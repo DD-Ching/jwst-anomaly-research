@@ -1,24 +1,21 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T144011Z-11342d69`).
+Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T151316Z-5706ae30`).
 
 ## Now (M1 follow-through)
-1. **Vet `jw02736-o001_t001_nircam_f200w_2804`** (galaxy rank 6 in run `20261007T144011Z-11342d69`). It is point-like (r50 2.13 px,
-   `mag_auto` 23.4) with F150W−F444W +3.7 and very red F356W−F444W, a brown-dwarf-like signature (D-016).
-   Check proper motion, published brown-dwarf lists and the F356W methane band.
-2. **Blended stars:** three PSF-like blends (`940`, `2242`, `1571`) remain in the SMACS galaxy top 20
+1. **Blended stars:** three PSF-like blends (`940`, `2242`, `1571`) remain in the SMACS galaxy top 20
    (D-015 "Revisit if"). Add image-based PSF-spike detection on cutouts.
-3. **Vet MIRI's known `G_Lens` object** with `/vet-candidate` and `scripts/vet_evidence.py`.
-4. **Track metrics per run:** the fractions of top k that are artifacts, stars and catalogued objects.
+2. **Vet MIRI's known `G_Lens` object** with `/vet-candidate` and `scripts/vet_evidence.py`.
+3. **Track metrics per run:** the fractions of top k that are artifacts, stars and catalogued objects.
    Recovering catalogued lensed images and high-z candidates validates the ranking; uncatalogued high-rank
    sources (like `438`) form the discovery set.
-5. **Per-sample confirmation** (D-014 limitation): only SMACS NIRCam can confirm single-band detections
+4. **Per-sample confirmation** (D-014 limitation): only SMACS NIRCam can confirm single-band detections
    and apply the stellar locus. MIRI passes 103 of 530, and CEERS drops every single-band source. Add
    matched photometry or confirmation for each sample (DJA for CEERS, NIRCam counterparts for MIRI).
-6. **Control comparability:** CEERS differs from SMACS in colours (aper50), gate (no confirmation) and
+5. **Control comparability:** CEERS differs from SMACS in colours (aper50), gate (no confirmation) and
    classification (no locus). Science-vs-control comparisons stay invalid until it gets DJA photometry.
-7. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
+6. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
 
 ## Next (M2)
 - Matched-aperture colours for other samples (D-013 is done for SMACS NIRCam):
@@ -33,6 +30,8 @@ Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T144011Z
 - Crossmatch and classify: propagate Gaia positions to the JWST epoch, so fast-moving stars and brown
   dwarfs land in the star stratum (D-012). Identify lenses by name or literature, not only by otype.
 - Cutouts: north-up panels and an option for shared brightness scaling across panels.
+- Second epochs and medium bands: check the galaxy top k against VENUS (6882) and other later programs
+  with `scripts/epoch_compare.py` (D-017). Moving sources are stars; variable ones are AGN or transients.
 
 ## Owner setup (needs-human)
 - Run `claude.exe` interactively in the repo once and accept workspace trust.
