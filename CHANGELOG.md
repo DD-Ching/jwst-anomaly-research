@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: CEERS control on DJA matched photometry (D-022, cycle 16)
+- `ceers_t021` now uses the DJA v7.4 `ceers-full` catalog, a 250.5 MB download with the reason stated in D-022.
+  The control field is built the same way as SMACS for colours, confirmation, screening and the top-k metric.
+- Run `20261007T202419Z-65728e80`:
+  - 3,069 of 7,582 sources match DJA, and 3,156 pass the gate (2,757 before);
+  - the top 20 is 85% known objects with 0% cutout-flagged, and 4 sources were screened;
+  - the stellar locus does not apply (2 catalogued stars).
+- **Found:** `f200w_2842` (#4) is a single-band, ellipticity-0.95 streak, probably a spike from the bright source
+  4.6″ away. A coincident DJA object confirmed it (D-014 "Revisit if").
+- **Handoff:** TASKS "Spike streaks confirmed by a coincident DJA object", then the star-stratum NED matches.
+
+
 ## 2026-10-08: Low-weight screening of the top-k pool (D-021, cycle 15)
 - `stages.cutouts.screen_low_weight` re-applies D-011's 0.5 weight threshold with the cutout's own core weight. It
   runs on every non-star stratum, and `screened.ecsv` now records each source's `reason`.
