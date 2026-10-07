@@ -1,10 +1,968 @@
-"""Config-driven end-to-end runner chaining the stage modules. Owner: bootstrap unit 6."""
+"""Config-driven end-to-end runner chaining the stage modules. Owner: bootstrap unit 6.
+
+For each sample in the YAML config (e.g. ``configs/reference_sample.yaml``)::
+
+    query.query_observations -> query.list_products -> acquire.fetch_products (CAT only)
+    -> catalog.load_pipeline_catalog (per band) -> catalog.merge_bands
+    -> features.build_features -> rank.score_anomalies -> top-k targets
+    -> cutouts.make_cutouts (optional, per band, S3 i2d URI) -> crossmatch.crossmatch (optional)
+
+then the top-ranked candidates go into the :class:`~jwst_anomaly.candidates.CandidateStore`
+and a ``report.md`` is written. Every stage output is checked with ``schema.validate``.
+A failing required stage aborts the run (recorded as ``failed``); a failing optional stage
+(cutouts, crossmatch) is recorded and the run continues. Image products (``_i2d.fits``,
+~1.8 GB) are never downloaded here: only catalogs are fetched, cutouts read from S3.
+
+Config keys read: ``name``, ``archive.{collection, calib_level, data_rights,
+product_subgroups}``, ``samples[].{id, role, description, proposal_id, instrument_name,
+ref_band, obs_ids, query}`` (``query``: extra MAST criteria, optional),
+``cloud.{s3_bucket, l3_key_pattern}``, ``stages.catalog.merge_radius_arcsec``,
+``stages.rank.{methods, random_state}``, ``stages.cutouts.{enabled, top_k, size_arcsec, bands}``,
+``stages.crossmatch.{enabled, top_k, radius_arcsec, services}`` and the optional top-level
+``outputs`` block added by this unit:
+
+* ``outputs.candidates_top_k`` -- candidates stored/reported per sample
+  (default: the larger cutouts/crossmatch ``top_k``, else 20);
+* ``outputs.table_format`` -- ``ecsv`` (default) or ``parquet`` for intermediate tables.
+
+Run outputs live in ``<outputs>/runs/<run_id>/`` (``paths.outputs_dir()`` by default):
+``config.yaml`` (verbatim copy), ``run_context.json``, ``run_record.json``, ``report.md`` and
+``<sample_id>/<table>.<ext>``. The store defaults to ``<outputs>/candidates.sqlite``.
+"""
 
 from __future__ import annotations
 
+import json
+import logging
+import re
+import shutil
+import time
+from collections.abc import Callable, Mapping, Sequence
+from dataclasses import asdict, dataclass, field
+from functools import partial
 from pathlib import Path
+from typing import Any
+
+import numpy as np
+import yaml
+from astropy.table import Table, vstack
+
+from jwst_anomaly import (
+    acquire,
+    catalog,
+    crossmatch,
+    cutouts,
+    features,
+    paths,
+    provenance,
+    query,
+    rank,
+    schema,
+)
+from jwst_anomaly.candidates import CandidateStore, to_python
+
+log = logging.getLogger(__name__)
+
+DEFAULT_DB_NAME = "candidates.sqlite"
+DEFAULT_TOP_K = 20
+TABLE_FORMATS = {"ecsv": "ascii.ecsv", "parquet": "parquet"}
+
+DISCLAIMER = (
+    "Anomaly scores rank sources by how unusual they are *relative to this sample, under this "
+    "feature set and these models* (provenance: `model_prediction`). A high score is not a "
+    "discovery and is not evidence of new physics. Every candidate below has status `new` "
+    "(not vetted). Expected explanations, in order: processing or instrument artifacts, catalog "
+    "effects, known but rare astrophysical populations; only then 'unexplained under tests X, "
+    "Y, Z' (docs/methodology.md)."
+)
+
+LIMITATIONS = (
+    "Catalog-first: JWST level-3 pipeline catalogs detect each band independently (no forced "
+    "photometry), so cross-band colors are approximate and cross-band mismatches can create "
+    "spurious outliers (DECISIONS.md D-001).",
+    "Each sample is ranked on its own; scores and ranks are not comparable across samples, "
+    "feature sets, methods or runs with different configs.",
+    "Image quality flags are automatic heuristics on cutouts; they do not replace visual "
+    "inspection.",
+    "Cross-match: no counterpart within the search radius does not make a source unknown "
+    "(catalog depth and completeness vary); a counterpart does not prove association.",
+    "Optional stages that failed or were skipped are listed under Stages; their columns read "
+    "'not run'.",
+)
+
+_BAND_RE = re.compile(r"f\d{3,4}[wmnc]\d?", re.IGNORECASE)
+_OBS_ID_RE = re.compile(r"^jw(\d{5})-o(\d{3})_")
+_SAMPLE_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")  # used as a directory name
 
 
-def run(config_path: str | Path) -> str:
-    """Run the pipeline described by a YAML config and return the run id."""
-    raise NotImplementedError("bootstrap unit 6: candidate store + runner")
+class ConfigError(ValueError):
+    """The run configuration is missing or malformed."""
+
+
+class PipelineError(RuntimeError):
+    """A required stage failed; the run was recorded as ``failed``."""
+
+    def __init__(
+        self, message: str, *, run_id: str | None = None, report_path: Path | None = None
+    ) -> None:
+        super().__init__(message)
+        self.run_id = run_id
+        self.report_path = report_path
+
+
+class _StageFailure(Exception):
+    def __init__(self, sample_id: str, stage: str, message: str) -> None:
+        super().__init__(f"required stage {stage} failed for sample {sample_id!r}: {message}")
+
+
+@dataclass
+class StageRecord:
+    """Outcome of one stage call, as stored in the run record and report."""
+
+    sample: str
+    stage: str
+    required: bool
+    status: str  # ok | failed | skipped
+    n_rows: int | None = None
+    seconds: float = 0.0
+    message: str = ""
+    output: str | None = None
+
+
+@dataclass
+class SampleSummary:
+    """Per-sample facts for the report (counts, bands, methods)."""
+
+    id: str
+    role: str
+    description: str
+    ref_band: str
+    n_observations: int = 0
+    bands: list[str] = field(default_factory=list)
+    n_sources: int = 0
+    feature_spec: dict[str, str] = field(default_factory=dict)
+    methods: list[str] = field(default_factory=list)
+    n_scored: int = 0
+    cutout_bands: list[str] = field(default_factory=list)
+    tables: list[str] = field(default_factory=list)  # saved files, relative to the run dir
+    notes: list[str] = field(default_factory=list)
+
+
+# -- config ------------------------------------------------------------------------------------
+
+
+def _check_positive_int(value: Any, where: str) -> None:
+    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+        raise ConfigError(f"{where} must be a positive integer, got {value!r}")
+
+
+def load_config(path: str | Path) -> dict[str, Any]:
+    """Read and minimally validate a run config (see module docstring for the keys)."""
+    path = Path(path)
+    if not path.is_file():
+        raise ConfigError(f"config file not found: {path}")
+    try:
+        config = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except yaml.YAMLError as exc:
+        raise ConfigError(f"{path}: invalid YAML: {exc}") from exc
+    if not isinstance(config, dict):
+        raise ConfigError(f"{path}: top level must be a mapping")
+    if not isinstance(config.get("name"), str) or not config["name"]:
+        raise ConfigError(f"{path}: 'name' must be a non-empty string")
+    samples = config.get("samples")
+    if not isinstance(samples, list) or not samples:
+        raise ConfigError(f"{path}: 'samples' must be a non-empty list")
+    seen: set[str] = set()
+    for i, sample in enumerate(samples):
+        if not isinstance(sample, dict) or not sample.get("id"):
+            raise ConfigError(f"{path}: samples[{i}] needs an 'id'")
+        sid = str(sample["id"])
+        if not _SAMPLE_ID_RE.fullmatch(sid):
+            raise ConfigError(f"{path}: sample id {sid!r} may only use letters, digits, _ . -")
+        if sid in seen:
+            raise ConfigError(f"{path}: duplicate sample id {sid!r}")
+        seen.add(sid)
+        if not sample.get("ref_band"):
+            raise ConfigError(f"{path}: sample {sid!r} needs a 'ref_band'")
+        if not sample.get("obs_ids") and not sample.get("proposal_id"):
+            raise ConfigError(f"{path}: sample {sid!r} needs 'obs_ids' or 'proposal_id'")
+    for key in ("archive", "stages", "cloud", "outputs"):
+        if config.get(key) is not None and not isinstance(config[key], dict):
+            raise ConfigError(f"{path}: '{key}' must be a mapping")
+    for name, block in (config.get("stages") or {}).items():
+        if block is None:
+            continue
+        if not isinstance(block, dict):
+            raise ConfigError(f"{path}: stages.{name} must be a mapping")
+        if "enabled" in block and not isinstance(block["enabled"], bool):
+            raise ConfigError(f"{path}: stages.{name}.enabled must be true or false")
+        if "top_k" in block:
+            _check_positive_int(block["top_k"], f"{path}: stages.{name}.top_k")
+    outputs = config.get("outputs") or {}
+    if "candidates_top_k" in outputs:
+        _check_positive_int(outputs["candidates_top_k"], f"{path}: outputs.candidates_top_k")
+    if outputs.get("table_format", "ecsv") not in TABLE_FORMATS:
+        raise ConfigError(f"{path}: outputs.table_format must be one of {sorted(TABLE_FORMATS)}")
+    return config
+
+
+def default_db_path(outputs_dir: str | Path | None = None) -> Path:
+    """Default candidate store: ``<outputs>/candidates.sqlite``."""
+    base = Path(outputs_dir) if outputs_dir is not None else paths.outputs_dir()
+    return base / DEFAULT_DB_NAME
+
+
+def band_from_name(name: str) -> str | None:
+    """Last JWST filter name in ``name`` (``...nircam_clear-f200w_cat.ecsv`` -> ``F200W``)."""
+    matches = _BAND_RE.findall(name)
+    return matches[-1].upper() if matches else None
+
+
+def l3_image_uri(cloud: Mapping[str, Any] | None, obs_id: str, suffix: str = "i2d.fits") -> str:
+    """S3 URI of a level-3 product from ``cloud.s3_bucket`` and ``cloud.l3_key_pattern``."""
+    if not cloud or not cloud.get("s3_bucket") or not cloud.get("l3_key_pattern"):
+        raise ConfigError("config 'cloud' needs 's3_bucket' and 'l3_key_pattern' for cutouts")
+    match = _OBS_ID_RE.match(obs_id)
+    if not match:
+        raise ValueError(f"cannot parse program/observation from obs_id {obs_id!r}")
+    key = cloud["l3_key_pattern"].format(
+        proposal=int(match[1]), observation=int(match[2]), obs_id=obs_id, suffix=suffix
+    )
+    return f"s3://{cloud['s3_bucket']}/{key}"
+
+
+def _band_of(table: Table, *names: str) -> str | None:
+    """Band of a catalog: explicit ``meta['band']``, else the obs_id/file name, else meta filter.
+
+    The name wins over a FILTER keyword because NIRCam pupil-wheel filters (``f444w-f470n``)
+    are named last in obs ids, while FILTER holds the filter-wheel element only.
+    """
+    candidates: list[Any] = [table.meta.get("band"), table.meta.get("BAND")]
+    candidates += [band_from_name(n) for n in names]
+    candidates += [table.meta.get("filter"), table.meta.get("FILTER")]
+    for value in candidates:
+        if isinstance(value, str) and _BAND_RE.fullmatch(value.strip()):
+            return value.strip().upper()
+    return None
+
+
+def _describe(exc: BaseException) -> str:
+    if isinstance(exc, NotImplementedError):
+        return f"stage not implemented yet ({exc})"
+    return f"{type(exc).__name__}: {exc}"
+
+
+def _stage_kwargs(cfg: Mapping[str, Any], keys: Sequence[str]) -> dict[str, Any]:
+    """Stage parameters present in the config; lists become tuples (stage defaults otherwise)."""
+    return {k: tuple(cfg[k]) if isinstance(cfg[k], list) else cfg[k] for k in keys if k in cfg}
+
+
+def _text(value: Any) -> str:
+    """Table cell as ``str`` (bytes decoded; masked -> empty string)."""
+    value = to_python(value)
+    return "" if value is None else str(value)
+
+
+def _float(value: Any) -> float | None:
+    value = to_python(value)
+    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else None
+
+
+# -- runner ------------------------------------------------------------------------------------
+
+
+class _Runner:
+    def __init__(self, config: dict[str, Any], run_id: str, run_dir: Path) -> None:
+        self.config = config
+        self.run_id = run_id
+        self.run_dir = run_dir
+        self.stages_cfg: dict[str, Any] = config.get("stages") or {}
+        outputs = config.get("outputs") or {}
+        self.table_format: str = outputs.get("table_format", "ecsv")
+        cut_cfg = self.stages_cfg.get("cutouts") or {}
+        xm_cfg = self.stages_cfg.get("crossmatch") or {}
+        self.cutouts_top_k = int(cut_cfg.get("top_k", DEFAULT_TOP_K))
+        self.crossmatch_top_k = int(xm_cfg.get("top_k", DEFAULT_TOP_K))
+        default_k = max(self.cutouts_top_k, self.crossmatch_top_k)
+        self.candidates_top_k = int(outputs.get("candidates_top_k", default_k))
+        self.records: list[StageRecord] = []
+        self.summaries: dict[str, SampleSummary] = {}
+        self.candidates: list[dict[str, Any]] = []
+
+    def settings(self) -> dict[str, Any]:
+        return {
+            "candidates_top_k": self.candidates_top_k,
+            "cutouts_top_k": self.cutouts_top_k,
+            "crossmatch_top_k": self.crossmatch_top_k,
+            "table_format": self.table_format,
+        }
+
+    # -- stage plumbing ------------------------------------------------------------------------
+
+    def stage(
+        self,
+        sample_id: str,
+        name: str,
+        call: Callable[[], Any],
+        *,
+        columns: Sequence[str],
+        required: bool,
+        save_as: str | None = None,
+    ) -> Table | None:
+        """Run one stage call, validate its table, persist it and record the outcome."""
+        t0 = time.perf_counter()
+        try:
+            table = call()
+            if not isinstance(table, Table):
+                raise TypeError(f"returned {type(table).__name__}, expected astropy Table")
+            schema.validate(table, columns, name=name)
+        except Exception as exc:  # stage code is outside this unit; report any failure
+            message = _describe(exc)
+            self.records.append(
+                StageRecord(
+                    sample_id, name, required, "failed", None, time.perf_counter() - t0, message
+                )
+            )
+            if required:
+                raise _StageFailure(sample_id, name, message) from exc
+            log.warning("[%s] optional stage %s failed: %s", sample_id, name, message)
+            return None
+        output = self.save(table, sample_id, save_as) if save_as else None
+        record = StageRecord(
+            sample_id, name, required, "ok", len(table), time.perf_counter() - t0, "", output
+        )
+        self.records.append(record)
+        log.info("[%s] %s: ok (%d rows, %.2f s)", sample_id, name, len(table), record.seconds)
+        return table
+
+    def record(
+        self, sample_id: str, name: str, status: str, message: str, *, required: bool
+    ) -> None:
+        self.records.append(StageRecord(sample_id, name, required, status, message=message))
+        log.info("[%s] %s: %s %s", sample_id, name, status, message)
+
+    def fail(self, sample_id: str, name: str, message: str) -> None:
+        self.record(sample_id, name, "failed", message, required=True)
+        raise _StageFailure(sample_id, name, message)
+
+    def save(self, table: Table, sample_id: str, name: str) -> str | None:
+        """Persist an intermediate table (best effort); return its path relative to the run dir."""
+        rel = f"{sample_id}/{name}.{self.table_format}"
+        summary = self.summaries[sample_id]
+        try:
+            path = self.run_dir / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            out = table.copy(copy_data=False)
+            out.meta = to_python(dict(table.meta))  # plain types, so any writer can serialize
+            out.write(path, format=TABLE_FORMATS[self.table_format], overwrite=True)
+        except Exception as exc:  # a missing intermediate file must not abort the run
+            log.warning("[%s] could not write %s: %s", sample_id, rel, exc)
+            summary.notes.append(f"could not write {rel}: {exc}")
+            return None
+        summary.tables.append(rel)
+        return rel
+
+    # -- one sample ----------------------------------------------------------------------------
+
+    def run_sample(self, sample: Mapping[str, Any]) -> None:
+        sid = str(sample["id"])
+        ref_band = str(sample["ref_band"]).upper()
+        summary = SampleSummary(
+            sid, str(sample.get("role", "science")), str(sample.get("description", "")), ref_band
+        )
+        self.summaries[sid] = summary
+        archive = self.config.get("archive") or {}
+
+        # 1. Observations (observed). Public only, and only the configured obs_ids.
+        criteria: dict[str, Any] = {}
+        if archive.get("collection"):
+            criteria["obs_collection"] = archive["collection"]
+        for key in ("proposal_id", "instrument_name"):
+            if sample.get(key):
+                criteria[key] = str(sample[key])
+        if archive.get("calib_level") is not None:
+            criteria["calib_level"] = archive["calib_level"]
+        obs_ids = [str(o) for o in sample.get("obs_ids") or []]
+        if obs_ids:
+            criteria["obs_id"] = obs_ids
+        criteria.update(sample.get("query") or {})
+        obs = self.stage(
+            sid,
+            "query.query_observations",
+            partial(query.query_observations, **criteria),
+            columns=schema.OBSERVATION_COLUMNS,
+            required=True,
+        )
+        obs = self._filter_observations(sid, obs, obs_ids, archive.get("data_rights"))
+        summary.n_observations = len(obs)
+        self.save(obs, sid, "observations")
+
+        # 2. Product list, then fetch catalogs only (images are read remotely for cutouts).
+        product_kwargs = {"calib_level": archive.get("calib_level", 3)}
+        if archive.get("product_subgroups"):
+            product_kwargs["subgroups"] = tuple(archive["product_subgroups"])
+        products = self.stage(
+            sid,
+            "query.list_products",
+            partial(query.list_products, obs, **product_kwargs),
+            columns=schema.PRODUCT_COLUMNS,
+            required=True,
+            save_as="products",
+        )
+        subgroup = np.array([_text(s).upper() for s in products["productSubGroupDescription"]])
+        cat_products = products[subgroup == "CAT"]
+        if len(cat_products) == 0:
+            self.fail(sid, "select catalog products", "no CAT products in the product list")
+        manifest = self.stage(
+            sid,
+            "acquire.fetch_products",
+            partial(acquire.fetch_products, cat_products),
+            columns=schema.MANIFEST_COLUMNS,
+            required=True,
+            save_as="manifest",
+        )
+
+        # 3. Per-band pipeline catalogs (observed) -> merged sources (derived).
+        uri_to_obs = {_text(r["dataURI"]): _text(r["obs_id"]) for r in products}
+        catalogs: dict[str, Table] = {}
+        band_obs: dict[str, str] = {}
+        for row in manifest:
+            filename = _text(row["productFilename"])
+            obs_id = uri_to_obs.get(_text(row["dataURI"]), "")
+            local = paths.data_root() / _text(row["local_path"])
+            table = self.stage(
+                sid,
+                f"catalog.load_pipeline_catalog[{filename}]",
+                partial(catalog.load_pipeline_catalog, local),
+                columns=schema.BAND_CATALOG_COLUMNS,
+                required=True,
+            )
+            band = _band_of(table, obs_id, filename)
+            if band is None:
+                self.fail(sid, "catalog band", f"cannot determine the band of {filename}")
+            if band in catalogs:
+                self.fail(sid, "catalog band", f"two catalogs for band {band} ({filename})")
+            catalogs[band] = table
+            band_obs[band] = obs_id or filename.rsplit("_", 1)[0]
+        summary.bands = sorted(catalogs)
+        if ref_band not in catalogs:
+            self.fail(sid, "catalog band", f"ref_band {ref_band} not among {summary.bands}")
+        cat_cfg = self.stages_cfg.get("catalog") or {}
+        merge_kwargs = {}
+        if "merge_radius_arcsec" in cat_cfg:
+            merge_kwargs["radius_arcsec"] = float(cat_cfg["merge_radius_arcsec"])
+        sources = self.stage(
+            sid,
+            "catalog.merge_bands",
+            partial(catalog.merge_bands, catalogs, ref_band=ref_band, **merge_kwargs),
+            columns=schema.SOURCE_COLUMNS,
+            required=True,
+            save_as="sources",
+        )
+        summary.n_sources = len(sources)
+
+        # 4. Features (derived) -> scores (model_prediction).
+        feats = self.stage(
+            sid,
+            "features.build_features",
+            partial(features.build_features, sources),
+            columns=schema.FEATURE_ID_COLUMNS,
+            required=True,
+            save_as="features",
+        )
+        summary.feature_spec = {
+            str(k): str(v) for k, v in (feats.meta.get("feature_spec") or {}).items()
+        }
+        rank_kwargs = _stage_kwargs(self.stages_cfg.get("rank") or {}, ("methods", "random_state"))
+        scores = self.stage(
+            sid,
+            "rank.score_anomalies",
+            partial(rank.score_anomalies, feats, **rank_kwargs),
+            columns=schema.SCORE_COLUMNS,
+            required=True,
+            save_as="scores",
+        )
+        summary.n_scored = len(scores)
+        summary.methods = [c[len("score_") :] for c in scores.colnames if c.startswith("score_")]
+
+        # 5. Top-k targets, joined to positions.
+        ranked = self._ranked(sid, scores, sources)
+        k_max = max(self.candidates_top_k, self.cutouts_top_k, self.crossmatch_top_k)
+        targets_all = self._targets(sid, ranked[:k_max])
+        self.save(targets_all, sid, "targets")
+
+        # 6. Optional evidence stages.
+        cutout_rows = self._cutouts(sid, summary, targets_all[: self.cutouts_top_k], band_obs)
+        xmatch_rows = self._crossmatch(sid, targets_all[: self.crossmatch_top_k])
+
+        for rec in ranked[: self.candidates_top_k]:
+            uid = rec["source_uid"]
+            per_band = cutout_rows.get(uid, {})
+            rec.update(
+                sample_id=sid,
+                role=summary.role,
+                flags={
+                    band: {k: v for k, v in row.items() if k != "path"}
+                    for band, row in per_band.items()
+                },
+                cutouts={band: row["path"] for band, row in per_band.items()},
+                xmatch=xmatch_rows.get(uid),
+            )
+            self.candidates.append(rec)
+
+    def _filter_observations(
+        self, sid: str, obs: Table, obs_ids: list[str], data_rights: str | None
+    ) -> Table:
+        notes = []
+        keep = np.ones(len(obs), dtype=bool)
+        if obs_ids:
+            wanted = set(obs_ids)
+            found = [_text(o) for o in obs["obs_id"]]
+            keep &= np.array([o in wanted for o in found], dtype=bool)
+            missing = sorted(wanted - set(found))
+            if missing:
+                notes.append(f"configured obs_ids not returned by MAST: {missing}")
+        if data_rights:
+            rights = np.array([_text(r).upper() for r in obs["dataRights"]])
+            not_public = keep & (rights != str(data_rights).upper())
+            if not_public.any():
+                notes.append(
+                    f"dropped {int(not_public.sum())} rows with dataRights != {data_rights}"
+                )
+            keep &= ~not_public
+        obs = obs[keep]
+        if notes:
+            self.record(sid, "filter observations", "ok", "; ".join(notes), required=True)
+        if len(obs) == 0:
+            self.fail(sid, "filter observations", "no observations left after filtering")
+        return obs
+
+    def _ranked(self, sid: str, scores: Table, sources: Table) -> list[dict[str, Any]]:
+        positions = {
+            _text(uid): (_float(ra), _float(dec))
+            for uid, ra, dec in zip(
+                sources["source_uid"], sources["ra"], sources["dec"], strict=True
+            )
+        }
+        method_cols = [c for c in scores.colnames if c.startswith("score_")]
+        rows: list[dict[str, Any]] = []
+        seen: set[str] = set()
+        for row in scores:
+            uid = _text(row["source_uid"])
+            if uid not in positions:
+                self.fail(sid, "select targets", f"scored source_uid {uid!r} not in sources")
+            if uid in seen:
+                self.fail(sid, "select targets", f"duplicate source_uid {uid!r} in scores")
+            seen.add(uid)
+            ra, dec = positions[uid]
+            rank_value = to_python(row["rank"])
+            top = to_python(row["top_features"]) if "top_features" in scores.colnames else None
+            if isinstance(top, list):
+                top = ", ".join(str(t) for t in top)
+            rows.append(
+                {
+                    "source_uid": uid,
+                    "ra": ra,
+                    "dec": dec,
+                    "score": _float(row["score"]),
+                    "rank": None if rank_value is None else int(rank_value),
+                    "top_features": None if top is None else str(top),
+                    "method_scores": {c[len("score_") :]: _float(row[c]) for c in method_cols},
+                }
+            )
+        rows.sort(key=lambda r: (r["rank"] is None, r["rank"] or 0, r["source_uid"]))
+        return rows
+
+    def _targets(self, sid: str, ranked: list[dict[str, Any]]) -> Table:
+        targets = Table(
+            {
+                "source_uid": [r["source_uid"] for r in ranked],
+                "ra": np.array([np.nan if r["ra"] is None else r["ra"] for r in ranked], float),
+                "dec": np.array([np.nan if r["dec"] is None else r["dec"] for r in ranked], float),
+                "rank": np.array([r["rank"] or 0 for r in ranked], dtype=int),
+            }
+        )
+        targets["ra"].unit = targets["dec"].unit = "deg"
+        targets.meta.update(
+            provenance=schema.Provenance.DERIVED.value,
+            source=f"top {len(ranked)} by rank.score_anomalies, run {self.run_id}, sample {sid}",
+        )
+        return schema.validate(targets, schema.TARGET_COLUMNS, name="targets")
+
+    def _skip_reason(self, cfg: Mapping[str, Any] | None, targets: Table) -> str | None:
+        if cfg is None:
+            return "not configured"
+        if cfg.get("enabled", True) is False:
+            return "disabled in config"
+        if len(targets) == 0:
+            return "no targets"
+        return None
+
+    def _relative_to_run(self, path_text: str) -> str:
+        """Cutout path relative to the run dir when it lies inside it (for report links)."""
+        path = Path(path_text)
+        absolute = (path if path.is_absolute() else Path.cwd() / path).resolve()
+        try:
+            return absolute.relative_to(self.run_dir.resolve()).as_posix()
+        except ValueError:
+            return path.as_posix()
+
+    def _cutouts(
+        self, sid: str, summary: SampleSummary, targets: Table, band_obs: Mapping[str, str]
+    ) -> dict[str, dict[str, dict[str, Any]]]:
+        """Run cutouts per band; return ``{source_uid: {band: {path, quality...}}}``."""
+        cfg = self.stages_cfg.get("cutouts")
+        reason = self._skip_reason(cfg, targets)
+        if reason:
+            self.record(sid, "cutouts.make_cutouts", "skipped", reason, required=False)
+            return {}
+        wanted = [str(b).upper() for b in cfg.get("bands") or []]
+        bands = [b for b in wanted if b in band_obs]
+        if not bands:
+            bands = [summary.ref_band]
+            summary.notes.append(
+                f"cutout bands {wanted} not in this sample; used ref_band {summary.ref_band}"
+            )
+        kwargs: dict[str, Any] = {"out_dir": self.run_dir / sid / "cutouts"}
+        if "size_arcsec" in cfg:
+            kwargs["size_arcsec"] = float(cfg["size_arcsec"])
+        tables = []
+        for band in bands:
+            name = f"cutouts.make_cutouts[{band}]"
+            try:
+                uri = l3_image_uri(self.config.get("cloud"), band_obs[band])
+            except (ConfigError, ValueError) as exc:
+                self.record(sid, name, "failed", str(exc), required=False)
+                continue
+            table = self.stage(
+                sid,
+                name,
+                partial(cutouts.make_cutouts, uri, targets, **kwargs),
+                columns=schema.CUTOUT_COLUMNS,
+                required=False,
+            )
+            if table is not None:
+                tables.append(table)
+                summary.cutout_bands.append(band)
+        if not tables:
+            return {}
+        try:  # still part of the optional stage: a failure here must not abort the run
+            combined = vstack(tables, metadata_conflicts="silent")
+            combined.meta.update(
+                provenance=tables[0].meta["provenance"],
+                source="; ".join(str(t.meta["source"]) for t in tables),
+            )
+            self.save(combined, sid, "cutouts")
+            result: dict[str, dict[str, dict[str, Any]]] = {}
+            for row in combined:
+                result.setdefault(_text(row["source_uid"]), {})[_text(row["band"]).upper()] = {
+                    "path": self._relative_to_run(_text(row["path"])),
+                    "quality_flag": to_python(row["quality_flag"]),
+                    "on_edge": to_python(row["on_edge"]),
+                    "frac_nan": to_python(row["frac_nan"]),
+                }
+        except Exception as exc:
+            self.record(sid, "cutouts (combine bands)", "failed", _describe(exc), required=False)
+            return {}
+        return result
+
+    def _crossmatch(self, sid: str, targets: Table) -> dict[str, dict[str, Any]]:
+        cfg = self.stages_cfg.get("crossmatch")
+        reason = self._skip_reason(cfg, targets)
+        if reason:
+            self.record(sid, "crossmatch.crossmatch", "skipped", reason, required=False)
+            return {}
+        kwargs = _stage_kwargs(cfg, ("radius_arcsec", "services"))
+        table = self.stage(
+            sid,
+            "crossmatch.crossmatch",
+            partial(crossmatch.crossmatch, targets, **kwargs),
+            columns=schema.XMATCH_COLUMNS,
+            required=False,
+            save_as="crossmatch",
+        )
+        if table is None:
+            return {}
+        meta = {
+            k: to_python(v) for k, v in table.meta.items() if k in ("services", "radius_arcsec")
+        }
+        out = {}
+        for row in table:
+            values = {c: to_python(row[c]) for c in schema.XMATCH_COLUMNS if c != "source_uid"}
+            values.update(meta)
+            out[_text(row["source_uid"])] = values
+        return out
+
+
+# -- report ------------------------------------------------------------------------------------
+
+
+def _cell(value: Any) -> str:
+    text = "" if value is None else str(value)
+    return text.replace("|", "\\|").replace("\n", " ").strip()
+
+
+def _num(value: Any, fmt: str) -> str:
+    return "" if value is None else format(value, fmt)
+
+
+def _quality_cell(flags: Mapping[str, Any] | None) -> str:
+    if not flags:
+        return "not run"
+    parts = []
+    for band, q in sorted(flags.items()):
+        text = f"{band}: {q.get('quality_flag')}"
+        if q.get("on_edge"):
+            text += ", edge"
+        frac_nan = _float(q.get("frac_nan"))
+        if frac_nan:
+            text += f", NaN {frac_nan:.0%}"
+        parts.append(text)
+    return "; ".join(parts)
+
+
+def _xmatch_cell(xm: Mapping[str, Any] | None) -> str:
+    if not xm:
+        return "not run"
+    n_matches = xm.get("n_matches")
+    if n_matches is None:
+        return "result missing"
+    if not n_matches:
+        radius = xm.get("radius_arcsec")
+        return "no counterpart" + (f" within {radius} arcsec" if radius is not None else "")
+    sep = _float(xm.get("best_match_sep_arcsec"))
+    text = f"{xm.get('best_match_service')}: {xm.get('best_match_id')}"
+    detail = [str(xm.get("best_match_type") or "?")]
+    if sep is not None:
+        detail.append(f'{sep:.2f}"')
+    if xm.get("is_star"):
+        detail.append("star")
+    if xm.get("is_known_object"):
+        detail.append("known")
+    return f"{text} ({', '.join(detail)}; {n_matches} matches)"
+
+
+def render_report(
+    context: Mapping[str, Any],
+    config: Mapping[str, Any],
+    runner: _Runner,
+    *,
+    status: str,
+    error: str | None = None,
+    db_path: Path | None = None,
+) -> str:
+    """Markdown report for one run (see module docstring)."""
+    lines: list[str] = [f"# Anomaly-ranking run `{context['run_id']}`", ""]
+    lines += [f"> **Read this first.** {DISCLAIMER}", ""]
+    lines.append(f"**Status:** {status}" + (f" -- {error}" if error else ""))
+    if status != "completed":
+        lines += ["", "No candidates were stored: the run did not complete."]
+    lines.append("")
+
+    git = context.get("git") or {}
+    cfg = context.get("config") or {}
+    if git.get("commit"):
+        dirty = {True: "yes", False: "no"}.get(git.get("dirty"), "unknown")
+        code = (
+            f"git `{git['commit'][:12]}` on `{git.get('branch')}` "
+            f"(uncommitted code changes: {dirty})"
+        )
+    else:
+        code = "not a git checkout (code version unknown beyond package version)"
+    packages = ", ".join(f"{k} {v}" for k, v in (context.get("packages") or {}).items() if v)
+    py = context.get("python") or {}
+    plat = (context.get("platform") or {}).get("platform", "")
+    lines += [
+        "## Run context",
+        "",
+        "| Item | Value |",
+        "|---|---|",
+        f"| Run id | `{context['run_id']}` |",
+        f"| Created (UTC) | {context.get('created_utc')} |",
+        f"| Config | `{_cell(config.get('name'))}` from `{_cell(cfg.get('path'))}` "
+        f"(sha256 `{(cfg.get('sha256') or '')[:16]}`; copy: `config.yaml`) |",
+        f"| Code | {_cell(code)} |",
+        f"| jwst-anomaly | {context.get('jwst_anomaly_version')} |",
+        f"| Python | {py.get('version')} ({py.get('implementation')}) on {_cell(plat)} |",
+        f"| Packages | {_cell(packages)} |",
+        f"| Settings | {_cell(json.dumps(runner.settings()))} |",
+        "",
+    ]
+
+    lines += [
+        "## Stages",
+        "",
+        "| Sample | Stage | Required | Status | Rows | Time (s) | Notes / output |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    for r in runner.records:
+        note = r.message or (f"`{r.output}`" if r.output else "")
+        n_rows = "" if r.n_rows is None else r.n_rows
+        lines.append(
+            f"| {_cell(r.sample)} | `{_cell(r.stage)}` | {'yes' if r.required else 'no'} | "
+            f"{r.status} | {n_rows} | {r.seconds:.2f} | {_cell(note)} |"
+        )
+    lines.append("")
+
+    lines += ["## Samples", ""]
+    for s in runner.summaries.values():
+        lines += [f"### {s.id} ({s.role})", ""]
+        if s.description:
+            lines += [s.description, ""]
+        lines += [
+            f"- Observations (observed): {s.n_observations}; catalog bands: "
+            f"{', '.join(s.bands) or 'none'}; ref band {s.ref_band}",
+            f"- Merged sources (derived): {s.n_sources}",
+            f"- Features (derived): {len(s.feature_spec)}",
+            f"- Scored sources (model_prediction): {s.n_scored}; methods: "
+            f"{', '.join(s.methods) or 'unknown'}",
+            f"- Cutout bands: {', '.join(s.cutout_bands) or 'none'}",
+        ]
+        if s.tables:
+            lines.append(f"- Tables: {', '.join(f'`{t}`' for t in s.tables)}")
+        lines += [f"- Note: {_cell(n)}" for n in s.notes]
+        lines.append("")
+        cands = [c for c in runner.candidates if c["sample_id"] == s.id]
+        if cands:
+            methods = s.methods
+            lines += [
+                f"#### Top {len(cands)} candidates",
+                "",
+                "Score columns: `model_prediction`. Image quality: `derived`. "
+                "Cross-match: `observed` (external catalogs). Status of all rows: `new`.",
+                "",
+                "| Rank | source_uid | RA (deg) | Dec (deg) | Score | "
+                + "".join(f"{m} | " for m in methods)
+                + "Top features | Image quality | Cross-match | Cutouts |",
+                "|" + "---|" * (9 + len(methods)),
+            ]
+            for c in cands:
+                links = ", ".join(
+                    f"[{band}]({path})" for band, path in sorted((c.get("cutouts") or {}).items())
+                )
+                method_cells = "".join(
+                    f"{_num((c.get('method_scores') or {}).get(m), '.3g')} | " for m in methods
+                )
+                lines.append(
+                    f"| {c.get('rank')} | `{_cell(c['source_uid'])}` | {_num(c.get('ra'), '.6f')} "
+                    f"| {_num(c.get('dec'), '.6f')} | {_num(c.get('score'), '.3g')} | "
+                    f"{method_cells}{_cell(c.get('top_features'))} | "
+                    f"{_cell(_quality_cell(c.get('flags')))} | "
+                    f"{_cell(_xmatch_cell(c.get('xmatch')))} | {links or 'none'} |"
+                )
+            lines.append("")
+        if s.feature_spec:
+            lines += ["<details><summary>Feature definitions (derived)</summary>", ""]
+            lines += [f"- `{k}`: {_cell(v)}" for k, v in s.feature_spec.items()]
+            lines += ["", "</details>", ""]
+
+    lines += ["## Limitations", ""]
+    lines += [f"- {item}" for item in LIMITATIONS]
+    db = f' --db "{Path(db_path).as_posix()}"' if db_path is not None else ""
+    lines += [
+        "",
+        "## Next steps",
+        "",
+        f"- `jwst-anomaly candidates list{db} --run {context['run_id']}`",
+        "- Vet a candidate (the `/vet-candidate` skill walks through the tests): "
+        f"`jwst-anomaly candidates set-status{db} <source_uid> triaged --run {context['run_id']} "
+        "--note ...`; record each test with `candidates add-vetting <source_uid> --test ... "
+        "--outcome pass|fail|inconclusive --evidence ... --provenance ...`; conclude with "
+        "`candidates set-status <source_uid> artifact|known_object|explained|unexplained "
+        "--note ...`. Add `--sample <id>` when a source_uid occurs in several samples.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+# -- entry point -------------------------------------------------------------------------------
+
+
+def run(
+    config_path: str | Path,
+    *,
+    outputs_dir: str | Path | None = None,
+    db_path: str | Path | None = None,
+    samples: Sequence[str] | None = None,
+) -> str:
+    """Run the pipeline described by a YAML config and return the run id.
+
+    ``outputs_dir`` defaults to ``paths.outputs_dir()``; ``db_path`` to
+    ``<outputs_dir>/candidates.sqlite``; ``samples`` restricts the run to those sample ids.
+    Raises :class:`ConfigError` before anything is recorded if the config is invalid, and
+    :class:`PipelineError` (after recording a ``failed`` run and its report) if a required
+    stage fails. Any other exception, including ``KeyboardInterrupt``, is also recorded as a
+    ``failed`` run before it propagates.
+    """
+    config_path = Path(config_path)
+    config = load_config(config_path)
+    selected = list(config["samples"])
+    if samples:
+        wanted = set(samples)
+        unknown = sorted(wanted - {str(s["id"]) for s in selected})
+        if unknown:
+            raise ConfigError(f"unknown sample ids {unknown}")
+        selected = [s for s in selected if str(s["id"]) in wanted]
+
+    out_root = (Path(outputs_dir) if outputs_dir is not None else paths.outputs_dir()).resolve()
+    db = Path(db_path) if db_path is not None else default_db_path(out_root)
+    context = provenance.capture_run_context(config_path)
+    run_id = context["run_id"]
+    run_dir = out_root / "runs" / run_id
+    runner = _Runner(config, run_id, run_dir)
+    run_dir.mkdir(parents=True, exist_ok=False)
+    shutil.copyfile(config_path, run_dir / "config.yaml")
+    (run_dir / "run_context.json").write_text(json.dumps(context, indent=2), encoding="utf-8")
+    report_path = run_dir / "report.md"
+    log.info("run %s: config %s -> %s", run_id, config_path, run_dir)
+
+    with CandidateStore(db) as store:
+        store.add_run(run_id, context, config_name=config["name"])
+
+        def finish(status: str, error: str | None) -> None:
+            if status != "completed":
+                runner.candidates.clear()  # nothing is stored for a failed run
+            summary = {
+                "status": status,
+                "error": error,
+                "settings": runner.settings(),
+                "samples_selected": [str(s["id"]) for s in selected],
+                "stages": [asdict(r) for r in runner.records],
+                "samples": [asdict(s) for s in runner.summaries.values()],
+                "n_candidates": len(runner.candidates),
+                "report": report_path.name,
+            }
+            store.finish_run(run_id, status, summary=summary, error=error)  # the record of truth
+            try:
+                (run_dir / "run_record.json").write_text(
+                    json.dumps(to_python(summary), indent=2), encoding="utf-8"
+                )
+                report_path.write_text(
+                    render_report(context, config, runner, status=status, error=error, db_path=db),
+                    encoding="utf-8",
+                )
+            except OSError as exc:
+                log.error("run %s: could not write run record/report: %s", run_id, exc)
+
+        def finish_failed(error: str) -> None:
+            try:
+                finish("failed", error)
+            except Exception:  # never mask the original failure
+                log.exception("run %s: could not record the failure", run_id)
+
+        try:
+            for sample in selected:
+                runner.run_sample(sample)
+            store.add_candidates(run_id, runner.candidates)
+        except _StageFailure as exc:
+            finish_failed(str(exc))
+            raise PipelineError(str(exc), run_id=run_id, report_path=report_path) from exc
+        except BaseException as exc:  # incl. KeyboardInterrupt: never leave a run 'running'
+            interrupted = isinstance(exc, KeyboardInterrupt)
+            finish_failed("interrupted" if interrupted else f"internal error: {_describe(exc)}")
+            raise
+        finish("completed", None)
+    log.info(
+        "run %s completed: %d candidates; report %s", run_id, len(runner.candidates), report_path
+    )
+    return run_id

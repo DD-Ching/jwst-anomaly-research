@@ -170,7 +170,21 @@ All links checked 2026-10-07. Exact catalog identifiers are as queried by `cross
 
 ## Candidate store and run provenance (unit 6)
 
-_Pending._
+Checked 2026-10-07.
+
+- **SQLite** 3.49.1 (bundled with CPython 3.12.10): https://www.sqlite.org/whentouse.html ;
+  `PRAGMA user_version`: https://www.sqlite.org/pragma.html#pragma_user_version ;
+  JSON functions: https://www.sqlite.org/json1.html
+- **Python standard library**: `sqlite3` https://docs.python.org/3/library/sqlite3.html ;
+  `importlib.metadata` https://docs.python.org/3/library/importlib.metadata.html ;
+  `argparse` https://docs.python.org/3/library/argparse.html
+- **Astropy** 8.0.1 table I/O for intermediate tables: ECSV https://docs.astropy.org/en/stable/io/ascii/ecsv.html ;
+  Parquet https://docs.astropy.org/en/stable/io/unified_table_parquet.html
+- Considered, not used (D-007): DuckDB SQLite extension https://duckdb.org/docs/current/core_extensions/sqlite.html ;
+  Datasette https://datasette.io/ ; sqlite-utils https://sqlite-utils.datasette.io/ ;
+  Alembic https://alembic.sqlalchemy.org/ ; GitPython https://gitpython.readthedocs.io/ ;
+  Click https://click.palletsprojects.com/ ; Typer https://typer.tiangolo.com/ ;
+  Snakemake https://snakemake.readthedocs.io/
 
 ## Open-source project tooling (unit 7)
 
