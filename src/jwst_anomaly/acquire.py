@@ -3,8 +3,10 @@
 Files are downloaded with ``astroquery.mast.Observations.download_file`` (DECISIONS.md D-002)
 into a temporary ``*.part`` file next to the target, checked against the size MAST reports,
 hashed (sha256) and only then moved into place with ``os.replace``, so a file at its final
-path is always complete. The manifest (ECSV, one row per ``dataURI``, sorted, LF line endings)
-is the tracked reproducibility record; it is rewritten only when its content changes.
+path is always complete. When MAST's listed size is stale (a reprocessed product), the
+download is accepted only if it matches the Content-Length the download service declares.
+The manifest (ECSV, one row per ``dataURI``, sorted, LF line endings) is the tracked
+reproducibility record; it is rewritten only when its content changes.
 """
 
 from __future__ import annotations
@@ -13,14 +15,17 @@ import hashlib
 import io
 import logging
 import os
+import urllib.request
 from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 from typing import Any
+from urllib.parse import quote
 
 import numpy as np
 from astropy.io import fits
 from astropy.table import Row, Table
+from astroquery.mast import conf as mast_conf
 
 from . import paths, query, schema
 
@@ -262,7 +267,10 @@ def _fetch_one(
 
     if dest.is_file():
         on_disk = dest.stat().st_size
-        if expected is not None and on_disk != expected:
+        # A size the manifest already verified (download-service Content-Length + sha256) is
+        # trusted over a stale MAST listing; the sha256 check below still applies.
+        verified = prev is not None and int(prev["size"]) == on_disk
+        if expected is not None and on_disk != expected and not verified:
             log.warning(
                 "%s: %d B on disk, MAST reports %d B; re-downloading", rel, on_disk, expected
             )
@@ -301,12 +309,37 @@ def _fetch_one(
             raise DownloadError(f"{status}: {msg}{hint}")
         size = tmp.stat().st_size
         if size != expected:  # the only integrity check available: MAST publishes no checksums
-            raise DownloadError(f"got {size} B, MAST reports {expected} B")
+            # MAST's product listing can lag a reprocessing (seen for 1176 o241 on 2026-10-01),
+            # so a complete transfer of the new file is accepted when the server declares it.
+            served = _served_size(uri)
+            if served != size:
+                raise DownloadError(
+                    f"got {size} B, MAST reports {expected} B (download service: {served} B)"
+                )
+            log.warning(
+                "%s: MAST lists %d B but serves %d B (Content-Length matches the download); "
+                "the product listing is stale, probably after a reprocessing",
+                fname,
+                expected,
+                size,
+            )
         digest = sha256_file(tmp)
         os.replace(tmp, dest)
     finally:
         tmp.unlink(missing_ok=True)
     return _new_row(prod, rel, dest, size, digest, datetime.now(UTC), "downloaded")
+
+
+def _served_size(uri: str) -> int | None:
+    """Content-Length the MAST download service declares for ``uri`` (HTTP HEAD), or None."""
+    url = f"{mast_conf.server}/api/v0.1/Download/file?uri={quote(uri, safe=':/')}"
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, method="HEAD"), timeout=60) as r:
+            length = r.headers.get("Content-Length")
+        return int(length) if length is not None else None
+    except (OSError, ValueError) as exc:  # URLError is an OSError
+        log.warning("could not read the served size of %s: %s", uri, exc)
+        return None
 
 
 def _new_row(
