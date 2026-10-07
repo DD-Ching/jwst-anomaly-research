@@ -122,41 +122,67 @@ fresh clone of the repository in a fresh session. Routines are a research previe
    cleanly. Read the transcript, or ask `/schedule why did my research cycle do nothing?`.
 
 **GitHub from a cloud session.** GraphQL is blocked there (`HTTP 403: GitHub GraphQL is not available from Claude
-Code sessions`), so every `gh pr ...` and `gh issue ...` command fails. Use REST through `gh api`, with literal
-paths (shell variables don't persist between tool calls):
+Code sessions`), so every `gh pr ...` and `gh issue ...` command fails. Two routes work:
+- the session's GitHub MCP tools (load them with ToolSearch: `mcp__github__create_pull_request`,
+  `pull_request_read`, `merge_pull_request`). The first routine run opened #38 with them, without a permission
+  prompt;
+- REST through `gh api`, with literal paths (shell variables don't persist between tool calls):
 
 | Purpose | Cloud call |
 |---|---|
 | open PRs | `gh api 'repos/DD-Ching/jwst-anomaly-research/pulls?state=open'` |
+| one PR's state | `gh api repos/DD-Ching/jwst-anomaly-research/pulls/N --jq '[.user.login, .head.repo.full_name, .head.ref, .head.sha, .mergeable_state] \| @tsv'` |
+| a PR's files (every page) | `gh api --paginate repos/DD-Ching/jwst-anomaly-research/pulls/N/files --jq '.[].filename'` |
 | open issues | `gh api 'repos/DD-Ching/jwst-anomaly-research/issues?state=open'` (entries with `pull_request` are PRs) |
 | comments and reviews | `gh api repos/DD-Ching/jwst-anomaly-research/issues/N/comments`, `.../pulls/N/reviews`, `.../pulls/N/comments` |
 | comment on a PR or issue | `gh api repos/DD-Ching/jwst-anomaly-research/issues/N/comments -f body="..."` |
 | reply to an inline comment | `gh api repos/DD-Ching/jwst-anomaly-research/pulls/N/comments/ID/replies -f body="..."` |
 | open an issue | `gh api repos/DD-Ching/jwst-anomaly-research/issues -f title="..." -f body="..."` |
-| open a PR | `gh api repos/DD-Ching/jwst-anomaly-research/pulls -f title="..." -f head=claude/<slug> -f base=main -f body="..."` |
-| add labels | `gh api repos/DD-Ching/jwst-anomaly-research/issues/N/labels -f "labels[]=agent"` |
+| open a PR | `mcp__github__create_pull_request`, or `gh api repos/DD-Ching/jwst-anomaly-research/pulls -f title="..." -f head=claude/<slug> -f base=main -f body="..."` |
+| add labels | `gh api repos/DD-Ching/jwst-anomaly-research/issues/N/labels -f "labels[]=agent"` (adds; MCP `issue_write` replaces the whole label set, so don't label with it) |
 | wait for CI | the loop below, as one background Bash call |
-| merge | not available: denied by `.claude/settings.json` (merge API calls); label the PR `merge-ready` |
+| merge | `mcp__github__merge_pull_request` with `merge_method: squash` and `expectedHeadSha` = the reviewed head (the REST merge API is denied by `.claude/settings.json`) |
 
 Write each body in the command itself (`-f body="$(cat <<'EOF'` on one line, the text, then `EOF` and `)"` on
 their own lines); `=@file` and `--input` are denied so local files can't be posted by accident.
 
-Wait for CI in one background call, not one model turn per poll. CI has 4 check runs (lint and three test jobs,
-as of 2026-10-08), so an empty or partial list means CI hasn't started yet:
+**Conflicts.** A PR that conflicts with `main` has `mergeable_state` `dirty` and gets no `pull_request` CI at all
+(#38's first three commits had none). Merge `origin/main` into the branch, review the conflict resolution
+(`git diff HEAD^1 HEAD` on the conflicted files), test and push. The merge is then pinned to the new head.
+
+**Waiting for CI.** Use one background call with a timeout, not one model turn per poll. The CI workflow has 4
+jobs (lint and three test jobs, as of 2026-10-08). The Claude workflow adds `claude` check runs, normally
+`skipped`, which are not CI:
 
 ```bash
 sha=$(git rev-parse HEAD)
-until out=$(gh api "repos/DD-Ching/jwst-anomaly-research/commits/$sha/check-runs"       --jq '[.total_count, ([.check_runs[] | select(.status != "completed")] | length)] | @tsv')     && [ "$(cut -f1 <<<"$out")" -ge 4 ] && [ "$(cut -f2 <<<"$out")" -eq 0 ]; do sleep 30; done
-gh api "repos/DD-Ching/jwst-anomaly-research/commits/$sha/check-runs" --jq '.check_runs[] | [.name, .conclusion] | @tsv'
+for i in $(seq 60); do
+  out=$(gh api "repos/DD-Ching/jwst-anomaly-research/commits/$sha/check-runs" \
+    --jq '[.check_runs[] | select(.name != "claude")] | [length, (map(select(.status != "completed")) | length)] | @tsv')
+  [ "$(cut -f1 <<<"$out")" -ge 4 ] && [ "$(cut -f2 <<<"$out")" -eq 0 ] && break
+  sleep 30
+done
+gh api "repos/DD-Ching/jwst-anomaly-research/commits/$sha/check-runs" --jq '.check_runs[] | [.name, .status, .conclusion] | @tsv'
 ```
 
-Every conclusion must be `success`; `failure`, `cancelled` or `skipped` is not green.
+Every CI job must conclude `success`; `failure`, `cancelled`, `skipped` or a missing job is not green. If the loop
+times out, read `mergeable_state` before waiting again.
 
-**Merging cloud PRs.** The merge API is denied in `.claude/settings.json`, and the cloud proxy rejects branch
-deletion. A cloud run therefore stops at merge-ready (CI green, `/code-review` findings fixed, handoff in the
-PR's CHANGELOG) and labels the PR `merge-ready`. Merge it yourself, or let a local session do it under the
-merge policy. To let routines merge, change the deny rule (a guarded file, so it is your decision) and turn on
-**Settings → General → Automatically delete head branches** for the branch clean-up.
+**Merging cloud PRs.** CLAUDE.md's merge policy is the gate. From a cloud session the run checks it on GitHub:
+- author `DD-Ching` and head repository `DD-Ching/jwst-anomaly-research` (no forks);
+- head branch `claude/*`, `batch/*` or `integration/*`;
+- no `needs-human` label;
+- no guarded file on any page of the PR's files;
+- every CI job successful;
+- `/code-review` on the final diff, including any conflict resolution;
+- `--run-network` tests when I/O code changed;
+- no announcement of a result outside the repository.
+
+It then squash-merges with `mcp__github__merge_pull_request` and `expectedHeadSha`. The repository deletes merged
+branches itself (`delete_branch_on_merge`). If merging is unavailable or refused, the run labels the PR
+`merge-ready` (CI green, review findings fixed, handoff in its CHANGELOG) for you or a local session. Rejected:
+a Bash allow rule for the REST merge (#37), because a glob such as `pulls/*/merge` also matches other
+`pulls/...` writes (D-028).
 
 **How the PRs reach you.** The run pushes a `claude/<slug>` branch and opens a PR with the `agent` label. Routines
 act through your GitHub identity, so these PRs are authored by you. The `agent` label and the session link in the
@@ -229,6 +255,8 @@ and a stable interface landed first. When they hold, the cycle fans out instead 
 | `needs-human` | A decision only you can make: scientific, irreversible, costly or credentials. The PR body says which |
 | `candidate` | Candidate report or vetting record |
 | `batch-<slug>` | One parallel batch, reviewed together |
+| `merge-ready` | A cloud PR that is ready except for the merge itself: merge it |
+| `local-wip` | A local session is working on the PR; cloud runs leave it alone |
 | `infra`, `science`, `reuse-decision` | Topic |
 
 All these labels already exist in the repository. Agents create new `batch-<slug>` labels with `gh label create`.
@@ -265,6 +293,9 @@ All these labels already exist in the repository. Agents create new `batch-<slug
   Deny is evaluated before ask and allow, and an allow rule can't override it. These were tested headlessly
   (D-009). The allow list covers the cycle's commands: uv, pytest, ruff, git read, add, commit and switch, pushes to
   `claude/*` and `batch/*`, `gh pr` and `gh issue` reads, comments and creates, and `gh label create`.
+- **GitHub MCP tools in cloud sessions** (`mcp__github__*`) are not covered by these Bash rules. Cloud runs use
+  them to open and merge their own PRs (D-028). There, the merge policy, branch protection on `main` (required
+  checks, enforced for admins) and the repository's merge settings are the boundary.
 - **Rules match command text, not intent.** As [the docs warn](https://code.claude.com/docs/en/permissions),
   `git -C . push --force`, `sh -c '...'` and a refspec deletion like `git push origin :branch` slip past them.
   GitHub is the boundary for branches:
