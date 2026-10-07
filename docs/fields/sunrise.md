@@ -141,10 +141,11 @@ The code is at this PR's head; outputs are under `outputs/transients_sunrise/` (
   - frame shifts of ≤ 0.018″;
   - candidates: F090W 71, F115W 65, F277W 129, F356W 107.
 - **Combination** (`transient_combine.py`): 58 positions have the same kind in ≥ 2 bands (13 variable, 27
-  appeared, 18 disappeared). 6 lie near Gaia DR3 sources (59 in a 4′ cone) and are excluded, leaving 53.
+  appeared, 18 disappeared). 6 lie near Gaia DR3 sources (59 in a 4′ cone) and are excluded, leaving 52 candidates. Earendel is measured alongside as a
+  reference position and is not counted among them.
 - **Forced photometry,** 0.15″ aperture, recentred with a 0.15″ box: `appeared` candidates are centroided in
-  epoch 2, all others in epoch 1. The median Δm is ≤ 0.003 in every band, and the 5–95% range is −0.39…+0.16 mag.
-  **0 of 53 pass in all four bands.** Passing in one or two bands:
+  epoch 2, all others in epoch 1. The median Δm of the candidates is ≤ 0.005 in every band, and the 5–95% range is −0.39…+0.16 mag.
+  **0 of 52 candidates pass in all four bands.** Passing in one or two bands:
   - `c0049` (disappeared in F277W and F356W; it passes in F090W and F115W, −0.54/−0.66 mag): a linear streak crosses
     the position in epoch 2 in all four bands;
   - `c0018` (appeared in F277W and F356W; it passes in F356W only, +0.32 mag): galaxy outskirts, 0.3″ from a bright

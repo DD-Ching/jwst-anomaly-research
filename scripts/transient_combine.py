@@ -164,7 +164,12 @@ def main(argv: list[str] | None = None) -> int:
         row.update(ra=float(ra), dec=float(dec), kind=f"reference_{name}", band="", bands="")
         row["n_bands"] = 0
         targets.add_row(row)
-    targets.meta.update(provenance="derived", n_excluded_near_gaia=len(excluded))
+    targets.meta.update(
+        provenance="derived",
+        n_excluded_near_gaia=len(excluded),
+        n_candidates=len(targets) - len(args.reference),
+        n_references=len(args.reference),
+    )
     args.out.mkdir(parents=True, exist_ok=True)
     targets.write(args.out / "targets.ecsv", overwrite=True)
     excluded.write(args.out / "excluded.ecsv", overwrite=True)
@@ -178,7 +183,8 @@ def main(argv: list[str] | None = None) -> int:
                 "coincident": len(cand),
                 **kinds,
                 "excluded_near_gaia": len(excluded),
-                "targets": len(targets),
+                "candidates": len(targets) - len(args.reference),
+                "references": len(args.reference),
             }
         )
     )

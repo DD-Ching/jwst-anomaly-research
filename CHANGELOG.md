@@ -3,7 +3,7 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-08: Sunrise two-epoch search, a null result; Earendel steady (D-027 amendment)
-- WHL0137 2282 o010 against o120 (same pipeline): 372 catalog candidates → 58 in ≥ 2 bands → 53 after the bright-Gaia
+- WHL0137 2282 o010 against o120 (same pipeline): 372 catalog candidates → 58 in ≥ 2 bands → 52 after the bright-Gaia
   mask → 0 by recentred forced photometry in all four bands. 2 pass in one or two bands, both ordinary on visual check
   (an epoch-2 streak; galaxy outskirts at the footprint edge). docs/fields/sunrise.md.
 - Earendel: |Δm| ≤ 0.18 mag (≤ 1.5σ) in F090W/F115W/F277W/F356W over 164 days.

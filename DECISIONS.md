@@ -1287,7 +1287,7 @@ Field docs: `docs/fields/*.md`.
 - **Evidence:**
   - Catalog stage, same pipeline: 71/65/129/107 candidates in F090W/F115W/F277W/F356W, against hundreds in
     SMACS/VENUS. 58 coincide in ≥ 2 bands, and 6 of them lie near Gaia sources.
-  - Forced photometry, recentred (0.15″ box): 0 of 53 pass in all four bands. 2 pass in one or two bands, and
+  - Forced photometry, recentred (0.15″ box): 0 of 52 candidates pass in all four bands (Earendel is measured as a separate reference). 2 pass in one or two bands, and
     both are ordinary on visual check: one has a linear streak through it in epoch 2, and the other lies on galaxy
     outskirts at the epoch-2 LW footprint edge.
   - Noise calibration on 150 ordinary sources (F356W 25.5–28, median 27.0): the robust std of the ERR-based flux
