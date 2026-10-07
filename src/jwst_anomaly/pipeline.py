@@ -399,6 +399,13 @@ def _topk_line(m: Mapping[str, int]) -> str:
     return f"n = {n}: {text}" + (f"; {', '.join(extra)}" if extra else "")
 
 
+def _min_finite(per_band: Mapping[str, Mapping[str, Any]], key: str) -> float | None:
+    """Smallest finite ``key`` over a source's bands (None when none)."""
+    values = [_float(q.get(key)) for q in per_band.values()]
+    finite = [v for v in values if v is not None and np.isfinite(v)]
+    return min(finite) if finite else None
+
+
 def _max_finite(per_band: Mapping[str, Mapping[str, Any]]) -> float:
     """Largest finite ``spike_s6`` over a source's bands (NaN when none)."""
     values = [_float(q.get("spike_s6")) for q in per_band.values()]
@@ -411,7 +418,14 @@ def _check_spike(spike: Any, where: str) -> None:
     optional ``search_arcsec`` and ``screen`` (D-019)."""
     if not isinstance(spike, dict):
         raise ConfigError(f"{where} must be a mapping")
-    unknown = set(spike) - {"radii_arcsec", "threshold", "search_arcsec", "screen"}
+    unknown = set(spike) - {
+        "radii_arcsec",
+        "threshold",
+        "search_arcsec",
+        "screen",
+        "host_annulus_arcsec",
+        "host_ratio_max",
+    }
     if unknown:
         raise ConfigError(f"{where}: unknown keys {sorted(unknown)}")
 
@@ -434,6 +448,20 @@ def _check_spike(spike: Any, where: str) -> None:
         raise ConfigError(f"{where}.search_arcsec must be a non-negative number")
     if "screen" in spike and not isinstance(spike["screen"], bool):
         raise ConfigError(f"{where}.screen must be true or false")
+    ann = spike.get("host_annulus_arcsec")
+    if ann is not None and not (
+        isinstance(ann, list | tuple)
+        and len(ann) == 2
+        and all(number(r) for r in ann)
+        and 0 <= ann[0] < ann[1]
+    ):
+        raise ConfigError(
+            f"{where}.host_annulus_arcsec must be [r_in, r_out] with 0 <= r_in < r_out"
+        )
+    if "host_ratio_max" in spike and not (
+        number(spike["host_ratio_max"]) and spike["host_ratio_max"] > 0
+    ):
+        raise ConfigError(f"{where}.host_ratio_max must be a positive number")
 
 
 def _stage_kwargs(cfg: Mapping[str, Any], keys: Sequence[str]) -> dict[str, Any]:
@@ -828,15 +856,26 @@ class _Runner:
         cutout_rows: Mapping[str, Mapping[str, Mapping[str, Any]]],
         cut_k: int,
     ) -> list[dict[str, Any]]:
-        """``ranked`` without spike-flagged sources that have stellar colours (D-019).
+        """``ranked`` without star-dominated spike-flagged sources (D-019, D-020).
 
-        A spiky source with stellar colours is a star or a star-dominated blend. One with other
-        colours may be a galaxy with a bright unresolved nucleus (e.g. an AGN), so it stays
-        ranked and is only noted. Without stellar-locus colours nothing is removed.
+        A spiky source is a star or a star-dominated blend when its colours are stellar (D-019)
+        or, with ``host_ratio_max``, when no host light surrounds its peak (D-020; corrupted
+        colours of star pairs or saturated stars do not matter then). A spiky nucleus inside a
+        galaxy with non-stellar colours (e.g. an AGN) stays ranked and is noted. Without
+        stellar-locus colours or a host test nothing is removed.
         """
         if not flagged:
             return ranked
         stellar = self.stellar_colour_uids.get(sid)
+        host_max = ((self.stages_cfg.get("cutouts") or {}).get("spike") or {}).get("host_ratio_max")
+        if host_max is not None:
+            hostless = {
+                uid
+                for uid in flagged
+                if (h := _min_finite(cutout_rows.get(uid) or {}, "host_ratio")) is not None
+                and h < float(host_max)
+            }
+            stellar = (stellar or set()) | hostless
         if stellar is None:
             summary.notes.append(
                 "spike screening (D-019) skipped: no stellar-locus colours for this sample; "
@@ -846,8 +885,8 @@ class _Runner:
         kept_flagged = [r for r in ranked if r["source_uid"] in flagged - stellar]
         if kept_flagged:
             summary.notes.append(
-                "spike-flagged but non-stellar colours, kept ranked (star with corrupted "
-                "photometry, or a galaxy with a bright nucleus such as an AGN; inspect): "
+                "spike-flagged but non-stellar colours and host light, kept ranked (a galaxy "
+                "with a bright nucleus such as an AGN, or a saturated star; inspect): "
                 + ", ".join(
                     f"#{r['rank']} " + "_".join(r["source_uid"].split("_")[-2:])
                     for r in kept_flagged
@@ -869,8 +908,8 @@ class _Runner:
         table.meta.update(
             provenance=schema.Provenance.DERIVED.value,
             source=(
-                f"spike-flagged cutouts (D-018) with stellar colours (D-015 box), screened out of "
-                f"the top {cut_k} (D-019)"
+                f"spike-flagged cutouts (D-018) with stellar colours (D-015 box, D-019) or no host "
+                f"light (D-020), screened out of the top {cut_k}"
             ),
         )
         self.save(table, sid, "screened")
@@ -1248,6 +1287,10 @@ class _Runner:
             kwargs["spike_threshold"] = float(spike["threshold"])  # "screen" is used by the caller
             if "search_arcsec" in spike:
                 kwargs["spike_search_arcsec"] = float(spike["search_arcsec"])
+            if "host_annulus_arcsec" in spike:
+                kwargs["host_annulus_arcsec"] = tuple(
+                    float(r) for r in spike["host_annulus_arcsec"]
+                )
         tables = []
         for band in bands:
             name = f"cutouts.make_cutouts[{band}]"
@@ -1293,10 +1336,11 @@ class _Runner:
                     "on_edge": to_python(row["on_edge"]),
                     "frac_nan": to_python(row["frac_nan"]),
                 }
-                if "spike_s6" in combined.colnames:
-                    result[_text(row["source_uid"])][_text(row["band"]).upper()]["spike_s6"] = (
-                        _float(row["spike_s6"])
-                    )
+                for col in ("spike_s6", "host_ratio"):
+                    if col in combined.colnames:
+                        result[_text(row["source_uid"])][_text(row["band"]).upper()][col] = _float(
+                            row[col]
+                        )
             spiky = sorted(
                 {
                     _text(r["source_uid"])

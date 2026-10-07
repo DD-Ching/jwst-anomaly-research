@@ -1448,7 +1448,7 @@ def test_spike_screening_keeps_non_stellar_or_unknown_colours(tmp_path, env, mon
     _with_stellar_colours(monkeypatch, lambda ranked: set())  # locus ran; nothing is stellar
     run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])
     report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
-    assert "spike-flagged but non-stellar colours, kept ranked" in report
+    assert "spike-flagged but non-stellar colours and host light, kept ranked" in report
     assert not (env / "runs" / run_id / "field_a" / "screened.ecsv").exists()
 
 
@@ -1491,3 +1491,39 @@ def test_report_has_topk_composition(tmp_path, env, monkeypatch):
     record = json.loads((env / "runs" / run_id / "run_record.json").read_text(encoding="utf-8"))
     sample = [s for s in record["samples"] if s["id"] == "field_a"][0]
     assert sample["topk"]["n"] > 0 and "known" in sample["topk"]
+
+
+def test_spike_screening_drops_hostless_sources_without_stellar_colours(tmp_path, env, monkeypatch):
+    fakes = install_fakes(monkeypatch)
+    stages = _split_stages(tmp_path, env, monkeypatch)
+    stages["cutouts"]["spike"]["host_ratio_max"] = 0.004
+    flagged = {}
+    spiky = _spiky_cutouts(fakes, flagged)
+
+    def with_host(image_uri, targets, size_arcsec=3.0, out_dir=None, **kw):
+        t = spiky(image_uri, targets, size_arcsec, out_dir, **kw)
+        t["host_ratio"] = [0.001] + [0.02] * (len(t) - 1)  # the spiky source has no host
+        return t
+
+    monkeypatch.setattr(cutouts, "make_cutouts", with_host)
+    _with_stellar_colours(monkeypatch, lambda ranked: set())  # nothing has stellar colours
+    run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])
+    screened = Table.read(env / "runs" / run_id / "field_a" / "screened.ecsv")
+    assert [str(u) for u in screened["source_uid"]] == [flagged["uid"]]
+    assert "host light (D-020)" in screened.meta["source"]
+
+
+@pytest.mark.parametrize(
+    "extra, match",
+    [
+        ({"host_ratio_max": 0}, "host_ratio_max"),
+        ({"host_annulus_arcsec": [0.6, 0.3]}, "host_annulus"),
+    ],
+)
+def test_host_config_is_validated(tmp_path, extra, match):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["stages"]["cutouts"]["spike"] = {"radii_arcsec": [0.2, 0.8], "threshold": 3, **extra}
+    path = tmp_path / "bad.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    with pytest.raises(pipeline.ConfigError, match=match):
+        pipeline.load_config(path)

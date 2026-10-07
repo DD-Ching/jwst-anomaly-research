@@ -410,3 +410,13 @@ def test_spike_flag_is_nircam_only_and_recorded(tmp_path, monkeypatch):
     )
     assert np.isnan(miri["spike_s6"][0]) and "spikes" not in miri["quality_flag"][0]
     assert miri.meta["spike"]["applied"] is False
+
+
+def test_host_ratio_separates_a_bare_star_from_a_nucleus_in_a_galaxy():
+    star, c = _spiky_star()
+    galaxy, _ = _elongated_galaxy(q=0.8)
+    nucleus = galaxy + star  # a point-like nucleus inside a galaxy
+    bare = cutouts.host_ratio(star, c, c, 10, 19)
+    hosted = cutouts.host_ratio(nucleus, c, c, 10, 19)
+    assert bare < 0.01 < hosted
+    assert np.isnan(cutouts.host_ratio(np.full((40, 40), np.nan), 20, 20, 5, 10))
