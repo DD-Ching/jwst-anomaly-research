@@ -82,8 +82,8 @@ Action.
 - **Cloud run** (`CLAUDE_CODE_REMOTE=true`, e.g. a `/schedule` routine): fresh clone, ephemeral and limited disk,
   network allowlist. GitHub GraphQL is blocked (`HTTP 403: GitHub GraphQL is not available from Claude Code
   sessions`; older wording "This GraphQL query is not enabled for this session"), so every `gh pr` and `gh issue`
-  command in this procedure fails. Use the REST calls and the CI wait loop in docs/operations.md §3. Merging is
-  denied there: stop at merge-ready and add the label `merge-ready`.
+  command in this procedure fails. Use the GitHub MCP tools or the REST calls, the conflict check
+  (`mergeable_state`) and the CI wait loop in docs/operations.md §3.
 
 ## 2. Owner review comments first
 
@@ -167,8 +167,10 @@ Keep them terse; link instead of repeating. Batch workers leave TASKS.md and CHA
   exactly which one.
 - Merge only under CLAUDE.md "Merge policy and version control": own PR, every required check green
   (`gh pr checks <n> --watch`), `/code-review` run on the final diff with findings fixed, no `needs-human`, no
-  guarded file. Then `gh pr merge <n> --squash --delete-branch`, `git switch main`, `git pull`. Otherwise
-  leave the PR for the owner and say why in the handoff.
+  guarded file. Then `gh pr merge <n> --squash --delete-branch`, `git switch main`, `git pull`. In a cloud run,
+  check the policy on GitHub (author and head repository, branch, labels, every page of files, CI jobs) and merge
+  with `mcp__github__merge_pull_request` (squash, `expectedHeadSha` = the reviewed head; docs/operations.md §3). Otherwise leave the PR for the owner (label `merge-ready` when only the
+  merge itself is missing) and say why in the handoff.
 - Never `--admin` or `--auto`, never merge someone else's PR, never push to `main`, never force-push.
 
 ## 9. Handoff

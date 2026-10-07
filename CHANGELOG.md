@@ -12,8 +12,39 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `transient_forced.py --recentre-arcsec`.
 - **Failed approach:** a fixed aperture at a literature position. Earendel seemed to brighten by 0.76 mag at 5.7σ,
   because the aperture sat 0.15″ off the source and the PSF rotates by about 180° between the epochs.
-- **Handoff:** the lens-model PR #35 (another run was working on it), then lens-model checks per field.
+- **Handoff:** lens-model checks per field (#35 merged; El Gordo and Abell 2744 model validation in issue #41).
   Time domain: rescale the thresholds by the control std, and add VENUS 6882 o052 (F150W, F444W) as a third epoch.
+
+## 2026-10-08: Cloud runs use the GitHub MCP tools; conflicting PRs get no CI (D-028)
+- The first routine run opened #38 with the session's GitHub MCP tools. The prompt, the research-cycle skill and
+  docs/operations.md §3 now prefer them, merge with `mcp__github__merge_pull_request` after checking the policy,
+  and fall back to REST plus the `merge-ready` label.
+- **Failed approach:** #37, a REST squash-merge allow rule, was closed. The glob `pulls/*/merge` also matches other
+  `pulls/...` writes, so the Bash merge API stays denied.
+- **Lesson:** a PR that conflicts with `main` gets no `pull_request` CI at all (#38). Merge `origin/main` in first.
+- The cloud merge gate checks author, head repository (no forks), branch, labels, every page of files and the CI jobs
+  (not the skipped `claude` runs), and pins `expectedHeadSha`. D-028 records the decision.
+- **Handoff:** TASKS "Now" 1 (counter-images, then parity and flux ratios; see the lens-model entry below). #38
+  needs `origin/main` merged in before its CI and merge.
+
+## 2026-10-08: Lens-model stage validated; SMACS arc orientations agree with ICLv2 (D-024)
+- `lensmodel.py` is a Lenstool dPIE port (from PyAutoGalaxy, MIT) that evaluates a published `best.par`. It
+  reproduces Mahler+2022 ICLv2:
+  - κ map: median |Δκ| 1.6e-5;
+  - back-trace χ² of the 60 catalogued images: 31.18, against Lenstool's 30.91.
+- `scripts/lens_consistency.py` provides `validate` and `arcs`.
+- SMACS arcs: 21 of 25 elongated strong-shear background sources, each tested at its own photo-z range, are
+  aligned with the predicted stretch (p = 2.6e-7). The 6 anti candidates are all ordinary:
+  - 2 segmentation blends;
+  - 1 galaxy at z ≈ 0.77 with an intrinsic shape;
+  - 3 noisy low-surface-brightness shapes.
+  This is a null result.
+- **Lesson:** moment orientations from pipeline segments pick up blends and low-S/N shapes, so filter them before
+  calling a source anti-tangential.
+- **Handoff:** TASKS "Now" 1, which leaves counter-images (predicted but missing, or observed but not predicted)
+  and parity/flux ratios. Then El Gordo and Abell 2744; check their model profiles first.
+
+
 ## 2026-10-08: Hourly cloud routine
 - Routine `trig_01PNAmgcfqef8CvhPAY8ggbP` runs `/research-cycle` loops hourly at :07 UTC (Opus 5.5, no connectors)
   with the prompt in docs/cloud-routine-prompt.md.

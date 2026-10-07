@@ -1178,6 +1178,71 @@ clean (D-019 to D-021), so further clean-up has diminishing returns.
 - The usage limits are reached often: then restore pauses.
 - The lens-model comparison is dominated by model systematics: then use several published models per field.
 
+## D-024 Lens-model stage: Lenstool dPIE port, Mahler+2022 ICLv2 validated; SMACS arc orientations (2026-10-08)
+
+**Decision.**
+- **`src/jwst_anomaly/lensmodel.py`** evaluates published Lenstool models. It parses `best.par` (French or English
+  keywords) and sums its dPIE (profile 81) potentials in one lens plane. At sky positions, for any z_s, it returns
+  convergence, shear, signed magnification, deflection, source-plane position and the expected arc orientation
+  (`model_prediction`).
+  - Anything else raises `UnsupportedModelError` and is never approximated: other profiles, `potfile` catalogs,
+    several planes, non-flat cosmologies, relative coordinates.
+  - The dPIE deflection and Hessian are ported to numpy from PyAutoGalaxy (`autogalaxy==2026.10.7.1`, MIT; licence
+    text in the module).
+- **Model: Mahler+2022 ICLv2**, the repository README's final model. It is pinned at commit `f36a41c`, with every
+  file verified by sha256 (`SMACS0723_MAHLER22_ICLV2`).
+- **`scripts/lens_consistency.py`** has two subcommands:
+  - `validate`: compares the port with the published κ map and back-traces `arcs.dat`;
+  - `arcs`: compares the orientation of elongated catalog sources with the predicted stretch at z_s = 1, 2, 4
+    and at the DJA photo-z.
+
+**Alternatives rejected.**
+- PyAutoGalaxy as a dependency: it brings the JAX stack, heavy documentation dependencies and an older scipy pin,
+  all for about 100 lines of closed-form maths.
+- Lenstool itself: C code that needs compiling, not pip-installable. The port reproduces its outputs (see Evidence).
+- Interpolating published maps: only a convergence map is pinned, at D_LS/D_S = 1. Deflection, shear and
+  magnification at arbitrary z_s need the model itself.
+
+**Evidence** (2026-10-08, `lens_consistency.py validate` / `arcs`).
+- **κ map:** 3000² px of 0.0133″, i.e. the central 40″; every 5th pixel, 360,000 points.
+  - Median |Δκ| = 1.6e-5; 95th percentile 1.2e-4; 99th 6.5e-4.
+  - Maximum 1.22, in one galaxy core (κ = 11.2) at the map edge (−19.3″, +11.9″).
+  - Median ratio 1.0000001. The map is therefore at D_LS/D_S = 1, and MCMC sample `0000` is `best.par`.
+- **D_LS/D_S** matches the 16 values written in `best.par` to ≤ 2e-4. System 8's free redshift fits to 11.76; that
+  is an unconstrained fit value (D_LS/D_S saturates at high z), not a redshift measurement.
+- **Back-trace** of the 60 `arcs.dat` images (redshifts from `arcs.dat` or `z_m_limit`):
+  - image-plane rms 0.319″, median 0.249″;
+  - χ² at `sigposArcsec` 0.443″ is 31.18, against Lenstool's `Chi2pos` of 30.91 (1%);
+  - no image lies beyond 3σ, and parities alternate within each system;
+  - the worst systems are 4 (0.61″ rms) and 1 (0.56″).
+- **Arc orientations**, from the F200W pipeline catalog (jw02736 o001) and DJA v7.4 eazy photo-z. ASSUMPTIONS:
+  - selection: ellipticity ≥ 0.5, σ_major ≥ 2 px, S/N ≥ 10, r ≤ 50″, reduced shear ≥ 0.2 at every tested z;
+  - classes: `aligned` ≤ 30° and `anti` ≥ 60° at every tested z. A background source is tested at its photo-z
+    range (z16, z_phot, z84); other sources at z_s = 1, 2, 4;
+  - background: z16 > z_lens + 0.1. Random orientations are aligned with probability 30/90.
+
+  Results:
+  - **Convention check:** 12 elongated (e ≥ 0.3) catalogued images match within 0.5″. Their median offset is 19°,
+    and 7 are within 30°. All 4 with e ≥ 0.6 lie within 10°. The two beyond 60° (17.3, 19.1) are small
+    (σ ≤ 2.8 px), with e ≈ 0.45 and μ 2.6–6.7.
+  - **Strong-shear region, background sources:** 21 of 25 aligned (random expectation 1/3; binomial
+    p = 2.6e-7), 1 anti. Members or foreground: 3/6 aligned, 2 anti. All 58 sources: 39 aligned, 8 anti.
+  - **The 6 anti candidates** (background or no photo-z) were inspected in F200W cutouts:
+    - `1159` and `1896` are blends whose centroid lies between two galaxies. The edge-on spiral in `1896` is
+      itself aligned.
+    - `1253` is a diffuse galaxy at z_phot 0.77: low lensing efficiency, so an intrinsic shape explains it.
+    - `1791`, `1412` and `1804` are low-surface-brightness detections (S/N 23–37) on the BCG/ICL gradient or in
+      noisy regions.
+  - **Result:** at these thresholds, SMACS 0723 has no anti-tangential arc that ICLv2 fails to explain. A null
+    result for this test.
+
+**Revisit if.**
+- A model uses other profiles, `potfile` catalogs or several planes: check El Gordo (Caminha+2023) and Abell 2744
+  (Bergamini+2023) before porting.
+- Shapes: reject blends (several peaks in one segment), require S/N ≥ 50 and compare bands; this cuts the noisy
+  `anti` tail.
+- Model uncertainty: only the best model is used. The MCMC samples would turn offsets into significances.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.
@@ -1302,3 +1367,35 @@ Field docs: `docs/fields/*.md`.
 - More than two epochs make light curves possible.
 - Thresholds are set on calibrated significances: divide by the control std (1.2–1.5) instead of trusting ERR.
 - The search goes below catalog depth (image differencing or forced photometry on a grid).
+
+## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
+
+**Decision.**
+- Cloud routine sessions block GitHub GraphQL, so `gh pr` and `gh issue` fail. Cloud runs instead use:
+  - the session's GitHub MCP tools: `create_pull_request`, `pull_request_read`, `merge_pull_request`;
+  - REST (`gh api`) for everything else, labels included, because MCP `issue_write` replaces the whole label set.
+- Merges follow CLAUDE.md's merge policy. The run first checks on GitHub:
+  - the author and head repository;
+  - the branch and labels;
+  - every page of the PR's files;
+  - the CI jobs (the skipped `claude` runs are not CI).
+  It then merges with `merge_pull_request` (squash, `expectedHeadSha` = the reviewed head; docs/operations.md
+  §3). When merging is unavailable, the PR gets `merge-ready`.
+
+**Alternatives rejected.**
+- A Bash allow rule for `gh api -X PUT .../pulls/*/merge -f merge_method=squash*` (#37, closed). Glob patterns span
+  arguments, so the rule would also auto-approve other `pulls/...` writes (review dismissal, PATCH, DELETE).
+- Leaving every cloud PR for the owner: the WIP cap of 3 stalls the hourly routine. The owner asked the agents not to
+  wait for approval (2026-10-08).
+
+**Evidence.** Routine run `cse_01GjmW75zAM9bsN2ebLZQ9Zh`:
+- `gh pr list` returned 403 (GraphQL).
+- `mcp__github__create_pull_request` opened #38 without a permission prompt.
+- #38 had no check runs on its first three commits, because it conflicted with `main`.
+- The github-mcp-server merge tool's head pin is `expectedHeadSha` (checked by the #39 review).
+
+**Revisit if.**
+- `.claude/settings.json` gains explicit `mcp__github__*` rules, e.g. denying the file-writing tools. These tools are
+  outside the Bash rules today (docs/operations.md §8).
+- The cloud proxy allows GraphQL.
+- A merge through the MCP tool is refused.

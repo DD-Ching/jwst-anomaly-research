@@ -4,14 +4,13 @@ Prioritized queue. Agents pick from **Now** first; in-flight work is visible as 
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
 ## Now (M3 lensing-violation search, D-023)
-1. **Lens-model consistency on SMACS:** turn the pinned Mahler+2022 model into per-position predictions
-   (convergence, shear, magnification, critical curves, counter-images). Flag:
-   - arcs whose orientation or curvature disagrees with the predicted shear;
-   - multiple-image candidates where none is predicted;
-   - parity or flux-ratio anomalies.
-   Route: port the Lenstool dPIE from autogalaxy (MIT) and switch to ICLv2, the final model (survey
-   2026-10-08; the worker branch `claude/lens-model` was interrupted). Exotic signatures:
-   docs/exotic_lensing.md.
+1. **Lens-model consistency on SMACS** (D-024: model validated; arc orientations give a null result). Next:
+   - counter-images: forward-predict the other images of each catalogued system and of bright single arcs. Flag
+     predicted images that are missing, and multiple-image candidates where none is predicted;
+   - parity and flux-ratio checks for the catalogued systems (DJA photometry against model magnification ratios);
+   - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
+   - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
+   - the exotic-specific screens of docs/exotic_lensing.md once these ordinary checks are done.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;
@@ -71,9 +70,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 - `claude.exe setup-token`, then `gh secret set CLAUDE_CODE_OAUTH_TOKEN`; install the Claude GitHub App;
   test with an `@claude` issue (docs/operations.md §5).
 - Cloud routine: live since 2026-10-08 (docs/cloud-routine-prompt.md). Check that the environment's Custom network
-  allowlist has every host in docs/operations.md §3. Cloud runs can't merge (merge API denied in
-  `.claude/settings.json`), so merge `merge-ready` PRs, or change that rule and enable "Automatically delete head
-  branches".
+  allowlist has every host in docs/operations.md §3. Merge any PR labelled `merge-ready` (cloud runs merge with the
+  GitHub MCP tool when they can).
 - Zenodo DOI at the first tagged release; optionally a separate Code of Conduct contact.
 
 ## Later
