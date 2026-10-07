@@ -22,7 +22,7 @@ def _sources(uids):
     return t
 
 
-def _matches(rows, failed=()):
+def _matches(rows, failed=(), radius=0.5):
     t = Table(
         rows=rows,
         names=("source_uid", "service", "match_id", "match_type", "sep_arcsec", "is_star"),
@@ -33,6 +33,7 @@ def _matches(rows, failed=()):
         source="test",
         services_requested=["gaia", "simbad"],
         services_failed=list(failed),
+        radius_arcsec=radius,
     )
     return t
 
@@ -66,13 +67,29 @@ def test_star_rules():
     schema.validate(out, schema.CLASSIFY_COLUMNS)
 
 
-def test_astrometry_wins_over_position_regardless_of_row_order():
-    src = _sources(["a"])
+def test_nearest_match_decides():
+    src = _sources(["galaxy_near_star", "star_behind_galaxy_entry"])
     m = _matches(
-        [("a", "gaia", "G2", "unclassified", 0.1, False), ("a", "simbad", "S", "*", 0.3, True)]
+        [
+            ("galaxy_near_star", "simbad", "S", "G", 0.05, False),
+            ("galaxy_near_star", "gaia", "G1", "astrometric_star", 0.45, True),
+            ("star_behind_galaxy_entry", "gaia", "G2", "astrometric_star", 0.05, True),
+            ("star_behind_galaxy_entry", "simbad", "S2", "G", 0.4, False),
+        ]
     )
     out = classify.classify_sources(src, m)
-    assert out["star_basis"][0] == "simbad_or_gaia_astrometry"
+    assert list(out["population"]) == ["other", "star"]
+
+
+def test_ned_failure_does_not_block_classification():
+    src = _sources(["a"])
+    m = _matches([("a", "gaia", "G", "astrometric_star", 0.1, True)], failed=["ned"])
+    assert classify.classify_sources(src, m)["population"][0] == "star"
+
+
+def test_gaia_radius_cannot_exceed_query_radius():
+    with pytest.raises(ValueError, match="exceeds the query radius"):
+        classify.classify_sources(_sources(["a"]), _matches([]), gaia_radius_arcsec=1.0)
 
 
 def test_no_matches_means_no_stars():

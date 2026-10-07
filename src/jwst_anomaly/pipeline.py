@@ -157,6 +157,7 @@ class SampleSummary:
     tables: list[str] = field(default_factory=list)  # saved files, relative to the run dir
     contact_sheet: str | None = None  # PNG of the top-k cutouts, relative to the run dir
     quality: dict[str, int] = field(default_factory=dict)  # quality-gate counts (D-011)
+    quality_text: str = ""  # replaces the counts line (e.g. strata of a gated sample)
     notes: list[str] = field(default_factory=list)
 
 
@@ -316,10 +317,8 @@ class _Runner:
         default_k = max(self.cutouts_top_k, self.crossmatch_top_k)
         self.candidates_top_k = int(outputs.get("candidates_top_k", default_k))
         self.records: list[StageRecord] = []
-        # Reference weight of each sample's gate map, shared with cutouts of the same image.
-        self.weight_refs: dict[tuple[str, str], float] = {}
-        # Stratum label -> its sample id (D-012: stars ranked as "<sample>-stars").
-        self.parent_of: dict[str, str] = {}
+        # Reference weight of each gate map, by image URI, shared with cutouts of that image.
+        self.weight_refs: dict[str, float] = {}
         self.summaries: dict[str, SampleSummary] = {}
         self.candidates: list[dict[str, Any]] = []
 
@@ -511,22 +510,25 @@ class _Runner:
         to_rank = feats
         keep = self._quality(sid, summary, sources, feats, ref_band, band_obs)
         if keep is not None:
-            to_rank = feats[keep]
-            to_rank.meta = dict(feats.meta)
-            to_rank.meta["source"] = (
-                f"quality-gated subset ({int(keep.sum())} of {len(feats)} sources, D-011) of: "
-                f"{feats.meta.get('source', '')}"
-            )
+            to_rank = _subset(feats, keep, "quality-gated subset (D-011)")
         # 4c. Star/galaxy separation (D-012): stars become their own ranking stratum.
-        stars = self._classify(sid, sources, to_rank)
-        if stars is None:
+        split = self._classify(sid, sources, to_rank)
+        if split is not None:
+            stars, star_top_k, min_stars = split
+            n_stars, n_other = int(stars.sum()), int((~stars).sum())
+            if n_stars < min_stars or n_other < 2:
+                summary.notes.append(
+                    f"star/galaxy strata not used ({n_stars} stars, {n_other} others; "
+                    f"min_stars {min_stars}): one ranking"
+                )
+                split = None
+        if split is None:
             self._rank_stratum(sid, summary, to_rank, sources, band_obs, required=True)
             return
-        cfg = self.stages_cfg.get("classify") or {}
+        star_sid = f"{sid}-stars"
+        summary.notes.append(f"{n_stars} stars ranked separately as {star_sid} (D-012)")
         galaxies = _subset(to_rank, ~stars, "non-star stratum (D-012)")
         self._rank_stratum(sid, summary, galaxies, sources, band_obs, required=True)
-        n_stars = int(stars.sum())
-        star_sid = f"{sid}-stars"
         star_summary = SampleSummary(
             star_sid,
             f"{summary.role}/stars",
@@ -536,16 +538,9 @@ class _Runner:
             bands=list(summary.bands),
             n_sources=n_stars,
             feature_spec=dict(summary.feature_spec),
+            quality_text=f"applied in {sid}; this stratum holds its {n_stars} passing stars",
         )
         self.summaries[star_sid] = star_summary
-        self.parent_of[star_sid] = sid
-        min_stars = max(2, int(cfg.get("min_stars", 5)))
-        if n_stars < min_stars:
-            star_summary.notes.append(f"{n_stars} stars < min_stars {min_stars}: not ranked")
-            self.record(
-                star_sid, "rank.score_anomalies", "skipped", "too few stars", required=False
-            )
-            return
         self._rank_stratum(
             star_sid,
             star_summary,
@@ -553,7 +548,7 @@ class _Runner:
             sources,
             band_obs,
             required=False,
-            top_k=int(cfg.get("star_top_k", 10)),
+            top_k=star_top_k,
         )
 
     def _rank_stratum(
@@ -613,28 +608,44 @@ class _Runner:
             )
             self.candidates.append(rec)
 
-    def _classify(self, sid: str, sources: Table, to_rank: Table) -> np.ndarray | None:
-        """Star mask over ``to_rank`` rows (optional stage, D-012); None = do not stratify."""
+    def _classify(
+        self, sid: str, sources: Table, to_rank: Table
+    ) -> tuple[np.ndarray, int, int] | None:
+        """``(star mask over to_rank, star_top_k, min_stars)`` (optional stage, D-012).
+
+        None means one ranking: not configured, failed, or invalid parameters.
+        """
         cfg = self.stages_cfg.get("classify")
         name = "classify.classify_sources"
         if cfg is None or cfg.get("enabled", True) is False:
             reason = "not configured" if cfg is None else "disabled in config"
             self.record(sid, name, "skipped", reason, required=False)
             return None
+        params: dict[str, int] = {}
 
         def run_classify() -> Table:
+            star_top_k = int(cfg.get("star_top_k", 10))
+            min_stars = int(cfg.get("min_stars", 5))
+            if star_top_k < 1 or min_stars < 2:
+                raise ValueError("classify needs star_top_k >= 1 and min_stars >= 2")
+            configured = {str(smp.get("id")) for smp in self.config.get("samples") or []}
+            if f"{sid}-stars" in configured:
+                raise ValueError(f"stratum id {sid}-stars collides with a configured sample")
+            params.update(star_top_k=star_top_k, min_stars=min_stars)
             targets = Table(
                 {"source_uid": sources["source_uid"], "ra": sources["ra"], "dec": sources["dec"]}
             )
             targets.meta.update(
                 provenance=schema.Provenance.DERIVED.value, source=f"all merged sources of {sid}"
             )
-            kwargs = _stage_kwargs(cfg, ("radius_arcsec", "services"))
-            kwargs.setdefault("radius_arcsec", 0.5)
-            kwargs.setdefault("services", ("gaia", "simbad"))
-            matches = crossmatch.query_matches(targets, **kwargs)
-            params = _stage_kwargs(cfg, ("gaia_radius_arcsec",))
-            return classify.classify_sources(sources, matches, **params)
+            matches = crossmatch.query_matches(
+                targets,
+                radius_arcsec=float(cfg.get("radius_arcsec", classify.DEFAULT_QUERY_RADIUS_ARCSEC)),
+                services=tuple(cfg.get("services") or classify.DEFAULT_SERVICES),
+            )
+            return classify.classify_sources(
+                sources, matches, **_stage_kwargs(cfg, ("gaia_radius_arcsec",))
+            )
 
         table = self.stage(
             sid,
@@ -652,7 +663,8 @@ class _Runner:
             for u, p in zip(table["source_uid"], table["population"], strict=True)
             if _text(p) == "star"
         }
-        return np.array([_text(u) in star_uids for u in to_rank["source_uid"]], dtype=bool)
+        mask = np.array([_text(u) in star_uids for u in to_rank["source_uid"]], dtype=bool)
+        return mask, params["star_top_k"], params["min_stars"]
 
     def _filter_observations(
         self, sid: str, obs: Table, obs_ids: list[str], data_rights: str | None
@@ -782,7 +794,7 @@ class _Runner:
             table = quality.assess_sources(sources, weights, ref_band=ref_band, **params)
             ref = getattr(weights, "reference_weight", None)
             if ref is not None and np.isfinite(ref):
-                self.weight_refs[(sid, ref_band)] = float(ref)
+                self.weight_refs[uri] = float(ref)
             return table
 
         table = self.stage(
@@ -808,7 +820,6 @@ class _Runner:
         if problem:
             self.record(sid, "quality gate (sanity check)", "failed", problem, required=False)
             summary.notes.append(f"quality gate unusable ({problem}): all sources ranked (ungated)")
-            self.weight_refs.pop((sid, ref_band), None)
             return None
         summary.quality = quality.summarize(table)
         return keep
@@ -848,11 +859,7 @@ class _Runner:
                     uri,
                     targets,
                     **kwargs,
-                    **(
-                        {"weight_ref": self.weight_refs[(self.parent_of.get(sid, sid), band)]}
-                        if (self.parent_of.get(sid, sid), band) in self.weight_refs
-                        else {}
-                    ),
+                    **({"weight_ref": self.weight_refs[uri]} if uri in self.weight_refs else {}),
                 ),
                 columns=schema.CUTOUT_COLUMNS,
                 required=False,
@@ -949,7 +956,7 @@ def _quality_line(counts: Mapping[str, int]) -> str:
         return "not applied (all sources ranked)"
     excluded = {k: v for k, v in counts.items() if k not in ("n_sources", "n_ok")}
     detail = ", ".join(f"{k} {v}" for k, v in sorted(excluded.items())) or "none"
-    return f"{counts['n_ok']} of {counts['n_sources']} ranked; flags: {detail}"
+    return f"{counts['n_ok']} of {counts['n_sources']} passed; flags: {detail}"
 
 
 def _cell(value: Any) -> str:
@@ -1069,7 +1076,7 @@ def render_report(
             f"{', '.join(s.bands) or 'none'}; ref band {s.ref_band}",
             f"- Merged sources (derived): {s.n_sources}",
             f"- Features (derived): {len(s.feature_spec)}",
-            f"- Quality gate (derived, D-011): {_quality_line(s.quality)}",
+            f"- Quality gate (derived, D-011): {s.quality_text or _quality_line(s.quality)}",
             f"- Scored sources (model_prediction): {s.n_scored}; methods: "
             f"{', '.join(s.methods) or 'unknown'}",
             f"- Cutout bands: {', '.join(s.cutout_bands) or 'none'}",

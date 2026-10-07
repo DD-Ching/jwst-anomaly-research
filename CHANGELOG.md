@@ -8,12 +8,18 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   galaxies are ranked without them.
 - Failed approach: the pipeline's `is_extended` flag labels every bright, saturated star in the top 20
   as extended.
-- Real data, run `20261007T035338Z-8ea21f89`:
-  - Stars found: SMACS 52, MIRI 12, CEERS 7.
+- Real data, run `20261007T040938Z-01527ace`:
+  - Stars found: SMACS 52, MIRI 12, CEERS 7. Of these, 40, 8 and 7 passed the gate and were ranked as
+    `-stars`.
   - Galaxy-stratum top 20s: 0 cross-matched stars (SMACS had 7), 1/60 image-quality flags.
 - Visual check (unvetted): the SMACS galaxy top 20 is now mostly interacting, clumpy or elongated
   galaxies, including three arc-like sources (`f200w_2925`, `f200w_2559`, `f200w_1096`). About 4
   faint PSF-like sources without Gaia counterparts remain.
+- `/code-review` found 15 issues, all fixed. The main ones:
+  - a classification leaving fewer than 2 galaxies could abort the run;
+  - stars were dropped entirely when there were fewer than `min_stars`;
+  - the offline suite made live CDS calls;
+  - the rule used any match instead of the nearest one.
 - **Handoff:** TASKS Now 1 (vet the arc-like sources against published lens models), then Now 2
   (stellar locus for faint stars).
 

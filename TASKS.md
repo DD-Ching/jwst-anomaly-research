@@ -26,8 +26,8 @@ Evidence for the current priorities: CHANGELOG 2026-10-07 (runs `20261007T033832
   Until then, compare only photometric columns across programs (D-010).
 - Image embeddings (Zoobot via `timm`, DINOv2) on cutouts, evaluated against the baseline with
   injection-recovery. Keep the evaluation fields out of any training data.
-- Crossmatch: propagate Gaia positions to the JWST epoch; identify lenses by name or literature, not
-  only by otype.
+- Crossmatch and classify: propagate Gaia positions to the JWST epoch, so fast-moving stars and brown
+  dwarfs land in the star stratum (D-012). Identify lenses by name or literature, not only by otype.
 - Cutouts: north-up panels and an option for shared brightness scaling across panels.
 
 ## Owner setup (needs-human)
@@ -38,6 +38,7 @@ Evidence for the current priorities: CHANGELOG 2026-10-07 (runs `20261007T033832
 - Zenodo DOI at the first tagged release; optionally a separate Code of Conduct contact.
 
 ## Later
+- Reuse `classify`'s full-catalog SIMBAD/Gaia matches for the top-k cross-match (re-query only NED).
 - M3: published SMACS 0723 lens models (Mahler+2022, RELICS, Caminha+2022); AnomalyMatch for lens finding.
 - A weekly scheduled link check of the state files (`scripts/check_links.py`).
 - Switch Dependabot from pip to uv once a `uv.lock` exists. Keep the version in `pyproject.toml`,

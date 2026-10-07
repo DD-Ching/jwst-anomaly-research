@@ -739,15 +739,21 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
 **Decision.**
 - `classify.classify_sources` labels each merged source `star` or `other` from one bulk Gaia DR3 +
   SIMBAD cross-match of the whole catalog (`crossmatch.query_matches`, CDS XMatch, about 8 s per
-  sample). A source is a star when:
-  - its SIMBAD otype or Gaia DR3 astrometry says star (the `crossmatch` `is_star` rule), or
-  - any Gaia DR3 source lies within 0.3″ (ASSUMPTION: in extragalactic fields Gaia detections are
-    mostly stars).
+  sample, 0.5″ radius). As in `crossmatch`'s `is_star`, the nearest SIMBAD/Gaia match decides.
+  The source is a star when:
+  - that match is a star (SIMBAD otype or Gaia DR3 astrometry), or
+  - that match is a Gaia DR3 source within 0.3″ (ASSUMPTION: in extragalactic fields Gaia detections
+    are mostly stars).
+
+  A nearer SIMBAD galaxy wins, which keeps catalogued cluster members out of the star class.
 - Stars are not discarded. The runner ranks them among themselves as a stratum `<sample>-stars`, with
   its own top k (default 10), cutouts, cross-match, candidates and report section. Unusual stars
   (e.g. brown dwarfs) stay findable, and they no longer crowd out galaxies.
-- This is an optional stage. If any cross-match service fails, or the stage itself fails, there is
-  one ranking, as before. Fewer than `min_stars` (5) stars means the star stratum is not ranked.
+- This is an optional stage, and it can never abort a run or drop sources. In each of these cases
+  there is one ranking, as before, with all sources:
+  - a SIMBAD or Gaia service failed, or the parameters are invalid;
+  - the stratum id would collide with a configured sample;
+  - fewer than `min_stars` (5) stars were found, or fewer than 2 other sources remain.
 
 **Alternatives rejected.**
 - The pipeline's `is_extended` flag: every bright, saturated star in the program 2736 top 20 has
@@ -757,7 +763,7 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
 - A size–magnitude stellar locus as the first step: it needs care with saturated stars. It is the next
   step, for faint stars that Gaia misses.
 
-**Evidence.** Run `20261007T035338Z-8ea21f89`:
+**Evidence.** Runs `20261007T035338Z-8ea21f89` and `20261007T040938Z-01527ace` (nearest-match rule):
 - Stars found: SMACS NIRCam 52 (46 astrometry/SIMBAD, 6 position-only), MIRI 12, CEERS 7.
 - The galaxy-stratum top 20s contain no cross-matched stars (SMACS had 7 before) and 1/60 image-quality
   flags.
@@ -765,8 +771,15 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
   galaxy top 20. Most of the rest are interacting, clumpy or elongated galaxies, including three
   arc-like sources (`f200w_2925`, `f200w_2559`, `f200w_1096`).
 
+**Known limitations.**
+- No proper-motion propagation: SIMBAD positions are J2000, Gaia J2016, JWST about 2022. Fast movers
+  (nearby M and brown dwarfs, >~100 mas/yr) can miss the 0.5″ match and stay in the galaxy stratum.
+- Position-only Gaia stars (6 in SMACS) can be compact cluster galaxies.
+- The top-k cross-match re-queries SIMBAD/Gaia that `classify` already fetched (about 4 s per stratum).
+
 **Revisit if.**
 - Faint stars or brown dwarfs keep reaching the galaxy top k: add a size–magnitude stellar locus.
+- High-proper-motion stars show up as galaxy candidates: propagate Gaia positions to the JWST epoch.
 - Gaia DR4 is released.
 - A field has Gaia-detected compact galaxies in numbers (cluster cores): tighten `gaia_position` with
   Gaia's own classifiers.
