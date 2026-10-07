@@ -1,0 +1,28 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: dataURI, datatype: string}
+# - {name: productFilename, datatype: string}
+# - {name: local_path, datatype: string}
+# - {name: size, datatype: int64}
+# - {name: sha256, datatype: string}
+# - {name: retrieved_utc, datatype: string}
+# - {name: pipeline_version, datatype: string}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'MAST via astroquery.mast.Observations.download_file; size checked against MAST, sha256 computed locally, pipeline_version
+#     read from each file''s own header'}
+# - {local_path_root: $JWST_ANOMALY_DATA (jwst_anomaly.paths.data_root)}
+# schema: astropy-2.0
+dataURI productFilename local_path size sha256 retrieved_utc pipeline_version
+mast:JWST/product/jw01345-o001_t021_nircam_clear-f200w_cat.ecsv jw01345-o001_t021_nircam_clear-f200w_cat.ecsv cache/mast/jw01345-o001_t021_nircam_clear-f200w/jw01345-o001_t021_nircam_clear-f200w_cat.ecsv 4017583 878766359ac425b9510b0e02dba82f032f23a1e68d2deb097d51df9cc5f35f27 2026-10-07T01:14:51Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f090w_cat.ecsv jw02736-o001_t001_nircam_clear-f090w_cat.ecsv cache/mast/jw02736-o001_t001_nircam_clear-f090w/jw02736-o001_t001_nircam_clear-f090w_cat.ecsv 2893148 c83881377453c4dce1b9691fa89b386cc588728610684ddc79f1950eb482ff3e 2026-10-07T01:14:54Z jwst=2.0.1;photutils=2.3.0;astropy=7.2.0
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f150w_cat.ecsv jw02736-o001_t001_nircam_clear-f150w_cat.ecsv cache/mast/jw02736-o001_t001_nircam_clear-f150w/jw02736-o001_t001_nircam_clear-f150w_cat.ecsv 3240759 f5f7c752ace8c19a625f2c871801dd67b28abc8933f5149da22c8ea8966ef584 2026-10-07T01:14:58Z jwst=2.0.1;photutils=2.3.0;astropy=7.2.0
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f200w_cat.ecsv jw02736-o001_t001_nircam_clear-f200w_cat.ecsv cache/mast/jw02736-o001_t001_nircam_clear-f200w/jw02736-o001_t001_nircam_clear-f200w_cat.ecsv 3444394 7e7b760110fe778df6b4f143e68846113df20b7c681cbbed9dac3e9064652ba3 2026-10-07T01:15:01Z jwst=2.0.1;photutils=2.3.0;astropy=7.2.0
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f277w_cat.ecsv jw02736-o001_t001_nircam_clear-f277w_cat.ecsv cache/mast/jw02736-o001_t001_nircam_clear-f277w/jw02736-o001_t001_nircam_clear-f277w_cat.ecsv 2049850 9f7d00b2f1a5bc0e579a7872870c0290d49255a686ce53f03adec1f521941ca4 2026-10-07T01:15:04Z jwst=2.0.1;photutils=2.3.0;astropy=7.2.0
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f356w_cat.ecsv jw02736-o001_t001_nircam_clear-f356w_cat.ecsv cache/mast/jw02736-o001_t001_nircam_clear-f356w/jw02736-o001_t001_nircam_clear-f356w_cat.ecsv 2185607 d284126a950c341560ee7a95bdc0280d894eaa3a17ff6e8b3e09e941e127e420 2026-10-07T01:15:07Z jwst=2.0.1;photutils=2.3.0;astropy=7.2.0
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f444w_cat.ecsv jw02736-o001_t001_nircam_clear-f444w_cat.ecsv cache/mast/jw02736-o001_t001_nircam_clear-f444w/jw02736-o001_t001_nircam_clear-f444w_cat.ecsv 2063841 bf128e859be873ab6b502cd57393ec6eed556212e1826a57310217c98f2ee5ca 2026-10-07T01:15:10Z jwst=2.0.1;photutils=2.3.0;astropy=7.2.0
+mast:JWST/product/jw02736-o002_t001_miri_f1000w_cat.ecsv jw02736-o002_t001_miri_f1000w_cat.ecsv cache/mast/jw02736-o002_t001_miri_f1000w/jw02736-o002_t001_miri_f1000w_cat.ecsv 229635 620866d8a02531c268f79bed5d47b7aa5c324e6618884c74382c021afa15957d 2026-10-07T01:15:12Z jwst=2.0.1;photutils=2.3.0;astropy=7.2.0
+mast:JWST/product/jw02736-o002_t001_miri_f1500w_cat.ecsv jw02736-o002_t001_miri_f1500w_cat.ecsv cache/mast/jw02736-o002_t001_miri_f1500w/jw02736-o002_t001_miri_f1500w_cat.ecsv 119744 0df373ca196294b90f71ab661bf3dcc7045dc02853f22c3363a095964e889d75 2026-10-07T01:15:14Z jwst=2.0.1;photutils=2.3.0;astropy=7.2.0
+mast:JWST/product/jw02736-o002_t001_miri_f1800w_cat.ecsv jw02736-o002_t001_miri_f1800w_cat.ecsv cache/mast/jw02736-o002_t001_miri_f1800w/jw02736-o002_t001_miri_f1800w_cat.ecsv 122900 ea3702d197183e764702b794faf322cf9d173be80419a37acbd888cd0d5d06c1 2026-10-07T01:15:16Z jwst=2.0.1;photutils=2.3.0;astropy=7.2.0
+mast:JWST/product/jw02736-o002_t001_miri_f770w_cat.ecsv jw02736-o002_t001_miri_f770w_cat.ecsv cache/mast/jw02736-o002_t001_miri_f770w/jw02736-o002_t001_miri_f770w_cat.ecsv 344227 79bd8dde37d040f6e279cf83ef506e77a11b21bac8b7d00fe50c00b484061e97 2026-10-07T01:15:19Z jwst=2.0.1;photutils=2.3.0;astropy=7.2.0
