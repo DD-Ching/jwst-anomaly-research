@@ -89,18 +89,19 @@ def compare_epochs(
     snr1 = snr_from_mag_err(np.asarray(cat1["aper50_abmag_err"], float))[i1]
     snr2 = snr_from_mag_err(np.asarray(cat2["aper50_abmag_err"], float))[i2]
     near = target.separation(c1[i1]).arcsec <= ref_radius_arcsec
-    ref = near & (snr1 >= min_snr) & (snr2 >= min_snr) & (i1 != t1)
+    mag1 = np.asarray(cat1["aper50_abmag"], float)
+    mag2 = np.asarray(cat2["aper50_abmag"], float)
+    finite = np.isfinite(mag1[i1]) & np.isfinite(mag2[i2])
+    # The target is excluded by both of its rows: a moved target may pair with another source.
+    ref = near & finite & (snr1 >= min_snr) & (snr2 >= min_snr) & (i1 != t1) & (i2 != t2)
     if ref.sum() < n_ref_min:
         raise ValueError(f"only {int(ref.sum())} reference sources (need {n_ref_min})")
     d_ref = offsets_mas(c1[i1[ref]], c2[i2[ref]])
     med, sig = robust_center(d_ref)
     d_t = offsets_mas(c1[[t1]], c2[[t2]])[0] - med
-    dm_ref = (
-        np.asarray(cat2["aper50_abmag"], float)[i2[ref]]
-        - np.asarray(cat1["aper50_abmag"], float)[i1[ref]]
-    )
+    dm_ref = mag2[i2[ref]] - mag1[i1[ref]]
     dm_med, dm_sig = robust_center(dm_ref)
-    dm_t = float(cat2["aper50_abmag"][t2] - cat1["aper50_abmag"][t1]) - float(dm_med)
+    dm_t = float(mag2[t2] - mag1[t1]) - float(dm_med)
     total = float(np.hypot(*d_t))
     tie = 1.2533 * sig / np.sqrt(ref.sum())  # standard error of a median
     resid_ref = np.hypot(*(d_ref - med).T)

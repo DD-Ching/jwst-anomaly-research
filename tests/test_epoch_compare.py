@@ -66,6 +66,14 @@ def test_moving_and_variable_target_is_detected():
     assert r["target_dmag"] == pytest.approx(0.5, abs=0.02)
 
 
+def test_references_with_missing_magnitudes_are_skipped():
+    cat1, cat2, target = _cats()
+    cat1["aper50_abmag"][5] = np.nan
+    cat2["aper50_abmag"][6] = np.nan
+    r = ec.compare_epochs(cat1, cat2, target)
+    assert r["n_references"] == 77 and np.isfinite(r["target_dmag"])
+
+
 def test_missing_target_or_too_few_references_raise():
     cat1, cat2, _ = _cats()
     far = SkyCoord(RA0 + 0.1, DEC0, unit="deg")
