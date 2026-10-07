@@ -68,6 +68,12 @@ stages:
     min_edge_arcsec: 1.0
     max_artifact_ci: 1.45  # CI_50_30 below this is sharper than the PSF (S/N >= 3 only)
     min_ranked: 20         # fewer survivors -> gate considered unusable, rank ungated
+  classify:  # D-012; stars are ranked as their own stratum '<sample>-stars'
+    services: [gaia, simbad]   # bulk CDS XMatch over all sources (~8 s per sample)
+    radius_arcsec: 0.5
+    gaia_radius_arcsec: 0.3    # any Gaia DR3 source this close counts as the star itself
+    star_top_k: 10
+    min_stars: 5
   rank:
     methods: [robust_z, isolation_forest, lof]
     random_state: 0
