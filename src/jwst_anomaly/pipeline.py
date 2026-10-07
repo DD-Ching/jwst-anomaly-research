@@ -75,6 +75,7 @@ from jwst_anomaly import (
     viz,
 )
 from jwst_anomaly.candidates import CandidateStore, to_python
+from jwst_anomaly.features import column_as_float
 
 log = logging.getLogger(__name__)
 
@@ -441,6 +442,7 @@ def _check_spike(spike: Any, where: str) -> None:
         "screen",
         "host_annulus_arcsec",
         "host_ratio_max",
+        "host_exempt_colour",
     }
     if unknown:
         raise ConfigError(f"{where}: unknown keys {sorted(unknown)}")
@@ -474,6 +476,14 @@ def _check_spike(spike: Any, where: str) -> None:
         raise ConfigError(
             f"{where}.host_annulus_arcsec must be [r_in, r_out] with 0 <= r_in < r_out"
         )
+    hec = spike.get("host_exempt_colour")
+    if hec is not None and not (
+        isinstance(hec, list | tuple)
+        and len(hec) == 3
+        and number(hec[2])
+        and all(isinstance(b, str) for b in hec[:2])
+    ):
+        raise ConfigError(f"{where}.host_exempt_colour must be [blue_band, red_band, min_colour]")
     if "host_ratio_max" in spike and not (
         number(spike["host_ratio_max"]) and spike["host_ratio_max"] > 0
     ):
@@ -527,6 +537,8 @@ class _Runner:
         self.weight_refs: dict[tuple[str, str], float] = {}
         # D-019: per sample, the source_uids with stellar matched-photometry colours (D-015 box).
         self.stellar_colour_uids: dict[str, set[str]] = {}
+        # D-025: the matched-photometry sources (and label) for colour checks during screening.
+        self.matched_sources: dict[str, tuple[Table, str]] = {}
         self.summaries: dict[str, SampleSummary] = {}
         self.candidates: list[dict[str, Any]] = []
 
@@ -914,6 +926,13 @@ class _Runner:
                 is not None
                 and h < float(host_max)
             }
+            exempt = self._red_exempt(sid, hostless)
+            if exempt:
+                summary.notes.append(
+                    "host test (D-020) exempts very red spiky source(s), not stars (D-025): "
+                    + ", ".join("_".join(u.split("_")[-2:]) for u in sorted(exempt))
+                )
+            hostless -= exempt
             if stellar is None:
                 summary.notes.append(
                     "spike screening: no stellar-locus colours for this sample; only the host "
@@ -950,6 +969,26 @@ class _Runner:
             if r["source_uid"] in flagged
         ]
         return [r for r in ranked if r["source_uid"] not in flagged]
+
+    def _red_exempt(self, sid: str, uids: set[str]) -> set[str]:
+        """Host-less spiky sources whose colour is too red for a star (D-025): kept ranked."""
+        spike = (self.stages_cfg.get("cutouts") or {}).get("spike") or {}
+        rule = spike.get("host_exempt_colour")
+        if not rule or not uids or sid not in self.matched_sources:
+            return set()
+        sources, label = self.matched_sources[sid]
+        blue, red, min_colour = str(rule[0]).lower(), str(rule[1]).lower(), float(rule[2])
+        try:
+            colour = column_as_float(sources, f"{blue}_{label}_abmag") - column_as_float(
+                sources, f"{red}_{label}_abmag"
+            )
+        except KeyError:
+            return set()
+        uid_col = [_text(u) for u in sources["source_uid"]]
+        with np.errstate(invalid="ignore"):
+            return {
+                u for u, c in zip(uid_col, colour, strict=True) if u in uids and c >= min_colour
+            }
 
     def _save_screened(
         self,
@@ -1050,6 +1089,15 @@ class _Runner:
                     )
                 else:
                     try:  # an optional add-on: any failure keeps the catalogue classification
+                        veto_cfg = cfg.get("extended_veto")
+                        if veto_cfg:  # D-025: before the locus calibrates on these stars
+                            table = classify.veto_extended_stars(table, sources, label, veto_cfg)
+                            vetoed = table.meta["extended_veto"]["n_vetoed"]
+                            if vetoed:
+                                self.summaries[sid].notes.append(
+                                    f"extended-star veto (D-025): {vetoed} catalogue star(s) too "
+                                    "extended in the DJA detection image are ranked as galaxies"
+                                )
                         table = classify.apply_stellar_locus(table, sources, label, locus_cfg)
                         mask = classify.stellar_colour_mask(
                             sources, label, table.meta["stellar_locus"]
@@ -1057,6 +1105,7 @@ class _Runner:
                         self.stellar_colour_uids[sid] = {
                             _text(u) for u, m in zip(sources["source_uid"], mask, strict=True) if m
                         }
+                        self.matched_sources[sid] = (sources, label)
                     except Exception as exc:  # noqa: BLE001
                         self.summaries[sid].notes.append(f"stellar locus not applied: {exc}")
             return table

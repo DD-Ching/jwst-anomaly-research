@@ -1,7 +1,7 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: D-023 (owner, 2026-10-08) and the CHANGELOG entries of 2026-10-08.
+Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
 ## Now (M3 lensing-violation search, D-023)
 1. **Lens-model consistency on SMACS:** turn the pinned Mahler+2022 model into per-position predictions
@@ -10,8 +10,20 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08) and the CHANGELOG
    - multiple-image candidates where none is predicted;
    - parity or flux-ratio anomalies.
    The tooling and exotic-signature survey (subagent, 2026-10-08) decides the route.
-2. **Cluster fields in flight** (`batch-clusters`): Abell 2744, El Gordo, Sunrise. Fold in their proposed DECISIONS
-   and SOURCES entries, then run the lens-model tests on each field with its published model.
+2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
+   - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
+   - Abell 2744: UNCOVER v2.0 maps;
+   - Sunrise: RELICS or Scofield+2025.
+   Field follow-ups (docs/fields/*.md):
+   - vet Abell 2744 `5904`, `7987`, `4731`, `264`, `7298`;
+   - vet El Gordo `2828` (a linear feature) and `1601`;
+   - vet Sunrise `1756`, `1907`, `1578`;
+   - Sunrise `1869` is a two-band detection on a star spike (D-014 spike mask);
+   - Sunrise has a rel_weight plateau at 0.45–0.55 (1,909 sources), so the D-011/D-021 0.5 cut splits it on noise;
+   - duplicate merged sources (Abell 2744 `3999`/`7179`, 0.25″ apart);
+   - extended-veto fallback for sources without DJA r50 (Abell 2744 `7694`);
+   - El Gordo module A is a flanking field;
+   - reword `acquire._warn_if_reprocessed`.
 3. **Two-epoch search:** run `scripts/epoch_compare.py` (or an all-source batch mode) on every SMACS source covered
    by VENUS 6882, looking for caustic-crossing transients and variable lensed images.
 

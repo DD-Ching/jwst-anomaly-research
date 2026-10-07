@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Three cluster fields; robustness rules from them (D-025, D-026, cycle 17)
+- Parallel worktree workers added Abell 2744 (#32), El Gordo (#31) and Sunrise/WHL0137 (#30). PR #29 fixed downloads
+  for MAST products whose listed size is stale after the 2026-10-01 reprocessing. Proposals are folded into
+  D-026 and SOURCES.
+- **D-025** (found on Abell 2744):
+  - catalogue "stars" with DJA r50 too large for a point source (bright cluster-galaxy cores in Gaia) go back to the
+    galaxy ranking, before the locus calibrates;
+  - very red spiky sources are exempt from the D-020 host test.
+  - Run `20261007T211229Z-883a5066`: 8 vetoed, the locus recalibrated, the star top 10 is now mostly point sources with spikes, and
+    `5904` is kept.
+- **Handoff:** TASKS "Now (M3)". The lens-model stage (worker, `claude/lens-model`) is in flight; then per-field
+  model checks and the transient forced photometry.
+
+
 ## 2026-10-08: Owner priorities, lensing-violation search first (D-023)
 - The owner merged PR #20 (`2804`, inconclusive) and reprioritised: M3 lens-model consistency first; more clusters in
   parallel (Abell 2744, El Gordo, Sunrise; MACS J0416 has no DJA v7 catalog); a two-epoch transient search; no
