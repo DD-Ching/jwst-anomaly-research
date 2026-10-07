@@ -733,3 +733,40 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
 - A band other than the reference band drives colours: then gate per band and set that band's
   features to missing.
 - MAST adds DQ to i2d products.
+
+## D-012 Star/galaxy separation: rank stars as their own stratum (2026-10-07)
+
+**Decision.**
+- `classify.classify_sources` labels each merged source `star` or `other` from one bulk Gaia DR3 +
+  SIMBAD cross-match of the whole catalog (`crossmatch.query_matches`, CDS XMatch, about 8 s per
+  sample). A source is a star when:
+  - its SIMBAD otype or Gaia DR3 astrometry says star (the `crossmatch` `is_star` rule), or
+  - any Gaia DR3 source lies within 0.3″ (ASSUMPTION: in extragalactic fields Gaia detections are
+    mostly stars).
+- Stars are not discarded. The runner ranks them among themselves as a stratum `<sample>-stars`, with
+  its own top k (default 10), cutouts, cross-match, candidates and report section. Unusual stars
+  (e.g. brown dwarfs) stay findable, and they no longer crowd out galaxies.
+- This is an optional stage. If any cross-match service fails, or the stage itself fails, there is
+  one ranking, as before. Fewer than `min_stars` (5) stars means the star stratum is not ranked.
+
+**Alternatives rejected.**
+- The pipeline's `is_extended` flag: every bright, saturated star in the program 2736 top 20 has
+  `is_extended = 1` (spikes and flat cores inflate CI), and 68% of all F200W detections have
+  `is_extended = 0`.
+- Excluding stars outright: that would lose unusual stars.
+- A size–magnitude stellar locus as the first step: it needs care with saturated stars. It is the next
+  step, for faint stars that Gaia misses.
+
+**Evidence.** Run `20261007T035338Z-8ea21f89`:
+- Stars found: SMACS NIRCam 52 (46 astrometry/SIMBAD, 6 position-only), MIRI 12, CEERS 7.
+- The galaxy-stratum top 20s contain no cross-matched stars (SMACS had 7 before) and 1/60 image-quality
+  flags.
+- Visual check (unvetted): about 4 faint PSF-like sources without a Gaia counterpart remain in the SMACS
+  galaxy top 20. Most of the rest are interacting, clumpy or elongated galaxies, including three
+  arc-like sources (`f200w_2925`, `f200w_2559`, `f200w_1096`).
+
+**Revisit if.**
+- Faint stars or brown dwarfs keep reaching the galaxy top k: add a size–magnitude stellar locus.
+- Gaia DR4 is released.
+- A field has Gaia-detected compact galaxies in numbers (cluster cores): tighten `gaia_position` with
+  Gaia's own classifiers.

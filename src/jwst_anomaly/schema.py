@@ -86,6 +86,9 @@ QUALITY_COLUMNS = (
     "quality_reason",
 )
 
+# classify.classify_sources -> one row per merged source; population in {star, other} (D-012).
+CLASSIFY_COLUMNS = ("source_uid", "population", "star_basis")
+
 # rank.score_anomalies -> one row per source. score: higher = more anomalous;
 # rank: 1 = most anomalous. Per-method scores as score_<method>; attributions in top_features.
 SCORE_COLUMNS = ("source_uid", "score", "rank")

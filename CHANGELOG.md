@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-07: Stars ranked as their own stratum (D-012)
+- New `classify.classify_sources`. One bulk Gaia DR3 + SIMBAD cross-match over the whole catalog
+  (about 8 s per sample) labels stars. The runner ranks them as `<sample>-stars` with their own top k;
+  galaxies are ranked without them.
+- Failed approach: the pipeline's `is_extended` flag labels every bright, saturated star in the top 20
+  as extended.
+- Real data, run `20261007T035338Z-8ea21f89`:
+  - Stars found: SMACS 52, MIRI 12, CEERS 7.
+  - Galaxy-stratum top 20s: 0 cross-matched stars (SMACS had 7), 1/60 image-quality flags.
+- Visual check (unvetted): the SMACS galaxy top 20 is now mostly interacting, clumpy or elongated
+  galaxies, including three arc-like sources (`f200w_2925`, `f200w_2559`, `f200w_1096`). About 4
+  faint PSF-like sources without Gaia counterparts remain.
+- **Handoff:** TASKS Now 1 (vet the arc-like sources against published lens models), then Now 2
+  (stellar locus for faint stars).
+
 ## 2026-10-07: Quality gate before ranking (D-011)
 - New `quality.assess_sources` with `cutouts.sample_weight_map`. A coarse WHT map (1″ cells,
   concurrent S3 byte ranges, about 10 s per 1.8 GB mosaic) gives each source's relative weight and

@@ -255,6 +255,9 @@ class FakeStages:
         return out_png
 
 
+_CLASSIFY = "classify.classify_sources"
+
+
 def install_fakes(monkeypatch: pytest.MonkeyPatch, fakes: FakeStages | None = None) -> FakeStages:
     """Replace every stage function with ``fakes`` (module attributes, as the runner calls them)."""
     fakes = fakes or FakeStages()
@@ -358,7 +361,7 @@ def test_run_end_to_end_with_fakes(tmp_path, env, monkeypatch):
     assert context["run_id"] == run_id
     record = json.loads((run_dir / "run_record.json").read_text(encoding="utf-8"))
     assert record["status"] == "completed"
-    assert {s["status"] for s in record["stages"]} == {"ok"}
+    assert {s["status"] for s in record["stages"] if s["stage"] != _CLASSIFY} == {"ok"}
     for name in ("observations", "products", "manifest", "sources", "features", "scores"):
         assert (run_dir / "field_a" / f"{name}.ecsv").is_file(), name
     scores = Table.read(run_dir / "field_a" / "scores.ecsv")
@@ -453,7 +456,7 @@ def test_optional_stages_skipped_when_not_configured(tmp_path, env, monkeypatch)
         run = store.get_run(run_id)
         cands = store.list_candidates(run_id=run_id, sample_id="field_a")
     skipped = {s["stage"] for s in run["summary"]["stages"] if s["status"] == "skipped"}
-    assert skipped == {"cutouts.make_cutouts", "crossmatch.crossmatch"}
+    assert skipped == {"cutouts.make_cutouts", "crossmatch.crossmatch", _CLASSIFY}
     assert len(cands) == 5  # outputs.candidates_top_k
 
 
@@ -466,7 +469,8 @@ def test_disabled_stage_is_skipped_with_reason(tmp_path, env, monkeypatch):
     with _store(env) as store:
         stages_run = store.get_run(run_id)["summary"]["stages"]
     assert {(s["stage"], s["message"]) for s in stages_run if s["status"] == "skipped"} == {
-        ("crossmatch.crossmatch", "disabled in config")
+        ("crossmatch.crossmatch", "disabled in config"),
+        (_CLASSIFY, "not configured"),
     }
 
 
@@ -790,3 +794,82 @@ def test_quality_gate_skipped_when_not_configured(tmp_path, env, monkeypatch):
     assert fakes.calls["sample_weight_map"] == []
     report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
     assert "Quality gate (derived, D-011): not applied (all sources ranked)" in report
+
+
+def _fake_matches(star_uids):
+    def query_matches(targets, radius_arcsec=1.0, services=("gaia", "simbad"), **kw):
+        uids = [str(u) for u in targets["source_uid"] if str(u) in star_uids]
+        t = Table(
+            {
+                "source_uid": uids,
+                "service": ["gaia"] * len(uids),
+                "match_id": [f"Gaia DR3 {i}" for i in range(len(uids))],
+                "match_type": ["astrometric_star"] * len(uids),
+                "sep_arcsec": [0.05] * len(uids),
+                "is_star": [True] * len(uids),
+            }
+        )
+        t.meta.update(
+            provenance="observed",
+            source="fake",
+            services_requested=list(services),
+            services_ok=list(services),
+            services_failed=[],
+        )
+        return t
+
+    return query_matches
+
+
+def test_stars_are_ranked_as_their_own_stratum(tmp_path, env, monkeypatch):
+    fakes = install_fakes(monkeypatch)
+    probe = pipeline.run(write_config(tmp_path))  # learn the fake source uids
+    sources = Table.read(env / "runs" / probe / "field_a" / "sources.ecsv")
+    star_uids = {str(u) for u in sources["source_uid"][:6]}
+    monkeypatch.setattr(crossmatch, "query_matches", _fake_matches(star_uids))
+    stages = json.loads(json.dumps(TEST_CONFIG["stages"]))
+    stages["classify"] = {"star_top_k": 3, "min_stars": 2}
+    run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])
+    run_dir = env / "runs" / run_id
+    galaxy_scores = Table.read(run_dir / "field_a" / "scores.ecsv")
+    star_scores = Table.read(run_dir / "field_a-stars" / "scores.ecsv")
+    assert {str(u) for u in star_scores["source_uid"]} <= star_uids
+    assert not ({str(u) for u in galaxy_scores["source_uid"]} & star_uids)
+    assert (run_dir / "field_a" / "populations.ecsv").is_file()
+    with _store(env) as store:
+        star_cands = store.list_candidates(run_id=run_id, sample_id="field_a-stars")
+    assert 0 < len(star_cands) <= 3
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    assert "### field_a-stars" in report
+    assert "ranked among themselves (D-012)" in report
+    assert fakes.calls["make_cutouts"]  # evidence stages ran for the strata
+
+
+def test_classify_failure_keeps_one_ranking(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+
+    def failed(targets, radius_arcsec=1.0, services=("gaia",), **kw):
+        t = _fake_matches(set())(targets, radius_arcsec, services)
+        t.meta["services_failed"] = ["gaia"]
+        return t
+
+    monkeypatch.setattr(crossmatch, "query_matches", failed)
+    stages = json.loads(json.dumps(TEST_CONFIG["stages"]))
+    stages["classify"] = {}
+    run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])
+    run_dir = env / "runs" / run_id
+    assert not (run_dir / "field_a-stars").exists()
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    assert "star/galaxy separation failed: one ranking" in report
+
+
+def test_too_few_stars_are_not_ranked(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+    probe = pipeline.run(write_config(tmp_path))
+    sources = Table.read(env / "runs" / probe / "field_a" / "sources.ecsv")
+    monkeypatch.setattr(crossmatch, "query_matches", _fake_matches({str(sources["source_uid"][0])}))
+    stages = json.loads(json.dumps(TEST_CONFIG["stages"]))
+    stages["classify"] = {"min_stars": 5}
+    run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])
+    report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
+    assert "1 stars < min_stars 5: not ranked" in report

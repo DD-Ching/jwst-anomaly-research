@@ -5,7 +5,8 @@ For each sample in the YAML config (e.g. ``configs/reference_sample.yaml``)::
     query.query_observations -> query.list_products -> acquire.fetch_products (CAT only)
     -> catalog.load_pipeline_catalog (per band) -> catalog.merge_bands
     -> features.build_features -> quality.assess_sources (optional gate, D-011)
-    -> rank.score_anomalies (quality_ok sources) -> top-k targets
+    -> classify.classify_sources (optional, D-012: stars ranked as stratum "<sample>-stars")
+    -> rank.score_anomalies (quality_ok sources, per stratum) -> top-k targets
     -> cutouts.make_cutouts (optional, per band, S3 i2d URI) -> crossmatch.crossmatch (optional)
 
 then the top-ranked candidates go into the :class:`~jwst_anomaly.candidates.CandidateStore`
@@ -21,6 +22,8 @@ ref_band, obs_ids, query}`` (``query``: extra MAST criteria, optional),
 ``cloud.{s3_bucket, l3_key_pattern}``, ``stages.catalog.merge_radius_arcsec``,
 ``stages.quality.{enabled, grid_arcsec, step, min_rel_weight, min_edge_arcsec, max_artifact_ci,
 min_ranked}`` (gate skipped when the block is absent),
+``stages.classify.{enabled, services, radius_arcsec, gaia_radius_arcsec, star_top_k, min_stars}``
+(skipped when absent),
 ``stages.rank.{methods, random_state}``, ``stages.cutouts.{enabled, top_k, size_arcsec, bands}``,
 ``stages.crossmatch.{enabled, top_k, radius_arcsec, services}`` and the optional top-level
 ``outputs`` block added by this unit:
@@ -54,6 +57,7 @@ from astropy.table import Table, vstack
 from jwst_anomaly import (
     acquire,
     catalog,
+    classify,
     crossmatch,
     cutouts,
     features,
@@ -260,6 +264,16 @@ def _describe(exc: BaseException) -> str:
     return f"{type(exc).__name__}: {exc}"
 
 
+def _subset(table: Table, mask: np.ndarray, what: str) -> Table:
+    """Rows of ``table`` under ``mask``, with ``meta['source']`` naming the selection."""
+    out = table[mask]
+    out.meta = dict(table.meta)
+    out.meta["source"] = (
+        f"{what}: {int(mask.sum())} of {len(table)} rows of: {table.meta.get('source', '')}"
+    )
+    return out
+
+
 def _stage_kwargs(cfg: Mapping[str, Any], keys: Sequence[str]) -> dict[str, Any]:
     """Stage parameters present in the config; lists become tuples (stage defaults otherwise)."""
     return {k: tuple(cfg[k]) if isinstance(cfg[k], list) else cfg[k] for k in keys if k in cfg}
@@ -304,6 +318,8 @@ class _Runner:
         self.records: list[StageRecord] = []
         # Reference weight of each sample's gate map, shared with cutouts of the same image.
         self.weight_refs: dict[tuple[str, str], float] = {}
+        # Stratum label -> its sample id (D-012: stars ranked as "<sample>-stars").
+        self.parent_of: dict[str, str] = {}
         self.summaries: dict[str, SampleSummary] = {}
         self.candidates: list[dict[str, Any]] = []
 
@@ -501,33 +517,92 @@ class _Runner:
                 f"quality-gated subset ({int(keep.sum())} of {len(feats)} sources, D-011) of: "
                 f"{feats.meta.get('source', '')}"
             )
+        # 4c. Star/galaxy separation (D-012): stars become their own ranking stratum.
+        stars = self._classify(sid, sources, to_rank)
+        if stars is None:
+            self._rank_stratum(sid, summary, to_rank, sources, band_obs, required=True)
+            return
+        cfg = self.stages_cfg.get("classify") or {}
+        galaxies = _subset(to_rank, ~stars, "non-star stratum (D-012)")
+        self._rank_stratum(sid, summary, galaxies, sources, band_obs, required=True)
+        n_stars = int(stars.sum())
+        star_sid = f"{sid}-stars"
+        star_summary = SampleSummary(
+            star_sid,
+            f"{summary.role}/stars",
+            f"Gaia/SIMBAD stars of {sid}, ranked among themselves (D-012)",
+            summary.ref_band,
+            n_observations=summary.n_observations,
+            bands=list(summary.bands),
+            n_sources=n_stars,
+            feature_spec=dict(summary.feature_spec),
+        )
+        self.summaries[star_sid] = star_summary
+        self.parent_of[star_sid] = sid
+        min_stars = max(2, int(cfg.get("min_stars", 5)))
+        if n_stars < min_stars:
+            star_summary.notes.append(f"{n_stars} stars < min_stars {min_stars}: not ranked")
+            self.record(
+                star_sid, "rank.score_anomalies", "skipped", "too few stars", required=False
+            )
+            return
+        self._rank_stratum(
+            star_sid,
+            star_summary,
+            _subset(to_rank, stars, "star stratum (D-012)"),
+            sources,
+            band_obs,
+            required=False,
+            top_k=int(cfg.get("star_top_k", 10)),
+        )
+
+    def _rank_stratum(
+        self,
+        label: str,
+        summary: SampleSummary,
+        to_rank: Table,
+        sources: Table,
+        band_obs: Mapping[str, str],
+        *,
+        required: bool,
+        top_k: int | None = None,
+    ) -> None:
+        """Score one stratum, then select, cut out, cross-match and store its top k."""
         rank_kwargs = _stage_kwargs(self.stages_cfg.get("rank") or {}, ("methods", "random_state"))
         scores = self.stage(
-            sid,
+            label,
             "rank.score_anomalies",
             partial(rank.score_anomalies, to_rank, **rank_kwargs),
             columns=schema.SCORE_COLUMNS,
-            required=True,
+            required=required,
             save_as="scores",
         )
+        if scores is None:
+            return
         summary.n_scored = len(scores)
         summary.methods = [c[len("score_") :] for c in scores.colnames if c.startswith("score_")]
 
+        def cap(k: int) -> int:
+            return k if top_k is None else min(k, top_k)
+
+        cand_k = cap(self.candidates_top_k)
+        cut_k = cap(self.cutouts_top_k)
+        xm_k = cap(self.crossmatch_top_k)
+
         # 5. Top-k targets, joined to positions.
-        ranked = self._ranked(sid, scores, sources)
-        k_max = max(self.candidates_top_k, self.cutouts_top_k, self.crossmatch_top_k)
-        targets_all = self._targets(sid, ranked[:k_max])
-        self.save(targets_all, sid, "targets")
+        ranked = self._ranked(label, scores, sources)
+        targets_all = self._targets(label, ranked[: max(cand_k, cut_k, xm_k)])
+        self.save(targets_all, label, "targets")
 
         # 6. Optional evidence stages.
-        cutout_rows = self._cutouts(sid, summary, targets_all[: self.cutouts_top_k], band_obs)
-        xmatch_rows = self._crossmatch(sid, targets_all[: self.crossmatch_top_k])
+        cutout_rows = self._cutouts(label, summary, targets_all[:cut_k], band_obs)
+        xmatch_rows = self._crossmatch(label, targets_all[:xm_k])
 
-        for rec in ranked[: self.candidates_top_k]:
+        for rec in ranked[:cand_k]:
             uid = rec["source_uid"]
             per_band = cutout_rows.get(uid, {})
             rec.update(
-                sample_id=sid,
+                sample_id=label,
                 role=summary.role,
                 flags={
                     band: {k: v for k, v in row.items() if k != "path"}
@@ -537,6 +612,47 @@ class _Runner:
                 xmatch=xmatch_rows.get(uid),
             )
             self.candidates.append(rec)
+
+    def _classify(self, sid: str, sources: Table, to_rank: Table) -> np.ndarray | None:
+        """Star mask over ``to_rank`` rows (optional stage, D-012); None = do not stratify."""
+        cfg = self.stages_cfg.get("classify")
+        name = "classify.classify_sources"
+        if cfg is None or cfg.get("enabled", True) is False:
+            reason = "not configured" if cfg is None else "disabled in config"
+            self.record(sid, name, "skipped", reason, required=False)
+            return None
+
+        def run_classify() -> Table:
+            targets = Table(
+                {"source_uid": sources["source_uid"], "ra": sources["ra"], "dec": sources["dec"]}
+            )
+            targets.meta.update(
+                provenance=schema.Provenance.DERIVED.value, source=f"all merged sources of {sid}"
+            )
+            kwargs = _stage_kwargs(cfg, ("radius_arcsec", "services"))
+            kwargs.setdefault("radius_arcsec", 0.5)
+            kwargs.setdefault("services", ("gaia", "simbad"))
+            matches = crossmatch.query_matches(targets, **kwargs)
+            params = _stage_kwargs(cfg, ("gaia_radius_arcsec",))
+            return classify.classify_sources(sources, matches, **params)
+
+        table = self.stage(
+            sid,
+            name,
+            run_classify,
+            columns=schema.CLASSIFY_COLUMNS,
+            required=False,
+            save_as="populations",
+        )
+        if table is None:
+            self.summaries[sid].notes.append("star/galaxy separation failed: one ranking")
+            return None
+        star_uids = {
+            _text(u)
+            for u, p in zip(table["source_uid"], table["population"], strict=True)
+            if _text(p) == "star"
+        }
+        return np.array([_text(u) in star_uids for u in to_rank["source_uid"]], dtype=bool)
 
     def _filter_observations(
         self, sid: str, obs: Table, obs_ids: list[str], data_rights: str | None
@@ -733,8 +849,8 @@ class _Runner:
                     targets,
                     **kwargs,
                     **(
-                        {"weight_ref": self.weight_refs[(sid, band)]}
-                        if (sid, band) in self.weight_refs
+                        {"weight_ref": self.weight_refs[(self.parent_of.get(sid, sid), band)]}
+                        if (self.parent_of.get(sid, sid), band) in self.weight_refs
                         else {}
                     ),
                 ),

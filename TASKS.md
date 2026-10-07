@@ -1,16 +1,17 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-07 (runs `20261007T020124Z-4bfabaaa`, `20261007T033832Z-cfcf6032`).
+Evidence for the current priorities: CHANGELOG 2026-10-07 (runs `20261007T033832Z-cfcf6032`, `20261007T035338Z-8ea21f89`).
 
 ## Now (M1 follow-through)
-1. **Star/galaxy separation.** Use Gaia plus `CI`/`is_extended` and rank the two populations separately,
-   because bright stars dominate the SMACS NIRCam top 20.
-2. **First vetting with `/vet-candidate`:**
-   - SMACS NIRCam `jw02736-o001_t001_nircam_f200w_2925` and `_2559` (ranks 7 and 16 after D-011): elongated, arc-like;
-     compare them with the published SMACS 0723 lens models (docs/landscape.md).
+1. **First vetting with `/vet-candidate`:**
+   - SMACS NIRCam `jw02736-o001_t001_nircam_f200w_2925`, `_2559`, `_1096` (galaxy stratum, run
+     `20261007T035338Z-8ea21f89`): elongated, arc-like; compare them with the published SMACS 0723
+     lens models (docs/landscape.md).
    - MIRI rank 17 (`jw02736-o002_t001_miri_f770w_94`): the known NED `G_Lens` object, which exercises the
      known-object path.
+2. **Faint stars:** about 4 PSF-like sources without Gaia counterparts remain in the SMACS galaxy top 20.
+   Add a size–magnitude stellar locus to `classify` (D-012 "Revisit if").
 3. Align the `/vet-candidate` skill with the real `jwst-anomaly candidates` subcommands and confirm
    `docs/candidates/` as the place for vetting records.
 4. Report the top-k artifact and star fractions per run as a tracked metric.

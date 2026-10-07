@@ -9,6 +9,7 @@ MAST (CAOM metadata)            query.py      query_observations / list_products
   → source representation       catalog.py    load_pipeline_catalog / merge_bands
   → derived features            features.py   build_features
   → quality gate (D-011)        quality.py    assess_sources (coarse WHT map via cutouts.sample_weight_map)
+  → star/galaxy strata (D-012)  classify.py   classify_sources (bulk Gaia/SIMBAD); stars ranked as <sample>-stars
   → baseline anomaly ranking    rank.py       score_anomalies
   → image evidence (top-k)      cutouts.py    make_cutouts (S3 byte-range reads); viz.contact_sheet
   → external cross-check        crossmatch.py crossmatch (SIMBAD / NED / Gaia / CDS XMatch)
