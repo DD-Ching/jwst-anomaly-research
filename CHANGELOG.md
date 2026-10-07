@@ -15,6 +15,36 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - `no_flux_ref`: the third images of systems 8, 11 and 16 (μ 3.4–4.2), which have no flux reference yet.
 - **Handoff:** see the PR #40 body (flux reference, depth, cutouts, D-record).
 
+## 2026-10-08: El Gordo and Abell 2744 lens models, preliminary: no image-position anomaly (issue #41)
+- Preliminary validation on published products. The numbers come from scratch code and are not yet reproducible
+  in the repository; they need a re-run with #40's solver.
+  - `lensmodel.py` reproduces the Caminha+2023 El Gordo magnification maps (median |Δμ|/μ 4e-5).
+  - Exact image-plane solves match Lenstool's χ²: El Gordo 82.5 vs 80.22 (rms 0.754″, paper 0.75″); Abell 2744
+    (Bergamini+2023b) 146.64 vs 146.60 (rms 0.427″).
+- Results:
+  - No image-position anomaly in either field.
+  - Predicted uncatalogued counter-images: El Gordo 16, inconclusive, because the MUSE Lyα images are too faint in
+    continuum. Abell 2744 30, not yet testable, because the pipeline catalogs miss most arcs in the core.
+  - docs/fields/elgordo.md, docs/fields/abell2744.md.
+- **Failed approach:** source-plane back-trace χ² for image-plane-optimised models (El Gordo 121.6 against 80.22).
+- **Bugs found on `main`:** the parser fails on letter-suffixed image IDs and on 6-decimal `_kpc` rounding (#41).
+- Also merged #38 after bringing it up to date with `main`.
+- **Handoff:** #40 (image solver, local session); then reproduce these numbers in the repository, the parser fixes,
+  and the counter-image flux test on DJA photometry (TASKS "Now" 2).
+
+## 2026-10-08: Sunrise two-epoch search, a null result; Earendel steady (D-027 amendment)
+- WHL0137 2282 o010 against o120 (same pipeline): 372 catalog candidates → 58 in ≥ 2 bands → 52 after the bright-Gaia
+  mask → 0 by recentred forced photometry in all four bands. 2 pass in one or two bands, both ordinary on visual check
+  (an epoch-2 streak; galaxy outskirts at the footprint edge). docs/fields/sunrise.md.
+- Earendel: |Δm| ≤ 0.18 mag (≤ 1.5σ) in F090W/F115W/F277W/F356W over 164 days.
+- Noise calibration on 150 ordinary sources: ERR-based significances are 1.2–1.5× too large.
+- New: `scripts/transient_combine.py` (band coincidence and bright-Gaia mask) and
+  `transient_forced.py --recentre-arcsec`.
+- **Failed approach:** a fixed aperture at a literature position. Earendel seemed to brighten by 0.76 mag at 5.7σ,
+  because the aperture sat 0.15″ off the source and the PSF rotates by about 180° between the epochs.
+- **Handoff:** lens-model checks per field (#35 merged; El Gordo and Abell 2744 model validation in issue #41).
+  Time domain: rescale the thresholds by the control std, and add VENUS 6882 o052 (F150W, F444W) as a third epoch.
+
 ## 2026-10-08: Cloud runs use the GitHub MCP tools; conflicting PRs get no CI (D-028)
 - The first routine run opened #38 with the session's GitHub MCP tools. The prompt, the research-cycle skill and
   docs/operations.md §3 now prefer them, merge with `mcp__github__merge_pull_request` after checking the policy,
@@ -56,7 +86,6 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - Coordination: runs last about 40 minutes and skip `local-wip` PRs and branches committed to in the last 15
     minutes. An unmerged PR's handoff is read from its branch.
 - **Handoff:** unchanged (TASKS "Now (M3)"); the cloud routine continues it.
-
 
 ## 2026-10-08: Two-epoch transient search, a null result; exotic-lens signatures (D-027)
 - `scripts/transient_search.py` produces catalog-level candidates; `scripts/transient_forced.py` checks them with

@@ -44,6 +44,31 @@ Every title was checked on its arXiv abstract page and every URL was opened on 2
 - **RELICS** offers the only ready-made κ/γ/deflection grids.
 - **Diego+2023 and Frye+2023**, the JWST-era free-form models, have no public files.
 
+## Lens-model consistency: Caminha+2023 (preliminary, 2026-10-08, issue #41)
+
+**Preliminary, not yet reproducible from the repository.** These numbers come from scratch scripts (a cloud
+run, issue #41) on `lensmodel.py` (#35), with the parser workarounds described there. Re-run them with #40's
+`find_images` and the parser fixes before relying on them. Every number below is `model_prediction` or
+`derived`, and every threshold is an ASSUMPTION.
+
+- **Files:** CDS `files/best_fit.par` (sha256 `7b0153ae…`) and `obs_arcs_v1_new_IDs.dat` (sha256 `d6317439…`).
+  - The model has 265 dPIE potentials, single plane at z = 0.8703. Lenstool optimised it in the image plane:
+    Chi2pos 80.22, dof 52.
+  - The image list has 56 images in 23 systems, all with spectroscopic z, and errors of 0.621″.
+- **Magnification maps:** the port reproduces CDS `magnification_best_fit_z{2,8}.fits`. On about 20k pixels with
+  |μ| < 10, the median |Δμ|/μ is 3.8e-5 / 6.7e-5, and the 99th percentile is 2.6e-3 / 5.1e-3.
+- **Image positions:**
+  - The exact image-plane solve gives χ² = 82.5 against Lenstool's 80.22, and rms 0.754″ against the paper's 0.75″.
+  - The source-plane back-trace approximation gives 121.6 and is not valid for image-plane-optimised models.
+  - The largest residuals are 23c 1.54″, 3a 1.49″ and 17a 1.44″. **No image-position anomaly.**
+- **Counter-images:**
+  - The model predicts 72 images: 56 match the catalogued images and 16 are not catalogued. 14 are third images
+    30–60″ away with |μ| 2.4–4.6; the other two are 4th images on bright members (sys 6 and 12).
+  - Most observed images of these MUSE Lyα systems are at or below the F277W noise in a 0.5″ aperture. The 5″
+    search circles hold 9–32 DJA sources each, so a flux and colour match cannot discriminate.
+  - **Result: inconclusive; no candidate.**
+- **Frame:** DJA v7.0 sits at dRA +0.224″, dDec −0.016″ (median) relative to the RELICS/HST frame of the image list.
+
 ## Run
 
 - Run `20261007T210354Z-9dccdf35`, config [`configs/elgordo.yaml`](../../configs/elgordo.yaml) (`elgordo_v1`,

@@ -14,6 +14,15 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;
+   - **Preliminary (issue #41, scratch code):** exact image-plane solves reproduce Lenstool for El Gordo (χ² 82.5
+     vs 80.22) and Abell 2744 (Bergamini+2023b, 146.64 vs 146.60). Neither shows an image-position anomaly.
+     Open items:
+     - make these results reproducible in the repository: re-run them with #40's `find_images` as
+       `lens_consistency.py validate` known cases;
+     - fix the parser (letter IDs in `z_m_limit`/arcs files, 6-decimal `_kpc` rounding);
+     - add both as `MODELS` entries;
+     - run the counter-image flux test on DJA photometry (Abell 2744 needs the 233 MB catalogue, with a DECISIONS
+       entry) and on `bayes.dat` search radii.
    - Sunrise: RELICS or Scofield+2025.
    Field follow-ups (docs/fields/*.md):
    - vet Abell 2744 `5904`, `7987`, `4731`, `264`, `7298`;
@@ -25,10 +34,11 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - extended-veto fallback for sources without DJA r50 (Abell 2744 `7694`);
    - El Gordo module A is a flanking field;
    - reword `acquire._warn_if_reprocessed`.
-3. **Two-epoch search** (D-027): SMACS/VENUS gave a null result. Next:
-   - Sunrise 2282 o010 against o120 (same pipeline, F090W/F115W/F277W/F356W). It includes Earendel: use DJA
-     positions, since it is not in the pipeline catalog.
-   - Exclude spiky or star positions before forced photometry.
+3. **Two-epoch search** (D-027): null results for SMACS/VENUS and Sunrise o010/o120; Earendel is steady
+   (docs/fields/sunrise.md). Next:
+   - divide forced-photometry significances by the control std (1.2–1.5) before thresholding;
+   - add a third epoch: Sunrise VENUS 6882 o052 (F150W, F444W, jwst 3.0.0; forced photometry only);
+   - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 ## Then (M1 follow-through, after the M3 items)
 4. **Star-stratum sources with NED galaxy matches** (run `20261007T162133Z-2511977c`). Check their classification and photometry.

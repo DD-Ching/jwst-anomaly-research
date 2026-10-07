@@ -130,3 +130,34 @@ Ranks 5 and 7 were screened (D-020).
 - **`f200w_1082` (#23):** this is `[BCB2023] WHL0137-08004`, a published z ≈ 9–10 candidate (Bradley et al. 2023,
   ApJ 955, 13, arXiv:[2210.01777](https://arxiv.org/abs/2210.01777)). The ranking recovers a known rare
   population here.
+
+## Two-epoch search, o010 (2022-07-30) against o120 (2023-01-10) (D-027)
+
+The code is at this PR's head; outputs are under `outputs/transients_sunrise/` (not committed). Every number is
+`derived`, and every threshold is an ASSUMPTION.
+
+- **Catalog stage** (`transient_search.py`, jwst 2.0.1 in both epochs):
+  - 660–873 matched pairs per band (the epoch-2 footprint overlaps only part of epoch 1);
+  - frame shifts of ≤ 0.018″;
+  - candidates: F090W 71, F115W 65, F277W 129, F356W 107.
+- **Combination** (`transient_combine.py`): 58 positions have the same kind in ≥ 2 bands (13 variable, 27
+  appeared, 18 disappeared). 6 lie near Gaia DR3 sources (59 in a 4′ cone) and are excluded, leaving 52 candidates. Earendel is measured alongside as a
+  reference position and is not counted among them.
+- **Forced photometry,** 0.15″ aperture, recentred with a 0.15″ box: `appeared` candidates are centroided in
+  epoch 2, all others in epoch 1. The median Δm of the candidates is ≤ 0.005 in every band, and the 5–95% range is −0.39…+0.16 mag.
+  **0 of 52 candidates pass in all four bands.** Passing in one or two bands:
+  - `c0049` (disappeared in F277W and F356W; it passes in F090W and F115W, −0.54/−0.66 mag): a linear streak crosses
+    the position in epoch 2 in all four bands;
+  - `c0018` (appeared in F277W and F356W; it passes in F356W only, +0.32 mag): galaxy outskirts, 0.3″ from a bright
+    core, at the epoch-2 LW footprint edge.
+- **Result: no credible transient** at |Δm| ≥ 0.3 mag and ≥ 5σ in all four bands, for sources the catalogs
+  detect at S/N ≥ 10 in one epoch, in the overlap of the two epochs.
+- **Noise calibration:** forced photometry of 150 ordinary sources (F356W 25.5–28 mag) gives a robust std of the
+  flux significance of 1.18–1.49. So ERR-based significances are 1.2–1.5× too large.
+- **Earendel:**
+  - At the Scofield+2025 reference position, without recentring, it seemed to brighten by −0.62 (F277W) and −0.76
+    mag (F356W, 5.7σ). This is an artefact: the centroid lies 0.15–0.16″ away, and the PSF rotates by about 180°
+    between the epochs.
+  - Recentred (centroid 0.15–0.16″ from the reference): Δm = +0.11 ± 0.18 (F090W), +0.18 ± 0.12 (F115W),
+    −0.05 ± 0.08 (F277W) and −0.08 ± 0.07 (F356W), all within 1.5σ. The errors are ERR-based plus a 0.05 mag floor,
+    before the 1.2–1.5× calibration. This is consistent with no change over 164 days.
