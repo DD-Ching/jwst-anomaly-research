@@ -7,8 +7,11 @@ tie between the two catalogs; its error is about 1.25 sigma / sqrt(N) per axis. 
 residual from that median, compared with the frame-tie error (a bright point source centroids far
 better than the galaxy references), tests for proper motion (stars, brown dwarfs). The same is
 done for the magnitude difference (variability; zero points cancel in the median). Every result
-is ``derived``. Optionally lists the target's magnitude in every catalog of a second observation
-(e.g. medium bands).
+is ``derived``. ``target_residual_significance`` assumes a point-like target. For an extended
+target, centroids shift with depth, filter and segmentation, so compare its residual with the
+references' scatter (``target_residual_over_reference_sigma``) and across filters: real motion is
+common to all filters. Optionally lists the target's magnitude in every catalog of a second
+observation (e.g. medium bands).
 
     python scripts/epoch_compare.py --target 110.668714 -73.504767 \\
         --epoch1 $JWST_ANOMALY_DATA/cache/mast/<obs_id>/<obs_id>_cat.ecsv \\

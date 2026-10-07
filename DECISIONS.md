@@ -981,6 +981,8 @@ Unit tests recover an injected 30 mas motion and 0.5 mag change.
 - Many candidates need it: then batch per program pair and cache the frame tie.
 - Targets sit near a chip edge, where local distortion dominates.
 - Proper motions below about 1 mas/yr matter.
+- Extended targets are tested: then measure motion on PSF-like cores, or across filters. For `2915`, a galaxy,
+  the residual was 7 mas in F444W and 34 mas in F150W; the bands disagree, so it is not motion.
 
 ## D-018 Diffraction-spike flag on cutouts: orientation-free hexagonal harmonic (2026-10-08)
 
