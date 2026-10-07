@@ -34,7 +34,23 @@ edit only your own section in parallel work.
 
 ## Archive access (unit 1)
 
-_Pending._
+All links checked 2026-10-07.
+
+- **astroquery** 0.4.11 (used): https://pypi.org/project/astroquery/0.4.11/ ; cloud access section:
+  https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#cloud-data-access
+- **MAST field definitions**: observations https://mast.stsci.edu/api/v0/_c_a_o_mfields.html ;
+  products (`productSubGroupDescription`, `parent_obsid`, `prvversion`, ...) https://mast.stsci.edu/api/v0/_productsfields.html
+- **MAST download endpoint**: `https://mast.stsci.edu/api/v0.1/Download/file?uri=<dataURI>`
+  (anonymous for PUBLIC data, `Accept-Ranges: bytes`).
+- **MAST path lookup** (dataURI → S3 key, JSON): `https://mast.stsci.edu/api/v0.1/path_lookup/?uri=<dataURI>`
+- **MAST API tokens** (only for exclusive-access data; read from `$MAST_API_TOKEN`): https://auth.mast.stsci.edu/token
+- **MAST public data on AWS**: https://outerspace.stsci.edu/display/MASTDOCS/Public+AWS+Data ;
+  registry entry https://registry.opendata.aws/mast-jwst/
+- **JWST file naming** (level-3 `<obs_id>_<suffix>` names): https://jwst-pipeline.readthedocs.io/en/latest/jwst/data_products/file_naming.html
+- **ECSV** (manifest format): https://docs.astropy.org/en/stable/io/ascii/ecsv.html
+- **botocore pin conflict** (D-002): aiobotocore 3.9.2 https://pypi.org/project/aiobotocore/3.9.2/
+  (`botocore<1.43.107`) vs boto3 1.43.108 https://pypi.org/project/boto3/1.43.108/ (`botocore>=1.43.108`).
+- **pooch** (rejected alternative): https://www.fatiando.org/pooch/latest/
 
 ## Catalogs and cross-band matching (unit 2)
 
