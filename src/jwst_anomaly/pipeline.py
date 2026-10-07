@@ -1355,6 +1355,9 @@ class _Runner:
         kwargs: dict[str, Any] = {"out_dir": self.run_dir / sid / "cutouts"}
         if "size_arcsec" in cfg:
             kwargs["size_arcsec"] = float(cfg["size_arcsec"])
+        quality_cfg = self.stages_cfg.get("quality") or {}
+        if "min_rel_weight" in quality_cfg:  # the cutout low_weight flag uses the D-011 threshold
+            kwargs["low_weight_frac"] = float(quality_cfg["min_rel_weight"])
         spike = cfg.get("spike")
         if spike:  # D-018: flag bright stars and star+galaxy blends on the cutouts
             kwargs["spike_radii_arcsec"] = tuple(float(r) for r in spike["radii_arcsec"])

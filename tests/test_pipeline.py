@@ -1550,7 +1550,9 @@ def test_low_weight_screening_also_runs_on_a_mixed_ranking(tmp_path, env, monkey
     monkeypatch.setattr(cutouts, "make_cutouts", shallow)
     stages = json.loads(json.dumps(TEST_CONFIG["stages"]))
     stages["cutouts"]["screen_low_weight"] = True
+    stages["quality"]["min_rel_weight"] = 0.7
     run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])  # no split
+    assert fakes.calls["make_cutouts_kw"][-1]["low_weight_frac"] == 0.7  # the D-011 threshold
     run_dir = env / "runs" / run_id / "field_a"
     assert fakes.calls["make_cutouts"][-1][1] == 6  # 2 x top_k pool
     screened = Table.read(run_dir / "screened.ecsv")
