@@ -1277,7 +1277,27 @@ Field docs: `docs/fields/*.md`.
 - **Result: no credible transient in the SMACS/VENUS overlap** at |Δm| ≥ 0.3 mag and ≥ 5σ in both F150W and
   F444W. This is a null result for caustic-crossing events at this depth.
 
+**Amendment (2026-10-08, Sunrise 2282 o010/o120, same pipeline jwst 2.0.1).**
+- **`scripts/transient_combine.py`** keeps positions with the same `kind` in ≥ 2 bands within 0.3″. It then
+  excludes positions near Gaia DR3 sources (one VizieR cone), within `r = 1.5″ × 10^(0.2 (20 − G))`, clipped to
+  1.5–12″ (ASSUMPTION). Gaia sources include compact galaxies, so the mask is conservative.
+- **`transient_forced.py --recentre-arcsec`** moves the aperture to the epoch-1 centroid in each band and
+  measures epoch 2 at the same sky position. Use it for positions taken from another frame or catalog.
+- **Evidence:**
+  - Catalog stage, same pipeline: 71/65/129/107 candidates in F090W/F115W/F277W/F356W, against hundreds in
+    SMACS/VENUS. 58 coincide in ≥ 2 bands, and 6 of them lie near Gaia sources.
+  - Forced photometry, recentred within 0.1″: 0 of 53 pass in all four bands. 3 pass in one or two bands, and all
+    3 are ordinary on visual check: two lie on galaxy outskirts at the epoch-2 LW footprint edge, and one has a
+    linear streak through it in epoch 2.
+  - Noise calibration on 150 ordinary sources (F356W 25.5–28, median 27.0): the robust std of the ERR-based flux
+    significance is 1.18/1.23/1.49/1.36 (F090W/F115W/F277W/F356W). ERR therefore underestimates the noise by
+    1.2–1.5×, and 3 of 600 control measurements exceed 5σ.
+  - Earendel (known case) at the Scofield+2025 position, without recentring: F356W −0.76 mag at 5.7σ. Its
+    centroid lies 0.13–0.15″ away in LW. Recentred, |Δm| ≤ 0.10 mag at |σ| ≤ 1.2 in all four bands.
+- **Failed approach:** a fixed aperture at a literature position. An offset of 0.1″ between the aperture and the
+  source turns PSF-wing differences into a fake brightening, because the PSF rotates about 180° between the epochs.
+
 **Revisit if.**
-- Same-pipeline epoch pairs are available (Sunrise 2282 o010/o120 share four bands at jwst 2.0.1).
-- Exclude spiky (D-018) or star positions before forced photometry.
 - More than two epochs make light curves possible.
+- Thresholds are set on calibrated significances: divide by the control std (1.2–1.5) instead of trusting ERR.
+- The search goes below catalog depth (image differencing or forced photometry on a grid).

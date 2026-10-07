@@ -12,6 +12,11 @@ candidates (mostly deblending differences). The aperture sits at each candidate'
 the cutout WCS, not at the cutout's centre pixel. A candidate is ``confirmed`` when
 |dmag| ≥ ``--min-dmag`` at ≥ ``--min-sigma`` in every band given.
 
+Positions from another frame or catalog (e.g. a literature position) can sit 0.1″ off the source,
+and then PSF-wing differences between epochs fake a change (Earendel, 2026-10-08: −0.75 mag at
+the literature position, +0.01 mag at the centroid). ``--recentre-arcsec`` moves the aperture to
+the epoch-1 centroid in each band and measures epoch 2 at that same sky position.
+
     python scripts/transient_forced.py --candidates outputs/transients/coincident.ecsv \\
         --band F444W jw02736-o001_t001_nircam_clear-f444w jw06882-o057_t057_nircam_clear-f444w \\
         --band F150W jw02736-o001_t001_nircam_clear-f150w jw06882-o057_t057_nircam_clear-f150w \\
@@ -61,16 +66,36 @@ def aperture_flux(
     return flux, e
 
 
+def recentre(sci: np.ndarray, x: float, y: float, half_px: int) -> tuple[float, float]:
+    """Intensity-weighted centroid of the positive, background-subtracted pixels within a
+    ``(2 half_px + 1)`` box around ``(x, y)``; the input position when the box is empty."""
+    if not (np.isfinite(x) and np.isfinite(y)):
+        return x, y
+    xi, yi = int(round(x)), int(round(y))
+    y0, x0 = max(yi - half_px, 0), max(xi - half_px, 0)
+    sub = sci[y0 : yi + half_px + 1, x0 : xi + half_px + 1]
+    if sub.size == 0 or not np.isfinite(sub).any():
+        return x, y
+    w = np.clip(np.nan_to_num(sub - np.nanmedian(sci)), 0, None)
+    if w.sum() <= 0:
+        return x, y
+    yy, xx = np.mgrid[0 : sub.shape[0], 0 : sub.shape[1]]
+    return float(x0 + (w * xx).sum() / w.sum()), float(y0 + (w * yy).sum() / w.sum())
+
+
 def measure(
     paths: list[str],
     r_arcsec: float,
     scale_arcsec: float,
     ra: np.ndarray | None = None,
     dec: np.ndarray | None = None,
-) -> tuple[np.ndarray, np.ndarray]:
+    recentre_arcsec: float = 0.0,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Aperture fluxes and errors at each target's sky position (cutout WCS), or at the cutout
-    centre when no position is given (NaN for missing files)."""
+    centre when no position is given (NaN for missing files). With ``recentre_arcsec`` > 0 the
+    aperture moves to the centroid within that half-width first. Also returns the RA/Dec used."""
     flux, err = np.full(len(paths), np.nan), np.full(len(paths), np.nan)
+    ra_used, dec_used = np.full(len(paths), np.nan), np.full(len(paths), np.nan)
     r_px = r_arcsec / scale_arcsec
     for k, p in enumerate(paths):
         if not p:
@@ -80,12 +105,16 @@ def measure(
             e = np.asarray(h["ERR"].data, float) if "ERR" in h else None
             header = h["SCI"].header
         cy, cx = (sci.shape[0] - 1) / 2, (sci.shape[1] - 1) / 2
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", FITSFixedWarning)
+            wcs = WCS(header)
         if ra is not None and dec is not None:
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore", FITSFixedWarning)
-                cx, cy = (float(v) for v in WCS(header).world_to_pixel_values(ra[k], dec[k]))
+            cx, cy = (float(v) for v in wcs.world_to_pixel_values(ra[k], dec[k]))
+        if recentre_arcsec > 0:
+            cx, cy = recentre(sci, cx, cy, max(1, int(round(recentre_arcsec / scale_arcsec))))
+        ra_used[k], dec_used[k] = (float(v) for v in wcs.pixel_to_world_values(cx, cy))
         flux[k], err[k] = aperture_flux(sci, e, cx, cy, r_px, 2.5 * r_px, 4.0 * r_px)
-    return flux, err
+    return flux, err, ra_used, dec_used
 
 
 def compare(
@@ -135,6 +164,13 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--min-dmag", type=float, default=0.3)
     ap.add_argument("--min-sigma", type=float, default=5.0)
     ap.add_argument("--sys-floor", type=float, default=0.05, help="mag, added in quadrature")
+    ap.add_argument(
+        "--recentre-arcsec",
+        type=float,
+        default=0.0,
+        help="move the aperture to the epoch-1 centroid within this half-width, per band, and use "
+        "that sky position in epoch 2 too (for positions from another frame or catalog)",
+    )
     args = ap.parse_args(argv)
 
     cfg = pipeline.load_config(args.config)
@@ -150,6 +186,7 @@ def main(argv: list[str] | None = None) -> int:
     confirmed = np.ones(len(targets), bool)
     for band, obs1, obs2 in args.band:
         fl, er = [], []
+        ra_b, dec_b = np.asarray(targets["ra"]), np.asarray(targets["dec"])
         for epoch, obs in (("1", obs1), ("2", obs2)):
             uri = pipeline.l3_image_uri(cfg.get("cloud"), obs)
             t = cutouts.make_cutouts(
@@ -161,13 +198,18 @@ def main(argv: list[str] | None = None) -> int:
             )
             scale = float(np.mean(t.meta["pixel_scale_arcsec"]))
             paths = {str(u): str(p) for u, p in zip(t["source_uid"], t["path"], strict=True)}
-            f, e = measure(
+            f, e, ra_used, dec_used = measure(
                 [paths.get(str(u), "") for u in targets["source_uid"]],
                 args.radius_arcsec,
                 scale,
-                np.asarray(targets["ra"]),
-                np.asarray(targets["dec"]),
+                ra_b,
+                dec_b,
+                args.recentre_arcsec if epoch == "1" else 0.0,
             )
+            if epoch == "1" and args.recentre_arcsec > 0:
+                ok = np.isfinite(ra_used)
+                ra_b, dec_b = np.where(ok, ra_used, ra_b), np.where(ok, dec_used, dec_b)
+                out[f"{band}_ra"], out[f"{band}_dec"] = ra_b, dec_b
             fl.append(f)
             er.append(e)
         dm, sig, sig_flux = compare(fl[0], er[0], fl[1], er[1], args.sys_floor)
@@ -186,6 +228,7 @@ def main(argv: list[str] | None = None) -> int:
     out.meta.update(
         provenance="derived",
         radius_arcsec=args.radius_arcsec,
+        recentre_arcsec=args.recentre_arcsec,
         thresholds={
             "min_dmag": args.min_dmag,
             "min_sigma": args.min_sigma,

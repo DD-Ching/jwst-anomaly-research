@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Sunrise two-epoch search, a null result; Earendel steady (D-027 amendment)
+- WHL0137 2282 o010 against o120 (same pipeline): 372 catalog candidates → 58 in ≥ 2 bands → 53 after the bright-Gaia
+  mask → 0 by recentred forced photometry in all four bands. 3 pass in one or two bands, all ordinary on visual check
+  (galaxy outskirts at the footprint edge, an epoch-2 streak). docs/fields/sunrise.md.
+- Earendel: |Δm| ≤ 0.10 mag (≤ 1.2σ) in F090W/F115W/F277W/F356W over 164 days.
+- Noise calibration on 150 ordinary sources: ERR-based significances are 1.2–1.5× too large.
+- New: `scripts/transient_combine.py` (band coincidence and bright-Gaia mask) and
+  `transient_forced.py --recentre-arcsec`.
+- **Failed approach:** a fixed aperture at a literature position. Earendel seemed to brighten by 0.76 mag at 5.7σ,
+  because the aperture sat 0.14″ off the source and the PSF rotates by about 180° between the epochs.
+- **Handoff:** the lens-model PR #35 (another run was working on it), then lens-model checks per field.
+  Time domain: rescale the thresholds by the control std, and add VENUS 6882 o052 (F150W, F444W) as a third epoch.
+
 ## 2026-10-08: Two-epoch transient search, a null result; exotic-lens signatures (D-027)
 - `scripts/transient_search.py` produces catalog-level candidates; `scripts/transient_forced.py` checks them with
   forced aperture photometry on byte-range cutouts of both epochs.

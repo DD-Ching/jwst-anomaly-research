@@ -115,3 +115,49 @@ def test_frame_offset_between_epochs_is_tied_before_matching():
     assert len(res) == 0  # no false appeared/disappeared pairs
     assert abs(res.meta["frame_shift_arcsec"][0] - 0.25) < 0.01
     assert res.meta["n_without_local_tie"] == 0
+
+
+_spec3 = importlib.util.spec_from_file_location("transient_combine", _DIR / "transient_combine.py")
+tc = importlib.util.module_from_spec(_spec3)
+_spec3.loader.exec_module(tc)
+
+
+def _cands(rows):
+    return Table(rows=rows, names=("kind", "ra", "dec"), dtype=(str, float, float))
+
+
+def test_coincident_keeps_same_kind_in_two_bands_once():
+    d = 0.1 / 3600  # 0.1" apart
+    a = _cands(
+        [("variable", RA0, DEC0), ("appeared", RA0 + 0.01, DEC0), ("variable", RA0 + 0.02, DEC0)]
+    )
+    b = _cands([("variable", RA0 + d, DEC0), ("disappeared", RA0 + 0.01, DEC0)])
+    c = _cands([("variable", RA0, DEC0 + d)])
+    out = tc.coincident({"F090W": a, "F115W": b, "F277W": c})
+    assert len(out) == 1  # different kinds at RA0+0.01 and the single-band one are dropped
+    assert out[0]["n_bands"] == 3 and out[0]["bands"] == "F090W,F115W,F277W"
+    assert len(tc.coincident({"F090W": a, "F115W": b}, min_bands=3)) == 0
+
+
+def test_bright_gaia_exclusion_radius_grows_with_brightness():
+    r = tc.exclusion_radius(np.array([22.0, 20.0, 17.5, 5.0, np.nan]))
+    assert (
+        np.allclose(r[:2], 1.5)
+        and abs(r[2] - 1.5 * 10**0.5) < 1e-9
+        and r[3] == 12.0
+        and r[4] == 1.5
+    )
+    gaia = Table({"ra": [RA0], "dec": [DEC0], "gmag": [15.0]})  # 15" radius clipped to 12"
+    cosd = np.cos(np.deg2rad(DEC0))
+    ra = RA0 + np.array([5.0, 11.0, 13.0]) / 3600 / cosd
+    assert list(tc.near_bright(ra, np.full(3, DEC0), gaia)) == [0, 0, -1]
+
+
+def test_recentre_finds_an_offset_source():
+    yy, xx = np.mgrid[0:41, 0:41]
+    img = 50.0 * np.exp(-((xx - 23.0) ** 2 + (yy - 18.0) ** 2) / (2 * 1.5**2))
+    cx, cy = tf.recentre(img, 20.0, 20.0, 5)
+    assert abs(cx - 23.0) < 0.2 and abs(cy - 18.0) < 0.2
+    assert tf.recentre(np.zeros((41, 41)), 20.0, 20.0, 5) == (20.0, 20.0)  # empty box: unchanged
+    x, y = tf.recentre(img, np.nan, 20.0, 5)
+    assert np.isnan(x) and y == 20.0
