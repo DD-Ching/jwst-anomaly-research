@@ -614,6 +614,67 @@ scheduled workflow: re-enable it from the Actions tab.
 - The cloud GitHub proxy blocks `gh` commands the cycle needs.
 - claude-code-action changes major version.
 
-## D-010 Tools for future milestones (unit 9)
+## D-010 Tools for future milestones (unit 9, 2026-10-07)
 
-_Open._
+The full survey, with versions, licenses and per-option verdicts, is in
+[docs/landscape.md](docs/landscape.md).
+
+**Decision.**
+- **M2 photometry.** Start from the DJA grizli v7.4 catalogs, which cover both SMACS 0723 and the
+  CEERS t021 data. They use matched apertures (not PSF-homogenised) and come with eazy photo-z.
+  Validate CEERS colours against the PSF-matched CEERS DR1.0 catalog. Use photutils forced
+  photometry (`SourceCatalog(detection_catalog=...)`) only where those colours prove inadequate.
+  Don't make our own mosaics. The `ceers-full` DJA files are 250–400 MB, so state the reason
+  before downloading them (CLAUDE.md).
+- **M2 representations.** Start with Zoobot encoders loaded through `timm` (Apache-2.0 weights).
+  Use DINOv2 as the generic-vision control. Use the Multimodal Universe JWST subset as unlabelled
+  JWST data, but exclude CEERS and any other field being scored from it. Any embedding must beat
+  the sklearn baseline on injection-recovery.
+- **M2 detectors.** Keep the M1 sklearn baseline. Add PyOD when more detectors are needed, and
+  coniferest for active learning.
+- **M3 lensing.**
+  - Test candidates against published SMACS 0723 models (Mahler+2022, CC0; RELICS HLSP; Caminha+2022)
+    and the Noirot+2023 redshifts. Don't refit the cluster.
+  - Lens finding: AnomalyMatch first, then a fine-tuned Zoobot.
+  - Galaxy-scale modelling: lenstronomy, with PyAutoLens as a cross-check.
+- **Calibration.** Use MAST products. Re-run `jwst` only when a product's `CAL_VER`/`CRDS_CTX` lags
+  the operational build, when a top candidate needs a correction that is off by default (1/f,
+  wisps, persistence, saturated cores), or when a comparison needs identical catalog settings.
+  Record `CAL_VER`/`CRDS_CTX` in the manifests.
+- **Tracking.** git + manifests now. Add MLflow (local backend only) at M2 if the run count
+  outgrows a results table.
+
+**Alternatives rejected.**
+- **AstroCLIP, AstroPT, AION-1:** they are tied to Legacy Survey/HSC bands and pixel scales.
+  AstroPT also has AGPL code and CC-BY-SA weights.
+- **DINOv3:** gated download and a custom license.
+- **anomalib:** built for industrial, normal-only training with pixel-level defect maps.
+- **SEP:** duplicates photutils.
+- **SourceXtractor++ at M2:** conda-only and heavy. Reconsider at M3 for blended arcs.
+- **DVC, DataLad:** our inputs already live in a permanent public archive.
+- **Refitting cluster lens models:** published models exist.
+- **ssl-legacysurvey, CMU DeepLens:** ground-based training, or no weights.
+- **ceers-nircam scripts:** no license, and stale.
+- **lychee, markdown-link-check, LinkChecker** for `scripts/check_links.py`:
+  - lychee is Rust, Apache-2.0, v0.24.2.
+  - markdown-link-check is Node, ISC, v3.15.0.
+  - LinkChecker is Python, GPL-2.0, v10.6.0.
+
+  The checker had to be stdlib-only and run before any environment exists, without adding a
+  Node/Rust toolchain or a GPL dependency. If CI link checking is wanted later, lychee-action is
+  the upgrade path.
+
+**Evidence.** docs/landscape.md (checked 2026-10-07; versions from the GitHub/PyPI APIs; arXiv IDs
+checked against their abstract pages), DJA file listing
+https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/index.html, JWST build table
+https://jwst-docs.stsci.edu/jwst-science-calibration-pipeline/jwst-operations-pipeline-build-information,
+and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with astroquery).
+
+**Revisit if.**
+- A JWST-trained encoder or a lens finder with public weights appears.
+- DJA colours disagree with CEERS DR1.0 beyond the photometric errors.
+- MAST reprocesses program 2736 with build 13.0 (then redo the cross-program comparisons).
+- A study needs more than ~50 tracked runs (MLflow).
+- Derived datasets of several GB must be shared (DVC/DataLad).
+- docs/landscape.md is more than 6 months old when a milestone starts.
+- The link checker needs more than small fixes (then switch to lychee).
