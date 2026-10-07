@@ -21,7 +21,7 @@ product_subgroups}``, ``samples[].{id, role, description, proposal_id, instrumen
 ref_band, obs_ids, query}`` (``query``: extra MAST criteria, optional),
 ``cloud.{s3_bucket, l3_key_pattern}``, ``stages.catalog.merge_radius_arcsec``,
 ``stages.quality.{enabled, grid_arcsec, step, min_rel_weight, min_edge_arcsec, max_artifact_ci,
-min_ranked}`` (gate skipped when the block is absent),
+min_ranked, min_detection_snr, require_multiband}`` (gate skipped when the block is absent),
 ``stages.classify.{enabled, services, radius_arcsec, gaia_radius_arcsec, star_top_k, min_stars}``
 (skipped when absent), ``stages.features.daofind_max_ci``,
 ``samples[].matched_photometry.{url, sha256, label, aperture, radius_arcsec, max_bytes}`` (D-013),
@@ -551,7 +551,8 @@ class _Runner:
         }
         # 4b. Quality gate (derived, D-011): rank only sources whose measurements can be trusted.
         to_rank = feats
-        keep = self._quality(sid, summary, sources, feats, ref_band, band_obs)
+        confirm = f"{aperture}_match_sep_arcsec" if aperture else None
+        keep = self._quality(sid, summary, feat_sources, feats, ref_band, band_obs, confirm)
         if keep is not None:
             to_rank = _subset(feats, keep, "quality-gated subset (D-011)")
         # 4c. Star/galaxy separation (D-012): stars become their own ranking stratum.
@@ -868,8 +869,9 @@ class _Runner:
         feats: Table,
         ref_band: str,
         band_obs: Mapping[str, str],
+        confirm_column: str | None = None,
     ) -> np.ndarray | None:
-        """Quality gate (optional stage, D-011). Return the rows of ``feats`` to rank, or None.
+        """Quality gate (optional, D-011/D-014). Return the rows of ``feats`` to rank, or None.
 
         None (rank everything) when the gate is not configured, fails, or leaves fewer than
         ``min_ranked`` sources, so a broken gate can never abort or empty a run.
@@ -882,7 +884,18 @@ class _Runner:
             return None
 
         def gate() -> Table:
-            params = _stage_kwargs(cfg, ("min_rel_weight", "min_edge_arcsec", "max_artifact_ci"))
+            params = _stage_kwargs(
+                cfg,
+                (
+                    "min_rel_weight",
+                    "min_edge_arcsec",
+                    "max_artifact_ci",
+                    "min_detection_snr",
+                    "require_multiband",
+                ),
+            )
+            if params.get("require_multiband") and confirm_column:
+                params["confirm_column"] = confirm_column
             map_kwargs = {"grid_arcsec": float(cfg.get("grid_arcsec", 1.0))}
             if cfg.get("step") is not None:
                 map_kwargs["step"] = int(cfg["step"])

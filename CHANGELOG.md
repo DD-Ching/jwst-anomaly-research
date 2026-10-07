@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-07: Rank only confirmed detections (D-014, cycle 5)
+- The quality gate adds two tests:
+  - `low_snr`: best-band aper50 S/N < 5;
+  - `single_band`: detected in one band only and not confirmed by a DJA match.
+- **Real data** (run `20261007T123653Z-d45d04d1`; SMACS galaxy top 20, visual and unvetted):
+  - spike and stripe detections fell from 5–6 to 1, and near-noise sources from about 6 to 0;
+  - the catalogued lens-related objects `f277w_829` (`[YML2023] F150DB-C-4`) and `f200w_1032`
+    (`[MJR2023] 028.2`) are ranks 4 and 10;
+  - 7 of the 20 are catalogued.
+- **Failed approach:** an S/N floor in the reference band only (run `20261007T123127Z-3b78b3fc`) excluded red dropouts,
+  including `f277w_829`, which is detected only at F277W–F444W. 1,285 SMACS sources had S/N ≥ 5 in some
+  band but not in F200W, so the floor now uses the best band.
+- **Remaining contamination:** about 5–6 faint PSF-like stars missing from Gaia. Sources ranked: SMACS
+  2,588/5,254, MIRI 95/530, CEERS 2,766/7,582. MIRI keeps few sources because it has no matched
+  photometry to confirm single-band detections.
+- **Handoff:** TASKS Now 1 (stellar locus for faint stars), Now 2 (vet `829`, `1032`, `438`, `1243`).
+
 ## 2026-10-07: Size-robust colours from DJA matched apertures (D-013, cycle 4)
 - New `photometry.py`. The DJA v7.4 catalog is verified against its sha256 before it is cached, and is
   joined one-to-one within 0.2″. Colours now come from 0.5″ matched apertures.

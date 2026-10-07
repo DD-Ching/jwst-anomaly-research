@@ -76,6 +76,8 @@ stages:
     min_edge_arcsec: 1.0
     max_artifact_ci: 1.45  # CI_50_30 below this is sharper than the PSF (S/N >= 3 only)
     min_ranked: 20         # fewer survivors -> gate considered unusable, rank ungated
+    min_detection_snr: 5   # D-014: best-band aper50 S/N floor for ranking (keeps dropouts)
+    require_multiband: true  # D-014: single-band detections need independent confirmation
   classify:  # D-012; stars are ranked as their own stratum '<sample>-stars'
     services: [gaia, simbad]   # bulk CDS XMatch over all sources (~8 s per sample)
     radius_arcsec: 0.5

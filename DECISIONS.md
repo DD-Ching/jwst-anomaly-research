@@ -826,3 +826,36 @@ Nearest-neighbour matching would have given 191 duplicate assignments.
 - DJA releases v8.
 - Other fields need it: CEERS `ceers-full` is 250–400 MB (state the reason first). MIRI colours in a fixed
   0.5″ aperture need their own evaluation.
+
+## D-014 Rank only confirmed detections: best-band S/N floor and multi-band confirmation (2026-10-07)
+
+**Decision.** The D-011 quality gate gains two configurable tests (ASSUMPTION thresholds):
+- `low_snr`: the best aper50 S/N over the bands a source is detected in is below `min_detection_snr` (5).
+- `single_band`: the source is detected in one band only, and no independent detection confirms it.
+  With matched photometry, a match to the DJA catalog counts as confirmation, because DJA detects on a
+  stacked multi-band image.
+
+Both apply before ranking, and flagged sources stay in `quality.ecsv` with their reason. The
+methodology already treats single-band detections as artifact candidates (snowballs, cosmic rays).
+
+**Alternatives rejected.**
+- A diffraction-spike mask around bright stars as the first step: it needs per-observation spike
+  geometry. The 5–6 spike and stripe detections in run `20261007T122054Z-c52935ec` were all single-band with no DJA match,
+  so confirmation removes them without geometry.
+- An S/N floor in the reference band only (run `20261007T123127Z-3b78b3fc`): it excluded red dropouts. The published
+  F150W-dropout candidate `f277w_829` (S/N 104–376 in F277W–F444W, undetected at F200W and bluer) left
+  the top 20, and 1,285 SMACS sources had S/N ≥ 5 in some band but not in F200W.
+
+**Evidence.** Run `20261007T123653Z-d45d04d1` vs `20261007T122054Z-c52935ec`, visual check of the SMACS galaxy top 20 (unvetted):
+- spike and stripe detections fell from 5–6 to 1, and near-noise sources from about 6 to 0;
+- `f277w_829` is rank 4 and `f200w_1032` (`[MJR2023] 028.2`) rank 10;
+- 7 of the top 20 are catalogued objects.
+
+Sources ranked: SMACS NIRCam 2,588 of 5,254, MIRI 95 of 530, CEERS 2,766 of 7,582.
+
+**Revisit if.**
+- Single-band sources matter scientifically, e.g. extreme emission-line objects: rank them as their own
+  stratum.
+- MIRI loses too much: only 103 of 530 sources pass, so a MIRI-specific confirmation is needed (e.g. a
+  NIRCam counterpart).
+- Spike or stripe detections that are multi-band appear: then add the spike-geometry mask.

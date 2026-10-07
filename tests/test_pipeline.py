@@ -1110,3 +1110,28 @@ def test_daofind_max_ci_is_validated(tmp_path):
     path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     with pytest.raises(pipeline.ConfigError, match="daofind_max_ci"):
         pipeline.load_config(path)
+
+
+def test_quality_gate_gets_confirmation_from_matched_photometry(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+    seen = {}
+    real = quality.assess_sources
+
+    def spy(sources, weight_map, **kw):
+        seen.update(kw)
+        seen["has_column"] = kw.get("confirm_column") in sources.colnames
+        return real(sources, weight_map, **kw)
+
+    monkeypatch.setattr(quality, "assess_sources", spy)
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["samples"][0]["matched_photometry"] = {
+        "url": "https://e.org/x.fits",
+        "sha256": "0" * 64,
+        "label": "dja05",
+    }
+    config["stages"]["quality"].update(min_detection_snr=5, require_multiband=True)
+    path = tmp_path / "conf.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    pipeline.run(path, samples=[config["samples"][0]["id"]])
+    assert seen["min_detection_snr"] == 5 and seen["require_multiband"] is True
+    assert seen["confirm_column"] == "dja05_match_sep_arcsec" and seen["has_column"]
