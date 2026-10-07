@@ -13,9 +13,10 @@ the cutout WCS, not at the cutout's centre pixel. A candidate is ``confirmed`` w
 |dmag| ≥ ``--min-dmag`` at ≥ ``--min-sigma`` in every band given.
 
 Positions from another frame or catalog (e.g. a literature position) can sit 0.1″ off the source,
-and then PSF-wing differences between epochs fake a change (Earendel, 2026-10-08: −0.75 mag at
-the literature position, +0.01 mag at the centroid). ``--recentre-arcsec`` moves the aperture to
-the epoch-1 centroid in each band and measures epoch 2 at that same sky position.
+and then PSF-wing differences between epochs fake a change (Earendel, docs/fields/sunrise.md).
+``--recentre-arcsec`` moves the aperture to the source centroid in each band, found in the epoch
+where the source exists (epoch 2 for ``appeared`` candidates, else epoch 1), and measures both
+epochs at that same sky position.
 
     python scripts/transient_forced.py --candidates outputs/transients/coincident.ecsv \\
         --band F444W jw02736-o001_t001_nircam_clear-f444w jw06882-o057_t057_nircam_clear-f444w \\
@@ -66,21 +67,39 @@ def aperture_flux(
     return flux, e
 
 
-def recentre(sci: np.ndarray, x: float, y: float, half_px: int) -> tuple[float, float]:
-    """Intensity-weighted centroid of the positive, background-subtracted pixels within a
-    ``(2 half_px + 1)`` box around ``(x, y)``; the input position when the box is empty."""
-    if not (np.isfinite(x) and np.isfinite(y)):
+def recentre(
+    sci: np.ndarray, x: float, y: float, half_px: int, max_iter: int = 10
+) -> tuple[float, float]:
+    """Iterated intensity-weighted centroid near ``(x, y)``.
+
+    Each pass takes the positive pixels of a ``(2 half_px + 1)`` box around the current position,
+    minus the median of a local ring (``2–3 half_px``), and moves the box to their centroid until
+    it moves by < 0.05 px. The input position is returned when it lies outside the image, when a
+    box is empty, or when the centroid drifts more than ``2 half_px`` from the input (the box then
+    followed a neighbour, not the target)."""
+    ny, nx = sci.shape
+    if not (np.isfinite(x) and np.isfinite(y)) or not (0 <= x < nx and 0 <= y < ny):
         return x, y
-    xi, yi = int(round(x)), int(round(y))
-    y0, x0 = max(yi - half_px, 0), max(xi - half_px, 0)
-    sub = sci[y0 : yi + half_px + 1, x0 : xi + half_px + 1]
-    if sub.size == 0 or not np.isfinite(sub).any():
+    yy, xx = np.mgrid[0:ny, 0:nx]
+    cx, cy = x, y
+    for _ in range(max_iter):
+        r = np.maximum(np.abs(xx - cx), np.abs(yy - cy))
+        box = (r <= half_px) & np.isfinite(sci)
+        ring = (r >= 2 * half_px) & (r <= 3 * half_px) & np.isfinite(sci)
+        if not box.any():
+            return x, y
+        bkg = float(np.median(sci[ring])) if ring.sum() >= 8 else float(np.nanmedian(sci))
+        w = np.clip(sci[box] - bkg, 0, None)
+        if w.sum() <= 0:
+            return x, y
+        nxc, nyc = float((w * xx[box]).sum() / w.sum()), float((w * yy[box]).sum() / w.sum())
+        done = np.hypot(nxc - cx, nyc - cy) < 0.05
+        cx, cy = nxc, nyc
+        if done:
+            break
+    if np.hypot(cx - x, cy - y) > 2 * half_px:
         return x, y
-    w = np.clip(np.nan_to_num(sub - np.nanmedian(sci)), 0, None)
-    if w.sum() <= 0:
-        return x, y
-    yy, xx = np.mgrid[0 : sub.shape[0], 0 : sub.shape[1]]
-    return float(x0 + (w * xx).sum() / w.sum()), float(y0 + (w * yy).sum() / w.sum())
+    return cx, cy
 
 
 def measure(
@@ -93,7 +112,8 @@ def measure(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Aperture fluxes and errors at each target's sky position (cutout WCS), or at the cutout
     centre when no position is given (NaN for missing files). With ``recentre_arcsec`` > 0 the
-    aperture moves to the centroid within that half-width first. Also returns the RA/Dec used."""
+    aperture moves to the centroid found from that half-width first (``recentre``). Also returns
+    the RA/Dec used."""
     flux, err = np.full(len(paths), np.nan), np.full(len(paths), np.nan)
     ra_used, dec_used = np.full(len(paths), np.nan), np.full(len(paths), np.nan)
     r_px = r_arcsec / scale_arcsec
@@ -111,7 +131,7 @@ def measure(
         if ra is not None and dec is not None:
             cx, cy = (float(v) for v in wcs.world_to_pixel_values(ra[k], dec[k]))
         if recentre_arcsec > 0:
-            cx, cy = recentre(sci, cx, cy, max(1, int(round(recentre_arcsec / scale_arcsec))))
+            cx, cy = recentre(sci, cx, cy, max(1, int(np.ceil(recentre_arcsec / scale_arcsec))))
         ra_used[k], dec_used[k] = (float(v) for v in wcs.pixel_to_world_values(cx, cy))
         flux[k], err[k] = aperture_flux(sci, e, cx, cy, r_px, 2.5 * r_px, 4.0 * r_px)
     return flux, err, ra_used, dec_used
@@ -168,8 +188,8 @@ def main(argv: list[str] | None = None) -> int:
         "--recentre-arcsec",
         type=float,
         default=0.0,
-        help="move the aperture to the epoch-1 centroid within this half-width, per band, and use "
-        "that sky position in epoch 2 too (for positions from another frame or catalog)",
+        help="move the aperture to the source centroid (box half-width) per band, found in epoch 1 "
+        "(epoch 2 for 'appeared' candidates), and measure both epochs there",
     )
     args = ap.parse_args(argv)
 
@@ -185,8 +205,12 @@ def main(argv: list[str] | None = None) -> int:
     out = Table({"source_uid": targets["source_uid"], "ra": targets["ra"], "dec": targets["dec"]})
     confirmed = np.ones(len(targets), bool)
     for band, obs1, obs2 in args.band:
-        fl, er = [], []
-        ra_b, dec_b = np.asarray(targets["ra"]), np.asarray(targets["dec"])
+        # appeared sources exist only in epoch 2, so they are centroided there; others in epoch 1
+        if "kind" in cand.colnames:
+            from_e2 = np.char.startswith(np.asarray(cand["kind"]).astype(str), "appeared")
+        else:
+            from_e2 = np.zeros(len(targets), bool)
+        files, scales = [], []
         for epoch, obs in (("1", obs1), ("2", obs2)):
             uri = pipeline.l3_image_uri(cfg.get("cloud"), obs)
             t = cutouts.make_cutouts(
@@ -196,20 +220,25 @@ def main(argv: list[str] | None = None) -> int:
                 extensions=["ERR"],
                 out_dir=args.out / "cutouts" / f"{band}_e{epoch}",
             )
-            scale = float(np.mean(t.meta["pixel_scale_arcsec"]))
+            scales.append(float(np.mean(t.meta["pixel_scale_arcsec"])))
             paths = {str(u): str(p) for u, p in zip(t["source_uid"], t["path"], strict=True)}
-            f, e, ra_used, dec_used = measure(
-                [paths.get(str(u), "") for u in targets["source_uid"]],
-                args.radius_arcsec,
-                scale,
-                ra_b,
-                dec_b,
-                args.recentre_arcsec if epoch == "1" else 0.0,
-            )
-            if epoch == "1" and args.recentre_arcsec > 0:
-                ok = np.isfinite(ra_used)
-                ra_b, dec_b = np.where(ok, ra_used, ra_b), np.where(ok, dec_used, dec_b)
-                out[f"{band}_ra"], out[f"{band}_dec"] = ra_b, dec_b
+            files.append([paths.get(str(u), "") for u in targets["source_uid"]])
+        ra_b, dec_b = np.asarray(targets["ra"]), np.asarray(targets["dec"])
+        if args.recentre_arcsec > 0:
+            cen = [
+                measure(files[k], args.radius_arcsec, scales[k], ra_b, dec_b, args.recentre_arcsec)[
+                    2:
+                ]
+                for k in (0, 1)
+            ]
+            ra_c = np.where(from_e2, cen[1][0], cen[0][0])
+            dec_c = np.where(from_e2, cen[1][1], cen[0][1])
+            ok = np.isfinite(ra_c) & np.isfinite(dec_c)
+            ra_b, dec_b = np.where(ok, ra_c, ra_b), np.where(ok, dec_c, dec_b)
+            out[f"{band}_ra"], out[f"{band}_dec"] = ra_b, dec_b
+        fl, er = [], []
+        for k in (0, 1):  # both epochs at the same sky position
+            f, e, _, _ = measure(files[k], args.radius_arcsec, scales[k], ra_b, dec_b)
             fl.append(f)
             er.append(e)
         dm, sig, sig_flux = compare(fl[0], er[0], fl[1], er[1], args.sys_floor)

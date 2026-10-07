@@ -1281,19 +1281,20 @@ Field docs: `docs/fields/*.md`.
 - **`scripts/transient_combine.py`** keeps positions with the same `kind` in ≥ 2 bands within 0.3″. It then
   excludes positions near Gaia DR3 sources (one VizieR cone), within `r = 1.5″ × 10^(0.2 (20 − G))`, clipped to
   1.5–12″ (ASSUMPTION). Gaia sources include compact galaxies, so the mask is conservative.
-- **`transient_forced.py --recentre-arcsec`** moves the aperture to the epoch-1 centroid in each band and
-  measures epoch 2 at the same sky position. Use it for positions taken from another frame or catalog.
+- **`transient_forced.py --recentre-arcsec`** moves the aperture to an iterated centroid in each band and
+  measures both epochs at that sky position. `appeared` candidates are centroided in epoch 2, all others in epoch 1.
+  Use it for positions taken from another frame or catalog.
 - **Evidence:**
   - Catalog stage, same pipeline: 71/65/129/107 candidates in F090W/F115W/F277W/F356W, against hundreds in
     SMACS/VENUS. 58 coincide in ≥ 2 bands, and 6 of them lie near Gaia sources.
-  - Forced photometry, recentred within 0.1″: 0 of 53 pass in all four bands. 3 pass in one or two bands, and all
-    3 are ordinary on visual check: two lie on galaxy outskirts at the epoch-2 LW footprint edge, and one has a
-    linear streak through it in epoch 2.
+  - Forced photometry, recentred (0.15″ box): 0 of 53 pass in all four bands. 2 pass in one or two bands, and
+    both are ordinary on visual check: one has a linear streak through it in epoch 2, and the other lies on galaxy
+    outskirts at the epoch-2 LW footprint edge.
   - Noise calibration on 150 ordinary sources (F356W 25.5–28, median 27.0): the robust std of the ERR-based flux
     significance is 1.18/1.23/1.49/1.36 (F090W/F115W/F277W/F356W). ERR therefore underestimates the noise by
     1.2–1.5×, and 3 of 600 control measurements exceed 5σ.
   - Earendel (known case) at the Scofield+2025 position, without recentring: F356W −0.76 mag at 5.7σ. Its
-    centroid lies 0.13–0.15″ away in LW. Recentred, |Δm| ≤ 0.10 mag at |σ| ≤ 1.2 in all four bands.
+    centroid lies 0.15–0.16″ away. Recentred, |Δm| ≤ 0.18 mag at |σ| ≤ 1.5 in all four bands.
 - **Failed approach:** a fixed aperture at a literature position. An offset of 0.1″ between the aperture and the
   source turns PSF-wing differences into a fake brightening, because the PSF rotates about 180° between the epochs.
 

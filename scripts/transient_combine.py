@@ -31,41 +31,44 @@ from astropy.table import Table, vstack
 
 
 def coincident(tables: dict[str, Table], radius_arcsec: float = 0.3, min_bands: int = 2) -> Table:
-    """One row per position whose ``kind`` recurs in >= ``min_bands`` bands within the radius.
+    """One row per group of same-``kind`` candidates linked within the radius (friends of friends)
+    that spans >= ``min_bands`` bands.
 
-    The row is the first band's (in ``tables`` order); ``bands`` lists every band with that kind
-    there and ``n_bands`` counts them."""
+    The row is the group's first candidate (in ``tables`` order); ``bands`` lists the group's bands
+    and ``n_bands`` counts them."""
+    from scipy.sparse import coo_matrix
+    from scipy.sparse.csgraph import connected_components
+
     parts = []
     for band, t in tables.items():
         t = t.copy()
         t["band"] = band
         parts.append(t)
-    if not parts or sum(len(t) for t in parts) == 0:
-        return Table(
-            names=("ra", "dec", "kind", "band", "bands", "n_bands"),
-            dtype=(float, float, str, str, str, int),
-        )
     allc = vstack(parts, metadata_conflicts="silent")
-    c = SkyCoord(allc["ra"], allc["dec"], unit="deg")
-    i, j, _, _ = c.search_around_sky(c, radius_arcsec * u.arcsec)
-    kinds = np.asarray(allc["kind"]).astype(str)
-    bands_at: dict[int, set[str]] = {}
-    for a, b in zip(i, j, strict=True):
-        if kinds[a] == kinds[b]:
-            bands_at.setdefault(int(a), set()).add(str(allc["band"][b]))
-    order = list(tables)
-    keep, used = [], np.zeros(len(allc), bool)
-    for k in range(len(allc)):
-        bs = bands_at.get(k, set())
-        if used[k] or len(bs) < min_bands:
-            continue
-        same = np.flatnonzero((c.separation(c[k]).arcsec <= radius_arcsec) & (kinds == kinds[k]))
-        used[same] = True
-        keep.append((k, ",".join(sorted(bs, key=order.index)), len(bs)))
+    keep: list[tuple[int, str, int]] = []
+    if len(allc):
+        c = SkyCoord(allc["ra"], allc["dec"], unit="deg")
+        i, j, _, _ = c.search_around_sky(c, radius_arcsec * u.arcsec)
+        kinds = np.asarray(allc["kind"]).astype(str)
+        same = kinds[i] == kinds[j]
+        graph = coo_matrix((np.ones(same.sum()), (i[same], j[same])), shape=(len(allc), len(allc)))
+        _, comp = connected_components(graph, directed=False)
+        order = list(tables)
+        bands = np.asarray(allc["band"]).astype(str)
+        for g in np.unique(comp):
+            members = np.flatnonzero(comp == g)
+            bs = sorted(set(bands[members]), key=order.index)
+            if len(bs) >= min_bands:
+                keep.append((int(members[0]), ",".join(bs), len(bs)))
     out = allc[[k for k, _, _ in keep]]
-    out["bands"] = [b for _, b, _ in keep]
+    out["bands"] = np.array([b for _, b, _ in keep], dtype=str)
     out["n_bands"] = np.array([n for _, _, n in keep], int)
-    out.meta = {"provenance": "derived", "radius_arcsec": radius_arcsec, "min_bands": min_bands}
+    out.meta = {
+        "provenance": "derived",
+        "source": "same-kind band coincidence of scripts/transient_search.py candidates",
+        "radius_arcsec": radius_arcsec,
+        "min_bands": min_bands,
+    }
     return out
 
 
@@ -78,17 +81,21 @@ def exclusion_radius(
 
 
 def near_bright(ra, dec, gaia: Table, **kw) -> np.ndarray:
-    """Index into ``gaia`` of the bright source each position falls near, or -1."""
+    """Index into ``gaia`` of the bright source each position falls near (the nearest one when
+    several apply), or -1."""
     out = np.full(len(ra), -1, int)
     if len(ra) == 0 or len(gaia) == 0:
         return out
     pos = SkyCoord(ra, dec, unit="deg")
     g = SkyCoord(gaia["ra"], gaia["dec"], unit="deg")
     r = exclusion_radius(np.asarray(gaia["gmag"], float), **kw)
-    sep = pos[:, None].separation(g[None, :]).arcsec
-    inside = sep <= r[None, :]
-    hit = inside.any(axis=1)
-    out[hit] = np.argmax(inside[hit], axis=1)
+    # SkyCoord.search_around_sky(arg) returns indices into ``arg`` first, then into ``self``.
+    ip, ig, sep, _ = g.search_around_sky(pos, float(np.max(r)) * u.arcsec)
+    hit = sep.arcsec <= r[ig]
+    best = np.full(len(ra), np.inf)
+    for p_, g_, s_ in zip(ip[hit], ig[hit], sep.arcsec[hit], strict=True):
+        if s_ < best[p_]:
+            best[p_], out[p_] = s_, g_
     return out
 
 
@@ -135,19 +142,26 @@ def main(argv: list[str] | None = None) -> int:
 
     tables = {band: Table.read(p) for band, p in args.transients}
     cand = coincident(tables, args.radius_arcsec, args.min_bands)
+    cand.meta["source"] = {band: str(p) for band, p in args.transients}
     cand["near_gaia"] = np.full(len(cand), -1, np.int64)
     if args.gaia_centre:
         gaia = fetch_gaia(*args.gaia_centre, args.gaia_radius_arcmin)
         args.out.mkdir(parents=True, exist_ok=True)
         gaia.write(args.out / "gaia.ecsv", overwrite=True)
+        cand.meta["gaia"] = {
+            "source": gaia.meta["source"],
+            "centre": args.gaia_centre,
+            "n": len(gaia),
+        }
         idx = near_bright(np.asarray(cand["ra"]), np.asarray(cand["dec"]), gaia)
         cand["near_gaia"][idx >= 0] = gaia["source_id"][idx[idx >= 0]]
     excluded = cand[cand["near_gaia"] >= 0]
     targets = cand[cand["near_gaia"] < 0]
     for ra, dec, name in args.reference:  # known positions measured alongside, e.g. a lensed star
-        targets.add_row(
-            {"ra": float(ra), "dec": float(dec), "kind": f"reference_{name}", "n_bands": 0}
-        )
+        row = {c: (np.nan if targets[c].dtype.kind == "f" else -1) for c in targets.colnames}
+        row.update(ra=float(ra), dec=float(dec), kind=f"reference_{name}", band="", bands="")
+        row["n_bands"] = 0
+        targets.add_row(row)
     targets.meta.update(provenance="derived", n_excluded_near_gaia=len(excluded))
     args.out.mkdir(parents=True, exist_ok=True)
     targets.write(args.out / "targets.ecsv", overwrite=True)

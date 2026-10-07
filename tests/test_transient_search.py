@@ -161,3 +161,25 @@ def test_recentre_finds_an_offset_source():
     assert tf.recentre(np.zeros((41, 41)), 20.0, 20.0, 5) == (20.0, 20.0)  # empty box: unchanged
     x, y = tf.recentre(img, np.nan, 20.0, 5)
     assert np.isnan(x) and y == 20.0
+
+
+def test_coincident_merges_chains_into_one_group():
+    cosd = np.cos(np.deg2rad(DEC0))
+    step = 0.2 / 3600 / cosd  # A~B and B~C within 0.3", A and C 0.4" apart
+    tables = {
+        "F090W": _cands([("variable", RA0, DEC0)]),
+        "F115W": _cands([("variable", RA0 + step, DEC0)]),
+        "F277W": _cands([("variable", RA0 + 2 * step, DEC0)]),
+    }
+    out = tc.coincident(tables)
+    assert len(out) == 1 and out[0]["n_bands"] == 3
+    empty = tc.coincident({"F090W": _cands([]), "F115W": _cands([])})
+    assert len(empty) == 0 and "n_bands" in empty.colnames and empty.meta["provenance"] == "derived"
+
+
+def test_recentre_iterates_beyond_its_box_and_rejects_off_image_starts():
+    yy, xx = np.mgrid[0:41, 0:41]
+    img = 50.0 * np.exp(-((xx - 24.5) ** 2 + (yy - 20.0) ** 2) / (2 * 1.5**2)) + 3.0
+    cx, cy = tf.recentre(img, 20.0, 20.0, 3)  # 4.5 px away, box half-width 3
+    assert abs(cx - 24.5) < 0.2 and abs(cy - 20.0) < 0.2
+    assert tf.recentre(img, -10.0, 20.0, 2) == (-10.0, 20.0)

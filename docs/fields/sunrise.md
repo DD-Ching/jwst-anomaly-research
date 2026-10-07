@@ -142,20 +142,21 @@ The code is at this PR's head; outputs are under `outputs/transients_sunrise/` (
   - candidates: F090W 71, F115W 65, F277W 129, F356W 107.
 - **Combination** (`transient_combine.py`): 58 positions have the same kind in ≥ 2 bands (13 variable, 27
   appeared, 18 disappeared). 6 lie near Gaia DR3 sources (59 in a 4′ cone) and are excluded, leaving 53.
-- **Forced photometry,** 0.15″ aperture, recentred within 0.1″: the median Δm is ≤ 0.02 in every band, and the
-  5–95% range is −0.34…+0.18 mag. **0 of 53 pass in all four bands.** Passing in one or two bands:
-  - `c0018` (appeared in F277W and F356W; LW −0.39/−0.47 mag, flux significance 6.2/7.0): galaxy outskirts, 0.3″
-    from a bright core, at the epoch-2 LW footprint edge;
-  - `c0044` (disappeared in F277W and F356W): galaxy outskirts at the epoch-2 LW footprint edge;
-  - `c0049` (disappeared in F277W and F356W): a linear streak crosses the position in epoch 2 in all four bands.
+- **Forced photometry,** 0.15″ aperture, recentred with a 0.15″ box: `appeared` candidates are centroided in
+  epoch 2, all others in epoch 1. The median Δm is ≤ 0.003 in every band, and the 5–95% range is −0.39…+0.16 mag.
+  **0 of 53 pass in all four bands.** Passing in one or two bands:
+  - `c0049` (disappeared in F277W and F356W; it passes in F090W and F115W, −0.54/−0.66 mag): a linear streak crosses
+    the position in epoch 2 in all four bands;
+  - `c0018` (appeared in F277W and F356W; it passes in F356W only, +0.32 mag): galaxy outskirts, 0.3″ from a bright
+    core, at the epoch-2 LW footprint edge.
 - **Result: no credible transient** at |Δm| ≥ 0.3 mag and ≥ 5σ in all four bands, for sources the catalogs
   detect at S/N ≥ 10 in one epoch, in the overlap of the two epochs.
 - **Noise calibration:** forced photometry of 150 ordinary sources (F356W 25.5–28 mag) gives a robust std of the
   flux significance of 1.18–1.49. So ERR-based significances are 1.2–1.5× too large.
 - **Earendel:**
   - At the Scofield+2025 reference position, without recentring, it seemed to brighten by −0.62 (F277W) and −0.76
-    mag (F356W, 5.7σ). This is an artefact: the centroid lies 0.13–0.15″ away, and the PSF rotates by about 180°
+    mag (F356W, 5.7σ). This is an artefact: the centroid lies 0.15–0.16″ away, and the PSF rotates by about 180°
     between the epochs.
-  - Recentred: Δm = −0.07 ± 0.21 (F090W), +0.08 ± 0.17 (F115W), −0.10 ± 0.08 (F277W) and −0.04 ± 0.08 (F356W).
-    The errors are ERR-based plus a 0.05 mag floor, before the 1.2–1.5× calibration. This is consistent with no
-    change over 164 days.
+  - Recentred (centroid 0.15–0.16″ from the reference): Δm = +0.11 ± 0.18 (F090W), +0.18 ± 0.12 (F115W),
+    −0.05 ± 0.08 (F277W) and −0.08 ± 0.07 (F356W), all within 1.5σ. The errors are ERR-based plus a 0.05 mag floor,
+    before the 1.2–1.5× calibration. This is consistent with no change over 164 days.
