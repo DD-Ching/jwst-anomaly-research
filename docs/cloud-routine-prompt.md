@@ -56,19 +56,20 @@ MOVE FAST, SAFELY:
 - The session is ephemeral: commit and push before the run ends, because anything uncommitted is lost.
   If a host is blocked (403, x-deny-reason: host_not_allowed), record it in the handoff and continue with
   other work.
-- GitHub. GraphQL is blocked here, so `gh pr` and `gh issue` fail with 403. Prefer the GitHub MCP tools
-  when the session has them (load with ToolSearch: mcp__github__create_pull_request, pull_request_read,
-  merge_pull_request, issue_write). Otherwise use the REST calls in docs/operations.md §3, with literal
-  paths (shell variables do not persist between commands). Wait for CI with one background loop, not
-  with repeated polling turns.
-- A PR that conflicts with main gets no CI at all (GitHub needs a merge ref), so a PR with no check
-  runs is usually a conflict. Merge origin/main into the branch, resolve, test and push.
-- Merging. Before merging, confirm from the PR's files, labels and head branch that CLAUDE.md's merge
-  policy holds: a claude/* branch, no needs-human label, no guarded file, all 4 CI checks green. Then
-  squash-merge with mcp__github__merge_pull_request (merge_method squash, sha = the reviewed head).
-  The repository deletes merged branches itself. If merging is unavailable or refused, leave the PR
-  merge-ready (CI green, review findings fixed, handoff in its CHANGELOG) and add the label
-  `merge-ready`; the owner or a local session merges it.
+- GitHub. GraphQL is blocked here, so `gh pr` and `gh issue` fail with 403. Use the session's GitHub
+  MCP tools (load with ToolSearch: mcp__github__create_pull_request, pull_request_read,
+  merge_pull_request) or the REST calls in docs/operations.md §3, with literal paths. Add labels with
+  the REST call, because MCP issue_write replaces the whole label set.
+- Conflicts. Read the PR's mergeable_state: "dirty" means it conflicts with main, and a conflicting PR
+  gets no CI at all. Merge origin/main into the branch, review the conflict resolution, test and push.
+  Wait for CI with the single background loop in docs/operations.md §3, which times out.
+- Merging. Merge only when every condition of CLAUDE.md's merge policy holds, checked on GitHub as
+  docs/operations.md §3 lists: author DD-Ching and head repository DD-Ching/jwst-anomaly-research; head
+  branch claude/*, batch/* or integration/*; no needs-human label; no guarded file on any page of the
+  PR's files; every CI job successful (the Claude workflow's skipped runs are not CI); /code-review on
+  the final diff; --run-network tests if I/O code changed; no result announced outside the repo. Then
+  squash-merge with mcp__github__merge_pull_request (merge_method squash, expectedHeadSha = the reviewed
+  head). If merging is unavailable or refused, label the PR merge-ready for the owner or a local session.
 
 PRIORITIES: TASKS.md "Now", top item first. Run the exotic-specific screens only after the ordinary
 lens-model checks, and vet every hit with /vet-candidate.
