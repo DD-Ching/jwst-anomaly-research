@@ -1116,3 +1116,41 @@ carries the `low_weight` flag: median core WHT below `low_weight_frac` (0.5) of 
 **Revisit if.**
 - Real sources in shallow regions (dither gaps, mosaic edges) are lost; check them with `screened.ecsv`.
 - Short-wavelength-only artifacts appear in full-weight regions: then add the DJA-confirmation rule.
+
+## D-022 CEERS control on DJA matched photometry; >200 MB download justified (2026-10-08)
+
+**Decision.** `ceers_t021` gets the same DJA v7.4 matched-aperture photometry as SMACS (D-013): the
+`ceers-full-grizli-v7.4-fix_phot.fits` catalog, aperture 0.5″, label `dja05`, radius 0.2″. Its colours,
+detection confirmation (D-014), screening (D-019 to D-021) and top-k metric are then built the same way as
+in the science field.
+
+**Stated reason for the 250.5 MB download** (CLAUDE.md, >200 MB):
+- The control field must share the science field's photometric system, or science-vs-control comparisons
+  are invalid (TASKS since cycle 5).
+- DJA's `ceers-full` catalog is the only public matched-aperture catalog in the same grizli system.
+- A FITS binary table is stored row by row and is not sorted by position, so byte-range reads cannot extract the
+  t021 rows.
+- The file sits in the gitignored data cache with a pinned sha256. The config sets `max_bytes` explicitly.
+
+**Alternatives rejected.**
+- Keeping pipeline aper50 colours for CEERS: they are size-biased (D-013), so the samples would differ in
+  construction.
+- Our own forced photometry on the CEERS mosaics: GB of `_i2d` downloads and a re-implementation (D-013).
+- CEERS DR1.0 alone: it is not on the SMACS system. It stays the validation target (D-013 "Revisit if").
+
+**Evidence.** Run `20261007T202419Z-65728e80` (CEERS t021):
+- 3,069 of 7,582 merged sources match DJA one-to-one.
+- The D-014 gate passes 3,156, up from 2,757 without confirmation.
+- 4 sources were screened from the top 20 (3 low weight, D-021; 1 star without host light, D-020).
+- Top 20: 85% known objects (CEERS is heavily catalogued), 0% cutout-flagged.
+- The stellar locus does not apply: only 2 catalogued stars at 20–22.5 mag, against the 10 needed.
+
+**Known remaining differences between the samples.**
+- Pipeline-catalog features come from jwst 3.0.0 in CEERS and 2.0.1 in SMACS (D-010).
+- There is no stellar locus in CEERS.
+- "Known object" fractions reflect literature coverage, not anomaly rates.
+
+**Revisit if.**
+- DJA colours disagree with CEERS DR1.0 beyond the errors.
+- A newer DJA CEERS release appears.
+- Disk space becomes tight: delete the cached file and re-fetch it by its hash.

@@ -1,7 +1,7 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T194733Z-ac5f1b59`).
+Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T202419Z-65728e80`).
 
 ## Now (M1 follow-through)
 1. **Vet `jw02736-o001_t001_nircam_f200w_2804`** (galaxy rank 6 in run `20261007T144011Z-11342d69`). It is point-like (r50 2.13 px,
@@ -12,17 +12,20 @@ Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T194733Z
    - `f200w_2054`: a stellar-locus member 0.23″ from the lensed image NED `[MJR2023] 002.3`; it has spikes, and an
      arc lies next to it.
 3. **Vet MIRI's known `G_Lens` object** with `/vet-candidate` and `scripts/vet_evidence.py`.
-4. **Per-sample confirmation** (D-014 limitation): only SMACS NIRCam can confirm single-band detections
-   and apply the stellar locus. MIRI passes 103 of 530, and CEERS drops every single-band source. Add
-   matched photometry or confirmation for each sample (DJA for CEERS, NIRCam counterparts for MIRI).
-5. **Control comparability:** CEERS differs from SMACS in colours (aper50), gate (no confirmation) and
-   classification (no locus). Science-vs-control comparisons stay invalid until it gets DJA photometry.
-6. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
+4. **Spike streaks confirmed by a coincident DJA object** (D-014 "Revisit if"; run `20261007T202419Z-65728e80`): CEERS
+   `f200w_2842` (#4) is detected in F200W only, with ellipticity 0.95 and area 376 px. A bright source lies 4.6″
+   away, and a DJA object sits 0.04″ off. Test single-band, highly elongated detections near bright sources
+   (a spike-geometry check), without dropping lensed arcs.
+5. **MIRI confirmation** (D-014 limitation): MIRI passes 103 of 530. Confirm MIRI detections with NIRCam
+   counterparts. SMACS and CEERS now both have DJA confirmation.
+6. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and 2.0.1
+   in SMACS, until 2736 is reprocessed. CEERS has no stellar locus (too few stars). DJA colours are still to be
+   validated against CEERS DR1.0. Then compare the science and control feature distributions.
+7. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
 
 ## Next (M2)
 - Matched-aperture colours for other samples (D-013 is done for SMACS NIRCam):
-  - CEERS: DJA `ceers-full` (250–400 MB, so state the reason before downloading), validated against
-    CEERS DR1.0.
+  - CEERS: done (D-022). Validation against CEERS DR1.0 is still open.
   - MIRI: evaluate fixed-aperture colours.
 - DJA photo-z as a ranking feature or stratifier (it is used for vetting since cycle 7).
 - Re-fetch program 2736 after MAST reprocesses it with jwst ≥ 3.0 (expected around mid to late October 2026).
