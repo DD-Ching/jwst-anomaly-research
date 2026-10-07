@@ -86,3 +86,52 @@ def test_moments_growth_reports_the_size_measured(monkeypatch, tmp_path):
     assert err is None
     assert sizes == [4.0, 8.0, 16.0, 32.0]  # MAX_GROWTH = 3 doublings
     assert moments["cutout_arcsec"] == 32.0 and moments["touches_border"]
+
+
+def _zout(path, **extra):
+    from astropy.table import Table
+
+    t = Table(
+        {
+            "id": [1, 2],
+            "ra": [10.0, 10.01],
+            "dec": [-5.0, -5.0],
+            "z_phot": [2.5, 4.8],
+            "z025": [2.3, 4.6],
+            "z160": [2.4, 4.7],
+            "z500": [2.5, 4.8],
+            "z840": [2.6, 4.9],
+            "z975": [2.8, 5.4],
+            "z_phot_chi2": [10.0, 3.5],
+            "z_spec": [-1.0, 4.81],
+            **extra,
+        }
+    )
+    t.meta.update(VERSION="0.8.3", TEMPLATES_FILE="templates/x.param")
+    t.write(path, overwrite=True)
+    return path
+
+
+def test_photoz_evidence_nearest_within_radius(tmp_path):
+    from astropy.coordinates import SkyCoord
+
+    table = vet.load_photoz(_zout(tmp_path / "x.zout.fits", nusefilt=[6, 16]))
+    assert table.meta["provenance"] == "model_prediction" and len(table.meta["sha256"]) == 64
+    near = SkyCoord(10.0, -5.0 + 0.05 / 3600, unit="deg")
+    ev = vet.photoz_evidence(table, near, 0.2)
+    assert ev["match"]["id"] == 1 and ev["match"]["z_spec"] is None  # -1 = no z_spec
+    assert ev["match"]["sep_arcsec"] == pytest.approx(0.05, abs=1e-3)
+    assert ev["match"]["nusefilt"] == 6 and ev["eazy_version"] == "0.8.3"
+    second = vet.photoz_evidence(table, SkyCoord(10.01, -5.0, unit="deg"), 0.2)
+    assert second["match"]["z_spec"] == pytest.approx(4.81)
+    far = SkyCoord(10.0, -5.0 + 1.0 / 3600, unit="deg")
+    assert vet.photoz_evidence(table, far, 0.2)["match"] is None
+    assert vet.photoz_evidence(table[:0], near, 0.2)["match"] is None  # empty table
+
+
+def test_load_photoz_rejects_other_tables(tmp_path):
+    from astropy.table import Table
+
+    Table({"ra": [1.0], "dec": [2.0]}).write(tmp_path / "x.fits")
+    with pytest.raises(ValueError, match="zout"):
+        vet.load_photoz(tmp_path / "x.fits")

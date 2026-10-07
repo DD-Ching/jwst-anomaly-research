@@ -15,7 +15,9 @@ and the rest still run. Evidence collected:
 * SIMBAD/NED/Gaia matches (observed): one query at the largest radius, filtered for smaller ones,
   with redshifts, lens flags, query times and cache status;
 * cutouts in every band of the sample (S3 byte ranges; the reference band uses the gate's
-  reference weight).
+  reference weight);
+* optionally, the nearest entry of an eazy ``zout`` photo-z table (model_prediction), e.g. the
+  DJA one for the matched-photometry catalog (``--photoz``; see SOURCES.md).
 
 Example (program 2736 with the Mahler et al. 2022 model, pinned commit; see SOURCES.md):
 
@@ -66,6 +68,9 @@ QUANTITIES = (
     "is_extended",
 )
 MAX_GROWTH = 3  # cutout doublings while the moments segment touches the border
+# eazy zout columns kept as photo-z evidence (z_spec < 0 means none).
+PHOTOZ_COLUMNS = ("id", "z_phot", "z025", "z160", "z500", "z840", "z975", "z_phot_chi2", "z_spec")
+PHOTOZ_OPTIONAL = ("nusefilt", "Av")
 
 
 def axis_offset_deg(pa_a: float, pa_b: float) -> float:
@@ -156,6 +161,46 @@ def load_lens_images(source: str) -> Table:
     return out
 
 
+def load_photoz(path: str | Path) -> Table:
+    """An eazy ``zout`` table (``id, ra, dec`` plus :data:`PHOTOZ_COLUMNS`), with its sha256."""
+    path = Path(path)
+    t = Table.read(path)
+    missing = [c for c in ("ra", "dec", *PHOTOZ_COLUMNS) if c not in t.colnames]
+    if missing:
+        raise ValueError(f"{path}: not an eazy zout table, missing {missing}")
+    keep = ["ra", "dec", *PHOTOZ_COLUMNS, *(c for c in PHOTOZ_OPTIONAL if c in t.colnames)]
+    out = Table({c: np.asarray(t[c]) for c in keep})
+    out.meta.update(
+        provenance=schema.Provenance.MODEL_PREDICTION.value,
+        source=path.name,
+        sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+        eazy_version=t.meta.get("VERSION"),
+        templates=t.meta.get("TEMPLATES_FILE"),
+    )
+    return out
+
+
+def photoz_evidence(table: Table, pos: SkyCoord, radius_arcsec: float) -> dict[str, Any]:
+    """The nearest photo-z entry within ``radius_arcsec`` (``match: null`` when there is none)."""
+    match = None
+    sep = pos.separation(SkyCoord(table["ra"], table["dec"], unit="deg")).arcsec
+    j = int(np.argmin(sep)) if len(table) else -1
+    if j >= 0 and sep[j] <= radius_arcsec:
+        match = {c: table[c][j] for c in table.colnames if c not in ("ra", "dec")}
+        match["sep_arcsec"] = float(sep[j])
+        if match["z_spec"] < 0:
+            match["z_spec"] = None
+    return {
+        "catalog": table.meta.get("source"),
+        "sha256": table.meta.get("sha256"),
+        "eazy_version": table.meta.get("eazy_version"),
+        "templates": table.meta.get("templates"),
+        "radius_arcsec": radius_arcsec,
+        "match": match,
+        "label": schema.Provenance.MODEL_PREDICTION.value,
+    }
+
+
 def json_safe(obj: Any) -> Any:
     """Recursively replace NaN/inf by None and numpy scalars by Python ones."""
     if isinstance(obj, dict):
@@ -211,6 +256,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--radii", nargs="+", type=float, default=[1.0, 3.0])
     ap.add_argument("--size-arcsec", type=float, default=4.0)
     ap.add_argument("--out", type=Path, default=None)
+    ap.add_argument("--photoz", type=Path, help="eazy zout FITS table (e.g. the DJA one)")
+    ap.add_argument("--photoz-radius", type=float, default=0.2, help="match radius, arcsec")
     args = ap.parse_args(argv)
 
     # --- validate everything before any network work --------------------------------------
@@ -249,6 +296,12 @@ def main(argv: list[str] | None = None) -> int:
             lens = load_lens_images(args.lens_images)
         except Exception as exc:  # recorded, not fatal
             errors["lens_images"] = f"{type(exc).__name__}: {exc}"
+    photoz = None
+    if args.photoz:
+        try:
+            photoz = load_photoz(args.photoz)
+        except Exception as exc:  # recorded, not fatal
+            errors["photoz"] = f"{type(exc).__name__}: {exc}"
     center = SkyCoord(args.center[0], args.center[1], unit="deg") if args.center else None
     stars = None
     if pops is not None:
@@ -412,6 +465,11 @@ def main(argv: list[str] | None = None) -> int:
                 "meaning": "absent = not a constraint image of this model (not: singly imaged)",
                 "label": "observed",
             }
+        if photoz is not None:
+            try:
+                ev["photoz"] = photoz_evidence(photoz, pos, args.photoz_radius)
+            except Exception as exc:  # recorded, not fatal
+                ev["errors"]["photoz"] = f"{type(exc).__name__}: {exc}"
         if stars is not None:
             sep = pos.separation(stars).arcsec
             sep = sep[sep > 0.05]

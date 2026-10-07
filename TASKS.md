@@ -1,20 +1,19 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T130207Z-c8ffc470`).
+Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T132538Z-96e911bb`).
 
 ## Now (M1 follow-through)
-1. **Vet the new candidates** with `/vet-candidate` and `scripts/vet_evidence.py` (run `20261007T130207Z-c8ffc470`):
-   - catalogued lens-related `jw02736-o001_t001_nircam_f277w_829` (`[YML2023] F150DB-C-4`, a red F150W
-     dropout, rank 3) and `jw02736-o001_t001_nircam_f200w_1032` (`[MJR2023] 028.2`, rank 8);
-   - arc-like `..._f200w_438` (rank 11);
-   - red faint `..._f356w_1243` (`[RBI2023] 18`, rank 12);
-   - MIRI's known `G_Lens` object.
+1. **Stellar-locus lower bound** (D-015): the PSF-like star `jw02736-o001_t001_nircam_f200w_1874` (F200W 21.4 mag, spikes,
+   not in Gaia) has DJA r50 2.10 px, 27% below r50_psf 2.86 px, so the locus missed it. Nothing real is smaller
+   than the PSF. Drop the lower bound (keep a noise floor), or calibrate r50_psf against magnitude, then
+   re-check the star counts.
 2. **Blended stars:** three PSF-like blends (`940`, `2242`, `1571`) remain in the SMACS galaxy top 20
    (D-015 "Revisit if"). Add image-based PSF-spike detection on cutouts.
-3. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
-   subcommands.
-4. Report the top-k artifact and star fractions per run as a tracked metric.
+3. **Vet MIRI's known `G_Lens` object** with `/vet-candidate` and `scripts/vet_evidence.py`.
+4. **Track metrics per run:** the fractions of top k that are artifacts, stars and catalogued objects.
+   Recovering catalogued lensed images and high-z candidates validates the ranking; uncatalogued high-rank
+   sources (like `438`) form the discovery set.
 5. **Per-sample confirmation** (D-014 limitation): only SMACS NIRCam can confirm single-band detections
    and apply the stellar locus. MIRI passes 103 of 530, and CEERS drops every single-band source. Add
    matched photometry or confirmation for each sample (DJA for CEERS, NIRCam counterparts for MIRI).
@@ -27,7 +26,7 @@ Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T130207Z
   - CEERS: DJA `ceers-full` (250–400 MB, so state the reason before downloading), validated against
     CEERS DR1.0.
   - MIRI: evaluate fixed-aperture colours.
-- DJA photo-z (`smacs0723-grizli-v7.4-fix.photoz.tar.gz`, 59 MB) as a feature or for vetting.
+- DJA photo-z as a ranking feature or stratifier (it is used for vetting since cycle 7).
 - Re-fetch program 2736 after MAST reprocesses it with jwst ≥ 3.0 (expected around mid to late October 2026).
   Until then, compare only photometric columns across programs (D-010).
 - Image embeddings (Zoobot via `timm`, DINOv2) on cutouts, evaluated against the baseline with
