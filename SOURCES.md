@@ -31,6 +31,33 @@ edit only your own section in parallel work.
 - Claude Code skills: https://code.claude.com/docs/en/skills ; routines (`/schedule`):
   https://code.claude.com/docs/en/routines
 - `anthropics/claude-code-action`: https://github.com/anthropics/claude-code-action
+- **Claude Code docs**, checked 2026-10-07 against Claude Code v2.1.292:
+  - `/loop` and scheduled tasks: https://code.claude.com/docs/en/scheduled-tasks
+  - cloud environments (network levels, default allowlist, GitHub proxy, setup scripts):
+    https://code.claude.com/docs/en/cloud-environments
+  - Desktop scheduled tasks: https://code.claude.com/docs/en/desktop-scheduled-tasks
+  - GitHub Actions: https://code.claude.com/docs/en/github-actions
+  - permissions (rule syntax, deny before ask before allow): https://code.claude.com/docs/en/permissions
+  - settings: https://code.claude.com/docs/en/settings , with schema https://json.schemastore.org/claude-code-settings.json
+  - memory: https://code.claude.com/docs/en/memory
+  - commands (`/batch`): https://code.claude.com/docs/en/commands
+  - subagents: https://code.claude.com/docs/en/sub-agents
+  - headless (`-p`): https://code.claude.com/docs/en/headless
+  - `claude setup-token`: https://code.claude.com/docs/en/authentication
+- **claude-code-action v1**: tag `v1`, released 2025-08-26, https://github.com/anthropics/claude-code-action/releases/tag/v1 .
+  Inputs: https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md . Security model (write-access
+  check, PR creation by link, `include_comments_by_actor`): https://github.com/anthropics/claude-code-action/blob/main/docs/security.md
+  (checked 2026-10-07). The action's git handling at tag `v1`: it embeds its token in the remote URL and fetches fork
+  PRs via `refs/pull` (https://github.com/anthropics/claude-code-action/tree/v1/src/github/operations).
+- Workflow actions: `astral-sh/setup-uv@v10.2.0` (https://github.com/astral-sh/setup-uv); `actions/checkout@v7`.
+  Validated with actionlint 1.7.12 (https://github.com/rhysd/actionlint), checked 2026-10-07.
+- GitHub docs: rulesets, https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets ;
+  Actions billing (free for public repositories on standard runners),
+  https://docs.github.com/en/billing/concepts/product-billing/github-actions (checked 2026-10-07).
+- **Hosts used by the science services**, observed on 2026-10-07 with astroquery 0.4.11 by logging DNS lookups:
+  `mast.stsci.edu` (query, product list, download), `stpubdata.s3.amazonaws.com` (S3 byte-range FITS),
+  `simbad.cds.unistra.fr`, `vizier.cds.unistra.fr`, `cdsxmatch.u-strasbg.fr`, `ned.ipac.caltech.edu` and
+  `gea.esac.esa.int`. These feed the routine allowlist in docs/operations.md.
 
 ## Archive access (unit 1)
 
