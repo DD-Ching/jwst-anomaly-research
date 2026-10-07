@@ -9,7 +9,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - arcs whose orientation or curvature disagrees with the predicted shear;
    - multiple-image candidates where none is predicted;
    - parity or flux-ratio anomalies.
-   The tooling and exotic-signature survey (subagent, 2026-10-08) decides the route.
+   Route: port the Lenstool dPIE from autogalaxy (MIT) and switch to ICLv2, the final model (survey
+   2026-10-08; the worker branch `claude/lens-model` was interrupted). Exotic signatures:
+   docs/exotic_lensing.md.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;
@@ -24,8 +26,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - extended-veto fallback for sources without DJA r50 (Abell 2744 `7694`);
    - El Gordo module A is a flanking field;
    - reword `acquire._warn_if_reprocessed`.
-3. **Two-epoch search:** run `scripts/epoch_compare.py` (or an all-source batch mode) on every SMACS source covered
-   by VENUS 6882, looking for caustic-crossing transients and variable lensed images.
+3. **Two-epoch search** (D-027): SMACS/VENUS gave a null result. Next:
+   - Sunrise 2282 o010 against o120 (same pipeline, F090W/F115W/F277W/F356W). It includes Earendel: use DJA
+     positions, since it is not in the pipeline catalog.
+   - Exclude spiky or star positions before forced photometry.
 
 ## Then (M1 follow-through, after the M3 items)
 4. **Star-stratum sources with NED galaxy matches** (run `20261007T162133Z-2511977c`). Check their classification and photometry.

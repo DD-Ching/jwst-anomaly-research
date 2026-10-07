@@ -16,6 +16,7 @@ MAST (CAOM metadata)            query.py      query_observations / list_products
                                               DJA r50 + colours); stars ranked as <sample>-stars
   → baseline anomaly ranking    rank.py       score_anomalies
   → image evidence (top-k)      cutouts.py    make_cutouts (S3 byte-range reads; `spikes` flag D-018, screening D-019/D-021, host test D-020); viz.contact_sheet
+  → time domain (vetting)       scripts/transient_search.py + transient_forced.py (D-027)
   → external cross-check        crossmatch.py crossmatch (SIMBAD / NED / Gaia / CDS XMatch)
   → candidate store             candidates.py CandidateStore (SQLite) + provenance.py
   → orchestration               pipeline.py   run(config) ; cli.py `jwst-anomaly`
