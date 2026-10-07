@@ -2,6 +2,39 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-07: Size-robust colours from DJA matched apertures (D-013, cycle 4)
+- New `photometry.py`. The DJA v7.4 catalog is verified against its sha256 before it is cached, and is
+  joined one-to-one within 0.2″. Colours now come from 0.5″ matched apertures.
+- `features`: `ref_mag` and the morphology features keep the pipeline aperture's S/N gate, so sources
+  without a DJA match keep their morphology. With matched photometry, a band counts as detected when DJA
+  measured it at S/N ≥ 3. DAOFind sharpness/roundness apply only when 0 < CI_50_30 ≤ 1.8.
+- **The size bias is gone, measured on the same 1,423 rows** (run `20261007T122054Z-c52935ec`, F200W−F277W, F200W aper50
+  S/N > 10). Spearman between log area and colour:
+  - aper50: +0.181 (p = 6.7e-12);
+  - isophotal: −0.312 (p = 1.5e-33);
+  - DJA 0.5″: −0.012 (p = 0.66).
+
+  Re-measure with `python scripts/feature_size_bias.py --run-dir <outputs>/runs/20261007T122054Z-c52935ec --sample
+  smacs0723_nircam --compare dja05`.
+- Join coverage: 2,729 of 5,254 sources matched one-to-one. Nearest-neighbour matching gave 2,920, of
+  which 191 were fragments sharing one DJA object.
+- **Ranking:** the sources vetted in #13 dropped (`2925` to rank 1297, `2559` to 482, `1096` to 296). Two
+  catalogued lens-related objects are in the galaxy top 20 (observed cross-matches):
+  - rank 7 `f277w_829`, SIMBAD `[YML2023] F150DB-C-4` (also NED G_Lens);
+  - rank 13 `f200w_1032`, NED `SMACS J0723-73:[MJR2023] 028.2` (G_Lens).
+- **Top-20 purity is still mixed** (visual, unvetted):
+  - 4 faint PSF-like stars missing from Gaia;
+  - 5–6 detections on diffraction spikes or parallel stripes (a new artifact class the D-011 gate misses);
+  - about 6 faint, compact or near-noise sources, one of them hot-pixel-like;
+  - 3 arc-like sources;
+  - 1 catalogued elongated galaxy.
+- Failed approaches, both fixed after `/code-review` (15 findings, all addressed):
+  - nearest-neighbour joining (fragments shared photometry);
+  - gating morphology on DJA S/N, which erased the morphology of 44% of sources.
+  The first run, `20261007T120528Z-378af5a1`, used both.
+- **Handoff:** TASKS Now 1 (mask detections on diffraction spikes and stripes), Now 2 (S/N floor for
+  ranking), Now 3 (stellar locus), Now 4 (vet the catalogued lensed images and arcs).
+
 ## 2026-10-07: First vetting: three arc-like galaxy candidates (cycle 3)
 - New `scripts/vet_evidence.py` gathers vetting evidence:
   - per-band catalog rows;

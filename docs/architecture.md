@@ -7,6 +7,7 @@ MAST (CAOM metadata)            query.py      query_observations / list_products
   → reproducible acquisition    acquire.py    fetch_products → data/manifests/*
   → science-ready products      level-3 _cat.ecsv (photometry/shape) + _i2d.fits (images)
   → source representation       catalog.py    load_pipeline_catalog / merge_bands
+  → matched-aperture colours    photometry.py join_matched_photometry (DJA, per sample, D-013)
   → derived features            features.py   build_features
   → quality gate (D-011)        quality.py    assess_sources (coarse WHT map via cutouts.sample_weight_map)
   → star/galaxy strata (D-012)  classify.py   classify_sources (bulk Gaia/SIMBAD); stars ranked as <sample>-stars

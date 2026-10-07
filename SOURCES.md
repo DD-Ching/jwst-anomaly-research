@@ -372,3 +372,19 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - **NED** entries `SMACS J0723:[NDA2023] 01100` (z 1.9807) and `[NDA2023] 00908` (z 1.3618), retrieved through
   NED TAP by `crossmatch.query_matches` on 2026-10-07. The original reference for the `NDA2023` designation and
   the redshift type were not verified.
+
+## Matched-aperture photometry (cycle 4, checked 2026-10-07)
+
+- **DJA v7.4 SMACS 0723 catalog** (grizli; no license stated; cite arXiv:2302.10936, see docs/landscape.md):
+  - file https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/smacs0723-grizli-v7.4-fix_phot.fits, last-modified
+    2025-03-05, 38,626,560 bytes, sha256 `361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166`;
+  - 13,554 sources;
+  - apertures `ASEC_0..2` = 0.36, 0.5 and 0.7″ diameter;
+  - fluxes in µJy.
+- **SEP flag bits** used to filter DJA aperture measurements (`APER_TRUNC` 0x10, `APER_HASMASKED` 0x20,
+  `APER_ALLMASKED` 0x40, `APER_NONPOSITIVE` 0x80): https://raw.githubusercontent.com/kbarbary/sep/main/src/sep.h
+- **SIMBAD/NED designations** recovered in the top 20 of runs `20261007T120528Z-378af5a1` and `20261007T122054Z-c52935ec`, as returned by
+  `crossmatch` on 2026-10-07; their original papers are not verified:
+  - `SMACS J0723-73:[MJR2023] 028.2` (NED G_Lens);
+  - `[YML2023] F150DB-C-4` (SIMBAD);
+  - `[RBI2023] 18`, `SMACS J0723-7327:[CSM2022] 78`, `[MS2023] WDF-P-6576` (SIMBAD).

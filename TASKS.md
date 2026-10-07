@@ -1,33 +1,36 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T040938Z-01527ace`; the size bias
-is re-measured with `scripts/feature_size_bias.py`).
+Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T122054Z-c52935ec`; size bias via
+`scripts/feature_size_bias.py --compare dja05`).
 
 ## Now (M1 follow-through)
-1. **Size-robust features** (vetting, 2026-10-07): the top galaxy candidates were explained by
-   catalog effects. The aper50 SW−LW colours are biased with source size, and DAOFind
-   sharpness/roundness are meaningless for extended sources. Options:
-   - restrict sharpness/roundness to compact sources;
-   - take colours from size-consistent photometry, i.e. the DJA v7.4 `smacs0723` matched-aperture
-     catalog (`fix_phot.fits`, 38.6 MB), which pulls the M2 item forward.
-
-   Measure the change by re-vetting the new top 20.
-   - Still open from vetting: `/vet-candidate` on MIRI rank 17 (`jw02736-o002_t001_miri_f770w_94`),
-     the known NED `G_Lens` object, which exercises the known-object path.
-2. **Faint stars:** about 4 PSF-like sources without Gaia counterparts remain in the SMACS galaxy top 20.
-   Add a size–magnitude stellar locus to `classify` (D-012 "Revisit if").
-3. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
-   subcommands (`add-vetting --outcome pass|fail|inconclusive`). `docs/candidates/` is confirmed as the
-   record location.
-4. Report the top-k artifact and star fractions per run as a tracked metric.
-5. Quality gate follow-ups (D-011 "Revisit if"): per-band gating for colours; rank shallow regions as a
-   separate stratum instead of excluding them (55% of MIRI sources are excluded now).
+1. **Diffraction-spike and stripe artifacts:** 5–6 of the SMACS galaxy top 20 (run `20261007T122054Z-c52935ec`) are detections
+   on bright-star spikes or parallel stripes, and the D-011 gate misses them. Mask the spike directions
+   around bright stars (from the `classify` star list and the PSF spike angles), or flag linear features,
+   then re-check the top 20.
+2. **S/N floor for ranking:** about 6 faint or near-noise sources reach the top 20 now that colours are
+   clean. Rank only sources above a reference-band S/N.
+3. **Faint stars:** 4 PSF-like stars without Gaia counterparts remain. Add a size–magnitude stellar locus
+   to `classify` (D-012 "Revisit if").
+4. **Vet the new candidates** with `/vet-candidate` and `scripts/vet_evidence.py`, whose evidence now
+   includes the dja05 colours:
+   - catalogued lens-related `jw02736-o001_t001_nircam_f200w_1032` (NED `[MJR2023] 028.2`) and
+     `jw02736-o001_t001_nircam_f277w_829` (`[YML2023] F150DB-C-4`);
+   - arc-like `jw02736-o001_t001_nircam_f200w_438`;
+   - MIRI rank 17 (`jw02736-o002_t001_miri_f770w_94`), the known NED `G_Lens` object.
+5. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
+   subcommands.
+6. Report the top-k artifact and star fractions per run as a tracked metric.
+7. **Control comparability:** CEERS still uses aper50 colours while SMACS uses dja05, so science-vs-control
+   comparisons are invalid until CEERS gets matched photometry (Next).
 
 ## Next (M2)
-- Ingest the DJA v7.4 `smacs0723` and `ceers-full` catalogs and photo-z for consistent matched-aperture
-  photometry. Validate CEERS colours against CEERS DR1.0. The `ceers-full` files are 250–400 MB, so state
-  the reason before downloading them.
+- Matched-aperture colours for other samples (D-013 is done for SMACS NIRCam):
+  - CEERS: DJA `ceers-full` (250–400 MB, so state the reason before downloading), validated against
+    CEERS DR1.0.
+  - MIRI: evaluate fixed-aperture colours.
+- DJA photo-z (`smacs0723-grizli-v7.4-fix.photoz.tar.gz`, 59 MB) as a feature or for vetting.
 - Re-fetch program 2736 after MAST reprocesses it with jwst ≥ 3.0 (expected around mid to late October 2026).
   Until then, compare only photometric columns across programs (D-010).
 - Image embeddings (Zoobot via `timm`, DINOv2) on cutouts, evaluated against the baseline with
