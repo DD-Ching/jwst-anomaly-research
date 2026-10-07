@@ -1286,3 +1286,50 @@ def test_stellar_locus_disabled_unavailable_or_broken(
 def test_stellar_locus_config_is_validated(tmp_path, locus, match):
     with pytest.raises(pipeline.ConfigError, match=match):
         pipeline.load_config(_locus_config(tmp_path, locus))
+
+
+def test_spike_flags_are_passed_counted_and_stored(tmp_path, env, monkeypatch):
+    fakes = install_fakes(monkeypatch)
+    real = fakes.make_cutouts
+
+    def spiky(image_uri, targets, size_arcsec=3.0, out_dir=None, **kw):
+        t = real(image_uri, targets, size_arcsec, out_dir, **kw)
+        t["spike_s6"] = [5.0] + [1.0] * (len(t) - 1)
+        t["quality_flag"] = [f"{t['quality_flag'][0]},spikes"] + list(t["quality_flag"][1:])
+        return t
+
+    monkeypatch.setattr(cutouts, "make_cutouts", spiky)
+    stages = json.loads(json.dumps(TEST_CONFIG["stages"]))
+    stages["cutouts"]["spike"] = {
+        "radii_arcsec": [0.2, 0.8],
+        "threshold": 3.0,
+        "search_arcsec": 0.3,
+    }
+    run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])
+    kw = fakes.calls["make_cutouts_kw"][-1]
+    assert kw["spike_radii_arcsec"] == (0.2, 0.8) and kw["spike_threshold"] == 3.0
+    assert kw["spike_search_arcsec"] == 0.3
+    report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
+    assert "1 of 3 cutout targets show diffraction spikes" in report
+    with _store(env) as store:
+        cands = store.list_candidates(run_id=run_id, sample_id="field_a")
+    flags = [c["flags"] for c in cands if c.get("flags")]
+    assert any("spike_s6" in band for f in flags for band in f.values())
+
+
+@pytest.mark.parametrize(
+    "spike, match",
+    [
+        ({"radii_arcsec": [0.8, 0.2], "threshold": 3}, "r_in < r_out"),
+        ({"radii_arcsec": [0.2, 0.8], "threshold": 0}, "threshold"),
+        ({"radii_arcsec": [0.2, 0.8], "threshold": 3, "r": 1}, "unknown keys"),
+        ("on", "mapping"),
+    ],
+)
+def test_spike_config_is_validated(tmp_path, spike, match):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["stages"]["cutouts"]["spike"] = spike
+    path = tmp_path / "bad.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    with pytest.raises(pipeline.ConfigError, match=match):
+        pipeline.load_config(path)

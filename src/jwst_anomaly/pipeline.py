@@ -26,7 +26,7 @@ min_ranked, min_detection_snr, require_multiband}`` (gate skipped when the block
 stellar_locus}``
 (skipped when absent), ``stages.features.daofind_max_ci``,
 ``samples[].matched_photometry.{url, sha256, label, aperture, radius_arcsec, max_bytes}`` (D-013),
-``stages.rank.{methods, random_state}``, ``stages.cutouts.{enabled, top_k, size_arcsec, bands}``,
+``stages.rank.{methods, random_state}``, ``stages.cutouts.{enabled, top_k, size_arcsec, bands, spike}``,
 ``stages.crossmatch.{enabled, top_k, radius_arcsec, services}`` and the optional top-level
 ``outputs`` block added by this unit:
 
@@ -234,6 +234,9 @@ def load_config(path: str | Path) -> dict[str, Any]:
             raise ConfigError(
                 f"{path}: unknown stages.classify.stellar_locus keys {sorted(unknown)}"
             )
+    spike = ((config.get("stages") or {}).get("cutouts") or {}).get("spike")
+    if spike is not None:
+        _check_spike(spike, f"{path}: stages.cutouts.spike")
     daofind = ((config.get("stages") or {}).get("features") or {}).get("daofind_max_ci")
     if daofind is not None and not (
         isinstance(daofind, int | float) and not isinstance(daofind, bool) and daofind > 0
@@ -326,6 +329,34 @@ def _subset(table: Table, mask: np.ndarray, what: str) -> Table:
         f"{what}: {int(mask.sum())} of {len(table)} rows of: {table.meta.get('source', '')}"
     )
     return out
+
+
+def _check_spike(spike: Any, where: str) -> None:
+    """``stages.cutouts.spike`` (D-018): ``radii_arcsec`` [r_in, r_out], ``threshold``,
+    optional ``search_arcsec``."""
+    if not isinstance(spike, dict):
+        raise ConfigError(f"{where} must be a mapping")
+    unknown = set(spike) - {"radii_arcsec", "threshold", "search_arcsec"}
+    if unknown:
+        raise ConfigError(f"{where}: unknown keys {sorted(unknown)}")
+
+    def number(v: Any) -> bool:
+        return isinstance(v, int | float) and not isinstance(v, bool)
+
+    radii = spike.get("radii_arcsec")
+    if not (
+        isinstance(radii, list | tuple)
+        and len(radii) == 2
+        and all(number(r) for r in radii)
+        and 0 <= radii[0] < radii[1]
+    ):
+        raise ConfigError(f"{where}.radii_arcsec must be [r_in, r_out] with 0 <= r_in < r_out")
+    if not (number(spike.get("threshold")) and spike["threshold"] > 0):
+        raise ConfigError(f"{where}.threshold must be a positive number")
+    if "search_arcsec" in spike and not (
+        number(spike["search_arcsec"]) and spike["search_arcsec"] >= 0
+    ):
+        raise ConfigError(f"{where}.search_arcsec must be a non-negative number")
 
 
 def _stage_kwargs(cfg: Mapping[str, Any], keys: Sequence[str]) -> dict[str, Any]:
@@ -1025,6 +1056,12 @@ class _Runner:
         kwargs: dict[str, Any] = {"out_dir": self.run_dir / sid / "cutouts"}
         if "size_arcsec" in cfg:
             kwargs["size_arcsec"] = float(cfg["size_arcsec"])
+        spike = cfg.get("spike")
+        if spike:  # D-018: flag bright stars and star+galaxy blends on the cutouts
+            kwargs["spike_radii_arcsec"] = tuple(float(r) for r in spike["radii_arcsec"])
+            kwargs["spike_threshold"] = float(spike["threshold"])
+            if "search_arcsec" in spike:
+                kwargs["spike_search_arcsec"] = float(spike["search_arcsec"])
         tables = []
         for band in bands:
             name = f"cutouts.make_cutouts[{band}]"
@@ -1070,6 +1107,23 @@ class _Runner:
                     "on_edge": to_python(row["on_edge"]),
                     "frac_nan": to_python(row["frac_nan"]),
                 }
+                if "spike_s6" in combined.colnames:
+                    result[_text(row["source_uid"])][_text(row["band"]).upper()]["spike_s6"] = (
+                        _float(row["spike_s6"])
+                    )
+            spiky = sorted(
+                {
+                    _text(r["source_uid"])
+                    for r in combined
+                    if "spikes" in _text(r["quality_flag"]).split(",")
+                }
+            )
+            if spiky:
+                summary.notes.append(
+                    f"{len(spiky)} of {len(targets)} cutout targets show diffraction spikes "
+                    f"(bright star or star+galaxy blend, D-018): "
+                    + ", ".join("_".join(u.split("_")[-2:]) for u in spiky)
+                )
         except Exception as exc:
             self.record(sid, "cutouts (combine bands)", "failed", _describe(exc), required=False)
             return {}
