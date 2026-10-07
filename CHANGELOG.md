@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Vetted `f200w_2915`, a catalogued quiescent galaxy with a compact core (cycle 12)
+- Run `20261007T174424Z-540be92d` (clean `a27d628`), galaxy rank 21, kept ranked by D-019 as a spiky source with non-stellar colours.
+- It is SIMBAD `[VBG2023] SMACS 1060` (Valentino+2023 atlas of colour-selected quiescent galaxies at z > 3), and
+  DJA z_phot is 2.84. Its F090W−F150W break is 2.5 mag. The spikes come from its compact core. D-019 behaved as
+  intended.
+- **Two epochs:** the position residuals disagree between bands (7 mas F444W, 34 mas F150W), as expected for centroid
+  shifts of an extended source, and Δm is F444W only (+0.11; F150W +0.01). So it shows neither motion nor
+  variability. `epoch_compare.py` now documents that its significance assumes a point-like target.
+- **New resource:** program 4043 has NIRCam F444W grism spectra over part of SMACS 0723 (SOURCES).
+- **Handoff:** TASKS "Saturated stars in the galaxy ranking", then the star-stratum NED matches.
+
+
 ## 2026-10-08: Spike screening of the galaxy top k (D-019, cycle 11)
 - The galaxy strata get cutouts for 2k. Spike-flagged sources with stellar colours (`1571`, `2242`) are removed
   and backfilled. Spiky sources with non-stellar colours stay ranked and are noted: `940` (a saturated star with

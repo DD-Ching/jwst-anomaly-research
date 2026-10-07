@@ -456,3 +456,8 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   https://www.stsci.edu/~jayander/JWST1PASS/CODE/MASK_EXAMPLE/PLEASE_README.txt
 - JWST spike geometry (six spikes plus two fainter ones from the secondary-mirror support):
   https://en.wikipedia.org/wiki/Diffraction_spike
+- **Quiescent-galaxy atlas:** 2023ApJ...947...20V, "An Atlas of Color-selected Quiescent Galaxies at z > 3 in Public
+  JWST Fields" (SIMBAD designation `[VBG2023]`; title from SIMBAD TAP, 2026-10-07).
+- **JWST program 4043**, "Unveiling the build-up of large scale structure in the early Universe", PI Witten (MAST
+  metadata). It has NIRCam F444W grism spectra (`jw04043-o001_t001_nircam_f444w-grismr` and `-grismc`, public,
+  level 3, t_min 2024-05-11) and F090W/F115W/F444W imaging over part of SMACS 0723, including `2915`.
