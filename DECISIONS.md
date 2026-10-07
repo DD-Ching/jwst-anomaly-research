@@ -874,3 +874,39 @@ comparisons are therefore biased by sample construction until every sample has c
   stratum.
 - A MIRI-specific confirmation becomes available, e.g. a NIRCam counterpart.
 - Spike or stripe detections that are multi-band appear: then add the spike-geometry mask.
+
+## D-015 Stellar locus: point-like sources with ordinary stellar colours join the stars (2026-10-08)
+
+**Decision.** After the catalogue classification (D-012), `classify.stellar_locus` adds sources that are
+both point-like and stellar-coloured in the matched-photometry catalog (DJA). Thresholds are ASSUMPTIONS,
+set in config:
+- The detection-image half-light radius r50 is within 20% of `r50_psf`. `r50_psf` is the median over
+  catalogued (Gaia/SIMBAD) stars with 20 < `mag_auto` < 22.5, which are unsaturated.
+- `mag_auto` < 24. Fainter than that, size cannot separate stars from compact galaxies.
+- F150W−F444W and F200W−F356W lie within the catalogued stars' 5–95% range, widened by 0.3 mag.
+- At least 10 calibration stars are needed. Otherwise the locus is not applied and the report says so.
+
+Point-like sources with unusual colours (brown dwarfs, compact high-z galaxies) are deliberately left in
+the galaxy ranking, where they are legitimate anomaly candidates.
+
+**Alternatives rejected.**
+- Pipeline `CI_50_30`/`CI_70_50` or `semimajor_sigma`: bright stars' spikes and saturated cores
+  inflate them, so stars overlap galaxies (catalogued stars: median CI_50_30 1.75, other sources 1.94,
+  heavily overlapping).
+- Size alone: 24 new members at mag < 24, with F150W−F444W from −1.43 to +0.71 against −0.85 to −0.52
+  for catalogued stars, so compact galaxies get in.
+- DJA eazy stellar-template χ²: a further 59 MB download. Revisit if colours plus size prove
+  insufficient.
+
+**Evidence.** Run `20261007T130207Z-c8ffc470` (SMACS NIRCam):
+- `r50_psf` = 2.86 px from 22 catalogued stars; 16 stars were added (49 in the star stratum).
+- Three of the six PSF-like sources in the previous galaxy top 20 (`2553`, `991`, `1456`) moved to the star
+  stratum.
+- The other three (`940`, a star pair; `2242` and `1571`, blends of a star and a galaxy) have r50
+  inflated by neighbours and remain.
+- `f277w_829`, `f200w_1032` and `f200w_438` are now ranks 3, 8 and 11; 8 of the top 20 are catalogued.
+
+**Revisit if.**
+- Blended stars dominate the galaxy top k: add image-based PSF-spike detection on cutouts.
+- Samples without matched photometry need a locus: then use pipeline size and colour.
+- Saturation sets in at another magnitude in other fields: adjust `calib_mag_range`.

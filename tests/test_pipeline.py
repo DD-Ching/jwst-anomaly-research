@@ -205,6 +205,8 @@ class FakeStages:
     def join_matched_photometry(self, sources, catalog, label, *, radius_arcsec=0.2):
         out = sources.copy()
         out[f"{label}_match_sep_arcsec"] = [0.01] * len(out)
+        out[f"{label}_r50_pix"] = [2.9] * len(out)
+        out[f"{label}_mag_auto"] = [21.0] * len(out)
         for c in sources.colnames:
             if c.endswith("_aper50_abmag") or c.endswith("_aper50_abmag_err"):
                 out[c.replace("_aper50_", f"_{label}_")] = sources[c]
@@ -1191,3 +1193,96 @@ def test_quality_keys_are_validated(tmp_path, key, value, match):
     path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     with pytest.raises(pipeline.ConfigError, match=match):
         pipeline.load_config(path)
+
+
+def test_stellar_locus_failure_keeps_catalogue_classification(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["samples"][0]["matched_photometry"] = {
+        "url": "https://e.org/x.fits",
+        "sha256": "0" * 64,
+        "label": "dja05",
+    }
+    config["stages"]["classify"] = {"stellar_locus": {"min_ref_stars": 10}}
+    path = tmp_path / "locus.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    run_id = pipeline.run(path, samples=[config["samples"][0]["id"]])
+    report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
+    assert "stellar locus not applied" in report  # the fake field has no catalogued stars
+    with _store(env) as store:
+        assert store.get_run(run_id)["status"] == "completed"
+
+
+def _locus_config(tmp_path, locus, *, matched=True):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    if matched:
+        config["samples"][0]["matched_photometry"] = {
+            "url": "https://e.org/x.fits",
+            "sha256": "0" * 64,
+            "label": "dja05",
+        }
+    config["stages"]["classify"] = {"min_stars": 2, "stellar_locus": locus}
+    path = tmp_path / "locus.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    return path
+
+
+def test_stellar_locus_adds_point_like_stars(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+    probe = pipeline.run(write_config(tmp_path), samples=["field_a"])
+    uids = [
+        str(u) for u in Table.read(env / "runs" / probe / "field_a" / "sources.ecsv")["source_uid"]
+    ]
+    monkeypatch.setattr(crossmatch, "query_matches", _fake_matches(set(uids[:3])))
+    # Every fake source has r50 2.9 px and mag 21; a huge colour pad admits all of them.
+    locus = {"min_ref_stars": 3, "colours": [["f150w", "f200w"]], "colour_pad": 100}
+    run_id = pipeline.run(_locus_config(tmp_path, locus), samples=["field_a"])
+    run_dir = env / "runs" / run_id
+    pops = Table.read(run_dir / "field_a" / "populations.ecsv")
+    basis = {
+        str(u): pipeline._text(b)
+        for u, b in zip(pops["source_uid"], pops["star_basis"], strict=True)
+    }
+    assert all(basis[u] not in ("", "stellar_locus") for u in uids[:3])  # catalogue basis kept
+    assert {u for u, b in basis.items() if b == "stellar_locus"} == set(uids[3:])
+    assert pops.meta["stellar_locus"]["n_added"] == len(uids) - 3
+    assert "stellar locus from" in pops.meta["source"]
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    assert f"stellar locus (D-015) added {len(uids) - 3} stars" in report
+
+
+@pytest.mark.parametrize(
+    "locus, matched, note",
+    [
+        ({"enabled": False, "min_ref_stars": 3}, True, None),
+        ({"min_ref_stars": 3}, False, "no matched photometry for this sample"),
+        ({"min_ref_stars": "three"}, True, "stellar locus not applied"),
+    ],
+)
+def test_stellar_locus_disabled_unavailable_or_broken(
+    tmp_path, env, monkeypatch, locus, matched, note
+):
+    install_fakes(monkeypatch)
+    probe = pipeline.run(write_config(tmp_path), samples=["field_a"])
+    uids = [
+        str(u) for u in Table.read(env / "runs" / probe / "field_a" / "sources.ecsv")["source_uid"]
+    ]
+    monkeypatch.setattr(crossmatch, "query_matches", _fake_matches(set(uids[:3])))
+    run_id = pipeline.run(_locus_config(tmp_path, locus, matched=matched), samples=["field_a"])
+    run_dir = env / "runs" / run_id
+    pops = Table.read(run_dir / "field_a" / "populations.ecsv")
+    assert [pipeline._text(p) for p in pops["population"]].count("star") == 3  # D-012 kept
+    assert "stellar_locus" not in pops.meta
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    assert "stellar locus (D-015) added" not in report
+    if note:
+        assert note in report
+
+
+@pytest.mark.parametrize(
+    "locus, match",
+    [({"r50_tol": 0.1}, "r50_tol"), ("yes", "mapping or true/false")],
+)
+def test_stellar_locus_config_is_validated(tmp_path, locus, match):
+    with pytest.raises(pipeline.ConfigError, match=match):
+        pipeline.load_config(_locus_config(tmp_path, locus))

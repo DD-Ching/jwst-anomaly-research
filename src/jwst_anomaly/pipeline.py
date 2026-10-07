@@ -22,7 +22,8 @@ ref_band, obs_ids, query}`` (``query``: extra MAST criteria, optional),
 ``cloud.{s3_bucket, l3_key_pattern}``, ``stages.catalog.merge_radius_arcsec``,
 ``stages.quality.{enabled, grid_arcsec, step, min_rel_weight, min_edge_arcsec, max_artifact_ci,
 min_ranked, min_detection_snr, require_multiband}`` (gate skipped when the block is absent),
-``stages.classify.{enabled, services, radius_arcsec, gaia_radius_arcsec, star_top_k, min_stars}``
+``stages.classify.{enabled, services, radius_arcsec, gaia_radius_arcsec, star_top_k, min_stars,
+stellar_locus}``
 (skipped when absent), ``stages.features.daofind_max_ci``,
 ``samples[].matched_photometry.{url, sha256, label, aperture, radius_arcsec, max_bytes}`` (D-013),
 ``stages.rank.{methods, random_state}``, ``stages.cutouts.{enabled, top_k, size_arcsec, bands}``,
@@ -224,6 +225,15 @@ def load_config(path: str | Path) -> dict[str, Any]:
             isinstance(value, int | float) and not isinstance(value, bool) and value > 0
         ):
             raise ConfigError(f"{path}: stages.quality.{key} must be a positive number")
+    locus = ((config.get("stages") or {}).get("classify") or {}).get("stellar_locus")
+    if locus is not None and not isinstance(locus, bool | dict):
+        raise ConfigError(f"{path}: stages.classify.stellar_locus must be a mapping or true/false")
+    if isinstance(locus, dict):
+        unknown = set(locus) - set(classify.DEFAULT_LOCUS) - {"enabled"}
+        if unknown:
+            raise ConfigError(
+                f"{path}: unknown stages.classify.stellar_locus keys {sorted(unknown)}"
+            )
     daofind = ((config.get("stages") or {}).get("features") or {}).get("daofind_max_ci")
     if daofind is not None and not (
         isinstance(daofind, int | float) and not isinstance(daofind, bool) and daofind > 0
@@ -565,7 +575,7 @@ class _Runner:
         if keep is not None:
             to_rank = _subset(feats, keep, "quality-gated subset (D-011)")
         # 4c. Star/galaxy separation (D-012): stars become their own ranking stratum.
-        split = self._classify(sid, sources, to_rank)
+        split = self._classify(sid, feat_sources, to_rank, aperture)
         if split is not None:
             stars, star_top_k, min_stars = split
             n_stars, n_other = int(stars.sum()), int((~stars).sum())
@@ -585,7 +595,8 @@ class _Runner:
         star_summary = SampleSummary(
             star_sid,
             f"{summary.role}/stars",
-            f"Gaia/SIMBAD stars of {sid}, ranked among themselves (D-012)",
+            f"stars of {sid} (Gaia/SIMBAD; stellar locus D-015 where applied), ranked among "
+            "themselves (D-012)",
             summary.ref_band,
             n_observations=summary.n_observations,
             bands=list(summary.bands),
@@ -670,11 +681,14 @@ class _Runner:
             self.candidates.append(rec)
 
     def _classify(
-        self, sid: str, sources: Table, to_rank: Table
+        self, sid: str, sources: Table, to_rank: Table, label: str | None = None
     ) -> tuple[np.ndarray, int, int] | None:
-        """``(star mask over to_rank, star_top_k, min_stars)`` (optional stage, D-012).
+        """``(star mask over to_rank, star_top_k, min_stars)`` (optional stage, D-012/D-015).
 
-        None means one ranking: not configured, failed, or invalid parameters.
+        None means one ranking: not configured, failed, or invalid parameters. With
+        ``classify.stellar_locus`` and matched photometry ``label``, point-like sources with
+        stellar colours join the catalogued stars (D-015); a locus failure keeps the catalogue
+        classification and adds a note.
         """
         cfg = self.stages_cfg.get("classify")
         name = "classify.classify_sources"
@@ -704,9 +718,22 @@ class _Runner:
                 radius_arcsec=float(cfg.get("radius_arcsec", classify.DEFAULT_QUERY_RADIUS_ARCSEC)),
                 services=tuple(cfg.get("services") or classify.DEFAULT_SERVICES),
             )
-            return classify.classify_sources(
+            table = classify.classify_sources(
                 sources, matches, **_stage_kwargs(cfg, ("gaia_radius_arcsec",))
             )
+            locus_cfg = cfg.get("stellar_locus")
+            enabled = not (isinstance(locus_cfg, dict) and locus_cfg.get("enabled") is False)
+            if locus_cfg is not None and locus_cfg is not False and enabled:
+                if not label:
+                    self.summaries[sid].notes.append(
+                        "stellar locus not applied: no matched photometry for this sample"
+                    )
+                else:
+                    try:  # an optional add-on: any failure keeps the catalogue classification
+                        table = classify.apply_stellar_locus(table, sources, label, locus_cfg)
+                    except Exception as exc:  # noqa: BLE001
+                        self.summaries[sid].notes.append(f"stellar locus not applied: {exc}")
+            return table
 
         table = self.stage(
             sid,
@@ -725,6 +752,19 @@ class _Runner:
             if _text(p) == "star"
         }
         mask = np.array([_text(u) in star_uids for u in to_rank["source_uid"]], dtype=bool)
+        locus = table.meta.get("stellar_locus")
+        if locus:
+            locus_uids = {
+                _text(u)
+                for u, b in zip(table["source_uid"], table["star_basis"], strict=True)
+                if _text(b) == "stellar_locus"
+            }
+            n_ranked = sum(_text(u) in locus_uids for u in to_rank["source_uid"])
+            self.summaries[sid].notes.append(
+                f"stellar locus (D-015) added {locus['n_added']} stars, {n_ranked} of them past "
+                f"the quality gate (r50_psf {locus['r50_psf_pix']} px from "
+                f"{locus['n_calibration_stars']} catalogued stars)"
+            )
         return mask, params["star_top_k"], params["min_stars"]
 
     def _filter_observations(
