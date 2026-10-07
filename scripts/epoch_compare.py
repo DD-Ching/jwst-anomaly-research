@@ -110,12 +110,14 @@ def compare_epochs(
     dm_ref = mag2[i2[ref]] - mag1[i1[ref]]
     dm_med, dm_sig = robust_center(dm_ref)
     dm_t = float(mag2[t2] - mag1[t1]) - float(dm_med)
+    dm_t = dm_t if np.isfinite(dm_t) else None  # astrometry stays useful without magnitudes
     total = float(np.hypot(*d_t))
     tie = 1.2533 * sig / np.sqrt(ref.sum())  # standard error of a median
     snr_t = [float(snr_from_mag_err(c["aper50_abmag_err"][k])) for c, k in ((cat1, t1), (cat2, t2))]
     cen = [_centroid_error_mas(c, k, s) for c, k, s in ((cat1, t1, snr_t[0]), (cat2, t2, snr_t[1]))]
     cen_total = float(np.hypot(*cen)) if all(x is not None for x in cen) else None
-    err = np.hypot(tie, cen_total / np.sqrt(2)) if cen_total is not None else tie  # per axis
+    # Each centroid error is per axis, so the epoch difference has hypot(cen1, cen2) per axis.
+    err = np.hypot(tie, cen_total) if cen_total is not None else tie
     resid_ref = np.hypot(*(d_ref - med).T)
     return {
         "n_references": int(ref.sum()),
@@ -140,7 +142,8 @@ def _centroid_error_mas(cat: Table, k: int, snr: float) -> float | None:
     scale = cat.meta.get("pixel_scale_arcsec")
     if "semimajor_sigma" not in cat.colnames or not scale or not np.isfinite(snr) or snr <= 0:
         return None
-    return float(np.asarray(cat["semimajor_sigma"], float)[k] * float(scale) * 1000.0 / snr)
+    size = float(np.ma.filled(np.ma.asarray(cat["semimajor_sigma"], float), np.nan)[k])
+    return size * float(scale) * 1000.0 / snr if np.isfinite(size) else None
 
 
 def _fetch_cats(obs_filter: str, exact: bool, manifest: Path) -> list[Path]:

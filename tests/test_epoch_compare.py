@@ -93,7 +93,11 @@ def test_centroid_error_enters_the_significance():
         c["aper50_abmag_err"][0] = 2.5 * np.log10(1 + 1 / 3.0)  # S/N 3: ~21 mas centroids
     r = ec.compare_epochs(cat1, cat2, target)
     np.testing.assert_allclose(r["target_centroid_error_mas"], [21.0, 21.0], rtol=1e-6)
-    assert r["target_residual_significance"] < 2.5  # 30 mas is not significant at S/N 3
+    assert r["target_residual_significance"] == pytest.approx(30.0 / np.hypot(21.0, 21.0), rel=0.1)
+    cat1["semimajor_sigma"][0] = np.nan  # unknown size: falls back to the frame-tie error
+    assert ec.compare_epochs(cat1, cat2, target)["target_centroid_error_mas"][0] is None
+    cat2["aper50_abmag"][0] = np.nan
+    assert ec.compare_epochs(cat1, cat2, target)["target_dmag"] is None
 
 
 def test_ambiguous_target_is_rejected():

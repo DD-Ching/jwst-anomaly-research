@@ -973,7 +973,7 @@ level-3 `_cat.ecsv` catalogs of the same filter from different programs:
 
 **Evidence.** SMACS `f200w_2804`, F444W, 2736 (2022-06-07) against VENUS 6882 o057 (2026-06-05):
 - 64 references; frame offset (7.3, 20.6) mas; tie error (1.9, 2.3) mas;
-- target residual 1.9 mas (0.97σ, including centroid errors of 0.4 mas per epoch), Δm 0.004 against a reference scatter of 0.037.
+- target residual 1.9 mas (0.95σ, including centroid errors of 0.4 mas per epoch), Δm 0.004 against a reference scatter of 0.037.
 
 Unit tests recover an injected 30 mas motion and 0.5 mag change.
 
