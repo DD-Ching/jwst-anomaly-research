@@ -952,3 +952,31 @@ Why one-sided:
 - Faint (mag > 24) point sources dominate the galaxy top k: then consider a fainter `mag_max` with a stricter
   colour test.
 - A field with a different detection image or PSF is added.
+
+## D-017 Two-epoch vetting from level-3 catalogs with a local frame tie (2026-10-08)
+
+**Decision.** `scripts/epoch_compare.py` tests a candidate for proper motion and variability with two public
+level-3 `_cat.ecsv` catalogs of the same filter from different programs:
+- Mutual nearest matches within 0.3″ and 60″ of the target, with aper50 S/N ≥ 30 in both, fix the frame tie by
+  their median offset. Galaxies do not move.
+- The target's residual is compared with the tie's standard error.
+- Magnitudes get the same treatment, so zero-point differences between pipeline versions cancel.
+- Thresholds are ASSUMPTIONS, set by arguments. Outputs are `derived`.
+
+**Alternatives rejected.**
+- Re-aligning the images (tweakreg/JHAT-style) and re-measuring centroids: it needs full `_i2d` or `_cal`
+  downloads, which are GB for NIRCam (CLAUDE.md), for one target.
+- An absolute tie to Gaia: there are few unsaturated Gaia stars per field, and they move.
+- A global affine fit over the whole field: distortion residuals between programs grow with distance; a local
+  median is simpler and enough for one target.
+
+**Evidence.** SMACS `f200w_2804`, F444W, 2736 (2022-06-07) against VENUS 6882 o057 (2026-06-05):
+- 64 references; frame offset (7.3, 20.6) mas; tie error (1.9, 2.3) mas;
+- target residual 1.9 mas (0.99 × tie error), Δm 0.004 against a reference scatter of 0.037.
+
+Unit tests recover an injected 30 mas motion and 0.5 mag change.
+
+**Revisit if.**
+- Many candidates need it: then batch per program pair and cache the frame tie.
+- Targets sit near a chip edge, where local distortion dominates.
+- Proper motions below about 1 mas/yr matter.
