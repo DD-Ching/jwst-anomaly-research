@@ -469,3 +469,23 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - last-modified 2024-09-27, 250,545,600 bytes, sha256 `741ec72f761b19bba57a6c1ef0f10934e03933084330faade88bfacb1d761c28`
   - 81,671 rows; apertures `ASEC_0..2` = 0.36, 0.5 and 0.7″ (`APER_1` = 12.5 px, 0.04″/px)
   - 23 bands, including F115W, F150W, F200W, F277W, F356W, F410M and F444W.
+
+## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
+
+- arXiv:1009.6084 Abe, "Gravitational Microlensing by the Ellis Wormhole".
+- arXiv:1211.0379 Kitamura, Nakajima & Asada, "Demagnifying gravitational lenses toward hunting a clue of exotic
+  matter and energy".
+- arXiv:1305.5037 Izumi et al., "Gravitational lensing shear by an exotic lens object with negative convergence or
+  negative mass".
+- arXiv:astro-ph/9409051 Cramer et al., "Natural Wormholes as Gravitational Lenses".
+- arXiv:gr-qc/0105070 Safonova, Torres & Romero, "Microlensing by natural wormholes: theory and simulations".
+- arXiv:1711.01730 Asada, "Gravitational lensing by exotic objects".
+- arXiv:gr-qc/9907019 Clark, Hiscock & Larson, "Null geodesics in the Alcubierre warp drive spacetime: the view
+  from the bridge".
+- arXiv:2406.02466 Clough, Dietrich & Khan, gravitational waves from warp-drive collapse.
+- arXiv:1303.1301 Takahashi & Asada (ApJL 768, L16): limits on negative-mass objects and Ellis wormholes from the
+  SDSS quasar lens search.
+- arXiv:astro-ph/9904399 Anchordoqui et al., "In search for natural wormholes".
+- Degeneracies:
+  - arXiv:1706.10279 Kelly et al., "Extreme magnification of a star at redshift 1.5 by a galaxy-cluster lens";
+  - arXiv:astro-ph/9707187 Mao & Schneider (flux-ratio anomalies from substructure).

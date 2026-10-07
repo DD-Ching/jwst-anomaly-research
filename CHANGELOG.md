@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Two-epoch transient search, a null result; exotic-lens signatures (D-027)
+- `scripts/transient_search.py` produces catalog-level candidates; `scripts/transient_forced.py` checks them with
+  forced aperture photometry on byte-range cutouts of both epochs.
+- SMACS against VENUS: catalog 441 (F444W) and 628 (F150W) → 144 in both bands → 4 by forced photometry → 0 after a
+  visual check. The 4 are bright stars whose spike angle changed between the epochs. No credible transient at
+  |Δm| ≥ 0.3 mag, ≥ 5σ.
+- **Failed approach:** catalog-only comparison across pipeline versions, which picks up deblending differences.
+- docs/exotic_lensing.md records the verified exotic-lens signatures (wormhole demagnification, radial images for
+  negative mass), the degeneracies with ordinary lensing, and existing limits. Warp drives have no imaging
+  prediction to test.
+- **Handoff:** the lens-model stage (TASKS "Now (M3)" 1), then Sunrise's same-pipeline epoch pair.
+
+
 ## 2026-10-08: Owner priorities, lensing-violation search first (D-023)
 - The owner merged PR #20 (`2804`, inconclusive) and reprioritised: M3 lens-model consistency first; more clusters in
   parallel (Abell 2744, El Gordo, Sunrise; MACS J0416 has no DJA v7 catalog); a two-epoch transient search; no
