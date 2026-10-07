@@ -30,7 +30,6 @@ DEFAULT_APERTURE = "aper50"
 _BAND_RE = re.compile(r"^(f\d{3,4}(?:w2|w|m|n|c))_")
 
 DEFAULT_MIN_SNR = 3.0
-# 2.5 / ln(10): S/N = this / AB-magnitude error, to first order.
 
 NAN_POLICY = (
     "build_features never imputes. A feature is NaN when it is undefined for a source: band not "
