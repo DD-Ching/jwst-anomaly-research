@@ -29,6 +29,21 @@ Two subcommands, both writing to ``outputs/lens_consistency/<model>/`` (ECSV plu
     intrinsic shapes, deblending fragments, photo-z failures and model error are the ordinary
     explanations to rule out.
 
+``images``
+    Forward-predicts every image of each catalogued multiple-image system: the system's mean
+    back-traced source position is solved for all images (``lensmodel.find_images``) and each
+    predicted image is compared with ``arcs.dat`` and a pipeline catalog. A predicted image's
+    magnitude is the reference image's catalog magnitude scaled by the magnification ratio (the
+    reference is the catalogued image with the smallest predicted |μ|, i.e. the least sensitive to
+    the critical curves). Classes: ``observed`` (an ``arcs.dat`` image within ``--match-arcsec``),
+    ``candidate`` (an uncatalogued source there whose photo-z allows the system redshift),
+    ``demagnified`` (|μ| < 0.5, e.g. central images), ``missing`` (predicted brighter than the
+    depth, nothing there), ``faint`` (predicted below the depth), ``no_flux_ref`` (no catalogued
+    image of the system matched in the catalog, so no predicted magnitude) and ``outside`` (no
+    catalog source within ``--footprint-arcsec``: off the image or inside a bright galaxy's
+    segment).
+    ``arcs.dat`` images that no predicted image reproduces are reported as ``unpredicted``.
+
 Every threshold here is an ASSUMPTION. Inputs: the pinned model files (downloaded and verified by
 sha256, ``SMACS0723_MAHLER22_ICLV2``), a level-3 ``_cat.ecsv`` and optionally a ``zout`` file.
 """
@@ -178,6 +193,11 @@ def load_shapes(cat_path: Path) -> Table:
             "area_px": np.asarray(cat["isophotal_area"], float),
             "snr": snr,
             "is_extended": np.asarray(cat["is_extended"], bool),
+            "mag": (
+                np.asarray(cat["isophotal_abmag"], float)
+                if "isophotal_abmag" in cat.colnames
+                else np.full(len(cat), np.nan)
+            ),
         }
     )
     out.meta.update(provenance=schema.Provenance.OBSERVED.value, source=str(cat_path))
@@ -416,6 +436,169 @@ def cmd_arcs(args) -> dict:
     return summary
 
 
+def depth_mag(shapes: Table, snr_range=(4.0, 6.0)) -> float:
+    """Median magnitude of catalog sources at S/N 4-6: a 5-sigma depth proxy (ASSUMPTION)."""
+    m = (
+        (shapes["snr"] >= snr_range[0])
+        & (shapes["snr"] <= snr_range[1])
+        & np.isfinite(shapes["mag"])
+    )
+    return float(np.median(shapes["mag"][m])) if m.any() else float("nan")
+
+
+def predict_counter_images(
+    model,
+    grid,
+    backtrace: Table,
+    shapes: Table,
+    match_arcsec: float = 1.5,
+    footprint_arcsec: float = 5.0,
+    ref_match_arcsec: float = 0.5,
+    depth: float = float("nan"),
+    z_margin: float = 0.1,
+    min_abs_mu: float = 0.5,
+) -> tuple[Table, list[str]]:
+    """Predicted images of every catalogued system, classified against the observations."""
+    cs = SkyCoord(shapes["ra"], shapes["dec"], unit="deg")
+    rows, unpredicted = [], []
+    systems = np.asarray(backtrace["system"]).astype(str)
+    for sys_id in dict.fromkeys(systems):
+        sel = (systems == sys_id) & np.isfinite(backtrace["beta_x"])
+        if sel.sum() < 2:
+            continue
+        obs = backtrace[sel]
+        z = float(obs["z_used"][0])
+        pred = lensmodel.find_images(
+            model, grid, float(np.mean(obs["beta_x"])), float(np.mean(obs["beta_y"])), z
+        )
+        co = SkyCoord(obs["ra"], obs["dec"], unit="deg")
+        cp = SkyCoord(pred["ra"], pred["dec"], unit="deg")
+        # reference image: catalogued, matched in the catalog, smallest predicted |mu|
+        idx, sep, _ = co.match_to_catalog_sky(cs)
+        ok = (sep.arcsec <= ref_match_arcsec) & np.isfinite(np.asarray(shapes["mag"])[idx])
+        m_ref = mu_ref = np.nan
+        ref_id = ""
+        if ok.any():
+            k = np.where(ok)[0][np.argmin(np.abs(np.asarray(obs["magnification"])[ok]))]
+            m_ref, mu_ref, ref_id = (
+                float(shapes["mag"][idx[k]]),
+                float(obs["magnification"][k]),
+                str(obs["image_id"][k]),
+            )
+        for img_id, c in zip(obs["image_id"], co, strict=True):
+            if not len(pred) or c.separation(cp).arcsec.min() > match_arcsec:
+                unpredicted.append(str(img_id))
+        for p, c in zip(pred, cp, strict=True):
+            d_obs = c.separation(co).arcsec
+            j = int(np.argmin(d_obs))
+            d_cat = c.separation(cs).arcsec
+            q = int(np.argmin(d_cat))
+            mu = float(p["magnification"])
+            m_pred = m_ref - 2.5 * np.log10(abs(mu) / abs(mu_ref)) if np.isfinite(m_ref) else np.nan
+            near = d_cat[q] <= match_arcsec
+            zlo = float(shapes["z160"][q]) if "z160" in shapes.colnames else np.nan
+            zhi = float(shapes["z840"][q]) if "z840" in shapes.colnames else np.nan
+            z_ok = not (np.isfinite(zlo) and np.isfinite(zhi)) or (
+                zlo - z_margin <= z <= zhi + z_margin
+            )
+            if d_obs[j] <= match_arcsec:
+                cls = "observed"
+            elif abs(mu) < min_abs_mu:
+                cls = "demagnified"  # e.g. a central image: expected undetectable
+            elif near and z_ok:
+                cls = "candidate"
+            elif d_cat[q] > footprint_arcsec:
+                cls = "outside"
+            elif not np.isfinite(m_pred):
+                cls = "no_flux_ref"  # no catalogued image of the system matched in the catalog
+            elif np.isfinite(depth) and m_pred < depth:
+                cls = "missing"
+            else:
+                cls = "faint"
+            rows.append(
+                {
+                    "system": sys_id,
+                    "z_sys": z,
+                    "x": float(p["x"]),
+                    "y": float(p["y"]),
+                    "ra": float(p["ra"]),
+                    "dec": float(p["dec"]),
+                    "magnification": mu,
+                    "image_class": cls,
+                    "matched_image": str(obs["image_id"][j]) if d_obs[j] <= match_arcsec else "",
+                    "sep_image_arcsec": float(d_obs[j]),
+                    "ref_image": ref_id,
+                    "mag_pred": float(m_pred),
+                    "nearest_label": int(shapes["label"][q]),
+                    "sep_catalog_arcsec": float(d_cat[q]),
+                    "nearest_mag": float(shapes["mag"][q]),
+                    "nearest_z160": zlo,
+                    "nearest_z840": zhi,
+                }
+            )
+    out = Table(rows=rows) if rows else Table()
+    out.meta.update(model._meta())
+    out.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        depth_mag=depth,
+        assumptions={
+            "match_arcsec": match_arcsec,
+            "footprint_arcsec": footprint_arcsec,
+            "z_margin": z_margin,
+        },
+    )
+    return out, unpredicted
+
+
+def cmd_images(args) -> dict:
+    files = model_files(args.model)
+    par = lensmodel.parse_lenstool_par(files["best.par"])
+    model = lensmodel.LensModel.from_par(par)
+    cache = (
+        paths.cache_dir()
+        / "external"
+        / f"{model.sha256[:12]}_alpha_{args.half_width:g}_{args.step:g}.npz"
+    )
+    grid = lensmodel.DeflectionGrid.cached(model, cache, args.half_width, args.step)
+    images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    bt = lensmodel.backtrace_images(model, images, par["z_m_limit"])
+    shapes = load_shapes(args.catalog)
+    if args.photoz:
+        attach_photoz(shapes, args.photoz)
+    depth = depth_mag(shapes)
+    table, unpredicted = predict_counter_images(
+        model, grid, bt, shapes, args.match_arcsec, args.footprint_arcsec, depth=depth
+    )
+    out = args.out / args.model
+    _write(table, out / "images_predicted.ecsv")
+    classes = ("observed", "demagnified", "candidate", "missing", "faint", "no_flux_ref", "outside")
+    counts = {c: int(np.sum(table["image_class"] == c)) for c in classes}
+    flagged = table[np.isin(table["image_class"], ["candidate", "missing"])]
+    summary = {
+        "model": args.model,
+        "catalog": str(args.catalog),
+        "depth_mag_5sigma_proxy": depth,
+        "n_systems": len(set(table["system"])) if len(table) else 0,
+        "n_predicted": len(table),
+        "classes": counts,
+        "unpredicted_catalogued_images": unpredicted,
+        "flagged": [
+            {
+                "system": str(r["system"]),
+                "class": str(r["image_class"]),
+                "xy": [round(float(r["x"]), 2), round(float(r["y"]), 2)],
+                "mu": round(float(r["magnification"]), 2),
+                "mag_pred": round(float(r["mag_pred"]), 2),
+                "nearest_label": int(r["nearest_label"]),
+                "sep_catalog_arcsec": round(float(r["sep_catalog_arcsec"]), 2),
+            }
+            for r in flagged
+        ],
+    }
+    (out / "images.json").write_text(json.dumps(summary, indent=1))
+    return summary
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--model", choices=sorted(MODELS), default="smacs0723-iclv2")
@@ -435,8 +618,15 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("--anti-deg", type=float, default=60.0)
     a.add_argument("--z-margin", type=float, default=0.1)
     a.add_argument("--image-match-arcsec", type=float, default=0.5)
+    i = sub.add_parser("images", help="forward-predict every image of the catalogued systems")
+    i.add_argument("--catalog", type=Path, required=True, help="JWST pipeline _cat.ecsv")
+    i.add_argument("--photoz", type=Path, help="eazy zout FITS table (e.g. DJA)")
+    i.add_argument("--match-arcsec", type=float, default=1.5)
+    i.add_argument("--footprint-arcsec", type=float, default=5.0)
+    i.add_argument("--half-width", type=float, default=60.0, help="solver grid half-width, arcsec")
+    i.add_argument("--step", type=float, default=0.1, help="solver grid step, arcsec")
     args = ap.parse_args(argv)
-    summary = cmd_validate(args) if args.cmd == "validate" else cmd_arcs(args)
+    summary = {"validate": cmd_validate, "arcs": cmd_arcs, "images": cmd_images}[args.cmd](args)
     json.dump(summary, sys.stdout, indent=1)
     print()
     return 0

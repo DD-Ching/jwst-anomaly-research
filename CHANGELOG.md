@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: WIP counter-image prediction for SMACS (PR #40, not merged)
+- `lensmodel.DeflectionGrid` caches the D_LS/D_S = 1 deflection on a grid (0.1″ over ±60″ takes about 75–105 s once;
+  `.npz` under the data cache). `lensmodel.find_images` maps grid triangles to the source plane and refines each image
+  with Newton steps.
+- `scripts/lens_consistency.py images` predicts every image of each catalogued ICLv2 system and classifies it.
+- First run (unvetted): all 60 catalogued images are reproduced within 0.04–0.91″, none is unpredicted, and there are
+  4 `demagnified` central images. The F200W 5σ depth proxy is 27.4.
+  - `missing`: system 9 at (16.4, 23.0)″, μ 4.7, predicted 25.9 mag; system 17 at (−1.2, −3.7)″ and (0.1, −2.3)″,
+    near the BCG.
+  - `candidate`: system 26 near labels 912 (μ 27) and 816.
+  - `no_flux_ref`: the third images of systems 8, 11 and 16 (μ 3.4–4.2), which have no flux reference yet.
+- **Handoff:** see the PR #40 body (flux reference, depth, cutouts, D-record).
+
 ## 2026-10-08: Cloud runs use the GitHub MCP tools; conflicting PRs get no CI (D-028)
 - The first routine run opened #38 with the session's GitHub MCP tools. The prompt, the research-cycle skill and
   docs/operations.md §3 now prefer them, merge with `mcp__github__merge_pull_request` after checking the policy,

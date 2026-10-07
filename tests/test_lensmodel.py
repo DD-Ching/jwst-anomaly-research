@@ -306,3 +306,49 @@ def test_outputs_meet_schema_contracts(tmp_path):
     arcs.write_text("1.1 110.8 -73.4 0.1 0.1 0 2.0 0\n1.2 110.81 -73.41 0.1 0.1 0 2.0 0\n")
     bt = lensmodel.backtrace_images(model, lensmodel.load_lenstool_images(arcs), {})
     schema.validate(bt, schema.BACKTRACE_COLUMNS)
+
+
+def test_find_images_sis_pair():
+    # SIS-like lens: a source at beta = (1, 0) has images at x = beta +- theta_E.
+    model = LensModel(
+        [_dpie(x=0.0, y=0.0, ellipticity=0.0, r_core=1e-4, r_cut=1e5)], RA0, DEC0, COSMO
+    )
+    theta_e = model.components[0].b0 * float(model.dls_ds(2.0))
+    grid = lensmodel.DeflectionGrid.compute(model, half_width=2 * theta_e, step=0.2)
+    imgs = lensmodel.find_images(model, grid, 1.0, 0.0, 2.0)
+    bright = imgs[np.abs(imgs["magnification"]) > 0.1]
+    assert len(bright) == 2
+    np.testing.assert_allclose(sorted(bright["x"]), [1.0 - theta_e, 1.0 + theta_e], atol=2e-3)
+    np.testing.assert_allclose(bright["y"], 0.0, atol=2e-3)
+    # SIS magnifications: mu = 1 / (1 - theta_E / |x|), positive outside, negative inside the ring
+    xs = np.asarray(bright["x"])
+    np.testing.assert_allclose(bright["magnification"], 1 / (1 - theta_e / np.abs(xs)), rtol=5e-3)
+    assert imgs.meta["provenance"] == "model_prediction"
+
+
+def test_find_images_elliptical_quad():
+    # An elliptical lens with the source near the centre gives four bright images (plus a faint
+    # central one for a cored profile).
+    model = LensModel(
+        [_dpie(x=0.0, y=0.0, ellipticity=0.4, angle_pos=20.0, r_core=0.5, r_cut=300.0)],
+        RA0,
+        DEC0,
+        COSMO,
+    )
+    grid = lensmodel.DeflectionGrid.compute(model, half_width=60.0, step=0.25)
+    imgs = lensmodel.find_images(model, grid, 0.3, -0.2, 2.0)
+    bright = imgs[np.abs(imgs["magnification"]) > 0.5]
+    assert len(bright) == 4
+    assert (bright["magnification"] > 0).sum() == 2  # two of each parity
+    assert np.all(imgs["residual_arcsec"] < 1e-5)
+
+
+def test_deflection_grid_cache(tmp_path):
+    model = LensModel([_dpie()], RA0, DEC0, COSMO, sha256="abc")
+    path = tmp_path / "grid.npz"
+    g1 = lensmodel.DeflectionGrid.cached(model, path, half_width=5.0, step=0.5)
+    g2 = lensmodel.DeflectionGrid.cached(model, path, half_width=5.0, step=0.5)
+    np.testing.assert_array_equal(g1.alpha_x, g2.alpha_x)
+    other = LensModel([_dpie(v_disp=500.0)], RA0, DEC0, COSMO, sha256="def")
+    g3 = lensmodel.DeflectionGrid.cached(other, path, half_width=5.0, step=0.5)
+    assert not np.allclose(g3.alpha_x, g1.alpha_x)  # a different model recomputes
