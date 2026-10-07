@@ -23,6 +23,7 @@ from jwst_anomaly import (
     paths,
     pipeline,
     provenance,
+    quality,
     query,
     rank,
     schema,
@@ -240,6 +241,11 @@ class FakeStages:
         t.meta["radius_arcsec"] = radius_arcsec
         return _meta(t, schema.Provenance.OBSERVED, "fake crossmatch")
 
+    def sample_weight_map(self, image_uri, step=64, **kw):
+        # No WHT map: quality.assess_sources then runs only its PSF-sharpness test.
+        self.calls["sample_weight_map"].append((image_uri, step))
+        return None
+
     def contact_sheet(self, cutouts_table, out_png, *, ranks=None, title=None, **kw):
         self.calls["contact_sheet"].append((len(cutouts_table), dict(ranks or {}), title))
         out_png = Path(out_png)
@@ -260,6 +266,7 @@ def install_fakes(monkeypatch: pytest.MonkeyPatch, fakes: FakeStages | None = No
         (features, "build_features"),
         (rank, "score_anomalies"),
         (cutouts, "make_cutouts"),
+        (cutouts, "sample_weight_map"),
         (crossmatch, "crossmatch"),
         (viz, "contact_sheet"),
     ):
@@ -696,3 +703,51 @@ def test_xmatch_cell_does_not_invent_a_non_detection():
     assert pipeline._xmatch_cell({"n_matches": 0, "radius_arcsec": 1.0}) == (
         "no counterpart within 1.0 arcsec"
     )
+
+
+def test_quality_gate_excludes_flagged_sources_from_ranking(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+
+    def gate(sources, weight_map, *, ref_band=None, **kw):
+        uids = [str(u) for u in sources["source_uid"]]
+        t = Table(
+            {
+                "source_uid": uids,
+                "rel_weight": [1.0] * len(uids),
+                "edge_dist_arcsec": [5.0] * len(uids),
+                "sharper_than_psf": [False] * len(uids),
+                "quality_ok": [u != uids[0] for u in uids],
+                "quality_reason": ["low_weight" if u == uids[0] else "" for u in uids],
+            }
+        )
+        t.meta.update(provenance="derived", source="fake gate")
+        return t
+
+    monkeypatch.setattr(quality, "assess_sources", gate)
+    run_id = pipeline.run(write_config(tmp_path))
+    run_dir = env / "runs" / run_id
+    sources = Table.read(run_dir / "field_a" / "sources.ecsv")
+    scores = Table.read(run_dir / "field_a" / "scores.ecsv")
+    assert len(scores) == len(sources) - 1
+    assert str(sources["source_uid"][0]) not in {str(u) for u in scores["source_uid"]}
+    assert (run_dir / "field_a" / "quality.ecsv").is_file()
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    n = len(sources)
+    assert f"Quality gate (derived, D-011): {n - 1} of {n} ranked; flags: low_weight 1" in report
+
+
+def test_quality_gate_failure_ranks_everything(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+
+    def broken(image_uri, step=64, **kw):
+        raise OSError("S3 unreachable")
+
+    monkeypatch.setattr(cutouts, "sample_weight_map", broken)
+    run_id = pipeline.run(write_config(tmp_path))
+    run_dir = env / "runs" / run_id
+    sources = Table.read(run_dir / "field_a" / "sources.ecsv")
+    scores = Table.read(run_dir / "field_a" / "scores.ecsv")
+    assert len(scores) == len(sources)
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    assert "quality gate failed: all sources ranked (ungated)" in report
+    assert "Quality gate (derived, D-011): not applied (all sources ranked)" in report

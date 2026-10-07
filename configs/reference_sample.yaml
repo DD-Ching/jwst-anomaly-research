@@ -62,6 +62,11 @@ cloud:
 stages:
   catalog:
     merge_radius_arcsec: 0.1
+  quality:  # D-011; thresholds are assumptions
+    step: 64               # coarse WHT map: every 64th row/column of the ref-band i2d (S3 ranges)
+    min_rel_weight: 0.5    # x median positive WHT
+    min_edge_arcsec: 1.0
+    max_artifact_ci: 1.45  # CI_50_30 below this is sharper than the PSF
   rank:
     methods: [robust_z, isolation_forest, lof]
     random_state: 0

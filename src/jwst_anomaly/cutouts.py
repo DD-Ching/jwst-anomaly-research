@@ -18,6 +18,7 @@ import time
 import warnings
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlparse
@@ -31,6 +32,7 @@ from astropy.nddata import Cutout2D, NoOverlapError
 from astropy.table import Table
 from astropy.wcs import WCS, FITSFixedWarning
 from astropy.wcs.utils import proj_plane_pixel_scales
+from scipy.ndimage import distance_transform_edt
 
 from jwst_anomaly import paths, schema
 
@@ -210,6 +212,95 @@ def make_cutouts(
         fetch=fetch,
     )
     return schema.validate(out, schema.CUTOUT_COLUMNS, name="cutouts")
+
+
+@dataclass(frozen=True)
+class WeightMap:
+    """Coarse WHT map of one level-3 image: the weight at every ``step``-th row and column.
+
+    Built by :func:`sample_weight_map` to gate whole catalogs cheaply (quality.py); cutouts
+    measure exact per-pixel quality only for the top-k.
+    """
+
+    values: np.ndarray  # WHT at rows/cols step//2, step//2 + step, ...; NaN where unreadable
+    step: int
+    shape: tuple[int, int]  # full-resolution (ny, nx)
+    wcs: WCS
+    band: str
+    reference_weight: float  # median positive coarse weight
+    pixel_scale_arcsec: float
+    uri: str
+
+    def at(self, ra_deg: Any, dec_deg: Any) -> tuple[np.ndarray, np.ndarray]:
+        """Relative weight and distance (arcsec) to the nearest zero-weight or off-image cell.
+
+        Positions off the image get weight 0 and distance 0.
+        """
+        ra = np.atleast_1d(np.asarray(ra_deg, dtype=float))
+        dec = np.atleast_1d(np.asarray(dec_deg, dtype=float))
+        x, y = self.wcs.world_to_pixel_values(ra, dec)
+        x, y = np.asarray(x, float), np.asarray(y, float)
+        half = self.step // 2
+        with np.errstate(invalid="ignore"):
+            ix = np.rint((x - half) / self.step)
+            iy = np.rint((y - half) / self.step)
+        ny, nx = self.values.shape
+        inside = (
+            np.isfinite(ix)
+            & np.isfinite(iy)
+            & (x >= -0.5)
+            & (y >= -0.5)
+            & (x <= self.shape[1] - 0.5)
+            & (y <= self.shape[0] - 0.5)
+        )
+        ix = np.clip(np.nan_to_num(ix), 0, nx - 1).astype(int)
+        iy = np.clip(np.nan_to_num(iy), 0, ny - 1).astype(int)
+        valid = np.isfinite(self.values) & (self.values > 0)
+        # Pad with invalid cells so the image border counts as an edge.
+        dist_cells = distance_transform_edt(np.pad(valid, 1, constant_values=False))[1:-1, 1:-1]
+        weight = np.where(valid, self.values, 0.0)
+        ref = self.reference_weight if self.reference_weight > 0 else np.nan
+        rel = np.where(inside, weight[iy, ix] / ref, 0.0)
+        # A cell's distance is to the nearest invalid cell centre; subtract half a cell so a
+        # source in the last valid cell is ~step/2 pixels from the edge, not a full step.
+        dist = np.clip(dist_cells[iy, ix] - 0.5, 0.0, None) * self.step * self.pixel_scale_arcsec
+        return rel, np.where(inside, dist, 0.0)
+
+
+def sample_weight_map(
+    image_uri: str,
+    step: int = 64,
+    *,
+    storage_options: dict[str, Any] | None = None,
+    block_size: int = 2**16,
+) -> WeightMap:
+    """Read every ``step``-th row of a level-3 image's WHT (one byte range per row).
+
+    For a 1.8 GB NIRCam i2d with ``step=64`` this reads ~1/64 of one extension. Images
+    whose WHT is at most ``_WHOLE_WHT_BYTES`` are read whole and then subsampled.
+    """
+    if step < 1:
+        raise ValueError("step must be >= 1")
+    uri = _resolve_uri(str(image_uri))
+    with _open_image(uri, storage_options, block_size) as (hdul, _fileobj):
+        sci = _get_hdu(hdul, "SCI")
+        wht_hdu = _get_hdu(hdul, "WHT")
+        if sci is None or wht_hdu is None:
+            raise ValueError(f"{image_uri}: needs SCI and WHT extensions")
+        shape = (int(sci.header["NAXIS2"]), int(sci.header["NAXIS1"]))
+        wcs = _read_wcs(sci.header, uri)
+        band = _band_from_header(hdul[0].header, sci.header, uri)
+        wht = _image_section(wht_hdu, shape, "WHT", uri)
+        half = step // 2
+        if shape[0] * shape[1] * 4 <= _WHOLE_WHT_BYTES:
+            values = np.asarray(wht[:, :], dtype=float)[half::step, half::step]
+        else:
+            rows = range(half, shape[0], step)
+            values = np.stack([np.asarray(wht[r, :], dtype=float)[half::step] for r in rows])
+    good = values[np.isfinite(values) & (values > 0)]
+    ref = float(np.median(good)) if good.size else float("nan")
+    scale = float(np.mean(proj_plane_pixel_scales(wcs.celestial)) * 3600.0)
+    return WeightMap(values, step, shape, wcs, band, ref, scale, str(image_uri))
 
 
 class _RowStripSection(fits.Section):

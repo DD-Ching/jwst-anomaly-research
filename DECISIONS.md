@@ -683,3 +683,45 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
 - Derived datasets of several GB must be shared (DVC/DataLad).
 - docs/landscape.md is more than 6 months old when a milestone starts.
 - The link checker needs more than small fixes (then switch to lychee).
+
+## D-011 Source-level quality gate before ranking (2026-10-07)
+
+**Decision.**
+- `quality.assess_sources` flags every merged source before ranking, and `rank.score_anomalies` sees
+  only `quality_ok` sources. Flagged sources stay in `sources`/`quality` tables with a reason and are
+  never deleted.
+- Weight and edge come from a coarse WHT map of the reference-band i2d
+  (`cutouts.sample_weight_map`). It reads every 64th row through S3 byte ranges: about 30 s for a
+  1.8 GB NIRCam mosaic and 3 s for MIRI. Positions map through the SCI WCS.
+- Flags (thresholds are ASSUMPTIONS, set in config):
+  - `no_coverage`: off the image or on a zero-weight cell.
+  - `low_weight`: below 0.5 × the median positive WHT. This matches unit 4's cutout threshold.
+  - `edge`: within 1.0″ of a zero-weight region or the image border.
+  - `sharper_than_psf`: ref-band `CI_50_30` < 1.45. A point source has ~0.5/0.3 ≈ 1.67, and real
+    sources are at least that extended (program 2736 F200W: 1st/5th percentiles 1.50/1.58), so
+    anything well below is a detector artifact.
+- This is an optional stage. If it fails, everything is ranked and the report says "ungated".
+
+**Alternatives rejected.**
+- Per-source exact WHT/DQ lookup: i2d files have no DQ, and exact per-pixel reads for thousands of
+  sources would read most of the mosaic. Cutouts already measure this exactly, but only for the top k.
+- MAST `s_region` footprints: polygons miss internal gaps and low-depth areas, which were the main
+  artifact source.
+- DAOFind `sharpness` cuts: real compact blends reach 2–3.5, overlapping hot pixels.
+- Downloading the full i2d: 1.8 GB per band.
+
+**Evidence.**
+- Run `20261007T032010Z-8e29bc6f` vs `20261007T020124Z-4bfabaaa`: top-20 sources carrying a cutout
+  image-quality flag fell from 20/60 to 2/60 (SMACS NIRCam 6→1, MIRI 10→0, CEERS 4→1).
+- The coarse gate agrees with exact cutout flags on 19, 19 and 18 of the previous top 20. It also
+  caught a CEERS hot pixel that the cutout flags missed.
+- Excluded sources: 28% of SMACS NIRCam, 55% of MIRI (mostly the low-coverage mosaic outskirts) and
+  34% of CEERS.
+
+**Revisit if.**
+- Science needs sources in shallow regions: then rank them as a separate stratum, or add local depth
+  as a feature instead of excluding.
+- A band other than the reference band drives colours: then gate per band and set that band's
+  features to missing.
+- MAST adds DQ to i2d products.
+

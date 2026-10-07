@@ -55,6 +55,7 @@ from jwst_anomaly import (
     features,
     paths,
     provenance,
+    quality,
     query,
     rank,
     schema,
@@ -147,6 +148,7 @@ class SampleSummary:
     cutout_bands: list[str] = field(default_factory=list)
     tables: list[str] = field(default_factory=list)  # saved files, relative to the run dir
     contact_sheet: str | None = None  # PNG of the top-k cutouts, relative to the run dir
+    quality: dict[str, int] = field(default_factory=dict)  # quality-gate counts (D-011)
     notes: list[str] = field(default_factory=list)
 
 
@@ -483,11 +485,19 @@ class _Runner:
         summary.feature_spec = {
             str(k): str(v) for k, v in (feats.meta.get("feature_spec") or {}).items()
         }
+        # 4b. Quality gate (derived, D-011): rank only sources whose measurements can be trusted.
+        gate = self._quality(sid, summary, sources, ref_band, band_obs)
+        if gate is not None:
+            ok = set(np.asarray(gate["source_uid"]).astype(str)[np.asarray(gate["quality_ok"])])
+            keep = np.isin(np.asarray(feats["source_uid"]).astype(str), list(ok))
+            to_rank = feats[keep]
+        else:
+            to_rank = feats
         rank_kwargs = _stage_kwargs(self.stages_cfg.get("rank") or {}, ("methods", "random_state"))
         scores = self.stage(
             sid,
             "rank.score_anomalies",
-            partial(rank.score_anomalies, feats, **rank_kwargs),
+            partial(rank.score_anomalies, to_rank, **rank_kwargs),
             columns=schema.SCORE_COLUMNS,
             required=True,
             save_as="scores",
@@ -617,6 +627,38 @@ class _Runner:
         except ValueError:
             return path.as_posix()
 
+    def _quality(
+        self,
+        sid: str,
+        summary: SampleSummary,
+        sources: Table,
+        ref_band: str,
+        band_obs: Mapping[str, str],
+    ) -> Table | None:
+        """Quality-gate the merged sources from the ref band's coarse WHT map (optional stage)."""
+        cfg = self.stages_cfg.get("quality") or {}
+        name = "quality.assess_sources"
+        if cfg.get("enabled", True) is False:
+            self.record(sid, name, "skipped", "disabled in config", required=False)
+            summary.notes.append("quality gate disabled: all sources ranked")
+            return None
+        params = _stage_kwargs(cfg, ("min_rel_weight", "min_edge_arcsec", "max_artifact_ci"))
+        step = int(cfg.get("step", 64))
+
+        def gate() -> Table:
+            uri = l3_image_uri(self.config.get("cloud"), band_obs[ref_band])
+            weights = cutouts.sample_weight_map(uri, step=step)
+            return quality.assess_sources(sources, weights, ref_band=ref_band, **params)
+
+        table = self.stage(
+            sid, name, gate, columns=schema.QUALITY_COLUMNS, required=False, save_as="quality"
+        )
+        if table is None:
+            summary.notes.append("quality gate failed: all sources ranked (ungated)")
+            return None
+        summary.quality = quality.summarize(table)
+        return table
+
     def _cutouts(
         self, sid: str, summary: SampleSummary, targets: Table, band_obs: Mapping[str, str]
     ) -> dict[str, dict[str, dict[str, Any]]]:
@@ -738,6 +780,14 @@ class _Runner:
 # -- report ------------------------------------------------------------------------------------
 
 
+def _quality_line(counts: Mapping[str, int]) -> str:
+    if not counts:
+        return "not applied (all sources ranked)"
+    excluded = {k: v for k, v in counts.items() if k not in ("n_sources", "n_ok")}
+    detail = ", ".join(f"{k} {v}" for k, v in sorted(excluded.items())) or "none"
+    return f"{counts['n_ok']} of {counts['n_sources']} ranked; flags: {detail}"
+
+
 def _cell(value: Any) -> str:
     text = "" if value is None else str(value)
     return text.replace("|", "\\|").replace("\n", " ").strip()
@@ -855,6 +905,7 @@ def render_report(
             f"{', '.join(s.bands) or 'none'}; ref band {s.ref_band}",
             f"- Merged sources (derived): {s.n_sources}",
             f"- Features (derived): {len(s.feature_spec)}",
+            f"- Quality gate (derived, D-011): {_quality_line(s.quality)}",
             f"- Scored sources (model_prediction): {s.n_scored}; methods: "
             f"{', '.join(s.methods) or 'unknown'}",
             f"- Cutout bands: {', '.join(s.cutout_bands) or 'none'}",

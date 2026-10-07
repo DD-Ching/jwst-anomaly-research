@@ -1,22 +1,21 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T020124Z-4bfabaaa`).
+Evidence for the current priorities: CHANGELOG 2026-10-07 (runs `20261007T020124Z-4bfabaaa`, `20261007T032010Z-8e29bc6f`).
 
 ## Now (M1 follow-through)
-1. **Quality gating before ranking.** Exclude or separately rank sources on low weight or the image edge
-   (i2d `WHT` via S3 byte-range reads, or the MAST `s_region` footprint) and hot-pixel-like sharpness
-   extremes. Metric: the artifact fraction of the top 20 per sample, compared with the run above.
-2. **Star/galaxy separation.** Use Gaia plus `CI`/`is_extended` and rank the two populations separately,
+1. **Star/galaxy separation.** Use Gaia plus `CI`/`is_extended` and rank the two populations separately,
    because bright stars dominate the SMACS NIRCam top 20.
-3. **First vetting with `/vet-candidate`:**
-   - SMACS NIRCam ranks 6 and 19 (`jw02736-o001_t001_nircam_f200w_2925`, `_2559`): elongated and arc-like;
+2. **First vetting with `/vet-candidate`:**
+   - SMACS NIRCam `jw02736-o001_t001_nircam_f200w_2925` and `_2559` (ranks 7 and 16 after D-011): elongated, arc-like;
      compare them with the published SMACS 0723 lens models (docs/landscape.md).
    - MIRI rank 17 (`jw02736-o002_t001_miri_f770w_94`): the known NED `G_Lens` object, which exercises the
      known-object path.
-4. Align the `/vet-candidate` skill with the real `jwst-anomaly candidates` subcommands and confirm
+3. Align the `/vet-candidate` skill with the real `jwst-anomaly candidates` subcommands and confirm
    `docs/candidates/` as the place for vetting records.
-5. Report the top-k artifact and star fractions per run as a tracked metric.
+4. Report the top-k artifact and star fractions per run as a tracked metric.
+5. Quality gate follow-ups (D-011 "Revisit if"): per-band gating for colours; rank shallow regions as a
+   separate stratum instead of excluding them (55% of MIRI sources are excluded now).
 
 ## Next (M2)
 - Ingest the DJA v7.4 `smacs0723` and `ceers-full` catalogs and photo-z for consistent matched-aperture
