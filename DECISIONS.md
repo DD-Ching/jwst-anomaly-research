@@ -1167,7 +1167,9 @@ the most direct route to exotic-spacetime signatures, and it stays a hypothesis-
 - **Process:**
   - no fixed pause between cycles; continue until usage limits near;
   - one `/code-review` per PR on its final diff, after all fixes are collected;
-  - needs-human candidate PRs merge once the owner decides in chat (PR #20 did).
+  - when the owner decides a needs-human candidate PR in chat, the agent records that on the PR, removes the
+    `needs-human` label as instructed, and merges under the normal CLAUDE.md policy, which needs no label
+    (PR #20).
 
 **Alternatives rejected.** Continuing the M1/M2 contamination clean-up first: the SMACS galaxy top 20 is now
 clean (D-019 to D-021), so further clean-up has diminishing returns.

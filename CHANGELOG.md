@@ -6,7 +6,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - The owner merged PR #20 (`2804`, inconclusive) and reprioritised: M3 lens-model consistency first; more clusters in
   parallel (Abell 2744, El Gordo, Sunrise; MACS J0416 has no DJA v7 catalog); a two-epoch transient search; no
   pauses; one review per PR.
-- **Handoff:** TASKS Now 1–3 (M3). Worker PRs with label `batch-clusters` are in flight.
+- **Handoff:** TASKS "Now (M3)" items 1–3. Worker PRs with label `batch-clusters` are in flight.
 
 
 ## 2026-10-08: CEERS control on DJA matched photometry (D-022, cycle 16)

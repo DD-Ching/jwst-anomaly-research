@@ -1,7 +1,7 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T202419Z-65728e80`).
+Evidence for the current priorities: D-023 (owner, 2026-10-08) and the CHANGELOG entries of 2026-10-08.
 
 ## Now (M3 lensing-violation search, D-023)
 1. **Lens-model consistency on SMACS:** turn the pinned Mahler+2022 model into per-position predictions
@@ -15,7 +15,7 @@ Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T202419Z
 3. **Two-epoch search:** run `scripts/epoch_compare.py` (or an all-source batch mode) on every SMACS source covered
    by VENUS 6882, looking for caustic-crossing transients and variable lensed images.
 
-## Now (M1 follow-through)
+## Then (M1 follow-through, after the M3 items)
 4. **Star-stratum sources with NED galaxy matches** (run `20261007T162133Z-2511977c`). Check their classification and photometry.
    - `f090w_1719`: NED `[NDA2023] 00713`, type G, 0.03″.
    - `f200w_2054`: a stellar-locus member 0.23″ from the lensed image NED `[MJR2023] 002.3`; it has spikes, and an
