@@ -76,6 +76,16 @@ SOURCE_COLUMNS = ("source_uid", "ra", "dec", "ref_band", "n_bands")
 # each feature name to a one-line definition.
 FEATURE_ID_COLUMNS = ("source_uid",)
 
+# quality.assess_sources -> one row per merged source; quality_ok gates ranking (D-011).
+QUALITY_COLUMNS = (
+    "source_uid",
+    "rel_weight",
+    "edge_dist_arcsec",
+    "sharper_than_psf",
+    "quality_ok",
+    "quality_reason",
+)
+
 # rank.score_anomalies -> one row per source. score: higher = more anomalous;
 # rank: 1 = most anomalous. Per-method scores as score_<method>; attributions in top_features.
 SCORE_COLUMNS = ("source_uid", "score", "rank")

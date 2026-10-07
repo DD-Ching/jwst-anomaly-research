@@ -2,6 +2,27 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-07: Quality gate before ranking (D-011)
+- New `quality.assess_sources` with `cutouts.sample_weight_map`. A coarse WHT map (1″ cells,
+  concurrent S3 byte ranges, about 10 s per 1.8 GB mosaic) gives each source's relative weight and
+  edge distance. A CI_50_30 test
+  catches sources sharper than the PSF. Ranking now sees only sources that pass.
+- Real data, run `20261007T033832Z-cfcf6032`: top-20 sources with a cutout image-quality flag fell from
+  20/60 to 2/60.
+  - SMACS NIRCam: 6→1. MIRI: 10→0. CEERS: 4→1.
+  - Gated out: 28% of SMACS NIRCam, 55% of MIRI, 28% of CEERS.
+- `/code-review` found 15 issues in the first version, all fixed:
+  - edge distance was snapped to cells, so `edge` never fired for LW or MIRI;
+  - a gate passing too few sources could abort the run;
+  - the gate ran even when unconfigured;
+  - noise was labelled as artifacts.
+- Visual check (unvetted): the SMACS NIRCam top 20 is now about 12 bright stars plus 8 galaxies, which
+  include interacting pairs and the two arc-like sources (`f200w_2925`, `f200w_2559`). Low-weight
+  noise and streaks are gone. Stars dominate, so star/galaxy separation is next (TASKS Now 1).
+- The agent self-merge policy was adopted (owner decision; CLAUDE.md "Merge policy and version
+  control"), and PRs #1–#10 were merged.
+- **Handoff:** TASKS Now 1 (star/galaxy separation).
+
 ## 2026-10-07: M0 bootstrap batch landed; first real-data run (M1 slice)
 - Nine parallel units became PRs #1–#9: archive, catalog, rank, cutouts, crossmatch, runner/CLI, OSS,
   agent harness, landscape. The integration branch merges all of them and adds a contact sheet to the

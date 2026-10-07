@@ -62,6 +62,12 @@ cloud:
 stages:
   catalog:
     merge_radius_arcsec: 0.1
+  quality:  # D-011; thresholds are assumptions
+    grid_arcsec: 1.0       # coarse WHT map cell size (one S3 row read per cell row)
+    min_rel_weight: 0.5    # x median positive WHT
+    min_edge_arcsec: 1.0
+    max_artifact_ci: 1.45  # CI_50_30 below this is sharper than the PSF (S/N >= 3 only)
+    min_ranked: 20         # fewer survivors -> gate considered unusable, rank ungated
   rank:
     methods: [robust_z, isolation_forest, lof]
     random_state: 0

@@ -4,19 +4,23 @@ For each sample in the YAML config (e.g. ``configs/reference_sample.yaml``)::
 
     query.query_observations -> query.list_products -> acquire.fetch_products (CAT only)
     -> catalog.load_pipeline_catalog (per band) -> catalog.merge_bands
-    -> features.build_features -> rank.score_anomalies -> top-k targets
+    -> features.build_features -> quality.assess_sources (optional gate, D-011)
+    -> rank.score_anomalies (quality_ok sources) -> top-k targets
     -> cutouts.make_cutouts (optional, per band, S3 i2d URI) -> crossmatch.crossmatch (optional)
 
 then the top-ranked candidates go into the :class:`~jwst_anomaly.candidates.CandidateStore`
 and a ``report.md`` is written. Every stage output is checked with ``schema.validate``.
 A failing required stage aborts the run (recorded as ``failed``); a failing optional stage
-(cutouts, crossmatch) is recorded and the run continues. Image products (``_i2d.fits``,
+(quality gate, cutouts, crossmatch) is recorded and the run continues (an unusable gate means
+all sources are ranked, marked "ungated"). Image products (``_i2d.fits``,
 ~1.8 GB) are never downloaded here: only catalogs are fetched, cutouts read from S3.
 
 Config keys read: ``name``, ``archive.{collection, calib_level, data_rights,
 product_subgroups}``, ``samples[].{id, role, description, proposal_id, instrument_name,
 ref_band, obs_ids, query}`` (``query``: extra MAST criteria, optional),
 ``cloud.{s3_bucket, l3_key_pattern}``, ``stages.catalog.merge_radius_arcsec``,
+``stages.quality.{enabled, grid_arcsec, step, min_rel_weight, min_edge_arcsec, max_artifact_ci,
+min_ranked}`` (gate skipped when the block is absent),
 ``stages.rank.{methods, random_state}``, ``stages.cutouts.{enabled, top_k, size_arcsec, bands}``,
 ``stages.crossmatch.{enabled, top_k, radius_arcsec, services}`` and the optional top-level
 ``outputs`` block added by this unit:
@@ -55,6 +59,7 @@ from jwst_anomaly import (
     features,
     paths,
     provenance,
+    quality,
     query,
     rank,
     schema,
@@ -147,6 +152,7 @@ class SampleSummary:
     cutout_bands: list[str] = field(default_factory=list)
     tables: list[str] = field(default_factory=list)  # saved files, relative to the run dir
     contact_sheet: str | None = None  # PNG of the top-k cutouts, relative to the run dir
+    quality: dict[str, int] = field(default_factory=dict)  # quality-gate counts (D-011)
     notes: list[str] = field(default_factory=list)
 
 
@@ -296,6 +302,8 @@ class _Runner:
         default_k = max(self.cutouts_top_k, self.crossmatch_top_k)
         self.candidates_top_k = int(outputs.get("candidates_top_k", default_k))
         self.records: list[StageRecord] = []
+        # Reference weight of each sample's gate map, shared with cutouts of the same image.
+        self.weight_refs: dict[tuple[str, str], float] = {}
         self.summaries: dict[str, SampleSummary] = {}
         self.candidates: list[dict[str, Any]] = []
 
@@ -483,11 +491,21 @@ class _Runner:
         summary.feature_spec = {
             str(k): str(v) for k, v in (feats.meta.get("feature_spec") or {}).items()
         }
+        # 4b. Quality gate (derived, D-011): rank only sources whose measurements can be trusted.
+        to_rank = feats
+        keep = self._quality(sid, summary, sources, feats, ref_band, band_obs)
+        if keep is not None:
+            to_rank = feats[keep]
+            to_rank.meta = dict(feats.meta)
+            to_rank.meta["source"] = (
+                f"quality-gated subset ({int(keep.sum())} of {len(feats)} sources, D-011) of: "
+                f"{feats.meta.get('source', '')}"
+            )
         rank_kwargs = _stage_kwargs(self.stages_cfg.get("rank") or {}, ("methods", "random_state"))
         scores = self.stage(
             sid,
             "rank.score_anomalies",
-            partial(rank.score_anomalies, feats, **rank_kwargs),
+            partial(rank.score_anomalies, to_rank, **rank_kwargs),
             columns=schema.SCORE_COLUMNS,
             required=True,
             save_as="scores",
@@ -617,6 +635,68 @@ class _Runner:
         except ValueError:
             return path.as_posix()
 
+    def _quality(
+        self,
+        sid: str,
+        summary: SampleSummary,
+        sources: Table,
+        feats: Table,
+        ref_band: str,
+        band_obs: Mapping[str, str],
+    ) -> np.ndarray | None:
+        """Quality gate (optional stage, D-011). Return the rows of ``feats`` to rank, or None.
+
+        None (rank everything) when the gate is not configured, fails, or leaves fewer than
+        ``min_ranked`` sources, so a broken gate can never abort or empty a run.
+        """
+        cfg = self.stages_cfg.get("quality")
+        name = "quality.assess_sources"
+        if cfg is None or cfg.get("enabled", True) is False:
+            reason = "not configured" if cfg is None else "disabled in config"
+            self.record(sid, name, "skipped", reason, required=False)
+            return None
+
+        def gate() -> Table:
+            params = _stage_kwargs(cfg, ("min_rel_weight", "min_edge_arcsec", "max_artifact_ci"))
+            map_kwargs = {"grid_arcsec": float(cfg.get("grid_arcsec", 1.0))}
+            if cfg.get("step") is not None:
+                map_kwargs["step"] = int(cfg["step"])
+            uri = l3_image_uri(self.config.get("cloud"), band_obs[ref_band])
+            weights = cutouts.sample_weight_map(uri, **map_kwargs)
+            table = quality.assess_sources(sources, weights, ref_band=ref_band, **params)
+            ref = getattr(weights, "reference_weight", None)
+            if ref is not None and np.isfinite(ref):
+                self.weight_refs[(sid, ref_band)] = float(ref)
+            return table
+
+        table = self.stage(
+            sid, name, gate, columns=schema.QUALITY_COLUMNS, required=False, save_as="quality"
+        )
+        if table is None:
+            summary.notes.append("quality gate failed: all sources ranked (ungated)")
+            return None
+        ok_by_uid = {
+            _text(u): bool(v)
+            for u, v in zip(table["source_uid"], np.asarray(table["quality_ok"]), strict=True)
+        }
+        uids = [_text(u) for u in feats["source_uid"]]
+        missing = sum(u not in ok_by_uid for u in uids)
+        keep = np.array([ok_by_uid.get(u, False) for u in uids], dtype=bool)
+        min_ranked = max(2, int(cfg.get("min_ranked", 20)))
+        problem = None
+        if missing:
+            problem = f"gate table lacks {missing} of {len(uids)} feature rows"
+        elif keep.sum() < min_ranked:
+            n_ok = int(keep.sum())
+            problem = f"only {n_ok} of {len(uids)} sources passed (min_ranked {min_ranked})"
+        if problem:
+            self.record(sid, "quality gate (sanity check)", "failed", problem, required=False)
+            summary.notes.append(f"quality gate unusable ({problem}): all sources ranked (ungated)")
+            self.weight_refs.pop((sid, ref_band), None)
+            return None
+        summary.quality = quality.summarize(table)
+        return keep
+
     def _cutouts(
         self, sid: str, summary: SampleSummary, targets: Table, band_obs: Mapping[str, str]
     ) -> dict[str, dict[str, dict[str, Any]]]:
@@ -647,7 +727,17 @@ class _Runner:
             table = self.stage(
                 sid,
                 name,
-                partial(cutouts.make_cutouts, uri, targets, **kwargs),
+                partial(
+                    cutouts.make_cutouts,
+                    uri,
+                    targets,
+                    **kwargs,
+                    **(
+                        {"weight_ref": self.weight_refs[(sid, band)]}
+                        if (sid, band) in self.weight_refs
+                        else {}
+                    ),
+                ),
                 columns=schema.CUTOUT_COLUMNS,
                 required=False,
             )
@@ -736,6 +826,14 @@ class _Runner:
 
 
 # -- report ------------------------------------------------------------------------------------
+
+
+def _quality_line(counts: Mapping[str, int]) -> str:
+    if not counts:
+        return "not applied (all sources ranked)"
+    excluded = {k: v for k, v in counts.items() if k not in ("n_sources", "n_ok")}
+    detail = ", ".join(f"{k} {v}" for k, v in sorted(excluded.items())) or "none"
+    return f"{counts['n_ok']} of {counts['n_sources']} ranked; flags: {detail}"
 
 
 def _cell(value: Any) -> str:
@@ -855,6 +953,7 @@ def render_report(
             f"{', '.join(s.bands) or 'none'}; ref band {s.ref_band}",
             f"- Merged sources (derived): {s.n_sources}",
             f"- Features (derived): {len(s.feature_spec)}",
+            f"- Quality gate (derived, D-011): {_quality_line(s.quality)}",
             f"- Scored sources (model_prediction): {s.n_scored}; methods: "
             f"{', '.join(s.methods) or 'unknown'}",
             f"- Cutout bands: {', '.join(s.cutout_bands) or 'none'}",
