@@ -416,3 +416,27 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
     itself is not verified.
 - **NED redshift flags** (first letter: S = spectroscopic, P = photometric; `SLS` = spectroscopic, several lines,
   secure): https://ned.ipac.caltech.edu/Documents/Guides/Database
+
+## Second epochs (cycle 9, checked 2026-10-07 UTC)
+
+- **JWST program 6882**, "Vast Exploration for Nascent, Unexplored Sources (VENUS)", PI Fujimoto (MAST metadata).
+  Observation `o057_t057` covers part of SMACS 0723 on 2026-06-05 (t_min 21:55:17 UTC). Program 2736's F444W
+  epoch is 2022-06-07 (t_min 05:18:42 UTC). Both are public, level 3. The VENUS catalogs are jwst 3.0.0 and
+  photutils 3.0.0; sha256 values follow.
+  - `jw06882-o057_t057_nircam_clear-f150w_cat.ecsv` `d71e54f235b5acb0ee7fc21acd7527bf8fdefe91eae5c771c53afa9a42f5a4a8`
+  - `jw06882-o057_t057_nircam_clear-f182m_cat.ecsv` `8f76b50430d8ec90b8cb7afd268f72be6ee5367743f71e5446190cbfd761226b`
+  - `jw06882-o057_t057_nircam_clear-f210m_cat.ecsv` `92b5a1c661d3e361497721071a0f6a09ebd6894f09073e96785261b04ee3d7a3`
+  - `jw06882-o057_t057_nircam_clear-f300m_cat.ecsv` `f560d0f3ac43b014e7e34d47c94ba96f393e8cd8507ac1447574a9f91100fb0c`
+  - `jw06882-o057_t057_nircam_clear-f410m_cat.ecsv` `876f469e51a51ae34d324a31d6b8ad1b695364a804685c1e420f2acff8782deb`
+  - `jw06882-o057_t057_nircam_clear-f444w_cat.ecsv` `e431813bdaf255fbdc0cb4003e96051f7c8babfddc8223199c27582ad43efca6`
+- **Little-red-dot colour criteria:** Kokorev et al., "A Census of Photometrically Selected Little Red Dots at
+  4 < z < 9 in JWST Blank Fields", arXiv:2401.09981 (§3.1: `red1`/`red2` colour cuts, F444W compactness
+  f(0.4″)/f(0.2″) < 1.7, F444W > 14σ and < 27.7 mag, brown-dwarf removal F115W−F200W > −0.5, z16 > 4). Read
+  2026-10-07.
+- **Brown-dwarf NIRCam selection:** Hainline et al. 2024, ApJ 975, 31, "Brown Dwarf Candidates in the JADES and CEERS
+  Extragalactic Surveys". It selects on blue 1–2.5 µm and red 3–4.5 µm colours (abstract).
+  https://experts.arizona.edu/en/publications/brown-dwarf-candidates-in-the-jades-and-ceers-extragalactic-surve/
+  The colour thresholds themselves were not read.
+- Langeroodi & Hjorth, arXiv:2308.10900, "Little Red Dots or Brown Dwarfs? NIRSpec Discovery of Three Distant
+  Brown Dwarfs Masquerading as NIRCam-Selected Highly-Reddened AGNs": the two populations overlap in NIRCam colours.
+  Only the title is read.

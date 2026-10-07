@@ -2,6 +2,13 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Two-epoch vetting tool (D-017, cycle 9a)
+- `scripts/epoch_compare.py`: proper motion and variability of one target from two public level-3 catalogs of one
+  filter, with a local median frame tie. Program 6882 (VENUS, 2026-06-05) gives SMACS 0723 a 4-year second epoch in
+  F150W, F182M, F210M, F300M, F410M and F444W (SOURCES "Second epochs").
+- **Handoff:** the vetting record for `f200w_2804` follows in its own PR (inconclusive, `needs-human`).
+
+
 ## 2026-10-08: One-sided stellar-locus size test (D-016, cycle 8)
 - Bright calibration stars have inflated r50 (5–8 px under 20.5 mag), so D-015's two-sided band around 2.86 px
   missed the unsaturated stellar sequence at r50 ≈ 2.0 px. The size test is now 0.5–1.2 × r50_psf.
