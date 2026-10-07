@@ -61,6 +61,7 @@ stages:
     gaia_radius_arcsec: 0.3    # any Gaia DR3 source this close counts as the star itself
     star_top_k: 10
     min_stars: 5
+    extended_veto: true    # D-025: catalogue 'stars' too extended in DJA r50 are galaxies
     # D-015: point-like (DJA detection-image r50 within 20% of the catalogued stars' median)
     # sources with ordinary stellar colours join the stars; samples need matched photometry.
     stellar_locus:
@@ -88,6 +89,7 @@ stages:
       screen: true         # D-019: drop flagged sources with stellar colours from galaxy top k
       host_annulus_arcsec: [0.3, 0.6]   # D-020: ring/peak host test around the spike peak
       host_ratio_max: 0.004             # D-020: below this no host light -> star-dominated, screened
+      host_exempt_colour: [f150w, f444w, 1.0]  # D-025: redder spiky sources are not stars; kept
   crossmatch:
     top_k: 20
     radius_arcsec: 1.0

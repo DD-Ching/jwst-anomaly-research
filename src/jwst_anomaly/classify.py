@@ -178,6 +178,56 @@ def stellar_locus(
     return member, info
 
 
+# ASSUMPTIONS (D-025): catalogue "stars" too extended to be stars (bright cluster galaxies whose
+# cores Gaia lists). DJA detection images are 0.04"/px; a point source has r50 ~2-3 px.
+DEFAULT_EXTENDED_VETO = {
+    "r50_ref_px": 2.5,  # point-source half-light radius (before the D-015 calibration exists)
+    "bright_factor": 4.0,  # brighter than faint_mag: veto above this x r50_ref (spike wings)
+    "faint_factor": 2.0,  # fainter than faint_mag: veto above this x r50_ref
+    "faint_mag": 21.0,  # DJA mag_auto
+}
+
+
+def veto_extended_stars(
+    populations: Table, sources: Table, label: str, cfg: dict | bool = True
+) -> Table:
+    """Copy of ``populations`` where catalogue stars that are clearly extended in the matched
+    detection image become ``other`` again (D-025).
+
+    Gaia lists the cores of bright cluster galaxies, and their (position-only or spurious
+    astrometric) matches put whole galaxies into the star stratum. A star's DJA r50 stays near
+    the PSF; bright stars' wings inflate it, so the limit is ``bright_factor`` x ``r50_ref_px``
+    for sources brighter than ``faint_mag`` and ``faint_factor`` x ``r50_ref_px`` otherwise.
+    Sources without r50 are kept. ``meta['extended_veto']`` records the thresholds and uids.
+    """
+    overrides = {} if cfg is True else {k: v for k, v in dict(cfg).items() if k != "enabled"}
+    unknown = set(overrides) - set(DEFAULT_EXTENDED_VETO)
+    if unknown:
+        raise ValueError(f"unknown extended_veto keys {sorted(unknown)}")
+    p = {**DEFAULT_EXTENDED_VETO, **overrides}
+    r50 = column_as_float(sources, f"{label}_r50_pix")
+    mag = column_as_float(sources, f"{label}_mag_auto")
+    star = np.asarray(populations["population"]).astype(str) == "star"
+    with np.errstate(invalid="ignore"):
+        limit = np.where(
+            mag < float(p["faint_mag"]), float(p["bright_factor"]), float(p["faint_factor"])
+        ) * float(p["r50_ref_px"])
+        veto = star & np.isfinite(r50) & (r50 > limit)
+    out = populations.copy()
+    out["star_basis"] = np.asarray(out["star_basis"]).astype("U32")
+    out["population"] = np.asarray(out["population"]).astype("U8")  # room for "other"
+    out["population"][veto] = "other"
+    out["star_basis"][veto] = ""
+    out.meta = dict(populations.meta)
+    out.meta["extended_veto"] = {
+        "thresholds": {k: float(v) for k, v in p.items()},
+        "n_vetoed": int(veto.sum()),
+        "source_uids": [str(u) for u in np.asarray(populations["source_uid"])[veto]],
+        "provenance": schema.Provenance.ASSUMPTION.value,
+    }
+    return schema.validate(out, schema.CLASSIFY_COLUMNS, name="populations")
+
+
 def stellar_colour_mask(sources: Table, label: str, locus_info: dict) -> np.ndarray:
     """Rows whose ``label`` colours all lie in a locus's stellar colour box (size ignored).
 
