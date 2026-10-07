@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Hourly cloud routine
+- Routine `trig_01PNAmgcfqef8CvhPAY8ggbP` runs `/research-cycle` loops hourly at :07 UTC (Opus 5.5, no connectors)
+  with the prompt in docs/cloud-routine-prompt.md.
+- First test run: clone, venv, skills and MAST downloads work.
+  - GitHub GraphQL is blocked in cloud sessions, so `gh pr` / `gh issue` fail. The REST equivalents and a single
+    background CI-wait loop are in docs/operations.md §3, and the research-cycle skill points to them.
+  - The merge API is denied by `.claude/settings.json`, so cloud runs stop at merge-ready with the label
+    `merge-ready`. The owner or a local session merges.
+  - Coordination: runs last about 40 minutes and skip `local-wip` PRs and branches committed to in the last 15
+    minutes. An unmerged PR's handoff is read from its branch.
+- **Handoff:** unchanged (TASKS "Now (M3)"); the cloud routine continues it.
+
+
 ## 2026-10-08: Two-epoch transient search, a null result; exotic-lens signatures (D-027)
 - `scripts/transient_search.py` produces catalog-level candidates; `scripts/transient_forced.py` checks them with
   forced aperture photometry on byte-range cutouts of both epochs.

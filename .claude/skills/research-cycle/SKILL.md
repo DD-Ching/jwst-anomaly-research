@@ -80,8 +80,10 @@ Action.
   `.venv/bin/python`). If uv can't fetch Python 3.12 there, use `uv venv .venv --python python3`, which is
   preinstalled and >=3.11.
 - **Cloud run** (`CLAUDE_CODE_REMOTE=true`, e.g. a `/schedule` routine): fresh clone, ephemeral and limited disk,
-  network allowlist. If `gh` is refused with "This GraphQL query is not enabled for this session", use the REST
-  fallback it names, e.g. `gh api 'repos/DD-Ching/jwst-anomaly-research/issues?state=open'`.
+  network allowlist. GitHub GraphQL is blocked (`HTTP 403: GitHub GraphQL is not available from Claude Code
+  sessions`; older wording "This GraphQL query is not enabled for this session"), so every `gh pr` and `gh issue`
+  command in this procedure fails. Use the REST calls and the CI wait loop in docs/operations.md §3. Merging is
+  denied there: stop at merge-ready and add the label `merge-ready`.
 
 ## 2. Owner review comments first
 
