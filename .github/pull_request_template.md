@@ -1,5 +1,6 @@
 <!--
-Every change goes through a PR; the owner reviews and merges. AI-agent PRs carry the `agent` label;
+Every change goes through a PR with green CI. External PRs need the owner's approving review; the
+owner's agents merge their own PRs under CLAUDE.md's merge policy. AI-agent PRs carry the `agent` label;
 add `needs-human` when a decision is scientific, irreversible, costly, legal or credential-related.
 See CONTRIBUTING.md.
 -->
