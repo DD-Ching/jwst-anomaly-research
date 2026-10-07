@@ -1,0 +1,58 @@
+# Issue form. Syntax: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms
+name: Bug report
+description: Something in the code, pipeline, CI or docs is broken or wrong.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Security problems go to the private channel in [SECURITY.md](https://github.com/DD-Ching/jwst-anomaly-research/blob/main/SECURITY.md), not here.
+        A surprising **scientific result** is not a bug. Use the *Anomaly candidate* form for that.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Include the full error message if there is one.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Commands, config file and inputs. Refer to data by archive ID (MAST obs_id / product filename) or manifest entry; don't attach data.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, the git commit you ran, and versions of relevant packages (e.g. astropy, astroquery, jwst).
+      placeholder: |
+        OS:
+        Python:
+        Commit:
+        Packages:
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant log output. Remove tokens and other secrets first.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues and open pull requests.
+          required: true
+        - label: This report contains no secrets, tokens or personal data.
+          required: true

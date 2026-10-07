@@ -58,7 +58,44 @@ _Pending._
 
 ## Open-source project tooling (unit 7)
 
-_Pending._
+All links checked 2026-10-07.
+
+- **Contributor Covenant 2.1**: https://www.contributor-covenant.org/version/2/1/code_of_conduct/ ;
+  the markdown copied into CODE_OF_CONDUCT.md is
+  https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md
+  (sha256 of the downloaded file: `977d781349351fd7c1f076e4c7dc7de2a05b40e12c773542c3815dd4ce7f37ba`.
+  The repository copy differs only in the filled-in contact line and the trimmed leading and trailing
+  blank lines). The contact line links GitHub "Report abuse":
+  https://docs.github.com/en/communities/maintaining-your-safety-on-github/reporting-abuse-or-spam . Source repository:
+  https://github.com/EthicalSource/contributor_covenant (release `2.1`). Newer version 3.0, not adopted:
+  https://www.contributor-covenant.org/version/3/0/code_of_conduct/
+- **Citation File Format 1.2.0**: https://citation-file-format.github.io/ ; schema guide:
+  https://github.com/citation-file-format/citation-file-format/blob/1.2.0/schema-guide.md ;
+  validator **cffconvert 2.0.0**: https://github.com/citation-file-format/cffconvert . GitHub
+  citation support: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-citation-files ;
+  DOIs through Zenodo: https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content
+- **GitHub issue forms and templates**: syntax:
+  https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms ;
+  form schema: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema ;
+  `config.yml`: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository ;
+  PR template: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository
+- **GitHub private vulnerability reporting**: enabling it:
+  https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository ;
+  how reporters use it: https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/report-privately
+- **Dependabot options reference** (ecosystems `github-actions`, `pre-commit`, `pip`; `groups`, `cooldown`,
+  `versioning-strategy`, `labels`): https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference ;
+  grouping of version vs security updates (`applies-to`):
+  https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/optimizing-pr-creation-version-updates
+- **GitHub Actions `schedule` event** (delays at the top of the hour; disabled after 60 days without
+  activity in public repos): https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule
+- **pre-commit 4.6.2**: https://pre-commit.com/ ; hooks pinned in `.pre-commit-config.yaml`:
+  **astral-sh/ruff-pre-commit v0.16.10** (https://github.com/astral-sh/ruff-pre-commit/releases/tag/v0.16.10)
+  and **pre-commit/pre-commit-hooks v6.0.0** (https://github.com/pre-commit/pre-commit-hooks/releases/tag/v6.0.0).
+- Validation tools (not project dependencies): **actionlint 1.7.12** (https://github.com/rhysd/actionlint ,
+  PyPI wrapper `actionlint-py` 1.7.12.25) and **check-jsonschema 0.38.2**, which bundles SchemaStore
+  schemas for workflows, Dependabot, issue forms and CFF (https://github.com/python-jsonschema/check-jsonschema).
+- Considered but not adopted: Renovate (https://docs.renovatebot.com/) and pre-commit.ci (https://pre-commit.ci/).
+  D-008 gives the reasons.
 
 ## Future milestones: models, frameworks, lensing, HLSPs, tracking (unit 9)
 

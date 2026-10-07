@@ -1,0 +1,26 @@
+# Local hooks: `pre-commit install`, then `pre-commit run --all-files` (see CONTRIBUTING.md).
+# Revisions are pinned release tags; Dependabot (pre-commit ecosystem) proposes updates weekly.
+# CI (ci.yml) is authoritative: it runs the latest ruff, which can be newer than the pin below.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.10
+    hooks:
+      # Same paths as CI's lint job; without `files`, the hooks would also rewrite notebooks and
+      # python blocks inside markdown files.
+      - id: ruff-check
+        args: [--fix]
+        files: ^(src|tests|scripts)/
+      - id: ruff-format
+        files: ^(src|tests|scripts)/
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      # --enforce-all: also check modified and already-tracked files, not only newly added ones.
+      - id: check-added-large-files
+        args: [--maxkb=1024, --enforce-all]
+      - id: detect-private-key
+      - id: check-yaml
+      - id: check-toml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-merge-conflict

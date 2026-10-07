@@ -1,0 +1,9 @@
+# Issue template chooser. Docs: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/DD-Ching/jwst-anomaly-research/security/advisories/new
+    about: Report privately via GitHub private vulnerability reporting (see SECURITY.md). Do not open a public issue.
+  - name: Methodology and provenance labels
+    url: https://github.com/DD-Ching/jwst-anomaly-research/blob/main/docs/methodology.md
+    about: Read this before reporting an anomaly candidate.
