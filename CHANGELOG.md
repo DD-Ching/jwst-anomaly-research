@@ -6,7 +6,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Run `20261007T151316Z-5706ae30` (clean `6fade35`), galaxy rank 6. Uncatalogued, unresolved, F444W 22.9.
 - **Second epoch:** no proper motion over 4.0 years (VENUS 6882, 2026-06-05; 1.9 mas = 0.95σ, so
   |μ| ≲ 1.5 mas/yr) and no F444W variability (0.004 mag).
-- F444W is 0.73 mag brighter than F410M in the same epoch, which suggests a strong line at 4.25–4.98 µm.
+- F444W is 0.725 mag brighter than F410M in the same epoch, which suggests a strong line at 4.25–4.98 µm.
 - It meets Kokorev+2024 little-red-dot colour cuts. A brown dwarf is disfavoured: the 1.5–2.8 µm colours are red
   rather than blue, there is no motion, and there is no 4.1 µm peak.
 - Verdict: `inconclusive: needs NIRSpec spectroscopy`. Record: `docs/candidates/jw02736-o001_t001_nircam_f200w_2804.md`.
