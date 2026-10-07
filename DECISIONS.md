@@ -1245,3 +1245,39 @@ Field docs: `docs/fields/*.md`.
 **Revisit if.**
 - Newer DJA catalogs appear.
 - Lens-model comparisons (D-023) need other associations or modules.
+## D-027 Two-epoch transient search: catalog candidates, verified by forced photometry (2026-10-08)
+
+**Decision.** Two scripts, both producing `derived` outputs with ASSUMPTION thresholds:
+- **`scripts/transient_search.py`** compares two same-filter level-3 catalogs. It applies a local median position
+  and zero-point tie, then lists `variable` (|Δm| ≥ 0.3 mag at ≥ 5σ), `appeared` and `disappeared` candidates.
+  Footprint and depth are judged from catalog proxies.
+- **`scripts/transient_forced.py`** checks candidates with **forced aperture photometry**:
+  - 0.15″ aperture with a background annulus, at fixed sky positions;
+  - both epochs' `_i2d` cutouts read by S3 byte ranges;
+  - ERR-based errors plus a 0.05 mag systematic floor.
+  Each catalog carries its own segmentation and deblending, and those changed between pipeline versions;
+  forced photometry does not depend on them.
+
+**Alternatives rejected.**
+- Catalog-only comparison: in SMACS F444W it gave 56 "variables" and 311 "appeared" (F150W: 128 and 410),
+  almost all from deblending differences between jwst 2.0.1 and 3.0.0.
+- Image differencing: it needs full mosaics (GB) and PSF matching.
+- Light-curve exotic tests: two epochs cannot sample them (docs/exotic_lensing.md).
+
+**Evidence.** SMACS 2736 (2022-06-07) against VENUS 6882 o057 (2026-06-05):
+- Catalog stage: 441 candidates in F444W and 628 in F150W; 144 coincide in both bands with the same kind.
+- Forced photometry: the median Δm is 0.00 in both bands and the 5–95% range is ±0.2–0.3 mag. 4 pass in both bands.
+- Visual check: all 4 are bright stars that look unchanged. Their spikes rotate between the epochs (different
+  V3 PA), so a fixed aperture on a star's wing measures different spike light.
+- After the review fixes (PR #34):
+  - Matching follows a global frame tie: shifts of (0.001, 0.022)″ in F444W and (0.008, 0.019)″ in F150W.
+  - Catalog candidates: 445 and 630.
+  - Re-measuring with WCS-centred apertures: 6 pass in both bands. All look unchanged on visual check (5 bright
+    stars and 1 compact source next to a brighter neighbour).
+- **Result: no credible transient in the SMACS/VENUS overlap** at |Δm| ≥ 0.3 mag and ≥ 5σ in both F150W and
+  F444W. This is a null result for caustic-crossing events at this depth.
+
+**Revisit if.**
+- Same-pipeline epoch pairs are available (Sunrise 2282 o010/o120 share four bands at jwst 2.0.1).
+- Exclude spiky (D-018) or star positions before forced photometry.
+- More than two epochs make light curves possible.

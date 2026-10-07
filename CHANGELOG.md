@@ -2,6 +2,30 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Hourly cloud routine
+- Routine `trig_01PNAmgcfqef8CvhPAY8ggbP` runs `/research-cycle` loops hourly at :07 UTC (Opus 5.5, no connectors)
+  with the prompt in docs/cloud-routine-prompt.md.
+- First test run: clone, venv, skills and MAST downloads work.
+  - GitHub GraphQL is blocked in cloud sessions, so `gh pr` / `gh issue` fail. The REST equivalents and a single
+    background CI-wait loop are in docs/operations.md §3, and the research-cycle skill points to them.
+  - The merge API is denied by `.claude/settings.json`, so cloud runs stop at merge-ready with the label
+    `merge-ready`. The owner or a local session merges.
+  - Coordination: runs last about 40 minutes and skip `local-wip` PRs and branches committed to in the last 15
+    minutes. An unmerged PR's handoff is read from its branch.
+- **Handoff:** unchanged (TASKS "Now (M3)"); the cloud routine continues it.
+
+
+## 2026-10-08: Two-epoch transient search, a null result; exotic-lens signatures (D-027)
+- `scripts/transient_search.py` produces catalog-level candidates; `scripts/transient_forced.py` checks them with
+  forced aperture photometry on byte-range cutouts of both epochs.
+- SMACS against VENUS: catalog 441 (F444W) and 628 (F150W) → 144 in both bands → 4 by forced photometry (6 with
+  WCS-centred apertures) → 0 after a visual check. All are bright stars or a source next to a bright neighbour, where
+  fixed-aperture systematics dominate. No credible transient at |Δm| ≥ 0.3 mag, ≥ 5σ.
+- **Failed approach:** catalog-only comparison across pipeline versions, which picks up deblending differences.
+- docs/exotic_lensing.md records the verified exotic-lens signatures (wormhole demagnification, radial images for
+  negative mass), the degeneracies with ordinary lensing, and existing limits. Warp drives have no imaging
+  prediction to test.
+- **Handoff:** the lens-model stage (TASKS "Now (M3)" 1), then Sunrise's same-pipeline epoch pair.
 ## 2026-10-08: Three cluster fields; robustness rules from them (D-025, D-026, cycle 17)
 - Parallel worktree workers added Abell 2744 (#32), El Gordo (#31) and Sunrise/WHL0137 (#30). PR #29 fixed downloads
   for MAST products whose listed size is stale after the 2026-10-01 reprocessing. Proposals are folded into
