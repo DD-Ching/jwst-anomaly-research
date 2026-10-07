@@ -61,6 +61,7 @@ _COLUMN_PROVENANCE = {
     "y": schema.Provenance.DERIVED.value,
     "wht_rel": schema.Provenance.DERIVED.value,
     "spike_s6": schema.Provenance.DERIVED.value,
+    "host_ratio": schema.Provenance.DERIVED.value,
 }
 _OUTSIDE = {
     "path": "",
@@ -69,6 +70,7 @@ _OUTSIDE = {
     "quality_flag": "outside",
     "wht_rel": np.nan,
     "spike_s6": np.nan,
+    "host_ratio": np.nan,
 }
 
 _WHOLE_WHT_BYTES = 8 * 2**20  # read a WHT this small in one go rather than sampling rows
@@ -93,6 +95,7 @@ def make_cutouts(
     spike_radii_arcsec: tuple[float, float] | None = None,
     spike_threshold: float = 3.0,
     spike_search_arcsec: float = 0.3,
+    host_annulus_arcsec: tuple[float, float] = (0.3, 0.6),
     weight_ref: float | None = None,
     n_weight_rows: int = 32,
     storage_options: dict[str, Any] | None = None,
@@ -118,8 +121,9 @@ def make_cutouts(
     (:func:`spike_statistic` between ``spike_radii_arcsec`` around the brightest peak within
     ``spike_search_arcsec`` of the target, so a blended star counts; NaN when not requested or not
     NIRCam). With ``spike_radii_arcsec``, a NIRCam cutout scoring ``>= spike_threshold`` gets the
-    ``spikes`` flag (D-018). The table is labeled observed; ``meta["column_provenance"]`` marks
-    the derived columns.
+    ``spikes`` flag (D-018). ``host_ratio`` (:func:`host_ratio` in ``host_annulus_arcsec`` around
+    the same peak; D-020) is low for a bare point source and high for a nucleus inside a galaxy.
+    The table is labeled observed; ``meta["column_provenance"]`` marks the derived columns.
 
     ``band`` overrides the header (``FILTER``, or ``PUPIL`` for NIRCam pupil-wheel filters).
     ``weight_ref`` is the image's typical WHT; by default it is the median positive WHT of
@@ -190,7 +194,7 @@ def make_cutouts(
             if ref is None:
                 ref = _reference_weight(wht_section, n_weight_rows)
             row |= _quality(cut, nodata, wht, ref, core_px, nan_frac_max, low_weight_frac)
-            row["spike_s6"] = np.nan
+            row["spike_s6"] = row["host_ratio"] = np.nan
             if spike_radii_arcsec is not None and nircam:
                 px = float(np.mean(scale_arcsec))
                 img = np.where(nodata, np.nan, cut.data)
@@ -199,6 +203,9 @@ def make_cutouts(
                     img, cx, cy, spike_radii_arcsec[0] / px, spike_radii_arcsec[1] / px
                 )
                 row["spike_s6"] = s6
+                row["host_ratio"] = host_ratio(
+                    img, cx, cy, host_annulus_arcsec[0] / px, host_annulus_arcsec[1] / px
+                )
                 if np.isfinite(s6) and s6 >= spike_threshold:
                     flags = [t for t in row["quality_flag"].split(",") if t != "ok"]
                     row["quality_flag"] = ",".join([*flags, "spikes"])
@@ -221,8 +228,8 @@ def make_cutouts(
 
     out = Table(
         rows=rows or None,
-        names=(*schema.CUTOUT_COLUMNS, "x", "y", "wht_rel", "spike_s6"),
-        dtype=(str, str, str, float, bool, str, float, float, float, float),
+        names=(*schema.CUTOUT_COLUMNS, "x", "y", "wht_rel", "spike_s6", "host_ratio"),
+        dtype=(str, str, str, float, bool, str, float, float, float, float, float),
     )
     out.meta.update(
         provenance=schema.Provenance.OBSERVED.value,
@@ -240,6 +247,7 @@ def make_cutouts(
             else {
                 "radii_arcsec": [float(r) for r in spike_radii_arcsec],
                 "search_arcsec": float(spike_search_arcsec),
+                "host_annulus_arcsec": [float(r) for r in host_annulus_arcsec],
                 "threshold": float(spike_threshold),
                 "applied": bool(nircam),
                 "provenance": schema.Provenance.ASSUMPTION.value,
@@ -594,6 +602,40 @@ def spike_statistic(
     power = (np.abs(np.fft.rfft(resid, axis=1)) ** 2).sum(axis=0)
     denom = np.sqrt(power[4] * power[8])
     return float(power[6] / denom) if denom > 0 else float("nan")
+
+
+def host_ratio(
+    data: np.ndarray, x: float, y: float, r_in_px: float, r_out_px: float, *, peak_px: float = 2.0
+) -> float:
+    """Azimuthal-median surface brightness in an annulus over the peak brightness (D-020).
+
+    The background (median of pixels beyond ``1.5 * r_out_px``) is subtracted first. Medians
+    per 1-px ring ignore diffraction spikes and small neighbours. A bare star gives the PSF
+    wings (~1e-3 in NIRCam F200W at 0.3-0.6"); a nucleus inside a galaxy adds the host light.
+    NaN when the cutout has no pixels beyond ``1.5 * r_out_px``, the peak is not positive, or the
+    annulus has no data.
+    """
+    ny, nx = data.shape
+    yy, xx = np.mgrid[0:ny, 0:nx]
+    r = np.hypot(xx - x, yy - y)
+    outer = np.isfinite(data) & (r > 1.5 * r_out_px)
+    if not outer.any():  # no background region in this cutout: the ratio would be biased
+        return float("nan")
+    background = float(np.median(data[outer]))
+    sub = data - background
+    core = np.isfinite(sub) & (r <= peak_px)
+    if not core.any():
+        return float("nan")
+    peak = float(np.max(sub[core]))
+    rings = []
+    for a in np.arange(r_in_px, r_out_px, 1.0):
+        ring = sub[(r >= a) & (r < a + 1.0)]
+        ring = ring[np.isfinite(ring)]
+        if ring.size:
+            rings.append(float(np.median(ring)))
+    if peak <= 0 or not rings:
+        return float("nan")
+    return float(np.mean(rings) / peak)
 
 
 def _peak_near(data: np.ndarray, x: float, y: float, r_px: float) -> tuple[float, float]:

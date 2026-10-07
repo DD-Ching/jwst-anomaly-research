@@ -110,6 +110,8 @@ stages:
       search_arcsec: 0.3
       threshold: 3.0
       screen: true         # D-019: drop flagged sources with stellar colours from galaxy top k
+      host_annulus_arcsec: [0.3, 0.6]   # D-020: ring/peak host test around the spike peak
+      host_ratio_max: 0.004             # D-020: below this no host light -> star-dominated, screened
   crossmatch:
     top_k: 20
     radius_arcsec: 1.0
