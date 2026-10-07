@@ -1,0 +1,54 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - name: main_id
+#   datatype: string
+#   description: Main identifier for an object
+#   meta: !!omap
+#   - {ucd: meta.id;meta.main}
+#   - {utype: 'mango:MangoObject.identifier'}
+#   - {_votable_string_dtype: char}
+#   - {_votable_arraysize: '*'}
+#   subtype: json
+# - name: otype
+#   datatype: string
+#   description: Object type
+#   meta: !!omap
+#   - {ucd: src.class}
+#   - {utype: 'mango:Label.text[CT.vocabulary=https://www.ivoa.net/rdf/uat#classification]'}
+#   - {_votable_string_dtype: char}
+#   - {_votable_arraysize: '*'}
+#   subtype: json
+# - name: alltypes.otypes
+#   datatype: string
+#   description: List of all object types concatenated with pipe
+#   meta: !!omap
+#   - {ucd: src.class}
+#   - {_votable_string_dtype: char}
+#   - {_votable_arraysize: '*'}
+#   subtype: json
+# - name: ra
+#   unit: deg
+#   datatype: float64
+#   description: Right ascension
+#   meta: !!omap
+#   - {ucd: pos.eq.ra;meta.main}
+#   - {utype: 'mango:EpochPosition.longitude[CS.spaceSys=ICRS CT.epoch=J2000]'}
+# - name: dec
+#   unit: deg
+#   datatype: float64
+#   description: Declination
+#   meta: !!omap
+#   - {ucd: pos.eq.dec;meta.main}
+#   - {utype: 'mango:EpochPosition.latitude[CS.spaceSys=ICRS CT.epoch=J2000]'}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: SIMBAD TAP basic + alltypes (simbad.cds.unistra.fr)}
+# - {note: 'raw simbad/tap response for xmatch_targets.ecsv at radius 1.0 arcsec, trimmed to the columns crossmatch.py reads'}
+# - {recorded_utc: '2026-10-07T01:45:24+00:00'}
+# - software: {astropy: 8.0.1, astroquery: 0.4.11, pyvo: 1.9.1}
+# schema: astropy-2.0
+main_id otype alltypes.otypes ra dec
+"""[CSM2022] 54""" """G""" """G""" 110.8035266 -73.4573758
+"""[CLL2024] SMACS J0723.3-7327 15.2""" """LeG""" """LeG|LeI""" 110.82413791666666 -73.45745805555556
+"""SMACS J0723.3-7327""" """ClG""" """C?G|ClG|X""" 110.8054 -73.457

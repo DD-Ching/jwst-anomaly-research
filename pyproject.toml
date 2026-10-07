@@ -21,6 +21,7 @@ classifiers = [
 dependencies = [
     "astropy>=6.1",
     "astroquery>=0.4.7",
+    "pyvo>=1.5",
     "numpy>=1.26",
     "scipy>=1.11",
     "pandas>=2.1",

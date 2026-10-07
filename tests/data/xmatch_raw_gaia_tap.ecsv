@@ -1,0 +1,77 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - name: source_id
+#   datatype: int64
+#   description: Unique source identifier (unique within a particular Data Release)
+#   meta: !!omap
+#   - {ucd: meta.id}
+# - name: ra
+#   unit: deg
+#   datatype: float64
+#   description: Right ascension
+#   meta: !!omap
+#   - {ucd: pos.eq.ra;meta.main}
+#   - {utype: 'stc:AstroCoords.Position3D.Value3.C1'}
+# - name: dec
+#   unit: deg
+#   datatype: float64
+#   description: Declination
+#   meta: !!omap
+#   - {ucd: pos.eq.dec;meta.main}
+#   - {utype: 'stc:AstroCoords.Position3D.Value3.C2'}
+# - name: parallax
+#   unit: mas
+#   datatype: float64
+#   description: Parallax
+#   meta: !!omap
+#   - {ucd: pos.parallax.trig}
+# - name: parallax_error
+#   unit: mas
+#   datatype: float32
+#   description: Standard error of parallax
+#   meta: !!omap
+#   - {ucd: stat.error;pos.parallax.trig}
+# - name: pmra
+#   unit: mas / yr
+#   datatype: float64
+#   description: Proper motion in right ascension direction
+#   meta: !!omap
+#   - {ucd: pos.pm;pos.eq.ra}
+#   - {utype: 'stc:AstroCoords.Velocity3D.Value3.C1'}
+# - name: pmra_error
+#   unit: mas / yr
+#   datatype: float32
+#   description: Standard error of proper motion in right ascension direction
+#   meta: !!omap
+#   - {ucd: stat.error;pos.pm;pos.eq.ra}
+#   - {utype: 'stc:AstroCoords.Velocity3D.Error3.C1'}
+# - name: pmdec
+#   unit: mas / yr
+#   datatype: float64
+#   description: Proper motion in declination direction
+#   meta: !!omap
+#   - {ucd: pos.pm;pos.eq.dec}
+#   - {utype: 'stc:AstroCoords.Velocity3D.Value3.C2'}
+# - name: pmdec_error
+#   unit: mas / yr
+#   datatype: float32
+#   description: Standard error of proper motion in declination direction
+#   meta: !!omap
+#   - {ucd: stat.error;pos.pm;pos.eq.dec}
+#   - {utype: 'stc:AstroCoords.Velocity3D.Error3.C2'}
+# - name: pmra_pmdec_corr
+#   datatype: float32
+#   description: Correlation between proper motion in right ascension and proper motion in declination
+#   meta: !!omap
+#   - {ucd: stat.correlation}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'ESA Gaia archive TAP gaiadr3.gaia_source (Gaia DR3, epoch J2016.0)'}
+# - {note: 'raw gaia/tap response for xmatch_targets.ecsv at radius 1.0 arcsec, trimmed to the columns crossmatch.py reads'}
+# - {recorded_utc: '2026-10-07T01:45:32+00:00'}
+# - software: {astropy: 8.0.1, astroquery: 0.4.11, pyvo: 1.9.1}
+# schema: astropy-2.0
+source_id ra dec parallax parallax_error pmra pmra_error pmdec pmdec_error pmra_pmdec_corr
+5262900027979791104 110.82628572759177 -73.44871015820974 2.1642644866319523 0.01682956 0.005408490518329145 0.020547224 19.394821744491658 0.020782052 -0.009551455
+5262899954964194816 110.85797244287184 -73.46423346172936 6.143387840763897 0.13968344 6.818400799696354 0.18205649 -7.799968952598311 0.17237179 0.022635747
