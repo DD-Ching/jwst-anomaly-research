@@ -21,10 +21,27 @@ under tests X, Y, Z". Every interpretation is labelled `hypothesis`.
 
 ## 0. Gather evidence (tolerate missing stages)
 
+**Start with `scripts/vet_evidence.py`.** It collects nearly everything below in one batched call for several
+`--uid`s and writes `<out>/<uid>/evidence.json` plus a multi-band `bands.png`. It reports:
+- the run's score;
+- the quality-gate row;
+- per-band catalog rows and the matched-photometry magnitudes;
+- cutouts in every band;
+- tangential geometry (`--center`);
+- the nearest published multiple image (`--lens-images`);
+- the nearest classified star;
+- SIMBAD/NED/Gaia matches;
+- a DJA eazy photo-z (`--photoz`).
+
+See its docstring and an existing `docs/candidates/*.md` for the command. Look at `bands.png` yourself before
+writing any verdict. For paper titles and redshift types, query SIMBAD TAP (`ident` → `has_ref` → `ref`) and NED
+TAP `objdir` (`z`, `zunc`, `zflag`, `z_bibcode`), not memory. Use positional NED queries, because name queries
+time out.
+
 The candidate store, cutouts and cross-match stages (bootstrap units 4-6) may not exist yet. Use what exists and
 state what doesn't.
 - **Candidate, score, `top_features`, run provenance:** run `jwst-anomaly candidates --help` first to see the real
-  subcommands, e.g. `jwst-anomaly candidates show $source_uid`. The script is `.venv/Scripts/jwst-anomaly` on
+  subcommands: `list`, `show`, `set-status` and `add-vetting`, e.g. `jwst-anomaly candidates show $source_uid --run <run_id>`. The script is `.venv/Scripts/jwst-anomaly` on
   Windows and `.venv/bin/jwst-anomaly` on Linux. Without the CLI, use `jwst_anomaly.candidates.CandidateStore` or
   the run outputs under `$JWST_ANOMALY_OUTPUTS`.
 - **Catalog rows in every band:** fluxes and errors, flags, `is_extended`, sharpness and roundness, position offsets
@@ -94,8 +111,11 @@ A threshold you choose yourself is an `assumption`; record it as one.
   - open questions.
 
   In cloud runs the SQLite store and the figures are lost when the run ends, so this file is the record.
-- **Store:** if the CLI supports it, also add the vetting through it (check `jwst-anomaly candidates --help` for the
-  add-vetting command).
+- **Store:** record tests with `jwst-anomaly candidates add-vetting <uid> --run <run_id> --test <name> --outcome
+  pass|fail|inconclusive --evidence <text> --provenance <label>`. Record the verdict with `set-status <uid> <status>
+  --run <run_id> --note <verdict>`: first `triaged`, then `known_object`, `explained`, `artifact`, `unexplained` or
+  `followup` (the CLI enforces the lifecycle, and a conclusion needs at least one vetting note). Leave a hypothesis-only verdict at `triaged`. The store is
+  local; the markdown record is the durable copy.
 - **PR:** open it as in `/research-cycle` step 8, with labels `agent` and `candidate`, and a summary of the verdict in
   the body. Add `needs-human` when the verdict is "unexplained" or "inconclusive", or whenever interpreting it needs
   a scientific judgement.

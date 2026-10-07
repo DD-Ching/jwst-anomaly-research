@@ -384,7 +384,35 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - **SEP flag bits** used to filter DJA aperture measurements (`APER_TRUNC` 0x10, `APER_HASMASKED` 0x20,
   `APER_ALLMASKED` 0x40, `APER_NONPOSITIVE` 0x80): https://raw.githubusercontent.com/kbarbary/sep/main/src/sep.h
 - **SIMBAD/NED designations** recovered in the top 20 of runs `20261007T120528Z-378af5a1` and `20261007T122054Z-c52935ec`, as returned by
-  `crossmatch` on 2026-10-07; their original papers are not verified:
+  `crossmatch` on 2026-10-07 (papers of the first three verified in "Vetting (cycle 7)"):
   - `SMACS J0723-73:[MJR2023] 028.2` (NED G_Lens);
   - `[YML2023] F150DB-C-4` (SIMBAD);
   - `[RBI2023] 18`, `SMACS J0723-7327:[CSM2022] 78`, `[MS2023] WDF-P-6576` (SIMBAD).
+
+## Vetting (cycle 7, checked 2026-10-07 UTC)
+
+- **DJA v7.4 SMACS 0723 eazy photo-z** (same DJA terms as the catalog above):
+  - tarball https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/smacs0723-grizli-v7.4-fix.photoz.tar.gz, last-modified
+    2025-03-05, 59,032,200 bytes, sha256 `13b5b6f40048b1f474827d93ca52dc94f0200261187c59ca397d70382c8c2821`;
+  - only the member `smacs0723-grizli-v7.4-fix.eazypy.zout.fits` is used (13,052,160 bytes, sha256
+    `82db8910962f3050ddb9f8209aafa487fb30f3cf46551d57ef3824d7d2c355ea`, 13,554 rows). Extract it with
+    `tarfile` (`filter="data"`) to `$JWST_ANOMALY_DATA/cache/dja/photoz-v7.4/`;
+  - header: eazy-py `VERSION` 0.8.3, templates `templates/sfhz/sorted_agn_blue_sfhz_13.param`, `PRIOR` False.
+- **Papers behind catalogue designations**, as SIMBAD TAP (`ident`→`has_ref`→`ref`) and NED TAP (`objdir`) return
+  them. Titles are verbatim from SIMBAD.
+  - 2023ApJ...942L...9Y: "First Batch of z ≈ 11-20 Candidate Objects Revealed by the James Webb Space Telescope
+    Early Release Observations on SMACS 0723-73." (`[YML2023]`)
+  - 2023ApJ...945...49M: "Precision Modeling of JWST's First Cluster Lens SMACS J0723.3-7327." It is NED's only
+    reference for `[MJR2023] 028.2` and the published version of arXiv:2207.07101.
+  - 2023MNRAS.518L..19R: "JWST unveils heavily obscured (active and passive) sources up to z ∼ 13." (`[RBI2023]`)
+  - 2023ApJS..265....5H: "A Comprehensive Study of Galaxies at z ∼ 9-16 Found in the Early JWST Data: Ultraviolet
+    Luminosity Functions and Cosmic Star Formation History at the Pre-reionization Epoch."
+  - 2023ApJ...947L...1Y: "Pointlike Sources among z > 11 Galaxy Candidates: Contaminants due to Supernovae at High
+    Redshifts?"
+  - 2023MNRAS.518.4755A: "Discovery and properties of ultra-high redshift galaxies (9 < z < 12) in the JWST ERO
+    SMACS 0723 Field."
+  - 2023MNRAS.525.2087B: "High-z galaxies with JWST and local analogues - it is not only star formation." It is the
+    NED redshift reference (z 2.7412, flag `SLS`) for `[MS2023] WDF-C-2420`. The `[MS2023]` designation paper
+    itself is not verified.
+- **NED redshift flags** (first letter: S = spectroscopic, P = photometric; `SLS` = spectroscopic, several lines,
+  secure): https://ned.ipac.caltech.edu/Documents/Guides/Database

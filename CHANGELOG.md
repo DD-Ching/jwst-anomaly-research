@@ -2,6 +2,27 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Vetted four high-ranked SMACS galaxies; DJA photo-z for vetting (cycle 7)
+- PR #16 (D-015) review fixes merged. Run `20261007T132538Z-96e911bb` (clean `725eac3`) reproduces the D-015 numbers.
+- `scripts/vet_evidence.py --photoz`: the nearest DJA eazy entry, labelled model_prediction (SOURCES "Vetting
+  (cycle 7)"). `/vet-candidate` now names the script and the real `candidates` subcommands.
+- All four are ordinary; none is an artifact. Records are in `docs/candidates/`.
+
+  | Source | Rank | Verdict |
+  |---|---|---|
+  | `829` | 3 | red, dusty galaxy at spectroscopic z = 2.74 (NED), a published F150W-dropout "z ≈ 11–20" candidate |
+  | `1032` | 8 | lensed arc `[MJR2023] 028.2` (Mahler et al. 2023), a tangential pair with 028.1; blue colours likely from emission lines (hypothesis) |
+  | `438` | 11 | uncatalogued; Balmer-break galaxy at z_phot 4.8 (hypothesis, 6-band photo-z) |
+  | `1243` | 12 | catalogued red point-like high-z candidate, photometric z ≈ 5.6–5.75 |
+
+- **Lesson:** after D-011/D-014/D-015 the top of the galaxy ranking is dominated by real but rare populations
+  (lensed arcs, dusty and high-z galaxies), most already catalogued. The pipeline recovers known lensing
+  features. Uncatalogued sources such as `438` are the discovery set.
+- **Side finding:** the D-015 stellar locus missed the PSF-like star `f200w_1874` (F200W 21.4 mag, spikes)
+  because its r50 (2.10 px) is 27% below r50_psf (TASKS Now 1).
+- **Handoff:** TASKS Now 1 (stellar-locus lower bound) and Now 2 (blended stars).
+
+
 ## 2026-10-08: Stellar locus for stars missing from Gaia (D-015, cycle 6)
 - `classify.stellar_locus`: a source counts as a star when its DJA detection-image r50 is within 20% of the
   catalogued stars' median and its colours are stellar. The DJA join now carries `r50_pix` and `mag_auto`.
