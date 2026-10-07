@@ -1,0 +1,67 @@
+# Reference sample for the first vertical slice.
+# Observation ids, public status and product sizes were checked against MAST on 2026-10-07
+# (see SOURCES.md "Data"). Stage parameters are starting points, not tuned values.
+name: reference_sample_v1
+
+archive:
+  collection: JWST
+  calib_level: 3
+  data_rights: PUBLIC
+  product_subgroups: [CAT, I2D]
+
+samples:
+  - id: smacs0723_nircam
+    role: science
+    description: JWST ERO SMACS J0723.3-7327 lensing cluster, NIRCam imaging (program 2736)
+    proposal_id: "2736"
+    instrument_name: NIRCAM/IMAGE
+    ref_band: F200W
+    obs_ids:
+      - jw02736-o001_t001_nircam_clear-f090w
+      - jw02736-o001_t001_nircam_clear-f150w
+      - jw02736-o001_t001_nircam_clear-f200w
+      - jw02736-o001_t001_nircam_clear-f277w
+      - jw02736-o001_t001_nircam_clear-f356w
+      - jw02736-o001_t001_nircam_clear-f444w
+
+  - id: smacs0723_miri
+    role: science-aux
+    description: Same field, MIRI imaging (program 2736)
+    proposal_id: "2736"
+    instrument_name: MIRI/IMAGE
+    ref_band: F770W
+    obs_ids:
+      - jw02736-o002_t001_miri_f770w
+      - jw02736-o002_t001_miri_f1000w
+      - jw02736-o002_t001_miri_f1500w
+      - jw02736-o002_t001_miri_f1800w
+
+  - id: ceers_t021
+    role: control
+    description: CEERS (program 1345) NIRCam pointing t021, non-cluster control field
+    proposal_id: "1345"
+    instrument_name: NIRCAM/IMAGE
+    ref_band: F200W
+    # Only F200W was verified; resolve the other bands of this pointing via query.
+    obs_ids:
+      - jw01345-o001_t021_nircam_clear-f200w
+
+cloud:
+  s3_bucket: stpubdata
+  # Verified for programs 2736 and 1345 level-3 products.
+  l3_key_pattern: "jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}"
+
+stages:
+  catalog:
+    merge_radius_arcsec: 0.1
+  rank:
+    methods: [robust_z, isolation_forest, lof]
+    random_state: 0
+  cutouts:
+    top_k: 20
+    size_arcsec: 3.0
+    bands: [F200W]
+  crossmatch:
+    top_k: 20
+    radius_arcsec: 1.0
+    services: [simbad, ned, gaia]

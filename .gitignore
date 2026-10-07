@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Data: raw/derived astronomical data never goes into git.
+# Reproduce it with scripts/ + data/manifests/ instead.
+data/cache/
+data/raw/
+data/derived/
+outputs/
+*.fits
+*.fits.gz
+*.fz
+*.asdf
+*.h5
+*.hdf5
+*.npy
+*.npz
+*.sqlite
+*.db
+
+# Local tool state
+.claude/worktrees/
+.claude/settings.local.json
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db

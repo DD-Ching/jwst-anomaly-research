@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.fits binary
+*.png binary
+*.jpg binary
+*.parquet binary

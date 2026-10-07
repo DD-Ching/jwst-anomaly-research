@@ -1,0 +1,46 @@
+# Architecture
+
+## Pipeline (v0, catalog-first)
+
+```
+MAST (CAOM metadata)            query.py      query_observations / list_products
+  → reproducible acquisition    acquire.py    fetch_products → data/manifests/*
+  → science-ready products      level-3 _cat.ecsv (photometry/shape) + _i2d.fits (images)
+  → source representation       catalog.py    load_pipeline_catalog / merge_bands
+  → derived features            features.py   build_features
+  → baseline anomaly ranking    rank.py       score_anomalies
+  → image evidence (top-k)      cutouts.py    make_cutouts (S3 byte-range reads), viz.py
+  → external cross-check        crossmatch.py crossmatch (SIMBAD / NED / Gaia / CDS XMatch)
+  → candidate store             candidates.py CandidateStore (SQLite) + provenance.py
+  → orchestration               pipeline.py   run(config) ; cli.py `jwst-anomaly`
+  → interpretation              humans + /vet-candidate skill (never automatic)
+```
+
+Why catalog-first: a NIRCam level-3 `_cat.ecsv` is ~3 MB while its `_i2d.fits` is ~1.8 GB
+(program 2736, measured 2026-10-07). Ranking on pipeline catalogs and pulling image cutouts only
+for the top-k keeps the first slice cheap. Known limitation: pipeline catalogs detect each band
+independently (no forced photometry), so cross-band colors are approximate. See DECISIONS.md.
+
+## Contracts
+
+- Every stage takes/returns `astropy.table.Table`; required columns are in `src/jwst_anomaly/schema.py`.
+- `meta["provenance"]` ∈ {observed, derived, simulated, model_prediction, assumption, hypothesis};
+  `meta["source"]` names the inputs. `schema.validate()` checks both.
+- Per-band columns: `schema.band_column(band, quantity)` → `f200w_aper50_abmag`.
+- Locations: `paths.data_root()` (`$JWST_ANOMALY_DATA`), `paths.manifests_dir()` (tracked),
+  `paths.outputs_dir()` (`$JWST_ANOMALY_OUTPUTS`).
+- Public stage signatures are fixed; extend with keyword arguments that have defaults.
+
+## Stage ownership (bootstrap batch, 2026-10-07)
+
+| Stage | Module(s) | Unit |
+|---|---|---|
+| Archive query + acquisition | `query.py`, `acquire.py`, `scripts/fetch_reference_sample.py` | 1 |
+| Catalog ingestion | `catalog.py` | 2 |
+| Features + baseline ranking | `features.py`, `rank.py` | 3 |
+| Cutouts + visualization | `cutouts.py`, `viz.py` | 4 |
+| External cross-check | `crossmatch.py` | 5 |
+| Candidate store + runner + CLI | `candidates.py`, `provenance.py`, `pipeline.py`, `cli.py` | 6 |
+| OSS hygiene | community files, templates, pre-commit | 7 |
+| Agent operations | `.claude/`, `.github/workflows/claude.yml`, `docs/operations.md` | 8 |
+| Reuse landscape | `docs/landscape.md` | 9 |

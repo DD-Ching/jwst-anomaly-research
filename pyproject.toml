@@ -1,0 +1,58 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jwst-anomaly"
+version = "0.0.1"
+description = "Reproducible anomaly discovery in public JWST/MAST data."
+readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+authors = [{ name = "DD-Ching and contributors" }]
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
+# Dependencies are pre-declared for all bootstrap units so parallel PRs do not
+# collide on this file. Add new ones only with a justification in the PR body.
+dependencies = [
+    "astropy>=6.1",
+    "astroquery>=0.4.7",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pandas>=2.1",
+    "pyarrow>=14",
+    "scikit-learn>=1.4",
+    "matplotlib>=3.8",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+# Byte-range reads of cloud-hosted FITS (s3://stpubdata) without full downloads.
+cloud = ["fsspec>=2024.2", "s3fs>=2024.2"]
+
+[project.scripts]
+jwst-anomaly = "jwst_anomaly.cli:main"
+
+[project.urls]
+Repository = "https://github.com/DD-Ching/jwst-anomaly-research"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/jwst_anomaly"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "network: needs internet access to MAST/CDS/etc. (skipped unless --run-network or JWST_ANOMALY_NETWORK=1)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "NPY"]
