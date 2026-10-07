@@ -1346,3 +1346,35 @@ Field docs: `docs/fields/*.md`.
 - Same-pipeline epoch pairs are available (Sunrise 2282 o010/o120 share four bands at jwst 2.0.1).
 - Exclude spiky (D-018) or star positions before forced photometry.
 - More than two epochs make light curves possible.
+
+## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
+
+**Decision.**
+- Cloud routine sessions block GitHub GraphQL, so `gh pr` and `gh issue` fail. Cloud runs instead use:
+  - the session's GitHub MCP tools: `create_pull_request`, `pull_request_read`, `merge_pull_request`;
+  - REST (`gh api`) for everything else, labels included, because MCP `issue_write` replaces the whole label set.
+- Merges follow CLAUDE.md's merge policy. The run first checks on GitHub:
+  - the author and head repository;
+  - the branch and labels;
+  - every page of the PR's files;
+  - the CI jobs (the skipped `claude` runs are not CI).
+  It then merges with `merge_pull_request` (squash, `expectedHeadSha` = the reviewed head; docs/operations.md
+  §3). When merging is unavailable, the PR gets `merge-ready`.
+
+**Alternatives rejected.**
+- A Bash allow rule for `gh api -X PUT .../pulls/*/merge -f merge_method=squash*` (#37, closed). Glob patterns span
+  arguments, so the rule would also auto-approve other `pulls/...` writes (review dismissal, PATCH, DELETE).
+- Leaving every cloud PR for the owner: the WIP cap of 3 stalls the hourly routine. The owner asked the agents not to
+  wait for approval (2026-10-08).
+
+**Evidence.** Routine run `cse_01GjmW75zAM9bsN2ebLZQ9Zh`:
+- `gh pr list` returned 403 (GraphQL).
+- `mcp__github__create_pull_request` opened #38 without a permission prompt.
+- #38 had no check runs on its first three commits, because it conflicted with `main`.
+- The github-mcp-server merge tool's head pin is `expectedHeadSha` (checked by the #39 review).
+
+**Revisit if.**
+- `.claude/settings.json` gains explicit `mcp__github__*` rules, e.g. denying the file-writing tools. These tools are
+  outside the Bash rules today (docs/operations.md §8).
+- The cloud proxy allows GraphQL.
+- A merge through the MCP tool is refused.
