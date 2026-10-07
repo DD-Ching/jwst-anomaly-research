@@ -91,8 +91,16 @@ def test_forced_aperture_flux_and_comparison():
     f1 = np.array([10.0, 10.0, 10.0, 10.0])
     f2 = np.array([10.0, 10.0, 10.0, 2.5])  # the last one faded by 1.5 mag
     err = np.full(4, 1e-3)
-    dm, sig = tf.compare(f1, err, f2, err, sys_floor=0.05)
+    dm, sig, sig_flux = tf.compare(f1, err, f2, err, sys_floor=0.05, min_zp_refs=3)
     assert abs(dm[-1] - 2.5 * np.log10(4)) < 1e-6 and abs(sig[-1]) > 25 and abs(sig[0]) < 1
+    # a source that vanished (flux ~0 in epoch 2) has no magnitude but a clear flux change
+    dm, sig, sig_flux = tf.compare(
+        np.array([10.0]), np.array([0.1]), np.array([-0.05]), np.array([0.1])
+    )
+    assert np.isnan(dm[0]) and sig_flux[0] < -15  # floor-limited: 0.05 mag of 10 units
+    # too few positions: no zero point is fitted, so one real variable is not absorbed
+    dm, _, _ = tf.compare(np.array([10.0]), np.array([0.01]), np.array([5.0]), np.array([0.01]))
+    assert abs(dm[0] - 2.5 * np.log10(2)) < 1e-6
 
 
 def test_frame_offset_between_epochs_is_tied_before_matching():

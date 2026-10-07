@@ -88,21 +88,35 @@ def measure(
     return flux, err
 
 
-def compare(f1, e1, f2, e2, sys_floor: float = 0.05) -> tuple[np.ndarray, np.ndarray]:
-    """m2 − m1 with the median zero point removed, and its significance. ``sys_floor`` (mag) is
-    added in quadrature: PSF and registration differences between epochs dominate the ERR-based
-    error for bright sources."""
+def compare(
+    f1, e1, f2, e2, sys_floor: float = 0.05, min_zp_refs: int = 10
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """``(dmag, dmag significance, flux-difference significance)`` between two epochs.
+
+    The zero point is a 3-sigma-clipped median of ``dmag`` over all positions with positive flux in
+    both epochs, used only with at least ``min_zp_refs`` such positions (otherwise 0: both epochs
+    are calibrated MJy/sr). ``sys_floor`` (mag) is added in quadrature: PSF and registration
+    differences dominate the ERR-based error for bright sources. The flux-space significance,
+    ``(f2 - f1 * 10**(-0.4 zp)) / err``, also works for non-detections (flux <= 0), where a
+    magnitude is undefined: that is the test for ``appeared``/``disappeared`` sources.
+    """
     with np.errstate(divide="ignore", invalid="ignore"):
-        dm = -2.5 * np.log10(f2 / f1)
-        zp = np.nanmedian(dm)
-        for _ in range(3):  # sigma-clipped zero point: real variables do not drag it
-            mad = 1.4826 * np.nanmedian(np.abs(dm - zp))
-            keep = np.abs(dm - zp) <= 3 * max(mad, 1e-3)
-            if keep.any():
-                zp = np.nanmedian(dm[keep])
+        both = (f1 > 0) & (f2 > 0)
+        dm = np.where(both, -2.5 * np.log10(f2 / f1), np.nan)
+        zp = 0.0
+        if np.isfinite(dm).sum() >= min_zp_refs:
+            zp = float(np.nanmedian(dm))
+            for _ in range(3):  # sigma-clipped: real variables do not drag the zero point
+                mad = 1.4826 * np.nanmedian(np.abs(dm - zp))
+                keep = np.abs(dm - zp) <= 3 * max(mad, 1e-3)
+                if keep.any():
+                    zp = float(np.nanmedian(dm[keep]))
         sig_dm = np.hypot((2.5 / np.log(10)) * np.hypot(e1 / f1, e2 / f2), sys_floor)
         dm = dm - zp
-        return dm, dm / sig_dm
+        f1_scaled = f1 * 10 ** (-0.4 * zp)
+        floor = sys_floor * np.log(10) / 2.5 * np.fmax(np.abs(f1_scaled), np.abs(f2))
+        sig_flux = (f2 - f1_scaled) / np.sqrt(e1**2 + e2**2 + floor**2)
+        return dm, dm / sig_dm, sig_flux
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -156,11 +170,15 @@ def main(argv: list[str] | None = None) -> int:
             )
             fl.append(f)
             er.append(e)
-        dm, sig = compare(fl[0], er[0], fl[1], er[1], args.sys_floor)
+        dm, sig, sig_flux = compare(fl[0], er[0], fl[1], er[1], args.sys_floor)
         out[f"{band}_flux1"], out[f"{band}_flux2"] = fl[0], fl[1]
         out[f"{band}_dmag"], out[f"{band}_sigma"] = dm, sig
+        out[f"{band}_flux_sigma"] = sig_flux
         with np.errstate(invalid="ignore"):
-            confirmed &= (np.abs(dm) >= args.min_dmag) & (np.abs(sig) >= args.min_sigma)
+            changed = (np.abs(dm) >= args.min_dmag) & (np.abs(sig) >= args.min_sigma)
+            # a non-detection in one epoch (flux <= 0) is judged in flux space
+            gone = (np.fmin(fl[0], fl[1]) <= 0) & (np.abs(sig_flux) >= args.min_sigma)
+            confirmed &= changed | gone
     out["confirmed"] = confirmed
     for c in cand.colnames:
         if c not in ("ra", "dec") and c not in out.colnames:
