@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: El Gordo and Abell 2744 lens models validated; no image-position anomaly (issue #41)
+- Validation on published products:
+  - `lensmodel.py` reproduces the Caminha+2023 El Gordo magnification maps (median |Δμ|/μ 4e-5).
+  - Exact image-plane solves match Lenstool's χ²: El Gordo 82.5 vs 80.22 (rms 0.754″, paper 0.75″); Abell 2744
+    (Bergamini+2023b) 146.64 vs 146.60 (rms 0.427″).
+- Results:
+  - No image-position anomaly in either field.
+  - Predicted uncatalogued counter-images: El Gordo 16, inconclusive, because the MUSE Lyα images are too faint in
+    continuum. Abell 2744 30, not yet testable, because the pipeline catalogs miss most arcs in the core.
+  - docs/fields/elgordo.md, docs/fields/abell2744.md.
+- **Failed approach:** source-plane back-trace χ² for image-plane-optimised models (El Gordo 121.6 against 80.22).
+- **Bugs found on `main`:** the parser fails on letter-suffixed image IDs and on 6-decimal `_kpc` rounding (#41).
+- Also merged #38 after bringing it up to date with `main`.
+- **Handoff:** #40 (image solver, local session), then the parser fixes and the counter-image flux test on DJA
+  photometry (TASKS "Now" 2).
+
 ## 2026-10-08: Sunrise two-epoch search, a null result; Earendel steady (D-027 amendment)
 - WHL0137 2282 o010 against o120 (same pipeline): 372 catalog candidates → 58 in ≥ 2 bands → 52 after the bright-Gaia
   mask → 0 by recentred forced photometry in all four bands. 2 pass in one or two bands, both ordinary on visual check
