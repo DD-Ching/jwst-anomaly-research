@@ -1269,6 +1269,11 @@ Field docs: `docs/fields/*.md`.
 - Forced photometry: the median Δm is 0.00 in both bands and the 5–95% range is ±0.2–0.3 mag. 4 pass in both bands.
 - Visual check: all 4 are bright stars that look unchanged. Their spikes rotate between the epochs (different
   V3 PA), so a fixed aperture on a star's wing measures different spike light.
+- After the review fixes (PR #34):
+  - Matching follows a global frame tie: shifts of (0.001, 0.022)″ in F444W and (0.008, 0.019)″ in F150W.
+  - Catalog candidates: 445 and 630.
+  - Re-measuring with WCS-centred apertures: 6 pass in both bands. All look unchanged on visual check (5 bright
+    stars and 1 compact source next to a brighter neighbour).
 - **Result: no credible transient in the SMACS/VENUS overlap** at |Δm| ≥ 0.3 mag and ≥ 5σ in both F150W and
   F444W. This is a null result for caustic-crossing events at this depth.
 

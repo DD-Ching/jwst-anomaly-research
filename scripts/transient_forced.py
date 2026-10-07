@@ -6,8 +6,10 @@ both epochs' level-3 ``_i2d.fits`` images (S3; no full downloads) at each candid
 measures the flux in the same circular aperture, minus a local background annulus (median), with
 errors from the ``ERR`` extension. Every result is ``derived``.
 
-``dmag`` is m(epoch2) − m(epoch1), with the zero point fixed by the median of all positions
-(``--zp-from``: all, or the sources given as references). A candidate is ``confirmed`` when
+``dmag`` is m(epoch2) − m(epoch1), with the zero point set by a 3-sigma-clipped median over all
+positions. That assumes most candidates are not variable, which holds for catalog-level
+candidates (mostly deblending differences). The aperture sits at each candidate's RA/Dec through
+the cutout WCS, not at the cutout's centre pixel. A candidate is ``confirmed`` when
 |dmag| ≥ ``--min-dmag`` at ≥ ``--min-sigma`` in every band given.
 
     python scripts/transient_forced.py --candidates outputs/transients/coincident.ecsv \\
@@ -21,11 +23,13 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import warnings
 from pathlib import Path
 
 import numpy as np
 from astropy.io import fits
 from astropy.table import Table
+from astropy.wcs import WCS, FITSFixedWarning
 
 from jwst_anomaly import cutouts, pipeline
 
@@ -58,9 +62,14 @@ def aperture_flux(
 
 
 def measure(
-    paths: list[str], r_arcsec: float, scale_arcsec: float
+    paths: list[str],
+    r_arcsec: float,
+    scale_arcsec: float,
+    ra: np.ndarray | None = None,
+    dec: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Aperture fluxes and errors at the centre of each cutout file (NaN for missing files)."""
+    """Aperture fluxes and errors at each target's sky position (cutout WCS), or at the cutout
+    centre when no position is given (NaN for missing files)."""
     flux, err = np.full(len(paths), np.nan), np.full(len(paths), np.nan)
     r_px = r_arcsec / scale_arcsec
     for k, p in enumerate(paths):
@@ -69,7 +78,12 @@ def measure(
         with fits.open(p) as h:
             sci = np.asarray(h["SCI"].data, float)
             e = np.asarray(h["ERR"].data, float) if "ERR" in h else None
+            header = h["SCI"].header
         cy, cx = (sci.shape[0] - 1) / 2, (sci.shape[1] - 1) / 2
+        if ra is not None and dec is not None:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", FITSFixedWarning)
+                cx, cy = (float(v) for v in WCS(header).world_to_pixel_values(ra[k], dec[k]))
         flux[k], err[k] = aperture_flux(sci, e, cx, cy, r_px, 2.5 * r_px, 4.0 * r_px)
     return flux, err
 
@@ -81,6 +95,11 @@ def compare(f1, e1, f2, e2, sys_floor: float = 0.05) -> tuple[np.ndarray, np.nda
     with np.errstate(divide="ignore", invalid="ignore"):
         dm = -2.5 * np.log10(f2 / f1)
         zp = np.nanmedian(dm)
+        for _ in range(3):  # sigma-clipped zero point: real variables do not drag it
+            mad = 1.4826 * np.nanmedian(np.abs(dm - zp))
+            keep = np.abs(dm - zp) <= 3 * max(mad, 1e-3)
+            if keep.any():
+                zp = np.nanmedian(dm[keep])
         sig_dm = np.hypot((2.5 / np.log(10)) * np.hypot(e1 / f1, e2 / f2), sys_floor)
         dm = dm - zp
         return dm, dm / sig_dm
@@ -129,7 +148,11 @@ def main(argv: list[str] | None = None) -> int:
             scale = float(np.mean(t.meta["pixel_scale_arcsec"]))
             paths = {str(u): str(p) for u, p in zip(t["source_uid"], t["path"], strict=True)}
             f, e = measure(
-                [paths.get(str(u), "") for u in targets["source_uid"]], args.radius_arcsec, scale
+                [paths.get(str(u), "") for u in targets["source_uid"]],
+                args.radius_arcsec,
+                scale,
+                np.asarray(targets["ra"]),
+                np.asarray(targets["dec"]),
             )
             fl.append(f)
             er.append(e)

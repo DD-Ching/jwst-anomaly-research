@@ -2,9 +2,11 @@
 
 Compares two level-3 pipeline catalogs of the same filter taken at different epochs (e.g. program
 2736 in 2022 against the VENUS program 6882 in 2026 for SMACS 0723). Every result is ``derived``.
-- **Frame and zero-point tie:** each source is tied to the median position and magnitude offset of
-  bright mutual matches within ``--tie-radius`` arcsec (local, so distortion between programs
-  cancels).
+- **Frame and zero-point tie:** the global median position offset of bright pairs is removed
+  before the final match. Each matched source's magnitude is tied to the median offset of
+  bright pairs within ``--tie-radius`` arcsec (local, so zero-point gradients cancel). Pairs
+  without enough local references cannot be judged; they are counted in
+  ``meta['n_without_local_tie']``, not silently passed.
 - **variable:** a matched source whose magnitude change exceeds ``--min-dmag`` and ``--min-sigma``
   times its error (catalog errors in quadrature, plus ``--sys-floor`` mag). Candidate caustic
   crossings, AGN or supernovae.
@@ -93,10 +95,20 @@ def search(
     e1 = np.asarray(cat1["aper50_abmag_err"], float)
     e2 = np.asarray(cat2["aper50_abmag_err"], float)
     s1, s2 = snr_from_mag_err(e1), snr_from_mag_err(e2)
+    # Frame tie: remove the median offset of bright pairs before the final match, so a systematic
+    # offset between programs cannot turn matches into appeared/disappeared pairs.
+    j1, j2 = mutual_matches(c1, c2, match_radius_arcsec)
+    bright = (s1[j1] >= ref_snr) & (s2[j2] >= ref_snr)
+    shift = np.zeros(2)
+    if bright.sum() >= 10:
+        dra, ddec = c1[j1[bright]].spherical_offsets_to(c2[j2[bright]])
+        shift = np.array([np.median(dra.to_value(u.arcsec)), np.median(ddec.to_value(u.arcsec))])
+        c2 = c2.spherical_offsets_by(-shift[0] * u.arcsec, -shift[1] * u.arcsec)
     i1, i2 = mutual_matches(c1, c2, match_radius_arcsec)
     dm = m2[i2] - m1[i1]
     ref = (s1[i1] >= ref_snr) & (s2[i2] >= ref_snr) & np.isfinite(dm)
     _, _, med_dm = local_offsets(c1[i1], c2[i2], dm, ref, tie_radius_arcsec)
+    n_no_tie = int((~np.isfinite(med_dm)).sum())  # matched pairs without a local zero point
     rows: list[dict[str, Any]] = []
 
     # variable: matched, significant zero-point-corrected magnitude change
@@ -160,6 +172,8 @@ def search(
         provenance="derived",
         n_matched=len(i1),
         n_references=int(ref.sum()),
+        frame_shift_arcsec=[float(x) for x in shift],
+        n_without_local_tie=n_no_tie,
         thresholds={
             "match_radius_arcsec": match_radius_arcsec,
             "tie_radius_arcsec": tie_radius_arcsec,
@@ -255,6 +269,8 @@ def main(argv: list[str] | None = None) -> int:
                 "band": res.meta["band"],
                 "n_matched": res.meta["n_matched"],
                 "n_references": res.meta["n_references"],
+                "n_without_local_tie": res.meta["n_without_local_tie"],
+                "frame_shift_arcsec": res.meta["frame_shift_arcsec"],
                 **summary,
             },
             indent=1,

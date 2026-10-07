@@ -5,9 +5,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-08: Two-epoch transient search, a null result; exotic-lens signatures (D-027)
 - `scripts/transient_search.py` produces catalog-level candidates; `scripts/transient_forced.py` checks them with
   forced aperture photometry on byte-range cutouts of both epochs.
-- SMACS against VENUS: catalog 441 (F444W) and 628 (F150W) → 144 in both bands → 4 by forced photometry → 0 after a
-  visual check. The 4 are bright stars whose spike angle changed between the epochs. No credible transient at
-  |Δm| ≥ 0.3 mag, ≥ 5σ.
+- SMACS against VENUS: catalog 441 (F444W) and 628 (F150W) → 144 in both bands → 4 by forced photometry (6 with
+  WCS-centred apertures) → 0 after a visual check. All are bright stars or a source next to a bright neighbour, where
+  fixed-aperture systematics dominate. No credible transient at |Δm| ≥ 0.3 mag, ≥ 5σ.
 - **Failed approach:** catalog-only comparison across pipeline versions, which picks up deblending differences.
 - docs/exotic_lensing.md records the verified exotic-lens signatures (wormhole demagnification, radial images for
   negative mass), the degeneracies with ordinary lensing, and existing limits. Warp drives have no imaging

@@ -93,3 +93,17 @@ def test_forced_aperture_flux_and_comparison():
     err = np.full(4, 1e-3)
     dm, sig = tf.compare(f1, err, f2, err, sys_floor=0.05)
     assert abs(dm[-1] - 2.5 * np.log10(4)) < 1e-6 and abs(sig[-1]) > 25 and abs(sig[0]) < 1
+
+
+def test_frame_offset_between_epochs_is_tied_before_matching():
+    rng = np.random.default_rng(7)
+    n = 300
+    mag = rng.uniform(22, 25, n)
+    cat1 = _catalog(n, rng, mag, np.full(n, 0.01))
+    cat2 = cat1.copy()
+    cosd = np.cos(np.deg2rad(DEC0))
+    cat2["ra"] = cat1["ra"] + 0.25 / 3600 / cosd  # 0.25" offset, close to the match radius
+    res = ts.search(cat1, cat2, tie_radius_arcsec=100.0)
+    assert len(res) == 0  # no false appeared/disappeared pairs
+    assert abs(res.meta["frame_shift_arcsec"][0] - 0.25) < 0.01
+    assert res.meta["n_without_local_tie"] == 0
