@@ -36,7 +36,9 @@ Two subcommands, both writing to ``outputs/lens_consistency/<model>/`` (ECSV plu
     magnitude is the reference image's catalog magnitude scaled by the magnification ratio (the
     reference is the catalogued image with the smallest predicted |μ|, i.e. the least sensitive to
     the critical curves). Classes: ``observed`` (an ``arcs.dat`` image within ``--match-arcsec``),
-    ``candidate`` (an uncatalogued source there whose photo-z allows the system redshift),
+    ``candidate`` (an uncatalogued source there whose photo-z allows the system redshift;
+    without ``--photoz`` every nearby source qualifies), ``other_source`` (a source there whose
+    photo-z excludes it),
     ``demagnified`` (|μ| < 0.5, e.g. central images), ``missing`` (predicted brighter than the
     depth, nothing there), ``faint`` (predicted below the depth), ``no_flux_ref`` (no catalogued
     image of the system matched in the catalog, so no predicted magnitude) and ``outside`` (no
@@ -50,9 +52,10 @@ Two subcommands, both writing to ``outputs/lens_consistency/<model>/`` (ECSV plu
     checked by forced aperture photometry: the reference flux is measured at the system's
     catalogued images (recentred on the peak within 0.4″), scaled by |μ| to a predicted flux and
     S/N, and compared with the best aperture within ``--forced-search-arcsec``. Forced classes:
-    ``undetectable`` (predicted < 5σ), ``recovered`` (a ≥ 5σ source there, at most 3× the
-    predicted flux), ``confused`` (a ≥ 5σ source more than 3× brighter dominates, e.g. a cluster
-    galaxy), ``absent`` (predicted ≥ 10σ, best < 3σ), ``ambiguous`` and ``no_reference``.
+    ``undetectable`` (predicted < 5σ), ``recovered`` (a ≥ 5σ source there at 1/3–3× the predicted
+    flux), ``confused`` (a ≥ 5σ source more than 3× brighter dominates, e.g. a cluster galaxy),
+    ``absent`` (predicted ≥ 10σ; best < 3σ or < 1/3 of the predicted flux), ``ambiguous``,
+    ``no_reference`` and ``off_image`` (< 80 % valid pixels). Offsets are West/North arcsec.
     ERR is scaled by 1.5 (D-027 amendment).
 
 Every threshold here is an ASSUMPTION. Inputs: the pinned model files (downloaded and verified by
@@ -486,7 +489,11 @@ def predict_counter_images(
         cp = SkyCoord(pred["ra"], pred["dec"], unit="deg")
         # reference image: catalogued, matched in the catalog, smallest predicted |mu|
         idx, sep, _ = co.match_to_catalog_sky(cs)
-        ok = (sep.arcsec <= ref_match_arcsec) & np.isfinite(np.asarray(shapes["mag"])[idx])
+        ok = (
+            (sep.arcsec <= ref_match_arcsec)
+            & np.isfinite(np.asarray(shapes["mag"])[idx])
+            & np.isfinite(np.asarray(obs["magnification"], float))
+        )
         m_ref = mu_ref = np.nan
         ref_id = ""
         if ok.any():
@@ -518,6 +525,8 @@ def predict_counter_images(
                 cls = "demagnified"  # e.g. a central image: expected undetectable
             elif near and z_ok:
                 cls = "candidate"
+            elif near:
+                cls = "other_source"  # a catalog source there, but its photo-z excludes z_sys
             elif d_cat[q] > footprint_arcsec:
                 cls = "outside"
             elif not np.isfinite(m_pred):
@@ -564,16 +573,21 @@ def predict_counter_images(
 FORCED_R_AP = 0.2  # aperture radius, arcsec (ASSUMPTION)
 FORCED_ANNULUS = (0.6, 1.0)  # background annulus, arcsec (ASSUMPTION)
 ERR_SCALE = 1.5  # ERR underestimates the noise by 1.2-1.5x (D-027 amendment)
+MIN_VALID = 0.8  # minimum finite fraction of aperture and annulus pixels (ASSUMPTION)
 
 
 def aperture_snr(img, err, xx, yy, cx: float, cy: float) -> tuple[float, float]:
     """Background-subtracted flux and error in a ``FORCED_R_AP`` aperture at offset (cx, cy).
 
-    ``xx``/``yy`` are the stamp's offsets from its centre in arcsec."""
+    ``xx``/``yy`` are each pixel's offset from the target in arcsec (West, North). NaN when fewer
+    than ``MIN_VALID`` of the aperture or annulus pixels are finite (gaps, edges, masks)."""
     r = np.hypot(xx - cx, yy - cy)
     ap = r <= FORCED_R_AP
     ann = (r > FORCED_ANNULUS[0]) & (r < FORCED_ANNULUS[1])
-    bkg = float(np.nanmedian(img[ann]))
+    good = np.isfinite(img) & np.isfinite(err)
+    if not ap.any() or good[ap].mean() < MIN_VALID or good[ann].mean() < MIN_VALID:
+        return float("nan"), float("nan")
+    bkg = float(np.nanmedian(img[ann & good]))
     flux = float(np.nansum(img[ap] - bkg))
     ferr = float(np.sqrt(np.nansum(err[ap] ** 2))) * ERR_SCALE
     return flux, ferr
@@ -581,7 +595,10 @@ def aperture_snr(img, err, xx, yy, cx: float, cy: float) -> tuple[float, float]:
 
 def peak_flux(img, err, xx, yy, radius: float = 0.4) -> tuple[float, float]:
     """Aperture flux at the brightest pixel within ``radius`` of the stamp centre."""
-    k = int(np.nanargmax(np.where(np.hypot(xx, yy) <= radius, img, -np.inf)))
+    inner = np.where((np.hypot(xx, yy) <= radius) & np.isfinite(img), img, -np.inf)
+    if not np.isfinite(inner).any():
+        return float("nan"), float("nan")
+    k = int(np.argmax(inner))
     return aperture_snr(img, err, xx, yy, float(xx.flat[k]), float(yy.flat[k]))
 
 
@@ -595,12 +612,13 @@ def best_within(
             if np.hypot(cx, cy) > search:
                 continue
             f, e = aperture_snr(img, err, xx, yy, cx, cy)
-            if e > 0 and f / e > best[0]:
+            if np.isfinite(f) and e > 0 and f / e > best[0]:
                 best = (f / e, f, float(cx), float(cy))
     return best
 
 
 MAX_FLUX_RATIO = 3.0  # best/predicted flux above this: a brighter source dominates (ASSUMPTION)
+MIN_FLUX_RATIO = 1 / 3  # below this the best source is too faint to be the image (ASSUMPTION)
 
 
 def forced_class(pred_snr: float, best_snr: float, flux_ratio: float = 1.0) -> str:
@@ -611,10 +629,12 @@ def forced_class(pred_snr: float, best_snr: float, flux_ratio: float = 1.0) -> s
         return "no_reference"
     if pred_snr < 5:
         return "undetectable"
-    if best_snr >= 5:
-        return "recovered" if flux_ratio <= MAX_FLUX_RATIO else "confused"
-    if pred_snr >= 10 and best_snr < 3:
-        return "absent"
+    if best_snr >= 5 and flux_ratio > MAX_FLUX_RATIO:
+        return "confused"
+    if best_snr >= 5 and flux_ratio >= MIN_FLUX_RATIO:
+        return "recovered"
+    if pred_snr >= 10 and (best_snr < 3 or flux_ratio < MIN_FLUX_RATIO):
+        return "absent"  # nothing there, or only a source far fainter than predicted
     return "ambiguous"
 
 
@@ -647,12 +667,23 @@ def forced_check(
                 if not np.isfinite(mu) or mu > max_ref_mu:
                     continue
                 f, e = peak_flux(*stamp(float(b["ra"]), float(b["dec"])))
-                if e > 0 and f / e > 5 and (not np.isfinite(ref[1]) or mu < ref[1]):
+                if (
+                    np.isfinite(f)
+                    and e > 0
+                    and f / e > 5
+                    and (not np.isfinite(ref[1]) or mu < ref[1])
+                ):
                     ref = (f, mu)
             ref_cache[sys_id] = ref
         f_ref, mu_ref = ref_cache[sys_id]
+        if not np.isfinite(f_ref):
+            fclass[i] = "no_reference"
+            continue
         sci, err, xx, yy = stamp(float(row["ra"]), float(row["dec"]))
         _, e0 = aperture_snr(sci, err, xx, yy, 0.0, 0.0)
+        if not (np.isfinite(e0) and e0 > 0):
+            fclass[i] = "off_image"  # off the footprint, or in a gap or masked region
+            continue
         pred = f_ref * abs(float(row["magnification"])) / mu_ref
         cols["pred_snr"][i] = pred / e0 if e0 > 0 else np.nan
         snr, flux, dx, dy = best_within(sci, err, xx, yy, search_arcsec)
@@ -668,7 +699,8 @@ def forced_check(
         "err_scale": ERR_SCALE,
         "search_arcsec": search_arcsec,
         "max_ref_mu": max_ref_mu,
-        "max_flux_ratio": MAX_FLUX_RATIO,
+        "flux_ratio_range": [MIN_FLUX_RATIO, MAX_FLUX_RATIO],
+        "min_valid_fraction": MIN_VALID,
     }
 
 
@@ -689,10 +721,16 @@ def image_stamper(uri: str, half_arcsec: float = 1.5):
     pix = float(abs(wcs.proj_plane_pixel_scales()[0].to_value("arcsec")))
     hp = int(np.ceil(half_arcsec / pix))
     ny, nx = sci.header["NAXIS2"], sci.header["NAXIS1"]
-    yy, xx = np.mgrid[-hp : hp + 1, -hp : hp + 1] * pix
+    jj, ii = np.mgrid[-hp : hp + 1, -hp : hp + 1].astype(float)
+    # pixel offsets -> (dRA cos dec, dDec) in arcsec; West = -dRA cos dec, as in the model frame
+    cd = wcs.pixel_scale_matrix * 3600.0
 
     def stamp(ra: float, dec: float):
-        x, y = (int(round(float(v))) for v in wcs.world_to_pixel_values(ra, dec))
+        xf, yf = (float(v) for v in wcs.world_to_pixel_values(ra, dec))
+        x, y = int(round(xf)), int(round(yf))
+        di, dj = ii + (x - xf), jj + (y - yf)  # offsets from the exact target position
+        xx = -(cd[0, 0] * di + cd[0, 1] * dj)
+        yy = cd[1, 0] * di + cd[1, 1] * dj
         if not (hp <= x < nx - hp and hp <= y < ny - hp):
             nan = np.full(xx.shape, np.nan)
             return nan, nan, xx, yy
@@ -725,6 +763,8 @@ def cmd_images(args) -> dict:
     table, unpredicted = predict_counter_images(
         model, grid, bt, shapes, args.match_arcsec, args.footprint_arcsec, depth=depth
     )
+    if not len(table):
+        raise SystemExit("no system has two or more back-traced images; nothing to predict")
     if args.forced_image:
         stamp, close = image_stamper(args.forced_image)
         try:
@@ -734,7 +774,16 @@ def cmd_images(args) -> dict:
         table.meta["forced"]["image"] = args.forced_image
     out = args.out / args.model
     _write(table, out / "images_predicted.ecsv")
-    classes = ("observed", "demagnified", "candidate", "missing", "faint", "no_flux_ref", "outside")
+    classes = (
+        "observed",
+        "demagnified",
+        "candidate",
+        "other_source",
+        "missing",
+        "faint",
+        "no_flux_ref",
+        "outside",
+    )
     counts = {c: int(np.sum(table["image_class"] == c)) for c in classes}
     flagged = table[np.isin(table["image_class"], ["candidate", "missing"])]
     summary = {
@@ -757,6 +806,7 @@ def cmd_images(args) -> dict:
                         "undetectable",
                         "ambiguous",
                         "no_reference",
+                        "off_image",
                     )
                 },
                 "rows": [

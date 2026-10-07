@@ -795,15 +795,17 @@ class DeflectionGrid:
     ) -> DeflectionGrid:
         """Load ``path`` (``.npz``) if it was computed for this model and grid, else compute it."""
         path = Path(path)
+        if not model.sha256:  # an in-memory model has no identity to key the cache on
+            return cls.compute(model, half_width, step)
         if path.exists():
-            d = np.load(path)
-            g = d["x"]
-            if (
-                str(d["model_sha256"]) == model.sha256
-                and np.isclose(g[-1], half_width)
-                and np.isclose(g[1] - g[0], step)
-            ):
-                return cls(g, d["alpha_x"], d["alpha_y"], model.sha256)
+            with np.load(path) as d:
+                g = d["x"]
+                if (
+                    str(d["model_sha256"]) == model.sha256
+                    and np.isclose(g[-1], half_width)
+                    and np.isclose(g[1] - g[0], step)
+                ):
+                    return cls(g, d["alpha_x"], d["alpha_y"], model.sha256)
         grid = cls.compute(model, half_width, step)
         path.parent.mkdir(parents=True, exist_ok=True)
         np.savez(

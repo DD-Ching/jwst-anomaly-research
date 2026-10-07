@@ -1412,8 +1412,9 @@ Field docs: `docs/fields/*.md`.
   - With `--forced-image`, forced aperture photometry decides whether each non-catalogued image is there:
     `recovered`, `confused`, `absent`, `undetectable`, `ambiguous` or `no_reference`.
   - Forced-photometry settings (all ASSUMPTIONs): r = 0.2″, annulus 0.6–1.0″, ERR × 1.5, search 1″.
-  - The reference is the least-magnified catalogued image at S/N > 5 with |μ| ≤ 50. `recovered` needs ≥ 5σ and at
-    most 3× the predicted flux.
+  - The reference is the least-magnified catalogued image at S/N > 5 with |μ| ≤ 50. `recovered` needs ≥ 5σ and
+    1/3–3× the predicted flux. `absent` is predicted ≥ 10σ, with best < 3σ or < 1/3 of the predicted flux.
+  - Apertures with < 80 % valid pixels are `off_image`. Offsets are West/North arcsec from the WCS.
 - **Mahler+2022 κ tarball URL** moves from `github.com/.../raw/` to `raw.githubusercontent.com`. The sha256 is
   unchanged, and cloud runs get a 403 from the former.
 
@@ -1428,9 +1429,9 @@ Field docs: `docs/fields/*.md`.
   catalogued image is unpredicted. 4 central images are demagnified (|μ| < 0.5), as expected.
 - **Forced photometry** of the 11 testable uncatalogued images:
   - **3 recovered:**
-    - system 9's third image (μ 4.7) at 0.9″ from the prediction, predicted 10.8σ, flux ratio 1.7. Its
+    - system 9's third image (μ 4.7) at 0.9″ from the prediction, predicted 11.1σ, flux ratio 1.7. Its
       F150W/F200W/F444W ratios match images 9.1 and 9.2;
-    - system 8 (μ 3.4) at 0.9″, ratio 1.2;
+    - system 8 (μ 3.4) at 1.0″, ratio 1.3;
     - system 17 (μ −10.2) at 1.0″. This one lies on the BCG's light gradient, so it is not a clean recovery.
   - **1 confused:** system 17 (μ 5.4), against a cluster galaxy.
   - **1 undetectable.**
@@ -1442,7 +1443,8 @@ Field docs: `docs/fields/*.md`.
 - **Ordinary findings:**
   - system 8's model-fitted z = 11.76 is contradicted by F090W detections of 8.2 (6.7σ) and by F150W detections of
     both images. It is a free model parameter, not a measurement;
-  - system 26's μ ≈ 27 predicted image (no reference flux) shows at most 4.6σ within 1″.
+  - system 26's μ ≈ 27 predicted image (no reference flux) shows at most 4.6σ within 1″ (scratch run, same
+    aperture).
 
 **Revisit if.**
 - A BCG/ICL model is subtracted. That allows a clean test near the BCG (system 17).

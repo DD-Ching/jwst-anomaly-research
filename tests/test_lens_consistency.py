@@ -166,6 +166,17 @@ def test_forced_class_thresholds():
     assert lc.forced_class(12.0, 600.0, 100.0) == "confused"  # a cluster galaxy dominates
     assert lc.forced_class(12.0, 2.0) == "absent"
     assert lc.forced_class(7.0, 4.0) == "ambiguous"
+    assert lc.forced_class(100.0, 6.0, 0.06) == "absent"  # only a far fainter source is there
+    assert lc.forced_class(7.0, 6.0, 0.1) == "ambiguous"
+
+
+def test_aperture_snr_rejects_mostly_invalid_pixels():
+    yy, xx = np.mgrid[-50:51, -50:51] * 0.03
+    img, err = np.ones(xx.shape), np.full(xx.shape, 0.1)
+    f, e = lc.aperture_snr(img, err, xx, yy, 0.0, 0.0)
+    assert abs(f) < 1e-9 and e > 0
+    img[np.hypot(xx, yy) <= 0.2] = np.nan  # a gap over the aperture
+    assert all(np.isnan(lc.aperture_snr(img, err, xx, yy, 0.0, 0.0)))
 
 
 def _stamp_factory(sources, pix=0.03, half=1.5, noise=0.003):
@@ -217,6 +228,16 @@ def test_forced_check_recovers_offset_image_and_flags_absent_one():
     assert 0.8 < table["flux_ratio"][1] < 1.2  # 1.0 observed against 2.0 x 5/10 predicted
     assert table["pred_snr"][2] > 10 and table["best_snr"][2] < 3
     assert table.meta["forced"]["max_ref_mu"] == 50.0
+
+    def gap_stamp(ra, dec):  # valid at the reference only; the predictions fall in a gap
+        img, err, xx, yy = stamp(ra, dec)
+        if (ra, dec) != ref:
+            img = np.full(img.shape, np.nan)
+        return img, err, xx, yy
+
+    off = table.copy()
+    lc.forced_check(off, backtrace, gap_stamp)
+    assert list(off["forced_class"]) == ["", "off_image", "off_image"]
 
 
 def test_predict_counter_images_reproduces_an_sis_pair():
