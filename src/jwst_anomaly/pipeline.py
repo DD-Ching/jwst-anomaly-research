@@ -399,6 +399,15 @@ def _topk_line(m: Mapping[str, int]) -> str:
     return f"n = {n}: {text}" + (f"; {', '.join(extra)}" if extra else "")
 
 
+def _spike_bands(per_band: Mapping[str, Mapping[str, Any]]) -> dict[str, Mapping[str, Any]]:
+    """The bands whose cutout carries the ``spikes`` flag (the host test runs only there)."""
+    return {
+        band: q
+        for band, q in per_band.items()
+        if "spikes" in {t.strip() for t in str(q.get("quality_flag", "")).split(",")}
+    }
+
+
 def _finite_extreme(
     per_band: Mapping[str, Mapping[str, Any]], key: str, pick: Any = max
 ) -> float | None:
@@ -867,7 +876,12 @@ class _Runner:
             hostless = {
                 uid
                 for uid in flagged
-                if (h := _finite_extreme(cutout_rows.get(uid) or {}, "host_ratio", min)) is not None
+                if (
+                    h := _finite_extreme(
+                        _spike_bands(cutout_rows.get(uid) or {}), "host_ratio", min
+                    )
+                )
+                is not None
                 and h < float(host_max)
             }
             if stellar is None:

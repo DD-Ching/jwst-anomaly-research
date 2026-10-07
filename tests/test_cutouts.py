@@ -420,3 +420,4 @@ def test_host_ratio_separates_a_bare_star_from_a_nucleus_in_a_galaxy():
     hosted = cutouts.host_ratio(nucleus, c, c, 10, 19)
     assert bare < 0.01 < hosted
     assert np.isnan(cutouts.host_ratio(np.full((40, 40), np.nan), 20, 20, 5, 10))
+    assert np.isnan(cutouts.host_ratio(star[30:67, 30:67], 18, 18, 10, 19))  # no background region

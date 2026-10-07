@@ -612,13 +612,16 @@ def host_ratio(
     The background (median of pixels beyond ``1.5 * r_out_px``) is subtracted first. Medians
     per 1-px ring ignore diffraction spikes and small neighbours. A bare star gives the PSF
     wings (~1e-3 in NIRCam F200W at 0.3-0.6"); a nucleus inside a galaxy adds the host light.
-    NaN when the peak is not positive or the annulus has no data.
+    NaN when the cutout has no pixels beyond ``1.5 * r_out_px``, the peak is not positive, or the
+    annulus has no data.
     """
     ny, nx = data.shape
     yy, xx = np.mgrid[0:ny, 0:nx]
     r = np.hypot(xx - x, yy - y)
     outer = np.isfinite(data) & (r > 1.5 * r_out_px)
-    background = float(np.median(data[outer])) if outer.any() else 0.0
+    if not outer.any():  # no background region in this cutout: the ratio would be biased
+        return float("nan")
+    background = float(np.median(data[outer]))
     sub = data - background
     core = np.isfinite(sub) & (r <= peak_px)
     if not core.any():

@@ -1420,6 +1420,11 @@ def test_max_finite_spike_ignores_missing_bands():
     assert pipeline._finite_extreme(rows, "spike_s6") == 0.0
     assert pipeline._finite_extreme({"F200W": {}}, "spike_s6") is None
     assert pipeline._finite_extreme({"a": {"h": 0.3}, "b": {"h": 0.1}}, "h", min) == 0.1
+    bands = {
+        "F200W": {"quality_flag": "spikes", "host_ratio": 0.02},
+        "F444W": {"quality_flag": "ok", "host_ratio": 0.0},
+    }
+    assert list(pipeline._spike_bands(bands)) == ["F200W"]  # the host test ignores unflagged bands
 
 
 def test_spike_screen_must_be_boolean(tmp_path):
