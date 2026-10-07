@@ -70,6 +70,10 @@ class FakeServer:
         Path(local_path).write_bytes(data[:-1] if uri in self.truncate else data)
         return "COMPLETE", None, None
 
+    def served_size(self, uri):
+        """Content-Length of the full file, as the real download service declares it."""
+        return len(self.files[uri]) if uri in self.files else None
+
 
 @pytest.fixture(autouse=True)
 def no_mast_token(monkeypatch):
@@ -81,6 +85,7 @@ def no_mast_token(monkeypatch):
 def server(monkeypatch):
     s = FakeServer()
     monkeypatch.setattr(query.Observations, "download_file", s.download_file)
+    monkeypatch.setattr(acquire, "_served_size", s.served_size)
     return s
 
 
@@ -168,6 +173,68 @@ def test_size_mismatch_keeps_nothing_and_records_the_rest(tmp_path, server, two_
     assert not (tmp_path / str(acquire.local_relpath(two_products[0]))).exists()
     assert not list(tmp_path.rglob("*.part"))
     assert list(acquire.read_manifest(manifest)["dataURI"]) == [two_products["dataURI"][1]]
+
+
+def test_stale_mast_size_is_accepted_when_the_service_serves_it(
+    tmp_path, server, two_products, caplog
+):
+    """A reprocessed product: MAST still lists the old size, the service declares the new one."""
+    manifest = tmp_path / "m.ecsv"
+    true_size = int(two_products["size"][0])
+    two_products["size"][0] = true_size - 7  # stale listing
+    with caplog.at_level(logging.WARNING, logger="jwst_anomaly.acquire"):
+        out = acquire.fetch_products(two_products, data_root=tmp_path, manifest_path=manifest)
+    assert list(out["status"]) == ["downloaded", "downloaded"]
+    assert out["size"][0] == true_size
+    assert "listing is stale" in caplog.text
+
+    server.calls.clear()  # the verified copy is kept, not re-downloaded on every run
+    again = acquire.fetch_products(two_products, data_root=tmp_path, manifest_path=manifest)
+    assert server.calls == []
+    assert list(again["status"]) == ["cached", "cached"]
+
+    local = tmp_path / out["local_path"][0]
+    local.write_bytes(b"Z" * true_size)  # verified size, wrong content: re-downloaded
+    again = acquire.fetch_products(two_products, data_root=tmp_path, manifest_path=manifest)
+    assert server.calls == [out["dataURI"][0]]
+    assert local.read_bytes() == server.files[out["dataURI"][0]]
+
+
+def test_stale_mast_size_and_short_transfer_still_fail(tmp_path, server, two_products):
+    bad = two_products["dataURI"][0]
+    two_products["size"][0] += 3  # stale listing, and the transfer is also incomplete
+    server.truncate.add(bad)
+    with pytest.raises(acquire.DownloadError, match="download service"):
+        acquire.fetch_products(two_products, data_root=tmp_path, manifest_path=tmp_path / "m.ecsv")
+    assert not (tmp_path / str(acquire.local_relpath(two_products[0]))).exists()
+
+
+def test_served_size_reads_content_length(monkeypatch):
+    seen = {}
+
+    class Response:
+        headers = {"Content-Length": "3405952"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+    def fake_urlopen(request, timeout):
+        seen.update(url=request.full_url, method=request.get_method())
+        return Response()
+
+    monkeypatch.setattr(acquire.urllib.request, "urlopen", fake_urlopen)
+    assert acquire._served_size(f"mast:JWST/product/{CAT}_cat.ecsv") == 3405952
+    assert seen["method"] == "HEAD"
+    assert seen["url"].endswith(f"/api/v0.1/Download/file?uri=mast:JWST/product/{CAT}_cat.ecsv")
+
+    def failing_urlopen(request, timeout):
+        raise acquire.urllib.error.URLError("offline")
+
+    monkeypatch.setattr(acquire.urllib.request, "urlopen", failing_urlopen)
+    assert acquire._served_size("mast:JWST/product/x_cat.ecsv") is None
 
 
 def test_404_mentions_exclusive_access(tmp_path, server, two_products):
