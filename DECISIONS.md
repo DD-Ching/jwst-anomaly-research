@@ -733,4 +733,3 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
 - A band other than the reference band drives colours: then gate per band and set that band's
   features to missing.
 - MAST adds DQ to i2d products.
-

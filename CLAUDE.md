@@ -93,4 +93,5 @@ polling (long waits; `gh pr checks --watch` blocks cheaply). Stop and leave a ha
 - PR bodies go inline (`gh pr create --body "$(cat <<'EOF' ... EOF)"` with text you wrote);
   `--body-file` is denied so local files can't be posted to the public repo by accident.
 - Before writing conclusions about candidates, look at the run's `contact_sheet.png` yourself.
-- Before committing: relevant tests pass, no file >1 MB, no data, no secrets.
+- Before committing: relevant tests pass, `pre-commit run --all-files` is clean (CI runs it), no file
+  >1 MB, no data, no secrets.
