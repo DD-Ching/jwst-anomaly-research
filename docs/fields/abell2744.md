@@ -39,10 +39,12 @@ in docs/methodology.md.
 | Bergamini et al. 2023a (pre-JWST; marked "obsolete" on the authors' model page) | "New high-precision strong lensing modeling of Abell 2744. Preparing for JWST observations" | 2207.09416; A&A 670, A60 (2023); 10.1051/0004-6361/202244575 | Lenstool files: https://www.fe.infn.it/astro/lensing/A2744_Bergamini22/ |
 | Cha et al. 2024 (MARS, free-form) | "Precision MARS Mass Reconstruction of Abell 2744: Synergizing the Largest Strong Lensing and Densest Weak Lensing Datasets from JWST" | 2308.14805; ApJ 961, 186 (2024); 10.3847/1538-4357/ad0cbf | none found. The abstract says the maps are public, but no location was found |
 
-## Lens-model consistency: Bergamini+2023b (2026-10-08, issue #41)
+## Lens-model consistency: Bergamini+2023b (preliminary, 2026-10-08, issue #41)
 
-Scratch scripts on `lensmodel.py` (#35); the exact image-plane solver itself is coming in #40. Every number below is
-`model_prediction` or `derived`, and every threshold is an ASSUMPTION.
+**Preliminary, not yet reproducible from the repository.** These numbers come from scratch scripts (a cloud
+run, issue #41) on `lensmodel.py` (#35), with the parser workarounds described there. Re-run them with #40's
+`find_images` and the parser fixes before relying on them. Every number below is `model_prediction` or
+`derived`, and every threshold is an ASSUMPTION.
 
 - **Files:** `best.par` (sha256 `7245368f…`) and `obs_arcs.cat` (sha256 `d02c231f…`) from the authors' page.
   - The model has 180 dPIE potentials at z = 0.3072 and was optimised in the image plane: Chi2pos 146.60, dof 148.

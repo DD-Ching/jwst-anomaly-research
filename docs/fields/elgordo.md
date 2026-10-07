@@ -44,10 +44,12 @@ Every title was checked on its arXiv abstract page and every URL was opened on 2
 - **RELICS** offers the only ready-made κ/γ/deflection grids.
 - **Diego+2023 and Frye+2023**, the JWST-era free-form models, have no public files.
 
-## Lens-model consistency: Caminha+2023 (2026-10-08, issue #41)
+## Lens-model consistency: Caminha+2023 (preliminary, 2026-10-08, issue #41)
 
-Scratch scripts on `lensmodel.py` (#35); the exact image-plane solver itself is coming in #40. Every number below is
-`model_prediction` or `derived`, and every threshold is an ASSUMPTION.
+**Preliminary, not yet reproducible from the repository.** These numbers come from scratch scripts (a cloud
+run, issue #41) on `lensmodel.py` (#35), with the parser workarounds described there. Re-run them with #40's
+`find_images` and the parser fixes before relying on them. Every number below is `model_prediction` or
+`derived`, and every threshold is an ASSUMPTION.
 
 - **Files:** CDS `files/best_fit.par` (sha256 `7b0153ae…`) and `obs_arcs_v1_new_IDs.dat` (sha256 `d6317439…`).
   - The model has 265 dPIE potentials, single plane at z = 0.8703. Lenstool optimised it in the image plane:
