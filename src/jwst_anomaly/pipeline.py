@@ -634,7 +634,9 @@ class _Runner:
         star_sid = f"{sid}-stars"
         summary.notes.append(f"{n_stars} stars ranked separately as {star_sid} (D-012)")
         galaxies = _subset(to_rank, ~stars, "non-star stratum (D-012)")
-        self._rank_stratum(sid, summary, galaxies, sources, band_obs, required=True)
+        self._rank_stratum(
+            sid, summary, galaxies, sources, band_obs, required=True, galaxy_stratum=True
+        )
         star_summary = SampleSummary(
             star_sid,
             f"{summary.role}/stars",
@@ -670,8 +672,12 @@ class _Runner:
         required: bool,
         top_k: int | None = None,
         parent: str | None = None,
+        galaxy_stratum: bool = False,
     ) -> None:
         """Score one stratum, then select, cut out, cross-match and store its top k.
+
+        Spike screening (D-019) runs only for ``galaxy_stratum`` (a successful D-012 split),
+        never for a star stratum or a single mixed ranking.
 
         ``parent`` is the sample a stratum (``<sample>-stars``) belongs to; its gate's
         reference weights are reused for the stratum's cutouts.
@@ -705,7 +711,7 @@ class _Runner:
         # 2 x top_k, drop spike-flagged sources (bright stars, star+galaxy blends) and keep the
         # next clean ones; the dropped sources are saved as "screened".
         spike_cfg = (self.stages_cfg.get("cutouts") or {}).get("spike") or {}
-        screen = bool(spike_cfg.get("screen")) and parent is None
+        screen = bool(spike_cfg.get("screen")) and galaxy_stratum
         pool = self._targets(label, ranked[: (2 * cut_k if screen else cut_k)])
         cutout_rows, cut_table = self._cutouts(
             label, summary, pool, band_obs, parent=parent or label, render=not screen
