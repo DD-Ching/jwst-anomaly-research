@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from astropy.coordinates import SkyCoord
 from astropy.cosmology import FlatLambdaCDM
 from astropy.io import fits
@@ -25,7 +26,9 @@ RA0, DEC0 = 110.826989, -73.454723
 
 
 def _model():
-    comp = DPIE("halo", 0.0, 0.0, 0.0, 0.0, 1e-3, 1e4, 900.0, 0.39)  # SIS-like, theta_E(D=1) ~ 23"
+    comp = DPIE(
+        "halo", 0.0, 0.0, 0.0, 0.0, 1e-3, 1e4, 900.0, 0.39
+    )  # SIS-like, b0 = theta_E(D=1) ~ 35"
     return LensModel([comp], RA0, DEC0, FlatLambdaCDM(H0=70.0, Om0=0.3), source="synthetic")
 
 
@@ -59,7 +62,7 @@ def test_chi2pos_from_par(tmp_path):
 
 def test_orientation_classes():
     model = _model()
-    # Three sources 40" North of the centre, where arcs should run East-West (PA 90).
+    # Sources 40" North of the centre, where arcs should run East-West (PA 90) at any z_s.
     dec = DEC0 + 40.0 / 3600
     src = Table(
         {
@@ -68,15 +71,56 @@ def test_orientation_classes():
             "dec": [dec, dec, dec],
             "pa_obs": [92.0, 0.0, 45.0],
             "z_phot": [2.0, 3.0, np.nan],
+            "z160": [1.8, 2.7, np.nan],
+            "z840": [2.2, 3.3, np.nan],
         }
     )
     out = lc.orientation_table(model, src)
     assert list(out["orientation_class"]) == ["aligned", "anti", "mixed"]
+    assert list(out["z_basis"]) == ["photo-z", "photo-z", "grid"]
     np.testing.assert_allclose(out["offset_z2"], [2.0, 90.0, 45.0], atol=1e-6)
     np.testing.assert_allclose(out["offset_zphot"][:2], [2.0, 90.0], atol=1e-6)
     assert np.isnan(out["offset_zphot"][2])
     assert np.all(out["pa_pred_spread"] < 1e-6)
     assert out.meta["provenance"] == "derived"
+
+
+def test_orientation_uses_the_source_photoz():
+    # 7" North of an SIS: at z_s = 1, 2, 4 kappa > 1 (radial stretch, PA 0), but at the source's
+    # own z ~ 0.6 kappa < 1 (tangential, PA 90). A tangential source must not be called anti.
+    model = _model()
+    src = Table(
+        {
+            "label": [1],
+            "ra": [RA0],
+            "dec": [DEC0 + 7.0 / 3600],
+            "pa_obs": [90.0],
+            "z_phot": [0.6],
+            "z160": [0.58],
+            "z840": [0.62],
+        }
+    )
+    out = lc.orientation_table(model, src)
+    assert out["offset_z1"][0] > 85  # the grid would call it anti
+    assert out["z_basis"][0] == "photo-z"
+    assert out["orientation_class"][0] == "aligned"
+
+
+def test_class_stats_null_follows_threshold():
+    rows = Table({"orientation_class": ["aligned"] * 6 + ["anti"] * 2 + ["mixed"] * 2})
+    s30, s45 = lc.class_stats(rows, 30.0), lc.class_stats(rows, 45.0)
+    assert (s30["n"], s30["aligned"], s30["anti"]) == (10, 6, 2)
+    assert s30["p_random"] == 1 / 3 and s45["p_random"] == 0.5
+    assert s30["p_aligned_excess"] < s45["p_aligned_excess"]
+
+
+def test_read_sigpos(tmp_path):
+    par = tmp_path / "input.par"
+    par.write_text("image\n    multfile 22 arcs.dat\n    sigposArcsec  0.44\n    end\n")
+    assert lc.read_sigpos(par) == 0.44
+    par.write_text("image\n    end\n")
+    with pytest.raises(SystemExit):
+        lc.read_sigpos(par)
 
 
 def test_load_shapes_and_photoz(tmp_path):

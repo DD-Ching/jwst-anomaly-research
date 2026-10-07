@@ -55,6 +55,7 @@ D-024):
 from __future__ import annotations
 
 import hashlib
+import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -124,6 +125,9 @@ _POTENTIAL_KEYS = (
     "v_disp",
     "z_lens",
 )
+# Potential keywords that carry no mass information (``mag`` feeds Lenstool's scaling relations,
+# whose result best.par already lists). Any other unknown keyword raises UnsupportedModelError.
+_IGNORED_POTENTIAL_KEYS = ("profile", "mag")
 SUPPORTED_PROFILES = (81,)
 
 
@@ -131,9 +135,33 @@ class UnsupportedModelError(ValueError):
     """A Lenstool model feature this module does not implement (it is never approximated)."""
 
 
+_INTEGER_ID = re.compile(r"^[+-]?\d+(?:\.0*)?$")
+
+
 def system_key(system_id: str | float) -> str:
-    """Canonical multiple-image system id: ``"4.0"``, ``"4"`` and ``4.0`` all give ``"4"``."""
-    return f"{float(system_id):g}"
+    """Canonical multiple-image system id.
+
+    Integer-valued ids (``"4"``, ``"4.0"``, ``4.0``; ``best.par`` writes ``z_m_limit`` systems as
+    floats) give ``"4"``; any other id is kept as written (``"4.10"``, ``"c2"``, ``"1a"``).
+    """
+    text = str(system_id).strip()
+    return str(int(float(text))) if _INTEGER_ID.match(text) else text
+
+
+def image_redshifts(images: Table, z_m_limit: dict[str, float]) -> np.ndarray:
+    """Redshift used for each image of an ``arcs.dat`` table.
+
+    The model's fixed ``z_m_limit`` value for the image's system comes first, because Lenstool
+    applies it to every image of that system. Otherwise the catalogued ``z`` is used when > 0,
+    else NaN.
+    """
+    return np.array(
+        [
+            z_m_limit.get(str(s), zc if zc > 0 else np.nan)
+            for zc, s in zip(images["z"], images["system"], strict=True)
+        ],
+        float,
+    )
 
 
 def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
@@ -158,7 +186,7 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
     raw = path.read_bytes()
     sections: list[dict[str, Any]] = []
     current: dict[str, Any] | None = None
-    for n, line in enumerate(raw.decode().splitlines(), 1):
+    for n, line in enumerate(raw.decode("latin-1").splitlines(), 1):
         stripped = line.split("#", 1)[0].strip()
         if not stripped:
             continue
@@ -247,6 +275,12 @@ def _parse_potential(path: Path, sec: dict[str, Any]) -> dict[str, Any]:
         raise UnsupportedModelError(
             f"{path}:{sec['line']}: potential {name} has Lenstool profile {profile}; only "
             f"{SUPPORTED_PROFILES} (dPIE/PIEMD) are supported"
+        )
+    unknown = sorted(set(values) - set(_POTENTIAL_KEYS) - set(_IGNORED_POTENTIAL_KEYS))
+    if unknown:
+        raise UnsupportedModelError(
+            f"{path}:{sec['line']}: potential {name} has keywords this module does not interpret: "
+            f"{unknown}"
         )
     pot: dict[str, Any] = {"name": name, "profile": profile}
     for key in _POTENTIAL_KEYS:
@@ -458,8 +492,8 @@ class LensModel:
         distance.
         """
         z = np.atleast_1d(np.asarray(z_s, float))
-        out = np.zeros(z.shape)
-        behind = z > self.z_lens
+        out = np.where(np.isfinite(z), 0.0, np.nan)  # an unknown redshift stays unknown
+        behind = np.isfinite(z) & (z > self.z_lens)
         if behind.any():
             d_l = self.cosmology.comoving_transverse_distance(self.z_lens)
             d_s = self.cosmology.comoving_transverse_distance(z[behind])
@@ -490,7 +524,9 @@ class LensModel:
         return out
 
     # --- sky-level predictions --------------------------------------------------------------
-    def evaluate(self, ra: Any, dec: Any, z_s: Any) -> Table:
+    def evaluate(
+        self, ra: Any, dec: Any, z_s: Any, fields: dict[str, np.ndarray] | None = None
+    ) -> Table:
         """All predictions at sky positions for source redshift(s) ``z_s``.
 
         Columns: ``ra, dec, z_s, dls_ds, x, y`` (model frame, arcsec), ``alpha_x, alpha_y``
@@ -498,6 +534,9 @@ class LensModel:
         ``gamma1, gamma2`` (model frame), ``gamma``, ``reduced_shear`` (|gamma| / |1 - kappa|),
         ``magnification`` (signed; negative = odd parity) and ``tangential_pa`` (deg E of N,
         mod 180: the major axis expected for the image of a small round source).
+
+        ``fields`` may pass :meth:`fields_xy` already computed at these positions; the fields do not
+        depend on ``z_s``, so callers evaluating several redshifts compute them once.
         """
         ra_a, dec_a = np.broadcast_arrays(
             np.atleast_1d(np.asarray(ra, float)), np.atleast_1d(np.asarray(dec, float))
@@ -505,7 +544,7 @@ class LensModel:
         zs = np.broadcast_to(np.asarray(z_s, float), ra_a.shape)
         scale = self.dls_ds(zs)
         x, y = self.to_frame(ra_a, dec_a)
-        f = self.fields_xy(x, y)
+        f = self.fields_xy(x, y) if fields is None else fields
         ax, ay = scale * f["alpha_x"], scale * f["alpha_y"]
         hxx, hxy, hyy = scale * f["psi_xx"], scale * f["psi_xy"], scale * f["psi_yy"]
         kappa = 0.5 * (hxx + hyy)
@@ -591,13 +630,18 @@ class LensModel:
 
 def _dpie_from_dict(pot: dict[str, Any], cosmo: FlatLambdaCDM, source: str) -> DPIE:
     def radius(key: str) -> float:
-        val = pot[key]
+        val, kpc = pot[key], pot[f"{key}_kpc"]
+        per_arcsec = cosmo.kpc_proper_per_arcmin(pot["z_lens"]).to_value(u.kpc / u.arcmin) / 60.0
+        if np.isfinite(val) and np.isfinite(kpc) and abs(kpc / per_arcsec - val) > 0.02 * val:
+            # Both given and inconsistent: which one Lenstool used is ambiguous, so refuse.
+            raise UnsupportedModelError(
+                f"{source}: potential {pot['name']} {key} {val} arcsec disagrees with "
+                f"{key}_kpc {kpc} ({kpc / per_arcsec:.4g} arcsec in the model cosmology)"
+            )
         if np.isfinite(val):
             return float(val)
-        kpc = pot[f"{key}_kpc"]
         if not np.isfinite(kpc):
             raise ValueError(f"{source}: potential {pot['name']} has neither {key} nor {key}_kpc")
-        per_arcsec = cosmo.kpc_proper_per_arcmin(pot["z_lens"]).to_value(u.kpc / u.arcmin) / 60.0
         return float(kpc / per_arcsec)
 
     required = ("x_centre", "y_centre", "v_disp", "z_lens")
@@ -631,7 +675,7 @@ def load_lenstool_images(path: str | Path) -> Table:
     path = Path(path)
     raw = path.read_bytes()
     ids, ras, decs, zs = [], [], [], []
-    for n, line in enumerate(raw.decode().splitlines(), 1):
+    for n, line in enumerate(raw.decode("latin-1").splitlines(), 1):
         stripped = line.strip()
         if not stripped:
             continue
@@ -671,15 +715,9 @@ def backtrace_images(model: LensModel, images: Table, z_m_limit: dict[str, float
     (``dbeta_arcsec``), and that offset mapped to the image plane with the local inverse
     magnification matrix (``dtheta_arcsec``, the usual source-plane approximation of the
     image-plane residual). Images whose redshift is neither catalogued nor in ``z_m_limit``
-    get NaN. Provenance ``model_prediction``.
+    get NaN (:func:`image_redshifts`). Provenance ``model_prediction``.
     """
-    z = np.array(
-        [
-            zc if zc > 0 else z_m_limit.get(str(s), np.nan)
-            for zc, s in zip(images["z"], images["system"], strict=True)
-        ],
-        float,
-    )
+    z = image_redshifts(images, z_m_limit)
     ok = np.isfinite(z)
     pred = model.evaluate(images["ra"][ok], images["dec"][ok], z[ok])
     bx = np.full(len(images), np.nan)
@@ -690,11 +728,10 @@ def backtrace_images(model: LensModel, images: Table, z_m_limit: dict[str, float
     a11 = np.full(len(images), np.nan)
     a12 = np.full(len(images), np.nan)
     a22 = np.full(len(images), np.nan)
-    scale = model.dls_ds(z[ok])
-    f = model.fields_xy(pred["x"], pred["y"])
-    a11[ok] = 1.0 - scale * f["psi_xx"]
-    a12[ok] = -scale * f["psi_xy"]
-    a22[ok] = 1.0 - scale * f["psi_yy"]
+    kap, g1, g2 = (np.asarray(pred[c], float) for c in ("kappa", "gamma1", "gamma2"))
+    a11[ok] = 1.0 - kap - g1  # psi_xx = kappa + gamma1, psi_yy = kappa - gamma1, psi_xy = gamma2
+    a12[ok] = -g2
+    a22[ok] = 1.0 - kap + g1
     systems = np.asarray(images["system"]).astype(str)
     dbx = np.full(len(images), np.nan)
     dby = np.full(len(images), np.nan)

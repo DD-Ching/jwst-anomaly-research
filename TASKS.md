@@ -8,7 +8,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - counter-images: forward-predict the other images of each catalogued system and of bright single arcs. Flag
      predicted images that are missing, and multiple-image candidates where none is predicted;
    - parity and flux-ratio checks for the catalogued systems (DJA photometry against model magnification ratios);
-   - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W.
+   - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
+   - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
+   - the exotic-specific screens of docs/exotic_lensing.md once these ordinary checks are done.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;

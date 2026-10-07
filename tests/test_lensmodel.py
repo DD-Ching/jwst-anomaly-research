@@ -155,7 +155,9 @@ def test_isothermal_limit():
     comp = _dpie(x=0.0, y=0.0, ellipticity=0.0, r_core=1e-4, r_cut=1e5)
     ax, ay = comp.deflection(np.array([5.0, 0.0]), np.array([0.0, -8.0]))
     np.testing.assert_allclose(np.hypot(ax, ay), comp.b0, rtol=2e-3)
-    np.testing.assert_allclose([ax[0], ay[1]], [comp.b0, -comp.b0], rtol=2e-3)  # towards the centre
+    np.testing.assert_allclose(
+        [ax[0], ay[1]], [comp.b0, -comp.b0], rtol=2e-3
+    )  # along theta: beta = theta - alpha
     np.testing.assert_allclose(
         comp.kappa(np.array([5.0]), np.array([0.0])), comp.b0 / 10.0, rtol=2e-3
     )
@@ -237,3 +239,70 @@ def test_subset_tables_keep_meta():
         t = method([RA0, RA0 + 1e-3], [DEC0, DEC0], 2.0)
         assert isinstance(t, Table) and len(t) == 2
         assert t.meta["provenance"] == "model_prediction"
+
+
+def test_system_key_keeps_non_integer_ids():
+    assert [lensmodel.system_key(v) for v in ("4", "4.0", 4.0, "4.10", "c2", "1a")] == [
+        "4",
+        "4",
+        "4",
+        "4.10",
+        "c2",
+        "1a",
+    ]
+
+
+def test_image_redshifts_prefer_z_m_limit(tmp_path):
+    arcs = tmp_path / "arcs.dat"
+    arcs.write_text(
+        "1.1 110.8 -73.4 0.1 0.1 0 1.5 0\n"  # catalogued z, overridden by the model's fixed value
+        "2.1 110.8 -73.4 0.1 0.1 0 2.5 0\n"  # catalogued z, not in z_m_limit
+        "3.1 110.8 -73.4 0.1 0.1 0 0 0\n"  # neither
+        "4.10.1 110.8 -73.4 0.1 0.1 0 0 0\n"  # system "4.10", not "4.1"
+    )
+    images = lensmodel.load_lenstool_images(arcs)
+    assert list(images["system"]) == ["1", "2", "3", "4.10"]
+    z = lensmodel.image_redshifts(images, {"1": 1.7, "4.10": 3.0, "4.1": 9.0})
+    np.testing.assert_allclose(z, [1.7, 2.5, np.nan, 3.0])
+
+
+def test_unknown_redshift_stays_unknown():
+    model = LensModel([_dpie()], RA0, DEC0, COSMO)
+    assert np.isnan(model.dls_ds(np.nan))
+    t = model.evaluate([RA0, RA0], [DEC0 + 5 / 3600] * 2, [np.nan, 2.0])
+    assert np.isnan(t["kappa"][0]) and np.isnan(t["magnification"][0])
+    assert np.isfinite(t["kappa"][1])
+
+
+def test_unknown_potential_keyword_is_refused(tmp_path):
+    text = PAR.format(ra=RA0, dec=DEC0).replace(
+        "    v_disp 800.0", "    v_disp 800.0\n    ellip_pot 0.1"
+    )
+    with pytest.raises(UnsupportedModelError, match="ellip_pot"):
+        lensmodel.parse_lenstool_par(_write(tmp_path, text))
+
+
+def test_inconsistent_core_radius_is_refused(tmp_path):
+    text = PAR.format(ra=RA0, dec=DEC0).replace(
+        "core_radius_kpc 10.0", "core_radius_kpc 10.0\n    core_radius 9.0"
+    )
+    with pytest.raises(UnsupportedModelError, match="disagrees"):
+        LensModel.from_par(_write(tmp_path, text))
+
+
+def test_latin1_comments_are_accepted(tmp_path):
+    text = "# mod\u00e8le de r\u00e9f\u00e9rence\n" + PAR.format(ra=RA0, dec=DEC0)
+    path = tmp_path / "best.par"
+    path.write_bytes(text.encode("latin-1"))
+    assert len(lensmodel.parse_lenstool_par(path)["potentials"]) == 1
+
+
+def test_outputs_meet_schema_contracts(tmp_path):
+    from jwst_anomaly import schema
+
+    model = LensModel([_dpie()], RA0, DEC0, COSMO)
+    schema.validate(model.evaluate(RA0, DEC0, 2.0), schema.LENS_PREDICTION_COLUMNS)
+    arcs = tmp_path / "arcs.dat"
+    arcs.write_text("1.1 110.8 -73.4 0.1 0.1 0 2.0 0\n1.2 110.81 -73.41 0.1 0.1 0 2.0 0\n")
+    bt = lensmodel.backtrace_images(model, lensmodel.load_lenstool_images(arcs), {})
+    schema.validate(bt, schema.BACKTRACE_COLUMNS)

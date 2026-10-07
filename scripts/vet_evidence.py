@@ -49,7 +49,7 @@ from astropy.table import Table, vstack
 from astropy.wcs import WCS
 from scipy import ndimage
 
-from jwst_anomaly import crossmatch, cutouts, paths, pipeline, schema, viz
+from jwst_anomaly import crossmatch, cutouts, lensmodel, paths, pipeline, schema, viz
 from jwst_anomaly.features import column_as_float, discover_bands
 
 QUANTITIES = (
@@ -75,8 +75,7 @@ PHOTOZ_OPTIONAL = ("nusefilt", "Av")
 
 def axis_offset_deg(pa_a: float, pa_b: float) -> float:
     """Smallest angle between two axes (orientation mod 180), in [0, 90]."""
-    d = (pa_a - pa_b) % 180.0
-    return float(min(d, 180.0 - d))
+    return float(lensmodel.axis_offset_deg(pa_a, pa_b))
 
 
 def moment_orientation(path: str | Path, nsigma: float = 3.0) -> dict[str, Any] | None:

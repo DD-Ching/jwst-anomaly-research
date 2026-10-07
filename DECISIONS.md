@@ -1216,16 +1216,17 @@ clean (D-019 to D-021), so further clean-up has diminishing returns.
   - no image lies beyond 3σ, and parities alternate within each system;
   - the worst systems are 4 (0.61″ rms) and 1 (0.56″).
 - **Arc orientations**, from the F200W pipeline catalog (jw02736 o001) and DJA v7.4 eazy photo-z. ASSUMPTIONS:
-  - selection: ellipticity ≥ 0.5, σ_major ≥ 2 px, S/N ≥ 10, r ≤ 50″, reduced shear ≥ 0.2 at z_s = 1;
-  - classes: `aligned` ≤ 30° and `anti` ≥ 60° at each of z_s = 1, 2, 4;
-  - background: z160 > z_lens + 0.1.
+  - selection: ellipticity ≥ 0.5, σ_major ≥ 2 px, S/N ≥ 10, r ≤ 50″, reduced shear ≥ 0.2 at every tested z;
+  - classes: `aligned` ≤ 30° and `anti` ≥ 60° at every tested z. A background source is tested at its photo-z
+    range (z16, z_phot, z84); other sources at z_s = 1, 2, 4;
+  - background: z16 > z_lens + 0.1. Random orientations are aligned with probability 30/90.
 
   Results:
   - **Convention check:** 12 elongated (e ≥ 0.3) catalogued images match within 0.5″. Their median offset is 19°,
     and 7 are within 30°. All 4 with e ≥ 0.6 lie within 10°. The two beyond 60° (17.3, 19.1) are small
     (σ ≤ 2.8 px), with e ≈ 0.45 and μ 2.6–6.7.
-  - **Strong-shear region:** 56 elongated sources, 37 of them aligned (random expectation 1/3; binomial
-    p = 5.6e-7). Background: 19/23 aligned, 1 anti. Members or foreground: 3/6 aligned, 2 anti.
+  - **Strong-shear region, background sources:** 21 of 25 aligned (random expectation 1/3; binomial
+    p = 2.6e-7), 1 anti. Members or foreground: 3/6 aligned, 2 anti. All 58 sources: 39 aligned, 8 anti.
   - **The 6 anti candidates** (background or no photo-z) were inspected in F200W cutouts:
     - `1159` and `1896` are blends whose centroid lies between two galaxies. The edge-on spiral in `1896` is
       itself aligned.

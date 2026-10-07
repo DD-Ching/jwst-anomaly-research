@@ -531,5 +531,6 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   https://pypi.org/project/autogalaxy/), `autogalaxy/profiles/mass/total/dual_pseudo_isothermal_mass.py`: the source
   of the dPIE port.
 - Profile references named by that code:
-  - Kassiola & Kovner (1993); bibliographic details not checked;
+  - Kassiola & Kovner 1993, ApJ 417, 450, doi:10.1086/173325, "Elliptic Mass Distributions versus Elliptic
+    Potentials in Gravitational Lenses" (Crossref, checked 2026-10-08);
   - arXiv:0710.5636, Elíasdóttir et al., "Where is the matter in the Merging Cluster Abell 2218?"

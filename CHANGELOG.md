@@ -8,8 +8,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - κ map: median |Δκ| 1.6e-5;
   - back-trace χ² of the 60 catalogued images: 31.18, against Lenstool's 30.91.
 - `scripts/lens_consistency.py` provides `validate` and `arcs`.
-- SMACS arcs: 37 of 56 elongated strong-shear sources are aligned with the predicted stretch (p = 5.6e-7); for
-  background sources, 19 of 23. The 6 anti candidates are all ordinary:
+- SMACS arcs: 21 of 25 elongated strong-shear background sources, each tested at its own photo-z range, are
+  aligned with the predicted stretch (p = 2.6e-7). The 6 anti candidates are all ordinary:
   - 2 segmentation blends;
   - 1 galaxy at z ≈ 0.77 with an intrinsic shape;
   - 3 noisy low-surface-brightness shapes.
