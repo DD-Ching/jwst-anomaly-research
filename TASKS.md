@@ -1,26 +1,25 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T174424Z-540be92d`).
+Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T183007Z-4342c5c2`).
 
 ## Now (M1 follow-through)
-1. **Saturated stars in the galaxy ranking** (D-019 "Revisit if"): `940` keeps rank 10 because saturation corrupts
-   its colours. Test a pipeline-aper50 vs DJA magnitude mismatch (5.1 mag here; 99th percentile 3.8) as a
-   saturation flag.
+1. **Star-pair segments in the galaxy ranking:** `940` (CHANGELOG cycle 13) is two stars merged into one pipeline
+   segment, with its centroid 0.20″ from the brighter star's peak. Spikes are flagged (`spike_s6` 15.6), but
+   D-019 keeps it ranked because its colours are not stellar. Options:
+   - a host-vs-PSF test: ring/peak flux beyond the PSF wings, calibrated on the star stratum;
+   - screening spiky sources whose `_peak_near` peak is offset by more than about 0.15″ from the centroid.
 2. **Star-stratum sources with NED galaxy matches** (run `20261007T162133Z-2511977c`). Check their classification and photometry.
    - `f090w_1719`: NED `[NDA2023] 00713`, type G, 0.03″.
    - `f200w_2054`: a stellar-locus member 0.23″ from the lensed image NED `[MJR2023] 002.3`; it has spikes, and an
      arc lies next to it.
 3. **Vet MIRI's known `G_Lens` object** with `/vet-candidate` and `scripts/vet_evidence.py`.
-4. **Track metrics per run:** the fractions of top k that are artifacts, stars and catalogued objects.
-   Recovering catalogued lensed images and high-z candidates validates the ranking; uncatalogued high-rank
-   sources (like `438`) form the discovery set.
-5. **Per-sample confirmation** (D-014 limitation): only SMACS NIRCam can confirm single-band detections
+4. **Per-sample confirmation** (D-014 limitation): only SMACS NIRCam can confirm single-band detections
    and apply the stellar locus. MIRI passes 103 of 530, and CEERS drops every single-band source. Add
    matched photometry or confirmation for each sample (DJA for CEERS, NIRCam counterparts for MIRI).
-6. **Control comparability:** CEERS differs from SMACS in colours (aper50), gate (no confirmation) and
+5. **Control comparability:** CEERS differs from SMACS in colours (aper50), gate (no confirmation) and
    classification (no locus). Science-vs-control comparisons stay invalid until it gets DJA photometry.
-7. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
+6. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
 
 ## Next (M2)
 - Matched-aperture colours for other samples (D-013 is done for SMACS NIRCam):
