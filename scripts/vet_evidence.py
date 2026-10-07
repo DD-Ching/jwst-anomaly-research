@@ -182,10 +182,10 @@ def load_photoz(path: str | Path) -> Table:
 
 def photoz_evidence(table: Table, pos: SkyCoord, radius_arcsec: float) -> dict[str, Any]:
     """The nearest photo-z entry within ``radius_arcsec`` (``match: null`` when there is none)."""
-    sep = pos.separation(SkyCoord(table["ra"], table["dec"], unit="deg")).arcsec
-    j = int(np.argmin(sep))
     match = None
-    if sep[j] <= radius_arcsec:
+    sep = pos.separation(SkyCoord(table["ra"], table["dec"], unit="deg")).arcsec
+    j = int(np.argmin(sep)) if len(table) else -1
+    if j >= 0 and sep[j] <= radius_arcsec:
         match = {c: table[c][j] for c in table.colnames if c not in ("ra", "dec")}
         match["sep_arcsec"] = float(sep[j])
         if match["z_spec"] < 0:
@@ -466,7 +466,10 @@ def main(argv: list[str] | None = None) -> int:
                 "label": "observed",
             }
         if photoz is not None:
-            ev["photoz"] = photoz_evidence(photoz, pos, args.photoz_radius)
+            try:
+                ev["photoz"] = photoz_evidence(photoz, pos, args.photoz_radius)
+            except Exception as exc:  # recorded, not fatal
+                ev["errors"]["photoz"] = f"{type(exc).__name__}: {exc}"
         if stars is not None:
             sep = pos.separation(stars).arcsec
             sep = sep[sep > 0.05]

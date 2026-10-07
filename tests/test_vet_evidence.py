@@ -126,6 +126,7 @@ def test_photoz_evidence_nearest_within_radius(tmp_path):
     assert second["match"]["z_spec"] == pytest.approx(4.81)
     far = SkyCoord(10.0, -5.0 + 1.0 / 3600, unit="deg")
     assert vet.photoz_evidence(table, far, 0.2)["match"] is None
+    assert vet.photoz_evidence(table[:0], near, 0.2)["match"] is None  # empty table
 
 
 def test_load_photoz_rejects_other_tables(tmp_path):
