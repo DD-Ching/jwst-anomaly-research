@@ -1,0 +1,58 @@
+name: Network tests
+
+# Live tests against MAST, CDS and other services (tests marked `network`). PR CI (ci.yml) skips
+# them to stay offline and deterministic; this job catches upstream API or data drift weekly.
+# Start it manually from the Actions tab after changing archive or catalog access code.
+on:
+  schedule:
+    # Mondays 06:17 UTC. Off the hour because scheduled runs queue at the top of the hour.
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: network-tests
+  cancel-in-progress: false
+
+jobs:
+  network:
+    name: network tests (ubuntu-latest, py3.12)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v10.2.0
+      - run: uv venv --python 3.12
+      - run: uv pip install -e ".[dev,cloud]"
+      - run: uv run --no-sync python -m pytest -q --run-network
+
+  # A failed scheduled run opens (or comments on) one tracking issue, so it shows up in
+  # `gh issue list` during agent work cycles instead of only in an Actions email.
+  report-failure:
+    needs: network
+    if: failure() && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      TITLE: Weekly network tests failing
+    steps:
+      - name: Open or update the tracking issue
+        run: |
+          number=$(gh issue list --state open --search "in:title \"$TITLE\"" --json number,title \
+            --jq "map(select(.title == \"$TITLE\")) | .[0].number // empty")
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body "Failed again: $RUN_URL"
+          else
+            gh issue create --title "$TITLE" --label infra --body "The scheduled live-network test run failed: $RUN_URL
+
+          Check whether an upstream service (MAST, CDS, ...) changed or was down before changing code. Close this issue when the job is green again."
+          fi

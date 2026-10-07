@@ -1,0 +1,41 @@
+# Dependabot version updates: weekly, one grouped PR per ecosystem. See DECISIONS.md D-008.
+# Options: https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    labels: [infra]
+    groups:
+      github-actions:
+        patterns: ["*"]
+
+  - package-ecosystem: pre-commit
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    labels: [infra]
+    groups:
+      pre-commit-hooks:
+        patterns: ["*"]
+
+  # pyproject.toml declares lower bounds only, has no lock file, and CI installs the newest releases.
+  # With `increase-if-necessary`, satisfied `>=` ranges are left alone, so this entry normally opens
+  # no PRs. It only acts if an upper bound is added. When a uv.lock is committed, replace it with
+  # the `uv` ecosystem (D-008). Vulnerability alerts come from the dependency graph either way.
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    versioning-strategy: increase-if-necessary
+    labels: [infra]
+    groups:
+      python-dependencies:
+        patterns: ["*"]

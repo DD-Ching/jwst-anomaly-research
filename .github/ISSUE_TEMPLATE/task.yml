@@ -1,0 +1,58 @@
+# Issue form. Syntax: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms
+name: Task
+description: Propose a unit of work (feature, research, maintenance) or ask a question.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check [TASKS.md](https://github.com/DD-Ching/jwst-anomaly-research/blob/main/TASKS.md), open pull requests
+        and the [DECISIONS.md](https://github.com/DD-Ching/jwst-anomaly-research/blob/main/DECISIONS.md) headings first,
+        since the work may already be in flight or decided.
+        Decisions that are scientific, irreversible, costly, legal or credential-related need the owner: a maintainer adds `needs-human`.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should be true when this is done, and why it matters for the project.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Checkable outcomes such as tests, outputs or docs. For a question, say what answer would resolve it.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Archive query / acquisition
+        - Catalog ingestion
+        - Features / anomaly ranking
+        - Cutouts / visualization
+        - External cross-check
+        - Candidate store / pipeline / CLI
+        - Methodology / science
+        - Docs
+        - Infra (CI, packaging, tooling)
+        - Agent operations
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reuse
+    attributes:
+      label: Reuse check
+      description: >-
+        Existing tools considered (official or maintained libraries, relevant DECISIONS.md entries) and why they do or
+        don't fit. Write "N/A" if nothing is being built.
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and links
+      description: Related issues, PRs, sources (URL plus DOI or version). Cite only sources you have opened.
