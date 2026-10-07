@@ -2,6 +2,31 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-07: First vetting: three arc-like galaxy candidates (cycle 3)
+- New `scripts/vet_evidence.py` gathers vetting evidence:
+  - per-band catalog rows;
+  - radius and tangential alignment from both the catalog orientation and image moments (they agree
+    to within 1–7°);
+  - nearest multiple image in Mahler+2022 `arcs.dat`;
+  - nearest star;
+  - SIMBAD/NED/Gaia cross-match at 1″ and 3″;
+  - six-band S3 cutouts.
+- Vetted SMACS NIRCam `f200w_2925`, `f200w_2559` and `f200w_1096` (records in `docs/candidates/`; store status
+  `explained`):
+  - none is multiply imaged (nearest Mahler+2022 image 24–45″);
+  - 2925 and 2559 are not tangentially aligned (45–60°); 1096 is at 19°, consistent with weak shear
+    (`hypothesis`);
+  - NED knows 2925 (z 1.98) and 1096 (z 1.36, with catalogued clumps) as background galaxies.
+- **Systematic finding (derived):** the baseline's colour and shape features are size-biased.
+  - aper50 F200W−F277W reddens with isophotal area (median +0.77 → +0.99, Spearman 0.21,
+    p ≈ 1e-16), while isophotal colour does the opposite (+0.71 → +0.02). EE apertures differ in angular
+    size between SW and LW.
+  - DAOFind sharpness reaches +145σ on clumpy extended galaxies.
+
+  This explains these three candidates (verdict `catalog effect`) and sets the next priority (TASKS Now 1).
+- **Handoff:** TASKS Now 1, size-robust features (DJA matched-aperture colours; sharpness only for compact
+  sources).
+
 ## 2026-10-07: Stars ranked as their own stratum (D-012)
 - New `classify.classify_sources`. One bulk Gaia DR3 + SIMBAD cross-match over the whole catalog
   (about 8 s per sample) labels stars. The runner ranks them as `<sample>-stars` with their own top k;

@@ -362,3 +362,15 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   https://jwst-docs.stsci.edu/jwst-science-calibration-pipeline/jwst-operations-pipeline-build-information
 - JDox known issues for NIRCam and MIRI (pages linked in docs/landscape.md §5b): https://jwst-docs.stsci.edu/known-issues/nircam-known-issues
 - MAST note on JWST reprocessing and the `CAL_VER`/`CRDS_CTX` headers: https://outerspace.stsci.edu/display/MASTDOCS/Updates+to+JWST+Data
+
+## Vetting (cycle 3, checked 2026-10-07)
+
+- **Mahler et al. 2022 SMACS 0723 lens model** (Lenstool; CC0-1.0):
+  - repository https://github.com/guillaumemahler/SMACS0723-mahler2022 (CITATION.cff v1.0, released
+    2022-10-19; last push 2022-12-27);
+  - multiple-image catalog `ICLv0/arcs.dat`, raw at
+    https://raw.githubusercontent.com/guillaumemahler/SMACS0723-mahler2022/main/ICLv0/arcs.dat;
+  - model reference centre RA 110.826750, Dec −73.454628 (`ICLv0/best.par`, `reference 3`).
+- **NED** entries `SMACS J0723:[NDA2023] 01100` (z 1.9807) and `[NDA2023] 00908` (z 1.3618), retrieved through
+  NED TAP by `crossmatch.query_matches` on 2026-10-07. The original reference for the `NDA2023` designation and
+  the redshift type were not verified.
