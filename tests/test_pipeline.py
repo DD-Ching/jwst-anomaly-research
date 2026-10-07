@@ -1417,8 +1417,9 @@ def test_max_finite_spike_ignores_missing_bands():
         "F200W": {"spike_s6": float("nan")},
         "F444W": {"spike_s6": 0.0},
     }
-    assert pipeline._max_finite(rows) == 0.0
-    assert np.isnan(pipeline._max_finite({"F200W": {}}))
+    assert pipeline._finite_extreme(rows, "spike_s6") == 0.0
+    assert pipeline._finite_extreme({"F200W": {}}, "spike_s6") is None
+    assert pipeline._finite_extreme({"a": {"h": 0.3}, "b": {"h": 0.1}}, "h", min) == 0.1
 
 
 def test_spike_screen_must_be_boolean(tmp_path):

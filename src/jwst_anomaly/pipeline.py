@@ -399,18 +399,13 @@ def _topk_line(m: Mapping[str, int]) -> str:
     return f"n = {n}: {text}" + (f"; {', '.join(extra)}" if extra else "")
 
 
-def _min_finite(per_band: Mapping[str, Mapping[str, Any]], key: str) -> float | None:
-    """Smallest finite ``key`` over a source's bands (None when none)."""
+def _finite_extreme(
+    per_band: Mapping[str, Mapping[str, Any]], key: str, pick: Any = max
+) -> float | None:
+    """``pick`` (max or min) of the finite ``key`` values over a source's bands; None if none."""
     values = [_float(q.get(key)) for q in per_band.values()]
     finite = [v for v in values if v is not None and np.isfinite(v)]
-    return min(finite) if finite else None
-
-
-def _max_finite(per_band: Mapping[str, Mapping[str, Any]]) -> float:
-    """Largest finite ``spike_s6`` over a source's bands (NaN when none)."""
-    values = [_float(q.get("spike_s6")) for q in per_band.values()]
-    finite = [v for v in values if v is not None and np.isfinite(v)]
-    return max(finite) if finite else float("nan")
+    return pick(finite) if finite else None
 
 
 def _check_spike(spike: Any, where: str) -> None:
@@ -872,9 +867,14 @@ class _Runner:
             hostless = {
                 uid
                 for uid in flagged
-                if (h := _min_finite(cutout_rows.get(uid) or {}, "host_ratio")) is not None
+                if (h := _finite_extreme(cutout_rows.get(uid) or {}, "host_ratio", min)) is not None
                 and h < float(host_max)
             }
+            if stellar is None:
+                summary.notes.append(
+                    "spike screening: no stellar-locus colours for this sample; only the host "
+                    "test (D-020) applies"
+                )
             stellar = (stellar or set()) | hostless
         if stellar is None:
             summary.notes.append(
@@ -901,7 +901,13 @@ class _Runner:
                 "source_uid": [r["source_uid"] for r in removed],
                 "rank": np.array([r["rank"] or 0 for r in removed], dtype=int),
                 "spike_s6": np.array(
-                    [_max_finite(cutout_rows[r["source_uid"]]) for r in removed], float
+                    [
+                        np.nan
+                        if (v := _finite_extreme(cutout_rows[r["source_uid"]], "spike_s6")) is None
+                        else v
+                        for r in removed
+                    ],
+                    float,
                 ),
             }
         )
