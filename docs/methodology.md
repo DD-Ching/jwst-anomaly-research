@@ -36,3 +36,20 @@ Each candidate's vetting record lists which tests were run, their outcomes and t
 Every new model is compared against the simple baseline (robust z-scores, Isolation Forest, LOF on
 catalog features) using injection-recovery on simulated outliers and the stability of rankings across
 seeds. A model that doesn't beat the baseline doesn't replace it.
+
+## Tracked metric: top-k composition
+
+Every run reports, per ranked stratum, how its top k (the stored candidates) splits up. The numbers are also
+saved under `samples[].topk` in `run_record.json`.
+- **Known objects:** a SIMBAD/NED/Gaia match within the cross-match radius.
+- **Lens-related:** matches with lens object types.
+- **Catalogued stars.**
+- **Cutout-flagged:** any image quality flag.
+- **`spikes`:** D-018.
+- **Screened out:** D-019; these are counted before selection.
+
+Use it to judge a change to the pipeline. A drop in flagged or star fractions means less contamination. Known
+and lens-related fractions show recovery of real, catalogued populations. The uncatalogued remainder is the
+discovery set, and its members still need `/vet-candidate`. Baseline: run `20261007T183007Z-4342c5c2` (SMACS NIRCam).
+- Galaxy top 20: 35% known, 10% lens-related, 0% stars, 15% cutout-flagged, 2 screened.
+- Star top 10: 100% spikes.

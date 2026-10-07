@@ -1450,3 +1450,44 @@ def test_spike_screening_keeps_non_stellar_or_unknown_colours(tmp_path, env, mon
     report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
     assert "spike-flagged but non-stellar colours, kept ranked" in report
     assert not (env / "runs" / run_id / "field_a" / "screened.ecsv").exists()
+
+
+def test_topk_metrics_count_flags_and_matches():
+    cands = [{"source_uid": u} for u in ("a", "b", "c", "d")]
+    cut = {
+        "a": {"F200W": {"quality_flag": "spikes"}},
+        "b": {"F200W": {"quality_flag": "ok"}},
+        "c": {"F200W": {"quality_flag": "edge,nan_center"}},
+    }
+    xm = {
+        "a": {"is_known_object": True, "is_star": True, "is_lens_related": False},
+        "b": {"is_known_object": True, "is_star": False, "is_lens_related": True},
+    }
+    m = pipeline._topk_metrics(cands, cut, xm)
+    assert m == {
+        "n": 4,
+        "flagged": 2,
+        "spikes": 1,
+        "no_cutout": 1,
+        "known": 2,
+        "star": 1,
+        "lens_related": 1,
+        "no_xmatch": 2,
+    }
+    line = pipeline._topk_line({**m, "screened": 3})
+    # fractions use the candidates that have the evidence: 2 cross-matched, 3 cut out
+    assert line.startswith("n = 4: known object 2 (100%)") and "3 screened out" in line
+    assert "cutout-flagged 2 (67%)" in line and "2 cross-matched, 3 cut out" in line
+    assert pipeline._topk_line({"n": 0, "screened": 2}) == "none (2 screened out, D-019)"
+    spaced = pipeline._topk_metrics(cands[:1], {"a": {"F200W": {"quality_flag": "ok, spikes"}}}, {})
+    assert spaced["spikes"] == 1
+
+
+def test_report_has_topk_composition(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+    run_id = pipeline.run(write_config(tmp_path), samples=["field_a"])
+    report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
+    assert "- Top-k composition (derived, tracked metric): n = " in report
+    record = json.loads((env / "runs" / run_id / "run_record.json").read_text(encoding="utf-8"))
+    sample = [s for s in record["samples"] if s["id"] == "field_a"][0]
+    assert sample["topk"]["n"] > 0 and "known" in sample["topk"]
