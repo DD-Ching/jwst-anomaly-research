@@ -42,7 +42,79 @@ _Open._
 
 ## D-004 Baseline features and anomaly ranking (unit 3)
 
-_Open._
+**Decision.**
+- Features (`features.build_features`, `derived`, one line each in `meta["feature_spec"]`):
+  `ref_mag`; colors of wavelength-adjacent bands; reference-band morphology (log10 isophotal area,
+  ellipticity, log10 `CI_50_30` and `CI_70_50`, DAOFind sharpness and roundness, log10 `nn_dist`);
+  detection pattern (`blue_dropout`, `red_dropout`, `n_gaps`, which together count every undetected
+  band exactly once; `n_bands` is left out because it would count the same missing band again).
+  Bands come from column prefixes and any subset works; unknown bands raise an error. Features
+  that are NaN for every source are dropped.
+- Colors and `ref_mag` use `aper50` AB magnitudes. The pipeline sizes each filter's apertures from
+  that filter's encircled-energy curve (APCORR is keyed by filter and EE fraction), so equal-EE
+  colors don't depend on the PSF for unresolved sources. For extended sources they are biased red.
+- Morphology comes from one table-level reference band (default: the most common `ref_band`), so
+  pixel-unit features share one pixel scale.
+- NaN policy (`features.NAN_POLICY`): no imputation in features. A value is NaN when it is undefined
+  (no detection, negative flux, non-positive log argument) or when that band's aperture S/N is below
+  `min_snr = 3`. A band with no error column is skipped with a warning and listed in `meta`. The
+  detection-pattern features encode missing bands explicitly. The ranker median-imputes (z = 0)
+  and reports `n_missing`.
+- Scoring (`rank.score_anomalies`, `model_prediction`): every method sees the same matrix of robust
+  z-scores (median and 1.4826 × MAD via `scipy.stats.median_abs_deviation`; if the MAD is 0 it falls
+  back to IQR/1.349, then std, then 1), with NaN set to 0 and values clipped at ±10.
+  `robust_z` = RMS of z (a diagonal robust Mahalanobis distance); `isolation_forest` = −`score_samples`
+  (scikit-learn, 1000 trees); `lof` = scikit-learn LOF with 20 neighbours, with each exact-duplicate
+  group capped at 20 copies (identical to plain LOF when there are no larger groups).
+  `score` = mean of per-method percentile ranks. `top_features` = the 3 largest unclipped |z|, a
+  model-agnostic attribution. Scoring a table that contains simulated rows keeps the `simulated` label.
+- Evaluation: `inject_outliers` ("shift": 2 features set to ±6 robust σ; "shuffle": marginals kept,
+  correlations broken), `injection_recovery` (precision@k and recall@k against a random baseline,
+  with boundary ties counted pro rata; `simulated`), `seed_stability` (Jaccard overlap of top-k sets
+  across seeds, ties broken by `source_uid`).
+
+**Alternatives rejected.**
+- `aper_total` colors: they add a point-source extrapolation and more NaN (F200W: 43 vs 26 of 3,145).
+  `aper70` is noisier and more blended. Isophotal magnitudes use segments that differ between bands.
+- sklearn `RobustScaler`: it uses the IQR (25% breakdown point vs 50% for the MAD) and silently sets
+  zero-IQR scales to 1. A single MAD-based matrix that feeds every method and the attribution is simpler.
+- Per-feature missing indicators (`SimpleImputer(add_indicator=True)`): they duplicate the
+  detection-pattern features and would make NaN-heavy, low-information rows look anomalous.
+  KNN/iterative imputation can't separate rows whose only information is the detection pattern.
+- Plain LOF on all rows: imputed duplicates make it ill-defined (see Evidence). Scoring distinct rows
+  only (tried first) discards multiplicity. In a probe, 200 identical rows away from 300 Gaussian rows
+  became one isolated point and filled LOF's top 200 (LOF 4.4). With the cap they score 1.13 and
+  none reach the top 50. Distinct-row scoring does score higher on shift injections
+  (LOF P@50 0.62 vs 0.50 with the cap, same features), but it is wrong for real duplicate groups.
+- PyOD 3.6.6 (ECOD, COPOD, …): ECOD is per-feature tail probability, the same family as `robust_z`,
+  and numba is a core dependency. IF and LOF already come from scikit-learn. Not added.
+- Astronomaly (active learning, image-first): suited to later human-in-the-loop labelling, not to a
+  catalog baseline.
+- Weighting the ensemble toward LOF because it wins the injection test: that would tune the ensemble
+  to one synthetic outlier type.
+
+**Evidence.** 2026-10-07 e2e on program 2736 NIRCam (6 bands, 5,254 sources, a throwaway 0.1″ union
+merge standing in for unit 2; full output in the unit-3 PR body):
+- S/N floor: without it, 5 of the top 20 had F200W S/N < 3 or no F200W detection. With it: 0 of
+  the top 100.
+- Imputed duplicates: 1,747 rows fell into 5 exact-duplicate groups (the largest had 906), and plain
+  LOF reached 4×10⁷ next to them. With the cap the maximum LOF is 6.4 and sklearn gives no warning.
+- Injection recovery (50 injections, n = 5,304, random precision 0.009), P@50 for robust_z / IF /
+  LOF / ensemble: shift 6σ×2 0.08 / 0.08 / 0.50 / 0.20; shift 4σ×1 0.00 / 0.02 / 0.08 / 0.06;
+  shuffle 0.00 / 0.00 / 0.22 / 0.00. Of the real sources, 6.4% already have a feature beyond 6σ
+  (2.9% beyond 10σ), so the per-feature methods (and the mean-rank ensemble, which needs them to
+  agree) recover few injections. LOF is the only method well above random on every injection type.
+- Clip none / 10 / 20 → LOF P@50 (shift 6σ×2) 0.30 / 0.50 / 0.48, ensemble 0.22 / 0.20 / 0.22. On
+  Gaussian data, clipping drops IF's rank for a 12σ single-feature outlier from 1st to 2nd or 3rd.
+- Seed stability, top-20 Jaccard over 5 seeds: IF 0.69 / 0.76 / 0.77 with 500 / 1000 / 2000 trees.
+  With 1000 trees the ensemble scores 0.90 (minimum 0.82); robust_z and LOF score 1.0.
+
+**Revisit if.** Forced or HLSP photometry becomes available (use it for colors). Vetted labels exist
+(then compare the mean-rank ensemble with LOF alone or a max-rank rule on real labels rather than
+injections). A learned model arrives (it must beat this baseline on `injection_recovery` and
+`seed_stability`; PyOD/ADBench is then the comparison zoo). Vetting shows the top is dominated by
+one artifact class (add quality features or cuts such as edge or exposure flags). The sample grows
+past ~10⁵ sources (LOF cost).
 
 ## D-005 Image cutouts and visualization (unit 4)
 
