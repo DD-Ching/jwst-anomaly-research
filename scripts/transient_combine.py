@@ -39,6 +39,8 @@ def coincident(tables: dict[str, Table], radius_arcsec: float = 0.3, min_bands: 
     from scipy.sparse import coo_matrix
     from scipy.sparse.csgraph import connected_components
 
+    if not tables:
+        raise ValueError("coincident needs at least one band's candidate table")
     parts = []
     for band, t in tables.items():
         t = t.copy()

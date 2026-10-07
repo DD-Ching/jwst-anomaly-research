@@ -183,3 +183,10 @@ def test_recentre_iterates_beyond_its_box_and_rejects_off_image_starts():
     cx, cy = tf.recentre(img, 20.0, 20.0, 3)  # 4.5 px away, box half-width 3
     assert abs(cx - 24.5) < 0.2 and abs(cy - 20.0) < 0.2
     assert tf.recentre(img, -10.0, 20.0, 2) == (-10.0, 20.0)
+
+
+def test_coincident_without_tables_is_an_error():
+    import pytest
+
+    with pytest.raises(ValueError):
+        tc.coincident({})
