@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Diffraction-spike flag on cutouts (D-018, cycle 10)
+- `cutouts.spike_statistic`: hexagonal-harmonic power around the brightest peak near the target. NIRCam cutouts with
+  `spike_s6` ≥ 3 get the `spikes` flag, and the report lists them.
+- Run `20261007T162133Z-2511977c`: it flags exactly the three PSF-like blends in the galaxy top 20 (`940`, `2242`, `1571`) and all of
+  the star-stratum top 10. `940` is really a saturated star: its pipeline aper50 is 5 mag fainter than DJA's
+  measurement, and the stellar locus missed it because its colours are corrupted.
+- **Failed approach:** centring on the catalog centroid, which misses blends whose star is offset.
+- PR #20 (`2804`, needs-human) was revised after review: F410M−F444W is now an observed colour, and the line
+  is a hypothesis.
+- **Handoff:** TASKS "Spike-flagged sources in the galaxy ranking" (do flagged sources leave the top k?) and
+  "Star-stratum sources with NED galaxy matches".
+
 ## 2026-10-08: Vetted `f200w_2804`, inconclusive, a little-red-dot-like source (cycle 9b)
 - Run `20261007T151316Z-5706ae30` (clean `6fade35`), galaxy rank 6. Uncatalogued, unresolved, F444W 22.9.
 - **Second epoch:** no proper motion over 4.0 years (VENUS 6882, 2026-06-05; 1.9 mas = 0.95σ, so
@@ -11,7 +23,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - It meets Kokorev+2024 little-red-dot colour cuts. A brown dwarf is disfavoured on two counts: the 1.5–2.8 µm
   colours are red rather than blue, and there is no motion.
 - Verdict: `inconclusive: needs NIRSpec spectroscopy`. Record: `docs/candidates/jw02736-o001_t001_nircam_f200w_2804.md`.
-- **Handoff:** the owner decides whether to pursue it (`needs-human`). Next for agents: TASKS Now 1, blended stars.
+- **Handoff:** the owner decides whether to pursue it (`needs-human`).
 
 
 ## 2026-10-08: Two-epoch vetting tool (D-017, cycle 9a)

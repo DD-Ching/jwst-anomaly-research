@@ -105,6 +105,10 @@ stages:
     top_k: 20
     size_arcsec: 3.0
     bands: [F200W]
+    spike:                 # D-018: hexagonal-spike flag on NIRCam cutouts (ASSUMPTION thresholds)
+      radii_arcsec: [0.2, 0.8]
+      search_arcsec: 0.3
+      threshold: 3.0
   crossmatch:
     top_k: 20
     radius_arcsec: 1.0

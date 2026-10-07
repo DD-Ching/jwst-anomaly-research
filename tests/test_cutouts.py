@@ -347,3 +347,66 @@ def test_live_mast_https_miri_cutout(tmp_path):
     assert out["band"][0] == "F770W"
     assert out["quality_flag"][0] != "outside"
     assert out.meta["fetch"]["bytes"] < 36_083_520  # less than the whole file
+
+
+def _spiky_star(n=97, rot_deg=0.0, nan_core=False):
+    yy, xx = np.mgrid[0:n, 0:n].astype(float)
+    c = (n - 1) / 2
+    img = 50.0 * np.exp(-((xx - c) ** 2 + (yy - c) ** 2) / (2 * 1.5**2))
+    r = np.hypot(xx - c, yy - c)
+    ang = np.arctan2(yy - c, xx - c)
+    for k in range(6):  # six rays 60 deg apart, fading with radius
+        a = np.deg2rad(rot_deg + 60.0 * k)
+        d_perp = np.abs(-(xx - c) * np.sin(a) + (yy - c) * np.cos(a))
+        along = np.cos(ang - a) > 0
+        img += np.where(along, 2.0 * np.exp(-(d_perp**2) / 2.0) / (1 + r / 10), 0.0)
+    img += np.random.default_rng(0).normal(0, 0.01, img.shape)
+    if nan_core:
+        img[r <= 2.5] = np.nan
+    return img, c
+
+
+def _elongated_galaxy(n=97, q=0.3, pa_deg=25.0):
+    yy, xx = np.mgrid[0:n, 0:n].astype(float)
+    c = (n - 1) / 2
+    a = np.deg2rad(pa_deg)
+    u = (xx - c) * np.cos(a) + (yy - c) * np.sin(a)
+    v = -(xx - c) * np.sin(a) + (yy - c) * np.cos(a)
+    img = 20.0 * np.exp(-(u**2 / (2 * 8.0**2) + v**2 / (2 * (8.0 * q) ** 2)))
+    return img + np.random.default_rng(1).normal(0, 0.01, img.shape), c
+
+
+def test_spike_statistic_separates_spiky_stars_from_elongated_galaxies():
+    for rot in (0.0, 17.0, 41.0):  # orientation-free
+        star, c = _spiky_star(rot_deg=rot)
+        assert cutouts.spike_statistic(star, c, c, 6, 25) > 5
+    gal, c = _elongated_galaxy()
+    assert cutouts.spike_statistic(gal, c, c, 6, 25) < 2
+    assert np.isnan(cutouts.spike_statistic(gal, c, c, 6, 7))  # fewer than three rings
+
+
+def test_peak_near_finds_a_saturated_core_and_an_offset_star():
+    star, c = _spiky_star(nan_core=True)
+    assert cutouts._peak_near(star, c + 4, c - 3, 10) == pytest.approx((c, c), abs=1.0)
+    s6 = cutouts.spike_statistic(star, *cutouts._peak_near(star, c + 4, c - 3, 10), 6, 25)
+    assert s6 > 5
+
+
+def test_spike_flag_is_nircam_only_and_recorded(tmp_path, monkeypatch):
+    monkeypatch.setattr(cutouts, "spike_statistic", lambda *a, **k: 5.0)
+    path = tmp_path / "jw99999-o001_t001_nircam_clear-f200w_i2d.fits"
+    w = _write_i2d(path)
+    t = cutouts.make_cutouts(
+        str(path), _targets(w, ["interior"]), out_dir=tmp_path / "c", spike_radii_arcsec=(0.2, 0.8)
+    )
+    assert t["spike_s6"][0] == 5.0 and t["quality_flag"][0] == "spikes"
+    assert t.meta["spike"]["applied"] and t.meta["spike"]["provenance"] == "assumption"
+    off = cutouts.make_cutouts(str(path), _targets(w, ["interior"]), out_dir=tmp_path / "d")
+    assert np.isnan(off["spike_s6"][0]) and off.meta["spike"] is None
+    with fits.open(path, mode="update") as h:
+        h[0].header["INSTRUME"] = "MIRI"
+    miri = cutouts.make_cutouts(
+        str(path), _targets(w, ["interior"]), out_dir=tmp_path / "e", spike_radii_arcsec=(0.2, 0.8)
+    )
+    assert np.isnan(miri["spike_s6"][0]) and "spikes" not in miri["quality_flag"][0]
+    assert miri.meta["spike"]["applied"] is False

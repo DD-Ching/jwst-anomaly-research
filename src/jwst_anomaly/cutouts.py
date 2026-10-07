@@ -32,6 +32,7 @@ from astropy.nddata import Cutout2D, NoOverlapError
 from astropy.table import Table
 from astropy.wcs import WCS, FITSFixedWarning
 from astropy.wcs.utils import proj_plane_pixel_scales
+from scipy import ndimage
 from scipy.ndimage import distance_transform_edt
 
 from jwst_anomaly import paths, schema
@@ -45,6 +46,8 @@ QUALITY_FLAGS = {
     "nan_center": "no-data pixel within core_radius_arcsec of the target",
     "nan": "fraction of no-data pixels in the box exceeds nan_frac_max",
     "low_weight": "median core WHT below low_weight_frac x the image's typical WHT",
+    "spikes": "hexagonal diffraction-spike power around the target (spike_s6 >= spike_threshold):"
+    " a bright star or a star+galaxy blend (D-018)",
 }
 
 # The table is labeled "observed" (its files hold archive pixels); these columns are derived.
@@ -57,6 +60,7 @@ _COLUMN_PROVENANCE = {
     "x": schema.Provenance.DERIVED.value,
     "y": schema.Provenance.DERIVED.value,
     "wht_rel": schema.Provenance.DERIVED.value,
+    "spike_s6": schema.Provenance.DERIVED.value,
 }
 _OUTSIDE = {
     "path": "",
@@ -64,6 +68,7 @@ _OUTSIDE = {
     "on_edge": True,
     "quality_flag": "outside",
     "wht_rel": np.nan,
+    "spike_s6": np.nan,
 }
 
 _WHOLE_WHT_BYTES = 8 * 2**20  # read a WHT this small in one go rather than sampling rows
@@ -85,6 +90,9 @@ def make_cutouts(
     core_radius_arcsec: float = 0.2,
     nan_frac_max: float = 0.1,
     low_weight_frac: float = 0.5,
+    spike_radii_arcsec: tuple[float, float] | None = None,
+    spike_threshold: float = 3.0,
+    spike_search_arcsec: float = 0.3,
     weight_ref: float | None = None,
     n_weight_rows: int = 32,
     storage_options: dict[str, Any] | None = None,
@@ -106,8 +114,12 @@ def make_cutouts(
     outside the array, or WHT <= 0); ``on_edge`` is the ``edge`` condition of
     ``QUALITY_FLAGS``; ``quality_flag`` joins the ``QUALITY_FLAGS`` tokens with ``,``.
     Extra columns: ``x``/``y`` (0-based target position in the image) and ``wht_rel``
-    (median core WHT over the reference weight; NaN without a WHT extension). The table is
-    labeled observed; ``meta["column_provenance"]`` marks the derived columns.
+    (median core WHT over the reference weight; NaN without a WHT extension), and ``spike_s6``
+    (:func:`spike_statistic` between ``spike_radii_arcsec`` around the brightest peak within
+    ``spike_search_arcsec`` of the target, so a blended star counts; NaN when not requested or not
+    NIRCam). With ``spike_radii_arcsec``, a NIRCam cutout scoring ``>= spike_threshold`` gets the
+    ``spikes`` flag (D-018). The table is labeled observed; ``meta["column_provenance"]`` marks
+    the derived columns.
 
     ``band`` overrides the header (``FILTER``, or ``PUPIL`` for NIRCam pupil-wheel filters).
     ``weight_ref`` is the image's typical WHT; by default it is the median positive WHT of
@@ -127,6 +139,7 @@ def make_cutouts(
     rows: list[dict[str, Any]] = []
     with _open_image(uri, storage_options, block_size) as (hdul, fileobj):
         primary = hdul[0].header
+        nircam = str(primary.get("INSTRUME", "")).strip().upper() == "NIRCAM"  # D-018 scope
         # Look HDUs up by name: iterating the HDUList would read every remote header.
         sci = _get_hdu(hdul, "SCI")
         if sci is None:
@@ -177,6 +190,18 @@ def make_cutouts(
             if ref is None:
                 ref = _reference_weight(wht_section, n_weight_rows)
             row |= _quality(cut, nodata, wht, ref, core_px, nan_frac_max, low_weight_frac)
+            row["spike_s6"] = np.nan
+            if spike_radii_arcsec is not None and nircam:
+                px = float(np.mean(scale_arcsec))
+                img = np.where(nodata, np.nan, cut.data)
+                cx, cy = _peak_near(img, *cut.input_position_cutout, spike_search_arcsec / px)
+                s6 = spike_statistic(
+                    img, cx, cy, spike_radii_arcsec[0] / px, spike_radii_arcsec[1] / px
+                )
+                row["spike_s6"] = s6
+                if np.isfinite(s6) and s6 >= spike_threshold:
+                    flags = [t for t in row["quality_flag"].split(",") if t != "ok"]
+                    row["quality_flag"] = ",".join([*flags, "spikes"])
             data = {"SCI": cut.data}
             for ext, section in sections.items():
                 if ext != "SCI":
@@ -196,8 +221,8 @@ def make_cutouts(
 
     out = Table(
         rows=rows or None,
-        names=(*schema.CUTOUT_COLUMNS, "x", "y", "wht_rel"),
-        dtype=(str, str, str, float, bool, str, float, float, float),
+        names=(*schema.CUTOUT_COLUMNS, "x", "y", "wht_rel", "spike_s6"),
+        dtype=(str, str, str, float, bool, str, float, float, float, float),
     )
     out.meta.update(
         provenance=schema.Provenance.OBSERVED.value,
@@ -209,6 +234,17 @@ def make_cutouts(
         image_shape=image_shape,
         weight_ref=float("nan") if ref is None else ref,
         quality_flags=dict(QUALITY_FLAGS),
+        spike=(
+            None
+            if spike_radii_arcsec is None
+            else {
+                "radii_arcsec": [float(r) for r in spike_radii_arcsec],
+                "search_arcsec": float(spike_search_arcsec),
+                "threshold": float(spike_threshold),
+                "applied": bool(nircam),
+                "provenance": schema.Provenance.ASSUMPTION.value,
+            }
+        ),
         fetch=fetch,
     )
     return schema.validate(out, schema.CUTOUT_COLUMNS, name="cutouts")
@@ -514,6 +550,66 @@ def _reference_weight(wht: Any | None, n_rows: int) -> float:
         sample = np.concatenate([np.asarray(wht[int(r), :], dtype=float).ravel() for r in rows])
     good = sample[np.isfinite(sample) & (sample > 0)]
     return float(np.median(good)) if good.size else float("nan")
+
+
+def spike_statistic(
+    data: np.ndarray,
+    x: float,
+    y: float,
+    r_in_px: float,
+    r_out_px: float,
+    *,
+    n_theta: int = 360,
+    min_finite: float = 0.5,
+) -> float:
+    """Orientation-free diffraction-spike power ``P6 / sqrt(P4 * P8)`` around ``(x, y)`` (D-018).
+
+    ``data`` is resampled on rings 1 px apart from ``r_in_px`` to ``r_out_px`` (clipped to the
+    array). Each ring loses its azimuthal median (non-finite samples take that median; rings with
+    less than ``min_finite`` finite samples are skipped), and the azimuthal power spectra are
+    summed over rings. JWST's six main spikes put power at m = 6 only; an elongated galaxy spreads
+    it over all even m, which the even neighbours m = 4 and 8 cancel. NaN with fewer than three
+    usable rings.
+    """
+    ny, nx = data.shape
+    r_max = min(r_out_px, x, y, nx - 1 - x, ny - 1 - y)
+    radii = np.arange(r_in_px, r_max + 1e-9, 1.0)
+    if len(radii) < 3:
+        return float("nan")
+    theta = np.linspace(0.0, 2.0 * np.pi, n_theta, endpoint=False)
+    rr, tt = np.meshgrid(radii, theta, indexing="ij")
+    polar = ndimage.map_coordinates(
+        np.asarray(data, float),
+        [y + rr * np.sin(tt), x + rr * np.cos(tt)],
+        order=1,
+        cval=np.nan,
+    )
+    finite = np.isfinite(polar)
+    keep = finite.mean(axis=1) >= min_finite
+    if keep.sum() < 3:
+        return float("nan")
+    polar = polar[keep]
+    med = np.nanmedian(polar, axis=1, keepdims=True)
+    resid = np.where(np.isfinite(polar), polar, med) - med
+    power = (np.abs(np.fft.rfft(resid, axis=1)) ** 2).sum(axis=0)
+    denom = np.sqrt(power[4] * power[8])
+    return float(power[6] / denom) if denom > 0 else float("nan")
+
+
+def _peak_near(data: np.ndarray, x: float, y: float, r_px: float) -> tuple[float, float]:
+    """Brightest smoothed pixel within ``r_px`` of ``(x, y)``; no-data pixels there count as
+    brightest (saturated cores are NaN in level-3 mosaics)."""
+    ny, nx = data.shape
+    yy, xx = np.mgrid[0:ny, 0:nx]
+    near = (xx - x) ** 2 + (yy - y) ** 2 <= max(r_px, 1.0) ** 2
+    finite = np.isfinite(data)
+    if not (finite & near).any():
+        return x, y
+    top = float(np.max(data[finite & near]))
+    work = np.where(finite, data, np.where(near, top, 0.0))
+    smooth = np.where(near, ndimage.gaussian_filter(work, 1.0), -np.inf)
+    py, px = np.unravel_index(int(np.argmax(smooth)), smooth.shape)
+    return float(px), float(py)
 
 
 def _cut(
