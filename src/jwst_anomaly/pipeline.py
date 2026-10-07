@@ -332,12 +332,19 @@ def _subset(table: Table, mask: np.ndarray, what: str) -> Table:
     return out
 
 
+def _max_finite(per_band: Mapping[str, Mapping[str, Any]]) -> float:
+    """Largest finite ``spike_s6`` over a source's bands (NaN when none)."""
+    values = [_float(q.get("spike_s6")) for q in per_band.values()]
+    finite = [v for v in values if v is not None and np.isfinite(v)]
+    return max(finite) if finite else float("nan")
+
+
 def _check_spike(spike: Any, where: str) -> None:
     """``stages.cutouts.spike`` (D-018): ``radii_arcsec`` [r_in, r_out], ``threshold``,
-    optional ``search_arcsec``."""
+    optional ``search_arcsec`` and ``screen`` (D-019)."""
     if not isinstance(spike, dict):
         raise ConfigError(f"{where} must be a mapping")
-    unknown = set(spike) - {"radii_arcsec", "threshold", "search_arcsec"}
+    unknown = set(spike) - {"radii_arcsec", "threshold", "search_arcsec", "screen"}
     if unknown:
         raise ConfigError(f"{where}: unknown keys {sorted(unknown)}")
 
@@ -358,6 +365,8 @@ def _check_spike(spike: Any, where: str) -> None:
         number(spike["search_arcsec"]) and spike["search_arcsec"] >= 0
     ):
         raise ConfigError(f"{where}.search_arcsec must be a non-negative number")
+    if "screen" in spike and not isinstance(spike["screen"], bool):
+        raise ConfigError(f"{where}.screen must be true or false")
 
 
 def _stage_kwargs(cfg: Mapping[str, Any], keys: Sequence[str]) -> dict[str, Any]:
@@ -405,6 +414,8 @@ class _Runner:
         # Reference weight of each sample's gate map, by (sample id, image URI), shared with
         # cutouts of that image in the sample's strata.
         self.weight_refs: dict[tuple[str, str], float] = {}
+        # D-019: per sample, the source_uids with stellar matched-photometry colours (D-015 box).
+        self.stellar_colour_uids: dict[str, set[str]] = {}
         self.summaries: dict[str, SampleSummary] = {}
         self.candidates: list[dict[str, Any]] = []
 
@@ -623,7 +634,9 @@ class _Runner:
         star_sid = f"{sid}-stars"
         summary.notes.append(f"{n_stars} stars ranked separately as {star_sid} (D-012)")
         galaxies = _subset(to_rank, ~stars, "non-star stratum (D-012)")
-        self._rank_stratum(sid, summary, galaxies, sources, band_obs, required=True)
+        self._rank_stratum(
+            sid, summary, galaxies, sources, band_obs, required=True, galaxy_stratum=True
+        )
         star_summary = SampleSummary(
             star_sid,
             f"{summary.role}/stars",
@@ -659,8 +672,12 @@ class _Runner:
         required: bool,
         top_k: int | None = None,
         parent: str | None = None,
+        galaxy_stratum: bool = False,
     ) -> None:
         """Score one stratum, then select, cut out, cross-match and store its top k.
+
+        Spike screening (D-019) runs only for ``galaxy_stratum`` (a successful D-012 split),
+        never for a star stratum or a single mixed ranking.
 
         ``parent`` is the sample a stratum (``<sample>-stars``) belongs to; its gate's
         reference weights are reused for the stratum's cutouts.
@@ -688,13 +705,32 @@ class _Runner:
 
         # 5. Top-k targets, joined to positions.
         ranked = self._ranked(label, scores, sources)
-        targets_all = self._targets(label, ranked[: max(cand_k, cut_k, xm_k)])
-        self.save(targets_all, label, "targets")
+        n_top = max(cand_k, cut_k, xm_k)
 
-        # 6. Optional evidence stages.
-        cutout_rows = self._cutouts(
-            label, summary, targets_all[:cut_k], band_obs, parent=parent or label
+        # 6. Optional evidence stages. With spike screening (D-019, galaxy strata only), cut out
+        # 2 x top_k, drop spike-flagged sources (bright stars, star+galaxy blends) and keep the
+        # next clean ones; the dropped sources are saved as "screened".
+        spike_cfg = (self.stages_cfg.get("cutouts") or {}).get("spike") or {}
+        screen = bool(spike_cfg.get("screen")) and galaxy_stratum
+        pool = self._targets(label, ranked[: (2 * cut_k if screen else cut_k)])
+        cutout_rows, cut_table = self._cutouts(
+            label, summary, pool, band_obs, parent=parent or label, render=not screen
         )
+        if screen:
+            flagged = {
+                uid
+                for uid, per_band in cutout_rows.items()
+                if any(
+                    "spikes" in str(q.get("quality_flag", "")).split(",") for q in per_band.values()
+                )
+            }
+            ranked = self._screen(label, summary, ranked, flagged, cutout_rows, cut_k)
+            if cut_table is not None:
+                keep = {r["source_uid"] for r in ranked[:cut_k]}
+                shown = cut_table[[_text(u) in keep for u in cut_table["source_uid"]]]
+                self._contact_sheet(label, summary, shown, self._targets(label, ranked[:cut_k]))
+        targets_all = self._targets(label, ranked[:n_top])
+        self.save(targets_all, label, "targets")
         xmatch_rows = self._crossmatch(label, targets_all[:xm_k])
 
         for rec in ranked[:cand_k]:
@@ -711,6 +747,73 @@ class _Runner:
                 xmatch=xmatch_rows.get(uid),
             )
             self.candidates.append(rec)
+
+    def _screen(
+        self,
+        sid: str,
+        summary: SampleSummary,
+        ranked: list[dict[str, Any]],
+        flagged: set[str],
+        cutout_rows: Mapping[str, Mapping[str, Mapping[str, Any]]],
+        cut_k: int,
+    ) -> list[dict[str, Any]]:
+        """``ranked`` without spike-flagged sources that have stellar colours (D-019).
+
+        A spiky source with stellar colours is a star or a star-dominated blend. One with other
+        colours may be a galaxy with a bright unresolved nucleus (e.g. an AGN), so it stays
+        ranked and is only noted. Without stellar-locus colours nothing is removed.
+        """
+        if not flagged:
+            return ranked
+        stellar = self.stellar_colour_uids.get(sid)
+        if stellar is None:
+            summary.notes.append(
+                "spike screening (D-019) skipped: no stellar-locus colours for this sample; "
+                "spike-flagged sources stay ranked"
+            )
+            return ranked
+        kept_flagged = [r for r in ranked if r["source_uid"] in flagged - stellar]
+        if kept_flagged:
+            summary.notes.append(
+                "spike-flagged but non-stellar colours, kept ranked (star with corrupted "
+                "photometry, or a galaxy with a bright nucleus such as an AGN; inspect): "
+                + ", ".join(
+                    f"#{r['rank']} " + "_".join(r["source_uid"].split("_")[-2:])
+                    for r in kept_flagged
+                )
+            )
+        flagged = flagged & stellar
+        if not flagged:
+            return ranked
+        removed = [r for r in ranked if r["source_uid"] in flagged]
+        table = Table(
+            {
+                "source_uid": [r["source_uid"] for r in removed],
+                "rank": np.array([r["rank"] or 0 for r in removed], dtype=int),
+                "spike_s6": np.array(
+                    [_max_finite(cutout_rows[r["source_uid"]]) for r in removed], float
+                ),
+            }
+        )
+        table.meta.update(
+            provenance=schema.Provenance.DERIVED.value,
+            source=(
+                f"spike-flagged cutouts (D-018) with stellar colours (D-015 box), screened out of "
+                f"the top {cut_k} (D-019)"
+            ),
+        )
+        self.save(table, sid, "screened")
+        kept = [r for r in ranked if r["source_uid"] not in flagged]
+        summary.notes.append(
+            f"spike screening (D-019) removed {len(removed)} source(s) from the top {cut_k} "
+            "(ranks keep their original numbers; see screened table): "
+            + ", ".join(
+                f"#{r['rank']} " + "_".join(r["source_uid"].split("_")[-2:]) for r in removed
+            )
+        )
+        if any(r["source_uid"] not in cutout_rows for r in kept[:cut_k]):
+            summary.notes.append("spike screening: some backfilled sources have no cutout")
+        return kept
 
     def _classify(
         self, sid: str, sources: Table, to_rank: Table, label: str | None = None
@@ -763,6 +866,12 @@ class _Runner:
                 else:
                     try:  # an optional add-on: any failure keeps the catalogue classification
                         table = classify.apply_stellar_locus(table, sources, label, locus_cfg)
+                        mask = classify.stellar_colour_mask(
+                            sources, label, table.meta["stellar_locus"]
+                        )
+                        self.stellar_colour_uids[sid] = {
+                            _text(u) for u, m in zip(sources["source_uid"], mask, strict=True) if m
+                        }
                     except Exception as exc:  # noqa: BLE001
                         self.summaries[sid].notes.append(f"stellar locus not applied: {exc}")
             return table
@@ -1040,13 +1149,17 @@ class _Runner:
         targets: Table,
         band_obs: Mapping[str, str],
         parent: str | None = None,
-    ) -> dict[str, dict[str, dict[str, Any]]]:
-        """Run cutouts per band; return ``{source_uid: {band: {path, quality...}}}``."""
+        render: bool = True,
+    ) -> tuple[dict[str, dict[str, dict[str, Any]]], Table | None]:
+        """Run cutouts per band; return ``({source_uid: {band: {path, quality...}}}, table)``.
+
+        ``render=False`` leaves the contact sheet to the caller (D-019 screening).
+        """
         cfg = self.stages_cfg.get("cutouts")
         reason = self._skip_reason(cfg, targets)
         if reason:
             self.record(sid, "cutouts.make_cutouts", "skipped", reason, required=False)
-            return {}
+            return {}, None
         wanted = [str(b).upper() for b in cfg.get("bands") or []]
         bands = [b for b in wanted if b in band_obs]
         if not bands:
@@ -1060,7 +1173,7 @@ class _Runner:
         spike = cfg.get("spike")
         if spike:  # D-018: flag bright stars and star+galaxy blends on the cutouts
             kwargs["spike_radii_arcsec"] = tuple(float(r) for r in spike["radii_arcsec"])
-            kwargs["spike_threshold"] = float(spike["threshold"])
+            kwargs["spike_threshold"] = float(spike["threshold"])  # "screen" is used by the caller
             if "search_arcsec" in spike:
                 kwargs["spike_search_arcsec"] = float(spike["search_arcsec"])
         tables = []
@@ -1092,7 +1205,7 @@ class _Runner:
                 tables.append(table)
                 summary.cutout_bands.append(band)
         if not tables:
-            return {}
+            return {}, None
         try:  # still part of the optional stage: a failure here must not abort the run
             combined = vstack(tables, metadata_conflicts="silent")
             combined.meta.update(
@@ -1127,9 +1240,10 @@ class _Runner:
                 )
         except Exception as exc:
             self.record(sid, "cutouts (combine bands)", "failed", _describe(exc), required=False)
-            return {}
-        self._contact_sheet(sid, summary, combined, targets)
-        return result
+            return {}, None
+        if render:
+            self._contact_sheet(sid, summary, combined, targets)
+        return result, combined
 
     def _contact_sheet(
         self, sid: str, summary: SampleSummary, combined: Table, targets: Table

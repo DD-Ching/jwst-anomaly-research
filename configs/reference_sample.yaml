@@ -109,6 +109,7 @@ stages:
       radii_arcsec: [0.2, 0.8]
       search_arcsec: 0.3
       threshold: 3.0
+      screen: true         # D-019: drop flagged sources with stellar colours from galaxy top k
   crossmatch:
     top_k: 20
     radius_arcsec: 1.0

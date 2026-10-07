@@ -178,6 +178,27 @@ def stellar_locus(
     return member, info
 
 
+def stellar_colour_mask(sources: Table, label: str, locus_info: dict) -> np.ndarray:
+    """Rows whose ``label`` colours all lie in a locus's stellar colour box (size ignored).
+
+    ``locus_info`` is ``meta['stellar_locus']`` of :func:`apply_stellar_locus`: its
+    ``colour_ranges`` (catalogued stars' 5-95%) widened by ``thresholds['colour_pad']``. Used by
+    D-019 to tell a star blended with a galaxy from a galaxy with a bright, non-stellar nucleus.
+    """
+    pad = float(locus_info["thresholds"]["colour_pad"])
+    if not locus_info.get("colour_ranges"):
+        return np.zeros(len(sources), dtype=bool)  # no colour evidence: nothing counts as stellar
+    mask = np.ones(len(sources), dtype=bool)
+    for pair, (lo, hi) in locus_info["colour_ranges"].items():
+        blue, red = pair.split("-")
+        colour = column_as_float(sources, f"{blue}_{label}_abmag") - column_as_float(
+            sources, f"{red}_{label}_abmag"
+        )
+        with np.errstate(invalid="ignore"):
+            mask &= (colour >= lo - pad) & (colour <= hi + pad)
+    return mask
+
+
 def apply_stellar_locus(
     populations: Table, sources: Table, label: str, locus_cfg: dict | bool
 ) -> Table:
