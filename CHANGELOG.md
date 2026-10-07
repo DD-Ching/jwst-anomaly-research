@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Host test for spiky sources (D-020, cycle 14)
+- `cutouts.host_ratio` measures annulus light against the peak around the spike peak. D-019 screening now also
+  removes spiky sources with no host light (< 0.004), so the two-star segment `940` (0.0017) leaves the top 20.
+  `2915` (0.0076, a galaxy nucleus) stays.
+- Run `20261007T190843Z-db3c83fe`: the galaxy top 20 is 40% known objects, with 1 spiky source (`2915`, legitimate) and 3 screened.
+- **Next contamination:** `3034` (#3) is a diagonal stripe artifact in a low-weight region (cutout flag `low_weight`).
+  It passed the D-011 gate.
+- **Handoff:** TASKS "Stripe artifact at galaxy rank 3".
+
+
 ## 2026-10-08: Top-k composition metric; `940` re-diagnosed (cycle 13)
 - Every stratum now reports its top-k composition: known, lens-related, catalogued star, cutout-flagged,
   spikes and screened. It is stored in `run_record.json` as `samples[].topk` and defined in

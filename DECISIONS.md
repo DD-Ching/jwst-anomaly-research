@@ -1055,3 +1055,34 @@ its top 2k sources.
   (Δ = 5.1 mag for `940`, beyond the 99th percentile of 3.8) as a saturation test.
 - AGN hosts turn out to have stellar-like colours in other fields.
 - A sample without matched photometry needs screening.
+
+## D-020 Host test for spiky sources: screen point sources without host light (2026-10-08)
+
+**Decision.** `cutouts.host_ratio` is the azimuthal-median surface brightness in an annulus of 0.3–0.6″ around
+the spike peak, divided by the peak, after subtracting the background measured beyond 0.9″. Per-ring medians
+ignore spikes and small neighbours.
+- With `stages.cutouts.spike.host_ratio_max` (0.004), D-019 screening also removes spike-flagged sources whose
+  ratio is below that threshold: a point source with no host light is a star, whatever its colours.
+- Spiky sources with host light and non-stellar colours stay ranked (a galaxy nucleus, possibly an AGN).
+- The threshold and annulus are ASSUMPTIONS, set in config.
+
+**Alternatives rejected.**
+- Saturation tests (aper50 − isophotal magnitude; a no-data core within 0.3″): both failed for `940`, which is
+  two stars in one segment, not a saturated star (CHANGELOG cycle 13).
+- A centroid–peak offset rule: stars themselves show offsets up to 0.18″ (`1345` saturated, `2054` next to an arc),
+  so it would not separate them.
+- Fitting a PSF model: it needs STPSF or an ePSF and fails on NaN cores (D-018).
+
+**Evidence.** Run `20261007T190843Z-db3c83fe` (SMACS NIRCam F200W):
+- Star-stratum top 10: host ratio 0.0006–0.0021, except the saturated `1345` at 0.0045. Its NaN core lowers the
+  peak, so it errs towards "host" (kept).
+- Galaxy pool:
+  - screened: `940` 0.0017, `2242` 0.0014, `1571` 0.0023;
+  - kept: `2915` 0.0076, a catalogued quiescent galaxy with a compact core.
+- Galaxy top 20 composition: spikes fall from 2 to 1 (only `2915`) and known objects rise to 40%. The contact
+  sheet was checked visually.
+
+**Revisit if.**
+- A galaxy-stratum point source with host light under 0.004 is a real compact galaxy or AGN (vetting shows it).
+- Saturated stars with NaN cores reach the galaxy stratum, since their ratio is biased high.
+- Other fields or bands need their own calibration on the star stratum.

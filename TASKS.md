@@ -1,14 +1,15 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T183007Z-4342c5c2`).
+Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T190843Z-db3c83fe`).
 
 ## Now (M1 follow-through)
-1. **Star-pair segments in the galaxy ranking:** `940` (CHANGELOG cycle 13) is two stars merged into one pipeline
-   segment, with its centroid 0.20″ from the brighter star's peak. Spikes are flagged (`spike_s6` 15.6), but
-   D-019 keeps it ranked because its colours are not stellar. Options:
-   - a host-vs-PSF test: ring/peak flux beyond the PSF wings, calibrated on the star stratum;
-   - screening spiky sources whose `_peak_near` peak is offset by more than about 0.15″ from the centroid.
+1. **Stripe artifact at galaxy rank 3:** `jw02736-o001_t001_nircam_f200w_3034` (run `20261007T190843Z-db3c83fe`) is a diagonal
+   stripe, a persistence or scattered-light feature, in a low-weight region. Its cutout is flagged `low_weight`,
+   but it passed the D-011 gate (min_rel_weight 0.5 on the coarse map). Options:
+   - a finer weight sample at the source;
+   - an elongation-plus-low-weight test;
+   - using the cutout `low_weight` flag in screening.
 2. **Star-stratum sources with NED galaxy matches** (run `20261007T162133Z-2511977c`). Check their classification and photometry.
    - `f090w_1719`: NED `[NDA2023] 00713`, type G, 0.03″.
    - `f200w_2054`: a stellar-locus member 0.23″ from the lensed image NED `[MJR2023] 002.3`; it has spikes, and an
