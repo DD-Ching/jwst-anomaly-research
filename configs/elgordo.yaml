@@ -1,0 +1,96 @@
+# El Gordo (ACT-CL J0102-4915) lensing cluster, NIRCam imaging from PEARLS (GTO program 1176).
+# Observation ids, public status and S3 keys were checked against MAST on 2026-10-08: all 8 bands of
+# the o241_t012 association are PUBLIC with level-3 _cat.ecsv. The files are jwst 3.0.0 (reprocessed
+# 2026-10-01; SMACS 2736 is 2.0.1); MAST's listing still shows prvversion 2.0.1 and old sizes (PR #29).
+# The cluster is in NIRCam module B; module A covers a flanking field ~3' north.
+# Stage parameters are the reference-sample values (configs/reference_sample.yaml), unchanged.
+# Field note: docs/fields/elgordo.md.
+name: elgordo_v1
+
+archive:
+  collection: JWST
+  calib_level: 3
+  data_rights: PUBLIC
+  product_subgroups: [CAT, I2D]
+
+samples:
+  - id: elgordo_nircam
+    role: science
+    description: El Gordo (ACT-CL J0102-4915) lensing cluster, PEARLS NIRCam imaging (program 1176)
+    proposal_id: "1176"
+    instrument_name: NIRCAM/IMAGE
+    ref_band: F200W
+    obs_ids:
+      - jw01176-o241_t012_nircam_clear-f090w
+      - jw01176-o241_t012_nircam_clear-f115w
+      - jw01176-o241_t012_nircam_clear-f150w
+      - jw01176-o241_t012_nircam_clear-f200w
+      - jw01176-o241_t012_nircam_clear-f277w
+      - jw01176-o241_t012_nircam_clear-f356w
+      - jw01176-o241_t012_nircam_clear-f410m
+      - jw01176-o241_t012_nircam_clear-f444w
+    # D-013: colours from DJA matched apertures (0.5" diameter, one detection image). v7.0 is the
+    # only elgordo catalog on the DJA v7 S3 path (v7.1-v7.5 absent on 2026-10-08), older than the
+    # v7.4 SMACS/CEERS catalogs. 17,170,560 bytes, 6,775 rows.
+    matched_photometry:
+      url: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/elgordo-grizli-v7.0-fix_phot.fits
+      sha256: ac1cf7064edc3f1a907c1b95b7eacd864e19810ff559e7dc39b917081ed66e31
+      aperture: 1        # index into ASEC_0..2 = 0.36, 0.5, 0.7 arcsec diameters
+      label: dja05
+      radius_arcsec: 0.2
+
+cloud:
+  s3_bucket: stpubdata
+  # Verified for programs 2736, 1345 and 1176 (o241) level-3 products.
+  l3_key_pattern: "jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}"
+
+stages:
+  catalog:
+    merge_radius_arcsec: 0.1
+  quality:  # D-011; thresholds are assumptions
+    grid_arcsec: 1.0       # coarse WHT map cell size (one S3 row read per cell row)
+    min_rel_weight: 0.5    # x median positive WHT
+    min_edge_arcsec: 1.0
+    max_artifact_ci: 1.45  # CI_50_30 below this is sharper than the PSF (S/N >= 3 only)
+    min_ranked: 20         # fewer survivors -> gate considered unusable, rank ungated
+    min_detection_snr: 5   # D-014: best-band aper50 S/N floor (dropouts detected redward pass)
+    # D-014: single-band detections need confirmation by a matched-photometry match; samples
+    # without matched photometry (MIRI, CEERS today) drop all of them (gates differ per sample).
+    require_multiband: true
+  classify:  # D-012; stars are ranked as their own stratum '<sample>-stars'
+    services: [gaia, simbad]   # bulk CDS XMatch over all sources (~8 s per sample)
+    radius_arcsec: 0.5
+    gaia_radius_arcsec: 0.3    # any Gaia DR3 source this close counts as the star itself
+    star_top_k: 10
+    min_stars: 5
+    # D-015: point-like (DJA detection-image r50 within 20% of the catalogued stars' median)
+    # sources with ordinary stellar colours join the stars; samples need matched photometry.
+    stellar_locus:
+      calib_mag_range: [20.0, 22.5]
+      r50_tolerance: 0.2   # D-016: r50 <= 1.2 r50_psf (one-sided)
+      r50_floor: 0.5       # D-016: noise floor, r50 >= 0.5 r50_psf
+      mag_max: 24.0
+      colours: [[f150w, f444w], [f200w, f356w]]
+      colour_pad: 0.3
+      min_ref_stars: 10
+  features:
+    daofind_max_ci: 1.8   # D-013: DAOFind sharpness/roundness only for point-like sources
+  rank:
+    methods: [robust_z, isolation_forest, lof]
+    random_state: 0
+  cutouts:
+    top_k: 20
+    size_arcsec: 3.0
+    bands: [F200W]
+    screen_low_weight: true  # D-021: re-apply min_rel_weight with the cutout's own core weight
+    spike:                 # D-018: hexagonal-spike flag on NIRCam cutouts (ASSUMPTION thresholds)
+      radii_arcsec: [0.2, 0.8]
+      search_arcsec: 0.3
+      threshold: 3.0
+      screen: true         # D-019: drop flagged sources with stellar colours from galaxy top k
+      host_annulus_arcsec: [0.3, 0.6]   # D-020: ring/peak host test around the spike peak
+      host_ratio_max: 0.004             # D-020: below this no host light -> star-dominated, screened
+  crossmatch:
+    top_k: 20
+    radius_arcsec: 1.0
+    services: [simbad, ned, gaia]
