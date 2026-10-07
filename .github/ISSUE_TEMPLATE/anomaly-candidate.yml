@@ -1,0 +1,151 @@
+# Issue form. Syntax: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms
+# Steps 1-3 below mirror the numbered list in docs/methodology.md ("Anomaly scores are not discoveries").
+# Keep them in sync.
+name: Anomaly candidate
+description: Report a source that ranked as anomalous, with its data, evidence and the ordinary explanations tested.
+title: "Candidate: "
+labels: [candidate, science]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **An anomaly score ranks a source. It is not evidence of new physics.** Report what was observed and what was tested,
+        and label each statement *observed / derived / simulated / model_prediction / assumption / hypothesis*
+        ([docs/methodology.md](https://github.com/DD-Ching/jwst-anomaly-research/blob/main/docs/methodology.md)).
+        "Unexplained under tests X, Y, Z" is a valid and useful outcome. Interpretation comes later, after vetting.
+  - type: input
+    id: source-uid
+    attributes:
+      label: Source ID (source_uid)
+      description: The `source_uid` from the ranked table or candidate store.
+    validations:
+      required: true
+  - type: input
+    id: coordinates
+    attributes:
+      label: RA, Dec
+      description: ICRS, decimal degrees, as given in the catalog (observed).
+      placeholder: "e.g. 123.45678, -12.34567"
+    validations:
+      required: true
+  - type: input
+    id: run-id
+    attributes:
+      label: Run ID and commit
+      description: The pipeline run identifier and git commit that produced the ranking (from the run's provenance record).
+    validations:
+      required: true
+  - type: textarea
+    id: data-products
+    attributes:
+      label: Data products
+      description: >-
+        Program, instrument, filters, MAST obs_id / product filenames, calibration pipeline version, and the
+        data/manifests entries (URI + sha256). Reference data; don't attach it.
+    validations:
+      required: true
+  - type: input
+    id: score
+    attributes:
+      label: Anomaly score, rank and method (model_prediction)
+      description: Score and rank within the sample, the model or baseline, and the feature set.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: >-
+        What is unusual, with values, units and figures/cutouts. Label each statement, e.g.
+        "[derived] F150W-F444W color = ... mag".
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        ### Ordinary explanations, in methodology order
+        Choose an outcome for each step. "Not tested" is an acceptable answer; skipping a step is not.
+  - type: dropdown
+    id: step1-artifacts
+    attributes:
+      label: "1. Processing or instrument artifacts"
+      description: Image edges, low exposure/weight, diffraction spikes, saturation, persistence, snowballs, ghosts or wisps, bad deblending.
+      options:
+        - Ruled out
+        - Not ruled out
+        - Not tested
+    validations:
+      required: true
+  - type: dropdown
+    id: step2-catalog-effects
+    attributes:
+      label: "2. Catalog effects"
+      description: Mismatched cross-band associations, NaN magnitudes from negative fluxes, blended neighbours.
+      options:
+        - Ruled out
+        - Not ruled out
+        - Not tested
+    validations:
+      required: true
+  - type: dropdown
+    id: step3-known-populations
+    attributes:
+      label: "3. Known astrophysical populations"
+      description: >-
+        Stars and brown dwarfs, high-redshift dropouts, dusty or line-dominated galaxies, AGN, mergers, lensed arcs in
+        cluster fields, including matches in SIMBAD, NED or Gaia (crossmatch stage).
+      options:
+        - Ruled out
+        - Not ruled out
+        - Not tested
+    validations:
+      required: true
+  - type: textarea
+    id: tests-performed
+    attributes:
+      label: Tests performed and evidence
+      description: For each step above, say what you did and link the evidence. For "Not tested", say why.
+      placeholder: |
+        1. Artifacts: inspected the F200W/F444W cutouts and the weight map ... (link)
+        2. Catalog effects: ...
+        3. Known populations: SIMBAD/NED/Gaia cone search, radius ... arcsec: ...
+    validations:
+      required: true
+  - type: dropdown
+    id: provenance
+    attributes:
+      label: Provenance labels used in this report
+      description: Select every label that appears in the statements above.
+      multiple: true
+      options:
+        - observed
+        - derived
+        - simulated
+        - model_prediction
+        - assumption
+        - hypothesis
+    validations:
+      required: true
+  - type: textarea
+    id: hypotheses
+    attributes:
+      label: Hypotheses (optional)
+      description: >-
+        Possible interpretations, each labeled `hypothesis`, with the test that would confirm or reject it.
+        Exotic-physics hypotheses come only after steps 1-3 above are ruled out.
+  - type: textarea
+    id: links
+    attributes:
+      label: Links
+      description: Cutouts, notebooks, runs, PRs, and papers (with DOI) that you have actually opened.
+  - type: checkboxes
+    id: integrity
+    attributes:
+      label: Integrity checks
+      options:
+        - label: This report does not present the anomaly score as evidence of new physics.
+          required: true
+        - label: Every value, metadata field and citation comes from a source I checked; nothing is fabricated or recalled from memory.
+          required: true
+        - label: No data files over 1 MB and no secrets are attached; data is referenced by archive ID or manifest.
+          required: true

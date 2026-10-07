@@ -1,0 +1,25 @@
+# Citation File Format 1.2.0 (https://citation-file-format.github.io/). GitHub shows it as
+# "Cite this repository". Validate after editing: cffconvert --validate -i CITATION.cff
+# Add `date-released` and a DOI (`identifiers`) when the first release is tagged and archived.
+# Keep `version` equal to pyproject.toml and src/jwst_anomaly/__init__.py when releasing.
+cff-version: 1.2.0
+message: >-
+  If you use this software, please cite it using the metadata from this file,
+  including the version or commit you used.
+type: software
+title: jwst-anomaly-research
+abstract: >-
+  Open-source, reproducible system for ranking anomalous sources in public JWST
+  data from MAST and vetting them against instrumental and known astrophysical
+  explanations. An anomaly score ranks sources; it is not evidence of new physics.
+authors:
+  - alias: DD-Ching
+repository-code: "https://github.com/DD-Ching/jwst-anomaly-research"
+license: BSD-3-Clause
+version: "0.0.1"
+keywords:
+  - astronomy
+  - JWST
+  - MAST
+  - anomaly detection
+  - reproducibility
