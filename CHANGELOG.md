@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Sunrise two-epoch search, a null result; Earendel steady (D-027 amendment)
+- WHL0137 2282 o010 against o120 (same pipeline): 372 catalog candidates → 58 in ≥ 2 bands → 52 after the bright-Gaia
+  mask → 0 by recentred forced photometry in all four bands. 2 pass in one or two bands, both ordinary on visual check
+  (an epoch-2 streak; galaxy outskirts at the footprint edge). docs/fields/sunrise.md.
+- Earendel: |Δm| ≤ 0.18 mag (≤ 1.5σ) in F090W/F115W/F277W/F356W over 164 days.
+- Noise calibration on 150 ordinary sources: ERR-based significances are 1.2–1.5× too large.
+- New: `scripts/transient_combine.py` (band coincidence and bright-Gaia mask) and
+  `transient_forced.py --recentre-arcsec`.
+- **Failed approach:** a fixed aperture at a literature position. Earendel seemed to brighten by 0.76 mag at 5.7σ,
+  because the aperture sat 0.15″ off the source and the PSF rotates by about 180° between the epochs.
+- **Handoff:** lens-model checks per field (#35 merged; El Gordo and Abell 2744 model validation in issue #41).
+  Time domain: rescale the thresholds by the control std, and add VENUS 6882 o052 (F150W, F444W) as a third epoch.
+
 ## 2026-10-08: Cloud runs use the GitHub MCP tools; conflicting PRs get no CI (D-028)
 - The first routine run opened #38 with the session's GitHub MCP tools. The prompt, the research-cycle skill and
   docs/operations.md §3 now prefer them, merge with `mcp__github__merge_pull_request` after checking the policy,
@@ -43,7 +56,6 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - Coordination: runs last about 40 minutes and skip `local-wip` PRs and branches committed to in the last 15
     minutes. An unmerged PR's handoff is read from its branch.
 - **Handoff:** unchanged (TASKS "Now (M3)"); the cloud routine continues it.
-
 
 ## 2026-10-08: Two-epoch transient search, a null result; exotic-lens signatures (D-027)
 - `scripts/transient_search.py` produces catalog-level candidates; `scripts/transient_forced.py` checks them with
