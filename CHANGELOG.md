@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Low-weight screening of the top-k pool (D-021, cycle 15)
+- `stages.cutouts.screen_low_weight` re-applies D-011's 0.5 weight threshold with the cutout's own core weight. It
+  runs on every non-star stratum, and `screened.ecsv` now records each source's `reason`.
+- Run `20261007T194733Z-ac5f1b59`: the stripe artifact `3034` (#3) is removed: short-wavelength only, not in DJA, core weight 0.468.
+  The galaxy top 20 is now 40% known objects, with 1 flagged source (`2915`, kept on purpose) and 4 screened
+  (one by D-021, two by D-019, one by D-020).
+- **Handoff:** TASKS "Star-stratum sources with NED galaxy matches", then MIRI's `G_Lens` vetting.
+
+
 ## 2026-10-08: Host test for spiky sources (D-020, cycle 14)
 - `cutouts.host_ratio` measures annulus light against the peak around the spike peak. D-019 screening now also
   removes spiky sources with no host light (< 0.004), so the two-star segment `940` (0.0017) leaves the top 20.

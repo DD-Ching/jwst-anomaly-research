@@ -27,7 +27,8 @@ stellar_locus}``
 (skipped when absent), ``stages.features.daofind_max_ci``,
 ``samples[].matched_photometry.{url, sha256, label, aperture, radius_arcsec, max_bytes}`` (D-013),
 ``stages.rank.{methods, random_state}``,
-``stages.cutouts.{enabled, top_k, size_arcsec, bands, spike}`` (spike: D-018),
+``stages.cutouts.{enabled, top_k, size_arcsec, bands, spike, screen_low_weight}``
+(spike: D-018-020; screen_low_weight: D-021),
 ``stages.crossmatch.{enabled, top_k, radius_arcsec, services}`` and the optional top-level
 ``outputs`` block added by this unit:
 
@@ -236,6 +237,9 @@ def load_config(path: str | Path) -> dict[str, Any]:
             raise ConfigError(
                 f"{path}: unknown stages.classify.stellar_locus keys {sorted(unknown)}"
             )
+    screen_lw = ((config.get("stages") or {}).get("cutouts") or {}).get("screen_low_weight")
+    if screen_lw is not None and not isinstance(screen_lw, bool):
+        raise ConfigError(f"{path}: stages.cutouts.screen_low_weight must be true or false")
     spike = ((config.get("stages") or {}).get("cutouts") or {}).get("spike")
     if spike is not None:
         _check_spike(spike, f"{path}: stages.cutouts.spike")
@@ -376,7 +380,7 @@ def _topk_line(m: Mapping[str, int]) -> str:
     n = m.get("n", 0)
     if not n:
         screened = m.get("screened", 0)
-        return f"none ({screened} screened out, D-019)" if screened else "none"
+        return f"none ({screened} screened out, D-019 to D-021)" if screened else "none"
     n_xm = n - m.get("no_xmatch", 0)
     n_cut = n - m.get("no_cutout", 0)
 
@@ -395,8 +399,16 @@ def _topk_line(m: Mapping[str, int]) -> str:
     )
     extra = [f"{n_xm} cross-matched, {n_cut} cut out"] if (n_xm, n_cut) != (n, n) else []
     if m.get("screened"):
-        extra.append(f"{m['screened']} screened out before selection (D-019)")
+        extra.append(f"{m['screened']} screened out before selection (D-019 to D-021)")
     return f"n = {n}: {text}" + (f"; {', '.join(extra)}" if extra else "")
+
+
+def _has_flag(per_band: Mapping[str, Mapping[str, Any]], token: str) -> bool:
+    """Whether any band's cutout ``quality_flag`` carries ``token``."""
+    return any(
+        token in {t.strip() for t in str(q.get("quality_flag", "")).split(",")}
+        for q in per_band.values()
+    )
 
 
 def _spike_bands(per_band: Mapping[str, Mapping[str, Any]]) -> dict[str, Mapping[str, Any]]:
@@ -806,24 +818,39 @@ class _Runner:
         ranked = self._ranked(label, scores, sources)
         n_top = max(cand_k, cut_k, xm_k)
 
-        # 6. Optional evidence stages. With spike screening (D-019, galaxy strata only), cut out
-        # 2 x top_k, drop spike-flagged sources (bright stars, star+galaxy blends) and keep the
-        # next clean ones; the dropped sources are saved as "screened".
-        spike_cfg = (self.stages_cfg.get("cutouts") or {}).get("spike") or {}
-        screen = bool(spike_cfg.get("screen")) and galaxy_stratum
+        # 6. Optional evidence stages. With screening, cut out 2 x top_k, drop sources the
+        # cutouts show to be artifacts or stars and keep the next clean ones; the dropped sources
+        # are saved as "screened" with a reason. Spike screening (D-019/D-020) runs on galaxy
+        # strata only; low-weight screening (D-021) on any stratum that is not a star stratum.
+        cut_cfg = self.stages_cfg.get("cutouts") or {}
+        spike_cfg = cut_cfg.get("spike") or {}
+        spike_screen = bool(spike_cfg.get("screen")) and galaxy_stratum
+        weight_screen = bool(cut_cfg.get("screen_low_weight")) and parent is None
+        screen = spike_screen or weight_screen
         pool = self._targets(label, ranked[: (2 * cut_k if screen else cut_k)])
         cutout_rows, cut_table = self._cutouts(
             label, summary, pool, band_obs, parent=parent or label, render=not screen
         )
         if screen:
-            flagged = {
-                uid
-                for uid, per_band in cutout_rows.items()
-                if any(
-                    "spikes" in str(q.get("quality_flag", "")).split(",") for q in per_band.values()
-                )
-            }
-            ranked = self._screen(label, summary, ranked, flagged, cutout_rows, cut_k)
+            removed: list[dict[str, Any]] = []
+            if weight_screen:
+                low = {
+                    uid
+                    for uid, per_band in cutout_rows.items()
+                    if _has_flag(per_band, "low_weight")
+                }
+                removed += [
+                    {**r, "reason": "low cutout weight (D-021)"}
+                    for r in ranked
+                    if r["source_uid"] in low
+                ]
+                ranked = [r for r in ranked if r["source_uid"] not in low]
+            if spike_screen:
+                flagged = {
+                    uid for uid, per_band in cutout_rows.items() if _has_flag(per_band, "spikes")
+                }
+                ranked = self._screen(label, summary, ranked, flagged, cutout_rows, removed)
+            self._save_screened(label, summary, removed, ranked, cutout_rows, cut_k)
             if cut_table is not None:
                 keep = {r["source_uid"] for r in ranked[:cut_k]}
                 shown = cut_table[[_text(u) in keep for u in cut_table["source_uid"]]]
@@ -858,9 +885,11 @@ class _Runner:
         ranked: list[dict[str, Any]],
         flagged: set[str],
         cutout_rows: Mapping[str, Mapping[str, Mapping[str, Any]]],
-        cut_k: int,
+        removed: list[dict[str, Any]],
     ) -> list[dict[str, Any]]:
         """``ranked`` without star-dominated spike-flagged sources (D-019, D-020).
+
+        The removed sources are appended to ``removed`` with their reason.
 
         A spiky source is a star or a star-dominated blend when its colours are stellar (D-019)
         or, with ``host_ratio_max``, when no host light surrounds its peak (D-020; corrupted
@@ -871,6 +900,7 @@ class _Runner:
         if not flagged:
             return ranked
         stellar = self.stellar_colour_uids.get(sid)
+        colours = set(stellar) if stellar is not None else set()
         host_max = ((self.stages_cfg.get("cutouts") or {}).get("spike") or {}).get("host_ratio_max")
         if host_max is not None:
             hostless = {
@@ -907,17 +937,45 @@ class _Runner:
                 )
             )
         flagged = flagged & stellar
-        if not flagged:
-            return ranked
-        removed = [r for r in ranked if r["source_uid"] in flagged]
+        removed += [
+            {
+                **r,
+                "reason": (
+                    "spikes, stellar colours (D-019)"
+                    if r["source_uid"] in colours
+                    else "spikes, no host light (D-020)"
+                ),
+            }
+            for r in ranked
+            if r["source_uid"] in flagged
+        ]
+        return [r for r in ranked if r["source_uid"] not in flagged]
+
+    def _save_screened(
+        self,
+        sid: str,
+        summary: SampleSummary,
+        removed: list[dict[str, Any]],
+        kept: list[dict[str, Any]],
+        cutout_rows: Mapping[str, Mapping[str, Mapping[str, Any]]],
+        cut_k: int,
+    ) -> None:
+        """Save and report the sources screened out of the top k (D-019, D-020, D-021)."""
+        if not removed:
+            return
+        removed = sorted(removed, key=lambda r: r["rank"] or 0)
         table = Table(
             {
                 "source_uid": [r["source_uid"] for r in removed],
                 "rank": np.array([r["rank"] or 0 for r in removed], dtype=int),
+                "reason": [r["reason"] for r in removed],
                 "spike_s6": np.array(
                     [
                         np.nan
-                        if (v := _finite_extreme(cutout_rows[r["source_uid"]], "spike_s6")) is None
+                        if (
+                            v := _finite_extreme(cutout_rows.get(r["source_uid"]) or {}, "spike_s6")
+                        )
+                        is None
                         else v
                         for r in removed
                     ],
@@ -927,24 +985,20 @@ class _Runner:
         )
         table.meta.update(
             provenance=schema.Provenance.DERIVED.value,
-            source=(
-                f"spike-flagged cutouts (D-018) with stellar colours (D-015 box, D-019) or no host "
-                f"light (D-020), screened out of the top {cut_k}"
-            ),
+            source=f"sources screened out of the top {cut_k} on cutout evidence; see 'reason'",
         )
         self.save(table, sid, "screened")
         summary.topk["screened"] = len(removed)
-        kept = [r for r in ranked if r["source_uid"] not in flagged]
         summary.notes.append(
-            f"spike screening (D-019) removed {len(removed)} source(s) from the top {cut_k} "
-            "(ranks keep their original numbers; see screened table): "
+            f"screening removed {len(removed)} source(s) from the top {cut_k} (ranks keep their "
+            "original numbers; see the screened table): "
             + ", ".join(
-                f"#{r['rank']} " + "_".join(r["source_uid"].split("_")[-2:]) for r in removed
+                f"#{r['rank']} " + "_".join(r["source_uid"].split("_")[-2:]) + f" ({r['reason']})"
+                for r in removed
             )
         )
         if any(r["source_uid"] not in cutout_rows for r in kept[:cut_k]):
-            summary.notes.append("spike screening: some backfilled sources have no cutout")
-        return kept
+            summary.notes.append("screening: some backfilled sources have no cutout")
 
     def _classify(
         self, sid: str, sources: Table, to_rank: Table, label: str | None = None

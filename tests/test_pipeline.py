@@ -1392,7 +1392,8 @@ def test_spike_screening_drops_flagged_sources_and_backfills(tmp_path, env, monk
         uids = {c["source_uid"] for c in store.list_candidates(run_id=run_id, sample_id="field_a")}
     assert flagged["uid"] not in uids
     report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
-    assert "spike screening (D-019) removed 1 source(s) from the top 3" in report
+    assert "screening removed 1 source(s) from the top 3" in report
+    assert "spikes, stellar colours (D-019)" in report
     assert not (env / "runs" / run_id / "field_a-stars" / "screened.ecsv").exists()
 
 
@@ -1484,7 +1485,7 @@ def test_topk_metrics_count_flags_and_matches():
     # fractions use the candidates that have the evidence: 2 cross-matched, 3 cut out
     assert line.startswith("n = 4: known object 2 (100%)") and "3 screened out" in line
     assert "cutout-flagged 2 (67%)" in line and "2 cross-matched, 3 cut out" in line
-    assert pipeline._topk_line({"n": 0, "screened": 2}) == "none (2 screened out, D-019)"
+    assert pipeline._topk_line({"n": 0, "screened": 2}) == "none (2 screened out, D-019 to D-021)"
     spaced = pipeline._topk_metrics(cands[:1], {"a": {"F200W": {"quality_flag": "ok, spikes"}}}, {})
     assert spaced["spikes"] == 1
 
@@ -1516,7 +1517,7 @@ def test_spike_screening_drops_hostless_sources_without_stellar_colours(tmp_path
     run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])
     screened = Table.read(env / "runs" / run_id / "field_a" / "screened.ecsv")
     assert [str(u) for u in screened["source_uid"]] == [flagged["uid"]]
-    assert "host light (D-020)" in screened.meta["source"]
+    assert list(screened["reason"]) == ["spikes, no host light (D-020)"]
 
 
 @pytest.mark.parametrize(
@@ -1532,4 +1533,36 @@ def test_host_config_is_validated(tmp_path, extra, match):
     path = tmp_path / "bad.yaml"
     path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     with pytest.raises(pipeline.ConfigError, match=match):
+        pipeline.load_config(path)
+
+
+def test_low_weight_screening_also_runs_on_a_mixed_ranking(tmp_path, env, monkeypatch):
+    fakes = install_fakes(monkeypatch)
+    real = fakes.make_cutouts
+    first = {}
+
+    def shallow(image_uri, targets, size_arcsec=3.0, out_dir=None, **kw):
+        t = real(image_uri, targets, size_arcsec, out_dir, **kw)
+        first["uid"] = str(t["source_uid"][0])
+        t["quality_flag"] = ["low_weight"] + list(t["quality_flag"][1:])
+        return t
+
+    monkeypatch.setattr(cutouts, "make_cutouts", shallow)
+    stages = json.loads(json.dumps(TEST_CONFIG["stages"]))
+    stages["cutouts"]["screen_low_weight"] = True
+    run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])  # no split
+    run_dir = env / "runs" / run_id / "field_a"
+    assert fakes.calls["make_cutouts"][-1][1] == 6  # 2 x top_k pool
+    screened = Table.read(run_dir / "screened.ecsv")
+    assert [str(u) for u in screened["source_uid"]] == [first["uid"]]
+    assert list(screened["reason"]) == ["low cutout weight (D-021)"]
+    assert first["uid"] not in {str(u) for u in Table.read(run_dir / "targets.ecsv")["source_uid"]}
+
+
+def test_screen_low_weight_must_be_boolean(tmp_path):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["stages"]["cutouts"]["screen_low_weight"] = "yes"
+    path = tmp_path / "bad.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    with pytest.raises(pipeline.ConfigError, match="screen_low_weight"):
         pipeline.load_config(path)
