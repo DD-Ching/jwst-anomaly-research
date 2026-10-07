@@ -276,3 +276,40 @@ def test_daofind_stats_only_for_point_like_sources():
     assert np.isnan(gated["ref_sharpness"][2])  # CI unknown -> not point-like
     assert "point-like" in gated.meta["feature_spec"]["ref_sharpness"]
     assert gated.meta["daofind_max_ci"] == 1.8
+
+
+def test_matched_aperture_colours_keep_pipeline_morphology_for_unmatched_sources():
+    """Regression (PR #14 review): morphology is gated on the pipeline aperture, not on DJA S/N."""
+    from jwst_anomaly.features import build_features
+
+    nan = np.nan
+    t = Table(
+        {
+            "source_uid": ["matched", "unmatched"],
+            "ra": [1.0, 1.0],
+            "dec": [2.0, 2.0],
+            "ref_band": ["F200W", "F200W"],
+            "n_bands": [2, 2],
+            "f200w_detected": [True, True],
+            "f277w_detected": [True, True],
+            "f200w_aper50_abmag": [24.0, 24.0],
+            "f200w_aper50_abmag_err": [0.01, 0.01],
+            "f277w_aper50_abmag": [23.0, 23.0],
+            "f277w_aper50_abmag_err": [0.01, 0.01],
+            "f200w_dja05_abmag": [24.2, nan],
+            "f200w_dja05_abmag_err": [0.02, nan],
+            "f277w_dja05_abmag": [24.3, nan],
+            "f277w_dja05_abmag_err": [0.02, nan],
+            "f200w_isophotal_area": [500.0, 800.0],
+            "f200w_ellipticity": [0.3, 0.6],
+            "f200w_CI_50_30": [2.0, 2.2],
+        }
+    )
+    t.meta.update(provenance="derived", source="test")
+    out = build_features(t, aperture="dja05")
+    assert out["color_f200w_f277w"][0] == pytest.approx(-0.1)
+    assert np.isnan(out["color_f200w_f277w"][1])  # no DJA match -> no colour
+    assert np.isfinite(out["ref_log_isophotal_area"][1])  # morphology kept
+    assert out["ref_ellipticity"][1] == pytest.approx(0.6)
+    assert out["ref_mag"][1] == pytest.approx(24.0)  # pipeline aperture
+    assert out.meta["morph_aperture"] == "aper50"
