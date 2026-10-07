@@ -58,6 +58,7 @@ from jwst_anomaly import (
     query,
     rank,
     schema,
+    viz,
 )
 from jwst_anomaly.candidates import CandidateStore, to_python
 
@@ -145,6 +146,7 @@ class SampleSummary:
     n_scored: int = 0
     cutout_bands: list[str] = field(default_factory=list)
     tables: list[str] = field(default_factory=list)  # saved files, relative to the run dir
+    contact_sheet: str | None = None  # PNG of the top-k cutouts, relative to the run dir
     notes: list[str] = field(default_factory=list)
 
 
@@ -272,8 +274,16 @@ def _float(value: Any) -> float | None:
 
 
 class _Runner:
-    def __init__(self, config: dict[str, Any], run_id: str, run_dir: Path) -> None:
+    def __init__(
+        self,
+        config: dict[str, Any],
+        run_id: str,
+        run_dir: Path,
+        manifest_path: Path | None = None,
+    ) -> None:
         self.config = config
+        # Shared with scripts/fetch_reference_sample.py: one tracked manifest per config file.
+        self.manifest_path = manifest_path
         self.run_id = run_id
         self.run_dir = run_dir
         self.stages_cfg: dict[str, Any] = config.get("stages") or {}
@@ -416,7 +426,7 @@ class _Runner:
         manifest = self.stage(
             sid,
             "acquire.fetch_products",
-            partial(acquire.fetch_products, cat_products),
+            partial(acquire.fetch_products, cat_products, manifest_path=self.manifest_path),
             columns=schema.MANIFEST_COLUMNS,
             required=True,
             save_as="manifest",
@@ -664,7 +674,38 @@ class _Runner:
         except Exception as exc:
             self.record(sid, "cutouts (combine bands)", "failed", _describe(exc), required=False)
             return {}
+        self._contact_sheet(sid, summary, combined, targets)
         return result
+
+    def _contact_sheet(
+        self, sid: str, summary: SampleSummary, combined: Table, targets: Table
+    ) -> None:
+        """Render the top-k cutouts as one PNG for visual inspection (optional)."""
+        name = "viz.contact_sheet"
+        start = time.perf_counter()
+        try:
+            ranks = {_text(r["source_uid"]): int(r["rank"]) for r in targets}
+            out = viz.contact_sheet(
+                combined,
+                self.run_dir / sid / "contact_sheet.png",
+                ranks=ranks,
+                title=f"{sid}: top {len(targets)} by anomaly score (unvetted)",
+            )
+        except Exception as exc:
+            self.record(sid, name, "failed", _describe(exc), required=False)
+            return
+        summary.contact_sheet = self._relative_to_run(str(out))
+        self.records.append(
+            StageRecord(
+                sid,
+                name,
+                False,
+                "ok",
+                n_rows=len(combined),
+                seconds=time.perf_counter() - start,
+                output=summary.contact_sheet,
+            )
+        )
 
     def _crossmatch(self, sid: str, targets: Table) -> dict[str, dict[str, Any]]:
         cfg = self.stages_cfg.get("crossmatch")
@@ -820,6 +861,8 @@ def render_report(
         ]
         if s.tables:
             lines.append(f"- Tables: {', '.join(f'`{t}`' for t in s.tables)}")
+        if s.contact_sheet:
+            lines.append(f"- Contact sheet: [{s.contact_sheet}]({s.contact_sheet})")
         lines += [f"- Note: {_cell(n)}" for n in s.notes]
         lines.append("")
         cands = [c for c in runner.candidates if c["sample_id"] == s.id]
@@ -909,7 +952,9 @@ def run(
     context = provenance.capture_run_context(config_path)
     run_id = context["run_id"]
     run_dir = out_root / "runs" / run_id
-    runner = _Runner(config, run_id, run_dir)
+    runner = _Runner(
+        config, run_id, run_dir, manifest_path=paths.manifests_dir() / f"{config_path.stem}.ecsv"
+    )
     run_dir.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(config_path, run_dir / "config.yaml")
     (run_dir / "run_context.json").write_text(json.dumps(context, indent=2), encoding="utf-8")

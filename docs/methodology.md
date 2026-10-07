@@ -24,6 +24,8 @@ The expected order of explanations for a top-ranked source is:
    blended neighbours.
 3. Known astrophysical populations that are merely rare in the sample: stars and brown dwarfs,
    high-redshift dropouts, dusty or line-dominated galaxies, AGN, mergers, lensed arcs in cluster fields.
+   Check SIMBAD/NED/Gaia (`crossmatch.py`) and published models, e.g. SMACS 0723 lens models
+   (docs/landscape.md), before calling anything unexplained.
 4. Only then, genuinely unexplained objects. Even these are reported as "unexplained under tests X, Y, Z",
    never as exotic physics.
 

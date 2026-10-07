@@ -20,7 +20,7 @@ classifiers = [
 # collide on this file. Add new ones only with a justification in the PR body.
 dependencies = [
     "astropy>=6.1",
-    "astroquery>=0.4.7",
+    "astroquery>=0.4.11",  # MAST path_lookup helper (D-002); crossmatch fallbacks need >=0.4.8
     "pyvo>=1.5",
     "numpy>=1.26",
     "scipy>=1.11",
@@ -32,7 +32,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.6"]
+dev = ["pytest>=8", "ruff>=0.6", "pre-commit>=4"]
 # Byte-range reads of cloud-hosted FITS (s3://stpubdata) without full downloads.
 cloud = ["fsspec>=2024.2", "s3fs>=2024.2"]
 

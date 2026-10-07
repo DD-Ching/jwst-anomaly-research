@@ -15,9 +15,8 @@ htmlcov/
 
 # Data: raw/derived astronomical data never goes into git.
 # Reproduce it with scripts/ + data/manifests/ instead.
-data/cache/
-data/raw/
-data/derived/
+data/*
+!data/manifests/
 outputs/
 *.fits
 *.fits.gz

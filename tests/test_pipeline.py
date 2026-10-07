@@ -26,6 +26,7 @@ from jwst_anomaly import (
     query,
     rank,
     schema,
+    viz,
 )
 from jwst_anomaly.candidates import CandidateStore
 
@@ -239,6 +240,13 @@ class FakeStages:
         t.meta["radius_arcsec"] = radius_arcsec
         return _meta(t, schema.Provenance.OBSERVED, "fake crossmatch")
 
+    def contact_sheet(self, cutouts_table, out_png, *, ranks=None, title=None, **kw):
+        self.calls["contact_sheet"].append((len(cutouts_table), dict(ranks or {}), title))
+        out_png = Path(out_png)
+        out_png.parent.mkdir(parents=True, exist_ok=True)
+        out_png.write_bytes(b"fake png")
+        return out_png
+
 
 def install_fakes(monkeypatch: pytest.MonkeyPatch, fakes: FakeStages | None = None) -> FakeStages:
     """Replace every stage function with ``fakes`` (module attributes, as the runner calls them)."""
@@ -253,6 +261,7 @@ def install_fakes(monkeypatch: pytest.MonkeyPatch, fakes: FakeStages | None = No
         (rank, "score_anomalies"),
         (cutouts, "make_cutouts"),
         (crossmatch, "crossmatch"),
+        (viz, "contact_sheet"),
     ):
         monkeypatch.setattr(module, name, getattr(fakes, name))
     return fakes
@@ -356,6 +365,10 @@ def test_run_end_to_end_with_fakes(tmp_path, env, monkeypatch):
     assert "#### Top 5 candidates" in report
     assert "[F200W](field_a/cutouts/f200w-0004_F200W.fits)" in report
     assert "F200W: edge, edge, NaN 25%" in report
+    assert "- Contact sheet: [field_a/contact_sheet.png](field_a/contact_sheet.png)" in report
+    assert (run_dir / "field_a" / "contact_sheet.png").is_file()
+    sheet_calls = fakes.calls["contact_sheet"]
+    assert sheet_calls and sheet_calls[0][1]["f200w-0004"] == 1  # ranks passed through
     assert 'simbad: Fake Star 1 (*, 0.12", star, known; 1 matches)' in report
     assert "no counterpart within 1.0 arcsec" in report
     assert "## Limitations" in report
