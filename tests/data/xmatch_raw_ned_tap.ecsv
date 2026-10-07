@@ -1,0 +1,49 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - name: prefname
+#   datatype: string
+#   description: preferred object name
+#   meta: !!omap
+#   - {ucd: meta.id.cross}
+#   - {_votable_string_dtype: char}
+#   - {_votable_arraysize: '*'}
+#   subtype: json
+# - name: prefphytype
+#   datatype: string
+#   description: NED preferred object type
+#   meta: !!omap
+#   - {ucd: src.class}
+#   - {_votable_string_dtype: char}
+#   - {_votable_arraysize: '*'}
+#   subtype: json
+# - name: ra
+#   unit: deg
+#   datatype: float64
+#   description: RA in decimal degrees of the object Equatorial Coordinate System, J2000.0
+#   meta: !!omap
+#   - {ucd: pos.eq.ra}
+# - name: dec
+#   unit: deg
+#   datatype: float64
+#   description: DEC in decimal degrees of the object Equatorial Coordinate System, J2000.0
+#   meta: !!omap
+#   - {ucd: pos.eq.dec}
+# - name: z
+#   datatype: float64
+#   description: Redshift in z.
+#   meta: !!omap
+#   - {ucd: src.redshift}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: NED TAP NEDTAP.objdir (ned.ipac.caltech.edu/tap)}
+# - {note: 'raw ned/tap response for xmatch_targets.ecsv at radius 1.0 arcsec, trimmed to the columns crossmatch.py reads'}
+# - {recorded_utc: '2026-10-07T01:45:26+00:00'}
+# - software: {astropy: 8.0.1, astroquery: 0.4.11, pyvo: 1.9.1}
+# schema: astropy-2.0
+prefname prefphytype ra dec z
+"""SMACS J0723:[NDA2023] 01169""" """G""" 110.803694 -73.457471 0.9318
+"""SMACS J0723-73:[MJR2023] 017.1""" """G_Lens""" 110.8239479 -73.4575528 2.1
+"""WISEA J072318.32-732655.3""" """*""" 110.8263448 -73.448717 0.0
+"""SMACS J0723.3-7327""" """GClstr""" 110.805416666667 -73.4569444444444 0.391
+"""WISEA J072325.90-732751.2""" """""" 110.8579376 -73.4642235 ""

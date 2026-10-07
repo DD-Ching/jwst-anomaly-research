@@ -1,0 +1,18 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: source_uid, datatype: string}
+# - {name: ra, unit: deg, datatype: float64}
+# - {name: dec, unit: deg, datatype: float64}
+# - {name: origin, datatype: string}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'Five real positions in the SMACS J0723.3-7327 field (JWST program 2736) from SIMBAD, Gaia DR3 and the MAST pipeline catalog
+#     mast:JWST/product/jw02736-o001_t001_nircam_clear-f200w_cat.ecsv; see column ''origin'''}
+# schema: astropy-2.0
+source_uid ra dec origin
+simbad_smacs0723_cluster 110.8054 -73.457 "SIMBAD basic position of SMACS J0723.3-7327 (otype ClG), query_object 2026-10-07"
+f200w_1205_bcg 110.80397017406573 -73.45734109851031 "mast:JWST/product/jw02736-o001_t001_nircam_clear-f200w_cat.ecsv label 1205 sky_centroid; brightest isophotal_abmag (18.28) source within 30 arcsec of the SIMBAD cluster position (taken as the BCG)"
+gaia_dr3_5262900027979791104 110.82628572759177 -73.44871015820974 "Gaia DR3 5262900027979791104 ra/dec (epoch J2016.0), gaiadr3.gaia_source 2026-10-07; G=14.6, parallax 2.16+-0.017 mas; no F200W catalog source within 4.5 arcsec"
+f200w_2596 110.85801683111302 -73.46425234249979 "mast:JWST/product/jw02736-o001_t001_nircam_clear-f200w_cat.ecsv label 2596 sky_centroid; point-like (is_extended False); 0.08 arcsec from Gaia DR3 5262899954964194816 (parallax_over_error 44)"
+f200w_1793 110.82403498855959 -73.45750798868083 "mast:JWST/product/jw02736-o001_t001_nircam_clear-f200w_cat.ecsv label 1793 sky_centroid; 0.21 arcsec from SIMBAD [CLL2024] SMACS J0723.3-7327 15.2 (otype LeG)"

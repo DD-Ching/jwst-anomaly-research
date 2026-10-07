@@ -1,0 +1,55 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - name: Object Name
+#   datatype: string
+#   description: NED preferred name for the object
+#   meta: !!omap
+#   - {ucd: meta.id;meta.main}
+#   - {width: 30}
+#   - {_votable_string_dtype: char}
+# - name: Type
+#   datatype: string
+#   description: 'NED''s Preferred Object Type: G,GPair,GTrpl,GGroup,GClstr,QSO,AbLS,RadioS,IrS,EmLS,UvES,XrayS,SN'
+#   meta: !!omap
+#   - {ucd: src.class}
+#   - {width: 10}
+#   - {_votable_string_dtype: char}
+#   - {_votable_arraysize: '*'}
+#   subtype: json
+# - name: RA
+#   unit: degrees
+#   datatype: float64
+#   format: '{!s:>10}'
+#   description: Right Ascension in degrees (Equatorial J2000.0)
+#   meta: !!omap
+#   - {ucd: pos.eq.ra;meta.main}
+#   - {width: 10}
+# - name: DEC
+#   unit: degrees
+#   datatype: float64
+#   format: '{!s:>10}'
+#   description: Declination in degrees (Equatorial J2000.0)
+#   meta: !!omap
+#   - {ucd: pos.eq.dec;meta.main}
+#   - {width: 10}
+# - name: Redshift
+#   datatype: float64
+#   format: '{!s:>10}'
+#   description: Heliocentric redshift for the object, if it exists in NED
+#   meta: !!omap
+#   - {ucd: src.redshift}
+#   - {width: 10}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'NED object search, astroquery.ipac.ned Ned.query_region'}
+# - {note: 'raw ned/cone response for xmatch_targets.ecsv at radius 1.0 arcsec, trimmed to the columns crossmatch.py reads'}
+# - {recorded_utc: '2026-10-07T01:45:29+00:00'}
+# - software: {astropy: 8.0.1, astroquery: 0.4.11, pyvo: 1.9.1}
+# schema: astropy-2.0
+"Object Name" Type RA DEC Redshift
+"SMACS J0723.3-7327" """GClstr""" 110.80542 -73.45694 0.388
+"SMACS J0723-7327:[CSM2022] 54" """G""" 110.80369 -73.45747 0.9318
+"WISEA J072318.32-732655.3" """IrS""" 110.82634 -73.44872 0.0
+"WISEA J072325.90-732751.2" """IrS""" 110.85794 -73.46422 ""
+"[CSM2022] 0926" """G_Lens""" 110.82395 -73.45755 2.1

@@ -1,0 +1,46 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: xm_idx, datatype: int16}
+# - name: angDist
+#   unit: arcsec
+#   datatype: float64
+#   description: Xmatch distance in arcseconds
+#   meta: !!omap
+#   - {ucd: pos.angDistance}
+# - name: main_id
+#   datatype: string
+#   meta: !!omap
+#   - {ucd: meta.id;meta.main}
+#   - {_votable_string_dtype: char}
+# - name: otype
+#   datatype: string
+#   meta: !!omap
+#   - {ucd: meta.code}
+#   - {_votable_string_dtype: char}
+# - name: other_types
+#   datatype: string
+#   meta: !!omap
+#   - {ucd: src.class}
+#   - {_votable_string_dtype: char}
+# - name: ra
+#   unit: deg
+#   datatype: float64
+#   meta: !!omap
+#   - {ucd: pos.eq.ra;meta.main}
+# - name: dec
+#   unit: deg
+#   datatype: float64
+#   meta: !!omap
+#   - {ucd: pos.eq.dec;meta.main}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: CDS XMatch cat2='simbad'}
+# - {note: 'raw simbad/xmatch response for xmatch_targets.ecsv at radius 1.0 arcsec, trimmed to the columns crossmatch.py reads'}
+# - {recorded_utc: '2026-10-07T01:45:21+00:00'}
+# - software: {astropy: 8.0.1, astroquery: 0.4.11, pyvo: 1.9.1}
+# schema: astropy-2.0
+xm_idx angDist main_id otype other_types ra dec
+0 0.0 "SMACS J0723.3-7327" ClG C?G|ClG|X 110.8054 -73.457
+1 0.471524 "[CSM2022] 54" G G 110.8035266 -73.4573758
+4 0.208433 "[CLL2024] SMACS J0723.3-7327 15.2" LeG LeG|LeI 110.8241379167 -73.4574580556
