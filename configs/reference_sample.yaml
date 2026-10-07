@@ -90,7 +90,8 @@ stages:
     # sources with ordinary stellar colours join the stars; samples need matched photometry.
     stellar_locus:
       calib_mag_range: [20.0, 22.5]
-      r50_tolerance: 0.2
+      r50_tolerance: 0.2   # D-016: r50 <= 1.2 r50_psf (one-sided)
+      r50_floor: 0.5       # D-016: noise floor, r50 >= 0.5 r50_psf
       mag_max: 24.0
       colours: [[f150w, f444w], [f200w, f356w]]
       colour_pad: 0.3

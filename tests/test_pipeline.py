@@ -1248,7 +1248,7 @@ def test_stellar_locus_adds_point_like_stars(tmp_path, env, monkeypatch):
     assert pops.meta["stellar_locus"]["n_added"] == len(uids) - 3
     assert "stellar locus from" in pops.meta["source"]
     report = (run_dir / "report.md").read_text(encoding="utf-8")
-    assert f"stellar locus (D-015) added {len(uids) - 3} stars" in report
+    assert f"stellar locus (D-015/D-016) added {len(uids) - 3} stars" in report
 
 
 @pytest.mark.parametrize(
@@ -1274,7 +1274,7 @@ def test_stellar_locus_disabled_unavailable_or_broken(
     assert [pipeline._text(p) for p in pops["population"]].count("star") == 3  # D-012 kept
     assert "stellar_locus" not in pops.meta
     report = (run_dir / "report.md").read_text(encoding="utf-8")
-    assert "stellar locus (D-015) added" not in report
+    assert "stellar locus (D-015" not in report
     if note:
         assert note in report
 

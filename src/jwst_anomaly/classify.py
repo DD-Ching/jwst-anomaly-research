@@ -96,8 +96,12 @@ def classify_sources(
 
 # ASSUMPTIONS (D-015): the stellar locus in a matched-photometry catalog's detection image.
 DEFAULT_LOCUS = {
-    "calib_mag_range": (20.0, 22.5),  # unsaturated catalogued stars calibrate the locus
-    "r50_tolerance": 0.2,  # |r50 / r50_psf - 1| <= this
+    "calib_mag_range": (20.0, 22.5),  # catalogued stars that calibrate the locus
+    # D-016: one-sided size test, r50_floor * r50_psf <= r50 <= (1 + r50_tolerance) * r50_psf.
+    # Nothing real is smaller than the PSF, and bright stars' r50 is inflated, so r50_psf is
+    # an upper envelope; the floor only rejects noise-like detections.
+    "r50_tolerance": 0.2,
+    "r50_floor": 0.5,
     "mag_max": 24.0,  # fainter, point-like galaxies and stars cannot be told apart by size
     "colours": (("f150w", "f444w"), ("f200w", "f356w")),
     "colour_pad": 0.3,  # mag beyond the catalogued stars' 5-95% colour range
@@ -113,8 +117,9 @@ def stellar_locus(
     ``sources`` carries the matched-photometry columns of ``label`` (``<label>_r50_pix``,
     ``<label>_mag_auto``, ``<band>_<label>_abmag``). Catalogued stars (``known_stars``) with
     ``calib_mag_range`` magnitudes give the point-source half-light radius ``r50_psf`` and the
-    stellar colour range. A source is in the locus when its r50 is within ``r50_tolerance`` of
-    ``r50_psf``, it is brighter than ``mag_max``, and every configured colour lies within the
+    stellar colour range. A source is in the locus when ``r50_floor * r50_psf <= r50 <=
+    (1 + r50_tolerance) * r50_psf`` (D-016), it is brighter than ``mag_max``, and every configured
+    colour lies within the
     stars' 5-95% range widened by ``colour_pad``. Point-like sources with unusual colours (brown
     dwarfs, compact high-z galaxies) are deliberately left out: they stay rankable as galaxies.
     Raises ``ValueError`` with fewer than ``min_ref_stars`` calibration stars.
@@ -125,6 +130,9 @@ def stellar_locus(
     cfg = {**DEFAULT_LOCUS, **overrides}
     lo_m, hi_m = (float(v) for v in cfg["calib_mag_range"])
     tol, mag_max, pad = float(cfg["r50_tolerance"]), float(cfg["mag_max"]), float(cfg["colour_pad"])
+    floor = float(cfg["r50_floor"])
+    if not 0 <= floor <= 1 + tol:
+        raise ValueError(f"r50_floor must lie in [0, 1 + r50_tolerance], got {floor}")
     min_ref = int(cfg["min_ref_stars"])
     pairs = [(str(b).lower(), str(r).lower()) for b, r in cfg["colours"]]
     r50 = column_as_float(sources, f"{label}_r50_pix")
@@ -145,7 +153,7 @@ def stellar_locus(
         )
     r50_psf = float(np.median(r50[ref]))
     with np.errstate(invalid="ignore"):
-        member = (np.abs(r50 / r50_psf - 1.0) <= tol) & (mag < mag_max)
+        member = (r50 <= (1.0 + tol) * r50_psf) & (r50 >= floor * r50_psf) & (mag < mag_max)
     ranges = {}
     for (b, r), colour in colours.items():
         lo, hi = np.percentile(colour[ref], [5, 95])
@@ -159,6 +167,7 @@ def stellar_locus(
         "thresholds": {
             "calib_mag_range": [lo_m, hi_m],
             "r50_tolerance": tol,
+            "r50_floor": floor,
             "mag_max": mag_max,
             "colours": [list(p) for p in pairs],
             "colour_pad": pad,
