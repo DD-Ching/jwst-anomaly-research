@@ -3,22 +3,34 @@
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
 Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T202419Z-65728e80`).
 
+## Now (M3 lensing-violation search, D-023)
+1. **Lens-model consistency on SMACS:** turn the pinned Mahler+2022 model into per-position predictions
+   (convergence, shear, magnification, critical curves, counter-images). Flag:
+   - arcs whose orientation or curvature disagrees with the predicted shear;
+   - multiple-image candidates where none is predicted;
+   - parity or flux-ratio anomalies.
+   The tooling and exotic-signature survey (subagent, 2026-10-08) decides the route.
+2. **Cluster fields in flight** (`batch-clusters`): Abell 2744, El Gordo, Sunrise. Fold in their proposed DECISIONS
+   and SOURCES entries, then run the lens-model tests on each field with its published model.
+3. **Two-epoch search:** run `scripts/epoch_compare.py` (or an all-source batch mode) on every SMACS source covered
+   by VENUS 6882, looking for caustic-crossing transients and variable lensed images.
+
 ## Now (M1 follow-through)
-1. **Star-stratum sources with NED galaxy matches** (run `20261007T162133Z-2511977c`). Check their classification and photometry.
+4. **Star-stratum sources with NED galaxy matches** (run `20261007T162133Z-2511977c`). Check their classification and photometry.
    - `f090w_1719`: NED `[NDA2023] 00713`, type G, 0.03″.
    - `f200w_2054`: a stellar-locus member 0.23″ from the lensed image NED `[MJR2023] 002.3`; it has spikes, and an
      arc lies next to it.
-2. **Vet MIRI's known `G_Lens` object** with `/vet-candidate` and `scripts/vet_evidence.py`.
-3. **Spike streaks confirmed by a coincident DJA object** (D-014 "Revisit if"; run `20261007T202419Z-65728e80`): CEERS
+5. **Vet MIRI's known `G_Lens` object** with `/vet-candidate` and `scripts/vet_evidence.py`.
+6. **Spike streaks confirmed by a coincident DJA object** (D-014 "Revisit if"; run `20261007T202419Z-65728e80`): CEERS
    `f200w_2842` (#4) is detected in F200W only, with ellipticity 0.95 and area 376 px. A bright source lies 4.6″
    away, and a DJA object sits 0.04″ off. Test single-band, highly elongated detections near bright sources
    (a spike-geometry check), without dropping lensed arcs.
-4. **MIRI confirmation** (D-014 limitation): MIRI passes 103 of 530. Confirm MIRI detections with NIRCam
+7. **MIRI confirmation** (D-014 limitation): MIRI passes 103 of 530. Confirm MIRI detections with NIRCam
    counterparts. SMACS and CEERS now both have DJA confirmation.
-5. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and 2.0.1
+8. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and 2.0.1
    in SMACS, until 2736 is reprocessed. CEERS has no stellar locus (too few stars). DJA colours are still to be
    validated against CEERS DR1.0. Then compare the science and control feature distributions.
-6. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
+9. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
 
 ## Next (M2)
 - Matched-aperture colours for other samples (D-013 is done for SMACS NIRCam):
