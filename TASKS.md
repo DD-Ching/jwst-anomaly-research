@@ -1,7 +1,7 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-07 (runs `20261007T020124Z-4bfabaaa`, `20261007T032010Z-8e29bc6f`).
+Evidence for the current priorities: CHANGELOG 2026-10-07 (runs `20261007T020124Z-4bfabaaa`, `20261007T033832Z-cfcf6032`).
 
 ## Now (M1 follow-through)
 1. **Star/galaxy separation.** Use Gaia plus `CI`/`is_extended` and rank the two populations separately,

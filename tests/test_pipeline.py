@@ -70,6 +70,7 @@ TEST_CONFIG = {
     },
     "stages": {
         "catalog": {"merge_radius_arcsec": 0.1},
+        "quality": {"grid_arcsec": 1.0, "min_ranked": 2},
         "rank": {"methods": ["robust_z", "isolation_forest"], "random_state": 0},
         "cutouts": {"top_k": 3, "size_arcsec": 3.0, "bands": ["F200W"]},
         "crossmatch": {"top_k": 4, "radius_arcsec": 1.0, "services": ["simbad"]},
@@ -241,7 +242,7 @@ class FakeStages:
         t.meta["radius_arcsec"] = radius_arcsec
         return _meta(t, schema.Provenance.OBSERVED, "fake crossmatch")
 
-    def sample_weight_map(self, image_uri, step=64, **kw):
+    def sample_weight_map(self, image_uri, step=None, **kw):
         # No WHT map: quality.assess_sources then runs only its PSF-sharpness test.
         self.calls["sample_weight_map"].append((image_uri, step))
         return None
@@ -739,7 +740,7 @@ def test_quality_gate_excludes_flagged_sources_from_ranking(tmp_path, env, monke
 def test_quality_gate_failure_ranks_everything(tmp_path, env, monkeypatch):
     install_fakes(monkeypatch)
 
-    def broken(image_uri, step=64, **kw):
+    def broken(image_uri, step=None, **kw):
         raise OSError("S3 unreachable")
 
     monkeypatch.setattr(cutouts, "sample_weight_map", broken)
@@ -750,4 +751,42 @@ def test_quality_gate_failure_ranks_everything(tmp_path, env, monkeypatch):
     assert len(scores) == len(sources)
     report = (run_dir / "report.md").read_text(encoding="utf-8")
     assert "quality gate failed: all sources ranked (ungated)" in report
+    assert "Quality gate (derived, D-011): not applied (all sources ranked)" in report
+
+
+def test_quality_gate_with_too_few_survivors_ranks_everything(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+
+    def strict_gate(sources, weight_map, *, ref_band=None, **kw):
+        uids = [str(u) for u in sources["source_uid"]]
+        t = Table(
+            {
+                "source_uid": uids,
+                "rel_weight": [0.1] * len(uids),
+                "edge_dist_arcsec": [5.0] * len(uids),
+                "sharper_than_psf": [False] * len(uids),
+                "quality_ok": [i == 0 for i in range(len(uids))],
+                "quality_reason": ["" if i == 0 else "low_weight" for i in range(len(uids))],
+            }
+        )
+        t.meta.update(provenance="derived", source="fake gate")
+        return t
+
+    monkeypatch.setattr(quality, "assess_sources", strict_gate)
+    run_id = pipeline.run(write_config(tmp_path))
+    run_dir = env / "runs" / run_id
+    sources = Table.read(run_dir / "field_a" / "sources.ecsv")
+    scores = Table.read(run_dir / "field_a" / "scores.ecsv")
+    assert len(scores) == len(sources)  # a gate that empties the sample is not applied
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    assert "quality gate unusable (only 1 of" in report
+
+
+def test_quality_gate_skipped_when_not_configured(tmp_path, env, monkeypatch):
+    fakes = install_fakes(monkeypatch)
+    stages = json.loads(json.dumps(TEST_CONFIG["stages"]))
+    stages.pop("quality")
+    run_id = pipeline.run(write_config(tmp_path, stages=stages))
+    assert fakes.calls["sample_weight_map"] == []
+    report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
     assert "Quality gate (derived, D-011): not applied (all sources ranked)" in report

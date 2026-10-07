@@ -216,73 +216,77 @@ def make_cutouts(
 
 @dataclass(frozen=True)
 class WeightMap:
-    """Coarse WHT map of one level-3 image: the weight at every ``step``-th row and column.
+    """Coarse WHT map of one level-3 image, built by :func:`sample_weight_map` (D-011).
 
-    Built by :func:`sample_weight_map` to gate whole catalogs cheaply (quality.py); cutouts
-    measure exact per-pixel quality only for the top-k.
+    Cell ``(i, j)`` summarises the block of pixels ``[i*step, (i+1)*step) x [j*step, (j+1)*step)``
+    by the median WHT along one full-resolution row through it (row ``i*step + step//2``).
+    It gates whole catalogs cheaply; cutouts measure exact per-pixel quality for the top k.
     """
 
-    values: np.ndarray  # WHT at rows/cols step//2, step//2 + step, ...; NaN where unreadable
-    step: int
+    values: np.ndarray  # median WHT per cell; NaN where unreadable
+    step: int  # cell size in pixels
     shape: tuple[int, int]  # full-resolution (ny, nx)
     wcs: WCS
     band: str
-    reference_weight: float  # median positive coarse weight
+    reference_weight: float  # median of the positive cells
     pixel_scale_arcsec: float
     uri: str
+    valid: np.ndarray  # cells with positive, finite weight
+    # (2, ny, nx): (row, col) of each cell's nearest invalid cell; -1 or n means off-image.
+    nearest_invalid: np.ndarray
 
-    def at(self, ra_deg: Any, dec_deg: Any) -> tuple[np.ndarray, np.ndarray]:
-        """Relative weight and distance (arcsec) to the nearest zero-weight or off-image cell.
+    def at(self, ra_deg: Any, dec_deg: Any) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """``(rel_weight, edge_dist_arcsec, covered)`` at sky positions.
 
-        Positions off the image get weight 0 and distance 0.
+        ``covered`` is False off the image and on zero-weight cells (where rel_weight and the
+        distance are 0). The distance runs from the source's own (fractional) position to the
+        nearest invalid cell's border, so it is not quantised to whole cells.
         """
         ra = np.atleast_1d(np.asarray(ra_deg, dtype=float))
         dec = np.atleast_1d(np.asarray(dec_deg, dtype=float))
         x, y = self.wcs.world_to_pixel_values(ra, dec)
         x, y = np.asarray(x, float), np.asarray(y, float)
-        half = self.step // 2
-        with np.errstate(invalid="ignore"):
-            ix = np.rint((x - half) / self.step)
-            iy = np.rint((y - half) / self.step)
         ny, nx = self.values.shape
         inside = (
-            np.isfinite(ix)
-            & np.isfinite(iy)
+            np.isfinite(x)
+            & np.isfinite(y)
             & (x >= -0.5)
             & (y >= -0.5)
             & (x <= self.shape[1] - 0.5)
             & (y <= self.shape[0] - 0.5)
         )
-        ix = np.clip(np.nan_to_num(ix), 0, nx - 1).astype(int)
-        iy = np.clip(np.nan_to_num(iy), 0, ny - 1).astype(int)
-        valid = np.isfinite(self.values) & (self.values > 0)
-        # Pad with invalid cells so the image border counts as an edge.
-        dist_cells = distance_transform_edt(np.pad(valid, 1, constant_values=False))[1:-1, 1:-1]
-        weight = np.where(valid, self.values, 0.0)
-        ref = self.reference_weight if self.reference_weight > 0 else np.nan
-        rel = np.where(inside, weight[iy, ix] / ref, 0.0)
-        # A cell's distance is to the nearest invalid cell centre; subtract half a cell so a
-        # source in the last valid cell is ~step/2 pixels from the edge, not a full step.
-        dist = np.clip(dist_cells[iy, ix] - 0.5, 0.0, None) * self.step * self.pixel_scale_arcsec
-        return rel, np.where(inside, dist, 0.0)
+        # Fractional cell coordinates: cell centres sit at j*step + (step-1)/2.
+        centre = (self.step - 1) / 2
+        fx = np.where(inside, (x - centre) / self.step, 0.0)
+        fy = np.where(inside, (y - centre) / self.step, 0.0)
+        ix = np.clip(np.rint(fx), 0, nx - 1).astype(int)
+        iy = np.clip(np.rint(fy), 0, ny - 1).astype(int)
+        covered = inside & self.valid[iy, ix]
+        rel = np.where(covered, self.values[iy, ix] / self.reference_weight, 0.0)
+        jy, jx = self.nearest_invalid[0][iy, ix], self.nearest_invalid[1][iy, ix]
+        cells = np.clip(np.hypot(fx - jx, fy - jy) - 0.5, 0.0, None)
+        edge = np.where(covered, cells * self.step * self.pixel_scale_arcsec, 0.0)
+        return rel, edge, covered
 
 
 def sample_weight_map(
     image_uri: str,
-    step: int = 64,
+    step: int | None = None,
     *,
+    grid_arcsec: float = 1.0,
     storage_options: dict[str, Any] | None = None,
     block_size: int = 2**16,
 ) -> WeightMap:
-    """Read every ``step``-th row of a level-3 image's WHT (one byte range per row).
+    """Coarse WHT map of a level-3 image from one full row per cell (D-011).
 
-    For a 1.8 GB NIRCam i2d with ``step=64`` this reads ~1/64 of one extension. Images
-    whose WHT is at most ``_WHOLE_WHT_BYTES`` are read whole and then subsampled.
+    The cell size is ``step`` pixels, or ``grid_arcsec`` converted with the image's pixel
+    scale, so SW, LW and MIRI maps have the same angular resolution. Remote rows are fetched
+    as concurrent byte ranges (``fs.cat_ranges``); a 1.8 GB NIRCam mosaic at 1" costs ~6 MB.
+    WHT arrays up to ``_WHOLE_WHT_BYTES`` are read whole. Raises ``ValueError`` when no cell
+    has positive weight (wrong product or empty image).
     """
-    if step < 1:
-        raise ValueError("step must be >= 1")
     uri = _resolve_uri(str(image_uri))
-    with _open_image(uri, storage_options, block_size) as (hdul, _fileobj):
+    with _open_image(uri, storage_options, block_size) as (hdul, fileobj):
         sci = _get_hdu(hdul, "SCI")
         wht_hdu = _get_hdu(hdul, "WHT")
         if sci is None or wht_hdu is None:
@@ -290,17 +294,63 @@ def sample_weight_map(
         shape = (int(sci.header["NAXIS2"]), int(sci.header["NAXIS1"]))
         wcs = _read_wcs(sci.header, uri)
         band = _band_from_header(hdul[0].header, sci.header, uri)
+        scale = float(np.mean(proj_plane_pixel_scales(wcs.celestial)) * 3600.0)
+        if step is None:
+            if not grid_arcsec > 0:
+                raise ValueError("grid_arcsec must be > 0")
+            step = max(1, int(round(grid_arcsec / scale)))
+        if step < 1:
+            raise ValueError("step must be >= 1")
         wht = _image_section(wht_hdu, shape, "WHT", uri)
-        half = step // 2
-        if shape[0] * shape[1] * 4 <= _WHOLE_WHT_BYTES:
-            values = np.asarray(wht[:, :], dtype=float)[half::step, half::step]
+        rows = list(range(step // 2, shape[0], step))
+        itemsize = abs(int(wht_hdu.header.get("BITPIX", -32))) // 8
+        if shape[0] * shape[1] * itemsize <= _WHOLE_WHT_BYTES:
+            full = np.asarray(wht[:, :], dtype=float)
+            row_data = [full[r] for r in rows]
         else:
-            rows = range(half, shape[0], step)
-            values = np.stack([np.asarray(wht[r, :], dtype=float)[half::step] for r in rows])
-    good = values[np.isfinite(values) & (values > 0)]
-    ref = float(np.median(good)) if good.size else float("nan")
-    scale = float(np.mean(proj_plane_pixel_scales(wcs.celestial)) * 3600.0)
-    return WeightMap(values, step, shape, wcs, band, ref, scale, str(image_uri))
+            row_data = _read_rows(wht_hdu, wht, rows, shape[1], fileobj)
+    values = np.stack([_block_median(r, step) for r in row_data])
+    valid = np.isfinite(values) & (values > 0)
+    if not valid.any():
+        raise ValueError(f"{image_uri}: WHT has no positive weight")
+    reference = float(np.median(values[valid]))
+    # Nearest invalid cell for every cell; padding makes the image border count as invalid.
+    _, idx = distance_transform_edt(np.pad(valid, 1, constant_values=False), return_indices=True)
+    nearest = idx[:, 1:-1, 1:-1] - 1
+    return WeightMap(
+        values, step, shape, wcs, band, reference, scale, str(image_uri), valid, nearest
+    )
+
+
+def _block_median(row: np.ndarray, step: int) -> np.ndarray:
+    """Median of each ``step``-wide block of a row (NaN-aware; the last block may be short)."""
+    n = -(-row.size // step)
+    padded = np.full(n * step, np.nan)
+    padded[: row.size] = row
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)  # all-NaN blocks -> NaN
+        return np.nanmedian(padded.reshape(n, step), axis=1)
+
+
+def _read_rows(
+    hdu: Any, section: Any, rows: list[int], width: int, fileobj: Any
+) -> list[np.ndarray]:
+    """Full rows of an uncompressed image HDU: concurrent byte ranges when remote."""
+    fs = getattr(fileobj, "fs", None)
+    bitpix = int(hdu.header.get("BITPIX", -32))
+    if fs is not None and bitpix in (-32, -64) and not isinstance(hdu, fits.CompImageHDU):
+        try:
+            start = int(hdu.fileinfo()["datLoc"])
+            rowbytes = width * abs(bitpix) // 8
+            starts = [start + r * rowbytes for r in rows]
+            blobs = fs.cat_ranges(
+                [fileobj.path] * len(rows), starts, [s + rowbytes for s in starts]
+            )
+            dtype = ">f4" if bitpix == -32 else ">f8"
+            return [np.frombuffer(b, dtype=dtype).astype(float) for b in blobs]
+        except Exception:  # any surprise: fall back to one sequential read per row
+            pass
+    return [np.asarray(section[r, :], dtype=float) for r in rows]
 
 
 class _RowStripSection(fits.Section):

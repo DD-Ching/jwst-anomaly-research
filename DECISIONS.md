@@ -690,16 +690,23 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
 - `quality.assess_sources` flags every merged source before ranking, and `rank.score_anomalies` sees
   only `quality_ok` sources. Flagged sources stay in `sources`/`quality` tables with a reason and are
   never deleted.
-- Weight and edge come from a coarse WHT map of the reference-band i2d
-  (`cutouts.sample_weight_map`). It reads every 64th row through S3 byte ranges: about 30 s for a
-  1.8 GB NIRCam mosaic and 3 s for MIRI. Positions map through the SCI WCS.
+- Weight and edge come from a coarse WHT map of the reference-band i2d (`cutouts.sample_weight_map`):
+  - Cells are 1″ (`grid_arcsec`, so SW, LW and MIRI behave the same).
+  - Each cell takes the median WHT along one row through it; those rows are fetched as concurrent S3
+    byte ranges, about 10 s for a 1.8 GB NIRCam mosaic and 5 s for MIRI.
+  - Positions map through the SCI WCS. Edge distance is measured from the source's own fractional
+    position, not snapped to cells.
+- A map with no positive weight, a band mismatch, or under 10% of sources covered is a gate failure.
+  So is a gate that leaves fewer than `min_ranked` sources. In all these cases everything is ranked
+  and the run is marked "ungated"; the gate can never abort or empty a run.
 - Flags (thresholds are ASSUMPTIONS, set in config):
   - `no_coverage`: off the image or on a zero-weight cell.
   - `low_weight`: below 0.5 × the median positive WHT. This matches unit 4's cutout threshold.
   - `edge`: within 1.0″ of a zero-weight region or the image border.
-  - `sharper_than_psf`: ref-band `CI_50_30` < 1.45. A point source has ~0.5/0.3 ≈ 1.67, and real
-    sources are at least that extended (program 2736 F200W: 1st/5th percentiles 1.50/1.58), so
-    anything well below is a detector artifact.
+  - `sharper_than_psf`: ref-band `CI_50_30` in (0, 1.45), tested only for aper50 S/N ≥ 3 so noise is not
+    called an artifact. A point source has ~0.5/0.3 ≈ 1.67, and real sources are at least that
+    extended (program 2736 F200W: 1st/5th percentiles 1.50/1.58), so anything well below is a detector
+    artifact.
 - This is an optional stage. If it fails, everything is ranked and the report says "ungated".
 
 **Alternatives rejected.**
@@ -711,12 +718,14 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
 - Downloading the full i2d: 1.8 GB per band.
 
 **Evidence.**
-- Run `20261007T032010Z-8e29bc6f` vs `20261007T020124Z-4bfabaaa`: top-20 sources carrying a cutout
-  image-quality flag fell from 20/60 to 2/60 (SMACS NIRCam 6→1, MIRI 10→0, CEERS 4→1).
+- Run `20261007T033832Z-cfcf6032` (final implementation) vs `20261007T020124Z-4bfabaaa`: top-20 sources
+  carrying a cutout image-quality flag fell from 20/60 to 2/60 (SMACS NIRCam 6→1, MIRI 10→0, CEERS 4→1).
 - The coarse gate agrees with exact cutout flags on 19, 19 and 18 of the previous top 20. It also
   caught a CEERS hot pixel that the cutout flags missed.
 - Excluded sources: 28% of SMACS NIRCam, 55% of MIRI (mostly the low-coverage mosaic outskirts) and
-  34% of CEERS.
+  28% of CEERS. A first version, with single-pixel cells and cell-snapped edges, flagged 553 CEERS
+  sources as `edge` (now 10). It also called faint noise `sharper_than_psf` (SMACS 28, now 10).
+  The code review caught both.
 
 **Revisit if.**
 - Science needs sources in shallow regions: then rank them as a separate stratum, or add local depth
