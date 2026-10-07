@@ -196,3 +196,7 @@ def test_apply_stellar_locus_adds_members_and_records_the_catalog():
     )
     with pytest.raises(ValueError, match="mapping"):
         classify.apply_stellar_locus(pops, t, "dja05", ["colours"])
+    narrow = pops.copy()
+    narrow["star_basis"] = np.asarray(narrow["star_basis"]).astype("U13")
+    out = classify.apply_stellar_locus(narrow, t, "dja05", True)
+    assert "stellar_locus" in list(out["star_basis"])  # not truncated

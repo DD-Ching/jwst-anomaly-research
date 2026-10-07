@@ -189,6 +189,7 @@ def apply_stellar_locus(
     known = np.asarray(populations["population"]).astype(str) == "star"
     member, info = stellar_locus(sources, label, known, **overrides)
     out = populations.copy()
+    out["star_basis"] = np.asarray(out["star_basis"]).astype("U32")  # room for "stellar_locus"
     new = member & ~known
     out["population"][new] = "star"
     out["star_basis"][new] = "stellar_locus"
