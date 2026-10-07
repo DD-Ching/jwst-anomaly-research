@@ -1476,6 +1476,9 @@ def test_topk_metrics_count_flags_and_matches():
     }
     line = pipeline._topk_line({**m, "screened": 3})
     assert line.startswith("n = 4: known object 2 (50%)") and "3 screened out" in line
+    assert pipeline._topk_line({"n": 0, "screened": 2}) == "none (2 screened out, D-019)"
+    spaced = pipeline._topk_metrics(cands[:1], {"a": {"F200W": {"quality_flag": "ok, spikes"}}}, {})
+    assert spaced["spikes"] == 1
 
 
 def test_report_has_topk_composition(tmp_path, env, monkeypatch):

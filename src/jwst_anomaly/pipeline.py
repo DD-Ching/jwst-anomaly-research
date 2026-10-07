@@ -351,7 +351,7 @@ def _topk_metrics(
         uid = rec["source_uid"]
         out["n"] += 1
         tokens = {
-            t
+            t.strip()
             for q in (cutout_rows.get(uid) or {}).values()
             for t in str(q.get("quality_flag", "")).split(",")
         }
@@ -373,7 +373,8 @@ def _topk_metrics(
 def _topk_line(m: Mapping[str, int]) -> str:
     n = m.get("n", 0)
     if not n:
-        return "none"
+        screened = m.get("screened", 0)
+        return f"none ({screened} screened out, D-019)" if screened else "none"
 
     def part(key: str, label: str) -> str:
         return f"{label} {m.get(key, 0)} ({m.get(key, 0) / n:.0%})"
