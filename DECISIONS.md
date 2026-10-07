@@ -1431,8 +1431,9 @@ Field docs: `docs/fields/*.md`.
   - **3 recovered:**
     - system 9's third image (μ 4.7) at 0.9″ from the prediction, predicted 11.1σ, flux ratio 1.7. Its
       F150W/F200W/F444W ratios match images 9.1 and 9.2;
-    - system 8 (μ 3.4) at 1.0″, ratio 1.3;
-    - system 17 (μ −10.2) at 1.0″. This one lies on the BCG's light gradient, so it is not a clean recovery.
+    - system 8 (μ 3.4) at 1.0″, ratio 1.25;
+    - system 17 (μ −10.2) at 0.7″, 7.8σ against a predicted 24.4σ (ratio 0.36, just above the 1/3 bound). It
+      lies on the BCG's light gradient, so it is not a clean recovery.
   - **1 confused:** system 17 (μ 5.4), against a cluster galaxy.
   - **1 undetectable.**
   - **6 no_reference:** systems 11, 16 and 26. Their catalogued images have |μ| > 50 or S/N < 5.

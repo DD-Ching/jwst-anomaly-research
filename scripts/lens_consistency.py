@@ -766,7 +766,9 @@ def cmd_images(args) -> dict:
     if not len(table):
         raise SystemExit("no system has two or more back-traced images; nothing to predict")
     if args.forced_image:
-        stamp, close = image_stamper(args.forced_image)
+        stamp, close = image_stamper(
+            args.forced_image, args.forced_search_arcsec + FORCED_ANNULUS[1] + 0.1
+        )
         try:
             forced_check(table, bt, stamp, args.forced_search_arcsec)
         finally:
@@ -790,7 +792,7 @@ def cmd_images(args) -> dict:
         "model": args.model,
         "catalog": str(args.catalog),
         "depth_mag_5sigma_proxy": depth,
-        "n_systems": len(set(table["system"])) if len(table) else 0,
+        "n_systems": len(set(table["system"])),
         "n_predicted": len(table),
         "classes": counts,
         "unpredicted_catalogued_images": unpredicted,
