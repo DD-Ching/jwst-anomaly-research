@@ -1,19 +1,25 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-07 (runs `20261007T033832Z-cfcf6032`, `20261007T035338Z-8ea21f89`).
+Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T040938Z-01527ace`; the size bias
+is re-measured with `scripts/feature_size_bias.py`).
 
 ## Now (M1 follow-through)
-1. **First vetting with `/vet-candidate`:**
-   - SMACS NIRCam `jw02736-o001_t001_nircam_f200w_2925`, `_2559`, `_1096` (galaxy stratum, run
-     `20261007T035338Z-8ea21f89`): elongated, arc-like; compare them with the published SMACS 0723
-     lens models (docs/landscape.md).
-   - MIRI rank 17 (`jw02736-o002_t001_miri_f770w_94`): the known NED `G_Lens` object, which exercises the
-     known-object path.
+1. **Size-robust features** (vetting, 2026-10-07): the top galaxy candidates were explained by
+   catalog effects. The aper50 SW−LW colours are biased with source size, and DAOFind
+   sharpness/roundness are meaningless for extended sources. Options:
+   - restrict sharpness/roundness to compact sources;
+   - take colours from size-consistent photometry, i.e. the DJA v7.4 `smacs0723` matched-aperture
+     catalog (`fix_phot.fits`, 38.6 MB), which pulls the M2 item forward.
+
+   Measure the change by re-vetting the new top 20.
+   - Still open from vetting: `/vet-candidate` on MIRI rank 17 (`jw02736-o002_t001_miri_f770w_94`),
+     the known NED `G_Lens` object, which exercises the known-object path.
 2. **Faint stars:** about 4 PSF-like sources without Gaia counterparts remain in the SMACS galaxy top 20.
    Add a size–magnitude stellar locus to `classify` (D-012 "Revisit if").
-3. Align the `/vet-candidate` skill with the real `jwst-anomaly candidates` subcommands and confirm
-   `docs/candidates/` as the place for vetting records.
+3. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
+   subcommands (`add-vetting --outcome pass|fail|inconclusive`). `docs/candidates/` is confirmed as the
+   record location.
 4. Report the top-k artifact and star fractions per run as a tracked metric.
 5. Quality gate follow-ups (D-011 "Revisit if"): per-band gating for colours; rank shallow regions as a
    separate stratum instead of excluding them (55% of MIRI sources are excluded now).
@@ -40,6 +46,8 @@ Evidence for the current priorities: CHANGELOG 2026-10-07 (runs `20261007T033832
 ## Later
 - Reuse `classify`'s full-catalog SIMBAD/Gaia matches for the top-k cross-match (re-query only NED).
 - M3: published SMACS 0723 lens models (Mahler+2022, RELICS, Caminha+2022); AnomalyMatch for lens finding.
+  Evaluate model shear and magnification at candidate positions (open question in
+  `docs/candidates/jw02736-o001_t001_nircam_f200w_1096.md`).
 - A weekly scheduled link check of the state files (`scripts/check_links.py`).
 - Switch Dependabot from pip to uv once a `uv.lock` exists. Keep the version in `pyproject.toml`,
   `__init__.py` and `CITATION.cff` in sync on release.
