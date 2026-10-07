@@ -222,3 +222,4 @@ def test_stellar_colour_mask_ignores_size():
     mask = dict(zip(t["source_uid"], classify.stellar_colour_mask(t, "dja05", info), strict=True))
     assert mask["galaxy"] and mask["faint_star"]  # stellar colours, whatever the size
     assert not mask["brown_dwarf"]
+    assert not classify.stellar_colour_mask(t, "dja05", {**info, "colour_ranges": {}}).any()

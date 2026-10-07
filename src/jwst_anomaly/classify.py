@@ -186,6 +186,8 @@ def stellar_colour_mask(sources: Table, label: str, locus_info: dict) -> np.ndar
     D-019 to tell a star blended with a galaxy from a galaxy with a bright, non-stellar nucleus.
     """
     pad = float(locus_info["thresholds"]["colour_pad"])
+    if not locus_info.get("colour_ranges"):
+        return np.zeros(len(sources), dtype=bool)  # no colour evidence: nothing counts as stellar
     mask = np.ones(len(sources), dtype=bool)
     for pair, (lo, hi) in locus_info["colour_ranges"].items():
         blue, red = pair.split("-")

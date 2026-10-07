@@ -1375,6 +1375,16 @@ def test_spike_screening_drops_flagged_sources_and_backfills(tmp_path, env, monk
     assert "spike screening (D-019) removed 1 source(s) from the top 3" in report
 
 
+def test_max_finite_spike_ignores_missing_bands():
+    rows = {
+        "F150W": {"spike_s6": None},
+        "F200W": {"spike_s6": float("nan")},
+        "F444W": {"spike_s6": 0.0},
+    }
+    assert pipeline._max_finite(rows) == 0.0
+    assert np.isnan(pipeline._max_finite({"F200W": {}}))
+
+
 def test_spike_screen_must_be_boolean(tmp_path):
     config = json.loads(json.dumps(TEST_CONFIG))
     config["stages"]["cutouts"]["spike"] = {

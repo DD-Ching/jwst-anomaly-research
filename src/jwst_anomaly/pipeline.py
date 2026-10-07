@@ -332,6 +332,13 @@ def _subset(table: Table, mask: np.ndarray, what: str) -> Table:
     return out
 
 
+def _max_finite(per_band: Mapping[str, Mapping[str, Any]]) -> float:
+    """Largest finite ``spike_s6`` over a source's bands (NaN when none)."""
+    values = [_float(q.get("spike_s6")) for q in per_band.values()]
+    finite = [v for v in values if v is not None and np.isfinite(v)]
+    return max(finite) if finite else float("nan")
+
+
 def _check_spike(spike: Any, where: str) -> None:
     """``stages.cutouts.spike`` (D-018): ``radii_arcsec`` [r_in, r_out], ``threshold``,
     optional ``search_arcsec`` and ``screen`` (D-019)."""
@@ -778,17 +785,7 @@ class _Runner:
                 "source_uid": [r["source_uid"] for r in removed],
                 "rank": np.array([r["rank"] or 0 for r in removed], dtype=int),
                 "spike_s6": np.array(
-                    [
-                        max(
-                            (
-                                q.get("spike_s6") or float("nan")
-                                for q in cutout_rows[r["source_uid"]].values()
-                            ),
-                            default=float("nan"),
-                        )
-                        for r in removed
-                    ],
-                    float,
+                    [_max_finite(cutout_rows[r["source_uid"]]) for r in removed], float
                 ),
             }
         )
@@ -808,7 +805,7 @@ class _Runner:
                 f"#{r['rank']} " + "_".join(r["source_uid"].split("_")[-2:]) for r in removed
             )
         )
-        if len(kept) >= cut_k and any(r["source_uid"] not in cutout_rows for r in kept[:cut_k]):
+        if any(r["source_uid"] not in cutout_rows for r in kept[:cut_k]):
             summary.notes.append("spike screening: some backfilled sources have no cutout")
         return kept
 
