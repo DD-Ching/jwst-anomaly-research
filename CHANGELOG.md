@@ -2,6 +2,13 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Owner priorities, lensing-violation search first (D-023)
+- The owner merged PR #20 (`2804`, inconclusive) and reprioritised: M3 lens-model consistency first; more clusters in
+  parallel (Abell 2744, El Gordo, Sunrise; MACS J0416 has no DJA v7 catalog); a two-epoch transient search; no
+  pauses; one review per PR.
+- **Handoff:** TASKS "Now (M3)" items 1–3. Worker PRs with label `batch-clusters` are in flight.
+
+
 ## 2026-10-08: CEERS control on DJA matched photometry (D-022, cycle 16)
 - `ceers_t021` now uses the DJA v7.4 `ceers-full` catalog, a 250.5 MB download with the reason stated in D-022.
   The control field is built the same way as SMACS for colours, confirmation, screening and the top-k metric.

@@ -1154,3 +1154,26 @@ in the science field.
 - DJA colours disagree with CEERS DR1.0 beyond the errors.
 - A newer DJA CEERS release appears.
 - Disk space becomes tight: delete the cached file and re-fetch it by its hash.
+
+## D-023 Owner priorities: lensing-violation search first, more clusters, faster cadence (2026-10-08)
+
+**Decision** (owner, in chat): put the search for lensing that published models cannot explain at the top. It is
+the most direct route to exotic-spacetime signatures, and it stays a hypothesis-generating search (charter).
+- **M3 comes first.** Start on SMACS with the pinned Mahler+2022 model, and use only verified literature for
+  exotic-lens signatures.
+- **More lensing clusters, in parallel.** Abell 2744, El Gordo and Sunrise/WHL0137 run as worktree workers
+  (label `batch-clusters`). MACS J0416 has no DJA v7 catalog, so Sunrise replaces it.
+- **Time-domain:** use the VENUS second epoch for caustic-crossing transients and variable lensed images.
+- **Process:**
+  - no fixed pause between cycles; continue until usage limits near;
+  - one `/code-review` per PR on its final diff, after all fixes are collected;
+  - when the owner decides a needs-human candidate PR in chat, the agent records that on the PR, removes the
+    `needs-human` label as instructed, and merges under the normal CLAUDE.md policy, which needs no label
+    (PR #20).
+
+**Alternatives rejected.** Continuing the M1/M2 contamination clean-up first: the SMACS galaxy top 20 is now
+clean (D-019 to D-021), so further clean-up has diminishing returns.
+
+**Revisit if.**
+- The usage limits are reached often: then restore pauses.
+- The lens-model comparison is dominated by model systematics: then use several published models per field.
