@@ -1086,3 +1086,33 @@ ignore spikes and small neighbours.
 - A galaxy-stratum point source with host light under 0.004 is a real compact galaxy or AGN (vetting shows it).
 - Saturated stars with NaN cores reach the galaxy stratum, since their ratio is biased high.
 - Other fields or bands need their own calibration on the star stratum.
+
+## D-021 Low-weight screening: re-apply the D-011 weight threshold on the cutout (2026-10-08)
+
+**Decision.** With `stages.cutouts.screen_low_weight: true`, a top-k pool source is dropped when its cutout
+carries the `low_weight` flag: median core WHT below `low_weight_frac` (0.5) of the image's typical WHT.
+- This is the same threshold as D-011's `min_rel_weight`, measured at the source instead of on the 1″
+  coarse map.
+- It applies to every stratum except star strata, including single mixed rankings, and shares the D-019
+  2 × top_k pool and backfill.
+- `screened.ecsv` now has a `reason` column: D-019 stellar colours, D-020 no host light, or D-021 low
+  weight.
+
+**Alternatives rejected.**
+- A finer D-011 weight map for every source: it reads more WHT rows for all sources (I/O), while the top-k
+  cutouts already measure the core weight.
+- Requiring DJA confirmation for faint short-wavelength-only detections: DJA's detection image may miss
+  genuinely blue faint sources, so this risks dropping them. Revisit if low-weight screening proves
+  insufficient.
+- Raising `min_rel_weight` globally: the coarse map's smoothing, not the threshold, let `3034` through.
+
+**Evidence.** Run `20261007T194733Z-ac5f1b59` (SMACS NIRCam):
+- `3034` (#3) is a diagonal two-stripe feature, detected only in F150W and F200W (S/N about 3.6 and 7) and absent
+  from DJA. Its coarse-map rel_weight is 0.558, which passed, but its cutout core weight is 0.468, which is
+  screened.
+- It was the only `low_weight` source in the 40-cutout pool.
+- Galaxy top 20 now: 5% cutout-flagged (only `2915`, kept on purpose), 40% known objects, 4 screened.
+
+**Revisit if.**
+- Real sources in shallow regions (dither gaps, mosaic edges) are lost; check them with `screened.ecsv`.
+- Short-wavelength-only artifacts appear in full-weight regions: then add the DJA-confirmation rule.

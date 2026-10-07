@@ -105,6 +105,7 @@ stages:
     top_k: 20
     size_arcsec: 3.0
     bands: [F200W]
+    screen_low_weight: true  # D-021: re-apply min_rel_weight with the cutout's own core weight
     spike:                 # D-018: hexagonal-spike flag on NIRCam cutouts (ASSUMPTION thresholds)
       radii_arcsec: [0.2, 0.8]
       search_arcsec: 0.3
