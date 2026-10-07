@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Cloud runs use the GitHub MCP tools; conflicting PRs get no CI
+- The first routine run opened #38 with the session's GitHub MCP tools. The prompt, the research-cycle skill and
+  docs/operations.md §3 now prefer them, merge with `mcp__github__merge_pull_request` after checking the policy,
+  and fall back to REST plus the `merge-ready` label.
+- **Failed approach:** #37, a REST squash-merge allow rule, was closed. The glob `pulls/*/merge` also matches other
+  `pulls/...` writes, so the Bash merge API stays denied.
+- **Lesson:** a PR that conflicts with `main` gets no `pull_request` CI at all (#38). Merge `origin/main` in first.
+
+
 ## 2026-10-08: Hourly cloud routine
 - Routine `trig_01PNAmgcfqef8CvhPAY8ggbP` runs `/research-cycle` loops hourly at :07 UTC (Opus 5.5, no connectors)
   with the prompt in docs/cloud-routine-prompt.md.
