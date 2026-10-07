@@ -981,3 +981,43 @@ Unit tests recover an injected 30 mas motion and 0.5 mag change.
 - Many candidates need it: then batch per program pair and cache the frame tie.
 - Targets sit near a chip edge, where local distortion dominates.
 - Proper motions below about 1 mas/yr matter.
+
+## D-018 Diffraction-spike flag on cutouts: orientation-free hexagonal harmonic (2026-10-08)
+
+**Decision.** This is new code (tier 5): numpy and scipy, with no new dependency. `cutouts.spike_statistic` resamples
+a NIRCam cutout on rings around the brightest smoothed peak within `search_arcsec` (0.3″) of the target. No-data
+pixels there count as brightest, because saturated cores are NaN.
+- Each ring loses its azimuthal median. The angular power spectra, summed over rings from 0.2″ to 0.8″, give
+  `spike_s6 = P6 / sqrt(P4 · P8)`.
+- JWST's six main spikes put power at m = 6 only. Elongated galaxies spread power over all even m, which the
+  neighbours cancel. |F_m| does not depend on the spike angle, so no position angle is needed.
+- Cutouts with `spike_s6` ≥ 3 get the `spikes` quality flag. The report lists them; ranks are unchanged.
+- Radii, search radius and threshold are ASSUMPTIONS in `stages.cutouts.spike`. MIRI is skipped, because its
+  cruciform PSF needs its own calibration.
+
+**Alternatives rejected** (`/reuse-check`, 2026-10-08):
+- STPSF templates: they need the spike angle and an 88 MB data set, and pin numpy < 2.4.
+- photutils PSF fitting: it has no spike utility, and it fails on NaN cores.
+- grizli `mask_IR_psf_spikes`: WFC3/IR only, and it works on level-2 exposures.
+- DJA: it ships no star or spike masks.
+- Catalog-driven geometric masks (LSST, JWST1PASS): they need per-exposure geometry and `_cal` files; D-014
+  already deferred these.
+- spike-psf: it needs GB of `_cal` files.
+- MaxiMask: no JWST data in its training set, and it needs TensorFlow.
+- i2d DQ: there is none.
+- Centring on the catalog centroid (first implementation): blends scored only 0.4–2.6, because their star is
+  offset from the target.
+
+**Evidence.** Run `20261007T162133Z-2511977c` (SMACS NIRCam F200W cutouts), visually checked on both contact sheets:
+- **Star-stratum top 10:** all flagged, `spike_s6` 3.9–28.3, including the saturated `1345` (11.6, `nan_center`).
+- **Galaxy top 20:** exactly the three PSF-like blends are flagged, `940` 15.6, `2242` 10.9 and `1571` 5.7. The
+  other 17 score ≤ 2.3, including faint point sources (`2043` 2.3, `432` 1.9) and arcs.
+- **Radius scan** on the previous run's 30 cutouts: r_in = 0.2″ leaves the widest gap between the lowest star
+  (3.85) and the highest unflagged galaxy (2.28).
+
+**Revisit if.**
+- Flagged sources should leave the galaxy ranking instead of being labelled, e.g. by backfilling the top k.
+- Compact bright galaxies get flagged: then check the spike angle `arg(F6)/6` against the header PA.
+- Close star pairs or crowded cluster cores are missed.
+- MIRI is to be covered.
+- MAST adds DQ to i2d products.

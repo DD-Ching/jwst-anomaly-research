@@ -440,3 +440,19 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - Langeroodi & Hjorth, arXiv:2308.10900, "Little Red Dots or Brown Dwarfs? NIRSpec Discovery of Three Distant
   Brown Dwarfs Masquerading as NIRCam-Selected Highly-Reddened AGNs": the two populations overlap in NIRCam colours.
   Only the title is read.
+
+## Diffraction-spike detection survey (cycle 10, checked 2026-10-08)
+
+All of these were rejected for D-018; they are listed so later sessions do not survey them again.
+- STPSF 2.2.0 (2025-12-23, BSD-3-Clause; requires `numpy<2.4.0`): https://github.com/spacetelescope/stpsf. Data
+  files (88 MB): https://stpsf.readthedocs.io/en/latest/installation.html
+- MaxiMask 1.4.1 (2024-03-22, MIT): https://github.com/mpaillassa/MaxiMask. Paper: Paillassa, Bertin & Bouy,
+  arXiv:1907.08298.
+- grizli 1.14.2 `mask_IR_psf_spikes` (WFC3/IR only):
+  https://grizli.readthedocs.io/en/latest/api/grizli.pipeline.auto_script.mask_IR_psf_spikes.html
+- LSST pipe_tasks `DiffractionSpikeMaskTask`: https://github.com/lsst/pipe_tasks/pull/1178/files
+- spike-psf: https://spike-psf.readthedocs.io/en/latest/psf.html
+- JWST1PASS mask example (J. Anderson, STScI; no license stated):
+  https://www.stsci.edu/~jayander/JWST1PASS/CODE/MASK_EXAMPLE/PLEASE_README.txt
+- JWST spike geometry (six spikes plus two fainter ones from the secondary-mirror support):
+  https://en.wikipedia.org/wiki/Diffraction_spike
