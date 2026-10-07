@@ -46,9 +46,10 @@ Every title was checked on its arXiv abstract page and every URL was opened on 2
 
 ## Run
 
-- Run `20261007T205438Z-b58ac10d`, config [`configs/elgordo.yaml`](../../configs/elgordo.yaml) (`elgordo_v1`,
-  sha256 prefix `1f6dfe8ec274ddae`). The config's `stages:` block is identical to `configs/reference_sample.yaml`.
-- Code: `2578ced` (PR #29 on top of `ec3d1e6`).
+- Run `20261007T210354Z-9dccdf35`, config [`configs/elgordo.yaml`](../../configs/elgordo.yaml) (`elgordo_v1`,
+  sha256 prefix `d647e092f21b872c`). The config's `stages:` block is identical to `configs/reference_sample.yaml`.
+- Code: `b787e29`, which includes the PR #29 fix. The earlier run `20261007T205438Z-b58ac10d` differed only in a
+  config comment, and its sample results are identical.
 - **Sources:** 6,921 merged sources. DJA matches one-to-one for 3,081 of them (D-013).
 - **Gate (D-011/D-014):** 3,397 of 6,921 sources passed.
   - Flags: edge 94, low_snr 2,132, low_weight 1,347, no_coverage 31, sharper_than_psf 8, single_band 2,968.

@@ -1,7 +1,8 @@
 # El Gordo (ACT-CL J0102-4915) lensing cluster, NIRCam imaging from PEARLS (GTO program 1176).
-# Observation ids, public status, product sizes and S3 keys were checked against MAST on 2026-10-08:
-# all 8 bands of the o241_t012 association are PUBLIC with level-3 _cat.ecsv (jwst 2.0.1, as SMACS).
-# The cluster core is in NIRCam module B; module A covers a flanking field ~3' north.
+# Observation ids, public status and S3 keys were checked against MAST on 2026-10-08: all 8 bands of
+# the o241_t012 association are PUBLIC with level-3 _cat.ecsv. The files are jwst 3.0.0 (reprocessed
+# 2026-10-01; SMACS 2736 is 2.0.1); MAST's listing still shows prvversion 2.0.1 and old sizes (PR #29).
+# The cluster is in NIRCam module B; module A covers a flanking field ~3' north.
 # Stage parameters are the reference-sample values (configs/reference_sample.yaml), unchanged.
 # Field note: docs/fields/elgordo.md.
 name: elgordo_v1
