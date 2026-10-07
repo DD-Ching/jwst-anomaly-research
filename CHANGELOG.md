@@ -14,6 +14,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   because the aperture sat 0.15″ off the source and the PSF rotates by about 180° between the epochs.
 - **Handoff:** the lens-model PR #35 (another run was working on it), then lens-model checks per field.
   Time domain: rescale the thresholds by the control std, and add VENUS 6882 o052 (F150W, F444W) as a third epoch.
+## 2026-10-08: Hourly cloud routine
+- Routine `trig_01PNAmgcfqef8CvhPAY8ggbP` runs `/research-cycle` loops hourly at :07 UTC (Opus 5.5, no connectors)
+  with the prompt in docs/cloud-routine-prompt.md.
+- First test run: clone, venv, skills and MAST downloads work.
+  - GitHub GraphQL is blocked in cloud sessions, so `gh pr` / `gh issue` fail. The REST equivalents and a single
+    background CI-wait loop are in docs/operations.md §3, and the research-cycle skill points to them.
+  - The merge API is denied by `.claude/settings.json`, so cloud runs stop at merge-ready with the label
+    `merge-ready`. The owner or a local session merges.
+  - Coordination: runs last about 40 minutes and skip `local-wip` PRs and branches committed to in the last 15
+    minutes. An unmerged PR's handoff is read from its branch.
+- **Handoff:** unchanged (TASKS "Now (M3)"); the cloud routine continues it.
 
 ## 2026-10-08: Two-epoch transient search, a null result; exotic-lens signatures (D-027)
 - `scripts/transient_search.py` produces catalog-level candidates; `scripts/transient_forced.py` checks them with
