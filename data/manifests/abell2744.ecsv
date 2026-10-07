@@ -1,0 +1,24 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: dataURI, datatype: string}
+# - {name: productFilename, datatype: string}
+# - {name: local_path, datatype: string}
+# - {name: size, datatype: int64}
+# - {name: sha256, datatype: string}
+# - {name: retrieved_utc, datatype: string}
+# - {name: pipeline_version, datatype: string}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'MAST via astroquery.mast.Observations.download_file; size checked against MAST, sha256 computed locally, pipeline_version
+#     read from each file''s own header'}
+# - {local_path_root: $JWST_ANOMALY_DATA (jwst_anomaly.paths.data_root)}
+# schema: astropy-2.0
+dataURI productFilename local_path size sha256 retrieved_utc pipeline_version
+mast:JWST/product/jw02561-o001_t003_nircam_clear-f115w_cat.ecsv jw02561-o001_t003_nircam_clear-f115w_cat.ecsv cache/mast/jw02561-o001_t003_nircam_clear-f115w/jw02561-o001_t003_nircam_clear-f115w_cat.ecsv 9139451 b081b601a18431c429493df28915657b38b8a7911453927f8291543346640af0 2026-10-07T20:49:10Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw02561-o001_t003_nircam_clear-f150w_cat.ecsv jw02561-o001_t003_nircam_clear-f150w_cat.ecsv cache/mast/jw02561-o001_t003_nircam_clear-f150w/jw02561-o001_t003_nircam_clear-f150w_cat.ecsv 9607752 6ba2cc073bf0b484601473dff1a8533ec46dee065df52505f3dca63267f4661a 2026-10-07T20:49:15Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw02561-o001_t003_nircam_clear-f200w_cat.ecsv jw02561-o001_t003_nircam_clear-f200w_cat.ecsv cache/mast/jw02561-o001_t003_nircam_clear-f200w/jw02561-o001_t003_nircam_clear-f200w_cat.ecsv 9427801 9953c8699e0f1d0be939d23591748a73f5d12c14b5221242aaf65227e16773ae 2026-10-07T20:49:20Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw02561-o001_t003_nircam_clear-f277w_cat.ecsv jw02561-o001_t003_nircam_clear-f277w_cat.ecsv cache/mast/jw02561-o001_t003_nircam_clear-f277w/jw02561-o001_t003_nircam_clear-f277w_cat.ecsv 6984785 4c620f31d479c39fd3a97ac3aeb1972a3bc740a677a3f49cc651bd1f011d2a3b 2026-10-07T20:49:24Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw02561-o001_t003_nircam_clear-f356w_cat.ecsv jw02561-o001_t003_nircam_clear-f356w_cat.ecsv cache/mast/jw02561-o001_t003_nircam_clear-f356w/jw02561-o001_t003_nircam_clear-f356w_cat.ecsv 7216995 bcca202168cd81e3d1ca689403149c70fc020f960acb1663ff673c6121820052 2026-10-07T20:49:28Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw02561-o001_t003_nircam_clear-f410m_cat.ecsv jw02561-o001_t003_nircam_clear-f410m_cat.ecsv cache/mast/jw02561-o001_t003_nircam_clear-f410m/jw02561-o001_t003_nircam_clear-f410m_cat.ecsv 4812713 ae83b21622a44428bf0295395d2918aeeb8cd2c508550cf85b9f81e064b823a5 2026-10-07T20:49:32Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw02561-o001_t003_nircam_clear-f444w_cat.ecsv jw02561-o001_t003_nircam_clear-f444w_cat.ecsv cache/mast/jw02561-o001_t003_nircam_clear-f444w/jw02561-o001_t003_nircam_clear-f444w_cat.ecsv 5354114 4e734f8003a90fab11bc13f5ed33898dd1ca3f126ebc88499ead32cdb85952d4 2026-10-07T20:49:36Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
