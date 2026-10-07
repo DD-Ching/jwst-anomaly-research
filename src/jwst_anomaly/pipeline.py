@@ -371,24 +371,29 @@ def _topk_metrics(
 
 
 def _topk_line(m: Mapping[str, int]) -> str:
+    """Report text; each fraction uses the candidates that have that evidence (cut out or
+    cross-matched), since the evidence stages may cover fewer than the stored top k."""
     n = m.get("n", 0)
     if not n:
         screened = m.get("screened", 0)
         return f"none ({screened} screened out, D-019)" if screened else "none"
+    n_xm = n - m.get("no_xmatch", 0)
+    n_cut = n - m.get("no_cutout", 0)
 
-    def part(key: str, label: str) -> str:
-        return f"{label} {m.get(key, 0)} ({m.get(key, 0) / n:.0%})"
+    def part(key: str, label: str, denom: int) -> str:
+        frac = f" ({m.get(key, 0) / denom:.0%})" if denom else ""
+        return f"{label} {m.get(key, 0)}{frac}"
 
     text = ", ".join(
         [
-            part("known", "known object"),
-            part("lens_related", "lens-related"),
-            part("star", "catalogued star"),
-            part("flagged", "cutout-flagged"),
-            part("spikes", "spikes"),
+            part("known", "known object", n_xm),
+            part("lens_related", "lens-related", n_xm),
+            part("star", "catalogued star", n_xm),
+            part("flagged", "cutout-flagged", n_cut),
+            part("spikes", "spikes", n_cut),
         ]
     )
-    extra = [f"{m[k]} {k.replace('_', ' ')}" for k in ("no_cutout", "no_xmatch") if m.get(k)]
+    extra = [f"{n_xm} cross-matched, {n_cut} cut out"] if (n_xm, n_cut) != (n, n) else []
     if m.get("screened"):
         extra.append(f"{m['screened']} screened out before selection (D-019)")
     return f"n = {n}: {text}" + (f"; {', '.join(extra)}" if extra else "")

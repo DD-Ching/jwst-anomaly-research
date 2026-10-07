@@ -1475,7 +1475,9 @@ def test_topk_metrics_count_flags_and_matches():
         "no_xmatch": 2,
     }
     line = pipeline._topk_line({**m, "screened": 3})
-    assert line.startswith("n = 4: known object 2 (50%)") and "3 screened out" in line
+    # fractions use the candidates that have the evidence: 2 cross-matched, 3 cut out
+    assert line.startswith("n = 4: known object 2 (100%)") and "3 screened out" in line
+    assert "cutout-flagged 2 (67%)" in line and "2 cross-matched, 3 cut out" in line
     assert pipeline._topk_line({"n": 0, "screened": 2}) == "none (2 screened out, D-019)"
     spaced = pipeline._topk_metrics(cands[:1], {"a": {"F200W": {"quality_flag": "ok, spikes"}}}, {})
     assert spaced["spikes"] == 1
