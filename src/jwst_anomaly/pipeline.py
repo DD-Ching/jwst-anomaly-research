@@ -23,7 +23,8 @@ ref_band, obs_ids, query}`` (``query``: extra MAST criteria, optional),
 ``stages.quality.{enabled, grid_arcsec, step, min_rel_weight, min_edge_arcsec, max_artifact_ci,
 min_ranked}`` (gate skipped when the block is absent),
 ``stages.classify.{enabled, services, radius_arcsec, gaia_radius_arcsec, star_top_k, min_stars}``
-(skipped when absent),
+(skipped when absent), ``stages.features.daofind_max_ci``,
+``samples[].matched_photometry.{url, sha256, aperture, label, radius_arcsec}`` (D-013),
 ``stages.rank.{methods, random_state}``, ``stages.cutouts.{enabled, top_k, size_arcsec, bands}``,
 ``stages.crossmatch.{enabled, top_k, radius_arcsec, services}`` and the optional top-level
 ``outputs`` block added by this unit:
@@ -62,6 +63,7 @@ from jwst_anomaly import (
     cutouts,
     features,
     paths,
+    photometry,
     provenance,
     quality,
     query,
@@ -495,11 +497,19 @@ class _Runner:
         )
         summary.n_sources = len(sources)
 
-        # 4. Features (derived) -> scores (model_prediction).
+        # 4. Features (derived) -> scores (model_prediction). Colours come from matched-aperture
+        # photometry when the sample configures it (D-013), else from the pipeline catalogs.
+        feat_sources, aperture = self._matched_photometry(sid, sample, sources)
+        feat_kwargs: dict[str, Any] = {}
+        if aperture:
+            feat_kwargs["aperture"] = aperture
+        fcfg = self.stages_cfg.get("features") or {}
+        if fcfg.get("daofind_max_ci") is not None:
+            feat_kwargs["daofind_max_ci"] = float(fcfg["daofind_max_ci"])
         feats = self.stage(
             sid,
             "features.build_features",
-            partial(features.build_features, sources),
+            partial(features.build_features, feat_sources, **feat_kwargs),
             columns=schema.FEATURE_ID_COLUMNS,
             required=True,
             save_as="features",
@@ -771,6 +781,51 @@ class _Runner:
             return absolute.relative_to(self.run_dir.resolve()).as_posix()
         except ValueError:
             return path.as_posix()
+
+    def _matched_photometry(
+        self, sid: str, sample: Mapping[str, Any], sources: Table
+    ) -> tuple[Table, str | None]:
+        """Join external matched-aperture magnitudes (optional stage, D-013).
+
+        Returns the table to build features from and the aperture label to use (None: the
+        pipeline catalogs' default aperture).
+        """
+        cfg = sample.get("matched_photometry")
+        name = "photometry.join_matched_photometry"
+        if not cfg:  # a per-sample option, not a stage every sample runs
+            return sources, None
+        label = str(cfg.get("label", "dja05"))
+
+        def join() -> Table:
+            path = photometry.fetch_catalog(str(cfg["url"]), str(cfg["sha256"]))
+            catalog = photometry.load_dja_catalog(
+                path,
+                [b.lower() for b in self.summaries[sid].bands],
+                aperture=int(cfg.get("aperture", 1)),
+            )
+            return photometry.join_matched_photometry(
+                sources,
+                catalog,
+                label,
+                radius_arcsec=float(
+                    cfg.get("radius_arcsec", photometry.DEFAULT_MATCH_RADIUS_ARCSEC)
+                ),
+            )
+
+        joined = self.stage(
+            sid, name, join, columns=schema.SOURCE_COLUMNS, required=False, save_as="photometry"
+        )
+        if joined is None:
+            self.summaries[sid].notes.append(
+                "matched-aperture photometry failed: colours from pipeline catalogs"
+            )
+            return sources, None
+        info = joined.meta.get("matched_photometry", {})
+        self.summaries[sid].notes.append(
+            f"colours from matched-aperture photometry '{label}' "
+            f"({info.get('n_matched')} of {len(joined)} sources matched; D-013)"
+        )
+        return joined, label
 
     def _quality(
         self,

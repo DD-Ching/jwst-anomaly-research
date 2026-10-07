@@ -783,3 +783,40 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
 - Gaia DR4 is released.
 - A field has Gaia-detected compact galaxies in numbers (cluster cores): tighten `gaia_position` with
   Gaia's own classifiers.
+
+## D-013 Colours from matched-aperture photometry; DAOFind statistics only for point-like sources (2026-10-07)
+
+**Decision.**
+- Colours come from the DJA v7.4 grizli catalog: the same 0.5″-diameter circular aperture in every band,
+  defined on one combined detection image. The pipeline `_cat.ecsv` encircled-energy apertures are no longer
+  used for colours.
+  - `photometry.py` fetches the catalog by URL plus pinned sha256 into the cache.
+  - It turns µJy into AB (23.9 − 2.5 log f). Measurements with SEP flags APER_TRUNC, ALLMASKED or
+    NONPOSITIVE are dropped. APER_HASMASKED is kept, because grizli masks neighbours on purpose.
+  - Magnitudes are joined to the merged sources by nearest neighbour within 0.2″, as
+    `<band>_dja05_abmag`. Features then use `aperture: dja05`.
+  - The pipeline catalogs remain the source list. This is a per-sample, optional stage: if it fails, the
+    pipeline colours are used and the report says so.
+- `features.build_features(daofind_max_ci=1.8)` sets DAOFind `sharpness`/`roundness` to NaN unless the
+  reference-band CI_50_30 ≤ 1.8 (point-like). Both statistics assume a point-source profile.
+
+**Alternatives rejected.**
+- Correcting the EE-aperture colours analytically: per-band EE radii differ in arcsec, and the correction
+  depends on each source's profile.
+- Isophotal colours: the isophotes are defined per band.
+- Running our own forced photometry with photutils: it duplicates DJA, which already provides it. Revisit if
+  PSF-matching is needed.
+- Replacing the source list with DJA's: it would change the uids, the gate and the strata in one step.
+
+**Evidence.** Run `20261007T120528Z-378af5a1` (SMACS NIRCam), `scripts/feature_size_bias.py` (F200W−F277W, F200W S/N > 10):
+- **aper50:** bin medians +0.77 → +0.99 with size, Spearman 0.206 (p = 1.5e-16).
+- **dja05:** bin medians +0.01 → −0.09, Spearman 0.023 (p = 0.38), so the size bias is gone.
+- **Join coverage:** 2,920 of 5,254 sources match DJA within 0.2″. Most unmatched sources are faint
+  fragments; at S/N > 10, about 93% match.
+
+**Revisit if.**
+- PSF differences matter for compact sources (DJA apertures are not PSF-homogenised): then validate against
+  PSF-matched catalogs such as CEERS DR1.0.
+- DJA releases v8.
+- Other fields need it: CEERS `ceers-full` is 250–400 MB (state the reason first). MIRI colours in a fixed
+  0.5″ aperture need their own evaluation.

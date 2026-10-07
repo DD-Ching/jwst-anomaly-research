@@ -1,33 +1,32 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T040938Z-01527ace`; the size bias
-is re-measured with `scripts/feature_size_bias.py`).
+Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T120528Z-378af5a1`; size bias via
+`scripts/feature_size_bias.py`).
 
 ## Now (M1 follow-through)
-1. **Size-robust features** (vetting, 2026-10-07): the top galaxy candidates were explained by
-   catalog effects. The aper50 SW−LW colours are biased with source size, and DAOFind
-   sharpness/roundness are meaningless for extended sources. Options:
-   - restrict sharpness/roundness to compact sources;
-   - take colours from size-consistent photometry, i.e. the DJA v7.4 `smacs0723` matched-aperture
-     catalog (`fix_phot.fits`, 38.6 MB), which pulls the M2 item forward.
-
-   Measure the change by re-vetting the new top 20.
-   - Still open from vetting: `/vet-candidate` on MIRI rank 17 (`jw02736-o002_t001_miri_f770w_94`),
-     the known NED `G_Lens` object, which exercises the known-object path.
-2. **Faint stars:** about 4 PSF-like sources without Gaia counterparts remain in the SMACS galaxy top 20.
-   Add a size–magnitude stellar locus to `classify` (D-012 "Revisit if").
-3. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
-   subcommands (`add-vetting --outcome pass|fail|inconclusive`). `docs/candidates/` is confirmed as the
-   record location.
-4. Report the top-k artifact and star fractions per run as a tracked metric.
-5. Quality gate follow-ups (D-011 "Revisit if"): per-band gating for colours; rank shallow regions as a
-   separate stratum instead of excluding them (55% of MIRI sources are excluded now).
+1. **S/N floor for ranking:** with size-robust colours (D-013), faint near-noise sources reach the SMACS
+   galaxy top 20 (run `20261007T120528Z-378af5a1`). Rank only sources above a reference-band S/N (rank the rest separately or
+   not at all), then re-check the top 20.
+2. **Faint stars:** about three PSF-like sources without Gaia counterparts remain in the galaxy top 20. Add
+   a size–magnitude stellar locus to `classify` (D-012 "Revisit if").
+3. **Vet the new top candidates** with `/vet-candidate` and `scripts/vet_evidence.py`:
+   - thin arcs `jw02736-o001_t001_nircam_f200w_1032` (NED `[MJR2023] 028.2`, G_Lens) and `_438`;
+   - `jw02736-o001_t001_nircam_f277w_829` (SIMBAD `[YML2023] F150DB-C-4`);
+   - MIRI rank 17 (`jw02736-o002_t001_miri_f770w_94`), the known NED `G_Lens` object, which exercises the
+     known-object path.
+4. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
+   subcommands (`add-vetting --outcome pass|fail|inconclusive`).
+5. Report the top-k artifact and star fractions per run as a tracked metric.
+6. Quality gate follow-ups (D-011 "Revisit if"): gate each band for colours; rank shallow regions as a
+   separate stratum instead of excluding them.
 
 ## Next (M2)
-- Ingest the DJA v7.4 `smacs0723` and `ceers-full` catalogs and photo-z for consistent matched-aperture
-  photometry. Validate CEERS colours against CEERS DR1.0. The `ceers-full` files are 250–400 MB, so state
-  the reason before downloading them.
+- Matched-aperture colours for other samples (D-013 is done for SMACS NIRCam):
+  - CEERS: DJA `ceers-full` (250–400 MB, so state the reason before downloading), validated against
+    CEERS DR1.0.
+  - MIRI: evaluate fixed-aperture colours.
+- DJA photo-z (`smacs0723-grizli-v7.4-fix.photoz.tar.gz`, 59 MB) as a feature or for vetting.
 - Re-fetch program 2736 after MAST reprocesses it with jwst ≥ 3.0 (expected around mid to late October 2026).
   Until then, compare only photometric columns across programs (D-010).
 - Image embeddings (Zoobot via `timm`, DINOv2) on cutouts, evaluated against the baseline with

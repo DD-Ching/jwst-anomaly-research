@@ -125,6 +125,7 @@ def build_features(
     ref_band: str | None = None,
     aperture: str = DEFAULT_APERTURE,
     min_snr: float | None = DEFAULT_MIN_SNR,
+    daofind_max_ci: float | None = None,
 ) -> Table:
     """Compute numeric features from a merged source table (``schema.SOURCE_COLUMNS``).
 
@@ -137,6 +138,10 @@ def build_features(
     ``aperture`` selects the magnitude used for colors and ``ref_mag``; measurements from a band
     whose ``aperture`` S/N is below ``min_snr`` are NaN (``None`` disables this). The NaN policy is
     :data:`NAN_POLICY` (also stored in ``meta["nan_policy"]``).
+
+    ``daofind_max_ci``: DAOFind ``sharpness``/``roundness`` assume a point-like profile and are
+    meaningless for extended sources (D-013); with a value, they are NaN where the reference
+    band's ``CI_50_30`` exceeds it (a point source has CI_50_30 ~ 1.67).
     """
     schema.validate(sources, schema.SOURCE_COLUMNS, name="sources")
     if len(sources) == 0:
@@ -203,9 +208,16 @@ def build_features(
         ("ref_roundness", "roundness", _identity, "DAOFind roundness statistic"),
         ("ref_log_nn_dist", "nn_dist", _log10_positive, "log10 nearest-neighbour distance (pix)"),
     ]
+    ci_ref = measured(ref, "CI_50_30") if daofind_max_ci is not None else None
     for name, quantity, transform, text in morph:
-        columns[name] = transform(measured(ref, quantity))
-        spec[name] = f"{text} in {ref_name}{snr_note}"
+        values = transform(measured(ref, quantity))
+        extra = ""
+        if ci_ref is not None and quantity in ("sharpness", "roundness"):
+            with np.errstate(invalid="ignore"):
+                values = np.where(ci_ref <= daofind_max_ci, values, np.nan)
+            extra = f"; NaN unless CI_50_30 <= {daofind_max_ci} (point-like)"
+        columns[name] = values
+        spec[name] = f"{text} in {ref_name}{snr_note}{extra}"
 
     # Detection pattern: explicit band-level missingness indicators. Every undetected band is
     # counted in exactly one of the three (n_bands = n_total - blue - red - gaps is therefore not
@@ -238,6 +250,7 @@ def build_features(
         bands=band_list,
         ref_band=ref_name,
         aperture=aperture,
+        daofind_max_ci=daofind_max_ci,
         min_snr=min_snr,
         min_snr_skipped_bands=snr_skipped,
         dropped_features=dropped,

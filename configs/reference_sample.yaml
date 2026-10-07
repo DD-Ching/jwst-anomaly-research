@@ -23,6 +23,14 @@ samples:
       - jw02736-o001_t001_nircam_clear-f277w
       - jw02736-o001_t001_nircam_clear-f356w
       - jw02736-o001_t001_nircam_clear-f444w
+    # D-013: colours from DJA v7.4 matched apertures (0.5" diameter, one detection image),
+    # not from the pipeline's size-biased encircled-energy apertures.
+    matched_photometry:
+      url: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/smacs0723-grizli-v7.4-fix_phot.fits
+      sha256: 361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166
+      aperture: 1        # index into ASEC_0..2 = 0.36, 0.5, 0.7 arcsec diameters
+      label: dja05
+      radius_arcsec: 0.2
 
   - id: smacs0723_miri
     role: science-aux
@@ -74,6 +82,8 @@ stages:
     gaia_radius_arcsec: 0.3    # any Gaia DR3 source this close counts as the star itself
     star_top_k: 10
     min_stars: 5
+  features:
+    daofind_max_ci: 1.8   # D-013: DAOFind sharpness/roundness only for point-like sources
   rank:
     methods: [robust_z, isolation_forest, lof]
     random_state: 0

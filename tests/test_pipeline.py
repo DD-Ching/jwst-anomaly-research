@@ -22,6 +22,7 @@ from jwst_anomaly import (
     cutouts,
     features,
     paths,
+    photometry,
     pipeline,
     provenance,
     quality,
@@ -180,12 +181,32 @@ class FakeStages:
             t[schema.band_column(band, "aper50_abmag")] = cat["aper50_abmag"]
         return _meta(t, schema.Provenance.DERIVED, "fake merge")
 
-    def build_features(self, sources):
+    def build_features(self, sources, aperture="aper50", **kw):
+        self.calls["build_features"].append({"aperture": aperture, **kw})
         ref = sources["ref_band"][0]
         t = Table({"source_uid": sources["source_uid"]})
-        t["mag_ref"] = sources[schema.band_column(ref, "aper50_abmag")]
-        t.meta["feature_spec"] = {"mag_ref": "aper50 AB magnitude in the reference band"}
+        t["mag_ref"] = sources[schema.band_column(ref, f"{aperture}_abmag")]
+        t.meta["feature_spec"] = {"mag_ref": f"{aperture} AB magnitude in the reference band"}
         return _meta(t, schema.Provenance.DERIVED, "fake features")
+
+    # Matched-aperture photometry (D-013), offline: copies aper50 magnitudes under the label.
+    def fetch_catalog(self, url, sha256, cache_dir=None):
+        self.calls["fetch_catalog"].append((url, sha256))
+        return "fake_phot.fits"
+
+    def load_dja_catalog(self, path, bands, aperture=1):
+        t = Table({"id": [1], "ra": [0.0], "dec": [0.0]})
+        t.meta.update(provenance="observed", source=f"fake {path}", aperture_diameter_arcsec=0.5)
+        return t
+
+    def join_matched_photometry(self, sources, catalog, label, *, radius_arcsec=0.2):
+        out = sources.copy()
+        for c in sources.colnames:
+            if c.endswith("_aper50_abmag") or c.endswith("_aper50_abmag_err"):
+                out[c.replace("_aper50_", f"_{label}_")] = sources[c]
+        out.meta = dict(sources.meta)
+        out.meta["matched_photometry"] = {"label": label, "n_matched": len(out)}
+        return out
 
     def score_anomalies(self, features, methods=("robust_z",), random_state=0):
         self.calls["score_anomalies"].append((tuple(methods), random_state))
@@ -279,6 +300,9 @@ def install_fakes(monkeypatch: pytest.MonkeyPatch, fakes: FakeStages | None = No
         (cutouts, "make_cutouts"),
         (cutouts, "sample_weight_map"),
         (crossmatch, "query_matches"),
+        (photometry, "fetch_catalog"),
+        (photometry, "load_dja_catalog"),
+        (photometry, "join_matched_photometry"),
         (crossmatch, "crossmatch"),
         (viz, "contact_sheet"),
     ):
@@ -1007,3 +1031,41 @@ def test_rejected_gate_does_not_leak_its_reference_weight(tmp_path, env, monkeyp
     pipeline.run(write_config(tmp_path), samples=["field_a"])
     kws = fakes.calls["make_cutouts_kw"]
     assert kws and all("weight_ref" not in k for k in kws)
+
+
+def test_matched_photometry_feeds_feature_colours(tmp_path, env, monkeypatch):
+    fakes = install_fakes(monkeypatch)
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["samples"][0]["matched_photometry"] = {
+        "url": "https://example.org/x_phot.fits",
+        "sha256": "0" * 64,
+        "label": "dja05",
+    }
+    config["stages"]["features"] = {"daofind_max_ci": 1.8}
+    path = tmp_path / "mp.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    sid = config["samples"][0]["id"]
+    run_id = pipeline.run(path, samples=[sid])
+    assert fakes.calls["fetch_catalog"] == [("https://example.org/x_phot.fits", "0" * 64)]
+    assert fakes.calls["build_features"][-1] == {"aperture": "dja05", "daofind_max_ci": 1.8}
+    run_dir = env / "runs" / run_id
+    assert (run_dir / sid / "photometry.ecsv").is_file()
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    assert "colours from matched-aperture photometry 'dja05'" in report
+
+
+def test_matched_photometry_failure_falls_back_to_pipeline_colours(tmp_path, env, monkeypatch):
+    fakes = install_fakes(monkeypatch)
+
+    def broken(url, sha256, cache_dir=None):
+        raise ValueError("sha256 mismatch")
+
+    monkeypatch.setattr(photometry, "fetch_catalog", broken)
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["samples"][0]["matched_photometry"] = {"url": "https://e.org/x.fits", "sha256": "0" * 64}
+    path = tmp_path / "mp.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    run_id = pipeline.run(path, samples=[config["samples"][0]["id"]])
+    assert fakes.calls["build_features"][-1]["aperture"] == "aper50"
+    report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
+    assert "matched-aperture photometry failed: colours from pipeline catalogs" in report

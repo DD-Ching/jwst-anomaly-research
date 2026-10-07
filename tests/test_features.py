@@ -246,3 +246,33 @@ def test_features_feed_score_anomalies():
     schema.validate(scores, schema.SCORE_COLUMNS)
     assert len(scores) == 150
     assert scores.meta["feature_names"] == list(f.meta["feature_spec"])
+
+
+def test_daofind_stats_only_for_point_like_sources():
+    from jwst_anomaly.features import build_features
+
+    t = Table(
+        {
+            "source_uid": ["point", "extended", "unknown_ci"],
+            "ra": [1.0, 1.0, 1.0],
+            "dec": [2.0, 2.0, 2.0],
+            "ref_band": ["F200W"] * 3,
+            "n_bands": [1, 1, 1],
+            "f200w_detected": [True, True, True],
+            "f200w_aper50_abmag": [24.0, 24.0, 24.0],
+            "f200w_aper50_abmag_err": [0.01, 0.01, 0.01],
+            "f200w_CI_50_30": [1.65, 2.3, np.nan],
+            "f200w_sharpness": [0.6, 1.8, 0.7],
+            "f200w_roundness": [0.1, 0.5, 0.2],
+            "f200w_isophotal_area": [20.0, 900.0, 30.0],
+        }
+    )
+    t.meta.update(provenance="derived", source="test")
+    plain = build_features(t)
+    gated = build_features(t, daofind_max_ci=1.8)
+    assert np.isfinite(plain["ref_sharpness"]).all()
+    assert gated["ref_sharpness"][0] == pytest.approx(0.6)
+    assert np.isnan(gated["ref_sharpness"][1]) and np.isnan(gated["ref_roundness"][1])
+    assert np.isnan(gated["ref_sharpness"][2])  # CI unknown -> not point-like
+    assert "point-like" in gated.meta["feature_spec"]["ref_sharpness"]
+    assert gated.meta["daofind_max_ci"] == 1.8

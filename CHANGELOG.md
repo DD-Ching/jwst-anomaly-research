@@ -2,6 +2,31 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-07: Size-robust colours from DJA matched apertures (D-013, cycle 4)
+- New `photometry.py`: checksum-verified DJA v7.4 catalog, joined by position within 0.2″. Colours now come
+  from 0.5″ matched apertures. DAOFind sharpness/roundness apply only to point-like sources (CI_50_30 ≤ 1.8).
+- **The size bias is gone (derived; run `20261007T120528Z-378af5a1`, SMACS NIRCam).** Spearman between log area and F200W−F277W
+  went from 0.206 (p = 1.5e-16) to 0.023 (p = 0.38).
+  - Re-measure with `python scripts/feature_size_bias.py --run-dir <outputs>/runs/20261007T120528Z-378af5a1 --sample
+    smacs0723_nircam --aperture dja05 --table photometry`.
+- **The ranking changed substantially.** Only 4 of the previous galaxy top 20 remain. The three vetted
+  sources fell to ranks 3115, 502 and 263, which agrees with their `catalog effect` verdicts.
+- **Known objects now reach the top 20** (observed cross-matches; any interpretation is a `hypothesis`):
+  - rank 7 `f200w_1032` = NED `SMACS J0723-73:[MJR2023] 028.2` (G_Lens);
+  - rank 11 `f277w_829` = SIMBAD `[YML2023] F150DB-C-4`, also NED G_Lens.
+
+  The ranking now recovers catalogued lensed images and a published dropout candidate instead of large
+  galaxies.
+- Visual check (unvetted):
+  - two thin arc-like sources (`f200w_1032`, `f200w_438`);
+  - about three faint PSF-like stars missing from Gaia (D-012 limitation);
+  - several faint compact sources with extreme colours;
+  - about five faint, near-noise detections. Cleaner colours let low-S/N sources rise, so ranking needs an
+    S/N floor.
+- Only 56% of sources match DJA (about 93% at S/N > 10). Unmatched sources get their colours imputed.
+- **Handoff:** TASKS Now 1 (ranking S/N floor), Now 2 (stellar locus for faint stars), Now 3 (vet the
+  thin arcs and known lens images).
+
 ## 2026-10-07: First vetting: three arc-like galaxy candidates (cycle 3)
 - New `scripts/vet_evidence.py` gathers vetting evidence:
   - per-band catalog rows;

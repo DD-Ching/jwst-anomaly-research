@@ -26,7 +26,12 @@ MAG_ERR_TO_SNR = 2.5 / np.log(10)  # S/N ~ 1.0857 / sigma_mag
 
 
 def size_bias(
-    sources: Table, band_a: str, band_b: str, min_snr: float, bins: list[float]
+    sources: Table,
+    band_a: str,
+    band_b: str,
+    min_snr: float,
+    bins: list[float],
+    aperture: str = "aper50",
 ) -> tuple[list[tuple[float, float, int, float, float]], float, float]:
     """Bin rows ``(lo, hi, n, median aperture colour, median isophotal colour)`` and Spearman."""
 
@@ -35,9 +40,9 @@ def size_bias(
 
     detected = (col(band_a, "detected") > 0) & (col(band_b, "detected") > 0)
     with np.errstate(divide="ignore", invalid="ignore"):
-        snr = MAG_ERR_TO_SNR / col(band_a, "aper50_abmag_err")
+        snr = MAG_ERR_TO_SNR / col(band_a, f"{aperture}_abmag_err")
     area = col(band_a, "isophotal_area")
-    ap = col(band_a, "aper50_abmag") - col(band_b, "aper50_abmag")
+    ap = col(band_a, f"{aperture}_abmag") - col(band_b, f"{aperture}_abmag")
     iso = col(band_a, "isophotal_abmag") - col(band_b, "isophotal_abmag")
     ok = detected & (snr > min_snr) & np.isfinite(ap) & np.isfinite(area) & (area > 0)
     rows = []
@@ -55,16 +60,23 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--band-a", default="F200W")
     ap.add_argument("--band-b", default="F277W")
     ap.add_argument("--min-snr", type=float, default=10.0)
+    ap.add_argument("--aperture", default="aper50", help="e.g. dja05 (with --table photometry)")
+    ap.add_argument("--table", default="sources", help="run table: sources or photometry")
     ap.add_argument("--bins", nargs="+", type=float, default=[0, 50, 200, 1000, 1e9])
     args = ap.parse_args(argv)
-    sources = Table.read(args.run_dir / args.sample / "sources.ecsv")
-    rows, rho, p = size_bias(sources, args.band_a, args.band_b, args.min_snr, args.bins)
+    sources = Table.read(args.run_dir / args.sample / f"{args.table}.ecsv")
+    rows, rho, p = size_bias(
+        sources, args.band_a, args.band_b, args.min_snr, args.bins, aperture=args.aperture
+    )
     a, b = args.band_a.upper(), args.band_b.upper()
-    print(f"{args.run_dir.name} {args.sample}: {a}-{b}, {a} aper50 S/N > {args.min_snr:g}")
-    print(f"{'isophotal area [pix]':>22} {'n':>5} {'median aper50':>14} {'median isophotal':>17}")
+    print(
+        f"{args.run_dir.name} {args.sample}: {a}-{b} ({args.aperture}), {a} S/N > {args.min_snr:g}"
+    )
+    head = f"median {args.aperture}"
+    print(f"{'isophotal area [pix]':>22} {'n':>5} {head:>14} {'median isophotal':>17}")
     for lo, hi, n, ma, mi in rows:
         print(f"{f'[{lo:g}, {hi:g})':>22} {n:5d} {ma:+14.2f} {mi:+17.2f}")
-    print(f"Spearman(log area, aper50 colour) = {rho:.3f}, p = {p:.1e}")
+    print(f"Spearman(log area, {args.aperture} colour) = {rho:.3f}, p = {p:.1e}")
     return 0
 
 
