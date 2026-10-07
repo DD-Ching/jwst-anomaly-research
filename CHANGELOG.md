@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Spike screening of the galaxy top k (D-019, cycle 11)
+- The galaxy strata get cutouts for 2k. Spike-flagged sources with stellar colours (`1571`, `2242`) are removed
+  and backfilled. Spiky sources with non-stellar colours stay ranked and are noted: `940` (a saturated star with
+  corrupted colours) and `2915` (a bright nucleus, possibly an AGN).
+- **Failed approach:** screening every spiky source removed `2915`. Spikes also mark bright galactic nuclei.
+- Run `20261007T170539Z-b369bfa2`: the top 20 now runs to rank 22, with no star+galaxy blends left.
+- **Handoff:** TASKS "Vet `2915`" (a bright red nucleus), "Saturated stars in the galaxy ranking" and "Star-stratum
+  sources with NED galaxy matches".
+
+
 ## 2026-10-08: Diffraction-spike flag on cutouts (D-018, cycle 10)
 - `cutouts.spike_statistic`: hexagonal-harmonic power around the brightest peak near the target. NIRCam cutouts with
   `spike_s6` ≥ 3 get the `spikes` flag, and the report lists them.

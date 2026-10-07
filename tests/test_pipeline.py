@@ -1333,3 +1333,88 @@ def test_spike_config_is_validated(tmp_path, spike, match):
     path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     with pytest.raises(pipeline.ConfigError, match=match):
         pipeline.load_config(path)
+
+
+def test_spike_screening_drops_flagged_sources_and_backfills(tmp_path, env, monkeypatch):
+    fakes = install_fakes(monkeypatch)
+    real = fakes.make_cutouts
+    flagged = {}
+
+    def spiky(image_uri, targets, size_arcsec=3.0, out_dir=None, **kw):
+        t = real(image_uri, targets, size_arcsec, out_dir, **kw)
+        first = str(t["source_uid"][0])  # the rank-1 source shows spikes
+        flagged["uid"] = first
+        t["spike_s6"] = [8.0] + [1.0] * (len(t) - 1)
+        t["quality_flag"] = ["spikes"] + list(t["quality_flag"][1:])
+        return t
+
+    monkeypatch.setattr(cutouts, "make_cutouts", spiky)
+    # Every source has stellar colours here, as if the D-015 locus had run.
+    original = pipeline._Runner._screen
+
+    def with_colours(self, sid, summary, ranked, flagged, cutout_rows, cut_k):
+        self.stellar_colour_uids[sid] = {r["source_uid"] for r in ranked}
+        return original(self, sid, summary, ranked, flagged, cutout_rows, cut_k)
+
+    monkeypatch.setattr(pipeline._Runner, "_screen", with_colours)
+    stages = json.loads(json.dumps(TEST_CONFIG["stages"]))
+    stages["cutouts"]["spike"] = {"radii_arcsec": [0.2, 0.8], "threshold": 3.0, "screen": True}
+    run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])
+    run_dir = env / "runs" / run_id / "field_a"
+    assert fakes.calls["make_cutouts"][-1][1] == 6  # 2 x cutouts top_k (3)
+    screened = Table.read(run_dir / "screened.ecsv")
+    assert [str(u) for u in screened["source_uid"]] == [flagged["uid"]]
+    assert screened["rank"][0] == 1 and screened["spike_s6"][0] == 8.0
+    targets = Table.read(run_dir / "targets.ecsv")
+    assert flagged["uid"] not in {str(u) for u in targets["source_uid"]}
+    assert targets["rank"][0] == 2  # original rank numbers are kept
+    with _store(env) as store:
+        uids = {c["source_uid"] for c in store.list_candidates(run_id=run_id, sample_id="field_a")}
+    assert flagged["uid"] not in uids
+    report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
+    assert "spike screening (D-019) removed 1 source(s) from the top 3" in report
+
+
+def test_spike_screen_must_be_boolean(tmp_path):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["stages"]["cutouts"]["spike"] = {
+        "radii_arcsec": [0.2, 0.8],
+        "threshold": 3,
+        "screen": "yes",
+    }
+    path = tmp_path / "bad.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    with pytest.raises(pipeline.ConfigError, match="screen"):
+        pipeline.load_config(path)
+
+
+def test_spike_screening_keeps_non_stellar_or_unknown_colours(tmp_path, env, monkeypatch):
+    fakes = install_fakes(monkeypatch)
+    real = fakes.make_cutouts
+
+    def spiky(image_uri, targets, size_arcsec=3.0, out_dir=None, **kw):
+        t = real(image_uri, targets, size_arcsec, out_dir, **kw)
+        t["quality_flag"] = ["spikes"] + list(t["quality_flag"][1:])
+        return t
+
+    monkeypatch.setattr(cutouts, "make_cutouts", spiky)
+    stages = json.loads(json.dumps(TEST_CONFIG["stages"]))
+    stages["cutouts"]["spike"] = {"radii_arcsec": [0.2, 0.8], "threshold": 3.0, "screen": True}
+    run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])  # no locus
+    run_dir = env / "runs" / run_id
+    assert not (run_dir / "field_a" / "screened.ecsv").exists()
+    assert Table.read(run_dir / "field_a" / "targets.ecsv")["rank"][0] == 1
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    assert "spike screening (D-019) skipped: no stellar-locus colours" in report
+
+    original = pipeline._Runner._screen
+
+    def no_stellar(self, sid, summary, ranked, flagged, cutout_rows, cut_k):
+        self.stellar_colour_uids[sid] = set()  # locus ran; nothing has stellar colours
+        return original(self, sid, summary, ranked, flagged, cutout_rows, cut_k)
+
+    monkeypatch.setattr(pipeline._Runner, "_screen", no_stellar)
+    run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])
+    report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
+    assert "spike-flagged but non-stellar colours, kept ranked" in report
+    assert not (env / "runs" / run_id / "field_a" / "screened.ecsv").exists()

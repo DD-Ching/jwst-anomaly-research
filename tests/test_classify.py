@@ -214,3 +214,11 @@ def test_stellar_locus_two_sided_with_a_high_floor():
     assert info["thresholds"]["r50_floor"] == 0.8
     with pytest.raises(ValueError, match="r50_floor"):
         classify.stellar_locus(t, "dja05", known, r50_floor=2.0)
+
+
+def test_stellar_colour_mask_ignores_size():
+    t, known = _locus_table()
+    _, info = classify.stellar_locus(t, "dja05", known)
+    mask = dict(zip(t["source_uid"], classify.stellar_colour_mask(t, "dja05", info), strict=True))
+    assert mask["galaxy"] and mask["faint_star"]  # stellar colours, whatever the size
+    assert not mask["brown_dwarf"]

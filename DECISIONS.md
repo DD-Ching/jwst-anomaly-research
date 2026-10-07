@@ -1021,3 +1021,35 @@ pixels there count as brightest, because saturated cores are NaN.
 - Close star pairs or crowded cluster cores are missed.
 - MIRI is to be covered.
 - MAST adds DQ to i2d products.
+
+## D-019 Spike screening: drop spiky sources with stellar colours from the galaxy top k (2026-10-08)
+
+**Decision.** With `stages.cutouts.spike.screen: true`, a galaxy stratum (not a star stratum) gets cutouts for
+its top 2k sources.
+- **Removed:** sources flagged `spikes` (D-018) whose matched-photometry colours lie in the D-015 stellar colour
+  box (`classify.stellar_colour_mask`, size ignored). They are stars or star-dominated blends.
+  - The next clean sources backfill the top k. Original rank numbers are kept.
+  - Removed sources go to `screened.ecsv` and a report note.
+- **Kept, with a note:** spiky sources with non-stellar colours, because a galaxy with a bright unresolved nucleus
+  (an AGN, for instance) also shows spikes and is a legitimate anomaly.
+- **Unchanged:** samples without stellar-locus colours are not screened, and the report says so.
+
+**Alternatives rejected.**
+- Removing every spike-flagged source: on run `20261007T170058Z-68af3efd` it also removed `2915`, an extended
+  galaxy with a bright point-like nucleus and F150W−F444W +2.0 (not stellar), so it may be an AGN host.
+- Flag only (D-018 alone): the blends kept 2 of the top 20 slots.
+- Moving flagged sources into the star stratum: they were never ranked among stars, and the star stratum's top 10
+  would then mix in blends.
+- Iterative backfill with repeated cutout calls: a single 2k pool is simpler, and more than k flagged sources
+  in 2k is unlikely (the report notes it if it happens).
+
+**Evidence.** Run `20261007T170539Z-b369bfa2` (SMACS NIRCam), contact sheet checked:
+- Removed: `1571` (#4) and `2242` (#9), star+galaxy blends with stellar colours.
+- Kept and noted: `940` (#10), a saturated star with corrupted colours, and `2915` (#21), a bright nucleus.
+- The top 20 now runs to rank 22. The cutout pool costs 20 extra S3 cutouts.
+
+**Revisit if.**
+- Saturated stars like `940` should also leave the ranking: use a pipeline-vs-matched magnitude mismatch
+  (Δ = 5.1 mag for `940`, beyond the 99th percentile of 3.8) as a saturation test.
+- AGN hosts turn out to have stellar-like colours in other fields.
+- A sample without matched photometry needs screening.
