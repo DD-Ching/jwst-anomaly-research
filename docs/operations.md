@@ -73,15 +73,20 @@ fresh clone of the repository in a fresh session. Routines are a research previe
      cdsxmatch.u-strasbg.fr
      ned.ipac.caltech.edu
      gea.esac.esa.int
+     arxiv.org
+     export.arxiv.org
+     raw.githubusercontent.com
+     s3.amazonaws.com
      ```
      These are the hosts we observed (2026-10-07, astroquery 0.4.11, by logging every DNS lookup) for a MAST query,
      a product list and a `_cat.ecsv` download (`mast.stsci.edu`), an S3 byte-range FITS read
      (`stpubdata.s3.amazonaws.com`), SIMBAD (`simbad.cds.unistra.fr`), VizieR (`vizier.cds.unistra.fr`), CDS XMatch
      (`cdsxmatch.u-strasbg.fr`), NED (`ned.ipac.caltech.edu`) and the Gaia archive (`gea.esac.esa.int`). The
      wildcards also cover the other MAST hosts in astroquery's `mast` module (`catalogs.mast.stsci.edu`,
-     `auth.mast.stsci.edu`) and the alternative XMatch host `cdsxmatch.cds.unistra.fr` (also live). A blocked request fails with `403`
-     and `x-deny-reason: host_not_allowed`. Add the host when a run reports one, for example a docs site such as
-     `*.readthedocs.io` or `arxiv.org`.
+     `auth.mast.stsci.edu`) and the alternative XMatch host `cdsxmatch.cds.unistra.fr` (also live). The last four
+     serve literature checks (arXiv), raw files from public repositories, and the path-style DJA catalog URLs
+     (`s3.amazonaws.com/grizli-v2/...`). A blocked request fails with `403` and `x-deny-reason: host_not_allowed`.
+     Add the host when a run reports one, for example a docs site such as `*.readthedocs.io`.
    - **Environment variables:** none. Never put secrets here, because anyone using the environment can read them.
      A MAST token isn't needed for public data.
    - **Setup script:** optional. uv, Python 3 and `gh` are preinstalled, and the cycle creates `.venv` itself. To warm
@@ -96,16 +101,28 @@ fresh clone of the repository in a fresh session. Routines are a research previe
      exit 0
      ```
 3. **Create the routine.** Run `/schedule` in a local session (or open [claude.ai/code/routines](https://claude.ai/code/routines)).
-   Choose the repository `DD-Ching/jwst-anomaly-research`, the environment from step 2, no connectors, and this
-   prompt:
-   ```text
-   /research-cycle
-   ```
-   Start with **daily at a few minutes past the hour**, for example 09:07, since on-the-hour starts can lag. When your
-   review keeps up, switch to every 8 hours with `/schedule update` and cron `7 */8 * * *`. The minimum interval is
-   1 hour. The WIP cap (3 open agent PRs) stops extra runs from piling up work.
+   Choose the repository `DD-Ching/jwst-anomaly-research`, the environment from step 2 and no connectors (new
+   routines attach every connected connector; remove them). The plain prompt `/research-cycle` works; the live
+   routine (since 2026-10-08: hourly at :07 UTC, Opus 5.5) uses the longer prompt in
+   [cloud-routine-prompt.md](cloud-routine-prompt.md), which loops cycles for about 50 minutes and carries the
+   D-023 priorities. Start slower (daily, then cron `7 */8 * * *`) if your review can't keep up. The minimum
+   interval is 1 hour; start a few minutes past the hour, since on-the-hour starts can lag. The WIP cap (3 open agent
+   PRs) and the prompt's 60-minute rule for recently updated branches keep overlapping runs apart.
 4. **Check the first run** with **Run now**, then open the session. A green status only means the session exited
    cleanly. Read the transcript, or ask `/schedule why did my research cycle do nothing?`.
+
+**GitHub from a cloud session.** GraphQL is blocked there (`HTTP 403: GitHub GraphQL is not available from Claude
+Code sessions`), so `gh pr ...` and `gh issue ...` fail. Use REST with `gh api` (`R=repos/DD-Ching/jwst-anomaly-research`):
+
+| Local command | Cloud equivalent |
+|---|---|
+| `gh pr list --state open` | `gh api "$R/pulls?state=open"` |
+| `gh issue list --state open` | `gh api "$R/issues?state=open"` (drop entries with `pull_request`) |
+| `gh pr create --label agent ...` | `gh api "$R/pulls" -f title=... -f head=claude/<slug> -f base=main -f body="..."`, then `gh api "$R/issues/N/labels" -f "labels[]=agent"` |
+| `gh pr checks N --watch` | poll `gh api "$R/commits/<head sha>/check-runs"` until nothing is queued or in progress |
+| `gh pr merge N --squash --delete-branch` | `gh api -X PUT "$R/pulls/N/merge" -f merge_method=squash`, then `gh api -X DELETE "$R/git/refs/heads/claude/<slug>"` |
+
+The merge policy is the same; only the transport changes.
 
 **How the PRs reach you.** The run pushes a `claude/<slug>` branch and opens a PR with the `agent` label. Routines
 act through your GitHub identity, so these PRs are authored by you. The `agent` label and the session link in the

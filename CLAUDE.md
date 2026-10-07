@@ -28,6 +28,8 @@ decisions. Where they conflict, this file wins.
 
 ## Environment
 - Windows host with Git Bash and PowerShell; in Git Bash call `claude.exe`, not `claude`.
+- Cloud routine sessions (docs/cloud-routine-prompt.md) block GitHub GraphQL, so `gh pr`/`gh issue` fail with 403;
+  use the `gh api` REST equivalents in docs/operations.md §3.
 - Trust the repository once interactively: project `allow` rules in `.claude/settings.json` do not apply
   in untrusted `-p`/SDK runs (skills carry their own `allowed-tools`; see docs/operations.md).
 - Setup: `uv venv .venv --python 3.12` then `uv pip install --python .venv/Scripts/python.exe -e ".[dev,cloud]"`
