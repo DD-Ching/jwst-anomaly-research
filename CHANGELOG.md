@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: One-sided stellar-locus size test (D-016, cycle 8)
+- Bright calibration stars have inflated r50 (5–8 px under 20.5 mag), so D-015's two-sided band around 2.86 px
+  missed the unsaturated stellar sequence at r50 ≈ 2.0 px. The size test is now 0.5–1.2 × r50_psf.
+- Run `20261007T144011Z-11342d69`: the locus adds 90 stars, not 16. The star stratum has 109; its top 10 is all PSF-like.
+  `f200w_1874` is now a star.
+- Point-like sources left in the galaxy top 20 are faint (mag > 24), blends, or `2804`, whose red
+  F356W−F444W makes it a brown-dwarf-like candidate to vet. Details are in D-016.
+- **Handoff:** TASKS Now 1 (vet `2804`), Now 2 (blended stars).
+
+
 ## 2026-10-08: Vetted four high-ranked SMACS galaxies; DJA photo-z for vetting (cycle 7)
 - PR #16 (D-015) review fixes merged. Run `20261007T132538Z-96e911bb` (clean `725eac3`) reproduces the D-015 numbers.
 - `scripts/vet_evidence.py --photoz`: the nearest DJA eazy entry, labelled model_prediction (SOURCES "Vetting

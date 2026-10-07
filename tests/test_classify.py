@@ -110,6 +110,8 @@ def _locus_table(n_ref=12):
         rows.append((f"ref{i}", 2.9 + rng.normal(0, 0.05), 21.0, -0.7, -0.4, True))
     rows += [
         ("faint_star", 2.8, 23.0, -0.65, -0.35, False),  # point-like, stellar colours -> star
+        ("compact_star", 2.0, 23.0, -0.65, -0.35, False),  # below r50_psf: still a star (D-016)
+        ("noise_like", 1.0, 23.0, -0.65, -0.35, False),  # under the r50 floor -> stays
         ("brown_dwarf", 2.9, 22.0, 1.5, 0.8, False),  # point-like, unusual colours -> stays
         ("galaxy", 6.0, 22.0, -0.7, -0.4, False),  # extended -> stays
         ("too_faint", 2.9, 26.0, -0.7, -0.4, False),  # below mag_max -> stays
@@ -134,8 +136,8 @@ def test_stellar_locus_membership():
     t, known = _locus_table()
     member, info = classify.stellar_locus(t, "dja05", known)
     got = dict(zip(t["source_uid"], member, strict=True))
-    assert got["faint_star"] and not got["brown_dwarf"]
-    assert not got["galaxy"] and not got["too_faint"]
+    assert got["faint_star"] and got["compact_star"] and not got["brown_dwarf"]
+    assert not got["galaxy"] and not got["too_faint"] and not got["noise_like"]
     assert info["n_calibration_stars"] == 12 and info["r50_psf_pix"] == pytest.approx(2.9, abs=0.1)
     assert info["provenance"] == "assumption"
 
@@ -164,9 +166,10 @@ def test_stellar_locus_rejects_unknown_keys_and_reads_masked_columns():
     with pytest.raises(ValueError, match="r50_tol"):
         classify.stellar_locus(t, "dja05", known, r50_tol=0.1)
     masked = Table(t, masked=True)
-    masked["dja05_r50_pix"].mask[-4] = True  # faint_star loses its size
+    k = list(t["source_uid"]).index("faint_star")
+    masked["dja05_r50_pix"].mask[k] = True  # faint_star loses its size
     member, _ = classify.stellar_locus(masked, "dja05", known)
-    assert not member[-4]
+    assert not member[k]
 
 
 def _populations(t, known):
@@ -188,11 +191,12 @@ def test_apply_stellar_locus_adds_members_and_records_the_catalog():
     out = classify.apply_stellar_locus(pops, t, "dja05", {"enabled": True})
     basis = dict(zip(out["source_uid"], out["star_basis"], strict=True))
     assert basis["faint_star"] == "stellar_locus" and basis["ref0"] == "gaia_position"
-    assert basis["brown_dwarf"] == "" and pops["star_basis"][-4] == ""  # input untouched
-    assert out.meta["stellar_locus"]["n_added"] == 1
+    k = list(t["source_uid"]).index("faint_star")
+    assert basis["brown_dwarf"] == "" and pops["star_basis"][k] == ""  # input untouched
+    assert out.meta["stellar_locus"]["n_added"] == 2  # faint_star and compact_star
     assert "DJA catalog x_phot.fits" in out.meta["source"]
     assert (
-        classify.apply_stellar_locus(pops, t, "dja05", True).meta["stellar_locus"]["n_added"] == 1
+        classify.apply_stellar_locus(pops, t, "dja05", True).meta["stellar_locus"]["n_added"] == 2
     )
     with pytest.raises(ValueError, match="mapping"):
         classify.apply_stellar_locus(pops, t, "dja05", ["colours"])
@@ -200,3 +204,13 @@ def test_apply_stellar_locus_adds_members_and_records_the_catalog():
     narrow["star_basis"] = np.asarray(narrow["star_basis"]).astype("U13")
     out = classify.apply_stellar_locus(narrow, t, "dja05", True)
     assert "stellar_locus" in list(out["star_basis"])  # not truncated
+
+
+def test_stellar_locus_two_sided_with_a_high_floor():
+    t, known = _locus_table()
+    member, info = classify.stellar_locus(t, "dja05", known, r50_floor=0.8)  # the D-015 rule
+    got = dict(zip(t["source_uid"], member, strict=True))
+    assert got["faint_star"] and not got["compact_star"]
+    assert info["thresholds"]["r50_floor"] == 0.8
+    with pytest.raises(ValueError, match="r50_floor"):
+        classify.stellar_locus(t, "dja05", known, r50_floor=2.0)

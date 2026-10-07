@@ -910,3 +910,45 @@ the galaxy ranking, where they are legitimate anomaly candidates.
 - Blended stars dominate the galaxy top k: add image-based PSF-spike detection on cutouts.
 - Samples without matched photometry need a locus: then use pipeline size and colour.
 - Saturation sets in at another magnitude in other fields: adjust `calib_mag_range`.
+
+## D-016 Stellar locus: one-sided size test (2026-10-08)
+
+**Decision.** This supersedes D-015's size test. A source is point-like when `r50_floor · r50_psf ≤ r50 ≤
+(1 + r50_tolerance) · r50_psf`, i.e. 0.5–1.2 × r50_psf. Previously the test was |r50/r50_psf − 1| ≤ 0.2. The
+calibration (r50_psf from catalogued stars with 20 < `mag_auto` < 22.5), the colour box and `mag_max` 24 are
+unchanged. Both thresholds are ASSUMPTIONS, set in config; `r50_floor: 0.8` restores the D-015 rule.
+
+Why one-sided:
+- Nothing real is smaller than the PSF.
+- The calibration stars' r50 rises with brightness: 5–8 px at `mag_auto` < 20.5 (saturated cores and spikes),
+  2.5–3.0 px at 20–21 and 2.1–2.2 px at 21–21.6. The median, 2.86 px, is therefore an upper envelope.
+- The floor only rejects noise-like detections. D-011's `sharper_than_psf` already handles artifacts.
+
+**Alternatives rejected.**
+- Calibrating only on unsaturated catalogued stars (21–22.5 mag): there are 4–5 Gaia/SIMBAD stars there,
+  near Gaia's limit, which is below `min_ref_stars`.
+- A magnitude-dependent r50_psf(mag): more parameters, and not needed, since the one-sided bound with the colour
+  box already separates the sequence (Evidence).
+- Self-calibrating a two-sided band around the r50 mode of stellar-coloured sources: circular, and it would
+  drop bright uncatalogued stars whose r50 is inflated (2.5–3.4 px).
+
+**Evidence.** Run `20261007T144011Z-11342d69` (SMACS NIRCam), compared with `20261007T132538Z-96e911bb`:
+- Among uncatalogued sources at `mag_auto` < 24 inside the colour box, r50 peaks at 1.9–2.1 px (65 sources).
+  Galaxies start above about 2.5 px.
+- Of the 75 uncatalogued sources at `mag_auto` < 24 with r50 < 2.3 px, 74 have stellar colours.
+- The locus now adds 90 stars instead of 16 (76 past the quality gate). The star stratum grows from 49 to 109,
+  and 2,504 galaxies are ranked.
+- The star-stratum top 10 is all PSF-like with spikes on visual check, including new members `2054`, `1802`
+  and `1005`. `f200w_1874` (TASKS) is now a star.
+- In the galaxy top 20, `741`, `2915` and `1828` (not stars) were replaced by `1894`, `737` and `2043`, because the
+  reference sample changed.
+- Point-like sources left in the galaxy top 20 fall into three groups:
+  - fainter than `mag_max`: `2317`, `365`, `432`, `2578`, `2043`, `737`;
+  - non-stellar colours: `2804`, with F150W−F444W +3.7 and very red F356W−F444W;
+  - the known blends: `1571`, `2242`, `940`.
+
+**Revisit if.**
+- Compact galaxies with stellar colours show up in the star stratum on visual check.
+- Faint (mag > 24) point sources dominate the galaxy top k: then consider a fainter `mag_max` with a stricter
+  colour test.
+- A field with a different detection image or PSF is added.

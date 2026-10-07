@@ -1,13 +1,12 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T132538Z-96e911bb`).
+Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T144011Z-11342d69`).
 
 ## Now (M1 follow-through)
-1. **Stellar-locus lower bound** (D-015): the PSF-like star `jw02736-o001_t001_nircam_f200w_1874` (F200W 21.4 mag, spikes,
-   not in Gaia) has DJA r50 2.10 px, 27% below r50_psf 2.86 px, so the locus missed it. Nothing real is smaller
-   than the PSF. Drop the lower bound (keep a noise floor), or calibrate r50_psf against magnitude, then
-   re-check the star counts.
+1. **Vet `jw02736-o001_t001_nircam_f200w_2804`** (galaxy rank 6 in run `20261007T144011Z-11342d69`). It is point-like (r50 2.13 px,
+   `mag_auto` 23.4) with F150W−F444W +3.7 and very red F356W−F444W, a brown-dwarf-like signature (D-016).
+   Check proper motion, published brown-dwarf lists and the F356W methane band.
 2. **Blended stars:** three PSF-like blends (`940`, `2242`, `1571`) remain in the SMACS galaxy top 20
    (D-015 "Revisit if"). Add image-based PSF-spike detection on cutouts.
 3. **Vet MIRI's known `G_Lens` object** with `/vet-candidate` and `scripts/vet_evidence.py`.

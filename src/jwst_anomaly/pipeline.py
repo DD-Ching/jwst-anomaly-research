@@ -761,7 +761,8 @@ class _Runner:
             }
             n_ranked = sum(_text(u) in locus_uids for u in to_rank["source_uid"])
             self.summaries[sid].notes.append(
-                f"stellar locus (D-015) added {locus['n_added']} stars, {n_ranked} of them past "
+                f"stellar locus (D-015/D-016) added {locus['n_added']} stars, "
+                f"{n_ranked} of them past "
                 f"the quality gate (r50_psf {locus['r50_psf_pix']} px from "
                 f"{locus['n_calibration_stars']} catalogued stars)"
             )
