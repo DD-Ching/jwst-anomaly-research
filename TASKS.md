@@ -4,14 +4,11 @@ Prioritized queue. Agents pick from **Now** first; in-flight work is visible as 
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
 ## Now (M3 lensing-violation search, D-023)
-1. **Lens-model consistency on SMACS:** turn the pinned Mahler+2022 model into per-position predictions
-   (convergence, shear, magnification, critical curves, counter-images). Flag:
-   - arcs whose orientation or curvature disagrees with the predicted shear;
-   - multiple-image candidates where none is predicted;
-   - parity or flux-ratio anomalies.
-   Route: port the Lenstool dPIE from autogalaxy (MIT) and switch to ICLv2, the final model (survey
-   2026-10-08; the worker branch `claude/lens-model` was interrupted). Exotic signatures:
-   docs/exotic_lensing.md.
+1. **Lens-model consistency on SMACS** (D-024: model validated; arc orientations give a null result). Next:
+   - counter-images: forward-predict the other images of each catalogued system and of bright single arcs. Flag
+     predicted images that are missing, and multiple-image candidates where none is predicted;
+   - parity and flux-ratio checks for the catalogued systems (DJA photometry against model magnification ratios);
+   - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;

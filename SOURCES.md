@@ -518,3 +518,18 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - Degeneracies:
   - arXiv:1706.10279 Kelly et al., "Extreme magnification of a star at redshift 1.5 by a galaxy-cluster lens";
   - arXiv:astro-ph/9707187 Mao & Schneider (flux-ratio anomalies from substructure).
+
+## Lens-model stage (D-024, checked 2026-10-08)
+
+- **Mahler+2022 SMACS 0723 ICLv2** (model entry above; CC0-1.0), pinned at commit
+  `f36a41c365865df252a6da08cd79955f9cd68f11`. URLs and sha256 are in `lensmodel.SMACS0723_MAHLER22_ICLV2`.
+  - `ICLv2/best.par`: 149 dPIE potentials; reference RA 110.826989, Dec −73.454723; `Chi2pos` 30.913.
+  - `ICLv2/arcs.dat`: 60 images.
+  - `ICLv2/input.par`: `sigposArcsec` 0.4427.
+  - `ICLv2/tmp_k/0000_k.fits.tar.xz`: 17.1 MB; a 3000 × 3000 px κ map, 0.01334″/px, centred on the reference.
+- **PyAutoGalaxy** `autogalaxy==2026.10.7.1` (MIT, https://github.com/PyAutoLabs/PyAutoGalaxy;
+  https://pypi.org/project/autogalaxy/), `autogalaxy/profiles/mass/total/dual_pseudo_isothermal_mass.py`: the source
+  of the dPIE port.
+- Profile references named by that code:
+  - Kassiola & Kovner (1993); bibliographic details not checked;
+  - arXiv:0710.5636, Elíasdóttir et al., "Where is the matter in the Merging Cluster Abell 2218?"

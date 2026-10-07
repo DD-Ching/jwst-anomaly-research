@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Lens-model stage validated; SMACS arc orientations agree with ICLv2 (D-024)
+- `lensmodel.py` is a Lenstool dPIE port (from PyAutoGalaxy, MIT) that evaluates a published `best.par`. It
+  reproduces Mahler+2022 ICLv2:
+  - κ map: median |Δκ| 1.6e-5;
+  - back-trace χ² of the 60 catalogued images: 31.18, against Lenstool's 30.91.
+- `scripts/lens_consistency.py` provides `validate` and `arcs`.
+- SMACS arcs: 37 of 56 elongated strong-shear sources are aligned with the predicted stretch (p = 5.6e-7); for
+  background sources, 19 of 23. The 6 anti candidates are all ordinary:
+  - 2 segmentation blends;
+  - 1 galaxy at z ≈ 0.77 with an intrinsic shape;
+  - 3 noisy low-surface-brightness shapes.
+  This is a null result.
+- **Lesson:** moment orientations from pipeline segments pick up blends and low-S/N shapes, so filter them before
+  calling a source anti-tangential.
+- **Handoff:** TASKS "Now" 1, which leaves counter-images (predicted but missing, or observed but not predicted)
+  and parity/flux ratios. Then El Gordo and Abell 2744; check their model profiles first.
+
+
 ## 2026-10-08: Hourly cloud routine
 - Routine `trig_01PNAmgcfqef8CvhPAY8ggbP` runs `/research-cycle` loops hourly at :07 UTC (Opus 5.5, no connectors)
   with the prompt in docs/cloud-routine-prompt.md.

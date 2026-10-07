@@ -448,17 +448,22 @@ class LensModel:
         PA is measured East of North. +x points West, so East = -cos(phi), North = sin(phi).
         """
         p = np.deg2rad(np.asarray(phi_deg, float))
-        return np.mod(np.rad2deg(np.arctan2(-np.cos(p), np.sin(p))), 180.0)
+        pa = np.mod(np.rad2deg(np.arctan2(-np.cos(p), np.sin(p))), 180.0)
+        return np.where(np.isclose(pa, 180.0, rtol=0.0, atol=1e-9), 0.0, pa)  # keep [0, 180)
 
     def dls_ds(self, z_s: Any) -> np.ndarray:
-        """Distance ratio D_LS / D_S for source redshift(s) ``z_s`` (0 in front of the lens)."""
+        """Distance ratio D_LS / D_S for source redshift(s) ``z_s`` (0 in front of the lens).
+
+        Flat cosmology: D_LS / D_S = 1 - D_M(z_lens) / D_M(z_s), with D_M the transverse comoving
+        distance.
+        """
         z = np.atleast_1d(np.asarray(z_s, float))
         out = np.zeros(z.shape)
         behind = z > self.z_lens
         if behind.any():
-            d_ls = self.cosmology.angular_diameter_distance_z1z2(self.z_lens, z[behind])
-            d_s = self.cosmology.angular_diameter_distance(z[behind])
-            out[behind] = (d_ls / d_s).to_value(u.dimensionless_unscaled)
+            d_l = self.cosmology.comoving_transverse_distance(self.z_lens)
+            d_s = self.cosmology.comoving_transverse_distance(z[behind])
+            out[behind] = 1.0 - (d_l / d_s).to_value(u.dimensionless_unscaled)
         return out.reshape(np.shape(z_s))
 
     # --- frame-level fields (D_LS/D_S = 1) --------------------------------------------------
