@@ -1,0 +1,94 @@
+# WHL0137-08 ("Sunrise arc" lensing cluster, host of the lensed star Earendel), NIRCam only.
+# Observation ids, public status, pipeline versions and product sizes were checked against MAST on
+# 2026-10-08 (docs/fields/sunrise.md). The archive, cloud and stages blocks are the reference
+# sample's (configs/reference_sample.yaml), so gates, strata and screening are built the same way.
+name: sunrise_v1
+
+archive:
+  collection: JWST
+  calib_level: 3
+  data_rights: PUBLIC
+  product_subgroups: [CAT, I2D]
+
+samples:
+  - id: sunrise_nircam
+    role: science
+    description: WHL0137-08 (Sunrise arc / Earendel) lensing cluster, NIRCam imaging (program 2282, epoch 1)
+    proposal_id: "2282"
+    instrument_name: NIRCAM/IMAGE
+    ref_band: F200W
+    # Epoch 1 (2022-07-30), the only epoch with all 8 bands; catalogs are jwst 2.0.1 (as SMACS 2736).
+    # Later epochs for scripts/epoch_compare.py are listed in docs/fields/sunrise.md.
+    obs_ids:
+      - jw02282-o010_t001_nircam_clear-f090w
+      - jw02282-o010_t001_nircam_clear-f115w
+      - jw02282-o010_t001_nircam_clear-f150w
+      - jw02282-o010_t001_nircam_clear-f200w
+      - jw02282-o010_t001_nircam_clear-f277w
+      - jw02282-o010_t001_nircam_clear-f356w
+      - jw02282-o010_t001_nircam_clear-f410m
+      - jw02282-o010_t001_nircam_clear-f444w
+    # D-013: colours from DJA matched apertures (0.5" diameter, one detection image). The
+    # Sunrise field has DJA v7.5 (SMACS and CEERS use v7.4); 28,779,840 bytes, 10,938 rows.
+    matched_photometry:
+      url: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/sunrise-grizli-v7.5-fix_phot.fits
+      sha256: 8bd178e94156d6a9a126e487dec8a850b6df9f6d76ceb9e36931d9960558ebf0
+      aperture: 1        # index into ASEC_0..2 = 0.36, 0.5, 0.7 arcsec diameters
+      label: dja05
+      radius_arcsec: 0.2
+
+cloud:
+  s3_bucket: stpubdata
+  # Verified for programs 2736, 1345 and 2282 level-3 products.
+  l3_key_pattern: "jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}"
+
+stages:
+  catalog:
+    merge_radius_arcsec: 0.1
+  quality:  # D-011; thresholds are assumptions
+    grid_arcsec: 1.0       # coarse WHT map cell size (one S3 row read per cell row)
+    min_rel_weight: 0.5    # x median positive WHT
+    min_edge_arcsec: 1.0
+    max_artifact_ci: 1.45  # CI_50_30 below this is sharper than the PSF (S/N >= 3 only)
+    min_ranked: 20         # fewer survivors -> gate considered unusable, rank ungated
+    min_detection_snr: 5   # D-014: best-band aper50 S/N floor (dropouts detected redward pass)
+    # D-014: single-band detections need confirmation by a matched-photometry match; samples
+    # without matched photometry (MIRI, CEERS today) drop all of them (gates differ per sample).
+    require_multiband: true
+  classify:  # D-012; stars are ranked as their own stratum '<sample>-stars'
+    services: [gaia, simbad]   # bulk CDS XMatch over all sources (~8 s per sample)
+    radius_arcsec: 0.5
+    gaia_radius_arcsec: 0.3    # any Gaia DR3 source this close counts as the star itself
+    star_top_k: 10
+    min_stars: 5
+    # D-015: point-like (DJA detection-image r50 within 20% of the catalogued stars' median)
+    # sources with ordinary stellar colours join the stars; samples need matched photometry.
+    stellar_locus:
+      calib_mag_range: [20.0, 22.5]
+      r50_tolerance: 0.2   # D-016: r50 <= 1.2 r50_psf (one-sided)
+      r50_floor: 0.5       # D-016: noise floor, r50 >= 0.5 r50_psf
+      mag_max: 24.0
+      colours: [[f150w, f444w], [f200w, f356w]]
+      colour_pad: 0.3
+      min_ref_stars: 10
+  features:
+    daofind_max_ci: 1.8   # D-013: DAOFind sharpness/roundness only for point-like sources
+  rank:
+    methods: [robust_z, isolation_forest, lof]
+    random_state: 0
+  cutouts:
+    top_k: 20
+    size_arcsec: 3.0
+    bands: [F200W]
+    screen_low_weight: true  # D-021: re-apply min_rel_weight with the cutout's own core weight
+    spike:                 # D-018: hexagonal-spike flag on NIRCam cutouts (ASSUMPTION thresholds)
+      radii_arcsec: [0.2, 0.8]
+      search_arcsec: 0.3
+      threshold: 3.0
+      screen: true         # D-019: drop flagged sources with stellar colours from galaxy top k
+      host_annulus_arcsec: [0.3, 0.6]   # D-020: ring/peak host test around the spike peak
+      host_ratio_max: 0.004             # D-020: below this no host light -> star-dominated, screened
+  crossmatch:
+    top_k: 20
+    radius_arcsec: 1.0
+    services: [simbad, ned, gaia]
