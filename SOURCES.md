@@ -461,3 +461,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - **JWST program 4043**, "Unveiling the build-up of large scale structure in the early Universe", PI Witten (MAST
   metadata). It has NIRCam F444W grism spectra (`jw04043-o001_t001_nircam_f444w-grismr` and `-grismc`, public,
   level 3, t_min 2024-05-11) and F090W/F115W/F444W imaging over part of SMACS 0723, including `2915`.
+
+## Control-field matched photometry (cycle 16, checked 2026-10-07 UTC)
+
+- **DJA v7.4 CEERS catalog** (grizli; same terms as the SMACS catalog above):
+  - https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/ceers-full-grizli-v7.4-fix_phot.fits
+  - last-modified 2024-09-27, 250,545,600 bytes, sha256 `741ec72f761b19bba57a6c1ef0f10934e03933084330faade88bfacb1d761c28`
+  - 81,671 rows; apertures `ASEC_0..2` = 0.36, 0.5 and 0.7″ (`APER_1` = 12.5 px, 0.04″/px)
+  - 23 bands, including F115W, F150W, F200W, F277W, F356W, F410M and F444W.

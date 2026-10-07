@@ -61,6 +61,17 @@ samples:
       - jw01345-o001_t021_nircam_clear-f356w
       - jw01345-o001_t021_nircam_clear-f410m
       - jw01345-o001_t021_nircam_clear-f444w
+    # D-022: the same DJA v7.4 matched apertures as SMACS (D-013), so the control has the same
+    # colours, confirmation (D-014), stellar locus (D-015/016) and screening (D-019-021).
+    matched_photometry:
+      url: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/ceers-full-grizli-v7.4-fix_phot.fits
+      sha256: 741ec72f761b19bba57a6c1ef0f10934e03933084330faade88bfacb1d761c28
+      aperture: 1        # 0.5" diameter, as for SMACS
+      label: dja05
+      radius_arcsec: 0.2
+      # 250,545,600 bytes (> 200 MB): stated reason in D-022. The catalog covers all of CEERS
+      # (81,671 rows), and a FITS binary table cannot be range-read by sky position.
+      max_bytes: 260000000
 
 cloud:
   s3_bucket: stpubdata
