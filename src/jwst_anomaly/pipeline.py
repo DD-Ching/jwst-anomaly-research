@@ -238,6 +238,15 @@ def load_config(path: str | Path) -> dict[str, Any]:
             raise ConfigError(
                 f"{path}: unknown stages.classify.stellar_locus keys {sorted(unknown)}"
             )
+    veto = ((config.get("stages") or {}).get("classify") or {}).get("extended_veto")
+    if veto is not None and not isinstance(veto, bool | dict):
+        raise ConfigError(f"{path}: stages.classify.extended_veto must be a mapping or true/false")
+    if isinstance(veto, dict):
+        unknown = set(veto) - set(classify.DEFAULT_EXTENDED_VETO) - {"enabled"}
+        if unknown:
+            raise ConfigError(
+                f"{path}: unknown stages.classify.extended_veto keys {sorted(unknown)}"
+            )
     screen_lw = ((config.get("stages") or {}).get("cutouts") or {}).get("screen_low_weight")
     if screen_lw is not None and not isinstance(screen_lw, bool):
         raise ConfigError(f"{path}: stages.cutouts.screen_low_weight must be true or false")
@@ -983,6 +992,9 @@ class _Runner:
                 sources, f"{red}_{label}_abmag"
             )
         except KeyError:
+            self.summaries[sid].notes.append(
+                f"host-test exemption (D-025) off: no {blue}/{red} matched photometry here"
+            )
             return set()
         uid_col = [_text(u) for u in sources["source_uid"]]
         with np.errstate(invalid="ignore"):
@@ -1080,6 +1092,24 @@ class _Runner:
             table = classify.classify_sources(
                 sources, matches, **_stage_kwargs(cfg, ("gaia_radius_arcsec",))
             )
+            if label:  # D-025: matched colours for the red exemption, independent of the locus
+                self.matched_sources[sid] = (sources, label)
+            veto_cfg = cfg.get("extended_veto")
+            veto_on = bool(veto_cfg) and not (
+                isinstance(veto_cfg, dict) and veto_cfg.get("enabled") is False
+            )
+            if veto_on and label:  # D-025: before the locus calibrates on these stars
+                try:
+                    table = classify.veto_extended_stars(table, sources, label, veto_cfg)
+                except Exception as exc:  # noqa: BLE001  keys are validated in load_config
+                    self.summaries[sid].notes.append(f"extended-star veto not applied: {exc}")
+                else:
+                    vetoed = table.meta["extended_veto"]["n_vetoed"]
+                    if vetoed:
+                        self.summaries[sid].notes.append(
+                            f"extended-star veto (D-025): {vetoed} catalogue star(s) too "
+                            "extended in the DJA detection image are ranked as galaxies"
+                        )
             locus_cfg = cfg.get("stellar_locus")
             enabled = not (isinstance(locus_cfg, dict) and locus_cfg.get("enabled") is False)
             if locus_cfg is not None and locus_cfg is not False and enabled:
@@ -1089,15 +1119,6 @@ class _Runner:
                     )
                 else:
                     try:  # an optional add-on: any failure keeps the catalogue classification
-                        veto_cfg = cfg.get("extended_veto")
-                        if veto_cfg:  # D-025: before the locus calibrates on these stars
-                            table = classify.veto_extended_stars(table, sources, label, veto_cfg)
-                            vetoed = table.meta["extended_veto"]["n_vetoed"]
-                            if vetoed:
-                                self.summaries[sid].notes.append(
-                                    f"extended-star veto (D-025): {vetoed} catalogue star(s) too "
-                                    "extended in the DJA detection image are ranked as galaxies"
-                                )
                         table = classify.apply_stellar_locus(table, sources, label, locus_cfg)
                         mask = classify.stellar_colour_mask(
                             sources, label, table.meta["stellar_locus"]
@@ -1105,7 +1126,6 @@ class _Runner:
                         self.stellar_colour_uids[sid] = {
                             _text(u) for u, m in zip(sources["source_uid"], mask, strict=True) if m
                         }
-                        self.matched_sources[sid] = (sources, label)
                     except Exception as exc:  # noqa: BLE001
                         self.summaries[sid].notes.append(f"stellar locus not applied: {exc}")
             return table

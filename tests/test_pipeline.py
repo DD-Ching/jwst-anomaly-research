@@ -18,6 +18,7 @@ from astropy.table import Table
 from jwst_anomaly import (
     acquire,
     catalog,
+    classify,
     crossmatch,
     cutouts,
     features,
@@ -1618,3 +1619,33 @@ def test_host_exempt_colour_is_validated(tmp_path):
     path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     with pytest.raises(pipeline.ConfigError, match="host_exempt_colour"):
         pipeline.load_config(path)
+
+
+@pytest.mark.parametrize(
+    "veto, match",
+    [({"r50_ref": 2}, "unknown stages.classify.extended_veto"), ("yes", "mapping or true/false")],
+)
+def test_extended_veto_config_is_validated(tmp_path, veto, match):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["stages"]["classify"] = {"extended_veto": veto}
+    path = tmp_path / "bad.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    with pytest.raises(pipeline.ConfigError, match=match):
+        pipeline.load_config(path)
+
+
+def test_extended_veto_can_be_disabled(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+    calls = []
+    monkeypatch.setattr(classify, "veto_extended_stars", lambda *a, **k: calls.append(1))
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["samples"][0]["matched_photometry"] = {
+        "url": "https://e.org/x.fits",
+        "sha256": "0" * 64,
+        "label": "dja05",
+    }
+    config["stages"]["classify"] = {"extended_veto": {"enabled": False}}
+    path = tmp_path / "off.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    pipeline.run(path, samples=["field_a"])
+    assert calls == []
