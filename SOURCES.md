@@ -87,7 +87,27 @@ Checked 2026-10-07. Used with astropy 8.0.1.
 
 ## Features and anomaly-detection methods (unit 3)
 
-_Pending._
+Checked 2026-10-07. Library versions are the ones resolved for the project environment that day.
+
+- **scikit-learn** 1.9.1. `IsolationForest`:
+  https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html ;
+  `LocalOutlierFactor`: https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.LocalOutlierFactor.html ;
+  overview: https://scikit-learn.org/stable/modules/outlier_detection.html
+- **SciPy** 1.18.1. `median_abs_deviation`:
+  https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.median_abs_deviation.html ;
+  `rankdata`: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rankdata.html
+- Liu, Ting & Zhou 2008, "Isolation Forest", ICDM, 413–422, doi:10.1109/ICDM.2008.17
+- Breunig, Kriegel, Ng & Sander 2000, "LOF", SIGMOD, 93–104, doi:10.1145/342009.335388
+- JWST `source_catalog` step: aperture EE defaults of 30/50/70 and the CI star thresholds,
+  https://jwst-pipeline.readthedocs.io/en/latest/jwst/source_catalog/arguments.html ; APCORR reference
+  file (NIRCam rows: filter, pupil, eefraction, radius),
+  https://jwst-pipeline.readthedocs.io/en/latest/jwst/source_catalog/reference_files.html
+- **PyOD** 3.6.6 (PyPI, released 2026-09-17; evaluated and not adopted, see D-004):
+  https://github.com/yzhao062/pyod . ECOD: Li et al. 2022, arXiv:2201.00382,
+  doi:10.1109/TKDE.2022.3159580
+- **ADBench**, Han et al. 2022, arXiv:2206.09426 (30 algorithms on 57 datasets)
+- **Astronomaly**, Lochner & Bassett 2021, arXiv:2010.11202, doi:10.1016/j.ascom.2021.100481 ;
+  https://github.com/MichelleLochner/astronomaly (last push 2026-05-12)
 
 ## Imaging, cutouts and visualization (unit 4)
 
