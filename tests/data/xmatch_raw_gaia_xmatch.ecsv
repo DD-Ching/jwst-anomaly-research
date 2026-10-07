@@ -1,0 +1,69 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: xm_idx, datatype: int16}
+# - name: angDist
+#   unit: arcsec
+#   datatype: float64
+#   description: Xmatch distance in arcseconds
+#   meta: !!omap
+#   - {ucd: pos.angDistance}
+# - name: DR3Name
+#   datatype: string
+#   meta: !!omap
+#   - {ucd: meta.id;meta.main}
+#   - {_votable_string_dtype: char}
+# - name: RAdeg
+#   unit: deg
+#   datatype: float64
+#   meta: !!omap
+#   - {ucd: pos.eq.ra;meta.main}
+# - name: DEdeg
+#   unit: deg
+#   datatype: float64
+#   meta: !!omap
+#   - {ucd: pos.eq.dec;meta.main}
+# - name: Plx
+#   unit: mas
+#   datatype: float64
+#   meta: !!omap
+#   - {ucd: pos.parallax.trig}
+# - name: e_Plx
+#   unit: mas
+#   datatype: float32
+#   meta: !!omap
+#   - {ucd: stat.error;pos.parallax.trig}
+# - name: pmRA
+#   unit: mas / yr
+#   datatype: float64
+#   meta: !!omap
+#   - {ucd: pos.pm;pos.eq.ra}
+# - name: e_pmRA
+#   unit: mas / yr
+#   datatype: float32
+#   meta: !!omap
+#   - {ucd: stat.error;pos.pm;pos.eq.ra}
+# - name: pmDE
+#   unit: mas / yr
+#   datatype: float64
+#   meta: !!omap
+#   - {ucd: pos.pm;pos.eq.dec}
+# - name: e_pmDE
+#   unit: mas / yr
+#   datatype: float32
+#   meta: !!omap
+#   - {ucd: stat.error;pos.pm;pos.eq.dec}
+# - name: pmRApmDEcor
+#   datatype: float32
+#   meta: !!omap
+#   - {ucd: stat.correlation}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'CDS XMatch cat2=''vizier:I/355/gaiadr3'' (Gaia DR3, epoch J2016.0)'}
+# - {note: 'raw gaia/xmatch response for xmatch_targets.ecsv at radius 1.0 arcsec, trimmed to the columns crossmatch.py reads'}
+# - {recorded_utc: '2026-10-07T01:45:30+00:00'}
+# - software: {astropy: 8.0.1, astroquery: 0.4.11, pyvo: 1.9.1}
+# schema: astropy-2.0
+xm_idx angDist DR3Name RAdeg DEdeg Plx e_Plx pmRA e_pmRA pmDE e_pmDE pmRApmDEcor
+2 0.0 "Gaia DR3 5262900027979791104" 110.82628572759 -73.44871015821 2.1643 0.0168 0.005 0.021 19.395 0.021 -0.0096
+3 0.081783 "Gaia DR3 5262899954964194816" 110.85797244287 -73.46423346173 6.1434 0.1397 6.818 0.182 -7.8 0.172 0.0226
