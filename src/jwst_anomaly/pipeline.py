@@ -317,8 +317,9 @@ class _Runner:
         default_k = max(self.cutouts_top_k, self.crossmatch_top_k)
         self.candidates_top_k = int(outputs.get("candidates_top_k", default_k))
         self.records: list[StageRecord] = []
-        # Reference weight of each gate map, by image URI, shared with cutouts of that image.
-        self.weight_refs: dict[str, float] = {}
+        # Reference weight of each sample's gate map, by (sample id, image URI), shared with
+        # cutouts of that image in the sample's strata.
+        self.weight_refs: dict[tuple[str, str], float] = {}
         self.summaries: dict[str, SampleSummary] = {}
         self.candidates: list[dict[str, Any]] = []
 
@@ -549,6 +550,7 @@ class _Runner:
             band_obs,
             required=False,
             top_k=star_top_k,
+            parent=sid,
         )
 
     def _rank_stratum(
@@ -561,8 +563,13 @@ class _Runner:
         *,
         required: bool,
         top_k: int | None = None,
+        parent: str | None = None,
     ) -> None:
-        """Score one stratum, then select, cut out, cross-match and store its top k."""
+        """Score one stratum, then select, cut out, cross-match and store its top k.
+
+        ``parent`` is the sample a stratum (``<sample>-stars``) belongs to; its gate's
+        reference weights are reused for the stratum's cutouts.
+        """
         rank_kwargs = _stage_kwargs(self.stages_cfg.get("rank") or {}, ("methods", "random_state"))
         scores = self.stage(
             label,
@@ -590,7 +597,9 @@ class _Runner:
         self.save(targets_all, label, "targets")
 
         # 6. Optional evidence stages.
-        cutout_rows = self._cutouts(label, summary, targets_all[:cut_k], band_obs)
+        cutout_rows = self._cutouts(
+            label, summary, targets_all[:cut_k], band_obs, parent=parent or label
+        )
         xmatch_rows = self._crossmatch(label, targets_all[:xm_k])
 
         for rec in ranked[:cand_k]:
@@ -794,7 +803,7 @@ class _Runner:
             table = quality.assess_sources(sources, weights, ref_band=ref_band, **params)
             ref = getattr(weights, "reference_weight", None)
             if ref is not None and np.isfinite(ref):
-                self.weight_refs[uri] = float(ref)
+                self.weight_refs[(sid, uri)] = float(ref)
             return table
 
         table = self.stage(
@@ -819,13 +828,20 @@ class _Runner:
             problem = f"only {n_ok} of {len(uids)} sources passed (min_ranked {min_ranked})"
         if problem:
             self.record(sid, "quality gate (sanity check)", "failed", problem, required=False)
+            for key in [k for k in self.weight_refs if k[0] == sid]:
+                del self.weight_refs[key]
             summary.notes.append(f"quality gate unusable ({problem}): all sources ranked (ungated)")
             return None
         summary.quality = quality.summarize(table)
         return keep
 
     def _cutouts(
-        self, sid: str, summary: SampleSummary, targets: Table, band_obs: Mapping[str, str]
+        self,
+        sid: str,
+        summary: SampleSummary,
+        targets: Table,
+        band_obs: Mapping[str, str],
+        parent: str | None = None,
     ) -> dict[str, dict[str, dict[str, Any]]]:
         """Run cutouts per band; return ``{source_uid: {band: {path, quality...}}}``."""
         cfg = self.stages_cfg.get("cutouts")
@@ -859,7 +875,11 @@ class _Runner:
                     uri,
                     targets,
                     **kwargs,
-                    **({"weight_ref": self.weight_refs[uri]} if uri in self.weight_refs else {}),
+                    **(
+                        {"weight_ref": self.weight_refs[(parent or sid, uri)]}
+                        if (parent or sid, uri) in self.weight_refs
+                        else {}
+                    ),
                 ),
                 columns=schema.CUTOUT_COLUMNS,
                 required=False,

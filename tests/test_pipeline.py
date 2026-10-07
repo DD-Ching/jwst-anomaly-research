@@ -978,3 +978,32 @@ def test_cutouts_reuse_the_gate_reference_weight_for_every_stratum(tmp_path, env
     kws = fakes.calls["make_cutouts_kw"]
     assert {"field_a", "field_a-stars"} <= {pathlib.Path(k["out_dir"]).parent.name for k in kws}
     assert all(k.get("weight_ref") == 2.5 for k in kws)
+
+
+def test_rejected_gate_does_not_leak_its_reference_weight(tmp_path, env, monkeypatch):
+    from types import SimpleNamespace
+
+    fakes = install_fakes(monkeypatch)
+    monkeypatch.setattr(
+        cutouts, "sample_weight_map", lambda uri, **kw: SimpleNamespace(reference_weight=2.5)
+    )
+
+    def reject_all_but_one(sources, weight_map, *, ref_band=None, **kw):
+        uids = [str(u) for u in sources["source_uid"]]
+        t = Table(
+            {
+                "source_uid": uids,
+                "rel_weight": [0.1] * len(uids),
+                "edge_dist_arcsec": [5.0] * len(uids),
+                "sharper_than_psf": [False] * len(uids),
+                "quality_ok": [i == 0 for i in range(len(uids))],
+                "quality_reason": ["" if i == 0 else "low_weight" for i in range(len(uids))],
+            }
+        )
+        t.meta.update(provenance="derived", source="fake gate")
+        return t
+
+    monkeypatch.setattr(quality, "assess_sources", reject_all_but_one)
+    pipeline.run(write_config(tmp_path), samples=["field_a"])
+    kws = fakes.calls["make_cutouts_kw"]
+    assert kws and all("weight_ref" not in k for k in kws)
