@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Top-k composition metric; `940` re-diagnosed (cycle 13)
+- Every stratum now reports its top-k composition: known, lens-related, catalogued star, cutout-flagged,
+  spikes and screened. It is stored in `run_record.json` as `samples[].topk` and defined in
+  docs/methodology.md. The crossmatch rows now keep `is_lens_related`.
+- Baseline, run `20261007T183007Z-4342c5c2`: the galaxy top 20 is 35% known objects, 10% lens-related, 0% stars and 15% flagged.
+- **`940` is not saturated.** Its F200W cutout has no no-data pixels. The pipeline merged two stars into one
+  5,788 px segment whose centroid lies 0.20″ from the brighter star's peak, so aper50 at the centroid is faint
+  (25.7 against isophotal 20.1). It is a single-band detection confirmed by the DJA match (0.18″) to the bright
+  star.
+- **Failed approaches** (saturation tests):
+  - aper50 − isophotal magnitude: cluster galaxies reach 10–21 mag, so `940` (5.6) is not an outlier;
+  - a no-data core within 0.3″: `940` has none, and only `1345` does.
+- **Handoff:** TASKS Now 1 (multi-star segments: a host-vs-PSF profile test or a centroid–peak offset rule) and Now 2
+  (star-stratum NED matches).
+
+
 ## 2026-10-08: Vetted `f200w_2915`, a catalogued quiescent galaxy with a compact core (cycle 12)
 - Run `20261007T174424Z-540be92d` (clean `a27d628`), galaxy rank 21, kept ranked by D-019 as a spiky source with non-stellar colours.
 - It is SIMBAD `[VBG2023] SMACS 1060` (Valentino+2023 atlas of colour-selected quiescent galaxies at z > 3). DJA

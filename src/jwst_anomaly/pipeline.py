@@ -162,6 +162,7 @@ class SampleSummary:
     contact_sheet: str | None = None  # PNG of the top-k cutouts, relative to the run dir
     quality: dict[str, int] = field(default_factory=dict)  # quality-gate counts (D-011)
     quality_text: str = ""  # replaces the counts line (e.g. strata of a gated sample)
+    topk: dict[str, int] = field(default_factory=dict)  # top-k composition (tracked metric)
     notes: list[str] = field(default_factory=list)
 
 
@@ -330,6 +331,66 @@ def _subset(table: Table, mask: np.ndarray, what: str) -> Table:
         f"{what}: {int(mask.sum())} of {len(table)} rows of: {table.meta.get('source', '')}"
     )
     return out
+
+
+def _topk_metrics(
+    cands: Sequence[Mapping[str, Any]],
+    cutout_rows: Mapping[str, Mapping[str, Mapping[str, Any]]],
+    xmatch_rows: Mapping[str, Mapping[str, Any]],
+) -> dict[str, int]:
+    """Composition of a stratum's top k: a tracked contamination and recovery metric.
+
+    Counts candidates whose cutouts carry any quality flag, the ``spikes`` flag (D-018), a
+    cross-match to a known object, to a star, or to a lens-related object. Candidates without
+    cutouts or cross-match are counted as ``no_cutout`` / ``no_xmatch``.
+    """
+    out = dict.fromkeys(
+        ("n", "flagged", "spikes", "no_cutout", "known", "star", "lens_related", "no_xmatch"), 0
+    )
+    for rec in cands:
+        uid = rec["source_uid"]
+        out["n"] += 1
+        tokens = {
+            t
+            for q in (cutout_rows.get(uid) or {}).values()
+            for t in str(q.get("quality_flag", "")).split(",")
+        }
+        if uid not in cutout_rows:
+            out["no_cutout"] += 1
+        elif tokens - {"ok", ""}:
+            out["flagged"] += 1
+        out["spikes"] += "spikes" in tokens
+        xm = xmatch_rows.get(uid)
+        if xm is None:
+            out["no_xmatch"] += 1
+            continue
+        out["known"] += bool(xm.get("is_known_object"))
+        out["star"] += bool(xm.get("is_star"))
+        out["lens_related"] += bool(xm.get("is_lens_related"))
+    return out
+
+
+def _topk_line(m: Mapping[str, int]) -> str:
+    n = m.get("n", 0)
+    if not n:
+        return "none"
+
+    def part(key: str, label: str) -> str:
+        return f"{label} {m.get(key, 0)} ({m.get(key, 0) / n:.0%})"
+
+    text = ", ".join(
+        [
+            part("known", "known object"),
+            part("lens_related", "lens-related"),
+            part("star", "catalogued star"),
+            part("flagged", "cutout-flagged"),
+            part("spikes", "spikes"),
+        ]
+    )
+    extra = [f"{m[k]} {k.replace('_', ' ')}" for k in ("no_cutout", "no_xmatch") if m.get(k)]
+    if m.get("screened"):
+        extra.append(f"{m['screened']} screened out before selection (D-019)")
+    return f"n = {n}: {text}" + (f"; {', '.join(extra)}" if extra else "")
 
 
 def _max_finite(per_band: Mapping[str, Mapping[str, Any]]) -> float:
@@ -747,6 +808,10 @@ class _Runner:
                 xmatch=xmatch_rows.get(uid),
             )
             self.candidates.append(rec)
+        summary.topk = {
+            **_topk_metrics(ranked[:cand_k], cutout_rows, xmatch_rows),
+            "screened": summary.topk.get("screened", 0),
+        }
 
     def _screen(
         self,
@@ -803,6 +868,7 @@ class _Runner:
             ),
         )
         self.save(table, sid, "screened")
+        summary.topk["screened"] = len(removed)
         kept = [r for r in ranked if r["source_uid"] not in flagged]
         summary.notes.append(
             f"spike screening (D-019) removed {len(removed)} source(s) from the top {cut_k} "
@@ -1297,7 +1363,9 @@ class _Runner:
         }
         out = {}
         for row in table:
-            values = {c: to_python(row[c]) for c in schema.XMATCH_COLUMNS if c != "source_uid"}
+            cols = [c for c in schema.XMATCH_COLUMNS if c != "source_uid"]
+            cols += [c for c in ("is_lens_related", "lens_types") if c in table.colnames]
+            values = {c: to_python(row[c]) for c in cols}
             values.update(meta)
             out[_text(row["source_uid"])] = values
         return out
@@ -1436,6 +1504,8 @@ def render_report(
             f"{', '.join(s.methods) or 'unknown'}",
             f"- Cutout bands: {', '.join(s.cutout_bands) or 'none'}",
         ]
+        if s.topk:
+            lines.append(f"- Top-k composition (derived, tracked metric): {_topk_line(s.topk)}")
         if s.tables:
             lines.append(f"- Tables: {', '.join(f'`{t}`' for t in s.tables)}")
         if s.contact_sheet:
