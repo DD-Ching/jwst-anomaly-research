@@ -96,6 +96,41 @@ SCORE_COLUMNS = ("source_uid", "score", "rank")
 # Inputs to cutouts/crossmatch.
 TARGET_COLUMNS = ("source_uid", "ra", "dec")
 
+# lensmodel.LensModel.evaluate -> one row per position (model_prediction, D-024).
+LENS_PREDICTION_COLUMNS = (
+    "ra",
+    "dec",
+    "z_s",
+    "dls_ds",
+    "x",
+    "y",
+    "alpha_x",
+    "alpha_y",
+    "beta_ra",
+    "beta_dec",
+    "kappa",
+    "gamma1",
+    "gamma2",
+    "gamma",
+    "reduced_shear",
+    "magnification",
+    "tangential_pa",
+)
+
+# lensmodel.backtrace_images -> one row per catalogued multiple image (model_prediction, D-024).
+BACKTRACE_COLUMNS = (
+    "image_id",
+    "system",
+    "ra",
+    "dec",
+    "z_used",
+    "beta_x",
+    "beta_y",
+    "dbeta_arcsec",
+    "magnification",
+    "dtheta_arcsec",
+)
+
 # cutouts.make_cutouts -> one row per (target, image).
 CUTOUT_COLUMNS = ("source_uid", "band", "path", "frac_nan", "on_edge", "quality_flag")
 
