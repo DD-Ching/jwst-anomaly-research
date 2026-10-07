@@ -31,7 +31,6 @@ _BAND_RE = re.compile(r"^(f\d{3,4}(?:w2|w|m|n|c))_")
 
 DEFAULT_MIN_SNR = 3.0
 # 2.5 / ln(10): S/N = this / AB-magnitude error, to first order.
-_MAG_ERR_TO_SNR = 2.5 / np.log(10.0)
 
 NAN_POLICY = (
     "build_features never imputes. A feature is NaN when it is undefined for a source: band not "
@@ -97,6 +96,13 @@ def _band_values(table: Table, band: str, quantity: str) -> np.ndarray:
     return column_as_float(table, name) if name in table.colnames else np.full(len(table), np.nan)
 
 
+def snr_from_mag_err(err: np.ndarray) -> np.ndarray:
+    """S/N from an AB magnitude error ``2.5 log10(1 + 1/SNR)`` (the JWST pipeline's definition)."""
+    err = np.asarray(err, dtype=float)
+    with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
+        return 1.0 / (10.0 ** (err / 2.5) - 1.0)
+
+
 def _snr_ok(table: Table, band: str, aperture: str, min_snr: float | None) -> np.ndarray | None:
     """True where the band's aperture S/N >= min_snr; ``None`` if the error column is missing."""
     name = schema.band_column(band, f"{aperture}_abmag_err")
@@ -104,10 +110,9 @@ def _snr_ok(table: Table, band: str, aperture: str, min_snr: float | None) -> np
         return np.ones(len(table), dtype=bool)
     if name not in table.colnames:
         return None
-    err = column_as_float(table, name)
-    with np.errstate(divide="ignore", invalid="ignore"):
-        snr = _MAG_ERR_TO_SNR / err
-    return snr >= min_snr  # NaN error -> False
+    snr = snr_from_mag_err(column_as_float(table, name))
+    with np.errstate(invalid="ignore"):
+        return snr >= min_snr  # NaN error -> False
 
 
 def _log10_positive(x: np.ndarray) -> np.ndarray:

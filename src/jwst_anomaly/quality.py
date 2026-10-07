@@ -33,14 +33,9 @@ DEFAULT_MAX_ARTIFACT_CI = 1.45
 # More uncovered sources than this means the weight map is for the wrong image.
 MAX_UNCOVERED_FRACTION = 0.9
 
-REASONS = (
-    "no_coverage",
-    "low_weight",
-    "edge",
-    "sharper_than_psf",
-    "low_snr",
-    "single_band",
-)
+REASONS_D011 = ("no_coverage", "low_weight", "edge", "sharper_than_psf")  # image tests
+REASONS_D014 = ("low_snr", "single_band")  # detection-confirmation tests
+REASONS = REASONS_D011 + REASONS_D014
 
 
 def assess_sources(
@@ -108,19 +103,23 @@ def assess_sources(
         sharp = np.zeros(n, dtype=bool)
 
     low_snr = np.zeros(n, dtype=bool)
+    snr_test = "off"
     if min_detection_snr is not None:
         passed = np.zeros(n, dtype=bool)
-        checked = 0
+        unmeasured: list[str] = []
         for b in discover_bands(sources):
             ok = _snr_ok(sources, b, "aper50", min_detection_snr)
-            if ok is None:
-                continue
-            checked += 1
+            if ok is None:  # S/N unknown in this band: a detection there is not penalised
+                unmeasured.append(b)
+                ok = np.ones(n, dtype=bool)
             passed |= ok & _detected(sources, b)
-        if not checked:
-            raise ValueError("min_detection_snr needs <band>_aper50_abmag_err columns")
-        low_snr = ~passed
+        if len(unmeasured) == len(discover_bands(sources)):
+            snr_test = "skipped: no <band>_aper50_abmag_err columns"
+        else:
+            low_snr = ~passed
+            snr_test = "on" + (f" (no S/N for {unmeasured}: detections pass)" if unmeasured else "")
     single = np.zeros(n, dtype=bool)
+    confirmation = None
     if require_multiband:
         n_bands = column_as_float(sources, "n_bands")
         confirmed = np.zeros(n, dtype=bool)
@@ -128,6 +127,8 @@ def assess_sources(
             if confirm_column not in sources.colnames:
                 raise ValueError(f"confirm_column {confirm_column!r} not in sources")
             confirmed = np.isfinite(column_as_float(sources, confirm_column))
+            info = sources.meta.get("matched_photometry") or {}
+            confirmation = f"{confirm_column} from {info.get('catalog', 'an external catalog')}"
         single = (n_bands <= 1) & ~confirmed
 
     reasons = [
@@ -153,6 +154,7 @@ def assess_sources(
                 if weight_map
                 else "no WHT"
             )
+            + (f"; single-band confirmation: {confirmation}" if confirmation else "")
         ),
         thresholds={
             "min_rel_weight": min_rel_weight,
@@ -160,6 +162,7 @@ def assess_sources(
             "max_artifact_ci": max_artifact_ci,
             "min_snr": min_snr,
             "min_detection_snr": min_detection_snr,
+            "snr_test": snr_test,
             "require_multiband": require_multiband,
             "confirm_column": confirm_column,
             "provenance": schema.Provenance.ASSUMPTION.value,

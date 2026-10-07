@@ -228,8 +228,29 @@ def test_detection_confirmation_input_errors(image):
     with pytest.raises(ValueError, match="confirm_column"):
         quality.assess_sources(src, None, require_multiband=True, confirm_column="nope")
     src.remove_column("f200w_aper50_abmag_err")
-    with pytest.raises(ValueError, match="min_detection_snr"):
-        quality.assess_sources(src, None, min_detection_snr=5)
+    q = quality.assess_sources(src, None, min_detection_snr=5)  # no S/N at all: test skipped
+    assert list(q["quality_reason"]) == [""]
+    assert q.meta["thresholds"]["snr_test"].startswith("skipped")
+
+
+def test_low_snr_threshold_uses_the_exact_pipeline_error_formula(image):
+    _, w = image
+    # Pipeline: abmag_err = 2.5 log10(1 + 1/SNR). SNR 4.6 -> err 0.2136; the linear
+    # approximation 1.0857/err would call that S/N 5.08 and let it pass.
+    errs = {"snr46": 2.5 * np.log10(1 + 1 / 4.6), "snr52": 2.5 * np.log10(1 + 1 / 5.2)}
+    src = _sources(w, {n: SOURCES["interior"] for n in errs}, ci={}, snr_err=errs)
+    q = quality.assess_sources(src, None, min_detection_snr=5)
+    assert list(q["quality_reason"]) == ["low_snr", ""]
+
+
+def test_bands_without_errors_do_not_fail_their_detections(image):
+    _, w = image
+    src = _sources(w, {"lw_only": SOURCES["interior"]}, ci={})
+    src["f200w_detected"] = [False]
+    src["f356w_detected"] = [True]  # detected where no error column exists
+    q = quality.assess_sources(src, None, min_detection_snr=5)
+    assert list(q["quality_reason"]) == [""]
+    assert "f356w" in q.meta["thresholds"]["snr_test"]
 
 
 def test_low_snr_uses_the_best_detected_band_so_dropouts_survive(image):

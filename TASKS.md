@@ -1,11 +1,11 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T123653Z-d45d04d1`).
+Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T124944Z-bbad4ab3`).
 
 ## Now (M1 follow-through)
 1. **Faint stars:** about 5–6 PSF-like stars without Gaia counterparts are now the main contamination of
-   the SMACS galaxy top 20 (run `20261007T123653Z-d45d04d1`). Add a size–magnitude stellar locus to `classify` (D-012
+   the SMACS galaxy top 20 (run `20261007T124944Z-bbad4ab3`). Add a size–magnitude stellar locus to `classify` (D-012
    "Revisit if"), then re-check the top 20.
 2. **Vet the new candidates** with `/vet-candidate` and `scripts/vet_evidence.py`:
    - catalogued lens-related `jw02736-o001_t001_nircam_f277w_829` (`[YML2023] F150DB-C-4`, a red F150W
@@ -16,10 +16,11 @@ Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T123653Z
 3. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
    subcommands.
 4. Report the top-k artifact and star fractions per run as a tracked metric.
-5. **MIRI confirmation** (D-014 "Revisit if"): only 103 of 530 MIRI sources pass. Confirm MIRI detections
-   with NIRCam counterparts.
-6. **Control comparability:** CEERS still uses aper50 colours (no matched photometry), so
-   science-vs-control comparisons stay invalid until it gets DJA photometry (Next).
+5. **Per-sample confirmation** (D-014 limitation): only SMACS NIRCam can confirm single-band detections.
+   MIRI passes 103 of 530, and CEERS drops every single-band source. Add confirmation for each sample
+   (DJA for CEERS, NIRCam counterparts for MIRI).
+6. **Control comparability:** CEERS differs from SMACS in its colours (aper50) and its gate (no
+   confirmation). Science-vs-control comparisons stay invalid until it gets DJA photometry (Next).
 7. Diffraction-spike mask: only if multi-band spike detections appear (D-014 "Revisit if").
 
 ## Next (M2)

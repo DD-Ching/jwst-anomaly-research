@@ -159,6 +159,7 @@ class FakeStages:
                 "ra": 110.8 + 1e-4 * i,
                 "dec": -73.45 + 1e-4 * i,
                 "aper50_abmag": mag,
+                "aper50_abmag_err": np.full(N_SOURCES, 0.02),  # S/N ~54
             }
         )
         t["ra"].unit = t["dec"].unit = "deg"
@@ -179,6 +180,8 @@ class FakeStages:
         )
         for band, cat in catalogs.items():
             t[schema.band_column(band, "aper50_abmag")] = cat["aper50_abmag"]
+            t[schema.band_column(band, "aper50_abmag_err")] = cat["aper50_abmag_err"]
+            t[schema.band_column(band, "detected")] = np.ones(len(ref), dtype=bool)
         return _meta(t, schema.Provenance.DERIVED, "fake merge")
 
     def build_features(self, sources, aperture="aper50", **kw):
@@ -1132,6 +1135,59 @@ def test_quality_gate_gets_confirmation_from_matched_photometry(tmp_path, env, m
     config["stages"]["quality"].update(min_detection_snr=5, require_multiband=True)
     path = tmp_path / "conf.yaml"
     path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
-    pipeline.run(path, samples=[config["samples"][0]["id"]])
+    run_id = pipeline.run(path, samples=[config["samples"][0]["id"]])
     assert seen["min_detection_snr"] == 5 and seen["require_multiband"] is True
     assert seen["confirm_column"] == "dja05_match_sep_arcsec" and seen["has_column"]
+    with _store(env) as store:
+        stages_run = store.get_run(run_id)["summary"]["stages"]
+    gate = [s for s in stages_run if s["stage"] == "quality.assess_sources"]
+    assert gate and gate[0]["status"] == "ok", gate  # the gate really ran
+    report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
+    assert "ungated" not in report
+
+
+def test_too_strict_confirmation_falls_back_to_d011_tests(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+
+    def strict(sources, weight_map, **kw):
+        uids = [str(u) for u in sources["source_uid"]]
+        reasons = ["no_coverage" if i == 0 else "single_band" for i in range(len(uids))]
+        t = Table(
+            {
+                "source_uid": uids,
+                "rel_weight": [1.0] * len(uids),
+                "edge_dist_arcsec": [5.0] * len(uids),
+                "sharper_than_psf": [False] * len(uids),
+                "quality_ok": [False] * len(uids),
+                "quality_reason": reasons,
+            }
+        )
+        t.meta.update(provenance="derived", source="fake gate")
+        return t
+
+    monkeypatch.setattr(quality, "assess_sources", strict)
+    run_id = pipeline.run(write_config(tmp_path), samples=["field_a"])
+    run_dir = env / "runs" / run_id
+    sources = Table.read(run_dir / "field_a" / "sources.ecsv")
+    scores = Table.read(run_dir / "field_a" / "scores.ecsv")
+    assert len(scores) == len(sources) - 1  # only the D-011 (no_coverage) row is excluded
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    assert "ranked with the D-011 image tests only" in report
+    assert "ungated" not in report
+
+
+@pytest.mark.parametrize(
+    "key, value, match",
+    [
+        ("require_multiband", "false", "require_multiband"),
+        ("min_detection_snr", "5", "min_detection_snr"),
+        ("min_rel_weight", -1, "min_rel_weight"),
+    ],
+)
+def test_quality_keys_are_validated(tmp_path, key, value, match):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["stages"]["quality"][key] = value
+    path = tmp_path / "bad.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    with pytest.raises(pipeline.ConfigError, match=match):
+        pipeline.load_config(path)

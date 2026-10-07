@@ -30,7 +30,6 @@ from jwst_anomaly.catalog import _match_one_to_one
 from jwst_anomaly.features import discover_bands
 
 AB_ZP_UJY = 23.9  # AB magnitude of 1 microjansky
-MAG_ERR_PER_SNR = 2.5 / np.log(10)  # sigma_mag ~ 1.0857 / (S/N)
 # SEP aperture flags (sep.h): measurements with these bits are discarded. APER_HASMASKED
 # (0x20) is kept: grizli masks neighbouring segments on purpose (APERMASK=True).
 SEP_APER_TRUNC, SEP_APER_ALLMASKED, SEP_APER_NONPOSITIVE = 0x10, 0x40, 0x80
@@ -38,6 +37,11 @@ BAD_FLAGS = SEP_APER_TRUNC | SEP_APER_ALLMASKED | SEP_APER_NONPOSITIVE
 DEFAULT_MATCH_RADIUS_ARCSEC = 0.2
 # Labels that would overwrite pipeline magnitude columns.
 RESERVED_LABELS = {"aper30", "aper50", "aper70", "total", "isophotal", "aper"}
+
+
+def match_sep_column(label: str) -> str:
+    """Name of the separation column a join with ``label`` writes (NaN = unmatched)."""
+    return f"{label}_match_sep_arcsec"
 
 
 def fetch_catalog(
@@ -120,7 +124,8 @@ def load_dja_catalog(path: str | Path, bands: list[str], aperture: int = 1) -> T
         good = np.isfinite(flux) & (flux > 0) & ((flags & BAD_FLAGS) == 0)
         with np.errstate(divide="ignore", invalid="ignore"):
             out[f"{b}_mag"] = np.where(good, AB_ZP_UJY - 2.5 * np.log10(flux), np.nan)
-            out[f"{b}_mag_err"] = np.where(good, MAG_ERR_PER_SNR * err / flux, np.nan)
+            # Same convention as the JWST pipeline's abmag_err, so one S/N inversion fits both.
+            out[f"{b}_mag_err"] = np.where(good, 2.5 * np.log10(1.0 + err / flux), np.nan)
     out.meta.update(
         provenance=schema.Provenance.DERIVED.value,
         source=f"DJA catalog {Path(path).name}, aperture {aperture} (uJy -> AB, SEP flags applied)",
@@ -169,7 +174,7 @@ def join_matched_photometry(
     out = sources.copy(copy_data=True)
     sep_col = np.full(len(out), np.nan)
     sep_col[i_src] = sep
-    out[f"{label}_match_sep_arcsec"] = sep_col
+    out[match_sep_column(label)] = sep_col
     for b in bands:
         for q, col in (("abmag", f"{b}_mag"), ("abmag_err", f"{b}_mag_err")):
             values = np.full(len(out), np.nan)
@@ -195,7 +200,7 @@ def join_matched_photometry(
 
 def joined_columns(joined: Table, label: str) -> Table:
     """The join's own columns (``source_uid``, separation, ``<band>_<label>_*``) for saving."""
-    keep = ["source_uid", f"{label}_match_sep_arcsec"] + [
+    keep = ["source_uid", match_sep_column(label)] + [
         c for c in joined.colnames if f"_{label}_abmag" in c
     ]
     out = Table(joined[keep], copy=True)
