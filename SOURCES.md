@@ -365,12 +365,10 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 
 ## Vetting (cycle 3, checked 2026-10-07)
 
-- **Mahler et al. 2022 SMACS 0723 lens model** (Lenstool; CC0-1.0):
-  - repository https://github.com/guillaumemahler/SMACS0723-mahler2022 (CITATION.cff v1.0, released
-    2022-10-19; last push 2022-12-27);
-  - multiple-image catalog `ICLv0/arcs.dat`, raw at
-    https://raw.githubusercontent.com/guillaumemahler/SMACS0723-mahler2022/main/ICLv0/arcs.dat;
-  - model reference centre RA 110.826750, Dec −73.454628 (`ICLv0/best.par`, `reference 3`).
+- **Mahler+2022 multiple-image catalog** (model entry above; CC0-1.0): `ICLv0/arcs.dat`, 62 images, absolute
+  coordinates, pinned at commit `f36a41c365865df252a6da08cd79955f9cd68f11`:
+  https://raw.githubusercontent.com/guillaumemahler/SMACS0723-mahler2022/f36a41c365865df252a6da08cd79955f9cd68f11/ICLv0/arcs.dat
+  (sha256 `35d568c43423974940275bddffb163c0acd4a95c907c108a278caf6b866c9154`). Model reference centre RA 110.826750, Dec −73.454628 (`ICLv0/best.par`).
 - **NED** entries `SMACS J0723:[NDA2023] 01100` (z 1.9807) and `[NDA2023] 00908` (z 1.3618), retrieved through
   NED TAP by `crossmatch.query_matches` on 2026-10-07. The original reference for the `NDA2023` designation and
   the redshift type were not verified.

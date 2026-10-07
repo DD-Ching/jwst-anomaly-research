@@ -1,7 +1,8 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-07 (runs `20261007T033832Z-cfcf6032`, `20261007T035338Z-8ea21f89`).
+Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T040938Z-01527ace`; the size bias
+is re-measured with `scripts/feature_size_bias.py`).
 
 ## Now (M1 follow-through)
 1. **Size-robust features** (vetting, 2026-10-07): the top galaxy candidates were explained by

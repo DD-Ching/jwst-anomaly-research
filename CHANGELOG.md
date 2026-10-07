@@ -13,7 +13,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - six-band S3 cutouts.
 - Vetted SMACS NIRCam `f200w_2925`, `f200w_2559` and `f200w_1096` (records in `docs/candidates/`; store status
   `explained`):
-  - none is multiply imaged (nearest Mahler+2022 image 24–45″);
+  - none is among the 62 Mahler+2022 constraint images (nearest 24–45″); this does not show they are
+    singly imaged, which needs the model's critical curves (M3);
   - 2925 and 2559 are not tangentially aligned (45–60°); 1096 is at 19°, consistent with weak shear
     (`hypothesis`);
   - NED knows 2925 (z 1.98) and 1096 (z 1.36, with catalogued clumps) as background galaxies.
@@ -21,6 +22,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - aper50 F200W−F277W reddens with isophotal area (median +0.77 → +0.99, Spearman 0.21,
     p ≈ 1e-16), while isophotal colour does the opposite (+0.71 → +0.02). EE apertures differ in angular
     size between SW and LW.
+  - Reproduce with `python scripts/feature_size_bias.py --run-dir <outputs>/runs/20261007T040938Z-01527ace
+    --sample smacs0723_nircam`: sources detected in F200W and F277W with F200W aper50 S/N > 10, F200W
+    isophotal-area bins [0, 50, 200, 1000, ∞) px.
   - DAOFind sharpness reaches +145σ on clumpy extended galaxies.
 
   This explains these three candidates (verdict `catalog effect`) and sets the next priority (TASKS Now 1).
