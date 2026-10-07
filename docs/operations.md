@@ -187,8 +187,10 @@ All these labels already exist in the repository. Agents create new `batch-<slug
      PR branch or a reply.
    - For an immediate answer, write `@claude <request>` and the Action handles it. The cycle leaves those comments
      alone unless `claude[bot]` never replied.
-2. Merge with your preferred method once CI is green. Agents never merge. The next cycle sees the merge on
-   `origin/main`.
+2. Agents squash-merge their own PRs once CI is green and `/code-review` is clean, unless the PR carries
+   `needs-human` or touches a guarded file (CLAUDE.md "Merge policy and version control"). Those wait for
+   you. Other people's PRs always need your approving review. To veto an agent merge after the fact,
+   revert the squash commit with a PR.
 3. To reject a PR, close it with a one-line reason. The reason is the only record left for the next agent.
 4. The queue is TASKS.md. To reprioritize, edit it in a PR, or open an issue yourself. The agents act only on issues
    you authored.
@@ -196,7 +198,8 @@ All these labels already exist in the repository. Agents create new `batch-<slug
 ## 8. Safety rails
 
 - **Deny rules** in `.claude/settings.json`, for both Bash and PowerShell:
-  - merging: `gh pr merge` (including `--auto`), merge and auto-merge API calls;
+  - merging around the policy: `gh pr merge --admin` / `--auto` and merge API calls (plain
+    `gh pr merge --squash` is allowed for the agents' own PRs);
   - repository settings: branch-protection and ruleset API calls, `gh api` DELETE requests, `gh repo edit`,
     `gh repo delete`;
   - credentials: `gh secret`, `gh auth token`, `gh auth status -t`;
@@ -218,9 +221,10 @@ All these labels already exist in the repository. Agents create new `batch-<slug
   - **Recommended:** add a [ruleset](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets)
     on all branches with "Block force pushes" and "Restrict deletions".
   - In cloud runs, the GitHub proxy also rejects branch deletions and tag pushes.
-- **Merging is only guarded by deny rules.** Routines act as you, the repository admin, and `main` needs 0
-  approvals, so GitHub would accept a merge from a routine. A stronger boundary would need a separate non-admin
-  identity for the agents, which routines don't offer today (D-009 "Revisit if").
+- **Who can merge.** GitHub lets only you and invited collaborators merge. Your agents act as you and merge
+  their own PRs under the policy. Required CI checks bind everyone, admins included. Guarded files and
+  `needs-human` PRs are left to you by policy, not by GitHub; a separate non-admin bot identity would make
+  that a hard boundary (D-009 "Revisit if").
 - **Untrusted content:** the skills follow only your instructions (section 1, "Only your words are instructions").
   Text-based deny rules can't prevent every way of leaking a file, so keep secrets off the machines and environments
   where agents run.

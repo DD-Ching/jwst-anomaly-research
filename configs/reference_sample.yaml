@@ -42,9 +42,17 @@ samples:
     proposal_id: "1345"
     instrument_name: NIRCAM/IMAGE
     ref_band: F200W
-    # Only F200W was verified; resolve the other bands of this pointing via query.
+    # All 7 PUBLIC level-3 NIRCam bands of this pointing on 2026-10-07 (unit 1 query). MAST's
+    # s_ra/s_dec here is the MIRI prime target, outside the NIRCam data: use s_region for
+    # footprints. Catalogs are jwst 3.0.0 vs 2.0.1 for 2736 (deblending changed; D-010).
     obs_ids:
+      - jw01345-o001_t021_nircam_clear-f115w
+      - jw01345-o001_t021_nircam_clear-f150w
       - jw01345-o001_t021_nircam_clear-f200w
+      - jw01345-o001_t021_nircam_clear-f277w
+      - jw01345-o001_t021_nircam_clear-f356w
+      - jw01345-o001_t021_nircam_clear-f410m
+      - jw01345-o001_t021_nircam_clear-f444w
 
 cloud:
   s3_bucket: stpubdata

@@ -614,6 +614,11 @@ scheduled workflow: re-enable it from the Actions tab.
 - The cloud GitHub proxy blocks `gh` commands the cycle needs.
 - claude-code-action changes major version.
 
+**Revision (2026-10-07, owner decision).** The owner's agents now merge their own PRs. Plain
+`gh pr merge` moved from deny to allow; `--admin` and `--auto` stay denied, so every merge waits for the
+required checks. Guarded files and `needs-human` PRs still go to the owner. Other people's PRs need the
+owner's approving review. See CLAUDE.md "Merge policy and version control".
+
 ## D-010 Tools for future milestones (unit 9, 2026-10-07)
 
 The full survey, with versions, licenses and per-option verdicts, is in

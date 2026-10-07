@@ -1,6 +1,6 @@
 ---
 name: research-cycle
-description: Run one complete work cycle on this repository under CLAUDE.md and docs/agent-charter.md - orient, answer owner reviews, respect the WIP cap, pick the highest-value action and execution mode, implement on a claude/ branch, test, update state files, open a PR (never merge) and hand off. Use when asked to run a cycle or continue the project, and as the prompt for /loop, Desktop scheduled tasks and cloud routines.
+description: Run one complete work cycle on this repository under CLAUDE.md and docs/agent-charter.md - orient, answer owner reviews, respect the WIP cap, pick the highest-value action and execution mode, implement on a claude/ branch, test, update state files, open a PR, merge it when the merge policy allows, and hand off. Use when asked to run a cycle or continue the project, and as the prompt for /loop, Desktop scheduled tasks and cloud routines.
 argument-hint: "[focus] [--dry-run]"
 # The tools this cycle needs. They're listed here because project "allow" rules in .claude/settings.json need
 # workspace trust, which -p, SDK and Actions runs never get, while a skill's allowed-tools are not trust-gated.
@@ -26,6 +26,8 @@ allowed-tools:
   - Bash(gh pr diff *)
   - Bash(gh pr comment *)
   - Bash(gh pr create *)
+  - Bash(gh pr merge *)
+  - Bash(gh release create *)
   - Bash(gh issue list *)
   - Bash(gh issue view *)
   - Bash(gh issue comment *)
@@ -161,7 +163,11 @@ Keep them terse; link instead of repeating. Batch workers leave TASKS.md and CHA
   - Body sections: Summary / Evidence (test output, numbers) / Decisions / Limitations / Next.
 - Add `needs-human` when the owner must make a scientific, irreversible, costly or credential decision, and say
   exactly which one.
-- Never `gh pr merge` (including auto-merge), never push to `main`, never force-push. The owner merges.
+- Merge only under CLAUDE.md "Merge policy and version control": own PR, every required check green
+  (`gh pr checks <n> --watch`), `/code-review` run on the final diff with findings fixed, no `needs-human`, no
+  guarded file. Then `gh pr merge <n> --squash --delete-branch`, `git switch main`, `git pull`. Otherwise
+  leave the PR for the owner and say why in the handoff.
+- Never `--admin` or `--auto`, never merge someone else's PR, never push to `main`, never force-push.
 
 ## 9. Handoff
 

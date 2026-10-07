@@ -20,6 +20,10 @@ jobs:
       - uses: astral-sh/setup-uv@v10.2.0
       - run: uvx ruff check src tests scripts
       - run: uvx ruff format --check src tests scripts
+      # ruff runs above at the latest version; pre-commit adds large-file/private-key/yaml checks
+      - run: uvx pre-commit run --all-files --show-diff-on-failure
+        env:
+          SKIP: ruff-check,ruff-format
 
   test:
     name: test (${{ matrix.os }}, py${{ matrix.python }})

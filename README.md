@@ -9,7 +9,8 @@ signatures.
 > interpretations are hypotheses of last resort, considered only after artifacts and known populations
 > have been ruled out ([methodology](docs/methodology.md)).
 
-**Status:** bootstrap (M0). The first vertical slice is under construction. See [TASKS.md](TASKS.md) and [ROADMAP.md](ROADMAP.md).
+**Status:** M0 bootstrap is complete. The M1 catalog-level slice runs end to end on real data; first
+results and limitations are in [CHANGELOG.md](CHANGELOG.md). See [TASKS.md](TASKS.md) and [ROADMAP.md](ROADMAP.md).
 
 ## Pipeline (v0)
 
@@ -26,8 +27,26 @@ uv pip install --python .venv/Scripts/python.exe -e ".[dev,cloud]"   # Linux/mac
 .venv/Scripts/python.exe -m pytest -q --run-network                  # + live MAST/CDS tests
 ```
 
-Downloaded data goes to `$JWST_ANOMALY_DATA` (default `./data`) and is never committed.
-`data/manifests/` records exactly what was fetched.
+## Run the reference sample
+
+```bash
+export JWST_ANOMALY_DATA=~/jwst-anomaly-data             # downloaded catalogs (never committed)
+export JWST_ANOMALY_OUTPUTS=~/jwst-anomaly-data/outputs  # run outputs and the candidate DB
+python scripts/fetch_reference_sample.py --config configs/reference_sample.yaml --catalogs-only  # 17 catalogs, checksummed
+jwst-anomaly run --config configs/reference_sample.yaml   # ~3 min: rank, S3 cutouts, cross-match, report
+jwst-anomaly candidates list --run <run_id>
+```
+
+Each run writes `outputs/runs/<run_id>/report.md`, with provenance, a stage log and the top-k table,
+plus a `contact_sheet.png` per sample. `data/manifests/` records exactly what was fetched: sha256,
+size and pipeline version. Nothing in a report is vetted until a `/vet-candidate` record says so.
+
+## Agent operations
+
+AI agents and the owner maintain this project together. Agents follow [CLAUDE.md](CLAUDE.md) and
+the [charter](docs/agent-charter.md), working through `/research-cycle`. How to run them is in
+[docs/operations.md](docs/operations.md): a single cycle, the local `/loop`, cloud routines, or
+`@claude` on issues.
 
 ## Project memory
 

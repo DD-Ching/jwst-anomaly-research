@@ -89,8 +89,10 @@ and read [DECISIONS.md](DECISIONS.md) first, because the question may already be
 
 ## Pull requests
 
-- Every change goes through a pull request, and the owner reviews and merges it. Nobody pushes to
-  `main`, force-pushes or rewrites published history. External contributors work from a fork.
+- Every change goes through a pull request with green CI. Nobody pushes to `main`, force-pushes or
+  rewrites published history. External contributors work from a fork, and their PRs are merged only
+  after the owner's approving review. The owner's AI agents may merge their own PRs under the merge
+  policy in CLAUDE.md.
 - Keep a PR to one coherent unit and fill in the template (Summary / Decision / Evidence /
   Limitations / Follow-ups, plus the checklist). CI (ruff and offline tests on Linux and Windows) must pass.
 - Labels: PRs opened by AI agents carry `agent`. Add `needs-human` when a PR or issue needs an owner

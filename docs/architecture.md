@@ -9,7 +9,7 @@ MAST (CAOM metadata)            query.py      query_observations / list_products
   → source representation       catalog.py    load_pipeline_catalog / merge_bands
   → derived features            features.py   build_features
   → baseline anomaly ranking    rank.py       score_anomalies
-  → image evidence (top-k)      cutouts.py    make_cutouts (S3 byte-range reads), viz.py
+  → image evidence (top-k)      cutouts.py    make_cutouts (S3 byte-range reads); viz.contact_sheet
   → external cross-check        crossmatch.py crossmatch (SIMBAD / NED / Gaia / CDS XMatch)
   → candidate store             candidates.py CandidateStore (SQLite) + provenance.py
   → orchestration               pipeline.py   run(config) ; cli.py `jwst-anomaly`
@@ -30,6 +30,11 @@ independently (no forced photometry), so cross-band colors are approximate. See 
 - Locations: `paths.data_root()` (`$JWST_ANOMALY_DATA`), `paths.manifests_dir()` (tracked),
   `paths.outputs_dir()` (`$JWST_ANOMALY_OUTPUTS`).
 - Public stage signatures are fixed; extend with keyword arguments that have defaults.
+- One tracked manifest per config: `data/manifests/<config stem>.ecsv` (downloads) and
+  `<config stem>_products.ecsv` (all level-3 products with S3 URIs), shared by
+  `scripts/fetch_reference_sample.py` and `pipeline.run`.
+- Field footprints come from MAST `s_region`, not `s_ra/s_dec` (which can be another
+  instrument's prime target, e.g. CEERS t021).
 
 ## Stage ownership (bootstrap batch, 2026-10-07)
 
