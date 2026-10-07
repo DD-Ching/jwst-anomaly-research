@@ -26,7 +26,8 @@ min_ranked, min_detection_snr, require_multiband}`` (gate skipped when the block
 stellar_locus}``
 (skipped when absent), ``stages.features.daofind_max_ci``,
 ``samples[].matched_photometry.{url, sha256, label, aperture, radius_arcsec, max_bytes}`` (D-013),
-``stages.rank.{methods, random_state}``, ``stages.cutouts.{enabled, top_k, size_arcsec, bands, spike}``,
+``stages.rank.{methods, random_state}``,
+``stages.cutouts.{enabled, top_k, size_arcsec, bands, spike}`` (spike: D-018),
 ``stages.crossmatch.{enabled, top_k, radius_arcsec, services}`` and the optional top-level
 ``outputs`` block added by this unit:
 
