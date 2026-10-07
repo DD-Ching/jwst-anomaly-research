@@ -46,7 +46,30 @@ _Pending._
 
 ## Imaging, cutouts and visualization (unit 4)
 
-_Pending._
+Checked 2026-10-07; versions are those installed and used (see D-005).
+
+- **astropy** 8.0.1 — cloud FITS subsets (`use_fsspec`, `.section`, `Cutout2D`):
+  https://docs.astropy.org/en/stable/io/fits/usage/cloud.html ; `Cutout2D`:
+  https://docs.astropy.org/en/stable/api/astropy.nddata.Cutout2D.html ; asinh stretch and intervals:
+  https://docs.astropy.org/en/stable/visualization/normalization.html
+- **fsspec** 2026.9.0 (read-ahead cache, block size): https://filesystem-spec.readthedocs.io/en/latest/api.html ;
+  **s3fs** 2026.9.0 (default 50 MiB blocks): https://s3fs.readthedocs.io/en/latest/
+- **astrocut** 1.3.0 (evaluated, not used): https://astrocut.readthedocs.io/en/latest/astrocut/index.html ;
+  https://pypi.org/project/astrocut/1.3.0/ ; https://github.com/spacetelescope/astrocut
+- **matplotlib** 3.11.2, `Figure` without pyplot:
+  https://matplotlib.org/stable/gallery/user_interfaces/web_application_server_sgskip.html
+- **JWST pipeline resample** (i2d `fillval`, WHT `weight_type`):
+  https://jwst-pipeline.readthedocs.io/en/latest/jwst/resample/arguments.html ; i2d layout (SCI, ERR,
+  CON, WHT, VAR_*): https://jwst-pipeline.readthedocs.io/en/latest/jwst/data_products/science_products.html
+- **NIRCam filters** (pupil-wheel filters F162M, F164N, F323N, F405N, F466N, F470N pair with a
+  filter-wheel filter, so `PUPIL` names the band):
+  https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-instrumentation/nircam-filters
+- **MAST download endpoint** `https://mast.stsci.edu/api/v0.1/Download/file?uri=<mast URI>` answers
+  HTTP range requests (206 Partial Content on the MIRI F770W i2d).
+- E2E inputs (program 2736): `jw02736-o001_t001_nircam_clear-f200w_cat.ecsv` sha256
+  `7e7b760110fe778df6b4f143e68846113df20b7c681cbbed9dac3e9064652ba3`;
+  `jw02736-o002_t001_miri_f770w_i2d.fits` sha256
+  `ff7d4d687941311752f5dbce8ebccd5065e6eafc7eb275a76bcedcc241e5155a`; F200W i2d read in place on S3.
 
 ## External catalog services (unit 5)
 
