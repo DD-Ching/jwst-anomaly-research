@@ -1,0 +1,271 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int32, description: Unique source identification label number}
+# - {name: xcentroid, datatype: float64, format: .4f, description: X pixel value of the source centroid (0 indexed)}
+# - {name: ycentroid, datatype: float64, format: .4f, description: Y pixel value of the source centroid (0 indexed)}
+# - {name: sky_centroid.ra, unit: deg, datatype: float64}
+# - {name: sky_centroid.dec, unit: deg, datatype: float64}
+# - {name: aper_bkg_flux, unit: Jy, datatype: float64, format: .6e, description: The local background value calculated as the sigma-clipped
+#     median value in the background annulus aperture}
+# - {name: aper_bkg_flux_err, unit: Jy, datatype: float64, format: .6e, description: The standard error of the sigma-clipped median background
+#     value}
+# - {name: aper30_flux, unit: Jy, datatype: float64, format: .6e, description: Flux within the 30% encircled energy circular aperture}
+# - {name: aper30_flux_err, unit: Jy, datatype: float64, format: .6e, description: Flux error within the 30% encircled energy circular
+#     aperture}
+# - {name: aper50_flux, unit: Jy, datatype: float64, format: .6e, description: Flux within the 50% encircled energy circular aperture}
+# - {name: aper50_flux_err, unit: Jy, datatype: float64, format: .6e, description: Flux error within the 50% encircled energy circular
+#     aperture}
+# - {name: aper70_flux, unit: Jy, datatype: float64, format: .6e, description: Flux within the 70% encircled energy circular aperture}
+# - {name: aper70_flux_err, unit: Jy, datatype: float64, format: .6e, description: Flux error within the 70% encircled energy circular
+#     aperture}
+# - {name: aper_total_flux, unit: Jy, datatype: float64, format: .6e, description: Total aperture-corrected flux based on the 70% encircled
+#     energy circular aperture; should be used only for unresolved sources.}
+# - {name: aper_total_flux_err, unit: Jy, datatype: float64, format: .6e, description: Total aperture-corrected flux error based on the
+#     70% encircled energy circular aperture; should be used only for unresolved sources.}
+# - {name: aper30_abmag, datatype: float64, format: .6f, description: AB magnitude within the 30% encircled energy circular aperture}
+# - {name: aper30_abmag_err, datatype: float64, format: .6f, description: AB magnitude error within the 30% encircled energy circular
+#     aperture}
+# - {name: aper50_abmag, datatype: float64, format: .6f, description: AB magnitude within the 50% encircled energy circular aperture}
+# - {name: aper50_abmag_err, datatype: float64, format: .6f, description: AB magnitude error within the 50% encircled energy circular
+#     aperture}
+# - {name: aper70_abmag, datatype: float64, format: .6f, description: AB magnitude within the 70% encircled energy circular aperture}
+# - {name: aper70_abmag_err, datatype: float64, format: .6f, description: AB magnitude error within the 70% encircled energy circular
+#     aperture}
+# - {name: aper_total_abmag, datatype: float64, format: .6f, description: Total aperture-corrected AB magnitude based on the 70% encircled
+#     energy circular aperture; should be used only for unresolved sources.}
+# - {name: aper_total_abmag_err, datatype: float64, format: .6f, description: Total aperture-corrected AB magnitude error based on the
+#     70% encircled energy circular aperture; should be used only for unresolved sources.}
+# - {name: aper30_vegamag, datatype: float64, format: .6f, description: Vega magnitude within the 30% encircled energy circular aperture}
+# - {name: aper30_vegamag_err, datatype: float64, format: .6f, description: Vega magnitude error within the 30% encircled energy circular
+#     aperture}
+# - {name: aper50_vegamag, datatype: float64, format: .6f, description: Vega magnitude within the 50% encircled energy circular aperture}
+# - {name: aper50_vegamag_err, datatype: float64, format: .6f, description: Vega magnitude error within the 50% encircled energy circular
+#     aperture}
+# - {name: aper70_vegamag, datatype: float64, format: .6f, description: Vega magnitude within the 70% encircled energy circular aperture}
+# - {name: aper70_vegamag_err, datatype: float64, format: .6f, description: Vega magnitude error within the 70% encircled energy circular
+#     aperture}
+# - {name: aper_total_vegamag, datatype: float64, format: .6f, description: Total aperture-corrected Vega magnitude based on the 70% encircled
+#     energy circular aperture; should be used only for unresolved sources.}
+# - {name: aper_total_vegamag_err, datatype: float64, format: .6f, description: Total aperture-corrected Vega magnitude error based on
+#     the 70% encircled energy circular aperture; should be used only for unresolved sources.}
+# - {name: CI_50_30, datatype: float64, format: .4f, description: Concentration index calculated as (aper50_flux / aper30_flux)}
+# - {name: CI_70_50, datatype: float64, format: .4f, description: Concentration index calculated as (aper70_flux / aper50_flux)}
+# - {name: CI_70_30, datatype: float64, format: .4f, description: Concentration index calculated as (aper70_flux / aper30_flux)}
+# - {name: is_extended, datatype: bool, description: Flag indicating whether the source is extended}
+# - {name: sharpness, datatype: float64, format: .6f, description: The DAOFind source sharpness statistic}
+# - {name: roundness, datatype: float32, format: .6f, description: The DAOFind source roundness statistic}
+# - {name: nn_label, datatype: int32, description: The label number of the nearest neighbor}
+# - {name: nn_dist, unit: pix, datatype: float64, format: .6f, description: The distance in pixels to the nearest neighbor}
+# - {name: isophotal_flux, unit: Jy, datatype: float64, format: .6e, description: Isophotal flux}
+# - {name: isophotal_flux_err, unit: Jy, datatype: float32, format: .6e, description: Isophotal flux error}
+# - {name: isophotal_abmag, datatype: float64, format: .6f, description: Isophotal AB magnitude}
+# - {name: isophotal_abmag_err, datatype: float64, format: .6f, description: Isophotal AB magnitude error}
+# - {name: isophotal_vegamag, datatype: float64, format: .6f, description: Isophotal Vega magnitude}
+# - {name: isophotal_vegamag_err, datatype: float64, format: .6f, description: Isophotal Vega magnitude error}
+# - {name: isophotal_area, unit: pix2, datatype: float64, description: Isophotal area}
+# - {name: semimajor_sigma, unit: pix, datatype: float64, format: .6f, description: 1-sigma standard deviation along the semimajor axis
+#     of the 2D Gaussian function that has the same second-order central moments as the source}
+# - {name: semiminor_sigma, unit: pix, datatype: float64, format: .6f, description: 1-sigma standard deviation along the semiminor axis
+#     of the 2D Gaussian function that has the same second-order central moments as the source}
+# - {name: ellipticity, datatype: float64, format: .6f, description: 1 minus the ratio of the 1-sigma lengths of the semimajor and semiminor
+#     axes}
+# - {name: orientation, unit: deg, datatype: float64, format: .6f, description: The angle (degrees) between the positive X axis and the
+#     major axis (increases counter-clockwise)}
+# - {name: sky_orientation, unit: deg, datatype: float64, format: .6f, description: The position angle (degrees) from North of the major
+#     axis}
+# - {name: sky_bbox_ll.ra, unit: deg, datatype: float64}
+# - {name: sky_bbox_ll.dec, unit: deg, datatype: float64}
+# - {name: sky_bbox_ul.ra, unit: deg, datatype: float64}
+# - {name: sky_bbox_ul.dec, unit: deg, datatype: float64}
+# - {name: sky_bbox_lr.ra, unit: deg, datatype: float64}
+# - {name: sky_bbox_lr.dec, unit: deg, datatype: float64}
+# - {name: sky_bbox_ur.ra, unit: deg, datatype: float64}
+# - {name: sky_bbox_ur.dec, unit: deg, datatype: float64}
+# meta: !!omap
+# - {date: '2026-08-02 20:47:53 UTC'}
+# - version: {Python: 3.13.13, astropy: 7.2.0, gwcs: 1.0.3, jwst: 2.0.1, numpy: 2.4.4, photutils: 2.3.0, scipy: 1.17.1}
+# - {localbkg_width: 0}
+# - {apermask_method: correct}
+# - kron_params: !!python/tuple [2.5, 1.4, 0.0]
+# - aperture_params:
+#     aperture_corrections: !numpy.ndarray
+#       buffer: !!binary |
+#         VzhkVlFIMVVBRUJ1NExjLw==
+#       dtype: float32
+#       order: C
+#       shape: !!python/tuple [3]
+#     aperture_ee: !numpy.ndarray
+#       buffer: !!binary |
+#         SGdBQUFBQUFBQUF5QUFBQUFBQUFBRVlBQUFBQUFBQUE=
+#       dtype: int64
+#       order: C
+#       shape: !!python/tuple [3]
+#     aperture_radii: !numpy.ndarray
+#       buffer: !!binary |
+#         cGVXZFA1ZDU0ai9jdTBSQQ==
+#       dtype: float32
+#       order: C
+#       shape: !!python/tuple [3]
+#     bkg_aperture_inner_radius: 8.0
+#     bkg_aperture_outer_radius: 13.0
+# - {abvega_offset: 3.236913}
+# - __serialized_columns__:
+#     aper30_flux:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: &id001 !astropy.units.Unit {unit: Jy}
+#       value: !astropy.table.SerializedColumn {name: aper30_flux}
+#     aper30_flux_err:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: aper30_flux_err}
+#     aper50_flux:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: aper50_flux}
+#     aper50_flux_err:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: aper50_flux_err}
+#     aper70_flux:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: aper70_flux}
+#     aper70_flux_err:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: aper70_flux_err}
+#     aper_bkg_flux:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: aper_bkg_flux}
+#     aper_bkg_flux_err:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: aper_bkg_flux_err}
+#     aper_total_flux:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: aper_total_flux}
+#     aper_total_flux_err:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: aper_total_flux_err}
+#     ellipticity:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: ''}
+#       value: !astropy.table.SerializedColumn {name: ellipticity}
+#     isophotal_area:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: pix2}
+#       value: !astropy.table.SerializedColumn {name: isophotal_area}
+#     isophotal_flux:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: isophotal_flux}
+#     isophotal_flux_err:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: isophotal_flux_err}
+#     nn_dist:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: pix}
+#       value: !astropy.table.SerializedColumn {name: nn_dist}
+#     orientation:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: &id002 !astropy.units.Unit {unit: deg}
+#       value: !astropy.table.SerializedColumn {name: orientation}
+#     semimajor_sigma:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: pix}
+#       value: !astropy.table.SerializedColumn {name: semimajor_sigma}
+#     semiminor_sigma:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: pix}
+#       value: !astropy.table.SerializedColumn {name: semiminor_sigma}
+#     sky_bbox_ll:
+#       __class__: astropy.coordinates.sky_coordinate.SkyCoord
+#       __info__: {description: Sky coordinate of the lower-left vertex of the minimal bounding box of the source}
+#       dec: !astropy.table.SerializedColumn
+#         __class__: astropy.coordinates.angles.core.Latitude
+#         unit: *id002
+#         value: !astropy.table.SerializedColumn {name: sky_bbox_ll.dec}
+#       frame: icrs
+#       ra: !astropy.table.SerializedColumn
+#         __class__: astropy.coordinates.angles.core.Longitude
+#         unit: *id002
+#         value: !astropy.table.SerializedColumn {name: sky_bbox_ll.ra}
+#         wrap_angle: &id003 !astropy.coordinates.Angle
+#           unit: *id002
+#           value: 360.0
+#       representation_type: spherical
+#     sky_bbox_lr:
+#       __class__: astropy.coordinates.sky_coordinate.SkyCoord
+#       __info__: {description: Sky coordinate of the lower-right vertex of the minimal bounding box of the source}
+#       dec: !astropy.table.SerializedColumn
+#         __class__: astropy.coordinates.angles.core.Latitude
+#         unit: *id002
+#         value: !astropy.table.SerializedColumn {name: sky_bbox_lr.dec}
+#       frame: icrs
+#       ra: !astropy.table.SerializedColumn
+#         __class__: astropy.coordinates.angles.core.Longitude
+#         unit: *id002
+#         value: !astropy.table.SerializedColumn {name: sky_bbox_lr.ra}
+#         wrap_angle: *id003
+#       representation_type: spherical
+#     sky_bbox_ul:
+#       __class__: astropy.coordinates.sky_coordinate.SkyCoord
+#       __info__: {description: Sky coordinate of the upper-left vertex of the minimal bounding box of the source}
+#       dec: !astropy.table.SerializedColumn
+#         __class__: astropy.coordinates.angles.core.Latitude
+#         unit: *id002
+#         value: !astropy.table.SerializedColumn {name: sky_bbox_ul.dec}
+#       frame: icrs
+#       ra: !astropy.table.SerializedColumn
+#         __class__: astropy.coordinates.angles.core.Longitude
+#         unit: *id002
+#         value: !astropy.table.SerializedColumn {name: sky_bbox_ul.ra}
+#         wrap_angle: *id003
+#       representation_type: spherical
+#     sky_bbox_ur:
+#       __class__: astropy.coordinates.sky_coordinate.SkyCoord
+#       __info__: {description: Sky coordinate of the upper-right vertex of the minimal bounding box of the source}
+#       dec: !astropy.table.SerializedColumn
+#         __class__: astropy.coordinates.angles.core.Latitude
+#         unit: *id002
+#         value: !astropy.table.SerializedColumn {name: sky_bbox_ur.dec}
+#       frame: icrs
+#       ra: !astropy.table.SerializedColumn
+#         __class__: astropy.coordinates.angles.core.Longitude
+#         unit: *id002
+#         value: !astropy.table.SerializedColumn {name: sky_bbox_ur.ra}
+#         wrap_angle: *id003
+#       representation_type: spherical
+#     sky_centroid:
+#       __class__: astropy.coordinates.sky_coordinate.SkyCoord
+#       __info__: {description: ICRS Sky coordinate of the source centroid}
+#       dec: !astropy.table.SerializedColumn
+#         __class__: astropy.coordinates.angles.core.Latitude
+#         unit: *id002
+#         value: !astropy.table.SerializedColumn {name: sky_centroid.dec}
+#       frame: icrs
+#       ra: !astropy.table.SerializedColumn
+#         __class__: astropy.coordinates.angles.core.Longitude
+#         unit: *id002
+#         value: !astropy.table.SerializedColumn {name: sky_centroid.ra}
+#         wrap_angle: *id003
+#       representation_type: spherical
+#     sky_orientation:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id002
+#       value: !astropy.table.SerializedColumn {name: sky_orientation}
+# schema: astropy-2.0
+label xcentroid ycentroid sky_centroid.ra sky_centroid.dec aper_bkg_flux aper_bkg_flux_err aper30_flux aper30_flux_err aper50_flux aper50_flux_err aper70_flux aper70_flux_err aper_total_flux aper_total_flux_err aper30_abmag aper30_abmag_err aper50_abmag aper50_abmag_err aper70_abmag aper70_abmag_err aper_total_abmag aper_total_abmag_err aper30_vegamag aper30_vegamag_err aper50_vegamag aper50_vegamag_err aper70_vegamag aper70_vegamag_err aper_total_vegamag aper_total_vegamag_err CI_50_30 CI_70_50 CI_70_30 is_extended sharpness roundness nn_label nn_dist isophotal_flux isophotal_flux_err isophotal_abmag isophotal_abmag_err isophotal_vegamag isophotal_vegamag_err isophotal_area semimajor_sigma semiminor_sigma ellipticity orientation sky_orientation sky_bbox_ll.ra sky_bbox_ll.dec sky_bbox_ul.ra sky_bbox_ul.dec sky_bbox_lr.ra sky_bbox_lr.dec sky_bbox_ur.ra sky_bbox_ur.dec
+514 1438.174018427844 589.1737473496488 110.6820637805128 -73.47052065230541 2.1895144364236785e-08 1.0733957012610286e-11 3.183554494234015e-08 6.506048306720451e-10 5.4671340779846045e-08 9.138565948486313e-10 8.968315710965113e-08 1.5091958715326254e-09 1.288331331542074e-07 2.1680150313532957e-09 27.642719279340483 0.021964884925107626 27.055600687955014 0.017998568240659634 26.51822277926737 0.01811883349530939 26.124931078163762 0.01811883349530939 24.405806313565947 0.021964884925107626 23.818687722180478 0.017998568240659634 23.281309813492832 0.01811883349530939 22.888018112389226 0.01811883349530939 1.7173050085640311 1.6404052988345912 2.8170762357636194 False 0.5588094208513371 0.15504749 540 36.57679772765054 9.626448260746656e-08 1.7100311e-09 26.44133479757849 0.01911758914466883 23.204421831803955 0.01911758914466883 39.0 1.5189487166470308 1.3954809054065398 0.08128504266624437 36.0781874776388 271.1345743514476 110.68174962324571 -73.47050469019892 110.68203056869368 -73.47061938665516 110.6821527603588 -73.47042475886808 110.68243370720583 -73.47053945478521
+524 1482.319725729344 603.957065397043 110.68480750871564 -73.47029150389638 2.1949081663308334e-08 1.339169054021245e-11 1.7728444046934593e-08 6.303113417450177e-10 3.205368607196898e-08 8.986890906295562e-10 6.442181054291402e-08 1.5304060508142295e-09 9.254428549568989e-08 2.198484229134441e-09 28.27832344744484 0.03793153582925327 27.635305051972374 0.030021860513982278 26.8774176842865 0.025491175207306253 26.484125983182892 0.025491175207306253 25.041410481670304 0.03793153582925327 24.398392086197838 0.030021860513982278 23.640504718511963 0.025491175207306253 23.247213017408356 0.025491175207306253 1.8080371851646704 2.009809742263965 3.633810749119471 False 0.5462615074704983 0.27123675 544 25.84402918216921 8.409759999494781e-08 1.9483843e-09 26.588040995161087 0.024867513003316133 23.35112802938655 0.024867513003316133 49.0 1.940863953200086 1.5330318150514237 0.21012917339014459 14.489218937875185 249.545605811684 110.68444323059566 -73.47029010031191 110.68472419066946 -73.47040479316605 110.68494712921293 -73.47019017956525 110.68522809103497 -73.47030487174548
+528 1518.9505215649651 651.1422691661112 110.68831054482914 -73.4706019300027 3.0047438315250474e-08 6.945043348259762e-10 2.3969941359278424e-05 2.371487600899842e-08 3.9758360338432535e-05 3.009690371500712e-08 5.5812974414710846e-05 3.3874496951973476e-08 8.017737774007301e-05 4.8661953002050916e-08 20.450832571087428 0.0010736518052772048 19.901428836256127 0.0008215865968661709 19.533162080535337 0.0006587645903672822 19.139870379431734 0.0006587645903672822 17.213919605312892 0.0010736518052772048 16.66451587048159 0.0008215865968661709 16.2962491147608 0.0006587645903672822 15.902957413657198 0.0006587645903672822 1.658675744863374 1.4038047328817802 2.3284568609554164 False 0.5743613133395997 0.050294045 597 39.84063047102896 7.89169148465163e-05 3.7711615e-08 19.157074753155662 0.0005187111795188971 15.920161787381126 0.0005187111795188971 2607.0 4.914378006188966 4.47518831451461 0.08936831703244208 63.77476720939993 298.83115408320873 110.6844722382662 -73.47045475342297 110.68738741363981 -73.47164467311018 110.68900715504031 -73.46955542255823 110.69192249361184 -73.47074527931647
+540 1430.3134037171355 624.8959094955668 110.68292219589529 -73.47111133907761 2.1868130417601606e-08 1.0835664980553355e-11 1.152723100079081e-08 6.08884565236719e-10 2.1341597420199096e-08 8.685906284444813e-10 4.3767697493476245e-08 1.4807527918335109e-09 6.287389718156221e-08 2.1271555077561117e-09 28.745687509191967 0.05588676759899307 28.07693269179932 0.0433132808925341 27.2971157497672 0.036125023865355835 26.903824048663594 0.036125023865355835 25.50877454341743 0.05588676759899307 24.840019726024785 0.0433132808925341 24.060202783992665 0.036125023865355835 23.666911082889058 0.036125023865355835 1.8514071088481687 2.0508163766622083 3.7968960186946563 False 0.5456962684726433 -0.89635783 514 36.57679772765054 4.4834674639560035e-08 1.4886538e-09 27.270964943805552 0.035464335058649356 24.034051978031016 0.035464335058649356 30.0 1.7612272652316339 1.1190318986268049 0.3646294713251379 -16.8122592111777 218.24412766263112 110.68264588034435 -73.47111509121042 110.68285660117411 -73.47120111268907 110.68309942087275 -73.47102516647426 110.68331014288289 -73.47111118749802
+544 1482.3997887665591 629.8009705640043 110.68571920299054 -73.47066121485933 2.2160886459232643e-08 2.434647037221185e-11 6.416961950440729e-09 6.023889470199742e-10 1.1696219983986741e-08 8.62130107507029e-10 2.7309773760896388e-08 1.4900545042896799e-09 3.923148819401024e-08 2.1405177576818428e-09 29.381676339656792 0.09741872301378637 28.729886180109453 0.07721764461009967 27.809204744048444 0.057679489166619295 27.415913042944837 0.057679489166619295 26.144763373882256 0.09741872301378637 25.492973214334917 0.07721764461009967 24.572291778273907 0.057679489166619295 24.1790000771703 0.057679489166619295 1.8227036523386932 2.334923060466212 4.255872790241604 False 0.6015227584911593 0.84278387 524 25.84402918216921 6.857003143068141e-08 2.1112567e-09 26.809664128663805 0.032925268307463965 23.57275116288927 0.032925268307463965 60.0 3.550810579026341 1.3068624033816152 0.6319537822994865 27.287604532146478 262.3439914059553 110.68517007103296 -73.47067849085373 110.68552128586852 -73.47082185564781 110.6859259275978 -73.47052860666547 110.6862771457113 -73.47067197019598
+545 1555.9724482045715 629.3161482186493 110.68940937789526 -73.46991907024862 2.222785688843487e-08 1.8577115538803612e-11 5.485267045098272e-09 5.85042778590698e-10 9.622621038757747e-09 8.392876375817251e-10 2.1668952779393414e-08 1.4592626325810805e-09 3.112824267913068e-08 2.09628410851346e-09 29.552005560884318 0.11003270508178573 28.941766543494843 0.09079385520117389 28.06040519206507 0.07076050111739085 27.667113490961462 0.07076050111739085 26.315092595109782 0.11003270508178573 25.704853577720307 0.09079385520117389 24.823492226290533 0.07076050111739085 24.430200525186926 0.07076050111739085 1.754266649124528 2.251876353866141 3.950391585539515 False 0.8220856989196904 -1.518293 575 42.88490034428958 4.4632466611460586e-08 1.6733208e-09 27.275872778073172 0.039960962443457114 24.038959812298636 0.039960962443457114 39.0 2.798279943358085 1.0246715014108998 0.6338209463842137 -23.7662147716395 211.2901721021693 110.68903472991528 -73.46993338547675 110.68928059171625 -73.4700337363716 110.68963936249266 -73.46981346721786 110.68988522612841 -73.4699138174051
+587 1496.4222014185493 702.7718417290962 110.68898882854585 -73.47156721381677 2.6181780299339152e-08 2.1001543674987877e-10 7.526974878819866e-07 1.6139848463040343e-09 1.3921347609534422e-06 2.2176119810187667e-09 3.1113274557222027e-06 3.4251506084043814e-09 4.469535610787099e-06 4.920354040015048e-09 24.20844883353864 0.0023256164991166755 23.540796805661234 0.001728155924314655 22.66763569648949 0.0011945912549749284 22.274343995385884 0.0011945912549749284 20.971535867764104 0.0023256164991166755 20.303883839886698 0.001728155924314655 19.430722730714955 0.0011945912549749284 19.037431029611348 0.0011945912549749284 1.8495275769695556 2.2349326681501176 4.133569602413791 False 0.5199468174969993 -0.088088825 597 24.975663357472484 1.1966127305029772e-05 1.1194447e-08 21.205115952761787 0.001015243661541591 17.96820298698725 0.001015243661541591 1278.0 6.7541001731929 5.883190631318622 0.12894531018816213 -49.76594383661364 185.29044303719516 110.68714762864519 -73.47139400343784 110.6891146841744 -73.47219682021 110.68921364432818 -73.47098429409903 110.69118075001964 -73.47178709152789
+597 1518.4387197963822 690.9796121407469 110.6896840362781 -73.47117814742109 2.270293641970511e-08 4.464713230278808e-11 1.4392217554152943e-09 5.840059968981192e-10 2.1943168671274617e-09 8.361495709092629e-10 3.747260391062913e-09 1.4488602483656214e-09 5.383076516084678e-09 2.0813407033753816e-09 31.004680711938704 0.36979264576335574 30.546751646428653 0.35052534299396587 29.965715318591513 0.3549133826530272 29.572423617487914 0.35491338265302735 27.767767746164168 0.36979264576335574 27.309838680654117 0.35052534299396587 26.728802352816977 0.3549133826530272 26.335510651713378 0.35491338265302735 1.5246551539893038 1.7077116104787455 2.603671308443794 False 1.0156209142900425 0.58085185 587 24.975663357472484 3.0245022486496964e-08 1.5088442e-09 27.698365220670723 0.052856762166398376 24.461452254896187 0.052856762166398376 32.0 2.1859093036554644 1.146057056678018 0.475706949615209 -82.72063964787124 152.33574722593755 110.68937860469255 -73.47114329600501 110.68972986461756 -73.47128665376363 110.68968094234664 -73.47108333659892 110.69003220358236 -73.47122669385206
