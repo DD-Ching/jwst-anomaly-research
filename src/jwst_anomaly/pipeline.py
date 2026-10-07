@@ -24,7 +24,7 @@ ref_band, obs_ids, query}`` (``query``: extra MAST criteria, optional),
 min_ranked}`` (gate skipped when the block is absent),
 ``stages.classify.{enabled, services, radius_arcsec, gaia_radius_arcsec, star_top_k, min_stars}``
 (skipped when absent), ``stages.features.daofind_max_ci``,
-``samples[].matched_photometry.{url, sha256, aperture, label, radius_arcsec}`` (D-013),
+``samples[].matched_photometry.{url, sha256, label, aperture, radius_arcsec, max_bytes}`` (D-013),
 ``stages.rank.{methods, random_state}``, ``stages.cutouts.{enabled, top_k, size_arcsec, bands}``,
 ``stages.crossmatch.{enabled, top_k, radius_arcsec, services}`` and the optional top-level
 ``outputs`` block added by this unit:
@@ -201,6 +201,8 @@ def load_config(path: str | Path) -> dict[str, Any]:
             raise ConfigError(f"{path}: sample {sid!r} needs a 'ref_band'")
         if not sample.get("obs_ids") and not sample.get("proposal_id"):
             raise ConfigError(f"{path}: sample {sid!r} needs 'obs_ids' or 'proposal_id'")
+        if sample.get("matched_photometry") is not None:
+            _check_matched_photometry(sample["matched_photometry"], f"{path}: sample {sid!r}")
     for key in ("archive", "stages", "cloud", "outputs"):
         if config.get(key) is not None and not isinstance(config[key], dict):
             raise ConfigError(f"{path}: '{key}' must be a mapping")
@@ -213,12 +215,42 @@ def load_config(path: str | Path) -> dict[str, Any]:
             raise ConfigError(f"{path}: stages.{name}.enabled must be true or false")
         if "top_k" in block:
             _check_positive_int(block["top_k"], f"{path}: stages.{name}.top_k")
+    daofind = ((config.get("stages") or {}).get("features") or {}).get("daofind_max_ci")
+    if daofind is not None and not (
+        isinstance(daofind, int | float) and not isinstance(daofind, bool) and daofind > 0
+    ):
+        raise ConfigError(f"{path}: stages.features.daofind_max_ci must be a positive number")
     outputs = config.get("outputs") or {}
     if "candidates_top_k" in outputs:
         _check_positive_int(outputs["candidates_top_k"], f"{path}: outputs.candidates_top_k")
     if outputs.get("table_format", "ecsv") not in TABLE_FORMATS:
         raise ConfigError(f"{path}: outputs.table_format must be one of {sorted(TABLE_FORMATS)}")
     return config
+
+
+def _check_matched_photometry(cfg: Any, where: str) -> None:
+    """Validate a sample's ``matched_photometry`` block (D-013)."""
+    if not isinstance(cfg, dict):
+        raise ConfigError(f"{where}: matched_photometry must be a mapping")
+    url = cfg.get("url")
+    if not isinstance(url, str) or not url.startswith(("https://", "http://")):
+        raise ConfigError(f"{where}: matched_photometry.url must be an http(s) URL")
+    sha = cfg.get("sha256")
+    if not (isinstance(sha, str) and re.fullmatch(r"[0-9a-fA-F]{64}", sha)):
+        raise ConfigError(f"{where}: matched_photometry.sha256 must be 64 hex characters")
+    label = cfg.get("label")
+    if not (isinstance(label, str) and label.isalnum() and label[:1].isalpha()):
+        raise ConfigError(f"{where}: matched_photometry.label must be alphanumeric, e.g. dja05")
+    for key in ("aperture", "max_bytes"):
+        if key in cfg:
+            if key == "aperture" and cfg[key] == 0:
+                continue
+            _check_positive_int(cfg[key], f"{where}: matched_photometry.{key}")
+    radius = cfg.get("radius_arcsec")
+    if radius is not None and not (
+        isinstance(radius, int | float) and not isinstance(radius, bool) and radius > 0
+    ):
+        raise ConfigError(f"{where}: matched_photometry.radius_arcsec must be positive")
 
 
 def default_db_path(outputs_dir: str | Path | None = None) -> Path:
@@ -794,10 +826,11 @@ class _Runner:
         name = "photometry.join_matched_photometry"
         if not cfg:  # a per-sample option, not a stage every sample runs
             return sources, None
-        label = str(cfg.get("label", "dja05"))
+        label = str(cfg["label"])
 
         def join() -> Table:
-            path = photometry.fetch_catalog(str(cfg["url"]), str(cfg["sha256"]))
+            fetch_kwargs = {"max_bytes": int(cfg["max_bytes"])} if "max_bytes" in cfg else {}
+            path = photometry.fetch_catalog(str(cfg["url"]), str(cfg["sha256"]), **fetch_kwargs)
             catalog = photometry.load_dja_catalog(
                 path,
                 [b.lower() for b in self.summaries[sid].bands],
@@ -812,9 +845,9 @@ class _Runner:
                 ),
             )
 
-        joined = self.stage(
-            sid, name, join, columns=schema.SOURCE_COLUMNS, required=False, save_as="photometry"
-        )
+        joined = self.stage(sid, name, join, columns=schema.SOURCE_COLUMNS, required=False)
+        if joined is not None:
+            self.save(photometry.joined_columns(joined, label), sid, "photometry")
         if joined is None:
             self.summaries[sid].notes.append(
                 "matched-aperture photometry failed: colours from pipeline catalogs"
@@ -823,7 +856,7 @@ class _Runner:
         info = joined.meta.get("matched_photometry", {})
         self.summaries[sid].notes.append(
             f"colours from matched-aperture photometry '{label}' "
-            f"({info.get('n_matched')} of {len(joined)} sources matched; D-013)"
+            f"({info.get('n_matched')} of {len(joined)} sources matched one-to-one; D-013)"
         )
         return joined, label
 

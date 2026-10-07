@@ -1,25 +1,29 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T120528Z-378af5a1`; size bias via
-`scripts/feature_size_bias.py`).
+Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T122054Z-c52935ec`; size bias via
+`scripts/feature_size_bias.py --compare dja05`).
 
 ## Now (M1 follow-through)
-1. **S/N floor for ranking:** with size-robust colours (D-013), faint near-noise sources reach the SMACS
-   galaxy top 20 (run `20261007T120528Z-378af5a1`). Rank only sources above a reference-band S/N (rank the rest separately or
-   not at all), then re-check the top 20.
-2. **Faint stars:** about three PSF-like sources without Gaia counterparts remain in the galaxy top 20. Add
-   a size–magnitude stellar locus to `classify` (D-012 "Revisit if").
-3. **Vet the new top candidates** with `/vet-candidate` and `scripts/vet_evidence.py`:
-   - thin arcs `jw02736-o001_t001_nircam_f200w_1032` (NED `[MJR2023] 028.2`, G_Lens) and `_438`;
-   - `jw02736-o001_t001_nircam_f277w_829` (SIMBAD `[YML2023] F150DB-C-4`);
-   - MIRI rank 17 (`jw02736-o002_t001_miri_f770w_94`), the known NED `G_Lens` object, which exercises the
-     known-object path.
-4. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
-   subcommands (`add-vetting --outcome pass|fail|inconclusive`).
-5. Report the top-k artifact and star fractions per run as a tracked metric.
-6. Quality gate follow-ups (D-011 "Revisit if"): gate each band for colours; rank shallow regions as a
-   separate stratum instead of excluding them.
+1. **Diffraction-spike and stripe artifacts:** 5–6 of the SMACS galaxy top 20 (run `20261007T122054Z-c52935ec`) are detections
+   on bright-star spikes or parallel stripes, and the D-011 gate misses them. Mask the spike directions
+   around bright stars (from the `classify` star list and the PSF spike angles), or flag linear features,
+   then re-check the top 20.
+2. **S/N floor for ranking:** about 6 faint or near-noise sources reach the top 20 now that colours are
+   clean. Rank only sources above a reference-band S/N.
+3. **Faint stars:** 4 PSF-like stars without Gaia counterparts remain. Add a size–magnitude stellar locus
+   to `classify` (D-012 "Revisit if").
+4. **Vet the new candidates** with `/vet-candidate` and `scripts/vet_evidence.py`, whose evidence now
+   includes the dja05 colours:
+   - catalogued lens-related `jw02736-o001_t001_nircam_f200w_1032` (NED `[MJR2023] 028.2`) and
+     `jw02736-o001_t001_nircam_f277w_829` (`[YML2023] F150DB-C-4`);
+   - arc-like `jw02736-o001_t001_nircam_f200w_438`;
+   - MIRI rank 17 (`jw02736-o002_t001_miri_f770w_94`), the known NED `G_Lens` object.
+5. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
+   subcommands.
+6. Report the top-k artifact and star fractions per run as a tracked metric.
+7. **Control comparability:** CEERS still uses aper50 colours while SMACS uses dja05, so science-vs-control
+   comparisons are invalid until CEERS gets matched photometry (Next).
 
 ## Next (M2)
 - Matched-aperture colours for other samples (D-013 is done for SMACS NIRCam):

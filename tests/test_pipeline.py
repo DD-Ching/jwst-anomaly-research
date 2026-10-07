@@ -190,7 +190,7 @@ class FakeStages:
         return _meta(t, schema.Provenance.DERIVED, "fake features")
 
     # Matched-aperture photometry (D-013), offline: copies aper50 magnitudes under the label.
-    def fetch_catalog(self, url, sha256, cache_dir=None):
+    def fetch_catalog(self, url, sha256, cache_dir=None, **kw):
         self.calls["fetch_catalog"].append((url, sha256))
         return "fake_phot.fits"
 
@@ -201,6 +201,7 @@ class FakeStages:
 
     def join_matched_photometry(self, sources, catalog, label, *, radius_arcsec=0.2):
         out = sources.copy()
+        out[f"{label}_match_sep_arcsec"] = [0.01] * len(out)
         for c in sources.colnames:
             if c.endswith("_aper50_abmag") or c.endswith("_aper50_abmag_err"):
                 out[c.replace("_aper50_", f"_{label}_")] = sources[c]
@@ -1049,7 +1050,12 @@ def test_matched_photometry_feeds_feature_colours(tmp_path, env, monkeypatch):
     assert fakes.calls["fetch_catalog"] == [("https://example.org/x_phot.fits", "0" * 64)]
     assert fakes.calls["build_features"][-1] == {"aperture": "dja05", "daofind_max_ci": 1.8}
     run_dir = env / "runs" / run_id
-    assert (run_dir / sid / "photometry.ecsv").is_file()
+    saved = Table.read(run_dir / sid / "photometry.ecsv")
+    assert (
+        saved.colnames[:2] == ["source_uid", "dja05_match_sep_arcsec"]
+        or "source_uid" in saved.colnames
+    )
+    assert all(c == "source_uid" or "dja05" in c for c in saved.colnames)  # join columns only
     report = (run_dir / "report.md").read_text(encoding="utf-8")
     assert "colours from matched-aperture photometry 'dja05'" in report
 
@@ -1057,15 +1063,50 @@ def test_matched_photometry_feeds_feature_colours(tmp_path, env, monkeypatch):
 def test_matched_photometry_failure_falls_back_to_pipeline_colours(tmp_path, env, monkeypatch):
     fakes = install_fakes(monkeypatch)
 
-    def broken(url, sha256, cache_dir=None):
+    def broken(url, sha256, cache_dir=None, **kw):
         raise ValueError("sha256 mismatch")
 
     monkeypatch.setattr(photometry, "fetch_catalog", broken)
     config = json.loads(json.dumps(TEST_CONFIG))
-    config["samples"][0]["matched_photometry"] = {"url": "https://e.org/x.fits", "sha256": "0" * 64}
+    config["samples"][0]["matched_photometry"] = {
+        "url": "https://e.org/x.fits",
+        "sha256": "0" * 64,
+        "label": "dja05",
+    }
     path = tmp_path / "mp.yaml"
     path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     run_id = pipeline.run(path, samples=[config["samples"][0]["id"]])
     assert fakes.calls["build_features"][-1]["aperture"] == "aper50"
     report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
     assert "matched-aperture photometry failed: colours from pipeline catalogs" in report
+
+
+@pytest.mark.parametrize(
+    "block, match",
+    [
+        (True, "must be a mapping"),
+        ({"url": "ftp://x", "sha256": "0" * 64, "label": "dja05"}, "http"),
+        ({"url": "https://x/a.fits", "sha256": "abc", "label": "dja05"}, "64 hex"),
+        ({"url": "https://x/a.fits", "sha256": "0" * 64}, "label"),
+        (
+            {"url": "https://x/a.fits", "sha256": "0" * 64, "label": "dja05", "radius_arcsec": -1},
+            "radius",
+        ),
+    ],
+)
+def test_matched_photometry_config_is_validated(tmp_path, block, match):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["samples"][0]["matched_photometry"] = block
+    path = tmp_path / "bad.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    with pytest.raises(pipeline.ConfigError, match=match):
+        pipeline.load_config(path)
+
+
+def test_daofind_max_ci_is_validated(tmp_path):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["stages"]["features"] = {"daofind_max_ci": "high"}
+    path = tmp_path / "bad.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    with pytest.raises(pipeline.ConfigError, match="daofind_max_ci"):
+        pipeline.load_config(path)

@@ -3,29 +3,37 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-07: Size-robust colours from DJA matched apertures (D-013, cycle 4)
-- New `photometry.py`: checksum-verified DJA v7.4 catalog, joined by position within 0.2″. Colours now come
-  from 0.5″ matched apertures. DAOFind sharpness/roundness apply only to point-like sources (CI_50_30 ≤ 1.8).
-- **The size bias is gone (derived; run `20261007T120528Z-378af5a1`, SMACS NIRCam).** Spearman between log area and F200W−F277W
-  went from 0.206 (p = 1.5e-16) to 0.023 (p = 0.38).
-  - Re-measure with `python scripts/feature_size_bias.py --run-dir <outputs>/runs/20261007T120528Z-378af5a1 --sample
-    smacs0723_nircam --aperture dja05 --table photometry`.
-- **The ranking changed substantially.** Only 4 of the previous galaxy top 20 remain. The three vetted
-  sources fell to ranks 3115, 502 and 263, which agrees with their `catalog effect` verdicts.
-- **Known objects now reach the top 20** (observed cross-matches; any interpretation is a `hypothesis`):
-  - rank 7 `f200w_1032` = NED `SMACS J0723-73:[MJR2023] 028.2` (G_Lens);
-  - rank 11 `f277w_829` = SIMBAD `[YML2023] F150DB-C-4`, also NED G_Lens.
+- New `photometry.py`. The DJA v7.4 catalog is verified against its sha256 before it is cached, and is
+  joined one-to-one within 0.2″. Colours now come from 0.5″ matched apertures.
+- `features`: `ref_mag` and the morphology features keep the pipeline aperture's S/N gate, so sources
+  without a DJA match keep their morphology. With matched photometry, a band counts as detected when DJA
+  measured it at S/N ≥ 3. DAOFind sharpness/roundness apply only when 0 < CI_50_30 ≤ 1.8.
+- **The size bias is gone, measured on the same 1,423 rows** (run `20261007T122054Z-c52935ec`, F200W−F277W, F200W aper50
+  S/N > 10). Spearman between log area and colour:
+  - aper50: +0.181 (p = 6.7e-12);
+  - isophotal: −0.312 (p = 1.5e-33);
+  - DJA 0.5″: −0.012 (p = 0.66).
 
-  The ranking now recovers catalogued lensed images and a published dropout candidate instead of large
-  galaxies.
-- Visual check (unvetted):
-  - two thin arc-like sources (`f200w_1032`, `f200w_438`);
-  - about three faint PSF-like stars missing from Gaia (D-012 limitation);
-  - several faint compact sources with extreme colours;
-  - about five faint, near-noise detections. Cleaner colours let low-S/N sources rise, so ranking needs an
-    S/N floor.
-- Only 56% of sources match DJA (about 93% at S/N > 10). Unmatched sources get their colours imputed.
-- **Handoff:** TASKS Now 1 (ranking S/N floor), Now 2 (stellar locus for faint stars), Now 3 (vet the
-  thin arcs and known lens images).
+  Re-measure with `python scripts/feature_size_bias.py --run-dir <outputs>/runs/20261007T122054Z-c52935ec --sample
+  smacs0723_nircam --compare dja05`.
+- Join coverage: 2,729 of 5,254 sources matched one-to-one. Nearest-neighbour matching gave 2,920, of
+  which 191 were fragments sharing one DJA object.
+- **Ranking:** the sources vetted in #13 dropped (`2925` to rank 1297, `2559` to 482, `1096` to 296). Two
+  catalogued lens-related objects are in the galaxy top 20 (observed cross-matches):
+  - rank 7 `f277w_829`, SIMBAD `[YML2023] F150DB-C-4` (also NED G_Lens);
+  - rank 13 `f200w_1032`, NED `SMACS J0723-73:[MJR2023] 028.2` (G_Lens).
+- **Top-20 purity is still mixed** (visual, unvetted):
+  - 4 faint PSF-like stars missing from Gaia;
+  - 5–6 detections on diffraction spikes or parallel stripes (a new artifact class the D-011 gate misses);
+  - about 6 faint, compact or near-noise sources, one of them hot-pixel-like;
+  - 3 arc-like sources;
+  - 1 catalogued elongated galaxy.
+- Failed approaches, both fixed after `/code-review` (15 findings, all addressed):
+  - nearest-neighbour joining (fragments shared photometry);
+  - gating morphology on DJA S/N, which erased the morphology of 44% of sources.
+  The first run, `20261007T120528Z-378af5a1`, used both.
+- **Handoff:** TASKS Now 1 (mask detections on diffraction spikes and stripes), Now 2 (S/N floor for
+  ranking), Now 3 (stellar locus), Now 4 (vet the catalogued lensed images and arcs).
 
 ## 2026-10-07: First vetting: three arc-like galaxy candidates (cycle 3)
 - New `scripts/vet_evidence.py` gathers vetting evidence:

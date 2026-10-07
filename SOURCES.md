@@ -383,8 +383,8 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   - fluxes in µJy.
 - **SEP flag bits** used to filter DJA aperture measurements (`APER_TRUNC` 0x10, `APER_HASMASKED` 0x20,
   `APER_ALLMASKED` 0x40, `APER_NONPOSITIVE` 0x80): https://raw.githubusercontent.com/kbarbary/sep/main/src/sep.h
-- **SIMBAD/NED designations** recovered in the run `20261007T120528Z-378af5a1` top 20, as returned by
+- **SIMBAD/NED designations** recovered in the top 20 of runs `20261007T120528Z-378af5a1` and `20261007T122054Z-c52935ec`, as returned by
   `crossmatch` on 2026-10-07; their original papers are not verified:
   - `SMACS J0723-73:[MJR2023] 028.2` (NED G_Lens);
   - `[YML2023] F150DB-C-4` (SIMBAD);
-  - `[RBI2023] 18` (SIMBAD).
+  - `[RBI2023] 18`, `SMACS J0723-7327:[CSM2022] 78`, `[MS2023] WDF-P-6576` (SIMBAD).

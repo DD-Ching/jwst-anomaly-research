@@ -39,7 +39,10 @@ NAN_POLICY = (
     "aperture S/N (from the AB magnitude error) below min_snr, so that pure-noise measurements are "
     "not ranked as anomalies (bands without an error column are listed in "
     "meta['min_snr_skipped_bands']). Band-level missingness is encoded explicitly by "
-    "blue_dropout, red_dropout and n_gaps, which ignore min_snr. Features that are NaN for every "
+    "blue_dropout, red_dropout and n_gaps, which ignore min_snr; with matched photometry "
+    "(aperture != morph_aperture) a band also counts as detected where the matched aperture "
+    "measured it at S/N >= min_snr. Colours use the aperture's S/N, ref_mag and morphology the "
+    "morph_aperture's. Features that are NaN for every "
     "source are dropped and listed in meta['dropped_features']. rank.score_anomalies imputes the "
     "median (robust z = 0) and reports the NaN count per source as n_missing."
 )
@@ -126,6 +129,7 @@ def build_features(
     aperture: str = DEFAULT_APERTURE,
     min_snr: float | None = DEFAULT_MIN_SNR,
     daofind_max_ci: float | None = None,
+    morph_aperture: str = DEFAULT_APERTURE,
 ) -> Table:
     """Compute numeric features from a merged source table (``schema.SOURCE_COLUMNS``).
 
@@ -140,8 +144,12 @@ def build_features(
     :data:`NAN_POLICY` (also stored in ``meta["nan_policy"]``).
 
     ``daofind_max_ci``: DAOFind ``sharpness``/``roundness`` assume a point-like profile and are
-    meaningless for extended sources (D-013); with a value, they are NaN where the reference
-    band's ``CI_50_30`` exceeds it (a point source has CI_50_30 ~ 1.67).
+    meaningless for extended sources (D-013); with a value, they are NaN unless the reference
+    band's ``CI_50_30`` is in (0, daofind_max_ci] (a point source has CI_50_30 ~ 1.67).
+
+    ``morph_aperture`` is the pipeline aperture whose S/N gates ``ref_mag`` and the reference-band
+    morphology. It differs from ``aperture`` only when colours come from joined matched-aperture
+    photometry (D-013), so sources without a match keep their morphology.
     """
     schema.validate(sources, schema.SOURCE_COLUMNS, name="sources")
     if len(sources) == 0:
@@ -167,36 +175,47 @@ def build_features(
     mag = f"{aperture}_abmag"
     ref_name = ref.upper()
 
-    snr_ok: dict[str, np.ndarray] = {}
+    def snr_gates(ap: str, wanted: list[str]) -> dict[str, np.ndarray]:
+        gates: dict[str, np.ndarray] = {}
+        skipped: list[str] = []
+        for b in wanted:
+            ok = _snr_ok(sources, b, ap, min_snr)
+            if ok is None:
+                skipped.append(b)
+                ok = np.ones(len(sources), dtype=bool)
+            gates[b] = ok
+        if skipped:
+            warnings.warn(
+                f"min_snr={min_snr} not applied to {skipped}: no {ap}_abmag_err column",
+                stacklevel=3,
+            )
+            snr_skipped.extend(skipped)
+        return gates
+
     snr_skipped: list[str] = []
-    for b in dict.fromkeys([*band_list, ref]):
-        ok = _snr_ok(sources, b, aperture, min_snr)
-        if ok is None:
-            snr_skipped.append(b)
-            ok = np.ones(len(sources), dtype=bool)
-        snr_ok[b] = ok
-    if snr_skipped:
-        warnings.warn(
-            f"min_snr={min_snr} not applied to {snr_skipped}: no {aperture}_abmag_err column",
-            stacklevel=2,
-        )
+    snr_ok = snr_gates(aperture, list(dict.fromkeys([*band_list, ref])))
+    snr_morph = snr_ok if morph_aperture == aperture else snr_gates(morph_aperture, [ref])
 
     def measured(band: str, quantity: str) -> np.ndarray:
         return np.where(snr_ok[band], _band_values(sources, band, quantity), np.nan)
 
-    snr_note = "; NaN if undefined"
-    if min_snr is not None:
-        snr_note += f" or {aperture} S/N < {min_snr}"
+    def measured_morph(band: str, quantity: str) -> np.ndarray:
+        return np.where(snr_morph[band], _band_values(sources, band, quantity), np.nan)
+
+    def note(ap: str) -> str:
+        return "; NaN if undefined" + (f" or {ap} S/N < {min_snr}" if min_snr is not None else "")
+
+    snr_note = note(morph_aperture)
     columns: dict[str, np.ndarray] = {}
     spec: dict[str, str] = {}
 
-    # Photometry: reference magnitude and adjacent-band colors.
-    columns["ref_mag"] = measured(ref, mag)
-    spec["ref_mag"] = f"{aperture} AB magnitude in {ref_name}{snr_note}"
+    # Photometry: reference magnitude (pipeline aperture) and adjacent-band colors (``aperture``).
+    columns["ref_mag"] = measured_morph(ref, f"{morph_aperture}_abmag")
+    spec["ref_mag"] = f"{morph_aperture} AB magnitude in {ref_name}{snr_note}"
     for blue, red in zip(band_list[:-1], band_list[1:], strict=True):
         name = f"color_{blue}_{red}"
         columns[name] = measured(blue, mag) - measured(red, mag)
-        spec[name] = f"{aperture} AB magnitude {blue.upper()} minus {red.upper()}{snr_note}"
+        spec[name] = f"{aperture} AB magnitude {blue.upper()} minus {red.upper()}{note(aperture)}"
 
     # Morphology in the reference band (pipeline/photutils quantities).
     morph: list[tuple[str, str, Callable[[np.ndarray], np.ndarray], str]] = [
@@ -208,14 +227,14 @@ def build_features(
         ("ref_roundness", "roundness", _identity, "DAOFind roundness statistic"),
         ("ref_log_nn_dist", "nn_dist", _log10_positive, "log10 nearest-neighbour distance (pix)"),
     ]
-    ci_ref = measured(ref, "CI_50_30") if daofind_max_ci is not None else None
+    ci_ref = measured_morph(ref, "CI_50_30") if daofind_max_ci is not None else None
     for name, quantity, transform, text in morph:
-        values = transform(measured(ref, quantity))
+        values = transform(measured_morph(ref, quantity))
         extra = ""
         if ci_ref is not None and quantity in ("sharpness", "roundness"):
             with np.errstate(invalid="ignore"):
-                values = np.where(ci_ref <= daofind_max_ci, values, np.nan)
-            extra = f"; NaN unless CI_50_30 <= {daofind_max_ci} (point-like)"
+                values = np.where((ci_ref > 0) & (ci_ref <= daofind_max_ci), values, np.nan)
+            extra = f"; NaN unless 0 < CI_50_30 <= {daofind_max_ci} (point-like)"
         columns[name] = values
         spec[name] = f"{text} in {ref_name}{snr_note}{extra}"
 
@@ -223,6 +242,11 @@ def build_features(
     # counted in exactly one of the three (n_bands = n_total - blue - red - gaps is therefore not
     # a separate feature: it would count the same missing band twice).
     det = np.column_stack([_detected(sources, b) for b in band_list])
+    if aperture != morph_aperture:  # matched photometry can measure pipeline non-detections
+        matched = np.column_stack(
+            [snr_ok[b] & np.isfinite(_band_values(sources, b, mag)) for b in band_list]
+        )
+        det = det | matched
     n_det = det.sum(axis=1)
     nb = len(band_list)
     any_det = n_det > 0
@@ -251,6 +275,7 @@ def build_features(
         ref_band=ref_name,
         aperture=aperture,
         daofind_max_ci=daofind_max_ci,
+        morph_aperture=morph_aperture,
         min_snr=min_snr,
         min_snr_skipped_bands=snr_skipped,
         dropped_features=dropped,

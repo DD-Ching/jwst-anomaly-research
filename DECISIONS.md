@@ -793,8 +793,11 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
   - `photometry.py` fetches the catalog by URL plus pinned sha256 into the cache.
   - It turns µJy into AB (23.9 − 2.5 log f). Measurements with SEP flags APER_TRUNC, ALLMASKED or
     NONPOSITIVE are dropped. APER_HASMASKED is kept, because grizli masks neighbours on purpose.
-  - Magnitudes are joined to the merged sources by nearest neighbour within 0.2″, as
-    `<band>_dja05_abmag`. Features then use `aperture: dja05`.
+  - Magnitudes are joined to the merged sources one-to-one within 0.2″ (closest first), as
+    `<band>_dja05_abmag`. Features then use `aperture: dja05` for colours. `ref_mag` and morphology
+    keep the pipeline aperture and its S/N gate.
+  - The catalog is verified against its sha256 before it enters the cache (downloads over 200 MB need
+    `max_bytes`). The pinned URL and sha256 in the config are its reproducibility record.
   - The pipeline catalogs remain the source list. This is a per-sample, optional stage: if it fails, the
     pipeline colours are used and the report says so.
 - `features.build_features(daofind_max_ci=1.8)` sets DAOFind `sharpness`/`roundness` to NaN unless the
@@ -808,11 +811,14 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
   PSF-matching is needed.
 - Replacing the source list with DJA's: it would change the uids, the gate and the strata in one step.
 
-**Evidence.** Run `20261007T120528Z-378af5a1` (SMACS NIRCam), `scripts/feature_size_bias.py` (F200W−F277W, F200W S/N > 10):
-- **aper50:** bin medians +0.77 → +0.99 with size, Spearman 0.206 (p = 1.5e-16).
-- **dja05:** bin medians +0.01 → −0.09, Spearman 0.023 (p = 0.38), so the size bias is gone.
-- **Join coverage:** 2,920 of 5,254 sources match DJA within 0.2″. Most unmatched sources are faint
-  fragments; at S/N > 10, about 93% match.
+**Evidence.** Run `20261007T122054Z-c52935ec` (SMACS NIRCam), `scripts/feature_size_bias.py --compare dja05`, on the same
+1,423 rows (F200W−F277W, F200W aper50 S/N > 10). Spearman between log isophotal area and colour:
+- aper50: +0.181 (p = 6.7e-12);
+- isophotal: −0.312 (p = 1.5e-33);
+- dja05: −0.012 (p = 0.66).
+
+Only the matched-aperture colour is free of size dependence. 2,729 of 5,254 sources match one-to-one.
+Nearest-neighbour matching would have given 191 duplicate assignments.
 
 **Revisit if.**
 - PSF differences matter for compact sources (DJA apertures are not PSF-homogenised): then validate against

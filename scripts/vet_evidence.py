@@ -225,6 +225,7 @@ def main(argv: list[str] | None = None) -> int:
     scores = _read_run_table(args.run_dir / args.sample, "scores")
     gate = _read_run_table(args.run_dir / base, "quality", required=False)
     pops = _read_run_table(args.run_dir / base, "populations", required=False)
+    phot = _read_run_table(args.run_dir / base, "photometry", required=False)
     wanted = list(dict.fromkeys(args.uid))
     uids = [str(x) for x in sources["source_uid"]]
     scored = {str(x) for x in scores["source_uid"]}
@@ -345,6 +346,21 @@ def main(argv: list[str] | None = None) -> int:
             }
             for b in bands
         }
+        if phot is not None:
+            k_phot = [str(x) for x in phot["source_uid"]].index(uid)
+            sep_cols = [c for c in phot.colnames if c.endswith("_match_sep_arcsec")]
+            label = sep_cols[0].removesuffix("_match_sep_arcsec") if sep_cols else ""
+            ev["matched_photometry"] = {
+                "label": label,
+                "match_sep_arcsec": float(phot[sep_cols[0]][k_phot]) if sep_cols else None,
+                "abmag": {
+                    b.upper(): float(column_as_float(phot[k_phot : k_phot + 1], c)[0])
+                    for b in bands
+                    if (c := schema.band_column(b, f"{label}_abmag")) in phot.colnames
+                },
+                "note": "these colours ranked the source (D-013); aper50 colours are size-biased",
+                "label_provenance": "derived",
+            }
         ev["cutouts"] = {}
         if all_cuts is not None:
             for r in all_cuts[np.asarray(all_cuts["source_uid"]).astype(str) == uid]:
