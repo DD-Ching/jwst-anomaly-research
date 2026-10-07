@@ -2,18 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-08: WIP counter-image prediction for SMACS (PR #40, not merged)
-- `lensmodel.DeflectionGrid` caches the D_LS/D_S = 1 deflection on a grid (0.1″ over ±60″ takes about 75–105 s once;
-  `.npz` under the data cache). `lensmodel.find_images` maps grid triangles to the source plane and refines each image
-  with Newton steps.
-- `scripts/lens_consistency.py images` predicts every image of each catalogued ICLv2 system and classifies it.
-- First run (unvetted): all 60 catalogued images are reproduced within 0.04–0.91″, none is unpredicted, and there are
-  4 `demagnified` central images. The F200W 5σ depth proxy is 27.4.
-  - `missing`: system 9 at (16.4, 23.0)″, μ 4.7, predicted 25.9 mag; system 17 at (−1.2, −3.7)″ and (0.1, −2.3)″,
-    near the BCG.
-  - `candidate`: system 26 near labels 912 (μ 27) and 816.
-  - `no_flux_ref`: the third images of systems 8, 11 and 16 (μ 3.4–4.2), which have no flux reference yet.
-- **Handoff:** see the PR #40 body (flux reference, depth, cutouts, D-record).
+## 2026-10-08: SMACS counter-images: no predicted image is absent (D-029)
+- New: `lensmodel.find_images` (an image-plane solver on a cached deflection grid), `lens_consistency.py images`, and
+  `--forced-image`, which runs forced photometry on S3 byte-range stamps.
+- Results:
+  - ICLv2 reproduces all 60 catalogued images within 0.04–0.91″, with 4 demagnified central images.
+  - Of the 11 testable uncatalogued images: 3 are recovered (systems 9, 8, and 17 on the BCG gradient), 1 is
+    confused, 1 is undetectable, 6 have no reference flux, and **0 are absent**.
+  - System 8's model z = 11.76 is contradicted by its F090W/F150W detections.
+- **Failed approach:** pipeline-catalog flux references near cluster galaxies. They falsely made system 9 `missing`.
+- The Mahler κ tarball now comes from raw.githubusercontent.com, because github.com/raw returns 403 in cloud runs.
+- **Handoff:** TASKS "Now" 1 is done for counter-images. Next:
+  - parser fixes (issue #41), then the same test on El Gordo and Abell 2744;
+  - the exotic screens of docs/exotic_lensing.md (demagnified images, radial images around a dark centre).
 
 ## 2026-10-08: El Gordo and Abell 2744 lens models, preliminary: no image-position anomaly (issue #41)
 - Preliminary validation on published products. The numbers come from scratch code and are not yet reproducible

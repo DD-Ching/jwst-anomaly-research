@@ -44,6 +44,17 @@ Two subcommands, both writing to ``outputs/lens_consistency/<model>/`` (ECSV plu
     segment).
     ``arcs.dat`` images that no predicted image reproduces are reported as ``unpredicted``.
 
+    Pipeline segments of arcs near cluster galaxies are unreliable flux references (SMACS: the
+    catalogued images sit 0.7–2.6″ from their nearest segment). With ``--forced-image`` (an
+    ``_i2d`` URI or path; S3 is read by byte range), every non-observed predicted image is also
+    checked by forced aperture photometry: the reference flux is measured at the system's
+    catalogued images (recentred on the peak within 0.4″), scaled by |μ| to a predicted flux and
+    S/N, and compared with the best aperture within ``--forced-search-arcsec``. Forced classes:
+    ``undetectable`` (predicted < 5σ), ``recovered`` (a ≥ 5σ source there, at most 3× the
+    predicted flux), ``confused`` (a ≥ 5σ source more than 3× brighter dominates, e.g. a cluster
+    galaxy), ``absent`` (predicted ≥ 10σ, best < 3σ), ``ambiguous`` and ``no_reference``.
+    ERR is scaled by 1.5 (D-027 amendment).
+
 Every threshold here is an ASSUMPTION. Inputs: the pinned model files (downloaded and verified by
 sha256, ``SMACS0723_MAHLER22_ICLV2``), a level-3 ``_cat.ecsv`` and optionally a ``zout`` file.
 """
@@ -550,6 +561,151 @@ def predict_counter_images(
     return out, unpredicted
 
 
+FORCED_R_AP = 0.2  # aperture radius, arcsec (ASSUMPTION)
+FORCED_ANNULUS = (0.6, 1.0)  # background annulus, arcsec (ASSUMPTION)
+ERR_SCALE = 1.5  # ERR underestimates the noise by 1.2-1.5x (D-027 amendment)
+
+
+def aperture_snr(img, err, xx, yy, cx: float, cy: float) -> tuple[float, float]:
+    """Background-subtracted flux and error in a ``FORCED_R_AP`` aperture at offset (cx, cy).
+
+    ``xx``/``yy`` are the stamp's offsets from its centre in arcsec."""
+    r = np.hypot(xx - cx, yy - cy)
+    ap = r <= FORCED_R_AP
+    ann = (r > FORCED_ANNULUS[0]) & (r < FORCED_ANNULUS[1])
+    bkg = float(np.nanmedian(img[ann]))
+    flux = float(np.nansum(img[ap] - bkg))
+    ferr = float(np.sqrt(np.nansum(err[ap] ** 2))) * ERR_SCALE
+    return flux, ferr
+
+
+def peak_flux(img, err, xx, yy, radius: float = 0.4) -> tuple[float, float]:
+    """Aperture flux at the brightest pixel within ``radius`` of the stamp centre."""
+    k = int(np.nanargmax(np.where(np.hypot(xx, yy) <= radius, img, -np.inf)))
+    return aperture_snr(img, err, xx, yy, float(xx.flat[k]), float(yy.flat[k]))
+
+
+def best_within(
+    img, err, xx, yy, search: float, step: float = 0.1
+) -> tuple[float, float, float, float]:
+    """Highest aperture S/N on a grid of centres within ``search``: (snr, flux, dx, dy)."""
+    best = (-np.inf, np.nan, 0.0, 0.0)
+    for cx in np.arange(-search, search + 1e-9, step):
+        for cy in np.arange(-search, search + 1e-9, step):
+            if np.hypot(cx, cy) > search:
+                continue
+            f, e = aperture_snr(img, err, xx, yy, cx, cy)
+            if e > 0 and f / e > best[0]:
+                best = (f / e, f, float(cx), float(cy))
+    return best
+
+
+MAX_FLUX_RATIO = 3.0  # best/predicted flux above this: a brighter source dominates (ASSUMPTION)
+
+
+def forced_class(pred_snr: float, best_snr: float, flux_ratio: float = 1.0) -> str:
+    """Forced-photometry verdict for one predicted image (thresholds are ASSUMPTIONs).
+
+    ``flux_ratio`` is the best aperture's flux over the predicted flux."""
+    if not np.isfinite(pred_snr):
+        return "no_reference"
+    if pred_snr < 5:
+        return "undetectable"
+    if best_snr >= 5:
+        return "recovered" if flux_ratio <= MAX_FLUX_RATIO else "confused"
+    if pred_snr >= 10 and best_snr < 3:
+        return "absent"
+    return "ambiguous"
+
+
+def forced_check(
+    table: Table,
+    backtrace: Table,
+    stamp,
+    search_arcsec: float = 1.0,
+    max_ref_mu: float = 50.0,
+) -> None:
+    """Add forced-photometry columns to the predicted-image ``table`` in place.
+
+    ``stamp(ra, dec)`` returns ``(sci, err, xx, yy)`` around a position. The reference is the
+    system's catalogued image at S/N > 5 with the smallest |μ| below ``max_ref_mu`` (μ near a
+    critical curve is too uncertain to scale from; ASSUMPTION)."""
+    n = len(table)
+    keys = ("pred_snr", "best_snr", "flux_ratio", "best_dx", "best_dy")
+    cols = {k: np.full(n, np.nan) for k in keys}
+    fclass = np.full(n, "", dtype="U12")
+    ref_cache: dict[str, tuple[float, float]] = {}
+    systems = np.asarray(backtrace["system"]).astype(str)
+    for i, row in enumerate(table):
+        if row["image_class"] in ("observed", "demagnified", "outside"):
+            continue
+        sys_id = str(row["system"])
+        if sys_id not in ref_cache:
+            ref = (np.nan, np.nan)
+            for b in backtrace[systems == sys_id]:
+                mu = abs(float(b["magnification"]))
+                if not np.isfinite(mu) or mu > max_ref_mu:
+                    continue
+                f, e = peak_flux(*stamp(float(b["ra"]), float(b["dec"])))
+                if e > 0 and f / e > 5 and (not np.isfinite(ref[1]) or mu < ref[1]):
+                    ref = (f, mu)
+            ref_cache[sys_id] = ref
+        f_ref, mu_ref = ref_cache[sys_id]
+        sci, err, xx, yy = stamp(float(row["ra"]), float(row["dec"]))
+        _, e0 = aperture_snr(sci, err, xx, yy, 0.0, 0.0)
+        pred = f_ref * abs(float(row["magnification"])) / mu_ref
+        cols["pred_snr"][i] = pred / e0 if e0 > 0 else np.nan
+        snr, flux, dx, dy = best_within(sci, err, xx, yy, search_arcsec)
+        cols["best_snr"][i], cols["best_dx"][i], cols["best_dy"][i] = snr, dx, dy
+        cols["flux_ratio"][i] = flux / pred if pred > 0 else np.nan
+        fclass[i] = forced_class(cols["pred_snr"][i], snr, cols["flux_ratio"][i])
+    for k, v in cols.items():
+        table[k] = v
+    table["forced_class"] = fclass
+    table.meta["forced"] = {
+        "r_ap_arcsec": FORCED_R_AP,
+        "annulus_arcsec": list(FORCED_ANNULUS),
+        "err_scale": ERR_SCALE,
+        "search_arcsec": search_arcsec,
+        "max_ref_mu": max_ref_mu,
+        "max_flux_ratio": MAX_FLUX_RATIO,
+    }
+
+
+def image_stamper(uri: str, half_arcsec: float = 1.5):
+    """``stamp(ra, dec)`` reading SCI/ERR sections of an ``_i2d`` (local path or S3 by byte range).
+
+    Returns ``(stamper, close)``."""
+    import fsspec
+
+    opts = {"anon": True} if uri.startswith("s3://") else {}
+    fs, path = fsspec.core.url_to_fs(uri, **opts)
+    fo = fs.open(path, "rb", block_size=2**20, cache_type="readahead")
+    hdul = fits.open(fo, lazy_load_hdus=True)
+    sci, err = hdul["SCI"], hdul["ERR"]
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", FITSFixedWarning)
+        wcs = WCS(sci.header)
+    pix = float(abs(wcs.proj_plane_pixel_scales()[0].to_value("arcsec")))
+    hp = int(np.ceil(half_arcsec / pix))
+    ny, nx = sci.header["NAXIS2"], sci.header["NAXIS1"]
+    yy, xx = np.mgrid[-hp : hp + 1, -hp : hp + 1] * pix
+
+    def stamp(ra: float, dec: float):
+        x, y = (int(round(float(v))) for v in wcs.world_to_pixel_values(ra, dec))
+        if not (hp <= x < nx - hp and hp <= y < ny - hp):
+            nan = np.full(xx.shape, np.nan)
+            return nan, nan, xx, yy
+        sl = (slice(y - hp, y + hp + 1), slice(x - hp, x + hp + 1))
+        return np.asarray(sci.section[sl], float), np.asarray(err.section[sl], float), xx, yy
+
+    def close() -> None:
+        hdul.close()
+        fo.close()
+
+    return stamp, close
+
+
 def cmd_images(args) -> dict:
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
@@ -569,6 +725,13 @@ def cmd_images(args) -> dict:
     table, unpredicted = predict_counter_images(
         model, grid, bt, shapes, args.match_arcsec, args.footprint_arcsec, depth=depth
     )
+    if args.forced_image:
+        stamp, close = image_stamper(args.forced_image)
+        try:
+            forced_check(table, bt, stamp, args.forced_search_arcsec)
+        finally:
+            close()
+        table.meta["forced"]["image"] = args.forced_image
     out = args.out / args.model
     _write(table, out / "images_predicted.ecsv")
     classes = ("observed", "demagnified", "candidate", "missing", "faint", "no_flux_ref", "outside")
@@ -582,6 +745,42 @@ def cmd_images(args) -> dict:
         "n_predicted": len(table),
         "classes": counts,
         "unpredicted_catalogued_images": unpredicted,
+        "forced": (
+            {
+                **table.meta["forced"],
+                "classes": {
+                    c: int(np.sum(table["forced_class"] == c))
+                    for c in (
+                        "recovered",
+                        "confused",
+                        "absent",
+                        "undetectable",
+                        "ambiguous",
+                        "no_reference",
+                    )
+                },
+                "rows": [
+                    {
+                        "system": str(r["system"]),
+                        "catalog_class": str(r["image_class"]),
+                        "forced_class": str(r["forced_class"]),
+                        "xy": [round(float(r["x"]), 2), round(float(r["y"]), 2)],
+                        "mu": round(float(r["magnification"]), 2),
+                        "pred_snr": round(float(r["pred_snr"]), 1),
+                        "best_snr": round(float(r["best_snr"]), 1),
+                        "flux_ratio": round(float(r["flux_ratio"]), 2),
+                        "best_offset_arcsec": [
+                            round(float(r["best_dx"]), 1),
+                            round(float(r["best_dy"]), 1),
+                        ],
+                    }
+                    for r in table
+                    if r["forced_class"]
+                ],
+            }
+            if "forced_class" in table.colnames
+            else None
+        ),
         "flagged": [
             {
                 "system": str(r["system"]),
@@ -625,6 +824,10 @@ def main(argv: list[str] | None = None) -> int:
     i.add_argument("--footprint-arcsec", type=float, default=5.0)
     i.add_argument("--half-width", type=float, default=60.0, help="solver grid half-width, arcsec")
     i.add_argument("--step", type=float, default=0.1, help="solver grid step, arcsec")
+    i.add_argument(
+        "--forced-image", help="_i2d URI or path for forced photometry (S3 by byte range)"
+    )
+    i.add_argument("--forced-search-arcsec", type=float, default=1.0)
     args = ap.parse_args(argv)
     summary = {"validate": cmd_validate, "arcs": cmd_arcs, "images": cmd_images}[args.cmd](args)
     json.dump(summary, sys.stdout, indent=1)

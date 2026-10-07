@@ -1399,3 +1399,52 @@ Field docs: `docs/fields/*.md`.
   outside the Bash rules today (docs/operations.md §8).
 - The cloud proxy allows GraphQL.
 - A merge through the MCP tool is refused.
+
+## D-029 Counter-image prediction with an image-plane solver and forced photometry; SMACS null result (2026-10-08)
+
+**Decision.**
+- **`lensmodel.DeflectionGrid` and `lensmodel.find_images`** solve the lens equation in the image plane:
+  - the D_LS/D_S = 1 deflection is computed once on a grid (default 0.1″ over ±60″) and cached by model sha256;
+  - grid triangles are mapped to the source plane, and Newton steps on the analytic model refine each image
+    (tolerance 1e-5″).
+- **`lens_consistency.py images`** predicts every image of each catalogued system from its mean back-traced source.
+  - Each image is classified against `arcs.dat` and a pipeline catalog.
+  - With `--forced-image`, forced aperture photometry decides whether each non-catalogued image is there:
+    `recovered`, `confused`, `absent`, `undetectable`, `ambiguous` or `no_reference`.
+  - Forced-photometry settings (all ASSUMPTIONs): r = 0.2″, annulus 0.6–1.0″, ERR × 1.5, search 1″.
+  - The reference is the least-magnified catalogued image at S/N > 5 with |μ| ≤ 50. `recovered` needs ≥ 5σ and at
+    most 3× the predicted flux.
+- **Mahler+2022 κ tarball URL** moves from `github.com/.../raw/` to `raw.githubusercontent.com`. The sha256 is
+  unchanged, and cloud runs get a 403 from the former.
+
+**Alternatives rejected.**
+- Catalog-only flux references: near cluster galaxies the pipeline segments of the catalogued SMACS images lie
+  0.7–2.6″ away, with aper50 magnitudes of 29–32. They wrongly made system 9 `missing`.
+- The source-plane back-trace χ² as the only check. It is not valid for models optimised in the image plane
+  (El Gordo: 121.6 against Lenstool's 80.22; issue #41).
+
+**Evidence** (SMACS 0723, ICLv2, F200W `jw02736-o001_t001`, run 2026-10-08).
+- **75 images predicted for 21 systems.** All 60 catalogued images are reproduced within 0.04–0.91″, and no
+  catalogued image is unpredicted. 4 central images are demagnified (|μ| < 0.5), as expected.
+- **Forced photometry** of the 11 testable uncatalogued images:
+  - **3 recovered:**
+    - system 9's third image (μ 4.7) at 0.9″ from the prediction, predicted 10.8σ, flux ratio 1.7. Its
+      F150W/F200W/F444W ratios match images 9.1 and 9.2;
+    - system 8 (μ 3.4) at 0.9″, ratio 1.2;
+    - system 17 (μ −10.2) at 1.0″. This one lies on the BCG's light gradient, so it is not a clean recovery.
+  - **1 confused:** system 17 (μ 5.4), against a cluster galaxy.
+  - **1 undetectable.**
+  - **6 no_reference:** systems 11, 16 and 26. Their catalogued images have |μ| > 50 or S/N < 5.
+  - **0 absent.**
+- **Cutouts** (F150W/F200W/F444W) were inspected for every flagged position.
+- **Result: no predicted image of ≥ 10σ is absent.** This is a null result for "missing image" lens-model
+  violations in SMACS 0723 at this depth.
+- **Ordinary findings:**
+  - system 8's model-fitted z = 11.76 is contradicted by F090W detections of 8.2 (6.7σ) and by F150W detections of
+    both images. It is a free model parameter, not a measurement;
+  - system 26's μ ≈ 27 predicted image (no reference flux) shows at most 4.6σ within 1″.
+
+**Revisit if.**
+- A BCG/ICL model is subtracted. That allows a clean test near the BCG (system 17).
+- A reference flux is available for systems 11, 16 and 26 (DJA matched photometry, or a deeper image).
+- The test runs on the other clusters: El Gordo and Abell 2744 (issue #41) once their parser bugs are fixed.

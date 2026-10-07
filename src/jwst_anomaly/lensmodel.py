@@ -94,8 +94,7 @@ SMACS0723_MAHLER22_ICLV2: dict[str, tuple[str, str]] = {
     ),
     # Best-model convergence (MCMC sample 0000), 3000 x 3000 px of 0.01334", D_LS/D_S = 1.
     "kappa_0000": (
-        "https://github.com/guillaumemahler/SMACS0723-mahler2022/raw/"
-        f"{MAHLER22_COMMIT}/ICLv2/tmp_k/0000_k.fits.tar.xz",
+        f"{_MAHLER22_RAW}/ICLv2/tmp_k/0000_k.fits.tar.xz",
         "4de5d733587dd4dea12233c25069d8e1307936fcd50de316cc4eb967a53edc2c",
     ),
 }
