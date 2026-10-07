@@ -57,7 +57,7 @@ def test_load_dja_catalog_magnitudes_and_flags(tmp_path):
     np.testing.assert_allclose(cat["f200w_mag"][:2], [23.9, 23.9 - 2.5])
     assert np.isnan(cat["f200w_mag"][2])  # non-positive flux
     assert np.isnan(cat["f200w_mag"][3])  # APER_TRUNC
-    assert cat["f200w_mag_err"][0] == pytest.approx(2.5 / np.log(10) * 0.1)
+    assert cat["f200w_mag_err"][0] == pytest.approx(2.5 * np.log10(1.1))  # pipeline convention
 
 
 def test_load_dja_catalog_rejects_unexpected_units(tmp_path):

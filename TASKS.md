@@ -1,29 +1,27 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T122054Z-c52935ec`; size bias via
-`scripts/feature_size_bias.py --compare dja05`).
+Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T124944Z-bbad4ab3`).
 
 ## Now (M1 follow-through)
-1. **Diffraction-spike and stripe artifacts:** 5–6 of the SMACS galaxy top 20 (run `20261007T122054Z-c52935ec`) are detections
-   on bright-star spikes or parallel stripes, and the D-011 gate misses them. Mask the spike directions
-   around bright stars (from the `classify` star list and the PSF spike angles), or flag linear features,
-   then re-check the top 20.
-2. **S/N floor for ranking:** about 6 faint or near-noise sources reach the top 20 now that colours are
-   clean. Rank only sources above a reference-band S/N.
-3. **Faint stars:** 4 PSF-like stars without Gaia counterparts remain. Add a size–magnitude stellar locus
-   to `classify` (D-012 "Revisit if").
-4. **Vet the new candidates** with `/vet-candidate` and `scripts/vet_evidence.py`, whose evidence now
-   includes the dja05 colours:
-   - catalogued lens-related `jw02736-o001_t001_nircam_f200w_1032` (NED `[MJR2023] 028.2`) and
-     `jw02736-o001_t001_nircam_f277w_829` (`[YML2023] F150DB-C-4`);
-   - arc-like `jw02736-o001_t001_nircam_f200w_438`;
-   - MIRI rank 17 (`jw02736-o002_t001_miri_f770w_94`), the known NED `G_Lens` object.
-5. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
+1. **Faint stars:** about 5–6 PSF-like stars without Gaia counterparts are now the main contamination of
+   the SMACS galaxy top 20 (run `20261007T124944Z-bbad4ab3`). Add a size–magnitude stellar locus to `classify` (D-012
+   "Revisit if"), then re-check the top 20.
+2. **Vet the new candidates** with `/vet-candidate` and `scripts/vet_evidence.py`:
+   - catalogued lens-related `jw02736-o001_t001_nircam_f277w_829` (`[YML2023] F150DB-C-4`, a red F150W
+     dropout) and `jw02736-o001_t001_nircam_f200w_1032` (`[MJR2023] 028.2`);
+   - arc-like `..._f200w_438`;
+   - red faint `..._f356w_1243` (`[RBI2023] 18`);
+   - MIRI's known `G_Lens` object.
+3. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
    subcommands.
-6. Report the top-k artifact and star fractions per run as a tracked metric.
-7. **Control comparability:** CEERS still uses aper50 colours while SMACS uses dja05, so science-vs-control
-   comparisons are invalid until CEERS gets matched photometry (Next).
+4. Report the top-k artifact and star fractions per run as a tracked metric.
+5. **Per-sample confirmation** (D-014 limitation): only SMACS NIRCam can confirm single-band detections.
+   MIRI passes 103 of 530, and CEERS drops every single-band source. Add confirmation for each sample
+   (DJA for CEERS, NIRCam counterparts for MIRI).
+6. **Control comparability:** CEERS differs from SMACS in its colours (aper50) and its gate (no
+   confirmation). Science-vs-control comparisons stay invalid until it gets DJA photometry (Next).
+7. Diffraction-spike mask: only if multi-band spike detections appear (D-014 "Revisit if").
 
 ## Next (M2)
 - Matched-aperture colours for other samples (D-013 is done for SMACS NIRCam):

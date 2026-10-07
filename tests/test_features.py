@@ -313,3 +313,11 @@ def test_matched_aperture_colours_keep_pipeline_morphology_for_unmatched_sources
     assert out["ref_ellipticity"][1] == pytest.approx(0.6)
     assert out["ref_mag"][1] == pytest.approx(24.0)  # pipeline aperture
     assert out.meta["morph_aperture"] == "aper50"
+
+
+def test_snr_from_mag_err_inverts_the_pipeline_formula():
+    from jwst_anomaly.features import snr_from_mag_err
+
+    snr = np.array([2.0, 5.0, 100.0])
+    np.testing.assert_allclose(snr_from_mag_err(2.5 * np.log10(1 + 1 / snr)), snr)
+    assert np.isnan(snr_from_mag_err(np.nan))

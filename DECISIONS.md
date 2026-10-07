@@ -817,6 +817,9 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
 - isophotal: −0.312 (p = 1.5e-33);
 - dja05: −0.012 (p = 0.66).
 
+Re-measured after the exact pipeline S/N conversion (D-014 review) in run `20261007T124944Z-bbad4ab3`, on 1,418 rows:
++0.180 (p = 7.6e-12), −0.308 (p = 1.6e-32) and −0.010 (p = 0.71).
+
 Only the matched-aperture colour is free of size dependence. 2,729 of 5,254 sources match one-to-one.
 Nearest-neighbour matching would have given 191 duplicate assignments.
 
@@ -826,3 +829,48 @@ Nearest-neighbour matching would have given 191 duplicate assignments.
 - DJA releases v8.
 - Other fields need it: CEERS `ceers-full` is 250–400 MB (state the reason first). MIRI colours in a fixed
   0.5″ aperture need their own evaluation.
+
+## D-014 Rank only confirmed detections: best-band S/N floor and multi-band confirmation (2026-10-07)
+
+**Decision.** The D-011 quality gate gains two configurable detection-confirmation tests (ASSUMPTION
+thresholds):
+- `low_snr`: the best aper50 S/N over the bands a source is detected in is below `min_detection_snr` (5).
+  S/N is inverted exactly from the pipeline's `abmag_err = 2.5 log10(1 + 1/SNR)` (jwst `source_catalog`).
+  The linear 1.0857/err approximation would admit a true S/N of about 4.5. DJA errors use the same
+  convention.
+- `single_band`: the source is detected in one band only, and no independent detection confirms it. A
+  matched-photometry match counts as confirmation, because DJA detects on a stacked multi-band image.
+
+Bands without an error column cannot fail a detection. With no error columns at all, the S/N test is
+skipped, which `meta['thresholds']['snr_test']` records. If the two tests leave fewer than
+`min_ranked` sources, ranking falls back to the D-011 image tests rather than going ungated. Flagged
+sources stay in `quality.ecsv`. The methodology already treats single-band detections as artifact
+candidates (snowballs, cosmic rays).
+
+**Alternatives rejected.**
+- A diffraction-spike mask around bright stars as the first step: it needs per-observation spike geometry.
+  The 5–6 spike and stripe detections in run `20261007T122054Z-c52935ec` were all single-band with no DJA
+  match, so confirmation removes them without geometry.
+- An S/N floor in the reference band only (run `20261007T123127Z-3b78b3fc`): it excluded red dropouts.
+  The published F150W-dropout candidate `f277w_829` (S/N 104–376 in F277W–F444W, undetected at F200W
+  and bluer) left the top 20. 1,285 SMACS sources had S/N ≥ 5 in some band but not in F200W.
+
+**Evidence.** Run `20261007T124944Z-bbad4ab3`, SMACS galaxy top 20, visual check (unvetted):
+- spike and stripe detections fell from 5–6 to 1, and near-noise sources from about 6 to 0;
+- `f277w_829` is rank 4, `f200w_1032` (`[MJR2023] 028.2`) rank 9 and `f200w_438` rank 15;
+- 7 of the 20 are catalogued.
+
+Gate pass counts, with the stars that are then ranked separately (D-012) in parentheses:
+- SMACS NIRCam: 2,613 of 5,254 (33 stars), so 2,580 galaxies ranked;
+- MIRI: 103 of 530 (8), so 95 ranked;
+- CEERS: 2,757 of 7,582 (7), so 2,750 ranked.
+
+**Known limitation.** Gates differ per sample. Only SMACS NIRCam has matched photometry, so MIRI and
+CEERS drop every single-band detection, while SMACS keeps the DJA-confirmed ones. Science-vs-control
+comparisons are therefore biased by sample construction until every sample has confirmation (TASKS).
+
+**Revisit if.**
+- Single-band sources matter scientifically, e.g. extreme emission-line objects: rank them as their own
+  stratum.
+- A MIRI-specific confirmation becomes available, e.g. a NIRCam counterpart.
+- Spike or stripe detections that are multi-band appear: then add the spike-geometry mask.

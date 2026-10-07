@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-07: Rank only confirmed detections (D-014, cycle 5)
+- Quality gate: best-band S/N floor (`low_snr`) and single-band confirmation (`single_band`, confirmed by a
+  DJA match). Too few survivors now fall back to the D-011 tests instead of ranking ungated.
+- S/N is now inverted exactly from the pipeline's `abmag_err` everywhere: the features S/N ≥ 3 gate,
+  the quality gate and the scripts. The linear approximation overstated S/N at low S/N.
+- Run `20261007T124944Z-bbad4ab3`: spike and stripe detections in the SMACS galaxy top 20 fell from 5–6 to 1, and near-noise
+  sources from about 6 to 0. `[YML2023] F150DB-C-4` and `[MJR2023] 028.2` are ranks 4 and 9. Evidence and
+  counts are in D-014.
+- **Failed approach:** an S/N floor in the reference band only removed red dropouts, including `829`
+  (D-014).
+- **Handoff:** TASKS Now 1 (stellar locus: about 5–6 faint PSF-like stars remain), Now 2 (vet `829`,
+  `1032`, `438`, `1243`).
+
 ## 2026-10-07: Size-robust colours from DJA matched apertures (D-013, cycle 4)
 - New `photometry.py`. The DJA v7.4 catalog is verified against its sha256 before it is cached, and is
   joined one-to-one within 0.2″. Colours now come from 0.5″ matched apertures.

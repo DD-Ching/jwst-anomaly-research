@@ -193,3 +193,72 @@ def test_band_mismatch_and_wrong_image_raise(image):
     far = _sources(w, {f"s{i}": (NX + 100.0 + i, NY + 100.0) for i in range(10)}, ci={})
     with pytest.raises(ValueError, match="covers only"):
         quality.assess_sources(far, wm)
+
+
+def test_detection_confirmation_flags(image):
+    """D-014: low_snr and single_band (unless confirmed by an independent detection)."""
+    _, w = image
+    positions = {n: SOURCES["interior"] for n in ("good", "faint", "single", "single_conf")}
+    src = _sources(w, positions, ci={}, snr_err={"faint": 0.5})  # S/N ~2.2
+    src["n_bands"] = [3, 3, 1, 1]
+    src["dja05_match_sep_arcsec"] = [0.01, 0.02, np.nan, 0.03]
+    q = quality.assess_sources(
+        src,
+        None,
+        min_detection_snr=5,
+        require_multiband=True,
+        confirm_column="dja05_match_sep_arcsec",
+    )
+    assert dict(zip(q["source_uid"], q["quality_reason"], strict=True)) == {
+        "good": "",
+        "faint": "low_snr",
+        "single": "single_band",
+        "single_conf": "",
+    }
+    assert q.meta["thresholds"]["min_detection_snr"] == 5
+    unconfirmed = quality.assess_sources(src, None, require_multiband=True)
+    assert list(unconfirmed["quality_reason"])[2:] == ["single_band", "single_band"]
+    off = quality.assess_sources(src, None)
+    assert all(r == "" for r in off["quality_reason"])
+
+
+def test_detection_confirmation_input_errors(image):
+    _, w = image
+    src = _sources(w, {"a": SOURCES["interior"]}, ci={})
+    with pytest.raises(ValueError, match="confirm_column"):
+        quality.assess_sources(src, None, require_multiband=True, confirm_column="nope")
+    src.remove_column("f200w_aper50_abmag_err")
+    q = quality.assess_sources(src, None, min_detection_snr=5)  # no S/N at all: test skipped
+    assert list(q["quality_reason"]) == [""]
+    assert q.meta["thresholds"]["snr_test"].startswith("skipped")
+
+
+def test_low_snr_threshold_uses_the_exact_pipeline_error_formula(image):
+    _, w = image
+    # Pipeline: abmag_err = 2.5 log10(1 + 1/SNR). SNR 4.6 -> err 0.2136; the linear
+    # approximation 1.0857/err would call that S/N 5.08 and let it pass.
+    errs = {"snr46": 2.5 * np.log10(1 + 1 / 4.6), "snr52": 2.5 * np.log10(1 + 1 / 5.2)}
+    src = _sources(w, {n: SOURCES["interior"] for n in errs}, ci={}, snr_err=errs)
+    q = quality.assess_sources(src, None, min_detection_snr=5)
+    assert list(q["quality_reason"]) == ["low_snr", ""]
+
+
+def test_bands_without_errors_do_not_fail_their_detections(image):
+    _, w = image
+    src = _sources(w, {"lw_only": SOURCES["interior"]}, ci={})
+    src["f200w_detected"] = [False]
+    src["f356w_detected"] = [True]  # detected where no error column exists
+    q = quality.assess_sources(src, None, min_detection_snr=5)
+    assert list(q["quality_reason"]) == [""]
+    assert "f356w" in q.meta["thresholds"]["snr_test"]
+
+
+def test_low_snr_uses_the_best_detected_band_so_dropouts_survive(image):
+    _, w = image
+    src = _sources(w, {"dropout": SOURCES["interior"], "faint": SOURCES["interior"]}, ci={})
+    src["f200w_detected"] = [False, True]  # the dropout is not detected in the reference band
+    src["f200w_aper50_abmag_err"] = [np.nan, 0.5]
+    src["f444w_detected"] = [True, True]
+    src["f444w_aper50_abmag_err"] = [0.003, 0.6]  # S/N ~360 vs ~1.8
+    q = quality.assess_sources(src, None, min_detection_snr=5)
+    assert list(q["quality_reason"]) == ["", "low_snr"]

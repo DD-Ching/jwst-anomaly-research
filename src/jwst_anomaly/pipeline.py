@@ -21,7 +21,7 @@ product_subgroups}``, ``samples[].{id, role, description, proposal_id, instrumen
 ref_band, obs_ids, query}`` (``query``: extra MAST criteria, optional),
 ``cloud.{s3_bucket, l3_key_pattern}``, ``stages.catalog.merge_radius_arcsec``,
 ``stages.quality.{enabled, grid_arcsec, step, min_rel_weight, min_edge_arcsec, max_artifact_ci,
-min_ranked}`` (gate skipped when the block is absent),
+min_ranked, min_detection_snr, require_multiband}`` (gate skipped when the block is absent),
 ``stages.classify.{enabled, services, radius_arcsec, gaia_radius_arcsec, star_top_k, min_stars}``
 (skipped when absent), ``stages.features.daofind_max_ci``,
 ``samples[].matched_photometry.{url, sha256, label, aperture, radius_arcsec, max_bytes}`` (D-013),
@@ -215,6 +215,15 @@ def load_config(path: str | Path) -> dict[str, Any]:
             raise ConfigError(f"{path}: stages.{name}.enabled must be true or false")
         if "top_k" in block:
             _check_positive_int(block["top_k"], f"{path}: stages.{name}.top_k")
+    qcfg = (config.get("stages") or {}).get("quality") or {}
+    if "require_multiband" in qcfg and not isinstance(qcfg["require_multiband"], bool):
+        raise ConfigError(f"{path}: stages.quality.require_multiband must be true or false")
+    for key in ("min_detection_snr", "min_rel_weight", "min_edge_arcsec", "max_artifact_ci"):
+        value = qcfg.get(key)
+        if value is not None and not (
+            isinstance(value, int | float) and not isinstance(value, bool) and value > 0
+        ):
+            raise ConfigError(f"{path}: stages.quality.{key} must be a positive number")
     daofind = ((config.get("stages") or {}).get("features") or {}).get("daofind_max_ci")
     if daofind is not None and not (
         isinstance(daofind, int | float) and not isinstance(daofind, bool) and daofind > 0
@@ -551,7 +560,8 @@ class _Runner:
         }
         # 4b. Quality gate (derived, D-011): rank only sources whose measurements can be trusted.
         to_rank = feats
-        keep = self._quality(sid, summary, sources, feats, ref_band, band_obs)
+        confirm = photometry.match_sep_column(aperture) if aperture else None
+        keep = self._quality(sid, summary, feat_sources, feats, ref_band, band_obs, confirm)
         if keep is not None:
             to_rank = _subset(feats, keep, "quality-gated subset (D-011)")
         # 4c. Star/galaxy separation (D-012): stars become their own ranking stratum.
@@ -868,8 +878,9 @@ class _Runner:
         feats: Table,
         ref_band: str,
         band_obs: Mapping[str, str],
+        confirm_column: str | None = None,
     ) -> np.ndarray | None:
-        """Quality gate (optional stage, D-011). Return the rows of ``feats`` to rank, or None.
+        """Quality gate (optional, D-011/D-014). Return the rows of ``feats`` to rank, or None.
 
         None (rank everything) when the gate is not configured, fails, or leaves fewer than
         ``min_ranked`` sources, so a broken gate can never abort or empty a run.
@@ -882,7 +893,18 @@ class _Runner:
             return None
 
         def gate() -> Table:
-            params = _stage_kwargs(cfg, ("min_rel_weight", "min_edge_arcsec", "max_artifact_ci"))
+            params = _stage_kwargs(
+                cfg,
+                (
+                    "min_rel_weight",
+                    "min_edge_arcsec",
+                    "max_artifact_ci",
+                    "min_detection_snr",
+                    "require_multiband",
+                ),
+            )
+            if params.get("require_multiband") and confirm_column:
+                params["confirm_column"] = confirm_column
             map_kwargs = {"grid_arcsec": float(cfg.get("grid_arcsec", 1.0))}
             if cfg.get("step") is not None:
                 map_kwargs["step"] = int(cfg["step"])
@@ -908,12 +930,27 @@ class _Runner:
         missing = sum(u not in ok_by_uid for u in uids)
         keep = np.array([ok_by_uid.get(u, False) for u in uids], dtype=bool)
         min_ranked = max(2, int(cfg.get("min_ranked", 20)))
+        reasons_of = {
+            _text(u): set(filter(None, _text(r).split(",")))
+            for u, r in zip(table["source_uid"], table["quality_reason"], strict=True)
+        }
         problem = None
         if missing:
             problem = f"gate table lacks {missing} of {len(uids)} feature rows"
         elif keep.sum() < min_ranked:
-            n_ok = int(keep.sum())
-            problem = f"only {n_ok} of {len(uids)} sources passed (min_ranked {min_ranked})"
+            # The D-014 tests (low_snr, single_band) can be too strict for a small or single-band
+            # sample: fall back to the D-011 image tests before giving up on gating entirely.
+            d011 = set(quality.REASONS_D011)
+            keep_d011 = np.array([not (reasons_of.get(u, set()) & d011) for u in uids], dtype=bool)
+            if keep_d011.sum() >= min_ranked:
+                summary.notes.append(
+                    f"detection-confirmation tests (D-014) left {int(keep.sum())} of {len(uids)} "
+                    f"sources (min_ranked {min_ranked}): ranked with the D-011 image tests only"
+                )
+                keep = keep_d011
+            else:
+                n_ok = int(keep.sum())
+                problem = f"only {n_ok} of {len(uids)} sources passed (min_ranked {min_ranked})"
         if problem:
             self.record(sid, "quality gate (sanity check)", "failed", problem, required=False)
             for key in [k for k in self.weight_refs if k[0] == sid]:

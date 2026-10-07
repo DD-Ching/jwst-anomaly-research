@@ -22,9 +22,7 @@ from astropy.table import Table, join
 from scipy.stats import spearmanr
 
 from jwst_anomaly import schema
-from jwst_anomaly.features import column_as_float
-
-MAG_ERR_TO_SNR = 2.5 / np.log(10)  # S/N ~ 1.0857 / sigma_mag
+from jwst_anomaly.features import column_as_float, snr_from_mag_err
 
 
 def colour_table(
@@ -36,8 +34,7 @@ def colour_table(
         return column_as_float(sources, schema.band_column(band, q))
 
     detected = (col(band_a, "detected") > 0) & (col(band_b, "detected") > 0)
-    with np.errstate(divide="ignore", invalid="ignore"):
-        snr = MAG_ERR_TO_SNR / col(band_a, "aper50_abmag_err")
+    snr = snr_from_mag_err(col(band_a, "aper50_abmag_err"))
     area = col(band_a, "isophotal_area")
     colours = {
         name: col(band_a, f"{name}_abmag") - col(band_b, f"{name}_abmag")

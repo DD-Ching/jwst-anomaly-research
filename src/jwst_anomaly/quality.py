@@ -14,7 +14,13 @@ from astropy.table import Table
 
 from jwst_anomaly import schema
 from jwst_anomaly.cutouts import WeightMap, _as_degrees
-from jwst_anomaly.features import DEFAULT_MIN_SNR, _detected, _snr_ok, column_as_float
+from jwst_anomaly.features import (
+    DEFAULT_MIN_SNR,
+    _detected,
+    _snr_ok,
+    column_as_float,
+    discover_bands,
+)
 
 # ASSUMPTIONS (D-011). Relative weight: median positive WHT of the image = 1.
 DEFAULT_MIN_REL_WEIGHT = 0.5
@@ -27,7 +33,9 @@ DEFAULT_MAX_ARTIFACT_CI = 1.45
 # More uncovered sources than this means the weight map is for the wrong image.
 MAX_UNCOVERED_FRACTION = 0.9
 
-REASONS = ("no_coverage", "low_weight", "edge", "sharper_than_psf")
+REASONS_D011 = ("no_coverage", "low_weight", "edge", "sharper_than_psf")  # image tests
+REASONS_D014 = ("low_snr", "single_band")  # detection-confirmation tests
+REASONS = REASONS_D011 + REASONS_D014
 
 
 def assess_sources(
@@ -39,6 +47,9 @@ def assess_sources(
     min_edge_arcsec: float = DEFAULT_MIN_EDGE_ARCSEC,
     max_artifact_ci: float = DEFAULT_MAX_ARTIFACT_CI,
     min_snr: float = DEFAULT_MIN_SNR,
+    min_detection_snr: float | None = None,
+    require_multiband: bool = False,
+    confirm_column: str | None = None,
 ) -> Table:
     """Flag each merged source (``schema.SOURCE_COLUMNS``); return ``schema.QUALITY_COLUMNS``.
 
@@ -49,6 +60,13 @@ def assess_sources(
     reference-band detections with aper50 S/N >= ``min_snr`` and a positive CI, so noise is
     not called an artifact. Raises ``ValueError`` if the map's band differs from the
     reference band or the map covers almost none of the sources (wrong image).
+
+    Detection-confirmation tests (D-014, off by default): ``low_snr`` flags sources whose best
+    aper50 S/N over the bands they are detected in is below ``min_detection_snr``. The best band,
+    not the reference band, counts, so red dropouts undetected in the reference band survive. With
+    ``require_multiband``, ``single_band`` flags sources detected in one band only unless an
+    independent detection confirms them: a finite value in ``confirm_column`` (e.g. the matched-
+    photometry separation of a catalog built from a stacked detection image).
     """
     schema.validate(sources, schema.SOURCE_COLUMNS, name="sources")
     n = len(sources)
@@ -84,9 +102,38 @@ def assess_sources(
     else:
         sharp = np.zeros(n, dtype=bool)
 
+    low_snr = np.zeros(n, dtype=bool)
+    snr_test = "off"
+    if min_detection_snr is not None:
+        passed = np.zeros(n, dtype=bool)
+        unmeasured: list[str] = []
+        for b in discover_bands(sources):
+            ok = _snr_ok(sources, b, "aper50", min_detection_snr)
+            if ok is None:  # S/N unknown in this band: a detection there is not penalised
+                unmeasured.append(b)
+                ok = np.ones(n, dtype=bool)
+            passed |= ok & _detected(sources, b)
+        if len(unmeasured) == len(discover_bands(sources)):
+            snr_test = "skipped: no <band>_aper50_abmag_err columns"
+        else:
+            low_snr = ~passed
+            snr_test = "on" + (f" (no S/N for {unmeasured}: detections pass)" if unmeasured else "")
+    single = np.zeros(n, dtype=bool)
+    confirmation = None
+    if require_multiband:
+        n_bands = column_as_float(sources, "n_bands")
+        confirmed = np.zeros(n, dtype=bool)
+        if confirm_column is not None:
+            if confirm_column not in sources.colnames:
+                raise ValueError(f"confirm_column {confirm_column!r} not in sources")
+            confirmed = np.isfinite(column_as_float(sources, confirm_column))
+            info = sources.meta.get("matched_photometry") or {}
+            confirmation = f"{confirm_column} from {info.get('catalog', 'an external catalog')}"
+        single = (n_bands <= 1) & ~confirmed
+
     reasons = [
         ",".join(name for name, on in zip(REASONS, flags, strict=True) if on)
-        for flags in zip(uncovered, low, near_edge, sharp, strict=True)
+        for flags in zip(uncovered, low, near_edge, sharp, low_snr, single, strict=True)
     ]
     out = Table(
         {
@@ -107,12 +154,17 @@ def assess_sources(
                 if weight_map
                 else "no WHT"
             )
+            + (f"; single-band confirmation: {confirmation}" if confirmation else "")
         ),
         thresholds={
             "min_rel_weight": min_rel_weight,
             "min_edge_arcsec": min_edge_arcsec,
             "max_artifact_ci": max_artifact_ci,
             "min_snr": min_snr,
+            "min_detection_snr": min_detection_snr,
+            "snr_test": snr_test,
+            "require_multiband": require_multiband,
+            "confirm_column": confirm_column,
             "provenance": schema.Provenance.ASSUMPTION.value,
         },
         ref_band=band,
