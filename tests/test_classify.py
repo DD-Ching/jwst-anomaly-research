@@ -150,3 +150,49 @@ def test_star_basis_is_wide_enough_for_later_bases():
     out = classify.classify_sources(_sources(["a"]), _matches([]))
     out["star_basis"][0] = "stellar_locus"
     assert out["star_basis"][0] == "stellar_locus"
+
+
+def test_stellar_locus_calibration_needs_finite_colours():
+    t, known = _locus_table(n_ref=12)
+    t["f444w_dja05_abmag"][:5] = np.nan  # 7 calibration stars left with every colour
+    with pytest.raises(ValueError, match="found 7"):
+        classify.stellar_locus(t, "dja05", known)
+
+
+def test_stellar_locus_rejects_unknown_keys_and_reads_masked_columns():
+    t, known = _locus_table()
+    with pytest.raises(ValueError, match="r50_tol"):
+        classify.stellar_locus(t, "dja05", known, r50_tol=0.1)
+    masked = Table(t, masked=True)
+    masked["dja05_r50_pix"].mask[-4] = True  # faint_star loses its size
+    member, _ = classify.stellar_locus(masked, "dja05", known)
+    assert not member[-4]
+
+
+def _populations(t, known):
+    pops = Table(
+        {
+            "source_uid": list(t["source_uid"]),
+            "population": ["star" if k else "other" for k in known],
+            "star_basis": np.array(["gaia_position" if k else "" for k in known], dtype="U32"),
+        }
+    )
+    pops.meta.update(provenance="derived", source="catalogue classification")
+    return pops
+
+
+def test_apply_stellar_locus_adds_members_and_records_the_catalog():
+    t, known = _locus_table()
+    t.meta["matched_photometry"] = {"catalog": "DJA catalog x_phot.fits"}
+    pops = _populations(t, known)
+    out = classify.apply_stellar_locus(pops, t, "dja05", {"enabled": True})
+    basis = dict(zip(out["source_uid"], out["star_basis"], strict=True))
+    assert basis["faint_star"] == "stellar_locus" and basis["ref0"] == "gaia_position"
+    assert basis["brown_dwarf"] == "" and pops["star_basis"][-4] == ""  # input untouched
+    assert out.meta["stellar_locus"]["n_added"] == 1
+    assert "DJA catalog x_phot.fits" in out.meta["source"]
+    assert (
+        classify.apply_stellar_locus(pops, t, "dja05", True).meta["stellar_locus"]["n_added"] == 1
+    )
+    with pytest.raises(ValueError, match="mapping"):
+        classify.apply_stellar_locus(pops, t, "dja05", ["colours"])

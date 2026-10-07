@@ -95,7 +95,8 @@ def fetch_catalog(
 def load_dja_catalog(path: str | Path, bands: list[str], aperture: int = 1) -> Table:
     """DJA grizli ``*_phot.fits``: positions plus AB magnitudes in aperture ``aperture``.
 
-    Returns ``id, ra, dec`` and, per requested band, ``<band>_mag``/``_mag_err`` (µJy fluxes to
+    Returns ``id, ra, dec``, the detection-image ``r50_pix`` (``flux_radius``) and ``mag_auto``
+    when present, and, per requested band, ``<band>_mag``/``_mag_err`` (µJy fluxes to
     AB; NaN for non-positive flux or bad SEP flags). Raises ``ValueError`` if a requested band is
     missing or a flux column is not in µJy. Provenance ``derived`` (converted and filtered).
     """
@@ -134,7 +135,12 @@ def load_dja_catalog(path: str | Path, bands: list[str], aperture: int = 1) -> T
         provenance=schema.Provenance.DERIVED.value,
         source=f"DJA catalog {Path(path).name}, aperture {aperture} (uJy -> AB, SEP flags applied)",
         aperture_diameter_arcsec=float(diam) if diam is not None else None,
-        detection_pixel_scale_arcsec=t.meta.get("BACK_PIXEL_SCALE"),
+        # Aperture diameter in arcsec over pixels gives the detection image's pixel scale.
+        detection_pixel_scale_arcsec=(
+            float(diam) / float(t.meta[f"APER_{aperture}"])
+            if diam is not None and t.meta.get(f"APER_{aperture}")
+            else None
+        ),
     )
     return out
 
@@ -151,7 +157,9 @@ def join_matched_photometry(
     Pairs are one-to-one within ``radius_arcsec``, closest first (``catalog._match_one_to_one``),
     so two fragments never share one catalog object's photometry; unmatched rows get NaN and
     ``<label>_match_sep_arcsec`` records the separation. Every band of ``sources`` must exist in
-    ``catalog``. Provenance stays ``derived`` (a positional join of derived magnitudes).
+    ``catalog``. When the catalog carries them, the detection-image ``<label>_r50_pix``
+    (half-light radius, pixels of ``detection_pixel_scale_arcsec``) and ``<label>_mag_auto`` are
+    joined too (D-015). Provenance stays ``derived`` (a positional join of derived magnitudes).
     """
     schema.validate(sources, schema.SOURCE_COLUMNS, name="sources")
     if not (label.isalnum() and label[0].isalpha()) or label.lower() in RESERVED_LABELS:
@@ -163,6 +171,10 @@ def join_matched_photometry(
     if missing:
         raise ValueError(f"{catalog.meta.get('source')}: no photometry for sample bands {missing}")
     clash = [
+        c
+        for c in (f"{label}_r50_pix", f"{label}_mag_auto", match_sep_column(label))
+        if c in sources.colnames
+    ] + [
         c
         for b in bands
         for c in (
@@ -210,7 +222,8 @@ def join_matched_photometry(
 
 
 def joined_columns(joined: Table, label: str) -> Table:
-    """The join's own columns (``source_uid``, separation, ``<band>_<label>_*``) for saving."""
+    """The join's own columns for saving: ``source_uid``, separation, ``<band>_<label>_*`` and the
+    detection-image ``<label>_r50_pix``/``<label>_mag_auto``."""
     keep = ["source_uid", match_sep_column(label)] + [
         c
         for c in joined.colnames

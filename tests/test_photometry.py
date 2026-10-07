@@ -23,12 +23,15 @@ def _dja(path, *, unit="uJy"):
             "f277w_flux_aper_1": [2.0, 10.0, 1.0, 5.0],
             "f277w_fluxerr_aper_1": [0.2, 1.0, 0.1, 0.5],
             "f277w_flag_aper_1": [0, 0, 0, 0],
+            "flux_radius": [2.9, 4.0, 3.0, 2.8],
+            "mag_auto": [21.0, 22.0, 23.0, 24.0],
         }
     )
     for c in t.colnames:
-        if "flux" in c:
+        if "flux" in c and c != "flux_radius":
             t[c].unit = unit
     t.meta["ASEC_1"] = 0.5
+    t.meta["APER_1"] = 12.5
     t.write(path, overwrite=True)
     return path
 
@@ -58,6 +61,9 @@ def test_load_dja_catalog_magnitudes_and_flags(tmp_path):
     assert np.isnan(cat["f200w_mag"][2])  # non-positive flux
     assert np.isnan(cat["f200w_mag"][3])  # APER_TRUNC
     assert cat["f200w_mag_err"][0] == pytest.approx(2.5 * np.log10(1.1))  # pipeline convention
+    np.testing.assert_allclose(cat["r50_pix"], [2.9, 4.0, 3.0, 2.8])
+    np.testing.assert_allclose(cat["mag_auto"], [21.0, 22.0, 23.0, 24.0])
+    assert cat.meta["detection_pixel_scale_arcsec"] == pytest.approx(0.04)
 
 
 def test_load_dja_catalog_rejects_unexpected_units(tmp_path):
@@ -76,6 +82,10 @@ def test_join_matched_photometry(tmp_path):
     assert np.isnan(out["f200w_dja05_abmag"][2])  # nothing within 0.2"
     assert out["dja05_match_sep_arcsec"][1] == pytest.approx(0.05, abs=0.01)
     assert out.meta["matched_photometry"]["n_matched"] == 2
+    assert out.meta["matched_photometry"]["detection_pixel_scale_arcsec"] == pytest.approx(0.04)
+    np.testing.assert_allclose(out["dja05_r50_pix"][:2], [2.9, 4.0])
+    np.testing.assert_allclose(out["dja05_mag_auto"][:2], [21.0, 22.0])
+    assert np.isnan(out["dja05_r50_pix"][2]) and np.isnan(out["dja05_mag_auto"][2])
     assert "f200w_dja05_abmag" not in src.colnames  # input untouched
 
 
@@ -175,6 +185,10 @@ def test_join_rejects_reserved_or_clashing_labels(tmp_path):
     src["f200w_dja05_abmag"] = [20.0]
     with pytest.raises(ValueError, match="overwrite"):
         photometry.join_matched_photometry(src, cat, "dja05")
+    src.remove_column("f200w_dja05_abmag")
+    src["dja05_r50_pix"] = [1.0]
+    with pytest.raises(ValueError, match="overwrite"):
+        photometry.join_matched_photometry(src, cat, "dja05")
 
 
 def test_joined_columns_keeps_only_the_join(tmp_path):
@@ -185,6 +199,8 @@ def test_joined_columns_keeps_only_the_join(tmp_path):
     assert out.colnames[0] == "source_uid"
     assert set(out.colnames[1:]) == {
         "dja05_match_sep_arcsec",
+        "dja05_r50_pix",
+        "dja05_mag_auto",
         "f200w_dja05_abmag",
         "f200w_dja05_abmag_err",
         "f277w_dja05_abmag",

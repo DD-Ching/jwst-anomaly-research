@@ -225,6 +225,15 @@ def load_config(path: str | Path) -> dict[str, Any]:
             isinstance(value, int | float) and not isinstance(value, bool) and value > 0
         ):
             raise ConfigError(f"{path}: stages.quality.{key} must be a positive number")
+    locus = ((config.get("stages") or {}).get("classify") or {}).get("stellar_locus")
+    if locus is not None and not isinstance(locus, bool | dict):
+        raise ConfigError(f"{path}: stages.classify.stellar_locus must be a mapping or true/false")
+    if isinstance(locus, dict):
+        unknown = set(locus) - set(classify.DEFAULT_LOCUS) - {"enabled"}
+        if unknown:
+            raise ConfigError(
+                f"{path}: unknown stages.classify.stellar_locus keys {sorted(unknown)}"
+            )
     daofind = ((config.get("stages") or {}).get("features") or {}).get("daofind_max_ci")
     if daofind is not None and not (
         isinstance(daofind, int | float) and not isinstance(daofind, bool) and daofind > 0
@@ -586,7 +595,8 @@ class _Runner:
         star_summary = SampleSummary(
             star_sid,
             f"{summary.role}/stars",
-            f"Gaia/SIMBAD stars of {sid}, ranked among themselves (D-012)",
+            f"stars of {sid} (Gaia/SIMBAD; stellar locus D-015 where applied), ranked among "
+            "themselves (D-012)",
             summary.ref_band,
             n_observations=summary.n_observations,
             bands=list(summary.bands),
@@ -712,29 +722,17 @@ class _Runner:
                 sources, matches, **_stage_kwargs(cfg, ("gaia_radius_arcsec",))
             )
             locus_cfg = cfg.get("stellar_locus")
-            if locus_cfg and label:
-                try:
-                    known = np.asarray(table["population"]).astype(str) == "star"
-                    overrides = {
-                        k: tuple(tuple(c) for c in v) if k == "colours" else v
-                        for k, v in dict(locus_cfg).items()
-                        if k != "enabled"
-                    }
-                    if "calib_mag_range" in overrides:
-                        overrides["calib_mag_range"] = tuple(overrides["calib_mag_range"])
-                    member, info = classify.stellar_locus(sources, label, known, **overrides)
-                except (KeyError, ValueError) as exc:
-                    self.summaries[sid].notes.append(f"stellar locus not applied: {exc}")
-                else:
-                    new = member & ~known
-                    table["population"][new] = "star"
-                    table["star_basis"][new] = "stellar_locus"
-                    table.meta["stellar_locus"] = {**info, "n_added": int(new.sum())}
+            enabled = not (isinstance(locus_cfg, dict) and locus_cfg.get("enabled") is False)
+            if locus_cfg is not None and locus_cfg is not False and enabled:
+                if not label:
                     self.summaries[sid].notes.append(
-                        f"stellar locus (D-015) added {int(new.sum())} stars "
-                        f"(r50_psf {info['r50_psf_pix']} px from {info['n_calibration_stars']} "
-                        "catalogued stars)"
+                        "stellar locus not applied: no matched photometry for this sample"
                     )
+                else:
+                    try:  # an optional add-on: any failure keeps the catalogue classification
+                        table = classify.apply_stellar_locus(table, sources, label, locus_cfg)
+                    except Exception as exc:  # noqa: BLE001
+                        self.summaries[sid].notes.append(f"stellar locus not applied: {exc}")
             return table
 
         table = self.stage(
@@ -754,6 +752,19 @@ class _Runner:
             if _text(p) == "star"
         }
         mask = np.array([_text(u) in star_uids for u in to_rank["source_uid"]], dtype=bool)
+        locus = table.meta.get("stellar_locus")
+        if locus:
+            locus_uids = {
+                _text(u)
+                for u, b in zip(table["source_uid"], table["star_basis"], strict=True)
+                if _text(b) == "stellar_locus"
+            }
+            n_ranked = sum(_text(u) in locus_uids for u in to_rank["source_uid"])
+            self.summaries[sid].notes.append(
+                f"stellar locus (D-015) added {locus['n_added']} stars, {n_ranked} of them past "
+                f"the quality gate (r50_psf {locus['r50_psf_pix']} px from "
+                f"{locus['n_calibration_stars']} catalogued stars)"
+            )
         return mask, params["star_top_k"], params["min_stars"]
 
     def _filter_observations(
