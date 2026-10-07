@@ -184,19 +184,19 @@ def _moments_with_growth(
 ) -> tuple[dict[str, Any] | None, str | None]:
     """Moments of the reference-band cutout, doubling the box while the segment is clipped."""
     moments = None
-    for _ in range(MAX_GROWTH + 1):
+    for attempt in range(MAX_GROWTH + 1):
+        used = size * 2**attempt
         try:
             t = cutouts.make_cutouts(
-                uri, target, size_arcsec=size, out_dir=out_root / "moments" / f"{size:g}arcsec"
+                uri, target, size_arcsec=used, out_dir=out_root / "moments" / f"{used:g}arcsec"
             )
             moments = moment_orientation(t["path"][0]) if t["path"][0] else None
         except Exception as exc:
             return None, f"{type(exc).__name__}: {exc}"
+        if moments is not None:
+            moments["cutout_arcsec"] = used  # the size actually measured
         if moments is None or not moments["touches_border"]:
             break
-        size *= 2
-    if moments is not None:
-        moments["cutout_arcsec"] = size
     return moments, None
 
 

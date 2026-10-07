@@ -67,3 +67,22 @@ def test_load_lens_images_parses_lenstool_arcs(tmp_path):
     t = vet.load_lens_images(str(f))
     assert list(t["image_id"]) == ["1.1", "2.3"]
     assert t["ra"][1] == pytest.approx(110.83)
+
+
+def test_moments_growth_reports_the_size_measured(monkeypatch, tmp_path):
+    from astropy.table import Table
+
+    sizes = []
+
+    def fake_cutouts(uri, targets, size_arcsec, out_dir):
+        sizes.append(size_arcsec)
+        return Table({"path": ["x.fits"]})
+
+    monkeypatch.setattr(vet.cutouts, "make_cutouts", fake_cutouts)
+    monkeypatch.setattr(
+        vet, "moment_orientation", lambda path: {"pa_deg": 0.0, "touches_border": True}
+    )
+    moments, err = vet._moments_with_growth("uri", Table(), 4.0, tmp_path)
+    assert err is None
+    assert sizes == [4.0, 8.0, 16.0, 32.0]  # MAX_GROWTH = 3 doublings
+    assert moments["cutout_arcsec"] == 32.0 and moments["touches_border"]
