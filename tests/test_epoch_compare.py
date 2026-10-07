@@ -62,7 +62,8 @@ def test_moving_and_variable_target_is_detected():
     cat1, cat2, target = _cats(target_motion_mas=(30.0, 0.0), target_dmag=0.5)
     r = ec.compare_epochs(cat1, cat2, target)
     assert r["target_residual_mas"][0] == pytest.approx(30.0, abs=1.5)
-    assert r["target_residual_over_tie_error"] > 20
+    assert r["target_residual_significance"] > 20
+    assert r["target_centroid_error_mas"] == [None, None]  # no semimajor_sigma in the fakes
     assert r["target_dmag"] == pytest.approx(0.5, abs=0.02)
 
 
@@ -81,6 +82,33 @@ def test_missing_target_or_too_few_references_raise():
         ec.compare_epochs(cat1, cat2, far)
     cat1, cat2, target = _cats(n=10)
     with pytest.raises(ValueError, match="reference sources"):
+        ec.compare_epochs(cat1, cat2, target)
+
+
+def test_centroid_error_enters_the_significance():
+    cat1, cat2, target = _cats(target_motion_mas=(30.0, 0.0))
+    for c in (cat1, cat2):
+        c["semimajor_sigma"] = np.full(len(c), 1.0)  # pixels
+        c.meta["pixel_scale_arcsec"] = 0.063
+        c["aper50_abmag_err"][0] = 2.5 * np.log10(1 + 1 / 3.0)  # S/N 3: ~21 mas centroids
+    r = ec.compare_epochs(cat1, cat2, target)
+    np.testing.assert_allclose(r["target_centroid_error_mas"], [21.0, 21.0], rtol=1e-6)
+    assert r["target_residual_significance"] < 2.5  # 30 mas is not significant at S/N 3
+
+
+def test_ambiguous_target_is_rejected():
+    cat1, cat2, target = _cats()
+    cosd = np.cos(np.deg2rad(DEC0))
+    neighbour = {
+        "ra": RA0 + 0.05 / 3600 / cosd,
+        "dec": DEC0,
+        "aper50_abmag": 24.0,
+        "aper50_abmag_err": 0.01,
+    }
+    cat1.add_row(neighbour)  # a real neighbour 0.05 arcsec away in both epochs ...
+    cat2.add_row(neighbour)
+    cat2["ra"][0] = RA0 + 0.25 / 3600 / cosd  # ... and the target moved 0.25 arcsec
+    with pytest.raises(ValueError, match="ambiguous"):
         ec.compare_epochs(cat1, cat2, target)
 
 

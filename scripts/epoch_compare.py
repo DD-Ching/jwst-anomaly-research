@@ -75,8 +75,12 @@ def compare_epochs(
     """The target's astrometric and photometric residuals relative to nearby matched sources.
 
     References are mutual matches within ``ref_radius_arcsec`` of the target with aper50 S/N >=
-    ``min_snr`` in both catalogs, excluding the target itself. Raises ``ValueError`` when the
-    target is missing from either catalog or fewer than ``n_ref_min`` references remain.
+    ``min_snr`` in both catalogs, excluding the target itself. The target's two rows must be each
+    other's nearest neighbours, so a neighbour cannot stand in for it in one epoch. Its centroid
+    error per epoch is ``semimajor_sigma * pixel scale / S/N`` (when the catalog has them) and is
+    added in quadrature to the frame-tie error for ``target_residual_significance``. Raises
+    ``ValueError`` when the target is missing or ambiguous, or fewer than ``n_ref_min``
+    references remain.
     """
     c1 = SkyCoord(cat1["ra"], cat1["dec"], unit="deg")
     c2 = SkyCoord(cat2["ra"], cat2["dec"], unit="deg")
@@ -85,6 +89,10 @@ def compare_epochs(
     for name, c, k in (("epoch1", c1, t1), ("epoch2", c2, t2)):
         if target.separation(c[k]).arcsec > target_radius_arcsec:
             raise ValueError(f"target not within {target_radius_arcsec} arcsec in {name}")
+    back1 = int(np.argmin(c2[t2].separation(c1).arcsec))
+    back2 = int(np.argmin(c1[t1].separation(c2).arcsec))
+    if back1 != t1 or back2 != t2:
+        raise ValueError("ambiguous target: its epoch rows are not each other's nearest neighbours")
     i1, i2 = mutual_matches(c1, c2, match_radius_arcsec)
     snr1 = snr_from_mag_err(np.asarray(cat1["aper50_abmag_err"], float))[i1]
     snr2 = snr_from_mag_err(np.asarray(cat2["aper50_abmag_err"], float))[i2]
@@ -104,6 +112,10 @@ def compare_epochs(
     dm_t = float(mag2[t2] - mag1[t1]) - float(dm_med)
     total = float(np.hypot(*d_t))
     tie = 1.2533 * sig / np.sqrt(ref.sum())  # standard error of a median
+    snr_t = [float(snr_from_mag_err(c["aper50_abmag_err"][k])) for c, k in ((cat1, t1), (cat2, t2))]
+    cen = [_centroid_error_mas(c, k, s) for c, k, s in ((cat1, t1, snr_t[0]), (cat2, t2, snr_t[1]))]
+    cen_total = float(np.hypot(*cen)) if all(x is not None for x in cen) else None
+    err = np.hypot(tie, cen_total / np.sqrt(2)) if cen_total is not None else tie  # per axis
     resid_ref = np.hypot(*(d_ref - med).T)
     return {
         "n_references": int(ref.sum()),
@@ -112,17 +124,23 @@ def compare_epochs(
         "target_residual_mas": [float(x) for x in d_t],
         "target_residual_total_mas": total,
         "frame_tie_error_mas": [float(x) for x in tie],
-        "target_residual_over_tie_error": float(np.hypot(*(d_t / tie))),
+        "target_centroid_error_mas": cen,
+        "target_residual_significance": float(np.hypot(*(d_t / err))),
         "target_residual_over_reference_sigma": float(np.hypot(*(d_t / sig))),
         "fraction_of_references_with_larger_residual": float(np.mean(resid_ref > total)),
         "target_dmag": dm_t,
         "reference_dmag_sigma": float(dm_sig),
-        "target_snr": [
-            float(snr_from_mag_err(cat1["aper50_abmag_err"][t1])),
-            float(snr_from_mag_err(cat2["aper50_abmag_err"][t2])),
-        ],
+        "target_snr": snr_t,
         "label": "derived",
     }
+
+
+def _centroid_error_mas(cat: Table, k: int, snr: float) -> float | None:
+    """Approximate centroid error, ``semimajor_sigma * pixel scale / S/N``, in mas (or None)."""
+    scale = cat.meta.get("pixel_scale_arcsec")
+    if "semimajor_sigma" not in cat.colnames or not scale or not np.isfinite(snr) or snr <= 0:
+        return None
+    return float(np.asarray(cat["semimajor_sigma"], float)[k] * float(scale) * 1000.0 / snr)
 
 
 def _fetch_cats(obs_filter: str, exact: bool, manifest: Path) -> list[Path]:

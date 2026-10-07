@@ -959,7 +959,8 @@ Why one-sided:
 level-3 `_cat.ecsv` catalogs of the same filter from different programs:
 - Mutual nearest matches within 0.3″ and 60″ of the target, with aper50 S/N ≥ 30 in both, fix the frame tie by
   their median offset. Galaxies do not move.
-- The target's residual is compared with the tie's standard error.
+- The target's two rows must be mutual nearest neighbours. Its residual is compared with the tie's standard
+  error plus its own centroid error (`semimajor_sigma` × pixel scale / S/N).
 - Magnitudes get the same treatment, so zero-point differences between pipeline versions cancel.
 - Thresholds are ASSUMPTIONS, set by arguments. Outputs are `derived`.
 
@@ -972,7 +973,7 @@ level-3 `_cat.ecsv` catalogs of the same filter from different programs:
 
 **Evidence.** SMACS `f200w_2804`, F444W, 2736 (2022-06-07) against VENUS 6882 o057 (2026-06-05):
 - 64 references; frame offset (7.3, 20.6) mas; tie error (1.9, 2.3) mas;
-- target residual 1.9 mas (0.99 × tie error), Δm 0.004 against a reference scatter of 0.037.
+- target residual 1.9 mas (0.97σ, including centroid errors of 0.4 mas per epoch), Δm 0.004 against a reference scatter of 0.037.
 
 Unit tests recover an injected 30 mas motion and 0.5 mag change.
 
