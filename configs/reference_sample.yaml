@@ -62,7 +62,8 @@ samples:
       - jw01345-o001_t021_nircam_clear-f410m
       - jw01345-o001_t021_nircam_clear-f444w
     # D-022: the same DJA v7.4 matched apertures as SMACS (D-013), so the control has the same
-    # colours, confirmation (D-014), stellar locus (D-015/016) and screening (D-019-021).
+    # colours, confirmation (D-014) and screening (D-019-021). The stellar locus (D-015/016) is
+    # configured too but does not apply here: too few catalogued stars.
     matched_photometry:
       url: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/ceers-full-grizli-v7.4-fix_phot.fits
       sha256: 741ec72f761b19bba57a6c1ef0f10934e03933084330faade88bfacb1d761c28
