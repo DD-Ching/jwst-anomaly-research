@@ -59,9 +59,11 @@ MOVE FAST, SAFELY:
 - GitHub GraphQL is blocked here, so `gh pr` and `gh issue` fail with 403. Use the REST calls in
   docs/operations.md §3, with literal paths (shell variables do not persist between commands). Wait for
   CI with the single background loop given there, not with repeated polling turns.
-- Merging. .claude/settings.json denies merge API calls, and the cloud proxy rejects branch deletion.
-  When the merge is refused, leave the PR merge-ready (CI green, review findings fixed, handoff in its
-  CHANGELOG) and add the label `merge-ready`. The owner or a local session merges it.
+- Merging. When the policy allows it, squash-merge with the REST call in docs/operations.md §3, pinned to
+  the reviewed head commit (`-f sha=<head sha>`). The cloud proxy rejects branch deletion, so leave the
+  branch. If the merge is refused (permission rule or GitHub), leave the PR merge-ready (CI green, review
+  findings fixed, handoff in its CHANGELOG) and add the label `merge-ready`; the owner or a local session
+  merges it.
 
 PRIORITIES: TASKS.md "Now", top item first. Run the exotic-specific screens only after the ordinary
 lens-model checks, and vet every hit with /vet-candidate.

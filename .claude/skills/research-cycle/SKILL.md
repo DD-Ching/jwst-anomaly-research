@@ -82,8 +82,8 @@ Action.
 - **Cloud run** (`CLAUDE_CODE_REMOTE=true`, e.g. a `/schedule` routine): fresh clone, ephemeral and limited disk,
   network allowlist. GitHub GraphQL is blocked (`HTTP 403: GitHub GraphQL is not available from Claude Code
   sessions`; older wording "This GraphQL query is not enabled for this session"), so every `gh pr` and `gh issue`
-  command in this procedure fails. Use the REST calls and the CI wait loop in docs/operations.md §3. Merging is
-  denied there: stop at merge-ready and add the label `merge-ready`.
+  command in this procedure fails. Use the REST calls and the CI wait loop in docs/operations.md §3, including the
+  REST squash merge. If a merge is refused, stop at merge-ready and add the label `merge-ready`.
 
 ## 2. Owner review comments first
 

@@ -2,6 +2,13 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Cloud runs may squash-merge through REST (owner decision pending)
+- `.claude/settings.json` allows `gh api -X PUT .../pulls/N/merge -f merge_method=squash` (the cloud equivalent of
+  the allowed `gh pr merge --squash`) and keeps denying the other merge methods, `/merges` and auto-merge.
+- The routine prompt, the research-cycle skill and docs/operations.md §3 use it, with `merge-ready` as the fallback.
+- **Handoff:** after merging, enable "Automatically delete head branches" in the repository settings.
+
+
 ## 2026-10-08: Hourly cloud routine
 - Routine `trig_01PNAmgcfqef8CvhPAY8ggbP` runs `/research-cycle` loops hourly at :07 UTC (Opus 5.5, no connectors)
   with the prompt in docs/cloud-routine-prompt.md.

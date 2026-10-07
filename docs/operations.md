@@ -136,7 +136,7 @@ paths (shell variables don't persist between tool calls):
 | open a PR | `gh api repos/DD-Ching/jwst-anomaly-research/pulls -f title="..." -f head=claude/<slug> -f base=main -f body="..."` |
 | add labels | `gh api repos/DD-Ching/jwst-anomaly-research/issues/N/labels -f "labels[]=agent"` |
 | wait for CI | the loop below, as one background Bash call |
-| merge | not available: denied by `.claude/settings.json` (merge API calls); label the PR `merge-ready` |
+| squash-merge (own PR, policy met) | `gh api -X PUT repos/DD-Ching/jwst-anomaly-research/pulls/N/merge -f merge_method=squash -f sha=<head sha>` |
 
 Write each body in the command itself (`-f body="$(cat <<'EOF'` on one line, the text, then `EOF` and `)"` on
 their own lines); `=@file` and `--input` are denied so local files can't be posted by accident.
@@ -152,11 +152,14 @@ gh api "repos/DD-Ching/jwst-anomaly-research/commits/$sha/check-runs" --jq '.che
 
 Every conclusion must be `success`; `failure`, `cancelled` or `skipped` is not green.
 
-**Merging cloud PRs.** The merge API is denied in `.claude/settings.json`, and the cloud proxy rejects branch
-deletion. A cloud run therefore stops at merge-ready (CI green, `/code-review` findings fixed, handoff in the
-PR's CHANGELOG) and labels the PR `merge-ready`. Merge it yourself, or let a local session do it under the
-merge policy. To let routines merge, change the deny rule (a guarded file, so it is your decision) and turn on
-**Settings → General → Automatically delete head branches** for the branch clean-up.
+**Merging cloud PRs.** `.claude/settings.json` allows exactly one merge API call: a squash merge of a pull
+request (`merge_method=squash`; other merge methods, the branch-merge endpoint `/merges` and auto-merge stay
+denied). It is no stronger than the allowed `gh pr merge --squash`: branch protection still requires every CI
+check, admins included, and the REST endpoint has no bypass option. `sha=<head sha>` makes GitHub refuse the
+merge if the branch moved after the review. The cloud proxy rejects branch deletion, so turn on **Settings →
+General → Automatically delete head branches**. If a merge is refused, the run stops at merge-ready (CI green,
+`/code-review` findings fixed, handoff in the PR's CHANGELOG) and labels the PR `merge-ready` for you or a
+local session.
 
 **How the PRs reach you.** The run pushes a `claude/<slug>` branch and opens a PR with the `agent` label. Routines
 act through your GitHub identity, so these PRs are authored by you. The `agent` label and the session link in the
@@ -249,8 +252,9 @@ All these labels already exist in the repository. Agents create new `batch-<slug
 ## 8. Safety rails
 
 - **Deny rules** in `.claude/settings.json`, for both Bash and PowerShell:
-  - merging around the policy: `gh pr merge --admin` / `--auto` and merge API calls (plain
-    `gh pr merge --squash` is allowed for the agents' own PRs);
+  - merging around the policy: `gh pr merge --admin` / `--auto`, auto-merge API calls, the branch-merge
+    endpoint, and merge or rebase merges through the API (plain `gh pr merge --squash` and the REST squash merge
+    of a PR are allowed for the agents' own PRs, §3);
   - repository settings: branch-protection and ruleset API calls, `gh api` DELETE requests, `gh repo edit`,
     `gh repo delete`;
   - credentials: `gh secret`, `gh auth token`, `gh auth status -t`;
