@@ -1,0 +1,105 @@
+# @claude in issues and PRs, answered by anthropics/claude-code-action@v1 on the owner's Claude subscription.
+#
+# Public repository, so:
+# - only the OWNER can trigger it (author_association == 'OWNER' on every event);
+# - only the owner's and claude[bot]'s comments reach Claude (include_comments_by_actor);
+# - fork PRs are skipped, so fork code never runs next to these credentials.
+# Issue and PR bodies written by others still reach Claude when the owner mentions @claude on them, so mention it only
+# on content you trust.
+#
+# The workflow does nothing until the CLAUDE_CODE_OAUTH_TOKEN secret exists. Setup is in docs/operations.md §5.
+# Claude pushes claude/ branches or commits to the PR branch. It never merges.
+name: Claude
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+  issues:
+    types: [opened]
+
+permissions: {}
+
+jobs:
+  claude:
+    if: |
+      (github.event_name == 'issue_comment' &&
+        github.event.comment.author_association == 'OWNER' &&
+        contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' &&
+        github.event.comment.author_association == 'OWNER' &&
+        contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' &&
+        github.event.review.author_association == 'OWNER' &&
+        contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' &&
+        github.event.issue.author_association == 'OWNER' &&
+        (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+    # One run per issue or PR at a time, so several @claude mentions in one review don't race on the same branch.
+    # GitHub keeps only the newest pending run per group. A collapsed request shows as "cancelled" in the Actions tab,
+    # and /research-cycle step 2 picks up @claude comments that claude[bot] never answered.
+    concurrency:
+      group: claude-${{ github.event.pull_request.number || github.event.issue.number }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write # the action's GitHub App authentication
+      actions: read # lets Claude read CI results on PRs
+    steps:
+      - name: Gate on the token and same-repository PRs
+        id: gate
+        env:
+          TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number || (github.event.issue.pull_request && github.event.issue.number) || '' }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::notice::CLAUDE_CODE_OAUTH_TOKEN is not set; skipping. See docs/operations.md."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ -n "$PR_NUMBER" ]; then
+            cross=$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json isCrossRepository --jq .isCrossRepository || echo unknown)
+            if [ "$cross" != "false" ]; then
+              echo "::notice::PR #$PR_NUMBER is from a fork (or could not be checked: $cross); skipping."
+              echo "ready=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v7
+        if: steps.gate.outputs.ready == 'true'
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v10.2.0
+        if: steps.gate.outputs.ready == 'true'
+
+      - name: Create the project environment
+        if: steps.gate.outputs.ready == 'true'
+        run: |
+          uv venv --python 3.12
+          uv pip install -e ".[dev,cloud]"
+          echo "VIRTUAL_ENV=$GITHUB_WORKSPACE/.venv" >> "$GITHUB_ENV"
+          echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
+
+      - uses: anthropics/claude-code-action@v1
+        if: steps.gate.outputs.ready == 'true'
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          include_comments_by_actor: ${{ github.repository_owner }},claude[bot]
+          additional_permissions: |
+            actions: read
+          claude_args: |
+            --max-turns 60
+            --allowedTools "Bash(python -m pytest *),Bash(python -m ruff *),Bash(uv pip install *),Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh issue view *)"
+            --append-system-prompt "The .venv was installed from the default branch. If pyproject.toml on this branch differs, run uv pip install -e '.[dev,cloud]' before testing. Never write @claude in comments, commits or PR text."
