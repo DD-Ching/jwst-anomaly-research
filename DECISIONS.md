@@ -329,7 +329,53 @@ _Open._
 
 ## D-007 Candidate store and run provenance (unit 6)
 
-_Open._
+**Decision.**
+- Candidate store: one SQLite file through stdlib `sqlite3` (`<outputs>/candidates.sqlite`, gitignored)
+  with tables `runs`, `candidates`, `status_history`, `vetting_notes`. Variable-shaped fields (per-method
+  scores, per-band image flags, cross-match summary, cutout paths, run context) are JSON text columns,
+  queryable with SQLite's built-in JSON functions. Schema version = `PRAGMA user_version`; a file from
+  newer code is refused; migrations go in `CandidateStore._init_schema`.
+- Status lifecycle `new → triaged → {artifact, known_object, explained, unexplained}`, `unexplained →
+  followup`, re-open via `triaged`. Outcome statuses and `followup` require ≥1 vetting note (test,
+  outcome `pass|fail|inconclusive`, evidence, provenance label, author, UTC), so every conclusion
+  names its tests (docs/methodology.md). Candidates are keyed by `(run_id, sample_id, source_uid)`;
+  statuses do not carry across runs, and a uid present in several runs or samples must be
+  addressed with `--run`/`--sample` (uids come from per-run catalogs; the store never guesses).
+- Run provenance with the standard library only: `git` via `subprocess` (commit, branch, dirty
+  including untracked files, with `data/manifests/` reported separately; None unless the package
+  sits at a checkout root), sha256 of the config bytes plus a verbatim copy in the run directory,
+  `importlib.metadata` versions of key packages, Python/platform, UTC time. Run id
+  `YYYYMMDDTHHMMSSZ-<8 hex>` sorts chronologically. Interrupted runs are recorded as `failed`.
+- Runner: plain in-process Python that calls stage functions as module attributes and checks each
+  output with `schema.validate`. A failing required stage aborts the run (recorded `failed`, report
+  written); failing optional stages (cutouts, crossmatch) are recorded and the run continues. Only
+  `CAT` products are fetched; i2d images are read via S3 by the cutout stage. Each sample is ranked
+  separately. Intermediate tables are ECSV (Parquet optional) under `<outputs>/runs/<run_id>/`, plus
+  `report.md`. New optional config block `outputs: {candidates_top_k, table_format}`.
+- CLI: stdlib `argparse` (`jwst-anomaly run | runs list | candidates list|show|set-status|add-vetting`).
+
+**Alternatives rejected.**
+- DuckDB: a columnar engine for analytical scans and a new dependency. The store is small,
+  transactional and updated row by row (status, notes). DuckDB can attach this SQLite file if
+  analytics are needed later.
+- SQLAlchemy + Alembic: too heavy for four tables; `user_version` plus in-code migrations suffices.
+- Datasette / sqlite-utils as dependencies: good viewers of the same file, usable ad hoc, not needed by the code.
+- GitPython: a handful of `git` subprocess calls do not justify a dependency. Click/Typer: argparse covers the CLI.
+- Workflow engines (Snakemake, Prefect, Luigi): the run is one linear chain of in-process calls.
+- Experiment trackers (MLflow, DVC): surveyed by unit 9 (D-010); the run context is a plain JSON dict
+  that can be logged to a tracker later.
+
+**Evidence.** SQLite positions itself as a local application file format that "does not compete with
+client/server databases" (sqlite.org/whentouse.html); `user_version` pragma (sqlite.org/pragma.html);
+JSON functions built in by default since SQLite 3.38.0 (sqlite.org/json1.html); CPython 3.12.10 ships
+SQLite 3.49.1 (measured 2026-10-07). DuckDB attaches SQLite files (duckdb.org SQLite extension). Offline
+tests (`tests/test_{candidates,provenance,pipeline,cli}.py`) run the full chain with contract-valid fake
+stages; links in SOURCES.md "Candidate store and run provenance (unit 6)".
+
+**Revisit if.** Several processes write the store concurrently (parallel cloud runs): use per-run files
+merged later or a server DB. Candidates reach millions or analytics dominate: DuckDB/Parquet. Source
+uids become stable across runs: carry vetting status across runs. Stages become long-running or fan
+out over many programs: Snakemake.
 
 ## D-008 Open-source project tooling (unit 7)
 
