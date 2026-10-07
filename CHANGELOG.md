@@ -14,8 +14,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Failed approaches** (saturation tests):
   - aper50 − isophotal magnitude: cluster galaxies reach 10–21 mag, so `940` (5.6) is not an outlier;
   - a no-data core within 0.3″: `940` has none, and only `1345` does.
-- **Handoff:** TASKS Now 1 (multi-star segments: a host-vs-PSF profile test or a centroid–peak offset rule) and Now 2
-  (star-stratum NED matches).
+- **Handoff:** TASKS "Star-pair segments in the galaxy ranking" (a host-vs-PSF profile test or a centroid–peak
+  offset rule) and "Star-stratum sources with NED galaxy matches".
 
 
 ## 2026-10-08: Vetted `f200w_2915`, a catalogued quiescent galaxy with a compact core (cycle 12)
