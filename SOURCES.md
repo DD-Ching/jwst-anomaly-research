@@ -469,3 +469,33 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - last-modified 2024-09-27, 250,545,600 bytes, sha256 `741ec72f761b19bba57a6c1ef0f10934e03933084330faade88bfacb1d761c28`
   - 81,671 rows; apertures `ASEC_0..2` = 0.36, 0.5 and 0.7″ (`APER_1` = 12.5 px, 0.04″/px)
   - 23 bands, including F115W, F150W, F200W, F277W, F356W, F410M and F444W.
+
+## Cluster fields (cycle 17, checked 2026-10-07/08 UTC; details in docs/fields/*.md)
+
+- **Abell 2744.**
+  - Data: MAST 2561 `jw02561-o001_t003_nircam_clear-*` (jwst 3.0.0).
+  - DJA v7.2: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/abell2744clu-grizli-v7.2-fix_phot.fits
+    (233,527,680 B; sha256 in `configs/abell2744.yaml`).
+  - Lens models:
+    - UNCOVER v2.0 maps, https://jwst-uncover.github.io/DR4.html#LensingMaps. Cite Furtak et al. arXiv:2212.04381,
+      "UNCOVERing the extended strong lensing structures of Abell 2744 with the deepest JWST imaging", and Price
+      et al. arXiv:2408.03920.
+    - Bergamini et al. arXiv:2303.10210: Lenstool files at https://www.fe.infn.it/astro/lensing/A2744_Bergamini23/.
+- **El Gordo.**
+  - Data: MAST 1176 `jw01176-o241_t012` (jwst 3.0.0, reprocessed 2026-10-01).
+  - DJA v7.0: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/elgordo-grizli-v7.0-fix_phot.fits (17,170,560 B,
+    sha256 `ac1cf7064edc3f1a907c1b95b7eacd864e19810ff559e7dc39b917081ed66e31`).
+  - Lens models:
+    - Caminha et al. 2023 (A&A 678, A3, arXiv:2209.02718): magnification maps, `best_fit.par` and the
+      multiple-image list at https://cdsarc.cds.unistra.fr/ftp/J/A+A/678/A3/.
+    - RELICS models: https://archive.stsci.edu/hlsps/relics/act0102m49/models/ (DOI 10.17909/T9SP45).
+- **Sunrise (WHL0137−08).**
+  - Data: MAST 2282 `jw02282-o010_t001` (jwst 2.0.1); later epochs 2282 o120 and 6882 o052.
+  - DJA v7.5: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/sunrise-grizli-v7.5-fix_phot.fits (28,779,840 B,
+    sha256 `8bd178e94156d6a9a126e487dec8a850b6df9f6d76ceb9e36931d9960558ebf0`).
+  - Lens models:
+    - RELICS: https://archive.stsci.edu/hlsps/relics/whl0137m08/models/.
+    - Scofield et al. arXiv:2504.08879: maps at Zenodo 10.5281/zenodo.15110933.
+  - Earendel: Welch et al. arXiv:2209.14866, "A highly magnified star at redshift 6.2".
+- **MAST stale product sizes** after the 2026-10-01 reprocessing (PR #29): `acquire` checks the Download
+  service's Content-Length.

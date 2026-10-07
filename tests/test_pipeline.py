@@ -18,6 +18,7 @@ from astropy.table import Table
 from jwst_anomaly import (
     acquire,
     catalog,
+    classify,
     crossmatch,
     cutouts,
     features,
@@ -1568,3 +1569,83 @@ def test_screen_low_weight_must_be_boolean(tmp_path):
     path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     with pytest.raises(pipeline.ConfigError, match="screen_low_weight"):
         pipeline.load_config(path)
+
+
+def test_red_spiky_sources_are_exempt_from_the_host_test(tmp_path, env, monkeypatch):
+    fakes = install_fakes(monkeypatch)
+    stages = _split_stages(tmp_path, env, monkeypatch)
+    stages["cutouts"]["spike"]["host_ratio_max"] = 0.004
+    stages["cutouts"]["spike"]["host_exempt_colour"] = ["f150w", "f200w", 1.0]
+    flagged = {}
+    spiky = _spiky_cutouts(fakes, flagged)
+
+    def with_host(image_uri, targets, size_arcsec=3.0, out_dir=None, **kw):
+        t = spiky(image_uri, targets, size_arcsec, out_dir, **kw)
+        t["host_ratio"] = [0.001] * len(t)  # no host light anywhere
+        return t
+
+    monkeypatch.setattr(cutouts, "make_cutouts", with_host)
+    original = pipeline._Runner._screen
+
+    def patched(self, sid, summary, ranked, flagged_uids, cutout_rows, removed):
+        self.stellar_colour_uids[sid] = set()
+        uids = [r["source_uid"] for r in ranked]
+        red = Table(
+            {
+                "source_uid": uids,
+                "f150w_dja05_abmag": [25.0] * len(uids),
+                "f200w_dja05_abmag": [23.0] * len(uids),
+            }
+        )  # F150W-F200W = +2: too red
+        self.matched_sources[sid] = (red, "dja05")
+        return original(self, sid, summary, ranked, flagged_uids, cutout_rows, removed)
+
+    monkeypatch.setattr(pipeline._Runner, "_screen", patched)
+    run_id = pipeline.run(write_config(tmp_path, stages=stages), samples=["field_a"])
+    run_dir = env / "runs" / run_id
+    assert not (run_dir / "field_a" / "screened.ecsv").exists()
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    assert "exempts very red spiky source(s), not stars (D-025)" in report
+
+
+def test_host_exempt_colour_is_validated(tmp_path):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["stages"]["cutouts"]["spike"] = {
+        "radii_arcsec": [0.2, 0.8],
+        "threshold": 3,
+        "host_exempt_colour": ["f150w", 1.0],
+    }
+    path = tmp_path / "bad.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    with pytest.raises(pipeline.ConfigError, match="host_exempt_colour"):
+        pipeline.load_config(path)
+
+
+@pytest.mark.parametrize(
+    "veto, match",
+    [({"r50_ref": 2}, "unknown stages.classify.extended_veto"), ("yes", "mapping or true/false")],
+)
+def test_extended_veto_config_is_validated(tmp_path, veto, match):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["stages"]["classify"] = {"extended_veto": veto}
+    path = tmp_path / "bad.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    with pytest.raises(pipeline.ConfigError, match=match):
+        pipeline.load_config(path)
+
+
+def test_extended_veto_can_be_disabled(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+    calls = []
+    monkeypatch.setattr(classify, "veto_extended_stars", lambda *a, **k: calls.append(1))
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["samples"][0]["matched_photometry"] = {
+        "url": "https://e.org/x.fits",
+        "sha256": "0" * 64,
+        "label": "dja05",
+    }
+    config["stages"]["classify"] = {"extended_veto": {"enabled": False}}
+    path = tmp_path / "off.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    pipeline.run(path, samples=["field_a"])
+    assert calls == []

@@ -1177,3 +1177,71 @@ clean (D-019 to D-021), so further clean-up has diminishing returns.
 **Revisit if.**
 - The usage limits are reached often: then restore pauses.
 - The lens-model comparison is dominated by model systematics: then use several published models per field.
+
+## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
+
+**Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.
+- **`classify.extended_veto`.** This runs before the stellar locus calibrates.
+  - A catalogue star (Gaia/SIMBAD) whose DJA r50 exceeds 4 × 2.5 px goes back to the galaxy ranking; for sources
+    fainter than `mag_auto` 21 the limit is 2 × 2.5 px.
+  - Gaia lists the cores of bright cluster galaxies, and those matches put whole galaxies into the star stratum.
+    They also widened the locus colour box (Abell 2744: F150W−F444W up to +0.06).
+  - Bright stars' spike wings reach r50 of about 8 px in SMACS, so the bright limit stays at 10 px.
+  - Colour cannot separate stars from cluster galaxies here: cluster ellipticals have F150W−F444W ≈ −0.75, like
+    stars.
+- **`cutouts.spike.host_exempt_colour` [F150W, F444W, 1.0].** A spiky source without host light (D-020) that is
+  redder than this is not a star, so it stays ranked. Abell 2744 `5904` (F150W−F444W +2.64, a catalogued
+  emission-line galaxy) was screened from rank 1 before this rule.
+
+**Alternatives rejected.**
+- A colour veto: it fails for the reason above.
+- Requiring Gaia astrometric significance: two of the extended "stars" have the astrometry basis.
+- Dropping the D-020 host test: it correctly screens star pairs such as `940`.
+
+**Evidence.**
+- Run `20261007T211229Z-883a5066` (Abell 2744):
+  - 8 extended catalogue stars went back to the galaxy ranking.
+  - The stellar locus recalibrated to r50_psf 2.07 px from 10 stars (2.13 from 13 before) and added 14.
+  - The star stratum fell from 48 to 39; its top 10 is now mostly point sources with spikes.
+  - `5904` is kept ranked. 3 point sources without host light were screened.
+- Run `20261007T210959Z-1ad9bca8` (SMACS): 1 star vetoed; the stellar locus (90 added) and the galaxy top 20 are unchanged.
+
+**Revisit if.**
+- Sources without DJA r50 are extended. Abell 2744 star rank 3, `7694`, is a smooth bright galaxy: fall back
+  to the pipeline catalog's size.
+- Real stars on galaxies (superpositions) are vetoed.
+
+## D-026 Cluster fields: Abell 2744, El Gordo, WHL0137 (Sunrise) (2026-10-08)
+
+**Decision.** Three lensing clusters run as separate configs with the reference stages and DJA matched
+photometry. They were built by parallel worktree workers (PRs #30, #31, #32; label `batch-clusters`).
+
+| Field | Association | Pipeline | DJA catalog | Notes |
+|---|---|---|---|---|
+| Abell 2744 | `jw02561-o001_t003`, 7 bands | jwst 3.0.0 | v7.2, 233.5 MB | >200 MB, reason stated in the config; core in footprint |
+| El Gordo | `jw01176-o241_t012`, 8 bands | jwst 3.0.0, reprocessed 2026-10-01 | v7.0, 17.2 MB | stale MAST sizes fixed by #29; module A is a flanking field |
+| Sunrise (WHL0137−08) | `jw02282-o010_t001`, 8 bands | jwst 2.0.1 | v7.5, 28.8 MB | later epochs 2282 o120 (same pipeline) and 6882 o052 |
+
+MACS J0416 has no DJA v7 catalog, so Sunrise replaced it (D-023).
+
+**Alternatives rejected** (per the worker PRs):
+- Associations whose footprint misses the core or that lack wide bands (2561 o003_t006, 2756, 4111, 3516,
+  6882 o051).
+- Merging epochs of different depth or pipeline version (D-010).
+
+**Evidence.** Galaxy top-20 composition on the first runs:
+- Abell 2744: 95% known.
+- El Gordo: 30% known, 15% lens-related.
+- Sunrise: 10% known, 5% lens-related.
+
+Field docs: `docs/fields/*.md`.
+
+**Known differences.**
+- DJA versions differ: v7.0 / v7.2 / v7.4 / v7.5.
+- Pipeline versions differ (2.0.1 against 3.0.0).
+- The stellar locus does not apply in El Gordo or Sunrise (too few catalogued stars).
+- "Known" fractions reflect each field's literature coverage.
+
+**Revisit if.**
+- Newer DJA catalogs appear.
+- Lens-model comparisons (D-023) need other associations or modules.

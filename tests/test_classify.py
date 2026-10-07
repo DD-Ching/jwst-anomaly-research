@@ -223,3 +223,33 @@ def test_stellar_colour_mask_ignores_size():
     assert mask["galaxy"] and mask["faint_star"]  # stellar colours, whatever the size
     assert not mask["brown_dwarf"]
     assert not classify.stellar_colour_mask(t, "dja05", {**info, "colour_ranges": {}}).any()
+
+
+def test_veto_extended_stars_reverts_extended_catalogue_stars():
+    t = Table(
+        {
+            "source_uid": ["bright_star", "bcg_core", "faint_star", "faint_galaxy", "no_size"],
+            "dja05_r50_pix": [7.5, 14.0, 2.4, 6.0, np.nan],
+            "dja05_mag_auto": [18.0, 18.0, 22.0, 22.0, 20.0],
+        }
+    )
+    pops = Table(
+        {
+            "source_uid": list(t["source_uid"]),
+            "population": ["star"] * 5,
+            "star_basis": np.array(["gaia_position"] * 5, dtype="U32"),
+        }
+    )
+    pops.meta.update(provenance="derived", source="test")
+    out = classify.veto_extended_stars(pops, t, "dja05")
+    pop = dict(zip(out["source_uid"], out["population"], strict=True))
+    assert pop == {
+        "bright_star": "star",  # 7.5 < 4 x 2.5: spike wings of a bright star
+        "bcg_core": "other",  # 14 px at 18 mag: a galaxy
+        "faint_star": "star",
+        "faint_galaxy": "other",  # 6 > 2 x 2.5 at 22 mag
+        "no_size": "star",
+    }
+    assert out.meta["extended_veto"]["n_vetoed"] == 2
+    with pytest.raises(ValueError, match="r50_ref"):
+        classify.veto_extended_stars(pops, t, "dja05", {"r50_ref": 2})
