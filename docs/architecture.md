@@ -12,7 +12,8 @@ MAST (CAOM metadata)            query.py      query_observations / list_products
   → quality gate (D-011/D-014)  quality.py    assess_sources: image tests (coarse WHT map via
                                               cutouts.sample_weight_map) + detection confirmation
                                               (best-band S/N, multi-band or matched-photometry match)
-  → star/galaxy strata (D-012)  classify.py   classify_sources (bulk Gaia/SIMBAD); stars ranked as <sample>-stars
+  → star/galaxy strata (D-012)  classify.py   classify_sources (bulk Gaia/SIMBAD) + stellar_locus (D-015,
+                                              DJA r50 + colours); stars ranked as <sample>-stars
   → baseline anomaly ranking    rank.py       score_anomalies
   → image evidence (top-k)      cutouts.py    make_cutouts (S3 byte-range reads); viz.contact_sheet
   → external cross-check        crossmatch.py crossmatch (SIMBAD / NED / Gaia / CDS XMatch)

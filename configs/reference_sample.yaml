@@ -86,6 +86,15 @@ stages:
     gaia_radius_arcsec: 0.3    # any Gaia DR3 source this close counts as the star itself
     star_top_k: 10
     min_stars: 5
+    # D-015: point-like (DJA detection-image r50 within 20% of the catalogued stars' median)
+    # sources with ordinary stellar colours join the stars; samples need matched photometry.
+    stellar_locus:
+      calib_mag_range: [20.0, 22.5]
+      r50_tolerance: 0.2
+      mag_max: 24.0
+      colours: [[f150w, f444w], [f200w, f356w]]
+      colour_pad: 0.3
+      min_ref_stars: 10
   features:
     daofind_max_ci: 1.8   # D-013: DAOFind sharpness/roundness only for point-like sources
   rank:

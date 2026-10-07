@@ -205,6 +205,8 @@ class FakeStages:
     def join_matched_photometry(self, sources, catalog, label, *, radius_arcsec=0.2):
         out = sources.copy()
         out[f"{label}_match_sep_arcsec"] = [0.01] * len(out)
+        out[f"{label}_r50_pix"] = [2.9] * len(out)
+        out[f"{label}_mag_auto"] = [21.0] * len(out)
         for c in sources.colnames:
             if c.endswith("_aper50_abmag") or c.endswith("_aper50_abmag_err"):
                 out[c.replace("_aper50_", f"_{label}_")] = sources[c]
@@ -1191,3 +1193,21 @@ def test_quality_keys_are_validated(tmp_path, key, value, match):
     path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     with pytest.raises(pipeline.ConfigError, match=match):
         pipeline.load_config(path)
+
+
+def test_stellar_locus_failure_keeps_catalogue_classification(tmp_path, env, monkeypatch):
+    install_fakes(monkeypatch)
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["samples"][0]["matched_photometry"] = {
+        "url": "https://e.org/x.fits",
+        "sha256": "0" * 64,
+        "label": "dja05",
+    }
+    config["stages"]["classify"] = {"stellar_locus": {"min_ref_stars": 10}}
+    path = tmp_path / "locus.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    run_id = pipeline.run(path, samples=[config["samples"][0]["id"]])
+    report = (env / "runs" / run_id / "report.md").read_text(encoding="utf-8")
+    assert "stellar locus not applied" in report  # the fake field has no catalogued stars
+    with _store(env) as store:
+        assert store.get_run(run_id)["status"] == "completed"

@@ -1,27 +1,26 @@
 # Tasks
 
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
-Evidence for the current priorities: CHANGELOG 2026-10-07 (run `20261007T124944Z-bbad4ab3`).
+Evidence for the current priorities: CHANGELOG 2026-10-08 (run `20261007T130207Z-c8ffc470`).
 
 ## Now (M1 follow-through)
-1. **Faint stars:** about 5–6 PSF-like stars without Gaia counterparts are now the main contamination of
-   the SMACS galaxy top 20 (run `20261007T124944Z-bbad4ab3`). Add a size–magnitude stellar locus to `classify` (D-012
-   "Revisit if"), then re-check the top 20.
-2. **Vet the new candidates** with `/vet-candidate` and `scripts/vet_evidence.py`:
+1. **Vet the new candidates** with `/vet-candidate` and `scripts/vet_evidence.py` (run `20261007T130207Z-c8ffc470`):
    - catalogued lens-related `jw02736-o001_t001_nircam_f277w_829` (`[YML2023] F150DB-C-4`, a red F150W
-     dropout) and `jw02736-o001_t001_nircam_f200w_1032` (`[MJR2023] 028.2`);
-   - arc-like `..._f200w_438`;
-   - red faint `..._f356w_1243` (`[RBI2023] 18`);
+     dropout, rank 3) and `jw02736-o001_t001_nircam_f200w_1032` (`[MJR2023] 028.2`, rank 8);
+   - arc-like `..._f200w_438` (rank 11);
+   - red faint `..._f356w_1243` (`[RBI2023] 18`, rank 12);
    - MIRI's known `G_Lens` object.
+2. **Blended stars:** three PSF-like blends (`940`, `2242`, `1571`) remain in the SMACS galaxy top 20
+   (D-015 "Revisit if"). Add image-based PSF-spike detection on cutouts.
 3. Teach `/vet-candidate` to use `scripts/vet_evidence.py` and the real `jwst-anomaly candidates`
    subcommands.
 4. Report the top-k artifact and star fractions per run as a tracked metric.
-5. **Per-sample confirmation** (D-014 limitation): only SMACS NIRCam can confirm single-band detections.
-   MIRI passes 103 of 530, and CEERS drops every single-band source. Add confirmation for each sample
-   (DJA for CEERS, NIRCam counterparts for MIRI).
-6. **Control comparability:** CEERS differs from SMACS in its colours (aper50) and its gate (no
-   confirmation). Science-vs-control comparisons stay invalid until it gets DJA photometry (Next).
-7. Diffraction-spike mask: only if multi-band spike detections appear (D-014 "Revisit if").
+5. **Per-sample confirmation** (D-014 limitation): only SMACS NIRCam can confirm single-band detections
+   and apply the stellar locus. MIRI passes 103 of 530, and CEERS drops every single-band source. Add
+   matched photometry or confirmation for each sample (DJA for CEERS, NIRCam counterparts for MIRI).
+6. **Control comparability:** CEERS differs from SMACS in colours (aper50), gate (no confirmation) and
+   classification (no locus). Science-vs-control comparisons stay invalid until it gets DJA photometry.
+7. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
 
 ## Next (M2)
 - Matched-aperture colours for other samples (D-013 is done for SMACS NIRCam):

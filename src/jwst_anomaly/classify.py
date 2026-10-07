@@ -71,8 +71,9 @@ def classify_sources(
     out = Table(
         {
             "source_uid": sources["source_uid"],
-            "population": ["star" if b else "other" for b in basis],
-            "star_basis": basis,
+            "population": np.array(["star" if b else "other" for b in basis], dtype="U8"),
+            # Fixed width so later bases (e.g. "stellar_locus", D-015) are never truncated.
+            "star_basis": np.array(basis, dtype="U32"),
         }
     )
     services = matches.meta.get("services_requested") or sorted(
@@ -89,3 +90,62 @@ def classify_sources(
         },
     )
     return schema.validate(out, schema.CLASSIFY_COLUMNS, name="populations")
+
+
+# ASSUMPTIONS (D-015): the stellar locus in a matched-photometry catalog's detection image.
+DEFAULT_LOCUS = {
+    "calib_mag_range": (20.0, 22.5),  # unsaturated catalogued stars calibrate the locus
+    "r50_tolerance": 0.2,  # |r50 / r50_psf - 1| <= this
+    "mag_max": 24.0,  # fainter, point-like galaxies and stars cannot be told apart by size
+    "colours": (("f150w", "f444w"), ("f200w", "f356w")),
+    "colour_pad": 0.3,  # mag beyond the catalogued stars' 5-95% colour range
+    "min_ref_stars": 10,
+}
+
+
+def stellar_locus(
+    sources: Table, label: str, known_stars: np.ndarray, **overrides
+) -> tuple[np.ndarray, dict]:
+    """Point-like sources with ordinary stellar colours, calibrated on catalogued stars (D-015).
+
+    ``sources`` carries the matched-photometry columns of ``label`` (``<label>_r50_pix``,
+    ``<label>_mag_auto``, ``<band>_<label>_abmag``). Catalogued stars (``known_stars``) with
+    ``calib_mag_range`` magnitudes give the point-source half-light radius ``r50_psf`` and the
+    stellar colour range. A source is in the locus when its r50 is within ``r50_tolerance`` of
+    ``r50_psf``, it is brighter than ``mag_max``, and every configured colour lies within the
+    stars' 5-95% range widened by ``colour_pad``. Point-like sources with unusual colours (brown
+    dwarfs, compact high-z galaxies) are deliberately left out: they stay rankable as galaxies.
+    Raises ``ValueError`` with fewer than ``min_ref_stars`` calibration stars.
+    """
+    cfg = {**DEFAULT_LOCUS, **overrides}
+    r50 = np.asarray(sources[f"{label}_r50_pix"], dtype=float)
+    mag = np.asarray(sources[f"{label}_mag_auto"], dtype=float)
+    lo_m, hi_m = cfg["calib_mag_range"]
+    with np.errstate(invalid="ignore"):
+        ref = np.asarray(known_stars, dtype=bool) & (mag > lo_m) & (mag < hi_m) & np.isfinite(r50)
+    if ref.sum() < cfg["min_ref_stars"]:
+        raise ValueError(
+            f"stellar locus needs >= {cfg['min_ref_stars']} catalogued stars with "
+            f"{lo_m} < mag < {hi_m}; found {int(ref.sum())}"
+        )
+    r50_psf = float(np.median(r50[ref]))
+    with np.errstate(invalid="ignore"):
+        member = (np.abs(r50 / r50_psf - 1.0) <= cfg["r50_tolerance"]) & (mag < cfg["mag_max"])
+    ranges = {}
+    for blue, red in cfg["colours"]:
+        colour = np.asarray(sources[f"{blue}_{label}_abmag"], float) - np.asarray(
+            sources[f"{red}_{label}_abmag"], float
+        )
+        lo, hi = np.nanpercentile(colour[ref], [5, 95])
+        pad = cfg["colour_pad"]
+        with np.errstate(invalid="ignore"):
+            member &= (colour >= lo - pad) & (colour <= hi + pad)
+        ranges[f"{blue}-{red}"] = [round(float(lo), 3), round(float(hi), 3)]
+    info = {
+        "r50_psf_pix": round(r50_psf, 3),
+        "n_calibration_stars": int(ref.sum()),
+        "colour_ranges": ranges,
+        "thresholds": {k: (list(v) if isinstance(v, tuple) else v) for k, v in cfg.items()},
+        "provenance": schema.Provenance.ASSUMPTION.value,
+    }
+    return member, info

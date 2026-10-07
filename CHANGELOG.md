@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Stellar locus for stars missing from Gaia (D-015, cycle 6)
+- `classify.stellar_locus`: a source counts as a star when its DJA detection-image r50 is within 20% of the
+  catalogued stars' median and its colours are stellar. The DJA join now carries `r50_pix` and `mag_auto`.
+- Run `20261007T130207Z-c8ffc470`: the locus added 16 stars to SMACS, and 3 of the 6 PSF-like sources left the galaxy top 20.
+  `829`, `1032` and `438` are ranks 3, 8 and 11. Details are in D-015.
+- **Failed approaches:**
+  - pipeline CI and `semimajor_sigma` do not separate stars from galaxies, because spikes and
+    saturation inflate them;
+  - size alone admits compact galaxies, because their colours are too broad.
+- **Handoff:** TASKS Now 1 (vet `829`, `1032`, `438`, `1243`). Three blended stars remain in the galaxy top
+  20 (TASKS Now 2).
+
+
 ## 2026-10-07: Rank only confirmed detections (D-014, cycle 5)
 - Quality gate: best-band S/N floor (`low_snr`) and single-band confirmation (`single_band`, confirmed by a
   DJA match). Too few survivors now fall back to the D-011 tests instead of ranking ungated.

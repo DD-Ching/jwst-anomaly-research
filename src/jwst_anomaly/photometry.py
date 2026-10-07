@@ -107,6 +107,10 @@ def load_dja_catalog(path: str | Path, bands: list[str], aperture: int = 1) -> T
         {"id": t["id"], "ra": np.asarray(t["ra"], float), "dec": np.asarray(t["dec"], float)}
     )
     diam = t.meta.get(f"ASEC_{aperture}")
+    # Detection-image (stacked) quantities used by the stellar locus (D-015).
+    for src_col, dst in (("flux_radius", "r50_pix"), ("mag_auto", "mag_auto")):
+        if src_col in t.colnames:
+            out[dst] = np.asarray(np.ma.filled(t[src_col], np.nan), float)
     for b in bands:
         f, e, fl = (
             f"{b}_flux_aper_{aperture}",
@@ -130,6 +134,7 @@ def load_dja_catalog(path: str | Path, bands: list[str], aperture: int = 1) -> T
         provenance=schema.Provenance.DERIVED.value,
         source=f"DJA catalog {Path(path).name}, aperture {aperture} (uJy -> AB, SEP flags applied)",
         aperture_diameter_arcsec=float(diam) if diam is not None else None,
+        detection_pixel_scale_arcsec=t.meta.get("BACK_PIXEL_SCALE"),
     )
     return out
 
@@ -180,6 +185,11 @@ def join_matched_photometry(
             values = np.full(len(out), np.nan)
             values[i_src] = np.asarray(catalog[col], float)[i_cat]
             out[schema.band_column(b, f"{label}_{q}")] = values
+    for q in ("r50_pix", "mag_auto"):  # detection-image quantities, when the catalog has them
+        if q in catalog.colnames:
+            values = np.full(len(out), np.nan)
+            values[i_src] = np.asarray(catalog[q], float)[i_cat]
+            out[f"{label}_{q}"] = values
     out.meta = dict(sources.meta)
     out.meta["source"] = (
         f"{sources.meta.get('source', '')} + matched-aperture photometry "
@@ -193,6 +203,7 @@ def join_matched_photometry(
         "n_contested": int(contested),
         "radius_arcsec": radius_arcsec,
         "aperture_diameter_arcsec": catalog.meta.get("aperture_diameter_arcsec"),
+        "detection_pixel_scale_arcsec": catalog.meta.get("detection_pixel_scale_arcsec"),
         "catalog": catalog.meta.get("source"),
     }
     return schema.validate(out, schema.SOURCE_COLUMNS, name="sources+photometry")
@@ -201,7 +212,9 @@ def join_matched_photometry(
 def joined_columns(joined: Table, label: str) -> Table:
     """The join's own columns (``source_uid``, separation, ``<band>_<label>_*``) for saving."""
     keep = ["source_uid", match_sep_column(label)] + [
-        c for c in joined.colnames if f"_{label}_abmag" in c
+        c
+        for c in joined.colnames
+        if f"_{label}_abmag" in c or c in (f"{label}_r50_pix", f"{label}_mag_auto")
     ]
     out = Table(joined[keep], copy=True)
     out.meta = {
