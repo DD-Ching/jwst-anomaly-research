@@ -69,7 +69,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 - Run `claude.exe` interactively in the repo once and accept workspace trust.
 - `claude.exe setup-token`, then `gh secret set CLAUDE_CODE_OAUTH_TOKEN`; install the Claude GitHub App;
   test with an `@claude` issue (docs/operations.md §5).
-- Cloud routine: `/schedule` with the Custom network allowlist (docs/operations.md §3).
+- Cloud routine: live since 2026-10-08 (docs/cloud-routine-prompt.md). Check that the environment's Custom network
+  allowlist has every host in docs/operations.md §3. Cloud runs can't merge (merge API denied in
+  `.claude/settings.json`), so merge `merge-ready` PRs, or change that rule and enable "Automatically delete head
+  branches".
 - Zenodo DOI at the first tagged release; optionally a separate Code of Conduct contact.
 
 ## Later
