@@ -609,25 +609,52 @@ def _fit_worker(job):
     return row
 
 
-def _jobs(sample: ogle.OgleMrozSample, limit: int | None, ids=None):
+def _jobs(sample: ogle.OgleMrozSample, limit: int | None, ids=None, skip=()):
     ev = sample.events()
     if ids is not None:
         ev = ev[np.isin(ev["event_id"], list(ids))]
     if limit:
         ev = ev[:limit]
+    if skip:
+        ev = ev[~np.isin(ev["event_id"], list(skip))]
     for r in ev:
         lc = sample.light_curve(r["event_id"])
         d = {k: (r[k].item() if hasattr(r[k], "item") else r[k]) for k in ev.colnames}
         yield d, np.asarray(lc["time"]), np.asarray(lc["mag"]), np.asarray(lc["mag_err"])
 
 
-def run_fit(sample_key: str, limit: int | None, procs: int) -> Path:
+def load_checkpoint(path: Path) -> list[dict]:
+    """Rows of an interrupted ``fit`` (one JSON object per line); a torn last line is dropped."""
+    rows = []
+    if path.exists():
+        for line in path.read_text().splitlines():
+            try:
+                rows.append(json.loads(line))
+            except json.JSONDecodeError:
+                break
+    return rows
+
+
+def run_fit(sample_key: str, limit: int | None, procs: int, fresh: bool = False) -> Path:
+    """Fit the sample. Each row is appended to ``fits_<key>.partial.jsonl`` as it finishes, so an
+    interrupted run (a cloud session ends after ~40 min; the bulge sample takes ~3 h on 4 cores)
+    resumes where it stopped; ``fresh`` starts over."""
     sample = ogle.OgleMrozSample(sample_key)
     t1 = time.time()
-    rows = []
-    with Pool(procs) as pool:
-        for i, row in enumerate(pool.imap_unordered(_fit_worker, _jobs(sample, limit), 4)):
+    ckpt = out_dir() / f"fits_{sample_key}.partial.jsonl"
+    if fresh:
+        ckpt.unlink(missing_ok=True)
+    rows = load_checkpoint(ckpt)
+    ckpt.write_text("".join(json.dumps(r, default=float) + "\n" for r in rows))
+    done = {r["event_id"] for r in rows}
+    if done:
+        print(f"resuming: {len(done)} events already fitted", flush=True)
+    with Pool(procs) as pool, ckpt.open("a") as fh:
+        jobs = _jobs(sample, limit, skip=done)
+        for i, row in enumerate(pool.imap_unordered(_fit_worker, jobs, 4)):
             rows.append(row)
+            fh.write(json.dumps(row, default=float) + "\n")
+            fh.flush()
             if (i + 1) % 250 == 0:
                 print(f"{i + 1} events, {time.time() - t1:.0f} s", flush=True)
     keys = sorted({k for r in rows for k in r}, key=lambda k: (k != "event_id", k))
@@ -643,7 +670,8 @@ def run_fit(sample_key: str, limit: int | None, procs: int) -> Path:
         provenance=schema.Provenance.DERIVED.value,
         source=f"scripts/w3_microlensing.py fit on {sample.name} ({sample.spec.reference})",
         params=json.dumps(asdict(P)),
-        wall_time_s=round(time.time() - t1, 1),
+        wall_time_s=round(time.time() - t1, 1),  # this invocation only
+        cpu_time_s=round(float(sum(r.get("seconds", 0.0) for r in rows)), 1),
         procs=procs,
     )
     path = out_dir() / f"fits_{sample_key}.ecsv"
@@ -1535,6 +1563,7 @@ def main(argv=None) -> int:
     f = sub.add_parser("fit", help="fit every event of a sample")
     f.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     f.add_argument("--limit", type=int, default=None)
+    f.add_argument("--fresh", action="store_true", help="ignore an interrupted run's checkpoint")
     v = sub.add_parser("vet", help="vet the flags of a fitted sample")
     v.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     v.add_argument("--no-binary-lens", action="store_true")
@@ -1550,7 +1579,7 @@ def main(argv=None) -> int:
     m.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     args = ap.parse_args(argv)
     if args.cmd == "fit":
-        run_fit(args.sample, args.limit, args.procs)
+        run_fit(args.sample, args.limit, args.procs, args.fresh)
     elif args.cmd == "vet":
         run_vet(args.sample, args.procs, binary_lens=not args.no_binary_lens)
     elif args.cmd == "sheet":
