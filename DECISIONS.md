@@ -2625,3 +2625,78 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
 - A proper weak-lensing shape catalogue (PSF-anisotropy-corrected, calibrated) exists for these fields: the E/B
   floor would drop and the limits improve.
 - DJA photo-z for SMACS 0723 and El Gordo are reachable again (tarballs 404 on 2026-10-08).
+
+## D-054 Survey-agnostic exotic signatures; MulensModel for ordinary microlensing fits; OGLE-IV Mróz samples first for W3 (2026-10-08)
+
+**Context.** Owner direction (2026-10-08): find observational evidence of traversable wormholes / negative-mass
+objects or warp-drive spacetimes in any public dataset, not only JWST. Exotic physics stays a hypothesis; every hit
+goes through `/vet-candidate`; nulls become limits; nothing is announced outside the repo without the owner.
+
+**Decision.**
+- **Signature layer** (`jwst_anomaly.signatures`): one `Signature` per D-047 signature (W1, W2, W3, W5) with its
+  `exotic_sim` prediction and injector, the screens that implement it, the ordinary mimics vetting must rule out
+  first, and where its limits live. A survey enters through a thin adapter satisfying `LightCurveSurvey`
+  (`events`, `light_curve`, `efficiency`) or `CatalogueSurvey` (`catalogue`, `area_deg2`);
+  `standard_light_curve` is the shared light-curve layout (`observed`). In-house dict registry, no plugin
+  framework.
+- **Ordinary microlensing fits:** MulensModel ≥ 3.12 (MIT; pulls VBMicrolensing, LGPL-3.0) as the optional extra
+  `mulens`: point lens, finite source, binary lens, annual parallax, linear source/blend fluxes. The exotic models
+  are not refitted in another library: `exotic_sim` magnification (n = 1, ε < 0 with the finite-source spike cap;
+  n = 2 Ellis) is evaluated on the source trajectory from `MulensModel.Model.get_trajectory(times)`, so the
+  geometry (and parallax) is identical, and source/blend fluxes come from the same linear solve. Comparison:
+  Δχ² and BIC on identical data; one `derived` row per event and model.
+- **W3 data, in order:** (1) Mróz et al. 2019 OGLE-IV bulge sample (5,836 fitted events, 48 MB calibrated I-band
+  photometry, per-field detection efficiencies); (2) Mróz et al. 2020 OGLE-IV plane sample (630 events, with
+  efficiencies); (3) Gaia DR3 `vari_microlensing` (363 events) with epoch photometry via `astroquery.gaia`;
+  (4) KMTNet public seasons. OGLE-IV EWS seasons only after the owner decides on its terms (below).
+- **W1/W2 in wide imaging:** reuse published lens catalogues before any finder: lenscat `catalog.csv` (32,838
+  entries, MIT), Euclid Q1 Strong Lensing Discovery Engine CSV (CC-BY-4.0; not the 3 GB `lens.zip`), SuGOHI;
+  pinned by sha256 in manifests.
+- **Warp:** no imaging or photometric prediction for distant observers (D-047). One standing research task:
+  monitor the literature, including warp-bubble-collapse gravitational waves (Clough, Dietrich & Khan 2024), and
+  any detector band that could test it. No signature is invented.
+
+**Alternatives rejected.**
+- pyLIMA 1.9.8 (cleanest custom-model hook, but GPL-3.0-or-later and heavy dependencies); VBMicrolensing alone (no
+  negative-mass or Ellis lens; MulensModel wraps it); VBBinaryLensing (superseded, GPL, win-only wheel); muLAn
+  (unmaintained since 2020); the lenscat package (needs `ligo.skymap`; read its CSV); Master Lens Database (no
+  response 2026-10-08; lenscat covers it); pluggy/stevedore (unneeded for < 10 in-repo modules).
+- MOA alerts and ZTF/IRSA light curves for now: no verified bulk MOA endpoint; ZTF is ineffective toward the bulge.
+
+**Evidence** (reuse-check, 2026-10-08; SOURCES "Signature layer and time-domain archives (D-054)").
+- Prior art: no published archival search of OGLE, MOA, KMTNet, Gaia or MACHO light curves for negative-mass or
+  Ellis events was found (arXiv API, `abs:wormhole AND abs:microlensing`, `abs:"negative mass" AND
+  abs:microlensing`); existing limits come from SDSS quasar lensing (arXiv:1303.1301), BATSE (gr-qc/9805075,
+  astro-ph/9904399) and femtolensing (arXiv:1302.7170). A W3 survey limit would be new: `needs-human` before any
+  outside announcement.
+- Selection caveat: the Mróz samples were selected with a PSPL-like finder and the EWS selects brightenings, so an
+  inverted event with a long umbra may be excluded; use the published efficiencies only for events the finder
+  could have selected, and state this limit.
+- OGLE EWS terms ask users to contact the OGLE team before publishing (co-authorship may be required). The Mróz
+  data products are published with their papers (cite them). Using EWS seasons in this public repo waits for the
+  owner (`needs-human`).
+
+**Revisit if.** MulensModel or VBMicrolensing add user-defined or negative-mass magnification; pyLIMA relicenses; a
+paper publishes a survey light-curve limit on negative-mass or Ellis lenses (compare, do not repeat); OGLE or
+KMTNet terms forbid a population reanalysis; > 10 signature modules or outside contributors need entry points.
+
+## D-055 Orphan-pair null (e) made symmetric; companion-aware null (f); the D-051 deep-field excess was a null artefact (2026-10-08)
+
+**Decision.** `orphan_pairs.pair_cells` bins colour per member and uses the unordered pair of bins; a non-finite
+colour (no valid flux, or a non-positive mean flux) has its own bin. A cell needs ≥ 5 z-overlapping reference pairs
+(`MIN_CELL_REF`, ASSUMPTION), else its S/N × size cell, else the global reference rate. A new null (f) applies the same cells to the 3–6″
+z-overlapping pairs (null (d)'s annulus). Background-aware W1/W2/point-mass limits use null (e) as fixed.
+
+**Alternatives rejected.**
+- Pair mean colour: a red + blue pair would share a cell with two neutral members, which match far more easily.
+- (f) as the limit background: it predicts more (347.5), so its limits would be less conservative.
+
+**Evidence** (`derived`; `outputs/orphan_pairs/<field>/summary.json`, `outputs/inject_pairs/limits.json`; table
+in docs/orphan_pairs.md).
+- Orphans unchanged from D-048/D-051 in all nine fields. Deep fields, 355 orphans: null (e) fixed 334.0 (P = 0.13;
+  D-051: 315.4, P = 0.015), null (f) 347.5 (P = 0.35). The D-048 clusters stay null (P ≥ 0.13).
+- Injections re-run: no-candidate limits reproduce D-051; background-aware s₉₅ 72.3 → 54.9 (docs/exotic_limits.md).
+- The symmetry, the non-finite bin and the cell floor were changed together; their shares were not measured.
+
+**Revisit if.** A run gives P < 0.05 under both (e) and (f), or a segmentation-map same_galaxy rule changes the
+orphan counts.

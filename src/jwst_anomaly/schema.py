@@ -96,6 +96,9 @@ SCORE_COLUMNS = ("source_uid", "score", "rank")
 # Inputs to cutouts/crossmatch.
 TARGET_COLUMNS = ("source_uid", "ra", "dec")
 
+# Time-domain light curves shared by survey adapters (signatures.standard_light_curve, D-054).
+LIGHT_CURVE_COLUMNS = ("time", "mag", "mag_err", "band")
+
 # lensmodel.LensModel.evaluate -> one row per position (model_prediction, D-024).
 LENS_PREDICTION_COLUMNS = (
     "ra",

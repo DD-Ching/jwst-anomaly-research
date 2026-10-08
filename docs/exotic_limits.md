@@ -355,9 +355,9 @@ annulus. Its zero efficiency is by construction.
    4″, a row with valid S/N bands and ≥ 8 valid bands: 108.1 arcmin² in total, 9.8–9.9 arcmin² per flanking
    field and 58.7 arcmin² for GOODS-N.
    - **No-candidate limit:** 2.996 / Σ εA. It assumes every orphan is ordinary.
-   - **Background-aware limit:** s₉₅ / Σ εA, where s₉₅ = 72.3 is the CLs 95 % upper limit (Read 2002) on a Poisson
-     signal, which never collapses to 0 when fewer events than the background are observed. The inputs are 355 observed orphans over a known background of 315.4 (null (e), summed). This is the
-     defensible number: about 40 faint orphans cannot be told apart from lensed pairs.
+   - **Background-aware limit:** s₉₅ / Σ εA, where s₉₅ = 54.9 (D-055; 72.3 in D-051) is the CLs 95 % upper limit (Read 2002) on a Poisson
+     signal, which never collapses to 0 when fewer events than the background are observed. The inputs are 355 observed orphans over a known background of 334.0 (null (e) as fixed in D-055, summed; D-051 used 315.4). This is the
+     defensible number: the ~21 orphans above that background cannot be told apart from lensed pairs.
 
 Reproduce:
 - `python scripts/inject_pairs.py` runs all six fields, about 3.5–4.5 min per field on one core.
@@ -400,20 +400,24 @@ The outputs are `outputs/inject_pairs/limits.json`, plus per field `injection_su
 
 | θ_E | \|M\| (n = 1; model_prediction) | Ellis throat a (pc; model_prediction) | point: no-candidate / background-aware | W2: no-candidate / background-aware | W1: no-candidate / background-aware |
 |---|---|---|---|---|---|
-| 0.15″ | 4.5 × 10⁹ M☉ | 0.96 | 5.4 × 10⁵ / 1.3 × 10⁷ | 1.1 × 10⁶ / 2.6 × 10⁷ | none (ε = 0) |
-| 0.3″ | 1.8 × 10¹⁰ M☉ | 2.7 | 1.9 × 10⁴ / 4.5 × 10⁵ | 1.6 × 10⁴ / 3.8 × 10⁵ | 9.6 × 10⁴ / 2.3 × 10⁶ |
-| 0.7″ | 9.8 × 10¹⁰ M☉ | 9.7 | 1.2 × 10⁴ / 2.9 × 10⁵ | 1.2 × 10⁴ / 2.9 × 10⁵ | 2.8 × 10³ / 6.7 × 10⁴ |
-| 1.5″ | 4.5 × 10¹¹ M☉ | 30 | none (separation > 3″) | none (separation > 3″) | 5.4 × 10² / 1.3 × 10⁴ |
+| 0.15″ | 4.5 × 10⁹ M☉ | 0.96 | 5.5 × 10⁵ / 1.0 × 10⁷ | 1.1 × 10⁶ / 2.0 × 10⁷ | none (ε = 0) |
+| 0.3″ | 1.8 × 10¹⁰ M☉ | 2.7 | 1.9 × 10⁴ / 3.4 × 10⁵ | 1.6 × 10⁴ / 2.9 × 10⁵ | 9.6 × 10⁴ / 1.8 × 10⁶ |
+| 0.7″ | 9.8 × 10¹⁰ M☉ | 9.7 | 1.2 × 10⁴ / 2.2 × 10⁵ | 1.2 × 10⁴ / 2.2 × 10⁵ | 2.8 × 10³ / 5.1 × 10⁴ |
+| 1.5″ | 4.5 × 10¹¹ M☉ | 30 | none (separation > 3″) | none (separation > 3″) | 5.4 × 10² / 9.8 × 10³ |
+
+Re-run 2026-10-08 with the D-055 nulls (`inject_pairs.py` per field, then `--combine-only`): the no-candidate
+column reproduces D-051 (0.15″ point: 5.46 × 10⁵, printed 5.4 × 10⁵ in D-051); the background-aware column uses
+s₉₅ = 54.9 (D-051: 72.3).
 
 Reading:
 - **What the screen can do.** It is sensitive at θ_E ≈ 0.3–1.5″. That is the regime where the W1 `radial`
   screen is blind (D-049, branch `claude/radial-injection`: no limit at 0.3″ or 1″, < 3.6 × 10⁴ deg⁻² at 3″).
-  - The best W1 limits here are < 5.4 × 10² (no candidate) and < 1.3 × 10⁴ deg⁻² (background-aware) at
+  - The best W1 limits here are < 5.4 × 10² (no candidate) and < 9.8 × 10³ deg⁻² (background-aware; 1.3 × 10⁴ before D-055) at
     θ_E = 1.5″, |M| ≈ 4.5 × 10¹¹ M☉.
   - In the no-candidate case that is two orders of magnitude below the radial screen's 3″ limit.
 - **Comparison with Takahashi & Asada (2013).** Their Ellis volume limit, n < 10⁻⁴ h³ Mpc⁻³ for a = 10–10⁴ pc,
   corresponds to about 120 deg⁻² if spread over 0 < z < 1 (Planck18 comoving volume; computed here).
-  - The W2 limits at a ≈ 10 pc are 100× (no candidate) to 2400× (background-aware) weaker.
+  - The W2 limits at a ≈ 10 pc are 100× (no candidate) to 1800× (background-aware; D-055) weaker.
   - At a ≲ 3 pc (θ_E ≤ 0.3″) the screen probes throat radii below their range, but only at > 10⁴ deg⁻².
 - **The point-mass column** is the same calculation for ordinary compact dark deflectors (dark subhaloes,
   compact dark objects). It shows that the screen's reach is set by geometry and depth, not by the exotic
@@ -430,8 +434,9 @@ Reading:
 - **Single deflector redshift** z_l = 0.4 and single source redshift z_s = 2 for the masses. A real population
   spread in z_l would change the mass scale, not the angular efficiency.
 - **No macro-model.** CANUCS flanking-field μ = 1.0–1.4 is ignored for the injected lens.
-- **Background-aware limit.** It treats null (e) as exact. Null (e) itself under-predicts the flanking-field
-  orphans by ~15 % (orphan_pairs.md), so the true background may be higher and the limit is then conservative.
+- **Background-aware limit.** It treats null (e) as exact. After the D-055 fix, null (e) and the companion-aware
+  null (f) both match the observed orphans (docs/orphan_pairs.md); (f) predicts ~14 more, so the (e)-based limit
+  is the more conservative.
 
 ## W3 inverted microlensing / dimming (multi-epoch)
 

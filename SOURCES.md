@@ -800,3 +800,26 @@ jwst 3.0.0 / photutils 3.0.0 (file headers).
 - Not used: El Gordo (only 1176 o241 in 2022 and 6882 o051 F444W in 2026: one shared band); JADES (many programs
   and pointings; left for later, TASKS follow-up).
 - Gaia DR3 (VizieR I/355/gaiadr3), one 6′ cone per field (`transient_combine.fetch_gaia`), for the star mask.
+
+## Signature layer and time-domain archives (D-054, checked 2026-10-08)
+
+- MulensModel 3.12.0 (2026-09-25, MIT): https://github.com/rpoleski/MulensModel ; docs https://rpoleski.github.io/MulensModel/
+- VBMicrolensing 5.6.1 (2026-10-08, LGPL-3.0): https://github.com/valboz/VBMicrolensing
+- pyLIMA 1.9.8 (2025-04-04, GPL-3.0-or-later; rejected): https://pylima.readthedocs.io/en/latest/
+- OGLE-IV EWS 2011–2026 (publication terms on the page; cite Udalski et al. 2015, Acta Astron. 65, 1):
+  https://ogle.astrouw.edu.pl/ogle4/ews/ews.html ; files https://www.astrouw.edu.pl/ogle/ogle4/ews/
+- Mróz et al. 2019, OGLE-IV bulge (arXiv:1906.02210, ApJS 244, 29): https://www.astrouw.edu.pl/ogle/ogle4/microlensing_maps/
+  (`table3.dat` 5,836 rows; `phot.tar.gz` 48 MB)
+- Mróz et al. 2020, OGLE-IV Galactic plane (arXiv:2004.07289, ApJS 249, 16), 630 events:
+  https://www.astrouw.edu.pl/ogle/ogle4/galactic_disk_microlensing/
+- Gaia DR3 `vari_microlensing`, 363 events (Wyrzykowski et al., arXiv:2206.06121, A&A 674, A23):
+  https://gea.esac.esa.int/archive/documentation/GDR3/Gaia_archive/chap_datamodel/sec_dm_variability_tables/ssec_dm_vari_microlensing.html
+- astroquery.gaia epoch photometry (`Gaia.load_data`, astroquery 0.4.11, BSD): https://astroquery.readthedocs.io/en/latest/gaia/gaia.html
+- KMTNet event lists 2015–2025 (cite Kim et al. 2016, JKAS 49, 37; proprietary until 1 July of the following year):
+  https://kmtnet.kasi.re.kr/~ulens/
+- ZTF light-curve API (not used now): https://irsa.ipac.caltech.edu/docs/program_interface/ztf_lightcurve_api.html
+- lenscat `catalog.csv`, 32,838 entries (MIT; Vujeva et al., arXiv:2406.04398): https://github.com/lenscat/lenscat
+- Euclid Q1 Strong Lensing Discovery Engine catalogue v0.0.3 (CC-BY-4.0; arXiv:2503.15324): https://doi.org/10.5281/zenodo.15003116
+- SuGOHI public lens list (no licence stated): https://www-utap.phys.s.u-tokyo.ac.jp/~oguri/sugohi/
+- Prior-art check (no survey light-curve search for negative-mass or Ellis lenses found): arXiv:1711.04560,
+  arXiv:0807.2774, arXiv:1302.7170, arXiv:gr-qc/9805075.

@@ -3,7 +3,18 @@
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
-## Now (owner focus 2026-10-08: wormhole / negative-mass and warp signatures only; D-047)
+## Now (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
+1. **W3 in published microlensing samples:** an OGLE-IV adapter (`LightCurveSurvey`) for Mróz et al. 2019 (bulge,
+   5,836 events) and 2020 (plane, 630); fit PSPL / finite source / parallax (MulensModel) and the n = 1 ε < 0 and
+   Ellis models on the same trajectory; rank by ΔBIC; vet binary lenses, blending, variables, systematics, parallax
+   first; inject-recover on the real cadence and the published efficiencies → rate limits per star per year.
+   Then Gaia DR3 `vari_microlensing` + epoch photometry, then KMTNet. OGLE EWS seasons wait for the owner (terms).
+2. **W1/W2 in wide imaging:** pin lenscat, Euclid Q1 and SuGOHI tables; look for confirmed multiple-image systems
+   or radial arcs with no visible deflector in their own imaging; reuse catalogues before any finder.
+3. **W5:** background-count deficits around empty regions in a wide survey, with calibrated nulls.
+4. **Warp:** monitor the literature (incl. Clough, Dietrich & Khan 2024) and any detector band that could test it.
+
+## JWST focus (D-047 screens; continues under the direction above)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
    - W1: the shear screen (D-053, `exotic_screens.py shear`, `inject_shear.py`) is built; four fields null; limits
      7.7 × 10³ / 1.3 × 10³ / 6.5 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, still blind at ≤ 2 × 10¹¹ M☉. Next:
@@ -11,10 +22,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      apertures with < 50 % coverage); add SMACS 0723 and El Gordo when DJA photo-z is reachable (tarballs 404
      2026-10-08) and MACS0717 / Abell S1063 with photo-z (DJA v7.5, 75 MB); stack S around `radial` and orphan-pair
      centres; other lens redshifts → volume density vs Takahashi & Asada;
-   - W2 / dark deflectors (D-048 clusters, D-051 deep fields: null, limits): a companion-aware null to explain the
-     flanking-field orphan excess (P = 0.01) before any orphan is read as other than chance; first make null (e)'s colour cell symmetric in
-     the pair and give NaN colour its own cell (`orphan_pairs.pair_cells` uses member i's colour; NaN lands in the
-     0–0.3 bin), then re-run P; segmentation-map
+   - W2 / dark deflectors (D-048 clusters, D-051 deep fields: null, limits; D-055: the flanking-field orphan
+     excess was a null (e) artefact, no excess under the fixed (e) or the companion-aware (f); D-048 clusters re-run, null): segmentation-map
      adjacency for the same-galaxy and visible-lens rules (the main efficiency losses); pixel-level injections;
      optionally CEERS / GOODS-S / PRIMER (~600 MB each);
    - W3 (D-052, null; headline limits from MACS0416 only): re-run `forced` for all three fields when S3 cutout jobs
