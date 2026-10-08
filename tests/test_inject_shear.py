@@ -58,8 +58,10 @@ def test_injected_ellipticity_keeps_r_of_the_measured_change_only():
     # no lens change: the source's corrected shape comes back unchanged, whatever its cluster g
     same = ish.injected_ellipticity(e_src[:1], raw_src[:1], raw_src[:1], 0.45)
     np.testing.assert_allclose(same, e_src[:1])
-    # an unresolved source painted with no lens change stays round
+    # an unresolved source painted with no lens change stays round; |e| is capped below 1
     np.testing.assert_allclose(ish.injected_ellipticity([np.nan], [0j], [np.nan], 0.45), [0j])
+    big = ish.injected_ellipticity([0.5 + 0j], [1.9 + 0j], [0.0 + 0j], 1.0)
+    np.testing.assert_allclose(big, [0.99 + 0j])
 
 
 def test_a_user_responsivity_outside_its_range_is_refused():

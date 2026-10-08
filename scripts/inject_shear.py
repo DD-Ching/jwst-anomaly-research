@@ -56,13 +56,16 @@ def injected_ellipticity(e_src, raw_img, raw_src, r: float) -> np.ndarray:
     """Corrected ε of a painted image: its source's corrected ε plus R times the lens-induced
     change of the *measured* moments (raw image minus raw source). The catalogue's moments respond
     to shear by R (D-053), the painted moments by 1; taking the change between raw moments keeps
-    the cluster shear out of it. An unresolved source (no measured ε) counts as round: its painted
-    image holds the lens shear only, so it gets R times its raw ε."""
+    the cluster shear out of it. |ε| is capped at 0.99. ``ShearInjector`` paints only resolved
+    sources; for an unresolved one (NaN) this returns R times the raw image ε."""
     e_src, raw_src = np.asarray(e_src, complex), np.asarray(raw_src, complex)
     resolved = np.isfinite(raw_src) & np.isfinite(e_src)
     with np.errstate(invalid="ignore"):
         lensed = e_src + r * (np.asarray(raw_img, complex) - raw_src)
-    return np.where(resolved, lensed, r * np.asarray(raw_img, complex))
+    out = np.where(resolved, lensed, r * np.asarray(raw_img, complex))
+    mod = np.abs(out)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        return np.where(mod > 0.99, out * 0.99 / mod, out)
 
 
 class ShearInjector:
@@ -87,8 +90,12 @@ class ShearInjector:
         # spike segments are never painted: the real field vetoes them too
         # and sources where the cluster shear cannot be removed (κ >= 1, |g| or |R g| >= 1) are
         # not painted
+        # only resolved sources are lensed: an unresolved one has no measured shape to paint from
         self.background = (
-            es.lensable_mask(shapes, model.z_lens) & ~self.base["spike"] & self.base["correctable"]
+            es.lensable_mask(shapes, model.z_lens)
+            & ~self.base["spike"]
+            & self.base["correctable"]
+            & np.isfinite(self.eps)
         )
         shapes["_src"] = np.arange(len(shapes))  # carried into painted rows by paint_lens
         self.next_label = int(np.max(shapes["label"])) + 1

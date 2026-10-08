@@ -238,7 +238,7 @@ with a catalogue aperture-mass map instead of converging arcs.
   Adopted after the first run's results were seen; it is conservative.
 - **Injections.** A painted image's ε is its source's corrected ε plus R times the change of the *measured* moments
   (image minus source; the catalogue's moments respond to shear by R, the painted moments by 1, and the cluster
-  shear cancels in the difference); an unresolved (round) source's image gets R times its painted ε, which holds the lens shear only. Recovery: the largest S within 2″ of the lens passes the rule above. 200 lenses
+  shear cancels in the difference); only resolved sources (finite deconvolved ε) are painted; |ε| is capped at 0.99. Recovery: the largest S within 2″ of the lens passes the rule above. 200 lenses
   per field and mass, a fresh rotation null per 10 trials. Spike-segment rows, and rows where the cluster
   shear cannot be removed (κ ≥ 1, |g| ≥ 1 or |R g| ≥ 1), are never painted (conservative).
 - **Choice of filter** (`simulated` only, 50 injections in MACS0416 and Abell 2744, before the E/B rule and the R
@@ -263,9 +263,9 @@ No field has an E-mode peak with p_rot < 0.05 that also beats its B-mode extreme
 |---|---|---|---|---|---|---|
 | 2 × 10¹⁰ | 0.27–0.36″ | 0 | 0 | 0 | 0 | 0 / 1600 |
 | 2 × 10¹¹ | 0.85–1.14″ | 0 | 0 | 0 | 1 | 0 / 1600 |
-| 2 × 10¹² | 2.7–3.6″ | 19 | 15 | 6 | 10 | 8 / 1600 |
-| 8 × 10¹² | 5.4–7.2″ | 80 | 58 | 38 | 62 | 84 / 1600 |
-| 2 × 10¹³ | 8.5–11.4″ | 159 | 123 | 85 | 82 | 156 / 1600 |
+| 2 × 10¹² | 2.7–3.6″ | 14 | 7 | 3 | 9 | 8 / 1600 |
+| 8 × 10¹² | 5.4–7.2″ | 72 | 48 | 30 | 47 | 84 / 1600 |
+| 2 × 10¹³ | 8.5–11.4″ | 147 | 113 | 74 | 75 | 156 / 1600 |
 
 MACS1149 is lowest (fewest sources per arcsec²). Before the spike veto, with the rotation null alone, the four
 fields recovered 66, 309 and 486 of 800 at the top three masses (biased high by the spike systematics).
@@ -276,11 +276,11 @@ fields recovered 66, 309 and 486 of 800 at the top three masses (biased high by 
 |---|---|---|---|---|
 | 2 × 10¹⁰ | 0 | no limit | — | no limit |
 | 2 × 10¹¹ | 8.5 × 10⁻⁶ | 3.5 × 10⁵ (one recovery) | 4.0 × 10⁵ | no limit |
-| 2 × 10¹² | 5.7 × 10⁻⁴ | 5.2 × 10³ | 5.7 × 10³ | 6.1 × 10⁴ |
-| 8 × 10¹² | 2.6 × 10⁻³ | 1.1 × 10³ | 1.2 × 10³ | 7.0 × 10³ |
-| 2 × 10¹³ | 5.1 × 10⁻³ | 5.9 × 10² | 6.4 × 10² | 4.0 × 10³ |
+| 2 × 10¹² | 3.9 × 10⁻⁴ | 7.7 × 10³ | 8.4 × 10³ | 6.1 × 10⁴ |
+| 8 × 10¹² | 2.2 × 10⁻³ | 1.3 × 10³ | 1.5 × 10³ | 7.0 × 10³ |
+| 2 × 10¹³ | 4.6 × 10⁻³ | 6.5 × 10² | 7.0 × 10² | 4.0 × 10³ |
 
-**Reading.** The shear screen gives limits 6–12× stronger than `radial` from 20 % less area, but is equally blind
+**Reading.** The shear screen gives limits 5–8× stronger than `radial` from 20 % less area, but is equally blind
 at ≤ 2 × 10¹¹ M☉ (θ_E ≲ 1″): there the umbra and images cover too few sources per aperture (S/N ≈ 1–2, as D-050
 expected). The best limit is about 5× weaker than Takahashi & Asada's ~120 deg⁻² (radial section). Below 10¹² M☉
 the orphan-pair limits (D-051) remain the only ones.
