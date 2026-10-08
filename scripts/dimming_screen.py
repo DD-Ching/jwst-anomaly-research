@@ -531,8 +531,16 @@ def ordinary_columns(
     fref = reference_flux(lc["flux"], det)[:, 0]
     bright_nb = np.zeros(n, bool)
     i, j, _, _ = pos.search_around_sky(pos, p.bright_neighbour_arcsec * u.arcsec)
+    # a saturated star often has a NaN catalogue flux (NaN-filled core): its own Gaia match
+    # (G < gaia_saturated_g) marks it bright instead
+    sat = np.zeros(n, bool)
+    if gaia is not None and len(gaia):
+        g = SkyCoord(gaia["ra"], gaia["dec"], unit="deg")
+        ip, ig, _, _ = g.search_around_sky(pos, p.gaia_self_arcsec * u.arcsec)
+        with np.errstate(invalid="ignore"):
+            sat[ip[np.asarray(gaia["gmag"], float)[ig] < p.gaia_saturated_g]] = True
     with np.errstate(invalid="ignore"):
-        hit = (i != j) & (fref[j] >= p.bright_neighbour_ratio * fref[i])
+        hit = (i != j) & ((fref[j] >= p.bright_neighbour_ratio * fref[i]) | sat[j])
     bright_nb[i[hit]] = True
     return {
         "near_star": near,
@@ -931,6 +939,7 @@ def cmd_screen(args) -> dict:
             k: int(np.sum(fl[k]))
             for k in (
                 "near_star",
+                "bright_neighbour",
                 "gaia_star",
                 "sharp_artifact",
                 "edge_proxy",
