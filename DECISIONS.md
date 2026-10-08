@@ -2100,7 +2100,9 @@ tests (removing or rescaling one potential, D-042), which maps do not.
   solves the standard multi-plane lens equation and its Jacobian recursion (Schneider, Ehlers & Falco 1992, ch. 9),
   with `D_ij / D_j = 1 − D_M(z_i) / D_M(z_j)` (flat ΛCDM).
 - `LensModel.split_planes({name: z}, v_disp={name: σ})` moves named potentials to their own redshift, optionally
-  with a new σ. This turns the D-042 rule ("check every potential that produces an extra image against its
+  with a new σ. A potential moved behind another plane is delensed: put where the ray through its fitted
+  (observed) centre crosses its plane, so it is still seen where it was fitted; shapes and the other planes'
+  positions are kept (ASSUMPTION). This turns the D-042 rule ("check every potential that produces an extra image against its
   spectroscopic redshift") into library code.
 - `find_images`, `backtrace_images` and `imageplane_residuals` now go through `lens_map` / `source_points` /
   `source_grid`, so they take either model. The Jacobian is no longer assumed symmetric. Single-plane results are

@@ -986,8 +986,15 @@ class LensModel:
 
         ``z_lens`` maps potential names to their redshift (e.g. a spectroscopic redshift for a
         galaxy that the model treats as a cluster member); ``v_disp`` optionally replaces their
-        velocity dispersion (km/s). Angular positions and radii are kept. Potentials at the same
-        redshift share a plane; the rest stay on this model's plane.
+        velocity dispersion (km/s). Potentials at the same redshift share a plane; the rest stay
+        on this model's plane.
+
+        A single-plane fit places every potential at its observed (image-plane) position. A
+        moved potential with another plane in front of it is put where the ray through its
+        observed centre crosses its own plane (delensed through the foreground planes, nearest
+        first), so it is still seen where it was fitted. Its radii, ellipticity and angle are kept
+        (ASSUMPTION: the foreground's distortion of its shape is neglected), and potentials left
+        on this model's plane keep their fitted positions.
         """
         names = [c.name for c in self.components]
         unknown = sorted(set(z_lens) - set(names)) + sorted(set(v_disp or {}) - set(z_lens))
@@ -1005,10 +1012,33 @@ class LensModel:
             text = f"{self.sha256}{comps!r}{_cosmology_key(self.cosmology)}"
             return hashlib.sha256(text.encode()).hexdigest()
 
-        planes = [
-            LensModel(comps, self.ra0, self.dec0, self.cosmology, self.source, ident(comps))
-            for comps in by_z.values()
-        ]
+        def build(groups: dict[float, list[DPIE]]) -> list[LensModel]:
+            return [
+                LensModel(comps, self.ra0, self.dec0, self.cosmology, self.source, ident(comps))
+                for comps in groups.values()
+            ]
+
+        # delens moved potentials plane by plane, in redshift order, so each one is traced
+        # through foreground planes that are already final
+        for z in sorted(by_z):
+            comps = by_z[z]
+            moved_here = [k for k, c in enumerate(comps) if c.name in z_lens]
+            front = [zz for zz in by_z if zz < z]
+            if not moved_here or not front:
+                continue
+            fore = MultiPlaneLensModel(build({zz: by_z[zz] for zz in sorted(front)}))
+            for k in moved_here:
+                c = comps[k]
+                # theta_j = theta - sum_i (D_ij / D_j) alpha_i(theta_i) through the foreground
+                d_j = float(self.cosmology.comoving_transverse_distance(z).to_value(u.Mpc))
+                alphas, _ = fore._rays(np.array([c.x]), np.array([c.y]), len(fore.planes), False)
+                px, py = c.x, c.y
+                for (ax, ay), d_i in zip(alphas, fore._d_m, strict=True):
+                    r = 1.0 - d_i / d_j
+                    px -= r * float(ax[0])
+                    py -= r * float(ay[0])
+                comps[k] = replace(c, x=px, y=py)
+        planes = build(by_z)
         moved = ", ".join(f"{k}@z{v:g}" for k, v in sorted(z_lens.items()))
         sigs = ", ".join(f"{k}:{v:g} km/s" for k, v in sorted((v_disp or {}).items()))
         return MultiPlaneLensModel(

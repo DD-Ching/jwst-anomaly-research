@@ -715,3 +715,20 @@ def test_multiplane_identity_tracks_the_cosmology_and_grids_check_their_model():
         lensmodel.find_images(single, grid, 0.3, -0.2, 2.0)
     with pytest.raises(AttributeError, match="z_planes"):
         _ = a.z_lens
+
+
+def test_split_planes_delenses_a_potential_moved_behind_the_cluster():
+    # a background galaxy fitted at its observed position stays seen there: the ray through
+    # its fitted centre must cross its own plane at its new (delensed) centre
+    model = _cluster_and_galaxy()
+    multi = model.split_planes({"gal": 1.2})
+    gal = [c for c in multi.components if c.name == "gal"][0]
+    fitted = [c for c in model.components if c.name == "gal"][0]
+    assert np.hypot(gal.x - fitted.x, gal.y - fitted.y) > 0.5  # moved by the cluster
+    cl = multi.planes[0]
+    ax, ay = cl.deflection_xy(np.array([fitted.x]), np.array([fitted.y]))
+    r = float(cl.dls_ds(1.2))
+    assert np.isclose(fitted.x - r * ax[0], gal.x) and np.isclose(fitted.y - r * ay[0], gal.y)
+    front = model.split_planes({"gal": 0.2})  # nothing in front: kept where fitted
+    g2 = [c for c in front.components if c.name == "gal"][0]
+    assert (g2.x, g2.y) == (fitted.x, fitted.y)
