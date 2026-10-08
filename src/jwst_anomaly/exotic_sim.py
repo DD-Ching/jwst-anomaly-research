@@ -90,9 +90,33 @@ def critical_x(n: float) -> float:
     return n ** (1.0 / (n + 1.0))
 
 
-def demagnification_threshold(n: float) -> float:
-    """KNA13 large-n estimate 2/(n+1) of the source radius beyond which total magnification < 1."""
+def demagnification_onset_approx(n: float) -> float:
+    """KNA13's leading-order estimate 2/(n+1) of the demagnification onset.
+
+    It comes from expanding A_tot ≈ 2/(beta (n+1)) for beta < 1 and setting it to 1, so it is only
+    an approximation for large n (KNA13: 0.182 against their numerical 0.187 for n = 10). Use
+    ``demagnification_onset`` for the exact value of this model.
+    """
     return 2.0 / (n + 1.0)
+
+
+def demagnification_onset(n: float, sign: int = 1) -> float:
+    """Smallest beta (Einstein radii) at which the point-source total magnification drops below 1.
+
+    Exact for this lens model (numerical): 1.111 for n = 2, 0.643 for n = 3, 0.187 for n = 10.
+    Returns inf when the total magnification never drops below 1 (n ≤ 1, or sign = -1, whose
+    total magnification is 0 in the umbra and > 1 outside it).
+    """
+    _check(n, sign)
+    if sign == -1 or n <= 1:
+        return math.inf
+    grid = np.geomspace(1e-3, 20.0, 4000)
+    below = np.nonzero(total_magnification(grid, n, sign) < 1.0)[0]
+    if below.size == 0:
+        return math.inf
+    i = below[0]
+    lo, hi = np.array([grid[i - 1]]), np.array([grid[i]])
+    return float(_bisect(lambda b: total_magnification(b, n, sign) - 1.0, lo, hi)[0])
 
 
 def _bisect(f, lo: np.ndarray, hi: np.ndarray) -> np.ndarray:
@@ -124,7 +148,7 @@ def _roots_n1(b: np.ndarray, sign: int) -> np.ndarray:
     ok = disc >= 0
     root = np.sqrt(np.where(ok, disc, 0.0))
     x[ok, 0] = 0.5 * (b[ok] + root[ok])
-    x[ok, 1] = 0.5 * (b[ok] - root[ok])
+    x[ok, 1] = -sign / x[ok, 0]  # product of the roots is -sign; avoids cancellation at large beta
     return x
 
 
@@ -209,31 +233,54 @@ def count_ratio(
     return cumulative_counts(flux_limit / mu) / mu / cumulative_counts(flux_limit)
 
 
-def finite_source_magnification(
-    beta, rho: float, n: float = 1.0, sign: int = 1, n_rings: int = 24, n_phi: int = 48
-) -> np.ndarray:
+def _check_rho(rho: float) -> None:
+    if not rho >= 0:
+        raise ValueError("rho must be non-negative")
+
+
+def finite_source_magnification(beta, rho: float, n: float = 1.0, sign: int = 1, n_nodes: int = 48):
     """Total magnification of a uniform disk of radius ``rho`` (Einstein radii) centred at ``beta``.
 
-    Area average of the point-source magnification: Gauss-Legendre in radius (weight r dr, which
-    absorbs the 1/beta point-lens singularity) times ``n_phi`` uniform angles. It caps the caustic
-    spikes; accuracy is about 1 % except while a caustic crosses the disk.
+    The lens is axisymmetric, so the disk average reduces to a 1-D integral over the source radius
+    b of A(b) times the length of the circle of radius b inside the disk, divided by pi rho². The
+    b range is split at the disk's inner radii and at the caustic (umbra edge) of a repulsive lens;
+    each piece uses Gauss-Legendre in t with b = lo + (hi - lo)(1 - cos t)/2, which absorbs the
+    1/sqrt singularities at the caustic and the disk edges. Agrees with inverse ray shooting
+    (``tests/test_exotic_sim.py``).
     """
-    if rho <= 0:
+    _check_rho(rho)
+    if rho == 0:
         return total_magnification(beta, n, sign)
     b = np.atleast_1d(np.asarray(beta, dtype=float))
-    nodes, weights = np.polynomial.legendre.leggauss(n_rings)
-    r = 0.5 * rho * (nodes + 1.0)
-    w = np.repeat(weights * r, n_phi)
-    w = w / w.sum()
-    phi = (np.arange(n_phi) + 0.5) * 2 * np.pi / n_phi
-    dx = (r[:, None] * np.cos(phi)[None, :]).ravel()
-    dy = (r[:, None] * np.sin(phi)[None, :]).ravel()
-    bb = np.hypot(b[:, None] + dx[None, :], dy[None, :])
-    return total_magnification(bb.ravel(), n, sign).reshape(bb.shape) @ w
+    lo = np.maximum(b - rho, 0.0)
+    hi = b + rho
+    bc = caustic_beta(n) if sign == -1 else 0.0
+    cuts = np.stack([lo, np.abs(b - rho), np.full_like(b, bc), hi], axis=1)
+    cuts = np.sort(np.clip(cuts, lo[:, None], hi[:, None]), axis=1)
+    a_, b_ = cuts[:, :-1], cuts[:, 1:]  # (N, 3) sub-intervals
+    nodes, weights = np.polynomial.legendre.leggauss(n_nodes)
+    t = 0.5 * np.pi * (nodes + 1.0)
+    u = 0.5 * (1.0 - np.cos(t))
+    du = 0.25 * np.pi * np.sin(t) * weights  # d u = sin(t)/2 dt, dt = pi/2 d(node)
+    rr = a_[..., None] + (b_ - a_)[..., None] * u  # (N, 3, n_nodes)
+    w = (b_ - a_)[..., None] * du
+    bb = np.broadcast_to(b[:, None, None], rr.shape)
+    full = rr <= rho - bb  # whole circle inside the disk (source disk covers the lens)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        cosphi = (rr**2 + bb**2 - rho**2) / (2.0 * rr * bb)
+    phi = np.where(full, np.pi, np.arccos(np.clip(np.nan_to_num(cosphi, nan=1.0), -1.0, 1.0)))
+    arc = 2.0 * rr * phi
+    amp = total_magnification(np.maximum(rr, 0.0).ravel(), n, sign).reshape(rr.shape)
+    # a node rounding onto the caustic (measure zero) would give inf * 0
+    amp = np.where(np.isfinite(amp), amp, 0.0)
+    integrand = amp * arc * w
+    return np.sum(integrand, axis=(1, 2)) / (np.pi * rho**2)
 
 
 def impact_track(t, t0: float, t_e: float, u0: float) -> np.ndarray:
     """beta(t) = sqrt(u0² + ((t - t0)/t_E)²) for straight-line relative motion (Abe 2010)."""
+    if not t_e > 0:
+        raise ValueError("t_e must be positive")
     t = np.asarray(t, dtype=float)
     return np.sqrt(u0**2 + ((t - t0) / t_e) ** 2)
 
@@ -242,6 +289,7 @@ def light_curve(
     t, t0: float, t_e: float, u0: float, n: float = 1.0, sign: int = 1, rho: float = 0.0
 ) -> np.ndarray:
     """Total magnification A(t); for sign = -1, zero in the umbra and spikes at the caustic."""
+    _check_rho(rho)
     beta = impact_track(t, t0, t_e, u0)
     return finite_source_magnification(beta, rho, n, sign)
 
@@ -268,7 +316,13 @@ def inject_images(
     sx = np.atleast_1d(np.asarray(source_dx, dtype=float))
     sy = np.atleast_1d(np.asarray(source_dy, dtype=float))
     fl = np.broadcast_to(np.asarray(flux, dtype=float), sx.shape)
+    if sx.shape != sy.shape:
+        raise ValueError("source_dx and source_dy must have the same length")
     ids = np.arange(sx.size) if source_id is None else np.atleast_1d(np.asarray(source_id))
+    if ids.shape != sx.shape:
+        raise ValueError("source_id must have one entry per source")
+    if not theta_e > 0:
+        raise ValueError("theta_e must be positive")
     beta_ang = np.hypot(sx, sy)
     beta = beta_ang / theta_e
     sol = solve_images(beta, n, sign)
@@ -317,6 +371,8 @@ def inject_light_curve(
     ``flux = baseline_flux * (blend * A(t) + 1 - blend)``, where ``blend`` is the lensed fraction of
     the baseline flux (1 = unblended). Columns: ``time``, ``beta``, ``magnification``, ``flux``.
     """
+    if not 0 <= blend <= 1:
+        raise ValueError("blend must be in [0, 1]")
     t = np.atleast_1d(np.asarray(times, dtype=float))
     a = light_curve(t, t0, t_e, u0, n, sign, rho)
     out = Table(

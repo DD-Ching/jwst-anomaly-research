@@ -643,7 +643,8 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
 `src/jwst_anomaly/exotic_sim.py`; the others were checked from the abstract.
 - Wormholes and negative masses:
   - arXiv:1211.0379, Kitamura, Nakajima & Asada, PRD 87, 027501 (2013), doi:10.1103/PhysRevD.87.027501 (full
-    text): α = ε̄/bⁿ; demagnification for β > 2/(n+1); n = 10 onset at β = 0.187.
+    text): α = ε̄/bⁿ; 2/(n+1) is their leading-order, large-n estimate of the demagnification onset; n = 10
+    onset at β = 0.187 (numerical); Fig. 2c (n = 3) minimum A ≈ 0.865, read from the figure pixels.
   - arXiv:1305.5037, Izumi et al., PRD 88, 024049 (2013), doi:10.1103/PhysRevD.88.024049 (full text): λ_±, κ, γ;
     radial images for ε < 0; voids as negative convergence.
   - arXiv:1307.6637, Kitamura et al., "Microlensed image centroid motions by an exotic lens object with negative
