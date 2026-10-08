@@ -500,11 +500,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Lens models:
     - RELICS: https://archive.stsci.edu/hlsps/relics/whl0137m08/models/. Lenstool v1 maps used (accessed
       2026-10-08, sha256 in `lensmodel.WHL0137_RELICS_LENSTOOL`): x/y-arcsec-deflect, kappa, z06p2-magnif.
+    - Scofield et al. arXiv:2504.08879: maps at Zenodo 10.5281/zenodo.15110933.
   - DJA v7.5 photo-z: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/sunrise-grizli-v7.5-fix.photoz.tar.gz
     (51,231,576 B, sha256 `a99b604f7d7418271d94f4665e2e8ab2839f67edf53f28d93e0b9a02cfffc6f1`). Member
     `sunrise-grizli-v7.5-fix.eazypy.zout.fits`, sha256
     `672d4bdf31926209633c1a7feeb436bab3e5b08e847a079521820f3409f548e0`.
-    - Scofield et al. arXiv:2504.08879: maps at Zenodo 10.5281/zenodo.15110933.
   - Earendel: Welch et al. arXiv:2209.14866, "A highly magnified star at redshift 6.2".
 - **MAST stale product sizes** after the 2026-10-01 reprocessing (PR #29): `acquire` checks the Download
   service's Content-Length.

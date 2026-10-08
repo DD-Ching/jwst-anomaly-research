@@ -1056,11 +1056,12 @@ class MapLensModel(LensModel):
 
     ``alpha_x``, ``alpha_y`` are deflection maps in arcsec at D_LS/D_S = 1 along the image's pixel
     axes, on a north-up, east-left TAN grid (``wcs``; rotated grids raise
-    :class:`UnsupportedModelError`). The model frame is centred on the map's reference pixel,
-    x = West and y = North (arcsec), as for :class:`LensModel`; there, +x runs along +i and +y
-    along +j. Deflection is interpolated bilinearly; the Hessian comes from centred finite
-    differences of the maps (so κ, γ and μ are resolution-limited near critical curves).
-    Positions outside the maps give NaN. Provenance of every prediction: ``model_prediction``.
+    :class:`UnsupportedModelError`): +i runs West and +j North, as the model frame's +x and +y.
+    The model frame is centred on ``centre`` (RA, Dec; default: the map's reference pixel), with
+    x = West and y = North in arcsec as for :class:`LensModel`. Positions are mapped to pixels
+    through the WCS. Deflection is interpolated bilinearly; the Hessian comes from centred finite
+    differences in float64 (so κ, γ and μ are resolution-limited at critical curves). Positions
+    outside the maps give NaN. Provenance of every prediction: ``model_prediction``.
     """
 
     def __init__(
@@ -1072,6 +1073,7 @@ class MapLensModel(LensModel):
         cosmology: FlatLambdaCDM,
         source: str = "",
         sha256: str = "",
+        centre: tuple[float, float] | None = None,
     ) -> None:
         cd = np.asarray(wcs.pixel_scale_matrix, float) * 3600.0
         if abs(cd[0, 1]) > 1e-9 * abs(cd[0, 0]) or abs(cd[1, 0]) > 1e-9 * abs(cd[1, 1]):
@@ -1082,29 +1084,30 @@ class MapLensModel(LensModel):
             raise ValueError(f"{source}: deflection maps differ in shape")
         self.components = ()
         self.z_lens = float(z_lens)
-        ny, nx = alpha_x.shape
-        # reference point: the map's reference pixel (0-based pixel coordinates)
-        self._ref_pix = (float(wcs.wcs.crpix[0]) - 1.0, float(wcs.wcs.crpix[1]) - 1.0)
-        ra0, dec0 = (float(v) for v in wcs.pixel_to_world_values(*self._ref_pix))
-        self.ra0, self.dec0 = ra0, dec0
+        self.wcs = wcs
+        if centre is None:
+            ref = (float(wcs.wcs.crpix[0]) - 1.0, float(wcs.wcs.crpix[1]) - 1.0)
+            centre = tuple(float(v) for v in wcs.pixel_to_world_values(*ref))
+        self.ra0, self.dec0 = float(centre[0]), float(centre[1])
         self.cosmology = cosmology
         self.source = source
         self.sha256 = sha256
         self._cos0 = np.cos(np.deg2rad(self.dec0))
         self.pixel_arcsec = float(cd[1, 1])
         step = self.pixel_arcsec
-        ax = np.asarray(alpha_x, np.float32)
-        ay = np.asarray(alpha_y, np.float32)
+        ax = np.asarray(alpha_x, np.float64)
+        ay = np.asarray(alpha_y, np.float64)
         dax_dy, dax_dx = np.gradient(ax, step)
         day_dy, day_dx = np.gradient(ay, step)
         self._maps = {
-            "alpha_x": ax,
-            "alpha_y": ay,
+            "alpha_x": ax.astype(np.float32),
+            "alpha_y": ay.astype(np.float32),
             "psi_xx": dax_dx.astype(np.float32),
             "psi_yy": day_dy.astype(np.float32),
             "psi_xy": (0.5 * (dax_dy + day_dx)).astype(np.float32),
         }
-        self.shape = (ny, nx)
+        del ax, ay, dax_dy, dax_dx, day_dy, day_dx
+        self.shape = alpha_x.shape
 
     @classmethod
     def from_fits(
@@ -1114,8 +1117,10 @@ class MapLensModel(LensModel):
         z_lens: float,
         cosmology: FlatLambdaCDM,
         source: str = "",
+        centre: tuple[float, float] | None = None,
     ) -> MapLensModel:
-        """Build from two FITS deflection maps (arcsec, D_LS/D_S = 1); ``sha256`` hashes both."""
+        """Build from two FITS deflection maps (arcsec, D_LS/D_S = 1); ``sha256`` hashes both
+        files (read in chunks)."""
         import warnings
 
         from astropy.io import fits
@@ -1123,11 +1128,14 @@ class MapLensModel(LensModel):
 
         digest = hashlib.sha256()
         arrays = []
+        wcs = None
         for p in (alpha_x_path, alpha_y_path):
-            digest.update(Path(p).read_bytes())
-            with fits.open(p) as hdul:
+            with open(p, "rb") as fh:
+                while chunk := fh.read(1 << 22):
+                    digest.update(chunk)
+            with fits.open(p, memmap=True) as hdul:
                 arrays.append(np.asarray(hdul[0].data, np.float32))
-                if len(arrays) == 1:
+                if wcs is None:
                     with warnings.catch_warnings():
                         warnings.simplefilter("ignore", FITSFixedWarning)
                         wcs = WCS(hdul[0].header)
@@ -1139,15 +1147,16 @@ class MapLensModel(LensModel):
             cosmology,
             source=source or f"{alpha_x_path} + {alpha_y_path}",
             sha256=digest.hexdigest(),
+            centre=centre,
         )
 
     def _interp(self, x: np.ndarray, y: np.ndarray, keys) -> dict[str, np.ndarray]:
         from scipy.ndimage import map_coordinates
 
-        i = self._ref_pix[0] + x / self.pixel_arcsec
-        j = self._ref_pix[1] + y / self.pixel_arcsec
+        ra, dec = self.to_sky(x, y)
+        i, j = (np.asarray(v, float) for v in self.wcs.world_to_pixel_values(ra, dec))
         inside = (i >= 0) & (i <= self.shape[1] - 1) & (j >= 0) & (j <= self.shape[0] - 1)
-        coords = np.vstack([j.ravel(), i.ravel()])
+        coords = np.vstack([np.ravel(j), np.ravel(i)])
         out = {}
         for k in keys:
             v = map_coordinates(self._maps[k], coords, order=1, mode="nearest").reshape(x.shape)
@@ -1167,3 +1176,16 @@ class MapLensModel(LensModel):
         x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
         f = self._interp(x, y, ("psi_xx", "psi_yy"))
         return 0.5 * (f["psi_xx"] + f["psi_yy"])
+
+    def _meta(self) -> dict[str, Any]:
+        meta = super()._meta()
+        meta.pop("n_potentials", None)
+        meta.update(
+            source=f"deflection maps {self.source}",
+            maps={
+                "shape": list(self.shape),
+                "pixel_arcsec": self.pixel_arcsec,
+                "interpolation": "bilinear; Hessian from centred finite differences",
+            },
+        )
+        return meta

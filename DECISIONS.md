@@ -1554,8 +1554,12 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 **Decision.**
 - **`lensmodel.MapLensModel`** evaluates a lens model from two published deflection maps (arcsec, D_LS/D_S = 1).
   - The maps must be on a north-up, east-left TAN grid. Rotated grids raise `UnsupportedModelError`.
-  - Deflection is interpolated bilinearly. The Hessian comes from centred finite differences, so κ, γ and μ are
-    resolution-limited at critical curves.
+  - Model-frame positions go to pixels through the maps' WCS (TAN), not a flat offset.
+  - Deflection is interpolated bilinearly. The Hessian comes from centred finite differences in float64, so κ, γ
+    and μ are resolution-limited at critical curves.
+  - The frame origin is the map's reference pixel unless the `MODELS` entry gives a `centre`. The radial screen's
+    `--max-radius` is measured from that origin.
+  - Screens fetch only the two deflection maps; `validate` also fetches the κ and μ check maps.
   - It has the `LensModel` interface (`fields_xy`, `deflection_xy`, `kappa_xy`, `evaluate`), so `find_images`,
     `DeflectionGrid` and the exotic screens run unchanged.
   - Fields with only published maps (RELICS, HFF, UNCOVER) therefore need no Lenstool file.

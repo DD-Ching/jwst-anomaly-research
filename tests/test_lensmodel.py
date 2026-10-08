@@ -514,9 +514,8 @@ def test_map_lens_model_reproduces_the_analytic_model():
     w.wcs.crpix = [(n + 1) / 2, (n + 1) / 2]
     w.wcs.cdelt = [-pix / 3600, pix / 3600]
     jj, ii = np.mgrid[0:n, 0:n]
-    x = (ii - (n - 1) / 2) * pix  # +x = West along +i, as the class documents
-    y = (jj - (n - 1) / 2) * pix
-    ax, ay = model.deflection_xy(x, y)
+    x, y = model.to_frame(*w.pixel_to_world_values(ii, jj))  # each pixel's true sky position
+    ax, ay = model.deflection_xy(x, y)  # +x = West along +i, as the class documents
     mm = lensmodel.MapLensModel(ax, ay, w, model.z_lens, COSMO, source="synthetic maps")
     assert abs(mm.ra0 - RA0) < 1e-9 and abs(mm.dec0 - DEC0) < 1e-9
     px, py = np.array([5.3, -12.1, 20.7]), np.array([-7.4, 3.3, 15.2])
