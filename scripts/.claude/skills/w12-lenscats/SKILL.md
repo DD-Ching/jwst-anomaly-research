@@ -32,8 +32,8 @@ Results: docs/exotic_limits.md "W1/W2 in published lens catalogues".
 - A fold or cusp pair of a quad leaves the lens outside the pair circle.
 - The LS pair may be two unrelated point sources: a pair-based status counts only if the pair separation matches the
   catalogued one (`lenscats.pair_match`, 2θ_E when only θ_E is given); report how many decided systems are unchecked.
-- One lens can be listed twice > 3″ apart (MG0414+0534, B2114+022, B2319+052 in lenscat): name-match decided systems
-  before counting N.
+- One lens can be listed twice > 3″ apart (MG0414+0534, B2114+022, B2319+052 in lenscat). `dedup_same_lens` keeps one
+  decided entry per designation within 30″; a deflector at either copy explains the lens.
 - Data Lab TAP takes no table uploads or q3c: batch box ORs; split boxes at RA 0/360 and use full RA near the poles.
 - lenscat types cluster-survey entries as "galaxy", has AGEL declination and SPT position errors and rounded
   positions, and keeps rejected candidates; "no lens redshift" ≠ "no lens".
