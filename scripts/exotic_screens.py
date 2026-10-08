@@ -347,12 +347,14 @@ def spike_segments(src: Table, shapes: Table, extra_stars: Table | None = None) 
     return out
 
 
-def cmd_radial(args) -> dict:
-    model, _, _ = lc.load_model(args.model)  # a Lenstool model or published deflection maps
-    lc.apply_frame_offset(args.model, model)  # into the JWST frame (D-034, D-040)
-    shapes = lc.load_shapes(args.catalog)
-    if args.photoz:
-        lc.attach_photoz(shapes, args.photoz)
+def radial_candidates(model, shapes: Table, args, extra: Table | None = None) -> tuple[Table, dict]:
+    """The ``radial`` screen's arc selection: elongated, not spike segments, behind the lens (when a
+    photo-z says so), ``anti`` to the model's stretch and not predicted radial by the model.
+
+    ``shapes`` is a :func:`lens_consistency.load_shapes` table (with photo-z columns if attached);
+    ``args`` carries the CLI thresholds. Returns the selected arcs and the selection counts.
+    Shared by ``cmd_radial`` and ``scripts/inject_radial.py`` (D-049), so injections see the same
+    screen."""
     sel = (
         (np.asarray(shapes["ellipticity"], float) >= args.min_ellipticity)
         & (np.asarray(shapes["semimajor_px"], float) >= args.min_semimajor_px)
@@ -361,7 +363,6 @@ def cmd_radial(args) -> dict:
     src = shapes[sel]
     x, y = model.to_frame(src["ra"], src["dec"])
     src = src[np.hypot(x, y) <= args.max_radius]
-    extra = read_spike_stars(args.spike_stars) if args.spike_stars else None
     spike = spike_segments(src, shapes, extra)
     n_spike = int(spike.sum())
     src = src[~spike]
@@ -390,6 +391,25 @@ def cmd_radial(args) -> dict:
     anti["mu_radial"] = mu_r
     n_mu_nan = int(np.sum(~np.isfinite(mu_r)))
     cand = anti[np.isfinite(mu_r) & (mu_r < MAX_RADIAL_MU)]
+    counts = {
+        "n_spike_segments_dropped": n_spike,
+        "n_elongated": len(src),
+        "n_not_background_dropped": n_not_background,
+        "n_anti": len(anti),
+        "n_anti_not_model_radial": len(cand),
+        "n_mu_radial_nan": n_mu_nan,
+    }
+    return cand, counts
+
+
+def cmd_radial(args) -> dict:
+    model, _, _ = lc.load_model(args.model)  # a Lenstool model or published deflection maps
+    lc.apply_frame_offset(args.model, model)  # into the JWST frame (D-034, D-040)
+    shapes = lc.load_shapes(args.catalog)
+    if args.photoz:
+        lc.attach_photoz(shapes, args.photoz)
+    extra = read_spike_stars(args.spike_stars) if args.spike_stars else None
+    cand, sel_counts = radial_candidates(model, shapes, args, extra)
     cx, cy = model.to_frame(cand["ra"], cand["dec"])
     g = np.arange(-args.max_radius, args.max_radius + 1e-9, args.grid_arcsec)
     gx, gy = np.meshgrid(g, g)
@@ -448,12 +468,7 @@ def cmd_radial(args) -> dict:
             if extra is not None
             else None
         ),
-        "n_spike_segments_dropped": n_spike,
-        "n_elongated": len(src),
-        "n_not_background_dropped": n_not_background,
-        "n_anti": len(anti),
-        "n_anti_not_model_radial": len(cand),
-        "n_mu_radial_nan": n_mu_nan,
+        **sel_counts,
         "n_peaks": len(rows),
         "n_dark_centre_peaks": int(sum(r["dark_centre"] for r in rows)),
         "random_peaks_mean": float(np.mean(n_rand)) if n_rand else None,

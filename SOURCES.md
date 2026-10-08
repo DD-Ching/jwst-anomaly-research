@@ -696,3 +696,12 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
     064024 (2012), doi:10.1103/PhysRevD.85.064024.
   - arXiv:2608.10800, Fell & Loeb, "Radiative Signatures from Warp Drives Traveling Through the Earth's
     Atmosphere" (2026, preprint).
+
+## Injection-recovery limits (D-049)
+
+- arXiv:1807.06209, Planck Collaboration, "Planck 2018 results. VI. Cosmological parameters", A&A 641, A6 (2020),
+  doi:10.1051/0004-6361/201833910 (checked on the arXiv API 2026-10-08). Used as `astropy.cosmology.Planck18`
+  for the θ_E → |M| conversion in `scripts/inject_radial.py`, as in D-047.
+- Inputs that were already recorded: the field catalogues, photo-z and models of docs/fields/*.md (SOURCES
+  "Cluster fields", "HFF CATS lens models"); the Gaia DR3 stars from `scripts/gaia_stars.py` (D-043); and
+  Takahashi & Asada (2013) for the comparison limit ("Exotic-lens literature").
