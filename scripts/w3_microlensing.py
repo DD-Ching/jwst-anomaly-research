@@ -222,6 +222,23 @@ class LightCurve:
         self.sf = np.asarray(sf, float)
         self.w = 1.0 / self.sf**2
         self.ra, self.dec, self.event_id = ra, dec, event_id
+        self.seasons = None  # one-hot season design (with_season_offsets), else one blend flux
+        self.n_extra = 0  # linear parameters beyond fs, fb (BIC)
+
+    def with_season_offsets(self, gap_days: float = 60.0, trend: bool = False) -> LightCurve:
+        """Copy whose blend flux is free per observing season (gaps > ``gap_days`` split them),
+        plus a linear drift per season when ``trend``: the ordinary-systematics model for
+        season-to-season zero points and slow baseline (blend or source) variability."""
+        out = LightCurve(self.t, self.f, self.sf, self.ra, self.dec, self.event_id)
+        sid = np.concatenate([[0], np.cumsum(np.diff(self.t) > gap_days)])
+        onehot = (sid[None, :] == np.arange(sid.max() + 1)[:, None]).astype(float)
+        cols = [onehot]
+        if trend:
+            mid = np.array([self.t[sid == k].mean() for k in range(sid.max() + 1)])
+            cols.append(onehot * (self.t - mid[sid])[None, :] / 100.0)
+        out.seasons = np.vstack(cols)
+        out.n_extra = out.seasons.shape[0] - 1
+        return out
 
     @classmethod
     def from_mag(cls, t, mag, err, **kw):
@@ -229,9 +246,14 @@ class LightCurve:
         return cls(t, f, sf, **kw)
 
     def subset(self, keep):
-        return LightCurve(
+        out = LightCurve(
             self.t[keep], self.f[keep], self.sf[keep], self.ra, self.dec, self.event_id
         )
+        if self.seasons is not None:
+            out.seasons = self.seasons[:, keep]
+            out.seasons = out.seasons[out.seasons.sum(axis=1) > 0]
+            out.n_extra = out.seasons.shape[0] - 1
+        return out
 
 
 def _mm():
@@ -339,8 +361,16 @@ def chi2_of(model: str, lc: LightCurve, p: dict):
     a = magnification(model, lc, p)
     if not np.all(np.isfinite(a)):
         return np.inf, 0.0, 0.0
-    fs, fb, chi2 = linear_fluxes(a, lc.f, lc.w)
-    return chi2, fs, fb
+    if lc.seasons is None:
+        fs, fb, chi2 = linear_fluxes(a, lc.f, lc.w)
+        return chi2, fs, fb
+    m = np.vstack([a, lc.seasons]).T
+    sw = np.sqrt(lc.w)
+    coef, *_ = np.linalg.lstsq(m * sw[:, None], lc.f * sw, rcond=None)
+    if coef[0] < 0:
+        return np.inf, 0.0, 0.0
+    r = lc.f - m @ coef
+    return float(np.sum(r * r * lc.w)), float(coef[0]), float(np.mean(coef[1:]))
 
 
 def _objective(model, lc, t0_par):
@@ -409,7 +439,7 @@ def optimise(model, lc, starts, t0_par=None, n_best=2):
             best_x, best_v = r.x, r.fun
     p = _unpack(model, best_x, t0_par)
     chi2, fs, fb = chi2_of(model, lc, p)
-    k = N_NONLIN[model] + N_FLUX
+    k = N_NONLIN[model] + N_FLUX + lc.n_extra
     n = lc.t.size
     return {
         "model": model,
@@ -453,6 +483,37 @@ def exotic_starts(model, t0, te, u0_pspl):
                     tt = te * 10**dl
                     shift = o * tt * math.sqrt(max(bc**2 - u0**2, 0.0)) if sign == -1 else 0.0
                     out.append((t0 + shift, lt + dl, u0, lr))
+    if sign == -1:  # time scales independent of the PSPL fit (it can be far off for W3 shapes)
+        for te_abs in (1.0, 3.0, 10.0, 30.0, 100.0, 300.0):
+            for u0 in bc * np.array([0.5, 0.95, 0.99, 1.02]):
+                for lr in (-2.5, -1.2):
+                    for o in (0.0, 1.0, -1.0):  # t0 guess on either caustic spike
+                        shift = o * te_abs * math.sqrt(max(bc**2 - u0**2, 0.0))
+                        out.append((t0 + shift, math.log10(te_abs), u0, lr))
+    return out
+
+
+def spike_pair_starts(lc: LightCurve, bc: float, n_peaks: int = 5) -> list:
+    """Starts that put the two caustic spikes of a repulsive lens on pairs of light-curve maxima."""
+    k = np.convolve(lc.f, np.ones(3) / 3, mode="same")
+    peaks = []
+    for i in np.argsort(k)[::-1]:
+        if all(abs(i - j) > 3 for j in peaks):
+            peaks.append(int(i))
+        if len(peaks) == n_peaks:
+            break
+    out = []
+    for a in range(len(peaks)):
+        for b in range(a + 1, len(peaks)):
+            ta, tb = sorted((lc.t[peaks[a]], lc.t[peaks[b]]))
+            half = 0.5 * (tb - ta)
+            if half <= 0:
+                continue
+            for u0 in bc * np.array([0.3, 0.7, 0.95, 0.99]):
+                te = half / math.sqrt(bc**2 - u0**2)
+                if P.te_bounds[0] < te < P.te_bounds[1]:
+                    for lr in (-2.5, -1.2):
+                        out.append((0.5 * (ta + tb), math.log10(te), u0, lr))
     return out
 
 
@@ -493,7 +554,10 @@ def fit_event(
         res["PAR"] = optimise("PAR", lc, starts, t0_par=round(ps["t0"], 1), n_best=2)
     for m in EXOTIC:
         if m in models:
-            res[m] = optimise(m, lc, exotic_starts(m, ps["t0"], ps["tE"], ps["u0"]), n_best=2)
+            starts = exotic_starts(m, ps["t0"], ps["tE"], ps["u0"])
+            if EXOTIC[m][1] == -1:
+                starts += spike_pair_starts(lc, es.caustic_beta(EXOTIC[m][0]))
+            res[m] = optimise(m, lc, starts, n_best=3)
     if have_mm():
         for m in ("PSPL", "FSPL", "PAR"):
             if m in res:
@@ -588,6 +652,13 @@ def run_fit(sample_key: str, limit: int | None, procs: int) -> Path:
     return path
 
 
+def no_error(tab: Table) -> np.ndarray:
+    """Rows without a fit error (ECSV reads empty strings back as masked)."""
+    col = tab["error"]
+    vals = col.filled("") if hasattr(col, "filled") else col
+    return np.asarray(vals == "", bool)
+
+
 def _join_pub(tab: Table, ev: Table) -> Table:
     idx = {e: i for i, e in enumerate(ev["event_id"])}
     j = np.array([idx[e] for e in tab["event_id"]])
@@ -661,13 +732,25 @@ def published_selection(lc: LightCurve, fit: dict | None = None) -> dict:
             u0=fit["u0"] <= P.sel_u0_max,
             te=fit["tE"] <= P.sel_te_max,
             i_s=i_s <= P.sel_is_max,
-            fb=fit["fb"] > -ogle.F_MIN,
+            fb=_blend_ok(lc, fit),
             fs=fs_frac > P.sel_fs_min,
         )
         out.update(chi2_fit=float(chi_all), chi2_fit_te=float(chi_te), Is=float(i_s))
     out["passed"] = passed
     out["selected"] = all(passed.values())
     return out
+
+
+def _blend_ok(lc: LightCurve, fit: dict) -> bool:
+    """F_b > −F_min, or, at the bound, the F_b = 0 (four-parameter) model is worse by Δχ² < 9:
+    Mróz et al. 2019 then keep the four-parameter fit."""
+    if fit["fb"] > -ogle.F_MIN + 1e-9:
+        return True
+    a = pspl(straight_beta(lc.t, fit["t0"], fit["tE"], fit["u0"]))
+    fs4 = float(np.sum(lc.w * a * lc.f) / np.sum(lc.w * a * a))
+    chi4 = float(np.sum(lc.w * (lc.f - fs4 * a) ** 2))
+    chi5 = float(np.sum(lc.w * (lc.f - fit["fs"] * a - fit["fb"]) ** 2))
+    return chi4 - chi5 < 9.0
 
 
 def _runs(mask):
@@ -745,7 +828,7 @@ INJ_PER_CELL = 150
 def _pick_bases(fits: Table, n: int, seed: int) -> list[str]:
     """Events whose PSPL fit is good (χ²/dof ≤ 1.5) and whose source is bright enough to matter."""
     ok = (
-        (fits["error"] == "")
+        no_error(fits)
         & (fits["PSPL_chi2"] / fits["PSPL_dof"] <= 1.5)
         & (fits["PSPL_fs"] > 0)
         & (fits["n_points"] >= 100)
@@ -775,10 +858,28 @@ def _inject_worker(job):
             best = min(res[m]["bic"] for m in ORDINARY if m in res)
             row["dbic_N1neg"] = res["N1neg"]["bic"] - best
             row["flagged"] = row["dbic_N1neg"] < P.flag_dbic
+            row["flag_vetted"] = row["flagged"] and _survives_cheap_vetting(lc, res)
         row["error"] = ""
     except Exception as exc:  # noqa: BLE001
         row["error"] = repr(exc)[:200]
     return row
+
+
+def _survives_cheap_vetting(lc: LightCurve, res: dict) -> bool:
+    """The vetting tests that remove most real-data flags, applied to an injected W3 flag:
+    errors rescaled to χ²/dof = 1 of the best ordinary model, and per-season offset + drift."""
+    best = min((m for m in ORDINARY if m in res), key=lambda m: res[m]["bic"])
+    scale = max(res[best]["chi2"] / res[best]["dof"], 1.0)
+    d = (res["N1neg"]["chi2"] - res[best]["chi2"]) / scale + (
+        res["N1neg"]["k"] - res[best]["k"]
+    ) * math.log(lc.t.size)
+    if not d < P.flag_dbic:
+        return False
+    lct = lc.with_season_offsets(trend=True)
+    ps, rx = res["PSPL"], res["N1neg"]
+    o = optimise("PSPL", lct, [(ps["t0"], math.log10(ps["tE"]), ps["u0"])])
+    e = optimise("N1neg", lct, [(rx["t0"], math.log10(rx["tE"]), rx["u0"], math.log10(rx["rho"]))])
+    return bool(e["bic"] - o["bic"] < P.flag_dbic)
 
 
 def run_inject(procs: int, per_cell: int, seed: int = 55) -> Path:
@@ -862,7 +963,7 @@ def selection_audit(procs: int) -> dict:
     ev = sample.events()
     pub = {r["event_id"]: r for r in ev}
     jobs = []
-    for r in fits[fits["error"] == ""]:
+    for r in fits[no_error(fits)]:
         lc0 = sample.light_curve(r["event_id"])
         e = pub[r["event_id"]]
         fit = {k: float(r[f"PSPL_{k}"]) for k in ("t0", "tE", "u0", "fs", "fb")}
@@ -971,6 +1072,9 @@ def fit_binary_lens(lc: LightCurve, ps: dict, maxfev: int = 600) -> dict:
         for lq in (-3.0, -1.5, 0.0)
         for al in np.deg2rad((30.0, 90.0, 150.0, 210.0, 270.0, 330.0))
     ]
+    # near-PSPL limits (tiny or distant companion), so the fit is never worse than PSPL
+    starts += [(t0, u0, math.log10(te), -2.0, ls, -4.5, 1.0) for ls in (-0.5, 0.0, 0.5)]
+    starts += [(t0, u0, math.log10(te), -2.0, 0.9, lq, 1.0) for lq in (-2.0, -1.0)]
     vals = np.array([chi2(np.array(s)) for s in starts])
     best = None
     for i in np.argsort(vals)[:3]:
@@ -1070,10 +1174,58 @@ def _vet_worker(job):
     out["chi2_out"] = chi_out
     out["tests"].append(
         (
-            "variable_baseline",
+            "variable_baseline" if np.isfinite(chi_out) else "variable_baseline_untestable",
             not (chi_out > 2.0),
             f"baseline χ²/dof {chi_out:.2f} ({far.sum()} pts)",
         )
+    )
+    # 2b. where the exotic preference comes from: core (|t − t0| < t_E) or wings
+    ao = model_flux(best_o, lc, ordinary[best_o])
+    ae = model_flux(ex, lc, res[ex])
+    dchi = (lc.f - ae) ** 2 * lc.w - (lc.f - ao) ** 2 * lc.w
+    core = np.abs(lc.t - ps["t0"]) < ps["tE"]
+    out["dchi2_core"] = float(dchi[core].sum())
+    out["dchi2_wings"] = float(dchi[~core].sum())
+    # 2c. season-to-season baseline offsets (OGLE zero points, slow blends): refit both families
+    lcs = lc.with_season_offsets()
+    o_s = {"PSPL": optimise("PSPL", lcs, [(ps["t0"], lt, ps["u0"])])}
+    if "PAR" in ordinary:
+        r = ordinary["PAR"]
+        o_s["PAR"] = optimise(
+            "PAR",
+            lcs,
+            [(r["t0"], math.log10(r["tE"]), r["u0"], r["pi_E_N"], r["pi_E_E"])],
+            t0_par=r["t0_par"],
+        )
+    rx = res[ex]
+    e_s = optimise(ex, lcs, [(rx["t0"], math.log10(rx["tE"]), rx["u0"], math.log10(rx["rho"]))])
+    d2 = e_s["bic"] - min(r["bic"] for r in o_s.values())
+    out["tests"].append(
+        (
+            "season_offsets",
+            d2 < P.flag_dbic,
+            f"{lcs.n_extra + 1} seasons, free baseline each; ΔBIC {d2:.1f}",
+        )
+    )
+    # 2d. slow baseline drifts: free offset and linear trend per season, both families
+    lct = lc.with_season_offsets(trend=True)
+    o_t = optimise("PSPL", lct, [(ps["t0"], lt, ps["u0"])])
+    best_t = o_t["bic"]
+    if "PAR" in ordinary:
+        r = ordinary["PAR"]
+        best_t = min(
+            best_t,
+            optimise(
+                "PAR",
+                lct,
+                [(r["t0"], math.log10(r["tE"]), r["u0"], r["pi_E_N"], r["pi_E_E"])],
+                t0_par=r["t0_par"],
+            )["bic"],
+        )
+    e_t = optimise(ex, lct, [(rx["t0"], math.log10(rx["tE"]), rx["u0"], math.log10(rx["rho"]))])
+    d2t = e_t["bic"] - best_t
+    out["tests"].append(
+        ("season_trends", d2t < P.flag_dbic, f"offset + linear drift per season; ΔBIC {d2t:.1f}")
     )
     # 3. binary source (xallarap proxy)
     bs = fit_binary_source(lc, ps)
@@ -1142,7 +1294,7 @@ def variable_catalogue_matches(ra, dec, radius_arcsec: float = 1.0) -> dict[str,
 def run_vet(sample_key: str, procs: int, binary_lens: bool = True) -> Path:
     sample = ogle.OgleMrozSample(sample_key)
     fits = Table.read(out_dir() / f"fits_{sample_key}.ecsv")
-    ok = fits["error"] == ""
+    ok = no_error(fits)
     flags = fits[ok & (fits["dbic_min"] < P.flag_dbic)]
     print(f"{len(flags)} flags of {ok.sum()} fitted events")
     jobs = []
@@ -1220,10 +1372,10 @@ def contact_sheet(sample_key: str, path_png: Path) -> None:
             lc.f[sel],
             lc.sf[sel],
             fmt=".",
-            ms=2,
-            color="0.6",
+            ms=3,
+            color="0.25",
             lw=0.5,
-            zorder=1,
+            zorder=5,
         )
         tt = np.linspace(r0["t0"] - win, r0["t0"] + win, 3000)
         fine = LightCurve(tt, np.ones_like(tt), np.ones_like(tt), e["ra"], e["dec"])
@@ -1270,7 +1422,7 @@ def einstein_time_days(mass_msun, d_l_kpc=4.0, d_s_kpc=8.0, mu_mas_yr=5.0) -> np
 def run_limit(per_cell_min: int = 20) -> Path:
     sample = ogle.OgleMrozSample("bulge2019")
     inj = Table.read(out_dir() / "injections_bulge2019.ecsv")
-    inj = inj[inj["error"] == ""]
+    inj = inj[no_error(inj)]
     rows = []
     for te in INJ_TE:
         ctrl = inj[(inj["kind"] == "PSPL") & (inj["tE"] == te)]
@@ -1280,7 +1432,7 @@ def run_limit(per_cell_min: int = 20) -> Path:
         for rho in INJ_RHO:
             w = inj[(inj["kind"] == "W3") & (inj["tE"] == te) & (inj["rho"] == rho)]
             sel = np.asarray(w["selected"], bool)
-            flg = np.asarray(w["flagged"], bool)
+            flg = np.asarray(w["flag_vetted"], bool)
             p_sel = float(sel.mean())
             p_both = float((sel & flg).mean())
             p_flag = float(flg.mean())
@@ -1330,6 +1482,30 @@ def run_limit(per_cell_min: int = 20) -> Path:
     return path
 
 
+def summarise_fits(sample_key: str) -> dict:
+    """ΔBIC distribution and flag counts of a fitted sample (``derived``)."""
+    fits = Table.read(out_dir() / f"fits_{sample_key}.ecsv")
+    ok = no_error(fits)
+    out = {
+        "n_events": len(fits),
+        "n_fitted": int(ok.sum()),
+        "wall_time_s": fits.meta.get("wall_time_s"),
+    }
+    f = fits[ok]
+    out["best_ordinary"] = {m: int(np.sum(f["best_ordinary"] == m)) for m in ORDINARY}
+    for m in (*EXOTIC, "min"):
+        d = np.asarray(f[f"dbic_{m}"], float)
+        out[m] = {
+            "quantiles_5_25_50_75_95": [
+                round(float(q), 1) for q in np.nanpercentile(d, [5, 25, 50, 75, 95])
+            ],
+            "n_lt_0": int(np.sum(d < 0)),
+            "n_lt_minus10": int(np.sum(d < P.flag_dbic)),
+            "min": round(float(np.nanmin(d)), 1),
+        }
+    return out
+
+
 def write_manifest() -> Path:
     """Pinned OGLE files as a tracked manifest (URL, sha256, size, retrieval date)."""
     tab = Table(
@@ -1370,6 +1546,8 @@ def main(argv=None) -> int:
     sub.add_parser("audit", help="emulated selection on the real bulge sample")
     sub.add_parser("limit", help="95 %% rate limit from the injections")
     sub.add_parser("manifest", help="write data/manifests/ogle_mroz.ecsv")
+    m = sub.add_parser("summary", help="ΔBIC distribution of a fitted sample")
+    m.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     args = ap.parse_args(argv)
     if args.cmd == "fit":
         run_fit(args.sample, args.limit, args.procs)
@@ -1383,6 +1561,8 @@ def main(argv=None) -> int:
         print(json.dumps(selection_audit(args.procs), indent=1))
     elif args.cmd == "limit":
         run_limit()
+    elif args.cmd == "summary":
+        print(json.dumps(summarise_fits(args.sample), indent=1))
     elif args.cmd == "manifest":
         print(write_manifest())
     return 0

@@ -130,3 +130,28 @@ def test_trajectory_and_magnification_match_mulensmodel():
     q = {"t0": 2456800.0, "tE": 60.0, "u0": 0.2}
     assert np.allclose(w3.magnification("PSPL", lc, q), m.get_magnification(t), rtol=1e-12)
     assert w3.mm_crosscheck("FSPL", lc, {**q, "u0": 0.01, "rho": 0.02}) < 0.01
+
+
+def test_isolated_outliers_and_season_offsets():
+    t = np.concatenate([np.arange(0.0, 100.0), np.arange(365.0, 465.0)])
+    f = np.where(t < 200, 1.0, 1.05)  # a season-to-season zero-point jump
+    f[50] = 1.2  # one isolated outlier
+    f[150:153] = 1.2  # not isolated: three neighbours
+    lc = w3.LightCurve(t, f, np.full_like(t, 0.01))
+    bad = w3.isolated_outliers(lc, np.where(t < 200, 1.0, 1.05))
+    assert list(np.nonzero(bad)[0]) == [50]
+    lcs = lc.with_season_offsets()
+    assert lcs.n_extra == 1 and lcs.seasons.shape == (2, t.size)
+    assert lc.with_season_offsets(trend=True).n_extra == 3
+    p = {"t0": 50.0, "tE": 5.0, "u0": 1.0}
+    assert w3.chi2_of("PSPL", lcs, p)[0] < w3.chi2_of("PSPL", lc, p)[0]
+    sub = lcs.subset(t < 200)
+    assert sub.n_extra == 0 and sub.seasons.shape == (1, 100)
+
+
+def test_spike_pair_starts_bracket_the_umbra():
+    t = _cadence(n=900)
+    a = es.light_curve(t, 2456800.0, 40.0, 1.0, 1.0, -1, 0.02)
+    lc = _synthetic(t, a, sigma=0.002)
+    starts = w3.spike_pair_starts(lc, 2.0)
+    assert any(abs(s[0] - 2456800.0) < 5 and abs(10 ** s[1] - 40.0) < 15 for s in starts)
