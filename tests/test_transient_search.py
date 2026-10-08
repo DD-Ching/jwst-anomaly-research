@@ -212,10 +212,16 @@ def test_select_controls_is_reproducible_and_avoids_candidates():
         }
     )
     avoid_ra, avoid_dec = np.asarray(cat["ra"][:5]), np.asarray(cat["dec"][:5])
+    cat["ra"][5], cat["dec"][5] = avoid_ra[0] + 0.5 / 3600, avoid_dec[0]  # 0.5" from a candidate
+    cat["aper_total_abmag"][5] = 26.0
+    near = cat["ra"][5]
     a = tf.select_controls(cat, 50, (25.5, 28.0), avoid_ra, avoid_dec)
     b = tf.select_controls(cat, 50, (25.5, 28.0), avoid_ra, avoid_dec)
     assert len(a) == 50 and np.array_equal(a["ra"], b["ra"])
     assert not np.isin(np.asarray(a["ra"]), avoid_ra).any()
+    assert near not in np.asarray(
+        tf.select_controls(cat, 500, (25.5, 28.0), avoid_ra, avoid_dec)["ra"]
+    )
     picked = np.isin(np.asarray(cat["ra"]), np.asarray(a["ra"]))
     mags = np.asarray(cat["aper_total_abmag"])[picked]
     assert (mags >= 25.5).all() and (mags <= 28.0).all()

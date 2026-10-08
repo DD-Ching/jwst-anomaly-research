@@ -1371,6 +1371,10 @@ Field docs: `docs/fields/*.md`.
 - **Evidence:** Sunrise o010 against VENUS o052 gives scales 1.30 (F150W) and 1.18 (F444W), within the
   1.2–1.5 found by hand before; 0 of 57 candidates pass. Three controls change; two of them (`n0022`, `n0150`)
   are open candidates that the catalog-stage search did not list (docs/fields/sunrise.md).
+- A check run with 40 requested controls (33 measurable in F444W) gave a scale of 0.54, below the 1st percentile
+  (0.68) of 33-control subsamples of the 175-control run. The MAD of these heavy-tailed significances is
+  unstable at small n, so a band needs ≥ 100 measurable controls (`MIN_CONTROLS`, ASSUMPTION) to be calibrated.
+  Controls are selected on epoch-1 F150W magnitudes and applied to every band (a limitation for LW bands).
 - **Failed approach:** candidates only from the catalog stage. Requiring the same kind in two bands drops
   transients seen in one band of the shared pair (blue sources in F150W/F444W).
 
