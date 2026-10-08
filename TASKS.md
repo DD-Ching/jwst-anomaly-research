@@ -16,16 +16,20 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - an observational parity test (image orientation or resolved structure; not yet designed);
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
-   - exotic screens (D-031, D-034): SMACS, El Gordo and Sunrise (radial) null. Next: Abell 2744 (worker), then HFF/RELICS map fields via
-     `MapLensModel` (D-033). The six HFF CATS map models are in (D-035). Next: JWST field runs per HFF cluster, then
-     `/vet-candidate` for Abell 2744 4.2c.
+   - exotic screens (D-031, D-034, D-036): SMACS, El Gordo, Sunrise (radial) and Abell 2744 null. The six HFF CATS
+     map models are in (D-035). MACS1149 null (D-037). Next:
+     - JWST field runs per HFF cluster (radial on all six; `images` / `fluxratio` on MACS0717);
+     - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1 photo-z;
+       fix system 16's z (spectroscopic z, or forced photometry on its far-image track);
+       evaluate the CANUCS lens models (with samples) as the independent second model for the D-036/D-037 μ rule;
+     - `bayes.dat` position spreads;
+     - the UNCOVER v2.0 cross-check for Abell 2744.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;
    - **Done (D-030):** `validate --model elgordo-caminha23 | abell2744-bergamini23` reproduces Lenstool's χ²
      (82.53 vs 80.22; 146.64 vs 146.60). No image-position anomaly. Next:
-     - `lens_consistency.py images --forced-image` per field (El Gordo: F277W `jw01176-o241_t012`; Abell 2744
-       needs DJA photometry, the 233 MB catalogue, with a DECISIONS entry, because pipeline catalogs miss core arcs);
+     - `images --forced-image`: done for El Gordo (D-034) and Abell 2744 (D-036); 700.1 needs a finer z scan;
      - search radii from `bayes.dat` instead of a fixed 1″;
      - Abell 2744 multiplicity residual (D-030): do `bayes.dat` samples split 3.2a/b, 34.1a/b, 700.1a/b?
      - El Gordo magnification-map check (CDS `magnification_best_fit_z2.fits`) as a `validate` map test.
@@ -41,9 +45,11 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - El Gordo module A is a flanking field;
    - reword `acquire._warn_if_reprocessed`.
 3. **Two-epoch search** (D-027): null results for SMACS/VENUS and Sunrise o010/o120; Earendel is steady
-   (docs/fields/sunrise.md). Next:
-   - divide forced-photometry significances by the control std (1.2–1.5) before thresholding;
-   - add a third epoch: Sunrise VENUS 6882 o052 (F150W, F444W, jwst 3.0.0; forced photometry only);
+   (docs/fields/sunrise.md). Third epoch (o052, calibrated with `--controls`): 0 of 57 candidates. Next:
+   - **vet the Sunrise transient candidates** `n0022`, `n0150` (and variable `n0153`) from the third-epoch
+     controls (docs/fields/sunrise.md): per-dither `_cal` exposures, host, moving-object test;
+   - forced photometry on all catalogued sources, not only catalog-stage candidates (the two-band rule misses
+     blue transients); find why o010/o120 missed `n0022`/`n0150`;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

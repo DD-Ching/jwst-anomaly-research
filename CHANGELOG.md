@@ -2,6 +2,51 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: CANUCS DR1 photo-z for MACS1149 (D-037 addendum)
+- **Failed approach:** the worker checked only DJA, but docs/landscape.md already listed CANUCS DR1 (PSF-matched
+  EAzY photo-z for A370, MACS0416, MACS0417, MACS1149 and MACS1423). Check docs/landscape.md before reporting that a
+  field has no photo-z.
+- MACS1149 system 16.2: z_phot 2.25 (95 % 0.23–2.33). This disfavours the CATS-fitted 4.419.
+- Radial re-run with the background cut: 12 peaks against a null mean of 12.8; null. 6 of 68 matched lensed images
+  get a blended z < 0.6.
+
+## 2026-10-08: MACS1149 screens: null (D-037)
+- Worktree worker on CANUCS 1208 (8 bands) with `macs1149-cats`. The image-plane rms is 0.673″ (gate passes) and
+  the frame offset is under 0.02″.
+- 3 flags, 0 surviving: system 16 (fitted z 4.419; at z 2.5 in CATS or 3.0 in Sharon v4cor the image lands on 16.2), system 2 (CATS topology error,
+  checked against Sharon v4cor), Refsdal-host knot 1192 (next to the BCG; μ differs >2× between models).
+  `fluxratio` 0 flags; `radial` p = 0.91.
+- **Failed approach:** forced photometry with an annulus on a BCG core gives negative fluxes; use high-pass.
+- No DJA mosaic for MACS1149 (v7).
+- Wall time: about 5 min of pipeline plus about 10 min of vetting.
+- **Handoff:** `macs1149-sharon` (or the CANUCS models) in `MODELS`; the D-037 rules in `forced_check`; system 16's
+  redshift (spectroscopic z, or forced photometry on its far-image track); `images` with CANUCS photo-z.
+
+## 2026-10-08: Abell 2744 screens: null (D-036)
+- A worktree worker ran `validate`, `images --forced-image`, `fluxratio` and `radial` on Bergamini+2023b, with
+  cutouts of every flag. 15 of 16 flags were ordinary. The survivor, 4.2c, was re-run under the D-034 rules: it
+  is `no_reference` (resolved-knot references, BCG halo), not a candidate.
+- Radial: 35 peaks against a random mean of 50.4, p ≥ 0.575.
+- **Lesson:** a "252σ absent" image can come from a resolved-knot reference. D-034's compact-reference rule now
+  catches this.
+- Family 4's c images were vetted (4.1c 4–8× underluminous after BCG subtraction; 4.2c undetected). They are
+  explained by μ systematics next to member 34423 (3.9–28.7 under ±30 %; CATS 7.3). **Rule:** a μ that moves by
+  more than 2× under member perturbation is untestable.
+- **Handoff:** HFF field runs (D-035 models), `bayes.dat` position spreads, UNCOVER v2.0 cross-check.
+
+## 2026-10-08: Sunrise third epoch with calibrated significances; two open transient candidates (D-027)
+- `transient_forced.py --controls`: noise scale from ordinary sources, applied before thresholding.
+- Sunrise o010 against VENUS o052 (2.9 yr; F150W, F444W): scales 1.30/1.18; **0 of 57 catalog candidates pass**;
+  Earendel steady (Δm ≤ 0.12 mag, < 1σ).
+- Among the 200 controls, `n0022` (gone after 2022-07 in four SW bands), `n0150` (a different position in each
+  epoch) and `n0153` (+0.5–0.6 mag in both bands) change. Not vetted; ordinary explanations (supernova, moving
+  object, AGN, edge artefact) are untested. docs/fields/sunrise.md has the numbers.
+- **Failed approach:** the catalog stage plus the two-band rule misses single-pair, blue transients.
+- Follow-up #53: an empty control selection is flagged uncalibrated instead of being skipped silently.
+- **Handoff:** `/vet-candidate` for `n0022` and `n0150` (level-2 `_cal` exposures per filter: is the source in
+  every dither? Does `n0150` move within one visit?); then a grid of forced photometry (all sources, not only
+  catalog candidates) for every epoch pair.
+
 ## 2026-10-08: Six HFF clusters as CATS map models (D-035)
 - MACS0416, MACS1149, Abell 370, MACS0717, Abell S1063 and Abell 2744 (CATS v4/v4.1) are pinned map models. All six
   reproduce their published z = 2 magnification maps (median 9e-5 to 6e-3).

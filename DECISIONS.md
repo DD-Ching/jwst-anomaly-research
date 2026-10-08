@@ -1363,9 +1363,23 @@ Field docs: `docs/fields/*.md`.
 - **Failed approach:** a fixed aperture at a literature position. An offset of 0.1″ between the aperture and the
   source turns PSF-wing differences into a fake brightening, because the PSF rotates about 180° between the epochs.
 
+**Amendment (2026-10-08, calibrated significances; Sunrise third epoch).**
+- `transient_forced.py --controls <catalog>` measures a reproducible random set of ordinary sources (default
+  200, `aper_total_abmag` 25.5–28, ≥ 1″ from candidates) with the candidates. Per band, the robust std
+  (1.4826 MAD) of their significances divides the candidates' significances before thresholding, never by
+  less than 1; raw values stay in `*_sigma_raw`.
+- **Evidence:** Sunrise o010 against VENUS o052 gives scales 1.30 (F150W) and 1.18 (F444W), within the
+  1.2–1.5 found by hand before; 0 of 57 candidates pass. Three controls change; two of them (`n0022`, `n0150`)
+  are open candidates that the catalog-stage search did not list (docs/fields/sunrise.md).
+- A check run with 40 requested controls (33 measurable in F444W) gave a scale of 0.54, below the 1st percentile
+  (0.68) of 33-control subsamples of the 175-control run. The MAD of these heavy-tailed significances is
+  unstable at small n, so a band needs ≥ 100 measurable controls (`MIN_CONTROLS`, ASSUMPTION) to be calibrated.
+  Controls are selected on epoch-1 F150W magnitudes and applied to every band (a limitation for LW bands).
+- **Failed approach:** candidates only from the catalog stage. Requiring the same kind in two bands drops
+  transients seen in one band of the shared pair (blue sources in F150W/F444W).
+
 **Revisit if.**
 - More than two epochs make light curves possible.
-- Thresholds are set on calibrated significances: divide by the control std (1.2–1.5) instead of trusting ERR.
 - The search goes below catalog depth (image differencing or forced photometry on a grid).
 
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
@@ -1752,3 +1766,71 @@ them automatically. All thresholds are ASSUMPTIONs.
 **Revisit if.**
 - `params.txt` (or another source of fitted redshifts) becomes available for Abell 370, Abell S1063 and Abell 2744.
 - MACS0416 system 26 is understood.
+## D-036 Abell 2744 lens-model and exotic screens: null (2026-10-08)
+
+**Decision.** The Abell 2744 screens (Bergamini+2023b) are a null result. Every flag has an ordinary explanation
+(docs/fields/abell2744.md, 2026-10-08). The worker's single survivor of the cheap tests, 4.2c, was re-examined
+under the D-034 rules: its reference images are resolved knots, and the prediction lies on the BCG halo. It is
+untestable, not missing.
+
+**Alternatives rejected.** Reporting the forced-photometry `absent` / `confused` classes directly. Near-critical
+magnifications, the fitted-redshift system 700.1, resolved-arc references and the 1″ search made them misleading.
+D-034's rules now remove these automatically.
+
+**Evidence.**
+- `validate`: χ² 146.64 against 146.60.
+- `images`, after D-034: absent only for 700.1, which the model reproduces at none of the sampled z = 1, 1.5, 2, 3, 5 (a finer z scan is open).
+- `fluxratio`: 30 consistent, 0 under- or overluminous, 3 chromatic (a 602.1 blend).
+- `radial`: 35 peaks against a random mean of 50.4; p ≥ 0.575.
+- Cutouts were inspected for every flag.
+- Tally: 176 predicted images, 149 flux-ratio images and 35 radial peaks screened; 16 flags; **0 surviving**.
+- Family 4's c images (4.1c underluminous 4–8× after BCG subtraction; 4.2c undetected) were vetted
+  (docs/candidates/abell2744-family4-c.md). They are explained by μ(4.1c) systematics next to member 34423:
+  ±30 % changes give 3.9–28.7, and CATS v4.1 gives 7.3.
+- **Rule:** an under- or overluminous image whose μ moves by more than 2× under ±30 % changes of the nearest member
+  potential, or under an independent model, is untestable.
+
+**Revisit if.**
+- `bayes.dat` position spreads do not cover 34.1 / 700.1.
+- An independent model (UNCOVER v2.0, or the CATS v4.1 maps of D-035) predicts a bright image where none is seen.
+
+## D-037 MACS1149 screens: null; repeated-pair, fitted-redshift and model-dependent-μ rules (2026-10-08)
+
+**Decision.** The MACS1149 screens (`macs1149-cats`, CANUCS program 1208 `jw01208-o008_t004`) are a null result
+(docs/fields/macs1149.md). There were 3 forced-photometry flags. Two are ordinary model errors: system 16 (fitted
+redshift / pair topology) and system 2 (topology). One is untestable: knot 1192 (model-dependent μ). New rules
+(ASSUMPTION: thresholds):
+- **Repeated pair.** An extra predicted image is untestable (`model_topology`) when its system's catalogued images
+  share one predicted image (`validate`'s `shared_match_images`) and the image lies within 8″ of that pair. MACS1149
+  system 16's flagged image is 7.2″ from 16.1 and 6.9″ from 16.2.
+- **Fitted redshift.** The same applies when the system's redshift is model-fitted (`z_m_limit`, or no spectroscopic
+  z in `arcs.txt`) and a redshift change within ±50 % moves the image onto a catalogued one. For system 16, CATS needs
+  z 4.419 → 2.5 (−43 %) and Sharon v4cor needs → 3.0 (−32 %).
+- **Model-dependent μ.** D-036's μ-stability rule is extended from flux-ratio flags to forced-photometry flags: a
+  `confused` or `absent` image whose μ differs by more than 2× between independent models is untestable.
+- **BCG annuli.** Where a forced-photometry background annulus crosses a BCG core, the flux goes negative. Use
+  high-pass photometry there (0.6″ median filter).
+
+**Alternatives rejected.** Treating system 16's third image as missing: the predicted image exists only at the
+CATS-fitted z = 4.419.
+
+**Evidence.**
+- `validate`: κ median relative difference 3.3e-3; μ(z=2) 5.6e-4; image-plane rms 0.673″ over 145 images (the D-035
+  gate passes). The frame offset is under 0.02″, so `MODELS["macs1149-cats"]` has no `frame_offset_arcsec`.
+- `images`: 159 predicted, 16 forced-tested (F277W). `fluxratio`: 19 consistent, 106 resolved, 0 under- or
+  overluminous. `radial`: 98 anti arcs; 32 peaks against a null mean of 30.8 (p95 41); p = 0.91. With CANUCS DR1 photo-z (134
+  non-background sources dropped, including some blended lensed images): 62 anti arcs, 12 peaks against 12.8 (p95
+  20), max 3 lines; null.
+- System 16 (μ 15.8; empty sky at −0.4σ after high-pass): at z = 2.5 (CATS) or 3.0 (Sharon v4cor), both models move
+  the image onto 16.2, so 16.1 and 16.2 become a merging pair. CANUCS DR1 photo-z for 16.2: z 2.25 (95 % 0.23–2.33; upper bound
+  2.67 with the 0.1 × (1 + z) margin). This disfavours the fitted 4.419. In CATS the pair is close to merging at z
+  2.0–2.5. (derived) The far image (μ ≈ 4, `recovered` at 0.95″ but 0σ at
+  the fixed position) moves 3–5.5″ between z = 2.5 and 3.0, so it is untestable too.
+- System 2: CATS merges 2.2 and 2.3; Sharon places the critical curve between them.
+- Knot 1192 (SN Refsdal host) is 1.1″ from the BCG. CATS gives μ 7.5; Sharon gives 2.2 at its image 0.56″ away.
+- Tally: 159 predicted images, 145 flux-ratio images and 98 anti arcs screened; 3 flags; **0 surviving**.
+
+**Revisit if.**
+- A spectroscopic z for system 16 is published (search the MUSE catalogues of Grillo+2016 and Treu+2016), or a source
+  with 16.1's colour is found on the far-image track (z = 2.5–3.5 positions). Either would fix z.
+- `images` is re-run with CANUCS DR1 photo-z (counterpart redshifts). DJA v7 has no MACS1149 mosaic.
