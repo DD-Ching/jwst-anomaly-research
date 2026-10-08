@@ -68,7 +68,7 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
   - **Result: inconclusive; no candidate.**
 - **Frame:** DJA v7.0 sits at dRA +0.224″, dDec −0.016″ (median) relative to the RELICS/HST frame of the image list.
 - **Flux ratios and colours (D-032):** `lens_consistency.py --model elgordo-caminha23 fluxratios --photometry
-  <DJA v7.0 fix_phot> --photoz <DJA v7.0 zout> --offset-arcsec 0.221,-0.018`.
+  <DJA v7.0 fix_phot> --photoz <DJA v7.0 zout> --offset-arcsec 0.221 -0.018`.
   - 37 of 56 images have a DJA counterpart. 23 images in 11 systems are flux-tested (leave-one-out rms 0.49 mag)
     and 11 are colour-tested (rms 0.07 mag).
   - The flagged pair 18b/18c (1.16 mag) is a faint-counterpart failure: 18b has forced S/N 0.3–4. So is 7b/7c,

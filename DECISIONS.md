@@ -1614,6 +1614,12 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 - `mag_auto` of faint sources (> 25.5 mag) next to bright neighbours is unreliable.
 - The 0.5″ aperture colours are not PSF-matched here (the F444W PSF is wider), which may add about 0.1 mag of
   scatter between differently stretched images.
+- Only each system's worst image is flagged, so a second discrepant image in a system of four would stay
+  `consistent` (none of the tested systems has more than three usable images).
+- `_loo_residual` duplicates the sibling reference of D-031's `luminosity_ratios`, with a different reference
+  error (median/√n against 1.25 × mean/√n). Merge them into one helper when either changes.
+- The S/N cuts invert each catalogue's own error definition: Pogson for SEP `magerr_auto`, and
+  `snr_from_mag_err` for `load_dja_catalog`'s 2.5 log10(1 + 1/SNR).
 
 **Revisit if.**
 - A photometry with totals for arcs near cluster galaxies becomes available (BCG/ICL-subtracted; e.g. the DJA

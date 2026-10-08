@@ -961,7 +961,8 @@ def load_dja_photometry(
     if missing:
         raise SystemExit(f"error: {path} has no {missing}")
     out["magerr_auto"] = np.asarray(np.ma.filled(raw["magerr_auto"], np.nan), float)
-    out["npix"] = np.asarray(np.ma.filled(raw["npix"], 0), int)
+    # Unknown segment size counts as too large (unusable), not as a clean compact source.
+    out["npix"] = np.asarray(np.ma.filled(raw["npix"], np.iinfo(np.int32).max), int)
     out.rename_column("id", "dja_id")
     if zout is not None:
         z = Table.read(zout)
@@ -1143,9 +1144,7 @@ def cmd_fluxratios(args) -> dict:
     if len(colour) != 2:
         raise SystemExit("--colour takes two bands, e.g. f150w,f444w")
     phot = load_dja_photometry(args.photometry, list(colour), args.aperture, args.photoz)
-    offset = tuple(float(v) for v in args.offset_arcsec.split(","))
-    if len(offset) != 2:
-        raise SystemExit("--offset-arcsec takes dRA,dDec, e.g. 0.221,-0.018")
+    offset = tuple(args.offset_arcsec)
     table = flux_ratio_table(
         model,
         images,
@@ -1238,7 +1237,12 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--aperture", type=int, default=1, help="DJA aperture index (1 = 0.5 arcsec)")
     f.add_argument("--match-arcsec", type=float, default=0.3)
     f.add_argument(
-        "--offset-arcsec", default="0,0", help="photometry frame minus image list: dRA,dDec"
+        "--offset-arcsec",
+        nargs=2,
+        type=float,
+        default=(0.0, 0.0),
+        metavar=("DRA", "DDEC"),
+        help="photometry frame minus image list, arcsec (El Gordo: 0.221 -0.018)",
     )
     f.add_argument("--min-snr", type=float, default=10.0)
     f.add_argument("--max-abs-mu", type=float, default=20.0)
