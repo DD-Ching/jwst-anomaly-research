@@ -719,3 +719,81 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
     064024 (2012), doi:10.1103/PhysRevD.85.064024.
   - arXiv:2608.10800, Fell & Loeb, "Radiative Signatures from Warp Drives Traveling Through the Earth's
     Atmosphere" (2026, preprint).
+
+## Injection-recovery limits (D-049)
+
+- arXiv:1807.06209, Planck Collaboration, "Planck 2018 results. VI. Cosmological parameters", A&A 641, A6 (2020),
+  doi:10.1051/0004-6361/201833910 (checked on the arXiv API 2026-10-08). Used as `astropy.cosmology.Planck18`
+  for the θ_E → |M| conversion in `scripts/inject_radial.py`, as in D-047.
+- Inputs that were already recorded: the field catalogues, photo-z and models of docs/fields/*.md (SOURCES
+  "Cluster fields", "HFF CATS lens models"); the Gaia DR3 stars from `scripts/gaia_stars.py` (D-043); and
+  Takahashi & Asada (2013) for the comparison limit ("Exotic-lens literature").
+
+## W1 shear screen (D-050, checked 2026-10-08)
+- **TreeCorr** 5.1.4 (2026-09-01, BSD-3-Clause): https://rmjarvis.github.io/TreeCorr/_build/html/ng.html. Evaluated,
+  not used.
+- **lenspack** 1.0.0 (2020-09-04, MIT): https://github.com/CosmoStat/lenspack. Evaluated, not used.
+- **Schneider 1996**, "Detection of (dark) matter concentrations via weak gravitational lensing", MNRAS 283, 837,
+  doi:10.1093/mnras/283.3.837, https://arxiv.org/abs/astro-ph/9601039. Catalogue aperture-mass estimator.
+- **Schirmer et al. 2007**, "GaBoDS IX. A sample of 158 shear-selected mass concentration candidates", A&A 462, 875,
+  doi:10.1051/0004-6361:20065955, https://arxiv.org/abs/astro-ph/0607022. Shear-shaped filter (formula still to be
+  read from the full text).
+
+## Deep-field orphan-pair screen (accessed 2026-10-08; D-051)
+
+- A. L. Read, "Presentation of search results: the CLs technique", J. Phys. G 28, 2693 (2002),
+  doi:10.1088/0954-3899/28/10/313 (checked on Crossref 2026-10-08): the background-aware limit in
+  `scripts/inject_pairs.py` (`poisson_signal_ul`).
+
+Pinned by URL and sha256 in `scripts/orphan_pairs.py` (`DEEP_FIELDS`); downloaded with `photometry.fetch_catalog`.
+- **CANUCS DR1 NIRCam flanking-field (NCF) photometry + EAzY photo-z**, same format and readme as the cluster
+  catalogues (https://archive.stsci.edu/hlsps/canucs/dr1/webpage/hlsp_canucs_jwst-hst_multi_v1_photometry-cat_readme.txt,
+  sha256 `978413b1052cfc6f951599e468f4083aa11efb4b19528c39a9ebcb46c486511b`). All Last-Modified 2025-04-29.
+  URL pattern `https://archive.stsci.edu/hlsps/canucs/dr1/<c>/ncf/hlsp_canucs_jwst-hst_multi_<c>-ncf_multi_v1_photometry-cat.fits.gz`:
+  - `macs0416`: 38,095,398 B, sha256 `72a2c609015f830af4ca05bcd49c7754723c0a55434176f780508bfe62a5afe3`, 10,804 rows;
+  - `macs1149`: 37,393,732 B, sha256 `f83510e39332657bf149a08d8060b8dd63a9bb9b839ca5d157714c88ea273ceb`, 11,657 rows;
+  - `a370`: 37,054,880 B, sha256 `b35c6eed37ae964d7f996a563dca5794ccfa8ccb0e8b364800fc04b54aa3039f`, 10,267 rows;
+  - `macs0417`: 23,683,659 B, sha256 `f82940179ebf63ddf2ec872e7a0297f2fce1785faa0de83ee43b401e96acc49d`, 11,027 rows
+    (no F356W);
+  - `macs1423`: 23,191,315 B, sha256 `b4881e0ea7fc4dd11fbad76afa73a3ca56f0848d0f85384f59646070c9b7b63b`, 10,412 rows
+    (no F356W).
+  - Cite Sarrouh, Asada et al. 2025 (named in the readme as the catalogue paper; arXiv id not checked here).
+- **DJA v7.3 GOODS-North** (grizli; same DJA terms and citation as the other DJA catalogues, arXiv:2302.10936):
+  - catalogue https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/gdn-grizli-v7.3-fix_phot.fits, Last-Modified
+    2024-02-19, 223,813,440 B, sha256 `9b18b41731c3a86085cb9c4fdb7a4c9f15c5477431f4eea904d410a1f173b6c1`, 70,421 rows;
+    apertures `ASEC_0..2` = 0.36, 0.5, 0.7″ on 0.04″ pixels; per-band images not PSF-matched (SW bands on 0.02″
+    pixels, header `<BAND>_aper_0` = 18 px);
+  - photo-z tarball https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/gdn-grizli-v7.3-fix.photoz.tar.gz,
+    Last-Modified 2024-02-19, 371,072,778 B, sha256 `1d89eef3f613eeb7d592ecf03d94869dfd76110c8208eb728291592ddca8db82`;
+    only the member `gdn-grizli-v7.3-fix.eazypy.zout.fits` is kept (67,645,440 B, sha256
+    `363176053431708410d4957a77e56826f5ced3d6ed072722aeccc9a2edde48fc`, 70,421 rows aligned with the catalogue ids;
+    eazy-py `0.6.8.dev0+gf3eee26.d20230928`, templates `templates/sfhz/agn_blue_sfhz_13.param`, `PRIOR` False);
+  - **do not use** the standalone https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/gdn-grizli-v7.3-fix.eazypy.zout.fits
+    (Last-Modified 2024-02-08, 60,586,560 B, sha256 `3cc7a92465ed76503b1f29c621074162c446c1eb46d8d1c58583ed75a6727c56`):
+    63,069 rows from an earlier catalogue; its ids point at other positions (median offset 137″).
+  - Other DJA v7 deep-field catalogues checked (HEAD, 2026-10-08), all > 200 MB with ≥ 350 MB photo-z tarballs:
+    `gds-grizli-v7.2` 248.3 MB (+352.8 MB), `ceers-full-grizli-v7.4` 250.5 MB (+396.8 MB), `primer-uds-north-grizli-v7.2`
+    270.1 MB (+393.0 MB), `primer-cosmos-east-grizli-v7.4` 269.0 MB (+407.9 MB). The gds, ceers and primer-uds-north tarballs
+    (first 300 kB read) and the GOODS-N one start with a 112–138 MB `eazypy.h5`; in the GOODS-N tarball the zout is the fifth member.
+- **Cutouts**: MAST level-3 `_i2d` F150W/F277W/F444W read by S3 byte range. CANUCS NCF observations of program 1208:
+  o023_t002 (MACS0416), o029_t004 (MACS1149), o020_t001 (Abell 370), o026_t003 (MACS0417), o032_t005 (MACS1423);
+  GOODS-N: JADES program 1181 (the observation whose MAST footprint contains the pair).
+
+## Multi-epoch NIRCam fields (accessed 2026-10-08; D-052)
+
+Survey: one MAST `Observations.query_criteria` per field (`instrument_name=NIRCAM/IMAGE`, `calib_level=3`,
+PUBLIC; cones of 3′ around MACS0416, El Gordo and Abell 2744; `proposal_id` 5105 for NEXUS and 1180/1210/1286/3215
+for JADES). Programs, PIs and titles are MAST metadata. The epochs used, with MAST `t_min`, are in
+`configs/dimming_screen.yaml`; catalogue sha256 and sizes in `data/manifests/dimming_<field>.ecsv`, level-3 products
+with S3 URIs (never downloaded `_i2d.fits`) in `data/manifests/dimming_<field>_products.ecsv`. All catalogues are
+jwst 3.0.0 / photutils 3.0.0 (file headers).
+- **JWST 5105**, "NEXUS: the North ecliptic pole EXtragalactic Unified Survey", PI Shen: `jw05105-o001/o002/o014/
+  o004/o006/o008/o010/o012_t001` (F200W, F444W), 2024-09-12 to 2026-03-28.
+- **JWST 1176** (PEARLS, PI Windhorst) `jw01176-o211/o212/o213_t009` and **JWST 1208** (CANUCS, PI Willott)
+  `jw01208-o004_t002`, MACS0416, 2022-10-07 to 2023-02-10; **JWST 6882** (VENUS, PI Fujimoto) `jw06882-o054_t054`
+  F444W, 2026-01-10.
+- **JWST 2561** (UNCOVER, PI Labbé) `jw02561-o001_t003`, `o002_t001`, `o006_t007`, Abell 2744, 2022-11-02 to
+  2024-07-31.
+- Not used: El Gordo (only 1176 o241 in 2022 and 6882 o051 F444W in 2026: one shared band); JADES (many programs
+  and pointings; left for later, TASKS follow-up).
+- Gaia DR3 (VizieR I/355/gaiadr3), one 6′ cone per field (`transient_combine.fetch_gaia`), for the star mask.

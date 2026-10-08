@@ -5,11 +5,23 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 
 ## Now (owner focus 2026-10-08: wormhole / negative-mass and warp signatures only; D-047)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
-   - W1 through `exotic_screens.py radial` on the screened fields: recovery vs θ_E (0.3″, 1″, 3″) → upper limit on
-     negative-mass lenses per deg²;
-   - W2 through `orphan_pairs.py` (D-048), and the dark-lens search extended to non-cluster deep fields;
-   - W3: a dimming / vanished-source class for multi-epoch fields (El Gordo, MACS0416 flashlights, NEXUS, JADES);
-     ≥ 3 epochs for the spike-dip-spike shape; leave the Sunrise transient track to its owner run;
+   - W1: `radial` is blind below about 10¹² M☉ (D-049; limits only from 2 × 10¹² M☉, θ_E(z_s = 2) ≳ 2″). Next: a W1-specific screen (collinear radial
+     image pairs flanking an empty centre, orientation against the candidate centre, local null), benchmarked with
+     `scripts/inject_radial.py`. Design settled in D-050: a sign-flipped catalogue aperture-mass map (Schneider
+     1996 estimator, Schirmer+07 filter) on cluster-shear-corrected shapes, rotation null; build in
+     `exotic_screens.py`, benchmark against `radial`; expect gains mainly at θ_E ≥ 2–3″; then pixel-level injections; other lens redshifts → volume density vs Takahashi &
+     Asada; photo-z for Abell S1063 (DJA v7.5, 75 MB) and MACS0717 to bring both back into the W1 limits (D-049
+     excludes them: without photo-z their members are painted as images);
+   - W2 / dark deflectors (D-048 clusters, D-051 deep fields: null, limits): a companion-aware null to explain the
+     flanking-field orphan excess (P = 0.01) before any orphan is read as other than chance; first make null (e)'s colour cell symmetric in
+     the pair and give NaN colour its own cell (`orphan_pairs.pair_cells` uses member i's colour; NaN lands in the
+     0–0.3 bin), then re-run P; segmentation-map
+     adjacency for the same-galaxy and visible-lens rules (the main efficiency losses); pixel-level injections;
+     optionally CEERS / GOODS-S / PRIMER (~600 MB each);
+   - W3 (D-052, null; headline limits from MACS0416 only): re-run `forced` for all three fields when S3 cutout jobs
+     work, ≥ 300 multi-epoch controls so NEXUS and Abell 2744 become calibrated; replace the single-epoch veto for
+     vanish flags with the D-039 persistence test (restores full-vanish sensitivity); add JADES and new NEXUS epochs;
+     SN/TNS check for any survivor; leave the Sunrise transient track to its owner run;
    - W5: counts N(>S) around `radial` centres.
 2. W3 inside caustic-crossing arcs needs a microlens with macro shear (Chang-Refsdal-type; reuse-check first).
 3. Warp: recheck only when a paper gives an electromagnetic prediction for a distant observer.

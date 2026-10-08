@@ -150,3 +150,137 @@ def test_summary_is_strict_json():
     raw["d"] = np.ma.masked
     text = json.dumps(op._finite(raw), allow_nan=False)
     assert json.loads(text) == {"a": None, "b": [None, 1.0], "c": [None, 2.0], "d": None}
+
+
+# ------------------------------------------------------------------- column abstraction (D-051)
+
+
+def dja_from_canucs(cat: Table) -> tuple[Table, Table]:
+    """The same synthetic catalogue in DJA grizli layout (uJy apertures) plus its zout."""
+    import astropy.units as u
+
+    n = len(cat)
+    d = Table({"id": np.asarray(cat["SOURCE"]), "ra": cat["RA"], "dec": cat["DEC"]})
+    d["x"], d["y"] = cat["X"], cat["Y"]
+    for a, b in (("xmin", "X_MIN"), ("xmax", "X_MAX"), ("ymin", "Y_MIN"), ("ymax", "Y_MAX")):
+        d[a] = cat[b]
+    # half-light radius (px) that gives the CANUCS Kron aperture radius under DJA_KRON_PER_R50
+    d["flux_radius"] = op.aperture_radius(cat) / (op.DJA_KRON_PER_R50 * 0.04)
+    d["area_iso"], d["theta_image"] = cat["AREA_ISO"], np.deg2rad(cat["PA"])
+    d["flag"] = np.where(cat["FLAG_DEBLEND"], 1, 0)
+    d["flag_aper_0"] = np.zeros(n, int)
+    for b in BANDS:
+        lo = b.lower()
+        d[f"{lo}_flux_aper_0"] = np.asarray(cat[f"FLUX_COLOR03_TOTAL_{b}"]) / 1000.0 * u.uJy
+        d[f"{lo}_fluxerr_aper_0"] = np.asarray(cat[f"FLUXERR_COLOR03_TOTAL_{b}"]) / 1000.0 * u.uJy
+        d[f"{lo}_flag_aper_0"] = np.zeros(n, int)
+    # a MIRI band and a "u" duplicate: both must be left out of the SED
+    for extra in ("f770w", "f444wu"):
+        d[f"{extra}_flux_aper_0"] = np.ones(n) * u.uJy
+        d[f"{extra}_fluxerr_aper_0"] = np.ones(n) * u.uJy
+    d.meta.update(ASEC_0=0.36, APER_0=9.0, KRONFACT=2.5)
+    z = Table({"id": np.asarray(cat["SOURCE"])})
+    z["z_spec"], z["z_ml"] = np.asarray(cat["Z_SPEC"]), np.asarray(cat["Z_ML"])
+    for a, b in (("z025", "Z025"), ("z160", "Z160"), ("z840", "Z840")):
+        z[a] = np.asarray(cat[b])
+    return d, z
+
+
+def test_canucs_and_dja_layouts_give_the_same_standard_table_and_pairs():
+    cat, ids = synthetic_catalogue()
+    std_c = op.canucs_standard(cat)
+    std_d = op.dja_standard(*dja_from_canucs(cat))
+    assert std_c.meta["bands"] == std_d.meta["bands"] == list(BANDS)
+    for col in ("flux", "err", "ra", "dec", "z_low", "z16", "z84", "ap_radius", "pa_deg"):
+        assert np.allclose(std_c[col], std_d[col], equal_nan=True), col
+    assert np.array_equal(std_c["deblend"], std_d["deblend"])
+    images = Table({"image_id": [], "ra": [], "dec": []}, dtype=[str, float, float])
+    pc, _ = op.search(std_c, Z_CLUSTER, images, n_shift=2)
+    pd, _ = op.search(std_d, Z_CLUSTER, images, n_shift=2)
+    assert list(pc["id_a"]) == list(pd["id_a"])
+    assert list(pc["pair_class"]) == list(pd["pair_class"])
+    # as_standard is idempotent and the raw CANUCS table converts implicitly
+    assert op.as_standard(std_c) is std_c
+    assert np.array_equal(op.select_sources(cat, Z_CLUSTER), op.select_sources(std_c, Z_CLUSTER))
+
+
+def test_dja_flags_invalidate_a_band_and_misaligned_zout_is_refused():
+    import pytest
+
+    cat, _ = synthetic_catalogue()
+    d, z = dja_from_canucs(cat)
+    d["f444w_flag_aper_0"][0] = 0x10  # APER_TRUNC
+    std = op.dja_standard(d, z)
+    assert np.isnan(std["flux"][0, BANDS.index("F444W")])
+    with pytest.raises(ValueError, match="row-aligned"):
+        op.dja_standard(d, z[::-1])
+
+
+def test_snr_bands_fall_back_when_f356w_is_missing():
+    cat, ids = synthetic_catalogue()
+    cat.remove_columns(["FLUX_COLOR03_TOTAL_F356W", "FLUXERR_COLOR03_TOTAL_F356W"])
+    assert op.snr_bands_of(cat) == ["F277W", "F444W"]
+    k = int(np.flatnonzero(cat["SOURCE"] == ids["injected"][0])[0])
+    assert op.select_sources(cat, Z_CLUSTER)[k]
+
+
+def test_deep_field_lens_check_needs_no_model():
+    cat, _ = synthetic_catalogue()
+    images = Table({"image_id": [], "ra": [], "dec": []}, dtype=[str, float, float])
+    pairs, summary = op.search(cat, op.Z_LENS_REF, images, n_shift=1)
+    top = op.lens_check(op.rank_orphans(pairs), None, op.Z_LENS_REF)
+    assert len(top) and not np.any(top["cluster_explains"])
+    assert all(c in top.meta["hypothesis_columns"] for c in ("mass_e_msun", "sis_sigma"))
+    for key in ("null_d_near_zmatched", "null_e_conditioned", "zoverlap_match_fraction_by_sep"):
+        assert key in summary
+
+
+def test_fetch_tar_member_streams_and_verifies(tmp_path):
+    import hashlib
+    import io
+    import tarfile
+
+    import pytest
+
+    payload = b"zout bytes" * 100
+    arch = tmp_path / "a.tar.gz"
+    with tarfile.open(arch, "w:gz") as tar:
+        for name, data in (("big.h5", b"x" * 5000), ("cat.zout.fits", payload)):
+            info = tarfile.TarInfo(name)
+            info.size = len(data)
+            tar.addfile(info, io.BytesIO(data))
+    spec = {
+        "url": arch.as_uri(),
+        "sha256": hashlib.sha256(arch.read_bytes()).hexdigest(),
+        "member": "cat.zout.fits",
+        "member_sha256": hashlib.sha256(payload).hexdigest(),
+        "max_bytes": 10**6,
+    }
+    out = op.fetch_tar_member(spec, cache_dir=tmp_path / "cache")
+    assert out.read_bytes() == payload
+    assert op.fetch_tar_member(spec, cache_dir=tmp_path / "cache") == out  # cached
+    bad = dict(spec, sha256="0" * 64)
+    with pytest.raises(ValueError, match="archive sha256"):
+        op.fetch_tar_member(bad, cache_dir=tmp_path / "cache2")
+    assert not list((tmp_path / "cache2").glob("*"))  # nothing kept on failure
+
+
+def test_in_region_handles_polygons():
+    poly = "POLYGON 10.0 -1.0 10.1 -1.0 10.1 -0.9 10.0 -0.9"
+    assert op._in_region(poly, 10.05, -0.95)
+    assert not op._in_region(poly, 10.2, -0.95)
+    assert op._in_region("POLYGON 359.95 0.0 0.05 0.0 0.05 0.1 359.95 0.1", 0.0, 0.05)
+
+
+def test_footprint_covers_the_sources_and_excludes_empty_sky():
+    cat, _ = synthetic_catalogue()
+    gx, gy, area, _ = op.searched_footprint(cat)
+    assert 0 < area < 300.0 * 300.0  # sources span ~300" x 300" but sparsely
+    assert len(gx) == int(area)
+
+
+def test_in_region_accepts_a_frame_token():
+    sq = "10.0 -1.0 10.0 1.0 12.0 1.0 12.0 -1.0"
+    assert op._in_region(f"POLYGON {sq}", 11.0, 0.0)
+    assert op._in_region(f"POLYGON ICRS {sq}", 11.0, 0.0)
+    assert not op._in_region(f"POLYGON ICRS {sq}", 13.0, 0.0)

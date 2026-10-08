@@ -347,12 +347,14 @@ def spike_segments(src: Table, shapes: Table, extra_stars: Table | None = None) 
     return out
 
 
-def cmd_radial(args) -> dict:
-    model, _, _ = lc.load_model(args.model)  # a Lenstool model or published deflection maps
-    lc.apply_frame_offset(args.model, model)  # into the JWST frame (D-034, D-040)
-    shapes = lc.load_shapes(args.catalog)
-    if args.photoz:
-        lc.attach_photoz(shapes, args.photoz)
+def radial_candidates(model, shapes: Table, args, extra: Table | None = None) -> tuple[Table, dict]:
+    """The ``radial`` screen's arc selection: elongated, not spike segments, behind the lens (when a
+    photo-z says so), ``anti`` to the model's stretch and not predicted radial by the model.
+
+    ``shapes`` is a :func:`lens_consistency.load_shapes` table (with photo-z columns if attached);
+    ``args`` carries the CLI thresholds. Returns the selected arcs and the selection counts.
+    Shared by ``cmd_radial`` and ``scripts/inject_radial.py`` (D-049), so injections see the same
+    screen."""
     sel = (
         (np.asarray(shapes["ellipticity"], float) >= args.min_ellipticity)
         & (np.asarray(shapes["semimajor_px"], float) >= args.min_semimajor_px)
@@ -361,7 +363,6 @@ def cmd_radial(args) -> dict:
     src = shapes[sel]
     x, y = model.to_frame(src["ra"], src["dec"])
     src = src[np.hypot(x, y) <= args.max_radius]
-    extra = read_spike_stars(args.spike_stars) if args.spike_stars else None
     spike = spike_segments(src, shapes, extra)
     n_spike = int(spike.sum())
     src = src[~spike]
@@ -390,9 +391,62 @@ def cmd_radial(args) -> dict:
     anti["mu_radial"] = mu_r
     n_mu_nan = int(np.sum(~np.isfinite(mu_r)))
     cand = anti[np.isfinite(mu_r) & (mu_r < MAX_RADIAL_MU)]
+    counts = {
+        "n_spike_segments_dropped": n_spike,
+        "n_elongated": len(src),
+        "n_not_background_dropped": n_not_background,
+        "n_anti": len(anti),
+        "n_anti_not_model_radial": len(cand),
+        "n_mu_radial_nan": n_mu_nan,
+    }
+    return cand, counts
+
+
+def radial_grid(max_radius: float, step: float) -> tuple[np.ndarray, np.ndarray]:
+    """The screen's search grid (model frame, arcsec): a square of half-width ``max_radius``."""
+    g = np.arange(-max_radius, max_radius + 1e-9, step)
+    return np.meshgrid(g, g)
+
+
+def anti_window_draw(pa_pred, rng) -> np.ndarray:
+    """One null draw: each arc keeps its selection (anti, i.e. >= 60 deg from the predicted
+    tangential direction ``pa_pred``) but takes a uniform random angle inside that window."""
+    pa_pred = np.asarray(pa_pred, float)
+    return np.mod(pa_pred + 90.0 + rng.uniform(-30.0, 30.0, len(pa_pred)), 180.0)
+
+
+def add_radial_options(r: argparse.ArgumentParser) -> None:
+    """The ``radial`` thresholds (ASSUMPTIONs) and their defaults."""
+    r.add_argument("--min-ellipticity", type=float, default=0.5)
+    r.add_argument("--min-semimajor-px", type=float, default=2.0)
+    r.add_argument("--min-snr", type=float, default=10.0)
+    r.add_argument("--max-radius", type=float, default=60.0, help="arcsec from the model centre")
+    r.add_argument("--grid-arcsec", type=float, default=0.5)
+    r.add_argument("--line-tol-arcsec", type=float, default=1.0)
+    r.add_argument("--max-len-arcsec", type=float, default=15.0)
+    r.add_argument("--min-lines", type=int, default=3)
+    r.add_argument("--dark-radius-arcsec", type=float, default=1.0)
+    r.add_argument("--n-random", type=int, default=200)
+    r.add_argument("--seed", type=int, default=1)
+
+
+def radial_defaults() -> dict:
+    """The ``radial`` CLI defaults, e.g. for injection-recovery (D-049)."""
+    ap = argparse.ArgumentParser()
+    add_radial_options(ap)
+    return vars(ap.parse_args([]))
+
+
+def cmd_radial(args) -> dict:
+    model, _, _ = lc.load_model(args.model)  # a Lenstool model or published deflection maps
+    lc.apply_frame_offset(args.model, model)  # into the JWST frame (D-034, D-040)
+    shapes = lc.load_shapes(args.catalog)
+    if args.photoz:
+        lc.attach_photoz(shapes, args.photoz)
+    extra = read_spike_stars(args.spike_stars) if args.spike_stars else None
+    cand, sel_counts = radial_candidates(model, shapes, args, extra)
     cx, cy = model.to_frame(cand["ra"], cand["dec"])
-    g = np.arange(-args.max_radius, args.max_radius + 1e-9, args.grid_arcsec)
-    gx, gy = np.meshgrid(g, g)
+    gx, gy = radial_grid(args.max_radius, args.grid_arcsec)
     counts = line_counts(cx, cy, cand["pa_obs"], gx, gy, args.line_tol_arcsec, args.max_len_arcsec)
     peaks = convergence_peaks(counts, args.min_lines)
     cs = SkyCoord(shapes["ra"], shapes["dec"], unit="deg")
@@ -414,14 +468,13 @@ def cmd_radial(args) -> dict:
                 "dark_centre": bool(sep[k] > args.dark_radius_arcsec),
             }
         )
-    # null: each arc keeps its selection (anti, i.e. >= 60 deg from the predicted tangential
-    # direction) but takes a random angle inside that window, so lines that point at the mass
-    # centre because they were selected as anti are in the null too
+    # null: random angles inside each arc's anti window, so lines that point at the mass centre
+    # because they were selected as anti are in the null too
     rng = np.random.default_rng(args.seed)
     pa_t = np.asarray(cand["pa_pred_z2"], float)
     n_rand, max_rand = [], []
     for _ in range(args.n_random):
-        pa_r = np.mod(pa_t + 90.0 + rng.uniform(-30.0, 30.0, len(cx)), 180.0)
+        pa_r = anti_window_draw(pa_t, rng)
         rc = line_counts(cx, cy, pa_r, gx, gy, args.line_tol_arcsec, args.max_len_arcsec)
         n_rand.append(len(convergence_peaks(rc, args.min_lines)))
         max_rand.append(int(rc.max()) if rc.size else 0)
@@ -448,12 +501,7 @@ def cmd_radial(args) -> dict:
             if extra is not None
             else None
         ),
-        "n_spike_segments_dropped": n_spike,
-        "n_elongated": len(src),
-        "n_not_background_dropped": n_not_background,
-        "n_anti": len(anti),
-        "n_anti_not_model_radial": len(cand),
-        "n_mu_radial_nan": n_mu_nan,
+        **sel_counts,
         "n_peaks": len(rows),
         "n_dark_centre_peaks": int(sum(r["dark_centre"] for r in rows)),
         "random_peaks_mean": float(np.mean(n_rand)) if n_rand else None,
@@ -501,17 +549,7 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         help="bright-star table (ra, dec, mag/Gmag; e.g. Gaia DR3) for the spike veto (D-043)",
     )
-    r.add_argument("--min-ellipticity", type=float, default=0.5)
-    r.add_argument("--min-semimajor-px", type=float, default=2.0)
-    r.add_argument("--min-snr", type=float, default=10.0)
-    r.add_argument("--max-radius", type=float, default=60.0, help="arcsec from the model centre")
-    r.add_argument("--grid-arcsec", type=float, default=0.5)
-    r.add_argument("--line-tol-arcsec", type=float, default=1.0)
-    r.add_argument("--max-len-arcsec", type=float, default=15.0)
-    r.add_argument("--min-lines", type=int, default=3)
-    r.add_argument("--dark-radius-arcsec", type=float, default=1.0)
-    r.add_argument("--n-random", type=int, default=200)
-    r.add_argument("--seed", type=int, default=1)
+    add_radial_options(r)
     args = ap.parse_args(argv)
     (args.out / args.model).mkdir(parents=True, exist_ok=True)
     summary = {"fluxratio": cmd_fluxratio, "radial": cmd_radial}[args.cmd](args)

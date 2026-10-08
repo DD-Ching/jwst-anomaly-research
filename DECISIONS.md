@@ -2292,3 +2292,290 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - Injection-recovery shows a screen is blind to W1 or W3 at the recommended amplitudes.
 - Cluster macro-magnification needs a lens model with shear plus a microlens instead of an isolated lens (W3 in
   caustic-crossing arcs).
+
+## D-049 W1 injection-recovery through the `radial` screen: blind below about 10¹² M☉, weak limits above (2026-10-08)
+
+**Decision.**
+- `scripts/inject_radial.py` turns the eight null `radial` screens into 95 % upper limits on the surface density of
+  W1 negative-mass lenses (n = 1, ε < 0; D-047), per lens mass. The method, tables and caveats are in
+  docs/exotic_limits.md.
+- **Parameter.** The mass |M| is the parameter; the lens sits at the cluster redshift. Each lensed row gets
+  θ_E(|M|, z_l, z_s), with z_s its photo-z, or 2 without one. θ_E at z_s = 2 is a label only.
+- **Injection.** Each lens sits at a random point of the screened footprint. The lensed sources are the field's
+  own background rows:
+  - β < 2 θ_E: removed (umbra);
+  - 2 ≤ β ≤ 4 θ_E: replaced by their images, with PSF-deconvolved moments mapped by the signed Jacobian,
+    magnitude − 2.5 log₁₀|μ|, area × |μ| and S/N × √|μ|;
+  - an image pair whose isophotes overlap (separation < sum of √(area |μ| / π)) is painted as one blended row;
+  - rows below S/N 5 are dropped as undetected (bookkeeping only: the screen requires S/N ≥ 10);
+  - painted images are flagged extended, so a magnified compact source never becomes a spike-veto "star".
+- **Screen.** It is unchanged: `exotic_screens.radial_candidates`, `radial_grid`, `anti_window_draw` and
+  `radial_defaults` are shared with `cmd_radial`, and the refactor gives byte-identical SMACS output.
+- **Null.** Each batch of 10 trials has its own independent 200-draw null (trials within a batch share it, so the
+  binomial σ is approximate). Each trial updates only the grid blocks
+  its arcs touch, which gives results identical to a full recompute (tested).
+- **Recovery.** A peak with p_random < 0.05 within 2″ of the injected centre. 200 lenses per field and mass.
+- **Limit.** 2.996 / Σ ε_f A_f, with A_f the screened footprint: 1″ grid points with a catalogue source within
+  4″. Its border excess is measured and given as an upper bound, with border-corrected limits alongside.
+- All of these are ASSUMPTIONs.
+
+**Alternatives rejected.**
+- One θ_E for every source (the first version): θ_E depends on z_s, so the mass is the physical parameter.
+- Painting the two images of a source as two rows even when they overlap: near the caustic, that invents two
+  converging lines the catalogue would show as one blend.
+- One fixed set of 200 null draws for all trials: it correlates every trial's p_random. Each batch now has its
+  own.
+- Re-running `cmd_radial` in full for every injection, or copying the whole null grid 200× per trial.
+- Hard-coded copies of the screen defaults and a `nanmin(S/N)` detection floor, which removes nothing.
+- Synthetic sources at random β: lensing the rows actually present keeps the real density, clustering and
+  photo-z.
+- Catalogue shapes used as intrinsic, with no PSF term: PSF-sized images would be over-elongated.
+- Counting a lens as recovered at the ≥ 3-line peak: the screen's significance is p_random, and 3 lines is below
+  every field's null (5–8 needed).
+- Headline limits from all eight fields: without photo-z (MACS0717, Abell S1063) members and foreground galaxies
+  get lensed and the efficiency is biased high; they enter only the optimistic set.
+
+**Evidence** (`derived` from `simulated` injections; 8 fields, 51.2 arcmin²).
+- The base screens reproduce the field docs: SMACS 31 arcs, 4 lines, p 0.965; MACS0416 120, 7, 0.225; Abell 370
+  100, 5, 0.495; and so on.
+  - Abell 2744 now gives 134 arcs, 5 lines, p 0.505: its doc predates the D-034 spike veto (42 segments).
+- Recovered of 1,600 lenses per mass (200 in each field):
+
+  | \|M\| (M☉) | 2 × 10¹⁰ | 2 × 10¹¹ | 2 × 10¹² | 8 × 10¹² | 2 × 10¹³ |
+  |---|---|---|---|---|---|
+  | θ_E(z_s = 2) | 0.21–0.36″ | 0.65–1.14″ | 2.05–3.59″ | 4.11–7.18″ | 6.49–11.35″ |
+  | recovered | 0 | 0 | 8 | 84 | 156 |
+
+  - Headline 95 % limits, from the six fields with photo-z (38.0 arcmin²): none at 2 × 10¹⁰ and 2 × 10¹¹ M☉,
+    < 6.1 × 10⁴ deg⁻² at 2 × 10¹², < 7.0 × 10³ at 8 × 10¹² and < 4.0 × 10³ at 2 × 10¹³. MACS0717 and Abell S1063
+    have no photo-z, so their members and foreground galaxies get painted as W1 images and their efficiency is biased
+    high; all eight fields (optimistic): 3.7 × 10⁴, 3.8 × 10³ and 2.1 × 10³ (border-corrected 4.1 × 10⁴, 4.2 × 10³,
+    2.4 × 10³; headline border-corrected 6.6 × 10⁴, 7.6 × 10³, 4.3 × 10³).
+  - The best headline limit is about 30× weaker than Takahashi & Asada's volume limit spread over 0 < z < 1 (about
+    120 deg⁻²).
+- History: #70 merged a first review round (photo-z-only headline, θ_E-parametrised); this record supersedes its
+  numbers with the mass-parametrised, blend-aware, independent-null run.
+- The loss is in the arc selection. An image reaches e ≥ 0.5 only for β ≲ 2.3 θ_E, and `anti` relative to the
+  cluster keeps about a third of the images. A 2 × 10¹² M☉ lens therefore puts 0.5–2.7 arcs into the screen,
+  while the null needs 5–8.
+- Tests: `tests/test_inject_radial.py`, offline. They cover:
+  - the windowed and incremental null against `line_counts` on the full grid;
+  - θ_E(z_s, |M|) against D-047;
+  - blends, the detection floor, painting, recovery of a dense synthetic lens, and the footprint border.
+
+**Revisit if.**
+- A W1-specific screen is built: collinear radial image pairs flanking an empty centre, with orientation measured
+  relative to the candidate centre instead of the cluster, and a local rather than field-maximum null. This
+  injection harness is its benchmark.
+- The screen's thresholds change (e ≥ 0.5, 60° `anti` window, 15″ lines).
+- Pixel-level injections (painted into cutouts and re-extracted) are needed to measure blending and
+  incompleteness.
+
+## D-050 W1 negative-tangential-shear screen: in-house catalogue aperture-mass map on scipy cKDTree; TreeCorr and lenspack rejected (2026-10-08)
+
+**Decision.** Build the W1-specific screen (D-049 "Revisit if") as a catalogue aperture-mass map in
+`scripts/exotic_screens.py` next to `radial_candidates`, with existing dependencies only (numpy, scipy
+`cKDTree`). Reuse-check result; not implemented yet.
+- **Statistic.** Schneider (1996) catalogue estimator on a grid of candidate centres (1″, the D-049 footprint):
+  M_ap(θ₀) = Σ Q(|θ_i − θ₀|/R) e_t,i / Σ Q, with a Schirmer et al. (2007) shear-shaped filter and a top-hat
+  option. Report −M_ap, because a W1 lens (ε < 0) gives *negative* tangential shear (radial alignment); report
+  M_× as the B-mode/systematics check. Take Q's exact formula from the Schirmer et al. full text (only the
+  abstract was checked).
+- **Input.** Background rows as in D-049 (photo-z fields only), PSF-deconvolved second moments as in
+  `inject_radial.lensed_shapes`, and the cluster model's reduced shear removed: e_int = (e − g)/(1 − g* e).
+  Mask where |g| ≳ 0.5 (ASSUMPTION) instead of subtracting.
+- **Null.** Random position-angle rotations with positions kept, ≥ 200 draws per field from cached neighbour
+  lists; a local p-value per centre and a field-maximum p-value.
+- **Adoption.** Benchmark with `scripts/inject_radial.py`; adopt only if it beats `radial`'s D-049 efficiencies.
+- **Expectation (`derived`, rough).** γ_t ≈ (θ_E/θ)², so at θ_E = 1″ γ_t ≈ 0.11 at 3″; with about
+  0.05–0.09 lensable rows per arcsec² (D-049) and σ_e ≈ 0.3, S/N ≈ 1–2 in a 5″ aperture. Gains are expected
+  mainly at θ_E ≥ 2–3″; the injections decide.
+
+**Alternatives rejected.**
+- TreeCorr `NGCorrelation` / `calculateNMap` (5.1.4, BSD-3): ⟨N M_ap⟩ is stacked over all lens positions and
+  returned against R only, with no per-centre map or local null. One correlation per grid centre would be slower
+  than one cKDTree pass. No Windows wheels on PyPI or conda-forge (the owner's host would need an MSVC build).
+- lenspack (1.0.0, 2020, MIT): `aperture_mass` filters a pixelised (binned, KS93) map, which loses the arcsecond
+  scales W1 needs and adds edge/mask artefacts; its `gamma_tx` and `random_rotation` are ~10 lines each; no
+  release since 2020.
+- Weak-lensing peak finders on pixelised maps: same limitation.
+- Keeping `radial`'s arc selection (e ≥ 0.5, `anti`): D-049 shows it discards most W1 images.
+
+**Evidence.** TreeCorr NG docs (https://rmjarvis.github.io/TreeCorr/_build/html/ng.html) and its PyPI/conda-forge
+file lists; lenspack source (https://github.com/CosmoStat/lenspack); Schneider 1996; Schirmer et al. 2007
+(SOURCES "W1 shear screen").
+
+**Revisit if.**
+- Wide fields (≥ 1e5 sources) where tree-code speed matters and TreeCorr ships Windows wheels, or a stacked
+  ⟨N M_ap⟩ around a list of `radial`/orphan-pair centres is wanted (exactly TreeCorr NG).
+- A maintained catalogue-level aperture-mass map package with a per-centre null appears.
+
+## D-051 Orphan-pair screen in deep fields, with injection-recovery: null; W2/W1/point-mass surface-density limits (2026-10-08)
+
+**Decision.**
+- **Catalogue adapter.** `scripts/orphan_pairs.py` reads every catalogue into one column layout (`as_standard`),
+  so CANUCS DR1 and DJA grizli (catalogue plus eazy-py zout) both run through D-048's code. The three D-048
+  cluster runs reproduce every pair and count bit for bit; only the column `mu_canucs` is renamed `mu_cat`.
+- **Deep fields** (`DEEP_FIELDS`):
+  - the five CANUCS NIRCam flanking fields (NCF: MACS0416, MACS1149, Abell 370, MACS0417, MACS1423; 23–38 MB
+    each, same format as the cluster catalogues);
+  - DJA v7.3 GOODS-North.
+
+  They use these rules (ASSUMPTIONs):
+  - no published images and no cluster model; the ordinary-lensing test is the catalogue |μ| (≤ 1.4, or 1);
+  - redshift floor z_low > 0.5 (`Z_LENS_REF` 0.4 + 0.1);
+  - S/N bands are those of F277W/F356W/F444W that exist (two NCFs lack F356W);
+  - DJA: 0.36″ apertures, SEP flags, MIRI and `u` duplicates dropped, and a same_galaxy radius of
+    3.3 × `flux_radius`.
+- **Two new nulls.** (d) is the z-overlap match rate at 3–6″. (e) is null (c) conditioned on fainter-member S/N,
+  larger-member size and LW/SW colour. Both are new keys; the D-048 keys are unchanged.
+- **Injection-recovery.** `scripts/inject_pairs.py` paints simulated pairs into the real catalogue
+  (docs/exotic_limits.md "W2"). Lensed rows are removed and replaced by |μ|-scaled copies of their SED (scatter max(|μ|, 1) ×
+  the row's errors). Two images closer than the catalogue's 2nd-percentile nearest-neighbour separation (0.24–0.30″) merge
+  into one row. The unchanged orphan rules then decide recovery.
+  - Lens types: point mass (sanity), W2 Ellis (n = 2) and W1 negative mass (n = 1, ε < 0, β ∈ [2, 4] θ_E).
+  - θ_E ∈ {0.15, 0.3, 0.7, 1.5}″.
+  - Per-source (400) and per-deflector (2000) trials per field, type and θ_E.
+- **Limits.** Two 95 % limits on the surface density, each over Σ ε_f A_f (108.1 arcmin² searched):
+  - **no-candidate:** 2.996 / Σ ε_f A_f;
+  - **background-aware:** s₉₅ = 72.3 (CLs) / Σ ε_f A_f, for 355 orphans observed against 315.4 expected.
+- **Stated reason for the > 200 MB downloads** (CLAUDE.md):
+  - **Catalogue, 223.8 MB.** The GOODS-N DJA catalogue is the only file with the matched-aperture fluxes, and
+    FITS tables are row-major, so a byte-range read cannot skip columns. It is pinned with `max_bytes` 230 MB.
+  - **Photo-z tarball, 371.1 MB.** It is streamed: `fetch_tar_member` hashes the whole archive in flight and keeps
+    only the 67.6 MB zout, so nothing over 200 MB is written to disk.
+  - Every other DJA deep field costs the same or more (SOURCES.md).
+  - The CANUCS NCF catalogues give five fields with PSF-matched photometry for 160 MB in total, which is why they
+    carry most of the area.
+
+**Alternatives rejected.**
+- **The standalone `gdn-grizli-v7.3-fix.eazypy.zout.fits` (60.6 MB).** It belongs to an older catalogue: 63,069
+  rows, ids offset by a median 137″. It cannot be joined.
+- **DJA Kron apertures for the same_galaxy rule.** `kron_radius` lies between 2.4 and 3.8, which gives
+  8.7 × r₅₀ against 3.3 × in CANUCS. 0 of 2000 point lenses at θ_E = 0.3″ were recovered in GOODS-N, and the
+  orphan count fell from 109 to 69.
+- **A global null (c) only.** Flanking-field orphans exceed it at P = 0.04–0.08 per field. Conditioning on S/N,
+  size and colour (null e) absorbs part of the excess, not all of it.
+- **Re-running the whole field search per injected lens.** The rules are local (≤ 1.8″ from the pair), so the
+  neighbourhood within β_max θ_E + 6″ gives the same classification at about 8 ms per trial.
+- **Drawing synthetic sources.** Lensing the real rows keeps the real density, SEDs, depth and clustering (as in
+  D-049).
+- **CEERS, GOODS-S, PRIMER.** They are not run: 250–270 MB catalogues plus 350–410 MB tarballs each, for fields
+  that add area but no new method.
+
+**Evidence** (`derived`; summaries in `outputs/orphan_pairs/<field>/` and `outputs/inject_pairs/`; all six
+contact sheets inspected).
+- Orphans observed against null (e):
+
+  | Field | Orphans / null (e) | P(≥ observed) |
+  |---|---|---|
+  | M0416-NCF | 51 / 41.4 | 0.083 |
+  | M1149-NCF | 50 / 40.6 | 0.085 |
+  | A370-NCF | 43 / 43.1 | 0.53 |
+  | M0417-NCF | 49 / 38.0 | 0.049 |
+  | M1423-NCF | 53 / 47.9 | 0.25 |
+  | GOODS-N | 109 / 104.4 | 0.34 |
+  | Total | 355 / 315.4 | 0.015 |
+
+- **Vetting.** Of the 90 top orphans inspected, 50 are knots, companions, group members, satellites or
+  artefact-affected. The other 40 are featureless faint pairs at θ_E-equivalent 0.4–1.4″ (`hypothesis`:
+  4 × 10¹⁰–7 × 10¹¹ M☉ at z_l = 0.4). No pair goes to `/vet-candidate`.
+- **The ~15 % excess is not read as lensing.** At the measured efficiency (~0.5 % per deflector), it would need
+  ~140 dark galaxy-mass deflectors per arcmin², one per ~7 catalogued galaxies.
+- **Per-deflector efficiency** (mean over 108 arcmin²):
+
+  | Type | 0.15″ | 0.3″ | 0.7″ | 1.5″ |
+  |---|---|---|---|---|
+  | point | 0.02 % | 0.54 % | 0.84 % | 0 (pair separation > 3″) |
+  | W2 | 0.01 % | 0.64 % | 0.83 % | 0 (pair separation > 3″) |
+  | W1 | 0 | 0.10 % | 3.6 % | 18.6 % |
+
+  - Per source, recovery is ≤ 3.5 %.
+  - Only 1–12 % of lensed selected sources keep both images above the S/N cuts.
+  - same_galaxy removes the 0.3–0.6″ pairs, and visible_lens removes ~73 % of the 0.7″ pairs.
+  - At best, recovery reaches 11–15 % at m < 24.
+- **Limits (deg⁻², no-candidate / background-aware).**
+  - W1: < 5.4 × 10² / 1.3 × 10⁴ at θ_E 1.5″ (|M| 4.5 × 10¹¹ M☉) and < 2.8 × 10³ / 6.7 × 10⁴ at 0.7″
+    (9.8 × 10¹⁰ M☉).
+  - W2: < 1.2 × 10⁴ / 2.9 × 10⁵ at 0.7″ (a ≈ 10 pc). That is ~100× weaker than Takahashi & Asada's volume limit
+    spread over z < 1 (~120 deg⁻²).
+  - Point mass: < 1.2–1.9 × 10⁴ / 2.9–4.5 × 10⁵ at 0.3–0.7″.
+  - Masses and throat radii are a `model_prediction` at z_l = 0.4 and z_s = 2 (Planck18).
+- **Tests.** `tests/test_orphan_pairs.py` covers the adapter: CANUCS and DJA layouts give the same pairs; flags,
+  misaligned zout, missing F356W, the deep-field lens check, tar streaming, footprints and polygons.
+  `tests/test_inject_pairs.py` covers mass and throat inversion of `einstein_radius`, Poisson limits, recovery of
+  a bright point-lens pair as an orphan, the merge rule, the W1 umbra and image side, and efficiency bounds.
+
+**Revisit if.**
+- A companion-aware null exists: spectroscopic close pairs, or a null matched in environment. The flanking-field
+  orphan excess (P = 0.01) must be explained before any orphan is read as anything but chance.
+- Pixel-level injections (painting into mosaics and re-extracting) are run. They would measure blending with
+  neighbours and photo-z scatter of faint counter-images.
+- The same_galaxy or visible_lens rule changes, for example to segmentation-map adjacency. Those rules set most of
+  the efficiency loss.
+- More deep fields are added (CEERS, GOODS-S, PRIMER), or a real-pair spectroscopic sample tests the SED-match
+  power.
+
+## D-052 W3 multi-epoch dimming / vanished-source screen: null in NEXUS, MACS0416 and Abell 2744; injection-calibrated rate limits (2026-10-08)
+
+**Decision.** `scripts/dimming_screen.py` screens multi-epoch level-3 NIRCam catalogues for W3 (D-047). Results are in
+docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs are in `configs/dimming_screen.yaml`.
+- **Reuse.**
+  - `epoch_compare.mutual_matches`, the D-027 global frame shift and `transient_search._neighbour_counts`.
+  - `transient_combine.exclusion_radius` and `fetch_gaia`.
+  - `transient_forced.measure`, `select_controls` and `robust_std`.
+  - `cutouts.make_cutouts` (D-018/D-021) and `exotic_sim.inject_light_curve`.
+- **Flags** (ASSUMPTIONs): `vanish`, achromatic in every testable band; `dim_achromatic`; `rise_dip_rise`.
+- **Order of tests:** catalogue vetoes first, then forced confirmation, cutout tests, visual check and SIMBAD/NED.
+  The catalogue vetoes are: Gaia star with the self-match excluded, a ≥ 100× brighter neighbour within 1.5″, edge,
+  blend, single epoch, and sharper than the PSF.
+- **Injection model.**
+  - f = F f_obs + √max(0, 1 − F²) σ_n z, with error σ_n max(F, 1).
+  - Light-curve vetoes are re-applied per injected copy.
+  - Only baseline-unflagged sources count in the exposure.
+  - The forced stage is emulated by the forced/catalogue fractional scatter measured on the same controls.
+- **Calibration and limits.**
+  - Headline limits come only from fields whose forced stage is calibrated (≥ 50 controls in some epoch pair and
+    control zero points in every epoch). The others are reported separately.
+  - Limit definitions: rate per source per year = 3 / Σ N ε (T + 4t_E); τ = rate × π t_E; per deg² per year and
+    per deg² per epoch analogously (docs/exotic_limits.md).
+
+**Alternatives rejected.**
+- Image differencing, or forced photometry of whole mosaics: it needs full `_i2d` files (NEXUS o014 F200W is
+  113 GB).
+- Per-band vanish flags: they count single-band deblending misses.
+- Catalogue non-detections as zero flux at any depth: MACS0416 gave 1,122 vanishes from shallower PEARLS epochs.
+- `is_extended == False` as a point-source cut: 70 % of S/N ≥ 10 rows qualify.
+- `transient_combine.near_bright` for the star mask: it returns the source's own faint Gaia match as the nearest
+  star, so a saturated star 0.5–1″ away never masks. That let two MACS0416 spike artefacts through.
+- `f_obs + (A − 1) f_ref` and `F f_obs + (1 − F) n`: the first leaves the bright-star epoch scatter, and the
+  second's scatter (√(F² + (1 − F)²) σ) disagrees with the quoted error.
+- Dividing the forced ERR scale by the catalogue scale for the inflation: the two are measured against different
+  baselines.
+- Positive-flux-only control zero points: they are biased against faded epochs.
+- Controls drawn from the largest catalogue: NEXUS o014 barely overlaps the other epochs.
+- The D-047 spike amplitudes ×7.5 / ×3.4, and the pre-merge quadrature (×9.2 / ×4.9): the merged simulator gives
+  ×7.0 / ×2.35 / ×1.53.
+
+**Evidence** (derived; `simulated` for injections).
+- Catalogue flags: 3,793 / 854 / 530 (NEXUS / MACS0416 / Abell 2744).
+- After catalogue tests (current code): 1,051 / 358 / 32.
+- Last complete forced run: 100 / 375 / 32 measured, 0 / 6 / 0 confirmed. Every confirmed MACS0416 flag is a
+  saturated star or lies within 1.5″ of one; the new `bright_neighbour` veto removes all six automatically
+  (cutouts inspected). **0 surviving events.**
+- Re-runs after the review fixes failed on S3 (s3fs "bucket does not exist" through the proxy, 2026-10-08 07:00 and
+  08:29 UTC, for multi-target jobs; single reads worked). The last complete run was re-calibrated offline.
+- MACS0416 is calibrated: noise 2.15 / 1.99, forced/catalogue scatter 1.00 / 1.98. NEXUS and Abell 2744 are not.
+- Efficiency, MACS0416: W3 0.12–0.22 at t_E = 0.3–3 yr; dimming 0.09 / 0.59 / 0.35 for 20 / 50 / 100 %. The 100 %
+  case is low because the per-copy `single_epoch` veto removes full vanishes of sources seen in only two F200W
+  epochs.
+- Headline 95 % limits (MACS0416, 34 sources): 0.16 per source per year at t_E = 0.3 yr, 0.056 at 1 yr; τ < 0.15
+  at 0.3 yr. All fields, indicative: 0.025 and 0.015.
+
+**Revisit if.**
+- S3 cutout jobs work again: re-run `forced` for all fields with ≥ 300 overlapping controls to calibrate NEXUS and
+  Abell 2744.
+- The D-039 persistence test replaces the `single_epoch` veto for vanish flags. That restores sensitivity to full
+  vanishes of two-epoch sources.
+- JADES or more NEXUS epochs enlarge the compact sample.
+- A W3 model with cluster macro-magnification is needed for caustic-crossing stars in arcs.

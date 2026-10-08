@@ -1,0 +1,40 @@
+# Multi-epoch dimming / vanished-source screen (W3, D-052): scripts/dimming_screen.py.
+# Epochs are PUBLIC level-3 NIRCam associations of the same pointing. They were found with one MAST query per field
+# (2026-10-08; SOURCES.md "Multi-epoch NIRCam fields (D-052)"). `obs` is the obs_id without the filter suffix; the
+# script appends `_nircam_clear-<band>`. `mjd` is MAST t_min of the F200W association (F444W where F200W is
+# missing), so epoch times are observed values rounded to 0.01 d (the F444W start for VENUS o054). An epoch may list a subset of the bands.
+cloud:
+  s3_bucket: stpubdata
+  l3_key_pattern: "jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}"
+
+bands: [F200W, F444W]  # detection band first; an epoch may hold a subset (see its bands)
+
+fields:
+  nexus:
+    description: NEXUS-Center (program 5105), the multi-epoch tier, one pointing near the NEP
+    centre: [268.4625, 65.1992]
+    epochs:
+      - {obs: jw05105-o001_t001, mjd: 60565.65, bands: [F200W, F444W]}
+      - {obs: jw05105-o002_t001, mjd: 60827.74, bands: [F200W, F444W]}
+      - {obs: jw05105-o014_t001, mjd: 60849.26, bands: [F200W, F444W]}
+      - {obs: jw05105-o004_t001, mjd: 60886.04, bands: [F200W, F444W]}
+      - {obs: jw05105-o006_t001, mjd: 60946.76, bands: [F200W, F444W]}
+      - {obs: jw05105-o008_t001, mjd: 61007.21, bands: [F200W, F444W]}
+      - {obs: jw05105-o010_t001, mjd: 61068.43, bands: [F200W, F444W]}
+      - {obs: jw05105-o012_t001, mjd: 61127.37, bands: [F200W, F444W]}
+  macs0416:
+    description: MACS J0416.1-2403, PEARLS 1176 (three epochs) and CANUCS 1208 o004; VENUS 6882 o054 (F444W only)
+    centre: [64.0381, -24.0675]
+    epochs:
+      - {obs: jw01176-o211_t009, mjd: 59859.41, bands: [F200W, F444W]}
+      - {obs: jw01176-o212_t009, mjd: 59942.79, bands: [F200W, F444W]}
+      - {obs: jw01208-o004_t002, mjd: 59955.94, bands: [F200W, F444W]}
+      - {obs: jw01176-o213_t009, mjd: 59985.46, bands: [F200W, F444W]}
+      - {obs: jw06882-o054_t054, mjd: 61050.16, bands: [F444W]}
+  abell2744:
+    description: Abell 2744, UNCOVER 2561 o001 (imaging), o002 and o006 (NIRCam parallels to the NIRSpec visits)
+    centre: [3.5875, -30.3972]
+    epochs:
+      - {obs: jw02561-o001_t003, mjd: 59885.53, bands: [F200W, F444W]}
+      - {obs: jw02561-o002_t001, mjd: 60156.43, bands: [F200W, F444W]}
+      - {obs: jw02561-o006_t007, mjd: 60522.06, bands: [F200W, F444W]}
