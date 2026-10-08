@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: El Gordo counter-images and radial screen: no candidate (D-034)
+- Forced photometry: 3 `absent` images on the first pass, all ordinary on vetting (cutouts plus numbers):
+  - 23: model position error;
+  - 6: reference on a galaxy wing; photo-z-consistent counterparts at 2.6–3.1″;
+  - 7: HST→JWST frame offset of 0.22″.
+- Radial screen: max 4 lines, p = 0.75. A 6-line "centre" was a star's diffraction spikes.
+- Four new rules (D-034): frame offset, compact and consistent references, a residual-scaled search radius, and a
+  spike-segment veto. SMACS re-run: unchanged, 0 absent.
+- Tally: El Gordo screened 17 uncatalogued predicted images and 37 anti arcs; flags 3 + 1; **surviving 0**.
+  Wall time: about 50 s for `images`, 21 s for `radial`.
+- **Handoff:** Abell 2744 (worker running), then the HFF/RELICS map fields via `MapLensModel` (#47).
+
 ## 2026-10-08: Flux-ratio and colour test of catalogued images: no anomaly in SMACS or El Gordo (D-032)
 - New: `lens_consistency.py fluxratios`.
   - It compares each image's DJA `mag_auto` + 2.5 log|μ| and its F150W−F444W colour with the other images of its

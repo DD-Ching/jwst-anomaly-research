@@ -238,6 +238,41 @@ def convergence_peaks(counts: np.ndarray, min_lines: int) -> list[tuple[int, int
     return [(int(a), int(b)) for a, b in idx]
 
 
+SPIKE_STAR_MAG = 20.0  # point sources brighter than this have long diffraction spikes (ASSUMPTION)
+SPIKE_ALIGN_DEG = 7.0
+
+
+def spike_radius(mag) -> np.ndarray:
+    """Spike length (arcsec) of a point source of magnitude ``mag``: 3" x 10^(0.2 (20 - m)),
+    clipped to 3-20" (the D-027 bright-star mask form; ASSUMPTION)."""
+    return np.clip(3.0 * 10 ** (0.2 * (SPIKE_STAR_MAG - np.asarray(mag, float))), 3.0, 20.0)
+
+
+def spike_segments(src: Table, shapes: Table) -> np.ndarray:
+    """Elongated sources that are diffraction-spike segments: within ``spike_radius`` of a
+    bright point source (not ``is_extended``, brighter than ``SPIKE_STAR_MAG``) and with the
+    major axis within ``SPIKE_ALIGN_DEG`` of the direction to it. Spikes point radially at their
+    star, which mimics radial arcs around a (luminous) centre (El Gordo, D-033)."""
+    mag = np.asarray(shapes["mag"], float)
+    bright = ~np.asarray(shapes["is_extended"], bool) & np.isfinite(mag) & (mag < SPIKE_STAR_MAG)
+    stars = shapes[bright]
+    out = np.zeros(len(src), bool)
+    if not len(stars) or not len(src):
+        return out
+    cs = SkyCoord(src["ra"], src["dec"], unit="deg")
+    ct = SkyCoord(stars["ra"], stars["dec"], unit="deg")
+    radius = spike_radius(stars["mag"])
+    for k in range(len(stars)):
+        sep = cs.separation(ct[k]).arcsec
+        near = (sep <= radius[k]) & (sep > 0.5)
+        if not near.any():
+            continue
+        pa_to_star = np.mod(cs[near].position_angle(ct[k]).deg, 180.0)
+        off = lensmodel.axis_offset_deg(np.asarray(src["pa_obs"], float)[near], pa_to_star)
+        out[np.flatnonzero(near)[off <= SPIKE_ALIGN_DEG]] = True
+    return out
+
+
 def cmd_radial(args) -> dict:
     files = lc.model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
@@ -251,6 +286,9 @@ def cmd_radial(args) -> dict:
         & (np.asarray(shapes["snr"], float) >= args.min_snr)
     )
     src = shapes[sel]
+    spike = spike_segments(src, shapes)
+    n_spike = int(spike.sum())
+    src = src[~spike]
     x, y = model.to_frame(src["ra"], src["dec"])
     src = src[np.hypot(x, y) <= args.max_radius]
     ot = lc.orientation_table(model, src)
@@ -327,6 +365,7 @@ def cmd_radial(args) -> dict:
     summary = {
         "model": args.model,
         "catalog": str(args.catalog),
+        "n_spike_segments_dropped": n_spike,
         "n_elongated": len(src),
         "n_not_background_dropped": n_not_background,
         "n_anti": len(anti),

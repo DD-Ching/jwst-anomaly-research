@@ -214,19 +214,21 @@ def test_forced_check_recovers_offset_image_and_flags_absent_one():
     )
     table = Table(
         {
-            "system": ["1", "1", "1"],
-            "ra": [ref[0], pred_a[0], pred_b[0]],
-            "dec": [ref[1], pred_a[1], pred_b[1]],
-            "magnification": [10.0, 5.0, -5.0],
-            "image_class": ["observed", "missing", "missing"],
+            "system": ["1", "1", "1", "1"],
+            "ra": [ref[0], ref[0] + 40 / 3600 / cosd, pred_a[0], pred_b[0]],
+            "dec": [ref[1], ref[1], pred_a[1], pred_b[1]],
+            "magnification": [10.0, 400.0, 5.0, -5.0],
+            "image_class": ["observed", "observed", "missing", "missing"],
+            "sep_image_arcsec": [0.1, 0.2, np.nan, np.nan],
         }
     )
     table.meta["provenance"] = "derived"
     lc.forced_check(table, backtrace, stamp, search_arcsec=1.0)
-    assert list(table["forced_class"]) == ["", "recovered", "absent"]
-    assert abs(table["best_dx"][1] - 0.5) < 0.11 and abs(table["best_dy"][1]) < 0.11
-    assert 0.8 < table["flux_ratio"][1] < 1.2  # 1.0 observed against 2.0 x 5/10 predicted
-    assert table["pred_snr"][2] > 10 and table["best_snr"][2] < 3
+    assert list(table["forced_class"]) == ["", "", "recovered", "absent"]
+    assert abs(table["best_dx"][2] - 0.5) < 0.11 and abs(table["best_dy"][2]) < 0.11
+    assert 0.8 < table["flux_ratio"][2] < 1.2  # 1.0 observed against 2.0 x 5/10 predicted
+    assert table["pred_snr"][3] > 10 and table["best_snr"][3] < 3
+    assert table["search_arcsec"][3] == 1.0  # residuals 0.1-0.2": the base radius
     assert table.meta["forced"]["max_ref_mu"] == 50.0
 
     def gap_stamp(ra, dec):  # valid at the reference only; the predictions fall in a gap
@@ -237,7 +239,45 @@ def test_forced_check_recovers_offset_image_and_flags_absent_one():
 
     off = table.copy()
     lc.forced_check(off, backtrace, gap_stamp)
-    assert list(off["forced_class"]) == ["", "off_image", "off_image"]
+    assert list(off["forced_class"]) == ["", "", "off_image", "off_image"]
+
+    # a reference whose recentred peak is a brighter neighbour (nothing at the catalogued spot)
+    nb = _stamp_factory([(ref[0] + 0.35 / 3600 / cosd, ref[1], 2.0)])
+    nbt = table.copy()
+    lc.forced_check(nbt, backtrace, nb)
+    assert list(nbt["forced_class"])[2:] == ["no_reference", "no_reference"]
+
+    # two usable references whose f/|mu| disagree by more than 3x
+    bt2 = Table(
+        {
+            "system": ["1", "1"],
+            "ra": [ref[0], ref[0] - 10 / 3600 / cosd],
+            "dec": [ref[1], ref[1]],
+            "magnification": [10.0, 5.0],
+        }
+    )
+    st2 = _stamp_factory(
+        [(ref[0], ref[1], 2.0), (ref[0] - 10 / 3600 / cosd, ref[1], 0.25)], noise=0.001
+    )  # f/|mu| 0.2 against 0.05
+    t2 = table.copy()
+    t2["magnification"][1] = 5.0
+    lc.forced_check(t2, bt2, st2)
+    assert list(t2["forced_class"])[2:] == ["inconsistent_reference"] * 2
+
+
+def test_search_radius_follows_model_residuals():
+    t = Table(
+        {
+            "system": ["1", "1", "1", "2"],
+            "image_class": ["observed", "observed", "missing", "observed"],
+            "sep_image_arcsec": [0.3, 1.2, np.nan, 0.1],
+        }
+    )
+    assert lc.system_search_radius(t, "1", 1.0, 2) == pytest.approx(1.8)
+    assert lc.system_search_radius(t, "2", 1.0, 1) == 1.0
+    assert lc.system_search_radius(t, "2", 1.0, 2) == pytest.approx(2.25)  # one unpredicted
+    t["sep_image_arcsec"][1] = 5.0
+    assert lc.system_search_radius(t, "1", 1.0, 2) == lc.MAX_SEARCH_ARCSEC
 
 
 def test_predict_counter_images_reproduces_an_sis_pair():

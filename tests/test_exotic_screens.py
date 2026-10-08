@@ -63,3 +63,26 @@ def test_radial_magnification_of_an_isothermal_lens_is_one():
     ra = RA0 + np.array([10.0, 20.0]) / 3600 / np.cos(np.deg2rad(DEC0))
     mu_r = es.radial_magnification(model, ra, np.full(2, DEC0), 2.0)
     np.testing.assert_allclose(mu_r, 1.0, atol=3e-3)  # SIS: kappa = gamma, so 1 - kappa + gamma = 1
+
+
+def test_spike_segments_are_dropped_but_tangential_neighbours_kept():
+    from astropy.table import Table
+
+    cosd = np.cos(np.deg2rad(DEC0))
+    star = (RA0, DEC0)
+    # two sources 5" N and 5" E of the star; the first along the spike (PA 0), the second across
+    ras = [RA0, RA0 + 5 / 3600 / cosd]
+    decs = [DEC0 + 5 / 3600, DEC0]
+    src = Table({"ra": ras, "dec": decs, "pa_obs": [2.0, 0.0]})
+    shapes = Table(
+        {
+            "ra": [star[0], *ras],
+            "dec": [star[1], *decs],
+            "mag": [16.0, 24.0, 24.0],
+            "is_extended": [False, True, True],
+        }
+    )
+    assert list(es.spike_segments(src, shapes)) == [True, False]
+    shapes["mag"][0] = 23.0  # a faint point source has no long spikes (radius 3")
+    assert not es.spike_segments(src, shapes).any()
+    np.testing.assert_allclose(es.spike_radius([20.0, 17.0, 10.0]), [3.0, 3 * 10**0.6, 20.0])
