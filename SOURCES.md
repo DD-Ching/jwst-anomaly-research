@@ -516,6 +516,13 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Earendel: Welch et al. arXiv:2209.14866, "A highly magnified star at redshift 6.2".
 - **MAST stale product sizes** after the 2026-10-01 reprocessing (PR #29): `acquire` checks the Download
   service's Content-Length.
+## HFF CATS lens models (accessed 2026-10-08; D-035)
+
+- Hubble Frontier Fields lens models, CATS team (Lenstool), HLSP https://archive.stsci.edu/prepds/frontier/lensmodels/.
+  Versions: MACS0416 v4.1, MACS1149 v4.1, Abell 370 v4, MACS0717 v4.1, Abell S1063 v4.1, Abell 2744 v4.1. The files
+  (x/y-arcsec-deflect, kappa, z02-magnif, arcs.txt, params.txt where present) are pinned by sha256 in
+  `lensmodel.HFF_CATS`. The release readmes quote rms 0.72″, 0.63″, n/a, 2.41″, 0.48″ and n/a.
+
 ## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
 
 - arXiv:1009.6084 Abe, "Gravitational Microlensing by the Ellis Wormhole".
