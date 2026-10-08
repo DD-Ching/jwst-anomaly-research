@@ -30,10 +30,14 @@ MAST (CAOM metadata)            query.py      query_observations / list_products
 the screens that implement it (`scripts/exotic_screens.py`, `inject_radial.py`, `orphan_pairs.py`,
 `inject_pairs.py`, `dimming_screen.py`), the ordinary mimics vetting rules out first, and its limits
 (docs/exotic_limits.md). Surveys plug in through `LightCurveSurvey` / `CatalogueSurvey` adapters;
-`standard_light_curve` is the shared light-curve layout. Ordinary microlensing fits use MulensModel
-(extra `mulens`); exotic models are evaluated on the same trajectory. First adapter: `ogle.py`
-(`OgleMrozSample`, the Mróz et al. 2019/2020 OGLE-IV samples), used by `scripts/w3_microlensing.py` (D-057);
-`gaia_mulens.py` (`GaiaDR3Microlensing`, the Gaia DR3 candidates), used by `scripts/w3_gaia.py` (D-061).
+`standard_light_curve` is the shared light-curve layout (magnitudes); `standard_flux_light_curve` is the
+layout for difference-imaging fluxes, which can be negative (`schema.LIGHT_CURVE_FLUX_COLUMNS`). Ordinary
+microlensing fits use MulensModel (extra `mulens`); exotic models are evaluated on the same trajectory.
+Adapters: `ogle.py` (`OgleMrozSample`, the Mróz et al. 2019/2020 OGLE-IV samples), used by
+`scripts/w3_microlensing.py` (D-057); `gaia_mulens.py` (`GaiaDR3Microlensing`, the Gaia DR3 candidates), used by
+`scripts/w3_gaia.py` (D-061); `moa.py` (`MoaField`, one field of the MOA-II 9-year release, every
+Cut-0 object before any bump cut; light curves read in place from the per-field tar), used by
+`scripts/w3_moa.py` (D-062), which reuses the `w3_microlensing` fitter with the blend flux left free.
 
 Why catalog-first: a NIRCam level-3 `_cat.ecsv` is ~3 MB while its `_i2d.fits` is ~1.8 GB
 (program 2736, measured 2026-10-07). Ranking on pipeline catalogs and pulling image cutouts only

@@ -195,11 +195,13 @@ def straight_beta(t, t0, te, u0):
 # ----------------------------------------------------------------------------- linear fluxes
 
 
-def linear_fluxes(a, f, w):
+def linear_fluxes(a, f, w, f_min: float | None = None):
     """Weighted least-squares F = fs·A + fb with fb ≥ −F_min and fs ≥ 0 (published convention).
 
-    ``a`` has shape (N,) or (K, N); returns fs, fb, χ² with shape () or (K,).
+    ``a`` has shape (N,) or (K, N); returns fs, fb, χ² with shape () or (K,). ``f_min`` defaults
+    to the OGLE ``F_MIN``; ``inf`` leaves fb free (difference fluxes, MOA-II, D-062).
     """
+    f_min = ogle.F_MIN if f_min is None else f_min
     a = np.atleast_2d(a)
     sw = w.sum()
     sa = a @ w
@@ -210,9 +212,9 @@ def linear_fluxes(a, f, w):
     with np.errstate(divide="ignore", invalid="ignore"):
         fs = np.where(det > 0, (saf * sw - sa * sf) / det, 0.0)
         fb = (sf - fs * sa) / sw
-        low = fb < -ogle.F_MIN
-        fb = np.where(low, -ogle.F_MIN, fb)
-        fs = np.where(low, (saf + ogle.F_MIN * sa) / np.where(saa > 0, saa, 1.0), fs)
+        low = fb < -f_min
+        fb = np.where(low, -f_min, fb)
+        fs = np.where(low, (saf + f_min * sa) / np.where(saa > 0, saa, 1.0), fs)
     neg = ~(fs >= 0)
     fs = np.where(neg, 0.0, fs)
     fb = np.where(neg, sf / sw, fb)
@@ -229,7 +231,8 @@ def linear_fluxes(a, f, w):
 class LightCurve:
     """Flux light curve of one event, with the published RA/Dec for parallax."""
 
-    def __init__(self, t, f, sf, ra=None, dec=None, event_id=""):
+    def __init__(self, t, f, sf, ra=None, dec=None, event_id="", f_min=None):
+        self.f_min = f_min  # blend-flux bound of linear_fluxes (None: OGLE F_MIN)
         self.t = np.asarray(t, float)
         self.f = np.asarray(f, float)
         self.sf = np.asarray(sf, float)
@@ -242,7 +245,7 @@ class LightCurve:
         """Copy whose blend flux is free per observing season (gaps > ``gap_days`` split them),
         plus a linear drift per season when ``trend``: the ordinary-systematics model for
         season-to-season zero points and slow baseline (blend or source) variability."""
-        out = LightCurve(self.t, self.f, self.sf, self.ra, self.dec, self.event_id)
+        out = LightCurve(self.t, self.f, self.sf, self.ra, self.dec, self.event_id, self.f_min)
         sid = np.concatenate([[0], np.cumsum(np.diff(self.t) > gap_days)])
         onehot = (sid[None, :] == np.arange(sid.max() + 1)[:, None]).astype(float)
         cols = [onehot]
@@ -260,7 +263,7 @@ class LightCurve:
 
     def subset(self, keep):
         out = LightCurve(
-            self.t[keep], self.f[keep], self.sf[keep], self.ra, self.dec, self.event_id
+            self.t[keep], self.f[keep], self.sf[keep], self.ra, self.dec, self.event_id, self.f_min
         )
         if self.seasons is not None:
             out.seasons = self.seasons[:, keep]
@@ -375,7 +378,7 @@ def chi2_of(model: str, lc: LightCurve, p: dict):
     if not np.all(np.isfinite(a)):
         return np.inf, 0.0, 0.0
     if lc.seasons is None:
-        fs, fb, chi2 = linear_fluxes(a, lc.f, lc.w)
+        fs, fb, chi2 = linear_fluxes(a, lc.f, lc.w, lc.f_min)
         return chi2, fs, fb
     m = np.vstack([a, lc.seasons]).T
     sw = np.sqrt(lc.w)
@@ -1234,7 +1237,7 @@ def fit_binary_lens(lc: LightCurve, ps: dict, maxfev: int = 600) -> dict:
             return 1e30
         if not np.all(np.isfinite(a)):
             return 1e30
-        return linear_fluxes(a, lc.f, lc.w)[2]
+        return linear_fluxes(a, lc.f, lc.w, lc.f_min)[2]
 
     starts = [
         (t0, u0, math.log10(te), -2.0, ls, lq, al)

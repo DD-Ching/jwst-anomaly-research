@@ -140,7 +140,11 @@ register(
         data_kinds=("light_curve",),
         predict=_bound(exotic_sim.light_curve, _NEG),
         inject=_bound(exotic_sim.inject_light_curve, _NEG),
-        screens=("scripts/dimming_screen.py", "scripts/w3_microlensing.py"),
+        screens=(
+            "scripts/dimming_screen.py",
+            "scripts/w3_microlensing.py",
+            "scripts/w3_moa.py",  # MOA-II light curves before any bump cut (D-062)
+        ),
         ordinary_mimics=(
             "binary-lens caustic crossings",
             "blending and photometric systematics",
@@ -149,7 +153,7 @@ register(
             "persistence and saturated-star wings",
         ),
         limits_doc=_LIMITS,
-        decisions=("D-047", "D-052", "D-054", "D-057"),
+        decisions=("D-047", "D-052", "D-054", "D-057", "D-062"),
         lens=_NEG,
     )
 )
@@ -172,6 +176,7 @@ register(
 # ----------------------------------------------------------------------------- survey adapters
 
 LIGHT_CURVE_COLUMNS = schema.LIGHT_CURVE_COLUMNS
+LIGHT_CURVE_FLUX_COLUMNS = schema.LIGHT_CURVE_FLUX_COLUMNS
 
 
 @runtime_checkable
@@ -179,7 +184,9 @@ class LightCurveSurvey(Protocol):
     """A time-domain survey: an event or source list and one light curve per entry.
 
     ``events()`` has at least ``event_id, ra, dec`` (deg), plus any published fit parameters;
-    ``light_curve(event_id)`` returns :func:`standard_light_curve` output. ``efficiency(t_e)``
+    ``light_curve(event_id)`` returns :func:`standard_light_curve` output, or
+    :func:`standard_flux_light_curve` output for difference-imaging surveys whose flux relative to
+    a reference image can be negative (MOA-II, D-062). ``efficiency(t_e)``
     is the survey's published detection efficiency for an event time scale (days), or None when
     the survey publishes none (limits then need injection-recovery on the survey's cadence).
     """
@@ -225,5 +232,43 @@ def standard_light_curve(time, mag, mag_err, band, source: str, time_system: str
         source=source,
         time_system=time_system,
         n_dropped=int((~ok).sum()),  # non-finite or non-positive-error rows (cadence audit)
+    )
+    return out
+
+
+def standard_flux_light_curve(
+    time,
+    flux,
+    flux_err,
+    band,
+    source: str,
+    time_system: str,
+    flux_unit: str,
+    flux_kind: str = "difference",
+) -> Table:
+    """One flux light curve in the shared layout, ``observed`` (finite rows only, time-sorted).
+
+    For difference-imaging photometry the flux is relative to a reference image and can be negative,
+    so it has no magnitude. ``flux_unit`` and ``flux_kind`` (e.g. "difference", "detrended
+    difference") are recorded in ``meta`` with ``time_system`` and ``n_dropped`` (non-finite rows or
+    non-positive errors).
+    """
+    t = np.asarray(time, float)
+    f = np.asarray(flux, float)
+    e = np.asarray(flux_err, float)
+    if not (t.shape == f.shape == e.shape):
+        raise ValueError("time, flux and flux_err must have one shape")
+    b = np.broadcast_to(np.asarray(band, str), t.shape)
+    ok = np.isfinite(t) & np.isfinite(f) & np.isfinite(e) & (e > 0)
+    order = np.argsort(t[ok], kind="stable")
+    cols = (t, f, e, b)
+    out = Table({k: c[ok][order] for k, c in zip(LIGHT_CURVE_FLUX_COLUMNS, cols, strict=True)})
+    out.meta.update(
+        provenance=schema.Provenance.OBSERVED.value,
+        source=source,
+        time_system=time_system,
+        flux_unit=flux_unit,
+        flux_kind=flux_kind,
+        n_dropped=int((~ok).sum()),
     )
     return out

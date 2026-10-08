@@ -29,6 +29,7 @@ macro-magnification), point or uniform-disk source, geometric optics.
 from __future__ import annotations
 
 import math
+from functools import lru_cache
 
 import astropy.constants as const
 import numpy as np
@@ -246,6 +247,15 @@ def count_ratio(
     return cumulative_counts(flux_limit / mu) / mu / cumulative_counts(flux_limit)
 
 
+@lru_cache(maxsize=16)
+def _gauss_legendre(n_nodes: int) -> tuple[np.ndarray, np.ndarray]:
+    """Cached Gauss-Legendre nodes and weights (recomputing them dominated fitter run time)."""
+    nodes, weights = np.polynomial.legendre.leggauss(n_nodes)
+    nodes.setflags(write=False)
+    weights.setflags(write=False)
+    return nodes, weights
+
+
 def _check_rho(rho: float) -> None:
     if not rho >= 0:
         raise ValueError("rho must be non-negative")
@@ -274,7 +284,7 @@ def finite_source_magnification(
     cuts = np.stack([lo, np.abs(b - rho), np.full_like(b, bc), hi], axis=1)
     cuts = np.sort(np.clip(cuts, lo[:, None], hi[:, None]), axis=1)
     a_, b_ = cuts[:, :-1], cuts[:, 1:]  # (N, 3) sub-intervals
-    nodes, weights = np.polynomial.legendre.leggauss(n_nodes)
+    nodes, weights = _gauss_legendre(int(n_nodes))
     t = 0.5 * np.pi * (nodes + 1.0)
     u = 0.5 * (1.0 - np.cos(t))
     du = 0.25 * np.pi * np.sin(t) * weights  # d u = sin(t)/2 dt, dt = pi/2 d(node)

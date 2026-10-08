@@ -2,6 +2,30 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 in MOA-II Cut-0 light curves (gb22): 30 flags, 0 survivors, first W3 rate limit (D-062)
+- Cloud runs (two sessions merged on `claude/w3-moa`). Hypothesis: the MOA-II 9-year release publishes every Cut-0
+  object (positive *or negative* difference-image detections) before any bump cut, so unlike OGLE (0 / 600) and
+  Gaia (0 / 240) its selection should keep W3 dimming events. `gb22.tar` (3.5 GB, smallest field, sha256 pinned).
+- Pre-screen on all 18,599 light curves: 1,058 shape passes, **30** after the shared-epoch tests (1,022 removed at
+  field-wide shared epochs, 6 at chip-wide ones); 0 / 100 PSPL controls pass. 30 flags (ΔBIC < −10), **0 survive
+  vetting** (funnel and the three eclipse-like dips in docs/exotic_limits.md "W3 in MOA-II"). `derived`.
+- Injection-recovery through Cut-0 emulation, pre-screen, fit and vetting (600 W3, 100 PSPL): recovered 8–53 % of
+  injections per cell. **Γ₉₅ ≈ 0.5–5 × 10⁻⁶ per monitored star per year** for t_E = 3–300 d, strongest at ~30 d
+  (N_s = 3.5 × 10⁶ is an ASSUMPTION from Nunota et al.'s N_s-per-object ratio; 1.43× weaker at its low end).
+- **Failed approaches:** fitting all 1,058 shape passes (chunk 1/8 flagged 131 / 133: dip-shaped variables at
+  shared epochs prefer negative-flux models; superseded by the shared-epoch cut, table kept as
+  `fits_gb22_chunk1of8.ecsv.gz`). The first vetting chain left 9 survivors; the contact sheet showed one- or
+  two-night drops and flat dips without caustic spikes, so the eclipse model, chip-level shared-epoch test and
+  ≥ 3-night rule were added (their cost to W3 is in the injection numbers). Waiting with `pgrep -f`/`pkill -f`
+  matches the waiting shell itself; wait on a log line or output file.
+- Reproduced in a later cloud run from the tracked fit table (`prescreen`, `merge-chunks --n 1`, `vet`, `sheet`).
+- Final `/code-review` fixes: Pool workers get the MOA fit bounds and shared-epoch populations through an
+  initializer (spawned workers on Windows inherited neither, so the shared-epoch cut was silently skipped there);
+  `fit --chunk` writes its own file instead of replacing the table `vet` reads; `merge-chunks` also checks the
+  pre-screen `Params`; the sheet labels a PAR winner's PSPL curve as such.
+- **Next:** a field with a published N_s (Nunota et al. 2024 Table 1) to make the limit model-light; the Cut-0
+  spurious-detection filters are not emulated, so ε (and the limit) are optimistic by an unknown factor.
+
 ## 2026-10-08: W3 in the Gaia DR3 microlensing candidates: the published selection rejects W3 too (D-061)
 - Cloud run. Hypothesis: the Gaia DR3 candidates (363; Wyrzykowski et al. 2023) are selected less PSPL-shaped than
   Mróz et al., so they could limit W3. Tested the selection before fitting, as D-057 requires.
