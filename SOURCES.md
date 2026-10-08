@@ -526,6 +526,50 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   (x/y-arcsec-deflect, kappa, z02-magnif, arcs.txt, params.txt where present) are pinned by sha256 in
   `lensmodel.HFF_CATS`. The release readmes quote rms 0.72″, 0.63″, n/a, 2.41″, 0.48″ and n/a.
 
+### MACS0717 field run (accessed 2026-10-08; D-041)
+
+- JWST program 6882 (VENUS, PI Fujimoto), observation 29 `jw06882-o029_t063`, 10 NIRCam bands, jwst 3.0.0, released
+  2025-11-03. Manifests: `data/manifests/macs0717*.ecsv`.
+- HFF MACS0717 second models, https://archive.stsci.edu/pub/hlsp/frontier/macs0717/models/<team>/<version>/. They
+  were read by byte range (κ/γ) or solved in scratch code and then deleted (Sharon and Keeton deflection maps). Full
+  sha256 values were streamed on 2026-10-08. The deflection-map prefixes match those recorded during the run.
+  - `hlsp_frontier_model_macs0717_sharon_v4cor_kappa.fits` 64,008,000 B `4dcb81cb70a5b429687566b850490ee9f727cb909b6c769adbcf03927930511c`
+  - `hlsp_frontier_model_macs0717_sharon_v4cor_gamma.fits` 64,008,000 B `077c548ea9b19fe717b9efd4b6f25a274f7c799b73b20dee0acd3ab55b8ccbca`
+  - `hlsp_frontier_model_macs0717_sharon_v4cor_x-arcsec-deflect.fits` 64,008,000 B `ded45fa9802561f764fa3c8fd427b8eebb620155ef43760b608bf7a8e719f758`
+  - `hlsp_frontier_model_macs0717_sharon_v4cor_y-arcsec-deflect.fits` 64,008,000 B `913acb9272a63776b70c71eb6b3424f94c94f2392572c1e844ef733c3c8c68f8`
+  - `hlsp_frontier_model_macs0717_keeton_v4_kappa.fits` 64,039,680 B `2bd093da64ea551bf49ba5026a24690ee3884d544a2b476e8ae0dce6c5b49684`
+  - `hlsp_frontier_model_macs0717_keeton_v4_gamma.fits` 64,039,680 B `50f203bd22748da418810dbb8e5eaa1548297082e8010652823ede58503b075e`
+  - `hlsp_frontier_model_macs0717_keeton_v4_x-arcsec-deflect.fits` 64,039,680 B `794590824dc56f12da9a261774c9488ab79a57cb792dcfebff586bd6cb078d6c`
+  - `hlsp_frontier_model_macs0717_keeton_v4_y-arcsec-deflect.fits` 64,039,680 B `9820902025c448a0f760facd51f107fffc2aa61ea7e6efb519d4a6c240e207c8`
+  - `hlsp_frontier_model_macs0717_glafic_v3_kappa.fits` 277,318,080 B `3c0f8b0ed0b9c7a04454c4b59640550479845b88ba47832b4cd539a19ff8319d`
+  - `hlsp_frontier_model_macs0717_glafic_v3_gamma.fits` 277,318,080 B `618bd396d6c3ade6ad67f2e593c475b6a99371d320483426f757cdc2142a0bfe`
+  - `hlsp_frontier_model_macs0717_williams_v4.1_kappa.fits` 3,090,240 B `cc807a9a391246e911f8e0a54a52e35139360c41949bd678c0983e7c3a5a7a40`
+  - `hlsp_frontier_model_macs0717_williams_v4.1_gamma.fits` 3,090,240 B `75ed37026ecedf04b250684669ab7263a3fb20e66754a017fc272dfd94cd87d3`
+  - `hlsp_frontier_model_macs0717_diego_v4.1_kappa.fits` 1,056,960 B `e3304e045a04639df725351bdfd12aec2dc530bc2b863b52e3631f927d10e69f`
+  - `hlsp_frontier_model_macs0717_diego_v4.1_gamma.fits` 1,056,960 B `316ab0e8953021b4ad0cef8d085aa0bb8c5df1acb5f74bcdee66fcc95bdfe9da`
+
+### MACS1149 field run (accessed 2026-10-08; D-037)
+
+- JWST CANUCS program 1208, NIRCam level 3 `jw01208-o008_t004_nircam_clear-*`, 8 bands (F090W–F444W), jwst 3.0.0,
+  S3 `s3://stpubdata/jwst/public/jw01208/L3/t/o008/`. Manifests: `data/manifests/macs1149*.ecsv`.
+- HFF Sharon v4cor MACS1149 deflection maps (second model for the comparison only; not in `MODELS`):
+  `https://archive.stsci.edu/pub/hlsp/frontier/macs1149/models/sharon/v4cor/hlsp_frontier_model_macs1149_sharon_v4cor_{x,y}-arcsec-deflect.fits`,
+  64,008,000 B each. sha256: x `44f1d21a78cead051c08295d13d7c9189638971cf1e9445bb2caa641a129324f`,
+  y `54508deb502d9bcafca9733c3b28f3b4d794b64f11167589b56c1fc37d66a15c`.
+- DJA v7 imaging index (dawn-cph GitHub Pages `/dja/imaging/v7/`): no MACS1149 mosaic.
+- CANUCS DR1 (DOI 10.17909/18nv-np70) MACS1149 cluster-field photometry and EAzY photo-z:
+  https://archive.stsci.edu/hlsps/canucs/dr1/macs1149/clu/hlsp_canucs_jwst-hst_multi_macs1149-clu_multi_v1_photometry-cat.fits.gz,
+  29,779,449 B, sha256 `08ab67347f2c3dfe4f743cc1b2a9d4b77a1e40eb66ddeb611648bb296adc0739`. The same directory tree has
+  CANUCS lens models (`model/`: deflection, κ, γ, best and samples), not yet used.
+### MACS0416 field run (accessed 2026-10-08; D-038)
+
+- JWST CANUCS program 1208, NIRCam level 3 `jw01208-o004_t002`, 8 bands, jwst 3.0.0. Manifests:
+  `data/manifests/macs0416*.ecsv`. Also available: PEARLS 1176 o211/o212/o213 `t009`.
+- DJA v7 index https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/index.html: no MACS0416 mosaic.
+- CANUCS DR1 (DOI 10.17909/18nv-np70) MACS0416 cluster-field photometry and EAzY photo-z:
+  https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/clu/hlsp_canucs_jwst-hst_multi_macs0416-clu_multi_v1_photometry-cat.fits.gz,
+  31,693,111 B, sha256 `339107a5c5041621d7bed4ecc8b4a51b5148a6913d4e513c3a5e783363f11bff`.
+
 ## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
 
 - arXiv:1009.6084 Abe, "Gravitational Microlensing by the Ellis Wormhole".

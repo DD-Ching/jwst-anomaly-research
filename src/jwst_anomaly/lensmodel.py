@@ -750,6 +750,15 @@ class LensModel:
         ra = self.ra0 - np.asarray(x, float) / 3600.0 / self._cos0
         return ra % 360.0, self.dec0 + np.asarray(y, float) / 3600.0
 
+    def shift_frame(self, dra_arcsec: float, ddec_arcsec: float) -> None:
+        """Move the whole model on the sky by (dRA cos dec, dDec) arcsec, in place (D-034).
+
+        Model-frame quantities are unchanged; only the frame's sky anchor moves.
+        """
+        self.ra0 += dra_arcsec / 3600.0 / self._cos0
+        self.dec0 += ddec_arcsec / 3600.0
+        self._cos0 = np.cos(np.deg2rad(self.dec0))
+
     @staticmethod
     def frame_angle_to_pa(phi_deg: Any) -> np.ndarray:
         """Direction angle in the model frame (deg CCW from +x = West) -> sky PA mod 180.
@@ -1101,6 +1110,97 @@ class DeflectionGrid:
         return grid
 
 
+def _triangle_seeds(
+    bx: np.ndarray, by: np.ndarray, gx: np.ndarray, gy: np.ndarray, beta_x: float, beta_y: float
+) -> tuple[np.ndarray, np.ndarray]:
+    """Seeds from the triangles of quadrilateral meshes that contain ``(beta_x, beta_y)``.
+
+    ``bx, by`` (mapped source-plane coordinates) and ``gx, gy`` (image-plane coordinates) have
+    shape ``(..., n, m)``: one or more meshes of ``n × m`` nodes. Every mesh cell is split into two
+    triangles; a triangle that contains beta gives the barycentric image-plane point as a seed.
+    """
+
+    # Pre-filter: a triangle can contain the source only if its cell's mapped corners bracket
+    # beta in both coordinates (inclusive, so boundary hits of the barycentric test are kept).
+    def brackets(m: np.ndarray, value: float) -> np.ndarray:
+        corners = (m[..., :-1, :-1], m[..., :-1, 1:], m[..., 1:, :-1], m[..., 1:, 1:])
+        return (np.minimum.reduce(corners) <= value) & (value <= np.maximum.reduce(corners))
+
+    idx = np.nonzero(brackets(bx, beta_x) & brackets(by, beta_y))
+    lead, rows, cols = idx[:-2], idx[-2], idx[-1]
+    seeds_x: list[np.ndarray] = []
+    seeds_y: list[np.ndarray] = []
+    for (a0, a1), (b0, b1), (c0, c1) in (
+        ((0, 0), (0, 1), (1, 0)),
+        ((1, 1), (1, 0), (0, 1)),
+    ):
+        ka, kb, kc = (
+            (lead + (rows + a0, cols + a1)),
+            (lead + (rows + b0, cols + b1)),
+            (lead + (rows + c0, cols + c1)),
+        )
+        pax, pay = bx[ka], by[ka]
+        pbx, pby = bx[kb], by[kb]
+        pcx, pcy = bx[kc], by[kc]
+        det = (pby - pcy) * (pax - pcx) + (pcx - pbx) * (pay - pcy)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            l1 = ((pby - pcy) * (beta_x - pcx) + (pcx - pbx) * (beta_y - pcy)) / det
+            l2 = ((pcy - pay) * (beta_x - pcx) + (pax - pcx) * (beta_y - pcy)) / det
+        hit = (l1 >= 0) & (l2 >= 0) & (1 - l1 - l2 >= 0)
+        w1, w2 = l1[hit], l2[hit]
+        w3 = 1 - w1 - w2
+        seeds_x.append(w1 * gx[ka][hit] + w2 * gx[kb][hit] + w3 * gx[kc][hit])
+        seeds_y.append(w1 * gy[ka][hit] + w2 * gy[kb][hit] + w3 * gy[kc][hit])
+    return np.concatenate(seeds_x), np.concatenate(seeds_y)
+
+
+def _fold_cells(
+    bx: np.ndarray, by: np.ndarray, beta_x: float, beta_y: float
+) -> tuple[np.ndarray, np.ndarray]:
+    """Grid cells next to a critical curve whose source-plane footprint may hide an image of beta.
+
+    A critical curve is where the mapped triangles change orientation (the sign of their signed
+    area). Near a fold, a merging image pair can sit inside one cell even when the cell's mapped
+    corners do not bracket beta, so a cell qualifies when it, or a neighbour, contains an
+    orientation change and beta lies within its mapped bounding box widened by the box's own size.
+    """
+
+    def widened(m: np.ndarray, value: float) -> np.ndarray:
+        corners = (m[:-1, :-1], m[:-1, 1:], m[1:, :-1], m[1:, 1:])
+        lo, hi = np.minimum.reduce(corners), np.maximum.reduce(corners)
+        pad = hi - lo
+        return (lo - pad <= value) & (value <= hi + pad)
+
+    cand = widened(bx, beta_x) & widened(by, beta_y)
+    if not cand.any():
+        return np.nonzero(cand)
+
+    def dilate(mask: np.ndarray) -> np.ndarray:
+        out = mask.copy()
+        out[1:, :] |= mask[:-1, :]
+        out[:-1, :] |= mask[1:, :]
+        out[:, 1:] |= mask[:, :-1]
+        out[:, :-1] |= mask[:, 1:]
+        return out
+
+    # Orientation signs only where the test below can look (two cells around the candidates).
+    band = dilate(dilate(cand))
+    rr, cc = np.nonzero(band)
+    x00, x01, x10, x11 = bx[rr, cc], bx[rr, cc + 1], bx[rr + 1, cc], bx[rr + 1, cc + 1]
+    y00, y01, y10, y11 = by[rr, cc], by[rr, cc + 1], by[rr + 1, cc], by[rr + 1, cc + 1]
+    sa = np.zeros(cand.shape, np.int8)
+    sb = np.zeros(cand.shape, np.int8)
+    with np.errstate(invalid="ignore"):  # map models are NaN outside their coverage: sign 0
+        sa[rr, cc] = np.nan_to_num(np.sign((x01 - x00) * (y10 - y00) - (x10 - x00) * (y01 - y00)))
+        sb[rr, cc] = np.nan_to_num(np.sign((x10 - x11) * (y01 - y11) - (x01 - x11) * (y10 - y11)))
+    crit = sa != sb
+    crit[:, 1:] |= sa[:, 1:] != sa[:, :-1]
+    crit[1:, :] |= sa[1:, :] != sa[:-1, :]
+    # dilate by one cell so both sides of the curve are refined; signs outside the two-cell
+    # band are unset, but only cells within one cell of a candidate are kept
+    return np.nonzero(dilate(crit & band) & cand)
+
+
 def find_images(
     model: LensModel,
     grid: DeflectionGrid,
@@ -1109,47 +1209,42 @@ def find_images(
     z_s: float,
     newton_steps: int = 12,
     tol_arcsec: float = 1e-5,
+    refine_arcsec: float = 0.02,
 ) -> Table:
     """All image positions of a point source at ``(beta_x, beta_y)`` (model frame, arcsec).
 
     Every grid cell is split into two triangles and mapped to the source plane; a triangle that
     contains the source seeds a Newton iteration on the lens equation with the analytic model.
-    Converged solutions closer than 0.05" are merged. Columns: ``x, y`` (arcsec), ``ra, dec``,
-    ``magnification`` (signed; negative = odd parity), ``residual_arcsec`` (source-plane misfit).
-    Images outside the grid, or in cells where the map folds below the grid scale, can be missed.
+    Cells next to a critical curve whose source-plane footprint is near the source are subdivided
+    into sub-cells of at most ``refine_arcsec`` (below the 0.05" merge radius) with the model
+    evaluated directly, so a merging pair inside one grid cell is still found (D-040);
+    ``refine_arcsec <= 0`` disables this. Converged solutions closer than 0.05" are merged.
+    Columns: ``x, y`` (arcsec), ``ra, dec``, ``magnification`` (signed; negative = odd parity),
+    ``residual_arcsec`` (source-plane misfit). Images outside the grid can be missed.
     Provenance ``model_prediction``.
     """
     s = float(model.dls_ds(z_s))
     g = grid.x
     bx = g[None, :] - s * grid.alpha_x
     by = g[:, None] - s * grid.alpha_y
-    seeds_x: list[np.ndarray] = []
-    seeds_y: list[np.ndarray] = []
-    # Pre-filter: a triangle can contain the source only if its cell's mapped corners bracket
-    # beta in both coordinates (inclusive, so boundary hits of the barycentric test are kept).
-
-    def brackets(m: np.ndarray, value: float) -> np.ndarray:
-        corners = (m[:-1, :-1], m[:-1, 1:], m[1:, :-1], m[1:, 1:])
-        return (np.minimum.reduce(corners) <= value) & (value <= np.maximum.reduce(corners))
-
-    rows, cols = np.nonzero(brackets(bx, beta_x) & brackets(by, beta_y))
-    for (a0, a1), (b0, b1), (c0, c1) in (
-        ((0, 0), (0, 1), (1, 0)),
-        ((1, 1), (1, 0), (0, 1)),
-    ):
-        pax, pay = bx[rows + a0, cols + a1], by[rows + a0, cols + a1]
-        pbx, pby = bx[rows + b0, cols + b1], by[rows + b0, cols + b1]
-        pcx, pcy = bx[rows + c0, cols + c1], by[rows + c0, cols + c1]
-        det = (pby - pcy) * (pax - pcx) + (pcx - pbx) * (pay - pcy)
-        with np.errstate(divide="ignore", invalid="ignore"):
-            l1 = ((pby - pcy) * (beta_x - pcx) + (pcx - pbx) * (beta_y - pcy)) / det
-            l2 = ((pcy - pay) * (beta_x - pcx) + (pax - pcx) * (beta_y - pcy)) / det
-        hit = (l1 >= 0) & (l2 >= 0) & (1 - l1 - l2 >= 0)
-        iy, ix = rows[hit], cols[hit]
-        w1, w2 = l1[hit], l2[hit]
-        w3 = 1 - w1 - w2
-        seeds_x.append(w1 * g[ix + a1] + w2 * g[ix + b1] + w3 * g[ix + c1])
-        seeds_y.append(w1 * g[iy + a0] + w2 * g[iy + b0] + w3 * g[iy + c0])
+    gx, gy = np.broadcast_to(g[None, :], bx.shape), np.broadcast_to(g[:, None], by.shape)
+    x0, y0 = _triangle_seeds(bx, by, gx, gy, beta_x, beta_y)
+    seeds_x, seeds_y = [x0], [y0]
+    step = g[1] - g[0]
+    n_sub = int(np.ceil(step / refine_arcsec - 1e-9)) if refine_arcsec > 0 else 1
+    if n_sub > 1:
+        rows, cols = _fold_cells(bx, by, beta_x, beta_y)
+        if len(rows):
+            t = np.linspace(0.0, step, n_sub + 1)
+            fx = g[cols][:, None, None] + t[None, None, :]
+            fy = g[rows][:, None, None] + t[None, :, None]
+            fx, fy = np.broadcast_arrays(fx, fy)
+            ax, ay = model.deflection_xy(fx.ravel(), fy.ravel())
+            fbx = fx - s * np.asarray(ax).reshape(fx.shape)
+            fby = fy - s * np.asarray(ay).reshape(fy.shape)
+            x1, y1 = _triangle_seeds(fbx, fby, fx, fy, beta_x, beta_y)
+            seeds_x.append(x1)
+            seeds_y.append(y1)
     # Newton steps for every seed at once: one fields_xy call per step over all potentials.
     x, y = np.concatenate(seeds_x), np.concatenate(seeds_y)
     for _ in range(newton_steps):
@@ -1339,6 +1434,17 @@ class MapLensModel(LensModel):
             sha256=digest.hexdigest(),
             centre=centre,
         )
+
+    def shift_frame(self, dra_arcsec: float, ddec_arcsec: float) -> None:
+        """Move the model and its maps on the sky (the maps are looked up by sky position, so
+        moving only the frame anchor would leave them in place; D-040)."""
+        crval = self.wcs.wcs.crval
+        self.wcs.wcs.crval = [
+            crval[0] + dra_arcsec / 3600.0 / self._cos0,
+            crval[1] + ddec_arcsec / 3600.0,
+        ]
+        self.wcs.wcs.set()
+        super().shift_frame(dra_arcsec, ddec_arcsec)
 
     def _interp(self, x: np.ndarray, y: np.ndarray, keys) -> dict[str, np.ndarray]:
         from scipy.ndimage import map_coordinates

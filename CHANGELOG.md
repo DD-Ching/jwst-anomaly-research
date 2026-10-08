@@ -14,6 +14,56 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Lesson:** a single-epoch source in a mosaic can be an afterimage that two dithers place on one sky position.
   The archived `_cal` files carry no DQ flag there.
 - **Handoff:** `/vet-candidate n0153`; persistence-check new single-epoch candidates before vetting.
+## 2026-10-08: MACS0717 screens: null (D-041)
+- Worktree worker on VENUS 6882 o029 (10 bands, the only public NIRCam association) with `macs0717-cats` (rms 3.21″).
+- 51 flags, 0 surviving. 29 are the model's own copies of catalogued images it does not reproduce (1.6–5.6″ off), 6 are
+  CATS-only extra images (Sharon v4cor and Keeton v4 predict none), and 5 have μ more than 2× model-dependent.
+  System 65's flux ratio is a 0.6″ catalogue offset. `radial` p ≥ 0.70.
+- **Failed approach:** a fixed 1.5″ match radius for a 3.2″-rms model makes most catalogued images "unpredicted",
+  and their model copies then flag as absent or confused.
+- Wall time: about 7.5 min of pipeline plus about 20 min of vetting.
+- **Handoff:** in `forced_check`, rms-scaled match and search radii and automatic copy classification; Sharon v4cor and
+  Keeton v4 as pinned `MapLensModel` entries.
+
+## 2026-10-08: `find_images` fold refinement; frame offsets for map models (D-040)
+- Cells on a critical curve near the source are subdivided into ≤ 0.02″ sub-cells. MACS0416 system 26 is now solved
+  (rms 1.57″ → 0.76″), and its image list is open with offset (0.208, −0.025). No other model changes beyond 0.03″
+  rms; Abell 2744 `validate` takes 41 s instead of 29 s.
+- **Bug fixed:** `apply_frame_offset` was a no-op for map models (the maps are looked up by sky position), and
+  `radial` / `arcs` skipped it for them. No earlier result used a map model with an offset. MACS0416's radial screen
+  was re-run in the JWST frame: still null.
+- **Handoff:** `images` / `fluxratio` on MACS0416 (CANUCS photo-z); radial on Abell 370 and Abell S1063.
+
+## 2026-10-08: MACS0416: system 26 is a solver-grid artefact; radial null (D-038)
+- Worktree worker on CANUCS 1208 (`jw01208-o004_t002`, 8 bands). The CATS system-26 residual (11″) is the 0.25″
+  `find_images` grid missing a merging pair near the critical curve; the source lies 0.001–0.005″ from the caustic. On a 0.1″ grid the rms is 0.811″ (1.13×
+  quoted). The model stays map-only until the solver refines its grid near high |μ|.
+- `radial`: 98 centres against 99.6 random; the 7-line centre (p 0.29) is low-S/N noise segments. With CANUCS DR1
+  photo-z (background cut): 77 against 85.0, p 0.225. 0 flags.
+- **Failed approach:** jwst 3.0.0 isophotal S/N admits noise segments (66 of 137 anti arcs have aper50 S/N < 3). The
+  radial screen needs an aper50 S/N floor.
+- Wall time: about 4.5 min (lens and exotic scripts plus vetting stamps; no pipeline `run`).
+- **Handoff:** adaptive grid refinement in `find_images`; an aper50 S/N floor in `radial`.
+
+## 2026-10-08: CANUCS DR1 photo-z for MACS1149 (D-037 addendum)
+- **Failed approach:** the worker checked only DJA, but docs/landscape.md already listed CANUCS DR1 (PSF-matched
+  EAzY photo-z for A370, MACS0416, MACS0417, MACS1149 and MACS1423). Check docs/landscape.md before reporting that a
+  field has no photo-z.
+- MACS1149 system 16.2: z_phot 2.25 (95 % 0.23–2.33). This disfavours the CATS-fitted 4.419.
+- Radial re-run with the background cut: 12 peaks against a null mean of 12.8; null. 6 of 68 matched lensed images
+  get a blended z < 0.6.
+
+## 2026-10-08: MACS1149 screens: null (D-037)
+- Worktree worker on CANUCS 1208 (8 bands) with `macs1149-cats`. The image-plane rms is 0.673″ (gate passes) and
+  the frame offset is under 0.02″.
+- 3 flags, 0 surviving: system 16 (fitted z 4.419; at z 2.5 in CATS or 3.0 in Sharon v4cor the image lands on 16.2), system 2 (CATS topology error,
+  checked against Sharon v4cor), Refsdal-host knot 1192 (next to the BCG; μ differs >2× between models).
+  `fluxratio` 0 flags; `radial` p = 0.91.
+- **Failed approach:** forced photometry with an annulus on a BCG core gives negative fluxes; use high-pass.
+- No DJA mosaic for MACS1149 (v7).
+- Wall time: about 5 min of pipeline plus about 10 min of vetting.
+- **Handoff:** `macs1149-sharon` (or the CANUCS models) in `MODELS`; the D-037 rules in `forced_check`; system 16's
+  redshift (spectroscopic z, or forced photometry on its far-image track); `images` with CANUCS photo-z.
 
 ## 2026-10-08: Abell 2744 screens: null (D-036)
 - A worktree worker ran `validate`, `images --forced-image`, `fluxratio` and `radial` on Bergamini+2023b, with

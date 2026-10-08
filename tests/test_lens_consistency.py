@@ -326,6 +326,41 @@ def test_frame_offset_moves_model_and_images_together():
         del lc.MODELS["_test"]
 
 
+def test_frame_offset_moves_a_map_model_with_its_maps():
+    from jwst_anomaly import lensmodel
+
+    model = _model()
+    n, pix = 401, 0.2
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = [RA0, DEC0]
+    w.wcs.crpix = [(n + 1) / 2, (n + 1) / 2]
+    w.wcs.cdelt = [-pix / 3600, pix / 3600]
+    jj, ii = np.mgrid[0:n, 0:n]
+    ax, ay = model.deflection_xy(*model.to_frame(*w.pixel_to_world_values(ii, jj)))
+    mm = lensmodel.MapLensModel(ax, ay, w, model.z_lens, model.cosmology, source="synthetic")
+    ref = lensmodel.MapLensModel(ax, ay, w.deepcopy(), model.z_lens, model.cosmology, source="ref")
+    px, py = np.array([7.3, -11.2]), np.array([4.1, 9.6])
+    before = mm.deflection_xy(px, py)
+    sky = mm.to_sky(px, py)
+    lc.MODELS["_test"] = {"frame_offset_arcsec": (0.6, -0.4)}
+    try:
+        lc.apply_frame_offset("_test", mm)
+    finally:
+        del lc.MODELS["_test"]
+    # in model-frame coordinates nothing changes: the maps moved with the reference point
+    np.testing.assert_allclose(mm.deflection_xy(px, py), before, atol=1e-6)
+    # the maps moved +0.6" in RA cos dec and -0.4" in Dec, so a fixed sky position now shows
+    # what the unshifted maps had 0.6" lower in RA and 0.4" higher in Dec
+    ra_src = sky[0] - 0.6 / 3600.0 / np.cos(np.deg2rad(DEC0))
+    dec_src = sky[1] + 0.4 / 3600.0
+    np.testing.assert_allclose(
+        mm.deflection_xy(*mm.to_frame(*sky)),
+        ref.deflection_xy(*ref.to_frame(ra_src, dec_src)),
+        atol=2e-3,
+    )
+
+
 def test_predict_counter_images_reproduces_an_sis_pair():
     from jwst_anomaly import lensmodel
 

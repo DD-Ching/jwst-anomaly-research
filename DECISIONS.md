@@ -1794,6 +1794,81 @@ D-034's rules now remove these automatically.
 - `bayes.dat` position spreads do not cover 34.1 / 700.1.
 - An independent model (UNCOVER v2.0, or the CATS v4.1 maps of D-035) predicts a bright image where none is seen.
 
+## D-037 MACS1149 screens: null; repeated-pair, fitted-redshift and model-dependent-μ rules (2026-10-08)
+
+**Decision.** The MACS1149 screens (`macs1149-cats`, CANUCS program 1208 `jw01208-o008_t004`) are a null result
+(docs/fields/macs1149.md). There were 3 forced-photometry flags. Two are ordinary model errors: system 16 (fitted
+redshift / pair topology) and system 2 (topology). One is untestable: knot 1192 (model-dependent μ). New rules
+(ASSUMPTION: thresholds):
+- **Repeated pair.** An extra predicted image is untestable (`model_topology`) when its system's catalogued images
+  share one predicted image (`validate`'s `shared_match_images`) and the image lies within 8″ of that pair. MACS1149
+  system 16's flagged image is 7.2″ from 16.1 and 6.9″ from 16.2.
+- **Fitted redshift.** The same applies when the system's redshift is model-fitted (`z_m_limit`, or no spectroscopic
+  z in `arcs.txt`) and a redshift change within ±50 % moves the image onto a catalogued one. For system 16, CATS needs
+  z 4.419 → 2.5 (−43 %) and Sharon v4cor needs → 3.0 (−32 %).
+- **Model-dependent μ.** D-036's μ-stability rule is extended from flux-ratio flags to forced-photometry flags: a
+  `confused` or `absent` image whose μ differs by more than 2× between independent models is untestable.
+- **BCG annuli.** Where a forced-photometry background annulus crosses a BCG core, the flux goes negative. Use
+  high-pass photometry there (0.6″ median filter).
+
+**Alternatives rejected.** Treating system 16's third image as missing: the predicted image exists only at the
+CATS-fitted z = 4.419.
+
+**Evidence.**
+- `validate`: κ median relative difference 3.3e-3; μ(z=2) 5.6e-4; image-plane rms 0.673″ over 145 images (the D-035
+  gate passes). The frame offset is under 0.02″, so `MODELS["macs1149-cats"]` has no `frame_offset_arcsec`.
+- `images`: 159 predicted, 16 forced-tested (F277W). `fluxratio`: 19 consistent, 106 resolved, 0 under- or
+  overluminous. `radial`: 98 anti arcs; 32 peaks against a null mean of 30.8 (p95 41); p = 0.91. With CANUCS DR1 photo-z (134
+  non-background sources dropped, including some blended lensed images): 62 anti arcs, 12 peaks against 12.8 (p95
+  20), max 3 lines; null.
+- System 16 (μ 15.8; empty sky at −0.4σ after high-pass): at z = 2.5 (CATS) or 3.0 (Sharon v4cor), both models move
+  the image onto 16.2, so 16.1 and 16.2 become a merging pair. CANUCS DR1 photo-z for 16.2: z 2.25 (95 % 0.23–2.33; upper bound
+  2.67 with the 0.1 × (1 + z) margin). This disfavours the fitted 4.419. In CATS the pair is close to merging at z
+  2.0–2.5. (derived) The far image (μ ≈ 4, `recovered` at 0.95″ but 0σ at
+  the fixed position) moves 3–5.5″ between z = 2.5 and 3.0, so it is untestable too.
+- System 2: CATS merges 2.2 and 2.3; Sharon places the critical curve between them.
+- Knot 1192 (SN Refsdal host) is 1.1″ from the BCG. CATS gives μ 7.5; Sharon gives 2.2 at its image 0.56″ away.
+- Tally: 159 predicted images, 145 flux-ratio images and 98 anti arcs screened; 3 flags; **0 surviving**.
+
+**Revisit if.**
+- A spectroscopic z for system 16 is published (search the MUSE catalogues of Grillo+2016 and Treu+2016), or a source
+  with 16.1's colour is found on the far-image track (z = 2.5–3.5 positions). Either would fix z.
+- `images` is re-run with CANUCS DR1 photo-z (counterpart redshifts). DJA v7 has no MACS1149 mosaic.
+## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)
+
+**Decision.** MACS0416 system 26's 11″ image-plane residual (D-035) comes from `find_images`. With the default 0.25″
+solver grid, it misses the merging 26.1/26.2 pair, because the mean source lies 0.001–0.005″ from the fold caustic
+(|μ| 142, 153, 69). It is not a redshift problem and not a model failure. `macs0416-cats` stays map-only (image list
+gated off) until the solver refines its grid near high |μ|. Pairs whose catalogued images share one predicted image
+(`shared_match_images`) are checked at a 0.1″ grid before they are called model topology. The radial screen is null
+(docs/fields/macs0416.md).
+
+**Alternatives rejected.**
+- Dropping system 26 by hand (rms 0.809″): this hides a solver limitation.
+- Opening the image list on the 0.1″ result alone: system 122 still shares one predicted image on both grids, and the
+  gate should not depend on a hand-chosen step.
+
+**Evidence.**
+- Data: CANUCS 1208 `jw01208-o004_t002`, 8 bands, jwst 3.0.0.
+- `validate`: κ 2.5e-3; μ(z=2) 3.7e-4. Image-plane rms:
+  - 1.572″ on the 0.25″ grid (116 images; 2.18× the quoted 0.72″);
+  - 0.811″ on a 0.1″ grid (1.13×), where system 26's residuals are 0.15″, 1.01″ and 1.12″.
+- Redshift: `params.txt` has no `z_m_limit`. z = 3.238 is close to the source-plane rms minimum (0.071″ at z 3.30).
+  All three images have F200W counterparts within 0.22″.
+- Frame offset (arcs.txt → JWST, 54 images): dRA +0.208″, dDec −0.025″.
+- MACS1149 control: its six shared pairs are identical at 0.25″ and 0.1″, so D-037's topology verdicts stand.
+- `radial` (no photo-z): 139 anti arcs, 98 centres against a random mean of 99.6 (p95 120). The strongest centre has
+  7 lines, p = 0.29. Its lines are noise segments: aper50 S/N 1.6–4.0, nothing in cutouts, forced S/N within ±1.5σ.
+  With aper50 S/N ≥ 5, there are 7 centres against 6.8 and at most 3 lines. Re-run with CANUCS DR1 photo-z (77
+  non-background sources dropped, some of them blended lensed images): 120 anti arcs, 77 centres against 85.0 (p95 103), max 7 lines, p 0.225; null.
+  In the JWST frame (offset applied; D-040 fix): 101 against 100.2 without photo-z, 81 against 84.9 with; null.
+- Tally: 137 anti arcs screened; 0 flags; **0 surviving**. `images` and `fluxratio` were not run (gated).
+
+**Revisit if.**
+- `find_images` gets adaptive refinement near |μ| > 50. Then open the MACS0416 gate and run `images` / `fluxratio`
+  with `frame_offset_arcsec` (0.208, −0.025).
+- `images` / `fluxratio` run with CANUCS DR1 photo-z once the image list opens.
+
 ## D-039 Persistence test on level-2 exposures; Sunrise `n0022` and `n0150` are afterimages (2026-10-08)
 
 **Decision.** Before a single-epoch source counts as a transient, `scripts/persistence_check.py` measures it in every
@@ -1823,3 +1898,74 @@ it `on_sky`. Thresholds are ASSUMPTIONs.
 
 **Revisit if.** A candidate is detected in exposures whose earlier ones were dark at its pixel, but fades within one
 visit (fast transient vs. a lookback that is too short), or afterimages appear > 3 h after the illumination.
+
+## D-040 `find_images` refines grid cells on folds; frame offsets move map models; MACS0416 image list open (2026-10-08)
+
+**Decision.**
+- `find_images(..., refine_arcsec=0.02)` keeps the triangle scan on the deflection grid. It then subdivides, into
+  sub-cells of at most 0.02″ (below the 0.05″ merge radius), every cell that lies within one cell of a critical curve
+  and whose mapped bounding box, widened by its own size, contains the source. The model is evaluated directly at the
+  sub-cell nodes. A critical curve is detected where the mapped triangles change orientation. `refine_arcsec=0`
+  restores the plain scan.
+- Frame offsets go through `LensModel.shift_frame`; `MapLensModel.shift_frame` also moves its WCS. Map models look
+  their maps up by sky position, so moving only the reference point left the maps where they were. `radial` and
+  `arcs` now apply the offset for every model, not only Lenstool ones.
+- `macs0416-cats` gets `frame_offset_arcsec` (0.208, −0.025) and its image list is opened.
+
+**Alternatives rejected.**
+- A finer global grid (0.1″): about 6× the memory and time on every field, against the 2M-cell rule.
+- Dropping system 26 by hand.
+
+**Evidence.**
+- MACS0416 `validate`: image-plane rms 1.572″ → 0.760″ (1.06× the quoted 0.72″; the gate passes). System 26 is
+  solved as 3 images. Shared matches drop from 6 to 3 (only system 122 is left).
+- The other eight models give the same rms with and without refinement (SMACS 0.318″, El Gordo 0.754″, Abell 2744
+  0.427″, MACS1149 0.673″, MACS0717 3.21″, Abell S1063, Abell 2744 CATS), except Abell 370 (10.69″ → 10.66″).
+- Grid alignment: a synthetic fold pair gives the same image count on 0.5″, 0.3″ and 0.25″ grids of different extents
+  (an 8 × 8 split with 0.0625″ sub-cells did not).
+- `validate` wall time: Abell 2744 29 s → 41 s, El Gordo 16 s → 18 s, MACS0416 2.6 s → 3.9 s, SMACS 14 s → 12 s.
+- Tests: a synthetic fold pair about 0.1″ apart inside one 0.5″ cell is missed by the plain scan and found, with opposite
+  parities, by the refined scan. A frame offset leaves a map model's model-frame deflection unchanged and moves it on
+  the sky.
+- No earlier result was affected: no map model had an offset before this change (MACS1149 and MACS0717 are under
+  0.1″). MACS0416's radial screen was re-run in the JWST frame with this code after pinning its offset: still null
+  (D-038).
+
+**Revisit if.**
+- A fold image is still missed with `refine=8` (cusps with three merging images may need recursion).
+- Map models with rotated WCS grids appear (`MapLensModel` rejects them today).
+
+
+## D-041 MACS0717 screens: null; model copies of unpredicted images; CATS-only extra images (2026-10-08)
+
+**Decision.** The MACS0717 screens (`macs0717-cats`, VENUS program 6882 `jw06882-o029_t063`, 10 bands) are a null
+result (docs/fields/macs0717.md). There were 51 flags, 0 surviving. Two rules (ASSUMPTION: thresholds):
+- **Model copy.** A predicted image within 1.75× the model's image-plane rms (5.6″ here) of a catalogued, detected
+  but unpredicted image of the same system is the model's copy of that image, not a missing counter-image. In
+  MACS0717, 29 of the 51 flags are copies, 1.6–5.6″ from catalogued images.
+- **Model-dependent extra image.** An extra image predicted by one model but by neither of two independent models
+  solved from their deflection maps (here Sharon v4cor and Keeton v4) is model-dependent and untestable. This extends
+  the D-036/D-037 μ rule to image existence.
+
+**Alternatives rejected.** Reporting the raw `absent` / `confused` classes. Matching within 1.5″ for a model whose
+image-plane rms is 3.2″: 89 of 132 catalogued images have no prediction within 1.5″. With `--match-arcsec 3.2` the forced-photometry flags
+drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the radius), and all were vetted.
+
+**Evidence.**
+- `validate`: κ 3.2e-3; μ(z=2) 1.2e-3; image-plane rms 3.21″ against the quoted 2.41″ (the gate passes). With the
+  D-040 fold refinement, rms and the 16 shared matches are unchanged, so the copies are not solver-grid misses (the
+  `images` run itself used the 0.25″ grid before D-040). Frame offset
+  (F200W, 63 matches): +0.023″, −0.061″, so no `frame_offset_arcsec`.
+- `images` (forced F277W): 199 predicted. Classes: recovered 25, confused 38, absent 6, undetectable 13,
+  no_reference 54, inconsistent_reference 5, off_image 3.
+- `fluxratio`: system 65 under- and overluminous; the rest are 26 consistent, 82 resolved and 22 untestable.
+  65.2's JWST source is 0.6″ from its catalogued position. Corrected, the flux ratio is 0.7–1.1. μ(65.1)/μ(65.2) is
+  0.37–17 across six models (untestable).
+- `radial` (no photo-z): 11 peaks against a random mean of 16.7; max 5 lines; p ≥ 0.70.
+- Breakdown of the 51 flags: 29 model copies, 5 untestable μ, 6 CATS-only extra images, 6 below sensitivity, 1 with a
+  counterpart inside the position uncertainty, and 4 rows for the system 65 pair. Cutouts were inspected for every flag.
+
+**Revisit if.**
+- A JWST-era MACS0717 lens model appears.
+- A MACS0717 photo-z catalogue (DJA or a team release) appears: re-run `radial` with the background cut.
+- `forced_check` ties its match and search radii to the measured image-plane rms when that rms exceeds 1″.

@@ -1,0 +1,27 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: dataURI, datatype: string}
+# - {name: productFilename, datatype: string}
+# - {name: local_path, datatype: string}
+# - {name: size, datatype: int64}
+# - {name: sha256, datatype: string}
+# - {name: retrieved_utc, datatype: string}
+# - {name: pipeline_version, datatype: string}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'MAST via astroquery.mast.Observations.download_file; size checked against MAST, sha256 computed locally, pipeline_version
+#     read from each file''s own header'}
+# - {local_path_root: $JWST_ANOMALY_DATA (jwst_anomaly.paths.data_root)}
+# schema: astropy-2.0
+dataURI productFilename local_path size sha256 retrieved_utc pipeline_version
+mast:JWST/product/jw06882-o029_t063_nircam_clear-f090w_cat.ecsv jw06882-o029_t063_nircam_clear-f090w_cat.ecsv cache/mast/jw06882-o029_t063_nircam_clear-f090w/jw06882-o029_t063_nircam_clear-f090w_cat.ecsv 4508959 db53f7610caafcd18e021f551d2d9e557c6bce646f38bd202d7b45d5a9a786d3 2026-10-08T02:39:31Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw06882-o029_t063_nircam_clear-f115w_cat.ecsv jw06882-o029_t063_nircam_clear-f115w_cat.ecsv cache/mast/jw06882-o029_t063_nircam_clear-f115w/jw06882-o029_t063_nircam_clear-f115w_cat.ecsv 4322309 385ca06d3fe6557f917f63c6a6b97823b9682c2970603b51d8f570da394c6d6b 2026-10-08T02:39:32Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw06882-o029_t063_nircam_clear-f150w_cat.ecsv jw06882-o029_t063_nircam_clear-f150w_cat.ecsv cache/mast/jw06882-o029_t063_nircam_clear-f150w/jw06882-o029_t063_nircam_clear-f150w_cat.ecsv 4438823 418e232566c8556860e5a80272a3a7c755c00f15251f0ef851445d02d31c7405 2026-10-08T02:39:33Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw06882-o029_t063_nircam_clear-f200w_cat.ecsv jw06882-o029_t063_nircam_clear-f200w_cat.ecsv cache/mast/jw06882-o029_t063_nircam_clear-f200w/jw06882-o029_t063_nircam_clear-f200w_cat.ecsv 5384150 099c3c38f368a41219701e4a55c3632c81757dd2a9d2987356cbd99cca077648 2026-10-08T02:39:34Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw06882-o029_t063_nircam_clear-f210m_cat.ecsv jw06882-o029_t063_nircam_clear-f210m_cat.ecsv cache/mast/jw06882-o029_t063_nircam_clear-f210m/jw06882-o029_t063_nircam_clear-f210m_cat.ecsv 5580333 5c55978719be0a18ec2fb375fea39fecd02bdd8b4b2bed371685c3934f992210 2026-10-08T02:39:35Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw06882-o029_t063_nircam_clear-f277w_cat.ecsv jw06882-o029_t063_nircam_clear-f277w_cat.ecsv cache/mast/jw06882-o029_t063_nircam_clear-f277w/jw06882-o029_t063_nircam_clear-f277w_cat.ecsv 3676735 3af7862095acb9cde69c53060ca315af5c58bdb52f3701afc8c6c78fdfd40281 2026-10-08T02:39:36Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw06882-o029_t063_nircam_clear-f300m_cat.ecsv jw06882-o029_t063_nircam_clear-f300m_cat.ecsv cache/mast/jw06882-o029_t063_nircam_clear-f300m/jw06882-o029_t063_nircam_clear-f300m_cat.ecsv 3668962 411a9dcfa5727a8f8c6169d81c754b091e543a20b29bd30ce79b731775fd39bd 2026-10-08T02:39:37Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw06882-o029_t063_nircam_clear-f356w_cat.ecsv jw06882-o029_t063_nircam_clear-f356w_cat.ecsv cache/mast/jw06882-o029_t063_nircam_clear-f356w/jw06882-o029_t063_nircam_clear-f356w_cat.ecsv 3684532 aa60f6b966feb44bb560f7111776c4cc1cdbfe1abad25a582960cb8ef229c9ff 2026-10-08T02:39:38Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw06882-o029_t063_nircam_clear-f410m_cat.ecsv jw06882-o029_t063_nircam_clear-f410m_cat.ecsv cache/mast/jw06882-o029_t063_nircam_clear-f410m/jw06882-o029_t063_nircam_clear-f410m_cat.ecsv 3372243 322277e75f5def4c9c16abea8849b797eed1d8be819c6b6c2150b0af51fdd937 2026-10-08T02:39:38Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
+mast:JWST/product/jw06882-o029_t063_nircam_clear-f444w_cat.ecsv jw06882-o029_t063_nircam_clear-f444w_cat.ecsv cache/mast/jw06882-o029_t063_nircam_clear-f444w/jw06882-o029_t063_nircam_clear-f444w_cat.ecsv 3672082 2f9ecc3f2ddd9323d0b3bb6f69e3ad5b879b4619059df1e06706674c368265be 2026-10-08T02:39:39Z jwst=3.0.0;photutils=3.0.0;astropy=8.0.0
