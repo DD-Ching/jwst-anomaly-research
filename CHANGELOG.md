@@ -7,7 +7,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   with main (its D-060 renumbered **D-062**). `gb22.tar` (3.5 GB, sha256 verified) and `metadata.ipac.tar.gz` fetched.
 - `prescreen` on all 18,599 gb22 light curves: 0 errors, 137 s wall; **1,058 passes** (`derived`).
 - `inject --prescreen-only` (seed 60; 300 W3, 100 PSPL on real quiet light curves): W3 survives emulated Cut-0 and the
-  pre-screen at 28 / 47 / 58 / 50 / 33 % (t_E 3 / 10 / 30 / 100 / 300 d); PSPL 0 / 100. This is the first sample in
+  pre-screen at 23 / 43 / 48 / 38 / 28 % (t_E 3 / 10 / 30 / 100 / 300 d); PSPL 0 / 100. This is the first sample in
   this project whose selection keeps W3 (OGLE 0 / 600, Gaia 0 / 240).
 - `fit --chunk 1/8`: 133 passes, 0 errors, 855 s wall; best ordinary PSPL 130 / FSPL 3; ΔBIC(min exotic) 5/50/95 % = −13,497 / −631 / −193; **131 / 133 flag** (`derived`). Every pass flags (dip-shaped variables prefer a negative-flux model), so `vet` is
   the discriminating step; no conclusion before it runs on all chunks and the contact sheet is inspected.
