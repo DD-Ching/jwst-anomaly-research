@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Sunrise `n0153` vetted: a real nuclear brightening, inconclusive without a third epoch
+- Forced photometry against 388 (F150W) and 378 (F444W) o010 sources within 75″: the controls' median Δm is
+  +0.003/+0.002 and none reaches |σ| ≥ 5. `n0153` is at −0.64 mag, −7.8σ (F150W) and −0.52 mag, −3.6σ (F444W). The
+  jwst 2.0.1 → 3.0.0 calibration does not explain it.
+- The F150W difference image is compact and 0.018″ from the 2022 centroid. The host is compact but resolved (DJA
+  r50 ≈ 1.45× the point-source locus), with z_phot 2.04 (1.66–2.25). No SIMBAD/NED/Gaia source within 3″. It lies
+  128″ from the cluster centre, outside the multiple-image region.
+- Verdict: `inconclusive`. AGN variability or a nuclear SN/TDE (a `hypothesis`); not a lensing anomaly. MAST has no
+  other JWST epoch, and o120 misses the position.
+- **Rule:** for transients across pipeline versions, use controls within about 1′ of the candidate to test the
+  calibration locally (`--controls` on a cone-cut catalogue).
+- **Handoff:** back to TASKS "Now" item 1. Check MAST for WHL0137 revisits when one could be due.
+
 ## 2026-10-08: Sunrise transient candidates `n0022` and `n0150` are detector persistence (D-039)
 - New `scripts/persistence_check.py`: per-exposure photometry on level-2 `_cal` files (S3 byte ranges), plus the
   same detector pixel in earlier exposures on that detector. Validated on a synthetic afterimage and on two real
