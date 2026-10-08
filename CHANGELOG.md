@@ -8,8 +8,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   37-px sub-grid): median |μ| ratio 1.00001 / 1.00001, p95 relative difference 0.04 % / 0.07 %, parity 100 %;
   χ²pos unchanged (82.53). At full resolution (250,000 points), >20 % mismatches sit only on critical curves or
   within ~1″ of member cores (0.4″ map pixels).
-- **Handoff:** El Gordo μ and parities are validated. Next, the El Gordo `bayes.dat` `Chi2` column (D-045), then
-  posterior μ spreads in `fluxratios`.
+- El Gordo `bayes.dat` `Chi2` explained (D-045 amendment): the sampling run uses `forme -10`, an image-plane χ² with
+  σ² = a·b from the image list (19 of 56 images at 1.24″). It reproduces `Chi2` row by row to 0.1 % and the
+  ln(Lhood) offset (75.904) exactly. The chain is validated. **Failed approach:** a source-plane χ² with free
+  per-family weights (held-out ρ 0.81) fit only partly; the definition came from Lenstool's source.
+- **Handoff:** El Gordo μ, parities and the MCMC chain are validated. Next: posterior μ spreads in `fluxratios`.
 
 ## 2026-10-08: Multi-plane lens models (D-046)
 - `LensModel.split_planes` moves named potentials (e.g. a foreground galaxy fitted as a member) to their own

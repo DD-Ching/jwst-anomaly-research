@@ -87,6 +87,23 @@ def test_elgordo_reproduces_its_published_magnification_maps():
         assert res["parity_agree"] > 0.999
 
 
+@pytest.mark.network
+def test_elgordo_chain_normalisation_is_forme_minus10():
+    # D-045 amendment: ln(Lhood) = -(Chi2 + sum 2 ln(2 pi a b))/2 with the image list's a, b
+    files = lc.model_files("elgordo-caminha23")
+    bayes = lc.lensmodel.read_lenstool_bayes(
+        lc.fetch_catalog(*lc.MODELS["elgordo-caminha23"]["bayes"])
+    )
+    rows = [ln.split() for ln in files["arcs.dat"].read_text().splitlines()]
+    rows = [r for r in rows if r and not r[0].startswith("#")]  # id ra dec a b theta z mag
+    a, b = (np.array([float(r[k]) for r in rows]) for k in (3, 4))
+    assert len(a) == 56  # every family has >= 2 images, so every image enters the sum
+    const = np.sum(np.log(2 * np.pi * a * b))
+    assert const == pytest.approx(75.904258, abs=1e-5)
+    offset = np.asarray(bayes["ln(Lhood)"], float) + 0.5 * np.asarray(bayes["Chi2"], float)
+    assert np.allclose(offset, -const, atol=1e-4)
+
+
 def test_chi2pos_from_par(tmp_path):
     par = tmp_path / "best.par"
     par.write_text("#Chi2tot(dof=32): 30.9\n#Chi2pos: 30.913219\nrunmode\n end\n")

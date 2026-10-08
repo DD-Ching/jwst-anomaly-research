@@ -504,6 +504,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
       `bayes.dat` 1,666,720 B sha256 `2d3f7362…` (MCMC chain, D-045), `to_sample.par` (read for the potfile `mag0`).
       `fits/magnification_best_fit_z2.fits` and `_z4.fits` (4,003,200 B each; sha256 `2cfe1b62…`, `6eab61e2…`; signed μ,
       0.4″/px, model frame), pinned in `lensmodel.ELGORDO_CAMINHA23_MAG_MAPS` for `validate`.
+    - Lenstool source, https://git-cral.univ-lyon1.fr/lenstool/lenstool.git (v8.15.6, commit 09cf4cc4, accessed
+      2026-10-08): `docs/sphinx/source/section_parfile/image.rst` ("forme"), `src/o_chi.c` (`chi2_img`, σ² = a·b for
+      `forme -10`), `src/bayesapp.c` (bayes.dat ln(Lhood) and Chi2). Read for the D-045 amendment.
     - RELICS models: https://archive.stsci.edu/hlsps/relics/act0102m49/models/ (DOI 10.17909/T9SP45).
 - **Sunrise (WHL0137−08).**
   - Data: MAST 2282 `jw02282-o010_t001` (jwst 2.0.1); later epochs 2282 o120 and 6882 o052.
