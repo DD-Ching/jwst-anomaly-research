@@ -18,6 +18,12 @@ and then PSF-wing differences between epochs fake a change (Earendel, docs/field
 where the source exists (epoch 2 for ``appeared`` candidates, else epoch 1), and measures both
 epochs at that same sky position.
 
+ERR-based errors underestimate the noise of these measurements (1.2–1.5x in Sunrise, D-027).
+``--controls`` measures ordinary sources (a random subset of a catalog, e.g. the epoch-1
+pipeline ``_cat.ecsv``, within ``--control-mag``) the same way. Per band, the robust std
+(1.4826 MAD) of their significances is the noise scale. Candidate significances are divided by it
+(never by less than 1) before thresholding, and the raw values are kept as ``*_sigma_raw``.
+
     python scripts/transient_forced.py --candidates outputs/transients/coincident.ecsv \\
         --band F444W jw02736-o001_t001_nircam_clear-f444w jw06882-o057_t057_nircam_clear-f444w \\
         --band F150W jw02736-o001_t001_nircam_clear-f150w jw06882-o057_t057_nircam_clear-f150w \\
@@ -168,6 +174,51 @@ def compare(
         return dm, dm / sig_dm, sig_flux
 
 
+def robust_std(x: np.ndarray) -> float:
+    """1.4826 x median absolute deviation of the finite values (NaN when fewer than 10)."""
+    x = np.asarray(x, float)
+    x = x[np.isfinite(x)]
+    if len(x) < 10:
+        return float("nan")
+    return float(1.4826 * np.median(np.abs(x - np.median(x))))
+
+
+def select_controls(
+    cat: Table,
+    n: int,
+    mag_range: tuple[float, float],
+    avoid_ra: np.ndarray,
+    avoid_dec: np.ndarray,
+    avoid_arcsec: float = 1.0,
+    seed: int = 0,
+) -> Table:
+    """A reproducible random subset of ``n`` catalog sources (``ra``/``dec`` or the pipeline's
+    ``sky_centroid``) as noise controls.
+
+    Uses ``aper_total_abmag`` within ``mag_range`` when the column exists, and drops sources within
+    ``avoid_arcsec`` of any candidate, so a control never measures a candidate."""
+    if "ra" in cat.colnames:
+        ra, dec = np.asarray(cat["ra"], float), np.asarray(cat["dec"], float)
+    else:  # a raw pipeline catalog
+        ra, dec = cat["sky_centroid"].ra.deg, cat["sky_centroid"].dec.deg
+    keep = np.isfinite(ra) & np.isfinite(dec)
+    if "aper_total_abmag" in cat.colnames:
+        m = np.asarray(np.ma.filled(cat["aper_total_abmag"], np.nan), float)
+        with np.errstate(invalid="ignore"):
+            keep &= (m >= mag_range[0]) & (m <= mag_range[1])
+    if len(avoid_ra):
+        from astropy import units as u
+        from astropy.coordinates import SkyCoord
+
+        c = SkyCoord(ra * u.deg, dec * u.deg)
+        _, d, _ = c.match_to_catalog_sky(SkyCoord(avoid_ra * u.deg, avoid_dec * u.deg))
+        keep &= d.arcsec > avoid_arcsec
+    idx = np.flatnonzero(keep)
+    rng = np.random.default_rng(seed)
+    idx = np.sort(rng.choice(idx, size=min(n, len(idx)), replace=False))
+    return Table({"ra": ra[idx], "dec": dec[idx]})
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--candidates", type=Path, required=True, help="table with ra, dec columns")
@@ -191,25 +242,41 @@ def main(argv: list[str] | None = None) -> int:
         help="move the aperture to the source centroid (box half-width) per band, found in epoch 1 "
         "(epoch 2 for 'appeared' candidates), and measure both epochs there",
     )
+    ap.add_argument(
+        "--controls",
+        type=Path,
+        default=None,
+        help="ordinary sources (ra, dec; e.g. the epoch-1 _cat.ecsv) for noise calibration",
+    )
+    ap.add_argument("--n-controls", type=int, default=200)
+    ap.add_argument(
+        "--control-mag", nargs=2, type=float, default=(25.5, 28.0), metavar=("BRIGHT", "FAINT")
+    )
     args = ap.parse_args(argv)
 
     cfg = pipeline.load_config(args.config)
     cand = Table.read(args.candidates)
-    targets = Table(
-        {
-            "source_uid": [f"c{k:04d}" for k in range(len(cand))],
-            "ra": np.asarray(cand["ra"], float),
-            "dec": np.asarray(cand["dec"], float),
-        }
-    )
+    n_cand = len(cand)
+    ra_all, dec_all = np.asarray(cand["ra"], float), np.asarray(cand["dec"], float)
+    uids = [f"c{k:04d}" for k in range(n_cand)]
+    kinds = np.asarray(cand["kind"]).astype(str) if "kind" in cand.colnames else np.full(n_cand, "")
+    if args.controls is not None:
+        ctl = select_controls(
+            Table.read(args.controls), args.n_controls, tuple(args.control_mag), ra_all, dec_all
+        )
+        ra_all = np.concatenate([ra_all, np.asarray(ctl["ra"])])
+        dec_all = np.concatenate([dec_all, np.asarray(ctl["dec"])])
+        uids += [f"n{k:04d}" for k in range(len(ctl))]
+        kinds = np.concatenate([kinds, np.full(len(ctl), "control")])
+    is_control = np.arange(len(uids)) >= n_cand
+    targets = Table({"source_uid": uids, "ra": ra_all, "dec": dec_all})
     out = Table({"source_uid": targets["source_uid"], "ra": targets["ra"], "dec": targets["dec"]})
-    confirmed = np.ones(len(targets), bool)
+    out["control"] = is_control
+    confirmed = ~is_control
+    noise = {}
+    # appeared sources exist only in epoch 2, so they are centroided there; others in epoch 1
+    from_e2 = np.char.startswith(kinds, "appeared")
     for band, obs1, obs2 in args.band:
-        # appeared sources exist only in epoch 2, so they are centroided there; others in epoch 1
-        if "kind" in cand.colnames:
-            from_e2 = np.char.startswith(np.asarray(cand["kind"]).astype(str), "appeared")
-        else:
-            from_e2 = np.zeros(len(targets), bool)
         files, scales = [], []
         for epoch, obs in (("1", obs1), ("2", obs2)):
             uri = pipeline.l3_image_uri(cfg.get("cloud"), obs)
@@ -243,8 +310,19 @@ def main(argv: list[str] | None = None) -> int:
             er.append(e)
         dm, sig, sig_flux = compare(fl[0], er[0], fl[1], er[1], args.sys_floor)
         out[f"{band}_flux1"], out[f"{band}_flux2"] = fl[0], fl[1]
-        out[f"{band}_dmag"], out[f"{band}_sigma"] = dm, sig
-        out[f"{band}_flux_sigma"] = sig_flux
+        out[f"{band}_dmag"] = dm
+        if is_control.any():
+            s_dm, s_fl = robust_std(sig[is_control]), robust_std(sig_flux[is_control])
+            noise[band] = {
+                "sigma": s_dm,
+                "flux_sigma": s_fl,
+                "n_controls": int(np.isfinite(sig_flux[is_control]).sum()),
+            }
+            out[f"{band}_sigma_raw"], out[f"{band}_flux_sigma_raw"] = sig, sig_flux
+            # never sharpen: a scale below 1 (or undefined) leaves the ERR-based value
+            sig = sig / (s_dm if s_dm > 1 else 1.0)
+            sig_flux = sig_flux / (s_fl if s_fl > 1 else 1.0)
+        out[f"{band}_sigma"], out[f"{band}_flux_sigma"] = sig, sig_flux
         with np.errstate(invalid="ignore"):
             changed = (np.abs(dm) >= args.min_dmag) & (np.abs(sig) >= args.min_sigma)
             # a non-detection in one epoch (flux <= 0) is judged in flux space
@@ -253,7 +331,13 @@ def main(argv: list[str] | None = None) -> int:
     out["confirmed"] = confirmed
     for c in cand.colnames:
         if c not in ("ra", "dec") and c not in out.colnames:
-            out[c] = cand[c]
+            if is_control.any():  # controls get masked values in candidate-only columns
+                pad = np.ma.masked_all(int(is_control.sum()), dtype=cand[c].dtype)
+                out[c] = np.ma.concatenate([np.ma.asarray(cand[c]), pad])
+            else:
+                out[c] = cand[c]
+    if is_control.any():
+        out["kind"] = kinds
     out.meta.update(
         provenance="derived",
         radius_arcsec=args.radius_arcsec,
@@ -265,9 +349,20 @@ def main(argv: list[str] | None = None) -> int:
         },
         bands=[list(b) for b in args.band],
     )
+    if noise:
+        out.meta["noise_scale"] = {
+            **noise,
+            "controls": str(args.controls),
+            "control_mag": list(args.control_mag),
+            "provenance": "derived",
+        }
     args.out.mkdir(parents=True, exist_ok=True)
     out.write(args.out / "forced.ecsv", overwrite=True)
-    print(json.dumps({"n": len(out), "confirmed": int(confirmed.sum())}))
+    print(
+        json.dumps(
+            {"n": int((~is_control).sum()), "confirmed": int(confirmed.sum()), "noise": noise}
+        )
+    )
     return 0
 
 

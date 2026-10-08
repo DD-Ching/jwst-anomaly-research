@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Sunrise third epoch with calibrated significances; two open transient candidates (D-027)
+- `transient_forced.py --controls`: noise scale from ordinary sources, applied before thresholding.
+- Sunrise o010 against VENUS o052 (2.9 yr; F150W, F444W): scales 1.30/1.18; **0 of 57 catalog candidates pass**;
+  Earendel steady (Δm ≤ 0.12 mag, < 1σ).
+- Among the 200 controls, `n0022` (gone after 2022-07 in four SW bands), `n0150` (a different position in each
+  epoch) and `n0153` (+0.5–0.6 mag in both bands) change. Not vetted; ordinary explanations (supernova, moving
+  object, AGN, edge artefact) are untested. docs/fields/sunrise.md has the numbers.
+- **Failed approach:** the catalog stage plus the two-band rule misses single-pair, blue transients.
+- **Handoff:** `/vet-candidate` for `n0022` and `n0150` (level-2 `_cal` exposures per filter: is the source in
+  every dither? Does `n0150` move within one visit?); then a grid of forced photometry (all sources, not only
+  catalog candidates) for every epoch pair.
+
 ## 2026-10-08: Map-based lens models; Sunrise radial screen null (D-033)
 - `lensmodel.MapLensModel` evaluates published deflection maps. The first one is `whl0137-relics-lenstool`, which
   reproduces RELICS κ to 3.5e-5 and μ(z = 6.2) to 2.0e-5 (medians).

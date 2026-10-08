@@ -40,9 +40,11 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - El Gordo module A is a flanking field;
    - reword `acquire._warn_if_reprocessed`.
 3. **Two-epoch search** (D-027): null results for SMACS/VENUS and Sunrise o010/o120; Earendel is steady
-   (docs/fields/sunrise.md). Next:
-   - divide forced-photometry significances by the control std (1.2–1.5) before thresholding;
-   - add a third epoch: Sunrise VENUS 6882 o052 (F150W, F444W, jwst 3.0.0; forced photometry only);
+   (docs/fields/sunrise.md). Third epoch (o052, calibrated with `--controls`): 0 of 57 candidates. Next:
+   - **vet the Sunrise transient candidates** `n0022`, `n0150` (and variable `n0153`) from the third-epoch
+     controls (docs/fields/sunrise.md): per-dither `_cal` exposures, host, moving-object test;
+   - forced photometry on all catalogued sources, not only catalog-stage candidates (the two-band rule misses
+     blue transients); find why o010/o120 missed `n0022`/`n0150`;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps
