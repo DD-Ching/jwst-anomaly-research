@@ -154,9 +154,15 @@ def test_fast_parser_equals_the_line_parser_and_reads_column_subsets():
     for text in (LC, LC_COR):
         fast = moa.parse_lightcurve(text)
         slow = moa._parse_lines(text)
-        assert fast.keys() == slow.keys()
+        fixed = moa._parse_fixed(text.encode())
+        assert fixed is not None  # the fixed-width path is the one taken
+        assert fast.keys() == slow.keys() == fixed.keys()
         for k in slow:
             np.testing.assert_array_equal(fast[k], slow[k])
+            assert fixed[k].tobytes() == moa._parse_tokens(text.encode())[k].tobytes()
+    shifted = LC.replace(" 3825.12153    164", "3825.12153     164")  # token under a bar
+    assert moa._parse_fixed(shifted.encode()) is None
+    assert moa.parse_lightcurve(shifted)["HJD"].size == 4
     sub = moa.parse_lightcurve(gzip.compress(LC.encode()), columns=("flux", "included"))
     assert set(sub) == {"HJD", "flux", "included"}
     ragged = LC + "  3827.0  1.0\n"  # a short row: the line parser drops it

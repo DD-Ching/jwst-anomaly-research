@@ -28,6 +28,7 @@ from __future__ import annotations
 import gzip
 import io
 import tarfile
+import zlib
 from pathlib import Path
 
 import numpy as np
@@ -35,6 +36,8 @@ from astropy.table import Table, vstack
 
 from jwst_anomaly import paths, photometry, schema
 from jwst_anomaly.signatures import standard_flux_light_curve
+
+_inflate = zlib  # gzip members inflated in C with the CRC and length checked
 
 BULK = "https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/"
 COLUMNS_DOC = "https://exoplanetarchive.ipac.caltech.edu/docs/API_moa_columns.html"
@@ -205,8 +208,15 @@ def parse_lightcurve(raw: bytes | str, columns=None) -> dict[str, np.ndarray]:
     """
     if isinstance(raw, str):
         raw = raw.encode()
-    if raw[:2] == b"\x1f\x8b":
-        raw = gzip.decompress(raw)
+    if bytes(raw[:2]) == b"\x1f\x8b":
+        d = _inflate.decompressobj(wbits=31)  # one gzip member, CRC and length checked in C
+        out = d.decompress(raw)
+        raw = out if d.eof and not d.unused_data else gzip.decompress(raw)
+    elif isinstance(raw, memoryview):
+        raw = raw.tobytes()
+    fast = _parse_fixed(raw, columns)
+    if fast is not None:
+        return fast
     fast = _parse_tokens(raw, columns)
     if fast is not None:
         return fast
@@ -215,6 +225,49 @@ def parse_lightcurve(raw: bytes | str, columns=None) -> dict[str, np.ndarray]:
         want = {"HJD", *columns}
         out = {k: v for k, v in out.items() if k in want}
     return out
+
+
+def _parse_fixed(raw: bytes, columns=None) -> dict[str, np.ndarray] | None:
+    """Fixed-width parse: only the wanted columns' byte ranges are converted. None unless every
+    row has the header's width, ends in a newline and is blank under every header bar (then each
+    column slice holds exactly the token the whitespace split would give)."""
+    pos, bars, names = 0, None, None
+    while raw[pos : pos + 1] in (b"|", b"\\"):
+        end = raw.find(b"\n", pos)
+        if end < 0:
+            return None
+        if names is None and raw[pos : pos + 1] == b"|":
+            line = raw[pos:end].rstrip(b"\r")
+            bars = [i for i, c in enumerate(line) if c == 124]
+            names = [h.strip().decode() for h in line.strip(b"|").split(b"|")]
+        pos = end + 1
+    body = raw[pos:]
+    width = body.find(b"\n") + 1
+    if names is None or len(bars) != len(names) + 1 or width <= bars[-1] or len(body) % width:
+        return None
+    u8 = np.frombuffer(body, np.uint8).reshape(-1, width)
+    if (
+        (u8[:, -1] != 10).any()
+        or (u8[:, bars[:-1]] != 32).any()
+        or (u8[:, bars[-1] : -1] != 32).any()
+    ):
+        return None
+    want = None if columns is None else {"HJD", *columns}
+    out: dict[str, np.ndarray] = {}
+    for j, name in enumerate(names):
+        if want is not None and name not in want:
+            continue
+        a, b = bars[j] + 1, bars[j + 1]
+        col = np.ascontiguousarray(u8[:, a:b])
+        if name == "included":
+            out[name] = np.char.strip(col.view(f"S{b - a}").ravel()) == b"True"
+        else:  # each slice ends in a blank (the bar column), so tokens stay apart
+            v = np.fromstring(np.ascontiguousarray(u8[:, a : b + 1]).tobytes(), sep=" ")
+            if v.size != len(u8):
+                return None
+            out[name] = v
+    keep = np.isfinite(out["HJD"]) if "HJD" in out else np.ones(len(u8), bool)
+    return {k: v[keep] for k, v in out.items()}
 
 
 def _parse_tokens(raw: bytes, columns=None) -> dict[str, np.ndarray] | None:

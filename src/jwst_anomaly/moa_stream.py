@@ -91,22 +91,24 @@ class RangeReader:
 
 
 def read_segment(reader: RangeReader, start: int, stop: int, total: int) -> list[tuple]:
-    """``[(event_id, offset_data, size, gz_bytes)]`` of the members whose header starts in
-    ``[start, stop)``; the last member's data is fetched past ``stop`` as needed."""
-    buf = bytearray(reader.read(start, min(stop, total)))
+    """``[(event_id, offset_data, size, gz_view)]`` of the members whose header starts in
+    ``[start, stop)``; the last member's data is fetched past ``stop`` as needed. ``gz_view`` is a
+    zero-copy ``memoryview`` into the downloaded range (one copy of the bytes in memory)."""
+    buf = reader.read(start, min(stop, total))
     base, pos, out = start, start, []
     while True:
         need = None
-        for eid, off, size in moa.walk_members(buf, base, pos, stop):
+        view = memoryview(buf)
+        for eid, off, size in moa.walk_members(view, base, pos, stop):
             if eid == "":
                 need, pos = size, off  # resume at this header once buf reaches `need`
                 break
-            out.append((eid, off, size, bytes(buf[off - base : off - base + size])))
+            out.append((eid, off, size, view[off - base : off - base + size]))
         if need is None or base + len(buf) >= total:
             return out
         end = min(max(need, base + len(buf) + (1 << 20)), total)
         end += (-end) % 512 if end < total else 0
-        buf += reader.read(base + len(buf), min(end, total))
+        buf = buf + reader.read(base + len(buf), min(end, total))  # rare: a member past `stop`
 
 
 def segments(start: int, stop: int, seg_bytes: int) -> list[tuple[int, int]]:
@@ -157,6 +159,19 @@ def _get_whole(eid: str) -> bytes:
             time.sleep(delay * (1.0 + random.random()))
             delay *= 2.0
     raise OSError(f"{moa.object_url(eid)}: failed after retries")
+
+
+def limit_heap_growth() -> None:
+    """glibc only: serve allocations ≥ 1 MB by mmap (returned to the OS when freed) and cap the
+    malloc arenas, so a process that cycles 64 MB ranges does not keep a fragmented heap."""
+    try:
+        import ctypes
+
+        libc = ctypes.CDLL("libc.so.6")
+        libc.mallopt(-3, 1 << 20)  # M_MMAP_THRESHOLD (also stops the dynamic threshold)
+        libc.mallopt(-8, 2)  # M_ARENA_MAX
+    except (OSError, AttributeError):
+        pass
 
 
 class CpuMeter:

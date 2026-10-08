@@ -90,14 +90,24 @@ def out_dir() -> Path:
 # ----------------------------------------------------------------------------- pre-screen
 
 
+def _median(x: np.ndarray) -> float:
+    """``np.median`` of a 1-d array without its wrapper overhead (bit-identical: the mean of the
+    two middle values is their sum / 2, as ``np.mean`` computes it; NaN or empty: ``np.median``)."""
+    n = x.size
+    if n == 0 or np.isnan(x).any():
+        return float(np.median(x))
+    lo, hi = np.partition(x, ((n - 1) // 2, n // 2))[[(n - 1) // 2, n // 2]]
+    return float(lo) if n % 2 else float((lo + hi) / 2.0)
+
+
 def robust_scale(f: np.ndarray, sf: np.ndarray) -> tuple[float, float]:
     """Median flux and the error scale from point-to-point scatter (1.4826 MAD of successive
     differences of f/σ, / √2, ≥ 1): insensitive to slow trends and to the event itself."""
-    b = float(np.median(f))
+    b = _median(f)
     if f.size < 3:
         return b, 1.0
     d = np.diff(f) / np.hypot(sf[1:], sf[:-1])
-    s = 1.4826 * float(np.median(np.abs(d - np.median(d))))
+    s = 1.4826 * _median(np.abs(d - _median(d)))
     return b, max(s, 1.0)
 
 
@@ -111,7 +121,7 @@ def spread_of(x: np.ndarray, valid: np.ndarray) -> float:
     if valid.sum() < 10:
         return 1.0
     v = x[valid]
-    return max(1.4826 * float(np.median(np.abs(v - np.median(v)))), 1.0)
+    return max(1.4826 * _median(np.abs(v - _median(v))), 1.0)
 
 
 def deficit_scan(t, f, sf, widths=None, n_min=None) -> dict:
@@ -274,8 +284,6 @@ CHUNK_BYTES = (
     4 * 2**30
 )  # tar bytes per tracked pre-screen chunk (~1–2 min of download, ~1 min CPU/GB)
 SEG_BYTES = 64 * 2**20  # one HTTP range read
-BATCH_MEMBERS = 32  # light curves per process-pool task
-MAX_BACKLOG = 1536 * 2**20  # downloaded, not yet scanned bytes held in memory
 QUIET_TRACK_MOD = 4  # ASSUMPTION: 1 in 4 quiet light curves (by crc32 of the id) is tracked
 TRACK_COLUMNS = (
     "event_id",
@@ -397,13 +405,46 @@ def _write_prescreen_chunk(field: str, k: int, n: int, rows: list, stats: dict) 
     return path
 
 
+def _stream_worker(wid: int, segs: list, total: int, url, path, prefetch: int, queue) -> None:
+    """One pre-screen process: reads its own byte ranges (``prefetch`` threads download the next
+    segments while this one is scanned) and puts ``(segment, rows, MB, retries)`` on ``queue``;
+    the parent holds no light-curve bytes. ``None`` marks the end, ``("error", text)`` a failure."""
+    from collections import deque
+    from concurrent.futures import ThreadPoolExecutor
+
+    moa_stream.limit_heap_growth()
+    try:
+        reader = moa_stream.RangeReader(url=url, path=path)
+        with ThreadPoolExecutor(prefetch) as ex:
+            futs = deque()
+            nxt = 0
+            while nxt < len(segs) and len(futs) < prefetch:
+                k, a, b = segs[nxt]
+                futs.append(ex.submit(moa_stream.read_segment, reader, a, b, total))
+                nxt += 1
+            for s in segs:
+                members = futs.popleft().result()
+                if nxt < len(segs):
+                    k, a, b = segs[nxt]
+                    futs.append(ex.submit(moa_stream.read_segment, reader, a, b, total))
+                    nxt += 1
+                rows = _scan_batch(members)
+                del members
+                queue.put((s, rows, reader.n_retries))
+        queue.put(None)
+    except Exception as exc:  # noqa: BLE001 — reported to the parent, which stops the run
+        queue.put(("error", f"worker {wid}: {exc!r}"[:500]))
+
+
 def run_stream_prescreen(field: str, procs: int, conns: int, chunks=None, source: str = "auto",
                          log_every: float = 30.0) -> list[Path]:  # fmt: skip
-    """Pre-screen a whole field tar without storing it: ``conns`` concurrent range reads feed a
-    pool of ``procs`` processes (download of later segments overlaps the scan of earlier ones).
-    One tracked table per ``CHUNK_BYTES`` of tar; finished chunks are skipped (resumable)."""
+    """Pre-screen a whole field tar without storing it. ``procs`` processes each read their own
+    64 MB byte ranges (segments dealt round-robin) with ``conns / procs`` prefetch threads, so
+    downloads overlap the scan and no process holds more than a few segments. One tracked table
+    per ``CHUNK_BYTES`` of tar; finished chunks are skipped (resumable)."""
+    import multiprocessing as mp
+    import queue as queue_mod
     from collections import defaultdict
-    from concurrent.futures import FIRST_COMPLETED, ProcessPoolExecutor, ThreadPoolExecutor, wait
 
     n, total = n_chunks(field), moa.TAR_BYTES[field_number(field)]
     todo = [k for k in (range(n) if chunks is None else chunks) if not _chunk_done(field, k, n)]
@@ -419,101 +460,88 @@ def run_stream_prescreen(field: str, procs: int, conns: int, chunks=None, source
         )
     ]
     seg_left = {k: sum(1 for s in segs if s[0] == k) for k in todo}
+    seg_pos = {s: i for i, s in enumerate(segs)}
+    prefetch = max(1, conns // procs)
+    print(f"{field}: {len(todo)} of {n} chunks, {len(segs)} segments of {SEG_BYTES >> 20} MB, "
+          f"{procs} processes × {prefetch} prefetching connections, source "
+          f"{reader.url or reader.path}", flush=True)  # fmt: skip
+    ctx = mp.get_context("fork") if "fork" in mp.get_all_start_methods() else mp.get_context()
+    queue = ctx.Queue(maxsize=4 * procs)
+    workers = [
+        ctx.Process(
+            target=_stream_worker,
+            args=(i, segs[i::procs], total, reader.url, reader.path, prefetch, queue),
+            daemon=True,
+        )
+        for i in range(procs)
+    ]
+    for w in workers:
+        w.start()
     rows = defaultdict(list)
     t_chunk = {k: None for k in todo}
-    stats_chunk = defaultdict(lambda: {"bytes": 0, "cpu": []})
-    batches_left: dict[tuple, int] = {}
-    meter, meter_chunk = moa_stream.CpuMeter(), {}
+    meter_chunk, bytes_chunk = {}, defaultdict(int)
+    meter = moa_stream.CpuMeter()
+    retries = [0] * procs
     written = []
-    it = iter(segs)
-    dl, cpu = {}, {}
-    backlog = 0
     t0 = t_log = time.time()
-    n_items = n_items_log = 0
-    bytes_log = 0
-    exhausted = False
-    print(
-        f"{field}: {len(todo)} of {n} chunks, {len(segs)} segments of {SEG_BYTES >> 20} MB, "
-        f"{conns} connections, {procs} processes, source {reader.url or reader.path}",
-        flush=True,
-    )
-    with (
-        ThreadPoolExecutor(conns) as tp,
-        ProcessPoolExecutor(procs, initializer=_init_worker, initargs=(_ctx(),)) as pp,
-    ):
-        while True:
-            while not exhausted and len(dl) < conns and backlog < MAX_BACKLOG:
-                s = next(it, None)
-                if s is None:
-                    exhausted = True
-                    break
-                if t_chunk[s[0]] is None:
-                    t_chunk[s[0]] = time.time()
-                    meter_chunk[s[0]] = moa_stream.CpuMeter()
-                dl[tp.submit(moa_stream.read_segment, reader, s[1], s[2], total)] = s
-                backlog += s[2] - s[1]
-            if not dl and not cpu:
-                break
-            done, _ = wait([*dl, *cpu], return_when=FIRST_COMPLETED)
-            for fut in done:
-                if fut in dl:
-                    s = dl.pop(fut)
-                    members = fut.result()
-                    backlog -= s[2] - s[1]
-                    seg_bytes = sum(m[2] for m in members)
-                    stats_chunk[s[0]]["bytes"] += s[2] - s[1]
-                    bytes_log += s[2] - s[1]
-                    parts = [
-                        members[i : i + BATCH_MEMBERS]
-                        for i in range(0, len(members), BATCH_MEMBERS)
-                    ]
-                    batches_left[s] = len(parts)
-                    backlog += seg_bytes
-                    for part in parts:
-                        cpu[pp.submit(_scan_batch, part)] = (s, sum(m[2] for m in part))
-                    if not parts:
-                        batches_left[s] = 1
-                        cpu_done = [(s, 0)]
-                    else:
-                        cpu_done = []
-                else:
-                    s, nb = cpu.pop(fut)
-                    out = fut.result()
-                    rows[s[0]].extend(out)
-                    n_items += len(out)
-                    backlog -= nb
-                    cpu_done = [(s, 0)]
-                for s_done, _ in cpu_done:
-                    batches_left[s_done] -= 1
-                    if batches_left[s_done] == 0:
-                        del batches_left[s_done]
-                        k = s_done[0]
-                        seg_left[k] -= 1
-                        if seg_left[k] == 0:
-                            wall = time.time() - t_chunk[k]
-                            busy = meter_chunk[k].busy()
-                            st = {
-                                "wall_time_s": round(wall, 1),
-                                "items_per_s": round(len(rows[k]) / wall, 1),
-                                "mb_per_s": round(stats_chunk[k]["bytes"] / 1e6 / wall, 1),
-                                "cpu_percent": None if busy is None else round(busy, 1),
-                                "procs": procs,
-                                "conns": conns,
-                            }
-                            p = _write_prescreen_chunk(field, k, n, rows.pop(k), st)
-                            written.append(p)
-                            print(f"{field} chunk {k + 1}/{n}: {st}", flush=True)
+    for k in todo[:1]:
+        t_chunk[k], meter_chunk[k] = t0, moa_stream.CpuMeter()
+    n_items = n_items_log = bytes_log = 0
+    finished = 0
+    try:
+        while finished < procs:
+            try:
+                msg = queue.get(timeout=60)
+            except queue_mod.Empty:
+                dead = [w.exitcode for w in workers if not w.is_alive() and w.exitcode]
+                if dead:
+                    raise SystemExit(
+                        f"{field} pre-screen: a worker died (exit codes {dead})"
+                    ) from None
+                continue
+            if msg is None:
+                finished += 1
+                continue
+            if msg[0] == "error":
+                raise SystemExit(f"{field} pre-screen failed: {msg[1]}")
+            s, out, nret = msg
+            k = s[0]
+            if t_chunk[k] is None:  # a later chunk started (rough: its first finished segment)
+                t_chunk[k], meter_chunk[k] = time.time(), moa_stream.CpuMeter()
+            retries[seg_pos[s] % procs] = nret
+            rows[k].extend(out)
+            n_items += len(out)
+            bytes_chunk[k] += s[2] - s[1]
+            bytes_log += s[2] - s[1]
+            seg_left[k] -= 1
+            if seg_left[k] == 0:
+                wall = time.time() - t_chunk[k]
+                busy = meter_chunk[k].busy()
+                st = {
+                    "wall_time_s": round(wall, 1),
+                    "items_per_s": round(len(rows[k]) / wall, 1),
+                    "mb_per_s": round(bytes_chunk[k] / 1e6 / wall, 1),
+                    "cpu_percent": None if busy is None else round(busy, 1),
+                    "procs": procs,
+                    "conns": procs * prefetch,
+                }
+                written.append(_write_prescreen_chunk(field, k, n, rows.pop(k), st))
+                print(f"{field} chunk {k + 1}/{n}: {st}", flush=True)
             now = time.time()
             if now - t_log >= log_every:
                 busy = meter.busy()
                 print(
                     f"  {n_items} light curves, {(n_items - n_items_log) / (now - t_log):.0f}/s, "
-                    f"{bytes_log / 1e6 / (now - t_log):.0f} MB/s downloaded, CPU "
-                    f"{busy if busy is None else round(busy)} %, backlog {backlog >> 20} MB, "
-                    f"retries {reader.n_retries}",
+                    f"{bytes_log / 1e6 / (now - t_log):.0f} MB/s, CPU "
+                    f"{busy if busy is None else round(busy)} %, retries {sum(retries)}",
                     flush=True,
                 )
                 t_log, n_items_log, bytes_log = now, n_items, 0
+    finally:
+        for w in workers:
+            if w.is_alive() and finished < procs:
+                w.terminate()
+            w.join()
     print(f"{field}: {n_items} light curves in {time.time() - t0:.0f} s", flush=True)
     return written
 
@@ -1828,7 +1856,7 @@ def main(argv=None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("prescreen", help="stream the field tar and pre-screen every light curve")
     p.add_argument("--procs", type=int, default=ncpu)
-    p.add_argument("--conns", type=int, default=12, help="concurrent HTTP range reads")
+    p.add_argument("--conns", type=int, default=8, help="concurrent HTTP range reads")
     p.add_argument("--source", choices=("auto", "local", "http"), default="auto")
     p.add_argument("--chunks", default=None, help="1-based chunk list, e.g. 1-5,9 (default all)")
     sub.add_parser("merge-prescreen", help="join the tracked pre-screen chunks of the field")
@@ -1857,7 +1885,7 @@ def main(argv=None) -> int:
     sub.add_parser("manifest", help="write data/manifests/moa_ii.ecsv")
     r = sub.add_parser("run-field", help="every stage for the field (resumable)")
     r.add_argument("--procs", type=int, default=ncpu)
-    r.add_argument("--conns", type=int, default=12)
+    r.add_argument("--conns", type=int, default=8)
     r.add_argument("--per-cell", type=int, default=200)
     r.add_argument("--per-ctrl", type=int, default=40)
     a = ap.parse_args(argv)
