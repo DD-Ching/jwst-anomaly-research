@@ -293,7 +293,8 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
                         if len(vals) >= 6
                         else (vals[1:2], vals[2], vals[3])
                     )
-                    if flag not in ("0", "1", "2", "3"):
+                    # Flags 1-4 and -n (parabolic) are free redshifts; only 0 is fixed.
+                    if not re.fullmatch(r"-?\d+", flag):
                         raise ValueError(f"{path}:{n}: malformed z_m_limit {vals}")
                     if flag == "0":
                         for name in names:

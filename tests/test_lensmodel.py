@@ -375,7 +375,9 @@ def test_z_m_limit_letter_ids_and_shared_redshift(tmp_path):
         "    z_m_limit 1 4.0 0 2.17 0.0 0.0\n",
         "    z_m_limit 1 4.0 0 2.17 0.0 0.0\n"
         "    z_m_limit 1 301.1a 0 5.29 0.0 0.0\n"
-        "    z_m_limit 1 A200.1a B200.2a 0 7.39 0.0 0.0\n",
+        "    z_m_limit 1 A200.1a B200.2a 0 7.39 0.0 0.0\n"
+        "    z_m_limit 1 9a 4 1.0 3.0 0.1\n"  # boundary flag 4 and parabolic -n: free, not fixed
+        "    z_m_limit 1 10a -2 1.0 3.0 0.1\n",
     )
     zml = lensmodel.parse_lenstool_par(_write(tmp_path, text))["z_m_limit"]
     assert zml == {"4": 2.17, "301.1": 5.29, "A200.1": 7.39, "B200.2": 7.39}
