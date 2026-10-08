@@ -20,24 +20,26 @@
 | Catalogue counterpart | B | none | No CANUCS DR1 source within 0.8″. The nearest are cluster members at 0.85–1.1″ (z 0.32–0.35) and the z 0.268 galaxy | observed |
 | Independent model | C | predicts it | Both CATS and CANUCS predict the image (μ 3.8 / 5.5), so it is not a CATS-only feature (unlike the system-27 extras, D-042) | model_prediction |
 | Galaxy-scale sensitivity | C | **explains the prediction's fragility** | In CANUCS the image survives ±30 % changes in σ of the nearest potential (8757, σ 102 km/s, 0.02″ from the z 0.268 galaxy): it moves 0.4–0.5″, μ 5.1–5.7. With 8757 removed it vanishes: 3 images remain, none within 0.8″. The image exists because of this galaxy's potential | model_prediction |
-| Galaxy redshift | C | **untested ordinary explanation** | 8757 is modelled as a cluster member (z_lens 0.396, scaling-relation mass). The galaxy is at z_spec 0.268, in the foreground. A correct treatment is multi-plane: different distances, a mass rescaled to its true luminosity, and the cluster deflection applied behind it. Neither model does this | assumption |
+| Galaxy redshift and mass (two-plane model) | C | **explains** | The galaxy is put on its own plane at z 0.268 and the rest of the CANUCS model is kept at z 0.396. Two-plane lens equation; source re-fitted from 51.1–51.3; image search on a 0.05″ grid. **σ 102 km/s (as fitted):** 5 images; the fourth persists (μ 6.1, 0.12″ from the single-plane position). **σ 81 km/s (rescaled to D_L(0.268), σ ∝ L^1/4):** 4 images. **σ ≤ 70 km/s:** only 3 images. The former fourth image becomes the model's counterpart of 51.3, 1.3–1.6″ from it (μ 5.8 → 2.9 as σ goes 70 → 1). No unseen image remains. 70 km/s is 14 % below the rescaled value, within the scatter of the member scaling relation | model_prediction / assumption |
 
-**Verdict:** `inconclusive: needs a multi-plane lens model with the z 0.268 galaxy as a foreground deflector`.
+**Verdict (updated the same day):** `explained: lens-model systematics, not an anomaly`.
 
-The image's existence in both models depends on one galaxy that both treat as a cluster member, although it lies in
-the foreground. A multi-plane model, or at least a single-plane model with that galaxy's mass and distance rescaled,
-is needed before the absence means anything. Nothing here points beyond ordinary lensing. The strongest statement
-allowed is "unexplained under the single-plane models tested", which is a statement about the models.
+The fourth image exists only while the z 0.268 foreground galaxy is massive enough (σ ≳ 75–80 km/s in a two-plane
+model) to split 51.3. Both published models give it a cluster-member scaling-relation mass at the cluster redshift.
+A two-plane model with σ ≤ 70 km/s, within the scaling relation's scatter, predicts exactly the three observed
+images. The observed absence of a fourth image therefore constrains this galaxy's mass (a `hypothesis`-level
+statement about the galaxy). It is not evidence for anything unusual.
+
+The first verdict, earlier the same day, was `inconclusive: needs a multi-plane lens model`; the two-plane test
+resolved it.
 
 ### Open questions
 
-- Does a multi-plane model (for example Lenstool's multi-plane mode, or a two-plane composition of the CANUCS model
-  plus a foreground dPIE at z 0.268) still predict a fourth image near this position, and with what μ?
-- Is the neighbour's mass from the member scaling relation too high for its true luminosity? It would be fainter at
-  z 0.268: L lower by about 2.4×, σ by about 20–25 %. The −30 % test kept the image, so the multi-plane geometry
-  matters more.
-- Does any spectroscopic data cover the predicted position (MUSE, NIRSpec)? A faint, extincted image would show
-  Lyα or [O II] at z 4.10.
+- A full multi-plane re-fit of the cluster, with the galaxy's σ free, would test whether σ ≈ 70 km/s is consistent
+  with the other constraints. The two-plane test here keeps the rest of the CANUCS model fixed.
+- Rule for later fields (D-042): before treating a missing extra image as a flag, check every potential that
+  produces it against its spectroscopic redshift. Foreground or background galaxies modelled as members are the
+  first suspect.
 
 ### Regeneration
 
@@ -45,7 +47,10 @@ Scripts are scratch only:
 - `s51.py`: solving in both models;
 - `s51pert.py`: ±30 % changes and removal of potential 8757;
 - `s51iso.py`: isophote subtraction and photometry;
-- `s51b.py`: high-pass sheet.
+- `s51b.py`: high-pass sheet;
+- `twoplane.py` and `twoplane_scan.py`: the two-plane lens equation with angular-diameter distances
+  (β = θ − D₁ₛ/Dₛ·α₁(θ) − D₂ₛ/Dₛ·α₂(θ − D₁₂/D₂·α₁(θ))), the source traced back from 51.1–51.3, and seeds from a 0.05″
+  triangle grid (under 2M cells).
 
 Inputs:
 - the CANUCS bestparam file (SOURCES, D-042);
