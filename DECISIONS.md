@@ -1715,3 +1715,40 @@ them automatically. All thresholds are ASSUMPTIONs.
 **Revisit if.**
 - `bayes.dat` posteriors give model position errors for far images (system 6 needs about 3″).
 - A field's image list carries its own frame solution.
+
+## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
+
+**Decision.**
+- **`lensmodel.HFF_CATS`** pins the CATS Lenstool v4/v4.1 HLSP products by sha256 for MACS0416, MACS1149, Abell 370,
+  MACS0717, Abell S1063 and Abell 2744: x/y deflection (arcsec, D_LS/D_S = 1), κ, z = 2 magnification and
+  `arcs.txt`, plus `params.txt` where it exists (MACS0416, MACS1149, MACS0717; it returns 404 for the others).
+- **`lens_consistency.py`** has `MODELS` `<cluster>-cats` (`kind: maps`, through `MapLensModel`, D-033).
+  - `validate` compares κ and μ(z = 2) with the published maps and measures the image-plane rms of `arcs.txt`, with
+    system redshifts from `params.txt` (`read_z_m_limit`, which reads only `z_m_limit`).
+  - An image list is used by `images` / `fluxratio` only where that rms is ≤ 1.5× the release's quoted rms
+    (ASSUMPTION). `validate` reports this gate (`image_list_gate`) and whether it agrees with the `MODELS` setting.
+  - For map models, χ² and the "> 3σ" list are null: there is no published position error.
+- **Parser:** a parenthesised redshift in an image list, e.g. "(2.16)", is read as that value. `parse_lenstool_par` and
+  `read_z_m_limit` share one `z_m_limit` line parser and key every id by `image_family`.
+
+**Alternatives rejected.**
+- Using every `arcs.txt` as published. Without the model's fitted redshifts, placeholder redshifts give 9–12″
+  residuals (Abell 370, Abell S1063, Abell 2744), which would fake "absent" counter-images.
+
+**Evidence** (`validate`, 2026-10-08; `model_prediction` against the published products).
+
+| Cluster (z_lens) | κ median rel. diff | μ(z = 2) median rel. diff | image-plane rms (ours / quoted) | image list |
+|---|---|---|---|---|
+| MACS1149 (0.543) | 3.3e-3 | 5.6e-4 | 0.67″ / 0.63″ (145 images) | used |
+| MACS0717 (0.545) | 3.2e-3 | 1.2e-3 | 3.21″ / 2.41″ (132) | used |
+| MACS0416 (0.396) | 2.5e-3 | 3.7e-4 | 1.57″ / 0.72″ (116; system 26 off by 11″) | map only |
+| Abell S1063 (0.348) | 1.8e-2 | 5.9e-3 | 11.8″ / 0.48″ (72) | map only |
+| Abell 370 (0.375) | 3.0e-2 | 2.1e-3 | 10.7″ / not quoted (101) | map only |
+| Abell 2744 (0.308) | 5.1e-4 | 8.8e-5 | 8.9″ / not quoted (87 of 109 solved) | map only |
+
+- The lens redshifts reproduce every z = 2 map (median ratios 0.994–1.000), which confirms them.
+- The κ differences of 0.3–3 % come from finite differences on 0.2–0.8″ pixels.
+
+**Revisit if.**
+- `params.txt` (or another source of fitted redshifts) becomes available for Abell 370, Abell S1063 and Abell 2744.
+- MACS0416 system 26 is understood.

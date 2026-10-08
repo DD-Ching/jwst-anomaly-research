@@ -538,3 +538,19 @@ def test_map_lens_model_reproduces_the_analytic_model():
         sorted(zip(bright_r["x"], bright_r["y"], strict=True)),
         atol=0.01,
     )
+
+
+def test_read_z_m_limit_without_parsing_the_model(tmp_path):
+    path = _write(
+        tmp_path,
+        "potfile\n  filein 3 members.cat\n  end\nimage\n"
+        "  z_m_limit 1 5.0 0 3.948 0.000 0.0000\n  z_m_limit 2 7a 0 1.954 0.0 0.0\n"
+        "  z_m_limit 3 9.0 1 1.0 3.0 0.1\n  end\n",
+        "params.txt",
+    )
+    assert lensmodel.read_z_m_limit(path) == {"5": 3.948, "7": 1.954}
+
+
+def test_load_images_accepts_parenthesised_redshifts(tmp_path):
+    path = _write(tmp_path, f"#REFERENCE 0\n1.1 {RA0} {DEC0} 0.1 0.1 0.0 (2.16) 0.0\n", "arcs.dat")
+    assert lensmodel.load_lenstool_images(path)["z"][0] == 2.16
