@@ -420,17 +420,17 @@ def _stream_worker(wid: int, segs: list, total: int, url, path, prefetch: int, q
             nxt = 0
             while nxt < len(segs) and len(futs) < prefetch:
                 k, a, b = segs[nxt]
-                futs.append(ex.submit(moa_stream.read_segment, reader, a, b, total))
+                futs.append(ex.submit(moa_stream.read_segment_hashed, reader, a, b, total))
                 nxt += 1
             for s in segs:
-                members = futs.popleft().result()
+                members, sha = futs.popleft().result()
                 if nxt < len(segs):
                     k, a, b = segs[nxt]
-                    futs.append(ex.submit(moa_stream.read_segment, reader, a, b, total))
+                    futs.append(ex.submit(moa_stream.read_segment_hashed, reader, a, b, total))
                     nxt += 1
                 rows = _scan_batch(members)
                 del members
-                queue.put((s, rows, reader.n_retries))
+                queue.put((s, rows, reader.n_retries, sha))
         queue.put(None)
     except Exception as exc:  # noqa: BLE001 — reported to the parent, which stops the run
         queue.put(("error", f"worker {wid}: {exc!r}"[:500]))
@@ -461,6 +461,7 @@ def run_stream_prescreen(field: str, procs: int, conns: int, chunks=None, source
     ]
     seg_left = {k: sum(1 for s in segs if s[0] == k) for k in todo}
     seg_pos = {s: i for i, s in enumerate(segs)}
+    seg_sha: dict = {}
     prefetch = max(1, conns // procs)
     print(f"{field}: {len(todo)} of {n} chunks, {len(segs)} segments of {SEG_BYTES >> 20} MB, "
           f"{procs} processes × {prefetch} prefetching connections, source "
@@ -504,7 +505,8 @@ def run_stream_prescreen(field: str, procs: int, conns: int, chunks=None, source
                 continue
             if msg[0] == "error":
                 raise SystemExit(f"{field} pre-screen failed: {msg[1]}")
-            s, out, nret = msg
+            s, out, nret, sha = msg
+            seg_sha[s] = sha
             k = s[0]
             if t_chunk[k] is None:  # a later chunk started (rough: its first finished segment)
                 t_chunk[k], meter_chunk[k] = time.time(), moa_stream.CpuMeter()
@@ -524,6 +526,8 @@ def run_stream_prescreen(field: str, procs: int, conns: int, chunks=None, source
                     "cpu_percent": None if busy is None else round(busy, 1),
                     "procs": procs,
                     "conns": procs * prefetch,
+                    "segment_bytes": SEG_BYTES,
+                    "segment_sha256": [seg_sha[x] for x in segs if x[0] == k],
                 }
                 written.append(_write_prescreen_chunk(field, k, n, rows.pop(k), st))
                 print(f"{field} chunk {k + 1}/{n}: {st}", flush=True)
@@ -577,6 +581,7 @@ def merge_prescreen(field: str) -> Path:
         **{k: sum(float(t.meta.get(k, 0)) for t in parts) for k in keys},
         "quiet_track_mod": QUIET_TRACK_MOD,
         "quiet_chi2_hist": np.sum([t.meta["quiet_chi2_hist"] for t in parts], axis=0).tolist(),
+        "range_sha256": field_range_digest(field) or "",
     }
     tab.meta["n_members"] = int(tab.meta["n_members"])
     path = out_dir() / f"prescreen_{field}.ecsv"
@@ -1736,23 +1741,44 @@ LAST_MODIFIED = {  # HTTP Last-Modified of the pinned files, read 2026-10-08 (th
 }
 
 
+def field_range_digest(field: str) -> str | None:
+    """Content pin of a streamed field tar from its tracked pre-screen chunks: sha256 over the
+    ordered sha256s of its 64 MiB ranges (``moa_stream.range_digest``); None until complete."""
+    n = n_chunks(field)
+    shas = []
+    for k in range(n):
+        p = prescreen_chunk_path(field, k, n)
+        if not p.exists():
+            return None
+        meta = Table.read(p, format="ascii.ecsv").meta
+        if meta.get("segment_bytes") != SEG_BYTES or "segment_sha256" not in meta:
+            return None
+        shas.extend(meta["segment_sha256"])
+    return moa_stream.range_digest(shas)
+
+
 def write_manifest() -> Path:
-    """Pinned MOA-II files as a tracked manifest (URL, sha256, size, retrieval date, release)."""
-    names = [u.rsplit("/", 1)[-1] for u in moa.FILES]
-    tab = Table(
-        {
-            "url": list(moa.FILES),
-            "sha256": [v[0] for v in moa.FILES.values()],
-            "size_bytes": [v[1] for v in moa.FILES.values()],
-            "retrieved_utc": ["2026-10-08"] * len(names),
-            "last_modified": [LAST_MODIFIED[n] for n in names],
-            "release": ["MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"]
-            * len(names),
-        }
-    )
+    """Pinned MOA-II files as a tracked manifest (URL, sha256, size, retrieval date, release).
+    Downloaded files carry a whole-file sha256; streamed field tars carry ``range_sha256`` (sha256
+    over the sha256s of consecutive 64 MiB byte ranges, recorded per chunk in results/w3_moa/)."""
+    rows = []
+    release = "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+    for url, (sha, size) in moa.FILES.items():
+        name = url.rsplit("/", 1)[-1]
+        rows.append({"url": url, "sha256": sha, "range_sha256": "", "size_bytes": size,
+                     "retrieved_utc": "2026-10-08", "last_modified": LAST_MODIFIED[name],
+                     "release": release})  # fmt: skip
+    for f in sorted(moa.TAR_BYTES):
+        dig = field_range_digest(f"gb{f}")
+        if dig:
+            rows.append({"url": moa.tar_url(f), "sha256": "", "range_sha256": dig,
+                         "size_bytes": moa.TAR_BYTES[f], "retrieved_utc": "2026-10-08",
+                         "last_modified": moa.TAR_LAST_MODIFIED[f],
+                         "release": release})  # fmt: skip
+    tab = Table(rows)
     tab.meta.update(
         provenance=schema.Provenance.OBSERVED.value,
-        source="jwst_anomaly.moa.FILES (MOA-II 9-year release; D-062)",
+        source="jwst_anomaly.moa.FILES and streamed field tars (MOA-II 9-year; D-062, D-063)",
     )
     path = paths.manifests_dir() / "moa_ii.ecsv"
     tab.write(path, overwrite=True)

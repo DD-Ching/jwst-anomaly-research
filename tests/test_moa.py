@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import gzip
+import hashlib
 import io
 import tarfile
 
@@ -199,9 +200,14 @@ def test_range_segments_cover_every_member_exactly_once(tmp_path, seg):
         }
     total = path.stat().st_size
     reader = moa_stream.RangeReader(path=path)
-    got = []
+    got, shas = [], []
+    raw = path.read_bytes()
     for a, b in moa_stream.segments(0, total, seg):
-        got.extend(moa_stream.read_segment(reader, a, b, total))
+        members, sha = moa_stream.read_segment_hashed(reader, a, b, total)
+        got.extend(members)
+        shas.append(sha)
+        assert sha == hashlib.sha256(raw[a:b]).hexdigest()  # content pin of exactly [a, b)
+    assert len(moa_stream.range_digest(shas)) == 64
     ids = [g[0] for g in got]
     assert len(ids) == len(set(ids)) == len(truth)
     raw = path.read_bytes()

@@ -14,6 +14,7 @@ gb22). Everything returned is ``observed`` data as published.
 
 from __future__ import annotations
 
+import hashlib
 import random
 import threading
 import time
@@ -90,11 +91,16 @@ class RangeReader:
         raise OSError(f"{self.url} bytes {a}-{b - 1}: failed after {self.retries} retries")
 
 
-def read_segment(reader: RangeReader, start: int, stop: int, total: int) -> list[tuple]:
+def read_segment(
+    reader: RangeReader, start: int, stop: int, total: int, digest=None
+) -> list[tuple]:
     """``[(event_id, offset_data, size, gz_view)]`` of the members whose header starts in
     ``[start, stop)``; the last member's data is fetched past ``stop`` as needed. ``gz_view`` is a
-    zero-copy ``memoryview`` into the downloaded range (one copy of the bytes in memory)."""
+    zero-copy ``memoryview`` into the downloaded range (one copy of the bytes in memory).
+    ``digest``: a list that receives the sha256 of bytes ``[start, stop)`` (content pin)."""
     buf = reader.read(start, min(stop, total))
+    if digest is not None:
+        digest.append(hashlib.sha256(buf).hexdigest())
     base, pos, out = start, start, []
     while True:
         need = None
@@ -109,6 +115,17 @@ def read_segment(reader: RangeReader, start: int, stop: int, total: int) -> list
         end = min(max(need, base + len(buf) + (1 << 20)), total)
         end += (-end) % 512 if end < total else 0
         buf = buf + reader.read(base + len(buf), min(end, total))  # rare: a member past `stop`
+
+
+def read_segment_hashed(reader: RangeReader, start: int, stop: int, total: int):
+    """``(members, sha256 of [start, stop))``."""
+    d: list[str] = []
+    return read_segment(reader, start, stop, total, d), d[0]
+
+
+def range_digest(segment_sha256s) -> str:
+    """Content pin of a streamed file: sha256 of its ordered 64 MiB range digests (hex, joined)."""
+    return hashlib.sha256("".join(segment_sha256s).encode()).hexdigest()
 
 
 def segments(start: int, stop: int, seg_bytes: int) -> list[tuple[int, int]]:
