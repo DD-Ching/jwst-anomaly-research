@@ -327,7 +327,7 @@ def main(argv: list[str] | None = None) -> int:
         dm, sig, sig_flux = compare(fl[0], er[0], fl[1], er[1], args.sys_floor)
         out[f"{band}_flux1"], out[f"{band}_flux2"] = fl[0], fl[1]
         out[f"{band}_dmag"] = dm
-        if is_control.any():
+        if args.controls is not None:  # an empty selection is reported as uncalibrated
             # the scale is unstable for small samples (33 controls gave 0.54 against 1.18 from 175)
             s_dm = robust_std(sig[is_control], MIN_CONTROLS)
             s_fl = robust_std(sig_flux[is_control], MIN_CONTROLS)
