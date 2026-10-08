@@ -2809,7 +2809,7 @@ population model; a hard bound is enough for a flag screen).
 **Decision.** `w3_microlensing.py fit --chunk K/N` (complete chunks, no `--limit`) also writes its `derived` table
 as deterministic gzipped ECSV to `results/w3_ogle/fits_<sample>_chunkKofN.ecsv.gz`; `merge-chunks --n N` joins
 chunks 1..N into the table `vet` reads and sets `chunk = ""` (the whole sample) only when every chunk exists,
-was fitted with the current `Params` and holds only its own events. `limit` keeps refusing anything else.
+was fitted with the current `Params` and holds exactly its own events (none skipped). `limit` keeps refusing anything else.
 Raw light curves and all other outputs stay out of git.
 
 **Alternatives rejected.** Fitting all 5,790 bulge events in one session (~4 h; cloud sessions end after ~40 min);

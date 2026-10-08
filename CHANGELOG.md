@@ -6,7 +6,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Cloud run. Chunk 1/12's fit table lived only in the ephemeral session and is lost. `fit --chunk K/N` now also
   writes a deterministic gzipped copy to `results/w3_ogle/` (~0.22 MB per chunk); `merge-chunks --n 12` joins
   chunks 1..12 into the table `vet` reads and marks it the whole sample only when every chunk is present, fitted
-  with the current `Params` and holds only its own events (D-059). A chunk takes ~9 min on 4 cores (not ~17).
+  with the current `Params` and holds exactly its own events (none skipped) (D-059). A chunk takes ~9 min on 4 cores (not ~17).
 - Chunk 2/12 (483 events, 0 errors): best ordinary PSPL 454 / PAR 28 / FSPL 1; ΔBIC(min exotic) 5/25/50/75/95 % =
   −4.7 / 3.8 / 5.8 / 6.6 / 11.2; 49 below 0, 9 flags below −10 (`derived`). `vet`: 8 fail; **BLG624.18.69573**
   (no EWS name; t_E ≈ 180–240 d, best ordinary PAR) passes every automated test (N1neg ΔBIC −19.0 vs PAR; season

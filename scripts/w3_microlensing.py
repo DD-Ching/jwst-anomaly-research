@@ -1634,10 +1634,11 @@ def merge_chunks(sample_key: str, n: int) -> Path:
             raise SystemExit(f"{path.name}: fitted with other Params; refit chunk {k}/{n}")
         want = set(ids[k - 1 :: n].tolist())
         have = set(t["event_id"].tolist())
-        if have != want:  # a light curve without photometry is skipped by `fit`: report it
-            print(f"chunk {k}/{n}: {len(want - have)} events missing, {len(have - want)} extra")
-            if have - want:
-                raise SystemExit(f"{path.name}: events outside chunk {k}/{n}")
+        if have != want:  # incl. events `fit` skipped for lack of photometry: not the whole sample
+            raise SystemExit(
+                f"{path.name}: {len(want - have)} events of chunk {k}/{n} missing, "
+                f"{len(have - want)} from outside it"
+            )
         parts.append(t)
     if missing:
         raise SystemExit(f"missing chunks of {n}: {missing}")
