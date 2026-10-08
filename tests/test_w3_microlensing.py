@@ -206,5 +206,6 @@ def test_parallax_objective_rejects_pi_e_beyond_the_bound():
     fun = w3._objective("PAR", lc, 2456800.0)
     lt = np.log10(40.0)
     inside = 0.6 * w3.P.pie_max
-    assert fun(np.array([2456800.0, lt, 0.2, inside, inside])) < 1e30
     assert fun(np.array([2456800.0, lt, 0.2, w3.P.pie_max, 0.1])) == 1e30
+    pytest.importorskip("MulensModel")  # the parallax trajectory inside the bound needs it
+    assert fun(np.array([2456800.0, lt, 0.2, inside, inside])) < 1e30
