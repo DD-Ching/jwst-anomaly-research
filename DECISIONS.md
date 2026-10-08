@@ -2585,10 +2585,10 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
 **Decision.**
 - D-050's catalogue aperture-mass map is `exotic_screens.py shear` (Schirmer Q_TANH, R_ap = 10″, 1″ grid, sources at
   1–10″, rotation null) with `scripts/inject_shear.py` for injection-recovery. It replaces `radial` for W1 limits at
-  ≥ 2 × 10¹² M☉ (6–11× stronger); `radial` stays as an independent screen. Method and tables: docs/exotic_limits.md
+  ≥ 2 × 10¹² M☉ (6–12× stronger); `radial` stays as an independent screen. Method and tables: docs/exotic_limits.md
   "W1 negative-mass lenses (shear screen)".
 - **Responsivity.** The cluster shear removed is R g with R fitted per field (0.41–0.48): catalogue isophotal
-  moments respond to shear by R, not 1. Injected images keep R of the lens-induced change of their measured moments (image minus source, so the cluster shear cancels). Fewer than 20
+  moments respond to shear by R, not 1. Injected images keep R of the lens-induced change of their measured moments (image minus source, so the cluster shear cancels); an unresolved source counts as round (R × its painted ε). Sources with κ ≥ 1, |g| ≥ 1 or |R g| ≥ 1, and spike segments, are not painted. Fewer than 20
   calibrating rows, or an R outside (0, 1.5] or below 3σ, is an error, not R = 1.
 - **Spike veto.** Diffraction-spike segments (`spike_segments`, D-043, Gaia stars where the field uses them) are
   dropped: they point radially at their star, the W1 sign.
@@ -2616,10 +2616,10 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   consistent with 0.
 - Real fields: S_max 3.39 / 3.79 / 3.40 / 3.48 (Abell 2744, MACS0416, MACS1149, Abell 370), p_rot 0.58 / 0.050 /
   0.19 / 0.20; only Abell 370 exceeds its max |S_×| (3.46), and not the rotation null: null.
-- Recovered (of 800, four fields): 0, 1, 49, 240, 453 at 2 × 10¹⁰, 2 × 10¹¹, 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉
-  (radial: 0, 0, 8, 84, 156 of 1,600). 95 % limits: 5.3 × 10³, 1.1 × 10³, 5.9 × 10² deg⁻² at the top three masses
+- Recovered (of 800, four fields): 0, 1, 50, 238, 449 at 2 × 10¹⁰, 2 × 10¹¹, 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉
+  (radial: 0, 0, 8, 84, 156 of 1,600). 95 % limits: 5.2 × 10³, 1.1 × 10³, 5.9 × 10² deg⁻² at the top three masses
   (radial headline 6.1 × 10⁴, 7.0 × 10³, 4.0 × 10³).
-- Wall time 65–172 s per field (1,000 injections).
+- Wall time 62–170 s per field (1,000 injections).
 
 **Revisit if.**
 - A proper weak-lensing shape catalogue (PSF-anisotropy-corrected, calibrated) exists for these fields: the E/B

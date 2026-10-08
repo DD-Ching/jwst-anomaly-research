@@ -52,17 +52,17 @@ SHEAR_DEFAULTS = es.shear_defaults()
 DEFAULT_FIELDS = ("abell2744", "macs0416", "macs1149", "abell370")
 
 
-def injected_ellipticity(e_src, raw_img, raw_src, r: float, e_img_corr) -> np.ndarray:
+def injected_ellipticity(e_src, raw_img, raw_src, r: float) -> np.ndarray:
     """Corrected ε of a painted image: its source's corrected ε plus R times the lens-induced
     change of the *measured* moments (raw image minus raw source). The catalogue's moments respond
     to shear by R (D-053), the painted moments by 1; taking the change between raw moments keeps
-    the cluster shear out of it. An unresolved source (no measured ε) counts as round: its image
-    gets R times its own cluster-corrected ε, ``e_img_corr``."""
+    the cluster shear out of it. An unresolved source (no measured ε) counts as round: its painted
+    image holds the lens shear only, so it gets R times its raw ε."""
     e_src, raw_src = np.asarray(e_src, complex), np.asarray(raw_src, complex)
     resolved = np.isfinite(raw_src) & np.isfinite(e_src)
     with np.errstate(invalid="ignore"):
         lensed = e_src + r * (np.asarray(raw_img, complex) - raw_src)
-    return np.where(resolved, lensed, r * np.asarray(e_img_corr, complex))
+    return np.where(resolved, lensed, r * np.asarray(raw_img, complex))
 
 
 class ShearInjector:
@@ -125,7 +125,7 @@ class ShearInjector:
             src = np.asarray(img["_src"], int)
             e_img = np.where(
                 np.isfinite(e_img),
-                injected_ellipticity(self.e_all[src], c["eps"], self.eps[src], self.r, e_img),
+                injected_ellipticity(self.e_all[src], c["eps"], self.eps[src], self.r),
                 np.nan + 0j,
             )
             ok = np.isfinite(e_img)

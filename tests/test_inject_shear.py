@@ -52,19 +52,20 @@ def test_injected_ellipticity_keeps_r_of_the_measured_change_only():
     e_src = np.array([0.1 + 0.05j, np.nan])
     raw_src = np.array([0.3 + 0.0j, np.nan])  # measured, cluster shear included
     raw_img = np.array([0.5 + 0.1j, 0.2j])
-    e_img_corr = np.array([9.0 + 0j, 0.1j])  # cluster-corrected image shapes
-    out = ish.injected_ellipticity(e_src, raw_img, raw_src, 0.5, e_img_corr)
-    # resolved source: the measured change only; unresolved: R x its own corrected image shape
-    np.testing.assert_allclose(out, [0.1 + 0.05j + 0.5 * (0.2 + 0.1j), 0.5 * 0.1j])
+    out = ish.injected_ellipticity(e_src, raw_img, raw_src, 0.5)
+    # resolved source: the measured change only; unresolved (round): R x the painted lens shape
+    np.testing.assert_allclose(out, [0.1 + 0.05j + 0.5 * (0.2 + 0.1j), 0.5 * 0.2j])
     # no lens change: the source's corrected shape comes back unchanged, whatever its cluster g
-    same = ish.injected_ellipticity(e_src[:1], raw_src[:1], raw_src[:1], 0.45, e_img_corr[:1])
+    same = ish.injected_ellipticity(e_src[:1], raw_src[:1], raw_src[:1], 0.45)
     np.testing.assert_allclose(same, e_src[:1])
+    # an unresolved source painted with no lens change stays round
+    np.testing.assert_allclose(ish.injected_ellipticity([np.nan], [0j], [np.nan], 0.45), [0j])
 
 
 def test_a_user_responsivity_outside_its_range_is_refused():
     model, shapes, _ = _field()
     for bad in (0.0, -0.3, 2.0):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="outside"):
             ish.es.shear_sources(model, shapes, 1.0, 10.0, responsivity=bad)
 
 
