@@ -40,6 +40,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - add a third epoch: Sunrise VENUS 6882 o052 (F150W, F444W, jwst 3.0.0; forced photometry only);
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
+- **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps
+  (UNCOVER v2.0, RELICS, HFF) for fields without a Lenstool `best.par`.
+
 ## Then (M1 follow-through, after the M3 items)
 4. **Star-stratum sources with NED galaxy matches** (run `20261007T162133Z-2511977c`). Check their classification and photometry.
    - `f090w_1719`: NED `[NDA2023] 00713`, type G, 0.03″.

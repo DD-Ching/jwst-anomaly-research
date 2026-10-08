@@ -902,48 +902,57 @@ def find_images(
     g = grid.x
     bx = g[None, :] - s * grid.alpha_x
     by = g[:, None] - s * grid.alpha_y
-    seeds = []
-    n = len(g) - 1
+    seeds_x: list[np.ndarray] = []
+    seeds_y: list[np.ndarray] = []
+    # Cheap pre-filter: a cell can contain the source only if beta_x and beta_y each lie between
+    # the extremes of its four mapped corners (boolean sign tests, no arithmetic on the grid).
+    sx, sy = bx > beta_x, by > beta_y
+
+    def straddles(sgn):
+        c = (sgn[:-1, :-1], sgn[:-1, 1:], sgn[1:, :-1], sgn[1:, 1:])
+        return (c[0] | c[1] | c[2] | c[3]) & ~(c[0] & c[1] & c[2] & c[3])
+
+    cy, cx = np.nonzero(straddles(sx) & straddles(sy))
     for (a0, a1), (b0, b1), (c0, c1) in (
         ((0, 0), (0, 1), (1, 0)),
         ((1, 1), (1, 0), (0, 1)),
     ):
-        ax_, ay_ = bx[a0 : a0 + n, a1 : a1 + n], by[a0 : a0 + n, a1 : a1 + n]
-        bx_, by_ = bx[b0 : b0 + n, b1 : b1 + n], by[b0 : b0 + n, b1 : b1 + n]
-        cx_, cy_ = bx[c0 : c0 + n, c1 : c1 + n], by[c0 : c0 + n, c1 : c1 + n]
+        ax_, ay_ = bx[cy + a0, cx + a1], by[cy + a0, cx + a1]
+        bx_, by_ = bx[cy + b0, cx + b1], by[cy + b0, cx + b1]
+        cx_, cy_ = bx[cy + c0, cx + c1], by[cy + c0, cx + c1]
         det = (by_ - cy_) * (ax_ - cx_) + (cx_ - bx_) * (ay_ - cy_)
         with np.errstate(divide="ignore", invalid="ignore"):
             l1 = ((by_ - cy_) * (beta_x - cx_) + (cx_ - bx_) * (beta_y - cy_)) / det
             l2 = ((cy_ - ay_) * (beta_x - cx_) + (ax_ - cx_) * (beta_y - cy_)) / det
         hit = (l1 >= 0) & (l2 >= 0) & (1 - l1 - l2 >= 0)
-        for iy, ix in zip(*np.nonzero(hit), strict=True):
-            w1, w2 = l1[iy, ix], l2[iy, ix]
-            w3 = 1 - w1 - w2
-            seeds.append(
-                (
-                    w1 * g[ix + a1] + w2 * g[ix + b1] + w3 * g[ix + c1],
-                    w1 * g[iy + a0] + w2 * g[iy + b0] + w3 * g[iy + c0],
-                )
-            )
+        iy, ix = cy[hit], cx[hit]
+        w1, w2 = l1[hit], l2[hit]
+        w3 = 1 - w1 - w2
+        seeds_x.append(w1 * g[ix + a1] + w2 * g[ix + b1] + w3 * g[ix + c1])
+        seeds_y.append(w1 * g[iy + a0] + w2 * g[iy + b0] + w3 * g[iy + c0])
+    # Newton steps for every seed at once: one fields_xy call per step over all potentials.
+    x = np.concatenate(seeds_x) if seeds_x else np.zeros(0)
+    y = np.concatenate(seeds_y) if seeds_y else np.zeros(0)
     found: list[tuple[float, float, float, float]] = []
-    for x0, y0 in seeds:
-        x, y = np.array([x0]), np.array([y0])
+    if len(x):
         for _ in range(newton_steps):
             f = model.fields_xy(x, y)
             rx = beta_x - (x - s * f["alpha_x"])
             ry = beta_y - (y - s * f["alpha_y"])
             a11, a12, a22 = 1 - s * f["psi_xx"], -s * f["psi_xy"], 1 - s * f["psi_yy"]
             det = a11 * a22 - a12 * a12
-            x = x + (a22 * rx - a12 * ry) / det
-            y = y + (-a12 * rx + a11 * ry) / det
+            with np.errstate(divide="ignore", invalid="ignore"):
+                x = x + (a22 * rx - a12 * ry) / det
+                y = y + (-a12 * rx + a11 * ry) / det
         f = model.fields_xy(x, y)
-        res = float(np.hypot(beta_x - (x - s * f["alpha_x"]), beta_y - (y - s * f["alpha_y"]))[0])
-        if not res < tol_arcsec:
-            continue
+        res = np.hypot(beta_x - (x - s * f["alpha_x"]), beta_y - (y - s * f["alpha_y"]))
         a11, a12, a22 = 1 - s * f["psi_xx"], -s * f["psi_xy"], 1 - s * f["psi_yy"]
-        mu = float(1.0 / (a11 * a22 - a12 * a12)[0])
-        if all(np.hypot(x[0] - u_, y[0] - v_) > 0.05 for u_, v_, _, _ in found):
-            found.append((float(x[0]), float(y[0]), mu, res))
+        with np.errstate(divide="ignore"):
+            mu = 1.0 / (a11 * a22 - a12 * a12)
+        # same acceptance and merge order as one seed at a time (seed order is preserved)
+        for k in np.flatnonzero(res < tol_arcsec):
+            if all(np.hypot(x[k] - u_, y[k] - v_) > 0.05 for u_, v_, _, _ in found):
+                found.append((float(x[k]), float(y[k]), float(mu[k]), float(res[k])))
     found.sort(key=lambda r: -abs(r[2]))
     xs = np.array([r[0] for r in found])
     ys = np.array([r[1] for r in found])
