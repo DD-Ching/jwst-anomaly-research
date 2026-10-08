@@ -258,7 +258,7 @@ and a stable interface landed first. When they hold, the cycle fans out instead 
 | `candidate` | Candidate report or vetting record |
 | `batch-<slug>` | One parallel batch, reviewed together |
 | `merge-ready` | A cloud PR that is ready except for the merge itself: merge it |
-| `local-wip` | A local session is working on the PR; other sessions leave it alone while its claim comment has a heartbeat under 20 minutes old |
+| `local-wip` | A local session is working on the PR; other sessions leave it alone while its claim comment has a heartbeat under 20 minutes old, and always when it has no CLAIM comment (older rule) |
 | `claimed` | A session is working on the PR; in flight while its claim comment has a heartbeat under 20 minutes old |
 | `infra`, `science`, `reuse-decision` | Topic |
 
