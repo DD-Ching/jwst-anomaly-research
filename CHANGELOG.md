@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W5 count deficits in Legacy Surveys DR10: first screen, 47 flags, 0 candidates (in progress, #94, D-TBD)
+- Cloud run took over #94 (stale since 21:38). Regions halved to 10° × 10° (desA RA 20–30, desB RA 50–60, Dec −30 to −20;
+  87.1 + 86.0 deg² usable, 3.17 + 3.16 M galaxies r < 23.5): Data Lab TAP delivers ~2 chunks/min, so 100 chunks did
+  not fit one run; 50 took ~20 min with 6 workers.
+- Screen (`scripts/w5_counts.py screen`, cross-region null): **47 flags** (1 desA, 46 desB); automated vetting
+  (`vet`) leaves **2** (desB, 2′ scale, RA 54.635 / 54.728, Dec −26.23; Z = 7.5 / 6.2). `derived`.
+- **Both are a processing artefact:** they sit 7–8′ from NGC 1398 (D25 6.2′), inside a ~30′ cluster of 19 flags;
+  the DR10 cutout (`results/w5_counts/ngc1398_dr10_cutout.jpg`) shows CCD-sized dark rectangles of over-subtracted
+  sky around the galaxy. Not a candidate. **Rule:** the vetting needs a large-galaxy test (Siena Galaxy Atlas /
+  HyperLEDA within a few D25) or a sky-residual test before any limit; the desB flag clusters near (53.3, −28.1)
+  and (50.34, −21.8) still need a cutout look.
+- Not done: injections (`inject`) and `limit` — they must run after the new vetting test (scripts/CLAUDE.md).
+- **Failed approach:** `pkill -f 'w5_counts.py fetch'` killed the calling shell (as scripts/CLAUDE.md warns); stop
+  a background job by its task handle instead.
+- **Next:** add the large-galaxy veto, look at the remaining flag clusters, run `inject` + `limit`, assign the D number,
+  `/code-review`, mark #94 ready. A fresh cloud run must refetch (~20 min); the cache is not persistent.
+
 ## 2026-10-08: Coordination and dispatch rules for concurrent sessions (owner text)
 - Two sessions worked PR #94 (W5) at once: a cloud run started from its 20:39 skeleton, another session pushed the full
   screen at 21:14, and the run's push was rejected (its pilot is parked on `claude/w5-clustered-null`, findings on #94).
