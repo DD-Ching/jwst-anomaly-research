@@ -913,3 +913,15 @@ Cite Mróz et al. as their pages ask; data are pinned in `src/jwst_anomaly/ogle.
   whose events are in the 2019 optical-depth analysis but whose light curves are not in `phot.tar.gz`.
 - Hubble Source Catalog v3 (Whitmore et al. 2016, AJ 151, 134), summary `magaper2` via the MAST catalogs API
   `https://catalogs.mast.stsci.edu/api/v0.1/hsc/v3/summary/magaper2.csv` (cone search; accessed 2026-10-08; D-060).
+
+## Gaia DR3 microlensing candidates (accessed 2026-10-08; D-061)
+
+- Wyrzykowski, Kruszyńska, Rybicki et al. 2023, "Gaia Data Release 3: Microlensing events from all over the sky",
+  A&A 674, A23, doi:10.1051/0004-6361/202243756, arXiv:2206.06121. The v2 e-print source
+  (https://arxiv.org/src/2206.06121v2, 2,461,772 bytes, sha256 40c60eee14f1a5e691cf7efb5b1233878fcabd37496eb4a0865fa5e7afa07295)
+  was read for the Sample A cuts (Appendix C, Table C.1), the error rescaling (Eq. 9–10) and Table D.1 (Method
+  A / B / A+B, parsed by `gaia_mulens.parse_method_table`).
+- Gaia archive TAP `SELECT * FROM gaiadr3.vari_microlensing` (363 rows) and `gaiadr3.gaia_source` positions
+  (https://gea.esac.esa.int/tap-server/tap/sync); DR3 epoch photometry from the DataLink service
+  (https://gea.esac.esa.int/data-server/data, `RETRIEVAL_TYPE=EPOCH_PHOTOMETRY`, INDIVIDUAL CSV). sha256 of every
+  cached file: `data/manifests/gaia_dr3_mulens.ecsv`.

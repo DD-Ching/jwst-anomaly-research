@@ -870,3 +870,15 @@ W3 efficiency is 0 and the 95 % limit is formally infinite. What can be stated:
   are a vetting test, not a characterisation.
 - Only the published samples were used; OGLE EWS seasons wait for the owner's decision on their terms
   (D-054).
+
+## W3 in the Gaia DR3 microlensing candidates
+
+D-061; `src/jwst_anomaly/gaia_mulens.py` (adapter), `scripts/w3_gaia.py` (`fetch`, `fit`, `inject`, `summary`,
+`manifest`), tests in `tests/test_w3_gaia.py`. Tracked tables: `results/w3_gaia/`; inputs:
+`data/manifests/gaia_dr3_mulens.ecsv`.
+
+- **No limit.** The emulated Sample A selection (Wyrzykowski et al. 2023, Table C.1; passes 143 / 163 real Sample A
+  events) passes 2 / 240 injected W3 events and none that the fitter also flags (PSPL controls 17 / 120). The
+  catalogue cannot constrain W3 at any t_E (`derived`; ASSUMPTIONs in `SelParams`).
+- Fits of all 363 candidates: one flag (4053892503992268288, ΔBIC −40.3); truncated event on a variable baseline,
+  not a candidate.
