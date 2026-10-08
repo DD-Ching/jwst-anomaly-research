@@ -277,3 +277,10 @@ def test_footprint_covers_the_sources_and_excludes_empty_sky():
     gx, gy, area, _ = op.searched_footprint(cat)
     assert 0 < area < 300.0 * 300.0  # sources span ~300" x 300" but sparsely
     assert len(gx) == int(area)
+
+
+def test_in_region_accepts_a_frame_token():
+    sq = "10.0 -1.0 10.0 1.0 12.0 1.0 12.0 -1.0"
+    assert op._in_region(f"POLYGON {sq}", 11.0, 0.0)
+    assert op._in_region(f"POLYGON ICRS {sq}", 11.0, 0.0)
+    assert not op._in_region(f"POLYGON ICRS {sq}", 13.0, 0.0)
