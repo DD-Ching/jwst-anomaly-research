@@ -95,7 +95,41 @@ MODELS = {
     },
     "elgordo-caminha23": {"files": lensmodel.ELGORDO_CAMINHA23, "sigpos": 0.621},
     "abell2744-bergamini23": {"files": lensmodel.ABELL2744_BERGAMINI23, "sigpos": "arcs"},
+    # map models: published deflection maps (D_LS/D_S = 1), no Lenstool par or image list
+    "whl0137-relics-lenstool": {
+        "files": lensmodel.WHL0137_RELICS_LENSTOOL,
+        "kind": "maps",
+        "z_lens": 0.566,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {6.2: "mag_z6.2"},
+    },
 }
+
+
+def is_map_model(name: str) -> bool:
+    return MODELS[name].get("kind") == "maps"
+
+
+def load_model(name: str):
+    """``(model, files, par)`` for ``MODELS[name]``; ``par`` is None for a map model."""
+    from astropy.cosmology import FlatLambdaCDM
+
+    files = model_files(name)
+    if is_map_model(name):
+        spec = MODELS[name]
+        h0, om = spec["cosmology"]
+        model = lensmodel.MapLensModel.from_fits(
+            files["alpha_x"],
+            files["alpha_y"],
+            spec["z_lens"],
+            FlatLambdaCDM(H0=h0, Om0=om),
+            source=f"{name} deflection maps",
+        )
+        return model, files, None
+    par = lensmodel.parse_lenstool_par(files["best.par"])
+    return lensmodel.LensModel.from_par(par), files, par
+
+
 Z_GRID = (1.0, 2.0, 4.0)
 
 
@@ -393,7 +427,59 @@ def _write(table: Table, path: Path) -> None:
     table.write(path, overwrite=True)
 
 
+def map_check(model, map_path: Path, quantity: str, z_s: float | None, step: int = 37) -> dict:
+    """Model against a published κ (D_LS/D_S = 1) or |μ| map (at ``z_s``) on a pixel sub-grid.
+
+    Only map pixels with 0.05 < κ < 2, or |μ| < 10, are compared (critical curves excluded)."""
+    with fits.open(map_path, memmap=True) as hdul:
+        data = hdul[0].data
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", FITSFixedWarning)
+            wcs = WCS(hdul[0].header)
+        jj, ii = np.mgrid[step // 2 : data.shape[0] : step, step // 2 : data.shape[1] : step]
+        pub = np.asarray(data[jj, ii], float)
+    ra, dec = wcs.pixel_to_world_values(ii, jj)
+    if quantity == "kappa":
+        val = model.kappa_xy(*model.to_frame(ra, dec))
+        sel = (pub > 0.05) & (pub < 2)
+    else:
+        val = np.abs(np.asarray(model.evaluate(ra.ravel(), dec.ravel(), z_s)["magnification"]))
+        val, pub = val.reshape(ra.shape), np.abs(pub)
+        sel = (pub > 0) & (pub < 10)
+    ok = sel & np.isfinite(val) & np.isfinite(pub)
+    if not ok.any():
+        raise SystemExit(f"error: {map_path}: no comparable pixel")
+    rel = np.abs(val[ok] - pub[ok]) / pub[ok]
+    return {
+        "map": str(map_path),
+        "quantity": quantity,
+        "z_s": z_s,
+        "n_points": int(ok.sum()),
+        "median_rel_diff": float(np.median(rel)),
+        "p95_rel_diff": float(np.percentile(rel, 95)),
+        "median_ratio": float(np.median(val[ok] / pub[ok])),
+    }
+
+
+def cmd_validate_maps(args) -> dict:
+    """Map model: κ and magnification against the published maps (no image list)."""
+    model, files, _ = load_model(args.model)
+    summary = {
+        "model": args.model,
+        "model_sha256": model.sha256,
+        "kappa_map": map_check(model, files["kappa_map"], "kappa", None),
+    }
+    for z_s, key in MODELS[args.model].get("mag_maps", {}).items():
+        summary[f"magnification_z{z_s:g}"] = map_check(model, files[key], "mu", z_s)
+    out = args.out / args.model
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "validate.json").write_text(json.dumps(summary, indent=1))
+    return summary
+
+
 def cmd_validate(args) -> dict:
+    if is_map_model(args.model):
+        return cmd_validate_maps(args)
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
