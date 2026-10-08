@@ -24,6 +24,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   Abell 2744 forced errors uncalibrated; PEARLS (MAST lists 2.0.1, headers 3.0.0) + CANUCS processing differ.
 - Wall time: screen 4–76 s, injections 20–136 s, forced photometry 3–32 min per field.
 
+## 2026-10-08: Orphan-pair cutout footprints: frame-token polygons, deterministic visit order
+- Cloud run. Review follow-ups to #73 that its final squash did not carry: `_in_region` parses `POLYGON ICRS …`
+  (a frame token used to match nothing, so every cutout read "outside"); MAST observations are sorted by obs_id
+  before "first covering visit" is chosen (archive row order no longer picks the cutout). Counts and limits do
+  not depend on either (cutouts only). TASKS: null (e) colour cell asymmetry.
+- **Handoff:** TASKS "Now" 1, the D-050 W1 shear screen, is next; it needs the SMACS `_cat.ecsv` and DJA zout.
+
 ## 2026-10-08: Dark-deflector (orphan-pair) screen in deep fields, with injection-recovery: null (D-051)
 - Worktree worker: `orphan_pairs.py` now reads CANUCS and DJA catalogues through one column layout (D-048 counts
   reproduced bit for bit) and runs on six deep fields: the five CANUCS NIRCam flanking fields and DJA GOODS-N

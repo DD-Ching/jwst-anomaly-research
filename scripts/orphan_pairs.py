@@ -1011,7 +1011,7 @@ def _in_region(s_region: str, ra: float, dec: float) -> bool:
     """Whether (ra, dec) lies inside a MAST ``s_region`` (one or more ``POLYGON``s)."""
     from matplotlib.path import Path as MplPath
 
-    for poly in re.findall(r"POLYGON\s+([-0-9.eE\s]+)", s_region.upper()):
+    for poly in re.findall(r"POLYGON\s+(?:[A-Z]\w*\s+)?([-0-9.E\s]+)", s_region.upper()):
         v = np.array(poly.split(), float).reshape(-1, 2)
         x = (v[:, 0] - ra + 180.0) % 360.0 - 180.0  # wrap-safe RA offsets
         x *= np.cos(np.deg2rad(dec))
@@ -1036,6 +1036,7 @@ def deep_i2d_uris(mast: tuple[str, list[str]], tgt: Table) -> dict[str, list[str
         )
         ids = query.str_values(obs["obs_id"])
         obs = obs[[any(i.startswith(p) for p in prefixes) for i in ids]]
+        obs.sort("obs_id")  # "first by obs_id", independent of the archive's row order
         obs_by_band[b] = obs
         hits[b] = [
             [
