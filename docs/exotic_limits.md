@@ -1009,8 +1009,51 @@ dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no pu
 - Not a statement about OGLE or the Mróz samples, and not combinable with the D-052 JWST limits without a lens
   population model.
 
-## W1/W2 in rejected lensed-quasar pairs (in progress)
+## W1/W2 in rejected lensed-quasar pairs
 
-D-TBD. Same-redshift quasar pairs that lens searches rejected for lack of a visible lens (Lemon et al. 2023 UQPs,
-VizieR J/MNRAS/520/3305; SQLS "no lensing object" rejections, Inada et al. 2008/2010/2012) through the D-056
-deflector test and required-lens magnitude. Work in progress.
+D-TBD; `scripts/w12_niq.py screen --sheet`; outputs `results/w12_niq/` (`systems.ecsv`, `summary.json`, contact sheets);
+inputs pinned in `data/manifests/w12_niq_inputs.json`.
+
+**Question.** Lens searches reject same-redshift quasar pairs when no lens galaxy is seen: Lemon et al. 2023's
+"unclassified quasar pairs" (UQP, "akin to NIQs") and "QSO pair" classes, and the SQLS "no lens(ing) object"
+rejections. A dark deflector (W2, W1's empty centre) would hide in exactly these lists. The ordinary explanations are
+binary quasars, unrelated pairs and lens galaxies below the depth.
+
+**Method.**
+- Inputs:
+  - rejected: 229 pairs (Lemon UQP + QSO pair, and SQLS DR3/DR5/DR7 "no lens object");
+  - control: 122 real lenses (Lemon lens/quad, SQLS "SDSS lens"/"known lens");
+  - entries within 3″ in two tables are merged.
+- The D-056 chain unchanged: DR10 brick coverage and depth, Tractor boxes, the quasar pair test (two PSF images
+  ≥ 2″ apart, a deflector between them), and the required lens magnitude from the D-056 Faber–Jackson calibration.
+- Two vetting columns (thresholds are ASSUMPTIONs):
+  - image colours: |Δ(g − z)| ≤ 0.5, since lensed images share a colour;
+  - a Hennawi et al. 2006 binary-quasar match within 3″.
+
+**Result (derived).**
+
+| Sample | covered | blended | too close (< 2″) | faint galaxy | decided | deflector | none | none, colours match |
+|---|---|---|---|---|---|---|---|---|
+| rejected | 175 | 105 | 45 | 1 | 23 | 1 | 22 | 11 |
+| control (real lenses) | 85 | 50 | 30 | 0 | 5 | **0** | 5 | 4 |
+
+- **The test does not find real lens galaxies at these separations.** All 5 decided control lenses (2.0–2.6″;
+  J0628−7448, J1550+0221, J2308+3201, SDSS J1322+1052, SDSS J1515+1511) give "none". Their required typical
+  m_z ≈ 19.2–19.8 is ~3 mag brighter than the depth, yet the contact sheet shows the lens light blended into the images,
+  and Tractor fits the blend as two point sources. Measured efficiency for an ordinary lens: **0 / 5 (95 % upper
+  bound 0.45)**. A "none" at 2–2.7″ in LS DR10 therefore carries no information about a dark deflector.
+- Of the 22 rejected "none" pairs, 11 have mismatched colours (the contact sheet shows blue+orange pairs: unrelated
+  objects, not lens images of any kind). J1035+0752 is a catalogued binary (Hennawi et al. 2006).
+- **No limit and no candidate.** The 10 remaining colour-matched pairs are untestable here: J0130+0725, J0728+2607,
+  J0941−2443, J1428+0500, J2355−4553, J0927+2113, J0904+1134, J1324+2823, J1711+2929 and J1425+0210. Their
+  discovery papers' deeper follow-up already found no lens galaxy; telling a binary from a dark lens needs spectral
+  comparison or HST/Euclid/HSC imaging.
+- Most rejected pairs are closer than LS can resolve: the Lemon UQP median separation is 1.22″, and only 8 of its
+  38 UQPs are ≥ 2″.
+- The one rejected "deflector" (J0041−5350) is a different source pair: its LS separation is 3.3″ against the
+  catalogue's 1.1″.
+
+**Consequence for D-056.** D-056's quasar-class limits assume that a dark lens gives "none" (true). Its "none"
+systems were explained by literature lens galaxies, never by LS. This measurement confirms the D-056 vetting finding
+(13 of 16 "none" systems had a literature lens galaxy): at ≤ 3″, LS DR10 cannot show a lens galaxy, so only
+literature or deeper imaging decides.

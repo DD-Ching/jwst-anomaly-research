@@ -150,6 +150,7 @@ def build_sample(tables: dict[str, Table]) -> Table:
         rows=rows,
         names=("name", "ra", "dec", "z_source", "sep_cat", "group", "catalogue", "comment"),
     )
+    s["comment"] = s["comment"].astype(object)  # notes are appended below (no truncation)
     # deduplicate across tables/releases within DEDUP_ARCSEC: keep Lemon, then the newest SQLS
     order = {"Lemon2023": 0, "SQLS-DR7": 1, "SQLS-DR5": 2, "SQLS-DR3": 3}
     s = s[np.argsort([order[c] for c in s["catalogue"]], kind="stable")]
@@ -207,25 +208,43 @@ def sheet(t: Table, out: Path, path: Path, title: str) -> None:
     Image.open(png).convert("RGB").save(path, quality=80)
 
 
+def _coords(ra_col, dec_col) -> tuple[np.ndarray, np.ndarray]:
+    """Degrees from decimal or sexagesimal ("h:m:s" / "d:m:s", as VizieR writes RA1/DE1) strings."""
+    ra = np.array([_float(x) for x in ra_col])
+    de = np.array([_float(x) for x in dec_col])
+    for i, (r, d) in enumerate(zip(ra_col, dec_col, strict=True)):
+        if not (np.isfinite(ra[i]) and np.isfinite(de[i])) and str(r).strip() and str(d).strip():
+            try:
+                c = SkyCoord(str(r).strip(), str(d).strip(), unit=("hourangle", "deg"))
+                ra[i], de[i] = c.ra.deg, c.dec.deg
+            except ValueError:
+                pass
+    return ra, de
+
+
 def binary_match(s: Table, binq: Table, radius: float = 3.0) -> np.ndarray:
-    """Hennawi et al. 2006 binary-quasar entry within ``radius`` of the position (either quasar)."""
-    cols = [c for c in binq.colnames if c.startswith("_RA") or c.startswith("RA")]
-    if not len(binq):
-        return np.zeros(len(s), bool)
-    c = SkyCoord(s["ra"], s["dec"], unit="deg")
+    """Hennawi et al. 2006 binary-quasar entry within ``radius`` of the position (either quasar).
+
+    Raises if the catalogue has rows but no parseable coordinate pair, so a format change cannot
+    silently give "no binary"."""
     hit = np.zeros(len(s), bool)
-    for rc in cols:
-        dc = rc.replace("RA", "DE")
+    if not len(binq) or not len(s):
+        return hit
+    c = SkyCoord(s["ra"], s["dec"], unit="deg")
+    pairs = [(rc, rc.replace("RA", "DE")) for rc in binq.colnames if rc.startswith(("_RA", "RA"))]
+    parsed = 0
+    for rc, dc in pairs:
         if dc not in binq.colnames:
             continue
-        ra = np.array([_float(x) for x in binq[rc]])
-        de = np.array([_float(x) for x in binq[dc]])
+        ra, de = _coords(binq[rc], binq[dc])
         ok = np.isfinite(ra) & np.isfinite(de)
         if not ok.any():
             continue
-        b = SkyCoord(ra[ok], de[ok], unit="deg")
-        _, d, _ = c.match_to_catalog_sky(b)
+        parsed += 1
+        _, d, _ = c.match_to_catalog_sky(SkyCoord(ra[ok], de[ok], unit="deg"))
         hit |= d.arcsec < radius
+    if not parsed:
+        raise ValueError(f"no coordinates parsed from {binq.colnames}")
     return hit
 
 

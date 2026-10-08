@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them (D-TBD)
+- Hypothesis: a dark deflector hides among pairs rejected as lenses for lack of a lens galaxy (Lemon 2023 UQPs,
+  SQLS "no lensing object"). 229 rejected and 122 control lenses went through the D-056 chain.
+- **Control efficiency 0 / 5** (2.0–2.6″; lens light blended into the images, fitted as PSFs): an LS "none" at these
+  separations carries no information. Rejected: 22 "none", 11 colour-mismatched, 1 catalogued binary, 10
+  untestable. No limit, no candidate. Most UQPs are < 2″ (median 1.22″).
+- **Failed approach / bug:** the Hennawi binaries' sexagesimal coordinates silently matched nothing; fixed, and
+  `binary_match` now raises when nothing parses.
+- **Next:** HST/Euclid/HSC image models or spectra for the 10 colour-matched pairs; the LaTeX-only NIQ tables.
+
 ## 2026-10-08: Governance — owner decisions on scope, parallelism, cloud disk and layout
 - Owner direction (2026-10-08, given by the owner in the session that opened this PR) with a one-time
   authorisation to edit CLAUDE.md, including "Owner decisions", in this single PR and to merge it once CI is green

@@ -37,3 +37,6 @@ Results: docs/exotic_limits.md "W1/W2 in published lens catalogues".
   PSF-subtracted image models or HSC PDR3 photometry.
 - Known biases of the assumed completeness: unrelated faint sources remove dark-lens systems as "faint galaxy"
   (efficiency ~0.98); a colourless pair takes a compact PSF-typed lens as an image.
+- LS DR10 finds no lens galaxy in real quasar lenses at 2–2.7″: 0/5 controls (lens light absorbed into the image
+  PSFs). A "none" there is uninformative; always run a control sample of known lenses through the same chain.
+- VizieR writes some coordinates as sexagesimal strings (`RA1` "h:m:s"); parse them, and fail loudly if nothing parses.

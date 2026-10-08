@@ -2951,3 +2951,33 @@ t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in 
 - The other 21 fields are screened. The largest tars are 474 GB, so per-object HTTP or a cloud session is needed.
 - A survivor appears: stop and report to the owner (/vet-candidate).
 - Any W3 limit is quoted outside the repository: `needs-human` (D-054).
+
+## D-TBD W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them; measured control efficiency 0/5 (2026-10-08)
+
+**Decision.** Test the pairs that lens searches rejected for lack of a lens galaxy with the unchanged D-056 chain
+(`scripts/w12_niq.py`, importing `w12_lenscats`; D-056 Faber–Jackson calibration fixed). Add a control sample of real
+lenses from the same tables to *measure* the test's efficiency, which D-056 had to assume. Inputs are VizieR tables
+pinned by sha256: Lemon et al. 2023 table1 (UQP / QSO pair rejected; lens / quad control), SQLS DR3/DR5/DR7
+candidate tables (Inada et al. 2008, 2010, 2012; "no lens(ing) object" rejected; "SDSS lens"/"known lens" control),
+and Hennawi et al. 2006 binaries for vetting. Vetting adds an image-colour check (|Δ(g − z)| ≤ 0.5, ASSUMPTION).
+
+Result: 0 of 5 decided control lenses (2.0–2.6″) show their lens galaxy. Rejected: 22 "none", of which 11 are
+colour-mismatched and 1 is a catalogued binary. 10 remain untestable. No limit and no candidate
+(docs/exotic_limits.md "W1/W2 in rejected lensed-quasar pairs").
+
+**Alternatives rejected.**
+- Deriving a dark-lens fraction from the rejected "none" count: control lenses give "none" too, so k carries no
+  information.
+- The Lemon lensed-quasar database (HTTP 500 again on 2026-10-08).
+- Gaia GraL invalidated candidates (Stern et al. 2021): mostly star pairs, with one quasar pair.
+- Williams et al. 2018: no separation or redshift.
+- Dawes et al. 2023: unconfirmed candidates, not rejections.
+- NIQ tables that exist only in arXiv LaTeX (Lemon 2018/2019/2020, Anguita et al. 2018, Agnello et al. 2018):
+  deferred. The Lemon 2023 UQPs and the SQLS rejections are the machine-readable superset.
+
+**Evidence.** `results/w12_niq/summary.json` and `systems.ecsv`. The contact sheets show lens light blended into the
+control images and blue+orange rejected pairs. A Hennawi coordinate-parse bug (sexagesimal RA1/DE1 silently matched
+nothing) was caught on review of the run. `binary_match` now raises if no coordinate parses.
+
+**Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 10 colour-matched pairs;
+spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ tables add pairs ≥ 2″.
