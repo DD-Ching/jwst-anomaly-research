@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Abell 2744 screens: null (D-036)
+- A worktree worker ran `validate`, `images --forced-image`, `fluxratio` and `radial` on Bergamini+2023b, with
+  cutouts of every flag. 15 of 16 flags were ordinary. The survivor, 4.2c, was re-run under the D-034 rules: it
+  is `no_reference` (resolved-knot references, BCG halo), not a candidate.
+- Radial: 35 peaks against a random mean of 50.4, p ≥ 0.575.
+- **Lesson:** a "252σ absent" image can come from a resolved-knot reference. D-034's compact-reference rule now
+  catches this.
+- Family 4's c images were vetted (4.1c 4–8× underluminous after BCG subtraction; 4.2c undetected). They are
+  explained by μ systematics next to member 34423 (3.9–28.7 under ±30 %; CATS 7.3). **Rule:** a μ that moves by
+  more than 2× under member perturbation is untestable.
+- **Handoff:** HFF field runs (D-035 models), `bayes.dat` position spreads, UNCOVER v2.0 cross-check.
+
 ## 2026-10-08: Sunrise third epoch with calibrated significances; two open transient candidates (D-027)
 - `transient_forced.py --controls`: noise scale from ordinary sources, applied before thresholding.
 - Sunrise o010 against VENUS o052 (2.9 yr; F150W, F444W): scales 1.30/1.18; **0 of 57 catalog candidates pass**;

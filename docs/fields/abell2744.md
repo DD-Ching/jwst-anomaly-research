@@ -155,3 +155,108 @@ uid prefix: `jw02561-o001_t003_nircam_`.
 - **`f200w_7298` (#6).** A faint, arc-like source with NED designation ABELL 2744:[FZW2023] c65.13CI (type G).
   The pipeline does not flag it as lens-related (only SIMBAD types do that). Whether it is a multiple image in a
   published lens model was not checked.
+
+## Lens-model and exotic screens (2026-10-08)
+
+Model `abell2744-bergamini23` (Bergamini+2023b). Code: `main` at 64172c4, no `src/` or `scripts/` changes.
+Every number is `derived` from `observed` images and `model_prediction` positions and magnifications. Every
+threshold is an ASSUMPTION (the script defaults, recorded in each JSON output).
+
+**Inputs**
+- F200W pipeline catalogue (`jw02561-o001_t003_nircam_clear-f200w_cat.ecsv`, sha256 `9953c869…`).
+- DJA eazy photo-z: `https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/abell2744clu-grizli-v7.2-fix.eazypy.zout.fits`
+  (63,570,240 B, sha256 `436626861c7dbf370419a8787dd79140fad99c2ecbd268257941afe6d493991c`, Last-Modified
+  2023-12-12, accessed 2026-10-08). The `…v7.2-fix.photoz.tar.gz` tarball named in earlier notes returns S3 403
+  (no such key); the zout table is published on its own, so no tarball was needed.
+- Forced photometry and cutouts: S3 byte ranges of the F150W, F200W, F277W and F444W `_i2d` (no full download).
+
+**Commands** (`JWST_ANOMALY_DATA` = shared data root; `$CAT`, `$ZOUT` as above; `$S3` =
+`s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear`)
+
+```
+python scripts/lens_consistency.py --model abell2744-bergamini23 validate                       # 33 s
+python scripts/lens_consistency.py --model abell2744-bergamini23 images --catalog $CAT --photoz $ZOUT \
+    --half-width 190 --step 0.25 --forced-image $S3-f277w_i2d.fits                             # 60 s
+python scripts/exotic_screens.py --model abell2744-bergamini23 fluxratio \
+    --band1 $S3-f150w_i2d.fits --band2 $S3-f444w_i2d.fits                                       # 3 min 10 s
+python scripts/exotic_screens.py --model abell2744-bergamini23 radial --catalog $CAT --photoz $ZOUT \
+    --max-radius 120                                                                            # 66 s
+```
+
+**Validate.** Image-plane χ² 146.64 against Lenstool's 146.60 (149/149 images solved, rms 0.427″, max 1.62″,
+none over 3σ). `shared_match_images`: 3.2a/3.2b, 34.1a/34.1b and 700.1a/700.1b (each pair matches one predicted
+image).
+
+**Counter-images (`images`).** 50 systems, 176 predicted images: observed 145, candidate 8, other_source 7,
+missing 1, faint 2, no_flux_ref 9, outside 4, demagnified 0. 5σ depth proxy 27.8 mag. Catalogued images with no
+predicted image within 1.5″: 22.1a (the 1.62″ residual) and 64.1a (1.50″, μ ≈ −535: on the critical curve).
+Forced photometry in F277W (r = 0.2″, search 1.0″, flux-ratio window [1/3, 3], ASSUMPTIONs) on 27 predicted
+images: recovered 7, confused 9, absent 4, undetectable 4, ambiguous 0, no_reference 3, off_image 0.
+
+**Flux ratios (`fluxratio`, F150W/F444W).** 149 images: underluminous 0, overluminous 0, chromatic 3, consistent
+30, resolved 99, untestable 17. The 3 chromatic ones are all of system 602.1 (z from `z_m_limit`): 602.1d
+(μ 24.9) has F150W/F444W ratios 4.28/0.79 and is blended with a red compact neighbour 0.5″ south (cutout), which
+also shifts its siblings' reference medians (602.1a/b 0.39/1.15 and 0.37/1.09). Blend; not a flag.
+
+**Radial arcs (`radial`, 120″).** 943 elongated sources, 110 dropped as foreground or cluster by photo-z, 149
+anti-tangential, 148 not predicted radial (μ_r < 3). 35 convergence peaks (25 with no source within 1″), max
+5 lines. 200 random-angle draws give 50.4 peaks on average (95th percentile 65) and a maximum of ≥5 lines in
+115 of 200 draws: p_random ≥ 0.575 for every peak. **No radial peak has p_random < 0.05.**
+
+**Checks applied to each flag.** 3-band cutouts (F150W/F200W/F444W) of every flagged position, viewed by eye.
+Also high-pass versions (0.6″ median filter subtracted) to remove cluster-member light. Further checks:
+- 0.2″ aperture S/N at the exact predicted position on the high-pass F150W and F277W stamps;
+- DJA neighbours within 2.5″ whose photo-z 95% interval contains z_sys;
+- each prediction recomputed from each observed image's own back-traced source position, and for 700.1 at
+  z = 1, 1.5, 2, 3, 5.
+
+| Flag (system, μ) | RA, Dec (deg) | Screen | Forced S/N pred → best (at pred) | Flux ratio | Ordinary explanation tested | Verdict |
+|---|---|---|---|---|---|---|
+| 3.2c (3.43) | 3.57667, −30.40165 | confused | 40.7 → 131.4 (1.4) | 4.26 | Knot mismatch: catalogued 3.1c (DJA 17477, z_spec 3.987) is 0.57″ away; the c image is compact, so all knots fall in one aperture | Ordinary (image seen as 3.1c) |
+| 4.1, 4.2 central (−0.88, −0.74) | 3.57950/3.57955, −30.40932 | confused ×2 | 8.3/6.4 → ~2190 | 1471/1807 | Cluster-member light: 0.7″ from the BCG core (6983, DJA z_spec 0.303) | Ordinary (buried; untestable) |
+| **4.2c (8.71)** | **3.57972, −30.40835** | **absent** | **251.7 → 30.7 (−0.3); high-pass 0.2** | **0.14** | Catalogue: no DJA or pipeline source with 4.2's colour within 2″ (6985 at 1.14″ is diffuse halo light, absent after high-pass). Knot mismatch: the forced reference is the galaxy peak; knot-only expectation is still high-pass S/N ≈ 60 (4.2a/b give 63/68). Cluster light: removed by high-pass, nothing. Source position: robust to 0.65″. z: spectroscopic (not z_m_limit). Not near a critical curve (μ 8.7). Achromatic absence (F150W–F444W all ≈ 0σ). The c image of the companion knot (4.1c) is seen 2.5″ away. **Not tested:** model error from the galaxy-scale potential of BCG 6983, 2.9″ away; the MCMC (`bayes.dat`) spread | **Survives the cheap tests; most likely a model-prediction residual near a bright member. Candidate for `/vet-candidate`, not an anomaly** |
+| 8.1c (3.33) | 3.57650, −30.40231 | confused | 11.3 → 31.6 (−0.9) | 3.28 | Search radius: the 1″ search found a bright z = 0.25 galaxy (2122). Pipeline sources 2121 and 2118, 0.80″ and 1.03″ away, have F150W−F444W −1.46, as do 8.1a/b (−1.41/−1.03) | Ordinary (counterpart at 0.8–1.0″) |
+| 18.1 extra (−3.87) | 3.58861, −30.39626 | confused | 122.0 → 1941 (226 raw, 5 high-pass) | 103.9 | Cluster-member light: 0.8″ from a member core (DJA z_spec 0.302). Robustness: the image exists only for the mean and 18.1a source positions; with 18.1b or 18.1c's position the model predicts 3 images | Ordinary (galaxy-scale caustic, not robust) |
+| 22.1a (5.41) | 3.58739, −30.41163 | confused; unpredicted | 30.7 → 113.1 (0.6) | 4.50 | Position residual: observed 22.1a (DJA 13659, z_spec 5.283) is 1.62–1.66″ away, the known largest residual. The 1″ search found a z = 1.1 neighbour | Ordinary |
+| 33.1 extra ×2 (−32.2, −19.1) | 3.58498, −30.40352; 3.58423, −30.40280 | confused ×2 | 52.5/22.1 → 1327/1191 | 110/155 | Cluster-member light: on or next to members (DJA z_spec 0.304/0.316). Near-critical magnification. The reference 33.1a has only high-pass S/N 6–12 | Ordinary (untestable) |
+| 33.1 third (2.94) | 3.60056, −30.39528 | confused | 5.4 → 152 (6.6 raw, 0.2 high-pass) | 43.7 | Predicted S/N 5.4 is marginal; crowded field next to a 20.1 mag member | Ordinary (below sensitivity) |
+| 34.1 (+44.98) and pair 34.1a/b | 3.59269, −30.41106; a 3.59341, −30.41081; b 3.59380, −30.41069 | absent; shared_match | 387 → 15.5 (12.1; a compact z ≈ 0.34 dwarf) | 0.04 | Near critical curve: the observed fold pair a/b (1.3″ apart, high-pass S/N 10.6/8.1) straddles a critical curve that the model places so its +parity image falls 2.4″ away. The μ = 45 scaling of 34.1c's flux is invalid there. Robust to 0.3–1.0″ | Ordinary (the observed 34.1b is the predicted image; misplaced critical curve) |
+| 700.1 ×2 (−91.95, +10.30) and pair 700.1a/b | 3.57519, −30.35561; 3.57883, −30.35360; a 3.57970, −30.35772; b 3.57917, −30.35783 | absent ×2; shared_match | 3634/392 → 2.9/8.4 | 0.00/0.02 | Wrong z (z_m_limit 1.217): at the sampled z = 1, 1.5, 2, 3, 5 the model never gives 700.1a and b separate images, so the configuration is not reproduced. The 4th image comes and goes with the source position (2 images from 700.1a's position). The −92 image is the fold partner of 700.1c, 1.9″ away. At 160″ from the core this is the model's infall region | Ordinary (model-limited system) |
+| 3.2a/3.2b pair | 3.58921, −30.39382; 3.58896, −30.39380 | shared_match | — | — | Knot identification along the giant merging arc (μ ≈ ±50, cutout): knots straddle the critical curve | Ordinary |
+| 64.1a | 3.58119, −30.39871 | unpredicted | — | — | On the critical curve (μ ≈ −535); nearest predicted image 1.50″ away | Ordinary |
+| 28d (−4.23) | 3.58721, −30.40146 | catalog `missing` | 33.6 → 21.5 | 0.68 | Forced photometry recovers a faint compact source 0.85″ away (cutout) | Not a flag. Possible uncatalogued 28d (unconfirmed) |
+
+**Summary.**
+- Predicted images screened: 176 (27 with forced photometry). Images in the flux-ratio test: 149. Radial
+  peaks: 35.
+- Flags raised: 16 = 13 forced (absent 4, confused 9) + 3 shared-match pairs. Also inspected: 2 unpredicted
+  images, 3 chromatic images and 1 catalogue-missing image.
+- Surviving the cheap ordinary tests: one, 4.2c, which is most likely a model residual near BCG 6983. No
+  under- or overluminous image, and no significant radial convergence.
+- Nothing here is evidence of non-standard lensing.
+- **Next:**
+  - Rerun `images` over `bayes.dat` samples to get positional spreads for 4.2c, 34.1 and 700.1.
+  - ~~Run `/vet-candidate` on 4.2c~~ — done: explained, see docs/candidates/abell2744-family4-c.md.
+  - Widen the forced search to the model's positional rms × 3 (≈1.3″) together with a colour match (the
+    8.1c lesson).
+
+### Re-run under the D-034 rules and the 4.2c verdict (coordinator, 2026-10-08)
+
+- `images --forced-image` was re-run with the code after #49 (D-034: compact, at-position, consistent references;
+  residual-scaled search radius). Classes: recovered 3, confused 3, absent 2, undetectable 3, no_reference 16.
+  - The only `absent` images are both of system 700.1 (z = 1.217 fitted). The worker had already shown that the
+    model cannot reproduce this system at any z from 1 to 5.
+  - **4.2c is now `no_reference`.** System 4.2's catalogued images (4.2a, 4.2b) fail the reference rules: they are
+    resolved or neighbour-contaminated. The first pass's 252σ prediction therefore rested on aperture fluxes that
+    do not scale with |μ|.
+- **4.2c verdict: ordinary, not a candidate.**
+  - The reference knots 4.1a and 4.2a are small, faint clumps of one thin arc (high-pass cutouts, F150W/F277W/
+    F444W).
+  - The predicted position lies on the brightest cluster galaxy's halo, where the high-pass residuals are strong.
+  - The family's other knot image, 4.1c, is observed 2.5″ away. That is consistent with knot-level model offsets
+    near the cluster core.
+- 34.1 (μ 45) and 28 are recovered under the new rules (flux ratios 0.80 and 0.68).
+- **Family 4 c images, vetted** (docs/candidates/abell2744-family4-c.md): 4.1c is underluminous 4–8× after BCG
+  subtraction, and 4.2c is undetected. Both are explained by the model's μ and position systematics next to member
+  34423: plausible changes move μ(4.1c) from 3.9 to 28.7, and CATS v4.1 gives 7.3.
+- **Result: the Abell 2744 screens are a null result.** Flags raised: 16. Surviving vetting: 0.
