@@ -82,6 +82,8 @@ Action.
   WIP cap (step 3, counted now from the PR list above) does not block new feature work, skip the unit if it is in
   flight: a `claimed` or `local-wip` label and a claim heartbeat under 20 minutes old (docs/cloud-routine-prompt.md
   "COORDINATION AND DISPATCH"; a stale claim may be taken over after a "TAKEOVER from <session> at <UTC>" comment).
+  An unlabelled draft `[field: <unit>]` claim PR from the older rule is in flight while its newest commit or comment
+  is under 20 minutes old.
   Otherwise create `claude/<slug>` from `origin/main`, commit
   one small file change (e.g. the plan as a CHANGELOG or docs line; GitHub refuses a PR without commits), push, and
   open a draft PR titled `[field: <unit>] ...` labelled `agent` within 5 minutes of starting, before environment

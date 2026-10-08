@@ -48,6 +48,8 @@ MOVE FAST, SAFELY:
   Merge only when every condition of CLAUDE.md's merge policy holds; that policy is the only one.
 - Coordination and parallel work: see COORDINATION AND DISPATCH below. Do not use /batch here, because it
   waits for a plan approval that never comes. Bring a stale agent PR up to date by merging origin/main into it.
+  Transition: a draft `[field: <unit>]` claim PR without a `claimed` label (opened under the older rule) is in
+  flight while its newest commit or comment is under 20 minutes old.
 - Batch network I/O. Prefer pipeline catalogs and S3 byte-range cutouts. Cloud disk (CLAUDE.md owner decision
   2026-10-08): stream data, never store a whole archive tar, log the reason, delete after use. Never put data or
   secrets in git.
