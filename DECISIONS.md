@@ -2185,3 +2185,44 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - Injection-recovery turns the count null into a limit (TASKS).
 - CANUCS segmentation maps replace the same-galaxy rule, or deeper / core photometry is used.
 - CANUCS v2 releases the MACS1149 image list, or spectroscopy targets an orphan pair.
+
+## D-046 Multi-plane lens models: `LensModel.split_planes` and `MultiPlaneLensModel` (2026-10-08)
+
+**Decision.**
+- `lensmodel.MultiPlaneLensModel` holds several `LensModel` planes (one `z_lens` each) in one frame and cosmology and
+  solves the standard multi-plane lens equation and its Jacobian recursion (Schneider, Ehlers & Falco 1992, ch. 9),
+  with `D_ij / D_j = 1 − D_M(z_i) / D_M(z_j)` (flat ΛCDM).
+- `LensModel.split_planes({name: z}, v_disp={name: σ})` moves named potentials to their own redshift, optionally
+  with a new σ. A potential moved behind another plane is delensed: put where the ray through its fitted
+  (observed) centre crosses its plane, so it is still seen where it was fitted; shapes and the other planes'
+  positions are kept (ASSUMPTION). This turns the D-042 rule ("check every potential that produces an extra image against its
+  spectroscopic redshift") into library code.
+- `find_images`, `backtrace_images` and `imageplane_residuals` now go through `lens_map` / `source_points` /
+  `source_grid`, so they take either model. The Jacobian is no longer assumed symmetric. Single-plane results are
+  unchanged (tests).
+- The ray positions θ_i do not depend on the source redshift; only the weights D_is/D_s do. So a `DeflectionGrid`
+  of a multi-plane model stores α_i(θ_i) per plane (shape `(n_planes, n, n)`, cached by a content hash) and serves
+  every source redshift, as for one plane. Computing it costs about one single-plane grid (≈70 s for the
+  222-potential CANUCS MACS0416 model on a ±59″, 0.1″ grid).
+- `MultiPlaneLensModel` has no `evaluate` and no scalar `z_lens` (`z_planes` instead), so single-plane-only code in
+  `lens_consistency.py` fails loudly rather than silently. Sub-planes made by `split_planes` get their own hash;
+  `find_images` refuses a grid computed for another model.
+
+**Alternatives rejected.**
+- Re-tracing every plane at every grid node per source redshift (first version): unnecessary, see above.
+- lenstronomy `MultiPlane`: its dPIE-like profiles are not parametrised as Lenstool's, and our ported dPIE already
+  reproduces Lenstool's χ² (D-030, D-044). The recursion itself is a few lines on top of it.
+- Keeping two-plane checks as scratch code (D-042): not reproducible.
+
+**Evidence** (`model_prediction`).
+- Offline tests: `split_planes({})` reproduces the single-plane `find_images` and `backtrace_images`; the multi-plane
+  Jacobian matches finite differences of `source_points` (and is not symmetric); a plane behind the source does not
+  lens.
+- MACS0416 system 51 (CATS positions, CANUCS model, potential 8757 moved to z 0.268; scratch
+  `macs0416/mp_check2.py`): σ as fitted (102 km/s) keeps the fourth image (μ 6.1, 0.12″ from the single-plane
+  position); σ 81 km/s gives 4 images; σ 70 and 60 km/s give 3, with 51.3 matched at 1.58″ and 1.49″. This
+  reproduces the D-042 scratch result, except that the scratch found a fifth (faint) image at the fitted σ.
+
+**Revisit if.**
+- A multi-plane field run needs speed: interpolate per-plane deflection grids for the seeds.
+- A model needs more than dPIE potentials on the extra planes.
