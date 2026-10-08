@@ -484,6 +484,7 @@ All of these were rejected for D-018; they are listed so later sessions do not s
       "UNCOVERing the extended strong lensing structures of Abell 2744 with the deepest JWST imaging", and Price
       et al. arXiv:2408.03920.
     - Bergamini et al. arXiv:2303.10210: Lenstool files at https://www.fe.infn.it/astro/lensing/A2744_Bergamini23/.
+      MCMC chain `bayes.dat` 70,069,007 B, sha256 `bf6ae670…` (accessed 2026-10-08; D-045).
       Accessed 2026-10-08: `best.par` sha256 `7245368f96ad9c7159eb9c8d0045030eda0804554312ee86d84f2e052025b9fb`,
       `obs_arcs.cat` sha256 `d02c231f4ee8c81f47335a99182a9f64a4c553e14818b1c9bd07314c2f4f5e1c`.
 - **El Gordo.**
@@ -499,7 +500,8 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     - Caminha et al. 2023 (A&A 678, A3, arXiv:2209.02718): magnification maps, `best_fit.par` and the
       multiple-image list at https://cdsarc.cds.unistra.fr/ftp/J/A+A/678/A3/.
       Accessed 2026-10-08: `best_fit.par` sha256 `7b0153ae0ee02f057f6aaa6f46b1b698502e6fc427266ac9a09d241ddc63a472`,
-      `obs_arcs_v1_new_IDs.dat` sha256 `d631743921266c34689a1d509f08e53dc3c90bc88064393d7b8fd524a3d5c700`.
+      `obs_arcs_v1_new_IDs.dat` sha256 `d631743921266c34689a1d509f08e53dc3c90bc88064393d7b8fd524a3d5c700`,
+      `bayes.dat` 1,666,720 B sha256 `2d3f7362…` (MCMC chain, D-045), `to_sample.par` (read for the potfile `mag0`).
     - RELICS models: https://archive.stsci.edu/hlsps/relics/act0102m49/models/ (DOI 10.17909/T9SP45).
 - **Sunrise (WHL0137−08).**
   - Data: MAST 2282 `jw02282-o010_t001` (jwst 2.0.1); later epochs 2282 o120 and 6882 o052.
@@ -525,6 +527,19 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   Versions: MACS0416 v4.1, MACS1149 v4.1, Abell 370 v4, MACS0717 v4.1, Abell S1063 v4.1, Abell 2744 v4.1. The files
   (x/y-arcsec-deflect, kappa, z02-magnif, arcs.txt, params.txt where present) are pinned by sha256 in
   `lensmodel.HFF_CATS`. The release readmes quote rms 0.72″, 0.63″, n/a, 2.41″, 0.48″ and n/a.
+
+### Abell 370 and Abell S1063 field runs (accessed 2026-10-08; D-043)
+
+- JWST programs 1208 (CANUCS, PI Willott; Abell 370 `o002_t001`) and 3293 (GLIMPSE, PI Atek; S1063 `o001_t001`).
+  Manifests: `data/manifests/abell370*.ecsv`, `data/manifests/abells1063*.ecsv`.
+- CANUCS DR1 Abell 370 photometry and photo-z:
+  https://archive.stsci.edu/hlsps/canucs/dr1/a370/clu/hlsp_canucs_jwst-hst_multi_a370-clu_multi_v1_photometry-cat.fits.gz,
+  32,153,881 B, sha256 `f5622f2867aa3094df6861981ee67f7f1879b8381b348224748c7381436ae17b` (13,567 sources, 509 Z_SPEC).
+- DJA v7.5 Abell S1063 photo-z: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/abells1063-grizli-v7.5-fix.photoz.tar.gz,
+  74,481,914 B (last-modified 2025-01-09), sha256 `088a1954e357d96e9e3b0ab4af1f474eb9d35676774c1ad990f40140e81b1319`.
+  The member `abells1063-grizli-v7.5-fix.eazypy.zout.fits` has sha256
+  `03bc4c289982dc50a4540305b8858b279aca7c7cdb64c809d69a855e631b6428` (12,597 rows).
+- Gaia DR3 (VizieR I/355/gaiadr3): positions and G magnitudes of the spike-seeding stars.
 
 ### MACS0717 field run (accessed 2026-10-08; D-041)
 
@@ -569,6 +584,23 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - CANUCS DR1 (DOI 10.17909/18nv-np70) MACS0416 cluster-field photometry and EAzY photo-z:
   https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/clu/hlsp_canucs_jwst-hst_multi_macs0416-clu_multi_v1_photometry-cat.fits.gz,
   31,693,111 B, sha256 `339107a5c5041621d7bed4ecc8b4a51b5148a6913d4e513c3a5e783363f11bff`.
+- CANUCS DR1 MACS0416 Lenstool model (Rihtarsic et al. 2025, A&A, doi:10.1051/0004-6361/202451117), files under
+  https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/model/:
+  - `hlsp_canucs_jwst-hst_multi_macs0416-lenstool-bestparam_multi_v1_model.txt` 70,753 B
+    `f3d9a8415044ff8d5ab4774573fcf3670c9dee9169abfca46086bdbf3dd45bed`;
+  - `…-lenstool-multim_multi_v1_model.txt` 19,280 B `ce00444dcc9239f0fd72d5fb37e35cbbea281647803ef4c30eb7b187262f5507`;
+  - `…-lenstool-readme_multi_v1_model.txt` 2,275 B `0d3f6796f79c9b9710223aa2ef5d3535c27e2da06c7cd89dc47f1ae3f0915cbf`.
+  Deflection, κ and γ maps (best fit and 100 MCMC samples) are in the same directory and were not used.
+  - `…-lenstool-param_multi_v1_model.txt` (input parameters; sigposArcsec 0.49) 4,468 B
+    `0f1fb7d6947d467b28d8b74485799321b09a1cc63fd7e7df82f01620ddb9b337`.
+- CANUCS DR1 Abell 370 Lenstool model (Gledhill et al. 2025, ApJ, doi:10.3847/1538-4357/ad684a), files under
+  https://archive.stsci.edu/hlsps/canucs/dr1/a370/model/ (accessed 2026-10-08; D-044):
+  - `hlsp_canucs_jwst-hst_multi_a370-lenstool-bestparam_multi_v1_model.txt` 90,403 B
+    `3c1eea91755ea532e424b1b143e39b35a9d89beae2958d3b042876af50443580`;
+  - `…-lenstool-multim_multi_v1_model.txt` 7,881 B `d72c3d98e675e5bc00cfbdd9b84d1b8528b22e36311924fea072293af23ef9e2`;
+  - `…-lenstool-param_multi_v1_model.txt` (sigposArcsec 0.3) 6,254 B
+    `aacc2dadd442645d2222c23ee2c3f9f6a76fddaa73996a26a6e88c0691a6bf3d`;
+  - `…-lenstool-readme_multi_v1_model.txt` 1,988 B `a73bfe3b7d23c7605e16717781d94736d003e7b5fc5d08c0ef80a0358367edc0`.
 
 ## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
 

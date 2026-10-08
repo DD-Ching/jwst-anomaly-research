@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 
@@ -427,14 +428,21 @@ def test_imageplane_check_summary():
 @pytest.mark.network
 @pytest.mark.parametrize(
     "name, n_images, n_families, chi2",
-    [("elgordo-caminha23", 56, 23, 80.221558), ("abell2744-bergamini23", 149, 50, 146.604318)],
+    [
+        ("elgordo-caminha23", 56, 23, 80.221558),
+        ("abell2744-bergamini23", 149, 50, 146.604318),
+        ("macs0416-canucs", 303, None, 344.298308),
+        ("abell370-canucs", 115, None, 192.611321),
+    ],
 )
 def test_cluster_model_files_load(name, n_images, n_families, chi2):
     files = lc.model_files(name)
     par = lc.lensmodel.parse_lenstool_par(files["best.par"])
     model = lc.lensmodel.LensModel.from_par(par)
     images = lc.lensmodel.load_lenstool_images(files["arcs.dat"])
-    assert len(images) == n_images and len(set(images["system"])) == n_families
+    assert len(images) == n_images
+    if n_families is not None:
+        assert len(set(images["system"])) == n_families
     assert lc.chi2pos_from_par(files["best.par"]) == pytest.approx(chi2)
     z = lc.lensmodel.image_redshifts(images, par["z_m_limit"])
     assert np.all(np.isfinite(z))  # every image has a catalogued or fixed redshift
@@ -537,3 +545,142 @@ def test_flux_ratio_table_exclusions():
     assert set(t["flux_class"]) == {"untested"} and set(t["dja_id"]) == {-1}
     t = lc.flux_ratio_table(model, images, {}, phot, match_arcsec=0.05, offset_arcsec=(0.0, 0.1))
     assert list(t["dja_id"]) == [11, 12, 13]
+
+
+_POST_PAR = f"""\
+runmode
+    reference 3 {RA0} {DEC0}
+    end
+cosmology
+    H0 70.0
+    omegaM 0.3
+    end
+potentiel O1
+    profil 81
+    x_centre 0.0
+    y_centre 0.0
+    ellipticite 0.0
+    angle_pos 0.0
+    core_radius 0.001
+    cut_radius 10000.0
+    v_disp 900.0
+    z_lens 0.39
+    end
+potentiel 7
+    profil 81
+    x_centre 40.0
+    y_centre 40.0
+    ellipticite 0.0
+    angle_pos 0.0
+    core_radius 0.01
+    cut_radius 5.0
+    v_disp 100.0
+    mag 18.0
+    z_lens 0.39
+    end
+fini
+"""
+_POST_BAYES = """\
+#Nsample
+#ln(Lhood)
+#O1 : sigma (km/s)
+#Pot0 rcut (arcsec)
+#Pot0 sigma (km/s)
+#Chi2
+1 -1.0 900.0 5.0 100.0 1.0
+2 -2.0 910.0 5.5 110.0 2.0
+3 -3.0 890.0 4.5 95.0 3.0
+"""
+
+
+def test_posterior_command_on_a_synthetic_chain(tmp_path, monkeypatch):
+    from jwst_anomaly import lensmodel
+
+    par_path = tmp_path / "best.par"
+    par_path.write_text(_POST_PAR)
+    bayes_path = tmp_path / "bayes.dat"
+    bayes_path.write_text(_POST_BAYES)
+    model = lensmodel.LensModel.from_par(par_path)
+    grid = lensmodel.DeflectionGrid.compute(model, half_width=60.0, step=0.5)
+    pred = lensmodel.find_images(model, grid, 5.0, 3.0, 2.0)
+    bright = pred[np.abs(pred["magnification"]) > 0.5]
+    arcs = tmp_path / "arcs.dat"
+    arcs.write_text(
+        "#REFERENCE 0\n"
+        + "".join(
+            f"1.{k + 1} {r['ra']:.8f} {r['dec']:.8f} 0.5 0.5 0.0 2.0 25\n"
+            for k, r in enumerate(bright)
+        )
+    )
+    lc.MODELS["_post"] = {"sigpos": 0.5, "bayes": ("unused", "unused")}
+    monkeypatch.setattr(lc, "model_files", lambda name: {"best.par": par_path, "arcs.dat": arcs})
+    monkeypatch.setattr(lc, "fetch_catalog", lambda url, sha: bayes_path)
+    try:
+        args = lc.argparse.Namespace(
+            model="_post",
+            out=tmp_path / "out",
+            systems="1",
+            samples=2,
+            seed=0,
+            grid_step=0.5,
+            half_width=60.0,
+            match_arcsec=1.0,
+            follow_arcsec=3.0,
+        )
+        summary = lc.cmd_posterior(args)
+    finally:
+        del lc.MODELS["_post"]
+    assert summary["best_row"] == 0 and summary["best_row_max_diff"] == 0.0
+    fam = summary["families"]["1"]
+    assert fam["n_catalogued"] == len(bright)
+    assert sum(fam["n_predicted_counts"].values()) == 3
+    for img in fam["images"].values():
+        assert img["dtheta_best"] < 0.1 and not img["shared_best"]
+        assert img["dtheta_p16_50_84"][2] > img["dtheta_best"]  # sampled models fit worse
+    assert (tmp_path / "out" / "_post" / "posterior.json").exists()
+    images = Table.read(tmp_path / "out" / "_post" / "posterior_images.ecsv")
+    assert images.meta["model_sha256"] == lc.lensmodel.parse_lenstool_par(par_path)["sha256"]
+    lc.MODELS["_post"] = {"sigpos": 0.5, "bayes": ("unused", "unused")}
+    try:
+        args.samples = 0  # best.par only: no NaN in the JSON
+        summary = lc.cmd_posterior(args)
+    finally:
+        del lc.MODELS["_post"]
+    img = next(iter(summary["families"]["1"]["images"].values()))
+    assert img["shared_fraction"] is None and img["dtheta_p16_50_84"] is None
+
+
+@pytest.mark.network
+def test_pinned_chains_match_their_best_par():
+    for name in ("abell2744-bergamini23", "elgordo-caminha23"):
+        files = lc.model_files(name)
+        par = lc.lensmodel.parse_lenstool_par(files["best.par"])
+        bayes = lc.lensmodel.read_lenstool_bayes(lc.fetch_catalog(*lc.MODELS[name]["bayes"]))
+        row, diff = lc.lensmodel.best_sample_index(par, bayes)
+        if "potfile_mag0" in lc.MODELS[name]:  # El Gordo: a thinned chain without best.par
+            ref = lc.lensmodel.potfile_reference(par, lc.MODELS[name]["potfile_mag0"])
+            assert ref["sigma"] == pytest.approx(289.484861)
+        else:  # Abell 2744: best.par is a chain row (redshifts differ by < 1e-3)
+            assert diff < 1e-3 and bayes["Chi2"][row] == pytest.approx(146.603887)
+
+
+@pytest.mark.network
+def test_canucs_macs0416_reproduces_its_lenstool_chi2(tmp_path):
+    # D-044: the CANUCS best fit's image-plane chi2pos is 344.30 (sigpos 0.49"); ours is within 10 %
+    out = tmp_path / "v"
+    lc.main(["--model", "macs0416-canucs", "--out", str(out), "validate"])
+    ip = json.loads((out / "macs0416-canucs" / "validate.json").read_text())["image_plane"]
+    assert ip["n_solved"] == ip["n_images"] > 250
+    assert abs(ip["chi2_pos"] / ip["chi2_pos_lenstool"] - 1) < 0.10
+
+
+def test_fluxratios_refuses_a_gated_image_list():
+    # D-044: abell370-canucs is a source-plane fit whose image list is gated off
+    with pytest.raises(SystemExit, match="usable multiple-image list"):
+        lc.main(["--model", "abell370-canucs", "fluxratios", "--photometry", "unused.fits"])
+
+
+def test_fluxratios_refuses_a_map_model():
+    # map models have no Lenstool potentials to re-solve, so fluxratios refuses them
+    with pytest.raises(SystemExit, match="usable multiple-image list"):
+        lc.main(["--model", "macs1149-cats", "fluxratios", "--photometry", "unused.fits"])

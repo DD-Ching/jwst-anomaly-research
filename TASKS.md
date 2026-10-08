@@ -16,19 +16,21 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - an observational parity test (image orientation or resolved structure; not yet designed);
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
-   - exotic screens (D-031, D-034, D-036–D-038, D-040, D-041): SMACS, El Gordo, Sunrise (radial), Abell 2744,
-     MACS1149, MACS0717 and MACS0416 (radial) null. The six HFF CATS map models are in (D-035). Next:
-     - MACS0416: `images` / `fluxratio` with CANUCS photo-z (image list open and frame offset pinned, D-040);
-     - `radial`: an aper50 S/N floor (noise segments pass the isophotal S/N);
-     - JWST field runs: radial on Abell 370 (CANUCS photo-z) and Abell S1063; MACS0717 done (D-041), re-run its radial
-       when a photo-z catalogue exists;
+   - exotic screens (D-031, D-034, D-036–D-038, D-040–D-043): SMACS, El Gordo, Sunrise (radial), Abell 2744,
+     MACS1149, MACS0717, MACS0416, Abell 370 and Abell S1063 (radial) null. All six HFF clusters are screened. Next:
+     - a two-plane option in `LensModel` (D-042 used scratch code): check flagged extra images for non-member deflectors;
+     - CANUCS models pinned (D-044: `macs0416-canucs`, `abell370-canucs`); next, the 100 MCMC sample maps for μ spreads;
+     - `radial`: low-weight veto (relative WHT < 0.5) or aper50 S/N floor; pass `--spike-stars` (Gaia, D-043) on every
+       field and re-run earlier fields' radial screens with it;
+     - re-run MACS0717 radial when a photo-z catalogue exists;
      - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; classify model copies of
        unpredicted catalogued images automatically (D-041);
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, MACS0717), Keeton v4 (MACS0717);
      - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1
        photo-z; fix system 16's z (spectroscopic z, or forced photometry on its far-image track); evaluate the CANUCS
-       lens models (with samples) as the independent second model for the D-036/D-037 μ rule;
-     - `bayes.dat` position spreads; the UNCOVER v2.0 cross-check for Abell 2744.
+       lens models (see the CANUCS item above);
+     - `bayes.dat` position spreads (`posterior`, D-045) as `forced_check` search radii; the UNCOVER v2.0 cross-check
+       for Abell 2744.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;
@@ -36,7 +38,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      (82.53 vs 80.22; 146.64 vs 146.60). No image-position anomaly. Next:
      - `images --forced-image`: done for El Gordo (D-034) and Abell 2744 (D-036); 700.1 needs a finer z scan;
      - search radii from `bayes.dat` instead of a fixed 1″;
-     - Abell 2744 multiplicity residual (D-030): do `bayes.dat` samples split 3.2a/b, 34.1a/b, 700.1a/b?
+     - ~~Abell 2744 multiplicity residual~~ — done (D-045): model resolution at folds. Next: `bayes.dat` μ errors in
+       `fluxratios` (Abell 2744 chain validated; El Gordo's `Chi2` column not understood);
      - El Gordo magnification-map check (CDS `magnification_best_fit_z2.fits`) as a `validate` map test.
    - Sunrise: RELICS or Scofield+2025.
    Field follow-ups (docs/fields/*.md):

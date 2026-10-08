@@ -16,6 +16,50 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   calibration locally (`--controls` on a cone-cut catalogue).
 - **Handoff:** back to TASKS "Now" item 1. Check MAST for WHL0137 revisits when one could be due.
 
+## 2026-10-08: Lenstool MCMC posteriors; Abell 2744 multiplicity residual explained (D-045)
+- `lensmodel.read_lenstool_bayes` / `posterior_par` and `lens_consistency.py posterior` rebuild published models at
+  MCMC samples (potfile rescaling, sampled family redshifts). Validated on Abell 2744: best.par is a chain row, and
+  two random rows give χ²pos 173.5 / 173.0 against the chain's 178.1 / 174.1.
+- Abell 2744 (12 samples plus best.par): 3.2a/b, 34.1a/b and 700.1a/b stay merged in every model. CATS v4.1 splits
+  34.1a/b, and 3.2a/b sit on the caustic in both models. That is model resolution at folds; 0 surviving. 4.2c moves
+  only 0.2–0.4″ (μ 8.7–10.0), well below its galaxy-scale systematics (D-036).
+- **Failed approach:** the El Gordo CDS chain's `Chi2` column (54–77) does not track our χ²pos (93–106), not even in
+  rank, so that chain is not validated.
+- Wall time: about 70 s per Abell 2744 sample on a 0.25″ grid; 15 min for 13 models.
+- **Handoff:** feed the posterior μ spread into `fluxratios` (then recheck SMACS 6.3 once a SMACS chain is pinned) and
+  the position spread into `forced_check` search radii.
+
+## 2026-10-08: CANUCS Lenstool models pinned (D-044)
+- `macs0416-canucs` reproduces Lenstool's image-plane χ²pos (330.8 against 344.30; rms 0.51″ over 303 images).
+  `abell370-canucs` is a source-plane fit (image-plane rms 2.3″).
+- They are the independent second model for vetting (the D-042 system-27 and system-51 checks used scratch code).
+- `fluxratios` now refuses gated image lists and map models, as `images` does; its `--offset-arcsec` defaults to
+  the model's pinned frame offset.
+- **Handoff:** a two-plane option in `LensModel`; use `macs0416-canucs` in `images` runs as a direct cross-check.
+
+## 2026-10-08: Abell 370 and Abell S1063 radial screens: null (D-043)
+- Worktree worker: CANUCS 1208 for Abell 370 (CANUCS DR1 photo-z; frame offset −0.121″, −0.015″ pinned) and GLIMPSE
+  3293 for S1063 (DJA v7.5 photo-z). Only `radial` applies (image lists gated, D-035).
+- Abell 370 raised two flags (15 and 8 lines, p ≤ 0.01). Both are diffraction-spike chains from Gaia stars that are
+  off the mosaic or saturated and absent from the catalogue. The Gaia-seeded veto is now in the code
+  (`radial --spike-stars`, `scripts/gaia_stars.py`); with it, p 0.945. S1063: p 0.435, unchanged by the veto.
+- **Failed approach:** spike vetoes seeded from the pipeline catalogue miss saturated and off-mosaic stars, whose
+  spikes reach 37″.
+- Wall time: under 2 min of pipeline per field, plus cutout vetting.
+- **Handoff:** a low-weight veto or an aper50 S/N floor in `radial`; use `--spike-stars` on every field.
+
+## 2026-10-08: MACS0416 counter-images and flux ratios: null; CANUCS model as second model; two-plane check (D-042)
+- With the D-040 solver, the MACS0416 image list is open. `images` and `fluxratio` raised 21 flags; 0 survive. The most
+  persistent was system 51's fourth image: two independent models predict it, and the 51.1–51.3 photometry says it
+  should appear at 9–25σ, but it is not seen. It comes from a z 0.268 foreground galaxy modelled as a member. A
+  scratch two-plane model with that galaxy at σ ≤ 60 km/s gives exactly the 3 observed images.
+- System 27's two bright `absent` predictions (S/N 247–341) are CATS-only galaxy-scale caustics. The JWST-era CANUCS
+  Lenstool model (222 potentials, 111 spectroscopic systems) reproduces system 27 with exactly its 3 images, and the
+  cutouts show empty sky there.
+- Flux-ratio flags: 45.2 is blended with a bright galaxy 0.5″ away; 38.1 is marginal.
+- Wall time: about 3 min of pipeline plus about 5 min of vetting.
+- **Handoff:** pin the CANUCS models (MACS0416, MACS1149, Abell 370) as `MODELS` entries for second-model vetting.
+
 ## 2026-10-08: Sunrise transient candidates `n0022` and `n0150` are detector persistence (D-039)
 - New `scripts/persistence_check.py`: per-exposure photometry on level-2 `_cal` files (S3 byte ranges), plus the
   same detector pixel in earlier exposures on that detector. Validated on a synthetic afterimage and on two real

@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from astropy.cosmology import FlatLambdaCDM
 
 from jwst_anomaly.lensmodel import DPIE, LensModel
@@ -111,3 +112,72 @@ def test_spike_veto_keeps_off_axis_radial_arcs():
     )
     veto = es.spike_segments(src, shapes)
     assert list(veto) == [True] * 6 + [False]
+
+
+def test_external_stars_veto_spikes_of_stars_missing_from_the_catalogue(tmp_path):
+    from astropy.table import Table
+
+    cosd = np.cos(np.deg2rad(DEC0))
+    # a saturated G = 13 star with no catalogue row; segments 30" and 33" N along its spike,
+    # one 30" E across it
+    ras = [RA0, RA0, RA0 + 30 / 3600 / cosd]
+    decs = [DEC0 + 30 / 3600, DEC0 + 33 / 3600, DEC0]
+    src = Table({"ra": ras, "dec": decs, "pa_obs": [1.0, 179.0, 0.0]})
+    shapes = Table({"ra": ras, "dec": decs, "mag": [24.0] * 3, "is_extended": [True] * 3})
+    assert not es.spike_segments(src, shapes).any()  # no catalogued star, nothing vetoed
+    path = tmp_path / "gaia.ecsv"
+    Table({"RA_ICRS": [RA0], "DE_ICRS": [DEC0], "Gmag": [13.0]}).write(path, format="ascii.ecsv")
+    stars = es.read_spike_stars(path)
+    assert list(stars.colnames) == ["ra", "dec", "mag"] and stars.meta["provenance"] == "observed"
+    assert list(es.spike_segments(src, shapes, stars)) == [True, True, False]
+    # a catalogued star of the same brightness keeps the 20" cap (D-034): the 30" segments survive;
+    # passing the Gaia star as well seeds it once (deduplicated), from the catalogue
+    shapes2 = Table(
+        {
+            "ra": [RA0, *ras],
+            "dec": [DEC0, *decs],
+            "mag": [13.0] + [24.0] * 3,
+            "is_extended": [False] + [True] * 3,
+        }
+    )
+    assert not es.spike_segments(src, shapes2).any()
+    assert not es.spike_segments(src, shapes2, stars).any()
+    np.testing.assert_allclose(es.spike_radius(12.0, cap=es.EXTERNAL_SPIKE_CAP), 60.0)
+    # masked magnitudes are ignored; a missing column is a clear error
+    m = Table({"ra": [RA0, RA0], "dec": [DEC0, DEC0], "Gmag": [13.0, 0.0]}, masked=True)
+    m["Gmag"].mask = [False, True]
+    m.write(tmp_path / "masked.ecsv", format="ascii.ecsv")
+    assert np.isnan(es.read_spike_stars(tmp_path / "masked.ecsv")["mag"][1])
+    Table({"ra": [RA0], "dec": [DEC0], "G": [13.0]}).write(
+        tmp_path / "bad.ecsv", format="ascii.ecsv"
+    )
+    with pytest.raises(ValueError, match="no mag column"):
+        es.read_spike_stars(tmp_path / "bad.ecsv")
+
+
+def test_gaia_star_table_conversion():
+    from astropy.table import MaskedColumn, Table
+
+    spec = importlib.util.spec_from_file_location("gaia_stars", _DIR / "gaia_stars.py")
+    gs = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gs)
+    v = Table({"RA_ICRS": [1.0, 2.0], "DE_ICRS": [3.0, 4.0]})
+    v["Gmag"] = MaskedColumn([12.5, 0.0], mask=[False, True])
+    out = gs.to_star_table(v)
+    assert (
+        out.colnames == ["ra", "dec", "mag"] and out["mag"][0] == 12.5 and np.isnan(out["mag"][1])
+    )
+    assert len(gs.to_star_table(None)) == 0
+
+
+@pytest.mark.network
+def test_gaia_stars_live_query(tmp_path):
+    spec = importlib.util.spec_from_file_location("gaia_stars", _DIR / "gaia_stars.py")
+    gs = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gs)
+    out = tmp_path / "stars.ecsv"
+    gs.main(
+        ["39.97134", "-1.58226", "--radius-arcmin", "4", "--out", str(out)]
+    )  # Abell 370 (D-043)
+    stars = es.read_spike_stars(out)
+    assert len(stars) >= 5 and np.nanmin(stars["mag"]) < 14

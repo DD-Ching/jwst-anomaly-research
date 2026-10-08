@@ -590,3 +590,108 @@ def test_find_images_refines_cells_on_a_fold():
     assert len(pair) == 2  # one image on each side of the curve, opposite parity
     assert np.sign(pair["magnification"][0]) != np.sign(pair["magnification"][1])
     assert np.min(np.hypot(pair["x"] - x_img, pair["y"])) < 1e-3
+
+
+POSTERIOR_PAR = PAR.replace(
+    "fini\n",
+    """potentiel 101
+    profil 81
+    x_centre 5.0
+    y_centre 2.0
+    ellipticite 0.0
+    angle_pos 0.0
+    core_radius 0.05
+    cut_radius 10.0
+    v_disp 200.0
+    mag 18.0
+    z_lens 0.39
+    end
+potentiel 102
+    profil 81
+    x_centre -6.0
+    y_centre 1.0
+    ellipticite 0.0
+    angle_pos 0.0
+    core_radius 0.03
+    cut_radius 6.0
+    v_disp 120.0
+    mag 19.0
+    z_lens 0.39
+    end
+fini
+""",
+)
+
+BAYES = """\
+#Nsample
+#ln(Lhood)
+#O1 : x (arcsec)
+#O1 : sigma (km/s)
+#O1 : rc (arcsec)
+#Redshift of 4.0c
+#Pot0 rcut (arcsec)
+#Pot0 sigma (km/s)
+#Chi2
+1 -10.0 0.40 790.0 1.2 2.10 9.0 210.0 30.0
+2 -9.0 0.50 800.0 1.3 2.17 10.0 200.0 28.0
+3 -11.0 0.60 820.0 1.4 2.30 12.0 180.0 31.0
+"""
+
+
+def test_read_bayes_and_best_row(tmp_path):
+    par = lensmodel.parse_lenstool_par(_write(tmp_path, POSTERIOR_PAR.format(ra=RA0, dec=DEC0)))
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, BAYES, "bayes.dat"))
+    assert len(bayes) == 3 and bayes.colnames[-1] == "Chi2"
+    assert bayes.meta["provenance"] == "model_prediction" and len(bayes.meta["sha256"]) == 64
+    # O1 core radius is given in kpc in best.par, so only x, sigma and the redshift match row 1
+    par["potentials"][0]["core_radius"] = 1.3
+    k, diff = lensmodel.best_sample_index(par, bayes)
+    assert k == 1 and diff == pytest.approx(0.0)
+
+
+def test_posterior_par_replaces_and_rescales(tmp_path):
+    par = lensmodel.parse_lenstool_par(_write(tmp_path, POSTERIOR_PAR.format(ra=RA0, dec=DEC0)))
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, BAYES, "bayes.dat"))
+    out = lensmodel.posterior_par(par, bayes, 2, 1)
+    o1, m1, m2 = out["potentials"]
+    assert (o1["x_centre"], o1["v_disp"], o1["core_radius"]) == (0.6, 820.0, 1.4)
+    assert np.isnan(o1["core_radius_kpc"])  # the replaced radius drops its kpc twin
+    assert o1["y_centre"] == -1.0  # not sampled: unchanged
+    # members scale by sigma*, rcut* ratios to the reference row (180/200, 12/10)
+    assert m1["v_disp"] == pytest.approx(180.0) and m2["v_disp"] == pytest.approx(108.0)
+    assert m1["cut_radius"] == pytest.approx(12.0) and m2["cut_radius"] == pytest.approx(7.2)
+    assert m1["core_radius"] == 0.05  # rcore* is not sampled
+    assert out["z_m_limit"]["4"] == 2.30
+    assert par["potentials"][0]["x_centre"] == 0.5  # the input is not modified
+    assert out["sha256"] != par["sha256"]
+    # the reference row reproduces best.par's members; a dict reference does too
+    same = lensmodel.posterior_par(par, bayes, 1, {"sigma": 200.0, "rcut": 10.0})
+    assert same["potentials"][2]["v_disp"] == pytest.approx(120.0)
+    assert lensmodel.potfile_reference(par, 18.0) == {"sigma": 200.0, "rcut": 10.0}
+    with pytest.raises(ValueError):
+        lensmodel.potfile_reference(par, 17.0)
+    LensModel.from_par(out)  # builds
+    # a member optimised on its own (O2 sigma) is not rescaled again by Pot0 sigma
+    own = BAYES.replace("#O1 : rc (arcsec)", "#O2 : sigma (km/s)")
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, own, "own.dat"))
+    out = lensmodel.posterior_par(par, bayes, 2, 1)
+    assert out["potentials"][1]["v_disp"] == 1.4 and out["potentials"][2]["v_disp"] == 108.0
+
+
+def test_posterior_rejects_unknown_columns(tmp_path):
+    par = lensmodel.parse_lenstool_par(_write(tmp_path, POSTERIOR_PAR.format(ra=RA0, dec=DEC0)))
+    text = BAYES.replace("#O1 : rc (arcsec)", "#O1 : gamma")
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, text, "bayes.dat"))
+    with pytest.raises(UnsupportedModelError):
+        lensmodel.posterior_par(par, bayes, 0, 0)
+    kpc = BAYES.replace("#O1 : rc (arcsec)", "#O1 : rc (kpc)")
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, kpc, "kpc.dat"))
+    with pytest.raises(UnsupportedModelError):  # units are checked, never assumed
+        lensmodel.posterior_par(par, bayes, 0, 0)
+    extra = BAYES.replace("#O1 : x (arcsec)", "#O4 : x (arcsec)")
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, extra, "extra.dat"))
+    with pytest.raises(UnsupportedModelError):
+        lensmodel.best_sample_index(par, bayes)
+    bad = BAYES.replace("#Chi2\n", "")
+    with pytest.raises(ValueError):
+        lensmodel.read_lenstool_bayes(_write(tmp_path, bad, "bad.dat"))

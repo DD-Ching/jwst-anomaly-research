@@ -1969,3 +1969,169 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
 - A JWST-era MACS0717 lens model appears.
 - A MACS0717 photo-z catalogue (DJA or a team release) appears: re-run `radial` with the background cut.
 - `forced_check` ties its match and search radii to the measured image-plane rms when that rms exceeds 1″.
+
+## D-042 MACS0416 counter-image and flux-ratio screens: null; CANUCS Lenstool model as second model; two-plane check of foreground deflectors (2026-10-08)
+
+**Decision.** With the image list open (D-040), the MACS0416 `images` and `fluxratio` screens are a null result
+(docs/fields/macs0416.md). The JWST-era CANUCS Lenstool model is the independent second model for this field:
+Rihtarsic et al. 2025, 222 potentials and 111 spectroscopic systems, loaded with `LensModel.from_par` from the
+released best-fit parameter file. A flagged extra image that the CANUCS model does not predict is CATS-only, and
+therefore model-dependent. This relaxes D-041's two-independent-models requirement to one JWST-era model (ASSUMPTION:
+the JWST-era model, with spectroscopic constraints only, is the stronger check).
+
+**Alternatives rejected.**
+- HFF-era second models (Sharon, Keeton). The CANUCS model is fitted to JWST positions and uses spectroscopic
+  constraints only, so it is the stronger independent check.
+- Treating the system-27 extra images (predicted S/N 247–341) as missing: the CANUCS model reproduces system 27 with
+  exactly its 3 catalogued images (within 0.2–0.66″) and predicts nothing at the 4 CATS extras (its nearest images are 4.5–12.8″ away).
+
+**Evidence.**
+- `images` (F277W forced, CANUCS photo-z, frame offset applied): 143 predicted. Classes: recovered 3, confused 13,
+  absent 2, undetectable 3, no_reference 6, inconsistent_reference 3.
+- Vetting (CANUCS model, cutouts inspected):
+  - system 27: 2 absent and 2 confused, all CATS-only. Empty sky at the μ 26 and μ 19 positions in all bands;
+    cluster members at z 0.3–0.4 lie 0.6–1″ away, so these are galaxy-scale caustics of the CATS model.
+  - one system-55 row is CATS-only (5.3″ from any CANUCS image); the other two are reference-quality cases.
+  - 5 confused rows (systems 34, 45, 47, 132, 133) are predicted by both models (within 0.25–0.9″) but lie next to
+    neighbours 30–900× brighter, so they are untestable.
+  - 4 confused rows (systems 1, 15, 122 ×2) are copies, under a second copy rule (ASSUMPTION). The flagged prediction
+    is the only unmatched prediction of its system near exactly one unmatched catalogued image, it has the same
+    parity, and it lies within 6.5 × the image-plane rms (1.6–4.7″ here, against 0.76″ rms). D-041's 1.75 × rms rule
+    does not cover them.
+  - System 45 (μ −9) lies 1.89″ from the unmatched 45.2 but with the opposite parity to CATS's μ +2.3 there. CANUCS
+    gives μ +14.9 at 45.2, so 45.2 is near-critical and its parity is model-dependent. Untestable (D-036).
+  - **System 51's fourth image is explained.** Both models predict it (μ 3.8 CATS, 5.5 CANUCS; 0.66″ apart). After
+    isophote subtraction of the neighbour, nothing is seen; the expected signal, derived from 51.1–51.3 photometry,
+    is 9–25σ. In CANUCS the image comes from potential 8757, the z_spec 0.268 galaxy 0.85–0.88″ away, modelled as a
+    cluster member at z 0.396. CATS is a map model and cannot be decomposed; its fourth image lies 0.85″ from the same
+    galaxy, consistent with the same origin (not tested). In a two-plane model (that galaxy at z 0.268, the rest of CANUCS at z 0.396), the
+    image persists at σ 102 and 81 km/s (fitted, and rescaled to its luminosity distance). At σ ≤ 60 km/s the system
+    has exactly 3 images and 51.3 is matched within 1.5″. That is 26 % below the rescaled σ, inside the assumed ±30 %
+    scatter. Record: docs/candidates/macs0416-system51-fourth-image.md.
+- `fluxratio` (F150W/F444W): 32 consistent, 58 resolved, 23 untestable.
+  - 45.2 is overluminous: a 0.2″ aperture 0.5″ from a bright compact galaxy (the cutout), and its CANUCS match has
+    spectroscopic z 2.544 but photo-z 0.38, a blend.
+  - 45.1 is flagged as underluminous only relative to 45.2.
+  - 38.1 is chromatic at S/N 2–3.5 (marginal).
+- Tally: 143 predicted images and 116 flux-ratio images screened; 21 flags (18 forced rows, 3 flux-ratio images);
+  **0 surviving**.
+- **Rule:** before treating a missing extra image as a flag, check the potentials that produce it against their
+  spectroscopic redshifts. A foreground or background galaxy modelled as a member is tested in a two-plane model with
+  its σ rescaled and scanned over the scaling-relation scatter (ASSUMPTION: ±30 %).
+
+**Revisit if.**
+- The CANUCS model is pinned as a `MODELS` entry with its image list, and `images` is re-run on it directly.
+- A multi-plane re-fit, or a measured velocity dispersion of CANUCS 3101008 (z 0.268), gives σ ≳ 65 km/s. System
+  51's explanation then fails and the fourth image becomes a flag again.
+
+## D-043 Abell 370 and Abell S1063 radial screens: null; Gaia-seeded spike veto (2026-10-08)
+
+**Decision.**
+- Only the `radial` screen applies to `abell370-cats` and `abells1063-cats`: their image lists are gated off (D-035;
+  rms 10.7″ and 11.8″).
+- Data: CANUCS 1208 `o002_t001` (Abell 370; 8 bands) and GLIMPSE 3293 `o001_t001` (Abell S1063; 9 bands, F200W 70 ks).
+- Abell 370's frame offset (−0.121″, −0.015″) is pinned. S1063's 0.075″ is under the 0.1″ threshold and not pinned.
+- Photo-z come from CANUCS DR1 (Abell 370) and DJA v7.5 eazy (S1063).
+- `exotic_screens.py radial --spike-stars` (stars from `scripts/gaia_stars.py`) adds Gaia DR3 stars (G < 17) to
+  `spike_segments`, with spikes up to 60″; catalogued stars keep the 20″ cap (D-034), and a Gaia star within 1″ of a
+  catalogued one is seeded once (ASSUMPTIONs; G is used in the AB spike-length law without a colour term). The
+  pipeline catalogue misses saturated and off-mosaic stars.
+- Both fields are null (docs/fields/abell370.md, docs/fields/abells1063.md).
+
+**Alternatives rejected.**
+- Abell 370 data: MAGNIF 2883/3538 and JUMPS 5890 (medium bands only); 5324 (shallow).
+- S1063 data: 1840 (about 1 ks per band).
+- Taking the 15-line Abell 370 centre (p 0.0) at face value. It is a straight chain of diffraction-spike segments
+  along the column axis (PA 62°), at a low-weight seam, pointing at a Gaia G = 13.7 star off the F200W mosaic.
+
+**Evidence.**
+- Abell 370 `radial`: 15 lines, p 0.0, with or without photo-z. Two flags, both instrumental (cutouts inspected):
+  - the 15-line chain above;
+  - an 8-line chain (p 0.01 with aper50 S/N ≥ 5) from a saturated Gaia G = 12.7 star that has no catalogue entry.
+  - `spike_segments` missed both stars: it seeds only from catalogued point sources brighter than AB 20 and caps
+    spikes at 20″, while these segments reach 12–37″.
+  - With the committed Gaia-seeded veto: 82 segments dropped, 140 anti arcs, max 5 lines, p 0.945 (111 and p 0.495
+    with photo-z). The scratch test used a fixed axis (63.4°) and removed 166 catalogue rows. The code estimates the
+    axes and vetoes selected segments; the resulting anti counts and p-values are the same.
+- S1063 `radial`: max 4 lines, p 0.435; with photo-z, max 3, p 0.95. The Gaia veto (11 stars) leaves it unchanged.
+- Tally, counted the same way for both (anti arcs after all spike vetoes, no photo-z): Abell 370 140, S1063 51; 2
+  flags; **0 surviving**.
+
+**Revisit if.**
+- A low-weight veto (relative WHT < 0.5) or an aper50 S/N floor is added to `radial`.
+- Fitted redshifts for Abell 370 or S1063 appear, which would open their image lists.
+- A photo-z catalogue for S1063 with fewer blends on arcs appears: DJA puts 13 of 46 matched images at z < 0.6.
+
+## D-044 CANUCS Lenstool models pinned as `macs0416-canucs` and `abell370-canucs` (2026-10-08)
+
+**Decision.**
+- The CANUCS DR1 Lenstool best fits are now `MODELS` entries: `macs0416-canucs` (Rihtarsic et al. 2025, image-plane
+  fit) and `abell370-canucs` (Gledhill et al. 2025, source-plane fit).
+- Each entry pins the best-fit parameter file, the Lenstool multiple-image file and the input parameter file by
+  sha256 (`lensmodel.MACS0416_CANUCS`, `ABELL370_CANUCS`). sigpos is read from the input file: 0.49″ and 0.3″.
+- Frame offsets of the image lists against the JWST F200W catalogues, measured with the D-034 method:
+  - MACS0416: (−0.008″, +0.052″), not pinned (under 0.1″);
+  - Abell 370: (−0.148″, +0.002″) ± 0.017″, pinned.
+- `abell370-canucs` has its image list gated off (`image_list_ok: False`).
+- `validate` drops the Lenstool χ² reference from the image-plane comparison when the best fit is source-plane.
+- `macs0416-canucs` is the independent JWST-era second model for the D-036/D-041/D-042 rules. It can be used
+  directly by `validate` and `images`. The two-plane checks of D-042 still need scratch code (TASKS).
+- MACS1149 has no released CANUCS Lenstool parameter file (only maps), so it is not pinned.
+
+**Alternatives rejected.** Using the CANUCS deflection maps as map models: the parameter files allow galaxy-scale
+tests (removing or rescaling one potential, D-042), which maps do not.
+
+**Evidence.**
+- `validate --model macs0416-canucs`: 303 of 303 images solved, rms 0.512″ (max 1.53″), χ²pos 330.8 against
+  Lenstool's 344.30. The match is within 4 %, as for SMACS / El Gordo / Abell 2744 (D-030).
+- `validate --model abell370-canucs`: 115 of 115 images solved, rms 2.32″ (max 17.9″). This model was fitted in the
+  source plane (χ² 192.6 there), so its image-plane residuals are not comparable, and its image list is gated off.
+- Network tests: the MACS0416 reproduction holds within 10 %, and both models load with finite redshifts for every
+  image.
+
+**Revisit if.**
+- CANUCS releases a MACS1149 parameter file.
+- The Abell 370 image list is needed: it requires an rms gate like D-035's.
+
+## D-045 Lenstool MCMC posteriors (`bayes.dat`); the Abell 2744 multiplicity residual is model resolution, not an anomaly (2026-10-08)
+
+**Decision.** `lensmodel.read_lenstool_bayes` / `posterior_par` rebuild a published model at any MCMC sample, and
+`lens_consistency.py --model <m> posterior --systems ...` runs the image-plane solve for selected families over
+best.par plus N random chain rows. Pinned chains: Abell 2744 Bergamini+2023b (70 MB, 133,690 rows) and El Gordo
+Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `validate` does not fetch them.
+- `O<i> : <key> (<unit>)` columns replace keywords of the i-th best.par potential; units are checked.
+- `Pot0 sigma` / `Pot0 rcut` rescale every potfile member (a best.par potential with `mag`) by the ratio to the
+  best-fit value. That is exact for Lenstool's power-law scaling relations. The reference is best.par's own chain
+  row (Abell 2744) or, for a thinned chain without it, the member at the input file's `mag0` (El Gordo: BCG 1758,
+  `potfile_mag0` 17.9852 from CDS `to_sample.par`).
+- `Redshift of <id>` columns set every family on that `z_m_limit` line.
+
+**Alternatives rejected.**
+- The CANUCS 100 MCMC deflection maps (MACS0416 only, 100 × 3 maps); a parametric chain covers every model we
+  rebuild from best.par, at any number of samples.
+- A full `images` run per sample: about 70 s per Abell 2744 sample at a 0.25″ grid, dominated by the deflection
+  grid, so `posterior` restricts the solve to the named families.
+
+**Evidence.**
+- Abell 2744: best.par is chain row 117,869 (Chi2 146.60; parameter differences 0, family redshifts < 1e-3), and its
+  rebuilt deflection field equals best.par's. Two random rows give χ²pos 173.5 and 173.0 against the chain's 178.1
+  and 174.1 (all 149 images, 0.25″ grid). The rebuild is validated.
+- El Gordo: the chain medians match best_fit.par (σ* 289.97 vs 289.48 km/s; O1 σ 1041 vs 1041), but the chain's
+  `Chi2` column (54–77) does not track our χ²pos (93–106 at the 0.621″ sigpos of D-030), not even in rank. The
+  column's definition is unknown, so the El Gordo chain is **not validated**; don't use it for conclusions yet.
+- Abell 2744 `posterior --systems 3.2,34.1,700.1,4.2 --samples 12 --seed 1` (`model_prediction`):
+  - 3.2a/b, 34.1a/b, 700.1a/b stay a `shared_match` in 13 of 13 models. The MCMC spread does not split them.
+  - Independent model, CATS v4.1 maps (scratch run with Bergamini's image list): 34.1a/b **split** (μ +24.9 / −21.7,
+    residuals 2.8″ / 2.0″), so the 34.1 merger is model-dependent. 3.2a/b merge there too (μ 230): both models put
+    the source on the caustic. The catalogue's 3.3a–3.1a–3.2a | 3.2b–3.1b–3.3b ordering is mirror-symmetric, so the
+    critical curve must run between 3.2a and 3.2b. A point-source model with the source within its position error of
+    the caustic predicts one merged image 0.28–0.53″ from each, which is within the model's 0.43″ rms. 700.1 has a
+    free redshift (posterior 1.2–3.9); CATS does not reproduce it at Bergamini's z.
+  - 4.2c (D-036) is present in 12 of 12 samples, 0.22–0.36″ (p16–p84) from the best-fit position, with μ 8.7–10.0.
+    The statistical spread is far below the galaxy-scale systematics that explain it (μ 3.9–28.7 under ±30 %).
+- Verdict: the D-030 multiplicity residual is model resolution at folds, not an anomaly. **0 surviving.**
+
+**Revisit if.**
+- The El Gordo `Chi2` column is understood (then validate that chain as for Abell 2744).
+- An independent model with 3.2's source well inside the caustic still merges 3.2a/b.
+- Speed: `imageplane_residuals` exposes its predicted images (`posterior` currently solves each family twice).

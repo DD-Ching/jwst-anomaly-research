@@ -1,0 +1,38 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: dataURI, datatype: string}
+# - {name: sample_id, datatype: string}
+# - {name: obs_id, datatype: string}
+# - {name: obsID, datatype: string}
+# - {name: productFilename, datatype: string}
+# - {name: productSubGroupDescription, datatype: string}
+# - {name: calib_level, datatype: int64}
+# - {name: size, datatype: int64}
+# - {name: dataRights, datatype: string}
+# - {name: prvversion, datatype: string}
+# - {name: cloud_uri, datatype: string}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'MAST level-3 product lists for the observations in abells1063.yaml (calib_level=3, subgroups=[''CAT'', ''I2D''], PUBLIC;
+#     level-2 members excluded); cloud_uri from MAST path_lookup'}
+# schema: astropy-2.0
+dataURI sample_id obs_id obsID productFilename productSubGroupDescription calib_level size dataRights prvversion cloud_uri
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f090w_cat.ecsv abells1063_nircam jw03293-o001_t001_nircam_clear-f090w 230236161 jw03293-o001_t001_nircam_clear-f090w_cat.ecsv CAT 3 5343576 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f090w_cat.ecsv
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f090w_i2d.fits abells1063_nircam jw03293-o001_t001_nircam_clear-f090w 230236161 jw03293-o001_t001_nircam_clear-f090w_i2d.fits I2D 3 9241816320 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f090w_i2d.fits
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f115w_cat.ecsv abells1063_nircam jw03293-o001_t001_nircam_clear-f115w 230236688 jw03293-o001_t001_nircam_clear-f115w_cat.ecsv CAT 3 4972367 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f115w_cat.ecsv
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f115w_i2d.fits abells1063_nircam jw03293-o001_t001_nircam_clear-f115w 230236688 jw03293-o001_t001_nircam_clear-f115w_i2d.fits I2D 3 9241871040 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f115w_i2d.fits
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f150w_cat.ecsv abells1063_nircam jw03293-o001_t001_nircam_clear-f150w 230234492 jw03293-o001_t001_nircam_clear-f150w_cat.ecsv CAT 3 4548330 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f150w_cat.ecsv
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f150w_i2d.fits abells1063_nircam jw03293-o001_t001_nircam_clear-f150w 230234492 jw03293-o001_t001_nircam_clear-f150w_i2d.fits I2D 3 5775845760 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f150w_i2d.fits
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f200w_cat.ecsv abells1063_nircam jw03293-o001_t001_nircam_clear-f200w 230234490 jw03293-o001_t001_nircam_clear-f200w_cat.ecsv CAT 3 4647395 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f200w_cat.ecsv
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f200w_i2d.fits abells1063_nircam jw03293-o001_t001_nircam_clear-f200w 230234490 jw03293-o001_t001_nircam_clear-f200w_i2d.fits I2D 3 5785194240 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f200w_i2d.fits
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f277w_cat.ecsv abells1063_nircam jw03293-o001_t001_nircam_clear-f277w 230231975 jw03293-o001_t001_nircam_clear-f277w_cat.ecsv CAT 3 2914946 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f277w_cat.ecsv
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f277w_i2d.fits abells1063_nircam jw03293-o001_t001_nircam_clear-f277w 230231975 jw03293-o001_t001_nircam_clear-f277w_i2d.fits I2D 3 550258560 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f277w_i2d.fits
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f356w_cat.ecsv abells1063_nircam jw03293-o001_t001_nircam_clear-f356w 230227193 jw03293-o001_t001_nircam_clear-f356w_cat.ecsv CAT 3 3217762 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f356w_cat.ecsv
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f356w_i2d.fits abells1063_nircam jw03293-o001_t001_nircam_clear-f356w 230227193 jw03293-o001_t001_nircam_clear-f356w_i2d.fits I2D 3 550054080 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f356w_i2d.fits
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f410m_cat.ecsv abells1063_nircam jw03293-o001_t001_nircam_clear-f410m 230231977 jw03293-o001_t001_nircam_clear-f410m_cat.ecsv CAT 3 3454468 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f410m_cat.ecsv
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f410m_i2d.fits abells1063_nircam jw03293-o001_t001_nircam_clear-f410m 230231977 jw03293-o001_t001_nircam_clear-f410m_i2d.fits I2D 3 504236160 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f410m_i2d.fits
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f444w_cat.ecsv abells1063_nircam jw03293-o001_t001_nircam_clear-f444w 230231978 jw03293-o001_t001_nircam_clear-f444w_cat.ecsv CAT 3 2685852 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f444w_cat.ecsv
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f444w_i2d.fits abells1063_nircam jw03293-o001_t001_nircam_clear-f444w 230231978 jw03293-o001_t001_nircam_clear-f444w_i2d.fits I2D 3 779448960 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f444w_i2d.fits
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f480m_cat.ecsv abells1063_nircam jw03293-o001_t001_nircam_clear-f480m 230231973 jw03293-o001_t001_nircam_clear-f480m_cat.ecsv CAT 3 1251632 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f480m_cat.ecsv
+mast:JWST/product/jw03293-o001_t001_nircam_clear-f480m_i2d.fits abells1063_nircam jw03293-o001_t001_nircam_clear-f480m 230231973 jw03293-o001_t001_nircam_clear-f480m_i2d.fits I2D 3 550180800 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f480m_i2d.fits

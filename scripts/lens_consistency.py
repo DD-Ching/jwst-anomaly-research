@@ -100,7 +100,7 @@ import astropy.units as u
 import numpy as np
 from astropy.coordinates import SkyCoord
 from astropy.io import fits
-from astropy.table import Table
+from astropy.table import Table, vstack
 from astropy.wcs import WCS, FITSFixedWarning
 
 from jwst_anomaly import lensmodel, paths, schema
@@ -123,8 +123,25 @@ MODELS = {
         "files": lensmodel.ELGORDO_CAMINHA23,
         "sigpos": 0.621,
         "frame_offset_arcsec": (0.224, -0.016),
+        "bayes": lensmodel.ELGORDO_CAMINHA23_BAYES,
+        # best_fit.par is not a row of the published (thinned) chain; the potfile reference is
+        # the member at the input file's mag0 (CDS files/to_sample.par: BCG 1758, D-045)
+        "potfile_mag0": 17.9852,
     },
-    "abell2744-bergamini23": {"files": lensmodel.ABELL2744_BERGAMINI23, "sigpos": "arcs"},
+    "abell2744-bergamini23": {
+        "files": lensmodel.ABELL2744_BERGAMINI23,
+        "sigpos": "arcs",
+        "bayes": lensmodel.ABELL2744_BERGAMINI23_BAYES,  # best.par is a chain row (D-045)
+    },
+    # CANUCS JWST-era Lenstool models (D-044): the independent second model for vetting. The
+    # Abell 370 fit is source-plane (image-plane rms 2.3"), so its image list is gated off.
+    "macs0416-canucs": {"files": lensmodel.MACS0416_CANUCS, "sigpos": "input.par"},
+    "abell370-canucs": {
+        "files": lensmodel.ABELL370_CANUCS,
+        "sigpos": "input.par",
+        "frame_offset_arcsec": (-0.148, 0.002),
+        "image_list_ok": False,
+    },
     # map models: published deflection maps (D_LS/D_S = 1), no Lenstool par or image list
     "whl0137-relics-lenstool": {
         "files": lensmodel.WHL0137_RELICS_LENSTOOL,
@@ -144,7 +161,7 @@ _HFF_QUOTED_RMS = {"macs0416": 0.72, "macs1149": 0.63, "macs0717": 2.41, "abells
 # macs0416 passes once find_images refines cells on folds (D-040)
 _HFF_IMAGE_LIST_OK = {"macs1149", "macs0717", "macs0416"}
 # (dRA cos dec, dDec) from arcs.txt to the JWST frame where it exceeds 0.1" (D-034, D-038)
-_HFF_FRAME_OFFSET = {"macs0416": (0.208, -0.025)}
+_HFF_FRAME_OFFSET = {"macs0416": (0.208, -0.025), "abell370": (-0.121, -0.015)}
 for _c, (_v, _zl, _files) in lensmodel.HFF_CATS.items():
     MODELS[f"{_c}-cats"] = {
         "files": _files,
@@ -165,7 +182,8 @@ def is_map_model(name: str) -> bool:
 
 
 def has_image_list(name: str) -> bool:
-    """Whether ``images`` and ``fluxratio`` may use the model's multiple-image list."""
+    """Whether ``images`` may use the model's multiple-image list. ``fluxratios`` also needs a
+    Lenstool model (it refuses map models)."""
     spec = MODELS[name]
     return "arcs.dat" in spec["files"] and spec.get("image_list_ok", True)
 
@@ -619,18 +637,21 @@ def cmd_validate(args) -> dict:
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
     sigma = model_sigpos(args.model, files, images)
     chi2_ref = chi2pos_from_par(files["best.par"])
+    image_plane_opt = (
+        "image plane optimization" in files["best.par"].read_text(encoding="latin-1").lower()
+    )
     bt, bsum = backtrace_check(model, images, par["z_m_limit"], sigma, chi2_ref)
     half = grid_half_width(model, images)
     grid = lensmodel.DeflectionGrid.cached(
         model, grid_cache_path(model, half, args.grid_step), half, args.grid_step
     )
-    ip, isum = imageplane_check(model, grid, bt, sigma, chi2_ref)
+    # a source-plane fit's Chi2pos is not an image-plane chi2: no reference for that comparison
+    ip, isum = imageplane_check(model, grid, bt, sigma, chi2_ref if image_plane_opt else None)
     summary = {
         "model": args.model,
         "model_sha256": model.sha256,
         "n_potentials": len(model.components),
-        "image_plane_optimised": "image plane optimization"
-        in files["best.par"].read_text(encoding="latin-1").lower(),
+        "image_plane_optimised": image_plane_opt,
         "kappa_map": (
             kappa_map_check(model, files["kappa_map"], step=args.step)
             if "kappa_map" in files
@@ -643,6 +664,164 @@ def cmd_validate(args) -> dict:
     _write(bt, out / "backtrace.ecsv")
     _write(ip, out / "imageplane.ecsv")
     (out / "validate.json").write_text(json.dumps(summary, indent=1))
+    return summary
+
+
+def _pct(values, q=(16, 50, 84)) -> list[float] | None:
+    v = np.asarray(values, float)
+    v = v[np.isfinite(v)]
+    return [round(float(x), 3) for x in np.percentile(v, q)] if len(v) else None
+
+
+def cmd_posterior(args) -> dict:
+    """Image-plane predictions of selected families over the model's MCMC samples (D-045).
+
+    For best.par (sample 0) and ``--samples`` random rows of the published ``bayes.dat``: each
+    catalogued image's image-plane residual, magnification and shared-match flag (a predicted
+    image claimed by two catalogued ones), the family's number of predicted images, and the
+    predicted images more than ``--match-arcsec`` from every catalogued one ("extra"). Extras of
+    the best-fit row are followed through the samples (nearest extra within
+    ``--follow-arcsec``). Everything is ``model_prediction``.
+    """
+    spec = MODELS[args.model]
+    if "bayes" not in spec:
+        raise SystemExit(f"error: {args.model} has no pinned bayes.dat")
+    files = model_files(args.model)
+    par = lensmodel.parse_lenstool_par(files["best.par"])
+    bayes = lensmodel.read_lenstool_bayes(fetch_catalog(*spec["bayes"]))
+    best, best_diff = lensmodel.best_sample_index(par, bayes)
+    if "potfile_mag0" in spec:
+        reference = lensmodel.potfile_reference(par, spec["potfile_mag0"])
+    elif best_diff > 1e-3:
+        raise SystemExit(f"error: best.par is not a row of bayes.dat (max diff {best_diff:.3g})")
+    else:
+        reference = best
+    images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    systems = [lensmodel.system_key(x) for x in args.systems.split(",")]
+    images = images[np.isin(np.asarray(images["system"]).astype(str), systems)]
+    if not len(images):
+        raise SystemExit(f"error: no catalogued images of {systems}")
+    rng = np.random.default_rng(args.seed)
+    rows = [best] + [int(r) for r in rng.choice(len(bayes), args.samples, replace=False)]
+    per_image, extras = [], []
+    for n, row in enumerate(rows):
+        # sample 0 is best.par itself (a thinned chain need not contain it)
+        p = par if n == 0 else lensmodel.posterior_par(par, bayes, row, reference)
+        model = lensmodel.LensModel.from_par(p)  # the model's own image frame, as validate
+        half = args.half_width or grid_half_width(model, images)
+        grid = lensmodel.DeflectionGrid.compute(model, half, args.grid_step)
+        bt = lensmodel.backtrace_images(model, images, p["z_m_limit"])
+        ip = lensmodel.imageplane_residuals(model, grid, bt)
+        ip["sample"] = n
+        ip["bayes_row"] = row
+        exact = n > 0 or best_diff <= 1e-3
+        ip["chain_chi2"] = (
+            float(bayes["Chi2"][row]) if exact and "Chi2" in bayes.colnames else np.nan
+        )
+        per_image.append(ip)
+        for fam in systems:
+            sel = bt[bt["system"] == fam]
+            sel = sel[np.isfinite(sel["beta_x"])]
+            if len(sel) < 2:
+                continue
+            z_s = float(sel["z_used"][0])
+            pred = lensmodel.find_images(
+                model, grid, float(np.mean(sel["beta_x"])), float(np.mean(sel["beta_y"])), z_s
+            )
+            ox, oy = model.to_frame(np.asarray(sel["ra"], float), np.asarray(sel["dec"], float))
+            d = np.hypot(pred["x"][:, None] - ox[None, :], pred["y"][:, None] - oy[None, :])
+            for k in np.flatnonzero(d.min(axis=1) > args.match_arcsec):
+                extras.append(
+                    (
+                        n,
+                        row,
+                        fam,
+                        z_s,
+                        float(pred["ra"][k]),
+                        float(pred["dec"][k]),
+                        float(pred["magnification"][k]),
+                    )
+                )
+    tab = vstack(per_image, metadata_conflicts="silent")
+    # model_sha256 differs per sample (rows carry bayes_row); keep only best.par's
+    tab.meta["model_sha256"] = par["sha256"]
+    ext = Table(
+        rows=extras or None,
+        names=("sample", "bayes_row", "system", "z_used", "ra", "dec", "magnification"),
+        dtype=(int, int, str, float, float, float, float),
+    )
+    for t in (tab, ext):
+        t.meta.update(provenance="model_prediction", source=f"{args.model} bayes.dat samples")
+    summary = {
+        "model": args.model,
+        "bayes_sha256": bayes.meta["sha256"],
+        "n_chain_rows": len(bayes),
+        "best_row": best,
+        "best_row_max_diff": best_diff,
+        "potfile_reference": reference,
+        "n_samples": args.samples,
+        "seed": args.seed,
+        "grid_step_arcsec": args.grid_step,
+        "families": {},
+    }
+    for fam in systems:
+        t = tab[tab["system"] == fam]
+        if not len(t):
+            continue
+        n_pred = [int(t["n_predicted"][t["sample"] == n][0]) for n in range(len(rows))]
+        fam_sum = {
+            "n_catalogued": int(np.sum(t["sample"] == 0)),
+            "n_predicted_best": n_pred[0],
+            "n_predicted_counts": {str(v): n_pred.count(v) for v in sorted(set(n_pred))},
+            "images": {},
+            "best_extras": [],
+        }
+        for img in dict.fromkeys(np.asarray(t["image_id"]).astype(str)):
+            ti = t[(t["image_id"] == img) & (t["sample"] > 0)]
+            t0 = t[(t["image_id"] == img) & (t["sample"] == 0)]
+            fam_sum["images"][img] = {
+                "dtheta_best": round(float(t0["dtheta_arcsec"][0]), 3),
+                "shared_best": bool(t0["shared_match"][0]),
+                "shared_fraction": (
+                    round(float(np.mean(ti["shared_match"])), 3) if len(ti) else None
+                ),
+                "dtheta_p16_50_84": _pct(ti["dtheta_arcsec"]),
+                "mu_p16_50_84": _pct(ti["magnification"]),
+            }
+        e = ext[ext["system"] == fam] if len(ext) else ext
+        for b in e[e["sample"] == 0]:
+            offs, mus = [], []
+            for n in range(1, len(rows)):
+                en = e[e["sample"] == n]
+                if not len(en):
+                    continue
+                dd = (
+                    SkyCoord(en["ra"], en["dec"], unit="deg")
+                    .separation(SkyCoord(b["ra"], b["dec"], unit="deg"))
+                    .arcsec
+                )
+                k = int(np.argmin(dd))
+                if dd[k] <= args.follow_arcsec:
+                    offs.append(dd[k])
+                    mus.append(en["magnification"][k])
+            fam_sum["best_extras"].append(
+                {
+                    "ra": round(float(b["ra"]), 6),
+                    "dec": round(float(b["dec"]), 6),
+                    "mu_best": round(float(b["magnification"]), 2),
+                    "present_fraction": round(len(offs) / args.samples, 3)
+                    if args.samples
+                    else None,
+                    "offset_p16_50_84": _pct(offs),
+                    "offset_max": round(float(np.max(offs)), 3) if offs else None,
+                    "mu_p16_50_84": _pct(mus),
+                }
+            )
+        summary["families"][fam] = fam_sum
+    out = args.out / args.model
+    _write(tab, out / "posterior_images.ecsv")
+    _write(ext, out / "posterior_extras.ecsv")
+    (out / "posterior.json").write_text(json.dumps(summary, indent=1))
     return summary
 
 
@@ -1406,6 +1585,11 @@ def _resid_stats(r: np.ndarray) -> dict:
 
 
 def cmd_fluxratios(args) -> dict:
+    if not has_image_list(args.model) or is_map_model(args.model):
+        raise SystemExit(
+            f"error: {args.model}: fluxratios needs a Lenstool model with a usable multiple-image "
+            "list (gated off by the image-plane rms gate of D-035 / D-044, or a map model)"
+        )
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
@@ -1414,7 +1598,10 @@ def cmd_fluxratios(args) -> dict:
     if len(colour) != 2:
         raise SystemExit("--colour takes two bands, e.g. f150w,f444w")
     phot = load_dja_photometry(args.photometry, list(colour), args.aperture, args.photoz)
-    offset = tuple(args.offset_arcsec)
+    if args.offset_arcsec is None:  # default: the model's pinned frame offset (D-034)
+        offset = tuple(MODELS[args.model].get("frame_offset_arcsec", (0.0, 0.0)))
+    else:
+        offset = tuple(args.offset_arcsec)
     table = flux_ratio_table(
         model,
         images,
@@ -1513,9 +1700,9 @@ def main(argv: list[str] | None = None) -> int:
         "--offset-arcsec",
         nargs=2,
         type=float,
-        default=(0.0, 0.0),
+        default=None,
         metavar=("DRA", "DDEC"),
-        help="photometry frame minus image list, arcsec (El Gordo: 0.221 -0.018)",
+        help="photometry frame minus image list, arcsec (default: the model's frame_offset_arcsec)",
     )
     f.add_argument("--min-snr", type=float, default=10.0)
     f.add_argument("--max-abs-mu", type=float, default=20.0)
@@ -1524,12 +1711,21 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--max-npix", type=int, default=20000, help="larger DJA segments are blends")
     f.add_argument("--photoz", type=Path, help="DJA eazy zout matching --photometry row by row")
     f.add_argument("--z-margin", type=float, default=0.15, help="photo-z margin, x (1 + z)")
+    po = sub.add_parser("posterior", help="selected families over the MCMC samples (bayes.dat)")
+    po.add_argument("--systems", required=True, help="comma-separated families, e.g. 3.2,34.1")
+    po.add_argument("--samples", type=int, default=20, help="random chain rows besides the best")
+    po.add_argument("--seed", type=int, default=1)
+    po.add_argument("--grid-step", type=float, default=0.25, help="solver grid step, arcsec")
+    po.add_argument("--half-width", type=float, help='grid half-width (default: images + 20")')
+    po.add_argument("--match-arcsec", type=float, default=1.0, help="extra = farther than this")
+    po.add_argument("--follow-arcsec", type=float, default=3.0, help="best extra -> sample extra")
     args = ap.parse_args(argv)
     summary = {
         "validate": cmd_validate,
         "arcs": cmd_arcs,
         "images": cmd_images,
         "fluxratios": cmd_fluxratios,
+        "posterior": cmd_posterior,
     }[args.cmd](args)
     json.dump(summary, sys.stdout, indent=1)
     print()
