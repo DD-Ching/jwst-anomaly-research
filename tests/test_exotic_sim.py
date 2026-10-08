@@ -239,8 +239,23 @@ def test_repulsive_inner_image_shape_switch(n):
 
 
 def test_n1_inner_image_precise_at_large_beta():
-    x = es.solve_images([1e8], 1, 1)["x"][0]
-    assert x[1] == pytest.approx(-1e-8, rel=1e-9)  # (beta - sqrt(beta² + 4))/2 would cancel to 0
+    x = es.solve_images([1e8, 1e9], 1, 1)["x"]
+    np.testing.assert_allclose(x[:, 1], [-1e-8, -1e-9], rtol=1e-9)
+    x = es.solve_images([1e9], 1, -1)["x"][0]  # repulsive inner root, same cancellation
+    assert x[1] == pytest.approx(1e-9, rel=1e-9)
+
+
+@pytest.mark.parametrize("rho", [0.0, 0.1])
+def test_nan_input_stays_nan_but_umbra_is_zero(rho):
+    """A NaN epoch must not read as a vanished source; a real umbra point still gives 0."""
+    t = np.array([np.nan, 0.0, 10.0])
+    a = es.light_curve(t, 0.0, 1.0, 0.5, n=1, sign=-1, rho=rho)
+    assert np.isnan(a[0]) and a[1] == 0 and a[2] == pytest.approx(1.0, abs=0.01)
+    lc = es.inject_light_curve(t, 5.0, 0.0, 1.0, 0.5, n=1, sign=-1, rho=rho)
+    assert np.isnan(lc["flux"][0]) and lc["flux"][1] == 0
+    assert np.isnan(
+        es.total_magnification([np.nan], 2, 1)[0]
+    )  # (beta - sqrt(beta² + 4))/2 would cancel to 0
 
 
 def test_inject_light_curve_round_trip_and_blend():

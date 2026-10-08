@@ -195,9 +195,11 @@ def solve_images(beta, n: float = 1.0, sign: int = 1) -> dict[str, np.ndarray]:
 
 
 def total_magnification(beta, n: float = 1.0, sign: int = 1) -> np.ndarray:
-    """Σ|μ| over the images of a point source (0 inside a repulsive lens's umbra)."""
-    mu = solve_images(beta, n, sign)["mu"]
-    return np.nansum(np.abs(mu), axis=1)
+    """Σ|μ| over a point source's images: 0 inside a repulsive lens's umbra, NaN for NaN beta."""
+    b = np.atleast_1d(np.asarray(beta, dtype=float))
+    total = np.nansum(np.abs(solve_images(b, n, sign)["mu"]), axis=1)
+    total[~np.isfinite(b)] = np.nan  # a missing time must not look like an umbra (W3)
+    return total
 
 
 def image_plane_magnification(x, n: float = 1.0, sign: int = 1) -> np.ndarray:
@@ -274,7 +276,9 @@ def finite_source_magnification(beta, rho: float, n: float = 1.0, sign: int = 1,
     # a node rounding onto the caustic (measure zero) would give inf * 0
     amp = np.where(np.isfinite(amp), amp, 0.0)
     integrand = amp * arc * w
-    return np.sum(integrand, axis=(1, 2)) / (np.pi * rho**2)
+    out = np.sum(integrand, axis=(1, 2)) / (np.pi * rho**2)
+    out[~np.isfinite(b)] = np.nan
+    return out
 
 
 def impact_track(t, t0: float, t_e: float, u0: float) -> np.ndarray:
