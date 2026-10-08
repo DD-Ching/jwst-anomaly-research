@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Governance — owner decisions on scope, parallelism, cloud disk and layout
+- Owner direction (2026-10-08, given by the owner in the session that opened this PR) with a one-time
+  authorisation to edit CLAUDE.md, including "Owner decisions", in this single PR and to merge it once CI is green
+  and `/code-review` findings are fixed: four owner-decision bullets added verbatim (scope: any public dataset; smart
+  parallelism and `[field: <unit>]` claim PRs; cloud disk streaming; layout). "Prefer single-thread work" removed
+  from Budget. Later edits to "Owner decisions" again need the owner.
+- Layout: root CLAUDE.md keeps owner decisions, merge policy, budget and pointers; module rules moved to
+  `src/jwst_anomaly/CLAUDE.md` (stage contracts, signature layer), `scripts/CLAUDE.md` (screen / vet / inject /
+  limit conventions, parallel topology) and `data/manifests/CLAUDE.md` (data, manifests, cloud disk). New
+  directory-scoped skills `scripts/.claude/skills/w3-survey` and `w12-lenscats` carry the recipes and every
+  failed-approach rule recorded for those searches; a `w5-counts` skill follows when W5 (#94) lands.
+- Inventory before the change: one CLAUDE.md (root, 97 lines) and three root skills (`research-cycle`,
+  `reuse-check`, `vet-candidate`), kept at the root; `research-cycle` now points to the new files and the claim rule.
+
 ## 2026-10-08: W3 MOA-II gb22 limit corrected: injections re-run after the `s_min` review fix (D-062)
 - #92's limit (Γ₉₅ ≈ 0.5–5 × 10⁻⁶, 171 / 600 recovered) came from injections run before the review fix that made
   the pre-screen `s_min` the weaker of the two significances; the merged code already has the fix. Re-run of the whole
