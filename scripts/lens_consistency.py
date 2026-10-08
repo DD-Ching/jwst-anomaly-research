@@ -144,7 +144,7 @@ _HFF_QUOTED_RMS = {"macs0416": 0.72, "macs1149": 0.63, "macs0717": 2.41, "abells
 # macs0416 passes once find_images refines cells on folds (D-040)
 _HFF_IMAGE_LIST_OK = {"macs1149", "macs0717", "macs0416"}
 # (dRA cos dec, dDec) from arcs.txt to the JWST frame where it exceeds 0.1" (D-034, D-038)
-_HFF_FRAME_OFFSET = {"macs0416": (0.208, -0.025)}
+_HFF_FRAME_OFFSET = {"macs0416": (0.208, -0.025), "abell370": (-0.121, -0.015)}
 for _c, (_v, _zl, _files) in lensmodel.HFF_CATS.items():
     MODELS[f"{_c}-cats"] = {
         "files": _files,
