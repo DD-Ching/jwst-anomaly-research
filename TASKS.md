@@ -20,8 +20,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      MACS1149, MACS0717 and MACS0416 (radial) null. The six HFF CATS map models are in (D-035). Next:
      - MACS0416: `images` / `fluxratio` with CANUCS photo-z (image list open and frame offset pinned, D-040);
      - `radial`: an aper50 S/N floor (noise segments pass the isophotal S/N);
-     - JWST field runs: radial on Abell 370 (CANUCS photo-z) and Abell S1063; MACS0717 done (D-041), re-run its radial
-       when a photo-z catalogue exists;
+     - `radial`: Gaia-seeded `spike_segments` (stars G < 17, saturated or off-mosaic; length cap scaled with G; low-weight
+       veto), then re-run Abell 370 as a regression check (D-043);
+     - JWST field runs: all six HFF clusters screened (D-037–D-043); re-run MACS0717 radial when a photo-z catalogue
+       exists;
      - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; classify model copies of
        unpredicted catalogued images automatically (D-041);
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, MACS0717), Keeton v4 (MACS0717);

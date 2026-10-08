@@ -1969,3 +1969,35 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
 - A JWST-era MACS0717 lens model appears.
 - A MACS0717 photo-z catalogue (DJA or a team release) appears: re-run `radial` with the background cut.
 - `forced_check` ties its match and search radii to the measured image-plane rms when that rms exceeds 1″.
+
+## D-043 Abell 370 and Abell S1063 radial screens: null; spike chains from Gaia stars off the catalogue (2026-10-08)
+
+**Decision.**
+- Only the `radial` screen applies to `abell370-cats` and `abells1063-cats`: their image lists are gated off (D-035;
+  rms 10.7″ and 11.8″).
+- Data: CANUCS 1208 `o002_t001` (Abell 370; 8 bands) and GLIMPSE 3293 `o001_t001` (Abell S1063; 9 bands, F200W 70 ks).
+- Abell 370's frame offset (−0.121″, −0.015″) is pinned. S1063's 0.075″ is under the 0.1″ threshold and not pinned.
+- Photo-z come from CANUCS DR1 (Abell 370) and DJA v7.5 eazy (S1063).
+- Both fields are null (docs/fields/abell370.md, docs/fields/abells1063.md).
+
+**Alternatives rejected.**
+- Abell 370 data: MAGNIF 2883/3538 and JUMPS 5890 (medium bands only); 5324 (shallow).
+- S1063 data: 1840 (about 1 ks per band).
+- Taking the 15-line Abell 370 centre (p 0.0) at face value. It is a straight chain of diffraction-spike segments
+  along the column axis (PA 62°), at a low-weight seam, pointing at a Gaia G = 13.7 star off the F200W mosaic.
+
+**Evidence.**
+- Abell 370 `radial`: 15 lines, p 0.0, with or without photo-z. Two flags, both instrumental (cutouts inspected):
+  - the 15-line chain above;
+  - an 8-line chain (p 0.01 with aper50 S/N ≥ 5) from a saturated Gaia G = 12.7 star that has no catalogue entry.
+  - `spike_segments` missed both stars: it seeds only from catalogued point sources brighter than AB 20 and caps
+    spikes at 20″, while these segments reach 12–37″.
+  - With a scratch Gaia-seeded veto: max 5 lines, p 0.945 (0.495 with photo-z).
+- S1063 `radial`: max 4 lines, p 0.435; with photo-z, max 3, p 0.95.
+- Tally: 140 anti arcs (Abell 370, after the veto) and 51 (S1063) screened; 2 flags; **0 surviving**.
+
+**Revisit if.**
+- `spike_segments` gains Gaia seeding, a length cap that scales with G, and a low-weight veto. Re-run Abell 370 as a
+  regression check.
+- Fitted redshifts for Abell 370 or S1063 appear, which would open their image lists.
+- A photo-z catalogue for S1063 with fewer blends on arcs appears: DJA puts 13 of 46 matched images at z < 0.6.

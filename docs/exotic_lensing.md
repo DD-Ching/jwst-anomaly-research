@@ -63,3 +63,5 @@ hit goes to `/vet-candidate`.
 | MACS1149 (HFF CATS, D-037) | 19 consistent, 0 flags (106 resolved; no photo-z) | with CANUCS photo-z: 12 against a null mean of 12.8 (p95 20); max 3 lines, p 1.0 (without: 32 against 30.8, p 0.91) | null |
 | MACS0416 (HFF CATS, D-038) | not run (image list gated) | with CANUCS photo-z: 77 against a null mean of 85.0 (p95 103); max 7 lines, p 0.225 (without: 98 against 99.6, p 0.29) | null |
 | MACS0717 (HFF CATS, D-041) | 26 consistent; system 65 flags explained (catalogue offset; μ model-dependent) | 11 against a null mean of 16.7; max 5 lines, p ≥ 0.70 (no photo-z) | null |
+| Abell 370 (HFF CATS, D-043) | not run (image list gated) | with a Gaia spike veto: max 5 lines, p 0.945 (0.495 with CANUCS photo-z); two raw flags were spike chains | null |
+| Abell S1063 (HFF CATS, D-043) | not run (image list gated) | max 4 lines, p 0.435; with DJA photo-z max 3, p 0.95 | null |
