@@ -438,3 +438,61 @@ def test_z_m_limit_malformed_flag_is_refused(tmp_path):
     )
     with pytest.raises(ValueError, match="z_m_limit"):
         lensmodel.parse_lenstool_par(_write(tmp_path, text))
+
+
+def _find_images_reference(model, grid, beta_x, beta_y, z_s, newton_steps=12, tol=1e-5):
+    """The original one-seed-at-a-time solver over every grid triangle (no pre-filter)."""
+    s = float(model.dls_ds(z_s))
+    g = grid.x
+    bx = g[None, :] - s * grid.alpha_x
+    by = g[:, None] - s * grid.alpha_y
+    n = len(g) - 1
+    seeds = []
+    for (a0, a1), (b0, b1), (c0, c1) in (((0, 0), (0, 1), (1, 0)), ((1, 1), (1, 0), (0, 1))):
+        ax_, ay_ = bx[a0 : a0 + n, a1 : a1 + n], by[a0 : a0 + n, a1 : a1 + n]
+        bx_, by_ = bx[b0 : b0 + n, b1 : b1 + n], by[b0 : b0 + n, b1 : b1 + n]
+        cx_, cy_ = bx[c0 : c0 + n, c1 : c1 + n], by[c0 : c0 + n, c1 : c1 + n]
+        det = (by_ - cy_) * (ax_ - cx_) + (cx_ - bx_) * (ay_ - cy_)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            l1 = ((by_ - cy_) * (beta_x - cx_) + (cx_ - bx_) * (beta_y - cy_)) / det
+            l2 = ((cy_ - ay_) * (beta_x - cx_) + (ax_ - cx_) * (beta_y - cy_)) / det
+        for iy, ix in zip(*np.nonzero((l1 >= 0) & (l2 >= 0) & (1 - l1 - l2 >= 0)), strict=True):
+            w1, w2 = l1[iy, ix], l2[iy, ix]
+            w3 = 1 - w1 - w2
+            seeds.append(
+                (
+                    w1 * g[ix + a1] + w2 * g[ix + b1] + w3 * g[ix + c1],
+                    w1 * g[iy + a0] + w2 * g[iy + b0] + w3 * g[iy + c0],
+                )
+            )
+    found = []
+    for x0, y0 in seeds:
+        x, y = np.array([x0]), np.array([y0])
+        for _ in range(newton_steps):
+            f = model.fields_xy(x, y)
+            rx, ry = beta_x - (x - s * f["alpha_x"]), beta_y - (y - s * f["alpha_y"])
+            a11, a12, a22 = 1 - s * f["psi_xx"], -s * f["psi_xy"], 1 - s * f["psi_yy"]
+            det = a11 * a22 - a12 * a12
+            x, y = x + (a22 * rx - a12 * ry) / det, y + (-a12 * rx + a11 * ry) / det
+        f = model.fields_xy(x, y)
+        if np.hypot(beta_x - (x - s * f["alpha_x"]), beta_y - (y - s * f["alpha_y"]))[0] < tol:
+            if all(np.hypot(x[0] - u, y[0] - v) > 0.05 for u, v in found):
+                found.append((float(x[0]), float(y[0])))
+    return found
+
+
+@pytest.mark.parametrize("beta", [(0.3, -0.2), (1.0, 0.0), (0.0, 0.0), (6.0, 2.5)])
+def test_find_images_matches_the_unfiltered_solver(beta):
+    # includes sources on the symmetry axes, where mapped grid values can equal beta exactly
+    model = LensModel(
+        [_dpie(x=0.0, y=0.0, ellipticity=0.4, angle_pos=20.0, r_core=0.5, r_cut=300.0)],
+        RA0,
+        DEC0,
+        COSMO,
+    )
+    grid = lensmodel.DeflectionGrid.compute(model, half_width=40.0, step=0.5)
+    imgs = lensmodel.find_images(model, grid, *beta, 2.0)
+    ref = _find_images_reference(model, grid, *beta, 2.0)
+    assert len(imgs) == len(ref)
+    got = sorted(zip(imgs["x"], imgs["y"], strict=True))
+    np.testing.assert_allclose(got, sorted(ref), atol=1e-9)

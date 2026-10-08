@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-08: Flux-ratio and colour test of catalogued images: no anomaly in SMACS or El Gordo (D-031)
+## 2026-10-08: Flux-ratio and colour test of catalogued images: no anomaly in SMACS or El Gordo (D-032)
 - New: `lens_consistency.py fluxratios`.
   - It compares each image's DJA `mag_auto` + 2.5 log|μ| and its F150W−F444W colour with the other images of its
     system (leave-one-out).
@@ -26,6 +26,34 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - Abell 2744 `fluxratios` with the 233 MB DJA catalogue (needs a DECISIONS entry);
   - `bayes.dat` μ uncertainties, then recheck SMACS 6;
   - BCG/ICL-subtracted totals, to test the core images.
+## 2026-10-08: Exotic-lens screens; SMACS null (D-031)
+- New `scripts/exotic_screens.py`:
+  - `fluxratio`: two-band forced photometry, luminosity ratio against sibling images, compactness and chromatic
+    gates;
+  - `radial`: anti-tangential arcs whose axes converge on a dark centre, with a false-alarm rate from randomised
+    position angles.
+- SMACS:
+  - fluxratio: 6 compact images consistent, 0 flags. A first, single-band compactness gate had flagged system 7,
+    an ordinary knot-vs-whole-arc mismatch;
+  - radial (background sources only): 12 centres against a null mean of 9.0 (p95 15); max 4 lines, p 0.945.
+  - **No exotic candidate.**
+- **Failed approaches (now rules):**
+  - fixed-aperture flux ratios on resolved arcs: surface brightness is conserved, so the ratios scale with 1/|μ|
+    (systems 5 and 10);
+  - a single-band compactness gate (knots of a clumpy arc pass in F150W);
+  - a uniform-angle null for the radial screen (the selected arcs point at the mass centre).
+- **Handoff:** fan out per cluster (El Gordo, Abell 2744, Sunrise, then HFF/RELICS). Each runs `validate`,
+  `images --forced-image`, `exotic_screens fluxratio` and `radial`, with contact sheets of all flags.
+
+## 2026-10-08: `find_images` 3–5× faster with identical images
+- Seeds are pre-filtered with boolean sign tests on the mapped grid corners, and Newton steps run for every seed in
+  one `fields_xy` call.
+- Benchmark: all catalogued systems at a 0.25″ grid, images identical (max |Δ| 0 arcsec, same counts):
+  - SMACS: 23.2 → 6.7 s;
+  - El Gordo: 44.3 → 13.0 s;
+  - Abell 2744: 118 → 23.5 s (at ±190″).
+- **Handoff:** the deflection grid itself (one-time and cached) is now the main cost. Published deflection maps
+  (UNCOVER, RELICS, HFF) could replace it for fields without a Lenstool model (TASKS).
 
 ## 2026-10-08: Image-plane χ² reproduces Lenstool for SMACS, El Gordo and Abell 2744 (D-030)
 - Merged #40 (counter-images, D-029) after its last commit, which GitHub had not attached to the PR, was picked up

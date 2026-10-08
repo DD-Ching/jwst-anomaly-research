@@ -9,14 +9,14 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - bright single arcs;
      - a BCG/ICL-subtracted test for system 17;
      - reference fluxes for systems 11, 16 and 26;
-   - flux ratios and colours: done for SMACS and El Gordo (D-031: no anomaly; most images untested). Left:
+   - flux ratios and colours: done for SMACS and El Gordo (D-032: no anomaly; most images untested). Left:
      - Abell 2744 `fluxratios` (needs the 233 MB DJA catalogue, see below);
      - totals for arcs inside cluster-galaxy/ICL light (inspect DJA `_phot_apcorr.fits`);
      - `bayes.dat` μ errors, then recheck SMACS 6.3 (0.6–0.7 mag brighter than 6.1+6.2 predict);
      - an observational parity test (image orientation or resolved structure; not yet designed);
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
-   - the exotic-specific screens of docs/exotic_lensing.md once these ordinary checks are done.
+   - exotic screens (D-031): SMACS null. Run them per cluster (El Gordo, Abell 2744, Sunrise, then HFF/RELICS).
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;
@@ -43,6 +43,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - divide forced-photometry significances by the control std (1.2–1.5) before thresholding;
    - add a third epoch: Sunrise VENUS 6882 o052 (F150W, F444W, jwst 3.0.0; forced photometry only);
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
+
+- **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps
+  (UNCOVER v2.0, RELICS, HFF) for fields without a Lenstool `best.par`.
 
 ## Then (M1 follow-through, after the M3 items)
 4. **Star-stratum sources with NED galaxy matches** (run `20261007T162133Z-2511977c`). Check their classification and photometry.
