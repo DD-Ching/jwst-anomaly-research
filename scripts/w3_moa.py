@@ -1,24 +1,30 @@
-"""W3 in the MOA-II 9-year release, pilot field gb22: pre-screen, fits, vetting, limit (D-062).
+"""W3 in the MOA-II 9-year release, any field gb1 … gb22: pre-screen, fits, vetting, limit.
 
-The release holds every Cut-0 variable object (difference-image detections of positive *or
-negative* PSF profiles; ``jwst_anomaly.moa``), before any bump or PSPL cut, so a W3 event (the
-source flux drops toward zero inside an umbra between two caustic spikes; ``exotic_sim``) can be in
-it. Fitting all 18,599 gb22 light curves with every model is too slow, so:
+D-062 (method, gb22 pilot) and D-063 (streaming, calibration, all fields). The release holds every
+Cut-0 variable object (difference-image detections of positive *or negative* PSF profiles;
+``jwst_anomaly.moa``), before any bump or PSPL cut, so a W3 event (the source flux drops toward
+zero inside an umbra between two caustic spikes; ``exotic_sim``) can be in it. Fitting every light
+curve with every model is too slow, so (``--field gbF``, default gb22):
 
-- ``prescreen``: a W3-shaped matched statistic on every light curve (``deficit_scan``): the most
-  significant box of width W = 1 … 300 d that is below both its flanks and the median flux, in
-  units of the light curve's own spread of that statistic (red noise), and no second such deficit
-  elsewhere (``prescreen_pass``). Thresholds are set from the real distribution and the injections.
+- ``prescreen``: streams the field tar with concurrent HTTP range reads (``moa_stream``; the tar is
+  never stored) into a process pool computing a W3-shaped matched statistic on every light curve
+  (``deficit_scan``): the most significant box of width W = 1 … 300 d that is below both its
+  flanks and the median flux, in units of the light curve's own spread of that statistic (red
+  noise), and no second such deficit elsewhere (``prescreen_pass``). One tracked table per 4 GiB
+  of tar in ``results/w3_moa/prescreen/`` (resumable); ``merge-prescreen`` joins them.
 - ``fit``: the passes are fitted with the ordinary (PSPL, FSPL, PAR) and exotic (N1neg, E2pos,
   E2neg) models of ``scripts/w3_microlensing.py`` on one trajectory, blend flux free (difference
   flux), extra exotic starts on the deficit. Flag: ΔBIC < −10 (ASSUMPTION, as D-057).
-- ``vet``: flags through ordinary explanations, cheapest first (``vet_one``).
-- ``inject``: W3 events (``exotic_sim``, ``simulated``) added to real gb22 light curves of quiet
-  objects, through a light-curve-level Cut-0 emulation, the pre-screen, the fit and the vetting.
-- ``limit``: 95 % upper limit on the W3 rate per monitored star per year for gb22.
+- ``vet``: flags through ordinary explanations, cheapest first (``vet_one``); the variable-baseline
+  threshold is calibrated on the field's quiet light curves (``calibrate_baseline``).
+- ``inject``: W3 events (``exotic_sim``, ``simulated``) added to real light curves of the field's
+  quiet objects, through a light-curve-level Cut-0 emulation, the pre-screen, the fit and vetting.
+- ``limit``: 95 % upper limit on the W3 rate per monitored star per year for the field;
+  ``combine``: the same over every field with a tracked limit table.
+- ``run-field``: every stage in order, resumable.
 
-Outputs go to ``$JWST_ANOMALY_DATA/derived/w3_moa/`` (never in git). Exotic physics is a
-hypothesis: a flag is an anomaly to vet, never a discovery.
+Outputs go to ``$JWST_ANOMALY_DATA/derived/w3_moa/``, except the small tracked tables in
+``results/w3_moa/``. Exotic physics is a hypothesis: a flag is an anomaly to vet, never a discovery.
 """
 
 from __future__ import annotations
@@ -1759,6 +1765,43 @@ def _pool(procs: int):
     return Pool(procs, initializer=_init_worker, initargs=(_ctx(),))
 
 
+FITS_PER_CHUNK = 120  # pre-screen passes per tracked fit chunk (~30 min on 4 cores)
+
+
+def run_field(procs: int, conns: int, per_cell: int, per_ctrl: int) -> None:
+    """Every stage for ``FIELD``, resumable: streamed pre-screen (finished chunks skipped), fits in
+    tracked chunks (finished chunks skipped), vetting, contact sheet, injections, limit. Stops
+    before the limit if any flag survives (``run_limit`` refuses)."""
+    t0 = time.time()
+    run_stream_prescreen(FIELD, procs, conns)
+    merge_prescreen(FIELD)
+    pre = read_prescreen()
+    n_pass = len(passes(pre))
+    n = max(1, math.ceil(n_pass / FITS_PER_CHUNK))
+    for k in range(n):
+        path = results_dir() / f"{chunk_name((k, n))}.gz"
+        ok = False
+        if path.exists():
+            meta = Table.read(path, format="ascii.ecsv").meta
+            ok = meta.get("fit_params") == json.dumps(asdict(w3.P)) and meta.get(
+                "params"
+            ) == json.dumps(asdict(P))
+        if not ok:
+            run_fit(procs, None, (k, n))
+    merge_chunks(n)
+    run_vet(procs)
+    contact_sheet(out_dir() / f"contact_sheet_{FIELD}.png")
+    vet = json.loads((out_dir() / f"vetting_{FIELD}.json").read_text())
+    alive = [o["event_id"] for o in vet["flags"] if o.get("survives")]
+    set_field_context(pre)
+    write_vetting_summary()
+    if alive:
+        raise SystemExit(f"{FIELD}: flags survive every test: {alive} — stop and report")
+    run_inject(procs, per_cell, per_ctrl)
+    run_limit()
+    print(f"{FIELD}: chain done in {time.time() - t0:.0f} s", flush=True)
+
+
 def parse_chunk_list(text: str | None) -> list[int] | None:
     """``"3"``, ``"1-5"``, ``"1,4,7-9"`` (1-based) -> 0-based chunk numbers; None = all."""
     if not text:
@@ -1812,6 +1855,11 @@ def main(argv=None) -> int:
     sub.add_parser("combine", help="combined limit over the fields with tracked limit tables")
     sub.add_parser("summary", help="tracked compact vetting record of the field")
     sub.add_parser("manifest", help="write data/manifests/moa_ii.ecsv")
+    r = sub.add_parser("run-field", help="every stage for the field (resumable)")
+    r.add_argument("--procs", type=int, default=ncpu)
+    r.add_argument("--conns", type=int, default=12)
+    r.add_argument("--per-cell", type=int, default=200)
+    r.add_argument("--per-ctrl", type=int, default=40)
     a = ap.parse_args(argv)
     set_field(a.field)
     if a.cmd == "prescreen":
@@ -1838,6 +1886,8 @@ def main(argv=None) -> int:
     elif a.cmd == "summary":
         set_field_context(read_prescreen())
         print(write_vetting_summary())
+    elif a.cmd == "run-field":
+        run_field(min(a.procs, ncpu), a.conns, a.per_cell, a.per_ctrl)
     elif a.cmd == "manifest":
         print(write_manifest())
     elif a.cmd == "sheet":
