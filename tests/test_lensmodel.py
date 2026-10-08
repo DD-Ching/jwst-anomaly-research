@@ -693,3 +693,20 @@ def test_multiplane_shift_frame_leaves_the_caller_planes_alone():
     multi.shift_frame(0.5, -0.2)
     assert (model.ra0, model.dec0) == (RA0, DEC0)
     assert multi.planes[0].ra0 != RA0 and multi.ra0 == multi.planes[1].ra0
+
+
+def test_multiplane_identity_tracks_the_cosmology_and_grids_check_their_model():
+    comps = list(_cluster_and_galaxy().components)
+    a = LensModel(comps, RA0, DEC0, COSMO).split_planes({"gal": 0.2})
+    b = LensModel(comps, RA0, DEC0, FlatLambdaCDM(H0=50.0, Om0=0.5)).split_planes({"gal": 0.2})
+    assert a.sha256 != b.sha256
+    named = LensModel(comps[1:], RA0, DEC0, FlatLambdaCDM(H0=70.0, Om0=0.3, name="x"))
+    lensmodel.MultiPlaneLensModel(
+        [LensModel(comps[:1], RA0, DEC0, COSMO), named.split_planes({"gal": 0.2}).planes[0]]
+    )
+    single = LensModel(comps, RA0, DEC0, COSMO)  # in memory: no sha256, so only the shape check
+    grid = lensmodel.DeflectionGrid.compute(a, half_width=5.0, step=0.5)
+    with pytest.raises(ValueError, match="single-plane model"):
+        lensmodel.find_images(single, grid, 0.3, -0.2, 2.0)
+    with pytest.raises(AttributeError, match="z_planes"):
+        _ = a.z_lens

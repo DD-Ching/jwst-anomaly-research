@@ -973,6 +973,8 @@ class LensModel:
 
     def source_grid(self, grid: DeflectionGrid, z_s: float) -> tuple[np.ndarray, np.ndarray]:
         """Source-plane position of every node of ``grid`` (indexed ``[iy, ix]``)."""
+        if grid.alpha_x.shape != (len(grid.x), len(grid.x)):
+            raise ValueError("the deflection grid was not computed for this single-plane model")
         s = float(self.dls_ds(z_s))
         g = grid.x
         return g[None, :] - s * grid.alpha_x, g[:, None] - s * grid.alpha_y
@@ -998,11 +1000,8 @@ class LensModel:
             by_z.setdefault(z, []).append(replace(comp, z_lens=z, v_disp=float(sig)))
 
         def ident(comps: list[DPIE]) -> str:  # a plane holds a subset: not the file's hash
-            return (
-                hashlib.sha256(f"{self.sha256}{comps!r}".encode()).hexdigest()
-                if self.sha256
-                else ""
-            )
+            text = f"{self.sha256}{comps!r}{_cosmology_key(self.cosmology)}"
+            return hashlib.sha256(text.encode()).hexdigest()
 
         planes = [
             LensModel(comps, self.ra0, self.dec0, self.cosmology, self.source, ident(comps))
@@ -1170,11 +1169,14 @@ def backtrace_images(model: LensModel, images: Table, z_m_limit: dict[str, float
 class DeflectionGrid:
     """A model's deflection at D_LS/D_S = 1 on a square model-frame grid (arcsec).
 
-    Deflection scales linearly with D_LS/D_S, so one grid serves every source redshift.
+    Deflection scales linearly with D_LS/D_S, so one grid serves every source redshift. For a
+    :class:`MultiPlaneLensModel` the arrays hold each plane's ``alpha_i(theta_i)`` along the ray
+    through every node, shape ``(n_planes, len(x), len(x))`` (the rays do not depend on z_s).
+    Use a grid only with the model it was computed for (``model.source_grid`` checks the shape).
     """
 
     x: np.ndarray  # 1-D grid coordinates (arcsec), shared by both axes
-    alpha_x: np.ndarray  # shape (len(x), len(x)), indexed [iy, ix]
+    alpha_x: np.ndarray  # shape (len(x), len(x)) [iy, ix]; (n_planes, len(x), len(x)) multi-plane
     alpha_y: np.ndarray
     model_sha256: str
 
@@ -1589,6 +1591,11 @@ class MapLensModel(LensModel):
         return meta
 
 
+def _cosmology_key(cosmo: FlatLambdaCDM) -> str:
+    """The cosmological parameters (not the name or meta) as text, for content hashes."""
+    return repr(sorted((k, str(v)) for k, v in cosmo.parameters.items()))
+
+
 def _detached(plane: LensModel) -> LensModel:
     """A shallow copy whose frame can move without moving the caller's object (or its WCS)."""
     q = copy.copy(plane)
@@ -1627,7 +1634,7 @@ class MultiPlaneLensModel:
             raise ValueError(f"lens planes must have distinct redshifts (z_lens {z})")
         p0 = planes[0]
         for p in planes[1:]:
-            if (p.ra0, p.dec0) != (p0.ra0, p0.dec0) or p.cosmology != p0.cosmology:
+            if (p.ra0, p.dec0) != (p0.ra0, p0.dec0) or not p.cosmology.is_equivalent(p0.cosmology):
                 raise ValueError("lens planes must share the reference point and cosmology")
         self.planes = tuple(_detached(p) for p in planes)
         self.components = tuple(c for p in planes for c in p.components)
@@ -1635,9 +1642,19 @@ class MultiPlaneLensModel:
         self._cos0 = p0._cos0
         self.cosmology = p0.cosmology
         self.source = source or " + ".join(p.source for p in planes)
-        # identity for caches and provenance: each plane's file hash, redshift and potentials
-        ident = repr([(p.sha256, p.z_lens, p.components) for p in planes] + [p0.ra0, p0.dec0])
-        self.sha256 = sha256 or hashlib.sha256(ident.encode()).hexdigest()
+        # identity for caches and provenance: each plane's file hash, redshift and potentials, and
+        # the cosmology. A plane with neither a hash nor potentials (an in-memory map) has no
+        # identity, so neither has the model ("": never cached, never matched to a grid).
+        ident = repr(
+            [(p.sha256, p.z_lens, p.components) for p in planes]
+            + [p0.ra0, p0.dec0, _cosmology_key(p0.cosmology)]
+        )
+        anonymous = any(not p.sha256 and not p.components for p in planes)
+        self.sha256 = sha256 or ("" if anonymous else hashlib.sha256(ident.encode()).hexdigest())
+        self._d_m = [
+            float(self.cosmology.comoving_transverse_distance(p.z_lens).to_value(u.Mpc))
+            for p in planes
+        ]
         # D_ij / D_j for every pair of planes i < j
         self._ratio = {
             (i, j): float(planes[i].dls_ds(planes[j].z_lens))
@@ -1652,6 +1669,12 @@ class MultiPlaneLensModel:
     @property
     def z_planes(self) -> tuple[float, ...]:
         return tuple(p.z_lens for p in self.planes)
+
+    @property
+    def z_lens(self) -> float:
+        raise AttributeError(
+            "MultiPlaneLensModel has no single z_lens (see z_planes): single-plane code path"
+        )
 
     def shift_frame(self, dra_arcsec: float, ddec_arcsec: float) -> None:
         """Move every plane on the sky by (dRA cos dec, dDec) arcsec, in place (D-034)."""
@@ -1698,7 +1721,16 @@ class MultiPlaneLensModel:
         evaluation per distinct redshift."""
         zs = np.broadcast_to(np.asarray(z_s, float), shape)
         u_z, inv = np.unique(zs.ravel(), return_inverse=True)
-        return [p.dls_ds(u_z)[inv].reshape(shape) for p in self.planes]
+        d_s = np.full(u_z.shape, np.nan)
+        fin = np.isfinite(u_z)
+        d_s[fin] = self.cosmology.comoving_transverse_distance(u_z[fin]).to_value(u.Mpc)
+        out = []
+        for p, d_l in zip(self.planes, self._d_m, strict=True):  # as LensModel.dls_ds
+            w = np.where(fin, 0.0, np.nan)
+            behind = fin & (u_z > p.z_lens)
+            w[behind] = 1.0 - d_l / d_s[behind]
+            out.append(w[inv].reshape(shape))
+        return out
 
     def _trace(self, x: Any, y: Any, z_s: Any, jacobian: bool) -> dict[str, np.ndarray]:
         x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
@@ -1711,11 +1743,12 @@ class MultiPlaneLensModel:
             out.update(a11=np.ones(x.shape), a12=np.zeros(x.shape))
             out.update(a21=np.zeros(x.shape), a22=np.ones(x.shape))
         for i in range(n):
-            out["beta_x"] = out["beta_x"] - w[i] * alphas[i][0]
-            out["beta_y"] = out["beta_y"] - w[i] * alphas[i][1]
+            on = w[i] != 0  # a plane behind this source adds nothing, even a NaN off its map
+            out["beta_x"] = out["beta_x"] - np.where(on, w[i] * alphas[i][0], 0.0)
+            out["beta_y"] = out["beta_y"] - np.where(on, w[i] * alphas[i][1], 0.0)
             if jacobian:
                 for k, key in enumerate(("a11", "a12", "a21", "a22")):
-                    out[key] = out[key] - w[i] * ha[i][k]
+                    out[key] = out[key] - np.where(on, w[i] * ha[i][k], 0.0)
         return out
 
     def lens_map(self, x: Any, y: Any, z_s: Any) -> dict[str, np.ndarray]:
