@@ -21,7 +21,8 @@ effects that produce the same pattern, and tests the cheap ones itself.
     (radial magnification 1/|1 - κ + γ| < 3 at their redshift). A grid search then finds points
     where at least ``--min-lines`` such major axes pass within ``--line-tol-arcsec``; a point with
     no catalog source within ``--dark-radius-arcsec`` is a *dark-centre candidate*. The false-alarm
-    rate comes from the same search with the position angles randomised (``--n-random`` draws).
+    rate comes from the same search with each arc's position angle redrawn inside its own anti
+    window (``--n-random`` draws).
     Ordinary explanations left for vetting: blends, intrinsic alignments, voids, model error.
 
 Every threshold is an ASSUMPTION (defaults below); outputs are ``derived`` with ``model_prediction``
@@ -73,30 +74,37 @@ def luminosity_ratios(flux: np.ndarray, err: np.ndarray, mu: np.ndarray, systems
         if len(idx) < 2:
             continue
         for k in idx:
-            others = lum[idx[idx != k]]
-            ref = float(np.median(others))
+            o = idx[idx != k]
+            ref = float(np.median(lum[o]))
+            # error of the reference: median-of-n ~ 1.25 x mean error / sqrt(n) (ASSUMPTION)
+            ref_err = 1.25 * float(np.mean(err[o] / np.abs(mu[o]))) / np.sqrt(len(o))
             ratio[k] = lum[k] / ref
-            rsnr[k] = abs(flux[k] - ref * abs(mu[k])) / err[k]
+            total = np.hypot(err[k], ref_err * abs(mu[k]))
+            rsnr[k] = abs(flux[k] - ref * abs(mu[k])) / total
     out = Table({"system": systems, "lum_ratio": ratio, "ratio_snr": rsnr})
     out["usable"] = ok
     return out
 
 
-def concentration(img, err, xx, yy) -> float:
-    """Aperture flux at r = 0.2" over r = 0.4", both at the peak within 0.4" (local background)."""
-    f_small, _ = lc.peak_flux(img, err, xx, yy)
-    inner = np.where((np.hypot(xx, yy) <= 0.4) & np.isfinite(img), img, -np.inf)
-    if not np.isfinite(inner).any() or not np.isfinite(f_small):
-        return float("nan")
+def peak_offset(img, xx, yy, radius: float = 0.4) -> tuple[float, float]:
+    """Offset (arcsec) of the brightest finite pixel within ``radius`` (as ``lc.peak_flux``)."""
+    inner = np.where((np.hypot(xx, yy) <= radius) & np.isfinite(img), img, -np.inf)
+    if not np.isfinite(inner).any():
+        return float("nan"), float("nan")
     k = int(np.argmax(inner))
-    cx, cy = float(xx.flat[k]), float(yy.flat[k])
-    r = np.hypot(xx - cx, yy - cy)
-    ann = (r > 0.8) & (r < 1.2) & np.isfinite(img)
-    if ann.sum() < 10:
-        return float("nan")
-    bkg = float(np.median(img[ann]))
-    f_big = float(np.nansum(img[r <= 0.4] - bkg))
-    return f_small / f_big if f_big > 0 else float("nan")
+    return float(xx.flat[k]), float(yy.flat[k])
+
+
+def photometry(img, err, xx, yy) -> tuple[float, float, float]:
+    """Flux and error at r = 0.2" and the concentration f(0.2")/f(0.4"), at one peak and with the
+    same background annulus (``lc.aperture_snr``; NaN on gaps, edges or masks)."""
+    cx, cy = peak_offset(img, xx, yy)
+    if not np.isfinite(cx):
+        return float("nan"), float("nan"), float("nan")
+    f_small, e_small = lc.aperture_snr(img, err, xx, yy, cx, cy)
+    f_big, _ = lc.aperture_snr(img, err, xx, yy, cx, cy, r_ap=0.4)
+    conc = f_small / f_big if np.isfinite(f_big) and f_big > 0 else float("nan")
+    return f_small, e_small, conc
 
 
 def flux_class(r1: float, r2: float, s1: float, s2: float, compact: bool = True) -> str:
@@ -138,12 +146,15 @@ def cmd_fluxratio(args) -> dict:
             stamps = [stamp(float(r["ra"]), float(r["dec"])) for r in out]
         finally:
             close()
-        fe = [lc.peak_flux(*st) for st in stamps]
-        out[f"flux_{tag}"] = [f for f, _ in fe]
-        out[f"err_{tag}"] = [e for _, e in fe]
-        out[f"conc_{tag}"] = [concentration(*st) for st in stamps]
-    # only unresolved images take part: a resolved arc's aperture flux does not scale with |μ|
-    compact = np.asarray(out["conc_b1"], float) >= MIN_CONCENTRATION
+        ph = [photometry(*st) for st in stamps]
+        out[f"flux_{tag}"] = [p[0] for p in ph]
+        out[f"err_{tag}"] = [p[1] for p in ph]
+        out[f"conc_{tag}"] = [p[2] for p in ph]
+    # only images unresolved in both bands take part: a resolved arc's aperture flux follows
+    # its surface brightness, which lensing conserves, not |μ|
+    compact = (np.asarray(out["conc_b1"], float) >= MIN_CONCENTRATION) & (
+        np.asarray(out["conc_b2"], float) >= MIN_CONCENTRATION
+    )
     out["compact"] = compact
     for tag in ("b1", "b2"):
         flux = np.where(compact, np.asarray(out[f"flux_{tag}"], float), np.nan)
@@ -245,14 +256,19 @@ def cmd_radial(args) -> dict:
     ot = lc.orientation_table(model, src)
     anti = ot[ot["orientation_class"] == "anti"]
     # the model's own radial arcs are ordinary: drop sources it predicts to be radially stretched
-    z = np.where(
-        np.asarray(anti["z_basis"]) == "photo-z",
-        np.asarray(anti["z_phot"], float) if "z_phot" in anti.colnames else 2.0,
-        2.0,
-    )
-    mu_r = radial_magnification(model, anti["ra"], anti["dec"], z)
+    # the largest predicted radial magnification over the redshifts the class used: the z grid,
+    # or the photo-z range (z160, z_phot, z840) for sources with a background photo-z
+    use_pz = np.asarray(anti["z_basis"]) == "photo-z"
+    zsets = [np.full(len(anti), z) for z in lc.Z_GRID]
+    if use_pz.any():
+        zsets = [
+            np.where(use_pz, np.asarray(anti[c], float), zg)
+            for c, zg in zip(("z160", "z_phot", "z840"), zsets, strict=True)
+        ]
+    mu_r = np.max([radial_magnification(model, anti["ra"], anti["dec"], z) for z in zsets], axis=0)
     anti["mu_radial"] = mu_r
-    cand = anti[mu_r < MAX_RADIAL_MU]
+    n_mu_nan = int(np.sum(~np.isfinite(mu_r)))
+    cand = anti[np.isfinite(mu_r) & (mu_r < MAX_RADIAL_MU)]
     cx, cy = model.to_frame(cand["ra"], cand["dec"])
     g = np.arange(-args.max_radius, args.max_radius + 1e-9, args.grid_arcsec)
     gx, gy = np.meshgrid(g, g)
@@ -277,13 +293,15 @@ def cmd_radial(args) -> dict:
                 "dark_centre": bool(sep[k] > args.dark_radius_arcsec),
             }
         )
-    # false-alarm rate: the same search with the candidates' position angles randomised
+    # null: each arc keeps its selection (anti, i.e. >= 60 deg from the predicted tangential
+    # direction) but takes a random angle inside that window, so lines that point at the mass
+    # centre because they were selected as anti are in the null too
     rng = np.random.default_rng(args.seed)
+    pa_t = np.asarray(cand["pa_pred_z2"], float)
     n_rand, max_rand = [], []
     for _ in range(args.n_random):
-        rc = line_counts(
-            cx, cy, rng.uniform(0, 180, len(cx)), gx, gy, args.line_tol_arcsec, args.max_len_arcsec
-        )
+        pa_r = np.mod(pa_t + 90.0 + rng.uniform(-30.0, 30.0, len(cx)), 180.0)
+        rc = line_counts(cx, cy, pa_r, gx, gy, args.line_tol_arcsec, args.max_len_arcsec)
         n_rand.append(len(convergence_peaks(rc, args.min_lines)))
         max_rand.append(int(rc.max()) if rc.size else 0)
     max_obs = int(counts.max()) if counts.size else 0
@@ -303,6 +321,7 @@ def cmd_radial(args) -> dict:
         "n_elongated": len(src),
         "n_anti": len(anti),
         "n_anti_not_model_radial": len(cand),
+        "n_mu_radial_nan": n_mu_nan,
         "n_peaks": len(rows),
         "n_dark_centre_peaks": int(sum(r["dark_centre"] for r in rows)),
         "random_peaks_mean": float(np.mean(n_rand)) if n_rand else None,
@@ -354,7 +373,7 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--max-len-arcsec", type=float, default=15.0)
     r.add_argument("--min-lines", type=int, default=3)
     r.add_argument("--dark-radius-arcsec", type=float, default=1.0)
-    r.add_argument("--n-random", type=int, default=50)
+    r.add_argument("--n-random", type=int, default=200)
     r.add_argument("--seed", type=int, default=1)
     args = ap.parse_args(argv)
     (args.out / args.model).mkdir(parents=True, exist_ok=True)

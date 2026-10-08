@@ -1499,19 +1499,22 @@ pair. Not a candidate.
 Each hit is a candidate for `/vet-candidate`, never evidence.
 - **`fluxratio`** (demagnification, Ellis-wormhole-like lenses):
   - forced aperture photometry (r = 0.2″, recentred) of every catalogued image in two bands;
-  - `lum_ratio` = (flux / |μ|) over the median of the same quantity for the system's other images;
+  - `lum_ratio` = (flux / |μ|) over the median of the same quantity for the system's other images; its S/N
+    includes the reference's error;
   - `underluminous` < 1/3 and `overluminous` > 3, in both bands at ≥ 5σ.
   - Gates:
-    - compact images only: f(0.2″)/f(0.4″) ≥ 0.6;
+    - images compact in both bands: f(0.2″)/f(0.4″) ≥ 0.6, from one peak and one background annulus;
     - |μ| ≤ 50;
     - achromatic: the bands agree within 0.5 mag, otherwise `chromatic`.
 - **`radial`** (negative convergence):
   - inputs: elongated background sources (e ≥ 0.5, S/N ≥ 10) that are `anti` to the predicted stretch and that
-    the model does not make radial (radial magnification 1/|1 − κ + γ| < 3);
+    the model does not make radial (radial magnification 1/|1 − κ + γ| < 3 at every redshift of the class: the
+    z = 1, 2, 4 grid or the photo-z range);
   - a grid search (0.5″ grid, 1″ line tolerance, 15″ line length) finds connected regions where at least 3
     major axes meet;
   - such a region with no catalog source within 1″ is a dark-centre candidate;
-  - significance: the same search with randomised position angles (200 draws).
+  - significance: the same search, with each arc's position angle redrawn inside its own `anti` window (200
+    draws). A uniform 0–180° null would be biased, because the selected arcs point at the mass centre.
 - All thresholds are ASSUMPTIONs (the script's module constants and CLI defaults).
 
 **Alternatives rejected.**
@@ -1524,15 +1527,18 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 
 **Evidence** (SMACS 0723, ICLv2, F150W/F444W `jw02736-o001_t001`, 2026-10-08; `derived`).
 - **`fluxratio`:** 60 images:
-  - 38 resolved, 8 untestable, 12 consistent;
-  - 1 underluminous (7.1, μ 42.7, ratio 0.22/0.28) and 1 overluminous (7.3, μ 7.4, ratio 4.5/3.6).
-  - Cutouts: 7.1 and 7.2 are single knots on a long, thin clumpy arc, and 7.3 is the compact counter-image that
-    contains all the knots. This is an ordinary aperture mismatch with μ near a critical curve.
+  - 49 resolved in at least one band, 5 untestable, 6 consistent, **0 flags**;
+  - with compactness tested in F150W only (first version), system 7 was flagged: 7.1 underluminous (μ 42.7),
+    7.3 overluminous. Cutouts show 7.1 and 7.2 are single knots of a long, thin clumpy arc, and 7.3 is the
+    compact whole counter-image. That is an ordinary knot-vs-whole aperture mismatch, and 7.1 is resolved in
+    F444W;
   - **Result: no demagnification candidate.**
+  - **Rule:** require compactness in both bands.
 - **`radial`** (F200W catalog, DJA photo-z):
   - 224 elongated sources; 45 `anti`; none predicted radial by the model;
-  - 19 convergence centres (14 without a catalog source within 1″), against 14.8 ± (p95 22) for random angles;
-  - the strongest centre has 5 lines, and random angles give ≥ 5 in 37.5 % of draws.
+  - 19 convergence centres (14 without a catalog source within 1″), against a mean of 12.5 (p95 21) for angles
+    redrawn in each arc's anti window;
+  - the strongest centre has 5 lines, and the null gives ≥ 5 in 84 % of draws.
   - **Result: consistent with chance; no dark-centre candidate.**
 
 **Revisit if.**

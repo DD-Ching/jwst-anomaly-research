@@ -9,11 +9,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - `radial`: anti-tangential arcs whose axes converge on a dark centre, with a false-alarm rate from randomised
     position angles.
 - SMACS:
-  - fluxratio: the only flag (system 7) is an ordinary knot-vs-whole-arc aperture mismatch;
-  - radial: 19 centres against 14.8 expected at random (p95 22); max 5 lines, p 0.375.
+  - fluxratio: 6 compact images consistent, 0 flags. A first, single-band compactness gate had flagged system 7,
+    an ordinary knot-vs-whole-arc mismatch;
+  - radial: 19 centres against a null mean of 12.5 (p95 21); max 5 lines, p 0.84.
   - **No exotic candidate.**
-- **Failed approach:** fixed-aperture flux ratios on resolved arcs. Surface brightness is conserved, so ratios
-  scale with 1/|μ| (systems 5 and 10).
+- **Failed approaches (now rules):**
+  - fixed-aperture flux ratios on resolved arcs: surface brightness is conserved, so the ratios scale with 1/|μ|
+    (systems 5 and 10);
+  - a single-band compactness gate (knots of a clumpy arc pass in F150W);
+  - a uniform-angle null for the radial screen (the selected arcs point at the mass centre).
 - **Handoff:** fan out per cluster (El Gordo, Abell 2744, Sunrise, then HFF/RELICS). Each runs `validate`,
   `images --forced-image`, `exotic_screens fluxratio` and `radial`, with contact sheets of all flags.
 
