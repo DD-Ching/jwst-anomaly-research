@@ -7,7 +7,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `--forced-image`, which runs forced photometry on S3 byte-range stamps.
 - Results:
   - ICLv2 reproduces all 60 catalogued images within 0.04–0.91″, with 4 demagnified central images.
-  - Of the 11 testable uncatalogued images: 3 are recovered (systems 9, 8, and 17 on the BCG gradient), 1 is
+  - Of the 11 testable uncatalogued images: 3 are recovered (systems 9 and 8, and system 17 marginally: flux ratio
+    0.36 on the BCG gradient), 1 is
     confused, 1 is undetectable, 6 have no reference flux, and **0 are absent**.
   - System 8's model z = 11.76 is contradicted by its F090W/F150W detections.
 - **Failed approach:** pipeline-catalog flux references near cluster galaxies. They falsely made system 9 `missing`.
