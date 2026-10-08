@@ -2293,56 +2293,75 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - Cluster macro-magnification needs a lens model with shear plus a microlens instead of an isolated lens (W3 in
   caustic-crossing arcs).
 
-## D-049 W1 injection-recovery through the `radial` screen: blind at θ_E ≤ 1″, weak limits at 3–10″ (2026-10-08)
+## D-049 W1 injection-recovery through the `radial` screen: blind below about 10¹² M☉, weak limits above (2026-10-08)
 
 **Decision.**
 - `scripts/inject_radial.py` turns the eight null `radial` screens into 95 % upper limits on the surface density of
-  W1 negative-mass lenses (n = 1, ε < 0; D-047). The method, tables and caveats are in docs/exotic_limits.md.
-- **Injection.** Each lens sits at a random point of the screened footprint, at the cluster redshift. The lensed
-  sources are the field's own background catalogue rows:
+  W1 negative-mass lenses (n = 1, ε < 0; D-047), per lens mass. The method, tables and caveats are in
+  docs/exotic_limits.md.
+- **Parameter.** The mass |M| is the parameter; the lens sits at the cluster redshift. Each lensed row gets
+  θ_E(|M|, z_l, z_s), with z_s its photo-z, or 2 without one. θ_E at z_s = 2 is a label only.
+- **Injection.** Each lens sits at a random point of the screened footprint. The lensed sources are the field's
+  own background rows:
   - β < 2 θ_E: removed (umbra);
-  - 2 ≤ β ≤ 4 θ_E: replaced by two images from `exotic_sim.inject_images`;
-  - each image gets PSF-deconvolved second moments mapped by the signed Jacobian, magnitude − 2.5 log₁₀|μ|, area
-    × |μ| and S/N × √|μ|.
-- **Screen.** It is unchanged: `cmd_radial`'s selection is now `exotic_screens.radial_candidates`, a pure
-  refactor that gives the same SMACS output. The real arcs' null draws are cached once per field and updated for
-  each injection.
-- **Recovery.** A peak with p_random < 0.05 within 2″ of the injected centre. 200 lenses per field and θ_E.
-- **Limit.** 2.996 / Σ ε_f A_f, using the screened footprint (1″ grid points with a catalogue source within 4″).
+  - 2 ≤ β ≤ 4 θ_E: replaced by their images, with PSF-deconvolved moments mapped by the signed Jacobian,
+    magnitude − 2.5 log₁₀|μ|, area × |μ| and S/N × √|μ|;
+  - an image pair whose isophotes overlap (separation < sum of √(area |μ| / π)) is painted as one blended row;
+  - rows below S/N 5 are dropped as undetected (bookkeeping only: the screen requires S/N ≥ 10);
+  - painted images are flagged extended, so a magnified compact source never becomes a spike-veto "star".
+- **Screen.** It is unchanged: `exotic_screens.radial_candidates`, `radial_grid`, `anti_window_draw` and
+  `radial_defaults` are shared with `cmd_radial`, and the refactor gives byte-identical SMACS output.
+- **Null.** Each batch of 10 trials has its own independent 200-draw null (trials within a batch share it, so the
+  binomial σ is approximate). Each trial updates only the grid blocks
+  its arcs touch, which gives results identical to a full recompute (tested).
+- **Recovery.** A peak with p_random < 0.05 within 2″ of the injected centre. 200 lenses per field and mass.
+- **Limit.** 2.996 / Σ ε_f A_f, with A_f the screened footprint: 1″ grid points with a catalogue source within
+  4″. Its border excess is measured and given as an upper bound, with border-corrected limits alongside.
 - All of these are ASSUMPTIONs.
 
 **Alternatives rejected.**
-- Drawing synthetic sources at random β. Lensing the rows that are actually there keeps the real local density,
-  clustering and photo-z, and removes each original row as it is replaced.
-- Re-running `cmd_radial` (200 null draws over the whole grid) for every injection: about 15–150 s per lens. The
-  incremental null has the same distribution in about 0.2–1 s.
-- Using the shapes of the catalogue as intrinsic, with no PSF term. That would over-elongate PSF-sized images.
-- Counting a lens as recovered at the ≥ 3-line peak threshold. The screen's significance is p_random, and 3 lines
-  is below every field's null (5–8 lines needed).
+- One θ_E for every source (the first version): θ_E depends on z_s, so the mass is the physical parameter.
+- Painting the two images of a source as two rows even when they overlap: near the caustic, that invents two
+  converging lines the catalogue would show as one blend.
+- One fixed set of 200 null draws for all trials: it correlates every trial's p_random. Each batch now has its
+  own.
+- Re-running `cmd_radial` in full for every injection, or copying the whole null grid 200× per trial.
+- Hard-coded copies of the screen defaults and a `nanmin(S/N)` detection floor, which removes nothing.
+- Synthetic sources at random β: lensing the rows actually present keeps the real density, clustering and
+  photo-z.
+- Catalogue shapes used as intrinsic, with no PSF term: PSF-sized images would be over-elongated.
+- Counting a lens as recovered at the ≥ 3-line peak: the screen's significance is p_random, and 3 lines is below
+  every field's null (5–8 needed).
+- Headline limits from all eight fields: without photo-z (MACS0717, Abell S1063) members and foreground galaxies
+  get lensed and the efficiency is biased high; they enter only the optimistic set.
 
 **Evidence** (`derived` from `simulated` injections; 8 fields, 51.2 arcmin²).
 - The base screens reproduce the field docs: SMACS 31 arcs, 4 lines, p 0.965; MACS0416 120, 7, 0.225; Abell 370
   100, 5, 0.495; and so on.
   - Abell 2744 now gives 134 arcs, 5 lines, p 0.505: its doc predates the D-034 spike veto (42 segments).
-- Recovered of 1,600 lenses per θ_E (200 in each field):
+- Recovered of 1,600 lenses per mass (200 in each field):
 
-  | θ_E | 0.3″ | 1″ | 3″ | 6″ | 10″ |
+  | \|M\| (M☉) | 2 × 10¹⁰ | 2 × 10¹¹ | 2 × 10¹² | 8 × 10¹² | 2 × 10¹³ |
   |---|---|---|---|---|---|
-  | recovered | 0 | 0 | 10 | 80 | 181 |
+  | θ_E(z_s = 2) | 0.21–0.36″ | 0.65–1.14″ | 2.05–3.59″ | 4.11–7.18″ | 6.49–11.35″ |
+  | recovered | 0 | 0 | 8 | 84 | 156 |
 
-  - The 95 % limits, from the six fields with photo-z (38.1 arcmin²), are none at 0.3″ and 1″, < 7.0 × 10⁴ deg⁻²
-    at 3″, < 6.8 × 10³ at 6″ and < 3.2 × 10³ at 10″. MACS0717 and Abell S1063 have no photo-z, so their members
-    and foreground galaxies get painted as W1 images and their efficiency is biased high (code review); with them
-    the limits would be about 2× tighter (optimistic, reported separately in `limits.json`).
-  - |M| ≈ 1.4–4.3 × 10¹² M☉ at 3″ (`model_prediction`, z_s = 2).
-  - The best limit is about 27× weaker than Takahashi & Asada's volume limit spread over 0 < z < 1 (about
+  - Headline 95 % limits, from the six fields with photo-z (38.0 arcmin²): none at 2 × 10¹⁰ and 2 × 10¹¹ M☉,
+    < 6.1 × 10⁴ deg⁻² at 2 × 10¹², < 7.0 × 10³ at 8 × 10¹² and < 4.0 × 10³ at 2 × 10¹³. MACS0717 and Abell S1063
+    have no photo-z, so their members and foreground galaxies get painted as W1 images and their efficiency is biased
+    high; all eight fields (optimistic): 3.7 × 10⁴, 3.8 × 10³ and 2.1 × 10³ (border-corrected 4.1 × 10⁴, 4.2 × 10³,
+    2.4 × 10³; headline border-corrected 6.6 × 10⁴, 7.6 × 10³, 4.3 × 10³).
+  - The best headline limit is about 30× weaker than Takahashi & Asada's volume limit spread over 0 < z < 1 (about
     120 deg⁻²).
+- History: #70 merged a first review round (photo-z-only headline, θ_E-parametrised); this record supersedes its
+  numbers with the mass-parametrised, blend-aware, independent-null run.
 - The loss is in the arc selection. An image reaches e ≥ 0.5 only for β ≲ 2.3 θ_E, and `anti` relative to the
-  cluster keeps about a third of the images. A 3″ lens therefore puts 1–3 arcs into the screen, while the null
-  needs 5–8.
-- Tests: `tests/test_inject_radial.py`, offline. They check the image shapes against the Jacobian, the painting
-  (umbra removed, sources replaced, μ in magnitude and S/N), recovery of a dense synthetic lens, the footprint
-  area, and the mass scaling against D-047.
+  cluster keeps about a third of the images. A 2 × 10¹² M☉ lens therefore puts 0.5–2.7 arcs into the screen,
+  while the null needs 5–8.
+- Tests: `tests/test_inject_radial.py`, offline. They cover:
+  - the windowed and incremental null against `line_counts` on the full grid;
+  - θ_E(z_s, |M|) against D-047;
+  - blends, the detection floor, painting, recovery of a dense synthetic lens, and the footprint border.
 
 **Revisit if.**
 - A W1-specific screen is built: collinear radial image pairs flanking an empty centre, with orientation measured
