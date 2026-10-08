@@ -221,7 +221,7 @@ def test_fit_drops_checkpoint_rows_fitted_with_other_params(tmp_path, monkeypatc
         name="fake", spec=types.SimpleNamespace(reference="x"), events=lambda: None
     )
     monkeypatch.setattr(w3.ogle, "OgleMrozSample", lambda key: fake)
-    monkeypatch.setattr(w3, "_jobs", lambda sample, limit, skip: [])
+    monkeypatch.setattr(w3, "_jobs", lambda sample, limit, skip, chunk=None: [])
     monkeypatch.setattr(w3, "_join_pub", lambda tab, ev: tab)
     row = {"event_id": "new", "error": "", "best_ordinary": "PSPL", "seconds": 1.0}
     old = {**row, "event_id": "old"}  # written before checkpoints carried a params tag
@@ -235,3 +235,15 @@ def test_fit_drops_checkpoint_rows_fitted_with_other_params(tmp_path, monkeypatc
         w3.params_tag()
         != json.loads((tmp_path / "fits_k.partial.jsonl").read_text().splitlines()[0])["params_tag"]
     )
+
+
+def test_parse_chunk_is_one_based_and_chunks_partition_the_sample():
+    assert w3.parse_chunk(None) is None
+    assert w3.parse_chunk("1/6") == (0, 6)
+    with pytest.raises(ValueError):
+        w3.parse_chunk("0/6")
+    with pytest.raises(ValueError):
+        w3.parse_chunk("7/6")
+    idx = np.arange(23)
+    parts = [idx[k::6] for k, _ in (w3.parse_chunk(f"{i}/6") for i in range(1, 7))]
+    assert sorted(np.concatenate(parts).tolist()) == idx.tolist()

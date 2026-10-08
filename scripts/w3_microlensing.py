@@ -609,8 +609,10 @@ def _fit_worker(job):
     return row
 
 
-def _jobs(sample: ogle.OgleMrozSample, limit: int | None, ids=None, skip=()):
+def _jobs(sample: ogle.OgleMrozSample, limit: int | None, ids=None, skip=(), chunk=None):
     ev = sample.events()
+    if chunk is not None:  # (k, n): every n-th event from k, so each chunk spans all fields
+        ev = ev[chunk[0] :: chunk[1]]
     if ids is not None:
         ev = ev[np.isin(ev["event_id"], list(ids))]
     if limit:
@@ -644,10 +646,27 @@ def params_tag() -> str:
     return hashlib.sha256(json.dumps(asdict(P), sort_keys=True).encode()).hexdigest()[:12]
 
 
-def run_fit(sample_key: str, limit: int | None, procs: int, fresh: bool = False) -> Path:
+def parse_chunk(text: str | None) -> tuple[int, int] | None:
+    """``"K/N"`` (1-based K) -> ``(K - 1, N)``; ``None`` passes through."""
+    if text is None:
+        return None
+    k, n = (int(x) for x in text.split("/"))
+    if not 1 <= k <= n:
+        raise ValueError(f"chunk {text!r}: need 1 <= K <= N")
+    return k - 1, n
+
+
+def run_fit(
+    sample_key: str,
+    limit: int | None,
+    procs: int,
+    fresh: bool = False,
+    chunk: tuple[int, int] | None = None,
+) -> Path:
     """Fit the sample. Each row is appended to ``fits_<key>.partial.jsonl`` as it finishes, so an
-    interrupted run (a cloud session ends after ~40 min; the bulge sample takes ~3 h on 4 cores)
-    resumes where it stopped; ``fresh`` starts over."""
+    interrupted run resumes where it stopped (a cloud session ends after ~40 min; the bulge sample
+    takes ~4 h on 4 cores, ~10 s per event); ``fresh`` starts over. ``chunk=(k, n)`` fits only
+    events k, k+n, ... (0-based), so separate sessions fit disjoint, field-balanced parts."""
     sample = ogle.OgleMrozSample(sample_key)
     t1 = time.time()
     ckpt = out_dir() / f"fits_{sample_key}.partial.jsonl"
@@ -664,7 +683,7 @@ def run_fit(sample_key: str, limit: int | None, procs: int, fresh: bool = False)
     if done:
         print(f"resuming: {len(done)} events already fitted", flush=True)
     with Pool(procs) as pool, ckpt.open("a") as fh:
-        jobs = _jobs(sample, limit, skip=done)
+        jobs = _jobs(sample, limit, skip=done, chunk=chunk)
         for i, row in enumerate(pool.imap_unordered(_fit_worker, jobs, 4)):
             row["params_tag"] = tag
             rows.append(row)
@@ -685,6 +704,7 @@ def run_fit(sample_key: str, limit: int | None, procs: int, fresh: bool = False)
         provenance=schema.Provenance.DERIVED.value,
         source=f"scripts/w3_microlensing.py fit on {sample.name} ({sample.spec.reference})",
         params=json.dumps(asdict(P)),
+        chunk="" if chunk is None else f"{chunk[0] + 1}/{chunk[1]}",
         wall_time_s=round(time.time() - t1, 1),  # this invocation only
         cpu_time_s=round(float(sum(r.get("seconds", 0.0) for r in rows)), 1),
         procs=procs,
@@ -1611,6 +1631,7 @@ def main(argv=None) -> int:
     f.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     f.add_argument("--limit", type=int, default=None)
     f.add_argument("--fresh", action="store_true", help="ignore an interrupted run's checkpoint")
+    f.add_argument("--chunk", default=None, help="K/N: fit only events K-1, K-1+N, ... (1-based K)")
     v = sub.add_parser("vet", help="vet the flags of a fitted sample")
     v.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     v.add_argument("--no-binary-lens", action="store_true")
@@ -1626,7 +1647,7 @@ def main(argv=None) -> int:
     m.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     args = ap.parse_args(argv)
     if args.cmd == "fit":
-        run_fit(args.sample, args.limit, args.procs, args.fresh)
+        run_fit(args.sample, args.limit, args.procs, args.fresh, parse_chunk(args.chunk))
     elif args.cmd == "vet":
         run_vet(args.sample, args.procs, binary_lens=not args.no_binary_lens)
     elif args.cmd == "sheet":
