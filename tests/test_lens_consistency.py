@@ -370,6 +370,12 @@ def test_flux_ratio_table_consistent_and_injected_outlier():
     assert t["resid_mag"][0] == pytest.approx(1.5)
     assert list(t["flux_class"]) == ["flux_outlier", "consistent", "consistent"]
     assert list(t["colour_class"]) == ["consistent"] * 3  # achromatic: colours still agree
+    # 1.6 mag shifts the good images' references by 0.8 mag; only the worst image is flagged.
+    model, images, phot, _ = _flux_inputs(offsets_mag=(1.6, 0.0, 0.0))
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    np.testing.assert_allclose(t["resid_mag"], [1.6, -0.8, -0.8])
+    assert list(t["flux_class"]) == ["flux_outlier", "consistent", "consistent"]
+    np.testing.assert_allclose(t["resid_err"], np.hypot(0.02, 0.02 / np.sqrt(2)))
     # A chromatic change: only image 1.2 is 0.5 mag redder.
     model, images, phot, _ = _flux_inputs()
     phot["f444w_mag"][1] -= 0.5

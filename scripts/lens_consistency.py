@@ -65,10 +65,11 @@ Two subcommands, both writing to ``outputs/lens_consistency/<model>/`` (ECSV plu
     ``mag_auto``: DJA aperture fluxes are not totals for extended arcs (``<band>_tot_corr`` is 1
     and ``tot_corr`` a point-source correction). The implied source magnitude is
     ``s = mag_auto + 2.5 log10 |μ|``, with μ at the catalogued position and system redshift;
-    an image's residual is ``s`` minus the median ``s`` of its system's usable images (two or
-    more needed), and ``flux_outlier`` means |residual| > ``--outlier-mag``. The colour test
-    does the same with the ``--colour`` aperture colour (``colour_outlier`` above
-    ``--colour-tol``; it does not use μ). Images are unusable when unmatched, at S/N <
+    an image's residual is ``s`` minus the median ``s`` of the *other* usable images of its
+    system (leave-one-out; two or more usable images needed), and ``flux_outlier`` marks the
+    system's largest |residual| (both images of a pair) when it exceeds ``--outlier-mag``.
+    The colour test does the same with the ``--colour`` aperture colour (``colour_outlier``
+    above ``--colour-tol``; it does not use μ). Images are unusable when unmatched, at S/N <
     ``--min-snr``, when one DJA source matches several catalogued images, or when the DJA
     segment exceeds ``--max-npix`` pixels (it swallows host or ICL light; SMACS 1.1), or, with
     ``--photoz``, when the counterpart's 95 % photo-z interval, widened by ``--z-margin`` ×
@@ -103,6 +104,7 @@ from astropy.table import Table
 from astropy.wcs import WCS, FITSFixedWarning
 
 from jwst_anomaly import lensmodel, paths, schema
+from jwst_anomaly.features import snr_from_mag_err
 from jwst_anomaly.photometry import fetch_catalog, load_dja_catalog
 
 # sigpos: "input.par" (its sigposArcsec), "arcs" (each image's error column, as Lenstool's
@@ -953,6 +955,9 @@ def load_dja_photometry(
     """
     out = load_dja_catalog(path, bands, aperture)
     raw = Table.read(path)
+    missing = [c for c in ("mag_auto", "magerr_auto", "npix") if c not in raw.colnames]
+    if missing:
+        raise SystemExit(f"error: {path} has no {missing}")
     out["magerr_auto"] = np.asarray(np.ma.filled(raw["magerr_auto"], np.nan), float)
     out["npix"] = np.asarray(np.ma.filled(raw["npix"], 0), int)
     out.rename_column("id", "dja_id")
@@ -962,25 +967,37 @@ def load_dja_photometry(
             raise SystemExit(f"error: {zout} rows do not match {path} ids")
         for c in ("z_phot", "z025", "z975"):
             v = np.asarray(np.ma.filled(z[c], np.nan), float)
-            out[c] = np.where(v > 0, v, np.nan)
+            out[c] = np.where(v >= 0, v, np.nan)  # eazy writes -1 for no fit
         out.meta["photoz_source"] = str(zout)
     out.meta.update(aperture=aperture)
     return out
 
 
-def _loo_residual(values: np.ndarray, use: np.ndarray, systems: np.ndarray) -> np.ndarray:
-    """``values`` minus the median of the *other* usable images of its system (NaN if < 2 usable).
+def _loo_residual(
+    values: np.ndarray, errors: np.ndarray, use: np.ndarray, systems: np.ndarray
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Leave-one-out residuals: ``values`` minus the median of the *other* usable images of its
+    system (NaN if < 2 usable), so a discrepant image does not pull its own reference; in a pair
+    each image carries the full pair difference.
 
-    Leave-one-out, so a discrepant image does not pull its own reference: in a pair each image's
-    residual is the full pair difference (with opposite signs)."""
+    Returns ``(resid, resid_err, worst)``. ``resid_err`` adds the reference's error (the others'
+    median error / sqrt(n), an approximation) in quadrature. ``worst`` marks each system's
+    largest |resid| (both images of a pair), so one bad image in a system of three or more
+    does not also flag the good ones, whose references it shifts."""
     resid = np.full(len(values), np.nan)
+    rerr = np.full(len(values), np.nan)
+    worst = np.zeros(len(values), bool)
     for sys_id in dict.fromkeys(systems):
         ii = np.flatnonzero((systems == sys_id) & use)
         if ii.size < 2:
             continue
         for i in ii:
-            resid[i] = values[i] - np.median(values[ii[ii != i]])
-    return resid
+            others = ii[ii != i]
+            resid[i] = values[i] - np.median(values[others])
+            rerr[i] = np.hypot(errors[i], np.median(errors[others]) / np.sqrt(others.size))
+        a = np.abs(resid[ii])
+        worst[ii[np.isclose(a, a.max())]] = True
+    return resid, rerr, worst
 
 
 def _r(v, nd: int = 2):
@@ -1040,16 +1057,16 @@ def flux_ratio_table(
     e1, e2 = col(f"{colour[0]}_mag_err"), col(f"{colour[1]}_mag_err")
     with np.errstate(divide="ignore", invalid="ignore"):
         src = mag + 2.5 * np.log10(np.abs(mu))
-        snr_auto = np.where(magerr > 0, 1.0857 / magerr, np.nan)
-        snr1, snr2 = (np.where(e > 0, 1.0857 / e, np.nan) for e in (e1, e2))
+        snr_auto = np.where(magerr > 0, 1.0857 / magerr, np.nan)  # SEP: Pogson magerr_auto
+    snr1, snr2 = (np.where(e > 0, snr_from_mag_err(e), np.nan) for e in (e1, e2))
     c_obs = m1 - m2
     c_err = np.hypot(e1, e2)
     systems = np.asarray(images["system"]).astype(str)
     base = matched & ~bad & np.isfinite(mu) & (np.abs(mu) <= max_abs_mu)
     use_m = base & np.isfinite(src) & (snr_auto >= min_snr)
     use_c = matched & ~bad & np.isfinite(c_obs) & (snr1 >= min_snr) & (snr2 >= min_snr)
-    resid = _loo_residual(src, use_m, systems)
-    c_resid = _loo_residual(c_obs, use_c, systems)
+    resid, resid_err, worst = _loo_residual(src, magerr, use_m, systems)
+    c_resid, c_resid_err, c_worst = _loo_residual(c_obs, c_err, use_c, systems)
     cname = f"{colour[0]}_{colour[1]}"
     out = Table(
         {
@@ -1069,19 +1086,19 @@ def flux_ratio_table(
             "mag_auto": mag,
             "source_mag": src,
             "resid_mag": resid,
-            "resid_err": np.where(np.isfinite(resid), magerr, np.nan),
+            "resid_err": resid_err,
             f"colour_{cname}": c_obs,
             "colour_resid": c_resid,
-            "colour_err": np.where(np.isfinite(c_resid), c_err, np.nan),
+            "colour_err": c_resid_err,
         }
     )
     cls = np.full(len(images), "untested", dtype="U16")
     cls[np.isfinite(resid)] = "consistent"
-    cls[np.isfinite(resid) & (np.abs(resid) > outlier_mag)] = "flux_outlier"
+    cls[worst & (np.abs(resid) > outlier_mag)] = "flux_outlier"
     out["flux_class"] = cls
     ccls = np.full(len(images), "untested", dtype="U16")
     ccls[np.isfinite(c_resid)] = "consistent"
-    ccls[np.isfinite(c_resid) & (np.abs(c_resid) > colour_tol)] = "colour_outlier"
+    ccls[c_worst & (np.abs(c_resid) > colour_tol)] = "colour_outlier"
     out["colour_class"] = ccls
     out.meta.update(model._meta())
     out.meta.update(
@@ -1126,7 +1143,7 @@ def cmd_fluxratios(args) -> dict:
     phot = load_dja_photometry(args.photometry, list(colour), args.aperture, args.photoz)
     offset = tuple(float(v) for v in args.offset_arcsec.split(","))
     if len(offset) != 2:
-        raise SystemExit("--offset-arcsec takes dRA,dDec, e.g. 0.224,-0.016")
+        raise SystemExit("--offset-arcsec takes dRA,dDec, e.g. 0.221,-0.018")
     table = flux_ratio_table(
         model,
         images,
