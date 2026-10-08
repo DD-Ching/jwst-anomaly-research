@@ -41,6 +41,8 @@ def test_sdss_name_radec():
         ("QSO pair (different SED)", "nonpair"),
         ("QSO + unknown lens candidate", "nonpair"),
         ("not a binary", ""),
+        ("not a known lens", ""),
+        ("known lensed quasar", "control"),
         ("Different SED, not QSO", "nonpair"),
         ("", ""),
     ],
@@ -58,9 +60,9 @@ def test_read_tsv_skips_units_and_dashes(tmp_path):
 
 def _lemon(rows):
     return Table(
-        rows=[r + ("",) for r in rows],
-        names=("Name", "RAJ2000", "DEJ2000", "z", "Sep", "Class", "z2"),
-        dtype=[str] * 7,
+        rows=[r + ("", "") for r in rows],
+        names=("Name", "RAJ2000", "DEJ2000", "z", "Sep", "Class", "z2", "f_z"),
+        dtype=[str] * 8,
     )
 
 
@@ -85,8 +87,9 @@ def test_build_sample_groups_and_dedup():
     )
     s = niq.build_sample({"J/MNRAS/520/3305/table1": lemon, "J/AJ/143/119/table4": sqls})
     assert len(s) == 3  # the Lemon "QSO + star" is dropped, the SQLS duplicate merged
-    row = s[s["name"] == "J1000+0100"][0]
-    assert row["group"] == "control" and "listed as lens elsewhere" in row["comment"]
+    # the system's kept row is its lens entry, with the Lemon UQP noted in the comment
+    row = s[s["name"] == "J100000.00+010000.0"][0]
+    assert row["group"] == "control" and "Lemon2023: UQP" in row["comment"]
     new = s[s["name"] == "J130000.00+020000.0"][0]
     assert new["group"] == "rejected" and new["ra"] == pytest.approx(195.0)
     assert np.allclose(s["theta_e"], s["sep_cat"] / 2)
@@ -141,7 +144,7 @@ def test_dedup_is_transitive():
     s = niq.build_sample({"J/MNRAS/520/3305/table1": lemon, "J/AJ/143/119/table4": sqls})
     groups = dict(zip(s["name"], s["group"], strict=True))
     # transitive: A, B and C are one system, which holds a catalogued lens
-    assert list(groups.items()) == [("A", "control")]
+    assert list(groups.items()) == [("J100000.13+010000.0", "control")]
 
 
 def test_data_sha256_ignores_header_time():
@@ -182,7 +185,7 @@ def test_lemon_z2_used_only_for_a_second_quasar():
     assert z2["Q"] == pytest.approx(1.4) and np.isnan(z2["L"]) and np.isnan(z2["F"])
 
 
-def test_wide_lens_still_promotes_its_group_and_merged_info_is_kept():
+def test_wide_lens_keeps_its_system_out_of_the_rejected_sample():
     lemon = _lemon([("A", "150.0", "1.0", "1.5", "2.2", "UQP")])
     sqls = _sqls(
         [
@@ -192,10 +195,10 @@ def test_wide_lens_still_promotes_its_group_and_merged_info_is_kept():
         ]
     )
     s = niq.build_sample({"J/MNRAS/520/3305/table1": lemon, "J/AJ/143/119/table4": sqls})
-    g = dict(zip(s["name"], s["group"], strict=True))
-    assert g["A"] == "control"
+    # A's system is a lens (dropped with the wide lens row), never a rejection
+    assert "A" not in s["name"]
     row = s[s["name"] == "J110000.00+010000.0"][0]
-    assert row["z2"] == pytest.approx(1.6) and "No lensing object" in row["comment"]
+    assert row["different_z"] and "No lensing object" in row["comment"]
 
 
 def test_check_vizier_refuses_errors_and_empty(tmp_path):
@@ -268,3 +271,16 @@ def test_sqls_nonpair_companion_does_not_veto_and_second_companion_keeps_primary
 def test_coords_refuses_mixed_rows():
     with pytest.raises(ValueError):
         niq._coords(["150.0003"], ["+01:00:00"])
+    ra, de = niq._coords(["12:00:00"], ["+05"])  # whole-degree Dec with a sexagesimal RA
+    assert ra[0] == pytest.approx(180.0) and de[0] == pytest.approx(5.0)
+
+
+def test_sqls_newer_nonpair_row_does_not_veto_older_rejection():
+    dr7 = _sqls([("J100000.00+010000.0", "1.5", "2.2", "QSO+star")])
+    dr5 = Table(
+        rows=[("J100000.01+010000.0", "1.5", "2.2", "No lens object")],
+        names=("SDSS", "z", "theta", "Com"),
+        dtype=[str] * 4,
+    )
+    s = niq.build_sample({"J/AJ/143/119/table4": dr7, "J/AJ/140/403/table3": dr5})
+    assert list(s["group"]) == ["rejected"] and s["catalogue"][0] == "SQLS-DR5"

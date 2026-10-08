@@ -45,7 +45,7 @@ J0125-1012 21.3174 -10.2082 1.22 1.12 1.1180433572769486 rejected Lemon2023 """U
 J0130+0725 22.5859 7.4212 1.54 2.06 2.059053944138518 rejected Lemon2023 """UQP""" 23.047657 19.44446365153435 21.704587913584255 """none""" """""" True -0.23321699999999979 True False True True True False nan False
 J0133+0816 23.2695 8.2788 1.27 1.55 1.5476296077048342 rejected Lemon2023 """UQP""" 23.274622 19.83467777188927 21.819710105184676 """too close""" """""" False 0.040073000000003134 True False True True True False nan False
 J0146-6510 26.6467 -65.1799 1.255 1.0 0.998193642133816 rejected Lemon2023 """UQP""" 23.403557 20.76984259877771 22.73978423646982 """too close""" """""" False -0.3489819999999959 True False True True True False nan False
-J0149-6532 27.2906 -65.5404 0.944 2.74 nan control Lemon2023 """lens (?)""" 23.53385 18.05706352735124 19.817063527351237 """blended""" """""" False nan False False False True True False nan False
+J0149-6532 27.2906 -65.5404 nan 2.74 nan control Lemon2023 """lens (?)""" 23.53385 19.044774675834738 22.85291824781995 """blended""" """""" False nan False False False True True False nan False
 J0152-2448 28.0797 -24.8105 1.69 1.91 nan control Lemon2023 """lens""" 23.486565 19.696362258364836 22.112394322529738 """blended""" """""" False nan False False False True True False nan False
 J0156-2751 29.1039 -27.8562 2.97 1.5 1.4989096716358083 control Lemon2023 """lens""" 23.598356 20.56851250533444 24.139297604703803 """too close""" """""" False 0.019164999999997434 True False True True False False nan False
 J0200-1509 30.0872 -15.1609 1.185 0.78 nan control Lemon2023 """lens""" 23.591133 21.22478578198589 23.131648790595246 """blended""" """""" False nan False False False True False False nan False

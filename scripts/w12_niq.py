@@ -229,7 +229,16 @@ def _sqls_z(r) -> float:
     return np.nan if flag else _float(r["z"])
 
 
-def sqls_redshifts(t: Table, r) -> tuple[float, float]:
+def primary_rows(t: Table) -> np.ndarray:
+    """Index of the nearest earlier row without theta (the primary quasar) for each row; -1 if
+    none. Earlier companions of the same primary are skipped."""
+    has_theta = np.array([np.isfinite(_float(x)) for x in t["theta"]])
+    idx = np.where(~has_theta, np.arange(len(t)), -1)
+    last = np.maximum.accumulate(idx) if len(t) else idx
+    return np.concatenate([[-1], last[:-1]]) if len(t) else last
+
+
+def sqls_redshifts(t: Table, r, prim: np.ndarray | None = None) -> tuple[float, float]:
     """(quasar z, second z) for an SQLS candidate row.
 
     Pair-format tables (DR3 table3, DR5 table3, DR7 table4) list the primary quasar (its z, no
@@ -240,9 +249,7 @@ def sqls_redshifts(t: Table, r) -> tuple[float, float]:
     if np.isfinite(za):
         return za, zb
     theta = _float(r["theta"])
-    k = r.index - 1
-    while k >= 0 and np.isfinite(_float(t[k]["theta"])):  # skip earlier companions
-        k -= 1
+    k = (primary_rows(t) if prim is None else prim)[r.index]
     if k >= 0 and not t[k]["Com"].strip() and np.isfinite(theta):
         (ra1, de1), (ra2, de2) = sqls_radec(t, t[k]), sqls_radec(t, r)
         d = SkyCoord(ra1, de1, unit="deg").separation(SkyCoord(ra2, de2, unit="deg")).arcsec
@@ -265,7 +272,7 @@ def sqls_group(comment: str) -> str:
     """rejected: no lens object, or a quasar pair / binary (as Lemon's "QSO pair" class);
     control: a catalogued lens."""
     c = comment.lower()
-    if re.search(r"\b(sdss|known) lens\b", c):
+    if re.search(r"(?<!not a )(?<!not )(?<!no )\b(sdss|known) lens(ed)?\b", c):
         return "control"  # first: a comment naming a lens never makes a rejection
     if SQLS_NONPAIR.search(c):
         return "nonpair"  # second: a star/galaxy/SED classification vetoes a rejection
@@ -280,6 +287,7 @@ def build_sample(tables: dict[str, Table]) -> Table:
     rows, dropped = [], {}
     for source, t in tables.items():
         label = INPUTS[source]
+        prim = primary_rows(t) if label != "Lemon2023" else None
         for r in t:
             if label == "Lemon2023":
                 cls = r["Class"]
@@ -296,7 +304,7 @@ def build_sample(tables: dict[str, Table]) -> Table:
                     _float(r["RAJ2000"]),
                     _float(r["DEJ2000"]),
                     r["Name"],
-                    _float(r["z"]),
+                    np.nan if r["f_z"].strip() else _float(r["z"]),  # flagged z not used
                     _float(r["Sep"]),
                 )
                 z2 = lemon_second_qso_z(r)
@@ -307,7 +315,7 @@ def build_sample(tables: dict[str, Table]) -> Table:
                 group = sqls_group(comment)
                 ra, dec = sqls_radec(t, r)
                 sep = _float(r["theta"])
-                z, z2 = sqls_redshifts(t, r)
+                z, z2 = sqls_redshifts(t, r, prim)
             if group and not np.isfinite(ra):
                 dropped[label] = dropped.get(label, 0) + 1
             elif group:
@@ -330,6 +338,7 @@ def build_sample(tables: dict[str, Table]) -> Table:
         ),
     )
     s["comment"] = s["comment"].astype(object)  # notes are appended below (no truncation)
+    s["different_z"] = different_redshift(s["z_source"], s["z2"])  # per row, OR-ed in dedup
     # merge first (a lens row that is dropped below still promotes its group to control), then
     # drop component rows of one cluster-scale lens, unknown separations and wide pairs
     n_rows = len(s)
@@ -364,10 +373,14 @@ def build_sample(tables: dict[str, Table]) -> Table:
 
 
 def dedup(s: Table) -> Table:
-    """Merge entries within P.dedup_arcsec transitively (connected components). The kept row is
-    Lemon's, else the newest SQLS release's. A component holding any catalogued lens is a control
-    (noted in ``comment``), so a known lens never enters the rejected sample; a rejected one that
-    another catalogue classified as a non-pair becomes "nonpair" (dropped)."""
+    """Merge entries within P.dedup_arcsec transitively (connected components).
+
+    The merged system is a control if any member is a lens (a known lens never enters the
+    rejected sample); else rejected if any member is, unless Lemon classified the system as a
+    non-pair (star, galaxy, projected), which vetoes it; else a non-pair (dropped later). The
+    kept row is the first member of the winning group in catalogue order (Lemon, then the newest
+    SQLS release); its position, separation and redshifts are never mixed with other members'.
+    Other members add their comments, and ``different_z`` is OR-ed over the system."""
     if len(s) < 2:
         return s
     order = {"Lemon2023": 0, "SQLS-DR7": 1, "SQLS-DR5": 2, "SQLS-DR3": 3}
@@ -376,29 +389,25 @@ def dedup(s: Table) -> Table:
     i, j, _, _ = c.search_around_sky(c, P.dedup_arcsec * u.arcsec)
     graph = csr_matrix((np.ones(len(i)), (i, j)), shape=(len(s), len(s)))
     _, label = connected_components(graph, directed=False)
+    grp = np.asarray(s["group"])
     keep = []
     for lab in np.unique(label):
-        members = np.flatnonzero(label == lab)  # sorted: members[0] has the preferred catalogue
-        k = members[0]
-        lens = (s["group"][members] == "control") | np.asarray(s["component"][members], bool)
-        if s["group"][k] != "control" and np.any(lens):
-            s["group"][k] = "control"
-            s["comment"][k] += " | listed as lens elsewhere"
-        elif s["group"][k] == "rejected" and np.any(
-            (s["group"][members] == "nonpair") & (s["catalogue"][members] == "Lemon2023")
-        ):
-            # Lemon classified the whole system (star, galaxy, projected); an SQLS non-pair row
-            # describes another companion, so it never vetoes
-            s["group"][k] = "nonpair"
-        for m in members[1:]:  # keep the merged rows' vetting information
+        members = np.flatnonzero(label == lab)  # sorted by catalogue preference
+        lens = (grp[members] == "control") | np.asarray(s["component"][members], bool)
+        rej = grp[members] == "rejected"
+        lemon_nonpair = (grp[members] == "nonpair") & (s["catalogue"][members] == "Lemon2023")
+        if lens.any():
+            k = members[np.argmax(lens)]
+            new, note = "control", " | listed as lens elsewhere" if not lens[0] else ""
+        elif rej.any() and not lemon_nonpair.any():
+            k, new, note = members[np.argmax(rej)], "rejected", ""
+        else:
+            k, new, note = members[0], "nonpair", ""
+        s["group"][k] = new
+        s["comment"][k] += note
+        for m in members[members != k]:
             s["comment"][k] += f" | {s['catalogue'][m]}: {s['comment'][m]}"
-            # redshifts travel as a pair from one member, never mixed across catalogues
-            if not np.isfinite(s["z2"][k]) and np.isfinite(s["z2"][m]):
-                s["z_source"][k], s["z2"][k] = s["z_source"][m], s["z2"][m]
-            elif not np.isfinite(s["z_source"][k]) and np.isfinite(s["z_source"][m]):
-                s["z_source"][k] = s["z_source"][m]
-            if not np.isfinite(s["sep_cat"][k]) and np.isfinite(s["sep_cat"][m]):
-                s["sep_cat"][k] = s["sep_cat"][m]
+        s["different_z"][k] = bool(np.any(np.asarray(s["different_z"][members], bool)))
         keep.append(k)
     return s[np.sort(keep)]
 
@@ -441,10 +450,11 @@ def _coords(ra_col, dec_col) -> tuple[np.ndarray, np.ndarray]:
     de = np.array([_float(x) for x in dec_col])
     rs = np.array([str(x).strip() for x in ra_col])
     ds = np.array([str(x).strip() for x in dec_col])
-    half = np.isfinite(ra) != np.isfinite(de)
-    if np.any(half & (rs != "") & (ds != "")):
-        raise ValueError("mixed decimal/sexagesimal coordinates in one row")
-    todo = np.flatnonzero(~np.isfinite(ra) & ~np.isfinite(de) & (rs != "") & (ds != ""))
+    filled = (rs != "") & (ds != "")
+    if np.any(np.isfinite(ra) & ~np.isfinite(de) & filled):
+        raise ValueError("decimal RA with a sexagesimal Dec: ambiguous units")
+    # sexagesimal RA, with a Dec in d:m:s or whole degrees ("+05" floats but is degrees anyway)
+    todo = np.flatnonzero(~np.isfinite(ra) & filled)
     if len(todo):
         try:
             c = SkyCoord(rs[todo], ds[todo], unit=("hourangle", "deg"))
@@ -520,14 +530,14 @@ def cmd_screen(args) -> None:
     src = w12.query_tractor(sc, p, out / "tractor_cache")
     # pin only the rows within a box of the current sample (the cache may hold earlier batches)
     near = np.zeros(len(src), bool)
-    if len(src) and len(sc):
+    if len(src) and len(sc) and "ra" in src.colnames:
         cs = SkyCoord(np.asarray(src["ra"], float), np.asarray(src["dec"], float), unit="deg")
         cp = SkyCoord(np.asarray(sc["ra"], float), np.asarray(sc["dec"], float), unit="deg")
         icp, ics, _, _ = cs.search_around_sky(cp, p.box * np.sqrt(2) * u.arcsec)
         dra, ddec = cp[icp].spherical_offsets_to(cs[ics])  # the query boxes, not a circle
         inbox = (np.abs(dra.arcsec) <= p.box) & (np.abs(ddec.arcsec) <= p.box)
         near[np.unique(ics[inbox])] = True
-    src = src[near]
+    src = src[near] if len(src) else src
     tractor_sha = hashlib.sha256(
         "\n".join(
             f"{i},{r:.7f},{d:.7f},{t},{z:.4f}"
@@ -551,7 +561,6 @@ def cmd_screen(args) -> None:
     sc["detectable_typical"] = sc["req_mag_z_typical"] < sc["depth_z"] - p.margin
     sc["detectable_conservative"] = sc["req_mag_z"] < sc["depth_z"] - p.margin
     sc["hennawi_binary"] = binary_match(sc, binq)
-    sc["different_z"] = different_redshift(sc["z_source"], sc["z2"])
     decided = np.isin(sc["test_status"], ["deflector", "none"]) & (sc["undecided_flags"] == "")
     decided &= np.asarray(sc["pair_match"], bool)  # otherwise the test ran on another pair
     sc["decided"] = decided
