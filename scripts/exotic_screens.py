@@ -126,6 +126,8 @@ def flux_class(r1: float, r2: float, s1: float, s2: float, compact: bool = True)
 
 
 def cmd_fluxratio(args) -> dict:
+    if lc.is_map_model(args.model):
+        raise SystemExit(f"error: {args.model} is a map model without a multiple-image list")
     files = lc.model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
@@ -239,9 +241,7 @@ def convergence_peaks(counts: np.ndarray, min_lines: int) -> list[tuple[int, int
 
 
 def cmd_radial(args) -> dict:
-    files = lc.model_files(args.model)
-    par = lensmodel.parse_lenstool_par(files["best.par"])
-    model = lensmodel.LensModel.from_par(par)
+    model, _, _ = lc.load_model(args.model)  # a Lenstool model or published deflection maps
     shapes = lc.load_shapes(args.catalog)
     if args.photoz:
         lc.attach_photoz(shapes, args.photoz)

@@ -1548,3 +1548,46 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 - Total (deblended, model-subtracted) fluxes become available for resolved arcs. That would test the 38 resolved
   images.
 - A field has many more `anti` arcs, or a centre reaches p_random < 0.01.
+
+## D-032 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
+
+**Decision.**
+- **`lensmodel.MapLensModel`** evaluates a lens model from two published deflection maps (arcsec, D_LS/D_S = 1).
+  - The maps must be on a north-up, east-left TAN grid. Rotated grids raise `UnsupportedModelError`.
+  - Deflection is interpolated bilinearly. The Hessian comes from centred finite differences, so κ, γ and μ are
+    resolution-limited at critical curves.
+  - It has the `LensModel` interface (`fields_xy`, `deflection_xy`, `kappa_xy`, `evaluate`), so `find_images`,
+    `DeflectionGrid` and the exotic screens run unchanged.
+  - Fields with only published maps (RELICS, HFF, UNCOVER) therefore need no Lenstool file.
+- **`lens_consistency.py`:**
+  - map models are `MODELS` entries with `kind: maps`;
+  - `load_model` returns a Lenstool model or a map model;
+  - `validate` compares a map model with the published κ map and magnification maps.
+- **First map model:** `whl0137-relics-lenstool`, the RELICS Lenstool v1 maps of WHL0137-08.
+  - The 4 maps are pinned by sha256 in `lensmodel.WHL0137_RELICS_LENSTOOL`, 100 MB each (5000² float32 at
+    0.04″), each under the 200 MB limit.
+  - z_lens 0.566, H0 70, Ωm 0.3.
+
+**Alternatives rejected.**
+- Interpolating the published κ/γ maps directly: they have no source-redshift scaling and no deflection, so they
+  cannot solve the lens equation.
+- Re-fitting a parametric model: that is new modelling, not the published model.
+
+**Evidence** (`validate`, 2026-10-08; `model_prediction` against the published products).
+- κ: median relative difference 3.5e-5 (p95 1.3e-4) over 17,991 pixels with 0.05 < κ < 2.
+- μ at z = 6.2: median relative difference 2.0e-5 (p95 7.9e-5) over 17,133 pixels with |μ| < 10.
+- These confirm the sign convention (+x along +i = West), the D_LS/D_S = 1 normalisation, z_lens and the
+  cosmology.
+- Unit test: maps sampled from an analytic dPIE reproduce its deflection (2e-3″), its Hessian (5e-3) and its image
+  positions (0.01″).
+- **Radial screen on Sunrise** (F200W `jw02282-o010_t001`, DJA v7.5 photo-z):
+  - 265 elongated sources, 74 not behind the lens, 30 `anti`, 29 not model-radial;
+  - 3 centres, all without a catalog source within 1″, against a null mean of 2.2 (p95 5);
+  - max 3 lines, p = 0.885.
+  - **Null result.**
+- `fluxratio` needs a multiple-image list, which the RELICS HLSP lacks: not run.
+
+**Revisit if.**
+- A Sunrise image list becomes available (Welch+2022, Scofield+2025). It would allow `validate` χ² and
+  `fluxratio`.
+- Map resolution limits the Hessian near critical curves (0.04″ pixels).

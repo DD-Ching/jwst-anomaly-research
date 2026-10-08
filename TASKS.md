@@ -12,7 +12,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - parity and flux-ratio checks for the catalogued systems (DJA photometry against model magnification ratios);
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
-   - exotic screens (D-031): SMACS null. Run them per cluster (El Gordo, Abell 2744, Sunrise, then HFF/RELICS).
+   - exotic screens (D-031, D-032): SMACS and Sunrise (radial) null. Next: El Gordo, Abell 2744, then HFF/RELICS map
+     fields via `MapLensModel` (add `MODELS` entries with `kind: maps`).
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;
