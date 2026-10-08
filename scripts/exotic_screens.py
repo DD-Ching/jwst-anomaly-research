@@ -1,6 +1,6 @@
 """Exotic-lens screens on a lensing-cluster field (docs/exotic_lensing.md; D-031).
 
-Two model-assisted screens for the patterns the literature predicts for exotic lenses. Every hit is
+Three model-assisted screens for patterns the literature predicts for exotic lenses. Every hit is
 a *candidate for vetting* (``/vet-candidate``), never evidence: each screen names the ordinary
 effects that produce the same pattern, and tests the cheap ones itself.
 
@@ -573,6 +573,8 @@ def aperture_filter(x, kind: str, x_min: float) -> np.ndarray:
         with np.errstate(over="ignore"):
             q = np.tanh(xs) / xs / (1.0 + np.exp(6.0 - 150.0 * x) + np.exp(-47.0 + 50.0 * x))
     elif kind == "pointmass":
+        if x_min <= 0:
+            raise ValueError("the pointmass filter needs an inner radius > 0")
         q = 1.0 / np.maximum(x, x_min) ** 2
     elif kind == "tophat":
         q = np.ones_like(x)
@@ -631,6 +633,8 @@ def shear_responsivity(eps: np.ndarray, g: np.ndarray) -> tuple[float, float]:
     x = ag[ok]
     r = float(np.dot(x, y) / np.dot(x, x))
     err = float(np.std(y - r * x) / np.sqrt(np.dot(x, x)))
+    if not (0.0 < r <= 1.5 and r > 3.0 * err):  # a noise-dominated or unphysical R would
+        raise ValueError(f"shear responsivity R = {r:.3f} ± {err:.3f} is not usable")  # add shear
     return r, err
 
 
@@ -652,8 +656,9 @@ def shear_sources(
     shear is R g, with R from :func:`shear_responsivity` on the used rows unless
     ``responsivity`` is given. Diffraction-spike segments (:func:`spike_segments`, with
     ``extra`` stars; D-043) are dropped: spikes point radially at their star, the W1 sign.
-    ``counts["e_all"]`` holds ε of every resolved row, corrected where κ < 1 and |g| < 1 (cuts
-    on S/N, ``max_g`` and lensability not applied), for injected sources."""
+    ``counts["e_all"]`` holds the corrected ε of every resolved row with κ < 1 and |g| < 1 (cuts
+    on S/N, ``max_g`` and lensability not applied) and ``counts["correctable"]`` that κ/|g| mask,
+    for injected sources."""
     snr = np.asarray(shapes["snr"], float)
     a = np.asarray(shapes["semimajor_px"], float)
     b = a * (1.0 - np.asarray(shapes["ellipticity"], float))
@@ -672,10 +677,8 @@ def shear_sources(
     r_err = float("nan")
     if responsivity is None:
         responsivity, r_err = shear_responsivity(np.where(weak, eps, np.nan), g)
-    # where the cluster shear cannot be removed (κ >= 1, |g| >= 1), keep the measured ε
-    e_all = np.where(
-        (np.abs(g) < 1.0) & (kappa < 1.0), remove_cluster_shear(eps, responsivity * g), eps
-    )
+    correctable = (np.abs(g) < 1.0) & (kappa < 1.0)
+    e_all = np.where(correctable, remove_cluster_shear(eps, responsivity * g), np.nan + 0j)
     e = np.where(weak, e_all, np.nan + 0j)
     counts = {
         "n_rows": len(shapes),
@@ -689,6 +692,7 @@ def shear_sources(
     }
     counts["e_all"] = e_all
     counts["spike"] = spike
+    counts["correctable"] = correctable
     return e, counts
 
 
@@ -751,7 +755,10 @@ def psf_sigma_px(shapes: Table) -> float:
     the narrowest objects are PSF-limited in their minor axis (``derived``)."""
     snr = np.asarray(shapes["snr"], float)
     b = np.asarray(shapes["semimajor_px"], float) * (1.0 - np.asarray(shapes["ellipticity"], float))
-    return float(np.nanpercentile(b[snr > 50], 1))
+    b = b[(snr > 50) & np.isfinite(b)]
+    if not len(b):
+        raise ValueError("no S/N > 50 source with a size to estimate the PSF from")
+    return float(np.percentile(b, 1))
 
 
 def add_shear_options(s: argparse.ArgumentParser) -> None:
@@ -791,6 +798,7 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | No
     )
     e_all = counts.pop("e_all")
     spike = counts.pop("spike")
+    correctable = counts.pop("correctable")
     use = np.isfinite(e)
     x, y = model.to_frame(np.asarray(shapes["ra"])[use], np.asarray(shapes["dec"])[use])
     gx, gy = radial_grid(args.max_radius, args.grid_arcsec)
@@ -809,6 +817,7 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | No
         "e": e,
         "e_all": e_all,
         "spike": spike,
+        "correctable": correctable,
         "use": use,
         "ap": ap,
         "xy": (x, y),

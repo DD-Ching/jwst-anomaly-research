@@ -6,7 +6,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 ## Now (owner focus 2026-10-08: wormhole / negative-mass and warp signatures only; D-047)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
    - W1: the shear screen (D-053, `exotic_screens.py shear`, `inject_shear.py`) is built; four fields null; limits
-     5.3 × 10³ / 1.1 × 10³ / 5.8 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, still blind at ≤ 2 × 10¹¹ M☉. Next:
+     5.3 × 10³ / 1.1 × 10³ / 6.0 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, still blind at ≤ 2 × 10¹¹ M☉. Next:
      lower the B-mode floor (Abell 2744 max S_× 4.21: PSF-anisotropy model from stars, blend rejection, drop edge
      apertures with < 50 % coverage); add SMACS 0723 and El Gordo when DJA photo-z is reachable (tarballs 404
      2026-10-08) and MACS0717 / Abell S1063 with photo-z (DJA v7.5, 75 MB); stack S around `radial` and orphan-pair

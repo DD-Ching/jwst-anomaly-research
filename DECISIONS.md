@@ -2589,7 +2589,7 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   "W1 negative-mass lenses (shear screen)".
 - **Responsivity.** The cluster shear removed is R g with R fitted per field (0.41–0.48): catalogue isophotal
   moments respond to shear by R, not 1. Injected images keep R of their lens-induced shape change. Fewer than 20
-  calibrating rows is an error, not R = 1.
+  calibrating rows, or an R outside (0, 1.5] or below 3σ, is an error, not R = 1.
 - **Spike veto.** Diffraction-spike segments (`spike_segments`, D-043, Gaia stars where the field uses them) are
   dropped: they point radially at their star, the W1 sign.
 - **E/B rule.** A peak counts only if p_random < 0.05 against the rotation null *and* S exceeds the field's largest
@@ -2616,10 +2616,10 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   consistent with 0.
 - Real fields: S_max 3.39 / 3.79 / 3.40 / 3.48 (Abell 2744, MACS0416, MACS1149, Abell 370), p_rot 0.58 / 0.050 /
   0.19 / 0.20; only Abell 370 exceeds its max |S_×| (3.46), and not the rotation null: null.
-- Recovered (of 800, four fields): 0, 1, 49, 250, 466 at 2 × 10¹⁰, 2 × 10¹¹, 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉
-  (radial: 0, 0, 8, 84, 156 of 1,600). 95 % limits: 5.3 × 10³, 1.1 × 10³, 5.8 × 10² deg⁻² at the top three masses
+- Recovered (of 800, four fields): 0, 1, 49, 243, 447 at 2 × 10¹⁰, 2 × 10¹¹, 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉
+  (radial: 0, 0, 8, 84, 156 of 1,600). 95 % limits: 5.3 × 10³, 1.1 × 10³, 6.0 × 10² deg⁻² at the top three masses
   (radial headline 6.1 × 10⁴, 7.0 × 10³, 4.0 × 10³).
-- Wall time 54–160 s per field (1,000 injections).
+- Wall time 80–186 s per field (1,000 injections).
 
 **Revisit if.**
 - A proper weak-lensing shape catalogue (PSF-anisotropy-corrected, calibrated) exists for these fields: the E/B

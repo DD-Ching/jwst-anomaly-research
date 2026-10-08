@@ -71,7 +71,10 @@ class ShearInjector:
         self.null = self.base["null_max"]
         self.b_max = float(np.nanmax(np.abs(self.base["s_cross"])))
         # spike segments are never painted: the real field vetoes them too
-        self.background = es.lensable_mask(shapes, model.z_lens) & ~self.base["spike"]
+        # and sources where the cluster shear cannot be removed (κ >= 1, |g| >= 1) are not painted
+        self.background = (
+            es.lensable_mask(shapes, model.z_lens) & ~self.base["spike"] & self.base["correctable"]
+        )
         shapes["_src"] = np.arange(len(shapes))  # carried into painted rows by paint_lens
         self.next_label = int(np.max(shapes["label"])) + 1
 
@@ -105,7 +108,8 @@ class ShearInjector:
                 self.model, img, self.psf, a.min_snr, a.max_g, self.r, spike_veto=False
             )
             # the catalogue's moments respond to shear by R (D-053), the painted moments by 1:
-            # keep R of the lens-induced change (an unresolved source counts as round)
+            # keep R of the lens-induced change (an unresolved source counts as round; painted
+            # sources are all correctable, so e_src is NaN only when unresolved)
             e_src = np.nan_to_num(self.e_all[np.asarray(img["_src"], int)], nan=0.0)
             e_img = e_src + self.r * (e_img - e_src)
             ok = np.isfinite(e_img)
@@ -223,6 +227,9 @@ def run_field(name: str, args) -> dict:
             "recover_tol_arcsec": args.recover_tol,
             "p_recover": ir.P_RECOVER,
             "trials_per_null": ir.BATCH,
+            "seed": args.seed,
+            "n_inject": args.n_inject,
+            "spike_stars": len(extra) if extra is not None else None,
             "screen": SHEAR_DEFAULTS
             | {k: getattr(sargs, k) for k in ("aperture_arcsec", "filter", "r_min_arcsec")}
             | {"max_radius": sargs.max_radius},
@@ -260,9 +267,10 @@ def main(argv: list[str] | None = None) -> int:
         summaries = [run_field(f, args) for f in args.fields]
     combined = ir.combine(summaries, args.mass)
 
-    def setting(s):  # the grid half-width is per field (FIELDS); everything else must agree
+    def setting(s):  # grid half-width and star table are per field; everything else must agree
         a = json.loads(json.dumps(s["assumptions"]))
         a["screen"].pop("max_radius", None)
+        a.pop("spike_stars", None)
         return a
 
     if len({json.dumps(setting(s), sort_keys=True) for s in summaries}) != 1:
