@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Orphan-pair null (e) fixed, companion-aware null (f): no deep-field excess (D-055)
+- Cloud run. Hypothesis: the D-051 flanking-field orphan excess (246 vs 211, P = 0.010) comes from null (e)'s
+  colour cell (member i only, non-finite colours in the 0–0.3 bin) or from physical companions the 10–30″
+  reference misses.
+- `pair_cells` uses both members' colour bins (unordered), a non-finite bin and a ≥ 5-pair cell floor (S/N × size
+  fallback); null (f) conditions on 3–6″ pairs. Nine fields re-run (≈ 1 min each, in parallel), orphans unchanged.
+  Deep fields: (e) P = 0.13, (f) P = 0.35; clusters P ≥ 0.13. **The excess was a null-model artefact.** Table:
+  docs/orphan_pairs.md.
+- Injections re-run (6 fields in parallel, ~4 min): no-candidate limits reproduce D-051; background-aware limits
+  tighten by ×0.76 (docs/exotic_limits.md). Orphan set unchanged, so D-051's inspected contact sheets stand.
+- Not separated: the shares of the cell changes.
+- **Handoff:** W2 next is the segmentation-map same_galaxy rule (TASKS "Now" 1); PR #78 (W1 shear) in flight.
 ## 2026-10-08: Survey-agnostic signature layer; any public dataset in scope (D-054)
 - Owner direction: find evidence of traversable wormholes / negative-mass objects or warp-drive spacetimes in any
   public dataset. `jwst_anomaly.signatures` registers W1/W2/W3/W5 (prediction, injection, screens, ordinary

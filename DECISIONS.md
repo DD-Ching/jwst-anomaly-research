@@ -2633,3 +2633,24 @@ goes through `/vet-candidate`; nulls become limits; nothing is announced outside
 **Revisit if.** MulensModel or VBMicrolensing add user-defined or negative-mass magnification; pyLIMA relicenses; a
 paper publishes a survey light-curve limit on negative-mass or Ellis lenses (compare, do not repeat); OGLE or
 KMTNet terms forbid a population reanalysis; > 10 signature modules or outside contributors need entry points.
+
+## D-055 Orphan-pair null (e) made symmetric; companion-aware null (f); the D-051 deep-field excess was a null artefact (2026-10-08)
+
+**Decision.** `orphan_pairs.pair_cells` bins colour per member and uses the unordered pair of bins; a non-finite
+colour (no valid flux, or a non-positive mean flux) has its own bin. A cell needs ≥ 5 z-overlapping reference pairs
+(`MIN_CELL_REF`, ASSUMPTION), else its S/N × size cell, else the global reference rate. A new null (f) applies the same cells to the 3–6″
+z-overlapping pairs (null (d)'s annulus). Background-aware W1/W2/point-mass limits use null (e) as fixed.
+
+**Alternatives rejected.**
+- Pair mean colour: a red + blue pair would share a cell with two neutral members, which match far more easily.
+- (f) as the limit background: it predicts more (347.5), so its limits would be less conservative.
+
+**Evidence** (`derived`; `outputs/orphan_pairs/<field>/summary.json`, `outputs/inject_pairs/limits.json`; table
+in docs/orphan_pairs.md).
+- Orphans unchanged from D-048/D-051 in all nine fields. Deep fields, 355 orphans: null (e) fixed 334.0 (P = 0.13;
+  D-051: 315.4, P = 0.015), null (f) 347.5 (P = 0.35). The D-048 clusters stay null (P ≥ 0.13).
+- Injections re-run: no-candidate limits reproduce D-051; background-aware s₉₅ 72.3 → 54.9 (docs/exotic_limits.md).
+- The symmetry, the non-finite bin and the cell floor were changed together; their shares were not measured.
+
+**Revisit if.** A run gives P < 0.05 under both (e) and (f), or a segmentation-map same_galaxy rule changes the
+orphan counts.
