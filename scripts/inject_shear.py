@@ -4,8 +4,9 @@ The simulated lenses of ``inject_radial.py`` (D-049: ``paint_lens``, lens of mas
 cluster redshift, the field's own background rows lensed, blends, detection floor), measured with
 the catalogue aperture-mass screen of ``exotic_screens.py shear`` instead of ``radial``. One
 difference (ASSUMPTION, conservative): only rows whose shape can be corrected are lensed, i.e.
-resolved after PSF deconvolution, not spike segments, and with κ < 1, |g| < 1, |R g| < 1; the S/N
-and ``max_g`` cuts apply to the painted images, since magnification and position change both. The
+resolved after PSF deconvolution, not spike segments, and with κ < 1, |g| < 1, |R g| < 1; the S/N,
+``max_g`` and spike-segment cuts apply to the painted images, since magnification and position
+change all three. The
 radial injections also lens unresolved rows, so the efficiency ratio mixes screen power with
 this (docs/exotic_limits.md caveats). The efficiencies decide whether the shear screen replaces
 ``radial`` for W1 (D-050).
@@ -14,13 +15,13 @@ Recovery (ASSUMPTIONs): the largest S of the screen's grid centres within ``--re
 injected centre has ``p_random`` < 0.05, i.e. fewer than 5 % of the rotation-null draws reach that
 value anywhere in the field, *and* exceeds the real field's largest B-mode excursion |S_×| (D-053:
 the real E and B maps have the same heavier-than-rotation tails, so shape systematics, not the
-rotation null, set the floor; the real field is null under the same rule). Each batch of 10
-trials draws its own ``--n-random`` rotation null of the *real* field (the injected rows change
-the field maximum only near the lens; ASSUMPTION). Rows that ``paint_lens`` keeps use the real
-field's corrected ellipticities. A painted image gets its source's corrected ε plus R times the
-change of the raw (measured) moments between image and source, because the catalogue's isophotal
-moments respond to shear by R ~ 0.45 (D-053); the sum is linear and |ε| capped at 0.99
-(ASSUMPTION; how often the cap binds is not measured).
+rotation null, set the floor; the real field is null under the same rule). Each batch of 10 trials
+draws its own rotation null (``SHEAR_DEFAULTS["n_random"]`` draws, not a CLI option) of the *real*
+field (the injected rows change the field maximum only near the lens; ASSUMPTION). Rows that
+``paint_lens`` keeps use the real field's corrected ellipticities. A painted image gets its source's
+corrected ε plus R times the change of the raw (measured) moments between image and source, because
+the catalogue's isophotal moments respond to shear by R ~ 0.45 (D-053); the sum is linear and |ε|
+capped at 0.99 (ASSUMPTION; how often the cap binds is not measured).
 
 Everything injected is ``simulated``; efficiencies and limits are ``derived``.
 """
@@ -35,7 +36,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
-from astropy.table import Table
+from astropy.table import Table, vstack
 
 from jwst_anomaly import paths, schema
 
@@ -102,6 +103,20 @@ class ShearInjector:
         )
         shapes["_src"] = np.arange(len(shapes))  # carried into painted rows by paint_lens
         self.next_label = int(np.max(shapes["label"])) + 1
+        # painted images face the real field's spike veto: the field's spike segments go in with
+        # them so the spike axes are estimated as on the real field (ASSUMPTION: the vetoed real
+        # segments dominate that estimate)
+        self.extra = extra
+        self.spike_ref = self._spike_cols(shapes[self.base["spike"]])
+
+    @staticmethod
+    def _spike_cols(t: Table) -> Table:
+        return Table({k: np.asarray(t[k], float) for k in ("ra", "dec", "pa_obs")})
+
+    def spike_veto(self, img: Table) -> np.ndarray:
+        """Painted rows that ``spike_segments`` would veto on the real field."""
+        both = vstack([self.spike_ref, self._spike_cols(img)])
+        return es.spike_segments(both, self.shapes, self.extra)[len(self.spike_ref) :]
 
     def draw_null(self, rng) -> None:
         self.null = self.ap.null_max(self.e[self.use], self.args.n_random, rng)
@@ -134,7 +149,7 @@ class ShearInjector:
             )
             src = np.asarray(img["_src"], int)
             e_img = np.where(
-                np.isfinite(e_img),
+                np.isfinite(e_img) & ~self.spike_veto(img),
                 injected_ellipticity(self.e_all[src], c["eps"], self.eps[src], self.r),
                 np.nan + 0j,
             )

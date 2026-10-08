@@ -91,3 +91,32 @@ def test_a_massive_w1_lens_is_recovered_and_no_lens_is_not():
     none = np.full(len(shapes), np.nan)  # no lensable rows: nothing painted
     miss = inj.trial(15.0, -10.0, none, SCALE)
     assert miss["n_lensed"] == 0 and miss["s_best"] < hit["s_best"]
+
+
+def test_painted_images_on_a_spike_axis_are_vetoed_like_real_segments():
+    from astropy import units as u
+    from astropy.coordinates import SkyCoord
+    from astropy.table import Table
+
+    model, shapes, args = _field()
+    star = SkyCoord(shapes["ra"][0], shapes["dec"][0], unit="deg")
+    shapes["mag"][0], shapes["is_extended"][0] = 16.0, False  # spikes reach ~19"
+    for i, sep in enumerate(np.arange(2.0, 10.0), start=1):  # real segments along PA 0 (north)
+        c = star.directional_offset_by(0.0 * u.deg, sep * u.arcsec)
+        shapes["ra"][i], shapes["dec"][i], shapes["pa_obs"][i] = c.ra.deg, c.dec.deg, 0.0
+        shapes["ellipticity"][i] = 0.6
+    inj = ish.ShearInjector(model, shapes, args, psf_sigma=1.0)
+    assert inj.base["spike"][1:9].all() and len(inj.spike_ref) >= 8
+    # painted: on the north axis and aligned (vetoed); 30 deg off every axis, pointing at the star
+    pas = [0.0, 30.0, 0.0]
+    pos = [star.directional_offset_by(pa * u.deg, 6.5 * u.arcsec) for pa in (180.0, 30.0)]
+    pos.append(star.directional_offset_by(0.0 * u.deg, 40.0 * u.arcsec))  # beyond the spike
+    img = Table(
+        {
+            "ra": [c.ra.deg for c in pos],
+            "dec": [c.dec.deg for c in pos],
+            "pa_obs": pas,
+            "label": [10**6, 10**6 + 1, 10**6 + 2],
+        }
+    )
+    np.testing.assert_array_equal(inj.spike_veto(img), [True, False, False])
