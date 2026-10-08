@@ -92,12 +92,14 @@
   "bricks": {
     "query": "SELECT brickname, ra1, ra2, dec1, dec2, nexp_r, nexp_z, galdepth_z FROM ls_dr10.bricks_s WHERE survey_primary = 1 AND nexp_z > 0",
     "bytes": 23535682,
-    "sha256": "784df2df9454a3097d1d602d129ffbc746e8951f766a3ad67784de7ce4f743f9",
-    "rows": 332581
+    "sha256": "3c1eec9d45521b3b985dc4a13ecfb0fd7e36223378734b8ea031026ef3aedf52",
+    "rows": 332581,
+    "sha256_raw": "784df2df9454a3097d1d602d129ffbc746e8951f766a3ad67784de7ce4f743f9",
+    "sha256_of": "sorted rows: brickname,ra1,ra2,dec1,dec2,nexp_r,nexp_z,galdepth_z"
   },
   "tractor": {
-    "sha256": "6845e4cba24101d5c57650c786454fd6e954903b37a3ea60451c94ee8e5c9d30",
-    "rows": 547,
+    "sha256": "bdb02eca5ce479a715b3a1994f1a3653ae73c4e74e8d7f79ea881ab21b2dfdd6",
+    "rows": 542,
     "sha256_of": "sorted ls_id,ra,dec,type,mag_z",
     "source": "Legacy Surveys DR10 Tractor boxes (Data Lab TAP)",
     "box_arcsec": 5.0

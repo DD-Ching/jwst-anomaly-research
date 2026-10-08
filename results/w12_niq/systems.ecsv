@@ -27,12 +27,12 @@
 # - {name: different_z, datatype: bool}
 # meta: !!omap
 # - dropped:
-#     cluster-lens component rows: 2
 #     duplicates: 2
+#     lens rows outside the pair test (cluster components, lensed galaxies): 6
 #     no catalogued separation: 0
 #     no coordinates: {}
-#     non-pair classifications (incl. vetoed rejections): 284
-#     sep_cat > 3.0 arcsec: 184
+#     non-pair classifications (incl. vetoed rejections): 283
+#     sep_cat > 3.0 arcsec: 181
 # - {provenance: derived}
 # - {source: scripts/w12_niq.py screen (D-056 test on rejected pairs)}
 # schema: astropy-2.0
@@ -69,7 +69,6 @@ J0401-2514 60.4504 -25.2439 1.32 1.45 nan control Lemon2023 """lens""" 23.706072
 J0405-3730 61.2721 -37.5128 3.585 1.7 nan control Lemon2023 """lens""" 23.432194 20.368124006376824 24.216432512983644 """blended""" """""" False nan False False False True False False nan False
 J0416-5606 64.1783 -56.1073 1.45 1.04 1.0356267689223828 control Lemon2023 """lens""" 23.531904 20.86487551693306 23.031161441314254 """too close""" """""" False -0.48549899999999724 True False True True True False nan False
 J0440-0905 70.0482 -9.0911 2.105 1.69 nan control Lemon2023 """lens""" 23.509026 20.12851053831052 22.963375191655704 """blended""" """""" False nan False False False True True False nan False
-J0500-5534 75.1017 -55.5796 0.62 2.36 nan control Lemon2023 """lensed gal.""" 23.507057 16.46816718618909 19.073668807929526 """blended""" """""" False nan False False False True True False nan False
 J0504-2446 76.1616 -24.7752 0.771 2.05 nan control Lemon2023 """lens""" 23.64244 18.061969924373834 19.92965653347298 """blended""" """""" False nan False False False True True False nan False
 J0526-3933 81.547 -39.563 2.41 1.41 1.4163995586644598 control Lemon2023 """lens""" 23.58859 20.602456784229197 23.72644011438432 """too close""" """position rounded""" False -0.45519000000000176 True False True True False False nan False
 J0527-2431 81.7608 -24.5328 1.437 1.46 1.454285199234696 rejected Lemon2023 """UQP""" 23.540545 20.118221970057313 22.270653909443826 """too close""" """LS maskbits""" False -0.3961169999999967 True False True True True False nan False

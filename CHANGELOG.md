@@ -4,7 +4,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-08: W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them (D-064)
 - Hypothesis: a dark deflector hides among pairs rejected as lenses for lack of a lens galaxy (Lemon 2023 UQP/QSO
-  pair; SQLS "no lensing object", "QSO pair", "binary"). 124 rejected and 108 control lenses (≤ 3″) went through the
+  pair; SQLS "no lensing object", "QSO pair", "binary"). 124 rejected and 107 control lenses (≤ 3″) went through the
   D-056 chain.
 - **Control efficiency 0 / 5** (1.9–2.6″; lens light blended into the images, fitted as PSFs): an LS "none" at these
   separations carries no information. Rejected: 24 "none". Of these, 10 are colour-mismatched, 2 are catalogued

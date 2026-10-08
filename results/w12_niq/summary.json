@@ -92,8 +92,10 @@
   "bricks": {
     "query": "SELECT brickname, ra1, ra2, dec1, dec2, nexp_r, nexp_z, galdepth_z FROM ls_dr10.bricks_s WHERE survey_primary = 1 AND nexp_z > 0",
     "bytes": 23535682,
-    "sha256": "784df2df9454a3097d1d602d129ffbc746e8951f766a3ad67784de7ce4f743f9",
-    "rows": 332581
+    "sha256": "3c1eec9d45521b3b985dc4a13ecfb0fd7e36223378734b8ea031026ef3aedf52",
+    "rows": 332581,
+    "sha256_raw": "784df2df9454a3097d1d602d129ffbc746e8951f766a3ad67784de7ce4f743f9",
+    "sha256_of": "sorted rows: brickname,ra1,ra2,dec1,dec2,nexp_r,nexp_z,galdepth_z"
   },
   "fj_calibration": {
     "a": 20.41,
@@ -127,18 +129,20 @@
     "dz_tol": 0.01,
     "sep_max": 3.0,
     "sep_match": 0.5,
-    "dedup_arcsec": 3.0
+    "dedup_arcsec": 3.0,
+    "binary_arcsec": 3.0,
+    "companion_tol": 1.0
   },
-  "n_systems": 232,
+  "n_systems": 231,
   "dropped": {
     "no coordinates": {},
     "duplicates": 2,
-    "non-pair classifications (incl. vetoed rejections)": 284,
-    "cluster-lens component rows": 2,
+    "non-pair classifications (incl. vetoed rejections)": 283,
+    "lens rows outside the pair test (cluster components, lensed galaxies)": 6,
     "no catalogued separation": 0,
-    "sep_cat > 3.0 arcsec": 184
+    "sep_cat > 3.0 arcsec": 181
   },
-  "n_covered": 169,
+  "n_covered": 168,
   "rejected": {
     "n_all": 124,
     "n_covered": 88,
@@ -160,10 +164,10 @@
     "none_untestable": 11
   },
   "control": {
-    "n_all": 108,
-    "n_covered": 81,
+    "n_all": 107,
+    "n_covered": 80,
     "status": {
-      "blended": 47,
+      "blended": 46,
       "none": 5,
       "too close": 29
     },

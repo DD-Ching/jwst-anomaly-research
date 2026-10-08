@@ -60,10 +60,14 @@ INPUTS = {
 }
 HENNAWI = "J/AJ/131/1/binqso"  # binary-quasar catalogue for vetting (Hennawi et al. 2006)
 LEMON_REJECTED = {"UQP", "UQP (?)", "QSO pair"}
-LEMON_CONTROL = {"lens", "quad", "lens (?)", "lensed gal."}
+LEMON_CONTROL = {"lens", "quad", "lens (?)"}
+# lenses the quasar pair test cannot decide (extended images): they promote a merged rejection to
+# control, then leave the sample
+LEMON_OTHER_LENS = {"lensed gal."}
 # SQLS comments that classify a candidate as something other than a quasar pair or a lens
+# ("Sngle QSO" is a typo in J/AJ/140/403/table2)
 SQLS_NONPAIR = re.compile(
-    r"qso\s*\+\s*(star|galaxy|unknown)|different sed|not qso|single qso", re.I
+    r"qso\s*\+\s*(star|galaxy|unknown)|different sed|not qso|s(i)?ngle qso", re.I
 )
 # D-056 calibration (LS z; 605 galaxy-selected lenses; docs/exotic_limits.md), reused unchanged
 D056_FJ = lenscats.FJCalibration(a=20.41, k=0.67, slope=-10.0, rms=0.88, n=605, band="ls_z")
@@ -86,6 +90,11 @@ class NiqParams:
     sep_match: float = 0.5
     # entries closer than this in two tables are one system (merged transitively)
     dedup_arcsec: float = 3.0
+    # Hennawi et al. 2006 binary match radius around the catalogued position
+    binary_arcsec: float = 3.0
+    # an SQLS companion row belongs to the primary row above it when their distance equals theta
+    # within this tolerance
+    companion_tol: float = 1.0
 
 
 P = NiqParams()
@@ -230,14 +239,15 @@ def sqls_redshifts(t: Table, r) -> tuple[float, float]:
     za, zb = comment_z_pair(r["Com"])
     if np.isfinite(za):
         return za, zb
-    k = r.index
-    prev = t[k - 1] if k > 0 else None
-    if prev is not None and not np.isfinite(_float(prev["theta"])) and not prev["Com"].strip():
-        theta = _float(r["theta"])
-        (ra1, de1), (ra2, de2) = sqls_radec(t, prev), sqls_radec(t, r)
+    theta = _float(r["theta"])
+    k = r.index - 1
+    while k >= 0 and np.isfinite(_float(t[k]["theta"])):  # skip earlier companions
+        k -= 1
+    if k >= 0 and not t[k]["Com"].strip() and np.isfinite(theta):
+        (ra1, de1), (ra2, de2) = sqls_radec(t, t[k]), sqls_radec(t, r)
         d = SkyCoord(ra1, de1, unit="deg").separation(SkyCoord(ra2, de2, unit="deg")).arcsec
-        if np.isfinite(theta) and abs(d - theta) < 1.0:
-            return _sqls_z(prev), _sqls_z(r)
+        if abs(d - theta) < P.companion_tol:
+            return _sqls_z(t[k]), _sqls_z(r)
     return _sqls_z(r), np.nan
 
 
@@ -277,10 +287,10 @@ def build_sample(tables: dict[str, Table]) -> Table:
                     "rejected"
                     if cls in LEMON_REJECTED
                     else "control"
-                    if cls in LEMON_CONTROL
-                    else "nonpair"
-                    if cls
+                    if cls in LEMON_CONTROL | LEMON_OTHER_LENS
                     else ""
+                    if not cls or "?" in cls  # undecided classes neither count nor veto
+                    else "nonpair"
                 )
                 ra, dec, name, z, sep = (
                     _float(r["RAJ2000"]),
@@ -301,7 +311,8 @@ def build_sample(tables: dict[str, Table]) -> Table:
             if group and not np.isfinite(ra):
                 dropped[label] = dropped.get(label, 0) + 1
             elif group:
-                comp = "component" in comment.lower()  # rows of one cluster-scale lens
+                # rows of one cluster-scale lens, and lensed galaxies: lenses outside the test
+                comp = "component" in comment.lower() or comment in LEMON_OTHER_LENS
                 rows.append((name, ra, dec, z, z2, sep, group, label, comment, comp))
     s = Table(
         rows=rows,
@@ -334,7 +345,7 @@ def build_sample(tables: dict[str, Table]) -> Table:
         "no coordinates": dropped,
         "duplicates": int(n_dup),
         "non-pair classifications (incl. vetoed rejections)": int(nonpair.sum()),
-        "cluster-lens component rows": int(comp.sum()),
+        "lens rows outside the pair test (cluster components, lensed galaxies)": int(comp.sum()),
         "no catalogued separation": int((~comp & nosep).sum()),
         f"sep_cat > {P.sep_max} arcsec": int((~comp & ~nosep & wide).sum()),
     }
@@ -373,14 +384,19 @@ def dedup(s: Table) -> Table:
         if s["group"][k] != "control" and np.any(lens):
             s["group"][k] = "control"
             s["comment"][k] += " | listed as lens elsewhere"
-        elif s["group"][k] == "rejected" and np.any(s["group"][members] == "nonpair"):
-            s["group"][k] = "nonpair"  # another catalogue classified it (star, galaxy, SED)
+        elif s["group"][k] == "rejected" and np.any(
+            (s["group"][members] == "nonpair") & (s["catalogue"][members] == "Lemon2023")
+        ):
+            # Lemon classified the whole system (star, galaxy, projected); an SQLS non-pair row
+            # describes another companion, so it never vetoes
+            s["group"][k] = "nonpair"
         for m in members[1:]:  # keep the merged rows' vetting information
             s["comment"][k] += f" | {s['catalogue'][m]}: {s['comment'][m]}"
-            if not np.isfinite(s["z_source"][k]) and np.isfinite(s["z_source"][m]):
-                s["z_source"][k] = s["z_source"][m]
+            # redshifts travel as a pair from one member, never mixed across catalogues
             if not np.isfinite(s["z2"][k]) and np.isfinite(s["z2"][m]):
-                s["z2"][k] = s["z2"][m]
+                s["z_source"][k], s["z2"][k] = s["z_source"][m], s["z2"][m]
+            elif not np.isfinite(s["z_source"][k]) and np.isfinite(s["z_source"][m]):
+                s["z_source"][k] = s["z_source"][m]
             if not np.isfinite(s["sep_cat"][k]) and np.isfinite(s["sep_cat"][m]):
                 s["sep_cat"][k] = s["sep_cat"][m]
         keep.append(k)
@@ -425,7 +441,10 @@ def _coords(ra_col, dec_col) -> tuple[np.ndarray, np.ndarray]:
     de = np.array([_float(x) for x in dec_col])
     rs = np.array([str(x).strip() for x in ra_col])
     ds = np.array([str(x).strip() for x in dec_col])
-    todo = np.flatnonzero(~(np.isfinite(ra) & np.isfinite(de)) & (rs != "") & (ds != ""))
+    half = np.isfinite(ra) != np.isfinite(de)
+    if np.any(half & (rs != "") & (ds != "")):
+        raise ValueError("mixed decimal/sexagesimal coordinates in one row")
+    todo = np.flatnonzero(~np.isfinite(ra) & ~np.isfinite(de) & (rs != "") & (ds != ""))
     if len(todo):
         try:
             c = SkyCoord(rs[todo], ds[todo], unit=("hourangle", "deg"))
@@ -435,11 +454,12 @@ def _coords(ra_col, dec_col) -> tuple[np.ndarray, np.ndarray]:
     return ra, de
 
 
-def binary_match(s: Table, binq: Table, radius: float = 3.0) -> np.ndarray:
+def binary_match(s: Table, binq: Table, radius: float | None = None) -> np.ndarray:
     """Hennawi et al. 2006 binary-quasar entry within ``radius`` of the position (either quasar).
 
     Raises if the catalogue has rows but no parseable coordinate pair, so a format change cannot
     silently give "no binary"."""
+    radius = P.binary_arcsec if radius is None else radius
     hit = np.zeros(len(s), bool)
     if not len(binq) or not len(s):
         return hit
@@ -478,6 +498,19 @@ def cmd_screen(args) -> None:
     manifest.append(mb)
     s = build_sample(tables)
     bricks, bmeta = w12.load_bricks(out)
+    # row order and float format of a TAP CSV are not guaranteed: pin the sorted, formatted rows
+    bmeta["sha256_raw"] = bmeta["sha256"]
+    bmeta["sha256"] = hashlib.sha256(
+        "\n".join(
+            sorted(
+                f"{r['brickname']},{float(r['ra1']):.6f},{float(r['ra2']):.6f},"
+                f"{float(r['dec1']):.6f},{float(r['dec2']):.6f},{int(r['nexp_r'])},"
+                f"{int(r['nexp_z'])},{float(r['galdepth_z']):.4f}"
+                for r in bricks
+            )
+        ).encode()
+    ).hexdigest()
+    bmeta["sha256_of"] = "sorted rows: brickname,ra1,ra2,dec1,dec2,nexp_r,nexp_z,galdepth_z"
     check_pin("bricks", bmeta["sha256"], pins)
     cov = lenscats.brick_coverage(s, bricks)
     for c in cov.colnames:
@@ -490,8 +523,10 @@ def cmd_screen(args) -> None:
     if len(src) and len(sc):
         cs = SkyCoord(np.asarray(src["ra"], float), np.asarray(src["dec"], float), unit="deg")
         cp = SkyCoord(np.asarray(sc["ra"], float), np.asarray(sc["dec"], float), unit="deg")
-        _, idx, _, _ = cs.search_around_sky(cp, p.box * np.sqrt(2) * u.arcsec)  # idx into cs
-        near[np.unique(idx)] = True
+        icp, ics, _, _ = cs.search_around_sky(cp, p.box * np.sqrt(2) * u.arcsec)
+        dra, ddec = cp[icp].spherical_offsets_to(cs[ics])  # the query boxes, not a circle
+        inbox = (np.abs(dra.arcsec) <= p.box) & (np.abs(ddec.arcsec) <= p.box)
+        near[np.unique(ics[inbox])] = True
     src = src[near]
     tractor_sha = hashlib.sha256(
         "\n".join(

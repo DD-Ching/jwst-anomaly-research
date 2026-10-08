@@ -248,3 +248,23 @@ def test_read_tsv_refuses_a_second_resource(tmp_path):
     f.write_text("Name\tSep\n \tarcsec\n----\t---\nJ1\t2.1\t\nName\tSep\n")
     with pytest.raises(ValueError):
         niq.read_tsv(f)
+
+
+def test_sqls_nonpair_companion_does_not_veto_and_second_companion_keeps_primary_z():
+    t = Table(
+        rows=[
+            ("J120000.00+010000.0", " ", "1.500", "", ""),
+            ("J120000.10+010000.0", " ", "", "1.50", "QSO pair"),
+            ("J120000.00+010002.5", " ", "", "2.50", "QSO+star"),
+        ],
+        names=("SDSS", "f_z", "z", "theta", "Com"),
+        dtype=[str] * 5,
+    )
+    assert niq.sqls_redshifts(t, t[2])[0] == 1.5
+    s = niq.build_sample({"J/AJ/143/119/table4": t})
+    assert list(s["group"]) == ["rejected"]
+
+
+def test_coords_refuses_mixed_rows():
+    with pytest.raises(ValueError):
+        niq._coords(["150.0003"], ["+01:00:00"])
