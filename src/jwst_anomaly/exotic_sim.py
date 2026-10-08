@@ -110,11 +110,22 @@ def demagnification_onset(n: float, sign: int = 1) -> float:
     _check(n, sign)
     if sign == -1 or n <= 1:
         return math.inf
-    grid = np.geomspace(1e-3, 20.0, 4000)
-    below = np.nonzero(total_magnification(grid, n, sign) < 1.0)[0]
-    if below.size == 0:
-        return math.inf
+    # widen the bracket until the magnification drops below 1 (the onset -> inf as n -> 1+);
+    # the grid starts well below the large-n estimate 2/(n+1), where A_tot > 1
+    lo_b, hi_b = 0.01 * demagnification_onset_approx(n), 20.0
+    while True:
+        grid = np.geomspace(lo_b, hi_b, 4000)
+        below = np.nonzero(total_magnification(grid, n, sign) < 1.0)[0]
+        if below.size:
+            break
+        if hi_b > 1e12:
+            return math.inf
+        hi_b *= 100.0
     i = below[0]
+    if i == 0:
+        raise ValueError(
+            f"demagnification_onset: no bracket for n = {n} (A_tot < 1 at beta {lo_b})"
+        )
     lo, hi = np.array([grid[i - 1]]), np.array([grid[i]])
     return float(_bisect(lambda b: total_magnification(b, n, sign) - 1.0, lo, hi)[0])
 
@@ -317,11 +328,14 @@ def inject_images(
     the image's long axis, degrees east of north, assuming dx = east, dy = north). Sources inside a
     repulsive lens's umbra produce no rows.
     """
-    sx = np.atleast_1d(np.asarray(source_dx, dtype=float))
-    sy = np.atleast_1d(np.asarray(source_dy, dtype=float))
+    try:
+        sx, sy = np.broadcast_arrays(
+            np.atleast_1d(np.asarray(source_dx, dtype=float)),
+            np.atleast_1d(np.asarray(source_dy, dtype=float)),
+        )
+    except ValueError as err:
+        raise ValueError("source_dx and source_dy must broadcast to one length") from err
     fl = np.broadcast_to(np.asarray(flux, dtype=float), sx.shape)
-    if sx.shape != sy.shape:
-        raise ValueError("source_dx and source_dy must have the same length")
     ids = np.arange(sx.size) if source_id is None else np.atleast_1d(np.asarray(source_id))
     if ids.shape != sx.shape:
         raise ValueError("source_id must have one entry per source")

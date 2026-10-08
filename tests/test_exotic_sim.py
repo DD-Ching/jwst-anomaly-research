@@ -290,3 +290,13 @@ def test_bad_parameters_raise():
         es.inject_images([1.0, 2.0], [0.0, 0.0], 1.0, source_id=[7])
     with pytest.raises(ValueError):
         es.inject_light_curve([0.0], 1.0, 0.0, 1.0, 0.5, blend=1.5)
+
+
+@pytest.mark.filterwarnings("ignore:overflow encountered:RuntimeWarning")  # x**2001 far out
+def test_demagnification_onset_brackets_extreme_indices():
+    for n in (1.01, 1.002, 50.0, 2000.0):
+        b = es.demagnification_onset(n)
+        assert np.isfinite(b)
+        assert es.total_magnification(np.array([b * 0.999]), n, 1)[0] > 1.0
+        assert es.total_magnification(np.array([b * 1.001]), n, 1)[0] < 1.0
+    assert es.demagnification_onset(2000.0) < 0.01  # near the large-n estimate 2/(n+1)
