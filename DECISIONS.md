@@ -1823,4 +1823,3 @@ the CATS-fitted z = 4.419.
 **Revisit if.**
 - A spectroscopic z for system 16 is published (search the MUSE catalogues of Grillo+2016 and Treu+2016).
 - DJA publishes a MACS1149 mosaic and photo-z. v7 has none, so the radial screen here kept cluster members.
-
