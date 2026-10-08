@@ -2701,52 +2701,65 @@ in docs/orphan_pairs.md).
 **Revisit if.** A run gives P < 0.05 under both (e) and (f), or a segmentation-map same_galaxy rule changes the
 orphan counts.
 
-## D-056 W1/W2 in published lens catalogues: no lens without a visible deflector; per-lens dark-fraction limits (2026-10-08)
+## D-056 W1/W2 in published lens catalogues: per-class deflector tests; weak limits; one open quasar pair (2026-10-08)
 
 **Decision.**
-- `jwst_anomaly.lenscats` reads lenscat 1.1.3, the Euclid Q1 Discovery Engine tables and the SuGOHI list into one
-  entry layout (`observed`, pinned by sha256), merges them by position (friends-of-friends, 3″; per-entry
-  provenance in `entries`, unique `refs`) and exposes the result as a `signatures.CatalogueSurvey`
-  (`PublishedLensSurvey`). It also holds the screen's pure functions: deflector classification against a deep
-  catalogue, SIS σ, an empirical Faber–Jackson calibration and the required lens magnitude, and catalogue-position
-  checks (J2000 name vs RA/Dec, rounding step).
-- `scripts/w12_lenscats.py screen` asks Legacy Surveys DR10 Tractor (Data Lab TAP; batched box ORs, cached by
-  position) for an extended source within 1.5″ of every galaxy-scale system; `vet` runs the ordinary tests
-  cheapest-first (docs/exotic_limits.md "W1/W2 in published lens catalogues"), CDS XMatch with redMaPPer, WHL and
-  SIMBAD, cutouts and contact sheets, and the limits. Registered under W2 in `signatures`.
-- lenscat rows citing 14 cluster surveys are reset to cluster scale (`CLUSTER_SURVEY_REFS`, titles checked).
-- Result: **null.** Of 20,663 LS-covered galaxy-scale systems, 19,483 have an extended source at the position; the
-  1,180 others are all explained (position errors or rounding 329, Euclid or submm/radio centroids 155, offset
-  galaxy 304, blended point sources 330, masks 55, published lens redshift 4, cluster 1, no LS depth 1, and
-  J1329+4325, rejected by its discovery paper). Zero unexplained: f_dark < 1.5 × 10⁻⁴ (typical, all, N = 19,666) and < 8.2 × 10⁻³ (typical,
-  quasar- or submm/radio-selected, N = 366); conservative variants < 3.9 × 10⁻³ (N = 763) and < 0.14 (N = 21).
-  Nothing goes to `/vet-candidate`. W1 image geometry is not testable (no image positions in any catalogue).
+- `jwst_anomaly.lenscats` reads lenscat 1.1.3, the Euclid Q1 Discovery Engine tables and the SuGOHI list (pinned by
+  sha256). It merges them by position (3″; `entries`, `refs` keep provenance) and exposes them as a
+  `signatures.CatalogueSurvey` (`PublishedLensSurvey`). It holds the pure tests:
+  - `bright_galaxy_near` and `quasar_pair_test`;
+  - SIS σ, the Faber–Jackson fit and the required lens magnitude;
+  - position checks: J2000 name vs signed RA/Dec, and rounding that must appear on both axes.
+- `scripts/w12_lenscats.py screen | vet`.
+  - Legacy Surveys DR10 Tractor comes from Data Lab TAP, with batched box ORs split at RA 0/360 and full RA near the
+    poles, cached by position.
+  - A dark deflector is tested only where it could fail the test:
+    - lensed-quasar searches: two resolved point images ≥ 2″ apart and nothing bright enough between them;
+    - radio-interferometric searches: a bright-enough galaxy within 1.5″, else the same pair test.
+  - Galaxy-finder and single-dish sub-mm systems are insensitive by construction and get no limit.
+  - Position and mask problems are evaluated on every covered system and remove it from N.
+  - An injection deletes the deflector in systems where one was found and confirms the test then says "none".
+  - Limits are s₉₅(k) / (N × recovery), with k the open candidates detectable in that variant.
+- Thresholds are ASSUMPTIONs in `Params`: images within 3″, separation ≥ 2″, image exclusion 0.5″, lens radius 1.5″,
+  "bright enough" = typical required m_z + 2 rms, calibration match 0.5″.
+
+**Result** (`derived`; run `summary.json`). There are 20,986 galaxy-scale systems, 20,663 covered: 20,142
+galaxy-selected, 107 sub-mm, 391 quasar and 23 radio. Of the 414 covered quasar and radio systems, 295 are blended,
+75 too close, 19 are undecided by masks or positions, and 40 are decided (19 with a deflector, 21 "none").
+- The 21 "none":
+  - 14 have a lens galaxy in the literature (SIMBAD 7, published z_l 6, He et al. 2025 for HSC J2212−0103 1);
+  - 5 have a fainter galaxy at the position;
+  - 1 is near a cluster;
+  - 1 is open: SuGOHI IX 090434−005328, open only in the typical variant. Its conservative required lens (23.4) is
+    below the local depth (23.0).
+- Injection recovery: 18 of 19.
+- Limits: f_dark < 0.13 (typical, k = 1, N = 40) and < 0.35 (conservative, k = 0, N = 9).
+- Nothing goes to `/vet-candidate`. The earlier f_dark < 1.5 × 10⁻⁴ counted systems that could not fail the test and
+  is withdrawn (code review of PR #81).
 
 **Alternatives rejected.**
-- Data Lab TAP table upload and `q3c_*` in ADQL: both rejected by the service on 2026-10-08 ("Content is not allowed
-  in prolog"; parser error); the Data Lab SQL endpoint answers HTTP 500 to anonymous use. Box ORs (300 per query,
-  ~17 s) work.
-- Per-object Legacy Surveys viewer catalogue calls (one request per system, ~35k requests).
-- A physical Faber–Jackson anchor from the literature: an empirical fit on 753 visible lenses keeps the band
-  (LS z) and the selection consistent; the faint-lens margin (2 × rms) and a z_l maximisation make the conservative
-  variant.
-- Treating "no lens redshift" as "no lens": 7,657 galaxy-scale systems lack it, nearly all with a visible galaxy.
-- The Lemon et al. lensed-quasar database (HTTP 500 on 2026-10-08; its rows enter through lenscat) and HSC-SSP
-  imaging (account required).
+- Counting every covered system in N: galaxy finders and sub-mm centroids give zero sensitivity to a dark lens.
+- "Any extended source within 1.5″" as the deflector: faint neighbours and arcs pass. A deflector must be bright enough
+  for the θ_E.
+- Data Lab TAP uploads and `q3c_*` in ADQL: rejected by the service on 2026-10-08. Per-object viewer calls: 35k
+  requests.
+- Treating "no lens redshift" as "no lens".
+- The Lemon lensed-quasar database (HTTP 500 on 2026-10-08) and HSC imaging (account required).
 
-**Evidence** (`derived`; run directory summary.json, vetted.ecsv, contact sheets; ~230 cutouts inspected).
-- Catalogue defects found (they made most raw "no deflector" hits): cluster-survey rows typed "galaxy" (before the
-  fix 7,940 of 28,238 covered systems lacked an extended source); AGEL rows with the declination degrees dropped;
-  SPT rows up to 1.7° off; PS1 positions in whole RA seconds; rejected candidates kept (MJV16999, Spingola et al.
-  2019); name-based merges across lists ("5", "10").
-- FJ calibration (LS z): a = 20.43 at σ = 200 km/s and z_l = 0.5, k = 1.01, rms 0.96 mag (N = 753). Required lens
-  m_z median 19.75 (typical) and 24.05 (conservative) against a median 5σ galaxy depth of 23.29: LS DR10 cannot
-  exclude a 2σ-faint lens at the least favourable redshift for 96 % of systems.
-- Tests: `tests/test_lenscats.py` (readers, merge/dedup, refs, selection, name and rounding checks, deflector
-  classification, SIS, FJ fit, required magnitude); `tests/test_w12_lenscats.py` (selection class, SIMBAD galaxy
-  rule, limits).
+**Evidence.**
+- FJ calibration on 605 galaxy-selected lenses (LS z): a = 20.41, k = 0.67, rms 0.88 mag.
+- Median required m_z: 19.73 (typical) and 25.05 (conservative), against a median depth of 23.29.
+- Catalogue defects: cluster-survey rows typed "galaxy" (14 references), AGEL declinations, SPT positions, positions
+  rounded on both axes (394 covered), rejected candidates kept (MJV16999), name-based merges.
+- About 270 cutouts were inspected over the passes, including all 21 "none", 19 controls and 32 random
+  rounded-position systems.
+- Tests: `tests/test_lenscats.py`, `tests/test_w12_lenscats.py`. They cover a dark quasar pair reaching "none",
+  faint, close and blended cases, insensitive classes, injection recovery, RA wrap and pole boxes, signed
+  declinations, two-axis rounding and Poisson limits.
 
-**Revisit if.** Image positions become available for a large lens list (W1 geometry test); deeper wide imaging (HSC
-PDR, Euclid DR1, Rubin) covers the conservative-variant gap; a list of rejected lensed-quasar candidates
-("nearly identical quasars", binary quasars) is public — that is where dark-lens W2 pairs would hide, since
-confirmation usually requires a lens galaxy; lenscat fixes the position defects above.
+**Revisit if.**
+- HSC PDR or HST photometry is available for the 368 blended or close lensed quasars (that makes the test decisive).
+- The CHITAH lens model of 090434−005328 is checked.
+- A public list of rejected lensed-quasar candidates (binary or "nearly identical" quasars) appears: dark W2 lenses
+  would hide there.
+- A lens list publishes image positions (W1 geometry).

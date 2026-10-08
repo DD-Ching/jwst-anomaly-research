@@ -210,3 +210,15 @@ def test_merge_keeps_unique_refs(tables):
     s = lenscats.merge(tables)
     row = s[np.abs(s["ra"] - 15) < 0.01][0]
     assert row["refs"] == "slacs | SuGOHI1"
+
+
+def test_name_offset_catches_sign_errors():
+    # declination sign flipped relative to the designation
+    assert lenscats.name_position_offset("J0100+0030", 15.0, -0.51) > 3000
+    assert lenscats.name_position_offset("J0100-0030", 15.0, -0.51) < 1
+
+
+def test_position_quantum_needs_both_axes():
+    # RA on a whole 0.01 deg by chance, declination precise -> not rounded
+    assert lenscats.position_quantum_arcsec(84.57, -49.48731) == 0
+    assert lenscats.position_quantum_arcsec(84.57123, -49.48) == 0

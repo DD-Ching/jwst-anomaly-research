@@ -47,7 +47,11 @@ class Params:
     calib_z_s: float = 2.0  # source redshift for calibration lenses without one
     faint_sigma: float = 2.0  # required lens = calibration + faint_sigma * rms
     margin: float = 0.5  # mag: detectable if required mag < 5-sigma depth - margin
-    offset_radius: float = 5.0  # arcsec: catalogue position error plus theta_E (vetting)
+    calib_sep: float = 0.5  # arcsec: calibration lenses have their galaxy this close
+    image_radius: float = 3.0  # arcsec: point images of a quasar lens around the position
+    sep_min: float = 2.0  # arcsec: image pairs closer than this hide the lens in LS seeing
+    image_exclusion: float = 0.5  # arcsec: a deflector candidate is not an image
+    n_rounded_sample: int = 32  # random rounded-position systems put on a contact sheet
 
 
 def fetch_all() -> dict[str, Path]:
@@ -65,17 +69,28 @@ def load_systems(p: Params) -> tuple[Table, dict]:
     return lenscats.merge(tabs, p.merge_radius), sizes
 
 
+def box_terms(ra: float, dec: float, half_arcsec: float) -> list[str]:
+    """ADQL conditions for one box; split at RA 0/360, full RA range near the poles."""
+    h = half_arcsec / 3600
+    dpart = f"dec BETWEEN {max(dec - h, -90):.7f} AND {min(dec + h, 90):.7f}"
+    if abs(dec) + h >= 89.9:
+        return [f"({dpart})"]
+    hr = h / np.cos(np.radians(abs(dec) + h))
+    lo, hi = ra - hr, ra + hr
+    if lo < 0:
+        ranges = [(0.0, hi), (lo + 360, 360.0)]
+    elif hi >= 360:
+        ranges = [(lo, 360.0), (0.0, hi - 360)]
+    else:
+        ranges = [(lo, hi)]
+    return [f"(ra BETWEEN {a:.7f} AND {b:.7f} AND {dpart})" for a, b in ranges]
+
+
 def tap_boxes(ra, dec, half_arcsec: float) -> Table:
     """One ADQL query for many boxes (the Data Lab TAP rejects uploads and q3c in ADQL)."""
-    h = half_arcsec / 3600
-    terms = []
-    for r, d in zip(ra, dec, strict=True):
-        hr = h / max(np.cos(np.radians(d)), 1e-3)
-        terms.append(
-            f"(ra BETWEEN {r - hr:.7f} AND {r + hr:.7f}"
-            f" AND dec BETWEEN {d - h:.7f} AND {d + h:.7f})"
-        )
+    terms = [t for r, d in zip(ra, dec, strict=True) for t in box_terms(r, d, half_arcsec)]
     q = f"SELECT {TRACTOR_COLS} FROM ls_dr10.tractor WHERE " + " OR ".join(terms)
+    err = ""
     for attempt in range(4):
         try:
             r = requests.post(
@@ -140,18 +155,116 @@ def query_tractor(systems: Table, p: Params, cache: Path) -> Table:
 
 
 def calibrate(systems: Table, defl: Table, p: Params) -> lenscats.FJCalibration:
-    """FJ calibration on visible lenses with theta_E and z_lens (LS z-band magnitude)."""
-    j = {s: i for i, s in enumerate(defl["system_id"])}
-    idx = [j[s] for s in systems["system_id"]]
-    vis = np.asarray(defl["visible_deflector"], bool)[idx]
-    mag = np.asarray(defl["mag_ext"], float)[idx]
+    """FJ calibration (LS z) on galaxy-selected lenses whose catalogued lens position has an
+    extended Tractor source within ``calib_sep`` (the lens galaxy, not an arc or a quasar image)
+    and a theta_E and z_lens."""
+    vis = np.asarray(defl["visible_deflector"], bool) & (
+        np.asarray(defl["sep_ext"], float) <= p.calib_sep
+    )
+    mag = np.asarray(defl["mag_ext"], float)
     th = np.asarray(systems["theta_e"], float)
     zl = np.asarray(systems["z_lens"], float)
     zs = np.asarray(systems["z_source"], float)
     zs = np.where(np.isfinite(zs), zs, p.calib_z_s)
     use = vis & np.isfinite(mag) & np.isfinite(th) & (th > 0) & (th <= p.theta_e_max)
     use &= np.isfinite(zl) & (zl > 0.05) & (zl < zs - 0.1)
+    use &= np.asarray(systems["selection"]) == "galaxy"
     return lenscats.fit_fj(th[use], zl[use], zs[use], mag[use], band="ls_z")
+
+
+def required_mags(t: Table, theta_e, cal: lenscats.FJCalibration, p: Params) -> dict:
+    """Typical, conservative (max over z_l, z_s default 3, + faint_sigma rms) and floor
+    (conservative with theta_E floor where theta_E is unknown) required lens magnitudes."""
+    th = np.asarray(theta_e, float)
+    zs_c = np.where(np.isfinite(np.asarray(t["z_source"], float)), t["z_source"], p.z_s_default)
+    th_used = np.where(np.isfinite(th), th, p.theta_e_default)
+    cons, zcons = lenscats.required_lens_mag(th_used, zs_c, cal, n_sigma_faint=p.faint_sigma)
+    floor, _ = lenscats.required_lens_mag(
+        np.where(np.isfinite(th), th, p.theta_e_floor), zs_c, cal, n_sigma_faint=p.faint_sigma
+    )
+    zl = np.asarray(t["z_lens"], float)
+    zl_t = np.where(np.isfinite(zl), zl, p.z_l_typical)
+    zs_t = np.where(np.isfinite(np.asarray(t["z_source"], float)), t["z_source"], p.calib_z_s)
+    zl_t = np.where(zl_t < zs_t - 0.1, zl_t, np.nan)
+    typ = cal.mag(lenscats.sis_sigma(th_used, zl_t, zs_t), zl_t)
+    # faintest magnitude a deflector may have and still count as the lens: typical + 2 rms,
+    # else the conservative value, else -inf (nothing qualifies; never +inf)
+    lim = typ + p.faint_sigma * cal.rms
+    lim = np.where(np.isfinite(lim), lim, cons)
+    lim = np.where(np.isfinite(lim), lim, -np.inf)
+    return {
+        "theta_e_used": th_used,
+        "req_mag_z_typical": typ,
+        "req_mag_z": cons,
+        "req_z_l": zcons,
+        "req_mag_z_floor": floor,
+        "defl_mag_max": lim,
+    }
+
+
+def load_sources(out: Path) -> Table:
+    parts = [Table.read(f) for f in sorted((out / "tractor_cache").glob("tractor_*.ecsv"))]
+    tr = vstack([t for t in parts if len(t)], metadata_conflicts="silent")
+    tr = Table(tr, masked=False)
+    tr["type"] = np.array([str(x) for x in tr["type"]])
+    for c in ("mag_z", "galdepth_z"):
+        tr[c] = np.asarray(np.ma.filled(np.ma.asarray(tr[c], float), np.nan))
+    tr["maskbits"] = np.asarray(np.ma.filled(np.ma.asarray(tr["maskbits"], int), 0))
+    _, first = np.unique(np.asarray(tr["ls_id"]), return_index=True)
+    return tr[np.sort(first)]
+
+
+def deflector_test(t: Table, src: Table, p: Params) -> Table:
+    """The per-class test a deflector without light could fail (D-056 review).
+
+    - galaxy-selected: "insensitive" (the finder needed a galaxy at the position);
+    - submm: "insensitive" (single-dish centroids are uncertain by more than theta_E);
+    - quasar: :func:`lenscats.quasar_pair_test`;
+    - radio (interferometric positions, ASSUMPTION < theta_E): a bright-enough extended source
+      within ``lens_radius`` -> "deflector"; else with optical point sources the quasar test;
+      else "none".
+    Returns ``test_status`` in {insensitive, blended, too close, deflector, none},
+    ``theta_e_test`` and the source indices that made a "deflector" (for injection)."""
+    sel = np.asarray(t["selection"])
+    lim = np.asarray(t["defl_mag_max"], float)
+    pair = lenscats.quasar_pair_test(t, src, lim, p.image_radius, p.sep_min, p.image_exclusion)
+    ngal, _ = lenscats.bright_galaxy_near(t, src, lim, p.lens_radius)
+    status = np.array(["insensitive"] * len(t), dtype=object)
+    q = sel == "quasar"
+    status[q] = np.asarray(pair["status"])[q]
+    r = sel == "radio"
+    rad_status = np.where(
+        ngal > 0,
+        "deflector",
+        np.where(np.asarray(pair["n_images"]) > 0, np.asarray(pair["status"]), "none"),
+    )
+    status[r] = rad_status[r]
+    out = Table({"test_status": status, "theta_e_test": np.asarray(pair["theta_e"], float)})
+    out["n_images"] = pair["n_images"]
+    out["image_sep"] = pair["sep"]
+    return out
+
+
+def flags_undecided(t: Table, src: Table, p: Params) -> np.ndarray:
+    """Position and imaging problems that make the deflector test uninformative, evaluated for
+    every covered system whatever the test said."""
+    near = lenscats._neighbours(t, src, p.image_radius)
+    masked = np.array(
+        [bool(np.any((np.asarray(src["maskbits"])[idx] & MASK_BAD) > 0)) for idx, _ in near]
+    )
+    reasons = []
+    for row, m in zip(t, masked, strict=True):
+        r = []
+        if row["name_offset"] > 5:
+            r.append("position error (name vs RA/Dec)")
+        if row["pos_quantum"] > p.lens_radius:
+            r.append("position rounded")
+        if row["catalogues"] == "euclid_q1":
+            r.append("Euclid host position")
+        if m:
+            r.append("LS maskbits")
+        reasons.append("; ".join(r))
+    return np.array(reasons, dtype=object)
 
 
 def cmd_screen(args, p: Params) -> None:
@@ -164,49 +277,20 @@ def cmd_screen(args, p: Params) -> None:
         np.asarray(systems["theta_e"], float) > p.theta_e_max
     )
     counts["galaxy_scale"] = int(galaxy.sum())
-    no_info = lenscats.select_no_lens_info(systems, p.theta_e_max)
-    counts["galaxy_scale_no_lens_z_no_lens_mag"] = int(no_info.sum())
+    counts["galaxy_scale_no_lens_z_no_lens_mag"] = int(
+        lenscats.select_no_lens_info(systems, p.theta_e_max).sum()
+    )
     gs = systems[galaxy]
-    src = query_tractor(gs, p, out / "tractor_cache")
+    gs["selection"] = [selection_class(r) for r in gs]
+    query_tractor(gs, p, out / "tractor_cache")
+    src = load_sources(out)
     defl = lenscats.classify_deflectors(gs, src, p.lens_radius, p.box)
     cov = np.asarray(defl["covered"], bool)
-    vis = np.asarray(defl["visible_deflector"], bool)
-    counts["ls_covered"] = int(cov.sum())
-    counts["ls_visible_deflector"] = int((cov & vis).sum())
-    counts["ls_no_extended_within_lens_radius"] = int((cov & ~vis).sum())
-    ni = no_info[galaxy]
-    counts["no_lens_info_covered"] = int((ni & cov).sum())
-    counts["no_lens_info_no_extended"] = int((ni & cov & ~vis).sum())
-
     cal = calibrate(gs, defl, p)
-    th = np.asarray(gs["theta_e"], float)
-    zs = np.asarray(gs["z_source"], float)
-    zs = np.where(np.isfinite(zs), zs, p.z_s_default)
-    th_used = np.where(np.isfinite(th), th, p.theta_e_default)
-    req, zreq = lenscats.required_lens_mag(th_used, zs, cal, n_sigma_faint=p.faint_sigma)
-    req_floor, _ = lenscats.required_lens_mag(
-        np.where(np.isfinite(th), th, p.theta_e_floor), zs, cal, n_sigma_faint=p.faint_sigma
-    )
-    # typical ordinary lens: catalogue z_l (else z_l_typical), z_s (else calib_z_s), no extra
-    # faintness; the conservative columns above maximise over z_l and add faint_sigma * rms
-    zl = np.asarray(gs["z_lens"], float)
-    zl_t = np.where(np.isfinite(zl), zl, p.z_l_typical)
-    zs_t = np.where(np.isfinite(np.asarray(gs["z_source"], float)), gs["z_source"], p.calib_z_s)
-    zl_t = np.where(zl_t < zs_t - 0.1, zl_t, np.nan)
-    req_typ = cal.mag(lenscats.sis_sigma(th_used, zl_t, zs_t), zl_t)
-    depth = np.asarray(defl["depth_z"], float)
+
     res = gs.copy()
     for c in defl.colnames[1:]:
         res[c] = defl[c]
-    res["theta_e_used"] = th_used
-    res["z_s_used"] = zs
-    res["req_mag_z"] = req
-    res["req_z_l"] = zreq
-    res["req_mag_z_floor"] = req_floor
-    res["detectable"] = req < depth - p.margin
-    res["detectable_floor"] = req_floor < depth - p.margin
-    res["req_mag_z_typical"] = req_typ
-    res["detectable_typical"] = req_typ < depth - p.margin
     res["name_offset"] = [
         lenscats.name_position_offset(n, r, d)
         for n, r, d in zip(res["name"], res["ra"], res["dec"], strict=True)
@@ -214,20 +298,61 @@ def cmd_screen(args, p: Params) -> None:
     res["pos_quantum"] = [
         lenscats.position_quantum_arcsec(r, d) for r, d in zip(res["ra"], res["dec"], strict=True)
     ]
-    res["selection"] = [selection_class(r) for r in res]
+    # first pass with catalogue theta_E (needed for the deflector magnitude limit)
+    for k, v in required_mags(res, res["theta_e"], cal, p).items():
+        res[k] = v
+    test = deflector_test(res, src, p)
+    # quasar pairs: theta_E = half the image separation where the catalogue has none
+    th = np.where(
+        np.isfinite(np.asarray(res["theta_e"], float)), res["theta_e"], test["theta_e_test"]
+    )
+    for k, v in required_mags(res, th, cal, p).items():
+        res[k] = v
+    test = deflector_test(res, src, p)
+    for c in test.colnames:
+        res[c] = test[c]
+    ngal, _ = lenscats.bright_galaxy_near(res, src, res["defl_mag_max"], p.lens_radius)
+    res["visible_bright"] = ngal > 0
+    depth = np.asarray(res["depth_z"], float)
+    res["detectable_typical"] = res["req_mag_z_typical"] < depth - p.margin
+    res["detectable_floor"] = res["req_mag_z_floor"] < depth - p.margin
+    res["undecided"] = flags_undecided(res, src, p)
     res.meta.update(
         provenance=schema.Provenance.DERIVED.value, params=asdict(p), calibration=asdict(cal)
     )
     res.write(out / "systems.ecsv", overwrite=True)
-    surv = res[cov & ~vis]
-    surv.write(out / "no_visible_deflector.ecsv", overwrite=True)
-    counts["no_extended_and_detectable"] = int(np.sum(surv["detectable"]))
-    counts["no_extended_and_detectable_floor"] = int(np.sum(surv["detectable_floor"]))
-    counts["covered_detectable_fraction"] = float(np.mean(res["detectable"][cov]))
-    counts["covered_detectable_fraction_floor"] = float(np.mean(res["detectable_floor"][cov]))
-    counts["no_extended_and_detectable_typical"] = int(np.sum(surv["detectable_typical"]))
-    counts["covered_detectable_fraction_typical"] = float(np.mean(res["detectable_typical"][cov]))
-    counts["median_depth_z"] = float(np.nanmedian(depth[cov]))
+
+    sel = np.asarray(res["selection"])
+    vis_any = np.asarray(res["visible_deflector"], bool)
+    vis = np.asarray(res["visible_bright"], bool)
+    counts.update(
+        ls_covered=int(cov.sum()),
+        ls_extended_within_lens_radius=int((cov & vis_any).sum()),
+        ls_bright_enough_within_lens_radius=int((cov & vis).sum()),
+        selection_galaxy_scale={c: int((sel == c).sum()) for c in SELECTIONS},
+        selection_covered={c: int((cov & (sel == c)).sum()) for c in SELECTIONS},
+        median_depth_z=float(np.nanmedian(depth[cov])),
+        depth_z_p05_p50_p95=[float(x) for x in np.nanpercentile(depth[cov], [5, 50, 95])],
+        median_req_mag_z_typical=float(np.nanmedian(np.asarray(res["req_mag_z_typical"])[cov])),
+        median_req_mag_z_floor=float(np.nanmedian(np.asarray(res["req_mag_z_floor"])[cov])),
+        covered_detectable_fraction_typical=float(np.mean(res["detectable_typical"][cov])),
+        covered_detectable_fraction_floor=float(np.mean(res["detectable_floor"][cov])),
+        undecided_covered=int((cov & (np.asarray(res["undecided"]) != "")).sum()),
+        test_status_by_selection={
+            c: dict(
+                zip(
+                    *[
+                        x.tolist()
+                        for x in np.unique(
+                            np.asarray(res["test_status"])[cov & (sel == c)], return_counts=True
+                        )
+                    ],
+                    strict=True,
+                )
+            )
+            for c in SELECTIONS
+        },
+    )
     summary = {
         "counts": counts,
         "calibration": asdict(cal),
@@ -236,8 +361,10 @@ def cmd_screen(args, p: Params) -> None:
         "provenance": schema.Provenance.DERIVED.value,
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=2))
-    print(json.dumps(summary, indent=2))
+    print(json.dumps(summary["counts"], indent=1))
 
+
+SELECTIONS = ("galaxy", "quasar", "radio", "submm")
 
 # Cluster and object catalogues for vetting (CDS XMatch, one request per catalogue).
 VET_XMATCH = {
@@ -260,35 +387,37 @@ def is_simbad_galaxy(main_id: str, main_type: str) -> bool:
 
 
 SIMBAD_CLUSTER_TYPES = {"ClG", "GroupG", "CGG", "PCG", "protoClG", "BrightestCG", "SuperClG"}
-# Sub-mm / radio lens surveys: the catalogued position is the source centroid, not the lens.
-_SUBMM_RADIO = re.compile(
-    r"\bSPT|ACT-S|H-?ATLAS|HeLMS|HELMS|\bHERS\d|HerBS|NKC2016|ACS2016|PLCK|\bCLASS\b|JVAS|"
-    r"\bMG\d|Negrello|Amvrosiadis|Nayyeri"
+# Single-dish sub-mm lens surveys: the catalogued position is a centroid uncertain by arcsec.
+_SUBMM = re.compile(
+    r"\bSPT|ACT-S|H-?ATLAS|HeLMS|HELMS|\bHERS\d|HerBS|NKC2016|ACS2016|PLCK|Negrello|"
+    r"Amvrosiadis|Nayyeri"
 )
+# Radio-interferometric lens surveys (VLA / VLBI positions, ASSUMPTION: error < theta_E).
+_RADIO = re.compile(r"\bCLASS\b|JVAS|\bMG\d|\bB\d{4}[+-]\d|SML2019|mJIVE|MJV\d")
 
 
 # Systems the catalogue tests leave open, settled by reading the discovery paper (D-056).
 LITERATURE = {
     "J1329+4325": "[SML2019] MJV16999: mJIVE-20 VLBI milli-lens candidate rejected as a core-jet "
     "source by Spingola et al. 2019 (arXiv:1811.09152, sect. 4.1.12)",
+    "221216-010345": "HSC J2212-0103: likely lensed quasar; He et al. 2025 (arXiv:2509.03858, "
+    "lens-light table) fit a lens galaxy in HSC with i = 22.40, r = 23.30",
 }
 
 
 def selection_class(r) -> str:
-    """How a system was found: "quasar" (lensed-quasar searches), "submm/radio" (flux- or
-    radio-selected; lens light plays no part) or "galaxy" (finders run around galaxies, or not
-    known). Only the first two could have selected a lens without a visible deflector."""
+    """How a system was found: "quasar" (lensed-quasar searches), "radio" (interferometric
+    radio searches), "submm" (single-dish sub-mm flux selection) or "galaxy" (finders run
+    around galaxies, or unknown). Only quasar and radio searches can select a lens without a
+    visible deflector *and* locate it to better than theta_E."""
     text = " ".join(str(r[c]) for c in ("name", "entries", "refs", "system_type"))
-    if _SUBMM_RADIO.search(text):
-        return "submm/radio"
+    if _SUBMM.search(text):
+        return "submm"
+    if _RADIO.search(text):
+        return "radio"
     if "lensedquasars" in text or "GQ" in str(r["system_type"]):
         return "quasar"
     return "galaxy"
-
-
-def is_submm_radio(r) -> bool:
-    text = " ".join(str(r[c]) for c in ("name", "entries", "refs", "simbad") if c in r.colnames)
-    return bool(_SUBMM_RADIO.search(text))
 
 
 def xmatch(t: Table, cat: str, radius: float) -> Table:
@@ -303,101 +432,17 @@ def xmatch(t: Table, cat: str, radius: float) -> Table:
     )
 
 
-def fetch_cutout(ra: float, dec: float, path: Path, size: int = 80) -> bool:
-    if path.exists():
-        return True
-    try:
-        r = requests.get(
-            CUTOUT,
-            params={"ra": ra, "dec": dec, "layer": "ls-dr10", "pixscale": 0.262, "size": size},
-            timeout=60,
-        )
-    except requests.RequestException:
-        return False
-    if r.status_code != 200 or not r.content[:3] == b"\xff\xd8\xff":
-        return False
-    path.write_bytes(r.content)
-    time.sleep(0.5)  # politeness towards the viewer
-    return True
-
-
-def contact_sheet(t: Table, cut_dir: Path, out_png: Path, ncol: int = 8) -> None:
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.image as mpimg
-    import matplotlib.pyplot as plt
-
-    n = len(t)
-    nrow = max(1, int(np.ceil(n / ncol)))
-    fig, axes = plt.subplots(nrow, ncol, figsize=(2.0 * ncol, 2.25 * nrow), squeeze=False)
-    for ax in axes.ravel():
-        ax.axis("off")
-    for ax, row in zip(axes.ravel(), t, strict=False):
-        f = cut_dir / f"{row['system_id']}.jpg"
-        if f.exists():
-            img = mpimg.imread(f)
-            ax.imshow(img, origin="upper")
-            c = img.shape[0] / 2
-            r = row["theta_e_used"] / 0.262
-            ax.add_patch(plt.Circle((c, c), 1.5 / 0.262, fill=False, color="w", lw=0.6, ls=":"))
-            ax.add_patch(plt.Circle((c, c), r, fill=False, color="c", lw=0.5))
-        ax.set_title(
-            f"{row['system_id']} {str(row['name'])[:16]}\n{row['verdict'][:26]}", fontsize=6
-        )
-    fig.suptitle(
-        "W1/W2 lens-catalogue survivors: LS DR10 grz, 21'' (dotted 1.5'', cyan theta_E)", fontsize=8
-    )
-    fig.tight_layout()
-    fig.savefig(out_png, dpi=110)
-    plt.close(fig)
-
-
-def cmd_vet(args, p: Params) -> None:
-    """Cheapest-first ordinary tests on every system without a visible deflector."""
-    out = Path(args.out)
-    s = Table.read(out / "no_visible_deflector.ecsv")
-    parts = [Table.read(f) for f in sorted((out / "tractor_cache").glob("tractor_*.ecsv"))]
-    tr = vstack([t for t in parts if len(t)], metadata_conflicts="silent")
-    tr["type"] = tr["type"].astype(str)
-    for c in ("mag_z", "galdepth_z"):
-        tr[c] = np.asarray(np.ma.filled(np.ma.asarray(tr[c], float), np.nan))
-    from scipy.spatial import cKDTree
-
-    xyz_t = lenscats._unit(np.asarray(tr["ra"], float), np.asarray(tr["dec"], float))
-    tree = cKDTree(xyz_t)
-    xyz_s = lenscats._unit(np.asarray(s["ra"], float), np.asarray(s["dec"], float))
-    ext = np.isin(np.asarray(tr["type"]), lenscats.EXTENDED_TYPES)
-    magz = np.asarray(tr["mag_z"], float)
-    rad = np.pi / 180 / 3600
-    # bright enough to be the deflector: typical required magnitude + faint_sigma * rms
-    lim = np.asarray(s["req_mag_z_typical"], float) + p.faint_sigma * s.meta["calibration"]["rms"]
-    lim = np.where(np.isfinite(lim), lim, np.inf)
-    n_gal, n_pt = [], []
-    for x, m in zip(xyz_s, lim, strict=True):
-        near = np.asarray(tree.query_ball_point(x, p.offset_radius * rad), int)
-        sep = np.linalg.norm(xyz_t[near] - x, axis=1) / rad if len(near) else np.zeros(0)
-        bright = magz[near] <= m
-        n_gal.append(int(np.sum(ext[near] & bright)))
-        n_pt.append(int(np.sum(~ext[near] & (sep <= p.theta_e_max))))
-    s["n_gal_offset"] = n_gal  # extended, bright enough, within offset_radius
-    s["n_point_3as"] = n_pt  # point sources (any magnitude) within theta_e_max
-    # maskbits at the nearest source
-    d, k = cKDTree(xyz_t).query(
-        lenscats._unit(np.asarray(s["ra"], float), np.asarray(s["dec"], float))
-    )
-    mb = np.asarray(np.ma.filled(np.ma.asarray(tr["maskbits"], int), 0))[k]
-    s["masked"] = (mb & MASK_BAD) > 0
-    s["nearest_sep"] = d * 3600 * 180 / np.pi
-    s["nearest_type"] = np.asarray(tr["type"])[k]
-    s["nearest_ref_cat"] = np.asarray(np.ma.filled(np.ma.asarray(tr["ref_cat"]).astype(str), ""))[k]
-    s["simbad_galaxy_3as"] = np.full(len(s), "", dtype=object)
+def add_xmatch(s: Table, p: Params) -> None:
+    """SIMBAD / cluster columns; a failed service leaves "not run" (never crashes)."""
+    for c in ("redmapper", "whl", "simbad", "simbad_galaxy_3as", "simbad_cluster"):
+        s[c] = np.full(len(s), "not run" if len(s) else "", dtype=object)
+    if not len(s):
+        return
     for key, (cat, rad) in VET_XMATCH.items():
         try:
             m = xmatch(s, cat, rad)
-        except Exception as e:  # noqa: BLE001 - record and continue; the column says "not run"
+        except Exception as e:  # noqa: BLE001 - record and continue
             print(f"xmatch {key} failed: {e}", flush=True)
-            s[key] = np.full(len(s), "not run", dtype=object)
             continue
         m.sort("angDist")
         hit: dict[str, str] = {}
@@ -418,121 +463,212 @@ def cmd_vet(args, p: Params) -> None:
                 idcol = next(c for c in m.colnames if c not in skip)
                 label = f"{row[idcol]} @{row['angDist']:.0f}''"
             hit.setdefault(sid, label)
-        s[key] = np.array([hit.get(str(x), "") for x in s["system_id"]], dtype=object)
+        s[key] = [hit.get(str(x), "") for x in s["system_id"]]
         if key == "simbad":
             s["simbad_galaxy_3as"] = [gal.get(str(x), "") for x in s["system_id"]]
             s["simbad_cluster"] = [clu.get(str(x), "") for x in s["system_id"]]
-        print(f"xmatch {key}: {len(m)} rows, {len(hit)} systems", flush=True)
+
+
+def fetch_cutout(ra: float, dec: float, path: Path, size: int = 80) -> bool:
+    if path.exists():
+        return True
+    try:
+        r = requests.get(
+            CUTOUT,
+            params={"ra": ra, "dec": dec, "layer": "ls-dr10", "pixscale": 0.262, "size": size},
+            timeout=60,
+        )
+    except requests.RequestException:
+        return False
+    if r.status_code != 200 or not r.content[:3] == b"\xff\xd8\xff":
+        return False
+    path.write_bytes(r.content)
+    time.sleep(0.5)  # politeness towards the viewer
+    return True
+
+
+def contact_sheet(t: Table, cut_dir: Path, out_png: Path, title: str, ncol: int = 8) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.image as mpimg
+    import matplotlib.pyplot as plt
+
+    n = len(t)
+    nrow = max(1, int(np.ceil(n / ncol)))
+    fig, axes = plt.subplots(nrow, ncol, figsize=(2.0 * ncol, 2.25 * nrow), squeeze=False)
+    for ax in axes.ravel():
+        ax.axis("off")
+    for ax, row in zip(axes.ravel(), t, strict=False):
+        f = cut_dir / f"{row['system_id']}.jpg"
+        if f.exists():
+            img = mpimg.imread(f)
+            ax.imshow(img, origin="upper")
+            c = img.shape[0] / 2
+            ax.add_patch(plt.Circle((c, c), 1.5 / 0.262, fill=False, color="w", lw=0.6, ls=":"))
+        ax.set_title(f"{row['system_id']} {str(row['name'])[:16]}\n{row['label'][:28]}", fontsize=6)
+    fig.suptitle(f"{title}: LS DR10 grz, 21'' (dotted 1.5'')", fontsize=8)
+    fig.tight_layout()
+    fig.savefig(out_png, dpi=110)
+    plt.close(fig)
+
+
+def inject_dark(res: Table, src: Table, p: Params) -> dict:
+    """Injection check of the test logic: delete every source that could have been the deflector
+    (all sources within ``lens_radius`` of the position that are not one of the two quasar
+    images, and all non-image sources inside the image circle) for sensitive systems whose test
+    said "deflector", re-run the test and count how many now say "none". ``simulated``."""
+    sens = np.isin(res["selection"], ("quasar", "radio")) & (res["test_status"] == "deflector")
+    t = res[sens]
+    if not len(t):
+        return {"n": 0}
+    drop = set()
+    pair_imgs = set()
+    typ = np.asarray(src["type"])
+    magz = np.asarray(src["mag_z"], float)
+    for (idx, off), row in zip(lenscats._neighbours(t, src, p.image_radius + 0.5), t, strict=True):
+        d0 = np.hypot(off[:, 0], off[:, 1])
+        img = idx[(typ[idx] == "PSF") & (d0 <= p.image_radius) & np.isfinite(magz[idx])]
+        two = set(img[np.argsort(magz[img])[:2]].tolist()) if len(img) >= 2 else set()
+        pair_imgs |= two
+        for k, j in enumerate(idx):
+            if j in two:
+                continue
+            if d0[k] <= p.lens_radius or (row["selection"] == "quasar" and len(two) == 2):
+                drop.add(int(j))
+    keep = np.ones(len(src), bool)
+    keep[list(drop - pair_imgs)] = False
+    after = deflector_test(t, src[keep], p)
+    st = np.asarray(after["test_status"])
+    return {
+        "n": int(len(t)),
+        "now_none": int((st == "none").sum()),
+        "recovery": float(np.mean(st == "none")),
+        "other": dict(zip(*[x.tolist() for x in np.unique(st, return_counts=True)], strict=True)),
+        "provenance": schema.Provenance.SIMULATED.value,
+    }
+
+
+def _count(values) -> dict:
+    vals, cnt = np.unique(np.asarray(list(values), dtype=str), return_counts=True)
+    return {str(v): int(c) for v, c in zip(vals, cnt, strict=True)}
+
+
+POISSON95_ZERO = 2.996  # 95 % upper limit on a Poisson mean for zero events
+
+
+def poisson95(k: int) -> float:
+    from scipy.stats import chi2
+
+    return float(0.5 * chi2.ppf(0.95, 2 * k + 2))
+
+
+def cmd_vet(args, p: Params) -> None:
+    """Vet every sensitive system whose test found no deflector; injection; limits."""
+    out = Path(args.out)
+    res = Table.read(out / "systems.ecsv")
+    src = load_sources(out)
+    cov = np.asarray(res["covered"], bool)
+    sens = np.isin(res["selection"], ("quasar", "radio"))
+    decided = cov & sens & (np.asarray(res["undecided"]) == "")
+    decided &= np.isin(res["test_status"], ("deflector", "none"))
+    cand = res[decided & (res["test_status"] == "none")]
+    add_xmatch(cand, p)
 
     def ran(v) -> bool:
         return str(v) not in ("", "not run")
 
-    tests = (  # cheapest first; the verdict is the first that applies, ``flags`` lists all
-        ("catalogue position error (name vs RA/Dec)", lambda r: r["name_offset"] > 5),
-        ("catalogue position rounded to > 1.5''", lambda r: r["pos_quantum"] > p.lens_radius),
-        (
-            "Euclid position may be off by up to 10'' (README)",
-            lambda r: r["catalogues"] == "euclid_q1",
-        ),
-        ("submm/radio centroid position (arcsec uncertainty)", is_submm_radio),
-        ("galaxy bright enough for the lens within 5''", lambda r: r["n_gal_offset"] > 0),
-        ("LS maskbits: bright star / large galaxy / cluster", lambda r: bool(r["masked"])),
-        ("point sources within 3'': lens blended or PSF-typed", lambda r: r["n_point_3as"] > 0),
+    tests = (  # ordinary explanations of a deflector-less configuration, cheapest first
         (
             "SIMBAD galaxy within 3'' (literature lens galaxy)",
             lambda r: ran(r["simbad_galaxy_3as"]),
         ),
-        (
-            "lens redshift published: deflector observed, not at this position",
-            lambda r: bool(r["lens_z_known"]),
-        ),
+        ("lens redshift published (deflector observed)", lambda r: bool(r["lens_z_known"])),
         (
             "cluster: redMaPPer/WHL within 2' or SIMBAD cluster within 5''",
             lambda r: ran(r["redmapper"]) or ran(r["whl"]) or ran(r["simbad_cluster"]),
         ),
-        ("required lens below LS depth (conservative)", lambda r: not r["detectable"]),
         ("literature: not a lens / explained", lambda r: str(r["name"]) in LITERATURE),
+        (
+            "galaxy at the position, fainter than required (under-luminous lens or no lens)",
+            lambda r: bool(r["visible_deflector"]),
+        ),
     )
-    flags = [[name for name, f in tests if f(r)] for r in s]
-    s["flags"] = np.array(["; ".join(f) for f in flags], dtype=object)
-    s["verdict"] = np.array(
-        [f[0] if f else "unexplained by catalogue tests" for f in flags], dtype=object
-    )
-    s.meta.update(provenance=schema.Provenance.DERIVED.value)
-    s.write(out / "vetted.ecsv", overwrite=True)
-    vals, cnt = np.unique(s["verdict"], return_counts=True)
-    print(dict(zip(vals.tolist(), cnt.tolist(), strict=True)))
-    # cutouts: systems left with no flag but the conservative depth test, where a typical ordinary
-    # lens would be detected (eyes needed), then a random control sample of the flagged rest
-    eyes = ("unexplained by catalogue tests", "required lens below LS depth (conservative)")
-    det = np.asarray(s["detectable_typical"], bool) & np.isin(s["verdict"], eyes)
-    rest = np.flatnonzero(~det)
-    rng = np.random.default_rng(56)
-    ctrl = rng.choice(rest, size=min(len(rest), args.n_control), replace=False)
-    look = vstack([s[det], s[np.sort(ctrl)]])[: args.max_cutouts]
-    print(f"cutouts: {int(det.sum())} to inspect + {len(ctrl)} controls", flush=True)
+    flags = [[n for n, f in tests if f(r)] for r in cand]
+    cand["flags"] = ["; ".join(f) for f in flags]
+    cand["label"] = [f[0] if f else "unexplained by catalogue tests" for f in flags]
+    cand.meta.update(provenance=schema.Provenance.DERIVED.value)
+    cand.write(out / "candidates_vetted.ecsv", overwrite=True)
+
+    # cutouts: every candidate, a random sample of rounded positions, and sensitive controls
     cut = out / "cutouts"
     cut.mkdir(exist_ok=True)
-    for r in look:
-        fetch_cutout(float(r["ra"]), float(r["dec"]), cut / f"{r['system_id']}.jpg")
-    for i in range(0, len(look), 64):
-        contact_sheet(look[i : i + 64], cut, out / f"contact_sheet_{i // 64:02d}.png")
+    rng = np.random.default_rng(56)
+    rounded = np.flatnonzero(cov & (np.asarray(res["pos_quantum"]) > p.lens_radius))
+    rsample = res[np.sort(rng.choice(rounded, min(len(rounded), p.n_rounded_sample), False))]
+    rsample["label"] = [f"rounded {q:.1f}''" for q in rsample["pos_quantum"]]
+    ctrl_idx = np.flatnonzero(decided & (res["test_status"] == "deflector"))
+    ctrl = res[np.sort(rng.choice(ctrl_idx, min(len(ctrl_idx), args.n_control), False))]
+    ctrl["label"] = ["deflector found"] * len(ctrl)
+    sheets = {"candidates": cand, "rounded_sample": rsample, "controls": ctrl}
+    for name, t in sheets.items():
+        for r in t:
+            fetch_cutout(float(r["ra"]), float(r["dec"]), cut / f"{r['system_id']}.jpg")
+        for i in range(0, len(t), 64):
+            contact_sheet(t[i : i + 64], cut, out / f"sheet_{name}_{i // 64:02d}.png", name)
+
+    # a candidate counts against a variant if no non-depth test explains it and an ordinary lens
+    # would have been detectable in that variant
+    open_ = np.asarray(cand["label"]) == "unexplained by catalogue tests"
+    k_var = {
+        "typical": int(np.sum(open_ & np.asarray(cand["detectable_typical"], bool))),
+        "conservative": int(np.sum(open_ & np.asarray(cand["detectable_floor"], bool))),
+    }
     summary = json.loads((out / "summary.json").read_text())
-    summary["vetting"] = dict(zip(vals.tolist(), [int(c) for c in cnt], strict=True))
-    summary["limits"] = limits(out, s, p)
+    summary["vetting"] = {
+        "sensitive_covered": int((cov & sens).sum()),
+        "sensitive_decided": int(decided.sum()),
+        "no_deflector": len(cand),
+        "labels": dict(
+            zip(
+                *[x.tolist() for x in np.unique(np.asarray(cand["label"]), return_counts=True)],
+                strict=True,
+            )
+        )
+        if len(cand)
+        else {},
+        "sensitive_undecided_by_reason": _count(
+            x for u in np.asarray(res["undecided"])[cov & sens] for x in str(u).split("; ") if x
+        ),
+        "sensitive_status": _count(np.asarray(res["test_status"])[cov & sens]),
+        "rounded_covered": int(len(rounded)),
+        "rounded_sample_inspected": int(len(rsample)),
+        "controls_inspected": int(len(ctrl)),
+    }
+    summary["injection"] = inject_dark(
+        res[cov & sens & (np.asarray(res["undecided"]) == "")], src, p
+    )
+    rec = summary["injection"].get("recovery", 0.0)
+    lim = {"open_candidates": int(open_.sum())}
+    for variant, col in (("typical", "detectable_typical"), ("conservative", "detectable_floor")):
+        k = k_var[variant]
+        lim[f"{variant}_k"] = k
+        for c in ("quasar", "radio", "all"):
+            m = decided & np.asarray(res[col], bool)
+            if c != "all":
+                m &= np.asarray(res["selection"]) == c
+            n = int(m.sum())
+            lim[f"{variant}_{c}_N"] = n
+            lim[f"{variant}_{c}_f95"] = poisson95(k) / (n * rec) if n and rec else None
+    summary["limits"] = lim
     (out / "summary.json").write_text(json.dumps(summary, indent=2))
-
-
-UNDECIDED = (  # the LS test says nothing about the deflector for these
-    "catalogue position error (name vs RA/Dec)",
-    "catalogue position rounded to > 1.5''",
-    "Euclid position may be off by up to 10'' (README)",
-    "submm/radio centroid position (arcsec uncertainty)",
-    "LS maskbits: bright star / large galaxy / cluster",
-    "point sources within 3'': lens blended or PSF-typed",
-)
-POISSON95_ZERO = 2.996  # 95 % upper limit on a Poisson mean for zero events
-
-
-def limits(out: Path, vetted: Table, p: Params) -> dict:
-    """Upper limits on the dark-deflector fraction among tested galaxy-scale lenses (derived).
-
-    Tested: LS-covered systems where the test is decisive, i.e. a deflector was found at the
-    position, within the offset radius, in the literature or in a cluster catalogue, or none was
-    found although the position is good, unmasked and not blended (the ``UNDECIDED`` verdicts are
-    excluded). A dark lens is counted only if ``detectable`` (an ordinary lens would have been
-    seen); with zero unexplained systems the 95 % limit is 2.996 / N."""
-    allsys = Table.read(out / "systems.ecsv")
-    cov = np.asarray(allsys["covered"], bool)
-    und = dict(zip(vetted["system_id"], np.isin(vetted["verdict"], UNDECIDED), strict=True))
-    decisive = cov & ~np.array([und.get(x, False) for x in allsys["system_id"]])
-    unexplained = set(vetted["system_id"][vetted["verdict"] == "unexplained by catalogue tests"])
-    k = sum(1 for x in allsys["system_id"] if x in unexplained)
-    res = {"unexplained": k, "covered": int(cov.sum()), "decisive": int(decisive.sum())}
-    sel = np.asarray(allsys["selection"])
-    for variant, col in (("typical", "detectable_typical"), ("conservative", "detectable")):
-        det = decisive & np.asarray(allsys[col], bool)
-        for name, m in (
-            ("all", np.ones(len(sel), bool)),
-            ("lens_light_independent", sel != "galaxy"),
-        ):
-            n = int((det & m).sum())
-            res[f"{variant}_{name}_N"] = n
-            res[f"{variant}_{name}_f95"] = POISSON95_ZERO / n if n and k == 0 else None
-    res["selection_counts_covered"] = {
-        c: int((cov & (sel == c)).sum()) for c in ("galaxy", "quasar", "submm/radio")
-    }
-    res["selection_counts_decisive"] = {
-        c: int((decisive & (sel == c)).sum()) for c in ("galaxy", "quasar", "submm/radio")
-    }
-    return res
+    print(json.dumps({k: summary[k] for k in ("vetting", "injection", "limits")}, indent=1))
 
 
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("cmd", choices=["screen", "vet"])
-    ap.add_argument("--n-control", type=int, default=32, help="random other cutouts")
-    ap.add_argument("--max-cutouts", type=int, default=600)
+    ap.add_argument("--n-control", type=int, default=32, help="random deflector-found cutouts")
     ap.add_argument("--out", default=None)
     args = ap.parse_args(argv)
     args.out = args.out or paths.outputs_dir() / "w12_lenscats"

@@ -438,18 +438,20 @@ def name_position_offset(name: str, ra: float, dec: float) -> float:
     ddec = (abs(dec) - abs(dec_n)) * 3600
     ex_ra = max(0.0, -dra, dra - res_ra * np.cos(np.radians(dec)))
     ex_dec = max(0.0, -ddec, ddec - res_dec)
+    if (sg == "-") != (dec < 0) and dec != 0:  # declination sign differs from the designation
+        ex_dec = max(ex_dec, abs(dec - dec_n) * 3600 - res_dec)
     return float(np.hypot(ex_ra, ex_dec))
 
 
 def position_quantum_arcsec(ra: float, dec: float, printed_decimals: int = 5) -> float:
-    """Coarsest rounding step consistent with a catalogued position (arcsec on the sky).
+    """Rounding step of a catalogued position (arcsec on the sky), 0 unless both axes are rounded.
 
-    Positions converted from truncated sexagesimal (whole seconds of RA, whole arcsec) or
-    rounded decimal degrees (0.01 deg) cannot locate a deflector to ~1''. The RA step is
-    multiplied by cos(dec); the larger of the RA and Dec steps is returned (0 when finer than
-    0.01''). A value counts as a multiple of a step when it is one to within the rounding of
-    ``printed_decimals`` decimal degrees (lenscat prints 5). Steps finer than 3.6'' are not
-    tested.
+    Positions converted from truncated sexagesimal (whole seconds of RA and whole arcsec) or
+    rounded decimal degrees (0.01 deg) cannot locate a deflector to ~1''. A value counts as a
+    multiple of a step when it is one to within the rounding of ``printed_decimals`` decimal
+    degrees (lenscat prints 5). One axis alone is rounded by chance in up to a few per cent of
+    precise positions, so both axes must show a step (two independent indicators, chance
+    ~1e-4); the larger step (RA step times cos dec) is returned.
     """
     tol = 0.5 * 10.0 ** (-printed_decimals) * 1.01
     cosd = np.cos(np.radians(dec))
@@ -463,8 +465,97 @@ def position_quantum_arcsec(ra: float, dec: float, printed_decimals: int = 5) ->
 
     ra_units = [(1e1, 360.0 * cosd), (1e2, 36.0 * cosd), (240.0, 15.0 * cosd)]
     ra_units += [(1e3, 3.6 * cosd)]
-    dec_units = [(1e1, 360.0), (1e2, 36.0), (60.0, 60.0), (1e3, 3.6)]
-    return float(max(step(ra, ra_units), step(abs(dec), dec_units)))
+    dec_units = [(1e1, 360.0), (1e2, 36.0), (60.0, 60.0), (1e3, 3.6), (3600.0, 1.0)]
+    ra_step, dec_step = step(ra, ra_units), step(abs(dec), dec_units)
+    return float(max(ra_step, dec_step)) if ra_step > 0 and dec_step > 0 else 0.0
+
+
+def _neighbours(systems: Table, sources: Table, radius_arcsec: float):
+    """For each system: indices of ``sources`` within ``radius_arcsec`` and their offsets
+    (arcsec, tangent plane: east, north)."""
+    xyz_s = _unit(np.asarray(sources["ra"], float), np.asarray(sources["dec"], float))
+    tree = cKDTree(xyz_s)
+    ra_s = np.asarray(sources["ra"], float)
+    dec_s = np.asarray(sources["dec"], float)
+    rad = np.pi / 180 / 3600
+    for ra0, dec0 in zip(systems["ra"], systems["dec"], strict=True):
+        idx = np.asarray(tree.query_ball_point(_unit([ra0], [dec0])[0], radius_arcsec * rad), int)
+        dx = ((ra_s[idx] - ra0 + 180) % 360 - 180) * np.cos(np.radians(dec0)) * 3600
+        dy = (dec_s[idx] - dec0) * 3600
+        yield idx, np.column_stack([dx, dy])
+
+
+def bright_galaxy_near(systems: Table, sources: Table, mag_max, radius_arcsec: float):
+    """Per system: number of extended sources within ``radius_arcsec`` with mag_z <= mag_max
+    (the per-system faintest magnitude an ordinary deflector could have) and the nearest one's
+    separation. ``derived``."""
+    typ = np.array([str(t).strip() for t in sources["type"]])
+    ext = np.isin(typ, EXTENDED_TYPES)
+    magz = np.asarray(sources["mag_z"], float)
+    n, sep = [], []
+    for (idx, off), m in zip(
+        _neighbours(systems, sources, radius_arcsec), np.asarray(mag_max, float), strict=True
+    ):
+        ok = ext[idx] & (magz[idx] <= m)
+        d = np.hypot(off[ok, 0], off[ok, 1])
+        n.append(int(ok.sum()))
+        sep.append(float(d.min()) if len(d) else np.nan)
+    return np.array(n), np.array(sep)
+
+
+def quasar_pair_test(
+    systems: Table,
+    sources: Table,
+    mag_max,
+    image_radius: float = 3.0,
+    sep_min: float = 2.0,
+    image_exclusion: float = 0.5,
+) -> Table:
+    """Deflector test that a lens without light can fail: two resolved point images, then any
+    source between them bright enough to be the lens. ``derived``.
+
+    Images: the two brightest PSF-typed Tractor sources within ``image_radius`` of the
+    catalogue position. ``status``: "blended" (< 2 images), "too close" (separation <
+    ``sep_min``: ground-based seeing cannot separate a lens from the images, ASSUMPTION),
+    "deflector" (a source of any type, farther than ``image_exclusion`` from both images,
+    inside the circle with the image pair as diameter, with mag_z <= mag_max) or "none". The
+    returned ``theta_e`` is half the image separation (``model_prediction`` for an SIS).
+    """
+    typ = np.array([str(t).strip() for t in sources["type"]])
+    magz = np.asarray(sources["mag_z"], float)
+    rows = []
+    for (idx, off), m in zip(
+        _neighbours(systems, sources, image_radius + 0.5), np.asarray(mag_max, float), strict=True
+    ):
+        d0 = np.hypot(off[:, 0], off[:, 1])
+        img = idx[(typ[idx] == "PSF") & (d0 <= image_radius) & np.isfinite(magz[idx])]
+        row = {"n_images": len(img), "sep": np.nan, "theta_e": np.nan, "defl_mag": np.nan}
+        if len(img) < 2:
+            rows.append({**row, "status": "blended"})
+            continue
+        two = img[np.argsort(magz[img])[:2]]
+        p = np.array([off[np.flatnonzero(idx == j)[0]] for j in two])
+        sep = float(np.hypot(*(p[0] - p[1])))
+        row.update(sep=sep, theta_e=sep / 2)
+        if sep < sep_min:
+            rows.append({**row, "status": "too close"})
+            continue
+        mid = p.mean(axis=0)
+        others = np.array([k for k in range(len(idx)) if idx[k] not in two], int)
+        q = off[others] if len(others) else np.zeros((0, 2))
+        far = (np.hypot(*(q - p[0]).T) > image_exclusion) & (
+            np.hypot(*(q - p[1]).T) > image_exclusion
+        )
+        inside = np.hypot(*(q - mid).T) <= sep / 2
+        cand = idx[others][far & inside & (magz[idx[others]] <= m)] if len(others) else []
+        if len(cand):
+            row["defl_mag"] = float(np.min(magz[cand]))
+            rows.append({**row, "status": "deflector"})
+        else:
+            rows.append({**row, "status": "none"})
+    out = Table(rows=rows) if rows else Table(names=["status"], dtype=[str])
+    out.meta.update(provenance=schema.Provenance.DERIVED.value)
+    return out
 
 
 EXTENDED_TYPES = ("REX", "DEV", "EXP", "SER")
