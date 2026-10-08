@@ -20,6 +20,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      map models are in (D-035). MACS1149 null (D-037). Next:
      - JWST field runs per HFF cluster (radial on all six; `images` / `fluxratio` on MACS0717);
      - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1 photo-z;
+       fix system 16's z (spectroscopic z, or forced photometry on its far-image track);
        evaluate the CANUCS lens models (with samples) as the independent second model for the D-036/D-037 μ rule;
      - `bayes.dat` position spreads;
      - the UNCOVER v2.0 cross-check for Abell 2744.

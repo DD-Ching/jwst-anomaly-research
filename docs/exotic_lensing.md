@@ -60,4 +60,4 @@ hit goes to `/vet-candidate`.
 |---|---|---|---|
 | WHL0137 / Sunrise (RELICS Lenstool maps, D-033) | no image list | 3 against a null mean of 2.2 (p95 5); max 3 lines, p 0.885 | null |
 | SMACS 0723 (ICLv2) | 6 compact images consistent, 0 flags (49 resolved) | 12 against a null mean of 9.0 (p95 15); max 4 lines, p 0.945 | null |
-| MACS1149 (HFF CATS, D-037) | 19 consistent, 0 flags (106 resolved) | with CANUCS photo-z: 12 against a null mean of 12.8 (p95 20); max 3 lines, p 1.0 (without: 32 against 30.8, p 0.91) | null |
+| MACS1149 (HFF CATS, D-037) | 19 consistent, 0 flags (106 resolved; no photo-z) | with CANUCS photo-z: 12 against a null mean of 12.8 (p95 20); max 3 lines, p 1.0 (without: 32 against 30.8, p 0.91) | null |

@@ -1819,10 +1819,12 @@ CATS-fitted z = 4.419.
   gate passes). The frame offset is under 0.02″, so `MODELS["macs1149-cats"]` has no `frame_offset_arcsec`.
 - `images`: 159 predicted, 16 forced-tested (F277W). `fluxratio`: 19 consistent, 106 resolved, 0 under- or
   overluminous. `radial`: 98 anti arcs; 32 peaks against a null mean of 30.8 (p95 41); p = 0.91. With CANUCS DR1 photo-z (134
-  non-background sources dropped): 62 anti arcs, 12 peaks against 12.8 (p95 20), max 3 lines; null.
+  non-background sources dropped, including some blended lensed images): 62 anti arcs, 12 peaks against 12.8 (p95
+  20), max 3 lines; null.
 - System 16 (μ 15.8; empty sky at −0.4σ after high-pass): at z = 2.5 (CATS) or 3.0 (Sharon v4cor), both models move
-  the image onto 16.2, so 16.1 and 16.2 become a merging pair. CANUCS DR1 photo-z for 16.2: z 2.25 (68 % 1.90–2.28),
-  which excludes the fitted 4.419. The far image (μ ≈ 4, `recovered` at 0.95″ but 0σ at
+  the image onto 16.2, so 16.1 and 16.2 become a merging pair. CANUCS DR1 photo-z for 16.2: z 2.25 (95 % 0.23–2.33; upper bound
+  2.67 with the 0.1 × (1 + z) margin). This disfavours the fitted 4.419. In CATS the pair is close to merging at z
+  2.0–2.5. (derived) The far image (μ ≈ 4, `recovered` at 0.95″ but 0σ at
   the fixed position) moves 3–5.5″ between z = 2.5 and 3.0, so it is untestable too.
 - System 2: CATS merges 2.2 and 2.3; Sharon places the critical curve between them.
 - Knot 1192 (SN Refsdal host) is 1.1″ from the BCG. CATS gives μ 7.5; Sharon gives 2.2 at its image 0.56″ away.
@@ -1831,5 +1833,4 @@ CATS-fitted z = 4.419.
 **Revisit if.**
 - A spectroscopic z for system 16 is published (search the MUSE catalogues of Grillo+2016 and Treu+2016), or a source
   with 16.1's colour is found on the far-image track (z = 2.5–3.5 positions). Either would fix z.
-- `images` is re-run with CANUCS DR1 photo-z (counterpart redshifts). DJA v7 has no MACS1149 mosaic; CANUCS DR1 is
-  the photo-z source for MACS1149, MACS0416 and Abell 370.
+- `images` is re-run with CANUCS DR1 photo-z (counterpart redshifts). DJA v7 has no MACS1149 mosaic.

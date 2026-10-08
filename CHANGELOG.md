@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: CANUCS DR1 photo-z for MACS1149 (D-037 addendum)
+- **Failed approach:** the worker checked only DJA, but docs/landscape.md already listed CANUCS DR1 (PSF-matched
+  EAzY photo-z for A370, MACS0416, MACS0417, MACS1149 and MACS1423). Check docs/landscape.md before reporting that a
+  field has no photo-z.
+- MACS1149 system 16.2: z_phot 2.25 (95 % 0.23–2.33). This disfavours the CATS-fitted 4.419.
+- Radial re-run with the background cut: 12 peaks against a null mean of 12.8; null. 6 of 68 matched lensed images
+  get a blended z < 0.6.
+
 ## 2026-10-08: MACS1149 screens: null (D-037)
 - Worktree worker on CANUCS 1208 (8 bands) with `macs1149-cats`. The image-plane rms is 0.673″ (gate passes) and
   the frame offset is under 0.02″.
@@ -9,11 +17,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   checked against Sharon v4cor), Refsdal-host knot 1192 (next to the BCG; μ differs >2× between models).
   `fluxratio` 0 flags; `radial` p = 0.91.
 - **Failed approach:** forced photometry with an annulus on a BCG core gives negative fluxes; use high-pass.
-- No DJA mosaic for MACS1149 (v7). CANUCS DR1 has PSF-matched EAzY photo-z (docs/landscape.md listed it; missed at
-  first): 16.2 has z_phot 2.25, which excludes the fitted 4.419. The radial re-run with a background cut is null (12 peaks against 12.8).
+- No DJA mosaic for MACS1149 (v7).
 - Wall time: about 5 min of pipeline plus about 10 min of vetting.
-- **Handoff:** `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; forced photometry on system 16's
-  far-image track to fix its redshift.
+- **Handoff:** `macs1149-sharon` (or the CANUCS models) in `MODELS`; the D-037 rules in `forced_check`; system 16's
+  redshift (spectroscopic z, or forced photometry on its far-image track); `images` with CANUCS photo-z.
 
 ## 2026-10-08: Abell 2744 screens: null (D-036)
 - A worktree worker ran `validate`, `images --forced-image`, `fluxratio` and `radial` on Bergamini+2023b, with
