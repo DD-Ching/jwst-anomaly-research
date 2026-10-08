@@ -1861,6 +1861,7 @@ gated off) until the solver refines its grid near high |μ|. Pairs whose catalog
   7 lines, p = 0.29. Its lines are noise segments: aper50 S/N 1.6–4.0, nothing in cutouts, forced S/N within ±1.5σ.
   With aper50 S/N ≥ 5, there are 7 centres against 6.8 and at most 3 lines. Re-run with CANUCS DR1 photo-z (77
   non-background sources dropped, some of them blended lensed images): 120 anti arcs, 77 centres against 85.0 (p95 103), max 7 lines, p 0.225; null.
+  In the JWST frame (offset applied; D-040 fix): 101 against 100.2 without photo-z, 81 against 84.9 with; null.
 - Tally: 137 anti arcs screened; 0 flags; **0 surviving**. `images` and `fluxratio` were not run (gated).
 
 **Revisit if.**
