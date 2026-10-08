@@ -1,6 +1,7 @@
 """W3 in the OGLE-IV Mróz et al. microlensing samples: ordinary vs exotic fits and limits (D-057).
 
-Subcommands (outputs under ``$JWST_ANOMALY_DATA/derived/w3_ogle/``, never in git):
+Subcommands (outputs under ``$JWST_ANOMALY_DATA/derived/w3_ogle/``, never in git; the one
+exception is ``fit --chunk``'s table, also written gzipped to ``results/w3_ogle/`` (D-059)):
 
 - ``fit``: every event of a sample (``jwst_anomaly.ogle``) is fitted with ordinary models — PSPL;
   FSPL (MulensModel, uniform disk) when the PSPL u0 < ``Params.fspl_u0_max``; PSPL with annual
@@ -15,6 +16,7 @@ Subcommands (outputs under ``$JWST_ANOMALY_DATA/derived/w3_ogle/``, never in git
   first.
 - ``inject``: W3 events (``exotic_sim.inject_light_curve``) injected into real light curves of the
   sample, classified by this fitter and by an emulation of the published selection.
+- ``merge-chunks``: joins the tracked chunk tables 1..N of N into the table `vet` reads.
 - ``limit``: 95 % upper limit on the W3 rate from the published efficiencies and the injections.
 
 Exotic physics is a hypothesis. A better exotic fit is an anomaly to vet, never a discovery.
@@ -23,6 +25,9 @@ Exotic physics is a hypothesis. A better exotic fit is an anomaly to vet, never 
 from __future__ import annotations
 
 import argparse
+import gzip
+import hashlib
+import io
 import json
 import math
 import os
@@ -50,6 +55,7 @@ class Params:
     flag_dbic: float = -10.0  # ΔBIC below which an exotic fit flags an event
     fspl_u0_max: float = 0.1  # fit FSPL when PSPL u0 is below this (ρ constrained only then)
     parallax_te_min: float = 20.0  # days; annual parallax fitted for longer events
+    pie_max: float = 5.0  # ASSUMPTION: |π_E| bound; unbounded fits reached 30–1,400 (D-058)
     fs_near: float = 10.0  # exact finite-source integral within fs_near·ρ of a singular radius
     beta_far: float = 50.0  # A = 1 beyond this impact parameter (|A − 1| < 1e-5)
     log_rho_bounds: tuple = (-3.5, 0.0)
@@ -76,6 +82,13 @@ N_NONLIN = {"PSPL": 3, "FSPL": 4, "PAR": 5, "N1neg": 4, "E2pos": 4, "E2neg": 4}
 
 def out_dir() -> Path:
     d = paths.data_root() / "derived" / "w3_ogle"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def results_dir() -> Path:
+    """Tracked chunk fit tables (D-059): ephemeral sessions fit chunks that `merge-chunks` joins."""
+    d = paths.repo_root() / "results" / "w3_ogle"
     d.mkdir(parents=True, exist_ok=True)
     return d
 
@@ -386,6 +399,8 @@ def _objective(model, lc, t0_par):
             and not (P.log_rho_bounds[0] - 0.5 <= x[3] <= P.log_rho_bounds[1])
         ):
             return 1e30
+        if model == "PAR" and math.hypot(x[3], x[4]) > P.pie_max:
+            return 1e30
         try:
             c = chi2_of(model, lc, _unpack(model, x, t0_par))[0]
         except (ValueError, ZeroDivisionError, FloatingPointError):
@@ -605,8 +620,10 @@ def _fit_worker(job):
     return row
 
 
-def _jobs(sample: ogle.OgleMrozSample, limit: int | None, ids=None, skip=()):
+def _jobs(sample: ogle.OgleMrozSample, limit: int | None, ids=None, skip=(), chunk=None):
     ev = sample.events()
+    if chunk is not None:  # (k, n): every n-th event from k, so each chunk spans all fields
+        ev = ev[chunk[0] :: chunk[1]]
     if ids is not None:
         ev = ev[np.isin(ev["event_id"], list(ids))]
     if limit:
@@ -635,29 +652,68 @@ def load_checkpoint(path: Path) -> list[dict]:
     return rows
 
 
-def run_fit(sample_key: str, limit: int | None, procs: int, fresh: bool = False) -> Path:
+def params_tag() -> str:
+    """Short hash of the fitting ``Params``; checkpoint rows from other Params are not reused."""
+    return hashlib.sha256(json.dumps(asdict(P), sort_keys=True).encode()).hexdigest()[:12]
+
+
+def write_ecsv_gz(tab: Table, path: Path) -> None:
+    """ECSV, gzipped with a fixed header time so a refit of the same chunk gives the same bytes."""
+    buf = io.StringIO()
+    tab.write(buf, format="ascii.ecsv")
+    with path.open("wb") as raw, gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as gz:
+        gz.write(buf.getvalue().encode())
+
+
+def parse_chunk(text: str | None) -> tuple[int, int] | None:
+    """``"K/N"`` (1-based K) -> ``(K - 1, N)``; ``None`` passes through."""
+    if text is None:
+        return None
+    k, n = (int(x) for x in text.split("/"))
+    if not 1 <= k <= n:
+        raise ValueError(f"chunk {text!r}: need 1 <= K <= N")
+    return k - 1, n
+
+
+def run_fit(
+    sample_key: str,
+    limit: int | None,
+    procs: int,
+    fresh: bool = False,
+    chunk: tuple[int, int] | None = None,
+) -> Path:
     """Fit the sample. Each row is appended to ``fits_<key>.partial.jsonl`` as it finishes, so an
-    interrupted run (a cloud session ends after ~40 min; the bulge sample takes ~3 h on 4 cores)
-    resumes where it stopped; ``fresh`` starts over."""
+    interrupted run resumes where it stopped (a cloud session ends after ~40 min; the bulge sample
+    takes ~4 h on 4 cores, ~10 s per event); ``fresh`` starts over. ``chunk=(k, n)`` fits only
+    events k, k+n, ... (0-based), so separate sessions fit disjoint, field-balanced parts."""
     sample = ogle.OgleMrozSample(sample_key)
     t1 = time.time()
     ckpt = out_dir() / f"fits_{sample_key}.partial.jsonl"
     if fresh:
         ckpt.unlink(missing_ok=True)
+    tag = params_tag()
     rows = load_checkpoint(ckpt)
+    stale = [r for r in rows if r.get("params_tag") != tag]
+    if stale:  # fitted under other Params (e.g. before the D-058 π_E bound): refit them
+        print(f"dropping {len(stale)} checkpointed events fitted with other Params", flush=True)
+        rows = [r for r in rows if r.get("params_tag") == tag]
     ckpt.write_text("".join(json.dumps(r, default=float) + "\n" for r in rows))
+    if chunk is not None:  # other chunks' rows stay in the checkpoint but not in this chunk's table
+        ids = set(sample.events()["event_id"][chunk[0] :: chunk[1]].tolist())
+        rows = [r for r in rows if r["event_id"] in ids]
     done = {r["event_id"] for r in rows}
     if done:
         print(f"resuming: {len(done)} events already fitted", flush=True)
     with Pool(procs) as pool, ckpt.open("a") as fh:
-        jobs = _jobs(sample, limit, skip=done)
+        jobs = _jobs(sample, limit, skip=done, chunk=chunk)
         for i, row in enumerate(pool.imap_unordered(_fit_worker, jobs, 4)):
+            row["params_tag"] = tag
             rows.append(row)
             fh.write(json.dumps(row, default=float) + "\n")
             fh.flush()
             if (i + 1) % 250 == 0:
                 print(f"{i + 1} events, {time.time() - t1:.0f} s", flush=True)
-    keys = sorted({k for r in rows for k in r}, key=lambda k: (k != "event_id", k))
+    keys = sorted({k for r in rows for k in r} - {"params_tag"}, key=lambda k: (k != "event_id", k))
     tab = Table(
         {
             k: [r.get(k, np.nan if k not in ("error", "best_ordinary") else "") for r in rows]
@@ -670,12 +726,18 @@ def run_fit(sample_key: str, limit: int | None, procs: int, fresh: bool = False)
         provenance=schema.Provenance.DERIVED.value,
         source=f"scripts/w3_microlensing.py fit on {sample.name} ({sample.spec.reference})",
         params=json.dumps(asdict(P)),
+        chunk="" if chunk is None else f"{chunk[0] + 1}/{chunk[1]}",
         wall_time_s=round(time.time() - t1, 1),  # this invocation only
         cpu_time_s=round(float(sum(r.get("seconds", 0.0) for r in rows)), 1),
         procs=procs,
     )
-    path = out_dir() / f"fits_{sample_key}.ecsv"
+    path = out_dir() / f"fits_{sample_key}.ecsv"  # what `vet` / `sheet` / `summary` read
     tab.write(path, overwrite=True)
+    if chunk is not None:  # keep each chunk's table; the next chunk replaces `path`
+        name = f"fits_{sample_key}_chunk{chunk[0] + 1}of{chunk[1]}.ecsv"
+        tab.write(out_dir() / name, overwrite=True)
+        if limit is None:  # complete chunks only: the tracked copy is what `merge-chunks` joins
+            write_ecsv_gz(tab, results_dir() / f"{name}.gz")
     print(f"wrote {path}: {len(tab)} events, {time.time() - t1:.0f} s wall")
     return path
 
@@ -892,6 +954,16 @@ def _inject_worker(job):
     return row
 
 
+def par_starts(ps: dict) -> list:
+    """Parallax starts around a PSPL fit (both u0 signs, small π_E offsets)."""
+    lt = math.log10(ps["tE"])
+    return [
+        (ps["t0"], lt, s * ps["u0"], a, b)
+        for s in (1, -1)
+        for a, b in ((0, 0), (0.3, 0), (-0.3, 0), (0, 0.3), (0, -0.3))
+    ]
+
+
 def _survives_cheap_vetting(lc: LightCurve, res: dict) -> bool:
     """The vetting tests that remove most real-data flags, applied to an injected W3 flag:
     errors rescaled to χ²/dof = 1 of the best ordinary model, and per-season offset + drift."""
@@ -904,9 +976,15 @@ def _survives_cheap_vetting(lc: LightCurve, res: dict) -> bool:
         return False
     lct = lc.with_season_offsets(trend=True)
     ps, rx = res["PSPL"], res["N1neg"]
-    o = optimise("PSPL", lct, [(ps["t0"], math.log10(ps["tE"]), ps["u0"])])
+    best_t = optimise("PSPL", lct, [(ps["t0"], math.log10(ps["tE"]), ps["u0"])])["bic"]
+    if "PAR" in res:  # as in _vet_one: the season-trend refit always includes parallax
+        r = res["PAR"]
+        start = (r["t0"], math.log10(r["tE"]), r["u0"], r["pi_E_N"], r["pi_E_E"])
+        best_t = min(best_t, optimise("PAR", lct, [start], t0_par=r["t0_par"])["bic"])
+    elif have_mm() and lc.ra is not None:  # short t_E: fit_event skipped PAR, _vet_one does not
+        best_t = min(best_t, optimise("PAR", lct, par_starts(ps), t0_par=round(ps["t0"], 1))["bic"])
     e = optimise("N1neg", lct, [(rx["t0"], math.log10(rx["tE"]), rx["u0"], math.log10(rx["rho"]))])
-    return bool(e["bic"] - o["bic"] < P.flag_dbic)
+    return bool(e["bic"] - best_t < P.flag_dbic)
 
 
 def run_inject(procs: int, per_cell: int, seed: int = 55) -> Path:
@@ -1097,11 +1175,11 @@ def fit_binary_lens(lc: LightCurve, ps: dict, maxfev: int = 600) -> dict:
         (t0, u0, math.log10(te), -2.0, ls, lq, al)
         for ls in (-0.3, 0.0, 0.3)
         for lq in (-3.0, -1.5, 0.0)
-        for al in np.deg2rad((30.0, 90.0, 150.0, 210.0, 270.0, 330.0))
+        for al in (30.0, 90.0, 150.0, 210.0, 270.0, 330.0)  # degrees, as MulensModel's alpha
     ]
     # near-PSPL limits (tiny or distant companion), so the fit is never worse than PSPL
-    starts += [(t0, u0, math.log10(te), -2.0, ls, -4.5, 1.0) for ls in (-0.5, 0.0, 0.5)]
-    starts += [(t0, u0, math.log10(te), -2.0, 0.9, lq, 1.0) for lq in (-2.0, -1.0)]
+    starts += [(t0, u0, math.log10(te), -2.0, ls, -4.5, 60.0) for ls in (-0.5, 0.0, 0.5)]
+    starts += [(t0, u0, math.log10(te), -2.0, 0.9, lq, 60.0) for lq in (-2.0, -1.0)]
     vals = np.array([chi2(np.array(s)) for s in starts])
     best = None
     for i in np.argsort(vals)[:3]:
@@ -1144,7 +1222,11 @@ def _vet_worker(job):
     try:
         return _vet_one(job)
     except Exception as exc:  # noqa: BLE001 — one bad flag must not lose the others' vetting
-        return {"event_id": job[0]["event_id"], "tests": [("vet_error", True, repr(exc)[:200])]}
+        return {
+            "event_id": job[0]["event_id"],
+            "tests": [("vet_error", True, repr(exc)[:200])],
+            "complete": False,
+        }
 
 
 def _vet_one(job):
@@ -1161,16 +1243,7 @@ def _vet_one(job):
             "FSPL", lc, [(ps["t0"], lt, ps["u0"], math.log10(r)) for r in (0.003, 0.03, 0.3)]
         )
     if "PAR" not in res and have_mm():
-        res["PAR"] = optimise(
-            "PAR",
-            lc,
-            [
-                (ps["t0"], lt, s * ps["u0"], a, b)
-                for s in (1, -1)
-                for a, b in ((0, 0), (0.3, 0), (-0.3, 0), (0, 0.3), (0, -0.3))
-            ],
-            t0_par=round(ps["t0"], 1),
-        )
+        res["PAR"] = optimise("PAR", lc, par_starts(ps), t0_par=round(ps["t0"], 1))
     ex = min(EXOTIC, key=lambda m: res[m]["bic"])
     ordinary = {m: res[m] for m in ORDINARY if m in res}
     best_o = min(ordinary, key=lambda m: ordinary[m]["bic"])
@@ -1277,6 +1350,7 @@ def _vet_one(job):
         )
         out["bl"] = bl
     out["survives"] = all(ok for _, ok, _ in out["tests"])
+    out["complete"] = bool(do_bl and have_mm())  # binary lens and PAR tested
     out["res"] = {m: {k: v for k, v in r.items() if k != "model"} for m, r in res.items()}
     return out
 
@@ -1346,18 +1420,24 @@ def run_vet(sample_key: str, procs: int, binary_lens: bool = True) -> Path:
     names = [str(pub[o["event_id"]]["alt_id"]) for o in out] + [o["event_id"] for o in out]
     lit = arxiv_mentions(names) if out else {}
     var = variable_catalogue_matches(flags["ra"], flags["dec"]) if out else {}
+    failed = [c for c, idx in var.items() if any(isinstance(j, str) for j in idx)]
     for i, o in enumerate(out):
         alt = str(pub[o["event_id"]]["alt_id"])
         n_lit = max(lit.get(alt, 0), lit.get(o["event_id"], 0))
         o["tests"].append(("literature_arxiv", True, f"{alt}: {n_lit} arXiv records (read them)"))
         hits = [c for c, idx in var.items() if i in idx]
         o["tests"].append(("variable_catalogues", not hits, f"matches: {hits or 'none'} (1″)"))
+        if failed:  # a failed query is not a clean match list: the flag stays unvetted
+            o["tests"].append(("variable_catalogues_failed", True, f"queries failed: {failed}"))
+            o["complete"] = False
         o["survives"] = all(ok for _, ok, _ in o["tests"])
     path = out_dir() / f"vetting_{sample_key}.json"
     path.write_text(
         json.dumps(
             {
                 "provenance": "derived",
+                "fit_chunk": fits.meta.get("chunk", ""),  # "" = the whole sample was fitted
+                "n_fit": len(fits),
                 "wall_time_s": time.time() - t1,
                 "variable_xmatch": var,
                 "arxiv": lit,
@@ -1575,6 +1655,21 @@ def einstein_time_days(mass_msun, d_l_kpc=4.0, d_s_kpc=8.0, mu_mas_yr=5.0) -> np
 
 
 def run_limit(per_cell_min: int = 20) -> Path:
+    """95 % limits use the zero-event Poisson numerator 3.0: they need a complete null vetting."""
+    path = out_dir() / "vetting_bulge2019.json"
+    if not path.exists():
+        raise SystemExit(f"no zero-event limit: run `vet` first ({path} missing)")
+    doc = json.loads(path.read_text())
+    if (
+        doc.get("fit_chunk", "missing") != ""
+    ):  # one chunk's null says nothing about the other chunks
+        raise SystemExit(
+            f"no zero-event limit: vetting covers fit chunk {doc.get('fit_chunk')!r} only"
+        )
+    vet = doc["flags"]
+    open_flags = [o["event_id"] for o in vet if o.get("survives") or o.get("complete") is not True]
+    if open_flags:
+        raise SystemExit(f"no zero-event limit: flags survive or are unvetted: {open_flags}")
     sample = ogle.OgleMrozSample("bulge2019")
     inj = Table.read(out_dir() / "injections_bulge2019.ecsv")
     inj = inj[no_error(inj)]
@@ -1646,6 +1741,52 @@ def run_limit(per_cell_min: int = 20) -> Path:
     return path
 
 
+def merge_chunks(sample_key: str, n: int) -> Path:
+    """Join the tracked chunk tables ``1..n of n`` into ``fits_<key>.ecsv`` for `vet` / `limit`.
+
+    Every chunk must exist, be fitted with the current ``Params`` and cover exactly its events;
+    only then is ``meta["chunk"]`` empty (the whole sample), which `limit` requires."""
+    from astropy.table import vstack
+
+    sample = ogle.OgleMrozSample(sample_key)
+    ids = sample.events()["event_id"]
+    params = json.dumps(asdict(P))
+    parts, missing = [], []
+    for k in range(1, n + 1):
+        path = results_dir() / f"fits_{sample_key}_chunk{k}of{n}.ecsv.gz"
+        if not path.exists():
+            missing.append(k)
+            continue
+        t = Table.read(path, format="ascii.ecsv")
+        if t.meta.get("params") != params:
+            raise SystemExit(f"{path.name}: fitted with other Params; refit chunk {k}/{n}")
+        want = set(ids[k - 1 :: n].tolist())
+        have = set(t["event_id"].tolist())
+        if len(t) != len(have):  # a resumed run must not count an event twice
+            raise SystemExit(f"{path.name}: duplicate event rows")
+        if have != want:  # incl. events `fit` skipped for lack of photometry: not the whole sample
+            raise SystemExit(
+                f"{path.name}: {len(want - have)} events of chunk {k}/{n} missing, "
+                f"{len(have - want)} from outside it"
+            )
+        parts.append(t)
+    if missing:
+        raise SystemExit(f"missing chunks of {n}: {missing}")
+    tab = vstack(parts, metadata_conflicts="silent")
+    tab.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source=f"merge-chunks of {n} tracked chunk tables (results/w3_ogle)",
+        params=params,
+        chunk="",
+        wall_time_s=None,
+        cpu_time_s=round(float(np.nansum(np.asarray(tab["seconds"], float))), 1),
+    )
+    path = out_dir() / f"fits_{sample_key}.ecsv"
+    tab.write(path, overwrite=True)
+    print(f"wrote {path}: {len(tab)} events from {n} chunks")
+    return path
+
+
 def summarise_fits(sample_key: str) -> dict:
     """ΔBIC distribution and flag counts of a fitted sample (``derived``)."""
     fits = Table.read(out_dir() / f"fits_{sample_key}.ecsv")
@@ -1700,6 +1841,7 @@ def main(argv=None) -> int:
     f.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     f.add_argument("--limit", type=int, default=None)
     f.add_argument("--fresh", action="store_true", help="ignore an interrupted run's checkpoint")
+    f.add_argument("--chunk", default=None, help="K/N: fit only events K-1, K-1+N, ... (1-based K)")
     v = sub.add_parser("vet", help="vet the flags of a fitted sample")
     v.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     v.add_argument("--no-binary-lens", action="store_true")
@@ -1713,11 +1855,14 @@ def main(argv=None) -> int:
     sub.add_parser("audit", help="emulated selection on the real bulge sample")
     sub.add_parser("limit", help="95 %% rate limit from the injections")
     sub.add_parser("manifest", help="write data/manifests/ogle_mroz.ecsv")
+    mc = sub.add_parser("merge-chunks", help="join tracked chunk tables 1..N of N for `vet`")
+    mc.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
+    mc.add_argument("--n", type=int, default=12)
     m = sub.add_parser("summary", help="ΔBIC distribution of a fitted sample")
     m.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     args = ap.parse_args(argv)
     if args.cmd == "fit":
-        run_fit(args.sample, args.limit, args.procs, args.fresh)
+        run_fit(args.sample, args.limit, args.procs, args.fresh, parse_chunk(args.chunk))
     elif args.cmd == "vet":
         run_vet(args.sample, args.procs, binary_lens=not args.no_binary_lens)
     elif args.cmd == "revet":
@@ -1732,6 +1877,8 @@ def main(argv=None) -> int:
         run_limit()
     elif args.cmd == "summary":
         print(json.dumps(summarise_fits(args.sample), indent=1))
+    elif args.cmd == "merge-chunks":
+        merge_chunks(args.sample, args.n)
     elif args.cmd == "manifest":
         print(write_manifest())
     return 0

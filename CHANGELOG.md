@@ -2,6 +2,62 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 OGLE bulge, chunks 2–3/12: 20 flags, no candidate; chunk tables tracked (D-059)
+- Cloud run. Chunk 1/12's fit table lived only in the ephemeral session and is lost. `fit --chunk K/N` now also
+  writes a deterministic gzipped copy to `results/w3_ogle/` (~0.22 MB per chunk); `merge-chunks --n 12` joins
+  chunks 1..12 into the table `vet` reads and marks it the whole sample only when every chunk is present, fitted
+  with the current `Params` and holds exactly its own events (none skipped) (D-059). A chunk takes ~9 min on 4 cores (not ~17).
+- Chunk 2/12 (483 events, 0 errors): best ordinary PSPL 454 / PAR 28 / FSPL 1; ΔBIC(min exotic) 5/25/50/75/95 % =
+  −4.7 / 3.8 / 5.8 / 6.6 / 11.2; 49 below 0, 9 flags below −10 (`derived`). `vet`: 8 fail; **BLG624.18.69573**
+  (no EWS name; t_E ≈ 180–240 d, best ordinary PAR) passes every automated test (N1neg ΔBIC −19.0 vs PAR; season
+  offsets −15.0, drifts −15.5; binary source / lens −10.1; 0 VSX / Gaia matches). Contact sheet and residuals
+  inspected: the N1neg model puts its first caustic spike inside a season gap (no data at t − t0 ∈ [−50, 0] d; the
+  models differ by > 5 % over [−89, −7] d); its Δχ² comes from 2 peak points (−9.4) and 16 post-peak points (−6.7).
+  An unsampled caustic plus a sparsely sampled peak is not evidence: not a candidate (ASSUMPTION-level judgement).
+- Chunk 3/12 (483 events, 0 errors): PSPL 447 / PAR 36 / FSPL 0; ΔBIC(min) 5/50/95 % = −2.6 / 5.7 / 11.1; 39 below
+  0, 11 flags; **0 survive** `vet` (season offsets/drifts remove 10, the refit of all ordinary models the 11th; one
+  VSX match). Contact sheet inspected; in several flags the exotic and ordinary curves also differ mainly in gaps
+  (e.g. BLG597.28.9837 has no peak data).
+- **Failed approach:** chaining chunk runs with `while pgrep -f 'chunk 2/12'` — the waiting shell matches its own
+  pattern and never starts the next chunk.
+- **Next:** a `gap_coverage` vetting test (require data where the exotic and best ordinary models differ, else the
+  flag fails); refit chunk 1 and fit chunks 4–12 (two or three per run); `merge-chunks`, `vet`, `sheet`; the
+  empirical ΔBIC null and xallarap fit for BLG667.04.62161 (scratch null-simulation design: PSPL best fit plus white
+  noise, and plus season-wise circularly shifted residuals); then `inject` / `limit`.
+
+## 2026-10-08: W3 OGLE bulge, chunk 1/12 (483 events): one marginal flag survives automated vetting
+- Cloud run. `w3_microlensing.py fit --chunk K/N` fits events K−1, K−1+N, … so sessions fit disjoint, field-balanced
+  parts of the bulge sample (measured ~10 s CPU per bulge event, ~4 h for all 5,790 on 4 cores; one chunk of 12 is
+  ~17 min wall). Chunk 1/12: 483 events, 0 errors; best ordinary PSPL 449 / PAR 32 / FSPL 2; ΔBIC(min exotic)
+  5/25/50/75/95 % = −3.5 / 3.7 / 5.6 / 6.5 / 12.4; 41 below 0, 12 flags below −10 (`derived`).
+- `vet`: 11 of 12 fail; **BLG667.04.62161 (OGLE-2015-BLG-1250) passes every automated test**: E2neg ΔBIC −12.1 vs
+  PSPL; season offsets −12.7, season drifts −12.4, binary source / binary lens no better than PSPL, 0 outliers,
+  baseline χ²/dof 0.87, 0 arXiv records, no VSX / Gaia variable within 1″. Contact sheet inspected: faint source
+  (peak flux ~2× baseline), large scatter, a flattened peak and a few low points ~+20…+50 d; the E2neg plateau fits
+  those. ASSUMPTION-level judgement: marginal, not a candidate — with 483 trials and 12 flags below −10 from a
+  heavy-tailed ΔBIC distribution, one −12 survivor is expected without any exotic lens; untested ordinary
+  explanations: xallarap, per-season error underestimation near the peak, blending/difference-imaging systematics
+  of a faint source, and a calibrated null (the injection/limit stage).
+- **Next:** chunks 2–12 (one per run: `fit --chunk K/12`, then `vet` / `sheet`); for BLG667.04.62161, an
+  empirical ΔBIC null from the same chunk's PSPL-simulated light curves (does −12 occur at rate ≥ 1/483?) and an
+  xallarap fit before any further attention; then `inject` / `limit`. `limit` refuses vetting of a single chunk
+  (#86 Codex), so a `merge-chunks` step (concatenate `fits_bulge2019_chunk*of12.ecsv`, then `vet`) comes first.
+
+## 2026-10-08: W3 OGLE disk re-fit with bounded parallax: still null (D-058)
+- Cloud run. ASSUMPTION `Params.pie_max = 5`: PAR fits with |π_E| > 5 are rejected in every fit and vetting refit
+  (the unbounded fits reached π_E ~ 30–1,400). Disk (460 events, 376 s): best ordinary PSPL 408 / PAR 52 / FSPL 0;
+  36 of 368 PAR fits sit on the bound; ΔBIC(min exotic) 5/50/95 % = −4.0 / 3.6 / 6.9.
+- 7 flags (was 6; new GD1217.10.8703 at ΔBIC −10.0, `E2pos`), **0 survive** `vet` (all tests complete). The new flag
+  is four post-peak points 0.15–0.35 below baseline that neither model fits; per-season offsets remove it (ΔBIC 0.9).
+  Contact sheet inspected.
+- Absorption check (simulated: 40 E2pos/N1neg injections, 700 uniform epochs, white noise σ = 0.05–0.3): flags 25
+  bounded vs 25 unbounded; ΔBIC shifts ≤ 0.46. On this cadence unbounded parallax does not absorb exotic signals,
+  so the bound is a physical prior, not a sensitivity gain. Not tested: seasonal gaps and correlated systematics.
+- Environment: install the `mulens` extra (`-e ".[dev,cloud,mulens]"`); without MulensModel `fit` silently skips PAR.
+- Follow-up (#84 Codex): checkpoint rows carry a `Params` hash; `fit` refits rows from other Params, so a chunked
+  bulge run never mixes bounded and unbounded parallax fits.
+- **Next:** bulge `fit` in chunks or locally, then `vet` / `sheet`; `inject` / `limit` with season-drift vetting.
+
 ## 2026-10-08: W1/W2 in published lens catalogues: no dark deflector; weak limits (D-056)
 - Worktree worker: lenscat (32,838), Euclid Q1 Discovery Engine (2,584) and SuGOHI (3,961) merged into 35,862 systems
   (`src/jwst_anomaly/lenscats.py`, `scripts/w12_lenscats.py`; pinned by sha256). Deflector test in Legacy Surveys
@@ -33,6 +89,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   inspected: two flags have sparse peak coverage; two have post-peak points below baseline (the Ellis
   demagnification shape) that one season's drift absorbs.
 - **Limits:** none yet (injections use bulge light curves); the disk null is a flag count, not a rate limit.
+- Review follow-up (#82 Codex): binary-lens α starts were passed in radians to MulensModel (degrees), so only
+  0.5–5.8° was searched; fixed and disk re-vetted: still 0 survivors (BL BICs move by ≤ 18). Injection vetting now
+  refits PAR with season trends as `vet` does; failed XMatch queries leave a flag unvetted; `limit` refuses a
+  zero-event limit unless the bulge vetting is a complete null.
 - **Caveats:** unbounded parallax fits reach π_E ~ 30–1,400 (unphysical); they can absorb an exotic signal and cut
   sensitivity. The season-drift test may also absorb real W3 dips: calibrate both with injections.
 - Timing: the bulge fit is ~1.1 s/event on 4 cores (~1.8 h for 5,790); `fit` checkpoints to

@@ -2802,8 +2802,45 @@ per-season drift absorbs). No rate limit yet: injections are built on bulge ligh
   the published products do not contain (and OGLE EWS terms are still an owner decision, D-054).
 - Evidence: docs/exotic_limits.md "W3 in the OGLE-IV microlensing samples"; survivors inspected on a contact sheet
   before this entry. Wall time ≈ 5 CPU hours (bulge fit 10,413 s on 4 cores; vet 6,592 s; inject 1,974 s).
+- **Params caveat:** this bulge run predates D-058, so its parallax fits are unbounded. A bound makes the ordinary
+  family less flexible, so re-fitting under D-058 can only add flags, never remove one; the vetting chain and the
+  injection/selection result are unaffected. The chunked tables of D-059 are the re-fit under the current Params.
 
 **Revisit if.** A light-curve-level OGLE/KMTNet/MOA data set becomes usable (then a real W3 limit is possible, and the
 selection emulation here is the baseline to beat); or the season-offset/drift test is shown to absorb injected W3
 signals at small u₀ (it is applied to injections through `flag_vetted`, which stays at 43–86 %, so it does not now);
-or the unbounded parallax fit (π_E up to ~10³) is shown to absorb injected exotic signals.
+or the D-059 chunk re-fit under the bounded parallax of D-058 produces flags that pass feature coverage and the
+jackknife (this run, with unbounded parallax, produced none).
+
+## D-058 W3 fitter: parallax bounded at |π_E| ≤ 5; disk sample still null (2026-10-08)
+
+**Decision.** ASSUMPTION: `w3_microlensing.Params.pie_max = 5`; the PAR objective rejects larger |π_E| in `fit`,
+`vet` and injections. Observed microlensing parallaxes are ≲ 1–2 even for nearby disk lenses, so 5 is generous.
+Disk re-fit: 7 flags, 0 survivors (`derived`).
+
+**Alternatives rejected.** Unbounded π_E (unphysical fits, π_E up to ~10³); a Gaussian prior on π_E (needs a
+population model; a hard bound is enough for a flag screen).
+
+**Evidence.** CHANGELOG 2026-10-08 "bounded parallax": simulated injections show no absorption either way
+(25 / 25 flagged); the bound adds one marginal real flag (GD1217.10.8703), removed by season offsets.
+
+**Revisit if.** Bulge injections with real cadences show the bound changes recovery, or a published event with
+|π_E| > 5 appears in the samples.
+
+## D-059 W3 bulge chunk fit tables are tracked in git (`results/w3_ogle/`) and joined by `merge-chunks` (2026-10-08)
+
+**Decision.** `w3_microlensing.py fit --chunk K/N` (complete chunks, no `--limit`) also writes its `derived` table
+as deterministic gzipped ECSV to `results/w3_ogle/fits_<sample>_chunkKofN.ecsv.gz`; `merge-chunks --n N` joins
+chunks 1..N into the table `vet` reads and sets `chunk = ""` (the whole sample) only when every chunk exists,
+was fitted with the current `Params` and holds exactly its own events (none skipped). `limit` keeps refusing anything else.
+Raw light curves and all other outputs stay out of git.
+
+**Alternatives rejected.** Fitting all 5,790 bulge events in one session (~4 h; cloud sessions end after ~40 min);
+keeping chunk tables only under `$JWST_ANOMALY_DATA` (lost with each ephemeral session — chunk 1/12 of
+2026-10-08 was lost this way and must be refitted); GitHub release assets (extra credentials and tooling for
+~100 kB files); a compact column subset (the contact sheet and audits need the model parameters).
+
+**Evidence.** A chunk table is ~480 rows × 57 columns; gzipped ~0.2 MB (CHANGELOG 2026-10-08 "chunk 2/12"),
+so all 12 chunks stay ~2–3 MB, under the 1 MB per-file rule.
+
+**Revisit if.** The tracked tables exceed ~10 MB in total, or a local session can fit the whole sample at once.
