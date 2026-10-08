@@ -270,7 +270,8 @@ def run_prescreen(procs: int) -> Path:
             f"  z_min < -{thr}: {(z < -thr).sum()} (and S_min < -{P.prescreen_s}: "
             f"{((z < -thr) & (s < -P.prescreen_s)).sum()})"
         )
-    print(f"passes: {len(passes(tab))}")
+    n_shape = int((no_error(tab) & prescreen_pass(tab["z_min"], tab["s_min"], tab["z_min2"])).sum())
+    print(f"shape passes: {n_shape}; not at a shared epoch: {len(passes(tab))}")
     return path
 
 
@@ -368,7 +369,15 @@ def prescreen_pass(z_min, s_min, z_min2):
 
 
 def passes(pre: Table) -> Table:
-    return pre[no_error(pre) & prescreen_pass(pre["z_min"], pre["s_min"], pre["z_min2"])]
+    """Light curves passing the shape cuts (``prescreen_pass``) whose deficit epoch is not shared
+    by improbably many other objects of the field or chip (``epoch_artefact``)."""
+    sel = pre[no_error(pre) & prescreen_pass(pre["z_min"], pre["s_min"], pre["z_min2"])]
+    pop, chips = deficit_population(pre), chip_populations(pre)
+    sh = [epoch_artefact(pop, chips, r, str(r["event_id"])) for r in sel]
+    for k in ("field_n", "field_p", "chip_n", "chip_p"):
+        sel[f"shared_{k}"] = [x[k] for x in sh]
+    keep = np.array([x["p"] >= COINC_P for x in sh], bool)
+    return sel[keep]
 
 
 def run_fit(procs: int, limit: int | None = None) -> Path:
@@ -422,6 +431,64 @@ REPEAT_S = 6.0  # ASSUMPTION: a second deficit this significant outside the feat
 NEIGHBOUR_PX = 12.0  # ASSUMPTION: Cut-0 objects within 12 px (7″, ~3.5 seeing FWHM) share flux
 BASELINE_CHI2 = 2.0  # ASSUMPTION (as D-057): χ²/dof of a constant outside the feature
 NEIGHBOUR_S = 5.0  # ASSUMPTION: |S| of a neighbour's notch over the same window = shared feature
+MIN_FEATURE_NIGHTS = 3  # ASSUMPTION: nights with epochs inside the exotic feature
+COINC_Z = 5.0  # deficits with z_min < −5 form the population for the shared-epoch test
+COINC_P = 1e-3  # ASSUMPTION: Poisson probability below which a shared epoch is a frame systematic
+
+_POP: tuple | None = None  # (field, per-chip) deficit populations (set before a Pool forks)
+
+
+def deficit_population(pre: Table, chip: int | None = None) -> dict:
+    """Centres of every significant deficit box of the field (or of one chip), per box width and
+    pooled over widths (key ``"all"``) (``derived``)."""
+    ok = no_error(pre) & (np.asarray(pre["z_min"], float) < -COINC_Z)
+    ids = np.asarray(pre["event_id"], str)
+    if chip is not None:
+        ok &= np.array([moa.parse_event_id(e)[1] == chip for e in ids])
+    w = np.asarray(pre["width"], float)[ok]
+    c = 0.5 * (np.asarray(pre["t_lo"], float) + np.asarray(pre["t_hi"], float))[ok]
+    ids = ids[ok]
+    out = {}
+    for key in [*np.unique(w).tolist(), "all"]:
+        m = np.ones(w.size, bool) if key == "all" else w == key
+        order = np.argsort(c[m])
+        out[key] = (c[m][order], ids[m][order])
+    return out
+
+
+def chip_populations(pre: Table) -> dict:
+    return {chip: deficit_population(pre, chip) for chip in range(1, 11)}
+
+
+def shared_epoch(
+    pop: dict, width: float, centre: float, self_id: str = "", pooled: bool = False
+) -> dict:
+    """How many other objects have a deficit box of the same width (``pooled``: any width) centred
+    within max(W/2, 1 d) of this one, against the Poisson expectation for boxes spread uniformly
+    over the survey. Many unrelated stars dimming together is an artefact of the frame or of the
+    chip (bad seeing, clouds, subtraction, a detector problem), not lensing of one star."""
+    key = "all" if pooled else width
+    if key not in pop:
+        return {"n": 0, "expected": 0.0, "p": 1.0}
+    cs, ids = pop[key]
+    tol = max(width / 2.0, 1.0)
+    lo, hi = np.searchsorted(cs, centre - tol), np.searchsorted(cs, centre + tol)
+    n = int(np.sum(ids[lo:hi] != self_id))
+    lam = max(len(cs) - 1, 0) * 2.0 * tol / (moa.T_END - moa.T_START)
+    from scipy.stats import poisson
+
+    return {"n": n, "expected": float(lam), "p": float(poisson.sf(n - 1, lam)) if n else 1.0}
+
+
+def epoch_artefact(field_pop: dict, chip_pops: dict, scan: dict, event_id: str) -> dict:
+    """Shared-epoch probabilities in the whole field (same width) and on the object's chip (any
+    width); the smaller one decides."""
+    c = 0.5 * (scan["t_lo"] + scan["t_hi"])
+    fld = shared_epoch(field_pop, scan["width"], c, event_id)
+    chip = moa.parse_event_id(event_id)[1]
+    chp = shared_epoch(chip_pops.get(chip, {}), scan["width"], c, event_id, pooled=True)
+    return {"field_n": fld["n"], "field_p": fld["p"], "chip_n": chp["n"], "chip_p": chp["p"],
+            "p": min(fld["p"], chp["p"])}  # fmt: skip
 
 
 def feature_window(r: dict, model: str) -> tuple[float, float]:
@@ -570,6 +637,12 @@ def vet_one(job) -> dict:
     out["neighbours"] = s_n
     if not add("neighbour_shares_feature", not hit, f"{len(s_n)} neighbours; |S| > 5: {hit}"):
         return record()
+    # --- an eclipse or occultation: a trapezoidal dip with no caustic spikes
+    ecl = fit_eclipse(lc, lo, hi)
+    out["eclipse"] = ecl
+    d_ecl = res[ex]["bic"] - min(ordinary[best_o]["bic"], ecl["bic"])
+    if not add("eclipse_dip", d_ecl < P.flag_dbic, f"ΔBIC {d_ecl:.1f} vs a trapezoidal dip"):
+        return record()
     # --- refits from the screen optimum: systematics models
     bad = w3.isolated_outliers(lc, w3.model_flux(best_o, lc, ordinary[best_o])) | (
         w3.isolated_outliers(lc, w3.model_flux(ex, lc, res[ex]))
@@ -621,13 +694,17 @@ def vet_one(job) -> dict:
             return record()
     # --- D-057 revet tests: feature sampled, jackknife, two unrelated events
     cov = w3.feature_coverage(lc, ordinary[best_o], res[ex], best_o, ex)
+    fe = w3.model_flux(ex, lc, res[ex])
+    fo = w3.model_flux(best_o, lc, ordinary[best_o])
+    cov["n_nights"] = int(np.unique(nights(lc.t[np.abs(fe - fo) > 3.0 * np.median(lc.sf)])).size)
     out["feature"] = cov
-    ok_cov = cov["n_epochs"] >= 3 and cov["dchi2_in"] < P.flag_dbic
+    # MOA takes several exposures a night: the D-057 "≥ 3 epochs" becomes ≥ 3 nights (ASSUMPTION)
+    ok_cov = cov["n_nights"] >= MIN_FEATURE_NIGHTS and cov["dchi2_in"] < P.flag_dbic
     if not add(
         "exotic_feature_sampled",
         ok_cov,
-        f"{cov['n_epochs']} epochs inside, Δχ² in {cov['dchi2_in']:.1f} / out "
-        f"{cov['dchi2_out']:.1f}",
+        f"{cov['n_epochs']} epochs on {cov['n_nights']} nights inside, Δχ² in "
+        f"{cov['dchi2_in']:.1f} / out {cov['dchi2_out']:.1f}",
     ):
         return record()
     n_drop = w3.jackknife_n_drop(cov["n_epochs"])
@@ -635,12 +712,92 @@ def vet_one(job) -> dict:
         jk = w3.jackknife_worst_epochs(lc, ordinary[best_o], res[ex], best_o, ex, n_drop)
         if not add("jackknife_epochs", jk[-1] < P.flag_dbic, f"ΔBIC {[round(v, 1) for v in jk]}"):
             return record()
+    jn = jackknife_nights(lc, res, ex, best_o, ecl)
+    out["jackknife_nights"] = jn
+    if jn["n_dropped"] and not add(
+        "jackknife_nights",
+        jn["dbic"] < P.flag_dbic,
+        f"ΔBIC {jn['dbic']:.1f} after dropping the {jn['n_dropped']} most influential night(s) "
+        f"of {jn['n_nights']} in the feature",
+    ):
+        return record()
     d2e, _two = w3.two_events_dbic(lc, ordinary["PSPL"], res[ex], "PSPL", ex)
     if d2e is not None and not add("two_unrelated_events", d2e < P.flag_dbic, f"ΔBIC {d2e:.1f}"):
         return record()
     out["complete"] = bool(binary_lens and w3.have_mm())
     out["survives"] = True
     return record()
+
+
+def trapezoid(t, tc: float, dur: float, fin: float) -> np.ndarray:
+    """Dip shape in [0, 1]: flat bottom for |t − tc| < dur/2 (1 − fin), linear ingress/egress."""
+    x = np.abs(np.asarray(t, float) - tc)
+    half = 0.5 * dur
+    ramp = max(fin, 1e-3) * half
+    return np.clip((half - x) / ramp, 0.0, 1.0)
+
+
+def fit_eclipse(lc: w3.LightCurve, lo: float, hi: float) -> dict:
+    """Ordinary dip model: baseline − depth × trapezoid (eclipse, occultation, dipper), depth ≥ 0
+    and baseline from a weighted linear solve; Nelder–Mead over (tc, log duration, ingress)."""
+    from scipy.optimize import minimize
+
+    def chi2(x):
+        tc, ld, fin = x
+        if not (0.0 <= fin <= 1.0 and -1.5 <= ld <= 3.5):
+            return 1e30
+        s = trapezoid(lc.t, tc, 10.0**ld, fin)
+        coef, c2 = w3.linear_fluxes_n(-s[None, :], lc.f, lc.w)
+        return c2 if coef[0] >= 0 else 1e30
+
+    tc0, dur0 = 0.5 * (lo + hi), max(hi - lo, 0.2)
+    starts = [
+        (tc0 + dt * dur0, math.log10(dur0 * g), fin)
+        for dt in (-0.2, 0.0, 0.2)
+        for g in (0.3, 0.6, 1.0)
+        for fin in (0.05, 0.3, 0.7)
+    ]
+    vals = [chi2(np.array(s)) for s in starts]
+    best = None
+    for i in np.argsort(vals)[:3]:
+        r = minimize(
+            chi2, np.array(starts[i]), method="Nelder-Mead", options={"maxfev": 1500, "xatol": 1e-5}
+        )
+        if best is None or r.fun < best.fun:
+            best = r
+    n = lc.t.size
+    k = 3 + 2
+    tc, ld, fin = best.x
+    return {"chi2": float(best.fun), "k": k, "bic": float(best.fun) + k * math.log(n),
+            "tc": float(tc), "duration": float(10.0**ld), "ingress": float(fin)}  # fmt: skip
+
+
+def jackknife_nights(lc: w3.LightCurve, res: dict, ex: str, best_o: str, ecl: dict) -> dict:
+    """Drop whole nights (MOA takes several exposures a night, so one bad night is several bad
+    epochs) in order of their contribution to the exotic preference over the best ordinary model
+    (single lens or eclipse); at most 2 and never fewer than 2 nights left inside the feature
+    (ASSUMPTION). Returns ΔBIC (exotic − best ordinary) after the drops."""
+    fe = w3.model_flux(ex, lc, res[ex])
+    fo = w3.model_flux(best_o, lc, res[best_o])
+    dchi = (lc.f - fe) ** 2 * lc.w - (lc.f - fo) ** 2 * lc.w
+    nt = nights(lc.t)
+    inside = np.abs(fe - fo) > 3.0 * np.median(lc.sf)
+    feat_nights = np.unique(nt[inside])
+    n_drop = int(min(2, max(0, feat_nights.size - 2)))
+    out = {"n_nights": int(feat_nights.size), "n_dropped": n_drop, "dbic": np.nan}
+    if not n_drop:
+        return out
+    per = {k: float(dchi[nt == k].sum()) for k in np.unique(nt)}
+    worst = sorted(per, key=per.get)[:n_drop]
+    sub = lc.subset(~np.isin(nt, worst))
+    d = refit_both(sub, res, ex)
+    # the eclipse alternative on the same subset
+    lo, hi = float(lc.t[inside].min()), float(lc.t[inside].max())
+    e2 = fit_eclipse(sub, lo, hi)
+    e_bic = w3.optimise(ex, sub, [_start(ex, res[ex])])["bic"]
+    out["dbic"] = float(max(d, e_bic - e2["bic"]))
+    out["dropped"] = [int(x) for x in worst]
+    return out
 
 
 def _vet_worker(job):
@@ -825,7 +982,13 @@ def _inject_worker(job):
         row["cut0"] = cut0_emulated(t, sig, sf)
         scan = deficit_scan(t, f2, sf)
         row.update(z_min=scan["z_min"], s_min=scan["s_min"], z_min2=scan["z_min2"])
-        row["prescreen"] = bool(prescreen_pass(scan["z_min"], scan["s_min"], scan["z_min2"]))
+        row["shape"] = bool(prescreen_pass(scan["z_min"], scan["s_min"], scan["z_min2"]))
+        sh = (
+            epoch_artefact(_POP[0], _POP[1], scan, eid)
+            if row["shape"] and _POP is not None
+            else {"p": 1.0}
+        )
+        row["prescreen"] = bool(row["shape"] and sh["p"] >= COINC_P)
         row.update(flagged=False, survives=False, failed_test="")
         if row["cut0"] and row["prescreen"] and not prm.get("prescreen_only"):
             t1 = time.time()
@@ -852,6 +1015,8 @@ def run_inject(
     u0 ~ U[0, 1) (they measure how often an ordinary event ends as a W3 survivor)."""
     field = moa.MoaField(FIELD)
     pre = Table.read(out_dir() / f"prescreen_{FIELD}.ecsv")
+    global _POP
+    _POP = (deficit_population(pre), chip_populations(pre))  # the real field's coincidences
     carriers = quiet_carriers(pre, 300, seed)
     arrays = load_arrays(field, carriers, aux=True)
     ev = field.events()
@@ -962,6 +1127,8 @@ def run_limit() -> Path:
                     if (np.asarray(w["Is"]) < 19.0).any()
                     else np.nan,
                     "eff_per_star": eff,
+                    # Kish effective sample size of the LF weights (the faint end dominates)
+                    "n_eff_lf": float(wt.sum() ** 2 / np.sum(wt**2)) if len(w) else 0.0,
                     "rate95_per_star_yr": lim,
                     "rate95_conservative": 3.0 / (n_lo * years * eff) if eff > 0 else np.inf,
                     "n_ctrl": len(ctrl),

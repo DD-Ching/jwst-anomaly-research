@@ -870,3 +870,124 @@ W3 efficiency is 0 and the 95 % limit is formally infinite. What can be stated:
   are a vetting test, not a characterisation.
 - Only the published samples were used; OGLE EWS seasons wait for the owner's decision on their terms
   (D-054).
+
+## W3 in MOA-II (pilot: gb22)
+
+D-060; `src/jwst_anomaly/moa.py` (adapter), `scripts/w3_moa.py` (`prescreen`, `fit`, `vet`, `sheet`,
+`inject`, `limit`, `manifest`), tests in `tests/test_moa.py` and `tests/test_w3_moa.py`. Outputs under
+`$JWST_ANOMALY_DATA/derived/w3_moa/` (not in git); data pins in SOURCES.md "MOA-II 9-year bulge release" and
+`data/manifests/moa_ii.ecsv`.
+
+Why MOA: the OGLE samples above cannot limit W3 because their PSPL selection rejects every injected W3
+event. The MOA-II 9-year release publishes a light curve for **every Cut-0 object** — 2,409,061 variable
+objects found on difference images with positive *or negative* PSF profiles (Koshimoto et al. 2023, Table 2:
+S/N > 2.7, N_continue,8 ≥ 3) — before any bump cut. Light curves and metadata are **observed**; scan
+statistics, fits, ΔBIC and limits are **derived**; injected events are **simulated**; the t_E → |M| scale is a
+**model_prediction**; every threshold is an **ASSUMPTION** (`Params` and module constants in the script). A
+flag is an anomaly to vet; it is not evidence of exotic physics.
+
+### Data (observed)
+
+gb22 (l, b) ≈ (10.0°, −7.5°), the smallest field: 18,599 Cut-0 objects (248 have too few good epochs to
+scan), ~3,100 epochs each over HJD 2453824–2456970 (8.61 yr). Difference flux in counts; the de-trended
+`cor_flux` is used where it is complete (6,801 objects), else `flux`; epochs with `included = False` are
+dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no published N_s.
+
+### Method
+
+1. **Pre-screen** (`deficit_scan`, every light curve, 207 s on 4 cores): for boxes of width 1, 3, 10, 30, 100,
+   300 d (≥ 3 epochs on ≥ 2 nights), the significance of the box mean below its flanks *and* below the median
+   flux (the weaker of the two), with errors scaled to the point-to-point scatter and each statistic divided by
+   its own robust spread over the light curve (red noise). Pass: z < −10, white-noise S < −5, no second
+   deficit (z < −8) more than 4 box widths away, and the deficit epoch not shared with improbably many other
+   objects — same width in the whole field, or any width on the same chip (Poisson p < 10⁻³ against deficits
+   spread uniformly in time). Thresholds were set from the real distribution and the injections (below).
+2. **Fit** (`fit`): PSPL, FSPL and the exotic N1neg, E2pos, E2neg models of `w3_microlensing.py` on one
+   trajectory, blend flux unbounded (difference flux), extra repulsive-lens starts on the deficit, t_E ≤ 1,000 d
+   and ρ ≤ 0.3. Parallax is fitted in vetting only (it can only remove flags). Flag: ΔBIC < −10.
+3. **Vetting, cheapest first, stopping at the first failure** (`vet_one`): repeated deficit outside the exotic
+   feature (z < −6); variable baseline (χ²/dof > 2 beyond 60 d of the feature); a neighbouring Cut-0 object
+   (< 12 px) with |S| > 5 over the same window; **an eclipse or occultation** (baseline − depth × trapezoid,
+   no caustic spikes); isolated outliers and rescaled errors; free baseline per season; plus drift per season;
+   baseline linear in seeing, airmass and sky; refit with FSPL and parallax; binary source; binary lens
+   (MulensModel + VBMicrolensing grid); the exotic feature sampled on **≥ 3 nights** with Δχ² from inside it;
+   epoch jackknife; **night jackknife** (drop the 1–2 most influential nights); two unrelated events; VSX and
+   Gaia DR3 variability matches (2″).
+4. **Injection-recovery** (`inject`): 600 W3 events (n = 1, ε < 0; u₀ ~ U[0, 2); t₀ ~ U over the data span;
+   t_E ∈ {3, 10, 30, 100, 300} d × ρ ∈ {0.01, 0.1}, 60 per cell; source MOA-Red magnitude I_s ~ U[14.2, 21.4],
+   flux from the archive zero point) added as F_s(A − 1) to the real light curves of 300 quiet gb22 objects
+   (|z| < 4), plus 100 PSPL controls (u₀ < 1). Each goes through a light-curve-level Cut-0 emulation (≥ 3
+   epochs with |signal|/σ > 2.7, each ≤ 8 d after the previous), the pre-screen (against the real field's
+   shared-epoch population), the fit and the vetting (binary lens and VSX/Gaia excepted).
+
+### Results (derived)
+
+| Stage | gb22 |
+|---|---|
+| Light curves scanned | 18,599 (18,351 with enough epochs) |
+| Pass the shape cuts | 1,058 |
+| … and not at a shared epoch (field or chip) | **30** (1,022 removed by the field test, 6 more by the chip test) |
+| Flags (ΔBIC < −10) | 30 (N1neg 22, E2neg 7, E2pos 1; ΔBIC −95 … −3,889) |
+| After vetting | **0** |
+
+- Vetting funnel: 30 → 17 (repeated deficit) → 15 (variable baseline) → 13 (neighbour) → 5 (eclipse dip) → 3
+  (isolated outliers) → 0 (feature on ≥ 3 nights). Every flag fails because the dip is ordinary: an
+  eclipse-like flat-bottomed dip (gb22-R-6-0-4889, -10-3-16229, -10-0-24345: 5–8 d deep dips that a trapezoid
+  fits better than any lens by ΔBIC 36–142, with the predicted caustic spikes absent where sampled), a
+  periodic or repeated dimming, a noisy baseline, or a dip confined to one or two nights.
+- The first vetting pass (without the eclipse model, the chip-level shared-epoch test and the ≥ 3-night rule)
+  left 9 survivors. All nine were inspected on a contact sheet: four were one- or two-night drops (the
+  predicted spikes fell in gaps), five were flat or V-shaped dips without spikes. The three tests were added
+  because these are the ordinary explanations the chain lacked (eclipsing and dipping stars are a listed W3
+  mimic; MOA takes several exposures a night, so one bad night is several bad epochs); their cost to real W3
+  events is in the injection numbers below, which were run after the change.
+- The pre-screen is W3-specific: **0 of 100** PSPL controls pass it (they have no deficit below the baseline),
+  so no control can become a W3 survivor.
+- Wall time: prescreen 207 s, fit 337 s (30 light curves), vet 22 s, inject 1,258 s (700 injections), all on
+  4 cores; the abandoned first fits of 1,058 shape passes ran ~35 s each before the shared-epoch cut existed.
+
+### Injection-recovery and limit (simulated / derived)
+
+| t_E (d) | \|M\| (M☉, model_prediction) | Cut-0 (ρ = 0.01 / 0.1) | pre-screen | recovered | ε per star (LF-weighted) | **Γ₉₅ per star per yr** |
+|---|---|---|---|---|---|---|
+| 3 | 1.7 × 10⁻³ | 0.38 / 0.37 | 0.28 / 0.22 | 0.22 / 0.20 | 0.028 / 0.021 | 3.6 / 4.6 × 10⁻⁶ |
+| 10 | 1.8 × 10⁻² | 0.62 / 0.67 | 0.37 / 0.30 | 0.32 / 0.25 | 0.050 / 0.094 | 2.0 / 1.1 × 10⁻⁶ |
+| 30 | 0.17 | 0.87 / 0.82 | 0.57 / 0.48 | 0.53 / 0.43 | 0.19 / 0.17 | 5.3 / 5.7 × 10⁻⁷ |
+| 100 | 1.8 | 0.92 / 0.90 | 0.45 / 0.45 | 0.28 / 0.32 | 0.10 / 0.18 | 9.8 / 5.6 × 10⁻⁷ |
+| 300 | 17 | 0.90 / 0.92 | 0.27 / 0.47 | 0.08 / 0.22 | 0.053 / 0.093 | 1.9 / 1.1 × 10⁻⁶ |
+
+- **First W3 rate limit**: with zero survivors, the 95 % upper limit on the rate of umbra crossings (u₀ < 2 in
+  |ε| Einstein radii) by an n = 1, ε < 0 lens is **Γ₉₅ ≈ 0.5–5 × 10⁻⁶ per monitored star per year** in gb22
+  over t_E = 3–300 d (|M| ≈ 2 × 10⁻³ – 17 M☉ in the stated geometry), the strongest near t_E ≈ 30 d. Γ₉₅ =
+  3 / (N_s T ε); N_s = 3.5 × 10⁶ stars with 10 ≤ I ≤ 21.4, T = 8.61 yr. With the smallest N_s of the star-count
+  model (2.4 × 10⁶) the limits are 1.43× weaker (`rate95_conservative`).
+- Fractions are of all injections; ε per star weights them by a luminosity function ∝ 10^(0.319 I) and counts
+  stars brighter than I = 14.2 (0.5 % of N_s) as undetectable. The weights favour faint sources, so the
+  effective number of injections per cell is ~20–25 (`n_eff_lf`) and ε is uncertain by ~±20–45 % per cell
+  (binomial); the ρ = 0.01 / 0.1 differences at fixed t_E are within that noise.
+- Where efficiency is lost: Cut-0 (faint sources and short events); the shape cuts, mostly long events whose
+  umbra spans seasons (second-deficit rule); then the variable-baseline test (34 of 231 vetted injections) and
+  the eclipse model (9), which removes W3 events whose caustic spikes fall in gaps. t_E = 300 d events
+  are recovered least (8–22 %).
+
+### Assumptions and caveats
+
+- **N_s** (no published value for gb22): N_s per Cut-0 object in Nunota et al.'s 20 fields (median 188, range
+  131–240) × 18,599 = 3.5 × 10⁶ (2.4–4.5 × 10⁶). A Gaia DR3 RP power-law extrapolation over the same magnitude
+  range gives ~6 × 10⁶ for a 2.18 deg² field, so the adopted N_s is not optimistic.
+- **Luminosity function**: slope 0.319 dex/mag from Gaia DR3 RP counts at RP 13–17.5 within 0.3° of the field
+  centre, extended to I = 21.4; MOA-Red ≈ RP ≈ I to ~0.3 mag. A steeper faint end would lower ε.
+- **Cut-0 fidelity**: emulated on the light curve, not the images — the light-curve S/N stands in for the
+  image S/N, and the spurious-detection filters (σ_x,y, moving objects, PSF χ²) are not emulated. A source
+  that passes the emulation but not the real filters would be missing from the release, so ε is an upper
+  bound on that step, and so the limit is optimistic by that unknown factor.
+- **Carriers**: quiet Cut-0 light curves stand in for the difference light curves of constant stars, which are
+  not in the release; the source's own photon noise is not added (sky- and blend-dominated noise assumed).
+- **Event rate definition**: per star per year for umbra crossings (u₀ < 2); events with t₀ outside the data
+  span are not injected. Mass scale as D-057 (n = 1, D_L = 4 kpc, D_S = 8 kpc, μ_rel = 5 mas/yr).
+- Three vetting tests were added after the first pass left nine survivors (see Results); the injections
+  measure their cost, and their removal would raise ε but leave nine ordinary-looking dips unexplained.
+- One field (0.8 % of the release's light curves). The other 21 fields need the same chain (bulk tars of
+  7–474 GB each; per-object files are also served).
+- Not a statement about OGLE or the Mróz samples, and not combinable with the D-052 JWST limits without a lens
+  population model.

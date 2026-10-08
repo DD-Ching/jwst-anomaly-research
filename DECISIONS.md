@@ -2847,3 +2847,56 @@ keeping chunk tables only under `$JWST_ANOMALY_DATA` (lost with each ephemeral s
 so all 12 chunks stay ~2–3 MB, under the 1 MB per-file rule.
 
 **Revisit if.** The tracked tables exceed ~10 MB in total, or a local session can fit the whole sample at once.
+
+## D-060 W3 in the MOA-II 9-year release: thin in-house adapter, notch pre-screen, gb22 pilot null and first W3 rate limit (2026-10-08)
+
+**Decision.** Read the MOA-II 2006–2014 release (NASA Exoplanet Archive) with a thin adapter,
+`jwst_anomaly.moa.MoaField`, a `signatures.LightCurveSurvey` over one field's bulk tar. Its light curves are read in
+place through a tar-header index; they are difference fluxes in counts, returned by the new
+`signatures.standard_flux_light_curve`. Its events are all Cut-0 objects of the field. The pinned files are the
+metadata tarball (97 MB) and `gb22.tar` (3.5 GB; stated reason: light curves exist only as per-field tars, and gb22 is
+the smallest). The W3 search is `scripts/w3_moa.py`:
+- a notch pre-screen. A deficit must sit below both its flanks and the median flux, normalised by the light curve's
+  own red noise. It must be single, and its epoch must not be shared by improbably many objects of the field or chip;
+- the `w3_microlensing` fitter with the blend flux free (`linear_fluxes(f_min=inf)`), t_E ≤ 1,000 d and ρ ≤ 0.3;
+- cheapest-first vetting that stops at the first failure. It adds MOA-specific ordinary tests (neighbour objects,
+  seeing/airmass/sky regressors, a trapezoidal eclipse model, ≥ 3 nights in the feature, a night jackknife);
+- injection-recovery through Cut-0 emulation, pre-screen, fit and vetting;
+- a 95 % limit per monitored star per year. N_s comes from the N_s-per-Cut-0-object ratio of Nunota et al. 2024.
+
+Pilot result for gb22: 18,599 light curves, 30 flags, **0 survivors**. Γ₉₅ ≈ 0.5–5 × 10⁻⁶ per star per year for
+t_E = 3–300 d (docs/exotic_limits.md "W3 in MOA-II (pilot: gb22)").
+
+**Alternatives rejected.**
+- astroquery `NasaExoplanetArchive`: TAP has no MOA table (2026-10-08).
+- merida 0.3.2: it scrapes a temporary Firefly workspace URL with a spoofed User-Agent and has heavy runtime dependencies.
+- qusi / ramjet `MoaDataInterface`: it reads internal feather files, not the public release.
+- Per-object HTTP files (`data/Contributed/MOA/gb{F}/R/{C}/…ipac`): fine for a few events, but undocumented, and
+  18,599 requests where a whole field is screened.
+- Fitting every shape pass: 1,058 light curves at ~35 s each (~2.5 h on 4 cores); 97 % of them are epochs shared
+  with other objects.
+- The first pre-screen statistics:
+  - a plain box mean against the median: 10,367 passes at S < −8, dominated by trends and season offsets;
+  - a notch against the flanks with white-noise errors: 13,462 passes;
+  - the notch normalised by its own spread: 4,855 passes, and it passed 44–76 % of Cut-0-detected PSPL controls (a baseline box
+    between bright flanks). Requiring the box below the median flux too brought the PSPL controls to 0/250.
+- Keeping parallax in the screen fit: it can only remove flags, so it is fitted in vetting. Unbounded t_E/ρ: one fit
+  took 200 s with an exact finite-source integral on every epoch.
+
+**Evidence.**
+- `metadata.ipac` has 2,409,061 rows, the Cut-0 count of Nunota et al. 2024 (arXiv:2410.23553, Sect. 2.2).
+- Cut-0 cuts: Koshimoto et al. 2023 (arXiv:2303.08279), Table 2. The archive page quotes the older Sumi et al. 2011
+  values.
+- N_s per Cut-0 object over 20 fields: median 188, range 131–240. gb22 is not in Nunota et al.'s Table 1.
+- First vetting pass: 9 survivors, inspected; they are one- or two-night drops and spike-less flat dips. The eclipse
+  model, the chip-level shared-epoch test and the ≥ 3-night rule were then added, and the injections were re-run
+  after the change: 171/600 W3 injections recovered, 0/100 PSPL controls.
+- D-054's "no verified bulk MOA endpoint" no longer holds.
+
+**Revisit if.**
+- NExScI publishes a TAP table or API for MOA, or a maintained reader appears.
+- MOA publishes machine-readable W3-relevant efficiencies or image-level injections. The Cut-0 emulation is
+  light-curve level.
+- The other 21 fields are screened. The largest tars are 474 GB, so per-object HTTP or a cloud session is needed.
+- A survivor appears: stop and report to the owner (/vet-candidate).
+- Any W3 limit is quoted outside the repository: `needs-human` (D-054).

@@ -150,3 +150,40 @@ def test_vetting_removes_a_star_with_repeated_dips():
     assert out["exotic"] in ("N1neg", "E2neg")
     assert ("repeated_deficit", False) in [(n, ok) for n, ok, _ in out["tests"]]
     assert not out["survives"] and not out["complete"]
+
+
+def test_a_deficit_shared_by_many_objects_is_a_frame_artefact():
+    rng = np.random.default_rng(5)
+    n = 300
+    centres = rng.uniform(2453824.0, 2456970.0, n)
+    centres[:12] = 2455000.0 + rng.uniform(-0.5, 0.5, 12)  # twelve objects dim on one night
+    pre = Table(
+        {
+            "event_id": [f"gb22-R-{1 + i % 10}-0-{i}" for i in range(n)],
+            "z_min": np.full(n, -12.0),
+            "s_min": np.full(n, -20.0),
+            "z_min2": np.zeros(n),
+            "width": np.full(n, 1.0),
+            "t_lo": centres - 0.5,
+            "t_hi": centres + 0.5,
+            "error": [""] * n,
+        }
+    )
+    pop = wm.deficit_population(pre)
+    hot = wm.shared_epoch(pop, 1.0, 2455000.0, "gb22-R-1-0-0")
+    assert hot["n"] >= 11 and hot["p"] < wm.COINC_P
+    lone = wm.shared_epoch(pop, 1.0, float(centres[100]), "gb22-R-1-0-100")
+    assert lone["p"] >= wm.COINC_P
+    kept = set(wm.passes(pre)["event_id"])
+    assert "gb22-R-1-0-0" not in kept and "gb22-R-1-0-100" in kept
+
+
+def test_a_flat_bottomed_dip_is_fitted_as_an_eclipse():
+    assert wm.trapezoid([0.0, 4.0, 10.0], 0.0, 10.0, 0.2).tolist() == [1.0, 1.0, 0.0]
+    t, f, sf = _dip_lc()  # 500-count box dip, 95 < t < 105
+    lc = wm.to_lightcurve(t, f, sf)
+    ecl = wm.fit_eclipse(lc, 93.0, 107.0)
+    assert ecl["tc"] == pytest.approx(100.0, abs=1.0)
+    assert ecl["duration"] == pytest.approx(10.0, rel=0.2)
+    flat = float(np.sum((f - np.average(f, weights=lc.w)) ** 2 * lc.w))
+    assert ecl["chi2"] < flat - 100.0
