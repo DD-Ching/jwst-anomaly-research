@@ -51,10 +51,11 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - reword `acquire._warn_if_reprocessed`.
 3. **Two-epoch search** (D-027): null results for SMACS/VENUS and Sunrise o010/o120; Earendel is steady
    (docs/fields/sunrise.md). Third epoch (o052, calibrated with `--controls`): 0 of 57 candidates. Next:
-   - **vet the Sunrise transient candidates** `n0022`, `n0150` (and variable `n0153`) from the third-epoch
-     controls (docs/fields/sunrise.md): per-dither `_cal` exposures, host, moving-object test;
+   - `n0022` and `n0150` are detector persistence (D-039). Run `scripts/persistence_check.py` on every future
+     single-epoch candidate before vetting. Next: `/vet-candidate n0153` (on sky in all 8 dithers, F150W ×1.9 over
+     2.9 yr; host, AGN colours, a pipeline-version check on neighbours);
    - forced photometry on all catalogued sources, not only catalog-stage candidates (the two-band rule misses
-     blue transients); find why o010/o120 missed `n0022`/`n0150`;
+     blue transients);
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

@@ -1869,6 +1869,36 @@ gated off) until the solver refines its grid near high |μ|. Pairs whose catalog
   with `frame_offset_arcsec` (0.208, −0.025).
 - `images` / `fluxratio` run with CANUCS DR1 photo-z once the image list opens.
 
+## D-039 Persistence test on level-2 exposures; Sunrise `n0022` and `n0150` are afterimages (2026-10-08)
+
+**Decision.** Before a single-epoch source counts as a transient, `scripts/persistence_check.py` measures it in every
+level-2 `_cal` exposure that covers it, and measures the same *detector pixel* in the earlier exposures on that
+detector (≤ 3 h). A detection is `suspect` when an earlier exposure put ≥ 20× its flux, or a saturated pixel, there;
+earlier exposures that put the position itself on that pixel (< 2 px) are skipped. A position with detections
+but none clean (clean = not suspect, with ≥ 1 earlier exposure checked) is `persistence`; two clean detections make
+it `on_sky`. Thresholds are ASSUMPTIONs.
+
+**Alternatives rejected.**
+- Re-running calwebb_detector1's `persistence` step from `_uncal`: full raw downloads per exposure, and the archived
+  `_cal` products already carry the afterimages with no DQ flag at their pixels (observed), so the test has to work
+  on what the mosaic was built from.
+- Inspecting the level-3 `_i2d` only: the mosaic hides which exposures contribute, and an afterimage that lands on
+  the same sky in two dithers looks like a real source there (`n0022`).
+
+**Evidence** (docs/fields/sunrise.md; all `derived`).
+- `n0022`: seen only in o010 dithers 3 and 4 of each SW filter. A bright galaxy lit the same pixels in dithers 2 and
+  1 (F150W 256 and 268 vs 5.0 and 2.1, i.e. 2.0 % and 0.8 %); the dither geometry puts both afterimages on one sky
+  position.
+- `n0150`: in each epoch it appears only in the exposure after a saturated star (19–31 saturated pixels) sat on that
+  pixel: o010 d4 (SW and F277W), o120 d2, o052 d4, at 0.04–0.07 % of the star's flux. Its wandering position is the
+  per-epoch dither vector.
+- Controls: `n0153` (39 of 48 exposures detected, 0 suspect, 36 clean) and Earendel (4 detected, 4 clean; S/N ≈ 5 per
+  exposure, a weak control) are `on_sky`.
+- Synthetic test: a 1 % afterimage of a saturated star is `persistence`, a real faint source `on_sky`.
+
+**Revisit if.** A candidate is detected in exposures whose earlier ones were dark at its pixel, but fades within one
+visit (fast transient vs. a lookback that is too short), or afterimages appear > 3 h after the illumination.
+
 ## D-040 `find_images` refines grid cells on folds; frame offsets move map models; MACS0416 image list open (2026-10-08)
 
 **Decision.**
