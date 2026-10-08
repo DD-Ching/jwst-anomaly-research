@@ -1,4 +1,4 @@
-"""Offline tests for scripts/w3_moa.py on synthetic difference light curves (D-060)."""
+"""Offline tests for scripts/w3_moa.py on synthetic difference light curves (D-062)."""
 
 from __future__ import annotations
 

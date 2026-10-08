@@ -1,4 +1,4 @@
-"""Offline tests for the MOA-II 9-year adapter on tiny fixture files (D-060)."""
+"""Offline tests for the MOA-II 9-year adapter on tiny fixture files (D-062)."""
 
 from __future__ import annotations
 

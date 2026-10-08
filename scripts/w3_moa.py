@@ -1,4 +1,4 @@
-"""W3 in the MOA-II 9-year release, pilot field gb22: pre-screen, fits, vetting, limit (D-060).
+"""W3 in the MOA-II 9-year release, pilot field gb22: pre-screen, fits, vetting, limit (D-062).
 
 The release holds every Cut-0 variable object (difference-image detections of positive *or
 negative* PSF profiles; ``jwst_anomaly.moa``), before any bump or PSPL cut, so a W3 event (the
@@ -1010,7 +1010,7 @@ def write_manifest() -> Path:
     )
     tab.meta.update(
         provenance=schema.Provenance.OBSERVED.value,
-        source="jwst_anomaly.moa.FILES (MOA-II 9-year release; D-060)",
+        source="jwst_anomaly.moa.FILES (MOA-II 9-year release; D-062)",
     )
     path = paths.manifests_dir() / "moa_ii.ecsv"
     tab.write(path, overwrite=True)

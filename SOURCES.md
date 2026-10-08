@@ -719,6 +719,14 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
     064024 (2012), doi:10.1103/PhysRevD.85.064024.
   - arXiv:2608.10800, Fell & Loeb, "Radiative Signatures from Warp Drives Traveling Through the Earth's
     Atmosphere" (2026, preprint).
+  - Literature check 2026-10-08 (arXiv API, 2023–2026; INSPIRE citations of 2406.02466, none searches data):
+    arXiv:2310.16067, Kuwahara & Cannon, "Development and Application of a Detection System for a Novel Class of
+    Gravitational-Wave Transients" (2023): LIGO/Virgo/KAGRA O3 search for GW bursts from superluminal curvature
+    sources, null. arXiv:2212.02065, Sellers, Bobrick, Martire et al. (2022): GWs from accelerating massive
+    spacecraft (not a warp metric). arXiv:2405.19381, Lentz & Felton, "Motivating Emissions from Positive Energy Warp
+    Bubbles" (2024): order-of-magnitude EM fluxes for a bubble 100 lyr away (Eqs. 12–13, Figs. 6–8; no template).
+    arXiv:2311.12069, Pieri (2023): no quantitative prediction for a distant observer. The Clough et al. waveform is not public (no data statement or
+    Zenodo record found).
 
 ## Injection-recovery limits (D-049)
 
@@ -903,8 +911,22 @@ Cite Mróz et al. as their pages ask; data are pinned in `src/jwst_anomaly/ogle.
   (recorded as −1 in the vetting record, so they can be re-run).
 - Mróz et al. 2017, Nature 548, 183 (reference list of arXiv:1906.02210): the nine high-cadence bulge fields,
   whose events are in the 2019 optical-depth analysis but whose light curves are not in `phot.tar.gz`.
+- Hubble Source Catalog v3 (Whitmore et al. 2016, AJ 151, 134), summary `magaper2` via the MAST catalogs API
+  `https://catalogs.mast.stsci.edu/api/v0.1/hsc/v3/summary/magaper2.csv` (cone search; accessed 2026-10-08; D-060).
 
-## MOA-II 9-year bulge release (accessed 2026-10-08; D-060)
+## Gaia DR3 microlensing candidates (accessed 2026-10-08; D-061)
+
+- Wyrzykowski, Kruszyńska, Rybicki et al. 2023, "Gaia Data Release 3: Microlensing events from all over the sky",
+  A&A 674, A23, doi:10.1051/0004-6361/202243756, arXiv:2206.06121. The v2 e-print source
+  (https://arxiv.org/src/2206.06121v2, 2,461,772 bytes, sha256 40c60eee14f1a5e691cf7efb5b1233878fcabd37496eb4a0865fa5e7afa07295)
+  was read for the Sample A cuts (Appendix C, Table C.1), the error rescaling (Eq. 9–10) and Table D.1 (Method
+  A / B / A+B, parsed by `gaia_mulens.parse_method_table`).
+- Gaia archive TAP `SELECT * FROM gaiadr3.vari_microlensing` (363 rows) and `gaiadr3.gaia_source` positions
+  (https://gea.esac.esa.int/tap-server/tap/sync); DR3 epoch photometry from the DataLink service
+  (https://gea.esac.esa.int/data-server/data, `RETRIEVAL_TYPE=EPOCH_PHOTOMETRY`, INDIVIDUAL CSV). sha256 of every
+  cached file: `data/manifests/gaia_dr3_mulens.ecsv`.
+
+## MOA-II 9-year bulge release (accessed 2026-10-08; D-062)
 
 Pinned in `src/jwst_anomaly/moa.py` (`FILES`) and `data/manifests/moa_ii.ecsv`; fetched with
 `photometry.fetch_catalog` into `$JWST_ANOMALY_DATA/raw/moa/`. Licence not stated; the archive asks for this
@@ -936,6 +958,6 @@ Exploration Program."
   HJD 2453824–2456970; Table 1 N_s (10 ≤ I_s ≤ 21.4) for 20 fields; gb6 and gb22 excluded (no clear RCG).
 - Sumi et al. 2011, Nature 473, 349, doi:10.1038/nature10092, arXiv:1105.3544: the selection the archive page cites.
 - Gaia DR3 `gaiadr3.gaia_source` via the ESA TAP service (https://gea.esac.esa.int/tap-server/tap), queried
-  2026-10-08: RP histogram within 0.3° of (279.148°, −23.767°) for the luminosity-function slope (D-060).
-- Rejected readers (D-060): merida 0.3.2 (https://pypi.org/project/merida/), qusi 1.5.6
+  2026-10-08: RP histogram within 0.3° of (279.148°, −23.767°) for the luminosity-function slope (D-062).
+- Rejected readers (D-062): merida 0.3.2 (https://pypi.org/project/merida/), qusi 1.5.6
   (https://pypi.org/project/qusi/).

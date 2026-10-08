@@ -199,7 +199,7 @@ def linear_fluxes(a, f, w, f_min: float | None = None):
     """Weighted least-squares F = fs·A + fb with fb ≥ −F_min and fs ≥ 0 (published convention).
 
     ``a`` has shape (N,) or (K, N); returns fs, fb, χ² with shape () or (K,). ``f_min`` defaults
-    to the OGLE ``F_MIN``; ``inf`` leaves fb free (difference fluxes, MOA-II, D-060).
+    to the OGLE ``F_MIN``; ``inf`` leaves fb free (difference fluxes, MOA-II, D-062).
     """
     f_min = ogle.F_MIN if f_min is None else f_min
     a = np.atleast_2d(a)
