@@ -36,7 +36,12 @@ def _blob(x: float, y: float, amp: float) -> np.ndarray:
 
 
 def _write(
-    path: Path, mjd: float, dx: float, sci: np.ndarray, sat: np.ndarray | None = None
+    path: Path,
+    mjd: float,
+    dx: float,
+    sci: np.ndarray,
+    sat: np.ndarray | None = None,
+    substrt: tuple[int, int] = (1, 1),
 ) -> str:
     rng = np.random.default_rng(int(mjd * 1e4) % 2**32)
     sci = sci + rng.normal(0, 0.05, sci.shape)
@@ -49,6 +54,7 @@ def _write(
     primary.header.update(
         EXPSTART=mjd, EXP_TYPE="NRC_IMAGE", DETECTOR="NRCB3", FILTER="F150W", PUPIL="CLEAR"
     )
+    primary.header.update(SUBSTRT1=substrt[0], SUBSTRT2=substrt[1])
     hdr = _wcs(dx).to_header()
     hdul = fits.HDUList(
         [
@@ -107,3 +113,39 @@ def test_run_flags_afterimage_and_keeps_real_source(tmp_path):
     assert per_exp.meta["provenance"] == "derived" and per_exp.meta["failed"] == []
     real = summ[summ["uid"] == "real"][0]
     assert real["n_detected"] == 3 and real["n_clean"] == 2
+
+
+def test_unreadable_prior_does_not_clear_a_detection(tmp_path, monkeypatch):
+    real_sky = _wcs(0).all_pix2world(60.0, 140.0, 0)
+    files = []
+    for k, dx in enumerate((0, 40, 80)):
+        x, y = _wcs(dx).all_world2pix(*real_sky, 0)
+        files.append(
+            _write(tmp_path / f"e{k}_cal.fits", 60000 + k / 100, dx, _blob(float(x), float(y), 2.0))
+        )
+    measure = pc.measure_pixel
+
+    def flaky(uri, *args):
+        if uri.endswith("e0_cal.fits") and args[0] > 61:  # e0 read as a prior, not as itself
+            raise OSError("S3 timeout")
+        return measure(uri, *args)
+
+    monkeypatch.setattr(pc, "measure_pixel", flaky)
+    per_exp, summ = pc.run({"real": tuple(float(v) for v in real_sky)}, files, workers=1)
+    assert summ["verdict"][0] == "inconclusive"  # e1 and e2 each lost a prior: none clean
+    assert list(per_exp["n_prior_failed"]) == [0, 1, 1]
+    assert len(per_exp.meta["failed"]) == 2
+
+
+def test_subarray_origin_maps_prior_pixels(tmp_path):
+    # Same pointing, but the second exposure is a subarray starting at full-frame pixel (51, 51):
+    # its local pixel (x, y) is full-frame (x + 50, y + 50). The bright star at full-frame P in the
+    # first exposure must be found under the afterimage at local P - 50 in the second.
+    p = (120.0, 120.0)
+    f1 = _write(tmp_path / "full_cal.fits", 60000.00, 0, _blob(*p, 500.0))
+    sub = np.zeros((N, N))
+    sub[:, :] = _blob(p[0] - 50, p[1] - 50, 5.0)
+    f2 = _write(tmp_path / "sub_cal.fits", 60000.01, 0, sub, substrt=(51, 51))
+    ghost_sky = _wcs(0).all_pix2world(p[0] - 50, p[1] - 50, 0)  # subarray WCS = full WCS here
+    per_exp, summ = pc.run({"ghost": tuple(float(v) for v in ghost_sky)}, [f1, f2], workers=1)
+    assert summ["verdict"][0] == "persistence"

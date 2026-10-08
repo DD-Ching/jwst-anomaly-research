@@ -13,7 +13,9 @@ Earlier exposures that put the position itself on (nearly) the same pixel are sk
 would be its own "illuminator". A detection (S/N ≥ ``--min-snr``) is ``suspect`` when an earlier
 exposure put ≥ ``--ratio`` × its flux, or any saturated pixel, on that pixel. It is ``clean`` when
 it is not suspect and at least one earlier exposure was checked (``n_prior`` > 0; the first
-exposure of a visit cannot be cleared). Per position:
+exposure of a visit cannot be cleared, nor can a detection whose earlier exposures could not all be
+read: ``n_prior`` is then 0). Subarray exposures are compared on full-detector pixels
+(``SUBSTRT1``/``SUBSTRT2``). Per position:
 
 - ``persistence``: detections, none of them clean, at least one suspect;
 - ``on_sky``: at least two clean detections;
@@ -145,6 +147,8 @@ def header_info(uri: str, positions: dict[str, tuple[float, float]]) -> dict[str
         "filter": band,
         "mjd": float(primary["EXPSTART"]),
         "pix": pix,
+        # subarray origin on the full detector (0-based); pixel x on this array is x + origin there
+        "origin": tuple(int(primary.get(k, sci.get(k, 1))) - 1 for k in ("SUBSTRT1", "SUBSTRT2")),
     }
 
 
@@ -203,10 +207,12 @@ def run(
                     continue
                 if not 0 < cur["mjd"] - p["mjd"] <= lookback_hours / 24:
                     continue
+                dx = cur["origin"][0] - p["origin"][0]  # current array -> prior array pixels
+                dy = cur["origin"][1] - p["origin"][1]
                 own = p["pix"].get(uid)
-                if own is not None and np.hypot(own[0] - x, own[1] - y) < SAME_PIXEL:
+                if own is not None and np.hypot(own[0] - x - dx, own[1] - y - dy) < SAME_PIXEL:
                     continue  # the position itself sat on this pixel then
-                prior.append(p)
+                prior.append((p, x + dx, y + dy))
             jobs.append((uid, cur, prior, x, y))
 
     def one(job):
@@ -218,11 +224,13 @@ def run(
             now = {"flux": np.nan, "err": np.nan, "n_sat": 0}
         snr = now["flux"] / now["err"] if now["err"] > 0 else np.nan
         before = []
+        n_failed = 0
         if np.isfinite(snr) and snr >= min_snr:  # priors only matter for detections
-            for p in prior:
-                m, err = _safe(measure_pixel, p["file"], x, y, long)
+            for p, px, py in prior:
+                m, err = _safe(measure_pixel, p["file"], px, py, long)
                 if m is None:
                     failed.append(err)
+                    n_failed += 1  # the unreadable one may be the illuminator
                 else:
                     before.append((p, m))
         worst = max(
@@ -242,7 +250,8 @@ def run(
             "y": y,
             "flux": now["flux"],
             "snr": snr,
-            "n_prior": len(before),
+            "n_prior": len(before) if n_failed == 0 else 0,
+            "n_prior_failed": n_failed,
             "prior_file": worst[0]["file"].rsplit("/", 1)[-1] if worst else "",
             "prior_flux": prior_flux,
             "prior_sat": prior_sat,
