@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: MACS0416: system 26 is a solver-grid artefact; radial null (D-038)
+- Worktree worker on CANUCS 1208 (`jw01208-o004_t002`, 8 bands). The CATS system-26 residual (11″) is the 0.25″
+  `find_images` grid missing a merging pair near the critical curve; the source lies 0.001–0.005″ from the caustic. On a 0.1″ grid the rms is 0.811″ (1.13×
+  quoted). The model stays map-only until the solver refines its grid near high |μ|.
+- `radial`: 98 centres against 99.6 random; the 7-line centre (p 0.29) is low-S/N noise segments. With CANUCS DR1
+  photo-z (background cut): 77 against 85.0, p 0.225. 0 flags.
+- **Failed approach:** jwst 3.0.0 isophotal S/N admits noise segments (66 of 137 anti arcs have aper50 S/N < 3). The
+  radial screen needs an aper50 S/N floor.
+- Wall time: about 4.5 min (lens and exotic scripts plus vetting stamps; no pipeline `run`).
+- **Handoff:** adaptive grid refinement in `find_images`; an aper50 S/N floor in `radial`.
+
 ## 2026-10-08: CANUCS DR1 photo-z for MACS1149 (D-037 addendum)
 - **Failed approach:** the worker checked only DJA, but docs/landscape.md already listed CANUCS DR1 (PSF-matched
   EAzY photo-z for A370, MACS0416, MACS0417, MACS1149 and MACS1423). Check docs/landscape.md before reporting that a
