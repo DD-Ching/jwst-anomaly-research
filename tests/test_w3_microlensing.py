@@ -247,3 +247,25 @@ def test_parse_chunk_is_one_based_and_chunks_partition_the_sample():
     idx = np.arange(23)
     parts = [idx[k::6] for k, _ in (w3.parse_chunk(f"{i}/6") for i in range(1, 7))]
     assert sorted(np.concatenate(parts).tolist()) == idx.tolist()
+
+
+def test_chunked_fit_keeps_only_its_chunk_and_writes_a_chunk_table(tmp_path, monkeypatch):
+    import json
+    import types
+
+    monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
+    ev = w3.Table({"event_id": ["a", "b", "c", "d"]})
+    fake = types.SimpleNamespace(
+        name="fake", spec=types.SimpleNamespace(reference="x"), events=lambda: ev
+    )
+    monkeypatch.setattr(w3.ogle, "OgleMrozSample", lambda key: fake)
+    monkeypatch.setattr(w3, "_jobs", lambda sample, limit, skip, chunk=None: [])
+    monkeypatch.setattr(w3, "_join_pub", lambda tab, ev: tab)
+    row = {"error": "", "best_ordinary": "PSPL", "seconds": 1.0, "params_tag": w3.params_tag()}
+    (tmp_path / "fits_k.partial.jsonl").write_text(
+        "".join(json.dumps({**row, "event_id": e}) + "\n" for e in "abcd")
+    )
+    tab = w3.Table.read(w3.run_fit("k", None, 1, chunk=(1, 2)))
+    assert sorted(tab["event_id"]) == ["b", "d"]
+    assert sorted(w3.Table.read(tmp_path / "fits_k_chunk2of2.ecsv")["event_id"]) == ["b", "d"]
+    assert len((tmp_path / "fits_k.partial.jsonl").read_text().splitlines()) == 4

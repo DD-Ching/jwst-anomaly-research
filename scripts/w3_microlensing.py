@@ -679,6 +679,9 @@ def run_fit(
         print(f"dropping {len(stale)} checkpointed events fitted with other Params", flush=True)
         rows = [r for r in rows if r.get("params_tag") == tag]
     ckpt.write_text("".join(json.dumps(r, default=float) + "\n" for r in rows))
+    if chunk is not None:  # other chunks' rows stay in the checkpoint but not in this chunk's table
+        ids = set(sample.events()["event_id"][chunk[0] :: chunk[1]].tolist())
+        rows = [r for r in rows if r["event_id"] in ids]
     done = {r["event_id"] for r in rows}
     if done:
         print(f"resuming: {len(done)} events already fitted", flush=True)
@@ -709,8 +712,12 @@ def run_fit(
         cpu_time_s=round(float(sum(r.get("seconds", 0.0) for r in rows)), 1),
         procs=procs,
     )
-    path = out_dir() / f"fits_{sample_key}.ecsv"
+    path = out_dir() / f"fits_{sample_key}.ecsv"  # what `vet` / `sheet` / `summary` read
     tab.write(path, overwrite=True)
+    if chunk is not None:  # keep each chunk's table; the next chunk replaces `path`
+        tab.write(
+            out_dir() / f"fits_{sample_key}_chunk{chunk[0] + 1}of{chunk[1]}.ecsv", overwrite=True
+        )
     print(f"wrote {path}: {len(tab)} events, {time.time() - t1:.0f} s wall")
     return path
 
