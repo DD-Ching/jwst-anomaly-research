@@ -178,7 +178,8 @@ def test_limit_refuses_a_zero_event_limit_unless_vetting_is_a_complete_null(
 ):
     import json
 
-    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps({"flags": [flag]}))
+    doc = {"fit_chunk": "", "flags": [flag]}
+    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps(doc))
     monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
     with pytest.raises(SystemExit, match=flag["event_id"]):
         w3.run_limit()
@@ -188,9 +189,19 @@ def test_limit_passes_a_complete_null_vetting_to_the_injections(tmp_path, monkey
     import json
 
     flag = {"event_id": "A", "tests": [], "survives": False, "complete": True}
-    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps({"flags": [flag]}))
+    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps({"fit_chunk": "", "flags": [flag]}))
     monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
     with pytest.raises(FileNotFoundError, match="injections_bulge2019"):
+        w3.run_limit()
+
+
+@pytest.mark.parametrize("doc", [{"fit_chunk": "1/12"}, {}])  # one chunk, or an older file
+def test_limit_refuses_vetting_of_a_partial_fit(tmp_path, monkeypatch, doc):
+    import json
+
+    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps({**doc, "flags": []}))
+    monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
+    with pytest.raises(SystemExit, match="fit chunk"):
         w3.run_limit()
 
 
@@ -221,7 +232,7 @@ def test_fit_drops_checkpoint_rows_fitted_with_other_params(tmp_path, monkeypatc
         name="fake", spec=types.SimpleNamespace(reference="x"), events=lambda: None
     )
     monkeypatch.setattr(w3.ogle, "OgleMrozSample", lambda key: fake)
-    monkeypatch.setattr(w3, "_jobs", lambda sample, limit, skip: [])
+    monkeypatch.setattr(w3, "_jobs", lambda sample, limit, skip, chunk=None: [])
     monkeypatch.setattr(w3, "_join_pub", lambda tab, ev: tab)
     row = {"event_id": "new", "error": "", "best_ordinary": "PSPL", "seconds": 1.0}
     old = {**row, "event_id": "old"}  # written before checkpoints carried a params tag
@@ -235,3 +246,37 @@ def test_fit_drops_checkpoint_rows_fitted_with_other_params(tmp_path, monkeypatc
         w3.params_tag()
         != json.loads((tmp_path / "fits_k.partial.jsonl").read_text().splitlines()[0])["params_tag"]
     )
+
+
+def test_parse_chunk_is_one_based_and_chunks_partition_the_sample():
+    assert w3.parse_chunk(None) is None
+    assert w3.parse_chunk("1/6") == (0, 6)
+    with pytest.raises(ValueError):
+        w3.parse_chunk("0/6")
+    with pytest.raises(ValueError):
+        w3.parse_chunk("7/6")
+    idx = np.arange(23)
+    parts = [idx[k::6] for k, _ in (w3.parse_chunk(f"{i}/6") for i in range(1, 7))]
+    assert sorted(np.concatenate(parts).tolist()) == idx.tolist()
+
+
+def test_chunked_fit_keeps_only_its_chunk_and_writes_a_chunk_table(tmp_path, monkeypatch):
+    import json
+    import types
+
+    monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
+    ev = w3.Table({"event_id": ["a", "b", "c", "d"]})
+    fake = types.SimpleNamespace(
+        name="fake", spec=types.SimpleNamespace(reference="x"), events=lambda: ev
+    )
+    monkeypatch.setattr(w3.ogle, "OgleMrozSample", lambda key: fake)
+    monkeypatch.setattr(w3, "_jobs", lambda sample, limit, skip, chunk=None: [])
+    monkeypatch.setattr(w3, "_join_pub", lambda tab, ev: tab)
+    row = {"error": "", "best_ordinary": "PSPL", "seconds": 1.0, "params_tag": w3.params_tag()}
+    (tmp_path / "fits_k.partial.jsonl").write_text(
+        "".join(json.dumps({**row, "event_id": e}) + "\n" for e in "abcd")
+    )
+    tab = w3.Table.read(w3.run_fit("k", None, 1, chunk=(1, 2)))
+    assert sorted(tab["event_id"]) == ["b", "d"]
+    assert sorted(w3.Table.read(tmp_path / "fits_k_chunk2of2.ecsv")["event_id"]) == ["b", "d"]
+    assert len((tmp_path / "fits_k.partial.jsonl").read_text().splitlines()) == 4

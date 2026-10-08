@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 OGLE bulge, chunk 1/12 (483 events): one marginal flag survives automated vetting
+- Cloud run. `w3_microlensing.py fit --chunk K/N` fits events K−1, K−1+N, … so sessions fit disjoint, field-balanced
+  parts of the bulge sample (measured ~10 s CPU per bulge event, ~4 h for all 5,790 on 4 cores; one chunk of 12 is
+  ~17 min wall). Chunk 1/12: 483 events, 0 errors; best ordinary PSPL 449 / PAR 32 / FSPL 2; ΔBIC(min exotic)
+  5/25/50/75/95 % = −3.5 / 3.7 / 5.6 / 6.5 / 12.4; 41 below 0, 12 flags below −10 (`derived`).
+- `vet`: 11 of 12 fail; **BLG667.04.62161 (OGLE-2015-BLG-1250) passes every automated test**: E2neg ΔBIC −12.1 vs
+  PSPL; season offsets −12.7, season drifts −12.4, binary source / binary lens no better than PSPL, 0 outliers,
+  baseline χ²/dof 0.87, 0 arXiv records, no VSX / Gaia variable within 1″. Contact sheet inspected: faint source
+  (peak flux ~2× baseline), large scatter, a flattened peak and a few low points ~+20…+50 d; the E2neg plateau fits
+  those. ASSUMPTION-level judgement: marginal, not a candidate — with 483 trials and 12 flags below −10 from a
+  heavy-tailed ΔBIC distribution, one −12 survivor is expected without any exotic lens; untested ordinary
+  explanations: xallarap, per-season error underestimation near the peak, blending/difference-imaging systematics
+  of a faint source, and a calibrated null (the injection/limit stage).
+- **Next:** chunks 2–12 (one per run: `fit --chunk K/12`, then `vet` / `sheet`); for BLG667.04.62161, an
+  empirical ΔBIC null from the same chunk's PSPL-simulated light curves (does −12 occur at rate ≥ 1/483?) and an
+  xallarap fit before any further attention; then `inject` / `limit`. `limit` refuses vetting of a single chunk
+  (#86 Codex), so a `merge-chunks` step (concatenate `fits_bulge2019_chunk*of12.ecsv`, then `vet`) comes first.
+
 ## 2026-10-08: W3 OGLE disk re-fit with bounded parallax: still null (D-058)
 - Cloud run. ASSUMPTION `Params.pie_max = 5`: PAR fits with |π_E| > 5 are rejected in every fit and vetting refit
   (the unbounded fits reached π_E ~ 30–1,400). Disk (460 events, 376 s): best ordinary PSPL 408 / PAR 52 / FSPL 0;
