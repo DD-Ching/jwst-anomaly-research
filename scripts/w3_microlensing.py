@@ -1148,7 +1148,13 @@ def fit_two_events(lc: LightCurve, ps: dict, t_second: float) -> dict:
     later flare or a second lens): the ordinary model for an exotic fit whose two caustic spikes
     sit on two separate bumps. The second bump starts at ``t_second``."""
 
+    lo_t, hi_t = float(lc.t.min()), float(lc.t.max())
+    lo_te, hi_te = np.log10(P.te_bounds[0]), np.log10(P.te_bounds[1])
+
     def fun(x):
+        # both bumps inside the data span and the fitter's t_E range (else t0 runs away)
+        if not (lo_t <= x[3] <= hi_t and lo_te <= x[1] <= hi_te and lo_te <= x[4] <= hi_te):
+            return 1e12
         a1 = pspl(straight_beta(lc.t, x[0], 10 ** x[1], abs(x[2])))
         a2 = pspl(straight_beta(lc.t, x[3], 10 ** x[4], abs(x[5])))
         coef, chi2 = linear_fluxes_n(np.vstack([a1, a2]), lc.f, lc.w)
@@ -1195,6 +1201,9 @@ def two_events_dbic(lc: LightCurve, ordinary: dict, exotic: dict, model_o: str, 
     j = np.flatnonzero(far)[np.argmin(dchi[far])]
     two = fit_two_events(lc, ordinary, float(lc.t[j]))
     n = lc.t.size
+    if model_o == "PSPL":  # the two-bump model nests PSPL (second amplitude 0)
+        nested = chi2_of("PSPL", lc, ordinary)[0] + two["k"] * math.log(n)
+        two["bic"] = float(min(two["bic"], nested))
     bic_e = chi2_of(model_e, lc, exotic)[0] + exotic.get("k", 6) * math.log(n)
     return float(bic_e - two["bic"]), two
 
@@ -1583,7 +1592,7 @@ def jackknife_n_drop(n_feature_epochs: int, n_max: int = 3) -> int:
 
 
 def run_revet(sample_key: str) -> Path:
-    """Two further tests on the flags that survived ``vet`` (strictly later, so the order holds).
+    """Three further tests on the flags that survived ``vet`` (strictly later, so the order holds).
 
     They need the surviving flags' fits, so they run from ``vetting_<key>.json`` and rewrite it.
     """
@@ -1596,6 +1605,8 @@ def run_revet(sample_key: str) -> Path:
             continue
         # idempotent: drop this stage's earlier results and restart from the ``vet`` verdict
         o["tests"] = [t for t in o["tests"] if t[0] not in REVET_TESTS]
+        for key in ("feature", "jackknife_dbic", "two_events"):
+            o.pop(key, None)
         o["survives"] = all(ok for _, ok, _ in o["tests"])
         if not o["survives"]:
             continue
@@ -1781,7 +1792,7 @@ def run_limit(per_cell_min: int = 20) -> Path:
             # Poisson upper bound on the recovery fraction (3 / n) bounds how strong any limit
             # from these samples could be (`rate95_floor_per_star_yr`), and no limit is claimed.
             # rule of three holds only for zero recovered events: NaN otherwise
-            k0 = len(w) and p_sel == 0
+            k0 = len(w) and p_both == 0  # recovered = selected and flagged
             ratio_hi = (3.0 / len(w)) / p_ctrl if (k0 and p_ctrl > 0) else np.nan
             lim = 3.0 / (exposure * ratio) if ratio > 0 else np.inf
             lim_floor = 3.0 / (exposure * ratio_hi) if ratio_hi > 0 else np.nan

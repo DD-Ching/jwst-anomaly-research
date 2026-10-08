@@ -9,7 +9,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   9 season drifts → 7 binary source/lens, VSX/Gaia, arXiv → 2 `feature_coverage` → 1 jackknife → **0** two unrelated
   events (new `revet` tests: ≥ 3 epochs where the models differ by > 3σ; drop up to 3 influential epochs keeping ≥ 3 in
   the feature; two independent PSPL bumps). BLG519.21.110304's exotic spikes sat on the 2011 event and a 1-day bump in
-  2015 (two PSPL bumps better by ΔBIC 24.3). Disk: 6 → 0.
+  2015 (two PSPL bumps better by ΔBIC 24.4). Disk: 6 → 0.
   Contact sheet of the 7 late survivors inspected. The D-059 chunk survivors fail `feature_coverage` here.
 - Injections: 600 W3 events (n = 1, ε < 0; t_E 3–300 d, ρ 0.01/0.1) on real bulge cadences + 300 PSPL controls. The
   fitter flags 42–97 %, but **0 / 600 pass the emulated Mróz selection** (controls 15–43 %; cuts failed most: one

@@ -811,8 +811,8 @@ not used.
   (ΔBIC −15.2 → +0.4). BLG519.21.110304 (OGLE-2011-BLG-0589; 4 epochs in the feature, ΔBIC −14.2 after
   one dropped) is an N1neg fit with f_s ≈ 0.01 that puts one caustic spike on the published 2011 event
   and the other on three points of a 1-day brightening in September 2015 (JD 2457277.5–2457278.7, ~6σ),
-  with an umbra too shallow to see. Two unrelated PSPL bumps (the 2011 event plus a t_E ≈ 1.7 d bump)
-  fit better by ΔBIC 24.3: an ordinary second brightening (a flare or a second lens), not W3.
+  with an umbra too shallow to see. Two unrelated PSPL bumps (the 2011 event plus a t_E ≈ 2.7 d bump)
+  fit better by ΔBIC 24.4: an ordinary second brightening (a flare or a second lens), not W3.
   The survivors' light curves with every model curve were inspected (scratch contact sheet).
 - Plane sample: every flag loses its preference once each season gets a free baseline offset (D-057).
 - Wall time: bulge `fit` 10,413 s (5,790 events, 4 cores, 1.8 s per event), `vet` 6,592 s (127 flags,

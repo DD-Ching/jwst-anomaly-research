@@ -2792,7 +2792,7 @@ per-season drift absorbs). No rate limit yet: injections are built on bulge ligh
   the best ordinary model differ by > 3σ, with the Δχ² coming from them) leaves 2; an **epoch jackknife** (drop up to
   3 most influential epochs, keeping ≥ 3 inside the feature; review of PR #88: dropping 3 of 5 killed a synthetic
   t_E = 3 d W3 event) leaves 1 (BLG603.25.29679 −15.2 → +0.4); **two unrelated PSPL bumps** explain the last,
-  BLG519.21.110304, whose N1neg spikes sit on the 2011 event and a 1-day bump in 2015 (ΔBIC +24.3 for the exotic).
+  BLG519.21.110304, whose N1neg spikes sit on the 2011 event and a 1-day bump in 2015 (ΔBIC +24.4 for the exotic).
 - **The published samples cannot contain a W3 event.** 0 of 600 injected n = 1, ε < 0 events (t_E 3–300 d,
   ρ ∈ {0.01, 0.1}, u₀ ~ U[0, 2)) pass the emulated Mróz selection, in every t_E, ρ and u₀ bin, while PSPL controls on
   the same light curves pass 15–43 % and the fitter flags 42–97 % of the injections. They fail the one-bump, PSPL
