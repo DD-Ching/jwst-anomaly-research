@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Exotic-lens predictions first: wormhole / negative-mass searchable, warp not (D-047)
+- Owner focus (2026-10-08): search only for signatures of traversable wormholes / negative-mass lenses and warp-drive
+  spacetimes, predictions first. Research worker; every citation fetched from arXiv / Crossref.
+- Searchable: W1 negative-mass dark lens (radial pair beside an empty centre), W2 Ellis pair without deflector, W3
+  inverted microlensing (umbra between caustic spikes), W5 count deficit. Not searchable: the 4 % Ellis gutter, µas
+  shifts, and every warp signature (Alcubierre exterior is flat; no published imaging/photometric prediction for a
+  distant observer). The warp branch is stopped.
+- `jwst_anomaly.exotic_sim`: Kitamura+2013 power-law lens family (either sign of ε), finite-source light curves,
+  `inject_images` / `inject_light_curve` (`simulated`) for injection-recovery.
+- **Handoff:** injection-recovery for `radial` (W1) and the dark-lens search (W2) to turn nulls into limits; a
+  dimming class for the transient screen (W3); counts around `radial` centres (W5).
+
 ## 2026-10-08: CANUCS Lenstool models pinned (D-044)
 - `macs0416-canucs` reproduces Lenstool's image-plane χ²pos (330.8 against 344.30; rms 0.51″ over 303 images).
   `abell370-canucs` is a source-plane fit (image-plane rms 2.3″).

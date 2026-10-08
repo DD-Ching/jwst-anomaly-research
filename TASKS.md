@@ -3,7 +3,18 @@
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
-## Now (M3 lensing-violation search, D-023)
+## Now (owner focus 2026-10-08: wormhole / negative-mass and warp signatures only; D-047)
+1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
+   - W1 through `exotic_screens.py radial` on the screened fields: recovery vs θ_E (0.3″, 1″, 3″) → upper limit on
+     negative-mass lenses per deg²;
+   - W2 through `orphan_pairs.py` (D-045), and the dark-lens search extended to non-cluster deep fields;
+   - W3: a dimming / vanished-source class for multi-epoch fields (El Gordo, MACS0416 flashlights, NEXUS, JADES);
+     ≥ 3 epochs for the spike-dip-spike shape; leave the Sunrise transient track to its owner run;
+   - W5: counts N(>S) around `radial` centres.
+2. W3 inside caustic-crossing arcs needs a microlens with macro shear (Chang-Refsdal-type; reuse-check first).
+3. Warp: recheck only when a paper gives an electromagnetic prediction for a distant observer.
+
+## Then (M3 lensing-violation search, D-023)
 1. **Lens-model consistency on SMACS** (D-024: model validated; arc orientations give a null result). Next:
    - counter-images: done for the catalogued systems (D-029: 0 of 11 testable uncatalogued images absent). Left:
      - bright single arcs;
