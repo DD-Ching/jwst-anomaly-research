@@ -128,6 +128,40 @@ ABELL2744_BERGAMINI23: dict[str, tuple[str, str]] = {
     ),
 }
 
+# CANUCS DR1 Lenstool best fits (doi:10.17909/18nv-np70): MACS0416 by Rihtarsic et al. 2025
+# (A&A, doi:10.1051/0004-6361/202451117; image-plane chi2pos 344.30) and Abell 370 by Gledhill
+# et al. 2025 (ApJ, doi:10.3847/1538-4357/ad684a; source-plane fit). ``input.par`` is the
+# Lenstool input file (its sigposArcsec); the multiple-image files are their ``multfile``s (D-044).
+_CANUCS_MODEL = "https://archive.stsci.edu/hlsps/canucs/dr1/{0}/model/hlsp_canucs_jwst-hst_multi_{0}-{1}_multi_v1_model.txt"
+MACS0416_CANUCS: dict[str, tuple[str, str]] = {
+    "best.par": (
+        _CANUCS_MODEL.format("macs0416", "lenstool-bestparam"),
+        "f3d9a8415044ff8d5ab4774573fcf3670c9dee9169abfca46086bdbf3dd45bed",
+    ),
+    "arcs.dat": (
+        _CANUCS_MODEL.format("macs0416", "lenstool-multim"),
+        "ce00444dcc9239f0fd72d5fb37e35cbbea281647803ef4c30eb7b187262f5507",
+    ),
+    "input.par": (
+        _CANUCS_MODEL.format("macs0416", "lenstool-param"),
+        "0f1fb7d6947d467b28d8b74485799321b09a1cc63fd7e7df82f01620ddb9b337",
+    ),
+}
+ABELL370_CANUCS: dict[str, tuple[str, str]] = {
+    "best.par": (
+        _CANUCS_MODEL.format("a370", "lenstool-bestparam"),
+        "3c1eea91755ea532e424b1b143e39b35a9d89beae2958d3b042876af50443580",
+    ),
+    "arcs.dat": (
+        _CANUCS_MODEL.format("a370", "lenstool-multim"),
+        "d72c3d98e675e5bc00cfbdd9b84d1b8528b22e36311924fea072293af23ef9e2",
+    ),
+    "input.par": (
+        _CANUCS_MODEL.format("a370", "lenstool-param"),
+        "aacc2dadd442645d2222c23ee2c3f9f6a76fddaa73996a26a6e88c0691a6bf3d",
+    ),
+}
+
 #: RELICS (Cerny et al. 2018, ApJ 859, 159; HLSP DOI 10.17909/T9SP45) Lenstool v1 maps of
 #: WHL0137-08 (Sunrise), deflection in arcsec at D_LS/D_S = 1 (accessed 2026-10-08). The lens
 #: redshift 0.566 and H0 = 70, Om0 = 0.3 reproduce the published z = 6.2 magnification map.
