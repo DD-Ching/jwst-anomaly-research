@@ -1912,7 +1912,7 @@ gated off) until the solver refines its grid near high |μ|. Pairs whose catalog
 result (docs/fields/macs0717.md). There were 51 flags, 0 surviving. Two rules (ASSUMPTION: thresholds):
 - **Model copy.** A predicted image within 1.75× the model's image-plane rms (5.6″ here) of a catalogued, detected
   but unpredicted image of the same system is the model's copy of that image, not a missing counter-image. In
-  MACS0717, 32 of the 51 flags are copies, 1.6–5.6″ from catalogued images.
+  MACS0717, 29 of the 51 flags are copies, 1.6–5.6″ from catalogued images.
 - **Model-dependent extra image.** An extra image predicted by one model but by neither of two independent models
   solved from their deflection maps (here Sharon v4cor and Keeton v4) is model-dependent and untestable. This extends
   the D-036/D-037 μ rule to image existence.
@@ -1932,7 +1932,7 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
   65.2's JWST source is 0.6″ from its catalogued position. Corrected, the flux ratio is 0.7–1.1. μ(65.1)/μ(65.2) is
   0.37–17 across six models (untestable).
 - `radial` (no photo-z): 11 peaks against a random mean of 16.7; max 5 lines; p ≥ 0.70.
-- Breakdown of the 51 flags: 32 model copies, 5 untestable μ, 6 CATS-only extra images, 3 below sensitivity, 1 with a
+- Breakdown of the 51 flags: 29 model copies, 5 untestable μ, 6 CATS-only extra images, 6 below sensitivity, 1 with a
   counterpart inside the position uncertainty, and 4 rows for the system 65 pair. Cutouts were inspected for every flag.
 
 **Revisit if.**
