@@ -50,7 +50,7 @@ class Params:
     flag_dbic: float = -10.0  # ΔBIC below which an exotic fit flags an event
     fspl_u0_max: float = 0.1  # fit FSPL when PSPL u0 is below this (ρ constrained only then)
     parallax_te_min: float = 20.0  # days; annual parallax fitted for longer events
-    pie_max: float = 5.0  # |π_E| bound; unbounded fits reached 30–1,400 and absorbed dips (D-058)
+    pie_max: float = 5.0  # ASSUMPTION: |π_E| bound; unbounded fits reached 30–1,400 (D-058)
     fs_near: float = 10.0  # exact finite-source integral within fs_near·ρ of a singular radius
     beta_far: float = 50.0  # A = 1 beyond this impact parameter (|A − 1| < 1e-5)
     log_rho_bounds: tuple = (-3.5, 0.0)
