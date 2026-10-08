@@ -409,7 +409,7 @@ def dedup(s: Table) -> Table:
     i, j, _, _ = c.search_around_sky(c, P.dedup_arcsec * u.arcsec)
     graph = csr_matrix((np.ones(len(i)), (i, j)), shape=(len(s), len(s)))
     _, label = connected_components(graph, directed=False)
-    grp = np.asarray(s["group"])
+    grp = np.array(s["group"], copy=True)  # original classes (s["group"] is relabelled below)
     keep = []
     for lab in np.unique(label):
         members = np.flatnonzero(label == lab)  # sorted by catalogue preference
