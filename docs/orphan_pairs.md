@@ -204,3 +204,144 @@ that becomes worth considering, the far likelier reading is a chance SED match. 
   Members at the S/N floor are barely visible in them.
 - **Not tested.** A per-pair time-delay or flux-ratio test, spectroscopy, and pairs whose two members fall in
   different photo-z solutions (a catastrophic photo-z on one image).
+
+## Deep fields: CANUCS flanking fields and GOODS-North (D-051)
+
+Run of 2026-10-08, same script. **Result: null.** Six non-cluster fields (108 arcmin² searched) give 355 orphans
+against 315 expected from chance SED matches at one redshift (null (e) below). No single pair survives the
+ordinary explanations, and no pair goes to `/vet-candidate`. The injection-recovery that turns this into a limit on
+dark deflectors is in [exotic_limits.md](exotic_limits.md), section "W2 / dark-deflector pairs".
+
+### What changed in the script
+
+- **One column layout.** `as_standard` turns each catalogue into the same columns (`STANDARD_COLUMNS`). CANUCS
+  (`canucs_standard`) and DJA grizli (`dja_standard`, catalogue plus eazy-py zout) both run through
+  `search` unchanged. The three D-048 cluster runs reproduce every count, every pair and every column of
+  `matched_pairs.ecsv` / `top_orphans.ecsv`. The only change is the column rename `mu_canucs` → `mu_cat`.
+- **Deep fields** (`DEEP_FIELDS`). They have no published images and no cluster model. Two rules replace the
+  cluster ones (ASSUMPTIONs):
+  - the redshift cut is z_low > `Z_LENS_REF` + 0.1 = 0.5, as behind a z = 0.4 cluster;
+  - the ordinary-lensing test becomes "no lens model needed": |μ| is the catalogue `MU` (CANUCS model, 1.00–1.4
+    in the flanking fields) or 1 (DJA).
+- **S/N bands.** These are the bands of F277W/F356W/F444W that the catalogue has. The MACS0417 and MACS1423
+  flanking fields have no F356W.
+- **DJA specifics** (ASSUMPTIONs):
+  - the 0.36″ apertures (`aper_0`, closest to CANUCS's 0.3″) are converted from µJy to nJy;
+  - SEP aperture flags in `photometry.BAD_FLAGS` invalidate a band, and MIRI and `<band>u` duplicates are left out;
+  - `flag & 1` (SEP `OBJ_MERGED`) is "deblended";
+  - the same_galaxy radius is 3.3 × `flux_radius`. The DJA Kron apertures follow another convention:
+    `kron_radius` lies between 2.4 and 3.8, which gives 8.7 × the half-light radius against CANUCS's 3.2–3.5.
+    With them, the same_galaxy rule swallowed every injected pair under 1.5″. The first GOODS-N run (kept below
+    as a failed approach) found 69 orphans this way, against 109 with the fix.
+  - The DJA photometry is **not PSF-matched**: the SW bands are measured on 0.02″ images. Both members of a
+    lensed pair of compact images share the aperture losses, so the free-scale χ² is unaffected. Resolved pairs of
+    different sizes are not. The null (a) match rate is 1.5 %, against 2.3–3.7 % in CANUCS.
+- **Two more nulls**, needed because the deep-field orphan counts exceed null (c) (P = 0.04–0.08 in three of the
+  flanking fields):
+  - (d) the z-overlap match rate of real pairs at 3–6″;
+  - (e) null (c) conditioned on what makes two SEDs easy to match. The cells are the fainter member's summed
+    S/N, the larger member's aperture radius and the LW/SW colour (`pair_cells`). Each close pair gets its cell's
+    far-pair match rate.
+
+  `zoverlap_match_fraction_by_sep` shows the z-overlap match rate is flat from 0.3″ to 10″ in every field.
+- **Other changes.**
+  - `searched_footprint` measures the searched area: 1″ grid points with a catalogue row within 4″ that has valid
+    S/N bands and ≥ 8 valid bands.
+  - Cutouts of deep fields use the MAST level-3 `_i2d` whose footprint (`s_region`) contains the pair: one
+    query per band. They retry intermittent S3 errors.
+  - `fetch_tar_member` streams the DJA photo-z tarball and keeps only the zout. Both checksums are verified, and
+    the 371 MB archive never touches disk.
+
+Reproduce:
+
+```
+python scripts/orphan_pairs.py --field {macs0416,macs1149,abell370,macs0417,macs1423}-ncf --cutouts
+python scripts/orphan_pairs.py --field goodsn-dja --cutouts
+```
+
+Wall time per field (4-core cloud VM):
+- flanking fields: 3–6 s without cutouts, 45–60 s with them;
+- GOODS-N: 20 s without cutouts and about 3 min with them, plus a one-time 224 MB catalogue download and 371 MB
+  tarball stream.
+
+### Null comparison (derived)
+
+| | M0416-NCF | M1149-NCF | A370-NCF | M0417-NCF | M1423-NCF | GOODS-N (DJA) |
+|---|---|---|---|---|---|---|
+| Catalogue rows / sources kept | 10804 / 2362 | 11657 / 2716 | 10267 / 2676 | 11027 / 2344 | 10412 / 2183 | 70421 / 13741 |
+| Bands / searched area (arcmin²) | 29 / 9.92 | 27 / 9.87 | 29 / 9.90 | 16 / 9.86 | 18 / 9.82 | 21 / 58.72 |
+| Pairs at 0.3–3″ / SED-matched | 3303 / 148 | 3920 / 143 | 3746 / 135 | 2985 / 152 | 2626 / 151 | 14789 / 366 |
+| Random-pair match rate (a) / (b) | 2.7 / 2.7 % | 2.3 / 2.4 % | 2.3 / 2.3 % | 3.3 / 3.4 % | 3.7 / 3.7 % | 1.5 / 1.6 % |
+| SED-matched expected (a) / (c) | 89.9 / 162.8 | 91.1 / 172.7 | 86.6 / 181.6 | 97.9 / 169.1 | 97.2 / 166.5 | 223.6 / 395.6 |
+| Matched: same_galaxy / visible_lens / orphan | 28 / 69 / 51 | 27 / 66 / 50 | 22 / 70 / 43 | 32 / 71 / 49 | 18 / 80 / 53 | 94 / 163 / 109 |
+| Orphans expected (c) / (d) / (e) | 39.2 / 38.2 / 41.4 | 40.1 / 40.2 / 40.6 | 43.0 / 38.9 / 43.1 | 37.3 / 37.5 / 38.0 | 43.3 / 45.9 / 47.9 | 99.4 / 99.3 / 104.4 |
+| P(≥ observed orphans) (c) / (e) | 0.040 / 0.083 | 0.074 / 0.085 | 0.52 / 0.53 | 0.038 / 0.049 | 0.083 / 0.25 | 0.18 / 0.34 |
+
+Reading the table:
+- **SED-matched pairs.** As in the clusters, they exceed the random-pair nulls (a)/(b) and fall below the
+  same-redshift null (c).
+- **Orphans in GOODS-N** match every null.
+- **Orphans in the five flanking fields** are 246 against 211 under null (e), P = 0.010. With GOODS-N, the total
+  is 355 against 315, P = 0.015. This is a 10–15 % excess at about 2.3σ.
+  - It is spread over 1–3″ and over fainter-member S/N 20–40. No single bin carries it (a one-off diagnostic
+    split; per-field bins lie within about +2σ).
+  - Pairs under 1″ show no excess. Lensing by the smallest deflectors would put pairs there, but the
+    same_galaxy rule removes most of them anyway (see the injections).
+- **Lensing is an implausible reading of the excess.** The per-deflector recovery efficiency measured by injection
+  is about 0.5 % at θ_E = 0.3–0.7″. The ~35 excess pairs would then need ~7000 dark deflectors in 50 arcmin²:
+  - that is 140 arcmin⁻², or 5 × 10⁵ deg⁻², each with M ≈ 2 × 10¹⁰–10¹¹ M☉ inside θ_E (model_prediction);
+  - that is one invisible galaxy-mass deflector for every ~7 catalogued galaxies (about 1050 rows per arcmin² in
+    the flanking fields).
+
+  An ordinary explanation is far likelier.
+- **The likelier reading** is that null (e) still under-models physical companions. Pairs at 1–3″ at one redshift
+  (satellites, interacting pairs) share stellar populations more closely than z-overlapping pairs 10–30″ apart.
+  The contact sheets show many such companions.
+
+### Top orphans and verdicts (all six contact sheets inspected)
+
+The top 15 orphans per field come from `outputs/orphan_pairs/<field>/contact_sheet.png` and `top_orphans.ecsv`.
+They are vetted cheapest-first:
+1. knots of one galaxy or blends;
+2. group members, satellites and companions;
+3. image artefacts;
+4. chance SED matches.
+
+Every pair has catalogue |μ| ≤ 1.3 and no cluster model to invoke. The cutouts are single-visit MAST `_i2d`
+images, so the faintest members are barely visible.
+
+| Field | Knot / same galaxy | Group, satellite or companion (flux ratio > 5 or a bright neighbour) | Artefact-affected | Faint pair, nothing between, no other feature ("chance") |
+|---|---|---|---|---|
+| M0416-NCF | #11, #12 (two knots in the disk of a z = 0.56 spiral) | #5, #6, #8 (ratio 11), #14, #15 (ratio 54) | #10 (detector stripe in F150W) | #1, #2, #3, #4, #7, #9, #13 |
+| M1149-NCF | #11 (0.6″) | #2, #5, #6, #9, #13 (ratio 14), #14, #15 | — | #1, #3, #4, #7, #8, #10, #12 |
+| A370-NCF | #1, #4 (≤ 0.6″ in one blob), #9/#10 (chain sharing 2222566) | #5, #6, #8, #12 (ratio 16), #14 (ratio 13) | — | #2 (z 4.74/4.75), #3/#7 (share an edge-on disk with different partners), #11, #13, #15 |
+| M0417-NCF | #3, #10, #14 (both inside a face-on spiral) | #6, #8, #9, #11, #15 (ratio 13) | — | #1, #2, #4, #5, #7, #12, #13 |
+| M1423-NCF | #4, #9/#10 (knots of one irregular) | #2, #6, #11, #12, #14 | #7 (on a scattered-light stripe; the CANUCS readme lists "dragon's breath" in this field), #8, #15 (beside a bright star) | #1, #3, #5, #13 |
+| GOODS-N | — | #2, #15 (beside a spiral), #6 (ratio 28), #7, #9, #14 | — | #1, #3, #4, #5, #8, #10, #11, #12, #13 |
+
+(GOODS-N ranks refer to the final run with the half-light radius rule.)
+
+### What survives
+
+**No pair survives as an anomaly.** Forty of the 90 inspected pairs are faint pairs with nothing visible between
+them. The data cannot tell them apart from a lensed pair, and they are what the nulls predict. Their dark-deflector
+requirements (`hypothesis` numbers in `top_orphans.ecsv`, z_l = 0.4) are:
+- θ_E = 0.4–1.4″;
+- M(<θ_E) ≈ 4 × 10¹⁰–7 × 10¹¹ M☉;
+- σ_SIS ≈ 145–350 km/s.
+
+As in the clusters, a luminous galaxy of that mass would be many magnitudes above the detection limit.
+
+### Limits (deep fields)
+
+- **Same rules as D-048.** The same S/N, Kron-rule and visible-lens limitations apply. In a deep field the
+  visible-lens rule removes about 73 % of injected pairs at θ_E = 0.7″, because a catalogued source falls inside
+  the pair's circle by chance at these densities.
+- **The deep-field excess.** Null (e) does not model physical companions at 1–3″, so the deep-field orphan excess
+  stays unexplained at the 2σ level. A companion-aware null would be one built from spectroscopic pairs or from
+  pairs matched in redshift *and* environment.
+- **DJA photometry** is not PSF-matched, and its same_galaxy radius is calibrated on CANUCS (3.3 × half-light
+  radius; ASSUMPTION).
+- **Failed approach (recorded so it is not repeated).** The DJA Kron apertures (`2.5 × kron_radius × a_image`)
+  are ~3× the CANUCS ones. With them, the same_galaxy rule classed every injected GOODS-N pair under 1.5″ as one
+  galaxy: 0 of 2000 point lenses at θ_E = 0.3″ were recovered.

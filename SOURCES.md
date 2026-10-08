@@ -738,3 +738,43 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
 - **Schirmer et al. 2007**, "GaBoDS IX. A sample of 158 shear-selected mass concentration candidates", A&A 462, 875,
   doi:10.1051/0004-6361:20065955, https://arxiv.org/abs/astro-ph/0607022. Shear-shaped filter (formula still to be
   read from the full text).
+
+## Deep-field orphan-pair screen (accessed 2026-10-08; D-051)
+
+- A. L. Read, "Presentation of search results: the CLs technique", J. Phys. G 28, 2693 (2002),
+  doi:10.1088/0954-3899/28/10/313 (checked on Crossref 2026-10-08): the background-aware limit in
+  `scripts/inject_pairs.py` (`poisson_signal_ul`).
+
+Pinned by URL and sha256 in `scripts/orphan_pairs.py` (`DEEP_FIELDS`); downloaded with `photometry.fetch_catalog`.
+- **CANUCS DR1 NIRCam flanking-field (NCF) photometry + EAzY photo-z**, same format and readme as the cluster
+  catalogues (https://archive.stsci.edu/hlsps/canucs/dr1/webpage/hlsp_canucs_jwst-hst_multi_v1_photometry-cat_readme.txt,
+  sha256 `978413b1052cfc6f951599e468f4083aa11efb4b19528c39a9ebcb46c486511b`). All Last-Modified 2025-04-29.
+  URL pattern `https://archive.stsci.edu/hlsps/canucs/dr1/<c>/ncf/hlsp_canucs_jwst-hst_multi_<c>-ncf_multi_v1_photometry-cat.fits.gz`:
+  - `macs0416`: 38,095,398 B, sha256 `72a2c609015f830af4ca05bcd49c7754723c0a55434176f780508bfe62a5afe3`, 10,804 rows;
+  - `macs1149`: 37,393,732 B, sha256 `f83510e39332657bf149a08d8060b8dd63a9bb9b839ca5d157714c88ea273ceb`, 11,657 rows;
+  - `a370`: 37,054,880 B, sha256 `b35c6eed37ae964d7f996a563dca5794ccfa8ccb0e8b364800fc04b54aa3039f`, 10,267 rows;
+  - `macs0417`: 23,683,659 B, sha256 `f82940179ebf63ddf2ec872e7a0297f2fce1785faa0de83ee43b401e96acc49d`, 11,027 rows
+    (no F356W);
+  - `macs1423`: 23,191,315 B, sha256 `b4881e0ea7fc4dd11fbad76afa73a3ca56f0848d0f85384f59646070c9b7b63b`, 10,412 rows
+    (no F356W).
+  - Cite Sarrouh, Asada et al. 2025 (named in the readme as the catalogue paper; arXiv id not checked here).
+- **DJA v7.3 GOODS-North** (grizli; same DJA terms and citation as the other DJA catalogues, arXiv:2302.10936):
+  - catalogue https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/gdn-grizli-v7.3-fix_phot.fits, Last-Modified
+    2024-02-19, 223,813,440 B, sha256 `9b18b41731c3a86085cb9c4fdb7a4c9f15c5477431f4eea904d410a1f173b6c1`, 70,421 rows;
+    apertures `ASEC_0..2` = 0.36, 0.5, 0.7″ on 0.04″ pixels; per-band images not PSF-matched (SW bands on 0.02″
+    pixels, header `<BAND>_aper_0` = 18 px);
+  - photo-z tarball https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/gdn-grizli-v7.3-fix.photoz.tar.gz,
+    Last-Modified 2024-02-19, 371,072,778 B, sha256 `1d89eef3f613eeb7d592ecf03d94869dfd76110c8208eb728291592ddca8db82`;
+    only the member `gdn-grizli-v7.3-fix.eazypy.zout.fits` is kept (67,645,440 B, sha256
+    `363176053431708410d4957a77e56826f5ced3d6ed072722aeccc9a2edde48fc`, 70,421 rows aligned with the catalogue ids;
+    eazy-py `0.6.8.dev0+gf3eee26.d20230928`, templates `templates/sfhz/agn_blue_sfhz_13.param`, `PRIOR` False);
+  - **do not use** the standalone https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/gdn-grizli-v7.3-fix.eazypy.zout.fits
+    (Last-Modified 2024-02-08, 60,586,560 B, sha256 `3cc7a92465ed76503b1f29c621074162c446c1eb46d8d1c58583ed75a6727c56`):
+    63,069 rows from an earlier catalogue; its ids point at other positions (median offset 137″).
+  - Other DJA v7 deep-field catalogues checked (HEAD, 2026-10-08), all > 200 MB with ≥ 350 MB photo-z tarballs:
+    `gds-grizli-v7.2` 248.3 MB (+352.8 MB), `ceers-full-grizli-v7.4` 250.5 MB (+396.8 MB), `primer-uds-north-grizli-v7.2`
+    270.1 MB (+393.0 MB), `primer-cosmos-east-grizli-v7.4` 269.0 MB (+407.9 MB). The gds, ceers and primer-uds-north tarballs
+    (first 300 kB read) and the GOODS-N one start with a 112–138 MB `eazypy.h5`; in the GOODS-N tarball the zout is the fifth member.
+- **Cutouts**: MAST level-3 `_i2d` F150W/F277W/F444W read by S3 byte range. CANUCS NCF observations of program 1208:
+  o023_t002 (MACS0416), o029_t004 (MACS1149), o020_t001 (Abell 370), o026_t003 (MACS0417), o032_t005 (MACS1423);
+  GOODS-N: JADES program 1181 (the observation whose MAST footprint contains the pair).
