@@ -904,55 +904,50 @@ def find_images(
     by = g[:, None] - s * grid.alpha_y
     seeds_x: list[np.ndarray] = []
     seeds_y: list[np.ndarray] = []
-    # Cheap pre-filter: a cell can contain the source only if beta_x and beta_y each lie between
-    # the extremes of its four mapped corners (boolean sign tests, no arithmetic on the grid).
-    sx, sy = bx > beta_x, by > beta_y
+    # Pre-filter: a triangle can contain the source only if its cell's mapped corners bracket
+    # beta in both coordinates (inclusive, so boundary hits of the barycentric test are kept).
 
-    def straddles(sgn):
-        c = (sgn[:-1, :-1], sgn[:-1, 1:], sgn[1:, :-1], sgn[1:, 1:])
-        return (c[0] | c[1] | c[2] | c[3]) & ~(c[0] & c[1] & c[2] & c[3])
+    def brackets(m: np.ndarray, value: float) -> np.ndarray:
+        corners = (m[:-1, :-1], m[:-1, 1:], m[1:, :-1], m[1:, 1:])
+        return (np.minimum.reduce(corners) <= value) & (value <= np.maximum.reduce(corners))
 
-    cy, cx = np.nonzero(straddles(sx) & straddles(sy))
+    rows, cols = np.nonzero(brackets(bx, beta_x) & brackets(by, beta_y))
     for (a0, a1), (b0, b1), (c0, c1) in (
         ((0, 0), (0, 1), (1, 0)),
         ((1, 1), (1, 0), (0, 1)),
     ):
-        ax_, ay_ = bx[cy + a0, cx + a1], by[cy + a0, cx + a1]
-        bx_, by_ = bx[cy + b0, cx + b1], by[cy + b0, cx + b1]
-        cx_, cy_ = bx[cy + c0, cx + c1], by[cy + c0, cx + c1]
-        det = (by_ - cy_) * (ax_ - cx_) + (cx_ - bx_) * (ay_ - cy_)
+        pax, pay = bx[rows + a0, cols + a1], by[rows + a0, cols + a1]
+        pbx, pby = bx[rows + b0, cols + b1], by[rows + b0, cols + b1]
+        pcx, pcy = bx[rows + c0, cols + c1], by[rows + c0, cols + c1]
+        det = (pby - pcy) * (pax - pcx) + (pcx - pbx) * (pay - pcy)
         with np.errstate(divide="ignore", invalid="ignore"):
-            l1 = ((by_ - cy_) * (beta_x - cx_) + (cx_ - bx_) * (beta_y - cy_)) / det
-            l2 = ((cy_ - ay_) * (beta_x - cx_) + (ax_ - cx_) * (beta_y - cy_)) / det
+            l1 = ((pby - pcy) * (beta_x - pcx) + (pcx - pbx) * (beta_y - pcy)) / det
+            l2 = ((pcy - pay) * (beta_x - pcx) + (pax - pcx) * (beta_y - pcy)) / det
         hit = (l1 >= 0) & (l2 >= 0) & (1 - l1 - l2 >= 0)
-        iy, ix = cy[hit], cx[hit]
+        iy, ix = rows[hit], cols[hit]
         w1, w2 = l1[hit], l2[hit]
         w3 = 1 - w1 - w2
         seeds_x.append(w1 * g[ix + a1] + w2 * g[ix + b1] + w3 * g[ix + c1])
         seeds_y.append(w1 * g[iy + a0] + w2 * g[iy + b0] + w3 * g[iy + c0])
     # Newton steps for every seed at once: one fields_xy call per step over all potentials.
-    x = np.concatenate(seeds_x) if seeds_x else np.zeros(0)
-    y = np.concatenate(seeds_y) if seeds_y else np.zeros(0)
-    found: list[tuple[float, float, float, float]] = []
-    if len(x):
-        for _ in range(newton_steps):
-            f = model.fields_xy(x, y)
-            rx = beta_x - (x - s * f["alpha_x"])
-            ry = beta_y - (y - s * f["alpha_y"])
-            a11, a12, a22 = 1 - s * f["psi_xx"], -s * f["psi_xy"], 1 - s * f["psi_yy"]
-            det = a11 * a22 - a12 * a12
-            with np.errstate(divide="ignore", invalid="ignore"):
-                x = x + (a22 * rx - a12 * ry) / det
-                y = y + (-a12 * rx + a11 * ry) / det
+    x, y = np.concatenate(seeds_x), np.concatenate(seeds_y)
+    for _ in range(newton_steps):
         f = model.fields_xy(x, y)
-        res = np.hypot(beta_x - (x - s * f["alpha_x"]), beta_y - (y - s * f["alpha_y"]))
+        rx = beta_x - (x - s * f["alpha_x"])
+        ry = beta_y - (y - s * f["alpha_y"])
         a11, a12, a22 = 1 - s * f["psi_xx"], -s * f["psi_xy"], 1 - s * f["psi_yy"]
-        with np.errstate(divide="ignore"):
-            mu = 1.0 / (a11 * a22 - a12 * a12)
-        # same acceptance and merge order as one seed at a time (seed order is preserved)
-        for k in np.flatnonzero(res < tol_arcsec):
-            if all(np.hypot(x[k] - u_, y[k] - v_) > 0.05 for u_, v_, _, _ in found):
-                found.append((float(x[k]), float(y[k]), float(mu[k]), float(res[k])))
+        det = a11 * a22 - a12 * a12
+        x = x + (a22 * rx - a12 * ry) / det  # a seed on a critical curve diverges and is
+        y = y + (-a12 * rx + a11 * ry) / det  # rejected below (as one seed at a time did)
+    f = model.fields_xy(x, y)
+    res = np.hypot(beta_x - (x - s * f["alpha_x"]), beta_y - (y - s * f["alpha_y"]))
+    found: list[tuple[float, float, float, float]] = []
+    # same acceptance and merge order as one seed at a time (seed order is preserved)
+    for k in np.flatnonzero(res < tol_arcsec):
+        a11, a12, a22 = 1 - s * f["psi_xx"][k], -s * f["psi_xy"][k], 1 - s * f["psi_yy"][k]
+        mu = float(1.0 / (a11 * a22 - a12 * a12))
+        if all(np.hypot(x[k] - u_, y[k] - v_) > 0.05 for u_, v_, _, _ in found):
+            found.append((float(x[k]), float(y[k]), mu, float(res[k])))
     found.sort(key=lambda r: -abs(r[2]))
     xs = np.array([r[0] for r in found])
     ys = np.array([r[1] for r in found])
