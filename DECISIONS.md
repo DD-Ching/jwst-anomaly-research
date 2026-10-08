@@ -2351,3 +2351,42 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - The screen's thresholds change (e ≥ 0.5, 60° `anti` window, 15″ lines).
 - Pixel-level injections (painted into cutouts and re-extracted) are needed to measure blending and
   incompleteness.
+
+## D-050 W1 negative-tangential-shear screen: in-house catalogue aperture-mass map on scipy cKDTree; TreeCorr and lenspack rejected (2026-10-08)
+
+**Decision.** Build the W1-specific screen (D-049 "Revisit if") as a catalogue aperture-mass map in
+`scripts/exotic_screens.py` next to `radial_candidates`, with existing dependencies only (numpy, scipy
+`cKDTree`). Reuse-check result; not implemented yet.
+- **Statistic.** Schneider (1996) catalogue estimator on a grid of candidate centres (1″, the D-049 footprint):
+  M_ap(θ₀) = Σ Q(|θ_i − θ₀|/R) e_t,i / Σ Q, with a Schirmer et al. (2007) shear-shaped filter and a top-hat
+  option. Report −M_ap, because a W1 lens (ε < 0) gives *negative* tangential shear (radial alignment); report
+  M_× as the B-mode/systematics check. Take Q's exact formula from the Schirmer et al. full text (only the
+  abstract was checked).
+- **Input.** Background rows as in D-049 (photo-z fields only), PSF-deconvolved second moments as in
+  `inject_radial.lensed_shapes`, and the cluster model's reduced shear removed: e_int = (e − g)/(1 − g* e).
+  Mask where |g| ≳ 0.5 (ASSUMPTION) instead of subtracting.
+- **Null.** Random position-angle rotations with positions kept, ≥ 200 draws per field from cached neighbour
+  lists; a local p-value per centre and a field-maximum p-value.
+- **Adoption.** Benchmark with `scripts/inject_radial.py`; adopt only if it beats `radial`'s D-049 efficiencies.
+- **Expectation (`derived`, rough).** γ_t ≈ (θ_E/θ)², so at θ_E = 1″ γ_t ≈ 0.11 at 3″; with about
+  0.05–0.09 lensable rows per arcsec² (D-049) and σ_e ≈ 0.3, S/N ≈ 1–2 in a 5″ aperture. Gains are expected
+  mainly at θ_E ≥ 2–3″; the injections decide.
+
+**Alternatives rejected.**
+- TreeCorr `NGCorrelation` / `calculateNMap` (5.1.4, BSD-3): ⟨N M_ap⟩ is stacked over all lens positions and
+  returned against R only, with no per-centre map or local null. One correlation per grid centre would be slower
+  than one cKDTree pass. No Windows wheels on PyPI or conda-forge (the owner's host would need an MSVC build).
+- lenspack (1.0.0, 2020, MIT): `aperture_mass` filters a pixelised (binned, KS93) map, which loses the arcsecond
+  scales W1 needs and adds edge/mask artefacts; its `gamma_tx` and `random_rotation` are ~10 lines each; no
+  release since 2020.
+- Weak-lensing peak finders on pixelised maps: same limitation.
+- Keeping `radial`'s arc selection (e ≥ 0.5, `anti`): D-049 shows it discards most W1 images.
+
+**Evidence.** TreeCorr NG docs (https://rmjarvis.github.io/TreeCorr/_build/html/ng.html) and its PyPI/conda-forge
+file lists; lenspack source (https://github.com/CosmoStat/lenspack); Schneider 1996; Schirmer et al. 2007
+(SOURCES "W1 shear screen").
+
+**Revisit if.**
+- Wide fields (≥ 1e5 sources) where tree-code speed matters and TreeCorr ships Windows wheels, or a stacked
+  ⟨N M_ap⟩ around a list of `radial`/orphan-pair centres is wanted (exactly TreeCorr NG).
+- A maintained catalogue-level aperture-mass map package with a per-centre null appears.
