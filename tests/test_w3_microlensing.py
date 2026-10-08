@@ -155,3 +155,11 @@ def test_spike_pair_starts_bracket_the_umbra():
     lc = _synthetic(t, a, sigma=0.002)
     starts = w3.spike_pair_starts(lc, 2.0)
     assert any(abs(s[0] - 2456800.0) < 5 and abs(10 ** s[1] - 40.0) < 15 for s in starts)
+
+
+def test_fit_checkpoint_drops_a_torn_last_line(tmp_path):
+    p = tmp_path / "fits.partial.jsonl"
+    assert w3.load_checkpoint(p) == []
+    p.write_text('{"event_id": "a", "x": NaN}\n{"event_id": "b"}\n{"event_id": "c", "x"')
+    rows = w3.load_checkpoint(p)
+    assert [r["event_id"] for r in rows] == ["a", "b"] and np.isnan(rows[0]["x"])

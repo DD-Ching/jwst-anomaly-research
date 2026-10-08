@@ -8,7 +8,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   test skipped without the `mulens` extra). Not yet run on real data; no DECISIONS, SOURCES or limits entry yet.
 - main took D-055 (orphan-pair nulls) while this branch was open: the branch's decision is now **D-056**.
 - `www.astrouw.edu.pl` (OGLE) answered 200 from the cloud environment on 2026-10-08.
-- **Next:** install `.[mulens]`, `fit` the bulge sample, look at the ΔBIC distribution and contact sheet, `vet`,
+- Timing (cloud, 4 cores): 1.8 s per event, so the 5,836-event bulge fit takes ~3 h. `fit` now checkpoints each
+  row to `fits_<key>.partial.jsonl` and resumes (`--fresh` restarts), but cloud disks are ephemeral: run the full
+  fit locally, or speed the fitter up, or fit chunks per run and keep only derived summaries. First 40 events:
+  best ordinary PSPL 38 / PAR 2; min ΔBIC N1neg +0.6, E2pos −7.5, none below the −10 flag (`derived`).
+- **Next:** `fit` the bulge sample (see timing), look at the ΔBIC distribution and contact sheet, `vet`,
   then `inject` / `limit`; write D-056 + SOURCES; open the PR.
 
 ## 2026-10-08: W1 shear (aperture-mass) screen: four clusters null; limits 5–8× stronger than radial (D-053)
