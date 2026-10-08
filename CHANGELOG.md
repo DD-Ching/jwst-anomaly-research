@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: `find_images` 3–5× faster with identical images
+- Seeds are pre-filtered with boolean sign tests on the mapped grid corners, and Newton steps run for every seed in
+  one `fields_xy` call.
+- Benchmark: all catalogued systems at a 0.25″ grid, images identical (max |Δ| 0 arcsec, same counts):
+  - SMACS: 23.2 → 6.7 s;
+  - El Gordo: 44.3 → 13.0 s;
+  - Abell 2744: 118 → 23.5 s (at ±190″).
+- **Handoff:** the deflection grid itself (one-time and cached) is now the main cost. Published deflection maps
+  (UNCOVER, RELICS, HFF) could replace it for fields without a Lenstool model (TASKS).
+
 ## 2026-10-08: Image-plane χ² reproduces Lenstool for SMACS, El Gordo and Abell 2744 (D-030)
 - Merged #40 (counter-images, D-029) after its last commit, which GitHub had not attached to the PR, was picked up
   by a follow-up commit.
