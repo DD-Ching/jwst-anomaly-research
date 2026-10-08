@@ -310,6 +310,10 @@ def test_baseline_calibration_is_a_quantile_of_the_quiet_light_curves():
         wm.calibrate_baseline(few)
 
 
+def test_tracked_columns_hold_everything_the_fit_and_vetting_read():
+    assert set(wm.SCAN_KEYS) <= set(wm.TRACK_COLUMNS)
+
+
 def test_tracked_rows_keep_deficits_errors_and_a_quiet_sample():
     tab = _scan_table()
     tab["error"][25] = "boom"

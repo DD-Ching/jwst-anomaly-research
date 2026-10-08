@@ -1,4 +1,4 @@
-"""Stream MOA-II field tars with parallel HTTP byte-range reads (D-063).
+"""Stream MOA-II field tars with parallel HTTP byte-range reads (D-TBD).
 
 The field tars (3.5–508 GB, uncompressed, ``Accept-Ranges: bytes``) are never written to disk:
 a byte range ``[a, b)`` is downloaded, its light-curve members are found by walking the tar
@@ -24,6 +24,18 @@ from pathlib import Path
 from jwst_anomaly import moa
 
 RETRY_STATUS = {429, 500, 502, 503, 504}
+MAX_OBJECT_BYTES = 64 * 2**20  # a per-object light curve is < 10 MB
+
+
+def _read_capped(r, n: int) -> bytes:
+    """At most ``n`` bytes of a streamed ``requests`` response body."""
+    parts, got = [], 0
+    for chunk in r.iter_content(1 << 20):
+        parts.append(chunk[: n - got])
+        got += len(parts[-1])
+        if got >= n:
+            break
+    return b"".join(parts)
 
 
 class RangeReader:
@@ -67,19 +79,28 @@ class RangeReader:
         delay = 2.0
         for attempt in range(self.retries + 1):
             try:
-                r = self._session().get(
-                    self.url, headers={"Range": f"bytes={a}-{b - 1}"}, timeout=self.timeout
-                )
-                if r.status_code == 206 and len(r.content) == b - a:
-                    return r.content
-                if r.status_code == 200 and a == 0 and len(r.content) >= b:
-                    return r.content[:b]  # server ignored the range on a small file
-                if r.status_code not in RETRY_STATUS and r.status_code != 206:
-                    raise OSError(f"{self.url} bytes {a}-{b - 1}: HTTP {r.status_code}")
+                # streamed: a server or proxy that ignores Range answers 200 with the whole tar
+                # (up to 508 GB); never read more than the range (an unstreamed read of a 12 GB
+                # reply was OOM-killed, 2026-10-08)
+                with self._session().get(
+                    self.url,
+                    headers={"Range": f"bytes={a}-{b - 1}"},
+                    timeout=self.timeout,
+                    stream=True,
+                ) as r:
+                    if r.status_code in (200, 206):
+                        data = _read_capped(r, b - a)
+                        if r.status_code == 206 and len(data) == b - a:
+                            return data
+                        if r.status_code == 200 and a == 0 and len(data) == b:
+                            return data  # range ignored: the first b bytes are the range
+                    elif r.status_code not in RETRY_STATUS:
+                        raise OSError(f"{self.url} bytes {a}-{b - 1}: HTTP {r.status_code}")
             except (
                 requests.ConnectionError,
                 requests.Timeout,
                 requests.exceptions.ChunkedEncodingError,
+                requests.exceptions.ContentDecodingError,
             ):
                 pass
             if attempt == self.retries:
@@ -165,11 +186,14 @@ def _get_whole(eid: str) -> bytes:
     delay = 2.0
     for attempt in range(7):
         try:
-            r = requests.get(moa.object_url(eid), timeout=120)
-            if r.status_code == 200:
-                return r.content
-            if r.status_code not in RETRY_STATUS:
-                raise OSError(f"{moa.object_url(eid)}: HTTP {r.status_code}")
+            with requests.get(moa.object_url(eid), timeout=120, stream=True) as r:
+                if r.status_code == 200:
+                    data = _read_capped(r, MAX_OBJECT_BYTES + 1)
+                    if len(data) > MAX_OBJECT_BYTES:
+                        raise OSError(f"{moa.object_url(eid)}: larger than {MAX_OBJECT_BYTES} B")
+                    return data
+                if r.status_code not in RETRY_STATUS:
+                    raise OSError(f"{moa.object_url(eid)}: HTTP {r.status_code}")
         except (requests.ConnectionError, requests.Timeout):
             pass
         if attempt < 6:
