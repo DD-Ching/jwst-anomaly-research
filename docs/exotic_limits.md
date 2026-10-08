@@ -1009,7 +1009,7 @@ dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no pu
 - Not a statement about OGLE or the Mróz samples, and not combinable with the D-052 JWST limits without a lens
   population model.
 
-### Calibrated re-run of gb22 and the streaming pipeline (D-063)
+### Calibrated re-run of gb22 and the streaming pipeline (D-TBD)
 
 The pilot numbers above are superseded by this re-run (same real-data result, stricter injections).
 
@@ -1017,11 +1017,11 @@ The pilot numbers above are superseded by this re-run (same real-data result, st
   about a constant of the field's quiet light curves (1,458 in gb22: median 1.68, 35 % above the old fixed 2.0),
   i.e. **5.31** in gb22, instead of the fixed 2.0. It removes variables, not the field's typical red noise.
 - **Injections** drawn from the luminosity function itself (`--sampling lf`, so n_eff = n = 200 per cell), not
-  uniform magnitudes re-weighted afterwards (n_eff ≈ 20–25). 2,000 W3 injections, 400 PSPL controls.
+  uniform magnitudes re-weighted afterwards (n_eff ≈ 20–25). 2,000 W3 injections, 200 PSPL controls.
 - **Real data** (`derived`, `results/w3_moa/vetting_gb22.json`): the streamed pre-screen reproduces D-062's exactly
   (18,599 light curves, 1,058 shape passes, 30 passes); the 30 flags are D-062's 30 (same event IDs; contact sheet
   inspected then); **0 survive**. First failing test per flag: repeated deficit 13, eclipse dip 8, exotic feature not
-  sampled 3, neighbour shares the feature 2, robust errors 2, night jackknife 1, variable baseline 1.
+  sampled 3, neighbour shares the feature 2, robust errors 2, epoch jackknife 1, variable baseline 1.
 - **Limit** (`derived` from `simulated`; `results/w3_moa/limits_gb22.ecsv`; ρ = 0.01 / 0.1):
 
 | t_E (d) | Cut-0 | pre-screen | recovered / 200 | ε per star | **Γ₉₅ per star per yr** |
@@ -1033,7 +1033,7 @@ The pilot numbers above are superseded by this re-run (same real-data result, st
 | 300 | 0.68 / 0.47 | 0.065 / 0.055 | 11 / 6 | 0.055 / 0.030 | 1.8 / 3.3 × 10⁻⁶ |
 
   **Γ₉₅ ≈ 1.1–3.3 × 10⁻⁶ per monitored star per year for t_E = 10–300 d, 4–7 × 10⁻⁶ at 3 d**; 103 / 2,000
-  recovered, 0 / 400 PSPL controls end as W3 survivors. N_s and T as above (ASSUMPTION; `rate95_conservative` for
+  recovered, 0 / 200 PSPL controls end as W3 survivors. N_s and T as above (ASSUMPTION; `rate95_conservative` for
   the low N_s). With LF-drawn magnitudes most injections are faint, so Cut-0 and the pre-screen now dominate the
   losses; the per-cell binomial uncertainty of ε is ~±25–45 %.
 - **Streaming** (`moa_stream`, `w3_moa.py --field gbN prescreen|run-field`): concurrent HTTP range reads of the
