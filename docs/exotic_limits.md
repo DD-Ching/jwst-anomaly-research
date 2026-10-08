@@ -777,7 +777,7 @@ not used.
    **feature coverage** (are there ≥ 3 epochs where the exotic and the best ordinary model differ by
    > 3σ, and does the Δχ² come from them?); a **jackknife** (drop the most influential epochs and
    refit; at most 3, and never fewer than 3 left inside the feature, so a short, well-sampled W3 event
-   survives it); and **two unrelated events** (two independent PSPL bumps, the second started at the
+   survives it; skipped with exactly 3 feature epochs); and **two unrelated events** (two independent PSPL bumps, the second started at the
    epoch that favours the exotic fit most outside ±2 t_E). The `revet` tests are checked on synthetic
    W3 events in the unit tests but are not run in the injection loop.
 3. **Selection emulation** (`published_selection`): Mróz et al. 2019 Table 2. Not emulated: n_DIA ≥ 3
@@ -803,12 +803,12 @@ not used.
 - Bulge vetting, cumulative: 127 → 113 (refit with all ordinary models) → 80 (robust errors,
   isolated outliers) → 73 (variable baseline) → 14 (**free blend per season**) → 9 (season drifts)
   → 7 (binary source; binary lens removed none further) → 7 (9 flags matched VSX or Gaia DR3
-  variables, none of them still alive) → 2 (feature coverage) → 1 (jackknife) → **0** (two unrelated
+  variables, none of them still alive) → 1 (feature coverage) → 1 (jackknife) → **0** (two unrelated
   events).
 - The last two tests matter: of the 7 flags that passed everything else, five differ from the best
   ordinary model by < 3σ anywhere, or put their caustic spike in an observing gap (0–2 epochs inside
-  the feature). BLG603.25.29679 loses the preference when its most influential epoch is dropped
-  (ΔBIC −15.2 → +0.4). BLG519.21.110304 (OGLE-2011-BLG-0589; 4 epochs in the feature, ΔBIC −14.2 after
+  the feature; BLG603.25.29679 has 2, and loses the preference when its most influential epoch is
+  dropped, ΔBIC −15.2 → +0.4). BLG519.21.110304 (OGLE-2011-BLG-0589; 4 epochs in the feature, ΔBIC −14.2 after
   one dropped) is an N1neg fit with f_s ≈ 0.01 that puts one caustic spike on the published 2011 event
   and the other on three points of a 1-day brightening in September 2015 (JD 2457277.5–2457278.7, ~6σ),
   with an umbra too shallow to see. Two unrelated PSPL bumps (the 2011 event plus a t_E ≈ 2.7 d bump)

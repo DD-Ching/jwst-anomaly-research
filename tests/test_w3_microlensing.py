@@ -191,7 +191,7 @@ def test_jackknife_removes_a_preference_built_on_one_epoch():
 
 
 def test_jackknife_n_drop_keeps_three_feature_epochs():
-    assert [w3.jackknife_n_drop(n) for n in (0, 3, 4, 5, 6, 50)] == [1, 1, 1, 2, 3, 3]
+    assert [w3.jackknife_n_drop(n) for n in (0, 3, 4, 5, 6, 50)] == [0, 0, 1, 2, 3, 3]
 
 
 def test_well_sampled_short_w3_event_survives_feature_coverage_and_jackknife():

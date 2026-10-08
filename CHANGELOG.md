@@ -6,7 +6,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Worktree worker, unbounded π_E (predates D-058; bounding can only add flags). Bulge: 0 fit failures; best ordinary
   PSPL 5,377 / PAR 401 / FSPL 12; ΔBIC(best exotic) 5/50/95 % = −3.6 / 5.7 / 12.0; 127 flags < −10 (`derived`).
 - Vetting, cumulative: 127 → 113 refit all ordinary → 80 robust errors → 73 variable baseline → 14 season offsets →
-  9 season drifts → 7 binary source/lens, VSX/Gaia, arXiv → 2 `feature_coverage` → 1 jackknife → **0** two unrelated
+  9 season drifts → 7 binary source/lens, VSX/Gaia, arXiv → 1 `feature_coverage` → 1 jackknife → **0** two unrelated
   events (new `revet` tests: ≥ 3 epochs where the models differ by > 3σ; drop up to 3 influential epochs keeping ≥ 3 in
   the feature; two independent PSPL bumps). BLG519.21.110304's exotic spikes sat on the 2011 event and a 1-day bump in
   2015 (two PSPL bumps better by ΔBIC 24.4). Disk: 6 → 0.

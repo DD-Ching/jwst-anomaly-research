@@ -1529,14 +1529,10 @@ def feature_coverage(lc: LightCurve, ordinary: dict, exotic: dict, model_o: str,
     tt = np.linspace(ordinary["t0"] - span, ordinary["t0"] + span, 20000)
     fine = LightCurve(tt, np.ones_like(tt), np.ones_like(tt), lc.ra, lc.dec, lc.event_id)
     d = np.abs(model_flux(model_e, fine, exotic) - model_flux(model_o, fine, ordinary))
-    big = d > 3 * sig
-    idx = np.searchsorted(tt, lc.t)
-    inside = np.zeros(lc.t.size, bool)
-    ok = (idx > 0) & (idx < tt.size)
-    inside[ok] = big[idx[ok]]
-    dchi = (lc.f - model_flux(model_e, lc, exotic)) ** 2 * lc.w - (
-        lc.f - model_flux(model_o, lc, ordinary)
-    ) ** 2 * lc.w
+    big = d > 3 * sig  # the grid only estimates the feature's duration
+    fe, fo = model_flux(model_e, lc, exotic), model_flux(model_o, lc, ordinary)
+    inside = np.abs(fe - fo) > 3 * sig  # epochs classified by the models at the epochs themselves
+    dchi = (lc.f - fe) ** 2 * lc.w - (lc.f - fo) ** 2 * lc.w
     return {
         "duration_days": float(big.sum() * (tt[1] - tt[0])),
         "n_epochs": int(inside.sum()),
@@ -1586,9 +1582,9 @@ REVET_TESTS = ("exotic_feature_sampled", "jackknife_epochs", "two_unrelated_even
 
 
 def jackknife_n_drop(n_feature_epochs: int, n_max: int = 3) -> int:
-    """Epochs the jackknife may drop: at least the single most influential one, at most
-    ``n_max``, and never more than leaves 3 epochs inside the exotic feature (ASSUMPTION)."""
-    return int(min(n_max, max(1, n_feature_epochs - 3)))
+    """Epochs the jackknife may drop: at most ``n_max`` and never so many that fewer than 3 epochs
+    stay inside the exotic feature (ASSUMPTION). 0 means the jackknife is skipped (passes)."""
+    return int(min(n_max, max(0, n_feature_epochs - 3)))
 
 
 def run_revet(sample_key: str) -> Path:
@@ -1636,16 +1632,18 @@ def run_revet(sample_key: str) -> Path:
             # never drop so many epochs that the feature itself is gone: keep >= 3 inside it (a
             # short-t_E W3 event sampled by 5 epochs must survive; review of PR #88)
             n_drop = jackknife_n_drop(cov["n_epochs"])
-            jk = jackknife_worst_epochs(lc, o["res"][mo], o["res"][me], mo, me, n_drop=n_drop)
-            o["jackknife_dbic"] = jk
-            o["tests"].append(
-                (
+            if n_drop:
+                jk = jackknife_worst_epochs(lc, o["res"][mo], o["res"][me], mo, me, n_drop=n_drop)
+                o["jackknife_dbic"] = jk
+                jk_test = (
                     "jackknife_epochs",
                     bool(jk[-1] < P.flag_dbic),
                     f"ΔBIC after dropping the 1-{n_drop} most influential epochs: "
                     + ", ".join(f"{v:.1f}" for v in jk),
                 )
-            )
+            else:
+                jk_test = ("jackknife_epochs", True, "skipped: only 3 epochs inside the feature")
+            o["tests"].append(jk_test)
             d2e, two = two_events_dbic(lc, o["res"][mo], o["res"][me], mo, me)
             if d2e is not None:
                 o["two_events"] = two
