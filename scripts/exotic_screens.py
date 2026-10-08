@@ -32,6 +32,7 @@ inputs. Results go to ``outputs/exotic_screens/<model>/``.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -252,25 +253,35 @@ def spike_radius(mag, cap: float = 20.0) -> np.ndarray:
     return np.clip(3.0 * 10 ** (0.2 * (SPIKE_STAR_MAG - np.asarray(mag, float))), 3.0, cap)
 
 
-EXTERNAL_SPIKE_CAP = (
-    60.0  # saturated / off-mosaic Gaia stars: spikes reach 37" in Abell 370 (D-043)
+# Saturated / off-mosaic stars (D-043): their spikes reach 37" in Abell 370. Catalogued stars
+# keep the 20" cap: their catalogue magnitudes are unreliable when the core is clipped, and a
+# longer cap on them re-creates the El Gordo over-veto that D-034 fixed (ASSUMPTION).
+EXTERNAL_SPIKE_CAP = 60.0
+SPIKE_STAR_DEDUP_ARCSEC = (
+    1.0  # an external star this close to a catalogued bright point source is the same star
 )
+_STAR_COLUMNS = {
+    "ra": ("ra", "RA_ICRS", "RA"),
+    "dec": ("dec", "DE_ICRS", "DEC"),
+    "mag": ("mag", "phot_g_mean_mag", "Gmag"),
+}
 
 
 def read_spike_stars(path: Path) -> Table:
-    """External bright stars (e.g. Gaia DR3) as ``ra, dec, mag`` from an ECSV/FITS table with a
-    ``mag``, ``phot_g_mean_mag`` or ``Gmag`` column (G is used as the magnitude; ASSUMPTION)."""
+    """External bright stars (e.g. Gaia DR3) as ``ra, dec, mag`` from an ECSV/FITS table.
+
+    The magnitude may be ``mag``, ``phot_g_mean_mag`` or ``Gmag``. Gaia G (Vega) is used directly
+    in the AB spike-length law, with no colour term, so red stars' spikes are underestimated by up
+    to about 2x (ASSUMPTION). Masked values become NaN and those rows are ignored."""
     t = Table.read(path)
-    ra = next(c for c in ("ra", "RA_ICRS", "RA") if c in t.colnames)
-    dec = next(c for c in ("dec", "DE_ICRS", "DEC") if c in t.colnames)
-    mag = next(c for c in ("mag", "phot_g_mean_mag", "Gmag") if c in t.colnames)
-    out = Table(
-        {
-            "ra": np.asarray(t[ra], float),
-            "dec": np.asarray(t[dec], float),
-            "mag": np.asarray(t[mag], float),
-        }
-    )
+    cols = {}
+    for key, names in _STAR_COLUMNS.items():
+        found = next((c for c in names if c in t.colnames), None)
+        if found is None:
+            raise ValueError(f"{path}: no {key} column (expected one of {', '.join(names)})")
+        col = t[found]
+        cols[key] = np.asarray(col.filled(np.nan) if hasattr(col, "filled") else col, float)
+    out = Table(cols)
     out.meta.update(provenance=schema.Provenance.OBSERVED.value, source=str(path))
     return out
 
@@ -297,6 +308,10 @@ def spike_segments(src: Table, shapes: Table, extra_stars: Table | None = None) 
     if extra_stars is not None and len(extra_stars):
         em = np.asarray(extra_stars["mag"], float)
         ok = np.isfinite(em) & (em < SPIKE_STAR_MAG)
+        if ra_s and ok.any():  # a star already in the catalogue is seeded once, from the catalogue
+            ce = SkyCoord(extra_stars["ra"], extra_stars["dec"], unit="deg")
+            _, sep, _ = ce.match_to_catalog_sky(SkyCoord(ra_s, dec_s, unit="deg"))
+            ok &= sep.arcsec > SPIKE_STAR_DEDUP_ARCSEC
         ra_s += list(np.asarray(extra_stars["ra"], float)[ok])
         dec_s += list(np.asarray(extra_stars["dec"], float)[ok])
         radius += list(spike_radius(em[ok], cap=EXTERNAL_SPIKE_CAP))
@@ -424,7 +439,15 @@ def cmd_radial(args) -> dict:
     summary = {
         "model": args.model,
         "catalog": str(args.catalog),
-        "spike_stars": str(args.spike_stars) if args.spike_stars else None,
+        "spike_stars": (
+            {
+                "path": str(args.spike_stars),
+                "n": len(extra),
+                "sha256": hashlib.sha256(Path(args.spike_stars).read_bytes()).hexdigest(),
+            }
+            if extra is not None
+            else None
+        ),
         "n_spike_segments_dropped": n_spike,
         "n_elongated": len(src),
         "n_not_background_dropped": n_not_background,

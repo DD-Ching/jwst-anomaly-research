@@ -1979,7 +1979,9 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
 - Abell 370's frame offset (−0.121″, −0.015″) is pinned. S1063's 0.075″ is under the 0.1″ threshold and not pinned.
 - Photo-z come from CANUCS DR1 (Abell 370) and DJA v7.5 eazy (S1063).
 - `exotic_screens.py radial --spike-stars` (stars from `scripts/gaia_stars.py`) adds Gaia DR3 stars (G < 17) to
-  `spike_segments`, with spikes up to 60″ (ASSUMPTION). The pipeline catalogue misses saturated and off-mosaic stars.
+  `spike_segments`, with spikes up to 60″; catalogued stars keep the 20″ cap (D-034), and a Gaia star within 1″ of a
+  catalogued one is seeded once (ASSUMPTIONs; G is used in the AB spike-length law without a colour term). The
+  pipeline catalogue misses saturated and off-mosaic stars.
 - Both fields are null (docs/fields/abell370.md, docs/fields/abells1063.md).
 
 **Alternatives rejected.**
@@ -1995,7 +1997,8 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
   - `spike_segments` missed both stars: it seeds only from catalogued point sources brighter than AB 20 and caps
     spikes at 20″, while these segments reach 12–37″.
   - With the committed Gaia-seeded veto: 82 segments dropped, 140 anti arcs, max 5 lines, p 0.945 (111 and p 0.495
-    with photo-z). This reproduces the worker's scratch test exactly.
+    with photo-z). The scratch test used a fixed axis (63.4°) and removed 166 catalogue rows. The code estimates the
+    axes and vetoes selected segments; the resulting anti counts and p-values are the same.
 - S1063 `radial`: max 4 lines, p 0.435; with photo-z, max 3, p 0.95. The Gaia veto (11 stars) leaves it unchanged.
 - Tally, counted the same way for both (anti arcs after all spike vetoes, no photo-z): Abell 370 140, S1063 51; 2
   flags; **0 surviving**.

@@ -16,6 +16,20 @@ import numpy as np
 from astropy.coordinates import SkyCoord
 from astropy.table import Table
 
+from jwst_anomaly import schema
+
+
+def to_star_table(g: Table | None) -> Table:
+    """VizieR rows (RA_ICRS, DE_ICRS, Gmag) -> ``ra, dec, mag``; masked G becomes NaN."""
+    if g is None:
+        return Table({"ra": np.array([]), "dec": np.array([]), "mag": np.array([])})
+
+    def col(name):
+        c = g[name]
+        return np.asarray(c.filled(np.nan) if hasattr(c, "filled") else c, float)
+
+    return Table({"ra": col("RA_ICRS"), "dec": col("DE_ICRS"), "mag": col("Gmag")})
+
 
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -37,16 +51,9 @@ def main(argv: list[str] | None = None) -> None:
         radius=args.radius_arcmin * u.arcmin,
         catalog="I/355/gaiadr3",
     )
-    g = res[0] if len(res) else Table({"RA_ICRS": [], "DE_ICRS": [], "Gmag": []})
-    out = Table(
-        {
-            "ra": np.asarray(g["RA_ICRS"], float),
-            "dec": np.asarray(g["DE_ICRS"], float),
-            "mag": np.asarray(g["Gmag"], float),
-        }
-    )
+    out = to_star_table(res[0] if len(res) else None)
     out.meta.update(
-        provenance="observed",
+        provenance=schema.Provenance.OBSERVED.value,
         source=(
             f"VizieR I/355/gaiadr3 cone {args.ra} {args.dec} r={args.radius_arcmin}' G<{args.gmax}"
         ),
