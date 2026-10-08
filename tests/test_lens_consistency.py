@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 
@@ -427,14 +428,21 @@ def test_imageplane_check_summary():
 @pytest.mark.network
 @pytest.mark.parametrize(
     "name, n_images, n_families, chi2",
-    [("elgordo-caminha23", 56, 23, 80.221558), ("abell2744-bergamini23", 149, 50, 146.604318)],
+    [
+        ("elgordo-caminha23", 56, 23, 80.221558),
+        ("abell2744-bergamini23", 149, 50, 146.604318),
+        ("macs0416-canucs", 303, None, 344.298308),
+        ("abell370-canucs", 115, None, 192.611321),
+    ],
 )
 def test_cluster_model_files_load(name, n_images, n_families, chi2):
     files = lc.model_files(name)
     par = lc.lensmodel.parse_lenstool_par(files["best.par"])
     model = lc.lensmodel.LensModel.from_par(par)
     images = lc.lensmodel.load_lenstool_images(files["arcs.dat"])
-    assert len(images) == n_images and len(set(images["system"])) == n_families
+    assert len(images) == n_images
+    if n_families is not None:
+        assert len(set(images["system"])) == n_families
     assert lc.chi2pos_from_par(files["best.par"]) == pytest.approx(chi2)
     z = lc.lensmodel.image_redshifts(images, par["z_m_limit"])
     assert np.all(np.isfinite(z))  # every image has a catalogued or fixed redshift
@@ -544,8 +552,6 @@ def test_canucs_macs0416_reproduces_its_lenstool_chi2(tmp_path):
     # D-044: the CANUCS best fit's image-plane chi2pos is 344.30 (sigpos 0.49"); ours is within 10 %
     out = tmp_path / "v"
     lc.main(["--model", "macs0416-canucs", "--out", str(out), "validate"])
-    import json
-
     ip = json.loads((out / "macs0416-canucs" / "validate.json").read_text())["image_plane"]
     assert ip["n_solved"] == ip["n_images"] > 250
     assert abs(ip["chi2_pos"] / ip["chi2_pos_lenstool"] - 1) < 0.10

@@ -2066,11 +2066,16 @@ the JWST-era model, with spectroscopic constraints only, is the stronger check).
 
 **Decision.**
 - The CANUCS DR1 Lenstool best fits are now `MODELS` entries: `macs0416-canucs` (Rihtarsic et al. 2025, image-plane
-  fit, sigpos 0.49″) and `abell370-canucs` (Gledhill et al. 2025, source-plane fit, sigpos 0.3″).
-- Each entry pins the best-fit parameter file and the Lenstool multiple-image file by sha256
-  (`lensmodel.MACS0416_CANUCS`, `ABELL370_CANUCS`).
-- They are the independent JWST-era second model for the D-036/D-041/D-042 rules, used directly by `validate` and
-  `images` instead of scratch code.
+  fit) and `abell370-canucs` (Gledhill et al. 2025, source-plane fit).
+- Each entry pins the best-fit parameter file, the Lenstool multiple-image file and the input parameter file by
+  sha256 (`lensmodel.MACS0416_CANUCS`, `ABELL370_CANUCS`). sigpos is read from the input file: 0.49″ and 0.3″.
+- Frame offsets of the image lists against the JWST F200W catalogues, measured with the D-034 method:
+  - MACS0416: (−0.008″, +0.052″), not pinned (under 0.1″);
+  - Abell 370: (−0.148″, +0.002″) ± 0.017″, pinned.
+- `abell370-canucs` has its image list gated off (`image_list_ok: False`).
+- `validate` drops the Lenstool χ² reference from the image-plane comparison when the best fit is source-plane.
+- `macs0416-canucs` is the independent JWST-era second model for the D-036/D-041/D-042 rules. It can be used
+  directly by `validate` and `images`. The two-plane checks of D-042 still need scratch code (TASKS).
 - MACS1149 has no released CANUCS Lenstool parameter file (only maps), so it is not pinned.
 
 **Alternatives rejected.** Using the CANUCS deflection maps as map models: the parameter files allow galaxy-scale
@@ -2079,10 +2084,10 @@ tests (removing or rescaling one potential, D-042), which maps do not.
 **Evidence.**
 - `validate --model macs0416-canucs`: 303 of 303 images solved, rms 0.512″ (max 1.53″), χ²pos 330.8 against
   Lenstool's 344.30. The match is within 4 %, as for SMACS / El Gordo / Abell 2744 (D-030).
-- `validate --model abell370-canucs`: 115 of 115 images solved, rms 2.32″ (max 17.9″), χ²pos 6881. This model was
-  fitted in the source plane (χ² 192.6 there), so its image-plane residuals are not comparable, and its image list
-  should not be used for counter-image tests without a gate.
-- Network test `test_canucs_macs0416_reproduces_its_lenstool_chi2` keeps the MACS0416 reproduction within 10 %.
+- `validate --model abell370-canucs`: 115 of 115 images solved, rms 2.32″ (max 17.9″). This model was fitted in the
+  source plane (χ² 192.6 there), so its image-plane residuals are not comparable, and its image list is gated off.
+- Network tests: the MACS0416 reproduction holds within 10 %, and both models load with finite redshifts for every
+  image.
 
 **Revisit if.**
 - CANUCS releases a MACS1149 parameter file.

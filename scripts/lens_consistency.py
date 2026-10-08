@@ -125,9 +125,15 @@ MODELS = {
         "frame_offset_arcsec": (0.224, -0.016),
     },
     "abell2744-bergamini23": {"files": lensmodel.ABELL2744_BERGAMINI23, "sigpos": "arcs"},
-    # CANUCS JWST-era Lenstool models (D-044): the independent second model for vetting
-    "macs0416-canucs": {"files": lensmodel.MACS0416_CANUCS, "sigpos": 0.49},
-    "abell370-canucs": {"files": lensmodel.ABELL370_CANUCS, "sigpos": 0.3},
+    # CANUCS JWST-era Lenstool models (D-044): the independent second model for vetting. The
+    # Abell 370 fit is source-plane (image-plane rms 2.3"), so its image list is gated off.
+    "macs0416-canucs": {"files": lensmodel.MACS0416_CANUCS, "sigpos": "input.par"},
+    "abell370-canucs": {
+        "files": lensmodel.ABELL370_CANUCS,
+        "sigpos": "input.par",
+        "frame_offset_arcsec": (-0.148, 0.002),
+        "image_list_ok": False,
+    },
     # map models: published deflection maps (D_LS/D_S = 1), no Lenstool par or image list
     "whl0137-relics-lenstool": {
         "files": lensmodel.WHL0137_RELICS_LENSTOOL,
@@ -622,18 +628,21 @@ def cmd_validate(args) -> dict:
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
     sigma = model_sigpos(args.model, files, images)
     chi2_ref = chi2pos_from_par(files["best.par"])
+    image_plane_opt = (
+        "image plane optimization" in files["best.par"].read_text(encoding="latin-1").lower()
+    )
     bt, bsum = backtrace_check(model, images, par["z_m_limit"], sigma, chi2_ref)
     half = grid_half_width(model, images)
     grid = lensmodel.DeflectionGrid.cached(
         model, grid_cache_path(model, half, args.grid_step), half, args.grid_step
     )
-    ip, isum = imageplane_check(model, grid, bt, sigma, chi2_ref)
+    # a source-plane fit's Chi2pos is not an image-plane chi2: no reference for that comparison
+    ip, isum = imageplane_check(model, grid, bt, sigma, chi2_ref if image_plane_opt else None)
     summary = {
         "model": args.model,
         "model_sha256": model.sha256,
         "n_potentials": len(model.components),
-        "image_plane_optimised": "image plane optimization"
-        in files["best.par"].read_text(encoding="latin-1").lower(),
+        "image_plane_optimised": image_plane_opt,
         "kappa_map": (
             kappa_map_check(model, files["kappa_map"], step=args.step)
             if "kappa_map" in files
