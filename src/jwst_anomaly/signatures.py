@@ -3,9 +3,10 @@
 Each signature of D-047 (W1 negative-mass radial pair with an empty umbra, W2 Ellis pair without a
 deflector, W3 inverted-microlensing light curve, W5 count deficit) is one :class:`Signature` entry:
 how it is predicted and injected (``exotic_sim``, ``simulated``), which screens implement it, on
-which kind of survey data it runs, and where its vetting rules and limits are recorded. A survey
-enters through a thin adapter that satisfies :class:`LightCurveSurvey` or
-:class:`CatalogueSurvey`; screens take the adapter, never a survey-specific file layout.
+which kind of survey data it runs, and where its vetting rules and limits are recorded. A new
+survey enters through a thin adapter that satisfies :class:`LightCurveSurvey` or
+:class:`CatalogueSurvey`, and new screens take the adapter. The JWST screens registered below
+predate the layer and still read JWST level-3 catalogues directly.
 
 Exotic physics is a hypothesis: a screen flag is an anomaly, not evidence, until every ordinary
 explanation has been tested (/vet-candidate), and a null result is reported as a limit.
@@ -14,7 +15,8 @@ explanation has been tested (/vet-candidate), and a null result is reported as a
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from functools import partial
 from typing import Protocol, runtime_checkable
 
 import numpy as np
@@ -32,12 +34,13 @@ class Signature:
     code: str  # D-047 label, e.g. "W3"
     name: str
     data_kinds: tuple[str, ...]  # survey data it needs, from DATA_KINDS
-    predict: Callable | None  # exotic_sim closed form (``simulated`` output)
-    inject: Callable | None  # exotic_sim injector for injection-recovery
-    screens: tuple[str, ...]  # implementations, "path:entry" (scripts are not importable)
+    predict: Callable | None  # exotic_sim closed form, exotic lens parameters bound
+    inject: Callable | None  # exotic_sim injector, exotic lens parameters bound
+    screens: tuple[str, ...]  # implementations: "script [subcommand]" (scripts are not importable)
     ordinary_mimics: tuple[str, ...]  # what vetting must rule out first, cheapest first
-    limits_doc: str  # where its limits are recorded
+    limits_doc: str  # where its limits are recorded ("" while none exist)
     decisions: tuple[str, ...]
+    lens: dict = field(default_factory=dict)  # exotic_sim lens parameters (n, sign)
 
     def __post_init__(self) -> None:
         bad = set(self.data_kinds) - set(DATA_KINDS)
@@ -70,16 +73,25 @@ def for_kind(kind: str) -> list[Signature]:
 
 
 _LIMITS = "docs/exotic_limits.md"
+_NEG = {"n": 1.0, "sign": -1}  # negative mass (Kitamura+2013 n = 1, eps < 0)
+_ELLIS = {"n": 2.0, "sign": 1}  # Ellis wormhole (n = 2)
+
+
+def _bound(fn: Callable, lens: dict) -> Callable:
+    """``fn`` with the signature's exotic lens parameters fixed (exotic_sim defaults are an
+    ordinary positive point mass)."""
+    return partial(fn, **lens)
+
 
 register(
     Signature(
         code="W1",
         name="negative-mass lens: radially stretched images beside an empty umbra",
         data_kinds=("catalogue", "image"),
-        predict=exotic_sim.solve_images,
-        inject=exotic_sim.inject_images,
+        predict=_bound(exotic_sim.solve_images, _NEG),
+        inject=_bound(exotic_sim.inject_images, _NEG),
         screens=(
-            "scripts/exotic_screens.py:radial",
+            "scripts/exotic_screens.py radial",
             "scripts/inject_radial.py",
             "scripts/orphan_pairs.py",
         ),
@@ -91,6 +103,7 @@ register(
         ),
         limits_doc=_LIMITS,
         decisions=("D-031", "D-047", "D-049", "D-051", "D-053"),
+        lens=_NEG,
     )
 )
 register(
@@ -98,8 +111,8 @@ register(
         code="W2",
         name="Ellis-wormhole image pair with no visible deflector",
         data_kinds=("catalogue", "image"),
-        predict=exotic_sim.solve_images,
-        inject=exotic_sim.inject_images,
+        predict=_bound(exotic_sim.solve_images, _ELLIS),
+        inject=_bound(exotic_sim.inject_images, _ELLIS),
         screens=("scripts/orphan_pairs.py", "scripts/inject_pairs.py"),
         ordinary_mimics=(
             "knots of one galaxy",
@@ -109,6 +122,7 @@ register(
         ),
         limits_doc=_LIMITS,
         decisions=("D-047", "D-048", "D-051"),
+        lens=_ELLIS,
     )
 )
 register(
@@ -116,8 +130,8 @@ register(
         code="W3",
         name="inverted microlensing: flux vanishes between caustic spikes",
         data_kinds=("light_curve",),
-        predict=exotic_sim.light_curve,
-        inject=exotic_sim.inject_light_curve,
+        predict=_bound(exotic_sim.light_curve, _NEG),
+        inject=_bound(exotic_sim.inject_light_curve, _NEG),
         screens=("scripts/dimming_screen.py",),
         ordinary_mimics=(
             "binary-lens caustic crossings",
@@ -128,6 +142,7 @@ register(
         ),
         limits_doc=_LIMITS,
         decisions=("D-047", "D-052", "D-054"),
+        lens=_NEG,
     )
 )
 register(
@@ -135,19 +150,20 @@ register(
         code="W5",
         name="background-count deficit inside about theta_E",
         data_kinds=("catalogue",),
-        predict=exotic_sim.count_ratio,
+        predict=_bound(exotic_sim.count_ratio, _NEG),
         inject=None,
         screens=(),
         ordinary_mimics=("masks and bright-star halos", "deblending", "cosmic variance"),
-        limits_doc=_LIMITS,
+        limits_doc="",  # no W5 screen or limit yet
         decisions=("D-047",),
+        lens=_NEG,
     )
 )
 
 
 # ----------------------------------------------------------------------------- survey adapters
 
-LIGHT_CURVE_COLUMNS = ("time", "mag", "mag_err", "band")
+LIGHT_CURVE_COLUMNS = schema.LIGHT_CURVE_COLUMNS
 
 
 @runtime_checkable
@@ -183,7 +199,8 @@ class CatalogueSurvey(Protocol):
 def standard_light_curve(time, mag, mag_err, band, source: str, time_system: str) -> Table:
     """One light curve in the shared layout, ``observed`` (finite rows only, time-sorted).
 
-    ``time_system`` names the time column (e.g. "HJD - 2450000"), recorded in ``meta``.
+    ``time_system`` names the time column (e.g. "HJD - 2450000"), recorded in ``meta`` with the
+    number of rows dropped as non-finite or with non-positive errors (``n_dropped``).
     """
     t = np.asarray(time, float)
     m = np.asarray(mag, float)
@@ -193,15 +210,12 @@ def standard_light_curve(time, mag, mag_err, band, source: str, time_system: str
     b = np.broadcast_to(np.asarray(band, str), t.shape)
     ok = np.isfinite(t) & np.isfinite(m) & np.isfinite(e) & (e > 0)
     order = np.argsort(t[ok], kind="stable")
-    out = Table(
-        {
-            "time": t[ok][order],
-            "mag": m[ok][order],
-            "mag_err": e[ok][order],
-            "band": b[ok][order],
-        }
-    )
+    cols = (t, m, e, b)
+    out = Table({k: c[ok][order] for k, c in zip(LIGHT_CURVE_COLUMNS, cols, strict=True)})
     out.meta.update(
-        provenance=schema.Provenance.OBSERVED.value, source=source, time_system=time_system
+        provenance=schema.Provenance.OBSERVED.value,
+        source=source,
+        time_system=time_system,
+        n_dropped=int((~ok).sum()),  # non-finite or non-positive-error rows (cadence audit)
     )
     return out

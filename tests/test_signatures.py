@@ -12,8 +12,12 @@ def test_registry_holds_the_searchable_d047_signatures():
     assert [s.code for s in sg.for_kind("light_curve")] == ["W3"]
     assert {s.code for s in sg.for_kind("catalogue")} == {"W1", "W2", "W5"}
     w3 = sg.get("W3")
-    lc = w3.predict(np.array([0.0, 1.0]), 0.0, 10.0, 0.5, n=1.0, sign=-1, rho=0.0)
-    assert lc.shape == (2,)  # the closed form is callable through the registry
+    lc = w3.predict(np.array([0.0, 1.0]), 0.0, 10.0, 0.5)
+    assert lc[0] == 0.0  # negative mass bound: u0 = 0.5 is inside the umbra (u < 2)
+    assert sg.get("W2").lens == {"n": 2.0, "sign": 1} and sg.get("W1").lens["sign"] == -1
+    w1 = sg.get("W1").inject([3.0], [0.0], 1.0)
+    assert len(w1) == 2 and (w1["dx"] > 0).all()  # both images on the source's side
+    assert sg.get("W5").limits_doc == ""
     with pytest.raises(KeyError, match="registered"):
         sg.get("W9")
     with pytest.raises(ValueError, match="already registered"):
@@ -34,6 +38,7 @@ def test_standard_light_curve_sorts_drops_bad_rows_and_labels_provenance():
     assert list(lc["time"]) == [1.0, 3.0]
     assert list(lc["band"]) == ["I", "I"]
     assert lc.meta["provenance"] == "observed" and lc.meta["time_system"] == "HJD - 2450000"
+    assert lc.meta["n_dropped"] == 2
     with pytest.raises(ValueError, match="one shape"):
         sg.standard_light_curve([1.0], [1.0, 2.0], [0.1], "I", source="t", time_system="t")
 
