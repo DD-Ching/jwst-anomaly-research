@@ -2093,7 +2093,7 @@ tests (removing or rescaling one potential, D-042), which maps do not.
 - CANUCS releases a MACS1149 parameter file.
 - The Abell 370 image list is needed: it requires an rms gate like D-035's.
 
-## D-045 Orphan image pairs (blind dark-deflector screen): null in MACS0416, MACS1149 and Abell 370 (2026-10-08)
+## D-048 Orphan image pairs (blind dark-deflector screen): null in MACS0416, MACS1149 and Abell 370 (2026-10-08)
 
 **Decision.**
 - `scripts/orphan_pairs.py` ([docs/orphan_pairs.md](docs/orphan_pairs.md)) searches CANUCS DR1 catalogues for close

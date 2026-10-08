@@ -77,7 +77,7 @@ CUTOUT_ARCSEC = 4.0
 
 
 _HLSP = "https://archive.stsci.edu/hlsps/canucs/dr1/{f}/{d}/hlsp_canucs_jwst-hst_multi_{f}-{n}"
-# Inputs are downloaded once and verified by sha256 (SOURCES.md, D-045). ``image_lists`` are
+# Inputs are downloaded once and verified by sha256 (SOURCES.md, D-048). ``image_lists`` are
 # extra (url, sha256) lists already in the JWST frame; ``image_models`` are lens_consistency
 # MODELS whose pinned image list (and frame offset) is used.
 FIELDS = {

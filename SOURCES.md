@@ -600,7 +600,7 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     `aacc2dadd442645d2222c23ee2c3f9f6a76fddaa73996a26a6e88c0691a6bf3d`;
   - `…-lenstool-readme_multi_v1_model.txt` 1,988 B `a73bfe3b7d23c7605e16717781d94736d003e7b5fc5d08c0ef80a0358367edc0`.
 
-## Orphan-pair search inputs (accessed 2026-10-08; D-045)
+## Orphan-pair search inputs (accessed 2026-10-08; D-048)
 
 Pinned in `scripts/orphan_pairs.py` `FIELDS` and fetched by `photometry.fetch_catalog` (cache
 `data/cache/external/<sha256[:12]>_<name>`):
