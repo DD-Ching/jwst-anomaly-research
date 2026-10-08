@@ -1,6 +1,7 @@
 """W3 in the OGLE-IV Mróz et al. microlensing samples: ordinary vs exotic fits and limits (D-057).
 
-Subcommands (outputs under ``$JWST_ANOMALY_DATA/derived/w3_ogle/``, never in git):
+Subcommands (outputs under ``$JWST_ANOMALY_DATA/derived/w3_ogle/``, never in git; the one
+exception is ``fit --chunk``'s table, also written gzipped to ``results/w3_ogle/`` (D-059)):
 
 - ``fit``: every event of a sample (``jwst_anomaly.ogle``) is fitted with ordinary models — PSPL;
   FSPL (MulensModel, uniform disk) when the PSPL u0 < ``Params.fspl_u0_max``; PSPL with annual
@@ -15,6 +16,7 @@ Subcommands (outputs under ``$JWST_ANOMALY_DATA/derived/w3_ogle/``, never in git
   first.
 - ``inject``: W3 events (``exotic_sim.inject_light_curve``) injected into real light curves of the
   sample, classified by this fitter and by an emulation of the published selection.
+- ``merge-chunks``: joins the tracked chunk tables 1..N of N into the table `vet` reads.
 - ``limit``: 95 % upper limit on the W3 rate from the published efficiencies and the injections.
 
 Exotic physics is a hypothesis. A better exotic fit is an anomaly to vet, never a discovery.
@@ -23,7 +25,9 @@ Exotic physics is a hypothesis. A better exotic fit is an anomaly to vet, never 
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
+import io
 import json
 import math
 import os
@@ -78,6 +82,13 @@ N_NONLIN = {"PSPL": 3, "FSPL": 4, "PAR": 5, "N1neg": 4, "E2pos": 4, "E2neg": 4}
 
 def out_dir() -> Path:
     d = paths.data_root() / "derived" / "w3_ogle"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def results_dir() -> Path:
+    """Tracked chunk fit tables (D-059): ephemeral sessions fit chunks that `merge-chunks` joins."""
+    d = paths.repo_root() / "results" / "w3_ogle"
     d.mkdir(parents=True, exist_ok=True)
     return d
 
@@ -646,6 +657,14 @@ def params_tag() -> str:
     return hashlib.sha256(json.dumps(asdict(P), sort_keys=True).encode()).hexdigest()[:12]
 
 
+def write_ecsv_gz(tab: Table, path: Path) -> None:
+    """ECSV, gzipped with a fixed header time so a refit of the same chunk gives the same bytes."""
+    buf = io.StringIO()
+    tab.write(buf, format="ascii.ecsv")
+    with path.open("wb") as raw, gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as gz:
+        gz.write(buf.getvalue().encode())
+
+
 def parse_chunk(text: str | None) -> tuple[int, int] | None:
     """``"K/N"`` (1-based K) -> ``(K - 1, N)``; ``None`` passes through."""
     if text is None:
@@ -715,9 +734,10 @@ def run_fit(
     path = out_dir() / f"fits_{sample_key}.ecsv"  # what `vet` / `sheet` / `summary` read
     tab.write(path, overwrite=True)
     if chunk is not None:  # keep each chunk's table; the next chunk replaces `path`
-        tab.write(
-            out_dir() / f"fits_{sample_key}_chunk{chunk[0] + 1}of{chunk[1]}.ecsv", overwrite=True
-        )
+        name = f"fits_{sample_key}_chunk{chunk[0] + 1}of{chunk[1]}.ecsv"
+        tab.write(out_dir() / name, overwrite=True)
+        if limit is None:  # complete chunks only: the tracked copy is what `merge-chunks` joins
+            write_ecsv_gz(tab, results_dir() / f"{name}.gz")
     print(f"wrote {path}: {len(tab)} events, {time.time() - t1:.0f} s wall")
     return path
 
@@ -1593,6 +1613,52 @@ def run_limit(per_cell_min: int = 20) -> Path:
     return path
 
 
+def merge_chunks(sample_key: str, n: int) -> Path:
+    """Join the tracked chunk tables ``1..n of n`` into ``fits_<key>.ecsv`` for `vet` / `limit`.
+
+    Every chunk must exist, be fitted with the current ``Params`` and cover exactly its events;
+    only then is ``meta["chunk"]`` empty (the whole sample), which `limit` requires."""
+    from astropy.table import vstack
+
+    sample = ogle.OgleMrozSample(sample_key)
+    ids = sample.events()["event_id"]
+    params = json.dumps(asdict(P))
+    parts, missing = [], []
+    for k in range(1, n + 1):
+        path = results_dir() / f"fits_{sample_key}_chunk{k}of{n}.ecsv.gz"
+        if not path.exists():
+            missing.append(k)
+            continue
+        t = Table.read(path, format="ascii.ecsv")
+        if t.meta.get("params") != params:
+            raise SystemExit(f"{path.name}: fitted with other Params; refit chunk {k}/{n}")
+        want = set(ids[k - 1 :: n].tolist())
+        have = set(t["event_id"].tolist())
+        if len(t) != len(have):  # a resumed run must not count an event twice
+            raise SystemExit(f"{path.name}: duplicate event rows")
+        if have != want:  # incl. events `fit` skipped for lack of photometry: not the whole sample
+            raise SystemExit(
+                f"{path.name}: {len(want - have)} events of chunk {k}/{n} missing, "
+                f"{len(have - want)} from outside it"
+            )
+        parts.append(t)
+    if missing:
+        raise SystemExit(f"missing chunks of {n}: {missing}")
+    tab = vstack(parts, metadata_conflicts="silent")
+    tab.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source=f"merge-chunks of {n} tracked chunk tables (results/w3_ogle)",
+        params=params,
+        chunk="",
+        wall_time_s=None,
+        cpu_time_s=round(float(np.nansum(np.asarray(tab["seconds"], float))), 1),
+    )
+    path = out_dir() / f"fits_{sample_key}.ecsv"
+    tab.write(path, overwrite=True)
+    print(f"wrote {path}: {len(tab)} events from {n} chunks")
+    return path
+
+
 def summarise_fits(sample_key: str) -> dict:
     """ΔBIC distribution and flag counts of a fitted sample (``derived``)."""
     fits = Table.read(out_dir() / f"fits_{sample_key}.ecsv")
@@ -1659,6 +1725,9 @@ def main(argv=None) -> int:
     sub.add_parser("audit", help="emulated selection on the real bulge sample")
     sub.add_parser("limit", help="95 %% rate limit from the injections")
     sub.add_parser("manifest", help="write data/manifests/ogle_mroz.ecsv")
+    mc = sub.add_parser("merge-chunks", help="join tracked chunk tables 1..N of N for `vet`")
+    mc.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
+    mc.add_argument("--n", type=int, default=12)
     m = sub.add_parser("summary", help="ΔBIC distribution of a fitted sample")
     m.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     args = ap.parse_args(argv)
@@ -1676,6 +1745,8 @@ def main(argv=None) -> int:
         run_limit()
     elif args.cmd == "summary":
         print(json.dumps(summarise_fits(args.sample), indent=1))
+    elif args.cmd == "merge-chunks":
+        merge_chunks(args.sample, args.n)
     elif args.cmd == "manifest":
         print(write_manifest())
     return 0

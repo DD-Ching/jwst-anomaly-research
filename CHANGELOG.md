@@ -2,6 +2,29 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 OGLE bulge, chunks 2–3/12: 20 flags, no candidate; chunk tables tracked (D-059)
+- Cloud run. Chunk 1/12's fit table lived only in the ephemeral session and is lost. `fit --chunk K/N` now also
+  writes a deterministic gzipped copy to `results/w3_ogle/` (~0.22 MB per chunk); `merge-chunks --n 12` joins
+  chunks 1..12 into the table `vet` reads and marks it the whole sample only when every chunk is present, fitted
+  with the current `Params` and holds exactly its own events (none skipped) (D-059). A chunk takes ~9 min on 4 cores (not ~17).
+- Chunk 2/12 (483 events, 0 errors): best ordinary PSPL 454 / PAR 28 / FSPL 1; ΔBIC(min exotic) 5/25/50/75/95 % =
+  −4.7 / 3.8 / 5.8 / 6.6 / 11.2; 49 below 0, 9 flags below −10 (`derived`). `vet`: 8 fail; **BLG624.18.69573**
+  (no EWS name; t_E ≈ 180–240 d, best ordinary PAR) passes every automated test (N1neg ΔBIC −19.0 vs PAR; season
+  offsets −15.0, drifts −15.5; binary source / lens −10.1; 0 VSX / Gaia matches). Contact sheet and residuals
+  inspected: the N1neg model puts its first caustic spike inside a season gap (no data at t − t0 ∈ [−50, 0] d; the
+  models differ by > 5 % over [−89, −7] d); its Δχ² comes from 2 peak points (−9.4) and 16 post-peak points (−6.7).
+  An unsampled caustic plus a sparsely sampled peak is not evidence: not a candidate (ASSUMPTION-level judgement).
+- Chunk 3/12 (483 events, 0 errors): PSPL 447 / PAR 36 / FSPL 0; ΔBIC(min) 5/50/95 % = −2.6 / 5.7 / 11.1; 39 below
+  0, 11 flags; **0 survive** `vet` (season offsets/drifts remove 10, the refit of all ordinary models the 11th; one
+  VSX match). Contact sheet inspected; in several flags the exotic and ordinary curves also differ mainly in gaps
+  (e.g. BLG597.28.9837 has no peak data).
+- **Failed approach:** chaining chunk runs with `while pgrep -f 'chunk 2/12'` — the waiting shell matches its own
+  pattern and never starts the next chunk.
+- **Next:** a `gap_coverage` vetting test (require data where the exotic and best ordinary models differ, else the
+  flag fails); refit chunk 1 and fit chunks 4–12 (two or three per run); `merge-chunks`, `vet`, `sheet`; the
+  empirical ΔBIC null and xallarap fit for BLG667.04.62161 (scratch null-simulation design: PSPL best fit plus white
+  noise, and plus season-wise circularly shifted residuals); then `inject` / `limit`.
+
 ## 2026-10-08: W3 OGLE bulge, chunk 1/12 (483 events): one marginal flag survives automated vetting
 - Cloud run. `w3_microlensing.py fit --chunk K/N` fits events K−1, K−1+N, … so sessions fit disjoint, field-balanced
   parts of the bulge sample (measured ~10 s CPU per bulge event, ~4 h for all 5,790 on 4 cores; one chunk of 12 is
