@@ -523,6 +523,15 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   (x/y-arcsec-deflect, kappa, z02-magnif, arcs.txt, params.txt where present) are pinned by sha256 in
   `lensmodel.HFF_CATS`. The release readmes quote rms 0.72″, 0.63″, n/a, 2.41″, 0.48″ and n/a.
 
+### MACS0717 field run (accessed 2026-10-08; D-039)
+
+- JWST program 6882 (VENUS, PI Fujimoto), observation 29 `jw06882-o029_t063`, 10 NIRCam bands, jwst 3.0.0, released
+  2025-11-03. Manifests: `data/manifests/macs0717*.ecsv`.
+- HFF MACS0717 lens models, https://archive.stsci.edu/pub/hlsp/frontier/macs0717/models/: κ/γ maps of Sharon v4cor,
+  GLAFIC v3, Keeton v4, Williams v4.1 and Diego v4.1, read by byte range. The Sharon v4cor and Keeton v4 deflection maps
+  (64 MB each) were solved in scratch code and then deleted. Only sha256 prefixes were kept: Sharon x `ded45fa9802561f7…`,
+  y `913acb92…`; Keeton x `794590824dc5…`, y `9820902025c4…`. Pin full hashes when they become `MODELS` entries.
+
 ### MACS1149 field run (accessed 2026-10-08; D-037)
 
 - JWST CANUCS program 1208, NIRCam level 3 `jw01208-o008_t004_nircam_clear-*`, 8 bands (F090W–F444W), jwst 3.0.0,

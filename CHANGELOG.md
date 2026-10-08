@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: MACS0717 screens: null (D-039)
+- Worktree worker on VENUS 6882 o029 (10 bands, the only public NIRCam association) with `macs0717-cats` (rms 3.21″).
+- 51 flags, 0 surviving. 32 are the model's own copies of catalogued images it does not reproduce (2–5″ off), 6 are
+  CATS-only extra images (Sharon v4cor and Keeton v4 predict none), and 5 have μ more than 2× model-dependent.
+  System 65's flux ratio is a 0.6″ catalogue offset. `radial` p ≥ 0.70.
+- **Failed approach:** a fixed 1.5″ match radius for a 3.2″-rms model makes most catalogued images "unpredicted",
+  and their model copies then flag as absent or confused.
+- Wall time: about 7.5 min of pipeline plus about 20 min of vetting.
+- **Handoff:** in `forced_check`, rms-scaled match and search radii and automatic copy classification; Sharon v4cor and
+  Keeton v4 as pinned `MapLensModel` entries.
+
 ## 2026-10-08: CANUCS DR1 photo-z for MACS1149 (D-037 addendum)
 - **Failed approach:** the worker checked only DJA, but docs/landscape.md already listed CANUCS DR1 (PSF-matched
   EAzY photo-z for A370, MACS0416, MACS0417, MACS1149 and MACS1423). Check docs/landscape.md before reporting that a

@@ -1834,3 +1834,35 @@ CATS-fitted z = 4.419.
 - A spectroscopic z for system 16 is published (search the MUSE catalogues of Grillo+2016 and Treu+2016), or a source
   with 16.1's colour is found on the far-image track (z = 2.5–3.5 positions). Either would fix z.
 - `images` is re-run with CANUCS DR1 photo-z (counterpart redshifts). DJA v7 has no MACS1149 mosaic.
+
+## D-039 MACS0717 screens: null; model copies of unpredicted images; CATS-only extra images (2026-10-08)
+
+**Decision.** The MACS0717 screens (`macs0717-cats`, VENUS program 6882 `jw06882-o029_t063`, 10 bands) are a null
+result (docs/fields/macs0717.md). There were 51 flags, 0 surviving. Two rules (ASSUMPTION: thresholds):
+- **Model copy.** A predicted image within 2× the model's image-plane rms of a catalogued but unpredicted image of the
+  same system is the model's copy of that image, not a missing counter-image. In MACS0717, 32 of the 51 flags are
+  copies, 2–5″ from catalogued images.
+- **Model-dependent extra image.** An extra image predicted by one model but by neither of two independent models
+  solved from their deflection maps (here Sharon v4cor and Keeton v4) is model-dependent and untestable. This extends
+  the D-036/D-037 μ rule to image existence.
+
+**Alternatives rejected.** Reporting the raw `absent` / `confused` classes. Matching within 1.5″ for a model whose
+image-plane rms is 3.2″: 89 of 132 catalogued images have no prediction within 1.5″. With `--match-arcsec 3.2` the flags
+drop to 4, and all 4 were vetted.
+
+**Evidence.**
+- `validate`: κ 3.2e-3; μ(z=2) 1.2e-3; image-plane rms 3.21″ against the quoted 2.41″ (the gate passes). Frame offset
+  (F200W, 63 matches): +0.023″, −0.061″, so no `frame_offset_arcsec`.
+- `images` (forced F277W): 199 predicted. Classes: recovered 25, confused 38, absent 6, undetectable 13,
+  no_reference 54, inconsistent_reference 5, off_image 3.
+- `fluxratio`: system 65 under- and overluminous; the rest are 26 consistent, 82 resolved and 22 untestable.
+  65.2's JWST source is 0.6″ from its catalogued position. Corrected, the flux ratio is 0.7–1.1. μ(65.1)/μ(65.2) is
+  0.37–17 across six models (untestable).
+- `radial` (no photo-z): 11 peaks against a random mean of 16.7; max 5 lines; p ≥ 0.70.
+- Breakdown of the 51 flags: 32 model copies, 5 untestable μ, 6 CATS-only extra images, 3 below sensitivity, 1 with a
+  counterpart inside the position uncertainty, and 4 rows for the system 65 pair. Cutouts were inspected for every flag.
+
+**Revisit if.**
+- A JWST-era MACS0717 lens model appears.
+- A MACS0717 photo-z catalogue (DJA or a team release) appears.
+- `forced_check` ties its match and search radii to the measured image-plane rms when that rms exceeds 1″.

@@ -4,7 +4,10 @@
 # association there, and its F200W s_region contains the cluster centre. 10 bands, all PUBLIC
 # (observed 2025-11-02, released 2025-11-03). DJA v7 has no MACS0717 mosaic or catalog (index.html,
 # 2026-10-08), so there is no matched_photometry block and no DJA photo-z.
-# `stages:` is identical to configs/reference_sample.yaml. Field note: docs/fields/macs0717.md.
+# `stages:` is identical to configs/reference_sample.yaml. Without matched photometry, require_multiband drops every
+# single-band detection, and the stellar locus, the extended-star veto and the D-025 red exemption are skipped. Use this
+# config for catalog fetches and the lens-model screens; its anomaly ranking is not comparable with the reference
+# fields. Field note: docs/fields/macs0717.md.
 name: macs0717_v1
 
 archive:
