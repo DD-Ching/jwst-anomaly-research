@@ -58,9 +58,11 @@ INPUTS = {
     "J/AJ/143/119/table3": "SQLS-DR7",
     "J/AJ/143/119/table4": "SQLS-DR7",
 }
+LEMON_COLUMNS = {"Name", "RAJ2000", "DEJ2000", "z", "f_z", "Sep", "Class", "z2", "n_z2", "f_z2"}
+SQLS_COLUMNS = {"SDSS", "z", "theta", "Com"}
 HENNAWI = "J/AJ/131/1/binqso"  # binary-quasar catalogue for vetting (Hennawi et al. 2006)
 LEMON_REJECTED = {"UQP", "UQP (?)", "QSO pair"}
-LEMON_CONTROL = {"lens", "quad", "lens (?)"}
+LEMON_CONTROL = {"lens", "quad"}  # "lens (?)" is undecided: neither control nor veto
 # lenses the quasar pair test cannot decide (extended images): they promote a merged rejection to
 # control, then leave the sample
 LEMON_OTHER_LENS = {"lensed gal."}
@@ -147,6 +149,8 @@ def check_vizier(data: bytes, source: str, path: Path) -> None:
 def fetch(source: str, out: Path, pins: dict[str, str] | None) -> tuple[Path, dict]:
     """Download (or reuse) one VizieR table; refuse it if it differs from the pin."""
     f = out / (source.replace("/", "_") + ".tsv")
+    if pins is None and f.exists():
+        f.unlink()  # --repin pins a fresh download, never a stale cache
     if not f.exists():
         r = requests.get(VIZIER.format(source), timeout=300)
         r.raise_for_status()
@@ -196,12 +200,12 @@ def _float(x) -> float:
 
 def sdss_name_radec(name: str) -> tuple[float, float]:
     """RA, Dec (deg) from an SDSS name ``Jhhmmss.ss+ddmmss.s``."""
-    m = re.match(r"J?(\d{2})(\d{2})(\d{2}\.\d+)([+-])(\d{2})(\d{2})(\d{2}(?:\.\d+)?)", name)
+    m = re.match(r"J?(\d{2})(\d{2})(\d{2}(?:\.\d+)?)([+-])(\d{2})(\d{2})(\d{2}(?:\.\d+)?)?", name)
     if not m:
         return np.nan, np.nan
     hh, mm, ss, sg, dd, dm, ds = m.groups()
     ra = 15 * (int(hh) + int(mm) / 60 + float(ss) / 3600)
-    dec = int(dd) + int(dm) / 60 + float(ds) / 3600
+    dec = int(dd) + int(dm) / 60 + (float(ds) if ds else 0.0) / 3600
     return ra, (-dec if sg == "-" else dec)
 
 
@@ -261,10 +265,9 @@ def sqls_redshifts(t: Table, r, prim: np.ndarray | None = None) -> tuple[float, 
 def lemon_second_qso_z(r) -> float:
     """Lemon et al. 2023 ``z2``: a second quasar redshift when ``n_z2`` is blank (or "zqso="),
     otherwise a lens or galaxy redshift ("z_lens=", "zgal="); flagged values are not used."""
-    n = r["n_z2"].strip() if "n_z2" in r.colnames else ""
-    flags = "".join(r[c].strip() for c in ("f_z", "f_z2") if c in r.colnames)
-    if (n == "" or n.startswith("zqso")) and not flags:
-        return _float(r["z2"]) if "z2" in r.colnames else np.nan
+    n = r["n_z2"].strip()  # columns are required (build_sample checks LEMON_COLUMNS)
+    if (n == "" or n.startswith("zqso")) and not (r["f_z"].strip() or r["f_z2"].strip()):
+        return _float(r["z2"])
     return np.nan
 
 
@@ -288,6 +291,9 @@ def build_sample(tables: dict[str, Table]) -> Table:
     for source, t in tables.items():
         label = INPUTS[source]
         prim = primary_rows(t) if label != "Lemon2023" else None
+        need = {"Lemon2023": LEMON_COLUMNS}.get(label, SQLS_COLUMNS) - set(t.colnames)
+        if need:
+            raise ValueError(f"{source}: missing columns {sorted(need)}")
         for r in t:
             if label == "Lemon2023":
                 cls = r["Class"]
@@ -361,7 +367,10 @@ def build_sample(tables: dict[str, Table]) -> Table:
     s["selection"] = "quasar"
     s["z_lens"] = np.nan
     s["theta_e"] = s["sep_cat"] / 2  # SIS model_prediction from the catalogued separation
-    s["name_offset"] = 0.0
+    s["name_offset"] = [  # designation vs position: w12.flags_undecided flags > 5"
+        lenscats.name_position_offset(n, a, d)
+        for n, a, d in zip(s["name"], s["ra"], s["dec"], strict=True)
+    ]
     s["pos_quantum"] = [
         lenscats.position_quantum_arcsec(a, d) for a, d in zip(s["ra"], s["dec"], strict=True)
     ]
@@ -400,7 +409,9 @@ def dedup(s: Table) -> Table:
             k = members[np.argmax(lens)]
             new, note = "control", " | listed as lens elsewhere" if not lens[0] else ""
         elif rej.any() and not lemon_nonpair.any():
-            k, new, note = members[np.argmax(rej)], "rejected", ""
+            sep = np.asarray(s["sep_cat"][members], float)
+            usable = rej & (sep <= P.sep_max)  # the member describing the testable pair
+            k, new, note = members[np.argmax(usable if usable.any() else rej)], "rejected", ""
         else:
             k, new, note = members[0], "nonpair", ""
         s["group"][k] = new
@@ -431,13 +442,15 @@ def sheet(t: Table, out: Path, path: Path, title: str) -> None:
     cut = out / "cutouts"
     cut.mkdir(exist_ok=True)
     t = t.copy()
-    t["system_id"] = t["name"]
+    t["system_id"] = [  # cutout cache key: name and position (a moved row gets a new image)
+        f"{n}_{a:.5f}_{d:+.5f}" for n, a, d in zip(t["name"], t["ra"], t["dec"], strict=True)
+    ]
     t["label"] = [
         f"{c[:18]} {s} dgz={g:.2f}"
         for c, s, g in zip(t["comment"], t["test_status"], t["dgz"], strict=True)
     ]
     for r in t:
-        w12.fetch_cutout(float(r["ra"]), float(r["dec"]), cut / f"{r['name']}.jpg")
+        w12.fetch_cutout(float(r["ra"]), float(r["dec"]), cut / f"{r['system_id']}.jpg")
     png = out / (path.stem + ".png")
     w12.contact_sheet(t, cut, png, title)
     Image.open(png).convert("RGB").save(path, quality=80)
@@ -592,6 +605,7 @@ def cmd_screen(args) -> None:
             "none": int(none.sum()),
             "none_colour_match": int(cm.sum()),
             "none_colour_mismatch": int((none & sc["colour_mismatch"]).sum()),
+            "none_no_colour": int((none & ~sc["colour_match"] & ~sc["colour_mismatch"]).sum()),
             "pair_mismatch": int(
                 (m & np.isin(sc["test_status"], ["deflector", "none"]) & ~sc["pair_match"]).sum()
             ),

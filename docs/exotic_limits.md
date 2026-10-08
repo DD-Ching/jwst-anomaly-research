@@ -1022,7 +1022,8 @@ The ordinary explanations are binary quasars, unrelated pairs and lens galaxies 
 **Method.**
 - Inputs:
   - rejected: 124 pairs;
-  - control: 107 real quasar lenses (Lemon lens/quad, SQLS "SDSS lens"/"known lens");
+  - control: 106 real quasar lenses (Lemon lens/quad, SQLS "SDSS lens"/"known lens"; Lemon "lens (?)" is
+    undecided and left out);
   - entries within 3″ are merged transitively. A group containing a catalogued lens is a control. A rejection that
     Lemon classifies as a non-pair (QSO+star, projected, …) is dropped: this applied to J0947+0247, which Lemon
     classifies as "QSO + star". Undecided Lemon classes ("?") and SQLS non-pair companion rows do not veto.
@@ -1044,13 +1045,13 @@ The ordinary explanations are binary quasars, unrelated pairs and lens galaxies 
 | Sample | covered | blended | too close (< 2″) | decided | deflector | none | none, colours match |
 |---|---|---|---|---|---|---|---|
 | rejected | 88 | 17 | 46 | 24 | 0 | 24 | 14 |
-| control (real lenses) | 80 | 46 | 29 | 5 | **0** | 5 | 4 |
+| control (real lenses) | 79 | 45 | 29 | 5 | **0** | 5 | 4 |
 
 - **The test does not find real lens galaxies at these separations.** All 5 decided control lenses (1.9–2.6″;
   J0628−7448, J1550+0221, J2308+3201, SDSS J1322+1052, SDSS J1515+1511) give "none". Their required typical
   m_z ≈ 19.2–19.8 is ~3 mag brighter than the depth, yet the contact sheet shows the lens light blended into the
   images, and Tractor fits the blend as two point sources. Measured efficiency for an ordinary lens: **0 / 5 (95 %
-  upper bound 0.45)**. A further 46 control lenses are "blended" (fewer than two PSF images). A "none" at ≤ 3″ in LS
+  upper bound 0.45)**. A further 45 control lenses are "blended" (fewer than two PSF images). A "none" at ≤ 3″ in LS
   DR10 therefore carries no information about a dark deflector.
 - Ordinary explanations among the 24 rejected "none" pairs:
   - 10 have mismatched colours (blue+orange on the contact sheet: unrelated objects, not lens images);

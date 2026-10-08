@@ -24,6 +24,7 @@ def test_sdss_name_radec():
     assert dec == pytest.approx(10 + 52 / 60 + 39.4 / 3600)
     assert niq.sdss_name_radec("J212956.56-005152.4")[1] < 0
     assert np.isnan(niq.sdss_name_radec("not a name")[0])
+    assert niq.sdss_name_radec("J132236+105239")[1] == pytest.approx(10 + 52 / 60 + 39 / 3600)
 
 
 @pytest.mark.parametrize(
@@ -60,9 +61,9 @@ def test_read_tsv_skips_units_and_dashes(tmp_path):
 
 def _lemon(rows):
     return Table(
-        rows=[r + ("", "") for r in rows],
-        names=("Name", "RAJ2000", "DEJ2000", "z", "Sep", "Class", "z2", "f_z"),
-        dtype=[str] * 8,
+        rows=[r + ("", "", "", "") for r in rows],
+        names=("Name", "RAJ2000", "DEJ2000", "z", "Sep", "Class", "z2", "f_z", "n_z2", "f_z2"),
+        dtype=[str] * 10,
     )
 
 
@@ -284,3 +285,13 @@ def test_sqls_newer_nonpair_row_does_not_veto_older_rejection():
     )
     s = niq.build_sample({"J/AJ/143/119/table4": dr7, "J/AJ/140/403/table3": dr5})
     assert list(s["group"]) == ["rejected"] and s["catalogue"][0] == "SQLS-DR5"
+
+
+def test_lemon_table_without_flag_columns_is_refused():
+    t = Table(
+        rows=[("Q", "150.0", "1.0", "1.5", "2.2", "UQP", "1.4")],
+        names=("Name", "RAJ2000", "DEJ2000", "z", "Sep", "Class", "z2"),
+        dtype=[str] * 7,
+    )
+    with pytest.raises(ValueError):
+        niq.build_sample({"J/MNRAS/520/3305/table1": t})
