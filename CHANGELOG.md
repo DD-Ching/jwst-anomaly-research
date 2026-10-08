@@ -6,15 +6,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Cloud run. Hypothesis: HST resolution decides the lensed quasars that Legacy Surveys left blended or too close
   (D-056). `scripts/w12_hsc_probe.py`: HSC v3 summary sources within 4″ of each of the 444 galaxy-scale quasar/radio
   systems (MAST catalogs API, 58 s); ≥ 2 point sources (CI < 1.3) are the images, an extended source (CI ≥ 1.5)
-  near their centroid and > 0.2″ from an image is the deflector (ASSUMPTIONs in `Params`).
+  near their centroid and > 0.2″ from an image is the deflector; sources in < 2 HSC images are dropped as likely
+  artifacts (MAST's recommendation; #90 review) (ASSUMPTIONs in `Params`).
 - 91 of 444 systems have HSC sources. Validation on systems with a published lens redshift (a lens galaxy is known
-  to exist): 15 deflector, 20 none, 48 undecided → **efficiency 15/35 = 0.43** (`derived`). Misses include quads
-  and doubles (16 of 21 "none" have 2 point images). In four inspected misses (H1413+117, HE1104−1805, SBS0909+532,
+  to exist): 13 deflector, 15 none, 55 undecided → **efficiency 13/28 = 0.46** (`derived`; 15/35 = 0.43 without the
+  artifact cut). Misses include quads and doubles (13 of 16 "none" have 2 point images). In four inspected misses (H1413+117, HE1104−1805, SBS0909+532,
   HE2149−2745) the HSC rows within 4″ are only the quasar images: the lens galaxy is absent from the catalogue, not
   mis-typed (likely lost in the quasar PSF; hypothesis, no cutouts inspected). Without a lens redshift: 1 none
   (HS0810+2554), 7 undecided. The 3 open SuGOHI IX pairs (D-056) have no HSC sources.
 - **Failed approach (rule):** HST *catalogue* photometry cannot decide a dark deflector in lensed quasars — a
-  "none" is more likely a missed lens (0.57) than a dark one. No limit, no candidate; HS0810+2554 is not flagged.
+  "none" is more likely a missed lens (0.54) than a dark one. No limit, no candidate; HS0810+2554 is not flagged.
 - **Next:** PSF-subtracted HST image modelling (e.g. drizzled frames from MAST, quasar PSF + Sérsic fit) validated
   on the same known-lens set, or HSC PDR3 photometry; until then W2 in wide imaging stays at D-056.
 

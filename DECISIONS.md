@@ -2854,12 +2854,12 @@ so all 12 chunks stay ~2–3 MB, under the 1 MB per-file rule.
 `scripts/w12_hsc_probe.py` stays as the reproducible probe and as the validation harness (known-lens efficiency)
 for a pixel-level replacement.
 
-**Alternatives rejected.** Counting HSC "none" systems toward f_dark (efficiency 0.43 on known lenses would need a
+**Alternatives rejected.** Counting HSC "none" systems toward f_dark (efficiency 0.46 on known lenses would need a
 correction larger than the signal); widening the deflector radius or lowering the CI cut (the lens galaxy is
 missing from the catalogue, not mis-typed, in the four inspected misses: H1413+117, HE1104−1805, SBS0909+532, HE2149−2745).
 
 **Evidence** (`derived`, run 2026-10-08). 444 quasar/radio systems; 91 with HSC sources; known-lens systems
-15 deflector / 20 none / 48 undecided; no-lens-z systems 1 none (HS0810+2554) / 7 undecided. Tests:
+13 deflector / 15 none / 55 undecided (sources in ≥ 2 HSC images; 15 / 20 / 48 without that cut); no-lens-z systems 1 none (HS0810+2554) / 7 undecided. Tests:
 `tests/test_w12_hsc_probe.py`.
 
 **Revisit if.** PSF-subtracted HST image models (or another deeper/sharper survey) reach an efficiency ≥ 0.9 on

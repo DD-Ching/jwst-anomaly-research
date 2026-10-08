@@ -3,7 +3,8 @@
 For every galaxy-scale lensed-quasar or radio-selected system of the merged lens catalogues
 (``w12_lenscats.load_systems``), fetch the HSC v3 summary sources within ``radius`` (MAST
 catalogs API, one request per system, thread pool) and classify: >= 2 point-like sources
-(concentration index CI < ``ci_point``) inside ``image_radius`` are the quasar images; an
+(concentration index CI < ``ci_point``; sources in fewer than ``min_images``
+HSC images are dropped as likely artifacts) inside ``image_radius`` are the quasar images; an
 extended source (CI >= ``ci_ext``) near their centroid and not on an image is the deflector.
 The test is validated on systems whose lens galaxy has a published redshift (lenscat
 ``lens_z_known``); its efficiency there bounds what a "none" means. Thresholds are ASSUMPTIONs
@@ -43,6 +44,9 @@ class Params:
     lens_frac: float = 0.6  # deflector within lens_frac * max image separation of the centroid
     lens_min: float = 0.5  # arcsec, minimum deflector search radius
     image_exclusion: float = 0.2  # arcsec, an extended source this close to an image is the image
+    min_images: int = (
+        2  # HSC NumImages >= this; single-image detections are mostly artifacts (MAST)
+    )
     workers: int = 8
 
 
@@ -51,6 +55,8 @@ def classify(ra: float, dec: float, src: Table, p: Params) -> tuple[str, int, fl
 
     status: "deflector", "none" (>= 2 point images, no extended source near their centroid)
     or "undecided" (fewer than two point images)."""
+    if len(src) and "NumImages" in src.colnames:
+        src = src[np.asarray(src["NumImages"]) >= p.min_images]
     if len(src) == 0:
         return "undecided", 0, np.nan
     x = (np.asarray(src["MatchRA"], float) - ra) * np.cos(np.radians(dec)) * 3600

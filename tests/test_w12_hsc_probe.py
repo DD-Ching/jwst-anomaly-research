@@ -51,3 +51,11 @@ def test_fewer_than_two_point_images_is_undecided():
     s = _src([(0, 0), (0.3, 0)], [1.0, 2.0])
     assert probe.classify(10.0, 0.0, s, P)[:2] == ("undecided", 1)
     assert probe.classify(10.0, 0.0, Table(), P)[0] == "undecided"
+
+
+def test_single_image_detections_are_dropped():
+    s = _src([(-0.6, 0), (0.6, 0), (1.5, 0), (0.05, 0)], [1.0, 1.05, 1.0, 2.0])
+    s["NumImages"] = [3, 4, 1, 2]  # the third point source is a single-image artifact
+    status, n, sep = probe.classify(10.0, 0.0, s, P)
+    assert (status, n) == ("deflector", 2)
+    assert abs(sep - 1.2) < 1e-3
