@@ -2,10 +2,11 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-08: MACS0416 counter-images and flux ratios: 20 ordinary, 1 inconclusive; CANUCS model as second model (D-042)
-- With the D-040 solver, the MACS0416 image list is open. `images` and `fluxratio` raised 21 flags: 20 ordinary and 1
-  inconclusive. System 51's fourth image is produced by a z 0.268 foreground galaxy modelled as a member; it needs a
-  multi-plane model (vetting record in its own `needs-human` PR).
+## 2026-10-08: MACS0416 counter-images and flux ratios: null; CANUCS model as second model; two-plane check (D-042)
+- With the D-040 solver, the MACS0416 image list is open. `images` and `fluxratio` raised 21 flags; 0 survive. The most
+  persistent was system 51's fourth image: two independent models predict it at 9–25σ, and it is not seen. It comes
+  from a z 0.268 foreground galaxy modelled as a member. A scratch two-plane model with that galaxy at σ ≤ 70 km/s
+  gives exactly the 3 observed images.
 - System 27's two bright `absent` predictions (S/N 247–341) are CATS-only galaxy-scale caustics. The JWST-era CANUCS
   Lenstool model (222 potentials, 111 spectroscopic systems) reproduces system 27 with exactly its 3 images, and the
   cutouts show empty sky there.
