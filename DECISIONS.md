@@ -1970,6 +1970,60 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
 - A MACS0717 photo-z catalogue (DJA or a team release) appears: re-run `radial` with the background cut.
 - `forced_check` ties its match and search radii to the measured image-plane rms when that rms exceeds 1″.
 
+## D-042 MACS0416 counter-image and flux-ratio screens: null; CANUCS Lenstool model as second model; two-plane check of foreground deflectors (2026-10-08)
+
+**Decision.** With the image list open (D-040), the MACS0416 `images` and `fluxratio` screens are a null result
+(docs/fields/macs0416.md). The JWST-era CANUCS Lenstool model is the independent second model for this field:
+Rihtarsic et al. 2025, 222 potentials and 111 spectroscopic systems, loaded with `LensModel.from_par` from the
+released best-fit parameter file. A flagged extra image that the CANUCS model does not predict is CATS-only, and
+therefore model-dependent. This relaxes D-041's two-independent-models requirement to one JWST-era model (ASSUMPTION:
+the JWST-era model, with spectroscopic constraints only, is the stronger check).
+
+**Alternatives rejected.**
+- HFF-era second models (Sharon, Keeton). The CANUCS model is fitted to JWST positions and uses spectroscopic
+  constraints only, so it is the stronger independent check.
+- Treating the system-27 extra images (predicted S/N 247–341) as missing: the CANUCS model reproduces system 27 with
+  exactly its 3 catalogued images (within 0.2–0.66″) and predicts nothing at the 4 CATS extras (its nearest images are 4.5–12.8″ away).
+
+**Evidence.**
+- `images` (F277W forced, CANUCS photo-z, frame offset applied): 143 predicted. Classes: recovered 3, confused 13,
+  absent 2, undetectable 3, no_reference 6, inconsistent_reference 3.
+- Vetting (CANUCS model, cutouts inspected):
+  - system 27: 2 absent and 2 confused, all CATS-only. Empty sky at the μ 26 and μ 19 positions in all bands;
+    cluster members at z 0.3–0.4 lie 0.6–1″ away, so these are galaxy-scale caustics of the CATS model.
+  - one system-55 row is CATS-only (5.3″ from any CANUCS image); the other two are reference-quality cases.
+  - 5 confused rows (systems 34, 45, 47, 132, 133) are predicted by both models (within 0.25–0.9″) but lie next to
+    neighbours 30–900× brighter, so they are untestable.
+  - 4 confused rows (systems 1, 15, 122 ×2) are copies, under a second copy rule (ASSUMPTION). The flagged prediction
+    is the only unmatched prediction of its system near exactly one unmatched catalogued image, it has the same
+    parity, and it lies within 6.5 × the image-plane rms (1.6–4.7″ here, against 0.76″ rms). D-041's 1.75 × rms rule
+    does not cover them.
+  - System 45 (μ −9) lies 1.89″ from the unmatched 45.2 but with the opposite parity to CATS's μ +2.3 there. CANUCS
+    gives μ +14.9 at 45.2, so 45.2 is near-critical and its parity is model-dependent. Untestable (D-036).
+  - **System 51's fourth image is explained.** Both models predict it (μ 3.8 CATS, 5.5 CANUCS; 0.66″ apart). After
+    isophote subtraction of the neighbour, nothing is seen; the expected signal, derived from 51.1–51.3 photometry,
+    is 9–25σ. In CANUCS the image comes from potential 8757, the z_spec 0.268 galaxy 0.85–0.88″ away, modelled as a
+    cluster member at z 0.396. CATS is a map model and cannot be decomposed; its fourth image lies 0.85″ from the same
+    galaxy, consistent with the same origin (not tested). In a two-plane model (that galaxy at z 0.268, the rest of CANUCS at z 0.396), the
+    image persists at σ 102 and 81 km/s (fitted, and rescaled to its luminosity distance). At σ ≤ 60 km/s the system
+    has exactly 3 images and 51.3 is matched within 1.5″. That is 26 % below the rescaled σ, inside the assumed ±30 %
+    scatter. Record: docs/candidates/macs0416-system51-fourth-image.md.
+- `fluxratio` (F150W/F444W): 32 consistent, 58 resolved, 23 untestable.
+  - 45.2 is overluminous: a 0.2″ aperture 0.5″ from a bright compact galaxy (the cutout), and its CANUCS match has
+    spectroscopic z 2.544 but photo-z 0.38, a blend.
+  - 45.1 is flagged as underluminous only relative to 45.2.
+  - 38.1 is chromatic at S/N 2–3.5 (marginal).
+- Tally: 143 predicted images and 116 flux-ratio images screened; 21 flags (18 forced rows, 3 flux-ratio images);
+  **0 surviving**.
+- **Rule:** before treating a missing extra image as a flag, check the potentials that produce it against their
+  spectroscopic redshifts. A foreground or background galaxy modelled as a member is tested in a two-plane model with
+  its σ rescaled and scanned over the scaling-relation scatter (ASSUMPTION: ±30 %).
+
+**Revisit if.**
+- The CANUCS model is pinned as a `MODELS` entry with its image list, and `images` is re-run on it directly.
+- A multi-plane re-fit, or a measured velocity dispersion of CANUCS 3101008 (z 0.268), gives σ ≳ 65 km/s. System
+  51's explanation then fails and the fourth image becomes a flag again.
+
 ## D-043 Abell 370 and Abell S1063 radial screens: null; Gaia-seeded spike veto (2026-10-08)
 
 **Decision.**
