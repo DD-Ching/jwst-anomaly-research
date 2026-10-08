@@ -5,9 +5,17 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 
 ## Now (owner focus 2026-10-08: wormhole / negative-mass and warp signatures only; D-047)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
-   - W1 through `exotic_screens.py radial` on the screened fields: recovery vs θ_E (0.3″, 1″, 3″) → upper limit on
-     negative-mass lenses per deg²;
-   - W2 through `orphan_pairs.py` (D-048), and the dark-lens search extended to non-cluster deep fields;
+   - W1: `radial` is blind at θ_E ≤ 1″ (D-049, limits only ≥ 3″). Next: a W1-specific screen (collinear radial
+     image pairs flanking an empty centre, orientation against the candidate centre, local null), benchmarked with
+     `scripts/inject_radial.py`. Design settled in D-050: a sign-flipped catalogue aperture-mass map (Schneider
+     1996 estimator, Schirmer+07 filter) on cluster-shear-corrected shapes, rotation null; build in
+     `exotic_screens.py`, benchmark against `radial`; expect gains mainly at θ_E ≥ 2–3″; then pixel-level injections; other lens redshifts → volume density vs Takahashi &
+     Asada; photo-z for Abell S1063 (DJA v7.5, 75 MB) and MACS0717 to bring both back into the W1 limits (D-049
+     excludes them: without photo-z their members are painted as images);
+   - W2 / dark deflectors (D-048 clusters, D-051 deep fields: null, limits): a companion-aware null to explain the
+     flanking-field orphan excess (P = 0.01) before any orphan is read as other than chance; segmentation-map
+     adjacency for the same-galaxy and visible-lens rules (the main efficiency losses); pixel-level injections;
+     optionally CEERS / GOODS-S / PRIMER (~600 MB each);
    - W3: a dimming / vanished-source class for multi-epoch fields (El Gordo, MACS0416 flashlights, NEXUS, JADES);
      ≥ 3 epochs for the spike-dip-spike shape; leave the Sunrise transient track to its owner run;
    - W5: counts N(>S) around `radial` centres.

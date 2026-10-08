@@ -2,6 +2,59 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Dark-deflector (orphan-pair) screen in deep fields, with injection-recovery: null (D-051)
+- Worktree worker: `orphan_pairs.py` now reads CANUCS and DJA catalogues through one column layout (D-048 counts
+  reproduced bit for bit) and runs on six deep fields: the five CANUCS NIRCam flanking fields and DJA GOODS-N
+  (108 arcmin²). `scripts/inject_pairs.py` paints `exotic_sim` point-mass, W2 Ellis and W1 pairs into the real
+  catalogues and runs the unchanged screen.
+- 355 orphans against 315.4 expected (strictest null, P = 0.015); the excess sits in the flanking fields (246 vs
+  211, P = 0.010), GOODS-N matches every null. Read as unmodelled physical companions (lensing would need ~140 dark
+  galaxy-mass deflectors per arcmin²); open, not a candidate. 90 top orphans inspected: 50 ordinary (knots,
+  satellites, groups, artefacts), 40 faint chance-like pairs. Nothing for `/vet-candidate`.
+- Per-deflector efficiency ≤ 0.8 % (point mass, W2) and 0.1–18.6 % (W1, θ_E 0.3–1.5″). Background-aware 95 % limits:
+  W1 < 1.3 × 10⁴ deg⁻² at θ_E 1.5″ (4.5 × 10¹¹ M☉); W2 < 2.9 × 10⁵ deg⁻² at 0.7″ (throat ≈ 10 pc). This covers
+  θ_E ≤ 1.5″, where `radial` (D-049) is blind. docs/exotic_limits.md, docs/orphan_pairs.md.
+- **Failed approaches (rules):** DJA Kron apertures for the same-galaxy rule (2.6× CANUCS; use 3.3 × flux_radius);
+  the standalone DJA GOODS-N zout (older catalogue; stream the tarball member); a global null (c) in deep fields
+  (under-predicts orphans; use the conditioned null (e)); unretried S3 reads (spurious NoSuchBucket via the proxy).
+- Downloads > 200 MB (GOODS-N catalogue 224 MB, photo-z tarball 371 MB streamed) stated in D-051.
+- Wall time: 3–20 s per field search; 190–266 s per field of injections.
+
+## 2026-10-08: W1 shear screen reuse-check (D-050)
+- `/reuse-check` for the W1-specific screen: build a catalogue aperture-mass map (−M_ap: a negative-mass lens gives
+  negative tangential shear) with scipy cKDTree. TreeCorr NG only gives a stacked ⟨N M_ap⟩(R) and has no Windows
+  wheels; lenspack works on pixelised maps. Rough S/N 1–2 at θ_E = 1″ in a 5″ aperture, so gains are expected
+  mainly at θ_E ≥ 2–3″.
+- **Handoff:** implement D-050 in `exotic_screens.py` and benchmark it with `scripts/inject_radial.py` on SMACS
+  first (smallest field; needs its MAST `_cat.ecsv` and DJA zout in the cache).
+
+## 2026-10-08: PR #70 merged after review fixes; Abell 2744 radial doc brought to the post-D-034 result
+- Cloud run. PR #70 (D-049) was conflicted with main: merged `origin/main`, then `/code-review` on the final diff.
+  Main finding: MACS0717 and Abell S1063 have no photo-z, so the injector painted their members and foreground
+  galaxies as W1 images (Abell S1063 had the highest efficiency of all fields). The headline limits now use the six
+  photo-z fields (38.1 arcmin²): < 7.0 × 10⁴ / 6.8 × 10³ / 3.2 × 10³ deg⁻² at θ_E = 3″ / 6″ / 10″, about 27× weaker
+  than Takahashi & Asada; the all-field values stay in `limits.json` as optimistic. `inject_radial` now reads the
+  screen defaults from `exotic_screens.radial_defaults()`.
+- docs/fields/abell2744.md: radial result with the D-034 spike veto (134 `anti` arcs, max 5 lines, p 0.505; null).
+- PR #61 (n0153, `needs-human`) brought up to date with main; it still waits for the owner.
+- **Handoff:** the W1-specific screen (TASKS "Now" 1) is next; it fits one full cycle.
+
+## 2026-10-08: W1 injection-recovery through `radial`: the screen is blind to negative-mass lenses (D-049)
+- Worktree worker: `scripts/inject_radial.py` paints `exotic_sim` W1 lenses (n = 1, ε < 0) into the real catalogues
+  of all eight null `radial` fields and runs the unchanged screen (`exotic_screens.radial_candidates`, a pure
+  refactor of `cmd_radial`'s selection). 200 lenses per field and θ_E; 51.2 arcmin² screened.
+- Recovered: 0 / 1,600 at θ_E = 0.3″ and 1″; 10 at 3″; 80 at 6″; 181 at 10″. 95 % limits on W1 lens surface
+  density (six photo-z fields): none below 3″; < 7.0 × 10⁴ deg⁻² at 3″ (|M| ≈ 1.4–4.3 × 10¹² M☉), < 3.2 × 10³ deg⁻²
+  at 10″. MACS0717 and Abell S1063 (no photo-z, members get lensed) are excluded as optimistic. About 27×
+  weaker than Takahashi & Asada spread over 0 < z < 1. docs/exotic_limits.md.
+- Why: an image reaches e ≥ 0.5 only for β ≲ 2.3 θ_E, and `anti` against the cluster keeps a third, so a lens puts
+  1–3 arcs into a screen whose null needs 5–8 lines.
+- **Failed approaches (rules):** recovery is the screen's p_random, not the 3-line peak; cache the null draws once
+  per field (0.2–1 s per lens instead of 15–150 s); deconvolve the PSF before applying the lens Jacobian.
+- Wall time: 322–877 s per field for 1,000 lenses (5 θ_E).
+- **Handoff:** a W1-specific screen (collinear radial pairs flanking an empty centre, orientation against the
+  candidate centre, local null), benchmarked with this harness.
+
 ## 2026-10-08: El Gordo lens model reproduces the published magnification maps (issue #68)
 - `validate` now compares Lenstool-par models with published signed μ maps (`mag_map_files`, fetched only by
   `validate`); `map_check` reports `parity_agree` for signed maps. El Gordo (CDS J/A+A/678/A3, z=2 and z=4, |μ|<10,

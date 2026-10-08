@@ -720,6 +720,25 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
   - arXiv:2608.10800, Fell & Loeb, "Radiative Signatures from Warp Drives Traveling Through the Earth's
     Atmosphere" (2026, preprint).
 
+## Injection-recovery limits (D-049)
+
+- arXiv:1807.06209, Planck Collaboration, "Planck 2018 results. VI. Cosmological parameters", A&A 641, A6 (2020),
+  doi:10.1051/0004-6361/201833910 (checked on the arXiv API 2026-10-08). Used as `astropy.cosmology.Planck18`
+  for the θ_E → |M| conversion in `scripts/inject_radial.py`, as in D-047.
+- Inputs that were already recorded: the field catalogues, photo-z and models of docs/fields/*.md (SOURCES
+  "Cluster fields", "HFF CATS lens models"); the Gaia DR3 stars from `scripts/gaia_stars.py` (D-043); and
+  Takahashi & Asada (2013) for the comparison limit ("Exotic-lens literature").
+
+## W1 shear screen (D-050, checked 2026-10-08)
+- **TreeCorr** 5.1.4 (2026-09-01, BSD-3-Clause): https://rmjarvis.github.io/TreeCorr/_build/html/ng.html. Evaluated,
+  not used.
+- **lenspack** 1.0.0 (2020-09-04, MIT): https://github.com/CosmoStat/lenspack. Evaluated, not used.
+- **Schneider 1996**, "Detection of (dark) matter concentrations via weak gravitational lensing", MNRAS 283, 837,
+  doi:10.1093/mnras/283.3.837, https://arxiv.org/abs/astro-ph/9601039. Catalogue aperture-mass estimator.
+- **Schirmer et al. 2007**, "GaBoDS IX. A sample of 158 shear-selected mass concentration candidates", A&A 462, 875,
+  doi:10.1051/0004-6361:20065955, https://arxiv.org/abs/astro-ph/0607022. Shear-shaped filter (formula still to be
+  read from the full text).
+
 ## Deep-field orphan-pair screen (accessed 2026-10-08; D-051)
 
 Pinned by URL and sha256 in `scripts/orphan_pairs.py` (`DEEP_FIELDS`); downloaded with `photometry.fetch_catalog`.
