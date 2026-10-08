@@ -561,3 +561,9 @@ def test_fluxratios_refuses_a_gated_image_list():
     # D-044: abell370-canucs is a source-plane fit whose image list is gated off
     with pytest.raises(SystemExit, match="usable multiple-image list"):
         lc.main(["--model", "abell370-canucs", "fluxratios", "--photometry", "unused.fits"])
+
+
+def test_fluxratios_refuses_a_map_model():
+    # map models have no Lenstool potentials to re-solve, so fluxratios refuses them
+    with pytest.raises(SystemExit, match="usable multiple-image list"):
+        lc.main(["--model", "macs1149-cats", "fluxratios", "--photometry", "unused.fits"])

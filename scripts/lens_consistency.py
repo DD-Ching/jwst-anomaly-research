@@ -174,7 +174,8 @@ def is_map_model(name: str) -> bool:
 
 
 def has_image_list(name: str) -> bool:
-    """Whether ``images`` and ``fluxratio`` may use the model's multiple-image list."""
+    """Whether ``images`` may use the model's multiple-image list. ``fluxratios`` also needs a
+    Lenstool model (it refuses map models)."""
     spec = MODELS[name]
     return "arcs.dat" in spec["files"] and spec.get("image_list_ok", True)
 
@@ -1431,7 +1432,10 @@ def cmd_fluxratios(args) -> dict:
     if len(colour) != 2:
         raise SystemExit("--colour takes two bands, e.g. f150w,f444w")
     phot = load_dja_photometry(args.photometry, list(colour), args.aperture, args.photoz)
-    offset = tuple(args.offset_arcsec)
+    if args.offset_arcsec is None:  # default: the model's pinned frame offset (D-034)
+        offset = tuple(MODELS[args.model].get("frame_offset_arcsec", (0.0, 0.0)))
+    else:
+        offset = tuple(args.offset_arcsec)
     table = flux_ratio_table(
         model,
         images,
@@ -1530,9 +1534,9 @@ def main(argv: list[str] | None = None) -> int:
         "--offset-arcsec",
         nargs=2,
         type=float,
-        default=(0.0, 0.0),
+        default=None,
         metavar=("DRA", "DDEC"),
-        help="photometry frame minus image list, arcsec (El Gordo: 0.221 -0.018)",
+        help="photometry frame minus image list, arcsec (default: the model's frame_offset_arcsec)",
     )
     f.add_argument("--min-snr", type=float, default=10.0)
     f.add_argument("--max-abs-mu", type=float, default=20.0)
