@@ -251,7 +251,9 @@ def _check_rho(rho: float) -> None:
         raise ValueError("rho must be non-negative")
 
 
-def finite_source_magnification(beta, rho: float, n: float = 1.0, sign: int = 1, n_nodes: int = 48):
+def finite_source_magnification(
+    beta, rho: float, n: float = 1.0, sign: int = 1, n_nodes: int = 48, point_magnification=None
+):
     """Total magnification of a uniform disk of radius ``rho`` (Einstein radii) centred at ``beta``.
 
     The lens is axisymmetric, so the disk average reduces to a 1-D integral over the source radius
@@ -259,7 +261,8 @@ def finite_source_magnification(beta, rho: float, n: float = 1.0, sign: int = 1,
     b range is split at the disk's inner radii and at the caustic (umbra edge) of a repulsive lens;
     each piece uses Gauss-Legendre in t with b = lo + (hi - lo)(1 - cos t)/2, which absorbs the
     1/sqrt singularities at the caustic and the disk edges. Agrees with inverse ray shooting
-    (``tests/test_exotic_sim.py``).
+    (``tests/test_exotic_sim.py``). ``point_magnification(b)`` replaces
+    ``total_magnification(b, n, sign)`` inside the integral (e.g. a faster tabulated equivalent).
     """
     _check_rho(rho)
     if rho == 0:
@@ -283,7 +286,8 @@ def finite_source_magnification(beta, rho: float, n: float = 1.0, sign: int = 1,
         cosphi = (rr**2 + bb**2 - rho**2) / (2.0 * rr * bb)
     phi = np.where(full, np.pi, np.arccos(np.clip(np.nan_to_num(cosphi, nan=1.0), -1.0, 1.0)))
     arc = 2.0 * rr * phi
-    amp = total_magnification(np.maximum(rr, 0.0).ravel(), n, sign).reshape(rr.shape)
+    amp_fn = point_magnification or (lambda x: total_magnification(x, n, sign))
+    amp = np.asarray(amp_fn(np.maximum(rr, 0.0).ravel()), float).reshape(rr.shape)
     # a node rounding onto the caustic (measure zero) would give inf * 0
     amp = np.where(np.isfinite(amp), amp, 0.0)
     integrand = amp * arc * w
