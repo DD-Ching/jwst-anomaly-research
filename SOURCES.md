@@ -997,3 +997,9 @@ Exploration Program."
 - Void finders considered and not used: VIDE (Sutter et al. 2015, arXiv:1406.1191); REVOLVER (Nadathur et al. 2019,
   arXiv:1904.01030); DES SV photometric voids (Sánchez et al. 2017, arXiv:1605.03982). DES Y6 Gold (Bechtol et al.
   2025, arXiv:2501.05739) and HSC-SSP PDR3 (Aihara et al. 2022, arXiv:2108.13045) masks not used.
+
+- Rejected lensed-quasar candidates and controls (D-064, `data/manifests/w12_niq_inputs.json` has URLs, bytes, sha256;
+  accessed 2026-10-08), VizieR ASU-TSV `https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=<ID>&-out.max=5000&-out.all`:
+  Lemon et al. 2023, MNRAS 520, 3305 (arXiv:2206.07714), `J/MNRAS/520/3305/table1`; Inada et al. 2008, AJ 135, 496,
+  `J/AJ/135/496/table2,table3`; Inada et al. 2010, AJ 140, 403, `J/AJ/140/403/table2,table3`; Inada et al. 2012,
+  AJ 143, 119, `J/AJ/143/119/table3,table4`; Hennawi et al. 2006, AJ 131, 1, `J/AJ/131/1/binqso`.

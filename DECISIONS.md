@@ -3004,3 +3004,57 @@ t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in 
   (a larger contiguous area; the regions are 10° high).
 - A survivor appears: stop and report to the owner (/vet-candidate).
 - A published count-deficit search appears (compare; do not repeat). Any outside quotation: `needs-human`.
+
+## D-064 W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them; measured control efficiency 0/5 (2026-10-08)
+
+**Decision.** Test the pairs that lens searches rejected for lack of a lens galaxy with the unchanged D-056 chain
+(`scripts/w12_niq.py`, importing `w12_lenscats`; D-056 Faber–Jackson calibration fixed). Add a control sample of real
+lenses from the same tables to *measure* the test's efficiency, which D-056 had to assume.
+- Inputs: VizieR tables pinned by the sha256 of their data lines (the ASU-TSV header carries the request time):
+  - Lemon et al. 2023 table1: UQP / QSO pair rejected, lens / quad control;
+  - SQLS DR3/DR5/DR7 candidate tables (Inada et al. 2008, 2010, 2012): "no lens(ing) object", "QSO pair" and
+    "binary" rejected, "SDSS lens"/"known lens" control; SQLS QSO+star / different SED / not QSO rows describe
+    another companion and are dropped without vetoing. A Lemon non-pair class (QSO + star, projected, …) vetoes a
+    rejection of the same system, and Lemon classes with "?" are undecided;
+  - Hennawi et al. 2006 binaries, for vetting.
+- Mismatched or missing pins are refused.
+- Sample rules (ASSUMPTIONs):
+  - catalogued separation ≤ 3″, because positions are one image;
+  - transitive 3″ merging, with a group containing a lens counted as a control;
+  - the LS pair must match the catalogued separation within 0.5″.
+- Vetting adds image colour (|Δ(g − z)| ≤ 0.5) and quoted-redshift agreement (|Δz| / (1 + z) ≤ 0.01).
+
+Result: 0 of 5 decided control lenses (1.9–2.6″) show their lens galaxy. Rejected: 24 "none". Of these, 10 are
+colour-mismatched, 2 are catalogued binaries and 1 has two redshifts; 11 remain untestable. No limit and no candidate
+(docs/exotic_limits.md "W1/W2 in rejected lensed-quasar pairs").
+
+**Alternatives rejected.**
+- Deriving a dark-lens fraction from the rejected "none" count: control lenses give "none" too, so k carries no
+  information.
+- Separations up to 6″ (D-056's θ_E ≤ 3″): SQLS positions are one image, so 3–6″ pairs never fit the 3″ image search.
+- Hashing the raw ASU-TSV: its header embeds the request time, so a fresh download never matches.
+- The Lemon lensed-quasar database (HTTP 500 again on 2026-10-08).
+- Gaia GraL invalidated candidates (Stern et al. 2021): mostly star pairs, with one quasar pair.
+- Williams et al. 2018: no separation or redshift.
+- Dawes et al. 2023: unconfirmed candidates, not rejections.
+- NIQ tables that exist only in arXiv LaTeX (Lemon 2018/2019/2020, Anguita et al. 2018, Agnello et al. 2018):
+  deferred. The Lemon 2023 UQPs and the SQLS rejections are the machine-readable superset.
+
+**Evidence.**
+- `results/w12_niq/summary.json` and `systems.ecsv`.
+- The contact sheets show lens light blended into the control images, and blue+orange rejected pairs.
+- Review bugs fixed before merge:
+  - the Hennawi coordinates are sexagesimal and silently matched nothing; `binary_match` now raises if nothing
+    parses;
+  - wide pairs were tested on unrelated LS pairs;
+  - the greedy dedup was not transitive;
+  - Lemon's `z2` is a second quasar redshift only when `n_z2` is blank (or "zqso="). "z_lens=" and "zgal=" are
+    other objects, and flagged values are not used;
+  - a rejection that another catalogue classifies as a non-pair is now vetoed (J0947+0247);
+  - SQLS pair-format tables put the quasar z on the primary row and θ, the comment and the companion's z on the
+    next row. Both are now read, and flagged redshifts ("(") are not used.
+- The Tractor rows the test ran on are pinned too (sha256 of the sorted rows), and so are the brick summary and
+  every VizieR table. VizieR error, empty or truncated responses are refused.
+
+**Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 11 colour-matched pairs;
+spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ tables add pairs of 2–3″.
