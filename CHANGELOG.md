@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: MACS0416 counter-images and flux ratios: null; CANUCS Lenstool model as second model (D-042)
+- With the D-040 solver, the MACS0416 image list is open. `images` and `fluxratio` raised 20 flags; 0 survive.
+- System 27's two bright `absent` predictions (S/N 247–341) are CATS-only galaxy-scale caustics. The JWST-era CANUCS
+  Lenstool model (222 potentials, 111 spectroscopic systems) reproduces system 27 with exactly its 3 images, and the
+  cutouts show empty sky there.
+- Flux-ratio flags: 45.2 is blended with a bright galaxy 0.5″ away; 38.1 is marginal.
+- Wall time: about 3 min of pipeline plus about 5 min of vetting.
+- **Handoff:** pin the CANUCS models (MACS0416, MACS1149, Abell 370) as `MODELS` entries for second-model vetting.
+
 ## 2026-10-08: MACS0717 screens: null (D-041)
 - Worktree worker on VENUS 6882 o029 (10 bands, the only public NIRCam association) with `macs0717-cats` (rms 3.21″).
 - 51 flags, 0 surviving. 29 are the model's own copies of catalogued images it does not reproduce (1.6–5.6″ off), 6 are

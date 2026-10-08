@@ -16,9 +16,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - an observational parity test (image orientation or resolved structure; not yet designed);
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
-   - exotic screens (D-031, D-034, D-036–D-038, D-040, D-041): SMACS, El Gordo, Sunrise (radial), Abell 2744,
+   - exotic screens (D-031, D-034, D-036–D-038, D-040–D-042): SMACS, El Gordo, Sunrise (radial), Abell 2744,
      MACS1149, MACS0717 and MACS0416 (radial) null. The six HFF CATS map models are in (D-035). Next:
-     - MACS0416: `images` / `fluxratio` with CANUCS photo-z (image list open and frame offset pinned, D-040);
+     - CANUCS Lenstool models (MACS0416 used in D-042; MACS1149, Abell 370) as pinned `MODELS` entries for vetting;
      - `radial`: an aper50 S/N floor (noise segments pass the isophotal S/N);
      - JWST field runs: radial on Abell 370 (CANUCS photo-z) and Abell S1063; MACS0717 done (D-041), re-run its radial
        when a photo-z catalogue exists;
