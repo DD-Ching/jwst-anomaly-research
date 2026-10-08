@@ -2913,7 +2913,7 @@ the smallest). The W3 search is `scripts/w3_moa.py`:
 - `fit --chunk K/N` and `merge-chunks` (as D-059) for fields too large for one session; gb22 no longer needs them.
 The 3.5 GB download is for cloud sessions; the owner's machine need not fetch it.
 
-Pilot result for gb22: 18,599 light curves, 30 flags, **0 survivors**. Γ₉₅ ≈ 1–4 × 10⁻⁶ per star per year for
+Pilot result for gb22: 18,599 light curves, 30 flags, **0 survivors**. Γ₉₅ ≈ 1.2–4.4 × 10⁻⁶ per star per year for
 t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in MOA-II (pilot: gb22)").
 
 **Alternatives rejected.**

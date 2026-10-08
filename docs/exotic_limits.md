@@ -970,7 +970,7 @@ dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no pu
 | 300 | 17 | 0.90 / 0.90 | 0.22 / 0.35 | 0.07 / 0.10 | 0.027 / 0.023 | 3.6 / 4.4 × 10⁻⁶ |
 
 - **First W3 rate limit**: with zero survivors, the 95 % upper limit on the rate of umbra crossings (u₀ < 2 in
-  |ε| Einstein radii) by an n = 1, ε < 0 lens is **Γ₉₅ ≈ 1–4 × 10⁻⁶ per monitored star per year** in gb22 for
+  |ε| Einstein radii) by an n = 1, ε < 0 lens is **Γ₉₅ ≈ 1.2–4.4 × 10⁻⁶ per monitored star per year** in gb22 for
   t_E = 10–300 d (|M| ≈ 0.02–17 M☉ in the stated geometry) and 0.6–1.1 × 10⁻⁵ at t_E = 3 d. Γ₉₅ = 3 / (N_s T ε);
   N_s = 3.5 × 10⁶ stars with 10 ≤ I ≤ 21.4, T = 8.61 yr. With the smallest N_s of the star-count model
   (2.4 × 10⁶) the limits are 1.43× weaker (`rate95_conservative`). 101 of 600 W3 injections are recovered, 0 of
