@@ -2,6 +2,13 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Efficiency rules for routine cycles (owner text)
+- docs/cloud-routine-prompt.md gets the owner's "EFFICIENCY RULES" after "MOVE FAST, SAFELY": result first, a review
+  stopping rule (fix only result/provenance/reproducibility/guarded-file findings, list the rest, ≤ 3 rounds), verify
+  the branch after forked skills (they can leave HEAD detached, which stranded two commits on #98), fail fast on
+  data access, calibrate before flagging, a 35-minute time box, one unit per cycle.
+- **Owner action:** paste the updated prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`).
+
 ## 2026-10-08: Coordination and dispatch rules for concurrent sessions (owner text)
 - Two sessions worked PR #94 (W5) at once: a cloud run started from its 20:39 skeleton, another session pushed the full
   screen at 21:14, and the run's push was rejected (its pilot is parked on `claude/w5-clustered-null`, findings on #94).
