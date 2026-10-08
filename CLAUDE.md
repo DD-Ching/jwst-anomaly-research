@@ -50,8 +50,8 @@ their branch (never rebase or force-push a pushed branch), do non-conflicting re
 - `src/jwst_anomaly/CLAUDE.md` — stage contracts, schema, provenance of tables, signature layer.
 - `scripts/CLAUDE.md` — screen / vet / inject / limit conventions for searches, parallel topology.
 - `data/manifests/CLAUDE.md` — data root, downloads, manifests, cloud disk.
-- Directory-scoped skills in `scripts/.claude/skills/` (`w3-survey`, `w12-lenscats`) hold the per-search
-  recipes and their failed-approach rules.
+- Directory-scoped skills in `scripts/.claude/skills/` (`w3-survey`, `w5-counts`, `w12-lenscats`) hold the
+  per-search recipes and their failed-approach rules.
 
 ## State files
 - TASKS.md: prioritized queue. CHANGELOG.md: dated entries, newest first — results, failed approaches,

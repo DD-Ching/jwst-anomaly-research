@@ -22,8 +22,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    is not: D-060, efficiency 0.46); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar candidates ("nearly identical quasars", binary quasars) where a dark lens
    would hide; HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
-3. **W5:** background-count deficits in Legacy Surveys DR10 (#94, in progress): first screen 47 flags, 0 candidates
-   (2 automated survivors are sky over-subtraction around NGC 1398). Next: large-galaxy veto, injections, limit.
+3. **W5** (D-063): Legacy Surveys DR10, 340.5 deg², 40 flags, 0 survivors; n₉₅ ≈ 0.012–0.018 deg⁻² at θ_E = 8–32′.
+   Next: HSC / Euclid counts for θ_E < 6′; a larger contiguous area for θ_E ≈ 1°.
 4. **Warp:** monitor the literature (checked 2026-10-08: no distant-observer EM template — Lentz & Felton 2024 give fluxes only; Clough et al.
    2024 waveform not public; O3 superluminal-burst search already null, Kuwahara & Cannon 2023). Recheck monthly.
 
