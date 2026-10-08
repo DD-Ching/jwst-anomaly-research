@@ -2518,54 +2518,64 @@ contact sheets inspected).
 
 ## D-052 W3 multi-epoch dimming / vanished-source screen: null in NEXUS, MACS0416 and Abell 2744; injection-calibrated rate limits (2026-10-08)
 
-**Decision.** `scripts/dimming_screen.py` screens multi-epoch level-3 NIRCam catalogues for W3 (D-047). Results and
-tables are in docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs are in
-`configs/dimming_screen.yaml`.
-- **Reuse.** Matching (`epoch_compare.mutual_matches`, the D-027 global frame shift) and the footprint proxy
-  (`transient_search._neighbour_counts`). Gaia mask (`transient_combine.near_bright`/`fetch_gaia`). Forced
-  photometry, controls and robust noise (`transient_forced.measure`/`select_controls`/`robust_std`). Cutouts and
-  spike statistic (`cutouts.make_cutouts`, D-018/D-021). Light curves (`exotic_sim.inject_light_curve`).
-- **Flags** (ASSUMPTIONs): `vanish` (≥ 10σ → < 3σ with a ≥ 5σ drop in every testable band), `dim_achromatic`
-  (≥ 20 % at ≥ 5σ in two bands, equal within 3σ) and `rise_dip_rise` (≥ 3 epochs).
-- **Order of tests:** catalogue vetoes (Gaia star, edge, blend, single epoch, sharper than the PSF), then forced
-  confirmation, cutout tests, visual check, SIMBAD/NED.
-- A catalogue non-detection counts only where the source would have been ≥ 10σ.
-- Limits use point-like sources (CI_70_30 1.9–2.7) only.
+**Decision.** `scripts/dimming_screen.py` screens multi-epoch level-3 NIRCam catalogues for W3 (D-047). Results are in
+docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs are in `configs/dimming_screen.yaml`.
+- **Reuse.**
+  - `epoch_compare.mutual_matches`, the D-027 global frame shift and `transient_search._neighbour_counts`.
+  - `transient_combine.exclusion_radius` and `fetch_gaia`.
+  - `transient_forced.measure`, `select_controls` and `robust_std`.
+  - `cutouts.make_cutouts` (D-018/D-021) and `exotic_sim.inject_light_curve`.
+- **Flags** (ASSUMPTIONs): `vanish`, achromatic in every testable band; `dim_achromatic`; `rise_dip_rise`.
+- **Order of tests:** catalogue vetoes first, then forced confirmation, cutout tests, visual check and SIMBAD/NED.
+  The catalogue vetoes are: Gaia star with the self-match excluded, a ≥ 100× brighter neighbour within 1.5″, edge,
+  blend, single epoch, and sharper than the PSF.
+- **Injection model.**
+  - f = F f_obs + √max(0, 1 − F²) σ_n z, with error σ_n max(F, 1).
+  - Light-curve vetoes are re-applied per injected copy.
+  - Only baseline-unflagged sources count in the exposure.
+  - The forced stage is emulated by the forced/catalogue fractional scatter measured on the same controls.
+- **Calibration and limits.**
+  - Headline limits come only from fields whose forced stage is calibrated (≥ 50 controls in some epoch pair and
+    control zero points in every epoch). The others are reported separately.
+  - Limit definitions: rate per source per year = 3 / Σ N ε (T + 4t_E); τ = rate × π t_E; per deg² per year and
+    per deg² per epoch analogously (docs/exotic_limits.md).
 
 **Alternatives rejected.**
-- Image differencing or whole-mosaic forced photometry: it needs full `_i2d` files (NEXUS o014 F200W is
+- Image differencing, or forced photometry of whole mosaics: it needs full `_i2d` files (NEXUS o014 F200W is
   113 GB).
-- Per-band vanish flags: a catalogue miss in one band (deblending) then counts. W3 is achromatic, so every
-  testable band must vanish.
-- Catalogue non-detections as zero flux at any depth: MACS0416 gave 1,122 vanish flags from shallower PEARLS
-  epochs.
-- `is_extended == False` as the point-source cut: 70 % of S/N ≥ 10 rows qualify. The stellar locus is
-  CI_70_30 2.0–2.5, not ≤ 1.6.
-- `f_inj = f_obs + (A − 1) f_ref` for injections: the residual epoch scatter of bright stars (1–3 %) stayed above
-  3σ of their small noise, so 100 % dimming was missed for 12 % of bright sources.
-  `F f_obs + (1 − F) N(0, σ_noise)` recovers 100 %.
-- Controls drawn from the largest catalogue: NEXUS o014 barely overlaps the other epochs, which left 2–8 controls
-  per epoch and an uncalibrated noise scale.
-- The D-047 spike amplitudes ×7.5 / ×3.4, and the pre-merge default quadrature (×9.2 / ×4.9): the merged
-  simulator gives ×7.0 / ×2.35 / ×1.53.
+- Per-band vanish flags: they count single-band deblending misses.
+- Catalogue non-detections as zero flux at any depth: MACS0416 gave 1,122 vanishes from shallower PEARLS epochs.
+- `is_extended == False` as a point-source cut: 70 % of S/N ≥ 10 rows qualify.
+- `transient_combine.near_bright` for the star mask: it returns the source's own faint Gaia match as the nearest
+  star, so a saturated star 0.5–1″ away never masks. That let two MACS0416 spike artefacts through.
+- `f_obs + (A − 1) f_ref` and `F f_obs + (1 − F) n`: the first leaves the bright-star epoch scatter, and the
+  second's scatter (√(F² + (1 − F)²) σ) disagrees with the quoted error.
+- Dividing the forced ERR scale by the catalogue scale for the inflation: the two are measured against different
+  baselines.
+- Positive-flux-only control zero points: they are biased against faded epochs.
+- Controls drawn from the largest catalogue: NEXUS o014 barely overlaps the other epochs.
+- The D-047 spike amplitudes ×7.5 / ×3.4, and the pre-merge quadrature (×9.2 / ×4.9): the merged simulator gives
+  ×7.0 / ×2.35 / ×1.53.
 
 **Evidence** (derived; `simulated` for injections).
-- Catalogue flags: 3,793 / 854 / 530 (NEXUS / MACS0416 / Abell 2744). After catalogue tests: 1,095 / 375 / 32.
-  Forced-measured: 100 (all 13 compact plus a random 87) / 375 / 32. Forced-confirmed: 0 / 6 / 0. After cutout
-  tests: 0 / 2 / 0.
-- The two MACS0416 survivors (`d06533`, `d07517`) lie 0.5–1″ from the saturated star `d03349`. Its PSF wings and
-  spikes cross the aperture differently in each epoch because each i2d grid has a different orientation (cutouts
-  inspected). They are instrumental. **0 surviving events.**
-- Efficiency peaks at t_E ≈ 0.3 yr (0.26–0.60 by field). 100 % dimming is recovered at 1.00, 50 % at 0.40–0.71
-  and 20 % at 0.02–0.13.
-- 95 % limits on umbra crossings (261 compact sources): 0.0073 per source per year at t_E = 0.3 yr, 0.0052 at
-  1 yr, 0.016 at 0.1 yr. The best per-deg²-per-epoch-pair limit is 7.8.
-- Controls flagged by the forced stage: 7/300, 1/150, 0/14.
+- Catalogue flags: 3,793 / 854 / 530 (NEXUS / MACS0416 / Abell 2744).
+- After catalogue tests (current code): 1,051 / 358 / 32.
+- Last complete forced run: 100 / 375 / 32 measured, 0 / 6 / 0 confirmed. Every confirmed MACS0416 flag is a
+  saturated star or lies within 1.5″ of one; the new `bright_neighbour` veto removes all six automatically
+  (cutouts inspected). **0 surviving events.**
+- Re-runs after the review fixes failed on S3 (s3fs "bucket does not exist" through the proxy, 2026-10-08 07:00 and
+  08:29 UTC, for multi-target jobs; single reads worked). The last complete run was re-calibrated offline.
+- MACS0416 is calibrated: noise 2.15 / 1.99, forced/catalogue scatter 1.00 / 1.98. NEXUS and Abell 2744 are not.
+- Efficiency, MACS0416: W3 0.12–0.22 at t_E = 0.3–3 yr; dimming 0.09 / 0.59 / 0.35 for 20 / 50 / 100 %. The 100 %
+  case is low because the per-copy `single_epoch` veto removes full vanishes of sources seen in only two F200W
+  epochs.
+- Headline 95 % limits (MACS0416, 34 sources): 0.16 per source per year at t_E = 0.3 yr, 0.056 at 1 yr; τ < 0.15
+  at 0.3 yr. All fields, indicative: 0.025 and 0.015.
 
 **Revisit if.**
-- A veto for apertures within ~1.5″ of a much brighter (≥ 100×) catalogued or saturated source is added; it would
-  have removed both MACS0416 survivors automatically.
-- S3 byte-range reads fail again ("bucket does not exist" from s3fs through the proxy, 2026-10-08 07:00 UTC; plain
-  HTTPS reads worked). `forced` now retries and skips an unreadable image.
-- JADES or more NEXUS epochs (the wide tier repeats) enlarge the compact sample.
+- S3 cutout jobs work again: re-run `forced` for all fields with ≥ 300 overlapping controls to calibrate NEXUS and
+  Abell 2744.
+- The D-039 persistence test replaces the `single_epoch` veto for vanish flags. That restores sensitivity to full
+  vanishes of two-epoch sources.
+- JADES or more NEXUS epochs enlarge the compact sample.
 - A W3 model with cluster macro-magnification is needed for caustic-crossing stars in arcs.

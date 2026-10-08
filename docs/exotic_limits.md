@@ -357,129 +357,154 @@ robust part of the signal; the spike heights depend on ρ.
 
 ### Data (observed)
 
-| Field | Epochs (F200W + F444W) | Baseline | Master sources | Monitored compact sources | Overlap area |
+| Field | Epochs | Baseline | Master sources | Monitored compact sources | Overlap area |
 |---|---|---|---|---|---|
-| NEXUS-Center (5105) | 8: 2024-09-12 … 2026-03-28 | 1.54 yr | 81,136 | 154 | 79.5 arcmin² |
-| MACS0416 (1176 ×3, 1208, 6882 F444W only) | 5: 2022-10-07 … 2026-01-10 | 3.26 yr | 7,708 | 44 | 10.8 arcmin² |
-| Abell 2744 (2561 o001/o002/o006) | 3: 2022-11-02 … 2024-07-31 | 1.74 yr | 17,669 | 63 | 14.0 arcmin² |
+| NEXUS-Center (5105) | 8 (F200W + F444W): 2024-09-12 … 2026-03-28 | 1.54 yr | 81,136 | 151 | 79.5 arcmin² |
+| MACS0416 (1176 o211–o213, 1208 o004; 6882 o054) | 4 F200W + F444W (2022-10-07 … 2023-02-10), plus 6882 o054 in F444W only (2026-01-10) | 0.35 yr (F200W), 3.26 yr (F444W) | 7,708 | 44 | 10.8 arcmin² |
+| Abell 2744 (2561 o001/o002/o006) | 3 (F200W + F444W): 2022-11-02 … 2024-07-31 | 1.74 yr | 17,669 | 63 | 14.0 arcmin² |
 
-All 31 catalogues are level-3 `_cat.ecsv` with jwst 3.0.0 (`data/manifests/dimming_*.ecsv`, 339 MB). No `_i2d.fits`
-was downloaded; forced photometry uses S3 byte-range cutouts. El Gordo has one shared band across epochs and was
-not used. JADES is left for later.
+- Catalogues are level-3 `_cat.ecsv` files, 31 in total (`data/manifests/dimming_*.ecsv`, 339 MB). Every file
+  header says jwst 3.0.0 / photutils 3.0.0.
+- MAST's product listing still gives `prvversion` 2.0.1, with smaller sizes, for the six PEARLS MACS0416 files
+  (obs 211–213). The files were reprocessed and the listing is stale; `acquire` warned about it.
+- Caveat: the MACS0416 epochs come from two programmes with different depths and dither patterns (PEARLS 2.9 ks,
+  CANUCS 6.4 ks in F200W). Cross-epoch processing differences show up as catalogue flags, which the forced stage
+  must remove.
+- The master list and the W3 light-curve tests use the detection band (F200W) epochs only. VENUS o054 (F444W only)
+  enters MACS0416's F444W light curves (vanish / dim tests in that band). It does not add master sources, and it
+  does not lengthen the F200W baseline.
+- No `_i2d.fits` was downloaded; forced photometry reads S3 byte ranges. El Gordo has one shared band and was not
+  used. JADES is left for later.
 
 ### Method (every threshold an ASSUMPTION, `Params` in the script)
 
-1. **Light curves (derived).** Each catalogue is tied to the deepest detection-band catalogue by the D-027 global
-   frame shift. Master list: rows with aper50 S/N ≥ 5 from any epoch. Mutual matches within 0.3″. Per band and
-   epoch, the zero point is the median flux ratio of S/N ≥ 30 pairs. Errors are scaled by the robust scatter of
-   epoch-to-epoch differences (1.52–1.73 in all bands and fields; D-027 found 1.2–1.5), plus a 3 % floor.
-2. **Catalogue non-detections.** A covered epoch without a match counts as flux 0 only where the source's peak
-   flux would have been ≥ 10σ there. Catalogues are assumed complete at S/N ≥ 10.
-3. **Flags.**
-   - `vanish`: an epoch pair with S/N ≥ 10 in one epoch and < 3σ in the other, with a ≥ 5σ drop, in every band
-     testable in that pair (achromatic).
-   - `dim_achromatic`: one epoch ≥ 20 % below the median of the others at ≥ 5σ in both bands, with drops equal
-     within 3σ.
-   - `rise_dip_rise`: with ≥ 3 epochs, an epoch ≥ 20 % and ≥ 5σ fainter than an earlier and a later one.
-4. **Catalogue-level ordinary tests, cheapest first.** Gaia DR3 star mask (D-027 radii; a faint Gaia match to the
-   source itself is kept as `gaia_star`), edge proxy (neighbour count < 0.5 × median), blend (neighbour < 0.5″),
-   single-epoch detection (persistence suspect, D-039), sharper than the PSF (CI_70_30 < 1.9).
-5. **Forced photometry (`forced`).** For every flag that passes the catalogue tests: a 0.15″ aperture at the
-   recentred position in every epoch (`transient_forced.measure`), zero points and noise scale from random
-   controls, then the same flag logic again. A flag is confirmed when the same flag type reappears. Cutout tests
-   come next: edge / no data, WHT < 0.5 × typical, hexagonal spike statistic ≥ 3 (D-018/D-021). The last step is
-   a SIMBAD/NED match.
-6. **Compact sources monitored** (the population of the limit): 1.9 ≤ CI_70_30 ≤ 2.7 in the reference epoch (the
-   F200W stellar locus is 2.0–2.5), no catalogue veto, and S/N ≥ 10 in ≥ 2 detection-band epochs. These are mostly
-   Galactic stars in NEXUS and a mix of stars and compact sources in the clusters.
+1. **Light curves (derived).**
+   - Each catalogue is tied to the deepest F200W catalogue by the D-027 global frame shift.
+   - Master list: F200W rows with aper50 S/N ≥ 5 from any F200W epoch, matched mutually within 0.3″.
+   - Zero point per band and epoch: the median flux ratio of S/N ≥ 30 pairs.
+   - Errors are scaled by the robust scatter of epoch-to-epoch differences (1.52–1.73), plus a 3 % floor.
+   - A catalogue non-detection counts as flux 0 only where the source would have been ≥ 10σ.
+2. **Flags.**
+   - `vanish`: ≥ 10σ → < 3σ with a ≥ 5σ drop, in every band testable in that epoch pair.
+   - `dim_achromatic`: ≥ 20 % and ≥ 5σ in two bands, with drops equal within 3σ.
+   - `rise_dip_rise`: ≥ 3 epochs.
+3. **Catalogue-level ordinary tests, cheapest first.**
+   - `near_star`: within the D-027 radius of another Gaia DR3 source. The source's own Gaia match (< 0.3″) is
+     excluded before the mask is applied, unless it is brighter than G = 18.
+   - `bright_neighbour`: a master source ≥ 100× brighter within 1.5″ (new; PSF wings and spikes of saturated
+     stars).
+   - Edge proxy, blend (< 0.5″), sharper than the PSF (CI_70_30 < 1.9), and `single_epoch` (detected in one F200W
+     epoch only; persistence suspect, D-039).
+4. **Forced photometry (`forced`).**
+   - A 0.15″ aperture at the recentred position in every epoch (`transient_forced.measure`). SCI (MJy/sr) is
+     converted to µJy with each epoch's pixel solid angle.
+   - Zero points come from controls selected on the reference epoch only (S/N ≥ 10 there), as 1 / median(f_k /
+     f_ref), so faded epochs are not dropped. An epoch with < 10 such controls is recorded as uncalibrated.
+   - The forced noise scale needs ≥ 50 controls in some epoch pair, else the band is marked uncalibrated.
+   - Same flag logic again; a flag is confirmed when the same flag type reappears. Then cutout tests (edge / no
+     data, WHT < 0.5, spike statistic ≥ 3), then SIMBAD/NED.
+5. **Compact sources monitored** (the population of the limit): 1.9 ≤ CI_70_30 ≤ 2.7 (the F200W stellar locus is
+   2.0–2.5), no catalogue veto, and S/N ≥ 10 in ≥ 2 F200W epochs.
 
 ### Results (derived)
 
-| Field | Catalogue flags (vanish / dim / rdr) | After catalogue tests | Forced-measured | Forced-confirmed | After cutout tests | Survivors after visual check |
+Counts of the last complete forced run (2026-10-08 06:39–07:03 UTC). Re-runs after the review fixes failed on S3:
+s3fs returned "bucket does not exist" through the proxy for multi-target cutout jobs, while single reads worked.
+Its forced fluxes were re-calibrated offline with the fixed calibration code; the catalogue screen is the current
+code.
+
+| Field | Catalogue flags (vanish / dim / rdr) | After catalogue tests (current code) | Forced-measured | Forced-confirmed | After cutout tests | After the bright-neighbour veto and visual check |
 |---|---|---|---|---|---|---|
-| NEXUS | 3,793 (3,197 / 264 / 1,276) | 1,095 (13 compact) | 100 (all 13 compact + 87 random) | 0 | 0 | 0 |
-| MACS0416 | 854 (714 / 67 / 310) | 375 (10 compact) | 375 | 6 | 2 | 0 |
+| NEXUS | 3,793 (3,197 / 264 / 1,276) | 1,051 (12 compact) | 100 (13 compact + 87 random) | 0 | 0 | 0 |
+| MACS0416 | 854 (714 / 67 / 310) | 358 (10 compact) | 375 | 6 | 2 | 0 |
 | Abell 2744 | 530 (525 / 49 / 6) | 32 (1 compact) | 32 | 0 | 0 | 0 |
 
-- Most catalogue flags are catalogue effects. Sources are missing from one epoch's catalogue (deblending,
-  segmentation) but present in its image; others sit at mosaic edges (cutouts inspected).
-- The two MACS0416 flags that passed every automatic test, `d06533` and `d07517` (RA 64.0206–64.0207), lie
-  0.5–1″ from the saturated star `d03349`. Each i2d grid has a different orientation, so the star's PSF wings and
-  spikes cross the fixed aperture differently in each epoch, and the F200W flux jumps up and down by ×10.
-  The cutout spike statistic is centred on the target's own peak, so it does not catch this. **Ordinary
-  (instrumental); no candidate.**
-- The controls flagged 7 of 300 (MACS0416), 1 of 150 (NEXUS) and 0 of 14 (Abell 2744). This is the forced stage's
-  false-positive rate on ordinary sources.
-- Wall time: `screen` 76 s (NEXUS), 4 s (MACS0416), 9 s (Abell 2744); `inject` 136 / 20 / 34 s; `forced` about
-  32 min (MACS0416, 675 positions × 9 images), 20 min (NEXUS, 250 × 16), 3–9 min (Abell 2744).
-- The forced noise scale is calibrated for MACS0416 (2.15 / 1.99, from 300 controls). NEXUS (150 controls) and
-  the final Abell 2744 run (14 controls) had too few controls covering ≥ 2 epochs, so their forced errors stay
-  ERR-based (scale 1). An earlier Abell 2744 run with 300 controls gave 2.45 / 3.27 and also confirmed 0 flags.
+- The bright-neighbour veto removes 75 / 828 / 21 catalogue flags (MACS0416 / NEXUS / Abell 2744). It vetoes all
+  six forced-confirmed MACS0416 flags automatically. Five of them (`d03232`, `d03844`, `d03845`, `d06533`,
+  `d07517`) lie 0.5–1″ from saturated stars; the sixth is the saturated star `d03349` itself (spike statistic ≥ 3).
+- Each i2d grid has a different orientation, so spikes and wings cross a fixed aperture differently in each epoch
+  (cutouts inspected).
+- Before this veto existed, the old Gaia mask failed because it took the source's own faint Gaia match as the
+  nearest star. **0 surviving events.**
+- Controls flagged by the forced stage: 7/300 (MACS0416), 1/150 (NEXUS), 0/14 (Abell 2744).
+- Calibration:
+  - MACS0416 is calibrated: noise 2.15 / 1.99 (F200W / F444W). Its forced/catalogue fractional scatter on the same
+    300 controls is 1.00 (F200W) and 1.98 (F444W).
+  - NEXUS (150 controls) and Abell 2744 (14) are **uncalibrated**: too few controls in any epoch pair.
+- Wall time: `screen` 76 s (NEXUS), 5 s (MACS0416), 9 s (Abell 2744); `inject` 140 / 20 / 34 s; `forced` about
+  32 min (MACS0416, 675 positions × 9 images), 20 min (NEXUS), 3–9 min (Abell 2744).
 
 ### Injection-recovery (simulated)
 
-- Every monitored compact source that is not already flagged gets 20 copies per model.
-- W3 (n = 1, ε < 0) uses `exotic_sim.inject_light_curve` over the real epoch times. Each copy draws
-  u₀ ~ U[0, 2) and t₀ ~ U[t_first − 2t_E, t_last + 2t_E].
-- Injected flux: F·f_obs + (1 − F)·N(0, σ_noise), the same factor F in both bands. A vanished epoch therefore
-  keeps sky noise only.
-- Recovered: any flag and no catalogue veto. For MACS0416, the event must also still be flagged with errors
-  inflated by the forced/catalogue noise ratio (1.30 / 1.15).
-- Plain achromatic dimming of 20/50/100 % in one random epoch is the sensitivity floor.
+- Monitored compact sources that are not flagged without an injection (34 / 139 / 62) get 20 copies per model.
+- W3 (n = 1, ε < 0) uses `exotic_sim.inject_light_curve` on the real epoch times. Each copy draws u₀ ~ U[0, 2) and
+  t₀ ~ U[t_first − 2t_E, t_last + 2t_E].
+- Noise model (ASSUMPTION): sky-limited for F ≤ 1 and Poisson-like above.
+  f = F f_obs + √max(0, 1 − F²) σ_n z, with quoted error σ_n max(F, 1) plus the floor. The realised scatter
+  equals the quoted error, and a vanished epoch keeps sky noise only.
+- Recovered = a flag, no static veto, and, per injected copy, detections in ≥ 2 F200W epochs (the `single_epoch`
+  veto re-applied). In MACS0416 the event must also stay flagged with errors inflated by the forced/catalogue
+  fractional-scatter ratio (1.00 / 1.98).
 
-Efficiency, all magnitudes (source-weighted):
+Efficiency over all magnitudes (ρ = 0.01 / 0.1):
 
-| Model | NEXUS | MACS0416 | Abell 2744 |
+| Model | MACS0416 (calibrated) | NEXUS (uncalibrated) | Abell 2744 (uncalibrated) |
 |---|---|---|---|
-| W3 t_E = 0.01 yr, ρ = 0.01 / 0.1 | 0.06 / 0.05 | 0.03 / 0.02 | 0.04 / 0.05 |
-| W3 t_E = 0.03 yr | 0.17 / 0.16 | 0.07 / 0.07 | 0.10 / 0.09 |
-| W3 t_E = 0.1 yr | 0.44 / 0.43 | 0.14 / 0.15 | 0.30 / 0.30 |
-| W3 t_E = 0.3 yr | 0.60 / 0.59 | 0.30 / 0.26 | 0.55 / 0.59 |
-| W3 t_E = 1 yr | 0.36 / 0.36 | 0.48 / 0.45 | 0.36 / 0.36 |
-| W3 t_E = 3 yr | 0.17 / 0.18 | 0.26 / 0.22 | 0.18 / 0.16 |
-| dimming 20 % / 50 % / 100 % | 0.13 / 0.71 / 1.00 | 0.07 / 0.62 / 1.00 | 0.02 / 0.40 / 1.00 |
+| W3 t_E = 0.01 yr | 0.02 / 0.01 | 0.04 / 0.03 | 0.00 / 0.01 |
+| W3 t_E = 0.03 yr | 0.04 / 0.04 | 0.10 / 0.10 | 0.02 / 0.01 |
+| W3 t_E = 0.1 yr | 0.06 / 0.08 | 0.23 / 0.23 | 0.03 / 0.04 |
+| W3 t_E = 0.3 yr | 0.16 / 0.12 | 0.23 / 0.24 | 0.04 / 0.06 |
+| W3 t_E = 1 yr | 0.20 / 0.22 | 0.12 / 0.16 | 0.04 / 0.06 |
+| W3 t_E = 3 yr | 0.13 / 0.12 | 0.07 / 0.10 | 0.04 / 0.05 |
+| dimming 20 / 50 / 100 % | 0.09 / 0.59 / 0.35 | 0.13 / 0.70 / 0.41 | 0.02 / 0.41 / 0.02 |
 
-Pooled over fields, by detection-band AB magnitude (ρ = 0.1):
-
-| Model | 15–22 | 22–24 | 24–25 | 25–26 | 26–27 | 27–29 |
-|---|---|---|---|---|---|---|
-| W3 t_E = 0.1 yr | 0.39 | 0.42 | 0.40 | 0.34 | 0.28 | 0.24 |
-| W3 t_E = 0.3 yr | 0.56 | 0.61 | 0.57 | 0.53 | 0.48 | 0.48 |
-| W3 t_E = 1 yr | 0.45 | 0.42 | 0.40 | 0.34 | 0.29 | 0.27 |
-| dimming 20 % | 0.20 | 0.14 | 0.06 | 0.01 | 0.00 | 0.00 |
-| dimming 50 % | 0.88 | 0.79 | 0.91 | 0.56 | 0.16 | 0.09 |
-| dimming 100 % | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-
-Short events fall between epochs, and events longer than the baseline cover every epoch, so no epoch pair
-differs. The screen is most sensitive at t_E ≈ 0.3 yr. Efficiency depends weakly on ρ, because the umbra, not
-the spike, drives recovery.
+- Dimming by 100 % is now recovered only 2–41 % of the time. Most monitored sources are detected in just 2 F200W
+  epochs, so making one of them vanish leaves a single detection, which the `single_epoch` (persistence) veto
+  removes. In Abell 2744 almost every source is covered by only two of its three epochs.
+- The screen is therefore blind to full vanishes of two-epoch sources until the `single_epoch` veto is replaced by
+  the D-039 persistence test for vanish flags (follow-up).
 
 ### Upper limits (derived; 0 surviving events, Poisson 95 % = 3.0)
 
-- Rate per source per year: 3 / Σ N ε (T + 4t_E), with t₀ drawn over T + 4t_E.
-- Per source per epoch pair: 3 / Σ N ε n_pairs, with n_pairs = 28 / 10 / 3.
-- Per deg² per epoch pair: 3 / Σ A n_pairs ε̄.
+Exposure E = Σ_bins N_bin ε_bin W, in source years, with W = T + 4t_E the t₀ window. N_bin counts the injected
+(baseline-unflagged) monitored sources.
+- **Rate per compact source per year:** 3 / E.
+- **τ:** the fraction of compact sources inside an umbra at a single epoch, equal to that rate × π t_E (the mean
+  umbra duration for u₀ ~ U[0, 2) is π t_E).
+- **Per deg² per year:** 3 / Σ A ε̄ W, with ε̄ = Σ N ε / N_monitored. This applies at these fields' compact-source
+  densities.
+- **Per deg² per epoch:** the per-deg²-per-year limit × π t_E, i.e. sources inside an umbra per deg² at one
+  epoch.
 - |M| = (t_E / 12 yr)² M☉ is a **model_prediction** for z_l = 0.4, z_s = 2 and v⊥ = 1000 km/s (D-047; re-derived
-  here as 12.09 yr). It does not apply to the Galactic stars that dominate the NEXUS compact sample.
+  as 12.09 yr). It does not apply to Galactic stars.
 
-| t_E (yr) | \|M\| (M☉) | ρ | exposure (source yr) | per source per yr | per source per epoch pair | per deg² per epoch pair |
+Headline (calibrated field only: MACS0416, 34 injected compact sources; ρ = 0.1):
+
+| t_E (yr) | \|M\| (M☉) | exposure (source yr) | per source per yr | τ | per deg² per yr | per deg² per epoch |
 |---|---|---|---|---|---|---|
-| 0.01 | 6.9e-07 | 0.01 | 23.8 | 0.13 | 0.011 | 77 |
-| 0.03 | 6.3e-06 | 0.01 | 65.9 | 0.045 | 0.0038 | 27 |
-| 0.1 | 6.9e-05 | 0.01 | 193.5 | 0.016 | 0.0015 | 10.8 |
-| 0.3 | 6.2e-04 | 0.01 | 413.2 | 0.0073 | 0.0011 | 7.8 |
-| 1 | 6.9e-03 | 0.01 | 582.0 | 0.0052 | 0.0017 | 12.6 |
-| 3 | 6.2e-02 | 0.01 | 682.9 | 0.0044 | 0.0034 | 26 |
+| 0.01 | 6.9e-07 | 1.2 | 2.6 | 0.082 | 2.9e4 | 927 |
+| 0.03 | 6.3e-06 | 4.7 | 0.63 | 0.060 | 7.2e3 | 679 |
+| 0.1 | 6.9e-05 | 9.9 | 0.30 | 0.095 | 3.5e3 | 1.1e3 |
+| 0.3 | 6.2e-04 | 18.7 | 0.16 | 0.15 | 1.8e3 | 1.7e3 |
+| 1 | 6.9e-03 | 53.7 | 0.056 | 0.18 | 635 | 2.0e3 |
+| 3 | 6.2e-02 | 62.6 | 0.048 | 0.45 | 545 | 5.1e3 |
 
-ρ = 0.1 gives the same limits within 10 % (`limits_combined.ecsv`).
+All three fields, **including the two uncalibrated ones** (indicative only; `limits_combined_all_fields.ecsv`,
+ρ = 0.1):
 
-**Assumptions and caveats.**
+| t_E (yr) | exposure (source yr) | per source per yr | τ | per deg² per yr | per deg² per epoch |
+|---|---|---|---|---|---|
+| 0.01 | 7.9 | 0.38 | 0.012 | 2.7e3 | 84 |
+| 0.1 | 78.1 | 0.038 | 0.012 | 267 | 84 |
+| 0.3 | 120.1 | 0.025 | 0.024 | 179 | 169 |
+| 1 | 194.0 | 0.015 | 0.049 | 119 | 375 |
+| 3 | 290.6 | 0.010 | 0.097 | 79 | 748 |
+
+**Caveats.**
 - The isolated-lens light curve has no cluster macro-magnification or shear (D-047).
-- The lensed fraction is 1 (blend = 1).
-- The injection is applied to catalogue fluxes. Catalogue re-detection and deblending of the injected epoch are
-  not simulated. The forced stage is emulated only through the MACS0416 error inflation.
-- The monitored population is small (261 sources), so the limits are per source and weak. A rate of ≲ 0.005
-  umbra crossings per compact source per year for t_E ≈ 0.3–3 yr is the main result.
-- The forced stage measured only 100 of NEXUS's 1,095 catalogue-passing flags (all 13 compact ones). The limit
-  concerns compact sources only, so it is unaffected, but extended-source flags in NEXUS are not fully vetted.
-- No SN/TNS check was run (no survivors). SIMBAD/NED is wired into `forced` but was not needed.
+- The lensed fraction is 1.
+- The injection acts on catalogue fluxes; catalogue re-detection and deblending are not simulated.
+- The forced stage is emulated only through MACS0416's measured fractional-scatter inflation.
+- The headline rests on 34 compact sources in one field, so it is weak.
+- NEXUS extended flags are only audited (100 of 1,051 measured).
+- No SN/TNS check was run (no survivors).

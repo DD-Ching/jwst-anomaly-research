@@ -168,12 +168,16 @@ def test_efficiency_and_limits():
     assert len(full) and np.all(full["efficiency"] > 0.6)
     w3 = eff[eff["model"] == "w3"]
     assert np.isclose(w3["window_yr"][0], 1.0 + 4 * 0.3)
-    n_by_bin = {(r["mag_lo"], r["mag_hi"]): r["n_sources"] for r in w3}
-    lim = ds.rate_limits(eff, n_by_bin, n_pairs=3, area_deg2=0.01)
+    n_mon = int(np.sum(w3["n_sources"]))
+    lim = ds.rate_limits(eff, area_deg2=0.01, n_monitored=n_mon)
+    assert lim.meta["source"]
     r = lim[0]
     assert np.isclose(r["limit_per_source_per_yr"], 3.0 / r["exposure_source_yr"])
-    assert np.isclose(r["limit_per_source_per_pair"], 3.0 / (r["n_effective"] * 3))
-    assert np.isclose(r["limit_per_deg2_per_pair"], 3.0 / (0.01 * 3 * r["mean_efficiency"]))
+    assert np.isclose(r["limit_tau"], r["limit_per_source_per_yr"] * np.pi * 0.3)
+    assert np.isclose(
+        r["limit_per_deg2_per_yr"], 3.0 / (0.01 * r["mean_efficiency"] * r["window_yr"])
+    )
+    assert np.isclose(r["limit_per_deg2_per_epoch"], r["limit_per_deg2_per_yr"] * np.pi * 0.3)
 
 
 def test_ordinary_columns_star_self_match_and_veto():
@@ -202,24 +206,37 @@ def test_area_proxy():
     assert np.isclose(ds.area_deg2(ra, dec, np.array([2, 2, 1])), (5 / 3600) ** 2)
 
 
-def test_combine_limits_adds_exposures():
-    def lim(exp, neff, mean_eff, n_pairs, area):
+def test_combine_limits_adds_exposures_and_drops_uncalibrated():
+    def lim(exp, area_exp, calibrated):
         t = Table(
             {
                 "t_e_yr": [0.3],
                 "rho": [0.1],
                 "n_monitored": [10],
-                "n_effective": [neff],
-                "mean_efficiency": [mean_eff],
                 "exposure_source_yr": [exp],
+                "area_exposure_deg2_yr": [area_exp],
             }
         )
-        t.meta.update(n_pairs=n_pairs, area_deg2=area)
+        t.meta.update(calibrated=calibrated)
         return t
 
-    out = ds.combine_limits({"a": lim(10.0, 5.0, 0.5, 3, 0.01), "b": lim(20.0, 4.0, 0.4, 28, 0.02)})
-    r = out[0]
+    per = {"a": lim(10.0, 0.01, True), "b": lim(20.0, 0.02, True), "c": lim(99.0, 9.0, False)}
+    r = ds.combine_limits(per)[0]
     assert np.isclose(r["limit_per_source_per_yr"], 3.0 / 30.0)
-    assert np.isclose(r["limit_per_source_per_pair"], 3.0 / (5 * 3 + 4 * 28))
-    assert np.isclose(r["limit_per_deg2_per_pair"], 3.0 / (0.01 * 3 * 0.5 + 0.02 * 28 * 0.4))
+    assert np.isclose(r["limit_per_deg2_per_yr"], 3.0 / 0.03)
+    assert np.isclose(r["limit_tau"], 0.1 * np.pi * 0.3)
     assert r["n_monitored"] == 20
+    assert ds.combine_limits(per, calibrated_only=False)[0]["n_monitored"] == 30
+
+
+def test_bright_neighbour_and_gaia_self_match():
+    from astropy.coordinates import SkyCoord
+
+    # a faint source with its own faint Gaia match, 2" from a G = 15 star: masked by the star
+    pos = SkyCoord([150.0, 150.0], [2.0, 2.0 + 2.0 / 3600], unit="deg")
+    gaia = Table({"ra": [150.0, 150.0], "dec": [2.0, 2.0 + 2.0 / 3600], "gmag": [20.5, 15.0]})
+    near, star = ds.gaia_proximity(pos, gaia)
+    assert star.all() and near[0]
+    gaia["gmag"][1] = 21.0  # two faint Gaia stars (1.5" radius): only the self matches at 2"
+    near, _ = ds.gaia_proximity(pos, gaia)
+    assert not near.any()

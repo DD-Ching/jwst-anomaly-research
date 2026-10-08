@@ -48,7 +48,7 @@ from astropy.table import Table
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from epoch_compare import mutual_matches  # noqa: E402
-from transient_combine import near_bright  # noqa: E402
+from transient_combine import exclusion_radius  # noqa: E402
 from transient_forced import robust_std  # noqa: E402
 from transient_search import _neighbour_counts  # noqa: E402
 
@@ -81,6 +81,8 @@ class Params:
     point_ci_max: float = 2.7
     gaia_self_arcsec: float = 0.3  # a Gaia DR3 source this close is the source itself (D-012)
     gaia_saturated_g: float = 18.0  # brighter Gaia stars saturate NIRCam and grow spikes
+    bright_neighbour_arcsec: float = 1.5  # a much brighter neighbour this close -> veto
+    bright_neighbour_ratio: float = 100.0
     sys_floor: float = 0.03  # fractional flux error floor added in quadrature (D-027: 0.03 mag)
 
 
@@ -297,7 +299,15 @@ def build_light_curves(
 
 
 def noise_scale(flux: np.ndarray, err: np.ndarray, det: np.ndarray, min_n: int = 100) -> np.ndarray:
-    """Per band, the robust std of pairwise epoch differences in units of their quoted error.
+    """Per band noise scale (see ``noise_scale_calibrated``; uncalibrated bands get 1)."""
+    return noise_scale_calibrated(flux, err, det, min_n)[0]
+
+
+def noise_scale_calibrated(
+    flux: np.ndarray, err: np.ndarray, det: np.ndarray, min_n: int = 100
+) -> tuple[np.ndarray, np.ndarray]:
+    """Per band, the robust std of pairwise epoch differences in units of their quoted error, and
+    whether it is calibrated (at least one epoch pair with >= ``min_n`` sources).
 
     For every epoch pair, ``(f_i - f_j) / sqrt(e_i² + e_j²)`` over sources detected in both; the
     median over pairs of the 1.4826 MAD is the band's scale (never below 1; 1 with fewer than
@@ -306,6 +316,7 @@ def noise_scale(flux: np.ndarray, err: np.ndarray, det: np.ndarray, min_n: int =
     """
     _, ne, nb = flux.shape
     out = np.ones(nb)
+    cal = np.zeros(nb, bool)
     for jb in range(nb):
         vals = []
         for i in range(ne):
@@ -319,7 +330,8 @@ def noise_scale(flux: np.ndarray, err: np.ndarray, det: np.ndarray, min_n: int =
                     vals.append(s)
         if vals:
             out[jb] = max(1.0, float(np.median(vals)))
-    return out
+            cal[jb] = True
+    return out, cal
 
 
 def scaled_errors(flux, err_raw, scale, sys_floor: float) -> np.ndarray:
@@ -472,7 +484,11 @@ def ordinary_columns(
 ) -> dict[str, np.ndarray]:
     """Catalogue-level ordinary-explanation columns (each a flag; True = ordinary explanation open).
 
-    - ``near_star``: within the D-027 Gaia exclusion radius (``transient_combine.near_bright``).
+    - ``near_star``: within the D-027 Gaia exclusion radius of another Gaia DR3 source (the
+      source's own Gaia match, closer than ``gaia_self_arcsec``, is excluded), or itself a Gaia star
+      brighter than ``gaia_saturated_g`` (``gaia_proximity``).
+    - ``bright_neighbour``: a master source >= ``bright_neighbour_ratio`` x brighter (detection
+      band) within ``bright_neighbour_arcsec`` (PSF wings and rotating spikes, D-027).
     - ``point_like``: ``point_ci_min`` <= CI_70_30 <= ``point_ci_max`` in the reference-epoch
       detection-band row (not an ordinary flag; it selects compact sources).
     - ``blended``: nearest catalogue neighbour within ``blend_arcsec`` there.
@@ -508,21 +524,19 @@ def ordinary_columns(
         covered = c >= p.footprint_min
         if covered.any():
             edge |= covered & (c < p.edge_fraction * np.median(c[covered]))
-    near = np.zeros(n, bool)
-    star = np.zeros(n, bool)
-    if gaia is not None and len(gaia):
-        hit = near_bright(lc["ra"], lc["dec"], gaia)
-        pos = SkyCoord(lc["ra"], lc["dec"], unit="deg")
-        g = SkyCoord(gaia["ra"], gaia["dec"], unit="deg")
-        _, sep, _ = pos.match_to_catalog_sky(g)
-        star = sep.arcsec <= p.gaia_self_arcsec
-        gmag = np.asarray(gaia["gmag"], float)
-        # the source itself is the Gaia match: only a saturating star counts as "near a star"
-        own = star & (hit >= 0)
-        bright_self = own & (gmag[np.clip(hit, 0, None)] < p.gaia_saturated_g)
-        near = (hit >= 0) & (~own | bright_self)
+    pos = SkyCoord(lc["ra"], lc["dec"], unit="deg")
+    near, star = gaia_proximity(pos, gaia, p)
+    # a much brighter catalogued neighbour (saturated stars are catalogued with large aper50 flux):
+    # its PSF wings and spikes cross a fixed aperture differently at every position angle
+    fref = reference_flux(lc["flux"], det)[:, 0]
+    bright_nb = np.zeros(n, bool)
+    i, j, _, _ = pos.search_around_sky(pos, p.bright_neighbour_arcsec * u.arcsec)
+    with np.errstate(invalid="ignore"):
+        hit = (i != j) & (fref[j] >= p.bright_neighbour_ratio * fref[i])
+    bright_nb[i[hit]] = True
     return {
         "near_star": near,
+        "bright_neighbour": bright_nb,
         "gaia_star": star,
         "sharp_artifact": sharp,
         "point_like": point,
@@ -534,11 +548,33 @@ def ordinary_columns(
     }
 
 
+def gaia_proximity(pos: SkyCoord, gaia: Table | None, p: Params = DEFAULT_PARAMS):
+    """``(near_star, gaia_star)`` per position. Gaia sources within ``gaia_self_arcsec`` are the
+    source itself: they never mask it, unless brighter than ``gaia_saturated_g``. Every other Gaia
+    source masks positions within ``transient_combine.exclusion_radius`` of its G."""
+    n = len(pos)
+    near, star = np.zeros(n, bool), np.zeros(n, bool)
+    if gaia is None or len(gaia) == 0 or n == 0:
+        return near, star
+    g = SkyCoord(gaia["ra"], gaia["dec"], unit="deg")
+    gmag = np.asarray(gaia["gmag"], float)
+    r = exclusion_radius(gmag)
+    ip, ig, sep, _ = g.search_around_sky(pos, float(np.max(r)) * u.arcsec)
+    d = sep.arcsec
+    own = d <= p.gaia_self_arcsec
+    star[ip[own]] = True
+    with np.errstate(invalid="ignore"):
+        masks = (~own & (d <= r[ig])) | (own & (gmag[ig] < p.gaia_saturated_g))
+    near[ip[masks]] = True
+    return near, star
+
+
 def catalogue_veto(ordinary: dict[str, np.ndarray]) -> np.ndarray:
     """Rows with an open catalogue-level ordinary explanation (bright star, edge, blend, single
     epoch, sharper than the PSF)."""
     return (
         ordinary["near_star"]
+        | ordinary["bright_neighbour"]
         | ordinary["edge_proxy"]
         | ordinary["blended"]
         | ordinary["single_epoch"]
@@ -603,19 +639,22 @@ def w3_factor(
 def apply_factor(
     flux: np.ndarray, err: np.ndarray, factor: np.ndarray, rng, sys_floor: float = 0.03
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Injected light curves ``F f_obs + (1 - F) n``, the same factor ``F`` (rows x epochs) in every
-    band (achromatic), and their errors (``simulated``).
+    """Injected light curves with the same factor ``F`` (rows x epochs) in every band (achromatic),
+    and their errors (``simulated``).
 
-    ``n`` ~ N(0, sigma_noise), where sigma_noise is the noise part of the error (the fractional
-    floor removed): the observed epoch-to-epoch scatter scales with the flux, and a vanished source
-    (F = 0) leaves sky noise only. The errors keep the noise part and recompute the floor at the new
-    flux.
+    Noise model (ASSUMPTION): sigma_n, the noise part of the error (fractional floor removed), is
+    background-limited for F <= 1 and grows as F for a brightened source (F > 1, Poisson-like):
+    ``f = F f_obs + sqrt(max(0, 1 - F²)) sigma_n z`` with z ~ N(0, 1). The real noise in f_obs is
+    scaled by F, so the total scatter is sigma_n max(F, 1), the quoted error (plus the floor
+    at the new flux). A vanished epoch (F = 0) keeps sky noise only.
     """
     with np.errstate(invalid="ignore"):
         noise = np.sqrt(np.clip(err**2 - (sys_floor * flux) ** 2, 0, None))
     f = factor[:, :, None]
-    out = f * flux + (1.0 - f) * rng.normal(0.0, 1.0, flux.shape) * noise
-    return out, np.sqrt(noise**2 + (sys_floor * out) ** 2)
+    extra = np.sqrt(np.clip(1.0 - f**2, 0.0, None))
+    out = f * flux + extra * rng.normal(0.0, 1.0, flux.shape) * noise
+    sig = noise * np.maximum(f, 1.0)
+    return out, np.sqrt(sig**2 + (sys_floor * out) ** 2)
 
 
 def dimming_factor(n_epochs: int, epoch: np.ndarray, depth: float) -> np.ndarray:
@@ -636,7 +675,7 @@ def ab_mag(flux_ujy: np.ndarray) -> np.ndarray:
 def efficiency_table(
     lc: dict[str, Any],
     err: np.ndarray,
-    veto: np.ndarray,
+    static_veto: np.ndarray,
     sel: np.ndarray,
     times_yr: np.ndarray,
     t_e_grid: tuple[float, ...],
@@ -650,7 +689,10 @@ def efficiency_table(
     """Recovery fraction per magnification model and magnitude bin (``simulated``).
 
     Injections go into selected sources that are not flagged without an injection (so a recovery is
-    the injection's), ``n_rep`` times each. W3: every copy gets one event per (t_E, rho) with u0 ~
+    the injection's), ``n_rep`` times each. Recovered = flagged, no static catalogue veto
+    (``static_veto``: star, neighbour, edge, blend, sharp) and, per injected copy, detected in >= 2
+    detection-band epochs (the light-curve-dependent ``single_epoch`` veto).
+    W3: every copy gets one event per (t_E, rho) with u0 ~
     U[0, 2) (umbra crossings) and t0 ~ U[t_first - 2 t_E, t_last + 2 t_E], so the umbra (half-length
     <= 2 t_E) can overlap the baseline; recovered = any flag and no catalogue veto. ``window_yr`` =
     T + 4 t_E is the t0 range, so ``efficiency x window_yr`` is the exposure per source in years.
@@ -663,7 +705,7 @@ def efficiency_table(
     flux = lc["flux"][idx]
     det = lc["det"][idx]
     e = err[idx]
-    v = veto[idx]
+    v = static_veto[idx]
     mag = ab_mag(reference_flux(flux, det)[:, 0])
     t_first, t_last = float(times_yr.min()), float(times_yr.max())
     rows = []
@@ -718,58 +760,74 @@ def _recovered(fi, ei, det, p: Params, inflation: np.ndarray | None) -> np.ndarr
     """Flagged at the catalogue stage and, with ``inflation`` (per band, >= 1), still flagged when
     the errors are inflated to the forced-photometry noise (a proxy for the forced confirmation,
     which only needs some flag to reappear)."""
-    rec = flagged(_classify_injected(fi, ei, det, p))
+    res, det_i = _classify_injected(fi, ei, det, p)
+    rec = flagged(res) & (det_i[:, :, 0].sum(axis=1) >= 2)  # single_epoch veto per copy
     if inflation is not None:
-        rec &= flagged(_classify_injected(fi, ei * np.asarray(inflation)[None, None, :], det, p))
+        res2, _ = _classify_injected(fi, ei * np.asarray(inflation)[None, None, :], det, p)
+        rec &= flagged(res2)
     return rec
 
 
-def _classify_injected(fi, ei, det, p: Params) -> dict[str, np.ndarray]:
+def _classify_injected(fi, ei, det, p: Params):
     """Classify injected light curves as the screen does: rows whose injected flux falls below
-    ``master_snr`` count as catalogue non-detections (kept at their noisy injected flux)."""
+    ``master_snr`` count as catalogue non-detections (kept at their noisy injected flux);
+    returns the flags and the injected detections."""
     with np.errstate(invalid="ignore", divide="ignore"):
         det_i = det & (fi / ei >= p.master_snr)
-    return classify(mask_shallow_nondetections(fi, ei, det_i, p), ei, p)
+    return classify(mask_shallow_nondetections(fi, ei, det_i, p), ei, p), det_i
 
 
-def rate_limits(
-    eff: Table, n_by_bin: dict[tuple[float, float], int], n_pairs: int, area_deg2: float
-) -> Table:
-    """95 % upper limits for zero surviving events, per W3 model (t_E, rho).
+def rate_limits(eff: Table, area_deg2: float, n_monitored: int) -> Table:
+    """95 % upper limits for zero surviving events, per W3 model (t_E, rho); all ``derived``.
 
-    Poisson: 3.0 events. Per source per year: 3 / Σ_bins N_bin ε_bin window. Per source per epoch
-    pair (the owner's form): 3 / (Σ_bins N_bin ε_bin x n_pairs). Per deg² per epoch pair:
-    3 / (area x n_pairs x ε̄), ε̄ the source-weighted mean efficiency. All ``derived``.
+    Exposure E = Σ_bins N_bin ε_bin W (source years): N_bin counts the injected sources (monitored
+    and not flagged without an injection, ``n_sources``), ε_bin is their recovery fraction and
+    W = T + 4 t_E the t0 window.
+    - ``limit_per_source_per_yr`` = 3 / E: rate of umbra crossings (u0 < 2) per compact source.
+    - ``limit_tau`` = that x π t_E: fraction of compact sources inside an umbra at one epoch (the
+      mean umbra duration for u0 ~ U[0, 2) is π t_E).
+    - ``limit_per_deg2_per_yr`` = 3 / (A ε̄ W), ε̄ = Σ N ε / N_monitored, A the monitored area (at
+      this field's compact-source density); ``limit_per_deg2_per_epoch`` = that x π t_E (sources
+      inside an umbra per deg² at one epoch).
     """
     rows = []
     w3 = eff[eff["model"] == "w3"]
     for t_e in np.unique(w3["t_e_yr"]):
         for rho in np.unique(w3["rho"]):
             s = w3[(w3["t_e_yr"] == t_e) & (w3["rho"] == rho)]
-            ne = sum(
-                n_by_bin.get((float(r["mag_lo"]), float(r["mag_hi"])), 0)
-                * (r["efficiency"] if np.isfinite(r["efficiency"]) else 0.0)
-                for r in s
-            )
-            ntot = sum(n_by_bin.values())
+            eff_ok = np.where(np.isfinite(s["efficiency"]), s["efficiency"], 0.0)
+            ne = float(np.sum(np.asarray(s["n_sources"]) * eff_ok))
             window = float(s["window_yr"][0])
+            exp_yr = ne * window
+            mean_eff = ne / n_monitored if n_monitored else 0.0
+            area_exp = area_deg2 * mean_eff * window
+            lim = 3.0 / exp_yr if exp_yr > 0 else np.inf
+            lim_a = 3.0 / area_exp if area_exp > 0 else np.inf
             rows.append(
                 {
                     "t_e_yr": float(t_e),
                     "rho": float(rho),
-                    "n_monitored": ntot,
-                    "n_effective": float(ne),
-                    "mean_efficiency": float(ne / ntot) if ntot else np.nan,
+                    "n_monitored": int(n_monitored),
+                    "n_injected_sources": int(np.sum(s["n_sources"])),
+                    "n_effective": ne,
+                    "mean_efficiency": mean_eff,
                     "window_yr": window,
-                    "exposure_source_yr": float(ne * window),
-                    "limit_per_source_per_yr": 3.0 / (ne * window) if ne > 0 else np.inf,
-                    "limit_per_source_per_pair": 3.0 / (ne * n_pairs) if ne > 0 else np.inf,
-                    "limit_per_deg2_per_pair": (
-                        3.0 / (area_deg2 * n_pairs * ne / ntot) if ne > 0 else np.inf
-                    ),
+                    "exposure_source_yr": exp_yr,
+                    "area_exposure_deg2_yr": area_exp,
+                    "limit_per_source_per_yr": lim,
+                    "limit_tau": lim * np.pi * t_e,
+                    "limit_per_deg2_per_yr": lim_a,
+                    "limit_per_deg2_per_epoch": lim_a * np.pi * t_e,
                 }
             )
-    return Table(rows=rows, meta={"provenance": "derived", "poisson_95": 3.0})
+    return Table(
+        rows=rows,
+        meta={
+            "provenance": "derived",
+            "source": "dimming_screen.rate_limits on efficiency.ecsv (simulated injections)",
+            "poisson_95": 3.0,
+        },
+    )
 
 
 def area_deg2(ra, dec, cov_epochs: np.ndarray, cell_arcsec: float = 5.0) -> float:
@@ -900,18 +958,34 @@ def cmd_inject(args) -> dict:
     cats, lc, scale, err, res, ordn = _screen(field, p, gaia)
     sel = monitored(lc, err, ordn, p)
     times = _times_yr(field)
-    veto = catalogue_veto(ordn)
-    inflation = None
+    # the single_epoch veto is re-applied per injected copy (efficiency_table)
+    static_veto = (
+        ordn["near_star"]
+        | ordn["bright_neighbour"]
+        | ordn["edge_proxy"]
+        | ordn["blended"]
+        | ordn["sharp_artifact"]
+    )
+    inflation, calibrated = None, False
     fs = args.out / "forced.ecsv"
-    if fs.exists():  # forced noise scale over the catalogue-stage one, per band (never below 1)
-        forced_scale = Table.read(fs).meta["noise_scale"]
-        inflation = np.array(
-            [max(1.0, forced_scale[b] / s) for b, s in zip(field["bands"], scale, strict=True)]
+    if fs.exists():
+        meta = Table.read(fs).meta
+        infl = meta.get("inflation_vs_catalogue") or {}
+        calibrated = bool(meta.get("calibrated", False)) and all(
+            infl.get(b) is not None for b in field["bands"]
+        )
+        if calibrated:
+            inflation = np.array([float(infl[b]) for b in field["bands"]])
+    if not calibrated:
+        print(
+            f"warning: {args.field}: forced stage not calibrated; limits are labelled "
+            "uncalibrated and left out of the headline combination",
+            file=sys.stderr,
         )
     eff = efficiency_table(
         lc,
         err,
-        veto,
+        static_veto,
         sel,
         times,
         T_E_GRID,
@@ -922,17 +996,16 @@ def cmd_inject(args) -> dict:
         forced_inflation=inflation,
     )
     eff.meta["forced_inflation"] = None if inflation is None else [float(x) for x in inflation]
-    mag = ab_mag(reference_flux(lc["flux"][sel], lc["det"][sel])[:, 0])
+    eff.meta["calibrated"] = calibrated
+    first = eff[(eff["model"] == eff["model"][0]) & (eff["t_e_yr"] == eff["t_e_yr"][0])]
+    first = first[first["rho"] == first["rho"][0]]
     n_by_bin = {
-        (lo, hi): int(((mag >= lo) & (mag < hi)).sum())
-        for lo, hi in zip(MAG_BINS[:-1], MAG_BINS[1:], strict=True)
-    }
+        (float(r["mag_lo"]), float(r["mag_hi"])): int(r["n_sources"]) for r in first
+    }  # the injected (baseline-unflagged) sources: the same set the efficiency uses
     covd = np.isfinite(lc["flux"][:, :, 0]).sum(axis=1)
     area = area_deg2(lc["ra"], lc["dec"], covd)
-    ne = len(field["epochs"])
-    n_pairs = ne * (ne - 1) // 2
-    lim = rate_limits(eff, n_by_bin, n_pairs, area)
-    lim.meta.update(field=args.field, area_deg2=area, n_pairs=n_pairs)
+    lim = rate_limits(eff, area, int(sum(n_by_bin.values())))
+    lim.meta.update(field=args.field, area_deg2=area, calibrated=calibrated)
     args.out.mkdir(parents=True, exist_ok=True)
     eff.write(args.out / "efficiency.ecsv", overwrite=True)
     lim.write(args.out / "limits.ecsv", overwrite=True)
@@ -941,7 +1014,8 @@ def cmd_inject(args) -> dict:
         "n_monitored": int(sel.sum()),
         "n_by_mag_bin": {f"{lo}-{hi}": n for (lo, hi), n in n_by_bin.items()},
         "area_deg2": area,
-        "n_epoch_pairs": n_pairs,
+        "n_monitored_unflagged": int(sum(n_by_bin.values())),
+        "calibrated": calibrated,
         "baseline_yr": float(times.max() - times.min()),
         "forced_inflation": eff.meta["forced_inflation"],
         "wall_s": round(time.time() - t_start, 1),
@@ -1055,7 +1129,10 @@ def cmd_forced(args) -> dict:
                     ]
                 )
         # centroid in the epoch where the source is brightest (catalogue S/N), then measure all
-        ks = sorted(files_k for files_k in scales)
+        ks = sorted(scales)
+        if not ks:
+            skipped.append(f"{b}: no readable image")
+            continue
         best = np.zeros(n, int)
         snr_cols = (
             np.column_stack(
@@ -1093,21 +1170,42 @@ def cmd_forced(args) -> dict:
                 ra_c[idx[ok]], dec_c[idx[ok]] = r_[ok], d_[ok]
         for k in ks:
             f_, e_, _, _ = measure(files[(k, b)], 0.15, scales[k], ra_c, dec_c)
-            flux[:, k, jb], ferr[:, k, jb] = f_, e_
-    # zero points from the controls, per band against the epoch with most measurable controls
-    for jb in range(len(bands)):
+            # SCI is MJy/sr: x pixel solid angle (this epoch's pixel scale) -> MJy -> µJy
+            to_ujy = (scales[k] / 206264.806) ** 2 * 1e12
+            flux[:, k, jb], ferr[:, k, jb] = f_ * to_ujy, e_ * to_ujy
+    # zero points from the controls, per band against the epoch with most measurable controls.
+    # Controls are selected on the reference epoch only (S/N >= 10 there), so a faded epoch is not
+    # biased by keeping positive fluxes; the factor is 1 / median(f_k / f_ref).
+    zp_missing = []
+    for jb, b in enumerate(bands):
         good = np.isfinite(flux[is_ctl, :, jb]).sum(axis=0)
         if good.max() == 0:
             continue
         rk = int(np.argmax(good))
         for k in range(ne):
+            if not np.isfinite(flux[:, k, jb]).any() or k == rk:
+                continue
             with np.errstate(invalid="ignore", divide="ignore"):
-                c = is_ctl & (flux[:, k, jb] > 0) & (flux[:, rk, jb] > 0)
-                ratio = flux[c, rk, jb] / flux[c, k, jb]
-            if c.sum() >= 10:
-                flux[:, k, jb] *= np.median(ratio)
-                ferr[:, k, jb] *= np.median(ratio)
-    scale = noise_scale(flux[is_ctl], ferr[is_ctl], np.isfinite(flux[is_ctl]), min_n=50)
+                c = is_ctl & (flux[:, rk, jb] / ferr[:, rk, jb] >= 10) & np.isfinite(flux[:, k, jb])
+                ratio = flux[c, k, jb] / flux[c, rk, jb]
+            if c.sum() < 10:
+                zp_missing.append(f"{b}_e{k}")
+                print(
+                    f"warning: {b} e{k}: < 10 controls, zero point not calibrated", file=sys.stderr
+                )
+                continue
+            factor = 1.0 / float(np.median(ratio))
+            flux[:, k, jb] *= factor
+            ferr[:, k, jb] *= factor
+    scale, cal = noise_scale_calibrated(
+        flux[is_ctl], ferr[is_ctl], np.isfinite(flux[is_ctl]), min_n=50
+    )
+    calibrated = bool(cal.all()) and not zp_missing
+    if not calibrated:
+        print("warning: forced noise scale / zero points not calibrated", file=sys.stderr)
+    inflation = forced_inflation_vs_catalogue(
+        flux[is_ctl], targets["ra"][is_ctl], targets["dec"][is_ctl], lct, bands, ne
+    )
     err = scaled_errors(flux, ferr, scale, p.sys_floor)
     res = classify(flux, err, p)
     out = Table({"uid": uids, "ra": targets["ra"], "dec": targets["dec"], "control": is_ctl})
@@ -1126,10 +1224,23 @@ def cmd_forced(args) -> dict:
         cat_k = np.concatenate([np.asarray(fl[kname], bool), np.zeros(int(is_ctl.sum()), bool)])
         same |= cat_k & res[kname]
     out["forced_confirmed"] = same & ~is_ctl
-    for name in ("near_star", "edge_proxy", "blended", "single_epoch", "point_like"):
+    for name in (
+        "near_star",
+        "bright_neighbour",
+        "edge_proxy",
+        "blended",
+        "single_epoch",
+        "point_like",
+    ):
         out[name] = np.concatenate([np.asarray(fl[name], bool), np.zeros(int(is_ctl.sum()), bool)])
     cut_ok = ~(out["cut_edge"] | out["cut_low_weight"] | out["cut_spike"])
-    cat_ok = ~(out["near_star"] | out["edge_proxy"] | out["blended"] | out["single_epoch"])
+    cat_ok = ~(
+        out["near_star"]
+        | out["bright_neighbour"]
+        | out["edge_proxy"]
+        | out["blended"]
+        | out["single_epoch"]
+    )
     out["survives_artefact_tests"] = out["forced_confirmed"] & cut_ok & cat_ok
     surv = np.flatnonzero(out["survives_artefact_tests"])
     xm_note = "not run (no survivors)"
@@ -1145,6 +1256,11 @@ def cmd_forced(args) -> dict:
         provenance=schema.Provenance.DERIVED.value,
         source=f"scripts/dimming_screen.py forced --field {args.field}",
         noise_scale={b: float(s) for b, s in zip(bands, scale, strict=True)},
+        noise_calibrated={b: bool(c) for b, c in zip(bands, cal, strict=True)},
+        zero_point_uncalibrated=zp_missing,
+        calibrated=calibrated,
+        inflation_vs_catalogue={b: v for b, v in zip(bands, inflation, strict=True)},
+        flux_unit="uJy",
         aperture_arcsec=0.15,
         recentre_arcsec=0.1,
         crossmatch=xm_note,
@@ -1160,6 +1276,8 @@ def cmd_forced(args) -> dict:
         "n_flags_measured": int((~is_ctl).sum()),
         "n_controls": int(is_ctl.sum()),
         "noise_scale": out.meta["noise_scale"],
+        "calibrated": calibrated,
+        "inflation_vs_catalogue": out.meta["inflation_vs_catalogue"],
         "forced_confirmed": int(out["forced_confirmed"].sum()),
         "confirmed_by_flag": {
             k: int((out["forced_confirmed"] & out[f"forced_{k}"]).sum()) for k in FLAGS
@@ -1173,6 +1291,41 @@ def cmd_forced(args) -> dict:
     }
     (args.out / "forced_summary.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary
+
+
+def forced_inflation_vs_catalogue(fflux, ra, dec, lct: Table, bands, ne: int) -> list:
+    """Per band, forced over catalogue fractional scatter on the same controls (never below 1).
+
+    For every epoch pair, the robust std of (f_i - f_j) / mean(f_i, f_j) over controls measured by
+    both methods (catalogue: detected in both epochs); the median of forced/catalogue ratios over
+    pairs. It inflates the catalogue-stage errors in the injection to emulate the forced
+    confirmation. None for a band without a pair of >= 30 controls.
+    """
+    pos = SkyCoord(ra, dec, unit="deg")
+    j, sep, _ = pos.match_to_catalog_sky(SkyCoord(lct["ra"], lct["dec"], unit="deg"))
+    ok = sep.arcsec < 0.05
+    out = []
+    for jb, b in enumerate(bands):
+        ratios = []
+        for i in range(ne):
+            for k in range(i + 1, ne):
+                ci, ck = f"{b}_e{i}_flux", f"{b}_e{k}_flux"
+                if ci not in lct.colnames or ck not in lct.colnames:
+                    continue
+                cf_i, cf_k = np.asarray(lct[ci], float)[j], np.asarray(lct[ck], float)[j]
+                d_i = np.asarray(lct[ci.replace("_flux", "_det")], bool)[j]
+                d_k = np.asarray(lct[ck.replace("_flux", "_det")], bool)[j]
+                ff_i, ff_k = fflux[:, i, jb], fflux[:, k, jb]
+                m = ok & d_i & d_k & np.isfinite(ff_i) & np.isfinite(ff_k)
+                if m.sum() < 30:
+                    continue
+                with np.errstate(invalid="ignore", divide="ignore"):
+                    rf = robust_std((ff_i - ff_k)[m] / (0.5 * (ff_i + ff_k)[m]))
+                    rc = robust_std((cf_i - cf_k)[m] / (0.5 * (cf_i + cf_k)[m]))
+                if np.isfinite(rf) and np.isfinite(rc) and rc > 0:
+                    ratios.append(rf / rc)
+        out.append(max(1.0, float(np.median(ratios))) if ratios else None)
+    return out
 
 
 def _epoch_sheet(out: Table, rows: np.ndarray, files, field, png: Path, max_rows: int = 40):
@@ -1202,46 +1355,65 @@ def _epoch_sheet(out: Table, rows: np.ndarray, files, field, png: Path, max_rows
     fig.savefig(png)
 
 
-def combine_limits(per_field: dict[str, Table]) -> Table:
+def combine_limits(per_field: dict[str, Table], calibrated_only: bool = True) -> Table:
     """Joint 95 % limits over fields with zero surviving events: exposures add (``derived``).
 
-    Per source per year: 3 / Σ exposure_source_yr. Per source per epoch pair: 3 / Σ n_effective
-    n_pairs. Per deg² per epoch pair: 3 / Σ area n_pairs ε̄.
+    E = Σ exposure_source_yr gives ``limit_per_source_per_yr`` = 3 / E and ``limit_tau`` = that x
+    π t_E. The area-time exposure Σ A ε̄ W gives ``limit_per_deg2_per_yr`` and, x π t_E,
+    ``limit_per_deg2_per_epoch``. With ``calibrated_only`` the fields whose forced stage was not
+    calibrated (``meta['calibrated']`` False) are left out.
     """
+    use = {
+        f: t for f, t in per_field.items() if t.meta.get("calibrated", False) or not calibrated_only
+    }
     rows = []
-    first = next(iter(per_field.values()))
+    if not use:
+        return Table(meta={"provenance": "derived", "fields": []})
+    first = next(iter(use.values()))
     for r0 in first:
         t_e, rho = float(r0["t_e_yr"]), float(r0["rho"])
-        exp_yr = pair = area = 0.0
+        exp_yr = area = 0.0
         n_mon = 0
-        for lim in per_field.values():
+        for lim in use.values():
             r = lim[(lim["t_e_yr"] == t_e) & (lim["rho"] == rho)][0]
-            n_pairs = float(lim.meta["n_pairs"])
             exp_yr += float(r["exposure_source_yr"])
-            pair += float(r["n_effective"]) * n_pairs
-            area += float(lim.meta["area_deg2"]) * n_pairs * float(r["mean_efficiency"])
+            area += float(r["area_exposure_deg2_yr"])
             n_mon += int(r["n_monitored"])
+        lim_s = 3.0 / exp_yr if exp_yr > 0 else np.inf
+        lim_a = 3.0 / area if area > 0 else np.inf
         rows.append(
             {
                 "t_e_yr": t_e,
                 "rho": rho,
                 "n_monitored": n_mon,
                 "exposure_source_yr": exp_yr,
-                "limit_per_source_per_yr": 3.0 / exp_yr if exp_yr > 0 else np.inf,
-                "limit_per_source_per_pair": 3.0 / pair if pair > 0 else np.inf,
-                "limit_per_deg2_per_pair": 3.0 / area if area > 0 else np.inf,
+                "area_exposure_deg2_yr": area,
+                "limit_per_source_per_yr": lim_s,
+                "limit_tau": lim_s * np.pi * t_e,
+                "limit_per_deg2_per_yr": lim_a,
+                "limit_per_deg2_per_epoch": lim_a * np.pi * t_e,
             }
         )
-    return Table(rows=rows, meta={"provenance": "derived", "fields": list(per_field)})
+    return Table(
+        rows=rows,
+        meta={
+            "provenance": "derived",
+            "source": "dimming_screen.combine_limits over per-field limits.ecsv",
+            "fields": list(use),
+            "calibrated_only": calibrated_only,
+        },
+    )
 
 
 def cmd_combine(args) -> dict:
     fields = args.field.split(",")
     root = args.out.parent
     per = {f: Table.read(root / f / "limits.ecsv") for f in fields}
-    out = combine_limits(per)
-    out.write(root / "limits_combined.ecsv", overwrite=True)
-    return {"fields": fields, "rows": [dict(zip(out.colnames, r, strict=True)) for r in out]}
+    head = combine_limits(per, calibrated_only=True)
+    head.write(root / "limits_combined.ecsv", overwrite=True)
+    allf = combine_limits(per, calibrated_only=False)
+    allf.write(root / "limits_combined_all_fields.ecsv", overwrite=True)
+    return {"headline_fields": head.meta["fields"], "all_fields": allf.meta["fields"]}
 
 
 def main(argv: list[str] | None = None) -> int:
