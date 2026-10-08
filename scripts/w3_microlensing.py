@@ -1634,6 +1634,8 @@ def merge_chunks(sample_key: str, n: int) -> Path:
             raise SystemExit(f"{path.name}: fitted with other Params; refit chunk {k}/{n}")
         want = set(ids[k - 1 :: n].tolist())
         have = set(t["event_id"].tolist())
+        if len(t) != len(have):  # a resumed run must not count an event twice
+            raise SystemExit(f"{path.name}: duplicate event rows")
         if have != want:  # incl. events `fit` skipped for lack of photometry: not the whole sample
             raise SystemExit(
                 f"{path.name}: {len(want - have)} events of chunk {k}/{n} missing, "

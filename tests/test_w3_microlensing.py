@@ -330,6 +330,9 @@ def test_merge_chunks_refuses_missing_foreign_or_misplaced_chunks(tmp_path, monk
     _write_chunk(tmp_path, ["e0", "e1", "e3"], 2, 2)  # e0 belongs to chunk 1
     with pytest.raises(SystemExit, match="1 from outside"):
         w3.merge_chunks("k", 2)
+    _write_chunk(tmp_path, ["e1", "e3", "e3"], 2, 2)
+    with pytest.raises(SystemExit, match="duplicate"):
+        w3.merge_chunks("k", 2)
     _write_chunk(tmp_path, ["e1"], 2, 2)  # e3 skipped (no light curve): not the whole sample
     with pytest.raises(SystemExit, match="1 events of chunk 2/2 missing"):
         w3.merge_chunks("k", 2)
