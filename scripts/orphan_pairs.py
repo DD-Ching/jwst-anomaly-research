@@ -781,7 +781,7 @@ N_COLOUR = len(CELL_COLOUR) + 2  # colour bins per member: len(edges) + 1, plus 
 MIN_CELL_REF = 5  # z-overlapping reference pairs a cell needs for its own rate (ASSUMPTION; D-054)
 
 
-def pair_colours(sub: Table) -> np.ndarray:
+def source_colours(sub: Table) -> np.ndarray:
     """log10(mean LW / mean SW flux) per row; NaN when either side has no valid flux."""
     lw, _ = flux_matrix(sub, snr_bands_of(sub))
     sw_have = [b for b in SW_BANDS if b in sub.meta["bands"]]
@@ -800,7 +800,7 @@ def colour_bin(colour: np.ndarray) -> np.ndarray:
 
 def source_cells(sub: Table) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Per-source inputs of ``pair_cells``: summed S/N, aperture radius and colour bin."""
-    return summed_snr(sub), np.asarray(sub["ap_radius"], float), colour_bin(pair_colours(sub))
+    return summed_snr(sub), np.asarray(sub["ap_radius"], float), colour_bin(source_colours(sub))
 
 
 def pair_cells(src: tuple[np.ndarray, np.ndarray, np.ndarray], pairs: Table) -> np.ndarray:
@@ -817,37 +817,43 @@ def pair_cells(src: tuple[np.ndarray, np.ndarray, np.ndarray], pairs: Table) -> 
     return (s * (len(CELL_RADIUS) + 1) + r) * N_COLOUR**2 + c
 
 
+def _cell_rates(keys: np.ndarray, hits: np.ndarray) -> dict:
+    """Match rate of each cell with at least ``MIN_CELL_REF`` reference pairs."""
+    cells, inv = np.unique(keys, return_inverse=True)
+    n = np.bincount(inv, minlength=len(cells))
+    k = np.bincount(inv, weights=hits, minlength=len(cells))
+    return {int(c): float(h / m) for c, h, m in zip(cells, k, n, strict=True) if m >= MIN_CELL_REF}
+
+
 def conditioned_null(key_c, m: Table, key_ref, ref: Table, counts: dict) -> dict:
     """Expected matches per class from the reference pairs' z-overlap match rate per cell.
 
     ``key_c``/``key_ref``: ``pair_cells`` of the close pairs ``m`` and of the reference pairs
-    ``ref``. A close pair whose cell has fewer than ``MIN_CELL_REF`` z-overlapping reference
-    pairs takes the reference's global z-overlap rate; their number is ``n_fallback``. With no
-    z-overlapping reference pair at all the expectation is undefined (NaN) and a warning is
-    issued."""
+    ``ref``. A cell with fewer than ``MIN_CELL_REF`` z-overlapping reference pairs falls back to
+    its S/N x size cell (colour dropped), then to the global z-overlap rate; ``n_fallback``
+    counts close pairs on either fallback, ``n_global`` those on the second. With no
+    z-overlapping reference pair at all the expectation is undefined (NaN), with a warning."""
     zref = np.asarray(ref["z_overlap"], bool)
-    mref = np.asarray(ref["match"], bool)
+    mref = np.asarray(ref["match"], bool)[zref].astype(float)
     if not zref.any():
         warnings.warn("conditioned null: no z-overlapping reference pair", stacklevel=2)
-    glob = float(mref[zref].mean()) if zref.any() else float("nan")
-    cells, inv = np.unique(np.asarray(key_ref)[zref], return_inverse=True)
-    n_ref = np.bincount(inv, minlength=len(cells))
-    n_hit = np.bincount(inv, weights=mref[zref], minlength=len(cells))
-    ok = n_ref >= MIN_CELL_REF
+    glob = float(mref.mean()) if zref.any() else float("nan")
+    kref = np.asarray(key_ref)[zref]
+    fine, coarse = _cell_rates(kref, mref), _cell_rates(kref // N_COLOUR**2, mref)
     key_c = np.asarray(key_c)
-    pos = np.clip(np.searchsorted(cells, key_c), 0, max(len(cells) - 1, 0))
-    known = np.zeros(len(key_c), bool)
-    if len(cells):
-        known = (cells[pos] == key_c) & ok[pos]
-    exp_cell = np.full(len(key_c), glob)
-    exp_cell[known] = n_hit[pos[known]] / n_ref[pos[known]]
+    exp_cell = np.array(
+        [fine.get(int(k), coarse.get(int(k) // N_COLOUR**2, glob)) for k in key_c], float
+    )
+    in_fine = np.isin(key_c, list(fine))
+    in_coarse = np.isin(key_c // N_COLOUR**2, list(coarse))
     zc = np.asarray(m["z_overlap"], bool)
     exp = {c: float(exp_cell[zc & (m["pair_class"] == c)].sum()) for c in CLASSES}
     return {
         "cells": "fainter-member summed S/N x larger aperture radius x both members' LW/SW colour",
         "min_cell_ref": MIN_CELL_REF,
         "n_ref_zoverlap": int(zref.sum()),
-        "n_fallback": int((zc & ~known).sum()),
+        "n_fallback": int((zc & ~in_fine).sum()),
+        "n_global": int((zc & ~in_fine & ~in_coarse).sum()),
         "expected_by_class": exp,
         "poisson_p_orphan_excess": poisson_excess(counts.get("orphan", 0), exp["orphan"]),
     }

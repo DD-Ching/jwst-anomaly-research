@@ -2584,22 +2584,18 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
 
 **Decision.** `orphan_pairs.pair_cells` bins colour per member and uses the unordered pair of bins; a non-finite
 colour (no valid flux, or a non-positive mean flux) has its own bin. A cell needs ≥ 5 z-overlapping reference pairs
-(`MIN_CELL_REF`, ASSUMPTION), else the global reference rate. A new null (f) applies the same cells to the 3–6″
+(`MIN_CELL_REF`, ASSUMPTION), else its S/N × size cell, else the global reference rate. A new null (f) applies the same cells to the 3–6″
 z-overlapping pairs (null (d)'s annulus). Background-aware W1/W2/point-mass limits use null (e) as fixed.
 
 **Alternatives rejected.**
 - Pair mean colour: a red + blue pair would share a cell with two neutral members, which match far more easily.
-- (f) as the limit background: it predicts more (349.8), so its limits would be less conservative.
+- (f) as the limit background: it predicts more (347.5), so its limits would be less conservative.
 
 **Evidence** (`derived`; `outputs/orphan_pairs/<field>/summary.json`, `outputs/inject_pairs/limits.json`; table
 in docs/orphan_pairs.md).
-- Orphans 246 (five CANUCS NCFs) and 355 (with GOODS-N), identical to D-051.
-- Null (e) fixed: 230.2 (P = 0.16) and 334.2 (P = 0.13); D-051 had 211 (P = 0.010) and 315.4 (P = 0.015).
-- Null (f): 242.6 (P = 0.42) and 349.8 (P = 0.40). Unconditioned (d): 300.0 (P = 0.001).
-- D-048 clusters re-run: orphans 11 / 18 / 9 (unchanged); (e) P = 0.84 / 0.18 / 0.70, (f) P = 0.94 / 0.12 / 0.66
-  (MACS0416 / MACS1149 / Abell 370).
-- Injections re-run: no-candidate limits reproduce D-051; s₉₅ 72.3 → 54.7, so W1 at θ_E 1.5″ < 9.8 × 10³ deg⁻²
-  (was 1.3 × 10⁴), W2 at 0.7″ < 2.2 × 10⁵ (was 2.9 × 10⁵).
+- Orphans unchanged from D-048/D-051 in all nine fields. Deep fields, 355 orphans: null (e) fixed 334.0 (P = 0.13;
+  D-051: 315.4, P = 0.015), null (f) 347.5 (P = 0.35). The D-048 clusters stay null (P ≥ 0.13).
+- Injections re-run: no-candidate limits reproduce D-051; background-aware s₉₅ 72.3 → 54.9 (docs/exotic_limits.md).
 - The symmetry, the non-finite bin and the cell floor were changed together; their shares were not measured.
 
 **Revisit if.** A run gives P < 0.05 under both (e) and (f), or a segmentation-map same_galaxy rule changes the

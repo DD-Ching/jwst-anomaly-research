@@ -326,7 +326,14 @@ def test_conditioned_null_uses_cell_rates_and_counts_fallbacks(monkeypatch):
     monkeypatch.setattr(op, "MIN_CELL_REF", 2)
     out = op.conditioned_null(key_c, m, key_ref, ref, {"orphan": 2})
     assert np.isclose(out["expected_by_class"]["orphan"], 0.5 + 2 / 3 + 2 / 3)
-    assert out["n_fallback"] == 2
+    # cells 1-3 share S/N x size cell 0 (3 reference pairs, rate 2/3): no global fallback
+    assert out["n_fallback"] == 2 and out["n_global"] == 0
+    # a sparse colour cell falls back to its S/N x size cell before the global rate
+    sz = op.N_COLOUR**2
+    key_ref2 = np.array([sz + 1, sz + 2, sz + 3, 0])  # one S/N x size cell, three colour cells
+    out = op.conditioned_null(np.array([sz + 4]), m[:1], key_ref2, ref, {"orphan": 1})
+    assert np.isclose(out["expected_by_class"]["orphan"], 2 / 3)
+    assert out["n_fallback"] == 1 and out["n_global"] == 0
 
 
 def test_conditioned_null_without_reference_is_undefined():
