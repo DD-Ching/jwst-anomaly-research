@@ -824,6 +824,46 @@ jwst 3.0.0 / photutils 3.0.0 (file headers).
 - Prior-art check (no survey light-curve search for negative-mass or Ellis lenses found): arXiv:1711.04560,
   arXiv:0807.2774, arXiv:1302.7170, arXiv:gr-qc/9805075.
 
+## Published lens catalogues and deep-imaging checks (D-056, accessed 2026-10-08)
+
+- lenscat 1.1.3 `catalog.csv` (MIT; Vujeva et al., arXiv:2406.04398), 32,838 rows, 3,824,227 bytes, sha256
+  `7de5111afb6486c119198cb2df868a2e6a15f79869e6cdc8109ec7d59b06a7cc` (identical at HEAD 053719a):
+  https://raw.githubusercontent.com/lenscat/lenscat/f531b8a8f3fa4bbd1ee8a58b2ddcd54e6936ea14/lenscat/data/catalog.csv
+- Euclid Q1 Strong Lensing Discovery Engine v0.0.3 (CC-BY-4.0; Zenodo record 15025832, concept DOI
+  10.5281/zenodo.15003116; Walmsley et al. arXiv:2503.15324, lens models arXiv:2503.15325–15328), files at
+  `https://zenodo.org/api/records/15025832/files/<name>/content`:
+  - `q1_discovery_engine_lens_catalog.csv`, 2,584 rows, 422,423 bytes, sha256
+    `ee5e60cd507413eabf3da8ffa37a3c527212da00feb29083cf516a86d6f26877`;
+  - `modeling_lens_mass.csv` (PyAutoLens SIE + shear, 336 lenses), 322,960 bytes, sha256
+    `f2a52616a1ac65137b34abe0892d251e18e2c60e9a64c459914102f44ec49db5`;
+  - `modeling_sersic_magnitude.csv` (lens VIS/Y/J/H magnitudes), 288,390 bytes, sha256
+    `7c7506af33f27d65cc618e998cbbb0868c36a106703f303d6b0b0a74240d94f2`.
+  `lens.zip` (3.05 GB), `group.zip`, `unsuccess.zip` were not downloaded.
+- SuGOHI public candidate list (HSC-SSP; no licence stated; cite SuGOHI I–X and HOLISMOKES VI, VIII, XIII, XVI as
+  listed on the page), 3,961 rows, 423,170 bytes, sha256
+  `72fb96dc8d13851c20304b25b8889087d92df27cf1549e6522c8657befda4a55`, served by a PHP script (may change in place):
+  https://www-utap.phys.s.u-tokyo.ac.jp/~oguri/sugohi/download_list.php?file=list_ra_asc_public.csv
+- Legacy Surveys DR10 Tractor catalogue `ls_dr10.tractor` via NOIRLab Astro Data Lab TAP (synchronous ADQL; table
+  upload and q3c functions are rejected by the ADQL front end on 2026-10-08, so box ORs are batched 300 per query):
+  https://datalab.noirlab.edu/tap ; cutouts https://www.legacysurvey.org/viewer/cutout.jpg (layer `ls-dr10`).
+  Cite Dey et al. 2019 (AJ 157, 168) and the DR10 acknowledgement at https://www.legacysurvey.org/acknowledgment/
+- Cluster catalogues via CDS XMatch: redMaPPer SDSS DR8 v6.3 (Rykoff et al. 2016, VizieR J/ApJS/224/1) and
+  Wen, Han & Liu 2012 (VizieR J/ApJS/199/34); SIMBAD (CDS XMatch `simbad`).
+- Lemon et al. lensed-quasar database (https://research.ast.cam.ac.uk/lensedquasars/): HTTP 500 on 2026-10-08;
+  its entries enter through lenscat.
+- Prior art on dark lenses (arXiv API, 2026-10-08): Jackson, Helbig & Browne 1998, "Lensing galaxies: light or
+  dark?" (astro-ph/9804136; lens galaxies found in 12 of 12 JVAS/CLASS lenses); Koopmans et al. 2000, CLASS
+  B0827+525 "dark lens or binary radio-loud quasar" (astro-ph/0007286); Frey, Paragi & Campbell 2010,
+  J1218+2953 (arXiv:1002.1714).
+- Spingola et al. 2019, mJIVE-20 VLBI lens search (arXiv:1811.09152; MJV16999 rejected, sect. 4.1.12); SMILE
+  milli-lens searches (Casadio et al. 2021, arXiv:2107.06896; Pötzl et al. 2024, arXiv:2409.15229). Cluster-survey
+  references in `lenscats.CLUSTER_SURVEY_REFS` were checked by title on the arXiv API (2026-10-08); the two DOI-only
+  ones (Lopes et al. 2004 NoSOCS, Gioia et al. 1990 EMSS) by their lenscat names (NSCS, MS cluster designations).
+- Legacy Surveys DR10 brick summary `ls_dr10.bricks_s` via Data Lab TAP (query and sha256 of the 2026-10-08 download,
+  332,581 bricks / 23.5 MB, recorded in the run's summary.json; not pinned, the service output may change): footprint
+  (nexp_r, nexp_z) and per-brick 5σ galaxy depth for D-056. He et al. 2025, lensed-quasar confirmations
+  (arXiv:2509.03858; HSC J2212−0103 lens-light fit).
+
 ## OGLE-IV microlensing samples (accessed 2026-10-08; D-057)
 
 Cite Mróz et al. as their pages ask; data are pinned in `src/jwst_anomaly/ogle.py` (`FILES`) and

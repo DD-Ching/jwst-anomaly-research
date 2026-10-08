@@ -119,15 +119,17 @@ register(
             "scripts/exotic_screens.py fluxratio",
             "scripts/orphan_pairs.py",
             "scripts/inject_pairs.py",
+            "scripts/w12_lenscats.py",  # published lens catalogues, no visible deflector
         ),
         ordinary_mimics=(
             "knots of one galaxy",
             "physical companions and groups",
             "faint or dark ordinary lens galaxies",
             "chance SED matches",
+            "catalogue position errors and blended lens light",
         ),
         limits_doc=_LIMITS,
-        decisions=("D-047", "D-048", "D-051"),
+        decisions=("D-047", "D-048", "D-051", "D-056"),
         lens=_ELLIS,
     )
 )

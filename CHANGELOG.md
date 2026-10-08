@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W1/W2 in published lens catalogues: no dark deflector; weak limits (D-056)
+- Worktree worker: lenscat (32,838), Euclid Q1 Discovery Engine (2,584) and SuGOHI (3,961) merged into 35,862 systems
+  (`src/jwst_anomaly/lenscats.py`, `scripts/w12_lenscats.py`; pinned by sha256). Deflector test in Legacy Surveys
+  DR10 Tractor; footprint and depth from the DR10 brick summary, not from detected sources.
+- 17,555 galaxy-scale systems in the footprint. Galaxy-finder (17,102) and sub-mm (110) systems cannot show a dark lens
+  and give no limit; only lensed-quasar (325) and radio-interferometric (18) systems are tested (pair test: two point
+  images, nothing bright enough near the expected deflector). Blended, too-close and faint-galaxy cases are undecided.
+- 29 decided (13 with a deflector, 16 without); 13 of the 16 have a literature lens galaxy, and 3 SuGOHI IX CHITAH
+  pairs (090434−005328, 091517+040747, 104122−005618) are open only in the typical variant — a lens below the local
+  LS depth explains them conservatively. Not candidates. Cutout sheets inspected.
+- 95 % limits on the dark-deflector fraction, test completeness assumed (not measured): typical f_dark < 0.48
+  (quasar, k = 3, N = 16), < 0.23 (radio, k = 0, N = 13), < 0.27 (all, k = 3, N = 29); conservative < 0.50 (quasar,
+  N = 6). Earlier 1.5 × 10⁻⁴ / 8.2 × 10⁻³ / 0.13 are withdrawn (PR #81 reviews). No W1 geometry (no image positions).
+- **Failed approaches (rules):** a limit is valid only over systems where the test could have found the signal —
+  prove it by injection; a recovery factor from deleting deflectors and re-running the same code is 1 by
+  construction; coverage must come from footprint/depth products, never from "a source nearby"; evaluate exclusion
+  flags on every system; Data Lab TAP takes no table uploads or q3c (batch box ORs); lenscat types cluster-survey
+  entries as "galaxy", has AGEL declination and SPT position errors and rounded positions, and keeps rejected
+  candidates; "no lens redshift" ≠ "no lens".
+
 ## 2026-10-08: W3 OGLE-IV disk sample: null (D-057)
 - Cloud run. `jwst_anomaly.ogle` (Mróz et al. 2019/2020 adapter) and `scripts/w3_microlensing.py`
   (`fit` / `vet` / `sheet` / `inject` / `audit` / `limit` / `manifest` / `summary`). Manifest

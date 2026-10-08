@@ -2701,6 +2701,70 @@ in docs/orphan_pairs.md).
 **Revisit if.** A run gives P < 0.05 under both (e) and (f), or a segmentation-map same_galaxy rule changes the
 orphan counts.
 
+## D-056 W1/W2 in published lens catalogues: per-class deflector tests; weak limits; three open quasar pairs (2026-10-08)
+
+**Decision.**
+- `jwst_anomaly.lenscats` reads lenscat 1.1.3, the Euclid Q1 Discovery Engine tables and the SuGOHI list (pinned by
+  sha256). It merges them by position (3″; `entries`, `refs` keep provenance) and exposes them as a
+  `signatures.CatalogueSurvey` (`PublishedLensSurvey`). It holds the pure tests:
+  - `brick_coverage`: footprint and depth from the brick summary;
+  - `pair_images` and `quasar_pair_test`;
+  - `bright_galaxy_near`;
+  - SIS σ, the Faber–Jackson fit and the required lens magnitude;
+  - position checks: signed J2000 name vs RA/Dec, and rounding.
+- `scripts/w12_lenscats.py screen | vet`.
+  - DR10 coverage and depth come from `ls_dr10.bricks_s`; Tractor boxes come from the Data Lab TAP, split at RA 0/360
+    and full RA near the poles.
+  - Only lensed-quasar and radio-interferometric systems are tested; galaxy-finder and sub-mm systems are
+    insensitive.
+  - "faint galaxy", "blended", "too close" and position or mask problems are undecided and removed from N.
+  - Limits are s₉₅(k_class) / N_class, with test completeness assumed (no injection factor). Known biases of
+    that assumption: a faint unrelated source in the circle removes a dark-lens system as "faint galaxy" (true
+    efficiency near 0.98); a colourless pair takes a compact PSF-typed lens as an image (more "none").
+- Thresholds are ASSUMPTIONs in `Params`.
+
+**Result** (`derived`; run `summary.json`).
+- Of 20,986 galaxy-scale systems, 17,555 are in the DR10 footprint: 17,102 galaxy-selected, 110 sub-mm, 325 quasar,
+  18 radio.
+- 29 quasar and radio systems are decided: 13 with a deflector, 16 "none". Of the 16 "none":
+  - 13 have a literature lens galaxy (SIMBAD 6, published z_l 6, He et al. 2025 1);
+  - 3 SuGOHI IX CHITAH pairs are open in the typical variant but explained by a lens below the LS depth in the
+    conservative variant.
+- Typical: f_dark < 0.48 (quasar, k = 3, N = 16), < 0.23 (radio, k = 0, N = 13).
+- Conservative: < 0.50 (quasar, k = 0, N = 6); no radio limit (N = 0).
+- Nothing goes to `/vet-candidate`. Earlier limits (1.5 × 10⁻⁴, then 0.13) are withdrawn (PR #81 reviews).
+
+**Alternatives rejected.**
+- Coverage from "a Tractor source within 5″": it drops the dark configuration itself, and it counted stray DECam
+  detections north of the DR10 footprint.
+- Counting galaxy-finder or sub-mm systems in N: they have zero sensitivity.
+- Counting a galaxy fainter than required as an explanation: it is undecided.
+- A recovery factor from deleting deflectors and re-running the same code: it is 1 by construction.
+- Data Lab TAP uploads and `q3c_*` in ADQL (rejected by the service); per-object viewer calls.
+- The Lemon lensed-quasar database (HTTP 500 on 2026-10-08) and HSC imaging (account required).
+
+**Evidence.**
+- FJ calibration on 605 galaxy-selected lenses (LS z): a = 20.41, k = 0.67, rms 0.88 mag.
+- Median required m_z is 19.73 (typical) and 25.05 (conservative), against a median brick depth of 23.43.
+- Catalogue defects: cluster-survey rows typed "galaxy" (14 references), AGEL declinations, SPT positions, 468
+  rounded positions covered, rejected candidates kept (MJV16999), name-based merges.
+- Tests: `tests/test_lenscats.py` and `tests/test_w12_lenscats.py`. They cover:
+  - a dark pair reaching "none";
+  - quad images never counted as the deflector, while a red PSF-typed lens is;
+  - a fold-quad lens outside the brightest pair's circle (search circle holds every image; final review);
+  - a deflector beyond image_radius inside the pair circle;
+  - faint-galaxy, close, blended and insensitive cases;
+  - empty inputs keeping the schema;
+  - brick coverage independent of sources;
+  - RA-wrap and pole boxes, signed declinations, rounding and Poisson limits.
+
+**Revisit if.**
+- HSC PDR or HST photometry is available for the 307 blended or close lensed quasars.
+- The CHITAH lens models or spectra of the three open pairs are checked.
+- A public list of rejected lensed-quasar candidates (binary or "nearly identical" quasars) appears.
+- A lens list publishes image positions (W1 geometry).
+- Tractor can be re-run on injected images (a measured completeness).
+
 ## D-057 W3 in OGLE-IV Mróz samples: one fitter for ordinary and exotic models; disk sample null (2026-10-08)
 
 **Decision.**
