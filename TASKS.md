@@ -9,7 +9,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    `feature_coverage`). **The published samples cannot limit W3:** 0 of 600 injected W3 events pass the emulated Mróz
    selection (PSPL controls 15–43 %), so the chunk re-fits only re-test a selection that excludes the signal. Next:
    light curves from **before** a PSPL selection. **MOA-II 9-year Cut-0 light curves keep W3 (D-062):** gb22
-   null (30 flags, 0 survive), Γ₉₅ ≈ 0.5–5 × 10⁻⁶ per star per yr (t_E 3–300 d). Next: a field with published N_s
+   null (30 flags, 0 survive), Γ₉₅ ≈ 1.2–4.4 × 10⁻⁶ per star per yr (t_E 10–300 d; 0.6–1.1 × 10⁻⁵ at 3 d). Calibrate the variable-baseline test (largest efficiency loss) and add injections per cell. Next: a field with published N_s
    (Nunota et al. 2024 Table 1; light-curve tar size first), then more fields to scale the exposure. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
    injections both selected and flagged; one real flag, not a candidate). Next: Gaia DR3 variables with epoch
    photometry (vari_summary; check by injection whether W3 survives the variability classifier first), KMTNet

@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 MOA-II gb22 limit corrected: injections re-run after the `s_min` review fix (D-062)
+- #92's limit (Γ₉₅ ≈ 0.5–5 × 10⁻⁶, 171 / 600 recovered) came from injections run before the review fix that made
+  the pre-screen `s_min` the weaker of the two significances; the merged code already has the fix. Re-run of the whole
+  chain on that code: **101 / 600** W3 injections recovered, 0 / 100 PSPL controls; **Γ₉₅ ≈ 1.2–4.4 × 10⁻⁶ per star per
+  year for t_E = 10–300 d, 0.6–1.1 × 10⁻⁵ at 3 d** (`derived`; N_s ASSUMPTION unchanged). The real-data result is
+  unchanged and reproduced with main's code: 30 flags, 0 survivors. Tracked fit table regenerated.
+- Largest efficiency loss: the variable-baseline test (73 of 188 vetted injections; 35 % of quiet carriers have
+  χ²/dof > 2 alone). **Rule:** re-run injections after any pre-screen change before quoting a limit.
+
 ## 2026-10-08: W3 in MOA-II Cut-0 light curves (gb22): 30 flags, 0 survivors, first W3 rate limit (D-062)
 - Cloud runs (two sessions merged on `claude/w3-moa`). Hypothesis: the MOA-II 9-year release publishes every Cut-0
   object (positive *or negative* difference-image detections) before any bump cut, so unlike OGLE (0 / 600) and

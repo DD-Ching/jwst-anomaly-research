@@ -2913,8 +2913,8 @@ the smallest). The W3 search is `scripts/w3_moa.py`:
 - `fit --chunk K/N` and `merge-chunks` (as D-059) for fields too large for one session; gb22 no longer needs them.
 The 3.5 GB download is for cloud sessions; the owner's machine need not fetch it.
 
-Pilot result for gb22: 18,599 light curves, 30 flags, **0 survivors**. Γ₉₅ ≈ 0.5–5 × 10⁻⁶ per star per year for
-t_E = 3–300 d (docs/exotic_limits.md "W3 in MOA-II (pilot: gb22)").
+Pilot result for gb22: 18,599 light curves, 30 flags, **0 survivors**. Γ₉₅ ≈ 1.2–4.4 × 10⁻⁶ per star per year for
+t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in MOA-II (pilot: gb22)").
 
 **Alternatives rejected.**
 - astroquery `NasaExoplanetArchive`: TAP has no MOA table (2026-10-08).
@@ -2940,7 +2940,8 @@ t_E = 3–300 d (docs/exotic_limits.md "W3 in MOA-II (pilot: gb22)").
 - N_s per Cut-0 object over 20 fields: median 188, range 131–240. gb22 is not in Nunota et al.'s Table 1.
 - First vetting pass: 9 survivors, inspected; they are one- or two-night drops and spike-less flat dips. The eclipse
   model, the chip-level shared-epoch test and the ≥ 3-night rule were then added, and the injections were re-run
-  after the change: 171/600 W3 injections recovered, 0/100 PSPL controls.
+  after the change: 101/600 W3 injections recovered, 0/100 PSPL controls. The largest efficiency loss is the
+  variable-baseline test (35 % of carriers have χ²/dof > 2 alone); a stricter carrier definition gave 171/600.
 - D-054's "no verified bulk MOA endpoint" no longer holds.
 
 **Revisit if.**

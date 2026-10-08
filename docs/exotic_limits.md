@@ -956,32 +956,36 @@ dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no pu
   events is in the injection numbers below, which were run after the change.
 - The pre-screen is W3-specific: **0 of 100** PSPL controls pass it (they have no deficit below the baseline),
   so no control can become a W3 survivor.
-- Wall time: prescreen 207 s, fit 337 s (30 light curves), vet 22 s, inject 1,258 s (700 injections), all on
-  4 cores; the abandoned first fits of 1,058 shape passes ran ~35 s each before the shared-epoch cut existed.
+- Wall time: prescreen 203 s, fit 335 s (30 light curves), vet 22 s, inject 888 s (700 injections), all on
+  4 cores; the abandoned first fits of 1,058 shape passes ran ~26–35 s each before the shared-epoch cut existed.
 
 ### Injection-recovery and limit (simulated / derived)
 
 | t_E (d) | \|M\| (M☉, model_prediction) | Cut-0 (ρ = 0.01 / 0.1) | pre-screen | recovered | ε per star (LF-weighted) | **Γ₉₅ per star per yr** |
 |---|---|---|---|---|---|---|
-| 3 | 1.7 × 10⁻³ | 0.38 / 0.37 | 0.28 / 0.22 | 0.22 / 0.20 | 0.028 / 0.021 | 3.6 / 4.6 × 10⁻⁶ |
-| 10 | 1.8 × 10⁻² | 0.62 / 0.67 | 0.37 / 0.30 | 0.32 / 0.25 | 0.050 / 0.094 | 2.0 / 1.1 × 10⁻⁶ |
-| 30 | 0.17 | 0.87 / 0.82 | 0.57 / 0.48 | 0.53 / 0.43 | 0.19 / 0.17 | 5.3 / 5.7 × 10⁻⁷ |
-| 100 | 1.8 | 0.92 / 0.90 | 0.45 / 0.45 | 0.28 / 0.32 | 0.10 / 0.18 | 9.8 / 5.6 × 10⁻⁷ |
-| 300 | 17 | 0.90 / 0.92 | 0.27 / 0.47 | 0.08 / 0.22 | 0.053 / 0.093 | 1.9 / 1.1 × 10⁻⁶ |
+| 3 | 1.7 × 10⁻³ | 0.43 / 0.37 | 0.22 / 0.20 | 0.07 / 0.13 | 0.009 / 0.016 | 11 / 6.2 × 10⁻⁶ |
+| 10 | 1.8 × 10⁻² | 0.57 / 0.62 | 0.32 / 0.33 | 0.18 / 0.25 | 0.032 / 0.068 | 3.1 / 1.5 × 10⁻⁶ |
+| 30 | 0.17 | 0.83 / 0.72 | 0.48 / 0.33 | 0.28 / 0.23 | 0.051 / 0.070 | 2.0 / 1.4 × 10⁻⁶ |
+| 100 | 1.8 | 0.83 / 0.90 | 0.30 / 0.38 | 0.17 / 0.20 | 0.028 / 0.081 | 3.5 / 1.2 × 10⁻⁶ |
+| 300 | 17 | 0.90 / 0.90 | 0.22 / 0.35 | 0.07 / 0.10 | 0.027 / 0.023 | 3.6 / 4.4 × 10⁻⁶ |
 
 - **First W3 rate limit**: with zero survivors, the 95 % upper limit on the rate of umbra crossings (u₀ < 2 in
-  |ε| Einstein radii) by an n = 1, ε < 0 lens is **Γ₉₅ ≈ 0.5–5 × 10⁻⁶ per monitored star per year** in gb22
-  over t_E = 3–300 d (|M| ≈ 2 × 10⁻³ – 17 M☉ in the stated geometry), the strongest near t_E ≈ 30 d. Γ₉₅ =
-  3 / (N_s T ε); N_s = 3.5 × 10⁶ stars with 10 ≤ I ≤ 21.4, T = 8.61 yr. With the smallest N_s of the star-count
-  model (2.4 × 10⁶) the limits are 1.43× weaker (`rate95_conservative`).
+  |ε| Einstein radii) by an n = 1, ε < 0 lens is **Γ₉₅ ≈ 1.2–4.4 × 10⁻⁶ per monitored star per year** in gb22 for
+  t_E = 10–300 d (|M| ≈ 0.02–17 M☉ in the stated geometry) and 0.6–1.1 × 10⁻⁵ at t_E = 3 d. Γ₉₅ = 3 / (N_s T ε);
+  N_s = 3.5 × 10⁶ stars with 10 ≤ I ≤ 21.4, T = 8.61 yr. With the smallest N_s of the star-count model
+  (2.4 × 10⁶) the limits are 1.43× weaker (`rate95_conservative`). 101 of 600 W3 injections are recovered, 0 of
+  100 PSPL controls end as W3 survivors.
 - Fractions are of all injections; ε per star weights them by a luminosity function ∝ 10^(0.319 I) and counts
   stars brighter than I = 14.2 (0.5 % of N_s) as undetectable. The weights favour faint sources, so the
-  effective number of injections per cell is ~20–25 (`n_eff_lf`) and ε is uncertain by ~±20–45 % per cell
+  effective number of injections per cell is ~20–25 (`n_eff_lf`) and ε is uncertain by ~±25–75 % per cell
   (binomial); the ρ = 0.01 / 0.1 differences at fixed t_E are within that noise.
 - Where efficiency is lost: Cut-0 (faint sources and short events); the shape cuts, mostly long events whose
-  umbra spans seasons (second-deficit rule); then the variable-baseline test (34 of 231 vetted injections) and
-  the eclipse model (9), which removes W3 events whose caustic spikes fall in gaps. t_E = 300 d events
-  are recovered least (8–22 %).
+  umbra spans seasons (second-deficit rule); then the **variable-baseline test (73 of 188 vetted injections)**,
+  the eclipse model (6), season offsets (3) and the repeated-deficit test (2). The baseline test is the largest
+  loss because 35 % of the 300 carrier light curves have χ²/dof > 2 about a constant on their own (red noise of
+  difference photometry), so it is conservative for the limit. It is also sensitive to the carrier definition:
+  a first run whose quiet-carrier cut required *both* white-noise significances above −5 (before the review fix
+  that made `s_min` the weaker one) lost 34 of 231 to it, recovered 171 / 600, and gave Γ₉₅ ≈ 0.5–5 × 10⁻⁶.
 
 ### Assumptions and caveats
 
