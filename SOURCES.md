@@ -526,6 +526,19 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   (x/y-arcsec-deflect, kappa, z02-magnif, arcs.txt, params.txt where present) are pinned by sha256 in
   `lensmodel.HFF_CATS`. The release readmes quote rms 0.72″, 0.63″, n/a, 2.41″, 0.48″ and n/a.
 
+### Abell 370 and Abell S1063 field runs (accessed 2026-10-08; D-043)
+
+- JWST programs 1208 (CANUCS, PI Willott; Abell 370 `o002_t001`) and 3293 (GLIMPSE, PI Atek; S1063 `o001_t001`).
+  Manifests: `data/manifests/abell370*.ecsv`, `data/manifests/abells1063*.ecsv`.
+- CANUCS DR1 Abell 370 photometry and photo-z:
+  https://archive.stsci.edu/hlsps/canucs/dr1/a370/clu/hlsp_canucs_jwst-hst_multi_a370-clu_multi_v1_photometry-cat.fits.gz,
+  32,153,881 B, sha256 `f5622f2867aa3094df6861981ee67f7f1879b8381b348224748c7381436ae17b` (13,567 sources, 509 Z_SPEC).
+- DJA v7.5 Abell S1063 photo-z: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/abells1063-grizli-v7.5-fix.photoz.tar.gz,
+  74,481,914 B (last-modified 2025-01-09), sha256 `088a1954e357d96e9e3b0ab4af1f474eb9d35676774c1ad990f40140e81b1319`.
+  The member `abells1063-grizli-v7.5-fix.eazypy.zout.fits` has sha256
+  `03bc4c289982dc50a4540305b8858b279aca7c7cdb64c809d69a855e631b6428` (12,597 rows).
+- Gaia DR3 (VizieR I/355/gaiadr3): positions and G magnitudes of the spike-seeding stars.
+
 ### MACS0717 field run (accessed 2026-10-08; D-041)
 
 - JWST program 6882 (VENUS, PI Fujimoto), observation 29 `jw06882-o029_t063`, 10 NIRCam bands, jwst 3.0.0, released

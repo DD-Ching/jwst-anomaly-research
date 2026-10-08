@@ -2023,3 +2023,41 @@ the JWST-era model, with spectroscopic constraints only, is the stronger check).
 - The CANUCS model is pinned as a `MODELS` entry with its image list, and `images` is re-run on it directly.
 - A multi-plane re-fit, or a measured velocity dispersion of CANUCS 3101008 (z 0.268), gives σ ≳ 65 km/s. System
   51's explanation then fails and the fourth image becomes a flag again.
+
+## D-043 Abell 370 and Abell S1063 radial screens: null; Gaia-seeded spike veto (2026-10-08)
+
+**Decision.**
+- Only the `radial` screen applies to `abell370-cats` and `abells1063-cats`: their image lists are gated off (D-035;
+  rms 10.7″ and 11.8″).
+- Data: CANUCS 1208 `o002_t001` (Abell 370; 8 bands) and GLIMPSE 3293 `o001_t001` (Abell S1063; 9 bands, F200W 70 ks).
+- Abell 370's frame offset (−0.121″, −0.015″) is pinned. S1063's 0.075″ is under the 0.1″ threshold and not pinned.
+- Photo-z come from CANUCS DR1 (Abell 370) and DJA v7.5 eazy (S1063).
+- `exotic_screens.py radial --spike-stars` (stars from `scripts/gaia_stars.py`) adds Gaia DR3 stars (G < 17) to
+  `spike_segments`, with spikes up to 60″; catalogued stars keep the 20″ cap (D-034), and a Gaia star within 1″ of a
+  catalogued one is seeded once (ASSUMPTIONs; G is used in the AB spike-length law without a colour term). The
+  pipeline catalogue misses saturated and off-mosaic stars.
+- Both fields are null (docs/fields/abell370.md, docs/fields/abells1063.md).
+
+**Alternatives rejected.**
+- Abell 370 data: MAGNIF 2883/3538 and JUMPS 5890 (medium bands only); 5324 (shallow).
+- S1063 data: 1840 (about 1 ks per band).
+- Taking the 15-line Abell 370 centre (p 0.0) at face value. It is a straight chain of diffraction-spike segments
+  along the column axis (PA 62°), at a low-weight seam, pointing at a Gaia G = 13.7 star off the F200W mosaic.
+
+**Evidence.**
+- Abell 370 `radial`: 15 lines, p 0.0, with or without photo-z. Two flags, both instrumental (cutouts inspected):
+  - the 15-line chain above;
+  - an 8-line chain (p 0.01 with aper50 S/N ≥ 5) from a saturated Gaia G = 12.7 star that has no catalogue entry.
+  - `spike_segments` missed both stars: it seeds only from catalogued point sources brighter than AB 20 and caps
+    spikes at 20″, while these segments reach 12–37″.
+  - With the committed Gaia-seeded veto: 82 segments dropped, 140 anti arcs, max 5 lines, p 0.945 (111 and p 0.495
+    with photo-z). The scratch test used a fixed axis (63.4°) and removed 166 catalogue rows. The code estimates the
+    axes and vetoes selected segments; the resulting anti counts and p-values are the same.
+- S1063 `radial`: max 4 lines, p 0.435; with photo-z, max 3, p 0.95. The Gaia veto (11 stars) leaves it unchanged.
+- Tally, counted the same way for both (anti arcs after all spike vetoes, no photo-z): Abell 370 140, S1063 51; 2
+  flags; **0 surviving**.
+
+**Revisit if.**
+- A low-weight veto (relative WHT < 0.5) or an aper50 S/N floor is added to `radial`.
+- Fitted redshifts for Abell 370 or S1063 appear, which would open their image lists.
+- A photo-z catalogue for S1063 with fewer blends on arcs appears: DJA puts 13 of 46 matched images at z < 0.6.

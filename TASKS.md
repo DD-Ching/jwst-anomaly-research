@@ -16,14 +16,14 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - an observational parity test (image orientation or resolved structure; not yet designed);
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
-   - exotic screens (D-031, D-034, D-036–D-038, D-040–D-042): SMACS, El Gordo, Sunrise (radial), Abell 2744,
-     MACS1149, MACS0717 and MACS0416 null. The six HFF CATS map models are in (D-035). Next:
+   - exotic screens (D-031, D-034, D-036–D-038, D-040–D-043): SMACS, El Gordo, Sunrise (radial), Abell 2744,
+     MACS1149, MACS0717, MACS0416, Abell 370 and Abell S1063 (radial) null. All six HFF clusters are screened. Next:
      - a two-plane option in `LensModel` (D-042 used scratch code): check flagged extra images for non-member deflectors;
      - CANUCS Lenstool models (MACS0416 used in D-042; MACS1149, Abell 370) as pinned `MODELS` entries: the independent
        second model for the D-036/D-037/D-041 rules (best fit and the 100 MCMC samples);
-     - `radial`: an aper50 S/N floor (noise segments pass the isophotal S/N);
-     - JWST field runs: radial on Abell 370 (CANUCS photo-z) and Abell S1063; MACS0717 done (D-041), re-run its radial
-       when a photo-z catalogue exists;
+     - `radial`: low-weight veto (relative WHT < 0.5) or aper50 S/N floor; pass `--spike-stars` (Gaia, D-043) on every
+       field and re-run earlier fields' radial screens with it;
+     - re-run MACS0717 radial when a photo-z catalogue exists;
      - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; classify model copies of
        unpredicted catalogued images automatically (D-041);
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, MACS0717), Keeton v4 (MACS0717);

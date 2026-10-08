@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Abell 370 and Abell S1063 radial screens: null (D-043)
+- Worktree worker: CANUCS 1208 for Abell 370 (CANUCS DR1 photo-z; frame offset −0.121″, −0.015″ pinned) and GLIMPSE
+  3293 for S1063 (DJA v7.5 photo-z). Only `radial` applies (image lists gated, D-035).
+- Abell 370 raised two flags (15 and 8 lines, p ≤ 0.01). Both are diffraction-spike chains from Gaia stars that are
+  off the mosaic or saturated and absent from the catalogue. The Gaia-seeded veto is now in the code
+  (`radial --spike-stars`, `scripts/gaia_stars.py`); with it, p 0.945. S1063: p 0.435, unchanged by the veto.
+- **Failed approach:** spike vetoes seeded from the pipeline catalogue miss saturated and off-mosaic stars, whose
+  spikes reach 37″.
+- Wall time: under 2 min of pipeline per field, plus cutout vetting.
+- **Handoff:** a low-weight veto or an aper50 S/N floor in `radial`; use `--spike-stars` on every field.
+
 ## 2026-10-08: MACS0416 counter-images and flux ratios: null; CANUCS model as second model; two-plane check (D-042)
 - With the D-040 solver, the MACS0416 image list is open. `images` and `fluxratio` raised 21 flags; 0 survive. The most
   persistent was system 51's fourth image: two independent models predict it, and the 51.1–51.3 photometry says it
