@@ -24,6 +24,15 @@ MAST (CAOM metadata)            query.py      query_observations / list_products
   → interpretation              humans + /vet-candidate skill (never automatic)
 ```
 
+## Exotic signatures across surveys (D-054)
+
+`signatures.py` registers each D-047 signature (W1, W2, W3, W5): its `exotic_sim` prediction and injector,
+the screens that implement it (`scripts/exotic_screens.py`, `inject_radial.py`, `orphan_pairs.py`,
+`inject_pairs.py`, `dimming_screen.py`), the ordinary mimics vetting rules out first, and its limits
+(docs/exotic_limits.md). Surveys plug in through `LightCurveSurvey` / `CatalogueSurvey` adapters;
+`standard_light_curve` is the shared light-curve layout. Ordinary microlensing fits use MulensModel
+(extra `mulens`); exotic models are evaluated on the same trajectory.
+
 Why catalog-first: a NIRCam level-3 `_cat.ecsv` is ~3 MB while its `_i2d.fits` is ~1.8 GB
 (program 2736, measured 2026-10-07). Ranking on pipeline catalogs and pulling image cutouts only
 for the top-k keeps the first slice cheap. Known limitation: pipeline catalogs detect each band

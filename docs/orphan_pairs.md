@@ -241,7 +241,8 @@ dark deflectors is in [exotic_limits.md](exotic_limits.md), section "W2 / dark-d
   - (d) the z-overlap match rate of real pairs at 3–6″;
   - (e) null (c) conditioned on what makes two SEDs easy to match. The cells are the fainter member's summed
     S/N, the larger member's aperture radius and the LW/SW colour (`pair_cells`). Each close pair gets its cell's
-    far-pair match rate.
+    far-pair match rate. D-055 made the colour part use both members (unordered), gave non-finite colours their
+    own bin, required ≥ 5 reference pairs per cell (else the S/N × size cell), and added (f), the same with 3–6″ pairs as reference.
 
   `zoverlap_match_fraction_by_sep` shows the z-overlap match rate is flat from 0.3″ to 10″ in every field.
 - **Other changes.**
@@ -281,6 +282,8 @@ Reading the table:
 - **SED-matched pairs.** As in the clusters, they exceed the random-pair nulls (a)/(b) and fall below the
   same-redshift null (c).
 - **Orphans in GOODS-N** match every null.
+- **Superseded by D-055** (section "Null (e) fixed" below): under the corrected null (e) the excess is gone.
+  Original D-051 reading kept for the record:
 - **Orphans in the five flanking fields** are 246 against 211 under null (e), P = 0.010. With GOODS-N, the total
   is 355 against 315, P = 0.015. This is a 10–15 % excess at about 2.3σ.
   - It is spread over 1–3″ and over fainter-member S/N 20–40. No single bin carries it (a one-off diagnostic
@@ -297,6 +300,38 @@ Reading the table:
 - **The likelier reading** is that null (e) still under-models physical companions. Pairs at 1–3″ at one redshift
   (satellites, interacting pairs) share stellar populations more closely than z-overlapping pairs 10–30″ apart.
   The contact sheets show many such companions.
+
+### Null (e) fixed and a companion-aware null (f) (D-055)
+
+Re-run of 2026-10-08 (cloud). D-051's null (e) took the colour cell from member `i` of the pair only (pair order
+is arbitrary) and put a non-finite colour in the 0–0.3 bin. Now the cell holds both members' colour bins
+(unordered), and a non-finite colour (no valid flux, or a non-positive mean flux on one side) has its own bin. A
+cell needs ≥ 5 z-overlapping reference pairs (`MIN_CELL_REF`, ASSUMPTION), else its S/N × size cell, else the
+global reference rate. New null
+(f) is (e) with the 3–6″ z-overlapping pairs of null (d) as reference: physical companions are common there and
+galaxy-scale lensing is not. Orphan counts are unchanged (bit for bit).
+
+| Field | Orphans | (e) D-051 | (e) fixed, P | (f), P | fallback pairs (e) / (f) [to global] |
+|---|---|---|---|---|---|
+| M0416-NCF | 51 | 41.4 | 44.4, 0.18 | 45.6, 0.23 | 11 [0] / 79 [5] |
+| M1149-NCF | 50 | 40.6 | 45.8, 0.29 | 47.8, 0.39 | 4 [0] / 93 [3] |
+| A370-NCF | 43 | 43.1 | 45.0, 0.64 | 43.0, 0.52 | 5 [0] / 90 [9] |
+| M0417-NCF | 49 | 38.0 | 43.2, 0.21 | 47.0, 0.41 | 10 [0] / 74 [1] |
+| M1423-NCF | 53 | 47.9 | 51.6, 0.44 | 57.0, 0.72 | 3 [0] / 50 [4] |
+| GOODS-N | 109 | 104.4 | 103.9, 0.32 | 107.2, 0.44 | 2 [0] / 23 [2] |
+| Five NCFs | 246 | 211 (P 0.010) | 230.0, 0.15 | 240.4, 0.37 | |
+| Total | 355 | 315.4 (P 0.015) | 334.0, 0.13 | 347.5, 0.35 | |
+| MACS0416 / MACS1149 / A370 (D-048) | 11 / 18 / 9 | — | 14.3 / 14.1 / 10.3; P 0.84 / 0.18 / 0.70 | 16.6 / 13.3 / 10.3; P 0.94 / 0.13 / 0.70 | |
+
+- **Reading.** The flanking-field excess was a null-model artefact: no orphan excess remains under either null,
+  and the cluster fields stay null.
+- The changes (symmetry, own bin for non-finite colours, cell floor with S/N × size fallback) were made together; their separate shares
+  were not measured.
+- Fallback pairs: z-overlapping close pairs whose full cell has < 5 reference pairs; in brackets, those whose
+  S/N × size cell is sparse too and that take the global rate. Many (f) pairs lose the colour conditioning (its
+  3–6″ reference is far smaller than the 10–30″ one).
+- The unconditioned 3–6″ null (d) gives 300.0 (P = 0.001): conditioning on S/N, size and colour matters more than
+  the reference annulus.
 
 ### Top orphans and verdicts (all six contact sheets inspected)
 
@@ -337,9 +372,9 @@ As in the clusters, a luminous galaxy of that mass would be many magnitudes abov
 - **Same rules as D-048.** The same S/N, Kron-rule and visible-lens limitations apply. In a deep field the
   visible-lens rule removes about 73 % of injected pairs at θ_E = 0.7″, because a catalogued source falls inside
   the pair's circle by chance at these densities.
-- **The deep-field excess.** Null (e) does not model physical companions at 1–3″, so the deep-field orphan excess
-  stays unexplained at the 2σ level. A companion-aware null would be one built from spectroscopic pairs or from
-  pairs matched in redshift *and* environment.
+- **The deep-field excess** was a null (e) artefact (D-055): with a symmetric colour cell, and under the
+  companion-aware null (f), the orphans match chance (table in the D-055 section). A null from spectroscopic pairs, or one
+  matched in environment, remains untested.
 - **DJA photometry** is not PSF-matched, and its same_galaxy radius is calibrated on CANUCS (3.3 × half-light
   radius; ASSUMPTION).
 - **Failed approach (recorded so it is not repeated).** The DJA Kron apertures (`2.5 × kron_radius × a_image`)
