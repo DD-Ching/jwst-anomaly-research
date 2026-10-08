@@ -789,8 +789,8 @@ def cmd_sheet(args) -> None:
         x, y = ms.raster.xy(row["ra"], row["dec"])
         half = 3 * th
         f = max(1, int(th / 4 / CELL))
-        ix0 = int((x - half - ms.raster.x0) / CELL)
-        iy0 = int((y - half - ms.raster.y0) / CELL)
+        ix0 = math.floor((x - half - ms.raster.x0) / CELL)
+        iy0 = math.floor((y - half - ms.raster.y0) / CELL)
         n = int(2 * half / CELL)
         sl = (slice(max(iy0, 0), iy0 + n), slice(max(ix0, 0), ix0 + n))
         dens = cm.block_sum(ms.density()[sl], f)
@@ -798,8 +798,8 @@ def cmd_sheet(args) -> None:
         with np.errstate(divide="ignore", invalid="ignore"):
             rel = dens / wt / np.nanmean(dens[wt > 0.5] / wt[wt > 0.5])
         # a cutout clipped at the raster edge keeps its true offsets, so (0, 0) stays the flag
-        x_lo = (max(ix0, 0) - ix0) * CELL - half
-        y_lo = (max(iy0, 0) - iy0) * CELL - half
+        x_lo = ms.raster.x0 + max(ix0, 0) * CELL - x  # true cell edges relative to the flag
+        y_lo = ms.raster.y0 + max(iy0, 0) * CELL - y
         ext = [x_lo, x_lo + dens.shape[1] * f * CELL, y_lo, y_lo + dens.shape[0] * f * CELL]
         im = ax[0].imshow(
             np.where(wt > 0.3, rel, np.nan), origin="lower", extent=ext, cmap="RdBu", vmin=0, vmax=2
@@ -880,14 +880,23 @@ def cmd_manifest(args) -> None:
     rows = []
     for name in args.regions:
         survey = cm.LegacySurveysCountMap(REGIONS[name], MAG_LIM)
+        if survey.missing_chunks():
+            raise SystemExit(
+                f"{name}: {len(survey.missing_chunks())} chunks not fetched; run fetch"
+            )
         for box in survey.region.chunks():
             path = survey.chunk_path(box)
             data = path.read_bytes()
+            meta = Table.read(path).meta  # what the file was fetched with, not today's query
             rows.append(
                 {
                     "region": name,
                     "file": path.name,
-                    "query_gal": cm.chunk_queries(box, MAG_LIM)["gal"],
+                    "release": "Legacy Surveys DR10 (ls_dr10.tractor, Data Lab)",
+                    "query_gal": str(meta.get("query_gal", "")),
+                    "retrieved_utc": time.strftime(
+                        "%Y-%m-%dT%H:%M:%SZ", time.gmtime(path.stat().st_mtime)
+                    ),
                     "bytes": len(data),
                     "sha256": hashlib.sha256(data).hexdigest(),
                 }

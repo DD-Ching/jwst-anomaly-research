@@ -24,7 +24,7 @@ from astropy.table import Table
 
 from jwst_anomaly import exotic_sim, schema
 
-DATA_KINDS = ("catalogue", "light_curve", "image")
+DATA_KINDS = ("catalogue", "count_map", "light_curve", "image")
 
 
 @dataclass(frozen=True)
@@ -161,7 +161,7 @@ register(
     Signature(
         code="W5",
         name="background-count deficit inside about theta_E",
-        data_kinds=("catalogue",),
+        data_kinds=("count_map",),
         predict=_bound(exotic_sim.count_ratio, _NEG),
         # count-map injection is map-level (countmap.inject_deficit thins pixel counts with the
         # exotic_sim profile from countmap.deficit_profile); it is not an exotic_sim image injector

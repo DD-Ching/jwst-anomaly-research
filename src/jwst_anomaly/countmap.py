@@ -186,11 +186,22 @@ class LegacySurveysCountMap:
         q = chunk_queries(box, self.mag_lim)
         t = merge_chunk(run(q["gal"]), run(q["all"]), run(q["bad"]))
         t.meta["query_gal"] = q["gal"]
+        t.meta["query_all"] = q["all"]
+        t.meta["query_bad"] = q["bad"]
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(f".{os.getpid()}.{threading.get_ident()}.tmp.fits")
         t.write(tmp, overwrite=True)
         tmp.replace(path)
         return path
+
+    def pinned_sha256(self) -> dict[str, str]:
+        """sha256 per chunk file name from data/manifests/w5_dr10_counts.ecsv (empty if absent)."""
+        path = paths.repo_root() / "data" / "manifests" / "w5_dr10_counts.ecsv"
+        if not path.exists():
+            return {}
+        t = Table.read(path, format="ascii.ecsv")
+        name = self.region.name
+        return {str(r["file"]): str(r["sha256"]) for r in t if str(r["region"]) == name}
 
     def missing_chunks(self) -> list:
         return [b for b in self.region.chunks() if not self.chunk_path(b).exists()]
@@ -200,13 +211,23 @@ class LegacySurveysCountMap:
         missing = self.missing_chunks()
         if missing:
             raise FileNotFoundError(f"{len(missing)} chunks not fetched (run fetch first)")
+        pinned = self.pinned_sha256() if self.mag_lim == 23.5 else {}
         parts = []
         for b in self.region.chunks():
+            path = self.chunk_path(b)
+            if path.name in pinned and sha256_file(path) != pinned[path.name]:
+                raise ValueError(f"{path} does not match its manifest sha256; refetch it")
             p = Table.read(self.chunk_path(b))
             # the cache key is coarse (region, mag_lim to 0.1, lower-left corner): refuse a chunk
-            # fetched with another selection or geometry instead of silently reusing it
-            if p.meta.get("query_gal") != chunk_queries(b, self.mag_lim)["gal"]:
-                raise ValueError(f"{self.chunk_path(b)} was fetched with another query; refetch it")
+            # fetched with another selection or geometry instead of silently reusing it. Chunks
+            # fetched before 2026-10-08 23:30 UTC carry only the galaxy query.
+            want = chunk_queries(b, self.mag_lim)
+            for key in ("gal", "all", "bad"):
+                got = p.meta.get(f"query_{key}")
+                if got != want[key] and (key == "gal" or got is not None):
+                    raise ValueError(
+                        f"{self.chunk_path(b)} was fetched with another query; refetch"
+                    )
             p.meta.clear()
             parts.append(p)
         t = combine_duplicates(vstack(parts))
@@ -214,6 +235,12 @@ class LegacySurveysCountMap:
 
     def area_deg2(self) -> float:
         return float(np.sum(self.count_map()["w"]) * PIX_AREA_DEG2)
+
+
+def sha256_file(path: Path) -> str:
+    import hashlib
+
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def combine_duplicates(t: Table) -> Table:

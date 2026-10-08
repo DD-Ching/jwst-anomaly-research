@@ -10,7 +10,8 @@ from jwst_anomaly import signatures as sg
 def test_registry_holds_the_searchable_d047_signatures():
     assert sorted(sg.REGISTRY) == ["W1", "W2", "W3", "W5"]
     assert [s.code for s in sg.for_kind("light_curve")] == ["W3"]
-    assert {s.code for s in sg.for_kind("catalogue")} == {"W1", "W2", "W5"}
+    assert {s.code for s in sg.for_kind("catalogue")} == {"W1", "W2"}
+    assert [s.code for s in sg.for_kind("count_map")] == ["W5"]
     w3 = sg.get("W3")
     lc = w3.predict(np.array([0.0, 1.0]), 0.0, 10.0, 0.5)
     assert lc[0] == 0.0  # negative mass bound: u0 = 0.5 is inside the umbra (u < 2)

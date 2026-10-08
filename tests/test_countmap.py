@@ -192,3 +192,38 @@ def test_inject_deficit_thins_core_and_conserves_far():
     assert out[r < 2].mean() < 0.35 * 50  # x < 0.25: ratio ≲ 0.3 for these counts
     assert np.all(out[r > 25] == 50)
     assert out.dtype == np.int64 and np.all(out >= 0)
+
+
+def _fake_tap(query: str) -> Table:
+    pix = np.array([10, 11, 12])
+    if "n_gal" in query:
+        return Table({"nest4096": pix, "n_gal": [5, 6, 7]})
+    if "n_bad" in query:
+        return Table({"nest4096": pix[:1], "n_bad": [1]})
+    return Table(
+        {
+            "nest4096": pix,
+            "n_all": [10, 12, 14],
+            "galdepth_r": [400.0, 400.0, 400.0],
+            "nobs_g": [3, 3, 3],
+            "nobs_r": [3, 3, 3],
+            "nobs_z": [3, 3, 3],
+            "ebv": [0.02, 0.02, 0.02],
+        }
+    )
+
+
+def test_cached_chunk_round_trip_and_query_guard(tmp_path):
+    s = cm.LegacySurveysCountMap(cm.Region("t", 0, 1, 0, 1), cache=tmp_path)
+    (box,) = s.region.chunks()
+    path = s.fetch_chunk(box, run=_fake_tap)
+    m = s.count_map()  # the stored queries survive the FITS round trip
+    assert list(m["n_gal"]) == [5, 6, 7] and m.meta["provenance"] == "observed"
+    other = cm.LegacySurveysCountMap(cm.Region("t", 0, 1, 0, 1), mag_lim=23.45, cache=tmp_path)
+    with pytest.raises(ValueError, match="another query"):
+        other.count_map()  # same cache file, other selection: refused, not reused
+    t = Table.read(path)
+    t.meta["query_bad"] = "SELECT something else"
+    t.write(path, overwrite=True)
+    with pytest.raises(ValueError, match="another query"):
+        s.count_map()
