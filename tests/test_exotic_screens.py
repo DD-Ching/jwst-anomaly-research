@@ -181,3 +181,79 @@ def test_gaia_stars_live_query(tmp_path):
     )  # Abell 370 (D-043)
     stars = es.read_spike_stars(out)
     assert len(stars) >= 5 and np.nanmin(stars["mag"]) < 14
+
+
+# ------------------------------------------------------------------------------- shear (D-050)
+
+
+def test_aperture_filters_vanish_outside_the_annulus():
+    x = np.array([0.05, 0.2, 0.5, 1.0, 1.2])
+    for kind in ("pointmass", "schirmer", "tophat"):
+        q = es.aperture_filter(x, kind, 0.1)
+        assert q[0] == 0 and q[-1] == 0 and np.all(q[1:4] >= 0)
+    np.testing.assert_allclose(es.aperture_filter(x, "pointmass", 0.1)[1:4], 1 / x[1:4] ** 2)
+    with pytest.raises(ValueError):
+        es.aperture_filter(x, "gauss", 0.1)
+
+
+def test_intrinsic_ellipticity_phase_and_psf():
+    # q = 0.5 ellipses (sigma 4 x 2 px), no PSF: |eps| = (1 - q)/(1 + q) = 1/3, phase 2 PA
+    eps = es.intrinsic_ellipticity([4.0, 4.0], [2.0, 2.0], [0.0, 45.0], 0.0)
+    np.testing.assert_allclose(eps, [1 / 3, 1j / 3], atol=1e-12)
+    # a PSF-sized round source has no measurable shape; an unresolved one is NaN
+    assert abs(es.intrinsic_ellipticity([2.0], [2.0], [30.0], 1.0)[0]) < 1e-12
+    assert np.isnan(es.intrinsic_ellipticity([1.0], [0.8], [0.0], 1.0)[0])
+
+
+def test_cluster_shear_removal_inverts_the_lens_mapping():
+    rng = np.random.default_rng(0)
+    eps_s = 0.3 * rng.uniform(0, 1, 50) * np.exp(1j * rng.uniform(0, 2 * np.pi, 50))
+    g = 0.3 * np.exp(1j * 0.7)
+    eps_obs = (eps_s + g) / (1 + np.conj(g) * eps_s)  # Seitz & Schneider 1997, |g| < 1
+    np.testing.assert_allclose(es.remove_cluster_shear(eps_obs, g), eps_s, atol=1e-12)
+
+
+def _ring(n, r, radial: bool):
+    """Sources on a ring about the origin (model frame, x West), radial or tangential."""
+    phi = np.linspace(0, 2 * np.pi, n, endpoint=False)  # PA east of north
+    x, y = -r * np.sin(phi), r * np.cos(phi)
+    pa = phi if radial else phi + np.pi / 2
+    return x, y, 0.2 * np.exp(2j * pa)
+
+
+def test_aperture_mass_sign_radial_is_positive_tangential_negative():
+    x, y, e_rad = _ring(12, 3.0, radial=True)
+    _, _, e_tan = _ring(12, 3.0, radial=False)
+    ap = es.ApertureMass(x, y, [0.0, 50.0], [0.0, 0.0], 6.0, "pointmass", 1.0, min_n=5)
+    s_rad, sx_rad = ap.snr(e_rad)
+    s_tan, _ = ap.snr(e_tan)
+    # perfectly aligned: S = sqrt(2 n) = sqrt(24)
+    np.testing.assert_allclose([s_rad[0], s_tan[0]], [np.sqrt(24), -np.sqrt(24)])
+    assert abs(sx_rad[0]) < 1e-9
+    assert np.isnan(s_rad[1])  # no sources in the second aperture
+
+
+def test_aperture_mass_null_rarely_reaches_a_strong_radial_ring():
+    rng = np.random.default_rng(1)
+    bx, by = rng.uniform(-30, 30, (2, 600))
+    be = 0.25 * np.exp(1j * rng.uniform(0, 2 * np.pi, 600))
+    rx, ry, re = _ring(16, 2.5, radial=True)
+    x, y, e = np.r_[bx, rx + 10], np.r_[by, ry], np.r_[be, re]
+    gx, gy = es.radial_grid(30.0, 1.0)
+    ap = es.ApertureMass(x, y, gx, gy, 6.0, "pointmass", 1.0)
+    s, _ = ap.snr(e)
+    s = s.reshape(gx.shape)
+    iy, ix = np.unravel_index(np.nanargmax(s), s.shape)
+    assert np.hypot(gx[iy, ix] - 10, gy[iy, ix]) <= 1.5
+    null = ap.null_max(e, 100, np.random.default_rng(2))
+    assert np.mean(null >= s[iy, ix]) < 0.05
+
+
+def test_shear_responsivity_recovers_a_diluted_shear():
+    rng = np.random.default_rng(3)
+    n = 4000
+    g = rng.uniform(0.05, 0.4, n) * np.exp(1j * rng.uniform(0, 2 * np.pi, n))
+    eps = 0.25 * np.exp(1j * rng.uniform(0, 2 * np.pi, n)) + 0.5 * g
+    r, err = es.shear_responsivity(eps, g)
+    assert abs(r - 0.5) < 3 * err and err < 0.05
+    assert es.shear_responsivity(eps[:5], g[:5]) == (1.0, pytest.approx(np.nan, nan_ok=True))

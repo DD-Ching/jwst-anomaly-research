@@ -2579,3 +2579,47 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   vanishes of two-epoch sources.
 - JADES or more NEXUS epochs enlarge the compact sample.
 - A W3 model with cluster macro-magnification is needed for caustic-crossing stars in arcs.
+
+## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
+
+**Decision.**
+- D-050's catalogue aperture-mass map is `exotic_screens.py shear` (Schirmer Q_TANH, R_ap = 10″, 1″ grid, sources at
+  1–10″, rotation null) with `scripts/inject_shear.py` for injection-recovery. It replaces `radial` for W1 limits at
+  ≥ 2 × 10¹² M☉ (6–8× stronger); `radial` stays as an independent screen. Method and tables: docs/exotic_limits.md
+  "W1 negative-mass lenses (shear screen)".
+- **Responsivity.** The cluster shear removed is R g with R fitted per field (0.41–0.48): catalogue isophotal
+  moments respond to shear by R, not 1. Injected images keep R of their lens-induced shape change.
+- **E/B rule.** A peak counts only if p_random < 0.05 against the rotation null *and* S exceeds the field's largest
+  |S_×|. Adopted after seeing that real E and B maps share heavier-than-rotation tails (conservative; stated as
+  post hoc).
+- All thresholds are ASSUMPTIONs.
+
+**Alternatives rejected.**
+- Removing the full model g: leaves −(1 − R) g ≈ −0.55 g, a radial pattern of the W1 sign around every mass
+  concentration (measured slope of ε along g: 0.41–0.48 in four fields).
+- The rotation null alone: B-mode extremes reach p ≤ 0.02 in all four fields, so E peaks at p ≤ 0.01 (Abell 370,
+  Abell 2744) would be read as detections that the B mode shows to be systematics.
+- Point-mass 1/x² (4″, 10″) and top-hat 6″ filters: lower injection efficiency than Schirmer 10″ in MACS0416 and
+  Abell 2744 (50 injections each; numbers in the doc).
+- Hetterscheidt et al. (2005) as the source of the filter's cut-off: the exponential box E(x) is Schirmer et al.'s
+  own (eq. 16), read from the full text.
+
+**Evidence** (`derived`; four photo-z fields, 30.2 arcmin²).
+- Unit tests: phases and PSF deconvolution, (ε − g)/(1 − g*ε) inverts the lens mapping, sign (radial ring S = +√2n,
+  tangential −√2n), a strong synthetic ring beats the rotation null, R recovered from diluted shear, a massive
+  W1 injection recovered on a synthetic field.
+- Real data: ε along the model g rises with |g| in MACS0416 and Abell 2744 (e.g. +0.059 ± 0.010 at ⟨|g|⟩ = 0.14,
+  +0.255 ± 0.024 at 0.42), so the screen sees the cluster's real shear; after removing R g the residual is
+  consistent with 0.
+- Real fields: S_max 3.92 / 3.79 / 3.39 / 4.51 (Abell 2744, MACS0416, MACS1149, Abell 370), each below the field's
+  largest |S_×| (4.19 / 4.04 / 3.75 / 4.68): null.
+- Recovered (of 800, four fields): 0, 0, 34, 235, 431 at 2 × 10¹⁰, 2 × 10¹¹, 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉
+  (radial: 0, 0, 8, 84, 156 of 1,600). 95 % limits: 7.7 × 10³, 1.1 × 10³, 6.1 × 10² deg⁻² at the top three masses
+  (radial headline 6.1 × 10⁴, 7.0 × 10³, 4.0 × 10³).
+- Wall time 58–158 s per field (1,000 injections).
+
+**Revisit if.**
+- A proper weak-lensing shape catalogue (PSF-anisotropy-corrected, calibrated) exists for these fields: the E/B
+  floor would drop and the limits improve.
+- Abell 370's E tail (twice its B tail) survives an image inspection and a second model.
+- DJA photo-z for SMACS 0723 and El Gordo are reachable again (tarballs 404 on 2026-10-08).

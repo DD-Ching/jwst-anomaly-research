@@ -5,13 +5,13 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 
 ## Now (owner focus 2026-10-08: wormhole / negative-mass and warp signatures only; D-047)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
-   - W1: `radial` is blind below about 10¹² M☉ (D-049; limits only from 2 × 10¹² M☉, θ_E(z_s = 2) ≳ 2″). Next: a W1-specific screen (collinear radial
-     image pairs flanking an empty centre, orientation against the candidate centre, local null), benchmarked with
-     `scripts/inject_radial.py`. Design settled in D-050: a sign-flipped catalogue aperture-mass map (Schneider
-     1996 estimator, Schirmer+07 filter) on cluster-shear-corrected shapes, rotation null; build in
-     `exotic_screens.py`, benchmark against `radial`; expect gains mainly at θ_E ≥ 2–3″; then pixel-level injections; other lens redshifts → volume density vs Takahashi &
-     Asada; photo-z for Abell S1063 (DJA v7.5, 75 MB) and MACS0717 to bring both back into the W1 limits (D-049
-     excludes them: without photo-z their members are painted as images);
+   - W1: the shear screen (D-053, `exotic_screens.py shear`, `inject_shear.py`) is built; four fields null; limits
+     7.7 × 10³ / 1.1 × 10³ / 6.1 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, still blind at ≤ 2 × 10¹¹ M☉. Next:
+     inspect Abell 370's E-mode tail (twice its B tail; peak 39.99604, −1.56754, near the screen edge) in images and
+     with `abell370-canucs`; lower the E/B floor (PSF-anisotropy model from stars, blend rejection, edge apertures
+     with < 50 % coverage dropped); add SMACS 0723 and El Gordo when DJA photo-z is reachable (tarballs 404
+     2026-10-08) and MACS0717 / Abell S1063 with photo-z (DJA v7.5, 75 MB); stack S around `radial` and orphan-pair
+     centres; other lens redshifts → volume density vs Takahashi & Asada;
    - W2 / dark deflectors (D-048 clusters, D-051 deep fields: null, limits): a companion-aware null to explain the
      flanking-field orphan excess (P = 0.01) before any orphan is read as other than chance; first make null (e)'s colour cell symmetric in
      the pair and give NaN colour its own cell (`orphan_pairs.pair_cells` uses member i's colour; NaN lands in the

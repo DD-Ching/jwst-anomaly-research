@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W1 shear (aperture-mass) screen: four clusters null; limits 6–8× stronger than radial (D-053)
+- Cloud run. `exotic_screens.py shear` builds D-050: PSF-deconvolved catalogue ε, cluster shear removed, Schirmer
+  10″ aperture-mass S/N map, rotation null, B-mode check. `scripts/inject_shear.py` reuses D-049's W1 painting.
+- **Validation on known signals.** Measured ε along the cluster model's g rises with |g| (MACS0416, Abell 2744), with
+  responsivity R = 0.41–0.48, not 1. The screen now removes R g; injected images keep R of their lens shear.
+- **Real fields** (Abell 2744, MACS0416, MACS1149, Abell 370; 30.2 arcmin²): with the rotation null alone Abell 370
+  (S 4.51) and Abell 2744 (3.92) reach p ≤ 0.01. Their B modes are just as extreme (4.68, 4.19; B-mode p ≤ 0.02 in all
+  four fields), so these are shape systematics. Rule: E must also beat the field's max |S_×|. Under it, all four
+  fields are **null**. The rule is post hoc and conservative.
+- Injections (200 per field and mass): 34 / 235 / 431 of 800 at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉ (radial 8 / 84 / 156
+  of 1,600); 0 at ≤ 2 × 10¹¹. 95 % limits 7.7 × 10³ / 1.1 × 10³ / 6.1 × 10² deg⁻² (radial 6.1 × 10⁴ / 7.0 × 10³ /
+  4.0 × 10³). docs/exotic_limits.md.
+- **Failed approaches (rules):** subtracting the full model g from catalogue moments (leaves a W1-signed radial
+  residual); trusting the rotation null without a B-mode check; filter chosen from injections only: point-mass
+  1/x² and top-hat lost to Schirmer 10″.
+- Data: the DJA SMACS v7.4 and El Gordo v7.0 photo-z tarballs return 404 (2026-10-08), so these fields are out. MAST
+  catalogues and CANUCS DR1 catalogues (~30 MB each) downloaded fine.
+- Wall time: 58–158 s per field for 1,000 injections; the base screen takes 4–14 s.
+- **Handoff:** TASKS "Now" 1 W1: look at Abell 370's E tail, lower the E/B floor, more fields.
+
 ## 2026-10-08: W3 multi-epoch dimming / inverted-microlensing screen: null, limits (D-052)
 - Worktree worker: `scripts/dimming_screen.py` cross-matches per-epoch level-3 catalogues (F200W + F444W), flags
   vanishing, achromatic-dimming and rise-dip-rise sources, vetoes catalogue effects (incl. a `bright_neighbour`
