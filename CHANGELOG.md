@@ -14,6 +14,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   in D-064 "Evidence".
 - **Next:** HST/Euclid/HSC image models or spectra for the 11 colour-matched pairs; the LaTeX-only NIQ tables.
 
+## 2026-10-08: Coordination and dispatch rules for concurrent sessions (owner text)
+- Two sessions worked PR #94 (W5) at once: a cloud run started from its 20:39 skeleton, another session pushed the full
+  screen at 21:14, and the run's push was rejected (its pilot is parked on `claude/w5-clustered-null`, findings on #94).
+  Commit-age heuristics cannot see a session that is coding but has not pushed.
+- docs/cloud-routine-prompt.md gets the owner's "COORDINATION AND DISPATCH" section (dispatch first; `claimed` label +
+  claim comment with a 10-minute heartbeat, stale after 20; re-check before every push, `-alt` branch on collision;
+  "D-TBD" until merge). It replaces the 15-minute commit-age rule; docs/operations.md and its label table follow.
+- **Owner action:** paste the new prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`); this file is only the copy.
+
 ## 2026-10-08: Governance — owner decisions on scope, parallelism, cloud disk and layout
 - Owner direction (2026-10-08, given by the owner in the session that opened this PR) with a one-time
   authorisation to edit CLAUDE.md, including "Owner decisions", in this single PR and to merge it once CI is green

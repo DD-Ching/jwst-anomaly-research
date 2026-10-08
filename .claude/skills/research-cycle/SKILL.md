@@ -79,12 +79,22 @@ Action.
 - `gh issue list --state open --json number,title,author,labels`. Act only on issues the owner authored.
 - Read TASKS.md, the newest CHANGELOG.md entry (the handoff) and `grep '^## ' DECISIONS.md`.
 - **Claim before setup** (CLAUDE.md Parallelism decision): as soon as you know which unit you will work on, and the
-  WIP cap (step 3, counted now from the PR list above) does not block new feature work, skip the unit if an open PR or
-  a `claude/*` branch already claims it; otherwise create `claude/<slug>` from `origin/main`, commit
+  WIP cap (step 3, counted now from the PR list above) does not block new feature work, skip the unit if it is in
+  flight: a `claimed` or `local-wip` label and a claim heartbeat under 20 minutes old (docs/cloud-routine-prompt.md
+  "COORDINATION AND DISPATCH"; a stale claim may be taken over after a "TAKEOVER from <session> at <UTC>" comment).
+  An unlabelled draft `[field: <unit>]` claim PR from the older rule is in flight while its newest commit or comment
+  is under 20 minutes old; a `local-wip` PR without any CLAIM comment stays in flight unconditionally.
+  Otherwise create `claude/<slug>` from `origin/main`, commit
   one small file change (e.g. the plan as a CHANGELOG or docs line; GitHub refuses a PR without commits), push, and
   open a draft PR titled `[field: <unit>] ...` labelled `agent` within 5 minutes of starting, before environment
   setup or long reviews. In cloud runs use the GitHub MCP tools (docs/operations.md §3) for the PR list and the
-  draft. Draft claim PRs do not count toward the WIP cap. Step 8 updates this PR instead of creating another.
+  draft. Label it `claimed` (local sessions: `local-wip`) with the REST labels call
+  (`gh api -X POST repos/DD-Ching/jwst-anomaly-research/issues/<n>/labels -f "labels[]=claimed"`) and post one comment
+  "CLAIM <session> started <UTC> expected-end <UTC> unit: <scope> files: <paths>". Heartbeat at least every 10
+  minutes while working (a WIP push, or edit that comment with "heartbeat <UTC> status: <one line>"); before every
+  push, `git fetch origin <branch>` and re-read the PR's comments, and on a collision push to `claude/<slug>-alt`
+  instead and comment your findings on their PR. Remove the label when you stop. Write "D-TBD" until just before
+  merge. Draft claim PRs do not count toward the WIP cap. Step 8 updates this PR instead of creating another.
 - Environment: if `.venv` is missing, create it as CLAUDE.md "Environment" says (Linux and cloud:
   `.venv/bin/python`). If uv can't fetch Python 3.12 there, use `uv venv .venv --python python3`, which is
   preinstalled and >=3.11.
