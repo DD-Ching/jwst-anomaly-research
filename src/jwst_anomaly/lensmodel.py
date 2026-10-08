@@ -54,7 +54,9 @@ D-024):
 
 from __future__ import annotations
 
+import copy
 import hashlib
+import io
 import re
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -127,6 +129,17 @@ ABELL2744_BERGAMINI23: dict[str, tuple[str, str]] = {
         "d02c231f4ee8c81f47335a99182a9f64a4c553e14818b1c9bd07314c2f4f5e1c",
     ),
 }
+
+#: MCMC samples of the two models above (Lenstool ``bayes.dat``; D-045). Kept apart from the
+#: model file sets because the Abell 2744 chain is 70 MB and only ``posterior`` needs it.
+ELGORDO_CAMINHA23_BAYES = (
+    f"{_CAMINHA23_CDS}/files/bayes.dat",
+    "2d3f736218c1dbba56fdd39a7f8151d307c46bd37abf39bac8831a9e6a81de44",
+)
+ABELL2744_BERGAMINI23_BAYES = (
+    f"{_BERGAMINI23_WEB}/bayes.dat",
+    "bf6ae6702a021d185b70305a83d45f2fca7dacf2a60138f815f5d69ff7524c1b",
+)
 
 # CANUCS DR1 Lenstool best fits (doi:10.17909/18nv-np70): MACS0416 by Rihtarsic et al. 2025
 # (A&A, doi:10.1051/0004-6361/202451117; image-plane chi2pos 344.30) and Abell 370 by Gledhill
@@ -488,6 +501,7 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
     * ``potfiles``: names of ``potfile`` sections (not expanded);
     * ``z_m_limit``: fixed (best-fit) redshifts of multiple-image families, by :func:`image_family`
       of each listed image id (one line may list several ids);
+    * ``z_m_limit_groups``: the families of each such line (they share one redshift);
     * ``sigpos_arcsec``: the image-plane position error ``sigposArcsec``, or None;
     * ``source`` and ``sha256`` of the file.
 
@@ -525,6 +539,7 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
         "potentials": [],
         "potfiles": [],
         "z_m_limit": {},
+        "z_m_limit_groups": [],
         "sigpos_arcsec": None,
     }
     for sec in sections:
@@ -548,7 +563,10 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
         elif kind == "image":
             for key, vals, n in entries:
                 if key == "z_m_limit":
-                    out["z_m_limit"].update(_z_m_limit_entry(vals, f"{path}:{n}"))
+                    entry = _z_m_limit_entry(vals, f"{path}:{n}")
+                    out["z_m_limit"].update(entry)
+                    if entry:  # families of one line share one (sampled) redshift
+                        out["z_m_limit_groups"].append(sorted(entry))
                 elif key.lower() == "sigposarcsec":
                     out["sigpos_arcsec"] = float(vals[0])
         elif kind == "potential":
@@ -594,6 +612,8 @@ def _parse_potential(path: Path, sec: dict[str, Any]) -> dict[str, Any]:
     pot: dict[str, Any] = {"name": name, "profile": profile}
     for key in _POTENTIAL_KEYS:
         pot[key] = float(values[key][0]) if key in values else float("nan")
+    # ``mag`` marks a potfile (scaling-relation) member; :func:`posterior_par` rescales those.
+    pot["mag"] = float(values["mag"][0]) if "mag" in values else float("nan")
     return pot
 
 
@@ -1519,3 +1539,164 @@ class MapLensModel(LensModel):
             },
         )
         return meta
+
+
+# --- Lenstool MCMC posterior (bayes.dat) -------------------------------------------------------
+# bayes.dat column "O<i> : <key> (unit)" -> potential i (1-based, best.par order) and keyword.
+_BAYES_KEYS = {
+    "x": "x_centre",
+    "y": "y_centre",
+    "emass": "ellipticity",
+    "theta": "angle_pos",
+    "rc": "core_radius",
+    "rcut": "cut_radius",
+    "sigma": "v_disp",
+}
+_BAYES_UNITS = {"x": "arcsec", "y": "arcsec", "emass": "", "theta": "deg", "rc": "arcsec",
+                "rcut": "arcsec", "sigma": "km/s"}  # fmt: skip
+_BAYES_POT = re.compile(r"^O(\d+)\s*:\s*(\w+)\s*(?:\((.*)\))?\s*$")
+_BAYES_POTFILE = re.compile(r"^Pot0\s*:?\s*(rcut|sigma)\s*(?:\((.*)\))?\s*$")
+_BAYES_REDSHIFT = re.compile(r"^Redshift of (\S+)")
+
+
+def read_lenstool_bayes(path: str | Path) -> Table:
+    """Read a Lenstool ``bayes.dat`` (MCMC samples) into a Table.
+
+    The header has one ``#<name>`` line per column; the names are kept as written
+    (``"O1 : x (arcsec)"``, ``"Pot0 sigma (km/s)"``, ``"Redshift of 7c"``, ``"Chi2"``).
+    ``meta["sha256"]`` identifies the file. Provenance ``model_prediction`` (posterior samples of
+    a published model).
+    """
+    path = Path(path)
+    raw = path.read_bytes()
+    text = raw.decode("latin-1")
+    names = [line[1:].strip() for line in text.splitlines() if line.startswith("#")]
+    data = np.loadtxt(io.StringIO(text), comments="#", ndmin=2)
+    if not names or not data.size:
+        raise ValueError(f"{path}: no header or no samples")
+    if data.shape[1] != len(names):
+        raise ValueError(f"{path}: {len(names)} header names but {data.shape[1]} columns")
+    out = Table(data, names=names)
+    out.meta.update(
+        provenance="model_prediction", source=str(path), sha256=hashlib.sha256(raw).hexdigest()
+    )
+    return out
+
+
+def _bayes_columns(bayes: Table) -> tuple[dict, dict, dict]:
+    """``(potential, potfile, redshift)`` column maps of a bayes Table.
+
+    potential: ``name -> (index0, keyword)``; potfile: ``name -> "sigma" | "rcut"``;
+    redshift: ``name -> image family``. Unknown columns other than the bookkeeping ones raise
+    :class:`UnsupportedModelError` (never silently ignored)."""
+    pot, potfile, zcol = {}, {}, {}
+    for name in bayes.colnames:
+        if m := _BAYES_POT.match(name):
+            key, unit = m.group(2), m.group(3) or ""
+            if key not in _BAYES_KEYS or unit != _BAYES_UNITS[key]:
+                raise UnsupportedModelError(f"bayes.dat column {name!r} is not interpreted")
+            pot[name] = (int(m.group(1)) - 1, _BAYES_KEYS[key])
+        elif m := _BAYES_POTFILE.match(name):
+            if (m.group(2) or "") != _BAYES_UNITS[m.group(1)]:
+                raise UnsupportedModelError(f"bayes.dat column {name!r} is not interpreted")
+            potfile[name] = m.group(1)
+        elif m := _BAYES_REDSHIFT.match(name):
+            zcol[name] = image_family(m.group(1))
+        elif name not in ("Nsample", "ln(Lhood)", "Chi2"):
+            raise UnsupportedModelError(f"bayes.dat column {name!r} is not interpreted")
+    return pot, potfile, zcol
+
+
+def _check_potential_indices(par: dict[str, Any], pot: dict) -> None:
+    for name, (i, _) in pot.items():
+        if i >= len(par["potentials"]):
+            raise UnsupportedModelError(
+                f"bayes.dat column {name!r}: best.par has no potential {i + 1}"
+            )
+
+
+def best_sample_index(par: dict[str, Any], bayes: Table) -> tuple[int, float]:
+    """The bayes row whose optimised potential parameters and family redshifts match ``par`` (a
+    best.par), and that row's largest absolute difference from ``par`` over those parameters.
+
+    A difference above best.par's print precision means best.par is not a row of this chain
+    (e.g. a thinned chain); use :func:`potfile_reference` for the potfile scaling then."""
+    pot, _, zcol = _bayes_columns(bayes)
+    if not pot:
+        raise ValueError("bayes.dat has no optimised potential columns")
+    _check_potential_indices(par, pot)
+    cols = [(name, par["potentials"][i][key]) for name, (i, key) in pot.items()]
+    cols += [(name, par["z_m_limit"].get(fam, np.nan)) for name, fam in zcol.items()]
+    diffs = np.array([np.asarray(bayes[name], float) - ref for name, ref in cols])
+    diffs = diffs[np.all(np.isfinite(diffs), axis=1)]
+    scale = np.maximum(np.std(diffs, axis=1, keepdims=True), 1e-9)
+    k = int(np.argmin(np.sum((diffs / scale) ** 2, axis=0)))
+    return k, float(np.max(np.abs(diffs[:, k])))
+
+
+def potfile_reference(par: dict[str, Any], mag0: float) -> dict[str, float]:
+    """Best-fit potfile normalisation (``{"sigma", "rcut"}``) from the member at ``mag0``.
+
+    Lenstool scales every potfile member from the reference magnitude ``mag0`` (the input
+    ``.par`` file's potfile ``mag0``), so the best.par member with that magnitude carries
+    sigma* and rcut* themselves. Raises ``ValueError`` when no member has it."""
+    refs = {
+        (p["v_disp"], p["cut_radius"])
+        for p in par["potentials"]
+        if abs(p.get("mag", np.nan) - mag0) < 1e-4
+    }
+    if len(refs) != 1:
+        raise ValueError(f"{par['source']}: {len(refs)} distinct potfile members with mag {mag0}")
+    sigma, rcut = refs.pop()
+    return {"sigma": sigma, "rcut": rcut}
+
+
+def posterior_par(
+    par: dict[str, Any], bayes: Table, row: int, reference: int | dict[str, float]
+) -> dict[str, Any]:
+    """A copy of ``par`` (from :func:`parse_lenstool_par`) with the parameters of bayes ``row``.
+
+    * ``O<i>`` columns replace keywords of the i-th potential (best.par order). A replaced
+      radius drops its ``_kpc`` twin, so the two cannot disagree.
+    * ``Pot0 sigma`` / ``Pot0 rcut`` (the potfile scaling-relation normalisation) multiply
+      ``v_disp`` / ``cut_radius`` of every potential with a ``mag`` (a potfile member) by their
+      ratio to the best-fit values: ``reference`` is best.par's row (:func:`best_sample_index`)
+      or ``{"sigma", "rcut"}`` (:func:`potfile_reference`). The member scaling relations are
+      power laws in luminosity, so this ratio is exact.
+    * ``Redshift of <id>`` columns replace the fixed ``z_m_limit`` redshift of every family on
+      ``<id>``'s ``z_m_limit`` line (one line may list several ids, e.g. Bergamini+2023b's
+      A200.1a B200.2a C200.3a).
+
+    ``sha256`` gets a ``#<Nsample or row>`` suffix so caches keyed on it stay per sample.
+    """
+    pot, potfile, zcol = _bayes_columns(bayes)
+    _check_potential_indices(par, pot)
+    out = copy.deepcopy(par)
+    r = bayes[row]
+    sampled = set()
+    for name, (i, key) in pot.items():
+        p = out["potentials"][i]
+        p[key] = float(r[name])
+        sampled.add((i, key))
+        if key in ("core_radius", "cut_radius"):
+            p[f"{key}_kpc"] = float("nan")
+    for name, kind in potfile.items():
+        ref = reference[kind] if isinstance(reference, dict) else bayes[reference][name]
+        ratio = float(r[name]) / float(ref)
+        key = "v_disp" if kind == "sigma" else "cut_radius"
+        for i, p in enumerate(out["potentials"]):
+            # a member optimised on its own (an O<i> column for this key) is not rescaled
+            if np.isfinite(p.get("mag", np.nan)) and (i, key) not in sampled:
+                p[key] *= ratio
+                if key == "cut_radius":
+                    p["cut_radius_kpc"] = float("nan")
+    groups = par.get("z_m_limit_groups") or [[f] for f in par["z_m_limit"]]
+    for name, family in zcol.items():
+        group = next((g for g in groups if family in g), None)
+        if group is None:
+            raise UnsupportedModelError(f"bayes.dat column {name!r}: no z_m_limit for {family}")
+        for fam in group:
+            out["z_m_limit"][fam] = float(r[name])
+    tag = int(r["Nsample"]) if "Nsample" in bayes.colnames else row
+    out["sha256"] = f"{par['sha256']}#{tag}-{row}"
+    return out
