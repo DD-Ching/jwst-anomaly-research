@@ -1,0 +1,23 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: url, datatype: string}
+# - {name: sha256, datatype: string}
+# - {name: size_bytes, datatype: int64}
+# - {name: retrieved_utc, datatype: string}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: "jwst_anomaly.ogle.FILES (Mr\xF3z et al. 2019, 2020 data products)"}
+# schema: astropy-2.0
+url sha256 size_bytes retrieved_utc
+https://www.astrouw.edu.pl/ogle/ogle4/microlensing_maps/README 9e3e62038163881521d5a895b27ba0980edd502c20dcdb65f772ff4c0d9b2136 2688 2026-10-08
+https://www.astrouw.edu.pl/ogle/ogle4/microlensing_maps/table3.dat ca47555840c808967e9a257dba9071acddd499dc078efb5f5c361b3ec8fef67f 1542323 2026-10-08
+https://www.astrouw.edu.pl/ogle/ogle4/microlensing_maps/table6.dat a3e27a63b597e49563a061480c0ea37ae475e569900549d04dd8a8afa3ad50da 7355 2026-10-08
+https://www.astrouw.edu.pl/ogle/ogle4/microlensing_maps/table7.dat 56455aecadfea463c9ba623d7fe459a552a1017a2532601d3c610057fa24aa2d 10537 2026-10-08
+https://www.astrouw.edu.pl/ogle/ogle4/microlensing_maps/eff.tar.gz dd5ffa37e4860dfb137691f90e93e11278c16bef705c8950d5f4a5bacc133ac1 15845 2026-10-08
+https://www.astrouw.edu.pl/ogle/ogle4/microlensing_maps/phot.tar.gz 5dafa6835b8456b00eb379d1803a6f6dae46bb5eac54fb8c2f809fe4685bfe6f 50731904 2026-10-08
+https://www.astrouw.edu.pl/ogle/ogle4/galactic_disk_microlensing/README a456c9f2f0041b81aa1b3dbc21e0be0b7957e29dae7051cc1d88534270b85f33 2571 2026-10-08
+https://www.astrouw.edu.pl/ogle/ogle4/galactic_disk_microlensing/table_A1.txt 60990a6d207171333c8771b9dcc1240217da80ad7f272d20c5faf3432271a954 139773 2026-10-08
+https://www.astrouw.edu.pl/ogle/ogle4/galactic_disk_microlensing/table_B1.txt 065fea96c0f0343f268c675b3132dd36c2c0243ba6c6a1690b784549fbeec410 131669 2026-10-08
+https://www.astrouw.edu.pl/ogle/ogle4/galactic_disk_microlensing/eff21.tar.gz aacd45898288269573cb73ecd936c96fb0992563f65f6752b63701129d11f563 213175 2026-10-08
+https://www.astrouw.edu.pl/ogle/ogle4/galactic_disk_microlensing/data.tar.gz 74868d53863167ebca08cbbbc2df6214433bfc7382f8ee82705529ca206c93c7 497649 2026-10-08

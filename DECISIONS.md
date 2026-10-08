@@ -2700,3 +2700,27 @@ in docs/orphan_pairs.md).
 
 **Revisit if.** A run gives P < 0.05 under both (e) and (f), or a segmentation-map same_galaxy rule changes the
 orphan counts.
+
+## D-057 W3 in OGLE-IV Mróz samples: one fitter for ordinary and exotic models; disk sample null (2026-10-08)
+
+**Decision.**
+- `jwst_anomaly.ogle.OgleMrozSample` (a D-054 `LightCurveSurvey`) reads the published Mróz et al. 2019 (bulge,
+  5,790 events) and 2020 (disk, 460 events of Table B1) products, pinned by sha256 (`data/manifests/ogle_mroz.ecsv`).
+- `scripts/w3_microlensing.py fit` fits PSPL, FSPL, PSPL+parallax and the exotic `N1neg`, `E2pos`, `E2neg` models on
+  the same straight trajectory with shared linear source/blend fluxes; ΔBIC = BIC(exotic) − min BIC(ordinary).
+  ASSUMPTION: flag at ΔBIC < −10. `vet` then tests refits, robust errors, baseline variability, per-season offsets
+  and drifts, binary source, binary lens, arXiv mentions and VSX / Gaia DR3 variable matches; a flag survives only
+  if every test keeps the exotic preference.
+- **Disk sample (all 460 events): null.** 6 flags (all `E2pos`, ΔBIC −12.6 … −33.8 on first fit); 0 survive. Every
+  flag loses its preference once each season gets a free baseline offset and drift (`derived`).
+
+**Alternatives rejected.** Refitting exotic models in a second library (D-054: geometry must match exactly);
+treating a better exotic fit as a candidate without season-systematics tests (all 6 disk flags were systematics).
+
+**Evidence.** CHANGELOG 2026-10-08 "W3 OGLE-IV disk sample"; contact sheet inspected (sparse peak coverage in
+GD1279.14.87 and GD1081.21.615; post-peak dips below baseline in BLG979.24.9765 and BLG775.24.26593 that a
+per-season drift absorbs). No rate limit yet: injections are built on bulge light curves only.
+
+**Revisit if.** The bulge fit or injections show the season-drift test also absorbs injected W3 signals (then it
+costs sensitivity and needs a calibrated threshold); or the unbounded parallax fit (π_E up to ~10³ in
+BLG568.12.9169) is shown to absorb injected exotic signals.

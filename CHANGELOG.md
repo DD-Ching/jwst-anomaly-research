@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 OGLE-IV disk sample: null (D-057)
+- Cloud run. `jwst_anomaly.ogle` (Mróz et al. 2019/2020 adapter) and `scripts/w3_microlensing.py`
+  (`fit` / `vet` / `sheet` / `inject` / `audit` / `limit` / `manifest` / `summary`). Manifest
+  `data/manifests/ogle_mroz.ecsv`. `www.astrouw.edu.pl` reachable from the cloud (2026-10-08).
+- **Disk (Mróz 2020, all 460 Table B1 events; 525 s on 4 cores):** best ordinary PSPL 406 / PAR 54 / FSPL 0.
+  ΔBIC(min exotic) quantiles 5/50/95 % = −3.9 / 3.6 / 6.9; 6 flags below −10, all `E2pos`. `vet`: 0 survivors;
+  every flag loses the exotic preference under per-season baseline offsets and/or drifts (ΔBIC −4.6 … +8.0), and
+  BLG568.12.9169 is already −5.1 on refit. arXiv 0 mentions, no VSX / Gaia DR3 variable within 1″. Contact sheet
+  inspected: two flags have sparse peak coverage; two have post-peak points below baseline (the Ellis
+  demagnification shape) that one season's drift absorbs.
+- **Limits:** none yet (injections use bulge light curves); the disk null is a flag count, not a rate limit.
+- **Caveats:** unbounded parallax fits reach π_E ~ 30–1,400 (unphysical); they can absorb an exotic signal and cut
+  sensitivity. The season-drift test may also absorb real W3 dips: calibrate both with injections.
+- Timing: the bulge fit is ~1.1 s/event on 4 cores (~1.8 h for 5,790); `fit` checkpoints to
+  `fits_<key>.partial.jsonl`, but cloud disks are ephemeral: fit in chunks per run or locally.
+- **Next:** bound π_E (ASSUMPTION, e.g. |π_E| < 5) and re-fit disk; bulge `fit` (local or chunked), `vet`, `sheet`;
+  `inject` / `limit` with season-drift vetting inside the injection loop.
+
 ## 2026-10-08: W1 shear (aperture-mass) screen: four clusters null; limits 5–8× stronger than radial (D-053)
 - Cloud run. `exotic_screens.py shear` builds D-050: PSF-deconvolved catalogue ε, cluster shear removed, spike
   segments vetoed, Schirmer 10″ aperture-mass S/N map, rotation null, B-mode check. `scripts/inject_shear.py` reuses
