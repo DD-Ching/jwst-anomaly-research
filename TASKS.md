@@ -24,8 +24,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - Abell 2744: UNCOVER v2.0 maps;
    - **Done (D-030):** `validate --model elgordo-caminha23 | abell2744-bergamini23` reproduces Lenstool's χ²
      (82.53 vs 80.22; 146.64 vs 146.60). No image-position anomaly. Next:
-     - `lens_consistency.py images --forced-image` per field (El Gordo: F277W `jw01176-o241_t012`; Abell 2744
-       needs DJA photometry, the 233 MB catalogue, with a DECISIONS entry, because pipeline catalogs miss core arcs);
+     - `images --forced-image`: done for El Gordo (D-034) and Abell 2744 (D-036); 700.1 needs a finer z scan;
      - search radii from `bayes.dat` instead of a fixed 1″;
      - Abell 2744 multiplicity residual (D-030): do `bayes.dat` samples split 3.2a/b, 34.1a/b, 700.1a/b?
      - El Gordo magnification-map check (CDS `magnification_best_fit_z2.fits`) as a `validate` map test.

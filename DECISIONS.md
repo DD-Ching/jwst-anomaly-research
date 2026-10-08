@@ -1765,7 +1765,7 @@ D-034's rules now remove these automatically.
 
 **Evidence.**
 - `validate`: χ² 146.64 against 146.60.
-- `images`, after D-034: absent only for 700.1, which the model cannot reproduce at any z.
+- `images`, after D-034: absent only for 700.1, which the model reproduces at none of the sampled z = 1, 1.5, 2, 3, 5 (a finer z scan is open).
 - `fluxratio`: 30 consistent, 0 under- or overluminous, 3 chromatic (a 602.1 blend).
 - `radial`: 35 peaks against a random mean of 50.4; p ≥ 0.575.
 - Cutouts were inspected for every flag.
