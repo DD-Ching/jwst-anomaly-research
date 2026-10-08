@@ -53,6 +53,8 @@ class Params:
     image_exclusion: float = 0.5  # arcsec: a deflector candidate is not an image
     # arcsec: the LS pair is the catalogued pair when its separation is 2 theta_E (SIS) within this
     sep_match: float = lenscats.PAIR_SEP_TOL
+    # arcsec: decided systems with the same designation this close are one lens listed twice
+    same_lens_radius: float = 30.0
     n_rounded_sample: int = 32  # random rounded-position systems put on a contact sheet
 
 
@@ -334,6 +336,42 @@ def flags_undecided(t: Table, src: Table, p: Params) -> np.ndarray:
             r.append("LS maskbits")
         reasons.append("; ".join(r))
     return np.array(reasons, dtype=object)
+
+
+def dedup_same_lens(t: Table, decided, p: Params) -> tuple[np.ndarray, list[dict]]:
+    """One entry per lens among the decided systems. Catalogues list some lenses twice beyond
+    the merge radius (lenscat: MG0414+0534 about 11'' apart); copies share a designation
+    (``lenscats.designation_key``) within ``same_lens_radius``. Kept: a copy with a deflector (a
+    deflector seen at one catalogued position of the lens explains the lens), else the first copy
+    (the catalogues give no lens-galaxy position to prefer one). Returns the new decided mask and
+    the merged groups."""
+    keep = np.asarray(decided, bool).copy()
+    idx = np.flatnonzero(keep)
+    lab = lenscats.same_lens_groups(
+        np.asarray(t["name"])[idx],
+        np.asarray(t["ra"], float)[idx],
+        np.asarray(t["dec"], float)[idx],
+        p.same_lens_radius,
+    )
+    status = np.asarray(t["test_status"])
+    sid = np.asarray(t["system_id"])
+    merged = []
+    for g in np.unique(lab):
+        m = idx[lab == g]
+        if len(m) < 2:
+            continue
+        defl = m[status[m] == "deflector"]
+        k = defl[0] if len(defl) else m[0]
+        keep[m[m != k]] = False
+        merged.append(
+            {
+                "name": str(t["name"][k]),
+                "kept": str(sid[k]),
+                "kept_status": str(status[k]),
+                "dropped": [f"{sid[j]} ({status[j]})" for j in m if j != k],
+            }
+        )
+    return keep, merged
 
 
 def cmd_screen(args, p: Params) -> None:
@@ -626,6 +664,8 @@ def cmd_vet(args, p: Params) -> None:
     sens = np.isin(res["selection"], ("quasar", "radio"))
     decided = cov & sens & (np.asarray(res["undecided"]) == "")
     decided &= np.isin(res["test_status"], ("deflector", "none"))  # "faint galaxy" undecided
+    n_before_dedup = int(decided.sum())
+    decided, same_lens = dedup_same_lens(res, decided, p)
     cand = res[decided & (res["test_status"] == "none")]
     add_xmatch(cand, p)
     used = np.asarray(res["used_pair"], bool)
@@ -677,6 +717,8 @@ def cmd_vet(args, p: Params) -> None:
     summary["vetting"] = {
         "sensitive_covered": int((cov & sens).sum()),
         "sensitive_decided": int(decided.sum()),
+        "sensitive_decided_before_same_lens_dedup": n_before_dedup,
+        "same_lens_merged": same_lens,
         "no_deflector": len(cand),
         "labels": dict(
             zip(

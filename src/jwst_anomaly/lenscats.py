@@ -443,6 +443,37 @@ def name_position_offset(name: str, ra: float, dec: float) -> float:
     return float(np.hypot(ex_ra, ex_dec))
 
 
+_DESIGNATION = re.compile(r"(?:^|[^0-9])(\d{4})\d*(?:\.\d+)?([+-])(\d{2})")
+
+
+def designation_key(name: str) -> str:
+    """``HHMM+DD`` of a lens designation with survey prefix, J/B, spaces and suffixes such as
+    "*" or "A" removed (MG0414+0534, "B2114+022*", "SDSS J1322+1052" -> 0414+05, 2114+02,
+    1322+10); "" when the name has none. Equal keys plus a small separation identify one lens
+    listed twice (``same_lens_groups``)."""
+    m = _DESIGNATION.search(str(name).replace(" ", ""))
+    return f"{m.group(1)}{m.group(2)}{m.group(3)}" if m else ""
+
+
+def same_lens_groups(names, ra, dec, radius_arcsec: float) -> np.ndarray:
+    """Group label per row: rows with the same ``designation_key`` within ``radius_arcsec`` of
+    each other (transitively) share a label; rows without a designation are their own group.
+    ``derived``."""
+    keys = np.array([designation_key(n) for n in names], dtype=object)
+    n = len(keys)
+    label = np.arange(n)
+    xyz = _unit(np.asarray(ra, float), np.asarray(dec, float)) if n else np.zeros((0, 3))
+    lim = 2 * np.sin(np.radians(radius_arcsec / 3600) / 2)
+    for i in range(n):
+        if not keys[i]:
+            continue
+        for j in range(i + 1, n):
+            if keys[j] == keys[i] and np.linalg.norm(xyz[i] - xyz[j]) <= lim:
+                old, new = max(label[i], label[j]), min(label[i], label[j])
+                label[label == old] = new
+    return label
+
+
 def position_quantum_arcsec(ra: float, dec: float, printed_decimals: int = 5) -> float:
     """Rounding step of a catalogued position (arcsec on the sky); 0 for a precise position.
 

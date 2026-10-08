@@ -248,3 +248,17 @@ def test_brick_coverage_independent_of_sources():
 def test_pair_match():
     m = lenscats.pair_match([2.0, 2.0, np.nan, 3.0], [2.4, 2.6, 2.0, np.nan])
     assert list(m) == [True, False, False, False]
+
+
+def test_designation_key_and_same_lens_groups():
+    assert lenscats.designation_key("MG0414+0534") == "0414+05"
+    assert lenscats.designation_key("B2114+022*") == "2114+02"
+    assert lenscats.designation_key("SDSS J1322+1052") == "1322+10"
+    assert lenscats.designation_key("221216-010345") == "2212-01"
+    assert lenscats.designation_key("[SML2019] MJV16999") == ""
+    d = 1 / 3600
+    names = ["MG0414+0534", "MG0414+0534", "MG0414+0534", "X", "X"]
+    ra = [63.0, 63.0 + 11 * d, 63.0 + 300 * d, 10.0, 10.0]
+    lab = lenscats.same_lens_groups(names, ra, [5.0] * 5, 30.0)
+    assert lab[0] == lab[1] and lab[2] != lab[0]  # 300'' apart: another object
+    assert lab[3] != lab[4]  # no designation: never merged

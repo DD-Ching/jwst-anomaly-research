@@ -182,6 +182,25 @@ def test_pair_check_requires_the_catalogued_pair():
     assert list(mismatch) == [False, True, False, False]
 
 
+def test_dedup_same_lens_keeps_the_deflector_copy():
+    t = Table(
+        {
+            "system_id": ["L1", "L2", "L3", "L4", "L5"],
+            "name": ["MG0414+0534", "MG0414+0534", "B2319+052", "B2319+052", "J1000+0100"],
+            "ra": [63.0, 63.0 + 11 * D, 350.0, 350.0 + 12 * D, 150.0],
+            "dec": [5.0, 5.0, 5.0, 5.0, 1.0],
+            "test_status": ["none", "deflector", "none", "none", "none"],
+        }
+    )
+    keep, merged = w12.dedup_same_lens(t, np.ones(5, bool), w12.Params())
+    assert list(keep) == [False, True, True, False, True]
+    assert [m["kept"] for m in merged] == ["L2", "L3"]
+    assert merged[0]["dropped"] == ["L1 (none)"]
+    # undecided copies are not decided afterwards either
+    keep, _ = w12.dedup_same_lens(t, np.array([True, False, True, True, True]), w12.Params())
+    assert list(keep) == [True, False, True, False, True]
+
+
 def test_radio_used_pair_only_without_galaxy():
     p = w12.Params()
     gal = [(10.0 + 0.3 * D, 0.0, "DEV", 22.0, 20.0, 0)]
