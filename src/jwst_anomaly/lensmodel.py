@@ -1000,6 +1000,8 @@ class LensModel:
             by_z.setdefault(z, []).append(replace(comp, z_lens=z, v_disp=float(sig)))
 
         def ident(comps: list[DPIE]) -> str:  # a plane holds a subset: not the file's hash
+            if not self.sha256:  # in memory: no identity, as for the unsplit model
+                return ""
             text = f"{self.sha256}{comps!r}{_cosmology_key(self.cosmology)}"
             return hashlib.sha256(text.encode()).hexdigest()
 
@@ -1593,7 +1595,11 @@ class MapLensModel(LensModel):
 
 def _cosmology_key(cosmo: FlatLambdaCDM) -> str:
     """The cosmological parameters (not the name or meta) as text, for content hashes."""
-    return repr(sorted((k, str(v)) for k, v in cosmo.parameters.items()))
+
+    def lossless(v: Any) -> str:
+        return f"{np.asarray(getattr(v, 'value', v)).tolist()!r} {getattr(v, 'unit', '')}"
+
+    return repr(sorted((k, lossless(v)) for k, v in cosmo.parameters.items()))
 
 
 def _detached(plane: LensModel) -> LensModel:
@@ -1642,25 +1648,29 @@ class MultiPlaneLensModel:
         self._cos0 = p0._cos0
         self.cosmology = p0.cosmology
         self.source = source or " + ".join(p.source for p in planes)
-        # identity for caches and provenance: each plane's file hash, redshift and potentials, and
-        # the cosmology. A plane with neither a hash nor potentials (an in-memory map) has no
-        # identity, so neither has the model ("": never cached, never matched to a grid).
-        ident = repr(
-            [(p.sha256, p.z_lens, p.components) for p in planes]
-            + [p0.ra0, p0.dec0, _cosmology_key(p0.cosmology)]
-        )
-        anonymous = any(not p.sha256 and not p.components for p in planes)
-        self.sha256 = sha256 or ("" if anonymous else hashlib.sha256(ident.encode()).hexdigest())
+        # identity for caches and provenance (see _identity); fixed when passed in
+        self._fixed_sha256 = sha256
+        self.sha256 = sha256 or self._identity()
         self._d_m = [
             float(self.cosmology.comoving_transverse_distance(p.z_lens).to_value(u.Mpc))
             for p in planes
         ]
         # D_ij / D_j for every pair of planes i < j
         self._ratio = {
-            (i, j): float(planes[i].dls_ds(planes[j].z_lens))
-            for j in range(len(planes))
-            for i in range(j)
+            (i, j): 1.0 - self._d_m[i] / self._d_m[j] for j in range(len(planes)) for i in range(j)
         }
+
+    def _identity(self) -> str:
+        """Each plane's file hash, redshift and potentials, the frame anchor and the cosmology.
+        A plane without a hash (in memory) has no identity, so neither has the model: "" is
+        never cached, and ``find_images`` then cannot check that a grid belongs to it."""
+        if any(not p.sha256 for p in self.planes):
+            return ""
+        ident = repr(
+            [(p.sha256, p.z_lens, p.components) for p in self.planes]
+            + [self.ra0, self.dec0, _cosmology_key(self.cosmology)]
+        )
+        return hashlib.sha256(ident.encode()).hexdigest()
 
     to_frame = LensModel.to_frame
     to_sky = LensModel.to_sky
@@ -1682,6 +1692,8 @@ class MultiPlaneLensModel:
             p.shift_frame(dra_arcsec, ddec_arcsec)
         p0 = self.planes[0]
         self.ra0, self.dec0, self._cos0 = p0.ra0, p0.dec0, p0._cos0
+        # a map plane's deflection at a model-frame point depends on the anchor
+        self.sha256 = self._fixed_sha256 or self._identity()
 
     def _rays(
         self, x: np.ndarray, y: np.ndarray, n_planes: int, jacobian: bool
@@ -1723,7 +1735,8 @@ class MultiPlaneLensModel:
         u_z, inv = np.unique(zs.ravel(), return_inverse=True)
         d_s = np.full(u_z.shape, np.nan)
         fin = np.isfinite(u_z)
-        d_s[fin] = self.cosmology.comoving_transverse_distance(u_z[fin]).to_value(u.Mpc)
+        lensed = fin & (u_z > self.planes[0].z_lens)  # only sources behind some plane
+        d_s[lensed] = self.cosmology.comoving_transverse_distance(u_z[lensed]).to_value(u.Mpc)
         out = []
         for p, d_l in zip(self.planes, self._d_m, strict=True):  # as LensModel.dls_ds
             w = np.where(fin, 0.0, np.nan)
@@ -1773,8 +1786,8 @@ class MultiPlaneLensModel:
         g, shape = grid.x, grid.alpha_x.shape[1:]
         bx = np.broadcast_to(g[None, :], shape).astype(float)
         by = np.broadcast_to(g[:, None], shape).astype(float)
-        for i, p in enumerate(self.planes):
-            r = float(p.dls_ds(z_s))
+        for i, w in enumerate(self._weights(z_s, ())):
+            r = float(w)
             if r:
                 bx -= r * grid.alpha_x[i]
                 by -= r * grid.alpha_y[i]

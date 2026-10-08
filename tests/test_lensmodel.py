@@ -697,9 +697,14 @@ def test_multiplane_shift_frame_leaves_the_caller_planes_alone():
 
 def test_multiplane_identity_tracks_the_cosmology_and_grids_check_their_model():
     comps = list(_cluster_and_galaxy().components)
-    a = LensModel(comps, RA0, DEC0, COSMO).split_planes({"gal": 0.2})
-    b = LensModel(comps, RA0, DEC0, FlatLambdaCDM(H0=50.0, Om0=0.5)).split_planes({"gal": 0.2})
-    assert a.sha256 != b.sha256
+    a = LensModel(comps, RA0, DEC0, COSMO, sha256="f").split_planes({"gal": 0.2})
+    b = LensModel(comps, RA0, DEC0, FlatLambdaCDM(H0=50.0, Om0=0.5), sha256="f")
+    b = b.split_planes({"gal": 0.2})
+    assert a.sha256 and a.sha256 != b.sha256
+    assert LensModel(comps, RA0, DEC0, COSMO).split_planes({"gal": 0.2}).sha256 == ""
+    before = a.sha256
+    a.shift_frame(0.1, 0.0)
+    assert a.sha256 != before
     named = LensModel(comps[1:], RA0, DEC0, FlatLambdaCDM(H0=70.0, Om0=0.3, name="x"))
     lensmodel.MultiPlaneLensModel(
         [LensModel(comps[:1], RA0, DEC0, COSMO), named.split_planes({"gal": 0.2}).planes[0]]
