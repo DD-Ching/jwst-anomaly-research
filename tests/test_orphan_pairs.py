@@ -116,3 +116,37 @@ def test_dark_lens_numbers_scale_with_separation():
     assert np.allclose(t["theta_e"], [0.5, 1.0])
     assert np.isclose(t["mass_e_msun"][1] / t["mass_e_msun"][0], 4.0)
     assert 1e10 < t["mass_e_msun"][0] < 1e12  # theta_E = 0.5" at z_l = 0.4: ~1e11 Msun
+
+
+def test_lens_rules_ignore_fragments_of_a_member_and_report_only_qualifying_lenses():
+    cat, ids = synthetic_catalogue()
+    a = cat[cat["SOURCE"] == ids["injected"][0]]
+    # a fragment 0.1" from member a: not a lens (not clear of both members)
+    frag = cat[:1].copy()
+    frag["SOURCE"], frag["USE_PHOT_APER03"] = 9998, False
+    frag["RA"], frag["DEC"] = a["RA"][0], a["DEC"][0] + 0.1 / 3600.0
+    from astropy.table import vstack
+
+    empty = Table({"image_id": [], "ra": [], "dec": []}, dtype=[str, float, float])
+    pairs, _ = op.search(vstack([cat, frag]), Z_CLUSTER, empty, n_shift=1)
+    sel = [tuple(sorted((int(x), int(y)))) == ids["injected"] for x, y in pairs["id_a", "id_b"]]
+    row = pairs[sel][0]
+    assert row["pair_class"] == "orphan"
+    assert row["lens_source"] == 0
+
+
+def test_select_sources_drops_invalid_long_wavelength_photometry():
+    cat, ids = synthetic_catalogue()
+    k = int(np.flatnonzero(cat["SOURCE"] == ids["injected"][0])[0])
+    assert op.select_sources(cat, Z_CLUSTER)[k]
+    cat["FLUXERR_COLOR03_TOTAL_F444W"][k] = -5.0  # flagged invalid: no summed S/N
+    assert not op.select_sources(cat, Z_CLUSTER)[k]
+
+
+def test_summary_is_strict_json():
+    import json
+
+    raw = {"a": float("nan"), "b": [np.float64(np.inf), 1.0], "c": np.array([np.nan, 2.0])}
+    raw["d"] = np.ma.masked
+    text = json.dumps(op._finite(raw), allow_nan=False)
+    assert json.loads(text) == {"a": None, "b": [None, 1.0], "c": [None, 2.0], "d": None}

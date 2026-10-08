@@ -602,8 +602,13 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 
 ## Orphan-pair search inputs (accessed 2026-10-08; D-045)
 
-Cached under `data/cache/external/canucs/{a370,macs1149,macs0416}/`:
-- `hlsp_canucs_jwst-hst_multi_a370-clu_multi_v1_photometry-cat.fits.gz` (as in docs/fields/abell370.md).
+Pinned in `scripts/orphan_pairs.py` `FIELDS` and fetched by `photometry.fetch_catalog` (cache
+`data/cache/external/<sha256[:12]>_<name>`):
+- CANUCS DR1 photometry catalogues of MACS0416, MACS1149 and Abell 370 (URLs and sha256 above and in
+  docs/fields/abell370.md).
+- The Abell 370 image list is the pinned `abell370-canucs` `arcs.dat` (D-044).
+- MACS0416 `allmultim-cat`:
+  <https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/model/hlsp_canucs_jwst-hst_multi_macs0416-allmultim-cat_multi_v1_model.txt>.
 - MACS1149 Lenstool readme `hlsp_canucs_jwst-hst_multi_macs1149-lenstool-readme_multi_v1_model.txt` 2,198 B
   `aef1cfffaf1865a0f8f2927f4df6fe2b3d44ed5e211aa7dc3f57a97d4651cee1` (no image list until v2).
 - MACS0416 all-multiple-image catalogue (CANUCS `allmultim-cat`) 18,806 B

@@ -40,6 +40,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -76,8 +77,9 @@ CUTOUT_ARCSEC = 4.0
 
 
 _HLSP = "https://archive.stsci.edu/hlsps/canucs/dr1/{f}/{d}/hlsp_canucs_jwst-hst_multi_{f}-{n}"
-# Inputs are downloaded once and verified by sha256 (SOURCES.md, D-045). Image lists are
-# (url, sha256, MODELS name whose frame offset moves the list to the JWST frame, or None).
+# Inputs are downloaded once and verified by sha256 (SOURCES.md, D-045). ``image_lists`` are
+# extra (url, sha256) lists already in the JWST frame; ``image_models`` are lens_consistency
+# MODELS whose pinned image list (and frame offset) is used.
 FIELDS = {
     "macs0416": {
         "catalogue": (
@@ -87,10 +89,9 @@ FIELDS = {
         "z_cluster": 0.396,
         "cats": "macs0416-cats",
         "image_lists": [
-            (
+            (  # CANUCS frame offset under 0.1", not applied (D-044)
                 _HLSP.format(f="macs0416", d="model", n="allmultim-cat_multi_v1_model.txt"),
                 "c8978003d8dd617cb980ed7ba5acde1485cd742db43846c25ed251f110dc2417",
-                None,  # macs0416-canucs: offset under 0.1", not pinned (D-044)
             )
         ],
         "i2d": "jw01208-o004_t002",
@@ -112,13 +113,9 @@ FIELDS = {
         ),
         "z_cluster": 0.375,
         "cats": "abell370-cats",
-        "image_lists": [
-            (
-                _HLSP.format(f="a370", d="model", n="lenstool-multim_multi_v1_model.txt"),
-                "d72c3d98e675e5bc00cfbdd9b84d1b8528b22e36311924fea072293af23ef9e2",
-                "abell370-canucs",  # (-0.148, 0.002)" to the JWST frame (D-044)
-            )
-        ],
+        "image_lists": [],
+        # the pinned CANUCS Lenstool list, moved by its (-0.148, 0.002)" frame offset (D-044)
+        "image_models": ["abell370-canucs"],
         "i2d": "jw01208-o002_t001",
     },
 }
@@ -274,8 +271,10 @@ def classify_pairs(pairs: Table, cat: Table, images: Table, ra0: float, dec0: fl
 
     boxes = overlap("X_MIN", "X_MAX") & overlap("Y_MIN", "Y_MAX")
     same = (sep < SAME_GALAXY_FACTOR * (rad[ci] + rad[cj])) | (deb[ci] & deb[cj] & boxes)
-    # nearest other catalogued source (any redshift, BCGs included) to the midpoint, and to
-    # the segment joining the members (a lens need not sit at the midpoint if the fluxes differ)
+    # Lens tests use only catalogued sources (any redshift, BCGs included) at least LENS_RADIUS
+    # from both members, so a fragment of a member is not a lens. lens_dist is the distance from
+    # the midpoint to the nearest such source (inf: none within 0.5 sep + LENS_RADIUS); line_dist
+    # its distance to the segment joining the members (a lens need not sit at the midpoint).
     good = np.isfinite(x) & np.isfinite(y)
     idx = np.flatnonzero(good)
     tree = cKDTree(np.column_stack([x[idx], y[idx]]))
@@ -472,7 +471,7 @@ def lens_check(top: Table, model_name: str, z_cluster: float) -> Table:
     import lens_consistency as lc
 
     model, _, _ = lc.load_model(model_name)
-    lc.apply_frame_offset(model_name, model)
+    offset = lc.apply_frame_offset(model_name, model)
     zs = np.maximum(
         0.5 * (np.asarray(top["z_a"], float) + np.asarray(top["z_b"], float)), z_cluster + 0.05
     )
@@ -496,7 +495,8 @@ def lens_check(top: Table, model_name: str, z_cluster: float) -> Table:
         top[c] = dl[c]
     top.meta["source"] = (
         f"{top.meta.get('source', 'CANUCS DR1 photometry catalogue')}; magnifications from "
-        f"{model.source} (frame offset applied) and the CANUCS catalogue MU"
+        f"{model.source} (frame offset {offset[0]:+.3f}, {offset[1]:+.3f} arcsec) and the "
+        "CANUCS catalogue MU"
     )
     top.meta["model_prediction_columns"] = [
         "mu_cats_a",
@@ -580,11 +580,12 @@ def load_images(field: str) -> Table:
     cats, _ = lc.image_list(spec["cats"], {}, None)
     lc.shift_images(spec["cats"], cats)
     lists.append(Table({"image_id": cats["image_id"], "ra": cats["ra"], "dec": cats["dec"]}))
-    for url, sha, frame_model in spec["image_lists"]:
-        t = read_image_list(fetch_catalog(url, sha))
-        if frame_model:
-            lc.shift_images(frame_model, t)
-        lists.append(t)
+    for url, sha in spec["image_lists"]:
+        lists.append(read_image_list(fetch_catalog(url, sha)))
+    for name in spec.get("image_models", []):
+        t, _ = lc.image_list(name, {}, None)
+        lc.shift_images(name, t)
+        lists.append(Table({"image_id": t["image_id"], "ra": t["ra"], "dec": t["dec"]}))
     from astropy.table import vstack
 
     out = vstack(lists)
@@ -594,11 +595,17 @@ def load_images(field: str) -> Table:
 
 def _finite(obj):
     """NaN/inf -> None, recursively, so summary.json is strict JSON."""
+    if obj is np.ma.masked:
+        return None
     if isinstance(obj, dict):
         return {k: _finite(v) for k, v in obj.items()}
+    if isinstance(obj, np.ndarray):
+        obj = np.ma.filled(np.ma.asarray(obj).astype(object), None).tolist()
     if isinstance(obj, (list, tuple)):
         return [_finite(v) for v in obj]
-    if isinstance(obj, (float, np.floating)) and not np.isfinite(obj):
+    if isinstance(obj, np.generic):
+        obj = obj.item()
+    if isinstance(obj, float) and not np.isfinite(obj):
         return None
     return obj
 
@@ -615,8 +622,10 @@ def main(argv: list[str] | None = None) -> int:
     spec = FIELDS[args.field]
     out = args.out / args.field
     out.mkdir(parents=True, exist_ok=True)
-    for stale in ("top_orphans.ecsv", "contact_sheet.png"):  # never leave an earlier run's top
+    # never leave an earlier run's outputs next to this run's
+    for stale in ("summary.json", "matched_pairs.ecsv", "top_orphans.ecsv", "contact_sheet.png"):
         (out / stale).unlink(missing_ok=True)
+    shutil.rmtree(out / "cutouts", ignore_errors=True)
     cat = Table.read(fetch_catalog(*spec["catalogue"]))
     images = load_images(args.field)
     pairs, summary = search(cat, spec["z_cluster"], images, args.n_shift, args.seed)
@@ -639,7 +648,9 @@ def main(argv: list[str] | None = None) -> int:
         for row in top
     ]
     (out / "summary.json").write_text(json.dumps(_finite(summary), indent=1, default=str))
-    print(json.dumps({k: v for k, v in summary.items() if k != "top"}, indent=1, default=str))
+    print(
+        json.dumps(_finite({k: v for k, v in summary.items() if k != "top"}), indent=1, default=str)
+    )
     return 0
 
 

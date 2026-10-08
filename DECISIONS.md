@@ -2109,7 +2109,8 @@ tests (removing or rescaling one potential, D-042), which maps do not.
   - visible lens: a catalogued source at least 0.3″ from both members that lies within 0.3″ of the midpoint,
     within 0.3″ of the joining segment, or inside the circle with the pair as diameter.
 - Inputs are pinned by URL and sha256 in `FIELDS` and downloaded on first use; the CANUCS Abell 370 image list is
-  moved to the JWST frame with the `abell370-canucs` offset (D-044). Re-running with these rules (after review)
+  moved to the JWST frame with the `abell370-canucs` offset (D-044). A source with an invalid F277W, F356W or F444W
+  measurement (NaN, or error ≤ 0) has no summed S/N and is dropped. Re-running with these rules (after review)
   reproduced every count below.
 
 **Alternatives rejected.**
