@@ -119,12 +119,13 @@ evidence.
 
 | Mode | Use it when |
 |---|---|
-| Single thread (default) | Sequential, tightly coupled or exploratory work; most cycles |
+| Single thread | Sequential, tightly coupled or exploratory work. Even then, overlap I/O and compute and keep cores busy (owner decision 2026-10-08, Parallelism) |
 | Research subagent | A separable question (tool survey, literature, data-format check) whose raw findings would bloat this context. Keep only its conclusion |
 | `/reuse-check <need>` | Before building any new subsystem or adding a dependency, unless a DECISIONS.md entry covers it and its "Revisit if" doesn't hold |
 | `/batch <instruction>` | CLAUDE.md "Parallel work" criteria hold (3 or more independent units, disjoint files, stable interface landed first) |
 
-When those criteria hold, fan out. Serializing independent units only delays the owner's review. CLAUDE.md "Parallel
+When those criteria hold, fan out. A parallel cloud session claims one unit with a draft PR titled
+`[field: <unit>] ...` within 5 minutes of starting, after checking open PRs and `claude/*` branches for claims. Serializing independent units only delays the owner's review. CLAUDE.md "Parallel
 work" defines ownership. Beyond it:
 - `/batch` plans 5-30 units and asks for plan approval. For 3-4 units, or in unattended runs where nobody can
   approve, spawn parallel subagents with `isolation: worktree` instead.
@@ -134,7 +135,8 @@ work" defines ownership. Beyond it:
 
 - `git switch -c claude/<slug> origin/main`. If the work truly depends on an unmerged PR, branch from that PR's
   branch instead and write "Depends on #N (stacked on `<branch>`)" in the PR body.
-- Follow CLAUDE.md "Layout and contracts". Never commit data; manifests are the record.
+- Follow `src/jwst_anomaly/CLAUDE.md` (stage contracts), `scripts/CLAUDE.md` (search conventions) and
+  `data/manifests/CLAUDE.md` (data and provenance). Never commit data; manifests are the record.
 - Cloud runs: anything not committed is lost when the run ends, and the disk is small. Prefer pipeline catalogs and
   S3 byte-range reads over downloads. A `403` with `x-deny-reason: host_not_allowed` means the host is missing from
   the environment allowlist (docs/operations.md §3). Report it in the handoff; don't work around it.
