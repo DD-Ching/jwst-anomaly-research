@@ -10,14 +10,16 @@ from jwst_anomaly import signatures as sg
 def test_registry_holds_the_searchable_d047_signatures():
     assert sorted(sg.REGISTRY) == ["W1", "W2", "W3", "W5"]
     assert [s.code for s in sg.for_kind("light_curve")] == ["W3"]
-    assert {s.code for s in sg.for_kind("catalogue")} == {"W1", "W2", "W5"}
+    assert {s.code for s in sg.for_kind("catalogue")} == {"W1", "W2"}
+    assert [s.code for s in sg.for_kind("count_map")] == ["W5"]
     w3 = sg.get("W3")
     lc = w3.predict(np.array([0.0, 1.0]), 0.0, 10.0, 0.5)
     assert lc[0] == 0.0  # negative mass bound: u0 = 0.5 is inside the umbra (u < 2)
     assert sg.get("W2").lens == {"n": 2.0, "sign": 1} and sg.get("W1").lens["sign"] == -1
     w1 = sg.get("W1").inject([3.0], [0.0], 1.0)
     assert len(w1) == 2 and (w1["dx"] > 0).all()  # both images on the source's side
-    assert sg.get("W5").limits_doc == ""
+    assert sg.get("W5").limits_doc == "docs/exotic_limits.md"
+    assert "D-063" in sg.get("W5").decisions
     with pytest.raises(KeyError, match="registered"):
         sg.get("W9")
     with pytest.raises(ValueError, match="already registered"):

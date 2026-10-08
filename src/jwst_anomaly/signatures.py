@@ -4,9 +4,9 @@ Each signature of D-047 (W1 negative-mass radial pair with an empty umbra, W2 El
 deflector, W3 inverted-microlensing light curve, W5 count deficit) is one :class:`Signature` entry:
 how it is predicted and injected (``exotic_sim``, ``simulated``), which screens implement it, on
 which kind of survey data it runs, and where its vetting rules and limits are recorded. A new
-survey enters through a thin adapter that satisfies :class:`LightCurveSurvey` or
-:class:`CatalogueSurvey`, and new screens take the adapter. The JWST screens registered below
-predate the layer and still read JWST level-3 catalogues directly.
+survey enters through a thin adapter that satisfies :class:`LightCurveSurvey`,
+:class:`CatalogueSurvey` or :class:`CountMapSurvey`, and new screens take the adapter. The JWST
+screens registered below predate the layer and still read JWST level-3 catalogues directly.
 
 Exotic physics is a hypothesis: a screen flag is an anomaly, not evidence, until every ordinary
 explanation has been tested (/vet-candidate), and a null result is reported as a limit.
@@ -24,7 +24,7 @@ from astropy.table import Table
 
 from jwst_anomaly import exotic_sim, schema
 
-DATA_KINDS = ("catalogue", "light_curve", "image")
+DATA_KINDS = ("catalogue", "count_map", "light_curve", "image")
 
 
 @dataclass(frozen=True)
@@ -161,13 +161,22 @@ register(
     Signature(
         code="W5",
         name="background-count deficit inside about theta_E",
-        data_kinds=("catalogue",),
+        data_kinds=("count_map",),
         predict=_bound(exotic_sim.count_ratio, _NEG),
+        # count-map injection is map-level (countmap.inject_deficit thins pixel counts with the
+        # exotic_sim profile from countmap.deficit_profile); it is not an exotic_sim image injector
         inject=None,
-        screens=(),
-        ordinary_mimics=("masks and bright-star halos", "deblending", "cosmic variance"),
-        limits_doc="",  # no W5 screen or limit yet
-        decisions=("D-047",),
+        screens=("scripts/w5_counts.py screen", "scripts/w5_counts.py inject"),
+        ordinary_mimics=(
+            "masks and bright-star halos",
+            "depth and dust variations",
+            "survey edges",
+            "deblending and crowding",
+            "magnification-bias depletion behind galaxy clusters",
+            "voids and cosmic variance",
+        ),
+        limits_doc=_LIMITS,
+        decisions=("D-047", "D-063"),
         lens=_NEG,
     )
 )
@@ -207,6 +216,24 @@ class CatalogueSurvey(Protocol):
     name: str
 
     def catalogue(self) -> Table: ...
+
+    def area_deg2(self) -> float: ...
+
+
+@runtime_checkable
+class CountMapSurvey(Protocol):
+    """An imaging survey aggregated to galaxy counts per HEALPix pixel (W5, D-063).
+
+    ``count_map()`` has one row per ``nest`` pixel at ``nside``: at least ``pix``, ``n_gal``
+    (selected galaxies, ``observed``) and ``w`` (unmasked fraction of the pixel). Count maps are
+    used where a per-object catalogue would be a multi-GB download for a statistic that needs
+    only counts, mask and depth.
+    """
+
+    name: str
+    nside: int
+
+    def count_map(self) -> Table: ...
 
     def area_deg2(self) -> float: ...
 

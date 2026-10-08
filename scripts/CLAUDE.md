@@ -1,7 +1,7 @@
 # scripts — search conventions (screen / vet / inject / limit)
 
 Root CLAUDE.md applies. Per-search recipes and their failed-approach rules are directory-scoped skills in
-`scripts/.claude/skills/` (`w3-survey`, `w12-lenscats`); load the one for the search you touch.
+`scripts/.claude/skills/` (`w3-survey`, `w5-counts`, `w12-lenscats`); load the one for the search you touch.
 
 ## Every exotic search
 - Phases: prediction (`exotic_sim`) → screen → vet (cheapest ordinary test first) → injection-recovery → limit.
@@ -15,6 +15,8 @@ Root CLAUDE.md applies. Per-search recipes and their failed-approach rules are d
   stated in the efficiency).
 - Look at the contact sheet of flags and survivors yourself before concluding.
 - Thresholds are ASSUMPTIONs, named in `Params`; outputs carry provenance labels.
+- Tracked outputs under `results/` stay small (< 1 MB each); JSON writers end the file with a newline (pre-commit's
+  end-of-file-fixer runs in CI).
 
 ## Parallel topology (owner decision 2026-10-08)
 - Classify each stage: I/O-bound → 8–16 concurrent HTTP connections or range reads with back-off on 429/5xx —

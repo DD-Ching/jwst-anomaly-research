@@ -961,3 +961,45 @@ Exploration Program."
   2026-10-08: RP histogram within 0.3° of (279.148°, −23.767°) for the luminosity-function slope (D-062).
 - Rejected readers (D-062): merida 0.3.2 (https://pypi.org/project/merida/), qusi 1.5.6
   (https://pypi.org/project/qusi/).
+
+## W5 count-deficit screen (accessed 2026-10-08; D-063)
+
+- Legacy Surveys DR10 Tractor `ls_dr10.tractor` via NOIRLab Astro Data Lab TAP (https://datalab.noirlab.edu/tap),
+  aggregated server-side per `nest4096` pixel in 2° × 2° chunks (three queries per chunk:
+  `countmap.chunk_queries`); regions RA 20–40° and 50–70°, Dec −30° to −20° (DES-wide area). The service output is
+  not pinned (it may change); chunk FITS files are cached under `$JWST_ANOMALY_DATA/cache/w5_counts/`. The ADQL
+  front end rejected sub-selects, CASE, SIGN and GROUP BY on expressions on 2026-10-08, and returned HTTP 502 for
+  ~30 min the same evening. Cite Dey et al. 2019 (AJ 157, 168) and https://www.legacysurvey.org/acknowledgment/
+- Galaxy number counts N(< r) of the same selection: `results/w5_counts/numcounts.ecsv` (observed; boxes in its
+  meta).
+- Legacy Surveys DR10 random catalogues (Myers et al. 2023, arXiv:2208.08518, doi:10.3847/1538-3881/aca5f9;
+  ~19.9 GB per file, not used): https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr10/south/randoms/
+- astropy-healpix 2.0.1 (BSD-3-Clause; https://pypi.org/project/astropy-healpix/) for nest4096 geometry. Rejected:
+  healpy 1.20.1 (GPL-2.0, no Windows wheels; https://pypi.org/project/healpy/), healsparse 1.15.0 and hpgeom
+  (GPL-3.0-or-later; https://pypi.org/project/healsparse/), Pylians 0.12 (https://pypi.org/project/pylians/).
+- Gaia DR3 `gaiadr3.gaia_source` (G < 9) via the ESA TAP service https://gea.esac.esa.int/tap-server/tap, queried
+  2026-10-08, for the bright-star vetting test.
+- Wen & Han 2024, galaxy clusters from the DESI Legacy Surveys and WISE, ApJS 272, 39 (VizieR J/ApJS/272/39,
+  table2; M500 ≥ 3 × 10¹⁴ M☉ and z ≤ 0.6 used), queried 2026-10-08 through astroquery.vizier, for the
+  cluster-depletion test.
+- HyperLEDA PGC (Paturel et al. 2003, A&A 412, 45; VizieR VII/237/pgc), galaxies with D25 ≥ 1′ (logD25 ≥ 1.0 in
+  log 0.1′), queried 2026-10-08, for the large-galaxy (sky over-subtraction) test.
+- Safonova, Torres & Romero 2001, "Macrolensing signatures of large-scale violations of the weak energy
+  condition", MPLA 16, 153, arXiv:astro-ph/0104075, doi:10.1142/S0217732301003188: the W5 "central void" in the
+  background galaxy field.
+- Safonova & Torres 2002, "Degeneracy in exotic gravitational lensing", MPLA 17, 1685, arXiv:gr-qc/0208039,
+  doi:10.1142/S0217732302008083.
+- Broadhurst, Taylor & Peacock 1995, ApJ 438, 49, arXiv:astro-ph/9406052, doi:10.1086/175053, and Umetsu &
+  Broadhurst 2008, ApJ 684, 177, arXiv:0712.3441, doi:10.1086/589683: count depletion behind clusters by
+  magnification bias (the main ordinary mimic).
+- Amendola, Frieman & Waga 1999, MNRAS 309, 465, arXiv:astro-ph/9811458, doi:10.1046/j.1365-8711.1999.02841.x:
+  lensing by voids (mimic context).
+- Void finders considered and not used: VIDE (Sutter et al. 2015, arXiv:1406.1191); REVOLVER (Nadathur et al. 2019,
+  arXiv:1904.01030); DES SV photometric voids (Sánchez et al. 2017, arXiv:1605.03982). DES Y6 Gold (Bechtol et al.
+  2025, arXiv:2501.05739) and HSC-SSP PDR3 (Aihara et al. 2022, arXiv:2108.13045) masks not used.
+
+- Rejected lensed-quasar candidates and controls (D-064, `data/manifests/w12_niq_inputs.json` has URLs, bytes, sha256;
+  accessed 2026-10-08), VizieR ASU-TSV `https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=<ID>&-out.max=5000&-out.all`:
+  Lemon et al. 2023, MNRAS 520, 3305 (arXiv:2206.07714), `J/MNRAS/520/3305/table1`; Inada et al. 2008, AJ 135, 496,
+  `J/AJ/135/496/table2,table3`; Inada et al. 2010, AJ 140, 403, `J/AJ/140/403/table2,table3`; Inada et al. 2012,
+  AJ 143, 119, `J/AJ/143/119/table3,table4`; Hennawi et al. 2006, AJ 131, 1, `J/AJ/131/1/binqso`.

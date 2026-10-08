@@ -9,7 +9,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    `feature_coverage`). **The published samples cannot limit W3:** 0 of 600 injected W3 events pass the emulated Mróz
    selection (PSPL controls 15–43 %), so the chunk re-fits only re-test a selection that excludes the signal. Next:
    light curves from **before** a PSPL selection. **MOA-II 9-year Cut-0 light curves keep W3 (D-062):** gb22
-   null (30 flags, 0 survive); D-063 re-run with the calibrated baseline test and 200 LF-drawn injections per cell:
+   null (30 flags, 0 survive); D-TBD re-run with the calibrated baseline test and 200 LF-drawn injections per cell:
    Γ₉₅ ≈ 1.1–3.3 × 10⁻⁶ per star per yr (t_E 10–300 d; 4–7 × 10⁻⁶ at 3 d). Next: stream the Nunota et al. 2024
    Table 1 fields, smallest first (`w3_moa.py --field gbN run-field`; gb21, gb20, gb19 …), then `combine`. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
    injections both selected and flagged; one real flag, not a candidate). Next: Gaia DR3 variables with epoch
@@ -20,10 +20,12 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.27 (typical) for quasar/radio-selected
    lenses, the only selections sensitive to a dark lens). Next: HSC PDR3 photometry or PSF-subtracted HST
    image models for the 307 blended or too-close lensed quasars (makes the test decisive; HST *catalogue* photometry
-   is not: D-060, efficiency 0.46); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar candidates ("nearly identical quasars", binary quasars) where a dark lens
-   would hide; HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
+   is not: D-060, efficiency 0.46); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar pairs: LS DR10 cannot decide them
+   (D-064, control efficiency 0/5 at 1.9–2.6″); the 11 colour-matched ones need HST/Euclid/HSC image models or spectra; port D-064's LS-pair = catalogued-pair
+   check (`w12_niq` `pair_match`) into the shared D-056 quasar pair test and re-run D-056; HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
-3. **W5:** background-count deficits around empty regions in a wide survey, with calibrated nulls.
+3. **W5** (D-063): Legacy Surveys DR10, 340.5 deg², 40 flags, 0 survivors; n₉₅ ≈ 0.012–0.018 deg⁻² at θ_E = 8–32′.
+   Next: HSC / Euclid counts for θ_E < 6′; a larger contiguous area for θ_E ≈ 1°.
 4. **Warp:** monitor the literature (checked 2026-10-08: no distant-observer EM template — Lentz & Felton 2024 give fluxes only; Clough et al.
    2024 waveform not public; O3 superluminal-burst search already null, Kuwahara & Cannon 2023). Recheck monthly.
 
