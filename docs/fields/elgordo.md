@@ -67,6 +67,15 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
     search circles hold 9–32 DJA sources each, so a flux and colour match cannot discriminate.
   - **Result: inconclusive; no candidate.**
 - **Frame:** DJA v7.0 sits at dRA +0.224″, dDec −0.016″ (median) relative to the RELICS/HST frame of the image list.
+- **Flux ratios and colours (D-032):** `lens_consistency.py --model elgordo-caminha23 fluxratios --photometry
+  <DJA v7.0 fix_phot> --photoz <DJA v7.0 zout> --offset-arcsec 0.221 -0.018`.
+  - 37 of 56 images have a DJA counterpart. 23 images in 11 systems are flux-tested (leave-one-out rms 0.49 mag)
+    and 11 are colour-tested (rms 0.07 mag).
+  - The flagged pair 18b/18c (1.16 mag) is a faint-counterpart failure: 18b has forced S/N 0.3–4. So is 7b/7c,
+    flagged only at 0.5″ without the shift: its ratio changes from −0.16 to −1.48 mag between F200W and F277W.
+    **No anomaly.**
+  - 9a's counterpart is a z_phot 0.89 object (95 %: 0.73–0.99), not the z = 4.32 image. 9c's counterpart has
+    z_phot 3.62.
 
 ## Run
 
