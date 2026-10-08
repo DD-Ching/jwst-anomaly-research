@@ -652,3 +652,65 @@ Pinned in `scripts/orphan_pairs.py` `FIELDS` and fetched by `photometry.fetch_ca
   - Kassiola & Kovner 1993, ApJ 417, 450, doi:10.1086/173325, "Elliptic Mass Distributions versus Elliptic
     Potentials in Gravitational Lenses" (Crossref, checked 2026-10-08);
   - arXiv:0710.5636, Elíasdóttir et al., "Where is the matter in the Merging Cluster Abell 2218?"
+
+## Exotic-lensing predictions (D-047)
+
+All accessed 2026-10-08. Each ID was fetched from the arXiv API (export.arxiv.org); journal DOIs were checked on
+Crossref. The papers marked "full text" were read in their arXiv source for the formulas used in
+`src/jwst_anomaly/exotic_sim.py`; the others were checked from the abstract.
+- Wormholes and negative masses:
+  - arXiv:1211.0379, Kitamura, Nakajima & Asada, PRD 87, 027501 (2013), doi:10.1103/PhysRevD.87.027501 (full
+    text): α = ε̄/bⁿ; 2/(n+1) is their leading-order, large-n estimate of the demagnification onset; n = 10
+    onset at β = 0.187 (numerical); Fig. 2c (n = 3) minimum A ≈ 0.865, read from the figure pixels.
+  - arXiv:1305.5037, Izumi et al., PRD 88, 024049 (2013), doi:10.1103/PhysRevD.88.024049 (full text): λ_±, κ, γ;
+    radial images for ε < 0; voids as negative convergence.
+  - arXiv:1307.6637, Kitamura et al., "Microlensed image centroid motions by an exotic lens object with negative
+    convergence or negative mass", PRD 89, 084020 (2014), doi:10.1103/PhysRevD.89.084020 (full text): θ_E for
+    any n and sign; centroid shifts.
+  - arXiv:1009.6084, Abe, ApJ 725, 787 (2010), doi:10.1088/0004-637X/725/1/787 (full text): Ellis α = πa²/(4b²),
+    R_E, gutters of about 4 %, inner-image values at β = 2 and 3.
+  - arXiv:1107.5374, Toki, Kitamura, Asada & Abe, "Astrometric Image Centroid Displacements due to Gravitational
+    Microlensing by the Ellis Wormhole", ApJ 740, 121 (2011), doi:10.1088/0004-637X/740/2/121: µas centroid
+    shifts.
+  - arXiv:gr-qc/0105070, Safonova, Torres & Romero, PRD 65, 023001 (2002), doi:10.1103/PhysRevD.65.023001 (full
+    text): caustic at 2θ_E, umbra, A = (u² − 2)/(u√(u² − 4)).
+  - arXiv:astro-ph/9409051, Cramer et al., PRD 51, 3117 (1995), doi:10.1103/PhysRevD.51.3117: negative-mass light
+    curves differ qualitatively from MACHO ones.
+  - arXiv:astro-ph/9802106, Torres, Romero & Anchordoqui, "Might some gamma ray bursts be an observable signature
+    of natural wormholes?", PRD 58, 123001 (1998), doi:10.1103/PhysRevD.58.123001: negative-mass density
+    ≲ O(10⁻³⁶) g cm⁻³.
+  - arXiv:gr-qc/9805075, Torres, Romero & Anchordoqui, "Wormholes, Gamma Ray Bursts and the Amount of Negative Mass
+    in the Universe", MPLA 13, 1575 (1998), doi:10.1142/S0217732398001650: an essay version of the same bound.
+  - arXiv:1303.1301, Takahashi & Asada, ApJL 768, L16 (2013), doi:10.1088/2041-8205/768/1/L16: SDSS quasar-lens
+    limits (see "Existing observational limits").
+  - arXiv:1302.7170, Yoo, Harada & Tsukamoto, "Wave Effect in Gravitational Lensing by the Ellis Wormhole", PRD 87,
+    084045 (2013), doi:10.1103/PhysRevD.87.084045: n ≲ 10⁻⁹ AU⁻³ for a ~ 1 cm from femtolensing.
+  - arXiv:1711.04560, Tsukamoto & Gong, "Extended source effect on microlensing light curves by an Ellis
+    wormhole", PRD 97, 084051 (2018), doi:10.1103/PhysRevD.97.084051: an extended source makes the gutter
+    shallower.
+  - arXiv:gr-qc/0104076, Eiroa, Romero & Torres, "Chromaticity effects in microlensing by wormholes", MPLA 16, 973
+    (2001), doi:10.1142/S021773230100398X: finite-source colour signatures (not used numerically).
+- Warp drives:
+  - arXiv:gr-qc/0009013, Alcubierre, "The warp drive: hyper-fast travel within general relativity", CQG 11, L73
+    (1994), doi:10.1088/0264-9381/11/5/001.
+  - arXiv:gr-qc/9907019, Clark, Hiscock & Larson, CQG 16, 3965 (1999), doi:10.1088/0264-9381/16/12/313: view from
+    inside the bubble.
+  - arXiv:1107.5650, Müller & Weiskopf, "Detailed study of null and time-like geodesics in the Alcubierre Warp
+    spacetime", GRG 44, 509 (2011), doi:10.1007/s10714-011-1289-0.
+  - arXiv:gr-qc/0110086, Natário, "Warp Drive With Zero Expansion", CQG 19, 1157 (2002),
+    doi:10.1088/0264-9381/19/6/308.
+  - arXiv:2006.07125, Lentz, "Breaking the Warp Barrier: Hyper-Fast Solitons in Einstein-Maxwell-Plasma Theory",
+    CQG 38, 075015 (2021), doi:10.1088/1361-6382/abe692.
+  - arXiv:2102.06824, Bobrick & Martire, "Introducing Physical Warp Drives", CQG 38, 105009 (2021),
+    doi:10.1088/1361-6382/abdf6e.
+  - arXiv:2104.06488, Fell & Heisenberg, "Positive Energy Warp Drive from Hidden Geometric Structures", CQG 38,
+    155020 (2021), doi:10.1088/1361-6382/ac0e47.
+  - arXiv:2406.02466, Clough, Dietrich & Khan, "What no one has seen before: gravitational waveforms from warp
+    drive collapse", OJAp 7 (2024), doi:10.33232/001c.121868 (full text): flat exterior; f ~ 300 kHz and
+    h ~ 10⁻²¹ at 1 Mpc for a 1 km bubble.
+  - arXiv:2205.15950, Schuster, Santiago & Visser, "ADM mass in warp drive spacetimes", GRG 55, 14 (2023),
+    doi:10.1007/s10714-022-03061-9.
+  - arXiv:1202.5708, McMonigal, Lewis & O'Byrne, "The Alcubierre Warp Drive: On the Matter of Matter", PRD 85,
+    064024 (2012), doi:10.1103/PhysRevD.85.064024.
+  - arXiv:2608.10800, Fell & Loeb, "Radiative Signatures from Warp Drives Traveling Through the Earth's
+    Atmosphere" (2026, preprint).
