@@ -40,11 +40,12 @@ from jwst_anomaly import countmap as cm
 from jwst_anomaly import exotic_sim as es
 from jwst_anomaly import paths, schema
 
-# Two disjoint DES-wide regions of DR10 south (uniform ~10-epoch depth, r_5σ,gal ≈ 24.8, b < −45°,
+# Two disjoint 10° × 10° DES-wide regions of DR10 south (halved from 20° × 10° so one cloud run can
+# fetch both, ~1.7 chunks/min from Data Lab) (uniform ~10-epoch depth, r_5σ,gal ≈ 24.8, b < −45°,
 # E(B−V) ≲ 0.04). Each calibrates the null of the other (ASSUMPTION: statistically alike).
 REGIONS = {
-    "desA": cm.Region("desA", 20.0, 40.0, -30.0, -20.0),
-    "desB": cm.Region("desB", 50.0, 70.0, -30.0, -20.0),
+    "desA": cm.Region("desA", 20.0, 30.0, -30.0, -20.0),
+    "desB": cm.Region("desB", 50.0, 60.0, -30.0, -20.0),
 }
 MAG_LIM = 23.5
 CELL = 0.25  # arcmin, base raster cell

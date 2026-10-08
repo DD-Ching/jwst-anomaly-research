@@ -47,4 +47,4 @@ def test_theta_mass_geometry():
 def test_regions_are_disjoint_and_chunked():
     a, b = w5.REGIONS.values()
     assert a.ra_max <= b.ra_min
-    assert len(a.chunks()) == 50 and len(b.chunks()) == 50
+    assert len(a.chunks()) == 25 and len(b.chunks()) == 25
