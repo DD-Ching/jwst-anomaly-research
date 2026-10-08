@@ -2847,3 +2847,20 @@ keeping chunk tables only under `$JWST_ANOMALY_DATA` (lost with each ephemeral s
 so all 12 chunks stay ~2–3 MB, under the 1 MB per-file rule.
 
 **Revisit if.** The tracked tables exceed ~10 MB in total, or a local session can fit the whole sample at once.
+
+## D-060 W2 deflector test at HST resolution: the Hubble Source Catalog is not decisive (2026-10-08)
+
+**Decision.** Do not use HSC v3 catalogue photometry to decide whether a lensed quasar lacks a deflector.
+`scripts/w12_hsc_probe.py` stays as the reproducible probe and as the validation harness (known-lens efficiency)
+for a pixel-level replacement.
+
+**Alternatives rejected.** Counting HSC "none" systems toward f_dark (efficiency 0.46 on known lenses would need a
+correction larger than the signal); widening the deflector radius or lowering the CI cut (the lens galaxy is
+missing from the catalogue, not mis-typed, in the four inspected misses: H1413+117, HE1104−1805, SBS0909+532, HE2149−2745).
+
+**Evidence** (`derived`, run 2026-10-08). 444 quasar/radio systems; 71 with HSC sources in ≥ 2 HSC images (91 with any); known-lens systems
+13 deflector / 15 none / 38 undecided (sources in ≥ 2 HSC images; 15 / 20 / 48 without that cut); no-lens-z systems 1 none (HS0810+2554) / 4 undecided. Tests:
+`tests/test_w12_hsc_probe.py`.
+
+**Revisit if.** PSF-subtracted HST image models (or another deeper/sharper survey) reach an efficiency ≥ 0.9 on
+the known-lens set; HSC v4 or a lens-aware HST catalogue appears.

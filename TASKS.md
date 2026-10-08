@@ -13,8 +13,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    re-fit the bulge under D-058's bounded π_E (`merge-chunks`, then `vet` + `revet`; can only add flags); re-run the
    6 arXiv name queries that errored.
 2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.27 (typical) for quasar/radio-selected
-   lenses, the only selections sensitive to a dark lens). Next: HSC PDR3 / HST photometry for the 307 blended or
-   too-close lensed quasars (makes the test decisive); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar candidates ("nearly identical quasars", binary quasars) where a dark lens
+   lenses, the only selections sensitive to a dark lens). Next: HSC PDR3 photometry or PSF-subtracted HST
+   image models for the 307 blended or too-close lensed quasars (makes the test decisive; HST *catalogue* photometry
+   is not: D-060, efficiency 0.46); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar candidates ("nearly identical quasars", binary quasars) where a dark lens
    would hide; HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
 3. **W5:** background-count deficits around empty regions in a wide survey, with calibrated nulls.

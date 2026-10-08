@@ -911,3 +911,5 @@ Cite Mróz et al. as their pages ask; data are pinned in `src/jwst_anomaly/ogle.
   (recorded as −1 in the vetting record, so they can be re-run).
 - Mróz et al. 2017, Nature 548, 183 (reference list of arXiv:1906.02210): the nine high-cadence bulge fields,
   whose events are in the 2019 optical-depth analysis but whose light curves are not in `phot.tar.gz`.
+- Hubble Source Catalog v3 (Whitmore et al. 2016, AJ 151, 134), summary `magaper2` via the MAST catalogs API
+  `https://catalogs.mast.stsci.edu/api/v0.1/hsc/v3/summary/magaper2.csv` (cone search; accessed 2026-10-08; D-060).
