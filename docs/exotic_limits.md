@@ -217,8 +217,9 @@ annulus. Its zero efficiency is by construction.
    - A lensed row is **removed** and replaced by its images, which take positions and signed μ from
      `exotic_sim.inject_images`.
 2. **Painting.**
-   - Each image gets |μ| × the row's SED, plus fresh Gaussian noise drawn from the row's own errors in every band.
-     The errors stay the row's (sky-limited).
+   - Each image gets |μ| × the row's (already noisy) SED. Fresh Gaussian noise of √max(1 − μ², 0) × the row's
+     errors tops a demagnified image up to the row's own noise; a magnified image keeps |μ| × the row's noise
+     (slightly conservative). The errors stay the row's (sky-limited).
    - Photo-z and catalogue μ are inherited.
    - Kron radius: √(r_psf² + (r² − r_psf²) s²), with s = max(1/|λ_t|, 1/|λ_r|). r_psf is the 5th percentile of
      the selected sources' radii (0.15–0.17″ in CANUCS, 0.34″ in DJA).
@@ -237,8 +238,8 @@ annulus. Its zero efficiency is by construction.
    4″, a row with valid S/N bands and ≥ 8 valid bands: 108.1 arcmin² in total, 9.8–9.9 arcmin² per flanking
    field and 58.7 arcmin² for GOODS-N.
    - **No-candidate limit:** 2.996 / Σ εA. It assumes every orphan is ordinary.
-   - **Background-aware limit:** s₉₅ / Σ εA, where s₉₅ = 72.2 is the classical 95 % upper limit on a Poisson
-     signal. The inputs are 355 observed orphans over a known background of 315.4 (null (e), summed). This is the
+   - **Background-aware limit:** s₉₅ / Σ εA, where s₉₅ = 72.3 is the CLs 95 % upper limit (Read 2002) on a Poisson
+     signal, which never collapses to 0 when fewer events than the background are observed. The inputs are 355 observed orphans over a known background of 315.4 (null (e), summed). This is the
      defensible number: about 40 faint orphans cannot be told apart from lensed pairs.
 
 Reproduce:
@@ -307,7 +308,7 @@ Reading:
   deblending failures and photometric-pipeline effects are not modelled, apart from the explicit merge rule.
 - **Photo-z.** The images inherit the source's photo-z intervals, so the z-overlap test is passed by
   construction. This is optimistic for faint counter-images, whose real photo-z could scatter.
-- **Noise.** Fresh noise uses the source's errors. The PSF-convolved size model is approximate. The DJA
+- **Noise.** Magnified images carry |μ| × the row's noise, demagnified ones are topped up to it. The PSF-convolved size model is approximate. The DJA
   same_galaxy radius is calibrated on CANUCS (D-051).
 - **Single deflector redshift** z_l = 0.4 and single source redshift z_s = 2 for the masses. A real population
   spread in z_l would change the mass scale, not the angular efficiency.

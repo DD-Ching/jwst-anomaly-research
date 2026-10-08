@@ -741,6 +741,10 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
 
 ## Deep-field orphan-pair screen (accessed 2026-10-08; D-051)
 
+- A. L. Read, "Presentation of search results: the CLs technique", J. Phys. G 28, 2693 (2002),
+  doi:10.1088/0954-3899/28/10/313 (checked on Crossref 2026-10-08): the background-aware limit in
+  `scripts/inject_pairs.py` (`poisson_signal_ul`).
+
 Pinned by URL and sha256 in `scripts/orphan_pairs.py` (`DEEP_FIELDS`); downloaded with `photometry.fetch_catalog`.
 - **CANUCS DR1 NIRCam flanking-field (NCF) photometry + EAzY photo-z**, same format and readme as the cluster
   catalogues (https://archive.stsci.edu/hlsps/canucs/dr1/webpage/hlsp_canucs_jwst-hst_multi_v1_photometry-cat_readme.txt,

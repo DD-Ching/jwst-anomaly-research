@@ -66,7 +66,7 @@ from scipy.stats import chi2 as chi2_dist
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from jwst_anomaly import paths, schema  # noqa: E402
+from jwst_anomaly import acquire, paths, schema  # noqa: E402
 from jwst_anomaly.photometry import BAD_FLAGS, fetch_catalog  # noqa: E402
 
 SEP_MIN, SEP_MAX = 0.3, 3.0  # arcsec, the orphan-pair annulus (task definition)
@@ -1023,32 +1023,45 @@ def _in_region(s_region: str, ra: float, dec: float) -> bool:
 def deep_i2d_uris(mast: tuple[str, list[str]], tgt: Table) -> dict[str, list[str]]:
     """Per band, the S3 URI of a level-3 ``_i2d`` covering each target ("" if none).
 
-    One MAST observation query and one product listing per band (batched over targets); the
-    observation is the first, by obs_id, whose footprint contains the target."""
+    One MAST observation query and one product listing per band (batched over targets). For
+    each target the observation is the first, by obs_id, that covers it in every band, so all
+    panels of a pair come from one visit; only when none does is it chosen band by band."""
     from jwst_anomaly import query
 
     program, prefixes = mast
-    out = {}
+    obs_by_band, hits = {}, {}  # hits[band][target] = covering observation prefixes, in order
     for b in CUTOUT_BANDS:
         obs = query.query_observations(
             proposal_id=program, instrument_name="NIRCAM/IMAGE", filters=b.upper(), calib_level=3
         )
         ids = query.str_values(obs["obs_id"])
         obs = obs[[any(i.startswith(p) for p in prefixes) for i in ids]]
-        chosen = []
-        for r in tgt:
-            hit = [
-                o for o in obs if _in_region(str(o["s_region"]), float(r["ra"]), float(r["dec"]))
+        obs_by_band[b] = obs
+        hits[b] = [
+            [
+                str(o["obs_id"]).split("_nircam_")[0]
+                for o in obs
+                if _in_region(str(o["s_region"]), float(r["ra"]), float(r["dec"]))
             ]
-            chosen.append(str(hit[0]["obs_id"]) if hit else "")
-        need = obs[[str(i) in set(chosen) for i in obs["obs_id"]]]
+            for r in tgt
+        ]
+    chosen = {b: [] for b in CUTOUT_BANDS}
+    for t in range(len(tgt)):
+        common = [o for o in hits[CUTOUT_BANDS[0]][t] if all(o in hits[b][t] for b in CUTOUT_BANDS)]
+        for b in CUTOUT_BANDS:
+            chosen[b].append(common[0] if common else (hits[b][t][0] if hits[b][t] else ""))
+    out = {}
+    for b in CUTOUT_BANDS:
+        obs = obs_by_band[b]
+        want = set(chosen[b])
+        need = obs[[str(i).split("_nircam_")[0] in want for i in obs["obs_id"]]]
         prods = query.list_products(need, subgroups=("I2D",), cloud_uris=True) if len(need) else []
         by_obs = {}
         for p in prods:
             name = str(p["productFilename"])
             if name.endswith(f"_nircam_clear-{b}_i2d.fits") and str(p["cloud_uri"]):
                 by_obs[name.split("_nircam_")[0]] = str(p["cloud_uri"])
-        out[b] = [by_obs.get(c.split("_nircam_")[0], "") if c else "" for c in chosen]
+        out[b] = [by_obs.get(c, "") if c else "" for c in chosen[b]]
     return out
 
 
@@ -1064,11 +1077,7 @@ def fetch_tar_member(spec: dict, cache_dir: Path | None = None) -> Path:
     msha = spec["member_sha256"].lower()
     target = cache / f"{msha[:12]}_{Path(spec['member']).name}"
     if target.exists():
-        h = hashlib.sha256()
-        with open(target, "rb") as fh:
-            while chunk := fh.read(1 << 20):
-                h.update(chunk)
-        if h.hexdigest() == msha:
+        if acquire.sha256_file(target) == msha:
             return target
         target.unlink()
 

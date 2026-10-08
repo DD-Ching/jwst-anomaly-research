@@ -16,8 +16,9 @@ detection. Every threshold is an ASSUMPTION (constants below; docs/exotic_limits
 Painting (per lensed catalogue row; the row itself is removed):
 
 - image positions and signed magnifications from ``exotic_sim.inject_images``;
-- fluxes: ``|mu| x`` the row's SED plus fresh Gaussian noise with the row's own errors in every
-  band (sky-limited: the error does not grow with |mu|); errors = the row's errors;
+- fluxes: ``|mu| x`` the row's (noisy) SED, plus fresh Gaussian noise of sqrt(max(1 - mu^2, 0))
+  times the row's errors, so the scatter is max(|mu|, 1) x the row's errors (the row's own noise
+  is scaled with it); errors = the row's errors (sky-limited);
 - photo-z (z_low, z16, z84, z_best) and the catalogue mu are inherited from the row;
 - size: Kron aperture radius ``sqrt(r_psf^2 + (r^2 - r_psf^2) s^2)``, with s the larger
   stretch 1/|lambda| and r_psf the 5th percentile of the selected sources' radii;
@@ -106,14 +107,16 @@ def surface_density_limit(exposure_deg2: float, n_ul: float = POISSON_UL_95) -> 
 
 
 def poisson_signal_ul(n_obs: int, background: float, cl: float = 0.95) -> float:
-    """Classical upper limit s on a Poisson signal over a known background b:
-    the s with P(N <= n_obs | s + b) = 1 - cl (0 when even s = 0 is excluded)."""
+    """CLs upper limit s on a Poisson signal over a known background b (Read 2002): the s with
+    P(N <= n_obs | s + b) / P(N <= n_obs | b) = 1 - cl. Unlike the classical limit it never
+    collapses to 0 (excluding every density) when fewer events than b are observed."""
     from scipy.optimize import brentq
     from scipy.stats import poisson
 
-    f = lambda s: poisson.cdf(n_obs, s + background) - (1.0 - cl)  # noqa: E731
-    if f(0.0) <= 0:
-        return 0.0
+    if not (np.isfinite(background) and background >= 0):
+        raise ValueError(f"poisson_signal_ul: background must be finite and >= 0, not {background}")
+    p_b = poisson.cdf(n_obs, background)
+    f = lambda s: poisson.cdf(n_obs, s + background) / p_b - (1.0 - cl)  # noqa: E731
     hi = max(10.0, 3.0 * (n_obs + 10))
     return float(brentq(f, 0.0, hi))
 
@@ -204,7 +207,12 @@ def paint(field: Field, lx: float, ly: float, theta_e: float, ltype: str, rng, r
         else:
             idx = list(np.asarray(im["image"], int))
         for k in range(len(mus)):
-            f = mus[k] * flux[s] + rng.normal(0.0, 1.0, flux.shape[1]) * np.nan_to_num(err[s])
+            # the catalogue flux already carries its noise, scaled here by mu; add fresh noise only
+            # up to the image's own (sky-limited) error, so the scatter is max(mu, 1) sigma
+            extra = np.sqrt(max(1.0 - mus[k] ** 2, 0.0))
+            f = mus[k] * flux[s] + extra * rng.normal(0.0, 1.0, flux.shape[1]) * np.nan_to_num(
+                err[s]
+            )
             out_rows.append((ix[k], iy[k], f, r_img[k]))
             inj_src.append(int(s))
             inj_img.append(int(idx[k]))
@@ -223,7 +231,10 @@ def paint(field: Field, lx: float, ly: float, theta_e: float, ltype: str, rng, r
     base["deblend"] = False
     base["src_id"] = -(np.asarray(inj_src, int) * 10 + np.asarray(inj_img, int) + 1)
     base["inj_src"], base["inj_img"] = inj_src, inj_img
-    base.meta.update(provenance=schema.Provenance.SIMULATED.value)
+    base.meta.update(
+        provenance=schema.Provenance.SIMULATED.value,
+        source=f"exotic_sim images painted into {base.meta.get('source', 'the catalogue')}",
+    )
     return removed, base, src
 
 
@@ -305,7 +316,12 @@ def per_source(field: Field, ltype: str, theta_e: float, n: int, rng) -> Table:
         )
     names = ("row", "beta", "mag", "n_images", "n_selected", "matched", "cls", "recovered", "sep")
     t = Table(rows=rows, names=names) if rows else Table(names=names)
-    t.meta.update(provenance=schema.Provenance.DERIVED.value, lens=ltype, theta_e=theta_e)
+    t.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source=f"orphan-pair screen on {field.name} with injected {ltype} pairs",
+        lens=ltype,
+        theta_e=theta_e,
+    )
     return t
 
 
@@ -400,7 +416,7 @@ def combine(results: list[dict], orphans: dict[str, tuple[int, float]]) -> dict:
     n_obs = sum(v[0] for v in orphans.values())
     bkg = sum(v[1] for v in orphans.values())
     s95 = poisson_signal_ul(n_obs, bkg)
-    keys = sorted({k for r in results for k in r["runs"]})
+    keys = sorted(set.intersection(*(set(r["runs"]) for r in results)))  # run in every field
     for k in keys:
         ltype, te = k.split(":")
         te = float(te)
@@ -434,7 +450,9 @@ def combine(results: list[dict], orphans: dict[str, tuple[int, float]]) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--fields", nargs="+", default=list(DEEP), choices=sorted(op.FIELDS))
+    # deep fields only: combine converts theta_E to mass at Z_LENS_REF, which a cluster field
+    # (its own lens redshift) would silently misreport
+    ap.add_argument("--fields", nargs="+", default=list(DEEP), choices=sorted(DEEP))
     ap.add_argument("--lenses", nargs="+", default=list(LENSES), choices=list(LENSES))
     ap.add_argument("--theta-e", nargs="+", type=float, default=list(THETA_E))
     ap.add_argument("--n-lens", type=int, default=N_LENS)
@@ -465,13 +483,15 @@ def main(argv: list[str] | None = None) -> int:
         p = args.orphans / f / "summary.json"
         if p.exists():
             s = json.loads(p.read_text())
-            orphans[f] = (
-                int(s["classes"]["orphan"]),
-                float(s["null_e_conditioned"]["expected_by_class"]["orphan"]),
-            )
+            expected = s["null_e_conditioned"]["expected_by_class"]["orphan"]
+            if expected is None:  # NaN in the field run (no z-overlapping far pairs)
+                raise SystemExit(f"error: {f}: null (e) orphan expectation undefined")
+            orphans[f] = (int(s["classes"]["orphan"]), float(expected))
+    missing = [f for f in args.fields if f not in orphans]
+    if missing:  # the background-aware limit needs every field's observed and expected orphans
+        raise SystemExit(f"error: no orphan_pairs summary for {missing}; run orphan_pairs.py first")
     summary = combine(results, orphans)
     summary["fields"] = results
-    summary["missing_orphan_runs"] = [f for f in args.fields if f not in orphans]
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "limits.json").write_text(json.dumps(op._finite(summary), indent=1))
     print(json.dumps(op._finite({k: v for k, v in summary.items() if k != "fields"}), indent=1))

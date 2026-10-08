@@ -2411,15 +2411,15 @@ file lists; lenspack source (https://github.com/CosmoStat/lenspack); Schneider 1
 - **Two new nulls.** (d) is the z-overlap match rate at 3–6″. (e) is null (c) conditioned on fainter-member S/N,
   larger-member size and LW/SW colour. Both are new keys; the D-048 keys are unchanged.
 - **Injection-recovery.** `scripts/inject_pairs.py` paints simulated pairs into the real catalogue
-  (docs/exotic_limits.md "W2"). Lensed rows are removed and replaced by |μ|-scaled copies of their SED with fresh
-  noise. Two images closer than the catalogue's 2nd-percentile nearest-neighbour separation (0.24–0.30″) merge
+  (docs/exotic_limits.md "W2"). Lensed rows are removed and replaced by |μ|-scaled copies of their SED (scatter max(|μ|, 1) ×
+  the row's errors). Two images closer than the catalogue's 2nd-percentile nearest-neighbour separation (0.24–0.30″) merge
   into one row. The unchanged orphan rules then decide recovery.
   - Lens types: point mass (sanity), W2 Ellis (n = 2) and W1 negative mass (n = 1, ε < 0, β ∈ [2, 4] θ_E).
   - θ_E ∈ {0.15, 0.3, 0.7, 1.5}″.
   - Per-source (400) and per-deflector (2000) trials per field, type and θ_E.
 - **Limits.** Two 95 % limits on the surface density, each over Σ ε_f A_f (108.1 arcmin² searched):
   - **no-candidate:** 2.996 / Σ ε_f A_f;
-  - **background-aware:** s₉₅ = 72.2 / Σ ε_f A_f, for 355 orphans observed against 315.4 expected.
+  - **background-aware:** s₉₅ = 72.3 (CLs) / Σ ε_f A_f, for 355 orphans observed against 315.4 expected.
 - **Stated reason for the > 200 MB downloads** (CLAUDE.md):
   - **Catalogue, 223.8 MB.** The GOODS-N DJA catalogue is the only file with the matched-aperture fluxes, and
     FITS tables are row-major, so a byte-range read cannot skip columns. It is pinned with `max_bytes` 230 MB.

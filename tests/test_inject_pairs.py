@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from astropy.table import Table
 
 from jwst_anomaly import exotic_sim
@@ -127,3 +128,11 @@ def test_per_lens_efficiency_is_bounded_and_counts_lensed_sources():
     assert 0.0 <= res["efficiency"] <= res["frac_with_images"] <= 1.0
     src = ip.per_source(field, "point", 0.7, 5, np.random.default_rng(4))
     assert len(src) == 5 and set(src.colnames) >= {"mag", "recovered", "cls"}
+
+
+def test_background_aware_limit_never_excludes_every_density():
+    # CLs: fewer orphans than the null predicts still gives a positive limit
+    assert ip.poisson_signal_ul(285, 315.4) > 0
+    assert abs(ip.poisson_signal_ul(0, 0.0) - 2.9957) < 1e-3  # no background: the usual 3.0
+    with pytest.raises(ValueError):
+        ip.poisson_signal_ul(10, float("nan"))
