@@ -2,6 +2,25 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Exotic-lens screens; SMACS null (D-031)
+- New `scripts/exotic_screens.py`:
+  - `fluxratio`: two-band forced photometry, luminosity ratio against sibling images, compactness and chromatic
+    gates;
+  - `radial`: anti-tangential arcs whose axes converge on a dark centre, with a false-alarm rate from randomised
+    position angles.
+- SMACS:
+  - fluxratio: 6 compact images consistent, 0 flags. A first, single-band compactness gate had flagged system 7,
+    an ordinary knot-vs-whole-arc mismatch;
+  - radial (background sources only): 12 centres against a null mean of 9.0 (p95 15); max 4 lines, p 0.945.
+  - **No exotic candidate.**
+- **Failed approaches (now rules):**
+  - fixed-aperture flux ratios on resolved arcs: surface brightness is conserved, so the ratios scale with 1/|μ|
+    (systems 5 and 10);
+  - a single-band compactness gate (knots of a clumpy arc pass in F150W);
+  - a uniform-angle null for the radial screen (the selected arcs point at the mass centre).
+- **Handoff:** fan out per cluster (El Gordo, Abell 2744, Sunrise, then HFF/RELICS). Each runs `validate`,
+  `images --forced-image`, `exotic_screens fluxratio` and `radial`, with contact sheets of all flags.
+
 ## 2026-10-08: `find_images` 3–5× faster with identical images
 - Seeds are pre-filtered with boolean sign tests on the mapped grid corners, and Newton steps run for every seed in
   one `fields_xy` call.

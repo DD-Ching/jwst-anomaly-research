@@ -648,13 +648,15 @@ ERR_SCALE = 1.5  # ERR underestimates the noise by 1.2-1.5x (D-027 amendment)
 MIN_VALID = 0.8  # minimum finite fraction of aperture and annulus pixels (ASSUMPTION)
 
 
-def aperture_snr(img, err, xx, yy, cx: float, cy: float) -> tuple[float, float]:
-    """Background-subtracted flux and error in a ``FORCED_R_AP`` aperture at offset (cx, cy).
+def aperture_snr(
+    img, err, xx, yy, cx: float, cy: float, r_ap: float = FORCED_R_AP
+) -> tuple[float, float]:
+    """Background-subtracted flux and error in an ``r_ap`` aperture at offset (cx, cy).
 
     ``xx``/``yy`` are each pixel's offset from the target in arcsec (West, North). NaN when fewer
     than ``MIN_VALID`` of the aperture or annulus pixels are finite (gaps, edges, masks)."""
     r = np.hypot(xx - cx, yy - cy)
-    ap = r <= FORCED_R_AP
+    ap = r <= r_ap
     ann = (r > FORCED_ANNULUS[0]) & (r < FORCED_ANNULUS[1])
     good = np.isfinite(img) & np.isfinite(err)
     if not ap.any() or good[ap].mean() < MIN_VALID or good[ann].mean() < MIN_VALID:
