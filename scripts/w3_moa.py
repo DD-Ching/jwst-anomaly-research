@@ -1698,7 +1698,7 @@ def write_vetting_summary() -> Path:
         ],
     }
     path = results_dir() / f"vetting_{FIELD}.json"
-    path.write_text(json.dumps(rec, indent=1, default=float, ensure_ascii=False))
+    path.write_text(json.dumps(rec, indent=1, default=float, ensure_ascii=False) + "\n")
     return path
 
 
