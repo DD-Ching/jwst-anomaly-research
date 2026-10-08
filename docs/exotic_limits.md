@@ -727,3 +727,146 @@ ordinary lens of that θ_E).
 - Relation to D-051: D-051 limits dark deflectors per unit area in JWST deep fields. This is a per-lens fraction in
   published lens lists; the two are not combinable without a lensing cross-section model.
 - Prior art: Jackson, Helbig & Browne 1998 found lens galaxies in 12 of 12 JVAS/CLASS lenses (astro-ph/9804136).
+
+## W3 in the OGLE-IV microlensing samples
+
+D-057; `src/jwst_anomaly/ogle.py` (adapter), `scripts/w3_microlensing.py`
+(`fit`, `vet`, `revet`, `sheet`, `inject`, `audit`, `limit`, `summary`, `manifest`), tests in
+`tests/test_ogle.py` and `tests/test_w3_microlensing.py`. Run outputs live under
+`$JWST_ANOMALY_DATA/derived/w3_ogle/` (not in git); data pins in SOURCES.md "OGLE-IV microlensing
+samples" and `data/manifests/ogle_mroz.ecsv`.
+
+Question: in the published, homogeneous OGLE-IV samples, does any event fit a negative-mass (n = 1,
+ε < 0) or Ellis (n = 2) lens better than ordinary microlensing? Published photometry and fits are
+**observed**; our fits, ΔBIC and limits are **derived**; injected events are **simulated**; the
+t_E → |M| conversion is a **model_prediction**. A better exotic fit is an anomaly to vet, never
+evidence of exotic physics.
+
+### Data (observed)
+
+| Sample | Events fitted | Fields with efficiencies | Monitored sources | ΔT |
+|---|---|---|---|---|
+| Mróz et al. 2019 bulge (low-cadence) | 5,790 | 112 | 6.13 × 10⁸ (I < 21, Table 7) | 2,741 d |
+| Mróz et al. 2020 Galactic plane (GVS) | 460 (Table B1) | 1,982 | 1.86 × 10⁹ (database stars, Table A1; ASSUMPTION ≈ N_s) | 2,650 d |
+
+The nine high-cadence bulge fields of Mróz et al. 2017 are outside this sample (no light curves in
+`phot.tar.gz`); the 170 "possible" plane events of Table B2 failed the published selection and are
+not used.
+
+### Method (every threshold an ASSUMPTION, `Params` in the script)
+
+1. **One trajectory, one flux solve.** Source positions come from MulensModel's trajectory
+   (`Model.get_trajectory`; the annual-parallax basis is affine in π_E and is reproduced to 1e-10,
+   test). F = f_s A + f_b from one weighted linear least squares per model, with the published
+   bounds f_b ≥ −F_min (I = 20.5) and f_s ≥ 0.
+   - Ordinary: PSPL (equal to MulensModel `point_source` to 1e-12); FSPL (uniform disk) when the
+     PSPL u₀ < 0.1, cross-checked against `finite_source_uniform_WittMao94`; PSPL + annual parallax
+     when t_E ≥ 20 d.
+   - Exotic (`exotic_sim`): `N1neg` (n = 1, ε < 0), `E2pos` (Ellis, n = 2), `E2neg` (n = 2, ε < 0),
+     each with a uniform-disk source of free ρ, so the caustic spikes are capped. The exact disk
+     integral runs within 10ρ of a singular radius, a tabulated point-source magnification
+     (2 × 10⁻⁴ accurate against `exotic_sim`, test) elsewhere.
+   - Nelder–Mead from grids (published fit; PSPL bump; absolute t_E; both caustic spikes placed on
+     pairs of light-curve maxima), best starts plus a restart. ΔBIC = BIC(exotic) − min BIC(ordinary),
+     flag at ΔBIC < −10.
+2. **Vetting, cheapest first** (`vet`, then `revet` for the last three, which need the survivors' fits):
+   refit with FSPL and parallax for every flag; isolated 4σ outliers removed and errors rescaled to
+   χ²/dof = 1; baseline variability; free blend per observing season; free blend **and** linear drift
+   per season; binary source (xallarap proxy); binary lens (VBMicrolensing through MulensModel);
+   VSX and Gaia DR3 variability matches (CDS XMatch, 1″); arXiv mentions of both names; then
+   **feature coverage** (are there ≥ 3 epochs where the exotic and the best ordinary model differ by
+   > 3σ, and does the Δχ² come from them?); a **jackknife** (drop the most influential epochs and
+   refit; at most 3, and never fewer than 3 left inside the feature, so a short, well-sampled W3 event
+   survives it; skipped with exactly 3 feature epochs); and **two unrelated events** (two independent PSPL bumps, the second started at the
+   epoch that favours the exotic fit most outside ±2 t_E). The `revet` tests are checked on synthetic
+   W3 events in the unit tests but are not run in the injection loop.
+3. **Selection emulation** (`published_selection`): Mróz et al. 2019 Table 2. Not emulated: n_DIA ≥ 3
+   (difference-image centroids), the s < 0.4 artifact statistic, neighbours brightened together, the
+   moving search window (one window on the brightest 3-point mean here), the human inspection, and the
+   unpublished bump-counting rule. **Audit on the 5,790 published bulge events, which all passed the
+   real selection: 63.9 % pass the emulation** (per cut: F_b 78 %, χ²_fit,tE 87 %, χ²_out 98 %, every
+   other cut ≥ 98 %), so the emulation is somewhat stricter than the original, mostly on blending.
+4. **Injection-recovery** (`inject`): 400 bulge events with χ²/dof ≤ 1.5 give real cadences and noise
+   (PSPL subtracted, residuals rescaled to the baseline). 600 W3 events (n = 1, ε < 0; u₀ ~ U[0, 2),
+   t₀ ~ U over the efficiency window, t_E ∈ {3, 10, 30, 100, 300} d, ρ ∈ {0.01, 0.1}, 60 per cell)
+   and 300 PSPL controls (u₀ ~ U[0, 1)) on the same light curves.
+
+### Results (derived)
+
+| Sample | Events | Flags (ΔBIC < −10) | After vetting |
+|---|---|---|---|
+| bulge 2019 | 5,790 (0 fit failures) | 127 (E2pos 96, E2neg 22, N1neg 9; ΔBIC −10.2 … −2788; 45 fields) | **0** |
+| plane 2020 | 460 | 6 (all E2pos; −12.6 … −33.8) | **0** |
+
+- Best ordinary model, bulge: PSPL 5,377, parallax 401, FSPL 12. ΔBIC (best exotic) quantiles
+  5/25/50/75/95 % = −3.6 / 3.8 / 5.7 / 6.6 / 12.0; 554 events (9.6 %) have any ΔBIC < 0.
+- Bulge vetting, cumulative: 127 → 113 (refit with all ordinary models) → 80 (robust errors,
+  isolated outliers) → 73 (variable baseline) → 14 (**free blend per season**) → 9 (season drifts)
+  → 7 (binary source; binary lens removed none further) → 7 (9 flags matched VSX or Gaia DR3
+  variables, none of them still alive) → 1 (feature coverage) → 1 (jackknife) → **0** (two unrelated
+  events).
+- The last two tests matter: of the 7 flags that passed everything else, five differ from the best
+  ordinary model by < 3σ anywhere, or put their caustic spike in an observing gap (0–2 epochs inside
+  the feature; BLG603.25.29679 has 2, and loses the preference when its most influential epoch is
+  dropped, ΔBIC −15.2 → +0.4). BLG519.21.110304 (OGLE-2011-BLG-0589; 4 epochs in the feature, ΔBIC −14.2 after
+  one dropped) is an N1neg fit with f_s ≈ 0.01 that puts one caustic spike on the published 2011 event
+  and the other on three points of a 1-day brightening in September 2015 (JD 2457277.5–2457278.7, ~6σ),
+  with an umbra too shallow to see. Two unrelated PSPL bumps (the 2011 event plus a t_E ≈ 2.7 d bump)
+  fit better by ΔBIC 24.4: an ordinary second brightening (a flare or a second lens), not W3.
+  The survivors' light curves with every model curve were inspected (scratch contact sheet).
+- Plane sample: every flag loses its preference once each season gets a free baseline offset (D-057).
+- Wall time: bulge `fit` 10,413 s (5,790 events, 4 cores, 1.8 s per event), `vet` 6,592 s (127 flags,
+  2 cores, including the binary-lens fits), plane `fit` 1,423 s, `inject` 1,974 s (900 injections,
+  2 cores). ~5 CPU hours in total.
+
+### What the published samples can contain (simulated)
+
+| t_E (d) | \|M\| (M☉, model_prediction) | flagged and cheaply vetted (ρ = 0.01 / 0.1) | flagged and vetted (both ρ) | **passes the published selection** | PSPL control passes |
+|---|---|---|---|---|---|
+| 3 | 1.7 × 10⁻³ | 0.35 / 0.52 | 0.43 | **0.00** | 0.15 |
+| 10 | 1.8 × 10⁻² | 0.62 / 0.38 | 0.50 | **0.00** | 0.27 |
+| 30 | 0.17 | 0.88 / 0.75 | 0.82 | **0.00** | 0.35 |
+| 100 | 1.8 | 0.93 / 0.78 | 0.86 | **0.00** | 0.43 |
+| 300 | 17 | 0.93 / 0.78 | 0.86 | **0.00** | 0.15 |
+
+- **0 of 600** injected W3 events pass the emulated published selection, in every t_E, ρ and u₀ bin
+  (u₀ < 1, 1–1.8, 1.8–2). The fitter finds them (42–97 % flagged; 35–93 % also survive the cheap
+  vetting), so the loss is the selection, not the search. The cuts they fail, in order of how often:
+  one bump (70 %), χ²_fit/dof ≤ 2 of the PSPL fit (66 %), χ₃₊ ≥ 32 (60 %), three consecutive 3σ
+  points (51 %), F_b > −F_min (49 %); the median injected event fails four cuts at once.
+- This is the D-054 selection caveat, measured: a PSPL-shaped finder cannot select a light curve
+  whose signal is an umbra between two spikes. It also means the 5,790 + 460 published events are not
+  a W3-complete sample, and the null above is a statement about *PSPL-selected* events only.
+
+### Limit (derived)
+
+**No W3 event-rate limit follows from these samples.** With zero recovered injections, the measured
+W3 efficiency is 0 and the 95 % limit is formally infinite. What can be stated:
+
+- The 95 % Poisson upper bound on the recovery fraction is 3/60 per cell, i.e. ε_W3 / ε_PSPL < 0.12–0.33
+  depending on t_E. Even at that bound the rate limit would be no stronger than 0.8–3.9 × 10⁻⁸ per
+  monitored star per year (`rate95_floor_per_star_yr` in `limits_bulge2019.ecsv`), against a measured
+  ordinary event rate of 5–25 × 10⁻⁶ per star per year (Mróz et al. 2019, Table 7). A real W3 limit
+  therefore needs a search run on the OGLE light curves **before** the PSPL selection, not on the
+  published event lists.
+- Scale: for n = 1, θ_E = √(κ |M| π_rel), D_L = 4 kpc, D_S = 8 kpc, μ_rel = 5 mas/yr (ASSUMPTION),
+  t_E = 73.7 d (|M|/M☉)^½ — the grid above covers 1.7 × 10⁻³ to 17 M☉ of |negative| mass.
+- D-052's JWST limits (above) are per compact source per year in three deep fields; they are not
+  combinable with a Galactic per-star rate without a lens-population model.
+
+### Caveats
+
+- The emulated selection is stricter than the published one (64 % pass rate on real events), so the
+  "0 of 600" is an upper bound on W3 selectability only up to that factor; the injected events fail
+  four cuts on average, so a factor ~1.6 cannot change the conclusion.
+- Detection efficiencies are the published PSPL ones; they are not W3 efficiencies, which is the point
+  of this section.
+- The injection noise model (residual rescaling by √F with a 0.3 floor) is an ASSUMPTION; blending uses
+  each host event's own f_s.
+- This bulge run predates D-058, so its parallax fits are unbounded and a few reach |π_E| ~ 10³. That is
+  conservative for the null (a more flexible ordinary model can only remove exotic flags), but the flag list under
+  the bounded fitter may be longer; the D-059 chunk tables are the re-fit under the current `Params`.
+- Binary-lens fits are a 54-start grid with a 600-evaluation local search, not a global search; they
+  are a vetting test, not a characterisation.
+- Only the published samples were used; OGLE EWS seasons wait for the owner's decision on their terms
+  (D-054).

@@ -898,4 +898,8 @@ Cite Mróz et al. as their pages ask; data are pinned in `src/jwst_anomaly/ogle.
 - Skowron et al. 2016, Acta Astron. 66, 1 (reference list of arXiv:1906.02210): error-bar correction
   already applied to the published photometry.
 - Vetting catalogues via CDS XMatch (astroquery 0.4.11): AAVSO VSX `B/vsx/vsx`; Gaia DR3 variability
-  classification `I/358/vclassre`. Literature: arXiv API `all:"<event name>"` (export.arxiv.org).
+  classification `I/358/vclassre`. Literature: arXiv API `all:"<event name>"` (export.arxiv.org); the
+  per-name queries are rate-limited and returned an error for 6 of 212 bulge names on 2026-10-08
+  (recorded as −1 in the vetting record, so they can be re-run).
+- Mróz et al. 2017, Nature 548, 183 (reference list of arXiv:1906.02210): the nine high-cadence bulge fields,
+  whose events are in the 2019 optical-depth analysis but whose light curves are not in `phot.tar.gz`.
