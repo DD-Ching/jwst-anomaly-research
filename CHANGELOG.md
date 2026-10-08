@@ -26,7 +26,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Final /code-review fixes (cloud run): the forced-stage SIMBAD/NED label read non-existent `*_otype` columns
   (always empty; now `best_match_*` of `crossmatch.XMATCH_COLUMNS`); `calibrated` is False when an epoch image was
   unreadable; the dead saturated-star branch of `bright_neighbour` removed (`near_star` covers it). Counts and
-  limits unchanged (no survivor reached the cross-match).
+  limits unchanged (no survivor reached the cross-match). A failed SIMBAD/NED service is now named in
+  `forced.ecsv` meta (`n_<service>` == -1), `inject` also treats `unread_images` as uncalibrated, and
+  `check_params` guards the saturated-star / near_star coupling (#77).
 
 ## 2026-10-08: Orphan-pair cutout footprints: frame-token polygons, deterministic visit order
 - Cloud run. Review follow-ups to #73 that its final squash did not carry: `_in_region` parses `POLYGON ICRS …`

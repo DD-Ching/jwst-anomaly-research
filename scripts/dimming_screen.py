@@ -532,7 +532,9 @@ def ordinary_columns(
     bright_nb = np.zeros(n, bool)
     i, j, _, _ = pos.search_around_sky(pos, p.bright_neighbour_arcsec * u.arcsec)
     # a saturated star with a NaN catalogue flux needs no case here: as a Gaia star brighter than
-    # gaia_saturated_g it sets near_star out to exclusion_radius (>= 3.8") > bright_neighbour_arcsec
+    # gaia_saturated_g it sets near_star out to exclusion_radius (3.77" at G = 18), which must
+    # reach past bright_neighbour_arcsec (checked in check_params)
+    check_params(p)
     with np.errstate(invalid="ignore"):
         hit = (i != j) & (fref[j] >= p.bright_neighbour_ratio * fref[i])
     bright_nb[i[hit]] = True
@@ -548,6 +550,17 @@ def ordinary_columns(
         "single_epoch": det[:, :, 0].sum(axis=1) == 1,
         "n_epochs_detected": det[:, :, 0].sum(axis=1),
     }
+
+
+def check_params(p: Params) -> None:
+    """Parameter couplings the vetoes rely on."""
+    r_sat = float(exclusion_radius(np.array([p.gaia_saturated_g]))[0])
+    if r_sat < p.bright_neighbour_arcsec + p.gaia_self_arcsec:
+        raise ValueError(
+            f"exclusion_radius(gaia_saturated_g) = {r_sat:.2f} arcsec must be >= "
+            "bright_neighbour_arcsec + gaia_self_arcsec, or saturated stars with NaN catalogue "
+            "flux escape both near_star and bright_neighbour"
+        )
 
 
 def gaia_proximity(pos: SkyCoord, gaia: Table | None, p: Params = DEFAULT_PARAMS):
@@ -951,6 +964,31 @@ RHO_GRID = (0.01, 0.1)  # source radius / Einstein radius (D-047 recommended pai
 DEPTHS = (0.2, 0.5, 1.0)
 
 
+XMATCH_SERVICES = ("simbad", "ned")
+
+
+def known_object_labels(xm: Table, uids: list[str]) -> tuple[list[str], list[str]]:
+    """``service:type:id`` of the best match per uid ('' when none) from a ``crossmatch.crossmatch``
+    table, and the services that failed or were not queried for any row (``n_<service>`` == -1),
+    whose silence is not evidence of "unknown"."""
+    by_uid = {str(r["source_uid"]): r for r in xm}
+    labels = []
+    for uid in uids:
+        r = by_uid[uid]
+        known = bool(r["is_known_object"])
+        labels.append(
+            f"{r['best_match_service']}:{r['best_match_type']}:{r['best_match_id']}"
+            if known
+            else ""
+        )
+    failed = [
+        s
+        for s in XMATCH_SERVICES
+        if f"n_{s}" not in xm.colnames or (np.asarray(xm[f"n_{s}"], int) < 0).any()
+    ]
+    return labels, failed
+
+
 def cmd_inject(args) -> dict:
     p = Params()
     field = load_field(args.config, args.field)
@@ -967,8 +1005,10 @@ def cmd_inject(args) -> dict:
     if fs.exists():
         meta = Table.read(fs).meta
         infl = meta.get("inflation_vs_catalogue") or {}
-        calibrated = bool(meta.get("calibrated", False)) and all(
-            infl.get(b) is not None for b in field["bands"]
+        calibrated = (
+            bool(meta.get("calibrated", False))
+            and not meta.get("unread_images")
+            and all(infl.get(b) is not None for b in field["bands"])
         )
         if calibrated:
             inflation = np.array([float(infl[b]) for b in field["bands"]])
@@ -1222,21 +1262,23 @@ def cmd_forced(args) -> dict:
         "point_like",
     ):
         out[name] = np.concatenate([np.asarray(fl[name], bool), np.zeros(int(is_ctl.sum()), bool)])
-    # catalogue vetoes were applied before forced photometry (``fl`` holds unvetoed flags only)
     cut_ok = ~(out["cut_edge"] | out["cut_low_weight"] | out["cut_spike"])
-    out["survives_artefact_tests"] = out["forced_confirmed"] & cut_ok
+    cat_ok = ~np.concatenate(
+        [np.asarray(fl["catalogue_veto"], bool), np.zeros(int(is_ctl.sum()), bool)]
+    )
+    out["survives_artefact_tests"] = out["forced_confirmed"] & cut_ok & cat_ok
     surv = np.flatnonzero(out["survives_artefact_tests"])
     xm_note = "not run (no survivors)"
-    out["known_object"] = np.zeros(n, "U40")
+    out["known_object"] = np.zeros(n, "U120")
     if surv.size and not args.no_crossmatch:
         tg = Table({"source_uid": out["uid"][surv], "ra": out["ra"][surv], "dec": out["dec"][surv]})
-        xm = crossmatch.crossmatch(tg, radius_arcsec=1.0, services=("simbad", "ned"))
+        xm = crossmatch.crossmatch(tg, radius_arcsec=1.0, services=XMATCH_SERVICES)
+        labels, failed = known_object_labels(xm, [str(x) for x in out["uid"][surv]])
+        out["known_object"][surv] = labels
         xm_note = "SIMBAD and NED, 1 arcsec (crossmatch.crossmatch, batched)"
-        row_of = {str(u_): i for i, u_ in zip(surv, out["uid"][surv], strict=True)}
-        for r in xm:
-            if bool(r["is_known_object"]):
-                label = f"{r['best_match_service']}:{r['best_match_type']}:{r['best_match_id']}"
-                out["known_object"][row_of[str(r["source_uid"])]] = label[:40]
+        if failed:
+            xm_note += f"; FAILED or not queried: {', '.join(failed)}"
+            print(f"warning: cross-match incomplete ({', '.join(failed)})", file=sys.stderr)
     out.meta.update(
         provenance=schema.Provenance.DERIVED.value,
         source=f"scripts/dimming_screen.py forced --field {args.field}",
