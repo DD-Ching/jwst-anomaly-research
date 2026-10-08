@@ -177,16 +177,24 @@ Outputs under `outputs/t_sunrise_e13/` (not committed). Every number is `derived
 - **Earendel** (recentred): Δm = +0.05 (F150W, 0.3σ calibrated) and +0.12 mag (F444W, 0.9σ) over 2.9 years.
 - **Controls that change** (|flux σ| ≥ 5 after calibration). Checked on cutouts in every epoch-1 band and in
   epoch 2 (o120: F090W, F115W) at 0.1″ apertures:
-  - `n0022` (24.364244, −8.433747): S/N 12–48 in F090W, F115W, F150W and F200W on 2022-07-30; S/N < 2 in
-    F090W/F115W on 2023-01-10 and in F150W on 2025-07-08. No LW coverage in 2022. It lies about 1″ from the
-    epoch-1 SW mosaic edge, on faint extended light (a host?). **Open transient candidate**: fading supernova,
-    or an edge artefact.
-  - `n0150` (24.339250, −8.442280): a compact SW source in each epoch, but at a different position each time
-    (offsets from 2022-07: (+0.15, −0.54)″ in 2023-01, (+0.11, −0.35)″ in 2025-07). At each position it is
-    detected (S/N 11–18) in its own epoch only (|S/N| ≤ 2 in the others). Not linear proper motion. **Open**:
-    moving object (proper motion plus parallax), three unrelated transients, or an artefact.
+  - `n0022` (24.364244, −8.433747): **detector persistence, not a transient** (D-039). In o010 it appears only in
+    dithers 3 and 4 of each SW filter, at NRCB4 pixels (21, 298) and (29, 109). A bright galaxy at (24.364688,
+    −8.435356) lit pixel (21, 298) in dither 2 and pixel (29, 109) in dither 1 (F150W aperture flux 256 and 268
+    against 5.0 and 2.1 afterwards: 2.0 % and 0.8 %; the same ratios in F090W–F200W). The dither geometry puts both
+    afterimages on one sky position, so the mosaic shows a "source" that later epochs lack.
+  - `n0150` (24.339250, −8.442280): **detector persistence** (D-039). In every epoch it appears only in the
+    exposure right after a saturated star at (24.340874, −8.441846) sat on the same pixel: o010 dither 4 (NRCB3
+    (100, 929), all SW filters and F277W), o120 dither 2 and o052 dither 4; the preceding exposure has 19–31 saturated pixels
+    in the aperture.
+    The afterimage holds 0.04–0.07 % of the star's aperture flux. The "different position each epoch" is that
+    epoch's dither vector.
   - `n0153` (24.333856, −8.426836): brighter by 0.63 mag in F150W (5.9σ) and 0.52 mag in F444W (3.6σ) in 2025;
-    compact and unchanged in shape. A variable (e.g. AGN) candidate; not yet vetted.
+    compact and unchanged in shape. Per `_cal` exposure (0.1″ apertures) F150W is 1.5–2.0 in all four o010 dithers
+    and 3.0–3.8 in all four o052 dithers (×1.9; jwst 2.0.1 against 3.0.0 calibration). Not persistence. A variable
+    (e.g. AGN) candidate; not yet vetted.
+  - `scripts/persistence_check.py` on o010, o120 and o052 (404 `_cal` files, S3 byte ranges, 1 min): `n0022` 8 of 8
+    detections suspect, `n0150` 5/5, 4/4 and 2/2 at its three positions; `n0153` 0 of 39 suspect (36 clean) and Earendel
+    0 of 4 (`on_sky`).
   - **Why the search missed them:** the combination step needs the same kind in two bands, and in this pair only
     F150W and F444W overlap. `n0022` and `n0150` are blue and faint in F444W. That `n0022`/`n0150` did not appear in the o010/o120
     search (F090W and F115W) is not yet understood (footprint or depth proxy, or the S/N ≥ 10 cut).

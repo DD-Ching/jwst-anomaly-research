@@ -2,6 +2,30 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Sunrise transient candidates `n0022` and `n0150` are detector persistence (D-039)
+- New `scripts/persistence_check.py`: per-exposure photometry on level-2 `_cal` files (S3 byte ranges), plus the
+  same detector pixel in earlier exposures on that detector. Validated on a synthetic afterimage and on two real
+  sources (`n0153`, Earendel: 0 suspect detections).
+- `n0022`: afterimages of a bright galaxy (2.0 % and 0.8 % of its flux) in o010 dithers 3 and 4; the dither geometry
+  stacks both on one sky position. `n0150`: in all three epochs an afterimage (0.04–0.07 %) of a saturated star, one
+  exposure later; its "motion" is the dither vector. Cutouts inspected (dithers 1–4 at fixed detector pixels).
+- `n0153` is on sky in all 8 dithers and F150W is ×1.9 brighter in 2025 at the `_cal` level: still a variable
+  candidate.
+- **Lesson:** a single-epoch source in a mosaic can be an afterimage that two dithers place on one sky position.
+  The archived `_cal` files carry no DQ flag there.
+- **Handoff:** `/vet-candidate n0153`; persistence-check new single-epoch candidates before vetting.
+
+## 2026-10-08: MACS0717 screens: null (D-041)
+- Worktree worker on VENUS 6882 o029 (10 bands, the only public NIRCam association) with `macs0717-cats` (rms 3.21″).
+- 51 flags, 0 surviving. 29 are the model's own copies of catalogued images it does not reproduce (1.6–5.6″ off), 6 are
+  CATS-only extra images (Sharon v4cor and Keeton v4 predict none), and 5 have μ more than 2× model-dependent.
+  System 65's flux ratio is a 0.6″ catalogue offset. `radial` p ≥ 0.70.
+- **Failed approach:** a fixed 1.5″ match radius for a 3.2″-rms model makes most catalogued images "unpredicted",
+  and their model copies then flag as absent or confused.
+- Wall time: about 7.5 min of pipeline plus about 20 min of vetting.
+- **Handoff:** in `forced_check`, rms-scaled match and search radii and automatic copy classification; Sharon v4cor and
+  Keeton v4 as pinned `MapLensModel` entries.
+
 ## 2026-10-08: `find_images` fold refinement; frame offsets for map models (D-040)
 - Cells on a critical curve near the source are subdivided into ≤ 0.02″ sub-cells. MACS0416 system 26 is now solved
   (rms 1.57″ → 0.76″), and its image list is open with offset (0.208, −0.025). No other model changes beyond 0.03″

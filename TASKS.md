@@ -16,11 +16,15 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - an observational parity test (image orientation or resolved structure; not yet designed);
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
-   - exotic screens (D-031, D-034, D-036, D-037, D-038): SMACS, El Gordo, Sunrise (radial), Abell 2744, MACS1149 and
-     MACS0416 (radial) null. The six HFF CATS map models are in (D-035). Next:
+   - exotic screens (D-031, D-034, D-036–D-038, D-040, D-041): SMACS, El Gordo, Sunrise (radial), Abell 2744,
+     MACS1149, MACS0717 and MACS0416 (radial) null. The six HFF CATS map models are in (D-035). Next:
      - MACS0416: `images` / `fluxratio` with CANUCS photo-z (image list open and frame offset pinned, D-040);
      - `radial`: an aper50 S/N floor (noise segments pass the isophotal S/N);
-     - JWST field runs: radial on Abell 370, MACS0717 and Abell S1063; `images` / `fluxratio` on MACS0717;
+     - JWST field runs: radial on Abell 370 (CANUCS photo-z) and Abell S1063; MACS0717 done (D-041), re-run its radial
+       when a photo-z catalogue exists;
+     - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; classify model copies of
+       unpredicted catalogued images automatically (D-041);
+     - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, MACS0717), Keeton v4 (MACS0717);
      - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1
        photo-z; fix system 16's z (spectroscopic z, or forced photometry on its far-image track); evaluate the CANUCS
        lens models (with samples) as the independent second model for the D-036/D-037 μ rule;
@@ -47,10 +51,11 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - reword `acquire._warn_if_reprocessed`.
 3. **Two-epoch search** (D-027): null results for SMACS/VENUS and Sunrise o010/o120; Earendel is steady
    (docs/fields/sunrise.md). Third epoch (o052, calibrated with `--controls`): 0 of 57 candidates. Next:
-   - **vet the Sunrise transient candidates** `n0022`, `n0150` (and variable `n0153`) from the third-epoch
-     controls (docs/fields/sunrise.md): per-dither `_cal` exposures, host, moving-object test;
+   - `n0022` and `n0150` are detector persistence (D-039). Run `scripts/persistence_check.py` on every future
+     single-epoch candidate before vetting. Next: `/vet-candidate n0153` (on sky in all 8 dithers, F150W ×1.9 over
+     2.9 yr; host, AGN colours, a pipeline-version check on neighbours);
    - forced photometry on all catalogued sources, not only catalog-stage candidates (the two-band rule misses
-     blue transients); find why o010/o120 missed `n0022`/`n0150`;
+     blue transients);
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

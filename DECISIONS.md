@@ -1869,6 +1869,36 @@ gated off) until the solver refines its grid near high |μ|. Pairs whose catalog
   with `frame_offset_arcsec` (0.208, −0.025).
 - `images` / `fluxratio` run with CANUCS DR1 photo-z once the image list opens.
 
+## D-039 Persistence test on level-2 exposures; Sunrise `n0022` and `n0150` are afterimages (2026-10-08)
+
+**Decision.** Before a single-epoch source counts as a transient, `scripts/persistence_check.py` measures it in every
+level-2 `_cal` exposure that covers it, and measures the same *detector pixel* in the earlier exposures on that
+detector (≤ 3 h). A detection is `suspect` when an earlier exposure put ≥ 20× its flux, or a saturated pixel, there;
+earlier exposures that put the position itself on that pixel (< 2 px) are skipped. A position with detections
+but none clean (clean = not suspect, with ≥ 1 earlier exposure checked) is `persistence`; two clean detections make
+it `on_sky`. Thresholds are ASSUMPTIONs.
+
+**Alternatives rejected.**
+- Re-running calwebb_detector1's `persistence` step from `_uncal`: full raw downloads per exposure, and the archived
+  `_cal` products already carry the afterimages with no DQ flag at their pixels (observed), so the test has to work
+  on what the mosaic was built from.
+- Inspecting the level-3 `_i2d` only: the mosaic hides which exposures contribute, and an afterimage that lands on
+  the same sky in two dithers looks like a real source there (`n0022`).
+
+**Evidence** (docs/fields/sunrise.md; all `derived`).
+- `n0022`: seen only in o010 dithers 3 and 4 of each SW filter. A bright galaxy lit the same pixels in dithers 2 and
+  1 (F150W 256 and 268 vs 5.0 and 2.1, i.e. 2.0 % and 0.8 %); the dither geometry puts both afterimages on one sky
+  position.
+- `n0150`: in each epoch it appears only in the exposure after a saturated star (19–31 saturated pixels) sat on that
+  pixel: o010 d4 (SW and F277W), o120 d2, o052 d4, at 0.04–0.07 % of the star's flux. Its wandering position is the
+  per-epoch dither vector.
+- Controls: `n0153` (39 of 48 exposures detected, 0 suspect, 36 clean) and Earendel (4 detected, 4 clean; S/N ≈ 5 per
+  exposure, a weak control) are `on_sky`.
+- Synthetic test: a 1 % afterimage of a saturated star is `persistence`, a real faint source `on_sky`.
+
+**Revisit if.** A candidate is detected in exposures whose earlier ones were dark at its pixel, but fades within one
+visit (fast transient vs. a lookback that is too short), or afterimages appear > 3 h after the illumination.
+
 ## D-040 `find_images` refines grid cells on folds; frame offsets move map models; MACS0416 image list open (2026-10-08)
 
 **Decision.**
@@ -1904,3 +1934,38 @@ gated off) until the solver refines its grid near high |μ|. Pairs whose catalog
 **Revisit if.**
 - A fold image is still missed with `refine=8` (cusps with three merging images may need recursion).
 - Map models with rotated WCS grids appear (`MapLensModel` rejects them today).
+
+
+## D-041 MACS0717 screens: null; model copies of unpredicted images; CATS-only extra images (2026-10-08)
+
+**Decision.** The MACS0717 screens (`macs0717-cats`, VENUS program 6882 `jw06882-o029_t063`, 10 bands) are a null
+result (docs/fields/macs0717.md). There were 51 flags, 0 surviving. Two rules (ASSUMPTION: thresholds):
+- **Model copy.** A predicted image within 1.75× the model's image-plane rms (5.6″ here) of a catalogued, detected
+  but unpredicted image of the same system is the model's copy of that image, not a missing counter-image. In
+  MACS0717, 29 of the 51 flags are copies, 1.6–5.6″ from catalogued images.
+- **Model-dependent extra image.** An extra image predicted by one model but by neither of two independent models
+  solved from their deflection maps (here Sharon v4cor and Keeton v4) is model-dependent and untestable. This extends
+  the D-036/D-037 μ rule to image existence.
+
+**Alternatives rejected.** Reporting the raw `absent` / `confused` classes. Matching within 1.5″ for a model whose
+image-plane rms is 3.2″: 89 of 132 catalogued images have no prediction within 1.5″. With `--match-arcsec 3.2` the forced-photometry flags
+drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the radius), and all were vetted.
+
+**Evidence.**
+- `validate`: κ 3.2e-3; μ(z=2) 1.2e-3; image-plane rms 3.21″ against the quoted 2.41″ (the gate passes). With the
+  D-040 fold refinement, rms and the 16 shared matches are unchanged, so the copies are not solver-grid misses (the
+  `images` run itself used the 0.25″ grid before D-040). Frame offset
+  (F200W, 63 matches): +0.023″, −0.061″, so no `frame_offset_arcsec`.
+- `images` (forced F277W): 199 predicted. Classes: recovered 25, confused 38, absent 6, undetectable 13,
+  no_reference 54, inconsistent_reference 5, off_image 3.
+- `fluxratio`: system 65 under- and overluminous; the rest are 26 consistent, 82 resolved and 22 untestable.
+  65.2's JWST source is 0.6″ from its catalogued position. Corrected, the flux ratio is 0.7–1.1. μ(65.1)/μ(65.2) is
+  0.37–17 across six models (untestable).
+- `radial` (no photo-z): 11 peaks against a random mean of 16.7; max 5 lines; p ≥ 0.70.
+- Breakdown of the 51 flags: 29 model copies, 5 untestable μ, 6 CATS-only extra images, 6 below sensitivity, 1 with a
+  counterpart inside the position uncertainty, and 4 rows for the system 65 pair. Cutouts were inspected for every flag.
+
+**Revisit if.**
+- A JWST-era MACS0717 lens model appears.
+- A MACS0717 photo-z catalogue (DJA or a team release) appears: re-run `radial` with the background cut.
+- `forced_check` ties its match and search radii to the measured image-plane rms when that rms exceeds 1″.
