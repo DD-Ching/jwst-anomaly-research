@@ -2894,3 +2894,32 @@ Sample A events, so `selected` leaves them out; `selected_ext` keeps them for th
 **Revisit if.** Gaia DR4 publishes epoch photometry for all sources (then a W3 screen before any microlensing
 selection becomes possible); Gaia publishes the Extractor definitions; or a microlensing catalogue appears whose
 selection does not require a single brightening.
+
+## D-062 W3 in MOA-II 9-year light curves before any bump cut: pilot field gb22, pre-screen then fit (2026-10-08)
+
+**Decision.** Screen W3 in the MOA-II 9-year release (NASA Exoplanet Archive): every Cut-0 object, i.e. every
+difference-image variable (positive **or negative** PSF profile) before any microlensing selection, the gap D-057 and
+D-061 left. `jwst_anomaly.moa.MoaField` (a D-054 `LightCurveSurvey`; light curves read in place from the per-field
+tar) and `scripts/w3_moa.py` (`prescreen`, `fit [--chunk K/N]`, `merge-chunks`, `vet`, `inject`, `limit`). Pilot
+field **gb22** (18,599 objects, the smallest field). A deficit pre-screen (one significant local dip below both flanks,
+no second dip; thresholds ASSUMPTIONs in `Params`) cuts the sample before the D-057 fitter (blend flux free).
+Fit tables are tracked per chunk in `results/w3_moa/` as D-059 does for OGLE.
+Stated reason for the 3.5 GB `gb22.tar` download (CLAUDE.md >200 MB rule; also in `moa.FILES`): light curves exist
+only as per-field tars and gb22 is the smallest. Cloud sessions only; the owner's machine need not fetch it.
+
+**Alternatives rejected.** The published MOA event lists (PSPL-selected: the D-057/D-061 lesson); the per-object
+`.ipac` URLs (undocumented, 18,599 requests); fitting all 18,599 light curves with six models (~30 CPU h); readers
+merida 0.3.2 and qusi 1.5.6 (no Cut-0 tar reader, SOURCES.md).
+
+**Evidence** (`derived`, run 2026-10-08, 4 cores).
+- Pre-screen on all 18,599 gb22 light curves: 0 errors, 137 s; **1,058 passes** (z_min < −10, S_min < −5, no second
+  dip z < −8).
+- Selection test (`inject --prescreen-only`, 300 W3 + 100 PSPL on real quiet light curves, I_s ~ U[14.2, 21.4]):
+  W3 passes emulated Cut-0 **and** the pre-screen at **28 / 47 / 58 / 50 / 33 %** for t_E = 3 / 10 / 30 / 100 / 300 d;
+  PSPL controls **0 / 100**. Unlike the OGLE and Gaia selections (0 / 600, 0 / 240), this sample keeps W3 events.
+- Fit pilot: all 8 first passes flag (ΔBIC −174 … −869): a dip-shaped variable always prefers a negative-flux
+  model to PSPL, so in this sample the flag carries no information and the vetting (`vet_one`: repeated dips,
+  neighbours sharing the dip, baseline χ², refits) decides. chunk 1/8: 131 / 133 flag, ~26 s per pass on one core.
+
+**Revisit if.** Vetting leaves no usable sample (then tighten the pre-screen with the injections); a field with
+published N_s (not gb22, Nunota et al. 2024 Table 1) is needed for a calibrated rate; the archive changes the files.

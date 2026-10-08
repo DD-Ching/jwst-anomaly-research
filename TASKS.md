@@ -8,7 +8,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    vetted: 127 + 6 flags, **0 survive** (the D-059 chunk survivors BLG667.04.62161 and BLG624.18.69573 fail
    `feature_coverage`). **The published samples cannot limit W3:** 0 of 600 injected W3 events pass the emulated Mróz
    selection (PSPL controls 15–43 %), so the chunk re-fits only re-test a selection that excludes the signal. Next:
-   light curves from **before** a PSPL selection. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
+   light curves from **before** a PSPL selection. **In progress: MOA-II 9-year Cut-0 light curves, field gb22
+   (D-062)** — the pre-screen keeps 28–58 % of injected W3 and 0 % of PSPL; 1,058 passes to fit in 8 tracked
+   chunks (`fit --chunk K/8`, ~15 min each on 4 cores), then `merge-chunks --n 8`, `vet`, contact sheet, `inject`
+   (full chain), `limit`. Then a field with published N_s (Nunota et al. 2024 Table 1). Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
    injections both selected and flagged; one real flag, not a candidate). Next: Gaia DR3 variables with epoch
    photometry (vari_summary; check by injection whether W3 survives the variability classifier first), KMTNet
    public seasons, OGLE EWS (owner decision, terms). Optional:
