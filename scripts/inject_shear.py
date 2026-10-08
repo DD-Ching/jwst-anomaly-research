@@ -52,14 +52,17 @@ SHEAR_DEFAULTS = es.shear_defaults()
 DEFAULT_FIELDS = ("abell2744", "macs0416", "macs1149", "abell370")
 
 
-def injected_ellipticity(e_src, raw_img, raw_src, r: float) -> np.ndarray:
+def injected_ellipticity(e_src, raw_img, raw_src, r: float, e_img_corr) -> np.ndarray:
     """Corrected ε of a painted image: its source's corrected ε plus R times the lens-induced
     change of the *measured* moments (raw image minus raw source). The catalogue's moments respond
     to shear by R (D-053), the painted moments by 1; taking the change between raw moments keeps
-    the cluster shear out of it. An unresolved source counts as round."""
-    e0 = np.nan_to_num(np.asarray(e_src, complex), nan=0.0)
-    d = np.asarray(raw_img, complex) - np.nan_to_num(np.asarray(raw_src, complex), nan=0.0)
-    return e0 + r * d
+    the cluster shear out of it. An unresolved source (no measured ε) counts as round: its image
+    gets R times its own cluster-corrected ε, ``e_img_corr``."""
+    e_src, raw_src = np.asarray(e_src, complex), np.asarray(raw_src, complex)
+    resolved = np.isfinite(raw_src) & np.isfinite(e_src)
+    with np.errstate(invalid="ignore"):
+        lensed = e_src + r * (np.asarray(raw_img, complex) - raw_src)
+    return np.where(resolved, lensed, r * np.asarray(e_img_corr, complex))
 
 
 class ShearInjector:
@@ -82,7 +85,8 @@ class ShearInjector:
         self.null = self.base["null_max"]
         self.b_max = float(np.nanmax(np.abs(self.base["s_cross"])))
         # spike segments are never painted: the real field vetoes them too
-        # and sources where the cluster shear cannot be removed (κ >= 1, |g| >= 1) are not painted
+        # and sources where the cluster shear cannot be removed (κ >= 1, |g| or |R g| >= 1) are
+        # not painted
         self.background = (
             es.lensable_mask(shapes, model.z_lens) & ~self.base["spike"] & self.base["correctable"]
         )
@@ -115,17 +119,13 @@ class ShearInjector:
         x, y, e = self.xs[k], self.ys[k], self.e[k]
         n_img_used = 0
         if len(img):
-            e_img, _ = es.shear_sources(
+            e_img, c = es.shear_sources(
                 self.model, img, self.psf, a.min_snr, a.max_g, self.r, spike_veto=False
             )
             src = np.asarray(img["_src"], int)
-            a_i = np.asarray(img["semimajor_px"], float)
-            raw_img = es.intrinsic_ellipticity(
-                a_i, a_i * (1.0 - np.asarray(img["ellipticity"], float)), img["pa_obs"], self.psf
-            )
             e_img = np.where(
                 np.isfinite(e_img),
-                injected_ellipticity(self.e_all[src], raw_img, self.eps[src], self.r),
+                injected_ellipticity(self.e_all[src], c["eps"], self.eps[src], self.r, e_img),
                 np.nan + 0j,
             )
             ok = np.isfinite(e_img)

@@ -656,7 +656,7 @@ def shear_sources(
     shear is R g, with R from :func:`shear_responsivity` on the used rows unless
     ``responsivity`` is given. Diffraction-spike segments (:func:`spike_segments`, with
     ``extra`` stars; D-043) are dropped: spikes point radially at their star, the W1 sign.
-    ``counts["e_all"]`` holds the corrected ε of every resolved row with κ < 1 and |R g| < 1
+    ``counts["e_all"]`` holds the corrected ε of every resolved row with κ < 1, |g| < 1, |R g| < 1
     (cuts on S/N, ``max_g`` and lensability not applied), ``counts["correctable"]`` that mask and
     ``counts["eps"]`` the uncorrected ε, for injected sources."""
     snr = np.asarray(shapes["snr"], float)
@@ -680,13 +680,14 @@ def shear_sources(
         responsivity, r_err = shear_responsivity(np.where(weak, eps, np.nan), g)
     elif not 0.0 < responsivity <= 1.5:
         raise ValueError(f"shear responsivity R = {responsivity} is outside (0, 1.5]")
-    correctable = (np.abs(responsivity * g) < 1.0) & (kappa < 1.0)
+    correctable = (np.abs(g) < 1.0) & (np.abs(responsivity * g) < 1.0) & (kappa < 1.0)
     e_all = np.where(correctable, remove_cluster_shear(eps, responsivity * g), np.nan + 0j)
     e = np.where(weak, e_all, np.nan + 0j)
     counts = {
         "n_rows": len(shapes),
         "n_spike_segments": int(spike.sum()),
-        "n_lensable": n_lensable,
+        "n_lensable": n_lensable,  # before the spike veto
+        "n_lensable_after_spike_veto": int(lens.sum()),
         "n_snr": int(bright.sum()),
         "n_resolved": int(resolved.sum()),
         "n_weak_shear": int(weak.sum()),

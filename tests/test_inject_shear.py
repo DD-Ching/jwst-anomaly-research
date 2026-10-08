@@ -8,6 +8,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
+import pytest
 
 _DIR = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(_DIR))
@@ -51,12 +52,20 @@ def test_injected_ellipticity_keeps_r_of_the_measured_change_only():
     e_src = np.array([0.1 + 0.05j, np.nan])
     raw_src = np.array([0.3 + 0.0j, np.nan])  # measured, cluster shear included
     raw_img = np.array([0.5 + 0.1j, 0.2j])
-    out = ish.injected_ellipticity(e_src, raw_img, raw_src, 0.5)
-    np.testing.assert_allclose(out, [0.1 + 0.05j + 0.5 * (0.2 + 0.1j), 0.5 * 0.2j])
+    e_img_corr = np.array([9.0 + 0j, 0.1j])  # cluster-corrected image shapes
+    out = ish.injected_ellipticity(e_src, raw_img, raw_src, 0.5, e_img_corr)
+    # resolved source: the measured change only; unresolved: R x its own corrected image shape
+    np.testing.assert_allclose(out, [0.1 + 0.05j + 0.5 * (0.2 + 0.1j), 0.5 * 0.1j])
     # no lens change: the source's corrected shape comes back unchanged, whatever its cluster g
-    np.testing.assert_allclose(
-        ish.injected_ellipticity(e_src[:1], raw_src[:1], raw_src[:1], 0.45), e_src[:1]
-    )
+    same = ish.injected_ellipticity(e_src[:1], raw_src[:1], raw_src[:1], 0.45, e_img_corr[:1])
+    np.testing.assert_allclose(same, e_src[:1])
+
+
+def test_a_user_responsivity_outside_its_range_is_refused():
+    model, shapes, _ = _field()
+    for bad in (0.0, -0.3, 2.0):
+        with pytest.raises(ValueError):
+            ish.es.shear_sources(model, shapes, 1.0, 10.0, responsivity=bad)
 
 
 def test_a_massive_w1_lens_is_recovered_and_no_lens_is_not():
