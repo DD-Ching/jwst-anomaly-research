@@ -1008,3 +1008,9 @@ dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no pu
   7–474 GB each; per-object files are also served).
 - Not a statement about OGLE or the Mróz samples, and not combinable with the D-052 JWST limits without a lens
   population model.
+
+## W1/W2 in rejected lensed-quasar pairs (in progress)
+
+D-TBD. Same-redshift quasar pairs that lens searches rejected for lack of a visible lens (Lemon et al. 2023 UQPs,
+VizieR J/MNRAS/520/3305; SQLS "no lensing object" rejections, Inada et al. 2008/2010/2012) through the D-056
+deflector test and required-lens magnitude. Work in progress.
