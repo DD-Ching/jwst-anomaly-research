@@ -434,7 +434,8 @@ def combine(results: list[dict], orphans: dict[str, tuple[int, float]]) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--fields", nargs="+", default=list(DEEP), choices=sorted(op.FIELDS))
+    # Deep fields only: combine() converts angles to masses at the single Z_LENS_REF.
+    ap.add_argument("--fields", nargs="+", default=list(DEEP), choices=list(DEEP))
     ap.add_argument("--lenses", nargs="+", default=list(LENSES), choices=list(LENSES))
     ap.add_argument("--theta-e", nargs="+", type=float, default=list(THETA_E))
     ap.add_argument("--n-lens", type=int, default=N_LENS)
@@ -454,6 +455,11 @@ def main(argv: list[str] | None = None) -> int:
         "parallel processes)",
     )
     args = ap.parse_args(argv)
+    missing = [f for f in args.fields if not (args.orphans / f / "summary.json").exists()]
+    if missing:
+        # The background-aware limit needs every field's observed orphans; without them the
+        # exposure would be summed over more fields than the counts and the limit too tight.
+        ap.error(f"run orphan_pairs.py first; no summary.json for {', '.join(missing)}")
     if args.combine_only:
         results = [
             json.loads((args.out / f / "injection_summary.json").read_text()) for f in args.fields
@@ -462,16 +468,13 @@ def main(argv: list[str] | None = None) -> int:
         results = [run_field(f, args) for f in args.fields]
     orphans = {}
     for f in args.fields:
-        p = args.orphans / f / "summary.json"
-        if p.exists():
-            s = json.loads(p.read_text())
-            orphans[f] = (
-                int(s["classes"]["orphan"]),
-                float(s["null_e_conditioned"]["expected_by_class"]["orphan"]),
-            )
+        s = json.loads((args.orphans / f / "summary.json").read_text())
+        orphans[f] = (
+            int(s["classes"]["orphan"]),
+            float(s["null_e_conditioned"]["expected_by_class"]["orphan"]),
+        )
     summary = combine(results, orphans)
     summary["fields"] = results
-    summary["missing_orphan_runs"] = [f for f in args.fields if f not in orphans]
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "limits.json").write_text(json.dumps(op._finite(summary), indent=1))
     print(json.dumps(op._finite({k: v for k, v in summary.items() if k != "fields"}), indent=1))

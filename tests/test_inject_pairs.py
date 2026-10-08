@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from astropy.table import Table
 
 from jwst_anomaly import exotic_sim
@@ -127,3 +128,15 @@ def test_per_lens_efficiency_is_bounded_and_counts_lensed_sources():
     assert 0.0 <= res["efficiency"] <= res["frac_with_images"] <= 1.0
     src = ip.per_source(field, "point", 0.7, 5, np.random.default_rng(4))
     assert len(src) == 5 and set(src.colnames) >= {"mag", "recovered", "cls"}
+
+
+def test_cli_refuses_to_combine_without_every_orphan_summary(tmp_path, capsys):
+    (tmp_path / "orph" / "goodsn-dja").mkdir(parents=True)
+    (tmp_path / "orph" / "goodsn-dja" / "summary.json").write_text("{}")
+    argv = ["--combine-only", "--orphans", str(tmp_path / "orph"), "--out", str(tmp_path)]
+    with pytest.raises(SystemExit) as e:
+        ip.main([*argv, "--fields", "goodsn-dja", "macs0416-ncf"])
+    assert e.value.code == 2
+    assert "macs0416-ncf" in capsys.readouterr().err
+    with pytest.raises(SystemExit):  # cluster fields have their own lens redshift
+        ip.main([*argv, "--fields", "macs1149"])
