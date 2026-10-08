@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Six HFF clusters as CATS map models (D-035)
+- MACS0416, MACS1149, Abell 370, MACS0717, Abell S1063 and Abell 2744 (CATS v4/v4.1) are pinned map models. All six
+  reproduce their published z = 2 magnification maps (median 9e-5 to 6e-3).
+- Image lists pass the rms gate for MACS1149 (0.67″ vs 0.63″) and MACS0717 (3.21″ vs 2.41″). The other four stay
+  map-only: without `params.txt` their placeholder redshifts give 9–12″ residuals.
+- **Failed approach:** using CATS `arcs.txt` redshifts as published.
+- **Handoff:**
+  - per-cluster JWST field runs (configs, catalogs, `radial` on all six, `images` / `fluxratio` on MACS1149 and
+    MACS0717);
+  - `/vet-candidate` for Abell 2744 4.2c (the field worker's survivor).
+
 ## 2026-10-08: El Gordo counter-images and radial screen: no candidate (D-034)
 - Forced photometry: 3 `absent` images on the first pass, all ordinary on vetting (cutouts plus numbers):
   - 23: model position error;
