@@ -508,3 +508,104 @@ All three fields, **including the two uncalibrated ones** (indicative only; `lim
 - The headline rests on 34 compact sources in one field, so it is weak.
 - NEXUS extended flags are only audited (100 of 1,051 measured).
 - No SN/TNS check was run (no survivors).
+
+## W1/W2 in published lens catalogues
+
+D-056; `src/jwst_anomaly/lenscats.py`, `scripts/w12_lenscats.py`, tests in `tests/test_lenscats.py` and
+`tests/test_w12_lenscats.py`. Question: do any **published** strong-lens candidates or confirmed lenses show lensed
+images with **no visible deflector** (W2, and the W1 "empty centre"), down to the depth of public wide imaging?
+Catalogue values are **observed** (as published); merges, matches, magnitudes required of a lens and limits are
+**derived**; required magnitudes rest on a **model_prediction** (SIS) and **assumptions** (below). A system
+without a visible deflector would be an anomaly to vet, never evidence of exotic physics.
+
+### Data (observed; SOURCES.md "Published lens catalogues and deep-imaging checks (D-056)")
+
+| Catalogue | Entries | Notes |
+|---|---|---|
+| lenscat 1.1.3 `catalog.csv` | 32,838 | name, position, z_lens (value / "measured" / "not measured"), type, grade, refs; no source z, no image positions, no θ_E |
+| Euclid Q1 Discovery Engine | 2,584 | host-galaxy positions (README: up to 10″ off); SIE θ_E and lens VIS magnitude for 336 modelled lenses |
+| SuGOHI public list | 3,961 | z_lens / z_source (spec, phot), θ_E, lens i mag, type GG / GQ / CG, grade |
+
+Merged by friends-of-friends within 3″: **35,862 systems** (39,383 entries). No catalogue flags a system as "no
+lens galaxy" or "dark"; lenscat's z_lens = "not measured" only means no redshift.
+
+### Method (every threshold an ASSUMPTION, `Params` in the script)
+
+1. **Galaxy scale:** no entry typed group/cluster (lenscat rows citing 14 cluster surveys, e.g. NoSOCS, LCDCS,
+   REFLEX, RCS, are typed "galaxy" but list a cluster position; they are reset to cluster) and θ_E ≤ 3″ when given:
+   **20,986 systems**; 7,657 of them have neither a lens redshift nor a lens magnitude in any catalogue.
+2. **Deep imaging:** Legacy Surveys DR10 Tractor, ±5″ box per system, 300 boxes per synchronous ADQL query to the
+   Data Lab TAP (116 queries, 32 min). Covered: **20,663**. Visible deflector = an extended Tractor source (REX, DEV,
+   EXP, SER) within 1.5″ of the catalogue position: **19,483**; none: **1,180** (608 of them in the no-lens-info set).
+   Depth: 5σ galaxy depth from the Tractor `galdepth_z` of the box, median z = 23.29 (5–95 %: 22.68–24.19).
+3. **Required lens light:** SIS σ from θ_E (z_l, z_s), then an empirical Faber–Jackson calibration
+   m_z = a − 10 log(σ/200 km/s) + 5 log(D_L/D_L(0.5)) + k (z_l − 0.5), fitted (slope fixed, 3σ-clipped) to 753
+   visible lenses with θ_E and z_l: a = 20.43, k = 1.01, rms 0.96 mag (`derived`; the lens-finder selection favours
+   bright lenses, which the rms term below offsets). Two variants:
+   - **typical:** catalogue z_l (else 0.5), z_s (else 2), θ_E (else 1″); median required m_z = 19.75;
+   - **conservative:** the faintest over z_l ∈ [0.1, min(1.5, z_s − 0.1)], z_s (else 3), θ_E (else 1″), plus 2 × rms;
+     median 24.05.
+   A lens is **detectable** if required m_z < depth − 0.5. Typical: 99.2 % of covered systems; conservative: 3.7 %.
+4. **W1 configuration:** **not testable.** No catalogue gives image positions or shapes (only a centre and, for
+   SuGOHI and Euclid, θ_E from positive-mass models).
+5. **Vetting** of the 1,180 systems, cheapest first; the verdict is the first test that applies (`flags` keeps all):
+
+| Ordinary explanation (test) | Systems |
+|---|---|
+| catalogue position error: J2000 name vs RA/Dec > 5″ (e.g. lenscat AGEL rows drop the declination degrees; some SPT rows are up to 1.7° off) | 61 |
+| position rounded to > 1.5″ (whole RA seconds or 0.01°; PS1 rows) | 268 |
+| Euclid host position (up to 10″ off) | 33 |
+| submm / radio centroid (SPT, H-ATLAS, HeLMS/HerS, ACT, CLASS, MG; arcsec uncertainty) | 122 |
+| galaxy bright enough for the lens (m_z ≤ typical + 2 rms) within 5″: offset position or deflector | 304 |
+| Legacy Surveys maskbits (bright star, large galaxy, cluster) | 55 |
+| point sources within 3″: quasar images with the lens blended, or a PSF-typed compact lens | 330 |
+| lens redshift published (deflector observed; HETDEX LAE positions, Laseter et al. 2022) | 4 |
+| cluster (redMaPPer, WHL within 2′, SIMBAD cluster within 5″) | 1 |
+| required lens below depth (conservative) and no other flag | 2 |
+| **unexplained** | **0** |
+
+   The two depth-only systems: DELJ113049-413014 (no LS depth at the position; not detectable) and J1329+4325, the
+   radio pair [SML2019] MJV16999 (0.45″), which its discovery paper rejects as a core-jet source (Spingola et al.
+   2019, arXiv:1811.09152, sect. 4.1.12): a milli-arcsec candidate, not a galaxy-scale lens. About 230 LS DR10 grz
+   cutouts were inspected over three passes of the rules (contact sheets in the run directory), including every
+   system the automated tests left open at each pass and 32 random controls: they show offset galaxies, blended
+   quasar pairs, compact red lenses typed PSF, and empty submm or rounded positions, as the flags say.
+   **Nothing goes to `/vet-candidate`.**
+
+### Limits (95 %, zero unexplained systems: 2.996 / N; `derived`)
+
+N counts covered systems where the test is decisive (a deflector found at, or within 5″ of, the position, in the
+literature or a cluster catalogue, or none found although the position is good, unmasked and not blended) and where
+an ordinary lens would be detectable. 19,794 of 20,663 covered systems are decisive.
+
+| Population | Variant | N | f_dark < |
+|---|---|---|---|
+| all galaxy-scale | typical | 19,666 | 1.5 × 10⁻⁴ |
+| all galaxy-scale | conservative | 763 | 3.9 × 10⁻³ |
+| lens-light-independent selection (quasar, submm/radio) | typical | 366 | 8.2 × 10⁻³ |
+| lens-light-independent selection | conservative | 21 | 0.14 |
+
+f_dark is the fraction of catalogued galaxy-scale lenses whose deflector is dark (no galaxy as bright as an ordinary
+lens of that θ_E would be). Only the lens-light-independent rows are a test: 20,431 of the 20,986 systems come from
+finders run around galaxies (or of unknown selection), which cannot select a lens without a galaxy, so the "all" rows
+mostly restate the selection. Of the quasar-selected systems, 61 of 97 without an extended source are blended and
+undecided; LS DR10 (~1″ seeing) cannot separate a lens from quasar images at θ_E ≲ 1″ (CASTLES-type HST photometry
+would).
+
+### Caveats
+
+- Ordinary-looking configurations only. A W1 pair (both images on one side, no ring) is unlikely to pass a lens
+  finder or quasar-lens confirmation; this limit is on W2-like and point-mass-like dark deflectors, not on W1.
+- The conservative variant shows LS DR10 cannot exclude a 2σ-faint lens at the least favourable z_l for 96 % of
+  systems: the default explanation for any future "empty" lens is an ordinary lens below the survey depth.
+- Catalogue quality dominates the raw "no deflector" count: before the cluster-reference fix 7,940 of 28,238
+  covered systems lacked an extended source; most were cluster centres typed "galaxy". lenscat also keeps
+  candidates their discovery papers rejected (MJV16999), merges by name across unrelated lists ("5", "10" from
+  Talbot et al. 2022 sit on van Breukelen et al. 2006 UDS clusters), and carries the position errors above.
+- HSC-SSP and Euclid Q1 imaging were not queried (HSC needs an account; all 33 Euclid-only systems are flagged by
+  position and were selected around a catalogued galaxy).
+- Relation to D-051: D-051 limits dark deflectors per unit area in JWST deep fields (W1 < 5.4 × 10² deg⁻² at
+  θ_E = 1.5″, W2 < 1.2 × 10⁴ deg⁻² at 0.7″); this is a per-lens fraction in the published lens population. They are
+  complementary, not combinable without a lensing cross-section model.
+- Prior art: Jackson, Helbig & Browne 1998 found lens galaxies in 12 of 12 JVAS/CLASS lenses (astro-ph/9804136);
+  CLASS B0827+525 remains a "dark lens or binary quasar" case (Koopmans et al. 2000, astro-ph/0007286).
