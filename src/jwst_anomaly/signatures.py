@@ -113,7 +113,11 @@ register(
         data_kinds=("catalogue", "image"),
         predict=_bound(exotic_sim.solve_images, _ELLIS),
         inject=_bound(exotic_sim.inject_images, _ELLIS),
-        screens=("scripts/orphan_pairs.py", "scripts/inject_pairs.py"),
+        screens=(
+            "scripts/exotic_screens.py fluxratio",
+            "scripts/orphan_pairs.py",
+            "scripts/inject_pairs.py",
+        ),
         ordinary_mimics=(
             "knots of one galaxy",
             "physical companions and groups",
