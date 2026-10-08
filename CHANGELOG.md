@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Sunrise transient candidates `n0022` and `n0150` are detector persistence (D-039)
+- New `scripts/persistence_check.py`: per-exposure photometry on level-2 `_cal` files (S3 byte ranges), plus the
+  same detector pixel in earlier exposures on that detector. Validated on a synthetic afterimage and on two real
+  sources (`n0153`, Earendel: 0 suspect detections).
+- `n0022`: afterimages of a bright galaxy (2.0 % and 0.8 % of its flux) in o010 dithers 3 and 4; the dither geometry
+  stacks both on one sky position. `n0150`: in all three epochs an afterimage (0.04–0.07 %) of a saturated star, one
+  exposure later; its "motion" is the dither vector. Cutouts inspected (dithers 1–4 at fixed detector pixels).
+- `n0153` is on sky in all 8 dithers and F150W is ×1.9 brighter in 2025 at the `_cal` level: still a variable
+  candidate.
+- **Lesson:** a single-epoch source in a mosaic can be an afterimage that two dithers place on one sky position.
+  The archived `_cal` files carry no DQ flag there.
+- **Handoff:** `/vet-candidate n0153`; persistence-check new single-epoch candidates before vetting.
+
 ## 2026-10-08: Abell 2744 screens: null (D-036)
 - A worktree worker ran `validate`, `images --forced-image`, `fluxratio` and `radial` on Bergamini+2023b, with
   cutouts of every flag. 15 of 16 flags were ordinary. The survivor, 4.2c, was re-run under the D-034 rules: it
