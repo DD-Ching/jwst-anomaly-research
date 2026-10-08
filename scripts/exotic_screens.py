@@ -246,13 +246,36 @@ SPIKE_STAR_MAG = 20.0  # point sources brighter than this have long diffraction 
 SPIKE_ALIGN_DEG = 7.0
 
 
-def spike_radius(mag) -> np.ndarray:
+def spike_radius(mag, cap: float = 20.0) -> np.ndarray:
     """Spike length (arcsec) of a point source of magnitude ``mag``: 3" x 10^(0.2 (20 - m)),
-    clipped to 3-20" (the D-027 bright-star mask form; ASSUMPTION)."""
-    return np.clip(3.0 * 10 ** (0.2 * (SPIKE_STAR_MAG - np.asarray(mag, float))), 3.0, 20.0)
+    clipped to 3" - ``cap`` (the D-027 bright-star mask form; ASSUMPTION)."""
+    return np.clip(3.0 * 10 ** (0.2 * (SPIKE_STAR_MAG - np.asarray(mag, float))), 3.0, cap)
 
 
-def spike_segments(src: Table, shapes: Table) -> np.ndarray:
+EXTERNAL_SPIKE_CAP = (
+    60.0  # saturated / off-mosaic Gaia stars: spikes reach 37" in Abell 370 (D-043)
+)
+
+
+def read_spike_stars(path: Path) -> Table:
+    """External bright stars (e.g. Gaia DR3) as ``ra, dec, mag`` from an ECSV/FITS table with a
+    ``mag``, ``phot_g_mean_mag`` or ``Gmag`` column (G is used as the magnitude; ASSUMPTION)."""
+    t = Table.read(path)
+    ra = next(c for c in ("ra", "RA_ICRS", "RA") if c in t.colnames)
+    dec = next(c for c in ("dec", "DE_ICRS", "DEC") if c in t.colnames)
+    mag = next(c for c in ("mag", "phot_g_mean_mag", "Gmag") if c in t.colnames)
+    out = Table(
+        {
+            "ra": np.asarray(t[ra], float),
+            "dec": np.asarray(t[dec], float),
+            "mag": np.asarray(t[mag], float),
+        }
+    )
+    out.meta.update(provenance=schema.Provenance.OBSERVED.value, source=str(path))
+    return out
+
+
+def spike_segments(src: Table, shapes: Table, extra_stars: Table | None = None) -> np.ndarray:
     """Elongated sources that are diffraction-spike segments (El Gordo, D-034).
 
     A segment lies within ``spike_radius`` of a bright point source (not ``is_extended``,
@@ -261,19 +284,31 @@ def spike_segments(src: Table, shapes: Table) -> np.ndarray:
     sit at fixed position angles for one pointing: a hexagonal set (theta, theta + 60,
     theta + 120 deg) plus the weaker axis at theta + 90 deg. theta is estimated from all aligned
     pairs (mode of PA mod 60). Genuine radial arcs around a compact source survive unless they
-    happen to lie on a spike axis."""
+    happen to lie on a spike axis.
+
+    ``extra_stars`` (``ra, dec, mag``; e.g. Gaia DR3 from :func:`read_spike_stars`) adds stars the
+    catalogue misses because they are saturated or off the mosaic, with spikes up to
+    ``EXTERNAL_SPIKE_CAP`` (D-043)."""
     mag = np.asarray(shapes["mag"], float)
     bright = ~np.asarray(shapes["is_extended"], bool) & np.isfinite(mag) & (mag < SPIKE_STAR_MAG)
-    stars = shapes[bright]
+    ra_s = list(np.asarray(shapes["ra"], float)[bright])
+    dec_s = list(np.asarray(shapes["dec"], float)[bright])
+    radius = list(spike_radius(mag[bright]))
+    if extra_stars is not None and len(extra_stars):
+        em = np.asarray(extra_stars["mag"], float)
+        ok = np.isfinite(em) & (em < SPIKE_STAR_MAG)
+        ra_s += list(np.asarray(extra_stars["ra"], float)[ok])
+        dec_s += list(np.asarray(extra_stars["dec"], float)[ok])
+        radius += list(spike_radius(em[ok], cap=EXTERNAL_SPIKE_CAP))
     out = np.zeros(len(src), bool)
-    if not len(stars) or not len(src):
+    if not ra_s or not len(src):
         return out
     cs = SkyCoord(src["ra"], src["dec"], unit="deg")
-    ct = SkyCoord(stars["ra"], stars["dec"], unit="deg")
-    radius = spike_radius(stars["mag"])
+    ct = SkyCoord(ra_s, dec_s, unit="deg")
+    radius = np.asarray(radius)
     pa_src = np.asarray(src["pa_obs"], float)
     cand, cand_pa = [], []
-    for k in range(len(stars)):
+    for k in range(len(ct)):
         sep = cs.separation(ct[k]).arcsec
         near = (sep <= radius[k]) & (sep > 0.5)
         if not near.any():
@@ -311,7 +346,8 @@ def cmd_radial(args) -> dict:
     src = shapes[sel]
     x, y = model.to_frame(src["ra"], src["dec"])
     src = src[np.hypot(x, y) <= args.max_radius]
-    spike = spike_segments(src, shapes)
+    extra = read_spike_stars(args.spike_stars) if args.spike_stars else None
+    spike = spike_segments(src, shapes, extra)
     n_spike = int(spike.sum())
     src = src[~spike]
     ot = lc.orientation_table(model, src)
@@ -388,6 +424,7 @@ def cmd_radial(args) -> dict:
     summary = {
         "model": args.model,
         "catalog": str(args.catalog),
+        "spike_stars": str(args.spike_stars) if args.spike_stars else None,
         "n_spike_segments_dropped": n_spike,
         "n_elongated": len(src),
         "n_not_background_dropped": n_not_background,
@@ -436,6 +473,11 @@ def main(argv: list[str] | None = None) -> int:
     r = sub.add_parser("radial", help="anti-tangential arcs converging on a dark centre")
     r.add_argument("--catalog", type=Path, required=True, help="JWST pipeline _cat.ecsv")
     r.add_argument("--photoz", type=Path, help="eazy zout FITS table (e.g. DJA)")
+    r.add_argument(
+        "--spike-stars",
+        type=Path,
+        help="bright-star table (ra, dec, mag/Gmag; e.g. Gaia DR3) for the spike veto (D-043)",
+    )
     r.add_argument("--min-ellipticity", type=float, default=0.5)
     r.add_argument("--min-semimajor-px", type=float, default=2.0)
     r.add_argument("--min-snr", type=float, default=10.0)

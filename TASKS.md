@@ -16,14 +16,13 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - an observational parity test (image orientation or resolved structure; not yet designed);
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
-   - exotic screens (D-031, D-034, D-036–D-038, D-040, D-041): SMACS, El Gordo, Sunrise (radial), Abell 2744,
-     MACS1149, MACS0717 and MACS0416 (radial) null. The six HFF CATS map models are in (D-035). Next:
+   - exotic screens (D-031, D-034, D-036–D-038, D-040, D-041, D-043): SMACS, El Gordo, Sunrise (radial), Abell 2744,
+     MACS1149, MACS0717, MACS0416 (radial), Abell 370 and Abell S1063 (radial) null. The six HFF CATS map models are in (D-035). Next:
      - MACS0416: `images` / `fluxratio` with CANUCS photo-z (image list open and frame offset pinned, D-040);
-     - `radial`: an aper50 S/N floor (noise segments pass the isophotal S/N);
-     - `radial`: Gaia-seeded `spike_segments` (stars G < 17, saturated or off-mosaic; length cap scaled with G; low-weight
-       veto), then re-run Abell 370 as a regression check (D-043);
-     - JWST field runs: all six HFF clusters screened (D-037–D-043); re-run MACS0717 radial when a photo-z catalogue
-       exists;
+     - `radial`: low-weight veto (relative WHT < 0.5) or aper50 S/N floor; pass `--spike-stars` (Gaia, D-043) on every
+       field and re-run earlier fields' radial screens with it;
+     - JWST field runs: all six HFF clusters screened (MACS1149 D-037, MACS0416 D-038/D-042, MACS0717 D-041, Abell 370
+       and S1063 D-043, Abell 2744 D-036); re-run MACS0717 radial when a photo-z catalogue exists;
      - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; classify model copies of
        unpredicted catalogued images automatically (D-041);
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, MACS0717), Keeton v4 (MACS0717);

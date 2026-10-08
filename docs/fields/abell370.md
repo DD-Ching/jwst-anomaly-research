@@ -79,22 +79,30 @@ the catalogue's 0.5″-aperture flux over its error.
 | 15 lines, p 0.0 (both default runs) | 39.960747, −1.584486 | Labels 308, 268, 3688, 357, 218, 3685–3687, 3677–3683. Isophotal S/N 14–165, but aper50 S/N 1.0–14.5 (aper50 AB 28.1–31.1). e 0.51–0.94; semimajor up to 45 px | **Chain:** all 15 lie on one line (perpendicular rms 0.42″, PA 62.3°). Their `pa_obs` is 44–73°, along the chain: a chain, not convergence. **Mosaic axis:** the i2d column axis is at PA 63.4°. **Seam:** in the cutouts the chain is a faint straight streak along the columns in F150W/F200W. It sits at a SW weight step (relative WHT 0.3 → 0.7; 10 of 15 sources at WHT 0.3, below the pipeline's 0.5 gate, D-011), 3–10″ from the mosaic's southern edge (cutout flags `edge,nan,low_weight`). It is weaker in LW (F444W catalogue: 0 sources on the chain). **Spike:** the line passes 1.1″ from Gaia DR3 G = 13.71 (39.955714, −1.586726), 13″ beyond the chain end and off the F200W mosaic (no catalogue source within 10″). | **ordinary: instrumental.** Diffraction spike of an off-mosaic G = 13.7 star along the column/V3 spike axis, at an SW low-weight seam. With S/N ≥ 5 the centre falls to 6 lines (p 0.65); with the Gaia-spike veto it disappears |
 | 8 lines, p 0.01 (S/N ≥ 5 run); 10 lines, p 0.66 (default) | 39.989925, −1.569625 | Labels 3203, 4716, 3036, 3014, 2973, 2963, 2926, 4719 (4719: semimajor 114 px, e 0.98); aper50 S/N 5.7–53 | **Chain:** one line (perpendicular rms 0.29″, PA 66.1°), `pa_obs` 59–64°. **Cutouts:** a bright straight stripe along the mosaic columns in all four bands, with parallel ridges in F444W. It points at Gaia DR3 G = 12.71 (39.996246, −1.566737), 1.0″ off the line, 12–37″ beyond the line sources. The star has no catalogue counterpart within 4.8″ (saturated core), so `spike_segments` (D-034), which needs a catalogued point source brighter than AB 20 and caps the spike length at 20″, cannot see it. Both flags lie on one straight line at PA ≈ 63°, about 125″ apart. | **ordinary: instrumental (diffraction spike of a G = 12.7 star)**. With the Gaia-spike veto the centre disappears |
 
-**Gaia-spike veto (scratch sensitivity test, not in the code).** Gaia DR3 stars with G < 17 within 4′ of the
-cluster (7 stars, VizieR I/355/gaiadr3). A catalogue row was dropped when such a star lay 0.5–60″ away, the row's
-major axis was within 7° of the direction to it, and that direction was within 7° of a spike axis (63.4° + 0/60/90/120°).
-This dropped 166 of 5,266 rows. Max 5 lines, p 0.945 (no photo-z) and 0.495 (CANUCS photo-z): **null**.
+**Gaia-spike veto (in the code since D-043).** It was first a scratch test, which dropped 166 of 5,266 rows. It is
+now `exotic_screens.py radial --spike-stars`: Gaia DR3 stars join `spike_segments` with spikes up to 60″, and the
+field's hexagonal spike axes are estimated as before. The reproducing commands:
 
-**Counts.** Screened: 153 `anti` arcs without photo-z, 124 with. Flags: 2 (radial); both are diffraction spikes
-of bright Gaia stars. Surviving every ordinary test: **0**.
+    python scripts/gaia_stars.py 39.97134 -1.58226 --radius-arcmin 4 --out stars.ecsv   # 7 stars, G < 17
+    python scripts/exotic_screens.py --model abell370-cats radial --catalog <F200W cat> --max-radius 100 \
+        --spike-stars stars.ecsv [--photoz <CANUCS zout>]
+
+The committed code reproduces the scratch result: 82 spike segments dropped, 140 `anti`, 73 centres against 77.6,
+max 5 lines, **p 0.945**. With CANUCS photo-z: 111 `anti`, 53 against 47.7, **p 0.495**. **Null.**
+
+The "aper50 S/N ≥ 5" run in the table above was a scratch catalogue cut (rows with aper50 S/N < 5 removed before
+`radial`). The aper50 floor is not in the code yet (TASKS).
+
+**Counts.** Screened, after the Gaia veto: 140 `anti` arcs without photo-z, 111 with. Flags: 2 (radial); both are
+diffraction spikes of bright Gaia stars. Surviving every ordinary test: **0**.
 
 **Result:** no exotic-lens candidate in Abell 370 with the CATS v4 map model. Nothing for `/vet-candidate`.
 
 ## Limits
 
 - Radial screen only: no `params.txt`, so the image list (and `images`, `fluxratio`) is gated off (D-035).
-- `spike_segments` misses spikes of stars that are saturated (not catalogued) or off the mosaic, and its 20″
-  length cap is too short for G ≈ 13 stars (segments 12–37″ out). The Gaia-veto test above is scratch code;
-  folding a Gaia-seeded spike veto into `exotic_screens.py` is proposed (TASKS).
+- Without `--spike-stars`, `spike_segments` misses spikes of stars that are saturated (not catalogued) or off the
+  mosaic, and its 20″ cap is too short for G ≈ 13 stars (segments 12–37″ out). Use the Gaia-seeded veto (D-043).
 - The null distribution of the default runs is inflated by the same spike segments (random max 7–14 lines), so
   the default-run p values for other centres are too high (conservative); the vetoed runs are the cleaner numbers.
 - CANUCS photo-z blends (3 of 68 matched images at z < 0.6) drop a few real arcs from the photo-z runs.

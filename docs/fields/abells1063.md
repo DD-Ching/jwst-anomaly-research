@@ -70,5 +70,6 @@ S1063 with the CATS v4.1 map model; nothing for `/vet-candidate`.
 - Radial screen only (image list gated off, D-035).
 - The DJA photo-z put 13 of 46 matched `arcs.txt` images in the foreground (z < 0.6), so the photo-z run removes many
   genuine background arcs; the run without photo-z is the more complete one.
-- The 26 spike segments dropped came from catalogued stars only. The Abell 370 note shows that spikes of saturated or
-  off-mosaic Gaia stars get through `spike_segments`; here they would only add lines, and the result is null anyway.
+- Gaia-seeded veto (`--spike-stars`, 11 Gaia DR3 stars G < 17 within 4′; D-043): the result is unchanged. 26 segments
+  dropped, 51 `anti`, max 4 lines, p 0.435; with photo-z max 3, p 0.95. No saturated or off-mosaic star adds segments
+  here.

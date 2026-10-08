@@ -111,3 +111,32 @@ def test_spike_veto_keeps_off_axis_radial_arcs():
     )
     veto = es.spike_segments(src, shapes)
     assert list(veto) == [True] * 6 + [False]
+
+
+def test_external_stars_veto_spikes_of_stars_missing_from_the_catalogue(tmp_path):
+    from astropy.table import Table
+
+    cosd = np.cos(np.deg2rad(DEC0))
+    # a saturated G = 13 star with no catalogue row; segments 30" and 33" N along its spike,
+    # one 30" E across it
+    ras = [RA0, RA0, RA0 + 30 / 3600 / cosd]
+    decs = [DEC0 + 30 / 3600, DEC0 + 33 / 3600, DEC0]
+    src = Table({"ra": ras, "dec": decs, "pa_obs": [1.0, 179.0, 0.0]})
+    shapes = Table({"ra": ras, "dec": decs, "mag": [24.0] * 3, "is_extended": [True] * 3})
+    assert not es.spike_segments(src, shapes).any()  # no catalogued star, nothing vetoed
+    path = tmp_path / "gaia.ecsv"
+    Table({"RA_ICRS": [RA0], "DE_ICRS": [DEC0], "Gmag": [13.0]}).write(path, format="ascii.ecsv")
+    stars = es.read_spike_stars(path)
+    assert list(stars.colnames) == ["ra", "dec", "mag"] and stars.meta["provenance"] == "observed"
+    assert list(es.spike_segments(src, shapes, stars)) == [True, True, False]
+    # a catalogued star of the same brightness is capped at 20", so the 30" segments survive
+    shapes2 = Table(
+        {
+            "ra": [RA0, *ras],
+            "dec": [DEC0, *decs],
+            "mag": [13.0] + [24.0] * 3,
+            "is_extended": [False] + [True] * 3,
+        }
+    )
+    assert not es.spike_segments(src, shapes2).any()
+    np.testing.assert_allclose(es.spike_radius(12.0, cap=es.EXTERNAL_SPIKE_CAP), 60.0)

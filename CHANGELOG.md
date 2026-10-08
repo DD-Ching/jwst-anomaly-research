@@ -6,11 +6,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Worktree worker: CANUCS 1208 for Abell 370 (CANUCS DR1 photo-z; frame offset −0.121″, −0.015″ pinned) and GLIMPSE
   3293 for S1063 (DJA v7.5 photo-z). Only `radial` applies (image lists gated, D-035).
 - Abell 370 raised two flags (15 and 8 lines, p ≤ 0.01). Both are diffraction-spike chains from Gaia stars that are
-  off the mosaic or saturated and absent from the catalogue. With a Gaia-seeded veto: p 0.945. S1063: p 0.435.
+  off the mosaic or saturated and absent from the catalogue. The Gaia-seeded veto is now in the code
+  (`radial --spike-stars`, `scripts/gaia_stars.py`); with it, p 0.945. S1063: p 0.435, unchanged by the veto.
 - **Failed approach:** spike vetoes seeded from the pipeline catalogue miss saturated and off-mosaic stars, whose
   spikes reach 37″.
 - Wall time: under 2 min of pipeline per field, plus cutout vetting.
-- **Handoff:** a Gaia-seeded `spike_segments` with a length cap that scales with G and a low-weight veto.
+- **Handoff:** a low-weight veto or an aper50 S/N floor in `radial`; use `--spike-stars` on every field.
 
 ## 2026-10-08: Sunrise transient candidates `n0022` and `n0150` are detector persistence (D-039)
 - New `scripts/persistence_check.py`: per-exposure photometry on level-2 `_cal` files (S3 byte ranges), plus the
