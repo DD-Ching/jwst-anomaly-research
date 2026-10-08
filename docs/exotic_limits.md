@@ -53,7 +53,8 @@ given only as a label.
      S/N = S/N_src √(Σ|μ|).
      - On average 0.01–0.56 merges happen per lens, rising with |M|. Merges happen near the caustic, where the
        stretch is largest.
-   - **Detection.** Rows with S/N < 5 are dropped as undetected (ASSUMPTION). The catalogues' faintest rows have
+   - **Detection.** Rows with S/N < 5 are dropped as undetected (ASSUMPTION). This only affects the image
+     bookkeeping (`n_images`): the screen itself requires S/N ≥ 10. The catalogues' faintest rows have
      S/N 2.4–6.9, and the screen itself needs S/N ≥ 10.
    - The pixel scale, 0.0312″ in all eight catalogues, is measured from their pixel and sky centroids.
 6. **Screen.** The injected catalogue goes through `exotic_screens.radial_candidates`, the code `cmd_radial`
@@ -65,7 +66,9 @@ given only as a label.
    - Only the 32 × 32-cell grid blocks that those arcs' windows touch are recomputed. The per-draw maximum outside
      them comes from cached block maxima, so the result is identical to a full recompute. This is tested against
      `line_counts` on the whole grid, and so is the windowed null against the screen's own null with its seed.
-   - The binomial error on each efficiency therefore applies.
+   - The 10 trials of a batch share that batch's real-arc draws, so they are not fully independent: a batch with
+     an unusually high null maximum lowers all 10 together. With 20 independent batches per field and mass, the
+     binomial σ below is approximate (slightly understated).
 7. **Recovery.** A lens counts as recovered when a convergence peak with p_random < 0.05 lies within 2″ of the
    injected centre (ASSUMPTION: 4 grid steps, twice the 1″ line tolerance).
    - We used 200 lenses per field and mass, which gives a binomial σ of at most 3.5 %.

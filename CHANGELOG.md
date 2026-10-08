@@ -11,7 +11,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   Headline 95 % limits (six photo-z fields, 38.0 arcmin²): none below 10¹² M☉; < 6.1 × 10⁴, 6.9 × 10³, 3.9 × 10³
   deg⁻² at 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉ (all eight fields, optimistic: 3.7 × 10⁴, 3.9 × 10³, 2.2 × 10³).
 - **Failed approaches (rules):** one θ_E for every source; two lines for overlapping images; one fixed null for all
-  trials; a `nanmin(S/N)` detection floor.
+  trials; a `nanmin(S/N)` detection floor; recovery at the 3-line peak instead of p_random; catalogue shapes
+  without PSF deconvolution; headline limits including fields without photo-z.
 - Wall time: 405–1061 s per field (1,000 injections, 100 independent nulls).
 - **Handoff:** a W1-specific screen benchmarked with this harness (TASKS).
 

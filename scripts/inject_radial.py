@@ -346,6 +346,8 @@ def paint_lens(
     rows["mag"] = np.asarray(rows["mag"], float) - 2.5 * np.log10(mu)
     rows["area_px"] = np.asarray(rows["area_px"], float) * mu
     rows["snr"] = np.asarray(rows["snr"], float) * np.sqrt(mu)
+    if "is_extended" in rows.colnames:  # a lensed image is never a star for the spike veto
+        rows["is_extended"] = True
     ra, dec = model.to_sky(x_l - dxi[sel], y_l + dyi[sel])
     rows["ra"], rows["dec"] = ra, dec
     rows["label"] = first_label + np.arange(len(rows))
@@ -377,7 +379,7 @@ def footprint_border(xs, ys, max_radius: float, radii=(4.0, 5.0, 6.0, 8.0)) -> d
     overestimate (the true edge lies beyond the outermost sources)."""
     areas = [screened_footprint(xs, ys, max_radius, r)[2] for r in radii]
     slope, a0 = np.polyfit(radii, areas, 1)
-    a4 = screened_footprint(xs, ys, max_radius)[2]
+    a4 = areas[list(radii).index(FOOTPRINT_RADIUS)]
     return {
         "radii": list(radii),
         "areas_arcsec2": areas,
@@ -719,11 +721,14 @@ def _limits(summaries: list[dict], masses) -> dict:
         effs = [s["efficiency"][key]["efficiency"] for s in summaries]
         areas = [s["screened_area_deg2"] for s in summaries]
         th = [s["efficiency"][key]["theta_e_zs2_arcsec"] for s in summaries]
+        # border-corrected: each footprint shrunk to its r -> 0 area (conservative)
+        a0 = [a * (1.0 - s["footprint_border"]["excess_frac"]) for a, s in zip(areas, summaries)]
         limits[key] = {
             "mass_msun": m,
             "theta_e_zs2_arcsec_range": [min(th), max(th)],
             "effective_area_deg2": float(np.dot(effs, areas)),
             "upper_limit_deg2": surface_density_limit(effs, areas),
+            "upper_limit_border_corrected_deg2": surface_density_limit(effs, a0),
         }
     return limits
 
@@ -732,7 +737,7 @@ def combine(summaries: list[dict], masses) -> dict:
     """Headline limits use only fields with photo-z. Without photo-z every non-star row counts as
     lensable (at z_s = 2), so cluster members and foreground galaxies get painted as W1 images and
     the efficiency is biased high; those fields enter only the separate, optimistic set."""
-    pz = [s for s in summaries if FIELDS[s["field"]]["photoz"] is not None]
+    pz = [s for s in summaries if s.get("photoz")]  # as the field was actually run
     out = {
         "fields": [s["field"] for s in pz],
         "total_area_deg2": float(sum(s["screened_area_deg2"] for s in pz)),

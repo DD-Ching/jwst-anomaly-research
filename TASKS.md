@@ -5,7 +5,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 
 ## Now (owner focus 2026-10-08: wormhole / negative-mass and warp signatures only; D-047)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
-   - W1: `radial` is blind at θ_E ≤ 1″ (D-049, limits only ≥ 3″). Next: a W1-specific screen (collinear radial
+   - W1: `radial` is blind below about 10¹² M☉ (D-049; limits only from 2 × 10¹² M☉, θ_E(z_s = 2) ≳ 2″). Next: a W1-specific screen (collinear radial
      image pairs flanking an empty centre, orientation against the candidate centre, local null), benchmarked with
      `scripts/inject_radial.py`; then pixel-level injections; other lens redshifts → volume density vs Takahashi &
      Asada; Abell 2744 radial numbers in docs/fields/abell2744.md to the post-D-034 result (134 arcs, 5 lines, p 0.505);

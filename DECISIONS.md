@@ -2307,10 +2307,12 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
   - 2 ≤ β ≤ 4 θ_E: replaced by their images, with PSF-deconvolved moments mapped by the signed Jacobian,
     magnitude − 2.5 log₁₀|μ|, area × |μ| and S/N × √|μ|;
   - an image pair whose isophotes overlap (separation < sum of √(area |μ| / π)) is painted as one blended row;
-  - rows below S/N 5 are dropped as undetected.
+  - rows below S/N 5 are dropped as undetected (bookkeeping only: the screen requires S/N ≥ 10);
+  - painted images are flagged extended, so a magnified compact source never becomes a spike-veto "star".
 - **Screen.** It is unchanged: `exotic_screens.radial_candidates`, `radial_grid`, `anti_window_draw` and
   `radial_defaults` are shared with `cmd_radial`, and the refactor gives byte-identical SMACS output.
-- **Null.** Each batch of 10 trials has its own independent 200-draw null. Each trial updates only the grid blocks
+- **Null.** Each batch of 10 trials has its own independent 200-draw null (trials within a batch share it, so the
+  binomial σ is approximate). Each trial updates only the grid blocks
   its arcs touch, which gives results identical to a full recompute (tested).
 - **Recovery.** A peak with p_random < 0.05 within 2″ of the injected centre. 200 lenses per field and mass.
 - **Limit.** 2.996 / Σ ε_f A_f, with A_f the screened footprint: 1″ grid points with a catalogue source within
@@ -2327,6 +2329,11 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - Hard-coded copies of the screen defaults and a `nanmin(S/N)` detection floor, which removes nothing.
 - Synthetic sources at random β: lensing the rows actually present keeps the real density, clustering and
   photo-z.
+- Catalogue shapes used as intrinsic, with no PSF term: PSF-sized images would be over-elongated.
+- Counting a lens as recovered at the ≥ 3-line peak: the screen's significance is p_random, and 3 lines is below
+  every field's null (5–8 needed).
+- Headline limits from all eight fields: without photo-z (MACS0717, Abell S1063) members and foreground galaxies
+  get lensed and the efficiency is biased high; they enter only the optimistic set.
 
 **Evidence** (`derived` from `simulated` injections; 8 fields, 51.2 arcmin²).
 - The base screens reproduce the field docs: SMACS 31 arcs, 4 lines, p 0.965; MACS0416 120, 7, 0.225; Abell 370
