@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W1 injection-recovery through `radial`: the screen is blind to negative-mass lenses (D-049)
+- Worktree worker: `scripts/inject_radial.py` paints `exotic_sim` W1 lenses (n = 1, ε < 0) into the real catalogues
+  of all eight null `radial` fields and runs the unchanged screen (`exotic_screens.radial_candidates`, a pure
+  refactor of `cmd_radial`'s selection). 200 lenses per field and θ_E; 51.2 arcmin² screened.
+- Recovered: 0 / 1,600 at θ_E = 0.3″ and 1″; 10 at 3″; 80 at 6″; 181 at 10″. 95 % limits on W1 lens surface
+  density (six photo-z fields): none below 3″; < 7.0 × 10⁴ deg⁻² at 3″ (|M| ≈ 1.4–4.3 × 10¹² M☉), < 3.2 × 10³ deg⁻²
+  at 10″. MACS0717 and Abell S1063 (no photo-z, members get lensed) are excluded as optimistic. About 27×
+  weaker than Takahashi & Asada spread over 0 < z < 1. docs/exotic_limits.md.
+- Why: an image reaches e ≥ 0.5 only for β ≲ 2.3 θ_E, and `anti` against the cluster keeps a third, so a lens puts
+  1–3 arcs into a screen whose null needs 5–8 lines.
+- **Failed approaches (rules):** recovery is the screen's p_random, not the 3-line peak; cache the null draws once
+  per field (0.2–1 s per lens instead of 15–150 s); deconvolve the PSF before applying the lens Jacobian.
+- Wall time: 322–877 s per field for 1,000 lenses (5 θ_E).
+- **Handoff:** a W1-specific screen (collinear radial pairs flanking an empty centre, orientation against the
+  candidate centre, local null), benchmarked with this harness.
+
 ## 2026-10-08: El Gordo lens model reproduces the published magnification maps (issue #68)
 - `validate` now compares Lenstool-par models with published signed μ maps (`mag_map_files`, fetched only by
   `validate`); `map_check` reports `parity_agree` for signed maps. El Gordo (CDS J/A+A/678/A3, z=2 and z=4, |μ|<10,

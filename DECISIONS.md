@@ -2292,3 +2292,62 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - Injection-recovery shows a screen is blind to W1 or W3 at the recommended amplitudes.
 - Cluster macro-magnification needs a lens model with shear plus a microlens instead of an isolated lens (W3 in
   caustic-crossing arcs).
+
+## D-049 W1 injection-recovery through the `radial` screen: blind at θ_E ≤ 1″, weak limits at 3–10″ (2026-10-08)
+
+**Decision.**
+- `scripts/inject_radial.py` turns the eight null `radial` screens into 95 % upper limits on the surface density of
+  W1 negative-mass lenses (n = 1, ε < 0; D-047). The method, tables and caveats are in docs/exotic_limits.md.
+- **Injection.** Each lens sits at a random point of the screened footprint, at the cluster redshift. The lensed
+  sources are the field's own background catalogue rows:
+  - β < 2 θ_E: removed (umbra);
+  - 2 ≤ β ≤ 4 θ_E: replaced by two images from `exotic_sim.inject_images`;
+  - each image gets PSF-deconvolved second moments mapped by the signed Jacobian, magnitude − 2.5 log₁₀|μ|, area
+    × |μ| and S/N × √|μ|.
+- **Screen.** It is unchanged: `cmd_radial`'s selection is now `exotic_screens.radial_candidates`, a pure
+  refactor that gives the same SMACS output. The real arcs' null draws are cached once per field and updated for
+  each injection.
+- **Recovery.** A peak with p_random < 0.05 within 2″ of the injected centre. 200 lenses per field and θ_E.
+- **Limit.** 2.996 / Σ ε_f A_f, using the screened footprint (1″ grid points with a catalogue source within 4″).
+- All of these are ASSUMPTIONs.
+
+**Alternatives rejected.**
+- Drawing synthetic sources at random β. Lensing the rows that are actually there keeps the real local density,
+  clustering and photo-z, and removes each original row as it is replaced.
+- Re-running `cmd_radial` (200 null draws over the whole grid) for every injection: about 15–150 s per lens. The
+  incremental null has the same distribution in about 0.2–1 s.
+- Using the shapes of the catalogue as intrinsic, with no PSF term. That would over-elongate PSF-sized images.
+- Counting a lens as recovered at the ≥ 3-line peak threshold. The screen's significance is p_random, and 3 lines
+  is below every field's null (5–8 lines needed).
+
+**Evidence** (`derived` from `simulated` injections; 8 fields, 51.2 arcmin²).
+- The base screens reproduce the field docs: SMACS 31 arcs, 4 lines, p 0.965; MACS0416 120, 7, 0.225; Abell 370
+  100, 5, 0.495; and so on.
+  - Abell 2744 now gives 134 arcs, 5 lines, p 0.505: its doc predates the D-034 spike veto (42 segments).
+- Recovered of 1,600 lenses per θ_E (200 in each field):
+
+  | θ_E | 0.3″ | 1″ | 3″ | 6″ | 10″ |
+  |---|---|---|---|---|---|
+  | recovered | 0 | 0 | 10 | 80 | 181 |
+
+  - The 95 % limits, from the six fields with photo-z (38.1 arcmin²), are none at 0.3″ and 1″, < 7.0 × 10⁴ deg⁻²
+    at 3″, < 6.8 × 10³ at 6″ and < 3.2 × 10³ at 10″. MACS0717 and Abell S1063 have no photo-z, so their members
+    and foreground galaxies get painted as W1 images and their efficiency is biased high (code review); with them
+    the limits would be about 2× tighter (optimistic, reported separately in `limits.json`).
+  - |M| ≈ 1.4–4.3 × 10¹² M☉ at 3″ (`model_prediction`, z_s = 2).
+  - The best limit is about 27× weaker than Takahashi & Asada's volume limit spread over 0 < z < 1 (about
+    120 deg⁻²).
+- The loss is in the arc selection. An image reaches e ≥ 0.5 only for β ≲ 2.3 θ_E, and `anti` relative to the
+  cluster keeps about a third of the images. A 3″ lens therefore puts 1–3 arcs into the screen, while the null
+  needs 5–8.
+- Tests: `tests/test_inject_radial.py`, offline. They check the image shapes against the Jacobian, the painting
+  (umbra removed, sources replaced, μ in magnitude and S/N), recovery of a dense synthetic lens, the footprint
+  area, and the mass scaling against D-047.
+
+**Revisit if.**
+- A W1-specific screen is built: collinear radial image pairs flanking an empty centre, with orientation measured
+  relative to the candidate centre instead of the cluster, and a local rather than field-maximum null. This
+  injection harness is its benchmark.
+- The screen's thresholds change (e ≥ 0.5, 60° `anti` window, 15″ lines).
+- Pixel-level injections (painted into cutouts and re-extracted) are needed to measure blending and
+  incompleteness.
