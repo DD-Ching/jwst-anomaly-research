@@ -1418,6 +1418,11 @@ def _resid_stats(r: np.ndarray) -> dict:
 
 
 def cmd_fluxratios(args) -> dict:
+    if not has_image_list(args.model) or is_map_model(args.model):
+        raise SystemExit(
+            f"error: {args.model}: fluxratios needs a Lenstool model with a usable multiple-image "
+            "list (gated off by the image-plane rms gate of D-035 / D-044, or a map model)"
+        )
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)

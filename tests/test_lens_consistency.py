@@ -555,3 +555,9 @@ def test_canucs_macs0416_reproduces_its_lenstool_chi2(tmp_path):
     ip = json.loads((out / "macs0416-canucs" / "validate.json").read_text())["image_plane"]
     assert ip["n_solved"] == ip["n_images"] > 250
     assert abs(ip["chi2_pos"] / ip["chi2_pos_lenstool"] - 1) < 0.10
+
+
+def test_fluxratios_refuses_a_gated_image_list():
+    # D-044: abell370-canucs is a source-plane fit whose image list is gated off
+    with pytest.raises(SystemExit, match="usable multiple-image list"):
+        lc.main(["--model", "abell370-canucs", "fluxratios", "--photometry", "unused.fits"])
