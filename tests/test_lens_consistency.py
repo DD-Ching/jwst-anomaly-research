@@ -537,3 +537,15 @@ def test_flux_ratio_table_exclusions():
     assert set(t["flux_class"]) == {"untested"} and set(t["dja_id"]) == {-1}
     t = lc.flux_ratio_table(model, images, {}, phot, match_arcsec=0.05, offset_arcsec=(0.0, 0.1))
     assert list(t["dja_id"]) == [11, 12, 13]
+
+
+@pytest.mark.network
+def test_canucs_macs0416_reproduces_its_lenstool_chi2(tmp_path):
+    # D-044: the CANUCS best fit's image-plane chi2pos is 344.30 (sigpos 0.49"); ours is within 10 %
+    out = tmp_path / "v"
+    lc.main(["--model", "macs0416-canucs", "--out", str(out), "validate"])
+    import json
+
+    ip = json.loads((out / "macs0416-canucs" / "validate.json").read_text())["image_plane"]
+    assert ip["n_solved"] == ip["n_images"] > 250
+    assert abs(ip["chi2_pos"] / ip["chi2_pos_lenstool"] - 1) < 0.10

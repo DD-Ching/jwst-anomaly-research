@@ -125,6 +125,9 @@ MODELS = {
         "frame_offset_arcsec": (0.224, -0.016),
     },
     "abell2744-bergamini23": {"files": lensmodel.ABELL2744_BERGAMINI23, "sigpos": "arcs"},
+    # CANUCS JWST-era Lenstool models (D-044): the independent second model for vetting
+    "macs0416-canucs": {"files": lensmodel.MACS0416_CANUCS, "sigpos": 0.49},
+    "abell370-canucs": {"files": lensmodel.ABELL370_CANUCS, "sigpos": 0.3},
     # map models: published deflection maps (D_LS/D_S = 1), no Lenstool par or image list
     "whl0137-relics-lenstool": {
         "files": lensmodel.WHL0137_RELICS_LENSTOOL,
