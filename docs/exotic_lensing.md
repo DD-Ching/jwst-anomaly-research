@@ -123,6 +123,7 @@ hit goes to `/vet-candidate`.
 | Abell 370 (HFF CATS, D-043) | not run (image list gated) | with a Gaia spike veto: max 5 lines, p 0.945 (0.495 with CANUCS photo-z); two raw flags were spike chains | null |
 | Abell S1063 (HFF CATS, D-043) | not run (image list gated) | max 4 lines, p 0.435; with DJA photo-z max 3, p 0.95 | null |
 
-**Sensitivity (D-049).** Injected W1 negative-mass lenses are not recovered by `radial` at θ_E = 0.3″ or 1″, and
-10 of 1,600 are recovered at 3″. 95 % limits exist only for θ_E ≥ 3″ (Σ < 3.6 × 10⁴ deg⁻² at 3″, < 1.8 × 10³ at 10″).
+**Sensitivity (D-049).** Injected W1 negative-mass lenses at the cluster redshift are not recovered by `radial` at
+|M| = 2 × 10¹⁰ or 2 × 10¹¹ M☉ (θ_E(z_s = 2) ≈ 0.2–1.1″), and 8 of 1,600 are recovered at 2 × 10¹² M☉. 95 % limits exist
+only from there up: Σ < 3.7 × 10⁴ deg⁻² at 2 × 10¹² M☉ and < 2.2 × 10³ deg⁻² at 2 × 10¹³ M☉.
 See docs/exotic_limits.md.
