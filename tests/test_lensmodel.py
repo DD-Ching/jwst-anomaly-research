@@ -701,10 +701,12 @@ def test_multiplane_identity_tracks_the_cosmology_and_grids_check_their_model():
     b = LensModel(comps, RA0, DEC0, FlatLambdaCDM(H0=50.0, Om0=0.5), sha256="f")
     b = b.split_planes({"gal": 0.2})
     assert a.sha256 and a.sha256 != b.sha256
-    assert LensModel(comps, RA0, DEC0, COSMO).split_planes({"gal": 0.2}).sha256 == ""
+    mem_a = LensModel(comps, RA0, DEC0, COSMO).split_planes({"gal": 0.2})
+    mem_b = LensModel(comps, RA0, DEC0, FlatLambdaCDM(H0=50.0, Om0=0.5)).split_planes({"gal": 0.2})
+    assert mem_a.sha256 and mem_a.sha256 != mem_b.sha256  # parametric: content identifies it
     before = a.sha256
     a.shift_frame(0.1, 0.0)
-    assert a.sha256 != before
+    assert a.sha256 == before  # model-frame deflections, and so grids, are unchanged
     named = LensModel(comps[1:], RA0, DEC0, FlatLambdaCDM(H0=70.0, Om0=0.3, name="x"))
     lensmodel.MultiPlaneLensModel(
         [LensModel(comps[:1], RA0, DEC0, COSMO), named.split_planes({"gal": 0.2}).planes[0]]
@@ -837,3 +839,15 @@ def test_posterior_rejects_unknown_columns(tmp_path):
     bad = BAYES.replace("#Chi2\n", "")
     with pytest.raises(ValueError):
         lensmodel.read_lenstool_bayes(_write(tmp_path, bad, "bad.dat"))
+
+
+def test_split_planes_keeps_a_sigma_only_change_where_fitted():
+    model = LensModel(
+        [*_cluster_and_galaxy().components, _dpie(name="g2", x=-6.0, y=3.0, v_disp=150.0)],
+        RA0,
+        DEC0,
+        COSMO,
+    )
+    multi = model.split_planes({"gal": 0.2, "g2": 0.39}, v_disp={"g2": 120.0})
+    g2 = [c for c in multi.components if c.name == "g2"][0]
+    assert (g2.x, g2.y, g2.v_disp) == (-6.0, 3.0, 120.0)

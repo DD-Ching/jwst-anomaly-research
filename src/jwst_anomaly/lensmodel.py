@@ -1039,24 +1039,25 @@ class LensModel:
 
         # delens moved potentials plane by plane, in redshift order, so each one is traced
         # through foreground planes that are already final
+        fitted_z = {c.name: c.z_lens for c in self.components}
         for z in sorted(by_z):
             comps = by_z[z]
-            moved_here = [k for k, c in enumerate(comps) if c.name in z_lens]
+            # only potentials that changed redshift (a v_disp-only change stays where fitted)
+            moved_here = [
+                k for k, c in enumerate(comps) if c.name in z_lens and z != fitted_z[c.name]
+            ]
             front = [zz for zz in by_z if zz < z]
             if not moved_here or not front:
                 continue
             fore = MultiPlaneLensModel(build({zz: by_z[zz] for zz in sorted(front)}))
-            for k in moved_here:
-                c = comps[k]
-                # theta_j = theta - sum_i (D_ij / D_j) alpha_i(theta_i) through the foreground
-                d_j = float(self.cosmology.comoving_transverse_distance(z).to_value(u.Mpc))
-                alphas, _ = fore._rays(np.array([c.x]), np.array([c.y]), len(fore.planes), False)
-                px, py = c.x, c.y
-                for (ax, ay), d_i in zip(alphas, fore._d_m, strict=True):
-                    r = 1.0 - d_i / d_j
-                    px -= r * float(ax[0])
-                    py -= r * float(ay[0])
-                comps[k] = replace(c, x=px, y=py)
+            # the ray through the fitted centre, traced to this plane as if it were a source
+            px, py = fore.source_points(
+                np.array([comps[k].x for k in moved_here]),
+                np.array([comps[k].y for k in moved_here]),
+                z,
+            )
+            for k, x_new, y_new in zip(moved_here, px, py, strict=True):
+                comps[k] = replace(comps[k], x=float(x_new), y=float(y_new))
         planes = build(by_z)
         moved = ", ".join(f"{k}@z{v:g}" for k, v in sorted(z_lens.items()))
         sigs = ", ".join(f"{k}:{v:g} km/s" for k, v in sorted((v_disp or {}).items()))
@@ -1697,8 +1698,7 @@ class MultiPlaneLensModel:
         self._cos0 = p0._cos0
         self.cosmology = p0.cosmology
         self.source = source or " + ".join(p.source for p in planes)
-        # identity for caches and provenance (see _identity); fixed when passed in
-        self._fixed_sha256 = sha256
+        # identity for caches and provenance (see _identity)
         self.sha256 = sha256 or self._identity()
         self._d_m = [
             float(self.cosmology.comoving_transverse_distance(p.z_lens).to_value(u.Mpc))
@@ -1711,9 +1711,10 @@ class MultiPlaneLensModel:
 
     def _identity(self) -> str:
         """Each plane's file hash, redshift and potentials, the frame anchor and the cosmology.
-        A plane without a hash (in memory) has no identity, so neither has the model: "" is
-        never cached, and ``find_images`` then cannot check that a grid belongs to it."""
-        if any(not p.sha256 for p in self.planes):
+        Parametric planes are fully described by these. A plane with neither a hash nor
+        potentials (an in-memory map) is not, so then the model has no identity: "" is never
+        cached, and ``find_images`` cannot check that a grid belongs to it."""
+        if any(not p.sha256 and not p.components for p in self.planes):
             return ""
         ident = repr(
             [(p.sha256, p.z_lens, p.components) for p in self.planes]
@@ -1741,8 +1742,8 @@ class MultiPlaneLensModel:
             p.shift_frame(dra_arcsec, ddec_arcsec)
         p0 = self.planes[0]
         self.ra0, self.dec0, self._cos0 = p0.ra0, p0.dec0, p0._cos0
-        # a map plane's deflection at a model-frame point depends on the anchor
-        self.sha256 = self._fixed_sha256 or self._identity()
+        # model-frame deflections do not change (a map plane's WCS moves too), so the identity,
+        # and any grid computed before the shift, stay valid, as for one plane
 
     def _rays(
         self, x: np.ndarray, y: np.ndarray, n_planes: int, jacobian: bool
@@ -1835,7 +1836,7 @@ class MultiPlaneLensModel:
         g, shape = grid.x, grid.alpha_x.shape[1:]
         bx = np.broadcast_to(g[None, :], shape).astype(float)
         by = np.broadcast_to(g[:, None], shape).astype(float)
-        for i, w in enumerate(self._weights(z_s, ())):
+        for i, w in enumerate(self._weights(float(np.squeeze(z_s)), ())):
             r = float(w)
             if r:
                 bx -= r * grid.alpha_x[i]
