@@ -117,7 +117,13 @@ MODELS = {
         "kappa_member": "tmp_k/0000_k.fits",
         "sigpos": "input.par",
     },
-    "elgordo-caminha23": {"files": lensmodel.ELGORDO_CAMINHA23, "sigpos": 0.621},
+    # frame_offset_arcsec: (dRA cos dec, dDec) from the model's image frame to the JWST frame;
+    # El Gordo's image list is on the HST/RELICS frame (median offset to DJA v7.0, issue #41).
+    "elgordo-caminha23": {
+        "files": lensmodel.ELGORDO_CAMINHA23,
+        "sigpos": 0.621,
+        "frame_offset_arcsec": (0.224, -0.016),
+    },
     "abell2744-bergamini23": {"files": lensmodel.ABELL2744_BERGAMINI23, "sigpos": "arcs"},
     # map models: published deflection maps (D_LS/D_S = 1), no Lenstool par or image list
     "whl0137-relics-lenstool": {
@@ -132,6 +138,30 @@ MODELS = {
 
 def is_map_model(name: str) -> bool:
     return MODELS[name].get("kind") == "maps"
+
+
+def apply_frame_offset(name: str, model, images: Table | None = None) -> tuple[float, float]:
+    """Shift a model and its image list from the image list's frame to the JWST frame by
+    ``MODELS[name]["frame_offset_arcsec"]`` (dRA cos dec, dDec; D-034), in place. The model's
+    reference point moves with the images, so every model position lands in the JWST frame."""
+    dra, ddec = MODELS[name].get("frame_offset_arcsec", (0.0, 0.0))
+    if dra or ddec:
+        model.ra0 += dra / 3600.0 / model._cos0
+        model.dec0 += ddec / 3600.0
+        model._cos0 = np.cos(np.deg2rad(model.dec0))
+        if images is not None:
+            shift_images(name, images)
+    return float(dra), float(ddec)
+
+
+def shift_images(name: str, images: Table) -> Table:
+    """Shift an image list into the JWST frame by the model's ``frame_offset_arcsec``, in place."""
+    dra, ddec = MODELS[name].get("frame_offset_arcsec", (0.0, 0.0))
+    if dra or ddec:
+        cos = np.cos(np.deg2rad(np.asarray(images["dec"], float)))
+        images["ra"] = np.asarray(images["ra"], float) + dra / 3600.0 / cos
+        images["dec"] = np.asarray(images["dec"], float) + ddec / 3600.0
+    return images
 
 
 def load_model(name: str):
@@ -572,6 +602,8 @@ def convention_check(model, par, images, shapes, match_arcsec: float) -> dict:
 
 def cmd_arcs(args) -> dict:
     model, files, par = load_model(args.model)
+    if par is not None:
+        apply_frame_offset(args.model, model)
     shapes = load_shapes(args.catalog)
     if args.photoz:
         attach_photoz(shapes, args.photoz)
@@ -600,7 +632,9 @@ def cmd_arcs(args) -> dict:
         pop = np.full(len(table), "unknown")
     table["population"] = pop
 
-    images = lensmodel.load_lenstool_images(files["arcs.dat"]) if par is not None else None
+    images = None
+    if par is not None:
+        images = shift_images(args.model, lensmodel.load_lenstool_images(files["arcs.dat"]))
     test = table[table["strong_shear"]]
     by_pop = {
         p: class_stats(test[test["population"] == p], args.aligned_deg)
@@ -787,6 +821,15 @@ def aperture_snr(
     return flux, ferr
 
 
+def peak_position(img, xx, yy, radius: float = 0.4) -> tuple[float, float]:
+    """Offset (arcsec) of the brightest finite pixel within ``radius`` of the stamp centre."""
+    inner = np.where((np.hypot(xx, yy) <= radius) & np.isfinite(img), img, -np.inf)
+    if not np.isfinite(inner).any():
+        return float("nan"), float("nan")
+    k = int(np.argmax(inner))
+    return float(xx.flat[k]), float(yy.flat[k])
+
+
 def peak_flux(img, err, xx, yy, radius: float = 0.4) -> tuple[float, float]:
     """Aperture flux at the brightest pixel within ``radius`` of the stamp centre."""
     inner = np.where((np.hypot(xx, yy) <= radius) & np.isfinite(img), img, -np.inf)
@@ -832,56 +875,101 @@ def forced_class(pred_snr: float, best_snr: float, flux_ratio: float = 1.0) -> s
     return "ambiguous"
 
 
+MAX_SEARCH_ARCSEC = 3.0  # cap of the residual-scaled search radius (ASSUMPTION)
+MAX_REF_SPREAD = 3.0  # sibling references disagreeing by more than this are inconsistent
+MAX_PEAK_OVER_POSITION = 2.0  # the 0.4" peak may not be much brighter than the catalogued spot
+MIN_REF_CONCENTRATION = 0.6  # f(0.2")/f(0.4") of a reference image (as exotic_screens, D-031)
+
+
+def system_search_radius(table: Table, sys_id: str, base: float, has_unpredicted: bool) -> float:
+    """Search radius for a system's predicted images: ``base``, or 1.5x the largest offset of
+    its catalogued images from their predictions when that is larger (model position error),
+    and 1.5x the match radius when one of its catalogued images has no prediction at all. The
+    widening (not ``base`` itself) is capped at ``MAX_SEARCH_ARCSEC`` (D-034)."""
+    obs = table[(np.asarray(table["system"]).astype(str) == sys_id)]
+    obs = obs[obs["image_class"] == "observed"]
+    widen = 0.0
+    if len(obs) and "sep_image_arcsec" in obs.colnames:
+        widen = 1.5 * float(np.nanmax(obs["sep_image_arcsec"]))
+    if has_unpredicted:  # the model is off here
+        match = float(table.meta.get("assumptions", {}).get("match_arcsec", 1.5))
+        widen = max(widen, 1.5 * match)
+    return max(base, min(widen, MAX_SEARCH_ARCSEC))
+
+
 def forced_check(
     table: Table,
     backtrace: Table,
     stamp,
     search_arcsec: float = 1.0,
     max_ref_mu: float = 50.0,
+    unpredicted: list[str] | None = None,
 ) -> None:
     """Add forced-photometry columns to the predicted-image ``table`` in place.
 
-    ``stamp(ra, dec)`` returns ``(sci, err, xx, yy)`` around a position. The reference is the
-    system's catalogued image at S/N > 5 with the smallest |μ| below ``max_ref_mu`` (μ near a
-    critical curve is too uncertain to scale from; ASSUMPTION)."""
+    ``stamp(ra, dec)`` returns ``(sci, err, xx, yy)`` around a position (it must cover
+    ``MAX_SEARCH_ARCSEC`` plus the background annulus).
+
+    Reference flux (rules from El Gordo, D-034; thresholds are ASSUMPTIONs): a catalogued image
+    with |μ| <= ``max_ref_mu``, S/N > 5 at its catalogued position, a 0.4"-recentred peak at
+    most ``MAX_PEAK_OVER_POSITION`` x brighter (else the peak is a neighbour), and compact
+    (f(0.2")/f(0.4") >= ``MIN_REF_CONCENTRATION``). Of those, the
+    least magnified is the reference. When two or more qualify and their f/|μ| differ by more
+    than ``MAX_REF_SPREAD``, the system is ``inconsistent_reference`` (a flux-ratio question for
+    ``exotic_screens.py fluxratio``, not a counter-image test). The search radius grows with
+    the system's own model residuals (``system_search_radius``)."""
     n = len(table)
-    keys = ("pred_snr", "best_snr", "flux_ratio", "best_dx", "best_dy")
+    keys = ("pred_snr", "best_snr", "flux_ratio", "best_dx", "best_dy", "search_arcsec")
     cols = {k: np.full(n, np.nan) for k in keys}
-    fclass = np.full(n, "", dtype="U12")
-    ref_cache: dict[str, tuple[float, float]] = {}
+    fclass = np.full(n, "", dtype="U22")
+    ref_cache: dict[str, tuple[float, float, str]] = {}
     systems = np.asarray(backtrace["system"]).astype(str)
     for i, row in enumerate(table):
         if row["image_class"] in ("observed", "demagnified", "outside"):
             continue
         sys_id = str(row["system"])
         if sys_id not in ref_cache:
-            ref = (np.nan, np.nan)
+            usable = []
             for b in backtrace[systems == sys_id]:
                 mu = abs(float(b["magnification"]))
                 if not np.isfinite(mu) or mu > max_ref_mu:
                     continue
-                f, e = peak_flux(*stamp(float(b["ra"]), float(b["dec"])))
-                if (
-                    np.isfinite(f)
-                    and e > 0
-                    and f / e > 5
-                    and (not np.isfinite(ref[1]) or mu < ref[1])
-                ):
-                    ref = (f, mu)
-            ref_cache[sys_id] = ref
-        f_ref, mu_ref = ref_cache[sys_id]
-        if not np.isfinite(f_ref):
-            fclass[i] = "no_reference"
+                img, err, xx, yy = stamp(float(b["ra"]), float(b["dec"]))
+                f, e = peak_flux(img, err, xx, yy)
+                f0, e0 = aperture_snr(img, err, xx, yy, 0.0, 0.0)
+                if not (np.isfinite(f) and np.isfinite(f0) and e > 0 and e0 > 0):
+                    continue
+                if not (f / e > 5 and f0 / e0 > 5 and f <= MAX_PEAK_OVER_POSITION * max(f0, 0)):
+                    continue
+                # compact only: a resolved arc's (or a neighbour's wing) aperture flux does not
+                # scale with |mu| (surface brightness is conserved; D-031)
+                px, py = peak_position(img, xx, yy)
+                f_big, _ = aperture_snr(img, err, xx, yy, px, py, r_ap=0.4)
+                if np.isfinite(f_big) and f_big > 0 and f / f_big >= MIN_REF_CONCENTRATION:
+                    usable.append((f, mu))
+            if not usable:
+                ref_cache[sys_id] = (np.nan, np.nan, "no_reference")
+            else:
+                lum = [f / mu for f, mu in usable]
+                f_ref, mu_ref = min(usable, key=lambda t: t[1])
+                state = "inconsistent_reference" if max(lum) > MAX_REF_SPREAD * min(lum) else ""
+                ref_cache[sys_id] = (f_ref, mu_ref, state)
+        f_ref, mu_ref, state = ref_cache[sys_id]
+        if state:
+            fclass[i] = state
             continue
         sci, err, xx, yy = stamp(float(row["ra"]), float(row["dec"]))
         _, e0 = aperture_snr(sci, err, xx, yy, 0.0, 0.0)
         if not (np.isfinite(e0) and e0 > 0):
             fclass[i] = "off_image"  # off the footprint, or in a gap or masked region
             continue
+        has_unpred = any(lensmodel.image_family(u) == sys_id for u in (unpredicted or []))
+        radius = system_search_radius(table, sys_id, search_arcsec, has_unpred)
         pred = f_ref * abs(float(row["magnification"])) / mu_ref
-        cols["pred_snr"][i] = pred / e0 if e0 > 0 else np.nan
-        snr, flux, dx, dy = best_within(sci, err, xx, yy, search_arcsec)
+        cols["pred_snr"][i] = pred / e0
+        snr, flux, dx, dy = best_within(sci, err, xx, yy, radius)
         cols["best_snr"][i], cols["best_dx"][i], cols["best_dy"][i] = snr, dx, dy
+        cols["search_arcsec"][i] = radius
         cols["flux_ratio"][i] = flux / pred if pred > 0 else np.nan
         fclass[i] = forced_class(cols["pred_snr"][i], snr, cols["flux_ratio"][i])
     for k, v in cols.items():
@@ -892,7 +980,11 @@ def forced_check(
         "annulus_arcsec": list(FORCED_ANNULUS),
         "err_scale": ERR_SCALE,
         "search_arcsec": search_arcsec,
+        "max_search_arcsec": MAX_SEARCH_ARCSEC,
         "max_ref_mu": max_ref_mu,
+        "max_ref_spread": MAX_REF_SPREAD,
+        "max_peak_over_position": MAX_PEAK_OVER_POSITION,
+        "min_ref_concentration": MIN_REF_CONCENTRATION,
         "flux_ratio_range": [MIN_FLUX_RATIO, MAX_FLUX_RATIO],
         "min_valid_fraction": MIN_VALID,
     }
@@ -946,6 +1038,7 @@ def cmd_images(args) -> dict:
         model, grid_cache_path(model, args.half_width, args.step), args.half_width, args.step
     )
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    dra, ddec = apply_frame_offset(args.model, model, images)  # into the JWST frame
     bt = lensmodel.backtrace_images(model, images, par["z_m_limit"])
     shapes = load_shapes(args.catalog)
     if args.photoz:
@@ -958,13 +1051,15 @@ def cmd_images(args) -> dict:
         raise SystemExit("no system has two or more back-traced images; nothing to predict")
     if args.forced_image:
         stamp, close = image_stamper(
-            args.forced_image, args.forced_search_arcsec + FORCED_ANNULUS[1] + 0.1
+            args.forced_image,
+            max(args.forced_search_arcsec, MAX_SEARCH_ARCSEC) + FORCED_ANNULUS[1] + 0.1,
         )
         try:
-            forced_check(table, bt, stamp, args.forced_search_arcsec)
+            forced_check(table, bt, stamp, args.forced_search_arcsec, unpredicted=unpredicted)
         finally:
             close()
         table.meta["forced"]["image"] = args.forced_image
+        table.meta["forced"]["frame_offset_arcsec"] = [dra, ddec]
     out = args.out / args.model
     _write(table, out / "images_predicted.ecsv")
     classes = (
@@ -999,6 +1094,7 @@ def cmd_images(args) -> dict:
                         "undetectable",
                         "ambiguous",
                         "no_reference",
+                        "inconsistent_reference",
                         "off_image",
                     )
                 },
@@ -1012,6 +1108,7 @@ def cmd_images(args) -> dict:
                         "pred_snr": round(float(r["pred_snr"]), 1),
                         "best_snr": round(float(r["best_snr"]), 1),
                         "flux_ratio": round(float(r["flux_ratio"]), 2),
+                        "search_arcsec": round(float(r["search_arcsec"]), 2),
                         "best_offset_arcsec": [
                             round(float(r["best_dx"]), 1),
                             round(float(r["best_dy"]), 1),

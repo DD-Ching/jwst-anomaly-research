@@ -1671,3 +1671,47 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 - A Sunrise image list becomes available (Welch+2022, Scofield+2025). It would allow `validate` χ² and
   `fluxratio`.
 - Map resolution limits the Hessian near critical curves (0.04″ pixels).
+
+## D-034 Counter-image and radial-screen rules from El Gordo (2026-10-08)
+
+**Decision.** Four rules, each from an ordinary false flag in El Gordo (docs/fields/elgordo.md), so later fields skip
+them automatically. All thresholds are ASSUMPTIONs.
+1. **Frame offset:** a `MODELS` entry may give `frame_offset_arcsec` from its image list's frame to the JWST frame.
+   `apply_frame_offset` shifts the model's reference point and the image list together at load, so `images`,
+   `arcs` and both screens work in the JWST frame.
+   El Gordo's is (+0.224″, −0.016″), the median offset of the Caminha image list from DJA v7.0 (issue #41). An
+   unshifted 0.2″ aperture missed the images.
+2. **Reference images** (`forced_check`) must have:
+   - S/N > 5 at the catalogued position;
+   - a 0.4″-recentred peak at most 2× brighter (else the peak is a neighbour);
+   - compactness f(0.2″)/f(0.4″) ≥ 0.6 (a resolved arc or a galaxy wing does not scale with |μ|; D-031).
+   When qualifying siblings differ in f/|μ| by more than 3×, the system is `inconsistent_reference`. That is a
+   question for the flux-ratio screens, not a missing image.
+3. **Search radius** = max(1″, 1.5 × the system's largest catalogued-image residual), and 2.25″ when one of the
+   system's catalogued images is in the `unpredicted` list. The widening is capped at 3″; a larger user radius is
+   kept. It used to be a fixed 1″.
+4. **Radial screen:** elongated sources within the spike radius of a point source brighter than F200W 20 mag are
+   dropped when their axis lies within 7° of the direction to it and that direction is one of the field's spike
+   axes. The axes are a hexagonal set θ, θ + 60°, θ + 120° plus θ + 90°, with θ the mode of the aligned pairs'
+   angles mod 60°. Spikes point radially at their star; genuine radial arcs off the spike axes survive.
+   - Spike radius: 3″ × 10^(0.2 (20 − m)), clipped to 3–20″ (the D-027 mask form).
+
+**Alternatives rejected.**
+- A catalogue-counterpart requirement for references: it would tie the check to one catalogue's deblending.
+- An S/N cut for spike stars: S/N saturates for bright stars; 553 of 613 sources were dropped.
+
+**Evidence** (2026-10-08).
+- **El Gordo forced photometry:** `absent` went from 3 to 0. All three were ordinary on vetting (23: model position
+  error; 6: reference contamination plus far-image position error, with photo-z-consistent counterparts at 2.6–3.1″
+  and flux ratios 0.9–1.0; 7: frame offset).
+- **El Gordo radial screen:** the strongest centre went from 6 lines (p = 0.055, a mag 15.8 star) to max 4 lines,
+  p = 0.64. 33 spike segments were dropped within the screened 110″.
+- **SMACS re-run:** 0 absent, as in D-029. System 9 becomes `no_reference` (its catalogued images are resolved);
+  radial max 4 lines, p = 0.965 (5 spike segments).
+- **Tests:** `tests/test_lens_consistency.py` (neighbour peak, inconsistent references, residual radius) and
+  `tests/test_exotic_screens.py` (spike segments; off-axis radial arcs kept). There are also tests for resolved
+  references and the frame offset.
+
+**Revisit if.**
+- `bayes.dat` posteriors give model position errors for far images (system 6 needs about 3″).
+- A field's image list carries its own frame solution.
