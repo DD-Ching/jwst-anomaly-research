@@ -30,6 +30,7 @@ Outputs go to ``$JWST_ANOMALY_DATA/derived/w3_moa/``, except the small tracked t
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import math
 import os
@@ -328,7 +329,8 @@ def reader_for(field: str | None = None, source: str = "auto") -> moa_stream.Ran
         raise SystemExit(f"no local tar for {field or FIELD}")
     if p is not None:
         return moa_stream.RangeReader(path=p)
-    return moa_stream.RangeReader(url=moa.tar_url(field_number(field)))
+    f = field_number(field)
+    return moa_stream.RangeReader(url=moa.tar_url(f), total=moa.TAR_BYTES[f])
 
 
 def is_quiet(tab: Table) -> np.ndarray:
@@ -414,7 +416,7 @@ def _stream_worker(wid: int, segs: list, total: int, url, path, prefetch: int, q
 
     moa_stream.limit_heap_growth()
     try:
-        reader = moa_stream.RangeReader(url=url, path=path)
+        reader = moa_stream.RangeReader(url=url, path=path, total=None if path else total)
         with ThreadPoolExecutor(prefetch) as ex:
             futs = deque()
             nxt = 0
@@ -666,6 +668,12 @@ def _fit_worker(job):
 AUX = ("fwhm", "airmass", "sky")  # observing conditions per epoch (vetting regressors)
 
 
+@functools.lru_cache(maxsize=2)
+def _local_index(path: Path) -> dict[str, tuple[int, int]]:
+    """Member offsets of a local field tar (header walk only)."""
+    return moa.MoaField(tar_path=path).index()
+
+
 def load_arrays(ids, aux: bool = False, pre: Table | None = None, field: str | None = None) -> dict:
     """``event_id -> (t, f, sf)`` (plus a dict of ``AUX`` columns when ``aux``), included epochs
     only. Members with a tar offset in the pre-screen table are read by byte range (local tar or
@@ -678,7 +686,10 @@ def load_arrays(ids, aux: bool = False, pre: Table | None = None, field: str | N
             for e, o, s in zip(pre["event_id"], pre["offset"], pre["size"], strict=True)
         }
     ids = list(dict.fromkeys(map(str, ids)))
-    raws = moa_stream.fetch_members(reader_for(field), [(e, *loc[e]) for e in ids if e in loc])
+    reader = reader_for(field)
+    if reader.path is not None and any(e not in loc for e in ids):
+        loc = {**_local_index(reader.path), **loc}  # the pinned local tar has every member
+    raws = moa_stream.fetch_members(reader, [(e, *loc[e]) for e in ids if e in loc])
     missing = [e for e in ids if e not in loc]
     if missing:
         raws.update(moa_stream.fetch_objects(missing))
@@ -1832,14 +1843,17 @@ def run_field(procs: int, conns: int, per_cell: int, per_ctrl: int) -> None:
     pre = read_prescreen()
     n_pass = len(passes(pre))
     n = max(1, math.ceil(n_pass / FITS_PER_CHUNK))
+    ids = list(passes(pre)["event_id"])
     for k in range(n):
         path = results_dir() / f"{chunk_name((k, n))}.gz"
         ok = False
-        if path.exists():
-            meta = Table.read(path, format="ascii.ecsv").meta
-            ok = meta.get("fit_params") == json.dumps(asdict(w3.P)) and meta.get(
-                "params"
-            ) == json.dumps(asdict(P))
+        if path.exists():  # finished only with the current Params and exactly its passes
+            tab = Table.read(path, format="ascii.ecsv")
+            ok = (
+                tab.meta.get("fit_params") == json.dumps(asdict(w3.P))
+                and tab.meta.get("params") == json.dumps(asdict(P))
+                and sorted(tab["event_id"]) == sorted(ids[k::n])
+            )
         if not ok:
             run_fit(procs, None, (k, n))
     merge_chunks(n)

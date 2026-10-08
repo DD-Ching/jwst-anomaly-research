@@ -236,3 +236,28 @@ def test_one_metadata_pass_caches_several_fields(tmp_path):
     out = moa.write_metadata_caches(_meta(tmp_path), tmp_path / "d", fields=[1, 22])
     assert [p.name for p in out] == ["metadata_gb1.ecsv", "metadata_gb22.ecsv"]
     assert len(Table.read(out[1])) == 2 and len(Table.read(out[0])) == 1
+
+
+def test_fixed_parser_falls_back_on_an_unparseable_token(recwarn):
+    bad = LC.replace("   335 ", "  null ")  # same width, not a number
+    assert len(bad) == len(LC) and bad != LC
+    assert moa._parse_fixed(bad.encode()) is None
+    assert not [w for w in recwarn if issubclass(w.category, DeprecationWarning)]
+
+
+def test_long_name_headers_are_refused(tmp_path):
+    path = tmp_path / "gb21.tar"
+    with tarfile.open(path, "w", format=tarfile.GNU_FORMAT) as tar:
+        data = gzip.compress(b"x")
+        info = tarfile.TarInfo("exodata/" + "d" * 120 + "/gb21-R-3-0-1.ipac.gz")
+        info.size = len(data)
+        tar.addfile(info, io.BytesIO(data))
+    raw = path.read_bytes()
+    with pytest.raises(ValueError, match="name extension"):
+        list(moa.walk_members(memoryview(raw), 0, 0, len(raw)))
+
+
+def test_split_metadata_tables_carry_provenance(tmp_path):
+    t = moa.split_metadata(META.splitlines(keepends=True), [22])[22]
+    assert t.meta["provenance"] == schema.Provenance.OBSERVED.value
+    assert "metadata" in t.meta["source"]

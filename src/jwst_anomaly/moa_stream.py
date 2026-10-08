@@ -30,10 +30,12 @@ class RangeReader:
     """``read(a, b)`` -> bytes ``[a, b)`` of one tar, from ``url`` or a local ``path``."""
 
     def __init__(self, url: str | None = None, path: Path | None = None, retries: int = 8,
-                 timeout: float = 120.0):  # fmt: skip
+                 timeout: float = 120.0, total: int | None = None):  # fmt: skip
+        """``total``: the expected file size; an HTTP range reply for another size is refused
+        (the archive replaced the file)."""
         if (url is None) == (path is None):
             raise ValueError("give exactly one of url and path")
-        self.url, self.path = url, None if path is None else Path(path)
+        self.url, self.path, self.total = url, None if path is None else Path(path), total
         self.retries, self.timeout = retries, timeout
         self._local = threading.local()
         self.bytes_read = 0
@@ -67,15 +69,25 @@ class RangeReader:
         delay = 2.0
         for attempt in range(self.retries + 1):
             try:
-                r = self._session().get(
-                    self.url, headers={"Range": f"bytes={a}-{b - 1}"}, timeout=self.timeout
-                )
-                if r.status_code == 206 and len(r.content) == b - a:
-                    return r.content
-                if r.status_code == 200 and a == 0 and len(r.content) >= b:
-                    return r.content[:b]  # server ignored the range on a small file
-                if r.status_code not in RETRY_STATUS and r.status_code != 206:
-                    raise OSError(f"{self.url} bytes {a}-{b - 1}: HTTP {r.status_code}")
+                with self._session().get(
+                    self.url,
+                    headers={"Range": f"bytes={a}-{b - 1}"},
+                    timeout=self.timeout,
+                    stream=True,  # the body is read only after the status and range check
+                ) as r:
+                    if r.status_code == 206:
+                        cr = r.headers.get("Content-Range", "")
+                        size = cr.rsplit("/", 1)[-1]
+                        if self.total is not None and cr and size != str(self.total):
+                            raise OSError(f"{self.url}: size {cr} is not the pinned {self.total}")
+                        if cr.startswith(f"bytes {a}-{b - 1}/"):
+                            data = r.content
+                            if len(data) == b - a:
+                                return data
+                    elif r.status_code == 200:  # range ignored: never read a whole tar
+                        raise OSError(f"{self.url}: server ignored the byte range (HTTP 200)")
+                    elif r.status_code not in RETRY_STATUS:
+                        raise OSError(f"{self.url} bytes {a}-{b - 1}: HTTP {r.status_code}")
             except (
                 requests.ConnectionError,
                 requests.Timeout,
@@ -96,7 +108,8 @@ def read_segment(
 ) -> list[tuple]:
     """``[(event_id, offset_data, size, gz_view)]`` of the members whose header starts in
     ``[start, stop)``; the last member's data is fetched past ``stop`` as needed. ``gz_view`` is a
-    zero-copy ``memoryview`` into the downloaded range (one copy of the bytes in memory).
+    zero-copy ``memoryview`` into the downloaded range (one copy of the bytes in memory, two
+    while a member that runs past ``stop`` is being completed).
     ``digest``: a list that receives the sha256 of bytes ``[start, stop)`` (content pin)."""
     buf = reader.read(start, min(stop, total))
     if digest is not None:
@@ -166,11 +179,16 @@ def _get_whole(eid: str) -> bytes:
     for attempt in range(7):
         try:
             r = requests.get(moa.object_url(eid), timeout=120)
-            if r.status_code == 200:
-                return r.content
-            if r.status_code not in RETRY_STATUS:
+            n = r.headers.get("Content-Length")
+            if r.status_code == 200 and (n is None or len(r.content) == int(n)):
+                return r.content  # a truncated body is retried
+            if r.status_code not in RETRY_STATUS and r.status_code != 200:
                 raise OSError(f"{moa.object_url(eid)}: HTTP {r.status_code}")
-        except (requests.ConnectionError, requests.Timeout):
+        except (
+            requests.ConnectionError,
+            requests.Timeout,
+            requests.exceptions.ChunkedEncodingError,
+        ):
             pass
         if attempt < 6:
             time.sleep(delay * (1.0 + random.random()))
