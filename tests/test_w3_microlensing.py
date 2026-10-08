@@ -170,6 +170,7 @@ def test_fit_checkpoint_drops_a_torn_last_line(tmp_path):
     [
         {"event_id": "A", "tests": [], "survives": True},
         {"event_id": "B", "tests": [], "survives": False, "complete": False},
+        {"event_id": "C", "tests": [], "survives": False},  # older file: completeness unknown
     ],
 )
 def test_limit_refuses_a_zero_event_limit_unless_vetting_is_a_complete_null(
@@ -180,4 +181,20 @@ def test_limit_refuses_a_zero_event_limit_unless_vetting_is_a_complete_null(
     (tmp_path / "vetting_bulge2019.json").write_text(json.dumps({"flags": [flag]}))
     monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
     with pytest.raises(SystemExit, match=flag["event_id"]):
+        w3.run_limit()
+
+
+def test_limit_passes_a_complete_null_vetting_to_the_injections(tmp_path, monkeypatch):
+    import json
+
+    flag = {"event_id": "A", "tests": [], "survives": False, "complete": True}
+    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps({"flags": [flag]}))
+    monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
+    with pytest.raises(FileNotFoundError, match="injections_bulge2019"):
+        w3.run_limit()
+
+
+def test_limit_without_vetting_says_so(tmp_path, monkeypatch):
+    monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
+    with pytest.raises(SystemExit, match="run `vet` first"):
         w3.run_limit()
