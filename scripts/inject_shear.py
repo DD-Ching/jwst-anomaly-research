@@ -3,10 +3,11 @@
 The simulated lenses of ``inject_radial.py`` (D-049: ``paint_lens``, lens of mass |M| at the
 cluster redshift, the field's own background rows lensed, blends, detection floor), measured with
 the catalogue aperture-mass screen of ``exotic_screens.py shear`` instead of ``radial``. One
-difference (ASSUMPTION, conservative): only rows the shear screen can measure are lensed, i.e.
-resolved after PSF deconvolution, not spike segments, and with κ < 1, |g| < 1, |R g| < 1. The
+difference (ASSUMPTION, conservative): only rows whose shape can be corrected are lensed, i.e.
+resolved after PSF deconvolution, not spike segments, and with κ < 1, |g| < 1, |R g| < 1; the S/N
+and ``max_g`` cuts apply to the painted images, since magnification and position change both. The
 radial injections also lens unresolved rows, so the efficiency ratio mixes screen power with
-this. The efficiencies decide whether the shear screen replaces ``radial`` for W1 (D-050).
+this (docs/exotic_limits.md caveats). The efficiencies decide whether the shear screen replaces ``radial`` for W1 (D-050).
 
 Recovery (ASSUMPTIONs): the largest S of the screen's grid centres within ``--recover-tol`` of the
 injected centre has ``p_random`` < 0.05, i.e. fewer than 5 % of the rotation-null draws reach that
@@ -18,7 +19,7 @@ the field maximum only near the lens; ASSUMPTION). Rows that ``paint_lens`` keep
 field's corrected ellipticities. A painted image gets its source's corrected ε plus R times the
 change of the raw (measured) moments between image and source, because the catalogue's isophotal
 moments respond to shear by R ~ 0.45 (D-053); the sum is linear and |ε| capped at 0.99
-(ASSUMPTION; the cap binds only for images very close to the lens).
+(ASSUMPTION; how often the cap binds is not measured).
 
 Everything injected is ``simulated``; efficiencies and limits are ``derived``.
 """
@@ -91,7 +92,7 @@ class ShearInjector:
         # spike segments are never painted: the real field vetoes them too
         # and sources where the cluster shear cannot be removed (κ >= 1, |g| or |R g| >= 1) are
         # not painted
-        # only rows the screen can measure are lensed (ASSUMPTION, conservative; module docstring)
+        # only rows whose shape can be corrected are lensed (ASSUMPTION, conservative; docstring)
         self.background = (
             es.lensable_mask(shapes, model.z_lens)
             & ~self.base["spike"]

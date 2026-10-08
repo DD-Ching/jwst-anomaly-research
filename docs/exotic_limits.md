@@ -291,6 +291,9 @@ the orphan-pair limits (D-051) remain the only ones.
 - SMACS 0723 and El Gordo are missing: their DJA photo-z tarballs returned 404 on 2026-10-08.
 - The E/B rule uses one B-mode map per field; the floor is noisy (3.46–4.21 across fields).
 - Injection rows keep the real field's rotation null (only near-lens rows change).
+- Only resolved, correctable rows are lensed in the shear injections; the radial injections (D-049) also lens
+  unresolved rows. The efficiency ratio between the screens mixes screen power with that (painting unresolved rows
+  too gave 50 / 238 / 449 instead of 33 / 197 / 409). The linear ε sum is capped at |ε| = 0.99.
 
 ## W2 / dark-deflector pairs (orphan-pair screen)
 
