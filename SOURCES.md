@@ -778,3 +778,22 @@ Pinned by URL and sha256 in `scripts/orphan_pairs.py` (`DEEP_FIELDS`); downloade
 - **Cutouts**: MAST level-3 `_i2d` F150W/F277W/F444W read by S3 byte range. CANUCS NCF observations of program 1208:
   o023_t002 (MACS0416), o029_t004 (MACS1149), o020_t001 (Abell 370), o026_t003 (MACS0417), o032_t005 (MACS1423);
   GOODS-N: JADES program 1181 (the observation whose MAST footprint contains the pair).
+
+## Multi-epoch NIRCam fields (accessed 2026-10-08; D-052)
+
+Survey: one MAST `Observations.query_criteria` per field (`instrument_name=NIRCAM/IMAGE`, `calib_level=3`,
+PUBLIC; cones of 3′ around MACS0416, El Gordo and Abell 2744; `proposal_id` 5105 for NEXUS and 1180/1210/1286/3215
+for JADES). Programs, PIs and titles are MAST metadata. The epochs used, with MAST `t_min`, are in
+`configs/dimming_screen.yaml`; catalogue sha256 and sizes in `data/manifests/dimming_<field>.ecsv`, level-3 products
+with S3 URIs (never downloaded `_i2d.fits`) in `data/manifests/dimming_<field>_products.ecsv`. All catalogues are
+jwst 3.0.0 / photutils 3.0.0 (file headers).
+- **JWST 5105**, "NEXUS: the North ecliptic pole EXtragalactic Unified Survey", PI Shen: `jw05105-o001/o002/o014/
+  o004/o006/o008/o010/o012_t001` (F200W, F444W), 2024-09-12 to 2026-03-28.
+- **JWST 1176** (PEARLS, PI Windhorst) `jw01176-o211/o212/o213_t009` and **JWST 1208** (CANUCS, PI Willott)
+  `jw01208-o004_t002`, MACS0416, 2022-10-07 to 2023-02-10; **JWST 6882** (VENUS, PI Fujimoto) `jw06882-o054_t054`
+  F444W, 2026-01-10.
+- **JWST 2561** (UNCOVER, PI Labbé) `jw02561-o001_t003`, `o002_t001`, `o006_t007`, Abell 2744, 2022-11-02 to
+  2024-07-31.
+- Not used: El Gordo (only 1176 o241 in 2022 and 6882 o051 F444W in 2026: one shared band); JADES (many programs
+  and pointings; left for later, TASKS follow-up).
+- Gaia DR3 (VizieR I/355/gaiadr3), one 6′ cone per field (`transient_combine.fetch_gaia`), for the star mask.
