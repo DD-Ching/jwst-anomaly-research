@@ -2582,22 +2582,25 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
 
 ## D-054 Orphan-pair null (e) made symmetric; companion-aware null (f); the D-051 deep-field excess was a null artefact (2026-10-08)
 
-**Decision.** `orphan_pairs.pair_cells` bins colour per member and uses the unordered pair of bins, with NaN as its
-own bin. A new null (f) applies the same cells to the 3–6″ z-overlapping pairs (null (d)'s annulus). The
-background-aware W1/W2/point-mass limits use null (e) as fixed: s₉₅ = 55.4 (CLs, 355 observed over 333.4).
+**Decision.** `orphan_pairs.pair_cells` bins colour per member and uses the unordered pair of bins; a non-finite
+colour (no valid flux, or a non-positive mean flux) has its own bin. A cell needs ≥ 5 z-overlapping reference pairs
+(`MIN_CELL_REF`, ASSUMPTION), else the global reference rate. A new null (f) applies the same cells to the 3–6″
+z-overlapping pairs (null (d)'s annulus). Background-aware W1/W2/point-mass limits use null (e) as fixed.
 
 **Alternatives rejected.**
-- Pair mean colour: blends a red + blue pair with two neutral members, which match far more easily.
-- Taking (f) as the background: it predicts more (343.7), so limits from it would be less conservative.
+- Pair mean colour: a red + blue pair would share a cell with two neutral members, which match far more easily.
+- (f) as the limit background: it predicts more (349.8), so its limits would be less conservative.
 
-**Evidence** (`derived`; `outputs/orphan_pairs/<field>/summary.json`; table in docs/orphan_pairs.md).
+**Evidence** (`derived`; `outputs/orphan_pairs/<field>/summary.json`, `outputs/inject_pairs/limits.json`; table
+in docs/orphan_pairs.md).
 - Orphans 246 (five CANUCS NCFs) and 355 (with GOODS-N), identical to D-051.
-- Null (e) fixed: 229.5 (P = 0.15) and 333.4 (P = 0.12); D-051 had 211 (P = 0.010) and 315.4 (P = 0.015).
-- Null (f): 237.2 (P = 0.29) and 343.7 (P = 0.28). Unconditioned (d): 300.0 (P = 0.001).
-- D-048 clusters re-run: orphans 11 / 18 / 9 (unchanged); (e) P = 0.84 / 0.18 / 0.77, (f) P = 0.90 / 0.085 / 0.75
+- Null (e) fixed: 230.2 (P = 0.16) and 334.2 (P = 0.13); D-051 had 211 (P = 0.010) and 315.4 (P = 0.015).
+- Null (f): 242.6 (P = 0.42) and 349.8 (P = 0.40). Unconditioned (d): 300.0 (P = 0.001).
+- D-048 clusters re-run: orphans 11 / 18 / 9 (unchanged); (e) P = 0.84 / 0.18 / 0.70, (f) P = 0.94 / 0.12 / 0.66
   (MACS0416 / MACS1149 / Abell 370).
-- Background-aware limits tighten by 55.4 / 72.3; e.g. W1 at θ_E 1.5″ < 1.0 × 10⁴ deg⁻² (was 1.3 × 10⁴).
-- The symmetry and NaN-bin changes were made together; their separate shares were not measured.
+- Injections re-run: no-candidate limits reproduce D-051; s₉₅ 72.3 → 54.7, so W1 at θ_E 1.5″ < 9.8 × 10³ deg⁻²
+  (was 1.3 × 10⁴), W2 at 0.7″ < 2.2 × 10⁵ (was 2.9 × 10⁵).
+- The symmetry, the non-finite bin and the cell floor were changed together; their shares were not measured.
 
 **Revisit if.** A run gives P < 0.05 under both (e) and (f), or a segmentation-map same_galaxy rule changes the
 orphan counts.

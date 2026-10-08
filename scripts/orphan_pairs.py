@@ -755,12 +755,13 @@ def search(cat: Table, z_cluster: float, images: Table, n_shift: int = 20, seed:
     # the far z-overlap match rate in cells of the pair's fainter-member S/N, larger member's
     # aperture radius and both members' LW/SW colours, summed over each class's z-overlapping
     # close pairs.
-    key_c = pair_cells(sub, m)
-    summary["null_e_conditioned"] = conditioned_null(key_c, m, pair_cells(sub, far), far, counts)
+    src = source_cells(sub)
+    key_c = pair_cells(src, m)
+    summary["null_e_conditioned"] = conditioned_null(key_c, m, pair_cells(src, far), far, counts)
     # (f) companion-aware (D-054): null (e) with the 3-6" pairs of null (d) as reference, where
     # physical companions (satellites, groups) are common and lensing by galaxies is not.
     summary["null_f_near_conditioned"] = conditioned_null(
-        key_c, m, pair_cells(sub, near), near, counts
+        key_c, m, pair_cells(src, near), near, counts
     )
     mid = close_pairs(x, y, NEAR_MAX, FAR_MIN)
     mid_t = match_table(*mid[:2], f, e, z16, z84)
@@ -777,6 +778,7 @@ CELL_RADIUS = (0.4, 0.6, 0.9)  # larger member's aperture radius, arcsec (ASSUMP
 CELL_COLOUR = (0.0, 0.3, 0.6)  # log10(LW / SW flux) bin edges of each member (ASSUMPTION)
 SW_BANDS = ("F090W", "F115W", "F150W")
 N_COLOUR = len(CELL_COLOUR) + 2  # colour bins per member: len(edges) + 1, plus one for NaN
+MIN_CELL_REF = 5  # z-overlapping reference pairs a cell needs for its own rate (ASSUMPTION; D-054)
 
 
 def pair_colours(sub: Table) -> np.ndarray:
@@ -790,19 +792,24 @@ def pair_colours(sub: Table) -> np.ndarray:
 
 
 def colour_bin(colour: np.ndarray) -> np.ndarray:
-    """CELL_COLOUR bin of each colour; NaN (and non-positive flux ratios) get bin N_COLOUR - 1."""
+    """CELL_COLOUR bin of each colour; a non-finite colour (no valid flux on a side, or a
+    non-positive mean flux) gets bin N_COLOUR - 1."""
     b = np.digitize(np.nan_to_num(colour, nan=0.0), CELL_COLOUR)
     return np.where(np.isfinite(colour), b, N_COLOUR - 1)
 
 
-def pair_cells(sub: Table, pairs: Table) -> np.ndarray:
+def source_cells(sub: Table) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Per-source inputs of ``pair_cells``: summed S/N, aperture radius and colour bin."""
+    return summed_snr(sub), np.asarray(sub["ap_radius"], float), colour_bin(pair_colours(sub))
+
+
+def pair_cells(src: tuple[np.ndarray, np.ndarray, np.ndarray], pairs: Table) -> np.ndarray:
     """Integer cell of each pair for nulls (e)/(f): S/N x size x colour bins (see CELL_*).
 
-    Symmetric in the pair (D-054): the colour part is the unordered pair of the two members'
-    colour bins, and a NaN colour has its own bin (it used to share 0-0.3 with real colours)."""
-    snr = summed_snr(sub)
-    rad = np.asarray(sub["ap_radius"], float)
-    cb = colour_bin(pair_colours(sub))
+    ``src`` is ``source_cells`` of the selected rows. Symmetric in the pair (D-054): the colour
+    part is the unordered pair of the two members' colour bins, and a non-finite colour has its
+    own bin (D-051 put it in 0-0.3 with real colours)."""
+    snr, rad, cb = src
     i, j = np.asarray(pairs["i"], int), np.asarray(pairs["j"], int)
     s = np.digitize(np.minimum(snr[i], snr[j]), CELL_SNR)
     r = np.digitize(np.fmax(rad[i], rad[j]), CELL_RADIUS)
@@ -814,20 +821,33 @@ def conditioned_null(key_c, m: Table, key_ref, ref: Table, counts: dict) -> dict
     """Expected matches per class from the reference pairs' z-overlap match rate per cell.
 
     ``key_c``/``key_ref``: ``pair_cells`` of the close pairs ``m`` and of the reference pairs
-    ``ref``. A close pair whose cell has no z-overlapping reference pair takes the reference's
-    global z-overlap rate; their number is reported as ``n_fallback``."""
+    ``ref``. A close pair whose cell has fewer than ``MIN_CELL_REF`` z-overlapping reference
+    pairs takes the reference's global z-overlap rate; their number is ``n_fallback``. With no
+    z-overlapping reference pair at all the expectation is undefined (NaN) and a warning is
+    issued."""
     zref = np.asarray(ref["z_overlap"], bool)
     mref = np.asarray(ref["match"], bool)
+    if not zref.any():
+        warnings.warn("conditioned null: no z-overlapping reference pair", stacklevel=2)
     glob = float(mref[zref].mean()) if zref.any() else float("nan")
-    rate = {k: float(mref[zref & (key_ref == k)].mean()) for k in np.unique(key_ref[zref])}
-    exp_cell = np.array([rate.get(k, glob) for k in key_c], float)
+    cells, inv = np.unique(np.asarray(key_ref)[zref], return_inverse=True)
+    n_ref = np.bincount(inv, minlength=len(cells))
+    n_hit = np.bincount(inv, weights=mref[zref], minlength=len(cells))
+    ok = n_ref >= MIN_CELL_REF
+    key_c = np.asarray(key_c)
+    pos = np.clip(np.searchsorted(cells, key_c), 0, max(len(cells) - 1, 0))
+    known = np.zeros(len(key_c), bool)
+    if len(cells):
+        known = (cells[pos] == key_c) & ok[pos]
+    exp_cell = np.full(len(key_c), glob)
+    exp_cell[known] = n_hit[pos[known]] / n_ref[pos[known]]
     zc = np.asarray(m["z_overlap"], bool)
     exp = {c: float(exp_cell[zc & (m["pair_class"] == c)].sum()) for c in CLASSES}
-    fallback = zc & ~np.isin(key_c, list(rate))
     return {
         "cells": "fainter-member summed S/N x larger aperture radius x both members' LW/SW colour",
+        "min_cell_ref": MIN_CELL_REF,
         "n_ref_zoverlap": int(zref.sum()),
-        "n_fallback": int(fallback.sum()),
+        "n_fallback": int((zc & ~known).sum()),
         "expected_by_class": exp,
         "poisson_p_orphan_excess": poisson_excess(counts.get("orphan", 0), exp["orphan"]),
     }

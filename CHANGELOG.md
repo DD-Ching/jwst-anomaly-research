@@ -4,13 +4,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-08: Orphan-pair null (e) fixed, companion-aware null (f): no deep-field excess (D-054)
 - Cloud run. Hypothesis: the D-051 flanking-field orphan excess (246 vs 211, P = 0.010) comes from null (e)'s
-  colour cell (member i only, NaN in the 0–0.3 bin) or from physical companions the 10–30″ reference misses.
-- `pair_cells` now uses both members' colour bins (unordered) and a NaN bin; null (f) conditions on 3–6″ pairs.
-  Six deep fields re-run (~1 min each in parallel): orphans unchanged (246 / 355). Fixed (e): 229.5 (P = 0.15),
-  333.4 (P = 0.12); (f): 237.2 (P = 0.29), 343.7 (P = 0.28). **The excess was a null-model artefact.**
-- Background-aware limits: s₉₅ 72.3 → 55.4, all tighter by ×0.77 (docs/exotic_limits.md); injections not re-run.
-- D-048 cluster fields re-run: orphans 11 / 18 / 9 unchanged, (e) P ≥ 0.18, (f) P ≥ 0.085. Null.
-- Not separated: how much of the shift is symmetry vs the NaN bin.
+  colour cell (member i only, non-finite colours in the 0–0.3 bin) or from physical companions the 10–30″
+  reference misses.
+- `pair_cells` uses both members' colour bins (unordered), a non-finite bin and a ≥ 5-pair cell floor; null (f)
+  conditions on 3–6″ pairs. Nine fields re-run (≈ 1 min each, in parallel): orphans unchanged. Deep fields: (e)
+  334.2 (P = 0.13), (f) 349.8 (P = 0.40). D-048 clusters: P ≥ 0.18 (e), ≥ 0.12 (f). **The excess was a null-model
+  artefact.**
+- Injections re-run (6 fields in parallel, ~4 min): no-candidate limits reproduce D-051; background-aware limits
+  tighten (s₉₅ 72.3 → 54.7; W1 1.5″ < 9.8 × 10³ deg⁻²). docs/exotic_limits.md.
+- Not separated: the shares of the three cell changes.
 - **Handoff:** W2 next is the segmentation-map same_galaxy rule (TASKS "Now" 1); PR #78 (W1 shear) in flight.
 
 ## 2026-10-08: W3 multi-epoch dimming / inverted-microlensing screen: null, limits (D-052)
