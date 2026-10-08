@@ -26,6 +26,8 @@ allowed-tools:
   - Bash(gh pr diff *)
   - Bash(gh pr comment *)
   - Bash(gh pr create *)
+  - Bash(gh pr edit *)
+  - Bash(gh pr ready *)
   - Bash(gh pr merge *)
   - Bash(gh release create *)
   - Bash(gh issue list *)
@@ -77,9 +79,11 @@ Action.
 - `gh issue list --state open --json number,title,author,labels`. Act only on issues the owner authored.
 - Read TASKS.md, the newest CHANGELOG.md entry (the handoff) and `grep '^## ' DECISIONS.md`.
 - **Claim before setup** (CLAUDE.md Parallelism decision): as soon as you know which unit you will work on, skip it
-  if an open PR or a `claude/*` branch already claims it; otherwise push a branch and open a draft PR titled
-  `[field: <unit>] ...` within 5 minutes of starting, before environment setup or long reviews. Draft claim PRs do
-  not count toward the WIP cap.
+  if an open PR or a `claude/*` branch already claims it; otherwise create `claude/<slug>` from `origin/main`, commit
+  one small file change (e.g. the plan as a CHANGELOG or docs line; GitHub refuses a PR without commits), push, and
+  open a draft PR titled `[field: <unit>] ...` labelled `agent` within 5 minutes of starting, before environment
+  setup or long reviews. In cloud runs use the GitHub MCP tools (docs/operations.md §3) for the PR list and the
+  draft. Draft claim PRs do not count toward the WIP cap. Step 8 updates this PR instead of creating another.
 - Environment: if `.venv` is missing, create it as CLAUDE.md "Environment" says (Linux and cloud:
   `.venv/bin/python`). If uv can't fetch Python 3.12 there, use `uv venv .venv --python python3`, which is
   preinstalled and >=3.11.
@@ -100,7 +104,7 @@ reply with evidence (`gh pr comment`).
 
 ## 3. WIP cap
 
-Count the open PRs labelled `agent` that are waiting for the owner. All PRs that share one `batch-<slug>` label count
+Count the open, non-draft PRs labelled `agent` that are waiting for the owner (draft claim PRs are in-flight work). All PRs that share one `batch-<slug>` label count
 as a single item. **With 3 or more items**, open no new feature PR. Do only these:
 - step 2;
 - merge `origin/main` into stale PR branches;
@@ -164,7 +168,9 @@ Keep them terse; link instead of repeating. Batch workers leave TASKS.md and CHA
 
 - Make coherent, descriptive commits. Check that no file is over 1 MB and that there is no data and no secret.
 - `git push -u origin claude/<slug>`, then
-  `gh pr create --base main --label agent [--label needs-human] --title "..." --body "..."`.
+  `gh pr create --base main --label agent [--label needs-human] --title "..." --body "..."`. If a draft claim PR
+  exists for the branch, update its title and body instead (`gh pr edit`) and mark it ready (`gh pr ready <n>`;
+  cloud: `mcp__github__update_pull_request` with `draft: false`).
   - Pass the body inline (a heredoc is fine). `--body-file` is denied.
   - Create a missing label first with `gh label create`.
   - Body sections: Summary / Evidence (test output, numbers) / Decisions / Limitations / Next.

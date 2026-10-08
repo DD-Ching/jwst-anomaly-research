@@ -64,5 +64,5 @@ PSPL bumps. MOA adds shared-epoch tests (field- and chip-wide Poisson), a neighb
 - The Gaia Extractor cuts cannot be emulated from the paper (guessed definitions fail 126 / 163 real events);
   a single-id DataLink request returns bare CSV; retry truncated chunked replies.
 - `table3.dat` (Mróz 2019) rows overflow their byte ranges: split on whitespace, sexagesimal on colons.
-- Pin BLAS threads; two 4-process pools on 4 cores stalled both. Wait on output files, not `pgrep -f`.
+- Pool sizing, BLAS pinning and how to wait on runs: `scripts/CLAUDE.md` "Parallel topology".
 - 6 of 212 arXiv name queries hit the rate limit (recorded as −1); re-run before any publication-facing claim.
