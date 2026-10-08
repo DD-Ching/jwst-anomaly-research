@@ -1460,7 +1460,8 @@ Field docs: `docs/fields/*.md`.
     (Caminha+2023, Bergamini+2023b);
   - otherwise the last `.`-part does: `1.2` → `1` (Mahler+2022).
 - **`z_m_limit`** takes one or more ids before the flag. Each id is a system (`4.0`) or one of its images (`7a`).
-- **Radii given in both arcsec and kpc** may differ by max(2 %, 1e-5″). `best.par` prints 6 decimals, so tiny
+  The last three numbers fix the flag's position, so numeric ids are never read as the flag.
+- **Radii given in both arcsec and kpc** may differ by max(2 %, 1e-6″). `best.par` prints 6 decimals, so tiny
   radii carry rounding error (Bergamini potential 37609: 0.000021″ against 2.142e-5″).
 - **`load_lenstool_images`** keeps the `a` column as `err_arcsec`.
 - **New `MODELS` entries** in `lens_consistency.py`:
@@ -1469,7 +1470,10 @@ Field docs: `docs/fields/*.md`.
   - All files are pinned by sha256 in `lensmodel.py`.
 - **`validate`** now always runs the exact image-plane check (`imageplane_check`, `find_images`). That is
   Lenstool's χ² for models optimised in the image plane.
-  - It also compares magnification maps when a model publishes them.
+  - It matches each image to its nearest prediction, Lenstool's convention.
+  - A one-to-one pairing lists `shared_partner` images: two catalogued images that share one predicted image, so
+    one of them is not reproduced separately (> 3σ). These are lens-model residuals to inspect.
+  - It also compares magnification maps when a model publishes them. Pixels are selected on the published map only.
   - The source-plane back-trace is kept only for `sigposArcsec` models (SMACS).
 - **Position errors per model:**
   - SMACS: `sigposArcsec` 0.44″;
@@ -1491,6 +1495,13 @@ network). All results are `model_prediction` against the published products:
 | El Gordo | 82.53 | 80.22 | 0.754″ (paper 0.75″) | median \|Δμ\|/μ 3.8e-5 (z = 2), 6.7e-5 (z = 8) |
 | Abell 2744 | 146.64 | 146.60 | 0.427″ | none |
 
+- **`shared_partner` flags:**
+  - SMACS and El Gordo have none.
+  - Abell 2744 has two:
+    - 34.1a: nearest 0.63″, one-to-one 2.42″. A pair near a critical curve, where the model's merging image has
+      μ ≈ 45;
+    - 700.1b: nearest 0.79″, one-to-one 14.7″. Its z = 1.217 is a model fit.
+  - Both still need vetting (model and redshift error first).
 - Grids (ASSUMPTIONs): 0.25″ over ±130″ (El Gordo) and ±190″ (Abell 2744); 0.1″ over ±60″ (SMACS).
 - The solve takes 1–2 min per field, and the grid is cached.
 

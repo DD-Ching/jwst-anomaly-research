@@ -111,7 +111,7 @@ Z_GRID = (1.0, 2.0, 4.0)
 
 
 def model_files(name: str) -> dict[str, Path]:
-    """Download (once) and verify the pinned files of model ``name``; extract its kappa map.
+    """Download (once) and verify the pinned files of model ``name``; extract its kappa map if any.
 
     The map member is copied out of the (sha256-verified) archive into a temporary file, checked
     against the member's size, and renamed into place, so an interrupted run leaves no partial map.
@@ -194,27 +194,41 @@ def magnification_map_check(
     ra, dec = wcs.pixel_to_world_values(ii, jj)
     mu = np.abs(np.asarray(model.evaluate(ra.ravel(), dec.ravel(), z_s)["magnification"], float))
     pub = np.abs(data[jj, ii].ravel())
-    ok = np.isfinite(mu) & np.isfinite(pub) & (pub < max_abs_mu) & (mu < max_abs_mu) & (pub > 0)
-    rel = np.abs(mu[ok] - pub[ok]) / pub[ok]
-    return {
-        "map": str(map_path),
-        "z_s": z_s,
-        "n_points": int(ok.sum()),
-        "max_abs_mu": max_abs_mu,
-        "median_rel_dmu": float(np.median(rel)),
-        "p95_rel_dmu": float(np.percentile(rel, 95)),
-        "p99_rel_dmu": float(np.percentile(rel, 99)),
-    }
+    # select on the published map only, so model-side disagreements stay in the statistic
+    ok = np.isfinite(pub) & (pub > 0) & (pub < max_abs_mu)
+    out = {"map": str(map_path), "z_s": z_s, "n_points": int(ok.sum()), "max_abs_mu": max_abs_mu}
+    if not ok.any():
+        raise SystemExit(f"error: {map_path} has no usable pixel (|mu| < {max_abs_mu})")
+    rel = np.abs(np.where(np.isfinite(mu[ok]), mu[ok], np.inf) - pub[ok]) / pub[ok]
+    out.update(
+        median_rel_dmu=float(np.median(rel)),
+        p95_rel_dmu=float(np.percentile(rel, 95)),
+        p99_rel_dmu=float(np.percentile(rel, 99)),
+        n_model_over_max=int(np.sum(~(mu[ok] < max_abs_mu))),
+    )
+    return out
 
 
-def imageplane_check(model, grid, images: Table, z_m_limit, sigma, chi2_ref: float | None):
+def imageplane_check(
+    model, grid, images: Table, z_m_limit, sigma, chi2_ref: float | None, bt: Table | None = None
+):
     """Exact image-plane residuals: each system's mean back-traced source is solved for all its
-    images (``find_images``) and every catalogued image is compared with the nearest one.
+    images (``find_images``) and every catalogued image is compared with its nearest predicted
+    image. This reproduces the χ² Lenstool reports for models optimised in the image plane
+    (``sigma``: a scalar or one error per image, arcsec).
 
-    This is the χ² Lenstool reports for models optimised in the image plane. ``sigma`` is a
-    scalar or one error per image (arcsec)."""
-    bt = lensmodel.backtrace_images(model, images, z_m_limit)
+    Nearest-neighbour matching lets two catalogued images share one predicted image. A
+    one-to-one pairing (minimum total distance) exposes them: ``shared_partner`` lists each
+    catalogued image whose own partner is then farther than 3 sigma, i.e. an observed image the
+    model does not reproduce separately (a lens-model residual to inspect)."""
+    from scipy.optimize import linear_sum_assignment
+
+    if bt is None:
+        bt = lensmodel.backtrace_images(model, images, z_m_limit)
     sig = np.broadcast_to(np.asarray(sigma, float), (len(images),))
+    if not np.all(sig > 0):
+        raise SystemExit("error: position errors must be > 0 (check the image file's 'a' column)")
+    unpaired: list[dict] = []
     systems = np.asarray(bt["system"]).astype(str)
     d = np.full(len(bt), np.nan)
     for sys_id in dict.fromkeys(systems):
@@ -229,13 +243,26 @@ def imageplane_check(model, grid, images: Table, z_m_limit, sigma, chi2_ref: flo
             continue
         x, y = model.to_frame(bt["ra"][m], bt["dec"][m])
         px, py = np.asarray(pred["x"]), np.asarray(pred["y"])
-        d[m] = np.min(np.hypot(x[:, None] - px[None, :], y[:, None] - py[None, :]), axis=1)
+        dist = np.hypot(x[:, None] - px[None, :], y[:, None] - py[None, :])
+        d[m] = dist.min(axis=1)
+        rows, cols = linear_sum_assignment(dist)
+        d1 = np.full(m.sum(), np.inf)  # no partner left at all: infinitely far
+        d1[rows] = dist[rows, cols]
+        for k in np.flatnonzero(d1 > np.maximum(d[m] + 1e-9, 3 * sig[m])):
+            unpaired.append(
+                {
+                    "image": str(np.asarray(bt["image_id"][m])[k]),
+                    "nearest_arcsec": round(float(d[m][k]), 3),
+                    "one_to_one_arcsec": round(float(d1[k]), 3) if np.isfinite(d1[k]) else None,
+                }
+            )
     bt["dtheta_image_plane_arcsec"] = d
     ok = np.isfinite(d)
     worst = np.argsort(np.where(ok, d / sig, -np.inf))[::-1][:5]
     summary = {
         "n_images": len(bt),
         "n_solved": int(ok.sum()),
+        "shared_partner": unpaired,
         "rms_arcsec": float(np.sqrt(np.mean(d[ok] ** 2))),
         "chi2_pos": float(np.sum((d[ok] / sig[ok]) ** 2)),
         "chi2_pos_lenstool": chi2_ref,
@@ -453,11 +480,12 @@ def cmd_validate(args) -> dict:
         summary["kappa_map"] = kappa_map_check(model, files["kappa_map"], step=args.step)
     for z_s, key in spec.get("mag_maps", {}).items():
         summary[f"magnification_map_z{z_s:g}"] = magnification_map_check(model, files[key], z_s)
+    bt = None
     if spec["sigma"] == "sigpos":
         bt, summary["backtrace"] = backtrace_check(model, images, par["z_m_limit"], sigma, chi2_ref)
     grid = model_grid(model, args.model)
     bt, summary["image_plane"] = imageplane_check(
-        model, grid, images, par["z_m_limit"], sigma, chi2_ref
+        model, grid, images, par["z_m_limit"], sigma, chi2_ref, bt
     )
     out = args.out / args.model
     _write(bt, out / "backtrace.ecsv")
@@ -960,8 +988,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--model", choices=sorted(MODELS), default="smacs0723-iclv2")
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "lens_consistency")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    v = sub.add_parser("validate", help="compare with the published kappa map and multiple images")
-    v.add_argument("--step", type=int, default=5, help="kappa-map sub-grid step in pixels")
+    v = sub.add_parser(
+        "validate",
+        help="compare with the published maps (kappa or magnification) and the image-plane chi2",
+    )
+    v.add_argument("--step", type=int, default=5, help="kappa-map sub-grid step in pixels (SMACS)")
     a = sub.add_parser("arcs", help="observed source orientation against the predicted shear")
     a.add_argument("--catalog", type=Path, required=True, help="JWST pipeline _cat.ecsv")
     a.add_argument("--photoz", type=Path, help="eazy zout FITS table (e.g. DJA)")

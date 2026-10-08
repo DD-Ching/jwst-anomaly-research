@@ -18,6 +18,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - Abell 2744: UNCOVER v2.0 maps;
    - **Validated in the repository (D-030):** `validate` reproduces Lenstool's image-plane χ² for El Gordo (82.5 vs
      80.22) and Abell 2744 (146.64 vs 146.60). Neither shows an image-position anomaly. Open items:
+     - vet the Abell 2744 `shared_partner` images 34.1a and 700.1b (D-030);
      - run the counter-image flux test on DJA photometry (Abell 2744 needs the 233 MB catalogue, with a DECISIONS
        entry) and on `bayes.dat` search radii.
    - Sunrise: RELICS or Scofield+2025.

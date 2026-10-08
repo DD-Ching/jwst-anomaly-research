@@ -366,10 +366,12 @@ def test_image_system_conventions(image_id, system):
 def test_z_m_limit_with_image_ids_and_several_ids(tmp_path):
     text = PAR.format(ra=RA0, dec=DEC0).replace(
         "    z_m_limit 2 6.0 1 1.0 3.0 0.1\n",
-        "    z_m_limit 2 7a 0 2.5679 0.0 0.0\n    z_m_limit 3 A200.1a B200.2a 0 7.3895 0.0 0.0\n",
+        "    z_m_limit 2 7a 0 2.5679 0.0 0.0\n    z_m_limit 3 A200.1a B200.2a 0 7.3895 0.0 0.0\n"
+        "    z_m_limit 4 5 2 0 3.0 0.0 0.0\n",  # numeric ids that look like flags
     )
     parsed = lensmodel.parse_lenstool_par(_write(tmp_path, text))
-    assert parsed["z_m_limit"] == {"4": 2.17, "7": 2.5679, "A200.1": 7.3895, "B200.2": 7.3895}
+    expected = {"4": 2.17, "7": 2.5679, "A200.1": 7.3895, "B200.2": 7.3895, "5": 3.0, "2": 3.0}
+    assert parsed["z_m_limit"] == expected
 
 
 def test_tiny_radii_tolerate_print_rounding(tmp_path):

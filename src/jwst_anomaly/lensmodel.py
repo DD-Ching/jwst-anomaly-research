@@ -286,20 +286,25 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
         elif kind == "image":
             for key, vals, n in entries:
                 if key == "z_m_limit":
-                    # z_m_limit <n> <id> [<id> ...] <flag> <z or zmin> [<zmax> <step>]; flag 0 =
+                    # z_m_limit <n> <id> [<id> ...] <flag> <z or zmin> <zmax> <step>; flag 0 =
                     # fixed. An id is a system ("4.0") or one of its images ("7a", "A200.1a").
-                    flags = [k for k in range(2, len(vals)) if vals[k] in ("0", "1", "2", "3")]
-                    if len(vals) < 4 or not flags or flags[0] + 1 >= len(vals):
+                    # The last three numbers fix the flag's position, so numeric ids are safe.
+                    if len(vals) >= 6:
+                        ids, flag, z = vals[1:-4], vals[-4], vals[-3]
+                    elif len(vals) >= 4:  # short form without zmax/step: one id
+                        ids, flag, z = [vals[1]], vals[2], vals[3]
+                    else:
                         raise ValueError(f"{path}:{n}: malformed z_m_limit {vals}")
-                    k = flags[0]
-                    if vals[k] == "0":
-                        for ident in vals[1:k]:
+                    if not ids:
+                        raise ValueError(f"{path}:{n}: malformed z_m_limit {vals}")
+                    if flag == "0":
+                        for ident in ids:
                             sys_id = (
                                 image_system(ident)
                                 if _LETTER_SUFFIX.match(ident)
                                 else system_key(ident)
                             )
-                            out["z_m_limit"][sys_id] = float(vals[k + 1])
+                            out["z_m_limit"][sys_id] = float(z)
                 elif key.lower() == "sigposarcsec":
                     out["sigpos_arcsec"] = float(vals[0])
         elif kind == "potential":
@@ -692,8 +697,8 @@ def _dpie_from_dict(pot: dict[str, Any], cosmo: FlatLambdaCDM, source: str) -> D
     def radius(key: str) -> float:
         val, kpc = pot[key], pot[f"{key}_kpc"]
         per_arcsec = cosmo.kpc_proper_per_arcmin(pot["z_lens"]).to_value(u.kpc / u.arcmin) / 60.0
-        # best.par prints 6 decimals, so tiny radii carry rounding error: allow 1e-5" absolute.
-        tol = max(0.02 * val, 1e-5)
+        # best.par prints 6 decimals (half an LSB = 5e-7"), so allow 1e-6" absolute.
+        tol = max(0.02 * val, 1e-6)
         if np.isfinite(val) and np.isfinite(kpc) and abs(kpc / per_arcsec - val) > tol:
             # Both given and inconsistent: which one Lenstool used is ambiguous, so refuse.
             raise UnsupportedModelError(
