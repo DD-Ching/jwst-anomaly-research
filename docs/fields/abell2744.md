@@ -39,20 +39,20 @@ in docs/methodology.md.
 | Bergamini et al. 2023a (pre-JWST; marked "obsolete" on the authors' model page) | "New high-precision strong lensing modeling of Abell 2744. Preparing for JWST observations" | 2207.09416; A&A 670, A60 (2023); 10.1051/0004-6361/202244575 | Lenstool files: https://www.fe.infn.it/astro/lensing/A2744_Bergamini22/ |
 | Cha et al. 2024 (MARS, free-form) | "Precision MARS Mass Reconstruction of Abell 2744: Synergizing the Largest Strong Lensing and Densest Weak Lensing Datasets from JWST" | 2308.14805; ApJ 961, 186 (2024); 10.3847/1538-4357/ad0cbf | none found. The abstract says the maps are public, but no location was found |
 
-## Lens-model consistency: Bergamini+2023b (preliminary, 2026-10-08, issue #41)
+## Lens-model consistency: Bergamini+2023b (2026-10-08, issue #41, D-030)
 
-**Preliminary, not yet reproducible from the repository.** These numbers come from scratch scripts (a cloud
-run, issue #41) on `lensmodel.py` (#35), with the parser workarounds described there. Re-run them with #40's
-`find_images` and the parser fixes before relying on them. Every number below is `model_prediction` or
-`derived`, and every threshold is an ASSUMPTION.
+**Reproduced in the repository (D-030):** `python scripts/lens_consistency.py --model <name> validate` gives the
+image-plane χ² and rms below. The counter-image numbers still come from issue #41's scratch code. Every number below
+is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
 
 - **Files:** `best.par` (sha256 `7245368f…`) and `obs_arcs.cat` (sha256 `d02c231f…`) from the authors' page.
   - The model has 180 dPIE potentials at z = 0.3072 and was optimised in the image plane: Chi2pos 146.60, dof 148.
   - The image list has 149 images; 28 take their z from `z_m_limit`.
-- **Loading:** `main` refuses the file unmodified, because of the `_kpc` rounding check and letter IDs in
-  `z_m_limit` (issue #41).
+- **Loading:** fixed in D-030 (letter IDs, multi-id `z_m_limit`, `_kpc` rounding).
 - **Image positions:** the exact image-plane solve gives χ² = 146.64 against Lenstool's 146.60, and rms 0.427″. The
   largest residual is 22.1a, 1.62″ at σ 0.57. **No image-position anomaly.**
+  Multiplicity residual: 3.2a/b, 34.1a/b and 700.1a/b each match one predicted image (pairs on the same side of
+  the critical curve; D-030). Next test: `bayes.dat` samples.
 - **Counter-images:**
   - 30 predicted images are not catalogued. 15 are near-critical-curve pairs within 3″ of an observed image (|μ|
     mostly > 9). 15 are far third images, including the z = 7.39 system A200/B200/C200 (μ ≈ 10).

@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Image-plane χ² reproduces Lenstool for SMACS, El Gordo and Abell 2744 (D-030)
+- Merged #40 (counter-images, D-029) after its last commit, which GitHub had not attached to the PR, was picked up
+  by a follow-up commit.
+- `validate` now computes the exact image-plane χ² for every model; El Gordo and Abell 2744 are `MODELS` entries.
+  Issue #41's numbers are now reproducible in the repository: χ² 30.87/30.91 (SMACS), 82.53/80.22 (El Gordo),
+  146.64/146.60 (Abell 2744). No catalogued image is off by more than 3σ in any field.
+- Parser fixes: letter-suffixed image ids, several ids per `z_m_limit`, 6-decimal `_kpc` rounding.
+- **Failed approach:** the per-image error column for El Gordo (χ² 52.0); a uniform 0.621″ matches Lenstool.
+- CDS reset connections through the proxy in this run; the cache was seeded from a `curl` copy with the same sha256.
+- **Handoff:** run `lens_consistency.py images` with forced photometry on El Gordo and Abell 2744 (TASKS "Now" 2);
+  then the exotic screens (docs/exotic_lensing.md).
+
 ## 2026-10-08: SMACS counter-images: no predicted image is absent (D-029)
 - New: `lensmodel.find_images` (an image-plane solver on a cached deflection grid), `lens_consistency.py images`, and
   `--forced-image`, which runs forced photometry on S3 byte-range stamps.

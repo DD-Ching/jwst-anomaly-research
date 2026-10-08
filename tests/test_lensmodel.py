@@ -352,3 +352,87 @@ def test_deflection_grid_cache(tmp_path):
     other = LensModel([_dpie(v_disp=500.0)], RA0, DEC0, COSMO, sha256="def")
     g3 = lensmodel.DeflectionGrid.cached(other, path, half_width=5.0, step=0.5)
     assert not np.allclose(g3.alpha_x, g1.alpha_x)  # a different model recomputes
+
+
+def test_image_family_lenstool_ids():
+    ids = ("23a", "1.1a", "A200.1a", "4.1", "4.10", "4.0", "4", "7", "c2")
+    assert [lensmodel.image_family(i) for i in ids] == [
+        "23",
+        "1.1",
+        "A200.1",
+        "4",
+        "4",
+        "4",
+        "4",
+        "7",
+        "c2",
+    ]
+
+
+def test_z_m_limit_letter_ids_and_shared_redshift(tmp_path):
+    # Bergamini+2023b: image ids with letters, and one line fixing three families' redshift.
+    text = PAR.format(ra=RA0, dec=DEC0).replace(
+        "    z_m_limit 1 4.0 0 2.17 0.0 0.0\n",
+        "    z_m_limit 1 4.0 0 2.17 0.0 0.0\n"
+        "    z_m_limit 1 301.1a 0 5.29 0.0 0.0\n"
+        "    z_m_limit 1 A200.1a B200.2a 0 7.39 0.0 0.0\n",
+    )
+    zml = lensmodel.parse_lenstool_par(_write(tmp_path, text))["z_m_limit"]
+    assert zml == {"4": 2.17, "301.1": 5.29, "A200.1": 7.39, "B200.2": 7.39}
+
+
+def test_letter_suffixed_images_and_error_column(tmp_path):
+    arcs = tmp_path / "arcs.dat"
+    arcs.write_text(
+        "#REFERENCE 0\n"
+        "23a 110.8 -73.4 0.62 0.62 0 2.19 25\n"
+        "23b 110.8 -73.4 1.24 1.24 0 2.19 25\n"
+        "1.1a 110.8 -73.4 0.38 0.38 0 1.69 25\n"
+    )
+    images = lensmodel.load_lenstool_images(arcs)
+    assert list(images["system"]) == ["23", "23", "1.1"]
+    np.testing.assert_allclose(images["a"], [0.62, 1.24, 0.38])
+
+
+def test_kpc_radius_tolerates_six_decimal_rounding(tmp_path):
+    # Bergamini+2023b writes core_radius 0.000021 next to core_radius_kpc 0.000097 (2% apart).
+    per_arcsec = COSMO.kpc_proper_per_arcmin(0.39).value / 60.0
+    core = round(9.7e-5 / per_arcsec, 6)
+    text = PAR.format(ra=RA0, dec=DEC0).replace(
+        "core_radius_kpc 10.0", f"core_radius_kpc 0.000097\n    core_radius {core:.6f}"
+    )
+    model = LensModel.from_par(_write(tmp_path, text))
+    assert model.components[0].r_core == pytest.approx(core)
+
+
+def test_imageplane_residuals_sis_pair_and_offset(tmp_path):
+    # Exact images of an SIS give zero residual; moving one catalogued image by 0.3" gives ~0.15"
+    # for both (the mean source shifts), never more than the offset.
+    model = LensModel(
+        [_dpie(x=0.0, y=0.0, ellipticity=0.0, r_core=1e-4, r_cut=1e5)], RA0, DEC0, COSMO
+    )
+    theta_e = model.components[0].b0 * float(model.dls_ds(2.0))
+    grid = lensmodel.DeflectionGrid.compute(model, half_width=2 * theta_e, step=0.2)
+    for shift, expect in ((0.0, 0.0), (0.3, 0.15)):
+        xs = np.array([1.0 + theta_e + shift, 1.0 - theta_e])
+        ra, dec = model.to_sky(xs, np.zeros(2))
+        arcs = _write(
+            tmp_path,
+            "".join(
+                f"1.{k + 1} {r:.9f} {d:.9f} 0.1 0.1 0 2.0 0\n"
+                for k, (r, d) in enumerate(zip(ra, dec, strict=True))
+            ),
+            "arcs.dat",
+        )
+        bt = lensmodel.backtrace_images(model, lensmodel.load_lenstool_images(arcs), {})
+        ip = lensmodel.imageplane_residuals(model, grid, bt)
+        np.testing.assert_allclose(ip["dtheta_arcsec"], expect, atol=5e-3)
+        assert np.all(ip["n_predicted"] >= 2) and ip.meta["provenance"] == "model_prediction"
+
+
+def test_z_m_limit_malformed_flag_is_refused(tmp_path):
+    text = PAR.format(ra=RA0, dec=DEC0).replace(
+        "    z_m_limit 1 4.0 0 2.17 0.0 0.0\n", "    z_m_limit 1 A200.1a B200.2a 0 7.39\n"
+    )
+    with pytest.raises(ValueError, match="z_m_limit"):
+        lensmodel.parse_lenstool_par(_write(tmp_path, text))

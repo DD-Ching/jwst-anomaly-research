@@ -273,3 +273,48 @@ def test_predict_counter_images_reproduces_an_sis_pair():
     assert classes.count("observed") == 2
     assert set(classes) <= {"observed", "demagnified"}  # at most a central demagnified image
     assert table.meta["provenance"] == "derived"
+
+
+def test_model_sigpos_rules(tmp_path):
+    images = Table({"a": [0.38, 0.57]})
+    inp = tmp_path / "input.par"
+    inp.write_text("image\n    sigposArcsec 0.44\n    end\n")
+    files = {"input.par": inp}
+    np.testing.assert_allclose(lc.model_sigpos("smacs0723-iclv2", files, images), [0.44, 0.44])
+    np.testing.assert_allclose(
+        lc.model_sigpos("abell2744-bergamini23", files, images), [0.38, 0.57]
+    )
+    np.testing.assert_allclose(lc.model_sigpos("elgordo-caminha23", files, images), [0.621] * 2)
+
+
+def test_imageplane_check_summary():
+    model = _model()
+    theta_e = model.components[0].b0 * float(model.dls_ds(2.0))
+    grid = lc.lensmodel.DeflectionGrid.compute(model, half_width=1.5 * theta_e, step=0.5)
+    ra, dec = model.to_sky(np.array([2.0 + theta_e, 2.0 - theta_e]), np.zeros(2))
+    images = Table(
+        {"image_id": ["1.1", "1.2"], "system": ["1", "1"], "ra": ra, "dec": dec, "z": [2.0, 2.0]}
+    )
+    bt = lc.lensmodel.backtrace_images(model, images, {})
+    assert lc.grid_half_width(model, images) >= theta_e + 20
+    # x = 2 +- theta_E is exact only for a pure SIS; this cut-off profile leaves ~0.05".
+    ip, summary = lc.imageplane_check(model, grid, bt, np.array([0.1, 0.1]), 1.0)
+    assert summary["n_solved"] == 2 and summary["rms_dtheta_arcsec"] < 0.1
+    assert summary["images_over_3sigma"] == [] and summary["chi2_pos_lenstool"] == 1.0
+
+
+@pytest.mark.network
+@pytest.mark.parametrize(
+    "name, n_images, n_families, chi2",
+    [("elgordo-caminha23", 56, 23, 80.221558), ("abell2744-bergamini23", 149, 50, 146.604318)],
+)
+def test_cluster_model_files_load(name, n_images, n_families, chi2):
+    files = lc.model_files(name)
+    par = lc.lensmodel.parse_lenstool_par(files["best.par"])
+    model = lc.lensmodel.LensModel.from_par(par)
+    images = lc.lensmodel.load_lenstool_images(files["arcs.dat"])
+    assert len(images) == n_images and len(set(images["system"])) == n_families
+    assert lc.chi2pos_from_par(files["best.par"]) == pytest.approx(chi2)
+    z = lc.lensmodel.image_redshifts(images, par["z_m_limit"])
+    assert np.all(np.isfinite(z))  # every image has a catalogued or fixed redshift
+    assert len(model.components) == len(par["potentials"])

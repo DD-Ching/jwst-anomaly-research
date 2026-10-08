@@ -16,15 +16,13 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;
-   - **Preliminary (issue #41, scratch code):** exact image-plane solves reproduce Lenstool for El Gordo (χ² 82.5
-     vs 80.22) and Abell 2744 (Bergamini+2023b, 146.64 vs 146.60). Neither shows an image-position anomaly.
-     Open items:
-     - make these results reproducible in the repository: re-run them with #40's `find_images` as
-       `lens_consistency.py validate` known cases;
-     - fix the parser (letter IDs in `z_m_limit`/arcs files, 6-decimal `_kpc` rounding);
-     - add both as `MODELS` entries;
-     - run the counter-image flux test on DJA photometry (Abell 2744 needs the 233 MB catalogue, with a DECISIONS
-       entry) and on `bayes.dat` search radii.
+   - **Done (D-030):** `validate --model elgordo-caminha23 | abell2744-bergamini23` reproduces Lenstool's χ²
+     (82.53 vs 80.22; 146.64 vs 146.60). No image-position anomaly. Next:
+     - `lens_consistency.py images --forced-image` per field (El Gordo: F277W `jw01176-o241_t012`; Abell 2744
+       needs DJA photometry, the 233 MB catalogue, with a DECISIONS entry, because pipeline catalogs miss core arcs);
+     - search radii from `bayes.dat` instead of a fixed 1″;
+     - Abell 2744 multiplicity residual (D-030): do `bayes.dat` samples split 3.2a/b, 34.1a/b, 700.1a/b?
+     - El Gordo magnification-map check (CDS `magnification_best_fit_z2.fits`) as a `validate` map test.
    - Sunrise: RELICS or Scofield+2025.
    Field follow-ups (docs/fields/*.md):
    - vet Abell 2744 `5904`, `7987`, `4731`, `264`, `7298`;

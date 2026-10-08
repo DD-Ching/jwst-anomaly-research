@@ -83,11 +83,18 @@ from astropy.wcs import WCS, FITSFixedWarning
 from jwst_anomaly import lensmodel, paths, schema
 from jwst_anomaly.photometry import fetch_catalog
 
+# sigpos: "input.par" (its sigposArcsec), "arcs" (each image's error column, as Lenstool's
+# ``forme -10``) or a number. El Gordo's CDS best_fit.par has an empty image section: a uniform
+# 0.621" (the file's smallest error) reproduces Lenstool's Chi2pos best (82.5 vs 80.22; the
+# per-image column gives 52.0), so it is an ASSUMPTION backed by that match (D-030).
 MODELS = {
     "smacs0723-iclv2": {
         "files": lensmodel.SMACS0723_MAHLER22_ICLV2,
         "kappa_member": "tmp_k/0000_k.fits",
+        "sigpos": "input.par",
     },
+    "elgordo-caminha23": {"files": lensmodel.ELGORDO_CAMINHA23, "sigpos": 0.621},
+    "abell2744-bergamini23": {"files": lensmodel.ABELL2744_BERGAMINI23, "sigpos": "arcs"},
 }
 Z_GRID = (1.0, 2.0, 4.0)
 
@@ -100,6 +107,8 @@ def model_files(name: str) -> dict[str, Path]:
     """
     spec = MODELS[name]
     files = {key: fetch_catalog(url, sha) for key, (url, sha) in spec["files"].items()}
+    if "kappa_member" not in spec:
+        return files
     archive = files.pop("kappa_0000")
     target = archive.with_name(
         archive.name.split(".", 1)[0] + "_" + Path(spec["kappa_member"]).name
@@ -128,6 +137,52 @@ def read_sigpos(path: Path) -> float:
     if not match:
         raise SystemExit(f"error: {path} has no sigposArcsec; pass a model with one")
     return float(match.group(1))
+
+
+def model_sigpos(name: str, files: dict[str, Path], images: Table) -> np.ndarray:
+    """Per-image position error (arcsec) under the model's ``sigpos`` rule (see ``MODELS``)."""
+    rule = MODELS[name]["sigpos"]
+    if rule == "input.par":
+        return np.full(len(images), read_sigpos(files["input.par"]))
+    sigma = np.asarray(images["a"], float) if rule == "arcs" else np.full(len(images), float(rule))
+    if not np.all(np.isfinite(sigma) & (sigma > 0)):
+        raise SystemExit(f"error: {name}: position errors must be finite and positive")
+    return sigma
+
+
+def grid_cache_path(model: lensmodel.LensModel, half_width: float, step: float) -> Path:
+    """Cache file of a model's deflection grid (shared by ``validate`` and ``images``)."""
+    return paths.cache_dir() / "external" / f"{model.sha256[:12]}_alpha_{half_width:g}_{step:g}.npz"
+
+
+def grid_half_width(model: lensmodel.LensModel, images: Table, margin: float = 20.0) -> float:
+    """Solver grid half-width (arcsec) that covers every catalogued image plus ``margin``."""
+    x, y = model.to_frame(np.asarray(images["ra"], float), np.asarray(images["dec"], float))
+    return float(np.ceil(max(np.abs(x).max(), np.abs(y).max()) + margin))
+
+
+def imageplane_check(model, grid, bt: Table, sigma: np.ndarray, chi2_ref: float | None):
+    """Exact image-plane residuals plus a summary (χ², rms, > 3σ images)."""
+    ip = lensmodel.imageplane_residuals(model, grid, bt)
+    ip["sigma_arcsec"] = sigma
+    d = np.asarray(ip["dtheta_arcsec"], float)
+    ok = np.isfinite(d)
+    chi = d / sigma
+    any_ok = bool(ok.any())
+    summary = {
+        "n_images": len(ip),
+        "n_solved": int(ok.sum()),
+        "unsolved_images": [str(i) for i in ip["image_id"][~ok]],
+        "shared_match_images": [str(i) for i in ip["image_id"][ip["shared_match"]]],
+        "rms_dtheta_arcsec": float(np.sqrt(np.mean(d[ok] ** 2))) if any_ok else float("nan"),
+        "max_dtheta_arcsec": float(d[ok].max()) if any_ok else float("nan"),
+        "chi2_pos": float(np.sum(chi[ok] ** 2)),
+        "chi2_pos_lenstool": chi2_ref,
+        "images_over_3sigma": [str(i) for i in ip["image_id"][ok & (chi > 3)]],
+        "grid_half_width_arcsec": float(grid.x[-1]),
+        "grid_step_arcsec": float(grid.x[1] - grid.x[0]),
+    }
+    return ip, summary
 
 
 def kappa_map_check(model: lensmodel.LensModel, map_path: Path, step: int = 5) -> dict:
@@ -165,23 +220,27 @@ def chi2pos_from_par(path: Path) -> float | None:
     return float(match.group(1)) if match else None
 
 
-def backtrace_check(model, images, z_m_limit, sigpos: float, chi2_ref: float | None):
-    """Back-trace table plus a summary (χ², rms, per-system rms, > 3σ images)."""
+def backtrace_check(model, images, z_m_limit, sigpos, chi2_ref: float | None):
+    """Back-trace table plus a summary (χ², rms, per-system rms, > 3σ images).
+
+    ``sigpos`` is one error for all images or one per image (arcsec).
+    """
     bt = lensmodel.backtrace_images(model, images, z_m_limit)
+    sig = np.broadcast_to(np.asarray(sigpos, float), (len(bt),))
     ok = np.isfinite(bt["dtheta_arcsec"])
     dtheta = np.asarray(bt["dtheta_arcsec"][ok])
     systems = {}
     for sys_id in np.unique(bt["system"][ok]):
         m = ok & (bt["system"] == sys_id)
         systems[str(sys_id)] = float(np.sqrt(np.mean(np.asarray(bt["dtheta_arcsec"][m]) ** 2)))
-    outliers = bt[ok & (bt["dtheta_arcsec"] > 3 * sigpos)]
+    outliers = bt[ok & (bt["dtheta_arcsec"] > 3 * sig)]
     summary = {
         "n_images": len(bt),
         "n_traced": int(ok.sum()),
         "rms_dtheta_arcsec": float(np.sqrt(np.mean(dtheta**2))),
         "median_dtheta_arcsec": float(np.median(dtheta)),
-        "sigpos_arcsec": sigpos,
-        "chi2_pos": float(np.sum((dtheta / sigpos) ** 2)),
+        "sigpos_arcsec": float(np.median(sig)),
+        "chi2_pos": float(np.sum((dtheta / sig[ok]) ** 2)),
         "chi2_pos_lenstool": chi2_ref,
         "rms_by_system": systems,
         "images_over_3sigma": [str(i) for i in outliers["image_id"]],
@@ -338,19 +397,32 @@ def cmd_validate(args) -> dict:
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
-    sigpos = read_sigpos(files["input.par"])
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    sigma = model_sigpos(args.model, files, images)
     chi2_ref = chi2pos_from_par(files["best.par"])
-    bt, bsum = backtrace_check(model, images, par["z_m_limit"], sigpos, chi2_ref)
+    bt, bsum = backtrace_check(model, images, par["z_m_limit"], sigma, chi2_ref)
+    half = grid_half_width(model, images)
+    grid = lensmodel.DeflectionGrid.cached(
+        model, grid_cache_path(model, half, args.grid_step), half, args.grid_step
+    )
+    ip, isum = imageplane_check(model, grid, bt, sigma, chi2_ref)
     summary = {
         "model": args.model,
         "model_sha256": model.sha256,
         "n_potentials": len(model.components),
-        "kappa_map": kappa_map_check(model, files["kappa_map"], step=args.step),
+        "image_plane_optimised": "image plane optimization"
+        in files["best.par"].read_text(encoding="latin-1").lower(),
+        "kappa_map": (
+            kappa_map_check(model, files["kappa_map"], step=args.step)
+            if "kappa_map" in files
+            else None
+        ),
         "backtrace": bsum,
+        "image_plane": isum,
     }
     out = args.out / args.model
     _write(bt, out / "backtrace.ecsv")
+    _write(ip, out / "imageplane.ecsv")
     (out / "validate.json").write_text(json.dumps(summary, indent=1))
     return summary
 
@@ -748,12 +820,9 @@ def cmd_images(args) -> dict:
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
-    cache = (
-        paths.cache_dir()
-        / "external"
-        / f"{model.sha256[:12]}_alpha_{args.half_width:g}_{args.step:g}.npz"
+    grid = lensmodel.DeflectionGrid.cached(
+        model, grid_cache_path(model, args.half_width, args.step), args.half_width, args.step
     )
-    grid = lensmodel.DeflectionGrid.cached(model, cache, args.half_width, args.step)
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
     bt = lensmodel.backtrace_images(model, images, par["z_m_limit"])
     shapes = load_shapes(args.catalog)
@@ -857,6 +926,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     v = sub.add_parser("validate", help="compare with the published kappa map and multiple images")
     v.add_argument("--step", type=int, default=5, help="kappa-map sub-grid step in pixels")
+    v.add_argument("--grid-step", type=float, default=0.25, help="solver grid step, arcsec")
     a = sub.add_parser("arcs", help="observed source orientation against the predicted shear")
     a.add_argument("--catalog", type=Path, required=True, help="JWST pipeline _cat.ecsv")
     a.add_argument("--photoz", type=Path, help="eazy zout FITS table (e.g. DJA)")
