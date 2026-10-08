@@ -2233,3 +2233,62 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 **Revisit if.**
 - A multi-plane field run needs speed: interpolate per-plane deflection grids for the seeds.
 - A model needs more than dPIE potentials on the extra planes.
+
+## D-047 Exotic-lens predictions: wormhole and negative-mass signatures are searchable, warp signatures are not (2026-10-08)
+
+**Decision.** Phase 1 ("predictions first") gives the screens closed-form targets. docs/exotic_lensing.md has the
+"Wormhole signatures" and "Warp signatures" sections; `src/jwst_anomaly/exotic_sim.py` holds the simulator.
+- **Searchable with JWST data** (each one a hypothesis to test, never a result):
+  - W1, negative-mass dark lens: a radially stretched pair on one side of an empty centre, and no images of sources
+    within 2θ_E. It calibrates the `radial` screen (D-031).
+  - W2, Ellis pair with no deflector: it calibrates the dark-lens search and `fluxratio`.
+  - W3, inverted microlensing: a compact lensed source vanishes for 2 t_E √(4 − u₀²) between caustic spikes. It
+    calibrates the two-epoch transient screen (D-027), which needs a dimming class and ≥ 3 epochs to see
+    spike, dip, spike.
+  - W5, count deficit: fewer sources inside about θ_E. It calibrates the counts screen, run only around
+    `radial` centres.
+- **Not searchable:**
+  - W4, the Ellis gutter: it needs 0.8 % photometry per epoch;
+  - W6, µas centroid shifts and femtolensing;
+  - every warp-drive signature: none has a published imaging or photometric prediction for a distant observer
+    (docs/exotic_lensing.md "Warp signatures"). That branch is stopped.
+- **Model.** Kitamura, Nakajima & Asada (2013) power-law family, α = ε̄/bⁿ with ε of either sign; magnification from
+  Izumi et al. (2013). It covers point mass, negative mass, Ellis and phenomenological n > 2 in one lens equation.
+  - Solutions are closed form for n = 1, with bisection on the monotonic branches otherwise.
+  - A uniform-disk finite source caps the caustic spikes. It is an exact 1-D radial integral, split at the caustic
+    and the disk edges, and it agrees with inverse ray shooting to < 1 %.
+  - `inject_images` and `inject_light_curve` return `simulated` tables for injection-recovery.
+- **Recommended injections** (ASSUMPTIONs, to be tuned on recovery):
+  - radial: n = 1, ε < 0, θ_E = 0.3″, 1″ and 3″ (|M| ≈ 2 × 10¹⁰ to 2 × 10¹² M☉), painted from catalogue
+    sources with β ∈ [2, 4] θ_E.
+  - transient: an umbra (lensed flux → 0, keeping the blend) of 2–4 t_E, plus spikes of × 7.0 (ρ = 0.01),
+    × 2.35 (ρ = 0.1) and × 1.53 (ρ = 0.3). These are `simulated` peaks from `exotic_sim`, not paper values.
+  - Ellis or n ≥ 3 dips of 4 %, 14 % and 59 %, as a sensitivity floor.
+
+**Alternatives rejected.**
+- lenstronomy point-mass or power-law profiles: not a dependency here. They are parametrised by a positive
+  Einstein radius, and ε < 0 is not supported as far as we checked. The closed forms take about 100 lines of
+  numpy and are tested against the papers.
+- Inventing a warp-bubble lensing or flash model: the charter forbids it, and the Alcubierre exterior is flat.
+
+**Evidence** (`tests/test_exotic_sim.py`, offline; `simulated`).
+- n = 1, ε > 0 reproduces (u² + 2)/(u√(u² + 4)).
+- n = 1, ε < 0 reproduces Safonova et al.'s umbra at u < 2, the caustic at u = 2 and (u² − 2)/(u√(u² − 4)).
+- Ellis: inner images at −0.618 and −0.532 carrying 3.4 % and 1.3 % of the flux (Abe 2010), and a 4.2 % gutter
+  ("about 4 %").
+- n = 10: demagnification onset at β = 0.1875 (paper 0.187 numerically; 2/(n+1) = 0.182 is their leading-order
+  estimate, now `demagnification_onset_approx`), and 59 % depletion at β ≈ 0.70 (paper ~60 % at ~0.7).
+  The exact onsets are 1.111 (n = 2) and 0.643 (n = 3).
+- n = 3: 14.3 % depletion at β ≈ 1.12. The paper's text says "~10 %", but its own Fig. 2c (read from the figure
+  pixels) bottoms out at A ≈ 0.865 ± 0.01, i.e. 13–14 %. The text rounds; no model difference.
+- Izumi κ and γ; Abe's Tables 1–2 (R_E, θ_E, t_E for a = 10³ and 10⁵ km); the docs' physical scales;
+  injection round trips through the lens equation.
+- Converged spike heights. The first version, with a centred 2-D disk quadrature, overestimated them near the
+  caustic: 9.24 → 7.01 (ρ = 0.01), 2.56 → 2.35 (ρ = 0.1), 1.74 → 1.53 (ρ = 0.3).
+- Every citation was fetched from the arXiv API or Crossref (SOURCES.md "Exotic-lensing predictions (D-047)").
+
+**Revisit if.**
+- A paper gives a distant-observer electromagnetic prediction for a warp bubble.
+- Injection-recovery shows a screen is blind to W1 or W3 at the recommended amplitudes.
+- Cluster macro-magnification needs a lens model with shear plus a microlens instead of an isolated lens (W3 in
+  caustic-crossing arcs).
