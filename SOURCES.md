@@ -859,3 +859,7 @@ jwst 3.0.0 / photutils 3.0.0 (file headers).
   milli-lens searches (Casadio et al. 2021, arXiv:2107.06896; Pötzl et al. 2024, arXiv:2409.15229). Cluster-survey
   references in `lenscats.CLUSTER_SURVEY_REFS` were checked by title on the arXiv API (2026-10-08); the two DOI-only
   ones (Lopes et al. 2004 NoSOCS, Gioia et al. 1990 EMSS) by their lenscat names (NSCS, MS cluster designations).
+- Legacy Surveys DR10 brick summary `ls_dr10.bricks_s` via Data Lab TAP (query and sha256 of the 2026-10-08 download,
+  332,581 bricks / 23.5 MB, recorded in the run's summary.json; not pinned, the service output may change): footprint
+  (nexp_r, nexp_z) and per-brick 5σ galaxy depth for D-056. He et al. 2025, lensed-quasar confirmations
+  (arXiv:2509.03858; HSC J2212−0103 lens-light fit).

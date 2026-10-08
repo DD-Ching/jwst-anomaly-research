@@ -605,85 +605,109 @@ All three fields, **including the two uncalibrated ones** (indicative only; `lim
 ## W1/W2 in published lens catalogues
 
 D-056; `src/jwst_anomaly/lenscats.py`, `scripts/w12_lenscats.py`, tests in `tests/test_lenscats.py` and
-`tests/test_w12_lenscats.py`. Every number below is in the run's `summary.json`. Question: do any **published**
-strong-lens candidates or confirmed lenses have lensed images but **no visible deflector** (W2, and W1's empty
-centre), down to the depth of public wide imaging? Catalogue values are **observed**. Matches, required magnitudes and
-limits are **derived**; required magnitudes rest on a **model_prediction** (SIS) and on **assumptions**. A system
-without a deflector would be an anomaly to vet, never evidence of exotic physics.
+`tests/test_w12_lenscats.py`. Every number below is in the run's `summary.json`.
 
-### Data (observed; SOURCES.md "Published lens catalogues and deep-imaging checks (D-056)")
+Question: do any **published** strong-lens candidates or confirmed lenses have lensed images but **no visible
+deflector** (W2, and W1's empty centre), down to the depth of public wide imaging? Catalogue values are **observed**.
+Matches, required magnitudes and limits are **derived**. Required magnitudes rest on a **model_prediction** (SIS) and
+on **assumptions**. A system without a deflector would be an anomaly to vet, never evidence of exotic physics.
 
-lenscat 1.1.3 (32,838 entries), Euclid Q1 Discovery Engine (2,584), SuGOHI (3,961). Merged within 3″: 35,862 systems.
-Galaxy scale (no group/cluster entry, including lenscat rows citing 14 cluster surveys, and θ_E ≤ 3″ when given):
-20,986, of which 20,663 are covered by Legacy Surveys DR10 (Tractor, Data Lab TAP, ±5″ boxes). No catalogue flags a
-system as "no lens galaxy". No catalogue gives image positions, so the **W1 geometry is not testable**.
+### Data and footprint (observed; SOURCES.md "Published lens catalogues and deep-imaging checks (D-056)")
+
+- **Catalogues:** lenscat 1.1.3 (32,838 entries), Euclid Q1 Discovery Engine (2,584) and SuGOHI (3,961), merged
+  within 3″ into 35,862 systems.
+- **Galaxy scale:** no group or cluster entry, including the lenscat rows that cite 14 cluster surveys, and θ_E ≤ 3″
+  when given. 20,986 systems.
+- **Footprint and depth** come from the Legacy Surveys DR10 (DECam) brick summary `ls_dr10.bricks_s` (332,581 bricks
+  with survey_primary and z data; 23.5 MB; sha256 in `summary.json`). They do not depend on detected sources.
+  - Covered means the brick has nexp_r ≥ 1 and nexp_z ≥ 1: 17,555 systems.
+  - Depth is the brick's 5σ galaxy depth, median z = 23.43 (5–95 %: 22.84–24.27; ASSUMPTION: the brick median holds
+    at the position).
+  - `ls_dr10.tractor` is DECam-only, so the DR9 north bricks are not used.
+- **Sources:** Tractor sources in ±5″ boxes, from the Data Lab TAP.
+- **W1 geometry is not testable:** no catalogue gives image positions.
 
 ### Which systems can test a dark deflector at all
 
-A lens finder that searches around galaxies cannot select a lens without one, and a single-dish sub-mm centroid is
-uncertain by more than θ_E. The test is therefore defined per selection class (ASSUMPTIONs in `Params`):
+A finder that searches around galaxies cannot select a lens without one. A single-dish sub-mm centroid is uncertain by
+more than θ_E. The test is therefore defined per selection class (ASSUMPTIONs in `Params`):
 
 | Selection (galaxy scale / covered) | Test a dark lens could fail | Covered systems by outcome |
 |---|---|---|
-| galaxy finders or unknown (20,424 / 20,142) | none: insensitive by selection | 20,142 insensitive |
-| sub-mm (SPT, Herschel, ACT, Planck; 118 / 107) | none: centroid error > θ_E | 107 insensitive |
-| lensed-quasar searches (407 / 391) | two brightest PSF images within 3″, separated ≥ 2″; any source more than 0.5″ from both images, inside the circle with the pair as diameter and bright enough to be the lens | blended (< 2 images) 294, too close 74, deflector 9, none 14 |
-| radio interferometric (CLASS, JVAS, MG, mJIVE; 37 / 23) | an extended source within 1.5″ bright enough to be the lens; else the quasar test on optical point images; else "none" | blended 1, too close 1, deflector 12, none 9 |
+| galaxy finders or unknown (20,424 / 17,102) | none: insensitive by selection | 17,102 insensitive |
+| sub-mm (SPT, Herschel, ACT, Planck; 118 / 110) | none: centroid error > θ_E | 110 insensitive |
+| lensed-quasar searches (407 / 325) | quasar pair test (below) | blended 242, too close 65, deflector 6, faint galaxy 1, none 11 |
+| radio interferometric (CLASS, JVAS, MG, mJIVE; 37 / 18) | extended source within 1.5″ bright enough for the lens; a fainter one gives "faint galaxy"; else the pair test on optical point sources; else "none" | blended 1, too close 1, deflector 6, faint galaxy 1, none 9 |
 
-"Bright enough": m_z ≤ typical required magnitude + 2 rms. Where that is undefined, the conservative magnitude is used,
-and otherwise −∞ (nothing qualifies). Position and imaging problems are evaluated on **every** covered system and
-remove it from the test, whatever the outcome. In the 414 covered quasar and radio systems these are LS maskbits
-(14), name/RA–Dec mismatch (1) and positions rounded on both axes (4). That leaves **40 decided systems**: 19 with a deflector
-and 21 without ("none").
+**Quasar pair test.**
+- The images are the two brightest PSF-typed sources within 3″ of the position. The pair must be ≥ 2″ apart, or the
+  system is "too close".
+- Deflector candidates lie inside the circle with the pair as diameter, searched around the pair midpoint, and more
+  than 0.5″ from both images. The ±5″ box limits the circle to pairs within 3″ of the position.
+- PSF-typed sources with g − z within 0.5 mag of the pair's colour (or with no colour) are taken as further images
+  (the 3rd and 4th images of a quad), never as the deflector.
 
-**Required lens light.** SIS σ from θ_E (catalogue, else half the quasar image separation, else 1″), then an empirical
-Faber–Jackson calibration m_z = a − 10 log(σ/200 km/s) + 5 log(D_L/D_L(0.5)) + k (z_l − 0.5). It is fitted on
-galaxy-selected lenses that have an extended Tractor source within 0.5″ of the catalogued lens, θ_E and z_l (N = 605;
-a = 20.41, k = 0.67, rms 0.88 mag; arcs and quasar images are excluded by the 0.5″ match and the class cut).
+**Status rules.**
+- A candidate with m_z ≤ typical required magnitude + 2 rms is a "deflector". Where that magnitude is undefined, the
+  conservative one is used, and otherwise −∞.
+- **"faint galaxy"** (only fainter candidates) is **undecided** and is removed from N. A galaxy sits where the lens
+  should be, and whether it is luminous enough depends on the Faber–Jackson scatter beyond the margin. Such a system
+  can neither show nor exclude a dark deflector.
+- Position and imaging problems are evaluated on every covered system and remove it from N whatever the test said.
+  In the 343 covered quasar and radio systems: maskbits 9, rounded positions 5, name/RA–Dec mismatch 1.
+- A position counts as rounded if either axis is a whole 0.01° or 0.1°, or if both axes show a finer step.
+- **Decided: 29 systems**, of which 12 have a deflector and 17 do not ("none").
+
+**Required lens light.**
+- SIS σ from θ_E: the catalogue's, else (quasar and radio systems only) half the image separation, else 1″. Then an
+  empirical Faber–Jackson calibration, fitted on 605 galaxy-selected lenses that have an extended Tractor source
+  within 0.5″ of the catalogued lens, θ_E and z_l. Result (LS z): a = 20.41 at σ = 200 km/s and z_l = 0.5,
+  k = 0.67, rms 0.88 mag.
 - **Typical:** catalogue z_l (else 0.5) and z_s (else 2). Median required m_z = 19.73.
 - **Conservative:** the faintest over z_l, with z_s = 3 when unknown, + 2 rms, and θ_E = 0.5″ when unknown
   (`detectable_floor`). Median 25.05.
+- An ordinary lens counts as detectable when required m_z < depth − 0.5. That holds for 99.9 % of covered systems
+  in the typical variant and 3.2 % in the conservative variant.
 
-Median 5σ galaxy depth is z = 23.29 (5–95 %: 22.68–24.19). Detectable (required < depth − 0.5): 99.2 % of covered
-systems typical, 5.8 % conservative.
+**Completeness is assumed, not measured.** The limits take the test to be complete for decided systems: a dark lens
+there would give "none". This was checked only as logic, in the unit tests: a pair with no source between its images
+reaches "none". A realistic injection would need Tractor re-run on images, which this offline step cannot do. Not
+simulated:
+- a faint lens blending with the images;
+- Tractor typing a compact lens as PSF (counted as a further image when its colour matches the pair);
+- seeing, and depth varying within a brick.
 
-**Injection (`simulated`).** In the 19 decided systems whose test found a deflector, every source that could be the
-deflector (all non-image sources within 1.5″, or inside the image circle) is deleted and the test is re-run.
-18 of 19 become "none"; one becomes "too close". Logic recovery is 0.947. This checks that a deflector-less
-configuration reaches "none". It does not measure how often Tractor detects a real faint lens next to bright images.
-
-### Vetting of the 21 "none" systems (`candidates_vetted.ecsv`; all cutouts inspected)
+### Vetting of the 17 "none" systems (`candidates_vetted.ecsv`; all cutouts inspected)
 
 | Ordinary explanation | Systems |
 |---|---|
-| SIMBAD galaxy within 3″ (a catalogued lens galaxy: SDSS J1001+5027, HE1104−1805, J1322+1052, J1349+1227, J1515+1511, B1127+385, MG0751+2716) | 7 |
-| lens redshift published (DES J0053−2012, B0850+054, MG1131+0456, MG1549+3047, B2319+052, B2114+022) | 6 |
-| extended source at the position, fainter than "bright enough" (under-luminous lens or no lens; SuGOHI grade-C 083906−000000, B1555+375, three SuGOHI IX pairs) | 5 |
-| cluster (redMaPPer / WHL / SIMBAD) | 1 |
-| literature: HSC J2212−0103, a lens galaxy fitted in HSC with i = 22.40 (He et al. 2025, arXiv:2509.03858) | 1 |
-| **open:** SuGOHI IX 090434−005328 (CHITAH grade A, pair 2.17″) | 1 |
+| SIMBAD galaxy within 3″ (catalogued lens galaxy: HE1104−1805, 2M1134−2103, J1322+1052, J1349+1227, J1515+1511, MG0751+2716) | 6 |
+| lens redshift published (DES J0053−2012, MG1549+305, MG2016+112, MG0414+0534, MG1131+0456, B2319+052, B2114+022) | 7 |
+| literature: HSC J2212−0103, lens galaxy fitted in HSC with i = 22.40 (He et al. 2025, arXiv:2509.03858) | 1 |
+| **open in the typical variant:** SuGOHI IX 090434−005328 (A), 091517+040747 (C), 104122−005618 (B), CHITAH pairs of 2.0–2.25″ | 3 |
 
-14 of the 21 have a deflector known from the literature that the LS test missed. The LS deflector test therefore has a
-high false-"none" rate on real lenses. Any "none" is weak evidence until deeper imaging (HSC, HST) is checked.
+- 14 of the 17 have a deflector in the literature that the LS test missed. LS DR10 often does not detect real lens
+  galaxies next to quasar images, so a "none" is weak evidence.
+- All three open pairs need a conservative lens (m_z 23.3–23.5) fainter than the local depth (22.9–23.2). An ordinary
+  lens below the LS depth explains them, so none survives every ordinary test, and there is no `docs/candidates/` file.
+- Follow-up: their HSC (CHITAH) lens models, and spectra of both images (binary quasar vs lens).
 
-**090434−005328** is open only in the typical variant. Its conservative required lens (m_z 23.4) is fainter than the
-local depth (23.0), so an ordinary lens below LS depth explains it. It does not survive every ordinary test, so there is
-no `docs/candidates/` file. The discovery method (CHITAH) models lens light in deeper HSC imaging. The HSC lens fit for
-this system was not checked; that is the follow-up.
+### Limits (95 %; f_dark < s₉₅(k) / N per selection class; completeness assumed 1; `derived`)
 
-### Limits (95 %; f_dark < s₉₅(k) / (N × 0.947), with N decided and detectable; `derived`)
-
-| Variant | k | N (quasar / radio / all) | f_dark < (quasar / radio / all) |
+| Variant | quasar: k / N / f_dark < | radio: k / N / f_dark < | all |
 |---|---|---|---|
-| typical | 1 | 21 / 19 / 40 | 0.24 / 0.26 / 0.13 |
-| conservative | 0 | 9 / 0 / 9 | 0.35 / — / 0.35 |
+| typical | 3 / 16 / 0.48 | 0 / 13 / 0.23 | 3 / 29 / 0.27 |
+| conservative | 0 / 6 / 0.50 | 0 / 0 / — | 0 / 6 / 0.50 |
 
 f_dark is the fraction of quasar- or radio-selected galaxy-scale lenses whose deflector is dark (fainter than an
-ordinary lens of that θ_E). These limits are **weak**. LS DR10 resolves the image pair and the space between in only
-23 of 391 covered lensed quasars (294 blended, 74 closer than 2″). The conservative variant leaves only
-9 systems. There is **no limit** on galaxy-finder or sub-mm selected systems, or on W1 (no image geometry, and W1 pairs
-are unlikely to pass lens finders). An earlier version of this section quoted f_dark < 1.5 × 10⁻⁴. That number counted
-systems that could not have failed the test, and it is withdrawn.
+ordinary lens of that θ_E).
+- These limits are **weak and rest on an assumed complete test.** LS DR10 decides only 29 of the 343 covered quasar
+  and radio systems (242 blended, 65 closer than 2″).
+- There is **no limit** on galaxy-finder or sub-mm systems, or on W1: there is no image geometry, and W1 pairs are
+  unlikely to pass lens finders.
+- Earlier versions of this section quoted f_dark < 1.5 × 10⁻⁴, then 0.13. Both are withdrawn. The first counted
+  systems that could not fail the test. The second pooled k and the efficiency, counted under-luminous galaxies as
+  explained, and inferred coverage from detected sources (which drops exactly the dark configurations).
 
 ### Caveats
 
@@ -691,12 +715,11 @@ systems that could not have failed the test, and it is withdrawn.
   - cluster-survey rows typed "galaxy";
   - AGEL rows with the declination degrees dropped;
   - SPT rows up to 1.7° off;
-  - positions rounded on both axes (394 covered systems; a random 32 inspected; most show the galaxy several
-    arcseconds away);
+  - 468 covered systems with rounded positions (a random 32 inspected);
   - candidates their own papers rejected (MJV16999, Spingola et al. 2019);
   - name-based merges across lists.
-- HSC-SSP imaging (account required) and HST photometry were not used. Both would make the quasar test decisive at
-  sub-2″ separations.
+- HSC-SSP imaging (account required) and HST photometry were not used. They would decide the 307 blended or close
+  lensed quasars.
 - Relation to D-051: D-051 limits dark deflectors per unit area in JWST deep fields. This is a per-lens fraction in
   published lens lists; the two are not combinable without a lensing cross-section model.
 - Prior art: Jackson, Helbig & Browne 1998 found lens galaxies in 12 of 12 JVAS/CLASS lenses (astro-ph/9804136).

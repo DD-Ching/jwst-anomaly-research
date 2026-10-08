@@ -449,9 +449,10 @@ def position_quantum_arcsec(ra: float, dec: float, printed_decimals: int = 5) ->
     Positions converted from truncated sexagesimal (whole seconds of RA and whole arcsec) or
     rounded decimal degrees (0.01 deg) cannot locate a deflector to ~1''. A value counts as a
     multiple of a step when it is one to within the rounding of ``printed_decimals`` decimal
-    degrees (lenscat prints 5). One axis alone is rounded by chance in up to a few per cent of
-    precise positions, so both axes must show a step (two independent indicators, chance
-    ~1e-4); the larger step (RA step times cos dec) is returned.
+    degrees (lenscat prints 5). A whole 0.01 deg or 0.1 deg on either axis flags the position
+    (chance ~1e-3); finer steps (whole RA seconds, 1/1000 deg, whole arcmin or arcsec) occur
+    by chance in up to a few per cent of precise positions, so both axes must show one (two
+    indicators, chance ~1e-4). The larger step (RA step times cos dec) is returned.
     """
     tol = 0.5 * 10.0 ** (-printed_decimals) * 1.01
     cosd = np.cos(np.radians(dec))
@@ -467,6 +468,9 @@ def position_quantum_arcsec(ra: float, dec: float, printed_decimals: int = 5) ->
     ra_units += [(1e3, 3.6 * cosd)]
     dec_units = [(1e1, 360.0), (1e2, 36.0), (60.0, 60.0), (1e3, 3.6), (3600.0, 1.0)]
     ra_step, dec_step = step(ra, ra_units), step(abs(dec), dec_units)
+    coarse = max(ra_step / max(cosd, 1e-6), dec_step)
+    if coarse >= 36.0:  # a 0.01 deg multiple on one axis is chance only ~1e-3 of the time
+        return float(max(ra_step, dec_step))
     return float(max(ra_step, dec_step)) if ra_step > 0 and dec_step > 0 else 0.0
 
 
@@ -503,57 +507,161 @@ def bright_galaxy_near(systems: Table, sources: Table, mag_max, radius_arcsec: f
     return np.array(n), np.array(sep)
 
 
+PAIR_COLUMNS = ("n_images", "img1", "img2", "sep", "theta_e")
+PAIR_TEST_COLUMNS = ("status", "n_images", "sep", "theta_e", "defl_mag")
+
+
+def _types(sources: Table) -> np.ndarray:
+    return np.array([str(t).strip() for t in sources["type"]])
+
+
+def _gz(sources: Table) -> np.ndarray:
+    if "mag_g" not in sources.colnames:
+        return np.full(len(sources), np.nan)
+    with np.errstate(invalid="ignore"):
+        return np.asarray(sources["mag_g"], float) - np.asarray(sources["mag_z"], float)
+
+
+def pair_images(systems: Table, sources: Table, image_radius: float = 3.0) -> Table:
+    """The two brightest PSF-typed sources within ``image_radius`` of each catalogue position
+    (the quasar images). ``img1``/``img2`` are row indices into ``sources`` (-1 if absent);
+    ``theta_e`` is half the separation (``model_prediction`` for an SIS). ``derived``."""
+    typ = _types(sources)
+    magz = np.asarray(sources["mag_z"], float)
+    cols = {c: [] for c in PAIR_COLUMNS}
+    if len(systems) and len(sources):
+        neighbours = _neighbours(systems, sources, image_radius)
+    else:
+        neighbours = ((np.zeros(0, int), np.zeros((0, 2))) for _ in range(len(systems)))
+    for idx, off in neighbours:
+        img = idx[(typ[idx] == "PSF") & np.isfinite(magz[idx])] if len(idx) else idx
+        two = img[np.argsort(magz[img])[:2]]
+        sep = np.nan
+        if len(two) == 2:
+            p = np.array([off[np.flatnonzero(idx == j)[0]] for j in two])
+            sep = float(np.hypot(*(p[0] - p[1])))
+        cols["n_images"].append(len(img))
+        cols["img1"].append(int(two[0]) if len(two) > 0 else -1)
+        cols["img2"].append(int(two[1]) if len(two) > 1 else -1)
+        cols["sep"].append(sep)
+        cols["theta_e"].append(sep / 2)
+    out = Table(
+        {c: np.asarray(v, float if c in ("sep", "theta_e") else int) for c, v in cols.items()}
+    )
+    out.meta.update(provenance=schema.Provenance.DERIVED.value)
+    return out
+
+
 def quasar_pair_test(
     systems: Table,
     sources: Table,
     mag_max,
+    images: Table | None = None,
     image_radius: float = 3.0,
     sep_min: float = 2.0,
     image_exclusion: float = 0.5,
+    image_colour_tol: float = 0.5,
 ) -> Table:
     """Deflector test that a lens without light can fail: two resolved point images, then any
-    source between them bright enough to be the lens. ``derived``.
+    source between them that could be the lens. ``derived``.
 
-    Images: the two brightest PSF-typed Tractor sources within ``image_radius`` of the
-    catalogue position. ``status``: "blended" (< 2 images), "too close" (separation <
-    ``sep_min``: ground-based seeing cannot separate a lens from the images, ASSUMPTION),
-    "deflector" (a source of any type, farther than ``image_exclusion`` from both images,
-    inside the circle with the image pair as diameter, with mag_z <= mag_max) or "none". The
-    returned ``theta_e`` is half the image separation (``model_prediction`` for an SIS).
+    ``status``: "blended" (< 2 images), "too close" (separation < ``sep_min``: ground-based
+    seeing cannot separate a lens from the images, ASSUMPTION), "deflector" (a candidate with
+    mag_z <= mag_max), "faint galaxy" (only fainter candidates: an under-luminous lens or no
+    lens, undecided) or "none". Candidates lie inside the circle with the image pair as
+    diameter, farther than ``image_exclusion`` from both images, and are not further images:
+    PSF-typed sources whose g - z is within ``image_colour_tol`` of the pair's mean, or has no
+    colour, are taken as images (the 3rd and 4th images of a quad), never as the deflector.
     """
-    typ = np.array([str(t).strip() for t in sources["type"]])
-    magz = np.asarray(sources["mag_z"], float)
-    rows = []
-    for (idx, off), m in zip(
-        _neighbours(systems, sources, image_radius + 0.5), np.asarray(mag_max, float), strict=True
-    ):
-        d0 = np.hypot(off[:, 0], off[:, 1])
-        img = idx[(typ[idx] == "PSF") & (d0 <= image_radius) & np.isfinite(magz[idx])]
-        row = {"n_images": len(img), "sep": np.nan, "theta_e": np.nan, "defl_mag": np.nan}
-        if len(img) < 2:
-            rows.append({**row, "status": "blended"})
-            continue
-        two = img[np.argsort(magz[img])[:2]]
-        p = np.array([off[np.flatnonzero(idx == j)[0]] for j in two])
-        sep = float(np.hypot(*(p[0] - p[1])))
-        row.update(sep=sep, theta_e=sep / 2)
-        if sep < sep_min:
-            rows.append({**row, "status": "too close"})
-            continue
-        mid = p.mean(axis=0)
-        others = np.array([k for k in range(len(idx)) if idx[k] not in two], int)
-        q = off[others] if len(others) else np.zeros((0, 2))
-        far = (np.hypot(*(q - p[0]).T) > image_exclusion) & (
-            np.hypot(*(q - p[1]).T) > image_exclusion
-        )
-        inside = np.hypot(*(q - mid).T) <= sep / 2
-        cand = idx[others][far & inside & (magz[idx[others]] <= m)] if len(others) else []
-        if len(cand):
-            row["defl_mag"] = float(np.min(magz[cand]))
-            rows.append({**row, "status": "deflector"})
-        else:
-            rows.append({**row, "status": "none"})
-    out = Table(rows=rows) if rows else Table(names=["status"], dtype=[str])
+    images = pair_images(systems, sources, image_radius) if images is None else images
+    typ = _types(sources) if len(sources) else np.zeros(0, str)
+    magz = np.asarray(sources["mag_z"], float) if len(sources) else np.zeros(0)
+    gz = _gz(sources) if len(sources) else np.zeros(0)
+    ra = np.asarray(sources["ra"], float) if len(sources) else np.zeros(0)
+    dec = np.asarray(sources["dec"], float) if len(sources) else np.zeros(0)
+    xyz = _unit(ra, dec) if len(sources) else np.zeros((0, 3))
+    tree = cKDTree(xyz) if len(sources) else None
+    rad = np.pi / 180 / 3600
+    rows = {c: [] for c in PAIR_TEST_COLUMNS}
+    for im, m in zip(images, np.asarray(mag_max, float), strict=True):
+        status, dmag = "blended", np.nan
+        if im["img2"] >= 0 and im["sep"] < sep_min:
+            status = "too close"
+        elif im["img2"] >= 0:
+            i1, i2 = int(im["img1"]), int(im["img2"])
+            mid_xyz = xyz[i1] + xyz[i2]
+            mid_xyz /= np.linalg.norm(mid_xyz)
+            r = im["sep"] / 2
+            idx = np.asarray(tree.query_ball_point(mid_xyz, (r + 0.1) * rad), int)
+            idx = idx[(idx != i1) & (idx != i2)]
+            d1 = np.linalg.norm(xyz[idx] - xyz[i1], axis=1) / rad
+            d2 = np.linalg.norm(xyz[idx] - xyz[i2], axis=1) / rad
+            dm = np.linalg.norm(xyz[idx] - mid_xyz, axis=1) / rad
+            pg = gz[[i1, i2]]
+            pair_gz = float(np.mean(pg[np.isfinite(pg)])) if np.isfinite(pg).any() else np.nan
+            dcol = np.abs(gz[idx] - pair_gz)
+            other_colour = np.greater(
+                dcol, image_colour_tol, where=np.isfinite(dcol), out=np.zeros(len(idx), bool)
+            )
+            extra_image = (typ[idx] == "PSF") & ~other_colour
+            cand = idx[(d1 > image_exclusion) & (d2 > image_exclusion) & (dm <= r) & ~extra_image]
+            cand = cand[np.isfinite(magz[cand])]
+            bright = cand[magz[cand] <= m]
+            if len(bright):
+                status, dmag = "deflector", float(magz[bright].min())
+            elif len(cand):
+                status, dmag = "faint galaxy", float(magz[cand].min())
+            else:
+                status = "none"
+        rows["status"].append(status)
+        rows["n_images"].append(int(im["n_images"]))
+        rows["sep"].append(float(im["sep"]))
+        rows["theta_e"].append(float(im["theta_e"]))
+        rows["defl_mag"].append(dmag)
+    out = Table(
+        {
+            "status": np.asarray(rows["status"], dtype=object),
+            "n_images": np.asarray(rows["n_images"], int),
+            "sep": np.asarray(rows["sep"], float),
+            "theta_e": np.asarray(rows["theta_e"], float),
+            "defl_mag": np.asarray(rows["defl_mag"], float),
+        }
+    )
+    out.meta.update(provenance=schema.Provenance.DERIVED.value)
+    return out
+
+
+def brick_coverage(systems: Table, bricks: Table) -> Table:
+    """Coverage and depth from the survey's brick summary, independent of detected sources.
+
+    ``bricks``: one row per brick with ``ra1, ra2, dec1, dec2`` (deg), ``nexp_r``, ``nexp_z`` and
+    ``galdepth_z`` (5-sigma galaxy depth, AB). A position is covered when its brick is listed
+    with ``nexp_r >= 1`` and ``nexp_z >= 1``; ``depth_z`` is the brick's ``galdepth_z`` (brick
+    median: ASSUMPTION that it holds at the position). ``observed`` brick values, ``derived``
+    lookup.
+    """
+    dec1 = np.asarray(bricks["dec1"], float)
+    order = np.lexsort((np.asarray(bricks["ra1"], float), dec1))
+    b = bricks[order]
+    d1 = np.asarray(b["dec1"], float)
+    bands = np.unique(d1)
+    starts = np.searchsorted(d1, bands, side="left")
+    stops = np.searchsorted(d1, bands, side="right")
+    cov, depth = [], []
+    for ra, dec in zip(systems["ra"], systems["dec"], strict=True):
+        k = np.searchsorted(bands, dec, side="right") - 1
+        hit = None
+        if k >= 0:
+            lo, hi = starts[k], stops[k]
+            if dec < float(b["dec2"][lo]):
+                ra1 = np.asarray(b["ra1"][lo:hi], float)
+                j = lo + np.searchsorted(ra1, ra % 360, side="right") - 1
+                if lo <= j < hi and ra % 360 < float(b["ra2"][j]):
+                    hit = j
+        ok = hit is not None and b["nexp_r"][hit] >= 1 and b["nexp_z"][hit] >= 1
+        cov.append(bool(ok))
+        depth.append(float(b["galdepth_z"][hit]) if ok else np.nan)
+    out = Table({"covered": np.array(cov, bool), "depth_z": np.array(depth, float)})
     out.meta.update(provenance=schema.Provenance.DERIVED.value)
     return out
 

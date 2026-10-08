@@ -9,6 +9,8 @@ from pathlib import Path
 import pytest
 from astropy.table import Table
 
+from jwst_anomaly import lenscats
+
 _DIR = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(_DIR))
 _spec = importlib.util.spec_from_file_location("w12_lenscats", _DIR / "w12_lenscats.py")
@@ -66,7 +68,8 @@ def test_poisson95():
 
 
 def _sources(rows):
-    return Table(rows=rows, names=("ra", "dec", "type", "mag_z", "maskbits"))
+    """rows: (ra, dec, type, mag_g, mag_z, maskbits)."""
+    return Table(rows=rows, names=("ra", "dec", "type", "mag_g", "mag_z", "maskbits"))
 
 
 def _system(sel):
@@ -75,35 +78,70 @@ def _system(sel):
     )
 
 
-IMAGES = [(10.0 - 1.2 * D, 0.0, "PSF", 19.0, 0), (10.0 + 1.2 * D, 0.0, "PSF", 19.5, 0)]
-LENS = [(10.0 + 0.1 * D, 0.0, "DEV", 20.0, 0)]
+IMAGES = [(10.0 - 1.2 * D, 0.0, "PSF", 19.3, 19.0, 0), (10.0 + 1.2 * D, 0.0, "PSF", 19.8, 19.5, 0)]
+LENS = [(10.0 + 0.1 * D, 0.0, "DEV", 22.0, 20.0, 0)]
 
 
-def test_quasar_test_can_fail_and_injection_recovers():
+def _test(sel, rows, p=None):
+    p = p or w12.Params()
+    t, src = _system(sel), _sources(rows)
+    images = lenscats.pair_images(t, src, p.image_radius)
+    return w12.deflector_test(t, src, p, images)["test_status"][0]
+
+
+def test_quasar_test_can_fail():
+    assert _test("quasar", IMAGES + LENS) == "deflector"
+    assert _test("quasar", IMAGES) == "none"  # a dark lens can fail the test
+    assert _test("quasar", IMAGES + [(10.0, 0.0, "DEV", 24.0, 22.5, 0)]) == "faint galaxy"
+    close = [
+        (10.0 - 0.6 * D, 0.0, "PSF", 19.3, 19.0, 0),
+        (10.0 + 0.6 * D, 0.0, "PSF", 19.8, 19.5, 0),
+    ]
+    assert _test("quasar", close) == "too close"
+    assert _test("quasar", IMAGES[:1]) == "blended"
+    assert _test("galaxy", IMAGES) == "insensitive"
+
+
+def test_quad_images_are_not_the_deflector():
+    # 3rd and 4th images: PSF, colour like the pair, inside the pair circle
+    quad = IMAGES + [
+        (10.0, 0.9 * D, "PSF", 20.3, 20.0, 0),
+        (10.0, -0.9 * D, "PSF", 20.4, 20.1, 0),
+    ]
+    assert _test("quasar", quad) == "none"
+    # a red compact source typed PSF is a lens candidate, not an image
+    red = IMAGES + [(10.0, 0.2 * D, "PSF", 22.5, 20.0, 0)]
+    assert _test("quasar", red) == "deflector"
+
+
+def test_pair_circle_beyond_image_radius():
+    # wide pair (4.8'') centred 1.5'' north of the catalogue position: a lens 3.7'' from the
+    # position (outside image_radius + 0.5) but inside the pair circle is still found
     p = w12.Params()
-    sysq = _system("quasar")
-    with_lens = w12.deflector_test(sysq, _sources(IMAGES + LENS), p)
-    assert with_lens["test_status"][0] == "deflector"
-    assert with_lens["image_sep"][0] == pytest.approx(2.4, abs=0.01)
-    assert w12.deflector_test(sysq, _sources(IMAGES), p)["test_status"][0] == "none"
-    faint = _sources(IMAGES + [(10.0, 0.0, "DEV", 22.5, 0)])
-    assert w12.deflector_test(sysq, faint, p)["test_status"][0] == "none"  # too faint
-    close = [(10.0 - 0.6 * D, 0.0, "PSF", 19.0, 0), (10.0 + 0.6 * D, 0.0, "PSF", 19.5, 0)]
-    assert w12.deflector_test(sysq, _sources(close), p)["test_status"][0] == "too close"
-    assert w12.deflector_test(sysq, _sources(IMAGES[:1]), p)["test_status"][0] == "blended"
-    # galaxy-selected systems are insensitive whatever the imaging shows
-    sysg = _system("galaxy")
-    assert w12.deflector_test(sysg, _sources(IMAGES), p)["test_status"][0] == "insensitive"
-    res = sysq.copy()
-    res["test_status"] = with_lens["test_status"]
-    inj = w12.inject_dark(res, _sources(IMAGES + LENS), p)
-    assert inj["n"] == 1 and inj["recovery"] == 1.0
+    imgs = [
+        (10.0 - 2.4 * D, 1.5 * D, "PSF", 19.3, 19.0, 0),
+        (10.0 + 2.4 * D, 1.5 * D, "PSF", 19.8, 19.5, 0),
+    ]
+    lens = [(10.0, 3.7 * D, "DEV", 22.0, 20.0, 0)]
+    assert _test("quasar", imgs + lens, p) == "deflector"
 
 
 def test_radio_test():
-    p = w12.Params()
-    sysr = _system("radio")
-    gal = [(10.0 + 0.3 * D, 0.0, "DEV", 20.0, 0)]
-    assert w12.deflector_test(sysr, _sources(gal), p)["test_status"][0] == "deflector"
-    far = [(10.0 + 4.0 * D, 0.0, "DEV", 20.0, 0)]
-    assert w12.deflector_test(sysr, _sources(far), p)["test_status"][0] == "none"
+    gal = [(10.0 + 0.3 * D, 0.0, "DEV", 22.0, 20.0, 0)]
+    assert _test("radio", gal) == "deflector"
+    assert _test("radio", [(10.0 + 0.3 * D, 0.0, "DEV", 24.0, 22.5, 0)]) == "faint galaxy"
+    assert _test("radio", [(10.0 + 4.0 * D, 0.0, "DEV", 22.0, 20.0, 0)]) == "none"
+
+
+def test_empty_inputs_keep_schema():
+    t = _system("quasar")[:0]
+    src = _sources(IMAGES)
+    img = lenscats.pair_images(t, src)
+    assert list(img.colnames) == list(lenscats.PAIR_COLUMNS) and len(img) == 0
+    out = lenscats.quasar_pair_test(t, src, [], img)
+    assert list(out.colnames) == list(lenscats.PAIR_TEST_COLUMNS) and len(out) == 0
+    res = w12.deflector_test(t, src, w12.Params(), img)
+    assert "test_status" in res.colnames and len(res) == 0
+    one = _system("quasar")
+    none_src = _sources(IMAGES)[:0]
+    assert lenscats.pair_images(one, none_src)["n_images"][0] == 0

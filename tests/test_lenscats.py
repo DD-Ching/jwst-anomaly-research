@@ -219,6 +219,27 @@ def test_name_offset_catches_sign_errors():
 
 
 def test_position_quantum_needs_both_axes():
-    # RA on a whole 0.01 deg by chance, declination precise -> not rounded
-    assert lenscats.position_quantum_arcsec(84.57, -49.48731) == 0
-    assert lenscats.position_quantum_arcsec(84.57123, -49.48) == 0
+    # fine steps on one axis only (whole RA second, precise declination) -> not rounded
+    assert lenscats.position_quantum_arcsec(10.63333, -17.229123) == 0
+    assert lenscats.position_quantum_arcsec(84.57123, -49.4801) == 0
+    # a coarse 0.01 deg step on one axis is enough
+    q = lenscats.position_quantum_arcsec(84.57, -49.48731)
+    assert q == pytest.approx(36 * math.cos(math.radians(49.48731)))
+
+
+def test_brick_coverage_independent_of_sources():
+    bricks = Table(
+        {
+            "ra1": [0.0, 0.25, 359.75],
+            "ra2": [0.25, 0.5, 360.0],
+            "dec1": [-0.125, -0.125, -0.125],
+            "dec2": [0.125, 0.125, 0.125],
+            "nexp_r": [2, 0, 3],
+            "nexp_z": [2, 4, 3],
+            "galdepth_z": [23.4, 23.0, 23.1],
+        }
+    )
+    systems = Table({"ra": [0.1, 0.3, 359.9, 10.0], "dec": [0.0, 0.0, 0.1, 0.0]})
+    out = lenscats.brick_coverage(systems, bricks)
+    assert list(out["covered"]) == [True, False, True, False]  # no r data; outside footprint
+    assert out["depth_z"][0] == pytest.approx(23.4) and np.isnan(out["depth_z"][3])
