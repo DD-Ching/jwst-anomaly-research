@@ -1021,7 +1021,7 @@ The ordinary explanations are binary quasars, unrelated pairs and lens galaxies 
 
 **Method.**
 - Inputs:
-  - rejected: 124 pairs;
+  - rejected: 123 pairs (Lemon "UQP (?)" is undecided and left out);
   - control: 106 real quasar lenses (Lemon lens/quad, SQLS "SDSS lens"/"known lens"; Lemon "lens (?)" is
     undecided and left out);
   - entries within 3″ are merged transitively. A group containing a catalogued lens is a control. A rejection that

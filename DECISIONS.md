@@ -2960,8 +2960,9 @@ lenses from the same tables to *measure* the test's efficiency, which D-056 had 
 - Inputs: VizieR tables pinned by the sha256 of their data lines (the ASU-TSV header carries the request time):
   - Lemon et al. 2023 table1: UQP / QSO pair rejected, lens / quad control;
   - SQLS DR3/DR5/DR7 candidate tables (Inada et al. 2008, 2010, 2012): "no lens(ing) object", "QSO pair" and
-    "binary" rejected, "SDSS lens"/"known lens" control, QSO+star / different SED / not QSO non-pairs (they veto a
-    rejection of the same system);
+    "binary" rejected, "SDSS lens"/"known lens" control; SQLS QSO+star / different SED / not QSO rows describe
+    another companion and are dropped without vetoing. A Lemon non-pair class (QSO + star, projected, …) vetoes a
+    rejection of the same system, and Lemon classes with "?" are undecided;
   - Hennawi et al. 2006 binaries, for vetting.
 - Mismatched or missing pins are refused.
 - Sample rules (ASSUMPTIONs):

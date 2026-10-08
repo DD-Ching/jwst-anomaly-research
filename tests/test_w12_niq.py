@@ -316,3 +316,10 @@ def test_sqls_nonpair_companion_listed_first_does_not_veto():
     )
     s = niq.build_sample({"J/AJ/143/119/table4": t})
     assert list(s["group"]) == ["rejected"]
+
+
+def test_nonpair_companion_redshift_does_not_flag_the_rejected_pair():
+    lemon = _lemon([("A", "150.0", "1.0", "1.50", "2.2", "UQP")])
+    sqls = _sqls([("J100000.13+010000.0", "1.5", "2.4", "QSO+galaxy (z=1.50, 0.30)")])
+    s = niq.build_sample({"J/MNRAS/520/3305/table1": lemon, "J/AJ/143/119/table4": sqls})
+    assert list(s["group"]) == ["rejected"] and not s["different_z"][0]

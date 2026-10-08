@@ -7,7 +7,7 @@
       "bytes": 36469,
       "sha256": "91bff050271d632d1c7f6e6dde1edbbb161a770f4bfff046788cf7f6d31721e9",
       "sha256_of": "data lines (ASU-TSV without '#' header lines)",
-      "retrieved_utc": "2026-10-08T23:06:17+00:00",
+      "retrieved_utc": "2026-10-08T23:11:00+00:00",
       "pipeline_version": "0.0.1",
       "rows": 179
     },
@@ -18,7 +18,7 @@
       "bytes": 15687,
       "sha256": "7877900e733a258ab704eb9429233f619d9190f7f1e03db560fcf26359e6c88e",
       "sha256_of": "data lines (ASU-TSV without '#' header lines)",
-      "retrieved_utc": "2026-10-08T23:06:18+00:00",
+      "retrieved_utc": "2026-10-08T23:11:01+00:00",
       "pipeline_version": "0.0.1",
       "rows": 90
     },
@@ -29,7 +29,7 @@
       "bytes": 44872,
       "sha256": "4dcaf0c2fdfd92b933828cb89f1b30e12fef5d8244ec81183bf56ad02f09c3c1",
       "sha256_of": "data lines (ASU-TSV without '#' header lines)",
-      "retrieved_utc": "2026-10-08T23:06:20+00:00",
+      "retrieved_utc": "2026-10-08T23:11:02+00:00",
       "pipeline_version": "0.0.1",
       "rows": 262
     },
@@ -40,7 +40,7 @@
       "bytes": 10129,
       "sha256": "946dd1ea8a36d2d480693b03fc193187601e7d30c3794358959dabce25935ccb",
       "sha256_of": "data lines (ASU-TSV without '#' header lines)",
-      "retrieved_utc": "2026-10-08T23:06:21+00:00",
+      "retrieved_utc": "2026-10-08T23:11:03+00:00",
       "pipeline_version": "0.0.1",
       "rows": 50
     },
@@ -51,7 +51,7 @@
       "bytes": 28479,
       "sha256": "dddea385b4793aa2c4bd0d7eef19fd2d8441bef63c28d6c94aafc5600b1aa50b",
       "sha256_of": "data lines (ASU-TSV without '#' header lines)",
-      "retrieved_utc": "2026-10-08T23:06:22+00:00",
+      "retrieved_utc": "2026-10-08T23:11:04+00:00",
       "pipeline_version": "0.0.1",
       "rows": 174
     },
@@ -62,7 +62,7 @@
       "bytes": 9378,
       "sha256": "f3edca8cfb22cf0ca266c0f5601dfd21fcf17c8f637bc1f39472540612c01763",
       "sha256_of": "data lines (ASU-TSV without '#' header lines)",
-      "retrieved_utc": "2026-10-08T23:06:23+00:00",
+      "retrieved_utc": "2026-10-08T23:11:05+00:00",
       "pipeline_version": "0.0.1",
       "rows": 54
     },
@@ -73,7 +73,7 @@
       "bytes": 44692,
       "sha256": "f191fb1c93381fa49ac0658c4b1095e2b1c481cce286009efd271a075664cab1",
       "sha256_of": "data lines (ASU-TSV without '#' header lines)",
-      "retrieved_utc": "2026-10-08T23:06:24+00:00",
+      "retrieved_utc": "2026-10-08T23:11:06+00:00",
       "pipeline_version": "0.0.1",
       "rows": 243
     },
@@ -84,7 +84,7 @@
       "bytes": 185708,
       "sha256": "fe8c95e80c0044de4a1802388c670ad2d400701152c96fa1e3db64f7637a0b5f",
       "sha256_of": "data lines (ASU-TSV without '#' header lines)",
-      "retrieved_utc": "2026-10-08T23:06:25+00:00",
+      "retrieved_utc": "2026-10-08T23:11:07+00:00",
       "pipeline_version": "0.0.1",
       "rows": 890
     }
@@ -135,9 +135,10 @@
     "sep_match": 0.5,
     "dedup_arcsec": 3.0,
     "binary_arcsec": 3.0,
-    "companion_tol": 1.0
+    "companion_tol": 1.0,
+    "binary_theta_tol": 1.0
   },
-  "n_systems": 230,
+  "n_systems": 229,
   "dropped": {
     "no coordinates": {},
     "duplicates": 2,
@@ -148,7 +149,7 @@
   },
   "n_covered": 167,
   "rejected": {
-    "n_all": 124,
+    "n_all": 123,
     "n_covered": 88,
     "status": {
       "blended": 17,

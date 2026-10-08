@@ -4,9 +4,11 @@ rejected because no lens galaxy was seen (D-064).
 Inputs (VizieR, pinned by sha256 in ``data/manifests/w12_niq_inputs.json``):
 - Lemon et al. 2023 (MNRAS 520, 3305) Gaia-selected candidates: classes "UQP" (unclassified
   quasar pair: same redshift, no lens seen; "akin to NIQs") and "QSO pair" are the *rejected*
-  sample; "lens", "quad" and "lens (?)" are the *control* sample of real lenses.
-- SQLS (Inada et al. 2008, 2010, 2012) candidate tables: comments "no lens(ing) object" are
-  rejected; "SDSS lens" / "known lens" are controls.
+  sample; "lens" and "quad" are the *control* sample of real lenses; classes with "?" are
+  undecided; other classes (QSO + star, projected, ...) veto a rejection of the same system.
+- SQLS (Inada et al. 2008, 2010, 2012) candidate tables: comments "no lens(ing) object", "QSO
+  pair" and "binary" are rejected; "SDSS lens" / "known lens" are controls; QSO+star, different
+  SED and similar companion rows are dropped without vetoing (they describe another companion).
 
 Each system goes through ``w12_lenscats``: DR10 brick coverage and depth, Tractor boxes, the
 quasar pair test (two PSF images >= 2" apart, a deflector between them) and the required lens
@@ -61,7 +63,7 @@ INPUTS = {
 LEMON_COLUMNS = {"Name", "RAJ2000", "DEJ2000", "z", "f_z", "Sep", "Class", "z2", "n_z2", "f_z2"}
 SQLS_COLUMNS = {"SDSS", "z", "theta", "Com"}
 HENNAWI = "J/AJ/131/1/binqso"  # binary-quasar catalogue for vetting (Hennawi et al. 2006)
-LEMON_REJECTED = {"UQP", "UQP (?)", "QSO pair"}
+LEMON_REJECTED = {"UQP", "QSO pair"}  # "UQP (?)" is undecided, like "lens (?)"
 LEMON_CONTROL = {"lens", "quad"}  # "lens (?)" is undecided: neither control nor veto
 # lenses the quasar pair test cannot decide (extended images): they promote a merged rejection to
 # control, then leave the sample
@@ -97,6 +99,9 @@ class NiqParams:
     # an SQLS companion row belongs to the primary row above it when their distance equals theta
     # within this tolerance
     companion_tol: float = 1.0
+    # a Hennawi binary is the catalogued pair when its theta agrees with the catalogued separation
+    # within this tolerance
+    binary_theta_tol: float = 1.0
 
 
 P = NiqParams()
@@ -411,12 +416,13 @@ def dedup(s: Table) -> Table:
         lens = (grp[members] == "control") | np.asarray(s["component"][members], bool)
         rej = grp[members] == "rejected"
         lemon_nonpair = (grp[members] == "nonpair") & (s["catalogue"][members] == "Lemon2023")
+        sep = np.asarray(s["sep_cat"], float)[members]
+        testable = ~np.asarray(s["component"][members], bool) & (sep <= P.sep_max)
         if lens.any():
-            k = members[np.argmax(lens)]
+            k = members[np.argmax(lens & testable) if (lens & testable).any() else np.argmax(lens)]
             new, note = "control", " | listed as lens elsewhere" if not lens[0] else ""
         elif rej.any() and not lemon_nonpair.any():
-            sep = np.asarray(s["sep_cat"][members], float)
-            usable = rej & (sep <= P.sep_max)  # the member describing the testable pair
+            usable = rej & testable  # the member describing the testable pair
             k, new, note = members[np.argmax(usable if usable.any() else rej)], "rejected", ""
         else:
             k, new, note = members[0], "nonpair", ""
@@ -424,7 +430,10 @@ def dedup(s: Table) -> Table:
         s["comment"][k] += note
         for m in members[members != k]:
             s["comment"][k] += f" | {s['catalogue'][m]}: {s['comment'][m]}"
-        s["different_z"][k] = bool(np.any(np.asarray(s["different_z"][members], bool)))
+        same = members[grp[members] == grp[k]]  # rows of the kept row's own class
+        # two redshifts from rows describing the same pair (same class), never from non-pair
+        # companions or other objects in the group
+        s["different_z"][k] = bool(np.any(np.asarray(s["different_z"][same], bool)))
         keep.append(k)
     return s[np.sort(keep)]
 
@@ -509,12 +518,23 @@ def binary_match(s: Table, binq: Table, radius: float | None = None) -> np.ndarr
             # the binary must be the catalogued pair, not a wide binary next to it
             th = np.array([_float(x) for x in binq["theta"]])[ok][idx]
             sep = np.asarray(s["sep_cat"], float)
-            agree = np.abs(th - sep) < P.companion_tol
+            agree = np.abs(th - sep) < P.binary_theta_tol
             near &= agree | ~(np.isfinite(th) & np.isfinite(sep))
         hit |= near
     if not parsed:
         raise ValueError(f"no coordinates parsed from {binq.colnames}")
     return hit
+
+
+def tractor_times(out: Path) -> str:
+    """Oldest and newest retrieval times (UTC, file mtimes) of the cached Tractor batches."""
+    t = sorted(f.stat().st_mtime for f in (out / "tractor_cache").glob("tractor_*.ecsv"))
+    if not t:
+        return ""
+    iso = [
+        dt.datetime.fromtimestamp(x, dt.UTC).isoformat(timespec="seconds") for x in (t[0], t[-1])
+    ]
+    return iso[0] if iso[0] == iso[1] else f"{iso[0]} .. {iso[1]}"
 
 
 def cmd_screen(args) -> None:
@@ -680,7 +700,7 @@ def cmd_screen(args) -> None:
             "source": "Legacy Surveys DR10 Tractor boxes (Data Lab TAP)",
             "uri": f"{w12.TAP} (ls_dr10.tractor, {w12.TRACTOR_COLS})",
             "file": "tractor_cache/tractor_*.ecsv (rows near the sample)",
-            "retrieved_utc": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
+            "retrieved_utc": tractor_times(out),
             "pipeline_version": __version__,
             "box_arcsec": p.box,
         }
