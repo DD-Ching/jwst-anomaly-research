@@ -296,7 +296,7 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
                     # Flags 1-4 and -n (parabolic) are free redshifts; only 0 is fixed.
                     if not re.fullmatch(r"-?\d+", flag):
                         raise ValueError(f"{path}:{n}: malformed z_m_limit {vals}")
-                    if flag == "0":
+                    if int(flag) == 0:
                         for name in names:
                             out["z_m_limit"][image_family(name)] = float(z)
                 elif key.lower() == "sigposarcsec":
