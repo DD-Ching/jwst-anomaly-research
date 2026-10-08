@@ -1549,7 +1549,83 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   images.
 - A field has many more `anti` arcs, or a centre reaches p_random < 0.01.
 
-## D-032 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
+## D-032 Flux-ratio and colour test of catalogued multiple images on DJA photometry; no anomaly in SMACS or El Gordo (2026-10-08)
+
+**Decision.**
+- Complements D-031's `exotic_screens.py fluxratio` (forced photometry, compact images only): Kron totals
+  test resolved images too, and the colour test needs no μ.
+- `lens_consistency.py fluxratios` matches every `arcs.dat` image to DJA `fix_phot` (default 0.3″, after an
+  optional `--offset-arcsec` frame shift). It computes the implied source magnitude `mag_auto + 2.5 log10 |μ|`
+  (μ at the catalogued position and system z) and the 0.5″ aperture F150W−F444W colour, which needs no μ.
+- Each image's residual is taken against the median of the *other* usable images of its system (leave-one-out).
+  In a pair, both images carry the full pair difference.
+- ASSUMPTIONs: `flux_outlier` |residual| > 0.75 mag; `colour_outlier` > 0.3 mag; S/N ≥ 10; |μ| ≤ 20 for the flux
+  test.
+- An image is untested when its DJA segment exceeds 20,000 px (it swallows host or ICL light), when one DJA source
+  matches several images, or when the counterpart's 95 % photo-z interval, widened by 0.15 (1 + z), excludes the
+  system redshift (`--photoz`, DJA eazy zout).
+- Fluxes and colours come from `photometry.load_dja_catalog`, which applies SEP flags, masks and the unit check.
+- Parity (the sign of μ) is reported, not tested.
+
+**Alternatives rejected.**
+- DJA `<band>_flux_aper_k × <band>_tot_corr` as a total flux. In v7, `<band>_tot_corr` is 1 and `tot_corr` is a
+  point-source correction capped at 1.21. For extended arcs the aperture flux tracks surface brightness, which
+  lensing conserves, so it cannot test μ. Only the detection-image Kron `mag_auto` is a total.
+- A median that includes the image itself: it halves a pair's difference and hides a single bad image.
+- No segment-size cut. SMACS 1.1, an arc on a cluster galaxy's halo with a 32,864 px segment, then looked 1.4 mag
+  too bright. Visual check: the excess is host light.
+- No photo-z gate. El Gordo 9a's counterpart has z_phot 0.89 (95 %: 0.73–0.99), a cluster-redshift object, for a
+  z = 4.32 system, and it made 9a/9c a 1.2 mag colour pair. The 9c counterpart has z_phot 3.62.
+- The bare 95 % eazy interval. It is too narrow and excluded plausible images: SMACS 3.3 (1.83–1.86 against
+  z = 1.99) and El Gordo 5a (3.70–4.09 against 3.54).
+- A wider match radius instead of a frame shift for El Gordo. DJA v7.0 sits at dRA +0.221″, dDec −0.018″ (median
+  of 41 matches) from the image list. Matching at 0.5″ without the shift adds the 7b/7c pair, which is not a
+  lensing effect (vetting below).
+
+**Evidence** (`derived`; DJA v7.4 SMACS and v7.0 El Gordo, sha256 in SOURCES.md):
+
+| Field (match) | Matched | Flux tested (systems) | Flux rms / max | Colour tested | Colour rms / max | Flagged |
+|---|---|---|---|---|---|---|
+| SMACS (0.3″) | 22 / 60 | 8 (4) | 0.60 / 1.14 mag | 9 | 0.11 / 0.22 mag | 6.1/6.3 (flux) |
+| SMACS (0.5″) | 26 / 60 | 11 (5) | 0.52 / 1.14 mag | 12 | 0.14 / 0.22 mag | 6.1/6.3 (flux) |
+| El Gordo (0.3″, shifted) | 37 / 56 | 23 (11) | 0.49 / 1.16 mag | 11 | 0.07 / 0.15 mag | 18b/18c (flux) |
+
+- Photo-z excluded SMACS 8.1/8.2 (model z = 11.76 against z_phot 6.6, as D-029 found) and 11.2, and El Gordo 9a
+  and 21b. **No colour outlier** in either field.
+- Vetting of the flagged pairs (cutouts and forced 0.2″ photometry on the `_i2d`, S3 byte ranges):
+  - **SMACS 6.1/6.3** (μ 15.3 / 3.1, pair difference 1.14 mag in `mag_auto`).
+    - Both images are compact, with equal colours (Δ 0.01 mag).
+    - Moving 6.1 by the model rms (0.32″) changes μ by only −0.14 to +0.17 mag.
+    - Forced photometry reduces the difference to 0.61 / 0.66 / 0.78 mag in F150W / F200W / F444W. 6.2, which has
+      no DJA match, agrees with 6.1 within 0.3–0.5 mag.
+    - So 6.3 is about 0.6–0.7 mag brighter than the merging pair 6.1+6.2 predicts. That is below the threshold, in
+      a pair whose μ ≈ 13–15 depends on the critical curve's position (no `bayes.dat` uncertainty yet).
+    - **Not a candidate.**
+  - **El Gordo 18b/18c and 7b/7c** (`mag_auto` 25.9–27.4, MUSE Lyα systems).
+    - 18b has forced S/N 0.3–4.
+    - The 7b/7c ratio changes from −0.16 to −1.48 mag between F200W and F277W, but lensing is achromatic.
+    - These are faint-counterpart measurement failures. **Not candidates.**
+- **Result: no flux-ratio or colour anomaly** in SMACS or El Gordo among the testable images.
+
+**Limits.**
+- Most images are untested. DJA has no segment for arcs inside cluster-galaxy or ICL light (SMACS: 38 of 60 images
+  have no DJA source within 0.3″), and SMACS systems 7, 11, 16 and 26 have |μ| > 20.
+- μ comes from the best-fit model only.
+- `mag_auto` of faint sources (> 25.5 mag) next to bright neighbours is unreliable.
+- The 0.5″ aperture colours are not PSF-matched here (the F444W PSF is wider), which may add about 0.1 mag of
+  scatter between differently stretched images.
+- Only each system's worst image is flagged, so a second discrepant image in a system of four would stay
+  `consistent` (none of the tested systems has more than three usable images).
+- `_loo_residual` duplicates the sibling reference of D-031's `luminosity_ratios`, with a different reference
+  error (median/√n against 1.25 × mean/√n). Merge them into one helper when either changes.
+- The S/N cuts invert each catalogue's own error definition: Pogson for SEP `magerr_auto`, and
+  `snr_from_mag_err` for `load_dja_catalog`'s 2.5 log10(1 + 1/SNR).
+
+**Revisit if.**
+- A photometry with totals for arcs near cluster galaxies becomes available (BCG/ICL-subtracted; e.g. the DJA
+  tarball's `_phot_apcorr.fits`, not yet inspected).
+- `bayes.dat` μ uncertainties are added. Then use a χ² instead of a fixed threshold, and recheck SMACS 6.
+## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
 
 **Decision.**
 - **`lensmodel.MapLensModel`** evaluates a lens model from two published deflection maps (arcsec, D_LS/D_S = 1).

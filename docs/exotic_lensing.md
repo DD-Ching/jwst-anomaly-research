@@ -58,5 +58,5 @@ hit goes to `/vet-candidate`.
 
 | Field | fluxratio (compact images) | radial (convergence centres) | Verdict |
 |---|---|---|---|
-| WHL0137 / Sunrise (RELICS Lenstool maps, D-032) | no image list | 3 against a null mean of 2.2 (p95 5); max 3 lines, p 0.885 | null |
+| WHL0137 / Sunrise (RELICS Lenstool maps, D-033) | no image list | 3 against a null mean of 2.2 (p95 5); max 3 lines, p 0.885 | null |
 | SMACS 0723 (ICLv2) | 6 compact images consistent, 0 flags (49 resolved) | 12 against a null mean of 9.0 (p95 15); max 4 lines, p 0.945 | null |

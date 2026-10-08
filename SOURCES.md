@@ -487,6 +487,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Data: MAST 1176 `jw01176-o241_t012` (jwst 3.0.0, reprocessed 2026-10-01).
   - DJA v7.0: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/elgordo-grizli-v7.0-fix_phot.fits (17,170,560 B,
     sha256 `ac1cf7064edc3f1a907c1b95b7eacd864e19810ff559e7dc39b917081ed66e31`).
+  - DJA v7.0 eazy photo-z (D-032): https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/elgordo-grizli-v7.0-fix.photoz.tar.gz
+    (38,066,605 B, last-modified 2023-08-07, sha256 `9a4a39cee4b154c34040e05591a151597e85d05d0f580cbabdd15519488baade`,
+    accessed 2026-10-08). Only the member `elgordo-grizli-v7.0-fix.eazypy.zout.fits` is used (6,546,240 B, sha256
+    `efd051e4e688ed46f7279e08cab19ec4179e114705d38f879ffb8feff230edd0`, rows match the `fix_phot` ids). The tarball
+    also holds `elgordo-grizli-v7.0-fix_phot_apcorr.fits` (not inspected).
   - Lens models:
     - Caminha et al. 2023 (A&A 678, A3, arXiv:2209.02718): magnification maps, `best_fit.par` and the
       multiple-image list at https://cdsarc.cds.unistra.fr/ftp/J/A+A/678/A3/.
