@@ -61,6 +61,44 @@ def test_inverted_microlensing_light_curve_dip_and_spikes():
     assert 1.5 < af.max() < a.max()
 
 
+def _ray_shoot(beta, rho, n, sign, xr, yr, pix):
+    """Independent inverse ray shooting: fraction of image-plane rays landing in the source disk."""
+    x = np.arange(xr[0], xr[1], pix) + pix / 2
+    y = np.arange(yr[0], yr[1], pix) + pix / 2
+    xx, yy = np.meshgrid(x, y)
+    f = 1 - sign / np.hypot(xx, yy) ** (n + 1)  # vector lens equation (Izumi et al. 2013)
+    inside = (xx * f - beta) ** 2 + (yy * f) ** 2 < rho**2
+    return inside.sum() * pix**2 / (np.pi * rho**2)
+
+
+@pytest.mark.parametrize(
+    ("beta", "rho", "n", "sign", "xr", "yr", "pix"),
+    [
+        (2.0, 0.1, 1, -1, (0.3, 1.8), (-0.1, 0.1), 0.0015),  # disk straddles the caustic
+        (2.07, 0.1, 1, -1, (0.3, 1.8), (-0.1, 0.1), 0.0015),  # near the spike peak
+        (2.2, 0.1, 1, -1, (0.3, 1.8), (-0.1, 0.1), 0.0015),
+        (1.95, 0.01, 1, -1, (0.8, 1.25), (-0.01, 0.01), 0.0002),  # tiny source, spike
+        (0.2, 0.3, 2, 1, (-1.6, 1.9), (-1.5, 1.5), 0.006),  # disk covers the Ellis lens
+    ],
+)
+def test_finite_source_agrees_with_inverse_ray_shooting(beta, rho, n, sign, xr, yr, pix):
+    """Tolerance 1 %: the ray-shooting pixel noise at these grids is ~0.1-0.5 %."""
+    expect = _ray_shoot(beta, rho, n, sign, xr, yr, pix)
+    assert es.finite_source_magnification(beta, rho, n, sign)[0] == pytest.approx(expect, rel=0.01)
+
+
+def test_converged_caustic_spike_heights():
+    """Peak disk-averaged magnification of a negative point mass (simulated; docs W3, D-047)."""
+    for rho, peak in ((0.01, 7.013), (0.1, 2.353), (0.3, 1.529)):
+        b = np.linspace(1.95, 2.0 + 2 * rho, 4001)
+        a = es.finite_source_magnification(b, rho, 1, -1)
+        assert a.max() == pytest.approx(peak, abs=0.002)
+        # converged: a 4x finer quadrature changes the peak by < 0.1 %
+        i = a.argmax()
+        fine = es.finite_source_magnification(b[i], rho, 1, -1, n_nodes=192)[0]
+        assert fine == pytest.approx(a[i], rel=1e-3)
+
+
 def test_ellis_wormhole_statements_of_abe_2010():
     """Abe 2010 (arXiv:1009.6084): inner image at -0.618 and -0.532 for beta = 2 and 3, carrying
     A2/A = 0.034 and 0.013; gutters about 4 % deep."""
@@ -74,17 +112,24 @@ def test_ellis_wormhole_statements_of_abe_2010():
 
 
 def test_demagnification_onsets_of_kitamura_2013():
-    """KNA13: n = 10 total magnification < 1 for beta > 0.187 (numerical); n = 10 depletes up to
-    ~60 % near beta ~ 0.7; n = 3 depletes ~10 % near beta ~ 1.1 (we find 14 %)."""
-    beta = np.linspace(0.05, 3, 2951)
+    """KNA13 (arXiv:1211.0379): n = 10 onset 0.187 numerically against 2/(n+1) = 0.182 at leading
+    order; n = 10 depletes ~60 % at beta ~ 0.7. For n = 3 the text says ~10 % at beta ~ 1.1, but
+    their Fig. 2c (n = 3, beta_0 = 0.1) bottoms out at A ≈ 0.865 ± 0.01 (read from the figure
+    pixels), i.e. 13-14 %: the text rounds. We test the code's own 14.3 %."""
+    assert es.demagnification_onset(10) == pytest.approx(0.187, abs=0.001)
+    assert es.demagnification_onset_approx(10) == pytest.approx(0.182, abs=0.001)
+    assert es.demagnification_onset(2) == pytest.approx(1.1111, abs=1e-3)
+    assert es.demagnification_onset(3) == pytest.approx(0.6429, abs=1e-3)
+    assert np.isinf(es.demagnification_onset(1)) and np.isinf(es.demagnification_onset(2, -1))
+    a_on = es.total_magnification([es.demagnification_onset(3)], 3, 1)[0]
+    assert a_on == pytest.approx(1.0, abs=1e-9)
+    beta = np.linspace(0.05, 3, 5901)
     a10 = es.total_magnification(beta, 10, 1)
-    assert beta[np.argmax(a10 < 1)] == pytest.approx(0.187, abs=0.003)
-    assert 1 - a10.min() == pytest.approx(0.6, abs=0.03) and beta[a10.argmin()] == pytest.approx(
-        0.7, abs=0.05
-    )
+    assert 1 - a10.min() == pytest.approx(0.587, abs=0.002)
+    assert beta[a10.argmin()] == pytest.approx(0.70, abs=0.01)
     a3 = es.total_magnification(beta, 3, 1)
-    assert 0.05 < 1 - a3.min() < 0.2 and beta[a3.argmin()] == pytest.approx(1.1, abs=0.1)
-    assert es.demagnification_threshold(10) == pytest.approx(2 / 11)
+    assert 1 - a3.min() == pytest.approx(0.143, abs=0.002)
+    assert beta[a3.argmin()] == pytest.approx(1.12, abs=0.01)
 
 
 def test_convergence_and_shear_signs_of_izumi_2013():
@@ -98,16 +143,16 @@ def test_convergence_and_shear_signs_of_izumi_2013():
     assert np.all(k2r > 0) and np.all(g2r > 0)
 
 
-def test_ellis_einstein_radius_matches_abe():
-    """Abe 2010: R_E = (pi/4 D_L D_LS / D_S a²)^(1/3), theta_E = R_E / D_L."""
-    a, dl, ds = 1e8, 1.2e20, 2.4e20  # m (a = 1e5 km; bulge-like distances)
-    dls = ds - dl
-    re = (np.pi / 4 * dl * dls / ds * a**2) ** (1 / 3)
-    th = es.einstein_radius(es.eps_bar_ellis(a), 2, dl, ds, dls)
-    assert th == pytest.approx(re / dl, rel=1e-12)
-    # n = 1 reduces to the usual sqrt(4GM/c² D_LS/(D_L D_S))
-    th1 = es.einstein_radius(es.eps_bar_point_mass(1.0), 1, dl, ds, dls)
-    assert th1 == pytest.approx(np.sqrt(4 * es.G_SI * es.MSUN_KG / es.C_SI**2 * dls / (dl * ds)))
+def test_ellis_einstein_radius_matches_abe_tables():
+    """Abe 2010 Tables 1-2 (bulge: D_S = 8 kpc, D_L = 4 kpc; bound v_T = 220 km/s):
+    a = 1e3 km -> R_E 3.64e7 km, 0.061 mas; a = 1e5 km -> R_E 7.85e8 km, 1.31 mas, t_E 41.3 d."""
+    kpc = 1e3 * es.PC_M
+    dl, ds = 4 * kpc, 8 * kpc
+    for a_km, re_km, th_mas, te_day in ((1e3, 3.64e7, 0.061, 1.92), (1e5, 7.85e8, 1.31, 41.3)):
+        th = es.einstein_radius(es.eps_bar_ellis(a_km * 1e3), 2, dl, ds, ds - dl)
+        assert th * dl / 1e3 == pytest.approx(re_km, rel=0.005)
+        assert np.degrees(th) * 3.6e6 == pytest.approx(th_mas, rel=0.01)
+        assert th * dl / 220e3 / 86400 == pytest.approx(te_day, rel=0.005)
     assert es.deflection_integral(1) == pytest.approx(1.0)
     assert es.deflection_integral(2) == pytest.approx(np.pi / 4)
 
@@ -123,6 +168,24 @@ def test_finite_source_matches_point_source_and_disk_formula():
     np.testing.assert_allclose(
         es.finite_source_magnification(b, 1e-4, 2, 1), es.total_magnification(b, 2, 1), rtol=1e-3
     )
+
+
+def test_physical_scales_quoted_in_docs():
+    """docs/exotic_lensing.md scales; ASSUMPTIONs: Planck18, z_l = 0.4, z_s = 2, v = 1000 km/s."""
+    from astropy.cosmology import Planck18
+
+    dl = Planck18.angular_diameter_distance(0.4).to_value("m")
+    ds = Planck18.angular_diameter_distance(2.0).to_value("m")
+    dls = Planck18.angular_diameter_distance(0.4, 2.0).to_value("m")
+    arcsec = np.pi / 180 / 3600
+    th12 = es.einstein_radius(es.eps_bar_point_mass(1e12), 1, dl, ds, dls) / arcsec
+    assert th12 == pytest.approx(2.2, abs=0.05)
+    for a_pc, th in ((0.1, 0.033), (1, 0.15), (10, 0.72), (100, 3.3)):
+        th_e = es.einstein_radius(es.eps_bar_ellis(a_pc * es.PC_M), 2, dl, ds, dls) / arcsec
+        assert th_e == pytest.approx(th, rel=0.05)
+    th1 = es.einstein_radius(es.eps_bar_point_mass(1.0), 1, dl, ds, dls)
+    t_e_yr = th1 * dl / 1e6 / (365.25 * 86400)
+    assert t_e_yr == pytest.approx(12, rel=0.05)
 
 
 def test_count_ratio_deficit_inside_einstein_radius():
@@ -154,11 +217,45 @@ def test_inject_images_round_trip(n, sign):
     else:
         assert len(tab) == 2 * np.sum(beta >= es.caustic_beta(n))
         # outer images (all images for n = 1) are radial: long axis along the lens→image direction.
-        # For n > 1 the inner image at x < 1 has |lam_r| > lam_t, i.e. it is tangential in shape.
-        rad = (tab["image"] == 0) | (n == 1)
+        # For n > 1 the inner image is tangential in shape where x^(n+1) < (n - 1)/2.
+        x_in = np.hypot(tab["dx"], tab["dy"]) / theta_e
+        rad = (tab["image"] == 0) | (x_in ** (n + 1) >= (n - 1) / 2)
+        assert np.all(~np.asarray(tab["radial"])[~rad])
         assert np.all(tab["radial"][rad])
         pa = np.degrees(np.arctan2(tab["dx"], tab["dy"])) % 180
         np.testing.assert_allclose(tab["pa_deg"][rad], pa[rad])
+
+
+@pytest.mark.parametrize("n", [2, 3])
+def test_repulsive_inner_image_shape_switch(n):
+    """Tangential (|lam_r| > lam_t) iff x^(n+1) < (n - 1)/2: x < 0.794 (n = 2), x < 1 (n = 3)."""
+    x_sw = ((n - 1) / 2) ** (1 / (n + 1))
+    for x, radial in ((0.97 * x_sw, False), (1.03 * x_sw, True)):
+        beta = x + x**-n  # source radius whose inner image sits at x
+        tab = es.inject_images([beta], [0.0], 1.0, n=n, sign=-1)
+        inner = tab[tab["image"] == 1]
+        assert inner["dx"][0] == pytest.approx(x, rel=1e-9)
+        assert bool(inner["radial"][0]) is radial
+
+
+def test_n1_inner_image_precise_at_large_beta():
+    x = es.solve_images([1e8, 1e9], 1, 1)["x"]
+    np.testing.assert_allclose(x[:, 1], [-1e-8, -1e-9], rtol=1e-9)
+    x = es.solve_images([1e9], 1, -1)["x"][0]  # repulsive inner root, same cancellation
+    assert x[1] == pytest.approx(1e-9, rel=1e-9)
+
+
+@pytest.mark.parametrize("rho", [0.0, 0.1])
+def test_nan_input_stays_nan_but_umbra_is_zero(rho):
+    """A NaN epoch must not read as a vanished source; a real umbra point still gives 0."""
+    t = np.array([np.nan, 0.0, 10.0])
+    a = es.light_curve(t, 0.0, 1.0, 0.5, n=1, sign=-1, rho=rho)
+    assert np.isnan(a[0]) and a[1] == 0 and a[2] == pytest.approx(1.0, abs=0.01)
+    lc = es.inject_light_curve(t, 5.0, 0.0, 1.0, 0.5, n=1, sign=-1, rho=rho)
+    assert np.isnan(lc["flux"][0]) and lc["flux"][1] == 0
+    assert np.isnan(
+        es.total_magnification([np.nan], 2, 1)[0]
+    )  # (beta - sqrt(beta² + 4))/2 would cancel to 0
 
 
 def test_inject_light_curve_round_trip_and_blend():
@@ -180,3 +277,26 @@ def test_bad_parameters_raise():
         es.solve_images(1.0, n=1, sign=2)
     with pytest.raises(ValueError):
         es.solve_images(-1.0)
+    with pytest.raises(ValueError):
+        es.finite_source_magnification(2.0, -0.1)
+    with pytest.raises(ValueError):
+        es.light_curve([0.0], 0.0, 1.0, 0.5, rho=-0.1)
+    for t_e in (0.0, -1.0):
+        with pytest.raises(ValueError):
+            es.impact_track([0.0], 0.0, t_e, 0.5)
+        with pytest.raises(ValueError):
+            es.inject_light_curve([0.0], 1.0, 0.0, t_e, 0.5)
+    with pytest.raises(ValueError):
+        es.inject_images([1.0, 2.0], [0.0, 0.0], 1.0, source_id=[7])
+    with pytest.raises(ValueError):
+        es.inject_light_curve([0.0], 1.0, 0.0, 1.0, 0.5, blend=1.5)
+
+
+@pytest.mark.filterwarnings("ignore:overflow encountered:RuntimeWarning")  # x**2001 far out
+def test_demagnification_onset_brackets_extreme_indices():
+    for n in (1.01, 1.002, 50.0, 2000.0):
+        b = es.demagnification_onset(n)
+        assert np.isfinite(b)
+        assert es.total_magnification(np.array([b * 0.999]), n, 1)[0] > 1.0
+        assert es.total_magnification(np.array([b * 1.001]), n, 1)[0] < 1.0
+    assert es.demagnification_onset(2000.0) < 0.01  # near the large-n estimate 2/(n+1)

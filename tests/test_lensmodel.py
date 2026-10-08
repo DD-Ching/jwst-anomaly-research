@@ -590,3 +590,264 @@ def test_find_images_refines_cells_on_a_fold():
     assert len(pair) == 2  # one image on each side of the curve, opposite parity
     assert np.sign(pair["magnification"][0]) != np.sign(pair["magnification"][1])
     assert np.min(np.hypot(pair["x"] - x_img, pair["y"])) < 1e-3
+
+
+def _cluster_and_galaxy():
+    cluster = _dpie(
+        name="cl", x=0.0, y=0.0, ellipticity=0.4, angle_pos=20.0, r_core=0.5, r_cut=300.0
+    )
+    galaxy = _dpie(name="gal", x=9.0, y=4.0, ellipticity=0.1, r_core=0.05, r_cut=20.0, v_disp=180.0)
+    return LensModel([cluster, galaxy], RA0, DEC0, COSMO)
+
+
+def test_split_planes_without_moves_matches_the_single_plane_model():
+    model = _cluster_and_galaxy()
+    multi = model.split_planes({})
+    assert multi.z_planes == (0.39,)
+    grid = lensmodel.DeflectionGrid.compute(model, half_width=40.0, step=0.25)
+    mgrid = lensmodel.DeflectionGrid.compute(multi, half_width=40.0, step=0.25)
+    a = lensmodel.find_images(model, grid, 0.3, -0.2, 2.0)
+    b = lensmodel.find_images(multi, mgrid, 0.3, -0.2, 2.0)
+    assert len(a) == len(b) >= 4
+    np.testing.assert_allclose(b["x"], a["x"], atol=1e-6)
+    np.testing.assert_allclose(b["magnification"], a["magnification"], rtol=1e-6)
+    ra, dec = model.to_sky(a["x"][:3], a["y"][:3])
+    images = Table(
+        {
+            "image_id": ["1.1", "1.2", "1.3"],
+            "system": ["1"] * 3,
+            "ra": ra,
+            "dec": dec,
+            "z": [2.0] * 3,
+        }
+    )
+    bt_a = lensmodel.backtrace_images(model, images, {"1": 2.0})
+    bt_b = lensmodel.backtrace_images(multi, images, {"1": 2.0})
+    for col in ("beta_x", "beta_y", "magnification", "dtheta_arcsec"):
+        np.testing.assert_allclose(bt_b[col], bt_a[col], rtol=1e-6, atol=1e-8)
+
+
+def test_multiplane_jacobian_matches_finite_differences():
+    multi = _cluster_and_galaxy().split_planes({"gal": 0.2}, v_disp={"gal": 250.0})
+    assert multi.z_planes == (0.2, 0.39)
+    x, y = np.array([8.0, 10.5, -3.0]), np.array([3.0, 5.5, 12.0])
+    m = multi.lens_map(x, y, 3.0)
+    h = 1e-5
+    bxp, byp = multi.source_points(x + h, y, 3.0)
+    bxm, bym = multi.source_points(x - h, y, 3.0)
+    np.testing.assert_allclose(m["a11"], (bxp - bxm) / (2 * h), atol=1e-6)
+    np.testing.assert_allclose(m["a21"], (byp - bym) / (2 * h), atol=1e-6)
+    bxp, byp = multi.source_points(x, y + h, 3.0)
+    bxm, bym = multi.source_points(x, y - h, 3.0)
+    np.testing.assert_allclose(m["a12"], (bxp - bxm) / (2 * h), atol=1e-6)
+    np.testing.assert_allclose(m["a22"], (byp - bym) / (2 * h), atol=1e-6)
+    assert np.max(np.abs(m["a12"] - m["a21"])) > 1e-3  # two planes: A is not symmetric
+    np.testing.assert_allclose(m["beta_x"], multi.source_points(x, y, 3.0)[0])
+
+
+def test_multiplane_plane_behind_the_source_does_not_lens():
+    model = _cluster_and_galaxy()
+    multi = model.split_planes({"gal": 2.5})
+    alone = LensModel([model.components[0]], RA0, DEC0, COSMO)
+    x, y = np.linspace(-20, 20, 7), np.linspace(15, -15, 7)
+    m, ref = multi.lens_map(x, y, 2.0), alone.lens_map(x, y, 2.0)
+    for key in ("beta_x", "beta_y", "a11", "a12", "a21", "a22"):
+        np.testing.assert_allclose(m[key], ref[key], atol=1e-12)
+    grid = lensmodel.DeflectionGrid.compute(multi, half_width=30.0, step=0.25)
+    imgs = lensmodel.find_images(multi, grid, 0.3, -0.2, 2.0)
+    assert np.all(imgs["residual_arcsec"] < 1e-5)
+    assert imgs.meta["lens_planes"][1] == {"z_lens": 2.5, "n_potentials": 1, "potentials": ["gal"]}
+
+
+def test_split_planes_rejects_unknown_potentials():
+    model = _cluster_and_galaxy()
+    with pytest.raises(ValueError, match="unknown or unmoved"):
+        model.split_planes({"nope": 0.2})
+    with pytest.raises(ValueError, match="unknown or unmoved"):
+        model.split_planes({"gal": 0.2}, v_disp={"cl": 100.0})
+
+
+def test_multiplane_grid_serves_every_source_redshift(tmp_path):
+    model = LensModel(list(_cluster_and_galaxy().components), RA0, DEC0, COSMO, sha256="abc")
+    multi = model.split_planes({"gal": 0.2}, v_disp={"gal": 250.0})
+    grid = lensmodel.DeflectionGrid.cached(multi, tmp_path / "g.npz", half_width=10.0, step=0.5)
+    assert grid.alpha_x.shape == (2, 41, 41)
+    again = lensmodel.DeflectionGrid.cached(multi, tmp_path / "g.npz", half_width=10.0, step=0.5)
+    np.testing.assert_array_equal(again.alpha_x, grid.alpha_x)
+    gx, gy = np.meshgrid(grid.x, grid.x)
+    for z_s in (0.3, 1.0, 4.0):  # one grid, any source redshift (the rays do not depend on z_s)
+        bx, by = multi.source_grid(grid, z_s)
+        ex, ey = multi.source_points(gx, gy, z_s)
+        np.testing.assert_allclose(bx, ex, atol=1e-10)
+        np.testing.assert_allclose(by, ey, atol=1e-10)
+    single = lensmodel.DeflectionGrid.compute(model, half_width=10.0, step=0.5)
+    with pytest.raises(ValueError, match="another model"):
+        lensmodel.find_images(multi, single, 0.3, -0.2, 2.0)
+    assert multi.planes[0].sha256 not in ("", model.sha256)  # a plane is not the whole file
+
+
+def test_multiplane_shift_frame_leaves_the_caller_planes_alone():
+    model = _cluster_and_galaxy()
+    other = LensModel([_dpie(name="g2", z_lens=0.6, v_disp=150.0)], RA0, DEC0, COSMO)
+    multi = lensmodel.MultiPlaneLensModel([model, other])
+    multi.shift_frame(0.5, -0.2)
+    assert (model.ra0, model.dec0) == (RA0, DEC0)
+    assert multi.planes[0].ra0 != RA0 and multi.ra0 == multi.planes[1].ra0
+
+
+def test_multiplane_identity_tracks_the_cosmology_and_grids_check_their_model():
+    comps = list(_cluster_and_galaxy().components)
+    a = LensModel(comps, RA0, DEC0, COSMO, sha256="f").split_planes({"gal": 0.2})
+    b = LensModel(comps, RA0, DEC0, FlatLambdaCDM(H0=50.0, Om0=0.5), sha256="f")
+    b = b.split_planes({"gal": 0.2})
+    assert a.sha256 and a.sha256 != b.sha256
+    mem_a = LensModel(comps, RA0, DEC0, COSMO).split_planes({"gal": 0.2})
+    mem_b = LensModel(comps, RA0, DEC0, FlatLambdaCDM(H0=50.0, Om0=0.5)).split_planes({"gal": 0.2})
+    assert mem_a.sha256 and mem_a.sha256 != mem_b.sha256  # parametric: content identifies it
+    before = a.sha256
+    a.shift_frame(0.1, 0.0)
+    assert a.sha256 == before  # model-frame deflections, and so grids, are unchanged
+    named = LensModel(comps[1:], RA0, DEC0, FlatLambdaCDM(H0=70.0, Om0=0.3, name="x"))
+    lensmodel.MultiPlaneLensModel(
+        [LensModel(comps[:1], RA0, DEC0, COSMO), named.split_planes({"gal": 0.2}).planes[0]]
+    )
+    single = LensModel(comps, RA0, DEC0, COSMO)  # in memory: no sha256, so only the shape check
+    grid = lensmodel.DeflectionGrid.compute(a, half_width=5.0, step=0.5)
+    with pytest.raises(ValueError, match="single-plane model"):
+        lensmodel.find_images(single, grid, 0.3, -0.2, 2.0)
+    with pytest.raises(AttributeError, match="z_planes"):
+        _ = a.z_lens
+
+
+def test_split_planes_delenses_a_potential_moved_behind_the_cluster():
+    # a background galaxy fitted at its observed position stays seen there: the ray through
+    # its fitted centre must cross its own plane at its new (delensed) centre
+    model = _cluster_and_galaxy()
+    multi = model.split_planes({"gal": 1.2})
+    gal = [c for c in multi.components if c.name == "gal"][0]
+    fitted = [c for c in model.components if c.name == "gal"][0]
+    assert np.hypot(gal.x - fitted.x, gal.y - fitted.y) > 0.5  # moved by the cluster
+    cl = multi.planes[0]
+    ax, ay = cl.deflection_xy(np.array([fitted.x]), np.array([fitted.y]))
+    r = float(cl.dls_ds(1.2))
+    assert np.isclose(fitted.x - r * ax[0], gal.x) and np.isclose(fitted.y - r * ay[0], gal.y)
+    front = model.split_planes({"gal": 0.2})  # nothing in front: kept where fitted
+    g2 = [c for c in front.components if c.name == "gal"][0]
+    assert (g2.x, g2.y) == (fitted.x, fitted.y)
+
+
+POSTERIOR_PAR = PAR.replace(
+    "fini\n",
+    """potentiel 101
+    profil 81
+    x_centre 5.0
+    y_centre 2.0
+    ellipticite 0.0
+    angle_pos 0.0
+    core_radius 0.05
+    cut_radius 10.0
+    v_disp 200.0
+    mag 18.0
+    z_lens 0.39
+    end
+potentiel 102
+    profil 81
+    x_centre -6.0
+    y_centre 1.0
+    ellipticite 0.0
+    angle_pos 0.0
+    core_radius 0.03
+    cut_radius 6.0
+    v_disp 120.0
+    mag 19.0
+    z_lens 0.39
+    end
+fini
+""",
+)
+
+BAYES = """\
+#Nsample
+#ln(Lhood)
+#O1 : x (arcsec)
+#O1 : sigma (km/s)
+#O1 : rc (arcsec)
+#Redshift of 4.0c
+#Pot0 rcut (arcsec)
+#Pot0 sigma (km/s)
+#Chi2
+1 -10.0 0.40 790.0 1.2 2.10 9.0 210.0 30.0
+2 -9.0 0.50 800.0 1.3 2.17 10.0 200.0 28.0
+3 -11.0 0.60 820.0 1.4 2.30 12.0 180.0 31.0
+"""
+
+
+def test_read_bayes_and_best_row(tmp_path):
+    par = lensmodel.parse_lenstool_par(_write(tmp_path, POSTERIOR_PAR.format(ra=RA0, dec=DEC0)))
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, BAYES, "bayes.dat"))
+    assert len(bayes) == 3 and bayes.colnames[-1] == "Chi2"
+    assert bayes.meta["provenance"] == "model_prediction" and len(bayes.meta["sha256"]) == 64
+    # O1 core radius is given in kpc in best.par, so only x, sigma and the redshift match row 1
+    par["potentials"][0]["core_radius"] = 1.3
+    k, diff = lensmodel.best_sample_index(par, bayes)
+    assert k == 1 and diff == pytest.approx(0.0)
+
+
+def test_posterior_par_replaces_and_rescales(tmp_path):
+    par = lensmodel.parse_lenstool_par(_write(tmp_path, POSTERIOR_PAR.format(ra=RA0, dec=DEC0)))
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, BAYES, "bayes.dat"))
+    out = lensmodel.posterior_par(par, bayes, 2, 1)
+    o1, m1, m2 = out["potentials"]
+    assert (o1["x_centre"], o1["v_disp"], o1["core_radius"]) == (0.6, 820.0, 1.4)
+    assert np.isnan(o1["core_radius_kpc"])  # the replaced radius drops its kpc twin
+    assert o1["y_centre"] == -1.0  # not sampled: unchanged
+    # members scale by sigma*, rcut* ratios to the reference row (180/200, 12/10)
+    assert m1["v_disp"] == pytest.approx(180.0) and m2["v_disp"] == pytest.approx(108.0)
+    assert m1["cut_radius"] == pytest.approx(12.0) and m2["cut_radius"] == pytest.approx(7.2)
+    assert m1["core_radius"] == 0.05  # rcore* is not sampled
+    assert out["z_m_limit"]["4"] == 2.30
+    assert par["potentials"][0]["x_centre"] == 0.5  # the input is not modified
+    assert out["sha256"] != par["sha256"]
+    # the reference row reproduces best.par's members; a dict reference does too
+    same = lensmodel.posterior_par(par, bayes, 1, {"sigma": 200.0, "rcut": 10.0})
+    assert same["potentials"][2]["v_disp"] == pytest.approx(120.0)
+    assert lensmodel.potfile_reference(par, 18.0) == {"sigma": 200.0, "rcut": 10.0}
+    with pytest.raises(ValueError):
+        lensmodel.potfile_reference(par, 17.0)
+    LensModel.from_par(out)  # builds
+    # a member optimised on its own (O2 sigma) is not rescaled again by Pot0 sigma
+    own = BAYES.replace("#O1 : rc (arcsec)", "#O2 : sigma (km/s)")
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, own, "own.dat"))
+    out = lensmodel.posterior_par(par, bayes, 2, 1)
+    assert out["potentials"][1]["v_disp"] == 1.4 and out["potentials"][2]["v_disp"] == 108.0
+
+
+def test_posterior_rejects_unknown_columns(tmp_path):
+    par = lensmodel.parse_lenstool_par(_write(tmp_path, POSTERIOR_PAR.format(ra=RA0, dec=DEC0)))
+    text = BAYES.replace("#O1 : rc (arcsec)", "#O1 : gamma")
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, text, "bayes.dat"))
+    with pytest.raises(UnsupportedModelError):
+        lensmodel.posterior_par(par, bayes, 0, 0)
+    kpc = BAYES.replace("#O1 : rc (arcsec)", "#O1 : rc (kpc)")
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, kpc, "kpc.dat"))
+    with pytest.raises(UnsupportedModelError):  # units are checked, never assumed
+        lensmodel.posterior_par(par, bayes, 0, 0)
+    extra = BAYES.replace("#O1 : x (arcsec)", "#O4 : x (arcsec)")
+    bayes = lensmodel.read_lenstool_bayes(_write(tmp_path, extra, "extra.dat"))
+    with pytest.raises(UnsupportedModelError):
+        lensmodel.best_sample_index(par, bayes)
+    bad = BAYES.replace("#Chi2\n", "")
+    with pytest.raises(ValueError):
+        lensmodel.read_lenstool_bayes(_write(tmp_path, bad, "bad.dat"))
+
+
+def test_split_planes_keeps_a_sigma_only_change_where_fitted():
+    model = LensModel(
+        [*_cluster_and_galaxy().components, _dpie(name="g2", x=-6.0, y=3.0, v_disp=150.0)],
+        RA0,
+        DEC0,
+        COSMO,
+    )
+    multi = model.split_planes({"gal": 0.2, "g2": 0.39}, v_disp={"g2": 120.0})
+    g2 = [c for c in multi.components if c.name == "g2"][0]
+    assert (g2.x, g2.y, g2.v_disp) == (-6.0, 3.0, 120.0)

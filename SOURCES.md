@@ -484,6 +484,7 @@ All of these were rejected for D-018; they are listed so later sessions do not s
       "UNCOVERing the extended strong lensing structures of Abell 2744 with the deepest JWST imaging", and Price
       et al. arXiv:2408.03920.
     - Bergamini et al. arXiv:2303.10210: Lenstool files at https://www.fe.infn.it/astro/lensing/A2744_Bergamini23/.
+      MCMC chain `bayes.dat` 70,069,007 B, sha256 `bf6ae670…` (accessed 2026-10-08; D-045).
       Accessed 2026-10-08: `best.par` sha256 `7245368f96ad9c7159eb9c8d0045030eda0804554312ee86d84f2e052025b9fb`,
       `obs_arcs.cat` sha256 `d02c231f4ee8c81f47335a99182a9f64a4c553e14818b1c9bd07314c2f4f5e1c`.
 - **El Gordo.**
@@ -499,7 +500,8 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     - Caminha et al. 2023 (A&A 678, A3, arXiv:2209.02718): magnification maps, `best_fit.par` and the
       multiple-image list at https://cdsarc.cds.unistra.fr/ftp/J/A+A/678/A3/.
       Accessed 2026-10-08: `best_fit.par` sha256 `7b0153ae0ee02f057f6aaa6f46b1b698502e6fc427266ac9a09d241ddc63a472`,
-      `obs_arcs_v1_new_IDs.dat` sha256 `d631743921266c34689a1d509f08e53dc3c90bc88064393d7b8fd524a3d5c700`.
+      `obs_arcs_v1_new_IDs.dat` sha256 `d631743921266c34689a1d509f08e53dc3c90bc88064393d7b8fd524a3d5c700`,
+      `bayes.dat` 1,666,720 B sha256 `2d3f7362…` (MCMC chain, D-045), `to_sample.par` (read for the potfile `mag0`).
     - RELICS models: https://archive.stsci.edu/hlsps/relics/act0102m49/models/ (DOI 10.17909/T9SP45).
 - **Sunrise (WHL0137−08).**
   - Data: MAST 2282 `jw02282-o010_t001` (jwst 2.0.1); later epochs 2282 o120 and 6882 o052.
@@ -600,6 +602,21 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     `aacc2dadd442645d2222c23ee2c3f9f6a76fddaa73996a26a6e88c0691a6bf3d`;
   - `…-lenstool-readme_multi_v1_model.txt` 1,988 B `a73bfe3b7d23c7605e16717781d94736d003e7b5fc5d08c0ef80a0358367edc0`.
 
+## Orphan-pair search inputs (accessed 2026-10-08; D-048)
+
+Pinned in `scripts/orphan_pairs.py` `FIELDS` and fetched by `photometry.fetch_catalog` (cache
+`data/cache/external/<sha256[:12]>_<name>`):
+- CANUCS DR1 photometry catalogues of MACS0416, MACS1149 and Abell 370 (URLs and sha256 above and in
+  docs/fields/abell370.md).
+- The Abell 370 image list is the pinned `abell370-canucs` `arcs.dat` (D-044).
+- MACS0416 all-multiple-image catalogue (CANUCS `allmultim-cat`) 18,806 B
+  `c8978003d8dd617cb980ed7ba5acde1485cd742db43846c25ed251f110dc2417`:
+  <https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/model/hlsp_canucs_jwst-hst_multi_macs0416-allmultim-cat_multi_v1_model.txt>.
+- MACS1149 Lenstool readme `hlsp_canucs_jwst-hst_multi_macs1149-lenstool-readme_multi_v1_model.txt` 2,198 B
+  `aef1cfffaf1865a0f8f2927f4df6fe2b3d44ed5e211aa7dc3f57a97d4651cee1` (no image list until v2).
+- Photometry readme <https://archive.stsci.edu/hlsps/canucs/dr1/webpage/hlsp_canucs_jwst-hst_multi_v1_photometry-cat_readme.txt>
+  (read, not cached).
+
 ## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
 
 - arXiv:1009.6084 Abe, "Gravitational Microlensing by the Ellis Wormhole".
@@ -643,7 +660,8 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
 `src/jwst_anomaly/exotic_sim.py`; the others were checked from the abstract.
 - Wormholes and negative masses:
   - arXiv:1211.0379, Kitamura, Nakajima & Asada, PRD 87, 027501 (2013), doi:10.1103/PhysRevD.87.027501 (full
-    text): α = ε̄/bⁿ; demagnification for β > 2/(n+1); n = 10 onset at β = 0.187.
+    text): α = ε̄/bⁿ; 2/(n+1) is their leading-order, large-n estimate of the demagnification onset; n = 10
+    onset at β = 0.187 (numerical); Fig. 2c (n = 3) minimum A ≈ 0.865, read from the figure pixels.
   - arXiv:1305.5037, Izumi et al., PRD 88, 024049 (2013), doi:10.1103/PhysRevD.88.024049 (full text): λ_±, κ, γ;
     radial images for ε < 0; voids as negative convergence.
   - arXiv:1307.6637, Kitamura et al., "Microlensed image centroid motions by an exotic lens object with negative

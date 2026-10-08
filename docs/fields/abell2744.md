@@ -52,7 +52,8 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
 - **Image positions:** the exact image-plane solve gives χ² = 146.64 against Lenstool's 146.60, and rms 0.427″. The
   largest residual is 22.1a, 1.62″ at σ 0.57. **No image-position anomaly.**
   Multiplicity residual: 3.2a/b, 34.1a/b and 700.1a/b each match one predicted image (pairs on the same side of
-  the critical curve; D-030). Next test: `bayes.dat` samples.
+  the critical curve; D-030). `bayes.dat` samples (D-045): all three stay merged in 13 of 13 models; CATS v4.1 splits
+  34.1a/b; 3.2a/b sit on the caustic in both models. Model resolution at folds, not an anomaly.
 - **Counter-images:**
   - 30 predicted images are not catalogued. 15 are near-critical-curve pairs within 3″ of an observed image (|μ|
     mostly > 9). 15 are far third images, including the z = 7.39 system A200/B200/C200 (μ ≈ 10).
@@ -235,7 +236,8 @@ Also high-pass versions (0.6″ median filter subtracted) to remove cluster-memb
   under- or overluminous image, and no significant radial convergence.
 - Nothing here is evidence of non-standard lensing.
 - **Next:**
-  - Rerun `images` over `bayes.dat` samples to get positional spreads for 4.2c, 34.1 and 700.1.
+  - ~~`bayes.dat` spreads for 4.2c, 34.1 and 700.1~~ — done (D-045): 4.2c moves 0.2–0.4″ (μ 8.7–10.0); the pairs stay
+    merged.
   - ~~Run `/vet-candidate` on 4.2c~~ — done: explained, see docs/candidates/abell2744-family4-c.md.
   - Widen the forced search to the model's positional rms × 3 (≈1.3″) together with a colour match (the
     8.1c lesson).

@@ -11,8 +11,42 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   distant observer). The warp branch is stopped.
 - `jwst_anomaly.exotic_sim`: Kitamura+2013 power-law lens family (either sign of ε), finite-source light curves,
   `inject_images` / `inject_light_curve` (`simulated`) for injection-recovery.
+- Review fixes: an exact finite-source integral, checked against inverse ray shooting, puts the negative-mass spike
+  peaks at ×7.0 / 2.35 / 1.53 (ρ = 0.01 / 0.1 / 0.3; first version 9.2 / 2.6 / 1.7). Exact demagnification onset
+  added (2/(n+1) is KNA13's large-n estimate); KNA13's n = 3 "~10 %" is rounding of their Fig. 2c (13–14 %). NaN
+  epochs no longer read as an umbra.
 - **Handoff:** injection-recovery for `radial` (W1) and the dark-lens search (W2) to turn nulls into limits; a
   dimming class for the transient screen (W3); counts around `radial` centres (W5).
+
+## 2026-10-08: Multi-plane lens models (D-046)
+- `LensModel.split_planes` moves named potentials (e.g. a foreground galaxy fitted as a member) to their own
+  redshift; `MultiPlaneLensModel` solves the multi-plane lens equation, and `find_images` / `backtrace_images` /
+  `imageplane_residuals` accept it.
+- Reproduces the D-042 system-51 result with library code: σ ≤ 70 km/s at z 0.268 leaves exactly 3 images.
+- **Handoff:** use `split_planes` in `/vet-candidate` for any extra or missing image near a non-member galaxy.
+
+## 2026-10-08: Orphan image pairs, a blind dark-deflector screen: null (D-048)
+- Worktree worker: `scripts/orphan_pairs.py` looks for SED-matched close pairs with no published system and no visible
+  galaxy between them in the CANUCS DR1 catalogues of MACS0416, MACS1149 and Abell 370.
+- Pair excesses come from same-redshift groups (null (c)); 38 orphans against 34.5 expected. The 35 top orphans are
+  knots, group members or chance matches, all at |μ| ≈ 1–2.5. No candidate.
+- **Failed approaches:** a midpoint-only lens rule (missed galaxies between members); no per-band S/N cut (25 % false
+  SED matches).
+- Wall time: 5–10 s per field per search, 30–60 s with cutouts.
+- **Handoff:** injection-recovery so the null becomes a limit; segmentation-map same-galaxy test; more clusters.
+
+## 2026-10-08: Lenstool MCMC posteriors; Abell 2744 multiplicity residual explained (D-045)
+- `lensmodel.read_lenstool_bayes` / `posterior_par` and `lens_consistency.py posterior` rebuild published models at
+  MCMC samples (potfile rescaling, sampled family redshifts). Validated on Abell 2744: best.par is a chain row, and
+  two random rows give χ²pos 173.5 / 173.0 against the chain's 178.1 / 174.1.
+- Abell 2744 (12 samples plus best.par): 3.2a/b, 34.1a/b and 700.1a/b stay merged in every model. CATS v4.1 splits
+  34.1a/b, and 3.2a/b sit on the caustic in both models. That is model resolution at folds; 0 surviving. 4.2c moves
+  only 0.2–0.4″ (μ 8.7–10.0), well below its galaxy-scale systematics (D-036).
+- **Failed approach:** the El Gordo CDS chain's `Chi2` column (54–77) does not track our χ²pos (93–106), not even in
+  rank, so that chain is not validated.
+- Wall time: about 70 s per Abell 2744 sample on a 0.25″ grid; 15 min for 13 models.
+- **Handoff:** feed the posterior μ spread into `fluxratios` (then recheck SMACS 6.3 once a SMACS chain is pinned) and
+  the position spread into `forced_check` search radii.
 
 ## 2026-10-08: CANUCS Lenstool models pinned (D-044)
 - `macs0416-canucs` reproduces Lenstool's image-plane χ²pos (330.8 against 344.30; rms 0.51″ over 303 images).

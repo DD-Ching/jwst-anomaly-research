@@ -7,8 +7,11 @@ Every table returned carries ``meta["provenance"] = "model_prediction"``.
 
 Supported: one lens plane whose potentials are all dPIE/PIEMD (Lenstool ``profile 81``), in
 absolute coordinates (``runmode`` ``reference 3 ra dec``), with a flat LambdaCDM cosmology.
-Anything else raises :class:`UnsupportedModelError`. Scaling-relation galaxy catalogs
-(``potfile``) are not expanded: use the ``best.par`` of a run, which lists every potential.
+Anything else raises :class:`UnsupportedModelError`. :meth:`LensModel.split_planes` builds a
+:class:`MultiPlaneLensModel` from a parsed model by moving named potentials to their own
+redshifts (e.g. a foreground galaxy fitted as a cluster member, D-046).
+Scaling-relation galaxy catalogs (``potfile``) are not expanded: use the ``best.par`` of a run,
+which lists every potential.
 
 Lenstool conventions used here (checked against the Mahler et al. 2022 ICLv2 convergence map,
 D-024):
@@ -54,10 +57,12 @@ D-024):
 
 from __future__ import annotations
 
+import copy
 import hashlib
+import io
 import re
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -127,6 +132,17 @@ ABELL2744_BERGAMINI23: dict[str, tuple[str, str]] = {
         "d02c231f4ee8c81f47335a99182a9f64a4c553e14818b1c9bd07314c2f4f5e1c",
     ),
 }
+
+#: MCMC samples of the two models above (Lenstool ``bayes.dat``; D-045). Kept apart from the
+#: model file sets because the Abell 2744 chain is 70 MB and only ``posterior`` needs it.
+ELGORDO_CAMINHA23_BAYES = (
+    f"{_CAMINHA23_CDS}/files/bayes.dat",
+    "2d3f736218c1dbba56fdd39a7f8151d307c46bd37abf39bac8831a9e6a81de44",
+)
+ABELL2744_BERGAMINI23_BAYES = (
+    f"{_BERGAMINI23_WEB}/bayes.dat",
+    "bf6ae6702a021d185b70305a83d45f2fca7dacf2a60138f815f5d69ff7524c1b",
+)
 
 # CANUCS DR1 Lenstool best fits (doi:10.17909/18nv-np70): MACS0416 by Rihtarsic et al. 2025
 # (A&A, doi:10.1051/0004-6361/202451117; image-plane chi2pos 344.30) and Abell 370 by Gledhill
@@ -488,6 +504,7 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
     * ``potfiles``: names of ``potfile`` sections (not expanded);
     * ``z_m_limit``: fixed (best-fit) redshifts of multiple-image families, by :func:`image_family`
       of each listed image id (one line may list several ids);
+    * ``z_m_limit_groups``: the families of each such line (they share one redshift);
     * ``sigpos_arcsec``: the image-plane position error ``sigposArcsec``, or None;
     * ``source`` and ``sha256`` of the file.
 
@@ -525,6 +542,7 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
         "potentials": [],
         "potfiles": [],
         "z_m_limit": {},
+        "z_m_limit_groups": [],
         "sigpos_arcsec": None,
     }
     for sec in sections:
@@ -548,7 +566,10 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
         elif kind == "image":
             for key, vals, n in entries:
                 if key == "z_m_limit":
-                    out["z_m_limit"].update(_z_m_limit_entry(vals, f"{path}:{n}"))
+                    entry = _z_m_limit_entry(vals, f"{path}:{n}")
+                    out["z_m_limit"].update(entry)
+                    if entry:  # families of one line share one (sampled) redshift
+                        out["z_m_limit_groups"].append(sorted(entry))
                 elif key.lower() == "sigposarcsec":
                     out["sigpos_arcsec"] = float(vals[0])
         elif kind == "potential":
@@ -594,6 +615,8 @@ def _parse_potential(path: Path, sec: dict[str, Any]) -> dict[str, Any]:
     pot: dict[str, Any] = {"name": name, "profile": profile}
     for key in _POTENTIAL_KEYS:
         pot[key] = float(values[key][0]) if key in values else float("nan")
+    # ``mag`` marks a potfile (scaling-relation) member; :func:`posterior_par` rescales those.
+    pot["mag"] = float(values["mag"][0]) if "mag" in values else float("nan")
     return pot
 
 
@@ -941,6 +964,107 @@ class LensModel:
         """Expected arc orientation (deg E of N, mod 180) with ``kappa`` and ``gamma``."""
         return self._subset(ra, dec, z_s, ["tangential_pa", "kappa", "gamma"])
 
+    # --- lens equation (shared with MultiPlaneLensModel) -------------------------------------
+    def lens_map(self, x: Any, y: Any, z_s: Any) -> dict[str, np.ndarray]:
+        """Source-plane position and Jacobian ``A = d beta / d theta`` at model-frame positions.
+
+        Keys ``beta_x, beta_y`` (arcsec) and ``a11, a12, a21, a22``; ``z_s`` is a scalar or one
+        redshift per position.
+        """
+        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
+        s = self.dls_ds(z_s)
+        f = self.fields_xy(x, y)
+        return {
+            "beta_x": x - s * f["alpha_x"],
+            "beta_y": y - s * f["alpha_y"],
+            "a11": 1.0 - s * f["psi_xx"],
+            "a12": -s * f["psi_xy"],
+            "a21": -s * f["psi_xy"],
+            "a22": 1.0 - s * f["psi_yy"],
+        }
+
+    def source_points(self, x: Any, y: Any, z_s: Any) -> tuple[np.ndarray, np.ndarray]:
+        """Source-plane position only (no Hessian) at model-frame positions."""
+        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
+        s = self.dls_ds(z_s)
+        ax, ay = self.deflection_xy(x, y)
+        return x - s * np.asarray(ax), y - s * np.asarray(ay)
+
+    def source_grid(self, grid: DeflectionGrid, z_s: float) -> tuple[np.ndarray, np.ndarray]:
+        """Source-plane position of every node of ``grid`` (indexed ``[iy, ix]``)."""
+        if grid.alpha_x.shape != (len(grid.x), len(grid.x)):
+            raise ValueError("the deflection grid was not computed for this single-plane model")
+        s = float(self.dls_ds(z_s))
+        g = grid.x
+        return g[None, :] - s * grid.alpha_x, g[:, None] - s * grid.alpha_y
+
+    def split_planes(
+        self, z_lens: dict[str, float], v_disp: dict[str, float] | None = None
+    ) -> MultiPlaneLensModel:
+        """A multi-plane copy with the named potentials moved to their own redshifts (D-046).
+
+        ``z_lens`` maps potential names to their redshift (e.g. a spectroscopic redshift for a
+        galaxy that the model treats as a cluster member); ``v_disp`` optionally replaces their
+        velocity dispersion (km/s). Potentials at the same redshift share a plane; the rest stay
+        on this model's plane.
+
+        A single-plane fit places every potential at its observed (image-plane) position. A
+        moved potential with another plane in front of it is put where the ray through its
+        observed centre crosses its own plane (delensed through the foreground planes, nearest
+        first), so it is still seen where it was fitted. Its radii, ellipticity and angle are kept
+        (ASSUMPTION: the foreground's distortion of its shape is neglected), and potentials left
+        on this model's plane keep their fitted positions.
+        """
+        names = [c.name for c in self.components]
+        unknown = sorted(set(z_lens) - set(names)) + sorted(set(v_disp or {}) - set(z_lens))
+        if unknown:
+            raise ValueError(f"split_planes: unknown or unmoved potentials {unknown}")
+        by_z: dict[float, list[DPIE]] = {}
+        for comp in self.components:
+            z = float(z_lens.get(comp.name, comp.z_lens))
+            sig = (v_disp or {}).get(comp.name, comp.v_disp)
+            by_z.setdefault(z, []).append(replace(comp, z_lens=z, v_disp=float(sig)))
+
+        def ident(comps: list[DPIE]) -> str:  # a plane holds a subset: not the file's hash
+            if not self.sha256:  # in memory: no identity, as for the unsplit model
+                return ""
+            text = f"{self.sha256}{comps!r}{_cosmology_key(self.cosmology)}"
+            return hashlib.sha256(text.encode()).hexdigest()
+
+        def build(groups: dict[float, list[DPIE]]) -> list[LensModel]:
+            return [
+                LensModel(comps, self.ra0, self.dec0, self.cosmology, self.source, ident(comps))
+                for comps in groups.values()
+            ]
+
+        # delens moved potentials plane by plane, in redshift order, so each one is traced
+        # through foreground planes that are already final
+        fitted_z = {c.name: c.z_lens for c in self.components}
+        for z in sorted(by_z):
+            comps = by_z[z]
+            # only potentials that changed redshift (a v_disp-only change stays where fitted)
+            moved_here = [
+                k for k, c in enumerate(comps) if c.name in z_lens and z != fitted_z[c.name]
+            ]
+            front = [zz for zz in by_z if zz < z]
+            if not moved_here or not front:
+                continue
+            fore = MultiPlaneLensModel(build({zz: by_z[zz] for zz in sorted(front)}))
+            # the ray through the fitted centre, traced to this plane as if it were a source
+            px, py = fore.source_points(
+                np.array([comps[k].x for k in moved_here]),
+                np.array([comps[k].y for k in moved_here]),
+                z,
+            )
+            for k, x_new, y_new in zip(moved_here, px, py, strict=True):
+                comps[k] = replace(comps[k], x=float(x_new), y=float(y_new))
+        planes = build(by_z)
+        moved = ", ".join(f"{k}@z{v:g}" for k, v in sorted(z_lens.items()))
+        sigs = ", ".join(f"{k}:{v:g} km/s" for k, v in sorted((v_disp or {}).items()))
+        return MultiPlaneLensModel(
+            planes, source=f"{self.source} [planes: {moved}{'; ' + sigs if sigs else ''}]"
+        )
+
     def _meta(self) -> dict[str, Any]:
         return {
             "provenance": schema.Provenance.MODEL_PREDICTION.value,
@@ -1053,19 +1177,14 @@ def backtrace_images(model: LensModel, images: Table, z_m_limit: dict[str, float
     """
     z = image_redshifts(images, z_m_limit)
     ok = np.isfinite(z)
-    pred = model.evaluate(images["ra"][ok], images["dec"][ok], z[ok])
+    x, y = model.to_frame(np.asarray(images["ra"], float)[ok], np.asarray(images["dec"], float)[ok])
+    lm = model.lens_map(x, y, z[ok])
     bx = np.full(len(images), np.nan)
     by = np.full(len(images), np.nan)
-    bx[ok] = pred["x"] - pred["alpha_x"]
-    by[ok] = pred["y"] - pred["alpha_y"]
-    # Inverse magnification matrix A = I - H at each image (H from the scaled Hessian).
-    a11 = np.full(len(images), np.nan)
-    a12 = np.full(len(images), np.nan)
-    a22 = np.full(len(images), np.nan)
-    kap, g1, g2 = (np.asarray(pred[c], float) for c in ("kappa", "gamma1", "gamma2"))
-    a11[ok] = 1.0 - kap - g1  # psi_xx = kappa + gamma1, psi_yy = kappa - gamma1, psi_xy = gamma2
-    a12[ok] = -g2
-    a22[ok] = 1.0 - kap + g1
+    bx[ok], by[ok] = lm["beta_x"], lm["beta_y"]
+    # Inverse magnification matrix A = d beta / d theta at each image (I - H on one plane).
+    a11, a12, a21, a22 = (np.full(len(images), np.nan) for _ in range(4))
+    a11[ok], a12[ok], a21[ok], a22[ok] = lm["a11"], lm["a12"], lm["a21"], lm["a22"]
     systems = np.asarray(images["system"]).astype(str)
     dbx = np.full(len(images), np.nan)
     dby = np.full(len(images), np.nan)
@@ -1075,10 +1194,10 @@ def backtrace_images(model: LensModel, images: Table, z_m_limit: dict[str, float
             continue
         dbx[m] = bx[m] - bx[m].mean()
         dby[m] = by[m] - by[m].mean()
-    det = a11 * a22 - a12 * a12
-    # theta offset = A^-1 (beta offset), with A^-1 = [[a22, -a12], [-a12, a11]] / det.
+    det = a11 * a22 - a12 * a21
+    # theta offset = A^-1 (beta offset), with A^-1 = [[a22, -a12], [-a21, a11]] / det.
     dtx = (a22 * dbx - a12 * dby) / det
-    dty = (-a12 * dbx + a11 * dby) / det
+    dty = (-a21 * dbx + a11 * dby) / det
     out = Table(
         {
             "image_id": images["image_id"],
@@ -1102,11 +1221,14 @@ def backtrace_images(model: LensModel, images: Table, z_m_limit: dict[str, float
 class DeflectionGrid:
     """A model's deflection at D_LS/D_S = 1 on a square model-frame grid (arcsec).
 
-    Deflection scales linearly with D_LS/D_S, so one grid serves every source redshift.
+    Deflection scales linearly with D_LS/D_S, so one grid serves every source redshift. For a
+    :class:`MultiPlaneLensModel` the arrays hold each plane's ``alpha_i(theta_i)`` along the ray
+    through every node, shape ``(n_planes, len(x), len(x))`` (the rays do not depend on z_s).
+    Use a grid only with the model it was computed for (``model.source_grid`` checks the shape).
     """
 
     x: np.ndarray  # 1-D grid coordinates (arcsec), shared by both axes
-    alpha_x: np.ndarray  # shape (len(x), len(x)), indexed [iy, ix]
+    alpha_x: np.ndarray  # shape (len(x), len(x)) [iy, ix]; (n_planes, len(x), len(x)) multi-plane
     alpha_y: np.ndarray
     model_sha256: str
 
@@ -1116,7 +1238,10 @@ class DeflectionGrid:
     ) -> DeflectionGrid:
         g = np.arange(-half_width, half_width + step / 2, step)
         xx, yy = np.meshgrid(g, g)
-        ax, ay = model.deflection_xy(xx, yy)
+        if isinstance(model, MultiPlaneLensModel):  # one deflection per plane along each ray
+            ax, ay = model.plane_deflections(xx, yy)
+        else:
+            ax, ay = model.deflection_xy(xx, yy)
         return cls(g, ax, ay, model.sha256)
 
     @classmethod
@@ -1257,10 +1382,10 @@ def find_images(
     ``residual_arcsec`` (source-plane misfit). Images outside the grid can be missed.
     Provenance ``model_prediction``.
     """
-    s = float(model.dls_ds(z_s))
+    if grid.model_sha256 and model.sha256 and grid.model_sha256 != model.sha256:
+        raise ValueError("find_images: the deflection grid was computed for another model")
     g = grid.x
-    bx = g[None, :] - s * grid.alpha_x
-    by = g[:, None] - s * grid.alpha_y
+    bx, by = model.source_grid(grid, z_s)
     gx, gy = np.broadcast_to(g[None, :], bx.shape), np.broadcast_to(g[:, None], by.shape)
     x0, y0 = _triangle_seeds(bx, by, gx, gy, beta_x, beta_y)
     seeds_x, seeds_y = [x0], [y0]
@@ -1273,29 +1398,26 @@ def find_images(
             fx = g[cols][:, None, None] + t[None, None, :]
             fy = g[rows][:, None, None] + t[None, :, None]
             fx, fy = np.broadcast_arrays(fx, fy)
-            ax, ay = model.deflection_xy(fx.ravel(), fy.ravel())
-            fbx = fx - s * np.asarray(ax).reshape(fx.shape)
-            fby = fy - s * np.asarray(ay).reshape(fy.shape)
+            fbx, fby = model.source_points(fx.ravel(), fy.ravel(), z_s)
+            fbx, fby = fbx.reshape(fx.shape), fby.reshape(fy.shape)
             x1, y1 = _triangle_seeds(fbx, fby, fx, fy, beta_x, beta_y)
             seeds_x.append(x1)
             seeds_y.append(y1)
-    # Newton steps for every seed at once: one fields_xy call per step over all potentials.
+    # Newton steps for every seed at once: one lens_map call per step over all potentials.
     x, y = np.concatenate(seeds_x), np.concatenate(seeds_y)
     for _ in range(newton_steps):
-        f = model.fields_xy(x, y)
-        rx = beta_x - (x - s * f["alpha_x"])
-        ry = beta_y - (y - s * f["alpha_y"])
-        a11, a12, a22 = 1 - s * f["psi_xx"], -s * f["psi_xy"], 1 - s * f["psi_yy"]
-        det = a11 * a22 - a12 * a12
-        x = x + (a22 * rx - a12 * ry) / det  # a seed on a critical curve diverges and is
-        y = y + (-a12 * rx + a11 * ry) / det  # rejected below (as one seed at a time did)
-    f = model.fields_xy(x, y)
-    res = np.hypot(beta_x - (x - s * f["alpha_x"]), beta_y - (y - s * f["alpha_y"]))
+        m = model.lens_map(x, y, z_s)
+        rx, ry = beta_x - m["beta_x"], beta_y - m["beta_y"]
+        det = m["a11"] * m["a22"] - m["a12"] * m["a21"]
+        x = x + (m["a22"] * rx - m["a12"] * ry) / det  # a seed on a critical curve diverges and
+        y = y + (-m["a21"] * rx + m["a11"] * ry) / det  # is rejected below
+    m = model.lens_map(x, y, z_s)
+    res = np.hypot(beta_x - m["beta_x"], beta_y - m["beta_y"])
+    det = m["a11"] * m["a22"] - m["a12"] * m["a21"]
     found: list[tuple[float, float, float, float]] = []
     # same acceptance and merge order as one seed at a time (seed order is preserved)
     for k in np.flatnonzero(res < tol_arcsec):
-        a11, a12, a22 = 1 - s * f["psi_xx"][k], -s * f["psi_xy"][k], 1 - s * f["psi_yy"][k]
-        mu = float(1.0 / (a11 * a22 - a12 * a12))
+        mu = float(1.0 / det[k])
         if all(np.hypot(x[k] - u_, y[k] - v_) > 0.05 for u_, v_, _, _ in found):
             found.append((float(x[k]), float(y[k]), mu, float(res[k])))
     found.sort(key=lambda r: -abs(r[2]))
@@ -1519,3 +1641,387 @@ class MapLensModel(LensModel):
             },
         )
         return meta
+
+
+def _cosmology_key(cosmo: FlatLambdaCDM) -> str:
+    """The cosmological parameters (not the name or meta) as text, for content hashes."""
+
+    def lossless(v: Any) -> str:
+        return f"{np.asarray(getattr(v, 'value', v)).tolist()!r} {getattr(v, 'unit', '')}"
+
+    return repr(sorted((k, lossless(v)) for k, v in cosmo.parameters.items()))
+
+
+def _detached(plane: LensModel) -> LensModel:
+    """A shallow copy whose frame can move without moving the caller's object (or its WCS)."""
+    q = copy.copy(plane)
+    if getattr(q, "wcs", None) is not None:
+        q.wcs = q.wcs.deepcopy()
+    return q
+
+
+class MultiPlaneLensModel:
+    """Several lens planes, each a :class:`LensModel` at its own ``z_lens``, in one frame (D-046).
+
+    Typical use: a single-plane cluster model with a foreground or background galaxy that the
+    model treats as a cluster member, moved to its spectroscopic redshift with
+    :meth:`LensModel.split_planes`. The planes share the reference point and cosmology. The lens
+    equation is the standard multi-plane recursion (e.g. Schneider, Ehlers & Falco 1992, ch. 9):
+
+    ``theta_j = theta_1 - sum_{i<j} (D_ij / D_j) alpha_i(theta_i)``, the source position
+    ``beta = theta_1 - sum_i (D_is / D_s) alpha_i(theta_i)``, and
+    ``A_j = I - sum_{i<j} (D_ij / D_j) H_i(theta_i) A_i`` (``A = I - sum_i (D_is / D_s) H_i A_i``),
+
+    with ``alpha_i`` and ``H_i`` each plane's deflection and Hessian at D_LS/D_S = 1 and, in a flat
+    cosmology, ``D_ij / D_j = 1 - D_M(z_i) / D_M(z_j)``. The ray positions ``theta_i`` do not depend
+    on the source redshift, only the weights ``D_is / D_s`` do, so a :class:`DeflectionGrid` stores
+    ``alpha_i(theta_i)`` for every plane (shape ``(n_planes, n, n)``) and serves every source
+    redshift. It provides what :func:`backtrace_images`, :func:`find_images` and
+    :func:`imageplane_residuals` need; it has no ``evaluate`` (kappa/shear tables) and no scalar
+    ``z_lens`` (see ``z_planes``), so single-plane-only code fails loudly on it.
+    """
+
+    def __init__(self, planes: Sequence[LensModel], source: str = "", sha256: str = "") -> None:
+        planes = sorted(planes, key=lambda p: p.z_lens)
+        if not planes:
+            raise ValueError("a multi-plane model needs at least one plane")
+        z = [p.z_lens for p in planes]
+        if len(set(z)) != len(z):
+            raise ValueError(f"lens planes must have distinct redshifts (z_lens {z})")
+        p0 = planes[0]
+        for p in planes[1:]:
+            if (p.ra0, p.dec0) != (p0.ra0, p0.dec0) or not p.cosmology.is_equivalent(p0.cosmology):
+                raise ValueError("lens planes must share the reference point and cosmology")
+        self.planes = tuple(_detached(p) for p in planes)
+        self.components = tuple(c for p in planes for c in p.components)
+        self.ra0, self.dec0 = p0.ra0, p0.dec0
+        self._cos0 = p0._cos0
+        self.cosmology = p0.cosmology
+        self.source = source or " + ".join(p.source for p in planes)
+        # identity for caches and provenance (see _identity)
+        self.sha256 = sha256 or self._identity()
+        self._d_m = [
+            float(self.cosmology.comoving_transverse_distance(p.z_lens).to_value(u.Mpc))
+            for p in planes
+        ]
+        # D_ij / D_j for every pair of planes i < j
+        self._ratio = {
+            (i, j): 1.0 - self._d_m[i] / self._d_m[j] for j in range(len(planes)) for i in range(j)
+        }
+
+    def _identity(self) -> str:
+        """Each plane's file hash, redshift and potentials, the frame anchor and the cosmology.
+        Parametric planes are fully described by these. A plane with neither a hash nor
+        potentials (an in-memory map) is not, so then the model has no identity: "" is never
+        cached, and ``find_images`` cannot check that a grid belongs to it."""
+        if any(not p.sha256 and not p.components for p in self.planes):
+            return ""
+        ident = repr(
+            [(p.sha256, p.z_lens, p.components) for p in self.planes]
+            + [self.ra0, self.dec0, _cosmology_key(self.cosmology)]
+        )
+        return hashlib.sha256(ident.encode()).hexdigest()
+
+    to_frame = LensModel.to_frame
+    to_sky = LensModel.to_sky
+    frame_angle_to_pa = staticmethod(LensModel.frame_angle_to_pa)
+
+    @property
+    def z_planes(self) -> tuple[float, ...]:
+        return tuple(p.z_lens for p in self.planes)
+
+    @property
+    def z_lens(self) -> float:
+        raise AttributeError(
+            "MultiPlaneLensModel has no single z_lens (see z_planes): single-plane code path"
+        )
+
+    def shift_frame(self, dra_arcsec: float, ddec_arcsec: float) -> None:
+        """Move every plane on the sky by (dRA cos dec, dDec) arcsec, in place (D-034)."""
+        for p in self.planes:
+            p.shift_frame(dra_arcsec, ddec_arcsec)
+        p0 = self.planes[0]
+        self.ra0, self.dec0, self._cos0 = p0.ra0, p0.dec0, p0._cos0
+        # model-frame deflections do not change (a map plane's WCS moves too), so the identity,
+        # and any grid computed before the shift, stay valid, as for one plane
+
+    def _rays(
+        self, x: np.ndarray, y: np.ndarray, n_planes: int, jacobian: bool
+    ) -> tuple[list[tuple[np.ndarray, np.ndarray]], list[tuple[np.ndarray, ...]]]:
+        """``alpha_i(theta_i)`` (and ``H_i A_i``) for the first ``n_planes`` planes; no z_s."""
+        one, zero = np.ones(x.shape), np.zeros(x.shape)
+        alphas: list[tuple[np.ndarray, np.ndarray]] = []
+        ha: list[tuple[np.ndarray, ...]] = []
+        for j, plane in enumerate(self.planes[:n_planes]):
+            px, py = x.copy(), y.copy()
+            a = [one.copy(), zero.copy(), zero.copy(), one.copy()] if jacobian else []
+            for i in range(j):
+                r = self._ratio[(i, j)]
+                px -= r * alphas[i][0]
+                py -= r * alphas[i][1]
+                for k in range(len(a)):
+                    a[k] -= r * ha[i][k]
+            if jacobian:
+                f = plane.fields_xy(px, py)
+                hxx, hxy, hyy = f["psi_xx"], f["psi_xy"], f["psi_yy"]
+                alphas.append((f["alpha_x"], f["alpha_y"]))
+                ha.append(
+                    (
+                        hxx * a[0] + hxy * a[2],
+                        hxx * a[1] + hxy * a[3],
+                        hxy * a[0] + hyy * a[2],
+                        hxy * a[1] + hyy * a[3],
+                    )
+                )
+            else:
+                ax, ay = plane.deflection_xy(px, py)
+                alphas.append((np.asarray(ax), np.asarray(ay)))
+        return alphas, ha
+
+    def _weights(self, z_s: Any, shape: tuple[int, ...]) -> list[np.ndarray]:
+        """``D_is / D_s`` per plane (0 for a plane at or behind the source), one distance
+        evaluation per distinct redshift."""
+        zs = np.broadcast_to(np.asarray(z_s, float), shape)
+        u_z, inv = np.unique(zs.ravel(), return_inverse=True)
+        d_s = np.full(u_z.shape, np.nan)
+        fin = np.isfinite(u_z)
+        lensed = fin & (u_z > self.planes[0].z_lens)  # only sources behind some plane
+        d_s[lensed] = self.cosmology.comoving_transverse_distance(u_z[lensed]).to_value(u.Mpc)
+        out = []
+        for p, d_l in zip(self.planes, self._d_m, strict=True):  # as LensModel.dls_ds
+            w = np.where(fin, 0.0, np.nan)
+            behind = fin & (u_z > p.z_lens)
+            w[behind] = 1.0 - d_l / d_s[behind]
+            out.append(w[inv].reshape(shape))
+        return out
+
+    def _trace(self, x: Any, y: Any, z_s: Any, jacobian: bool) -> dict[str, np.ndarray]:
+        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
+        w = self._weights(z_s, x.shape)
+        # planes behind every source never deflect (and neither do the ones behind them)
+        n = len(self.planes) - int(sum(np.all(wi == 0) for wi in w))
+        alphas, ha = self._rays(x, y, n, jacobian)
+        out = {"beta_x": x.copy(), "beta_y": y.copy()}
+        if jacobian:
+            out.update(a11=np.ones(x.shape), a12=np.zeros(x.shape))
+            out.update(a21=np.zeros(x.shape), a22=np.ones(x.shape))
+        for i in range(n):
+            on = w[i] != 0  # a plane behind this source adds nothing, even a NaN off its map
+            out["beta_x"] = out["beta_x"] - np.where(on, w[i] * alphas[i][0], 0.0)
+            out["beta_y"] = out["beta_y"] - np.where(on, w[i] * alphas[i][1], 0.0)
+            if jacobian:
+                for k, key in enumerate(("a11", "a12", "a21", "a22")):
+                    out[key] = out[key] - np.where(on, w[i] * ha[i][k], 0.0)
+        return out
+
+    def lens_map(self, x: Any, y: Any, z_s: Any) -> dict[str, np.ndarray]:
+        """As :meth:`LensModel.lens_map`; ``A`` is not symmetric in general (``a12 != a21``)."""
+        return self._trace(x, y, z_s, jacobian=True)
+
+    def source_points(self, x: Any, y: Any, z_s: Any) -> tuple[np.ndarray, np.ndarray]:
+        out = self._trace(x, y, z_s, jacobian=False)
+        return out["beta_x"], out["beta_y"]
+
+    def plane_deflections(self, x: Any, y: Any) -> tuple[np.ndarray, np.ndarray]:
+        """``alpha_i(theta_i)`` of every plane along the rays through ``(x, y)``, stacked on a
+        leading plane axis (independent of the source redshift; for :class:`DeflectionGrid`)."""
+        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
+        alphas, _ = self._rays(x, y, len(self.planes), jacobian=False)
+        return np.stack([a[0] for a in alphas]), np.stack([a[1] for a in alphas])
+
+    def source_grid(self, grid: DeflectionGrid, z_s: float) -> tuple[np.ndarray, np.ndarray]:
+        """Source-plane position of every node of ``grid`` (computed for this model)."""
+        if grid.alpha_x.ndim != 3 or grid.alpha_x.shape[0] != len(self.planes):
+            raise ValueError("the deflection grid was not computed for this multi-plane model")
+        g, shape = grid.x, grid.alpha_x.shape[1:]
+        bx = np.broadcast_to(g[None, :], shape).astype(float)
+        by = np.broadcast_to(g[:, None], shape).astype(float)
+        for i, w in enumerate(self._weights(float(np.squeeze(z_s)), ())):
+            r = float(w)
+            if r:
+                bx -= r * grid.alpha_x[i]
+                by -= r * grid.alpha_y[i]
+        return bx, by
+
+    def _meta(self) -> dict[str, Any]:
+        meta = self.planes[0]._meta()
+        meta.update(
+            source=f"Lenstool model {self.source}",
+            model_sha256=self.sha256,
+            n_potentials=len(self.components),
+            z_lens=list(self.z_planes),
+            lens_planes=[
+                {
+                    "z_lens": p.z_lens,
+                    "n_potentials": len(p.components),
+                    **(
+                        {"potentials": [c.name for c in p.components]}
+                        if len(p.components) <= 10
+                        else {}
+                    ),
+                }
+                for p in self.planes
+            ],
+        )
+        return meta
+
+
+# --- Lenstool MCMC posterior (bayes.dat) -------------------------------------------------------
+# bayes.dat column "O<i> : <key> (unit)" -> potential i (1-based, best.par order) and keyword.
+_BAYES_KEYS = {
+    "x": "x_centre",
+    "y": "y_centre",
+    "emass": "ellipticity",
+    "theta": "angle_pos",
+    "rc": "core_radius",
+    "rcut": "cut_radius",
+    "sigma": "v_disp",
+}
+_BAYES_UNITS = {"x": "arcsec", "y": "arcsec", "emass": "", "theta": "deg", "rc": "arcsec",
+                "rcut": "arcsec", "sigma": "km/s"}  # fmt: skip
+_BAYES_POT = re.compile(r"^O(\d+)\s*:\s*(\w+)\s*(?:\((.*)\))?\s*$")
+_BAYES_POTFILE = re.compile(r"^Pot0\s*:?\s*(rcut|sigma)\s*(?:\((.*)\))?\s*$")
+_BAYES_REDSHIFT = re.compile(r"^Redshift of (\S+)")
+
+
+def read_lenstool_bayes(path: str | Path) -> Table:
+    """Read a Lenstool ``bayes.dat`` (MCMC samples) into a Table.
+
+    The header has one ``#<name>`` line per column; the names are kept as written
+    (``"O1 : x (arcsec)"``, ``"Pot0 sigma (km/s)"``, ``"Redshift of 7c"``, ``"Chi2"``).
+    ``meta["sha256"]`` identifies the file. Provenance ``model_prediction`` (posterior samples of
+    a published model).
+    """
+    path = Path(path)
+    raw = path.read_bytes()
+    text = raw.decode("latin-1")
+    names = [line[1:].strip() for line in text.splitlines() if line.startswith("#")]
+    data = np.loadtxt(io.StringIO(text), comments="#", ndmin=2)
+    if not names or not data.size:
+        raise ValueError(f"{path}: no header or no samples")
+    if data.shape[1] != len(names):
+        raise ValueError(f"{path}: {len(names)} header names but {data.shape[1]} columns")
+    out = Table(data, names=names)
+    out.meta.update(
+        provenance="model_prediction", source=str(path), sha256=hashlib.sha256(raw).hexdigest()
+    )
+    return out
+
+
+def _bayes_columns(bayes: Table) -> tuple[dict, dict, dict]:
+    """``(potential, potfile, redshift)`` column maps of a bayes Table.
+
+    potential: ``name -> (index0, keyword)``; potfile: ``name -> "sigma" | "rcut"``;
+    redshift: ``name -> image family``. Unknown columns other than the bookkeeping ones raise
+    :class:`UnsupportedModelError` (never silently ignored)."""
+    pot, potfile, zcol = {}, {}, {}
+    for name in bayes.colnames:
+        if m := _BAYES_POT.match(name):
+            key, unit = m.group(2), m.group(3) or ""
+            if key not in _BAYES_KEYS or unit != _BAYES_UNITS[key]:
+                raise UnsupportedModelError(f"bayes.dat column {name!r} is not interpreted")
+            pot[name] = (int(m.group(1)) - 1, _BAYES_KEYS[key])
+        elif m := _BAYES_POTFILE.match(name):
+            if (m.group(2) or "") != _BAYES_UNITS[m.group(1)]:
+                raise UnsupportedModelError(f"bayes.dat column {name!r} is not interpreted")
+            potfile[name] = m.group(1)
+        elif m := _BAYES_REDSHIFT.match(name):
+            zcol[name] = image_family(m.group(1))
+        elif name not in ("Nsample", "ln(Lhood)", "Chi2"):
+            raise UnsupportedModelError(f"bayes.dat column {name!r} is not interpreted")
+    return pot, potfile, zcol
+
+
+def _check_potential_indices(par: dict[str, Any], pot: dict) -> None:
+    for name, (i, _) in pot.items():
+        if i >= len(par["potentials"]):
+            raise UnsupportedModelError(
+                f"bayes.dat column {name!r}: best.par has no potential {i + 1}"
+            )
+
+
+def best_sample_index(par: dict[str, Any], bayes: Table) -> tuple[int, float]:
+    """The bayes row whose optimised potential parameters and family redshifts match ``par`` (a
+    best.par), and that row's largest absolute difference from ``par`` over those parameters.
+
+    A difference above best.par's print precision means best.par is not a row of this chain
+    (e.g. a thinned chain); use :func:`potfile_reference` for the potfile scaling then."""
+    pot, _, zcol = _bayes_columns(bayes)
+    if not pot:
+        raise ValueError("bayes.dat has no optimised potential columns")
+    _check_potential_indices(par, pot)
+    cols = [(name, par["potentials"][i][key]) for name, (i, key) in pot.items()]
+    cols += [(name, par["z_m_limit"].get(fam, np.nan)) for name, fam in zcol.items()]
+    diffs = np.array([np.asarray(bayes[name], float) - ref for name, ref in cols])
+    diffs = diffs[np.all(np.isfinite(diffs), axis=1)]
+    scale = np.maximum(np.std(diffs, axis=1, keepdims=True), 1e-9)
+    k = int(np.argmin(np.sum((diffs / scale) ** 2, axis=0)))
+    return k, float(np.max(np.abs(diffs[:, k])))
+
+
+def potfile_reference(par: dict[str, Any], mag0: float) -> dict[str, float]:
+    """Best-fit potfile normalisation (``{"sigma", "rcut"}``) from the member at ``mag0``.
+
+    Lenstool scales every potfile member from the reference magnitude ``mag0`` (the input
+    ``.par`` file's potfile ``mag0``), so the best.par member with that magnitude carries
+    sigma* and rcut* themselves. Raises ``ValueError`` when no member has it."""
+    refs = {
+        (p["v_disp"], p["cut_radius"])
+        for p in par["potentials"]
+        if abs(p.get("mag", np.nan) - mag0) < 1e-4
+    }
+    if len(refs) != 1:
+        raise ValueError(f"{par['source']}: {len(refs)} distinct potfile members with mag {mag0}")
+    sigma, rcut = refs.pop()
+    return {"sigma": sigma, "rcut": rcut}
+
+
+def posterior_par(
+    par: dict[str, Any], bayes: Table, row: int, reference: int | dict[str, float]
+) -> dict[str, Any]:
+    """A copy of ``par`` (from :func:`parse_lenstool_par`) with the parameters of bayes ``row``.
+
+    * ``O<i>`` columns replace keywords of the i-th potential (best.par order). A replaced
+      radius drops its ``_kpc`` twin, so the two cannot disagree.
+    * ``Pot0 sigma`` / ``Pot0 rcut`` (the potfile scaling-relation normalisation) multiply
+      ``v_disp`` / ``cut_radius`` of every potential with a ``mag`` (a potfile member) by their
+      ratio to the best-fit values: ``reference`` is best.par's row (:func:`best_sample_index`)
+      or ``{"sigma", "rcut"}`` (:func:`potfile_reference`). The member scaling relations are
+      power laws in luminosity, so this ratio is exact.
+    * ``Redshift of <id>`` columns replace the fixed ``z_m_limit`` redshift of every family on
+      ``<id>``'s ``z_m_limit`` line (one line may list several ids, e.g. Bergamini+2023b's
+      A200.1a B200.2a C200.3a).
+
+    ``sha256`` gets a ``#<Nsample or row>`` suffix so caches keyed on it stay per sample.
+    """
+    pot, potfile, zcol = _bayes_columns(bayes)
+    _check_potential_indices(par, pot)
+    out = copy.deepcopy(par)
+    r = bayes[row]
+    sampled = set()
+    for name, (i, key) in pot.items():
+        p = out["potentials"][i]
+        p[key] = float(r[name])
+        sampled.add((i, key))
+        if key in ("core_radius", "cut_radius"):
+            p[f"{key}_kpc"] = float("nan")
+    for name, kind in potfile.items():
+        ref = reference[kind] if isinstance(reference, dict) else bayes[reference][name]
+        ratio = float(r[name]) / float(ref)
+        key = "v_disp" if kind == "sigma" else "cut_radius"
+        for i, p in enumerate(out["potentials"]):
+            # a member optimised on its own (an O<i> column for this key) is not rescaled
+            if np.isfinite(p.get("mag", np.nan)) and (i, key) not in sampled:
+                p[key] *= ratio
+                if key == "cut_radius":
+                    p["cut_radius_kpc"] = float("nan")
+    groups = par.get("z_m_limit_groups") or [[f] for f in par["z_m_limit"]]
+    for name, family in zcol.items():
+        group = next((g for g in groups if family in g), None)
+        if group is None:
+            raise UnsupportedModelError(f"bayes.dat column {name!r}: no z_m_limit for {family}")
+        for fam in group:
+            out["z_m_limit"][fam] = float(r[name])
+    tag = int(r["Nsample"]) if "Nsample" in bayes.colnames else row
+    out["sha256"] = f"{par['sha256']}#{tag}-{row}"
+    return out
