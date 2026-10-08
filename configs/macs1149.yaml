@@ -4,7 +4,10 @@
 # s_region contains the cluster position (177.3988, +22.3985). Other public NIRCam level-3 imaging over
 # the cluster: PEARLS 1176 o231_t011 (8 bands), 1199 o005_t001 (SN Refsdal, 5 bands), 2883, 5890, 6882.
 # DJA v7 has no MACS1149 mosaic (not in the v7 imaging index; no matched photometry or photo-z).
-# Stage parameters are the reference-sample values (configs/reference_sample.yaml), unchanged.
+# Stage parameters are the reference-sample values (configs/reference_sample.yaml). This sample has no
+# `matched_photometry` (no DJA mosaic), so a full `run` behaves differently from the reference fields: with
+# `require_multiband` every single-band detection is dropped, and the stellar locus and the D-025 red exemption are
+# skipped. Use this config for catalog fetches and the lens-model screens; its anomaly ranking is not comparable.
 # Field note: docs/fields/macs1149.md.
 name: macs1149_v1
 

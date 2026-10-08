@@ -1794,32 +1794,39 @@ D-034's rules now remove these automatically.
 - `bayes.dat` position spreads do not cover 34.1 / 700.1.
 - An independent model (UNCOVER v2.0, or the CATS v4.1 maps of D-035) predicts a bright image where none is seen.
 
-## D-037 MACS1149 screens: null; repeated-pair and model-fitted-redshift rule (2026-10-08)
+## D-037 MACS1149 screens: null; repeated-pair, fitted-redshift and model-dependent-μ rules (2026-10-08)
 
 **Decision.** The MACS1149 screens (`macs1149-cats`, CANUCS program 1208 `jw01208-o008_t004`) are a null result
-(docs/fields/macs1149.md). There were 3 forced-photometry flags; 1 is ordinary and 2 are untestable.
-Two new rules:
-- An extra predicted image is untestable (`model_topology`) when its system's catalogued images share one predicted
-  image (the `validate` `shared_match` list) and it lies within about 7″ of that pair. The same applies when the
-  system's redshift is model-fitted (`z_m_limit`, no spectroscopic z) and a redshift change within ±40 % moves the
-  image onto a catalogued one (ASSUMPTION: thresholds).
-- Where a forced-photometry background annulus crosses a BCG core, the flux goes negative. Use high-pass photometry
-  there (ASSUMPTION: 0.6″ median filter).
+(docs/fields/macs1149.md). There were 3 forced-photometry flags. Two are ordinary model errors: system 16 (fitted
+redshift / pair topology) and system 2 (topology). One is untestable: knot 1192 (model-dependent μ). New rules
+(ASSUMPTION: thresholds):
+- **Repeated pair.** An extra predicted image is untestable (`model_topology`) when its system's catalogued images
+  share one predicted image (`validate`'s `shared_match_images`) and the image lies within 8″ of that pair. MACS1149
+  system 16's flagged image is 7.2″ from 16.1 and 6.9″ from 16.2.
+- **Fitted redshift.** The same applies when the system's redshift is model-fitted (`z_m_limit`, or no spectroscopic
+  z in `arcs.txt`) and a redshift change within ±50 % moves the image onto a catalogued one. For system 16, CATS needs
+  z 4.419 → 2.5 (−43 %) and Sharon v4cor needs → 3.0 (−32 %).
+- **Model-dependent μ.** D-036's μ-stability rule is extended from flux-ratio flags to forced-photometry flags: a
+  `confused` or `absent` image whose μ differs by more than 2× between independent models is untestable.
+- **BCG annuli.** Where a forced-photometry background annulus crosses a BCG core, the flux goes negative. Use
+  high-pass photometry there (0.6″ median filter).
 
-**Alternatives rejected.** Treating MACS1149 system 16's third image as missing: the predicted image exists only at
-the CATS-fitted z = 4.419.
+**Alternatives rejected.** Treating system 16's third image as missing: the predicted image exists only at the
+CATS-fitted z = 4.419.
 
 **Evidence.**
 - `validate`: κ median relative difference 3.3e-3; μ(z=2) 5.6e-4; image-plane rms 0.673″ over 145 images (the D-035
-  gate passes). Frame offset < 0.02″, so no `_HFF_FRAME_OFFSET`.
+  gate passes). The frame offset is under 0.02″, so `MODELS["macs1149-cats"]` has no `frame_offset_arcsec`.
 - `images`: 159 predicted, 16 forced-tested (F277W). `fluxratio`: 19 consistent, 106 resolved, 0 under- or
-  overluminous. `radial`: 98 anti arcs, 32 peaks against a null mean of 30.8 (p95 41); p = 0.91.
-- System 16 (μ 15.8, empty sky at −0.4σ after high-pass): at z = 2.5 (CATS) or 3.0 (Sharon v4cor), both models move
-  the image onto 16.2, making 16.1 and 16.2 a merging pair. System 2: CATS merges 2.2 and 2.3; Sharon places the
-  critical curve between them. Knot 1192 (SN Refsdal host): 1.1″ from the BCG, and μ differs by >2× between models
-  (the D-036 rule applies).
-- Tally: 159 predicted, 145 flux-ratio images and 98 anti arcs screened; 3 flags; **0 surviving**.
+  overluminous. `radial`: 98 anti arcs; 32 peaks against a null mean of 30.8 (p95 41); p = 0.91.
+- System 16 (μ 15.8; empty sky at −0.4σ after high-pass): at z = 2.5 (CATS) or 3.0 (Sharon v4cor), both models move
+  the image onto 16.2, so 16.1 and 16.2 become a merging pair. The far image (μ ≈ 4, `recovered` at 0.95″ but 0σ at
+  the fixed position) moves 3–5.5″ between z = 2.5 and 3.0, so it is untestable too.
+- System 2: CATS merges 2.2 and 2.3; Sharon places the critical curve between them.
+- Knot 1192 (SN Refsdal host) is 1.1″ from the BCG. CATS gives μ 7.5; Sharon gives 2.2 at its image 0.56″ away.
+- Tally: 159 predicted images, 145 flux-ratio images and 98 anti arcs screened; 3 flags; **0 surviving**.
 
 **Revisit if.**
-- A spectroscopic z for system 16 is published (search the MUSE catalogues of Grillo+2016 and Treu+2016).
+- A spectroscopic z for system 16 is published (search the MUSE catalogues of Grillo+2016 and Treu+2016), or a source
+  with 16.1's colour is found on the far-image track (z = 2.5–3.5 positions). Either would fix z.
 - DJA publishes a MACS1149 mosaic and photo-z. v7 has none, so the radial screen here kept cluster members.
