@@ -163,3 +163,21 @@ def test_fit_checkpoint_drops_a_torn_last_line(tmp_path):
     p.write_text('{"event_id": "a", "x": NaN}\n{"event_id": "b"}\n{"event_id": "c", "x"')
     rows = w3.load_checkpoint(p)
     assert [r["event_id"] for r in rows] == ["a", "b"] and np.isnan(rows[0]["x"])
+
+
+@pytest.mark.parametrize(
+    "flag",
+    [
+        {"event_id": "A", "tests": [], "survives": True},
+        {"event_id": "B", "tests": [], "survives": False, "complete": False},
+    ],
+)
+def test_limit_refuses_a_zero_event_limit_unless_vetting_is_a_complete_null(
+    tmp_path, monkeypatch, flag
+):
+    import json
+
+    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps({"flags": [flag]}))
+    monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
+    with pytest.raises(SystemExit, match=flag["event_id"]):
+        w3.run_limit()
