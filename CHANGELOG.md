@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: MACS1149 screens: null (D-037)
+- Worktree worker on CANUCS 1208 (8 bands) with `macs1149-cats`. The image-plane rms is 0.673″ (gate passes) and
+  the frame offset is under 0.02″.
+- 3 flags, 0 surviving: system 16 (fitted z; at z 2.5–3 the image lands on 16.2), system 2 (CATS topology error,
+  checked against Sharon v4cor), Refsdal-host knot 1192 (next to the BCG; μ differs >2× between models).
+  `fluxratio` 0 flags; `radial` p = 0.91.
+- **Failed approach:** forced photometry with an annulus on a BCG core gives negative fluxes; use high-pass.
+- No DJA mosaic for MACS1149 (v7), so there are no photo-z.
+- Wall time: about 5 min of pipeline plus about 10 min of vetting.
+- **Handoff:** `macs1149-sharon` in `MODELS`; the repeated-pair rule in `forced_check`.
+
 ## 2026-10-08: Abell 2744 screens: null (D-036)
 - A worktree worker ran `validate`, `images --forced-image`, `fluxratio` and `radial` on Bergamini+2023b, with
   cutouts of every flag. 15 of 16 flags were ordinary. The survivor, 4.2c, was re-run under the D-034 rules: it

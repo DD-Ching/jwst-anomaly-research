@@ -1793,3 +1793,34 @@ D-034's rules now remove these automatically.
 **Revisit if.**
 - `bayes.dat` position spreads do not cover 34.1 / 700.1.
 - An independent model (UNCOVER v2.0, or the CATS v4.1 maps of D-035) predicts a bright image where none is seen.
+
+## D-037 MACS1149 screens: null; repeated-pair and model-fitted-redshift rule (2026-10-08)
+
+**Decision.** The MACS1149 screens (`macs1149-cats`, CANUCS program 1208 `jw01208-o008_t004`) are a null result
+(docs/fields/macs1149.md). There were 3 forced-photometry flags; 1 is ordinary and 2 are untestable.
+Two new rules:
+- An extra predicted image is untestable (`model_topology`) when its system's catalogued images share one predicted
+  image (the `validate` `shared_match` list) and it lies within about 7″ of that pair. The same applies when the
+  system's redshift is model-fitted (`z_m_limit`, no spectroscopic z) and a redshift change within ±40 % moves the
+  image onto a catalogued one (ASSUMPTION: thresholds).
+- Where a forced-photometry background annulus crosses a BCG core, the flux goes negative. Use high-pass photometry
+  there (ASSUMPTION: 0.6″ median filter).
+
+**Alternatives rejected.** Treating MACS1149 system 16's third image as missing: the predicted image exists only at
+the CATS-fitted z = 4.419.
+
+**Evidence.**
+- `validate`: κ median relative difference 3.3e-3; μ(z=2) 5.6e-4; image-plane rms 0.673″ over 145 images (the D-035
+  gate passes). Frame offset < 0.02″, so no `_HFF_FRAME_OFFSET`.
+- `images`: 159 predicted, 16 forced-tested (F277W). `fluxratio`: 19 consistent, 106 resolved, 0 under- or
+  overluminous. `radial`: 98 anti arcs, 32 peaks against a null mean of 30.8 (p95 41); p = 0.91.
+- System 16 (μ 15.8, empty sky at −0.4σ after high-pass): at z = 2.5 (CATS) or 3.0 (Sharon v4cor), both models move
+  the image onto 16.2, making 16.1 and 16.2 a merging pair. System 2: CATS merges 2.2 and 2.3; Sharon places the
+  critical curve between them. Knot 1192 (SN Refsdal host): 1.1″ from the BCG, and μ differs by >2× between models
+  (the D-036 rule applies).
+- Tally: 159 predicted, 145 flux-ratio images and 98 anti arcs screened; 3 flags; **0 surviving**.
+
+**Revisit if.**
+- A spectroscopic z for system 16 is published (search the MUSE catalogues of Grillo+2016 and Treu+2016).
+- DJA publishes a MACS1149 mosaic and photo-z. v7 has none, so the radial screen here kept cluster members.
+

@@ -523,6 +523,16 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   (x/y-arcsec-deflect, kappa, z02-magnif, arcs.txt, params.txt where present) are pinned by sha256 in
   `lensmodel.HFF_CATS`. The release readmes quote rms 0.72″, 0.63″, n/a, 2.41″, 0.48″ and n/a.
 
+### MACS1149 field run (accessed 2026-10-08; D-037)
+
+- JWST CANUCS program 1208, NIRCam level 3 `jw01208-o008_t004_nircam_clear-*`, 8 bands (F090W–F444W), jwst 3.0.0,
+  S3 `s3://stpubdata/jwst/public/jw01208/L3/t/o008/`. Manifests: `data/manifests/macs1149*.ecsv`.
+- HFF Sharon v4cor MACS1149 deflection maps (second model for the comparison only; not in `MODELS`):
+  `https://archive.stsci.edu/pub/hlsp/frontier/macs1149/models/sharon/v4cor/hlsp_frontier_model_macs1149_sharon_v4cor_{x,y}-arcsec-deflect.fits`,
+  64,008,000 B each. sha256: x `44f1d21a78cead051c08295d13d7c9189638971cf1e9445bb2caa641a129324f`,
+  y `54508deb502d9bcafca9733c3b28f3b4d794b64f11167589b56c1fc37d66a15c`.
+- DJA v7 imaging index (dawn-cph GitHub Pages `/dja/imaging/v7/`): no MACS1149 mosaic.
+
 ## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
 
 - arXiv:1009.6084 Abe, "Gravitational Microlensing by the Ellis Wormhole".
