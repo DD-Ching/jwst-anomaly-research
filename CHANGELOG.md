@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Map-based lens models; Sunrise radial screen null (D-033)
+- `lensmodel.MapLensModel` evaluates published deflection maps. The first one is `whl0137-relics-lenstool`, which
+  reproduces RELICS κ to 3.5e-5 and μ(z = 6.2) to 2.0e-5 (medians).
+- Sunrise `exotic_screens radial`: 29 usable anti arcs, 3 centres against a null mean of 2.2, max 3 lines, p 0.885.
+  **No candidate.** Wall time 17 s, with cached maps and catalogs.
+- Cycle tally:
+  - SMACS + Sunrise screened: 60 + 0 images, 34 + 29 arcs;
+  - flags: SMACS fluxratio 2 (removed by the two-band compactness rule), radial 0 significant;
+  - surviving vetting: 0.
+- **Handoff:** more map fields (HFF: Abell 2744, MACS0416, MACS1149, Abell 370; RELICS clusters), El Gordo and
+  Abell 2744 `images --forced-image` and screens.
+
 ## 2026-10-08: Flux-ratio and colour test of catalogued images: no anomaly in SMACS or El Gordo (D-032)
 - New: `lens_consistency.py fluxratios`.
   - It compares each image's DJA `mag_auto` + 2.5 log|μ| and its F150W−F444W colour with the other images of its

@@ -496,3 +496,45 @@ def test_find_images_matches_the_unfiltered_solver(beta):
     assert len(imgs) == len(ref)
     got = sorted(zip(imgs["x"], imgs["y"], strict=True))
     np.testing.assert_allclose(got, sorted(ref), atol=1e-9)
+
+
+def test_map_lens_model_reproduces_the_analytic_model():
+    from astropy.wcs import WCS
+
+    model = LensModel(
+        [_dpie(x=0.0, y=0.0, ellipticity=0.3, angle_pos=20.0, r_core=1.0, r_cut=300.0)],
+        RA0,
+        DEC0,
+        COSMO,
+    )
+    n, pix = 801, 0.1  # 80" maps, north-up, east-left
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = [RA0, DEC0]
+    w.wcs.crpix = [(n + 1) / 2, (n + 1) / 2]
+    w.wcs.cdelt = [-pix / 3600, pix / 3600]
+    jj, ii = np.mgrid[0:n, 0:n]
+    x, y = model.to_frame(*w.pixel_to_world_values(ii, jj))  # each pixel's true sky position
+    ax, ay = model.deflection_xy(x, y)  # +x = West along +i, as the class documents
+    mm = lensmodel.MapLensModel(ax, ay, w, model.z_lens, COSMO, source="synthetic maps")
+    assert abs(mm.ra0 - RA0) < 1e-9 and abs(mm.dec0 - DEC0) < 1e-9
+    px, py = np.array([5.3, -12.1, 20.7]), np.array([-7.4, 3.3, 15.2])
+    fa, fm = model.fields_xy(px, py), mm.fields_xy(px, py)
+    for k in ("alpha_x", "alpha_y"):
+        np.testing.assert_allclose(fm[k], fa[k], atol=2e-3)
+    for k in ("psi_xx", "psi_xy", "psi_yy"):
+        np.testing.assert_allclose(fm[k], fa[k], atol=5e-3)
+    assert np.isnan(mm.fields_xy(100.0, 0.0)["alpha_x"])  # off the maps
+    grid = lensmodel.DeflectionGrid.compute(mm, half_width=35.0, step=0.25)
+    got = lensmodel.find_images(mm, grid, 0.6, -0.3, 2.0)
+    ref = lensmodel.find_images(
+        model, lensmodel.DeflectionGrid.compute(model, 35.0, 0.25), 0.6, -0.3, 2.0
+    )
+    bright_g = got[np.abs(got["magnification"]) > 0.5]
+    bright_r = ref[np.abs(ref["magnification"]) > 0.5]
+    assert len(bright_g) == len(bright_r) >= 2
+    np.testing.assert_allclose(
+        sorted(zip(bright_g["x"], bright_g["y"], strict=True)),
+        sorted(zip(bright_r["x"], bright_r["y"], strict=True)),
+        atol=0.01,
+    )

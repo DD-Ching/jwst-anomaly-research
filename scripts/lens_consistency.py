@@ -119,18 +119,58 @@ MODELS = {
     },
     "elgordo-caminha23": {"files": lensmodel.ELGORDO_CAMINHA23, "sigpos": 0.621},
     "abell2744-bergamini23": {"files": lensmodel.ABELL2744_BERGAMINI23, "sigpos": "arcs"},
+    # map models: published deflection maps (D_LS/D_S = 1), no Lenstool par or image list
+    "whl0137-relics-lenstool": {
+        "files": lensmodel.WHL0137_RELICS_LENSTOOL,
+        "kind": "maps",
+        "z_lens": 0.566,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {6.2: "mag_z6.2"},
+    },
 }
+
+
+def is_map_model(name: str) -> bool:
+    return MODELS[name].get("kind") == "maps"
+
+
+def load_model(name: str):
+    """``(model, files, par)`` for ``MODELS[name]``; ``par`` is None for a map model."""
+    from astropy.cosmology import FlatLambdaCDM
+
+    if is_map_model(name):
+        spec = MODELS[name]
+        files = model_files(name, ("alpha_x", "alpha_y"))  # the check maps only for validate
+        h0, om = spec["cosmology"]
+        model = lensmodel.MapLensModel.from_fits(
+            files["alpha_x"],
+            files["alpha_y"],
+            spec["z_lens"],
+            FlatLambdaCDM(H0=h0, Om0=om),
+            source=name,
+            centre=spec.get("centre"),
+        )
+        return model, files, None
+    files = model_files(name)
+    par = lensmodel.parse_lenstool_par(files["best.par"])
+    return lensmodel.LensModel.from_par(par), files, par
+
+
 Z_GRID = (1.0, 2.0, 4.0)
 
 
-def model_files(name: str) -> dict[str, Path]:
+def model_files(name: str, keys=None) -> dict[str, Path]:
     """Download (once) and verify the pinned files of model ``name``; extract its kappa map.
 
     The map member is copied out of the (sha256-verified) archive into a temporary file, checked
     against the member's size, and renamed into place, so an interrupted run leaves no partial map.
     """
     spec = MODELS[name]
-    files = {key: fetch_catalog(url, sha) for key, (url, sha) in spec["files"].items()}
+    files = {
+        key: fetch_catalog(url, sha)
+        for key, (url, sha) in spec["files"].items()
+        if keys is None or key in keys
+    }
     if "kappa_member" not in spec:
         return files
     archive = files.pop("kappa_0000")
@@ -417,7 +457,61 @@ def _write(table: Table, path: Path) -> None:
     table.write(path, overwrite=True)
 
 
+def map_check(model, map_path: Path, quantity: str, z_s: float | None, step: int = 37) -> dict:
+    """Model against a published κ (D_LS/D_S = 1) or |μ| map (at ``z_s``) on a pixel sub-grid.
+
+    Only map pixels with 0.05 < κ < 2, or |μ| < 10, are compared (critical curves excluded)."""
+    with fits.open(map_path, memmap=True) as hdul:
+        data = hdul[0].data
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", FITSFixedWarning)
+            wcs = WCS(hdul[0].header)
+        jj, ii = np.mgrid[step // 2 : data.shape[0] : step, step // 2 : data.shape[1] : step]
+        pub = np.asarray(data[jj, ii], float)
+    ra, dec = wcs.pixel_to_world_values(ii, jj)
+    if quantity == "kappa":
+        val = model.kappa_xy(*model.to_frame(ra, dec))
+        sel = (pub > 0.05) & (pub < 2)
+    else:
+        val = np.abs(np.asarray(model.evaluate(ra.ravel(), dec.ravel(), z_s)["magnification"]))
+        val, pub = val.reshape(ra.shape), np.abs(pub)
+        sel = (pub > 0) & (pub < 10)
+    ok = sel & np.isfinite(val) & np.isfinite(pub)
+    if not ok.any():
+        raise SystemExit(f"error: {map_path}: no comparable pixel")
+    rel = np.abs(val[ok] - pub[ok]) / pub[ok]
+    return {
+        "map": str(map_path),
+        "quantity": quantity,
+        "z_s": z_s,
+        "n_points": int(ok.sum()),
+        "median_rel_diff": float(np.median(rel)),
+        "p95_rel_diff": float(np.percentile(rel, 95)),
+        "median_ratio": float(np.median(val[ok] / pub[ok])),
+    }
+
+
+def cmd_validate_maps(args) -> dict:
+    """Map model: κ and magnification against the published maps (no image list)."""
+    model, _, _ = load_model(args.model)
+    files = model_files(args.model)
+    step = args.map_step
+    summary = {
+        "model": args.model,
+        "model_sha256": model.sha256,
+        "kappa_map": map_check(model, files["kappa_map"], "kappa", None, step),
+    }
+    for z_s, key in MODELS[args.model].get("mag_maps", {}).items():
+        summary[f"magnification_z{z_s:g}"] = map_check(model, files[key], "mu", z_s, step)
+    out = args.out / args.model
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "validate.json").write_text(json.dumps(summary, indent=1))
+    return summary
+
+
 def cmd_validate(args) -> dict:
+    if is_map_model(args.model):
+        return cmd_validate_maps(args)
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
@@ -477,9 +571,7 @@ def convention_check(model, par, images, shapes, match_arcsec: float) -> dict:
 
 
 def cmd_arcs(args) -> dict:
-    files = model_files(args.model)
-    par = lensmodel.parse_lenstool_par(files["best.par"])
-    model = lensmodel.LensModel.from_par(par)
+    model, files, par = load_model(args.model)
     shapes = load_shapes(args.catalog)
     if args.photoz:
         attach_photoz(shapes, args.photoz)
@@ -508,7 +600,7 @@ def cmd_arcs(args) -> dict:
         pop = np.full(len(table), "unknown")
     table["population"] = pop
 
-    images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    images = lensmodel.load_lenstool_images(files["arcs.dat"]) if par is not None else None
     test = table[table["strong_shear"]]
     by_pop = {
         p: class_stats(test[test["population"] == p], args.aligned_deg)
@@ -529,7 +621,11 @@ def cmd_arcs(args) -> dict:
         "catalog": str(args.catalog),
         "photoz": str(args.photoz) if args.photoz else None,
         "assumptions": {k: getattr(args, k) for k in keys},
-        "multiple_images": convention_check(model, par, images, shapes, args.image_match_arcsec),
+        "multiple_images": (
+            convention_check(model, par, images, shapes, args.image_match_arcsec)
+            if par is not None
+            else None  # map model: no multiple-image list
+        ),
         "selected": len(table),
         "strong_shear_background": by_pop["background"],
         "strong_shear_by_population": by_pop,
@@ -843,9 +939,9 @@ def image_stamper(uri: str, half_arcsec: float = 1.5):
 
 
 def cmd_images(args) -> dict:
-    files = model_files(args.model)
-    par = lensmodel.parse_lenstool_par(files["best.par"])
-    model = lensmodel.LensModel.from_par(par)
+    if is_map_model(args.model):
+        raise SystemExit(f"error: {args.model} is a map model without a multiple-image list")
+    model, files, par = load_model(args.model)
     grid = lensmodel.DeflectionGrid.cached(
         model, grid_cache_path(model, args.half_width, args.step), args.half_width, args.step
     )
@@ -1207,6 +1303,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     v = sub.add_parser("validate", help="compare with the published kappa map and multiple images")
     v.add_argument("--step", type=int, default=5, help="kappa-map sub-grid step in pixels")
+    v.add_argument("--map-step", type=int, default=37, help="map-model check sub-grid step, px")
     v.add_argument("--grid-step", type=float, default=0.25, help="solver grid step, arcsec")
     a = sub.add_parser("arcs", help="observed source orientation against the predicted shear")
     a.add_argument("--catalog", type=Path, required=True, help="JWST pipeline _cat.ecsv")
