@@ -318,3 +318,71 @@ def test_cluster_model_files_load(name, n_images, n_families, chi2):
     z = lc.lensmodel.image_redshifts(images, par["z_m_limit"])
     assert np.all(np.isfinite(z))  # every image has a catalogued or fixed redshift
     assert len(model.components) == len(par["potentials"])
+
+
+def _flux_inputs(offsets_mag=(0.0, 0.0, 0.0), npix=(500, 500, 500), z_lo=(1.0, 1.0, 1.0)):
+    model = _model()
+    ra = RA0 + np.array([50.0, -20.0, 0.0]) / 3600 / np.cos(np.deg2rad(DEC0))
+    dec = DEC0 + np.array([0.0, 0.0, 60.0]) / 3600
+    images = Table(
+        {
+            "image_id": ["1.1", "1.2", "1.3"],
+            "system": ["1", "1", "1"],
+            "ra": ra,
+            "dec": dec,
+            "a": [0.5] * 3,
+            "z": [2.0] * 3,
+        }
+    )
+    mu = np.asarray(model.evaluate(ra, dec, 2.0)["magnification"], float)
+    mag = 25.0 - 2.5 * np.log10(np.abs(mu)) + np.asarray(offsets_mag)
+    flux = 10 ** (-0.4 * (mag - 23.9))
+    phot = Table(
+        {
+            "dja_id": [11, 12, 13],
+            "ra": ra,
+            "dec": dec + 0.1 / 3600,
+            "mag_auto": mag,
+            "magerr_auto": [0.02] * 3,
+            "npix": list(npix),
+            "f150w_flux": flux,
+            "f150w_err": flux / 50,
+            "f444w_flux": flux * 2,
+            "f444w_err": flux / 50,
+            "z_phot": [2.0] * 3,
+            "z025": list(z_lo),
+            "z975": [3.0] * 3,
+        }
+    )
+    return model, images, phot, mu
+
+
+def test_flux_ratio_table_consistent_and_injected_outlier():
+    model, images, phot, mu = _flux_inputs()
+    assert np.all(np.abs(mu) < 20)
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    np.testing.assert_allclose(t["resid_mag"], 0.0, atol=1e-6)
+    assert list(t["flux_class"]) == ["consistent"] * 3
+    assert list(t["colour_class"]) == ["consistent"] * 3
+    assert t.meta["provenance"] == "derived"
+    # A 1.5 mag deficit in one image: flagged against the median of the other two.
+    model, images, phot, _ = _flux_inputs(offsets_mag=(1.5, 0.0, 0.0))
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert list(t["flux_class"]) == ["flux_outlier", "consistent", "consistent"]
+    assert t["resid_mag"][0] == pytest.approx(1.5)
+    assert list(t["colour_class"]) == ["consistent"] * 3  # achromatic: colours still agree
+
+
+def test_flux_ratio_table_drops_large_segments_and_photoz_interlopers():
+    model, images, phot, _ = _flux_inputs(npix=(50000, 500, 500))
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert list(t["large_segment"]) == [True, False, False]
+    assert t["flux_class"][0] == "untested" and t["flux_class"][1] == "consistent"
+    # z025 = 3.5 excludes z = 2 even with the 0.15 (1 + z) margin; z025 = 2.4 does not.
+    model, images, phot, _ = _flux_inputs(z_lo=(3.5, 2.4, 1.0))
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert list(t["photoz_excluded"]) == [True, False, False]
+    assert list(t["flux_class"]) == ["untested", "consistent", "consistent"]
+    # Unmatched images (beyond match_arcsec) are untested.
+    t = lc.flux_ratio_table(model, images, {}, phot, match_arcsec=0.05)
+    assert set(t["flux_class"]) == {"untested"} and set(t["dja_id"]) == {-1}

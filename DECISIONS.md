@@ -1492,3 +1492,51 @@ pair. Not a candidate.
 **Revisit if.**
 - Caminha+2023's σ is found stated otherwise (paper or Lenstool input file).
 - A model needs multi-plane lensing or a non-dPIE profile (refused today).
+
+## D-031 Flux-ratio and colour test of catalogued multiple images on DJA photometry; SMACS and El Gordo null (2026-10-08)
+
+**Decision.**
+- `lens_consistency.py fluxratios` matches every `arcs.dat` image to DJA `fix_phot` (default 0.3″) and computes
+  the implied source magnitude `mag_auto + 2.5 log10 |μ|` (μ at the catalogued position and system z). The
+  residual of an image is that value minus its system's median. A colour residual uses the 0.5″ aperture
+  F150W−F444W colour, without μ. ASSUMPTIONs: `flux_outlier` |residual| > 0.75 mag, `colour_outlier` > 0.3 mag,
+  S/N ≥ 10, |μ| ≤ 20 for the flux test.
+- An image is untested when its DJA segment exceeds 20,000 px (it swallows host or ICL light), when one DJA source
+  matches several images, or when the counterpart's 95 % photo-z interval, widened by 0.15 (1 + z), excludes the
+  system redshift (`--photoz`, DJA eazy zout).
+- Parity (the sign of μ) is reported, not tested.
+
+**Alternatives rejected.**
+- DJA `<band>_flux_aper_k × <band>_tot_corr` as a total flux: in v7 `<band>_tot_corr` is 1, and `tot_corr` is a
+  point-source correction capped at 1.21. For extended arcs the aperture flux tracks surface brightness, which
+  lensing conserves, so it cannot test μ. Only the detection-image Kron `mag_auto` is a total.
+- No segment-size cut: SMACS 1.1 (an arc on a cluster galaxy's halo, segment 32,864 px) then looked 1.4 mag too
+  bright. Visual check: the excess is host light.
+- No photo-z gate: El Gordo 9a's counterpart has z_phot 0.89 (95 %: 0.73–0.99), a cluster-redshift object, for
+  a z = 4.32 system, and it made 9a/9c a 1.2 mag colour pair. The 9c counterpart has z_phot 3.62.
+- The bare 95 % eazy interval: it is too narrow, and it excluded plausible images (SMACS 3.3: 1.83–1.86 against
+  z = 1.99; El Gordo 5a: 3.70–4.09 against 3.54).
+
+**Evidence** (`derived`; DJA v7.4 SMACS and v7.0 El Gordo, sha256 in SOURCES.md):
+
+| Field (match) | Matched | Flux tested (systems) | Flux rms / max | Colour tested | Colour rms / max | Outliers |
+|---|---|---|---|---|---|---|
+| SMACS (0.3″) | 22 / 60 | 8 (4) | 0.30 / 0.57 mag | 9 | 0.05 / 0.11 mag | 0 |
+| SMACS (0.5″) | 26 / 60 | 11 | 0.26 mag | 12 | 0.08 mag | 0 |
+| El Gordo (0.5″) | 41 / 56 | 23 (11) | 0.32 / 0.71 mag | 11 | 0.05 / 0.14 mag | 0 |
+
+El Gordo uses 0.5″ because DJA v7.0 sits 0.22″ off the image list's frame. Photo-z excluded SMACS 8.1/8.2
+(model z = 11.76 against z_phot 6.6, as D-029 found) and 11.2, and El Gordo 9a, 23c and 21b.
+**No flux-ratio or colour anomaly in either field.**
+
+**Limits.**
+- Most images are untested: DJA has no segment for arcs inside cluster-galaxy or ICL light (SMACS: 38 of 60
+  images have no DJA source within 0.3″), and SMACS systems 7, 11, 16 and 26 have |μ| > 20.
+- In a two-image system each residual is half the pair difference, so 0.75 mag flags only pairs that differ by
+  more than 1.5 mag.
+- μ comes from the best-fit model only; no `bayes.dat` uncertainty yet.
+
+**Revisit if.**
+- A photometry with totals for arcs near cluster galaxies (BCG/ICL-subtracted, e.g. the DJA tarball's
+  `_phot_apcorr.fits`, not yet inspected) becomes available.
+- `bayes.dat` μ uncertainties are added (then use a χ² instead of a fixed threshold).

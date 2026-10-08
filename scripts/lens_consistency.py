@@ -58,6 +58,27 @@ Two subcommands, both writing to ``outputs/lens_consistency/<model>/`` (ECSV plu
     ``no_reference`` and ``off_image`` (< 80 % valid pixels). Offsets are West/North arcsec.
     ERR is scaled by 1.5 (D-027 amendment).
 
+``fluxratios``
+    Compares each catalogued system's image fluxes and colours with the model (lensing is
+    achromatic and scales flux by |μ|). Each ``arcs.dat`` image is matched to the nearest DJA
+    ``fix_phot`` source within ``--match-arcsec``. The flux is the detection-image Kron total
+    ``mag_auto``: DJA aperture fluxes are not totals for extended arcs (``<band>_tot_corr`` is 1
+    and ``tot_corr`` a point-source correction). The implied source magnitude is
+    ``s = mag_auto + 2.5 log10 |μ|``, with μ at the catalogued position and system redshift;
+    an image's residual is ``s`` minus the median ``s`` of its system's usable images (two or
+    more needed), and ``flux_outlier`` means |residual| > ``--outlier-mag``. The colour test
+    does the same with the ``--colour`` aperture colour (``colour_outlier`` above
+    ``--colour-tol``; it does not use μ). Images are unusable when unmatched, at S/N <
+    ``--min-snr``, when one DJA source matches several catalogued images, or when the DJA
+    segment exceeds ``--max-npix`` pixels (it swallows host or ICL light; SMACS 1.1), or, with
+    ``--photoz``, when the counterpart's 95 % photo-z interval, widened by ``--z-margin`` ×
+    (1 + z) because eazy intervals are too narrow (SMACS 3.3: 1.83–1.86 at z = 1.99), excludes the
+    system redshift (another object at the position; El Gordo 9a). The flux
+    test also drops |μ| > ``--max-abs-mu`` (near the critical curves the model's μ is
+    unreliable). Ordinary explanations of an outlier: blending, segmentation, microlensing,
+    substructure the model omits, time delay with variability. The model parity (sign of μ) is
+    reported but not tested.
+
 Every threshold here is an ASSUMPTION. Inputs: the pinned model files (downloaded and verified by
 sha256, ``SMACS0723_MAHLER22_ICLV2``), a level-3 ``_cat.ecsv`` and optionally a ``zout`` file.
 """
@@ -919,6 +940,233 @@ def cmd_images(args) -> dict:
     return summary
 
 
+def load_dja_photometry(
+    path: Path, bands: list[str], aperture: int = 1, zout: Path | None = None
+) -> Table:
+    """DJA ``fix_phot``: detection-image Kron total (``mag_auto``) and per-band aperture fluxes.
+
+    ``<band>_tot_corr`` is 1 and ``tot_corr`` a point-source correction capped near 1.2 in
+    DJA v7, so aperture fluxes are not totals for extended images. Only ``mag_auto`` is.
+    """
+    t = Table.read(path)
+    out = Table(
+        {
+            "dja_id": np.asarray(t["id"]),
+            "ra": np.asarray(t["ra"], float),
+            "dec": np.asarray(t["dec"], float),
+            "mag_auto": np.asarray(t["mag_auto"], float),
+            "magerr_auto": np.asarray(t["magerr_auto"], float),
+            "npix": np.asarray(t["npix"], int),
+        }
+    )
+    for b in bands:
+        out[f"{b}_flux"] = np.asarray(t[f"{b}_flux_aper_{aperture}"], float)
+        out[f"{b}_err"] = np.asarray(t[f"{b}_fluxerr_aper_{aperture}"], float)
+    if zout is not None:
+        z = Table.read(zout)
+        if len(z) != len(t) or not np.array_equal(np.asarray(z["id"]), out["dja_id"]):
+            raise SystemExit(f"error: {zout} rows do not match {path} ids")
+        for c in ("z_phot", "z025", "z975"):
+            v = np.asarray(z[c], float)
+            out[c] = np.where(v > 0, v, np.nan)
+        out.meta["photoz_source"] = str(zout)
+    out.meta.update(source=str(path), aperture=aperture)
+    return out
+
+
+def _system_residual(values: np.ndarray, use: np.ndarray, systems: np.ndarray) -> np.ndarray:
+    """``values`` minus the median over the usable images of each system (NaN if < 2 usable)."""
+    resid = np.full(len(values), np.nan)
+    for sys_id in dict.fromkeys(systems):
+        m = (systems == sys_id) & use
+        if m.sum() >= 2:
+            resid[m] = values[m] - np.median(values[m])
+    return resid
+
+
+def flux_ratio_table(
+    model,
+    images: Table,
+    z_m_limit: dict[str, float],
+    phot: Table,
+    colour: tuple[str, str] = ("f150w", "f444w"),
+    match_arcsec: float = 0.3,
+    min_snr: float = 10.0,
+    max_abs_mu: float = 20.0,
+    outlier_mag: float = 0.75,
+    colour_tol: float = 0.3,
+    max_npix: int = 20000,
+    z_margin: float = 0.15,
+) -> Table:
+    """Per-image source-magnitude and colour residuals against the system median."""
+    z = lensmodel.image_redshifts(images, z_m_limit)
+    ok_z = np.isfinite(z)
+    mu = np.full(len(images), np.nan)
+    if ok_z.any():
+        pred = model.evaluate(images["ra"][ok_z], images["dec"][ok_z], z[ok_z])
+        mu[ok_z] = np.asarray(pred["magnification"], float)
+    ci = SkyCoord(images["ra"], images["dec"], unit="deg")
+    cp = SkyCoord(phot["ra"], phot["dec"], unit="deg")
+    idx, sep, _ = ci.match_to_catalog_sky(cp)
+    matched = sep.arcsec <= match_arcsec
+    ids = np.where(matched, np.asarray(phot["dja_id"])[idx], -1)
+    uniq, counts = np.unique(ids[matched], return_counts=True)
+    blended = matched & np.isin(ids, uniq[counts > 1])
+    npix = np.where(matched, np.asarray(phot["npix"])[idx], -1)
+    large = npix > max_npix  # segment swallowing host or ICL light (SMACS 1.1)
+    # A counterpart whose 95 % photo-z interval excludes the system redshift is another object
+    # (El Gordo 9a: z_phot 0.89 for a z = 4.32 system). Missing photo-z excludes nothing.
+    pz_excl = np.zeros(len(images), bool)
+    if "z025" in phot.colnames:
+        lo = np.where(matched, np.asarray(phot["z025"], float)[idx], np.nan)
+        hi = np.where(matched, np.asarray(phot["z975"], float)[idx], np.nan)
+        with np.errstate(invalid="ignore"):
+            dz = z_margin * (1.0 + z)
+            pz_excl = (z < lo - dz) | (z > hi + dz)
+    bad = blended | large | pz_excl
+
+    def col(name: str) -> np.ndarray:
+        return np.where(matched, np.asarray(phot[name], float)[idx], np.nan)
+
+    mag, magerr = col("mag_auto"), col("magerr_auto")
+    with np.errstate(divide="ignore", invalid="ignore"):
+        src = mag + 2.5 * np.log10(np.abs(mu))
+        snrs = [col(f"{b}_flux") / col(f"{b}_err") for b in colour]
+        c_obs = -2.5 * np.log10(col(f"{colour[0]}_flux") / col(f"{colour[1]}_flux"))
+    c_err = 1.0857 * np.hypot(1.0 / snrs[0], 1.0 / snrs[1])
+    systems = np.asarray(images["system"]).astype(str)
+    base = matched & ~bad & np.isfinite(mu) & (np.abs(mu) <= max_abs_mu)
+    use_m = base & np.isfinite(src) & (1.0857 / magerr >= min_snr)
+    use_c = matched & ~bad & np.isfinite(c_obs)
+    use_c &= (snrs[0] >= min_snr) & (snrs[1] >= min_snr)
+    resid = _system_residual(src, use_m, systems)
+    c_resid = _system_residual(c_obs, use_c, systems)
+    cname = f"{colour[0]}_{colour[1]}"
+    out = Table(
+        {
+            "image_id": images["image_id"],
+            "system": images["system"],
+            "ra": images["ra"],
+            "dec": images["dec"],
+            "z_used": z,
+            "magnification": mu,
+            "parity": np.sign(mu),
+            "dja_id": ids,
+            "sep_arcsec": sep.arcsec,
+            "npix": npix,
+            "blended": blended,
+            "large_segment": large,
+            "photoz_excluded": pz_excl,
+            "mag_auto": mag,
+            "source_mag": src,
+            "resid_mag": resid,
+            "resid_err": np.where(np.isfinite(resid), magerr, np.nan),
+            f"colour_{cname}": c_obs,
+            "colour_resid": c_resid,
+            "colour_err": np.where(np.isfinite(c_resid), c_err, np.nan),
+        }
+    )
+    cls = np.full(len(images), "untested", dtype="U16")
+    cls[np.isfinite(resid)] = "consistent"
+    cls[np.isfinite(resid) & (np.abs(resid) > outlier_mag)] = "flux_outlier"
+    out["flux_class"] = cls
+    ccls = np.full(len(images), "untested", dtype="U16")
+    ccls[np.isfinite(c_resid)] = "consistent"
+    ccls[np.isfinite(c_resid) & (np.abs(c_resid) > colour_tol)] = "colour_outlier"
+    out["colour_class"] = ccls
+    out.meta.update(model._meta())
+    out.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source=f"{images.meta.get('source', 'arcs.dat')} and {phot.meta.get('source')}"
+        f" against {model.source}",
+        thresholds={
+            "match_arcsec": match_arcsec,
+            "min_snr": min_snr,
+            "max_abs_mu": max_abs_mu,
+            "outlier_mag": outlier_mag,
+            "colour_tol": colour_tol,
+            "colour": list(colour),
+            "max_npix": max_npix,
+            "z_margin": z_margin,
+            "photoz": "z025-z975" if "z025" in phot.colnames else None,
+        },
+    )
+    return out
+
+
+def _resid_stats(r: np.ndarray) -> dict:
+    r = r[np.isfinite(r)]
+    if not r.size:
+        return {"n_images": 0}
+    return {
+        "n_images": int(r.size),
+        "median_abs": round(float(np.median(np.abs(r))), 3),
+        "rms": round(float(np.sqrt(np.mean(r**2))), 3),
+    }
+
+
+def cmd_fluxratios(args) -> dict:
+    files = model_files(args.model)
+    par = lensmodel.parse_lenstool_par(files["best.par"])
+    model = lensmodel.LensModel.from_par(par)
+    images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    colour = tuple(b.strip().lower() for b in args.colour.split(","))
+    if len(colour) != 2:
+        raise SystemExit("--colour takes two bands, e.g. f150w,f444w")
+    phot = load_dja_photometry(args.photometry, list(colour), args.aperture, args.photoz)
+    table = flux_ratio_table(
+        model,
+        images,
+        par["z_m_limit"],
+        phot,
+        colour,
+        args.match_arcsec,
+        args.min_snr,
+        args.max_abs_mu,
+        args.outlier_mag,
+        args.colour_tol,
+        args.max_npix,
+        args.z_margin,
+    )
+    out = args.out / args.model
+    _write(table, out / "flux_ratios.ecsv")
+    summary = {
+        "model": args.model,
+        "photometry": str(args.photometry),
+        "thresholds": table.meta["thresholds"],
+        "n_images": len(table),
+        "n_matched": int(np.sum(table["dja_id"] >= 0)),
+        "n_blended": int(np.sum(table["blended"])),
+        "n_large_segment": int(np.sum(table["large_segment"])),
+        "n_photoz_excluded": int(np.sum(table["photoz_excluded"])),
+        "flux_classes": {
+            c: int(np.sum(table["flux_class"] == c))
+            for c in ("consistent", "flux_outlier", "untested")
+        },
+        "colour_classes": {
+            c: int(np.sum(table["colour_class"] == c))
+            for c in ("consistent", "colour_outlier", "untested")
+        },
+        "flux_resid_mag": _resid_stats(np.asarray(table["resid_mag"], float)),
+        "colour_resid_mag": _resid_stats(np.asarray(table["colour_resid"], float)),
+        "flagged": [
+            {
+                "image_id": str(r["image_id"]),
+                "flux_class": str(r["flux_class"]),
+                "colour_class": str(r["colour_class"]),
+                "mu": round(float(r["magnification"]), 2),
+                "resid_mag": round(float(r["resid_mag"]), 2),
+                "colour_resid": round(float(r["colour_resid"]), 2),
+                "npix": int(r["npix"]),
+            }
+            for r in table
+            if r["flux_class"] == "flux_outlier" or r["colour_class"] == "colour_outlier"
+        ],
+    }
+    (out / "fluxratios.json").write_text(json.dumps(summary, indent=1))
+    return summary
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--model", choices=sorted(MODELS), default="smacs0723-iclv2")
@@ -950,8 +1198,25 @@ def main(argv: list[str] | None = None) -> int:
         "--forced-image", help="_i2d URI or path for forced photometry (S3 by byte range)"
     )
     i.add_argument("--forced-search-arcsec", type=float, default=1.0)
+    f = sub.add_parser("fluxratios", help="image flux ratios against model magnification ratios")
+    f.add_argument("--photometry", type=Path, required=True, help="DJA fix_phot FITS table")
+    f.add_argument("--colour", default="f150w,f444w", help="two bands for the colour test")
+    f.add_argument("--aperture", type=int, default=1, help="DJA aperture index (1 = 0.5 arcsec)")
+    f.add_argument("--match-arcsec", type=float, default=0.3)
+    f.add_argument("--min-snr", type=float, default=10.0)
+    f.add_argument("--max-abs-mu", type=float, default=20.0)
+    f.add_argument("--outlier-mag", type=float, default=0.75)
+    f.add_argument("--colour-tol", type=float, default=0.3)
+    f.add_argument("--max-npix", type=int, default=20000, help="larger DJA segments are blends")
+    f.add_argument("--photoz", type=Path, help="DJA eazy zout matching --photometry row by row")
+    f.add_argument("--z-margin", type=float, default=0.15, help="photo-z margin, x (1 + z)")
     args = ap.parse_args(argv)
-    summary = {"validate": cmd_validate, "arcs": cmd_arcs, "images": cmd_images}[args.cmd](args)
+    summary = {
+        "validate": cmd_validate,
+        "arcs": cmd_arcs,
+        "images": cmd_images,
+        "fluxratios": cmd_fluxratios,
+    }[args.cmd](args)
     json.dump(summary, sys.stdout, indent=1)
     print()
     return 0
