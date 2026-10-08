@@ -899,3 +899,5 @@ Cite Mróz et al. as their pages ask; data are pinned in `src/jwst_anomaly/ogle.
   already applied to the published photometry.
 - Vetting catalogues via CDS XMatch (astroquery 0.4.11): AAVSO VSX `B/vsx/vsx`; Gaia DR3 variability
   classification `I/358/vclassre`. Literature: arXiv API `all:"<event name>"` (export.arxiv.org).
+- Hubble Source Catalog v3 (Whitmore et al. 2016, AJ 151, 134), summary `magaper2` via the MAST catalogs API
+  `https://catalogs.mast.stsci.edu/api/v0.1/hsc/v3/summary/magaper2.csv` (cone search; accessed 2026-10-08; D-060).
