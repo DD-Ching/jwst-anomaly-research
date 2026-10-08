@@ -23,6 +23,7 @@ Exotic physics is a hypothesis. A better exotic fit is an anomaly to vet, never 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -638,6 +639,11 @@ def load_checkpoint(path: Path) -> list[dict]:
     return rows
 
 
+def params_tag() -> str:
+    """Short hash of the fitting ``Params``; checkpoint rows from other Params are not reused."""
+    return hashlib.sha256(json.dumps(asdict(P), sort_keys=True).encode()).hexdigest()[:12]
+
+
 def run_fit(sample_key: str, limit: int | None, procs: int, fresh: bool = False) -> Path:
     """Fit the sample. Each row is appended to ``fits_<key>.partial.jsonl`` as it finishes, so an
     interrupted run (a cloud session ends after ~40 min; the bulge sample takes ~3 h on 4 cores)
@@ -647,7 +653,12 @@ def run_fit(sample_key: str, limit: int | None, procs: int, fresh: bool = False)
     ckpt = out_dir() / f"fits_{sample_key}.partial.jsonl"
     if fresh:
         ckpt.unlink(missing_ok=True)
+    tag = params_tag()
     rows = load_checkpoint(ckpt)
+    stale = [r for r in rows if r.get("params_tag") != tag]
+    if stale:  # fitted under other Params (e.g. before the D-058 π_E bound): refit them
+        print(f"dropping {len(stale)} checkpointed events fitted with other Params", flush=True)
+        rows = [r for r in rows if r.get("params_tag") == tag]
     ckpt.write_text("".join(json.dumps(r, default=float) + "\n" for r in rows))
     done = {r["event_id"] for r in rows}
     if done:
@@ -655,12 +666,13 @@ def run_fit(sample_key: str, limit: int | None, procs: int, fresh: bool = False)
     with Pool(procs) as pool, ckpt.open("a") as fh:
         jobs = _jobs(sample, limit, skip=done)
         for i, row in enumerate(pool.imap_unordered(_fit_worker, jobs, 4)):
+            row["params_tag"] = tag
             rows.append(row)
             fh.write(json.dumps(row, default=float) + "\n")
             fh.flush()
             if (i + 1) % 250 == 0:
                 print(f"{i + 1} events, {time.time() - t1:.0f} s", flush=True)
-    keys = sorted({k for r in rows for k in r}, key=lambda k: (k != "event_id", k))
+    keys = sorted({k for r in rows for k in r} - {"params_tag"}, key=lambda k: (k != "event_id", k))
     tab = Table(
         {
             k: [r.get(k, np.nan if k not in ("error", "best_ordinary") else "") for r in rows]

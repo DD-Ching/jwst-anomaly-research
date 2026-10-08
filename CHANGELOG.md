@@ -13,6 +13,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   bounded vs 25 unbounded; ΔBIC shifts ≤ 0.46. On this cadence unbounded parallax does not absorb exotic signals,
   so the bound is a physical prior, not a sensitivity gain. Not tested: seasonal gaps and correlated systematics.
 - Environment: install the `mulens` extra (`-e ".[dev,cloud,mulens]"`); without MulensModel `fit` silently skips PAR.
+- Follow-up (#84 Codex): checkpoint rows carry a `Params` hash; `fit` refits rows from other Params, so a chunked
+  bulge run never mixes bounded and unbounded parallax fits.
 - **Next:** bulge `fit` in chunks or locally, then `vet` / `sheet`; `inject` / `limit` with season-drift vetting.
 
 ## 2026-10-08: W1/W2 in published lens catalogues: no dark deflector; weak limits (D-056)

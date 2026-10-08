@@ -209,3 +209,29 @@ def test_parallax_objective_rejects_pi_e_beyond_the_bound():
     assert fun(np.array([2456800.0, lt, 0.2, w3.P.pie_max, 0.1])) == 1e30
     pytest.importorskip("MulensModel")  # the parallax trajectory inside the bound needs it
     assert fun(np.array([2456800.0, lt, 0.2, inside, inside])) < 1e30
+
+
+def test_fit_drops_checkpoint_rows_fitted_with_other_params(tmp_path, monkeypatch):
+    import dataclasses
+    import json
+    import types
+
+    monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
+    fake = types.SimpleNamespace(
+        name="fake", spec=types.SimpleNamespace(reference="x"), events=lambda: None
+    )
+    monkeypatch.setattr(w3.ogle, "OgleMrozSample", lambda key: fake)
+    monkeypatch.setattr(w3, "_jobs", lambda sample, limit, skip: [])
+    monkeypatch.setattr(w3, "_join_pub", lambda tab, ev: tab)
+    row = {"event_id": "new", "error": "", "best_ordinary": "PSPL", "seconds": 1.0}
+    old = {**row, "event_id": "old"}  # written before checkpoints carried a params tag
+    (tmp_path / "fits_k.partial.jsonl").write_text(
+        json.dumps(old) + "\n" + json.dumps({**row, "params_tag": w3.params_tag()}) + "\n"
+    )
+    tab = w3.Table.read(w3.run_fit("k", None, 1))
+    assert list(tab["event_id"]) == ["new"] and "params_tag" not in tab.colnames
+    monkeypatch.setattr(w3, "P", dataclasses.replace(w3.P, pie_max=1e4))
+    assert (
+        w3.params_tag()
+        != json.loads((tmp_path / "fits_k.partial.jsonl").read_text().splitlines()[0])["params_tag"]
+    )
