@@ -136,10 +136,11 @@ MODELS = {
 }
 
 # HFF CATS map models (D-035): "<cluster>-cats". The image list is used only where our
-# image-plane rms is within 1.5x the release's quoted rms (ASSUMPTION; validate re-measures it):
-# MACS1149 0.67" vs 0.63", MACS0717 3.21" vs 2.41". MACS0416 (1.57" vs 0.72", system 26 off by
-# 11"), Abell S1063 (11.8" vs 0.48"), Abell 370 and Abell 2744 (no params.txt, 9-11") stay
-# map-only until their image redshifts are resolved.
+# image-plane rms is within IMAGE_LIST_RMS_FACTOR x the release's quoted rms (ASSUMPTION);
+# ``validate`` re-measures it and reports whether its measurement agrees with this setting.
+# Abell 370, Abell S1063 and Abell 2744 have no params.txt (no fitted image redshifts).
+IMAGE_LIST_RMS_FACTOR = 1.5
+_HFF_QUOTED_RMS = {"macs0416": 0.72, "macs1149": 0.63, "macs0717": 2.41, "abells1063": 0.48}
 _HFF_IMAGE_LIST_OK = {"macs1149", "macs0717"}
 for _c, (_v, _zl, _files) in lensmodel.HFF_CATS.items():
     MODELS[f"{_c}-cats"] = {
@@ -150,6 +151,7 @@ for _c, (_v, _zl, _files) in lensmodel.HFF_CATS.items():
         "mag_maps": {2.0: "mag_z2"},
         "version": _v,
         "image_list_ok": _c in _HFF_IMAGE_LIST_OK,
+        "quoted_rms_arcsec": _HFF_QUOTED_RMS.get(_c),
     }
 
 
@@ -576,13 +578,28 @@ def cmd_validate_maps(args) -> dict:
     if "arcs.dat" in MODELS[args.model]["files"]:  # validate measures it even when not trusted
         images, zml = image_list(args.model, files, None)
         bt = lensmodel.backtrace_images(model, images, zml)
-        half = grid_half_width(model, images[np.isfinite(bt["beta_x"])])
+        traced = images[np.isfinite(bt["beta_x"])]
+        if not len(traced):
+            raise SystemExit(f"error: {args.model}: no catalogued image has a usable redshift")
+        half = grid_half_width(model, traced)
         grid = lensmodel.DeflectionGrid.cached(
             model, grid_cache_path(model, half, args.grid_step), half, args.grid_step
         )
         # no published position error for map models: unit sigma, so chi2_pos = sum dtheta^2;
         # the image-plane rms is what compares with the model's quoted rms
-        ip, summary["image_plane"] = imageplane_check(model, grid, bt, np.ones(len(bt)), None)
+        ip, isum = imageplane_check(model, grid, bt, np.ones(len(bt)), None)
+        for k in ("chi2_pos", "chi2_pos_lenstool", "images_over_3sigma"):
+            isum[k] = None  # no published position error: only the rms is meaningful
+        quoted = MODELS[args.model].get("quoted_rms_arcsec")
+        if quoted:
+            ok = isum["rms_dtheta_arcsec"] <= IMAGE_LIST_RMS_FACTOR * quoted
+            isum["image_list_gate"] = {
+                "quoted_rms_arcsec": quoted,
+                "factor": IMAGE_LIST_RMS_FACTOR,
+                "passes": bool(ok),
+                "agrees_with_models_setting": bool(ok) == bool(has_image_list(args.model)),
+            }
+        summary["image_plane"] = isum
         _write(ip, out / "imageplane.ecsv")
     (out / "validate.json").write_text(json.dumps(summary, indent=1))
     return summary
@@ -1081,14 +1098,21 @@ def image_stamper(uri: str, half_arcsec: float = 1.5):
 
 def cmd_images(args) -> dict:
     if not has_image_list(args.model):
-        raise SystemExit(f"error: {args.model} is a map model without a multiple-image list")
+        raise SystemExit(
+            f"error: {args.model}: no usable multiple-image list (none published, or excluded by "
+            "the image-plane rms gate of D-035)"
+        )
     model, files, par = load_model(args.model)
-    grid = lensmodel.DeflectionGrid.cached(
-        model, grid_cache_path(model, args.half_width, args.step), args.half_width, args.step
-    )
     images, zml = image_list(args.model, files, par)
     dra, ddec = apply_frame_offset(args.model, model, images)  # into the JWST frame
     bt = lensmodel.backtrace_images(model, images, zml)
+    traced = images[np.isfinite(bt["beta_x"])]
+    if not len(traced):
+        raise SystemExit(f"error: {args.model}: no catalogued image has a usable redshift")
+    half = args.half_width or grid_half_width(model, traced)  # as validate: images + 20"
+    grid = lensmodel.DeflectionGrid.cached(
+        model, grid_cache_path(model, half, args.step), half, args.step
+    )
     shapes = load_shapes(args.catalog)
     if args.photoz:
         attach_photoz(shapes, args.photoz)
@@ -1468,7 +1492,9 @@ def main(argv: list[str] | None = None) -> int:
     i.add_argument("--photoz", type=Path, help="eazy zout FITS table (e.g. DJA)")
     i.add_argument("--match-arcsec", type=float, default=1.5)
     i.add_argument("--footprint-arcsec", type=float, default=5.0)
-    i.add_argument("--half-width", type=float, default=60.0, help="solver grid half-width, arcsec")
+    i.add_argument(
+        "--half-width", type=float, help='solver grid half-width, arcsec (default: images + 20")'
+    )
     i.add_argument("--step", type=float, default=0.1, help="solver grid step, arcsec")
     i.add_argument(
         "--forced-image", help="_i2d URI or path for forced photometry (S3 by byte range)"

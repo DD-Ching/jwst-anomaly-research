@@ -398,26 +398,31 @@ def image_family(image_id: str | float) -> str:
     return system_key(text)
 
 
+def _z_m_limit_entry(vals: list[str], where: str) -> dict[str, float]:
+    """Fixed redshifts of one ``z_m_limit`` line (values after the keyword), by image family.
+
+    ``z_m_limit <n> <image id>... <flag> <z or zmin> <zmax> <step>``; flag 0 = fixed. Several
+    ids may share one redshift (Bergamini+2023b "A200.1a B200.2a"). Flags 1-4 and -n
+    (parabolic) are free redshifts and are skipped."""
+    if len(vals) < 4:
+        raise ValueError(f"{where}: malformed z_m_limit {vals}")
+    names, flag, z = (
+        (vals[1:-4], vals[-4], vals[-3]) if len(vals) >= 6 else (vals[1:2], vals[2], vals[3])
+    )
+    if not re.fullmatch(r"-?\d+", flag):
+        raise ValueError(f"{where}: malformed z_m_limit {vals}")
+    return {image_family(name): float(z) for name in names} if int(flag) == 0 else {}
+
+
 def read_z_m_limit(path: str | Path) -> dict[str, float]:
     """Only the fixed ``z_m_limit`` redshifts of a Lenstool parameter file, without parsing (or
     supporting) the rest of it: for map models whose published ``params.txt`` uses features
-    this module does not implement (e.g. ``potfile``)."""
+    this module does not implement (e.g. ``potfile``). Same rules as :func:`parse_lenstool_par`."""
     out: dict[str, float] = {}
-    for line in Path(path).read_text(encoding="latin-1").splitlines():
+    for n, line in enumerate(Path(path).read_text(encoding="latin-1").splitlines(), 1):
         vals = line.split("#", 1)[0].split()
-        if not vals or vals[0] != "z_m_limit":
-            continue
-        vals = vals[1:]
-        if len(vals) >= 6:
-            ids, flag, z = vals[1:-4], vals[-4], vals[-3]
-        elif len(vals) >= 4:
-            ids, flag, z = [vals[1]], vals[2], vals[3]
-        else:
-            continue
-        if flag == "0":
-            for ident in ids:
-                key = image_family(ident) if _LETTER_SUFFIX.match(ident) else system_key(ident)
-                out[key] = float(z)
+        if vals and vals[0] == "z_m_limit":
+            out.update(_z_m_limit_entry(vals[1:], f"{path}:{n}"))
     return out
 
 
@@ -509,21 +514,7 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
         elif kind == "image":
             for key, vals, n in entries:
                 if key == "z_m_limit":
-                    # z_m_limit <n> <image id>... <flag> <z or zmin> <zmax> <step>; flag 0 =
-                    # fixed. Several ids share one redshift (Bergamini+2023b "A200.1a B200.2a").
-                    if len(vals) < 4:
-                        raise ValueError(f"{path}:{n}: malformed z_m_limit {vals}")
-                    names, flag, z = (
-                        (vals[1:-4], vals[-4], vals[-3])
-                        if len(vals) >= 6
-                        else (vals[1:2], vals[2], vals[3])
-                    )
-                    # Flags 1-4 and -n (parabolic) are free redshifts; only 0 is fixed.
-                    if not re.fullmatch(r"-?\d+", flag):
-                        raise ValueError(f"{path}:{n}: malformed z_m_limit {vals}")
-                    if int(flag) == 0:
-                        for name in names:
-                            out["z_m_limit"][image_family(name)] = float(z)
+                    out["z_m_limit"].update(_z_m_limit_entry(vals, f"{path}:{n}"))
                 elif key.lower() == "sigposarcsec":
                     out["sigpos_arcsec"] = float(vals[0])
         elif kind == "potential":

@@ -1726,8 +1726,10 @@ them automatically. All thresholds are ASSUMPTIONs.
   - `validate` compares κ and μ(z = 2) with the published maps and measures the image-plane rms of `arcs.txt`, with
     system redshifts from `params.txt` (`read_z_m_limit`, which reads only `z_m_limit`).
   - An image list is used by `images` / `fluxratio` only where that rms is ≤ 1.5× the release's quoted rms
-    (ASSUMPTION).
-- **Parser:** a parenthesised redshift in an image list, e.g. "(2.16)", is read as that value.
+    (ASSUMPTION). `validate` reports this gate (`image_list_gate`) and whether it agrees with the `MODELS` setting.
+  - For map models, χ² and the "> 3σ" list are null: there is no published position error.
+- **Parser:** a parenthesised redshift in an image list, e.g. "(2.16)", is read as that value. `parse_lenstool_par` and
+  `read_z_m_limit` share one `z_m_limit` line parser and key every id by `image_family`.
 
 **Alternatives rejected.**
 - Using every `arcs.txt` as published. Without the model's fitted redshifts, placeholder redshifts give 9–12″
