@@ -114,7 +114,9 @@ FIELDS = {
         "z_cluster": 0.375,
         "cats": "abell370-cats",
         "image_lists": [],
-        # the pinned CANUCS Lenstool list, moved by its (-0.148, 0.002)" frame offset (D-044)
+        # the pinned CANUCS Lenstool list, moved by its (-0.148, 0.002)" frame offset (D-044).
+        # Its image-plane gate (image_list_ok False) concerns model constraints; here only the
+        # positions are used, to mark pairs within 1" of a published image.
         "image_models": ["abell370-canucs"],
         "i2d": "jw01208-o002_t001",
     },
@@ -625,7 +627,8 @@ def main(argv: list[str] | None = None) -> int:
     # never leave an earlier run's outputs next to this run's
     for stale in ("summary.json", "matched_pairs.ecsv", "top_orphans.ecsv", "contact_sheet.png"):
         (out / stale).unlink(missing_ok=True)
-    shutil.rmtree(out / "cutouts", ignore_errors=True)
+    if (out / "cutouts").exists():
+        shutil.rmtree(out / "cutouts")  # fail loudly (e.g. a locked file on Windows)
     cat = Table.read(fetch_catalog(*spec["catalogue"]))
     images = load_images(args.field)
     pairs, summary = search(cat, spec["z_cluster"], images, args.n_shift, args.seed)
@@ -640,12 +643,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         top.write(out / "top_orphans.ecsv", overwrite=True)
     summary["top"] = [
-        {
-            k: (row[k].item() if hasattr(row[k], "item") else row[k])
-            for k in top.colnames
-            if k not in ("i", "j", "ci", "cj")
-        }
-        for row in top
+        {k: _finite(row[k]) for k in top.colnames if k not in ("i", "j", "ci", "cj")} for row in top
     ]
     (out / "summary.json").write_text(json.dumps(_finite(summary), indent=1, default=str))
     print(
