@@ -42,7 +42,8 @@ THINK LIKE A STRONG, EFFICIENT SCIENTIST. In every cycle:
   derived, model_prediction, assumption and hypothesis apart.
 
 MOVE FAST, SAFELY:
-- One coherent PR per cycle (a draft `[field: <unit>]` claim PR first, marked ready when the work is done). Run
+- One coherent PR per cycle (a draft `[field: <unit>]` claim PR first, labelled `claimed` with a CLAIM comment as
+  in COORDINATION AND DISPATCH 2, marked ready when the work is done). Run
   /code-review once on its final diff and fix the findings.
   Merge only when every condition of CLAUDE.md's merge policy holds; that policy is the only one.
 - Coordination and parallel work: see COORDINATION AND DISPATCH below. Do not use /batch here, because it
