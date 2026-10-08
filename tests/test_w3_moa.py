@@ -225,6 +225,9 @@ def test_vet_and_limit_refuse_partial_or_failed_inputs(tmp_path, monkeypatch):
     ids = [f"gb22-R-1-0-{i}" for i in range(4)]
     pre = Table({"event_id": ids, "z_min": [-20.0] * 4, "s_min": [-9.0] * 4, "z_min2": [0.0] * 4})
     pre["error"] = [""] * 4
+    pre["width"] = [1.0] * 4
+    pre["t_lo"] = 2454000.0 + 300.0 * np.arange(4)  # deficits at unrelated epochs
+    pre["t_hi"] = pre["t_lo"] + 1.0
     pre.write(tmp_path / "prescreen_gb22.ecsv")
     fits = Table({"event_id": ids[:2]})
     fits.meta["chunk"] = "1/2"
