@@ -29,7 +29,9 @@ lens-model systematics (the mass and redshift of a foreground deflector)`. This 
 family-4 record.
 
 The fourth image exists only while the z 0.268 foreground galaxy is massive enough to split 51.3. In the two-plane
-model the transition lies between σ 70 and 81 km/s (not resolved further). Both published models give it a cluster-member scaling-relation mass at the cluster redshift.
+model the transition lies between σ 70 and 81 km/s (not resolved further). CANUCS gives it a cluster-member scaling-relation mass at the cluster redshift. CATS is distributed as deflection
+maps and cannot be decomposed; its fourth image lies 0.85″ from the same galaxy, which is consistent with the same
+origin but was not tested.
 A two-plane model with σ ≤ 60 km/s, within the assumed ±30 % scatter, predicts exactly the three observed images,
 with 51.3 matched within 1.5″. The observed absence of a fourth image therefore constrains this galaxy's mass (a `hypothesis`-level
 statement about the galaxy). It is not evidence for anything unusual.

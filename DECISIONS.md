@@ -2002,8 +2002,9 @@ the JWST-era model, with spectroscopic constraints only, is the stronger check).
     gives μ +14.9 at 45.2, so 45.2 is near-critical and its parity is model-dependent. Untestable (D-036).
   - **System 51's fourth image is explained.** Both models predict it (μ 3.8 CATS, 5.5 CANUCS; 0.66″ apart). After
     isophote subtraction of the neighbour, nothing is seen; the expected signal, derived from 51.1–51.3 photometry,
-    is 9–25σ. The image comes from potential 8757, the z_spec 0.268 galaxy 0.85–0.88″ away, which both models treat
-    as a cluster member at z 0.396. In a two-plane model (that galaxy at z 0.268, the rest of CANUCS at z 0.396), the
+    is 9–25σ. In CANUCS the image comes from potential 8757, the z_spec 0.268 galaxy 0.85–0.88″ away, modelled as a
+    cluster member at z 0.396. CATS is a map model and cannot be decomposed; its fourth image lies 0.85″ from the same
+    galaxy, consistent with the same origin (not tested). In a two-plane model (that galaxy at z 0.268, the rest of CANUCS at z 0.396), the
     image persists at σ 102 and 81 km/s (fitted, and rescaled to its luminosity distance). At σ ≤ 60 km/s the system
     has exactly 3 images and 51.3 is matched within 1.5″. That is 26 % below the rescaled σ, inside the assumed ±30 %
     scatter. Record: docs/candidates/macs0416-system51-fourth-image.md.
