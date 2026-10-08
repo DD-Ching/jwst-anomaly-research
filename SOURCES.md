@@ -502,6 +502,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
       Accessed 2026-10-08: `best_fit.par` sha256 `7b0153ae0ee02f057f6aaa6f46b1b698502e6fc427266ac9a09d241ddc63a472`,
       `obs_arcs_v1_new_IDs.dat` sha256 `d631743921266c34689a1d509f08e53dc3c90bc88064393d7b8fd524a3d5c700`,
       `bayes.dat` 1,666,720 B sha256 `2d3f7362…` (MCMC chain, D-045), `to_sample.par` (read for the potfile `mag0`).
+      `fits/magnification_best_fit_z2.fits` and `_z4.fits` (4,003,200 B each; sha256 `2cfe1b62…`, `6eab61e2…`; signed μ,
+      0.4″/px, model frame), pinned in `lensmodel.ELGORDO_CAMINHA23_MAG_MAPS` for `validate`.
+    - Lenstool source, https://git-cral.univ-lyon1.fr/lenstool/lenstool.git (v8.15.6, commit 09cf4cc4, accessed
+      2026-10-08): `docs/sphinx/source/section_parfile/image.rst` ("forme"), `src/o_chi.c` (`chi2_img`, σ² = a·b for
+      `forme -10`), `src/bayesapp.c` (bayes.dat ln(Lhood) and Chi2). Read for the D-045 amendment.
     - RELICS models: https://archive.stsci.edu/hlsps/relics/act0102m49/models/ (DOI 10.17909/T9SP45).
 - **Sunrise (WHL0137−08).**
   - Data: MAST 2282 `jw02282-o010_t001` (jwst 2.0.1); later epochs 2282 o120 and 6882 o052.
@@ -602,6 +607,21 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     `aacc2dadd442645d2222c23ee2c3f9f6a76fddaa73996a26a6e88c0691a6bf3d`;
   - `…-lenstool-readme_multi_v1_model.txt` 1,988 B `a73bfe3b7d23c7605e16717781d94736d003e7b5fc5d08c0ef80a0358367edc0`.
 
+## Orphan-pair search inputs (accessed 2026-10-08; D-048)
+
+Pinned in `scripts/orphan_pairs.py` `FIELDS` and fetched by `photometry.fetch_catalog` (cache
+`data/cache/external/<sha256[:12]>_<name>`):
+- CANUCS DR1 photometry catalogues of MACS0416, MACS1149 and Abell 370 (URLs and sha256 above and in
+  docs/fields/abell370.md).
+- The Abell 370 image list is the pinned `abell370-canucs` `arcs.dat` (D-044).
+- MACS0416 all-multiple-image catalogue (CANUCS `allmultim-cat`) 18,806 B
+  `c8978003d8dd617cb980ed7ba5acde1485cd742db43846c25ed251f110dc2417`:
+  <https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/model/hlsp_canucs_jwst-hst_multi_macs0416-allmultim-cat_multi_v1_model.txt>.
+- MACS1149 Lenstool readme `hlsp_canucs_jwst-hst_multi_macs1149-lenstool-readme_multi_v1_model.txt` 2,198 B
+  `aef1cfffaf1865a0f8f2927f4df6fe2b3d44ed5e211aa7dc3f57a97d4651cee1` (no image list until v2).
+- Photometry readme <https://archive.stsci.edu/hlsps/canucs/dr1/webpage/hlsp_canucs_jwst-hst_multi_v1_photometry-cat_readme.txt>
+  (read, not cached).
+
 ## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
 
 - arXiv:1009.6084 Abe, "Gravitational Microlensing by the Ellis Wormhole".
@@ -637,3 +657,65 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Kassiola & Kovner 1993, ApJ 417, 450, doi:10.1086/173325, "Elliptic Mass Distributions versus Elliptic
     Potentials in Gravitational Lenses" (Crossref, checked 2026-10-08);
   - arXiv:0710.5636, Elíasdóttir et al., "Where is the matter in the Merging Cluster Abell 2218?"
+
+## Exotic-lensing predictions (D-047)
+
+All accessed 2026-10-08. Each ID was fetched from the arXiv API (export.arxiv.org); journal DOIs were checked on
+Crossref. The papers marked "full text" were read in their arXiv source for the formulas used in
+`src/jwst_anomaly/exotic_sim.py`; the others were checked from the abstract.
+- Wormholes and negative masses:
+  - arXiv:1211.0379, Kitamura, Nakajima & Asada, PRD 87, 027501 (2013), doi:10.1103/PhysRevD.87.027501 (full
+    text): α = ε̄/bⁿ; 2/(n+1) is their leading-order, large-n estimate of the demagnification onset; n = 10
+    onset at β = 0.187 (numerical); Fig. 2c (n = 3) minimum A ≈ 0.865, read from the figure pixels.
+  - arXiv:1305.5037, Izumi et al., PRD 88, 024049 (2013), doi:10.1103/PhysRevD.88.024049 (full text): λ_±, κ, γ;
+    radial images for ε < 0; voids as negative convergence.
+  - arXiv:1307.6637, Kitamura et al., "Microlensed image centroid motions by an exotic lens object with negative
+    convergence or negative mass", PRD 89, 084020 (2014), doi:10.1103/PhysRevD.89.084020 (full text): θ_E for
+    any n and sign; centroid shifts.
+  - arXiv:1009.6084, Abe, ApJ 725, 787 (2010), doi:10.1088/0004-637X/725/1/787 (full text): Ellis α = πa²/(4b²),
+    R_E, gutters of about 4 %, inner-image values at β = 2 and 3.
+  - arXiv:1107.5374, Toki, Kitamura, Asada & Abe, "Astrometric Image Centroid Displacements due to Gravitational
+    Microlensing by the Ellis Wormhole", ApJ 740, 121 (2011), doi:10.1088/0004-637X/740/2/121: µas centroid
+    shifts.
+  - arXiv:gr-qc/0105070, Safonova, Torres & Romero, PRD 65, 023001 (2002), doi:10.1103/PhysRevD.65.023001 (full
+    text): caustic at 2θ_E, umbra, A = (u² − 2)/(u√(u² − 4)).
+  - arXiv:astro-ph/9409051, Cramer et al., PRD 51, 3117 (1995), doi:10.1103/PhysRevD.51.3117: negative-mass light
+    curves differ qualitatively from MACHO ones.
+  - arXiv:astro-ph/9802106, Torres, Romero & Anchordoqui, "Might some gamma ray bursts be an observable signature
+    of natural wormholes?", PRD 58, 123001 (1998), doi:10.1103/PhysRevD.58.123001: negative-mass density
+    ≲ O(10⁻³⁶) g cm⁻³.
+  - arXiv:gr-qc/9805075, Torres, Romero & Anchordoqui, "Wormholes, Gamma Ray Bursts and the Amount of Negative Mass
+    in the Universe", MPLA 13, 1575 (1998), doi:10.1142/S0217732398001650: an essay version of the same bound.
+  - arXiv:1303.1301, Takahashi & Asada, ApJL 768, L16 (2013), doi:10.1088/2041-8205/768/1/L16: SDSS quasar-lens
+    limits (see "Existing observational limits").
+  - arXiv:1302.7170, Yoo, Harada & Tsukamoto, "Wave Effect in Gravitational Lensing by the Ellis Wormhole", PRD 87,
+    084045 (2013), doi:10.1103/PhysRevD.87.084045: n ≲ 10⁻⁹ AU⁻³ for a ~ 1 cm from femtolensing.
+  - arXiv:1711.04560, Tsukamoto & Gong, "Extended source effect on microlensing light curves by an Ellis
+    wormhole", PRD 97, 084051 (2018), doi:10.1103/PhysRevD.97.084051: an extended source makes the gutter
+    shallower.
+  - arXiv:gr-qc/0104076, Eiroa, Romero & Torres, "Chromaticity effects in microlensing by wormholes", MPLA 16, 973
+    (2001), doi:10.1142/S021773230100398X: finite-source colour signatures (not used numerically).
+- Warp drives:
+  - arXiv:gr-qc/0009013, Alcubierre, "The warp drive: hyper-fast travel within general relativity", CQG 11, L73
+    (1994), doi:10.1088/0264-9381/11/5/001.
+  - arXiv:gr-qc/9907019, Clark, Hiscock & Larson, CQG 16, 3965 (1999), doi:10.1088/0264-9381/16/12/313: view from
+    inside the bubble.
+  - arXiv:1107.5650, Müller & Weiskopf, "Detailed study of null and time-like geodesics in the Alcubierre Warp
+    spacetime", GRG 44, 509 (2011), doi:10.1007/s10714-011-1289-0.
+  - arXiv:gr-qc/0110086, Natário, "Warp Drive With Zero Expansion", CQG 19, 1157 (2002),
+    doi:10.1088/0264-9381/19/6/308.
+  - arXiv:2006.07125, Lentz, "Breaking the Warp Barrier: Hyper-Fast Solitons in Einstein-Maxwell-Plasma Theory",
+    CQG 38, 075015 (2021), doi:10.1088/1361-6382/abe692.
+  - arXiv:2102.06824, Bobrick & Martire, "Introducing Physical Warp Drives", CQG 38, 105009 (2021),
+    doi:10.1088/1361-6382/abdf6e.
+  - arXiv:2104.06488, Fell & Heisenberg, "Positive Energy Warp Drive from Hidden Geometric Structures", CQG 38,
+    155020 (2021), doi:10.1088/1361-6382/ac0e47.
+  - arXiv:2406.02466, Clough, Dietrich & Khan, "What no one has seen before: gravitational waveforms from warp
+    drive collapse", OJAp 7 (2024), doi:10.33232/001c.121868 (full text): flat exterior; f ~ 300 kHz and
+    h ~ 10⁻²¹ at 1 Mpc for a 1 km bubble.
+  - arXiv:2205.15950, Schuster, Santiago & Visser, "ADM mass in warp drive spacetimes", GRG 55, 14 (2023),
+    doi:10.1007/s10714-022-03061-9.
+  - arXiv:1202.5708, McMonigal, Lewis & O'Byrne, "The Alcubierre Warp Drive: On the Matter of Matter", PRD 85,
+    064024 (2012), doi:10.1103/PhysRevD.85.064024.
+  - arXiv:2608.10800, Fell & Loeb, "Radiative Signatures from Warp Drives Traveling Through the Earth's
+    Atmosphere" (2026, preprint).

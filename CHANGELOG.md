@@ -16,6 +16,51 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   calibration locally (`--controls` on a cone-cut catalogue).
 - **Handoff:** back to TASKS "Now" item 1. Check MAST for WHL0137 revisits when one could be due.
 
+## 2026-10-08: El Gordo lens model reproduces the published magnification maps (issue #68)
+- `validate` now compares Lenstool-par models with published signed μ maps (`mag_map_files`, fetched only by
+  `validate`); `map_check` reports `parity_agree` for signed maps. El Gordo (CDS J/A+A/678/A3, z=2 and z=4, |μ|<10,
+  37-px sub-grid): median |μ| ratio 1.00001 / 1.00001, p95 relative difference 0.04 % / 0.07 %, parity 100 %;
+  χ²pos unchanged (82.53). At full resolution (250,000 points), >20 % mismatches sit only on critical curves or
+  within ~1″ of member cores (0.4″ map pixels).
+- El Gordo `bayes.dat` `Chi2` explained (D-045 amendment): the sampling run uses `forme -10`, an image-plane χ² with
+  σ² = a·b from the image list (19 of 56 images at 1.24″). It reproduces `Chi2` row by row to 0.1 % and the
+  ln(Lhood) offset (75.904) exactly. The chain is validated. **Failed approach:** a source-plane χ² with free
+  per-family weights (held-out ρ 0.81) fit only partly; the definition came from Lenstool's source.
+- **Handoff:** El Gordo μ, parities and the MCMC chain are validated. Next: posterior μ spreads in `fluxratios`.
+
+## 2026-10-08: Exotic-lens predictions first: wormhole / negative-mass searchable, warp not (D-047)
+- Owner focus (2026-10-08): search only for signatures of traversable wormholes / negative-mass lenses and warp-drive
+  spacetimes, predictions first. Research worker; every citation fetched from arXiv / Crossref.
+- Searchable: W1 negative-mass dark lens (radial pair beside an empty centre), W2 Ellis pair without deflector, W3
+  inverted microlensing (umbra between caustic spikes), W5 count deficit. Not searchable: the 4 % Ellis gutter, µas
+  shifts, and every warp signature (Alcubierre exterior is flat; no published imaging/photometric prediction for a
+  distant observer). The warp branch is stopped.
+- `jwst_anomaly.exotic_sim`: Kitamura+2013 power-law lens family (either sign of ε), finite-source light curves,
+  `inject_images` / `inject_light_curve` (`simulated`) for injection-recovery.
+- Review fixes: an exact finite-source integral, checked against inverse ray shooting, puts the negative-mass spike
+  peaks at ×7.0 / 2.35 / 1.53 (ρ = 0.01 / 0.1 / 0.3; first version 9.2 / 2.6 / 1.7). Exact demagnification onset
+  added (2/(n+1) is KNA13's large-n estimate); KNA13's n = 3 "~10 %" is rounding of their Fig. 2c (13–14 %). NaN
+  epochs no longer read as an umbra.
+- **Handoff:** injection-recovery for `radial` (W1) and the dark-lens search (W2) to turn nulls into limits; a
+  dimming class for the transient screen (W3); counts around `radial` centres (W5).
+
+## 2026-10-08: Multi-plane lens models (D-046)
+- `LensModel.split_planes` moves named potentials (e.g. a foreground galaxy fitted as a member) to their own
+  redshift; `MultiPlaneLensModel` solves the multi-plane lens equation, and `find_images` / `backtrace_images` /
+  `imageplane_residuals` accept it.
+- Reproduces the D-042 system-51 result with library code: σ ≤ 70 km/s at z 0.268 leaves exactly 3 images.
+- **Handoff:** use `split_planes` in `/vet-candidate` for any extra or missing image near a non-member galaxy.
+
+## 2026-10-08: Orphan image pairs, a blind dark-deflector screen: null (D-048)
+- Worktree worker: `scripts/orphan_pairs.py` looks for SED-matched close pairs with no published system and no visible
+  galaxy between them in the CANUCS DR1 catalogues of MACS0416, MACS1149 and Abell 370.
+- Pair excesses come from same-redshift groups (null (c)); 38 orphans against 34.5 expected. The 35 top orphans are
+  knots, group members or chance matches, all at |μ| ≈ 1–2.5. No candidate.
+- **Failed approaches:** a midpoint-only lens rule (missed galaxies between members); no per-band S/N cut (25 % false
+  SED matches).
+- Wall time: 5–10 s per field per search, 30–60 s with cutouts.
+- **Handoff:** injection-recovery so the null becomes a limit; segmentation-map same-galaxy test; more clusters.
+
 ## 2026-10-08: Lenstool MCMC posteriors; Abell 2744 multiplicity residual explained (D-045)
 - `lensmodel.read_lenstool_bayes` / `posterior_par` and `lens_consistency.py posterior` rebuild published models at
   MCMC samples (potfile rescaling, sampled family redshifts). Validated on Abell 2744: best.par is a chain row, and

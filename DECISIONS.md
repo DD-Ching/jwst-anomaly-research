@@ -2119,6 +2119,13 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - El Gordo: the chain medians match best_fit.par (σ* 289.97 vs 289.48 km/s; O1 σ 1041 vs 1041), but the chain's
   `Chi2` column (54–77) does not track our χ²pos (93–106 at the 0.621″ sigpos of D-030), not even in rank. The
   column's definition is unknown, so the El Gordo chain is **not validated**; don't use it for conclusions yet.
+  - **Resolved (2026-10-08, PR #69, issue #68):** the sampling run (`to_sample.par`, `forme -10`) uses an
+    image-plane χ² with σ² = a·b from the image list (σ = 0.621″ for 37 images, 1.2421″ for 19), not D-030's uniform
+    0.621″. Lenstool's `chi2_img` and `bayesapp.c` (git-cral.univ-lyon1.fr/lenstool, v8.15.6) give
+    ln(Lhood) = −(Chi2 + Σ 2 ln(2π a b))/2; the file's Σ ln(2π a b) = 75.904 matches the chain's offset exactly. Our
+    image-plane χ² with σ² = a·b reproduces `Chi2` for three random rows (60.05/60.00, 67.50/67.47, 72.45/72.36), and
+    is 52.0 for best_fit.par (the chain minimum is 54.2). The El Gordo chain is **validated**. best_fit.par's
+    `Chi2pos` 80.22 still corresponds to the uniform 0.621″ of D-030.
 - Abell 2744 `posterior --systems 3.2,34.1,700.1,4.2 --samples 12 --seed 1` (`model_prediction`):
   - 3.2a/b, 34.1a/b, 700.1a/b stay a `shared_match` in 13 of 13 models. The MCMC spread does not split them.
   - Independent model, CATS v4.1 maps (scratch run with Bergamini's image list): 34.1a/b **split** (μ +24.9 / −21.7,
@@ -2132,6 +2139,156 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - Verdict: the D-030 multiplicity residual is model resolution at folds, not an anomaly. **0 surviving.**
 
 **Revisit if.**
-- The El Gordo `Chi2` column is understood (then validate that chain as for Abell 2744).
+- ~~The El Gordo `Chi2` column is understood~~ (done: `forme -10` σ² = a·b; chain validated, PR #69).
 - An independent model with 3.2's source well inside the caustic still merges 3.2a/b.
 - Speed: `imageplane_residuals` exposes its predicted images (`posterior` currently solves each family twice).
+
+## D-048 Orphan image pairs (blind dark-deflector screen): null in MACS0416, MACS1149 and Abell 370 (2026-10-08)
+
+**Decision.**
+- `scripts/orphan_pairs.py` ([docs/orphan_pairs.md](docs/orphan_pairs.md)) searches CANUCS DR1 catalogues for close
+  pairs (0.3–3″) with matching SEDs that no published multiple-image system explains and that have no visible galaxy
+  between them ("orphans"). It is a lens-model-independent dark-lens screen. The hypothesis is an unseen compact
+  deflector; an SED match is not evidence of lensing.
+- Result: **null**. SED-matched close-pair counts are explained by redshift clustering, and orphan counts match
+  chance. Nothing goes to `/vet-candidate`.
+- Thresholds (ASSUMPTIONs, in the script):
+  - summed F277W+F356W+F444W S/N ≥ 10 and S/N ≥ 10 in at least 8 bands;
+  - SED match: ≥ 8 shared bands, χ² probability ≥ 0.01 with a 3 % error floor and free normalisation, overlapping
+    16–84 % photo-z intervals;
+  - visible lens: a catalogued source at least 0.3″ from both members that lies within 0.3″ of the midpoint,
+    within 0.3″ of the joining segment, or inside the circle with the pair as diameter.
+- Inputs are pinned by URL and sha256 in `FIELDS` and downloaded on first use; the CANUCS Abell 370 image list is
+  moved to the JWST frame with the `abell370-canucs` offset (D-044); its image-plane gate concerns model
+  constraints, and here only positions are used (to mark pairs near a published image). A source with an invalid F277W, F356W or F444W
+  measurement (NaN, or error ≤ 0) has no summed S/N and is dropped. Re-running with these rules (after review)
+  reproduced every count below.
+
+**Alternatives rejected.**
+- A midpoint-only visible-lens rule: galaxies sitting between pair members were missed (first contact sheet).
+- No per-band S/N cut: 25 % of random far-apart pairs pass the SED test.
+- Random-position nulls alone: they ignore galaxy clustering at one redshift.
+
+**Evidence** (`derived`; per-field `summary.json`, three contact sheets inspected by eye):
+
+| | MACS0416 | MACS1149 | Abell 370 |
+|---|---|---|---|
+| Sources kept / catalogue rows | 1942 / 14149 | 1711 / 12851 | 1391 / 13567 |
+| Pairs at 0.3–3″ / SED-matched | 1664 / 62 | 1418 / 98 | 1028 / 35 |
+| SED-matched expected: null (a) shifted copies / (c) same-photo-z real pairs 10–30″ | 42.3 / 69.7 | 44.8 / 83.3 | 27.8 / 48.0 |
+| Orphans observed / expected under null (c) | 11 / 13.5 | 18 / 12.9 | 9 / 8.1 |
+
+- The SED-match excess over null (a) (significant in MACS1149) disappears under null (c): same-redshift groups.
+- All 35 inspected top orphans sit where the CATS (or CANUCS) model gives |μ| ≈ 1–2.5 with no parity flip. They are
+  knots of one galaxy, group members, or faint chance matches the null predicts.
+- A dark deflector making the observed separations (θ_E 0.36–1.47″ at the cluster redshift) would need σ ≈ 130–300
+  km/s; a normal galaxy of that mass would be m ≈ 17–20, 9–12 mag above the detection limit (`hypothesis`-level
+  scaling, σ* = 180 km/s at m*(F160W) = 19, ASSUMPTION).
+- Limits: the same-galaxy rule misses knots of large irregulars; pairs closer than ~0.6″ share aperture light; cluster
+  cores are excluded by catalogue flags; 86–90 % of each catalogue is cut; no injection-recovery yet, so this is a
+  count-level null, not an upper limit on dark deflectors.
+
+**Revisit if.**
+- Injection-recovery turns the count null into a limit (TASKS).
+- CANUCS segmentation maps replace the same-galaxy rule, or deeper / core photometry is used.
+- CANUCS v2 releases the MACS1149 image list, or spectroscopy targets an orphan pair.
+
+## D-046 Multi-plane lens models: `LensModel.split_planes` and `MultiPlaneLensModel` (2026-10-08)
+
+**Decision.**
+- `lensmodel.MultiPlaneLensModel` holds several `LensModel` planes (one `z_lens` each) in one frame and cosmology and
+  solves the standard multi-plane lens equation and its Jacobian recursion (Schneider, Ehlers & Falco 1992, ch. 9),
+  with `D_ij / D_j = 1 − D_M(z_i) / D_M(z_j)` (flat ΛCDM).
+- `LensModel.split_planes({name: z}, v_disp={name: σ})` moves named potentials to their own redshift, optionally
+  with a new σ. A potential moved behind another plane is delensed: put where the ray through its fitted
+  (observed) centre crosses its plane, so it is still seen where it was fitted; shapes and the other planes'
+  positions are kept (ASSUMPTION). This turns the D-042 rule ("check every potential that produces an extra image against its
+  spectroscopic redshift") into library code.
+- `find_images`, `backtrace_images` and `imageplane_residuals` now go through `lens_map` / `source_points` /
+  `source_grid`, so they take either model. The Jacobian is no longer assumed symmetric. Single-plane results are
+  unchanged (tests).
+- The ray positions θ_i do not depend on the source redshift; only the weights D_is/D_s do. So a `DeflectionGrid`
+  of a multi-plane model stores α_i(θ_i) per plane (shape `(n_planes, n, n)`, cached by a content hash) and serves
+  every source redshift, as for one plane. Computing it costs about one single-plane grid (≈70 s for the
+  222-potential CANUCS MACS0416 model on a ±59″, 0.1″ grid).
+- `MultiPlaneLensModel` has no `evaluate` and no scalar `z_lens` (`z_planes` instead), so single-plane-only code in
+  `lens_consistency.py` fails loudly rather than silently. Sub-planes made by `split_planes` get their own hash;
+  `find_images` refuses a grid computed for another model.
+
+**Alternatives rejected.**
+- Re-tracing every plane at every grid node per source redshift (first version): unnecessary, see above.
+- lenstronomy `MultiPlane`: its dPIE-like profiles are not parametrised as Lenstool's, and our ported dPIE already
+  reproduces Lenstool's χ² (D-030, D-044). The recursion itself is a few lines on top of it.
+- Keeping two-plane checks as scratch code (D-042): not reproducible.
+
+**Evidence** (`model_prediction`).
+- Offline tests: `split_planes({})` reproduces the single-plane `find_images` and `backtrace_images`; the multi-plane
+  Jacobian matches finite differences of `source_points` (and is not symmetric); a plane behind the source does not
+  lens.
+- MACS0416 system 51 (CATS positions, CANUCS model, potential 8757 moved to z 0.268; scratch
+  `macs0416/mp_check2.py`): σ as fitted (102 km/s) keeps the fourth image (μ 6.1, 0.12″ from the single-plane
+  position); σ 81 km/s gives 4 images; σ 70 and 60 km/s give 3, with 51.3 matched at 1.58″ and 1.49″. This
+  reproduces the D-042 scratch result, except that the scratch found a fifth (faint) image at the fitted σ.
+
+**Revisit if.**
+- A multi-plane field run needs speed: interpolate per-plane deflection grids for the seeds.
+- A model needs more than dPIE potentials on the extra planes.
+
+## D-047 Exotic-lens predictions: wormhole and negative-mass signatures are searchable, warp signatures are not (2026-10-08)
+
+**Decision.** Phase 1 ("predictions first") gives the screens closed-form targets. docs/exotic_lensing.md has the
+"Wormhole signatures" and "Warp signatures" sections; `src/jwst_anomaly/exotic_sim.py` holds the simulator.
+- **Searchable with JWST data** (each one a hypothesis to test, never a result):
+  - W1, negative-mass dark lens: a radially stretched pair on one side of an empty centre, and no images of sources
+    within 2θ_E. It calibrates the `radial` screen (D-031).
+  - W2, Ellis pair with no deflector: it calibrates the dark-lens search and `fluxratio`.
+  - W3, inverted microlensing: a compact lensed source vanishes for 2 t_E √(4 − u₀²) between caustic spikes. It
+    calibrates the two-epoch transient screen (D-027), which needs a dimming class and ≥ 3 epochs to see
+    spike, dip, spike.
+  - W5, count deficit: fewer sources inside about θ_E. It calibrates the counts screen, run only around
+    `radial` centres.
+- **Not searchable:**
+  - W4, the Ellis gutter: it needs 0.8 % photometry per epoch;
+  - W6, µas centroid shifts and femtolensing;
+  - every warp-drive signature: none has a published imaging or photometric prediction for a distant observer
+    (docs/exotic_lensing.md "Warp signatures"). That branch is stopped.
+- **Model.** Kitamura, Nakajima & Asada (2013) power-law family, α = ε̄/bⁿ with ε of either sign; magnification from
+  Izumi et al. (2013). It covers point mass, negative mass, Ellis and phenomenological n > 2 in one lens equation.
+  - Solutions are closed form for n = 1, with bisection on the monotonic branches otherwise.
+  - A uniform-disk finite source caps the caustic spikes. It is an exact 1-D radial integral, split at the caustic
+    and the disk edges, and it agrees with inverse ray shooting to < 1 %.
+  - `inject_images` and `inject_light_curve` return `simulated` tables for injection-recovery.
+- **Recommended injections** (ASSUMPTIONs, to be tuned on recovery):
+  - radial: n = 1, ε < 0, θ_E = 0.3″, 1″ and 3″ (|M| ≈ 2 × 10¹⁰ to 2 × 10¹² M☉), painted from catalogue
+    sources with β ∈ [2, 4] θ_E.
+  - transient: an umbra (lensed flux → 0, keeping the blend) of 2–4 t_E, plus spikes of × 7.0 (ρ = 0.01),
+    × 2.35 (ρ = 0.1) and × 1.53 (ρ = 0.3). These are `simulated` peaks from `exotic_sim`, not paper values.
+  - Ellis or n ≥ 3 dips of 4 %, 14 % and 59 %, as a sensitivity floor.
+
+**Alternatives rejected.**
+- lenstronomy point-mass or power-law profiles: not a dependency here. They are parametrised by a positive
+  Einstein radius, and ε < 0 is not supported as far as we checked. The closed forms take about 100 lines of
+  numpy and are tested against the papers.
+- Inventing a warp-bubble lensing or flash model: the charter forbids it, and the Alcubierre exterior is flat.
+
+**Evidence** (`tests/test_exotic_sim.py`, offline; `simulated`).
+- n = 1, ε > 0 reproduces (u² + 2)/(u√(u² + 4)).
+- n = 1, ε < 0 reproduces Safonova et al.'s umbra at u < 2, the caustic at u = 2 and (u² − 2)/(u√(u² − 4)).
+- Ellis: inner images at −0.618 and −0.532 carrying 3.4 % and 1.3 % of the flux (Abe 2010), and a 4.2 % gutter
+  ("about 4 %").
+- n = 10: demagnification onset at β = 0.1875 (paper 0.187 numerically; 2/(n+1) = 0.182 is their leading-order
+  estimate, now `demagnification_onset_approx`), and 59 % depletion at β ≈ 0.70 (paper ~60 % at ~0.7).
+  The exact onsets are 1.111 (n = 2) and 0.643 (n = 3).
+- n = 3: 14.3 % depletion at β ≈ 1.12. The paper's text says "~10 %", but its own Fig. 2c (read from the figure
+  pixels) bottoms out at A ≈ 0.865 ± 0.01, i.e. 13–14 %. The text rounds; no model difference.
+- Izumi κ and γ; Abe's Tables 1–2 (R_E, θ_E, t_E for a = 10³ and 10⁵ km); the docs' physical scales;
+  injection round trips through the lens equation.
+- Converged spike heights. The first version, with a centred 2-D disk quadrature, overestimated them near the
+  caustic: 9.24 → 7.01 (ρ = 0.01), 2.56 → 2.35 (ρ = 0.1), 1.74 → 1.53 (ρ = 0.3).
+- Every citation was fetched from the arXiv API or Crossref (SOURCES.md "Exotic-lensing predictions (D-047)").
+
+**Revisit if.**
+- A paper gives a distant-observer electromagnetic prediction for a warp bubble.
+- Injection-recovery shows a screen is blind to W1 or W3 at the recommended amplitudes.
+- Cluster macro-magnification needs a lens model with shear plus a microlens instead of an isolated lens (W3 in
+  caustic-crossing arcs).

@@ -53,6 +53,57 @@ def test_kappa_map_check_on_own_map(tmp_path):
     assert -10.1 < res["extent_arcsec"][0] < -9.8
 
 
+def test_map_check_signed_magnification(tmp_path):
+    model = _model()
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = [RA0, DEC0]
+    w.wcs.crpix = [200.5, 200.5]
+    w.wcs.cdelt = [-0.25 / 3600, 0.25 / 3600]
+    jj, ii = np.mgrid[0:400, 0:400]
+    ra, dec = w.pixel_to_world_values(ii, jj)
+    mu = np.asarray(model.magnification(ra.ravel(), dec.ravel(), 2.0)["magnification"], float)
+    mu = mu.reshape(ra.shape).astype(np.float32)
+    assert (mu < 0).any()  # the SIS has an odd-parity region inside theta_E
+    path = tmp_path / "mu.fits"
+    fits.PrimaryHDU(mu, header=w.to_header()).writeto(path)
+    res = lc.map_check(model, path, "mu", 2.0, step=8)
+    assert res["parity_agree"] == 1.0
+    assert abs(res["median_ratio"] - 1) < 1e-5
+    # an |mu| map has no parity to compare
+    fits.PrimaryHDU(np.abs(mu), header=w.to_header()).writeto(path, overwrite=True)
+    assert lc.map_check(model, path, "mu", 2.0, step=8)["parity_agree"] is None
+
+
+@pytest.mark.network
+def test_elgordo_reproduces_its_published_magnification_maps():
+    # 2026-10-08 (issue #68): median ratio 1.00001 and full parity agreement at |mu| < 10
+    model, _, _ = lc.load_model("elgordo-caminha23")
+    for z_s, (url, sha) in lc.MODELS["elgordo-caminha23"]["mag_map_files"].items():
+        res = lc.map_check(model, lc.fetch_catalog(url, sha), "mu", z_s, step=10)
+        assert res["n_points"] > 9000
+        assert abs(res["median_ratio"] - 1) < 1e-3
+        assert res["p95_rel_diff"] < 0.01
+        assert res["parity_agree"] > 0.999
+
+
+@pytest.mark.network
+def test_elgordo_chain_normalisation_is_forme_minus10():
+    # D-045 amendment: ln(Lhood) = -(Chi2 + sum 2 ln(2 pi a b))/2 with the image list's a, b
+    files = lc.model_files("elgordo-caminha23")
+    bayes = lc.lensmodel.read_lenstool_bayes(
+        lc.fetch_catalog(*lc.MODELS["elgordo-caminha23"]["bayes"])
+    )
+    rows = [ln.split() for ln in files["arcs.dat"].read_text().splitlines()]
+    rows = [r for r in rows if r and not r[0].startswith("#")]  # id ra dec a b theta z mag
+    a, b = (np.array([float(r[k]) for r in rows]) for k in (3, 4))
+    assert len(a) == 56  # every family has >= 2 images, so every image enters the sum
+    const = np.sum(np.log(2 * np.pi * a * b))
+    assert const == pytest.approx(75.904258, abs=1e-5)
+    offset = np.asarray(bayes["ln(Lhood)"], float) + 0.5 * np.asarray(bayes["Chi2"], float)
+    assert np.allclose(offset, -const, atol=1e-4)
+
+
 def test_chi2pos_from_par(tmp_path):
     par = tmp_path / "best.par"
     par.write_text("#Chi2tot(dof=32): 30.9\n#Chi2pos: 30.913219\nrunmode\n end\n")
