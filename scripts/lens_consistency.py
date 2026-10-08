@@ -742,7 +742,9 @@ def cmd_posterior(args) -> dict:
                         float(pred["magnification"][k]),
                     )
                 )
-    tab = vstack(per_image, metadata_conflicts="silent")  # model_sha256 differs per sample
+    tab = vstack(per_image, metadata_conflicts="silent")
+    # model_sha256 differs per sample (rows carry bayes_row); keep only best.par's
+    tab.meta["model_sha256"] = par["sha256"]
     ext = Table(
         rows=extras or None,
         names=("sample", "bayes_row", "system", "z_used", "ra", "dec", "magnification"),
@@ -780,7 +782,9 @@ def cmd_posterior(args) -> dict:
             fam_sum["images"][img] = {
                 "dtheta_best": round(float(t0["dtheta_arcsec"][0]), 3),
                 "shared_best": bool(t0["shared_match"][0]),
-                "shared_fraction": round(float(np.mean(ti["shared_match"])), 3),
+                "shared_fraction": (
+                    round(float(np.mean(ti["shared_match"])), 3) if len(ti) else None
+                ),
                 "dtheta_p16_50_84": _pct(ti["dtheta_arcsec"]),
                 "mu_p16_50_84": _pct(ti["magnification"]),
             }

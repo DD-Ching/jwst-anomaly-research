@@ -638,6 +638,16 @@ def test_posterior_command_on_a_synthetic_chain(tmp_path, monkeypatch):
         assert img["dtheta_best"] < 0.1 and not img["shared_best"]
         assert img["dtheta_p16_50_84"][2] > img["dtheta_best"]  # sampled models fit worse
     assert (tmp_path / "out" / "_post" / "posterior.json").exists()
+    images = Table.read(tmp_path / "out" / "_post" / "posterior_images.ecsv")
+    assert images.meta["model_sha256"] == lc.lensmodel.parse_lenstool_par(par_path)["sha256"]
+    lc.MODELS["_post"] = {"sigpos": 0.5, "bayes": ("unused", "unused")}
+    try:
+        args.samples = 0  # best.par only: no NaN in the JSON
+        summary = lc.cmd_posterior(args)
+    finally:
+        del lc.MODELS["_post"]
+    img = next(iter(summary["families"]["1"]["images"].values()))
+    assert img["shared_fraction"] is None and img["dtheta_p16_50_84"] is None
 
 
 @pytest.mark.network
