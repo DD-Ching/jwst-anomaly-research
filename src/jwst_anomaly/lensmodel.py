@@ -128,6 +128,32 @@ ABELL2744_BERGAMINI23: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: RELICS (Cerny et al. 2018, ApJ 859, 159; HLSP DOI 10.17909/T9SP45) Lenstool v1 maps of
+#: WHL0137-08 (Sunrise), deflection in arcsec at D_LS/D_S = 1 (accessed 2026-10-08). The lens
+#: redshift 0.566 and H0 = 70, Om0 = 0.3 reproduce the published z = 6.2 magnification map.
+_RELICS_WHL0137 = (
+    "https://archive.stsci.edu/hlsps/relics/whl0137m08/models/lenstool/v1/"
+    "hlsp_relics_model_model_whl0137m08_lenstool_v1"
+)
+WHL0137_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_WHL0137}_x-arcsec-deflect.fits",
+        "9666a25c06f6f5f078d60ab7093f79948d6fb0adbee548c36fb761dac35f9694",
+    ),
+    "alpha_y": (
+        f"{_RELICS_WHL0137}_y-arcsec-deflect.fits",
+        "85aa9f058850b983bdac7566dcbc090d2a88beeae2b251005c97912a64f78c0b",
+    ),
+    "kappa_map": (
+        f"{_RELICS_WHL0137}_kappa.fits",
+        "cce65a0723cd497406f99e25365e606d11d9147f370810ab95487a02dc03ca86",
+    ),
+    "mag_z6.2": (
+        f"{_RELICS_WHL0137}_z06p2-magnif.fits",
+        "3598be3c0caacb259dfe45fb49b80e5c05e1414f5c212d2a43f01eea028c1be0",
+    ),
+}
+
 # French Lenstool keywords (input files) -> the English ones written in best.par.
 _ALIASES = {
     "potentiel": "potential",
@@ -568,6 +594,16 @@ class LensModel:
             total += comp.kappa(x, y)
         return total
 
+    def deflection_xy(self, x: Any, y: Any) -> tuple[np.ndarray, np.ndarray]:
+        """Deflection at D_LS/D_S = 1 at model-frame positions (arcsec)."""
+        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
+        ax, ay = np.zeros(x.shape), np.zeros(x.shape)
+        for comp in self.components:
+            dx, dy = comp.deflection(x, y)
+            ax += dx
+            ay += dy
+        return ax, ay
+
     def fields_xy(self, x: Any, y: Any) -> dict[str, np.ndarray]:
         """Deflection and Hessian at D_LS/D_S = 1: ``alpha_x, alpha_y, psi_xx, psi_xy, psi_yy``."""
         x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
@@ -847,12 +883,7 @@ class DeflectionGrid:
     ) -> DeflectionGrid:
         g = np.arange(-half_width, half_width + step / 2, step)
         xx, yy = np.meshgrid(g, g)
-        ax = np.zeros_like(xx)
-        ay = np.zeros_like(xx)
-        for comp in model.components:
-            dx, dy = comp.deflection(xx, yy)
-            ax += dx
-            ay += dy
+        ax, ay = model.deflection_xy(xx, yy)
         return cls(g, ax, ay, model.sha256)
 
     @classmethod
@@ -1018,3 +1049,143 @@ def imageplane_residuals(model: LensModel, grid: DeflectionGrid, backtrace: Tabl
     out.meta.update(model._meta())
     out.meta["source"] = f"{backtrace.meta.get('source', 'images')}, image-plane solve"
     return out
+
+
+class MapLensModel(LensModel):
+    """A lens model given as published deflection maps (RELICS / HFF / UNCOVER convention).
+
+    ``alpha_x``, ``alpha_y`` are deflection maps in arcsec at D_LS/D_S = 1 along the image's pixel
+    axes, on a north-up, east-left TAN grid (``wcs``; rotated grids raise
+    :class:`UnsupportedModelError`): +i runs West and +j North, as the model frame's +x and +y.
+    The model frame is centred on ``centre`` (RA, Dec; default: the map's reference pixel), with
+    x = West and y = North in arcsec as for :class:`LensModel`. Positions are mapped to pixels
+    through the WCS. Deflection is interpolated bilinearly; the Hessian comes from centred finite
+    differences in float64 (so κ, γ and μ are resolution-limited at critical curves). Positions
+    outside the maps give NaN. Provenance of every prediction: ``model_prediction``.
+    """
+
+    def __init__(
+        self,
+        alpha_x: np.ndarray,
+        alpha_y: np.ndarray,
+        wcs: Any,
+        z_lens: float,
+        cosmology: FlatLambdaCDM,
+        source: str = "",
+        sha256: str = "",
+        centre: tuple[float, float] | None = None,
+    ) -> None:
+        cd = np.asarray(wcs.pixel_scale_matrix, float) * 3600.0
+        if abs(cd[0, 1]) > 1e-9 * abs(cd[0, 0]) or abs(cd[1, 0]) > 1e-9 * abs(cd[1, 1]):
+            raise UnsupportedModelError(f"{source}: rotated deflection maps are not supported")
+        if not (cd[0, 0] < 0 < cd[1, 1]) or not np.isclose(-cd[0, 0], cd[1, 1], rtol=1e-6):
+            raise UnsupportedModelError(f"{source}: maps must be north-up, east-left, square")
+        if alpha_x.shape != alpha_y.shape:
+            raise ValueError(f"{source}: deflection maps differ in shape")
+        self.components = ()
+        self.z_lens = float(z_lens)
+        self.wcs = wcs
+        if centre is None:
+            ref = (float(wcs.wcs.crpix[0]) - 1.0, float(wcs.wcs.crpix[1]) - 1.0)
+            centre = tuple(float(v) for v in wcs.pixel_to_world_values(*ref))
+        self.ra0, self.dec0 = float(centre[0]), float(centre[1])
+        self.cosmology = cosmology
+        self.source = source
+        self.sha256 = sha256
+        self._cos0 = np.cos(np.deg2rad(self.dec0))
+        self.pixel_arcsec = float(cd[1, 1])
+        step = self.pixel_arcsec
+        ax = np.asarray(alpha_x, np.float64)
+        ay = np.asarray(alpha_y, np.float64)
+        dax_dy, dax_dx = np.gradient(ax, step)
+        day_dy, day_dx = np.gradient(ay, step)
+        self._maps = {
+            "alpha_x": ax.astype(np.float32),
+            "alpha_y": ay.astype(np.float32),
+            "psi_xx": dax_dx.astype(np.float32),
+            "psi_yy": day_dy.astype(np.float32),
+            "psi_xy": (0.5 * (dax_dy + day_dx)).astype(np.float32),
+        }
+        del ax, ay, dax_dy, dax_dx, day_dy, day_dx
+        self.shape = alpha_x.shape
+
+    @classmethod
+    def from_fits(
+        cls,
+        alpha_x_path: str | Path,
+        alpha_y_path: str | Path,
+        z_lens: float,
+        cosmology: FlatLambdaCDM,
+        source: str = "",
+        centre: tuple[float, float] | None = None,
+    ) -> MapLensModel:
+        """Build from two FITS deflection maps (arcsec, D_LS/D_S = 1); ``sha256`` hashes both
+        files (read in chunks)."""
+        import warnings
+
+        from astropy.io import fits
+        from astropy.wcs import WCS, FITSFixedWarning
+
+        digest = hashlib.sha256()
+        arrays = []
+        wcs = None
+        for p in (alpha_x_path, alpha_y_path):
+            with open(p, "rb") as fh:
+                while chunk := fh.read(1 << 22):
+                    digest.update(chunk)
+            with fits.open(p, memmap=True) as hdul:
+                arrays.append(np.asarray(hdul[0].data, np.float32))
+                if wcs is None:
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore", FITSFixedWarning)
+                        wcs = WCS(hdul[0].header)
+        return cls(
+            arrays[0],
+            arrays[1],
+            wcs,
+            z_lens,
+            cosmology,
+            source=source or f"{alpha_x_path} + {alpha_y_path}",
+            sha256=digest.hexdigest(),
+            centre=centre,
+        )
+
+    def _interp(self, x: np.ndarray, y: np.ndarray, keys) -> dict[str, np.ndarray]:
+        from scipy.ndimage import map_coordinates
+
+        ra, dec = self.to_sky(x, y)
+        i, j = (np.asarray(v, float) for v in self.wcs.world_to_pixel_values(ra, dec))
+        inside = (i >= 0) & (i <= self.shape[1] - 1) & (j >= 0) & (j <= self.shape[0] - 1)
+        coords = np.vstack([np.ravel(j), np.ravel(i)])
+        out = {}
+        for k in keys:
+            v = map_coordinates(self._maps[k], coords, order=1, mode="nearest").reshape(x.shape)
+            out[k] = np.where(inside, v.astype(float), np.nan)
+        return out
+
+    def fields_xy(self, x: Any, y: Any) -> dict[str, np.ndarray]:
+        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
+        return self._interp(x, y, ("alpha_x", "alpha_y", "psi_xx", "psi_xy", "psi_yy"))
+
+    def deflection_xy(self, x: Any, y: Any) -> tuple[np.ndarray, np.ndarray]:
+        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
+        f = self._interp(x, y, ("alpha_x", "alpha_y"))
+        return f["alpha_x"], f["alpha_y"]
+
+    def kappa_xy(self, x: Any, y: Any) -> np.ndarray:
+        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
+        f = self._interp(x, y, ("psi_xx", "psi_yy"))
+        return 0.5 * (f["psi_xx"] + f["psi_yy"])
+
+    def _meta(self) -> dict[str, Any]:
+        meta = super()._meta()
+        meta.pop("n_potentials", None)
+        meta.update(
+            source=f"deflection maps {self.source}",
+            maps={
+                "shape": list(self.shape),
+                "pixel_arcsec": self.pixel_arcsec,
+                "interpolation": "bilinear; Hessian from centred finite differences",
+            },
+        )
+        return meta

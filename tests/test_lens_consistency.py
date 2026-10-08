@@ -214,19 +214,24 @@ def test_forced_check_recovers_offset_image_and_flags_absent_one():
     )
     table = Table(
         {
-            "system": ["1", "1", "1"],
-            "ra": [ref[0], pred_a[0], pred_b[0]],
-            "dec": [ref[1], pred_a[1], pred_b[1]],
-            "magnification": [10.0, 5.0, -5.0],
-            "image_class": ["observed", "missing", "missing"],
+            "system": ["1", "1", "1", "1"],
+            "ra": [ref[0], ref[0] + 40 / 3600 / cosd, pred_a[0], pred_b[0]],
+            "dec": [ref[1], ref[1], pred_a[1], pred_b[1]],
+            "magnification": [10.0, 400.0, 5.0, -5.0],
+            "image_class": ["observed", "observed", "missing", "missing"],
+            "sep_image_arcsec": [0.1, 0.2, np.nan, np.nan],
         }
     )
     table.meta["provenance"] = "derived"
     lc.forced_check(table, backtrace, stamp, search_arcsec=1.0)
-    assert list(table["forced_class"]) == ["", "recovered", "absent"]
-    assert abs(table["best_dx"][1] - 0.5) < 0.11 and abs(table["best_dy"][1]) < 0.11
-    assert 0.8 < table["flux_ratio"][1] < 1.2  # 1.0 observed against 2.0 x 5/10 predicted
-    assert table["pred_snr"][2] > 10 and table["best_snr"][2] < 3
+    assert list(table["forced_class"]) == ["", "", "recovered", "absent"]
+    assert abs(table["best_dx"][2] - 0.5) < 0.11 and abs(table["best_dy"][2]) < 0.11
+    assert 0.8 < table["flux_ratio"][2] < 1.2  # 1.0 observed against 2.0 x 5/10 predicted
+    assert table["pred_snr"][3] > 10 and table["best_snr"][3] < 3
+    assert table["search_arcsec"][3] == 1.0  # residuals 0.1-0.2": the base radius
+    widened = table.copy()
+    lc.forced_check(widened, backtrace, stamp, search_arcsec=1.0, unpredicted=["1.3"])
+    assert widened["search_arcsec"][3] == 2.25  # a catalogued image of system 1 is unpredicted
     assert table.meta["forced"]["max_ref_mu"] == 50.0
 
     def gap_stamp(ra, dec):  # valid at the reference only; the predictions fall in a gap
@@ -237,7 +242,88 @@ def test_forced_check_recovers_offset_image_and_flags_absent_one():
 
     off = table.copy()
     lc.forced_check(off, backtrace, gap_stamp)
-    assert list(off["forced_class"]) == ["", "off_image", "off_image"]
+    assert list(off["forced_class"]) == ["", "", "off_image", "off_image"]
+
+    # a reference whose recentred peak is a brighter neighbour (nothing at the catalogued spot)
+    nb = _stamp_factory([(ref[0] + 0.35 / 3600 / cosd, ref[1], 2.0)])
+    nbt = table.copy()
+    lc.forced_check(nbt, backtrace, nb)
+    assert list(nbt["forced_class"])[2:] == ["no_reference", "no_reference"]
+
+    # two usable references whose f/|mu| disagree by more than 3x
+    bt2 = Table(
+        {
+            "system": ["1", "1"],
+            "ra": [ref[0], ref[0] - 10 / 3600 / cosd],
+            "dec": [ref[1], ref[1]],
+            "magnification": [10.0, 5.0],
+        }
+    )
+    st2 = _stamp_factory(
+        [(ref[0], ref[1], 2.0), (ref[0] - 10 / 3600 / cosd, ref[1], 0.25)], noise=0.001
+    )  # f/|mu| 0.2 against 0.05
+    t2 = table.copy()
+    t2["magnification"][1] = 5.0
+    lc.forced_check(t2, bt2, st2)
+    assert list(t2["forced_class"])[2:] == ["inconsistent_reference"] * 2
+
+
+def test_search_radius_follows_model_residuals():
+    t = Table(
+        {
+            "system": ["1", "1", "1", "2"],
+            "image_class": ["observed", "observed", "missing", "observed"],
+            "sep_image_arcsec": [0.3, 1.2, np.nan, 0.1],
+        }
+    )
+    assert lc.system_search_radius(t, "1", 1.0, False) == pytest.approx(1.8)
+    assert lc.system_search_radius(t, "2", 1.0, False) == 1.0
+    assert lc.system_search_radius(t, "2", 1.0, True) == pytest.approx(2.25)  # one unpredicted
+    t["sep_image_arcsec"][1] = 5.0
+    assert lc.system_search_radius(t, "1", 1.0, False) == lc.MAX_SEARCH_ARCSEC
+    assert lc.system_search_radius(t, "2", 4.0, False) == 4.0  # a user radius is never capped
+
+
+def test_resolved_reference_is_not_used():
+    # a reference spread over ~0.5" (resolved): its 0.2" aperture flux does not scale with |mu|
+    cosd = np.cos(np.deg2rad(DEC0))
+    yy, xx = np.mgrid[-60:61, -60:61] * 0.03
+
+    def stamp(ra, dec):
+        dx = -(RA0 - ra) * cosd * 3600.0
+        dy = (DEC0 - dec) * 3600.0
+        img = np.exp(-((xx - dx) ** 2 + (yy - dy) ** 2) / (2 * 0.35**2))
+        return img, np.full(xx.shape, 0.001), xx, yy
+
+    bt = Table({"system": ["1"], "ra": [RA0], "dec": [DEC0], "magnification": [5.0]})
+    t = Table(
+        {
+            "system": ["1", "1"],
+            "ra": [RA0, RA0 + 20 / 3600 / cosd],
+            "dec": [DEC0, DEC0],
+            "magnification": [5.0, 3.0],
+            "image_class": ["observed", "missing"],
+            "sep_image_arcsec": [0.1, np.nan],
+        }
+    )
+    lc.forced_check(t, bt, stamp)
+    assert t["forced_class"][1] == "no_reference"
+
+
+def test_frame_offset_moves_model_and_images_together():
+    model = _model()
+    images = Table({"ra": [RA0], "dec": [DEC0]})
+    lc.MODELS["_test"] = {"frame_offset_arcsec": (0.3, -0.1)}
+    try:
+        x0, y0 = model.to_frame(RA0, DEC0)
+        lc.apply_frame_offset("_test", model, images)
+        x1, y1 = model.to_frame(images["ra"][0], images["dec"][0])
+        # the image keeps its model-frame position; on the sky it moved by the offset
+        assert abs(x1 - x0) < 1e-6 and abs(y1 - y0) < 1e-6
+        dra = (images["ra"][0] - RA0) * np.cos(np.deg2rad(DEC0)) * 3600
+        assert abs(dra - 0.3) < 1e-6 and abs((images["dec"][0] - DEC0) * 3600 + 0.1) < 1e-6
+    finally:
+        del lc.MODELS["_test"]
 
 
 def test_predict_counter_images_reproduces_an_sis_pair():
@@ -318,3 +404,101 @@ def test_cluster_model_files_load(name, n_images, n_families, chi2):
     z = lc.lensmodel.image_redshifts(images, par["z_m_limit"])
     assert np.all(np.isfinite(z))  # every image has a catalogued or fixed redshift
     assert len(model.components) == len(par["potentials"])
+
+
+def _flux_inputs(offsets_mag=(0.0, 0.0, 0.0), npix=(500, 500, 500), z_lo=(1.0, 1.0, 1.0)):
+    model = _model()
+    ra = RA0 + np.array([50.0, -20.0, 0.0]) / 3600 / np.cos(np.deg2rad(DEC0))
+    dec = DEC0 + np.array([0.0, 0.0, 60.0]) / 3600
+    images = Table(
+        {
+            "image_id": ["1.1", "1.2", "1.3"],
+            "system": ["1", "1", "1"],
+            "ra": ra,
+            "dec": dec,
+            "a": [0.5] * 3,
+            "z": [2.0] * 3,
+        }
+    )
+    mu = np.asarray(model.evaluate(ra, dec, 2.0)["magnification"], float)
+    mag = 25.0 - 2.5 * np.log10(np.abs(mu)) + np.asarray(offsets_mag)
+    phot = Table(
+        {
+            "dja_id": [11, 12, 13],
+            "ra": ra,
+            "dec": dec + 0.1 / 3600,
+            "mag_auto": mag,
+            "magerr_auto": [0.02] * 3,
+            "npix": list(npix),
+            "f150w_mag": mag + 0.5,
+            "f150w_mag_err": [0.02] * 3,
+            "f444w_mag": mag - 0.5,
+            "f444w_mag_err": [0.02] * 3,
+            "z_phot": [2.0] * 3,
+            "z025": list(z_lo),
+            "z975": [3.0] * 3,
+        }
+    )
+    return model, images, phot, mu
+
+
+def test_flux_ratio_table_consistent_and_injected_outlier():
+    model, images, phot, mu = _flux_inputs()
+    assert np.all(np.abs(mu) < 20)
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    np.testing.assert_allclose(t["resid_mag"], 0.0, atol=1e-6)
+    assert list(t["flux_class"]) == ["consistent"] * 3
+    assert list(t["colour_class"]) == ["consistent"] * 3
+    assert t.meta["provenance"] == "derived"
+    # A 1.5 mag deficit in one image: leave-one-out keeps it out of its own reference.
+    model, images, phot, _ = _flux_inputs(offsets_mag=(1.5, 0.0, 0.0))
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert t["resid_mag"][0] == pytest.approx(1.5)
+    assert list(t["flux_class"]) == ["flux_outlier", "consistent", "consistent"]
+    assert list(t["colour_class"]) == ["consistent"] * 3  # achromatic: colours still agree
+    # 1.6 mag shifts the good images' references by 0.8 mag; only the worst image is flagged.
+    model, images, phot, _ = _flux_inputs(offsets_mag=(1.6, 0.0, 0.0))
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    np.testing.assert_allclose(t["resid_mag"], [1.6, -0.8, -0.8])
+    assert list(t["flux_class"]) == ["flux_outlier", "consistent", "consistent"]
+    np.testing.assert_allclose(t["resid_err"], np.hypot(0.02, 0.02 / np.sqrt(2)))
+    # A chromatic change: only image 1.2 is 0.5 mag redder.
+    model, images, phot, _ = _flux_inputs()
+    phot["f444w_mag"][1] -= 0.5
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert list(t["colour_class"]) == ["consistent", "colour_outlier", "consistent"]
+    assert t["colour_resid"][1] == pytest.approx(0.5)
+
+
+def test_flux_ratio_table_pair_residual_is_the_full_difference():
+    model, images, phot, _ = _flux_inputs(offsets_mag=(1.0, 0.0, 0.0))
+    t = lc.flux_ratio_table(model, images[:2], {}, phot)
+    np.testing.assert_allclose(t["resid_mag"], [1.0, -1.0])
+    assert list(t["flux_class"]) == ["flux_outlier"] * 2
+    # A single usable image cannot be tested.
+    t = lc.flux_ratio_table(model, images[:1], {}, phot)
+    assert t["flux_class"][0] == "untested"
+
+
+def test_flux_ratio_table_exclusions():
+    model, images, phot, _ = _flux_inputs(npix=(50000, 500, 500))
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert list(t["large_segment"]) == [True, False, False]
+    assert list(t["flux_class"]) == ["untested", "consistent", "consistent"]
+    # z025 = 3.5 excludes z = 2 even with the 0.15 (1 + z) margin; z025 = 2.4 does not.
+    model, images, phot, _ = _flux_inputs(z_lo=(3.5, 2.4, 1.0))
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert list(t["photoz_excluded"]) == [True, False, False]
+    assert list(t["flux_class"]) == ["untested", "consistent", "consistent"]
+    # One DJA source nearest to two images: both are blends.
+    model, images, phot, _ = _flux_inputs()
+    images["ra"][1], images["dec"][1] = images["ra"][0], images["dec"][0] + 0.05 / 3600
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert list(t["blended"]) == [True, True, False]
+    assert list(t["flux_class"]) == ["untested"] * 3
+    # Beyond match_arcsec nothing matches; a frame offset brings the matches back.
+    model, images, phot, _ = _flux_inputs()
+    t = lc.flux_ratio_table(model, images, {}, phot, match_arcsec=0.05)
+    assert set(t["flux_class"]) == {"untested"} and set(t["dja_id"]) == {-1}
+    t = lc.flux_ratio_table(model, images, {}, phot, match_arcsec=0.05, offset_arcsec=(0.0, 0.1))
+    assert list(t["dja_id"]) == [11, 12, 13]

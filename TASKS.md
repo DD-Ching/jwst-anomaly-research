@@ -9,10 +9,15 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - bright single arcs;
      - a BCG/ICL-subtracted test for system 17;
      - reference fluxes for systems 11, 16 and 26;
-   - parity and flux-ratio checks for the catalogued systems (DJA photometry against model magnification ratios);
+   - flux ratios and colours: done for SMACS and El Gordo (D-032: no anomaly; most images untested). Left:
+     - Abell 2744 `fluxratios` (needs the 233 MB DJA catalogue, see below);
+     - totals for arcs inside cluster-galaxy/ICL light (inspect DJA `_phot_apcorr.fits`);
+     - `bayes.dat` μ errors, then recheck SMACS 6.3 (0.6–0.7 mag brighter than 6.1+6.2 predict);
+     - an observational parity test (image orientation or resolved structure; not yet designed);
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
-   - exotic screens (D-031): SMACS null. Run them per cluster (El Gordo, Abell 2744, Sunrise, then HFF/RELICS).
+   - exotic screens (D-031, D-034): SMACS, El Gordo and Sunrise (radial) null. Next: Abell 2744 (worker), then HFF/RELICS map fields via
+     `MapLensModel` (D-033).
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;

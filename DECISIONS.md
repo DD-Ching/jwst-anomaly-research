@@ -1548,3 +1548,170 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 - Total (deblended, model-subtracted) fluxes become available for resolved arcs. That would test the 38 resolved
   images.
 - A field has many more `anti` arcs, or a centre reaches p_random < 0.01.
+
+## D-032 Flux-ratio and colour test of catalogued multiple images on DJA photometry; no anomaly in SMACS or El Gordo (2026-10-08)
+
+**Decision.**
+- Complements D-031's `exotic_screens.py fluxratio` (forced photometry, compact images only): Kron totals
+  test resolved images too, and the colour test needs no μ.
+- `lens_consistency.py fluxratios` matches every `arcs.dat` image to DJA `fix_phot` (default 0.3″, after an
+  optional `--offset-arcsec` frame shift). It computes the implied source magnitude `mag_auto + 2.5 log10 |μ|`
+  (μ at the catalogued position and system z) and the 0.5″ aperture F150W−F444W colour, which needs no μ.
+- Each image's residual is taken against the median of the *other* usable images of its system (leave-one-out).
+  In a pair, both images carry the full pair difference.
+- ASSUMPTIONs: `flux_outlier` |residual| > 0.75 mag; `colour_outlier` > 0.3 mag; S/N ≥ 10; |μ| ≤ 20 for the flux
+  test.
+- An image is untested when its DJA segment exceeds 20,000 px (it swallows host or ICL light), when one DJA source
+  matches several images, or when the counterpart's 95 % photo-z interval, widened by 0.15 (1 + z), excludes the
+  system redshift (`--photoz`, DJA eazy zout).
+- Fluxes and colours come from `photometry.load_dja_catalog`, which applies SEP flags, masks and the unit check.
+- Parity (the sign of μ) is reported, not tested.
+
+**Alternatives rejected.**
+- DJA `<band>_flux_aper_k × <band>_tot_corr` as a total flux. In v7, `<band>_tot_corr` is 1 and `tot_corr` is a
+  point-source correction capped at 1.21. For extended arcs the aperture flux tracks surface brightness, which
+  lensing conserves, so it cannot test μ. Only the detection-image Kron `mag_auto` is a total.
+- A median that includes the image itself: it halves a pair's difference and hides a single bad image.
+- No segment-size cut. SMACS 1.1, an arc on a cluster galaxy's halo with a 32,864 px segment, then looked 1.4 mag
+  too bright. Visual check: the excess is host light.
+- No photo-z gate. El Gordo 9a's counterpart has z_phot 0.89 (95 %: 0.73–0.99), a cluster-redshift object, for a
+  z = 4.32 system, and it made 9a/9c a 1.2 mag colour pair. The 9c counterpart has z_phot 3.62.
+- The bare 95 % eazy interval. It is too narrow and excluded plausible images: SMACS 3.3 (1.83–1.86 against
+  z = 1.99) and El Gordo 5a (3.70–4.09 against 3.54).
+- A wider match radius instead of a frame shift for El Gordo. DJA v7.0 sits at dRA +0.221″, dDec −0.018″ (median
+  of 41 matches) from the image list. Matching at 0.5″ without the shift adds the 7b/7c pair, which is not a
+  lensing effect (vetting below).
+
+**Evidence** (`derived`; DJA v7.4 SMACS and v7.0 El Gordo, sha256 in SOURCES.md):
+
+| Field (match) | Matched | Flux tested (systems) | Flux rms / max | Colour tested | Colour rms / max | Flagged |
+|---|---|---|---|---|---|---|
+| SMACS (0.3″) | 22 / 60 | 8 (4) | 0.60 / 1.14 mag | 9 | 0.11 / 0.22 mag | 6.1/6.3 (flux) |
+| SMACS (0.5″) | 26 / 60 | 11 (5) | 0.52 / 1.14 mag | 12 | 0.14 / 0.22 mag | 6.1/6.3 (flux) |
+| El Gordo (0.3″, shifted) | 37 / 56 | 23 (11) | 0.49 / 1.16 mag | 11 | 0.07 / 0.15 mag | 18b/18c (flux) |
+
+- Photo-z excluded SMACS 8.1/8.2 (model z = 11.76 against z_phot 6.6, as D-029 found) and 11.2, and El Gordo 9a
+  and 21b. **No colour outlier** in either field.
+- Vetting of the flagged pairs (cutouts and forced 0.2″ photometry on the `_i2d`, S3 byte ranges):
+  - **SMACS 6.1/6.3** (μ 15.3 / 3.1, pair difference 1.14 mag in `mag_auto`).
+    - Both images are compact, with equal colours (Δ 0.01 mag).
+    - Moving 6.1 by the model rms (0.32″) changes μ by only −0.14 to +0.17 mag.
+    - Forced photometry reduces the difference to 0.61 / 0.66 / 0.78 mag in F150W / F200W / F444W. 6.2, which has
+      no DJA match, agrees with 6.1 within 0.3–0.5 mag.
+    - So 6.3 is about 0.6–0.7 mag brighter than the merging pair 6.1+6.2 predicts. That is below the threshold, in
+      a pair whose μ ≈ 13–15 depends on the critical curve's position (no `bayes.dat` uncertainty yet).
+    - **Not a candidate.**
+  - **El Gordo 18b/18c and 7b/7c** (`mag_auto` 25.9–27.4, MUSE Lyα systems).
+    - 18b has forced S/N 0.3–4.
+    - The 7b/7c ratio changes from −0.16 to −1.48 mag between F200W and F277W, but lensing is achromatic.
+    - These are faint-counterpart measurement failures. **Not candidates.**
+- **Result: no flux-ratio or colour anomaly** in SMACS or El Gordo among the testable images.
+
+**Limits.**
+- Most images are untested. DJA has no segment for arcs inside cluster-galaxy or ICL light (SMACS: 38 of 60 images
+  have no DJA source within 0.3″), and SMACS systems 7, 11, 16 and 26 have |μ| > 20.
+- μ comes from the best-fit model only.
+- `mag_auto` of faint sources (> 25.5 mag) next to bright neighbours is unreliable.
+- The 0.5″ aperture colours are not PSF-matched here (the F444W PSF is wider), which may add about 0.1 mag of
+  scatter between differently stretched images.
+- Only each system's worst image is flagged, so a second discrepant image in a system of four would stay
+  `consistent` (none of the tested systems has more than three usable images).
+- `_loo_residual` duplicates the sibling reference of D-031's `luminosity_ratios`, with a different reference
+  error (median/√n against 1.25 × mean/√n). Merge them into one helper when either changes.
+- The S/N cuts invert each catalogue's own error definition: Pogson for SEP `magerr_auto`, and
+  `snr_from_mag_err` for `load_dja_catalog`'s 2.5 log10(1 + 1/SNR).
+
+**Revisit if.**
+- A photometry with totals for arcs near cluster galaxies becomes available (BCG/ICL-subtracted; e.g. the DJA
+  tarball's `_phot_apcorr.fits`, not yet inspected).
+- `bayes.dat` μ uncertainties are added. Then use a χ² instead of a fixed threshold, and recheck SMACS 6.
+## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
+
+**Decision.**
+- **`lensmodel.MapLensModel`** evaluates a lens model from two published deflection maps (arcsec, D_LS/D_S = 1).
+  - The maps must be on a north-up, east-left TAN grid. Rotated grids raise `UnsupportedModelError`.
+  - Model-frame positions go to pixels through the maps' WCS (TAN), not a flat offset.
+  - Deflection is interpolated bilinearly. The Hessian comes from centred finite differences in float64, so κ, γ
+    and μ are resolution-limited at critical curves.
+  - The frame origin is the map's reference pixel unless the `MODELS` entry gives a `centre`. The radial screen's
+    `--max-radius` is measured from that origin.
+  - Screens fetch only the two deflection maps; `validate` also fetches the κ and μ check maps.
+  - It has the `LensModel` interface (`fields_xy`, `deflection_xy`, `kappa_xy`, `evaluate`), so `find_images`,
+    `DeflectionGrid` and the exotic screens run unchanged.
+  - Fields with only published maps (RELICS, HFF, UNCOVER) therefore need no Lenstool file.
+- **`lens_consistency.py`:**
+  - map models are `MODELS` entries with `kind: maps`;
+  - `load_model` returns a Lenstool model or a map model;
+  - `validate` compares a map model with the published κ map and magnification maps.
+- **First map model:** `whl0137-relics-lenstool`, the RELICS Lenstool v1 maps of WHL0137-08.
+  - The 4 maps are pinned by sha256 in `lensmodel.WHL0137_RELICS_LENSTOOL`, 100 MB each (5000² float32 at
+    0.04″), each under the 200 MB limit.
+  - z_lens 0.566, H0 70, Ωm 0.3.
+
+**Alternatives rejected.**
+- Interpolating the published κ/γ maps directly: they have no source-redshift scaling and no deflection, so they
+  cannot solve the lens equation.
+- Re-fitting a parametric model: that is new modelling, not the published model.
+
+**Evidence** (`validate`, 2026-10-08; `model_prediction` against the published products).
+- κ: median relative difference 3.5e-5 (p95 1.3e-4) over 17,991 pixels with 0.05 < κ < 2.
+- μ at z = 6.2: median relative difference 2.0e-5 (p95 7.9e-5) over 17,133 pixels with |μ| < 10.
+- These confirm the sign convention (+x along +i = West), the D_LS/D_S = 1 normalisation, z_lens and the
+  cosmology.
+- Unit test: maps sampled from an analytic dPIE reproduce its deflection (2e-3″), its Hessian (5e-3) and its image
+  positions (0.01″).
+- **Radial screen on Sunrise** (F200W `jw02282-o010_t001`, DJA v7.5 photo-z):
+  - 265 elongated sources, 74 not behind the lens, 30 `anti`, 29 not model-radial;
+  - 3 centres, all without a catalog source within 1″, against a null mean of 2.2 (p95 5);
+  - max 3 lines, p = 0.885.
+  - **Null result.**
+- `fluxratio` needs a multiple-image list, which the RELICS HLSP lacks: not run.
+
+**Revisit if.**
+- A Sunrise image list becomes available (Welch+2022, Scofield+2025). It would allow `validate` χ² and
+  `fluxratio`.
+- Map resolution limits the Hessian near critical curves (0.04″ pixels).
+
+## D-034 Counter-image and radial-screen rules from El Gordo (2026-10-08)
+
+**Decision.** Four rules, each from an ordinary false flag in El Gordo (docs/fields/elgordo.md), so later fields skip
+them automatically. All thresholds are ASSUMPTIONs.
+1. **Frame offset:** a `MODELS` entry may give `frame_offset_arcsec` from its image list's frame to the JWST frame.
+   `apply_frame_offset` shifts the model's reference point and the image list together at load, so `images`,
+   `arcs` and both screens work in the JWST frame.
+   El Gordo's is (+0.224″, −0.016″), the median offset of the Caminha image list from DJA v7.0 (issue #41). An
+   unshifted 0.2″ aperture missed the images.
+2. **Reference images** (`forced_check`) must have:
+   - S/N > 5 at the catalogued position;
+   - a 0.4″-recentred peak at most 2× brighter (else the peak is a neighbour);
+   - compactness f(0.2″)/f(0.4″) ≥ 0.6 (a resolved arc or a galaxy wing does not scale with |μ|; D-031).
+   When qualifying siblings differ in f/|μ| by more than 3×, the system is `inconsistent_reference`. That is a
+   question for the flux-ratio screens, not a missing image.
+3. **Search radius** = max(1″, 1.5 × the system's largest catalogued-image residual), and 2.25″ when one of the
+   system's catalogued images is in the `unpredicted` list. The widening is capped at 3″; a larger user radius is
+   kept. It used to be a fixed 1″.
+4. **Radial screen:** elongated sources within the spike radius of a point source brighter than F200W 20 mag are
+   dropped when their axis lies within 7° of the direction to it and that direction is one of the field's spike
+   axes. The axes are a hexagonal set θ, θ + 60°, θ + 120° plus θ + 90°, with θ the mode of the aligned pairs'
+   angles mod 60°. Spikes point radially at their star; genuine radial arcs off the spike axes survive.
+   - Spike radius: 3″ × 10^(0.2 (20 − m)), clipped to 3–20″ (the D-027 mask form).
+
+**Alternatives rejected.**
+- A catalogue-counterpart requirement for references: it would tie the check to one catalogue's deblending.
+- An S/N cut for spike stars: S/N saturates for bright stars; 553 of 613 sources were dropped.
+
+**Evidence** (2026-10-08).
+- **El Gordo forced photometry:** `absent` went from 3 to 0. All three were ordinary on vetting (23: model position
+  error; 6: reference contamination plus far-image position error, with photo-z-consistent counterparts at 2.6–3.1″
+  and flux ratios 0.9–1.0; 7: frame offset).
+- **El Gordo radial screen:** the strongest centre went from 6 lines (p = 0.055, a mag 15.8 star) to max 4 lines,
+  p = 0.64. 33 spike segments were dropped within the screened 110″.
+- **SMACS re-run:** 0 absent, as in D-029. System 9 becomes `no_reference` (its catalogued images are resolved);
+  radial max 4 lines, p = 0.965 (5 spike segments).
+- **Tests:** `tests/test_lens_consistency.py` (neighbour peak, inconsistent references, residual radius) and
+  `tests/test_exotic_screens.py` (spike segments; off-axis radial arcs kept). There are also tests for resolved
+  references and the frame offset.
+
+**Revisit if.**
+- `bayes.dat` posteriors give model position errors for far images (system 6 needs about 3″).
+- A field's image list carries its own frame solution.
