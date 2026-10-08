@@ -377,14 +377,17 @@ def footprint_border(xs, ys, max_radius: float, radii=(4.0, 5.0, 6.0, 8.0)) -> d
     interior holes are filled, so a linear fit over ``radii`` extrapolated to r = 0 gives the area
     enclosed by the outermost sources; the excess at ``FOOTPRINT_RADIUS`` is an upper bound on the
     overestimate (the true edge lies beyond the outermost sources)."""
+    radii = tuple(sorted(set(radii) | {FOOTPRINT_RADIUS}))
     areas = [screened_footprint(xs, ys, max_radius, r)[2] for r in radii]
     slope, a0 = np.polyfit(radii, areas, 1)
-    a4 = areas[list(radii).index(FOOTPRINT_RADIUS)]
+    a4 = areas[radii.index(FOOTPRINT_RADIUS)]
     return {
         "radii": list(radii),
         "areas_arcsec2": areas,
         "area_r0_arcsec2": float(a0),
-        "excess_frac": float((a4 - a0) / a4),
+        # clipped to [0, 0.99]: a flat or concave area(r) (footprint cut by max_radius) must not
+        # give a negative or vanishing corrected area
+        "excess_frac": float(np.clip((a4 - a0) / a4, 0.0, 0.99)),
     }
 
 
@@ -723,7 +726,7 @@ def _limits(summaries: list[dict], masses) -> dict:
         th = [s["efficiency"][key]["theta_e_zs2_arcsec"] for s in summaries]
         # border-corrected: each footprint shrunk to its r -> 0 area (conservative)
         a0 = [
-            a * (1.0 - s["footprint_border"]["excess_frac"])
+            a * (1.0 - s.get("footprint_border", {}).get("excess_frac", 0.0))
             for a, s in zip(areas, summaries, strict=True)
         ]
         limits[key] = {
@@ -741,6 +744,11 @@ def combine(summaries: list[dict], masses) -> dict:
     lensable (at z_s = 2), so cluster members and foreground galaxies get painted as W1 images and
     the efficiency is biased high; those fields enter only the separate, optimistic set."""
     pz = [s for s in summaries if s.get("photoz")]  # as the field was actually run
+    for s in summaries:
+        if bool(s.get("photoz")) != (FIELDS[s["field"]]["photoz"] is not None):
+            print(
+                f"warning: {s['field']}: summary photo-z differs from FIELDS; re-run it", flush=True
+            )
     out = {
         "fields": [s["field"] for s in pz],
         "total_area_deg2": float(sum(s["screened_area_deg2"] for s in pz)),

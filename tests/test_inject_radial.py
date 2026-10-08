@@ -117,6 +117,7 @@ def test_paint_lens_removes_the_umbra_and_replaces_lensed_sources():
     np.testing.assert_allclose(xo, te * np.array([2.2 - np.sqrt(0.84), 2.2 + np.sqrt(0.84)]) / 2)
     np.testing.assert_allclose(iy, 0.0, atol=1e-6)
     np.testing.assert_allclose(img["pa_obs"], 90.0)  # radial: along the line to the lens
+    assert all(img["is_extended"])  # a lensed image never seeds the spike veto as a star
     mu = np.abs(exotic_sim.solve_images([2.2], 1.0, -1)["mu"][0])
     np.testing.assert_allclose(np.sort(img["mag"]), np.sort(24.0 - 2.5 * np.log10(mu)))
     np.testing.assert_allclose(np.sort(img["snr"]), np.sort(200.0 * np.sqrt(mu)))
@@ -215,3 +216,25 @@ def test_footprint_covers_only_where_the_catalogue_has_sources():
     # the fitted r = 0 area is the half disc; the excess at 4" is the 4" strip along the cut
     assert abs(border["area_r0_arcsec2"] / half_disc - 1.0) < 0.05
     assert 0.0 < border["excess_frac"] < 0.15
+
+
+def test_combine_headline_uses_photoz_fields_and_border_correction():
+    def summ(field, photoz, eff, area, excess):
+        e = {"efficiency": eff, "theta_e_zs2_arcsec": 3.0}
+        return {
+            "field": field,
+            "photoz": photoz,
+            "efficiency": {"2e+12": e},
+            "screened_area_deg2": area,
+            "footprint_border": {"excess_frac": excess},
+        }
+
+    s = [summ("smacs0723", "zout", 0.1, 1e-3, 0.1), summ("macs0717", None, 0.5, 1e-3, 0.0)]
+    out = ir.combine(s, [2e12])
+    lim = out["limits_95"]["2e+12"]
+    assert out["fields"] == ["smacs0723"]
+    np.testing.assert_allclose(lim["upper_limit_deg2"], ir.POISSON_UL_95 / 1e-4, rtol=1e-6)
+    np.testing.assert_allclose(
+        lim["upper_limit_border_corrected_deg2"], ir.POISSON_UL_95 / 0.9e-4, rtol=1e-6
+    )
+    assert out["optimistic_all_fields"]["no_photoz"] == ["macs0717"]
