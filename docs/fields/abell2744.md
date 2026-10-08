@@ -236,7 +236,7 @@ Also high-pass versions (0.6″ median filter subtracted) to remove cluster-memb
 - Nothing here is evidence of non-standard lensing.
 - **Next:**
   - Rerun `images` over `bayes.dat` samples to get positional spreads for 4.2c, 34.1 and 700.1.
-  - Run `/vet-candidate` on 4.2c.
+  - ~~Run `/vet-candidate` on 4.2c~~ — done: explained, see docs/candidates/abell2744-family4-c.md.
   - Widen the forced search to the model's positional rms × 3 (≈1.3″) together with a colour match (the
     8.1c lesson).
 
@@ -256,4 +256,7 @@ Also high-pass versions (0.6″ median filter subtracted) to remove cluster-memb
   - The family's other knot image, 4.1c, is observed 2.5″ away. That is consistent with knot-level model offsets
     near the cluster core.
 - 34.1 (μ 45) and 28 are recovered under the new rules (flux ratios 0.80 and 0.68).
+- **Family 4 c images, vetted** (docs/candidates/abell2744-family4-c.md): 4.1c is underluminous 4–8× after BCG
+  subtraction, and 4.2c is undetected. Both are explained by the model's μ and position systematics next to member
+  34423: plausible changes move μ(4.1c) from 3.9 to 28.7, and CATS v4.1 gives 7.3.
 - **Result: the Abell 2744 screens are a null result.** Flags raised: 16. Surviving vetting: 0.

@@ -1770,6 +1770,11 @@ D-034's rules now remove these automatically.
 - `radial`: 35 peaks against a random mean of 50.4; p ≥ 0.575.
 - Cutouts were inspected for every flag.
 - Tally: 176 predicted images, 149 flux-ratio images and 35 radial peaks screened; 16 flags; **0 surviving**.
+- Family 4's c images (4.1c underluminous 4–8× after BCG subtraction; 4.2c undetected) were vetted
+  (docs/candidates/abell2744-family4-c.md). They are explained by μ(4.1c) systematics next to member 34423:
+  ±30 % changes give 3.9–28.7, and CATS v4.1 gives 7.3.
+- **Rule:** an under- or overluminous image whose μ moves by more than 2× under ±30 % changes of the nearest member
+  potential, or under an independent model, is untestable.
 
 **Revisit if.**
 - `bayes.dat` position spreads do not cover 34.1 / 700.1.

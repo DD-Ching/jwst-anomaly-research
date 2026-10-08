@@ -475,10 +475,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - **Abell 2744.**
   - Data: MAST 2561 `jw02561-o001_t003_nircam_clear-*` (jwst 3.0.0).
   - DJA v7.2: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/abell2744clu-grizli-v7.2-fix_phot.fits
+    (233,527,680 B; sha256 in `configs/abell2744.yaml`).
   - DJA v7.2 eazy photo-z (no tarball for v7.2): https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/abell2744clu-grizli-v7.2-fix.eazypy.zout.fits
     (63,570,240 B, sha256 `436626861c7dbf370419a8787dd79140fad99c2ecbd268257941afe6d493991c`, Last-Modified 2023-12-12,
     accessed 2026-10-08).
-    (233,527,680 B; sha256 in `configs/abell2744.yaml`).
   - Lens models:
     - UNCOVER v2.0 maps, https://jwst-uncover.github.io/DR4.html#LensingMaps. Cite Furtak et al. arXiv:2212.04381,
       "UNCOVERing the extended strong lensing structures of Abell 2744 with the deepest JWST imaging", and Price

@@ -9,6 +9,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Radial: 35 peaks against a random mean of 50.4, p ≥ 0.575.
 - **Lesson:** a "252σ absent" image can come from a resolved-knot reference. D-034's compact-reference rule now
   catches this.
+- Family 4's c images were vetted (4.1c 4–8× underluminous after BCG subtraction; 4.2c undetected). They are
+  explained by μ systematics next to member 34423 (3.9–28.7 under ±30 %; CATS 7.3). **Rule:** a μ that moves by
+  more than 2× under member perturbation is untestable.
 - **Handoff:** HFF field runs (D-035 models), `bayes.dat` position spreads, UNCOVER v2.0 cross-check.
 
 ## 2026-10-08: Six HFF clusters as CATS map models (D-035)
