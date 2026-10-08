@@ -777,6 +777,9 @@ def main(argv: list[str] | None = None) -> int:
         "--combine-only", action="store_true", help="combine existing <out>/<field>/summary.json"
     )
     args = ap.parse_args(argv)
+    keys = [f"{m:.0e}" for m in args.mass]  # result keys (as stored in summary.json)
+    if len(set(keys)) != len(keys):
+        raise SystemExit(f"error: --mass values {args.mass} collide in the result keys {keys}")
     summaries = []
     for name in args.fields:
         if args.combine_only:
