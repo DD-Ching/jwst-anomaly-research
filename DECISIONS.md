@@ -2092,3 +2092,37 @@ tests (removing or rescaling one potential, D-042), which maps do not.
 **Revisit if.**
 - CANUCS releases a MACS1149 parameter file.
 - The Abell 370 image list is needed: it requires an rms gate like D-035's.
+
+## D-046 Multi-plane lens models: `LensModel.split_planes` and `MultiPlaneLensModel` (2026-10-08)
+
+**Decision.**
+- `lensmodel.MultiPlaneLensModel` holds several `LensModel` planes (one `z_lens` each) in one frame and cosmology and
+  solves the standard multi-plane lens equation and its Jacobian recursion (Schneider, Ehlers & Falco 1992, ch. 9),
+  with `D_ij / D_j = 1 − D_M(z_i) / D_M(z_j)` (flat ΛCDM).
+- `LensModel.split_planes({name: z}, v_disp={name: σ})` moves named potentials to their own redshift, optionally
+  with a new σ. This turns the D-042 rule ("check every potential that produces an extra image against its
+  spectroscopic redshift") into library code.
+- `find_images`, `backtrace_images` and `imageplane_residuals` now go through `lens_map` / `source_points` /
+  `source_grid`, so they take either model. The Jacobian is no longer assumed symmetric. Single-plane results are
+  unchanged (tests).
+- A multi-plane model is nonlinear in the source redshift, so `DeflectionGrid` keeps only its nodes for it and
+  `source_grid` evaluates every plane per call: use a grid around the images of interest (about 70 s for the
+  222-potential CANUCS MACS0416 model on a ±59″, 0.1″ grid).
+
+**Alternatives rejected.**
+- lenstronomy `MultiPlane`: its dPIE-like profiles are not parametrised as Lenstool's, and our ported dPIE already
+  reproduces Lenstool's χ² (D-030, D-044). The recursion itself is a few lines on top of it.
+- Keeping two-plane checks as scratch code (D-042): not reproducible.
+
+**Evidence** (`model_prediction`).
+- Offline tests: `split_planes({})` reproduces the single-plane `find_images` and `backtrace_images`; the multi-plane
+  Jacobian matches finite differences of `source_points` (and is not symmetric); a plane behind the source does not
+  lens.
+- MACS0416 system 51 (CATS positions, CANUCS model, potential 8757 moved to z 0.268; scratch
+  `macs0416/mp_check2.py`): σ as fitted (102 km/s) keeps the fourth image (μ 6.1, 0.12″ from the single-plane
+  position); σ 81 km/s gives 4 images; σ 70 and 60 km/s give 3, with 51.3 matched at 1.58″ and 1.49″. This
+  reproduces the D-042 scratch result, except that the scratch found a fifth (faint) image at the fitted σ.
+
+**Revisit if.**
+- A multi-plane field run needs speed: interpolate per-plane deflection grids for the seeds.
+- A model needs more than dPIE potentials on the extra planes.

@@ -590,3 +590,78 @@ def test_find_images_refines_cells_on_a_fold():
     assert len(pair) == 2  # one image on each side of the curve, opposite parity
     assert np.sign(pair["magnification"][0]) != np.sign(pair["magnification"][1])
     assert np.min(np.hypot(pair["x"] - x_img, pair["y"])) < 1e-3
+
+
+def _cluster_and_galaxy():
+    cluster = _dpie(
+        name="cl", x=0.0, y=0.0, ellipticity=0.4, angle_pos=20.0, r_core=0.5, r_cut=300.0
+    )
+    galaxy = _dpie(name="gal", x=9.0, y=4.0, ellipticity=0.1, r_core=0.05, r_cut=20.0, v_disp=180.0)
+    return LensModel([cluster, galaxy], RA0, DEC0, COSMO)
+
+
+def test_split_planes_without_moves_matches_the_single_plane_model():
+    model = _cluster_and_galaxy()
+    multi = model.split_planes({})
+    assert multi.z_lens == (0.39,)
+    grid = lensmodel.DeflectionGrid.compute(model, half_width=40.0, step=0.25)
+    mgrid = lensmodel.DeflectionGrid.compute(multi, half_width=40.0, step=0.25)
+    a = lensmodel.find_images(model, grid, 0.3, -0.2, 2.0)
+    b = lensmodel.find_images(multi, mgrid, 0.3, -0.2, 2.0)
+    assert len(a) == len(b) >= 4
+    np.testing.assert_allclose(b["x"], a["x"], atol=1e-6)
+    np.testing.assert_allclose(b["magnification"], a["magnification"], rtol=1e-6)
+    ra, dec = model.to_sky(a["x"][:3], a["y"][:3])
+    images = Table(
+        {
+            "image_id": ["1.1", "1.2", "1.3"],
+            "system": ["1"] * 3,
+            "ra": ra,
+            "dec": dec,
+            "z": [2.0] * 3,
+        }
+    )
+    bt_a = lensmodel.backtrace_images(model, images, {"1": 2.0})
+    bt_b = lensmodel.backtrace_images(multi, images, {"1": 2.0})
+    for col in ("beta_x", "beta_y", "magnification", "dtheta_arcsec"):
+        np.testing.assert_allclose(bt_b[col], bt_a[col], rtol=1e-6, atol=1e-8)
+
+
+def test_multiplane_jacobian_matches_finite_differences():
+    multi = _cluster_and_galaxy().split_planes({"gal": 0.2}, v_disp={"gal": 250.0})
+    assert multi.z_lens == (0.2, 0.39)
+    x, y = np.array([8.0, 10.5, -3.0]), np.array([3.0, 5.5, 12.0])
+    m = multi.lens_map(x, y, 3.0)
+    h = 1e-5
+    bxp, byp = multi.source_points(x + h, y, 3.0)
+    bxm, bym = multi.source_points(x - h, y, 3.0)
+    np.testing.assert_allclose(m["a11"], (bxp - bxm) / (2 * h), atol=1e-6)
+    np.testing.assert_allclose(m["a21"], (byp - bym) / (2 * h), atol=1e-6)
+    bxp, byp = multi.source_points(x, y + h, 3.0)
+    bxm, bym = multi.source_points(x, y - h, 3.0)
+    np.testing.assert_allclose(m["a12"], (bxp - bxm) / (2 * h), atol=1e-6)
+    np.testing.assert_allclose(m["a22"], (byp - bym) / (2 * h), atol=1e-6)
+    assert np.max(np.abs(m["a12"] - m["a21"])) > 1e-3  # two planes: A is not symmetric
+    np.testing.assert_allclose(m["beta_x"], multi.source_points(x, y, 3.0)[0])
+
+
+def test_multiplane_plane_behind_the_source_does_not_lens():
+    model = _cluster_and_galaxy()
+    multi = model.split_planes({"gal": 2.5})
+    alone = LensModel([model.components[0]], RA0, DEC0, COSMO)
+    x, y = np.linspace(-20, 20, 7), np.linspace(15, -15, 7)
+    m, ref = multi.lens_map(x, y, 2.0), alone.lens_map(x, y, 2.0)
+    for key in ("beta_x", "beta_y", "a11", "a12", "a21", "a22"):
+        np.testing.assert_allclose(m[key], ref[key], atol=1e-12)
+    grid = lensmodel.DeflectionGrid.compute(multi, half_width=30.0, step=0.25)
+    imgs = lensmodel.find_images(multi, grid, 0.3, -0.2, 2.0)
+    assert np.all(imgs["residual_arcsec"] < 1e-5)
+    assert imgs.meta["lens_planes"][1] == {"z_lens": 2.5, "n_potentials": 1, "potentials": ["gal"]}
+
+
+def test_split_planes_rejects_unknown_potentials():
+    model = _cluster_and_galaxy()
+    with pytest.raises(ValueError, match="unknown or unmoved"):
+        model.split_planes({"nope": 0.2})
+    with pytest.raises(ValueError, match="unknown or unmoved"):
+        model.split_planes({"gal": 0.2}, v_disp={"cl": 100.0})

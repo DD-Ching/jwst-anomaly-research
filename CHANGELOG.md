@@ -2,6 +2,13 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Multi-plane lens models (D-046)
+- `LensModel.split_planes` moves named potentials (e.g. a foreground galaxy fitted as a member) to their own
+  redshift; `MultiPlaneLensModel` solves the multi-plane lens equation, and `find_images` / `backtrace_images` /
+  `imageplane_residuals` accept it.
+- Reproduces the D-042 system-51 result with library code: σ ≤ 70 km/s at z 0.268 leaves exactly 3 images.
+- **Handoff:** use `split_planes` in `/vet-candidate` for any extra or missing image near a non-member galaxy.
+
 ## 2026-10-08: CANUCS Lenstool models pinned (D-044)
 - `macs0416-canucs` reproduces Lenstool's image-plane χ²pos (330.8 against 344.30; rms 0.51″ over 303 images).
   `abell370-canucs` is a source-plane fit (image-plane rms 2.3″).
