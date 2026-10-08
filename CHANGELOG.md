@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: MACS0717 screens: null (D-041)
+- Worktree worker on VENUS 6882 o029 (10 bands, the only public NIRCam association) with `macs0717-cats` (rms 3.21″).
+- 51 flags, 0 surviving. 29 are the model's own copies of catalogued images it does not reproduce (1.6–5.6″ off), 6 are
+  CATS-only extra images (Sharon v4cor and Keeton v4 predict none), and 5 have μ more than 2× model-dependent.
+  System 65's flux ratio is a 0.6″ catalogue offset. `radial` p ≥ 0.70.
+- **Failed approach:** a fixed 1.5″ match radius for a 3.2″-rms model makes most catalogued images "unpredicted",
+  and their model copies then flag as absent or confused.
+- Wall time: about 7.5 min of pipeline plus about 20 min of vetting.
+- **Handoff:** in `forced_check`, rms-scaled match and search radii and automatic copy classification; Sharon v4cor and
+  Keeton v4 as pinned `MapLensModel` entries.
+
 ## 2026-10-08: `find_images` fold refinement; frame offsets for map models (D-040)
 - Cells on a critical curve near the source are subdivided into ≤ 0.02″ sub-cells. MACS0416 system 26 is now solved
   (rms 1.57″ → 0.76″), and its image list is open with offset (0.208, −0.025). No other model changes beyond 0.03″
