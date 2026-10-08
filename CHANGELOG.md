@@ -7,13 +7,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   redshift (photo-z, else z_s = 2), overlapping image pairs painted as one blend, an independent 200-draw null per
   batch of 10 trials, screen grid/null/defaults shared with `cmd_radial` (byte-identical SMACS output), a stated
   S/N ≥ 5 detection floor, measured footprint-border excess (3–16 %).
-- Recovered of 1,600 per mass (2 × 10¹⁰ / 2 × 10¹¹ / 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉): 0 / 0 / 8 / 83 / 154.
-  Headline 95 % limits (six photo-z fields, 38.0 arcmin²): none below 10¹² M☉; < 6.1 × 10⁴, 6.9 × 10³, 3.9 × 10³
-  deg⁻² at 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉ (all eight fields, optimistic: 3.7 × 10⁴, 3.9 × 10³, 2.2 × 10³).
+- Recovered of 1,600 per mass (2 × 10¹⁰ / 2 × 10¹¹ / 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉): 0 / 0 / 8 / 84 / 156.
+  Headline 95 % limits (six photo-z fields, 38.0 arcmin²): none below 10¹² M☉; < 6.1 × 10⁴, 7.0 × 10³, 4.0 × 10³
+  deg⁻² at 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉ (all eight fields, optimistic: 3.7 × 10⁴, 3.8 × 10³, 2.1 × 10³).
 - **Failed approaches (rules):** one θ_E for every source; two lines for overlapping images; one fixed null for all
   trials; a `nanmin(S/N)` detection floor; recovery at the 3-line peak instead of p_random; catalogue shapes
   without PSF deconvolution; headline limits including fields without photo-z.
-- Wall time: 405–1061 s per field (1,000 injections, 100 independent nulls).
+- Wall time: 371–993 s per field (1,000 injections, 100 independent nulls; 4 parallel).
 - **Handoff:** a W1-specific screen benchmarked with this harness (TASKS).
 
 ## 2026-10-08: El Gordo lens model reproduces the published magnification maps (issue #68)

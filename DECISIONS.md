@@ -2344,13 +2344,13 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
   | \|M\| (M☉) | 2 × 10¹⁰ | 2 × 10¹¹ | 2 × 10¹² | 8 × 10¹² | 2 × 10¹³ |
   |---|---|---|---|---|---|
   | θ_E(z_s = 2) | 0.21–0.36″ | 0.65–1.14″ | 2.05–3.59″ | 4.11–7.18″ | 6.49–11.35″ |
-  | recovered | 0 | 0 | 8 | 83 | 154 |
+  | recovered | 0 | 0 | 8 | 84 | 156 |
 
   - Headline 95 % limits, from the six fields with photo-z (38.0 arcmin²): none at 2 × 10¹⁰ and 2 × 10¹¹ M☉,
-    < 6.1 × 10⁴ deg⁻² at 2 × 10¹², < 6.9 × 10³ at 8 × 10¹² and < 3.9 × 10³ at 2 × 10¹³. MACS0717 and Abell S1063
+    < 6.1 × 10⁴ deg⁻² at 2 × 10¹², < 7.0 × 10³ at 8 × 10¹² and < 4.0 × 10³ at 2 × 10¹³. MACS0717 and Abell S1063
     have no photo-z, so their members and foreground galaxies get painted as W1 images and their efficiency is biased
-    high; all eight fields (optimistic): 3.7 × 10⁴, 3.9 × 10³ and 2.2 × 10³ (border-corrected 4.1 × 10⁴, 4.4 × 10³,
-    2.5 × 10³).
+    high; all eight fields (optimistic): 3.7 × 10⁴, 3.8 × 10³ and 2.1 × 10³ (border-corrected 4.1 × 10⁴, 4.2 × 10³,
+    2.4 × 10³; headline border-corrected 6.6 × 10⁴, 7.6 × 10³, 4.3 × 10³).
   - The best headline limit is about 30× weaker than Takahashi & Asada's volume limit spread over 0 < z < 1 (about
     120 deg⁻²).
 - History: #70 merged a first review round (photo-z-only headline, θ_E-parametrised); this record supersedes its

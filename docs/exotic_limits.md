@@ -108,16 +108,16 @@ parallel on 4 cores.
 
 | Field | 2 × 10¹⁰ M☉ | 2 × 10¹¹ | 2 × 10¹² | 8 × 10¹² | 2 × 10¹³ | θ_E(z_s = 2) at 2 × 10¹² |
 |---|---|---|---|---|---|---|
-| SMACS 0723 | 0 | 0 | 0 | 3 | 24 | 3.19″ |
-| El Gordo | 0 | 0 | 0 | 0 | 4 | 2.05″ |
+| SMACS 0723 | 0 | 0 | 0 | 1 | 15 | 3.19″ |
+| El Gordo | 0 | 0 | 0 | 0 | 6 | 2.05″ |
 | Abell 2744 | 0 | 0 | 2 | 12 | 20 | 3.59″ |
-| MACS0416 | 0 | 0 | 1 | 7 | 14 | 3.17″ |
+| MACS0416 | 0 | 0 | 1 | 7 | 15 | 3.17″ |
 | MACS1149 | 0 | 0 | 0 | 4 | 6 | 2.70″ |
-| MACS0717 | 0 | 0 | 0 | 6 | 21 | 2.70″ |
+| MACS0717 | 0 | 0 | 0 | 8 | 24 | 2.70″ |
 | Abell 370 | 0 | 0 | 1 | 16 | 18 | 3.26″ |
-| Abell S1063 | 0 | 0 | 4 | 35 | 47 | 3.38″ |
-| **All (of 1,600)** | **0** | **0** | **8** | **83** | **154** | |
-| Mean lensed sources per lens (range) | 0.1–0.4 | 0.7–4.0 | 7–32 | 26–126 | 58–289 | |
+| Abell S1063 | 0 | 0 | 4 | 36 | 52 | 3.38″ |
+| **All (of 1,600)** | **0** | **0** | **8** | **84** | **156** | |
+| Mean lensed sources per lens (range; previous run, same injections) | 0.1–0.4 | 0.7–4.0 | 7–32 | 26–126 | 58–289 | |
 | Mean injected arcs entering the screen | ≤ 0.04 | 0.07–0.36 | 0.5–2.7 | 2.3–10.7 | 4.8–23.7 | |
 | Lenses with ≥ 3 lines at the centre | 0–3.5 % | 0–4.5 % | 2.5–20.5 % | 9.5–51.5 % | 13–46 % | |
 
@@ -136,8 +136,8 @@ optimistic all-field set (`combine` in the script).
 | 2 × 10¹⁰ | 0 | no limit (ε = 0 in every field) | no limit | — |
 | 2 × 10¹¹ | 0 | no limit | no limit | — |
 | 2 × 10¹² | 4.9 × 10⁻⁵ | 6.1 × 10⁴ | 3.7 × 10⁴ | 4.1 × 10⁴ |
-| 8 × 10¹² | 4.4 × 10⁻⁴ | 6.9 × 10³ | 3.9 × 10³ | 4.4 × 10³ |
-| 2 × 10¹³ | 7.7 × 10⁻⁴ | 3.9 × 10³ | 2.2 × 10³ | 2.5 × 10³ |
+| 8 × 10¹² | 4.3 × 10⁻⁴ | 7.0 × 10³ | 3.8 × 10³ | 4.2 × 10³ |
+| 2 × 10¹³ | 7.6 × 10⁻⁴ | 4.0 × 10³ | 2.1 × 10³ | 2.4 × 10³ |
 
 θ_E(z_s = 2) across fields (`model_prediction`): 0.21–0.36″, 0.65–1.14″, 2.05–3.59″, 4.11–7.18″, 6.49–11.35″ for the
 five masses.
@@ -150,7 +150,7 @@ at 2 × 10¹⁰ and 2 × 10¹¹ M☉ was recovered. At 2 × 10¹² M☉ it recov
 - **Comparison (`derived`, rough).** Takahashi & Asada (2013) limit negative masses above 10¹² M☉ to
   n < 10⁻⁴ h³ Mpc⁻³. Spread over 0 < z < 1 (Planck18 comoving volume, 3.98 × 10⁶ Mpc³ deg⁻²), that is about
   120 deg⁻².
-- Our best headline limit, 3.9 × 10³ deg⁻² at 2 × 10¹³ M☉ (2.2 × 10³ optimistic), is about 30× (18×) weaker. It
+- Our best headline limit, 4.0 × 10³ deg⁻² at 2 × 10¹³ M☉ (2.1 × 10³ optimistic), is about 30× (18×) weaker. It
   also holds only for lenses near the cluster redshift.
 
 **Why the efficiency is low.** The cut that dominates is the screen's elongation cut, not a lack of sources.
