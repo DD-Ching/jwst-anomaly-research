@@ -20,7 +20,8 @@ Root CLAUDE.md (owner decisions, merge policy, budget) still applies; these rule
 - Survey adapters (`ogle.py`, `gaia_mulens.py`, `moa.py`, `lenscats.py`) pin every input by sha256 and record it in
   a manifest (`data/manifests/CLAUDE.md`). Before adding or changing an adapter, read the search recipe and its
   failed-approach rules: `scripts/.claude/skills/w3-survey/SKILL.md` (light-curve surveys) or
-  `scripts/.claude/skills/w12-lenscats/SKILL.md` (lens catalogues), and `scripts/CLAUDE.md`.
+  `scripts/.claude/skills/w12-lenscats/SKILL.md` (lens catalogues), `scripts/.claude/skills/w5-counts/SKILL.md`
+  (count maps, `countmap.py`), and `scripts/CLAUDE.md`.
 
 ## Code
 - Thresholds are ASSUMPTIONs: name them in a `Params` dataclass or a module constant with a comment.

@@ -1,0 +1,30 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: mag_r, datatype: float64}
+# - {name: n_brighter_deg2, datatype: float64}
+# - {name: sample, datatype: string}
+# meta: !!omap
+# - {boxes: '{"faint": [[30.0, 31.0, -25.0, -24.0], 23.5], "mid": [[30.0, 34.0, -26.0, -22.0], 20.5], "bright": [[24.0, 36.0, -29.0, -21.0],
+#     18.0]}'}
+# - {provenance: observed}
+# - {source: 'Legacy Surveys DR10 Tractor catalogue (Dey et al. 2019, AJ 157, 168) via NOIRLab Astro Data Lab TAP https://datalab.noirlab.edu/tap;
+#     maskbits=0 AND type<>''PSF'' AND type<>''DUP'' AND dered_mag_r<23.50 AND dered_mag_r>0'}
+# schema: astropy-2.0
+mag_r n_brighter_deg2 sample
+16.0 2.3580866357527475 bright
+16.5 8.213043209402251 bright
+17.0 23.017226137274378 bright
+17.5 55.36327306281938 bright
+18.0 119.77929823460175 bright
+18.5 225.883016349091 mid
+19.0 437.05387016711427 mid
+19.5 802.9419308816219 mid
+20.0 1393.8918639899982 mid
+20.5 2344.0238488452324 mid
+21.0 3878.236255540435 faint
+21.5 6320.129415022115 faint
+22.0 10010.443199693347 faint
+22.5 15796.477171192466 faint
+23.0 24553.004936606518 faint
+23.5 37374.59246661226 faint

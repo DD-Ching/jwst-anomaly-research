@@ -13,8 +13,8 @@ the official docs on 2026-10-07 (links in SOURCES.md, "Agent tooling").
 | `/vet-candidate <source_uid> [run_id]` | Tests ordinary explanations for a candidate and writes a vetting record |
 
 The skill files live in `.claude/skills/`; directory-scoped recipe skills live next to their code
-(`scripts/.claude/skills/w3-survey`, `w12-lenscats`) and load when files under that directory are in play. Because
-they're committed, they load locally, in cloud routines and in GitHub Actions. `.claude/settings.json` holds the project permission rules (section 8).
+(`scripts/.claude/skills/w3-survey`, `w5-counts`, `w12-lenscats`) and load when files under that directory are in
+play. Because they're committed, they load locally, in cloud routines and in GitHub Actions. `.claude/settings.json` holds the project permission rules (section 8).
 
 **Trust the repository once.** Start `claude.exe` interactively in the repository root and accept the workspace trust
 dialog. The `allow` rules in `.claude/settings.json` apply only after that, and the trust also covers worktrees of

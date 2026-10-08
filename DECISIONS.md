@@ -2952,6 +2952,59 @@ t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in 
 - A survivor appears: stop and report to the owner (/vet-candidate).
 - Any W3 limit is quoted outside the repository: `needs-human` (D-054).
 
+## D-063 W5 count-deficit screen: DR10 Tractor counts aggregated per nest4096 on Data Lab, astropy-healpix, cross-region null; 340.5 deg² null and first W5 limit (2026-10-08)
+
+**Decision.**
+- **Count maps, not catalogues:** `jwst_anomaly.countmap.LegacySurveysCountMap`, a `signatures.CountMapSurvey`
+  (new protocol: `count_map()` per HEALPix pixel, `nside`, `area_deg2()`; it also answers `catalogue()`). Legacy
+  Surveys DR10 `ls_dr10.tractor` is aggregated server-side on the Data Lab TAP with `GROUP BY nest4096`, three
+  queries per 2° × 2° chunk (galaxies r < 23.5 extended unmasked; all sources with depth, nobs, E(B−V); sources
+  with any maskbit → unmasked fraction w). Pixels split between chunks are summed (`combine_duplicates`).
+- **Geometry:** astropy-healpix (now a core dependency; BSD-3-Clause, wheels everywhere).
+- **Prediction:** `countmap.deficit_profile` = `exotic_sim.count_ratio` (n = 1, ε < 0) with measured counts of the
+  same selection, |μ| capped at 30 at the critical curve.
+- **Screen** (`scripts/w5_counts.py`): scipy-FFT local least-squares matched filter on a 0.25′ raster, θ_E = 2–32′;
+  **null from a second, disjoint region** (each region's ordinarily-vetted peaks calibrate the other), with an
+  exponential tail fit for the expected number of false peaks N_false; detection at N_false < 0.01.
+- **Vetting**, cheapest first, the same code for flags and injections: mask, depth, depth_edge, dust, Gaia DR3
+  bright star, HyperLEDA large galaxy, Wen & Han 2024 cluster, cosmic variance.
+- **First run:** desA + desB (RA 20–40° and 50–70°, Dec −30° to −20°), 340.5 deg², 12.5 M galaxies: 40 flags,
+  **0 survivors**; 95 % sky density of θ_E = 8–32′ lenses **n₉₅ ≈ 0.012–0.018 deg⁻²**; blind below θ_E ≈ 6′
+  (docs/exotic_limits.md "W5 count deficits").
+
+**Alternatives rejected.**
+- Per-object catalogue downloads (~12 M rows) and DR10 random catalogues (~19.9 GB per file, unordered on the sky,
+  so no byte-range region cut): counts, a mask proxy and depth are all the statistic needs.
+- healpy 1.20.1 (GPL-2.0, no Windows wheels); healsparse 1.15.0 / hpgeom (GPL-3.0-or-later; only needed for DES/LSST
+  mask files, not used); HSC-SSP PDR3 randoms (account needed, smaller area); DES Y6 Gold masks (healsparse tooling).
+- Void finders (VIDE, REVOLVER, Pylians, 2-D tunnel finders): they find the under-densities that are the
+  background W5 must beat, not the target; voids enter through the null.
+- A Gaussian significance: the Poisson σ of A is ×1.1 (2′) to ×5.8 (32′) too small because of clustering.
+- A null from the raw peaks of the other region: desB's artefacts (NGC 1398, deep tiles) raised desA's thresholds;
+  peaks the ordinary tests remove are now left out of both samples.
+- Veto radii growing with θ_E (a mimic anywhere inside θ_E): they vetoed 90 % of random 32′ positions. A mimic now
+  vetoes only if it reaches the core (0.5 θ_E) and can empty ≥ 10 % of it.
+- Data Lab ADQL: sub-selects, CASE, SIGN and GROUP BY on expressions are rejected (2026-10-08).
+
+**Evidence.**
+- Prior art: no published count-deficit search for negative-mass lenses was found (arXiv API, "negative mass" /
+  wormhole with number counts, depletion, deficit, void; the 42 INSPIRE citers of Safonova, Torres & Romero 2001,
+  astro-ph/0104075, which predicts the "central void"). Survey limits so far come from SDSS quasar lensing
+  (Takahashi & Asada 2013, arXiv:1303.1301). A W5 limit would be new: `needs-human` before any outside use.
+- Offline tests on synthetic Poisson maps: an injected deficit gives A = 1.10 ± 0.25 at the centre; the null map
+  gives median Z ≈ 0; the chunk-edge artefact (pixels split between chunks gave a deficit along every chunk
+  boundary in the pilot) is fixed and tested; pixels cut by the outer region border are dropped (code review).
+- Injections (5,232 in total, 3 realisations per region and θ_E) through the full screen and vetting:
+  ε = 0.50–0.73 at θ_E = 8–32′, 0.005 at 6′, 0 at ≤ 4′. The `depth_edge` test was added after inspecting the one
+  first-pass survivor (a deficit of all sources along a deep-tile edge); the injections ran after the change.
+
+**Revisit if.**
+- Data Lab exposes DR10 randoms or a pixelised mask; or the w proxy shows systematics in a larger area.
+- θ_E < 6′ becomes a priority (deeper counts, e.g. HSC or Euclid, or catalogue-level positions), or θ_E ≳ 1°
+  (a larger contiguous area; the regions are 10° high).
+- A survivor appears: stop and report to the owner (/vet-candidate).
+- A published count-deficit search appears (compare; do not repeat). Any outside quotation: `needs-human`.
+
 ## D-064 W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them; measured control efficiency 0/5 (2026-10-08)
 
 **Decision.** Test the pairs that lens searches rejected for lack of a lens galaxy with the unchanged D-056 chain
