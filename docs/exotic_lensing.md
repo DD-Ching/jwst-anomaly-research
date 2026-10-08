@@ -107,6 +107,11 @@ branch stops here until a paper supplies one. We do not invent one.
   bubble faster than 0.1c in Earth's air (Fell & Loeb 2026): both effects are local to the destination or to Earth.
   Neither paper gives a flux, spectrum or rate for a distant source.
 - The warp row of the "Signatures" table above stands. No JWST screen is calibrated for warp signatures.
+- **Literature check 2026-10-08** (SOURCES.md): still no imaging, lensing or spectral prediction for a distant
+  observer. The only modelled distant observable is the Clough et al. collapse burst (f ~ c/R, above the
+  ground-based band unless R ≳ 100 km, an extrapolation; waveform not public). A LIGO/Virgo/KAGRA O3 search for
+  superluminal-source GW bursts already returned a null (Kuwahara & Cannon 2023). Keep monitoring; revisit when a
+  lensing or electromagnetic prediction for distant observers, or the Clough et al. waveform, appears.
 
 ## Screens and results (D-031)
 

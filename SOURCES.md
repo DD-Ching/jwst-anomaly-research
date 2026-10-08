@@ -719,6 +719,13 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
     064024 (2012), doi:10.1103/PhysRevD.85.064024.
   - arXiv:2608.10800, Fell & Loeb, "Radiative Signatures from Warp Drives Traveling Through the Earth's
     Atmosphere" (2026, preprint).
+  - Literature check 2026-10-08 (arXiv API, 2023–2026; INSPIRE citations of 2406.02466, none searches data):
+    arXiv:2310.16067, Kuwahara & Cannon, "Development and Application of a Detection System for a Novel Class of
+    Gravitational-Wave Transients" (2023): LIGO/Virgo/KAGRA O3 search for GW bursts from superluminal curvature
+    sources, null. arXiv:2212.02065, Sellers, Bobrick, Martire et al. (2022): GWs from accelerating massive
+    spacecraft (not a warp metric). arXiv:2405.19381, Lentz & Felton (2024) and arXiv:2311.12069, Pieri (2023): no
+    quantitative prediction for a distant observer. The Clough et al. waveform is not public (no data statement or
+    Zenodo record found).
 
 ## Injection-recovery limits (D-049)
 

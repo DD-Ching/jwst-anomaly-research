@@ -18,7 +18,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    would hide; HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
 3. **W5:** background-count deficits around empty regions in a wide survey, with calibrated nulls.
-4. **Warp:** monitor the literature (incl. Clough, Dietrich & Khan 2024) and any detector band that could test it.
+4. **Warp:** monitor the literature (checked 2026-10-08: no distant-observer EM/lensing prediction; Clough et al.
+   2024 waveform not public; O3 superluminal-burst search already null, Kuwahara & Cannon 2023). Recheck monthly.
 
 ## JWST focus (D-047 screens; continues under the direction above)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
