@@ -231,9 +231,12 @@ def test_pool_workers_get_moa_bounds_and_populations(monkeypatch):
     # spawned workers (Windows) do not run main(): the initializer must set both
     monkeypatch.setattr(wm.w3, "P", wm.replace(wm.w3.P, te_bounds=(0.5, 50.0)))
     monkeypatch.setattr(wm, "_POP", None)
-    wm._init_worker(("field", "chips"))
+    monkeypatch.setattr(wm, "_BASELINE", None)
+    monkeypatch.setattr(wm, "FIELD", "gb22")
+    wm._init_worker({"pop": ("field", "chips"), "baseline": 3.5, "field": "gb5"})
     assert wm.w3.P.te_bounds == wm.MOA_FIT_BOUNDS["te_bounds"]
     assert wm._POP == ("field", "chips")
+    assert wm.baseline_threshold() == 3.5 and wm.FIELD == "gb5"
 
 
 def test_vet_and_limit_refuse_partial_or_failed_inputs(tmp_path, monkeypatch):
@@ -262,3 +265,124 @@ def test_vet_and_limit_refuse_partial_or_failed_inputs(tmp_path, monkeypatch):
     Table({"kind": ["W3", "W3"], "error": ["", "boom"]}).write(tmp_path / "injections_gb22.ecsv")
     with pytest.raises(SystemExit, match="1 injections failed"):
         wm.run_limit()
+
+
+def _scan_table(n=400, seed=7):
+    """Pre-screen rows: quiet light curves with red-noise χ²/dof and a few deficits (simulated)."""
+    rng = np.random.default_rng(seed)
+    tab = Table(
+        {
+            "event_id": [f"gb21-R-{1 + i % 10}-0-{i}" for i in range(n)],
+            "flux_kind": ["difference"] * n,
+            "z_min": rng.uniform(-3.5, -0.5, n),
+            "s_min": np.full(n, -1.0),
+            "z_max": np.full(n, 2.0),
+            "z_min2": np.zeros(n),
+            "width": np.full(n, 10.0),
+            "t_lo": rng.uniform(2453824.0, 2456900.0, n),
+            "n_points": np.full(n, 2000),
+            "err_scale": np.ones(n),
+            "chi2_const": np.exp(rng.normal(0.5, 0.5, n)),
+            "offset": 512 * np.arange(n),
+            "size": np.full(n, 100),
+            "error": np.array([""] * n, dtype="U200"),
+        }
+    )
+    tab["t_hi"] = tab["t_lo"] + 10.0
+    tab["z_min"][:20] = -12.0  # deficits: always tracked
+    tab["s_min"][:20] = -9.0
+    return tab
+
+
+def test_baseline_calibration_is_a_quantile_of_the_quiet_light_curves():
+    tab = _scan_table()
+    cal = wm.calibrate_baseline(tab)
+    quiet = np.asarray(tab["chi2_const"])[wm.is_quiet(tab)]
+    assert cal["n_quiet"] == quiet.size == 380
+    assert cal["threshold"] == pytest.approx(np.quantile(quiet, wm.BASELINE_Q))
+    tab.meta["quiet_chi2_hist"] = wm.chi2_histogram(quiet)  # the merged-table path
+    cal_h = wm.calibrate_baseline(tab)
+    assert cal_h["threshold"] == pytest.approx(cal["threshold"], rel=0.02)
+    assert cal_h["frac_above_2"] == pytest.approx(np.mean(quiet > 2.0), abs=0.01)
+    with pytest.raises(SystemExit, match="too few"):
+        few = tab[:60]
+        few.meta.pop("quiet_chi2_hist")
+        wm.calibrate_baseline(few)
+
+
+def test_tracked_rows_keep_deficits_errors_and_a_quiet_sample():
+    tab = _scan_table()
+    tab["error"][25] = "boom"
+    keep = wm.tracked_mask(tab)
+    assert keep[:20].all() and keep[25]
+    frac = keep[wm.is_quiet(tab)].mean()
+    assert 0.15 < frac < 0.35  # 1 in QUIET_TRACK_MOD = 4
+    assert np.array_equal(keep, wm.tracked_mask(tab))  # deterministic
+
+
+def test_lf_sampling_gives_equal_weights():
+    rng = np.random.default_rng(1)
+    mags = wm.sample_magnitudes(rng, 20000, "lf")
+    assert mags.min() >= wm.INJ_IS[0] and mags.max() <= wm.INJ_IS[1]
+    w = wm.lf_weights(mags) / wm.sampling_density(mags, "lf")
+    assert np.ptp(w) / w.mean() < 1e-9  # n_eff = n
+    # the sample follows the LF: its density ratio over 3 mag is 10^(3 × slope)
+    hist, _ = np.histogram(mags, [17.0, 17.5, 20.0, 20.5])
+    assert hist[2] / hist[0] == pytest.approx(10 ** (3 * wm.LF_SLOPE), rel=0.15)
+    u = wm.sample_magnitudes(rng, 10, "uniform")
+    assert np.allclose(wm.sampling_density(u, "uniform"), 1 / np.ptp(wm.INJ_IS))
+
+
+def test_merge_prescreen_checks_the_member_count(tmp_path, monkeypatch):
+    monkeypatch.setattr(wm, "out_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "FIELD", "gb21")
+    monkeypatch.setitem(wm.moa.CUT0_PER_FIELD, 21, 400)
+    monkeypatch.setitem(wm.moa.TAR_BYTES, 21, 2 * wm.CHUNK_BYTES - 1)
+    tab = _scan_table()
+    rows = [dict(zip(tab.colnames, r, strict=True)) for r in tab]
+    with pytest.raises(SystemExit, match="missing pre-screen chunk 1/2"):
+        wm.merge_prescreen("gb21")
+    wm._write_prescreen_chunk("gb21", 0, 2, rows[:150], {"wall_time_s": 1.0})
+    assert wm._chunk_done("gb21", 0, 2) and not wm._chunk_done("gb21", 1, 2)
+    wm._write_prescreen_chunk("gb21", 1, 2, rows[150:399], {"wall_time_s": 1.0})
+    with pytest.raises(SystemExit, match="399 light curves streamed, metadata has 400"):
+        wm.merge_prescreen("gb21")
+    wm._write_prescreen_chunk("gb21", 1, 2, rows[150:], {"wall_time_s": 1.0})
+    pre = Table.read(wm.merge_prescreen("gb21"))
+    assert wm.n_light_curves(pre) == 400 and len(pre) < 400
+    assert wm.calibrate_baseline(pre)["n_quiet"] == 380  # from the histogram, not the sample
+    assert pre.meta["provenance"] == "derived" and pre.meta["source"]
+
+
+def test_combined_limit_sums_star_years_times_efficiency(tmp_path, monkeypatch):
+    monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
+    for field, ns in (("gb21", 1e6), ("gb20", 3e6)):
+        rows = [
+            {
+                "field": field,
+                "tE_days": te,
+                "rho": rho,
+                "n_s": ns,
+                "n_s_low": ns / 2,
+                "years": 8.0,
+                "eff_per_star": 0.1,
+                "n_inj": 200,
+                "n_recovered": 20,
+            }  # fmt: skip
+            for te in wm.INJ_TE
+            for rho in wm.INJ_RHO
+        ]
+        Table(rows).write(tmp_path / f"limits_{field}.ecsv")
+    out = Table.read(wm.run_combine())
+    assert out["rate95_per_star_yr"][0] == pytest.approx(3.0 / (4e6 * 8.0 * 0.1))
+    assert out["rate95_conservative"][0] == pytest.approx(2 * out["rate95_per_star_yr"][0])
+    assert out["n_fields"][0] == 2 and out["n_inj"][0] == 400
+
+
+def test_published_star_counts_are_used_where_they_exist():
+    pub = wm.field_star_counts("gb21")
+    assert pub["n_s"] == wm.moa.NUNOTA_NS[21][1] and "Table 1" in pub["n_s_source"]
+    model = wm.field_star_counts("gb22")
+    assert model["n_s_low"] < model["n_s"] < model["n_s_high"]
+    assert wm.parse_chunk_list("1-3,7") == [0, 1, 2, 6] and wm.parse_chunk_list(None) is None

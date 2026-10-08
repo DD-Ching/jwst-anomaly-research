@@ -31,7 +31,7 @@ import tarfile
 from pathlib import Path
 
 import numpy as np
-from astropy.table import Table
+from astropy.table import Table, vstack
 
 from jwst_anomaly import paths, photometry, schema
 from jwst_anomaly.signatures import standard_flux_light_curve
@@ -79,6 +79,79 @@ NUNOTA_NS = {
 }  # fmt: skip
 
 
+# Field tar sizes in bytes (HTTP HEAD Content-Length, 2026-10-08; Last-Modified 2023-10-10 … 13).
+# Only gb22 is downloaded whole; the others are streamed with byte-range reads (``moa_stream``).
+TAR_BYTES = {
+    1: 70145955840, 2: 60503715840, 3: 214532423680, 4: 280555120640, 5: 508495472640,
+    6: 7730944000, 7: 30745886720, 8: 77880094720, 9: 430753607680, 10: 220873328640,
+    11: 22442977280, 12: 27467520000, 13: 53574082560, 14: 212026122240, 15: 32830392320,
+    16: 22349178880, 17: 52299028480, 18: 41926410240, 19: 16264140800, 20: 15218606080,
+    21: 12313610240, 22: 3510138880,
+}  # fmt: skip
+
+
+def tar_url(field: int | str) -> str:
+    return f"{BULK}gb{int(str(field).removeprefix('gb'))}.tar"
+
+
+def object_url(event_id: str) -> str:
+    """Per-object uncompressed IPAC file (used by the archive viewer; undocumented, SOURCES.md)."""
+    f, chip, _s, _i = parse_event_id(event_id)
+    return f"https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/gb{f}/R/{chip}/{event_id}.ipac"
+
+
+def tar_header(block: bytes):
+    """``tarfile.TarInfo`` of a 512-byte ustar header block, or None (bad checksum, no magic,
+    an end-of-archive zero block). Used to resynchronise on member boundaries inside a byte range
+    of an uncompressed tar (gzip member data never passes the checksum and magic by chance in
+    practice; the per-field member count is checked against the metadata)."""
+    if len(block) < 512 or block[257:262] != b"ustar":
+        return None
+    try:
+        return tarfile.TarInfo.frombuf(block[:512], "utf-8", "surrogateescape")
+    except tarfile.HeaderError:
+        return None
+
+
+def member_id(name: str) -> str | None:
+    base = name.rsplit("/", 1)[-1]
+    return base[: -len(".ipac.gz")] if base.endswith(".ipac.gz") else None
+
+
+def walk_members(buf, base: int, start: int, stop: int):
+    """Light-curve members whose header starts in ``[start, stop)`` (absolute tar offsets) of the
+    bytes ``buf`` that begin at absolute offset ``base``: yields ``(event_id, offset_data, size)``
+    with absolute offsets, or ``("", next_header_offset, needed_end)`` once a member's data runs
+    past ``buf`` (the caller extends ``buf`` and resumes from that header). ``start`` need not be
+    on a header: the first valid ustar header at or after it (512-aligned) is used."""
+    off = start + (-start) % 512
+    while off < stop and tar_header(bytes(buf[off - base : off - base + 512])) is None:
+        if off - base + 512 > len(buf):
+            return  # no header in the rest of the range (end of archive)
+        off += 512
+    long_name = None
+    while off < stop:
+        if off - base + 512 > len(buf):
+            yield "", off, off + 512
+            return
+        info = tar_header(bytes(buf[off - base : off - base + 512]))
+        if info is None:  # end of archive (zero blocks)
+            return
+        data = off + 512
+        end = data + info.size
+        if end > base + len(buf):
+            yield "", off, end
+            return
+        if info.type == tarfile.GNUTYPE_LONGNAME:  # GNU long name: applies to the next header
+            long_name = bytes(buf[data - base : end - base]).rstrip(b"\0").decode()
+        else:
+            eid = member_id(long_name or info.name) if info.isfile() else None
+            long_name = None
+            if eid:
+                yield eid, data, info.size
+        off = data + info.size + (-info.size) % 512
+
+
 def stars_per_cut0_object() -> np.ndarray:
     """N_s / (Cut-0 objects × subfields used / 80) for the 20 fields of Nunota et al. (derived)."""
     return np.array([ns / (CUT0_PER_FIELD[f] * nsub / 80.0) for f, (nsub, ns) in NUNOTA_NS.items()])
@@ -121,15 +194,57 @@ def _ipac_header(lines: list[str]) -> list[str]:
     return [h.strip() for h in lines[0].strip().strip("|").split("|")]
 
 
-def parse_lightcurve(raw: bytes | str) -> dict[str, np.ndarray]:
+def parse_lightcurve(raw: bytes | str, columns=None) -> dict[str, np.ndarray]:
     """Columns of one MOA light-curve IPAC table as arrays (``included`` as bool).
 
     The published tables carry one all-"nan" row after the header; "nan" values stay NaN.
+    ``columns``: convert only these (the rest are skipped; ``HJD`` is always read). The fast path
+    splits the whole body into tokens once (C level) and converts each wanted column with numpy;
+    it gives bit-identical arrays to the line-by-line path, which stays as the fallback for
+    ragged tables.
     """
-    if isinstance(raw, bytes):
-        if raw[:2] == b"\x1f\x8b":
-            raw = gzip.decompress(raw)
-        raw = raw.decode()
+    if isinstance(raw, str):
+        raw = raw.encode()
+    if raw[:2] == b"\x1f\x8b":
+        raw = gzip.decompress(raw)
+    fast = _parse_tokens(raw, columns)
+    if fast is not None:
+        return fast
+    out = _parse_lines(raw.decode())
+    if columns is not None:
+        want = {"HJD", *columns}
+        out = {k: v for k, v in out.items() if k in want}
+    return out
+
+
+def _parse_tokens(raw: bytes, columns=None) -> dict[str, np.ndarray] | None:
+    """Whole-member parse (None when the body is not a full rectangle of tokens)."""
+    pos, names = 0, None
+    while raw[pos : pos + 1] in (b"|", b"\\"):
+        end = raw.find(b"\n", pos)
+        if end < 0:
+            return None
+        if names is None and raw[pos : pos + 1] == b"|":
+            names = [h.strip().decode() for h in raw[pos:end].strip().strip(b"|").split(b"|")]
+        pos = end + 1
+    if names is None:
+        raise ValueError("no IPAC header")
+    toks = raw[pos:].split()
+    nc = len(names)
+    if not toks or len(toks) % nc:
+        return None
+    want = None if columns is None else {"HJD", *columns}
+    out: dict[str, np.ndarray] = {}
+    for j, name in enumerate(names):
+        if want is not None and name not in want:
+            continue
+        col = np.array(toks[j::nc])
+        out[name] = col == b"True" if name == "included" else col.astype(float)
+    keep = np.isfinite(out["HJD"]) if "HJD" in out else np.ones(len(toks) // nc, bool)
+    return {k: v[keep] for k, v in out.items()}
+
+
+def _parse_lines(raw: str) -> dict[str, np.ndarray]:
     lines = raw.splitlines()
     head = [ln for ln in lines if ln.startswith("|")]
     if not head:
@@ -167,10 +282,28 @@ def select_flux(cols: dict[str, np.ndarray]) -> tuple[np.ndarray, ...]:
 
 def parse_metadata(lines, field: int) -> Table:
     """Rows of ``metadata.ipac`` for one field (``lines``: an iterable of text lines)."""
+    return split_metadata(lines, [field])[int(field)]
+
+
+def split_metadata(lines, fields, block: int = 50_000) -> dict[int, Table]:
+    """Rows of ``metadata.ipac`` for several fields in one pass (``observed``); rows are converted
+    to columns in blocks so the 2.9 GB table is never held as text."""
     names: list[str] | None = None
     types: list[str] | None = None
-    rows = []
-    want = str(int(field))
+    want = {str(int(f)): int(f) for f in fields}
+    pending: dict[int, list] = {f: [] for f in want.values()}
+    parts: dict[int, list] = {f: [] for f in want.values()}
+
+    def flush(f):
+        rows = [r for r in pending[f] if len(r) == len(names)]
+        pending[f] = []
+        arr = np.array(rows, dtype=str).reshape(-1, len(names))
+        out = {}
+        for j, (name, typ) in enumerate(zip(names, types or ["double"] * len(names), strict=True)):
+            col = arr[:, j]
+            out[name] = col if typ == "char" else np.where(col == "null", "nan", col).astype(float)
+        parts[f].append(Table(out))
+
     for ln in lines:
         if ln.startswith("|"):
             if names is None:
@@ -181,25 +314,57 @@ def parse_metadata(lines, field: int) -> Table:
         if ln.startswith("\\") or not ln.strip():
             continue
         tok = ln.split()
-        if tok[0] != want:
+        f = want.get(tok[0])
+        if f is None:
             continue
-        rows.append(tok)
+        pending[f].append(tok)
+        if len(pending[f]) >= block:
+            flush(f)
     if names is None:
         raise ValueError("no IPAC header in metadata")
     types = types or ["double"] * len(names)
-    rows = [r for r in rows if len(r) == len(names)]
-    arr = np.array(rows, dtype=str).reshape(-1, len(names))
     out = {}
-    for j, (name, typ) in enumerate(zip(names, types, strict=True)):
-        col = arr[:, j]
-        if typ == "char":
-            out[name] = col
-        else:
-            out[name] = np.where(col == "null", "nan", col).astype(float)
-    t = Table(out)
-    for c in ("field", "chip", "subframe", "id"):
-        t[c] = t[c].astype(int)
-    return t
+    for f in want.values():
+        flush(f)
+        t = vstack(parts[f]) if len(parts[f]) > 1 else parts[f][0]
+        for c in ("field", "chip", "subframe", "id"):
+            t[c] = t[c].astype(int)
+        out[f] = t
+    return out
+
+
+def write_metadata_caches(metadata_path: Path, derived_dir: Path, fields=None) -> list[Path]:
+    """One pass over ``metadata.ipac`` writing ``metadata_gb<F>.ecsv`` for ``fields`` (default all
+    22; ``observed``)."""
+    fields = sorted(CUT0_PER_FIELD) if fields is None else [int(f) for f in fields]
+    with tarfile.open(metadata_path, "r:gz") as tar:
+        member = next(m for m in tar if m.isfile() and m.name.endswith("metadata.ipac"))
+        fh = io.TextIOWrapper(tar.extractfile(member), encoding="ascii")
+        tabs = split_metadata(fh, fields)
+    derived_dir.mkdir(parents=True, exist_ok=True)
+    paths_out = []
+    for f, t in tabs.items():
+        t["event_id"] = [
+            make_event_id(*r)
+            for r in zip(t["field"], t["chip"], t["subframe"], t["id"], strict=True)
+        ]
+        t.rename_columns(["ra_j2000", "dec_j2000"], ["ra", "dec"])
+        t = t[
+            [
+                "event_id",
+                "ra",
+                "dec",
+                *[c for c in t.colnames if c not in ("event_id", "ra", "dec")],
+            ]
+        ]
+        t.meta.update(
+            provenance=schema.Provenance.OBSERVED.value,
+            source=f"{BULK}metadata.ipac.tar.gz, field gb{f} rows ({REFERENCE})",
+        )
+        path = derived_dir / f"metadata_gb{f}.ecsv"
+        t.write(path, overwrite=True)
+        paths_out.append(path)
+    return paths_out
 
 
 class MoaField:
@@ -266,32 +431,9 @@ class MoaField:
         if self._events is not None:
             return self._events
         cache = self._derived_dir / f"metadata_{self.field}.ecsv"
-        if cache.exists():
-            t = Table.read(cache)
-        else:
-            with tarfile.open(self.metadata_path(), "r:gz") as tar:
-                member = next(m for m in tar if m.isfile() and m.name.endswith("metadata.ipac"))
-                fh = io.TextIOWrapper(tar.extractfile(member), encoding="ascii")
-                t = parse_metadata(fh, self.field_number)
-            t["event_id"] = [
-                make_event_id(*r)
-                for r in zip(t["field"], t["chip"], t["subframe"], t["id"], strict=True)
-            ]
-            t.rename_columns(["ra_j2000", "dec_j2000"], ["ra", "dec"])
-            t = t[
-                [
-                    "event_id",
-                    "ra",
-                    "dec",
-                    *[c for c in t.colnames if c not in ("event_id", "ra", "dec")],
-                ]
-            ]
-            t.meta.update(
-                provenance=schema.Provenance.OBSERVED.value,
-                source=f"{BULK}metadata.ipac.tar.gz, field {self.field} rows ({REFERENCE})",
-            )
-            self._derived_dir.mkdir(parents=True, exist_ok=True)
-            t.write(cache, overwrite=True)
+        if not cache.exists():
+            write_metadata_caches(self.metadata_path(), self._derived_dir, [self.field_number])
+        t = Table.read(cache)
         self._events = t
         return t
 

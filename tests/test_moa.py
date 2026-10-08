@@ -148,3 +148,79 @@ def test_standard_flux_light_curve_keeps_negative_flux_and_drops_bad_rows():
     )
     assert lc["time"].tolist() == [1.0, 3.0] and lc["flux"].tolist() == [2.0, -5.0]
     assert lc.meta["n_dropped"] == 2 and lc.meta["flux_kind"] == "difference"
+
+
+def test_fast_parser_equals_the_line_parser_and_reads_column_subsets():
+    for text in (LC, LC_COR):
+        fast = moa.parse_lightcurve(text)
+        slow = moa._parse_lines(text)
+        assert fast.keys() == slow.keys()
+        for k in slow:
+            np.testing.assert_array_equal(fast[k], slow[k])
+    sub = moa.parse_lightcurve(gzip.compress(LC.encode()), columns=("flux", "included"))
+    assert set(sub) == {"HJD", "flux", "included"}
+    ragged = LC + "  3827.0  1.0\n"  # a short row: the line parser drops it
+    assert moa.parse_lightcurve(ragged)["HJD"].size == 4
+
+
+def _big_tar(tmp_path, n=40, seed=3):
+    """A tar like the field tars: directory entries, then gzipped members of varied size."""
+    rng = np.random.default_rng(seed)
+    path = tmp_path / "gb21.tar"
+    with tarfile.open(path, "w", format=tarfile.USTAR_FORMAT) as tar:
+        for d in ("exodata/lcurve/gb21", "exodata/lcurve/gb21/R"):
+            info = tarfile.TarInfo(d)
+            info.type = tarfile.DIRTYPE
+            tar.addfile(info)
+        for i in range(n):
+            data = gzip.compress(rng.bytes(int(rng.integers(100, 5000))))  # incompressible
+            info = tarfile.TarInfo(f"exodata/lcurve/gb21/R/3/gb21-R-3-0-{i}.ipac.gz")
+            info.size = len(data)
+            tar.addfile(info, io.BytesIO(data))
+    return path
+
+
+@pytest.mark.parametrize("seg", [512, 1536, 4096, 10240, 1 << 20])
+def test_range_segments_cover_every_member_exactly_once(tmp_path, seg):
+    from jwst_anomaly import moa_stream
+
+    path = _big_tar(tmp_path)
+    with tarfile.open(path) as tar:
+        truth = {
+            m.name.rsplit("/", 1)[-1][: -len(".ipac.gz")]: (m.offset_data, m.size)
+            for m in tar
+            if m.isfile()
+        }
+    total = path.stat().st_size
+    reader = moa_stream.RangeReader(path=path)
+    got = []
+    for a, b in moa_stream.segments(0, total, seg):
+        got.extend(moa_stream.read_segment(reader, a, b, total))
+    ids = [g[0] for g in got]
+    assert len(ids) == len(set(ids)) == len(truth)
+    raw = path.read_bytes()
+    for eid, off, size, data in got:
+        assert truth[eid] == (off, size)
+        assert data == raw[off : off + size]
+    some = [(e, *truth[e]) for e in list(truth)[:5]]
+    fetched = moa_stream.fetch_members(reader, some)
+    assert all(fetched[e] == raw[o : o + s] for e, o, s in some)
+
+
+def test_tar_header_rejects_data_blocks():
+    assert moa.tar_header(b"\0" * 512) is None
+    assert moa.tar_header(bytes(range(256)) * 2) is None
+
+
+def test_field_urls_and_sizes():
+    assert moa.tar_url("gb5").endswith("/bulk/gb5.tar") and moa.tar_url(22) in moa.FILES
+    assert moa.object_url("gb22-R-6-1-29").endswith("/MOA/gb22/R/6/gb22-R-6-1-29.ipac")
+    assert set(moa.TAR_BYTES) == set(moa.CUT0_PER_FIELD) and moa.TAR_BYTES[22] == 3510138880
+
+
+def test_one_metadata_pass_caches_several_fields(tmp_path):
+    from astropy.table import Table
+
+    out = moa.write_metadata_caches(_meta(tmp_path), tmp_path / "d", fields=[1, 22])
+    assert [p.name for p in out] == ["metadata_gb1.ecsv", "metadata_gb22.ecsv"]
+    assert len(Table.read(out[1])) == 2 and len(Table.read(out[0])) == 1
