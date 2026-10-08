@@ -90,29 +90,36 @@
     "image_exclusion": 0.5,
     "n_rounded_sample": 32
   },
-  "n_systems": 351,
-  "n_covered": 260,
+  "n_systems": 263,
+  "dropped": {
+    "no coordinates": {},
+    "duplicates": 0,
+    "sep_cat > 6.0 arcsec": 86
+  },
+  "n_covered": 188,
   "rejected": {
-    "n_all": 229,
-    "n_covered": 175,
+    "n_all": 146,
+    "n_covered": 104,
     "status": {
-      "blended": 105,
+      "blended": 36,
       "deflector": 1,
       "faint galaxy": 1,
-      "none": 23,
+      "none": 21,
       "too close": 45
     },
-    "decided": 23,
-    "deflector": 1,
-    "none": 22,
-    "none_colour_match": 11,
-    "none_typical_detectable": 22
+    "decided": 20,
+    "deflector": 0,
+    "none": 20,
+    "none_colour_match": 10,
+    "none_colour_mismatch": 10,
+    "pair_mismatch": 1,
+    "none_typical_detectable": 20
   },
   "control": {
-    "n_all": 122,
-    "n_covered": 85,
+    "n_all": 117,
+    "n_covered": 84,
     "status": {
-      "blended": 50,
+      "blended": 49,
       "none": 5,
       "too close": 30
     },
@@ -120,6 +127,8 @@
     "deflector": 0,
     "none": 5,
     "none_colour_match": 4,
+    "none_colour_mismatch": 1,
+    "pair_mismatch": 0,
     "none_typical_detectable": 5
   },
   "control_efficiency": 0.0

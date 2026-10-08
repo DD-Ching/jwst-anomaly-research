@@ -103,3 +103,30 @@ def test_binary_match_sexagesimal_and_unparseable():
     assert list(niq.binary_match(s, binq)) == [True]
     with pytest.raises(ValueError):
         niq.binary_match(s, Table({"RA1": ["x"], "DE1": ["y"]}, dtype=[str, str]))
+
+
+def test_build_sample_drops_wide_and_component_rows():
+    sqls = _sqls(
+        [
+            ("J100000.00+010000.0", "1.5", "19.3", "No lensing object"),
+            ("J110000.00+010000.0", "1.5", "2.3", "SDSS Lens (component A)"),
+            ("J120000.00+010000.0", "1.5", "2.3", "No lensing object"),
+        ]
+    )
+    s = niq.build_sample({"J/AJ/143/119/table4": sqls})
+    assert list(s["name"]) == ["J120000.00+010000.0"]
+    assert s.meta["dropped"]["sep_cat > 6.0 arcsec"] == 1
+
+
+def test_dedup_ignores_rows_already_merged():
+    # A (rejected) - B (control, 2" from A) - C (rejected, 2" from B, 4" from A)
+    lemon = _lemon([("A", "150.0", "1.0", "1.5", "2.2", "UQP")])
+    sqls = _sqls(
+        [
+            ("J100000.26+010000.0", "1.5", "2.2", "No lensing object"),  # C: 3.9" from A
+            ("J100000.13+010000.0", "1.5", "2.2", "SDSS lens"),  # B: 1.95" east of A, after C
+        ]
+    )
+    s = niq.build_sample({"J/MNRAS/520/3305/table1": lemon, "J/AJ/143/119/table4": sqls})
+    groups = dict(zip(s["name"], s["group"], strict=True))
+    assert groups["A"] == "control" and groups["J100000.26+010000.0"] == "rejected"

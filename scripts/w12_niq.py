@@ -1,5 +1,5 @@
 """W1/W2 in rejected lensed-quasar pairs: the D-056 dark-deflector test on pairs that lens searches
-rejected because no lens galaxy was seen (D-TBD).
+rejected because no lens galaxy was seen (D-064).
 
 Inputs (VizieR, pinned by sha256 in ``data/manifests/w12_niq_inputs.json``):
 - Lemon et al. 2023 (MNRAS 520, 3305) Gaia-selected candidates: classes "UQP" (unclassified
@@ -56,27 +56,44 @@ D056_FJ = lenscats.FJCalibration(a=20.41, k=0.67, slope=-10.0, rms=0.88, n=605, 
 # lensed images share a colour (ASSUMPTION: |delta(g - z)| <= 0.5 allows microlensing, dust and
 # variability; the tolerance of quasar_pair_test's further-image rule)
 COLOUR_TOL = 0.5
+# galaxy scale as in D-056 (theta_E <= 3"): wider catalogued pairs cannot be the LS pair within
+# image_radius, so they are dropped
+SEP_MAX = 6.0
+# the LS image pair must be the catalogued pair (ASSUMPTION: separations agree within 0.5")
+SEP_MATCH = 0.5
 DEDUP_ARCSEC = 3.0  # same system in two tables (ASSUMPTION; SQLS positions are one image)
 
 
-def fetch(source: str, out: Path) -> tuple[Path, dict]:
+def pinned() -> dict[str, str]:
+    """sha256 per VizieR table from the tracked manifest (empty before the first ``--repin``)."""
+    man = paths.manifests_dir() / "w12_niq_inputs.json"
+    if not man.exists():
+        return {}
+    return {m["source"]: m["sha256"] for m in json.loads(man.read_text())["inputs"]}
+
+
+def fetch(source: str, out: Path, expected: str | None) -> tuple[Path, dict]:
+    """Download (or reuse) one VizieR table; raise if it differs from the pinned sha256."""
     f = out / (source.replace("/", "_") + ".tsv")
     if not f.exists():
         r = requests.get(VIZIER.format(source), timeout=300)
         r.raise_for_status()
         f.write_bytes(r.content)
     data = f.read_bytes()
-    return f, {
-        "source": source,
-        "url": VIZIER.format(source),
-        "bytes": len(data),
-        "sha256": hashlib.sha256(data).hexdigest(),
-    }
+    sha = hashlib.sha256(data).hexdigest()
+    if expected and sha != expected:
+        raise RuntimeError(
+            f"{source}: sha256 {sha} != pinned {expected} (VizieR changed or a stale "
+            f"cache in {f}; inspect, then rerun with --repin)"
+        )
+    return f, {"source": source, "url": VIZIER.format(source), "bytes": len(data), "sha256": sha}
 
 
 def read_tsv(path: Path) -> Table:
     """VizieR ASU-TSV: header, units and dashes rows, then data (all columns as strings)."""
-    lines = [ln for ln in path.read_text().splitlines() if ln and not ln.startswith("#")]
+    lines = [
+        ln for ln in path.read_text(encoding="utf-8").splitlines() if ln and not ln.startswith("#")
+    ]
     hdr = lines[0].split("\t")
     rows = [ln.split("\t") for ln in lines[3:]]
     rows = [r + [""] * (len(hdr) - len(r)) for r in rows]
@@ -111,7 +128,9 @@ def sqls_group(comment: str) -> str:
 
 
 def build_sample(tables: dict[str, Table]) -> Table:
-    rows = []
+    """Rejected and control pairs from all inputs, merged within DEDUP_ARCSEC, galaxy scale only
+    (catalogued separation <= SEP_MAX or unknown). ``meta``: rows dropped per reason."""
+    rows, dropped = [], {}
     for source, t in tables.items():
         label = INPUTS[source]
         for r in t:
@@ -144,7 +163,11 @@ def build_sample(tables: dict[str, Table]) -> Table:
                 if not np.isfinite(ra):
                     ra, dec = sdss_name_radec(name)
                 z, sep = _float(r["z"]), _float(r["theta"])
-            if group and np.isfinite(ra):
+            if group and "component" in comment.lower():
+                group = ""  # one cluster-scale lens split into component rows (not galaxy scale)
+            if group and not np.isfinite(ra):
+                dropped[label] = dropped.get(label, 0) + 1
+            elif group:
                 rows.append((name, ra, dec, z, sep, group, label, comment))
     s = Table(
         rows=rows,
@@ -158,13 +181,20 @@ def build_sample(tables: dict[str, Table]) -> Table:
     keep = np.ones(len(s), bool)
     for i in range(len(s)):
         if keep[i]:
-            dup = (c[i].separation(c).arcsec < DEDUP_ARCSEC) & (np.arange(len(s)) > i)
+            dup = (c[i].separation(c).arcsec < DEDUP_ARCSEC) & (np.arange(len(s)) > i) & keep
             # a pair listed as rejected in one table and as a lens in another stays a control
             if np.any(dup & (s["group"] == "control")) and s["group"][i] == "rejected":
                 s["group"][i] = "control"
                 s["comment"][i] += " | listed as lens elsewhere"
             keep &= ~dup
     s = s[keep]
+    wide = np.asarray(s["sep_cat"], float) > SEP_MAX
+    s = s[~wide]
+    s.meta["dropped"] = {
+        "no coordinates": dropped,
+        "duplicates": int((~keep).sum()),
+        f"sep_cat > {SEP_MAX} arcsec": int(wide.sum()),
+    }
     s["selection"] = "quasar"
     s["z_lens"] = np.nan
     s["theta_e"] = s["sep_cat"] / 2  # SIS model_prediction from the catalogued separation
@@ -253,12 +283,13 @@ def cmd_screen(args) -> None:
     out.mkdir(parents=True, exist_ok=True)
     p = w12.Params()
     tables, manifest = {}, []
+    pins = {} if args.repin else pinned()
     for src in INPUTS:
-        f, m = fetch(src, out)
+        f, m = fetch(src, out, pins.get(src))
         tables[src] = read_tsv(f)
         m["rows"] = len(tables[src])
         manifest.append(m)
-    fb, mb = fetch(HENNAWI, out)
+    fb, mb = fetch(HENNAWI, out, pins.get(HENNAWI))
     binq = read_tsv(fb)
     mb["rows"] = len(binq)
     manifest.append(mb)
@@ -276,13 +307,16 @@ def cmd_screen(args) -> None:
     images = lenscats.pair_images(sc, src, p.image_radius)
     sc["sep_ls"] = images["sep"]
     sc["dgz"] = pair_colour_difference(images, src)
-    sc["colour_match"] = np.abs(sc["dgz"]) <= COLOUR_TOL  # no colour counts as no match
+    sc["colour_match"] = np.abs(sc["dgz"]) <= COLOUR_TOL
+    sc["colour_mismatch"] = np.abs(sc["dgz"]) > COLOUR_TOL  # NaN (no colour) is neither
+    sc["pair_match"] = np.abs(sc["sep_ls"] - sc["sep_cat"]) <= SEP_MATCH
     sc["test_status"] = w12.deflector_test(sc, src, p, images)["test_status"]
     sc["undecided_flags"] = w12.flags_undecided(sc, src, p)
     sc["detectable_typical"] = sc["req_mag_z_typical"] < sc["depth_z"] - p.margin
     sc["detectable_conservative"] = sc["req_mag_z"] < sc["depth_z"] - p.margin
     sc["hennawi_binary"] = binary_match(sc, binq)
     decided = np.isin(sc["test_status"], ["deflector", "none"]) & (sc["undecided_flags"] == "")
+    decided &= np.asarray(sc["pair_match"], bool)  # otherwise the test ran on another pair
     sc["decided"] = decided
     summary = {
         "inputs": manifest,
@@ -290,6 +324,7 @@ def cmd_screen(args) -> None:
         "fj_calibration": D056_FJ.__dict__,
         "params": p.__dict__,
         "n_systems": len(s),
+        "dropped": s.meta["dropped"],
         "n_covered": int(covered.sum()),
     }
     for g in ("rejected", "control"):
@@ -310,6 +345,12 @@ def cmd_screen(args) -> None:
             "none": nn,
             "none_colour_match": int(
                 (d & (sc["test_status"] == "none") & sc["colour_match"]).sum()
+            ),
+            "none_colour_mismatch": int(
+                (d & (sc["test_status"] == "none") & sc["colour_mismatch"]).sum()
+            ),
+            "pair_mismatch": int(
+                (m & np.isin(sc["test_status"], ["deflector", "none"]) & ~sc["pair_match"]).sum()
             ),
             "none_typical_detectable": int(
                 (d & (sc["test_status"] == "none") & sc["detectable_typical"]).sum()
@@ -341,6 +382,8 @@ def cmd_screen(args) -> None:
         "decided",
         "dgz",
         "colour_match",
+        "colour_mismatch",
+        "pair_match",
         "detectable_typical",
         "detectable_conservative",
         "hennawi_binary",
@@ -371,7 +414,10 @@ def main(argv=None) -> None:
     sub = ap.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("screen")
     s.add_argument("--out", default=str(paths.outputs_dir() / "w12_niq"))
-    s.add_argument("--sheet", action="store_true", help="cutouts + contact sheet of 'none' pairs")
+    s.add_argument("--sheet", action="store_true", help="cutouts + contact sheets of decided pairs")
+    s.add_argument(
+        "--repin", action="store_true", help="accept new input hashes (after inspection)"
+    )
     args = ap.parse_args(argv)
     {"screen": cmd_screen}[args.cmd](args)
 

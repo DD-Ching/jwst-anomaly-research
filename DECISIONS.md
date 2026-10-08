@@ -2952,7 +2952,7 @@ t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in 
 - A survivor appears: stop and report to the owner (/vet-candidate).
 - Any W3 limit is quoted outside the repository: `needs-human` (D-054).
 
-## D-TBD W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them; measured control efficiency 0/5 (2026-10-08)
+## D-064 W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them; measured control efficiency 0/5 (2026-10-08)
 
 **Decision.** Test the pairs that lens searches rejected for lack of a lens galaxy with the unchanged D-056 chain
 (`scripts/w12_niq.py`, importing `w12_lenscats`; D-056 Faber–Jackson calibration fixed). Add a control sample of real
@@ -2961,8 +2961,10 @@ pinned by sha256: Lemon et al. 2023 table1 (UQP / QSO pair rejected; lens / quad
 candidate tables (Inada et al. 2008, 2010, 2012; "no lens(ing) object" rejected; "SDSS lens"/"known lens" control),
 and Hennawi et al. 2006 binaries for vetting. Vetting adds an image-colour check (|Δ(g − z)| ≤ 0.5, ASSUMPTION).
 
-Result: 0 of 5 decided control lenses (2.0–2.6″) show their lens galaxy. Rejected: 22 "none", of which 11 are
-colour-mismatched and 1 is a catalogued binary. 10 remain untestable. No limit and no candidate
+Result: 0 of 5 decided control lenses (2.0–2.6″) show their lens galaxy. Rejected: 20 "none", of which 10 are
+colour-mismatched and 1 is a catalogued binary. 9 remain untestable. Only galaxy-scale pairs (catalogued separation
+≤ 6″) whose LS pair matches the catalogued separation within 0.5″ count as decided. Inputs are checked against the
+pinned hashes (`--repin` after inspection). No limit and no candidate
 (docs/exotic_limits.md "W1/W2 in rejected lensed-quasar pairs").
 
 **Alternatives rejected.**
@@ -2979,5 +2981,5 @@ colour-mismatched and 1 is a catalogued binary. 10 remain untestable. No limit a
 control images and blue+orange rejected pairs. A Hennawi coordinate-parse bug (sexagesimal RA1/DE1 silently matched
 nothing) was caught on review of the run. `binary_match` now raises if no coordinate parses.
 
-**Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 10 colour-matched pairs;
+**Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 9 colour-matched pairs;
 spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ tables add pairs ≥ 2″.
