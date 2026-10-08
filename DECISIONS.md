@@ -1819,10 +1819,11 @@ gated off) until the solver refines its grid near high |μ|. Pairs whose catalog
 - MACS1149 control: its six shared pairs are identical at 0.25″ and 0.1″, so D-037's topology verdicts stand.
 - `radial` (no photo-z): 139 anti arcs, 98 centres against a random mean of 99.6 (p95 120). The strongest centre has
   7 lines, p = 0.29. Its lines are noise segments: aper50 S/N 1.6–4.0, nothing in cutouts, forced S/N within ±1.5σ.
-  With aper50 S/N ≥ 5, there are 7 centres against 6.8 and at most 3 lines.
+  With aper50 S/N ≥ 5, there are 7 centres against 6.8 and at most 3 lines. Re-run with CANUCS DR1 photo-z (77
+  non-background sources dropped): 120 anti arcs, 77 centres against 85.0 (p95 103), max 7 lines, p 0.225; null.
 - Tally: 137 anti arcs screened; 0 flags; **0 surviving**. `images` and `fluxratio` were not run (gated).
 
 **Revisit if.**
 - `find_images` gets adaptive refinement near |μ| > 50. Then open the MACS0416 gate and run `images` / `fluxratio`
   with `frame_offset_arcsec` (0.208, −0.025).
-- CANUCS DR1 photo-z (DOI 10.17909/18nv-np70) is adopted for this field.
+- `images` / `fluxratio` run with CANUCS DR1 photo-z once the image list opens.
