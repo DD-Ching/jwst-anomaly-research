@@ -1,0 +1,36 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: theta_e, datatype: float64}
+# - {name: n_flags, datatype: int64}
+# - {name: recovered, datatype: int64}
+# - {name: n_inject, datatype: int64}
+# - {name: efficiency, datatype: float64}
+# - {name: area_deg2, datatype: float64}
+# - {name: core_ratio, datatype: float64}
+# - {name: min_oe, datatype: float64}
+# - {name: k_nb, datatype: float64}
+# - {name: min_log10p_nb, datatype: float64}
+# - {name: n95_per_deg2, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: scripts/w5_counts.py screen on /home/user/jwst-anomaly-research/data/w5/tractor.fits}
+# - {cell_arcmin: 0.5}
+# - {mag_gal: 21.0}
+# - {disk_frac: 0.3}
+# - {min_cov: 0.8}
+# - {fap: 0.05}
+# - {flag_ratio: 0.15}
+# - {seed: 63}
+# - {ra0: 151.99998941878778}
+# - {dec0: 1.750019255348231}
+# - {n_gal: 43978}
+# - {area_deg2: 11.423022796140213}
+# schema: astropy-2.0
+theta_e n_flags recovered n_inject efficiency area_deg2 core_ratio min_oe k_nb min_log10p_nb n95_per_deg2
+4.0 0 0 200 0.0 10.909722222222221 0.022070165242239023 -0.0 5.961700638718773 -1.7181379944686472 inf
+8.0 0 0 200 0.0 11.558958333333333 0.022070165242239023 0.0 9.516657871918172 -4.337253192665179 inf
+11.0 0 200 200 1.0 11.881041666666667 0.022070165242239023 0.16800961173192303 11.223393011651792 -3.4833249524706367 0.25250311245155976
+16.0 0 200 200 1.0 12.104791666666667 0.022070165242239023 0.30742512425133184 14.943746621290586 -3.1457992198232447 0.2478357399790028
+22.0 0 200 200 1.0 12.247569444444444 0.022070165242239023 0.3787659727779173 20.078815847883924 -3.2825814050356756 0.24494655969154877
+32.0 0 200 200 1.0 12.456805555555556 0.022070165242239023 0.5194303085489148 27.191085710456516 -2.6231407927993664 0.24083220907803632

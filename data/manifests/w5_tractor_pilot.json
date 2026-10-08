@@ -1,0 +1,8 @@
+{
+  "uri": "Legacy Surveys DR10 ls_dr10.tractor via https://datalab.noirlab.edu/tap: SELECT ra, dec, type, mag_r, maskbits FROM ls_dr10.tractor WHERE ra BETWEEN 150.2 AND 153.8 AND dec BETWEEN -0.05 AND 3.55 AND mag_r < 22.0",
+  "file": "tractor.fits",
+  "sha256": "8731db9f768187c0f2f58943f1984f4cd2421c6b9b9f3f248a773463b327ee4e",
+  "size": 5008320,
+  "rows": 185070,
+  "accessed": "2026-10-08"
+}

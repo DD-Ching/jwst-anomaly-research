@@ -1,0 +1,11 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: theta_e, datatype: float64}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: scripts/w5_counts.py screen on /home/user/jwst-anomaly-research/data/w5/tractor.fits}
+# schema: astropy-2.0
+theta_e ra dec

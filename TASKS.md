@@ -22,7 +22,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    is not: D-060, efficiency 0.46); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar candidates ("nearly identical quasars", binary quasars) where a dark lens
    would hide; HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
-3. **W5:** background-count deficits around empty regions in a wide survey, with calibrated nulls.
+3. **W5** (D-063): DR10 count-deficit screen built; pilot 11.4 deg² null, N₉₅ ≈ 0.25 deg⁻² for θ_E = 11–32′, blind
+   ≤ 8′. Next: more DR10 regions (batched TAP queries, one per ~12 deg²), then HEALPix + DR10 randoms at ≳ 10³ deg²; a
+   lognormal-mock null below 10′; stack around W1 `radial` centres.
 4. **Warp:** monitor the literature (checked 2026-10-08: no distant-observer EM template — Lentz & Felton 2024 give fluxes only; Clough et al.
    2024 waveform not public; O3 superluminal-burst search already null, Kuwahara & Cannon 2023). Recheck monthly.
 

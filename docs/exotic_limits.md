@@ -1008,3 +1008,32 @@ dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no pu
   7–474 GB each; per-object files are also served).
 - Not a statement about OGLE or the Mróz samples, and not combinable with the D-052 JWST limits without a lens
   population model.
+
+## W5 count deficits (pilot: Legacy Surveys DR10)
+
+D-063; `scripts/w5_counts.py fetch` then `screen --n-inject 200 --seed 63`; outputs `results/w5/`; input manifest
+`data/manifests/w5_tractor_pilot.json` (185,070 rows; 11.4 deg² unmasked grid, 43,978 galaxies r < 21).
+
+- **Hypothesis (model_prediction):** a repulsive point lens (n = 1) leaves O/E ≈ 0.02 for galaxies r < 21 inside
+  0.3 θ_E (`predicted_ratio` with the field's own counts; bright-end slope 0.6 ASSUMPTION). Stars are untouched.
+- **Ordinary explanations:** clustering underdensities (voids), masks, depth or seeing, star/galaxy type swaps.
+- **Result (derived): 0 flags** at every θ_E under the clustered null. The deepest disks in the field reach
+  O/E = 0 at θ_E ≤ 8′ (0.17 at 11′, 0.31 at 16′), but none is improbable given the fitted k.
+
+| θ_E | disk radius | k (NB) | flags | ε (200 injections) | area [deg²] | N₉₅ [deg⁻²] |
+|---|---|---|---|---|---|---|
+| 4′ | 1.2′ | 6.0 | 0 | 0.00 | 10.9 | — |
+| 8′ | 2.4′ | 9.5 | 0 | 0.00 | 11.6 | — |
+| 11′ | 3.3′ | 11.2 | 0 | 1.00 | 11.9 | 0.25 |
+| 16′ | 4.8′ | 14.9 | 0 | 1.00 | 12.1 | 0.25 |
+| 22′ | 6.6′ | 20.1 | 0 | 1.00 | 12.2 | 0.24 |
+| 32′ | 9.6′ | 27.2 | 0 | 1.00 | 12.5 | 0.24 |
+
+- **Mass scale (derived, ASSUMPTION D_s ≫ D_l):** θ_E = 11′ (32′) means |M| ≈ 5 × 10¹³ (4.5 × 10¹⁴) M☉ × (D_l / 1 Mpc).
+- **Limits of this pilot:** one field and one sky density. It does not compete with the volume limits of Takahashi &
+  Asada 2013: 0.25 deg⁻² is n ≲ 2.5 × 10⁻³ Mpc⁻³ for lenses within 100 Mpc. DR10 covers ~2 × 10⁴ deg², which would
+  bring N₉₅ to ~1.5 × 10⁻⁴ deg⁻². Blind below θ_E ≈ 10′ because clustering underdensities are as empty as the
+  predicted hole there. The injections thin a fixed map; they do not model a lens inside large-scale structure.
+- **Failed approach (kept for the record):** the Poisson-threshold run flagged 31 disks at θ_E = 8′ with 0.5 θ_E disks
+  and 3 with 0.3 θ_E disks. All are clustering underdensities (normal star counts; two with a star excess, i.e.
+  type swaps; depth 24.7–25.3 and seeing 1.1–1.34″ from the DR10 brick maps). See D-063.

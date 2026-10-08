@@ -2951,3 +2951,40 @@ t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in 
 - The other 21 fields are screened. The largest tars are 474 GB, so per-object HTTP or a cloud session is needed.
 - A survivor appears: stop and report to the owner (/vet-candidate).
 - Any W3 limit is quoted outside the repository: `needs-human` (D-054).
+
+## D-063 W5 count deficits: client-side count maps from Legacy Surveys DR10, clustered null, pilot null (2026-10-08)
+
+**Decision.** Search for W5 holes (a repulsive point lens thins background galaxies inside x = θ/θ_E ≲ 0.35;
+`exotic_sim.count_ratio`, sign −1) with `jwst_anomaly.countmap` and `scripts/w5_counts.py`:
+- one TAP row query per region (`ra, dec, type, mag_r, maskbits`, r < 22), binned client-side on a 0.5′ tangent-plane grid;
+- galaxies: non-PSF, r < 21, unmasked (`MASK_BITS`: NPRIMARY, BRIGHT, SATUR, ALLMASK, MEDIUM, GALAXY, CLUSTER);
+  the mask enters as the unmasked fraction of *all* rows in each disk, which a lens does not change;
+- statistic: galaxy count O in a disk of radius 0.3 θ_E (predicted disk-mean ratio 0.022) against
+  E = n̄ × area × unmasked fraction;
+- null: a negative binomial with k fitted on independent disks of the same field (galaxy clustering;
+  k ≈ 6–27 for θ_E = 4–32′). A flag needs O/E < 0.15 **and** n_indep × P_NB(N ≤ O) < 0.05. All of these are ASSUMPTIONs;
+- vetting: stars in the same disk (a lens behind the Milky Way leaves them), and counts of every type
+  against what a hole would leave; then the DR10 per-brick `psfsize-r` / `depth-r` maps;
+- efficiency: predicted holes injected by binomial thinning, 200 per θ_E.
+
+Pilot (3.5° × 3.5° grid at RA 152, Dec 1.75; 11.4 deg² unmasked): **0 flags; ε = 1.0 for θ_E = 11–32′, 0 at ≤ 8′; N₉₅ ≈ 0.25 deg⁻²**
+(docs/exotic_limits.md "W5 count deficits (pilot: Legacy Surveys DR10)").
+
+**Alternatives rejected.**
+- Server-side aggregation on Data Lab TAP: the ADQL front end rejects expressions in GROUP BY and sub-selects in FROM.
+  The Query Manager SQL endpoint needs a login token (2026-10-08).
+- HEALPix (`nest4096`) maps: neither healpy nor astropy-healpix is a dependency, and a flat grid is exact enough
+  for ≤ 4° fields.
+- A Poisson threshold (first run: 31 flags at θ_E = 8′ with a 0.5 θ_E disk). Galaxy clustering at r < 21 gives O/E down to
+  0.24 in 4′ disks with normal star counts; Poisson p ignores it.
+- A disk of 0.5 θ_E: its predicted mean ratio is 0.23, too close to clustering underdensities. At 0.3 θ_E it is 0.022.
+- "All rows in the disk" as a depth proxy: a hole also removes the galaxies that dominate those rows. The image-based
+  depth/seeing maps are used instead.
+
+**Evidence.** Galaxy counts measured in the pilot (cumulative r < 19/20/21: slope 0.49 → 0.43 mag⁻¹); bright-end slope
+0.6 assumed. The three Poisson-era flags at θ_E = 8′ have normal depth (5σ r = 24.7–25.3) and seeing
+(1.10–1.34″). Two show a star excess (31 vs 21 expected: galaxies typed PSF). Under the fitted k each is expected
+0.1–0.6 times among 1,676 independent disks.
+
+**Revisit if** the screen is scaled to ≳ 10³ deg² (then use HEALPix and a mask from the DR10 random catalogues); or
+a clustering-aware null (mocks or a lognormal field) is needed below θ_E ≈ 10′.

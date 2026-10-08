@@ -961,3 +961,6 @@ Exploration Program."
   2026-10-08: RP histogram within 0.3° of (279.148°, −23.767°) for the luminosity-function slope (D-062).
 - Rejected readers (D-062): merida 0.3.2 (https://pypi.org/project/merida/), qusi 1.5.6
   (https://pypi.org/project/qusi/).
+- Legacy Surveys DR10 south per-brick coadd maps (`legacysurvey-<brick>-psfsize-r.fits.fz`, `-depth-r.fits.fz`),
+  https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr10/south/coadd/<RRR>/<brick>/ (accessed 2026-10-08; used to vet
+  the W5 pilot disks, not stored). Cite Dey et al. 2019 (AJ 157, 168).

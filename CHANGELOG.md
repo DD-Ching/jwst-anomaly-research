@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W5 count-deficit screen in Legacy Surveys DR10: pilot null under a clustered null (D-063)
+- Cloud run. Continued the claim PR #94 (skeleton only). Hypothesis: a repulsive point lens empties background galaxies
+  (r < 21) inside 0.3 θ_E (predicted O/E 0.022) and leaves stars. Ordinary explanations: clustering voids, masks,
+  depth/seeing, type swaps.
+- `countmap` + `scripts/w5_counts.py` on 3.5° × 3.5° at RA 152, Dec 1.75 (185,070 Tractor rows, 43,978 galaxies).
+  **0 flags** at θ_E = 4–32′ under a negative-binomial null fitted per scale (k ≈ 6–27). Injections: ε = 1.0 for
+  θ_E ≥ 11′, 0 at ≤ 8′. **N₉₅ ≈ 0.25 deg⁻²** (`derived`; one field, not competitive with published volume limits yet).
+- **Failed approaches:** Data Lab TAP rejects GROUP BY expressions and sub-selects, and the Query Manager needs a login,
+  so binning is client-side. A Poisson threshold flagged 31 disks (0.5 θ_E) and then 3 (0.3 θ_E). All were clustering
+  underdensities: normal brick depth and seeing, two with star excesses. "All rows" is not a depth proxy, because a
+  hole removes them too. Data Lab returned 502 for ~10 min mid-run; the NERSC portal served the brick maps.
+- **Next:** scale out (more DR10 regions in batched TAP queries; HEALPix + DR10 randoms once ≳ 10³ deg²); a
+  clustering-aware null (lognormal mocks) to push below θ_E ≈ 10′; stack around W1 `radial` centres.
+
 ## 2026-10-08: W3 MOA-II gb22 limit corrected: injections re-run after the `s_min` review fix (D-062)
 - #92's limit (Γ₉₅ ≈ 0.5–5 × 10⁻⁶, 171 / 600 recovered) came from injections run before the review fix that made
   the pre-screen `s_min` the weaker of the two significances; the merged code already has the fix. Re-run of the whole
