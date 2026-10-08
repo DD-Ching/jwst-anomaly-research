@@ -18,6 +18,31 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Next:** PSF-subtracted HST image modelling (e.g. drizzled frames from MAST, quasar PSF + Sérsic fit) validated
   on the same known-lens set, or HSC PDR3 photometry; until then W2 in wide imaging stays at D-056.
 
+## 2026-10-08: Warp literature check: still nothing testable
+- Subagent search (arXiv API 2023–2026, INSPIRE citations of Clough et al. 2024): no imaging or lensing prediction
+  for a distant observer; Lentz & Felton 2024 give order-of-magnitude EM fluxes for a bubble 100 lyr away but no
+  template that separates it from ordinary transients (found by review); the collapse-burst waveform is not public; an O3 search for superluminal-source GW
+  bursts (Kuwahara & Cannon 2023) is already null. D-047 stands; recorded in SOURCES.md and docs/exotic_lensing.md.
+
+## 2026-10-08: W3 OGLE bulge (all 5,790 events): no candidate; the published selection rejects every W3 event (D-057)
+- Worktree worker, unbounded π_E (predates D-058; bounding can only add flags). Bulge: 0 fit failures; best ordinary
+  PSPL 5,377 / PAR 401 / FSPL 12; ΔBIC(best exotic) 5/50/95 % = −3.6 / 5.7 / 12.0; 127 flags < −10 (`derived`).
+- Vetting, cumulative: 127 → 113 refit all ordinary → 80 robust errors → 73 variable baseline → 14 season offsets →
+  9 season drifts → 7 binary source/lens, VSX/Gaia, arXiv → 1 `feature_coverage` → 1 jackknife → **0** two unrelated
+  events (new `revet` tests: ≥ 3 epochs where the models differ by > 3σ; drop up to 3 influential epochs keeping ≥ 3 in
+  the feature; two independent PSPL bumps). BLG519.21.110304's exotic spikes sat on the 2011 event and a 1-day bump in
+  2015 (two PSPL bumps better by ΔBIC 24.4). Disk: 6 → 0.
+  Contact sheet of the 7 late survivors inspected. The D-059 chunk survivors fail `feature_coverage` here.
+- Injections: 600 W3 events (n = 1, ε < 0; t_E 3–300 d, ρ 0.01/0.1) on real bulge cadences + 300 PSPL controls. The
+  fitter flags 42–97 %, but **0 / 600 pass the emulated Mróz selection** (controls 15–43 %; cuts failed most: one
+  bump, PSPL χ², χ₃₊). The emulation passes 63.9 % of the real selected events (somewhat stricter). No rate limit is
+  derivable; ε_W3/ε_PSPL < 0.12–0.33 (95 %). Wall time ≈ 5 CPU h (bulge fit 10.4 ks, vet 6.6 ks, inject 2.0 ks).
+- **Failed approaches (rules):** exotic fits started only from the PSPL solution miss the W3 geometry — start with
+  caustic spikes on pairs of maxima and on absolute t_E; ΔBIC alone is not a candidate test (season blends and
+  feature coverage remove 120 of 127); a jackknife must keep ≥ 3 epochs in the exotic feature or it kills real short
+  events; an exotic fit whose spikes sit on two bumps years apart needs the two-unrelated-events test; pin BLAS threads (`OMP_NUM_THREADS=1`) with process pools; a published
+  PSPL-selected sample cannot constrain a non-PSPL signal — inject through its selection before fitting it.
+
 ## 2026-10-08: W3 OGLE bulge, chunks 2–3/12: 20 flags, no candidate; chunk tables tracked (D-059)
 - Cloud run. Chunk 1/12's fit table lived only in the ephemeral session and is lost. `fit --chunk K/N` now also
   writes a deterministic gzipped copy to `results/w3_ogle/` (~0.22 MB per chunk); `merge-chunks --n 12` joins

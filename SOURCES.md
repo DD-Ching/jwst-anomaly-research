@@ -719,6 +719,14 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
     064024 (2012), doi:10.1103/PhysRevD.85.064024.
   - arXiv:2608.10800, Fell & Loeb, "Radiative Signatures from Warp Drives Traveling Through the Earth's
     Atmosphere" (2026, preprint).
+  - Literature check 2026-10-08 (arXiv API, 2023–2026; INSPIRE citations of 2406.02466, none searches data):
+    arXiv:2310.16067, Kuwahara & Cannon, "Development and Application of a Detection System for a Novel Class of
+    Gravitational-Wave Transients" (2023): LIGO/Virgo/KAGRA O3 search for GW bursts from superluminal curvature
+    sources, null. arXiv:2212.02065, Sellers, Bobrick, Martire et al. (2022): GWs from accelerating massive
+    spacecraft (not a warp metric). arXiv:2405.19381, Lentz & Felton, "Motivating Emissions from Positive Energy Warp
+    Bubbles" (2024): order-of-magnitude EM fluxes for a bubble 100 lyr away (Eqs. 12–13, Figs. 6–8; no template).
+    arXiv:2311.12069, Pieri (2023): no quantitative prediction for a distant observer. The Clough et al. waveform is not public (no data statement or
+    Zenodo record found).
 
 ## Injection-recovery limits (D-049)
 
@@ -898,6 +906,10 @@ Cite Mróz et al. as their pages ask; data are pinned in `src/jwst_anomaly/ogle.
 - Skowron et al. 2016, Acta Astron. 66, 1 (reference list of arXiv:1906.02210): error-bar correction
   already applied to the published photometry.
 - Vetting catalogues via CDS XMatch (astroquery 0.4.11): AAVSO VSX `B/vsx/vsx`; Gaia DR3 variability
-  classification `I/358/vclassre`. Literature: arXiv API `all:"<event name>"` (export.arxiv.org).
+  classification `I/358/vclassre`. Literature: arXiv API `all:"<event name>"` (export.arxiv.org); the
+  per-name queries are rate-limited and returned an error for 6 of 212 bulge names on 2026-10-08
+  (recorded as −1 in the vetting record, so they can be re-run).
+- Mróz et al. 2017, Nature 548, 183 (reference list of arXiv:1906.02210): the nine high-cadence bulge fields,
+  whose events are in the 2019 optical-depth analysis but whose light curves are not in `phot.tar.gz`.
 - Hubble Source Catalog v3 (Whitmore et al. 2016, AJ 151, 134), summary `magaper2` via the MAST catalogs API
   `https://catalogs.mast.stsci.edu/api/v0.1/hsc/v3/summary/magaper2.csv` (cone search; accessed 2026-10-08; D-060).
