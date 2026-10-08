@@ -53,15 +53,23 @@ def test_injected_ellipticity_keeps_r_of_the_measured_change_only():
     raw_src = np.array([0.3 + 0.0j, np.nan])  # measured, cluster shear included
     raw_img = np.array([0.5 + 0.1j, 0.2j])
     out = ish.injected_ellipticity(e_src, raw_img, raw_src, 0.5)
-    # resolved source: the measured change only; unresolved (round): R x the painted lens shape
-    np.testing.assert_allclose(out, [0.1 + 0.05j + 0.5 * (0.2 + 0.1j), 0.5 * 0.2j])
+    # resolved source: the measured change only; an unresolved source is never painted (NaN)
+    np.testing.assert_allclose(out[0], 0.1 + 0.05j + 0.5 * (0.2 + 0.1j))
+    assert np.isnan(out[1])
     # no lens change: the source's corrected shape comes back unchanged, whatever its cluster g
     same = ish.injected_ellipticity(e_src[:1], raw_src[:1], raw_src[:1], 0.45)
     np.testing.assert_allclose(same, e_src[:1])
-    # an unresolved source painted with no lens change stays round; |e| is capped below 1
-    np.testing.assert_allclose(ish.injected_ellipticity([np.nan], [0j], [np.nan], 0.45), [0j])
-    big = ish.injected_ellipticity([0.5 + 0j], [1.9 + 0j], [0.0 + 0j], 1.0)
+    # |e| is capped below 1 (a large inner-image change on an already elliptical source)
+    big = ish.injected_ellipticity([0.8 + 0j], [0.95 + 0j], [0.1 + 0j], 0.45)
     np.testing.assert_allclose(big, [0.99 + 0j])
+
+
+def test_only_measurable_rows_are_lensed():
+    model, shapes, args = _field()
+    shapes["semimajor_px"][:50] = 0.5  # unresolved after deconvolving a 1 px PSF
+    inj = ish.ShearInjector(model, shapes, args, psf_sigma=1.0)
+    assert not inj.background[:50].any()
+    assert inj.background[50:].sum() > 0.9 * (len(shapes) - 50)
 
 
 def test_a_user_responsivity_outside_its_range_is_refused():

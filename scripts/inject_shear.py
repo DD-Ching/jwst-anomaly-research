@@ -1,9 +1,12 @@
 """Injection-recovery of W1 negative-mass lenses through the ``shear`` screen (D-050).
 
-The same simulated lenses as ``inject_radial.py`` (D-049: ``paint_lens``, lens of mass |M| at the
+The simulated lenses of ``inject_radial.py`` (D-049: ``paint_lens``, lens of mass |M| at the
 cluster redshift, the field's own background rows lensed, blends, detection floor), measured with
-the catalogue aperture-mass screen of ``exotic_screens.py shear`` instead of ``radial``. The
-efficiencies decide whether the shear screen replaces ``radial`` for W1 (D-050 "Adoption").
+the catalogue aperture-mass screen of ``exotic_screens.py shear`` instead of ``radial``. One
+difference (ASSUMPTION, conservative): only rows the shear screen can measure are lensed, i.e.
+resolved after PSF deconvolution, not spike segments, and with κ < 1, |g| < 1, |R g| < 1. The
+radial injections also lens unresolved rows, so the efficiency ratio mixes screen power with
+this. The efficiencies decide whether the shear screen replaces ``radial`` for W1 (D-050).
 
 Recovery (ASSUMPTIONs): the largest S of the screen's grid centres within ``--recover-tol`` of the
 injected centre has ``p_random`` < 0.05, i.e. fewer than 5 % of the rotation-null draws reach that
@@ -12,9 +15,10 @@ the real E and B maps have the same heavier-than-rotation tails, so shape system
 rotation null, set the floor; the real field is null under the same rule). Each batch of 10
 trials draws its own ``--n-random`` rotation null of the *real* field (the injected rows change
 the field maximum only near the lens; ASSUMPTION). Rows that ``paint_lens`` keeps use the real
-field's corrected ellipticities. Painted images get theirs from their lensed moments, minus R
-times the cluster model's reduced shear at their position, and keep only R of the lens-induced
-change, because the catalogue's isophotal moments respond to shear by R ~ 0.45 (D-053).
+field's corrected ellipticities. A painted image gets its source's corrected ε plus R times the
+change of the raw (measured) moments between image and source, because the catalogue's isophotal
+moments respond to shear by R ~ 0.45 (D-053); the sum is linear and |ε| capped at 0.99
+(ASSUMPTION; the cap binds only for images very close to the lens).
 
 Everything injected is ``simulated``; efficiencies and limits are ``derived``.
 """
@@ -56,13 +60,10 @@ def injected_ellipticity(e_src, raw_img, raw_src, r: float) -> np.ndarray:
     """Corrected ε of a painted image: its source's corrected ε plus R times the lens-induced
     change of the *measured* moments (raw image minus raw source). The catalogue's moments respond
     to shear by R (D-053), the painted moments by 1; taking the change between raw moments keeps
-    the cluster shear out of it. |ε| is capped at 0.99. ``ShearInjector`` paints only resolved
-    sources; for an unresolved one (NaN) this returns R times the raw image ε."""
+    the cluster shear out of it. |ε| is capped at 0.99. An unresolved source (NaN) gives NaN:
+    ``ShearInjector`` paints only resolved sources."""
     e_src, raw_src = np.asarray(e_src, complex), np.asarray(raw_src, complex)
-    resolved = np.isfinite(raw_src) & np.isfinite(e_src)
-    with np.errstate(invalid="ignore"):
-        lensed = e_src + r * (np.asarray(raw_img, complex) - raw_src)
-    out = np.where(resolved, lensed, r * np.asarray(raw_img, complex))
+    out = e_src + r * (np.asarray(raw_img, complex) - raw_src)
     mod = np.abs(out)
     with np.errstate(invalid="ignore", divide="ignore"):
         return np.where(mod > 0.99, out * 0.99 / mod, out)
@@ -90,7 +91,7 @@ class ShearInjector:
         # spike segments are never painted: the real field vetoes them too
         # and sources where the cluster shear cannot be removed (κ >= 1, |g| or |R g| >= 1) are
         # not painted
-        # only resolved sources are lensed: an unresolved one has no measured shape to paint from
+        # only rows the screen can measure are lensed (ASSUMPTION, conservative; module docstring)
         self.background = (
             es.lensable_mask(shapes, model.z_lens)
             & ~self.base["spike"]

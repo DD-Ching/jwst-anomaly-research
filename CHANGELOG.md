@@ -23,7 +23,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   catalogues and CANUCS DR1 catalogues (~30 MB each) downloaded fine.
 - Wall time: 58–168 s per field for 1,000 injections; the base screen takes 6–13 s. Review rounds changed the injection model (spike and
   near-core and unresolved rows not painted, lens change from raw moments); every re-run kept the four real fields
-  null, and each run's counts are in the PR #78 commit messages.
+  null. Recovered at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉ across the rounds: 59/264/459, 49/252/473, 49/250/466,
+  49/243/447, 50/232/442, 49/240/453, 50/238/449, then 33/197/409 once unresolved rows were no longer painted.
 - **Handoff:** TASKS "Now" 1 W1: lower the B-mode floor (PSF anisotropy, blends), more fields, stacking.
 
 ## 2026-10-08: W3 multi-epoch dimming / inverted-microlensing screen: null, limits (D-052)
