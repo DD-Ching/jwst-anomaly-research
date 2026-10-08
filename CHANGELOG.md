@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: MACS0416 counter-images and flux ratios: null; CANUCS model as second model; two-plane check (D-042)
+- With the D-040 solver, the MACS0416 image list is open. `images` and `fluxratio` raised 21 flags; 0 survive. The most
+  persistent was system 51's fourth image: two independent models predict it, and the 51.1–51.3 photometry says it
+  should appear at 9–25σ, but it is not seen. It comes from a z 0.268 foreground galaxy modelled as a member. A
+  scratch two-plane model with that galaxy at σ ≤ 60 km/s gives exactly the 3 observed images.
+- System 27's two bright `absent` predictions (S/N 247–341) are CATS-only galaxy-scale caustics. The JWST-era CANUCS
+  Lenstool model (222 potentials, 111 spectroscopic systems) reproduces system 27 with exactly its 3 images, and the
+  cutouts show empty sky there.
+- Flux-ratio flags: 45.2 is blended with a bright galaxy 0.5″ away; 38.1 is marginal.
+- Wall time: about 3 min of pipeline plus about 5 min of vetting.
+- **Handoff:** pin the CANUCS models (MACS0416, MACS1149, Abell 370) as `MODELS` entries for second-model vetting.
+
 ## 2026-10-08: Sunrise transient candidates `n0022` and `n0150` are detector persistence (D-039)
 - New `scripts/persistence_check.py`: per-exposure photometry on level-2 `_cal` files (S3 byte ranges), plus the
   same detector pixel in earlier exposures on that detector. Validated on a synthetic afterimage and on two real

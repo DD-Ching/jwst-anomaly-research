@@ -569,6 +569,13 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - CANUCS DR1 (DOI 10.17909/18nv-np70) MACS0416 cluster-field photometry and EAzY photo-z:
   https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/clu/hlsp_canucs_jwst-hst_multi_macs0416-clu_multi_v1_photometry-cat.fits.gz,
   31,693,111 B, sha256 `339107a5c5041621d7bed4ecc8b4a51b5148a6913d4e513c3a5e783363f11bff`.
+- CANUCS DR1 MACS0416 Lenstool model (Rihtarsic et al. 2025, A&A, doi:10.1051/0004-6361/202451117), files under
+  https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/model/:
+  - `hlsp_canucs_jwst-hst_multi_macs0416-lenstool-bestparam_multi_v1_model.txt` 70,753 B
+    `f3d9a8415044ff8d5ab4774573fcf3670c9dee9169abfca46086bdbf3dd45bed`;
+  - `…-lenstool-multim_multi_v1_model.txt` 19,280 B `ce00444dcc9239f0fd72d5fb37e35cbbea281647803ef4c30eb7b187262f5507`;
+  - `…-lenstool-readme_multi_v1_model.txt` 2,275 B `0d3f6796f79c9b9710223aa2ef5d3535c27e2da06c7cd89dc47f1ae3f0915cbf`.
+  Deflection, κ and γ maps (best fit and 100 MCMC samples) are in the same directory and were not used.
 
 ## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
 
