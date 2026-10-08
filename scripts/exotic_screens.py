@@ -298,9 +298,8 @@ def spike_segments(src: Table, shapes: Table) -> np.ndarray:
 
 
 def cmd_radial(args) -> dict:
-    model, _, par = lc.load_model(args.model)  # a Lenstool model or published deflection maps
-    if par is not None:
-        lc.apply_frame_offset(args.model, model)
+    model, _, _ = lc.load_model(args.model)  # a Lenstool model or published deflection maps
+    lc.apply_frame_offset(args.model, model)  # into the JWST frame (D-034, D-040)
     shapes = lc.load_shapes(args.catalog)
     if args.photoz:
         lc.attach_photoz(shapes, args.photoz)

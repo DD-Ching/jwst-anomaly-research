@@ -141,7 +141,10 @@ MODELS = {
 # Abell 370, Abell S1063 and Abell 2744 have no params.txt (no fitted image redshifts).
 IMAGE_LIST_RMS_FACTOR = 1.5
 _HFF_QUOTED_RMS = {"macs0416": 0.72, "macs1149": 0.63, "macs0717": 2.41, "abells1063": 0.48}
-_HFF_IMAGE_LIST_OK = {"macs1149", "macs0717"}
+# macs0416 passes once find_images refines cells on folds (D-040)
+_HFF_IMAGE_LIST_OK = {"macs1149", "macs0717", "macs0416"}
+# (dRA cos dec, dDec) from arcs.txt to the JWST frame where it exceeds 0.1" (D-034, D-038)
+_HFF_FRAME_OFFSET = {"macs0416": (0.208, -0.025)}
 for _c, (_v, _zl, _files) in lensmodel.HFF_CATS.items():
     MODELS[f"{_c}-cats"] = {
         "files": _files,
@@ -153,6 +156,8 @@ for _c, (_v, _zl, _files) in lensmodel.HFF_CATS.items():
         "image_list_ok": _c in _HFF_IMAGE_LIST_OK,
         "quoted_rms_arcsec": _HFF_QUOTED_RMS.get(_c),
     }
+    if _c in _HFF_FRAME_OFFSET:
+        MODELS[f"{_c}-cats"]["frame_offset_arcsec"] = _HFF_FRAME_OFFSET[_c]
 
 
 def is_map_model(name: str) -> bool:
@@ -183,12 +188,12 @@ def image_list(name: str, files: dict[str, Path], par) -> tuple[Table, dict[str,
 def apply_frame_offset(name: str, model, images: Table | None = None) -> tuple[float, float]:
     """Shift a model and its image list from the image list's frame to the JWST frame by
     ``MODELS[name]["frame_offset_arcsec"]`` (dRA cos dec, dDec; D-034), in place. The model's
-    reference point moves with the images, so every model position lands in the JWST frame."""
+    reference point moves with the images, so every model position lands in the JWST frame. A map
+    model's WCS moves too: its maps are looked up by sky position, so moving only the reference
+    point would leave them in place (D-040)."""
     dra, ddec = MODELS[name].get("frame_offset_arcsec", (0.0, 0.0))
     if dra or ddec:
-        model.ra0 += dra / 3600.0 / model._cos0
-        model.dec0 += ddec / 3600.0
-        model._cos0 = np.cos(np.deg2rad(model.dec0))
+        model.shift_frame(dra, ddec)
         if images is not None:
             shift_images(name, images)
     return float(dra), float(ddec)
@@ -668,8 +673,7 @@ def convention_check(model, par, images, shapes, match_arcsec: float) -> dict:
 
 def cmd_arcs(args) -> dict:
     model, files, par = load_model(args.model)
-    if par is not None:
-        apply_frame_offset(args.model, model)
+    apply_frame_offset(args.model, model)  # every model, maps included (D-040)
     shapes = load_shapes(args.catalog)
     if args.photoz:
         attach_photoz(shapes, args.photoz)

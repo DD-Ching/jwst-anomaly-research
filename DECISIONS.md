@@ -1869,6 +1869,42 @@ gated off) until the solver refines its grid near high |μ|. Pairs whose catalog
   with `frame_offset_arcsec` (0.208, −0.025).
 - `images` / `fluxratio` run with CANUCS DR1 photo-z once the image list opens.
 
+## D-040 `find_images` refines grid cells on folds; frame offsets move map models; MACS0416 image list open (2026-10-08)
+
+**Decision.**
+- `find_images(..., refine_arcsec=0.02)` keeps the triangle scan on the deflection grid. It then subdivides, into
+  sub-cells of at most 0.02″ (below the 0.05″ merge radius), every cell that lies within one cell of a critical curve
+  and whose mapped bounding box, widened by its own size, contains the source. The model is evaluated directly at the
+  sub-cell nodes. A critical curve is detected where the mapped triangles change orientation. `refine_arcsec=0`
+  restores the plain scan.
+- Frame offsets go through `LensModel.shift_frame`; `MapLensModel.shift_frame` also moves its WCS. Map models look
+  their maps up by sky position, so moving only the reference point left the maps where they were. `radial` and
+  `arcs` now apply the offset for every model, not only Lenstool ones.
+- `macs0416-cats` gets `frame_offset_arcsec` (0.208, −0.025) and its image list is opened.
+
+**Alternatives rejected.**
+- A finer global grid (0.1″): about 6× the memory and time on every field, against the 2M-cell rule.
+- Dropping system 26 by hand.
+
+**Evidence.**
+- MACS0416 `validate`: image-plane rms 1.572″ → 0.760″ (1.06× the quoted 0.72″; the gate passes). System 26 is
+  solved as 3 images. Shared matches drop from 6 to 3 (only system 122 is left).
+- The other eight models give the same rms with and without refinement (SMACS 0.318″, El Gordo 0.754″, Abell 2744
+  0.427″, MACS1149 0.673″, MACS0717 3.21″, Abell S1063, Abell 2744 CATS), except Abell 370 (10.69″ → 10.66″).
+- Grid alignment: a synthetic fold pair gives the same image count on 0.5″, 0.3″ and 0.25″ grids of different extents
+  (an 8 × 8 split with 0.0625″ sub-cells did not).
+- `validate` wall time: Abell 2744 29 s → 41 s, El Gordo 16 s → 18 s, MACS0416 2.6 s → 3.9 s, SMACS 14 s → 12 s.
+- Tests: a synthetic fold pair about 0.1″ apart inside one 0.5″ cell is missed by the plain scan and found, with opposite
+  parities, by the refined scan. A frame offset leaves a map model's model-frame deflection unchanged and moves it on
+  the sky.
+- No earlier result was affected: no map model had an offset before this change (MACS1149 and MACS0717 are under
+  0.1″). MACS0416's radial screen was re-run in the JWST frame with this code after pinning its offset: still null
+  (D-038).
+
+**Revisit if.**
+- A fold image is still missed with `refine=8` (cusps with three merging images may need recursion).
+- Map models with rotated WCS grids appear (`MapLensModel` rejects them today).
+
 
 ## D-041 MACS0717 screens: null; model copies of unpredicted images; CATS-only extra images (2026-10-08)
 
