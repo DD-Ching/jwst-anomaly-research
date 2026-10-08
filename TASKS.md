@@ -19,6 +19,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - exotic screens (D-031, D-034, D-036–D-038, D-040–D-043): SMACS, El Gordo, Sunrise (radial), Abell 2744,
      MACS1149, MACS0717, MACS0416, Abell 370 and Abell S1063 (radial) null. All six HFF clusters are screened. Next:
      - a two-plane option in `LensModel` (D-042 used scratch code): check flagged extra images for non-member deflectors;
+     - orphan pairs (D-048, null): injection-recovery of simulated dark-lens pairs (limit per deg²); CANUCS segmentation
+       maps for the same-galaxy test; blending model for pairs < 1″; re-run on Abell 2744 (UNCOVER), MACS0417, MACS1423;
+       MACS1149 image list when CANUCS v2 is out;
      - CANUCS models pinned (D-044: `macs0416-canucs`, `abell370-canucs`); next, the 100 MCMC sample maps for μ spreads;
      - `radial`: low-weight veto (relative WHT < 0.5) or aper50 S/N floor; pass `--spike-stars` (Gaia, D-043) on every
        field and re-run earlier fields' radial screens with it;

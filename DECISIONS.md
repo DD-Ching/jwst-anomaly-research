@@ -2135,3 +2135,53 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - The El Gordo `Chi2` column is understood (then validate that chain as for Abell 2744).
 - An independent model with 3.2's source well inside the caustic still merges 3.2a/b.
 - Speed: `imageplane_residuals` exposes its predicted images (`posterior` currently solves each family twice).
+
+## D-048 Orphan image pairs (blind dark-deflector screen): null in MACS0416, MACS1149 and Abell 370 (2026-10-08)
+
+**Decision.**
+- `scripts/orphan_pairs.py` ([docs/orphan_pairs.md](docs/orphan_pairs.md)) searches CANUCS DR1 catalogues for close
+  pairs (0.3–3″) with matching SEDs that no published multiple-image system explains and that have no visible galaxy
+  between them ("orphans"). It is a lens-model-independent dark-lens screen. The hypothesis is an unseen compact
+  deflector; an SED match is not evidence of lensing.
+- Result: **null**. SED-matched close-pair counts are explained by redshift clustering, and orphan counts match
+  chance. Nothing goes to `/vet-candidate`.
+- Thresholds (ASSUMPTIONs, in the script):
+  - summed F277W+F356W+F444W S/N ≥ 10 and S/N ≥ 10 in at least 8 bands;
+  - SED match: ≥ 8 shared bands, χ² probability ≥ 0.01 with a 3 % error floor and free normalisation, overlapping
+    16–84 % photo-z intervals;
+  - visible lens: a catalogued source at least 0.3″ from both members that lies within 0.3″ of the midpoint,
+    within 0.3″ of the joining segment, or inside the circle with the pair as diameter.
+- Inputs are pinned by URL and sha256 in `FIELDS` and downloaded on first use; the CANUCS Abell 370 image list is
+  moved to the JWST frame with the `abell370-canucs` offset (D-044); its image-plane gate concerns model
+  constraints, and here only positions are used (to mark pairs near a published image). A source with an invalid F277W, F356W or F444W
+  measurement (NaN, or error ≤ 0) has no summed S/N and is dropped. Re-running with these rules (after review)
+  reproduced every count below.
+
+**Alternatives rejected.**
+- A midpoint-only visible-lens rule: galaxies sitting between pair members were missed (first contact sheet).
+- No per-band S/N cut: 25 % of random far-apart pairs pass the SED test.
+- Random-position nulls alone: they ignore galaxy clustering at one redshift.
+
+**Evidence** (`derived`; per-field `summary.json`, three contact sheets inspected by eye):
+
+| | MACS0416 | MACS1149 | Abell 370 |
+|---|---|---|---|
+| Sources kept / catalogue rows | 1942 / 14149 | 1711 / 12851 | 1391 / 13567 |
+| Pairs at 0.3–3″ / SED-matched | 1664 / 62 | 1418 / 98 | 1028 / 35 |
+| SED-matched expected: null (a) shifted copies / (c) same-photo-z real pairs 10–30″ | 42.3 / 69.7 | 44.8 / 83.3 | 27.8 / 48.0 |
+| Orphans observed / expected under null (c) | 11 / 13.5 | 18 / 12.9 | 9 / 8.1 |
+
+- The SED-match excess over null (a) (significant in MACS1149) disappears under null (c): same-redshift groups.
+- All 35 inspected top orphans sit where the CATS (or CANUCS) model gives |μ| ≈ 1–2.5 with no parity flip. They are
+  knots of one galaxy, group members, or faint chance matches the null predicts.
+- A dark deflector making the observed separations (θ_E 0.36–1.47″ at the cluster redshift) would need σ ≈ 130–300
+  km/s; a normal galaxy of that mass would be m ≈ 17–20, 9–12 mag above the detection limit (`hypothesis`-level
+  scaling, σ* = 180 km/s at m*(F160W) = 19, ASSUMPTION).
+- Limits: the same-galaxy rule misses knots of large irregulars; pairs closer than ~0.6″ share aperture light; cluster
+  cores are excluded by catalogue flags; 86–90 % of each catalogue is cut; no injection-recovery yet, so this is a
+  count-level null, not an upper limit on dark deflectors.
+
+**Revisit if.**
+- Injection-recovery turns the count null into a limit (TASKS).
+- CANUCS segmentation maps replace the same-galaxy rule, or deeper / core photometry is used.
+- CANUCS v2 releases the MACS1149 image list, or spectroscopy targets an orphan pair.
