@@ -107,11 +107,21 @@ branch stops here until a paper supplies one. We do not invent one.
   bubble faster than 0.1c in Earth's air (Fell & Loeb 2026): both effects are local to the destination or to Earth.
   Neither paper gives a flux, spectrum or rate for a distant source.
 - The warp row of the "Signatures" table above stands. No JWST screen is calibrated for warp signatures.
-- **Literature check 2026-10-08** (SOURCES.md): still no imaging, lensing or spectral prediction for a distant
-  observer. The only modelled distant observable is the Clough et al. collapse burst (f ~ c/R, above the
-  ground-based band unless R ≳ 100 km, an extrapolation; waveform not public). A LIGO/Virgo/KAGRA O3 search for
-  superluminal-source GW bursts already returned a null (Kuwahara & Cannon 2023). Keep monitoring; revisit when a
-  lensing or electromagnetic prediction for distant observers, or the Clough et al. waveform, appears.
+- **Literature check 2026-10-08** (SOURCES.md):
+  - **Lentz & Felton 2024** (arXiv:2405.19381, §III.2–III.3) give the one electromagnetic estimate for a distant
+    observer (**model_prediction**, order of magnitude): a bubble of size D passing r = 100 lyr away at v_s ≫ c along
+    a 1 lyr path gives an ~11 h transient; ISM photons scattered by the bubble give F ~ 3 × 10⁻⁷ Jy·Hz (v_s/c)(D/km)²
+    (100 lyr/r)² (spectrum: the ISM spectrum boosted in frequency, their Fig. 6), and ISM gas and dust re-radiated as
+    light at most F ~ 3 × 10² Jy·Hz (= 3 × 10⁻²⁴ W m⁻²) × the same factors, with no spectral shape given.
+  - Why nothing to screen: the signal is an hours-long point transient whose dominant term has no spectrum or
+    light-curve shape, so it has no template that separates it from ordinary transients; and for D = 1 km it is ~10⁴
+    below a deep JWST broadband limit (~10⁶ Jy·Hz band-integrated, an **assumption**-level comparison) unless
+    v_s D² ≳ 10³–10⁴ c·km². An unclassified transient in a survey cannot be attributed to it.
+  - Clough et al. collapse burst: f ~ c/R, above the ground-based band unless R ≳ 100 km (an extrapolation); waveform
+    not public. A LIGO/Virgo/KAGRA O3 search for superluminal-source GW bursts already returned a null (Kuwahara &
+    Cannon 2023).
+  - Keep monitoring; revisit when a prediction with a distinguishing spectral, temporal or lensing template appears,
+    or the Clough et al. waveform is released.
 
 ## Screens and results (D-031)
 
