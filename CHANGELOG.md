@@ -7,7 +7,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   of all eight null `radial` fields and runs the unchanged screen (`exotic_screens.radial_candidates`, a pure
   refactor of `cmd_radial`'s selection). 200 lenses per field and θ_E; 51.2 arcmin² screened.
 - Recovered: 0 / 1,600 at θ_E = 0.3″ and 1″; 10 at 3″; 80 at 6″; 181 at 10″. 95 % limits on W1 lens surface
-  density: none below 3″; < 3.6 × 10⁴ deg⁻² at 3″ (|M| ≈ 1.4–4.3 × 10¹² M☉), < 1.8 × 10³ deg⁻² at 10″. About 15×
+  density (six photo-z fields): none below 3″; < 7.0 × 10⁴ deg⁻² at 3″ (|M| ≈ 1.4–4.3 × 10¹² M☉), < 3.2 × 10³ deg⁻²
+  at 10″. MACS0717 and Abell S1063 (no photo-z, members get lensed) are excluded as optimistic. About 27×
   weaker than Takahashi & Asada spread over 0 < z < 1. docs/exotic_limits.md.
 - Why: an image reaches e ≥ 0.5 only for β ≲ 2.3 θ_E, and `anti` against the cluster keeps a third, so a lens puts
   1–3 arcs into a screen whose null needs 5–8 lines.

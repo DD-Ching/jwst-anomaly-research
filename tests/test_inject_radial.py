@@ -8,6 +8,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
+import pytest
 from astropy.cosmology import FlatLambdaCDM, Planck18
 from astropy.table import Table
 
@@ -134,6 +135,7 @@ def test_injector_recovers_a_lens_with_many_radial_images_and_not_an_empty_one()
     pa = np.concatenate([rng.uniform(0, 180, 40), np.zeros(6)])
     shapes = _shapes(model, x, y, ellipticity=ell, pa_obs=pa)
     inj = ir.RadialInjector(model, shapes, _args())
+    before = shapes.copy()
     assert inj.base_counts_info["n_elongated"] == int(np.sum(np.hypot(bx, by) <= 60.0))
     np.testing.assert_array_equal(inj.max_rand, inj.rand.reshape(len(inj.rand), -1).max(axis=1))
     hit = inj.trial(30.0, 0.0, te, np.random.default_rng(1), 1.0, 3.0)
@@ -143,6 +145,8 @@ def test_injector_recovers_a_lens_with_many_radial_images_and_not_an_empty_one()
     miss = inj.trial(-50.0, -50.0, 0.3, np.random.default_rng(1), 1.0, 3.0)
     assert miss["n_lensed"] == 0 and not miss["recovered"]
     assert n == len(shapes)  # the input catalogue is untouched
+    for col in before.colnames:
+        np.testing.assert_array_equal(shapes[col], before[col])
 
 
 def test_footprint_covers_only_where_the_catalogue_has_sources():
@@ -151,3 +155,39 @@ def test_footprint_covers_only_where_the_catalogue_has_sources():
     _, _, area = ir.screened_footprint(xs, ys, 40.0)
     half_disc = 0.5 * np.pi * 40.0**2
     assert 0.95 * half_disc < area < 1.15 * half_disc  # edge grows by up to FOOTPRINT_RADIUS
+
+
+def _summary(field, photoz, area, effs):
+    eff = {k: {"efficiency": e, "mass_msun": 1e12} for k, e in effs.items()}
+    return {"field": field, "photoz": photoz, "screened_area_deg2": area, "efficiency": eff}
+
+
+def test_combine_keeps_no_photoz_fields_out_of_the_headline_limit():
+    s = [
+        _summary("a", "zout.fits", 0.01, {"3.0": 0.01, "6.0": 0.05}),
+        _summary("b", None, 0.01, {"3.0": 0.5, "6.0": 0.5}),
+    ]
+    c = ir.combine(s)  # keys come from the summaries, not from --theta-e
+    assert c["fields"] == ["a"] and set(c["limits_95"]) == {"3.0", "6.0"}
+    assert np.isclose(c["limits_95"]["3.0"]["upper_limit_deg2"], ir.POISSON_UL_95 / 1e-4)
+    opt = c["optimistic_all_fields"]
+    assert opt["no_photoz"] == ["b"]
+    assert opt["limits_95"]["3.0"]["upper_limit_deg2"] < c["limits_95"]["3.0"]["upper_limit_deg2"]
+
+
+def test_screen_defaults_follow_the_radial_cli():
+    assert ir.SCREEN_DEFAULTS == ir.es.radial_defaults()
+    assert ir.SCREEN_DEFAULTS["min_ellipticity"] == 0.5 and ir.SCREEN_DEFAULTS["n_random"] == 200
+
+
+def test_psf_sigma_needs_bright_sources(tmp_path):
+    t = Table(
+        {
+            "isophotal_flux": [1.0, 2.0],
+            "isophotal_flux_err": [1.0, 0.0],
+            "semiminor_sigma": [1.0, 1.0],
+        }
+    )
+    t.write(tmp_path / "cat.ecsv")
+    with pytest.raises(ValueError):
+        ir.psf_sigma_px(tmp_path / "cat.ecsv")

@@ -500,7 +500,7 @@ def cmd_radial(args) -> dict:
     return summary
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--model", choices=sorted(lc.MODELS), default="smacs0723-iclv2")
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "exotic_screens")
@@ -527,7 +527,19 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--dark-radius-arcsec", type=float, default=1.0)
     r.add_argument("--n-random", type=int, default=200)
     r.add_argument("--seed", type=int, default=1)
-    args = ap.parse_args(argv)
+    return ap
+
+
+def radial_defaults() -> dict:
+    """The ``radial`` subcommand's threshold defaults (the settings the field screens ran with)."""
+    ns = vars(build_parser().parse_args(["radial", "--catalog", "-"]))
+    for k in ("model", "out", "cmd", "catalog", "photoz", "spike_stars", "max_radius"):
+        ns.pop(k)
+    return ns
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
     (args.out / args.model).mkdir(parents=True, exist_ok=True)
     summary = {"fluxratio": cmd_fluxratio, "radial": cmd_radial}[args.cmd](args)
     print(json.dumps(summary, indent=1, default=str))

@@ -124,5 +124,5 @@ hit goes to `/vet-candidate`.
 | Abell S1063 (HFF CATS, D-043) | not run (image list gated) | max 4 lines, p 0.435; with DJA photo-z max 3, p 0.95 | null |
 
 **Sensitivity (D-049).** Injected W1 negative-mass lenses are not recovered by `radial` at θ_E = 0.3″ or 1″, and
-10 of 1,600 are recovered at 3″. 95 % limits exist only for θ_E ≥ 3″ (Σ < 3.6 × 10⁴ deg⁻² at 3″, < 1.8 × 10³ at 10″).
+10 of 1,600 are recovered at 3″. 95 % limits exist only for θ_E ≥ 3″ (Σ < 7.0 × 10⁴ deg⁻² at 3″, < 3.2 × 10³ at 10″; six photo-z fields).
 See docs/exotic_limits.md.

@@ -37,7 +37,6 @@ has the same distribution as a full re-run, at a fraction of the cost.
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import json
 import sys
 import time
@@ -48,15 +47,10 @@ import numpy as np
 from astropy.table import Table, vstack
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import exotic_screens as es  # noqa: E402
 import lens_consistency as lc  # noqa: E402
 
 from jwst_anomaly import exotic_sim, paths, schema  # noqa: E402
-
-_spec = importlib.util.spec_from_file_location(
-    "exotic_screens", Path(__file__).resolve().parent / "exotic_screens.py"
-)
-es = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(es)
 
 BETA_MIN, BETA_MAX = 2.0, 4.0  # lensed-source range in theta_E (D-047 recommendation; ASSUMPTION)
 P_RECOVER = 0.05  # the screen's p_random threshold
@@ -67,18 +61,7 @@ FOOTPRINT_RADIUS = (
 )
 POISSON_UL_95 = 2.996  # -ln(0.05): 95 % upper limit on a Poisson mean with zero events
 Z_SOURCE = 2.0  # source redshift for the theta_E -> |M| conversion (ASSUMPTION)
-SCREEN_DEFAULTS = {  # exotic_screens.py radial CLI defaults (the screens ran with them)
-    "min_ellipticity": 0.5,
-    "min_semimajor_px": 2.0,
-    "min_snr": 10.0,
-    "grid_arcsec": 0.5,
-    "line_tol_arcsec": 1.0,
-    "max_len_arcsec": 15.0,
-    "min_lines": 3,
-    "dark_radius_arcsec": 1.0,
-    "n_random": 200,
-    "seed": 1,
-}
+SCREEN_DEFAULTS = es.radial_defaults()  # the settings the field screens ran with
 
 # The inputs each field's null screen used (docs/fields/*.md, docs/exotic_lensing.md). Paths are
 # relative to the data root. Photo-z kinds: "eazy" (DJA zout) or "canucs" (CANUCS DR1 catalogue,
@@ -281,7 +264,10 @@ def paint_lens(
     rows["ra"], rows["dec"] = ra, dec
     rows["label"] = first_label + np.arange(len(rows))
     rows = rows[np.asarray(rows["snr"], float) >= snr_floor]
-    rows.meta = {"provenance": schema.Provenance.SIMULATED.value}
+    rows.meta = {
+        "provenance": schema.Provenance.SIMULATED.value,
+        "source": f"exotic_sim.inject_images W1 (n=1, eps<0) theta_E={theta_e} at ({x_l}, {y_l})",
+    }
     info["n_images"] = len(rows)
     return keep, rows, info
 
@@ -456,7 +442,10 @@ def psf_sigma_px(cat_path: Path) -> float:
     with np.errstate(divide="ignore", invalid="ignore"):
         snr = np.asarray(t["isophotal_flux"], float) / np.asarray(t["isophotal_flux_err"], float)
     b = np.asarray(t["semiminor_sigma"], float)
-    return float(np.nanpercentile(b[snr > 50], 1))
+    sel = np.isfinite(snr) & (snr > 50) & np.isfinite(b)
+    if not sel.any():
+        raise ValueError(f"{cat_path}: no source with S/N > 50 to estimate the PSF width")
+    return float(np.percentile(b[sel], 1))
 
 
 def load_field(name: str, out: Path):
@@ -583,23 +572,41 @@ def run_field(name: str, args) -> dict:
     return summary
 
 
-def combine(summaries: list[dict], theta_es) -> dict:
+def _limits(summaries: list[dict]) -> dict:
+    """95 % limits per theta_E present in every summary (keys as stored)."""
+    keys = set.intersection(*(set(s["efficiency"]) for s in summaries))
     limits = {}
-    for te in theta_es:
-        effs = [s["efficiency"][str(te)]["efficiency"] for s in summaries]
+    for te in sorted(keys, key=float):
+        effs = [s["efficiency"][te]["efficiency"] for s in summaries]
         areas = [s["screened_area_deg2"] for s in summaries]
-        masses = [s["efficiency"][str(te)]["mass_msun"] for s in summaries]
-        limits[str(te)] = {
+        masses = [s["efficiency"][te]["mass_msun"] for s in summaries]
+        limits[te] = {
             "effective_area_deg2": float(np.dot(effs, areas)),
             "upper_limit_deg2": surface_density_limit(effs, areas),
             "mass_msun_range": [min(masses), max(masses)],
         }
-    return {
-        "fields": [s["field"] for s in summaries],
-        "total_area_deg2": float(sum(s["screened_area_deg2"] for s in summaries)),
-        "limits_95": limits,
+    return limits
+
+
+def combine(summaries: list[dict]) -> dict:
+    """Headline limits use only fields with photo-z. Without photo-z every non-star row counts as
+    lensable, so cluster members and foreground galaxies get painted as W1 images and the
+    efficiency is biased high; those fields are reported separately as optimistic."""
+    pz = [s for s in summaries if s.get("photoz")]
+    out = {
+        "fields": [s["field"] for s in pz],
+        "total_area_deg2": float(sum(s["screened_area_deg2"] for s in pz)),
+        "limits_95": _limits(pz) if pz else {},
         "provenance": schema.Provenance.DERIVED.value,
     }
+    if len(pz) < len(summaries):
+        out["optimistic_all_fields"] = {
+            "fields": [s["field"] for s in summaries],
+            "no_photoz": [s["field"] for s in summaries if not s.get("photoz")],
+            "total_area_deg2": float(sum(s["screened_area_deg2"] for s in summaries)),
+            "limits_95": _limits(summaries),
+        }
+    return out
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -633,7 +640,7 @@ def main(argv: list[str] | None = None) -> int:
             flush=True,
         )
         summaries.append(s)
-    combined = combine(summaries, args.theta_e)
+    combined = combine(summaries)
     (args.out / "limits.json").write_text(json.dumps(combined, indent=1))
     print(json.dumps(combined, indent=1))
     return 0

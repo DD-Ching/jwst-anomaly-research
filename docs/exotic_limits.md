@@ -57,7 +57,7 @@ source's side of the lens for every source beyond that.
      respond.
 7. **Limit.** The real screens found zero surviving detections. The 95 % Poisson upper limit on the surface
    density of W1 lenses is therefore Σ < 2.996 / Σ_fields(ε_f A_f), where ε_f is the field's recovery efficiency
-   and A_f its screened area.
+   and A_f its screened area. The sum runs over the fields with photo-z only (see "Upper limits").
 
 Command: `python scripts/inject_radial.py --fields smacs0723 elgordo abell2744 macs0416 macs1149 macs0717
 abell370 abells1063 --n-inject 200 --theta-e 0.3 1 3 6 10`. It writes `trials.ecsv` and `summary.json` per field and
@@ -103,9 +103,15 @@ took 14–145 s of it. A sequential SMACS run of the three D-047 θ_E took 128 s
 |---|---|---|---|
 | 0.3″ | 1.4–4.3 × 10¹⁰ M☉ | 0 | no limit (ε = 0 in every field) |
 | 1″ | 1.6–4.7 × 10¹¹ M☉ | 0 | no limit |
-| 3″ | 1.4–4.3 × 10¹² M☉ | 8.2 × 10⁻⁵ | 3.6 × 10⁴ |
-| 6″ | 5.6–17 × 10¹² M☉ | 7.6 × 10⁻⁴ | 3.9 × 10³ |
-| 10″ | 1.6–4.7 × 10¹³ M☉ | 1.7 × 10⁻³ | 1.8 × 10³ |
+| 3″ | 1.4–4.3 × 10¹² M☉ | 4.3 × 10⁻⁵ | 7.0 × 10⁴ |
+| 6″ | 5.6–17 × 10¹² M☉ | 4.4 × 10⁻⁴ | 6.8 × 10³ |
+| 10″ | 1.6–4.7 × 10¹³ M☉ | 9.3 × 10⁻⁴ | 3.2 × 10³ |
+
+The limits use only the six fields with photo-z (38.1 arcmin²). In MACS0717 and Abell S1063 every non-star row
+counts as lensable, so cluster members and foreground galaxies near an injected lens are painted as W1 images, and
+the efficiency is biased high (Abell S1063 has the highest efficiency of all eight fields). `limits.json` reports
+the all-field values (8.2 × 10⁻⁵, 7.6 × 10⁻⁴ and 1.7 × 10⁻³ deg²; < 3.6 × 10⁴, 3.9 × 10³ and 1.8 × 10³ deg⁻²)
+separately as `optimistic_all_fields`.
 
 Mass conversion: |M| = θ_E² c² D_L D_S / (4 G D_LS). The low end of each range is Abell 2744 (z_l = 0.31), the
 high end El Gordo (0.87). `theta_e_to_mass(2.2″, z_l = 0.4)` reproduces D-047's 10¹² M☉ (tested).
@@ -115,7 +121,7 @@ was recovered, and at 3″ 10 of 1,600 lenses were. The limits that do exist, at
 - **Comparison (`derived`, rough).** Takahashi & Asada (2013) limit negative masses above 10¹² M☉ to
   n < 10⁻⁴ h³ Mpc⁻³. Spread over 0 < z < 1 (Planck18 comoving volume, 3.98 × 10⁶ Mpc³ deg⁻²), that is about
   120 deg⁻².
-- Our best limit, 1.8 × 10³ deg⁻² at about 2 × 10¹³ M☉, is about 15× weaker. It also holds only for lenses near
+- Our best limit, 3.2 × 10³ deg⁻² at about 2 × 10¹³ M☉, is about 27× weaker. It also holds only for lenses near
   the cluster redshift.
 
 **Why the efficiency is low.** The cut that dominates is the screen's elongation cut, not a lack of sources.
@@ -155,7 +161,7 @@ the model.
 - **Isolated lens.** We assume no coupling to the cluster's shear or magnification (D-047). The observed shapes
   already contain the cluster's shear, and the W1 Jacobian is applied on top of it.
 - **Redshift.** The lens is placed at the cluster redshift only; other redshifts are not covered. Sources without
-  a photo-z count as background. Rows beyond 4 θ_E stay unlensed, which loses a little weak radial stretching.
+  a photo-z count as background, which is why the two fields with no photo-z are left out of the limits. Rows beyond 4 θ_E stay unlensed, which loses a little weak radial stretching.
 - **Area.** The footprint extends up to 4″ past the catalogue edge, so the area is overestimated by up to about
   10 %, which makes the limits slightly too strong.
 - **Statistics.** The null is computed by an incremental update, statistically equivalent to a full re-run but not

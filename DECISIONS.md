@@ -2330,9 +2330,12 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
   |---|---|---|---|---|---|
   | recovered | 0 | 0 | 10 | 80 | 181 |
 
-  - The 95 % limits are none at 0.3″ and 1″, < 3.6 × 10⁴ deg⁻² at 3″, < 3.9 × 10³ at 6″ and < 1.8 × 10³ at 10″.
+  - The 95 % limits, from the six fields with photo-z (38.1 arcmin²), are none at 0.3″ and 1″, < 7.0 × 10⁴ deg⁻²
+    at 3″, < 6.8 × 10³ at 6″ and < 3.2 × 10³ at 10″. MACS0717 and Abell S1063 have no photo-z, so their members
+    and foreground galaxies get painted as W1 images and their efficiency is biased high (code review); with them
+    the limits would be about 2× tighter (optimistic, reported separately in `limits.json`).
   - |M| ≈ 1.4–4.3 × 10¹² M☉ at 3″ (`model_prediction`, z_s = 2).
-  - The best limit is about 15× weaker than Takahashi & Asada's volume limit spread over 0 < z < 1 (about
+  - The best limit is about 27× weaker than Takahashi & Asada's volume limit spread over 0 < z < 1 (about
     120 deg⁻²).
 - The loss is in the arc selection. An image reaches e ≥ 0.5 only for β ≲ 2.3 θ_E, and `anti` relative to the
   cluster keeps about a third of the images. A 3″ lens therefore puts 1–3 arcs into the screen, while the null
