@@ -152,7 +152,9 @@ def walk_members(buf, base: int, start: int, stop: int):
         if end > base + len(buf):
             yield "", off, end
             return
-        if info.type in (tarfile.GNUTYPE_LONGNAME, tarfile.XHDTYPE, tarfile.XGLTYPE):
+        if info.type == tarfile.XGLTYPE:  # pax global header: names nothing
+            pass
+        elif info.type in (tarfile.GNUTYPE_LONGNAME, tarfile.XHDTYPE):
             # a name header applies to the next header, which may start in the next range,
             # where the resync cannot see it; MOA member names fit in 100 bytes, so refuse
             raise ValueError(f"tar name extension header at offset {off} is not supported")
@@ -262,23 +264,23 @@ def _parse_fixed(raw: bytes, columns=None) -> dict[str, np.ndarray] | None:
         return None
     want = None if columns is None else {"HJD", *columns}
     out: dict[str, np.ndarray] = {}
-    for j, name in enumerate(names):
-        if want is not None and name not in want:
-            continue
-        a, b = bars[j] + 1, bars[j + 1]
-        col = np.ascontiguousarray(u8[:, a:b])
-        if name == "included":
-            out[name] = np.char.strip(col.view(f"S{b - a}").ravel()) == b"True"
-        else:  # each slice ends in a blank (the bar column), so tokens stay apart
-            with warnings.catch_warnings():  # an unparseable token: fall back, never raise
-                warnings.simplefilter("error", DeprecationWarning)
-                try:
+    with warnings.catch_warnings():  # once per member, not per column
+        warnings.simplefilter("error", DeprecationWarning)
+        for j, name in enumerate(names):
+            if want is not None and name not in want:
+                continue
+            a, b = bars[j] + 1, bars[j + 1]
+            col = np.ascontiguousarray(u8[:, a:b])
+            if name == "included":
+                out[name] = np.char.strip(col.view(f"S{b - a}").ravel()) == b"True"
+            else:  # each slice ends in a blank (the bar column), so tokens stay apart
+                try:  # an unparseable token: fall back to the token parser, never raise
                     v = np.fromstring(np.ascontiguousarray(u8[:, a : b + 1]).tobytes(), sep=" ")
                 except (DeprecationWarning, ValueError):
                     return None
-            if v.size != len(u8):
-                return None
-            out[name] = v
+                if v.size != len(u8):
+                    return None
+                out[name] = v
     keep = np.isfinite(out["HJD"]) if "HJD" in out else np.ones(len(u8), bool)
     return {k: v[keep] for k, v in out.items()}
 

@@ -24,6 +24,7 @@ from pathlib import Path
 from jwst_anomaly import moa
 
 RETRY_STATUS = {429, 500, 502, 503, 504}
+SMALL_FILE = 1 << 26  # bytes: a 200 reply to a range request is read only below this
 
 
 class RangeReader:
@@ -78,14 +79,20 @@ class RangeReader:
                     if r.status_code == 206:
                         cr = r.headers.get("Content-Range", "")
                         size = cr.rsplit("/", 1)[-1]
-                        if self.total is not None and cr and size != str(self.total):
+                        if self.total is not None and cr and size not in ("*", str(self.total)):
                             raise OSError(f"{self.url}: size {cr} is not the pinned {self.total}")
-                        if cr.startswith(f"bytes {a}-{b - 1}/"):
-                            data = r.content
-                            if len(data) == b - a:
-                                return data
-                    elif r.status_code == 200:  # range ignored: never read a whole tar
-                        raise OSError(f"{self.url}: server ignored the byte range (HTTP 200)")
+                        if cr and not cr.startswith(f"bytes {a}-{b - 1}/"):
+                            raise OSError(f"{self.url}: asked bytes {a}-{b - 1}, got {cr}")
+                        data = r.content
+                        if len(data) == b - a:
+                            return data  # a short body is retried
+                    elif r.status_code == 200:  # range ignored: read only a small file
+                        n = r.headers.get("Content-Length")
+                        if a != 0 or n is None or int(n) > SMALL_FILE:
+                            raise OSError(f"{self.url}: server ignored the byte range (HTTP 200)")
+                        data = r.content
+                        if len(data) >= b:
+                            return data[:b]
                     elif r.status_code not in RETRY_STATUS:
                         raise OSError(f"{self.url} bytes {a}-{b - 1}: HTTP {r.status_code}")
             except (
@@ -180,8 +187,9 @@ def _get_whole(eid: str) -> bytes:
         try:
             r = requests.get(moa.object_url(eid), timeout=120)
             n = r.headers.get("Content-Length")
-            if r.status_code == 200 and (n is None or len(r.content) == int(n)):
-                return r.content  # a truncated body is retried
+            plain = r.headers.get("Content-Encoding", "identity") == "identity"
+            if r.status_code == 200 and (n is None or not plain or len(r.content) == int(n)):
+                return r.content  # a truncated plain body is retried
             if r.status_code not in RETRY_STATUS and r.status_code != 200:
                 raise OSError(f"{moa.object_url(eid)}: HTTP {r.status_code}")
         except (

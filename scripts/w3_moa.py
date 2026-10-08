@@ -407,7 +407,7 @@ def _write_prescreen_chunk(field: str, k: int, n: int, rows: list, stats: dict) 
     return path
 
 
-def _stream_worker(wid: int, segs: list, total: int, url, path, prefetch: int, queue) -> None:
+def _stream_worker(wid: int, segs: list, total: int, url, path, pin, prefetch: int, queue) -> None:
     """One pre-screen process: reads its own byte ranges (``prefetch`` threads download the next
     segments while this one is scanned) and puts ``(segment, rows, MB, retries)`` on ``queue``;
     the parent holds no light-curve bytes. ``None`` marks the end, ``("error", text)`` a failure."""
@@ -416,7 +416,7 @@ def _stream_worker(wid: int, segs: list, total: int, url, path, prefetch: int, q
 
     moa_stream.limit_heap_growth()
     try:
-        reader = moa_stream.RangeReader(url=url, path=path, total=None if path else total)
+        reader = moa_stream.RangeReader(url=url, path=path, total=pin)
         with ThreadPoolExecutor(prefetch) as ex:
             futs = deque()
             nxt = 0
@@ -473,7 +473,7 @@ def run_stream_prescreen(field: str, procs: int, conns: int, chunks=None, source
     workers = [
         ctx.Process(
             target=_stream_worker,
-            args=(i, segs[i::procs], total, reader.url, reader.path, prefetch, queue),
+            args=(i, segs[i::procs], total, reader.url, reader.path, reader.total, prefetch, queue),
             daemon=True,
         )
         for i in range(procs)
@@ -798,23 +798,33 @@ def run_fit(procs: int, limit: int | None = None, chunk: tuple[int, int] | None 
     return path
 
 
+def fit_chunk_problem(tab: Table, ids: list, k: int, n: int) -> str | None:
+    """Why the tracked fit chunk ``k`` of ``n`` cannot be used (None: it can): fitted with other
+    ``Params``, or not exactly its share ``ids[k::n]`` of the current pre-screen passes."""
+    if tab.meta.get("fit_params") != json.dumps(asdict(w3.P)) or tab.meta.get(
+        "params"
+    ) != json.dumps(asdict(P)):
+        return "was fitted with other Params; refit it"
+    if sorted(tab["event_id"]) != sorted(ids[k::n]):
+        return "does not hold exactly its pre-screen passes"
+    return None
+
+
 def merge_chunks(n: int) -> Path:
     """Join the tracked chunk tables 1..n of n into the table `vet` reads. Refused unless every
     chunk is present, was fitted with the current pre-screen and fit ``Params`` and holds exactly
     its own passes of the current pre-screen (deterministic, recomputed in each session)."""
     pre = read_prescreen()
     ids = list(passes(pre)["event_id"])
-    fit_params, params = json.dumps(asdict(w3.P)), json.dumps(asdict(P))
     parts = []
     for k in range(n):
         path = results_dir() / f"{chunk_name((k, n))}.gz"
         if not path.exists():
             raise SystemExit(f"missing chunk {k + 1}/{n}: {path}")
         tab = Table.read(path, format="ascii.ecsv")
-        if tab.meta.get("fit_params") != fit_params or tab.meta.get("params") != params:
-            raise SystemExit(f"chunk {k + 1}/{n} was fitted with other Params; refit it")
-        if sorted(tab["event_id"]) != sorted(ids[k::n]):
-            raise SystemExit(f"chunk {k + 1}/{n} does not hold exactly its pre-screen passes")
+        problem = fit_chunk_problem(tab, ids, k, n)
+        if problem:
+            raise SystemExit(f"chunk {k + 1}/{n} {problem}")
         parts.append(tab)
     tab = vstack(parts, metadata_conflicts="silent")
     tab.sort("event_id")
@@ -1846,14 +1856,10 @@ def run_field(procs: int, conns: int, per_cell: int, per_ctrl: int) -> None:
     ids = list(passes(pre)["event_id"])
     for k in range(n):
         path = results_dir() / f"{chunk_name((k, n))}.gz"
-        ok = False
-        if path.exists():  # finished only with the current Params and exactly its passes
-            tab = Table.read(path, format="ascii.ecsv")
-            ok = (
-                tab.meta.get("fit_params") == json.dumps(asdict(w3.P))
-                and tab.meta.get("params") == json.dumps(asdict(P))
-                and sorted(tab["event_id"]) == sorted(ids[k::n])
-            )
+        ok = (
+            path.exists()
+            and fit_chunk_problem(Table.read(path, format="ascii.ecsv"), ids, k, n) is None
+        )
         if not ok:
             run_fit(procs, None, (k, n))
     merge_chunks(n)
