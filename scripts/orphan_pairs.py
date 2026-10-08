@@ -51,6 +51,7 @@ from scipy.stats import chi2 as chi2_dist
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from jwst_anomaly import paths, schema  # noqa: E402
+from jwst_anomaly.photometry import fetch_catalog  # noqa: E402
 
 SEP_MIN, SEP_MAX = 0.3, 3.0  # arcsec, the orphan-pair annulus (task definition)
 FAR_MIN, FAR_MAX = 10.0, 30.0  # arcsec, null annulus (b) (ASSUMPTION)
@@ -74,33 +75,50 @@ CUTOUT_BANDS = ("f150w", "f277w", "f444w")
 CUTOUT_ARCSEC = 4.0
 
 
-def canucs_dir() -> Path:
-    return paths.cache_dir() / "external" / "canucs"
-
-
-_CAT = "hlsp_canucs_jwst-hst_multi_{f}-clu_multi_v1_photometry-cat.fits.gz"
+_HLSP = "https://archive.stsci.edu/hlsps/canucs/dr1/{f}/{d}/hlsp_canucs_jwst-hst_multi_{f}-{n}"
+# Inputs are downloaded once and verified by sha256 (SOURCES.md, D-045). Image lists are
+# (url, sha256, MODELS name whose frame offset moves the list to the JWST frame, or None).
 FIELDS = {
     "macs0416": {
-        "canucs": "macs0416",
+        "catalogue": (
+            _HLSP.format(f="macs0416", d="clu", n="clu_multi_v1_photometry-cat.fits.gz"),
+            "339107a5c5041621d7bed4ecc8b4a51b5148a6913d4e513c3a5e783363f11bff",
+        ),
         "z_cluster": 0.396,
         "cats": "macs0416-cats",
         "image_lists": [
-            "macs0416/hlsp_canucs_jwst-hst_multi_macs0416-allmultim-cat_multi_v1_model.txt"
+            (
+                _HLSP.format(f="macs0416", d="model", n="allmultim-cat_multi_v1_model.txt"),
+                "c8978003d8dd617cb980ed7ba5acde1485cd742db43846c25ed251f110dc2417",
+                None,  # macs0416-canucs: offset under 0.1", not pinned (D-044)
+            )
         ],
         "i2d": "jw01208-o004_t002",
     },
     "macs1149": {
-        "canucs": "macs1149",
+        "catalogue": (
+            _HLSP.format(f="macs1149", d="clu", n="clu_multi_v1_photometry-cat.fits.gz"),
+            "08ab67347f2c3dfe4f743cc1b2a9d4b77a1e40eb66ddeb611648bb296adc0739",
+        ),
         "z_cluster": 0.543,
         "cats": "macs1149-cats",
         "image_lists": [],  # CANUCS DR1 publishes no MACS1149 image list (readme: with v2)
         "i2d": "jw01208-o008_t004",
     },
     "abell370": {
-        "canucs": "a370",
+        "catalogue": (
+            _HLSP.format(f="a370", d="clu", n="clu_multi_v1_photometry-cat.fits.gz"),
+            "f5622f2867aa3094df6861981ee67f7f1879b8381b348224748c7381436ae17b",
+        ),
         "z_cluster": 0.375,
         "cats": "abell370-cats",
-        "image_lists": ["a370/hlsp_canucs_jwst-hst_multi_a370-lenstool-multim_multi_v1_model.txt"],
+        "image_lists": [
+            (
+                _HLSP.format(f="a370", d="model", n="lenstool-multim_multi_v1_model.txt"),
+                "d72c3d98e675e5bc00cfbdd9b84d1b8528b22e36311924fea072293af23ef9e2",
+                "abell370-canucs",  # (-0.148, 0.002)" to the JWST frame (D-044)
+            )
+        ],
         "i2d": "jw01208-o002_t001",
     },
 }
@@ -126,12 +144,11 @@ def flux_matrix(cat: Table, bands: list[str]) -> tuple[np.ndarray, np.ndarray]:
 
 def select_sources(cat: Table, z_cluster: float) -> np.ndarray:
     """Boolean mask of step 1 (see module docstring)."""
-    num = sum(np.nan_to_num(np.asarray(cat[f"FLUX_COLOR03_TOTAL_{b}"], float)) for b in SNR_BANDS)
-    var = sum(
-        np.nan_to_num(np.asarray(cat[f"FLUXERR_COLOR03_TOTAL_{b}"], float), nan=np.inf) ** 2
-        for b in SNR_BANDS
-    )
-    snr = num / np.sqrt(var)
+    # an invalid band (NaN, or error <= 0, as in flux_matrix) makes the summed S/N invalid
+    fs, es = flux_matrix(cat, list(SNR_BANDS))
+    with np.errstate(invalid="ignore"):
+        snr = fs.sum(1) / np.sqrt((es**2).sum(1))
+    snr = np.nan_to_num(snr, nan=-np.inf)
     zspec = np.asarray(cat["Z_SPEC"], float)
     has_spec = np.isfinite(zspec) & (zspec > 0)
     z_low = np.where(has_spec, zspec, np.asarray(cat["Z025"], float))
@@ -274,21 +291,30 @@ def classify_pairs(pairs: Table, cat: Table, images: Table, ra0: float, dec0: fl
         cand = cand[(cand != ci[p]) & (cand != cj[p])]
         if len(cand) == 0:
             continue
-        dm = np.hypot(x[cand] - mx[p], y[cand] - my[p])
-        k = int(np.argmin(dm))
-        lens_dist[p], lens_id[p] = dm[k], source[cand[k]]
-        # distance to the segment, for sources projecting inside it and clear of both members
-        ux, uy = x[cj[p]] - x[ci[p]], y[cj[p]] - y[ci[p]]
-        t = ((x[cand] - x[ci[p]]) * ux + (y[cand] - y[ci[p]]) * uy) / (ux * ux + uy * uy)
-        dl = np.abs((x[cand] - x[ci[p]]) * uy - (y[cand] - y[ci[p]]) * ux) / np.hypot(ux, uy)
+        # every lens test needs the source clear of both members (not a fragment of one)
         clear = np.minimum(
             np.hypot(x[cand] - x[ci[p]], y[cand] - y[ci[p]]),
             np.hypot(x[cand] - x[cj[p]], y[cand] - y[cj[p]]),
         )
-        inside = (t > 0) & (t < 1) & (clear >= LENS_RADIUS)
+        cand = cand[clear >= LENS_RADIUS]
+        if len(cand) == 0:
+            continue
+        dm = np.hypot(x[cand] - mx[p], y[cand] - my[p])
+        k = int(np.argmin(dm))
+        lens_dist[p] = dm[k]
+        # distance to the segment, for sources projecting inside it
+        ux, uy = x[cj[p]] - x[ci[p]], y[cj[p]] - y[ci[p]]
+        t = ((x[cand] - x[ci[p]]) * ux + (y[cand] - y[ci[p]]) * uy) / (ux * ux + uy * uy)
+        dl = np.abs((x[cand] - x[ci[p]]) * uy - (y[cand] - y[ci[p]]) * ux) / np.hypot(ux, uy)
+        inside = (t > 0) & (t < 1)
         if inside.any():
             line_dist[p] = dl[inside].min()
-        n_between[p] = int(((dm <= 0.5 * sep[p]) & (clear >= LENS_RADIUS)).sum())
+        between = dm <= 0.5 * sep[p]
+        n_between[p] = int(between.sum())
+        # the catalogued lens: nearest qualifying source to the midpoint (0 when none qualifies)
+        hit = (dm <= LENS_RADIUS) | between | (inside & (dl <= LENS_RADIUS))
+        if hit.any():
+            lens_id[p] = source[cand[hit][int(np.argmin(dm[hit]))]]
     pairs["near_image"], pairs["same_galaxy"] = near, same
     pairs["lens_dist"], pairs["lens_source"], pairs["line_dist"] = lens_dist, lens_id, line_dist
     pairs["n_between"] = n_between
@@ -468,10 +494,23 @@ def lens_check(top: Table, model_name: str, z_cluster: float) -> Table:
     dl = dark_lens_numbers(top["sep"], z_cluster, zs)
     for c in dl.colnames:
         top[c] = dl[c]
+    top.meta["source"] = (
+        f"{top.meta.get('source', 'CANUCS DR1 photometry catalogue')}; magnifications from "
+        f"{model.source} (frame offset applied) and the CANUCS catalogue MU"
+    )
+    top.meta["model_prediction_columns"] = [
+        "mu_cats_a",
+        "mu_cats_b",
+        "z_pair",
+        "parity_flip",
+        "model_covered",
+        "cluster_explains",
+    ]
+    top.meta["hypothesis_columns"] = list(dl.colnames)
     return top
 
 
-def cutouts_and_sheet(top: Table, i2d_prefix: str, out_dir: Path, title: str) -> Path:
+def cutouts_and_sheet(top: Table, field: str, out_dir: Path, title: str) -> Path:
     """F150W/F277W/F444W cutouts centred on each pair's midpoint, members circled."""
     from astropy.io import fits
     from astropy.wcs import WCS
@@ -481,7 +520,8 @@ def cutouts_and_sheet(top: Table, i2d_prefix: str, out_dir: Path, title: str) ->
 
     from jwst_anomaly import cutouts, viz
 
-    man = Table.read(paths.repo_root() / "data/manifests" / FIELD_MANIFEST[i2d_prefix])
+    i2d_prefix = FIELDS[field]["i2d"]
+    man = Table.read(paths.manifests_dir() / f"{field}_products.ecsv")
     names = [str(n) for n in man["productFilename"]]
     uris = {
         b: str(man["cloud_uri"][names.index(f"{i2d_prefix}_nircam_clear-{b}_i2d.fits")])
@@ -531,9 +571,6 @@ def cutouts_and_sheet(top: Table, i2d_prefix: str, out_dir: Path, title: str) ->
     return out
 
 
-FIELD_MANIFEST = {v["i2d"]: f"{k}_products.ecsv" for k, v in FIELDS.items()}
-
-
 def load_images(field: str) -> Table:
     """All published multiple images for ``field``: CATS arcs.txt (JWST frame) + CANUCS lists."""
     import lens_consistency as lc
@@ -543,13 +580,27 @@ def load_images(field: str) -> Table:
     cats, _ = lc.image_list(spec["cats"], {}, None)
     lc.shift_images(spec["cats"], cats)
     lists.append(Table({"image_id": cats["image_id"], "ra": cats["ra"], "dec": cats["dec"]}))
-    for rel in spec["image_lists"]:
-        lists.append(read_image_list(canucs_dir() / rel))
+    for url, sha, frame_model in spec["image_lists"]:
+        t = read_image_list(fetch_catalog(url, sha))
+        if frame_model:
+            lc.shift_images(frame_model, t)
+        lists.append(t)
     from astropy.table import vstack
 
     out = vstack(lists)
     out.meta["n_per_list"] = [len(t) for t in lists]
     return out
+
+
+def _finite(obj):
+    """NaN/inf -> None, recursively, so summary.json is strict JSON."""
+    if isinstance(obj, dict):
+        return {k: _finite(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_finite(v) for v in obj]
+    if isinstance(obj, (float, np.floating)) and not np.isfinite(obj):
+        return None
+    return obj
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -564,7 +615,9 @@ def main(argv: list[str] | None = None) -> int:
     spec = FIELDS[args.field]
     out = args.out / args.field
     out.mkdir(parents=True, exist_ok=True)
-    cat = Table.read(canucs_dir() / _CAT.format(f=spec["canucs"]))
+    for stale in ("top_orphans.ecsv", "contact_sheet.png"):  # never leave an earlier run's top
+        (out / stale).unlink(missing_ok=True)
+    cat = Table.read(fetch_catalog(*spec["catalogue"]))
     images = load_images(args.field)
     pairs, summary = search(cat, spec["z_cluster"], images, args.n_shift, args.seed)
     summary["n_published_images"] = images.meta["n_per_list"]
@@ -574,7 +627,7 @@ def main(argv: list[str] | None = None) -> int:
         top = lens_check(top, spec["cats"], spec["z_cluster"])
         if args.cutouts:
             summary["contact_sheet"] = str(
-                cutouts_and_sheet(top, spec["i2d"], out, f"{args.field} orphan pairs (unvetted)")
+                cutouts_and_sheet(top, args.field, out, f"{args.field} orphan pairs (unvetted)")
             )
         top.write(out / "top_orphans.ecsv", overwrite=True)
     summary["top"] = [
@@ -585,7 +638,7 @@ def main(argv: list[str] | None = None) -> int:
         }
         for row in top
     ]
-    (out / "summary.json").write_text(json.dumps(summary, indent=1, default=str))
+    (out / "summary.json").write_text(json.dumps(_finite(summary), indent=1, default=str))
     print(json.dumps({k: v for k, v in summary.items() if k != "top"}, indent=1, default=str))
     return 0
 

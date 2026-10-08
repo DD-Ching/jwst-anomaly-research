@@ -2106,8 +2106,11 @@ tests (removing or rescaling one potential, D-042), which maps do not.
   - summed F277W+F356W+F444W S/N ≥ 10 and S/N ≥ 10 in at least 8 bands;
   - SED match: ≥ 8 shared bands, χ² probability ≥ 0.01 with a 3 % error floor and free normalisation, overlapping
     16–84 % photo-z intervals;
-  - visible lens: a catalogued source within 0.3″ of the joining line or inside the circle on the pair, at least
-    0.3″ from both members.
+  - visible lens: a catalogued source at least 0.3″ from both members that lies within 0.3″ of the midpoint,
+    within 0.3″ of the joining segment, or inside the circle with the pair as diameter.
+- Inputs are pinned by URL and sha256 in `FIELDS` and downloaded on first use; the CANUCS Abell 370 image list is
+  moved to the JWST frame with the `abell370-canucs` offset (D-044). Re-running with these rules (after review)
+  reproduced every count below.
 
 **Alternatives rejected.**
 - A midpoint-only visible-lens rule: galaxies sitting between pair members were missed (first contact sheet).

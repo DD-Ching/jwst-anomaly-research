@@ -78,7 +78,9 @@ hypothesis. An SED match is not evidence of lensing (charter).
 
 Reproduce with `python scripts/orphan_pairs.py --field {macs0416,macs1149,abell370} --cutouts`. Outputs go to
 `outputs/orphan_pairs/<field>/`: `summary.json`, `matched_pairs.ecsv`, `top_orphans.ecsv` and
-`contact_sheet.png`. Each field takes about 5 s without cutouts and about 30 s with them.
+`contact_sheet.png`. Each field takes about 5 s without cutouts and about 30 s with them. The catalogues and image lists are
+downloaded on first use and verified against the sha256 values in `FIELDS` (SOURCES.md); the CANUCS Abell 370 list
+is shifted to the JWST frame by the `abell370-canucs` offset (D-044). `summary.json` writes NaN as `null`.
 
 ## Null comparison per field (derived)
 
