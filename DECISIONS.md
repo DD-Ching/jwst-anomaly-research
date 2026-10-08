@@ -1507,7 +1507,8 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
     - |μ| ≤ 50;
     - achromatic: the bands agree within 0.5 mag, otherwise `chromatic`.
 - **`radial`** (negative convergence):
-  - inputs: elongated background sources (e ≥ 0.5, S/N ≥ 10) that are `anti` to the predicted stretch and that
+  - inputs: elongated background sources (e ≥ 0.5, S/N ≥ 10; a photo-z, when present, must put them behind the
+    lens) that are `anti` to the predicted stretch and that
     the model does not make radial (radial magnification 1/|1 − κ + γ| < 3 at every redshift of the class: the
     z = 1, 2, 4 grid or the photo-z range);
   - a grid search (0.5″ grid, 1″ line tolerance, 15″ line length) finds connected regions where at least 3
@@ -1535,10 +1536,12 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   - **Result: no demagnification candidate.**
   - **Rule:** require compactness in both bands.
 - **`radial`** (F200W catalog, DJA photo-z):
-  - 224 elongated sources; 45 `anti`; none predicted radial by the model;
-  - 19 convergence centres (14 without a catalog source within 1″), against a mean of 12.5 (p95 21) for angles
+  - 224 elongated sources;
+  - 26 dropped as cluster members or foreground (their photo-z is not behind the lens);
+  - 34 `anti`, none predicted radial by the model;
+  - 12 convergence centres (7 without a catalog source within 1″), against a mean of 9.0 (p95 15) for angles
     redrawn in each arc's anti window;
-  - the strongest centre has 5 lines, and the null gives ≥ 5 in 84 % of draws.
+  - the strongest centre has 4 lines, and the null gives ≥ 4 in 94.5 % of draws.
   - **Result: consistent with chance; no dark-centre candidate.**
 
 **Revisit if.**

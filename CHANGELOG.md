@@ -11,7 +11,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - SMACS:
   - fluxratio: 6 compact images consistent, 0 flags. A first, single-band compactness gate had flagged system 7,
     an ordinary knot-vs-whole-arc mismatch;
-  - radial: 19 centres against a null mean of 12.5 (p95 21); max 5 lines, p 0.84.
+  - radial (background sources only): 12 centres against a null mean of 9.0 (p95 15); max 4 lines, p 0.945.
   - **No exotic candidate.**
 - **Failed approaches (now rules):**
   - fixed-aperture flux ratios on resolved arcs: surface brightness is conserved, so the ratios scale with 1/|μ|

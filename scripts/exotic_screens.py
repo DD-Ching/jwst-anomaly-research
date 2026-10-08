@@ -254,6 +254,15 @@ def cmd_radial(args) -> dict:
     x, y = model.to_frame(src["ra"], src["dec"])
     src = src[np.hypot(x, y) <= args.max_radius]
     ot = lc.orientation_table(model, src)
+    # cluster members and foreground objects are not lensed: with a photo-z, keep only sources
+    # it puts behind the lens (sources without a photo-z stay, on the redshift grid)
+    if "z_phot" in ot.colnames:
+        has_pz = np.isfinite(np.asarray(ot["z_phot"], float))
+        not_background = has_pz & (np.asarray(ot["z_basis"]) != "photo-z")
+        n_not_background = int(not_background.sum())
+        ot = ot[~not_background]
+    else:
+        n_not_background = 0
     anti = ot[ot["orientation_class"] == "anti"]
     # the model's own radial arcs are ordinary: drop sources it predicts to be radially stretched
     # the largest predicted radial magnification over the redshifts the class used: the z grid,
@@ -319,6 +328,7 @@ def cmd_radial(args) -> dict:
         "model": args.model,
         "catalog": str(args.catalog),
         "n_elongated": len(src),
+        "n_not_background_dropped": n_not_background,
         "n_anti": len(anti),
         "n_anti_not_model_radial": len(cand),
         "n_mu_radial_nan": n_mu_nan,
