@@ -554,3 +554,39 @@ def test_read_z_m_limit_without_parsing_the_model(tmp_path):
 def test_load_images_accepts_parenthesised_redshifts(tmp_path):
     path = _write(tmp_path, f"#REFERENCE 0\n1.1 {RA0} {DEC0} 0.1 0.1 0.0 (2.16) 0.0\n", "arcs.dat")
     assert lensmodel.load_lenstool_images(path)["z"][0] == 2.16
+
+
+def test_find_images_refines_cells_on_a_fold():
+    # D-038: a merging pair straddling a critical curve inside one coarse grid cell is missed
+    # by the plain triangle scan; the fold-cell refinement recovers it
+    model = LensModel(
+        [_dpie(x=0.0, y=0.0, ellipticity=0.4, angle_pos=20.0, r_core=0.5, r_cut=300.0)],
+        RA0,
+        DEC0,
+        COSMO,
+    )
+    s = float(model.dls_ds(2.0))
+
+    def det(x):
+        f = model.fields_xy(np.atleast_1d(x), np.zeros(1))
+        a11, a12, a22 = 1 - s * f["psi_xx"], -s * f["psi_xy"], 1 - s * f["psi_yy"]
+        return float((a11 * a22 - a12 * a12)[0])
+
+    xs = np.linspace(1.0, 30.0, 2901)  # the outer (tangential) critical curve on the +x axis
+    signs = np.sign([det(x) for x in xs])
+    i = int(np.flatnonzero(signs[:-1] != signs[1:])[-1])
+    x_img = xs[i + 1] + 0.02  # just outside the curve: its partner is ~0.04" away
+    f = model.fields_xy(np.array([x_img]), np.zeros(1))
+    beta = (float(x_img - s * f["alpha_x"][0]), float(-s * f["alpha_y"][0]))
+    coarse = lensmodel.DeflectionGrid.compute(model, half_width=40.0, step=0.5)
+    plain = lensmodel.find_images(model, coarse, *beta, 2.0, refine=0)
+    refined = lensmodel.find_images(model, coarse, *beta, 2.0)
+
+    def near(t):
+        return t[np.hypot(t["x"] - x_img, t["y"]) < 0.5]
+
+    assert len(near(plain)) < 2
+    pair = near(refined)
+    assert len(pair) == 2  # one image on each side of the curve, opposite parity
+    assert np.sign(pair["magnification"][0]) != np.sign(pair["magnification"][1])
+    assert np.min(np.hypot(pair["x"] - x_img, pair["y"])) < 1e-3

@@ -1793,3 +1793,35 @@ D-034's rules now remove these automatically.
 **Revisit if.**
 - `bayes.dat` position spreads do not cover 34.1 / 700.1.
 - An independent model (UNCOVER v2.0, or the CATS v4.1 maps of D-035) predicts a bright image where none is seen.
+
+## D-040 `find_images` refines grid cells on folds; frame offsets move map models; MACS0416 image list open (2026-10-08)
+
+**Decision.**
+- `find_images(..., refine=8)` keeps the triangle scan on the deflection grid. It then subdivides 8 × 8 every cell
+  that lies within one cell of a critical curve and whose mapped bounding box, widened by its own size, contains the
+  source. The model is evaluated directly at the sub-cell nodes. A critical curve is detected where the mapped
+  triangles change orientation. `refine=0` restores the plain scan.
+- `apply_frame_offset` also shifts a `MapLensModel`'s WCS. Map models look their maps up by sky position, so moving
+  only the reference point left the maps where they were, and the offset was a no-op. `exotic_screens.py radial` now
+  applies the offset for every model, not only Lenstool ones.
+- `macs0416-cats` gets `frame_offset_arcsec` (0.208, −0.025) and its image list is opened.
+
+**Alternatives rejected.**
+- A finer global grid (0.1″): about 6× the memory and time on every field, against the 2M-cell rule.
+- Dropping system 26 by hand.
+
+**Evidence.**
+- MACS0416 `validate`: image-plane rms 1.572″ → 0.811″ (1.13× the quoted 0.72″; the gate passes). System 26 is
+  solved as 3 images. Shared matches drop from 6 to 3 (only system 122 is left).
+- The other eight models give the same rms with and without refinement (SMACS 0.318″, El Gordo 0.754″, Abell 2744
+  0.427″, MACS1149 0.673″, MACS0717 3.21″, Abell S1063, Abell 2744 CATS), except Abell 370 (10.69″ → 10.67″).
+- `validate` wall time: Abell 2744 29 s → 41 s, El Gordo 16 s → 18 s, MACS0416 2.6 s → 3.9 s.
+- Tests: a synthetic fold pair 0.04″ apart inside one 0.5″ cell is missed by the plain scan and found, with opposite
+  parities, by the refined scan. A frame offset leaves a map model's model-frame deflection unchanged and moves it on
+  the sky.
+- Affected results: only MACS0416's radial screen used a map model with an offset (MACS1149 and MACS0717 offsets are
+  under 0.1″ and were not applied). Its re-run in the JWST frame is still null (D-038).
+
+**Revisit if.**
+- A fold image is still missed with `refine=8` (cusps with three merging images may need recursion).
+- Map models with rotated WCS grids appear (`MapLensModel` rejects them today).

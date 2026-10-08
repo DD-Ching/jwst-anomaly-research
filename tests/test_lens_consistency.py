@@ -326,6 +326,34 @@ def test_frame_offset_moves_model_and_images_together():
         del lc.MODELS["_test"]
 
 
+def test_frame_offset_moves_a_map_model_with_its_maps():
+    from jwst_anomaly import lensmodel
+
+    model = _model()
+    n, pix = 401, 0.2
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = [RA0, DEC0]
+    w.wcs.crpix = [(n + 1) / 2, (n + 1) / 2]
+    w.wcs.cdelt = [-pix / 3600, pix / 3600]
+    jj, ii = np.mgrid[0:n, 0:n]
+    ax, ay = model.deflection_xy(*model.to_frame(*w.pixel_to_world_values(ii, jj)))
+    mm = lensmodel.MapLensModel(ax, ay, w, model.z_lens, model.cosmology, source="synthetic")
+    px, py = np.array([7.3, -11.2]), np.array([4.1, 9.6])
+    before = mm.deflection_xy(px, py)
+    sky = mm.to_sky(px, py)
+    lc.MODELS["_test"] = {"frame_offset_arcsec": (0.6, -0.4)}
+    try:
+        lc.apply_frame_offset("_test", mm)
+    finally:
+        del lc.MODELS["_test"]
+    # in model-frame coordinates nothing changes: the maps moved with the reference point
+    np.testing.assert_allclose(mm.deflection_xy(px, py), before, atol=1e-6)
+    # at a fixed sky position the deflection is now the one from 0.6"/-0.4" away
+    x2, y2 = mm.to_frame(*sky)
+    assert np.all(np.abs(x2 - px) > 0.3) and np.isfinite(mm.deflection_xy(x2, y2)[0]).all()
+
+
 def test_predict_counter_images_reproduces_an_sis_pair():
     from jwst_anomaly import lensmodel
 
