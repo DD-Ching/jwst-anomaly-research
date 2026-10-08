@@ -16,9 +16,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      flanking-field orphan excess (P = 0.01) before any orphan is read as other than chance; segmentation-map
      adjacency for the same-galaxy and visible-lens rules (the main efficiency losses); pixel-level injections;
      optionally CEERS / GOODS-S / PRIMER (~600 MB each);
-   - W3 (D-052, null; limits from NEXUS, MACS0416, Abell 2744): a veto for apertures within ~1.5″ of a saturated or
-     ≥ 100× brighter source; re-run `forced` for NEXUS (all 1,095 flags) and Abell 2744 with calibrated controls;
-     add JADES and new NEXUS epochs; SN/TNS check for any survivor; leave the Sunrise transient track to its owner run;
+   - W3 (D-052, null; headline limits from MACS0416 only): re-run `forced` for all three fields when S3 cutout jobs
+     work, ≥ 300 multi-epoch controls so NEXUS and Abell 2744 become calibrated; replace the single-epoch veto for
+     vanish flags with the D-039 persistence test (restores full-vanish sensitivity); add JADES and new NEXUS epochs;
+     SN/TNS check for any survivor; leave the Sunrise transient track to its owner run;
    - W5: counts N(>S) around `radial` centres.
 2. W3 inside caustic-crossing arcs needs a microlens with macro shear (Chang-Refsdal-type; reuse-check first).
 3. Warp: recheck only when a paper gives an electromagnetic prediction for a distant observer.
