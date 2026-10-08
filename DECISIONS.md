@@ -2718,14 +2718,16 @@ orphan counts.
   - Only lensed-quasar and radio-interferometric systems are tested; galaxy-finder and sub-mm systems are
     insensitive.
   - "faint galaxy", "blended", "too close" and position or mask problems are undecided and removed from N.
-  - Limits are s₉₅(k_class) / N_class, with test completeness assumed (no injection factor).
+  - Limits are s₉₅(k_class) / N_class, with test completeness assumed (no injection factor). Known biases of
+    that assumption: a faint unrelated source in the circle removes a dark-lens system as "faint galaxy" (true
+    efficiency near 0.98); a colourless pair takes a compact PSF-typed lens as an image (more "none").
 - Thresholds are ASSUMPTIONs in `Params`.
 
 **Result** (`derived`; run `summary.json`).
 - Of 20,986 galaxy-scale systems, 17,555 are in the DR10 footprint: 17,102 galaxy-selected, 110 sub-mm, 325 quasar,
   18 radio.
-- 29 quasar and radio systems are decided: 12 with a deflector, 17 "none". Of the 17 "none":
-  - 14 have a literature lens galaxy (SIMBAD 6, published z_l 7, He et al. 2025 1);
+- 29 quasar and radio systems are decided: 13 with a deflector, 16 "none". Of the 16 "none":
+  - 13 have a literature lens galaxy (SIMBAD 6, published z_l 6, He et al. 2025 1);
   - 3 SuGOHI IX CHITAH pairs are open in the typical variant but explained by a lens below the LS depth in the
     conservative variant.
 - Typical: f_dark < 0.48 (quasar, k = 3, N = 16), < 0.23 (radio, k = 0, N = 13).
@@ -2749,6 +2751,7 @@ orphan counts.
 - Tests: `tests/test_lenscats.py` and `tests/test_w12_lenscats.py`. They cover:
   - a dark pair reaching "none";
   - quad images never counted as the deflector, while a red PSF-typed lens is;
+  - a fold-quad lens outside the brightest pair's circle (search circle holds every image; final review);
   - a deflector beyond image_radius inside the pair circle;
   - faint-galaxy, close, blended and insensitive cases;
   - empty inputs keeping the schema;

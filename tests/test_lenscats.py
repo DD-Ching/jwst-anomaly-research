@@ -221,7 +221,7 @@ def test_name_offset_catches_sign_errors():
 def test_position_quantum_needs_both_axes():
     # fine steps on one axis only (whole RA second, precise declination) -> not rounded
     assert lenscats.position_quantum_arcsec(10.63333, -17.229123) == 0
-    assert lenscats.position_quantum_arcsec(84.57123, -49.4801) == 0
+    assert lenscats.position_quantum_arcsec(84.57123, -49.481) == 0
     # a coarse 0.01 deg step on one axis is enough
     q = lenscats.position_quantum_arcsec(84.57, -49.48731)
     assert q == pytest.approx(36 * math.cos(math.radians(49.48731)))

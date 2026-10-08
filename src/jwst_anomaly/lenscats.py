@@ -444,13 +444,14 @@ def name_position_offset(name: str, ra: float, dec: float) -> float:
 
 
 def position_quantum_arcsec(ra: float, dec: float, printed_decimals: int = 5) -> float:
-    """Rounding step of a catalogued position (arcsec on the sky), 0 unless both axes are rounded.
+    """Rounding step of a catalogued position (arcsec on the sky); 0 for a precise position.
 
     Positions converted from truncated sexagesimal (whole seconds of RA and whole arcsec) or
     rounded decimal degrees (0.01 deg) cannot locate a deflector to ~1''. A value counts as a
     multiple of a step when it is one to within the rounding of ``printed_decimals`` decimal
-    degrees (lenscat prints 5). A whole 0.01 deg or 0.1 deg on either axis flags the position
-    (chance ~1e-3); finer steps (whole RA seconds, 1/1000 deg, whole arcmin or arcsec) occur
+    degrees (lenscat prints 5). A whole 0.01 deg or 0.1 deg on either axis, or a whole arcmin
+    of declination, flags the position (chance ~1e-3); finer steps (whole RA seconds,
+    1/1000 deg, whole arcsec) occur
     by chance in up to a few per cent of precise positions, so both axes must show one (two
     indicators, chance ~1e-4). The larger step (RA step times cos dec) is returned.
     """
@@ -548,7 +549,10 @@ def pair_images(systems: Table, sources: Table, image_radius: float = 3.0) -> Ta
     out = Table(
         {c: np.asarray(v, float if c in ("sep", "theta_e") else int) for c, v in cols.items()}
     )
-    out.meta.update(provenance=schema.Provenance.DERIVED.value)
+    out.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source=f"pair_images of {sources.meta.get('source', 'deep-imaging sources')}",
+    )
     return out
 
 
@@ -568,10 +572,12 @@ def quasar_pair_test(
     ``status``: "blended" (< 2 images), "too close" (separation < ``sep_min``: ground-based
     seeing cannot separate a lens from the images, ASSUMPTION), "deflector" (a candidate with
     mag_z <= mag_max), "faint galaxy" (only fainter candidates: an under-luminous lens or no
-    lens, undecided) or "none". Candidates lie inside the circle with the image pair as
-    diameter, farther than ``image_exclusion`` from both images, and are not further images:
-    PSF-typed sources whose g - z is within ``image_colour_tol`` of the pair's mean, or has no
-    colour, are taken as images (the 3rd and 4th images of a quad), never as the deflector.
+    lens, undecided) or "none". Further images are PSF-typed sources within ``image_radius``
+    whose g - z is within ``image_colour_tol`` of the pair's mean, or has no colour (the 3rd and
+    4th images of a quad); they are never the deflector. Candidates lie inside the smallest
+    circle about the images' centroid that holds every image (the pair circle for a double),
+    farther than ``image_exclusion`` from every image. A colourless pair takes every PSF source
+    as an image, so a compact lens typed PSF then gives "none" (errs towards weaker limits).
     """
     images = pair_images(systems, sources, image_radius) if images is None else images
     typ = _types(sources) if len(sources) else np.zeros(0, str)
@@ -591,20 +597,31 @@ def quasar_pair_test(
             i1, i2 = int(im["img1"]), int(im["img2"])
             mid_xyz = xyz[i1] + xyz[i2]
             mid_xyz /= np.linalg.norm(mid_xyz)
-            r = im["sep"] / 2
-            idx = np.asarray(tree.query_ball_point(mid_xyz, (r + 0.1) * rad), int)
-            idx = idx[(idx != i1) & (idx != i2)]
-            d1 = np.linalg.norm(xyz[idx] - xyz[i1], axis=1) / rad
-            d2 = np.linalg.norm(xyz[idx] - xyz[i2], axis=1) / rad
-            dm = np.linalg.norm(xyz[idx] - mid_xyz, axis=1) / rad
             pg = gz[[i1, i2]]
             pair_gz = float(np.mean(pg[np.isfinite(pg)])) if np.isfinite(pg).any() else np.nan
-            dcol = np.abs(gz[idx] - pair_gz)
-            other_colour = np.greater(
-                dcol, image_colour_tol, where=np.isfinite(dcol), out=np.zeros(len(idx), bool)
-            )
-            extra_image = (typ[idx] == "PSF") & ~other_colour
-            cand = idx[(d1 > image_exclusion) & (d2 > image_exclusion) & (dm <= r) & ~extra_image]
+
+            def is_image(j: np.ndarray, pair_gz: float = pair_gz) -> np.ndarray:
+                dcol = np.abs(gz[j] - pair_gz)
+                other = np.greater(
+                    dcol, image_colour_tol, where=np.isfinite(dcol), out=np.zeros(len(j), bool)
+                )
+                return (typ[j] == "PSF") & ~other
+
+            # all images: the pair plus colour-consistent PSF sources within image_radius; with
+            # a fold or cusp pair the lens lies outside the pair circle, so the search circle
+            # encloses every image (centred on their centroid)
+            near = np.asarray(tree.query_ball_point(mid_xyz, image_radius * rad), int)
+            near = near[(near != i1) & (near != i2)]
+            imgs = np.concatenate([[i1, i2], near[is_image(near)]]).astype(int)
+            centre = xyz[imgs].sum(axis=0)
+            centre /= np.linalg.norm(centre)
+            r = float(np.max(np.linalg.norm(xyz[imgs] - centre, axis=1)) / rad)
+            idx = np.asarray(tree.query_ball_point(centre, (r + 0.1) * rad), int)
+            idx = idx[~np.isin(idx, imgs)]
+            d_img = np.linalg.norm(xyz[idx][:, None, :] - xyz[imgs][None], axis=2) / rad
+            dm = np.linalg.norm(xyz[idx] - centre, axis=1) / rad
+            far = d_img.min(axis=1) > image_exclusion if len(idx) else np.zeros(0, bool)
+            cand = idx[far & (dm <= r) & ~is_image(idx)]
             cand = cand[np.isfinite(magz[cand])]
             bright = cand[magz[cand] <= m]
             if len(bright):
@@ -627,7 +644,10 @@ def quasar_pair_test(
             "defl_mag": np.asarray(rows["defl_mag"], float),
         }
     )
-    out.meta.update(provenance=schema.Provenance.DERIVED.value)
+    out.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source=f"quasar_pair_test of {sources.meta.get('source', 'deep-imaging sources')}",
+    )
     return out
 
 
@@ -662,7 +682,10 @@ def brick_coverage(systems: Table, bricks: Table) -> Table:
         cov.append(bool(ok))
         depth.append(float(b["galdepth_z"][hit]) if ok else np.nan)
     out = Table({"covered": np.array(cov, bool), "depth_z": np.array(depth, float)})
-    out.meta.update(provenance=schema.Provenance.DERIVED.value)
+    out.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source=f"brick_coverage of {bricks.meta.get('source', 'a brick summary')}",
+    )
     return out
 
 

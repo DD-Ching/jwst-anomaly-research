@@ -6,6 +6,7 @@ import importlib.util
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 from astropy.table import Table
 
@@ -112,6 +113,18 @@ def test_quad_images_are_not_the_deflector():
     # a red compact source typed PSF is a lens candidate, not an image
     red = IMAGES + [(10.0, 0.2 * D, "PSF", 22.5, 20.0, 0)]
     assert _test("quasar", red) == "deflector"
+
+
+def test_fold_quad_lens_outside_pair_circle():
+    # the two brightest images are adjacent (+-40 deg): the lens lies outside their pair circle,
+    # but inside the circle that holds all four images
+    def at(deg, mag_g, mag_z):
+        a = np.radians(deg)
+        return (10.0 + 1.6 * np.cos(a) * D, 1.6 * np.sin(a) * D, "PSF", mag_g, mag_z, 0)
+
+    fold = [at(40, 19.3, 19.0), at(-40, 19.5, 19.2), at(140, 20.8, 20.5), at(220, 20.8, 20.5)]
+    assert _test("quasar", fold + [(10.0, 0.0, "DEV", 22.0, 20.0, 0)]) == "deflector"
+    assert _test("quasar", fold) == "none"
 
 
 def test_pair_circle_beyond_image_radius():

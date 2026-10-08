@@ -236,6 +236,10 @@ def load_bricks(out: Path) -> tuple[Table, dict]:
         "sha256": hashlib.sha256(data).hexdigest(),
     }
     t = Table.read(f, format="ascii.csv", guess=False)
+    t.meta.update(
+        provenance=schema.Provenance.OBSERVED.value,
+        source="Legacy Surveys DR10 brick summary ls_dr10.bricks_s (Data Lab TAP)",
+    )
     meta["rows"] = len(t)
     return t, meta
 
@@ -366,7 +370,16 @@ def cmd_screen(args, p: Params) -> None:
     res["detectable_floor"] = res["req_mag_z_floor"] < depth - p.margin
     res["undecided"] = flags_undecided(res, src, p)
     res.meta.update(
-        provenance=schema.Provenance.DERIVED.value, params=asdict(p), calibration=asdict(cal)
+        provenance=schema.Provenance.DERIVED.value,
+        source="; ".join(
+            (
+                str(res.meta.get("source", "merged lens catalogues")),
+                str(src.meta.get("source", "LS DR10 Tractor")),
+                "Legacy Surveys DR10 brick summary",
+            )
+        ),
+        params=asdict(p),
+        calibration=asdict(cal),
     )
     res.write(out / "systems.ecsv", overwrite=True)
 

@@ -9,7 +9,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - 17,555 galaxy-scale systems in the footprint. Galaxy-finder (17,102) and sub-mm (110) systems cannot show a dark lens
   and give no limit; only lensed-quasar (325) and radio-interferometric (18) systems are tested (pair test: two point
   images, nothing bright enough near the expected deflector). Blended, too-close and faint-galaxy cases are undecided.
-- 29 decided (12 with a deflector, 17 without); 14 of the 17 have a literature lens galaxy, and 3 SuGOHI IX CHITAH
+- 29 decided (13 with a deflector, 16 without); 13 of the 16 have a literature lens galaxy, and 3 SuGOHI IX CHITAH
   pairs (090434−005328, 091517+040747, 104122−005618) are open only in the typical variant — a lens below the local
   LS depth explains them conservatively. Not candidates. Cutout sheets inspected.
 - 95 % limits on the dark-deflector fraction, test completeness assumed (not measured): typical f_dark < 0.48
