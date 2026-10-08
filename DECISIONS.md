@@ -2788,3 +2788,18 @@ per-season drift absorbs). No rate limit yet: injections are built on bulge ligh
 **Revisit if.** The bulge fit or injections show the season-drift test also absorbs injected W3 signals (then it
 costs sensitivity and needs a calibrated threshold); or the unbounded parallax fit (π_E up to ~10³ in
 BLG568.12.9169) is shown to absorb injected exotic signals.
+
+## D-058 W3 fitter: parallax bounded at |π_E| ≤ 5; disk sample still null (2026-10-08)
+
+**Decision.** ASSUMPTION: `w3_microlensing.Params.pie_max = 5`; the PAR objective rejects larger |π_E| in `fit`,
+`vet` and injections. Observed microlensing parallaxes are ≲ 1–2 even for nearby disk lenses, so 5 is generous.
+Disk re-fit: 7 flags, 0 survivors (`derived`).
+
+**Alternatives rejected.** Unbounded π_E (unphysical fits, π_E up to ~10³); a Gaussian prior on π_E (needs a
+population model; a hard bound is enough for a flag screen).
+
+**Evidence.** CHANGELOG 2026-10-08 "bounded parallax": simulated injections show no absorption either way
+(25 / 25 flagged); the bound adds one marginal real flag (GD1217.10.8703), removed by season offsets.
+
+**Revisit if.** Bulge injections with real cadences show the bound changes recovery, or a published event with
+|π_E| > 5 appears in the samples.

@@ -5,7 +5,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 
 ## Now (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
 1. **W3 in published microlensing samples** (D-057: adapter + fitter built; Mróz 2020 disk, 460 events: 6 flags,
-   0 survive vetting, no limit yet). Next: bound π_E (ASSUMPTION) and re-fit disk; bulge (5,790 events, ~1.8 h on
+   0 survive vetting, no limit yet; D-058: |π_E| ≤ 5 bound, disk re-fit still null). Next: bulge (5,790 events, ~1.8 h on
    4 cores) fit in chunks or locally, then `vet` / `sheet`; `inject` / `limit` with season-drift vetting inside the
    injection loop → rate limits per star per year. Then Gaia DR3 `vari_microlensing` + epoch photometry, then
    KMTNet. OGLE EWS seasons wait for the owner (terms).
