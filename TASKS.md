@@ -14,7 +14,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 2. W3 inside caustic-crossing arcs needs a microlens with macro shear (Chang-Refsdal-type; reuse-check first).
 3. Warp: recheck only when a paper gives an electromagnetic prediction for a distant observer.
 
-## Then (M3 lensing-violation search, D-023)
+## Supporting (M3 lensing-violation search, D-023; serves the focus above)
 1. **Lens-model consistency on SMACS** (D-024: model validated; arc orientations give a null result). Next:
    - counter-images: done for the catalogued systems (D-029: 0 of 11 testable uncatalogued images absent). Left:
      - bright single arcs;
