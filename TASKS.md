@@ -5,8 +5,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 
 ## Now (M3 lensing-violation search, D-023)
 1. **Lens-model consistency on SMACS** (D-024: model validated; arc orientations give a null result). Next:
-   - counter-images: forward-predict the other images of each catalogued system and of bright single arcs. Flag
-     predicted images that are missing, and multiple-image candidates where none is predicted;
+   - counter-images: done for the catalogued systems (D-029: 0 of 11 testable uncatalogued images absent). Left:
+     - bright single arcs;
+     - a BCG/ICL-subtracted test for system 17;
+     - reference fluxes for systems 11, 16 and 26;
    - parity and flux-ratio checks for the catalogued systems (DJA photometry against model magnification ratios);
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;

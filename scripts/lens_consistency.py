@@ -29,6 +29,35 @@ Two subcommands, both writing to ``outputs/lens_consistency/<model>/`` (ECSV plu
     intrinsic shapes, deblending fragments, photo-z failures and model error are the ordinary
     explanations to rule out.
 
+``images``
+    Forward-predicts every image of each catalogued multiple-image system: the system's mean
+    back-traced source position is solved for all images (``lensmodel.find_images``) and each
+    predicted image is compared with ``arcs.dat`` and a pipeline catalog. A predicted image's
+    magnitude is the reference image's catalog magnitude scaled by the magnification ratio (the
+    reference is the catalogued image with the smallest predicted |μ|, i.e. the least sensitive to
+    the critical curves). Classes: ``observed`` (an ``arcs.dat`` image within ``--match-arcsec``),
+    ``candidate`` (an uncatalogued source there whose photo-z allows the system redshift;
+    without ``--photoz`` every nearby source qualifies), ``other_source`` (a source there whose
+    photo-z excludes it),
+    ``demagnified`` (|μ| < 0.5, e.g. central images), ``missing`` (predicted brighter than the
+    depth, nothing there), ``faint`` (predicted below the depth), ``no_flux_ref`` (no catalogued
+    image of the system matched in the catalog, so no predicted magnitude) and ``outside`` (no
+    catalog source within ``--footprint-arcsec``: off the image or inside a bright galaxy's
+    segment).
+    ``arcs.dat`` images that no predicted image reproduces are reported as ``unpredicted``.
+
+    Pipeline segments of arcs near cluster galaxies are unreliable flux references (SMACS: the
+    catalogued images sit 0.7–2.6″ from their nearest segment). With ``--forced-image`` (an
+    ``_i2d`` URI or path; S3 is read by byte range), every non-observed predicted image is also
+    checked by forced aperture photometry: the reference flux is measured at the system's
+    catalogued images (recentred on the peak within 0.4″), scaled by |μ| to a predicted flux and
+    S/N, and compared with the best aperture within ``--forced-search-arcsec``. Forced classes:
+    ``undetectable`` (predicted < 5σ), ``recovered`` (a ≥ 5σ source there at 1/3–3× the predicted
+    flux), ``confused`` (a ≥ 5σ source more than 3× brighter dominates, e.g. a cluster galaxy),
+    ``absent`` (predicted ≥ 10σ; best < 3σ or < 1/3 of the predicted flux), ``ambiguous``,
+    ``no_reference`` and ``off_image`` (< 80 % valid pixels). Offsets are West/North arcsec.
+    ERR is scaled by 1.5 (D-027 amendment).
+
 Every threshold here is an ASSUMPTION. Inputs: the pinned model files (downloaded and verified by
 sha256, ``SMACS0723_MAHLER22_ICLV2``), a level-3 ``_cat.ecsv`` and optionally a ``zout`` file.
 """
@@ -178,6 +207,11 @@ def load_shapes(cat_path: Path) -> Table:
             "area_px": np.asarray(cat["isophotal_area"], float),
             "snr": snr,
             "is_extended": np.asarray(cat["is_extended"], bool),
+            "mag": (
+                np.asarray(cat["isophotal_abmag"], float)
+                if "isophotal_abmag" in cat.colnames
+                else np.full(len(cat), np.nan)
+            ),
         }
     )
     out.meta.update(provenance=schema.Provenance.OBSERVED.value, source=str(cat_path))
@@ -416,6 +450,406 @@ def cmd_arcs(args) -> dict:
     return summary
 
 
+def depth_mag(shapes: Table, snr_range=(4.0, 6.0)) -> float:
+    """Median magnitude of catalog sources at S/N 4-6: a 5-sigma depth proxy (ASSUMPTION)."""
+    m = (
+        (shapes["snr"] >= snr_range[0])
+        & (shapes["snr"] <= snr_range[1])
+        & np.isfinite(shapes["mag"])
+    )
+    return float(np.median(shapes["mag"][m])) if m.any() else float("nan")
+
+
+def predict_counter_images(
+    model,
+    grid,
+    backtrace: Table,
+    shapes: Table,
+    match_arcsec: float = 1.5,
+    footprint_arcsec: float = 5.0,
+    ref_match_arcsec: float = 0.5,
+    depth: float = float("nan"),
+    z_margin: float = 0.1,
+    min_abs_mu: float = 0.5,
+) -> tuple[Table, list[str]]:
+    """Predicted images of every catalogued system, classified against the observations."""
+    cs = SkyCoord(shapes["ra"], shapes["dec"], unit="deg")
+    rows, unpredicted = [], []
+    systems = np.asarray(backtrace["system"]).astype(str)
+    for sys_id in dict.fromkeys(systems):
+        sel = (systems == sys_id) & np.isfinite(backtrace["beta_x"])
+        if sel.sum() < 2:
+            continue
+        obs = backtrace[sel]
+        z = float(obs["z_used"][0])
+        pred = lensmodel.find_images(
+            model, grid, float(np.mean(obs["beta_x"])), float(np.mean(obs["beta_y"])), z
+        )
+        co = SkyCoord(obs["ra"], obs["dec"], unit="deg")
+        cp = SkyCoord(pred["ra"], pred["dec"], unit="deg")
+        # reference image: catalogued, matched in the catalog, smallest predicted |mu|
+        idx, sep, _ = co.match_to_catalog_sky(cs)
+        ok = (
+            (sep.arcsec <= ref_match_arcsec)
+            & np.isfinite(np.asarray(shapes["mag"])[idx])
+            & np.isfinite(np.asarray(obs["magnification"], float))
+        )
+        m_ref = mu_ref = np.nan
+        ref_id = ""
+        if ok.any():
+            k = np.where(ok)[0][np.argmin(np.abs(np.asarray(obs["magnification"])[ok]))]
+            m_ref, mu_ref, ref_id = (
+                float(shapes["mag"][idx[k]]),
+                float(obs["magnification"][k]),
+                str(obs["image_id"][k]),
+            )
+        for img_id, c in zip(obs["image_id"], co, strict=True):
+            if not len(pred) or c.separation(cp).arcsec.min() > match_arcsec:
+                unpredicted.append(str(img_id))
+        for p, c in zip(pred, cp, strict=True):
+            d_obs = c.separation(co).arcsec
+            j = int(np.argmin(d_obs))
+            d_cat = c.separation(cs).arcsec
+            q = int(np.argmin(d_cat))
+            mu = float(p["magnification"])
+            m_pred = m_ref - 2.5 * np.log10(abs(mu) / abs(mu_ref)) if np.isfinite(m_ref) else np.nan
+            near = d_cat[q] <= match_arcsec
+            zlo = float(shapes["z160"][q]) if "z160" in shapes.colnames else np.nan
+            zhi = float(shapes["z840"][q]) if "z840" in shapes.colnames else np.nan
+            z_ok = not (np.isfinite(zlo) and np.isfinite(zhi)) or (
+                zlo - z_margin <= z <= zhi + z_margin
+            )
+            if d_obs[j] <= match_arcsec:
+                cls = "observed"
+            elif abs(mu) < min_abs_mu:
+                cls = "demagnified"  # e.g. a central image: expected undetectable
+            elif near and z_ok:
+                cls = "candidate"
+            elif near:
+                cls = "other_source"  # a catalog source there, but its photo-z excludes z_sys
+            elif d_cat[q] > footprint_arcsec:
+                cls = "outside"
+            elif not np.isfinite(m_pred):
+                cls = "no_flux_ref"  # no catalogued image of the system matched in the catalog
+            elif np.isfinite(depth) and m_pred < depth:
+                cls = "missing"
+            else:
+                cls = "faint"
+            rows.append(
+                {
+                    "system": sys_id,
+                    "z_sys": z,
+                    "x": float(p["x"]),
+                    "y": float(p["y"]),
+                    "ra": float(p["ra"]),
+                    "dec": float(p["dec"]),
+                    "magnification": mu,
+                    "image_class": cls,
+                    "matched_image": str(obs["image_id"][j]) if d_obs[j] <= match_arcsec else "",
+                    "sep_image_arcsec": float(d_obs[j]),
+                    "ref_image": ref_id,
+                    "mag_pred": float(m_pred),
+                    "nearest_label": int(shapes["label"][q]),
+                    "sep_catalog_arcsec": float(d_cat[q]),
+                    "nearest_mag": float(shapes["mag"][q]),
+                    "nearest_z160": zlo,
+                    "nearest_z840": zhi,
+                }
+            )
+    out = Table(rows=rows) if rows else Table()
+    out.meta.update(model._meta())
+    out.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        depth_mag=depth,
+        assumptions={
+            "match_arcsec": match_arcsec,
+            "footprint_arcsec": footprint_arcsec,
+            "z_margin": z_margin,
+        },
+    )
+    return out, unpredicted
+
+
+FORCED_R_AP = 0.2  # aperture radius, arcsec (ASSUMPTION)
+FORCED_ANNULUS = (0.6, 1.0)  # background annulus, arcsec (ASSUMPTION)
+ERR_SCALE = 1.5  # ERR underestimates the noise by 1.2-1.5x (D-027 amendment)
+MIN_VALID = 0.8  # minimum finite fraction of aperture and annulus pixels (ASSUMPTION)
+
+
+def aperture_snr(img, err, xx, yy, cx: float, cy: float) -> tuple[float, float]:
+    """Background-subtracted flux and error in a ``FORCED_R_AP`` aperture at offset (cx, cy).
+
+    ``xx``/``yy`` are each pixel's offset from the target in arcsec (West, North). NaN when fewer
+    than ``MIN_VALID`` of the aperture or annulus pixels are finite (gaps, edges, masks)."""
+    r = np.hypot(xx - cx, yy - cy)
+    ap = r <= FORCED_R_AP
+    ann = (r > FORCED_ANNULUS[0]) & (r < FORCED_ANNULUS[1])
+    good = np.isfinite(img) & np.isfinite(err)
+    if not ap.any() or good[ap].mean() < MIN_VALID or good[ann].mean() < MIN_VALID:
+        return float("nan"), float("nan")
+    bkg = float(np.nanmedian(img[ann & good]))
+    flux = float(np.nansum(img[ap] - bkg))
+    ferr = float(np.sqrt(np.nansum(err[ap] ** 2))) * ERR_SCALE
+    return flux, ferr
+
+
+def peak_flux(img, err, xx, yy, radius: float = 0.4) -> tuple[float, float]:
+    """Aperture flux at the brightest pixel within ``radius`` of the stamp centre."""
+    inner = np.where((np.hypot(xx, yy) <= radius) & np.isfinite(img), img, -np.inf)
+    if not np.isfinite(inner).any():
+        return float("nan"), float("nan")
+    k = int(np.argmax(inner))
+    return aperture_snr(img, err, xx, yy, float(xx.flat[k]), float(yy.flat[k]))
+
+
+def best_within(
+    img, err, xx, yy, search: float, step: float = 0.1
+) -> tuple[float, float, float, float]:
+    """Highest aperture S/N on a grid of centres within ``search``: (snr, flux, dx, dy)."""
+    best = (-np.inf, np.nan, 0.0, 0.0)
+    for cx in np.arange(-search, search + 1e-9, step):
+        for cy in np.arange(-search, search + 1e-9, step):
+            if np.hypot(cx, cy) > search:
+                continue
+            f, e = aperture_snr(img, err, xx, yy, cx, cy)
+            if np.isfinite(f) and e > 0 and f / e > best[0]:
+                best = (f / e, f, float(cx), float(cy))
+    return best
+
+
+MAX_FLUX_RATIO = 3.0  # best/predicted flux above this: a brighter source dominates (ASSUMPTION)
+MIN_FLUX_RATIO = 1 / 3  # below this the best source is too faint to be the image (ASSUMPTION)
+
+
+def forced_class(pred_snr: float, best_snr: float, flux_ratio: float = 1.0) -> str:
+    """Forced-photometry verdict for one predicted image (thresholds are ASSUMPTIONs).
+
+    ``flux_ratio`` is the best aperture's flux over the predicted flux."""
+    if not np.isfinite(pred_snr):
+        return "no_reference"
+    if pred_snr < 5:
+        return "undetectable"
+    if best_snr >= 5 and flux_ratio > MAX_FLUX_RATIO:
+        return "confused"
+    if best_snr >= 5 and flux_ratio >= MIN_FLUX_RATIO:
+        return "recovered"
+    if pred_snr >= 10 and (best_snr < 3 or flux_ratio < MIN_FLUX_RATIO):
+        return "absent"  # nothing there, or only a source far fainter than predicted
+    return "ambiguous"
+
+
+def forced_check(
+    table: Table,
+    backtrace: Table,
+    stamp,
+    search_arcsec: float = 1.0,
+    max_ref_mu: float = 50.0,
+) -> None:
+    """Add forced-photometry columns to the predicted-image ``table`` in place.
+
+    ``stamp(ra, dec)`` returns ``(sci, err, xx, yy)`` around a position. The reference is the
+    system's catalogued image at S/N > 5 with the smallest |μ| below ``max_ref_mu`` (μ near a
+    critical curve is too uncertain to scale from; ASSUMPTION)."""
+    n = len(table)
+    keys = ("pred_snr", "best_snr", "flux_ratio", "best_dx", "best_dy")
+    cols = {k: np.full(n, np.nan) for k in keys}
+    fclass = np.full(n, "", dtype="U12")
+    ref_cache: dict[str, tuple[float, float]] = {}
+    systems = np.asarray(backtrace["system"]).astype(str)
+    for i, row in enumerate(table):
+        if row["image_class"] in ("observed", "demagnified", "outside"):
+            continue
+        sys_id = str(row["system"])
+        if sys_id not in ref_cache:
+            ref = (np.nan, np.nan)
+            for b in backtrace[systems == sys_id]:
+                mu = abs(float(b["magnification"]))
+                if not np.isfinite(mu) or mu > max_ref_mu:
+                    continue
+                f, e = peak_flux(*stamp(float(b["ra"]), float(b["dec"])))
+                if (
+                    np.isfinite(f)
+                    and e > 0
+                    and f / e > 5
+                    and (not np.isfinite(ref[1]) or mu < ref[1])
+                ):
+                    ref = (f, mu)
+            ref_cache[sys_id] = ref
+        f_ref, mu_ref = ref_cache[sys_id]
+        if not np.isfinite(f_ref):
+            fclass[i] = "no_reference"
+            continue
+        sci, err, xx, yy = stamp(float(row["ra"]), float(row["dec"]))
+        _, e0 = aperture_snr(sci, err, xx, yy, 0.0, 0.0)
+        if not (np.isfinite(e0) and e0 > 0):
+            fclass[i] = "off_image"  # off the footprint, or in a gap or masked region
+            continue
+        pred = f_ref * abs(float(row["magnification"])) / mu_ref
+        cols["pred_snr"][i] = pred / e0 if e0 > 0 else np.nan
+        snr, flux, dx, dy = best_within(sci, err, xx, yy, search_arcsec)
+        cols["best_snr"][i], cols["best_dx"][i], cols["best_dy"][i] = snr, dx, dy
+        cols["flux_ratio"][i] = flux / pred if pred > 0 else np.nan
+        fclass[i] = forced_class(cols["pred_snr"][i], snr, cols["flux_ratio"][i])
+    for k, v in cols.items():
+        table[k] = v
+    table["forced_class"] = fclass
+    table.meta["forced"] = {
+        "r_ap_arcsec": FORCED_R_AP,
+        "annulus_arcsec": list(FORCED_ANNULUS),
+        "err_scale": ERR_SCALE,
+        "search_arcsec": search_arcsec,
+        "max_ref_mu": max_ref_mu,
+        "flux_ratio_range": [MIN_FLUX_RATIO, MAX_FLUX_RATIO],
+        "min_valid_fraction": MIN_VALID,
+    }
+
+
+def image_stamper(uri: str, half_arcsec: float = 1.5):
+    """``stamp(ra, dec)`` reading SCI/ERR sections of an ``_i2d`` (local path or S3 by byte range).
+
+    Returns ``(stamper, close)``."""
+    import fsspec
+
+    opts = {"anon": True} if uri.startswith("s3://") else {}
+    fs, path = fsspec.core.url_to_fs(uri, **opts)
+    fo = fs.open(path, "rb", block_size=2**20, cache_type="readahead")
+    hdul = fits.open(fo, lazy_load_hdus=True)
+    sci, err = hdul["SCI"], hdul["ERR"]
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", FITSFixedWarning)
+        wcs = WCS(sci.header)
+    pix = float(abs(wcs.proj_plane_pixel_scales()[0].to_value("arcsec")))
+    hp = int(np.ceil(half_arcsec / pix))
+    ny, nx = sci.header["NAXIS2"], sci.header["NAXIS1"]
+    jj, ii = np.mgrid[-hp : hp + 1, -hp : hp + 1].astype(float)
+    # pixel offsets -> (dRA cos dec, dDec) in arcsec; West = -dRA cos dec, as in the model frame
+    cd = wcs.pixel_scale_matrix * 3600.0
+
+    def stamp(ra: float, dec: float):
+        xf, yf = (float(v) for v in wcs.world_to_pixel_values(ra, dec))
+        x, y = int(round(xf)), int(round(yf))
+        di, dj = ii + (x - xf), jj + (y - yf)  # offsets from the exact target position
+        xx = -(cd[0, 0] * di + cd[0, 1] * dj)
+        yy = cd[1, 0] * di + cd[1, 1] * dj
+        if not (hp <= x < nx - hp and hp <= y < ny - hp):
+            nan = np.full(xx.shape, np.nan)
+            return nan, nan, xx, yy
+        sl = (slice(y - hp, y + hp + 1), slice(x - hp, x + hp + 1))
+        return np.asarray(sci.section[sl], float), np.asarray(err.section[sl], float), xx, yy
+
+    def close() -> None:
+        hdul.close()
+        fo.close()
+
+    return stamp, close
+
+
+def cmd_images(args) -> dict:
+    files = model_files(args.model)
+    par = lensmodel.parse_lenstool_par(files["best.par"])
+    model = lensmodel.LensModel.from_par(par)
+    cache = (
+        paths.cache_dir()
+        / "external"
+        / f"{model.sha256[:12]}_alpha_{args.half_width:g}_{args.step:g}.npz"
+    )
+    grid = lensmodel.DeflectionGrid.cached(model, cache, args.half_width, args.step)
+    images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    bt = lensmodel.backtrace_images(model, images, par["z_m_limit"])
+    shapes = load_shapes(args.catalog)
+    if args.photoz:
+        attach_photoz(shapes, args.photoz)
+    depth = depth_mag(shapes)
+    table, unpredicted = predict_counter_images(
+        model, grid, bt, shapes, args.match_arcsec, args.footprint_arcsec, depth=depth
+    )
+    if not len(table):
+        raise SystemExit("no system has two or more back-traced images; nothing to predict")
+    if args.forced_image:
+        stamp, close = image_stamper(
+            args.forced_image, args.forced_search_arcsec + FORCED_ANNULUS[1] + 0.1
+        )
+        try:
+            forced_check(table, bt, stamp, args.forced_search_arcsec)
+        finally:
+            close()
+        table.meta["forced"]["image"] = args.forced_image
+    out = args.out / args.model
+    _write(table, out / "images_predicted.ecsv")
+    classes = (
+        "observed",
+        "demagnified",
+        "candidate",
+        "other_source",
+        "missing",
+        "faint",
+        "no_flux_ref",
+        "outside",
+    )
+    counts = {c: int(np.sum(table["image_class"] == c)) for c in classes}
+    flagged = table[np.isin(table["image_class"], ["candidate", "missing"])]
+    summary = {
+        "model": args.model,
+        "catalog": str(args.catalog),
+        "depth_mag_5sigma_proxy": depth,
+        "n_systems": len(set(table["system"])),
+        "n_predicted": len(table),
+        "classes": counts,
+        "unpredicted_catalogued_images": unpredicted,
+        "forced": (
+            {
+                **table.meta["forced"],
+                "classes": {
+                    c: int(np.sum(table["forced_class"] == c))
+                    for c in (
+                        "recovered",
+                        "confused",
+                        "absent",
+                        "undetectable",
+                        "ambiguous",
+                        "no_reference",
+                        "off_image",
+                    )
+                },
+                "rows": [
+                    {
+                        "system": str(r["system"]),
+                        "catalog_class": str(r["image_class"]),
+                        "forced_class": str(r["forced_class"]),
+                        "xy": [round(float(r["x"]), 2), round(float(r["y"]), 2)],
+                        "mu": round(float(r["magnification"]), 2),
+                        "pred_snr": round(float(r["pred_snr"]), 1),
+                        "best_snr": round(float(r["best_snr"]), 1),
+                        "flux_ratio": round(float(r["flux_ratio"]), 2),
+                        "best_offset_arcsec": [
+                            round(float(r["best_dx"]), 1),
+                            round(float(r["best_dy"]), 1),
+                        ],
+                    }
+                    for r in table
+                    if r["forced_class"]
+                ],
+            }
+            if "forced_class" in table.colnames
+            else None
+        ),
+        "flagged": [
+            {
+                "system": str(r["system"]),
+                "class": str(r["image_class"]),
+                "xy": [round(float(r["x"]), 2), round(float(r["y"]), 2)],
+                "mu": round(float(r["magnification"]), 2),
+                "mag_pred": round(float(r["mag_pred"]), 2),
+                "nearest_label": int(r["nearest_label"]),
+                "sep_catalog_arcsec": round(float(r["sep_catalog_arcsec"]), 2),
+            }
+            for r in flagged
+        ],
+    }
+    (out / "images.json").write_text(json.dumps(summary, indent=1))
+    return summary
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--model", choices=sorted(MODELS), default="smacs0723-iclv2")
@@ -435,8 +869,19 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("--anti-deg", type=float, default=60.0)
     a.add_argument("--z-margin", type=float, default=0.1)
     a.add_argument("--image-match-arcsec", type=float, default=0.5)
+    i = sub.add_parser("images", help="forward-predict every image of the catalogued systems")
+    i.add_argument("--catalog", type=Path, required=True, help="JWST pipeline _cat.ecsv")
+    i.add_argument("--photoz", type=Path, help="eazy zout FITS table (e.g. DJA)")
+    i.add_argument("--match-arcsec", type=float, default=1.5)
+    i.add_argument("--footprint-arcsec", type=float, default=5.0)
+    i.add_argument("--half-width", type=float, default=60.0, help="solver grid half-width, arcsec")
+    i.add_argument("--step", type=float, default=0.1, help="solver grid step, arcsec")
+    i.add_argument(
+        "--forced-image", help="_i2d URI or path for forced photometry (S3 by byte range)"
+    )
+    i.add_argument("--forced-search-arcsec", type=float, default=1.0)
     args = ap.parse_args(argv)
-    summary = cmd_validate(args) if args.cmd == "validate" else cmd_arcs(args)
+    summary = {"validate": cmd_validate, "arcs": cmd_arcs, "images": cmd_images}[args.cmd](args)
     json.dump(summary, sys.stdout, indent=1)
     print()
     return 0

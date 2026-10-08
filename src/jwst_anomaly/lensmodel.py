@@ -94,8 +94,7 @@ SMACS0723_MAHLER22_ICLV2: dict[str, tuple[str, str]] = {
     ),
     # Best-model convergence (MCMC sample 0000), 3000 x 3000 px of 0.01334", D_LS/D_S = 1.
     "kappa_0000": (
-        "https://github.com/guillaumemahler/SMACS0723-mahler2022/raw/"
-        f"{MAHLER22_COMMIT}/ICLv2/tmp_k/0000_k.fits.tar.xz",
+        f"{_MAHLER22_RAW}/ICLv2/tmp_k/0000_k.fits.tar.xz",
         "4de5d733587dd4dea12233c25069d8e1307936fcd50de316cc4eb967a53edc2c",
     ),
 }
@@ -761,4 +760,138 @@ def backtrace_images(model: LensModel, images: Table, z_m_limit: dict[str, float
     )
     out.meta.update(model._meta())
     out.meta["source"] = f"{images.meta.get('source', 'images')} traced with {model.source}"
+    return out
+
+
+@dataclass(frozen=True)
+class DeflectionGrid:
+    """A model's deflection at D_LS/D_S = 1 on a square model-frame grid (arcsec).
+
+    Deflection scales linearly with D_LS/D_S, so one grid serves every source redshift.
+    """
+
+    x: np.ndarray  # 1-D grid coordinates (arcsec), shared by both axes
+    alpha_x: np.ndarray  # shape (len(x), len(x)), indexed [iy, ix]
+    alpha_y: np.ndarray
+    model_sha256: str
+
+    @classmethod
+    def compute(
+        cls, model: LensModel, half_width: float = 60.0, step: float = 0.1
+    ) -> DeflectionGrid:
+        g = np.arange(-half_width, half_width + step / 2, step)
+        xx, yy = np.meshgrid(g, g)
+        ax = np.zeros_like(xx)
+        ay = np.zeros_like(xx)
+        for comp in model.components:
+            dx, dy = comp.deflection(xx, yy)
+            ax += dx
+            ay += dy
+        return cls(g, ax, ay, model.sha256)
+
+    @classmethod
+    def cached(
+        cls, model: LensModel, path: str | Path, half_width: float = 60.0, step: float = 0.1
+    ) -> DeflectionGrid:
+        """Load ``path`` (``.npz``) if it was computed for this model and grid, else compute it."""
+        path = Path(path)
+        if not model.sha256:  # an in-memory model has no identity to key the cache on
+            return cls.compute(model, half_width, step)
+        if path.exists():
+            with np.load(path) as d:
+                g = d["x"]
+                if (
+                    str(d["model_sha256"]) == model.sha256
+                    and np.isclose(g[-1], half_width)
+                    and np.isclose(g[1] - g[0], step)
+                ):
+                    return cls(g, d["alpha_x"], d["alpha_y"], model.sha256)
+        grid = cls.compute(model, half_width, step)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        np.savez(
+            path, x=grid.x, alpha_x=grid.alpha_x, alpha_y=grid.alpha_y, model_sha256=model.sha256
+        )
+        return grid
+
+
+def find_images(
+    model: LensModel,
+    grid: DeflectionGrid,
+    beta_x: float,
+    beta_y: float,
+    z_s: float,
+    newton_steps: int = 12,
+    tol_arcsec: float = 1e-5,
+) -> Table:
+    """All image positions of a point source at ``(beta_x, beta_y)`` (model frame, arcsec).
+
+    Every grid cell is split into two triangles and mapped to the source plane; a triangle that
+    contains the source seeds a Newton iteration on the lens equation with the analytic model.
+    Converged solutions closer than 0.05" are merged. Columns: ``x, y`` (arcsec), ``ra, dec``,
+    ``magnification`` (signed; negative = odd parity), ``residual_arcsec`` (source-plane misfit).
+    Images outside the grid, or in cells where the map folds below the grid scale, can be missed.
+    Provenance ``model_prediction``.
+    """
+    s = float(model.dls_ds(z_s))
+    g = grid.x
+    bx = g[None, :] - s * grid.alpha_x
+    by = g[:, None] - s * grid.alpha_y
+    seeds = []
+    n = len(g) - 1
+    for (a0, a1), (b0, b1), (c0, c1) in (
+        ((0, 0), (0, 1), (1, 0)),
+        ((1, 1), (1, 0), (0, 1)),
+    ):
+        ax_, ay_ = bx[a0 : a0 + n, a1 : a1 + n], by[a0 : a0 + n, a1 : a1 + n]
+        bx_, by_ = bx[b0 : b0 + n, b1 : b1 + n], by[b0 : b0 + n, b1 : b1 + n]
+        cx_, cy_ = bx[c0 : c0 + n, c1 : c1 + n], by[c0 : c0 + n, c1 : c1 + n]
+        det = (by_ - cy_) * (ax_ - cx_) + (cx_ - bx_) * (ay_ - cy_)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            l1 = ((by_ - cy_) * (beta_x - cx_) + (cx_ - bx_) * (beta_y - cy_)) / det
+            l2 = ((cy_ - ay_) * (beta_x - cx_) + (ax_ - cx_) * (beta_y - cy_)) / det
+        hit = (l1 >= 0) & (l2 >= 0) & (1 - l1 - l2 >= 0)
+        for iy, ix in zip(*np.nonzero(hit), strict=True):
+            w1, w2 = l1[iy, ix], l2[iy, ix]
+            w3 = 1 - w1 - w2
+            seeds.append(
+                (
+                    w1 * g[ix + a1] + w2 * g[ix + b1] + w3 * g[ix + c1],
+                    w1 * g[iy + a0] + w2 * g[iy + b0] + w3 * g[iy + c0],
+                )
+            )
+    found: list[tuple[float, float, float, float]] = []
+    for x0, y0 in seeds:
+        x, y = np.array([x0]), np.array([y0])
+        for _ in range(newton_steps):
+            f = model.fields_xy(x, y)
+            rx = beta_x - (x - s * f["alpha_x"])
+            ry = beta_y - (y - s * f["alpha_y"])
+            a11, a12, a22 = 1 - s * f["psi_xx"], -s * f["psi_xy"], 1 - s * f["psi_yy"]
+            det = a11 * a22 - a12 * a12
+            x = x + (a22 * rx - a12 * ry) / det
+            y = y + (-a12 * rx + a11 * ry) / det
+        f = model.fields_xy(x, y)
+        res = float(np.hypot(beta_x - (x - s * f["alpha_x"]), beta_y - (y - s * f["alpha_y"]))[0])
+        if not res < tol_arcsec:
+            continue
+        a11, a12, a22 = 1 - s * f["psi_xx"], -s * f["psi_xy"], 1 - s * f["psi_yy"]
+        mu = float(1.0 / (a11 * a22 - a12 * a12)[0])
+        if all(np.hypot(x[0] - u_, y[0] - v_) > 0.05 for u_, v_, _, _ in found):
+            found.append((float(x[0]), float(y[0]), mu, res))
+    found.sort(key=lambda r: -abs(r[2]))
+    xs = np.array([r[0] for r in found])
+    ys = np.array([r[1] for r in found])
+    ra, dec = model.to_sky(xs, ys)
+    out = Table(
+        {
+            "x": xs,
+            "y": ys,
+            "ra": ra,
+            "dec": dec,
+            "magnification": np.array([r[2] for r in found]),
+            "residual_arcsec": np.array([r[3] for r in found]),
+        }
+    )
+    out.meta.update(model._meta())
+    out.meta.update(z_s=float(z_s), beta_xy=[float(beta_x), float(beta_y)])
     return out

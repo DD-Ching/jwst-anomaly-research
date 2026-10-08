@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: SMACS counter-images: no predicted image is absent (D-029)
+- New: `lensmodel.find_images` (an image-plane solver on a cached deflection grid), `lens_consistency.py images`, and
+  `--forced-image`, which runs forced photometry on S3 byte-range stamps.
+- Results:
+  - ICLv2 reproduces all 60 catalogued images within 0.04–0.91″, with 4 demagnified central images.
+  - Of the 11 testable uncatalogued images: 3 are recovered (systems 9 and 8, and system 17 marginally: flux ratio
+    0.36 on the BCG gradient), 1 is
+    confused, 1 is undetectable, 6 have no reference flux, and **0 are absent**.
+  - System 8's model z = 11.76 is contradicted by its F090W/F150W detections.
+- **Failed approach:** pipeline-catalog flux references near cluster galaxies. They falsely made system 9 `missing`.
+- The Mahler κ tarball now comes from raw.githubusercontent.com, because github.com/raw returns 403 in cloud runs.
+- **Handoff:** TASKS "Now" 1 is done for counter-images. Next:
+  - parser fixes (issue #41), then the same test on El Gordo and Abell 2744;
+  - the exotic screens of docs/exotic_lensing.md (demagnified images, radial images around a dark centre).
+
 ## 2026-10-08: El Gordo and Abell 2744 lens models, preliminary: no image-position anomaly (issue #41)
 - Preliminary validation on published products. The numbers come from scratch code and are not yet reproducible
   in the repository; they need a re-run with #40's solver.
