@@ -40,12 +40,13 @@ from jwst_anomaly import countmap as cm
 from jwst_anomaly import exotic_sim as es
 from jwst_anomaly import paths, schema
 
-# Two disjoint 10° × 10° DES-wide regions of DR10 south (halved from 20° × 10° so one cloud run can
-# fetch both, ~1.7 chunks/min from Data Lab) (uniform ~10-epoch depth, r_5σ,gal ≈ 24.8, b < −45°,
+# Two disjoint 20° × 10° DES-wide regions of DR10 south (~1 chunk/min from Data Lab with 2–3
+# concurrent queries; a cloud run without the cache can use the 10° halves, RA 20–30 and 50–60)
+# (uniform ~10-epoch depth, r_5σ,gal ≈ 24.8, b < −45°,
 # E(B−V) ≲ 0.04). Each calibrates the null of the other (ASSUMPTION: statistically alike).
 REGIONS = {
-    "desA": cm.Region("desA", 20.0, 30.0, -30.0, -20.0),
-    "desB": cm.Region("desB", 50.0, 60.0, -30.0, -20.0),
+    "desA": cm.Region("desA", 20.0, 40.0, -30.0, -20.0),
+    "desB": cm.Region("desB", 50.0, 70.0, -30.0, -20.0),
 }
 MAG_LIM = 23.5
 CELL = 0.25  # arcmin, base raster cell
@@ -365,7 +366,7 @@ def cmd_screen(args) -> None:
     flags.write(results_dir() / "flags.ecsv", overwrite=True)
     summary["null"] = null
     summary["n_flags"] = len(flags)
-    (results_dir() / "screen_summary.json").write_text(json.dumps(summary, indent=1))
+    (results_dir() / "screen_summary.json").write_text(json.dumps(summary, indent=1) + "\n")
     print(json.dumps(null, indent=1))
     flags.pprint(max_width=200, max_lines=60)
 
@@ -503,9 +504,14 @@ VET_STAR_MIN_R = 2.0  # arcmin: stars this close always veto, whatever θ_E
 VET_CLUSTER_M500 = 2.0  # 10¹⁴ M☉: clusters massive enough for magnification-bias depletion
 GAIA_TAP = "https://gea.esac.esa.int/tap-server/tap"
 WH24 = "J/ApJS/272/39/table2"  # Wen & Han 2024 DESI Legacy Surveys clusters (VizieR)
+# Large galaxies: sky over-subtraction around them empties CCD-sized patches well beyond the
+# LS GALAXY mask (NGC 1398, D25 = 7.2′, left 19 flags within ~30′ in the first run).
+VET_GALAXY_D25 = 1.0  # arcmin, HyperLEDA D25 of a galaxy that can bias the local sky
+VET_GALAXY_RADII = 2.0  # veto within θ_E + this × D25 of its centre
+HYPERLEDA = "VII/237/pgc"  # Paturel et al. 2003 HyperLEDA PGC (VizieR), logD25 in log(0.1′)
 
 
-def ancillary(name: str) -> tuple[Table, Table]:
+def ancillary(name: str) -> tuple[Table, Table, Table]:
     """Bright Gaia DR3 stars and massive WH24 clusters in a region (cached, ``observed``)."""
     reg = REGIONS[name]
     p_star = out_dir() / f"stars_{name}.ecsv"
@@ -542,7 +548,29 @@ def ancillary(name: str) -> tuple[Table, Table]:
         t = Table(t, masked=False)
         stamp(t, schema.Provenance.OBSERVED, f"VizieR {WH24} (Wen & Han 2024), M500 ≥ 2e14")
         t.write(p_cl, overwrite=True)
-    return Table.read(p_star), Table.read(p_cl)
+    p_gal = out_dir() / f"galaxies_{name}.ecsv"
+    if not p_gal.exists():
+        from astropy import units as u
+        from astropy.coordinates import SkyCoord
+        from astroquery.vizier import Vizier
+
+        v = Vizier(
+            columns=["PGC", "RAJ2000", "DEJ2000", "logD25"],
+            column_filters={"logD25": f">={math.log10(VET_GALAXY_D25 * 10):.3f}"},
+            row_limit=-1,
+        )
+        c = SkyCoord(0.5 * (reg.ra_min + reg.ra_max), 0.5 * (reg.dec_min + reg.dec_max), unit="deg")
+        res = v.query_region(
+            c,
+            width=(reg.ra_max - reg.ra_min + 2) * math.cos(math.radians(reg.dec_max)) * u.deg,
+            height=(reg.dec_max - reg.dec_min + 2) * u.deg,
+            catalog=HYPERLEDA,
+        )
+        t = Table(res[0], masked=False)
+        t["d25_arcmin"] = 0.1 * 10 ** np.asarray(t["logD25"], float)
+        stamp(t, schema.Provenance.OBSERVED, f"VizieR {HYPERLEDA} (HyperLEDA), D25 ≥ 1′")
+        t.write(p_gal, overwrite=True)
+    return Table.read(p_star), Table.read(p_cl), Table.read(p_gal)
 
 
 class Vetter:
@@ -559,7 +587,9 @@ class Vetter:
         self.ebv = np.asarray(t["ebv"], float)
         self.depth_med = float(np.median(self.depth))
         self.ebv_med = float(np.median(self.ebv))
-        stars, clusters = ancillary(ms.name)
+        stars, clusters, galaxies = ancillary(ms.name)
+        self.gal_xy = np.column_stack(ms.raster.xy(galaxies["RAJ2000"], galaxies["DEJ2000"]))
+        self.gal_d25 = np.asarray(galaxies["d25_arcmin"], float)
         self.star_xy = np.column_stack(ms.raster.xy(stars["ra"], stars["dec"]))
         self.star_g = np.asarray(stars["phot_g_mean_mag"], float)
         self.cl_xy = np.column_stack(ms.raster.xy(clusters["RAJ2000"], clusters["DEJ2000"]))
@@ -582,6 +612,12 @@ class Vetter:
             "n_bright_star": int(near.sum()),
             "brightest_g": float(self.star_g[near].min()) if near.any() else np.nan,
             "n_cluster": int(np.sum(np.asarray(d_cl) <= theta)),
+            "n_large_galaxy": int(
+                np.sum(
+                    np.hypot(self.gal_xy[:, 0] - x, self.gal_xy[:, 1] - y)
+                    <= theta + VET_GALAXY_RADII * self.gal_d25
+                )
+            ),
         }
         reasons = []
         if mask_frac > VET_MASK_FRAC:
@@ -592,6 +628,8 @@ class Vetter:
             reasons.append("dust")
         if out["n_bright_star"]:
             reasons.append("bright_star")
+        if out["n_large_galaxy"]:
+            reasons.append("large_galaxy")
         if out["n_cluster"]:
             reasons.append("cluster")
         if not n_false_expected < FAP:  # no deeper than the other region's null peaks reach
@@ -628,6 +666,8 @@ def cmd_vet(args) -> None:
             "star_g": VET_STAR_G,
             "star_min_r_arcmin": VET_STAR_MIN_R,
             "cluster_m500_1e14": VET_CLUSTER_M500,
+            "galaxy_d25_arcmin": VET_GALAXY_D25,
+            "galaxy_radii": VET_GALAXY_RADII,
         }
     )
     stamp(t, schema.Provenance.DERIVED, "w5_counts vet: ordinary explanations for each flag")
