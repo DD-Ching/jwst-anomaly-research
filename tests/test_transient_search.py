@@ -225,3 +225,10 @@ def test_select_controls_is_reproducible_and_avoids_candidates():
     picked = np.isin(np.asarray(cat["ra"]), np.asarray(a["ra"]))
     mags = np.asarray(cat["aper_total_abmag"])[picked]
     assert (mags >= 25.5).all() and (mags <= 28.0).all()
+
+
+def test_select_controls_can_return_an_empty_sample():
+    cat = Table({"ra": [10.0, 10.001], "dec": [0.0, 0.0], "aper_total_abmag": [22.0, 23.0]})
+    ctl = tf.select_controls(cat, 50, (25.5, 28.0), np.array([]), np.array([]))
+    assert len(ctl) == 0 and ctl.meta["mag_cut"]
+    assert np.isnan(tf.robust_std(np.array([]), tf.MIN_CONTROLS))
