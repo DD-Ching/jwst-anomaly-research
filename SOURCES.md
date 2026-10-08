@@ -523,6 +523,12 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   (x/y-arcsec-deflect, kappa, z02-magnif, arcs.txt, params.txt where present) are pinned by sha256 in
   `lensmodel.HFF_CATS`. The release readmes quote rms 0.72″, 0.63″, n/a, 2.41″, 0.48″ and n/a.
 
+### MACS0416 field run (accessed 2026-10-08; D-038)
+
+- JWST CANUCS program 1208, NIRCam level 3 `jw01208-o004_t002`, 8 bands, jwst 3.0.0. Manifests:
+  `data/manifests/macs0416*.ecsv`. Also available: PEARLS 1176 o211/o212/o213 `t009`.
+- DJA v7 index https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/index.html: no MACS0416 mosaic.
+
 ## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
 
 - arXiv:1009.6084 Abe, "Gravitational Microlensing by the Ellis Wormhole".
