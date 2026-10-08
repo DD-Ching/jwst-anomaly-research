@@ -9,8 +9,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    Ellis models on the same trajectory; rank by ΔBIC; vet binary lenses, blending, variables, systematics, parallax
    first; inject-recover on the real cadence and the published efficiencies → rate limits per star per year.
    Then Gaia DR3 `vari_microlensing` + epoch photometry, then KMTNet. OGLE EWS seasons wait for the owner (terms).
-2. **W1/W2 in wide imaging** (D-056: published lens catalogues null, f_dark < 8.2 × 10⁻³ for quasar/submm-selected
-   lenses). Next: rejected lensed-quasar candidates ("nearly identical quasars", binary quasars) where a dark lens
+2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.13 for quasar/radio-selected
+   lenses, the only selections sensitive to a dark lens). Next: HSC PDR3 / HST photometry for the 368 blended or
+   too-close lensed quasars (makes the test decisive); the CHITAH lens model of SuGOHI 090434−005328; rejected lensed-quasar candidates ("nearly identical quasars", binary quasars) where a dark lens
    would hide; HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
 3. **W5:** background-count deficits around empty regions in a wide survey, with calibrated nulls.
