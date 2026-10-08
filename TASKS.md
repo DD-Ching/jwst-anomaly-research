@@ -12,7 +12,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      `exotic_screens.py`, benchmark against `radial`; expect gains mainly at θ_E ≥ 2–3″; then pixel-level injections; other lens redshifts → volume density vs Takahashi &
      Asada; photo-z for Abell S1063 (DJA v7.5, 75 MB) and MACS0717 to bring both back into the W1 limits (D-049
      excludes them: without photo-z their members are painted as images);
-   - W2 through `orphan_pairs.py` (D-048), and the dark-lens search extended to non-cluster deep fields;
+   - W2 / dark deflectors (D-048 clusters, D-051 deep fields: null, limits): a companion-aware null to explain the
+     flanking-field orphan excess (P = 0.01) before any orphan is read as other than chance; segmentation-map
+     adjacency for the same-galaxy and visible-lens rules (the main efficiency losses); pixel-level injections;
+     optionally CEERS / GOODS-S / PRIMER (~600 MB each);
    - W3 (D-052, null; limits from NEXUS, MACS0416, Abell 2744): a veto for apertures within ~1.5″ of a saturated or
      ≥ 100× brighter source; re-run `forced` for NEXUS (all 1,095 flags) and Abell 2744 with calibrated controls;
      add JADES and new NEXUS epochs; SN/TNS check for any survivor; leave the Sunrise transient track to its owner run;
