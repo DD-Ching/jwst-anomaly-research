@@ -2803,3 +2803,21 @@ population model; a hard bound is enough for a flag screen).
 
 **Revisit if.** Bulge injections with real cadences show the bound changes recovery, or a published event with
 |π_E| > 5 appears in the samples.
+
+## D-059 W3 bulge chunk fit tables are tracked in git (`results/w3_ogle/`) and joined by `merge-chunks` (2026-10-08)
+
+**Decision.** `w3_microlensing.py fit --chunk K/N` (complete chunks, no `--limit`) also writes its `derived` table
+as deterministic gzipped ECSV to `results/w3_ogle/fits_<sample>_chunkKofN.ecsv.gz`; `merge-chunks --n N` joins
+chunks 1..N into the table `vet` reads and sets `chunk = ""` (the whole sample) only when every chunk exists,
+was fitted with the current `Params` and holds only its own events. `limit` keeps refusing anything else.
+Raw light curves and all other outputs stay out of git.
+
+**Alternatives rejected.** Fitting all 5,790 bulge events in one session (~4 h; cloud sessions end after ~40 min);
+keeping chunk tables only under `$JWST_ANOMALY_DATA` (lost with each ephemeral session — chunk 1/12 of
+2026-10-08 was lost this way and must be refitted); GitHub release assets (extra credentials and tooling for
+~100 kB files); a compact column subset (the contact sheet and audits need the model parameters).
+
+**Evidence.** A chunk table is ~480 rows × 57 columns; gzipped ~0.2 MB (CHANGELOG 2026-10-08 "chunk 2/12"),
+so all 12 chunks stay ~2–3 MB, under the 1 MB per-file rule.
+
+**Revisit if.** The tracked tables exceed ~10 MB in total, or a local session can fit the whole sample at once.
