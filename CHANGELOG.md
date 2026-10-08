@@ -3,16 +3,18 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-08: W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them (D-064)
-- Hypothesis: a dark deflector hides among pairs rejected as lenses for lack of a lens galaxy (Lemon 2023 UQPs,
-  SQLS "no lensing object"). 146 rejected and 117 control lenses (galaxy scale, ≤ 6″) went through the D-056 chain.
-- **Control efficiency 0 / 5** (2.0–2.6″; lens light blended into the images, fitted as PSFs): an LS "none" at these
-  separations carries no information. Rejected: 20 "none", 10 colour-mismatched, 1 catalogued binary, 9
-  untestable. No limit, no candidate. Most UQPs are < 2″ (median 1.22″).
-- **Failed approach / bug:** the Hennawi binaries' sexagesimal coordinates silently matched nothing; fixed, and
-  `binary_match` now raises when nothing parses.
-- Review fixes before merge: wide (> 6″) pairs had been tested on unrelated LS pairs, and the LS pair is now required
-  to match the catalogued separation; inputs are checked against the pinned hashes.
-- **Next:** HST/Euclid/HSC image models or spectra for the 9 colour-matched pairs; the LaTeX-only NIQ tables.
+- Hypothesis: a dark deflector hides among pairs rejected as lenses for lack of a lens galaxy (Lemon 2023 UQP/QSO
+  pair; SQLS "no lensing object", "QSO pair", "binary"). 125 rejected and 107 control lenses (≤ 3″) went through the
+  D-056 chain.
+- **Control efficiency 0 / 5** (1.9–2.6″; lens light blended into the images, fitted as PSFs): an LS "none" at these
+  separations carries no information. Rejected: 24 "none". Of these, 10 are colour-mismatched, 2 are catalogued
+  binaries and 1 has two redshifts; 11 are untestable. No limit, no candidate.
+- **Failed approaches and bugs (fixed):**
+  - the Hennawi sexagesimal coordinates silently matched nothing;
+  - pairs wider than the image search were tested on unrelated LS pairs;
+  - the raw-TSV hash could never verify (the header carries the request time);
+  - the greedy dedup was not transitive.
+- **Next:** HST/Euclid/HSC image models or spectra for the 11 colour-matched pairs; the LaTeX-only NIQ tables.
 
 ## 2026-10-08: Governance — owner decisions on scope, parallelism, cloud disk and layout
 - Owner direction (2026-10-08, given by the owner in the session that opened this PR) with a one-time

@@ -21,21 +21,25 @@ evidence of a dark lens.
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import hashlib
 import json
 import re
 import sys
 from pathlib import Path
 
+import astropy.units as u
 import numpy as np
 import requests
 from astropy.coordinates import SkyCoord
 from astropy.table import Table
+from scipy.sparse import csr_matrix
+from scipy.sparse.csgraph import connected_components
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import w12_lenscats as w12  # noqa: E402
 
-from jwst_anomaly import lenscats, paths, schema  # noqa: E402
+from jwst_anomaly import __version__, lenscats, paths, schema  # noqa: E402
 
 VIZIER = "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source={}&-out.max=5000&-out.all"
 # (VizieR table, release label); SQLS tables: DR3 (2008), DR5 (2010), DR7 (2012)
@@ -56,37 +60,72 @@ D056_FJ = lenscats.FJCalibration(a=20.41, k=0.67, slope=-10.0, rms=0.88, n=605, 
 # lensed images share a colour (ASSUMPTION: |delta(g - z)| <= 0.5 allows microlensing, dust and
 # variability; the tolerance of quasar_pair_test's further-image rule)
 COLOUR_TOL = 0.5
-# galaxy scale as in D-056 (theta_E <= 3"): wider catalogued pairs cannot be the LS pair within
-# image_radius, so they are dropped
-SEP_MAX = 6.0
+# two redshifts differing by more than 0.01 (1 + z) (~3,000 km/s, beyond broad-line redshift
+# errors; ASSUMPTION) belong to two quasars, not two images
+DZ_TOL = 0.01
+# catalogue positions are one image (SQLS: the SDSS quasar), so the second image lies inside the
+# 3" image search only for pairs up to image_radius (galaxy scale, theta_E <= 1.5"); wider pairs
+# are dropped (ASSUMPTION)
+SEP_MAX = 3.0
 # the LS image pair must be the catalogued pair (ASSUMPTION: separations agree within 0.5")
 SEP_MATCH = 0.5
 DEDUP_ARCSEC = 3.0  # same system in two tables (ASSUMPTION; SQLS positions are one image)
 
 
+MANIFEST = "w12_niq_inputs.json"
+
+
 def pinned() -> dict[str, str]:
-    """sha256 per VizieR table from the tracked manifest (empty before the first ``--repin``)."""
-    man = paths.manifests_dir() / "w12_niq_inputs.json"
+    """Pinned hashes from the tracked manifest: VizieR tables by ID, plus ``"bricks"``."""
+    man = paths.manifests_dir() / MANIFEST
     if not man.exists():
         return {}
-    return {m["source"]: m["sha256"] for m in json.loads(man.read_text())["inputs"]}
+    m = json.loads(man.read_text())
+    pins = {r["source"]: r["sha256"] for r in m["inputs"]}
+    pins["bricks"] = m["bricks"]["sha256"]
+    return pins
 
 
-def fetch(source: str, out: Path, expected: str | None) -> tuple[Path, dict]:
-    """Download (or reuse) one VizieR table; raise if it differs from the pinned sha256."""
+def check_pin(key: str, sha: str, pins: dict[str, str] | None) -> None:
+    """Refuse a mismatch or a missing pin; ``pins`` is None under ``--repin``."""
+    if pins is None:
+        return
+    if key not in pins:
+        raise RuntimeError(f"{key}: no pinned sha256 in {MANIFEST}; inspect it, then --repin")
+    if pins[key] != sha:
+        raise RuntimeError(
+            f"{key}: sha256 {sha} != pinned {pins[key]} (input changed or a stale cache); "
+            "inspect, then rerun with --repin"
+        )
+
+
+def data_sha256(data: bytes) -> str:
+    """sha256 of an ASU-TSV without its '#' header lines, which carry the request time."""
+    body = b"\n".join(ln for ln in data.splitlines() if not ln.startswith(b"#"))
+    return hashlib.sha256(body).hexdigest()
+
+
+def fetch(source: str, out: Path, pins: dict[str, str] | None) -> tuple[Path, dict]:
+    """Download (or reuse) one VizieR table; refuse it if it differs from the pin."""
     f = out / (source.replace("/", "_") + ".tsv")
     if not f.exists():
         r = requests.get(VIZIER.format(source), timeout=300)
         r.raise_for_status()
         f.write_bytes(r.content)
     data = f.read_bytes()
-    sha = hashlib.sha256(data).hexdigest()
-    if expected and sha != expected:
-        raise RuntimeError(
-            f"{source}: sha256 {sha} != pinned {expected} (VizieR changed or a stale "
-            f"cache in {f}; inspect, then rerun with --repin)"
-        )
-    return f, {"source": source, "url": VIZIER.format(source), "bytes": len(data), "sha256": sha}
+    sha = data_sha256(data)
+    check_pin(source, sha, pins)
+    retrieved = dt.datetime.fromtimestamp(f.stat().st_mtime, dt.UTC).isoformat(timespec="seconds")
+    return f, {
+        "source": source,
+        "url": VIZIER.format(source),
+        "file": f.name,
+        "bytes": len(data),
+        "sha256": sha,
+        "sha256_of": "data lines (ASU-TSV without '#' header lines)",
+        "retrieved_utc": retrieved,
+        "pipeline_version": __version__,
+    }
 
 
 def read_tsv(path: Path) -> Table:
@@ -118,9 +157,24 @@ def sdss_name_radec(name: str) -> tuple[float, float]:
     return ra, (-dec if sg == "-" else dec)
 
 
+def comment_z_pair(comment: str) -> tuple[float, float]:
+    """The two redshifts an SQLS comment quotes, e.g. "QSO pair (z=1.686, 1.600)"; NaN if none."""
+    m = re.search(r"z\s*=\s*([0-9.]+)\s*,\s*([0-9.]+)", comment)
+    return (float(m.group(1)), float(m.group(2))) if m else (np.nan, np.nan)
+
+
+def different_redshift(z1, z2) -> np.ndarray:
+    """Images of one source share its redshift: |dz| / (1 + z) > DZ_TOL means two sources."""
+    z1, z2 = np.asarray(z1, float), np.asarray(z2, float)
+    with np.errstate(invalid="ignore"):
+        return np.abs(z1 - z2) / (1 + z1) > DZ_TOL
+
+
 def sqls_group(comment: str) -> str:
+    """rejected: no lens object, or a quasar pair / binary (as Lemon's "QSO pair" class);
+    control: a catalogued lens."""
     c = comment.lower()
-    if "no lens" in c:
+    if "no lens" in c or "qso pair" in c or "binary" in c:
         return "rejected"
     if "sdss lens" in c or "known lens" in c:
         return "control"
@@ -150,6 +204,7 @@ def build_sample(tables: dict[str, Table]) -> Table:
                     _float(r["z"]),
                     _float(r["Sep"]),
                 )
+                z2 = _float(r["z2"]) if "z2" in t.colnames else np.nan
                 comment = cls
             else:
                 name = r["SDSS"]
@@ -163,37 +218,28 @@ def build_sample(tables: dict[str, Table]) -> Table:
                 if not np.isfinite(ra):
                     ra, dec = sdss_name_radec(name)
                 z, sep = _float(r["z"]), _float(r["theta"])
+                z2 = comment_z_pair(comment)[1]
             if group and "component" in comment.lower():
                 group = ""  # one cluster-scale lens split into component rows (not galaxy scale)
             if group and not np.isfinite(ra):
                 dropped[label] = dropped.get(label, 0) + 1
             elif group:
-                rows.append((name, ra, dec, z, sep, group, label, comment))
+                rows.append((name, ra, dec, z, z2, sep, group, label, comment))
     s = Table(
         rows=rows,
-        names=("name", "ra", "dec", "z_source", "sep_cat", "group", "catalogue", "comment"),
+        names=("name", "ra", "dec", "z_source", "z2", "sep_cat", "group", "catalogue", "comment"),
     )
     s["comment"] = s["comment"].astype(object)  # notes are appended below (no truncation)
-    # deduplicate across tables/releases within DEDUP_ARCSEC: keep Lemon, then the newest SQLS
-    order = {"Lemon2023": 0, "SQLS-DR7": 1, "SQLS-DR5": 2, "SQLS-DR3": 3}
-    s = s[np.argsort([order[c] for c in s["catalogue"]], kind="stable")]
-    c = SkyCoord(s["ra"], s["dec"], unit="deg")
-    keep = np.ones(len(s), bool)
-    for i in range(len(s)):
-        if keep[i]:
-            dup = (c[i].separation(c).arcsec < DEDUP_ARCSEC) & (np.arange(len(s)) > i) & keep
-            # a pair listed as rejected in one table and as a lens in another stays a control
-            if np.any(dup & (s["group"] == "control")) and s["group"][i] == "rejected":
-                s["group"][i] = "control"
-                s["comment"][i] += " | listed as lens elsewhere"
-            keep &= ~dup
-    s = s[keep]
+    n_rows = len(s)
+    nosep = ~np.isfinite(np.asarray(s["sep_cat"], float))
     wide = np.asarray(s["sep_cat"], float) > SEP_MAX
-    s = s[~wide]
+    s = s[~nosep & ~wide]
+    s = dedup(s)
     s.meta["dropped"] = {
         "no coordinates": dropped,
-        "duplicates": int((~keep).sum()),
+        "no catalogued separation": int(nosep.sum()),
         f"sep_cat > {SEP_MAX} arcsec": int(wide.sum()),
+        "duplicates": int(n_rows - nosep.sum() - wide.sum() - len(s)),
     }
     s["selection"] = "quasar"
     s["z_lens"] = np.nan
@@ -207,6 +253,29 @@ def build_sample(tables: dict[str, Table]) -> Table:
         provenance=schema.Provenance.OBSERVED.value, source="; ".join(f"VizieR {k}" for k in tables)
     )
     return s
+
+
+def dedup(s: Table) -> Table:
+    """Merge entries within DEDUP_ARCSEC transitively (connected components). The kept row is
+    Lemon's, else the newest SQLS release's; a component holding any catalogued lens is a control
+    (noted in ``comment``), so a known lens never enters the rejected sample."""
+    if len(s) < 2:
+        return s
+    order = {"Lemon2023": 0, "SQLS-DR7": 1, "SQLS-DR5": 2, "SQLS-DR3": 3}
+    s = s[np.argsort([order[c] for c in s["catalogue"]], kind="stable")]
+    c = SkyCoord(s["ra"], s["dec"], unit="deg")
+    i, j, _, _ = c.search_around_sky(c, DEDUP_ARCSEC * u.arcsec)
+    graph = csr_matrix((np.ones(len(i)), (i, j)), shape=(len(s), len(s)))
+    _, label = connected_components(graph, directed=False)
+    keep = []
+    for lab in np.unique(label):
+        members = np.flatnonzero(label == lab)  # sorted: members[0] has the preferred catalogue
+        k = members[0]
+        if s["group"][k] == "rejected" and np.any(s["group"][members] == "control"):
+            s["group"][k] = "control"
+            s["comment"][k] += " | listed as lens elsewhere"
+        keep.append(k)
+    return s[np.sort(keep)]
 
 
 def pair_colour_difference(images: Table, src: Table) -> np.ndarray:
@@ -283,18 +352,19 @@ def cmd_screen(args) -> None:
     out.mkdir(parents=True, exist_ok=True)
     p = w12.Params()
     tables, manifest = {}, []
-    pins = {} if args.repin else pinned()
+    pins = None if args.repin else pinned()
     for src in INPUTS:
-        f, m = fetch(src, out, pins.get(src))
+        f, m = fetch(src, out, pins)
         tables[src] = read_tsv(f)
         m["rows"] = len(tables[src])
         manifest.append(m)
-    fb, mb = fetch(HENNAWI, out, pins.get(HENNAWI))
+    fb, mb = fetch(HENNAWI, out, pins)
     binq = read_tsv(fb)
     mb["rows"] = len(binq)
     manifest.append(mb)
     s = build_sample(tables)
     bricks, bmeta = w12.load_bricks(out)
+    check_pin("bricks", bmeta["sha256"], pins)
     cov = lenscats.brick_coverage(s, bricks)
     for c in cov.colnames:
         s[c] = cov[c]
@@ -315,6 +385,7 @@ def cmd_screen(args) -> None:
     sc["detectable_typical"] = sc["req_mag_z_typical"] < sc["depth_z"] - p.margin
     sc["detectable_conservative"] = sc["req_mag_z"] < sc["depth_z"] - p.margin
     sc["hennawi_binary"] = binary_match(sc, binq)
+    sc["different_z"] = different_redshift(sc["z_source"], sc["z2"])
     decided = np.isin(sc["test_status"], ["deflector", "none"]) & (sc["undecided_flags"] == "")
     decided &= np.asarray(sc["pair_match"], bool)  # otherwise the test ran on another pair
     sc["decided"] = decided
@@ -387,11 +458,14 @@ def cmd_screen(args) -> None:
         "detectable_typical",
         "detectable_conservative",
         "hennawi_binary",
+        "z2",
+        "different_z",
     ]
     sc[keep].write(res / "systems.ecsv", overwrite=True)
     (res / "summary.json").write_text(json.dumps(summary, indent=2, default=str) + "\n")
-    man = paths.manifests_dir() / "w12_niq_inputs.json"
-    man.write_text(json.dumps({"inputs": manifest, "bricks": bmeta}, indent=2) + "\n")
+    if args.repin:  # the manifest is the pin: rewritten only on purpose
+        man = paths.manifests_dir() / MANIFEST
+        man.write_text(json.dumps({"inputs": manifest, "bricks": bmeta}, indent=2) + "\n")
     print(
         json.dumps(
             {

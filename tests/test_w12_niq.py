@@ -34,6 +34,8 @@ def test_sdss_name_radec():
         ("QSO pair, no lensing object", "rejected"),
         ("SDSS lens", "control"),
         ("Known lens", "control"),
+        ("QSO pair", "rejected"),
+        ("Binary QSO (z=0.799, 0.799)", "rejected"),
         ("QSO+star", ""),
         ("", ""),
     ],
@@ -51,7 +53,9 @@ def test_read_tsv_skips_units_and_dashes(tmp_path):
 
 def _lemon(rows):
     return Table(
-        rows=rows, names=("Name", "RAJ2000", "DEJ2000", "z", "Sep", "Class"), dtype=[str] * 6
+        rows=[r + ("",) for r in rows],
+        names=("Name", "RAJ2000", "DEJ2000", "z", "Sep", "Class", "z2"),
+        dtype=[str] * 7,
     )
 
 
@@ -109,16 +113,18 @@ def test_build_sample_drops_wide_and_component_rows():
     sqls = _sqls(
         [
             ("J100000.00+010000.0", "1.5", "19.3", "No lensing object"),
+            ("J103000.00+010000.0", "1.5", "", "No lensing object"),
             ("J110000.00+010000.0", "1.5", "2.3", "SDSS Lens (component A)"),
             ("J120000.00+010000.0", "1.5", "2.3", "No lensing object"),
         ]
     )
     s = niq.build_sample({"J/AJ/143/119/table4": sqls})
     assert list(s["name"]) == ["J120000.00+010000.0"]
-    assert s.meta["dropped"]["sep_cat > 6.0 arcsec"] == 1
+    assert s.meta["dropped"]["sep_cat > 3.0 arcsec"] == 1
+    assert s.meta["dropped"]["no catalogued separation"] == 1
 
 
-def test_dedup_ignores_rows_already_merged():
+def test_dedup_is_transitive():
     # A (rejected) - B (control, 2" from A) - C (rejected, 2" from B, 4" from A)
     lemon = _lemon([("A", "150.0", "1.0", "1.5", "2.2", "UQP")])
     sqls = _sqls(
@@ -129,4 +135,28 @@ def test_dedup_ignores_rows_already_merged():
     )
     s = niq.build_sample({"J/MNRAS/520/3305/table1": lemon, "J/AJ/143/119/table4": sqls})
     groups = dict(zip(s["name"], s["group"], strict=True))
-    assert groups["A"] == "control" and groups["J100000.26+010000.0"] == "rejected"
+    # transitive: A, B and C are one system, which holds a catalogued lens
+    assert list(groups.items()) == [("A", "control")]
+
+
+def test_data_sha256_ignores_header_time():
+    a = b"#Date: 2026-10-08T21:56:54\nName\tSep\nJ1\t2.1\n"
+    b = b"#Date: 2026-10-09T08:00:00\nName\tSep\nJ1\t2.1\n"
+    assert niq.data_sha256(a) == niq.data_sha256(b) != niq.data_sha256(b + b"J2\t3\n")
+
+
+def test_check_pin_refuses_mismatch_and_missing():
+    niq.check_pin("t", "abc", None)  # --repin
+    niq.check_pin("t", "abc", {"t": "abc"})
+    with pytest.raises(RuntimeError):
+        niq.check_pin("t", "abc", {"t": "def"})
+    with pytest.raises(RuntimeError):
+        niq.check_pin("t", "abc", {})
+
+
+def test_redshift_pair_and_difference():
+    assert niq.comment_z_pair("QSO pair (z=1.686, 1.600)") == (1.686, 1.6)
+    assert niq.comment_z_pair("Binary QSO (z = 0.799, 0.799)") == (0.799, 0.799)
+    assert np.isnan(niq.comment_z_pair("No lensing object")[0])
+    d = niq.different_redshift([1.686, 0.827, 1.0], [1.600, 0.824, np.nan])
+    assert list(d) == [True, False, False]

@@ -3,57 +3,89 @@
     {
       "source": "J/MNRAS/520/3305/table1",
       "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=J/MNRAS/520/3305/table1&-out.max=5000&-out.all",
+      "file": "J_MNRAS_520_3305_table1.tsv",
       "bytes": 36469,
-      "sha256": "c97aeb0c0e315a044c12ce045985bc91fc4978497e3fb947bc6ee4da6baabb9e",
+      "sha256": "91bff050271d632d1c7f6e6dde1edbbb161a770f4bfff046788cf7f6d31721e9",
+      "sha256_of": "data lines (ASU-TSV without '#' header lines)",
+      "retrieved_utc": "2026-10-08T21:56:48+00:00",
+      "pipeline_version": "0.0.1",
       "rows": 179
     },
     {
       "source": "J/AJ/135/496/table2",
       "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=J/AJ/135/496/table2&-out.max=5000&-out.all",
+      "file": "J_AJ_135_496_table2.tsv",
       "bytes": 15687,
-      "sha256": "bbb6f16a4c5ac253522fba27313ade44d623df20bf68c6f894667050afff5a79",
+      "sha256": "7877900e733a258ab704eb9429233f619d9190f7f1e03db560fcf26359e6c88e",
+      "sha256_of": "data lines (ASU-TSV without '#' header lines)",
+      "retrieved_utc": "2026-10-08T21:56:49+00:00",
+      "pipeline_version": "0.0.1",
       "rows": 90
     },
     {
       "source": "J/AJ/135/496/table3",
       "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=J/AJ/135/496/table3&-out.max=5000&-out.all",
+      "file": "J_AJ_135_496_table3.tsv",
       "bytes": 44872,
-      "sha256": "c4862ff4a4872d71bec20296b9badd8bbdc572d71e42ebcf0673c824c938cd37",
+      "sha256": "4dcaf0c2fdfd92b933828cb89f1b30e12fef5d8244ec81183bf56ad02f09c3c1",
+      "sha256_of": "data lines (ASU-TSV without '#' header lines)",
+      "retrieved_utc": "2026-10-08T21:56:50+00:00",
+      "pipeline_version": "0.0.1",
       "rows": 262
     },
     {
       "source": "J/AJ/140/403/table2",
       "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=J/AJ/140/403/table2&-out.max=5000&-out.all",
+      "file": "J_AJ_140_403_table2.tsv",
       "bytes": 10129,
-      "sha256": "a4a90fc571efd419ca75d0a038ebbff43509db0bfa8668a11393bf8b699c0a74",
+      "sha256": "946dd1ea8a36d2d480693b03fc193187601e7d30c3794358959dabce25935ccb",
+      "sha256_of": "data lines (ASU-TSV without '#' header lines)",
+      "retrieved_utc": "2026-10-08T21:56:52+00:00",
+      "pipeline_version": "0.0.1",
       "rows": 50
     },
     {
       "source": "J/AJ/140/403/table3",
       "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=J/AJ/140/403/table3&-out.max=5000&-out.all",
+      "file": "J_AJ_140_403_table3.tsv",
       "bytes": 28479,
-      "sha256": "da4597e8cb290eae30da5fd74eaf49cc7808e7758ed58a5fd820bed7bc08e570",
+      "sha256": "dddea385b4793aa2c4bd0d7eef19fd2d8441bef63c28d6c94aafc5600b1aa50b",
+      "sha256_of": "data lines (ASU-TSV without '#' header lines)",
+      "retrieved_utc": "2026-10-08T21:56:53+00:00",
+      "pipeline_version": "0.0.1",
       "rows": 174
     },
     {
       "source": "J/AJ/143/119/table3",
       "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=J/AJ/143/119/table3&-out.max=5000&-out.all",
+      "file": "J_AJ_143_119_table3.tsv",
       "bytes": 9378,
-      "sha256": "6a84478216917cb33ec6ffd5267bf6e9347de29f51e02aeb61dd51f190c3c561",
+      "sha256": "f3edca8cfb22cf0ca266c0f5601dfd21fcf17c8f637bc1f39472540612c01763",
+      "sha256_of": "data lines (ASU-TSV without '#' header lines)",
+      "retrieved_utc": "2026-10-08T21:56:54+00:00",
+      "pipeline_version": "0.0.1",
       "rows": 54
     },
     {
       "source": "J/AJ/143/119/table4",
       "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=J/AJ/143/119/table4&-out.max=5000&-out.all",
+      "file": "J_AJ_143_119_table4.tsv",
       "bytes": 44692,
-      "sha256": "4b9d3b385ce6242bdcb2c20e189059e78d74a1ea3aec583ad09adcdfe68951f0",
+      "sha256": "f191fb1c93381fa49ac0658c4b1095e2b1c481cce286009efd271a075664cab1",
+      "sha256_of": "data lines (ASU-TSV without '#' header lines)",
+      "retrieved_utc": "2026-10-08T21:56:55+00:00",
+      "pipeline_version": "0.0.1",
       "rows": 243
     },
     {
       "source": "J/AJ/131/1/binqso",
       "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=J/AJ/131/1/binqso&-out.max=5000&-out.all",
+      "file": "J_AJ_131_1_binqso.tsv",
       "bytes": 185708,
-      "sha256": "c03a9466344759841c267292543d31f06bbf367075cdb3848b76efc5e004ddef",
+      "sha256": "fe8c95e80c0044de4a1802388c670ad2d400701152c96fa1e3db64f7637a0b5f",
+      "sha256_of": "data lines (ASU-TSV without '#' header lines)",
+      "retrieved_utc": "2026-10-08T21:56:56+00:00",
+      "pipeline_version": "0.0.1",
       "rows": 890
     }
   ],
@@ -90,38 +122,38 @@
     "image_exclusion": 0.5,
     "n_rounded_sample": 32
   },
-  "n_systems": 263,
+  "n_systems": 232,
   "dropped": {
     "no coordinates": {},
-    "duplicates": 0,
-    "sep_cat > 6.0 arcsec": 86
+    "no catalogued separation": 0,
+    "sep_cat > 3.0 arcsec": 185,
+    "duplicates": 0
   },
-  "n_covered": 188,
+  "n_covered": 169,
   "rejected": {
-    "n_all": 146,
-    "n_covered": 104,
+    "n_all": 125,
+    "n_covered": 89,
     "status": {
-      "blended": 36,
+      "blended": 17,
       "deflector": 1,
-      "faint galaxy": 1,
-      "none": 21,
-      "too close": 45
+      "none": 24,
+      "too close": 47
     },
-    "decided": 20,
+    "decided": 24,
     "deflector": 0,
-    "none": 20,
-    "none_colour_match": 10,
+    "none": 24,
+    "none_colour_match": 14,
     "none_colour_mismatch": 10,
     "pair_mismatch": 1,
-    "none_typical_detectable": 20
+    "none_typical_detectable": 24
   },
   "control": {
-    "n_all": 117,
-    "n_covered": 84,
+    "n_all": 107,
+    "n_covered": 80,
     "status": {
-      "blended": 49,
+      "blended": 46,
       "none": 5,
-      "too close": 30
+      "too close": 29
     },
     "decided": 5,
     "deflector": 0,
