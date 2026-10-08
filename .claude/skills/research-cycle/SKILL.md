@@ -78,8 +78,9 @@ Action.
   comments that have no reply or fix yet.
 - `gh issue list --state open --json number,title,author,labels`. Act only on issues the owner authored.
 - Read TASKS.md, the newest CHANGELOG.md entry (the handoff) and `grep '^## ' DECISIONS.md`.
-- **Claim before setup** (CLAUDE.md Parallelism decision): as soon as you know which unit you will work on, skip it
-  if an open PR or a `claude/*` branch already claims it; otherwise create `claude/<slug>` from `origin/main`, commit
+- **Claim before setup** (CLAUDE.md Parallelism decision): as soon as you know which unit you will work on, and the
+  WIP cap (step 3, counted now from the PR list above) does not block new feature work, skip the unit if an open PR or
+  a `claude/*` branch already claims it; otherwise create `claude/<slug>` from `origin/main`, commit
   one small file change (e.g. the plan as a CHANGELOG or docs line; GitHub refuses a PR without commits), push, and
   open a draft PR titled `[field: <unit>] ...` labelled `agent` within 5 minutes of starting, before environment
   setup or long reviews. In cloud runs use the GitHub MCP tools (docs/operations.md §3) for the PR list and the
@@ -140,7 +141,8 @@ work" defines ownership. Beyond it:
 
 ## 5. Implement
 
-- `git switch -c claude/<slug> origin/main`. If the work truly depends on an unmerged PR, branch from that PR's
+- Work on the claim branch from step 1 if you made one (`git switch claude/<slug>`); otherwise
+  `git switch -c claude/<slug> origin/main`. If the work truly depends on an unmerged PR, branch from that PR's
   branch instead and write "Depends on #N (stacked on `<branch>`)" in the PR body.
 - Follow `src/jwst_anomaly/CLAUDE.md` (stage contracts), `scripts/CLAUDE.md` (search conventions) and
   `data/manifests/CLAUDE.md` (data and provenance). Never commit data; manifests are the record.
