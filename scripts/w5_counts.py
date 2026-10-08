@@ -105,6 +105,8 @@ def cmd_fetch(args) -> None:
         for name in args.regions:
             survey = cm.LegacySurveysCountMap(REGIONS[name], MAG_LIM)
             jobs += [(survey, b) for b in survey.missing_chunks()]
+        if args.reverse:  # a second process can work from the other end
+            jobs = jobs[::-1]
         print(f"pass {attempt + 1}: {len(jobs)} chunks to fetch", flush=True)
         if not jobs:
             return
@@ -633,6 +635,66 @@ def cmd_vet(args) -> None:
     print(f"{len(t)} flags, {int(np.sum(t['survives'])) if len(t) else 0} survive")
 
 
+def cmd_sheet(args) -> None:
+    """Contact sheet of the top flags: galaxy density, unmasked fraction, LS DR10 colour image."""
+    import io
+    import urllib.request
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    vet = Table.read(results_dir() / "vetting.ecsv")
+    vet.sort("n_false_expected")
+    vet = vet[: args.n]
+    states = {}
+    fig, axes = plt.subplots(len(vet), 3, figsize=(10, 3.2 * len(vet)), squeeze=False)
+    for row, ax in zip(vet, axes, strict=True):
+        ms = states.setdefault(row["region"], MapState(row["region"]))
+        th = float(row["scale_arcmin"])
+        x, y = ms.raster.xy(row["ra"], row["dec"])
+        half = 3 * th
+        f = max(1, int(th / 4 / CELL))
+        ix0 = int((x - half - ms.raster.x0) / CELL)
+        iy0 = int((y - half - ms.raster.y0) / CELL)
+        n = int(2 * half / CELL)
+        sl = (slice(max(iy0, 0), iy0 + n), slice(max(ix0, 0), ix0 + n))
+        dens = cm.block_sum(ms.density()[sl], f)
+        wt = cm.block_sum(ms.weight[sl], f) / f**2
+        with np.errstate(divide="ignore", invalid="ignore"):
+            rel = dens / wt / np.nanmean(dens[wt > 0.5] / wt[wt > 0.5])
+        ext = [-half, half, -half, half]
+        im = ax[0].imshow(
+            np.where(wt > 0.3, rel, np.nan), origin="lower", extent=ext, cmap="RdBu", vmin=0, vmax=2
+        )
+        fig.colorbar(im, ax=ax[0], fraction=0.046)
+        ax[1].imshow(wt, origin="lower", extent=ext, cmap="gray", vmin=0, vmax=1)
+        for a in ax[:2]:
+            a.add_patch(plt.Circle((0, 0), th, fill=False, color="k"))
+        ax[0].set_title(
+            f"{row['region']} θ={th:g}′ Z={row['z']:.1f} N_false={row['n_false_expected']:.2g}",
+            fontsize=8,
+        )
+        ax[1].set_title(f"w; {row['reasons'] or 'survives'}", fontsize=8)
+        pixscale = max(0.262, 2 * th * 60 / 512)
+        url = (
+            "https://www.legacysurvey.org/viewer/cutout.jpg?ra="
+            f"{row['ra']:.5f}&dec={row['dec']:.5f}&layer=ls-dr10&pixscale={pixscale:.3f}&size=512"
+        )
+        try:
+            with urllib.request.urlopen(url, timeout=60) as r:
+                ax[2].imshow(plt.imread(io.BytesIO(r.read()), format="jpg"))
+        except Exception as exc:  # cutout service down: leave the panel empty
+            ax[2].text(0.1, 0.5, f"cutout failed: {type(exc).__name__}", fontsize=7)
+        ax[2].set_title(f"{row['ra']:.4f} {row['dec']:.4f} (2θ wide)", fontsize=8)
+        ax[2].axis("off")
+    fig.tight_layout()
+    out = out_dir() / "contact_sheet.png"
+    fig.savefig(out, dpi=80)
+    print(out)
+
+
 # ----------------------------------------------------------------------------- limit
 
 
@@ -685,6 +747,7 @@ def main(argv=None) -> int:
     f.add_argument("--workers", type=int, default=2)
     f.add_argument("--passes", type=int, default=200)
     f.add_argument("--pause", type=float, default=120.0)
+    f.add_argument("--reverse", action="store_true")
     f.set_defaults(func=cmd_fetch)
     sub.add_parser("numcounts").set_defaults(func=cmd_numcounts)
     sub.add_parser("predict").set_defaults(func=cmd_predict)
@@ -694,6 +757,9 @@ def main(argv=None) -> int:
     i.add_argument("--workers", type=int, default=3)
     i.set_defaults(func=cmd_inject)
     sub.add_parser("vet").set_defaults(func=cmd_vet)
+    sh = sub.add_parser("sheet")
+    sh.add_argument("--n", type=int, default=12)
+    sh.set_defaults(func=cmd_sheet)
     sub.add_parser("limit").set_defaults(func=cmd_limit)
     args = ap.parse_args(argv)
     args.func(args)
