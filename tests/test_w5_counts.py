@@ -48,3 +48,20 @@ def test_regions_are_disjoint_and_chunked():
     a, b = w5.REGIONS.values()
     assert a.ra_max <= b.ra_min
     assert len(a.chunks()) == 50 and len(b.chunks()) == 50
+
+
+def test_survivors_at_several_scales_count_as_one_lens():
+    from astropy.table import Table
+
+    vet = Table(
+        {
+            "region": ["desA", "desA", "desA", "desB"],
+            "ra": [30.0, 30.01, 35.0, 30.0],
+            "dec": [-25.0, -25.0, -25.0, -25.0],
+            "scale_arcmin": [8.0, 16.0, 8.0, 8.0],
+            "survives": [True, True, True, True],
+        }
+    )
+    assert w5.count_survivor_positions(vet) == 3  # 0.6' apart at 8'/16' merge; other region apart
+    vet["survives"] = False
+    assert w5.count_survivor_positions(vet) == 0

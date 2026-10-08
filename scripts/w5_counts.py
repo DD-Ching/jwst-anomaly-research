@@ -834,6 +834,29 @@ def cmd_sheet(args) -> None:
 # ----------------------------------------------------------------------------- limit
 
 
+def count_survivor_positions(vet: Table) -> int:
+    """Surviving peaks counted once per sky position: survivors of one region within the larger
+    of their two filter scales are one candidate lens (the injections count one per lens)."""
+    s = vet[np.asarray(vet["survives"], bool)]
+    if not len(s):
+        return 0
+    ra, dec = np.radians(np.asarray(s["ra"], float)), np.radians(np.asarray(s["dec"], float))
+    scale = np.asarray(s["scale_arcmin"], float)
+    region = np.asarray(s["region"]).astype(str)
+    group = np.arange(len(s))
+    for i in range(len(s)):
+        for j in range(i + 1, len(s)):
+            if region[i] != region[j]:
+                continue
+            cosd = np.sin(dec[i]) * np.sin(dec[j]) + np.cos(dec[i]) * np.cos(dec[j]) * np.cos(
+                ra[i] - ra[j]
+            )
+            sep = np.degrees(np.arccos(np.clip(cosd, -1.0, 1.0))) * 60.0
+            if sep <= max(scale[i], scale[j]):
+                group[group == group[j]] = group[i]
+    return int(np.unique(group).size)
+
+
 def cmd_limit(args) -> None:
     inj = Table.read(out_dir() / "injections.ecsv")
     summary = json.loads((results_dir() / "screen_summary.json").read_text())
@@ -842,7 +865,7 @@ def cmd_limit(args) -> None:
         if (results_dir() / "vetting.ecsv").exists()
         else None
     )
-    n_surv = int(np.sum(vet["survives"])) if vet is not None and len(vet) else 0
+    n_surv = count_survivor_positions(vet) if vet is not None and len(vet) else 0
     area = sum(summary[n]["area_deg2"] for n in REGIONS)
     # Poisson 95 % upper limit on the expected number for n observed (0 → 2.996)
     from scipy.stats import chi2
@@ -926,7 +949,7 @@ def main(argv=None) -> int:
     sub.add_parser("predict").set_defaults(func=cmd_predict)
     sub.add_parser("screen").set_defaults(func=cmd_screen)
     i = sub.add_parser("inject")
-    i.add_argument("--reps", type=int, default=2)
+    i.add_argument("--reps", type=int, default=3)  # the committed limits use 3 (5,232 injections)
     i.add_argument("--workers", type=int, default=3)
     i.set_defaults(func=cmd_inject)
     sub.add_parser("vet").set_defaults(func=cmd_vet)
