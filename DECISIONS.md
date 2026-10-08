@@ -2292,3 +2292,109 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - Injection-recovery shows a screen is blind to W1 or W3 at the recommended amplitudes.
 - Cluster macro-magnification needs a lens model with shear plus a microlens instead of an isolated lens (W3 in
   caustic-crossing arcs).
+
+## D-051 Orphan-pair screen in deep fields, with injection-recovery: null; W2/W1/point-mass surface-density limits (2026-10-08)
+
+**Decision.**
+- **Catalogue adapter.** `scripts/orphan_pairs.py` reads every catalogue into one column layout (`as_standard`),
+  so CANUCS DR1 and DJA grizli (catalogue plus eazy-py zout) both run through D-048's code. The three D-048
+  cluster runs reproduce every pair and count bit for bit; only the column `mu_canucs` is renamed `mu_cat`.
+- **Deep fields** (`DEEP_FIELDS`):
+  - the five CANUCS NIRCam flanking fields (NCF: MACS0416, MACS1149, Abell 370, MACS0417, MACS1423; 23–38 MB
+    each, same format as the cluster catalogues);
+  - DJA v7.3 GOODS-North.
+
+  They use these rules (ASSUMPTIONs):
+  - no published images and no cluster model; the ordinary-lensing test is the catalogue |μ| (≤ 1.4, or 1);
+  - redshift floor z_low > 0.5 (`Z_LENS_REF` 0.4 + 0.1);
+  - S/N bands are those of F277W/F356W/F444W that exist (two NCFs lack F356W);
+  - DJA: 0.36″ apertures, SEP flags, MIRI and `u` duplicates dropped, and a same_galaxy radius of
+    3.3 × `flux_radius`.
+- **Two new nulls.** (d) is the z-overlap match rate at 3–6″. (e) is null (c) conditioned on fainter-member S/N,
+  larger-member size and LW/SW colour. Both are new keys; the D-048 keys are unchanged.
+- **Injection-recovery.** `scripts/inject_pairs.py` paints simulated pairs into the real catalogue
+  (docs/exotic_limits.md "W2"). Lensed rows are removed and replaced by |μ|-scaled copies of their SED with fresh
+  noise. Two images closer than the catalogue's 2nd-percentile nearest-neighbour separation (0.24–0.30″) merge
+  into one row. The unchanged orphan rules then decide recovery.
+  - Lens types: point mass (sanity), W2 Ellis (n = 2) and W1 negative mass (n = 1, ε < 0, β ∈ [2, 4] θ_E).
+  - θ_E ∈ {0.15, 0.3, 0.7, 1.5}″.
+  - Per-source (400) and per-deflector (2000) trials per field, type and θ_E.
+- **Limits.** Two 95 % limits on the surface density, each over Σ ε_f A_f (108.1 arcmin² searched):
+  - **no-candidate:** 2.996 / Σ ε_f A_f;
+  - **background-aware:** s₉₅ = 72.2 / Σ ε_f A_f, for 355 orphans observed against 315.4 expected.
+- **Stated reason for the > 200 MB downloads** (CLAUDE.md):
+  - **Catalogue, 223.8 MB.** The GOODS-N DJA catalogue is the only file with the matched-aperture fluxes, and
+    FITS tables are row-major, so a byte-range read cannot skip columns. It is pinned with `max_bytes` 230 MB.
+  - **Photo-z tarball, 371.1 MB.** It is streamed: `fetch_tar_member` hashes the whole archive in flight and keeps
+    only the 67.6 MB zout, so nothing over 200 MB is written to disk.
+  - Every other DJA deep field costs the same or more (SOURCES.md).
+  - The CANUCS NCF catalogues give five fields with PSF-matched photometry for 160 MB in total, which is why they
+    carry most of the area.
+
+**Alternatives rejected.**
+- **The standalone `gdn-grizli-v7.3-fix.eazypy.zout.fits` (60.6 MB).** It belongs to an older catalogue: 63,069
+  rows, ids offset by a median 137″. It cannot be joined.
+- **DJA Kron apertures for the same_galaxy rule.** `kron_radius` lies between 2.4 and 3.8, which gives
+  8.7 × r₅₀ against 3.3 × in CANUCS. 0 of 2000 point lenses at θ_E = 0.3″ were recovered in GOODS-N, and the
+  orphan count fell from 109 to 69.
+- **A global null (c) only.** Flanking-field orphans exceed it at P = 0.04–0.08 per field. Conditioning on S/N,
+  size and colour (null e) absorbs part of the excess, not all of it.
+- **Re-running the whole field search per injected lens.** The rules are local (≤ 1.8″ from the pair), so the
+  neighbourhood within β_max θ_E + 6″ gives the same classification at about 8 ms per trial.
+- **Drawing synthetic sources.** Lensing the real rows keeps the real density, SEDs, depth and clustering (as in
+  D-049).
+- **CEERS, GOODS-S, PRIMER.** They are not run: 250–270 MB catalogues plus 350–410 MB tarballs each, for fields
+  that add area but no new method.
+
+**Evidence** (`derived`; summaries in `outputs/orphan_pairs/<field>/` and `outputs/inject_pairs/`; all six
+contact sheets inspected).
+- Orphans observed against null (e):
+
+  | Field | Orphans / null (e) | P(≥ observed) |
+  |---|---|---|
+  | M0416-NCF | 51 / 41.4 | 0.083 |
+  | M1149-NCF | 50 / 40.6 | 0.085 |
+  | A370-NCF | 43 / 43.1 | 0.53 |
+  | M0417-NCF | 49 / 38.0 | 0.049 |
+  | M1423-NCF | 53 / 47.9 | 0.25 |
+  | GOODS-N | 109 / 104.4 | 0.34 |
+  | Total | 355 / 315.4 | 0.015 |
+
+- **Vetting.** Of the 90 top orphans inspected, 50 are knots, companions, group members, satellites or
+  artefact-affected. The other 40 are featureless faint pairs at θ_E-equivalent 0.4–1.4″ (`hypothesis`:
+  4 × 10¹⁰–7 × 10¹¹ M☉ at z_l = 0.4). No pair goes to `/vet-candidate`.
+- **The ~15 % excess is not read as lensing.** At the measured efficiency (~0.5 % per deflector), it would need
+  ~140 dark galaxy-mass deflectors per arcmin², one per ~7 catalogued galaxies.
+- **Per-deflector efficiency** (mean over 108 arcmin²):
+
+  | Type | 0.15″ | 0.3″ | 0.7″ | 1.5″ |
+  |---|---|---|---|---|
+  | point | 0.02 % | 0.54 % | 0.84 % | 0 (pair separation > 3″) |
+  | W2 | 0.01 % | 0.64 % | 0.83 % | 0 (pair separation > 3″) |
+  | W1 | 0 | 0.10 % | 3.6 % | 18.6 % |
+
+  - Per source, recovery is ≤ 3.5 %.
+  - Only 1–12 % of lensed selected sources keep both images above the S/N cuts.
+  - same_galaxy removes the 0.3–0.6″ pairs, and visible_lens removes ~73 % of the 0.7″ pairs.
+  - At best, recovery reaches 11–15 % at m < 24.
+- **Limits (deg⁻², no-candidate / background-aware).**
+  - W1: < 5.4 × 10² / 1.3 × 10⁴ at θ_E 1.5″ (|M| 4.5 × 10¹¹ M☉) and < 2.8 × 10³ / 6.7 × 10⁴ at 0.7″
+    (9.8 × 10¹⁰ M☉).
+  - W2: < 1.2 × 10⁴ / 2.9 × 10⁵ at 0.7″ (a ≈ 10 pc). That is ~100× weaker than Takahashi & Asada's volume limit
+    spread over z < 1 (~120 deg⁻²).
+  - Point mass: < 1.2–1.9 × 10⁴ / 2.9–4.5 × 10⁵ at 0.3–0.7″.
+  - Masses and throat radii are a `model_prediction` at z_l = 0.4 and z_s = 2 (Planck18).
+- **Tests.** `tests/test_orphan_pairs.py` covers the adapter: CANUCS and DJA layouts give the same pairs; flags,
+  misaligned zout, missing F356W, the deep-field lens check, tar streaming, footprints and polygons.
+  `tests/test_inject_pairs.py` covers mass and throat inversion of `einstein_radius`, Poisson limits, recovery of
+  a bright point-lens pair as an orphan, the merge rule, the W1 umbra and image side, and efficiency bounds.
+
+**Revisit if.**
+- A companion-aware null exists: spectroscopic close pairs, or a null matched in environment. The flanking-field
+  orphan excess (P = 0.01) must be explained before any orphan is read as anything but chance.
+- Pixel-level injections (painting into mosaics and re-extracting) are run. They would measure blending with
+  neighbours and photo-z scatter of faint counter-images.
+- The same_galaxy or visible_lens rule changes, for example to segmentation-map adjacency. Those rules set most of
+  the efficiency loss.
+- More deep fields are added (CEERS, GOODS-S, PRIMER), or a real-pair spectroscopic sample tests the SED-match
+  power.
