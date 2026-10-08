@@ -193,16 +193,7 @@ def apply_frame_offset(name: str, model, images: Table | None = None) -> tuple[f
     point would leave them in place (D-040)."""
     dra, ddec = MODELS[name].get("frame_offset_arcsec", (0.0, 0.0))
     if dra or ddec:
-        wcs = getattr(model, "wcs", None)
-        if wcs is not None:
-            wcs.wcs.crval = [
-                wcs.wcs.crval[0] + dra / 3600.0 / model._cos0,
-                wcs.wcs.crval[1] + ddec / 3600.0,
-            ]
-            wcs.wcs.set()
-        model.ra0 += dra / 3600.0 / model._cos0
-        model.dec0 += ddec / 3600.0
-        model._cos0 = np.cos(np.deg2rad(model.dec0))
+        model.shift_frame(dra, ddec)
         if images is not None:
             shift_images(name, images)
     return float(dra), float(ddec)
@@ -682,8 +673,7 @@ def convention_check(model, par, images, shapes, match_arcsec: float) -> dict:
 
 def cmd_arcs(args) -> dict:
     model, files, par = load_model(args.model)
-    if par is not None:
-        apply_frame_offset(args.model, model)
+    apply_frame_offset(args.model, model)  # every model, maps included (D-040)
     shapes = load_shapes(args.catalog)
     if args.photoz:
         attach_photoz(shapes, args.photoz)

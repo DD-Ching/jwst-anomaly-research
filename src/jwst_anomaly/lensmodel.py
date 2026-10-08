@@ -750,6 +750,15 @@ class LensModel:
         ra = self.ra0 - np.asarray(x, float) / 3600.0 / self._cos0
         return ra % 360.0, self.dec0 + np.asarray(y, float) / 3600.0
 
+    def shift_frame(self, dra_arcsec: float, ddec_arcsec: float) -> None:
+        """Move the whole model on the sky by (dRA cos dec, dDec) arcsec, in place (D-034).
+
+        Model-frame quantities are unchanged; only the frame's sky anchor moves.
+        """
+        self.ra0 += dra_arcsec / 3600.0 / self._cos0
+        self.dec0 += ddec_arcsec / 3600.0
+        self._cos0 = np.cos(np.deg2rad(self.dec0))
+
     @staticmethod
     def frame_angle_to_pa(phi_deg: Any) -> np.ndarray:
         """Direction angle in the model frame (deg CCW from +x = West) -> sky PA mod 180.
@@ -1175,19 +1184,21 @@ def _fold_cells(
         return out
 
     # Orientation signs only where the test below can look (two cells around the candidates).
-    rr, cc = np.nonzero(dilate(dilate(cand)))
+    band = dilate(dilate(cand))
+    rr, cc = np.nonzero(band)
     x00, x01, x10, x11 = bx[rr, cc], bx[rr, cc + 1], bx[rr + 1, cc], bx[rr + 1, cc + 1]
     y00, y01, y10, y11 = by[rr, cc], by[rr, cc + 1], by[rr + 1, cc], by[rr + 1, cc + 1]
     sa = np.zeros(cand.shape, np.int8)
     sb = np.zeros(cand.shape, np.int8)
-    sa[rr, cc] = np.sign((x01 - x00) * (y10 - y00) - (x10 - x00) * (y01 - y00))
-    sb[rr, cc] = np.sign((x10 - x11) * (y01 - y11) - (x01 - x11) * (y10 - y11))
+    with np.errstate(invalid="ignore"):  # map models are NaN outside their coverage: sign 0
+        sa[rr, cc] = np.nan_to_num(np.sign((x01 - x00) * (y10 - y00) - (x10 - x00) * (y01 - y00)))
+        sb[rr, cc] = np.nan_to_num(np.sign((x10 - x11) * (y01 - y11) - (x01 - x11) * (y10 - y11)))
     crit = sa != sb
     crit[:, 1:] |= sa[:, 1:] != sa[:, :-1]
     crit[1:, :] |= sa[1:, :] != sa[:-1, :]
     # dilate by one cell so both sides of the curve are refined; signs outside the two-cell
     # band are unset, but only cells within one cell of a candidate are kept
-    return np.nonzero(dilate(crit & dilate(dilate(cand))) & cand)
+    return np.nonzero(dilate(crit & band) & cand)
 
 
 def find_images(
@@ -1198,18 +1209,19 @@ def find_images(
     z_s: float,
     newton_steps: int = 12,
     tol_arcsec: float = 1e-5,
-    refine: int = 8,
+    refine_arcsec: float = 0.02,
 ) -> Table:
     """All image positions of a point source at ``(beta_x, beta_y)`` (model frame, arcsec).
 
     Every grid cell is split into two triangles and mapped to the source plane; a triangle that
     contains the source seeds a Newton iteration on the lens equation with the analytic model.
     Cells next to a critical curve whose source-plane footprint is near the source are subdivided
-    ``refine`` × ``refine`` with the model evaluated directly (``refine=0`` disables this), so a
-    merging pair inside one grid cell is still found (D-038). Converged solutions closer than
-    0.05" are merged. Columns: ``x, y`` (arcsec), ``ra, dec``, ``magnification`` (signed;
-    negative = odd parity), ``residual_arcsec`` (source-plane misfit). Images outside the grid can
-    be missed. Provenance ``model_prediction``.
+    into sub-cells of at most ``refine_arcsec`` (below the 0.05" merge radius) with the model
+    evaluated directly, so a merging pair inside one grid cell is still found (D-040);
+    ``refine_arcsec <= 0`` disables this. Converged solutions closer than 0.05" are merged.
+    Columns: ``x, y`` (arcsec), ``ra, dec``, ``magnification`` (signed; negative = odd parity),
+    ``residual_arcsec`` (source-plane misfit). Images outside the grid can be missed.
+    Provenance ``model_prediction``.
     """
     s = float(model.dls_ds(z_s))
     g = grid.x
@@ -1218,11 +1230,12 @@ def find_images(
     gx, gy = np.broadcast_to(g[None, :], bx.shape), np.broadcast_to(g[:, None], by.shape)
     x0, y0 = _triangle_seeds(bx, by, gx, gy, beta_x, beta_y)
     seeds_x, seeds_y = [x0], [y0]
-    if refine > 1:
+    step = g[1] - g[0]
+    n_sub = int(np.ceil(step / refine_arcsec - 1e-9)) if refine_arcsec > 0 else 1
+    if n_sub > 1:
         rows, cols = _fold_cells(bx, by, beta_x, beta_y)
         if len(rows):
-            step = g[1] - g[0]
-            t = np.linspace(0.0, step, refine + 1)
+            t = np.linspace(0.0, step, n_sub + 1)
             fx = g[cols][:, None, None] + t[None, None, :]
             fy = g[rows][:, None, None] + t[None, :, None]
             fx, fy = np.broadcast_arrays(fx, fy)
@@ -1421,6 +1434,17 @@ class MapLensModel(LensModel):
             sha256=digest.hexdigest(),
             centre=centre,
         )
+
+    def shift_frame(self, dra_arcsec: float, ddec_arcsec: float) -> None:
+        """Move the model and its maps on the sky (the maps are looked up by sky position, so
+        moving only the frame anchor would leave them in place; D-040)."""
+        crval = self.wcs.wcs.crval
+        self.wcs.wcs.crval = [
+            crval[0] + dra_arcsec / 3600.0 / self._cos0,
+            crval[1] + ddec_arcsec / 3600.0,
+        ]
+        self.wcs.wcs.set()
+        super().shift_frame(dra_arcsec, ddec_arcsec)
 
     def _interp(self, x: np.ndarray, y: np.ndarray, keys) -> dict[str, np.ndarray]:
         from scipy.ndimage import map_coordinates

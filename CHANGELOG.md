@@ -3,11 +3,12 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-08: `find_images` fold refinement; frame offsets for map models (D-040)
-- Cells on a critical curve near the source are subdivided 8 × 8. MACS0416 system 26 is now solved (rms 1.57″ →
-  0.81″), and its image list is open with offset (0.208, −0.025). No other model changes beyond 0.03″ rms; Abell 2744
-  `validate` takes 41 s instead of 29 s.
+- Cells on a critical curve near the source are subdivided into ≤ 0.02″ sub-cells. MACS0416 system 26 is now solved
+  (rms 1.57″ → 0.76″), and its image list is open with offset (0.208, −0.025). No other model changes beyond 0.03″
+  rms; Abell 2744 `validate` takes 41 s instead of 29 s.
 - **Bug fixed:** `apply_frame_offset` was a no-op for map models (the maps are looked up by sky position), and
-  `radial` skipped it for them. Only MACS0416's radial run was affected; it is still null.
+  `radial` / `arcs` skipped it for them. No earlier result used a map model with an offset. MACS0416's radial screen
+  was re-run in the JWST frame: still null.
 - **Handoff:** `images` / `fluxratio` on MACS0416 (CANUCS photo-z); radial on Abell 370 and Abell S1063.
 
 ## 2026-10-08: Abell 2744 screens: null (D-036)

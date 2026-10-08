@@ -557,8 +557,8 @@ def test_load_images_accepts_parenthesised_redshifts(tmp_path):
 
 
 def test_find_images_refines_cells_on_a_fold():
-    # D-038: a merging pair straddling a critical curve inside one coarse grid cell is missed
-    # by the plain triangle scan; the fold-cell refinement recovers it
+    # D-040: a merging pair straddling a critical curve inside one coarse grid cell (here about
+    # 0.1" apart in a 0.5" cell) is missed by the plain triangle scan; refinement recovers it
     model = LensModel(
         [_dpie(x=0.0, y=0.0, ellipticity=0.4, angle_pos=20.0, r_core=0.5, r_cut=300.0)],
         RA0,
@@ -575,11 +575,11 @@ def test_find_images_refines_cells_on_a_fold():
     xs = np.linspace(1.0, 30.0, 2901)  # the outer (tangential) critical curve on the +x axis
     signs = np.sign([det(x) for x in xs])
     i = int(np.flatnonzero(signs[:-1] != signs[1:])[-1])
-    x_img = xs[i + 1] + 0.02  # just outside the curve: its partner is ~0.04" away
+    x_img = xs[i + 1] + 0.02  # just outside the curve; its partner is about 0.1" away
     f = model.fields_xy(np.array([x_img]), np.zeros(1))
     beta = (float(x_img - s * f["alpha_x"][0]), float(-s * f["alpha_y"][0]))
     coarse = lensmodel.DeflectionGrid.compute(model, half_width=40.0, step=0.5)
-    plain = lensmodel.find_images(model, coarse, *beta, 2.0, refine=0)
+    plain = lensmodel.find_images(model, coarse, *beta, 2.0, refine_arcsec=0)
     refined = lensmodel.find_images(model, coarse, *beta, 2.0)
 
     def near(t):
