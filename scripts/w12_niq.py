@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import io
 import json
 import re
 import sys
@@ -31,7 +30,7 @@ from pathlib import Path
 import numpy as np
 import requests
 from astropy.coordinates import SkyCoord
-from astropy.table import Table, vstack
+from astropy.table import Table
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import w12_lenscats as w12  # noqa: E402
@@ -54,6 +53,9 @@ LEMON_REJECTED = {"UQP", "UQP (?)", "QSO pair"}
 LEMON_CONTROL = {"lens", "quad", "lens (?)"}
 # D-056 calibration (LS z; 605 galaxy-selected lenses; docs/exotic_limits.md), reused unchanged
 D056_FJ = lenscats.FJCalibration(a=20.41, k=0.67, slope=-10.0, rms=0.88, n=605, band="ls_z")
+# lensed images share a colour (ASSUMPTION: |delta(g - z)| <= 0.5 allows microlensing, dust and
+# variability; the tolerance of quasar_pair_test's further-image rule)
+COLOUR_TOL = 0.5
 DEDUP_ARCSEC = 3.0  # same system in two tables (ASSUMPTION; SQLS positions are one image)
 
 
@@ -64,8 +66,12 @@ def fetch(source: str, out: Path) -> tuple[Path, dict]:
         r.raise_for_status()
         f.write_bytes(r.content)
     data = f.read_bytes()
-    return f, {"source": source, "url": VIZIER.format(source), "bytes": len(data),
-               "sha256": hashlib.sha256(data).hexdigest()}
+    return f, {
+        "source": source,
+        "url": VIZIER.format(source),
+        "bytes": len(data),
+        "sha256": hashlib.sha256(data).hexdigest(),
+    }
 
 
 def read_tsv(path: Path) -> Table:
@@ -112,10 +118,17 @@ def build_sample(tables: dict[str, Table]) -> Table:
             if label == "Lemon2023":
                 cls = r["Class"]
                 group = (
-                    "rejected" if cls in LEMON_REJECTED else "control" if cls in LEMON_CONTROL else ""
+                    "rejected"
+                    if cls in LEMON_REJECTED
+                    else "control"
+                    if cls in LEMON_CONTROL
+                    else ""
                 )
                 ra, dec, name, z, sep = (
-                    _float(r["RAJ2000"]), _float(r["DEJ2000"]), r["Name"], _float(r["z"]),
+                    _float(r["RAJ2000"]),
+                    _float(r["DEJ2000"]),
+                    r["Name"],
+                    _float(r["z"]),
                     _float(r["Sep"]),
                 )
                 comment = cls
@@ -124,15 +137,19 @@ def build_sample(tables: dict[str, Table]) -> Table:
                 comment = r["Com"]
                 group = sqls_group(comment)
                 ra, dec = (
-                    (_float(r["_RA"]), _float(r["_DE"])) if "_RA" in t.colnames else (np.nan, np.nan)
+                    (_float(r["_RA"]), _float(r["_DE"]))
+                    if "_RA" in t.colnames
+                    else (np.nan, np.nan)
                 )
                 if not np.isfinite(ra):
                     ra, dec = sdss_name_radec(name)
                 z, sep = _float(r["z"]), _float(r["theta"])
             if group and np.isfinite(ra):
                 rows.append((name, ra, dec, z, sep, group, label, comment))
-    s = Table(rows=rows, names=("name", "ra", "dec", "z_source", "sep_cat", "group", "catalogue",
-                                "comment"))
+    s = Table(
+        rows=rows,
+        names=("name", "ra", "dec", "z_source", "sep_cat", "group", "catalogue", "comment"),
+    )
     # deduplicate across tables/releases within DEDUP_ARCSEC: keep Lemon, then the newest SQLS
     order = {"Lemon2023": 0, "SQLS-DR7": 1, "SQLS-DR5": 2, "SQLS-DR3": 3}
     s = s[np.argsort([order[c] for c in s["catalogue"]], kind="stable")]
@@ -151,11 +168,43 @@ def build_sample(tables: dict[str, Table]) -> Table:
     s["z_lens"] = np.nan
     s["theta_e"] = s["sep_cat"] / 2  # SIS model_prediction from the catalogued separation
     s["name_offset"] = 0.0
-    s["pos_quantum"] = [lenscats.position_quantum_arcsec(a, d) for a, d in zip(s["ra"], s["dec"])]
+    s["pos_quantum"] = [
+        lenscats.position_quantum_arcsec(a, d) for a, d in zip(s["ra"], s["dec"], strict=True)
+    ]
     s["catalogues"] = s["catalogue"]
-    s.meta.update(provenance=schema.Provenance.OBSERVED.value,
-                  source="; ".join(f"VizieR {k}" for k in tables))
+    s.meta.update(
+        provenance=schema.Provenance.OBSERVED.value, source="; ".join(f"VizieR {k}" for k in tables)
+    )
     return s
+
+
+def pair_colour_difference(images: Table, src: Table) -> np.ndarray:
+    """g - z of image 1 minus image 2 (LS Tractor); NaN when either is missing. ``derived``."""
+    gz = lenscats._gz(src) if len(src) else np.zeros(0)
+    out = np.full(len(images), np.nan)
+    for k, (i1, i2) in enumerate(zip(images["img1"], images["img2"], strict=True)):
+        if i1 >= 0 and i2 >= 0:
+            out[k] = gz[i1] - gz[i2]
+    return out
+
+
+def sheet(t: Table, out: Path, path: Path, title: str) -> None:
+    """Contact sheet (w12_lenscats layout), stored as a JPEG to stay well under 1 MB."""
+    from PIL import Image
+
+    cut = out / "cutouts"
+    cut.mkdir(exist_ok=True)
+    t = t.copy()
+    t["system_id"] = t["name"]
+    t["label"] = [
+        f"{c[:18]} {s} dgz={g:.2f}"
+        for c, s, g in zip(t["comment"], t["test_status"], t["dgz"], strict=True)
+    ]
+    for r in t:
+        w12.fetch_cutout(float(r["ra"]), float(r["dec"]), cut / f"{r['name']}.jpg")
+    png = out / (path.stem + ".png")
+    w12.contact_sheet(t, cut, png, title)
+    Image.open(png).convert("RGB").save(path, quality=80)
 
 
 def binary_match(s: Table, binq: Table, radius: float = 3.0) -> np.ndarray:
@@ -207,6 +256,8 @@ def cmd_screen(args) -> None:
         sc[k] = v
     images = lenscats.pair_images(sc, src, p.image_radius)
     sc["sep_ls"] = images["sep"]
+    sc["dgz"] = pair_colour_difference(images, src)
+    sc["colour_match"] = np.abs(sc["dgz"]) <= COLOUR_TOL  # no colour counts as no match
     sc["test_status"] = w12.deflector_test(sc, src, p, images)["test_status"]
     sc["undecided_flags"] = w12.flags_undecided(sc, src, p)
     sc["detectable_typical"] = sc["req_mag_z_typical"] < sc["depth_z"] - p.margin
@@ -214,41 +265,86 @@ def cmd_screen(args) -> None:
     sc["hennawi_binary"] = binary_match(sc, binq)
     decided = np.isin(sc["test_status"], ["deflector", "none"]) & (sc["undecided_flags"] == "")
     sc["decided"] = decided
-    summary = {"inputs": manifest, "bricks": bmeta, "fj_calibration": D056_FJ.__dict__,
-               "params": p.__dict__, "n_systems": len(s), "n_covered": int(covered.sum())}
+    summary = {
+        "inputs": manifest,
+        "bricks": bmeta,
+        "fj_calibration": D056_FJ.__dict__,
+        "params": p.__dict__,
+        "n_systems": len(s),
+        "n_covered": int(covered.sum()),
+    }
     for g in ("rejected", "control"):
         m = sc["group"] == g
-        st = {k: int(v) for k, v in zip(*np.unique(sc["test_status"][m], return_counts=True))}
+        st = {
+            k: int(v)
+            for k, v in zip(*np.unique(sc["test_status"][m], return_counts=True), strict=True)
+        }
         d = m & decided
         nd = int((d & (sc["test_status"] == "deflector")).sum())
         nn = int((d & (sc["test_status"] == "none")).sum())
-        summary[g] = {"n_all": int((s["group"] == g).sum()), "n_covered": int(m.sum()),
-                      "status": st, "decided": int(d.sum()), "deflector": nd, "none": nn,
-                      "none_typical_detectable": int((d & (sc["test_status"] == "none")
-                                                      & sc["detectable_typical"]).sum())}
+        summary[g] = {
+            "n_all": int((s["group"] == g).sum()),
+            "n_covered": int(m.sum()),
+            "status": st,
+            "decided": int(d.sum()),
+            "deflector": nd,
+            "none": nn,
+            "none_colour_match": int(
+                (d & (sc["test_status"] == "none") & sc["colour_match"]).sum()
+            ),
+            "none_typical_detectable": int(
+                (d & (sc["test_status"] == "none") & sc["detectable_typical"]).sum()
+            ),
+        }
     ctl = summary["control"]
     summary["control_efficiency"] = ctl["deflector"] / ctl["decided"] if ctl["decided"] else None
-    sc.meta.update(provenance=schema.Provenance.DERIVED.value,
-                   source="scripts/w12_niq.py screen (D-056 test on rejected pairs)")
+    sc.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source="scripts/w12_niq.py screen (D-056 test on rejected pairs)",
+    )
     res = paths.repo_root() / "results" / "w12_niq"
     res.mkdir(parents=True, exist_ok=True)
-    keep = ["name", "ra", "dec", "z_source", "sep_cat", "sep_ls", "group", "catalogue", "comment",
-            "depth_z", "req_mag_z_typical", "req_mag_z", "test_status", "undecided_flags",
-            "decided", "detectable_typical", "detectable_conservative", "hennawi_binary"]
+    keep = [
+        "name",
+        "ra",
+        "dec",
+        "z_source",
+        "sep_cat",
+        "sep_ls",
+        "group",
+        "catalogue",
+        "comment",
+        "depth_z",
+        "req_mag_z_typical",
+        "req_mag_z",
+        "test_status",
+        "undecided_flags",
+        "decided",
+        "dgz",
+        "colour_match",
+        "detectable_typical",
+        "detectable_conservative",
+        "hennawi_binary",
+    ]
     sc[keep].write(res / "systems.ecsv", overwrite=True)
     (res / "summary.json").write_text(json.dumps(summary, indent=2, default=str) + "\n")
     man = paths.manifests_dir() / "w12_niq_inputs.json"
     man.write_text(json.dumps({"inputs": manifest, "bricks": bmeta}, indent=2) + "\n")
-    print(json.dumps({k: v for k, v in summary.items() if k in ("rejected", "control",
-                      "control_efficiency", "n_systems", "n_covered")}, indent=2))
-    nones = sc[(sc["group"] == "rejected") & (sc["test_status"] == "none")]
-    if args.sheet and len(nones):
-        cut = out / "cutouts"
-        cut.mkdir(exist_ok=True)
-        for r in nones:
-            w12.fetch_cutout(float(r["ra"]), float(r["dec"]), cut / f"{r['name']}.jpg")
-        w12.contact_sheet(nones, cut, res / "contact_sheet_none.png",
-                          "Rejected quasar pairs with no LS deflector (status none)")
+    print(
+        json.dumps(
+            {
+                k: v
+                for k, v in summary.items()
+                if k in ("rejected", "control", "control_efficiency", "n_systems", "n_covered")
+            },
+            indent=2,
+        )
+    )
+    if args.sheet:
+        for g in ("rejected", "control"):
+            sel = sc[(sc["group"] == g) & sc["decided"]]
+            if len(sel):
+                sheet(sel, out, res / f"contact_sheet_{g}.jpg", f"Decided {g} pairs (LS DR10 grz)")
 
 
 def main(argv=None) -> None:
