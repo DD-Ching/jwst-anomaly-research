@@ -1870,23 +1870,25 @@ gated off) until the solver refines its grid near high |μ|. Pairs whose catalog
 - `images` / `fluxratio` run with CANUCS DR1 photo-z once the image list opens.
 
 
-## D-039 MACS0717 screens: null; model copies of unpredicted images; CATS-only extra images (2026-10-08)
+## D-041 MACS0717 screens: null; model copies of unpredicted images; CATS-only extra images (2026-10-08)
 
 **Decision.** The MACS0717 screens (`macs0717-cats`, VENUS program 6882 `jw06882-o029_t063`, 10 bands) are a null
 result (docs/fields/macs0717.md). There were 51 flags, 0 surviving. Two rules (ASSUMPTION: thresholds):
-- **Model copy.** A predicted image within 2× the model's image-plane rms of a catalogued but unpredicted image of the
-  same system is the model's copy of that image, not a missing counter-image. In MACS0717, 32 of the 51 flags are
-  copies, 2–5″ from catalogued images.
+- **Model copy.** A predicted image within 1.75× the model's image-plane rms (5.6″ here) of a catalogued, detected
+  but unpredicted image of the same system is the model's copy of that image, not a missing counter-image. In
+  MACS0717, 32 of the 51 flags are copies, 1.6–5.6″ from catalogued images.
 - **Model-dependent extra image.** An extra image predicted by one model but by neither of two independent models
   solved from their deflection maps (here Sharon v4cor and Keeton v4) is model-dependent and untestable. This extends
   the D-036/D-037 μ rule to image existence.
 
 **Alternatives rejected.** Reporting the raw `absent` / `confused` classes. Matching within 1.5″ for a model whose
-image-plane rms is 3.2″: 89 of 132 catalogued images have no prediction within 1.5″. With `--match-arcsec 3.2` the flags
-drop to 4, and all 4 were vetted.
+image-plane rms is 3.2″: 89 of 132 catalogued images have no prediction within 1.5″. With `--match-arcsec 3.2` the forced-photometry flags
+drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the radius), and all were vetted.
 
 **Evidence.**
-- `validate`: κ 3.2e-3; μ(z=2) 1.2e-3; image-plane rms 3.21″ against the quoted 2.41″ (the gate passes). Frame offset
+- `validate`: κ 3.2e-3; μ(z=2) 1.2e-3; image-plane rms 3.21″ against the quoted 2.41″ (the gate passes). With the
+  D-040 fold refinement, rms and the 16 shared matches are unchanged, so the copies are not solver-grid misses (the
+  `images` run itself used the 0.25″ grid before D-040). Frame offset
   (F200W, 63 matches): +0.023″, −0.061″, so no `frame_offset_arcsec`.
 - `images` (forced F277W): 199 predicted. Classes: recovered 25, confused 38, absent 6, undetectable 13,
   no_reference 54, inconsistent_reference 5, off_image 3.
@@ -1899,5 +1901,5 @@ drop to 4, and all 4 were vetted.
 
 **Revisit if.**
 - A JWST-era MACS0717 lens model appears.
-- A MACS0717 photo-z catalogue (DJA or a team release) appears.
+- A MACS0717 photo-z catalogue (DJA or a team release) appears: re-run `radial` with the background cut.
 - `forced_check` ties its match and search radii to the measured image-plane rms when that rms exceeds 1″.

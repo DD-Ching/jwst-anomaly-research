@@ -523,14 +523,27 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   (x/y-arcsec-deflect, kappa, z02-magnif, arcs.txt, params.txt where present) are pinned by sha256 in
   `lensmodel.HFF_CATS`. The release readmes quote rms 0.72″, 0.63″, n/a, 2.41″, 0.48″ and n/a.
 
-### MACS0717 field run (accessed 2026-10-08; D-039)
+### MACS0717 field run (accessed 2026-10-08; D-041)
 
 - JWST program 6882 (VENUS, PI Fujimoto), observation 29 `jw06882-o029_t063`, 10 NIRCam bands, jwst 3.0.0, released
   2025-11-03. Manifests: `data/manifests/macs0717*.ecsv`.
-- HFF MACS0717 lens models, https://archive.stsci.edu/pub/hlsp/frontier/macs0717/models/: κ/γ maps of Sharon v4cor,
-  GLAFIC v3, Keeton v4, Williams v4.1 and Diego v4.1, read by byte range. The Sharon v4cor and Keeton v4 deflection maps
-  (64 MB each) were solved in scratch code and then deleted. Only sha256 prefixes were kept: Sharon x `ded45fa9802561f7…`,
-  y `913acb92…`; Keeton x `794590824dc5…`, y `9820902025c4…`. Pin full hashes when they become `MODELS` entries.
+- HFF MACS0717 second models, https://archive.stsci.edu/pub/hlsp/frontier/macs0717/models/<team>/<version>/. They
+  were read by byte range (κ/γ) or solved in scratch code and then deleted (Sharon and Keeton deflection maps). Full
+  sha256 values were streamed on 2026-10-08. The deflection-map prefixes match those recorded during the run.
+  - `hlsp_frontier_model_macs0717_sharon_v4cor_kappa.fits` 64,008,000 B `4dcb81cb70a5b429687566b850490ee9f727cb909b6c769adbcf03927930511c`
+  - `hlsp_frontier_model_macs0717_sharon_v4cor_gamma.fits` 64,008,000 B `077c548ea9b19fe717b9efd4b6f25a274f7c799b73b20dee0acd3ab55b8ccbca`
+  - `hlsp_frontier_model_macs0717_sharon_v4cor_x-arcsec-deflect.fits` 64,008,000 B `ded45fa9802561f764fa3c8fd427b8eebb620155ef43760b608bf7a8e719f758`
+  - `hlsp_frontier_model_macs0717_sharon_v4cor_y-arcsec-deflect.fits` 64,008,000 B `913acb9272a63776b70c71eb6b3424f94c94f2392572c1e844ef733c3c8c68f8`
+  - `hlsp_frontier_model_macs0717_keeton_v4_kappa.fits` 64,039,680 B `2bd093da64ea551bf49ba5026a24690ee3884d544a2b476e8ae0dce6c5b49684`
+  - `hlsp_frontier_model_macs0717_keeton_v4_gamma.fits` 64,039,680 B `50f203bd22748da418810dbb8e5eaa1548297082e8010652823ede58503b075e`
+  - `hlsp_frontier_model_macs0717_keeton_v4_x-arcsec-deflect.fits` 64,039,680 B `794590824dc56f12da9a261774c9488ab79a57cb792dcfebff586bd6cb078d6c`
+  - `hlsp_frontier_model_macs0717_keeton_v4_y-arcsec-deflect.fits` 64,039,680 B `9820902025c448a0f760facd51f107fffc2aa61ea7e6efb519d4a6c240e207c8`
+  - `hlsp_frontier_model_macs0717_glafic_v3_kappa.fits` 277,318,080 B `3c0f8b0ed0b9c7a04454c4b59640550479845b88ba47832b4cd539a19ff8319d`
+  - `hlsp_frontier_model_macs0717_glafic_v3_gamma.fits` 277,318,080 B `618bd396d6c3ade6ad67f2e593c475b6a99371d320483426f757cdc2142a0bfe`
+  - `hlsp_frontier_model_macs0717_williams_v4.1_kappa.fits` 3,090,240 B `cc807a9a391246e911f8e0a54a52e35139360c41949bd678c0983e7c3a5a7a40`
+  - `hlsp_frontier_model_macs0717_williams_v4.1_gamma.fits` 3,090,240 B `75ed37026ecedf04b250684669ab7263a3fb20e66754a017fc272dfd94cd87d3`
+  - `hlsp_frontier_model_macs0717_diego_v4.1_kappa.fits` 1,056,960 B `e3304e045a04639df725351bdfd12aec2dc530bc2b863b52e3631f927d10e69f`
+  - `hlsp_frontier_model_macs0717_diego_v4.1_gamma.fits` 1,056,960 B `316ab0e8953021b4ad0cef8d085aa0bb8c5df1acb5f74bcdee66fcc95bdfe9da`
 
 ### MACS1149 field run (accessed 2026-10-08; D-037)
 
