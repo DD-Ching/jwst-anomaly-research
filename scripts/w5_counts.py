@@ -25,6 +25,7 @@ Exotic physics is a hypothesis: a flag is an anomaly to vet, never a discovery.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -796,7 +797,10 @@ def cmd_sheet(args) -> None:
         wt = cm.block_sum(ms.weight[sl], f) / f**2
         with np.errstate(divide="ignore", invalid="ignore"):
             rel = dens / wt / np.nanmean(dens[wt > 0.5] / wt[wt > 0.5])
-        ext = [-half, half, -half, half]
+        # a cutout clipped at the raster edge keeps its true offsets, so (0, 0) stays the flag
+        x_lo = (max(ix0, 0) - ix0) * CELL - half
+        y_lo = (max(iy0, 0) - iy0) * CELL - half
+        ext = [x_lo, x_lo + dens.shape[1] * f * CELL, y_lo, y_lo + dens.shape[0] * f * CELL]
         im = ax[0].imshow(
             np.where(wt > 0.3, rel, np.nan), origin="lower", extent=ext, cmap="RdBu", vmin=0, vmax=2
         )
@@ -871,12 +875,40 @@ def cmd_limit(args) -> None:
     t.pprint(max_width=200)
 
 
+def cmd_manifest(args) -> None:
+    """Write data/manifests/w5_dr10_counts.ecsv: each cached chunk, its query, size, sha256."""
+    rows = []
+    for name in args.regions:
+        survey = cm.LegacySurveysCountMap(REGIONS[name], MAG_LIM)
+        for box in survey.region.chunks():
+            path = survey.chunk_path(box)
+            data = path.read_bytes()
+            rows.append(
+                {
+                    "region": name,
+                    "file": path.name,
+                    "query_gal": cm.chunk_queries(box, MAG_LIM)["gal"],
+                    "bytes": len(data),
+                    "sha256": hashlib.sha256(data).hexdigest(),
+                }
+            )
+    t = Table(rows=rows)
+    t.meta.update(
+        provenance=schema.Provenance.OBSERVED.value,
+        source=f"{cm.REFERENCE}; cached per-chunk aggregations (scripts/w5_counts.py fetch)",
+    )
+    out = paths.repo_root() / "data" / "manifests" / "w5_dr10_counts.ecsv"
+    t.write(out, format="ascii.ecsv", overwrite=True)
+    print(f"wrote {out} ({len(t)} chunks)")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
     f = sub.add_parser("fetch")
     f.add_argument("--regions", nargs="+", default=list(REGIONS))
-    f.add_argument("--workers", type=int, default=2)
+    # Data Lab etiquette (scripts/CLAUDE.md): one query at a time unless the service is idle
+    f.add_argument("--workers", type=int, default=1)
     f.add_argument("--passes", type=int, default=200)
     f.add_argument("--pause", type=float, default=120.0)
     f.add_argument("--reverse", action="store_true")
@@ -893,6 +925,9 @@ def main(argv=None) -> int:
     sh.add_argument("--n", type=int, default=12)
     sh.set_defaults(func=cmd_sheet)
     sub.add_parser("limit").set_defaults(func=cmd_limit)
+    mf = sub.add_parser("manifest")
+    mf.add_argument("--regions", nargs="+", default=sorted(REGIONS))
+    mf.set_defaults(func=cmd_manifest)
     args = ap.parse_args(argv)
     args.func(args)
     return 0

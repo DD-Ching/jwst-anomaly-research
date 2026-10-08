@@ -85,7 +85,7 @@ def test_combine_duplicates_sums_split_pixels():
 def test_count_map_survey_protocol():
     s = cm.LegacySurveysCountMap(cm.Region("t", 0, 1, 0, 1), cache=None)
     assert isinstance(s, signatures.CountMapSurvey)
-    assert isinstance(s, signatures.CatalogueSurvey)
+    assert not isinstance(s, signatures.CatalogueSurvey)  # pixels are not objects
 
 
 def test_tabulated_counts_match_power_law():

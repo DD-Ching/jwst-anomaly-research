@@ -153,7 +153,11 @@ def merge_chunk(gal: Table, all_: Table, bad: Table) -> Table:
             "depth_r": depth_mag(np.asarray(all_["galdepth_r"], float)[order]),
             "nobs_min": nobs,
             "ebv": np.asarray(all_["ebv"], float)[order],
-        }
+        },
+        meta={
+            "provenance": schema.Provenance.OBSERVED.value,
+            "source": f"{REFERENCE}: one chunk's per-pixel aggregations (galaxies, all, masked)",
+        },
     )
 
 
@@ -196,15 +200,17 @@ class LegacySurveysCountMap:
         missing = self.missing_chunks()
         if missing:
             raise FileNotFoundError(f"{len(missing)} chunks not fetched (run fetch first)")
-        parts = [Table.read(self.chunk_path(b)) for b in self.region.chunks()]
-        for p in parts:
+        parts = []
+        for b in self.region.chunks():
+            p = Table.read(self.chunk_path(b))
+            # the cache key is coarse (region, mag_lim to 0.1, lower-left corner): refuse a chunk
+            # fetched with another selection or geometry instead of silently reusing it
+            if p.meta.get("query_gal") != chunk_queries(b, self.mag_lim)["gal"]:
+                raise ValueError(f"{self.chunk_path(b)} was fetched with another query; refetch it")
             p.meta.clear()
+            parts.append(p)
         t = combine_duplicates(vstack(parts))
         return finalize_map(t, source=f"{REFERENCE}; {self.name}; {galaxy_selection(self.mag_lim)}")
-
-    def catalogue(self) -> Table:
-        """CatalogueSurvey compatibility: the rows are pixels, not objects (see module doc)."""
-        return self.count_map()
 
     def area_deg2(self) -> float:
         return float(np.sum(self.count_map()["w"]) * PIX_AREA_DEG2)
@@ -221,6 +227,10 @@ def combine_duplicates(t: Table) -> Table:
     if uniq.size == pix.size:
         out = t.copy()
         out.sort("pix")
+        out.meta.update(
+            provenance=schema.Provenance.OBSERVED.value,
+            source=f"{REFERENCE}: chunk rows (no pixel split at chunk edges)",
+        )
         return out
     n_all = np.asarray(t["n_all"], float)
 
@@ -241,7 +251,11 @@ def combine_duplicates(t: Table) -> Table:
             "depth_r": depth_mag(ivar),
             "nobs_min": nobs,
             "ebv": np.bincount(inv, weights=n_all * np.asarray(t["ebv"], float)) / wsum,
-        }
+        },
+        meta={
+            "provenance": schema.Provenance.OBSERVED.value,
+            "source": f"{REFERENCE}: chunk rows with pixels split at chunk edges summed",
+        },
     )
 
 

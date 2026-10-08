@@ -22,7 +22,7 @@ from typing import Protocol, runtime_checkable
 import numpy as np
 from astropy.table import Table
 
-from jwst_anomaly import countmap, exotic_sim, schema
+from jwst_anomaly import exotic_sim, schema
 
 DATA_KINDS = ("catalogue", "light_curve", "image")
 
@@ -163,8 +163,9 @@ register(
         name="background-count deficit inside about theta_E",
         data_kinds=("catalogue",),
         predict=_bound(exotic_sim.count_ratio, _NEG),
-        # takes the predicted profile (countmap.deficit_profile, n = 1, eps < 0) as an argument
-        inject=countmap.inject_deficit,
+        # count-map injection is map-level (countmap.inject_deficit thins pixel counts with the
+        # exotic_sim profile from countmap.deficit_profile); it is not an exotic_sim image injector
+        inject=None,
         screens=("scripts/w5_counts.py screen", "scripts/w5_counts.py inject"),
         ordinary_mimics=(
             "masks and bright-star halos",
