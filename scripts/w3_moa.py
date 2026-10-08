@@ -1,4 +1,4 @@
-"""W3 in the MOA-II 9-year release, pilot field gb22: pre-screen, fits, vetting, limit (D-060).
+"""W3 in the MOA-II 9-year release, pilot field gb22: pre-screen, fits, vetting, limit (D-062).
 
 The release holds every Cut-0 variable object (difference-image detections of positive *or
 negative* PSF profiles; ``jwst_anomaly.moa``), before any bump or PSPL cut, so a W3 event (the
@@ -34,7 +34,7 @@ from multiprocessing import Pool
 from pathlib import Path
 
 import numpy as np
-from astropy.table import Table
+from astropy.table import Table, vstack
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -380,10 +380,25 @@ def passes(pre: Table) -> Table:
     return sel[keep]
 
 
-def run_fit(procs: int, limit: int | None = None) -> Path:
+def results_dir() -> Path:
+    """Tracked chunk fit tables (as D-059): an ephemeral session fits one chunk, `merge-chunks`
+    joins them into the table `vet` reads."""
+    d = paths.repo_root() / "results" / "w3_moa"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def chunk_name(chunk: tuple[int, int]) -> str:
+    return f"fits_{FIELD}_chunk{chunk[0] + 1}of{chunk[1]}.ecsv"
+
+
+def run_fit(procs: int, limit: int | None = None, chunk: tuple[int, int] | None = None) -> Path:
+    """Fit the pre-screen passes; ``chunk=(k, n)`` fits every n-th pass from k (0-based)."""
     field = moa.MoaField(FIELD)
     pre = Table.read(out_dir() / f"prescreen_{FIELD}.ecsv")
     sel = passes(pre)
+    if chunk is not None:
+        sel = sel[chunk[0] :: chunk[1]]
     if limit:
         sel = sel[:limit]
     ev = field.events()
@@ -413,15 +428,48 @@ def run_fit(procs: int, limit: int | None = None) -> Path:
         fit_params=json.dumps(asdict(w3.P)),
         wall_time_s=round(time.time() - t1, 1),
         n_prescreen=len(pre),
+        n_passes=len(passes(pre)),
+        chunk="" if chunk is None else f"{chunk[0] + 1}/{chunk[1]}",
     )
     path = out_dir() / f"fits_{FIELD}.ecsv"
     tab.write(path, overwrite=True)
+    if chunk is not None and limit is None:  # complete chunks only: what `merge-chunks` joins
+        w3.write_ecsv_gz(tab, results_dir() / f"{chunk_name(chunk)}.gz")
     ok = no_error(tab)
     flags = ok & (np.asarray(tab["dbic_min"], float) < P.flag_dbic)
     print(
         f"wrote {path}: {len(tab)} fits, {(~ok).sum()} errors, {flags.sum()} flags, "
         f"{time.time() - t1:.0f} s"
     )
+    return path
+
+
+def merge_chunks(n: int) -> Path:
+    """Join the tracked chunk tables 1..n of n into the table `vet` reads. Refused unless every
+    chunk is present, was fitted with the current fit ``Params`` and holds exactly its own passes
+    of the current pre-screen (which is deterministic and recomputed in each session)."""
+    pre = Table.read(out_dir() / f"prescreen_{FIELD}.ecsv")
+    ids = list(passes(pre)["event_id"])
+    fit_params = json.dumps(asdict(w3.P))
+    parts = []
+    for k in range(n):
+        path = results_dir() / f"{chunk_name((k, n))}.gz"
+        if not path.exists():
+            raise SystemExit(f"missing chunk {k + 1}/{n}: {path}")
+        tab = Table.read(path, format="ascii.ecsv")
+        if tab.meta.get("fit_params") != fit_params:
+            raise SystemExit(f"chunk {k + 1}/{n} was fitted with other Params; refit it")
+        if sorted(tab["event_id"]) != sorted(ids[k::n]):
+            raise SystemExit(f"chunk {k + 1}/{n} does not hold exactly its pre-screen passes")
+        parts.append(tab)
+    tab = vstack(parts, metadata_conflicts="silent")
+    tab.sort("event_id")
+    tab.meta["chunk"] = ""
+    tab.meta["source"] = f"scripts/w3_moa.py merge-chunks: {n} chunk fit tables of {FIELD}"
+    tab.meta["wall_time_s"] = round(sum(float(t.meta.get("wall_time_s", 0)) for t in parts), 1)
+    path = out_dir() / f"fits_{FIELD}.ecsv"
+    tab.write(path, overwrite=True)
+    print(f"wrote {path}: {len(tab)} fits from {n} chunks")
     return path
 
 
@@ -1177,7 +1225,7 @@ def write_manifest() -> Path:
     )
     tab.meta.update(
         provenance=schema.Provenance.OBSERVED.value,
-        source="jwst_anomaly.moa.FILES (MOA-II 9-year release; D-060)",
+        source="jwst_anomaly.moa.FILES (MOA-II 9-year release; D-062)",
     )
     path = paths.manifests_dir() / "moa_ii.ecsv"
     tab.write(path, overwrite=True)
@@ -1208,6 +1256,9 @@ def main(argv=None) -> int:
     f = sub.add_parser("fit", help="ordinary and exotic fits of the pre-screen passes")
     f.add_argument("--procs", type=int, default=4)
     f.add_argument("--limit", type=int, default=None)
+    f.add_argument("--chunk", default=None, help="K/N: fit every N-th pass from the K-th")
+    m = sub.add_parser("merge-chunks", help="join the tracked chunk fit tables 1..N")
+    m.add_argument("--n", type=int, required=True)
     v = sub.add_parser("vet", help="vet the flags of the fit stage")
     v.add_argument("--procs", type=int, default=4)
     c = sub.add_parser("sheet", help="contact sheet of the vetted flags")
@@ -1224,7 +1275,9 @@ def main(argv=None) -> int:
     if a.cmd == "prescreen":
         run_prescreen(min(a.procs, 4))
     elif a.cmd == "fit":
-        run_fit(min(a.procs, 4), a.limit)
+        run_fit(min(a.procs, 4), a.limit, w3.parse_chunk(a.chunk))
+    elif a.cmd == "merge-chunks":
+        merge_chunks(a.n)
     elif a.cmd == "vet":
         run_vet(min(a.procs, 4))
     elif a.cmd == "inject":

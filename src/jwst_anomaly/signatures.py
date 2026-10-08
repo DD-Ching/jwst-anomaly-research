@@ -143,7 +143,7 @@ register(
         screens=(
             "scripts/dimming_screen.py",
             "scripts/w3_microlensing.py",
-            "scripts/w3_moa.py",  # MOA-II light curves before any bump cut (D-060)
+            "scripts/w3_moa.py",  # MOA-II light curves before any bump cut (D-062)
         ),
         ordinary_mimics=(
             "binary-lens caustic crossings",
@@ -153,7 +153,7 @@ register(
             "persistence and saturated-star wings",
         ),
         limits_doc=_LIMITS,
-        decisions=("D-047", "D-052", "D-054", "D-057", "D-060"),
+        decisions=("D-047", "D-052", "D-054", "D-057", "D-062"),
         lens=_NEG,
     )
 )
@@ -186,7 +186,7 @@ class LightCurveSurvey(Protocol):
     ``events()`` has at least ``event_id, ra, dec`` (deg), plus any published fit parameters;
     ``light_curve(event_id)`` returns :func:`standard_light_curve` output, or
     :func:`standard_flux_light_curve` output for difference-imaging surveys whose flux relative to
-    a reference image can be negative (MOA-II, D-060). ``efficiency(t_e)``
+    a reference image can be negative (MOA-II, D-062). ``efficiency(t_e)``
     is the survey's published detection efficiency for an event time scale (days), or None when
     the survey publishes none (limits then need injection-recovery on the survey's cadence).
     """

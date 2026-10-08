@@ -1,4 +1,4 @@
-"""Offline tests for scripts/w3_moa.py on synthetic difference light curves (D-060)."""
+"""Offline tests for scripts/w3_moa.py on synthetic difference light curves (D-062)."""
 
 from __future__ import annotations
 
@@ -187,3 +187,34 @@ def test_a_flat_bottomed_dip_is_fitted_as_an_eclipse():
     assert ecl["duration"] == pytest.approx(10.0, rel=0.2)
     flat = float(np.sum((f - np.average(f, weights=lc.w)) ** 2 * lc.w))
     assert ecl["chi2"] < flat - 100.0
+
+
+def test_merge_chunks_joins_complete_chunks_and_refuses_bad_ones(tmp_path, monkeypatch):
+    ids = [f"gb22-R-1-0-{i}" for i in range(7)]
+    pre = Table({"event_id": ids, "z_min": [-20.0] * 7, "s_min": [-9.0] * 7, "z_min2": [0.0] * 7})
+    pre["width"] = [1.0] * 7
+    pre["t_lo"] = 2454000.0 + 300.0 * np.arange(7)  # deficits at unrelated epochs
+    pre["t_hi"] = pre["t_lo"] + 1.0
+    pre["error"] = ["x"] + [""] * 6  # a pre-screen error is not a pass
+    monkeypatch.setattr(wm, "out_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
+    pre.write(tmp_path / "prescreen_gb22.ecsv")
+    passes = ids[1:]
+
+    def chunk(k, n, rows, params=None):
+        tab = Table({"event_id": rows, "dbic_min": [0.0] * len(rows)})
+        tab.meta.update(fit_params=params or wm.json.dumps(wm.asdict(wm.w3.P)), wall_time_s=1.0)
+        wm.w3.write_ecsv_gz(tab, tmp_path / f"{wm.chunk_name((k, n))}.gz")
+
+    chunk(0, 2, passes[0::2])
+    with pytest.raises(SystemExit, match="missing chunk 2/2"):
+        wm.merge_chunks(2)
+    chunk(1, 2, passes[1::2])
+    out = Table.read(wm.merge_chunks(2))
+    assert list(out["event_id"]) == sorted(passes) and out.meta["wall_time_s"] == 2.0
+    chunk(0, 1, passes, params="{}")
+    with pytest.raises(SystemExit, match="other Params"):
+        wm.merge_chunks(1)
+    chunk(0, 1, passes[:-1])
+    with pytest.raises(SystemExit, match="exactly its pre-screen passes"):
+        wm.merge_chunks(1)

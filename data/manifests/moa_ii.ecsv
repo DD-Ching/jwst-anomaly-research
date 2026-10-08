@@ -9,7 +9,7 @@
 # - {name: release, datatype: string}
 # meta: !!omap
 # - {provenance: observed}
-# - {source: jwst_anomaly.moa.FILES (MOA-II 9-year release; D-060)}
+# - {source: jwst_anomaly.moa.FILES (MOA-II 9-year release; D-062)}
 # schema: astropy-2.0
 url sha256 size_bytes retrieved_utc last_modified release
 https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/metadata.ipac.tar.gz b339ec176933f4bfcad09d6e17f08166c7a18ffea2ddc567b6cca83fa25fe55c 97332954 2026-10-08 2023-10-13 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"

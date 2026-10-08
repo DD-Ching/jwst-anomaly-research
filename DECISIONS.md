@@ -2848,7 +2848,54 @@ so all 12 chunks stay ~2–3 MB, under the 1 MB per-file rule.
 
 **Revisit if.** The tracked tables exceed ~10 MB in total, or a local session can fit the whole sample at once.
 
-## D-060 W3 in the MOA-II 9-year release: thin in-house adapter, notch pre-screen, gb22 pilot null and first W3 rate limit (2026-10-08)
+## D-060 W2 deflector test at HST resolution: the Hubble Source Catalog is not decisive (2026-10-08)
+
+**Decision.** Do not use HSC v3 catalogue photometry to decide whether a lensed quasar lacks a deflector.
+`scripts/w12_hsc_probe.py` stays as the reproducible probe and as the validation harness (known-lens efficiency)
+for a pixel-level replacement.
+
+**Alternatives rejected.** Counting HSC "none" systems toward f_dark (efficiency 0.46 on known lenses would need a
+correction larger than the signal); widening the deflector radius or lowering the CI cut (the lens galaxy is
+missing from the catalogue, not mis-typed, in the four inspected misses: H1413+117, HE1104−1805, SBS0909+532, HE2149−2745).
+
+**Evidence** (`derived`, run 2026-10-08). 444 quasar/radio systems; 71 with HSC sources in ≥ 2 HSC images (91 with any); known-lens systems
+13 deflector / 15 none / 38 undecided (sources in ≥ 2 HSC images; 15 / 20 / 48 without that cut); no-lens-z systems 1 none (HS0810+2554) / 4 undecided. Tests:
+`tests/test_w12_hsc_probe.py`.
+
+**Revisit if.** PSF-subtracted HST image models (or another deeper/sharper survey) reach an efficiency ≥ 0.9 on
+the known-lens set; HSC v4 or a lens-aware HST catalogue appears.
+
+## D-061 W3 in the Gaia DR3 microlensing candidates: the published selection also rejects W3 (2026-10-08)
+
+**Decision.** Do not use `gaiadr3.vari_microlensing` (Wyrzykowski et al. 2023) to limit W3: its Sample A selection
+passes almost no injected W3 event. `jwst_anomaly.gaia_mulens.GaiaDR3Microlensing` (a D-054 `LightCurveSurvey`:
+TAP events, Table D.1 sample labels from the pinned arXiv source, DataLink G epoch photometry) and
+`scripts/w3_gaia.py` (`fetch`, `fit`, `inject`, `summary`, `manifest`; the D-057 fitter) stay as the harness for
+the next Gaia-cadence sample.
+
+**Alternatives rejected.** Fitting the 363 candidates and quoting the flag count as a limit (the selection removes
+the signal first, as in D-057); emulating the Extractor cuts with guessed definitions (they fail 126 of 163 real
+Sample A events, so `selected` leaves them out; `selected_ext` keeps them for the record).
+
+**Evidence** (`derived`, run 2026-10-08; tables in `results/w3_gaia/`, inputs in `data/manifests/gaia_dr3_mulens.ecsv`).
+- Emulation audit: published cuts (score, u0, t_E, G0, skewness, amplitude, t_first, parallax χ²/dof and π_E,
+  skew–Abbe with log10; the stricter first-year branch read in JD − 2450000, since Gaia time never reaches the published 6824.5–7189.5 window) pass **143 / 163** real Sample A events (149 with ln); 19 / 200 B-only events. G errors
+  rescaled by Eq. 9–10; Level 0 refit reproduces the published t_E (checked on 6 events). Not emulated: colour and RP
+  cuts, u0/t_E error cuts, Extractor cuts, visual inspection (ASSUMPTIONs in `SelParams`).
+- Injections on 166 PSPL-subtracted candidate light curves (30 per cell; t_E 10/30/100/300 d, ρ 0.01/0.1, u0 < 2,
+  t0 uniform in the DR3 window): **W3 2 / 240 selected (0.8 %)**, PSPL controls 17 / 120 (14 %); ε_W3/ε_PSPL ≈ 0.06.
+  Both selected W3 events have u0 ≈ 1.9 (outside the caustic) and are not flagged; **0 / 240 are selected and
+  flagged**. The fitter alone flags 139 / 240 (58 %). W3 events fail the skew–Abbe cut (213), the score (223), skewness
+  < 0 (153) and the parallax χ²/dof (141).
+- Fits of all 363 (0 errors): one flag, 4053892503992268288 (Sample B, ΔBIC −40.3, `E2neg`/`N1neg`, t_E ≈ 346 d,
+  u0 ≈ 1.47). Light curve inspected: the event peaks at the end of the DR3 window (no post-peak data) and the
+  baseline scatters by ~0.4 mag; the exotic fit uses the baseline wiggles. Not a candidate.
+
+**Revisit if.** Gaia DR4 publishes epoch photometry for all sources (then a W3 screen before any microlensing
+selection becomes possible); Gaia publishes the Extractor definitions; or a microlensing catalogue appears whose
+selection does not require a single brightening.
+
+## D-062 W3 in the MOA-II 9-year release: thin in-house adapter, notch pre-screen, gb22 pilot null and first W3 rate limit (2026-10-08)
 
 **Decision.** Read the MOA-II 2006–2014 release (NASA Exoplanet Archive) with a thin adapter,
 `jwst_anomaly.moa.MoaField`, a `signatures.LightCurveSurvey` over one field's bulk tar. Its light curves are read in
@@ -2863,6 +2910,8 @@ the smallest). The W3 search is `scripts/w3_moa.py`:
   seeing/airmass/sky regressors, a trapezoidal eclipse model, ≥ 3 nights in the feature, a night jackknife);
 - injection-recovery through Cut-0 emulation, pre-screen, fit and vetting;
 - a 95 % limit per monitored star per year. N_s comes from the N_s-per-Cut-0-object ratio of Nunota et al. 2024.
+- `fit --chunk K/N` and `merge-chunks` (as D-059) for fields too large for one session; gb22 no longer needs them.
+The 3.5 GB download is for cloud sessions; the owner's machine need not fetch it.
 
 Pilot result for gb22: 18,599 light curves, 30 flags, **0 survivors**. Γ₉₅ ≈ 0.5–5 × 10⁻⁶ per star per year for
 t_E = 3–300 d (docs/exotic_limits.md "W3 in MOA-II (pilot: gb22)").
@@ -2873,8 +2922,9 @@ t_E = 3–300 d (docs/exotic_limits.md "W3 in MOA-II (pilot: gb22)").
 - qusi / ramjet `MoaDataInterface`: it reads internal feather files, not the public release.
 - Per-object HTTP files (`data/Contributed/MOA/gb{F}/R/{C}/…ipac`): fine for a few events, but undocumented, and
   18,599 requests where a whole field is screened.
-- Fitting every shape pass: 1,058 light curves at ~35 s each (~2.5 h on 4 cores); 97 % of them are epochs shared
-  with other objects.
+- Fitting every shape pass: 1,058 light curves at ~26–35 s each (~2.5 h on 4 cores; chunk 1/8 of them,
+  `results/w3_moa/fits_gb22_chunk1of8.ecsv.gz`, flagged 131 / 133, so the flag carries no information there);
+  97 % of them sit at epochs shared with other objects.
 - The first pre-screen statistics:
   - a plain box mean against the median: 10,367 passes at S < −8, dominated by trends and season offsets;
   - a notch against the flanks with white-noise errors: 13,462 passes;

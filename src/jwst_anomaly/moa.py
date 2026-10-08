@@ -1,4 +1,4 @@
-"""MOA-II 9-year Galactic-bulge light curves as a :class:`signatures.LightCurveSurvey` (D-060).
+"""MOA-II 9-year Galactic-bulge light curves as a :class:`signatures.LightCurveSurvey` (D-062).
 
 The NASA Exoplanet Archive serves the MOA-II 2006–2014 release: 2,409,061 variable objects found
 by Cut-0 (Koshimoto et al. 2023, arXiv:2303.08279, Table 2: DAOFIND on difference images, positive

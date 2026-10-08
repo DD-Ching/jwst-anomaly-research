@@ -871,12 +871,25 @@ W3 efficiency is 0 and the 95 % limit is formally infinite. What can be stated:
 - Only the published samples were used; OGLE EWS seasons wait for the owner's decision on their terms
   (D-054).
 
+## W3 in the Gaia DR3 microlensing candidates
+
+D-061; `src/jwst_anomaly/gaia_mulens.py` (adapter), `scripts/w3_gaia.py` (`fetch`, `fit`, `inject`, `summary`,
+`manifest`), tests in `tests/test_w3_gaia.py`. Tracked tables: `results/w3_gaia/`; inputs:
+`data/manifests/gaia_dr3_mulens.ecsv`.
+
+- **No limit.** The emulated Sample A selection (Wyrzykowski et al. 2023, Table C.1; passes 143 / 163 real Sample A
+  events) passes 2 / 240 injected W3 events and none that the fitter also flags (PSPL controls 17 / 120). The
+  catalogue cannot constrain W3 at any t_E (`derived`; ASSUMPTIONs in `SelParams`).
+- Fits of all 363 candidates: one flag (4053892503992268288, ΔBIC −40.3); truncated event on a variable baseline,
+  not a candidate.
+
 ## W3 in MOA-II (pilot: gb22)
 
-D-060; `src/jwst_anomaly/moa.py` (adapter), `scripts/w3_moa.py` (`prescreen`, `fit`, `vet`, `sheet`,
+D-062; `src/jwst_anomaly/moa.py` (adapter), `scripts/w3_moa.py` (`prescreen`, `fit [--chunk]`, `merge-chunks`, `vet`, `sheet`,
 `inject`, `limit`, `manifest`), tests in `tests/test_moa.py` and `tests/test_w3_moa.py`. Outputs under
 `$JWST_ANOMALY_DATA/derived/w3_moa/` (not in git); data pins in SOURCES.md "MOA-II 9-year bulge release" and
-`data/manifests/moa_ii.ecsv`.
+`data/manifests/moa_ii.ecsv`. The gb22 fit table is tracked as `results/w3_moa/fits_gb22_chunk1of1.ecsv.gz`
+(`merge-chunks --n 1`); `fits_gb22_chunk1of8.ecsv.gz` belongs to the superseded 1,058-pass pre-screen.
 
 Why MOA: the OGLE samples above cannot limit W3 because their PSPL selection rejects every injected W3
 event. The MOA-II 9-year release publishes a light curve for **every Cut-0 object** — 2,409,061 variable

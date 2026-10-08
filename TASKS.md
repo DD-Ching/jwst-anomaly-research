@@ -4,21 +4,28 @@ Prioritized queue. Agents pick from **Now** first; in-flight work is visible as 
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
 ## Now (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
-1. **W3 in published microlensing samples** (D-057–D-059). Mróz 2019 bulge (5,790) and 2020 disk (460) fitted and
+1. **W3 in published microlensing samples** (D-057–D-059, D-061). Mróz 2019 bulge (5,790) and 2020 disk (460) fitted and
    vetted: 127 + 6 flags, **0 survive** (the D-059 chunk survivors BLG667.04.62161 and BLG624.18.69573 fail
    `feature_coverage`). **The published samples cannot limit W3:** 0 of 600 injected W3 events pass the emulated Mróz
    selection (PSPL controls 15–43 %), so the chunk re-fits only re-test a selection that excludes the signal. Next:
-   light curves from **before** a PSPL selection — Gaia DR3 `vari_microlensing` + epoch photometry (check its
-   selection with the same injections first), KMTNet public seasons, OGLE EWS (owner decision, terms). Optional:
+   light curves from **before** a PSPL selection. **In progress: MOA-II 9-year Cut-0 light curves, field gb22
+   (D-062)** — the pre-screen keeps 28–58 % of injected W3 and 0 % of PSPL; 1,058 passes to fit in 8 tracked
+   chunks (`fit --chunk K/8`, ~15 min each on 4 cores), then `merge-chunks --n 8`, `vet`, contact sheet, `inject`
+   (full chain), `limit`. Then a field with published N_s (Nunota et al. 2024 Table 1). Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
+   injections both selected and flagged; one real flag, not a candidate). Next: Gaia DR3 variables with epoch
+   photometry (vari_summary; check by injection whether W3 survives the variability classifier first), KMTNet
+   public seasons, OGLE EWS (owner decision, terms). Optional:
    re-fit the bulge under D-058's bounded π_E (`merge-chunks`, then `vet` + `revet`; can only add flags); re-run the
    6 arXiv name queries that errored.
 2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.27 (typical) for quasar/radio-selected
-   lenses, the only selections sensitive to a dark lens). Next: HSC PDR3 / HST photometry for the 307 blended or
-   too-close lensed quasars (makes the test decisive); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar candidates ("nearly identical quasars", binary quasars) where a dark lens
+   lenses, the only selections sensitive to a dark lens). Next: HSC PDR3 photometry or PSF-subtracted HST
+   image models for the 307 blended or too-close lensed quasars (makes the test decisive; HST *catalogue* photometry
+   is not: D-060, efficiency 0.46); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar candidates ("nearly identical quasars", binary quasars) where a dark lens
    would hide; HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
 3. **W5:** background-count deficits around empty regions in a wide survey, with calibrated nulls.
-4. **Warp:** monitor the literature (incl. Clough, Dietrich & Khan 2024) and any detector band that could test it.
+4. **Warp:** monitor the literature (checked 2026-10-08: no distant-observer EM template — Lentz & Felton 2024 give fluxes only; Clough et al.
+   2024 waveform not public; O3 superluminal-burst search already null, Kuwahara & Cannon 2023). Recheck monthly.
 
 ## JWST focus (D-047 screens; continues under the direction above)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):

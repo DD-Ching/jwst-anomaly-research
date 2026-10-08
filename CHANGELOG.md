@@ -2,6 +2,62 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 in MOA-II Cut-0 light curves (gb22): the pre-screen keeps W3 events; chunk 1/8 fitted (D-062)
+- Cloud run; continues the unpushed-PR branch `claude/w3-moa` of the previous run (adapter, script, tests), merged
+  with main (its D-060 renumbered **D-062**). `gb22.tar` (3.5 GB, sha256 verified) and `metadata.ipac.tar.gz` fetched.
+- `prescreen` on all 18,599 gb22 light curves: 0 errors, 137 s wall; **1,058 passes** (`derived`).
+- `inject --prescreen-only` (seed 60; 300 W3, 100 PSPL on real quiet light curves): W3 survives emulated Cut-0 and the
+  pre-screen at 28 / 47 / 58 / 50 / 33 % (t_E 3 / 10 / 30 / 100 / 300 d); PSPL 0 / 100. This is the first sample in
+  this project whose selection keeps W3 (OGLE 0 / 600, Gaia 0 / 240).
+- `fit --chunk 1/8`: 133 passes, 0 errors, 855 s wall; best ordinary PSPL 130 / FSPL 3; ΔBIC(min exotic) 5/50/95 % = −13,497 / −631 / −193; **131 / 133 flag** (`derived`). Every pass flags (dip-shaped variables prefer a negative-flux model), so `vet` is
+  the discriminating step; no conclusion before it runs on all chunks and the contact sheet is inspected.
+- New: `fit --chunk K/N` writes `results/w3_moa/fits_gb22_chunkKofN.ecsv.gz`; `merge-chunks --n N` refuses missing,
+  stale-Params or wrong-membership chunks (the pre-screen is deterministic and recomputed each session, ~2 min).
+- **Failed approach:** waiting with `until ! pgrep -f '<script>'` and `pkill -f` from the shell — both match the
+  waiting shell itself (lost ~8 min; the D-059 lesson again). Wait on a log line or the output file instead.
+- **Handoff / next:** chunks 2–8 (`OMP_NUM_THREADS=1 python scripts/w3_moa.py prescreen && ... fit --chunk K/8`,
+  ~15 min each), then `merge-chunks --n 8`, `vet`, `sheet`, full `inject`, `limit`.
+
+## 2026-10-08: W3 in the Gaia DR3 microlensing candidates: the published selection rejects W3 too (D-061)
+- Cloud run. Hypothesis: the Gaia DR3 candidates (363; Wyrzykowski et al. 2023) are selected less PSPL-shaped than
+  Mróz et al., so they could limit W3. Tested the selection before fitting, as D-057 requires.
+- New `gaia_mulens.GaiaDR3Microlensing` adapter (TAP + DataLink epoch photometry, 8 parallel batches of 12 ids,
+  ~3 s per source on the server; Table D.1 sample labels from the pinned arXiv source) and `scripts/w3_gaia.py`.
+- Emulated Sample A cuts pass 143 / 163 real Sample A events. W3 injections: **2 / 240 selected, 0 / 240 selected
+  and flagged**; PSPL controls 17 / 120. W3 dimming fails skewness < 0 and the skew–Abbe cut, as designed for
+  brightenings. The fits of all 363 give one flag (4053892503992268288, ΔBIC −40.3). It is an event truncated at the
+  window end on a variable baseline (light curve inspected), not a candidate.
+- **Failed approaches (rules):** the Extractor cuts (n points, duration > 135 d, max σ > 50) cannot be emulated from
+  the paper. The guessed definitions fail 126 / 163 real events, so they are left out. A single-id DataLink request
+  answers with bare CSV, not a zip. Truncated chunked replies happen, so retry them.
+- **Next:** W3 needs light curves taken before any microlensing selection. Gaia DR3 has epoch photometry only for
+  its variable sources (vari_summary; ~11.7 M per the DR3 release, recheck), selected by variability, not shape. Next, check whether W3 survives that
+  classifier (`vari_classifier_result`) by injection, and whether a sky-region subset is small enough to screen.
+  Other options: KMTNet public seasons; OGLE EWS (owner decision, terms).
+
+## 2026-10-08: W2 deflector test at HST resolution from the Hubble Source Catalog: not decisive (D-060)
+- Cloud run. Hypothesis: HST resolution decides the lensed quasars that Legacy Surveys left blended or too close
+  (D-056). `scripts/w12_hsc_probe.py`: HSC v3 summary sources within 4″ of each of the 444 galaxy-scale quasar/radio
+  systems (MAST catalogs API, 58 s); ≥ 2 point sources (CI < 1.3) are the images, an extended source (CI ≥ 1.5)
+  near their centroid and > 0.2″ from an image is the deflector; sources in < 2 HSC images are dropped as likely
+  artifacts (MAST's recommendation; #90 review) (ASSUMPTIONs in `Params`).
+- 71 of 444 systems have HSC sources in ≥ 2 HSC images (91 with any). Validation on systems with a published lens redshift (a lens galaxy is known
+  to exist): 13 deflector, 15 none, 38 undecided → **efficiency 13/28 = 0.46** (`derived`; 15/35 = 0.43 without the
+  artifact cut). Misses include quads and doubles (13 of 16 "none" have 2 point images). In four inspected misses (H1413+117, HE1104−1805, SBS0909+532,
+  HE2149−2745) the HSC rows within 4″ are only the quasar images: the lens galaxy is absent from the catalogue, not
+  mis-typed (likely lost in the quasar PSF; hypothesis, no cutouts inspected). Without a lens redshift: 1 none
+  (HS0810+2554), 4 undecided. The 3 open SuGOHI IX pairs (D-056) have no HSC sources.
+- **Failed approach (rule):** HST *catalogue* photometry cannot decide a dark deflector in lensed quasars — a
+  "none" is more likely a missed lens (0.54) than a dark one. No limit, no candidate; HS0810+2554 is not flagged.
+- **Next:** PSF-subtracted HST image modelling (e.g. drizzled frames from MAST, quasar PSF + Sérsic fit) validated
+  on the same known-lens set, or HSC PDR3 photometry; until then W2 in wide imaging stays at D-056.
+
+## 2026-10-08: Warp literature check: still nothing testable
+- Subagent search (arXiv API 2023–2026, INSPIRE citations of Clough et al. 2024): no imaging or lensing prediction
+  for a distant observer; Lentz & Felton 2024 give order-of-magnitude EM fluxes for a bubble 100 lyr away but no
+  template that separates it from ordinary transients (found by review); the collapse-burst waveform is not public; an O3 search for superluminal-source GW
+  bursts (Kuwahara & Cannon 2023) is already null. D-047 stands; recorded in SOURCES.md and docs/exotic_lensing.md.
+
 ## 2026-10-08: W3 OGLE bulge (all 5,790 events): no candidate; the published selection rejects every W3 event (D-057)
 - Worktree worker, unbounded π_E (predates D-058; bounding can only add flags). Bulge: 0 fit failures; best ordinary
   PSPL 5,377 / PAR 401 / FSPL 12; ΔBIC(best exotic) 5/50/95 % = −3.6 / 5.7 / 12.0; 127 flags < −10 (`derived`).
