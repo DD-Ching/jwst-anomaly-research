@@ -192,9 +192,9 @@ Outputs under `outputs/t_sunrise_e13/` (not committed). Every number is `derived
     compact and unchanged in shape. Per `_cal` exposure (0.1″ apertures) F150W is 1.5–2.0 in all four o010 dithers
     and 3.0–3.8 in all four o052 dithers (×1.9; jwst 2.0.1 against 3.0.0 calibration). Not persistence. A variable
     (e.g. AGN) candidate; not yet vetted.
-  - `scripts/persistence_check.py` on o010, o120 and o052 (404 `_cal` files, S3 byte ranges, 2 min): `n0022` 8 of 8
-    detections suspect, `n0150` 5/5, 4/4 and 2/2 at its three positions; `n0153` 0 of 39 and Earendel 0 of 4 suspect
-    (`on_sky`).
+  - `scripts/persistence_check.py` on o010, o120 and o052 (404 `_cal` files, S3 byte ranges, 1 min): `n0022` 8 of 8
+    detections suspect, `n0150` 5/5, 4/4 and 2/2 at its three positions; `n0153` 0 of 39 suspect (36 clean) and Earendel
+    0 of 4 (`on_sky`).
   - **Why the search missed them:** the combination step needs the same kind in two bands, and in this pair only
     F150W and F444W overlap. `n0022` and `n0150` are blue and faint in F444W. That `n0022`/`n0150` did not appear in the o010/o120
     search (F090W and F115W) is not yet understood (footprint or depth proxy, or the S/N ≥ 10 cut).

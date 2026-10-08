@@ -1799,7 +1799,9 @@ D-034's rules now remove these automatically.
 **Decision.** Before a single-epoch source counts as a transient, `scripts/persistence_check.py` measures it in every
 level-2 `_cal` exposure that covers it, and measures the same *detector pixel* in the earlier exposures on that
 detector (≤ 3 h). A detection is `suspect` when an earlier exposure put ≥ 20× its flux, or a saturated pixel, there;
-a position whose detections are all suspect is `persistence`. Thresholds are ASSUMPTIONs.
+earlier exposures that put the position itself on that pixel (< 2 px) are skipped. A position with detections
+but none clean (clean = not suspect, with ≥ 1 earlier exposure checked) is `persistence`; two clean detections make
+it `on_sky`. Thresholds are ASSUMPTIONs.
 
 **Alternatives rejected.**
 - Re-running calwebb_detector1's `persistence` step from `_uncal`: full raw downloads per exposure, and the archived
@@ -1815,7 +1817,8 @@ a position whose detections are all suspect is `persistence`. Thresholds are ASS
 - `n0150`: in each epoch it appears only in the exposure after a saturated star (19–31 saturated pixels) sat on that
   pixel: o010 d4 (SW and F277W), o120 d2, o052 d4, at 0.04–0.07 % of the star's flux. Its wandering position is the
   per-epoch dither vector.
-- Controls: `n0153` (39 of 48 exposures detected, 0 suspect) and Earendel (4 detected, 0 suspect) are `on_sky`.
+- Controls: `n0153` (39 of 48 exposures detected, 0 suspect, 36 clean) and Earendel (4 detected, 4 clean; S/N ≈ 5 per
+  exposure, a weak control) are `on_sky`.
 - Synthetic test: a 1 % afterimage of a saturated star is `persistence`, a real faint source `on_sky`.
 
 **Revisit if.** A candidate is detected in exposures whose earlier ones were dark at its pixel, but fades within one

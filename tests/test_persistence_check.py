@@ -46,7 +46,9 @@ def _write(
         else sat.astype(np.uint32) * pc.SATURATED
     )
     primary = fits.PrimaryHDU()
-    primary.header.update(EXPSTART=mjd, DETECTOR="NRCB3", FILTER="F150W", PUPIL="CLEAR")
+    primary.header.update(
+        EXPSTART=mjd, EXP_TYPE="NRC_IMAGE", DETECTOR="NRCB3", FILTER="F150W", PUPIL="CLEAR"
+    )
     hdr = _wcs(dx).to_header()
     hdul = fits.HDUList(
         [
@@ -61,10 +63,15 @@ def _write(
 
 
 def test_classify_and_is_suspect():
-    assert pc.classify(np.array([1.0, 2.0]), np.array([False, False])) == "undetected"
-    assert pc.classify(np.array([20.0, 1.0]), np.array([True, False])) == "persistence"
-    assert pc.classify(np.array([20.0, 9.0]), np.array([False, False])) == "on_sky"
-    assert pc.classify(np.array([20.0, 9.0]), np.array([False, True])) == "inconclusive"
+    one = np.array([1, 1])
+    assert pc.classify(np.array([1.0, 2.0]), np.array([False, False]), one) == "undetected"
+    assert pc.classify(np.array([20.0, 1.0]), np.array([True, False]), one) == "persistence"
+    assert pc.classify(np.array([20.0, 9.0]), np.array([False, False]), one) == "on_sky"
+    assert pc.classify(np.array([20.0, 9.0]), np.array([False, True]), one) == "inconclusive"
+    # a detection with no earlier exposure checked cannot be cleared
+    assert pc.classify(np.array([20.0, 9.0]), np.array([False, False]), np.array([0, 1])) == (
+        "inconclusive"
+    )
     assert pc.is_suspect(1.0, 50.0, 0)
     assert not pc.is_suspect(1.0, 5.0, 0)
     assert pc.is_suspect(1.0, 0.0, 3)  # saturation earlier on the pixel
@@ -74,7 +81,8 @@ def test_classify_and_is_suspect():
 def test_run_flags_afterimage_and_keeps_real_source(tmp_path):
     # A bright saturated star sits on detector pixel P=(100, 100) in exposure 1 (pointing 0). The
     # telescope then dithers by 40 px; exposure 2 shows a 1 % afterimage at P, which maps to a
-    # different sky position. A real faint source is present at another sky position in both.
+    # different sky position. A real faint source is present at another sky position in all three
+    # exposures (the third dithers by another 40 px); the first cannot be cleared (no prior).
     p = (100.0, 100.0)
     star = _blob(*p, 500.0)
     sat = np.hypot(*(np.mgrid[0:N, 0:N] - np.array(p)[::-1, None, None])) < 1.5
@@ -84,14 +92,18 @@ def test_run_flags_afterimage_and_keeps_real_source(tmp_path):
     f2 = _write(
         tmp_path / "e2_cal.fits", 60000.01, 40, _blob(*p, 5.0) + _blob(float(x2), float(y2), 2.0)
     )
+    x3, y3 = _wcs(80).all_world2pix(*real_sky, 0)
+    f3 = _write(tmp_path / "e3_cal.fits", 60000.02, 80, _blob(float(x3), float(y3), 2.0))
     ghost_sky = _wcs(40).all_pix2world(*p, 0)
     positions = {
         "ghost": (float(ghost_sky[0]), float(ghost_sky[1])),
         "real": (float(real_sky[0]), float(real_sky[1])),
     }
-    per_exp, summ = pc.run(positions, [f1, f2], workers=2)
+    per_exp, summ = pc.run(positions, [f1, f2, f3], workers=2)
     verdict = dict(zip(summ["uid"], summ["verdict"], strict=True))
     assert verdict == {"ghost": "persistence", "real": "on_sky"}
     ghost = per_exp[(per_exp["uid"] == "ghost") & per_exp["suspect"]]
     assert len(ghost) == 1 and ghost["prior_sat"][0] > 0
-    assert per_exp.meta["provenance"] == "derived"
+    assert per_exp.meta["provenance"] == "derived" and per_exp.meta["failed"] == []
+    real = summ[summ["uid"] == "real"][0]
+    assert real["n_detected"] == 3 and real["n_clean"] == 2
