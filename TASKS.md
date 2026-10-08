@@ -4,11 +4,11 @@ Prioritized queue. Agents pick from **Now** first; in-flight work is visible as 
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
 ## Now (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
-1. **W3 in published microlensing samples:** an OGLE-IV adapter (`LightCurveSurvey`) for Mróz et al. 2019 (bulge,
-   5,836 events) and 2020 (plane, 630); fit PSPL / finite source / parallax (MulensModel) and the n = 1 ε < 0 and
-   Ellis models on the same trajectory; rank by ΔBIC; vet binary lenses, blending, variables, systematics, parallax
-   first; inject-recover on the real cadence and the published efficiencies → rate limits per star per year.
-   Then Gaia DR3 `vari_microlensing` + epoch photometry, then KMTNet. OGLE EWS seasons wait for the owner (terms).
+1. **W3 in published microlensing samples** (D-057: adapter + fitter built; Mróz 2020 disk, 460 events: 6 flags,
+   0 survive vetting, no limit yet). Next: bound π_E (ASSUMPTION) and re-fit disk; bulge (5,790 events, ~1.8 h on
+   4 cores) fit in chunks or locally, then `vet` / `sheet`; `inject` / `limit` with season-drift vetting inside the
+   injection loop → rate limits per star per year. Then Gaia DR3 `vari_microlensing` + epoch photometry, then
+   KMTNet. OGLE EWS seasons wait for the owner (terms).
 2. **W1/W2 in wide imaging:** pin lenscat, Euclid Q1 and SuGOHI tables; look for confirmed multiple-image systems
    or radial arcs with no visible deflector in their own imaging; reuse catalogues before any finder.
 3. **W5:** background-count deficits around empty regions in a wide survey, with calibrated nulls.
