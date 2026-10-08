@@ -3,7 +3,7 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-08: MACS0416 counter-images and flux ratios: null; CANUCS Lenstool model as second model (D-042)
-- With the D-040 solver, the MACS0416 image list is open. `images` and `fluxratio` raised 20 flags; 0 survive.
+- With the D-040 solver, the MACS0416 image list is open. `images` and `fluxratio` raised 21 flags; 0 survive.
 - System 27's two bright `absent` predictions (S/N 247–341) are CATS-only galaxy-scale caustics. The JWST-era CANUCS
   Lenstool model (222 potentials, 111 spectroscopic systems) reproduces system 27 with exactly its 3 images, and the
   cutouts show empty sky there.

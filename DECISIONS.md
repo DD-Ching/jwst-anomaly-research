@@ -1946,13 +1946,14 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
 (docs/fields/macs0416.md). The JWST-era CANUCS Lenstool model is the independent second model for this field:
 Rihtarsic et al. 2025, 222 potentials and 111 spectroscopic systems, loaded with `LensModel.from_par` from the
 released best-fit parameter file. A flagged extra image that the CANUCS model does not predict is CATS-only, and
-therefore model-dependent (D-041).
+therefore model-dependent. This relaxes D-041's two-independent-models requirement to one JWST-era model, but only
+where the cutouts also show empty sky at the predicted position (ASSUMPTION).
 
 **Alternatives rejected.**
 - HFF-era second models (Sharon, Keeton). The CANUCS model is fitted to JWST positions and uses spectroscopic
   constraints only, so it is the stronger independent check.
 - Treating the system-27 extra images (predicted S/N 247–341) as missing: the CANUCS model reproduces system 27 with
-  exactly its 3 catalogued images (within 0.2–0.66″) and predicts nothing at the 4 CATS extras (4.5–12.8″ away).
+  exactly its 3 catalogued images (within 0.2–0.66″) and predicts nothing at the 4 CATS extras (its nearest images are 4.5–12.8″ away).
 
 **Evidence.**
 - `images` (F277W forced, CANUCS photo-z, frame offset applied): 143 predicted. Classes: recovered 3, confused 13,
@@ -1970,7 +1971,8 @@ therefore model-dependent (D-041).
     spectroscopic z 2.544 but photo-z 0.38, a blend.
   - 45.1 is flagged as underluminous only relative to 45.2.
   - 38.1 is chromatic at S/N 2–3.5 (marginal).
-- Tally: 143 predicted images, 114 flux-ratio images, 20 flags, **0 surviving**.
+- Tally: 143 predicted images and 116 flux-ratio images screened; 21 flags (18 forced rows, 3 flux-ratio images);
+  **0 surviving**.
 
 **Revisit if.**
 - The CANUCS model is pinned as a `MODELS` entry with its image list, and `images` is re-run on it directly.
