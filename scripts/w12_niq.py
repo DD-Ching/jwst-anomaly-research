@@ -87,11 +87,11 @@ class NiqParams:
     dz_tol: float = 0.01
     # catalogue positions are one image (SQLS: the SDSS quasar), so the second image lies inside
     # the 3" image search only for pairs up to image_radius; wider pairs are dropped
-    sep_max: float = 3.0
+    sep_max: float = w12.Params().image_radius
     # the LS image pair must be the catalogued pair: separations agree within sep_match
     sep_match: float = 0.5
     # entries closer than this in two tables are one system (merged transitively)
-    dedup_arcsec: float = 3.0
+    dedup_arcsec: float = w12.Params().merge_radius
     # Hennawi et al. 2006 binary match radius around the catalogued position
     binary_arcsec: float = 3.0
     # an SQLS companion row belongs to the primary row above it when their distance equals theta
@@ -139,8 +139,13 @@ def check_vizier(data: bytes, source: str, path: Path) -> None:
     """Refuse an ASU-TSV that is an error page, empty or truncated at -out.max (the notices sit
     in '#' lines, which the hash ignores)."""
     lines = data.decode("utf-8", "replace").splitlines()
-    status = [ln for ln in lines if ln.startswith(("#INFO", "#++"))]  # not '#Column' lines
-    notes = [ln for ln in status if re.search(r"error|overflow|truncat", ln, re.I)]
+    # VizieR status lines only ('#INFO QUERY_STATUS=...', '#++++' notices), never descriptions
+    notes = [
+        ln
+        for ln in lines
+        if re.match(r"#INFO\s+QUERY_STATUS\s*=\s*(ERROR|OVERFLOW)", ln, re.I)
+        or (ln.startswith("#++") and re.search(r"error|truncat", ln, re.I))
+    ]
     n_data = len([ln for ln in lines if ln and not ln.startswith("#")]) - 3
     if notes or n_data < 1 or n_data >= MAX_ROWS:
         raise RuntimeError(f"{source}: bad VizieR response in {path} ({n_data} rows; {notes[:2]})")
@@ -375,8 +380,9 @@ def build_sample(tables: dict[str, Table]) -> Table:
         lenscats.position_quantum_arcsec(a, d) for a, d in zip(s["ra"], s["dec"], strict=True)
     ]
     s["catalogues"] = s["catalogue"]
-    s.meta.update(
-        provenance=schema.Provenance.OBSERVED.value, source="; ".join(f"VizieR {k}" for k in tables)
+    s.meta.update(  # merged, reclassified and with a model theta_e: derived from observed rows
+        provenance=schema.Provenance.DERIVED.value,
+        source="build_sample of " + "; ".join(f"VizieR {k}" for k in tables),
     )
     return s
 
@@ -497,8 +503,15 @@ def binary_match(s: Table, binq: Table, radius: float | None = None) -> np.ndarr
         if not ok.any():
             continue
         parsed += 1
-        _, d, _ = c.match_to_catalog_sky(SkyCoord(ra[ok], de[ok], unit="deg"))
-        hit |= d.arcsec < radius
+        idx, d, _ = c.match_to_catalog_sky(SkyCoord(ra[ok], de[ok], unit="deg"))
+        near = d.arcsec < radius
+        if "theta" in binq.colnames and "sep_cat" in s.colnames:
+            # the binary must be the catalogued pair, not a wide binary next to it
+            th = np.array([_float(x) for x in binq["theta"]])[ok][idx]
+            sep = np.asarray(s["sep_cat"], float)
+            agree = np.abs(th - sep) < P.companion_tol
+            near &= agree | ~(np.isfinite(th) & np.isfinite(sep))
+        hit |= near
     if not parsed:
         raise ValueError(f"no coordinates parsed from {binq.colnames}")
     return hit
@@ -534,6 +547,14 @@ def cmd_screen(args) -> None:
         ).encode()
     ).hexdigest()
     bmeta["sha256_of"] = "sorted rows: brickname,ra1,ra2,dec1,dec2,nexp_r,nexp_z,galdepth_z"
+    bmeta.update(
+        uri=f"{w12.TAP} (ADQL: {w12.BRICKS_QUERY})",
+        file="bricks_dr10_south.csv",
+        retrieved_utc=dt.datetime.fromtimestamp(
+            (out / "bricks_dr10_south.csv").stat().st_mtime, dt.UTC
+        ).isoformat(timespec="seconds"),
+        pipeline_version=__version__,
+    )
     check_pin("bricks", bmeta["sha256"], pins)
     cov = lenscats.brick_coverage(s, bricks)
     for c in cov.colnames:
@@ -657,6 +678,10 @@ def cmd_screen(args) -> None:
             "rows": len(src),
             "sha256_of": "sorted ls_id,ra,dec,type,mag_z",
             "source": "Legacy Surveys DR10 Tractor boxes (Data Lab TAP)",
+            "uri": f"{w12.TAP} (ls_dr10.tractor, {w12.TRACTOR_COLS})",
+            "file": "tractor_cache/tractor_*.ecsv (rows near the sample)",
+            "retrieved_utc": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
+            "pipeline_version": __version__,
             "box_arcsec": p.box,
         }
         man.write_text(

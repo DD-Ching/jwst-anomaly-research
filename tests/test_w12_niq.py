@@ -295,3 +295,24 @@ def test_lemon_table_without_flag_columns_is_refused():
     )
     with pytest.raises(ValueError):
         niq.build_sample({"J/MNRAS/520/3305/table1": t})
+
+
+def test_binary_match_requires_the_catalogued_separation():
+    s = Table({"ra": [150.0, 150.0], "dec": [1.0, 1.0], "sep_cat": [2.2, 2.2]})
+    close = Table({"_RA": ["150.0003"], "_DE": ["1.0"], "theta": ["2.4"]}, dtype=[str] * 3)
+    wide = Table({"_RA": ["150.0003"], "_DE": ["1.0"], "theta": ["14.0"]}, dtype=[str] * 3)
+    assert niq.binary_match(s, close).all() and not niq.binary_match(s, wide).any()
+
+
+def test_sqls_nonpair_companion_listed_first_does_not_veto():
+    t = Table(
+        rows=[
+            ("J120000.00+010000.0", " ", "1.500", "", ""),
+            ("J120000.00+010002.5", " ", "", "2.50", "QSO+star"),
+            ("J120000.10+010000.0", " ", "", "1.50", "QSO pair"),
+        ],
+        names=("SDSS", "f_z", "z", "theta", "Com"),
+        dtype=[str] * 5,
+    )
+    s = niq.build_sample({"J/AJ/143/119/table4": t})
+    assert list(s["group"]) == ["rejected"]
