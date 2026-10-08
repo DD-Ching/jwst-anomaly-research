@@ -62,7 +62,7 @@ The two 4-line centres in the run without photo-z are at (53.0, 7.5)″ (342.162
 source 1142) and (−26.0, 16.0)″ (342.19335, −44.52644; 0.18″ from source 3818, isophotal S/N 10,595, a bright
 cluster galaxy). Neither is significant (p 0.435).
 
-**Counts.** Screened: 46 `anti` arcs (32 with photo-z). Flags: 0. **Result:** no exotic-lens candidate in Abell
+**Counts.** Screened: 51 `anti` arcs (36 with photo-z), of which 46 (32) are not model-radial. Flags: 0. **Result:** no exotic-lens candidate in Abell
 S1063 with the CATS v4.1 map model; nothing for `/vet-candidate`.
 
 ## Limits

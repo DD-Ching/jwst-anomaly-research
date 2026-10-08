@@ -61,8 +61,8 @@ uses it (D-040 applies the offset to map models).
 | no photo-z | 949 (13) | 0 | 164 (153) | 71 | 94.8 (118) | **15** | **0.0** |
 | CANUCS photo-z | 949 (13) | 121 | 135 (124) | 51 | 64.3 (82) | **15** | **0.0** |
 | no photo-z, aper50 S/N ≥ 5 (3,806 of 5,266 rows) | 524 (9) | 0 | 66 (64) | 12 | 20.4 (31) | 8 | **0.01** |
-| no photo-z, Gaia-spike veto (166 rows dropped) | 882 (13) | 0 | 140 (129) | 73 | 77.6 (95) | 5 | 0.945 |
-| CANUCS photo-z, Gaia-spike veto | 882 (13) | 121 | 111 (100) | 53 | 47.7 (61) | 5 | 0.495 |
+| no photo-z, Gaia-spike veto (`--spike-stars`, committed code) | 880 (82) | 0 | 140 (129) | 73 | 77.6 (95) | 5 | 0.945 |
+| CANUCS photo-z, Gaia-spike veto (committed code) | 880 (82) | 121 | 111 (100) | 53 | 47.7 (61) | 5 | 0.495 |
 
 Two centres were flagged (p_random < 0.05) and both were vetted:
 - the 15-line centre at (38.0, −8.0)″ in the default runs;
