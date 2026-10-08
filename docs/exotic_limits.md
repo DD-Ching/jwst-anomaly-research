@@ -1008,3 +1008,20 @@ dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no pu
   7–474 GB each; per-object files are also served).
 - Not a statement about OGLE or the Mróz samples, and not combinable with the D-052 JWST limits without a lens
   population model.
+
+### All 22 fields (in progress; branch `claude/w3-moa-fields`)
+
+Plan (owner step 3a, 2026-10-08):
+
+1. **Calibrate the variable-baseline test** on the carrier distribution: its threshold becomes relative to
+   the field's own quiet-light-curve χ²/dof distribution (a high quantile, ASSUMPTION) instead of the fixed
+   χ²/dof > 2, so it removes variables but not the typical red noise of difference photometry; the real gb22
+   flags it removed before are re-inspected. Injections rise to ≥ 200 per t_E × ρ cell.
+2. **Stream each field** from the archive with parallel HTTP range reads (the tars are uncompressed; member
+   headers are resynchronised at 512-byte blocks), pre-screen members in a process pool while the next
+   ranges download, and never write a whole tar to disk. Per-field result tables go to `results/w3_moa/`
+   and are resumable by chunk.
+3. Order: fields with a published N_s (Nunota et al. 2024, Table 1), smallest first; then gb6.
+   Tar sizes (HTTP HEAD, 2026-10-08, GB): gb1 70.1, gb2 60.5, gb3 214.5, gb4 280.6, gb5 508.5, gb6 7.7,
+   gb7 30.7, gb8 77.9, gb9 430.8, gb10 220.9, gb11 22.4, gb12 27.5, gb13 53.6, gb14 212.0, gb15 32.8,
+   gb16 22.3, gb17 52.3, gb18 41.9, gb19 16.3, gb20 15.2, gb21 12.3, gb22 3.5 (total ≈ 2.4 TB).
