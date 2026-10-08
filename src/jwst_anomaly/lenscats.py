@@ -556,6 +556,20 @@ def pair_images(systems: Table, sources: Table, image_radius: float = 3.0) -> Ta
     return out
 
 
+PAIR_SEP_TOL = 0.5  # arcsec, ASSUMPTION (D-064): the deep-imaging pair is the catalogued pair
+
+
+def pair_match(sep_ls, sep_cat, tol: float = PAIR_SEP_TOL) -> np.ndarray:
+    """True where the deep-imaging image pair (``pair_images`` ``sep``) has the catalogued image
+    separation within ``tol`` arcsec, i.e. the pair test ran on the catalogued images and not on
+    two unrelated point sources (D-064). False where either separation is unknown; callers decide
+    what an unknown catalogued separation means. ``derived``."""
+    a = np.asarray(sep_ls, float)
+    b = np.asarray(sep_cat, float)
+    with np.errstate(invalid="ignore"):
+        return np.abs(a - b) <= tol
+
+
 def quasar_pair_test(
     systems: Table,
     sources: Table,

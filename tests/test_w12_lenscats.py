@@ -158,3 +158,34 @@ def test_empty_inputs_keep_schema():
     one = _system("quasar")
     none_src = _sources(IMAGES)[:0]
     assert lenscats.pair_images(one, none_src)["n_images"][0] == 0
+
+
+def test_pair_check_requires_the_catalogued_pair():
+    # D-064: the test must run on the catalogued images; IMAGES are 2.4" apart
+    p = w12.Params()
+    src = _sources(IMAGES)
+    t = Table(
+        {
+            "system_id": ["a", "b", "c", "d"],
+            "ra": [10.0] * 4,
+            "dec": [0.0] * 4,
+            "selection": ["quasar", "quasar", "quasar", "galaxy"],
+            "defl_mag_max": [21.0] * 4,
+            "theta_e": [1.2, 2.0, np.nan, 2.0],  # match, 4" (another pair), unknown, insensitive
+        }
+    )
+    images = lenscats.pair_images(t, src, p.image_radius)
+    used = w12.deflector_test(t, src, p, images)["used_pair"]
+    assert list(used) == [True, True, True, False]
+    sep_cat, mismatch = w12.pair_check(t, images, used, p)
+    assert sep_cat[0] == pytest.approx(2.4) and np.isnan(sep_cat[2]) and np.isnan(sep_cat[3])
+    assert list(mismatch) == [False, True, False, False]
+
+
+def test_radio_used_pair_only_without_galaxy():
+    p = w12.Params()
+    gal = [(10.0 + 0.3 * D, 0.0, "DEV", 22.0, 20.0, 0)]
+    for rows, expect in ((IMAGES + gal, False), (IMAGES, True), (gal, False)):
+        t, src = _system("radio"), _sources(rows)
+        images = lenscats.pair_images(t, src, p.image_radius)
+        assert bool(w12.deflector_test(t, src, p, images)["used_pair"][0]) is expect

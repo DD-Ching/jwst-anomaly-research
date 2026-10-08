@@ -243,3 +243,8 @@ def test_brick_coverage_independent_of_sources():
     out = lenscats.brick_coverage(systems, bricks)
     assert list(out["covered"]) == [True, False, True, False]  # no r data; outside footprint
     assert out["depth_z"][0] == pytest.approx(23.4) and np.isnan(out["depth_z"][3])
+
+
+def test_pair_match():
+    m = lenscats.pair_match([2.0, 2.0, np.nan, 3.0], [2.4, 2.6, 2.0, np.nan])
+    assert list(m) == [True, False, False, False]
