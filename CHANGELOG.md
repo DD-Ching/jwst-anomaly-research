@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: PR #70 merged after review fixes; Abell 2744 radial doc brought to the post-D-034 result
+- Cloud run. PR #70 (D-049) was conflicted with main: merged `origin/main`, then `/code-review` on the final diff.
+  Main finding: MACS0717 and Abell S1063 have no photo-z, so the injector painted their members and foreground
+  galaxies as W1 images (Abell S1063 had the highest efficiency of all fields). The headline limits now use the six
+  photo-z fields (38.1 arcmin²): < 7.0 × 10⁴ / 6.8 × 10³ / 3.2 × 10³ deg⁻² at θ_E = 3″ / 6″ / 10″, about 27× weaker
+  than Takahashi & Asada; the all-field values stay in `limits.json` as optimistic. `inject_radial` now reads the
+  screen defaults from `exotic_screens.radial_defaults()`.
+- docs/fields/abell2744.md: radial result with the D-034 spike veto (134 `anti` arcs, max 5 lines, p 0.505; null).
+- PR #61 (n0153, `needs-human`) brought up to date with main; it still waits for the owner.
+- **Handoff:** the W1-specific screen (TASKS "Now" 1) is next; it fits one full cycle.
+
 ## 2026-10-08: W1 injection-recovery through `radial`: the screen is blind to negative-mass lenses (D-049)
 - Worktree worker: `scripts/inject_radial.py` paints `exotic_sim` W1 lenses (n = 1, ε < 0) into the real catalogues
   of all eight null `radial` fields and runs the unchanged screen (`exotic_screens.radial_candidates`, a pure
