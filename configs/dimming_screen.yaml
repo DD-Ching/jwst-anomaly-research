@@ -7,7 +7,7 @@ cloud:
   s3_bucket: stpubdata
   l3_key_pattern: "jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}"
 
-bands: [F200W, F444W]  # detection band first; both are in every epoch of every field
+bands: [F200W, F444W]  # detection band first; an epoch may hold a subset (see its bands)
 
 fields:
   nexus:

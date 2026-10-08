@@ -17,7 +17,7 @@ Subcommands (configs/dimming_screen.yaml lists the fields and epochs):
   by brighter epochs). Ordinary-explanation columns: Gaia star proximity (D-027 mask), point-like,
   blended, edge proxy, single-epoch detection (persistence suspect, D-039).
 - ``inject``: injection-recovery on the monitored compact sources with
-  ``exotic_sim.inject_light_curve`` (negative point mass, n = 1, sign = -1) over the real cadence,
+  ``exotic_sim.light_curve`` (negative point mass, n = 1, sign = -1) over the real cadence,
   plus plain achromatic dimming of 20/50/100 %; writes the efficiency table and the rate limits.
 - ``forced``: re-measures every flagged source (and random controls, for the noise scale) by forced
   aperture photometry on S3 byte-range cutouts of every epoch (``transient_forced.measure``),
@@ -531,16 +531,10 @@ def ordinary_columns(
     fref = reference_flux(lc["flux"], det)[:, 0]
     bright_nb = np.zeros(n, bool)
     i, j, _, _ = pos.search_around_sky(pos, p.bright_neighbour_arcsec * u.arcsec)
-    # a saturated star often has a NaN catalogue flux (NaN-filled core): its own Gaia match
-    # (G < gaia_saturated_g) marks it bright instead
-    sat = np.zeros(n, bool)
-    if gaia is not None and len(gaia):
-        g = SkyCoord(gaia["ra"], gaia["dec"], unit="deg")
-        ip, ig, _, _ = g.search_around_sky(pos, p.gaia_self_arcsec * u.arcsec)
-        with np.errstate(invalid="ignore"):
-            sat[ip[np.asarray(gaia["gmag"], float)[ig] < p.gaia_saturated_g]] = True
+    # a saturated star with a NaN catalogue flux needs no case here: as a Gaia star brighter than
+    # gaia_saturated_g it sets near_star out to exclusion_radius (>= 3.8") > bright_neighbour_arcsec
     with np.errstate(invalid="ignore"):
-        hit = (i != j) & ((fref[j] >= p.bright_neighbour_ratio * fref[i]) | sat[j])
+        hit = (i != j) & (fref[j] >= p.bright_neighbour_ratio * fref[i])
     bright_nb[i[hit]] = True
     return {
         "near_star": near,
@@ -627,7 +621,7 @@ def w3_factor(
     spike_peak: float | None = None,
 ) -> np.ndarray:
     """Flux factor ``blend A(t) + 1 - blend`` per row and epoch for a negative point mass (n = 1,
-    sign = -1), from ``exotic_sim.inject_light_curve`` (``simulated``).
+    sign = -1), from ``exotic_sim.light_curve`` (``simulated``).
 
     ``spike_peak`` optionally caps ``A`` (a sensitivity check on the spike height; None = the
     simulator's value, ``SPIKE_PEAK``). The umbra (A = 0) is the robust part of the signal: the
@@ -636,10 +630,8 @@ def w3_factor(
     cap = np.inf if spike_peak is None else spike_peak
     out = np.empty((len(t0), len(times_yr)))
     for s in range(len(t0)):
-        lcv = exotic_sim.inject_light_curve(
-            times_yr, 1.0, float(t0[s]), t_e, float(u0[s]), n=1.0, sign=-1, rho=rho
-        )
-        a = np.minimum(np.asarray(lcv["magnification"]), cap)
+        a = exotic_sim.light_curve(times_yr, float(t0[s]), t_e, float(u0[s]), 1.0, -1, rho)
+        a = np.minimum(np.asarray(a, float), cap)
         out[s] = blend * a + 1.0 - blend
     return out
 
@@ -754,7 +746,7 @@ def efficiency_table(
     out = Table(rows=rows)
     out.meta.update(
         provenance=schema.Provenance.SIMULATED.value,
-        source="dimming_screen.efficiency_table: exotic_sim.inject_light_curve(n=1, sign=-1) "
+        source="dimming_screen.efficiency_table: exotic_sim.light_curve(n=1, sign=-1) "
         "on real light curves",
         mag_band="detection band (reference flux)",
         seed=seed,
@@ -831,7 +823,7 @@ def rate_limits(eff: Table, area_deg2: float, n_monitored: int) -> Table:
     return Table(
         rows=rows,
         meta={
-            "provenance": "derived",
+            "provenance": schema.Provenance.DERIVED.value,
             "source": "dimming_screen.rate_limits on efficiency.ecsv (simulated injections)",
             "poisson_95": 3.0,
         },
@@ -967,14 +959,9 @@ def cmd_inject(args) -> dict:
     cats, lc, scale, err, res, ordn = _screen(field, p, gaia)
     sel = monitored(lc, err, ordn, p)
     times = _times_yr(field)
-    # the single_epoch veto is re-applied per injected copy (efficiency_table)
-    static_veto = (
-        ordn["near_star"]
-        | ordn["bright_neighbour"]
-        | ordn["edge_proxy"]
-        | ordn["blended"]
-        | ordn["sharp_artifact"]
-    )
+    # catalogue_veto without single_epoch, which efficiency_table re-applies per injected copy;
+    # monitored() already excludes these rows, so this only guards other callers' selections
+    static_veto = catalogue_veto({**ordn, "single_epoch": np.zeros_like(ordn["single_epoch"])})
     inflation, calibrated = None, False
     fs = args.out / "forced.ecsv"
     if fs.exists():
@@ -1066,16 +1053,9 @@ def cmd_forced(args) -> dict:
     dmask = np.column_stack([np.asarray(lct[c], bool) for c in det_cols])
     with _quiet():
         ref_mag = ab_mag(np.nanmedian(np.where(dmask, fl_det, np.nan), axis=1))
-    pool = lct[~np.asarray(lct["flagged"], bool) & (np.isfinite(fl_det).sum(axis=1) >= 2)]
-    pool_tab = Table(
-        {
-            "ra": pool["ra"],
-            "dec": pool["dec"],
-            "aper_total_abmag": ref_mag[
-                ~np.asarray(lct["flagged"], bool) & (np.isfinite(fl_det).sum(axis=1) >= 2)
-            ],
-        }
-    )
+    in_pool = ~np.asarray(lct["flagged"], bool) & (np.isfinite(fl_det).sum(axis=1) >= 2)
+    pool = lct[in_pool]
+    pool_tab = Table({"ra": pool["ra"], "dec": pool["dec"], "aper_total_abmag": ref_mag[in_pool]})
     ctl = select_controls(
         pool_tab,
         args.n_controls,
@@ -1209,7 +1189,7 @@ def cmd_forced(args) -> dict:
     scale, cal = noise_scale_calibrated(
         flux[is_ctl], ferr[is_ctl], np.isfinite(flux[is_ctl]), min_n=50
     )
-    calibrated = bool(cal.all()) and not zp_missing
+    calibrated = bool(cal.all()) and not zp_missing and not skipped
     if not calibrated:
         print("warning: forced noise scale / zero points not calibrated", file=sys.stderr)
     inflation = forced_inflation_vs_catalogue(
@@ -1242,15 +1222,9 @@ def cmd_forced(args) -> dict:
         "point_like",
     ):
         out[name] = np.concatenate([np.asarray(fl[name], bool), np.zeros(int(is_ctl.sum()), bool)])
+    # catalogue vetoes were applied before forced photometry (``fl`` holds unvetoed flags only)
     cut_ok = ~(out["cut_edge"] | out["cut_low_weight"] | out["cut_spike"])
-    cat_ok = ~(
-        out["near_star"]
-        | out["bright_neighbour"]
-        | out["edge_proxy"]
-        | out["blended"]
-        | out["single_epoch"]
-    )
-    out["survives_artefact_tests"] = out["forced_confirmed"] & cut_ok & cat_ok
+    out["survives_artefact_tests"] = out["forced_confirmed"] & cut_ok
     surv = np.flatnonzero(out["survives_artefact_tests"])
     xm_note = "not run (no survivors)"
     out["known_object"] = np.zeros(n, "U40")
@@ -1258,9 +1232,11 @@ def cmd_forced(args) -> dict:
         tg = Table({"source_uid": out["uid"][surv], "ra": out["ra"][surv], "dec": out["dec"][surv]})
         xm = crossmatch.crossmatch(tg, radius_arcsec=1.0, services=("simbad", "ned"))
         xm_note = "SIMBAD and NED, 1 arcsec (crossmatch.crossmatch, batched)"
-        for i, r in zip(surv, xm, strict=True):
-            names = [str(r[c]) for c in xm.colnames if c.endswith("_otype") or c == "otype"]
-            out["known_object"][i] = ";".join(x for x in names if x and x != "--")[:40]
+        row_of = {str(u_): i for i, u_ in zip(surv, out["uid"][surv], strict=True)}
+        for r in xm:
+            if bool(r["is_known_object"]):
+                label = f"{r['best_match_service']}:{r['best_match_type']}:{r['best_match_id']}"
+                out["known_object"][row_of[str(r["source_uid"])]] = label[:40]
     out.meta.update(
         provenance=schema.Provenance.DERIVED.value,
         source=f"scripts/dimming_screen.py forced --field {args.field}",
@@ -1377,7 +1353,13 @@ def combine_limits(per_field: dict[str, Table], calibrated_only: bool = True) ->
     }
     rows = []
     if not use:
-        return Table(meta={"provenance": "derived", "fields": []})
+        return Table(
+            meta={
+                "provenance": schema.Provenance.DERIVED.value,
+                "source": "dimming_screen.combine_limits: no field qualified",
+                "fields": [],
+            }
+        )
     first = next(iter(use.values()))
     for r0 in first:
         t_e, rho = float(r0["t_e_yr"]), float(r0["rho"])
@@ -1406,7 +1388,7 @@ def combine_limits(per_field: dict[str, Table], calibrated_only: bool = True) ->
     return Table(
         rows=rows,
         meta={
-            "provenance": "derived",
+            "provenance": schema.Provenance.DERIVED.value,
             "source": "dimming_screen.combine_limits over per-field limits.ecsv",
             "fields": list(use),
             "calibrated_only": calibrated_only,
