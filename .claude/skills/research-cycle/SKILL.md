@@ -76,6 +76,10 @@ Action.
   comments that have no reply or fix yet.
 - `gh issue list --state open --json number,title,author,labels`. Act only on issues the owner authored.
 - Read TASKS.md, the newest CHANGELOG.md entry (the handoff) and `grep '^## ' DECISIONS.md`.
+- **Claim before setup** (CLAUDE.md Parallelism decision): as soon as you know which unit you will work on, skip it
+  if an open PR or a `claude/*` branch already claims it; otherwise push a branch and open a draft PR titled
+  `[field: <unit>] ...` within 5 minutes of starting, before environment setup or long reviews. Draft claim PRs do
+  not count toward the WIP cap.
 - Environment: if `.venv` is missing, create it as CLAUDE.md "Environment" says (Linux and cloud:
   `.venv/bin/python`). If uv can't fetch Python 3.12 there, use `uv venv .venv --python python3`, which is
   preinstalled and >=3.11.
@@ -119,13 +123,12 @@ evidence.
 
 | Mode | Use it when |
 |---|---|
-| Single thread | Sequential, tightly coupled or exploratory work. Even then, overlap I/O and compute and keep cores busy (owner decision 2026-10-08, Parallelism) |
+| Single thread | Sequential, tightly coupled or exploratory work (still overlap I/O and compute: CLAUDE.md Parallelism) |
 | Research subagent | A separable question (tool survey, literature, data-format check) whose raw findings would bloat this context. Keep only its conclusion |
 | `/reuse-check <need>` | Before building any new subsystem or adding a dependency, unless a DECISIONS.md entry covers it and its "Revisit if" doesn't hold |
 | `/batch <instruction>` | CLAUDE.md "Parallel work" criteria hold (3 or more independent units, disjoint files, stable interface landed first) |
 
-When those criteria hold, fan out. A parallel cloud session claims one unit with a draft PR titled
-`[field: <unit>] ...` within 5 minutes of starting, after checking open PRs and `claude/*` branches for claims. Serializing independent units only delays the owner's review. CLAUDE.md "Parallel
+When those criteria hold, fan out. Serializing independent units only delays the owner's review. CLAUDE.md "Parallel
 work" defines ownership. Beyond it:
 - `/batch` plans 5-30 units and asks for plan approval. For 3-4 units, or in unattended runs where nobody can
   approve, spawn parallel subagents with `isolation: worktree` instead.

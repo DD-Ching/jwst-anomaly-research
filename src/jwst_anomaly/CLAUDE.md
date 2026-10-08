@@ -18,7 +18,9 @@ Root CLAUDE.md (owner decisions, merge policy, budget) still applies; these rule
 - `exotic_sim.py` is the only source of exotic predictions and injections (`simulated` / `model_prediction`).
   Exotic physics is a hypothesis; a screen flag is an anomaly, not evidence.
 - Survey adapters (`ogle.py`, `gaia_mulens.py`, `moa.py`, `lenscats.py`) pin every input by sha256 and record it in
-  a manifest (`data/manifests/CLAUDE.md`).
+  a manifest (`data/manifests/CLAUDE.md`). Before adding or changing an adapter, read the search recipe and its
+  failed-approach rules: `scripts/.claude/skills/w3-survey/SKILL.md` (light-curve surveys) or
+  `scripts/.claude/skills/w12-lenscats/SKILL.md` (lens catalogues), and `scripts/CLAUDE.md`.
 
 ## Code
 - Thresholds are ASSUMPTIONs: name them in a `Params` dataclass or a module constant with a comment.

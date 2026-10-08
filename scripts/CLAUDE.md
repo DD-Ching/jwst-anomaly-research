@@ -17,7 +17,9 @@ Root CLAUDE.md applies. Per-search recipes and their failed-approach rules are d
 - Thresholds are ASSUMPTIONs, named in `Params`; outputs carry provenance labels.
 
 ## Parallel topology (owner decision 2026-10-08)
-- Classify each stage: I/O-bound → 8–16 concurrent HTTP connections or range reads with back-off on 429/5xx;
+- Classify each stage: I/O-bound → 8–16 concurrent HTTP connections or range reads with back-off on 429/5xx —
+  except services with published rate limits or etiquette (arXiv API: one request per ~3 s; CDS, MAST, Data Lab:
+  batch queries instead of concurrency); a rate-limited query is retried, never recorded as a pass;
   CPU-bound → process pool sized to the cores with `OMP_NUM_THREADS=1`; never oversubscribe (load > cores stalls
   everything; two 4-process pools on 4 cores stalled both).
 - Pipeline: download batch N+1 while processing batch N; write small tracked per-chunk tables under `results/`
