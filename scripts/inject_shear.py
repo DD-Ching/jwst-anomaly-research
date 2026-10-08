@@ -56,6 +56,7 @@ class ShearInjector:
     """The shear screen on one field: real ellipticities cached, recovery checked near the lens."""
 
     def __init__(self, model, shapes: Table, args, psf_sigma: float, extra: Table | None = None):
+        shapes = shapes.copy(copy_data=False)  # the caller's table gets no `_src` column
         self.model, self.shapes, self.args, self.psf = model, shapes, args, psf_sigma
         self.base = es.shear_screen(model, shapes, args, psf_sigma, extra)
         if not np.isfinite(self.base["s"]).any():
@@ -69,7 +70,8 @@ class ShearInjector:
         self.ap = self.base["ap"]
         self.null = self.base["null_max"]
         self.b_max = float(np.nanmax(np.abs(self.base["s_cross"])))
-        self.background = ir.background_mask(shapes, model.z_lens)
+        # spike segments are never painted: the real field vetoes them too
+        self.background = es.lensable_mask(shapes, model.z_lens) & ~self.base["spike"]
         shapes["_src"] = np.arange(len(shapes))  # carried into painted rows by paint_lens
         self.next_label = int(np.max(shapes["label"])) + 1
 
@@ -93,12 +95,14 @@ class ShearInjector:
             self.next_label,
             pixel_scale,
         )
-        k = keep & self.use
+        a = self.args
+        near_l = np.hypot(self.xs - x_l, self.ys - y_l) <= a.recover_tol + a.aperture_arcsec + 1.0
+        k = keep & self.use & near_l
         x, y, e = self.xs[k], self.ys[k], self.e[k]
         n_img_used = 0
         if len(img):
             e_img, _ = es.shear_sources(
-                self.model, img, self.psf, self.args.min_snr, self.args.max_g, self.r
+                self.model, img, self.psf, a.min_snr, a.max_g, self.r, spike_veto=False
             )
             # the catalogue's moments respond to shear by R (D-053), the painted moments by 1:
             # keep R of the lens-induced change (an unresolved source counts as round)
@@ -110,7 +114,6 @@ class ShearInjector:
             x = np.concatenate([x, np.atleast_1d(xi)[ok]])
             y = np.concatenate([y, np.atleast_1d(yi)[ok]])
             e = np.concatenate([e, e_img[ok]])
-        a = self.args
         gx, gy = self.base["gx"], self.base["gy"]
         near = np.hypot(gx - x_l, gy - y_l) <= a.recover_tol
         cx, cy = gx[near], gy[near]
@@ -203,7 +206,6 @@ def run_field(name: str, args) -> dict:
             "s_max_xy": [float(inj.base["gx"][iy, ix]), float(inj.base["gy"][iy, ix])],
             "s_max_radec": [float(ra_pk), float(dec_pk)],
             "p_random_max": float(np.mean(base_null >= s_max)),
-            "n_spike_segments": inj.base["counts"]["n_spike_segments"],
             "b_max": inj.b_max,
             "e_exceeds_b": bool(s_max > inj.b_max),
             **es.cross_p_values(inj.base["s_cross"], base_null),

@@ -686,6 +686,7 @@ def shear_sources(
         "responsivity_err": r_err,
     }
     counts["e_all"] = e_all
+    counts["spike"] = spike
     return e, counts
 
 
@@ -787,6 +788,7 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | No
         extra,
     )
     e_all = counts.pop("e_all")
+    spike = counts.pop("spike")
     use = np.isfinite(e)
     x, y = model.to_frame(np.asarray(shapes["ra"])[use], np.asarray(shapes["dec"])[use])
     gx, gy = radial_grid(args.max_radius, args.grid_arcsec)
@@ -804,6 +806,7 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | No
         "null_max": null,
         "e": e,
         "e_all": e_all,
+        "spike": spike,
         "use": use,
         "ap": ap,
         "xy": (x, y),
@@ -833,6 +836,8 @@ def cmd_shear(args) -> dict:
     extra = read_spike_stars(args.spike_stars) if args.spike_stars else None
     res = shear_screen(model, shapes, args, psf, extra)
     s, null, gx, gy = res["s"], res["null_max"], res["gx"], res["gy"]
+    if not np.isfinite(s).any():
+        raise ValueError("no grid centre has enough shear sources")
     smax = float(np.nanmax(s)) if np.isfinite(s).any() else float("nan")
     p_max = float(np.mean(null >= smax)) if len(null) and np.isfinite(smax) else None
     rows = []
@@ -862,6 +867,16 @@ def cmd_shear(args) -> dict:
         "model": args.model,
         "catalog": str(args.catalog),
         "photoz": str(args.photoz) if args.photoz else None,
+        "spike_stars": (
+            {
+                "path": str(args.spike_stars),
+                "n": len(extra),
+                "sha256": hashlib.sha256(Path(args.spike_stars).read_bytes()).hexdigest(),
+            }
+            if extra is not None
+            else None
+        ),
+        "seed": args.seed,
         "psf_sigma_px": psf,
         **res["counts"],
         "n_centres_valid": int(finite.sum()),
