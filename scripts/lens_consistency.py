@@ -963,7 +963,7 @@ def forced_check(
         if not (np.isfinite(e0) and e0 > 0):
             fclass[i] = "off_image"  # off the footprint, or in a gap or masked region
             continue
-        has_unpred = any(lensmodel.image_system(u) == sys_id for u in (unpredicted or []))
+        has_unpred = any(lensmodel.image_family(u) == sys_id for u in (unpredicted or []))
         radius = system_search_radius(table, sys_id, search_arcsec, has_unpred)
         pred = f_ref * abs(float(row["magnification"])) / mu_ref
         cols["pred_snr"][i] = pred / e0

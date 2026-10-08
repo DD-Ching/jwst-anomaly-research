@@ -229,6 +229,9 @@ def test_forced_check_recovers_offset_image_and_flags_absent_one():
     assert 0.8 < table["flux_ratio"][2] < 1.2  # 1.0 observed against 2.0 x 5/10 predicted
     assert table["pred_snr"][3] > 10 and table["best_snr"][3] < 3
     assert table["search_arcsec"][3] == 1.0  # residuals 0.1-0.2": the base radius
+    widened = table.copy()
+    lc.forced_check(widened, backtrace, stamp, search_arcsec=1.0, unpredicted=["1.3"])
+    assert widened["search_arcsec"][3] == 2.25  # a catalogued image of system 1 is unpredicted
     assert table.meta["forced"]["max_ref_mu"] == 50.0
 
     def gap_stamp(ra, dec):  # valid at the reference only; the predictions fall in a gap
