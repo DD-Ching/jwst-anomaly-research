@@ -18,6 +18,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
    - exotic screens (D-031, D-034, D-036–D-038, D-040–D-042): SMACS, El Gordo, Sunrise (radial), Abell 2744,
      MACS1149, MACS0717 and MACS0416 null. The six HFF CATS map models are in (D-035). Next:
+     - multi-plane test of MACS0416 system 51's fourth image (foreground z 0.268 galaxy, D-042; needs-human record);
      - CANUCS Lenstool models (MACS0416 used in D-042; MACS1149, Abell 370) as pinned `MODELS` entries: the independent
        second model for the D-036/D-037/D-041 rules (best fit and the 100 MCMC samples);
      - `radial`: an aper50 S/N floor (noise segments pass the isophotal S/N);

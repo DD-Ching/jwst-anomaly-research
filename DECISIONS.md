@@ -1940,7 +1940,7 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
 - A MACS0717 photo-z catalogue (DJA or a team release) appears: re-run `radial` with the background cut.
 - `forced_check` ties its match and search radii to the measured image-plane rms when that rms exceeds 1″.
 
-## D-042 MACS0416 counter-image and flux-ratio screens: null; CANUCS Lenstool model as the independent second model (2026-10-08)
+## D-042 MACS0416 counter-image and flux-ratio screens: 20 ordinary, 1 inconclusive; CANUCS Lenstool model as second model (2026-10-08)
 
 **Decision.** With the image list open (D-040), the MACS0416 `images` and `fluxratio` screens are a null result
 (docs/fields/macs0416.md). The JWST-era CANUCS Lenstool model is the independent second model for this field:
@@ -1964,15 +1964,23 @@ where the cutouts also show empty sky at the predicted position (ASSUMPTION).
   - one system-55 row is CATS-only (5.3″ from any CANUCS image); the other two are reference-quality cases.
   - 5 confused rows (systems 34, 45, 47, 132, 133) are predicted by both models (within 0.25–0.9″) but lie next to
     neighbours 30–900× brighter, so they are untestable.
-  - 6 confused rows (systems 1, 15, 45, 51, 122 ×2) lie 1.6–4.7″ from catalogued images that both models reproduce:
-    probable model copies.
+  - 5 confused rows (systems 1, 15, 45, 122 ×2) are copies: CATS predicts as many images as are catalogued, and
+    each lies 1.6–4.7″ from the one catalogued image it does not match, with the same parity. Their residuals exceed
+    D-041's 1.75 × rms, so they are classified by image count and parity instead.
+  - **System 51's fourth image is inconclusive.** Both models predict it (μ 3.8 CATS, 5.5 CANUCS; 0.2″ apart). After
+    isophote subtraction of the neighbour, nothing is seen: S/N −1.8 to 0.2 against an expected 9–25σ. In CANUCS it
+    survives ±30 % changes of the nearest potential (8757) but vanishes when 8757 is removed. 8757 is the z_spec 0.268
+    galaxy 0.88″ away, a foreground object modelled as a cluster member at z 0.396. Testing the image needs a
+    multi-plane model (vetting record: docs/candidates/macs0416-system51-fourth-image.md, in its own `needs-human` PR).
 - `fluxratio` (F150W/F444W): 32 consistent, 58 resolved, 23 untestable.
   - 45.2 is overluminous: a 0.2″ aperture 0.5″ from a bright compact galaxy (the cutout), and its CANUCS match has
     spectroscopic z 2.544 but photo-z 0.38, a blend.
   - 45.1 is flagged as underluminous only relative to 45.2.
   - 38.1 is chromatic at S/N 2–3.5 (marginal).
 - Tally: 143 predicted images and 116 flux-ratio images screened; 21 flags (18 forced rows, 3 flux-ratio images);
-  **0 surviving**.
+  20 ordinary or untestable, **1 inconclusive**, 0 unexplained.
+- **Rule:** an extra image produced by a potential whose spectroscopic redshift places it off the cluster is untestable
+  in a single-plane model.
 
 **Revisit if.**
 - The CANUCS model is pinned as a `MODELS` entry with its image list, and `images` is re-run on it directly.
