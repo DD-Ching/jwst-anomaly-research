@@ -1451,3 +1451,49 @@ Field docs: `docs/fields/*.md`.
 - A BCG/ICL model is subtracted. That allows a clean test near the BCG (system 17).
 - A reference flux is available for systems 11, 16 and 26 (DJA matched photometry, or a deeper image).
 - The test runs on the other clusters: El Gordo and Abell 2744 (issue #41) once their parser bugs are fixed.
+
+## D-030 Lenstool parser conventions and the El Gordo / Abell 2744 models; image-plane validation (2026-10-08)
+
+**Decision.**
+- **Image ids** (`lensmodel.image_system`):
+  - a trailing lower-case letter names the image: `23a` → system `23`, `1.1a` → `1.1`, `A200.1a` → `A200.1`
+    (Caminha+2023, Bergamini+2023b);
+  - otherwise the last `.`-part does: `1.2` → `1` (Mahler+2022).
+- **`z_m_limit`** takes one or more ids before the flag. Each id is a system (`4.0`) or one of its images (`7a`).
+- **Radii given in both arcsec and kpc** may differ by max(2 %, 1e-5″). `best.par` prints 6 decimals, so tiny
+  radii carry rounding error (Bergamini potential 37609: 0.000021″ against 2.142e-5″).
+- **`load_lenstool_images`** keeps the `a` column as `err_arcsec`.
+- **New `MODELS` entries** in `lens_consistency.py`:
+  - `elgordo-caminha23`: CDS J/A+A/678/A3, best.par, image list and z = 2, 8 magnification maps;
+  - `abell2744-bergamini23`: the authors' page, best.par and image list.
+  - All files are pinned by sha256 in `lensmodel.py`.
+- **`validate`** now always runs the exact image-plane check (`imageplane_check`, `find_images`). That is
+  Lenstool's χ² for models optimised in the image plane.
+  - It also compares magnification maps when a model publishes them.
+  - The source-plane back-trace is kept only for `sigposArcsec` models (SMACS).
+- **Position errors per model:**
+  - SMACS: `sigposArcsec` 0.44″;
+  - Abell 2744: the per-image errors of its file;
+  - El Gordo: 0.621″ for every image. Its CDS file lists "re-scaled" errors, 19 of 56 at 1.242″, which give χ² 52.0
+    and do not reproduce best.par's Chi2pos.
+
+**Alternatives rejected.**
+- Rewriting the published files (the scratch workaround of issue #41): the pinned sha256 would then no longer
+  identify the published product.
+- Per-image errors for El Gordo: they do not reproduce the header χ² (52.0 against 80.22).
+
+**Evidence** (`validate`, 2026-10-08; also `tests/test_lens_consistency.py::test_validate_reproduces_lenstool_image_plane_chi2`,
+network). All results are `model_prediction` against the published products:
+
+| Field | χ² (image plane) | Lenstool Chi2pos | rms | Other checks |
+|---|---|---|---|---|
+| SMACS ICLv2 | 30.87 | 30.91 | 0.318″ | κ map median 1.6e-5 |
+| El Gordo | 82.53 | 80.22 | 0.754″ (paper 0.75″) | median \|Δμ\|/μ 3.8e-5 (z = 2), 6.7e-5 (z = 8) |
+| Abell 2744 | 146.64 | 146.60 | 0.427″ | none |
+
+- Grids (ASSUMPTIONs): 0.25″ over ±130″ (El Gordo) and ±190″ (Abell 2744); 0.1″ over ±60″ (SMACS).
+- The solve takes 1–2 min per field, and the grid is cached.
+
+**Revisit if.**
+- A model uses `potfile`s, other profiles or several lens planes (`UnsupportedModelError` today).
+- A published `sigposArcsec` or error convention changes.

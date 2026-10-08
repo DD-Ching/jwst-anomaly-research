@@ -492,6 +492,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
       multiple-image list at https://cdsarc.cds.unistra.fr/ftp/J/A+A/678/A3/.
       Accessed 2026-10-08: `best_fit.par` sha256 `7b0153ae0ee02f057f6aaa6f46b1b698502e6fc427266ac9a09d241ddc63a472`,
       `obs_arcs_v1_new_IDs.dat` sha256 `d631743921266c34689a1d509f08e53dc3c90bc88064393d7b8fd524a3d5c700`.
+      `fits/magnification_best_fit_z2.fits` sha256 `2cfe1b620ac2a2f0e2f72e3247871a6e1e0ddc537adb9787a4683d6b898b9336`,
+      `fits/magnification_best_fit_z8.fits` sha256 `8bdc4ce48b5ccd67163ffa3146507ffda66ecceed721d8d6c066ed5af878c539`
+      (3.9 MB each; pinned in `lensmodel.ELGORDO_CAMINHA23`).
     - RELICS models: https://archive.stsci.edu/hlsps/relics/act0102m49/models/ (DOI 10.17909/T9SP45).
 - **Sunrise (WHL0137−08).**
   - Data: MAST 2282 `jw02282-o010_t001` (jwst 2.0.1); later epochs 2282 o120 and 6882 o052.

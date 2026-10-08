@@ -273,3 +273,19 @@ def test_predict_counter_images_reproduces_an_sis_pair():
     assert classes.count("observed") == 2
     assert set(classes) <= {"observed", "demagnified"}  # at most a central demagnified image
     assert table.meta["provenance"] == "derived"
+
+
+@pytest.mark.network
+@pytest.mark.parametrize(
+    "name, chi2_lenstool",
+    [("elgordo-caminha23", 80.22), ("abell2744-bergamini23", 146.60), ("smacs0723-iclv2", 30.91)],
+)
+def test_validate_reproduces_lenstool_image_plane_chi2(tmp_path, name, chi2_lenstool):
+    """Known cases (issue #41, D-030): the exact image-plane χ² matches Lenstool's ``Chi2pos``."""
+    import argparse
+
+    args = argparse.Namespace(model=name, out=tmp_path, step=25)
+    summary = lc.cmd_validate(args)
+    ip = summary["image_plane"]
+    assert ip["n_solved"] == ip["n_images"]
+    assert ip["chi2_pos"] == pytest.approx(chi2_lenstool, rel=0.04)

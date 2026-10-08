@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: El Gordo and Abell 2744 models reproduced in the repository (D-030)
+- Parser fixes for letter-suffixed image ids (also in `z_m_limit`, with several ids per line) and for 6-decimal
+  `_kpc` rounding. New `MODELS`: `elgordo-caminha23` and `abell2744-bergamini23`, pinned by sha256.
+- `validate` runs the exact image-plane χ² for every model:
+  - SMACS 30.87 vs 30.91;
+  - El Gordo 82.53 vs 80.22, and the CDS magnification maps to a median of 4e-5;
+  - Abell 2744 146.64 vs 146.60.
+  The network test pins all three. The issue #41 numbers are now reproducible.
+- **Lesson:** El Gordo's published image file lists re-scaled errors. Lenstool's χ² uses 0.621″ for every image.
+- **Handoff:** step 2 of the owner's focus: vectorise `find_images` and use published deflection maps. Then fan out
+  per cluster: `images --forced-image` and the exotic screens.
+
 ## 2026-10-08: SMACS counter-images: no predicted image is absent (D-029)
 - New: `lensmodel.find_images` (an image-plane solver on a cached deflection grid), `lens_consistency.py images`, and
   `--forced-image`, which runs forced photometry on S3 byte-range stamps.

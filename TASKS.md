@@ -16,13 +16,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;
-   - **Preliminary (issue #41, scratch code):** exact image-plane solves reproduce Lenstool for El Gordo (χ² 82.5
-     vs 80.22) and Abell 2744 (Bergamini+2023b, 146.64 vs 146.60). Neither shows an image-position anomaly.
-     Open items:
-     - make these results reproducible in the repository: re-run them with #40's `find_images` as
-       `lens_consistency.py validate` known cases;
-     - fix the parser (letter IDs in `z_m_limit`/arcs files, 6-decimal `_kpc` rounding);
-     - add both as `MODELS` entries;
+   - **Validated in the repository (D-030):** `validate` reproduces Lenstool's image-plane χ² for El Gordo (82.5 vs
+     80.22) and Abell 2744 (146.64 vs 146.60). Neither shows an image-position anomaly. Open items:
      - run the counter-image flux test on DJA photometry (Abell 2744 needs the 233 MB catalogue, with a DECISIONS
        entry) and on `bayes.dat` search radii.
    - Sunrise: RELICS or Scofield+2025.

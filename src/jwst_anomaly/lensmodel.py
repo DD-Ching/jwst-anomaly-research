@@ -99,6 +99,42 @@ SMACS0723_MAHLER22_ICLV2: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: Caminha et al. (2023, A&A 678, A3) El Gordo (ACT-CL J0102-4915) Lenstool model, CDS
+#: J/A+A/678/A3 (accessed 2026-10-08). name -> (url, sha256). Optimised in the image plane.
+_CAMINHA23_CDS = "https://cdsarc.cds.unistra.fr/ftp/J/A+A/678/A3"
+ELGORDO_CAMINHA23: dict[str, tuple[str, str]] = {
+    "best.par": (
+        f"{_CAMINHA23_CDS}/files/best_fit.par",
+        "7b0153ae0ee02f057f6aaa6f46b1b698502e6fc427266ac9a09d241ddc63a472",
+    ),
+    "arcs.dat": (
+        f"{_CAMINHA23_CDS}/files/obs_arcs_v1_new_IDs.dat",
+        "d631743921266c34689a1d509f08e53dc3c90bc88064393d7b8fd524a3d5c700",
+    ),
+    "mag_z2": (
+        f"{_CAMINHA23_CDS}/fits/magnification_best_fit_z2.fits",
+        "2cfe1b620ac2a2f0e2f72e3247871a6e1e0ddc537adb9787a4683d6b898b9336",
+    ),
+    "mag_z8": (
+        f"{_CAMINHA23_CDS}/fits/magnification_best_fit_z8.fits",
+        "8bdc4ce48b5ccd67163ffa3146507ffda66ecceed721d8d6c066ed5af878c539",
+    ),
+}
+
+#: Bergamini et al. (2023b, ApJ 952, 84) Abell 2744 GLASS-JWST Lenstool model, the authors' page
+#: (accessed 2026-10-08). name -> (url, sha256). Optimised in the image plane.
+_BERGAMINI23_PAGE = "https://www.fe.infn.it/astro/lensing/A2744_Bergamini23"
+A2744_BERGAMINI23: dict[str, tuple[str, str]] = {
+    "best.par": (
+        f"{_BERGAMINI23_PAGE}/best.par",
+        "7245368f96ad9c7159eb9c8d0045030eda0804554312ee86d84f2e052025b9fb",
+    ),
+    "arcs.dat": (
+        f"{_BERGAMINI23_PAGE}/obs_arcs.cat",
+        "d02c231f4ee8c81f47335a99182a9f64a4c553e14818b1c9bd07314c2f4f5e1c",
+    ),
+}
+
 # French Lenstool keywords (input files) -> the English ones written in best.par.
 _ALIASES = {
     "potentiel": "potential",
@@ -145,6 +181,22 @@ def system_key(system_id: str | float) -> str:
     """
     text = str(system_id).strip()
     return str(int(float(text))) if _INTEGER_ID.match(text) else text
+
+
+_LETTER_SUFFIX = re.compile(r"^(.*\d)([a-z]+)$")
+
+
+def image_system(image_id: str) -> str:
+    """System of a multiple-image id.
+
+    A trailing lower-case letter names the image (``"23a"`` -> ``"23"``, ``"1.1a"`` -> ``"1.1"``,
+    ``"A200.1a"`` -> ``"A200.1"``; Caminha+2023, Bergamini+2023). Otherwise the last ``.``-part
+    names it (``"1.2"`` -> ``"1"``; Mahler+2022)."""
+    text = str(image_id).strip()
+    m = _LETTER_SUFFIX.match(text)
+    if m:
+        return system_key(m[1])
+    return system_key(text.rsplit(".", 1)[0]) if "." in text else system_key(text)
 
 
 def image_redshifts(images: Table, z_m_limit: dict[str, float]) -> np.ndarray:
@@ -234,11 +286,20 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
         elif kind == "image":
             for key, vals, n in entries:
                 if key == "z_m_limit":
-                    # z_m_limit <n> <system> <flag> <z or zmin> [<zmax> <step>]; flag 0 = fixed.
-                    if len(vals) < 4:
+                    # z_m_limit <n> <id> [<id> ...] <flag> <z or zmin> [<zmax> <step>]; flag 0 =
+                    # fixed. An id is a system ("4.0") or one of its images ("7a", "A200.1a").
+                    flags = [k for k in range(2, len(vals)) if vals[k] in ("0", "1", "2", "3")]
+                    if len(vals) < 4 or not flags or flags[0] + 1 >= len(vals):
                         raise ValueError(f"{path}:{n}: malformed z_m_limit {vals}")
-                    if vals[2] == "0":
-                        out["z_m_limit"][system_key(vals[1])] = float(vals[3])
+                    k = flags[0]
+                    if vals[k] == "0":
+                        for ident in vals[1:k]:
+                            sys_id = (
+                                image_system(ident)
+                                if _LETTER_SUFFIX.match(ident)
+                                else system_key(ident)
+                            )
+                            out["z_m_limit"][sys_id] = float(vals[k + 1])
                 elif key.lower() == "sigposarcsec":
                     out["sigpos_arcsec"] = float(vals[0])
         elif kind == "potential":
@@ -631,7 +692,9 @@ def _dpie_from_dict(pot: dict[str, Any], cosmo: FlatLambdaCDM, source: str) -> D
     def radius(key: str) -> float:
         val, kpc = pot[key], pot[f"{key}_kpc"]
         per_arcsec = cosmo.kpc_proper_per_arcmin(pot["z_lens"]).to_value(u.kpc / u.arcmin) / 60.0
-        if np.isfinite(val) and np.isfinite(kpc) and abs(kpc / per_arcsec - val) > 0.02 * val:
+        # best.par prints 6 decimals, so tiny radii carry rounding error: allow 1e-5" absolute.
+        tol = max(0.02 * val, 1e-5)
+        if np.isfinite(val) and np.isfinite(kpc) and abs(kpc / per_arcsec - val) > tol:
             # Both given and inconsistent: which one Lenstool used is ambiguous, so refuse.
             raise UnsupportedModelError(
                 f"{source}: potential {pot['name']} {key} {val} arcsec disagrees with "
@@ -666,14 +729,16 @@ def _dpie_from_dict(pot: dict[str, Any], cosmo: FlatLambdaCDM, source: str) -> D
 
 
 def load_lenstool_images(path: str | Path) -> Table:
-    """Lenstool ``arcs.dat`` (absolute coordinates): ``image_id, system, ra, dec, z``.
+    """Lenstool ``arcs.dat`` (absolute coordinates): ``image_id, system, ra, dec, z, err_arcsec``.
 
     ``z`` is the catalogued redshift (0 means "free in the model": take it from the model's
-    ``z_m_limit``). Provenance ``observed`` (published constraint positions).
+    ``z_m_limit``). ``err_arcsec`` is the file's ``a`` column, which Lenstool uses as the
+    position error when the model sets no ``sigposArcsec``. Provenance ``observed``
+    (published constraint positions).
     """
     path = Path(path)
     raw = path.read_bytes()
-    ids, ras, decs, zs = [], [], [], []
+    ids, ras, decs, zs, errs = [], [], [], [], []
     for n, line in enumerate(raw.decode("latin-1").splitlines(), 1):
         stripped = line.strip()
         if not stripped:
@@ -690,13 +755,15 @@ def load_lenstool_images(path: str | Path) -> Table:
         ras.append(float(parts[1]))
         decs.append(float(parts[2]))
         zs.append(float(parts[6]))
+        errs.append(float(parts[3]))
     t = Table(
         {
             "image_id": ids,
-            "system": [system_key(i.rsplit(".", 1)[0]) if "." in i else system_key(i) for i in ids],
+            "system": [image_system(i) for i in ids],
             "ra": ras,
             "dec": decs,
             "z": zs,
+            "err_arcsec": errs,
         }
     )
     t.meta.update(

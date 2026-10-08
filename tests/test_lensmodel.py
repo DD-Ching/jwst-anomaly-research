@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
+from astropy import units as u
 from astropy.cosmology import FlatLambdaCDM
 from astropy.table import Table
 
@@ -352,3 +353,49 @@ def test_deflection_grid_cache(tmp_path):
     other = LensModel([_dpie(v_disp=500.0)], RA0, DEC0, COSMO, sha256="def")
     g3 = lensmodel.DeflectionGrid.cached(other, path, half_width=5.0, step=0.5)
     assert not np.allclose(g3.alpha_x, g1.alpha_x)  # a different model recomputes
+
+
+@pytest.mark.parametrize(
+    "image_id, system",
+    [("23a", "23"), ("1.1a", "1.1"), ("A200.1a", "A200.1"), ("1.2", "1"), ("4", "4"), ("7", "7")],
+)
+def test_image_system_conventions(image_id, system):
+    assert lensmodel.image_system(image_id) == system
+
+
+def test_z_m_limit_with_image_ids_and_several_ids(tmp_path):
+    text = PAR.format(ra=RA0, dec=DEC0).replace(
+        "    z_m_limit 2 6.0 1 1.0 3.0 0.1\n",
+        "    z_m_limit 2 7a 0 2.5679 0.0 0.0\n    z_m_limit 3 A200.1a B200.2a 0 7.3895 0.0 0.0\n",
+    )
+    parsed = lensmodel.parse_lenstool_par(_write(tmp_path, text))
+    assert parsed["z_m_limit"] == {"4": 2.17, "7": 2.5679, "A200.1": 7.3895, "B200.2": 7.3895}
+
+
+def test_tiny_radii_tolerate_print_rounding(tmp_path):
+    # Bergamini+2023b potential 37609: 0.000021" printed, 0.000097 kpc -> 2.142e-5" (2 % off)
+    per_arcsec = (
+        FlatLambdaCDM(H0=70.0, Om0=0.3).kpc_proper_per_arcmin(0.39).to_value(u.kpc / u.arcmin) / 60
+    )
+    text = PAR.format(ra=RA0, dec=DEC0).replace(
+        "    core_radius_kpc 10.0\n",
+        f"    core_radius 0.000021\n    core_radius_kpc {2.142e-5 * per_arcsec:.6g}\n",
+    )
+    model = LensModel.from_par(_write(tmp_path, text))
+    assert model.components[0].r_core == pytest.approx(2.1e-5)
+    bad = text.replace("core_radius 0.000021", "core_radius 0.5")
+    with pytest.raises(lensmodel.UnsupportedModelError):
+        LensModel.from_par(_write(tmp_path, bad))
+
+
+def test_load_images_letter_ids_and_errors(tmp_path):
+    path = _write(
+        tmp_path,
+        "#REFERENCE 0\n"
+        f"23a {RA0} {DEC0} 0.6210 0.6210 0.0 2.1887 25\n"
+        f"1.1a {RA0} {DEC0} 0.3815 0.3815 0.0 0.0 25\n",
+        "arcs.dat",
+    )
+    t = lensmodel.load_lenstool_images(path)
+    assert list(t["system"]) == ["23", "1.1"]
+    np.testing.assert_allclose(t["err_arcsec"], [0.621, 0.3815])

@@ -83,10 +83,28 @@ from astropy.wcs import WCS, FITSFixedWarning
 from jwst_anomaly import lensmodel, paths, schema
 from jwst_anomaly.photometry import fetch_catalog
 
+# sigma: "sigpos" = input.par sigposArcsec; "arcs" = the image file's per-image error (Lenstool's
+# fallback); a number = one error for every image.
+# grid: (half-width, step) in arcsec for the image-plane solver, covering the images.
 MODELS = {
     "smacs0723-iclv2": {
         "files": lensmodel.SMACS0723_MAHLER22_ICLV2,
         "kappa_member": "tmp_k/0000_k.fits",
+        "sigma": "sigpos",
+        "grid": (60.0, 0.1),
+    },
+    "elgordo-caminha23": {
+        "files": lensmodel.ELGORDO_CAMINHA23,
+        "mag_maps": {2.0: "mag_z2", 8.0: "mag_z8"},
+        # The CDS image file lists "re-scaled" errors (19 of 56 at 1.242"); the best.par Chi2pos
+        # (80.22) is reproduced with the original 0.621" for every image (82.5; issue #41).
+        "sigma": 0.621,
+        "grid": (130.0, 0.25),
+    },
+    "abell2744-bergamini23": {
+        "files": lensmodel.A2744_BERGAMINI23,
+        "sigma": "arcs",
+        "grid": (190.0, 0.25),
     },
 }
 Z_GRID = (1.0, 2.0, 4.0)
@@ -100,6 +118,8 @@ def model_files(name: str) -> dict[str, Path]:
     """
     spec = MODELS[name]
     files = {key: fetch_catalog(url, sha) for key, (url, sha) in spec["files"].items()}
+    if "kappa_member" not in spec:
+        return files
     archive = files.pop("kappa_0000")
     target = archive.with_name(
         archive.name.split(".", 1)[0] + "_" + Path(spec["kappa_member"]).name
@@ -157,6 +177,83 @@ def kappa_map_check(model: lensmodel.LensModel, map_path: Path, step: int = 5) -
         "kappa_at_max": float(published.flat[k]),
         "median_ratio": float(np.median(analytic / published)),
     }
+
+
+def magnification_map_check(
+    model: lensmodel.LensModel, map_path: Path, z_s: float, step: int = 7, max_abs_mu: float = 10.0
+) -> dict:
+    """|Δμ|/|μ| between the analytic model and a published magnification map at ``z_s``.
+
+    Pixels with |μ| ≥ ``max_abs_mu`` (near critical curves, where μ diverges) are excluded."""
+    with fits.open(map_path) as hdul:
+        data = np.asarray(hdul[0].data, float)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", FITSFixedWarning)
+            wcs = WCS(hdul[0].header)
+    jj, ii = np.mgrid[2 : data.shape[0] : step, 2 : data.shape[1] : step]
+    ra, dec = wcs.pixel_to_world_values(ii, jj)
+    mu = np.abs(np.asarray(model.evaluate(ra.ravel(), dec.ravel(), z_s)["magnification"], float))
+    pub = np.abs(data[jj, ii].ravel())
+    ok = np.isfinite(mu) & np.isfinite(pub) & (pub < max_abs_mu) & (mu < max_abs_mu) & (pub > 0)
+    rel = np.abs(mu[ok] - pub[ok]) / pub[ok]
+    return {
+        "map": str(map_path),
+        "z_s": z_s,
+        "n_points": int(ok.sum()),
+        "max_abs_mu": max_abs_mu,
+        "median_rel_dmu": float(np.median(rel)),
+        "p95_rel_dmu": float(np.percentile(rel, 95)),
+        "p99_rel_dmu": float(np.percentile(rel, 99)),
+    }
+
+
+def imageplane_check(model, grid, images: Table, z_m_limit, sigma, chi2_ref: float | None):
+    """Exact image-plane residuals: each system's mean back-traced source is solved for all its
+    images (``find_images``) and every catalogued image is compared with the nearest one.
+
+    This is the χ² Lenstool reports for models optimised in the image plane. ``sigma`` is a
+    scalar or one error per image (arcsec)."""
+    bt = lensmodel.backtrace_images(model, images, z_m_limit)
+    sig = np.broadcast_to(np.asarray(sigma, float), (len(images),))
+    systems = np.asarray(bt["system"]).astype(str)
+    d = np.full(len(bt), np.nan)
+    for sys_id in dict.fromkeys(systems):
+        m = (systems == sys_id) & np.isfinite(bt["beta_x"])
+        if m.sum() < 2:
+            continue
+        z = float(bt["z_used"][m][0])
+        pred = lensmodel.find_images(
+            model, grid, float(np.mean(bt["beta_x"][m])), float(np.mean(bt["beta_y"][m])), z
+        )
+        if not len(pred):
+            continue
+        x, y = model.to_frame(bt["ra"][m], bt["dec"][m])
+        px, py = np.asarray(pred["x"]), np.asarray(pred["y"])
+        d[m] = np.min(np.hypot(x[:, None] - px[None, :], y[:, None] - py[None, :]), axis=1)
+    bt["dtheta_image_plane_arcsec"] = d
+    ok = np.isfinite(d)
+    worst = np.argsort(np.where(ok, d / sig, -np.inf))[::-1][:5]
+    summary = {
+        "n_images": len(bt),
+        "n_solved": int(ok.sum()),
+        "rms_arcsec": float(np.sqrt(np.mean(d[ok] ** 2))),
+        "chi2_pos": float(np.sum((d[ok] / sig[ok]) ** 2)),
+        "chi2_pos_lenstool": chi2_ref,
+        "largest": [
+            {"image": str(bt["image_id"][k]), "dtheta_arcsec": round(float(d[k]), 3)}
+            for k in worst
+            if ok[k]
+        ],
+    }
+    return bt, summary
+
+
+def model_grid(model, name: str, half_width: float | None = None, step: float | None = None):
+    """The model's cached deflection grid, sized by ``MODELS[name]["grid"]`` unless overridden."""
+    hw, st = MODELS[name]["grid"]
+    hw, st = half_width or hw, step or st
+    cache = paths.cache_dir() / "external" / f"{model.sha256[:12]}_alpha_{hw:g}_{st:g}.npz"
+    return lensmodel.DeflectionGrid.cached(model, cache, hw, st)
 
 
 def chi2pos_from_par(path: Path) -> float | None:
@@ -335,20 +432,33 @@ def _write(table: Table, path: Path) -> None:
 
 
 def cmd_validate(args) -> dict:
+    spec = MODELS[args.model]
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
-    sigpos = read_sigpos(files["input.par"])
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    if spec["sigma"] == "sigpos":
+        sigma = read_sigpos(files["input.par"])
+    elif spec["sigma"] == "arcs":
+        sigma = np.asarray(images["err_arcsec"], float)
+    else:
+        sigma = float(spec["sigma"])
     chi2_ref = chi2pos_from_par(files["best.par"])
-    bt, bsum = backtrace_check(model, images, par["z_m_limit"], sigpos, chi2_ref)
     summary = {
         "model": args.model,
         "model_sha256": model.sha256,
         "n_potentials": len(model.components),
-        "kappa_map": kappa_map_check(model, files["kappa_map"], step=args.step),
-        "backtrace": bsum,
     }
+    if "kappa_member" in spec:
+        summary["kappa_map"] = kappa_map_check(model, files["kappa_map"], step=args.step)
+    for z_s, key in spec.get("mag_maps", {}).items():
+        summary[f"magnification_map_z{z_s:g}"] = magnification_map_check(model, files[key], z_s)
+    if spec["sigma"] == "sigpos":
+        bt, summary["backtrace"] = backtrace_check(model, images, par["z_m_limit"], sigma, chi2_ref)
+    grid = model_grid(model, args.model)
+    bt, summary["image_plane"] = imageplane_check(
+        model, grid, images, par["z_m_limit"], sigma, chi2_ref
+    )
     out = args.out / args.model
     _write(bt, out / "backtrace.ecsv")
     (out / "validate.json").write_text(json.dumps(summary, indent=1))
@@ -748,12 +858,7 @@ def cmd_images(args) -> dict:
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
-    cache = (
-        paths.cache_dir()
-        / "external"
-        / f"{model.sha256[:12]}_alpha_{args.half_width:g}_{args.step:g}.npz"
-    )
-    grid = lensmodel.DeflectionGrid.cached(model, cache, args.half_width, args.step)
+    grid = model_grid(model, args.model, args.half_width, args.step)
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
     bt = lensmodel.backtrace_images(model, images, par["z_m_limit"])
     shapes = load_shapes(args.catalog)
@@ -874,8 +979,10 @@ def main(argv: list[str] | None = None) -> int:
     i.add_argument("--photoz", type=Path, help="eazy zout FITS table (e.g. DJA)")
     i.add_argument("--match-arcsec", type=float, default=1.5)
     i.add_argument("--footprint-arcsec", type=float, default=5.0)
-    i.add_argument("--half-width", type=float, default=60.0, help="solver grid half-width, arcsec")
-    i.add_argument("--step", type=float, default=0.1, help="solver grid step, arcsec")
+    i.add_argument(
+        "--half-width", type=float, help="solver grid half-width, arcsec (model default)"
+    )
+    i.add_argument("--step", type=float, help="solver grid step, arcsec (model default)")
     i.add_argument(
         "--forced-image", help="_i2d URI or path for forced photometry (S3 by byte range)"
     )
