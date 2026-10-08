@@ -88,11 +88,12 @@ class RangeReader:
                             return data  # a short body is retried
                     elif r.status_code == 200:  # range ignored: read only a small file
                         n = r.headers.get("Content-Length")
-                        if a != 0 or n is None or int(n) > SMALL_FILE:
-                            raise OSError(f"{self.url}: server ignored the byte range (HTTP 200)")
-                        data = r.content
-                        if len(data) >= b:
-                            return data[:b]
+                        if a == 0 and n is not None and int(n) <= SMALL_FILE:
+                            data = r.content
+                            if len(data) >= b:
+                                return data[:b]
+                        # a large file: the body is never read; the archive answers 200 to a
+                        # range request now and then (gb20, 2026-10-08), so back off and retry
                     elif r.status_code not in RETRY_STATUS:
                         raise OSError(f"{self.url} bytes {a}-{b - 1}: HTTP {r.status_code}")
             except (

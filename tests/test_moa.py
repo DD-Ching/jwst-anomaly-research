@@ -300,7 +300,7 @@ def test_range_reader_checks_status_range_and_pinned_size():
     for resp, match in (
         (_Resp(206, b"x" * 10, {"Content-Range": "bytes 0-9/2000"}), "pinned"),
         (_Resp(206, b"x" * 10, {"Content-Range": "bytes 5-14/1000"}), "asked"),
-        (_Resp(200, b"", {"Content-Length": str(10**12)}), "ignored the byte range"),
+        (_Resp(200, b"", {"Content-Length": str(10**12)}), "failed after"),  # retried, unread
         (_Resp(404), "HTTP 404"),
     ):
         with pytest.raises(OSError, match=match):
