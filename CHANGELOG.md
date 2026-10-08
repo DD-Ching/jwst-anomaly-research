@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-08: MACS0416 counter-images and flux ratios: null; CANUCS Lenstool model as second model (D-042)
+## 2026-10-08: MACS0416 counter-images and flux ratios: 20 ordinary, 1 inconclusive; CANUCS model as second model (D-042)
 - With the D-040 solver, the MACS0416 image list is open. `images` and `fluxratio` raised 21 flags: 20 ordinary and 1
   inconclusive. System 51's fourth image is produced by a z 0.268 foreground galaxy modelled as a member; it needs a
   multi-plane model (vetting record in its own `needs-human` PR).
