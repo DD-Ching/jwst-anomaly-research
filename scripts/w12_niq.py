@@ -106,6 +106,8 @@ class NiqParams:
 
 P = NiqParams()
 MANIFEST = "w12_niq_inputs.json"
+# all Tractor columns the D-056 chain and the vetting read (w12_lenscats.TRACTOR_COLS minus none)
+TRACTOR_PIN_COLUMNS = tuple(w12.TRACTOR_COLS.split(","))
 
 
 def pinned() -> dict[str, str]:
@@ -594,9 +596,10 @@ def cmd_screen(args) -> None:
     src = src[near] if len(src) else src
     tractor_sha = hashlib.sha256(
         "\n".join(
-            f"{i},{r:.7f},{d:.7f},{t},{z:.4f}"
-            for i, r, d, t, z in sorted(
-                zip(src["ls_id"], src["ra"], src["dec"], src["type"], src["mag_z"], strict=True)
+            # every Tractor column the test reads (pair test, colour, required depth, mask flags)
+            ",".join(f"{v:.7f}" if isinstance(v, float) else str(v) for v in row)
+            for row in sorted(
+                zip(*(np.asarray(src[c]).tolist() for c in TRACTOR_PIN_COLUMNS), strict=True)
             )
         ).encode()
     ).hexdigest()
@@ -696,7 +699,7 @@ def cmd_screen(args) -> None:
         tmeta = {
             "sha256": tractor_sha,
             "rows": len(src),
-            "sha256_of": "sorted ls_id,ra,dec,type,mag_z",
+            "sha256_of": "sorted rows of " + ",".join(TRACTOR_PIN_COLUMNS),
             "source": "Legacy Surveys DR10 Tractor boxes (Data Lab TAP)",
             "uri": f"{w12.TAP} (ls_dr10.tractor, {w12.TRACTOR_COLS})",
             "file": "tractor_cache/tractor_*.ecsv (rows near the sample)",
