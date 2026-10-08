@@ -1363,9 +1363,23 @@ Field docs: `docs/fields/*.md`.
 - **Failed approach:** a fixed aperture at a literature position. An offset of 0.1″ between the aperture and the
   source turns PSF-wing differences into a fake brightening, because the PSF rotates about 180° between the epochs.
 
+**Amendment (2026-10-08, calibrated significances; Sunrise third epoch).**
+- `transient_forced.py --controls <catalog>` measures a reproducible random set of ordinary sources (default
+  200, `aper_total_abmag` 25.5–28, ≥ 1″ from candidates) with the candidates. Per band, the robust std
+  (1.4826 MAD) of their significances divides the candidates' significances before thresholding, never by
+  less than 1; raw values stay in `*_sigma_raw`.
+- **Evidence:** Sunrise o010 against VENUS o052 gives scales 1.30 (F150W) and 1.18 (F444W), within the
+  1.2–1.5 found by hand before; 0 of 57 candidates pass. Three controls change; two of them (`n0022`, `n0150`)
+  are open candidates that the catalog-stage search did not list (docs/fields/sunrise.md).
+- A check run with 40 requested controls (33 measurable in F444W) gave a scale of 0.54, below the 1st percentile
+  (0.68) of 33-control subsamples of the 175-control run. The MAD of these heavy-tailed significances is
+  unstable at small n, so a band needs ≥ 100 measurable controls (`MIN_CONTROLS`, ASSUMPTION) to be calibrated.
+  Controls are selected on epoch-1 F150W magnitudes and applied to every band (a limitation for LW bands).
+- **Failed approach:** candidates only from the catalog stage. Requiring the same kind in two bands drops
+  transients seen in one band of the shared pair (blue sources in F150W/F444W).
+
 **Revisit if.**
 - More than two epochs make light curves possible.
-- Thresholds are set on calibrated significances: divide by the control std (1.2–1.5) instead of trusting ERR.
 - The search goes below catalog depth (image differencing or forced photometry on a grid).
 
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)

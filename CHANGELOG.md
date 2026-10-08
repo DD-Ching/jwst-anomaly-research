@@ -14,6 +14,18 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   more than 2× under member perturbation is untestable.
 - **Handoff:** HFF field runs (D-035 models), `bayes.dat` position spreads, UNCOVER v2.0 cross-check.
 
+## 2026-10-08: Sunrise third epoch with calibrated significances; two open transient candidates (D-027)
+- `transient_forced.py --controls`: noise scale from ordinary sources, applied before thresholding.
+- Sunrise o010 against VENUS o052 (2.9 yr; F150W, F444W): scales 1.30/1.18; **0 of 57 catalog candidates pass**;
+  Earendel steady (Δm ≤ 0.12 mag, < 1σ).
+- Among the 200 controls, `n0022` (gone after 2022-07 in four SW bands), `n0150` (a different position in each
+  epoch) and `n0153` (+0.5–0.6 mag in both bands) change. Not vetted; ordinary explanations (supernova, moving
+  object, AGN, edge artefact) are untested. docs/fields/sunrise.md has the numbers.
+- **Failed approach:** the catalog stage plus the two-band rule misses single-pair, blue transients.
+- **Handoff:** `/vet-candidate` for `n0022` and `n0150` (level-2 `_cal` exposures per filter: is the source in
+  every dither? Does `n0150` move within one visit?); then a grid of forced photometry (all sources, not only
+  catalog candidates) for every epoch pair.
+
 ## 2026-10-08: Six HFF clusters as CATS map models (D-035)
 - MACS0416, MACS1149, Abell 370, MACS0717, Abell S1063 and Abell 2744 (CATS v4/v4.1) are pinned map models. All six
   reproduce their published z = 2 magnification maps (median 9e-5 to 6e-3).
