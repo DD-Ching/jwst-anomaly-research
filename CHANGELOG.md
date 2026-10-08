@@ -9,7 +9,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   checked against Sharon v4cor), Refsdal-host knot 1192 (next to the BCG; μ differs >2× between models).
   `fluxratio` 0 flags; `radial` p = 0.91.
 - **Failed approach:** forced photometry with an annulus on a BCG core gives negative fluxes; use high-pass.
-- No DJA mosaic for MACS1149 (v7), so there are no photo-z.
+- No DJA mosaic for MACS1149 (v7). CANUCS DR1 has PSF-matched EAzY photo-z (docs/landscape.md listed it; missed at
+  first): 16.2 has z_phot 2.25, which excludes the fitted 4.419. The radial re-run with a background cut is null (12 peaks against 12.8).
 - Wall time: about 5 min of pipeline plus about 10 min of vetting.
 - **Handoff:** `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; forced photometry on system 16's
   far-image track to fix its redshift.

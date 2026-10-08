@@ -19,8 +19,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - exotic screens (D-031, D-034, D-036): SMACS, El Gordo, Sunrise (radial) and Abell 2744 null. The six HFF CATS
      map models are in (D-035). MACS1149 null (D-037). Next:
      - JWST field runs per HFF cluster (radial on all six; `images` / `fluxratio` on MACS0717);
-     - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; fix system 16's z (spectroscopic
-       z, or forced photometry on its far-image track);
+     - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1 photo-z;
+       evaluate the CANUCS lens models (with samples) as the independent second model for the D-036/D-037 μ rule;
      - `bayes.dat` position spreads;
      - the UNCOVER v2.0 cross-check for Abell 2744.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:

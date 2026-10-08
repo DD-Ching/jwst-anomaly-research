@@ -532,6 +532,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   64,008,000 B each. sha256: x `44f1d21a78cead051c08295d13d7c9189638971cf1e9445bb2caa641a129324f`,
   y `54508deb502d9bcafca9733c3b28f3b4d794b64f11167589b56c1fc37d66a15c`.
 - DJA v7 imaging index (dawn-cph GitHub Pages `/dja/imaging/v7/`): no MACS1149 mosaic.
+- CANUCS DR1 (DOI 10.17909/18nv-np70) MACS1149 cluster-field photometry and EAzY photo-z:
+  https://archive.stsci.edu/hlsps/canucs/dr1/macs1149/clu/hlsp_canucs_jwst-hst_multi_macs1149-clu_multi_v1_photometry-cat.fits.gz,
+  29,779,449 B, sha256 `08ab67347f2c3dfe4f743cc1b2a9d4b77a1e40eb66ddeb611648bb296adc0739`. The same directory tree has
+  CANUCS lens models (`model/`: deflection, κ, γ, best and samples), not yet used.
 
 ## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
 
