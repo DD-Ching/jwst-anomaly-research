@@ -190,6 +190,40 @@ def test_jackknife_removes_a_preference_built_on_one_epoch():
     assert jk[-1] > w3.P.flag_dbic  # and no longer flags
 
 
+def test_jackknife_n_drop_keeps_three_feature_epochs():
+    assert [w3.jackknife_n_drop(n) for n in (0, 3, 4, 5, 6, 50)] == [1, 1, 1, 2, 3, 3]
+
+
+def test_well_sampled_short_w3_event_survives_feature_coverage_and_jackknife():
+    """A real t_E = 3 d W3 event sampled by a few epochs must not be vetted away (PR #88 review)."""
+    t = _cadence(n=500, span=1600.0)
+    truth = {"t0": 2456800.0, "tE": 3.0, "u0": 0.2, "rho": 0.01, "fs": 0.6, "fb": 0.4}
+    grid = w3.LightCurve(t, np.ones_like(t), np.ones_like(t), RA, DEC, "x")
+    lc = _synthetic(t, (w3.model_flux("N1neg", grid, truth) - 0.4) / 0.6)
+    res = w3.fit_event(lc, 2456800.0, 3.0, 0.2, models=("PSPL", "N1neg"))
+    assert res["N1neg"]["bic"] - res["PSPL"]["bic"] < w3.P.flag_dbic
+    cov = w3.feature_coverage(lc, res["PSPL"], res["N1neg"], "PSPL", "N1neg")
+    assert cov["n_epochs"] >= 3 and cov["dchi2_in"] < w3.P.flag_dbic
+    n_drop = w3.jackknife_n_drop(cov["n_epochs"])
+    jk = w3.jackknife_worst_epochs(lc, res["PSPL"], res["N1neg"], "PSPL", "N1neg", n_drop=n_drop)
+    assert jk[-1] < w3.P.flag_dbic
+    d2e, _ = w3.two_events_dbic(lc, res["PSPL"], res["N1neg"], "PSPL", "N1neg")
+    assert d2e is None or d2e < w3.P.flag_dbic
+
+
+def test_two_unrelated_bumps_explain_spikes_far_apart():
+    """An event plus an unrelated later flare: two PSPL bumps beat any single exotic fit."""
+    t = _cadence(n=600, span=1600.0)
+    t = np.sort(np.concatenate([t, 2457300.0 + np.array([-0.2, 0.0, 0.3, 0.9])]))
+    a1 = w3.pspl(w3.straight_beta(t, 2456300.0, 3.0, 0.5))
+    a2 = w3.pspl(w3.straight_beta(t, 2457300.0, 1.0, 0.3))
+    lc = _synthetic(t, a1 + 0.3 * a2, sigma=0.005)
+    res = w3.fit_event(lc, 2456300.0, 3.0, 0.5, models=("PSPL", "N1neg"))
+    d2e, two = w3.two_events_dbic(lc, res["PSPL"], res["N1neg"], "PSPL", "N1neg")
+    assert d2e is not None and d2e > w3.P.flag_dbic
+    assert abs(two["x"][3] - 2457300.0) < 2.0
+
+
 @pytest.mark.parametrize(
     "flag",
     [

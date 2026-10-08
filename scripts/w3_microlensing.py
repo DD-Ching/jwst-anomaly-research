@@ -1143,6 +1143,62 @@ def fit_binary_source(lc: LightCurve, ps: dict) -> dict:
     }
 
 
+def fit_two_events(lc: LightCurve, ps: dict, t_second: float) -> dict:
+    """Two unrelated PSPL brightenings (independent t0, t_E, u0; e.g. a microlensing event and a
+    later flare or a second lens): the ordinary model for an exotic fit whose two caustic spikes
+    sit on two separate bumps. The second bump starts at ``t_second``."""
+
+    def fun(x):
+        a1 = pspl(straight_beta(lc.t, x[0], 10 ** x[1], abs(x[2])))
+        a2 = pspl(straight_beta(lc.t, x[3], 10 ** x[4], abs(x[5])))
+        coef, chi2 = linear_fluxes_n(np.vstack([a1, a2]), lc.f, lc.w)
+        return chi2 if coef[0] >= 0 and coef[1] >= 0 else chi2 + 1e6
+
+    first = (ps["t0"], math.log10(ps["tE"]), ps["u0"])
+    starts = [
+        first + (t_second, math.log10(te), u0)
+        for te in (0.3, 1.0, 3.0, 10.0, 30.0)
+        for u0 in (0.05, 0.3, 1.0)
+    ]
+    vals = [fun(np.array(st)) for st in starts]
+    best = None
+    for i in np.argsort(vals)[:3]:
+        r = minimize(
+            fun,
+            np.array(starts[i]),
+            method="Nelder-Mead",
+            options={"maxfev": 4000, "xatol": 1e-6, "fatol": 1e-4},
+        )
+        if best is None or r.fun < best.fun:
+            best = r
+    n = lc.t.size
+    k = 6 + 3
+    return {
+        "model": "2PSPL",
+        "chi2": float(best.fun),
+        "dof": n - k,
+        "k": k,
+        "bic": float(best.fun) + k * math.log(n),
+        "x": [float(v) for v in best.x],
+    }
+
+
+def two_events_dbic(lc: LightCurve, ordinary: dict, exotic: dict, model_o: str, model_e: str):
+    """ΔBIC (exotic − two unrelated PSPL bumps), the second bump started at the epoch that
+    favours the exotic model most (outside ±2 t_E of the ordinary event; else no second bump)."""
+    dchi = (lc.f - model_flux(model_e, lc, exotic)) ** 2 * lc.w - (
+        lc.f - model_flux(model_o, lc, ordinary)
+    ) ** 2 * lc.w
+    far = np.abs(lc.t - ordinary["t0"]) > 2 * ordinary["tE"]
+    if not far.any():
+        return None, None
+    j = np.flatnonzero(far)[np.argmin(dchi[far])]
+    two = fit_two_events(lc, ordinary, float(lc.t[j]))
+    n = lc.t.size
+    bic_e = chi2_of(model_e, lc, exotic)[0] + exotic.get("k", 6) * math.log(n)
+    return float(bic_e - two["bic"]), two
+
+
 def fit_binary_lens(lc: LightCurve, ps: dict, maxfev: int = 600) -> dict:
     """Binary lens (MulensModel + VBMicrolensing), grid over s, q, alpha then Nelder-Mead."""
     mm = _mm()
@@ -1517,6 +1573,15 @@ def jackknife_worst_epochs(
     return [float(v) for v in out]
 
 
+REVET_TESTS = ("exotic_feature_sampled", "jackknife_epochs", "two_unrelated_events")
+
+
+def jackknife_n_drop(n_feature_epochs: int, n_max: int = 3) -> int:
+    """Epochs the jackknife may drop: at least the single most influential one, at most
+    ``n_max``, and never more than leaves 3 epochs inside the exotic feature (ASSUMPTION)."""
+    return int(min(n_max, max(1, n_feature_epochs - 3)))
+
+
 def run_revet(sample_key: str) -> Path:
     """Two further tests on the flags that survived ``vet`` (strictly later, so the order holds).
 
@@ -1527,9 +1592,12 @@ def run_revet(sample_key: str) -> Path:
     sample = ogle.OgleMrozSample(sample_key)
     pub = {r["event_id"]: r for r in sample.events()}
     for o in rec["flags"]:
-        if not o.get("survives") or "res" not in o:
+        if "res" not in o:
             continue
-        if any(t[0] == "exotic_feature_sampled" for t in o["tests"]):
+        # idempotent: drop this stage's earlier results and restart from the ``vet`` verdict
+        o["tests"] = [t for t in o["tests"] if t[0] not in REVET_TESTS]
+        o["survives"] = all(ok for _, ok, _ in o["tests"])
+        if not o["survives"]:
             continue
         e = pub[o["event_id"]]
         lc0 = sample.light_curve(o["event_id"])
@@ -1554,16 +1622,30 @@ def run_revet(sample_key: str) -> Path:
             )
         )
         if ok_cov:
-            jk = jackknife_worst_epochs(lc, o["res"][mo], o["res"][me], mo, me)
+            # never drop so many epochs that the feature itself is gone: keep >= 3 inside it (a
+            # short-t_E W3 event sampled by 5 epochs must survive; review of PR #88)
+            n_drop = jackknife_n_drop(cov["n_epochs"])
+            jk = jackknife_worst_epochs(lc, o["res"][mo], o["res"][me], mo, me, n_drop=n_drop)
             o["jackknife_dbic"] = jk
             o["tests"].append(
                 (
                     "jackknife_epochs",
                     bool(jk[-1] < P.flag_dbic),
-                    "ΔBIC after dropping the 1-3 most influential epochs: "
+                    f"ΔBIC after dropping the 1-{n_drop} most influential epochs: "
                     + ", ".join(f"{v:.1f}" for v in jk),
                 )
             )
+            d2e, two = two_events_dbic(lc, o["res"][mo], o["res"][me], mo, me)
+            if d2e is not None:
+                o["two_events"] = two
+                o["tests"].append(
+                    (
+                        "two_unrelated_events",
+                        bool(d2e < P.flag_dbic),
+                        f"ΔBIC {d2e:.1f} vs two PSPL bumps (second at t0 {two['x'][3]:.2f}, "
+                        f"t_E {10 ** two['x'][4]:.2f} d)",
+                    )
+                )
         o["survives"] = all(ok for _, ok, _ in o["tests"])
     path.write_text(json.dumps(rec, indent=1, default=float))
     print(f"wrote {path}; survivors: {[o['event_id'] for o in rec['flags'] if o['survives']]}")
@@ -1698,9 +1780,11 @@ def run_limit(per_cell_min: int = 20) -> Path:
             # with zero recovered injections the sample has no measured W3 sensitivity: the 95 %
             # Poisson upper bound on the recovery fraction (3 / n) bounds how strong any limit
             # from these samples could be (`rate95_floor_per_star_yr`), and no limit is claimed.
-            ratio_hi = (3.0 / len(w)) / p_ctrl if (len(w) and p_ctrl > 0) else np.nan
+            # rule of three holds only for zero recovered events: NaN otherwise
+            k0 = len(w) and p_sel == 0
+            ratio_hi = (3.0 / len(w)) / p_ctrl if (k0 and p_ctrl > 0) else np.nan
             lim = 3.0 / (exposure * ratio) if ratio > 0 else np.inf
-            lim_floor = 3.0 / (exposure * ratio_hi) if ratio_hi > 0 else np.inf
+            lim_floor = 3.0 / (exposure * ratio_hi) if ratio_hi > 0 else np.nan
             mass = (te / einstein_time_days(1.0)[0]) ** 2
             rows.append(
                 {

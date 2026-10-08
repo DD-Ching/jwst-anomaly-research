@@ -769,14 +769,17 @@ not used.
    - Nelder–Mead from grids (published fit; PSPL bump; absolute t_E; both caustic spikes placed on
      pairs of light-curve maxima), best starts plus a restart. ΔBIC = BIC(exotic) − min BIC(ordinary),
      flag at ΔBIC < −10.
-2. **Vetting, cheapest first** (`vet`, then `revet` for the last two, which need the survivors' fits):
+2. **Vetting, cheapest first** (`vet`, then `revet` for the last three, which need the survivors' fits):
    refit with FSPL and parallax for every flag; isolated 4σ outliers removed and errors rescaled to
    χ²/dof = 1; baseline variability; free blend per observing season; free blend **and** linear drift
    per season; binary source (xallarap proxy); binary lens (VBMicrolensing through MulensModel);
    VSX and Gaia DR3 variability matches (CDS XMatch, 1″); arXiv mentions of both names; then
    **feature coverage** (are there ≥ 3 epochs where the exotic and the best ordinary model differ by
-   > 3σ, and does the Δχ² come from them?) and a **jackknife** (drop the 1–3 most influential epochs
-   and refit).
+   > 3σ, and does the Δχ² come from them?); a **jackknife** (drop the most influential epochs and
+   refit; at most 3, and never fewer than 3 left inside the feature, so a short, well-sampled W3 event
+   survives it); and **two unrelated events** (two independent PSPL bumps, the second started at the
+   epoch that favours the exotic fit most outside ±2 t_E). The `revet` tests are checked on synthetic
+   W3 events in the unit tests but are not run in the injection loop.
 3. **Selection emulation** (`published_selection`): Mróz et al. 2019 Table 2. Not emulated: n_DIA ≥ 3
    (difference-image centroids), the s < 0.4 artifact statistic, neighbours brightened together, the
    moving search window (one window on the brightest 3-point mean here), the human inspection, and the
@@ -800,11 +803,16 @@ not used.
 - Bulge vetting, cumulative: 127 → 113 (refit with all ordinary models) → 80 (robust errors,
   isolated outliers) → 73 (variable baseline) → 14 (**free blend per season**) → 9 (season drifts)
   → 7 (binary source; binary lens removed none further) → 7 (9 flags matched VSX or Gaia DR3
-  variables, none of them still alive) → 2 (feature coverage) → **0** (jackknife).
+  variables, none of them still alive) → 2 (feature coverage) → 1 (jackknife) → **0** (two unrelated
+  events).
 - The last two tests matter: of the 7 flags that passed everything else, five differ from the best
   ordinary model by < 3σ anywhere, or put their caustic spike in an observing gap (0–2 epochs inside
-  the feature); the two with ≥ 3 epochs lose the preference when 1–2 epochs are dropped
-  (BLG603.25.29679: ΔBIC −15.2 → +10.7 after one epoch; BLG519.21.110304: −54.0 → +24.8 after two).
+  the feature). BLG603.25.29679 loses the preference when its most influential epoch is dropped
+  (ΔBIC −15.2 → +0.4). BLG519.21.110304 (OGLE-2011-BLG-0589; 4 epochs in the feature, ΔBIC −14.2 after
+  one dropped) is an N1neg fit with f_s ≈ 0.01 that puts one caustic spike on the published 2011 event
+  and the other on three points of a 1-day brightening in September 2015 (JD 2457277.5–2457278.7, ~6σ),
+  with an umbra too shallow to see. Two unrelated PSPL bumps (the 2011 event plus a t_E ≈ 1.7 d bump)
+  fit better by ΔBIC 24.3: an ordinary second brightening (a flare or a second lens), not W3.
   The survivors' light curves with every model curve were inspected (scratch contact sheet).
 - Plane sample: every flag loses its preference once each season gets a free baseline offset (D-057).
 - Wall time: bulge `fit` 10,413 s (5,790 events, 4 cores, 1.8 s per event), `vet` 6,592 s (127 flags,
@@ -813,7 +821,7 @@ not used.
 
 ### What the published samples can contain (simulated)
 
-| t_E (d) | \|M\| (M☉, model_prediction) | flagged ΔBIC < −10 (ρ = 0.01 / 0.1) | flagged and vetted | **passes the published selection** | PSPL control passes |
+| t_E (d) | \|M\| (M☉, model_prediction) | flagged and cheaply vetted (ρ = 0.01 / 0.1) | flagged and vetted (both ρ) | **passes the published selection** | PSPL control passes |
 |---|---|---|---|---|---|
 | 3 | 1.7 × 10⁻³ | 0.35 / 0.52 | 0.43 | **0.00** | 0.15 |
 | 10 | 1.8 × 10⁻² | 0.62 / 0.38 | 0.50 | **0.00** | 0.27 |
@@ -822,7 +830,7 @@ not used.
 | 300 | 17 | 0.93 / 0.78 | 0.86 | **0.00** | 0.15 |
 
 - **0 of 600** injected W3 events pass the emulated published selection, in every t_E, ρ and u₀ bin
-  (u₀ < 1, 1–1.8, 1.8–2). The fitter finds them (35–93 % flagged, and the flags survive the cheap
+  (u₀ < 1, 1–1.8, 1.8–2). The fitter finds them (42–97 % flagged; 35–93 % also survive the cheap
   vetting), so the loss is the selection, not the search. The cuts they fail, in order of how often:
   one bump (70 %), χ²_fit/dof ≤ 2 of the PSPL fit (66 %), χ₃₊ ≥ 32 (60 %), three consecutive 3σ
   points (51 %), F_b > −F_min (49 %); the median injected event fails four cuts at once.
@@ -835,7 +843,7 @@ not used.
 **No W3 event-rate limit follows from these samples.** With zero recovered injections, the measured
 W3 efficiency is 0 and the 95 % limit is formally infinite. What can be stated:
 
-- The 95 % Poisson upper bound on the recovery fraction is 3/60 per cell, i.e. ε_W3 / ε_PSPL < 0.11–0.33
+- The 95 % Poisson upper bound on the recovery fraction is 3/60 per cell, i.e. ε_W3 / ε_PSPL < 0.12–0.33
   depending on t_E. Even at that bound the rate limit would be no stronger than 0.8–3.9 × 10⁻⁸ per
   monitored star per year (`rate95_floor_per_star_yr` in `limits_bulge2019.ecsv`), against a measured
   ordinary event rate of 5–25 × 10⁻⁶ per star per year (Mróz et al. 2019, Table 7). A real W3 limit

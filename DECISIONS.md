@@ -2789,11 +2789,13 @@ per-season drift absorbs). No rate limit yet: injections are built on bulge ligh
 - **Bulge sample (all 5,790 events): null.** 127 flags (E2pos 96, E2neg 22, N1neg 9; ΔBIC −10.2 … −2788); 0 survive.
   Free blend per season removes 73 → 14, season drifts → 9, binary source → 7, and two further tests, which need the
   survivors' fits and therefore run in `revet`, remove the rest: **feature coverage** (≥ 3 epochs where the exotic and
-  the best ordinary model differ by > 3σ, with the Δχ² coming from them) leaves 2, and an **epoch jackknife** (drop the
-  1–3 most influential epochs and refit) leaves 0 (ΔBIC −15.2 → +10.7 and −54.0 → +24.8).
+  the best ordinary model differ by > 3σ, with the Δχ² coming from them) leaves 2; an **epoch jackknife** (drop up to
+  3 most influential epochs, keeping ≥ 3 inside the feature; review of PR #88: dropping 3 of 5 killed a synthetic
+  t_E = 3 d W3 event) leaves 1 (BLG603.25.29679 −15.2 → +0.4); **two unrelated PSPL bumps** explain the last,
+  BLG519.21.110304, whose N1neg spikes sit on the 2011 event and a 1-day bump in 2015 (ΔBIC +24.3 for the exotic).
 - **The published samples cannot contain a W3 event.** 0 of 600 injected n = 1, ε < 0 events (t_E 3–300 d,
   ρ ∈ {0.01, 0.1}, u₀ ~ U[0, 2)) pass the emulated Mróz selection, in every t_E, ρ and u₀ bin, while PSPL controls on
-  the same light curves pass 15–43 % and the fitter flags 35–93 % of the injections. They fail the one-bump, PSPL
+  the same light curves pass 15–43 % and the fitter flags 42–97 % of the injections. They fail the one-bump, PSPL
   fit-quality, χ₃₊, three-consecutive-points and blend cuts, four at a time on average. The emulation is stricter than
   the published selection (63.9 % of the real events pass it), which cannot bridge that gap.
 - **Therefore no W3 rate limit from these samples** (the measured efficiency is 0). The 95 % bound on the recovery
@@ -2809,8 +2811,9 @@ per-season drift absorbs). No rate limit yet: injections are built on bulge ligh
 **Revisit if.** A light-curve-level OGLE/KMTNet/MOA data set becomes usable (then a real W3 limit is possible, and the
 selection emulation here is the baseline to beat); or the season-offset/drift test is shown to absorb injected W3
 signals at small u₀ (it is applied to injections through `flag_vetted`, which stays at 43–86 %, so it does not now);
-or the D-059 chunk re-fit under the bounded parallax of D-058 produces flags that pass feature coverage and the
-jackknife (this run, with unbounded parallax, produced none).
+or the D-059 chunk re-fit under the bounded parallax of D-058 produces flags that pass the `revet` tests (this run,
+with unbounded parallax, produced none); or the `revet` tests are run in the injection loop and remove injected W3
+events (they are checked only on synthetic unit-test events now).
 
 ## D-058 W3 fitter: parallax bounded at |π_E| ≤ 5; disk sample still null (2026-10-08)
 
