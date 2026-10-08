@@ -140,3 +140,16 @@ def test_cli_refuses_to_combine_without_every_orphan_summary(tmp_path, capsys):
     assert "macs0416-ncf" in capsys.readouterr().err
     with pytest.raises(SystemExit):  # cluster fields have their own lens redshift
         ip.main([*argv, "--fields", "macs1149"])
+
+
+def test_combine_rejects_fields_at_another_lens_redshift():
+    with pytest.raises(ValueError, match="macs1149"):
+        ip.combine([{"field": "macs1149", "z_lens": 0.543, "runs": {}}], {})
+
+
+def test_mass_conversion_matches_inject_radial():
+    spec = importlib.util.spec_from_file_location("inject_radial", _DIR / "inject_radial.py")
+    ir = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ir)
+    te = np.array([0.3, 1.5, 6.0])
+    assert np.allclose(ip.theta_e_to_mass(te, 0.4), ir.theta_e_to_mass(te, 0.4), rtol=1e-10)

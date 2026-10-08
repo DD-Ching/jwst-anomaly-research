@@ -19,6 +19,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (under-predicts orphans; use the conditioned null (e)); unretried S3 reads (spurious NoSuchBucket via the proxy).
 - Downloads > 200 MB (GOODS-N catalogue 224 MB, photo-z tarball 371 MB streamed) stated in D-051.
 - Wall time: 3–20 s per field search; 190–266 s per field of injections.
+- Review fixes (cloud run, after merging #74): `inject_pairs` refuses to combine unless every field has an orphan
+  summary and only takes deep fields (one Z_LENS_REF); MAST footprints sorted by obs_id and `POLYGON ICRS` parsed;
+  injected tables carry `meta["source"]`. Limits unchanged. Open: null (e) takes the colour of the lower-index pair
+  member and puts NaN colour in the 0–0.3 bin (TASKS).
 
 ## 2026-10-08: W1 limits re-run: mass-parametrised, blend-aware, independent nulls (D-049 update)
 - #70 merged an intermediate version. This re-run fixes the review findings: one lens mass with θ_E per source

@@ -789,7 +789,7 @@ def pair_cells(sub: Table, pairs: Table) -> np.ndarray:
     import warnings
 
     with np.errstate(invalid="ignore", divide="ignore"), warnings.catch_warnings():
-        warnings.simplefilter("ignore", RuntimeWarning)  # all-NaN rows: colour NaN -> cell 0
+        warnings.simplefilter("ignore", RuntimeWarning)  # all-NaN rows: colour NaN -> 0.0
         colour = np.log10(np.nanmean(lw, 1) / np.nanmean(sw, 1))
     i, j = np.asarray(pairs["i"], int), np.asarray(pairs["j"], int)
     s = np.digitize(np.minimum(snr[i], snr[j]), CELL_SNR)
@@ -1011,7 +1011,7 @@ def _in_region(s_region: str, ra: float, dec: float) -> bool:
     """Whether (ra, dec) lies inside a MAST ``s_region`` (one or more ``POLYGON``s)."""
     from matplotlib.path import Path as MplPath
 
-    for poly in re.findall(r"POLYGON\s+([-0-9.eE\s]+)", s_region.upper()):
+    for poly in re.findall(r"POLYGON\s+(?:[A-Z]\w*\s+)?([-0-9.E\s]+)", s_region.upper()):
         v = np.array(poly.split(), float).reshape(-1, 2)
         x = (v[:, 0] - ra + 180.0) % 360.0 - 180.0  # wrap-safe RA offsets
         x *= np.cos(np.deg2rad(dec))
@@ -1035,6 +1035,7 @@ def deep_i2d_uris(mast: tuple[str, list[str]], tgt: Table) -> dict[str, list[str
         )
         ids = query.str_values(obs["obs_id"])
         obs = obs[[any(i.startswith(p) for p in prefixes) for i in ids]]
+        obs.sort("obs_id")  # "first by obs_id", independent of the archive's row order
         chosen = []
         for r in tgt:
             hit = [

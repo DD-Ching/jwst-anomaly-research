@@ -223,7 +223,10 @@ def paint(field: Field, lx: float, ly: float, theta_e: float, ltype: str, rng, r
     base["deblend"] = False
     base["src_id"] = -(np.asarray(inj_src, int) * 10 + np.asarray(inj_img, int) + 1)
     base["inj_src"], base["inj_img"] = inj_src, inj_img
-    base.meta.update(provenance=schema.Provenance.SIMULATED.value)
+    base.meta.update(
+        provenance=schema.Provenance.SIMULATED.value,
+        source=f"exotic_sim {ltype} images painted into: {field.std.meta.get('source', '')}",
+    )
     return removed, base, src
 
 
@@ -305,7 +308,12 @@ def per_source(field: Field, ltype: str, theta_e: float, n: int, rng) -> Table:
         )
     names = ("row", "beta", "mag", "n_images", "n_selected", "matched", "cls", "recovered", "sep")
     t = Table(rows=rows, names=names) if rows else Table(names=names)
-    t.meta.update(provenance=schema.Provenance.DERIVED.value, lens=ltype, theta_e=theta_e)
+    t.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source=f"orphan-pair rules on {ltype} injections into {field.name}",
+        lens=ltype,
+        theta_e=theta_e,
+    )
     return t
 
 
@@ -400,6 +408,9 @@ def combine(results: list[dict], orphans: dict[str, tuple[int, float]]) -> dict:
     n_obs = sum(v[0] for v in orphans.values())
     bkg = sum(v[1] for v in orphans.values())
     s95 = poisson_signal_ul(n_obs, bkg)
+    bad = [r["field"] for r in results if r["z_lens"] != op.Z_LENS_REF]
+    if bad:
+        raise ValueError(f"limits convert at z_lens = {op.Z_LENS_REF}; not valid for {bad}")
     keys = sorted({k for r in results for k in r["runs"]})
     for k in keys:
         ltype, te = k.split(":")
