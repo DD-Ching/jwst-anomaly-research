@@ -2952,7 +2952,7 @@ t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in 
 - A survivor appears: stop and report to the owner (/vet-candidate).
 - Any W3 limit is quoted outside the repository: `needs-human` (D-054).
 
-## D-063 W5 count-deficit screen: DR10 Tractor counts aggregated per nest4096 on Data Lab, astropy-healpix, cross-region null; 342.6 deg² null and first W5 limit (2026-10-08)
+## D-063 W5 count-deficit screen: DR10 Tractor counts aggregated per nest4096 on Data Lab, astropy-healpix, cross-region null; 340.5 deg² null and first W5 limit (2026-10-08)
 
 **Decision.**
 - **Count maps, not catalogues:** `jwst_anomaly.countmap.LegacySurveysCountMap`, a `signatures.CountMapSurvey`
@@ -2968,8 +2968,8 @@ t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in 
   exponential tail fit for the expected number of false peaks N_false; detection at N_false < 0.01.
 - **Vetting**, cheapest first, the same code for flags and injections: mask, depth, depth_edge, dust, Gaia DR3
   bright star, HyperLEDA large galaxy, Wen & Han 2024 cluster, cosmic variance.
-- **First run:** desA + desB (RA 20–40° and 50–70°, Dec −30° to −20°), 342.6 deg², 12.5 M galaxies: 39 flags,
-  **0 survivors**; 95 % sky density of θ_E = 8–32′ lenses **n₉₅ ≈ 0.012–0.017 deg⁻²**; blind below θ_E ≈ 6′
+- **First run:** desA + desB (RA 20–40° and 50–70°, Dec −30° to −20°), 340.5 deg², 12.5 M galaxies: 40 flags,
+  **0 survivors**; 95 % sky density of θ_E = 8–32′ lenses **n₉₅ ≈ 0.012–0.018 deg⁻²**; blind below θ_E ≈ 6′
   (docs/exotic_limits.md "W5 count deficits").
 
 **Alternatives rejected.**
@@ -2993,9 +2993,9 @@ t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in 
   (Takahashi & Asada 2013, arXiv:1303.1301). A W5 limit would be new: `needs-human` before any outside use.
 - Offline tests on synthetic Poisson maps: an injected deficit gives A = 1.10 ± 0.25 at the centre; the null map
   gives median Z ≈ 0; the chunk-edge artefact (pixels split between chunks gave a deficit along every chunk
-  boundary in the pilot) is fixed and tested.
-- Injections (5,240 in total, 3 realisations per region and θ_E) through the full screen and vetting:
-  ε = 0.52–0.75 at θ_E = 8–32′, 0.009 at 6′, 0 at ≤ 3′. The `depth_edge` test was added after inspecting the one
+  boundary in the pilot) is fixed and tested; pixels cut by the outer region border are dropped (code review).
+- Injections (5,232 in total, 3 realisations per region and θ_E) through the full screen and vetting:
+  ε = 0.50–0.73 at θ_E = 8–32′, 0.005 at 6′, 0 at ≤ 4′. The `depth_edge` test was added after inspecting the one
   first-pass survivor (a deficit of all sources along a deep-tile edge); the injections ran after the change.
 
 **Revisit if.**

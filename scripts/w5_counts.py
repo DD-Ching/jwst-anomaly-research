@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -121,6 +122,10 @@ def cmd_fetch(args) -> None:
         with ThreadPoolExecutor(args.workers) as ex:
             for i, msg in enumerate(ex.map(one, jobs)):
                 print(f"  {i + 1}/{len(jobs)} {msg} {time.time() - t0:.0f}s", flush=True)
+        if not any(
+            cm.LegacySurveysCountMap(REGIONS[n], MAG_LIM).missing_chunks() for n in args.regions
+        ):
+            return
         time.sleep(args.pause)
     raise SystemExit("chunks still missing after all passes")
 
@@ -239,17 +244,32 @@ class MapState:
         t.sort("pix")
         self.table = t
         self.raster = cm.make_raster(self.region, CELL)
-        cache = out_dir() / f"idx_{name}_{len(t)}_{CELL}.npy"  # keyed by the pixel list
+        r = self.region  # cache keyed by the region box, the pixel list and the cell
+        key = (
+            f"{r.ra_min:g}_{r.ra_max:g}_{r.dec_min:g}_{r.dec_max:g}_{len(t)}_{int(t['pix'].sum())}"
+        )
+        cache = out_dir() / f"idx_{name}_{key}_{CELL}.npy"
         if cache.exists():
             self.idx = np.load(cache)
         else:
             self.idx = cm.pixel_index_image(self.raster, np.asarray(t["pix"], np.int64))
-            np.save(cache, self.idx)
+            tmp = cache.with_suffix(f".{os.getpid()}.npy")
+            np.save(tmp, self.idx)
+            tmp.replace(cache)
         lon, lat = HEALPix(nside=cm.NSIDE, order="nested").healpix_to_lonlat(t["pix"])
         self.pix_ra, self.pix_dec = lon.to_value(u.deg), lat.to_value(u.deg)
         self.pix_xy = self.raster.xy(self.pix_ra, self.pix_dec)
+        # pixels cut by the region border hold only the sources inside the box: drop them
+        edge = math.sqrt(cm.PIX_AREA_DEG2)  # deg, one pixel side
+        inside = (
+            (self.pix_ra >= r.ra_min + edge / np.cos(np.radians(self.pix_dec)))
+            & (self.pix_ra <= r.ra_max - edge / np.cos(np.radians(self.pix_dec)))
+            & (self.pix_dec >= r.dec_min + edge)
+            & (self.pix_dec <= r.dec_max - edge)
+        )
         good = (
-            (np.asarray(t["w"]) >= W_MIN)
+            inside
+            & (np.asarray(t["w"]) >= W_MIN)
             & (np.asarray(t["depth_r"]) >= DEPTH_MIN)
             & (np.asarray(t["ebv"]) <= EBV_MAX)
         )
@@ -493,6 +513,8 @@ def _inject_job(job) -> Table:
 def cmd_inject(args) -> None:
     summary = json.loads((results_dir() / "screen_summary.json").read_text())
     null = summary["null"]
+    for n in REGIONS:  # build the raster-index caches once, before the pool
+        MapState(n)
     jobs = [(n, th, rep, null) for n in REGIONS for th in INJ_THETA for rep in range(args.reps)]
     t0 = time.time()
     tabs = []
@@ -546,6 +568,13 @@ VET_GALAXY_RADII = 2.0  # veto within VET_CORE θ_E + this × D25 of its centre
 HYPERLEDA = "VII/237/pgc"  # Paturel et al. 2003 HyperLEDA PGC (VizieR), logD25 in log(0.1′)
 
 
+def _max_cos(reg: cm.Region) -> float:
+    """cos(dec) at the region's dec closest to the equator (the widest RA extent in degrees)."""
+    if reg.dec_min <= 0.0 <= reg.dec_max:
+        return 1.0
+    return max(math.cos(math.radians(reg.dec_min)), math.cos(math.radians(reg.dec_max)))
+
+
 def ancillary(name: str) -> tuple[Table, Table, Table]:
     """Bright Gaia DR3 stars and massive WH24 clusters in a region (cached, ``observed``)."""
     reg = REGIONS[name]
@@ -575,7 +604,7 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
         c = SkyCoord(0.5 * (reg.ra_min + reg.ra_max), 0.5 * (reg.dec_min + reg.dec_max), unit="deg")
         res = v.query_region(
             c,
-            width=(reg.ra_max - reg.ra_min + 2) * math.cos(math.radians(reg.dec_max)) * u.deg,
+            width=(reg.ra_max - reg.ra_min + 2) * _max_cos(reg) * u.deg,
             height=(reg.dec_max - reg.dec_min + 2) * u.deg,
             catalog=WH24,
         )
@@ -601,10 +630,12 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
         c = SkyCoord(0.5 * (reg.ra_min + reg.ra_max), 0.5 * (reg.dec_min + reg.dec_max), unit="deg")
         res = v.query_region(
             c,
-            width=(reg.ra_max - reg.ra_min + 2) * math.cos(math.radians(reg.dec_max)) * u.deg,
+            width=(reg.ra_max - reg.ra_min + 2) * _max_cos(reg) * u.deg,
             height=(reg.dec_max - reg.dec_min + 2) * u.deg,
             catalog=HYPERLEDA,
         )
+        if not len(res):
+            raise RuntimeError(f"VizieR {HYPERLEDA} returned nothing for {name}")
         t = Table(res[0], masked=False)
         t.rename_columns(["_RAJ2000", "_DEJ2000"], ["RAJ2000", "DEJ2000"])
         t["d25_arcmin"] = 0.1 * 10 ** np.asarray(t["logD25"], float)
@@ -819,7 +850,7 @@ def cmd_limit(args) -> None:
         n = int(np.sum(sel))
         k_rec = int(np.sum(inj["recovered"][sel]))
         k = int(np.sum(inj["detected"][sel]))
-        eff = k / n
+        eff = k / n if n else 0.0
         row = {
             "theta_e_arcmin": th,
             "n_injected": n,

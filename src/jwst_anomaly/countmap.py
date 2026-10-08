@@ -23,6 +23,8 @@ hypothesis; a flag is an anomaly to vet, and a null becomes an injection-calibra
 from __future__ import annotations
 
 import math
+import os
+import threading
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -181,7 +183,7 @@ class LegacySurveysCountMap:
         t = merge_chunk(run(q["gal"]), run(q["all"]), run(q["bad"]))
         t.meta["query_gal"] = q["gal"]
         path.parent.mkdir(parents=True, exist_ok=True)
-        tmp = path.with_suffix(".tmp.fits")
+        tmp = path.with_suffix(f".{os.getpid()}.{threading.get_ident()}.tmp.fits")
         t.write(tmp, overwrite=True)
         tmp.replace(path)
         return path

@@ -1054,8 +1054,8 @@ population still is galaxies; Milky Way stars are excluded by the extended-model
   sources and sources with any maskbit (unmasked fraction w = 1 − n_bad/n_all, ASSUMPTION), mean galaxy depth,
   E(B−V). Two DES-wide regions, desA (RA 20–40°) and desB (RA 50–70°), Dec −30° to −20°, b < −45°: 100 chunks,
   ~170 MB of FITS, fetched in ~2 h because Data Lab returned HTTP 502 for ~30 min and serves ~1 chunk/min.
-  Pixels used: w ≥ 0.5, 5σ galaxy depth ≥ 24.3 (median 24.84), E(B−V) ≤ 0.1: **172.9 + 169.8 = 342.6 deg²**,
-  6.33 + 6.17 million galaxies.
+  Pixels used: w ≥ 0.5, 5σ galaxy depth ≥ 24.3 (median 24.84), E(B−V) ≤ 0.1, not cut by the region border:
+  **171.8 + 168.7 = 340.5 deg²**, 6.30 + 6.15 million galaxies.
 - **Matched filter**: the pixel counts are painted on a 0.25′ equal-area (sinusoidal) raster; around every cell,
   a local least-squares fit D = w a (1 + A T) within 2.5 θ_E, T = profile − 1, so A = 1 is the predicted deficit
   and the local mean a absorbs large-scale gradients. Filter scales θ_E = 2′, 4′, 8′, 16′, 32′ (raster binned to
@@ -1074,12 +1074,12 @@ population still is galaxies; Milky Way stars are excluded by the extended-model
   0.5 θ_E + 3′: magnification-bias depletion), `cosmic_variance` (N_false ≥ 0.01).
 - **Injection-recovery**: the predicted deficit (binomial thinning where the ratio < 1, Poisson additions where
   > 1, ratio averaged over each pixel) painted into the real pixel counts at random footprint positions, ≥ 2 × 3.5
-  max(θ_E, 8′) apart, 3 realisations per region; θ_E = 2–32′, 76–888 injections each. Recovered = a flag within
+  max(θ_E, 8′) apart, 3 realisations per region; θ_E = 2–32′, 77–884 injections each (5,232 in all). Recovered = a flag within
   max(θ_E/2, 1′) at any filter scale that survives every vetting test.
 
 ### Results (derived)
 
-- 248,774 peaks, **39 flags** (7 desA, 32 desB), **0 survivors** (`vetting.ecsv`; `contact_sheet.png` shows the
+- 247,361 peaks, **40 flags** (7 desA, 33 desB), **0 survivors** (`vetting.ecsv`; `contact_sheet.png` shows the
   eight with the smallest N_false). The six with N_false < 0.01 are all explained:
   - three 2′/4′ flags 7–8′ from NGC 1398 (D25 = 7.2′): sharp-edged, CCD-sized deficits and excesses of sky
     over-subtraction (`large_galaxy`; first seen by a parallel cloud run, `ngc1398_dr10_cutout.jpg`);
@@ -1089,25 +1089,25 @@ population still is galaxies; Milky Way stars are excluded by the extended-model
     galaxies (1.0–1.6 per pixel against 7.6) and *all* sources (14–26 against 57) drop along a straight edge of a
     deep-coverage tile (depth 24.9 → 25.9). A lens would not remove foreground stars or follow a tile edge; the
     `depth_edge` test was added for it, and the injections were run after the change.
-- The other 33 flags are `cosmic_variance` (N_false ≥ 0.01), 12 of them around NGC 1398 and 3 in the C3 field.
+- The other 34 flags are `cosmic_variance` (N_false ≥ 0.01), 12 of them around NGC 1398 and 3 in the C3 field.
 
 ### Efficiency and limits (95 %, zero survivors, Poisson 3.0; derived)
 
 | θ_E | 2′ | 3′ | 4′ | 6′ | 8′ | 12′ | 16′ | 24′ | 32′ |
 |---|---|---|---|---|---|---|---|---|---|
-| injected | 866 | 874 | 871 | 876 | 888 | 415 | 254 | 120 | 76 |
-| flagged | 0 | 3 | 158 | 441 | 809 | 385 | 239 | 116 | 74 |
-| after vetting | 0 | 0 | 1 | 8 | 465 | 281 | 171 | 90 | 46 |
-| ε | 0 | 0 | 0.001 | 0.009 | 0.52 | 0.68 | 0.67 | 0.75 | 0.61 |
-| n₉₅ (deg⁻²) | — | — | 7.6 | 0.96 | 0.017 | 0.013 | 0.013 | 0.012 | 0.014 |
+| injected | 884 | 871 | 866 | 879 | 873 | 421 | 241 | 120 | 77 |
+| flagged | 0 | 7 | 155 | 441 | 782 | 395 | 235 | 117 | 76 |
+| after vetting | 0 | 0 | 0 | 4 | 433 | 284 | 172 | 88 | 53 |
+| ε | 0 | 0 | 0 | 0.005 | 0.50 | 0.67 | 0.71 | 0.73 | 0.69 |
+| n₉₅ (deg⁻²) | — | — | — | 1.9 | 0.018 | 0.013 | 0.012 | 0.012 | 0.013 |
 
-- **Sky density of n = 1, ε < 0 lenses with θ_E = 8–32′: n₉₅ ≈ 0.012–0.017 deg⁻²** (fewer than one per ~60–85 deg²)
-  over 342.6 deg² of DES-depth DR10 sky. In the stated geometries this is |M| ≈ 3 × 10¹⁰–5 × 10¹¹ M☉ at 1 kpc and
+- **Sky density of n = 1, ε < 0 lenses with θ_E = 8–32′: n₉₅ ≈ 0.012–0.018 deg⁻²** (fewer than one per ~55–85 deg²)
+  over 340.5 deg² of DES-depth DR10 sky. In the stated geometries this is |M| ≈ 3 × 10¹⁰–5 × 10¹¹ M☉ at 1 kpc and
   3 × 10¹³–5 × 10¹⁴ M☉ at 1 Mpc (`limits.ecsv`).
 - **Blind below θ_E ≈ 6′** (|M| ≲ 1.6 × 10¹⁰ M☉ at 1 kpc): the empty core (x ≲ 0.25) holds < 15 galaxies and the
   required N_false < 0.01 is deep in the clustered tail; 18 % (4′) and 50 % (6′) of injections are flagged but end as
   `cosmic_variance`.
-- Where efficiency goes at θ_E ≥ 8′: `cosmic_variance` (8′: 258 of 888), then `bright_star`, `depth_edge`,
+- Where efficiency goes at θ_E ≥ 8′: `cosmic_variance` (8′: 264 of 873), then `bright_star`, `depth_edge`,
   `large_galaxy`, `cluster` (each 1–6 %). Large injections are found mostly by the 8′ filter, which matches their
   empty core.
 
