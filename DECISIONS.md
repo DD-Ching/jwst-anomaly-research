@@ -2119,6 +2119,13 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - El Gordo: the chain medians match best_fit.par (σ* 289.97 vs 289.48 km/s; O1 σ 1041 vs 1041), but the chain's
   `Chi2` column (54–77) does not track our χ²pos (93–106 at the 0.621″ sigpos of D-030), not even in rank. The
   column's definition is unknown, so the El Gordo chain is **not validated**; don't use it for conclusions yet.
+  - **Resolved (2026-10-08, PR #69, issue #68):** the sampling run (`to_sample.par`, `forme -10`) uses an
+    image-plane χ² with σ² = a·b from the image list (σ = 0.621″ for 37 images, 1.2421″ for 19), not D-030's uniform
+    0.621″. Lenstool's `chi2_img` and `bayesapp.c` (git-cral.univ-lyon1.fr/lenstool, v8.15.6) give
+    ln(Lhood) = −(Chi2 + Σ 2 ln(2π a b))/2; the file's Σ ln(2π a b) = 75.904 matches the chain's offset exactly. Our
+    image-plane χ² with σ² = a·b reproduces `Chi2` for three random rows (60.05/60.00, 67.50/67.47, 72.45/72.36), and
+    is 52.0 for best_fit.par (the chain minimum is 54.2). The El Gordo chain is **validated**. best_fit.par's
+    `Chi2pos` 80.22 still corresponds to the uniform 0.621″ of D-030.
 - Abell 2744 `posterior --systems 3.2,34.1,700.1,4.2 --samples 12 --seed 1` (`model_prediction`):
   - 3.2a/b, 34.1a/b, 700.1a/b stay a `shared_match` in 13 of 13 models. The MCMC spread does not split them.
   - Independent model, CATS v4.1 maps (scratch run with Bergamini's image list): 34.1a/b **split** (μ +24.9 / −21.7,
@@ -2132,7 +2139,7 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - Verdict: the D-030 multiplicity residual is model resolution at folds, not an anomaly. **0 surviving.**
 
 **Revisit if.**
-- The El Gordo `Chi2` column is understood (then validate that chain as for Abell 2744).
+- ~~The El Gordo `Chi2` column is understood~~ (done: `forme -10` σ² = a·b; chain validated, PR #69).
 - An independent model with 3.2's source well inside the caustic still merges 3.2a/b.
 - Speed: `imageplane_residuals` exposes its predicted images (`posterior` currently solves each family twice).
 
@@ -2332,10 +2339,15 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
   | θ_E(z_s = 2) | 0.21–0.36″ | 0.65–1.14″ | 2.05–3.59″ | 4.11–7.18″ | 6.49–11.35″ |
   | recovered | 0 | 0 | 8 | 83 | 154 |
 
-  - The 95 % limits are none at 2 × 10¹⁰ and 2 × 10¹¹ M☉, < 3.7 × 10⁴ deg⁻² at 2 × 10¹², < 3.9 × 10³ at 8 × 10¹²
-    and < 2.2 × 10³ at 2 × 10¹³. With border-corrected areas: 4.1 × 10⁴, 4.4 × 10³ and 2.5 × 10³.
-  - The best limit is about 18× weaker than Takahashi & Asada's volume limit spread over 0 < z < 1 (about
+  - Headline 95 % limits, from the six fields with photo-z (38.0 arcmin²): none at 2 × 10¹⁰ and 2 × 10¹¹ M☉,
+    < 6.1 × 10⁴ deg⁻² at 2 × 10¹², < 6.9 × 10³ at 8 × 10¹² and < 3.9 × 10³ at 2 × 10¹³. MACS0717 and Abell S1063
+    have no photo-z, so their members and foreground galaxies get painted as W1 images and their efficiency is biased
+    high; all eight fields (optimistic): 3.7 × 10⁴, 3.9 × 10³ and 2.2 × 10³ (border-corrected 4.1 × 10⁴, 4.4 × 10³,
+    2.5 × 10³).
+  - The best headline limit is about 30× weaker than Takahashi & Asada's volume limit spread over 0 < z < 1 (about
     120 deg⁻²).
+- History: #70 merged a first review round (photo-z-only headline, θ_E-parametrised); this record supersedes its
+  numbers with the mass-parametrised, blend-aware, independent-null run.
 - The loss is in the arc selection. An image reaches e ≥ 0.5 only for β ≲ 2.3 θ_E, and `anti` relative to the
   cluster keeps about a third of the images. A 2 × 10¹² M☉ lens therefore puts 0.5–2.7 arcs into the screen,
   while the null needs 5–8.

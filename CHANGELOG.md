@@ -2,20 +2,30 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-08: W1 injection-recovery through `radial`: the screen is blind to negative-mass lenses (D-049)
-- Worktree worker: `scripts/inject_radial.py` paints `exotic_sim` W1 lenses (n = 1, ε < 0) into the real catalogues
-  of all eight null `radial` fields and runs the unchanged screen (`exotic_screens.radial_candidates`, a pure
-  refactor of `cmd_radial`'s selection). 200 lenses per field and θ_E; 51.2 arcmin² screened.
-- Recovered: 0 / 1,600 at θ_E = 0.3″ and 1″; 10 at 3″; 80 at 6″; 181 at 10″. 95 % limits on W1 lens surface
-  density: none below 3″; < 3.6 × 10⁴ deg⁻² at 3″ (|M| ≈ 1.4–4.3 × 10¹² M☉), < 1.8 × 10³ deg⁻² at 10″. About 15×
-  weaker than Takahashi & Asada spread over 0 < z < 1. docs/exotic_limits.md.
-- Why: an image reaches e ≥ 0.5 only for β ≲ 2.3 θ_E, and `anti` against the cluster keeps a third, so a lens puts
-  1–3 arcs into a screen whose null needs 5–8 lines.
-- **Failed approaches (rules):** recovery is the screen's p_random, not the 3-line peak; cache the null draws once
-  per field (0.2–1 s per lens instead of 15–150 s); deconvolve the PSF before applying the lens Jacobian.
-- Wall time: 322–877 s per field for 1,000 lenses (5 θ_E).
-- **Handoff:** a W1-specific screen (collinear radial pairs flanking an empty centre, orientation against the
-  candidate centre, local null), benchmarked with this harness.
+## 2026-10-08: W1 limits re-run: mass-parametrised, blend-aware, independent nulls (D-049 update)
+- #70 merged an intermediate version. This re-run fixes the review findings: one lens mass with θ_E per source
+  redshift (photo-z, else z_s = 2), overlapping image pairs painted as one blend, an independent 200-draw null per
+  batch of 10 trials, screen grid/null/defaults shared with `cmd_radial` (byte-identical SMACS output), a stated
+  S/N ≥ 5 detection floor, measured footprint-border excess (3–16 %).
+- Recovered of 1,600 per mass (2 × 10¹⁰ / 2 × 10¹¹ / 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉): 0 / 0 / 8 / 83 / 154.
+  Headline 95 % limits (six photo-z fields, 38.0 arcmin²): none below 10¹² M☉; < 6.1 × 10⁴, 6.9 × 10³, 3.9 × 10³
+  deg⁻² at 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉ (all eight fields, optimistic: 3.7 × 10⁴, 3.9 × 10³, 2.2 × 10³).
+- **Failed approaches (rules):** one θ_E for every source; two lines for overlapping images; one fixed null for all
+  trials; a `nanmin(S/N)` detection floor.
+- Wall time: 405–1061 s per field (1,000 injections, 100 independent nulls).
+- **Handoff:** a W1-specific screen benchmarked with this harness (TASKS).
+
+## 2026-10-08: El Gordo lens model reproduces the published magnification maps (issue #68)
+- `validate` now compares Lenstool-par models with published signed μ maps (`mag_map_files`, fetched only by
+  `validate`); `map_check` reports `parity_agree` for signed maps. El Gordo (CDS J/A+A/678/A3, z=2 and z=4, |μ|<10,
+  37-px sub-grid): median |μ| ratio 1.00001 / 1.00001, p95 relative difference 0.04 % / 0.07 %, parity 100 %;
+  χ²pos unchanged (82.53). At full resolution (250,000 points), >20 % mismatches sit only on critical curves or
+  within ~1″ of member cores (0.4″ map pixels).
+- El Gordo `bayes.dat` `Chi2` explained (D-045 amendment): the sampling run uses `forme -10`, an image-plane χ² with
+  σ² = a·b from the image list (19 of 56 images at 1.24″). It reproduces `Chi2` row by row to 0.1 % and the
+  ln(Lhood) offset (75.904) exactly. The chain is validated. **Failed approach:** a source-plane χ² with free
+  per-family weights (held-out ρ 0.81) fit only partly; the definition came from Lenstool's source.
+- **Handoff:** El Gordo μ, parities and the MCMC chain are validated. Next: posterior μ spreads in `fluxratios`.
 
 ## 2026-10-08: Exotic-lens predictions first: wormhole / negative-mass searchable, warp not (D-047)
 - Owner focus (2026-10-08): search only for signatures of traversable wormholes / negative-mass lenses and warp-drive

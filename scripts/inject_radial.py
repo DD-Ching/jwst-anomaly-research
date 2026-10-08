@@ -712,7 +712,7 @@ def run_field(name: str, args) -> dict:
     return summary
 
 
-def combine(summaries: list[dict], masses) -> dict:
+def _limits(summaries: list[dict], masses) -> dict:
     limits = {}
     for m in masses:
         key = f"{m:.0e}"
@@ -725,12 +725,28 @@ def combine(summaries: list[dict], masses) -> dict:
             "effective_area_deg2": float(np.dot(effs, areas)),
             "upper_limit_deg2": surface_density_limit(effs, areas),
         }
-    return {
-        "fields": [s["field"] for s in summaries],
-        "total_area_deg2": float(sum(s["screened_area_deg2"] for s in summaries)),
-        "limits_95": limits,
+    return limits
+
+
+def combine(summaries: list[dict], masses) -> dict:
+    """Headline limits use only fields with photo-z. Without photo-z every non-star row counts as
+    lensable (at z_s = 2), so cluster members and foreground galaxies get painted as W1 images and
+    the efficiency is biased high; those fields enter only the separate, optimistic set."""
+    pz = [s for s in summaries if FIELDS[s["field"]]["photoz"] is not None]
+    out = {
+        "fields": [s["field"] for s in pz],
+        "total_area_deg2": float(sum(s["screened_area_deg2"] for s in pz)),
+        "limits_95": _limits(pz, masses) if pz else {},
         "provenance": schema.Provenance.DERIVED.value,
     }
+    if len(pz) < len(summaries):
+        out["optimistic_all_fields"] = {
+            "fields": [s["field"] for s in summaries],
+            "no_photoz": [s["field"] for s in summaries if s not in pz],
+            "total_area_deg2": float(sum(s["screened_area_deg2"] for s in summaries)),
+            "limits_95": _limits(summaries, masses),
+        }
+    return out
 
 
 def main(argv: list[str] | None = None) -> int:

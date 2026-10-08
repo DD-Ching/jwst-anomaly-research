@@ -123,15 +123,23 @@ the smallest θ_E and the fewest lensed sources.
 
 ### Upper limits (95 %, zero detections; `derived`)
 
-| \|M\| (M☉) | θ_E(z_s = 2) across fields (`model_prediction`) | Σ ε_f A_f (deg²) | Σ(W1 lenses) < (deg⁻²) | with border-corrected areas |
-|---|---|---|---|---|
-| 2 × 10¹⁰ | 0.21–0.36″ | 0 | no limit (ε = 0 in every field) | — |
-| 2 × 10¹¹ | 0.65–1.14″ | 0 | no limit | — |
-| 2 × 10¹² | 2.05–3.59″ | 8.0 × 10⁻⁵ | 3.7 × 10⁴ | 4.1 × 10⁴ |
-| 8 × 10¹² | 4.11–7.18″ | 7.7 × 10⁻⁴ | 3.9 × 10³ | 4.4 × 10³ |
-| 2 × 10¹³ | 6.49–11.35″ | 1.4 × 10⁻³ | 2.2 × 10³ | 2.5 × 10³ |
+**Headline: the six fields with photo-z** (SMACS 0723, El Gordo, Abell 2744, MACS0416, MACS1149, Abell 370;
+38.0 arcmin²). In MACS0717 and Abell S1063 every non-star row is lensable at z_s = 2, so cluster members and
+foreground galaxies get painted as W1 images and the efficiency is biased high; those two fields enter only the
+optimistic all-field set (`combine` in the script).
 
-The last column uses the r → 0 area of each footprint and is the conservative version. θ_E(|M| = 10¹², z_l = 0.4,
+| \|M\| (M☉) | Σ ε_f A_f, photo-z fields (deg²) | Σ(W1 lenses) < (deg⁻²), headline | all eight fields, optimistic | all eight, border-corrected areas |
+|---|---|---|---|---|
+| 2 × 10¹⁰ | 0 | no limit (ε = 0 in every field) | no limit | — |
+| 2 × 10¹¹ | 0 | no limit | no limit | — |
+| 2 × 10¹² | 4.9 × 10⁻⁵ | 6.1 × 10⁴ | 3.7 × 10⁴ | 4.1 × 10⁴ |
+| 8 × 10¹² | 4.4 × 10⁻⁴ | 6.9 × 10³ | 3.9 × 10³ | 4.4 × 10³ |
+| 2 × 10¹³ | 7.7 × 10⁻⁴ | 3.9 × 10³ | 2.2 × 10³ | 2.5 × 10³ |
+
+θ_E(z_s = 2) across fields (`model_prediction`): 0.21–0.36″, 0.65–1.14″, 2.05–3.59″, 4.11–7.18″, 6.49–11.35″ for the
+five masses.
+
+The border-corrected column uses the r → 0 area of each footprint (the conservative version of the all-field set). θ_E(|M| = 10¹², z_l = 0.4,
 z_s = 2) = 2.23″ reproduces D-047's 2.2″ (tested).
 
 **Reading.** The radial screen is effectively blind to W1 lenses below about 10¹² M☉: none of 3,200 injections
@@ -139,8 +147,8 @@ at 2 × 10¹⁰ and 2 × 10¹¹ M☉ was recovered. At 2 × 10¹² M☉ it recov
 - **Comparison (`derived`, rough).** Takahashi & Asada (2013) limit negative masses above 10¹² M☉ to
   n < 10⁻⁴ h³ Mpc⁻³. Spread over 0 < z < 1 (Planck18 comoving volume, 3.98 × 10⁶ Mpc³ deg⁻²), that is about
   120 deg⁻².
-- Our best limit, 2.2 × 10³ deg⁻² at 2 × 10¹³ M☉, is about 18× weaker. It also holds only for lenses near the
-  cluster redshift.
+- Our best headline limit, 3.9 × 10³ deg⁻² at 2 × 10¹³ M☉ (2.2 × 10³ optimistic), is about 30× (18×) weaker. It
+  also holds only for lenses near the cluster redshift.
 
 **Why the efficiency is low.** The cut that dominates is the screen's elongation cut, not a lack of sources.
 - For a round source, the image axis ratio is (x² + 1)/(x² − 1), where x is the outer image's position in θ_E.
