@@ -190,3 +190,45 @@ def test_coincident_without_tables_is_an_error():
 
     with pytest.raises(ValueError):
         tc.coincident({})
+
+
+def test_robust_std_matches_gaussian_scale_and_ignores_outliers():
+    rng = np.random.default_rng(1)
+    x = rng.normal(0, 1.3, 2000)
+    x[:20] = 50.0  # a few real variables among the controls
+    x[20:30] = np.nan
+    assert abs(tf.robust_std(x) - 1.3) < 0.1
+    assert np.isnan(tf.robust_std(np.array([1.0, 2.0, np.nan])))
+
+
+def test_select_controls_is_reproducible_and_avoids_candidates():
+    rng = np.random.default_rng(2)
+    n = 500
+    cat = Table(
+        {
+            "ra": 10 + rng.uniform(0, 0.02, n),
+            "dec": rng.uniform(0, 0.02, n),
+            "aper_total_abmag": rng.uniform(24, 29, n),
+        }
+    )
+    avoid_ra, avoid_dec = np.asarray(cat["ra"][:5]), np.asarray(cat["dec"][:5])
+    cat["ra"][5], cat["dec"][5] = avoid_ra[0] + 0.5 / 3600, avoid_dec[0]  # 0.5" from a candidate
+    cat["aper_total_abmag"][5] = 26.0
+    near = cat["ra"][5]
+    a = tf.select_controls(cat, 50, (25.5, 28.0), avoid_ra, avoid_dec)
+    b = tf.select_controls(cat, 50, (25.5, 28.0), avoid_ra, avoid_dec)
+    assert len(a) == 50 and np.array_equal(a["ra"], b["ra"])
+    assert not np.isin(np.asarray(a["ra"]), avoid_ra).any()
+    assert near not in np.asarray(
+        tf.select_controls(cat, 500, (25.5, 28.0), avoid_ra, avoid_dec)["ra"]
+    )
+    picked = np.isin(np.asarray(cat["ra"]), np.asarray(a["ra"]))
+    mags = np.asarray(cat["aper_total_abmag"])[picked]
+    assert (mags >= 25.5).all() and (mags <= 28.0).all()
+
+
+def test_select_controls_can_return_an_empty_sample():
+    cat = Table({"ra": [10.0, 10.001], "dec": [0.0, 0.0], "aper_total_abmag": [22.0, 23.0]})
+    ctl = tf.select_controls(cat, 50, (25.5, 28.0), np.array([]), np.array([]))
+    assert len(ctl) == 0 and ctl.meta["mag_cut"]
+    assert np.isnan(tf.robust_std(np.array([]), tf.MIN_CONTROLS))
