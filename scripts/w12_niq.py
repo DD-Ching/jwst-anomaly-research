@@ -420,7 +420,7 @@ def dedup(s: Table) -> Table:
         testable = ~np.asarray(s["component"][members], bool) & (sep <= P.sep_max)
         if lens.any():
             k = members[np.argmax(lens & testable) if (lens & testable).any() else np.argmax(lens)]
-            new, note = "control", " | listed as lens elsewhere" if not lens[0] else ""
+            new, note = "control", " | also listed as a rejection" if rej.any() else ""
         elif rej.any() and not lemon_nonpair.any():
             usable = rej & testable  # the member describing the testable pair
             k, new, note = members[np.argmax(usable if usable.any() else rej)], "rejected", ""
