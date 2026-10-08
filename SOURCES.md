@@ -591,6 +591,16 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - `…-lenstool-multim_multi_v1_model.txt` 19,280 B `ce00444dcc9239f0fd72d5fb37e35cbbea281647803ef4c30eb7b187262f5507`;
   - `…-lenstool-readme_multi_v1_model.txt` 2,275 B `0d3f6796f79c9b9710223aa2ef5d3535c27e2da06c7cd89dc47f1ae3f0915cbf`.
   Deflection, κ and γ maps (best fit and 100 MCMC samples) are in the same directory and were not used.
+  - `…-lenstool-param_multi_v1_model.txt` (input parameters; sigposArcsec 0.49) 4,468 B
+    `0f1fb7d6947d467b28d8b74485799321b09a1cc63fd7e7df82f01620ddb9b337`.
+- CANUCS DR1 Abell 370 Lenstool model (Gledhill et al. 2025, ApJ, doi:10.3847/1538-4357/ad684a), files under
+  https://archive.stsci.edu/hlsps/canucs/dr1/a370/model/ (accessed 2026-10-08; D-044):
+  - `hlsp_canucs_jwst-hst_multi_a370-lenstool-bestparam_multi_v1_model.txt` 90,403 B
+    `3c1eea91755ea532e424b1b143e39b35a9d89beae2958d3b042876af50443580`;
+  - `…-lenstool-multim_multi_v1_model.txt` 7,881 B `d72c3d98e675e5bc00cfbdd9b84d1b8528b22e36311924fea072293af23ef9e2`;
+  - `…-lenstool-param_multi_v1_model.txt` (sigposArcsec 0.3) 6,254 B
+    `aacc2dadd442645d2222c23ee2c3f9f6a76fddaa73996a26a6e88c0691a6bf3d`;
+  - `…-lenstool-readme_multi_v1_model.txt` 1,988 B `a73bfe3b7d23c7605e16717781d94736d003e7b5fc5d08c0ef80a0358367edc0`.
 
 ## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
 

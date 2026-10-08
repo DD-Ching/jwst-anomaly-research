@@ -133,6 +133,15 @@ MODELS = {
         "sigpos": "arcs",
         "bayes": lensmodel.ABELL2744_BERGAMINI23_BAYES,  # best.par is a chain row (D-045)
     },
+    # CANUCS JWST-era Lenstool models (D-044): the independent second model for vetting. The
+    # Abell 370 fit is source-plane (image-plane rms 2.3"), so its image list is gated off.
+    "macs0416-canucs": {"files": lensmodel.MACS0416_CANUCS, "sigpos": "input.par"},
+    "abell370-canucs": {
+        "files": lensmodel.ABELL370_CANUCS,
+        "sigpos": "input.par",
+        "frame_offset_arcsec": (-0.148, 0.002),
+        "image_list_ok": False,
+    },
     # map models: published deflection maps (D_LS/D_S = 1), no Lenstool par or image list
     "whl0137-relics-lenstool": {
         "files": lensmodel.WHL0137_RELICS_LENSTOOL,
@@ -173,7 +182,8 @@ def is_map_model(name: str) -> bool:
 
 
 def has_image_list(name: str) -> bool:
-    """Whether ``images`` and ``fluxratio`` may use the model's multiple-image list."""
+    """Whether ``images`` may use the model's multiple-image list. ``fluxratios`` also needs a
+    Lenstool model (it refuses map models)."""
     spec = MODELS[name]
     return "arcs.dat" in spec["files"] and spec.get("image_list_ok", True)
 
@@ -627,18 +637,21 @@ def cmd_validate(args) -> dict:
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
     sigma = model_sigpos(args.model, files, images)
     chi2_ref = chi2pos_from_par(files["best.par"])
+    image_plane_opt = (
+        "image plane optimization" in files["best.par"].read_text(encoding="latin-1").lower()
+    )
     bt, bsum = backtrace_check(model, images, par["z_m_limit"], sigma, chi2_ref)
     half = grid_half_width(model, images)
     grid = lensmodel.DeflectionGrid.cached(
         model, grid_cache_path(model, half, args.grid_step), half, args.grid_step
     )
-    ip, isum = imageplane_check(model, grid, bt, sigma, chi2_ref)
+    # a source-plane fit's Chi2pos is not an image-plane chi2: no reference for that comparison
+    ip, isum = imageplane_check(model, grid, bt, sigma, chi2_ref if image_plane_opt else None)
     summary = {
         "model": args.model,
         "model_sha256": model.sha256,
         "n_potentials": len(model.components),
-        "image_plane_optimised": "image plane optimization"
-        in files["best.par"].read_text(encoding="latin-1").lower(),
+        "image_plane_optimised": image_plane_opt,
         "kappa_map": (
             kappa_map_check(model, files["kappa_map"], step=args.step)
             if "kappa_map" in files
@@ -1568,6 +1581,11 @@ def _resid_stats(r: np.ndarray) -> dict:
 
 
 def cmd_fluxratios(args) -> dict:
+    if not has_image_list(args.model) or is_map_model(args.model):
+        raise SystemExit(
+            f"error: {args.model}: fluxratios needs a Lenstool model with a usable multiple-image "
+            "list (gated off by the image-plane rms gate of D-035 / D-044, or a map model)"
+        )
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
@@ -1576,7 +1594,10 @@ def cmd_fluxratios(args) -> dict:
     if len(colour) != 2:
         raise SystemExit("--colour takes two bands, e.g. f150w,f444w")
     phot = load_dja_photometry(args.photometry, list(colour), args.aperture, args.photoz)
-    offset = tuple(args.offset_arcsec)
+    if args.offset_arcsec is None:  # default: the model's pinned frame offset (D-034)
+        offset = tuple(MODELS[args.model].get("frame_offset_arcsec", (0.0, 0.0)))
+    else:
+        offset = tuple(args.offset_arcsec)
     table = flux_ratio_table(
         model,
         images,
@@ -1675,9 +1696,9 @@ def main(argv: list[str] | None = None) -> int:
         "--offset-arcsec",
         nargs=2,
         type=float,
-        default=(0.0, 0.0),
+        default=None,
         metavar=("DRA", "DDEC"),
-        help="photometry frame minus image list, arcsec (El Gordo: 0.221 -0.018)",
+        help="photometry frame minus image list, arcsec (default: the model's frame_offset_arcsec)",
     )
     f.add_argument("--min-snr", type=float, default=10.0)
     f.add_argument("--max-abs-mu", type=float, default=20.0)

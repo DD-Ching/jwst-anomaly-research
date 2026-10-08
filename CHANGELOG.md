@@ -15,6 +15,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** feed the posterior μ spread into `fluxratios` (then recheck SMACS 6.3 once a SMACS chain is pinned) and
   the position spread into `forced_check` search radii.
 
+## 2026-10-08: CANUCS Lenstool models pinned (D-044)
+- `macs0416-canucs` reproduces Lenstool's image-plane χ²pos (330.8 against 344.30; rms 0.51″ over 303 images).
+  `abell370-canucs` is a source-plane fit (image-plane rms 2.3″).
+- They are the independent second model for vetting (the D-042 system-27 and system-51 checks used scratch code).
+- `fluxratios` now refuses gated image lists and map models, as `images` does; its `--offset-arcsec` defaults to
+  the model's pinned frame offset.
+- **Handoff:** a two-plane option in `LensModel`; use `macs0416-canucs` in `images` runs as a direct cross-check.
+
 ## 2026-10-08: Abell 370 and Abell S1063 radial screens: null (D-043)
 - Worktree worker: CANUCS 1208 for Abell 370 (CANUCS DR1 photo-z; frame offset −0.121″, −0.015″ pinned) and GLIMPSE
   3293 for S1063 (DJA v7.5 photo-z). Only `radial` applies (image lists gated, D-035).
