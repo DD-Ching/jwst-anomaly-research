@@ -2,22 +2,29 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-08: Flux-ratio and colour test of catalogued images: SMACS and El Gordo null (D-031)
-- New: `lens_consistency.py fluxratios`. It compares each image's DJA `mag_auto` + 2.5 log|μ| and its F150W−F444W
-  aperture colour with its system's median. It drops blends, segments larger than 20,000 px and counterparts whose
-  photo-z excludes the system redshift.
-- Results (`derived`): SMACS has 8 images in 4 systems flux-tested, rms 0.30 mag, max 0.57. El Gordo has 23 in 11
-  systems, rms 0.32 mag, max 0.71. Colour rms is 0.05 mag in both. **0 outliers** at the 0.75 mag / 0.3 mag
-  ASSUMPTION thresholds.
+## 2026-10-08: Flux-ratio and colour test of catalogued images: no anomaly in SMACS or El Gordo (D-031)
+- New: `lens_consistency.py fluxratios`.
+  - It compares each image's DJA `mag_auto` + 2.5 log|μ| and its F150W−F444W colour with the other images of its
+    system (leave-one-out).
+  - It drops blends, segments larger than 20,000 px and counterparts whose photo-z excludes the system redshift.
+- Results (`derived`):
+  - SMACS: 8 images in 4 systems flux-tested, rms 0.60 mag.
+  - El Gordo (0.3″ after a +0.221″ frame shift): 23 images in 11 systems, rms 0.49 mag.
+  - No colour outlier (rms 0.11 and 0.07 mag).
+  - The flagged pairs SMACS 6.1/6.3 and El Gordo 18b/18c (and 7b/7c, at 0.5″ without the shift) fail vetting.
+    Forced photometry brings SMACS 6 down to 0.61–0.78 mag. The El Gordo pairs are low-S/N or chromatic, so they
+    are measurement failures. **No anomaly.**
 - **Failed approaches**, each checked on cutouts or SEDs:
   - DJA aperture × `tot_corr` is not a total flux for arcs.
   - SMACS 1.1 looked 1.4 mag too bright, from host-halo light in a 32,864 px segment.
   - El Gordo 9a/9c differed by 1.2 mag in colour, because 9a's DJA counterpart is a z_phot 0.89 interloper.
   - Bare eazy 95 % intervals exclude good images.
+  - A median that includes the image itself halves pair differences.
 - Limit: DJA misses most arcs inside cluster light (SMACS: 38 of 60 images unmatched within 0.3″).
 - **Handoff:**
   - El Gordo `images --forced-image` (TASKS "Now" 2);
   - Abell 2744 `fluxratios` with the 233 MB DJA catalogue (needs a DECISIONS entry);
+  - `bayes.dat` μ uncertainties, then recheck SMACS 6;
   - BCG/ICL-subtracted totals, to test the core images.
 
 ## 2026-10-08: Image-plane χ² reproduces Lenstool for SMACS, El Gordo and Abell 2744 (D-030)

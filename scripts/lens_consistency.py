@@ -95,6 +95,7 @@ import tempfile
 import warnings
 from pathlib import Path
 
+import astropy.units as u
 import numpy as np
 from astropy.coordinates import SkyCoord
 from astropy.io import fits
@@ -102,7 +103,7 @@ from astropy.table import Table
 from astropy.wcs import WCS, FITSFixedWarning
 
 from jwst_anomaly import lensmodel, paths, schema
-from jwst_anomaly.photometry import fetch_catalog
+from jwst_anomaly.photometry import fetch_catalog, load_dja_catalog
 
 # sigpos: "input.par" (its sigposArcsec), "arcs" (each image's error column, as Lenstool's
 # ``forme -10``) or a number. El Gordo's CDS best_fit.par has an empty image section: a uniform
@@ -943,45 +944,49 @@ def cmd_images(args) -> dict:
 def load_dja_photometry(
     path: Path, bands: list[str], aperture: int = 1, zout: Path | None = None
 ) -> Table:
-    """DJA ``fix_phot``: detection-image Kron total (``mag_auto``) and per-band aperture fluxes.
+    """DJA ``fix_phot`` for ``fluxratios``: ``photometry.load_dja_catalog`` plus ``magerr_auto``,
+    ``npix`` and, with ``zout`` (eazy, row-aligned by ``id``), ``z_phot, z025, z975``.
 
-    ``<band>_tot_corr`` is 1 and ``tot_corr`` a point-source correction capped near 1.2 in
-    DJA v7, so aperture fluxes are not totals for extended images. Only ``mag_auto`` is.
+    ``mag_auto`` (detection-image Kron) is the only total: ``<band>_tot_corr`` is 1 and
+    ``tot_corr`` a point-source correction capped near 1.2 in DJA v7, so aperture magnitudes
+    are not totals for extended images.
     """
-    t = Table.read(path)
-    out = Table(
-        {
-            "dja_id": np.asarray(t["id"]),
-            "ra": np.asarray(t["ra"], float),
-            "dec": np.asarray(t["dec"], float),
-            "mag_auto": np.asarray(t["mag_auto"], float),
-            "magerr_auto": np.asarray(t["magerr_auto"], float),
-            "npix": np.asarray(t["npix"], int),
-        }
-    )
-    for b in bands:
-        out[f"{b}_flux"] = np.asarray(t[f"{b}_flux_aper_{aperture}"], float)
-        out[f"{b}_err"] = np.asarray(t[f"{b}_fluxerr_aper_{aperture}"], float)
+    out = load_dja_catalog(path, bands, aperture)
+    raw = Table.read(path)
+    out["magerr_auto"] = np.asarray(np.ma.filled(raw["magerr_auto"], np.nan), float)
+    out["npix"] = np.asarray(np.ma.filled(raw["npix"], 0), int)
+    out.rename_column("id", "dja_id")
     if zout is not None:
         z = Table.read(zout)
-        if len(z) != len(t) or not np.array_equal(np.asarray(z["id"]), out["dja_id"]):
+        if len(z) != len(out) or not np.array_equal(np.asarray(z["id"]), out["dja_id"]):
             raise SystemExit(f"error: {zout} rows do not match {path} ids")
         for c in ("z_phot", "z025", "z975"):
-            v = np.asarray(z[c], float)
+            v = np.asarray(np.ma.filled(z[c], np.nan), float)
             out[c] = np.where(v > 0, v, np.nan)
         out.meta["photoz_source"] = str(zout)
-    out.meta.update(source=str(path), aperture=aperture)
+    out.meta.update(aperture=aperture)
     return out
 
 
-def _system_residual(values: np.ndarray, use: np.ndarray, systems: np.ndarray) -> np.ndarray:
-    """``values`` minus the median over the usable images of each system (NaN if < 2 usable)."""
+def _loo_residual(values: np.ndarray, use: np.ndarray, systems: np.ndarray) -> np.ndarray:
+    """``values`` minus the median of the *other* usable images of its system (NaN if < 2 usable).
+
+    Leave-one-out, so a discrepant image does not pull its own reference: in a pair each image's
+    residual is the full pair difference (with opposite signs)."""
     resid = np.full(len(values), np.nan)
     for sys_id in dict.fromkeys(systems):
-        m = (systems == sys_id) & use
-        if m.sum() >= 2:
-            resid[m] = values[m] - np.median(values[m])
+        ii = np.flatnonzero((systems == sys_id) & use)
+        if ii.size < 2:
+            continue
+        for i in ii:
+            resid[i] = values[i] - np.median(values[ii[ii != i]])
     return resid
+
+
+def _r(v, nd: int = 2):
+    """Round for JSON; NaN becomes None (JSON has no NaN)."""
+    v = float(v)
+    return round(v, nd) if np.isfinite(v) else None
 
 
 def flux_ratio_table(
@@ -990,7 +995,9 @@ def flux_ratio_table(
     z_m_limit: dict[str, float],
     phot: Table,
     colour: tuple[str, str] = ("f150w", "f444w"),
+    *,
     match_arcsec: float = 0.3,
+    offset_arcsec: tuple[float, float] = (0.0, 0.0),
     min_snr: float = 10.0,
     max_abs_mu: float = 20.0,
     outlier_mag: float = 0.75,
@@ -998,7 +1005,7 @@ def flux_ratio_table(
     max_npix: int = 20000,
     z_margin: float = 0.15,
 ) -> Table:
-    """Per-image source-magnitude and colour residuals against the system median."""
+    """Per-image source-magnitude and colour residuals (see ``fluxratios``)."""
     z = lensmodel.image_redshifts(images, z_m_limit)
     ok_z = np.isfinite(z)
     mu = np.full(len(images), np.nan)
@@ -1006,6 +1013,8 @@ def flux_ratio_table(
         pred = model.evaluate(images["ra"][ok_z], images["dec"][ok_z], z[ok_z])
         mu[ok_z] = np.asarray(pred["magnification"], float)
     ci = SkyCoord(images["ra"], images["dec"], unit="deg")
+    if any(offset_arcsec):  # catalogue frame minus image-list frame, (dRA cos dec, dDec)
+        ci = ci.spherical_offsets_by(offset_arcsec[0] * u.arcsec, offset_arcsec[1] * u.arcsec)
     cp = SkyCoord(phot["ra"], phot["dec"], unit="deg")
     idx, sep, _ = ci.match_to_catalog_sky(cp)
     matched = sep.arcsec <= match_arcsec
@@ -1014,33 +1023,33 @@ def flux_ratio_table(
     blended = matched & np.isin(ids, uniq[counts > 1])
     npix = np.where(matched, np.asarray(phot["npix"])[idx], -1)
     large = npix > max_npix  # segment swallowing host or ICL light (SMACS 1.1)
-    # A counterpart whose 95 % photo-z interval excludes the system redshift is another object
-    # (El Gordo 9a: z_phot 0.89 for a z = 4.32 system). Missing photo-z excludes nothing.
-    pz_excl = np.zeros(len(images), bool)
-    if "z025" in phot.colnames:
-        lo = np.where(matched, np.asarray(phot["z025"], float)[idx], np.nan)
-        hi = np.where(matched, np.asarray(phot["z975"], float)[idx], np.nan)
-        with np.errstate(invalid="ignore"):
-            dz = z_margin * (1.0 + z)
-            pz_excl = (z < lo - dz) | (z > hi + dz)
-    bad = blended | large | pz_excl
 
     def col(name: str) -> np.ndarray:
         return np.where(matched, np.asarray(phot[name], float)[idx], np.nan)
 
+    # A counterpart whose 95 % photo-z interval excludes the system redshift is another object
+    # (El Gordo 9a: z_phot 0.89 for a z = 4.32 system). Missing photo-z excludes nothing.
+    pz_excl = np.zeros(len(images), bool)
+    if "z025" in phot.colnames:
+        dz = z_margin * (1.0 + z)
+        with np.errstate(invalid="ignore"):
+            pz_excl = (z < col("z025") - dz) | (z > col("z975") + dz)
+    bad = blended | large | pz_excl
     mag, magerr = col("mag_auto"), col("magerr_auto")
+    m1, m2 = col(f"{colour[0]}_mag"), col(f"{colour[1]}_mag")
+    e1, e2 = col(f"{colour[0]}_mag_err"), col(f"{colour[1]}_mag_err")
     with np.errstate(divide="ignore", invalid="ignore"):
         src = mag + 2.5 * np.log10(np.abs(mu))
-        snrs = [col(f"{b}_flux") / col(f"{b}_err") for b in colour]
-        c_obs = -2.5 * np.log10(col(f"{colour[0]}_flux") / col(f"{colour[1]}_flux"))
-    c_err = 1.0857 * np.hypot(1.0 / snrs[0], 1.0 / snrs[1])
+        snr_auto = np.where(magerr > 0, 1.0857 / magerr, np.nan)
+        snr1, snr2 = (np.where(e > 0, 1.0857 / e, np.nan) for e in (e1, e2))
+    c_obs = m1 - m2
+    c_err = np.hypot(e1, e2)
     systems = np.asarray(images["system"]).astype(str)
     base = matched & ~bad & np.isfinite(mu) & (np.abs(mu) <= max_abs_mu)
-    use_m = base & np.isfinite(src) & (1.0857 / magerr >= min_snr)
-    use_c = matched & ~bad & np.isfinite(c_obs)
-    use_c &= (snrs[0] >= min_snr) & (snrs[1] >= min_snr)
-    resid = _system_residual(src, use_m, systems)
-    c_resid = _system_residual(c_obs, use_c, systems)
+    use_m = base & np.isfinite(src) & (snr_auto >= min_snr)
+    use_c = matched & ~bad & np.isfinite(c_obs) & (snr1 >= min_snr) & (snr2 >= min_snr)
+    resid = _loo_residual(src, use_m, systems)
+    c_resid = _loo_residual(c_obs, use_c, systems)
     cname = f"{colour[0]}_{colour[1]}"
     out = Table(
         {
@@ -1081,6 +1090,7 @@ def flux_ratio_table(
         f" against {model.source}",
         thresholds={
             "match_arcsec": match_arcsec,
+            "offset_arcsec": list(offset_arcsec),
             "min_snr": min_snr,
             "max_abs_mu": max_abs_mu,
             "outlier_mag": outlier_mag,
@@ -1114,19 +1124,23 @@ def cmd_fluxratios(args) -> dict:
     if len(colour) != 2:
         raise SystemExit("--colour takes two bands, e.g. f150w,f444w")
     phot = load_dja_photometry(args.photometry, list(colour), args.aperture, args.photoz)
+    offset = tuple(float(v) for v in args.offset_arcsec.split(","))
+    if len(offset) != 2:
+        raise SystemExit("--offset-arcsec takes dRA,dDec, e.g. 0.224,-0.016")
     table = flux_ratio_table(
         model,
         images,
         par["z_m_limit"],
         phot,
         colour,
-        args.match_arcsec,
-        args.min_snr,
-        args.max_abs_mu,
-        args.outlier_mag,
-        args.colour_tol,
-        args.max_npix,
-        args.z_margin,
+        match_arcsec=args.match_arcsec,
+        offset_arcsec=offset,
+        min_snr=args.min_snr,
+        max_abs_mu=args.max_abs_mu,
+        outlier_mag=args.outlier_mag,
+        colour_tol=args.colour_tol,
+        max_npix=args.max_npix,
+        z_margin=args.z_margin,
     )
     out = args.out / args.model
     _write(table, out / "flux_ratios.ecsv")
@@ -1154,9 +1168,10 @@ def cmd_fluxratios(args) -> dict:
                 "image_id": str(r["image_id"]),
                 "flux_class": str(r["flux_class"]),
                 "colour_class": str(r["colour_class"]),
-                "mu": round(float(r["magnification"]), 2),
-                "resid_mag": round(float(r["resid_mag"]), 2),
-                "colour_resid": round(float(r["colour_resid"]), 2),
+                "mu": _r(r["magnification"]),
+                "resid_mag": _r(r["resid_mag"]),
+                "colour_resid": _r(r["colour_resid"]),
+                "photoz_excluded": bool(r["photoz_excluded"]),
                 "npix": int(r["npix"]),
             }
             for r in table
@@ -1203,6 +1218,9 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--colour", default="f150w,f444w", help="two bands for the colour test")
     f.add_argument("--aperture", type=int, default=1, help="DJA aperture index (1 = 0.5 arcsec)")
     f.add_argument("--match-arcsec", type=float, default=0.3)
+    f.add_argument(
+        "--offset-arcsec", default="0,0", help="photometry frame minus image list: dRA,dDec"
+    )
     f.add_argument("--min-snr", type=float, default=10.0)
     f.add_argument("--max-abs-mu", type=float, default=20.0)
     f.add_argument("--outlier-mag", type=float, default=0.75)

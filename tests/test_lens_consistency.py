@@ -336,7 +336,6 @@ def _flux_inputs(offsets_mag=(0.0, 0.0, 0.0), npix=(500, 500, 500), z_lo=(1.0, 1
     )
     mu = np.asarray(model.evaluate(ra, dec, 2.0)["magnification"], float)
     mag = 25.0 - 2.5 * np.log10(np.abs(mu)) + np.asarray(offsets_mag)
-    flux = 10 ** (-0.4 * (mag - 23.9))
     phot = Table(
         {
             "dja_id": [11, 12, 13],
@@ -345,10 +344,10 @@ def _flux_inputs(offsets_mag=(0.0, 0.0, 0.0), npix=(500, 500, 500), z_lo=(1.0, 1
             "mag_auto": mag,
             "magerr_auto": [0.02] * 3,
             "npix": list(npix),
-            "f150w_flux": flux,
-            "f150w_err": flux / 50,
-            "f444w_flux": flux * 2,
-            "f444w_err": flux / 50,
+            "f150w_mag": mag + 0.5,
+            "f150w_mag_err": [0.02] * 3,
+            "f444w_mag": mag - 0.5,
+            "f444w_mag_err": [0.02] * 3,
             "z_phot": [2.0] * 3,
             "z025": list(z_lo),
             "z975": [3.0] * 3,
@@ -365,24 +364,49 @@ def test_flux_ratio_table_consistent_and_injected_outlier():
     assert list(t["flux_class"]) == ["consistent"] * 3
     assert list(t["colour_class"]) == ["consistent"] * 3
     assert t.meta["provenance"] == "derived"
-    # A 1.5 mag deficit in one image: flagged against the median of the other two.
+    # A 1.5 mag deficit in one image: leave-one-out keeps it out of its own reference.
     model, images, phot, _ = _flux_inputs(offsets_mag=(1.5, 0.0, 0.0))
     t = lc.flux_ratio_table(model, images, {}, phot)
-    assert list(t["flux_class"]) == ["flux_outlier", "consistent", "consistent"]
     assert t["resid_mag"][0] == pytest.approx(1.5)
+    assert list(t["flux_class"]) == ["flux_outlier", "consistent", "consistent"]
     assert list(t["colour_class"]) == ["consistent"] * 3  # achromatic: colours still agree
+    # A chromatic change: only image 1.2 is 0.5 mag redder.
+    model, images, phot, _ = _flux_inputs()
+    phot["f444w_mag"][1] -= 0.5
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert list(t["colour_class"]) == ["consistent", "colour_outlier", "consistent"]
+    assert t["colour_resid"][1] == pytest.approx(0.5)
 
 
-def test_flux_ratio_table_drops_large_segments_and_photoz_interlopers():
+def test_flux_ratio_table_pair_residual_is_the_full_difference():
+    model, images, phot, _ = _flux_inputs(offsets_mag=(1.0, 0.0, 0.0))
+    t = lc.flux_ratio_table(model, images[:2], {}, phot)
+    np.testing.assert_allclose(t["resid_mag"], [1.0, -1.0])
+    assert list(t["flux_class"]) == ["flux_outlier"] * 2
+    # A single usable image cannot be tested.
+    t = lc.flux_ratio_table(model, images[:1], {}, phot)
+    assert t["flux_class"][0] == "untested"
+
+
+def test_flux_ratio_table_exclusions():
     model, images, phot, _ = _flux_inputs(npix=(50000, 500, 500))
     t = lc.flux_ratio_table(model, images, {}, phot)
     assert list(t["large_segment"]) == [True, False, False]
-    assert t["flux_class"][0] == "untested" and t["flux_class"][1] == "consistent"
+    assert list(t["flux_class"]) == ["untested", "consistent", "consistent"]
     # z025 = 3.5 excludes z = 2 even with the 0.15 (1 + z) margin; z025 = 2.4 does not.
     model, images, phot, _ = _flux_inputs(z_lo=(3.5, 2.4, 1.0))
     t = lc.flux_ratio_table(model, images, {}, phot)
     assert list(t["photoz_excluded"]) == [True, False, False]
     assert list(t["flux_class"]) == ["untested", "consistent", "consistent"]
-    # Unmatched images (beyond match_arcsec) are untested.
+    # One DJA source nearest to two images: both are blends.
+    model, images, phot, _ = _flux_inputs()
+    images["ra"][1], images["dec"][1] = images["ra"][0], images["dec"][0] + 0.05 / 3600
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert list(t["blended"]) == [True, True, False]
+    assert list(t["flux_class"]) == ["untested"] * 3
+    # Beyond match_arcsec nothing matches; a frame offset brings the matches back.
+    model, images, phot, _ = _flux_inputs()
     t = lc.flux_ratio_table(model, images, {}, phot, match_arcsec=0.05)
     assert set(t["flux_class"]) == {"untested"} and set(t["dja_id"]) == {-1}
+    t = lc.flux_ratio_table(model, images, {}, phot, match_arcsec=0.05, offset_arcsec=(0.0, 0.1))
+    assert list(t["dja_id"]) == [11, 12, 13]
