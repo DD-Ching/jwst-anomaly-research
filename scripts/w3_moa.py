@@ -30,6 +30,7 @@ Outputs go to ``$JWST_ANOMALY_DATA/derived/w3_moa/``, except the small tracked t
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import math
 import os
@@ -329,7 +330,8 @@ def reader_for(field: str | None = None, source: str = "auto") -> moa_stream.Ran
         raise SystemExit(f"no local tar for {field or FIELD}")
     if p is not None:
         return moa_stream.RangeReader(path=p)
-    return moa_stream.RangeReader(url=moa.tar_url(field_number(field)))
+    f = field_number(field)
+    return moa_stream.RangeReader(url=moa.tar_url(f), total=moa.TAR_BYTES[f])
 
 
 def is_quiet(tab: Table) -> np.ndarray:
@@ -410,7 +412,7 @@ def _write_prescreen_chunk(field: str, k: int, n: int, rows: list, stats: dict) 
     return path
 
 
-def _stream_worker(wid: int, segs: list, total: int, url, path, prefetch: int, queue) -> None:
+def _stream_worker(wid: int, segs: list, total: int, url, path, pin, prefetch: int, queue) -> None:
     """One pre-screen process: reads its own byte ranges (``prefetch`` threads download the next
     segments while this one is scanned) and puts ``(segment, rows, MB, retries)`` on ``queue``;
     the parent holds no light-curve bytes. ``None`` marks the end, ``("error", text)`` a failure."""
@@ -419,7 +421,7 @@ def _stream_worker(wid: int, segs: list, total: int, url, path, prefetch: int, q
 
     moa_stream.limit_heap_growth()
     try:
-        reader = moa_stream.RangeReader(url=url, path=path)
+        reader = moa_stream.RangeReader(url=url, path=path, total=pin)
         with ThreadPoolExecutor(prefetch) as ex:
             futs = deque()
             nxt = 0
@@ -476,7 +478,7 @@ def run_stream_prescreen(field: str, procs: int, conns: int, chunks=None, source
     workers = [
         ctx.Process(
             target=_stream_worker,
-            args=(i, segs[i::procs], total, reader.url, reader.path, prefetch, queue),
+            args=(i, segs[i::procs], total, reader.url, reader.path, reader.total, prefetch, queue),
             daemon=True,
         )
         for i in range(procs)
@@ -672,6 +674,12 @@ def _fit_worker(job):
 AUX = ("fwhm", "airmass", "sky")  # observing conditions per epoch (vetting regressors)
 
 
+@functools.lru_cache(maxsize=2)
+def _local_index(path: Path) -> dict[str, tuple[int, int]]:
+    """Member offsets of a local field tar (header walk only)."""
+    return moa.MoaField(tar_path=path).index()
+
+
 def load_arrays(ids, aux: bool = False, pre: Table | None = None, field: str | None = None) -> dict:
     """``event_id -> (t, f, sf)`` (plus a dict of ``AUX`` columns when ``aux``), included epochs
     only. Members with a tar offset in the pre-screen table are read by byte range (local tar or
@@ -684,7 +692,10 @@ def load_arrays(ids, aux: bool = False, pre: Table | None = None, field: str | N
             for e, o, s in zip(pre["event_id"], pre["offset"], pre["size"], strict=True)
         }
     ids = list(dict.fromkeys(map(str, ids)))
-    raws = moa_stream.fetch_members(reader_for(field), [(e, *loc[e]) for e in ids if e in loc])
+    reader = reader_for(field)
+    if reader.path is not None and any(e not in loc for e in ids):
+        loc = {**_local_index(reader.path), **loc}  # the pinned local tar has every member
+    raws = moa_stream.fetch_members(reader, [(e, *loc[e]) for e in ids if e in loc])
     missing = [e for e in ids if e not in loc]
     if missing:
         raws.update(moa_stream.fetch_objects(missing))
@@ -793,23 +804,33 @@ def run_fit(procs: int, limit: int | None = None, chunk: tuple[int, int] | None 
     return path
 
 
+def fit_chunk_problem(tab: Table, ids: list, k: int, n: int) -> str | None:
+    """Why the tracked fit chunk ``k`` of ``n`` cannot be used (None: it can): fitted with other
+    ``Params``, or not exactly its share ``ids[k::n]`` of the current pre-screen passes."""
+    if tab.meta.get("fit_params") != json.dumps(asdict(w3.P)) or tab.meta.get(
+        "params"
+    ) != json.dumps(asdict(P)):
+        return "was fitted with other Params; refit it"
+    if sorted(tab["event_id"]) != sorted(ids[k::n]):
+        return "does not hold exactly its pre-screen passes"
+    return None
+
+
 def merge_chunks(n: int) -> Path:
     """Join the tracked chunk tables 1..n of n into the table `vet` reads. Refused unless every
     chunk is present, was fitted with the current pre-screen and fit ``Params`` and holds exactly
     its own passes of the current pre-screen (deterministic, recomputed in each session)."""
     pre = read_prescreen()
     ids = list(passes(pre)["event_id"])
-    fit_params, params = json.dumps(asdict(w3.P)), json.dumps(asdict(P))
     parts = []
     for k in range(n):
         path = results_dir() / f"{chunk_name((k, n))}.gz"
         if not path.exists():
             raise SystemExit(f"missing chunk {k + 1}/{n}: {path}")
         tab = Table.read(path, format="ascii.ecsv")
-        if tab.meta.get("fit_params") != fit_params or tab.meta.get("params") != params:
-            raise SystemExit(f"chunk {k + 1}/{n} was fitted with other Params; refit it")
-        if sorted(tab["event_id"]) != sorted(ids[k::n]):
-            raise SystemExit(f"chunk {k + 1}/{n} does not hold exactly its pre-screen passes")
+        problem = fit_chunk_problem(tab, ids, k, n)
+        if problem:
+            raise SystemExit(f"chunk {k + 1}/{n} {problem}")
         parts.append(tab)
     tab = vstack(parts, metadata_conflicts="silent")
     tab.sort("event_id")
@@ -1838,14 +1859,13 @@ def run_field(procs: int, conns: int, per_cell: int, per_ctrl: int) -> None:
     pre = read_prescreen()
     n_pass = len(passes(pre))
     n = max(1, math.ceil(n_pass / FITS_PER_CHUNK))
+    ids = list(passes(pre)["event_id"])
     for k in range(n):
         path = results_dir() / f"{chunk_name((k, n))}.gz"
-        ok = False
-        if path.exists():
-            meta = Table.read(path, format="ascii.ecsv").meta
-            ok = meta.get("fit_params") == json.dumps(asdict(w3.P)) and meta.get(
-                "params"
-            ) == json.dumps(asdict(P))
+        ok = (
+            path.exists()
+            and fit_chunk_problem(Table.read(path, format="ascii.ecsv"), ids, k, n) is None
+        )
         if not ok:
             run_fit(procs, None, (k, n))
     merge_chunks(n)

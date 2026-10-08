@@ -236,3 +236,74 @@ def test_one_metadata_pass_caches_several_fields(tmp_path):
     out = moa.write_metadata_caches(_meta(tmp_path), tmp_path / "d", fields=[1, 22])
     assert [p.name for p in out] == ["metadata_gb1.ecsv", "metadata_gb22.ecsv"]
     assert len(Table.read(out[1])) == 2 and len(Table.read(out[0])) == 1
+
+
+def test_fixed_parser_falls_back_on_an_unparseable_token(recwarn):
+    bad = LC.replace("   335 ", "  null ")  # same width, not a number
+    assert len(bad) == len(LC) and bad != LC
+    assert moa._parse_fixed(bad.encode()) is None
+    assert not [w for w in recwarn if issubclass(w.category, DeprecationWarning)]
+
+
+def test_long_name_headers_are_refused(tmp_path):
+    path = tmp_path / "gb21.tar"
+    with tarfile.open(path, "w", format=tarfile.GNU_FORMAT) as tar:
+        data = gzip.compress(b"x")
+        info = tarfile.TarInfo("exodata/" + "d" * 120 + "/gb21-R-3-0-1.ipac.gz")
+        info.size = len(data)
+        tar.addfile(info, io.BytesIO(data))
+    raw = path.read_bytes()
+    with pytest.raises(ValueError, match="name extension"):
+        list(moa.walk_members(memoryview(raw), 0, 0, len(raw)))
+
+
+def test_split_metadata_tables_carry_provenance(tmp_path):
+    t = moa.split_metadata(META.splitlines(keepends=True), [22])[22]
+    assert t.meta["provenance"] == schema.Provenance.OBSERVED.value
+    assert "metadata" in t.meta["source"]
+
+
+class _Resp:
+    def __init__(self, status, body=b"", headers=None):
+        self.status_code, self.content, self.headers = status, body, headers or {}
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+
+class _Session:
+    def __init__(self, resp):
+        self.resp, self.calls = resp, 0
+
+    def get(self, url, headers=None, timeout=None, stream=False):
+        assert stream  # the body must not be read before the checks
+        self.calls += 1
+        return self.resp
+
+
+def _reader(resp, total=1000):
+    from jwst_anomaly import moa_stream
+
+    r = moa_stream.RangeReader(url="https://example.invalid/gb1.tar", total=total, retries=0)
+    r._local.session = _Session(resp)
+    return r
+
+
+def test_range_reader_checks_status_range_and_pinned_size():
+    ok = _Resp(206, b"x" * 10, {"Content-Range": "bytes 0-9/1000"})
+    assert _reader(ok).read(0, 10) == b"x" * 10
+    star = _Resp(206, b"x" * 10, {"Content-Range": "bytes 0-9/*"})
+    assert _reader(star).read(0, 10) == b"x" * 10
+    for resp, match in (
+        (_Resp(206, b"x" * 10, {"Content-Range": "bytes 0-9/2000"}), "pinned"),
+        (_Resp(206, b"x" * 10, {"Content-Range": "bytes 5-14/1000"}), "asked"),
+        (_Resp(200, b"", {"Content-Length": str(10**12)}), "ignored the byte range"),
+        (_Resp(404), "HTTP 404"),
+    ):
+        with pytest.raises(OSError, match=match):
+            _reader(resp).read(0, 10)
+    small = _Resp(200, b"y" * 50, {"Content-Length": "50"})
+    assert _reader(small).read(0, 10) == b"y" * 10

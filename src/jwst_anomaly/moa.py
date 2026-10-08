@@ -28,6 +28,7 @@ from __future__ import annotations
 import gzip
 import io
 import tarfile
+import warnings
 import zlib
 from pathlib import Path
 
@@ -36,8 +37,6 @@ from astropy.table import Table, vstack
 
 from jwst_anomaly import paths, photometry, schema
 from jwst_anomaly.signatures import standard_flux_light_curve
-
-_inflate = zlib  # gzip members inflated in C with the CRC and length checked
 
 BULK = "https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/"
 COLUMNS_DOC = "https://exoplanetarchive.ipac.caltech.edu/docs/API_moa_columns.html"
@@ -141,7 +140,6 @@ def walk_members(buf, base: int, start: int, stop: int):
         if off - base + 512 > len(buf):
             return  # no header in the rest of the range (end of archive)
         off += 512
-    long_name = None
     while off < stop:
         if off - base + 512 > len(buf):
             yield "", off, off + 512
@@ -154,11 +152,14 @@ def walk_members(buf, base: int, start: int, stop: int):
         if end > base + len(buf):
             yield "", off, end
             return
-        if info.type == tarfile.GNUTYPE_LONGNAME:  # GNU long name: applies to the next header
-            long_name = bytes(buf[data - base : end - base]).rstrip(b"\0").decode()
+        if info.type == tarfile.XGLTYPE:  # pax global header: names nothing
+            pass
+        elif info.type in (tarfile.GNUTYPE_LONGNAME, tarfile.XHDTYPE):
+            # a name header applies to the next header, which may start in the next range,
+            # where the resync cannot see it; MOA member names fit in 100 bytes, so refuse
+            raise ValueError(f"tar name extension header at offset {off} is not supported")
         else:
-            eid = member_id(long_name or info.name) if info.isfile() else None
-            long_name = None
+            eid = member_id(info.name) if info.isfile() else None
             if eid:
                 yield eid, data, info.size
         off = data + info.size + (-info.size) % 512
@@ -218,7 +219,7 @@ def parse_lightcurve(raw: bytes | str, columns=None) -> dict[str, np.ndarray]:
     if isinstance(raw, str):
         raw = raw.encode()
     if bytes(raw[:2]) == b"\x1f\x8b":
-        d = _inflate.decompressobj(wbits=31)  # one gzip member, CRC and length checked in C
+        d = zlib.decompressobj(wbits=31)  # one gzip member, CRC and length checked in C
         out = d.decompress(raw)
         raw = out if d.eof and not d.unused_data else gzip.decompress(raw)
     elif isinstance(raw, memoryview):
@@ -263,18 +264,23 @@ def _parse_fixed(raw: bytes, columns=None) -> dict[str, np.ndarray] | None:
         return None
     want = None if columns is None else {"HJD", *columns}
     out: dict[str, np.ndarray] = {}
-    for j, name in enumerate(names):
-        if want is not None and name not in want:
-            continue
-        a, b = bars[j] + 1, bars[j + 1]
-        col = np.ascontiguousarray(u8[:, a:b])
-        if name == "included":
-            out[name] = np.char.strip(col.view(f"S{b - a}").ravel()) == b"True"
-        else:  # each slice ends in a blank (the bar column), so tokens stay apart
-            v = np.fromstring(np.ascontiguousarray(u8[:, a : b + 1]).tobytes(), sep=" ")
-            if v.size != len(u8):
-                return None
-            out[name] = v
+    with warnings.catch_warnings():  # once per member, not per column
+        warnings.simplefilter("error", DeprecationWarning)
+        for j, name in enumerate(names):
+            if want is not None and name not in want:
+                continue
+            a, b = bars[j] + 1, bars[j + 1]
+            col = np.ascontiguousarray(u8[:, a:b])
+            if name == "included":
+                out[name] = np.char.strip(col.view(f"S{b - a}").ravel()) == b"True"
+            else:  # each slice ends in a blank (the bar column), so tokens stay apart
+                try:  # an unparseable token: fall back to the token parser, never raise
+                    v = np.fromstring(np.ascontiguousarray(u8[:, a : b + 1]).tobytes(), sep=" ")
+                except (DeprecationWarning, ValueError):
+                    return None
+                if v.size != len(u8):
+                    return None
+                out[name] = v
     keep = np.isfinite(out["HJD"]) if "HJD" in out else np.ones(len(u8), bool)
     return {k: v[keep] for k, v in out.items()}
 
@@ -391,6 +397,10 @@ def split_metadata(lines, fields, block: int = 50_000) -> dict[int, Table]:
         t = vstack(parts[f]) if len(parts[f]) > 1 else parts[f][0]
         for c in ("field", "chip", "subframe", "id"):
             t[c] = t[c].astype(int)
+        t.meta.update(
+            provenance=schema.Provenance.OBSERVED.value,
+            source=f"{BULK}metadata.ipac.tar.gz, field gb{f} rows ({REFERENCE})",
+        )
         out[f] = t
     return out
 

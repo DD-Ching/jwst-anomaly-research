@@ -24,28 +24,19 @@ from pathlib import Path
 from jwst_anomaly import moa
 
 RETRY_STATUS = {429, 500, 502, 503, 504}
-MAX_OBJECT_BYTES = 64 * 2**20  # a per-object light curve is < 10 MB
-
-
-def _read_capped(r, n: int) -> bytes:
-    """At most ``n`` bytes of a streamed ``requests`` response body."""
-    parts, got = [], 0
-    for chunk in r.iter_content(1 << 20):
-        parts.append(chunk[: n - got])
-        got += len(parts[-1])
-        if got >= n:
-            break
-    return b"".join(parts)
+SMALL_FILE = 1 << 26  # bytes: a 200 reply to a range request is read only below this
 
 
 class RangeReader:
     """``read(a, b)`` -> bytes ``[a, b)`` of one tar, from ``url`` or a local ``path``."""
 
     def __init__(self, url: str | None = None, path: Path | None = None, retries: int = 8,
-                 timeout: float = 120.0):  # fmt: skip
+                 timeout: float = 120.0, total: int | None = None):  # fmt: skip
+        """``total``: the expected file size; an HTTP range reply for another size is refused
+        (the archive replaced the file)."""
         if (url is None) == (path is None):
             raise ValueError("give exactly one of url and path")
-        self.url, self.path = url, None if path is None else Path(path)
+        self.url, self.path, self.total = url, None if path is None else Path(path), total
         self.retries, self.timeout = retries, timeout
         self._local = threading.local()
         self.bytes_read = 0
@@ -79,28 +70,35 @@ class RangeReader:
         delay = 2.0
         for attempt in range(self.retries + 1):
             try:
-                # streamed: a server or proxy that ignores Range answers 200 with the whole tar
-                # (up to 508 GB); never read more than the range (an unstreamed read of a 12 GB
-                # reply was OOM-killed, 2026-10-08)
                 with self._session().get(
                     self.url,
                     headers={"Range": f"bytes={a}-{b - 1}"},
                     timeout=self.timeout,
-                    stream=True,
+                    stream=True,  # the body is read only after the status and range check
                 ) as r:
-                    if r.status_code in (200, 206):
-                        data = _read_capped(r, b - a)
-                        if r.status_code == 206 and len(data) == b - a:
-                            return data
-                        if r.status_code == 200 and a == 0 and len(data) == b:
-                            return data  # range ignored: the first b bytes are the range
+                    if r.status_code == 206:
+                        cr = r.headers.get("Content-Range", "")
+                        size = cr.rsplit("/", 1)[-1]
+                        if self.total is not None and cr and size not in ("*", str(self.total)):
+                            raise OSError(f"{self.url}: size {cr} is not the pinned {self.total}")
+                        if cr and not cr.startswith(f"bytes {a}-{b - 1}/"):
+                            raise OSError(f"{self.url}: asked bytes {a}-{b - 1}, got {cr}")
+                        data = r.content
+                        if len(data) == b - a:
+                            return data  # a short body is retried
+                    elif r.status_code == 200:  # range ignored: read only a small file
+                        n = r.headers.get("Content-Length")
+                        if a != 0 or n is None or int(n) > SMALL_FILE:
+                            raise OSError(f"{self.url}: server ignored the byte range (HTTP 200)")
+                        data = r.content
+                        if len(data) >= b:
+                            return data[:b]
                     elif r.status_code not in RETRY_STATUS:
                         raise OSError(f"{self.url} bytes {a}-{b - 1}: HTTP {r.status_code}")
             except (
                 requests.ConnectionError,
                 requests.Timeout,
                 requests.exceptions.ChunkedEncodingError,
-                requests.exceptions.ContentDecodingError,
             ):
                 pass
             if attempt == self.retries:
@@ -117,7 +115,8 @@ def read_segment(
 ) -> list[tuple]:
     """``[(event_id, offset_data, size, gz_view)]`` of the members whose header starts in
     ``[start, stop)``; the last member's data is fetched past ``stop`` as needed. ``gz_view`` is a
-    zero-copy ``memoryview`` into the downloaded range (one copy of the bytes in memory).
+    zero-copy ``memoryview`` into the downloaded range (one copy of the bytes in memory, two
+    while a member that runs past ``stop`` is being completed).
     ``digest``: a list that receives the sha256 of bytes ``[start, stop)`` (content pin)."""
     buf = reader.read(start, min(stop, total))
     if digest is not None:
@@ -186,15 +185,18 @@ def _get_whole(eid: str) -> bytes:
     delay = 2.0
     for attempt in range(7):
         try:
-            with requests.get(moa.object_url(eid), timeout=120, stream=True) as r:
-                if r.status_code == 200:
-                    data = _read_capped(r, MAX_OBJECT_BYTES + 1)
-                    if len(data) > MAX_OBJECT_BYTES:
-                        raise OSError(f"{moa.object_url(eid)}: larger than {MAX_OBJECT_BYTES} B")
-                    return data
-                if r.status_code not in RETRY_STATUS:
-                    raise OSError(f"{moa.object_url(eid)}: HTTP {r.status_code}")
-        except (requests.ConnectionError, requests.Timeout):
+            r = requests.get(moa.object_url(eid), timeout=120)
+            n = r.headers.get("Content-Length")
+            plain = r.headers.get("Content-Encoding", "identity") == "identity"
+            if r.status_code == 200 and (n is None or not plain or len(r.content) == int(n)):
+                return r.content  # a truncated plain body is retried
+            if r.status_code not in RETRY_STATUS and r.status_code != 200:
+                raise OSError(f"{moa.object_url(eid)}: HTTP {r.status_code}")
+        except (
+            requests.ConnectionError,
+            requests.Timeout,
+            requests.exceptions.ChunkedEncodingError,
+        ):
             pass
         if attempt < 6:
             time.sleep(delay * (1.0 + random.random()))
