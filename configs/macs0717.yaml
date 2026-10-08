@@ -1,0 +1,91 @@
+# MACS J0717.5+3745 (Hubble Frontier Fields) lensing cluster, NIRCam imaging from VENUS (program 6882,
+# PI Fujimoto), observation 29, association t063. Found with one MAST query_criteria (3' cone around
+# 109.3864 +37.7550, NIRCAM/IMAGE, calib_level 3) on 2026-10-08: it is the only public level-3 NIRCam
+# association there, and its F200W s_region contains the cluster centre. 10 bands, all PUBLIC
+# (observed 2025-11-02, released 2025-11-03). DJA v7 has no MACS0717 mosaic or catalog (index.html,
+# 2026-10-08), so there is no matched_photometry block and no DJA photo-z.
+# `stages:` is identical to configs/reference_sample.yaml. Field note: docs/fields/macs0717.md.
+name: macs0717_v1
+
+archive:
+  collection: JWST
+  calib_level: 3
+  data_rights: PUBLIC
+  product_subgroups: [CAT, I2D]
+
+samples:
+  - id: macs0717_nircam
+    role: science
+    description: MACS J0717.5+3745 lensing cluster, VENUS NIRCam imaging (program 6882, observation 29)
+    proposal_id: "6882"
+    instrument_name: NIRCAM/IMAGE
+    ref_band: F200W
+    obs_ids:
+      - jw06882-o029_t063_nircam_clear-f090w
+      - jw06882-o029_t063_nircam_clear-f115w
+      - jw06882-o029_t063_nircam_clear-f150w
+      - jw06882-o029_t063_nircam_clear-f200w
+      - jw06882-o029_t063_nircam_clear-f210m
+      - jw06882-o029_t063_nircam_clear-f277w
+      - jw06882-o029_t063_nircam_clear-f300m
+      - jw06882-o029_t063_nircam_clear-f356w
+      - jw06882-o029_t063_nircam_clear-f410m
+      - jw06882-o029_t063_nircam_clear-f444w
+
+cloud:
+  s3_bucket: stpubdata
+  # Verified for programs 2736, 1345, 1176 (o241) and 6882 (o029) level-3 products.
+  l3_key_pattern: "jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}"
+
+stages:
+  catalog:
+    merge_radius_arcsec: 0.1
+  quality:  # D-011; thresholds are assumptions
+    grid_arcsec: 1.0       # coarse WHT map cell size (one S3 row read per cell row)
+    min_rel_weight: 0.5    # x median positive WHT
+    min_edge_arcsec: 1.0
+    max_artifact_ci: 1.45  # CI_50_30 below this is sharper than the PSF (S/N >= 3 only)
+    min_ranked: 20         # fewer survivors -> gate considered unusable, rank ungated
+    min_detection_snr: 5   # D-014: best-band aper50 S/N floor (dropouts detected redward pass)
+    # D-014: single-band detections need confirmation by a matched-photometry match; samples
+    # without matched photometry (MIRI, CEERS today) drop all of them (gates differ per sample).
+    require_multiband: true
+  classify:  # D-012; stars are ranked as their own stratum '<sample>-stars'
+    services: [gaia, simbad]   # bulk CDS XMatch over all sources (~8 s per sample)
+    radius_arcsec: 0.5
+    gaia_radius_arcsec: 0.3    # any Gaia DR3 source this close counts as the star itself
+    star_top_k: 10
+    min_stars: 5
+    extended_veto: true    # D-025: catalogue 'stars' too extended in DJA r50 are galaxies
+    # D-015: point-like (DJA detection-image r50 within 20% of the catalogued stars' median)
+    # sources with ordinary stellar colours join the stars; samples need matched photometry.
+    stellar_locus:
+      calib_mag_range: [20.0, 22.5]
+      r50_tolerance: 0.2   # D-016: r50 <= 1.2 r50_psf (one-sided)
+      r50_floor: 0.5       # D-016: noise floor, r50 >= 0.5 r50_psf
+      mag_max: 24.0
+      colours: [[f150w, f444w], [f200w, f356w]]
+      colour_pad: 0.3
+      min_ref_stars: 10
+  features:
+    daofind_max_ci: 1.8   # D-013: DAOFind sharpness/roundness only for point-like sources
+  rank:
+    methods: [robust_z, isolation_forest, lof]
+    random_state: 0
+  cutouts:
+    top_k: 20
+    size_arcsec: 3.0
+    bands: [F200W]
+    screen_low_weight: true  # D-021: re-apply min_rel_weight with the cutout's own core weight
+    spike:                 # D-018: hexagonal-spike flag on NIRCam cutouts (ASSUMPTION thresholds)
+      radii_arcsec: [0.2, 0.8]
+      search_arcsec: 0.3
+      threshold: 3.0
+      screen: true         # D-019: drop flagged sources with stellar colours from galaxy top k
+      host_annulus_arcsec: [0.3, 0.6]   # D-020: ring/peak host test around the spike peak
+      host_ratio_max: 0.004             # D-020: below this no host light -> star-dominated, screened
+      host_exempt_colour: [f150w, f444w, 1.0]  # D-025: redder spiky sources are not stars; kept
+  crossmatch:
+    top_k: 20
+    radius_arcsec: 1.0
+    services: [simbad, ned, gaia]
