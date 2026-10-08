@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W1/W2 in published lens catalogues: no dark deflector (D-056)
+- Worktree worker: lenscat (32,838), Euclid Q1 Discovery Engine (2,584) and SuGOHI (3,961) merged into 35,862 systems
+  (`src/jwst_anomaly/lenscats.py`, `scripts/w12_lenscats.py`; all pinned by sha256). 20,986 galaxy-scale; 20,663
+  covered by Legacy Surveys DR10; 1,180 without an extended Tractor source within 1.5″.
+- All 1,180 explained (cheapest first): position errors / rounding / Euclid host or submm centroids (484), a galaxy
+  bright enough to be the lens within 5″ (304), lens blended with quasar images or a compact lens (330), masks (55),
+  published lens z (4), cluster (1), no depth (1), rejected by its discovery paper (1). 0 unexplained. ~230 cutouts
+  inspected, incl. 32 random controls.
+- 95 % limits on the dark-deflector fraction (zero events): f_dark < 8.2 × 10⁻³ among lenses found by quasar or
+  submm/radio searches (typical lens-light model; 0.14 conservative) — the only selections able to find a lens with
+  no galaxy; < 1.5 × 10⁻⁴ over all galaxy-scale lenses (but galaxy-selected finders cannot see dark lenses).
+  W1 geometry not testable (no catalogue publishes image positions).
+- **Failed approaches (rules):** Data Lab TAP takes no table uploads or q3c (batch 300 box ORs per query); the
+  Lemon database returned 500 (use lenscat's copy); lenscat types cluster-survey entries as "galaxy" with cluster
+  positions, drops AGEL declination degrees, has SPT rows off by up to 1.7° and PS1 positions rounded to RA seconds,
+  and keeps rejected candidates; "no lens redshift" ≠ "no lens"; point-source-only matches are undecided, not dark.
+- Wall time: ~1 h 45 min (32 min of Data Lab TAP queries, now cached).
+
 ## 2026-10-08: W1 shear (aperture-mass) screen: four clusters null; limits 5–8× stronger than radial (D-053)
 - Cloud run. `exotic_screens.py shear` builds D-050: PSF-deconvolved catalogue ε, cluster shear removed, spike
   segments vetoed, Schirmer 10″ aperture-mass S/N map, rotation null, B-mode check. `scripts/inject_shear.py` reuses
