@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-08: Orphan-pair null (e) fixed, companion-aware null (f): no deep-field excess (D-054)
+## 2026-10-08: Orphan-pair null (e) fixed, companion-aware null (f): no deep-field excess (D-055)
 - Cloud run. Hypothesis: the D-051 flanking-field orphan excess (246 vs 211, P = 0.010) comes from null (e)'s
   colour cell (member i only, non-finite colours in the 0–0.3 bin) or from physical companions the 10–30″
   reference misses.
@@ -14,6 +14,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   tighten by ×0.76 (docs/exotic_limits.md). Orphan set unchanged, so D-051's inspected contact sheets stand.
 - Not separated: the shares of the cell changes.
 - **Handoff:** W2 next is the segmentation-map same_galaxy rule (TASKS "Now" 1); PR #78 (W1 shear) in flight.
+## 2026-10-08: Survey-agnostic signature layer; any public dataset in scope (D-054)
+- Owner direction: find evidence of traversable wormholes / negative-mass objects or warp-drive spacetimes in any
+  public dataset. `jwst_anomaly.signatures` registers W1/W2/W3/W5 (prediction, injection, screens, ordinary
+  mimics, limits) and defines the `LightCurveSurvey` / `CatalogueSurvey` adapters.
+- Reuse-check: MulensModel (extra `mulens`) for ordinary microlensing fits; OGLE-IV Mróz et al. 2019/2020 samples
+  first for W3 (with published efficiencies), then Gaia DR3 `vari_microlensing`, then KMTNet; lens catalogues
+  (lenscat, Euclid Q1, SuGOHI) for W1/W2. No published survey light-curve search for negative-mass or Ellis
+  events exists, so a W3 limit would be new (owner first). OGLE EWS use waits for the owner (its terms).
+- **Handoff:** W3 re-analysis of the Mróz OGLE-IV samples (TASKS "Now" 1).
 
 ## 2026-10-08: W3 multi-epoch dimming / inverted-microlensing screen: null, limits (D-052)
 - Worktree worker: `scripts/dimming_screen.py` cross-matches per-epoch level-3 catalogues (F200W + F444W), flags

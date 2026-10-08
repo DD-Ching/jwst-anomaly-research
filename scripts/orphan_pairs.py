@@ -36,8 +36,8 @@ Steps (every threshold is an ASSUMPTION; defaults below):
    the geometric class rules put in that class. (c) The match rate among photo-z-overlapping far
    pairs times the photo-z-overlapping close pairs tests whether an excess is just redshift
    clustering (physical neighbours share SEDs). (d) is (c) at 3-6" and (e) is (c) conditioned on
-   the pair's S/N, size and both members' colours (``pair_cells``; D-051, D-054). (f) is (e) with
-   the 3-6" pairs of (d) as reference: a companion-aware null (D-054).
+   the pair's S/N, size and both members' colours (``pair_cells``; D-051, D-055). (f) is (e) with
+   the 3-6" pairs of (d) as reference: a companion-aware null (D-055).
 5. ``--cutouts``: F150W/F277W/F444W cutouts of the top orphans (S3 byte ranges of MAST level-3
    ``_i2d`` files) on one contact sheet, plus a lens-model check (CATS map magnification and
    parity at both members; deep fields: the catalogue magnification).
@@ -758,7 +758,7 @@ def search(cat: Table, z_cluster: float, images: Table, n_shift: int = 20, seed:
     src = source_cells(sub)
     key_c = pair_cells(src, m)
     summary["null_e_conditioned"] = conditioned_null(key_c, m, pair_cells(src, far), far, counts)
-    # (f) companion-aware (D-054): null (e) with the 3-6" pairs of null (d) as reference, where
+    # (f) companion-aware (D-055): null (e) with the 3-6" pairs of null (d) as reference, where
     # physical companions (satellites, groups) are common and lensing by galaxies is not.
     summary["null_f_near_conditioned"] = conditioned_null(
         key_c, m, pair_cells(src, near), near, counts
@@ -778,7 +778,7 @@ CELL_RADIUS = (0.4, 0.6, 0.9)  # larger member's aperture radius, arcsec (ASSUMP
 CELL_COLOUR = (0.0, 0.3, 0.6)  # log10(LW / SW flux) bin edges of each member (ASSUMPTION)
 SW_BANDS = ("F090W", "F115W", "F150W")
 N_COLOUR = len(CELL_COLOUR) + 2  # colour bins per member: len(edges) + 1, plus one for NaN
-MIN_CELL_REF = 5  # z-overlapping reference pairs a cell needs for its own rate (ASSUMPTION; D-054)
+MIN_CELL_REF = 5  # z-overlapping reference pairs a cell needs for its own rate (ASSUMPTION; D-055)
 
 
 def source_colours(sub: Table) -> np.ndarray:
@@ -806,7 +806,7 @@ def source_cells(sub: Table) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
 def pair_cells(src: tuple[np.ndarray, np.ndarray, np.ndarray], pairs: Table) -> np.ndarray:
     """Integer cell of each pair for nulls (e)/(f): S/N x size x colour bins (see CELL_*).
 
-    ``src`` is ``source_cells`` of the selected rows. Symmetric in the pair (D-054): the colour
+    ``src`` is ``source_cells`` of the selected rows. Symmetric in the pair (D-055): the colour
     part is the unordered pair of the two members' colour bins, and a non-finite colour has its
     own bin (D-051 put it in 0-0.3 with real colours)."""
     snr, rad, cb = src
