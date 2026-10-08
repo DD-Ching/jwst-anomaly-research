@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 OGLE disk re-fit with bounded parallax: still null (D-058)
+- Cloud run. ASSUMPTION `Params.pie_max = 5`: PAR fits with |π_E| > 5 are rejected in every fit and vetting refit
+  (the unbounded fits reached π_E ~ 30–1,400). Disk (460 events, 376 s): best ordinary PSPL 408 / PAR 52 / FSPL 0;
+  36 of 368 PAR fits sit on the bound; ΔBIC(min exotic) 5/50/95 % = −4.0 / 3.6 / 6.9.
+- 7 flags (was 6; new GD1217.10.8703 at ΔBIC −10.0, `E2pos`), **0 survive** `vet` (all tests complete). The new flag
+  is four post-peak points 0.15–0.35 below baseline that neither model fits; per-season offsets remove it (ΔBIC 0.9).
+  Contact sheet inspected.
+- Absorption check (simulated: 40 E2pos/N1neg injections, 700 uniform epochs, white noise σ = 0.05–0.3): flags 25
+  bounded vs 25 unbounded; ΔBIC shifts ≤ 0.46. On this cadence unbounded parallax does not absorb exotic signals,
+  so the bound is a physical prior, not a sensitivity gain. Not tested: seasonal gaps and correlated systematics.
+- Environment: install the `mulens` extra (`-e ".[dev,cloud,mulens]"`); without MulensModel `fit` silently skips PAR.
+- **Next:** bulge `fit` in chunks or locally, then `vet` / `sheet`; `inject` / `limit` with season-drift vetting.
+
 ## 2026-10-08: W1/W2 in published lens catalogues: no dark deflector; weak limits (D-056)
 - Worktree worker: lenscat (32,838), Euclid Q1 Discovery Engine (2,584) and SuGOHI (3,961) merged into 35,862 systems
   (`src/jwst_anomaly/lenscats.py`, `scripts/w12_lenscats.py`; pinned by sha256). Deflector test in Legacy Surveys
