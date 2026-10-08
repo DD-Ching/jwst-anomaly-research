@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-08: W1 shear (aperture-mass) screen: four clusters null; limits 6–11× stronger than radial (D-053)
+## 2026-10-08: W1 shear (aperture-mass) screen: four clusters null; limits 6–12× stronger than radial (D-053)
 - Cloud run. `exotic_screens.py shear` builds D-050: PSF-deconvolved catalogue ε, cluster shear removed, spike
   segments vetoed, Schirmer 10″ aperture-mass S/N map, rotation null, B-mode check. `scripts/inject_shear.py` reuses
   D-049's W1 painting.
@@ -13,15 +13,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   were the cause: the veto (77–178 segments per field) brought them to 3.48 / 3.46 and 3.39. B-mode extremes still
   beat the rotation null in three fields, so an E peak must also beat the field's max |S_×| (post hoc,
   conservative). None passes both.
-- Injections (200 per field and mass; spike rows never painted): 49 / 243 / 447 of 800 at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉ (radial 8 / 84 /
-  156 of 1,600); 1 at 2 × 10¹¹, 0 at 2 × 10¹⁰. 95 % limits 5.3 × 10³ / 1.1 × 10³ / 6.0 × 10² deg⁻² (radial 6.1 × 10⁴ /
+- Injections (200 per field and mass; spike rows never painted): 50 / 232 / 442 of 800 at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉ (radial 8 / 84 /
+  156 of 1,600); 1 at 2 × 10¹¹, 0 at 2 × 10¹⁰. 95 % limits 5.2 × 10³ / 1.2 × 10³ / 6.0 × 10² deg⁻² (radial 6.1 × 10⁴ /
   7.0 × 10³ / 4.0 × 10³). docs/exotic_limits.md.
 - **Failed approaches (rules):** subtracting the full model g from catalogue moments (leaves a W1-signed radial
   residual); any radial-alignment statistic without the spike veto; trusting the rotation null without a B-mode
   check; point-mass 1/x² and top-hat filters (lost to Schirmer 10″ in injections).
 - Data: the DJA SMACS v7.4 and El Gordo v7.0 photo-z tarballs return 404 (2026-10-08), so these fields are out. MAST
   catalogues and CANUCS DR1 catalogues (~30 MB each) downloaded fine.
-- Wall time: 80–186 s per field for 1,000 injections; the base screen takes 18–26 s (four fields in parallel).
+- Wall time: 64–174 s per field for 1,000 injections; the base screen takes 6–12 s.
 - **Handoff:** TASKS "Now" 1 W1: lower the B-mode floor (PSF anisotropy, blends), more fields, stacking.
 
 ## 2026-10-08: W3 multi-epoch dimming / inverted-microlensing screen: null, limits (D-052)

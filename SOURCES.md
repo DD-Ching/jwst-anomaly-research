@@ -738,6 +738,9 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
 - **Schirmer et al. 2007**, "GaBoDS IX. A sample of 158 shear-selected mass concentration candidates", A&A 462, 875,
   doi:10.1051/0004-6361:20065955, https://arxiv.org/abs/astro-ph/0607022. Shear-shaped filter Q_TANH, eqs. 15–16,
   read from the arXiv full text on 2026-10-08 (D-053).
+- **Seitz & Schneider**, "Steps towards nonlinear cluster inversion through gravitational distortions III. Including
+  a redshift distribution of the sources", https://arxiv.org/abs/astro-ph/9601079 (A&A, 1997), accessed 2026-10-08.
+  Reduced-shear inversion ε_s = (ε − g)/(1 − g* ε) used by `exotic_screens.remove_cluster_shear` (D-053).
 
 ## Deep-field orphan-pair screen (accessed 2026-10-08; D-051)
 

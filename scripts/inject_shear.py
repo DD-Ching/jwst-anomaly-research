@@ -52,6 +52,16 @@ SHEAR_DEFAULTS = es.shear_defaults()
 DEFAULT_FIELDS = ("abell2744", "macs0416", "macs1149", "abell370")
 
 
+def injected_ellipticity(e_src, raw_img, raw_src, r: float) -> np.ndarray:
+    """Corrected ε of a painted image: its source's corrected ε plus R times the lens-induced
+    change of the *measured* moments (raw image minus raw source). The catalogue's moments respond
+    to shear by R (D-053), the painted moments by 1; taking the change between raw moments keeps
+    the cluster shear out of it. An unresolved source counts as round."""
+    e0 = np.nan_to_num(np.asarray(e_src, complex), nan=0.0)
+    d = np.asarray(raw_img, complex) - np.nan_to_num(np.asarray(raw_src, complex), nan=0.0)
+    return e0 + r * d
+
+
 class ShearInjector:
     """The shear screen on one field: real ellipticities cached, recovery checked near the lens."""
 
@@ -63,6 +73,7 @@ class ShearInjector:
             raise ValueError("no grid centre has enough shear sources")
         self.e = self.base["e"]
         self.e_all = self.base["e_all"]
+        self.eps = self.base["eps"]
         self.r = self.base["counts"]["responsivity"]
         xs, ys = model.to_frame(shapes["ra"], shapes["dec"])
         self.xs, self.ys = np.asarray(xs), np.asarray(ys)
@@ -107,11 +118,16 @@ class ShearInjector:
             e_img, _ = es.shear_sources(
                 self.model, img, self.psf, a.min_snr, a.max_g, self.r, spike_veto=False
             )
-            # the catalogue's moments respond to shear by R (D-053), the painted moments by 1:
-            # keep R of the lens-induced change (an unresolved source counts as round; painted
-            # sources are all correctable, so e_src is NaN only when unresolved)
-            e_src = np.nan_to_num(self.e_all[np.asarray(img["_src"], int)], nan=0.0)
-            e_img = e_src + self.r * (e_img - e_src)
+            src = np.asarray(img["_src"], int)
+            a_i = np.asarray(img["semimajor_px"], float)
+            raw_img = es.intrinsic_ellipticity(
+                a_i, a_i * (1.0 - np.asarray(img["ellipticity"], float)), img["pa_obs"], self.psf
+            )
+            e_img = np.where(
+                np.isfinite(e_img),
+                injected_ellipticity(self.e_all[src], raw_img, self.eps[src], self.r),
+                np.nan + 0j,
+            )
             ok = np.isfinite(e_img)
             n_img_used = int(ok.sum())
             xi, yi = self.model.to_frame(img["ra"], img["dec"])

@@ -47,6 +47,18 @@ def test_shear_defaults_come_from_the_screen():
     )
 
 
+def test_injected_ellipticity_keeps_r_of_the_measured_change_only():
+    e_src = np.array([0.1 + 0.05j, np.nan])
+    raw_src = np.array([0.3 + 0.0j, np.nan])  # measured, cluster shear included
+    raw_img = np.array([0.5 + 0.1j, 0.2j])
+    out = ish.injected_ellipticity(e_src, raw_img, raw_src, 0.5)
+    np.testing.assert_allclose(out, [0.1 + 0.05j + 0.5 * (0.2 + 0.1j), 0.5 * 0.2j])
+    # no lens change: the source's corrected shape comes back unchanged, whatever its cluster g
+    np.testing.assert_allclose(
+        ish.injected_ellipticity(e_src[:1], raw_src[:1], raw_src[:1], 0.45), e_src[:1]
+    )
+
+
 def test_a_massive_w1_lens_is_recovered_and_no_lens_is_not():
     model, shapes, args = _field()
     inj = ish.ShearInjector(model, shapes, args, psf_sigma=1.0)

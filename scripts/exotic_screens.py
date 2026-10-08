@@ -656,9 +656,9 @@ def shear_sources(
     shear is R g, with R from :func:`shear_responsivity` on the used rows unless
     ``responsivity`` is given. Diffraction-spike segments (:func:`spike_segments`, with
     ``extra`` stars; D-043) are dropped: spikes point radially at their star, the W1 sign.
-    ``counts["e_all"]`` holds the corrected ε of every resolved row with κ < 1 and |g| < 1 (cuts
-    on S/N, ``max_g`` and lensability not applied) and ``counts["correctable"]`` that κ/|g| mask,
-    for injected sources."""
+    ``counts["e_all"]`` holds the corrected ε of every resolved row with κ < 1 and |R g| < 1
+    (cuts on S/N, ``max_g`` and lensability not applied), ``counts["correctable"]`` that mask and
+    ``counts["eps"]`` the uncorrected ε, for injected sources."""
     snr = np.asarray(shapes["snr"], float)
     a = np.asarray(shapes["semimajor_px"], float)
     b = a * (1.0 - np.asarray(shapes["ellipticity"], float))
@@ -669,6 +669,7 @@ def shear_sources(
         z = np.where(np.isfinite(zp), zp, 2.0)
     g, kappa = cluster_reduced_shear(model, shapes["ra"], shapes["dec"], z)
     lens = lensable_mask(shapes, model.z_lens)
+    n_lensable = int(lens.sum())
     spike = spike_segments(shapes, shapes, extra) if spike_veto else np.zeros(len(shapes), bool)
     lens &= ~spike
     bright = lens & (snr >= min_snr)
@@ -677,13 +678,15 @@ def shear_sources(
     r_err = float("nan")
     if responsivity is None:
         responsivity, r_err = shear_responsivity(np.where(weak, eps, np.nan), g)
-    correctable = (np.abs(g) < 1.0) & (kappa < 1.0)
+    elif not 0.0 < responsivity <= 1.5:
+        raise ValueError(f"shear responsivity R = {responsivity} is outside (0, 1.5]")
+    correctable = (np.abs(responsivity * g) < 1.0) & (kappa < 1.0)
     e_all = np.where(correctable, remove_cluster_shear(eps, responsivity * g), np.nan + 0j)
     e = np.where(weak, e_all, np.nan + 0j)
     counts = {
         "n_rows": len(shapes),
         "n_spike_segments": int(spike.sum()),
-        "n_lensable": int(lens.sum()),
+        "n_lensable": n_lensable,
         "n_snr": int(bright.sum()),
         "n_resolved": int(resolved.sum()),
         "n_weak_shear": int(weak.sum()),
@@ -693,6 +696,7 @@ def shear_sources(
     counts["e_all"] = e_all
     counts["spike"] = spike
     counts["correctable"] = correctable
+    counts["eps"] = eps
     return e, counts
 
 
@@ -799,6 +803,7 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | No
     e_all = counts.pop("e_all")
     spike = counts.pop("spike")
     correctable = counts.pop("correctable")
+    eps = counts.pop("eps")
     use = np.isfinite(e)
     x, y = model.to_frame(np.asarray(shapes["ra"])[use], np.asarray(shapes["dec"])[use])
     gx, gy = radial_grid(args.max_radius, args.grid_arcsec)
@@ -818,6 +823,7 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | No
         "e_all": e_all,
         "spike": spike,
         "correctable": correctable,
+        "eps": eps,
         "use": use,
         "ap": ap,
         "xy": (x, y),
