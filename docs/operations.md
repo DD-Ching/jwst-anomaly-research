@@ -117,8 +117,9 @@ fresh clone of the repository in a fresh session. Routines are a research previe
    [cloud-routine-prompt.md](cloud-routine-prompt.md), which loops cycles for about 40 minutes and adds the
    D-023 mission and the cloud-specific rules. Start slower (daily, then cron `7 */8 * * *`) if your review can't keep up. The minimum
    interval is 1 hour; start a few minutes past the hour, since on-the-hour starts can lag. The WIP cap (3 open agent
-   PRs) limits unmerged work. Runs end after about 40 minutes, so consecutive hourly runs don't overlap; a run
-   leaves alone PRs labelled `local-wip` and branches with a commit in the last 15 minutes.
+   PRs) limits unmerged work. Runs end after about 40 minutes, but runs and local sessions can still overlap, so
+   sessions coordinate through `claimed` / `local-wip` labels and claim comments with a heartbeat every 10 minutes;
+   a claim silent for 20 minutes is stale (cloud-routine-prompt.md "COORDINATION AND DISPATCH").
 4. **Check the first run** with **Run now**, then open the session. A green status only means the session exited
    cleanly. Read the transcript, or ask `/schedule why did my research cycle do nothing?`.
 
@@ -258,6 +259,7 @@ and a stable interface landed first. When they hold, the cycle fans out instead 
 | `batch-<slug>` | One parallel batch, reviewed together |
 | `merge-ready` | A cloud PR that is ready except for the merge itself: merge it |
 | `local-wip` | A local session is working on the PR; cloud runs leave it alone |
+| `claimed` | A session is working on the PR; in flight while its claim comment has a heartbeat under 20 minutes old |
 | `infra`, `science`, `reuse-decision` | Topic |
 
 All these labels already exist in the repository. Agents create new `batch-<slug>` labels with `gh label create`.
