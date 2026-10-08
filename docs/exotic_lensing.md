@@ -50,3 +50,12 @@ publishable science. The search therefore tests lensing consistency in cluster f
 - First, ordinary checks: image positions, parities, flux ratios, and arc orientation against the predicted
   shear.
 - Only then the exotic-specific patterns from the table, after ordinary explanations fail (TASKS "Now (M3)").
+
+## Screens and results (D-031)
+
+`scripts/exotic_screens.py fluxratio` (demagnification) and `radial` (radial arcs around a dark centre). Every
+hit goes to `/vet-candidate`.
+
+| Field | fluxratio (compact images) | radial (convergence centres) | Verdict |
+|---|---|---|---|
+| SMACS 0723 (ICLv2) | 12 consistent; 7.1 under / 7.3 over, an ordinary knot-vs-whole aperture mismatch | 19 against random 14.8; max 5 lines, p_random 0.375 | null |

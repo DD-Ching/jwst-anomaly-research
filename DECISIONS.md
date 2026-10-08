@@ -1492,3 +1492,50 @@ pair. Not a candidate.
 **Revisit if.**
 - Caminha+2023's σ is found stated otherwise (paper or Lenstool input file).
 - A model needs multi-plane lensing or a non-dPIE profile (refused today).
+
+## D-031 Exotic-lens screens: flux ratios (demagnification) and radial arcs around a dark centre (2026-10-08)
+
+**Decision.** `scripts/exotic_screens.py` turns the two testable patterns of docs/exotic_lensing.md into screens.
+Each hit is a candidate for `/vet-candidate`, never evidence.
+- **`fluxratio`** (demagnification, Ellis-wormhole-like lenses):
+  - forced aperture photometry (r = 0.2″, recentred) of every catalogued image in two bands;
+  - `lum_ratio` = (flux / |μ|) over the median of the same quantity for the system's other images;
+  - `underluminous` < 1/3 and `overluminous` > 3, in both bands at ≥ 5σ.
+  - Gates:
+    - compact images only: f(0.2″)/f(0.4″) ≥ 0.6;
+    - |μ| ≤ 50;
+    - achromatic: the bands agree within 0.5 mag, otherwise `chromatic`.
+- **`radial`** (negative convergence):
+  - inputs: elongated background sources (e ≥ 0.5, S/N ≥ 10) that are `anti` to the predicted stretch and that
+    the model does not make radial (radial magnification 1/|1 − κ + γ| < 3);
+  - a grid search (0.5″ grid, 1″ line tolerance, 15″ line length) finds connected regions where at least 3
+    major axes meet;
+  - such a region with no catalog source within 1″ is a dark-centre candidate;
+  - significance: the same search with randomised position angles (200 draws).
+- All thresholds are ASSUMPTIONs (the script's module constants and CLI defaults).
+
+**Alternatives rejected.**
+- Fixed-aperture flux ratios on all images (**failed approach**, SMACS). A resolved arc's aperture flux follows its
+  surface brightness, which lensing conserves, not |μ|. High-μ arcs therefore look underluminous and low-μ
+  counter-images overluminous: systems 5 and 10 gave ratios of about 0.4 against about 4. The compactness gate
+  removes this.
+- Counting every grid point over threshold as a convergence centre: plateaus inflate the count (164 against a
+  random 102). One peak per connected region is used instead.
+
+**Evidence** (SMACS 0723, ICLv2, F150W/F444W `jw02736-o001_t001`, 2026-10-08; `derived`).
+- **`fluxratio`:** 60 images:
+  - 38 resolved, 8 untestable, 12 consistent;
+  - 1 underluminous (7.1, μ 42.7, ratio 0.22/0.28) and 1 overluminous (7.3, μ 7.4, ratio 4.5/3.6).
+  - Cutouts: 7.1 and 7.2 are single knots on a long, thin clumpy arc, and 7.3 is the compact counter-image that
+    contains all the knots. This is an ordinary aperture mismatch with μ near a critical curve.
+  - **Result: no demagnification candidate.**
+- **`radial`** (F200W catalog, DJA photo-z):
+  - 224 elongated sources; 45 `anti`; none predicted radial by the model;
+  - 19 convergence centres (14 without a catalog source within 1″), against 14.8 ± (p95 22) for random angles;
+  - the strongest centre has 5 lines, and random angles give ≥ 5 in 37.5 % of draws.
+  - **Result: consistent with chance; no dark-centre candidate.**
+
+**Revisit if.**
+- Total (deblended, model-subtracted) fluxes become available for resolved arcs. That would test the 38 resolved
+  images.
+- A field has many more `anti` arcs, or a centre reaches p_random < 0.01.
