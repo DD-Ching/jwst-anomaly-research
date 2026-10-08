@@ -711,9 +711,20 @@ def neighbours_of(ev: Table, eid: str, radius_px: float = NEIGHBOUR_PX) -> list[
     return [str(x) for x in ev["event_id"][same & (d < radius_px) & (ev["event_id"] != eid)]]
 
 
+def check_complete_fits(fits: Table) -> None:
+    """Vet only a fit table of every pre-screen pass: a chunk table (``fit --chunk`` writes one
+    before `merge-chunks`) or a ``--limit`` run would turn a partial screen into a null result."""
+    if fits.meta.get("chunk", ""):
+        raise SystemExit(f"fit table holds chunk {fits.meta['chunk']} only; run merge-chunks")
+    pre = Table.read(out_dir() / f"prescreen_{FIELD}.ecsv")
+    if sorted(map(str, fits["event_id"])) != sorted(map(str, passes(pre)["event_id"])):
+        raise SystemExit("fit table does not hold exactly the pre-screen passes; refit")
+
+
 def run_vet(procs: int) -> Path:
     field = moa.MoaField(FIELD)
     fits = Table.read(out_dir() / f"fits_{FIELD}.ecsv")
+    check_complete_fits(fits)
     ok = no_error(fits)
     flags = fits[ok & (np.asarray(fits["dbic_min"], float) < P.flag_dbic)]
     ev = field.events()
@@ -759,6 +770,7 @@ def run_vet(procs: int) -> Path:
     rec = {
         "provenance": "derived",
         "n_fit": len(fits),
+        "fit_errors": sorted(map(str, fits["event_id"][~ok])),  # unscreened: no null limit
         "n_flags": len(flags),
         "wall_time_s": time.time() - t1,
         "variable_xmatch": var,
@@ -976,8 +988,11 @@ def run_limit() -> Path:
     open_flags = [o["event_id"] for o in vet["flags"] if o.get("survives")]
     if open_flags:
         raise SystemExit(f"no zero-event limit: flags survive: {open_flags}")
+    if vet.get("fit_errors", ["vetting record predates fit_errors"]):
+        raise SystemExit(f"no zero-event limit: passes without a fit: {vet.get('fit_errors')}")
     inj = Table.read(out_dir() / f"injections_{FIELD}.ecsv")
-    inj = inj[no_error(inj)]
+    if not no_error(inj).all():  # dropping them would bias the efficiency upward
+        raise SystemExit(f"{int((~no_error(inj)).sum())} injections failed; rerun inject")
     n_s, n_lo, n_hi = moa.star_count_estimate(moa.CUT0_PER_FIELD[22])
     years = (moa.T_END - moa.T_START) / 365.25
     frac = lf_fraction_injected()

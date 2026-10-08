@@ -178,3 +178,28 @@ def test_merge_chunks_joins_complete_chunks_and_refuses_bad_ones(tmp_path, monke
     chunk(0, 1, passes[:-1])
     with pytest.raises(SystemExit, match="exactly its pre-screen passes"):
         wm.merge_chunks(1)
+
+
+def test_vet_and_limit_refuse_partial_or_failed_inputs(tmp_path, monkeypatch):
+    monkeypatch.setattr(wm, "out_dir", lambda: tmp_path)
+    ids = [f"gb22-R-1-0-{i}" for i in range(4)]
+    pre = Table({"event_id": ids, "z_min": [-20.0] * 4, "s_min": [-9.0] * 4, "z_min2": [0.0] * 4})
+    pre["error"] = [""] * 4
+    pre.write(tmp_path / "prescreen_gb22.ecsv")
+    fits = Table({"event_id": ids[:2]})
+    fits.meta["chunk"] = "1/2"
+    with pytest.raises(SystemExit, match="chunk 1/2 only"):
+        wm.check_complete_fits(fits)
+    fits.meta["chunk"] = ""
+    with pytest.raises(SystemExit, match="exactly the pre-screen passes"):
+        wm.check_complete_fits(fits)
+    wm.check_complete_fits(Table({"event_id": ids[::-1]}))  # complete: no error
+    vet = {"flags": [], "fit_errors": ["gb22-R-1-0-3"]}
+    (tmp_path / "vetting_gb22.json").write_text(wm.json.dumps(vet))
+    with pytest.raises(SystemExit, match="passes without a fit"):
+        wm.run_limit()
+    vet["fit_errors"] = []
+    (tmp_path / "vetting_gb22.json").write_text(wm.json.dumps(vet))
+    Table({"kind": ["W3", "W3"], "error": ["", "boom"]}).write(tmp_path / "injections_gb22.ecsv")
+    with pytest.raises(SystemExit, match="1 injections failed"):
+        wm.run_limit()
