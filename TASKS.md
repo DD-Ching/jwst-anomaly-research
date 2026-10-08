@@ -5,9 +5,11 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 
 ## Now (owner focus 2026-10-08: wormhole / negative-mass and warp signatures only; D-047)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
-   - W1 through `exotic_screens.py radial` on the screened fields: recovery vs θ_E (0.3″, 1″, 3″) → upper limit on
-     negative-mass lenses per deg²;
-   - W2 through `orphan_pairs.py` (D-045), and the dark-lens search extended to non-cluster deep fields;
+   - W1: `radial` is blind at θ_E ≤ 1″ (D-049, limits only ≥ 3″). Next: a W1-specific screen (collinear radial
+     image pairs flanking an empty centre, orientation against the candidate centre, local null), benchmarked with
+     `scripts/inject_radial.py`; then pixel-level injections; other lens redshifts → volume density vs Takahashi &
+     Asada; Abell 2744 radial numbers in docs/fields/abell2744.md to the post-D-034 result (134 arcs, 5 lines, p 0.505);
+   - W2 through `orphan_pairs.py` (D-048), and the dark-lens search extended to non-cluster deep fields;
    - W3: a dimming / vanished-source class for multi-epoch fields (El Gordo, MACS0416 flashlights, NEXUS, JADES);
      ≥ 3 epochs for the spike-dip-spike shape; leave the Sunrise transient track to its owner run;
    - W5: counts N(>S) around `radial` centres.
@@ -29,7 +31,11 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
    - exotic screens (D-031, D-034, D-036–D-038, D-040–D-043): SMACS, El Gordo, Sunrise (radial), Abell 2744,
      MACS1149, MACS0717, MACS0416, Abell 370 and Abell S1063 (radial) null. All six HFF clusters are screened. Next:
-     - a two-plane option in `LensModel` (D-042 used scratch code): check flagged extra images for non-member deflectors;
+     - multi-plane checks are in the library (D-046, `LensModel.split_planes`); a `--plane NAME=Z[:SIGMA]` option for
+       `lens_consistency.py images/validate` is next;
+     - orphan pairs (D-048, null): injection-recovery of simulated dark-lens pairs (limit per deg²); CANUCS segmentation
+       maps for the same-galaxy test; blending model for pairs < 1″; re-run on Abell 2744 (UNCOVER), MACS0417, MACS1423;
+       MACS1149 image list when CANUCS v2 is out;
      - CANUCS models pinned (D-044: `macs0416-canucs`, `abell370-canucs`); next, the 100 MCMC sample maps for μ spreads;
      - `radial`: low-weight veto (relative WHT < 0.5) or aper50 S/N floor; pass `--spike-stars` (Gaia, D-043) on every
        field and re-run earlier fields' radial screens with it;
@@ -40,7 +46,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1
        photo-z; fix system 16's z (spectroscopic z, or forced photometry on its far-image track); evaluate the CANUCS
        lens models (see the CANUCS item above);
-     - `bayes.dat` position spreads; the UNCOVER v2.0 cross-check for Abell 2744.
+     - `bayes.dat` position spreads (`posterior`, D-045) as `forced_check` search radii; the UNCOVER v2.0 cross-check
+       for Abell 2744.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;
@@ -48,7 +55,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      (82.53 vs 80.22; 146.64 vs 146.60). No image-position anomaly. Next:
      - `images --forced-image`: done for El Gordo (D-034) and Abell 2744 (D-036); 700.1 needs a finer z scan;
      - search radii from `bayes.dat` instead of a fixed 1″;
-     - Abell 2744 multiplicity residual (D-030): do `bayes.dat` samples split 3.2a/b, 34.1a/b, 700.1a/b?
+     - ~~Abell 2744 multiplicity residual~~ — done (D-045): model resolution at folds. Next: `bayes.dat` μ errors in
+       `fluxratios` (Abell 2744 chain validated; El Gordo's `Chi2` column not understood);
      - El Gordo magnification-map check (CDS `magnification_best_fit_z2.fits`) as a `validate` map test.
    - Sunrise: RELICS or Scofield+2025.
    Field follow-ups (docs/fields/*.md):
