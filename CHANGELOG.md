@@ -2,6 +2,34 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W1 shear (aperture-mass) screen: four clusters null; limits 5–8× stronger than radial (D-053)
+- Cloud run. `exotic_screens.py shear` builds D-050: PSF-deconvolved catalogue ε, cluster shear removed, spike
+  segments vetoed, Schirmer 10″ aperture-mass S/N map, rotation null, B-mode check. `scripts/inject_shear.py` reuses
+  D-049's W1 painting.
+- **Validation on known signals.** Measured ε along the cluster model's g rises with |g| (MACS0416, Abell 2744), with
+  responsivity R = 0.41–0.48, not 1. The screen now removes R g; injected images keep R of their lens shear.
+- **Real fields** (Abell 2744, MACS0416, MACS1149, Abell 370; 30.2 arcmin²): **null**. The first run (no spike veto)
+  had Abell 370 E 4.51 / B 4.68 and Abell 2744 E 3.92, all p ≤ 0.01 against the rotation null. Diffraction spikes
+  were the cause: the veto (77–178 segments per field) brought them to 3.48 / 3.46 and 3.39. B-mode extremes still
+  beat the rotation null in three fields, so an E peak must also beat the field's max |S_×| (post hoc,
+  conservative). None passes both.
+- Injections (200 per field and mass; spike rows never painted): 33 / 197 / 405 of 800 at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉ (radial 8 / 84 /
+  156 of 1,600); 1 at 2 × 10¹¹, 0 at 2 × 10¹⁰. 95 % limits 7.7 × 10³ / 1.3 × 10³ / 6.5 × 10² deg⁻² (radial 6.1 × 10⁴ /
+  7.0 × 10³ / 4.0 × 10³). docs/exotic_limits.md.
+- **Failed approaches (rules):** subtracting the full model g from catalogue moments (leaves a W1-signed radial
+  residual); any radial-alignment statistic without the spike veto; trusting the rotation null without a B-mode
+  check; point-mass 1/x² and top-hat filters (lost to Schirmer 10″ in injections).
+- Data: the DJA SMACS v7.4 and El Gordo v7.0 photo-z tarballs return 404 (2026-10-08), so these fields are out. MAST
+  catalogues and CANUCS DR1 catalogues (~30 MB each) downloaded fine.
+- Wall time: 58–168 s per field for 1,000 injections; the base screen takes 6–13 s. Review rounds changed the injection model (spike and
+  near-core and unresolved rows not painted, lens change from raw moments); every re-run kept the four real fields
+  null. The counts moved from 59/264/459 (first model) to 33/197/405 (final); not painting unresolved rows was the
+  largest step (from 50/238/449; docs/exotic_limits.md caveats).
+- Final review: painted images now face the spike veto too (409 → 405 at 2 × 10¹³ M☉; limits unchanged at two
+  digits). `psf_sigma_px` (now shared with `inject_radial.py`) raises when no S/N > 50 row has a size, where it
+  returned NaN. Left as is (maintainability only): the E/B summary is computed in both `cmd_shear` and
+  `inject_shear.run_field`; the null recomputes the |e|² noise term per draw.
+- **Handoff:** TASKS "JWST focus" 1 W1: lower the B-mode floor (PSF anisotropy, blends), more fields, stacking.
 ## 2026-10-08: Orphan-pair null (e) fixed, companion-aware null (f): no deep-field excess (D-055)
 - Cloud run. Hypothesis: the D-051 flanking-field orphan excess (246 vs 211, P = 0.010) comes from null (e)'s
   colour cell (member i only, non-finite colours in the 0–0.3 bin) or from physical companions the 10–30″

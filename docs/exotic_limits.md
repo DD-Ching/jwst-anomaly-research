@@ -209,6 +209,94 @@ otherwise the same.
 - Both plots look as the simulator predicts: an empty umbra apart from unlensed foreground and member rows, inner
   images bunched near the centre, and outer images stretched radially.
 
+## W1 negative-mass lenses (shear screen)
+
+D-053 (design D-050); `exotic_screens.py shear`, `scripts/inject_shear.py`, tests in `tests/test_exotic_screens.py`
+and `tests/test_inject_shear.py`. Same lenses and painting as the radial section (D-049, `paint_lens`), measured
+with a catalogue aperture-mass map instead of converging arcs.
+
+### Method (every threshold an ASSUMPTION)
+- **Shapes** (`observed` moments → `derived`): F200W pipeline `_cat.ecsv` second moments, isotropic Gaussian PSF
+  removed (σ = 1st percentile of the S/N > 50 minor axes), ε = (1 − q)/(1 + q) e^{2i PA}. Rows: lensable (D-049
+  rule), not a diffraction-spike segment (`spike_segments`, Gaia stars where the field uses them; D-043), S/N ≥ 10,
+  resolved, cluster model |g| < 0.5 and κ < 1 at the row's photo-z.
+- **Cluster shear.** The measured ε follows the model's reduced shear with a responsivity R ≈ 0.45, not 1
+  (isophotal, unweighted moments). R is fitted per field, Re(ε e^{-i arg g}) against |g| through the origin:
+  Abell 2744 0.451 ± 0.018, MACS0416 0.483 ± 0.034, MACS1149 0.476 ± 0.039, Abell 370 0.414 ± 0.023. The screen
+  removes R g; the residual along g is then −0.009 ± 0.007 (MACS0416) and +0.006 ± 0.004 (Abell 2744). Removing the
+  full g would leave −(1 − R) g, a radial pattern with the W1 sign.
+- **Statistic.** S = −Σ Q e_t / √(Σ Q² |e|² / 2) (Schneider 1996) on a 1″ grid, aperture R_ap = 10″, Schirmer et al.
+  (2007) Q_TANH filter (eqs. 15–16, x_c = 0.15), sources at 1″ ≤ θ ≤ 10″, ≥ 5 per aperture. S > 0 is radial
+  alignment (W1). S_× (cross component) is the B-mode check.
+- **Null.** 200 random rotations of every shape (positions and |e| kept); field maximum per draw.
+- **Spike veto.** Without it (first run), E and B maps were both wider than the rotation null (std 1.01–1.15 vs
+  1.00) with heavy tails (|S| > 3 in 0.06–0.6 % of centres vs 0.02–0.05 %): Abell 370 E max 4.51, B max 4.68 (both
+  p < 0.005), Abell 2744 E 3.92 (p 0.01). Spike segments point radially at their star, the W1 sign. Dropping
+  77–178 segments per field brought Abell 370 to E 3.48, B 3.46 and Abell 2744 to E 3.39.
+- **E/B rule.** B-mode extremes still beat the rotation null in three fields (p 0.005–0.04), so residual shape
+  systematics set the floor. A peak counts only if p_random < 0.05 **and** S exceeds the field's largest |S_×|.
+  Adopted after the first run's results were seen; it is conservative.
+- **Injections.** A painted image's ε is its source's corrected ε plus R times the change of the *measured* moments
+  (image minus source; the catalogue's moments respond to shear by R, the painted moments by 1, and the cluster
+  shear cancels in the difference); only resolved sources (finite deconvolved ε) are painted; |ε| is capped at 0.99. Recovery: the largest S within 2″ of the lens passes the rule above. 200 lenses
+  per field and mass, a fresh rotation null per 10 trials. Spike-segment rows, and rows where the cluster
+  shear cannot be removed (κ ≥ 1, |g| ≥ 1 or |R g| ≥ 1), are never painted (conservative). Painted images that
+  land on a spike axis and point at the star are vetoed as on the real field (`ShearInjector.spike_veto`; the
+  spike axes are estimated with the field's own vetoed segments). This cost 4 of 409 recoveries at 2 × 10¹³ M☉.
+- **Choice of filter** (`simulated` only, 50 injections in MACS0416 and Abell 2744, before the E/B rule and the R
+  correction): Schirmer 10″ recovered 11/50 and 18/50 at 2 × 10¹² M☉; top-hat 6″ 7 and 17; point-mass 1/x² 10″ 3 and
+  9; point-mass 4″ 2 and 8. Schirmer 10″ also led at 8 × 10¹² M☉.
+
+### Real fields (`derived`)
+
+| Field | spike segments dropped | sources used | per arcsec² | S_max (p_rot) | max S_× / max −S_× (p_rot) | E > B? |
+|---|---|---|---|---|---|---|
+| Abell 2744 | 114 | 4,951 | 0.12 | 3.39 (0.58) | 4.21 (0.005) / 3.52 (0.32) | no |
+| MACS0416 | 102 | 1,777 | 0.08 | 3.79 (0.050) | 3.87 (0.04) / 4.04 (0.02) | no |
+| MACS1149 | 77 | 1,399 | 0.06 | 3.40 (0.19) | 3.76 (0.015) / 3.45 (0.16) | no |
+| Abell 370 | 178 | 2,191 | 0.10 | 3.48 (0.20) | 3.37 (0.31) / 3.46 (0.21) | yes, by 0.02 |
+
+No field has an E-mode peak with p_rot < 0.05 that also beats its B-mode extremes: **null**. Abell 370's maximum
+(39.99604, −1.56754, near the screened edge) passes E > B but not the rotation null.
+
+### Recovery efficiency (`derived` from `simulated`; recovered / 200)
+
+| \|M\| (M☉) | θ_E(z_s = 2) | Abell 2744 | MACS0416 | MACS1149 | Abell 370 | radial, all 8 fields (D-049) |
+|---|---|---|---|---|---|---|
+| 2 × 10¹⁰ | 0.27–0.36″ | 0 | 0 | 0 | 0 | 0 / 1600 |
+| 2 × 10¹¹ | 0.85–1.14″ | 0 | 0 | 0 | 1 | 0 / 1600 |
+| 2 × 10¹² | 2.7–3.6″ | 14 | 7 | 3 | 9 | 8 / 1600 |
+| 8 × 10¹² | 5.4–7.2″ | 72 | 50 | 30 | 45 | 84 / 1600 |
+| 2 × 10¹³ | 8.5–11.4″ | 146 | 112 | 74 | 73 | 156 / 1600 |
+
+MACS1149 is lowest (fewest sources per arcsec²). Before the spike veto, with the rotation null alone, the four
+fields recovered 66, 309 and 486 of 800 at the top three masses (biased high by the spike systematics).
+
+### Upper limits (95 %, zero detections; `derived`; four photo-z fields, 30.2 arcmin²)
+
+| \|M\| (M☉) | Σ ε_f A_f (deg²) | Σ(W1) < (deg⁻²) | border-corrected | radial headline (D-049) |
+|---|---|---|---|---|
+| 2 × 10¹⁰ | 0 | no limit | — | no limit |
+| 2 × 10¹¹ | 8.5 × 10⁻⁶ | 3.5 × 10⁵ (one recovery) | 4.0 × 10⁵ | no limit |
+| 2 × 10¹² | 3.9 × 10⁻⁴ | 7.7 × 10³ | 8.4 × 10³ | 6.1 × 10⁴ |
+| 8 × 10¹² | 2.2 × 10⁻³ | 1.3 × 10³ | 1.5 × 10³ | 7.0 × 10³ |
+| 2 × 10¹³ | 4.6 × 10⁻³ | 6.5 × 10² | 7.1 × 10² | 4.0 × 10³ |
+
+**Reading.** The shear screen gives limits 5–8× stronger than `radial` from 20 % less area, but is equally blind
+at ≤ 2 × 10¹¹ M☉ (θ_E ≲ 1″): there the umbra and images cover too few sources per aperture (S/N ≈ 1–2, as D-050
+expected). The best limit is about 5× weaker than Takahashi & Asada's ~120 deg⁻² (radial section). Below 10¹² M☉
+the orphan-pair limits (D-051) remain the only ones.
+
+### Caveats
+- Isophotal catalogue moments, not a weak-lensing shape pipeline: no PSF anisotropy model, no noise-bias or
+  selection calibration beyond the fitted R. The remaining B-mode tails are the price.
+- SMACS 0723 and El Gordo are missing: their DJA photo-z tarballs returned 404 on 2026-10-08.
+- The E/B rule uses one B-mode map per field; the floor is noisy (3.46–4.21 across fields).
+- Injection rows keep the real field's rotation null (only near-lens rows change).
+- Only resolved, correctable rows are lensed in the shear injections; the radial injections (D-049) also lens
+  unresolved rows. The efficiency ratio between the screens mixes screen power with that (painting unresolved rows
+  too gave 50 / 238 / 449 instead of 33 / 197 / 405). The linear ε sum is capped at |ε| = 0.99.
+
 ## W2 / dark-deflector pairs (orphan-pair screen)
 
 D-051. The script is `scripts/inject_pairs.py`, with tests in `tests/test_inject_pairs.py`. The screen is the
