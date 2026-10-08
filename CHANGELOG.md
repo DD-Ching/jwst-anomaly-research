@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: El Gordo lens model reproduces the published magnification maps (issue #68)
+- `validate` now compares Lenstool-par models with published signed μ maps (`mag_map_files`, fetched only by
+  `validate`); `map_check` reports `parity_agree` for signed maps. El Gordo (CDS J/A+A/678/A3, z=2 and z=4, |μ|<10,
+  37-px sub-grid): median |μ| ratio 1.00001 / 1.00001, p95 relative difference 0.04 % / 0.07 %, parity 100 %;
+  χ²pos unchanged (82.53). At full resolution (250,000 points), >20 % mismatches sit only on critical curves or
+  within ~1″ of member cores (0.4″ map pixels).
+- **Handoff:** El Gordo μ and parities are validated. Next, the El Gordo `bayes.dat` `Chi2` column (D-045), then
+  posterior μ spreads in `fluxratios`.
+
 ## 2026-10-08: Orphan image pairs, a blind dark-deflector screen: null (D-048)
 - Worktree worker: `scripts/orphan_pairs.py` looks for SED-matched close pairs with no published system and no visible
   galaxy between them in the CANUCS DR1 catalogues of MACS0416, MACS1149 and Abell 370.

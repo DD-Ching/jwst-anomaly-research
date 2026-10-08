@@ -43,7 +43,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - search radii from `bayes.dat` instead of a fixed 1″;
      - ~~Abell 2744 multiplicity residual~~ — done (D-045): model resolution at folds. Next: `bayes.dat` μ errors in
        `fluxratios` (Abell 2744 chain validated; El Gordo's `Chi2` column not understood);
-     - El Gordo magnification-map check (CDS `magnification_best_fit_z2.fits`) as a `validate` map test.
+     - ~~El Gordo magnification-map check~~ — done (issue #68): `validate` reproduces the z=2 and z=4 maps (median
+       ratio 1.00001, parity 100 % at |μ|<10), so El Gordo μ and parities are validated. The `Chi2` mismatch is in the chain.
    - Sunrise: RELICS or Scofield+2025.
    Field follow-ups (docs/fields/*.md):
    - vet Abell 2744 `5904`, `7987`, `4731`, `264`, `7298`;
