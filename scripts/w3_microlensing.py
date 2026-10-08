@@ -1371,6 +1371,125 @@ def run_vet(sample_key: str, procs: int, binary_lens: bool = True) -> Path:
     return path
 
 
+def feature_coverage(lc: LightCurve, ordinary: dict, exotic: dict, model_o: str, model_e: str):
+    """Is the exotic model's distinguishing feature observed at all?
+
+    On a fine grid, the epochs where the two best models differ by more than 3 median error bars
+    are the "feature" (an umbra edge, a caustic spike, a flat top). Returns its duration, how many
+    real epochs fall inside it, and the Δχ² (exotic − ordinary) inside and outside. A preference
+    built outside the feature is a small change of the overall shape, not a W3 detection.
+    """
+    sig = float(np.median(lc.sf))
+    span = 6 * max(ordinary["tE"], exotic["tE"]) + 100.0
+    tt = np.linspace(ordinary["t0"] - span, ordinary["t0"] + span, 20000)
+    fine = LightCurve(tt, np.ones_like(tt), np.ones_like(tt), lc.ra, lc.dec, lc.event_id)
+    d = np.abs(model_flux(model_e, fine, exotic) - model_flux(model_o, fine, ordinary))
+    big = d > 3 * sig
+    idx = np.searchsorted(tt, lc.t)
+    inside = np.zeros(lc.t.size, bool)
+    ok = (idx > 0) & (idx < tt.size)
+    inside[ok] = big[idx[ok]]
+    dchi = (lc.f - model_flux(model_e, lc, exotic)) ** 2 * lc.w - (
+        lc.f - model_flux(model_o, lc, ordinary)
+    ) ** 2 * lc.w
+    return {
+        "duration_days": float(big.sum() * (tt[1] - tt[0])),
+        "n_epochs": int(inside.sum()),
+        "dchi2_in": float(dchi[inside].sum()),
+        "dchi2_out": float(dchi[~inside].sum()),
+        "max_diff_sigma": float(d.max() / sig),
+    }
+
+
+def jackknife_worst_epochs(
+    lc: LightCurve, ordinary: dict, exotic: dict, model_o: str, model_e: str, n_drop: int = 3
+):
+    """Drop the epochs that contribute most to the exotic preference, one at a time, and refit.
+
+    A preference that rests on one or two measurements is a photometric-outlier explanation, not a
+    light-curve shape. Returns ΔBIC after dropping the 1 … ``n_drop`` most influential epochs.
+    """
+    dchi = (lc.f - model_flux(model_e, lc, exotic)) ** 2 * lc.w - (
+        lc.f - model_flux(model_o, lc, ordinary)
+    ) ** 2 * lc.w
+    order = np.argsort(dchi)  # most negative first: the epochs the exotic model explains better
+    out = []
+    for k in range(1, n_drop + 1):
+        keep = np.ones(lc.t.size, bool)
+        keep[order[:k]] = False
+        sub = lc.subset(keep)
+        ro = optimise(
+            model_o,
+            sub,
+            [
+                (ordinary["t0"], math.log10(ordinary["tE"]), ordinary["u0"])
+                + ((math.log10(ordinary["rho"]),) if model_o == "FSPL" else ())
+                + ((ordinary["pi_E_N"], ordinary["pi_E_E"]) if model_o == "PAR" else ())
+            ],
+            t0_par=ordinary.get("t0_par"),
+        )
+        re_ = optimise(
+            model_e,
+            sub,
+            [(exotic["t0"], math.log10(exotic["tE"]), exotic["u0"], math.log10(exotic["rho"]))],
+        )
+        out.append(re_["bic"] - ro["bic"])
+    return [float(v) for v in out]
+
+
+def run_revet(sample_key: str) -> Path:
+    """Two further tests on the flags that survived ``vet`` (strictly later, so the order holds).
+
+    They need the surviving flags' fits, so they run from ``vetting_<key>.json`` and rewrite it.
+    """
+    path = out_dir() / f"vetting_{sample_key}.json"
+    rec = json.loads(path.read_text())
+    sample = ogle.OgleMrozSample(sample_key)
+    pub = {r["event_id"]: r for r in sample.events()}
+    for o in rec["flags"]:
+        if not o.get("survives") or "res" not in o:
+            continue
+        if any(t[0] == "exotic_feature_sampled" for t in o["tests"]):
+            continue
+        e = pub[o["event_id"]]
+        lc0 = sample.light_curve(o["event_id"])
+        lc = LightCurve.from_mag(
+            lc0["time"],
+            lc0["mag"],
+            lc0["mag_err"],
+            ra=e["ra"],
+            dec=e["dec"],
+            event_id=o["event_id"],
+        )
+        mo, me = o["best_ordinary"], o["exotic"]
+        cov = feature_coverage(lc, o["res"][mo], o["res"][me], mo, me)
+        o["feature"] = cov
+        ok_cov = cov["n_epochs"] >= 3 and cov["dchi2_in"] < P.flag_dbic
+        o["tests"].append(
+            (
+                "exotic_feature_sampled",
+                ok_cov,
+                f"feature {cov['duration_days']:.1f} d, {cov['n_epochs']} epochs inside, "
+                f"Δχ² in {cov['dchi2_in']:.1f} / out {cov['dchi2_out']:.1f}",
+            )
+        )
+        if ok_cov:
+            jk = jackknife_worst_epochs(lc, o["res"][mo], o["res"][me], mo, me)
+            o["jackknife_dbic"] = jk
+            o["tests"].append(
+                (
+                    "jackknife_epochs",
+                    bool(jk[-1] < P.flag_dbic),
+                    "ΔBIC after dropping the 1-3 most influential epochs: "
+                    + ", ".join(f"{v:.1f}" for v in jk),
+                )
+            )
+        o["survives"] = all(ok for _, ok, _ in o["tests"])
+    path.write_text(json.dumps(rec, indent=1, default=float))
+    print(f"wrote {path}; survivors: {[o['event_id'] for o in rec['flags'] if o['survives']]}")
+    return path
+
+
 def contact_sheet(sample_key: str, path_png: Path) -> None:
     """Light curves of the flags with every model curve (for visual inspection)."""
     import matplotlib
@@ -1481,7 +1600,12 @@ def run_limit(per_cell_min: int = 20) -> Path:
                 for a, b in ((0.0, 1.0), (1.0, 1.8), (1.8, 2.0))
             }
             eff_w3 = eps_pub * ratio
+            # with zero recovered injections the sample has no measured W3 sensitivity: the 95 %
+            # Poisson upper bound on the recovery fraction (3 / n) bounds how strong any limit
+            # from these samples could be (`rate95_floor_per_star_yr`), and no limit is claimed.
+            ratio_hi = (3.0 / len(w)) / p_ctrl if (len(w) and p_ctrl > 0) else np.nan
             lim = 3.0 / (exposure * ratio) if ratio > 0 else np.inf
+            lim_floor = 3.0 / (exposure * ratio_hi) if ratio_hi > 0 else np.inf
             mass = (te / einstein_time_days(1.0)[0]) ** 2
             rows.append(
                 {
@@ -1499,6 +1623,8 @@ def run_limit(per_cell_min: int = 20) -> Path:
                     "eff_w3": eff_w3,
                     "exposure_star_yr_pspl": exposure,
                     "rate95_per_star_yr": lim,
+                    "ratio_to_pspl_95hi": ratio_hi,
+                    "rate95_floor_per_star_yr": lim_floor,
                     **admits,
                 }
             )
@@ -1509,7 +1635,9 @@ def run_limit(per_cell_min: int = 20) -> Path:
         assumptions=(
             "W3 event = umbra crossing, u0 < 2 in |ε| Einstein radii; Poisson 95 % for 0 events = "
             "3.0; ε_W3 = ε_pub(t_E) × P(selected ∧ flagged | W3) / P(selected | PSPL, u0 < 1); "
-            "mass: n = 1, D_L = 4 kpc, D_S = 8 kpc, μ_rel = 5 mas/yr (model_prediction)"
+            "mass: n = 1, D_L = 4 kpc, D_S = 8 kpc, μ_rel = 5 mas/yr (model_prediction); with no "
+            "recovered injection, rate95 is inf and rate95_floor uses the 95 % upper bound 3/n on "
+            "the recovery fraction (the strongest limit these samples could give)"
         ),
     )
     path = out_dir() / "limits_bulge2019.ecsv"
@@ -1575,6 +1703,8 @@ def main(argv=None) -> int:
     v = sub.add_parser("vet", help="vet the flags of a fitted sample")
     v.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     v.add_argument("--no-binary-lens", action="store_true")
+    r = sub.add_parser("revet", help="feature-coverage and jackknife tests on the survivors")
+    r.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     c = sub.add_parser("sheet", help="contact sheet of the vetted flags")
     c.add_argument("--sample", default="bulge2019", choices=sorted(ogle.SAMPLES))
     c.add_argument("--out", type=Path, required=True)
@@ -1590,6 +1720,8 @@ def main(argv=None) -> int:
         run_fit(args.sample, args.limit, args.procs, args.fresh)
     elif args.cmd == "vet":
         run_vet(args.sample, args.procs, binary_lens=not args.no_binary_lens)
+    elif args.cmd == "revet":
+        run_revet(args.sample)
     elif args.cmd == "sheet":
         contact_sheet(args.sample, args.out)
     elif args.cmd == "inject":

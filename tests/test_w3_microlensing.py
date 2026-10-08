@@ -163,3 +163,28 @@ def test_fit_checkpoint_drops_a_torn_last_line(tmp_path):
     p.write_text('{"event_id": "a", "x": NaN}\n{"event_id": "b"}\n{"event_id": "c", "x"')
     rows = w3.load_checkpoint(p)
     assert [r["event_id"] for r in rows] == ["a", "b"] and np.isnan(rows[0]["x"])
+
+
+def test_feature_coverage_finds_the_unobserved_caustic_spike():
+    """An exotic fit whose spike falls in an observing gap has no epochs in its feature."""
+    t = np.sort(np.concatenate([_cadence(n=300, span=300.0), _cadence(n=300, span=300.0) + 400]))
+    lc = _synthetic(t, np.ones_like(t), sigma=0.003)  # flat; the gap is 2456300 … 2456400
+    flat = {"t0": 2456350.0, "tE": 1.0, "u0": 50.0, "fs": 0.6, "fb": 0.4}
+    in_gap = {"t0": 2456350.0, "tE": 2.0, "u0": 1.0, "rho": 0.001, "fs": 0.6, "fb": 0.4}
+    cov = w3.feature_coverage(lc, flat, in_gap, "PSPL", "N1neg")
+    assert cov["max_diff_sigma"] > 3 and cov["duration_days"] > 0
+    assert cov["n_epochs"] == 0  # the umbra and both spikes sit inside the 100-day gap
+    on_data = {**in_gap, "t0": 2456280.0}
+    assert w3.feature_coverage(lc, flat, on_data, "PSPL", "N1neg")["n_epochs"] > 3
+
+
+def test_jackknife_removes_a_preference_built_on_one_epoch():
+    t = _cadence(n=400)
+    a = w3.pspl(w3.straight_beta(t, 2456800.0, 25.0, 0.2))
+    lc = _synthetic(t, a, sigma=0.004)
+    i = int(np.argmin(np.abs(lc.t - 2456800.0)))
+    lc.f[i] *= 0.5  # one bad measurement at the peak: an exotic dip would love it
+    res = w3.fit_event(lc, 2456800.0, 25.0, 0.2, models=("PSPL", "N1neg"))
+    jk = w3.jackknife_worst_epochs(lc, res["PSPL"], res["N1neg"], "PSPL", "N1neg")
+    assert jk[-1] > res["N1neg"]["bic"] - res["PSPL"]["bic"]  # the preference weakens
+    assert jk[-1] > w3.P.flag_dbic  # and no longer flags

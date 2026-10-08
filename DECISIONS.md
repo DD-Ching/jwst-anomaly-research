@@ -2785,6 +2785,25 @@ treating a better exotic fit as a candidate without season-systematics tests (al
 GD1279.14.87 and GD1081.21.615; post-peak dips below baseline in BLG979.24.9765 and BLG775.24.26593 that a
 per-season drift absorbs). No rate limit yet: injections are built on bulge light curves only.
 
-**Revisit if.** The bulge fit or injections show the season-drift test also absorbs injected W3 signals (then it
-costs sensitivity and needs a calibrated threshold); or the unbounded parallax fit (π_E up to ~10³ in
-BLG568.12.9169) is shown to absorb injected exotic signals.
+**Amendment (2026-10-08, same day): bulge sample, injections and the selection answer.**
+- **Bulge sample (all 5,790 events): null.** 127 flags (E2pos 96, E2neg 22, N1neg 9; ΔBIC −10.2 … −2788); 0 survive.
+  Free blend per season removes 73 → 14, season drifts → 9, binary source → 7, and two further tests, which need the
+  survivors' fits and therefore run in `revet`, remove the rest: **feature coverage** (≥ 3 epochs where the exotic and
+  the best ordinary model differ by > 3σ, with the Δχ² coming from them) leaves 2, and an **epoch jackknife** (drop the
+  1–3 most influential epochs and refit) leaves 0 (ΔBIC −15.2 → +10.7 and −54.0 → +24.8).
+- **The published samples cannot contain a W3 event.** 0 of 600 injected n = 1, ε < 0 events (t_E 3–300 d,
+  ρ ∈ {0.01, 0.1}, u₀ ~ U[0, 2)) pass the emulated Mróz selection, in every t_E, ρ and u₀ bin, while PSPL controls on
+  the same light curves pass 15–43 % and the fitter flags 35–93 % of the injections. They fail the one-bump, PSPL
+  fit-quality, χ₃₊, three-consecutive-points and blend cuts, four at a time on average. The emulation is stricter than
+  the published selection (63.9 % of the real events pass it), which cannot bridge that gap.
+- **Therefore no W3 rate limit from these samples** (the measured efficiency is 0). The 95 % bound on the recovery
+  fraction (3/60) says even the strongest limit they could give would be 0.8–3.9 × 10⁻⁸ per star per year, against an
+  ordinary rate of 5–25 × 10⁻⁶. A W3 limit needs a search on the OGLE light curves before the PSPL selection, which
+  the published products do not contain (and OGLE EWS terms are still an owner decision, D-054).
+- Evidence: docs/exotic_limits.md "W3 in the OGLE-IV microlensing samples"; survivors inspected on a contact sheet
+  before this entry. Wall time ≈ 5 CPU hours (bulge fit 10,413 s on 4 cores; vet 6,592 s; inject 1,974 s).
+
+**Revisit if.** A light-curve-level OGLE/KMTNet/MOA data set becomes usable (then a real W3 limit is possible, and the
+selection emulation here is the baseline to beat); or the season-offset/drift test is shown to absorb injected W3
+signals at small u₀ (it is applied to injections through `flag_vetted`, which stays at 43–86 %, so it does not now);
+or the unbounded parallax fit (π_E up to ~10³) is shown to absorb injected exotic signals.
