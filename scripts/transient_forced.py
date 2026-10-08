@@ -7,16 +7,26 @@ measures the flux in the same circular aperture, minus a local background annulu
 errors from the ``ERR`` extension. Every result is ``derived``.
 
 ``dmag`` is m(epoch2) − m(epoch1), with the zero point set by a 3-sigma-clipped median over all
-positions. That assumes most candidates are not variable, which holds for catalog-level
-candidates (mostly deblending differences). The aperture sits at each candidate's RA/Dec through
-the cutout WCS, not at the cutout's centre pixel. A candidate is ``confirmed`` when
-|dmag| ≥ ``--min-dmag`` at ≥ ``--min-sigma`` in every band given.
+positions (candidates plus any ``--controls``). That assumes most of them are not variable,
+which holds for catalog-level candidates (mostly deblending differences) and for ordinary
+sources. The aperture sits at each candidate's RA/Dec through the cutout WCS, not at the
+cutout's centre pixel. A candidate is ``confirmed`` when |dmag| ≥ ``--min-dmag`` at
+≥ ``--min-sigma`` in every band given.
 
 Positions from another frame or catalog (e.g. a literature position) can sit 0.1″ off the source,
 and then PSF-wing differences between epochs fake a change (Earendel, docs/fields/sunrise.md).
 ``--recentre-arcsec`` moves the aperture to the source centroid in each band, found in the epoch
 where the source exists (epoch 2 for ``appeared`` candidates, else epoch 1), and measures both
 epochs at that same sky position.
+
+ERR-based errors underestimate the noise of these measurements (1.2–1.5x in Sunrise, D-027).
+``--controls`` measures ordinary sources (a random subset of a catalog, e.g. the epoch-1
+pipeline ``_cat.ecsv``, within ``--control-mag``) the same way. Per band, the robust std
+(1.4826 MAD) of their significances is the noise scale. Candidate significances are divided by it
+(never by less than 1) before thresholding, and the raw values are kept as ``*_sigma_raw``. A band
+with fewer than ``MIN_CONTROLS`` (100) measurable controls stays uncalibrated, with a warning and
+``meta["noise_scale"][band]["calibrated"] = False``. ``changed`` flags every row, controls
+included, that passes the thresholds in every band; ``confirmed`` is the same for candidates only.
 
     python scripts/transient_forced.py --candidates outputs/transients/coincident.ecsv \\
         --band F444W jw02736-o001_t001_nircam_clear-f444w jw06882-o057_t057_nircam_clear-f444w \\
@@ -38,6 +48,8 @@ from astropy.table import Table
 from astropy.wcs import WCS, FITSFixedWarning
 
 from jwst_anomaly import cutouts, pipeline
+
+MIN_CONTROLS = 100  # ASSUMPTION: measurable controls needed per band for a stable noise scale
 
 
 def aperture_flux(
@@ -168,6 +180,53 @@ def compare(
         return dm, dm / sig_dm, sig_flux
 
 
+def robust_std(x: np.ndarray, min_n: int = 10) -> float:
+    """1.4826 x median absolute deviation of the finite values (NaN when fewer than ``min_n``)."""
+    x = np.asarray(x, float)
+    x = x[np.isfinite(x)]
+    if len(x) < min_n:
+        return float("nan")
+    return float(1.4826 * np.median(np.abs(x - np.median(x))))
+
+
+def select_controls(
+    cat: Table,
+    n: int,
+    mag_range: tuple[float, float],
+    avoid_ra: np.ndarray,
+    avoid_dec: np.ndarray,
+    avoid_arcsec: float = 1.0,
+    seed: int = 0,
+) -> Table:
+    """A reproducible random subset of ``n`` catalog sources (``ra``/``dec`` or the pipeline's
+    ``sky_centroid``) as noise controls.
+
+    Uses ``aper_total_abmag`` within ``mag_range`` when the column exists, and drops sources within
+    ``avoid_arcsec`` of any candidate, so a control never measures a candidate. ``meta["mag_cut"]``
+    says whether the magnitude cut could be applied."""
+    if "ra" in cat.colnames:
+        ra, dec = np.asarray(cat["ra"], float), np.asarray(cat["dec"], float)
+    else:  # a raw pipeline catalog
+        ra, dec = cat["sky_centroid"].ra.deg, cat["sky_centroid"].dec.deg
+    keep = np.isfinite(ra) & np.isfinite(dec)
+    mag_cut = "aper_total_abmag" in cat.colnames
+    if mag_cut:
+        m = np.asarray(np.ma.filled(cat["aper_total_abmag"], np.nan), float)
+        with np.errstate(invalid="ignore"):
+            keep &= (m >= mag_range[0]) & (m <= mag_range[1])
+    if len(avoid_ra):
+        from astropy import units as u
+        from astropy.coordinates import SkyCoord
+
+        c = SkyCoord(ra * u.deg, dec * u.deg)
+        _, d, _ = c.match_to_catalog_sky(SkyCoord(avoid_ra * u.deg, avoid_dec * u.deg))
+        keep &= d.arcsec > avoid_arcsec
+    idx = np.flatnonzero(keep)
+    rng = np.random.default_rng(seed)
+    idx = np.sort(rng.choice(idx, size=min(n, len(idx)), replace=False))
+    return Table({"ra": ra[idx], "dec": dec[idx]}, meta={"mag_cut": mag_cut, "seed": seed})
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--candidates", type=Path, required=True, help="table with ra, dec columns")
@@ -191,25 +250,49 @@ def main(argv: list[str] | None = None) -> int:
         help="move the aperture to the source centroid (box half-width) per band, found in epoch 1 "
         "(epoch 2 for 'appeared' candidates), and measure both epochs there",
     )
+    ap.add_argument(
+        "--controls",
+        type=Path,
+        default=None,
+        help="ordinary sources (ra, dec; e.g. the epoch-1 _cat.ecsv) for noise calibration",
+    )
+    ap.add_argument("--n-controls", type=int, default=200)
+    ap.add_argument("--control-seed", type=int, default=0)
+    ap.add_argument(
+        "--control-mag", nargs=2, type=float, default=(25.5, 28.0), metavar=("BRIGHT", "FAINT")
+    )
     args = ap.parse_args(argv)
 
     cfg = pipeline.load_config(args.config)
     cand = Table.read(args.candidates)
-    targets = Table(
-        {
-            "source_uid": [f"c{k:04d}" for k in range(len(cand))],
-            "ra": np.asarray(cand["ra"], float),
-            "dec": np.asarray(cand["dec"], float),
-        }
-    )
+    n_cand = len(cand)
+    ra_all, dec_all = np.asarray(cand["ra"], float), np.asarray(cand["dec"], float)
+    uids = [f"c{k:04d}" for k in range(n_cand)]
+    kinds = np.asarray(cand["kind"]).astype(str) if "kind" in cand.colnames else np.full(n_cand, "")
+    if args.controls is not None:
+        ctl = select_controls(
+            Table.read(args.controls),
+            args.n_controls,
+            tuple(args.control_mag),
+            ra_all,
+            dec_all,
+            seed=args.control_seed,
+        )
+        if not ctl.meta["mag_cut"]:
+            print("warning: controls have no aper_total_abmag; no magnitude cut", file=sys.stderr)
+        ra_all = np.concatenate([ra_all, np.asarray(ctl["ra"])])
+        dec_all = np.concatenate([dec_all, np.asarray(ctl["dec"])])
+        uids += [f"n{k:04d}" for k in range(len(ctl))]
+        kinds = np.concatenate([kinds, np.full(len(ctl), "control")])
+    is_control = np.arange(len(uids)) >= n_cand
+    targets = Table({"source_uid": uids, "ra": ra_all, "dec": dec_all})
     out = Table({"source_uid": targets["source_uid"], "ra": targets["ra"], "dec": targets["dec"]})
-    confirmed = np.ones(len(targets), bool)
+    out["control"] = is_control
+    changed_all = np.ones(len(targets), bool)
+    noise = {}
+    # appeared sources exist only in epoch 2, so they are centroided there; others in epoch 1
+    from_e2 = np.char.startswith(kinds, "appeared")
     for band, obs1, obs2 in args.band:
-        # appeared sources exist only in epoch 2, so they are centroided there; others in epoch 1
-        if "kind" in cand.colnames:
-            from_e2 = np.char.startswith(np.asarray(cand["kind"]).astype(str), "appeared")
-        else:
-            from_e2 = np.zeros(len(targets), bool)
         files, scales = [], []
         for epoch, obs in (("1", obs1), ("2", obs2)):
             uri = pipeline.l3_image_uri(cfg.get("cloud"), obs)
@@ -243,17 +326,46 @@ def main(argv: list[str] | None = None) -> int:
             er.append(e)
         dm, sig, sig_flux = compare(fl[0], er[0], fl[1], er[1], args.sys_floor)
         out[f"{band}_flux1"], out[f"{band}_flux2"] = fl[0], fl[1]
-        out[f"{band}_dmag"], out[f"{band}_sigma"] = dm, sig
-        out[f"{band}_flux_sigma"] = sig_flux
+        out[f"{band}_dmag"] = dm
+        if args.controls is not None:  # an empty selection is reported as uncalibrated
+            # the scale is unstable for small samples (33 controls gave 0.54 against 1.18 from 175)
+            s_dm = robust_std(sig[is_control], MIN_CONTROLS)
+            s_fl = robust_std(sig_flux[is_control], MIN_CONTROLS)
+            calibrated = bool(np.isfinite(s_dm) and np.isfinite(s_fl))
+            if not calibrated:
+                print(f"warning: {band}: < {MIN_CONTROLS} controls, uncalibrated", file=sys.stderr)
+            noise[band] = {
+                "sigma": s_dm if np.isfinite(s_dm) else None,
+                "flux_sigma": s_fl if np.isfinite(s_fl) else None,
+                "n_sigma": int(np.isfinite(sig[is_control]).sum()),
+                "n_flux_sigma": int(np.isfinite(sig_flux[is_control]).sum()),
+                "calibrated": calibrated,
+            }
+            out[f"{band}_sigma_raw"], out[f"{band}_flux_sigma_raw"] = sig, sig_flux
+            # never sharpen: a scale below 1 (or undefined) leaves the ERR-based value
+            sig = sig / (s_dm if s_dm > 1 else 1.0)
+            sig_flux = sig_flux / (s_fl if s_fl > 1 else 1.0)
+        out[f"{band}_sigma"], out[f"{band}_flux_sigma"] = sig, sig_flux
         with np.errstate(invalid="ignore"):
             changed = (np.abs(dm) >= args.min_dmag) & (np.abs(sig) >= args.min_sigma)
             # a non-detection in one epoch (flux <= 0) is judged in flux space
             gone = (np.fmin(fl[0], fl[1]) <= 0) & (np.abs(sig_flux) >= args.min_sigma)
-            confirmed &= changed | gone
+            changed_all &= changed | gone
+    out["changed"] = changed_all
+    confirmed = changed_all & ~is_control
     out["confirmed"] = confirmed
     for c in cand.colnames:
         if c not in ("ra", "dec") and c not in out.colnames:
-            out[c] = cand[c]
+            col = cand[c]
+            if is_control.any() and (getattr(col, "ndim", 0) != 1 or col.dtype.kind == "O"):
+                continue  # mixin or multidimensional columns are not padded for controls
+            if is_control.any():  # controls get masked values in candidate-only columns
+                pad = np.ma.masked_all(int(is_control.sum()), dtype=cand[c].dtype)
+                out[c] = np.ma.concatenate([np.ma.asarray(cand[c]), pad])
+            else:
+                out[c] = cand[c]
+    if is_control.any():
+        out["kind"] = kinds
     out.meta.update(
         provenance="derived",
         radius_arcsec=args.radius_arcsec,
@@ -265,9 +377,22 @@ def main(argv: list[str] | None = None) -> int:
         },
         bands=[list(b) for b in args.band],
     )
+    if noise:
+        out.meta["noise_scale"] = {
+            **noise,
+            "controls": str(args.controls),
+            "control_mag": list(args.control_mag) if ctl.meta["mag_cut"] else None,
+            "n_requested": args.n_controls,
+            "seed": args.control_seed,
+            "provenance": "derived",
+        }
     args.out.mkdir(parents=True, exist_ok=True)
     out.write(args.out / "forced.ecsv", overwrite=True)
-    print(json.dumps({"n": len(out), "confirmed": int(confirmed.sum())}))
+    print(
+        json.dumps(
+            {"n": int((~is_control).sum()), "confirmed": int(confirmed.sum()), "noise": noise}
+        )
+    )
     return 0
 
 

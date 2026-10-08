@@ -161,3 +161,32 @@ The code is at this PR's head; outputs are under `outputs/transients_sunrise/` (
   - Recentred (centroid 0.15–0.16″ from the reference): Δm = +0.11 ± 0.18 (F090W), +0.18 ± 0.12 (F115W),
     −0.05 ± 0.08 (F277W) and −0.08 ± 0.07 (F356W), all within 1.5σ. The errors are ERR-based plus a 0.05 mag floor,
     before the 1.2–1.5× calibration. This is consistent with no change over 164 days.
+
+## Third epoch: o010 (2022-07-30) against VENUS o052 (2025-07-08), F150W and F444W (D-027)
+
+Outputs under `outputs/t_sunrise_e13/` (not committed). Every number is `derived`; thresholds are ASSUMPTIONs.
+
+- **Catalog stage** (jwst 2.0.1 against 3.0.0): F150W 1,305 matched, 91 variable, 194 appeared, 39 disappeared;
+  F444W 984 matched, 51/131/49. Frame shifts ≤ 0.019″.
+- **Combination:** 58 positions with the same kind in both bands; 1 near a Gaia source (cone 4′ around
+  24.3537, −8.4573); 57 candidates plus Earendel.
+- **Forced photometry,** recentred (0.15″ box), with `--controls` (200 random epoch-1 F150W sources at
+  25.5–28 mag, ≥ 1″ from any candidate; 184/175 measurable): noise scale **1.30 (F150W), 1.18 (F444W)**. The
+  candidates' Δm spans −0.08…+0.12 mag (5–95%); **0 of 57 pass**, raw or calibrated. They are deblending
+  differences between the pipeline versions.
+- **Earendel** (recentred): Δm = +0.05 (F150W, 0.3σ calibrated) and +0.12 mag (F444W, 0.9σ) over 2.9 years.
+- **Controls that change** (|flux σ| ≥ 5 after calibration). Checked on cutouts in every epoch-1 band and in
+  epoch 2 (o120: F090W, F115W) at 0.1″ apertures:
+  - `n0022` (24.364244, −8.433747): S/N 12–48 in F090W, F115W, F150W and F200W on 2022-07-30; S/N < 2 in
+    F090W/F115W on 2023-01-10 and in F150W on 2025-07-08. No LW coverage in 2022. It lies about 1″ from the
+    epoch-1 SW mosaic edge, on faint extended light (a host?). **Open transient candidate**: fading supernova,
+    or an edge artefact.
+  - `n0150` (24.339250, −8.442280): a compact SW source in each epoch, but at a different position each time
+    (offsets from 2022-07: (+0.15, −0.54)″ in 2023-01, (+0.11, −0.35)″ in 2025-07). At each position it is
+    detected (S/N 11–18) in its own epoch only (|S/N| ≤ 2 in the others). Not linear proper motion. **Open**:
+    moving object (proper motion plus parallax), three unrelated transients, or an artefact.
+  - `n0153` (24.333856, −8.426836): brighter by 0.63 mag in F150W (5.9σ) and 0.52 mag in F444W (3.6σ) in 2025;
+    compact and unchanged in shape. A variable (e.g. AGN) candidate; not yet vetted.
+  - **Why the search missed them:** the combination step needs the same kind in two bands, and in this pair only
+    F150W and F444W overlap. `n0022` and `n0150` are blue and faint in F444W. That `n0022`/`n0150` did not appear in the o010/o120
+    search (F090W and F115W) is not yet understood (footprint or depth proxy, or the S/N ≥ 10 cut).
