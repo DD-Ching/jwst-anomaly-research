@@ -93,6 +93,8 @@ register(
         screens=(
             "scripts/exotic_screens.py radial",
             "scripts/inject_radial.py",
+            "scripts/exotic_screens.py shear",
+            "scripts/inject_shear.py",
             "scripts/orphan_pairs.py",
         ),
         ordinary_mimics=(
