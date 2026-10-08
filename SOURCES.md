@@ -980,7 +980,10 @@ Exploration Program."
 - Gaia DR3 `gaiadr3.gaia_source` (G < 9) via the ESA TAP service https://gea.esac.esa.int/tap-server/tap, queried
   2026-10-08, for the bright-star vetting test.
 - Wen & Han 2024, galaxy clusters from the DESI Legacy Surveys and WISE, ApJS 272, 39 (VizieR J/ApJS/272/39,
-  table2; M500 ≥ 2 × 10¹⁴ M☉ used), queried 2026-10-08 through astroquery.vizier, for the cluster-depletion test.
+  table2; M500 ≥ 3 × 10¹⁴ M☉ and z ≤ 0.6 used), queried 2026-10-08 through astroquery.vizier, for the
+  cluster-depletion test.
+- HyperLEDA PGC (Paturel et al. 2003, A&A 412, 45; VizieR VII/237/pgc), galaxies with D25 ≥ 1′ (logD25 ≥ 1.0 in
+  log 0.1′), queried 2026-10-08, for the large-galaxy (sky over-subtraction) test.
 - Safonova, Torres & Romero 2001, "Macrolensing signatures of large-scale violations of the weak energy
   condition", MPLA 16, 153, arXiv:astro-ph/0104075, doi:10.1142/S0217732301003188: the W5 "central void" in the
   background galaxy field.

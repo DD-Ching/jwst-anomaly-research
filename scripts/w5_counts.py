@@ -334,13 +334,24 @@ def cmd_screen(args) -> None:
                 "z_std": float(np.nanstd(z)),
                 "z_max": float(np.nanmax(z)),
             }
-        peaks[name] = vstack(tabs)
+        pk = vstack(tabs)
+        # ordinary vetting of every peak, so the null counts only peaks the vetting would keep
+        vet = Vetter(ms)
+        reasons = [
+            vet(x, y, sc_, 0.0)["reasons"]
+            for x, y, sc_ in zip(pk["x"], pk["y"], pk["scale_arcmin"], strict=True)
+        ]
+        pk["ordinary"] = reasons
+        pk["clean"] = [r == "" for r in reasons]
+        peaks[name] = pk
         summary[name] = {
             "area_deg2": ms.area_deg2,
             "box_area_deg2": ms.region.area_deg2(),
             "n_gal": int(np.sum(ms.n_gal[ms.pix_weight > 0])),
             "pixels": len(ms.table),
             "wall_s": time.time() - t0,
+            "n_peaks": len(pk),
+            "n_peaks_clean": int(np.sum(pk["clean"])),
         }
         print(name, summary[name], flush=True)
     # Null calibration: each region's peaks (same scale) calibrate the other region (D-063).
@@ -348,8 +359,9 @@ def cmd_screen(args) -> None:
     null = {}
     for name, other in ((names[0], names[1]), (names[1], names[0])):
         for s in SCALES:
-            zo = np.asarray(peaks[other]["z"][peaks[other]["scale_arcmin"] == s], float)
-            n_search = int(np.sum(peaks[name]["scale_arcmin"] == s))
+            po, pn = peaks[other], peaks[name]
+            zo = np.asarray(po["z"][(po["scale_arcmin"] == s) & po["clean"]], float)
+            n_search = int(np.sum((pn["scale_arcmin"] == s) & pn["clean"]))
             null[f"{name} {s}"] = null_model(zo, n_search)
     allp = vstack([peaks[n] for n in names])
     key = [f"{r} {s}" for r, s in zip(allp["region"], allp["scale_arcmin"], strict=True)]
@@ -378,13 +390,18 @@ TAIL_Q = 0.01  # fraction of null peaks used for the exponential tail fit (at le
 def null_model(z_null: np.ndarray, n_search: int) -> dict:
     """Empirical null of the peak Z from an independent region (no Gaussian assumption).
 
-    ``z_flag`` is the null region's highest peak (anything above it is flagged for vetting).
+    Both samples are the peaks that pass the ordinary vetting tests (mask, depth, dust, bright
+    star, cluster, large galaxy), so artefacts in the null region do not raise the threshold of the
+    search region: a search-region artefact is removed by the same tests. ``z_flag`` is the null
+    region's highest such peak (anything above it is flagged for vetting).
     The upper tail of the null peak distribution is fitted with an exponential (MLE over the top
     ``TAIL_Q`` of peaks; an ASSUMPTION about the shape beyond the highest null peak) to give the
     expected number of null peaks above z among ``n_search`` peaks, and ``z_det`` where that
     number is ``FAP``.
     """
     z = np.sort(z_null[np.isfinite(z_null)])[::-1]
+    if z.size < 40:
+        raise ValueError(f"only {z.size} clean null peaks: too few to calibrate")
     q = min(max(30, int(TAIL_Q * z.size)), z.size - 1)
     z0 = float(z[q])
     tau = float(np.mean(z[:q] - z0))
@@ -496,18 +513,36 @@ def cmd_inject(args) -> None:
 # ----------------------------------------------------------------------------- vet
 
 # Vetting thresholds (ASSUMPTIONs, cheapest first; the same rules veto injections).
-VET_MASK_FRAC = 0.10  # masked or missing area inside θ_E
-VET_DEPTH_DROP = 0.15  # mag shallower than the region median inside θ_E
-VET_EBV_EXCESS = 0.02  # mag above the region median inside θ_E
+VET_MASK_FRAC = 0.20  # masked or missing area inside θ_E (w per pixel is noisy at ~25 sources)
+VET_DEPTH_DROP = 0.30  # mag shallower than the region median inside θ_E (r < 23.5 stays complete)
+VET_EBV_EXCESS = 0.03  # mag above the region median inside θ_E (≈ 7 % in counts)
+VET_DEPTH_SPREAD = 0.5  # mag, p90 − p10 of pixel depth within 2 θ_E (coverage boundary)
 VET_STAR_G = 9.0  # Gaia DR3 G of a star whose halo/mask could empty the disc
-VET_STAR_MIN_R = 2.0  # arcmin: stars this close always veto, whatever θ_E
-VET_CLUSTER_M500 = 2.0  # 10¹⁴ M☉: clusters massive enough for magnification-bias depletion
+VET_STAR_MIN_R = 2.0  # arcmin: halo radius of a G = 9 star, × 10^(0.15 (9 − G)) brighter
+# A mimic must reach the deficit core: it vetoes within VET_CORE × θ_E plus its own radius
+# (star halo, cluster, 2 × D25), so the vetoed area does not grow as θ_E² for wide filters.
+VET_CORE = 0.5
+VET_AREA_FRAC = (
+    0.1  # ...and only if its radius² is ≥ this × (VET_CORE θ_E)² (it can empty the core)
+)
+
+
+def _reaches_core(d, radius, theta: float) -> np.ndarray:
+    """Mimics at distance d with effect radius R that can empty ≥ VET_AREA_FRAC of the core."""
+    d, radius = np.asarray(d, float), np.asarray(radius, float)
+    core = VET_CORE * theta
+    return (d <= core + radius) & (radius**2 >= VET_AREA_FRAC * core**2)
+
+
+VET_CLUSTER_R = 3.0  # arcmin, ~R500 of a 2 × 10¹⁴ M☉ cluster at z ≈ 0.3
+VET_CLUSTER_M500 = 3.0  # 10¹⁴ M☉ (WH24 mass proxy), at z ≤ VET_CLUSTER_ZMAX: strong depletion
+VET_CLUSTER_ZMAX = 0.6  # lensing of r < 23.5 galaxies (mostly z < 1) by z > 0.6 clusters is weak
 GAIA_TAP = "https://gea.esac.esa.int/tap-server/tap"
 WH24 = "J/ApJS/272/39/table2"  # Wen & Han 2024 DESI Legacy Surveys clusters (VizieR)
 # Large galaxies: sky over-subtraction around them empties CCD-sized patches well beyond the
 # LS GALAXY mask (NGC 1398, D25 = 7.2′, left 19 flags within ~30′ in the first run).
 VET_GALAXY_D25 = 1.0  # arcmin, HyperLEDA D25 of a galaxy that can bias the local sky
-VET_GALAXY_RADII = 2.0  # veto within θ_E + this × D25 of its centre
+VET_GALAXY_RADII = 2.0  # veto within VET_CORE θ_E + this × D25 of its centre
 HYPERLEDA = "VII/237/pgc"  # Paturel et al. 2003 HyperLEDA PGC (VizieR), logD25 in log(0.1′)
 
 
@@ -546,7 +581,11 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
         )
         t = res[0] if len(res) else Table(names=("RAJ2000", "DEJ2000", "zCl", "M500"))
         t = Table(t, masked=False)
-        stamp(t, schema.Provenance.OBSERVED, f"VizieR {WH24} (Wen & Han 2024), M500 ≥ 2e14")
+        stamp(
+            t,
+            schema.Provenance.OBSERVED,
+            f"VizieR {WH24} (Wen & Han 2024), M500 ≥ {VET_CLUSTER_M500}e14",
+        )
         t.write(p_cl, overwrite=True)
     p_gal = out_dir() / f"galaxies_{name}.ecsv"
     if not p_gal.exists():
@@ -555,7 +594,7 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
         from astroquery.vizier import Vizier
 
         v = Vizier(
-            columns=["PGC", "RAJ2000", "DEJ2000", "logD25"],
+            columns=["PGC", "_RAJ2000", "_DEJ2000", "logD25"],  # decimal degrees
             column_filters={"logD25": f">={math.log10(VET_GALAXY_D25 * 10):.3f}"},
             row_limit=-1,
         )
@@ -567,6 +606,7 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
             catalog=HYPERLEDA,
         )
         t = Table(res[0], masked=False)
+        t.rename_columns(["_RAJ2000", "_DEJ2000"], ["RAJ2000", "DEJ2000"])
         t["d25_arcmin"] = 0.1 * 10 ** np.asarray(t["logD25"], float)
         stamp(t, schema.Provenance.OBSERVED, f"VizieR {HYPERLEDA} (HyperLEDA), D25 ≥ 1′")
         t.write(p_gal, overwrite=True)
@@ -592,6 +632,10 @@ class Vetter:
         self.gal_d25 = np.asarray(galaxies["d25_arcmin"], float)
         self.star_xy = np.column_stack(ms.raster.xy(stars["ra"], stars["dec"]))
         self.star_g = np.asarray(stars["phot_g_mean_mag"], float)
+        clusters = clusters[
+            (np.asarray(clusters["M500"], float) >= VET_CLUSTER_M500)
+            & (np.asarray(clusters["zCl"], float) <= VET_CLUSTER_ZMAX)
+        ]
         self.cl_xy = np.column_stack(ms.raster.xy(clusters["RAJ2000"], clusters["DEJ2000"]))
         self.pix_side = math.sqrt(cm.PIX_AREA_DEG2) * 60.0
 
@@ -601,27 +645,38 @@ class Vetter:
         n_exp = math.pi * r**2 / self.pix_side**2
         mask_frac = 1.0 - (np.sum(self.w[i]) / max(n_exp, len(i))) if i else 1.0
         depth = float(np.mean(self.depth[i])) if i else np.nan
+        # p90 − p10 of pixel depth inside 2 θ_E: a coverage boundary (deep tiles, missing
+        # exposures) changes source typing and deblending across the aperture
+        j = self.tree.query_ball_point([x, y], 2 * r)
+        depth_spread = float(np.subtract(*np.percentile(self.depth[j], [90, 10]))) if j else np.nan
         ebv = float(np.mean(self.ebv[i])) if i else np.nan
         d_star = np.hypot(self.star_xy[:, 0] - x, self.star_xy[:, 1] - y)
-        near = d_star <= max(theta, VET_STAR_MIN_R)
+        halo = VET_STAR_MIN_R * 10 ** (0.15 * (VET_STAR_G - self.star_g))
+        near = _reaches_core(d_star, halo, theta)
         d_cl = np.hypot(self.cl_xy[:, 0] - x, self.cl_xy[:, 1] - y) if len(self.cl_xy) else []
         out = {
             "mask_frac": mask_frac,
             "depth_r": depth,
+            "depth_spread": depth_spread,
             "ebv": ebv,
             "n_bright_star": int(near.sum()),
             "brightest_g": float(self.star_g[near].min()) if near.any() else np.nan,
-            "n_cluster": int(np.sum(np.asarray(d_cl) <= theta)),
+            "n_cluster": int(np.sum(_reaches_core(d_cl, VET_CLUSTER_R, theta))),
             "n_large_galaxy": int(
                 np.sum(
-                    np.hypot(self.gal_xy[:, 0] - x, self.gal_xy[:, 1] - y)
-                    <= theta + VET_GALAXY_RADII * self.gal_d25
+                    _reaches_core(
+                        np.hypot(self.gal_xy[:, 0] - x, self.gal_xy[:, 1] - y),
+                        VET_GALAXY_RADII * self.gal_d25,
+                        theta,
+                    )
                 )
             ),
         }
         reasons = []
         if mask_frac > VET_MASK_FRAC:
             reasons.append("mask")
+        if not depth_spread <= VET_DEPTH_SPREAD:
+            reasons.append("depth_edge")
         if not depth >= self.depth_med - VET_DEPTH_DROP:
             reasons.append("depth")
         if not ebv <= self.ebv_med + VET_EBV_EXCESS:
@@ -663,9 +718,14 @@ def cmd_vet(args) -> None:
             "mask_frac": VET_MASK_FRAC,
             "depth_drop": VET_DEPTH_DROP,
             "ebv_excess": VET_EBV_EXCESS,
+            "depth_spread": VET_DEPTH_SPREAD,
             "star_g": VET_STAR_G,
-            "star_min_r_arcmin": VET_STAR_MIN_R,
+            "star_halo_g9_arcmin": VET_STAR_MIN_R,
+            "core": VET_CORE,
+            "area_frac": VET_AREA_FRAC,
+            "cluster_r_arcmin": VET_CLUSTER_R,
             "cluster_m500_1e14": VET_CLUSTER_M500,
+            "cluster_zmax": VET_CLUSTER_ZMAX,
             "galaxy_d25_arcmin": VET_GALAXY_D25,
             "galaxy_radii": VET_GALAXY_RADII,
         }
