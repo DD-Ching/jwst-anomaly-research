@@ -42,3 +42,4 @@ Results: docs/exotic_limits.md "W1/W2 in published lens catalogues".
 - VizieR writes some coordinates as sexagesimal strings (`RA1` "h:m:s"); parse them, and fail loudly if nothing parses.
 - Lemon et al. 2023 `z2`: a blank `n_z2` (or "zqso=") is a second quasar redshift; "z_lens="/"zgal=" are not.
 - VizieR ASU-TSV headers carry the request time: pin the data lines, not the raw file.
+- SQLS candidate tables: the primary quasar row (z) precedes the companion row (theta, Com, its own z).

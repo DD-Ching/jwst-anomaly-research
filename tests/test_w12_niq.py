@@ -38,6 +38,9 @@ def test_sdss_name_radec():
         ("QSO pair", "rejected"),
         ("Binary QSO (z=0.799, 0.799)", "rejected"),
         ("QSO+star", "nonpair"),
+        ("QSO pair (different SED)", "nonpair"),
+        ("QSO + unknown lens candidate", "nonpair"),
+        ("not a binary", ""),
         ("Different SED, not QSO", "nonpair"),
         ("", ""),
     ],
@@ -221,3 +224,27 @@ def test_nonpair_elsewhere_vetoes_a_rejection_and_sqls_z_pair_is_used():
 def test_check_vizier_ignores_column_descriptions(tmp_path):
     ok = b"#Column\te_RA\t(F5.2)\tMean error on RA [ucd=stat.error]\nName\n \n----\nJ1\n"
     niq.check_vizier(ok, "t", tmp_path)
+
+
+def test_sqls_pair_format_redshifts():
+    t = Table(
+        rows=[
+            ("J004757.25+144741.9", " ", "1.612", "", ""),
+            ("J004757.87+144744.7", " ", "2.790", "9.42", "QSO pair"),
+            ("J074013.44+292648.4", " ", "0.980", "", ""),
+            ("J074013.42+292645.8", "(", "0.978", "2.64", "QSO pair"),
+        ],
+        names=("SDSS", "f_z", "z", "theta", "Com"),
+        dtype=[str] * 5,
+    )
+    assert niq.sqls_redshifts(t, t[1]) == (1.612, 2.79)
+    z, z2 = niq.sqls_redshifts(t, t[3])
+    assert z == 0.98 and np.isnan(z2)  # flagged companion z is not used
+    assert niq.comment_z_pair("QSO pair (z=1.686, 1.600.)") == (1.686, 1.6)
+
+
+def test_read_tsv_refuses_a_second_resource(tmp_path):
+    f = tmp_path / "t.tsv"
+    f.write_text("Name\tSep\n \tarcsec\n----\t---\nJ1\t2.1\t\nName\tSep\n")
+    with pytest.raises(ValueError):
+        niq.read_tsv(f)

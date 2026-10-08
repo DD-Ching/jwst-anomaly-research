@@ -1027,7 +1027,7 @@ The ordinary explanations are binary quasars, unrelated pairs and lens galaxies 
     another catalogue classifies as a non-pair (QSO+star, different SED, …) is dropped: this applied to J0947+0247,
     which Lemon classifies as "QSO + star".
 - Exclusions:
-  - 188 entries with catalogued separations > 3″: a catalogue position is one image, so the second image must
+  - 184 entries with catalogued separations > 3″: a catalogue position is one image, so the second image must
     fall inside the 3″ image search;
   - the SQLS "component" rows of one cluster lens.
 - The D-056 chain unchanged: DR10 brick coverage and depth, Tractor boxes, the quasar pair test (two PSF images

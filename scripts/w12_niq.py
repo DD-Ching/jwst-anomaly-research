@@ -161,13 +161,20 @@ def fetch(source: str, out: Path, pins: dict[str, str] | None) -> tuple[Path, di
 
 
 def read_tsv(path: Path) -> Table:
-    """VizieR ASU-TSV: header, units and dashes rows, then data (all columns as strings)."""
+    """VizieR ASU-TSV, one resource: header, units and dashes rows, then data (strings). Raises on
+    a second resource or a row wider than the header (trailing empty fields are dropped)."""
     lines = [
         ln for ln in path.read_text(encoding="utf-8").splitlines() if ln and not ln.startswith("#")
     ]
     hdr = lines[0].split("\t")
-    rows = [ln.split("\t") for ln in lines[3:]]
-    rows = [r + [""] * (len(hdr) - len(r)) for r in rows]
+    rows = []
+    for ln in lines[3:]:
+        r = ln.split("\t")
+        while len(r) > len(hdr) and not r[-1].strip():
+            r.pop()
+        if len(r) > len(hdr) or r[: len(hdr)] == hdr or set(ln.replace("\t", "")) == {"-"}:
+            raise ValueError(f"{path}: unexpected row (second resource or wide row): {ln[:80]}")
+        rows.append(r + [""] * (len(hdr) - len(r)))
     return Table(rows=[[c.strip() for c in r] for r in rows], names=hdr, dtype=[str] * len(hdr))
 
 
@@ -191,7 +198,7 @@ def sdss_name_radec(name: str) -> tuple[float, float]:
 
 def comment_z_pair(comment: str) -> tuple[float, float]:
     """The two redshifts an SQLS comment quotes, e.g. "QSO pair (z=1.686, 1.600)"; NaN if none."""
-    m = re.search(r"z\s*=\s*([0-9.]+)\s*,\s*([0-9.]+)", comment)
+    m = re.search(r"z\s*=\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)", comment)
     return (float(m.group(1)), float(m.group(2))) if m else (np.nan, np.nan)
 
 
@@ -200,6 +207,38 @@ def different_redshift(z1, z2) -> np.ndarray:
     z1, z2 = np.asarray(z1, float), np.asarray(z2, float)
     with np.errstate(invalid="ignore"):
         return np.abs(z1 - z2) / (1 + z1) > P.dz_tol
+
+
+def sqls_radec(t: Table, r) -> tuple[float, float]:
+    ra, dec = (_float(r["_RA"]), _float(r["_DE"])) if "_RA" in t.colnames else (np.nan, np.nan)
+    return (ra, dec) if np.isfinite(ra) else sdss_name_radec(r["SDSS"])
+
+
+def _sqls_z(r) -> float:
+    """An SQLS row's redshift, NaN when blank or flagged (f_z, e.g. "(" = uncertain)."""
+    flag = r["f_z"].strip() if "f_z" in r.colnames else ""
+    return np.nan if flag else _float(r["z"])
+
+
+def sqls_redshifts(t: Table, r) -> tuple[float, float]:
+    """(quasar z, second z) for an SQLS candidate row.
+
+    Pair-format tables (DR3 table3, DR5 table3, DR7 table4) list the primary quasar (its z, no
+    theta) on the row before the companion (theta, Com and the companion's own z, if measured).
+    The primary's z is the source redshift and the companion's z the second one; two redshifts
+    quoted in the comment win over both."""
+    za, zb = comment_z_pair(r["Com"])
+    if np.isfinite(za):
+        return za, zb
+    k = r.index
+    prev = t[k - 1] if k > 0 else None
+    if prev is not None and not np.isfinite(_float(prev["theta"])) and not prev["Com"].strip():
+        theta = _float(r["theta"])
+        (ra1, de1), (ra2, de2) = sqls_radec(t, prev), sqls_radec(t, r)
+        d = SkyCoord(ra1, de1, unit="deg").separation(SkyCoord(ra2, de2, unit="deg")).arcsec
+        if np.isfinite(theta) and abs(d - theta) < 1.0:
+            return _sqls_z(prev), _sqls_z(r)
+    return _sqls_z(r), np.nan
 
 
 def lemon_second_qso_z(r) -> float:
@@ -216,12 +255,12 @@ def sqls_group(comment: str) -> str:
     """rejected: no lens object, or a quasar pair / binary (as Lemon's "QSO pair" class);
     control: a catalogued lens."""
     c = comment.lower()
-    if "sdss lens" in c or "known lens" in c:
-        return "control"  # checked first: a comment naming a lens never makes a rejection
-    if "no lens" in c or "qso pair" in c or "binary" in c:
-        return "rejected"
+    if re.search(r"\b(sdss|known) lens\b", c):
+        return "control"  # first: a comment naming a lens never makes a rejection
     if SQLS_NONPAIR.search(c):
-        return "nonpair"
+        return "nonpair"  # second: a star/galaxy/SED classification vetoes a rejection
+    if re.search(r"\bno lens|\bqso pair\b|(?<!not )(?<!not a )\bbinary\b", c):
+        return "rejected"
     return ""
 
 
@@ -256,17 +295,9 @@ def build_sample(tables: dict[str, Table]) -> Table:
                 name = r["SDSS"]
                 comment = r["Com"]
                 group = sqls_group(comment)
-                ra, dec = (
-                    (_float(r["_RA"]), _float(r["_DE"]))
-                    if "_RA" in t.colnames
-                    else (np.nan, np.nan)
-                )
-                if not np.isfinite(ra):
-                    ra, dec = sdss_name_radec(name)
+                ra, dec = sqls_radec(t, r)
                 sep = _float(r["theta"])
-                z, z2 = comment_z_pair(comment)  # both redshifts the comment quotes
-                if not np.isfinite(z):
-                    z = _float(r["z"])
+                z, z2 = sqls_redshifts(t, r)
             if group and not np.isfinite(ra):
                 dropped[label] = dropped.get(label, 0) + 1
             elif group:
@@ -346,6 +377,8 @@ def dedup(s: Table) -> Table:
             s["group"][k] = "nonpair"  # another catalogue classified it (star, galaxy, SED)
         for m in members[1:]:  # keep the merged rows' vetting information
             s["comment"][k] += f" | {s['catalogue'][m]}: {s['comment'][m]}"
+            if not np.isfinite(s["z_source"][k]) and np.isfinite(s["z_source"][m]):
+                s["z_source"][k] = s["z_source"][m]
             if not np.isfinite(s["z2"][k]) and np.isfinite(s["z2"][m]):
                 s["z2"][k] = s["z2"][m]
             if not np.isfinite(s["sep_cat"][k]) and np.isfinite(s["sep_cat"][m]):
@@ -386,18 +419,19 @@ def sheet(t: Table, out: Path, path: Path, title: str) -> None:
 
 
 def _coords(ra_col, dec_col) -> tuple[np.ndarray, np.ndarray]:
-    """Degrees from decimal or sexagesimal ("h:m:s" / "d:m:s", as VizieR writes RA1/DE1) strings."""
+    """Degrees from decimal or sexagesimal ("h:m:s" / "d:m:s", as VizieR writes RA1/DE1) strings.
+    Raises on any non-empty entry that parses as neither (no silent "no match")."""
     ra = np.array([_float(x) for x in ra_col])
     de = np.array([_float(x) for x in dec_col])
     rs = np.array([str(x).strip() for x in ra_col])
     ds = np.array([str(x).strip() for x in dec_col])
-    todo = ~(np.isfinite(ra) & np.isfinite(de)) & (rs != "") & (ds != "")
-    if todo.any():
+    todo = np.flatnonzero(~(np.isfinite(ra) & np.isfinite(de)) & (rs != "") & (ds != ""))
+    if len(todo):
         try:
             c = SkyCoord(rs[todo], ds[todo], unit=("hourangle", "deg"))
-            ra[todo], de[todo] = c.ra.deg, c.dec.deg
-        except ValueError:
-            pass  # unparseable: stays NaN (binary_match raises if nothing parses)
+        except ValueError as e:
+            raise ValueError(f"unparseable coordinates among {len(todo)} entries: {e}") from e
+        ra[todo], de[todo] = c.ra.deg, c.dec.deg
     return ra, de
 
 
@@ -451,6 +485,14 @@ def cmd_screen(args) -> None:
     covered = np.asarray(s["covered"], bool)
     sc = s[covered]
     src = w12.query_tractor(sc, p, out / "tractor_cache")
+    # pin only the rows within a box of the current sample (the cache may hold earlier batches)
+    near = np.zeros(len(src), bool)
+    if len(src) and len(sc):
+        cs = SkyCoord(np.asarray(src["ra"], float), np.asarray(src["dec"], float), unit="deg")
+        cp = SkyCoord(np.asarray(sc["ra"], float), np.asarray(sc["dec"], float), unit="deg")
+        _, idx, _, _ = cs.search_around_sky(cp, p.box * np.sqrt(2) * u.arcsec)  # idx into cs
+        near[np.unique(idx)] = True
+    src = src[near]
     tractor_sha = hashlib.sha256(
         "\n".join(
             f"{i},{r:.7f},{d:.7f},{t},{z:.4f}"
@@ -495,28 +537,21 @@ def cmd_screen(args) -> None:
             for k, v in zip(*np.unique(sc["test_status"][m], return_counts=True), strict=True)
         }
         d = m & decided
-        nd = int((d & (sc["test_status"] == "deflector")).sum())
-        nn = int((d & (sc["test_status"] == "none")).sum())
-        cm = d & (sc["test_status"] == "none") & sc["colour_match"]
+        none = d & (sc["test_status"] == "none")
+        cm = none & sc["colour_match"]
         summary[g] = {
             "n_all": int((s["group"] == g).sum()),
             "n_covered": int(m.sum()),
             "status": st,
             "decided": int(d.sum()),
-            "deflector": nd,
-            "none": nn,
-            "none_colour_match": int(
-                (d & (sc["test_status"] == "none") & sc["colour_match"]).sum()
-            ),
-            "none_colour_mismatch": int(
-                (d & (sc["test_status"] == "none") & sc["colour_mismatch"]).sum()
-            ),
+            "deflector": int((d & (sc["test_status"] == "deflector")).sum()),
+            "none": int(none.sum()),
+            "none_colour_match": int(cm.sum()),
+            "none_colour_mismatch": int((none & sc["colour_mismatch"]).sum()),
             "pair_mismatch": int(
                 (m & np.isin(sc["test_status"], ["deflector", "none"]) & ~sc["pair_match"]).sum()
             ),
-            "none_typical_detectable": int(
-                (d & (sc["test_status"] == "none") & sc["detectable_typical"]).sum()
-            ),
+            "none_typical_detectable": int((none & sc["detectable_typical"]).sum()),
             "none_colour_match_binary": int((cm & sc["hennawi_binary"]).sum()),
             "none_colour_match_different_z": int((cm & sc["different_z"]).sum()),
             "none_untestable": int((cm & ~sc["hennawi_binary"] & ~sc["different_z"]).sum()),

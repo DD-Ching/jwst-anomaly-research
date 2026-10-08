@@ -133,10 +133,10 @@
   "dropped": {
     "no coordinates": {},
     "duplicates": 2,
-    "non-pair classifications (incl. vetoed rejections)": 280,
+    "non-pair classifications (incl. vetoed rejections)": 284,
     "cluster-lens component rows": 2,
     "no catalogued separation": 0,
-    "sep_cat > 3.0 arcsec": 188
+    "sep_cat > 3.0 arcsec": 184
   },
   "n_covered": 169,
   "rejected": {

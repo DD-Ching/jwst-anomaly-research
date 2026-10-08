@@ -2996,7 +2996,9 @@ colour-mismatched, 2 are catalogued binaries and 1 has two redshifts; 11 remain 
   - the greedy dedup was not transitive;
   - Lemon's `z2` is a second quasar redshift only when `n_z2` is blank (or "zqso="). "z_lens=" and "zgal=" are
     other objects, and flagged values are not used;
-  - a rejection that another catalogue classifies as a non-pair is now vetoed (J0947+0247).
+  - a rejection that another catalogue classifies as a non-pair is now vetoed (J0947+0247);
+  - SQLS pair-format tables put the quasar z on the primary row and θ, the comment and the companion's z on the
+    next row. Both are now read, and flagged redshifts ("(") are not used.
 - The Tractor rows the test ran on are pinned too (sha256 of the sorted rows), and so are the brick summary and
   every VizieR table. VizieR error, empty or truncated responses are refused.
 
