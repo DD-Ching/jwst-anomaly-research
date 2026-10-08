@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W1 shear screen reuse-check (D-050)
+- `/reuse-check` for the W1-specific screen: build a catalogue aperture-mass map (−M_ap: a negative-mass lens gives
+  negative tangential shear) with scipy cKDTree. TreeCorr NG only gives a stacked ⟨N M_ap⟩(R) and has no Windows
+  wheels; lenspack works on pixelised maps. Rough S/N 1–2 at θ_E = 1″ in a 5″ aperture, so gains are expected
+  mainly at θ_E ≥ 2–3″.
+- **Handoff:** implement D-050 in `exotic_screens.py` and benchmark it with `scripts/inject_radial.py` on SMACS
+  first (smallest field; needs its MAST `_cat.ecsv` and DJA zout in the cache).
+
 ## 2026-10-08: PR #70 merged after review fixes; Abell 2744 radial doc brought to the post-D-034 result
 - Cloud run. PR #70 (D-049) was conflicted with main: merged `origin/main`, then `/code-review` on the final diff.
   Main finding: MACS0717 and Abell S1063 have no photo-z, so the injector painted their members and foreground
