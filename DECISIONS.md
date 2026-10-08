@@ -2915,7 +2915,7 @@ merida 0.3.2 and qusi 1.5.6 (no Cut-0 tar reader, SOURCES.md).
 - Pre-screen on all 18,599 gb22 light curves: 0 errors, 137 s; **1,058 passes** (z_min < −10, S_min < −5, no second
   dip z < −8).
 - Selection test (`inject --prescreen-only`, 300 W3 + 100 PSPL on real quiet light curves, I_s ~ U[14.2, 21.4]):
-  W3 passes emulated Cut-0 **and** the pre-screen at **28 / 47 / 58 / 50 / 33 %** for t_E = 3 / 10 / 30 / 100 / 300 d;
+  W3 passes emulated Cut-0 **and** the pre-screen at **23 / 43 / 48 / 38 / 28 %** for t_E = 3 / 10 / 30 / 100 / 300 d;
   PSPL controls **0 / 100**. Unlike the OGLE and Gaia selections (0 / 600, 0 / 240), this sample keeps W3 events.
 - Fit pilot: all 8 first passes flag (ΔBIC −174 … −869): a dip-shaped variable always prefers a negative-flux
   model to PSPL, so in this sample the flag carries no information and the vetting (`vet_one`: repeated dips,

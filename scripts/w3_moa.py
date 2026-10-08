@@ -161,7 +161,7 @@ def deficit_scan(t, f, sf, widths=None, n_min=None) -> dict:
             out.update(
                 z_min=float(z[k]),
                 spread=spread,
-                s_min=float(min(st[k], sg[k])),
+                s_min=float(max(st[k], sg[k])),  # the weaker of the two, as z
                 width=float(width),
                 t_lo=float(t[k]),
                 t_hi=float(t[jm[k]]),
