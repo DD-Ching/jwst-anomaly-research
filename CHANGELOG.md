@@ -17,7 +17,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   of a faint source, and a calibrated null (the injection/limit stage).
 - **Next:** chunks 2–12 (one per run: `fit --chunk K/12`, then `vet` / `sheet`); for BLG667.04.62161, an
   empirical ΔBIC null from the same chunk's PSPL-simulated light curves (does −12 occur at rate ≥ 1/483?) and an
-  xallarap fit before any further attention; then `inject` / `limit`.
+  xallarap fit before any further attention; then `inject` / `limit`. `limit` refuses vetting of a single chunk
+  (#86 Codex), so a `merge-chunks` step (concatenate `fits_bulge2019_chunk*of12.ecsv`, then `vet`) comes first.
 
 ## 2026-10-08: W3 OGLE disk re-fit with bounded parallax: still null (D-058)
 - Cloud run. ASSUMPTION `Params.pie_max = 5`: PAR fits with |π_E| > 5 are rejected in every fit and vetting refit

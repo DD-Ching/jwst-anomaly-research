@@ -178,7 +178,8 @@ def test_limit_refuses_a_zero_event_limit_unless_vetting_is_a_complete_null(
 ):
     import json
 
-    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps({"flags": [flag]}))
+    doc = {"fit_chunk": "", "flags": [flag]}
+    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps(doc))
     monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
     with pytest.raises(SystemExit, match=flag["event_id"]):
         w3.run_limit()
@@ -188,9 +189,19 @@ def test_limit_passes_a_complete_null_vetting_to_the_injections(tmp_path, monkey
     import json
 
     flag = {"event_id": "A", "tests": [], "survives": False, "complete": True}
-    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps({"flags": [flag]}))
+    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps({"fit_chunk": "", "flags": [flag]}))
     monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
     with pytest.raises(FileNotFoundError, match="injections_bulge2019"):
+        w3.run_limit()
+
+
+@pytest.mark.parametrize("doc", [{"fit_chunk": "1/12"}, {}])  # one chunk, or an older file
+def test_limit_refuses_vetting_of_a_partial_fit(tmp_path, monkeypatch, doc):
+    import json
+
+    (tmp_path / "vetting_bulge2019.json").write_text(json.dumps({**doc, "flags": []}))
+    monkeypatch.setattr(w3, "out_dir", lambda: tmp_path)
+    with pytest.raises(SystemExit, match="fit chunk"):
         w3.run_limit()
 
 

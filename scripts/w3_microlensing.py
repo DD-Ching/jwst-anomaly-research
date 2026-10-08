@@ -1416,6 +1416,8 @@ def run_vet(sample_key: str, procs: int, binary_lens: bool = True) -> Path:
         json.dumps(
             {
                 "provenance": "derived",
+                "fit_chunk": fits.meta.get("chunk", ""),  # "" = the whole sample was fitted
+                "n_fit": len(fits),
                 "wall_time_s": time.time() - t1,
                 "variable_xmatch": var,
                 "arxiv": lit,
@@ -1518,7 +1520,14 @@ def run_limit(per_cell_min: int = 20) -> Path:
     path = out_dir() / "vetting_bulge2019.json"
     if not path.exists():
         raise SystemExit(f"no zero-event limit: run `vet` first ({path} missing)")
-    vet = json.loads(path.read_text())["flags"]
+    doc = json.loads(path.read_text())
+    if (
+        doc.get("fit_chunk", "missing") != ""
+    ):  # one chunk's null says nothing about the other chunks
+        raise SystemExit(
+            f"no zero-event limit: vetting covers fit chunk {doc.get('fit_chunk')!r} only"
+        )
+    vet = doc["flags"]
     open_flags = [o["event_id"] for o in vet if o.get("survives") or o.get("complete") is not True]
     if open_flags:
         raise SystemExit(f"no zero-event limit: flags survive or are unvetted: {open_flags}")
