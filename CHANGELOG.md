@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: `find_images` fold refinement; frame offsets for map models (D-040)
+- Cells on a critical curve near the source are subdivided into ≤ 0.02″ sub-cells. MACS0416 system 26 is now solved
+  (rms 1.57″ → 0.76″), and its image list is open with offset (0.208, −0.025). No other model changes beyond 0.03″
+  rms; Abell 2744 `validate` takes 41 s instead of 29 s.
+- **Bug fixed:** `apply_frame_offset` was a no-op for map models (the maps are looked up by sky position), and
+  `radial` / `arcs` skipped it for them. No earlier result used a map model with an offset. MACS0416's radial screen
+  was re-run in the JWST frame: still null.
+- **Handoff:** `images` / `fluxratio` on MACS0416 (CANUCS photo-z); radial on Abell 370 and Abell S1063.
+
 ## 2026-10-08: MACS0416: system 26 is a solver-grid artefact; radial null (D-038)
 - Worktree worker on CANUCS 1208 (`jw01208-o004_t002`, 8 bands). The CATS system-26 residual (11″) is the 0.25″
   `find_images` grid missing a merging pair near the critical curve; the source lies 0.001–0.005″ from the caustic. On a 0.1″ grid the rms is 0.811″ (1.13×

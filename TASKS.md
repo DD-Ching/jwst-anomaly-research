@@ -18,8 +18,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
    - exotic screens (D-031, D-034, D-036, D-037, D-038): SMACS, El Gordo, Sunrise (radial), Abell 2744, MACS1149 and
      MACS0416 (radial) null. The six HFF CATS map models are in (D-035). Next:
-     - `find_images`: adaptive grid refinement near |μ| > 50 (MACS0416 system 26 is a 0.25″-grid miss, D-038), then
-       open MACS0416's image list and run `images` / `fluxratio` with its frame offset;
+     - MACS0416: `images` / `fluxratio` with CANUCS photo-z (image list open and frame offset pinned, D-040);
      - `radial`: an aper50 S/N floor (noise segments pass the isophotal S/N);
      - JWST field runs: radial on Abell 370, MACS0717 and Abell S1063; `images` / `fluxratio` on MACS0717;
      - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1
