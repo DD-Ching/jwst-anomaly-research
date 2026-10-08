@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Abell 2744 screens: null (D-036)
+- A worktree worker ran `validate`, `images --forced-image`, `fluxratio` and `radial` on Bergamini+2023b, with
+  cutouts of every flag. 15 of 16 flags were ordinary. The survivor, 4.2c, was re-run under the D-034 rules: it
+  is `no_reference` (resolved-knot references, BCG halo), not a candidate.
+- Radial: 35 peaks against a random mean of 50.4, p ≥ 0.575.
+- **Lesson:** a "252σ absent" image can come from a resolved-knot reference. D-034's compact-reference rule now
+  catches this.
+- **Handoff:** HFF field runs (D-035 models), `bayes.dat` position spreads, UNCOVER v2.0 cross-check.
+
 ## 2026-10-08: El Gordo counter-images and radial screen: no candidate (D-034)
 - Forced photometry: 3 `absent` images on the first pass, all ordinary on vetting (cutouts plus numbers):
   - 23: model position error;

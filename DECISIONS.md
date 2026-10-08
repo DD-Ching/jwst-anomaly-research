@@ -1715,3 +1715,26 @@ them automatically. All thresholds are ASSUMPTIONs.
 **Revisit if.**
 - `bayes.dat` posteriors give model position errors for far images (system 6 needs about 3″).
 - A field's image list carries its own frame solution.
+
+## D-036 Abell 2744 lens-model and exotic screens: null (2026-10-08)
+
+**Decision.** The Abell 2744 screens (Bergamini+2023b) are a null result. Every flag has an ordinary explanation
+(docs/fields/abell2744.md, 2026-10-08). The worker's single survivor of the cheap tests, 4.2c, was re-examined
+under the D-034 rules: its reference images are resolved knots, and the prediction lies on the BCG halo. It is
+untestable, not missing.
+
+**Alternatives rejected.** Reporting the forced-photometry `absent` / `confused` classes directly. Near-critical
+magnifications, the fitted-redshift system 700.1, resolved-arc references and the 1″ search made them misleading.
+D-034's rules now remove these automatically.
+
+**Evidence.**
+- `validate`: χ² 146.64 against 146.60.
+- `images`, after D-034: absent only for 700.1, which the model cannot reproduce at any z.
+- `fluxratio`: 30 consistent, 0 under- or overluminous, 3 chromatic (a 602.1 blend).
+- `radial`: 35 peaks against a random mean of 50.4; p ≥ 0.575.
+- Cutouts were inspected for every flag.
+- Tally: 176 predicted images, 149 flux-ratio images and 35 radial peaks screened; 16 flags; **0 surviving**.
+
+**Revisit if.**
+- `bayes.dat` position spreads do not cover 34.1 / 700.1.
+- An independent model (UNCOVER v2.0, or the CATS v4.1 maps of D-035) predicts a bright image where none is seen.

@@ -239,3 +239,21 @@ Also high-pass versions (0.6″ median filter subtracted) to remove cluster-memb
   - Run `/vet-candidate` on 4.2c.
   - Widen the forced search to the model's positional rms × 3 (≈1.3″) together with a colour match (the
     8.1c lesson).
+
+### Re-run under the D-034 rules and the 4.2c verdict (coordinator, 2026-10-08)
+
+- `images --forced-image` was re-run with the code after #49 (D-034: compact, at-position, consistent references;
+  residual-scaled search radius). Classes: recovered 3, confused 3, absent 2, undetectable 3, no_reference 16.
+  - The only `absent` images are both of system 700.1 (z = 1.217 fitted). The worker had already shown that the
+    model cannot reproduce this system at any z from 1 to 5.
+  - **4.2c is now `no_reference`.** System 4.2's catalogued images (4.2a, 4.2b) fail the reference rules: they are
+    resolved or neighbour-contaminated. The first pass's 252σ prediction therefore rested on aperture fluxes that
+    do not scale with |μ|.
+- **4.2c verdict: ordinary, not a candidate.**
+  - The reference knots 4.1a and 4.2a are small, faint clumps of one thin arc (high-pass cutouts, F150W/F277W/
+    F444W).
+  - The predicted position lies on the brightest cluster galaxy's halo, where the high-pass residuals are strong.
+  - The family's other knot image, 4.1c, is observed 2.5″ away. That is consistent with knot-level model offsets
+    near the cluster core.
+- 34.1 (μ 45) and 28 are recovered under the new rules (flux ratios 0.80 and 0.68).
+- **Result: the Abell 2744 screens are a null result.** Flags raised: 16. Surviving vetting: 0.
