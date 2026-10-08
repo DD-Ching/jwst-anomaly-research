@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from astropy.table import Table
 
 _DIR = Path(__file__).resolve().parents[1] / "scripts"
@@ -240,3 +241,38 @@ def test_bright_neighbour_and_gaia_self_match():
     gaia["gmag"][1] = 21.0  # two faint Gaia stars (1.5" radius): only the self matches at 2"
     near, _ = ds.gaia_proximity(pos, gaia)
     assert not near.any()
+
+
+def test_saturated_star_masks_neighbours_beyond_bright_neighbour_radius():
+    from astropy.coordinates import SkyCoord
+
+    # a G = 17.9 star (NaN catalogue flux, so never a bright_neighbour) and a faint source 1.8"
+    # away: near_star must cover it, and check_params guards that coupling
+    p = ds.Params()
+    sep = p.bright_neighbour_arcsec + p.gaia_self_arcsec
+    pos = SkyCoord([150.0], [2.0 + sep / 3600], unit="deg")
+    gaia = Table({"ra": [150.0], "dec": [2.0], "gmag": [p.gaia_saturated_g - 0.1]})
+    near, _ = ds.gaia_proximity(pos, gaia, p)
+    assert near[0]
+    ds.check_params(p)
+    with pytest.raises(ValueError):
+        ds.check_params(ds.Params(gaia_saturated_g=21.0))
+
+
+def test_known_object_labels_and_failed_services():
+    xm = Table(
+        {
+            "source_uid": ["b", "a"],
+            "is_known_object": [True, False],
+            "best_match_service": ["ned", ""],
+            "best_match_type": ["G", ""],
+            "best_match_id": ["WISEA J001412.34-302345.6 extra long identifier", ""],
+            "n_simbad": [0, 0],
+            "n_ned": [1, -1],
+        }
+    )
+    labels, failed = ds.known_object_labels(xm, ["a", "b"])
+    assert labels == ["", "ned:G:WISEA J001412.34-302345.6 extra long identifier"]
+    assert failed == ["ned"]
+    xm["n_ned"] = [1, 0]
+    assert ds.known_object_labels(xm, ["a", "b"])[1] == []
