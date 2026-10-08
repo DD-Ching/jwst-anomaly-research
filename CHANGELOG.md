@@ -9,6 +9,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Reproduces the D-042 system-51 result with library code: σ ≤ 70 km/s at z 0.268 leaves exactly 3 images.
 - **Handoff:** use `split_planes` in `/vet-candidate` for any extra or missing image near a non-member galaxy.
 
+## 2026-10-08: Orphan image pairs, a blind dark-deflector screen: null (D-048)
+- Worktree worker: `scripts/orphan_pairs.py` looks for SED-matched close pairs with no published system and no visible
+  galaxy between them in the CANUCS DR1 catalogues of MACS0416, MACS1149 and Abell 370.
+- Pair excesses come from same-redshift groups (null (c)); 38 orphans against 34.5 expected. The 35 top orphans are
+  knots, group members or chance matches, all at |μ| ≈ 1–2.5. No candidate.
+- **Failed approaches:** a midpoint-only lens rule (missed galaxies between members); no per-band S/N cut (25 % false
+  SED matches).
+- Wall time: 5–10 s per field per search, 30–60 s with cutouts.
+- **Handoff:** injection-recovery so the null becomes a limit; segmentation-map same-galaxy test; more clusters.
+
 ## 2026-10-08: Lenstool MCMC posteriors; Abell 2744 multiplicity residual explained (D-045)
 - `lensmodel.read_lenstool_bayes` / `posterior_par` and `lens_consistency.py posterior` rebuild published models at
   MCMC samples (potfile rescaling, sampled family redshifts). Validated on Abell 2744: best.par is a chain row, and
