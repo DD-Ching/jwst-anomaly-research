@@ -111,6 +111,9 @@ def main(argv=None) -> None:
     )
     cls = [classify(float(r["ra"]), float(r["dec"]), t, p) for r, t in zip(q, srcs, strict=True)]
     res["n_hsc"] = [len(t) for t in srcs]
+    res["n_hsc_good"] = [
+        int((np.asarray(t["NumImages"]) >= p.min_images).sum()) if len(t) else 0 for t in srcs
+    ]
     res["status"] = [c[0] for c in cls]
     res["n_point"] = [c[1] for c in cls]
     res["max_sep"] = [c[2] for c in cls]
@@ -129,7 +132,7 @@ def main(argv=None) -> None:
         return {str(k): int(v) for k, v in zip(vals, n, strict=True)}
 
     known = np.asarray(res["lens_z_known"], bool)
-    cov = np.asarray(res["n_hsc"]) > 0
+    cov = np.asarray(res["n_hsc_good"]) > 0  # coverage after the artifact cut
     k = counts(known & cov)
     dec_known = k.get("deflector", 0) + k.get("none", 0)
     summary = {
