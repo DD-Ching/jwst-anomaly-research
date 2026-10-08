@@ -9,7 +9,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - The F150W difference image is compact and 0.018″ from the 2022 centroid. The host is compact but resolved (DJA
   r50 ≈ 1.45× the point-source locus), with z_phot 2.04 (1.66–2.25). No SIMBAD/NED/Gaia source within 3″. It lies
   128″ from the cluster centre, outside the multiple-image region.
-- Verdict: `inconclusive`. AGN variability or a nuclear SN/TDE (a `hypothesis`); not a lensing anomaly. MAST has no
+- Verdict: `inconclusive`. AGN variability or a nuclear SN/TDE (a `hypothesis`); a variable star is disfavoured but
+  not excluded; not a lensing anomaly. New `scripts/epoch_difference.py` regenerates the difference-image numbers. MAST has no
   other JWST epoch, and o120 misses the position.
 - **Rule:** for transients across pipeline versions, use controls within about 1′ of the candidate to test the
   calibration locally (`--controls` on a cone-cut catalogue).

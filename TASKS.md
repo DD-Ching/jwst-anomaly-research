@@ -53,7 +53,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    (docs/fields/sunrise.md). Third epoch (o052, calibrated with `--controls`): 0 of 57 candidates. Next:
    - `n0022` and `n0150` are detector persistence (D-039). Run `scripts/persistence_check.py` on every future
      single-epoch candidate before vetting. `n0153` is vetted (docs/candidates/n0153.md): real, nuclear, in a
-     z_phot ≈ 2 galaxy; it needs a third epoch (check MAST for WHL0137 revisits);
+     z_phot ≈ 2 galaxy (a star is not excluded); it needs a third epoch (check MAST for WHL0137 revisits). Archival
+     follow-ups: DJA per-epoch mosaics (colour of the change), X-ray or radio counterparts;
    - forced photometry on all catalogued sources, not only catalog-stage candidates (the two-band rule misses
      blue transients);
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
