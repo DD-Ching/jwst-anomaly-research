@@ -1834,6 +1834,41 @@ CATS-fitted z = 4.419.
 - A spectroscopic z for system 16 is published (search the MUSE catalogues of Grillo+2016 and Treu+2016), or a source
   with 16.1's colour is found on the far-image track (z = 2.5–3.5 positions). Either would fix z.
 - `images` is re-run with CANUCS DR1 photo-z (counterpart redshifts). DJA v7 has no MACS1149 mosaic.
+## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)
+
+**Decision.** MACS0416 system 26's 11″ image-plane residual (D-035) comes from `find_images`. With the default 0.25″
+solver grid, it misses the merging 26.1/26.2 pair, because the mean source lies 0.001–0.005″ from the fold caustic
+(|μ| 142, 153, 69). It is not a redshift problem and not a model failure. `macs0416-cats` stays map-only (image list
+gated off) until the solver refines its grid near high |μ|. Pairs whose catalogued images share one predicted image
+(`shared_match_images`) are checked at a 0.1″ grid before they are called model topology. The radial screen is null
+(docs/fields/macs0416.md).
+
+**Alternatives rejected.**
+- Dropping system 26 by hand (rms 0.809″): this hides a solver limitation.
+- Opening the image list on the 0.1″ result alone: system 122 still shares one predicted image on both grids, and the
+  gate should not depend on a hand-chosen step.
+
+**Evidence.**
+- Data: CANUCS 1208 `jw01208-o004_t002`, 8 bands, jwst 3.0.0.
+- `validate`: κ 2.5e-3; μ(z=2) 3.7e-4. Image-plane rms:
+  - 1.572″ on the 0.25″ grid (116 images; 2.18× the quoted 0.72″);
+  - 0.811″ on a 0.1″ grid (1.13×), where system 26's residuals are 0.15″, 1.01″ and 1.12″.
+- Redshift: `params.txt` has no `z_m_limit`. z = 3.238 is close to the source-plane rms minimum (0.071″ at z 3.30).
+  All three images have F200W counterparts within 0.22″.
+- Frame offset (arcs.txt → JWST, 54 images): dRA +0.208″, dDec −0.025″.
+- MACS1149 control: its six shared pairs are identical at 0.25″ and 0.1″, so D-037's topology verdicts stand.
+- `radial` (no photo-z): 139 anti arcs, 98 centres against a random mean of 99.6 (p95 120). The strongest centre has
+  7 lines, p = 0.29. Its lines are noise segments: aper50 S/N 1.6–4.0, nothing in cutouts, forced S/N within ±1.5σ.
+  With aper50 S/N ≥ 5, there are 7 centres against 6.8 and at most 3 lines. Re-run with CANUCS DR1 photo-z (77
+  non-background sources dropped, some of them blended lensed images): 120 anti arcs, 77 centres against 85.0 (p95 103), max 7 lines, p 0.225; null.
+  In the JWST frame (offset applied; D-040 fix): 101 against 100.2 without photo-z, 81 against 84.9 with; null.
+- Tally: 137 anti arcs screened; 0 flags; **0 surviving**. `images` and `fluxratio` were not run (gated).
+
+**Revisit if.**
+- `find_images` gets adaptive refinement near |μ| > 50. Then open the MACS0416 gate and run `images` / `fluxratio`
+  with `frame_offset_arcsec` (0.208, −0.025).
+- `images` / `fluxratio` run with CANUCS DR1 photo-z once the image list opens.
+
 
 ## D-039 MACS0717 screens: null; model copies of unpredicted images; CATS-only extra images (2026-10-08)
 
