@@ -40,3 +40,5 @@ Results: docs/exotic_limits.md "W1/W2 in published lens catalogues".
 - LS DR10 finds no lens galaxy in real quasar lenses at 1.9–2.6″: 0/5 controls (lens light absorbed into the image
   PSFs). A "none" there is uninformative; always run a control sample of known lenses through the same chain.
 - VizieR writes some coordinates as sexagesimal strings (`RA1` "h:m:s"); parse them, and fail loudly if nothing parses.
+- Lemon et al. 2023 `z2` is mostly z_lens / zgal (`n_z2`); only "zqso=" is a second quasar redshift.
+- VizieR ASU-TSV headers carry the request time: pin the data lines, not the raw file.

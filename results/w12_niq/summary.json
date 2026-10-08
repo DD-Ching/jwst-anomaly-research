@@ -125,9 +125,10 @@
   "n_systems": 232,
   "dropped": {
     "no coordinates": {},
+    "duplicates": 0,
+    "cluster-lens component rows": 2,
     "no catalogued separation": 0,
-    "sep_cat > 3.0 arcsec": 185,
-    "duplicates": 0
+    "sep_cat > 3.0 arcsec": 185
   },
   "n_covered": 169,
   "rejected": {

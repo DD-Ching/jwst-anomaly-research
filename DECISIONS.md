@@ -2992,7 +2992,10 @@ colour-mismatched, 2 are catalogued binaries and 1 has two redshifts; 11 remain 
   - the Hennawi coordinates are sexagesimal and silently matched nothing; `binary_match` now raises if nothing
     parses;
   - wide pairs were tested on unrelated LS pairs;
-  - the greedy dedup was not transitive.
+  - the greedy dedup was not transitive;
+  - Lemon's `z2` is usually the lens or a galaxy redshift. Only `n_z2 = "zqso="` (unflagged) is a second quasar.
+- The Tractor rows the test ran on are pinned too (sha256 of the sorted rows), and so are the brick summary and
+  every VizieR table. VizieR error, empty or truncated responses are refused.
 
 **Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 11 colour-matched pairs;
 spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ tables add pairs of 2–3″.

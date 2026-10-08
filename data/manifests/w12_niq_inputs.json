@@ -94,5 +94,12 @@
     "bytes": 23535682,
     "sha256": "784df2df9454a3097d1d602d129ffbc746e8951f766a3ad67784de7ce4f743f9",
     "rows": 332581
+  },
+  "tractor": {
+    "sha256": "ca54e8e0966ad93d21a6e802e85a5929348f38e010b5b032977c5a52a2e5ed24",
+    "rows": 743,
+    "sha256_of": "sorted ls_id,ra,dec,type,mag_z",
+    "source": "Legacy Surveys DR10 Tractor boxes (Data Lab TAP)",
+    "box_arcsec": 5.0
   }
 }

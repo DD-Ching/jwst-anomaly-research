@@ -34,6 +34,7 @@ def test_sdss_name_radec():
         ("QSO pair, no lensing object", "rejected"),
         ("SDSS lens", "control"),
         ("Known lens", "control"),
+        ("SDSS lens; QSO pair nearby", "control"),
         ("QSO pair", "rejected"),
         ("Binary QSO (z=0.799, 0.799)", "rejected"),
         ("QSO+star", ""),
@@ -160,3 +161,42 @@ def test_redshift_pair_and_difference():
     assert np.isnan(niq.comment_z_pair("No lensing object")[0])
     d = niq.different_redshift([1.686, 0.827, 1.0], [1.600, 0.824, np.nan])
     assert list(d) == [True, False, False]
+
+
+def test_lemon_z2_used_only_for_a_second_quasar():
+    t = Table(
+        rows=[
+            ("Q", "150.0", "1.0", "1.5", "2.2", "UQP", "1.40", "zqso=", " ", "  "),
+            ("L", "160.0", "1.0", "1.5", "2.2", "lens", "0.40", "z_lens=", " ", "  "),
+        ],
+        names=("Name", "RAJ2000", "DEJ2000", "z", "Sep", "Class", "z2", "n_z2", "f_z2", "f_z"),
+        dtype=[str] * 10,
+    )
+    s = niq.build_sample({"J/MNRAS/520/3305/table1": t})
+    z2 = dict(zip(s["name"], s["z2"], strict=True))
+    assert z2["Q"] == pytest.approx(1.4) and np.isnan(z2["L"])
+
+
+def test_wide_lens_still_promotes_its_group_and_merged_info_is_kept():
+    lemon = _lemon([("A", "150.0", "1.0", "1.5", "2.2", "UQP")])
+    sqls = _sqls(
+        [
+            ("J100000.13+010000.0", "1.5", "3.4", "SDSS lens"),  # wide lens 1.95" from A
+            ("J110000.00+010000.0", "1.5", "2.4", "QSO pair (z=1.686, 1.600)"),
+            ("J110000.13+010000.0", "1.5", "", "No lensing object"),
+        ]
+    )
+    s = niq.build_sample({"J/MNRAS/520/3305/table1": lemon, "J/AJ/143/119/table4": sqls})
+    g = dict(zip(s["name"], s["group"], strict=True))
+    assert g["A"] == "control"
+    row = s[s["name"] == "J110000.00+010000.0"][0]
+    assert row["z2"] == pytest.approx(1.6) and "No lensing object" in row["comment"]
+
+
+def test_check_vizier_refuses_errors_and_empty(tmp_path):
+    ok = b"#INFO x\nName\n \n----\nJ1\n"
+    niq.check_vizier(ok, "t", tmp_path)
+    with pytest.raises(RuntimeError):
+        niq.check_vizier(b"#INFO Error: no such table\nName\n \n----\n", "t", tmp_path)
+    with pytest.raises(RuntimeError):
+        niq.check_vizier(b"Name\n \n----\n", "t", tmp_path)

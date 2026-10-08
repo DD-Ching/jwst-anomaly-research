@@ -41,7 +41,12 @@ import w12_lenscats as w12  # noqa: E402
 
 from jwst_anomaly import __version__, lenscats, paths, schema  # noqa: E402
 
-VIZIER = "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source={}&-out.max=5000&-out.all"
+MAX_ROWS = 5000
+VIZIER = (
+    "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source={}&-out.max="
+    + str(MAX_ROWS)
+    + "&-out.all"
+)
 # (VizieR table, release label); SQLS tables: DR3 (2008), DR5 (2010), DR7 (2012)
 INPUTS = {
     "J/MNRAS/520/3305/table1": "Lemon2023",
@@ -83,6 +88,8 @@ def pinned() -> dict[str, str]:
     m = json.loads(man.read_text())
     pins = {r["source"]: r["sha256"] for r in m["inputs"]}
     pins["bricks"] = m["bricks"]["sha256"]
+    if "tractor" in m:
+        pins["tractor"] = m["tractor"]["sha256"]
     return pins
 
 
@@ -105,6 +112,18 @@ def data_sha256(data: bytes) -> str:
     return hashlib.sha256(body).hexdigest()
 
 
+def check_vizier(data: bytes, source: str, path: Path) -> None:
+    """Refuse an ASU-TSV that is an error page, empty or truncated at -out.max (the notices sit
+    in '#' lines, which the hash ignores)."""
+    lines = data.decode("utf-8", "replace").splitlines()
+    notes = [
+        ln for ln in lines if ln.startswith("#") and re.search(r"error|overflow|truncat", ln, re.I)
+    ]
+    n_data = len([ln for ln in lines if ln and not ln.startswith("#")]) - 3
+    if notes or n_data < 1 or n_data >= MAX_ROWS:
+        raise RuntimeError(f"{source}: bad VizieR response in {path} ({n_data} rows; {notes[:2]})")
+
+
 def fetch(source: str, out: Path, pins: dict[str, str] | None) -> tuple[Path, dict]:
     """Download (or reuse) one VizieR table; refuse it if it differs from the pin."""
     f = out / (source.replace("/", "_") + ".tsv")
@@ -113,6 +132,7 @@ def fetch(source: str, out: Path, pins: dict[str, str] | None) -> tuple[Path, di
         r.raise_for_status()
         f.write_bytes(r.content)
     data = f.read_bytes()
+    check_vizier(data, source, f)
     sha = data_sha256(data)
     check_pin(source, sha, pins)
     retrieved = dt.datetime.fromtimestamp(f.stat().st_mtime, dt.UTC).isoformat(timespec="seconds")
@@ -174,16 +194,16 @@ def sqls_group(comment: str) -> str:
     """rejected: no lens object, or a quasar pair / binary (as Lemon's "QSO pair" class);
     control: a catalogued lens."""
     c = comment.lower()
+    if "sdss lens" in c or "known lens" in c:
+        return "control"  # checked first: a comment naming a lens never makes a rejection
     if "no lens" in c or "qso pair" in c or "binary" in c:
         return "rejected"
-    if "sdss lens" in c or "known lens" in c:
-        return "control"
     return ""
 
 
 def build_sample(tables: dict[str, Table]) -> Table:
-    """Rejected and control pairs from all inputs, merged within DEDUP_ARCSEC, galaxy scale only
-    (catalogued separation <= SEP_MAX or unknown). ``meta``: rows dropped per reason."""
+    """Rejected and control pairs from all inputs, merged within DEDUP_ARCSEC, then restricted to
+    known catalogued separations <= SEP_MAX. ``meta["dropped"]``: rows dropped per reason."""
     rows, dropped = [], {}
     for source, t in tables.items():
         label = INPUTS[source]
@@ -204,7 +224,15 @@ def build_sample(tables: dict[str, Table]) -> Table:
                     _float(r["z"]),
                     _float(r["Sep"]),
                 )
-                z2 = _float(r["z2"]) if "z2" in t.colnames else np.nan
+                # z2 is a second *quasar* redshift only when n_z2 says "zqso=" (otherwise it is
+                # z_lens or zgal); flagged (uncertain) values are not used
+                z2 = (
+                    _float(r["z2"])
+                    if r.get("n_z2", "").startswith("zqso")
+                    and not r.get("f_z2", "").strip()
+                    and not r.get("f_z", "").strip()
+                    else np.nan
+                )
                 comment = cls
             else:
                 name = r["SDSS"]
@@ -219,8 +247,6 @@ def build_sample(tables: dict[str, Table]) -> Table:
                     ra, dec = sdss_name_radec(name)
                 z, sep = _float(r["z"]), _float(r["theta"])
                 z2 = comment_z_pair(comment)[1]
-            if group and "component" in comment.lower():
-                group = ""  # one cluster-scale lens split into component rows (not galaxy scale)
             if group and not np.isfinite(ra):
                 dropped[label] = dropped.get(label, 0) + 1
             elif group:
@@ -230,16 +256,21 @@ def build_sample(tables: dict[str, Table]) -> Table:
         names=("name", "ra", "dec", "z_source", "z2", "sep_cat", "group", "catalogue", "comment"),
     )
     s["comment"] = s["comment"].astype(object)  # notes are appended below (no truncation)
+    # merge first (a lens row that is dropped below still promotes its group to control), then
+    # drop component rows of one cluster-scale lens, unknown separations and wide pairs
     n_rows = len(s)
+    s = dedup(s)
+    n_dup = n_rows - len(s)
+    comp = np.array(["component" in str(c).lower() for c in s["comment"]], bool)
     nosep = ~np.isfinite(np.asarray(s["sep_cat"], float))
     wide = np.asarray(s["sep_cat"], float) > SEP_MAX
-    s = s[~nosep & ~wide]
-    s = dedup(s)
+    s = s[~comp & ~nosep & ~wide]
     s.meta["dropped"] = {
         "no coordinates": dropped,
-        "no catalogued separation": int(nosep.sum()),
-        f"sep_cat > {SEP_MAX} arcsec": int(wide.sum()),
-        "duplicates": int(n_rows - nosep.sum() - wide.sum() - len(s)),
+        "duplicates": int(n_dup),
+        "cluster-lens component rows": int(comp.sum()),
+        "no catalogued separation": int((~comp & nosep).sum()),
+        f"sep_cat > {SEP_MAX} arcsec": int((~comp & ~nosep & wide).sum()),
     }
     s["selection"] = "quasar"
     s["z_lens"] = np.nan
@@ -274,13 +305,21 @@ def dedup(s: Table) -> Table:
         if s["group"][k] == "rejected" and np.any(s["group"][members] == "control"):
             s["group"][k] = "control"
             s["comment"][k] += " | listed as lens elsewhere"
+        for m in members[1:]:  # keep the merged rows' vetting information
+            s["comment"][k] += f" | {s['catalogue'][m]}: {s['comment'][m]}"
+            if not np.isfinite(s["z2"][k]) and np.isfinite(s["z2"][m]):
+                s["z2"][k] = s["z2"][m]
+            if not np.isfinite(s["sep_cat"][k]) and np.isfinite(s["sep_cat"][m]):
+                s["sep_cat"][k] = s["sep_cat"][m]
         keep.append(k)
     return s[np.sort(keep)]
 
 
 def pair_colour_difference(images: Table, src: Table) -> np.ndarray:
     """g - z of image 1 minus image 2 (LS Tractor); NaN when either is missing. ``derived``."""
-    gz = lenscats._gz(src) if len(src) else np.zeros(0)
+    if not len(src) or "mag_g" not in src.colnames:
+        return np.full(len(images), np.nan)
+    gz = np.asarray(src["mag_g"], float) - np.asarray(src["mag_z"], float)
     out = np.full(len(images), np.nan)
     for k, (i1, i2) in enumerate(zip(images["img1"], images["img2"], strict=True)):
         if i1 >= 0 and i2 >= 0:
@@ -311,13 +350,15 @@ def _coords(ra_col, dec_col) -> tuple[np.ndarray, np.ndarray]:
     """Degrees from decimal or sexagesimal ("h:m:s" / "d:m:s", as VizieR writes RA1/DE1) strings."""
     ra = np.array([_float(x) for x in ra_col])
     de = np.array([_float(x) for x in dec_col])
-    for i, (r, d) in enumerate(zip(ra_col, dec_col, strict=True)):
-        if not (np.isfinite(ra[i]) and np.isfinite(de[i])) and str(r).strip() and str(d).strip():
-            try:
-                c = SkyCoord(str(r).strip(), str(d).strip(), unit=("hourangle", "deg"))
-                ra[i], de[i] = c.ra.deg, c.dec.deg
-            except ValueError:
-                pass
+    rs = np.array([str(x).strip() for x in ra_col])
+    ds = np.array([str(x).strip() for x in dec_col])
+    todo = ~(np.isfinite(ra) & np.isfinite(de)) & (rs != "") & (ds != "")
+    if todo.any():
+        try:
+            c = SkyCoord(rs[todo], ds[todo], unit=("hourangle", "deg"))
+            ra[todo], de[todo] = c.ra.deg, c.dec.deg
+        except ValueError:
+            pass  # unparseable: stays NaN (binary_match raises if nothing parses)
     return ra, de
 
 
@@ -371,6 +412,15 @@ def cmd_screen(args) -> None:
     covered = np.asarray(s["covered"], bool)
     sc = s[covered]
     src = w12.query_tractor(sc, p, out / "tractor_cache")
+    tractor_sha = hashlib.sha256(
+        "\n".join(
+            f"{i},{r:.7f},{d:.7f},{t},{z:.4f}"
+            for i, r, d, t, z in sorted(
+                zip(src["ls_id"], src["ra"], src["dec"], src["type"], src["mag_z"], strict=True)
+            )
+        ).encode()
+    ).hexdigest()
+    check_pin("tractor", tractor_sha, pins)
     req = w12.required_mags(sc, sc["theta_e"], D056_FJ, p)
     for k, v in req.items():
         sc[k] = v
@@ -465,7 +515,16 @@ def cmd_screen(args) -> None:
     (res / "summary.json").write_text(json.dumps(summary, indent=2, default=str) + "\n")
     if args.repin:  # the manifest is the pin: rewritten only on purpose
         man = paths.manifests_dir() / MANIFEST
-        man.write_text(json.dumps({"inputs": manifest, "bricks": bmeta}, indent=2) + "\n")
+        tmeta = {
+            "sha256": tractor_sha,
+            "rows": len(src),
+            "sha256_of": "sorted ls_id,ra,dec,type,mag_z",
+            "source": "Legacy Surveys DR10 Tractor boxes (Data Lab TAP)",
+            "box_arcsec": p.box,
+        }
+        man.write_text(
+            json.dumps({"inputs": manifest, "bricks": bmeta, "tractor": tmeta}, indent=2) + "\n"
+        )
     print(
         json.dumps(
             {
