@@ -2765,6 +2765,23 @@ orphan counts.
 - A lens list publishes image positions (W1 geometry).
 - Tractor can be re-run on injected images (a measured completeness).
 
+**Amendment (2026-10-08): the LS pair must be the catalogued pair (D-064 check).**
+- `lenscats.pair_match` (moved from `scripts/w12_niq.py`, tolerance `PAIR_SEP_TOL` = 0.5″, ASSUMPTION) is shared by
+  both scripts. In `w12_lenscats.py`, `deflector_test` reports `used_pair`, and `pair_check` compares the LS pair
+  with 2θ_E (SIS `model_prediction`; the catalogues give no image positions). A pair-based status with a mismatch
+  is undecided. Without a catalogued θ_E the system stays decided and is counted as unchecked in `summary.json`.
+- Re-run (`derived`): decided 29 → 28 (deflector 13 → 12, none 16). 115252+004733 (θ_E 1.67″, LS pair 4.18″)
+  becomes undecided. Typical: quasar 3 / 15 / < 0.52, radio 0 / 13 / < 0.23 (unchanged), all 3 / 28 / < 0.28.
+  Conservative: 0 / 5 / < 0.60. The three open CHITAH pairs are unchanged.
+- Coverage is thin: 0 of the 15 pair-decided systems have a catalogued θ_E. A one-off check against the SQLS
+  separations pinned for D-064 matched the three that have one (J1322+1052, J1349+1227, J1515+1511).
+- Found while re-running (not fixed): three radio lenses are listed twice about 11″ apart (MG0414+0534, B2114+022,
+  B2319+052). Each counts twice in N, with "deflector" at one position and "none" at the other. With one entry per
+  lens: radio 0 / 10 / < 0.30, all 3 / 25 / < 0.31.
+- Rejected: requiring a catalogued separation for every decided system (no pair-decided system has one, so the
+  quasar class would have N = 0); importing the D-064 VizieR tables into the D-056 chain (3 of 15 matches, all
+  consistent: a second pinned input set for no change).
+
 ## D-057 W3 in OGLE-IV Mróz samples: one fitter for ordinary and exotic models; disk sample null (2026-10-08)
 
 **Decision.**

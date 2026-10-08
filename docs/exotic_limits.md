@@ -648,6 +648,10 @@ more than θ_E. The test is therefore defined per selection class (ASSUMPTIONs i
 - Deflector candidates lie inside the smallest circle about the images' centroid that holds every image (the circle
   with the pair as diameter for a double; a fold or cusp pair of a quad leaves the lens outside the pair circle), and
   more than 0.5″ from every image. The ±5″ box limits the circle to pairs within 3″ of the position.
+- **The LS pair must be the catalogued pair** (D-064 check, `lenscats.pair_match`, D-056 amendment 2026-10-08). The
+  catalogues give θ_E, not image positions, so the catalogued separation is 2θ_E (SIS `model_prediction`). A system
+  whose status came from the LS pair (`used_pair`) and whose pair separation differs from 2θ_E by > 0.5″ is
+  undecided. Without a catalogued θ_E the pair is unchecked and the system stays decided.
 
 **Status rules.**
 - A candidate with m_z ≤ typical required magnitude + 2 rms is a "deflector". Where that magnitude is undefined, the
@@ -656,9 +660,17 @@ more than θ_E. The test is therefore defined per selection class (ASSUMPTIONs i
   should be, and whether it is luminous enough depends on the Faber–Jackson scatter beyond the margin. Such a system
   can neither show nor exclude a dark deflector.
 - Position and imaging problems are evaluated on every covered system and remove it from N whatever the test said.
-  In the 343 covered quasar and radio systems: maskbits 9, rounded positions 5, name/RA–Dec mismatch 1.
+  In the 343 covered quasar and radio systems: maskbits 9, rounded positions 5, name/RA–Dec mismatch 1, LS pair
+  not the catalogued pair 1.
 - A position counts as rounded if either axis is a whole 0.01° or 0.1°, or if both axes show a finer step.
-- **Decided: 29 systems**, of which 13 have a deflector and 16 do not ("none").
+- **Decided: 28 systems**, of which 12 have a deflector and 16 do not ("none"). Before the pair check: 29 and 13.
+- **Pair check coverage.** 15 decided systems got their status from the LS pair; none of the 15 has a catalogued
+  θ_E, so the check removed only a system that has one: 115252+004733 (θ_E 1.67″, so 3.34″ expected; LS pair 4.18″;
+  "deflector" before). Its cutout shows an 18.1 mag (z) red galaxy at the centre and two faint PSF sources
+  (z ≈ 23.2–23.3) about 2″ either side. The galaxy is plainly there, but the faint pair is not the catalogued one,
+  so the system is undecided. Three of the 15 have separations in the SQLS tables pinned for D-064
+  (`data/manifests/w12_niq_inputs.json`): J1322+1052 1.88″, J1349+1227 2.99″ and J1515+1511 2.03″, against LS
+  2.00″, 3.01″ and 2.01″. All three match (a one-off check, not part of the chain). The other 12 are unchecked.
 
 **Required lens light.**
 - SIS σ from θ_E: the catalogue's, else (quasar and radio systems only) half the image separation, else 1″. Then an
@@ -700,12 +712,15 @@ simulated:
 
 | Variant | quasar: k / N / f_dark < | radio: k / N / f_dark < | all |
 |---|---|---|---|
-| typical | 3 / 16 / 0.48 | 0 / 13 / 0.23 | 3 / 29 / 0.27 |
-| conservative | 0 / 6 / 0.50 | 0 / 0 / — | 0 / 6 / 0.50 |
+| typical | 3 / 15 / 0.52 | 0 / 13 / 0.23 | 3 / 28 / 0.28 |
+| conservative | 0 / 5 / 0.60 | 0 / 0 / — | 0 / 5 / 0.60 |
+
+With the pair check (D-056 amendment 2026-10-08). Before it: typical quasar 3 / 16 / 0.48 and all 3 / 29 / 0.27;
+conservative 0 / 6 / 0.50.
 
 f_dark is the fraction of quasar- or radio-selected galaxy-scale lenses whose deflector is dark (fainter than an
 ordinary lens of that θ_E).
-- These limits are **weak and rest on an assumed complete test.** LS DR10 decides only 29 of the 343 covered quasar
+- These limits are **weak and rest on an assumed complete test.** LS DR10 decides only 28 of the 343 covered quasar
   and radio systems (242 blended, 65 closer than 2″).
 - There is **no limit** on galaxy-finder or sub-mm systems, or on W1: there is no image geometry, and W1 pairs are
   unlikely to pass lens finders.
@@ -722,6 +737,11 @@ ordinary lens of that θ_E).
   - 468 covered systems with rounded positions (a random 32 inspected);
   - candidates their own papers rejected (MJV16999, Spingola et al. 2019);
   - name-based merges across lists.
+- **Duplicate systems (not fixed; found 2026-10-08).** Three radio lenses appear twice in lenscat, about 11″
+  apart (beyond the 3″ merge): MG0414+0534 (L00042 "deflector", L04558 "none"), B2114+022 (L00194, L10187)
+  and B2319+052 (L00211, L04612). Each pair counts twice in the radio N. The "none" copy sits off the lens and is
+  explained by its published lens redshift, so k is unchanged. With one entry per lens, the typical radio limit would
+  be 0 / 10 / 0.30 and all 3 / 25 / 0.31.
 - HSC-SSP imaging (account required) and HST photometry were not used. They would decide the 307 blended or close
   lensed quasars.
 - Relation to D-051: D-051 limits dark deflectors per unit area in JWST deep fields. This is a per-lens fraction in
