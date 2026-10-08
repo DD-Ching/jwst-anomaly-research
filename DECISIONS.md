@@ -2093,6 +2093,49 @@ tests (removing or rescaling one potential, D-042), which maps do not.
 - CANUCS releases a MACS1149 parameter file.
 - The Abell 370 image list is needed: it requires an rms gate like D-035's.
 
+## D-045 Lenstool MCMC posteriors (`bayes.dat`); the Abell 2744 multiplicity residual is model resolution, not an anomaly (2026-10-08)
+
+**Decision.** `lensmodel.read_lenstool_bayes` / `posterior_par` rebuild a published model at any MCMC sample, and
+`lens_consistency.py --model <m> posterior --systems ...` runs the image-plane solve for selected families over
+best.par plus N random chain rows. Pinned chains: Abell 2744 Bergamini+2023b (70 MB, 133,690 rows) and El Gordo
+Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `validate` does not fetch them.
+- `O<i> : <key> (<unit>)` columns replace keywords of the i-th best.par potential; units are checked.
+- `Pot0 sigma` / `Pot0 rcut` rescale every potfile member (a best.par potential with `mag`) by the ratio to the
+  best-fit value. That is exact for Lenstool's power-law scaling relations. The reference is best.par's own chain
+  row (Abell 2744) or, for a thinned chain without it, the member at the input file's `mag0` (El Gordo: BCG 1758,
+  `potfile_mag0` 17.9852 from CDS `to_sample.par`).
+- `Redshift of <id>` columns set every family on that `z_m_limit` line.
+
+**Alternatives rejected.**
+- The CANUCS 100 MCMC deflection maps (MACS0416 only, 100 × 3 maps); a parametric chain covers every model we
+  rebuild from best.par, at any number of samples.
+- A full `images` run per sample: about 70 s per Abell 2744 sample at a 0.25″ grid, dominated by the deflection
+  grid, so `posterior` restricts the solve to the named families.
+
+**Evidence.**
+- Abell 2744: best.par is chain row 117,869 (Chi2 146.60; parameter differences 0, family redshifts < 1e-3), and its
+  rebuilt deflection field equals best.par's. Two random rows give χ²pos 173.5 and 173.0 against the chain's 178.1
+  and 174.1 (all 149 images, 0.25″ grid). The rebuild is validated.
+- El Gordo: the chain medians match best_fit.par (σ* 289.97 vs 289.48 km/s; O1 σ 1041 vs 1041), but the chain's
+  `Chi2` column (54–77) does not track our χ²pos (93–106 at the 0.621″ sigpos of D-030), not even in rank. The
+  column's definition is unknown, so the El Gordo chain is **not validated**; don't use it for conclusions yet.
+- Abell 2744 `posterior --systems 3.2,34.1,700.1,4.2 --samples 12 --seed 1` (`model_prediction`):
+  - 3.2a/b, 34.1a/b, 700.1a/b stay a `shared_match` in 13 of 13 models. The MCMC spread does not split them.
+  - Independent model, CATS v4.1 maps (scratch run with Bergamini's image list): 34.1a/b **split** (μ +24.9 / −21.7,
+    residuals 2.8″ / 2.0″), so the 34.1 merger is model-dependent. 3.2a/b merge there too (μ 230): both models put
+    the source on the caustic. The catalogue's 3.3a–3.1a–3.2a | 3.2b–3.1b–3.3b ordering is mirror-symmetric, so the
+    critical curve must run between 3.2a and 3.2b. A point-source model with the source within its position error of
+    the caustic predicts one merged image 0.28–0.53″ from each, which is within the model's 0.43″ rms. 700.1 has a
+    free redshift (posterior 1.2–3.9); CATS does not reproduce it at Bergamini's z.
+  - 4.2c (D-036) is present in 12 of 12 samples, 0.22–0.36″ (p16–p84) from the best-fit position, with μ 8.7–10.0.
+    The statistical spread is far below the galaxy-scale systematics that explain it (μ 3.9–28.7 under ±30 %).
+- Verdict: the D-030 multiplicity residual is model resolution at folds, not an anomaly. **0 surviving.**
+
+**Revisit if.**
+- The El Gordo `Chi2` column is understood (then validate that chain as for Abell 2744).
+- An independent model with 3.2's source well inside the caustic still merges 3.2a/b.
+- Speed: `imageplane_residuals` exposes its predicted images (`posterior` currently solves each family twice).
+
 ## D-046 Multi-plane lens models: `LensModel.split_planes` and `MultiPlaneLensModel` (2026-10-08)
 
 **Decision.**
