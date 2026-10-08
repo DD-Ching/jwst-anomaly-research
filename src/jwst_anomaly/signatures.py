@@ -136,7 +136,7 @@ register(
         data_kinds=("light_curve",),
         predict=_bound(exotic_sim.light_curve, _NEG),
         inject=_bound(exotic_sim.inject_light_curve, _NEG),
-        screens=("scripts/dimming_screen.py",),
+        screens=("scripts/dimming_screen.py", "scripts/w3_microlensing.py"),
         ordinary_mimics=(
             "binary-lens caustic crossings",
             "blending and photometric systematics",
@@ -145,7 +145,7 @@ register(
             "persistence and saturated-star wings",
         ),
         limits_doc=_LIMITS,
-        decisions=("D-047", "D-052", "D-054"),
+        decisions=("D-047", "D-052", "D-054", "D-057"),
         lens=_NEG,
     )
 )

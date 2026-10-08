@@ -820,3 +820,39 @@ jwst 3.0.0 / photutils 3.0.0 (file headers).
 - SuGOHI public lens list (no licence stated): https://www-utap.phys.s.u-tokyo.ac.jp/~oguri/sugohi/
 - Prior-art check (no survey light-curve search for negative-mass or Ellis lenses found): arXiv:1711.04560,
   arXiv:0807.2774, arXiv:1302.7170, arXiv:gr-qc/9805075.
+
+## OGLE-IV microlensing samples (accessed 2026-10-08; D-057)
+
+Cite Mróz et al. as their pages ask; data are pinned in `src/jwst_anomaly/ogle.py` (`FILES`) and
+`data/manifests/ogle_mroz.ecsv`, fetched with `photometry.fetch_catalog`. Not OGLE EWS seasons (D-054).
+
+- Mróz, Udalski, Szymański et al. 2019, ApJS 244, 29, arXiv:1906.02210 (v2 e-print read for the selection,
+  Table 2, and the efficiency definition): https://www.astrouw.edu.pl/ogle/ogle4/microlensing_maps/
+  5,790 events in 112 low-cadence bulge fields (D-054 said 5,836; the nine high-cadence fields come from
+  Mróz et al. 2017, Nature 548, 183, and have no light curves here).
+
+  | File | Bytes | sha256 |
+  |---|---|---|
+  | README | 2,688 | 9e3e62038163881521d5a895b27ba0980edd502c20dcdb65f772ff4c0d9b2136 |
+  | table3.dat | 1,542,323 | ca47555840c808967e9a257dba9071acddd499dc078efb5f5c361b3ec8fef67f |
+  | table6.dat | 7,355 | a3e27a63b597e49563a061480c0ea37ae475e569900549d04dd8a8afa3ad50da |
+  | table7.dat | 10,537 | 56455aecadfea463c9ba623d7fe459a552a1017a2532601d3c610057fa24aa2d |
+  | eff.tar.gz | 15,845 | dd5ffa37e4860dfb137691f90e93e11278c16bef705c8950d5f4a5bacc133ac1 |
+  | phot.tar.gz | 50,731,904 | 5dafa6835b8456b00eb379d1803a6f6dae46bb5eac54fb8c2f809fe4685bfe6f |
+
+- Mróz, Udalski, Szymański et al. 2020, ApJS 249, 16, arXiv:2004.07289 (v2 e-print read):
+  https://www.astrouw.edu.pl/ogle/ogle4/galactic_disk_microlensing/ — 460 events that pass the selection
+  (Table B1); the "630" of the abstract adds 170 possible events (Table B2, `data_c/`), not used.
+
+  | File | Bytes | sha256 |
+  |---|---|---|
+  | README | 2,571 | a456c9f2f0041b81aa1b3dbc21e0be0b7957e29dae7051cc1d88534270b85f33 |
+  | table_A1.txt | 139,773 | 60990a6d207171333c8771b9dcc1240217da80ad7f272d20c5faf3432271a954 |
+  | table_B1.txt | 131,669 | 065fea96c0f0343f268c675b3132dd36c2c0243ba6c6a1690b784549fbeec410 |
+  | eff21.tar.gz | 213,175 | aacd45898288269573cb73ecd936c96fb0992563f65f6752b63701129d11f563 |
+  | data.tar.gz | 497,649 | 74868d53863167ebca08cbbbc2df6214433bfc7382f8ee82705529ca206c93c7 |
+
+- Skowron et al. 2016, Acta Astron. 66, 1 (reference list of arXiv:1906.02210): error-bar correction
+  already applied to the published photometry.
+- Vetting catalogues via CDS XMatch (astroquery 0.4.11): AAVSO VSX `B/vsx/vsx`; Gaia DR3 variability
+  classification `I/358/vclassre`. Literature: arXiv API `all:"<event name>"` (export.arxiv.org).
