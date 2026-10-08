@@ -2,23 +2,25 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-08: W1/W2 in published lens catalogues: no dark deflector; weak limit (D-056)
+## 2026-10-08: W1/W2 in published lens catalogues: no dark deflector; weak limits (D-056)
 - Worktree worker: lenscat (32,838), Euclid Q1 Discovery Engine (2,584) and SuGOHI (3,961) merged into 35,862 systems
-  (`src/jwst_anomaly/lenscats.py`, `scripts/w12_lenscats.py`; pinned by sha256); deflector test in Legacy Surveys
-  DR10 Tractor catalogues.
-- Sensitivity matters: galaxy-finder (20,142 covered) and single-dish submm (107) systems cannot show a dark lens and
-  give no limit. Only lensed-quasar (391) and radio-interferometric (23) searches can: a pair test (two point images
-  ≥ 2″ apart, nothing bright enough between them). Injection (deflector deleted in 19 systems): recovery 0.947.
-- 40 decided systems (19 with a deflector, 21 without); of the 21, 14 have a lens galaxy in the literature, 5 a
-  fainter galaxy at the position, 1 a cluster, and 1 (SuGOHI 090434−005328) is open only in the typical variant — an
-  ordinary lens below the LS depth explains it conservatively. Not a candidate. Cutout sheets inspected.
-- 95 % limits: dark-deflector fraction f_dark < 0.13 (typical, k = 1, N = 40) / < 0.35 (conservative) among
-  quasar- and radio-selected lenses. The first version's 8.2 × 10⁻³ / 1.5 × 10⁻⁴ is withdrawn: its test could
-  never classify a dark lens as unexplained (review). W1 geometry not testable (no image positions published).
+  (`src/jwst_anomaly/lenscats.py`, `scripts/w12_lenscats.py`; pinned by sha256). Deflector test in Legacy Surveys
+  DR10 Tractor; footprint and depth from the DR10 brick summary, not from detected sources.
+- 17,555 galaxy-scale systems in the footprint. Galaxy-finder (17,102) and sub-mm (110) systems cannot show a dark lens
+  and give no limit; only lensed-quasar (325) and radio-interferometric (18) systems are tested (pair test: two point
+  images, nothing bright enough near the expected deflector). Blended, too-close and faint-galaxy cases are undecided.
+- 29 decided (12 with a deflector, 17 without); 14 of the 17 have a literature lens galaxy, and 3 SuGOHI IX CHITAH
+  pairs (090434−005328, 091517+040747, 104122−005618) are open only in the typical variant — a lens below the local
+  LS depth explains them conservatively. Not candidates. Cutout sheets inspected.
+- 95 % limits on the dark-deflector fraction, test completeness assumed (not measured): typical f_dark < 0.48
+  (quasar, k = 3, N = 16), < 0.23 (radio, k = 0, N = 13), < 0.27 (all, k = 3, N = 29); conservative < 0.50 (quasar,
+  N = 6). Earlier 1.5 × 10⁻⁴ / 8.2 × 10⁻³ / 0.13 are withdrawn (PR #81 reviews). No W1 geometry (no image positions).
 - **Failed approaches (rules):** a limit is valid only over systems where the test could have found the signal —
-  prove it by injection; evaluate exclusion flags on every system, not only on flagged ones; Data Lab TAP takes no
-  table uploads or q3c (batch box ORs); lenscat types cluster-survey entries as "galaxy", has AGEL declination and
-  SPT position errors and PS1 rounded positions, and keeps rejected candidates; "no lens redshift" ≠ "no lens".
+  prove it by injection; a recovery factor from deleting deflectors and re-running the same code is 1 by
+  construction; coverage must come from footprint/depth products, never from "a source nearby"; evaluate exclusion
+  flags on every system; Data Lab TAP takes no table uploads or q3c (batch box ORs); lenscat types cluster-survey
+  entries as "galaxy", has AGEL declination and SPT position errors and rounded positions, and keeps rejected
+  candidates; "no lens redshift" ≠ "no lens".
 
 ## 2026-10-08: W1 shear (aperture-mass) screen: four clusters null; limits 5–8× stronger than radial (D-053)
 - Cloud run. `exotic_screens.py shear` builds D-050: PSF-deconvolved catalogue ε, cluster shear removed, spike
