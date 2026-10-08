@@ -201,9 +201,13 @@ def test_merge_chunks_joins_complete_chunks_and_refuses_bad_ones(tmp_path, monke
     pre.write(tmp_path / "prescreen_gb22.ecsv")
     passes = ids[1:]
 
-    def chunk(k, n, rows, params=None):
+    def chunk(k, n, rows, params=None, pre_params=None):
         tab = Table({"event_id": rows, "dbic_min": [0.0] * len(rows)})
-        tab.meta.update(fit_params=params or wm.json.dumps(wm.asdict(wm.w3.P)), wall_time_s=1.0)
+        tab.meta.update(
+            fit_params=params or wm.json.dumps(wm.asdict(wm.w3.P)),
+            params=pre_params or wm.json.dumps(wm.asdict(wm.P)),
+            wall_time_s=1.0,
+        )
         wm.w3.write_ecsv_gz(tab, tmp_path / f"{wm.chunk_name((k, n))}.gz")
 
     chunk(0, 2, passes[0::2])
@@ -215,9 +219,21 @@ def test_merge_chunks_joins_complete_chunks_and_refuses_bad_ones(tmp_path, monke
     chunk(0, 1, passes, params="{}")
     with pytest.raises(SystemExit, match="other Params"):
         wm.merge_chunks(1)
+    chunk(0, 1, passes, pre_params="{}")  # other pre-screen Params: other deficit starts
+    with pytest.raises(SystemExit, match="other Params"):
+        wm.merge_chunks(1)
     chunk(0, 1, passes[:-1])
     with pytest.raises(SystemExit, match="exactly its pre-screen passes"):
         wm.merge_chunks(1)
+
+
+def test_pool_workers_get_moa_bounds_and_populations(monkeypatch):
+    # spawned workers (Windows) do not run main(): the initializer must set both
+    monkeypatch.setattr(wm.w3, "P", wm.replace(wm.w3.P, te_bounds=(0.5, 50.0)))
+    monkeypatch.setattr(wm, "_POP", None)
+    wm._init_worker(("field", "chips"))
+    assert wm.w3.P.te_bounds == wm.MOA_FIT_BOUNDS["te_bounds"]
+    assert wm._POP == ("field", "chips")
 
 
 def test_vet_and_limit_refuse_partial_or_failed_inputs(tmp_path, monkeypatch):

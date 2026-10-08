@@ -248,7 +248,7 @@ def run_prescreen(procs: int) -> Path:
     chunks = [(ids[i : i + 250], tar) for i in range(0, len(ids), 250)]
     t1 = time.time()
     rows = []
-    with Pool(procs) as pool:
+    with _pool(procs) as pool:
         for part in pool.imap_unordered(_prescreen_worker, chunks):
             rows.extend(part)
     tab = rows_to_table(rows, {"error": "", "flux_kind": ""})
@@ -414,7 +414,7 @@ def run_fit(procs: int, limit: int | None = None, chunk: tuple[int, int] | None 
     print(f"fitting {len(jobs)} pre-screen passes of {len(pre)}", flush=True)
     t1 = time.time()
     rows = []
-    with Pool(procs) as pool:
+    with _pool(procs) as pool:
         for i, row in enumerate(pool.imap_unordered(_fit_worker, jobs, 1)):
             rows.append(row)
             if (i + 1) % 25 == 0:
@@ -431,7 +431,8 @@ def run_fit(procs: int, limit: int | None = None, chunk: tuple[int, int] | None 
         n_passes=len(passes(pre)),
         chunk="" if chunk is None else f"{chunk[0] + 1}/{chunk[1]}",
     )
-    path = out_dir() / f"fits_{FIELD}.ecsv"
+    # a chunk run never replaces the (possibly merged) table that `vet` reads
+    path = out_dir() / (f"fits_{FIELD}.ecsv" if chunk is None else chunk_name(chunk))
     tab.write(path, overwrite=True)
     if chunk is not None and limit is None:  # complete chunks only: what `merge-chunks` joins
         w3.write_ecsv_gz(tab, results_dir() / f"{chunk_name(chunk)}.gz")
@@ -446,18 +447,18 @@ def run_fit(procs: int, limit: int | None = None, chunk: tuple[int, int] | None 
 
 def merge_chunks(n: int) -> Path:
     """Join the tracked chunk tables 1..n of n into the table `vet` reads. Refused unless every
-    chunk is present, was fitted with the current fit ``Params`` and holds exactly its own passes
-    of the current pre-screen (which is deterministic and recomputed in each session)."""
+    chunk is present, was fitted with the current pre-screen and fit ``Params`` and holds exactly
+    its own passes of the current pre-screen (deterministic, recomputed in each session)."""
     pre = Table.read(out_dir() / f"prescreen_{FIELD}.ecsv")
     ids = list(passes(pre)["event_id"])
-    fit_params = json.dumps(asdict(w3.P))
+    fit_params, params = json.dumps(asdict(w3.P)), json.dumps(asdict(P))
     parts = []
     for k in range(n):
         path = results_dir() / f"{chunk_name((k, n))}.gz"
         if not path.exists():
             raise SystemExit(f"missing chunk {k + 1}/{n}: {path}")
         tab = Table.read(path, format="ascii.ecsv")
-        if tab.meta.get("fit_params") != fit_params:
+        if tab.meta.get("fit_params") != fit_params or tab.meta.get("params") != params:
             raise SystemExit(f"chunk {k + 1}/{n} was fitted with other Params; refit it")
         if sorted(tab["event_id"]) != sorted(ids[k::n]):
             raise SystemExit(f"chunk {k + 1}/{n} does not hold exactly its pre-screen passes")
@@ -483,7 +484,7 @@ MIN_FEATURE_NIGHTS = 3  # ASSUMPTION: nights with epochs inside the exotic featu
 COINC_Z = 5.0  # deficits with z_min < −5 form the population for the shared-epoch test
 COINC_P = 1e-3  # ASSUMPTION: Poisson probability below which a shared epoch is a frame systematic
 
-_POP: tuple | None = None  # (field, per-chip) deficit populations (set before a Pool forks)
+_POP: tuple | None = None  # (field, per-chip) deficit populations (passed to the workers)
 
 
 def deficit_population(pre: Table, chip: int | None = None) -> dict:
@@ -900,7 +901,7 @@ def run_vet(procs: int) -> Path:
     print(f"vetting {len(jobs)} flags", flush=True)
     t1 = time.time()
     out = []
-    with Pool(procs) as pool:
+    with _pool(procs) as pool:
         for i, o in enumerate(pool.imap_unordered(_vet_worker, jobs, 1)):
             out.append(o)
             if (i + 1) % 10 == 0:
@@ -983,7 +984,8 @@ def contact_sheet(path_png: Path, ids=None, max_panels: int = 24) -> None:
         fine = w3.LightCurve(tt, np.ones_like(tt), np.ones_like(tt), None, None, f_min=np.inf)
         for m, c in ((o["best_ordinary"], "k"), (o["exotic"], "tab:red")):
             mm, r = (m, o["res"][m]) if m != "PAR" else ("PSPL", o["res"]["PSPL"])
-            ax.plot(tt - lo, w3.model_flux(mm, fine, r), color=c, lw=0.8, label=m)
+            lab = "PSPL (PAR not drawn)" if m == "PAR" else m
+            ax.plot(tt - lo, w3.model_flux(mm, fine, r), color=c, lw=0.8, label=lab)
         failed = [n for n, ok, _ in o["tests"] if not ok]
         ax.set_title(
             f"{o['event_id']} {o['exotic']} ΔBIC {o['dbic_all']:.0f}\n"
@@ -1107,7 +1109,7 @@ def run_inject(
     print(f"{len(jobs)} injections on {len(arrays)} carriers", flush=True)
     t1 = time.time()
     rows = []
-    with Pool(procs) as pool:
+    with _pool(procs) as pool:
         for i, row in enumerate(pool.imap_unordered(_inject_worker, jobs, 1)):
             rows.append(row)
             if (i + 1) % 50 == 0:
@@ -1259,6 +1261,18 @@ MOA_FIT_BOUNDS = {"te_bounds": (0.1, 1000.0), "log_rho_bounds": (-3.5, -0.5)}
 
 def use_moa_fit_params() -> None:
     w3.P = replace(w3.P, **MOA_FIT_BOUNDS)
+
+
+def _init_worker(pop: tuple | None = None) -> None:
+    """Pool initializer: spawned workers (Windows, macOS) re-import this module without running
+    `main`, so the MOA fit bounds and the shared-epoch populations are set here, not inherited."""
+    global _POP
+    use_moa_fit_params()
+    _POP = pop
+
+
+def _pool(procs: int):
+    return Pool(procs, initializer=_init_worker, initargs=(_POP,))
 
 
 def main(argv=None) -> int:
