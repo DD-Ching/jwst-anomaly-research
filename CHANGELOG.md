@@ -2,6 +2,25 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 multi-epoch dimming / inverted-microlensing screen: null, limits (D-052)
+- Worktree worker: `scripts/dimming_screen.py` cross-matches per-epoch level-3 catalogues (F200W + F444W), flags
+  vanishing, achromatic-dimming and rise-dip-rise sources, vetoes catalogue effects, and confirms with S3
+  byte-range forced photometry. Fields: NEXUS-Center (8 epochs, 1.54 yr), MACS0416 (5, 3.26 yr), Abell 2744 (3,
+  1.74 yr). El Gordo rejected (one shared band); JADES deferred.
+- 5,177 catalogue flags → 1,502 after catalogue vetoes → 6 confirmed by forced photometry (all MACS0416) → 2 after
+  cutout tests → 0 after inspection: `d06533` and `d07517` sit 0.5–1″ from saturated star `d03349`, whose wings and
+  spikes rotate through the aperture with each epoch's mosaic orientation (cutout sheet inspected). No candidate.
+- Injection (`exotic_sim.inject_light_curve`, n = 1, ε < 0, 20 copies per source and model) on 261 monitored compact
+  sources: efficiency 0.03–0.60 by t_E. 95 % limits on the W3 event rate: 0.016 per source per yr at t_E 0.1 yr,
+  0.0052 at 1 yr; 7.8–77 deg⁻² per epoch pair. docs/exotic_limits.md "W3".
+- **Failed approaches (rules):** a catalogue non-detection is zero flux only if the source would have been ≥ 10σ;
+  vanish only when every testable band vanishes; `is_extended == False` is not a point-source cut (use CI_70_30);
+  inject multiplicatively (F·f_obs + (1 − F)·noise); draw controls from sources covered in ≥ 2 epochs; Gaia masks
+  miss saturated-star wings at 0.5–1″; don't run parallel S3 cutout jobs through the proxy.
+- Caveats: forced-error calibration exists for MACS0416 only (NEXUS, Abell 2744 scale 1); an S3 outage at ~07:00 UTC
+  stopped the final forced re-runs, so numbers are from the last complete run per field.
+- Wall time: screen 4–76 s, injections 20–136 s, forced photometry 3–32 min per field.
+
 ## 2026-10-08: W1 limits re-run: mass-parametrised, blend-aware, independent nulls (D-049 update)
 - #70 merged an intermediate version. This re-run fixes the review findings: one lens mass with θ_E per source
   redshift (photo-z, else z_s = 2), overlapping image pairs painted as one blend, an independent 200-draw null per

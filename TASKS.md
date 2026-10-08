@@ -13,8 +13,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      Asada; photo-z for Abell S1063 (DJA v7.5, 75 MB) and MACS0717 to bring both back into the W1 limits (D-049
      excludes them: without photo-z their members are painted as images);
    - W2 through `orphan_pairs.py` (D-048), and the dark-lens search extended to non-cluster deep fields;
-   - W3: a dimming / vanished-source class for multi-epoch fields (El Gordo, MACS0416 flashlights, NEXUS, JADES);
-     ≥ 3 epochs for the spike-dip-spike shape; leave the Sunrise transient track to its owner run;
+   - W3 (D-052, null; limits from NEXUS, MACS0416, Abell 2744): a veto for apertures within ~1.5″ of a saturated or
+     ≥ 100× brighter source; re-run `forced` for NEXUS (all 1,095 flags) and Abell 2744 with calibrated controls;
+     add JADES and new NEXUS epochs; SN/TNS check for any survivor; leave the Sunrise transient track to its owner run;
    - W5: counts N(>S) around `radial` centres.
 2. W3 inside caustic-crossing arcs needs a microlens with macro shear (Chang-Refsdal-type; reuse-check first).
 3. Warp: recheck only when a paper gives an electromagnetic prediction for a distant observer.
