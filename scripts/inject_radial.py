@@ -722,7 +722,10 @@ def _limits(summaries: list[dict], masses) -> dict:
         areas = [s["screened_area_deg2"] for s in summaries]
         th = [s["efficiency"][key]["theta_e_zs2_arcsec"] for s in summaries]
         # border-corrected: each footprint shrunk to its r -> 0 area (conservative)
-        a0 = [a * (1.0 - s["footprint_border"]["excess_frac"]) for a, s in zip(areas, summaries)]
+        a0 = [
+            a * (1.0 - s["footprint_border"]["excess_frac"])
+            for a, s in zip(areas, summaries, strict=True)
+        ]
         limits[key] = {
             "mass_msun": m,
             "theta_e_zs2_arcsec_range": [min(th), max(th)],
