@@ -154,6 +154,182 @@ WHL0137_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: HFF CATS Lenstool models (Jauzac, Richard, Mahler et al.; HLSP
+#: https://archive.stsci.edu/prepds/frontier/lensmodels/, accessed 2026-10-08): deflection maps
+#: (arcsec, D_LS/D_S = 1), κ, z = 2 magnification and the multiple-image list. cluster ->
+#: (version, z_lens, {name: (url, sha256)}). The lens redshifts reproduce the published z = 2 maps.
+_HFF = "https://archive.stsci.edu/pub/hlsp/frontier"
+HFF_CATS: dict[str, tuple[str, float, dict[str, tuple[str, str]]]] = {
+    "macs0416": (
+        "v4.1",
+        0.396,
+        {
+            "alpha_x": (
+                f"{_HFF}/macs0416/models/cats/v4.1/hlsp_frontier_model_macs0416_cats_v4.1_x-arcsec-deflect.fits",
+                "538789ef75b2660f880b573be0d45091599d85307bb24300c90453fa81333e91",
+            ),
+            "alpha_y": (
+                f"{_HFF}/macs0416/models/cats/v4.1/hlsp_frontier_model_macs0416_cats_v4.1_y-arcsec-deflect.fits",
+                "4fdef438de6384ea87c73a7a59ff5ade737055877aa7089b74b7a60982713d13",
+            ),
+            "kappa_map": (
+                f"{_HFF}/macs0416/models/cats/v4.1/hlsp_frontier_model_macs0416_cats_v4.1_kappa.fits",
+                "890ebc82c47e38e7154db5221813bd64d48c9ba7baa55f5e2441e63ba1368296",
+            ),
+            "mag_z2": (
+                f"{_HFF}/macs0416/models/cats/v4.1/hlsp_frontier_model_macs0416_cats_v4.1_z02-magnif.fits",
+                "cd01824f7317fdfd019921538380fa434e7d62646a7751f96f799a1524299a82",
+            ),
+            "arcs.dat": (
+                f"{_HFF}/macs0416/models/cats/v4.1/hlsp_frontier_model_macs0416_cats_v4.1_arcs.txt",
+                "59b8b56527f80b2ca5c1b72ab36f608b78143f1d24b86c081d9b50f471f80c15",
+            ),
+            "params.txt": (
+                f"{_HFF}/macs0416/models/cats/v4.1/hlsp_frontier_model_macs0416_cats_v4.1_params.txt",
+                "7149d8a55792c1b42aae9badb25ff9b0934cfbc780ca37b7ef1f0cb21d71f996",
+            ),
+        },
+    ),
+    "macs1149": (
+        "v4.1",
+        0.543,
+        {
+            "alpha_x": (
+                f"{_HFF}/macs1149/models/cats/v4.1/hlsp_frontier_model_macs1149_cats_v4.1_x-arcsec-deflect.fits",
+                "a39dda08daefce24000756fb30b0483a466dd9c1f2dda23fc5d6acea32603c7f",
+            ),
+            "alpha_y": (
+                f"{_HFF}/macs1149/models/cats/v4.1/hlsp_frontier_model_macs1149_cats_v4.1_y-arcsec-deflect.fits",
+                "5b3257f22d6b4f373793f7a8924f9768286e710d6f596425109532d5335aa57a",
+            ),
+            "kappa_map": (
+                f"{_HFF}/macs1149/models/cats/v4.1/hlsp_frontier_model_macs1149_cats_v4.1_kappa.fits",
+                "37005861ec7a7af7fd137fd74c1c5fe382bbf28998f721b0b779c028145a1257",
+            ),
+            "mag_z2": (
+                f"{_HFF}/macs1149/models/cats/v4.1/hlsp_frontier_model_macs1149_cats_v4.1_z02-magnif.fits",
+                "6b750d2d18aaa6faaa5b3a25e7a11f5b62adaf0e0fa8a5940d7c6224b3251397",
+            ),
+            "arcs.dat": (
+                f"{_HFF}/macs1149/models/cats/v4.1/hlsp_frontier_model_macs1149_cats_v4.1_arcs.txt",
+                "1a12c542fada53e0ba56c29ed73012c41331ce8f149357d6f5c2a10b8d808cf5",
+            ),
+            "params.txt": (
+                f"{_HFF}/macs1149/models/cats/v4.1/hlsp_frontier_model_macs1149_cats_v4.1_params.txt",
+                "37ccf2eccbd47ce3985a1907d1764fab775e0f20ca041fdc1249432cd81e7541",
+            ),
+        },
+    ),
+    "abell370": (
+        "v4",
+        0.375,
+        {
+            "alpha_x": (
+                f"{_HFF}/abell370/models/cats/v4/hlsp_frontier_model_abell370_cats_v4_x-arcsec-deflect.fits",
+                "1a4c7ee4f1c0e1330cfd4011587add2dd619680c0f30104668f5b8ef209a2c3d",
+            ),
+            "alpha_y": (
+                f"{_HFF}/abell370/models/cats/v4/hlsp_frontier_model_abell370_cats_v4_y-arcsec-deflect.fits",
+                "94153ce7850b2d02505df066ede18641b6e95143416a99a3469de2f41309020c",
+            ),
+            "kappa_map": (
+                f"{_HFF}/abell370/models/cats/v4/hlsp_frontier_model_abell370_cats_v4_kappa.fits",
+                "5eee21d023e80a04741cd54116272800211c720ea450dd7cc9ea121905ad915d",
+            ),
+            "mag_z2": (
+                f"{_HFF}/abell370/models/cats/v4/hlsp_frontier_model_abell370_cats_v4_z02-magnif.fits",
+                "8773f6044147f46c06dd274faf9e3f0f452b15e450a6260557929dd095276741",
+            ),
+            "arcs.dat": (
+                f"{_HFF}/abell370/models/cats/v4/hlsp_frontier_model_abell370_cats_v4_arcs.txt",
+                "27cd08c5b0087b841e5b1775fe5f64e7db70f0f3cbd8e4c98d9e5af416f13052",
+            ),
+        },
+    ),
+    "macs0717": (
+        "v4.1",
+        0.545,
+        {
+            "alpha_x": (
+                f"{_HFF}/macs0717/models/cats/v4.1/hlsp_frontier_model_macs0717_cats_v4.1_x-arcsec-deflect.fits",
+                "4916865e8513eed33cea613fb96007e2d87535ba44359ced6babaee4959ac5ad",
+            ),
+            "alpha_y": (
+                f"{_HFF}/macs0717/models/cats/v4.1/hlsp_frontier_model_macs0717_cats_v4.1_y-arcsec-deflect.fits",
+                "f3e69604862a51211064d1fb29777dbf2bfac1eea48f7f7430eefd90a195b458",
+            ),
+            "kappa_map": (
+                f"{_HFF}/macs0717/models/cats/v4.1/hlsp_frontier_model_macs0717_cats_v4.1_kappa.fits",
+                "6919ef95fd876a4a3d6a43a7cd1b7c35511533d3e7433fa986b7d94fca7af579",
+            ),
+            "mag_z2": (
+                f"{_HFF}/macs0717/models/cats/v4.1/hlsp_frontier_model_macs0717_cats_v4.1_z02-magnif.fits",
+                "f0ada68b3db2cbe933af63af697b945b1da37d3d929be87f9ceed0adb8b8d6d8",
+            ),
+            "arcs.dat": (
+                f"{_HFF}/macs0717/models/cats/v4.1/hlsp_frontier_model_macs0717_cats_v4.1_arcs.txt",
+                "abc9f95f89467160a59d87e7252eea2667c97ff292d25d67880ce8b1565ad73e",
+            ),
+            "params.txt": (
+                f"{_HFF}/macs0717/models/cats/v4.1/hlsp_frontier_model_macs0717_cats_v4.1_params.txt",
+                "7ea3af8dbb3e6dd9917f9155a17a24903d0337ddd6fb63ff17522ca262ed22e4",
+            ),
+        },
+    ),
+    "abells1063": (
+        "v4.1",
+        0.348,
+        {
+            "alpha_x": (
+                f"{_HFF}/abells1063/models/cats/v4.1/hlsp_frontier_model_abells1063_cats_v4.1_x-arcsec-deflect.fits",
+                "7aadd23ef613099a522319962b1c9f98606d54c8d895adf9fe715dd9a7b460a7",
+            ),
+            "alpha_y": (
+                f"{_HFF}/abells1063/models/cats/v4.1/hlsp_frontier_model_abells1063_cats_v4.1_y-arcsec-deflect.fits",
+                "5b9a81cd1741b13fc09c5a164dc110a01b45ae50915fe41db4b9a013d769dbe7",
+            ),
+            "kappa_map": (
+                f"{_HFF}/abells1063/models/cats/v4.1/hlsp_frontier_model_abells1063_cats_v4.1_kappa.fits",
+                "8bae5b69c2a6667b10a3c2fab065dccc8a87192b715be36ba4e869a39c537fe0",
+            ),
+            "mag_z2": (
+                f"{_HFF}/abells1063/models/cats/v4.1/hlsp_frontier_model_abells1063_cats_v4.1_z02-magnif.fits",
+                "2ae0c461add316de449d95078725bd37e64af5a913105141c96e3a77331e1ddb",
+            ),
+            "arcs.dat": (
+                f"{_HFF}/abells1063/models/cats/v4.1/hlsp_frontier_model_abells1063_cats_v4.1_arcs.txt",
+                "83b207e1b0085678f1b5b9768347f94f352a5390800aa5d11de80038cda4e410",
+            ),
+        },
+    ),
+    "abell2744": (
+        "v4.1",
+        0.308,
+        {
+            "alpha_x": (
+                f"{_HFF}/abell2744/models/cats/v4.1/hlsp_frontier_model_abell2744_cats_v4.1_x-arcsec-deflect.fits",
+                "931b6603f31fc32368cc1f41098ec4cbceffdf910ca99231aa323cfcb4b08e2c",
+            ),
+            "alpha_y": (
+                f"{_HFF}/abell2744/models/cats/v4.1/hlsp_frontier_model_abell2744_cats_v4.1_y-arcsec-deflect.fits",
+                "4a131c57085384b00fe56edbb2c16027734bfd8cd5b8ba57e2f6439c5c2843a3",
+            ),
+            "kappa_map": (
+                f"{_HFF}/abell2744/models/cats/v4.1/hlsp_frontier_model_abell2744_cats_v4.1_kappa.fits",
+                "bd1cf25162bd71ced4f8b75d063713b12d4054e83e409e8fd48e98205597d47b",
+            ),
+            "mag_z2": (
+                f"{_HFF}/abell2744/models/cats/v4.1/hlsp_frontier_model_abell2744_cats_v4.1_z02-magnif.fits",
+                "d74639912a9b1abc488d6ae5cbe1f8336f53b3e34d138260c65de20e39008132",
+            ),
+            "arcs.dat": (
+                f"{_HFF}/abell2744/models/cats/v4.1/hlsp_frontier_model_abell2744_cats_v4.1_arcs.txt",
+                "2e16e2884f4d1a386ae305737be4d97880e6cb3954117f4efbd62fc61eb28b19",
+            ),
+        },
+    ),
+}
+
 # French Lenstool keywords (input files) -> the English ones written in best.par.
 _ALIASES = {
     "potentiel": "potential",
@@ -220,6 +396,34 @@ def image_family(image_id: str | float) -> str:
     if "." in text and not _INTEGER_ID.match(text):
         return system_key(text.rsplit(".", 1)[0])
     return system_key(text)
+
+
+def _z_m_limit_entry(vals: list[str], where: str) -> dict[str, float]:
+    """Fixed redshifts of one ``z_m_limit`` line (values after the keyword), by image family.
+
+    ``z_m_limit <n> <image id>... <flag> <z or zmin> <zmax> <step>``; flag 0 = fixed. Several
+    ids may share one redshift (Bergamini+2023b "A200.1a B200.2a"). Flags 1-4 and -n
+    (parabolic) are free redshifts and are skipped."""
+    if len(vals) < 4:
+        raise ValueError(f"{where}: malformed z_m_limit {vals}")
+    names, flag, z = (
+        (vals[1:-4], vals[-4], vals[-3]) if len(vals) >= 6 else (vals[1:2], vals[2], vals[3])
+    )
+    if not re.fullmatch(r"-?\d+", flag):
+        raise ValueError(f"{where}: malformed z_m_limit {vals}")
+    return {image_family(name): float(z) for name in names} if int(flag) == 0 else {}
+
+
+def read_z_m_limit(path: str | Path) -> dict[str, float]:
+    """Only the fixed ``z_m_limit`` redshifts of a Lenstool parameter file, without parsing (or
+    supporting) the rest of it: for map models whose published ``params.txt`` uses features
+    this module does not implement (e.g. ``potfile``). Same rules as :func:`parse_lenstool_par`."""
+    out: dict[str, float] = {}
+    for n, line in enumerate(Path(path).read_text(encoding="latin-1").splitlines(), 1):
+        vals = line.split("#", 1)[0].split()
+        if vals and vals[0] == "z_m_limit":
+            out.update(_z_m_limit_entry(vals[1:], f"{path}:{n}"))
+    return out
 
 
 def image_redshifts(images: Table, z_m_limit: dict[str, float]) -> np.ndarray:
@@ -310,21 +514,7 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
         elif kind == "image":
             for key, vals, n in entries:
                 if key == "z_m_limit":
-                    # z_m_limit <n> <image id>... <flag> <z or zmin> <zmax> <step>; flag 0 =
-                    # fixed. Several ids share one redshift (Bergamini+2023b "A200.1a B200.2a").
-                    if len(vals) < 4:
-                        raise ValueError(f"{path}:{n}: malformed z_m_limit {vals}")
-                    names, flag, z = (
-                        (vals[1:-4], vals[-4], vals[-3])
-                        if len(vals) >= 6
-                        else (vals[1:2], vals[2], vals[3])
-                    )
-                    # Flags 1-4 and -n (parabolic) are free redshifts; only 0 is fixed.
-                    if not re.fullmatch(r"-?\d+", flag):
-                        raise ValueError(f"{path}:{n}: malformed z_m_limit {vals}")
-                    if int(flag) == 0:
-                        for name in names:
-                            out["z_m_limit"][image_family(name)] = float(z)
+                    out["z_m_limit"].update(_z_m_limit_entry(vals, f"{path}:{n}"))
                 elif key.lower() == "sigposarcsec":
                     out["sigpos_arcsec"] = float(vals[0])
         elif kind == "potential":
@@ -790,7 +980,7 @@ def load_lenstool_images(path: str | Path) -> Table:
         ras.append(float(parts[1]))
         decs.append(float(parts[2]))
         errs.append(float(parts[3]))
-        zs.append(float(parts[6]))
+        zs.append(float(parts[6].strip("()")))  # "(2.16)": a redshift the model fitted
     t = Table(
         {
             "image_id": ids,

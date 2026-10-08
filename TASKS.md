@@ -16,8 +16,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - an observational parity test (image orientation or resolved structure; not yet designed);
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
-   - exotic screens (D-031, D-033): SMACS and Sunrise (radial) null. Next: El Gordo, Abell 2744, then HFF/RELICS map
-     fields via `MapLensModel` (add `MODELS` entries with `kind: maps`).
+   - exotic screens (D-031, D-034): SMACS, El Gordo and Sunrise (radial) null. Next: Abell 2744 (worker), then HFF/RELICS map fields via
+     `MapLensModel` (D-033). The six HFF CATS map models are in (D-035). Next: JWST field runs per HFF cluster, then
+     `/vet-candidate` for Abell 2744 4.2c.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;

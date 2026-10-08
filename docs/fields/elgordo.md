@@ -77,6 +77,36 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
   - 9a's counterpart is a z_phot 0.89 object (95 %: 0.73–0.99), not the z = 4.32 image. 9c's counterpart has
     z_phot 3.62.
 
+## Counter-images and radial screen (2026-10-08, D-034)
+
+Every number below is `derived` or `model_prediction`, and every threshold is an ASSUMPTION (D-029, D-031, D-034).
+
+Commands:
+- `lens_consistency.py --model elgordo-caminha23 images --catalog <F200W jw01176-o241_t012 cat> --photoz <DJA v7.0
+  zout> --half-width 110 --step 0.25 --forced-image <F277W i2d, S3>`;
+- `exotic_screens.py --model elgordo-caminha23 radial --catalog <same> --photoz <same> --max-radius 110`.
+
+**Image prediction.** 72 images are predicted; 55 match the catalogue. 23c is unpredicted: its model residual is
+1.54″, beyond the 1.5″ match radius.
+
+**Forced photometry (F277W).** Classes: recovered 2, confused 2, absent 0, undetectable 4, ambiguous 1,
+no_reference 7. The first pass with the D-029 rules found 3 `absent` images. Each was ordinary on vetting:
+
+| System (μ) | First pass | Vetting (cutouts F150W/F277W/F444W + numbers) | Verdict |
+|---|---|---|---|
+| 23 (6.75) | absent, predicted 140σ, best 27σ within 1″ | The prediction lies 1.8″ from the catalogued 23c, and the model's 23c residual is 1.5″. Recovered at 1.8″ (S/N 130) once the search radius follows the residuals; then `confused` with the bright arc | model position error |
+| 6 (2.70, third image 46″ from the pair) | absent, predicted 33σ | The reference 6b has no DJA counterpart within 2″; its aperture sits on a galaxy wing (resolved, so not ∝ μ). 6a (μ 4.55; DJA 1297 at 0.07″, z_phot 4.63 [4.38, 4.70]) predicts F277W 0.33. DJA 359 (2.6″, z_phot 4.80) has 0.34 and DJA 345 (3.1″, z_phot 4.54 [3.94, 4.62]) has 0.29; F444W agrees. With compact references: `ambiguous` (predicted 11σ, best 4.7σ within 1.3″, ratio 0.41) | reference contamination plus position error of an unconstrained far image |
+| 7 (4.63) | absent, predicted 18σ | Caminha's image list is on the HST/RELICS frame, 0.22″ in RA from JWST, comparable to the 0.2″ aperture radius. With the frame offset: recovered at 1.5″ (ratio 1.9) | frame offset |
+
+**Radial screen.**
+- 363 elongated sources within 110″; 33 dropped as diffraction-spike segments (on the field's spike axes), 89 not
+  behind the lens; 37 `anti`.
+- 9 centres against a null mean of 7.6 (p95 14); max 4 lines, p = 0.64. **Null.**
+- Without the spike rule, the strongest centre had 6 lines (p = 0.055): a mag 15.8 star whose diffraction spikes
+  were catalogued as radial "arcs". Cutouts show the spikes.
+
+**Result:** no exotic-lens candidate. The El Gordo flux ratios (D-032, #48) also show no anomaly.
+
 ## Run
 
 - Run `20261007T210354Z-9dccdf35`, config [`configs/elgordo.yaml`](../../configs/elgordo.yaml) (`elgordo_v1`,
