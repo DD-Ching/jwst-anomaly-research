@@ -17,8 +17,13 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
    - exotic screens (D-031, D-034, D-036): SMACS, El Gordo, Sunrise (radial) and Abell 2744 null. The six HFF CATS
-     map models are in (D-035). Next: JWST field runs per HFF cluster (radial on all six; `images` / `fluxratio` on
-     MACS1149 and MACS0717), `bayes.dat` position spreads, and the UNCOVER v2.0 cross-check for Abell 2744.
+     map models are in (D-035). MACS1149 null (D-037). Next:
+     - JWST field runs per HFF cluster (radial on all six; `images` / `fluxratio` on MACS0717);
+     - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1 photo-z;
+       fix system 16's z (spectroscopic z, or forced photometry on its far-image track);
+       evaluate the CANUCS lens models (with samples) as the independent second model for the D-036/D-037 μ rule;
+     - `bayes.dat` position spreads;
+     - the UNCOVER v2.0 cross-check for Abell 2744.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps;
