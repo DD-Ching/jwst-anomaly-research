@@ -26,6 +26,7 @@ import hashlib
 import json
 import re
 import sys
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import astropy.units as u
@@ -59,24 +60,35 @@ INPUTS = {
 }
 HENNAWI = "J/AJ/131/1/binqso"  # binary-quasar catalogue for vetting (Hennawi et al. 2006)
 LEMON_REJECTED = {"UQP", "UQP (?)", "QSO pair"}
-LEMON_CONTROL = {"lens", "quad", "lens (?)"}
+LEMON_CONTROL = {"lens", "quad", "lens (?)", "lensed gal."}
+# SQLS comments that classify a candidate as something other than a quasar pair or a lens
+SQLS_NONPAIR = re.compile(
+    r"qso\s*\+\s*(star|galaxy|unknown)|different sed|not qso|single qso", re.I
+)
 # D-056 calibration (LS z; 605 galaxy-selected lenses; docs/exotic_limits.md), reused unchanged
 D056_FJ = lenscats.FJCalibration(a=20.41, k=0.67, slope=-10.0, rms=0.88, n=605, band="ls_z")
-# lensed images share a colour (ASSUMPTION: |delta(g - z)| <= 0.5 allows microlensing, dust and
-# variability; the tolerance of quasar_pair_test's further-image rule)
-COLOUR_TOL = 0.5
-# two redshifts differing by more than 0.01 (1 + z) (~3,000 km/s, beyond broad-line redshift
-# errors; ASSUMPTION) belong to two quasars, not two images
-DZ_TOL = 0.01
-# catalogue positions are one image (SQLS: the SDSS quasar), so the second image lies inside the
-# 3" image search only for pairs up to image_radius (galaxy scale, theta_E <= 1.5"); wider pairs
-# are dropped (ASSUMPTION)
-SEP_MAX = 3.0
-# the LS image pair must be the catalogued pair (ASSUMPTION: separations agree within 0.5")
-SEP_MATCH = 0.5
-DEDUP_ARCSEC = 3.0  # same system in two tables (ASSUMPTION; SQLS positions are one image)
 
 
+@dataclass(frozen=True)
+class NiqParams:
+    """Sample and vetting thresholds (ASSUMPTIONs; recorded in summary.json)."""
+
+    # lensed images share a colour: |delta(g - z)| <= colour_tol allows microlensing, dust and
+    # variability (the tolerance of quasar_pair_test's further-image rule)
+    colour_tol: float = 0.5
+    # two redshifts differing by more than dz_tol (1 + z) (~3,000 km/s, beyond broad-line
+    # redshift errors) belong to two quasars, not two images
+    dz_tol: float = 0.01
+    # catalogue positions are one image (SQLS: the SDSS quasar), so the second image lies inside
+    # the 3" image search only for pairs up to image_radius; wider pairs are dropped
+    sep_max: float = 3.0
+    # the LS image pair must be the catalogued pair: separations agree within sep_match
+    sep_match: float = 0.5
+    # entries closer than this in two tables are one system (merged transitively)
+    dedup_arcsec: float = 3.0
+
+
+P = NiqParams()
 MANIFEST = "w12_niq_inputs.json"
 
 
@@ -87,9 +99,9 @@ def pinned() -> dict[str, str]:
         return {}
     m = json.loads(man.read_text())
     pins = {r["source"]: r["sha256"] for r in m["inputs"]}
-    pins["bricks"] = m["bricks"]["sha256"]
-    if "tractor" in m:
-        pins["tractor"] = m["tractor"]["sha256"]
+    for key in ("bricks", "tractor"):
+        if key in m:
+            pins[key] = m[key]["sha256"]
     return pins
 
 
@@ -116,9 +128,8 @@ def check_vizier(data: bytes, source: str, path: Path) -> None:
     """Refuse an ASU-TSV that is an error page, empty or truncated at -out.max (the notices sit
     in '#' lines, which the hash ignores)."""
     lines = data.decode("utf-8", "replace").splitlines()
-    notes = [
-        ln for ln in lines if ln.startswith("#") and re.search(r"error|overflow|truncat", ln, re.I)
-    ]
+    status = [ln for ln in lines if ln.startswith(("#INFO", "#++"))]  # not '#Column' lines
+    notes = [ln for ln in status if re.search(r"error|overflow|truncat", ln, re.I)]
     n_data = len([ln for ln in lines if ln and not ln.startswith("#")]) - 3
     if notes or n_data < 1 or n_data >= MAX_ROWS:
         raise RuntimeError(f"{source}: bad VizieR response in {path} ({n_data} rows; {notes[:2]})")
@@ -130,6 +141,7 @@ def fetch(source: str, out: Path, pins: dict[str, str] | None) -> tuple[Path, di
     if not f.exists():
         r = requests.get(VIZIER.format(source), timeout=300)
         r.raise_for_status()
+        check_vizier(r.content, source, f)  # before caching: a bad response is never stored
         f.write_bytes(r.content)
     data = f.read_bytes()
     check_vizier(data, source, f)
@@ -184,10 +196,20 @@ def comment_z_pair(comment: str) -> tuple[float, float]:
 
 
 def different_redshift(z1, z2) -> np.ndarray:
-    """Images of one source share its redshift: |dz| / (1 + z) > DZ_TOL means two sources."""
+    """Images of one source share its redshift: |dz| / (1 + z) > P.dz_tol means two sources."""
     z1, z2 = np.asarray(z1, float), np.asarray(z2, float)
     with np.errstate(invalid="ignore"):
-        return np.abs(z1 - z2) / (1 + z1) > DZ_TOL
+        return np.abs(z1 - z2) / (1 + z1) > P.dz_tol
+
+
+def lemon_second_qso_z(r) -> float:
+    """Lemon et al. 2023 ``z2``: a second quasar redshift when ``n_z2`` is blank (or "zqso="),
+    otherwise a lens or galaxy redshift ("z_lens=", "zgal="); flagged values are not used."""
+    n = r["n_z2"].strip() if "n_z2" in r.colnames else ""
+    flags = "".join(r[c].strip() for c in ("f_z", "f_z2") if c in r.colnames)
+    if (n == "" or n.startswith("zqso")) and not flags:
+        return _float(r["z2"]) if "z2" in r.colnames else np.nan
+    return np.nan
 
 
 def sqls_group(comment: str) -> str:
@@ -198,12 +220,14 @@ def sqls_group(comment: str) -> str:
         return "control"  # checked first: a comment naming a lens never makes a rejection
     if "no lens" in c or "qso pair" in c or "binary" in c:
         return "rejected"
+    if SQLS_NONPAIR.search(c):
+        return "nonpair"
     return ""
 
 
 def build_sample(tables: dict[str, Table]) -> Table:
-    """Rejected and control pairs from all inputs, merged within DEDUP_ARCSEC, then restricted to
-    known catalogued separations <= SEP_MAX. ``meta["dropped"]``: rows dropped per reason."""
+    """Rejected and control pairs from all inputs, merged within P.dedup_arcsec, then restricted to
+    known catalogued separations <= P.sep_max. ``meta["dropped"]``: rows dropped per reason."""
     rows, dropped = [], {}
     for source, t in tables.items():
         label = INPUTS[source]
@@ -215,6 +239,8 @@ def build_sample(tables: dict[str, Table]) -> Table:
                     if cls in LEMON_REJECTED
                     else "control"
                     if cls in LEMON_CONTROL
+                    else "nonpair"
+                    if cls
                     else ""
                 )
                 ra, dec, name, z, sep = (
@@ -224,15 +250,7 @@ def build_sample(tables: dict[str, Table]) -> Table:
                     _float(r["z"]),
                     _float(r["Sep"]),
                 )
-                # z2 is a second *quasar* redshift only when n_z2 says "zqso=" (otherwise it is
-                # z_lens or zgal); flagged (uncertain) values are not used
-                z2 = (
-                    _float(r["z2"])
-                    if r.get("n_z2", "").startswith("zqso")
-                    and not r.get("f_z2", "").strip()
-                    and not r.get("f_z", "").strip()
-                    else np.nan
-                )
+                z2 = lemon_second_qso_z(r)
                 comment = cls
             else:
                 name = r["SDSS"]
@@ -245,15 +263,29 @@ def build_sample(tables: dict[str, Table]) -> Table:
                 )
                 if not np.isfinite(ra):
                     ra, dec = sdss_name_radec(name)
-                z, sep = _float(r["z"]), _float(r["theta"])
-                z2 = comment_z_pair(comment)[1]
+                sep = _float(r["theta"])
+                z, z2 = comment_z_pair(comment)  # both redshifts the comment quotes
+                if not np.isfinite(z):
+                    z = _float(r["z"])
             if group and not np.isfinite(ra):
                 dropped[label] = dropped.get(label, 0) + 1
             elif group:
-                rows.append((name, ra, dec, z, z2, sep, group, label, comment))
+                comp = "component" in comment.lower()  # rows of one cluster-scale lens
+                rows.append((name, ra, dec, z, z2, sep, group, label, comment, comp))
     s = Table(
         rows=rows,
-        names=("name", "ra", "dec", "z_source", "z2", "sep_cat", "group", "catalogue", "comment"),
+        names=(
+            "name",
+            "ra",
+            "dec",
+            "z_source",
+            "z2",
+            "sep_cat",
+            "group",
+            "catalogue",
+            "comment",
+            "component",
+        ),
     )
     s["comment"] = s["comment"].astype(object)  # notes are appended below (no truncation)
     # merge first (a lens row that is dropped below still promotes its group to control), then
@@ -261,16 +293,19 @@ def build_sample(tables: dict[str, Table]) -> Table:
     n_rows = len(s)
     s = dedup(s)
     n_dup = n_rows - len(s)
-    comp = np.array(["component" in str(c).lower() for c in s["comment"]], bool)
+    nonpair = np.asarray(s["group"]) == "nonpair"
+    s = s[~nonpair]
+    comp = np.asarray(s["component"], bool)  # the kept row's own flag
     nosep = ~np.isfinite(np.asarray(s["sep_cat"], float))
-    wide = np.asarray(s["sep_cat"], float) > SEP_MAX
+    wide = np.asarray(s["sep_cat"], float) > P.sep_max
     s = s[~comp & ~nosep & ~wide]
     s.meta["dropped"] = {
         "no coordinates": dropped,
         "duplicates": int(n_dup),
+        "non-pair classifications (incl. vetoed rejections)": int(nonpair.sum()),
         "cluster-lens component rows": int(comp.sum()),
         "no catalogued separation": int((~comp & nosep).sum()),
-        f"sep_cat > {SEP_MAX} arcsec": int((~comp & ~nosep & wide).sum()),
+        f"sep_cat > {P.sep_max} arcsec": int((~comp & ~nosep & wide).sum()),
     }
     s["selection"] = "quasar"
     s["z_lens"] = np.nan
@@ -287,24 +322,28 @@ def build_sample(tables: dict[str, Table]) -> Table:
 
 
 def dedup(s: Table) -> Table:
-    """Merge entries within DEDUP_ARCSEC transitively (connected components). The kept row is
-    Lemon's, else the newest SQLS release's; a component holding any catalogued lens is a control
-    (noted in ``comment``), so a known lens never enters the rejected sample."""
+    """Merge entries within P.dedup_arcsec transitively (connected components). The kept row is
+    Lemon's, else the newest SQLS release's. A component holding any catalogued lens is a control
+    (noted in ``comment``), so a known lens never enters the rejected sample; a rejected one that
+    another catalogue classified as a non-pair becomes "nonpair" (dropped)."""
     if len(s) < 2:
         return s
     order = {"Lemon2023": 0, "SQLS-DR7": 1, "SQLS-DR5": 2, "SQLS-DR3": 3}
     s = s[np.argsort([order[c] for c in s["catalogue"]], kind="stable")]
     c = SkyCoord(s["ra"], s["dec"], unit="deg")
-    i, j, _, _ = c.search_around_sky(c, DEDUP_ARCSEC * u.arcsec)
+    i, j, _, _ = c.search_around_sky(c, P.dedup_arcsec * u.arcsec)
     graph = csr_matrix((np.ones(len(i)), (i, j)), shape=(len(s), len(s)))
     _, label = connected_components(graph, directed=False)
     keep = []
     for lab in np.unique(label):
         members = np.flatnonzero(label == lab)  # sorted: members[0] has the preferred catalogue
         k = members[0]
-        if s["group"][k] == "rejected" and np.any(s["group"][members] == "control"):
+        lens = (s["group"][members] == "control") | np.asarray(s["component"][members], bool)
+        if s["group"][k] != "control" and np.any(lens):
             s["group"][k] = "control"
             s["comment"][k] += " | listed as lens elsewhere"
+        elif s["group"][k] == "rejected" and np.any(s["group"][members] == "nonpair"):
+            s["group"][k] = "nonpair"  # another catalogue classified it (star, galaxy, SED)
         for m in members[1:]:  # keep the merged rows' vetting information
             s["comment"][k] += f" | {s['catalogue'][m]}: {s['comment'][m]}"
             if not np.isfinite(s["z2"][k]) and np.isfinite(s["z2"][m]):
@@ -427,9 +466,9 @@ def cmd_screen(args) -> None:
     images = lenscats.pair_images(sc, src, p.image_radius)
     sc["sep_ls"] = images["sep"]
     sc["dgz"] = pair_colour_difference(images, src)
-    sc["colour_match"] = np.abs(sc["dgz"]) <= COLOUR_TOL
-    sc["colour_mismatch"] = np.abs(sc["dgz"]) > COLOUR_TOL  # NaN (no colour) is neither
-    sc["pair_match"] = np.abs(sc["sep_ls"] - sc["sep_cat"]) <= SEP_MATCH
+    sc["colour_match"] = np.abs(sc["dgz"]) <= P.colour_tol
+    sc["colour_mismatch"] = np.abs(sc["dgz"]) > P.colour_tol  # NaN (no colour) is neither
+    sc["pair_match"] = np.abs(sc["sep_ls"] - sc["sep_cat"]) <= P.sep_match
     sc["test_status"] = w12.deflector_test(sc, src, p, images)["test_status"]
     sc["undecided_flags"] = w12.flags_undecided(sc, src, p)
     sc["detectable_typical"] = sc["req_mag_z_typical"] < sc["depth_z"] - p.margin
@@ -444,6 +483,7 @@ def cmd_screen(args) -> None:
         "bricks": bmeta,
         "fj_calibration": D056_FJ.__dict__,
         "params": p.__dict__,
+        "niq_params": asdict(P),
         "n_systems": len(s),
         "dropped": s.meta["dropped"],
         "n_covered": int(covered.sum()),
@@ -457,6 +497,7 @@ def cmd_screen(args) -> None:
         d = m & decided
         nd = int((d & (sc["test_status"] == "deflector")).sum())
         nn = int((d & (sc["test_status"] == "none")).sum())
+        cm = d & (sc["test_status"] == "none") & sc["colour_match"]
         summary[g] = {
             "n_all": int((s["group"] == g).sum()),
             "n_covered": int(m.sum()),
@@ -476,6 +517,9 @@ def cmd_screen(args) -> None:
             "none_typical_detectable": int(
                 (d & (sc["test_status"] == "none") & sc["detectable_typical"]).sum()
             ),
+            "none_colour_match_binary": int((cm & sc["hennawi_binary"]).sum()),
+            "none_colour_match_different_z": int((cm & sc["different_z"]).sum()),
+            "none_untestable": int((cm & ~sc["hennawi_binary"] & ~sc["different_z"]).sum()),
         }
     ctl = summary["control"]
     summary["control_efficiency"] = ctl["deflector"] / ctl["decided"] if ctl["decided"] else None

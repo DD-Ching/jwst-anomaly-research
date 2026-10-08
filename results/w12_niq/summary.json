@@ -122,23 +122,31 @@
     "image_exclusion": 0.5,
     "n_rounded_sample": 32
   },
+  "niq_params": {
+    "colour_tol": 0.5,
+    "dz_tol": 0.01,
+    "sep_max": 3.0,
+    "sep_match": 0.5,
+    "dedup_arcsec": 3.0
+  },
   "n_systems": 232,
   "dropped": {
     "no coordinates": {},
-    "duplicates": 0,
+    "duplicates": 2,
+    "non-pair classifications (incl. vetoed rejections)": 280,
     "cluster-lens component rows": 2,
     "no catalogued separation": 0,
-    "sep_cat > 3.0 arcsec": 185
+    "sep_cat > 3.0 arcsec": 188
   },
   "n_covered": 169,
   "rejected": {
-    "n_all": 125,
-    "n_covered": 89,
+    "n_all": 124,
+    "n_covered": 88,
     "status": {
       "blended": 17,
       "deflector": 1,
       "none": 24,
-      "too close": 47
+      "too close": 46
     },
     "decided": 24,
     "deflector": 0,
@@ -146,13 +154,16 @@
     "none_colour_match": 14,
     "none_colour_mismatch": 10,
     "pair_mismatch": 1,
-    "none_typical_detectable": 24
+    "none_typical_detectable": 24,
+    "none_colour_match_binary": 2,
+    "none_colour_match_different_z": 1,
+    "none_untestable": 11
   },
   "control": {
-    "n_all": 107,
-    "n_covered": 80,
+    "n_all": 108,
+    "n_covered": 81,
     "status": {
-      "blended": 46,
+      "blended": 47,
       "none": 5,
       "too close": 29
     },
@@ -162,7 +173,10 @@
     "none_colour_match": 4,
     "none_colour_mismatch": 1,
     "pair_mismatch": 0,
-    "none_typical_detectable": 5
+    "none_typical_detectable": 5,
+    "none_colour_match_binary": 0,
+    "none_colour_match_different_z": 0,
+    "none_untestable": 4
   },
   "control_efficiency": 0.0
 }

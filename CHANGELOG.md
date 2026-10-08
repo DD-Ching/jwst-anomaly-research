@@ -4,7 +4,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-08: W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them (D-064)
 - Hypothesis: a dark deflector hides among pairs rejected as lenses for lack of a lens galaxy (Lemon 2023 UQP/QSO
-  pair; SQLS "no lensing object", "QSO pair", "binary"). 125 rejected and 107 control lenses (≤ 3″) went through the
+  pair; SQLS "no lensing object", "QSO pair", "binary"). 124 rejected and 108 control lenses (≤ 3″) went through the
   D-056 chain.
 - **Control efficiency 0 / 5** (1.9–2.6″; lens light blended into the images, fitted as PSFs): an LS "none" at these
   separations carries no information. Rejected: 24 "none". Of these, 10 are colour-mismatched, 2 are catalogued
@@ -13,7 +13,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - the Hennawi sexagesimal coordinates silently matched nothing;
   - pairs wider than the image search were tested on unrelated LS pairs;
   - the raw-TSV hash could never verify (the header carries the request time);
-  - the greedy dedup was not transitive.
+  - the greedy dedup was not transitive;
+  - Lemon `z2` semantics (a blank `n_z2` marks a second quasar; "z_lens="/"zgal=" are other objects);
+  - classifications as non-pairs in another catalogue were ignored.
 - **Next:** HST/Euclid/HSC image models or spectra for the 11 colour-matched pairs; the LaTeX-only NIQ tables.
 
 ## 2026-10-08: Governance — owner decisions on scope, parallelism, cloud disk and layout

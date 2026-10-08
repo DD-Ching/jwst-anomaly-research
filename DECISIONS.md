@@ -2960,7 +2960,8 @@ lenses from the same tables to *measure* the test's efficiency, which D-056 had 
 - Inputs: VizieR tables pinned by the sha256 of their data lines (the ASU-TSV header carries the request time):
   - Lemon et al. 2023 table1: UQP / QSO pair rejected, lens / quad control;
   - SQLS DR3/DR5/DR7 candidate tables (Inada et al. 2008, 2010, 2012): "no lens(ing) object", "QSO pair" and
-    "binary" rejected, "SDSS lens"/"known lens" control;
+    "binary" rejected, "SDSS lens"/"known lens" control, QSO+star / different SED / not QSO non-pairs (they veto a
+    rejection of the same system);
   - Hennawi et al. 2006 binaries, for vetting.
 - Mismatched or missing pins are refused.
 - Sample rules (ASSUMPTIONs):
@@ -2993,7 +2994,9 @@ colour-mismatched, 2 are catalogued binaries and 1 has two redshifts; 11 remain 
     parses;
   - wide pairs were tested on unrelated LS pairs;
   - the greedy dedup was not transitive;
-  - Lemon's `z2` is usually the lens or a galaxy redshift. Only `n_z2 = "zqso="` (unflagged) is a second quasar.
+  - Lemon's `z2` is a second quasar redshift only when `n_z2` is blank (or "zqso="). "z_lens=" and "zgal=" are
+    other objects, and flagged values are not used;
+  - a rejection that another catalogue classifies as a non-pair is now vetoed (J0947+0247).
 - The Tractor rows the test ran on are pinned too (sha256 of the sorted rows), and so are the brick summary and
   every VizieR table. VizieR error, empty or truncated responses are refused.
 

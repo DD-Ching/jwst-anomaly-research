@@ -37,7 +37,8 @@ def test_sdss_name_radec():
         ("SDSS lens; QSO pair nearby", "control"),
         ("QSO pair", "rejected"),
         ("Binary QSO (z=0.799, 0.799)", "rejected"),
-        ("QSO+star", ""),
+        ("QSO+star", "nonpair"),
+        ("Different SED, not QSO", "nonpair"),
         ("", ""),
     ],
 )
@@ -166,15 +167,16 @@ def test_redshift_pair_and_difference():
 def test_lemon_z2_used_only_for_a_second_quasar():
     t = Table(
         rows=[
-            ("Q", "150.0", "1.0", "1.5", "2.2", "UQP", "1.40", "zqso=", " ", "  "),
+            ("Q", "150.0", "1.0", "1.5", "2.2", "QSO pair", "1.40", "", " ", "  "),  # real format
             ("L", "160.0", "1.0", "1.5", "2.2", "lens", "0.40", "z_lens=", " ", "  "),
+            ("F", "170.0", "1.0", "1.5", "2.2", "UQP", "1.45", "", "?", "  "),  # flagged
         ],
         names=("Name", "RAJ2000", "DEJ2000", "z", "Sep", "Class", "z2", "n_z2", "f_z2", "f_z"),
         dtype=[str] * 10,
     )
     s = niq.build_sample({"J/MNRAS/520/3305/table1": t})
     z2 = dict(zip(s["name"], s["z2"], strict=True))
-    assert z2["Q"] == pytest.approx(1.4) and np.isnan(z2["L"])
+    assert z2["Q"] == pytest.approx(1.4) and np.isnan(z2["L"]) and np.isnan(z2["F"])
 
 
 def test_wide_lens_still_promotes_its_group_and_merged_info_is_kept():
@@ -197,6 +199,25 @@ def test_check_vizier_refuses_errors_and_empty(tmp_path):
     ok = b"#INFO x\nName\n \n----\nJ1\n"
     niq.check_vizier(ok, "t", tmp_path)
     with pytest.raises(RuntimeError):
-        niq.check_vizier(b"#INFO Error: no such table\nName\n \n----\n", "t", tmp_path)
+        niq.check_vizier(b"#INFO QUERY_STATUS=ERROR\nName\n \n----\nJ1\n", "t", tmp_path)
     with pytest.raises(RuntimeError):
         niq.check_vizier(b"Name\n \n----\n", "t", tmp_path)
+
+
+def test_nonpair_elsewhere_vetoes_a_rejection_and_sqls_z_pair_is_used():
+    lemon = _lemon([("S", "150.0", "1.0", "1.5", "2.2", "QSO + star")])
+    sqls = _sqls(
+        [
+            ("J100000.01+010000.0", "1.5", "2.2", "No lens object"),  # same system as S
+            ("J110000.00+010000.0", "1.600", "2.4", "QSO pair (z=1.686, 1.600)"),
+        ]
+    )
+    s = niq.build_sample({"J/MNRAS/520/3305/table1": lemon, "J/AJ/143/119/table4": sqls})
+    assert list(s["name"]) == ["J110000.00+010000.0"]
+    assert s.meta["dropped"]["non-pair classifications (incl. vetoed rejections)"] == 1
+    assert s["z_source"][0] == pytest.approx(1.686) and s["z2"][0] == pytest.approx(1.6)
+
+
+def test_check_vizier_ignores_column_descriptions(tmp_path):
+    ok = b"#Column\te_RA\t(F5.2)\tMean error on RA [ucd=stat.error]\nName\n \n----\nJ1\n"
+    niq.check_vizier(ok, "t", tmp_path)
