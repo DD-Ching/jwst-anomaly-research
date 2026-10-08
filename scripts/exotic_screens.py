@@ -652,8 +652,8 @@ def shear_sources(
     shear is R g, with R from :func:`shear_responsivity` on the used rows unless
     ``responsivity`` is given. Diffraction-spike segments (:func:`spike_segments`, with
     ``extra`` stars; D-043) are dropped: spikes point radially at their star, the W1 sign.
-    ``counts["e_all"]`` holds the corrected ε of every resolved row with κ < 1 and |g| < 1
-    (cuts on S/N, ``max_g`` and lensability not applied), for injected sources."""
+    ``counts["e_all"]`` holds ε of every resolved row, corrected where κ < 1 and |g| < 1 (cuts
+    on S/N, ``max_g`` and lensability not applied), for injected sources."""
     snr = np.asarray(shapes["snr"], float)
     a = np.asarray(shapes["semimajor_px"], float)
     b = a * (1.0 - np.asarray(shapes["ellipticity"], float))
@@ -672,8 +672,10 @@ def shear_sources(
     r_err = float("nan")
     if responsivity is None:
         responsivity, r_err = shear_responsivity(np.where(weak, eps, np.nan), g)
-    e_all = remove_cluster_shear(eps, responsivity * g)
-    e_all = np.where(np.isfinite(eps) & (np.abs(g) < 1.0) & (kappa < 1.0), e_all, np.nan + 0j)
+    # where the cluster shear cannot be removed (κ >= 1, |g| >= 1), keep the measured ε
+    e_all = np.where(
+        (np.abs(g) < 1.0) & (kappa < 1.0), remove_cluster_shear(eps, responsivity * g), eps
+    )
     e = np.where(weak, e_all, np.nan + 0j)
     counts = {
         "n_rows": len(shapes),
@@ -813,6 +815,17 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | No
     }
 
 
+def json_safe(obj):
+    """NaN and inf -> None, recursively, so the output is strict JSON."""
+    if isinstance(obj, dict):
+        return {k: json_safe(v) for k, v in obj.items()}
+    if isinstance(obj, list | tuple):
+        return [json_safe(v) for v in obj]
+    if isinstance(obj, float) and not np.isfinite(obj):
+        return None
+    return obj
+
+
 def cross_p_values(s_cross: np.ndarray, null_max: np.ndarray) -> dict:
     """B-mode check: under random rotations S_× and -S_× have the same field-maximum distribution
     as S, so ``null_max`` gives the p-value of each cross extreme. An E-mode peak no rarer than
@@ -838,8 +851,9 @@ def cmd_shear(args) -> dict:
     s, null, gx, gy = res["s"], res["null_max"], res["gx"], res["gy"]
     if not np.isfinite(s).any():
         raise ValueError("no grid centre has enough shear sources")
-    smax = float(np.nanmax(s)) if np.isfinite(s).any() else float("nan")
-    p_max = float(np.mean(null >= smax)) if len(null) and np.isfinite(smax) else None
+    smax = float(np.nanmax(s))
+    p_max = float(np.mean(null >= smax)) if len(null) else None
+    b_max = float(np.nanmax(np.abs(res["s_cross"])))
     rows = []
     thr = np.nanpercentile(null, 50) if len(null) else np.inf
     for iy, ix in convergence_peaks(np.nan_to_num(s, nan=-np.inf), thr):
@@ -884,6 +898,9 @@ def cmd_shear(args) -> dict:
         "s_max": smax,
         "p_random_max": p_max,
         **cross_p_values(res["s_cross"], null),
+        "b_max": b_max,
+        # D-053 rule: p_random < 0.05 and above the field's largest |S_x|
+        "passes_eb_rule": bool(p_max is not None and p_max < 0.05 and smax > b_max),
         "null_max_p50_p95": (
             [float(v) for v in np.percentile(null, [50, 95])] if len(null) else None
         ),
@@ -905,7 +922,7 @@ def cmd_shear(args) -> dict:
             )
         },
     }
-    (dest / "shear.json").write_text(json.dumps(summary, indent=1))
+    (dest / "shear.json").write_text(json.dumps(json_safe(summary), indent=1))
     return summary
 
 

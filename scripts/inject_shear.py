@@ -208,6 +208,9 @@ def run_field(name: str, args) -> dict:
             "p_random_max": float(np.mean(base_null >= s_max)),
             "b_max": inj.b_max,
             "e_exceeds_b": bool(s_max > inj.b_max),
+            "passes_eb_rule": bool(
+                np.mean(base_null >= s_max) < ir.P_RECOVER and s_max > inj.b_max
+            ),
             **es.cross_p_values(inj.base["s_cross"], base_null),
             "null_max_p50_p95": [float(v) for v in np.percentile(base_null, [50, 95])],
         },
@@ -225,7 +228,7 @@ def run_field(name: str, args) -> dict:
             | {"max_radius": sargs.max_radius},
         },
     }
-    (out / "summary.json").write_text(json.dumps(summary, indent=1))
+    (out / "summary.json").write_text(json.dumps(es.json_safe(summary), indent=1))
     return summary
 
 
@@ -256,11 +259,17 @@ def main(argv: list[str] | None = None) -> int:
     else:
         summaries = [run_field(f, args) for f in args.fields]
     combined = ir.combine(summaries, args.mass)
-    combined["screen"] = {
-        k: getattr(args, k) for k in ("aperture_arcsec", "filter", "r_min_arcsec", "recover_tol")
-    }
+
+    def setting(s):  # the grid half-width is per field (FIELDS); everything else must agree
+        a = json.loads(json.dumps(s["assumptions"]))
+        a["screen"].pop("max_radius", None)
+        return a
+
+    if len({json.dumps(setting(s), sort_keys=True) for s in summaries}) != 1:
+        ap.error("the fields were run with different screen settings; re-run them alike")
+    combined["screen"] = setting(summaries[0])
     args.out.mkdir(parents=True, exist_ok=True)
-    (args.out / "combined.json").write_text(json.dumps(combined, indent=1))
+    (args.out / "combined.json").write_text(json.dumps(es.json_safe(combined), indent=1))
     print(json.dumps(combined, indent=1))
     return 0
 
