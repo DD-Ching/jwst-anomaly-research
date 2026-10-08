@@ -1,0 +1,34 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: obs_id, datatype: string}
+# - {name: dataURI, datatype: string}
+# - {name: productSubGroupDescription, datatype: string}
+# - {name: prvversion, datatype: string}
+# - {name: productFilename, datatype: string}
+# - {name: size, datatype: int64}
+# - {name: cloud_uri, datatype: string}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'MAST Observations.get_product_list(1 observations); filter calib_level=3, productSubGroupDescription=[''CAT'', ''I2D''],
+#     dataRights=PUBLIC; astroquery 0.4.11'}
+# schema: astropy-2.0
+obs_id dataURI productSubGroupDescription prvversion productFilename size cloud_uri
+jw01176-o211_t009_nircam_clear-f200w mast:JWST/product/jw01176-o211_t009_nircam_clear-f200w_cat.ecsv CAT 2.0.1 jw01176-o211_t009_nircam_clear-f200w_cat.ecsv 3132202 s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f200w_cat.ecsv
+jw01176-o211_t009_nircam_clear-f200w mast:JWST/product/jw01176-o211_t009_nircam_clear-f200w_i2d.fits I2D 2.0.1 jw01176-o211_t009_nircam_clear-f200w_i2d.fits 1291913280 s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f200w_i2d.fits
+jw01176-o211_t009_nircam_clear-f444w mast:JWST/product/jw01176-o211_t009_nircam_clear-f444w_cat.ecsv CAT 2.0.1 jw01176-o211_t009_nircam_clear-f444w_cat.ecsv 1708918 s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f444w_cat.ecsv
+jw01176-o211_t009_nircam_clear-f444w mast:JWST/product/jw01176-o211_t009_nircam_clear-f444w_i2d.fits I2D 2.0.1 jw01176-o211_t009_nircam_clear-f444w_i2d.fits 306509760 s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f444w_i2d.fits
+jw01176-o212_t009_nircam_clear-f200w mast:JWST/product/jw01176-o212_t009_nircam_clear-f200w_cat.ecsv CAT 2.0.1 jw01176-o212_t009_nircam_clear-f200w_cat.ecsv 2751224 s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f200w_cat.ecsv
+jw01176-o212_t009_nircam_clear-f200w mast:JWST/product/jw01176-o212_t009_nircam_clear-f200w_i2d.fits I2D 2.0.1 jw01176-o212_t009_nircam_clear-f200w_i2d.fits 1292316480 s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f200w_i2d.fits
+jw01176-o212_t009_nircam_clear-f444w mast:JWST/product/jw01176-o212_t009_nircam_clear-f444w_cat.ecsv CAT 2.0.1 jw01176-o212_t009_nircam_clear-f444w_cat.ecsv 1776922 s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f444w_cat.ecsv
+jw01176-o212_t009_nircam_clear-f444w mast:JWST/product/jw01176-o212_t009_nircam_clear-f444w_i2d.fits I2D 2.0.1 jw01176-o212_t009_nircam_clear-f444w_i2d.fits 306509760 s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f444w_i2d.fits
+jw01176-o213_t009_nircam_clear-f200w mast:JWST/product/jw01176-o213_t009_nircam_clear-f200w_cat.ecsv CAT 2.0.1 jw01176-o213_t009_nircam_clear-f200w_cat.ecsv 2910071 s3://stpubdata/jwst/public/jw01176/L3/t/o213/jw01176-o213_t009_nircam_clear-f200w_cat.ecsv
+jw01176-o213_t009_nircam_clear-f200w mast:JWST/product/jw01176-o213_t009_nircam_clear-f200w_i2d.fits I2D 2.0.1 jw01176-o213_t009_nircam_clear-f200w_i2d.fits 1292034240 s3://stpubdata/jwst/public/jw01176/L3/t/o213/jw01176-o213_t009_nircam_clear-f200w_i2d.fits
+jw01176-o213_t009_nircam_clear-f444w mast:JWST/product/jw01176-o213_t009_nircam_clear-f444w_cat.ecsv CAT 2.0.1 jw01176-o213_t009_nircam_clear-f444w_cat.ecsv 1611366 s3://stpubdata/jwst/public/jw01176/L3/t/o213/jw01176-o213_t009_nircam_clear-f444w_cat.ecsv
+jw01176-o213_t009_nircam_clear-f444w mast:JWST/product/jw01176-o213_t009_nircam_clear-f444w_i2d.fits I2D 2.0.1 jw01176-o213_t009_nircam_clear-f444w_i2d.fits 306509760 s3://stpubdata/jwst/public/jw01176/L3/t/o213/jw01176-o213_t009_nircam_clear-f444w_i2d.fits
+jw01208-o004_t002_nircam_clear-f200w mast:JWST/product/jw01208-o004_t002_nircam_clear-f200w_cat.ecsv CAT 3.0.0 jw01208-o004_t002_nircam_clear-f200w_cat.ecsv 5527996 s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f200w_cat.ecsv
+jw01208-o004_t002_nircam_clear-f200w mast:JWST/product/jw01208-o004_t002_nircam_clear-f200w_i2d.fits I2D 3.0.0 jw01208-o004_t002_nircam_clear-f200w_i2d.fits 1655121600 s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f200w_i2d.fits
+jw01208-o004_t002_nircam_clear-f444w mast:JWST/product/jw01208-o004_t002_nircam_clear-f444w_cat.ecsv CAT 3.0.0 jw01208-o004_t002_nircam_clear-f444w_cat.ecsv 2557452 s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f444w_cat.ecsv
+jw01208-o004_t002_nircam_clear-f444w mast:JWST/product/jw01208-o004_t002_nircam_clear-f444w_i2d.fits I2D 3.0.0 jw01208-o004_t002_nircam_clear-f444w_i2d.fits 343995840 s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f444w_i2d.fits
+jw06882-o054_t054_nircam_clear-f444w mast:JWST/product/jw06882-o054_t054_nircam_clear-f444w_cat.ecsv CAT 3.0.0 jw06882-o054_t054_nircam_clear-f444w_cat.ecsv 1492652 s3://stpubdata/jwst/public/jw06882/L3/t/o054/jw06882-o054_t054_nircam_clear-f444w_cat.ecsv
+jw06882-o054_t054_nircam_clear-f444w mast:JWST/product/jw06882-o054_t054_nircam_clear-f444w_i2d.fits I2D 3.0.0 jw06882-o054_t054_nircam_clear-f444w_i2d.fits 306512640 s3://stpubdata/jwst/public/jw06882/L3/t/o054/jw06882-o054_t054_nircam_clear-f444w_i2d.fits
