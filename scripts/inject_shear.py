@@ -55,24 +55,18 @@ DEFAULT_FIELDS = ("abell2744", "macs0416", "macs1149", "abell370")
 class ShearInjector:
     """The shear screen on one field: real ellipticities cached, recovery checked near the lens."""
 
-    def __init__(self, model, shapes: Table, args, psf_sigma: float):
+    def __init__(self, model, shapes: Table, args, psf_sigma: float, extra: Table | None = None):
         self.model, self.shapes, self.args, self.psf = model, shapes, args, psf_sigma
-        self.base = es.shear_screen(model, shapes, args, psf_sigma)
+        self.base = es.shear_screen(model, shapes, args, psf_sigma, extra)
+        if not np.isfinite(self.base["s"]).any():
+            raise ValueError("no grid centre has enough shear sources")
         self.e = self.base["e"]
+        self.e_all = self.base["e_all"]
         self.r = self.base["counts"]["responsivity"]
         xs, ys = model.to_frame(shapes["ra"], shapes["dec"])
         self.xs, self.ys = np.asarray(xs), np.asarray(ys)
         self.use = self.base["use"]
-        self.ap = es.ApertureMass(
-            self.xs[self.use],
-            self.ys[self.use],
-            self.base["gx"],
-            self.base["gy"],
-            args.aperture_arcsec,
-            args.filter,
-            args.r_min_arcsec,
-            args.min_sources,
-        )
+        self.ap = self.base["ap"]
         self.null = self.base["null_max"]
         self.b_max = float(np.nanmax(np.abs(self.base["s_cross"])))
         self.background = ir.background_mask(shapes, model.z_lens)
@@ -107,8 +101,8 @@ class ShearInjector:
                 self.model, img, self.psf, self.args.min_snr, self.args.max_g, self.r
             )
             # the catalogue's moments respond to shear by R (D-053), the painted moments by 1:
-            # keep R of the lens-induced change (an unused source counts as round)
-            e_src = np.nan_to_num(self.e[np.asarray(img["_src"], int)], nan=0.0)
+            # keep R of the lens-induced change (an unresolved source counts as round)
+            e_src = np.nan_to_num(self.e_all[np.asarray(img["_src"], int)], nan=0.0)
             e_img = e_src + self.r * (e_img - e_src)
             ok = np.isfinite(e_img)
             n_img_used = int(ok.sum())
@@ -140,14 +134,14 @@ def run_field(name: str, args) -> dict:
     t0 = time.time()
     out = args.out / name
     out.mkdir(parents=True, exist_ok=True)
-    model, shapes, _, cat, photoz = ir.load_field(name, out)
+    model, shapes, extra, cat, photoz = ir.load_field(name, out)
     sargs = SimpleNamespace(**SHEAR_DEFAULTS)
     for k in ("aperture_arcsec", "filter", "r_min_arcsec"):
         setattr(sargs, k, getattr(args, k))
     sargs.max_radius = ir.FIELDS[name]["max_radius"]
     sargs.recover_tol = args.recover_tol
     psf = es.psf_sigma_px(shapes)
-    inj = ShearInjector(model, shapes, sargs, psf)
+    inj = ShearInjector(model, shapes, sargs, psf, extra)
     t_base = time.time() - t0
     scale = ir.pixel_scale_arcsec(cat)
     fx, fy, area = ir.screened_footprint(inj.xs, inj.ys, sargs.max_radius)
@@ -209,6 +203,7 @@ def run_field(name: str, args) -> dict:
             "s_max_xy": [float(inj.base["gx"][iy, ix]), float(inj.base["gy"][iy, ix])],
             "s_max_radec": [float(ra_pk), float(dec_pk)],
             "p_random_max": float(np.mean(base_null >= s_max)),
+            "n_spike_segments": inj.base["counts"]["n_spike_segments"],
             "b_max": inj.b_max,
             "e_exceeds_b": bool(s_max > inj.b_max),
             **es.cross_p_values(inj.base["s_cross"], base_null),
@@ -239,7 +234,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--n-inject", type=int, default=200, help="lenses per field and mass")
     ap.add_argument("--recover-tol", type=float, default=ir.RECOVER_TOL)
     ap.add_argument("--aperture-arcsec", type=float, default=SHEAR_DEFAULTS["aperture_arcsec"])
-    ap.add_argument("--filter", default=SHEAR_DEFAULTS["filter"])
+    ap.add_argument(
+        "--filter", default=SHEAR_DEFAULTS["filter"], choices=("pointmass", "schirmer", "tophat")
+    )
     ap.add_argument("--r-min-arcsec", type=float, default=SHEAR_DEFAULTS["r_min_arcsec"])
     ap.add_argument("--seed", type=int, default=50)
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "inject_shear")
@@ -249,6 +246,9 @@ def main(argv: list[str] | None = None) -> int:
         help="combine existing <out>/<field>/summary.json files (fields run as separate processes)",
     )
     args = ap.parse_args(argv)
+    keys = [f"{m:.0e}" for m in args.mass]
+    if len(set(keys)) != len(keys):
+        ap.error(f"--mass values must differ at one significant figure (keys {keys})")
     if args.combine_only:
         summaries = [json.loads((args.out / f / "summary.json").read_text()) for f in args.fields]
     else:

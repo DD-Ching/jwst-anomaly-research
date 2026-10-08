@@ -256,4 +256,5 @@ def test_shear_responsivity_recovers_a_diluted_shear():
     eps = 0.25 * np.exp(1j * rng.uniform(0, 2 * np.pi, n)) + 0.5 * g
     r, err = es.shear_responsivity(eps, g)
     assert abs(r - 0.5) < 3 * err and err < 0.05
-    assert es.shear_responsivity(eps[:5], g[:5]) == (1.0, pytest.approx(np.nan, nan_ok=True))
+    with pytest.raises(ValueError):  # too few rows: refuse rather than assume R = 1
+        es.shear_responsivity(eps[:5], g[:5])

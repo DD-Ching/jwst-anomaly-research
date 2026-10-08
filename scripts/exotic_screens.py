@@ -625,8 +625,8 @@ def shear_responsivity(eps: np.ndarray, g: np.ndarray) -> tuple[float, float]:
     D-053); subtracting the full g would leave -(1 - R) g, a radial pattern of the W1 sign."""
     ag = np.abs(g)
     ok = np.isfinite(eps) & (ag > 0)
-    if ok.sum() < 20:
-        return 1.0, float("nan")
+    if ok.sum() < 20:  # R = 1 would leave the W1-signed residual; refuse instead
+        raise ValueError(f"{int(ok.sum())} rows cannot calibrate the shear responsivity (need 20)")
     y = np.real(eps[ok] * np.exp(-1j * np.angle(g[ok])))
     x = ag[ok]
     r = float(np.dot(x, y) / np.dot(x, x))
@@ -641,6 +641,8 @@ def shear_sources(
     min_snr: float,
     max_g: float = SHEAR_MAX_G,
     responsivity: float | None = None,
+    extra: Table | None = None,
+    spike_veto: bool = True,
 ) -> tuple[np.ndarray, dict]:
     """Rows usable by the shear screen and their cluster-corrected ellipticities.
 
@@ -648,7 +650,10 @@ def shear_sources(
     no photo-z, not a star), S/N >= ``min_snr``, resolved after PSF deconvolution, and the cluster
     model's |g| < ``max_g`` and κ < 1 at the row's photo-z (z = 2 without one). The removed
     shear is R g, with R from :func:`shear_responsivity` on the used rows unless
-    ``responsivity`` is given."""
+    ``responsivity`` is given. Diffraction-spike segments (:func:`spike_segments`, with
+    ``extra`` stars; D-043) are dropped: spikes point radially at their star, the W1 sign.
+    ``counts["e_all"]`` holds the corrected ε of every resolved row with κ < 1 and |g| < 1
+    (cuts on S/N, ``max_g`` and lensability not applied), for injected sources."""
     snr = np.asarray(shapes["snr"], float)
     a = np.asarray(shapes["semimajor_px"], float)
     b = a * (1.0 - np.asarray(shapes["ellipticity"], float))
@@ -659,15 +664,20 @@ def shear_sources(
         z = np.where(np.isfinite(zp), zp, 2.0)
     g, kappa = cluster_reduced_shear(model, shapes["ra"], shapes["dec"], z)
     lens = lensable_mask(shapes, model.z_lens)
+    spike = spike_segments(shapes, shapes, extra) if spike_veto else np.zeros(len(shapes), bool)
+    lens &= ~spike
     bright = lens & (snr >= min_snr)
     resolved = bright & np.isfinite(eps)
     weak = resolved & (np.abs(g) < max_g) & (kappa < 1.0)
     r_err = float("nan")
     if responsivity is None:
         responsivity, r_err = shear_responsivity(np.where(weak, eps, np.nan), g)
-    e = np.where(weak, remove_cluster_shear(eps, responsivity * g), np.nan + 0j)
+    e_all = remove_cluster_shear(eps, responsivity * g)
+    e_all = np.where(np.isfinite(eps) & (np.abs(g) < 1.0) & (kappa < 1.0), e_all, np.nan + 0j)
+    e = np.where(weak, e_all, np.nan + 0j)
     counts = {
         "n_rows": len(shapes),
+        "n_spike_segments": int(spike.sum()),
         "n_lensable": int(lens.sum()),
         "n_snr": int(bright.sum()),
         "n_resolved": int(resolved.sum()),
@@ -675,6 +685,7 @@ def shear_sources(
         "responsivity": float(responsivity),
         "responsivity_err": r_err,
     }
+    counts["e_all"] = e_all
     return e, counts
 
 
@@ -693,13 +704,12 @@ class ApertureMass:
         x, y = np.asarray(x, float), np.asarray(y, float)
         cx, cy = np.ravel(np.asarray(cx, float)), np.ravel(np.asarray(cy, float))
         self.n_centres, self.min_n = len(cx), min_n
-        rows, cols = [], []
+        rows = cols = np.zeros(0, int)
         if len(x):
             hits = cKDTree(np.c_[x, y]).query_ball_point(np.c_[cx, cy], radius)
-            for i, h in enumerate(hits):
-                rows.extend([i] * len(h))
-                cols.extend(h)
-        rows, cols = np.asarray(rows, int), np.asarray(cols, int)
+            lens_ = np.fromiter((len(h) for h in hits), int, len(hits))
+            rows = np.repeat(np.arange(len(hits)), lens_)
+            cols = np.fromiter((j for h in hits for j in h), int, int(lens_.sum()))
         de, dn = -(x[cols] - cx[rows]), y[cols] - cy[rows]  # East, North of the centre
         theta = np.hypot(de, dn)
         q = aperture_filter(theta / radius, kind, r_min / radius)
@@ -752,7 +762,7 @@ def add_shear_options(s: argparse.ArgumentParser) -> None:
     s.add_argument(
         "--responsivity", type=float, default=None, help="shear responsivity R (default: measured)"
     )
-    s.add_argument("--max-radius", type=float, default=60.0, help="arcsec from the model centre")
+    s.add_argument("--max-radius", type=float, default=60.0, help="grid half-width (arcsec)")
     s.add_argument("--grid-arcsec", type=float, default=1.0)
     s.add_argument("--n-random", type=int, default=200)
     s.add_argument("--seed", type=int, default=1)
@@ -765,11 +775,18 @@ def shear_defaults() -> dict:
     return vars(ap.parse_args([]))
 
 
-def shear_screen(model, shapes: Table, args, psf_sigma: float) -> dict:
+def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | None = None) -> dict:
     """Run the shear screen; returns the map, null and peaks (all ``derived``)."""
     e, counts = shear_sources(
-        model, shapes, psf_sigma, args.min_snr, args.max_g, getattr(args, "responsivity", None)
+        model,
+        shapes,
+        psf_sigma,
+        args.min_snr,
+        args.max_g,
+        getattr(args, "responsivity", None),
+        extra,
     )
+    e_all = counts.pop("e_all")
     use = np.isfinite(e)
     x, y = model.to_frame(np.asarray(shapes["ra"])[use], np.asarray(shapes["dec"])[use])
     gx, gy = radial_grid(args.max_radius, args.grid_arcsec)
@@ -786,7 +803,10 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float) -> dict:
         "s_cross": sx.reshape(gx.shape),
         "null_max": null,
         "e": e,
+        "e_all": e_all,
         "use": use,
+        "ap": ap,
+        "xy": (x, y),
     }
 
 
@@ -798,7 +818,8 @@ def cross_p_values(s_cross: np.ndarray, null_max: np.ndarray) -> dict:
     for name, v in (("plus", s_cross), ("minus", -s_cross)):
         m = float(np.nanmax(v)) if np.isfinite(v).any() else float("nan")
         out[f"s_cross_{name}_max"] = m
-        out[f"p_random_cross_{name}"] = float(np.mean(null_max >= m)) if len(null_max) else None
+        ok = len(null_max) and np.isfinite(m)
+        out[f"p_random_cross_{name}"] = float(np.mean(null_max >= m)) if ok else None
     return out
 
 
@@ -809,10 +830,11 @@ def cmd_shear(args) -> dict:
     if args.photoz:
         lc.attach_photoz(shapes, args.photoz)
     psf = psf_sigma_px(shapes)
-    res = shear_screen(model, shapes, args, psf)
+    extra = read_spike_stars(args.spike_stars) if args.spike_stars else None
+    res = shear_screen(model, shapes, args, psf, extra)
     s, null, gx, gy = res["s"], res["null_max"], res["gx"], res["gy"]
     smax = float(np.nanmax(s)) if np.isfinite(s).any() else float("nan")
-    p_max = float(np.mean(null >= smax)) if len(null) else None
+    p_max = float(np.mean(null >= smax)) if len(null) and np.isfinite(smax) else None
     rows = []
     thr = np.nanpercentile(null, 50) if len(null) else np.inf
     for iy, ix in convergence_peaks(np.nan_to_num(s, nan=-np.inf), thr):
@@ -829,7 +851,8 @@ def cmd_shear(args) -> dict:
             }
         )
     rows.sort(key=lambda r: -r["s"])
-    peaks_t = Table(rows=rows) if rows else Table(names=("x", "y", "s"))
+    cols = ("x", "y", "ra", "dec", "s", "s_cross", "p_random")
+    peaks_t = Table(rows=rows, names=cols) if rows else Table(names=cols)
     peaks_t.meta.update(model._meta())
     peaks_t.meta.update(provenance=schema.Provenance.DERIVED.value, source=str(args.catalog))
     dest = args.out / args.model
@@ -891,6 +914,7 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser("shear", help="negative tangential shear around a dark centre (W1, D-050)")
     s.add_argument("--catalog", type=Path, required=True, help="JWST pipeline _cat.ecsv")
     s.add_argument("--photoz", type=Path, help="eazy zout FITS table (e.g. DJA)")
+    s.add_argument("--spike-stars", type=Path, help="bright-star table for the spike veto (D-043)")
     add_shear_options(s)
     args = ap.parse_args(argv)
     (args.out / args.model).mkdir(parents=True, exist_ok=True)

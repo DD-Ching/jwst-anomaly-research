@@ -2585,20 +2585,23 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
 **Decision.**
 - D-050's catalogue aperture-mass map is `exotic_screens.py shear` (Schirmer Q_TANH, R_ap = 10″, 1″ grid, sources at
   1–10″, rotation null) with `scripts/inject_shear.py` for injection-recovery. It replaces `radial` for W1 limits at
-  ≥ 2 × 10¹² M☉ (6–8× stronger); `radial` stays as an independent screen. Method and tables: docs/exotic_limits.md
+  ≥ 2 × 10¹² M☉ (7–13× stronger); `radial` stays as an independent screen. Method and tables: docs/exotic_limits.md
   "W1 negative-mass lenses (shear screen)".
 - **Responsivity.** The cluster shear removed is R g with R fitted per field (0.41–0.48): catalogue isophotal
-  moments respond to shear by R, not 1. Injected images keep R of their lens-induced shape change.
+  moments respond to shear by R, not 1. Injected images keep R of their lens-induced shape change. Fewer than 20
+  calibrating rows is an error, not R = 1.
+- **Spike veto.** Diffraction-spike segments (`spike_segments`, D-043, Gaia stars where the field uses them) are
+  dropped: they point radially at their star, the W1 sign.
 - **E/B rule.** A peak counts only if p_random < 0.05 against the rotation null *and* S exceeds the field's largest
-  |S_×|. Adopted after seeing that real E and B maps share heavier-than-rotation tails (conservative; stated as
-  post hoc).
+  |S_×|. Adopted after seeing real B-mode extremes beyond the rotation null (conservative; post hoc).
 - All thresholds are ASSUMPTIONs.
 
 **Alternatives rejected.**
 - Removing the full model g: leaves −(1 − R) g ≈ −0.55 g, a radial pattern of the W1 sign around every mass
   concentration (measured slope of ε along g: 0.41–0.48 in four fields).
-- The rotation null alone: B-mode extremes reach p ≤ 0.02 in all four fields, so E peaks at p ≤ 0.01 (Abell 370,
-  Abell 2744) would be read as detections that the B mode shows to be systematics.
+- No spike veto (first run): Abell 370 E max 4.51 and B max 4.68 (both p < 0.005), Abell 2744 E 3.92 (p 0.01). With
+  the veto: 3.48 / 3.46 and 3.39. Spikes, not lensing.
+- The rotation null alone: B-mode extremes still reach p 0.005–0.04 in three fields after the veto.
 - Point-mass 1/x² (4″, 10″) and top-hat 6″ filters: lower injection efficiency than Schirmer 10″ in MACS0416 and
   Abell 2744 (50 injections each; numbers in the doc).
 - Hetterscheidt et al. (2005) as the source of the filter's cut-off: the exponential box E(x) is Schirmer et al.'s
@@ -2611,15 +2614,14 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
 - Real data: ε along the model g rises with |g| in MACS0416 and Abell 2744 (e.g. +0.059 ± 0.010 at ⟨|g|⟩ = 0.14,
   +0.255 ± 0.024 at 0.42), so the screen sees the cluster's real shear; after removing R g the residual is
   consistent with 0.
-- Real fields: S_max 3.92 / 3.79 / 3.39 / 4.51 (Abell 2744, MACS0416, MACS1149, Abell 370), each below the field's
-  largest |S_×| (4.19 / 4.04 / 3.75 / 4.68): null.
-- Recovered (of 800, four fields): 0, 0, 34, 235, 431 at 2 × 10¹⁰, 2 × 10¹¹, 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉
-  (radial: 0, 0, 8, 84, 156 of 1,600). 95 % limits: 7.7 × 10³, 1.1 × 10³, 6.1 × 10² deg⁻² at the top three masses
+- Real fields: S_max 3.39 / 3.79 / 3.40 / 3.48 (Abell 2744, MACS0416, MACS1149, Abell 370), p_rot 0.58 / 0.050 /
+  0.19 / 0.20; only Abell 370 exceeds its max |S_×| (3.46), and not the rotation null: null.
+- Recovered (of 800, four fields): 0, 1, 59, 264, 459 at 2 × 10¹⁰, 2 × 10¹¹, 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉
+  (radial: 0, 0, 8, 84, 156 of 1,600). 95 % limits: 4.6 × 10³, 1.0 × 10³, 5.9 × 10² deg⁻² at the top three masses
   (radial headline 6.1 × 10⁴, 7.0 × 10³, 4.0 × 10³).
-- Wall time 58–158 s per field (1,000 injections).
+- Wall time 56–165 s per field (1,000 injections).
 
 **Revisit if.**
 - A proper weak-lensing shape catalogue (PSF-anisotropy-corrected, calibrated) exists for these fields: the E/B
   floor would drop and the limits improve.
-- Abell 370's E tail (twice its B tail) survives an image inspection and a second model.
 - DJA photo-z for SMACS 0723 and El Gordo are reachable again (tarballs 404 on 2026-10-08).
