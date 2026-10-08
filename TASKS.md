@@ -7,8 +7,11 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
    - W1: `radial` is blind below about 10¹² M☉ (D-049; limits only from 2 × 10¹² M☉, θ_E(z_s = 2) ≳ 2″). Next: a W1-specific screen (collinear radial
      image pairs flanking an empty centre, orientation against the candidate centre, local null), benchmarked with
-     `scripts/inject_radial.py`; then pixel-level injections; other lens redshifts → volume density vs Takahashi &
-     Asada; Abell 2744 radial numbers in docs/fields/abell2744.md to the post-D-034 result (134 arcs, 5 lines, p 0.505);
+     `scripts/inject_radial.py`. Design settled in D-050: a sign-flipped catalogue aperture-mass map (Schneider
+     1996 estimator, Schirmer+07 filter) on cluster-shear-corrected shapes, rotation null; build in
+     `exotic_screens.py`, benchmark against `radial`; expect gains mainly at θ_E ≥ 2–3″; then pixel-level injections; other lens redshifts → volume density vs Takahashi &
+     Asada; photo-z for Abell S1063 (DJA v7.5, 75 MB) and MACS0717 to bring both back into the W1 limits (D-049
+     excludes them: without photo-z their members are painted as images);
    - W2 through `orphan_pairs.py` (D-048), and the dark-lens search extended to non-cluster deep fields;
    - W3: a dimming / vanished-source class for multi-epoch fields (El Gordo, MACS0416 flashlights, NEXUS, JADES);
      ≥ 3 epochs for the spike-dip-spike shape; leave the Sunrise transient track to its owner run;

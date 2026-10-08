@@ -203,6 +203,9 @@ also shifts its siblings' reference medians (602.1a/b 0.39/1.15 and 0.37/1.09). 
 anti-tangential, 148 not predicted radial (μ_r < 3). 35 convergence peaks (25 with no source within 1″), max
 5 lines. 200 random-angle draws give 50.4 peaks on average (95th percentile 65) and a maximum of ≥5 lines in
 115 of 200 draws: p_random ≥ 0.575 for every peak. **No radial peak has p_random < 0.05.**
+These numbers predate the D-034 spike veto. With it (current code, re-run for D-049 with the same catalogue,
+photo-z and 120″ radius), 42 spike segments are dropped, 134 `anti` arcs remain, the maximum is 5 lines and
+p_random 0.505: still null (docs/exotic_limits.md, base-screen table).
 
 **Checks applied to each flag.** 3-band cutouts (F150W/F200W/F444W) of every flagged position, viewed by eye.
 Also high-pass versions (0.6″ median filter subtracted) to remove cluster-member light. Further checks:
