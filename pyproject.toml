@@ -22,6 +22,7 @@ dependencies = [
     "astropy>=6.1",
     "astroquery>=0.4.11",  # MAST path_lookup helper (D-002); crossmatch fallbacks need >=0.4.8
     "pyvo>=1.5",
+    "astropy-healpix>=1.0",  # HEALPix pixel geometry for W5 count maps (D-063)
     "numpy>=1.26",
     "scipy>=1.11",
     "pandas>=2.1",

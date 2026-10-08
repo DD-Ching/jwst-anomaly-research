@@ -17,7 +17,8 @@ def test_registry_holds_the_searchable_d047_signatures():
     assert sg.get("W2").lens == {"n": 2.0, "sign": 1} and sg.get("W1").lens["sign"] == -1
     w1 = sg.get("W1").inject([3.0], [0.0], 1.0)
     assert len(w1) == 2 and (w1["dx"] > 0).all()  # both images on the source's side
-    assert sg.get("W5").limits_doc == ""
+    assert sg.get("W5").limits_doc == "docs/exotic_limits.md"
+    assert "D-063" in sg.get("W5").decisions
     with pytest.raises(KeyError, match="registered"):
         sg.get("W9")
     with pytest.raises(ValueError, match="already registered"):
