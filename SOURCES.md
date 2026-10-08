@@ -903,3 +903,39 @@ Cite Mróz et al. as their pages ask; data are pinned in `src/jwst_anomaly/ogle.
   (recorded as −1 in the vetting record, so they can be re-run).
 - Mróz et al. 2017, Nature 548, 183 (reference list of arXiv:1906.02210): the nine high-cadence bulge fields,
   whose events are in the 2019 optical-depth analysis but whose light curves are not in `phot.tar.gz`.
+
+## MOA-II 9-year bulge release (accessed 2026-10-08; D-060)
+
+Pinned in `src/jwst_anomaly/moa.py` (`FILES`) and `data/manifests/moa_ii.ecsv`; fetched with
+`photometry.fetch_catalog` into `$JWST_ANOMALY_DATA/raw/moa/`. Licence not stated; the archive asks for this
+acknowledgement: "This paper makes use of data obtained by the MOA collaboration with the 1.8-metre MOA-II
+telescope at the University of Canterbury Mount John Observatory, Lake Tekapo, New Zealand. The MOA
+collaboration is supported by JSPS KAKENHI grant and the Royal Society of New Zealand Marsden Fund. These data
+are made available using services at the NASA Exoplanet Archive, which is operated by the California Institute
+of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet
+Exploration Program."
+
+- NASA Exoplanet Archive, MOA mission page (2006–2014, ~2.4 M light curves, 22 fields, selection text):
+  https://exoplanetarchive.ipac.caltech.edu/docs/MOAMission.html ; columns and flux zero point (20 mag =
+  691.8 counts on chip 2, 1,445 on other chips): https://exoplanetarchive.ipac.caltech.edu/docs/API_moa_columns.html
+
+  | File | Bytes | Last-Modified | sha256 |
+  |---|---|---|---|
+  | bulk/metadata.ipac.tar.gz | 97,332,954 | 2023-10-13 | b339ec176933f4bfcad09d6e17f08166c7a18ffea2ddc567b6cca83fa25fe55c |
+  | bulk/gb22.tar | 3,510,138,880 | 2023-10-10 | 1cb0173e676915dcf602647e5a2dc315f0ab51c8f2a612ffcdcab4e44edad2d0 |
+
+  `metadata.ipac` has 2,409,061 rows (gb22: 18,599), equal to the Cut-0 count of Nunota et al. 2024. The
+  per-object path `data/Contributed/MOA/gb{F}/R/{C}/gb{F}-R-{C}-{S}-{ID}.ipac` (used by the archive viewer;
+  undocumented) also answers; not used here.
+- Koshimoto, Sumi, Bennett et al. 2023, "Terrestrial and Neptune mass free-floating planet candidates from the
+  MOA-II 9-year Galactic Bulge survey", arXiv:2303.08279 (e-print read for Cut-0, Table 2: S/N of SIM > 2.7,
+  N_continue,8 ≥ 3, σ_x,y ≤ 1/0.8 px, positive and negative PSF profiles; the archive page still quotes the
+  Sumi et al. 2011 cuts S/N > 5, N_detect,continue > 2).
+- Nunota, Sumi, Koshimoto et al. 2024, "The Microlensing Event Rate and Optical Depth from MOA-II 9 year
+  Survey toward the Galactic Bulge", arXiv:2410.23553 (e-print read): 2,409,061 Cut-0 objects; span
+  HJD 2453824–2456970; Table 1 N_s (10 ≤ I_s ≤ 21.4) for 20 fields; gb6 and gb22 excluded (no clear RCG).
+- Sumi et al. 2011, Nature 473, 349, doi:10.1038/nature10092, arXiv:1105.3544: the selection the archive page cites.
+- Gaia DR3 `gaiadr3.gaia_source` via the ESA TAP service (https://gea.esac.esa.int/tap-server/tap), queried
+  2026-10-08: RP histogram within 0.3° of (279.148°, −23.767°) for the luminosity-function slope (D-060).
+- Rejected readers (D-060): merida 0.3.2 (https://pypi.org/project/merida/), qusi 1.5.6
+  (https://pypi.org/project/qusi/).
