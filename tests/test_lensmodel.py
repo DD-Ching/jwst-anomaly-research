@@ -603,7 +603,7 @@ def _cluster_and_galaxy():
 def test_split_planes_without_moves_matches_the_single_plane_model():
     model = _cluster_and_galaxy()
     multi = model.split_planes({})
-    assert multi.z_lens == (0.39,)
+    assert multi.z_planes == (0.39,)
     grid = lensmodel.DeflectionGrid.compute(model, half_width=40.0, step=0.25)
     mgrid = lensmodel.DeflectionGrid.compute(multi, half_width=40.0, step=0.25)
     a = lensmodel.find_images(model, grid, 0.3, -0.2, 2.0)
@@ -629,7 +629,7 @@ def test_split_planes_without_moves_matches_the_single_plane_model():
 
 def test_multiplane_jacobian_matches_finite_differences():
     multi = _cluster_and_galaxy().split_planes({"gal": 0.2}, v_disp={"gal": 250.0})
-    assert multi.z_lens == (0.2, 0.39)
+    assert multi.z_planes == (0.2, 0.39)
     x, y = np.array([8.0, 10.5, -3.0]), np.array([3.0, 5.5, 12.0])
     m = multi.lens_map(x, y, 3.0)
     h = 1e-5
@@ -665,3 +665,31 @@ def test_split_planes_rejects_unknown_potentials():
         model.split_planes({"nope": 0.2})
     with pytest.raises(ValueError, match="unknown or unmoved"):
         model.split_planes({"gal": 0.2}, v_disp={"cl": 100.0})
+
+
+def test_multiplane_grid_serves_every_source_redshift(tmp_path):
+    model = LensModel(list(_cluster_and_galaxy().components), RA0, DEC0, COSMO, sha256="abc")
+    multi = model.split_planes({"gal": 0.2}, v_disp={"gal": 250.0})
+    grid = lensmodel.DeflectionGrid.cached(multi, tmp_path / "g.npz", half_width=10.0, step=0.5)
+    assert grid.alpha_x.shape == (2, 41, 41)
+    again = lensmodel.DeflectionGrid.cached(multi, tmp_path / "g.npz", half_width=10.0, step=0.5)
+    np.testing.assert_array_equal(again.alpha_x, grid.alpha_x)
+    gx, gy = np.meshgrid(grid.x, grid.x)
+    for z_s in (0.3, 1.0, 4.0):  # one grid, any source redshift (the rays do not depend on z_s)
+        bx, by = multi.source_grid(grid, z_s)
+        ex, ey = multi.source_points(gx, gy, z_s)
+        np.testing.assert_allclose(bx, ex, atol=1e-10)
+        np.testing.assert_allclose(by, ey, atol=1e-10)
+    single = lensmodel.DeflectionGrid.compute(model, half_width=10.0, step=0.5)
+    with pytest.raises(ValueError, match="another model"):
+        lensmodel.find_images(multi, single, 0.3, -0.2, 2.0)
+    assert multi.planes[0].sha256 not in ("", model.sha256)  # a plane is not the whole file
+
+
+def test_multiplane_shift_frame_leaves_the_caller_planes_alone():
+    model = _cluster_and_galaxy()
+    other = LensModel([_dpie(name="g2", z_lens=0.6, v_disp=150.0)], RA0, DEC0, COSMO)
+    multi = lensmodel.MultiPlaneLensModel([model, other])
+    multi.shift_frame(0.5, -0.2)
+    assert (model.ra0, model.dec0) == (RA0, DEC0)
+    assert multi.planes[0].ra0 != RA0 and multi.ra0 == multi.planes[1].ra0

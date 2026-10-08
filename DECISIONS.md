@@ -2105,11 +2105,16 @@ tests (removing or rescaling one potential, D-042), which maps do not.
 - `find_images`, `backtrace_images` and `imageplane_residuals` now go through `lens_map` / `source_points` /
   `source_grid`, so they take either model. The Jacobian is no longer assumed symmetric. Single-plane results are
   unchanged (tests).
-- A multi-plane model is nonlinear in the source redshift, so `DeflectionGrid` keeps only its nodes for it and
-  `source_grid` evaluates every plane per call: use a grid around the images of interest (about 70 s for the
+- The ray positions θ_i do not depend on the source redshift; only the weights D_is/D_s do. So a `DeflectionGrid`
+  of a multi-plane model stores α_i(θ_i) per plane (shape `(n_planes, n, n)`, cached by a content hash) and serves
+  every source redshift, as for one plane. Computing it costs about one single-plane grid (≈70 s for the
   222-potential CANUCS MACS0416 model on a ±59″, 0.1″ grid).
+- `MultiPlaneLensModel` has no `evaluate` and no scalar `z_lens` (`z_planes` instead), so single-plane-only code in
+  `lens_consistency.py` fails loudly rather than silently. Sub-planes made by `split_planes` get their own hash;
+  `find_images` refuses a grid computed for another model.
 
 **Alternatives rejected.**
+- Re-tracing every plane at every grid node per source redshift (first version): unnecessary, see above.
 - lenstronomy `MultiPlane`: its dPIE-like profiles are not parametrised as Lenstool's, and our ported dPIE already
   reproduces Lenstool's χ² (D-030, D-044). The recursion itself is a few lines on top of it.
 - Keeping two-plane checks as scratch code (D-042): not reproducible.

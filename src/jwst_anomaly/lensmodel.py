@@ -57,6 +57,7 @@ D-024):
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import re
 from collections.abc import Sequence
@@ -995,8 +996,16 @@ class LensModel:
             z = float(z_lens.get(comp.name, comp.z_lens))
             sig = (v_disp or {}).get(comp.name, comp.v_disp)
             by_z.setdefault(z, []).append(replace(comp, z_lens=z, v_disp=float(sig)))
+
+        def ident(comps: list[DPIE]) -> str:  # a plane holds a subset: not the file's hash
+            return (
+                hashlib.sha256(f"{self.sha256}{comps!r}".encode()).hexdigest()
+                if self.sha256
+                else ""
+            )
+
         planes = [
-            LensModel(comps, self.ra0, self.dec0, self.cosmology, self.source, self.sha256)
+            LensModel(comps, self.ra0, self.dec0, self.cosmology, self.source, ident(comps))
             for comps in by_z.values()
         ]
         moved = ", ".join(f"{k}@z{v:g}" for k, v in sorted(z_lens.items()))
@@ -1123,10 +1132,8 @@ def backtrace_images(model: LensModel, images: Table, z_m_limit: dict[str, float
     by = np.full(len(images), np.nan)
     bx[ok], by[ok] = lm["beta_x"], lm["beta_y"]
     # Inverse magnification matrix A = d beta / d theta at each image (I - H on one plane).
-    a = {k: np.full(len(images), np.nan) for k in ("a11", "a12", "a21", "a22")}
-    for k in a:
-        a[k][ok] = lm[k]
-    a11, a12, a21, a22 = a["a11"], a["a12"], a["a21"], a["a22"]
+    a11, a12, a21, a22 = (np.full(len(images), np.nan) for _ in range(4))
+    a11[ok], a12[ok], a21[ok], a22[ok] = lm["a11"], lm["a12"], lm["a21"], lm["a22"]
     systems = np.asarray(images["system"]).astype(str)
     dbx = np.full(len(images), np.nan)
     dby = np.full(len(images), np.nan)
@@ -1176,11 +1183,11 @@ class DeflectionGrid:
         cls, model: LensModel, half_width: float = 60.0, step: float = 0.1
     ) -> DeflectionGrid:
         g = np.arange(-half_width, half_width + step / 2, step)
-        if isinstance(model, MultiPlaneLensModel):  # nonlinear in z_s: only the nodes are kept
-            empty = np.empty((0, 0))
-            return cls(g, empty, empty, model.sha256)
         xx, yy = np.meshgrid(g, g)
-        ax, ay = model.deflection_xy(xx, yy)
+        if isinstance(model, MultiPlaneLensModel):  # one deflection per plane along each ray
+            ax, ay = model.plane_deflections(xx, yy)
+        else:
+            ax, ay = model.deflection_xy(xx, yy)
         return cls(g, ax, ay, model.sha256)
 
     @classmethod
@@ -1189,7 +1196,7 @@ class DeflectionGrid:
     ) -> DeflectionGrid:
         """Load ``path`` (``.npz``) if it was computed for this model and grid, else compute it."""
         path = Path(path)
-        if not model.sha256 or isinstance(model, MultiPlaneLensModel):  # nothing to cache
+        if not model.sha256:  # an in-memory model has no identity to key the cache on
             return cls.compute(model, half_width, step)
         if path.exists():
             with np.load(path) as d:
@@ -1321,6 +1328,8 @@ def find_images(
     ``residual_arcsec`` (source-plane misfit). Images outside the grid can be missed.
     Provenance ``model_prediction``.
     """
+    if grid.model_sha256 and model.sha256 and grid.model_sha256 != model.sha256:
+        raise ValueError("find_images: the deflection grid was computed for another model")
     g = grid.x
     bx, by = model.source_grid(grid, z_s)
     gx, gy = np.broadcast_to(g[None, :], bx.shape), np.broadcast_to(g[:, None], by.shape)
@@ -1580,6 +1589,14 @@ class MapLensModel(LensModel):
         return meta
 
 
+def _detached(plane: LensModel) -> LensModel:
+    """A shallow copy whose frame can move without moving the caller's object (or its WCS)."""
+    q = copy.copy(plane)
+    if getattr(q, "wcs", None) is not None:
+        q.wcs = q.wcs.deepcopy()
+    return q
+
+
 class MultiPlaneLensModel:
     """Several lens planes, each a :class:`LensModel` at its own ``z_lens``, in one frame (D-046).
 
@@ -1588,16 +1605,17 @@ class MultiPlaneLensModel:
     :meth:`LensModel.split_planes`. The planes share the reference point and cosmology. The lens
     equation is the standard multi-plane recursion (e.g. Schneider, Ehlers & Falco 1992, ch. 9):
 
-    ``theta_j = theta_1 - sum_{i<j} (D_ij / D_j) alpha_i(theta_i)``, the source at ``j = s``, and
-    ``A_j = I - sum_{i<j} (D_ij / D_j) H_i(theta_i) A_i``,
+    ``theta_j = theta_1 - sum_{i<j} (D_ij / D_j) alpha_i(theta_i)``, the source position
+    ``beta = theta_1 - sum_i (D_is / D_s) alpha_i(theta_i)``, and
+    ``A_j = I - sum_{i<j} (D_ij / D_j) H_i(theta_i) A_i`` (``A = I - sum_i (D_is / D_s) H_i A_i``),
 
     with ``alpha_i`` and ``H_i`` each plane's deflection and Hessian at D_LS/D_S = 1 and, in a flat
-    cosmology, ``D_ij / D_j = 1 - D_M(z_i) / D_M(z_j)``. The model is nonlinear in the distance
-    ratios, so a :class:`DeflectionGrid` cannot be rescaled per source redshift:
-    :meth:`source_grid` evaluates every plane at every grid node (use a grid around the images of
-    interest). It provides what :func:`backtrace_images`, :func:`find_images` and
-    :func:`imageplane_residuals` need; :meth:`LensModel.evaluate` and its kappa/shear tables have
-    no multi-plane equivalent here.
+    cosmology, ``D_ij / D_j = 1 - D_M(z_i) / D_M(z_j)``. The ray positions ``theta_i`` do not depend
+    on the source redshift, only the weights ``D_is / D_s`` do, so a :class:`DeflectionGrid` stores
+    ``alpha_i(theta_i)`` for every plane (shape ``(n_planes, n, n)``) and serves every source
+    redshift. It provides what :func:`backtrace_images`, :func:`find_images` and
+    :func:`imageplane_residuals` need; it has no ``evaluate`` (kappa/shear tables) and no scalar
+    ``z_lens`` (see ``z_planes``), so single-plane-only code fails loudly on it.
     """
 
     def __init__(self, planes: Sequence[LensModel], source: str = "", sha256: str = "") -> None:
@@ -1609,20 +1627,17 @@ class MultiPlaneLensModel:
             raise ValueError(f"lens planes must have distinct redshifts (z_lens {z})")
         p0 = planes[0]
         for p in planes[1:]:
-            if (p.ra0, p.dec0) != (p0.ra0, p0.dec0) or (
-                p.cosmology.H0 != p0.cosmology.H0 or p.cosmology.Om0 != p0.cosmology.Om0
-            ):
+            if (p.ra0, p.dec0) != (p0.ra0, p0.dec0) or p.cosmology != p0.cosmology:
                 raise ValueError("lens planes must share the reference point and cosmology")
-        self.planes = tuple(planes)
+        self.planes = tuple(_detached(p) for p in planes)
         self.components = tuple(c for p in planes for c in p.components)
         self.ra0, self.dec0 = p0.ra0, p0.dec0
         self._cos0 = p0._cos0
         self.cosmology = p0.cosmology
         self.source = source or " + ".join(p.source for p in planes)
-        # identity for caches: the planes' parameters, not the file they came from
-        self.sha256 = (
-            sha256 or hashlib.sha256(repr([p.components for p in planes]).encode()).hexdigest()
-        )
+        # identity for caches and provenance: each plane's file hash, redshift and potentials
+        ident = repr([(p.sha256, p.z_lens, p.components) for p in planes] + [p0.ra0, p0.dec0])
+        self.sha256 = sha256 or hashlib.sha256(ident.encode()).hexdigest()
         # D_ij / D_j for every pair of planes i < j
         self._ratio = {
             (i, j): float(planes[i].dls_ds(planes[j].z_lens))
@@ -1635,42 +1650,36 @@ class MultiPlaneLensModel:
     frame_angle_to_pa = staticmethod(LensModel.frame_angle_to_pa)
 
     @property
-    def z_lens(self) -> tuple[float, ...]:
+    def z_planes(self) -> tuple[float, ...]:
         return tuple(p.z_lens for p in self.planes)
 
     def shift_frame(self, dra_arcsec: float, ddec_arcsec: float) -> None:
         """Move every plane on the sky by (dRA cos dec, dDec) arcsec, in place (D-034)."""
         for p in self.planes:
             p.shift_frame(dra_arcsec, ddec_arcsec)
-        self.ra0, self.dec0, self._cos0 = (
-            self.planes[0].ra0,
-            self.planes[0].dec0,
-            self.planes[0]._cos0,
-        )
+        p0 = self.planes[0]
+        self.ra0, self.dec0, self._cos0 = p0.ra0, p0.dec0, p0._cos0
 
-    def _trace(self, x: Any, y: Any, z_s: Any, jacobian: bool) -> dict[str, np.ndarray]:
-        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
-        zs = np.broadcast_to(np.asarray(z_s, float), x.shape)
+    def _rays(
+        self, x: np.ndarray, y: np.ndarray, n_planes: int, jacobian: bool
+    ) -> tuple[list[tuple[np.ndarray, np.ndarray]], list[tuple[np.ndarray, ...]]]:
+        """``alpha_i(theta_i)`` (and ``H_i A_i``) for the first ``n_planes`` planes; no z_s."""
         one, zero = np.ones(x.shape), np.zeros(x.shape)
         alphas: list[tuple[np.ndarray, np.ndarray]] = []
-        ha: list[tuple[np.ndarray, ...]] = []  # H_i A_i per plane
-        out = {"beta_x": x.copy(), "beta_y": y.copy()}
-        if jacobian:
-            out.update(a11=one.copy(), a12=zero.copy(), a21=zero.copy(), a22=one.copy())
-        for j, plane in enumerate(self.planes):
+        ha: list[tuple[np.ndarray, ...]] = []
+        for j, plane in enumerate(self.planes[:n_planes]):
             px, py = x.copy(), y.copy()
-            a = [one.copy(), zero.copy(), zero.copy(), one.copy()]
+            a = [one.copy(), zero.copy(), zero.copy(), one.copy()] if jacobian else []
             for i in range(j):
                 r = self._ratio[(i, j)]
                 px -= r * alphas[i][0]
                 py -= r * alphas[i][1]
-                if jacobian:
-                    for k in range(4):
-                        a[k] -= r * ha[i][k]
+                for k in range(len(a)):
+                    a[k] -= r * ha[i][k]
             if jacobian:
                 f = plane.fields_xy(px, py)
-                ax, ay = f["alpha_x"], f["alpha_y"]
                 hxx, hxy, hyy = f["psi_xx"], f["psi_xy"], f["psi_yy"]
+                alphas.append((f["alpha_x"], f["alpha_y"]))
                 ha.append(
                     (
                         hxx * a[0] + hxy * a[2],
@@ -1680,14 +1689,33 @@ class MultiPlaneLensModel:
                     )
                 )
             else:
-                ax, ay = (np.asarray(v) for v in plane.deflection_xy(px, py))
-            alphas.append((ax, ay))
-            r_s = plane.dls_ds(zs)  # D_is / D_s; 0 when the source is in front of the plane
-            out["beta_x"] = out["beta_x"] - r_s * ax
-            out["beta_y"] = out["beta_y"] - r_s * ay
+                ax, ay = plane.deflection_xy(px, py)
+                alphas.append((np.asarray(ax), np.asarray(ay)))
+        return alphas, ha
+
+    def _weights(self, z_s: Any, shape: tuple[int, ...]) -> list[np.ndarray]:
+        """``D_is / D_s`` per plane (0 for a plane at or behind the source), one distance
+        evaluation per distinct redshift."""
+        zs = np.broadcast_to(np.asarray(z_s, float), shape)
+        u_z, inv = np.unique(zs.ravel(), return_inverse=True)
+        return [p.dls_ds(u_z)[inv].reshape(shape) for p in self.planes]
+
+    def _trace(self, x: Any, y: Any, z_s: Any, jacobian: bool) -> dict[str, np.ndarray]:
+        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
+        w = self._weights(z_s, x.shape)
+        # planes behind every source never deflect (and neither do the ones behind them)
+        n = len(self.planes) - int(sum(np.all(wi == 0) for wi in w))
+        alphas, ha = self._rays(x, y, n, jacobian)
+        out = {"beta_x": x.copy(), "beta_y": y.copy()}
+        if jacobian:
+            out.update(a11=np.ones(x.shape), a12=np.zeros(x.shape))
+            out.update(a21=np.zeros(x.shape), a22=np.ones(x.shape))
+        for i in range(n):
+            out["beta_x"] = out["beta_x"] - w[i] * alphas[i][0]
+            out["beta_y"] = out["beta_y"] - w[i] * alphas[i][1]
             if jacobian:
-                for key, k in (("a11", 0), ("a12", 1), ("a21", 2), ("a22", 3)):
-                    out[key] = out[key] - r_s * ha[j][k]
+                for k, key in enumerate(("a11", "a12", "a21", "a22")):
+                    out[key] = out[key] - w[i] * ha[i][k]
         return out
 
     def lens_map(self, x: Any, y: Any, z_s: Any) -> dict[str, np.ndarray]:
@@ -1698,11 +1726,26 @@ class MultiPlaneLensModel:
         out = self._trace(x, y, z_s, jacobian=False)
         return out["beta_x"], out["beta_y"]
 
+    def plane_deflections(self, x: Any, y: Any) -> tuple[np.ndarray, np.ndarray]:
+        """``alpha_i(theta_i)`` of every plane along the rays through ``(x, y)``, stacked on a
+        leading plane axis (independent of the source redshift; for :class:`DeflectionGrid`)."""
+        x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
+        alphas, _ = self._rays(x, y, len(self.planes), jacobian=False)
+        return np.stack([a[0] for a in alphas]), np.stack([a[1] for a in alphas])
+
     def source_grid(self, grid: DeflectionGrid, z_s: float) -> tuple[np.ndarray, np.ndarray]:
-        """Source-plane position of every node of ``grid``, evaluated plane by plane (the grid's
-        stored deflection is not used)."""
-        gx, gy = np.meshgrid(grid.x, grid.x)
-        return self.source_points(gx, gy, z_s)
+        """Source-plane position of every node of ``grid`` (computed for this model)."""
+        if grid.alpha_x.ndim != 3 or grid.alpha_x.shape[0] != len(self.planes):
+            raise ValueError("the deflection grid was not computed for this multi-plane model")
+        g, shape = grid.x, grid.alpha_x.shape[1:]
+        bx = np.broadcast_to(g[None, :], shape).astype(float)
+        by = np.broadcast_to(g[:, None], shape).astype(float)
+        for i, p in enumerate(self.planes):
+            r = float(p.dls_ds(z_s))
+            if r:
+                bx -= r * grid.alpha_x[i]
+                by -= r * grid.alpha_y[i]
+        return bx, by
 
     def _meta(self) -> dict[str, Any]:
         meta = self.planes[0]._meta()
@@ -1710,7 +1753,7 @@ class MultiPlaneLensModel:
             source=f"Lenstool model {self.source}",
             model_sha256=self.sha256,
             n_potentials=len(self.components),
-            z_lens=list(self.z_lens),
+            z_lens=list(self.z_planes),
             lens_planes=[
                 {
                     "z_lens": p.z_lens,
