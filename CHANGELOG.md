@@ -17,6 +17,18 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** a W1-specific screen (collinear radial pairs flanking an empty centre, orientation against the
   candidate centre, local null), benchmarked with this harness.
 
+## 2026-10-08: El Gordo lens model reproduces the published magnification maps (issue #68)
+- `validate` now compares Lenstool-par models with published signed μ maps (`mag_map_files`, fetched only by
+  `validate`); `map_check` reports `parity_agree` for signed maps. El Gordo (CDS J/A+A/678/A3, z=2 and z=4, |μ|<10,
+  37-px sub-grid): median |μ| ratio 1.00001 / 1.00001, p95 relative difference 0.04 % / 0.07 %, parity 100 %;
+  χ²pos unchanged (82.53). At full resolution (250,000 points), >20 % mismatches sit only on critical curves or
+  within ~1″ of member cores (0.4″ map pixels).
+- El Gordo `bayes.dat` `Chi2` explained (D-045 amendment): the sampling run uses `forme -10`, an image-plane χ² with
+  σ² = a·b from the image list (19 of 56 images at 1.24″). It reproduces `Chi2` row by row to 0.1 % and the
+  ln(Lhood) offset (75.904) exactly. The chain is validated. **Failed approach:** a source-plane χ² with free
+  per-family weights (held-out ρ 0.81) fit only partly; the definition came from Lenstool's source.
+- **Handoff:** El Gordo μ, parities and the MCMC chain are validated. Next: posterior μ spreads in `fluxratios`.
+
 ## 2026-10-08: Exotic-lens predictions first: wormhole / negative-mass searchable, warp not (D-047)
 - Owner focus (2026-10-08): search only for signatures of traversable wormholes / negative-mass lenses and warp-drive
   spacetimes, predictions first. Research worker; every citation fetched from arXiv / Crossref.
