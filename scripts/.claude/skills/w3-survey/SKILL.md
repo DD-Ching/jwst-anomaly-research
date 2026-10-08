@@ -25,8 +25,11 @@ docs/exotic_limits.md "W3 in the OGLE-IV microlensing samples", "W3 in MOA-II".
 - OGLE-IV: `python scripts/w3_microlensing.py fit|merge-chunks|vet|revet|sheet|inject|audit|limit|summary|manifest
   [--sample bulge2019|disk2020]` (`fit --chunk K/N` writes tracked tables under `results/w3_ogle/`).
 - Gaia DR3: `python scripts/w3_gaia.py fetch|fit|inject|summary|manifest`.
-- MOA-II: `python scripts/w3_moa.py prescreen|fit|merge-chunks|vet|sheet|inject|limit|manifest`
-  (`fit --chunk K/N` → `results/w3_moa/`).
+- MOA-II: `python scripts/w3_moa.py --field gbF prescreen|merge-prescreen|fit|merge-chunks|vet|sheet|inject|limit|
+  summary|combine|manifest|run-field` (D-062, D-TBD). `prescreen` streams the field tar by HTTP range reads (never
+  stored) into one tracked table per 4 GiB in `results/w3_moa/prescreen/`; `run-field` runs every stage, skipping
+  finished pre-screen and fit chunks; `combine` sums N_s T ε over the tracked `limits_gb*.ecsv`. Long queues run
+  detached (`setsid nohup`, logs under `derived/w3_moa/`): harness background tasks are killed after 30 min.
 - Always `OMP_NUM_THREADS=1` with process pools; `JWST_ANOMALY_DATA` set.
 
 ## 4. Vetting chain (cheapest first; never drop a test for speed)
@@ -59,8 +62,15 @@ PSPL bumps. MOA adds shared-epoch tests (field- and chip-wide Poisson), a neighb
   run the shared-epoch test before fitting.
 - Unbounded t_E or ρ makes single fits take ~200 s: cap t_E ≤ 1,000 d and ρ ≤ 0.3 for MOA.
 - Fitting every shape pass before the shared-epoch cut wasted a chunk (131 / 133 flagged dip-shaped variables).
-- The variable-baseline test is the largest MOA efficiency loss (35 % of quiet carriers have χ²/dof > 2 alone):
-  calibrate it on the carrier distribution; re-run injections after any pre-screen or vetting change.
+- A fixed variable-baseline threshold (χ²/dof > 2) lost 73 / 188 vetted MOA injections (35 % of quiet carriers
+  exceed it from red noise): use the field's 95th percentile of quiet χ²/dof (gb22 5.3, gb21 6.3; loss 1–2 / 130).
+- Uniform injection magnitudes re-weighted to the luminosity function leave n_eff ≈ 20–25 of 60: draw them from
+  the LF (`--sampling lf`).
+- Streaming: a parent that downloads ranges and ships bytes to workers was OOM-killed (8–14 GB); each worker reads
+  its own ranges with prefetch threads. Read ranges with `stream=True` and accept only 206: the archive sometimes
+  answers 200 with the whole tar (retry it unread). Tracked pre-screen rows must carry every column the fit reads
+  (`SCAN_KEYS`). After a killed run, look for orphaned pool workers (`ps`) before benchmarking. `*.log` is
+  gitignored (heartbeat file: `results/w3_moa/progress.txt`).
 - The Gaia Extractor cuts cannot be emulated from the paper (guessed definitions fail 126 / 163 real events);
   a single-id DataLink request returns bare CSV; retry truncated chunked replies.
 - `table3.dat` (Mróz 2019) rows overflow their byte ranges: split on whitespace, sexagesimal on colons.

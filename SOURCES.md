@@ -948,7 +948,15 @@ Exploration Program."
 
   `metadata.ipac` has 2,409,061 rows (gb22: 18,599), equal to the Cut-0 count of Nunota et al. 2024. The
   per-object path `data/Contributed/MOA/gb{F}/R/{C}/gb{F}-R-{C}-{S}-{ID}.ipac` (used by the archive viewer;
-  undocumented) also answers; not used here.
+  undocumented; uncompressed) also answers; D-TBD uses it only for vetting neighbours without a recorded tar offset.
+- The other 21 field tars `bulk/gb{F}.tar` (D-TBD) are streamed with HTTP byte-range reads, never stored. Sizes and
+  Last-Modified (HEAD, 2026-10-08) are in `moa.TAR_BYTES` / `moa.TAR_LAST_MODIFIED` (7.7–508.5 GB, ≈ 2.4 TB in
+  all; Last-Modified 2023-10-10 … 13). No whole-file sha256 exists for a streamed tar: each is pinned by the sha256
+  of every 64 MiB range (tracked per chunk in `results/w3_moa/prescreen/`) and a field digest over them
+  (`moa_stream.range_digest`, rows in `data/manifests/moa_ii.ecsv`). The archive occasionally answers a range
+  request with HTTP 200 (whole file); such replies are closed unread and retried.
+- Nunota et al. 2024 Table 1 N_s (20 fields; `moa.NUNOTA_NS`) is the adopted N_s per field where published
+  (D-TBD); gb6 and gb22 use the N_s-per-Cut-0-object model.
 - Koshimoto, Sumi, Bennett et al. 2023, "Terrestrial and Neptune mass free-floating planet candidates from the
   MOA-II 9-year Galactic Bulge survey", arXiv:2303.08279 (e-print read for Cut-0, Table 2: S/N of SIM > 2.7,
   N_continue,8 ≥ 3, σ_x,y ≤ 1/0.8 px, positive and negative PSF profiles; the archive page still quotes the
