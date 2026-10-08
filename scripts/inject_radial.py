@@ -226,18 +226,8 @@ def lensed_shapes(a, b, pa_deg, dx, dy, lam_r, lam_t, psf_sigma: float):
 
 
 def background_mask(shapes: Table, z_lens: float, z_margin: float = 0.1) -> np.ndarray:
-    """Rows a lens at ``z_lens`` can lens: the screen's background rule (no photo-z, or one that
-    puts the source behind; ``orientation_table``'s z160 > z_lens + margin), minus bright point
-    sources (``exotic_screens.SPIKE_STAR_MAG``; stars)."""
-    mag = np.asarray(shapes["mag"], float)
-    star = ~np.asarray(shapes["is_extended"], bool) & np.isfinite(mag) & (mag < es.SPIKE_STAR_MAG)
-    ok = ~star
-    if "z_phot" in shapes.colnames:
-        has_pz = np.isfinite(np.asarray(shapes["z_phot"], float))
-        z160 = np.asarray(shapes["z160"], float)
-        behind = np.isfinite(z160) & (z160 > z_lens + z_margin)
-        ok &= ~has_pz | behind
-    return ok
+    """Rows a lens at ``z_lens`` can lens (``exotic_screens.lensable_mask``)."""
+    return es.lensable_mask(shapes, z_lens, z_margin)
 
 
 def source_redshift(shapes: Table, z_default: float = Z_SOURCE) -> np.ndarray:
@@ -578,12 +568,7 @@ def canucs_zout(path: Path) -> Table:
     return out
 
 
-def psf_sigma_px(shapes: Table) -> float:
-    """1st percentile of the minor-axis sigma, semimajor x (1 - ellipticity), over S/N > 50 rows:
-    the narrowest objects are PSF-limited in their minor axis (``derived``)."""
-    snr = np.asarray(shapes["snr"], float)
-    b = np.asarray(shapes["semimajor_px"], float) * (1.0 - np.asarray(shapes["ellipticity"], float))
-    return float(np.nanpercentile(b[snr > 50], 1))
+psf_sigma_px = es.psf_sigma_px
 
 
 def pixel_scale_arcsec(cat_path: Path) -> float:
