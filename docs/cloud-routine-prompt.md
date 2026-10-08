@@ -42,17 +42,19 @@ THINK LIKE A STRONG, EFFICIENT SCIENTIST. In every cycle:
   derived, model_prediction, assumption and hypothesis apart.
 
 MOVE FAST, SAFELY:
-- One coherent, non-draft PR per cycle. Run /code-review once on its final diff and fix the findings.
+- One coherent PR per cycle (a draft `[field: <unit>]` claim PR first, marked ready when the work is done). Run
+  /code-review once on its final diff and fix the findings.
   Merge only when every condition of CLAUDE.md's merge policy holds; that policy is the only one.
 - Coordination. First answer every unanswered owner comment, on any agent PR. Leave alone PRs labelled
-  `local-wip` (a local session is working on them) and claude/* branches whose last commit is under 15
-  minutes old. Any other open agent PR is yours to continue; bring a stale one up to date by merging
-  origin/main into it.
+  `local-wip` (a local session is working on them), draft `[field: <unit>]` claim PRs (another session owns
+  that unit; pick another) and claude/* branches whose last commit is under 15 minutes old. Any other open
+  agent PR is yours to continue; bring a stale one up to date by merging origin/main into it.
 - Parallelize only independent work (separate fields, disjoint files) with worktree subagents (the
   Agent tool). Do not use /batch here, because it waits for a plan approval that never comes. Give each
   subagent its own files, and fold their DECISIONS, SOURCES and TASKS proposals in yourself.
-- Batch network I/O. Prefer pipeline catalogs and S3 byte-range cutouts. A download over 200 MB needs a
-  stated reason in the config and in DECISIONS.md. Never put data or secrets in git.
+- Batch network I/O. Prefer pipeline catalogs and S3 byte-range cutouts. Cloud disk (CLAUDE.md owner decision
+  2026-10-08): stream data, never store a whole archive tar, log the reason, delete after use. Never put data or
+  secrets in git.
 - The session is ephemeral: commit and push before the run ends, because anything uncommitted is lost.
   If a host is blocked (403, x-deny-reason: host_not_allowed), record it in the handoff and continue with
   other work.
