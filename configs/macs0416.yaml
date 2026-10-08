@@ -6,7 +6,9 @@
 # the other module covers a flanking field to the south-east.
 # DJA v7 has no MACS0416 mosaic (the v7 index.html lists none on 2026-10-08), so there is no matched_photometry
 # block and no photo-z. Stage parameters are the reference-sample values (configs/reference_sample.yaml), unchanged;
-# without matched photometry, require_multiband drops every single-band detection (D-014).
+# without matched photometry, require_multiband drops every single-band detection (D-014), and the stellar locus,
+# the extended-star veto and the D-025 red exemption are skipped. Use this config for catalog fetches and the
+# lens-model screens; its anomaly ranking is not comparable with the reference fields.
 # Field note: docs/fields/macs0416.md.
 name: macs0416_v1
 

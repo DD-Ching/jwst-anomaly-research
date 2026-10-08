@@ -4,12 +4,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-08: MACS0416: system 26 is a solver-grid artefact; radial null (D-038)
 - Worktree worker on CANUCS 1208 (`jw01208-o004_t002`, 8 bands). The CATS system-26 residual (11″) is the 0.25″
-  `find_images` grid missing a fold pair 0.001–0.005″ from the caustic. On a 0.1″ grid the rms is 0.811″ (1.13×
+  `find_images` grid missing a merging pair near the critical curve; the source lies 0.001–0.005″ from the caustic. On a 0.1″ grid the rms is 0.811″ (1.13×
   quoted). The model stays map-only until the solver refines its grid near high |μ|.
 - `radial`: 98 centres against 99.6 random; the 7-line centre (p 0.29) is low-S/N noise segments. 0 flags.
 - **Failed approach:** jwst 3.0.0 isophotal S/N admits noise segments (66 of 137 anti arcs have aper50 S/N < 3). The
   radial screen needs an aper50 S/N floor.
-- Wall time: about 4 min of pipeline plus about 2 min of vetting.
+- Wall time: about 4.5 min (lens and exotic scripts plus vetting stamps; no pipeline `run`).
 - **Handoff:** adaptive grid refinement in `find_images`; an aper50 S/N floor in `radial`; CANUCS DR1 photo-z.
 
 ## 2026-10-08: Abell 2744 screens: null (D-036)
