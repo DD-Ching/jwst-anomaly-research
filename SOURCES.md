@@ -503,6 +503,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     - RELICS models: https://archive.stsci.edu/hlsps/relics/act0102m49/models/ (DOI 10.17909/T9SP45).
 - **Sunrise (WHL0137−08).**
   - Data: MAST 2282 `jw02282-o010_t001` (jwst 2.0.1); later epochs 2282 o120 and 6882 o052.
+  - Level-2 `_cal` exposures (D-039): `s3://stpubdata/jwst/public/jw02282/jw02282010001/`, `.../jw02282120001/`,
+    `s3://stpubdata/jwst/public/jw06882/jw06882052001/` (404 imaging files; headers and byte-range cutouts only;
+    accessed 2026-10-08).
   - DJA v7.5: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/sunrise-grizli-v7.5-fix_phot.fits (28,779,840 B,
     sha256 `8bd178e94156d6a9a126e487dec8a850b6df9f6d76ceb9e36931d9960558ebf0`).
   - Lens models:
