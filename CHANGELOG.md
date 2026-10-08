@@ -14,6 +14,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Lesson:** a single-epoch source in a mosaic can be an afterimage that two dithers place on one sky position.
   The archived `_cal` files carry no DQ flag there.
 - **Handoff:** `/vet-candidate n0153`; persistence-check new single-epoch candidates before vetting.
+
 ## 2026-10-08: MACS0717 screens: null (D-041)
 - Worktree worker on VENUS 6882 o029 (10 bands, the only public NIRCam association) with `macs0717-cats` (rms 3.21″).
 - 51 flags, 0 surviving. 29 are the model's own copies of catalogued images it does not reproduce (1.6–5.6″ off), 6 are
