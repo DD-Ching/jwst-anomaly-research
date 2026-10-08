@@ -189,6 +189,7 @@ def test_jackknife_removes_a_preference_built_on_one_epoch():
     assert jk[-1] > res["N1neg"]["bic"] - res["PSPL"]["bic"]  # the preference weakens
     assert jk[-1] > w3.P.flag_dbic  # and no longer flags
 
+
 @pytest.mark.parametrize(
     "flag",
     [

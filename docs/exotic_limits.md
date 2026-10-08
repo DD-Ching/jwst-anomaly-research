@@ -855,8 +855,9 @@ W3 efficiency is 0 and the 95 % limit is formally infinite. What can be stated:
   of this section.
 - The injection noise model (residual rescaling by √F with a 0.3 floor) is an ASSUMPTION; blending uses
   each host event's own f_s.
-- Parallax is fitted without a bound on π_E; a few fits reach |π_E| ~ 10³ (unphysical but conservative:
-  a more flexible ordinary model can only remove exotic flags, and it never created one here).
+- This bulge run predates D-058, so its parallax fits are unbounded and a few reach |π_E| ~ 10³. That is
+  conservative for the null (a more flexible ordinary model can only remove exotic flags), but the flag list under
+  the bounded fitter may be longer; the D-059 chunk tables are the re-fit under the current `Params`.
 - Binary-lens fits are a 54-start grid with a 600-evaluation local search, not a global search; they
   are a vetting test, not a characterisation.
 - Only the published samples were used; OGLE EWS seasons wait for the owner's decision on their terms
