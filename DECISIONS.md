@@ -2951,3 +2951,31 @@ t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in 
 - The other 21 fields are screened. The largest tars are 474 GB, so per-object HTTP or a cloud session is needed.
 - A survivor appears: stop and report to the owner (/vet-candidate).
 - Any W3 limit is quoted outside the repository: `needs-human` (D-054).
+
+## D-063 W3 MOA-II: calibrated variable-baseline test, LF-drawn injections and a streaming per-field pipeline; gb22 re-run null (2026-10-08)
+
+**Decision.**
+- The variable-baseline vetting test's threshold is the 95th percentile (ASSUMPTION, `BASELINE_Q`) of the field's
+  quiet-light-curve χ²/dof about a constant (`calibrate_baseline`), not D-057/D-062's fixed χ²/dof > 2. gb22: 5.31.
+- Injection magnitudes are drawn from the luminosity function (`--sampling lf`), 200 per t_E × ρ cell, 40 PSPL
+  controls per cell; uniform draws re-weighted afterwards left n_eff ≈ 20–25 per cell.
+- Fields are streamed (`jwst_anomaly.moa_stream`): concurrent HTTP range reads of the uncompressed tar, member
+  headers resynchronised at 512-byte blocks, each pre-screen process reading its own 64 MiB ranges. Per-chunk
+  pre-screen tables are tracked in `results/w3_moa/prescreen/` (resumable, `merge-prescreen` checks the Cut-0
+  member count); per-field limit and vetting summaries in `results/w3_moa/`; `combine` joins fields. Streamed tars
+  are pinned by per-range sha256 in the manifest.
+- gb22 re-run: same 30 flags as D-062, 0 survivors; Γ₉₅ ≈ 1.1–3.3 × 10⁻⁶ per star per year at t_E = 10–300 d,
+  4–7 × 10⁻⁶ at 3 d (docs/exotic_limits.md "Calibrated re-run of gb22"). Supersedes D-062's limit numbers.
+
+**Alternatives rejected.**
+- Fixed χ²/dof > 2: 35 % of quiet carriers exceed it from the red noise of difference photometry alone; it was the
+  largest injection loss (73 of 188 vetted injections, D-062).
+- Downloading each tar: 3.5–508 GB per field (≈ 2.4 TB total); against the cloud-disk owner decision.
+- A parent process that reads ranges and ships bytes to workers: OOM-killed on gb21.
+
+**Evidence.** The HTTP stream reproduces the D-062 pre-screen of gb22 exactly (81 s vs 203 s from the local tar);
+the fixed-width IPAC parser is bit-identical to the token parser on 15,461 gb21 light curves; gb21 test throughput
+258 light curves/s (72 MB/s, 4 cores). 103 / 2,000 W3 injections recovered, 0 / 400 PSPL controls.
+
+**Revisit if.** A field's quiet χ²/dof distribution is bimodal or its 95th percentile exceeds ~10 (the quantile then
+admits variables); the archive stops honouring range requests; a survivor appears (stop, /vet-candidate, owner).
