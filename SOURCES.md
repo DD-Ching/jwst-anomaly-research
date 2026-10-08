@@ -961,3 +961,8 @@ Exploration Program."
   2026-10-08: RP histogram within 0.3° of (279.148°, −23.767°) for the luminosity-function slope (D-062).
 - Rejected readers (D-062): merida 0.3.2 (https://pypi.org/project/merida/), qusi 1.5.6
   (https://pypi.org/project/qusi/).
+- Rejected lensed-quasar candidates and controls (D-064, `data/manifests/w12_niq_inputs.json` has URLs, bytes, sha256;
+  accessed 2026-10-08), VizieR ASU-TSV `https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=<ID>&-out.max=5000&-out.all`:
+  Lemon et al. 2023, MNRAS 520, 3305 (arXiv:2206.07714), `J/MNRAS/520/3305/table1`; Inada et al. 2008, AJ 135, 496,
+  `J/AJ/135/496/table2,table3`; Inada et al. 2010, AJ 140, 403, `J/AJ/140/403/table2,table3`; Inada et al. 2012,
+  AJ 143, 119, `J/AJ/143/119/table3,table4`; Hennawi et al. 2006, AJ 131, 1, `J/AJ/131/1/binqso`.

@@ -37,3 +37,9 @@ Results: docs/exotic_limits.md "W1/W2 in published lens catalogues".
   PSF-subtracted image models or HSC PDR3 photometry.
 - Known biases of the assumed completeness: unrelated faint sources remove dark-lens systems as "faint galaxy"
   (efficiency ~0.98); a colourless pair takes a compact PSF-typed lens as an image.
+- LS DR10 finds no lens galaxy in real quasar lenses at 1.9–2.6″: 0/5 controls (lens light absorbed into the image
+  PSFs). A "none" there is uninformative; always run a control sample of known lenses through the same chain.
+- VizieR writes some coordinates as sexagesimal strings (`RA1` "h:m:s"); parse them, and fail loudly if nothing parses.
+- Lemon et al. 2023 `z2`: a blank `n_z2` (or "zqso=") is a second quasar redshift; "z_lens="/"zgal=" are not.
+- VizieR ASU-TSV headers carry the request time: pin the data lines, not the raw file.
+- SQLS candidate tables: the primary quasar row (z) precedes the companion row (theta, Com, its own z).

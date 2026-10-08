@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them (D-064)
+- Hypothesis: a dark deflector hides among pairs rejected as lenses for lack of a lens galaxy (Lemon 2023 UQP/QSO
+  pair; SQLS "no lensing object", "QSO pair", "binary"). 123 rejected and 106 control lenses (≤ 3″) went through the
+  D-056 chain.
+- **Control efficiency 0 / 5** (1.9–2.6″; lens light blended into the images, fitted as PSFs): an LS "none" at these
+  separations carries no information. Rejected: 24 "none". Of these, 10 are colour-mismatched, 2 are catalogued
+  binaries and 1 has two redshifts; 11 are untestable. No limit, no candidate.
+- **Failed approaches:** several input-format traps (sexagesimal Hennawi coordinates, SQLS two-row pairs, Lemon
+  `z2` semantics, time-stamped VizieR headers) and sample-definition bugs were caught in review and fixed; the list is
+  in D-064 "Evidence".
+- **Next:** HST/Euclid/HSC image models or spectra for the 11 colour-matched pairs; the LaTeX-only NIQ tables.
+
 ## 2026-10-08: Coordination and dispatch rules for concurrent sessions (owner text)
 - Two sessions worked PR #94 (W5) at once: a cloud run started from its 20:39 skeleton, another session pushed the full
   screen at 21:14, and the run's push was rejected (its pilot is parked on `claude/w5-clustered-null`, findings on #94).
