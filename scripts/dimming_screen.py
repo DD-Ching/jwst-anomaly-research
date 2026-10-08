@@ -902,9 +902,9 @@ def cmd_inject(args) -> dict:
     times = _times_yr(field)
     veto = catalogue_veto(ordn)
     inflation = None
-    fs = args.out / "forced_summary.json"
+    fs = args.out / "forced.ecsv"
     if fs.exists():  # forced noise scale over the catalogue-stage one, per band (never below 1)
-        forced_scale = json.loads(fs.read_text())["noise_scale"]
+        forced_scale = Table.read(fs).meta["noise_scale"]
         inflation = np.array(
             [max(1.0, forced_scale[b] / s) for b, s in zip(field["bands"], scale, strict=True)]
         )
