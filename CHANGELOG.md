@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Orphan image pairs, a blind dark-deflector screen: null (D-045)
+- Worktree worker: `scripts/orphan_pairs.py` looks for SED-matched close pairs with no published system and no visible
+  galaxy between them in the CANUCS DR1 catalogues of MACS0416, MACS1149 and Abell 370.
+- Pair excesses come from same-redshift groups (null (c)); 38 orphans against 34.5 expected. The 35 top orphans are
+  knots, group members or chance matches, all at |μ| ≈ 1–2.5. No candidate.
+- **Failed approaches:** a midpoint-only lens rule (missed galaxies between members); no per-band S/N cut (25 % false
+  SED matches).
+- Wall time: 5–10 s per field per search, 30–60 s with cutouts.
+- **Handoff:** injection-recovery so the null becomes a limit; segmentation-map same-galaxy test; more clusters.
+
 ## 2026-10-08: CANUCS Lenstool models pinned (D-044)
 - `macs0416-canucs` reproduces Lenstool's image-plane χ²pos (330.8 against 344.30; rms 0.51″ over 303 images).
   `abell370-canucs` is a source-plane fit (image-plane rms 2.3″).

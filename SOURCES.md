@@ -600,6 +600,17 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     `aacc2dadd442645d2222c23ee2c3f9f6a76fddaa73996a26a6e88c0691a6bf3d`;
   - `…-lenstool-readme_multi_v1_model.txt` 1,988 B `a73bfe3b7d23c7605e16717781d94736d003e7b5fc5d08c0ef80a0358367edc0`.
 
+## Orphan-pair search inputs (accessed 2026-10-08; D-045)
+
+Cached under `data/cache/external/canucs/{a370,macs1149,macs0416}/`:
+- `hlsp_canucs_jwst-hst_multi_a370-clu_multi_v1_photometry-cat.fits.gz` (as in docs/fields/abell370.md).
+- MACS1149 Lenstool readme `hlsp_canucs_jwst-hst_multi_macs1149-lenstool-readme_multi_v1_model.txt` 2,198 B
+  `aef1cfffaf1865a0f8f2927f4df6fe2b3d44ed5e211aa7dc3f57a97d4651cee1` (no image list until v2).
+- MACS0416 all-multiple-image catalogue (CANUCS `allmultim-cat`) 18,806 B
+  `c8978003d8dd617cb980ed7ba5acde1485cd742db43846c25ed251f110dc2417`.
+- Photometry readme <https://archive.stsci.edu/hlsps/canucs/dr1/webpage/hlsp_canucs_jwst-hst_multi_v1_photometry-cat_readme.txt>
+  (read, not cached).
+
 ## Exotic-lens literature (checked 2026-10-08; summary in docs/exotic_lensing.md)
 
 - arXiv:1009.6084 Abe, "Gravitational Microlensing by the Ellis Wormhole".
