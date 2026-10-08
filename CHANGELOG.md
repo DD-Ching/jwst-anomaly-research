@@ -33,6 +33,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   inspected: two flags have sparse peak coverage; two have post-peak points below baseline (the Ellis
   demagnification shape) that one season's drift absorbs.
 - **Limits:** none yet (injections use bulge light curves); the disk null is a flag count, not a rate limit.
+- Review follow-up (#82 Codex): binary-lens α starts were passed in radians to MulensModel (degrees), so only
+  0.5–5.8° was searched; fixed and disk re-vetted: still 0 survivors (BL BICs move by ≤ 18). Injection vetting now
+  refits PAR with season trends as `vet` does; failed XMatch queries leave a flag unvetted; `limit` refuses a
+  zero-event limit unless the bulge vetting is a complete null.
 - **Caveats:** unbounded parallax fits reach π_E ~ 30–1,400 (unphysical); they can absorb an exotic signal and cut
   sensitivity. The season-drift test may also absorb real W3 dips: calibrate both with injections.
 - Timing: the bulge fit is ~1.1 s/event on 4 cores (~1.8 h for 5,790); `fit` checkpoints to

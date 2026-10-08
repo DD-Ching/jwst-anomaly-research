@@ -892,6 +892,16 @@ def _inject_worker(job):
     return row
 
 
+def par_starts(ps: dict) -> list:
+    """Parallax starts around a PSPL fit (both u0 signs, small π_E offsets)."""
+    lt = math.log10(ps["tE"])
+    return [
+        (ps["t0"], lt, s * ps["u0"], a, b)
+        for s in (1, -1)
+        for a, b in ((0, 0), (0.3, 0), (-0.3, 0), (0, 0.3), (0, -0.3))
+    ]
+
+
 def _survives_cheap_vetting(lc: LightCurve, res: dict) -> bool:
     """The vetting tests that remove most real-data flags, applied to an injected W3 flag:
     errors rescaled to χ²/dof = 1 of the best ordinary model, and per-season offset + drift."""
@@ -904,9 +914,15 @@ def _survives_cheap_vetting(lc: LightCurve, res: dict) -> bool:
         return False
     lct = lc.with_season_offsets(trend=True)
     ps, rx = res["PSPL"], res["N1neg"]
-    o = optimise("PSPL", lct, [(ps["t0"], math.log10(ps["tE"]), ps["u0"])])
+    best_t = optimise("PSPL", lct, [(ps["t0"], math.log10(ps["tE"]), ps["u0"])])["bic"]
+    if "PAR" in res:  # as in _vet_one: the season-trend refit always includes parallax
+        r = res["PAR"]
+        start = (r["t0"], math.log10(r["tE"]), r["u0"], r["pi_E_N"], r["pi_E_E"])
+        best_t = min(best_t, optimise("PAR", lct, [start], t0_par=r["t0_par"])["bic"])
+    elif have_mm() and lc.ra is not None:  # short t_E: fit_event skipped PAR, _vet_one does not
+        best_t = min(best_t, optimise("PAR", lct, par_starts(ps), t0_par=round(ps["t0"], 1))["bic"])
     e = optimise("N1neg", lct, [(rx["t0"], math.log10(rx["tE"]), rx["u0"], math.log10(rx["rho"]))])
-    return bool(e["bic"] - o["bic"] < P.flag_dbic)
+    return bool(e["bic"] - best_t < P.flag_dbic)
 
 
 def run_inject(procs: int, per_cell: int, seed: int = 55) -> Path:
@@ -1097,11 +1113,11 @@ def fit_binary_lens(lc: LightCurve, ps: dict, maxfev: int = 600) -> dict:
         (t0, u0, math.log10(te), -2.0, ls, lq, al)
         for ls in (-0.3, 0.0, 0.3)
         for lq in (-3.0, -1.5, 0.0)
-        for al in np.deg2rad((30.0, 90.0, 150.0, 210.0, 270.0, 330.0))
+        for al in (30.0, 90.0, 150.0, 210.0, 270.0, 330.0)  # degrees, as MulensModel's alpha
     ]
     # near-PSPL limits (tiny or distant companion), so the fit is never worse than PSPL
-    starts += [(t0, u0, math.log10(te), -2.0, ls, -4.5, 1.0) for ls in (-0.5, 0.0, 0.5)]
-    starts += [(t0, u0, math.log10(te), -2.0, 0.9, lq, 1.0) for lq in (-2.0, -1.0)]
+    starts += [(t0, u0, math.log10(te), -2.0, ls, -4.5, 60.0) for ls in (-0.5, 0.0, 0.5)]
+    starts += [(t0, u0, math.log10(te), -2.0, 0.9, lq, 60.0) for lq in (-2.0, -1.0)]
     vals = np.array([chi2(np.array(s)) for s in starts])
     best = None
     for i in np.argsort(vals)[:3]:
@@ -1144,7 +1160,11 @@ def _vet_worker(job):
     try:
         return _vet_one(job)
     except Exception as exc:  # noqa: BLE001 — one bad flag must not lose the others' vetting
-        return {"event_id": job[0]["event_id"], "tests": [("vet_error", True, repr(exc)[:200])]}
+        return {
+            "event_id": job[0]["event_id"],
+            "tests": [("vet_error", True, repr(exc)[:200])],
+            "complete": False,
+        }
 
 
 def _vet_one(job):
@@ -1161,16 +1181,7 @@ def _vet_one(job):
             "FSPL", lc, [(ps["t0"], lt, ps["u0"], math.log10(r)) for r in (0.003, 0.03, 0.3)]
         )
     if "PAR" not in res and have_mm():
-        res["PAR"] = optimise(
-            "PAR",
-            lc,
-            [
-                (ps["t0"], lt, s * ps["u0"], a, b)
-                for s in (1, -1)
-                for a, b in ((0, 0), (0.3, 0), (-0.3, 0), (0, 0.3), (0, -0.3))
-            ],
-            t0_par=round(ps["t0"], 1),
-        )
+        res["PAR"] = optimise("PAR", lc, par_starts(ps), t0_par=round(ps["t0"], 1))
     ex = min(EXOTIC, key=lambda m: res[m]["bic"])
     ordinary = {m: res[m] for m in ORDINARY if m in res}
     best_o = min(ordinary, key=lambda m: ordinary[m]["bic"])
@@ -1277,6 +1288,7 @@ def _vet_one(job):
         )
         out["bl"] = bl
     out["survives"] = all(ok for _, ok, _ in out["tests"])
+    out["complete"] = bool(do_bl and have_mm())  # binary lens and PAR tested
     out["res"] = {m: {k: v for k, v in r.items() if k != "model"} for m, r in res.items()}
     return out
 
@@ -1346,12 +1358,16 @@ def run_vet(sample_key: str, procs: int, binary_lens: bool = True) -> Path:
     names = [str(pub[o["event_id"]]["alt_id"]) for o in out] + [o["event_id"] for o in out]
     lit = arxiv_mentions(names) if out else {}
     var = variable_catalogue_matches(flags["ra"], flags["dec"]) if out else {}
+    failed = [c for c, idx in var.items() if any(isinstance(j, str) for j in idx)]
     for i, o in enumerate(out):
         alt = str(pub[o["event_id"]]["alt_id"])
         n_lit = max(lit.get(alt, 0), lit.get(o["event_id"], 0))
         o["tests"].append(("literature_arxiv", True, f"{alt}: {n_lit} arXiv records (read them)"))
         hits = [c for c, idx in var.items() if i in idx]
         o["tests"].append(("variable_catalogues", not hits, f"matches: {hits or 'none'} (1″)"))
+        if failed:  # a failed query is not a clean match list: the flag stays unvetted
+            o["tests"].append(("variable_catalogues_failed", True, f"queries failed: {failed}"))
+            o["complete"] = False
         o["survives"] = all(ok for _, ok, _ in o["tests"])
     path = out_dir() / f"vetting_{sample_key}.json"
     path.write_text(
@@ -1456,6 +1472,14 @@ def einstein_time_days(mass_msun, d_l_kpc=4.0, d_s_kpc=8.0, mu_mas_yr=5.0) -> np
 
 
 def run_limit(per_cell_min: int = 20) -> Path:
+    """95 % limits use the zero-event Poisson numerator 3.0: they need a complete null vetting."""
+    path = out_dir() / "vetting_bulge2019.json"
+    if not path.exists():
+        raise SystemExit(f"no zero-event limit: run `vet` first ({path} missing)")
+    vet = json.loads(path.read_text())["flags"]
+    open_flags = [o["event_id"] for o in vet if o.get("survives") or o.get("complete") is not True]
+    if open_flags:
+        raise SystemExit(f"no zero-event limit: flags survive or are unvetted: {open_flags}")
     sample = ogle.OgleMrozSample("bulge2019")
     inj = Table.read(out_dir() / "injections_bulge2019.ecsv")
     inj = inj[no_error(inj)]
