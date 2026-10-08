@@ -273,11 +273,54 @@ def test_search_radius_follows_model_residuals():
             "sep_image_arcsec": [0.3, 1.2, np.nan, 0.1],
         }
     )
-    assert lc.system_search_radius(t, "1", 1.0, 2) == pytest.approx(1.8)
-    assert lc.system_search_radius(t, "2", 1.0, 1) == 1.0
-    assert lc.system_search_radius(t, "2", 1.0, 2) == pytest.approx(2.25)  # one unpredicted
+    assert lc.system_search_radius(t, "1", 1.0, False) == pytest.approx(1.8)
+    assert lc.system_search_radius(t, "2", 1.0, False) == 1.0
+    assert lc.system_search_radius(t, "2", 1.0, True) == pytest.approx(2.25)  # one unpredicted
     t["sep_image_arcsec"][1] = 5.0
-    assert lc.system_search_radius(t, "1", 1.0, 2) == lc.MAX_SEARCH_ARCSEC
+    assert lc.system_search_radius(t, "1", 1.0, False) == lc.MAX_SEARCH_ARCSEC
+    assert lc.system_search_radius(t, "2", 4.0, False) == 4.0  # a user radius is never capped
+
+
+def test_resolved_reference_is_not_used():
+    # a reference spread over ~0.5" (resolved): its 0.2" aperture flux does not scale with |mu|
+    cosd = np.cos(np.deg2rad(DEC0))
+    yy, xx = np.mgrid[-60:61, -60:61] * 0.03
+
+    def stamp(ra, dec):
+        dx = -(RA0 - ra) * cosd * 3600.0
+        dy = (DEC0 - dec) * 3600.0
+        img = np.exp(-((xx - dx) ** 2 + (yy - dy) ** 2) / (2 * 0.35**2))
+        return img, np.full(xx.shape, 0.001), xx, yy
+
+    bt = Table({"system": ["1"], "ra": [RA0], "dec": [DEC0], "magnification": [5.0]})
+    t = Table(
+        {
+            "system": ["1", "1"],
+            "ra": [RA0, RA0 + 20 / 3600 / cosd],
+            "dec": [DEC0, DEC0],
+            "magnification": [5.0, 3.0],
+            "image_class": ["observed", "missing"],
+            "sep_image_arcsec": [0.1, np.nan],
+        }
+    )
+    lc.forced_check(t, bt, stamp)
+    assert t["forced_class"][1] == "no_reference"
+
+
+def test_frame_offset_moves_model_and_images_together():
+    model = _model()
+    images = Table({"ra": [RA0], "dec": [DEC0]})
+    lc.MODELS["_test"] = {"frame_offset_arcsec": (0.3, -0.1)}
+    try:
+        x0, y0 = model.to_frame(RA0, DEC0)
+        lc.apply_frame_offset("_test", model, images)
+        x1, y1 = model.to_frame(images["ra"][0], images["dec"][0])
+        # the image keeps its model-frame position; on the sky it moved by the offset
+        assert abs(x1 - x0) < 1e-6 and abs(y1 - y0) < 1e-6
+        dra = (images["ra"][0] - RA0) * np.cos(np.deg2rad(DEC0)) * 3600
+        assert abs(dra - 0.3) < 1e-6 and abs((images["dec"][0] - DEC0) * 3600 + 0.1) < 1e-6
+    finally:
+        del lc.MODELS["_test"]
 
 
 def test_predict_counter_images_reproduces_an_sis_pair():

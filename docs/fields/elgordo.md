@@ -99,8 +99,9 @@ no_reference 7. The first pass with the D-029 rules found 3 `absent` images. Eac
 | 7 (4.63) | absent, predicted 18σ | Caminha's image list is on the HST/RELICS frame, 0.22″ in RA from JWST, comparable to the 0.2″ aperture radius. With the frame offset: recovered at 1.5″ (ratio 1.9) | frame offset |
 
 **Radial screen.**
-- 368 elongated sources; 43 dropped as diffraction-spike segments, 88 not behind the lens; 37 `anti`.
-- 9 centres against a null mean of 9.7 (p95 17); max 4 lines, p = 0.75. **Null.**
+- 363 elongated sources within 110″; 33 dropped as diffraction-spike segments (on the field's spike axes), 89 not
+  behind the lens; 37 `anti`.
+- 9 centres against a null mean of 7.6 (p95 14); max 4 lines, p = 0.64. **Null.**
 - Without the spike rule, the strongest centre had 6 lines (p = 0.055): a mag 15.8 star whose diffraction spikes
   were catalogued as radial "arcs". Cutouts show the spikes.
 

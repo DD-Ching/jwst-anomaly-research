@@ -86,3 +86,28 @@ def test_spike_segments_are_dropped_but_tangential_neighbours_kept():
     shapes["mag"][0] = 23.0  # a faint point source has no long spikes (radius 3")
     assert not es.spike_segments(src, shapes).any()
     np.testing.assert_allclose(es.spike_radius([20.0, 17.0, 10.0]), [3.0, 3 * 10**0.6, 20.0])
+
+
+def test_spike_veto_keeps_off_axis_radial_arcs():
+    from astropy.table import Table
+
+    cosd = np.cos(np.deg2rad(DEC0))
+    star = (RA0, DEC0)
+    # 6 spike segments on a hexagonal set at theta = 10 deg, plus one radial arc at PA 35 deg
+    pas = [10.0, 70.0, 130.0, 10.0, 70.0, 130.0, 35.0]
+    seps = [4.0, 4.0, 4.0, 7.0, 7.0, 7.0, 5.0]
+    ras, decs = [], []
+    for pa, sep in zip(pas, seps, strict=True):
+        ras.append(RA0 + sep * np.sin(np.deg2rad(pa)) / 3600 / cosd)
+        decs.append(DEC0 + sep * np.cos(np.deg2rad(pa)) / 3600)
+    src = Table({"ra": ras, "dec": decs, "pa_obs": pas})
+    shapes = Table(
+        {
+            "ra": [star[0], *ras],
+            "dec": [star[1], *decs],
+            "mag": [15.0] + [24.0] * len(ras),
+            "is_extended": [False] + [True] * len(ras),
+        }
+    )
+    veto = es.spike_segments(src, shapes)
+    assert list(veto) == [True] * 6 + [False]

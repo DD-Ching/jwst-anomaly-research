@@ -126,10 +126,13 @@ def flux_class(r1: float, r2: float, s1: float, s2: float, compact: bool = True)
 
 
 def cmd_fluxratio(args) -> dict:
+    if lc.is_map_model(args.model):
+        raise SystemExit(f"error: {args.model} is a map model without a multiple-image list")
     files = lc.model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    lc.apply_frame_offset(args.model, model, images)  # into the JWST frame (D-034)
     bt = lensmodel.backtrace_images(model, images, par["z_m_limit"])
     out = Table(
         {
@@ -249,10 +252,15 @@ def spike_radius(mag) -> np.ndarray:
 
 
 def spike_segments(src: Table, shapes: Table) -> np.ndarray:
-    """Elongated sources that are diffraction-spike segments: within ``spike_radius`` of a
-    bright point source (not ``is_extended``, brighter than ``SPIKE_STAR_MAG``) and with the
-    major axis within ``SPIKE_ALIGN_DEG`` of the direction to it. Spikes point radially at their
-    star, which mimics radial arcs around a (luminous) centre (El Gordo, D-033)."""
+    """Elongated sources that are diffraction-spike segments (El Gordo, D-034).
+
+    A segment lies within ``spike_radius`` of a bright point source (not ``is_extended``,
+    brighter than ``SPIKE_STAR_MAG``), its major axis is within ``SPIKE_ALIGN_DEG`` of the
+    direction to that source, and that direction is one of the field's spike axes. JWST spikes
+    sit at fixed position angles for one pointing: a hexagonal set (theta, theta + 60,
+    theta + 120 deg) plus the weaker axis at theta + 90 deg. theta is estimated from all aligned
+    pairs (mode of PA mod 60). Genuine radial arcs around a compact source survive unless they
+    happen to lie on a spike axis."""
     mag = np.asarray(shapes["mag"], float)
     bright = ~np.asarray(shapes["is_extended"], bool) & np.isfinite(mag) & (mag < SPIKE_STAR_MAG)
     stars = shapes[bright]
@@ -262,21 +270,36 @@ def spike_segments(src: Table, shapes: Table) -> np.ndarray:
     cs = SkyCoord(src["ra"], src["dec"], unit="deg")
     ct = SkyCoord(stars["ra"], stars["dec"], unit="deg")
     radius = spike_radius(stars["mag"])
+    pa_src = np.asarray(src["pa_obs"], float)
+    cand, cand_pa = [], []
     for k in range(len(stars)):
         sep = cs.separation(ct[k]).arcsec
         near = (sep <= radius[k]) & (sep > 0.5)
         if not near.any():
             continue
         pa_to_star = np.mod(cs[near].position_angle(ct[k]).deg, 180.0)
-        off = lensmodel.axis_offset_deg(np.asarray(src["pa_obs"], float)[near], pa_to_star)
-        out[np.flatnonzero(near)[off <= SPIKE_ALIGN_DEG]] = True
+        aligned = lensmodel.axis_offset_deg(pa_src[near], pa_to_star) <= SPIKE_ALIGN_DEG
+        cand.extend(np.flatnonzero(near)[aligned])
+        cand_pa.extend(pa_to_star[aligned])
+    if not cand:
+        return out
+    cand, cand_pa = np.asarray(cand), np.asarray(cand_pa)
+    hist, edges = np.histogram(np.mod(cand_pa, 60.0), bins=60, range=(0.0, 60.0))
+    smooth = hist + np.roll(hist, 1) + np.roll(hist, -1)
+    theta = float(edges[int(np.argmax(smooth))] + 0.5)
+    axes = np.array([theta, theta + 60.0, theta + 120.0, theta + 90.0]) % 180.0
+    on_axis = (
+        np.min([lensmodel.axis_offset_deg(cand_pa, np.full(len(cand_pa), a)) for a in axes], axis=0)
+        <= SPIKE_ALIGN_DEG
+    )
+    out[cand[on_axis]] = True
     return out
 
 
 def cmd_radial(args) -> dict:
-    files = lc.model_files(args.model)
-    par = lensmodel.parse_lenstool_par(files["best.par"])
-    model = lensmodel.LensModel.from_par(par)
+    model, _, par = lc.load_model(args.model)  # a Lenstool model or published deflection maps
+    if par is not None:
+        lc.apply_frame_offset(args.model, model)
     shapes = lc.load_shapes(args.catalog)
     if args.photoz:
         lc.attach_photoz(shapes, args.photoz)
@@ -286,11 +309,11 @@ def cmd_radial(args) -> dict:
         & (np.asarray(shapes["snr"], float) >= args.min_snr)
     )
     src = shapes[sel]
+    x, y = model.to_frame(src["ra"], src["dec"])
+    src = src[np.hypot(x, y) <= args.max_radius]
     spike = spike_segments(src, shapes)
     n_spike = int(spike.sum())
     src = src[~spike]
-    x, y = model.to_frame(src["ra"], src["dec"])
-    src = src[np.hypot(x, y) <= args.max_radius]
     ot = lc.orientation_table(model, src)
     # cluster members and foreground objects are not lensed: with a photo-z, keep only sources
     # it puts behind the lens (sources without a photo-z stay, on the redshift grid)

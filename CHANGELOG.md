@@ -7,12 +7,24 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - 23: model position error;
   - 6: reference on a galaxy wing; photo-z-consistent counterparts at 2.6–3.1″;
   - 7: HST→JWST frame offset of 0.22″.
-- Radial screen: max 4 lines, p = 0.75. A 6-line "centre" was a star's diffraction spikes.
+- Radial screen: max 4 lines, p = 0.64. A 6-line "centre" was a star's diffraction spikes.
 - Four new rules (D-034): frame offset, compact and consistent references, a residual-scaled search radius, and a
   spike-segment veto. SMACS re-run: unchanged, 0 absent.
 - Tally: El Gordo screened 17 uncatalogued predicted images and 37 anti arcs; flags 3 + 1; **surviving 0**.
   Wall time: about 50 s for `images`, 21 s for `radial`.
 - **Handoff:** Abell 2744 (worker running), then the HFF/RELICS map fields via `MapLensModel` (#47).
+
+## 2026-10-08: Map-based lens models; Sunrise radial screen null (D-033)
+- `lensmodel.MapLensModel` evaluates published deflection maps. The first one is `whl0137-relics-lenstool`, which
+  reproduces RELICS κ to 3.5e-5 and μ(z = 6.2) to 2.0e-5 (medians).
+- Sunrise `exotic_screens radial`: 29 usable anti arcs, 3 centres against a null mean of 2.2, max 3 lines, p 0.885.
+  **No candidate.** Wall time 17 s, with cached maps and catalogs.
+- Cycle tally:
+  - SMACS + Sunrise screened: 60 + 0 images, 34 + 29 arcs;
+  - flags: SMACS fluxratio 2 (removed by the two-band compactness rule), radial 0 significant;
+  - surviving vetting: 0.
+- **Handoff:** more map fields (HFF: Abell 2744, MACS0416, MACS1149, Abell 370; RELICS clusters), El Gordo and
+  Abell 2744 `images --forced-image` and screens.
 
 ## 2026-10-08: Flux-ratio and colour test of catalogued images: no anomaly in SMACS or El Gordo (D-032)
 - New: `lens_consistency.py fluxratios`.
