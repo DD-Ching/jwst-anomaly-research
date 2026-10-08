@@ -99,6 +99,35 @@ SMACS0723_MAHLER22_ICLV2: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: Caminha et al. (2023, A&A 678, A3) El Gordo Lenstool model, CDS J/A+A/678/A3. Image-plane
+#: optimised (Chi2pos 80.22). No convergence map; the best-fit magnification map at z_s = 2 is
+#: the map check.
+_CAMINHA23_CDS = "https://cdsarc.cds.unistra.fr/ftp/J/A+A/678/A3"
+ELGORDO_CAMINHA23: dict[str, tuple[str, str]] = {
+    "best.par": (
+        f"{_CAMINHA23_CDS}/files/best_fit.par",
+        "7b0153ae0ee02f057f6aaa6f46b1b698502e6fc427266ac9a09d241ddc63a472",
+    ),
+    "arcs.dat": (
+        f"{_CAMINHA23_CDS}/files/obs_arcs_v1_new_IDs.dat",
+        "d631743921266c34689a1d509f08e53dc3c90bc88064393d7b8fd524a3d5c700",
+    ),
+}
+
+#: Bergamini et al. (2023b, ApJ 952, 84) Abell 2744 Lenstool model from the authors' page.
+#: Image-plane optimised (Chi2pos 146.60). No published FITS maps.
+_BERGAMINI23_WEB = "https://www.fe.infn.it/astro/lensing/A2744_Bergamini23"
+ABELL2744_BERGAMINI23: dict[str, tuple[str, str]] = {
+    "best.par": (
+        f"{_BERGAMINI23_WEB}/best.par",
+        "7245368f96ad9c7159eb9c8d0045030eda0804554312ee86d84f2e052025b9fb",
+    ),
+    "arcs.dat": (
+        f"{_BERGAMINI23_WEB}/obs_arcs.cat",
+        "d02c231f4ee8c81f47335a99182a9f64a4c553e14818b1c9bd07314c2f4f5e1c",
+    ),
+}
+
 # French Lenstool keywords (input files) -> the English ones written in best.par.
 _ALIASES = {
     "potentiel": "potential",
@@ -147,6 +176,26 @@ def system_key(system_id: str | float) -> str:
     return str(int(float(text))) if _INTEGER_ID.match(text) else text
 
 
+_LETTER_SUFFIX = re.compile(r"^(.*\d)([A-Za-z]+)$")
+
+
+def image_family(image_id: str | float) -> str:
+    """Multiple-image family (one point source) of a Lenstool image id.
+
+    Trailing letters mark the images of one family (``"23a"`` -> ``"23"``, ``"1.1a"`` ->
+    ``"1.1"``, ``"A200.1a"`` -> ``"A200.1"``); otherwise the last ``.N`` does (``"4.1"`` ->
+    ``"4"``). Ids without either are a family name already (``"4"``, ``"4.0"`` -> ``"4"``, as in
+    ``z_m_limit``).
+    """
+    text = str(image_id).strip()
+    match = _LETTER_SUFFIX.match(text)
+    if match:
+        return system_key(match.group(1))
+    if "." in text and not _INTEGER_ID.match(text):
+        return system_key(text.rsplit(".", 1)[0])
+    return system_key(text)
+
+
 def image_redshifts(images: Table, z_m_limit: dict[str, float]) -> np.ndarray:
     """Redshift used for each image of an ``arcs.dat`` table.
 
@@ -173,7 +222,8 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
     * ``potentials``: one dict per ``potential`` section with ``name``, ``profile`` and the
       keys in ``_POTENTIAL_KEYS`` (NaN when absent);
     * ``potfiles``: names of ``potfile`` sections (not expanded);
-    * ``z_m_limit``: fixed (best-fit) redshifts of multiple-image systems, by :func:`system_key`;
+    * ``z_m_limit``: fixed (best-fit) redshifts of multiple-image families, by :func:`image_family`
+      of each listed image id (one line may list several ids);
     * ``sigpos_arcsec``: the image-plane position error ``sigposArcsec``, or None;
     * ``source`` and ``sha256`` of the file.
 
@@ -234,11 +284,21 @@ def parse_lenstool_par(path: str | Path) -> dict[str, Any]:
         elif kind == "image":
             for key, vals, n in entries:
                 if key == "z_m_limit":
-                    # z_m_limit <n> <system> <flag> <z or zmin> [<zmax> <step>]; flag 0 = fixed.
+                    # z_m_limit <n> <image id>... <flag> <z or zmin> <zmax> <step>; flag 0 =
+                    # fixed. Several ids share one redshift (Bergamini+2023b "A200.1a B200.2a").
                     if len(vals) < 4:
                         raise ValueError(f"{path}:{n}: malformed z_m_limit {vals}")
-                    if vals[2] == "0":
-                        out["z_m_limit"][system_key(vals[1])] = float(vals[3])
+                    names, flag, z = (
+                        (vals[1:-4], vals[-4], vals[-3])
+                        if len(vals) >= 6
+                        else (vals[1:2], vals[2], vals[3])
+                    )
+                    # Flags 1-4 and -n (parabolic) are free redshifts; only 0 is fixed.
+                    if not re.fullmatch(r"-?\d+", flag):
+                        raise ValueError(f"{path}:{n}: malformed z_m_limit {vals}")
+                    if int(flag) == 0:
+                        for name in names:
+                            out["z_m_limit"][image_family(name)] = float(z)
                 elif key.lower() == "sigposarcsec":
                     out["sigpos_arcsec"] = float(vals[0])
         elif kind == "potential":
@@ -631,7 +691,9 @@ def _dpie_from_dict(pot: dict[str, Any], cosmo: FlatLambdaCDM, source: str) -> D
     def radius(key: str) -> float:
         val, kpc = pot[key], pot[f"{key}_kpc"]
         per_arcsec = cosmo.kpc_proper_per_arcmin(pot["z_lens"]).to_value(u.kpc / u.arcmin) / 60.0
-        if np.isfinite(val) and np.isfinite(kpc) and abs(kpc / per_arcsec - val) > 0.02 * val:
+        # 2 % plus 1e-6": best.par writes radii with 6 decimals, so a 2e-5" core is coarse.
+        tol = 0.02 * val + 1e-6
+        if np.isfinite(val) and np.isfinite(kpc) and abs(kpc / per_arcsec - val) > tol:
             # Both given and inconsistent: which one Lenstool used is ambiguous, so refuse.
             raise UnsupportedModelError(
                 f"{source}: potential {pot['name']} {key} {val} arcsec disagrees with "
@@ -666,14 +728,16 @@ def _dpie_from_dict(pot: dict[str, Any], cosmo: FlatLambdaCDM, source: str) -> D
 
 
 def load_lenstool_images(path: str | Path) -> Table:
-    """Lenstool ``arcs.dat`` (absolute coordinates): ``image_id, system, ra, dec, z``.
+    """Lenstool ``arcs.dat`` (absolute coordinates): ``image_id, system, ra, dec, a, z``.
 
-    ``z`` is the catalogued redshift (0 means "free in the model": take it from the model's
+    ``system`` is the image's family (:func:`image_family`). ``a`` is the file's first shape
+    column, which image lists for image-plane models use as the position error (arcsec). ``z`` is
+    the catalogued redshift (0 means "free in the model": take it from the model's
     ``z_m_limit``). Provenance ``observed`` (published constraint positions).
     """
     path = Path(path)
     raw = path.read_bytes()
-    ids, ras, decs, zs = [], [], [], []
+    ids, ras, decs, errs, zs = [], [], [], [], []
     for n, line in enumerate(raw.decode("latin-1").splitlines(), 1):
         stripped = line.strip()
         if not stripped:
@@ -689,13 +753,15 @@ def load_lenstool_images(path: str | Path) -> Table:
         ids.append(parts[0])
         ras.append(float(parts[1]))
         decs.append(float(parts[2]))
+        errs.append(float(parts[3]))
         zs.append(float(parts[6]))
     t = Table(
         {
             "image_id": ids,
-            "system": [system_key(i.rsplit(".", 1)[0]) if "." in i else system_key(i) for i in ids],
+            "system": [image_family(i) for i in ids],
             "ra": ras,
             "dec": decs,
+            "a": errs,
             "z": zs,
         }
     )
@@ -894,4 +960,57 @@ def find_images(
     )
     out.meta.update(model._meta())
     out.meta.update(z_s=float(z_s), beta_xy=[float(beta_x), float(beta_y)])
+    return out
+
+
+def imageplane_residuals(model: LensModel, grid: DeflectionGrid, backtrace: Table) -> Table:
+    """Exact image-plane residual of each catalogued image (Lenstool "image plane optimization").
+
+    For each family with two or more traced images, the source is the mean back-traced position
+    (``beta_x, beta_y`` of :func:`backtrace_images`); :func:`find_images` solves for all of its
+    images, and each catalogued image is matched to the nearest predicted one (``dtheta_arcsec``;
+    NaN when the family has no prediction). ``n_predicted`` counts the family's predicted images;
+    ``shared_match`` marks catalogued images whose nearest predicted image is also another
+    catalogued image's nearest (a predicted image is missing or merged). Provenance
+    ``model_prediction``.
+    """
+    systems = np.asarray(backtrace["system"]).astype(str)
+    dtheta = np.full(len(backtrace), np.nan)
+    mu = np.full(len(backtrace), np.nan)
+    n_pred = np.zeros(len(backtrace), int)
+    shared = np.zeros(len(backtrace), bool)
+    for sys_id in dict.fromkeys(systems):
+        sel = np.where((systems == sys_id) & np.isfinite(backtrace["beta_x"]))[0]
+        if len(sel) < 2:
+            continue
+        obs = backtrace[sel]
+        pred = find_images(
+            model,
+            grid,
+            float(np.mean(obs["beta_x"])),
+            float(np.mean(obs["beta_y"])),
+            float(obs["z_used"][0]),
+        )
+        n_pred[sel] = len(pred)
+        if not len(pred):
+            continue
+        ox, oy = model.to_frame(np.asarray(obs["ra"], float), np.asarray(obs["dec"], float))
+        d = np.hypot(ox[:, None] - pred["x"][None, :], oy[:, None] - pred["y"][None, :])
+        k = np.argmin(d, axis=1)
+        dtheta[sel] = d[np.arange(len(sel)), k]
+        mu[sel] = np.asarray(pred["magnification"])[k]
+        shared[sel] = np.bincount(k, minlength=len(pred))[k] > 1
+    out = Table(
+        {
+            "image_id": backtrace["image_id"],
+            "system": systems,
+            "z_used": backtrace["z_used"],
+            "dtheta_arcsec": dtheta,
+            "magnification": mu,
+            "n_predicted": n_pred,
+            "shared_match": shared,
+        }
+    )
+    out.meta.update(model._meta())
+    out.meta["source"] = f"{backtrace.meta.get('source', 'images')}, image-plane solve"
     return out

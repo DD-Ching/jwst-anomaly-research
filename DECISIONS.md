@@ -1451,3 +1451,44 @@ Field docs: `docs/fields/*.md`.
 - A BCG/ICL model is subtracted. That allows a clean test near the BCG (system 17).
 - A reference flux is available for systems 11, 16 and 26 (DJA matched photometry, or a deeper image).
 - The test runs on the other clusters: El Gordo and Abell 2744 (issue #41) once their parser bugs are fixed.
+
+## D-030 Exact image-plane χ² in `validate`; El Gordo and Abell 2744 models in the repository (2026-10-08)
+
+**Decision.**
+- `lensmodel.imageplane_residuals` gives each catalogued image's distance to the nearest image that `find_images`
+  (D-029) predicts from the family's mean back-traced source. `lens_consistency.py validate` reports this
+  image-plane χ² next to the source-plane back-trace, for every model.
+- `image_family` implements Lenstool's family rule: trailing letters (`23a` → `23`, `1.1a` → `1.1`), else the
+  last `.N` (`4.1` → `4`). `z_m_limit` accepts several image ids on one line. The `_kpc` check allows 1e-6″ on top
+  of 2 % (6-decimal rounding of tiny cores).
+- Position errors per model (`MODELS[...]["sigpos"]`): SMACS `input.par` `sigposArcsec`; Abell 2744 the image
+  list's error column (`forme -10`); El Gordo a uniform 0.621″ (ASSUMPTION: the CDS `best_fit.par` has an empty
+  image section, and 0.621″ is the file's smallest error).
+- New `MODELS`: `elgordo-caminha23` (CDS J/A+A/678/A3) and `abell2744-bergamini23` (authors' page); SOURCES.md
+  has the sha256 values.
+
+**Alternatives rejected.**
+- Source-plane back-trace χ² alone: it fails for image-plane-optimised models (El Gordo 121.6, Abell 2744
+  far off, against Lenstool's 80.22 and 146.60).
+- The per-image error column for El Gordo: χ² 52.0, far from Lenstool's 80.22.
+
+**Evidence** (`model_prediction`; grid 0.25″, cached by model sha256):
+
+| Model | Images / families | Image-plane χ² | Lenstool Chi2pos | rms | max | > 3σ |
+|---|---|---|---|---|---|---|
+| SMACS Mahler+2022 ICLv2 | 60 / 21 | 30.87 | 30.91 | 0.318″ | 0.91″ | 0 |
+| El Gordo Caminha+2023 | 56 / 23 | 82.53 | 80.22 | 0.754″ | 1.54″ (23c) | 0 |
+| Abell 2744 Bergamini+2023b | 149 / 50 | 146.64 | 146.60 | 0.427″ | 1.62″ (22.1a) | 0 |
+
+No image-position anomaly in any of the three fields: every catalogued image is reproduced within 3σ.
+
+**Multiplicity residual (Abell 2744, `model_prediction`):** in 3 families, two catalogued images match the same
+predicted image (`shared_match`): 3.2a/b (0.81″ apart, μ ≈ 50), 34.1a/b (1.27″, both odd parity, μ −64 and −30)
+and 700.1a/b (1.72″, both odd parity, μ −4 and −2). The best model puts no critical curve between each pair, so
+it predicts one image where two are catalogued. Each is still within 3σ. Ordinary explanations, not yet tested:
+the critical curve's position uncertainty (test with `bayes.dat`), or two clumps of one galaxy catalogued as a
+pair. Not a candidate.
+
+**Revisit if.**
+- Caminha+2023's σ is found stated otherwise (paper or Lenstool input file).
+- A model needs multi-plane lensing or a non-dPIE profile (refused today).
