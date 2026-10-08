@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 MOA-II: calibrated baseline test, LF-drawn injections, streaming pipeline; gb22 re-run null (D-063)
+- Cloud runs (session that opened #95, taken over at 23:12 UTC after 35 min idle to land it). The variable-baseline
+  threshold is now the 95th percentile of the field's quiet χ²/dof (5.31 in gb22; ASSUMPTION), injections are drawn
+  from the luminosity function, 200 per cell.
+- gb22: same 30 flags as D-062 (event IDs identical; contact sheet inspected in D-062), **0 survivors**.
+  **Γ₉₅ ≈ 1.1–3.3 × 10⁻⁶ per star per year for t_E = 10–300 d, 4–7 × 10⁻⁶ at 3 d** (103 / 2,000 recovered,
+  0 / 400 PSPL controls; `derived`, N_s ASSUMPTION). Supersedes D-062's numbers.
+- Streaming per-field pipeline (`moa_stream`, `w3_moa.py --field`): no tar on disk; gb22 by HTTP in 81 s;
+  258 light curves/s on gb21 (test only, no gb21 result yet).
+- **Failed approach:** a parent process reading ranges for its workers was OOM-killed on gb21.
+- **Handoff / next:** `w3_moa.py --field gbN run-field` for the Nunota et al. 2024 Table 1 fields, smallest first
+  (gb21 12.3 GB, gb20 15.2 GB, gb19 16.3 GB …; sizes in docs/exotic_limits.md), then `combine`.
+
 ## 2026-10-08: Coordination and dispatch rules for concurrent sessions (owner text)
 - Two sessions worked PR #94 (W5) at once: a cloud run started from its 20:39 skeleton, another session pushed the full
   screen at 21:14, and the run's push was rejected (its pilot is parked on `claude/w5-clustered-null`, findings on #94).
