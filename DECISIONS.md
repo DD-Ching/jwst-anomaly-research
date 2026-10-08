@@ -2580,6 +2580,52 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
 - JADES or more NEXUS epochs enlarge the compact sample.
 - A W3 model with cluster macro-magnification is needed for caustic-crossing stars in arcs.
 
+## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
+
+**Decision.**
+- D-050's catalogue aperture-mass map is `exotic_screens.py shear` (Schirmer Q_TANH, R_ap = 10″, 1″ grid, sources at
+  1–10″, rotation null) with `scripts/inject_shear.py` for injection-recovery. It replaces `radial` for W1 limits at
+  ≥ 2 × 10¹² M☉ (5–8× stronger); `radial` stays as an independent screen. Method and tables: docs/exotic_limits.md
+  "W1 negative-mass lenses (shear screen)".
+- **Responsivity.** The cluster shear removed is R g with R fitted per field (0.41–0.48): catalogue isophotal
+  moments respond to shear by R, not 1. Injected images keep R of the lens-induced change of their measured moments (image minus source, so the cluster shear cancels), and painted images face the spike veto; only resolved sources are painted (unresolved ones have no measured shape), and not those with κ ≥ 1, |g| ≥ 1 or |R g| ≥ 1 or spike segments. Fewer than 20
+  calibrating rows, or an R outside (0, 1.5] or below 3σ, is an error, not R = 1.
+- **Spike veto.** Diffraction-spike segments (`spike_segments`, D-043, Gaia stars where the field uses them) are
+  dropped: they point radially at their star, the W1 sign.
+- **E/B rule.** A peak counts only if p_random < 0.05 against the rotation null *and* S exceeds the field's largest
+  |S_×|. Adopted after seeing real B-mode extremes beyond the rotation null (conservative; post hoc).
+- All thresholds are ASSUMPTIONs.
+
+**Alternatives rejected.**
+- Removing the full model g: leaves −(1 − R) g ≈ −0.55 g, a radial pattern of the W1 sign around every mass
+  concentration (measured slope of ε along g: 0.41–0.48 in four fields).
+- No spike veto (first run): Abell 370 E max 4.51 and B max 4.68 (both p < 0.005), Abell 2744 E 3.92 (p 0.01). With
+  the veto: 3.48 / 3.46 and 3.39. Spikes, not lensing.
+- The rotation null alone: B-mode extremes still reach p 0.005–0.04 in three fields after the veto.
+- Point-mass 1/x² (4″, 10″) and top-hat 6″ filters: lower injection efficiency than Schirmer 10″ in MACS0416 and
+  Abell 2744 (50 injections each; numbers in the doc).
+- Hetterscheidt et al. (2005) as the source of the filter's cut-off: the exponential box E(x) is Schirmer et al.'s
+  own (eq. 16), read from the full text.
+
+**Evidence** (`derived`; four photo-z fields, 30.2 arcmin²).
+- Unit tests: phases and PSF deconvolution, (ε − g)/(1 − g*ε) inverts the lens mapping, sign (radial ring S = +√2n,
+  tangential −√2n), a strong synthetic ring beats the rotation null, R recovered from diluted shear, a massive
+  W1 injection recovered on a synthetic field.
+- Real data: ε along the model g rises with |g| in MACS0416 and Abell 2744 (e.g. +0.059 ± 0.010 at ⟨|g|⟩ = 0.14,
+  +0.255 ± 0.024 at 0.42), so the screen sees the cluster's real shear; after removing R g the residual is
+  consistent with 0.
+- Real fields: S_max 3.39 / 3.79 / 3.40 / 3.48 (Abell 2744, MACS0416, MACS1149, Abell 370), p_rot 0.58 / 0.050 /
+  0.19 / 0.20; only Abell 370 exceeds its max |S_×| (3.46), and not the rotation null: null.
+- Recovered (of 800, four fields): 0, 1, 33, 197, 405 at 2 × 10¹⁰, 2 × 10¹¹, 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉
+  (radial: 0, 0, 8, 84, 156 of 1,600). 95 % limits: 7.7 × 10³, 1.3 × 10³, 6.5 × 10² deg⁻² at the top three masses
+  (radial headline 6.1 × 10⁴, 7.0 × 10³, 4.0 × 10³).
+- Wall time 58–168 s per field (1,000 injections).
+
+**Revisit if.**
+- A proper weak-lensing shape catalogue (PSF-anisotropy-corrected, calibrated) exists for these fields: the E/B
+  floor would drop and the limits improve.
+- DJA photo-z for SMACS 0723 and El Gordo are reachable again (tarballs 404 on 2026-10-08).
+
 ## D-054 Survey-agnostic exotic signatures; MulensModel for ordinary microlensing fits; OGLE-IV Mróz samples first for W3 (2026-10-08)
 
 **Context.** Owner direction (2026-10-08): find observational evidence of traversable wormholes / negative-mass
@@ -2633,6 +2679,27 @@ goes through `/vet-candidate`; nulls become limits; nothing is announced outside
 **Revisit if.** MulensModel or VBMicrolensing add user-defined or negative-mass magnification; pyLIMA relicenses; a
 paper publishes a survey light-curve limit on negative-mass or Ellis lenses (compare, do not repeat); OGLE or
 KMTNet terms forbid a population reanalysis; > 10 signature modules or outside contributors need entry points.
+
+## D-055 Orphan-pair null (e) made symmetric; companion-aware null (f); the D-051 deep-field excess was a null artefact (2026-10-08)
+
+**Decision.** `orphan_pairs.pair_cells` bins colour per member and uses the unordered pair of bins; a non-finite
+colour (no valid flux, or a non-positive mean flux) has its own bin. A cell needs ≥ 5 z-overlapping reference pairs
+(`MIN_CELL_REF`, ASSUMPTION), else its S/N × size cell, else the global reference rate. A new null (f) applies the same cells to the 3–6″
+z-overlapping pairs (null (d)'s annulus). Background-aware W1/W2/point-mass limits use null (e) as fixed.
+
+**Alternatives rejected.**
+- Pair mean colour: a red + blue pair would share a cell with two neutral members, which match far more easily.
+- (f) as the limit background: it predicts more (347.5), so its limits would be less conservative.
+
+**Evidence** (`derived`; `outputs/orphan_pairs/<field>/summary.json`, `outputs/inject_pairs/limits.json`; table
+in docs/orphan_pairs.md).
+- Orphans unchanged from D-048/D-051 in all nine fields. Deep fields, 355 orphans: null (e) fixed 334.0 (P = 0.13;
+  D-051: 315.4, P = 0.015), null (f) 347.5 (P = 0.35). The D-048 clusters stay null (P ≥ 0.13).
+- Injections re-run: no-candidate limits reproduce D-051; background-aware s₉₅ 72.3 → 54.9 (docs/exotic_limits.md).
+- The symmetry, the non-finite bin and the cell floor were changed together; their shares were not measured.
+
+**Revisit if.** A run gives P < 0.05 under both (e) and (f), or a segmentation-map same_galaxy rule changes the
+orphan counts.
 
 ## D-056 W1/W2 in published lens catalogues: no lens without a visible deflector; per-lens dark-fraction limits (2026-10-08)
 

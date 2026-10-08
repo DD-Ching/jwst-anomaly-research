@@ -231,7 +231,8 @@ def test_deep_field_lens_check_needs_no_model():
     top = op.lens_check(op.rank_orphans(pairs), None, op.Z_LENS_REF)
     assert len(top) and not np.any(top["cluster_explains"])
     assert all(c in top.meta["hypothesis_columns"] for c in ("mass_e_msun", "sis_sigma"))
-    for key in ("null_d_near_zmatched", "null_e_conditioned", "zoverlap_match_fraction_by_sep"):
+    keys = ("null_d_near_zmatched", "null_e_conditioned", "null_f_near_conditioned")
+    for key in (*keys, "zoverlap_match_fraction_by_sep"):
         assert key in summary
 
 
@@ -284,3 +285,62 @@ def test_in_region_accepts_a_frame_token():
     assert op._in_region(f"POLYGON {sq}", 11.0, 0.0)
     assert op._in_region(f"POLYGON ICRS {sq}", 11.0, 0.0)
     assert not op._in_region(f"POLYGON ICRS {sq}", 13.0, 0.0)
+
+
+def test_pair_cells_are_symmetric_and_nan_colour_has_its_own_bin():
+    cat, _ = synthetic_catalogue()
+    sub = op.as_standard(cat)
+    src = op.source_cells(sub)
+    n = len(sub)
+    i, j = np.arange(n - 1), np.arange(1, n)
+    fwd = op.pair_cells(src, Table({"i": i, "j": j}))
+    rev = op.pair_cells(src, Table({"i": j, "j": i}))
+    assert np.array_equal(fwd, rev)
+    assert list(op.colour_bin(np.array([np.nan, -0.1, 0.1, 0.4, 0.9, np.inf]))) == [
+        4,
+        0,
+        1,
+        2,
+        3,
+        4,
+    ]
+    # a pair with a NaN-colour member no longer shares the cell of a 0-0.3 colour member
+    snr, rad, _ = src
+    nan_cb = np.array([1, 4, 1])  # rows 0, 2: colour 0-0.3; row 1: NaN
+    src3 = (snr[:3] * 0 + 50.0, rad[:3] * 0 + 0.5, nan_cb)
+    cells = op.pair_cells(src3, Table({"i": [0, 1], "j": [2, 2]}))
+    assert cells[0] != cells[1]
+
+
+def test_conditioned_null_uses_cell_rates_and_counts_fallbacks(monkeypatch):
+    monkeypatch.setattr(op, "MIN_CELL_REF", 1)
+    ref = Table({"z_overlap": [True, True, True, False], "match": [True, False, True, True]})
+    key_ref = np.array([1, 1, 2, 3])
+    m = Table({"z_overlap": [True, True, True, False], "pair_class": ["orphan"] * 4})
+    key_c = np.array([1, 2, 3, 1])  # cell 3 has no z-overlapping reference pair
+    out = op.conditioned_null(key_c, m, key_ref, ref, {"orphan": 2})
+    # 0.5 (cell 1) + 1.0 (cell 2) + 2/3 (global fallback); the non-overlapping pair adds nothing
+    assert np.isclose(out["expected_by_class"]["orphan"], 0.5 + 1.0 + 2 / 3)
+    assert out["n_fallback"] == 1 and out["n_ref_zoverlap"] == 3
+    # cells with fewer than MIN_CELL_REF reference pairs fall back to the global rate
+    monkeypatch.setattr(op, "MIN_CELL_REF", 2)
+    out = op.conditioned_null(key_c, m, key_ref, ref, {"orphan": 2})
+    assert np.isclose(out["expected_by_class"]["orphan"], 0.5 + 2 / 3 + 2 / 3)
+    # cells 1-3 share S/N x size cell 0 (3 reference pairs, rate 2/3): no global fallback
+    assert out["n_fallback"] == 2 and out["n_global"] == 0
+    # a sparse colour cell falls back to its S/N x size cell before the global rate
+    sz = op.N_COLOUR**2
+    key_ref2 = np.array([sz + 1, sz + 2, sz + 3, 0])  # one S/N x size cell, three colour cells
+    out = op.conditioned_null(np.array([sz + 4]), m[:1], key_ref2, ref, {"orphan": 1})
+    assert np.isclose(out["expected_by_class"]["orphan"], 2 / 3)
+    assert out["n_fallback"] == 1 and out["n_global"] == 0
+
+
+def test_conditioned_null_without_reference_is_undefined():
+    import pytest
+
+    ref = Table({"z_overlap": [False], "match": [True]})
+    m = Table({"z_overlap": [True], "pair_class": ["orphan"]})
+    with pytest.warns(UserWarning, match="no z-overlapping"):
+        out = op.conditioned_null(np.array([1]), m, np.array([1]), ref, {"orphan": 1})
+    assert np.isnan(out["expected_by_class"]["orphan"])
