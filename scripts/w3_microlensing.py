@@ -538,11 +538,7 @@ def fit_event(
     res["PSPL"] = ps
     if "FSPL" in models and ps["u0"] < P.fspl_u0_max:
         lt = math.log10(ps["tE"])
-        starts = [
-            (ps["t0"], lt, ps["u0"], math.log10(r))
-            for r in (0.002, 0.01, 0.03, 0.1)
-            if r > 0.3 * ps["u0"] or r >= 0.002
-        ]
+        starts = [(ps["t0"], lt, ps["u0"], math.log10(r)) for r in (0.002, 0.01, 0.03, 0.1)]
         res["FSPL"] = optimise("FSPL", lc, starts)
     if "PAR" in models and ps["tE"] >= P.parallax_te_min and lc.ra is not None and have_mm():
         lt = math.log10(ps["tE"])
@@ -618,7 +614,11 @@ def _jobs(sample: ogle.OgleMrozSample, limit: int | None, ids=None, skip=()):
     if skip:
         ev = ev[~np.isin(ev["event_id"], list(skip))]
     for r in ev:
-        lc = sample.light_curve(r["event_id"])
+        try:
+            lc = sample.light_curve(r["event_id"])
+        except KeyError:  # listed in the table but no photometry file: report, don't stop the run
+            print(f"skipped {r['event_id']}: no light curve", flush=True)
+            continue
         d = {k: (r[k].item() if hasattr(r[k], "item") else r[k]) for k in ev.colnames}
         yield d, np.asarray(lc["time"]), np.asarray(lc["mag"]), np.asarray(lc["mag_err"])
 
@@ -698,7 +698,9 @@ def _join_pub(tab: Table, ev: Table) -> Table:
 # ----------------------------------------------------------------------------- published selection
 
 
-def published_selection(lc: LightCurve, fit: dict | None = None) -> dict:
+def published_selection(
+    lc: LightCurve, fit: dict | None = None, sample_key: str = "bulge2019"
+) -> dict:
     """Emulation of the Mróz et al. 2019 low-cadence selection (their Table 2) on one light curve.
 
     Emulated: χ²_out/dof ≤ 2 outside a 720 d window (360 d if the light curve spans < 6 yr) centred
@@ -756,7 +758,7 @@ def published_selection(lc: LightCurve, fit: dict | None = None) -> dict:
         passed.update(
             chi2_fit=chi_all <= P.sel_chi2_fit,
             chi2_fit_te=(near.sum() <= 5) or chi_te <= P.sel_chi2_fit,
-            t0=ogle.SAMPLES["bulge2019"].t_min <= fit["t0"] <= ogle.SAMPLES["bulge2019"].t_max,
+            t0=ogle.SAMPLES[sample_key].t_min <= fit["t0"] <= ogle.SAMPLES[sample_key].t_max,
             u0=fit["u0"] <= P.sel_u0_max,
             te=fit["tE"] <= P.sel_te_max,
             i_s=i_s <= P.sel_is_max,
@@ -829,7 +831,6 @@ def inject_w3(
     rho,
     n=1.0,
     sign=-1,
-    rng=None,
 ):
     """Exotic event on a constant-baseline real light curve (``simulated``).
 
@@ -867,13 +868,11 @@ def _pick_bases(fits: Table, n: int, seed: int) -> list[str]:
 
 
 def _inject_worker(job):
-    kind, base_lc, base_flux, fs, prm, seed = job
-    rng = np.random.default_rng(seed)
+    kind, base_lc, base_flux, fs, prm = job
     if kind == "W3":
         lc = inject_w3(base_lc, base_flux, fs, prm["t0"], prm["tE"], prm["u0"], prm["rho"])
     else:  # PSPL control: same machinery, n = 1, ε > 0, point source
         lc = inject_w3(base_lc, base_flux, fs, prm["t0"], prm["tE"], prm["u0"], 0.0, 1.0, 1)
-    del rng
     k = np.convolve(lc.f, np.ones(3) / 3, mode="same")
     t0g = float(lc.t[int(np.argmax(k))])
     row = {"kind": kind, "event_id": base_lc.event_id, **prm}
@@ -954,7 +953,7 @@ def run_inject(procs: int, per_cell: int, seed: int = 55) -> Path:
                         "Is_base": float(flux_to_mag(bflux)),
                         "fs_frac": float(min(fs / bflux, 1.0)),
                     }
-                    jobs.append((kind, blc, bflux, fs, prm, int(rng.integers(2**31))))
+                    jobs.append((kind, blc, bflux, fs, prm))
     t1 = time.time()
     rows = []
     with Pool(procs) as pool:
@@ -1141,6 +1140,14 @@ def model_flux(model: str, lc: LightCurve, r: dict) -> np.ndarray:
 
 
 def _vet_worker(job):
+    """``_vet_one`` with errors recorded: a failed test keeps the flag open (``survives``)."""
+    try:
+        return _vet_one(job)
+    except Exception as exc:  # noqa: BLE001 — one bad flag must not lose the others' vetting
+        return {"event_id": job[0]["event_id"], "tests": [("vet_error", True, repr(exc)[:200])]}
+
+
+def _vet_one(job):
     ev, t, mag, err, do_bl = job
     lc = LightCurve.from_mag(t, mag, err, ra=ev["ra"], dec=ev["dec"], event_id=ev["event_id"])
     out = {"event_id": ev["event_id"], "tests": []}
@@ -1165,7 +1172,7 @@ def _vet_worker(job):
             t0_par=round(ps["t0"], 1),
         )
     ex = min(EXOTIC, key=lambda m: res[m]["bic"])
-    ordinary = {m: res[m] for m in ORDINARY}
+    ordinary = {m: res[m] for m in ORDINARY if m in res}
     best_o = min(ordinary, key=lambda m: ordinary[m]["bic"])
     d0 = res[ex]["bic"] - ordinary[best_o]["bic"]
     out.update(exotic=ex, dbic_all=d0, best_ordinary=best_o)
@@ -1372,6 +1379,7 @@ def contact_sheet(sample_key: str, path_png: Path) -> None:
     import matplotlib.pyplot as plt
 
     vet = json.loads((out_dir() / f"vetting_{sample_key}.json").read_text())["flags"]
+    vet = [o for o in vet if "res" in o]  # flags whose vetting raised have no fits to draw
     sample = ogle.OgleMrozSample(sample_key)
     pub = {r["event_id"]: r for r in sample.events()}
     n = len(vet)
