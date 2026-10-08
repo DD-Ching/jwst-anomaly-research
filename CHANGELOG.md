@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 in the Gaia DR3 microlensing candidates: the published selection rejects W3 too (D-061)
+- Cloud run. Hypothesis: the Gaia DR3 candidates (363; Wyrzykowski et al. 2023) are selected less PSPL-shaped than
+  Mróz et al., so they could limit W3. Tested the selection before fitting, as D-057 requires.
+- New `gaia_mulens.GaiaDR3Microlensing` adapter (TAP + DataLink epoch photometry, 8 parallel batches of 12 ids,
+  ~3 s per source on the server; Table D.1 sample labels from the pinned arXiv source) and `scripts/w3_gaia.py`.
+- Emulated Sample A cuts pass 143 / 163 real Sample A events. W3 injections: **2 / 240 selected, 0 / 240 selected
+  and flagged**; PSPL controls 17 / 120. W3 dimming fails skewness < 0 and the skew–Abbe cut, as designed for
+  brightenings. The fits of all 363 give one flag (4053892503992268288, ΔBIC −40.3). It is an event truncated at the
+  window end on a variable baseline (light curve inspected), not a candidate.
+- **Failed approaches (rules):** the Extractor cuts (n points, duration > 135 d, max σ > 50) cannot be emulated from
+  the paper. The guessed definitions fail 126 / 163 real events, so they are left out. A single-id DataLink request
+  answers with bare CSV, not a zip. Truncated chunked replies happen, so retry them.
+- **Next:** W3 needs light curves taken before any microlensing selection. Gaia DR3 has epoch photometry only for
+  its variable sources (vari_summary; ~11.7 M per the DR3 release, recheck), selected by variability, not shape. Next, check whether W3 survives that
+  classifier (`vari_classifier_result`) by injection, and whether a sky-region subset is small enough to screen.
+  Other options: KMTNet public seasons; OGLE EWS (owner decision, terms).
+
 ## 2026-10-08: W2 deflector test at HST resolution from the Hubble Source Catalog: not decisive (D-060)
 - Cloud run. Hypothesis: HST resolution decides the lensed quasars that Legacy Surveys left blended or too close
   (D-056). `scripts/w12_hsc_probe.py`: HSC v3 summary sources within 4″ of each of the 444 galaxy-scale quasar/radio

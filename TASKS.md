@@ -4,12 +4,14 @@ Prioritized queue. Agents pick from **Now** first; in-flight work is visible as 
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
 ## Now (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
-1. **W3 in published microlensing samples** (D-057–D-059). Mróz 2019 bulge (5,790) and 2020 disk (460) fitted and
+1. **W3 in published microlensing samples** (D-057–D-059, D-061). Mróz 2019 bulge (5,790) and 2020 disk (460) fitted and
    vetted: 127 + 6 flags, **0 survive** (the D-059 chunk survivors BLG667.04.62161 and BLG624.18.69573 fail
    `feature_coverage`). **The published samples cannot limit W3:** 0 of 600 injected W3 events pass the emulated Mróz
    selection (PSPL controls 15–43 %), so the chunk re-fits only re-test a selection that excludes the signal. Next:
-   light curves from **before** a PSPL selection — Gaia DR3 `vari_microlensing` + epoch photometry (check its
-   selection with the same injections first), KMTNet public seasons, OGLE EWS (owner decision, terms). Optional:
+   light curves from **before** a PSPL selection. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
+   injections both selected and flagged; one real flag, not a candidate). Next: Gaia DR3 variables with epoch
+   photometry (vari_summary; check by injection whether W3 survives the variability classifier first), KMTNet
+   public seasons, OGLE EWS (owner decision, terms). Optional:
    re-fit the bulge under D-058's bounded π_E (`merge-chunks`, then `vet` + `revet`; can only add flags); re-run the
    6 arXiv name queries that errored.
 2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.27 (typical) for quasar/radio-selected
