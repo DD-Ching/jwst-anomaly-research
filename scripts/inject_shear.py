@@ -7,7 +7,8 @@ difference (ASSUMPTION, conservative): only rows whose shape can be corrected ar
 resolved after PSF deconvolution, not spike segments, and with κ < 1, |g| < 1, |R g| < 1; the S/N
 and ``max_g`` cuts apply to the painted images, since magnification and position change both. The
 radial injections also lens unresolved rows, so the efficiency ratio mixes screen power with
-this (docs/exotic_limits.md caveats). The efficiencies decide whether the shear screen replaces ``radial`` for W1 (D-050).
+this (docs/exotic_limits.md caveats). The efficiencies decide whether the shear screen replaces
+``radial`` for W1 (D-050).
 
 Recovery (ASSUMPTIONs): the largest S of the screen's grid centres within ``--recover-tol`` of the
 injected centre has ``p_random`` < 0.05, i.e. fewer than 5 % of the rotation-null draws reach that
