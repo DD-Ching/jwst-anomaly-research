@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: D-056 amendment — the LS pair must be the catalogued pair; one entry per lens (W1/W2)
+- `lenscats.pair_match` (moved from D-064's `w12_niq`) now gates the D-056 quasar pair test: a status from an LS image
+  pair whose separation differs from the catalogued 2θ_E by > 0.5″ is undecided. Only 115252+004733 changed (LS pair
+  4.18″ vs 3.34″ expected; the cutout shows an 18.1 mag lens galaxy with an unrelated faint pair). 12 pair-decided
+  systems have no catalogued θ_E and stay unchecked; the 3 also in SQLS match (1.88/2.99/2.03″ vs LS 2.00/3.01/2.01″).
+- Same lens listed twice beyond the 3″ merge (MG0414+0534, B2114+022, B2319+052; ~11″ apart): decided systems are
+  grouped by designation within 30″ (ASSUMPTION) and keep the copy with a deflector. Each had counted once as
+  "deflector" and once as "none".
+- New limits (typical, `derived`): quasar 3/15 < 0.52, radio 0/10 < 0.30, all **3/25 < 0.31**; conservative 0/5 < 0.60
+  (were 0.48 / 0.23 / 0.27 / 0.50). No new unexplained system; the 3 CHITAH pairs stay open as before.
+- **Rules:** a pair test must check that its pair is the catalogued one; name-match decided systems before counting N.
+
 ## 2026-10-08: W5 count deficits in Legacy Surveys DR10: 340.5 deg² null, first W5 limit (D-063, #94)
 - Two sessions (a cloud run's 10° pilot, then a worktree worker on the full 20° × 10° regions; see the coordination
   entry below). DR10 Tractor galaxies (r < 23.5) counted per `nest4096` HEALPix pixel on the Data Lab server
