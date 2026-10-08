@@ -231,7 +231,8 @@ def test_deep_field_lens_check_needs_no_model():
     top = op.lens_check(op.rank_orphans(pairs), None, op.Z_LENS_REF)
     assert len(top) and not np.any(top["cluster_explains"])
     assert all(c in top.meta["hypothesis_columns"] for c in ("mass_e_msun", "sis_sigma"))
-    for key in ("null_d_near_zmatched", "null_e_conditioned", "zoverlap_match_fraction_by_sep"):
+    keys = ("null_d_near_zmatched", "null_e_conditioned", "null_f_near_conditioned")
+    for key in (*keys, "zoverlap_match_fraction_by_sep"):
         assert key in summary
 
 
@@ -284,3 +285,29 @@ def test_in_region_accepts_a_frame_token():
     assert op._in_region(f"POLYGON {sq}", 11.0, 0.0)
     assert op._in_region(f"POLYGON ICRS {sq}", 11.0, 0.0)
     assert not op._in_region(f"POLYGON ICRS {sq}", 13.0, 0.0)
+
+
+def test_pair_cells_are_symmetric_and_nan_colour_has_its_own_bin():
+    cat, _ = synthetic_catalogue()
+    sub = op.as_standard(cat)
+    n = len(sub)
+    i, j = np.arange(n - 1), np.arange(1, n)
+    fwd = op.pair_cells(sub, Table({"i": i, "j": j}))
+    rev = op.pair_cells(sub, Table({"i": j, "j": i}))
+    assert np.array_equal(fwd, rev)
+    assert list(op.colour_bin(np.array([np.nan, -0.1, 0.1, 0.4, 0.9]))) == [4, 0, 1, 2, 3]
+    # a NaN colour no longer shares the 0-0.3 cell
+    assert op.colour_bin(np.array([np.nan]))[0] != op.colour_bin(np.array([0.1]))[0]
+
+
+def test_conditioned_null_uses_cell_rates_and_counts_fallbacks():
+    ref = Table({"z_overlap": [True, True, True, False], "match": [True, False, True, True]})
+    key_ref = np.array([1, 1, 2, 3])
+    m = Table(
+        {"z_overlap": [True, True, True, False], "pair_class": ["orphan"] * 4},
+    )
+    key_c = np.array([1, 2, 3, 1])  # cell 3 has no z-overlapping reference pair
+    out = op.conditioned_null(key_c, m, key_ref, ref, {"orphan": 2})
+    # 0.5 (cell 1) + 1.0 (cell 2) + 2/3 (global fallback); the non-overlapping pair adds nothing
+    assert np.isclose(out["expected_by_class"]["orphan"], 0.5 + 1.0 + 2 / 3)
+    assert out["n_fallback"] == 1 and out["n_ref_zoverlap"] == 3

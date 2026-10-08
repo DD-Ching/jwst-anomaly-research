@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Orphan-pair null (e) fixed, companion-aware null (f): no deep-field excess (D-054)
+- Cloud run. Hypothesis: the D-051 flanking-field orphan excess (246 vs 211, P = 0.010) comes from null (e)'s
+  colour cell (member i only, NaN in the 0–0.3 bin) or from physical companions the 10–30″ reference misses.
+- `pair_cells` now uses both members' colour bins (unordered) and a NaN bin; null (f) conditions on 3–6″ pairs.
+  Six deep fields re-run (~1 min each in parallel): orphans unchanged (246 / 355). Fixed (e): 229.5 (P = 0.15),
+  333.4 (P = 0.12); (f): 237.2 (P = 0.29), 343.7 (P = 0.28). **The excess was a null-model artefact.**
+- Background-aware limits: s₉₅ 72.3 → 55.4, all tighter by ×0.77 (docs/exotic_limits.md); injections not re-run.
+- D-048 cluster fields re-run: orphans 11 / 18 / 9 unchanged, (e) P ≥ 0.18, (f) P ≥ 0.085. Null.
+- Not separated: how much of the shift is symmetry vs the NaN bin.
+- **Handoff:** W2 next is the segmentation-map same_galaxy rule (TASKS "Now" 1); PR #78 (W1 shear) in flight.
+
 ## 2026-10-08: W3 multi-epoch dimming / inverted-microlensing screen: null, limits (D-052)
 - Worktree worker: `scripts/dimming_screen.py` cross-matches per-epoch level-3 catalogues (F200W + F444W), flags
   vanishing, achromatic-dimming and rise-dip-rise sources, vetoes catalogue effects (incl. a `bright_neighbour`
