@@ -139,6 +139,18 @@ ELGORDO_CAMINHA23_BAYES = (
     f"{_CAMINHA23_CDS}/files/bayes.dat",
     "2d3f736218c1dbba56fdd39a7f8151d307c46bd37abf39bac8831a9e6a81de44",
 )
+#: The authors' best-fit signed magnification maps (CDS ``fits/``, 0.4"/px, model frame), for
+#: ``validate``; kept apart from the model files so other commands do not fetch them.
+ELGORDO_CAMINHA23_MAG_MAPS: dict[float, tuple[str, str]] = {
+    2.0: (
+        f"{_CAMINHA23_CDS}/fits/magnification_best_fit_z2.fits",
+        "2cfe1b620ac2a2f0e2f72e3247871a6e1e0ddc537adb9787a4683d6b898b9336",
+    ),
+    4.0: (
+        f"{_CAMINHA23_CDS}/fits/magnification_best_fit_z4.fits",
+        "6eab61e2407134171ed3386b7cb6d9cfff5cda0330bf56feb5702a62134bc937",
+    ),
+}
 ABELL2744_BERGAMINI23_BAYES = (
     f"{_BERGAMINI23_WEB}/bayes.dat",
     "bf6ae6702a021d185b70305a83d45f2fca7dacf2a60138f815f5d69ff7524c1b",

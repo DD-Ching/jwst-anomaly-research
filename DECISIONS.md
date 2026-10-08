@@ -2119,6 +2119,13 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - El Gordo: the chain medians match best_fit.par (σ* 289.97 vs 289.48 km/s; O1 σ 1041 vs 1041), but the chain's
   `Chi2` column (54–77) does not track our χ²pos (93–106 at the 0.621″ sigpos of D-030), not even in rank. The
   column's definition is unknown, so the El Gordo chain is **not validated**; don't use it for conclusions yet.
+  - **Resolved (2026-10-08, PR #69, issue #68):** the sampling run (`to_sample.par`, `forme -10`) uses an
+    image-plane χ² with σ² = a·b from the image list (σ = 0.621″ for 37 images, 1.2421″ for 19), not D-030's uniform
+    0.621″. Lenstool's `chi2_img` and `bayesapp.c` (git-cral.univ-lyon1.fr/lenstool, v8.15.6) give
+    ln(Lhood) = −(Chi2 + Σ 2 ln(2π a b))/2; the file's Σ ln(2π a b) = 75.904 matches the chain's offset exactly. Our
+    image-plane χ² with σ² = a·b reproduces `Chi2` for three random rows (60.05/60.00, 67.50/67.47, 72.45/72.36), and
+    is 52.0 for best_fit.par (the chain minimum is 54.2). The El Gordo chain is **validated**. best_fit.par's
+    `Chi2pos` 80.22 still corresponds to the uniform 0.621″ of D-030.
 - Abell 2744 `posterior --systems 3.2,34.1,700.1,4.2 --samples 12 --seed 1` (`model_prediction`):
   - 3.2a/b, 34.1a/b, 700.1a/b stay a `shared_match` in 13 of 13 models. The MCMC spread does not split them.
   - Independent model, CATS v4.1 maps (scratch run with Bergamini's image list): 34.1a/b **split** (μ +24.9 / −21.7,
@@ -2132,7 +2139,7 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - Verdict: the D-030 multiplicity residual is model resolution at folds, not an anomaly. **0 surviving.**
 
 **Revisit if.**
-- The El Gordo `Chi2` column is understood (then validate that chain as for Abell 2744).
+- ~~The El Gordo `Chi2` column is understood~~ (done: `forme -10` σ² = a·b; chain validated, PR #69).
 - An independent model with 3.2's source well inside the caustic still merges 3.2a/b.
 - Speed: `imageplane_residuals` exposes its predicted images (`posterior` currently solves each family twice).
 
@@ -2285,3 +2292,101 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - Injection-recovery shows a screen is blind to W1 or W3 at the recommended amplitudes.
 - Cluster macro-magnification needs a lens model with shear plus a microlens instead of an isolated lens (W3 in
   caustic-crossing arcs).
+
+## D-049 W1 injection-recovery through the `radial` screen: blind at θ_E ≤ 1″, weak limits at 3–10″ (2026-10-08)
+
+**Decision.**
+- `scripts/inject_radial.py` turns the eight null `radial` screens into 95 % upper limits on the surface density of
+  W1 negative-mass lenses (n = 1, ε < 0; D-047). The method, tables and caveats are in docs/exotic_limits.md.
+- **Injection.** Each lens sits at a random point of the screened footprint, at the cluster redshift. The lensed
+  sources are the field's own background catalogue rows:
+  - β < 2 θ_E: removed (umbra);
+  - 2 ≤ β ≤ 4 θ_E: replaced by two images from `exotic_sim.inject_images`;
+  - each image gets PSF-deconvolved second moments mapped by the signed Jacobian, magnitude − 2.5 log₁₀|μ|, area
+    × |μ| and S/N × √|μ|.
+- **Screen.** It is unchanged: `cmd_radial`'s selection is now `exotic_screens.radial_candidates`, a pure
+  refactor that gives the same SMACS output. The real arcs' null draws are cached once per field and updated for
+  each injection.
+- **Recovery.** A peak with p_random < 0.05 within 2″ of the injected centre. 200 lenses per field and θ_E.
+- **Limit.** 2.996 / Σ ε_f A_f, using the screened footprint (1″ grid points with a catalogue source within 4″).
+- All of these are ASSUMPTIONs.
+
+**Alternatives rejected.**
+- Drawing synthetic sources at random β. Lensing the rows that are actually there keeps the real local density,
+  clustering and photo-z, and removes each original row as it is replaced.
+- Re-running `cmd_radial` (200 null draws over the whole grid) for every injection: about 15–150 s per lens. The
+  incremental null has the same distribution in about 0.2–1 s.
+- Using the shapes of the catalogue as intrinsic, with no PSF term. That would over-elongate PSF-sized images.
+- Counting a lens as recovered at the ≥ 3-line peak threshold. The screen's significance is p_random, and 3 lines
+  is below every field's null (5–8 lines needed).
+
+**Evidence** (`derived` from `simulated` injections; 8 fields, 51.2 arcmin²).
+- The base screens reproduce the field docs: SMACS 31 arcs, 4 lines, p 0.965; MACS0416 120, 7, 0.225; Abell 370
+  100, 5, 0.495; and so on.
+  - Abell 2744 now gives 134 arcs, 5 lines, p 0.505: its doc predates the D-034 spike veto (42 segments).
+- Recovered of 1,600 lenses per θ_E (200 in each field):
+
+  | θ_E | 0.3″ | 1″ | 3″ | 6″ | 10″ |
+  |---|---|---|---|---|---|
+  | recovered | 0 | 0 | 10 | 80 | 181 |
+
+  - The 95 % limits, from the six fields with photo-z (38.1 arcmin²), are none at 0.3″ and 1″, < 7.0 × 10⁴ deg⁻²
+    at 3″, < 6.8 × 10³ at 6″ and < 3.2 × 10³ at 10″. MACS0717 and Abell S1063 have no photo-z, so their members
+    and foreground galaxies get painted as W1 images and their efficiency is biased high (code review); with them
+    the limits would be about 2× tighter (optimistic, reported separately in `limits.json`).
+  - |M| ≈ 1.4–4.3 × 10¹² M☉ at 3″ (`model_prediction`, z_s = 2).
+  - The best limit is about 27× weaker than Takahashi & Asada's volume limit spread over 0 < z < 1 (about
+    120 deg⁻²).
+- The loss is in the arc selection. An image reaches e ≥ 0.5 only for β ≲ 2.3 θ_E, and `anti` relative to the
+  cluster keeps about a third of the images. A 3″ lens therefore puts 1–3 arcs into the screen, while the null
+  needs 5–8.
+- Tests: `tests/test_inject_radial.py`, offline. They check the image shapes against the Jacobian, the painting
+  (umbra removed, sources replaced, μ in magnitude and S/N), recovery of a dense synthetic lens, the footprint
+  area, and the mass scaling against D-047.
+
+**Revisit if.**
+- A W1-specific screen is built: collinear radial image pairs flanking an empty centre, with orientation measured
+  relative to the candidate centre instead of the cluster, and a local rather than field-maximum null. This
+  injection harness is its benchmark.
+- The screen's thresholds change (e ≥ 0.5, 60° `anti` window, 15″ lines).
+- Pixel-level injections (painted into cutouts and re-extracted) are needed to measure blending and
+  incompleteness.
+
+## D-050 W1 negative-tangential-shear screen: in-house catalogue aperture-mass map on scipy cKDTree; TreeCorr and lenspack rejected (2026-10-08)
+
+**Decision.** Build the W1-specific screen (D-049 "Revisit if") as a catalogue aperture-mass map in
+`scripts/exotic_screens.py` next to `radial_candidates`, with existing dependencies only (numpy, scipy
+`cKDTree`). Reuse-check result; not implemented yet.
+- **Statistic.** Schneider (1996) catalogue estimator on a grid of candidate centres (1″, the D-049 footprint):
+  M_ap(θ₀) = Σ Q(|θ_i − θ₀|/R) e_t,i / Σ Q, with a Schirmer et al. (2007) shear-shaped filter and a top-hat
+  option. Report −M_ap, because a W1 lens (ε < 0) gives *negative* tangential shear (radial alignment); report
+  M_× as the B-mode/systematics check. Take Q's exact formula from the Schirmer et al. full text (only the
+  abstract was checked).
+- **Input.** Background rows as in D-049 (photo-z fields only), PSF-deconvolved second moments as in
+  `inject_radial.lensed_shapes`, and the cluster model's reduced shear removed: e_int = (e − g)/(1 − g* e).
+  Mask where |g| ≳ 0.5 (ASSUMPTION) instead of subtracting.
+- **Null.** Random position-angle rotations with positions kept, ≥ 200 draws per field from cached neighbour
+  lists; a local p-value per centre and a field-maximum p-value.
+- **Adoption.** Benchmark with `scripts/inject_radial.py`; adopt only if it beats `radial`'s D-049 efficiencies.
+- **Expectation (`derived`, rough).** γ_t ≈ (θ_E/θ)², so at θ_E = 1″ γ_t ≈ 0.11 at 3″; with about
+  0.05–0.09 lensable rows per arcsec² (D-049) and σ_e ≈ 0.3, S/N ≈ 1–2 in a 5″ aperture. Gains are expected
+  mainly at θ_E ≥ 2–3″; the injections decide.
+
+**Alternatives rejected.**
+- TreeCorr `NGCorrelation` / `calculateNMap` (5.1.4, BSD-3): ⟨N M_ap⟩ is stacked over all lens positions and
+  returned against R only, with no per-centre map or local null. One correlation per grid centre would be slower
+  than one cKDTree pass. No Windows wheels on PyPI or conda-forge (the owner's host would need an MSVC build).
+- lenspack (1.0.0, 2020, MIT): `aperture_mass` filters a pixelised (binned, KS93) map, which loses the arcsecond
+  scales W1 needs and adds edge/mask artefacts; its `gamma_tx` and `random_rotation` are ~10 lines each; no
+  release since 2020.
+- Weak-lensing peak finders on pixelised maps: same limitation.
+- Keeping `radial`'s arc selection (e ≥ 0.5, `anti`): D-049 shows it discards most W1 images.
+
+**Evidence.** TreeCorr NG docs (https://rmjarvis.github.io/TreeCorr/_build/html/ng.html) and its PyPI/conda-forge
+file lists; lenspack source (https://github.com/CosmoStat/lenspack); Schneider 1996; Schirmer et al. 2007
+(SOURCES "W1 shear screen").
+
+**Revisit if.**
+- Wide fields (≥ 1e5 sources) where tree-code speed matters and TreeCorr ships Windows wheels, or a stacked
+  ⟨N M_ap⟩ around a list of `radial`/orphan-pair centres is wanted (exactly TreeCorr NG).
+- A maintained catalogue-level aperture-mass map package with a per-centre null appears.

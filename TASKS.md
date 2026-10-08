@@ -5,8 +5,13 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 
 ## Now (owner focus 2026-10-08: wormhole / negative-mass and warp signatures only; D-047)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
-   - W1 through `exotic_screens.py radial` on the screened fields: recovery vs θ_E (0.3″, 1″, 3″) → upper limit on
-     negative-mass lenses per deg²;
+   - W1: `radial` is blind at θ_E ≤ 1″ (D-049, limits only ≥ 3″). Next: a W1-specific screen (collinear radial
+     image pairs flanking an empty centre, orientation against the candidate centre, local null), benchmarked with
+     `scripts/inject_radial.py`. Design settled in D-050: a sign-flipped catalogue aperture-mass map (Schneider
+     1996 estimator, Schirmer+07 filter) on cluster-shear-corrected shapes, rotation null; build in
+     `exotic_screens.py`, benchmark against `radial`; expect gains mainly at θ_E ≥ 2–3″; then pixel-level injections; other lens redshifts → volume density vs Takahashi &
+     Asada; photo-z for Abell S1063 (DJA v7.5, 75 MB) and MACS0717 to bring both back into the W1 limits (D-049
+     excludes them: without photo-z their members are painted as images);
    - W2 through `orphan_pairs.py` (D-048), and the dark-lens search extended to non-cluster deep fields;
    - W3: a dimming / vanished-source class for multi-epoch fields (El Gordo, MACS0416 flashlights, NEXUS, JADES);
      ≥ 3 epochs for the spike-dip-spike shape; leave the Sunrise transient track to its owner run;
@@ -54,8 +59,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
      - `images --forced-image`: done for El Gordo (D-034) and Abell 2744 (D-036); 700.1 needs a finer z scan;
      - search radii from `bayes.dat` instead of a fixed 1″;
      - ~~Abell 2744 multiplicity residual~~ — done (D-045): model resolution at folds. Next: `bayes.dat` μ errors in
-       `fluxratios` (Abell 2744 chain validated; El Gordo's `Chi2` column not understood);
-     - El Gordo magnification-map check (CDS `magnification_best_fit_z2.fits`) as a `validate` map test.
+       `fluxratios` (Abell 2744 and El Gordo chains validated; El Gordo's chain uses σ² = a·b, D-045);
+     - ~~El Gordo magnification-map check~~ — done (issue #68): `validate` reproduces the z=2 and z=4 maps (median
+       ratio 1.00001, parity 100 % at |μ|<10), so El Gordo μ and parities are validated. Its chain is validated too (`forme -10`, D-045).
    - Sunrise: RELICS or Scofield+2025.
    Field follow-ups (docs/fields/*.md):
    - vet Abell 2744 `5904`, `7987`, `4731`, `264`, `7298`;

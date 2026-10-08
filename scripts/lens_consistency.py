@@ -124,6 +124,7 @@ MODELS = {
         "sigpos": 0.621,
         "frame_offset_arcsec": (0.224, -0.016),
         "bayes": lensmodel.ELGORDO_CAMINHA23_BAYES,
+        "mag_map_files": lensmodel.ELGORDO_CAMINHA23_MAG_MAPS,  # validate only
         # best_fit.par is not a row of the published (thinned) chain; the potfile reference is
         # the member at the input file's mag0 (CDS files/to_sample.par: BCG 1758, D-045)
         "potfile_mag0": 17.9852,
@@ -553,7 +554,9 @@ def _write(table: Table, path: Path) -> None:
 def map_check(model, map_path: Path, quantity: str, z_s: float | None, step: int = 37) -> dict:
     """Model against a published κ (D_LS/D_S = 1) or |μ| map (at ``z_s``) on a pixel sub-grid.
 
-    Only map pixels with 0.05 < κ < 2, or |μ| < 10, are compared (critical curves excluded)."""
+    Only map pixels with 0.05 < κ < 2, or |μ| < 10, are compared (critical curves excluded).
+    ``parity_agree`` (μ only) is the fraction of those pixels whose sign matches a signed map;
+    None when the map has no negative pixel (|μ| only)."""
     with fits.open(map_path, memmap=True) as hdul:
         data = hdul[0].data
         with warnings.catch_warnings():
@@ -565,14 +568,19 @@ def map_check(model, map_path: Path, quantity: str, z_s: float | None, step: int
     if quantity == "kappa":
         val = model.kappa_xy(*model.to_frame(ra, dec))
         sel = (pub > 0.05) & (pub < 2)
+        signed = None
     else:
-        val = np.abs(np.asarray(model.evaluate(ra.ravel(), dec.ravel(), z_s)["magnification"]))
-        val, pub = val.reshape(ra.shape), np.abs(pub)
+        mu = np.asarray(model.evaluate(ra.ravel(), dec.ravel(), z_s)["magnification"], float)
+        signed = (mu.reshape(ra.shape), pub)
+        val, pub = np.abs(signed[0]), np.abs(pub)
         sel = (pub > 0) & (pub < 10)
     ok = sel & np.isfinite(val) & np.isfinite(pub)
     if not ok.any():
         raise SystemExit(f"error: {map_path}: no comparable pixel")
     rel = np.abs(val[ok] - pub[ok]) / pub[ok]
+    parity = None
+    if signed is not None and np.any(signed[1][ok] < 0):
+        parity = float(np.mean(np.sign(signed[0][ok]) == np.sign(signed[1][ok])))
     return {
         "map": str(map_path),
         "quantity": quantity,
@@ -581,6 +589,7 @@ def map_check(model, map_path: Path, quantity: str, z_s: float | None, step: int
         "median_rel_diff": float(np.median(rel)),
         "p95_rel_diff": float(np.percentile(rel, 95)),
         "median_ratio": float(np.median(val[ok] / pub[ok])),
+        "parity_agree": parity,
     }
 
 
@@ -660,6 +669,11 @@ def cmd_validate(args) -> dict:
         "backtrace": bsum,
         "image_plane": isum,
     }
+    # published magnification maps (model frame, so no frame offset)
+    for z_s, (url, sha) in MODELS[args.model].get("mag_map_files", {}).items():
+        summary[f"magnification_z{z_s:g}"] = map_check(
+            model, fetch_catalog(url, sha), "mu", z_s, args.map_step
+        )
     out = args.out / args.model
     _write(bt, out / "backtrace.ecsv")
     _write(ip, out / "imageplane.ecsv")
@@ -1664,7 +1678,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     v = sub.add_parser("validate", help="compare with the published kappa map and multiple images")
     v.add_argument("--step", type=int, default=5, help="kappa-map sub-grid step in pixels")
-    v.add_argument("--map-step", type=int, default=37, help="map-model check sub-grid step, px")
+    v.add_argument("--map-step", type=int, default=37, help="published-map check sub-grid step, px")
     v.add_argument("--grid-step", type=float, default=0.25, help="solver grid step, arcsec")
     a = sub.add_parser("arcs", help="observed source orientation against the predicted shear")
     a.add_argument("--catalog", type=Path, required=True, help="JWST pipeline _cat.ecsv")

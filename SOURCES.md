@@ -502,6 +502,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
       Accessed 2026-10-08: `best_fit.par` sha256 `7b0153ae0ee02f057f6aaa6f46b1b698502e6fc427266ac9a09d241ddc63a472`,
       `obs_arcs_v1_new_IDs.dat` sha256 `d631743921266c34689a1d509f08e53dc3c90bc88064393d7b8fd524a3d5c700`,
       `bayes.dat` 1,666,720 B sha256 `2d3f7362…` (MCMC chain, D-045), `to_sample.par` (read for the potfile `mag0`).
+      `fits/magnification_best_fit_z2.fits` and `_z4.fits` (4,003,200 B each; sha256 `2cfe1b62…`, `6eab61e2…`; signed μ,
+      0.4″/px, model frame), pinned in `lensmodel.ELGORDO_CAMINHA23_MAG_MAPS` for `validate`.
+    - Lenstool source, https://git-cral.univ-lyon1.fr/lenstool/lenstool.git (v8.15.6, commit 09cf4cc4, accessed
+      2026-10-08): `docs/sphinx/source/section_parfile/image.rst` ("forme"), `src/o_chi.c` (`chi2_img`, σ² = a·b for
+      `forme -10`), `src/bayesapp.c` (bayes.dat ln(Lhood) and Chi2). Read for the D-045 amendment.
     - RELICS models: https://archive.stsci.edu/hlsps/relics/act0102m49/models/ (DOI 10.17909/T9SP45).
 - **Sunrise (WHL0137−08).**
   - Data: MAST 2282 `jw02282-o010_t001` (jwst 2.0.1); later epochs 2282 o120 and 6882 o052.
@@ -714,6 +719,25 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
     064024 (2012), doi:10.1103/PhysRevD.85.064024.
   - arXiv:2608.10800, Fell & Loeb, "Radiative Signatures from Warp Drives Traveling Through the Earth's
     Atmosphere" (2026, preprint).
+
+## Injection-recovery limits (D-049)
+
+- arXiv:1807.06209, Planck Collaboration, "Planck 2018 results. VI. Cosmological parameters", A&A 641, A6 (2020),
+  doi:10.1051/0004-6361/201833910 (checked on the arXiv API 2026-10-08). Used as `astropy.cosmology.Planck18`
+  for the θ_E → |M| conversion in `scripts/inject_radial.py`, as in D-047.
+- Inputs that were already recorded: the field catalogues, photo-z and models of docs/fields/*.md (SOURCES
+  "Cluster fields", "HFF CATS lens models"); the Gaia DR3 stars from `scripts/gaia_stars.py` (D-043); and
+  Takahashi & Asada (2013) for the comparison limit ("Exotic-lens literature").
+
+## W1 shear screen (D-050, checked 2026-10-08)
+- **TreeCorr** 5.1.4 (2026-09-01, BSD-3-Clause): https://rmjarvis.github.io/TreeCorr/_build/html/ng.html. Evaluated,
+  not used.
+- **lenspack** 1.0.0 (2020-09-04, MIT): https://github.com/CosmoStat/lenspack. Evaluated, not used.
+- **Schneider 1996**, "Detection of (dark) matter concentrations via weak gravitational lensing", MNRAS 283, 837,
+  doi:10.1093/mnras/283.3.837, https://arxiv.org/abs/astro-ph/9601039. Catalogue aperture-mass estimator.
+- **Schirmer et al. 2007**, "GaBoDS IX. A sample of 158 shear-selected mass concentration candidates", A&A 462, 875,
+  doi:10.1051/0004-6361:20065955, https://arxiv.org/abs/astro-ph/0607022. Shear-shaped filter (formula still to be
+  read from the full text).
 
 ## Multi-epoch NIRCam fields (accessed 2026-10-08; D-052)
 
