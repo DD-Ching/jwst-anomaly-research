@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: W3 OGLE-IV branch (WIP, no PR yet): handoff
+- `claude/w3-ogle` carries `jwst_anomaly.ogle` (Mróz et al. 2019/2020 adapter) and `scripts/w3_microlensing.py`
+  (`fit` / `vet` / `sheet` / `inject` / `audit` / `limit` / `manifest` / `summary`); offline tests pass (MulensModel
+  test skipped without the `mulens` extra). Not yet run on real data; no DECISIONS, SOURCES or limits entry yet.
+- main took D-055 (orphan-pair nulls) while this branch was open: the branch's decision is now **D-056**.
+- `www.astrouw.edu.pl` (OGLE) answered 200 from the cloud environment on 2026-10-08.
+- **Next:** install `.[mulens]`, `fit` the bulge sample, look at the ΔBIC distribution and contact sheet, `vet`,
+  then `inject` / `limit`; write D-056 + SOURCES; open the PR.
+
 ## 2026-10-08: W1 shear (aperture-mass) screen: four clusters null; limits 5–8× stronger than radial (D-053)
 - Cloud run. `exotic_screens.py shear` builds D-050: PSF-deconvolved catalogue ε, cluster shear removed, spike
   segments vetoed, Schirmer 10″ aperture-mass S/N map, rotation null, B-mode check. `scripts/inject_shear.py` reuses

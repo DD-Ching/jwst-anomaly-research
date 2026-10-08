@@ -1,4 +1,4 @@
-"""OGLE-IV published microlensing samples as a :class:`signatures.LightCurveSurvey` (D-054, D-055).
+"""OGLE-IV published microlensing samples as a :class:`signatures.LightCurveSurvey` (D-054, D-056).
 
 Two homogeneous samples with published photometry, fits and detection efficiencies:
 

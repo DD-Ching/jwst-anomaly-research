@@ -1,4 +1,4 @@
-"""Offline tests for scripts/w3_microlensing.py on synthetic light curves (D-055)."""
+"""Offline tests for scripts/w3_microlensing.py on synthetic light curves (D-056)."""
 
 from __future__ import annotations
 

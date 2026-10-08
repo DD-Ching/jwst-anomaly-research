@@ -1,4 +1,4 @@
-"""W3 in the OGLE-IV Mróz et al. microlensing samples: ordinary vs exotic fits and limits (D-055).
+"""W3 in the OGLE-IV Mróz et al. microlensing samples: ordinary vs exotic fits and limits (D-056).
 
 Subcommands (outputs under ``$JWST_ANOMALY_DATA/derived/w3_ogle/``, never in git):
 
