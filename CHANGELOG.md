@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: Hypothesis round 2: three worlds with derived Lorentz invariance; nothing testable here survives (D-075)
+- System A (no literature) was bound by the round-1 failure modes:
+  - derive Lorentz invariance;
+  - no long-range links;
+  - no achromatic dimming;
+  - only derived amplitudes.
+- **Results:**
+  - R2-A (every two records share a future, so horizons re-emit everything): **excluded**. Ergoregion instability;
+    GWTC-4.0 null; supporting: GW250114 reflectivity < 0.35 % (preprint).
+  - R2-B (gravity as phase inference, so saddle images mirror polarisation): internally inconsistent; B0218+357
+    polarisation variations correlate with the wrong sign.
+  - R2-C (four axioms; massless lightest neutrino, so Σm_ν = 58.8 meV): not novel (minimal seesaw). 2.2–3.4σ
+    tension with DESI DR2 + CMB (reviewer estimates; DESI quotes 3.0σ); tracked externally.
+- **Lesson (rule):** deriving Lorentz invariance from a symmetric primitive is easy. The theory's risk then sits in
+  one precision-measured sector, where O(1) effects are already excluded. Round 3 should look for derived small
+  effects in large-N quantities that nobody has analysed for them.
+
 ## 2026-10-09: E1 causal event network: no wide-separation dependence between GRBs, neutrinos, GW events and FRBs (D-074)
 - Hypothesis (owner idea 4): events in different directions that depend on each other at lags no ordinary path
   explains. Ordinary explanations: observer-side common causes (uptime, exposure, Sun, follow-up chains, shared
