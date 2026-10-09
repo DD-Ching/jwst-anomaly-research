@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: E1 GW sky maps (in progress)
+- Plan: give GWTC events directions from public sky maps; redo GW same/wide/antipodal and signed-lag channels.
+
 ## 2026-10-09: E1 signed-lag ("which event comes first") channels: null, global p = 0.68 (D-074 addendum 3)
 - Hypothesis: one catalogue leads another at lags no ordinary path explains (sign asymmetry D = N_after − N_before).
 - `scripts/e1_signed_lag.py`: 45 cells (6 cross channels × 5 lags × class), `jit` null (2,000 scrambles, 52 s).
