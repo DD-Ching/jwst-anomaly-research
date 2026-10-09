@@ -1100,7 +1100,12 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   (J1206); Rusu et al. 2020 (WFI2033, arXiv:1905.09338).
 - TDCOSMO 2025 public release, https://github.com/TDCOSMO/TDCOSMO2025_public (commit d7f38db, 2026-01-21):
   `TDCOSMO_sample/TDCOSMO_data/SDSS1206+4332/final_D_d.npy`, `final_D_dt.npy`, `TDCOSMO_sample/tdcosmo_sample.yaml`.
-  Paper: TDCOSMO Collaboration 2025, A&A 704, A63 (arXiv:2506.03023).
+  Paper: TDCOSMO Collaboration 2025, A&A 704, A63 (arXiv:2506.03023). Other per-lens files there (names only,
+  listed 2026-10-09; contents unchecked): power-law D_dt chains `HE0435-1223/he_powerlaw_Ddt.dat`,
+  `PG1115+080/pg_powerlaw_Ddt.dat`, `RXJ1131-1231/rxj_powerlaw_Ddt.dat`, `WFI2033-4723/wfi2033_pl_dt_nokext.dat`,
+  `B1608+656/B1608_Dtmod_n5e5.dat`, `DES0408-5354/power_law_dist_post_no_kext.txt`,
+  `WGD2038-4008/desj2038_pl_nokext_nokin_dt_weight.csv` (weighted), `SDSS1206+4332/final_power_law_D_dt.npy`; κ_ext
+  files beside them (`*kext*`, `kappa_powerlaw_*.dat`, `kappahist_*`); kinematic likelihoods `*_const_processed.pkl`.
 - FRBs/FRB repository, https://github.com/FRBs/FRB (commit 996fcda, 2026-05-06, BSD-3):
   `frb/data/Galaxies/public_hosts.csv` and `frb/data/FRBs/FRB*.json` (DM, DMISM). `DMISM` is NE2001 (Cordes &
   Lazio 2002, arXiv:astro-ph/0207156) from `frb/mw.py` `ismDM` (python `ne2001` package, `ElectronDensity().DM(l, b,

@@ -6,9 +6,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **D1 distance self-consistency** (D-073; owner idea 1): 4 H0LiCOW lenses (H0-free R) + 6 (leave-one-out D_dt) and 94
    localized FRBs (DM–z tails): null, max pull 1.29σ. Injection-calibrated reach: R only ×2–8 / ×0.2–0.4, D_dt
-   ×1.3–1.85 / ×0.54–0.78. Next: per-lens D_d for the other TDCOSMO 2025 lenses (hierArc kinematics), D_dt LOO on the
-   TDCOSMO power-law chains. FRBs under YMW16 too (D-073 addendum): null under either model, max 4.09σ (20220319D,
-   Galactic-model error); models differ by > 20 % for 54/94, so next is a model-marginalised ISM term (both models).
+   ×1.3–1.85 / ×0.54–0.78. FRBs also null under YMW16 (D-073 addendum; max 4.09σ, Galactic-model error). Next: D_dt
+   LOO on the TDCOSMO 2025 power-law chains for the same 6 lenses plus DES0408 and WGD2038 (files in SOURCES.md);
+   apply the WGD2038 sample weights; its chain has no kinematics and DES0408's no κ_ext, so harmonise κ_ext and the
+   mass-sheet treatment before comparing. New per-lens D_d only via the hierArc `*_const_processed.pkl` likelihoods.
 1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
    mismatch). Next: CHIME/FRB Catalog 2 (CANFAR downloads reset by the proxy; try another route), TTE for short and
    faint bursts, an s ≠ 1 chain, a generative pulse-model null.
