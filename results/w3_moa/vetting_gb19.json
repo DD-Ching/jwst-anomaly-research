@@ -27,72 +27,28 @@
    45
   ],
   [
+   "feature_bracketed",
+   36
+  ],
+  [
    "repeated_deficit",
-   33
+   28
   ],
   [
    "variable_baseline",
-   32
+   27
   ],
   [
    "neighbour_shares_feature",
-   30
+   25
   ],
   [
    "eclipse_dip",
-   6
+   3
   ],
   [
    "smooth_dip",
-   2
-  ],
-  [
-   "robust_errors_outliers",
-   2
-  ],
-  [
-   "season_offsets",
-   1
-  ],
-  [
-   "season_trends",
-   1
-  ],
-  [
-   "observing_conditions",
-   1
-  ],
-  [
-   "refit_all_ordinary",
-   1
-  ],
-  [
-   "binary_source",
-   1
-  ],
-  [
-   "binary_lens",
-   1
-  ],
-  [
-   "exotic_feature_sampled",
-   1
-  ],
-  [
-   "jackknife_epochs",
-   1
-  ],
-  [
-   "jackknife_nights",
-   1
-  ],
-  [
-   "two_unrelated_events",
-   1
-  ],
-  [
-   "variable_catalogues",
-   1
+   0
   ]
  ],
  "flags": [
@@ -111,6 +67,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -4681.5; u0 1.57, f_s 3.99e+03 vs 3 × 3.11e+04 (Gaia DR3 RP 16.67)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "1756 epochs before ingress, 1361 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -151,6 +112,11 @@
      "N1neg ΔBIC -42260.8; u0 1.59, f_s 9.97e+03 vs 3 × 1.3e+05 (Gaia DR3 RP 15.12)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "2241 epochs before ingress, 1679 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.2"
@@ -187,6 +153,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -1851.6; u0 0.65, f_s 3.77e+03 vs 3 × 7.23e+04 (Gaia DR3 RP 15.75)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "2537 epochs before ingress, 2241 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -227,6 +198,11 @@
      "N1neg ΔBIC -1266.4; u0 1.00, f_s 7.06e+03 vs 3 × 1.69e+05 (Gaia DR3 RP 14.83)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "3140 epochs before ingress, 809 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.3"
@@ -265,6 +241,11 @@
      "N1neg ΔBIC -1706.7; u0 0.33, f_s 1.98e+04 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "3459 epochs before ingress, 1008 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -6.4"
@@ -286,6 +267,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -367.1; u0 1.01, f_s 1.87e+04 vs 3 × 1.91e+05 (Gaia DR3 RP 14.70)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "1253 epochs before ingress, 3233 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -344,9 +330,9 @@
      "N1neg ΔBIC -7688.5; u0 0.84, f_s 5.98e+03 vs 3 × 1.45e+05 (default 14.2)"
     ],
     [
-     "repeated_deficit",
+     "feature_bracketed",
      false,
-     "z_min outside the feature -21.5"
+     "0 epochs before ingress, 454 after egress (need 20 each)"
     ]
    ]
   },
@@ -365,6 +351,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -525.7; u0 1.56, f_s 5.92e+03 vs 3 × 1.45e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "613 epochs before ingress, 4214 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -405,6 +396,11 @@
      "N1neg ΔBIC -1149.3; u0 0.64, f_s 2.64e+03 vs 3 × 4.35e+03 (Gaia DR3 RP 18.00)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "3614 epochs before ingress, 1270 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -8.5"
@@ -426,6 +422,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -14840.8; u0 0.00, f_s 2.35e+03 vs 3 × 1.45e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "2333 epochs before ingress, 2400 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -466,6 +467,11 @@
      "N1neg ΔBIC -17989.0; u0 0.45, f_s 852 vs 3 × 8.06e+03 (Gaia DR3 RP 17.33)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "2681 epochs before ingress, 1378 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.5"
@@ -504,6 +510,11 @@
      "N1neg ΔBIC -264.7; u0 0.00, f_s 1.09e+04 vs 3 × 1.45e+05 (default 14.2)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "2257 epochs before ingress, 2254 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -7.5"
@@ -527,6 +538,11 @@
      "N1neg ΔBIC -7254.6; u0 0.00, f_s 1.44e+04 vs 3 × 1.15e+05 (Gaia DR3 RP 15.25)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "2757 epochs before ingress, 2112 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -14.2"
@@ -548,6 +564,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -2389.4; u0 1.56, f_s 931 vs 3 × 3.62e+04 (Gaia DR3 RP 16.50)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "876 epochs before ingress, 3103 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -588,6 +609,11 @@
      "N1neg ΔBIC -1623.0; u0 1.06, f_s 3.78e+03 vs 3 × 1.12e+04 (Gaia DR3 RP 17.77)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "491 epochs before ingress, 4398 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.0"
@@ -624,6 +650,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -689.3; u0 1.56, f_s 4.96e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "2412 epochs before ingress, 2511 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -667,29 +698,9 @@
      "N1neg ΔBIC -703.5; u0 0.78, f_s 6.75e+03 vs 3 × 1.7e+05 (Gaia DR3 RP 14.82)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -2.9"
-    ],
-    [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.31 > 6.41? (4602 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
-     true,
-     "ΔBIC -23.0 vs a trapezoidal dip"
-    ],
-    [
-     "smooth_dip",
+     "feature_bracketed",
      false,
-     "ΔBIC 14.8 vs a Gaussian dip (σ 6.9 d)"
+     "0 epochs before ingress, 4867 after egress (need 20 each)"
     ]
    ]
   },
@@ -708,6 +719,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -1357.2; u0 1.57, f_s 1.92e+04 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "4348 epochs before ingress, 111 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -741,6 +757,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -2265.9; u0 0.37, f_s 7.98e+03 vs 3 × 3.1e+04 (Gaia DR3 RP 16.67)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "2771 epochs before ingress, 2176 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -781,24 +802,9 @@
      "E2pos ΔBIC -8577.0; u0 1.19, f_s 6.36e+04 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -4.5"
-    ],
-    [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 3.82 > 6.41? (2338 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "1 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "feature_bracketed",
      false,
-     "ΔBIC 130.6 vs a trapezoidal dip"
+     "2338 epochs before ingress, 0 after egress (need 20 each)"
     ]
    ]
   },
@@ -817,6 +823,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -5036.7; u0 1.28, f_s 2.41e+03 vs 3 × 9.52e+04 (Gaia DR3 RP 15.45)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "3578 epochs before ingress, 502 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -843,8 +854,8 @@
   {
    "event_id": "gb19-R-4-4-31159",
    "exotic": "N1neg",
-   "dbic_all": -18662.75197466176,
-   "survives": true,
+   "dbic_all": -19005.104122196284,
+   "survives": false,
    "tests": [
     [
      "screen_flag",
@@ -857,89 +868,9 @@
      "N1neg ΔBIC -19005.1; u0 1.16, f_s 5.57e+03 vs 3 × 1.02e+05 (Gaia DR3 RP 15.38)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -2.1"
-    ],
-    [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.42 > 6.41? (3448 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
-     true,
-     "ΔBIC -172.1 vs a trapezoidal dip"
-    ],
-    [
-     "smooth_dip",
-     true,
-     "ΔBIC -3677.4 vs a Gaussian dip (σ 381.5 d)"
-    ],
-    [
-     "robust_errors_outliers",
-     true,
-     "61 isolated outliers removed, errors ×2.37; ΔBIC -3162.1"
-    ],
-    [
-     "season_offsets",
-     true,
-     "free baseline per season; ΔBIC -250.5"
-    ],
-    [
-     "season_trends",
-     true,
-     "offset + drift per season; ΔBIC -402.5"
-    ],
-    [
-     "observing_conditions",
-     true,
-     "baseline linear in ('fwhm', 'airmass', 'sky'); ΔBIC -18023.9"
-    ],
-    [
-     "refit_all_ordinary",
-     true,
-     "ΔBIC -18662.8 vs PAR (FSPL, PAR)"
-    ],
-    [
-     "binary_source",
-     true,
-     "ΔBIC -4148.1"
-    ],
-    [
-     "binary_lens",
-     true,
-     "ΔBIC -4148.1"
-    ],
-    [
-     "exotic_feature_sampled",
-     true,
-     "1247 epochs on 391 nights inside, Δχ² in -15936.4 / out -2717.9"
-    ],
-    [
-     "jackknife_epochs",
-     true,
-     "ΔBIC [-18566.1, -18475.9, -18389.5]"
-    ],
-    [
-     "jackknife_nights",
-     true,
-     "ΔBIC -181.8 after dropping the 2 most influential night(s) of 391 in the feature"
-    ],
-    [
-     "two_unrelated_events",
-     true,
-     "ΔBIC -19039.0"
-    ],
-    [
-     "variable_catalogues",
-     true,
-     "matches: none (2″)"
+     "feature_bracketed",
+     false,
+     "3520 epochs before ingress, 0 after egress (need 20 each)"
     ]
    ]
   },
@@ -958,6 +889,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -189089.3; u0 0.00, f_s 6.59e+03 vs 3 × 2.91e+04 (Gaia DR3 RP 16.74)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "1576 epochs before ingress, 2232 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -988,39 +924,9 @@
      "E2neg ΔBIC -15467.9; u0 0.10, f_s 2.77e+03 vs 3 × 6.86e+04 (Gaia DR3 RP 15.81)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -3.2"
-    ],
-    [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.63 > 6.41? (3487 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
-     true,
-     "ΔBIC -187.8 vs a trapezoidal dip"
-    ],
-    [
-     "smooth_dip",
-     true,
-     "ΔBIC -2990.6 vs a Gaussian dip (σ 360.8 d)"
-    ],
-    [
-     "robust_errors_outliers",
-     true,
-     "72 isolated outliers removed, errors ×2.22; ΔBIC -2968.8"
-    ],
-    [
-     "season_offsets",
+     "feature_bracketed",
      false,
-     "free baseline per season; ΔBIC 133.9"
+     "3577 epochs before ingress, 0 after egress (need 20 each)"
     ]
    ]
   },
@@ -1039,6 +945,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -78.3; u0 1.54, f_s 3.17e+03 vs 3 × 2.55e+04 (Gaia DR3 RP 16.88)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "1770 epochs before ingress, 2826 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -1079,9 +990,9 @@
      "N1neg ΔBIC -11263.9; u0 0.23, f_s 5.2e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
-     "repeated_deficit",
+     "feature_bracketed",
      false,
-     "z_min outside the feature -9.9"
+     "4310 epochs before ingress, 0 after egress (need 20 each)"
     ]
    ]
   },
@@ -1118,6 +1029,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -551.9; u0 0.00, f_s 4.52e+03 vs 3 × 4.33e+05 (Gaia DR3 RP 13.81)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "2355 epochs before ingress, 885 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -1158,9 +1074,9 @@
      "E2pos ΔBIC -1868.5; u0 0.98, f_s 2.66e+04 vs 3 × 3.02e+04 (Gaia DR3 RP 16.70)"
     ],
     [
-     "repeated_deficit",
+     "feature_bracketed",
      false,
-     "z_min outside the feature -17.0"
+     "0 epochs before ingress, 2903 after egress (need 20 each)"
     ]
    ]
   },
@@ -1179,6 +1095,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -2702.7; u0 1.71, f_s 2.27e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "3241 epochs before ingress, 499 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -1212,6 +1133,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -1416.4; u0 0.00, f_s 2.96e+03 vs 3 × 1.1e+05 (Gaia DR3 RP 15.29)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "3577 epochs before ingress, 930 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -1252,6 +1178,11 @@
      "E2pos ΔBIC -1904.8; u0 1.71, f_s 3.39e+04 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "3678 epochs before ingress, 935 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.0"
@@ -1290,6 +1221,11 @@
      "N1neg ΔBIC -458.8; u0 0.00, f_s 3.76e+03 vs 3 × 1.66e+05 (Gaia DR3 RP 14.85)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "775 epochs before ingress, 3450 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -11.0"
@@ -1311,6 +1247,11 @@
      "exotic_in_domain",
      true,
      "E2neg ΔBIC -4002.3; u0 1.44, f_s 2.68e+03 vs 3 × 8.45e+04 (Gaia DR3 RP 15.58)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "3433 epochs before ingress, 690 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -1349,6 +1290,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -2146.4; u0 0.81, f_s 2.88e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "1567 epochs before ingress, 2792 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -1394,6 +1340,11 @@
      "N1neg ΔBIC -507.9; u0 1.73, f_s 3.24e+03 vs 3 × 5.19e+04 (Gaia DR3 RP 16.11)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "673 epochs before ingress, 4286 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.0"
@@ -1432,6 +1383,11 @@
      "N1neg ΔBIC -2570.6; u0 1.65, f_s 1.51e+04 vs 3 × 9.56e+04 (Gaia DR3 RP 15.45)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "2285 epochs before ingress, 2679 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.2"
@@ -1468,6 +1424,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -4080.0; u0 1.68, f_s 7.11e+03 vs 3 × 2.53e+04 (Gaia DR3 RP 16.89)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "183 epochs before ingress, 4730 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -1513,9 +1474,9 @@
      "E2pos ΔBIC -7265.8; u0 1.12, f_s 1.46e+05 vs 3 × 1.41e+05 (Gaia DR3 RP 15.02)"
     ],
     [
-     "repeated_deficit",
+     "feature_bracketed",
      false,
-     "z_min outside the feature -12.7"
+     "2517 epochs before ingress, 0 after egress (need 20 each)"
     ]
    ]
   },
@@ -1536,24 +1497,9 @@
      "N1neg ΔBIC -605.0; u0 0.50, f_s 6.79e+03 vs 3 × 1.3e+05 (Gaia DR3 RP 15.11)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -4.4"
-    ],
-    [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.08 > 6.41? (4742 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "feature_bracketed",
      false,
-     "ΔBIC 74.5 vs a trapezoidal dip"
+     "0 epochs before ingress, 4897 after egress (need 20 each)"
     ]
    ]
   },
@@ -1572,6 +1518,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -67675.9; u0 1.19, f_s 1.28e+04 vs 3 × 1.57e+05 (Gaia DR3 RP 14.91)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "311 epochs before ingress, 4073 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -1595,6 +1546,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -629.3; u0 1.58, f_s 3.4e+03 vs 3 × 1.18e+04 (Gaia DR3 RP 17.72)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "2089 epochs before ingress, 2811 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -1640,6 +1596,11 @@
      "N1neg ΔBIC -2830.4; u0 0.00, f_s 3.59e+03 vs 3 × 2.6e+04 (Gaia DR3 RP 16.86)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "3390 epochs before ingress, 1530 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.7"
@@ -1676,6 +1637,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -4047.0; u0 0.18, f_s 4.51e+03 vs 3 × 1.93e+05 (Gaia DR3 RP 14.68)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "3292 epochs before ingress, 1381 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
@@ -1716,6 +1682,11 @@
      "E2pos ΔBIC -40641.9; u0 1.25, f_s 2.86e+05 vs 3 × 1.33e+05 (Gaia DR3 RP 15.09)"
     ],
     [
+     "feature_bracketed",
+     true,
+     "3554 epochs before ingress, 956 after egress (need 20 each)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -8.7"
@@ -1737,6 +1708,11 @@
      "exotic_in_domain",
      true,
      "N1neg ΔBIC -796.8; u0 1.68, f_s 3.71e+03 vs 3 × 1.71e+04 (Gaia DR3 RP 17.31)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "1789 epochs before ingress, 3075 after egress (need 20 each)"
     ],
     [
      "repeated_deficit",
