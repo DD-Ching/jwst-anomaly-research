@@ -3619,6 +3619,23 @@ kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0L
   calibrate the statistic, not the instrument.
 - Revisit if: GW sky maps are added (GW–X antipodal channels), or signed-lag channels are built.
 
+**Addendum 3 (2026-10-09): signed-lag ("which event comes first") channels.**
+- Hypothesis: one catalogue's events lead another's (A → B) at lags no ordinary path explains, visible as a sign
+  asymmetry that the pair counts (|Δt|) cannot see. Ordinary explanations: physical counterparts with a known order
+  (GW170817 → GRB 170817A), follow-up chains, and uptime (sign-symmetric, so it cannot make D ≠ 0 on its own).
+- `scripts/e1_signed_lag.py`: D = N(t_B > t_A) − N(t_B < t_A) for the six cross channels × five lag bins × class (same
+  and wide; all for GW channels) = 45 cells; `jit` null, 2,000 scrambles; pooled two-sided trials (`en.global_p` on
+  |D − μ|). Analytic tail: Gaussian, or Skellam(λ, λ) with λ = sd²/2 where the null sd < 1 (ASSUMPTION
+  `GAUSS_SD_MIN`). The Gaussian on a one-pair cell gave z = −4.4 for GW170817 alone and was rejected. Injections
+  move B to t_A + lag (one sign) in the tested class.
+- **Result: null.** Pooled global p = 0.68 (min cell p 0.032); min analytic p × 45 = 1.
+  - Largest |z|: GBM–GW 0–10 s, D = −1. This is GW170817 before GRB 170817A, the ordinary positive control (Skellam
+    p = 0.05, not detectable alone).
+  - Next: CHIME–GW 1 h–1 d, D = −45 vs +3.7 ± 22.6 (p = 0.03).
+- Sensitivity (`n50_injected`): 3–10 one-sided pairs at ≤ 100 s, 10–100 at 100 s–1 d (2 cells not reached), and mostly not reached at
+  1–7 d (≥ 100).
+- Revisit if: GW sky maps are added (GW cells get same/wide classes).
+
 ## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)
 
 **Decision.**
