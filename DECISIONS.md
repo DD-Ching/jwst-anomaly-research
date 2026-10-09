@@ -3085,7 +3085,7 @@ spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ t
 **Decision.** Do not port the D-063 count screen to Euclid Q1. Its S/N at θ_E ≤ 4′ is limited by galaxy clustering,
 not by the galaxy density, so 1.8× more galaxies buy ×1.0–1.4 in S/N on a fifth of the area
 (docs/exotic_limits.md "Euclid Q1"). For θ_E < 6′ the next W5/W1 test is the sign of the tangential shear of
-Euclid Q1 MER shapes around trial centres (radial for a negative-mass lens; forecast floor θ_E ≈ 18″).
+Euclid Q1 MER shapes around trial centres (radial for a negative-mass lens; forecast floor θ_E ≈ 26″).
 
 **Alternatives rejected.**
 - Euclid Q1 MER counts per pixel (IRSA TAP): ~3.5 h of row queries for 63 deg²; forecast in Evidence.
@@ -3099,6 +3099,8 @@ not return in 5 min; the same selection with `CONTAINS(POINT, CIRCLE)` (r = 0.25
 `COUNT(*)` in a 0.1° disc takes a few seconds.
 
 **Revisit if.**
-- A count screen is needed at θ_E ≈ 4–6′ specifically (Euclid DR1 area makes the area penalty disappear).
+- A count screen is needed at θ_E ≈ 4–6′ specifically (a larger Euclid release removes the area penalty), or a
+  counts-in-cells measurement gives a Euclid/DR10 clustering-variance ratio well below 0.5 (ASSUMPTION range 0.5–1;
+  at 0.3 counts would reach ≈ 4′).
 - The shear screen finds Euclid Q1 MER moments unusable (PSF anisotropy) and no PSF-corrected shape catalogue is
   public.

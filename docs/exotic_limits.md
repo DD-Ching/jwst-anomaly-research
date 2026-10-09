@@ -1163,9 +1163,12 @@ population still is galaxies; Milky Way stars are excluded by the extended-model
   DR10 reached ε ≈ 0.5 at 8′; its 4′ S/N is 0.72 and its 2′ S/N 0.52 of that, so Euclid Q1 counts reach
   0.79–1.0 at 4′ and 0.65–0.71 at 2′: at best a floor near 4–6′ instead of 6–8′, on 63 deg² instead of 340 deg²
   (n₉₅ ≥ 5× weaker above 8′). Not worth a ~3.5 h row fetch.
-- A radial-shear test (point-mass γ = (θ_E/θ)², mean 0.46 over θ_E–2θ_E; σ_γ = 0.3 per component and S/N ≥ 6,
-  ASSUMPTIONs) reaches θ_E ≈ 0.3′ ≈ 18″ with VIS < 24.5 shapes (≈ 4 × 10⁷ M☉ at 1 kpc, 4 × 10¹⁰ M☉ at 1 Mpc),
-  an order of magnitude below the count floor in θ_E. The sign of the tangential shear separates a negative-mass
+- Densities are counts over the full disc (masked area not subtracted, so lower bounds); 10 % more galaxies would
+  change the 4′ gain by < 1 %, because the clustering term dominates. The clustering ratio is not measured: at 0.3
+  the 4′ gain would be ×1.6 (S/N 1.15 of DR10 at 8′), so counts could reach ≈ 4′ at best.
+- A radial-shear test (point-mass γ = (θ_E/θ)², mean 0.21 over 1.5–3 θ_E, outside the critical curve where κ = 0;
+  σ_γ = 0.3 per component and S/N ≥ 6, ASSUMPTIONs) reaches θ_E ≈ 0.44′ ≈ 26″ with VIS < 24.5 shapes
+  (≈ 9 × 10⁷ M☉ at 1 kpc, 9 × 10¹⁰ M☉ at 1 Mpc), an order of magnitude below the count floor in θ_E. The sign of the tangential shear separates a negative-mass
   lens (radial) from every ordinary foreground mass (tangential). MER `ellipticity` / `position_angle` are
   SExtractor image moments without PSF correction (`position_angle` is CCW from the image x axis), so the test
   needs a PSF-anisotropy check on stars first.

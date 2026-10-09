@@ -20,6 +20,7 @@ from pathlib import Path
 
 import numpy as np
 import requests
+from astropy.table import Table
 
 TAP = "https://irsa.ipac.caltech.edu/TAP/sync"
 TABLE = "euclid_q1_mer_catalogue"
@@ -29,25 +30,30 @@ RADIUS_DEG = 0.1
 VIS_MAGS = (23.5, 24.5, 25.0)
 # Extended VIS detections, clean flags (ASSUMPTION: point_like_prob < 0.1 removes stars).
 SELECTION = "vis_det = 1 AND spurious_flag = 0 AND det_quality_flag = 0 AND point_like_prob < 0.1"
-DR10_DENSITY = 37374.6  # deg⁻², r < 23.5 (results/w5_counts/numcounts.ecsv)
 CLUSTERING_RATIO = (0.5, 1.0)  # Euclid / DR10 clustering variance at fixed angle (ASSUMPTION range)
 SIGMA_GAMMA = 0.3  # shape noise per component, unweighted SExtractor moments (ASSUMPTION)
 DETECT_SNR = 6.0  # S/N needed for a shear detection after trials (ASSUMPTION)
-# Point mass γ = (θ_E/θ)² averaged over θ_E < θ < 2 θ_E (model_prediction).
-MEAN_GAMMA = 2 * math.log(2) / 3
+# Shear annulus in θ_E, outside the critical curve (κ = 0, g = γ for a point mass); γ = (θ_E/θ)²
+# averaged over the annulus (model_prediction).
+ANNULUS = (1.5, 3.0)
+MEAN_GAMMA = 2 * math.log(ANNULUS[1] / ANNULUS[0]) / (ANNULUS[1] ** 2 - ANNULUS[0] ** 2)
 
 
 def vis_flux_ujy(mag: float) -> float:
     return 10 ** ((23.9 - mag) / 2.5)
 
 
-def count(ra: float, dec: float, mag: float) -> int:
+def count_query(ra: float, dec: float, mag: float) -> str:
     # CONTAINS uses IRSA's spatial index; a plain RA/Dec box ran > 5 min for 0.25 deg² (2026-10-09).
-    q = (
+    return (
         f"SELECT COUNT(*) AS n FROM {TABLE} WHERE 1 = CONTAINS(POINT('ICRS', ra, dec), "
         f"CIRCLE('ICRS', {ra}, {dec}, {RADIUS_DEG})) AND {SELECTION} "
         f"AND flux_detection_total > {vis_flux_ujy(mag):.4f}"
     )
+
+
+def count(ra: float, dec: float, mag: float) -> int:
+    q = count_query(ra, dec, mag)
     for attempt in range(4):
         try:
             r = requests.post(TAP, data={"QUERY": q, "FORMAT": "csv"}, timeout=300)
@@ -76,23 +82,29 @@ def main() -> int:
     mean = {m: float(np.mean([dens[f"{f} VIS<{m}"] for f in FIELDS])) for m in VIS_MAGS}
     slope = math.log10(mean[24.5] / mean[23.5]) / 1.0  # d log10 N / dm between 23.5 and 24.5
 
+    numc = Table.read(out / "numcounts.ecsv")
+    dr10_density = float(numc["n_brighter_deg2"][np.argmax(numc["mag_r"])])  # r < 23.5
     summ = json.loads((out / "screen_summary.json").read_text())
     counts_gain = {}
     for scale in (2.0, 4.0, 8.0):
         z_std = z_std_dr10(summ, scale)
         var_dr10 = z_std**2  # in units of the DR10 Poisson variance; clustering part = z_std² − 1
         for c in CLUSTERING_RATIO:
-            var_eu = DR10_DENSITY / mean[24.5] + c * (z_std**2 - 1)
+            var_eu = dr10_density / mean[24.5] + c * (z_std**2 - 1)
             counts_gain[f"{scale:g} arcmin, clustering x{c:g}"] = math.sqrt(var_dr10 / var_eu)
     # DR10 S/N at each scale relative to 8′ (ε ≈ 0.5 there): (θ/8) · z_std(8′) / z_std(θ).
     rel_snr_dr10 = {
         f"{s:g}": (s / 8.0) * z_std_dr10(summ, 8.0) / z_std_dr10(summ, s) for s in (2.0, 4.0, 8.0)
     }
     n_arcmin2 = mean[24.5] / 3600.0
-    theta_min = DETECT_SNR * SIGMA_GAMMA / (MEAN_GAMMA * math.sqrt(3 * math.pi * n_arcmin2))
+    annulus_area = math.pi * (ANNULUS[1] ** 2 - ANNULUS[0] ** 2)  # in θ_E²
+    theta_min = DETECT_SNR * SIGMA_GAMMA / (MEAN_GAMMA * math.sqrt(annulus_area * n_arcmin2))
     res = {
         "provenance": {
-            "densities": "observed (IRSA TAP counts, Euclid Q1 MER)",
+            "densities": "observed (IRSA TAP counts, Euclid Q1 MER; masked area not subtracted)",
+            "service": f"{TAP} table {TABLE}",
+            "accessed_utc": time.strftime("%Y-%m-%dT%H:%MZ", time.gmtime()),
+            "query_template": count_query(0.0, 0.0, 24.5),
             "forecasts": "model_prediction",
             "assumptions": {
                 "selection": SELECTION,
@@ -104,7 +116,8 @@ def main() -> int:
         "radius_deg": RADIUS_DEG,
         "density_deg2": dens,
         "mean_density_deg2": {f"VIS<{m}": v for m, v in mean.items()},
-        "density_ratio_vis24p5_over_dr10": mean[24.5] / DR10_DENSITY,
+        "dr10_density_deg2": dr10_density,
+        "density_ratio_vis24p5_over_dr10": mean[24.5] / dr10_density,
         "count_slope_dlog10N_dm_23p5_24p5": slope,
         "counts_snr_gain_over_dr10": counts_gain,
         "dr10_snr_relative_to_8arcmin": rel_snr_dr10,
