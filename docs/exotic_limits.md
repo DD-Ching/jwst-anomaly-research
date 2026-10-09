@@ -1259,11 +1259,12 @@ The ordinary explanations are binary quasars, unrelated pairs and lens galaxies 
 - **J0728+2607 (z = 1.03, 2.15″):** inconclusive with the Moffat model (S/N 5.0, residual at the image cores).
   Decided with an empirical PSF (`scripts/w12_niq_epsf.py`; `results/w12_niq/hst_epsf_*`):
   - the PSF is the median of 6 unsaturated, isolated Gaia stars (G 16.5–21) in the same F814W skycell cutout;
+  - stars with flat (saturated) cores are rejected, at least 3 stars are required, and the PSF stamp is 2″;
   - the residual is centred on the images (a ring around B, a centring dipole at A), and after the halo
-    correction there is no light between the images (S/N 3.3);
-  - the control J2308+3201 gives S/N 38 through the same chain, and J0130+0725 stays null (S/N 0.5, but with a
-    1-star PSF);
-  - whole-chain injections are recovered at ≥ 5σ above the baseline to **F814W = 23** for both pairs;
+    correction there is no light between the images (S/N 1.6);
+  - the control J2308+3201 gives S/N 49 through the same chain. J0130+0725 has only 1 usable star, so it has no
+    empirical-PSF result; its Moffat-chain result stands;
+  - whole-chain injections are recovered at ≥ 5σ above the baseline to **F814W = 23**;
   - J0728 would need an ordinary lens at m_z ≈ 18.8 (typical) or 20.6 (conservative), i.e. F814W ≈ 18.8–21.2
     (F814W − z assumed 0–0.6), which is ≥ 1.8 mag brighter than the limit.
   So neither HST pair has a visible deflector. A binary quasar remains the untested ordinary explanation for both.

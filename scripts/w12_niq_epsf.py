@@ -36,11 +36,14 @@ TARGETS = ["J2308+3201", "J0130+0725", "J0728+2607"]  # control first, then the 
 @dataclass(frozen=True)
 class Params:
     size_px: int = 2200  # hapcut cutout (88" at 0.04"/px): stars within ~44"
-    psf_half: int = 25  # PSF stamp half-size in pixels (1")
+    psf_half: int = 50  # PSF stamp half-size in pixels (2"): covers the between-images aperture
     star_gmag: tuple = (16.5, 21.0)  # Gaia G range: unsaturated in 674 s ACS/F814W, enough S/N
     star_min_dist_arcsec: float = 4.0  # stars at least this far from the pair
     star_isolation_arcsec: float = 2.0  # no other Gaia source this close to a PSF star
-    mirror_ap_arcsec: float = 0.3  # lens-position vs mirror aperture radius
+    min_psf_stars: int = 3  # fewer stars: no median, so no ePSF result
+    flat_core: float = 0.85  # 3x3 core min/max above this = flat-topped (saturated) star, rejected
+    noise_window_px: int = 600  # sky-aperture noise measured in this window around the pair
+    fit_box_px: float = 3.0  # fitted image positions stay within this of the found peaks
 
 
 def gaia_stars(c: SkyCoord, radius_deg: float):
@@ -65,7 +68,7 @@ def stamp(img, x, y, half):
     return img[yi - half : yi + half + 1, xi - half : xi + half + 1], x - xi, y - yi
 
 
-def build_epsf(img, valid, xy, half: int):
+def build_epsf(img, valid, xy, half: int, flat_core: float = 0.85):
     """Median of normalised stars, each recentred by its flux-weighted centroid (subpixel shift).
     Returns (psf normalised to unit sum, number of stars used)."""
     stamps = []
@@ -75,6 +78,9 @@ def build_epsf(img, valid, xy, half: int):
         if st is None or vs.min() < 1:
             continue
         st = st - np.median(np.r_[st[0], st[-1], st[:, 0], st[:, -1]])  # edge background
+        core = st[half - 1 : half + 2, half - 1 : half + 2]
+        if core.max() <= 0 or core.min() > flat_core * core.max():
+            continue  # flat-topped (saturated) or no source
         cy, cx = ndimage.center_of_mass(np.clip(st, 0, None) * (st > 0.1 * st.max()))
         st = ndimage.shift(st, (half - cy, half - cx), order=3, mode="nearest")
         if st.sum() > 0:
@@ -99,7 +105,7 @@ def place(psf, shape, x, y):
     return out
 
 
-def fit_two_epsf(img, peaks, psf):
+def fit_two_epsf(img, peaks, psf, box: float = 3.0):
     """Background + two scaled, shifted copies of ``psf``. Returns (fit namespace, residual)."""
     (x1, y1), (x2, y2) = peaks
     bg = float(np.median(img))
@@ -110,7 +116,13 @@ def fit_two_epsf(img, peaks, psf):
         return b + a1 * place(psf, img.shape, xa, ya) + a2 * place(psf, img.shape, xb, yb)
 
     q0 = [bg, f0[0], x1, y1, f0[1], x2, y2]
-    sol = optimize.least_squares(lambda q: (model(q) - img).ravel(), q0, x_scale="jac")
+    d = box
+    lo = [-np.inf, 0, x1 - d, y1 - d, 0, x2 - d, y2 - d]
+    hi = [np.inf, np.inf, x1 + d, y1 + d, np.inf, x2 + d, y2 + d]
+    q0 = np.clip(q0, np.array(lo) + 1e-9, np.array(hi) - 1e-9)
+    sol = optimize.least_squares(
+        lambda q: (model(q) - img).ravel(), q0, bounds=(lo, hi), x_scale="jac"
+    )
     b, a1, xa, ya, a2, xb, yb = sol.x
     fit = SimpleNamespace(
         x_0_1=SimpleNamespace(value=xa), y_0_1=SimpleNamespace(value=ya),
@@ -118,28 +130,6 @@ def fit_two_epsf(img, peaks, psf):
         amplitude_1=SimpleNamespace(value=a1), amplitude_2=SimpleNamespace(value=a2),
     )  # fmt: skip
     return fit, img - model(sol.x)
-
-
-def lens_vs_mirror(res, fit, pix, r_ap_arcsec, noise_px):
-    """Residual flux in an aperture at the SIS-predicted lens position (on the line between the
-    images, at sep * f / (1 + f) from the fainter one) minus the flux in the mirror aperture on
-    the far side of the fainter image. A halo centred on that image (host galaxy, PSF colour
-    mismatch) gives ~0; a lens galaxy gives a positive excess. Returns (excess, error, S/N)."""
-    a1, a2 = fit.amplitude_1.value, fit.amplitude_2.value
-    pb = (fit.x_0_1.value, fit.y_0_1.value)  # bright
-    pf = (fit.x_0_2.value, fit.y_0_2.value)  # faint
-    if a1 < a2:
-        pb, pf, a1, a2 = pf, pb, a2, a1
-    q = a2 / a1
-    lx, ly = pf[0] + (pb[0] - pf[0]) * q / (1 + q), pf[1] + (pb[1] - pf[1]) * q / (1 + q)
-    mx, my = 2 * pf[0] - lx, 2 * pf[1] - ly
-    yy, xx = np.indices(res.shape)
-    r = r_ap_arcsec / pix
-    al = np.hypot(xx - lx, yy - ly) <= r
-    am = np.hypot(xx - mx, yy - my) <= r
-    exc = float(res[al].sum() - res[am].sum())
-    err = float(noise_px * np.sqrt(al.sum() + am.sum()))
-    return exc, err, exc / err if err > 0 else np.nan
 
 
 def inject_epsf(img, val, centre, sep_px, tol_px, fit, psf, pix, hp, zp, noise,
@@ -163,7 +153,7 @@ def inject_epsf(img, val, centre, sep_px, tol_px, fit, psf, pix, hp, zp, noise,
     for mag in mags:
         im2 = img + 10 ** (-0.4 * (mag - zp)) * g
         pk = hst.find_two_peaks(im2, centre, hp.search_arcsec / pix, 0.5 * sep_px, sep_px, tol_px)
-        f2, res = fit_two_epsf(im2, pk, psf)
+        f2, res = fit_two_epsf(im2, pk, psf, 3.0)
         m = hst.residual_between(hst.remove_halos(res, f2), f2, pix, hp, noise, val)
         good = abs(m["sep_arcsec"] - sep_px * pix) <= hp.sep_match_arcsec
         out.append((mag, m["resid_snr"] if good else np.nan))
@@ -179,7 +169,20 @@ def run(args) -> None:
     for name in TARGETS:
         r = systems[systems["name"] == name][0]
         c = SkyCoord(float(r["ra"]), float(r["dec"]), unit="deg")
-        f = hst.pick_image(list((out / name).glob("*.fits")), c, hp.search_arcsec)
+        d = out / name
+        d.mkdir(parents=True, exist_ok=True)
+        files = list(d.glob("*.fits"))
+        if not files:  # reproducible from the repository: fetch the wide cutout
+            from astroquery.mast import Hapcut
+
+            files = list(
+                Hapcut.download_cutouts(c, size=[p.size_px, p.size_px], path=str(d))["Local Path"]
+            )
+        f = hst.pick_image(files, c, hp.search_arcsec)
+        row = {"name": name, "group": str(r["group"]), "n_psf_stars": 0, "status": "no image"}
+        if f is None:
+            rows.append(row)
+            continue
         with fits.open(f) as h:
             hdu = next(x for x in h if x.data is not None and x.data.ndim == 2)
             data = hdu.data.astype(float)
@@ -196,64 +199,65 @@ def run(args) -> None:
         ok &= gc.separation(c).arcsec > p.star_min_dist_arcsec
         ok &= d2.arcsec > p.star_isolation_arcsec
         xy = [tuple(map(float, w.world_to_pixel(s))) for s in gc[ok]]
-        psf, nstar = build_epsf(img_full, valid, xy, p.psf_half)
-        row = {"name": name, "group": str(r["group"]), "n_psf_stars": nstar, "status": "no PSF"}
-        if psf is not None:
-            x0, y0 = w.world_to_pixel(c)
-            sep_px, tol_px = float(r["sep_cat"]) / pix, hp.sep_match_arcsec / pix
-            peaks = hst.find_two_peaks(
-                img_full, (x0, y0), hp.search_arcsec / pix, 0.5 * sep_px, sep_px, tol_px
-            )
-            xm, ym = np.mean([q[0] for q in peaks]), np.mean([q[1] for q in peaks])
-            half = int(1.5 * r["sep_cat"] / pix) + 10
-            y0s, x0s = max(int(ym) - half, 0), max(int(xm) - half, 0)
-            sl = (slice(y0s, int(ym) + half), slice(x0s, int(xm) + half))
-            img, val = img_full[sl], valid[sl]
-            pk = [(x - x0s, y - y0s) for x, y in peaks]
-            fit, res = fit_two_epsf(img, pk, psf)
-            npix = hst.residual_between(res, fit, pix, hp, 1.0, val)["n_pix"]
-            emp = hst.empirical_aperture_noise(data, valid, npix)
-            noise = emp / np.sqrt(npix)
-            m = hst.residual_between(res, fit, pix, hp, noise, val)
-            row.update(m, zp_ab=zp, aperture_noise_empirical=emp)
-            # mirror test: same-size apertures (0.3") at the lens position and its mirror image
-            n_ap = int(np.pi * (p.mirror_ap_arcsec / pix) ** 2)
-            noise_ap = hst.empirical_aperture_noise(data, valid, n_ap) / np.sqrt(n_ap)
-            exc, err, snr_m = lens_vs_mirror(res, fit, pix, p.mirror_ap_arcsec, noise_ap)
-            row.update(lens_minus_mirror=exc, lens_minus_mirror_err=err, mirror_snr=snr_m)
-            # halo test: radially symmetric residual about each image (host galaxy, PSF colour
-            # mismatch) removed as in w12_niq_hst; light between the images remains
-            mh = hst.residual_between(hst.remove_halos(res, fit), fit, pix, hp, noise, val)
-            row.update(halo_removed_snr=mh["resid_snr"], halo_removed_flux=mh["resid_flux"])
-            row["status_halo"] = (
-                "light between images" if mh["resid_snr"] >= hp.detect_sigma else "none between"
-            )
-            if row["status_halo"] == "none between":
-                rec = inject_epsf(
-                    img, val, (x0 - x0s, y0 - y0s), sep_px, tol_px, fit, psf, pix, hp, zp, noise
-                )
-                base = mh["resid_snr"]
-                for mag, s_inj in rec:
-                    inj.append(
-                        {"name": name, "inject_mag": mag, "snr_above_baseline": s_inj - base}
-                    )
-                row["mag_limit_inject"] = hst.contiguous_limit(
-                    [(mag, bool(s_inj - base >= hp.detect_sigma)) for mag, s_inj in rec]
-                )
-            snr = m["resid_snr"]
+        psf, nstar = build_epsf(img_full, valid, xy, p.psf_half, p.flat_core)
+        row["n_psf_stars"] = nstar
+        if psf is None or nstar < p.min_psf_stars:
+            row["status"] = f"too few PSF stars ({nstar})"
+            rows.append(row)
+            continue
+        x0, y0 = w.world_to_pixel(c)
+        sep_px, tol_px = float(r["sep_cat"]) / pix, hp.sep_match_arcsec / pix
+        peaks = hst.find_two_peaks(
+            img_full, (x0, y0), hp.search_arcsec / pix, 0.5 * sep_px, sep_px, tol_px
+        )
+        xm, ym = np.mean([q[0] for q in peaks]), np.mean([q[1] for q in peaks])
+        half = int(1.5 * r["sep_cat"] / pix) + 10
+        y0s, x0s = max(int(ym) - half, 0), max(int(xm) - half, 0)
+        sl = (slice(y0s, int(ym) + half), slice(x0s, int(xm) + half))
+        img, val = img_full[sl], valid[sl]
+        pk = [(x - x0s, y - y0s) for x, y in peaks]
+        fit, res = fit_two_epsf(img, pk, psf, p.fit_box_px)
+        # noise: the larger of MAD x drizzle correlation and the sky-aperture scatter (as
+        # w12_niq_hst), the latter in a local window around the pair
+        wy = slice(max(int(ym) - p.noise_window_px // 2, 0), int(ym) + p.noise_window_px // 2)
+        wx = slice(max(int(xm) - p.noise_window_px // 2, 0), int(xm) + p.noise_window_px // 2)
+        corr = hst.noise_correlation(data[wy, wx], valid[wy, wx])
+        npix = hst.residual_between(res, fit, pix, hp, 1.0, val)["n_pix"]
+        emp = hst.empirical_aperture_noise(data[wy, wx], valid[wy, wx], npix)
+        mad = 1.4826 * np.median(np.abs(res[val] - np.median(res[val])))
+        noise = np.nanmax([mad * corr, emp / np.sqrt(npix) if npix else np.nan])
+        m = hst.residual_between(res, fit, pix, hp, noise, val)
+        row.update(m, zp_ab=zp, aperture_noise_empirical=emp, noise_corr=corr)
+        row["resid_snr_raw"] = m["resid_snr"]
+        # halo correction: radially symmetric residual about each image (host galaxy, PSF
+        # colour mismatch) removed as in w12_niq_hst; light between the images remains
+        mh = hst.residual_between(hst.remove_halos(res, fit), fit, pix, hp, noise, val)
+        snr = mh["resid_snr"]
+        row.update(halo_removed_snr=snr, halo_removed_flux=mh["resid_flux"])
+        if abs(m["sep_arcsec"] - float(r["sep_cat"])) > hp.sep_match_arcsec:
+            row["status"] = "pair mismatch"
+        elif not np.isfinite(noise):
+            row["status"] = "noise not estimable"
+        elif not np.isfinite(snr) or snr <= -hp.detect_sigma:
+            row["status"] = "fit inconclusive (over-subtraction)"
+        else:
             row["status"] = (
-                "pair mismatch"
-                if abs(m["sep_arcsec"] - float(r["sep_cat"])) > hp.sep_match_arcsec
-                else "residual >= 5 sigma"
-                if snr >= hp.detect_sigma
-                else "no residual"
+                "light between images" if snr >= hp.detect_sigma else "none between images"
             )
-            row["mag_resid"] = (
-                zp - 2.5 * np.log10(m["resid_flux"]) if m["resid_flux"] > 0 else np.nan
+        row["mag_resid"] = zp - 2.5 * np.log10(mh["resid_flux"]) if mh["resid_flux"] > 0 else np.nan
+        row["mag_limit_inject"] = np.nan
+        if row["status"] == "none between images":
+            rec = inject_epsf(
+                img, val, (x0 - x0s, y0 - y0s), sep_px, tol_px, fit, psf, pix, hp, zp, noise
             )
-            panels.append((name, row, img, res))
+            for mag, s_inj in rec:
+                inj.append({"name": name, "inject_mag": mag, "snr_above_baseline": s_inj - snr})
+            row["mag_limit_inject"] = hst.contiguous_limit(
+                [(mag, bool(s_inj - snr >= hp.detect_sigma)) for mag, s_inj in rec]
+            )
+        panels.append((name, row, img, res))
         rows.append(row)
-        keys = ("name", "status_halo", "n_psf_stars", "halo_removed_snr", "mag_limit_inject")
+        keys = ("name", "status", "n_psf_stars", "halo_removed_snr", "mag_limit_inject")
         print({k: row.get(k) for k in keys})
     t = Table(rows=rows)
     t.meta.update(

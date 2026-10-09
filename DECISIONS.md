@@ -3088,7 +3088,7 @@ and measures the residual flux between the images.
     ≥ 0.7 mag below a 2σ under-luminous one (F814W − z assumed 0–0.6). A binary quasar remains the untested
     ordinary explanation;
   - J0728+2607 is inconclusive with the Moffat model (PSF-core residuals). With an empirical PSF from 6 Gaia stars in
-    the same cutout (`w12_niq_epsf.py`; control S/N 38) it has no light between the images (S/N 3.3; injections
+    the same cutout (`w12_niq_epsf.py`; control S/N 49) it has no light between the images (S/N 1.6; injections
     recovered to F814W = 23), ≥ 1.8 mag below any ordinary lens.
 - Rejected alternatives:
   - the "combined_skycells" HAP cutout, whose WCS does not describe its pixels (separations of 10⁴″);
