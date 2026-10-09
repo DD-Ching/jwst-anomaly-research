@@ -3146,3 +3146,23 @@ tangential shear (S = −1.5 to −5.0); pilot null (0 flags); whole-chain injec
 **Revisit if.**
 - A PSF-corrected Euclid shear catalogue becomes public (DR1), or cluster-calibrated R differs from 0.5 by > 30 %.
 - PSF-anisotropy gradients (star ellipticity maps) show radial patterns on trial-centre scales.
+
+## D-067 W5/W1 radial-shear survey of all Euclid Q1 Deep Fields: tile fetch by `tileid`, R calibrated on SZ clusters, 60 deg² null (2026-10-09)
+
+**Decision.** Fetch the Q1 MER rows per tile with the indexed `tileid` (tile list from IRSA ObsCore), run the D-066
+screen per Deep Field with per-tile PSF sizes and a coverage cut, and keep R = 0.5 after calibrating it on the four
+SZ clusters against NFW haloes (in-house ~40 lines: Wright & Brainerd 2000, Duffy et al. 2008 c200).
+
+**Alternatives rejected.**
+- More `CONTAINS` discs: overlapping discs double-count rows; edge handling per disc wastes the aperture border.
+- 16 concurrent IRSA queries: 504 gateway time-outs and no rate gain over 8 (0.3–0.5 queries/s).
+- colossus / pyccl for the NFW shear: a dependency for textbook formulas checked by a unit test.
+- Per-source photo-z (`euclid_q1_phz_photo_z`) for Σ_crit: one source plane bracketed by z_s = 0.8–1.2 already
+  keeps R within ±20 %; worth it only if a flag needs a mass.
+
+**Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear survey"; `results/w5_shear/`. R = 0.56 ± 0.09
+(z_s = 1); 0 flags over 60 deg² at θ_E = 1′, 2′, 4′; known clusters negative (8/9); n₉₅ ≈ 0.062 / 0.049 / 0.051 deg⁻².
+
+**Revisit if.**
+- Euclid DR1 (≈ 2000 deg², PSF-corrected shapes) is public: the same code scales by tile.
+- A flag appears, or per-tile star ellipticity gradients show radial patterns on 1–12′ scales.

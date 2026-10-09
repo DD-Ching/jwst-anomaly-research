@@ -2,8 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-09: (in progress) W5/W1 Euclid Q1 radial-shear screen scaled beyond the pilot (D-066 next)
-- Plan: tile Q1 in ≤ 0.2° discs fetched in parallel, re-run screen + injections, calibrate R on the SZ clusters.
+## 2026-10-09: W5/W1 Euclid Q1 radial-shear survey: all Deep Fields (60 deg²) null; R calibrated (D-067)
+- Hypothesis as D-066 (negative mass shears background galaxies radially). Ordinary radial patterns: PSF-anisotropy
+  gradients, blends, tile edges; known clusters must give the opposite (tangential) sign.
+- **R = 0.56 ± 0.09** (z_s = 1; 0.50–0.67 for z_s = 0.8–1.2) from the 4 SZ clusters against NFW haloes of their
+  M500: the assumed R = 0.5 holds and is conservative.
+- **All 344 Q1 tiles of EDF-F/S/N** fetched by `tileid` (4.6 M rows, 25 min) and screened at θ_E = 1′, 2′, 4′:
+  **0 flags** (field maxima S = 3.3–4.4 against thresholds 4.4–5.3); known clusters 8/9 negative (EDF-S minimum is
+  ACT-CL J0405.9-4915). Injection efficiency 0.78–0.85 at 1′, 1.0 at 2′–4′. **n₉₅ ≈ 0.062 / 0.049 / 0.051 deg⁻²**
+  at θ_E = 1′ / 2′ / 4′ (pilot: 8.1 / 12). With D-063, negative point masses are limited from 1′ to 32′.
+- **Failed approaches (rules):** 16 IRSA threads → 504s, no gain; killing a fetch truncated a cache file (writes
+  are atomic now); `pgrep -f`/`pkill -f` waiters matched their own shell again (wait on the log file).
+- **Next:** per-tile star-ellipticity gradient test (data in `survey.json`); θ_E < 1′ needs fainter or better shapes
+  (Euclid DR1); DR1 scale-up when public; θ_E ≈ 1° needs a larger contiguous area than Q1.
 
 ## 2026-10-09: J0728+2607 decided with an empirical PSF: no light between the images to F814W ≈ 23 (D-064 addendum)
 - The PSF is the median of 6 unsaturated Gaia stars in the same HST F814W cutout. The control lens J2308+3201 is
@@ -123,7 +134,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   Commit-age heuristics cannot see a session that is coding but has not pushed.
 - docs/cloud-routine-prompt.md gets the owner's "COORDINATION AND DISPATCH" section (dispatch first; `claimed` label +
   claim comment with a 10-minute heartbeat, stale after 20; re-check before every push, `-alt` branch on collision;
-  "D-TBD" until merge). It replaces the 15-minute commit-age rule; docs/operations.md and its label table follow.
+  "D-067" until merge). It replaces the 15-minute commit-age rule; docs/operations.md and its label table follow.
 - **Owner action:** paste the new prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`); this file is only the copy.
 
 ## 2026-10-08: Governance — owner decisions on scope, parallelism, cloud disk and layout

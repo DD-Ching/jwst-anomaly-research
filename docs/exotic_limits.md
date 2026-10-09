@@ -1301,3 +1301,26 @@ median sigma); statistics **derived**; injections **model_prediction**.
 - Limitations: R is assumed (a cluster-mass calibration of R is next); 0.6 deg² of 63 deg²; EDF-N not fetched
   (the 0.3° row query hung > 15 min); PSF-anisotropy gradients and blends are untested, but they would need a
   radial pattern centred on a trial point to fake a flag.
+
+### Euclid Q1 radial-shear survey: all three Deep Fields (60 deg²) null; R calibrated (2026-10-09, D-067)
+
+`w5_euclid_shear.py fetch` (352 ObsCore VIS tiles; 344 in EDF-F/S/N by indexed `tileid`, LDN1641 left out),
+`calibrate`, `survey` → `results/w5_shear/{fetch,calibrate,survey}.json`. Same shapes, cuts and statistic as the
+pilot; PSF sigma per tile from its stars (field median when < 30 stars).
+- **Responsivity R (derived):** the `validate` profiles of the 4 SZ clusters (3 annuli each) against NFW haloes of
+  the catalogued M500 (Duffy+08 c200, Wright & Brainerd 2000; model_prediction) give R = 0.56 ± 0.09 at z_s = 1.0
+  (0.67 ± 0.11 at 0.8, 0.50 ± 0.08 at 1.2; single source plane, ASSUMPTION); χ² = 33/11, so the error is
+  ≈ ±0.15 after scaling by √(χ²/dof). Member dilution and miscentring bias R low. The assumed R = 0.5 stays (within
+  the D-066 30 % revisit bound) and is conservative.
+- **Survey:** 4.6 M rows, 2.9 M resolved galaxies; θ_E = 1′, 2′, 4′ (30″ dropped: blind); centres where the
+  1.5–3 θ_E annulus holds ≥ 0.8 × the field median count (ASSUMPTION); field-wise 1 % thresholds S = 4.4–5.3 from
+  200 rotations. Field maxima S = 3.3–4.4 (p_random 0.21–0.81): **0 flags in any field at any θ_E**.
+- **Known mass, whole chain:** at the 3 SZ clusters with valid centres, 8 of 9 S values are negative (tangential;
+  −5.24 at ACT-CL J0405.9-4915 for θ_E = 4′ is the EDF-S minimum); the exception is +0.16 (PSZ2 G255.60-46.18 at 1′).
+- **Injections** (40 per field and θ_E, off-grid, R = 0.5): efficiency 0.78 / 0.85 / 0.78 at 1′ (EDF-F/S/N), 1.0 at
+  2′ and 4′.
+- **Limits** (95 %, Poisson, derived): n₉₅ ≈ **0.062 deg⁻² at θ_E = 1′** (effective area 48.6 deg²), **0.049 at
+  2′** (60.7 deg²) and **0.051 at 4′** (58.7 deg²), 130–250× below the pilot. With D-063 (0.012–0.018 deg⁻² at
+  8–32′) negative point masses now have a limit from θ_E = 1′ to 32′.
+- Limitations: shapes are SExtractor moments, not a shear catalogue; one effective z_s; PSF-anisotropy gradients
+  untested (per-tile star means are in `survey.json` for that check); blends untested; θ_E < 1′ blind.

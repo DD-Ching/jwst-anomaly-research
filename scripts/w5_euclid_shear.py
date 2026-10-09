@@ -1,4 +1,4 @@
-"""W5/W1 radial-shear screen on Euclid Q1 MER shapes (D-065 next; D-TBD).
+"""W5/W1 radial-shear screen on Euclid Q1 MER shapes (D-065 next; D-067).
 
 A negative-mass lens (W5 / W1, D-047) shears background galaxies *radially*; ordinary mass shears
 them tangentially. This screen measures the catalogue aperture-mass S/N of radial alignment
@@ -21,9 +21,15 @@ Steps (each writes into ``results/w5_shear/``):
 Everything fetched is cached under ``$JWST_ANOMALY_DATA/euclid_q1_shear/`` (gitignored); outputs are
 ``derived``; θ_E grids, cuts and the responsivity R are ASSUMPTIONs named below.
 
+``fetch`` / ``survey``  Every Q1 MER tile of EDF-F/S/N by indexed ``tileid``, then the same
+    screen per Deep Field with per-tile PSF sizes (D-067).
+``calibrate``  R from the ``validate`` profiles against NFW haloes of the clusters' M500 (D-067).
+
     python scripts/w5_euclid_shear.py pacheck
     python scripts/w5_euclid_shear.py validate
     python scripts/w5_euclid_shear.py screen
+    python scripts/w5_euclid_shear.py fetch && python scripts/w5_euclid_shear.py survey --workers 2
+    python scripts/w5_euclid_shear.py calibrate
 """
 
 from __future__ import annotations
@@ -126,7 +132,9 @@ def run_query(q: str, path: Path) -> Table:
                 raise
             time.sleep(5 * 2**attempt)  # 504s under load: back off 5-40 s
     path.parent.mkdir(parents=True, exist_ok=True)
-    t.write(path, overwrite=True)
+    tmp = path.with_suffix(".part")
+    t.write(tmp, format="ascii.ecsv", overwrite=True)
+    tmp.replace(path)  # atomic: an interrupted run never leaves a truncated cache file
     return t
 
 
@@ -291,7 +299,7 @@ def apply_shear(e: np.ndarray, g: np.ndarray) -> np.ndarray:
     return (e + g) / (1.0 + np.conj(g) * e)
 
 
-# R calibration (the cluster shear against an NFW halo of the catalogued M500; D-TBD).
+# R calibration (the cluster shear against an NFW halo of the catalogued M500; D-067).
 CAL_ZS = (0.8, 1.0, 1.2)  # single effective source plane for VIS < 24.5 (ASSUMPTION; 1.0 fiducial)
 
 

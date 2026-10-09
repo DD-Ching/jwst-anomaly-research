@@ -1019,3 +1019,7 @@ Exploration Program."
   `?center=RA,Dec&size=8arcsec`, gzip-compressed), tile 102022477, accessed 2026-10-09 (`pacheck`).
 - Planck PSZ2 (Planck Collaboration 2016, A&A 594, A27; VizieR J/A+A/594/A27) and ACT DR5 clusters (Hilton et al.
   2021, ApJS 253, 3; VizieR J/ApJS/253/3), queried 2026-10-09 for clusters inside Q1 (`CLUSTERS` in the script).
+- Q1 MER tile list: IRSA ObsCore (`ivoa.obscore`, `obs_collection = 'euclid_DpdMerBksMosaic'`, VIS), 352 tiles,
+  2026-10-09; whole-tile rows fetched by the indexed `tileid` column (`w5_euclid_shear.py fetch`, D-067).
+- NFW lensing (R calibration, D-067): Wright & Brainerd 2000, ApJ 534, 34 (arXiv:astro-ph/9908213); c200(M200):
+  Duffy et al. 2008, MNRAS 390, L64 (arXiv:0804.2486); astropy `Planck18` cosmology.
