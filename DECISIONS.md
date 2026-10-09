@@ -3214,6 +3214,20 @@ includes its cost. The candidate records give the verdicts and evidence.
   identical injections; W3 recovered, ρ summed, before → after): 3 d 8 → 6 (−25 %, small counts), 10 d 22 → 20,
   30 d 28 → 25, 100 d 22 → 21, 300 d 13 → 13; total 93 → 85 (−9 %). PSPL controls falsely recovered: 0 → 0.
   Kept, not tuned: a threshold set on the flag that motivated the change would be post hoc twice over.
+  All seven paired fields (W3 recovered, before → after; PSPL controls 0 → 0 in each):
+
+  | Field | 3 d | 10 d | 30 d | 100 d | 300 d | total |
+  |---|---|---|---|---|---|---|
+  | gb22 | 8 → 6 | 22 → 20 | 28 → 25 | 22 → 21 | 13 → 13 | 93 → 85 |
+  | gb21 | 13 → 6 | 26 → 24 | 33 → 32 | 28 → 28 | 10 → 10 | 110 → 100 |
+  | gb20 | 10 → 6 | 21 → 18 | 22 → 22 | 27 → 25 | 5 → 5 | 85 → 76 |
+  | gb19 | 12 → 7 | 24 → 21 | 24 → 24 | 18 → 18 | 8 → 8 | 86 → 78 |
+  | gb16 | 11 → 9 | 20 → 19 | 24 → 23 | 20 → 20 | 4 → 4 | 79 → 75 |
+  | gb11 | 19 → 15 | 27 → 23 | 31 → 31 | 24 → 23 | 14 → 14 | 115 → 106 |
+  | gb12 | 14 → 9 | 28 → 27 | 29 → 28 | 28 → 28 | 9 → 9 | 108 → 101 |
+  | **all** | **87 → 58 (−33 %)** | **168 → 152 (−10 %)** | 191 → 185 (−3 %) | 167 → 163 (−2 %) | 63 → 63 | **676 → 621 (−8 %)** |
+
+  The cost falls on short events, whose caustic spikes are sampled on one or two nights.
 
 **Revisit if.** A field's quiet χ²/dof distribution is bimodal or its 95th percentile exceeds ~10 (the quantile then
 admits variables); the archive stops honouring range requests; a survivor appears (stop, /vet-candidate, owner).
