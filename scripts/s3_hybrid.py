@@ -226,7 +226,8 @@ def run_system(system: System, cache: Path, p: Params, rng: np.random.Generator)
     lead, trail, delay = win["lead"], win["trail"], win["delay"]
     res = {"system": asdict(system), "n_epochs": int(len(lc["t"])), "window": win}
     v = validate_delay(lc, system, p)
-    v["passed"] = bool(abs(v["best_tau_BA"] - v["published_tau_BA"]) <= 3 * system.dt_err + 2 * p.lag_step)
+    miss = abs(v["best_tau_BA"] - v["published_tau_BA"])
+    v["passed"] = bool(miss <= 3 * system.dt_err + 2 * p.lag_step)
     res["validation"] = v
     out = {}
     if not v["passed"]:  # the template fit cannot find the known delay: no screen on this system
