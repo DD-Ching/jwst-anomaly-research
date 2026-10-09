@@ -3434,12 +3434,16 @@ kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0L
   the others'.
 - SDSS1206: the pre-LOS power-law pickle (D_d D_s/D_ds, D_d, κ_pert) is read with an unpickler that admits numpy
   arrays only (`distance_consistency.load_array_pickle`); D_dt = (1 + z_d) × first / (1 + κ_pert), as in the notebook.
-- Sidak over 8 lenses × 2 variants: 5.51σ local (ASSUMPTION). Null: 100 random redshift permutations. Injection:
-  D_dt × f, f = 0.15–8.
+- Sidak over the 8 `kext` pulls: 5.39σ local (ASSUMPTION; `nokext` is a diagnostic and never flags). Null: 100
+  random redshift permutations. Injection: D_dt × f, f = 0.15–8 (baseline = the f = 1 run under the same settings).
+- Checked: the RXJ1131, PG1115 and HE0435 κ_ext files have as many rows as their D_dt chains but are uncorrelated
+  with them (|r| < 0.003; ln D_dt width identical paired or shuffled), so independent draws (TDCOSMO's own
+  treatment) lose nothing; B1608's chain κ column is all zero. The WGD2038 histogram range [−0.2, 1], 2000 bins, is
+  the one in TDCOSMO's `plotkappa_handpickedpaper2038.py`; its narrow κ_ext (16–84 %: −0.007 to 0.010) is as published.
 - **Result, `kext`: null.** Max |pull| 1.12σ (RXJ1131 −1.12, PG1115 −1.05, B1608 +0.97; the rest < 0.7σ); LOO H0 of
-  the others 72.2–74.4. Shuffled-z null median max|pull| 15.5σ. Detectable factors ×0.41–0.78 down / ×1.36–1.88 up
-  for the seven tight lenses, ×0.25 / ×3.3 for WGD2038 (σ_ln D_dt ≈ 0.24).
-- **`nokext`: RXJ1131 −5.67σ (above threshold), DES0408 +3.9σ.** Explained by line-of-sight convergence: removing the
+  the others 72.2–74.4. Shuffled-z null median max|pull| 15.8σ. Detectable factors ×0.41–0.78 down / ×1.36–1.85 up
+  for the seven tight lenses, ×0.26 / ×3.2 for WGD2038 (σ_ln D_dt ≈ 0.24).
+- **`nokext`: RXJ1131 −5.67σ (beyond the threshold), DES0408 +3.9σ.** Explained by line-of-sight convergence: removing the
   measured κ_ext (RXJ1131 median 0.070, B1608 0.103, WFI2033 0.059, DES0408 −0.040) moves the others' H0 to 77.5–79.8
   while RXJ1131, the most precise chain (σ_ln = 0.023), stays at 73.4. With κ_ext the tension is gone (−1.1σ). This
   is a real-data positive control: the statistic resolves a ~7 % sightline convergence on the precise lenses, so an

@@ -890,18 +890,11 @@ TDCOSMO_PL = {
 # Redshifts from TDCOSMO_sample/tdcosmo_sample.yaml (the 6 H0LiCOW lenses agree with REDSHIFTS).
 TD_REDSHIFTS = {**REDSHIFTS, "DES0408": (0.597, 2.375), "WGD2038": (0.2283, 0.777)}
 TD_ALL = ALL + ["DES0408", "WGD2038"]
-KEXT_VARIANTS = ("kext", "nokext")  # per-lens TDCOSMO kappa_ext PDFs, or kappa_ext = 0 everywhere
-
-
-def _pinned_td(root: Path, rel: str, digest: str, rows: list) -> Path:
-    path = root / _TD / rel
-    got = sha256(path)
-    if got != digest:
-        raise SystemExit(f"sha256 mismatch for {path}: {got} != {digest}")
-    rows.append(
-        (f"{TDCOSMO}/blob/{TDCOSMO_COMMIT}/{_TD}{rel}", digest, path.stat().st_size, TDCOSMO_COMMIT)
-    )
-    return path
+# "kext": own TDCOSMO kappa_ext PDF per lens (the test); "nokext": kappa_ext = 0 (diagnostic)
+KEXT_VARIANTS = ("kext", "nokext")
+for _n, (_fd, _dsha, _fk, _ksha) in TDCOSMO_PL.items():
+    FILES[f"TD_{_n}_ddt"] = (TDCOSMO, TDCOSMO_COMMIT, _TD + _fd, _dsha)
+    FILES[f"TD_{_n}_kext"] = (TDCOSMO, TDCOSMO_COMMIT, _TD + _fk, _ksha)
 
 
 def load_tdcosmo_pl(root: Path, rng: np.random.Generator, n_keep: int, rows: list) -> dict:
@@ -916,10 +909,12 @@ def load_tdcosmo_pl(root: Path, rng: np.random.Generator, n_keep: int, rows: lis
     def col(path, skip=1, sep=","):
         return pd.read_csv(path, sep=sep, header=None, skiprows=skip, comment="#").to_numpy()
 
+    roots = {TDCOSMO: root}
+    pinned("TDCOSMO_yaml", roots, rows)  # source of TD_REDSHIFTS
     out = {}
-    for name, (fd, dd_sha, fk, k_sha) in TDCOSMO_PL.items():
-        pd_ = _pinned_td(root, fd, dd_sha, rows)
-        pk = _pinned_td(root, fk, k_sha, rows)
+    for name in TDCOSMO_PL:
+        pd_ = pinned(f"TD_{name}_ddt", roots, rows)
+        pk = pinned(f"TD_{name}_kext", roots, rows)
         w = None
         if name == "B1608":
             a = col(pd_, skip=1, sep=r"\s+")
@@ -974,15 +969,14 @@ def run_tdcosmo(args) -> None:
     rows_m: list = []
     td = load_tdcosmo_pl(Path(args.tdcosmo), rng, params.n_obs, rows_m)
     OUT.mkdir(parents=True, exist_ok=True)
-    n_trials = len(TD_ALL) * len(KEXT_VARIANTS)  # ASSUMPTION: Sidak over (lens, variant) pulls
+    n_trials = len(TD_ALL)  # ASSUMPTION: Sidak over the kext pulls (nokext is a diagnostic)
     thr = dc.local_sigma_threshold(n_trials, params.flag_sigma_global)
 
-    rows, base, null, sens = [], {}, {}, {}
+    rows, null, sens = [], {}, {}
     inj_rows = []
     for v in KEXT_VARIANTS:
         lens = _td_lens(td, v)
         res = ddt_loo(lens, rng, params, TD_REDSHIFTS, names=TD_ALL)
-        base[v] = {r["lens"]: r for r in res}
         for r in res:
             q = np.percentile(lens[r["lens"]]["ddt"], [16, 50, 84])
             k = np.percentile(td[r["lens"]]["kappa"], [16, 50, 84]) if v == "kext" else (0, 0, 0)
@@ -1001,14 +995,16 @@ def run_tdcosmo(args) -> None:
                     "n_chain": td[r["lens"]]["n_chain"],
                     **{c: r[c] for c in r if c != "lens"},
                     "global_sigma": dc.global_sigma(r["z_D_loo"], n_trials),
-                    "flag": bool(abs(r["z_D_loo"]) >= thr),
+                    "beyond_threshold": bool(abs(r["z_D_loo"]) >= thr),
+                    "flag": bool(v == "kext" and abs(r["z_D_loo"]) >= thr),
                 }
             )
-        # null: random permutations of the redshift pairs across the 8 lenses
-        perms = [p for p in itertools.permutations(range(len(TD_ALL))) if list(p) != sorted(p)]
+        # null: random non-identity permutations of the redshift pairs across the 8 lenses
         vals = []
-        for i in rng.choice(len(perms), args.n_null, replace=False):
-            p = perms[i]
+        while len(vals) < args.n_null:
+            p = rng.permutation(len(TD_ALL))
+            if np.all(p == np.arange(len(TD_ALL))):
+                continue
             z = {TD_ALL[j]: TD_REDSHIFTS[TD_ALL[p[j]]] for j in range(len(TD_ALL))}
             vals.append(
                 max(abs(x["z_D_loo"]) for x in ddt_loo(lens, rng, nparams, z, names=TD_ALL))
@@ -1020,21 +1016,24 @@ def run_tdcosmo(args) -> None:
             "null_median": round(float(np.median(vals)), 3),
             "frac_null_ge_observed": float(np.mean(np.array(vals) >= obs)),
         }
-        # injection: one lens's D_dt x f through the same statistic
+        # injection: one lens's D_dt x f through the same statistic; the f = 1 run under the same
+        # settings is the baseline of the recovered shift
         for name in TD_ALL:
+            recs = {}
             for f in INJ_FACTORS:
-                dd = {
+                recs[f] = {
                     x["lens"]: x
                     for x in ddt_loo(lens, rng, nparams, TD_REDSHIFTS, {name: f}, names=TD_ALL)
                 }[name]
+            for f, dd in recs.items():
                 inj_rows.append(
                     {
                         "lens": name,
                         "variant": v,
                         "factor": f,
-                        "dlnDdt_D_recovered": dd["dlnDdt_D"] - base[v][name]["dlnDdt_D"],
+                        "dlnDdt_D_recovered": dd["dlnDdt_D"] - recs[1.0]["dlnDdt_D"],
                         "z_D": dd["z_D_loo"],
-                        "flag": bool(abs(dd["z_D_loo"]) >= thr),
+                        "beyond_threshold": bool(abs(dd["z_D_loo"]) >= thr),
                     }
                 )
     t = Table(rows=rows)
@@ -1079,8 +1078,11 @@ def run_tdcosmo(args) -> None:
         "provenance": str(Provenance.MODEL_PREDICTION),
         "n_trials": n_trials,
         "local_sigma_threshold": round(thr, 3),
-        "flagged": [f"{r['lens']}/{r['variant']}" for r in rows if r["flag"]],
-        "max_abs_z": {f"{r['lens']}/{r['variant']}": round(float(r["z_D_loo"]), 3) for r in rows},
+        "flagged": [r["lens"] for r in rows if r["flag"]],
+        "nokext_beyond_threshold_diagnostic": [
+            r["lens"] for r in rows if r["variant"] == "nokext" and r["beyond_threshold"]
+        ],
+        "z_D_loo": {f"{r['lens']}/{r['variant']}": round(float(r["z_D_loo"]), 3) for r in rows},
         "H0_loo_others": {
             f"{r['lens']}/{r['variant']}": round(float(r["H0_loo_others"]), 1) for r in rows
         },
@@ -1093,7 +1095,7 @@ def run_tdcosmo(args) -> None:
     print(t["lens", "variant", "Ddt_p50", "kext_p50", "z_D_loo", "H0_loo_others", "flag"])
     print(
         json.dumps(
-            {k: v for k, v in summary.items() if k not in ("params", "max_abs_z")},
+            {k: v for k, v in summary.items() if k not in ("params", "z_D_loo")},
             indent=1,
             default=str,
         )

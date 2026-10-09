@@ -8,8 +8,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   would have gone to composite models and κ_ext vetting.
 - `scripts/d1_distance.py tdcosmo`: power-law D_dt^model chains (6 H0LiCOW lenses + DES0408 + WGD2038), each lens's
   own TDCOSMO κ_ext PDF applied identically, H0 + Ωm LOO; 100 shuffled-z nulls; injections.
-- **With κ_ext: max |pull| 1.12σ (RXJ1131), threshold 5.51σ; null.** Reach ×0.41–0.78 / ×1.36–1.88 (WGD2038 ×0.25 /
-  ×3.3). LOO H0 72.2–74.4.
+- **With κ_ext: max |pull| 1.12σ (RXJ1131), threshold 5.39σ; null.** Reach ×0.41–0.78 / ×1.36–1.85 (WGD2038 ×0.26 /
+  ×3.2). LOO H0 72.2–74.4. κ_ext files checked uncorrelated with their chains (|r| < 0.003).
 - **Without κ_ext: RXJ1131 −5.67σ, DES0408 +3.9σ**, both removed by the measured κ_ext (positive control: the test
   sees a ~7 % line-of-sight convergence).
 - Safety: SDSS1206's pre-LOS file is a pickle; read with a numpy-only unpickler (arbitrary classes refused, tested).

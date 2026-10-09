@@ -1,11 +1,12 @@
 {
  "provenance": "model_prediction",
- "n_trials": 16,
- "local_sigma_threshold": 5.51,
- "flagged": [
-  "RXJ1131/nokext"
+ "n_trials": 8,
+ "local_sigma_threshold": 5.387,
+ "flagged": [],
+ "nokext_beyond_threshold_diagnostic": [
+  "RXJ1131"
  ],
- "max_abs_z": {
+ "z_D_loo": {
   "B1608/kext": 0.966,
   "RXJ1131/kext": -1.118,
   "PG1115/kext": -1.052,
@@ -45,83 +46,83 @@
   "kext": {
    "observed_max_abs_z": 1.118,
    "n_perm": 100,
-   "null_median": 15.473,
+   "null_median": 15.768,
    "frac_null_ge_observed": 1.0
   },
   "nokext": {
    "observed_max_abs_z": 5.675,
    "n_perm": 100,
-   "null_median": 28.872,
+   "null_median": 31.68,
    "frac_null_ge_observed": 1.0
   }
  },
  "min_factor_at_threshold_from_injections": {
   "kext": {
    "B1608": {
-    "down": 0.406,
-    "up": 1.88
+    "down": 0.413,
+    "up": 1.848
    },
    "RXJ1131": {
-    "down": 0.775,
-    "up": 1.475
+    "down": 0.78,
+    "up": 1.464
    },
    "PG1115": {
-    "down": 0.665,
-    "up": 1.824
+    "down": 0.673,
+    "up": 1.803
    },
    "J1206": {
-    "down": 0.492,
-    "up": 1.769
+    "down": 0.499,
+    "up": 1.743
    },
    "HE0435": {
-    "down": 0.642,
-    "up": 1.445
+    "down": 0.647,
+    "up": 1.432
    },
    "WFI2033": {
-    "down": 0.588,
-    "up": 1.509
+    "down": 0.594,
+    "up": 1.493
    },
    "DES0408": {
-    "down": 0.764,
-    "up": 1.364
+    "down": 0.769,
+    "up": 1.355
    },
    "WGD2038": {
-    "down": 0.254,
-    "up": 3.336
+    "down": 0.261,
+    "up": 3.245
    }
   },
   "nokext": {
    "B1608": {
-    "down": 0.818,
-    "up": 1.143
+    "down": 0.821,
+    "up": 1.138
    },
    "RXJ1131": {
     "down": 1.0,
     "up": 1.0
    },
    "PG1115": {
-    "down": 0.661,
-    "up": 1.62
+    "down": 0.668,
+    "up": 1.603
    },
    "J1206": {
-    "down": 0.5,
-    "up": 1.59
+    "down": 0.507,
+    "up": 1.569
    },
    "HE0435": {
-    "down": 0.663,
-    "up": 1.287
+    "down": 0.668,
+    "up": 1.277
    },
    "WFI2033": {
-    "down": 0.81,
-    "up": 1.165
+    "down": 0.813,
+    "up": 1.16
    },
    "DES0408": {
-    "down": 0.781,
-    "up": 1.042
+    "down": 0.784,
+    "up": 1.038
    },
    "WGD2038": {
-    "down": 0.241,
-    "up": 3.128
+    "down": 0.249,
+    "up": 3.035
    }
   }
  },
