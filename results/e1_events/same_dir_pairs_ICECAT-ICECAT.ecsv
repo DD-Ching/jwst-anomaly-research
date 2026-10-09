@@ -1,0 +1,14 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: a, datatype: string}
+# - {name: b, datatype: string}
+# - {name: lag_s, datatype: float64}
+# - {name: sep_deg, datatype: float64}
+# - {name: sigma_comb_deg, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: ICECAT-1 v4 x ICECAT-1 v4}
+# schema: astropy-2.0
+a b lag_s sep_deg sigma_comb_deg
+IC220627A IC220629A 194377.417 1.926 1.438
