@@ -9,7 +9,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    is reproduced by a calibrated rate-modulated null (week-scale detection-rate modulation; its cause is a
    hypothesis). Next:
    - GW sky maps, so GW channels get directions;
-   - re-test the CHIME 100 s–1 h cell under the rate-modulated null;
+   - re-test the CHIME 100 s–1 h cell under the rate-modulated null (in progress: claude/e1-chime-100s-rate-null);
    - a time-resolved CHIME uptime series (only from the collaboration: owner decision);
    - "which event comes first" and antipodal (> 170°) channels;
    - IceTracks-DR2, Swift, Einstein Probe.
