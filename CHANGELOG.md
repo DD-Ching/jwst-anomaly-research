@@ -10,11 +10,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - only derived amplitudes.
 - **Results:**
   - R2-A (every two records share a future, so horizons re-emit everything): **excluded**. Ergoregion instability;
-    GW250114 reflectivity < 0.35 %; GWTC-4.0 null.
+    GWTC-4.0 null; supporting: GW250114 reflectivity < 0.35 % (preprint).
   - R2-B (gravity as phase inference, so saddle images mirror polarisation): internally inconsistent; B0218+357
     polarisation variations correlate with the wrong sign.
   - R2-C (four axioms; massless lightest neutrino, so Σm_ν = 58.8 meV): not novel (minimal seesaw). 2.2–3.4σ
-    tension with DESI DR2; tracked externally.
+    tension with DESI DR2 + CMB (reviewer estimates; DESI quotes 3.0σ); tracked externally.
 - **Lesson (rule):** deriving Lorentz invariance from a symmetric primitive is easy. The theory's risk then sits in
   one precision-measured sector, where O(1) effects are already excluded. Round 3 should look for derived small
   effects in large-N quantities that nobody has analysed for them.
