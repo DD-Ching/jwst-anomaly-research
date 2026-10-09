@@ -3125,3 +3125,24 @@ not return in 5 min; the same selection with `CONTAINS(POINT, CIRCLE)` (r = 0.25
   at 0.3 counts would reach ≈ 4′).
 - The shear screen finds Euclid Q1 MER moments unusable (PSF anisotropy) and no PSF-corrected shape catalogue is
   public.
+
+## D-066 W5/W1 radial-shear screen on Euclid Q1 MER shapes: `ApertureMass` reused; pilot null; limits at θ_E = 1–2′ (2026-10-09)
+
+**Decision.** Search for radial (negative-mass) shear with the D-050 catalogue aperture-mass statistic
+(`exotic_screens.ApertureMass`, point-mass filter over 1.5–3 θ_E) on Euclid Q1 MER SExtractor moments, fetched per
+0.3° disc from IRSA TAP. The catalogue `position_angle` is used as PA east of north. Pilot: EDF-F and EDF-S.
+
+**Alternatives rejected.**
+- Trusting the TAP column description (`position_angle` "CCW/x", THETA_IMAGE): image moments on 25 MER VIS cutouts
+  contradict it (89° off); using it would flip tangential and radial, the sign under test.
+- A PSF-corrected shear catalogue (none public for Q1); building one (KSB/metacal) before a pilot shows need.
+- Grid-centred injections on deconvolved shapes: best case; injections are off-grid, applied to observed moments
+  before the cuts, and detected at any centre within one step.
+
+**Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear screen"; `results/w5_shear/`. Four SZ clusters show
+tangential shear (S = −1.5 to −5.0); pilot null (0 flags); whole-chain injection efficiency 0.88–1.0 at 1′, 1.0 at
+2′, ≤ 0.18 at 30″; n₉₅ ≈ 8.1 deg⁻² (1′), 12 deg⁻² (2′).
+
+**Revisit if.**
+- A PSF-corrected Euclid shear catalogue becomes public (DR1), or cluster-calibrated R differs from 0.5 by > 30 %.
+- PSF-anisotropy gradients (star ellipticity maps) show radial patterns on trial-centre scales.
