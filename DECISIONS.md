@@ -3208,3 +3208,28 @@ W1–W5 screens and the MOA-II run continue to completion (PR #95), but new comp
 - S1–S3 are run and null: start System A round 2 from the recorded failure modes (no Lorentz derivation,
   disordered-locality renaming, cosmic-opacity redundancy).
 - The owner changes the 30 % budget or the process.
+
+## D-070 S2 flat-kernel SN residuals: Pantheon+ × LS DR9 photo-z counts, α = 2 column, dilution-corrected limit (2026-10-09)
+
+**Decision.** S2 (D-069) is tested with `scripts/s2_flat_kernel.py`. Pantheon+ residuals against flat ΛCDM
+(Ω_m = 0.334) are regressed by WLS on [1, z, X_lens, X_flat]. The columns are per-SN counts of LS DR9 galaxies
+(countmap selection, dereddened z < 21 mag, 2′ disc, z_g < z_s − 0.05, Δz = 0.05 shells) relative to the mean
+shell densities per photometric region; discs with < 50 % of the region's median galaxy count are dropped.
+X_flat uses A3's (1+δ)^α with α = 2 (Poisson-unbiased N(N−1)/E, only shells expecting ≥ 1 galaxy).
+Errors come from χ²/dof scaling and a z-matched scramble. A 1 % leverage-trimmed refit is required, and
+limits are divided by the shot-noise dilution λ from Poisson-only columns and by the recovery ratio of a whole-chain
+injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T⟩ (one-sided 95 %).
+
+**Alternatives rejected.**
+- α = 2 over all shells: shells with E ≪ 1 turn 3–5 galaxies into X ≈ 20–54 and fake a tight limit.
+- α = 1 flat column: 0.995-correlated with the lensing column at this depth, so it is kernel-degenerate.
+- Scramble-carrier injections alone as the efficiency: they miss regression dilution.
+- A halo-model κ (Shah+2024): more work for a test that cannot detect lensing in Pantheon+ anyway; it belongs to the
+  DES-SN5YR follow-up.
+- DES-SN5YR first: needs DES Y3 Gold access and setup; Pantheon+ and DR9 photo-z were reachable in one cycle.
+
+**Evidence.** `results/s2_flat_kernel/fit_*.json`; CHANGELOG 2026-10-09.
+
+**Revisit if.**
+- DES-SN5YR + DES Y3 Gold are set up: repeat there with the lensing detection as the positive control.
+- A3 fixes how its matter column maps to galaxy counts (bias), which sets the conversion of this limit.
