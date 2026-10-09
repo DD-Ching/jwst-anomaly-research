@@ -8,8 +8,11 @@
     itself (running mean of daily counts), calibrated by injection.
 
 Writes ``results/e1_events/chime_flag_tests.json``. Single process.
+``--cell 100s-1h`` runs only (d) on the 100 s - 1 h wide cell, with a second variant that keeps
+the catalogue's time-of-day distribution (``keep_tod``), and writes
+``results/e1_events/chime_rate_null_100s_1h.json``.
 
-  python scripts/e1_chime_flag.py [--n 1000]
+  python scripts/e1_chime_flag.py [--n 1000] [--cell 1h-1d|100s-1h]
 """
 
 from __future__ import annotations
@@ -32,7 +35,9 @@ import e1_events as E  # noqa: E402
 from jwst_anomaly import event_network as en  # noqa: E402
 
 OUT = ROOT / "results" / "e1_events" / "chime_flag_tests.json"
+OUT_100S = ROOT / "results" / "e1_events" / "chime_rate_null_100s_1h.json"
 K = 3  # 1 h - 1 d lag bin
+CELLS = {"1h-1d": 3, "100s-1h": 2}
 WIDE = 1
 
 
@@ -56,8 +61,8 @@ def cell_pairs(s: en.Sample, p: en.Params):
     return i[m], j[m]
 
 
-def count(s: en.Sample, p: en.Params) -> int:
-    return int(en.count_channel(s, s, p, True, windows=[("c", [p.lag_edges[K : K + 2]])])[0, 1])
+def count(s: en.Sample, p: en.Params, k: int = K) -> int:
+    return int(en.count_channel(s, s, p, True, windows=[("c", [p.lag_edges[k : k + 2]])])[0, 1])
 
 
 def jit_null(s, p, n, rng):
@@ -72,10 +77,11 @@ def subset(s: en.Sample, m: np.ndarray) -> en.Sample:
     return en.Sample(s.cat, s.mjd[m], s.ra[m], s.dec[m], s.sigma[m], s.year[m])
 
 
-def rate_null(s: en.Sample, rng, window_days: int) -> en.Sample:
+def rate_null(s: en.Sample, rng, window_days: int, keep_tod: bool = False) -> en.Sample:
     """Permute events, then redraw every time from a smooth per-day rate: the running mean (window
-    days) of the catalogue's own daily counts; uniform time within the drawn day. Dec and hour angle
-    kept (with_times)."""
+    days) of the catalogue's own daily counts; uniform time within the drawn day, or with
+    ``keep_tod`` the permuted event's own UTC time of day (keeps the daily duty cycle). Dec and
+    hour angle kept (with_times)."""
     day = np.floor(s.mjd).astype(int)
     d0 = day.min()
     cnt = np.bincount(day - d0).astype(float)
@@ -85,13 +91,70 @@ def rate_null(s: en.Sample, rng, window_days: int) -> en.Sample:
     perm = rng.permutation(len(s.mjd))
     days = rng.choice(len(prob), size=len(s.mjd), p=prob) + d0
     new = np.empty_like(s.mjd)
-    new[perm] = days + rng.uniform(0, 1, len(s.mjd))
+    tod = np.mod(s.mjd[perm], 1.0) if keep_tod else rng.uniform(0, 1, len(s.mjd))
+    new[perm] = days + tod
     return s.with_times(new)
+
+
+def rate_null_test(s, p, k, n, rng, windows=(7, 3), keep_tod=False, n_inj=300) -> dict:
+    """Observed vs rate-modulated null in lag bin k (wide), and the same after injecting n_inj
+    wide pairs in that bin (the share of injected excess the null keeps is its calibration)."""
+    rn = {}
+    for w in windows:
+        res = {}
+        for ninj in (0, n_inj):
+            sb = (
+                s
+                if ninj == 0
+                else en.inject_pairs(s, s, ninj, *p.lag_edges[k : k + 2], p, True, rng)
+            )
+            ob = count(sb, p, k)
+            nb = np.array([count(rate_null(sb, rng, w, keep_tod), p, k) for _ in range(n)])
+            pa = float(en.analytic_p(np.array([ob]), nb[:, None])[0])
+            res[str(ninj)] = {
+                "obs": ob,
+                "null_mean": round(float(nb.mean()), 1),
+                "null_sd": round(float(nb.std()), 1),
+                "z": round(z_of(ob, nb), 2),
+                "excess_kept": round(float(ob - nb.mean()), 1),
+                "analytic_p": pa,
+                "bonferroni_45": min(1.0, pa * 45),
+            }
+        rn[f"running_mean_{w}d"] = res
+    return rn
+
+
+def main_100s(s: en.Sample, p: en.Params, n: int, t0: float) -> int:
+    k = CELLS["100s-1h"]
+    rng = np.random.default_rng(5_100_000)
+    o = count(s, p, k)
+    null = np.array([count(en.scramble_jit(s, rng, p), p, k) for _ in range(n)])
+    out: dict = {
+        "cell": "CHIME-CHIME 100s-1h wide",
+        "n_scrambles": n,
+        "full": {
+            "obs": o,
+            "jit_mean": round(float(null.mean()), 1),
+            "z_jit": round(z_of(o, null), 2),
+        },
+        "d_rate_modulated_null": rate_null_test(s, p, k, n, rng),
+        "d_rate_modulated_null_keep_tod": rate_null_test(
+            s, p, k, n, rng, windows=(7,), keep_tod=True
+        ),
+        "runtime_s": None,
+    }
+    out["runtime_s"] = round(time.time() - t0)
+    with open(OUT_100S, "w") as fh:
+        json.dump(out, fh, indent=1)
+        fh.write("\n")
+    print(json.dumps(out, indent=1))
+    return 0
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=1000)
+    ap.add_argument("--cell", choices=tuple(CELLS), default="1h-1d")
     a = ap.parse_args(argv)
     t0 = time.time()
     p = en.Params()
@@ -99,6 +162,8 @@ def main(argv=None) -> int:
     df = chime_frame(paths)
     s = en.Sample.from_table(en.chime_events(pd.read_csv(paths["chimefrbcat2.csv"])))
     assert np.allclose(np.sort(df["mjd_400"].to_numpy()), s.mjd)
+    if a.cell == "100s-1h":
+        return main_100s(s, p, a.n, t0)
     rng = np.random.default_rng(5_000_000)
     out: dict = {"cell": "CHIME-CHIME 1h-1d wide", "n_scrambles": a.n}
 
@@ -219,29 +284,7 @@ def main(argv=None) -> int:
     out["c_property_differences"] = pr
 
     # (d) rate-modulated null, calibrated by injection
-    rn = {}
-    for w in (7, 3):
-        res = {}
-        for ninj in (0, 300):
-            sb = (
-                s
-                if ninj == 0
-                else en.inject_pairs(s, s, ninj, *p.lag_edges[K : K + 2], p, True, rng)
-            )
-            ob = count(sb, p)
-            nb = np.array([count(rate_null(sb, rng, w), p) for _ in range(a.n)])
-            pa = float(en.analytic_p(np.array([ob]), nb[:, None])[0])
-            res[str(ninj)] = {
-                "obs": ob,
-                "null_mean": round(float(nb.mean()), 1),
-                "null_sd": round(float(nb.std()), 1),
-                "z": round(z_of(ob, nb), 2),
-                "excess_kept": round(float(ob - nb.mean()), 1),
-                "analytic_p": pa,
-                "bonferroni_45": min(1.0, pa * 45),
-            }
-        rn[f"running_mean_{w}d"] = res
-    out["d_rate_modulated_null"] = rn
+    out["d_rate_modulated_null"] = rate_null_test(s, p, K, a.n, rng)
     out["runtime_s"] = round(time.time() - t0)
     with open(OUT, "w") as fh:
         json.dump(out, fh, indent=1)
