@@ -2146,6 +2146,10 @@ def main(argv=None) -> int:
     r.add_argument("--per-cell", type=int, default=200)
     r.add_argument("--per-ctrl", type=int, default=40)
     a = ap.parse_args(argv)
+    if a.cmd in ("fit", "vet", "inject", "run-field") and not w3.have_mm():
+        # Without MulensModel the parallax refit and the binary-lens test are skipped, which
+        # inflates the injection efficiency and leaves real flags incomplete (D-068).
+        ap.error(f"{a.cmd} needs MulensModel: pip install -e '.[mulens]'")
     set_field(a.field)
     if a.cmd == "prescreen":
         run_stream_prescreen(

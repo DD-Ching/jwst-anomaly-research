@@ -484,3 +484,11 @@ def test_open_flags_give_an_efficiency_table_and_no_limit(tmp_path, monkeypatch)
     assert list(eff.meta["open_flags"]) == ["gb20-R-4-0-1"]
     assert eff["p_recovered"][0] == pytest.approx(0.5)
     assert not (tmp_path / "limits_gb20.ecsv").exists()  # combine never sees the field
+
+
+@pytest.mark.parametrize("cmd", ["fit", "vet", "inject", "run-field"])
+def test_fit_and_vet_stages_refuse_to_run_without_mulensmodel(monkeypatch, cmd):
+    monkeypatch.setattr(wm.w3, "have_mm", lambda: False)
+    with pytest.raises(SystemExit) as exc:
+        wm.main(["--field", "gb22", cmd])
+    assert exc.value.code == 2
