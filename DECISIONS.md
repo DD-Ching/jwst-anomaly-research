@@ -2765,6 +2765,27 @@ orphan counts.
 - A lens list publishes image positions (W1 geometry).
 - Tractor can be re-run on injected images (a measured completeness).
 
+**Amendment (2026-10-08): the LS pair must be the catalogued pair (D-064 check); one entry per lens.**
+- `lenscats.pair_match` (moved from `scripts/w12_niq.py`, tolerance `PAIR_SEP_TOL` = 0.5″, ASSUMPTION) is shared by
+  both scripts. In `w12_lenscats.py`, `deflector_test` reports `used_pair`, and `pair_check` compares the LS pair
+  with 2θ_E (SIS `model_prediction`; the catalogues give no image positions). A pair-based status with a mismatch
+  is undecided. Without a catalogued θ_E the system stays decided and is counted as unchecked in `summary.json`.
+- `dedup_same_lens` (vet) keeps one decided entry per lens. Entries match on the same designation
+  (`lenscats.designation_key`, HHMM±DD after removing the prefix, J/B, spaces and suffixes) within 30″
+  (`Params.same_lens_radius`, ASSUMPTION). A copy with a deflector is kept (a deflector seen at one catalogued
+  position explains the lens), else the first copy. Merged ids: `summary.json` `vetting.same_lens_merged`. Three
+  radio lenses are listed twice in lenscat about 11″ apart: MG0414+0534, B2114+022, B2319+052. For each, the
+  "deflector" copy is kept and the "none" copy, on empty sky, is dropped.
+- Re-run (`derived`): decided 29 → 25 (deflector 13 → 12, none 16 → 13). 115252+004733 (θ_E 1.67″, LS pair 4.18″)
+  becomes undecided. Typical: quasar 3 / 15 / < 0.52, radio 0 / 10 / < 0.30, all 3 / 25 / < 0.31.
+  Conservative: 0 / 5 / < 0.60. The three open CHITAH pairs are unchanged.
+- Coverage is thin: 0 of the 15 pair-decided systems have a catalogued θ_E. A one-off check against the SQLS
+  separations pinned for D-064 matched the three that have one (J1322+1052, J1349+1227, J1515+1511).
+- Rejected: requiring a catalogued separation for every decided system (no pair-decided system has one, so the
+  quasar class would have N = 0); importing the D-064 VizieR tables into the D-056 chain (3 of 15 matches, all
+  consistent: a second pinned input set for no change); a hard-coded duplicate list; widening the 3″ catalogue merge
+  (it would merge distinct close systems before any test).
+
 ## D-057 W3 in OGLE-IV Mróz samples: one fitter for ordinary and exotic models; disk sample null (2026-10-08)
 
 **Decision.**

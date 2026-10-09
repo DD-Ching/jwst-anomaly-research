@@ -51,6 +51,10 @@ class Params:
     image_radius: float = 3.0  # arcsec: point images of a quasar lens around the position
     sep_min: float = 2.0  # arcsec: image pairs closer than this hide the lens in LS seeing
     image_exclusion: float = 0.5  # arcsec: a deflector candidate is not an image
+    # arcsec: the LS pair is the catalogued pair when its separation is 2 theta_E (SIS) within this
+    sep_match: float = lenscats.PAIR_SEP_TOL
+    # arcsec: decided systems with the same designation this close are one lens listed twice
+    same_lens_radius: float = 30.0
     n_rounded_sample: int = 32  # random rounded-position systems put on a contact sheet
 
 
@@ -267,7 +271,8 @@ def deflector_test(t: Table, src: Table, p: Params, images: Table) -> Table:
       galaxy"; else, with optical point sources, the quasar test; else "none".
     "faint galaxy" is undecided: a galaxy sits where the lens should be, and whether it is
     luminous enough depends on the Faber-Jackson scatter beyond the 2-rms margin, so the system
-    can neither show nor exclude a dark deflector. Returns ``test_status``, ``n_bright_gal``.
+    can neither show nor exclude a dark deflector. Returns ``test_status``, ``n_bright_gal`` and
+    ``used_pair`` (the status came from the LS image pair).
     """
     sel = np.asarray(t["selection"])
     lim = np.asarray(t["defl_mag_max"], float)
@@ -279,18 +284,52 @@ def deflector_test(t: Table, src: Table, p: Params, images: Table) -> Table:
     status = np.array(["insensitive"] * len(t), dtype=object)
     q = sel == "quasar"
     status[q] = np.asarray(pair["status"], dtype=object)[q]
+    radio_pair = (ngal == 0) & (nany == 0) & (np.asarray(images["n_images"]) > 0)
     rad = np.where(
         ngal > 0,
         "deflector",
         np.where(
-            nany > 0,
-            "faint galaxy",
-            np.where(np.asarray(images["n_images"]) > 0, np.asarray(pair["status"]), "none"),
+            nany > 0, "faint galaxy", np.where(radio_pair, np.asarray(pair["status"]), "none")
         ),
     )
     r = sel == "radio"
     status[r] = rad[r]
-    return Table({"test_status": status, "n_bright_gal": np.asarray(ngal, int)})
+    used = (q | (r & radio_pair)) & (np.asarray(images["img2"]) >= 0)
+    return Table(
+        {
+            "test_status": status,
+            "n_bright_gal": np.asarray(ngal, int),
+            "used_pair": used,
+            "n_lens_images": np.asarray(pair["n_lens_images"], int),
+        }
+    )
+
+
+PAIR_MISMATCH = "LS pair is not the catalogued pair (separation)"
+
+
+def pair_check(t: Table, images: Table, used_pair, p: Params) -> tuple[np.ndarray, np.ndarray]:
+    """Whether the LS pair the test ran on is the catalogued pair (D-064 check, shared
+    ``lenscats.pair_match``). The catalogues give theta_E, not image positions, so the catalogued
+    separation is 2 theta_E (SIS ``model_prediction``) for quasar and radio systems that have
+    one. Returns ``sep_cat`` (NaN when unknown) and ``mismatch`` (the test used a pair whose
+    separation disagrees: undecided). An unknown catalogued separation leaves the system as it is
+    (counted as unchecked)."""
+    th = np.asarray(t["theta_e"], float)
+    sens = np.isin(np.asarray(t["selection"]), ("quasar", "radio"))
+    sep_cat = np.where(sens & np.isfinite(th) & (th > 0), 2 * th, np.nan)
+    match = lenscats.pair_match(images["sep"], sep_cat, p.sep_match)
+    # a quad's two brightest images are often a fold or cusp pair, closer than 2 theta_E: there
+    # only a pair wider than 2 theta_E (+ tolerance) is not the catalogued system
+    # quads by the images the pair test classified as lens images, not by raw PSF neighbours
+    # (a red PSF-typed source is the deflector, not a third image)
+    n_lens = t["n_lens_images"] if "n_lens_images" in t.colnames else images["n_images"]
+    quad = np.asarray(n_lens) >= 3
+    too_wide = np.asarray(images["sep"], float) > sep_cat + p.sep_match
+    wrong = np.where(quad, too_wide, ~match)
+    decided_status = np.isin(np.asarray(t["test_status"]), ("deflector", "none"))
+    mismatch = np.asarray(used_pair, bool) & np.isfinite(sep_cat) & wrong & decided_status
+    return sep_cat, mismatch
 
 
 def flags_undecided(t: Table, src: Table, p: Params) -> np.ndarray:
@@ -313,6 +352,50 @@ def flags_undecided(t: Table, src: Table, p: Params) -> np.ndarray:
             r.append("LS maskbits")
         reasons.append("; ".join(r))
     return np.array(reasons, dtype=object)
+
+
+def dedup_same_lens(t: Table, decided, p: Params, pool=None) -> tuple[np.ndarray, list[dict]]:
+    """One entry per lens among the decided systems. Catalogues list some lenses twice beyond
+    the merge radius (lenscat: MG0414+0534 about 11'' apart); copies share a designation
+    (``lenscats.designation_key``) within ``same_lens_radius``. Kept: a copy with a deflector (a
+    deflector seen at one catalogued position of the lens explains the lens), else the first copy
+    (the catalogues give no lens-galaxy position to prefer one). Returns the new decided mask and
+    the merged groups."""
+    keep = np.asarray(decided, bool).copy()
+    # copies are found among all ``pool`` systems (covered and sensitive), so a deflector seen at
+    # an undecided copy still explains the decided "none" copy of the same lens
+    pool = keep if pool is None else (np.asarray(pool, bool) | keep)
+    idx = np.flatnonzero(pool)
+    lab = lenscats.same_lens_groups(
+        np.asarray(t["name"])[idx],
+        np.asarray(t["ra"], float)[idx],
+        np.asarray(t["dec"], float)[idx],
+        p.same_lens_radius,
+    )
+    status = np.asarray(t["test_status"])
+    sid = np.asarray(t["system_id"])
+    merged = []
+    for g in np.unique(lab):
+        m = idx[lab == g]
+        if len(m) < 2 or not keep[m].any():
+            continue
+        defl = m[status[m] == "deflector"]
+        dec = m[keep[m]]
+        if len(defl):  # the lens has a visible deflector: keep one decided deflector copy, if any
+            dd = dec[status[dec] == "deflector"]
+            k = dd[0] if len(dd) else -1
+        else:
+            k = dec[0]
+        keep[m[m != k]] = False
+        merged.append(
+            {
+                "name": str(t["name"][k if k >= 0 else m[0]]),
+                "kept": str(sid[k]) if k >= 0 else "",  # "": deflector only at an undecided copy
+                "kept_status": str(status[k]) if k >= 0 else "",
+                "dropped": [f"{sid[j]} ({status[j]})" for j in m if j != k],
+            }
+        )
+    return keep, merged
 
 
 def cmd_screen(args, p: Params) -> None:
@@ -364,11 +447,18 @@ def cmd_screen(args, p: Params) -> None:
     test = deflector_test(res, src, p, images)
     for c in test.colnames:
         res[c] = test[c]
+    res["sep_cat"], pair_mismatch = pair_check(res, images, test["used_pair"], p)
     res["visible_bright"] = np.asarray(res["n_bright_gal"]) > 0
     depth = np.asarray(res["depth_z"], float)
     res["detectable_typical"] = res["req_mag_z_typical"] < depth - p.margin
     res["detectable_floor"] = res["req_mag_z_floor"] < depth - p.margin
-    res["undecided"] = flags_undecided(res, src, p)
+    res["undecided"] = np.array(
+        [
+            "; ".join(x for x in (u, PAIR_MISMATCH if m else "") if x)
+            for u, m in zip(flags_undecided(res, src, p), pair_mismatch, strict=True)
+        ],
+        dtype=object,
+    )
     res.meta.update(
         provenance=schema.Provenance.DERIVED.value,
         source="; ".join(
@@ -598,8 +688,12 @@ def cmd_vet(args, p: Params) -> None:
     sens = np.isin(res["selection"], ("quasar", "radio"))
     decided = cov & sens & (np.asarray(res["undecided"]) == "")
     decided &= np.isin(res["test_status"], ("deflector", "none"))  # "faint galaxy" undecided
+    n_before_dedup = int(decided.sum())
+    decided, same_lens = dedup_same_lens(res, decided, p, pool=cov & sens)
     cand = res[decided & (res["test_status"] == "none")]
     add_xmatch(cand, p)
+    used = np.asarray(res["used_pair"], bool)
+    checked = np.isfinite(np.asarray(res["sep_cat"], float))
 
     def ran(v) -> bool:
         return str(v) not in ("", "not run")
@@ -647,6 +741,8 @@ def cmd_vet(args, p: Params) -> None:
     summary["vetting"] = {
         "sensitive_covered": int((cov & sens).sum()),
         "sensitive_decided": int(decided.sum()),
+        "sensitive_decided_before_same_lens_dedup": n_before_dedup,
+        "same_lens_merged": same_lens,
         "no_deflector": len(cand),
         "labels": dict(
             zip(
@@ -660,6 +756,10 @@ def cmd_vet(args, p: Params) -> None:
             x for u in np.asarray(res["undecided"])[cov & sens] for x in str(u).split("; ") if x
         ),
         "sensitive_status": _count(np.asarray(res["test_status"])[cov & sens]),
+        # D-064 pair check on the decided systems whose status came from the LS pair
+        "decided_by_pair": int((decided & used).sum()),
+        "decided_by_pair_checked": int((decided & used & checked).sum()),
+        "decided_by_pair_unchecked": int((decided & used & ~checked).sum()),
         "rounded_covered": int(len(rounded)),
         "rounded_sample_inspected": int(len(rsample)),
         "controls_inspected": int(len(ctrl)),
