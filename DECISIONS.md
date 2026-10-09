@@ -3202,5 +3202,18 @@ efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049
 the fixed-width IPAC parser is bit-identical to the token parser on 15,461 gb21 light curves; gb21 test throughput
 258 light curves/s (72 MB/s, 4 cores). 103 / 2,000 W3 injections recovered, 0 / 200 PSPL controls.
 
+**Amendment (2026-10-09): vetting tests added post hoc, each after an automated survivor was seen.** Each change
+was followed by a re-run of the vetting and the injections of every field already done, so every quoted limit
+includes its cost. The candidate records give the verdicts and evidence.
+- `exotic_in_domain` and `smooth_dip`, added after seeing gb20-R-4-0-49379: u₀ < 2 and f_s ≤ 3 × the
+  DoPHOT or Gaia DR3 RP reference flux; a Gaussian dip. Cost on gb22: 0 injections.
+- `feature_bracketed` and `step_ramp`, added after seeing gb19-R-4-4-31159: ≥ 20 epochs before the ingress and
+  after the egress; a level change plus ramp. Cost on gb22: 103 → 93, mostly long t_E near the data edges.
+- The night jackknife ranks nights against the eclipse model too (c63a6d5), changed after seeing
+  gb7-R-8-6-94052. Its exotic preference over a trapezoid rested on one night. Paired re-run of gb22 (same seed,
+  identical injections; W3 recovered, ρ summed, before → after): 3 d 8 → 6 (−25 %, small counts), 10 d 22 → 20,
+  30 d 28 → 25, 100 d 22 → 21, 300 d 13 → 13; total 93 → 85 (−9 %). PSPL controls falsely recovered: 0 → 0.
+  Kept, not tuned: a threshold set on the flag that motivated the change would be post hoc twice over.
+
 **Revisit if.** A field's quiet χ²/dof distribution is bimodal or its 95th percentile exceeds ~10 (the quantile then
 admits variables); the archive stops honouring range requests; a survivor appears (stop, /vet-candidate, owner).
