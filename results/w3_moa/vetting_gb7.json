@@ -92,15 +92,7 @@
   ],
   [
    "jackknife_nights",
-   1
-  ],
-  [
-   "two_unrelated_events",
-   1
-  ],
-  [
-   "variable_catalogues",
-   1
+   0
   ]
  ],
  "flags": [
@@ -1471,7 +1463,7 @@
    "event_id": "gb7-R-8-6-94052",
    "exotic": "N1neg",
    "dbic_all": -566.3396961806984,
-   "survives": true,
+   "survives": false,
    "tests": [
     [
      "screen_flag",
@@ -1565,18 +1557,8 @@
     ],
     [
      "jackknife_nights",
-     true,
-     "ΔBIC -55.3 after dropping the 2 most influential night(s) of 7 in the feature"
-    ],
-    [
-     "two_unrelated_events",
-     true,
-     "ΔBIC -488.6"
-    ],
-    [
-     "variable_catalogues",
-     true,
-     "matches: none (2″)"
+     false,
+     "ΔBIC 47.9 after dropping the 2 most influential night(s) of 7 in the feature"
     ]
    ]
   }
