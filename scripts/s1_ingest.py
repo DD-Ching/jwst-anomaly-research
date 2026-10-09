@@ -1,7 +1,10 @@
-"""S1 burst twins, stage 1: stream Fermi GBM bcat files and reduce them to compact three-band light curves.
+"""S1 burst twins, stage 1: stream Fermi GBM bcat files and reduce them to compact three-band light
+curves.
 
-Writes one tracked table per trigger year, ``results/s1_twins/lc_<YYYY>.ecsv.gz`` (< 1 MB each), plus the
-catalogue subset ``results/s1_twins/catalogue.ecsv.gz``. Raw FITS files are held in memory only and never stored.
+Writes one tracked table per trigger year, ``results/s1_twins/lc_<YYYY>.ecsv.gz`` (< 1 MB each),
+plus the
+catalogue subset ``results/s1_twins/catalogue.ecsv.gz``. Raw FITS files are held in memory only and
+never stored.
 Resumable: a year whose chunk exists is skipped.
 
   python scripts/s1_ingest.py [--years 2019 2020] [--io 12] [--cpu 4]
@@ -29,14 +32,16 @@ OUT = ROOT / "results" / "s1_twins"
 TAP = "https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync"
 FTP = "https://heasarc.gsfc.nasa.gov/FTP/fermi/data/gbm/bursts"
 CAT_COLS = (
-    "trigger_name, ra, dec, error_radius, trigger_time, t90, t90_error, t90_start, fluence, fluence_error, "
-    "flux_64, flux_256, flnc_best_fitting_model, flnc_comp_epeak, flnc_band_epeak, flnc_comp_ergflnc, "
+    "trigger_name, ra, dec, error_radius, trigger_time, t90, t90_error, t90_start, fluence, "
+    "fluence_error, "
+    "flux_64, flux_256, flnc_best_fitting_model, flnc_comp_epeak, flnc_band_epeak, "
+    "flnc_comp_ergflnc, "
     "bcatalog, last_modified"
 )
 
 
 def write_ecsv_gz(t: Table, path: Path) -> None:
-    """astropy does not compress on write; gzip the ECSV text explicitly (mtime 0 for reproducible bytes)."""
+    """Write gzipped ECSV (astropy does not compress on write; mtime 0 for reproducible bytes)."""
     buf = io.StringIO()
     t.write(buf, format="ascii.ecsv")
     with open(path, "wb") as fh, gzip.GzipFile(fileobj=fh, mode="wb", mtime=0) as gz:
@@ -72,7 +77,11 @@ def fetch_catalogue() -> Table:
 
     r = requests.get(
         TAP,
-        params={"REQUEST": "doQuery", "LANG": "ADQL", "QUERY": f"SELECT {CAT_COLS} FROM fermigbrst"},
+        params={
+            "REQUEST": "doQuery",
+            "LANG": "ADQL",
+            "QUERY": f"SELECT {CAT_COLS} FROM fermigbrst",
+        },
         timeout=300,
     )
     r.raise_for_status()
@@ -84,7 +93,8 @@ def fetch_catalogue() -> Table:
     t.meta = {
         "provenance": str(Provenance.OBSERVED),
         "source": f"HEASARC TAP {TAP} fermigbrst ({len(t)} rows), fetched "
-        f"{time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}; response sha256 {hashlib.sha256(r.content).hexdigest()}",
+        f"{time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}; response sha256 "
+        f"{hashlib.sha256(r.content).hexdigest()}",
     }
     return t
 
@@ -125,23 +135,26 @@ def reduce_one(args):
             "bcat_file": fn,
             "sha256": sha,
             "size": len(content),
-            "dets": red["dets"],
+            "bad_frac": round(red["bad_frac"], 3),
             "t_lo": round(red["t_lo"], 4),
             "dt": red["dt"],
             "nbin": red["flux"].shape[1],
             "u1": units[0],
             "u2": units[1],
-            "u3": units[2],
             "f1": fs[0],
             "f2": fs[1],
-            "f3": fs[2],
             "e1": es[0],
             "e2": es[1],
-            "e3": es[2],
             "status": "ok",
         }
     except Exception as exc:  # noqa: BLE001
-        return {"trigger_name": name, "bcat_file": fn, "sha256": sha, "size": len(content), "status": str(exc)[:120]}
+        return {
+            "trigger_name": name,
+            "bcat_file": fn,
+            "sha256": sha,
+            "size": len(content),
+            "status": str(exc)[:120],
+        }
 
 
 def empty_row(name, fn, status):
@@ -170,38 +183,46 @@ def run_year(year: str, cat: Table, n_io: int, pool: cf.ProcessPoolExecutor) -> 
             rows.append(f.result())
     dt = time.time() - t0
     cpu1 = os.times()
-    cpu = (cpu1.children_user + cpu1.children_system - cpu0.children_user - cpu0.children_system) + (
-        cpu1.user + cpu1.system - cpu0.user - cpu0.system
-    )
+    cpu = (
+        cpu1.children_user + cpu1.children_system - cpu0.children_user - cpu0.children_system
+    ) + (cpu1.user + cpu1.system - cpu0.user - cpu0.system)
     keys = [
         "trigger_name",
         "bcat_file",
         "sha256",
         "size",
         "status",
-        "dets",
+        "bad_frac",
         "t_lo",
         "dt",
         "nbin",
         "u1",
         "u2",
-        "u3",
         "f1",
         "f2",
-        "f3",
         "e1",
         "e2",
-        "e3",
     ]
-    defaults = {"dets": "", "t_lo": np.nan, "dt": np.nan, "nbin": 0, "u1": np.nan, "u2": np.nan, "u3": np.nan}
+    defaults = {
+        "bad_frac": np.nan,
+        "t_lo": np.nan,
+        "dt": np.nan,
+        "nbin": 0,
+        "u1": np.nan,
+        "u2": np.nan,
+    }
     cols = {k: [r.get(k, defaults.get(k, "")) for r in rows] for k in keys}
     t = Table(cols)
     t.sort("trigger_name")
     t.meta = {
         "provenance": str(Provenance.DERIVED),
-        "source": f"Fermi GBM bcat files ({FTP}/<year>/<bn>/current/glg_bcat_all_*.fit; sha256 per row); "
-        "INCLUDED NaI detectors inverse-variance combined; bands keV 10-50/50-300/300-1000 (CTIME channels "
-        "1-2/3-4/5-6); flux f<b> and error e<b> are integer tenths of unit u<b> (ph cm^-2 s^-1); bin i covers "
+        "source": f"Fermi GBM bcat files ({FTP}/<year>/<bn>/current/glg_bcat_all_*.fit; "
+        "sha256 per row); "
+        "HDU 2 time-resolved fit fluxes; band 1 = PHTFLUXB (50-300 keV), band 2 = PHTFLUX - "
+        "PHTFLUXB "
+        "(10-50 + 300-1000 keV); bad_frac = invalid source bins in the window; flux f<b> and "
+        "error e<b> are "
+        "integer tenths of unit u<b> (ph cm^-2 s^-1); bin i covers "
         "[t_lo + i dt, t_lo + (i+1) dt) s from trigger; scripts/s1_ingest.py",
     }
     OUT.mkdir(parents=True, exist_ok=True)

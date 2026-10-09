@@ -3208,3 +3208,60 @@ W1–W5 screens and the MOA-II run continue to completion (PR #95), but new comp
 - S1–S3 are run and null: start System A round 2 from the recorded failure modes (no Lorentz derivation,
   disordered-locality renaming, cosmic-opacity redundancy).
 - The owner changes the 30 % budget or the process.
+
+## D-TBD S1 burst twins in Fermi GBM: bcat HDU 2 light curves, multi-band max cross-correlation, chi2 twin test; null and limit (2026-10-09)
+
+**Decision.**
+- Data: the HEASARC `fermigbrst` catalogue over TAP, and the per-burst bcat files streamed from the HEASARC FTP.
+  Each burst is reduced to two matched bands from bcat HDU 2: `PHTFLUXB` (50–300 keV) and `PHTFLUX − PHTFLUXB`
+  (10–50 plus 300–1000 keV). The window is T90 ± (0.25 T90 + 2 s) at 64 ms · 2^k, with at most 256 bins. The
+  results are tracked in `results/s1_twins/lc_<YYYY>.ecsv.gz` (~150 kB per year).
+- Eligibility: at least 2 pulses. A pulse is a summed-band peak whose prominence is ≥ 5σ of the local error,
+  sqrt(σ_peak² + σ_base²), so the test includes source Poisson noise.
+- Statistic: the maximum over lag of the multi-band normalised cross-correlation ρ, with s = 1 primary. Pairs are
+  compared at a common resolution, |Δk| ≤ 1. A coarse s grid (0.5, 0.71, 1.41, 2) is secondary and runs on the top
+  pairs only.
+- Position cut: sep > 3·sqrt(σ1² + σ2² + 2·3.7°²).
+- Chain: ρ > ρ* (95 % of the per-catalogue maximum over 100 pulse-shuffled surrogate catalogues), then a
+  noise-consistency χ² test of a scaled, shifted copy with a 10 % flux systematic (p ≥ 10⁻³), then a re-trigger
+  veto (delay ≥ 1 d). A secondary "deep" chain uses ρ > 0.90.
+- Injections copy a real eligible burst into another burst's slot, with that burst's background noise, flux ratios
+  1–0.1 and 5 % per-band gain jitter, and pass through the whole chain.
+- `scripts/s1_ingest.py`, `scripts/s1_twins.py`, `src/jwst_anomaly/burst_twins.py`. All thresholds are ASSUMPTIONs
+  in `burst_twins.Params`.
+
+**Alternatives rejected.**
+- bcat HDU 1 `PHTCNTS` (per-detector deconvolved 8- or 128-channel spectra): in ~40 % of faint bins, single channels
+  carry the fill value −9.9e36. Dropping those bins left only the positive fluctuations, which looked like spiky
+  multi-pulse bursts (84 % of bursts appeared "multi-pulse"). Rejected after visual inspection.
+- TTE/CTIME with our own background fits: these are ~10–100× more data and need per-burst background modelling,
+  while bcat already holds rmfit's background-subtracted, deconvolved fluxes. They are kept as a follow-up for
+  candidates only.
+- GDT (official) for reading: no bcat reader is listed, and bcat is a plain FITS table, so `astropy.io.fits` is
+  enough. GDT stays the tool for TTE/RSP follow-up.
+- `astroquery.heasarc`: plain HEASARC TAP is one request (4 s) with no extra dependency.
+- The 2006.07095 method (position, spectrum and duration cuts first, then cross-correlation): its position-first
+  cut is exactly what S1 inverts. We keep its cross-correlation and its warning about single-pulse look-alikes, and
+  replace the spectral cut with matched bands inside ρ plus the χ² test.
+- Pulse-count threshold judged on the S/N with background error only: it counts Poisson fluctuations on bright
+  pulses as pulses.
+
+**Evidence.**
+- The catalogue has 4,390 bursts and 4,389 bcat files reduced. 1,414 bursts are eligible. 998,991 eligible pairs
+  give 510,294 pairs after the position and resolution cuts.
+- Results are in `results/s1_twins/summary.json`, `null.json`, `pairs_top.ecsv` and `injections.ecsv.gz`; the PR
+  body has the numbers.
+- The surrogate null under-predicts the real high-ρ tail about 12×: 1,860 real pairs have ρ > 0.9, against 146
+  per surrogate catalogue. It is also near-degenerate, because a 2-pulse burst has one alternative order. So ρ* is
+  a pre-screen, not a calibrated false-alarm rate, and the χ² test decides.
+- At ρ > 0.9, 0 of the 1,860 real pairs pass χ². At ρ > 0.8, 24 of 40,041 pass, all with a faint partner
+  (S/N 5–10).
+- Positive controls: 8 same-source re-trigger pairs (GRB 091024, 130925, 150201, 220627, 250702 ×3, and
+  bn210925800/bn210926869 at 1.3°) are all removed by the position cut.
+
+**Revisit if.**
+- A better null that keeps the population envelope becomes available (e.g. a pulse-parameter generative model
+  fitted to the catalogue).
+- TTE-based light curves are needed for short GRBs (64 ms is coarse for T90 < 1 s).
+- CHIME/FRB Catalog 2 is added (the S1 second half).
+- The χ² systematic (10 %) is calibrated on real same-burst data, e.g. GBM vs. Swift-BAT.

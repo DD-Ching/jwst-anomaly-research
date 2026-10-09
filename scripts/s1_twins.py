@@ -1,8 +1,11 @@
 """S1 burst twins, stage 2: screen, surrogate null, injection-recovery, vetting and limit.
 
-Reads ``results/s1_twins/lc_*.ecsv.gz`` and ``catalogue.ecsv.gz`` (from scripts/s1_ingest.py). Writes
-``bursts.ecsv.gz`` (per-burst eligibility), ``pairs_top.ecsv`` (top real pairs and every flagged pair),
-``null.json`` (surrogate-null summary), ``injections.ecsv.gz`` and ``summary.json``. Plots go to --plots.
+Reads ``results/s1_twins/lc_*.ecsv.gz`` and ``catalogue.ecsv.gz`` (from scripts/s1_ingest.py).
+Writes
+``bursts.ecsv.gz`` (per-burst eligibility), ``pairs_top.ecsv`` (top real pairs and every flagged
+pair),
+``null.json`` (surrogate-null summary), ``injections.ecsv.gz`` and ``summary.json``. Plots go to
+--plots.
 
   python scripts/s1_twins.py [--null 100] [--inject 3000] [--plots <dir>]
 
@@ -31,7 +34,8 @@ from jwst_anomaly.schema import Provenance  # noqa: E402
 
 OUT = ROOT / "results" / "s1_twins"
 P = bt.Params()
-L = 512  # FFT length: native (<= 256 bins) + coarsened (<= 128) or two native (<= 256 each) fit without wrap
+# FFT length: native (<= 256 bins) + coarsened (<= 128), or two natives, fit without wrap
+L = 512
 G: dict = {}  # pool globals (fork) / set by initializer
 
 
@@ -48,12 +52,15 @@ def write_json(obj, path: Path) -> None:
     path.write_text(json.dumps(obj, indent=1, default=float) + "\n")
 
 
-# ------------------------------------------------------------------------------------------------- load
+# -------------------------------------------------------------------------------------------------
+# load
 
 
 def load():
     cat = Table.read(OUT / "catalogue.ecsv.gz", format="ascii.ecsv")
-    lc = vstack([Table.read(f, format="ascii.ecsv") for f in sorted(glob.glob(str(OUT / "lc_*.ecsv.gz")))])
+    lc = vstack(
+        [Table.read(f, format="ascii.ecsv") for f in sorted(glob.glob(str(OUT / "lc_*.ecsv.gz")))]
+    )
     status = {str(r["trigger_name"]): str(r["status"]) for r in lc}
     lc = lc[lc["status"] == "ok"]
     idx = {str(n): i for i, n in enumerate(cat["trigger_name"])}
@@ -61,7 +68,7 @@ def load():
     for r in lc:
         name = str(r["trigger_name"])
         c = cat[idx[name]]
-        flux, err = bt.decode((r["u1"], r["u2"], r["u3"]), (r["f1"], r["f2"], r["f3"]), (r["e1"], r["e2"], r["e3"]))
+        flux, err = bt.decode((r["u1"], r["u2"]), (r["f1"], r["f2"]), (r["e1"], r["e2"]))
         valid = np.isfinite(flux).all(0)
         f, e = bt.clean(flux, err)
         npk = len(bt.find_pulses(f, e, P)) if valid.sum() >= 3 else 0
@@ -87,11 +94,12 @@ def load():
     return cat, bursts, status
 
 
-# ------------------------------------------------------------------------------------------------ score
+# ------------------------------------------------------------------------------------------------
+# score
 
 
 def level_bank(lcs, ks, K):
-    """Rows usable at level K: natives at K and level-(K-1) bursts coarsened by 2. Returns (ids, coarse, F, norm, n)."""
+    """Rows usable at level K: natives at K, level K-1 coarsened by 2. (ids, coarse, F, norm, n)."""
     ids, coarse, F, nrm, n = [], [], [], [], []
     for i, (fe, k) in enumerate(zip(lcs, ks, strict=True)):
         if k == K:
@@ -115,7 +123,8 @@ def level_bank(lcs, ks, K):
 def score_all(lcs, ks, allowed):
     """Max multi-band normalised cross-correlation over lag, s = 1, for every allowed pair.
 
-    ``allowed`` is a boolean (N, N) matrix (position cut and eligibility). Returns dict (i, j) -> (rho, lag, K).
+    ``allowed`` is a boolean (N, N) matrix (position cut and eligibility). Returns dict (i, j) ->
+    (rho, lag, K).
     """
     out_i, out_j, out_r, out_l, out_k = [], [], [], [], []
     for K in sorted(set(ks)):
@@ -149,7 +158,7 @@ def score_all(lcs, ks, allowed):
 
 
 def best_per_pair(i, j, r, lag, K):
-    """A pair can be scored at two levels only if k differs by one; keep the best (it is scored once in fact)."""
+    """Keep one score per pair (the best, if a pair was scored at two levels)."""
     key = i.astype(np.int64) * 100000 + j
     order = np.lexsort((-r, key))
     keep = np.r_[True, key[order][1:] != key[order][:-1]]
@@ -158,7 +167,7 @@ def best_per_pair(i, j, r, lag, K):
 
 
 def stretch_scores(lcs, ks, pairs, s_grid):
-    """Secondary: max rho over the coarse s grid (j stretched by s, at the coarser level of the pair)."""
+    """Secondary: max rho over the s grid (j stretched by s, at the coarser level of the pair)."""
     best = np.zeros(len(pairs))
     best_s = np.ones(len(pairs))
     for q, (i, j) in enumerate(pairs):
@@ -176,7 +185,8 @@ def stretch_scores(lcs, ks, pairs, s_grid):
     return best, best_s
 
 
-# ------------------------------------------------------------------------------------------------- null
+# -------------------------------------------------------------------------------------------------
+# null
 
 
 def _init(g):
@@ -194,7 +204,8 @@ def null_realisation(seed):
     return float(r.max()) if r.size else 0.0, hist, top, int(r.size)
 
 
-# -------------------------------------------------------------------------------------------- injection
+# --------------------------------------------------------------------------------------------
+# injection
 
 
 def pair_rho(x, ex, kx, y, ey, ky):
@@ -208,7 +219,7 @@ def pair_rho(x, ex, kx, y, ey, ky):
 
 
 def injection_one(args):
-    """One synthetic twin through the whole chain: eligibility, position cut, threshold, chi2, re-trigger veto."""
+    """One synthetic twin through the chain: eligibility, threshold, chi2, re-trigger veto."""
     seed, a, b, ratio = args
     rng = np.random.default_rng(seed)
     B = G["bursts"]
@@ -217,14 +228,17 @@ def injection_one(args):
     nb = eb.shape[1]
     na = fa.shape[1]
     eb = eb[:, np.arange(na) % nb] if nb < na else eb[:, :na]
-    fi, ei = bt.inject_twin(fa, ea, eb, ratio, rng)
+    fa2, ea2, fi, ei = bt.inject_twin(bt.template(fa), ea, eb, ratio, rng, P.inject_gain_jitter)
     npk = len(bt.find_pulses(fi, ei, P))
-    eligible = npk >= P.min_pulses
-    r, lag, x, ex, y, ey = pair_rho(fa, ea, B[a]["k"], fi, ei, B[a]["k"])
+    eligible = npk >= P.min_pulses and len(bt.find_pulses(fa2, ea2, P)) >= P.min_pulses
+    r, lag, x, ex, y, ey = pair_rho(fa2, ea2, B[a]["k"], fi, ei, B[a]["k"])
     chi2, dof, pval = bt.twin_chi2(x, ex, y, ey, lag)
     dtd = abs(B[a]["mjd"] - B[b]["mjd"])
     flagged = eligible and r > G["rho_star"]
     passed = flagged and pval >= P.chi2_p_min and dtd >= P.retrigger_days
+    passed_deep = (
+        eligible and r > P.rho_prescreen_deep and pval >= P.chi2_p_min and dtd >= P.retrigger_days
+    )
     return (
         a,
         b,
@@ -236,10 +250,12 @@ def injection_one(args):
         float(pval),
         bool(flagged),
         bool(passed),
+        bool(passed_deep),
     )
 
 
-# ---------------------------------------------------------------------------------------------- plotting
+# ----------------------------------------------------------------------------------------------
+# plotting
 
 
 def overlay(ax, B, i, j, lag, K, title):
@@ -276,7 +292,8 @@ def contact_sheet(B, rows, path, ncol=4):
     plt.close(fig)
 
 
-# -------------------------------------------------------------------------------------------------- main
+# --------------------------------------------------------------------------------------------------
+# main
 
 
 def main(argv=None):
@@ -295,13 +312,16 @@ def main(argv=None):
     ra, dec, err = (np.array([b[c] for b in B]) for c in ("ra", "dec", "err"))
     sep = bt.angsep_deg(ra[:, None], dec[:, None], ra[None], dec[None])
     incons = bt.position_inconsistent(sep, err[:, None], err[None], P.sys_deg, P.pos_nsigma)
-    incons_tail = bt.position_inconsistent(sep, err[:, None], err[None], P.sys_tail_deg, P.pos_nsigma)
+    incons_tail = bt.position_inconsistent(
+        sep, err[:, None], err[None], P.sys_tail_deg, P.pos_nsigma
+    )
     allowed = incons & elig[:, None] & elig[None] & (np.abs(ks[:, None] - ks[None]) <= P.max_dk)
     np.fill_diagonal(allowed, False)
     n_pairs_allowed = int(np.triu(allowed, 1).sum())
     n_elig_pairs = int(elig.sum() * (elig.sum() - 1) // 2)
     print(
-        f"bursts: catalogue {len(cat)}, bcat reduced {N}, eligible (>= {P.min_pulses} pulses) {elig.sum()}; "
+        f"bursts: catalogue {len(cat)}, bcat reduced {N}, eligible (>= {P.min_pulses} pulses) "
+        f"{elig.sum()}; "
         f"eligible pairs {n_elig_pairs}, after position + resolution cut {n_pairs_allowed}",
         flush=True,
     )
@@ -328,7 +348,10 @@ def main(argv=None):
     # ---- real data, s = 1
     t1 = time.time()
     i, j, r, lag, K = best_per_pair(*score_all(lcs, ks, allowed))
-    print(f"real: {r.size} pairs scored in {time.time() - t1:.0f} s; max rho {r.max():.4f}", flush=True)
+    print(
+        f"real: {r.size} pairs scored in {time.time() - t1:.0f} s; max rho {r.max():.4f}",
+        flush=True,
+    )
 
     # ---- surrogate null
     bins = np.linspace(-0.2, 1.0, 1201)
@@ -340,15 +363,23 @@ def main(argv=None):
     maxes = np.array([x[0] for x in res])
     hist = np.sum([x[1] for x in res], axis=0)
     tops = np.concatenate([x[2] for x in res])
-    rho_star = float(np.quantile(maxes, 0.95))  # family-wise 5 % over all pairs of one catalogue (ASSUMPTION)
+    rho_star = float(
+        np.quantile(maxes, 0.95)
+    )  # family-wise 5 % over all pairs of one catalogue (ASSUMPTION)
     dt_null = time.time() - t1
     print(
-        f"null: {a.null} surrogate catalogues in {dt_null:.0f} s ({a.null * r.size / dt_null:.3g} pairs/s); "
+        f"null: {a.null} surrogate catalogues in {dt_null:.0f} s ({a.null * r.size / dt_null:.3g} "
+        f"pairs/s); "
         f"per-catalogue max rho median {np.median(maxes):.4f}, 95 % {rho_star:.4f}",
         flush=True,
     )
     cdf_real = np.array([(r > x).sum() for x in (0.8, 0.9, 0.95, rho_star)])
-    cdf_null = np.array([(np.cumsum(hist[::-1])[::-1][np.searchsorted(bins, x)]) / a.null for x in (0.8, 0.9, 0.95, rho_star)])
+    cdf_null = np.array(
+        [
+            (np.cumsum(hist[::-1])[::-1][np.searchsorted(bins, x)]) / a.null
+            for x in (0.8, 0.9, 0.95, rho_star)
+        ]
+    )
     real_hist, _ = np.histogram(r, bins=bins)
 
     flagged = np.flatnonzero(r > rho_star)
@@ -363,7 +394,9 @@ def main(argv=None):
     rows = []
     for q, m in enumerate(sel):
         bi, bj = B[i[m]], B[j[m]]
-        _, lg, x, ex, y, ey = pair_rho(bi["flux"], bi["errs"], bi["k"], bj["flux"], bj["errs"], bj["k"])
+        _, lg, x, ex, y, ey = pair_rho(
+            bi["flux"], bi["errs"], bi["k"], bj["flux"], bj["errs"], bj["k"]
+        )
         chi2, dof, pval = bt.twin_chi2(x, ex, y, ey, lg)
         dtd = abs(bi["mjd"] - bj["mjd"])
         rows.append(
@@ -372,7 +405,11 @@ def main(argv=None):
                 "burst2": bj["name"],
                 "sep_deg": round(float(sep[i[m], j[m]]), 2),
                 "pos_nsigma": round(
-                    float(sep[i[m], j[m]] / np.sqrt(err[i[m]] ** 2 + err[j[m]] ** 2 + 2 * P.sys_deg**2)), 2
+                    float(
+                        sep[i[m], j[m]]
+                        / np.sqrt(err[i[m]] ** 2 + err[j[m]] ** 2 + 2 * P.sys_deg**2)
+                    ),
+                    2,
                 ),
                 "incons_tail": bool(incons_tail[i[m], j[m]]),
                 "delay_days": round(dtd, 4),
@@ -402,29 +439,70 @@ def main(argv=None):
     pt = Table([{k: v for k, v in d.items() if not k.startswith("_")} for d in rows])
     pt.meta = {
         "provenance": str(Provenance.MODEL_PREDICTION),
-        "source": "scripts/s1_twins.py over results/s1_twins/lc_*.ecsv.gz; top 300 real pairs by rho (s = 1) and "
-        f"every pair above rho* = {rho_star:.4f} (95 % of the per-catalogue surrogate maximum, ASSUMPTION)",
+        "source": "scripts/s1_twins.py over results/s1_twins/lc_*.ecsv.gz; "
+        "top 300 real pairs by rho (s = 1) and "
+        f"every pair above rho* = {rho_star:.4f} (95 % of the per-catalogue surrogate maximum, "
+        f"ASSUMPTION)",
     }
     pt.write(OUT / "pairs_top.ecsv", format="ascii.ecsv", overwrite=True)
     survivors = [d for d in rows if d["flag"] and d["v_chi2"] and d["v_retrigger"]]
-    print(f"automated survivors (flag, chi2 p >= {P.chi2_p_min}, delay >= {P.retrigger_days} d): {len(survivors)}")
+    print(
+        f"automated survivors (flag, chi2 p >= {P.chi2_p_min}, delay >= {P.retrigger_days} d): "
+        f"{len(survivors)}"
+    )
 
-    # ---- positive controls: catalogue pairs within the re-trigger window, any position
+    # ---- secondary deep chain: every real pair above rho_prescreen_deep gets the chi2 and re-
+    # trigger tests
+    deep_idx = np.flatnonzero(r > P.rho_prescreen_deep)
+    deep_survivors = []
+    deep_chi2_pass = 0
+    for m in deep_idx:
+        bi, bj = B[i[m]], B[j[m]]
+        _, lg, x, ex, y, ey = pair_rho(
+            bi["flux"], bi["errs"], bi["k"], bj["flux"], bj["errs"], bj["k"]
+        )
+        pval = bt.twin_chi2(x, ex, y, ey, lg)[2]
+        if pval >= P.chi2_p_min:
+            deep_chi2_pass += 1
+            if abs(bi["mjd"] - bj["mjd"]) >= P.retrigger_days:
+                deep_survivors.append(
+                    (bi["name"], bj["name"], round(float(r[m]), 4), float(f"{pval:.3g}"))
+                )
+    print(
+        f"deep chain: {deep_idx.size} pairs with rho > {P.rho_prescreen_deep}; chi2 pass "
+        f"{deep_chi2_pass}; "
+        f"survivors {len(deep_survivors)}",
+        flush=True,
+    )
+
+    # ---- positive controls: same-source re-triggers (< 3 d apart, < 2 deg), scored with the
+    # position cut ignored
     mjd = np.array([b["mjd"] for b in B])
     o = np.argsort(mjd)
     ctrl = []
-    for u, v in zip(o[:-1], o[1:], strict=True):
-        if mjd[v] - mjd[u] < P.retrigger_days:
-            rr, lg, *_ = pair_rho(B[u]["flux"], B[u]["errs"], B[u]["k"], B[v]["flux"], B[v]["errs"], B[v]["k"])
-            ctrl.append(
-                {
-                    "burst1": B[u]["name"],
-                    "burst2": B[v]["name"],
-                    "delay_s": round(float((mjd[v] - mjd[u]) * 86400), 1),
-                    "sep_deg": round(float(sep[u, v]), 2),
-                    "rho": round(rr, 4),
-                }
-            )
+    for step in (1, 2, 3):
+        for u, v in zip(o[:-step], o[step:], strict=True):
+            if mjd[v] - mjd[u] < 3 and sep[u, v] < 2:
+                rr, lg, x, ex, y, ey = pair_rho(
+                    B[u]["flux"], B[u]["errs"], B[u]["k"], B[v]["flux"], B[v]["errs"], B[v]["k"]
+                )
+                ctrl.append(
+                    {
+                        "burst1": B[u]["name"],
+                        "burst2": B[v]["name"],
+                        "delay_s": round(float((mjd[v] - mjd[u]) * 86400), 1),
+                        "sep_deg": round(float(sep[u, v]), 3),
+                        "removed_by_position_cut": bool(not incons[u, v]),
+                        "rho": round(rr, 4),
+                        "chi2_p": float(f"{bt.twin_chi2(x, ex, y, ey, lg)[2]:.3g}"),
+                        "npulse": [B[u]["npulse"], B[v]["npulse"]],
+                    }
+                )
+    print(
+        f"positive controls (re-triggers): {len(ctrl)}; all removed by position cut: "
+        f"{all(c['removed_by_position_cut'] for c in ctrl)}",
+        flush=True,
+    )
 
     # ---- injections through the whole chain
     G["rho_star"] = rho_star
@@ -442,7 +520,19 @@ def main(argv=None):
         inj = list(pool.map(injection_one, jobs, chunksize=20))
     it = Table(
         rows=inj,
-        names=("a", "b", "ratio", "snr_copy", "npulse_copy", "eligible", "rho", "chi2_p", "flagged", "recovered"),
+        names=(
+            "a",
+            "b",
+            "ratio",
+            "snr_copy",
+            "npulse_copy",
+            "eligible",
+            "rho",
+            "chi2_p",
+            "flagged",
+            "recovered",
+            "recovered_deep",
+        ),
     )
     it["a"] = [B[x]["name"] for x in it["a"]]
     it["b"] = [B[x]["name"] for x in it["b"]]
@@ -450,9 +540,12 @@ def main(argv=None):
     it["rho"] = np.round(it["rho"], 4)
     it.meta = {
         "provenance": str(Provenance.SIMULATED),
-        "source": "jwst_anomaly.burst_twins.inject_twin: copy of eligible burst a in slot b (b's background noise), "
+        "source": "jwst_anomaly.burst_twins.inject_twin: smoothed template of eligible burst a, "
+        "re-noised as a and "
+        "as a copy in slot b (b's background noise, independent realisations), "
         f"flux ratio as listed; chain = >= {P.min_pulses} pulses, rho > rho* = {rho_star:.4f}, "
-        f"chi2 p >= {P.chi2_p_min}, delay >= {P.retrigger_days} d; scripts/s1_twins.py seed {a.seed}",
+        f"chi2 p >= {P.chi2_p_min}, delay >= {P.retrigger_days} d; scripts/s1_twins.py seed "
+        f"{a.seed}",
     }
     write_ecsv_gz(it, OUT / "injections.ecsv.gz")
     eff = {}
@@ -463,8 +556,10 @@ def main(argv=None):
             "eligible": float(it["eligible"][m].mean()),
             "flagged": float(it["flagged"][m].mean()),
             "recovered": float(it["recovered"][m].mean()),
+            "recovered_deep": float(it["recovered_deep"][m].mean()),
         }
     eff_mean = float(np.mean([eff[str(x)]["recovered"] for x in ratios]))
+    eff_mean_deep = float(np.mean([eff[str(x)]["recovered_deep"] for x in ratios]))
     n_surv = len(survivors)
     n_elig = int(elig.sum())
     mu95 = bt.poisson_upper_limit(n_surv)
@@ -472,12 +567,23 @@ def main(argv=None):
         "survivors_k": n_surv,
         "poisson_mu95": mu95,
         "n_eligible": n_elig,
-        "f95_ratio1": mu95 / (n_elig * eff["1.0"]["recovered"]) if eff["1.0"]["recovered"] > 0 else None,
+        "f95_ratio1": mu95 / (n_elig * eff["1.0"]["recovered"])
+        if eff["1.0"]["recovered"] > 0
+        else None,
         "f95_ratio_0.1_1_mean": mu95 / (n_elig * eff_mean) if eff_mean > 0 else None,
+        "deep_survivors_k": len(deep_survivors),
+        "deep_mu95": bt.poisson_upper_limit(len(deep_survivors)),
+        "deep_f95_ratio1": bt.poisson_upper_limit(len(deep_survivors))
+        / (n_elig * eff["1.0"]["recovered_deep"]),
+        "deep_f95_ratio_0.1_1_mean": bt.poisson_upper_limit(len(deep_survivors))
+        / (n_elig * eff_mean_deep),
     }
     summary = {
         "catalogue_bursts": len(cat),
-        "bcat_status": {k: int(v) for k, v in zip(*np.unique(list(status.values()), return_counts=True), strict=True)},
+        "bcat_status": {
+            k: int(v)
+            for k, v in zip(*np.unique(list(status.values()), return_counts=True), strict=True)
+        },
         "bursts_reduced": N,
         "eligible_bursts": n_elig,
         "eligible_pairs": n_elig_pairs,
@@ -485,10 +591,22 @@ def main(argv=None):
         "params": {k: getattr(P, k) for k in P.__dataclass_fields__},
         "rho_star": rho_star,
         "real_max_rho": float(r.max()),
-        "real_pairs_above": dict(zip(("0.8", "0.9", "0.95", "rho_star"), cdf_real.tolist(), strict=True)),
-        "null_pairs_above_per_catalogue": dict(zip(("0.8", "0.9", "0.95", "rho_star"), cdf_null.tolist(), strict=True)),
+        "real_pairs_above": dict(
+            zip(("0.8", "0.9", "0.95", "rho_star"), cdf_real.tolist(), strict=True)
+        ),
+        "null_pairs_above_per_catalogue": dict(
+            zip(("0.8", "0.9", "0.95", "rho_star"), cdf_null.tolist(), strict=True)
+        ),
         "flagged_real": int(flagged.size),
-        "automated_survivors": [(d["burst1"], d["burst2"], d["rho"], d["chi2_p"]) for d in survivors],
+        "automated_survivors": [
+            (d["burst1"], d["burst2"], d["rho"], d["chi2_p"]) for d in survivors
+        ],
+        "deep_chain": {
+            "rho_prescreen": P.rho_prescreen_deep,
+            "pairs": int(deep_idx.size),
+            "chi2_pass": deep_chi2_pass,
+            "survivors": deep_survivors,
+        },
         "positive_controls_retrigger": ctrl,
         "injection_efficiency": eff,
         "limits": limits,
@@ -498,27 +616,43 @@ def main(argv=None):
     write_json(
         {
             "provenance": str(Provenance.MODEL_PREDICTION),
-            "source": "pulse-shuffled surrogate catalogues (jwst_anomaly.burst_twins.pulse_shuffle), same pair set",
+            "source": "pulse-shuffled surrogate catalogues "
+            "(jwst_anomaly.burst_twins.pulse_shuffle), same pair set",
             "n_catalogues": a.null,
             "per_catalogue_max_rho": np.round(np.sort(maxes), 4).tolist(),
             "rho_star_95": rho_star,
             "top_surrogate_rho": np.round(np.sort(tops)[::-1][:50], 4).tolist(),
             "hist_bins": [float(bins[0]), float(bins[-1]), len(bins) - 1],
             "hist_null_mean_counts_rho_gt_0.5": {
-                f"{bins[q]:.3f}": round(float(hist[q] / a.null), 3) for q in range(len(hist)) if bins[q] >= 0.5 and hist[q]
+                f"{bins[q]:.3f}": round(float(hist[q] / a.null), 3)
+                for q in range(len(hist))
+                if bins[q] >= 0.5 and hist[q]
             },
             "hist_real_counts_rho_gt_0.5": {
-                f"{bins[q]:.3f}": int(real_hist[q]) for q in range(len(real_hist)) if bins[q] >= 0.5 and real_hist[q]
+                f"{bins[q]:.3f}": int(real_hist[q])
+                for q in range(len(real_hist))
+                if bins[q] >= 0.5 and real_hist[q]
             },
         },
         OUT / "null.json",
     )
-    print(json.dumps({k: summary[k] for k in ("rho_star", "flagged_real", "injection_efficiency", "limits")}, indent=1))
+    print(
+        json.dumps(
+            {k: summary[k] for k in ("rho_star", "flagged_real", "injection_efficiency", "limits")},
+            indent=1,
+        )
+    )
 
     if a.plots:
         a.plots.mkdir(parents=True, exist_ok=True)
         sheet = [
-            {"i": d["_i"], "j": d["_j"], "lag": d["lag_bins"], "K": d["_K"], "title": f"rho={d['rho']} p={d['chi2_p']}"}
+            {
+                "i": d["_i"],
+                "j": d["_j"],
+                "lag": d["lag_bins"],
+                "K": d["_K"],
+                "title": f"rho={d['rho']} p={d['chi2_p']}",
+            }
             for d in rows[:24]
         ]
         contact_sheet(B, sheet, a.plots / "top_pairs.png")
@@ -526,7 +660,16 @@ def main(argv=None):
         if fl:
             contact_sheet(
                 B,
-                [{"i": d["_i"], "j": d["_j"], "lag": d["lag_bins"], "K": d["_K"], "title": f"rho={d['rho']} p={d['chi2_p']}"} for d in fl],
+                [
+                    {
+                        "i": d["_i"],
+                        "j": d["_j"],
+                        "lag": d["lag_bins"],
+                        "K": d["_K"],
+                        "title": f"rho={d['rho']} p={d['chi2_p']}",
+                    }
+                    for d in fl
+                ],
                 a.plots / "flagged.png",
             )
         # injected examples near threshold

@@ -1023,3 +1023,19 @@ Exploration Program."
   2026-10-09; whole-tile rows fetched by the indexed `tileid` column (`w5_euclid_shear.py fetch`, D-067).
 - NFW lensing (R calibration, D-067): Wright & Brainerd 2000, ApJ 534, 34 (arXiv:astro-ph/9908213); c200(M200):
   Duffy et al. 2008, MNRAS 390, L64 (arXiv:0804.2486); astropy `Planck18` cosmology.
+
+## S1 burst twins: Fermi GBM (accessed 2026-10-09; D-TBD)
+
+- Fermi GBM burst catalogue, HEASARC table `fermigbrst` via TAP https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync
+  (ADQL, VOTable), 4,390 rows, 2026-10-09; columns kept and the response sha256 are in
+  `results/s1_twins/catalogue.ecsv.gz` (meta). Catalogue papers: von Kienlin et al. 2020
+  (arXiv:2002.11460); Poolakkil et al. 2021 (arXiv:2103.13528, doi:10.3847/1538-4357/abf24d).
+- GBM burst-catalogue "bcat" files `glg_bcat_all_bn<id>_v<NN>.fit`, HEASARC FTP
+  https://heasarc.gsfc.nasa.gov/FTP/fermi/data/gbm/bursts/<YYYY>/bn<id>/current/ , newest version per burst,
+  4,389 of 4,390 present (bn number, file name, size and sha256 per row in `results/s1_twins/lc_<YYYY>.ecsv.gz`);
+  streamed into memory, never stored. HDU 2 `PHTFLUX`/`PHTFLUXB` used; HDU 1 `PHTCNTS` rejected (D-TBD).
+- GBM localisation systematic: Connaughton et al. 2015 (arXiv:1411.2685), 3.7° (68 %) core plus a
+  ~10 % tail to ~14°.
+- Prior lensed-GRB search (method and gap): Ahlgren & Larsson 2020 (arXiv:2006.07095).
+- Fermi GBM Data Tools (GDT), https://astro-gdt.readthedocs.io/projects/astro-gdt-fermi/en/latest/ (docs 2.2.x,
+  opened 2026-10-09): TTE, PHAII, RSP, trigdat, poshist, scat, tcat and catalogue finders; no bcat reader listed.
