@@ -18,6 +18,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (2) four tarballs in a process pool: one proxy-dropped HEAD request killed the pool and lost the finished
   tarballs (now: 1-byte range probe with retries, one tarball at a time, per-tarball cache). Throughput fell to
   ~0.15 MB/s after ~450 MB in this session, so the 704 MB did not finish within the run.
+- Smoke run (not a result): GWTC-3 maps only (36 events) + GW170817, 40 scrambles, 171 s on 3 cores. Control
+  GW170817 × GRB 170817A is `same` at 0–10 s. Its cell dominates the analytic minimum (known ordinary pair);
+  exclude it from the family, or report it separately, before quoting a global p. Fixed after the smoke run: CSV
+  short names (GW150914) now match tarball names (GW150914_095045) by UTC time (all 54 GWTC-2.1 match); partners
+  without a position are skipped. Cost: `classify_gw_gw` is a Python loop; profile it before `--n 1000`.
+- Tarballs fetched this run (sha256 for the manifest): GWTC-3 7a2554afa372…, 72 MB in 170 s; GWTC-2.1 87 MB in
+  130 s. GWTC-5.0 and GWTC-4.1 were still downloading when the run ended.
 - **Next (continue this PR):** run `python scripts/e1_gw_skymaps.py` (expect 10–40 min at Zenodo's rate; start it
   first and in the background), then `python scripts/e1_gw_directional.py --n 1000`; check the GW170817 × GRB
   170817A control comes out `same`; then signed-lag GW cells; state files and D-NNN.

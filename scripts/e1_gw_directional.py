@@ -106,12 +106,28 @@ def gaussian_map(ra0, dec0, sigma_deg, vec) -> np.ndarray:
     return p / p.sum()
 
 
+def long_name(name: str, mjd: float, idx) -> str:
+    """The tarball event name (GWyymmdd_hhmmss, UTC) within +-1 s of ``mjd``, else ``name``."""
+    from astropy.time import Time
+
+    for ds in (0.0, -1.0, 1.0):
+        dt = Time(mjd + ds / en.DAY, format="mjd").to_datetime()
+        cand = dt.strftime("GW%y%m%d_%H%M%S")
+        if cand in idx:
+            return cand
+    return name
+
+
 class GWMaps:
     """Per-GW-event distance maps (deg) to the 90 % and 99 % regions, aligned with a GW Sample."""
 
-    def __init__(self, names, npz_path=MAPS):
+    def __init__(self, names, npz_path=MAPS, mjd=None):
         z = np.load(npz_path)
         idx = {str(n): k for k, n in enumerate(z["name"])}
+        if mjd is not None:  # CSV short names (GW150914) -> tarball names (GW150914_095045)
+            names = [
+                n if n in idx else long_name(n, t, idx) for n, t in zip(names, mjd, strict=True)
+            ]
         vec = pix_vectors()
         self.d90, self.d99, self.in90, self.in99, self.prob = [], [], [], [], []
         self.has = np.zeros(len(names), bool)
@@ -157,6 +173,8 @@ def rotation(gw: en.Sample, orig_mjd: np.ndarray) -> np.ndarray:
 def classify_x(m: GWMaps, gi, rot, ra, dec, sig, p: en.Params = P) -> np.ndarray:
     """Classes for GW(gi) x partner pairs: bit 0 same, bit 1 wide, bit 2 antipodal."""
     s = np.where(np.isfinite(sig), sig, 0.0)
+    ok = np.isfinite(ra) & np.isfinite(dec)
+    ra, dec = np.where(ok, ra, 0.0), np.where(ok, dec, 0.0)
     ra_g = ra - rot[gi]
     pix = m.pix(ra_g, dec)
     apix = m.pix(ra_g + 180.0, -dec)
@@ -164,7 +182,7 @@ def classify_x(m: GWMaps, gi, rot, ra, dec, sig, p: en.Params = P) -> np.ndarray
     same = m.d90[gi, pix] <= tol
     wide = m.d99[gi, pix] > np.maximum(p.n_sigma * s, p.min_wide_deg) + PIX_SLOP_DEG
     anti = (m.d90[gi, apix] <= tol) & ~same
-    return same * 1 + wide * 2 + anti * 4
+    return np.where(ok, same * 1 + wide * 2 + anti * 4, 0)
 
 
 def classify_gw_gw(m: GWMaps, i, j, rot) -> np.ndarray:
@@ -295,7 +313,7 @@ def main(argv=None) -> int:
     ev = E.load(E.fetch(False))
     s = {k: en.Sample.from_table(v) for k, v in ev.items()}
     names = [str(x) for x in ev["GW"]["name"]]
-    m = GWMaps(names)
+    m = GWMaps(names, mjd=s["GW"].mjd)
     orig = s["GW"].mjd.copy()
     obs = count_all(m, s, orig)
     # positive control: GW170817 x GRB 170817A

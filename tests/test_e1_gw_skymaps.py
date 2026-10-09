@@ -135,3 +135,12 @@ def test_injected_same_pairs_are_counted(tmp_path):
         hits += D.count_channel(m, gw, gw.mjd, np.zeros(1), sb)[0, 0] == base + 1
     # a counterpart drawn from the map lies outside the 90 % region about 10 % of the time
     assert hits >= 15
+
+
+def test_short_csv_name_maps_to_tarball_name():
+    from astropy.time import Time
+
+    mjd = Time("2015-09-14T09:50:45.4", scale="utc").mjd
+    idx = {"GW150914_095045": 0}
+    assert D.long_name("GW150914", mjd, idx) == "GW150914_095045"
+    assert D.long_name("GW150914", mjd + 1.0, idx) == "GW150914"
