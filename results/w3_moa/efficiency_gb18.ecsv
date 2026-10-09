@@ -1,0 +1,44 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: field, datatype: string}
+# - {name: tE_days, datatype: float64}
+# - {name: rho, datatype: float64}
+# - {name: mass_msun_model, datatype: float64}
+# - {name: n_inj, datatype: int64}
+# - {name: p_cut0, datatype: float64}
+# - {name: p_prescreen, datatype: float64}
+# - {name: p_flag, datatype: float64}
+# - {name: p_recovered, datatype: float64}
+# - {name: n_recovered, datatype: int64}
+# - {name: p_recovered_bright, datatype: float64}
+# - {name: eff_per_star, datatype: float64}
+# - {name: n_eff_lf, datatype: float64}
+# - {name: n_s, datatype: float64}
+# - {name: n_s_low, datatype: float64}
+# - {name: years, datatype: float64}
+# - {name: n_ctrl, datatype: int64}
+# - {name: ctrl_false_w3, datatype: int64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: 'scripts/w3_moa.py limit: injection-recovery through the full gb18 chain (efficiency only: flags open, no limit)'}
+# - {n_s_source: Nunota et al. 2024 Table 1 (78/80 subfields)}
+# - {baseline_chi2: 5.87658469894733}
+# - {is_sampling: lf}
+# - {assumptions: "N_s = 1.55e+07 (range 1.55e+07\u20131.59e+07) monitored stars, 10 \u2264 I \u2264 21.4 (Nunota et al. 2024 Table 1\
+#     \ (78/80 subfields)); T = 8.61 yr; LF \u221D 10^(0.319 I) (Gaia DR3 RP in gb22, assumed for every field); injections I_s in 14.2\u2013\
+#     21.4 (lf sampling), MOA-Red \u2248 I; carrier noise unchanged by the source (sky/blend dominated); Cut-0 emulated at light-curve\
+#     \ level; 95 % Poisson for 0 events = 3.0; mass: n = 1, D_L = 4 kpc, D_S = 8 kpc, \u03BC_rel = 5 mas/yr (model_prediction)"}
+# - open_flags: [gb18-R-9-4-24509]
+# schema: astropy-2.0
+field tE_days rho mass_msun_model n_inj p_cut0 p_prescreen p_flag p_recovered n_recovered p_recovered_bright eff_per_star n_eff_lf n_s n_s_low years n_ctrl ctrl_false_w3
+gb18 3.0 0.01 0.0016567695929925672 200 0.29 0.055 0.055 0.01 2 0.0625 0.00995180837030589 200.00000000000003 15478756.0 15478756.0 8.61327857631759 40 0
+gb18 3.0 0.1 0.0016567695929925672 200 0.26 0.075 0.075 0.05 10 0.2222222222222222 0.04975904185152943 200.0 15478756.0 15478756.0 8.61327857631759 40 0
+gb18 10.0 0.01 0.018408551033250748 200 0.405 0.07 0.07 0.025 5 0.16666666666666666 0.024879520925764734 200.00000000000003 15478756.0 15478756.0 8.61327857631759 40 0
+gb18 10.0 0.1 0.018408551033250748 200 0.42 0.105 0.105 0.075 15 0.3142857142857143 0.07463856277729417 199.99999999999997 15478756.0 15478756.0 8.61327857631759 40 0
+gb18 30.0 0.01 0.16567695929925674 200 0.58 0.125 0.125 0.095 19 0.5 0.09454217951790592 200.00000000000003 15478756.0 15478756.0 8.61327857631759 40 0
+gb18 30.0 0.1 0.16567695929925674 200 0.415 0.095 0.095 0.06 12 0.3125 0.05971085022183536 200.00000000000003 15478756.0 15478756.0 8.61327857631759 40 0
+gb18 100.0 0.01 1.8408551033250746 200 0.71 0.09 0.09 0.06 12 0.1935483870967742 0.05971085022183533 200.00000000000006 15478756.0 15478756.0 8.61327857631759 40 0
+gb18 100.0 0.1 1.8408551033250746 200 0.55 0.11 0.11 0.055 11 0.24242424242424243 0.05473494603668237 199.99999999999997 15478756.0 15478756.0 8.61327857631759 40 0
+gb18 300.0 0.01 16.567695929925673 200 0.835 0.065 0.055 0.02 4 0.05714285714285714 0.01990361674061177 200.00000000000003 15478756.0 15478756.0 8.61327857631759 40 0
+gb18 300.0 0.1 16.567695929925673 200 0.53 0.03 0.03 0.0 0 0.0 0.0 200.00000000000006 15478756.0 15478756.0 8.61327857631759 40 0

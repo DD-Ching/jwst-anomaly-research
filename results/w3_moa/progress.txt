@@ -69,3 +69,4 @@
 2026-10-09T11:13:57Z queue: STOP gb18 10:59:48 | gb18: flags survive every test: ['gb18-R-9-4-24509'] — stop and report
 2026-10-09T11:23:02Z queue: START gb18-inject 11:14:15 procs 4 |
 2026-10-09T11:32:05Z queue: START gb18-inject 11:14:15 procs 4 |
+2026-10-09T11:41:08Z queue: START gb17 11:38:59 procs 4 |   15463 light curves, 129/s, 66 MB/s, CPU 99 %, retries 1
