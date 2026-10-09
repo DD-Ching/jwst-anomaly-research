@@ -33,3 +33,4 @@
 2026-10-09T05:48:00Z queue: START gb12 05:20:51 | 1950/2200 injections, 873 s
 2026-10-09T05:57:03Z queue: START gb7 05:49:19 | wrote /home/user/jwst-anomaly-research/data/derived/w3_moa/prescreen_gb7.ecsv: 10841 tracked rows of 75328 light curves; 1450 shape passes, 44 not at a shared e
 2026-10-09T06:06:07Z queue: STOP gb7 06:03:46 | gb7: flags survive every test: ['gb7-R-8-6-94052'] — stop and report
+2026-10-09T06:15:10Z queue: STOP gb7 06:03:46 | gb7: flags survive every test: ['gb7-R-8-6-94052'] — stop and report
