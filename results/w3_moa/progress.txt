@@ -52,3 +52,4 @@
 2026-10-09T08:40:01Z queue: START gb11 08:35:58 procs 4 | 250/2200 injections, 117 s
 2026-10-09T08:49:05Z queue: START gb11 08:35:58 procs 4 | 1150/2200 injections, 646 s
 2026-10-09T08:58:08Z queue: START gb11 08:35:58 procs 4 | 1600/2200 injections, 1194 s
+2026-10-09T09:07:12Z queue: START gb12 09:04:28 procs 3 | 50/2200 injections, 36 s
