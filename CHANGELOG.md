@@ -61,7 +61,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   Commit-age heuristics cannot see a session that is coding but has not pushed.
 - docs/cloud-routine-prompt.md gets the owner's "COORDINATION AND DISPATCH" section (dispatch first; `claimed` label +
   claim comment with a 10-minute heartbeat, stale after 20; re-check before every push, `-alt` branch on collision;
-  "D-065" until merge). It replaces the 15-minute commit-age rule; docs/operations.md and its label table follow.
+  "D-TBD" until merge). It replaces the 15-minute commit-age rule; docs/operations.md and its label table follow.
 - **Owner action:** paste the new prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`); this file is only the copy.
 
 ## 2026-10-08: Governance — owner decisions on scope, parallelism, cloud disk and layout
