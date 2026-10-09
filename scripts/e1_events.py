@@ -58,9 +58,9 @@ CLASSES = ("same", "wide", "all")
 #: GW170817 / GRB 170817A positive control (Abbott+2017, ApJL 848, L13: GRB onset 1.74 +- 0.05 s
 #: after merger).
 PC_GW, PC_GBM = "GW170817", "bn170817529"
-#: NGC 4993 (host of GW170817; Coulter+2017, Science 358, 1556), used only to check the GBM row's
-#: position.
-NGC4993 = (197.450374, -23.381495)
+#: SSS17a in NGC 4993, the optical counterpart of GW170817 (13:09:48.085 -23:22:53.343;
+#: Coulter+2017, doi:10.1126/science.aap9811), used only to check the GBM row's position.
+NGC4993 = (197.4503542, -23.3814842)
 #: Vetting null "jitday": like "jit" but ground-instrument and GW shifts are whole solar days
 #: (+- slop), so time-of-day structure (daytime RFI, daily maintenance, duty cycles) is kept.
 P_DAY = en.Params(
