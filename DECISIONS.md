@@ -3141,8 +3141,38 @@ not return in 5 min; the same selection with `CONTAINS(POINT, CIRCLE)` (r = 0.25
 
 **Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear screen"; `results/w5_shear/`. Four SZ clusters show
 tangential shear (S = −1.5 to −5.0); pilot null (0 flags); whole-chain injection efficiency 0.88–1.0 at 1′, 1.0 at
-2′, ≤ 0.18 at 30″; n₉₅ ≈ 8.1 deg⁻² (1′), 12 deg⁻² (2′).
+2′, ≤ 0.18 at 30″; n₉₅ ≈ 8.1 deg⁻² (1′), 12 deg⁻² (2′). *Superseded by D-067: these injections were boosted
+~1.6× over R (efficiencies optimistic; `results/w5_shear/screen.json` is from that chain).*
 
 **Revisit if.**
 - A PSF-corrected Euclid shear catalogue becomes public (DR1), or cluster-calibrated R differs from 0.5 by > 30 %.
 - PSF-anisotropy gradients (star ellipticity maps) show radial patterns on trial-centre scales.
+
+## D-067 W5/W1 radial-shear survey of all Euclid Q1 Deep Fields: tile fetch by `tileid`, R calibrated on SZ clusters, 60 deg² null (2026-10-09)
+
+**Decision.** Fetch the Q1 MER rows per tile with the indexed `tileid` (tile list from IRSA ObsCore), run the D-066
+screen per Deep Field with per-tile PSF sizes and a coverage cut, and keep R = 0.5 after calibrating it on the four
+SZ clusters against NFW haloes (in-house ~40 lines: Wright & Brainerd 2000, Duffy et al. 2008 c200).
+
+**Alternatives rejected.**
+- More `CONTAINS` discs: overlapping discs double-count rows; edge handling per disc wastes the aperture border.
+- 16 concurrent IRSA queries: 504 gateway time-outs and no rate gain over 8 (0.3–0.5 queries/s).
+- colossus / pyccl for the NFW shear: a dependency for textbook formulas checked by a unit test.
+- Per-source photo-z (`euclid_q1_phz_photo_z`) for Σ_crit: one source plane bracketed by z_s = 0.8–1.2 already
+  keeps R within ±20 %; worth it only if a flag needs a mass.
+
+- Injecting by shearing the observed moments before the PSF deconvolution (the D-066 chain): it boosts the
+  injected shear by tr_obs/tr_int (median 1.6×) over the R calibrated on deconvolved shapes. Injections now shear
+  the deconvolved shapes by R g (`inject_shapes`); D-066's pilot efficiencies are superseded.
+- Rule exception (scripts/CLAUDE.md "inject through the whole chain"): injections skip the resolved cut and the
+  deconvolution, because R is defined on their output; a shear changes a galaxy's size by a fraction ≲ |g||ε|, so
+  only galaxies that close to the 1.2 × PSF cut could change their resolved flag (kept as is). Revisit if a limit
+  hinges on them.
+
+**Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear survey"; `results/w5_shear/`. R = 0.56 ± 0.16
+(z_s = 1, scaled by √(χ²/dof)); 0 flags over 60 deg² at θ_E = 1′, 2′, 4′; known clusters negative (8/9);
+efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049 / 0.051 deg⁻² at 2′ / 4′.
+
+**Revisit if.**
+- Euclid DR1 (≈ 2000 deg², PSF-corrected shapes) is public: the same code scales by tile.
+- A flag appears, or per-tile star ellipticity gradients show radial patterns on 1–12′ scales.
