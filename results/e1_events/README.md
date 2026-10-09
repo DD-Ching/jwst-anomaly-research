@@ -4,7 +4,7 @@ This tests hypothesis E1 (owner idea 4): are time-stamped events from *different
 dependent at time lags no ordinary path explains? The statistic is a pair-count cross-correlation in lag (0–10 s,
 10–100 s, 100 s–1 h, 1 h–1 d, 1–7 d), split into same-direction (≤ 3σ combined) and wide (> 3σ and > 0.1°) pairs.
 GW events have no position in the GWTC CSV, so their channels are lag-only. A dependence would be an anomaly, never
-evidence of anything exotic. Decision: DECISIONS.md "E1 causal event network" (D-TBD). Sources: SOURCES.md "E1
+evidence of anything exotic. Decision: DECISIONS.md "E1 causal event network" (D-074). Sources: SOURCES.md "E1
 causal event network".
 
 Reproduce (about 20 min single-process; the null ensembles are cached untracked next to the data):

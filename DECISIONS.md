@@ -3423,7 +3423,7 @@ counts as flagged if either model flags it (`frb_ism_compare.ecsv`, `flag_either
 on a low-latitude sightline (both models exceed its total DM), not a sightline anomaly. Rejected: building NE2001 in
 pygedm (needs a system f2c library; the stored NE2001 values are already the reference).
 
-## D-TBD E1 causal event network: lag × separation pair counts across GBM, ICECAT-1, GWTC and CHIME Cat 2 with sidereal-scrambled nulls (2026-10-09)
+## D-074 E1 causal event network: lag × separation pair counts across GBM, ICECAT-1, GWTC and CHIME Cat 2 with sidereal-scrambled nulls (2026-10-09)
 
 **Decision.**
 - Hypothesis (owner idea 4): events from different directions are dependent at lags no ordinary path explains.

@@ -1050,7 +1050,7 @@ Exploration Program."
 - Fermi GBM Data Tools (GDT), https://astro-gdt.readthedocs.io/projects/astro-gdt-fermi/en/latest/ (docs 2.2.x,
   opened 2026-10-09): TTE, PHAII, RSP, trigdat, poshist, scat, tcat and catalogue finders; no bcat reader listed.
 
-## E1 causal event network: GBM × ICECAT-1 × GWTC × CHIME/FRB Cat 2 (accessed 2026-10-09; D-TBD)
+## E1 causal event network: GBM × ICECAT-1 × GWTC × CHIME/FRB Cat 2 (accessed 2026-10-09; D-074)
 
 Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total; event tables only).
 
