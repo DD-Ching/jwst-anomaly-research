@@ -9,6 +9,40 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   data access, calibrate before flagging, a 35-minute time box, one unit per cycle.
 - **Owner action:** paste the updated prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`).
 
+## 2026-10-08: W5 count deficits in Legacy Surveys DR10: 340.5 deg² null, first W5 limit (D-063, #94)
+- Two sessions (a cloud run's 10° pilot, then a worktree worker on the full 20° × 10° regions; see the coordination
+  entry below). DR10 Tractor galaxies (r < 23.5) counted per `nest4096` HEALPix pixel on the Data Lab server
+  (~170 MB, not a catalogue download); predicted deficit profile from `exotic_sim.count_ratio` with the measured
+  number-count slope (`model_prediction`): ~10 % of galaxies inside θ_E missing, ratio 0.02 at θ/θ_E = 0.1.
+- Screen: matched filter at θ_E = 2–32′ over desA (RA 20–40°) and desB (RA 50–70°), Dec −30 to −20; cross-region
+  null calibrated on vetted peaks (galaxy clustering makes Poisson errors 1.1–5.8× too small). 247,361 peaks →
+  **40 flags → 0 survivors** (NGC 1398 sky over-subtraction ×3, bright stars, depth/tile edges; the rest consistent
+  with the null). Contact sheet inspected by the worker and the coordinator. `derived`.
+- 5,232 injections through screen + vetting: efficiency 0.50–0.73 for θ_E = 8–32′, 0 below 4′. **95 % limit on the
+  sky density of W5 lenses n₉₅ ≈ 0.012–0.018 deg⁻² at θ_E = 8–32′** (≈ 3 × 10¹⁰–5 × 10¹¹ M☉ at 1 kpc, 3 × 10¹³–5 ×
+  10¹⁴ M☉ at 1 Mpc; geometry ASSUMPTION). Untestable below θ_E ≈ 6′ with DR10 counts.
+- **Failed approaches (rules):** Data Lab ADQL rejects sub-selects, CASE, SIGN and GROUP BY on expressions (group by
+  `nest4096` only); RA/Dec chunks split edge pixels — sum them, or every chunk border looks like a deficit; an
+  unbounded bright-end count slope makes the profile blow up at x → 0 (fix 0.6); a null from the other region's raw
+  peaks inherits its artefacts (vet them first); veto radii growing with θ_E removed 90 % of random positions at 32′
+  (veto only mimics that can empty ≥ 10 % of the core); HyperLEDA returns sexagesimal unless `_RAJ2000`/`_DEJ2000`
+  are requested; a large-galaxy veto is needed (sky over-subtraction around NGC 1398); `pkill -f` killed the calling
+  shell; JSON writers must end the file with a newline (pre-commit end-of-file-fixer failed CI twice).
+- **Next:** deeper counts (HSC, Euclid) for θ_E < 6′; larger contiguous area for θ_E ≈ 1°; review leftovers: number
+  counts divided by the full box area (small bias), per-job rebuild of region state in `inject`.
+
+## 2026-10-08: W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them (D-064)
+- Hypothesis: a dark deflector hides among pairs rejected as lenses for lack of a lens galaxy (Lemon 2023 UQP/QSO
+  pair; SQLS "no lensing object", "QSO pair", "binary"). 123 rejected and 106 control lenses (≤ 3″) went through the
+  D-056 chain.
+- **Control efficiency 0 / 5** (1.9–2.6″; lens light blended into the images, fitted as PSFs): an LS "none" at these
+  separations carries no information. Rejected: 24 "none". Of these, 10 are colour-mismatched, 2 are catalogued
+  binaries and 1 has two redshifts; 11 are untestable. No limit, no candidate.
+- **Failed approaches:** several input-format traps (sexagesimal Hennawi coordinates, SQLS two-row pairs, Lemon
+  `z2` semantics, time-stamped VizieR headers) and sample-definition bugs were caught in review and fixed; the list is
+  in D-064 "Evidence".
+- **Next:** HST/Euclid/HSC image models or spectra for the 11 colour-matched pairs; the LaTeX-only NIQ tables.
+
 ## 2026-10-08: Coordination and dispatch rules for concurrent sessions (owner text)
 - Two sessions worked PR #94 (W5) at once: a cloud run started from its 20:39 skeleton, another session pushed the full
   screen at 21:14, and the run's push was rejected (its pilot is parked on `claude/w5-clustered-null`, findings on #94).

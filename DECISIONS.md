@@ -2951,3 +2951,110 @@ t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in 
 - The other 21 fields are screened. The largest tars are 474 GB, so per-object HTTP or a cloud session is needed.
 - A survivor appears: stop and report to the owner (/vet-candidate).
 - Any W3 limit is quoted outside the repository: `needs-human` (D-054).
+
+## D-063 W5 count-deficit screen: DR10 Tractor counts aggregated per nest4096 on Data Lab, astropy-healpix, cross-region null; 340.5 deg² null and first W5 limit (2026-10-08)
+
+**Decision.**
+- **Count maps, not catalogues:** `jwst_anomaly.countmap.LegacySurveysCountMap`, a `signatures.CountMapSurvey`
+  (new protocol: `count_map()` per HEALPix pixel, `nside`, `area_deg2()`; it also answers `catalogue()`). Legacy
+  Surveys DR10 `ls_dr10.tractor` is aggregated server-side on the Data Lab TAP with `GROUP BY nest4096`, three
+  queries per 2° × 2° chunk (galaxies r < 23.5 extended unmasked; all sources with depth, nobs, E(B−V); sources
+  with any maskbit → unmasked fraction w). Pixels split between chunks are summed (`combine_duplicates`).
+- **Geometry:** astropy-healpix (now a core dependency; BSD-3-Clause, wheels everywhere).
+- **Prediction:** `countmap.deficit_profile` = `exotic_sim.count_ratio` (n = 1, ε < 0) with measured counts of the
+  same selection, |μ| capped at 30 at the critical curve.
+- **Screen** (`scripts/w5_counts.py`): scipy-FFT local least-squares matched filter on a 0.25′ raster, θ_E = 2–32′;
+  **null from a second, disjoint region** (each region's ordinarily-vetted peaks calibrate the other), with an
+  exponential tail fit for the expected number of false peaks N_false; detection at N_false < 0.01.
+- **Vetting**, cheapest first, the same code for flags and injections: mask, depth, depth_edge, dust, Gaia DR3
+  bright star, HyperLEDA large galaxy, Wen & Han 2024 cluster, cosmic variance.
+- **First run:** desA + desB (RA 20–40° and 50–70°, Dec −30° to −20°), 340.5 deg², 12.5 M galaxies: 40 flags,
+  **0 survivors**; 95 % sky density of θ_E = 8–32′ lenses **n₉₅ ≈ 0.012–0.018 deg⁻²**; blind below θ_E ≈ 6′
+  (docs/exotic_limits.md "W5 count deficits").
+
+**Alternatives rejected.**
+- Per-object catalogue downloads (~12 M rows) and DR10 random catalogues (~19.9 GB per file, unordered on the sky,
+  so no byte-range region cut): counts, a mask proxy and depth are all the statistic needs.
+- healpy 1.20.1 (GPL-2.0, no Windows wheels); healsparse 1.15.0 / hpgeom (GPL-3.0-or-later; only needed for DES/LSST
+  mask files, not used); HSC-SSP PDR3 randoms (account needed, smaller area); DES Y6 Gold masks (healsparse tooling).
+- Void finders (VIDE, REVOLVER, Pylians, 2-D tunnel finders): they find the under-densities that are the
+  background W5 must beat, not the target; voids enter through the null.
+- A Gaussian significance: the Poisson σ of A is ×1.1 (2′) to ×5.8 (32′) too small because of clustering.
+- A null from the raw peaks of the other region: desB's artefacts (NGC 1398, deep tiles) raised desA's thresholds;
+  peaks the ordinary tests remove are now left out of both samples.
+- Veto radii growing with θ_E (a mimic anywhere inside θ_E): they vetoed 90 % of random 32′ positions. A mimic now
+  vetoes only if it reaches the core (0.5 θ_E) and can empty ≥ 10 % of it.
+- Data Lab ADQL: sub-selects, CASE, SIGN and GROUP BY on expressions are rejected (2026-10-08).
+
+**Evidence.**
+- Prior art: no published count-deficit search for negative-mass lenses was found (arXiv API, "negative mass" /
+  wormhole with number counts, depletion, deficit, void; the 42 INSPIRE citers of Safonova, Torres & Romero 2001,
+  astro-ph/0104075, which predicts the "central void"). Survey limits so far come from SDSS quasar lensing
+  (Takahashi & Asada 2013, arXiv:1303.1301). A W5 limit would be new: `needs-human` before any outside use.
+- Offline tests on synthetic Poisson maps: an injected deficit gives A = 1.10 ± 0.25 at the centre; the null map
+  gives median Z ≈ 0; the chunk-edge artefact (pixels split between chunks gave a deficit along every chunk
+  boundary in the pilot) is fixed and tested; pixels cut by the outer region border are dropped (code review).
+- Injections (5,232 in total, 3 realisations per region and θ_E) through the full screen and vetting:
+  ε = 0.50–0.73 at θ_E = 8–32′, 0.005 at 6′, 0 at ≤ 4′. The `depth_edge` test was added after inspecting the one
+  first-pass survivor (a deficit of all sources along a deep-tile edge); the injections ran after the change.
+
+**Revisit if.**
+- Data Lab exposes DR10 randoms or a pixelised mask; or the w proxy shows systematics in a larger area.
+- θ_E < 6′ becomes a priority (deeper counts, e.g. HSC or Euclid, or catalogue-level positions), or θ_E ≳ 1°
+  (a larger contiguous area; the regions are 10° high).
+- A survivor appears: stop and report to the owner (/vet-candidate).
+- A published count-deficit search appears (compare; do not repeat). Any outside quotation: `needs-human`.
+
+## D-064 W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them; measured control efficiency 0/5 (2026-10-08)
+
+**Decision.** Test the pairs that lens searches rejected for lack of a lens galaxy with the unchanged D-056 chain
+(`scripts/w12_niq.py`, importing `w12_lenscats`; D-056 Faber–Jackson calibration fixed). Add a control sample of real
+lenses from the same tables to *measure* the test's efficiency, which D-056 had to assume.
+- Inputs: VizieR tables pinned by the sha256 of their data lines (the ASU-TSV header carries the request time):
+  - Lemon et al. 2023 table1: UQP / QSO pair rejected, lens / quad control;
+  - SQLS DR3/DR5/DR7 candidate tables (Inada et al. 2008, 2010, 2012): "no lens(ing) object", "QSO pair" and
+    "binary" rejected, "SDSS lens"/"known lens" control; SQLS QSO+star / different SED / not QSO rows describe
+    another companion and are dropped without vetoing. A Lemon non-pair class (QSO + star, projected, …) vetoes a
+    rejection of the same system, and Lemon classes with "?" are undecided;
+  - Hennawi et al. 2006 binaries, for vetting.
+- Mismatched or missing pins are refused.
+- Sample rules (ASSUMPTIONs):
+  - catalogued separation ≤ 3″, because positions are one image;
+  - transitive 3″ merging, with a group containing a lens counted as a control;
+  - the LS pair must match the catalogued separation within 0.5″.
+- Vetting adds image colour (|Δ(g − z)| ≤ 0.5) and quoted-redshift agreement (|Δz| / (1 + z) ≤ 0.01).
+
+Result: 0 of 5 decided control lenses (1.9–2.6″) show their lens galaxy. Rejected: 24 "none". Of these, 10 are
+colour-mismatched, 2 are catalogued binaries and 1 has two redshifts; 11 remain untestable. No limit and no candidate
+(docs/exotic_limits.md "W1/W2 in rejected lensed-quasar pairs").
+
+**Alternatives rejected.**
+- Deriving a dark-lens fraction from the rejected "none" count: control lenses give "none" too, so k carries no
+  information.
+- Separations up to 6″ (D-056's θ_E ≤ 3″): SQLS positions are one image, so 3–6″ pairs never fit the 3″ image search.
+- Hashing the raw ASU-TSV: its header embeds the request time, so a fresh download never matches.
+- The Lemon lensed-quasar database (HTTP 500 again on 2026-10-08).
+- Gaia GraL invalidated candidates (Stern et al. 2021): mostly star pairs, with one quasar pair.
+- Williams et al. 2018: no separation or redshift.
+- Dawes et al. 2023: unconfirmed candidates, not rejections.
+- NIQ tables that exist only in arXiv LaTeX (Lemon 2018/2019/2020, Anguita et al. 2018, Agnello et al. 2018):
+  deferred. The Lemon 2023 UQPs and the SQLS rejections are the machine-readable superset.
+
+**Evidence.**
+- `results/w12_niq/summary.json` and `systems.ecsv`.
+- The contact sheets show lens light blended into the control images, and blue+orange rejected pairs.
+- Review bugs fixed before merge:
+  - the Hennawi coordinates are sexagesimal and silently matched nothing; `binary_match` now raises if nothing
+    parses;
+  - wide pairs were tested on unrelated LS pairs;
+  - the greedy dedup was not transitive;
+  - Lemon's `z2` is a second quasar redshift only when `n_z2` is blank (or "zqso="). "z_lens=" and "zgal=" are
+    other objects, and flagged values are not used;
+  - a rejection that another catalogue classifies as a non-pair is now vetoed (J0947+0247);
+  - SQLS pair-format tables put the quasar z on the primary row and θ, the comment and the companion's z on the
+    next row. Both are now read, and flagged redshifts ("(") are not used.
+- The Tractor rows the test ran on are pinned too (sha256 of the sorted rows), and so are the brick summary and
+  every VizieR table. VizieR error, empty or truncated responses are refused.
+
+**Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 11 colour-matched pairs;
+spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ tables add pairs of 2–3″.

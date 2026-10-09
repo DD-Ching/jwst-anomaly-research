@@ -1008,3 +1008,178 @@ dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no pu
   7–474 GB each; per-object files are also served).
 - Not a statement about OGLE or the Mróz samples, and not combinable with the D-052 JWST limits without a lens
   population model.
+
+## W5 count deficits
+
+D-063; `src/jwst_anomaly/countmap.py` (count-map adapter, matched filter, injector), `scripts/w5_counts.py`
+(`fetch`, `numcounts`, `predict`, `screen`, `vet`, `sheet`, `inject`, `limit`), tests in `tests/test_countmap.py`
+and `tests/test_w5_counts.py`. Small result tables in `results/w5_counts/`; maps and injections under
+`$JWST_ANOMALY_DATA/derived/w5_counts/` (not in git). Galaxy counts are **observed**; maps, filter amplitudes,
+nulls, vetting and limits are **derived**; injected deficits are **simulated**; the deficit profile and θ_E(|M|) are
+**model_prediction**s; every threshold and the lens geometry are **ASSUMPTION**s (module constants). A flag is an
+anomaly to vet; it is not evidence of exotic physics.
+
+### Prediction (model_prediction)
+
+An n = 1, ε < 0 lens puts both images on the source's side, so every image radius x = θ/θ_E is reached: inside the
+radial critical curve (x < 1) by the inner images of distant sources, demagnified as |μ| ≈ x⁴. Magnification bias
+with the measured counts of the galaxy sample (`numcounts.ecsv`, d log N/dm = 0.37 at r = 23.5, 0.6 brighter
+than r = 16 assumed) gives N_obs/N̄ (`profile.ecsv`, `countmap.deficit_profile`, |μ| capped at 30 near x = 1):
+
+| x | 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.7 | 0.9 | 1.05 | 1.2 | 1.5 | 2 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| N_obs/N̄ | 0.02 | 0.14 | 0.56 | 0.86 | 1.00 | 1.06 | 0.94 | 0.86 | 0.94 | 0.98 | 0.99 |
+
+An almost empty core (x ≲ 0.25), a 6 % excess at x ≈ 0.6–0.7 and a shallow dip at the critical curve. Net, about 10 %
+of the galaxies inside θ_E are missing. Counts with α = 2.5 d log N/dm = 1 would give no signal at all; α < 1 at the
+limit makes the dip at x ≈ 1 a deficit, and the steep bright end empties the core. With 37,400 galaxies deg⁻²
+(r < 23.5), θ_E = 10″ leaves 0.09 missing galaxies (untestable per lens), θ_E = 2′ 13, 8′ 214, 32′ 3,400.
+
+θ_E vs |M| (`theta_mass.ecsv`; Planck18, sources at z_s = 1, geometries ASSUMPTIONs; θ_E ∝ |M|^½):
+
+| θ_E | 10″ | 2′ | 8′ | 32′ | 1° |
+|---|---|---|---|---|---|
+| D_L = 1 kpc | 1.2 × 10⁷ | 1.8 × 10⁹ | 2.8 × 10¹⁰ | 4.5 × 10¹¹ | 1.6 × 10¹² M☉ |
+| D_L = 1 Mpc | 1.2 × 10¹⁰ | 1.8 × 10¹² | 2.8 × 10¹³ | 4.5 × 10¹⁴ | 1.6 × 10¹⁵ M☉ |
+| z_L = 0.3 | 1.8 × 10¹³ | 2.6 × 10¹⁵ | 4.2 × 10¹⁶ | 6.7 × 10¹⁷ | 2.4 × 10¹⁸ M☉ |
+
+θ_E between 10″ and 1° therefore means |M| ≈ 10⁷–10¹² M☉ at 1 kpc and 10¹⁰–10¹⁵ M☉ at 1 Mpc; a cosmological lens
+needs ≳ 10¹³ M☉ (≳ 10¹⁶ M☉ for the θ_E this screen can test). For the 1 kpc geometry the "background" r < 23.5
+population still is galaxies; Milky Way stars are excluded by the extended-model selection.
+
+### Data and method
+
+- **Count maps** (observed): Legacy Surveys DR10 Tractor via Data Lab TAP, aggregated server-side per HEALPix
+  nest4096 pixel (0.74 arcmin²): galaxies (`type` ≠ PSF/DUP, `maskbits` = 0, dereddened r < 23.5), all primary
+  sources and sources with any maskbit (unmasked fraction w = 1 − n_bad/n_all, ASSUMPTION), mean galaxy depth,
+  E(B−V). Two DES-wide regions, desA (RA 20–40°) and desB (RA 50–70°), Dec −30° to −20°, b < −45°: 100 chunks,
+  ~170 MB of FITS, fetched in ~2 h because Data Lab returned HTTP 502 for ~30 min and serves ~1 chunk/min.
+  Pixels used: w ≥ 0.5, 5σ galaxy depth ≥ 24.3 (median 24.84), E(B−V) ≤ 0.1, not cut by the region border:
+  **171.8 + 168.7 = 340.5 deg²**, 6.30 + 6.15 million galaxies.
+- **Matched filter**: the pixel counts are painted on a 0.25′ equal-area (sinusoidal) raster; around every cell,
+  a local least-squares fit D = w a (1 + A T) within 2.5 θ_E, T = profile − 1, so A = 1 is the predicted deficit
+  and the local mean a absorbs large-scale gradients. Filter scales θ_E = 2′, 4′, 8′, 16′, 32′ (raster binned to
+  θ_E/8). Z = A/σ_Poisson; positions need ≥ 80 % unmasked area in the aperture and in the inner disc.
+- **Null** (no Gaussian assumption): local maxima of Z in each region. Every peak of both regions goes through the
+  ordinary vetting tests below; each region's surviving peaks are the null of the other region at the same scale.
+  A flag is a peak above the null region's highest peak; an exponential fit to the top 1 % of null peaks gives
+  N_false, the expected number of null peaks at least as high among the search region's peaks. Detection needs
+  N_false < 0.01 per region and scale (`cosmic_variance` otherwise). The Poisson σ underestimates the scatter by
+  ×1.1 (2′) to ×5.8 (32′): galaxy clustering, which the null carries.
+- **Vetting** (cheapest first; the same code vetoes injections): `mask` (> 20 % masked or missing area inside θ_E),
+  `depth` (> 0.3 mag shallower than the region median), `depth_edge` (p90 − p10 of pixel depth > 0.5 mag within
+  2 θ_E: a coverage boundary), `dust` (E(B−V) > median + 0.03), `bright_star` (Gaia DR3 G < 9 whose halo,
+  2′ × 10^0.15(9−G), reaches the core 0.5 θ_E and could empty ≥ 10 % of it), `large_galaxy` (HyperLEDA D25 ≥ 1′
+  within 0.5 θ_E + 2 D25: sky over-subtraction), `cluster` (Wen & Han 2024 M500 ≥ 3 × 10¹⁴ M☉, z ≤ 0.6, within
+  0.5 θ_E + 3′: magnification-bias depletion), `cosmic_variance` (N_false ≥ 0.01).
+- **Injection-recovery**: the predicted deficit (binomial thinning where the ratio < 1, Poisson additions where
+  > 1, ratio averaged over each pixel) painted into the real pixel counts at random footprint positions, ≥ 2 × 3.5
+  max(θ_E, 8′) apart, 3 realisations per region; θ_E = 2–32′, 77–884 injections each (5,232 in all). Recovered = a flag within
+  max(θ_E/2, 1′) at any filter scale that survives every vetting test.
+
+### Results (derived)
+
+- 247,361 peaks, **40 flags** (7 desA, 33 desB), **0 survivors** (`vetting.ecsv`; `contact_sheet.png` shows the
+  eight with the smallest N_false). The six with N_false < 0.01 are all explained:
+  - three 2′/4′ flags 7–8′ from NGC 1398 (D25 = 7.2′): sharp-edged, CCD-sized deficits and excesses of sky
+    over-subtraction (`large_galaxy`; first seen by a parallel cloud run, `ngc1398_dr10_cutout.jpg`);
+  - the 8′ flag at (64.07°, −23.43°): masked holes next to a G < 9 star (`bright_star`);
+  - the 16′ flag at (53.37°, −28.05°): the edge of the DES-SN C3 deep field (`depth_edge`);
+  - the 4′ flag at (63.75°, −24.95°), N_false = 0.004, which survived the first vetting pass: inside 2′ both the
+    galaxies (1.0–1.6 per pixel against 7.6) and *all* sources (14–26 against 57) drop along a straight edge of a
+    deep-coverage tile (depth 24.9 → 25.9). A lens would not remove foreground stars or follow a tile edge; the
+    `depth_edge` test was added for it, and the injections were run after the change.
+- The other 34 flags are `cosmic_variance` (N_false ≥ 0.01), 12 of them around NGC 1398 and 3 in the C3 field.
+
+### Efficiency and limits (95 %, zero survivors, Poisson 3.0; derived)
+
+| θ_E | 2′ | 3′ | 4′ | 6′ | 8′ | 12′ | 16′ | 24′ | 32′ |
+|---|---|---|---|---|---|---|---|---|---|
+| injected | 884 | 871 | 866 | 879 | 873 | 421 | 241 | 120 | 77 |
+| flagged | 0 | 7 | 155 | 441 | 782 | 395 | 235 | 117 | 76 |
+| after vetting | 0 | 0 | 0 | 4 | 433 | 284 | 172 | 88 | 53 |
+| ε | 0 | 0 | 0 | 0.005 | 0.50 | 0.67 | 0.71 | 0.73 | 0.69 |
+| n₉₅ (deg⁻²) | — | — | — | 1.9 | 0.018 | 0.013 | 0.012 | 0.012 | 0.013 |
+
+- **Sky density of n = 1, ε < 0 lenses with θ_E = 8–32′: n₉₅ ≈ 0.012–0.018 deg⁻²** (fewer than one per ~55–85 deg²)
+  over 340.5 deg² of DES-depth DR10 sky. In the stated geometries this is |M| ≈ 3 × 10¹⁰–5 × 10¹¹ M☉ at 1 kpc and
+  3 × 10¹³–5 × 10¹⁴ M☉ at 1 Mpc (`limits.ecsv`).
+- **Blind below θ_E ≈ 6′** (|M| ≲ 1.6 × 10¹⁰ M☉ at 1 kpc): the empty core (x ≲ 0.25) holds < 15 galaxies and the
+  required N_false < 0.01 is deep in the clustered tail; 18 % (4′) and 50 % (6′) of injections are flagged but end as
+  `cosmic_variance`.
+- Where efficiency goes at θ_E ≥ 8′: `cosmic_variance` (8′: 264 of 873), then `bright_star`, `depth_edge`,
+  `large_galaxy`, `cluster` (each 1–6 %). Large injections are found mostly by the 8′ filter, which matches their
+  empty core.
+
+### Assumptions and caveats
+
+- Point lens, n = 1, isolated, all r < 23.5 galaxies behind the lens (for z_L = 0.3 a foreground fraction would
+  dilute the deficit; not modelled); demagnified galaxies are assumed to keep their extended Tractor type.
+- The profile uses the counts of a pilot area of the same selection; the bright end (r < 16) slope 0.6 is
+  assumed. The core is what the screen sees, and it depends on the counts at r ≲ 18.
+- w = 1 − n_bad/n_all is a proxy for the unmasked area (DR10 randoms are not on Data Lab; D-063).
+- The `depth_edge` test was added after inspecting a survivor; its cost (2–9 % of injections) is in ε.
+- Each region calibrates the other; desB holds more artefacts (NGC 1398, DES-SN C fields, deep tiles). Peaks that
+  the ordinary tests remove are left out of both the null and the search sample.
+- No limit below θ_E ≈ 6′ or above 32′ (the regions are 10° high; 1° needs a larger contiguous area).
+- Not combinable with the W1 radial/shear limits (different mass and θ_E ranges and selection).
+
+## W1/W2 in rejected lensed-quasar pairs
+
+D-064; `scripts/w12_niq.py screen --sheet` (`--repin` only after inspecting changed inputs); outputs `results/w12_niq/`
+(`systems.ecsv`, `summary.json`, contact sheets); inputs pinned in `data/manifests/w12_niq_inputs.json`.
+
+**Question.** Lens searches reject same-redshift quasar pairs when no lens galaxy is seen: Lemon et al. 2023's
+"unclassified quasar pairs" (UQP, "akin to NIQs") and "QSO pair" classes, and the SQLS "no lens(ing) object",
+"QSO pair" and "binary QSO" rejections. A dark deflector (W2, W1's empty centre) would hide in exactly these lists.
+The ordinary explanations are binary quasars, unrelated pairs and lens galaxies below the depth.
+
+**Method.**
+- Inputs:
+  - rejected: 123 pairs (Lemon "UQP (?)" is undecided and left out);
+  - control: 106 real quasar lenses (Lemon lens/quad, SQLS "SDSS lens"/"known lens"; Lemon "lens (?)" is
+    undecided and left out);
+  - entries within 3″ are merged transitively. A group containing a catalogued lens is a control. A rejection that
+    Lemon classifies as a non-pair (QSO+star, projected, …) is dropped: this applied to J0947+0247, which Lemon
+    classifies as "QSO + star". Undecided Lemon classes ("?") and SQLS non-pair companion rows do not veto.
+- Exclusions:
+  - 181 entries with catalogued separations > 3″: a catalogue position is one image, so the second image must
+    fall inside the 3″ image search;
+  - lenses the pair test cannot decide: the SQLS "component" rows of one cluster lens and Lemon's lensed galaxies.
+    These still promote a merged rejection to control.
+- The D-056 chain unchanged: DR10 brick coverage and depth, Tractor boxes, the quasar pair test (two PSF images
+  ≥ 2″ apart, a deflector between them), and the required lens magnitude from the D-056 Faber–Jackson calibration.
+- A system counts as decided only if the LS image pair is the catalogued pair: separations agree within 0.5″.
+- Vetting columns (thresholds are ASSUMPTIONs, `NiqParams`, recorded in `summary.json` with every count below):
+  - image colours: |Δ(g − z)| ≤ 0.5;
+  - two quoted redshifts: |Δz| / (1 + z) > 0.01 means two quasars;
+  - a Hennawi et al. 2006 binary-quasar match within 3″.
+
+**Result (derived).**
+
+| Sample | covered | blended | too close (< 2″) | decided | deflector | none | none, colours match |
+|---|---|---|---|---|---|---|---|
+| rejected | 88 | 17 | 46 | 24 | 0 | 24 | 14 |
+| control (real lenses) | 79 | 45 | 29 | 5 | **0** | 5 | 4 |
+
+- **The test does not find real lens galaxies at these separations.** All 5 decided control lenses (1.9–2.6″;
+  J0628−7448, J1550+0221, J2308+3201, SDSS J1322+1052, SDSS J1515+1511) give "none". Their required typical
+  m_z ≈ 19.2–19.8 is ~3 mag brighter than the depth, yet the contact sheet shows the lens light blended into the
+  images, and Tractor fits the blend as two point sources. Measured efficiency for an ordinary lens: **0 / 5 (95 %
+  upper bound 0.45)**. A further 45 control lenses are "blended" (fewer than two PSF images). A "none" at ≤ 3″ in LS
+  DR10 therefore carries no information about a dark deflector.
+- Ordinary explanations among the 24 rejected "none" pairs:
+  - 10 have mismatched colours (blue+orange on the contact sheet: unrelated objects, not lens images);
+  - J0740+2926 and J1035+0752 are catalogued binaries (Hennawi et al. 2006);
+  - J1212+0912 has two redshifts (1.686, 1.600).
+- **No limit and no candidate.** The 11 remaining colour-matched pairs are untestable here: J0130+0725, J0728+2607,
+  J0941−2443, J1428+0500, J2355−4553, J0927+2113, J1242+2543, J0904+1134, J0942+2310, J1324+2823 and J1711+2929.
+  Their discovery papers' deeper follow-up already found no lens galaxy, and SQLS calls J1242 and J0942 quasar pairs
+  from their spectra. Telling a binary from a dark lens needs spectral comparison or HST/Euclid/HSC imaging.
+- Most rejected pairs are closer than LS can resolve (46 "too close"; the Lemon UQP median separation is 1.22″).
+- One pair (J0041−5350) is not decided: its LS pair (3.3″) is not the catalogued one (1.1″).
+
+**Consequence for D-056.** D-056's quasar-class limits assume that a dark lens gives "none" (true). Its "none"
+systems were explained by literature lens galaxies, never by LS. This measurement confirms the D-056 vetting finding
+(13 of 16 "none" systems had a literature lens galaxy): at ≤ 3″, LS DR10 cannot show a lens galaxy, so only
+literature or deeper imaging decides.
