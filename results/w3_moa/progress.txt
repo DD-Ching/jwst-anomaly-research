@@ -5,3 +5,4 @@
 2026-10-08T23:39:39Z queue: START gb21 23:19:53 | 1550/2200 injections, 1088 s
 2026-10-08T23:48:42Z queue: START gb21 23:19:53 | 2150/2200 injections, 1619 s
 2026-10-08T23:57:44Z queue: START gb20 23:49:46 | fitting 51 pre-screen passes of 52005
+2026-10-09T00:06:48Z queue: STOP gb20 00:06:00 | gb20: flags survive every test: ['gb20-R-4-0-49379'] — stop and report

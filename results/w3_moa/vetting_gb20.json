@@ -1,0 +1,1615 @@
+{
+ "provenance": "derived",
+ "field": "gb20",
+ "n_light_curves": 52005,
+ "n_shape": 1378,
+ "n_passes": 51,
+ "baseline_chi2": 6.694027620721874,
+ "baseline_calibration": {
+  "threshold": 6.694027620721874,
+  "q": 0.95,
+  "n_quiet": 2949,
+  "frac_above_2": 0.4010525648949679,
+  "median": 1.6854611637636547
+ },
+ "n_flags": 48,
+ "funnel": [
+  [
+   "flags",
+   48
+  ],
+  [
+   "screen_flag",
+   48
+  ],
+  [
+   "repeated_deficit",
+   33
+  ],
+  [
+   "variable_baseline",
+   31
+  ],
+  [
+   "neighbour_shares_feature",
+   27
+  ],
+  [
+   "eclipse_dip",
+   6
+  ],
+  [
+   "robust_errors_outliers",
+   6
+  ],
+  [
+   "season_offsets",
+   4
+  ],
+  [
+   "season_trends",
+   4
+  ],
+  [
+   "observing_conditions",
+   4
+  ],
+  [
+   "refit_all_ordinary",
+   4
+  ],
+  [
+   "binary_source",
+   3
+  ],
+  [
+   "binary_lens",
+   3
+  ],
+  [
+   "exotic_feature_sampled",
+   2
+  ],
+  [
+   "jackknife_epochs",
+   2
+  ],
+  [
+   "jackknife_nights",
+   1
+  ],
+  [
+   "two_unrelated_events",
+   1
+  ],
+  [
+   "variable_catalogues",
+   1
+  ],
+  [
+   "variable_baseline_untestable",
+   1
+  ]
+ ],
+ "flags": [
+  {
+   "event_id": "gb20-R-10-0-56142",
+   "exotic": "N1neg",
+   "dbic_all": -383.67844641305874,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -383.7 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -2.5"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.30 > 6.69? (3996 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 48.5 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-10-1-1465",
+   "exotic": "N1neg",
+   "dbic_all": -1480.0720532674386,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1480.1 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.4"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-2-2-39519",
+   "exotic": "N1neg",
+   "dbic_all": -201.42303644076037,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -201.4 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -5.1"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.49 > 6.69? (4081 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "7 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 41.4 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-2-2-5975",
+   "exotic": "N1neg",
+   "dbic_all": -81.75880099467031,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -81.8 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.0"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.73 > 6.69? (4084 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "11 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 36.3 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-2-4-109274",
+   "exotic": "E2neg",
+   "dbic_all": -213.34041823811458,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -213.3 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -5.5"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.50 > 6.69? (4182 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 15.2 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-2-5-74562",
+   "exotic": "N1neg",
+   "dbic_all": -5742.080744265424,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -5742.1 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -5.4"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.14 > 6.69? (4484 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 551.1 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-3-0-37397",
+   "exotic": "E2neg",
+   "dbic_all": -19248.191740158036,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -19248.2 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.2"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 3.05 > 6.69? (3073 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     false,
+     "1 neighbours; |S| > 5: [('gb20-R-3-0-78809', -220.5)]"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-3-0-49636",
+   "exotic": "N1neg",
+   "dbic_all": -9751.651443987266,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -9751.7 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.3"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.31 > 6.69? (4423 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 863.8 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-3-4-43997",
+   "exotic": "N1neg",
+   "dbic_all": -36890.05255461019,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -36890.1 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.1"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-3-6-64337",
+   "exotic": "N1neg",
+   "dbic_all": -1090.1748211375343,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1090.2 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -16.0"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-3-6-81451",
+   "exotic": "E2pos",
+   "dbic_all": -12274.52302834888,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -12274.5 (E2pos vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.6"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 2.11 > 6.69? (4315 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 127.4 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-3-7-40399",
+   "exotic": "E2neg",
+   "dbic_all": -9858.480202423249,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -9858.5 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -4.1"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.30 > 6.69? (2684 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 340.6 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-3-7-64052",
+   "exotic": "N1neg",
+   "dbic_all": -2020.2190166592281,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -2020.2 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -13.0"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-4-0-49379",
+   "exotic": "E2pos",
+   "dbic_all": -16858.300834082882,
+   "survives": true,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -16858.3 (E2pos vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -2.8"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.37 > 6.69? (4322 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     true,
+     "ΔBIC -220.4 vs a trapezoidal dip"
+    ],
+    [
+     "robust_errors_outliers",
+     true,
+     "18 isolated outliers removed, errors ×2.22; ΔBIC -3322.6"
+    ],
+    [
+     "season_offsets",
+     true,
+     "free baseline per season; ΔBIC -1897.7"
+    ],
+    [
+     "season_trends",
+     true,
+     "offset + drift per season; ΔBIC -1296.8"
+    ],
+    [
+     "observing_conditions",
+     true,
+     "baseline linear in ('fwhm', 'airmass', 'sky'); ΔBIC -16765.5"
+    ],
+    [
+     "refit_all_ordinary",
+     true,
+     "ΔBIC -16858.3 vs PSPL (FSPL, PAR)"
+    ],
+    [
+     "binary_source",
+     true,
+     "ΔBIC -16326.4"
+    ],
+    [
+     "binary_lens",
+     true,
+     "ΔBIC -16326.4"
+    ],
+    [
+     "exotic_feature_sampled",
+     true,
+     "363 epochs on 120 nights inside, Δχ² in -14698.9 / out -2167.9"
+    ],
+    [
+     "jackknife_epochs",
+     true,
+     "ΔBIC [-16638.2, -16429.5, -16228.9]"
+    ],
+    [
+     "jackknife_nights",
+     true,
+     "ΔBIC -235.6 after dropping the 2 most influential night(s) of 120 in the feature"
+    ],
+    [
+     "two_unrelated_events",
+     true,
+     "ΔBIC -15824.2"
+    ],
+    [
+     "variable_catalogues",
+     true,
+     "matches: none (2″)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-4-0-75103",
+   "exotic": "N1neg",
+   "dbic_all": -5331.750229856804,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -5331.8 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.4"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.50 > 6.69? (4480 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 116.6 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-4-1-14479",
+   "exotic": "N1neg",
+   "dbic_all": -19184.00536680066,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -19184.0 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -2.0"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 4.01 > 6.69? (1662 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     false,
+     "1 neighbours; |S| > 5: [('gb20-R-4-1-28775', -168.2)]"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-4-1-26392",
+   "exotic": "N1neg",
+   "dbic_all": -142385.2435572423,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -142385.2 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -1.9"
+    ],
+    [
+     "variable_baseline",
+     false,
+     "baseline χ²/dof 7.37 > 6.69? (3473 pts, errors × point-to-point scale)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-4-2-48",
+   "exotic": "E2neg",
+   "dbic_all": -1249.692191800641,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1249.7 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -2.6"
+    ],
+    [
+     "variable_baseline",
+     false,
+     "baseline χ²/dof 222.85 > 6.69? (2027 pts, errors × point-to-point scale)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-4-4-19246",
+   "exotic": "N1neg",
+   "dbic_all": -2558.635802122075,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -2558.6 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.8"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 2.99 > 6.69? (3959 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 1404.7 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-4-5-5911",
+   "exotic": "N1neg",
+   "dbic_all": -884.1872946652393,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -884.2 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.2"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-4-6-49098",
+   "exotic": "N1neg",
+   "dbic_all": -64426.3291198224,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -64426.3 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.1"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 2.94 > 6.69? (4396 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "2 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 3085.7 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-5-2-26598",
+   "exotic": "E2neg",
+   "dbic_all": -6074.488985120552,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -6074.5 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -4.5"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.38 > 6.69? (3798 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 1814.6 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-5-2-30801",
+   "exotic": "E2pos",
+   "dbic_all": -52988.47523566653,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -54983.3 (E2pos vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature 0.0"
+    ],
+    [
+     "variable_baseline_untestable",
+     true,
+     "baseline χ²/dof nan > 6.69? (0 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     true,
+     "ΔBIC -54983.3 vs a trapezoidal dip"
+    ],
+    [
+     "robust_errors_outliers",
+     true,
+     "125 isolated outliers removed, errors ×5.97; ΔBIC -1519.1"
+    ],
+    [
+     "season_offsets",
+     true,
+     "free baseline per season; ΔBIC -14065.6"
+    ],
+    [
+     "season_trends",
+     true,
+     "offset + drift per season; ΔBIC -2287.1"
+    ],
+    [
+     "observing_conditions",
+     true,
+     "baseline linear in ('fwhm', 'airmass', 'sky'); ΔBIC -54864.4"
+    ],
+    [
+     "refit_all_ordinary",
+     true,
+     "ΔBIC -52988.5 vs FSPL (FSPL, PAR)"
+    ],
+    [
+     "binary_source",
+     false,
+     "ΔBIC 42906.6"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-5-4-6427",
+   "exotic": "E2neg",
+   "dbic_all": -5714.07484975891,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -5714.1 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -2.7"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 3.23 > 6.69? (1351 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     true,
+     "ΔBIC -1919.1 vs a trapezoidal dip"
+    ],
+    [
+     "robust_errors_outliers",
+     true,
+     "52 isolated outliers removed, errors ×2.32; ΔBIC -971.1"
+    ],
+    [
+     "season_offsets",
+     false,
+     "free baseline per season; ΔBIC 37.5"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-5-5-38429",
+   "exotic": "E2pos",
+   "dbic_all": -28920.502225882097,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -28920.5 (E2pos vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -2.0"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.07 > 6.69? (575 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 21901.7 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-5-6-6547",
+   "exotic": "N1neg",
+   "dbic_all": -203359.88836280257,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -203359.9 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -9.6"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-6-0-11376",
+   "exotic": "N1neg",
+   "dbic_all": -713.0617637046353,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -713.1 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -4.9"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.40 > 6.69? (3978 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     false,
+     "1 neighbours; |S| > 5: [('gb20-R-6-0-27920', -5.1)]"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-6-0-14243",
+   "exotic": "N1neg",
+   "dbic_all": -1778.8297265858291,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1778.8 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.7"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.55 > 6.69? (3865 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     true,
+     "ΔBIC -59.0 vs a trapezoidal dip"
+    ],
+    [
+     "robust_errors_outliers",
+     true,
+     "37 isolated outliers removed, errors ×1.44; ΔBIC -841.3"
+    ],
+    [
+     "season_offsets",
+     true,
+     "free baseline per season; ΔBIC -1771.5"
+    ],
+    [
+     "season_trends",
+     true,
+     "offset + drift per season; ΔBIC -771.1"
+    ],
+    [
+     "observing_conditions",
+     true,
+     "baseline linear in ('fwhm', 'airmass', 'sky'); ΔBIC -1765.2"
+    ],
+    [
+     "refit_all_ordinary",
+     true,
+     "ΔBIC -1778.8 vs PSPL (FSPL, PAR)"
+    ],
+    [
+     "binary_source",
+     true,
+     "ΔBIC -1778.8"
+    ],
+    [
+     "binary_lens",
+     true,
+     "ΔBIC -1778.8"
+    ],
+    [
+     "exotic_feature_sampled",
+     false,
+     "2 epochs on 1 nights inside, Δχ² in 8.3 / out -1795.5"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-6-0-8538",
+   "exotic": "N1neg",
+   "dbic_all": -1583.6224132546859,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1583.6 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -4.2"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.41 > 6.69? (3862 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "2 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 86.8 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-6-1-24547",
+   "exotic": "E2neg",
+   "dbic_all": -260.91572398075823,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -260.9 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -5.3"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.30 > 6.69? (4591 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC -1.8 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-6-1-41514",
+   "exotic": "N1neg",
+   "dbic_all": -399.2636965891088,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -399.3 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -9.4"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-6-2-46782",
+   "exotic": "E2neg",
+   "dbic_all": -1627.7593572372953,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1627.8 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -11.8"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-6-2-46783",
+   "exotic": "E2pos",
+   "dbic_all": -11818.813216928222,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -11971.4 (E2pos vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.1"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 2.54 > 6.69? (3478 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     true,
+     "ΔBIC -1576.6 vs a trapezoidal dip"
+    ],
+    [
+     "robust_errors_outliers",
+     true,
+     "77 isolated outliers removed, errors ×2.40; ΔBIC -1944.6"
+    ],
+    [
+     "season_offsets",
+     true,
+     "free baseline per season; ΔBIC -324.1"
+    ],
+    [
+     "season_trends",
+     true,
+     "offset + drift per season; ΔBIC -inf"
+    ],
+    [
+     "observing_conditions",
+     true,
+     "baseline linear in ('fwhm', 'airmass', 'sky'); ΔBIC -11806.2"
+    ],
+    [
+     "refit_all_ordinary",
+     true,
+     "ΔBIC -11818.8 vs FSPL (FSPL, PAR)"
+    ],
+    [
+     "binary_source",
+     true,
+     "ΔBIC -595.0"
+    ],
+    [
+     "binary_lens",
+     true,
+     "ΔBIC -595.0"
+    ],
+    [
+     "exotic_feature_sampled",
+     true,
+     "447 epochs on 158 nights inside, Δχ² in -8919.5 / out -2899.3"
+    ],
+    [
+     "jackknife_epochs",
+     true,
+     "ΔBIC [-11494.5, -11288.2, -11093.8]"
+    ],
+    [
+     "jackknife_nights",
+     false,
+     "ΔBIC 3622.0 after dropping the 2 most influential night(s) of 158 in the feature"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-6-4-36048",
+   "exotic": "N1neg",
+   "dbic_all": -397.51722762543704,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -397.5 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -6.4"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-6-4-36049",
+   "exotic": "N1neg",
+   "dbic_all": -224.37228887361744,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -224.4 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -5.7"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.30 > 6.69? (4570 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "1 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 7.6 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-6-6-21622",
+   "exotic": "E2pos",
+   "dbic_all": -18949.973873066054,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -18950.0 (E2pos vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -13.8"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-6-6-53815",
+   "exotic": "E2neg",
+   "dbic_all": -507.07221849474445,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -507.1 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.6"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-7-1-62085",
+   "exotic": "E2neg",
+   "dbic_all": -1473.7848544029466,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1473.8 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.0"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.46 > 6.69? (3588 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     true,
+     "ΔBIC -17.1 vs a trapezoidal dip"
+    ],
+    [
+     "robust_errors_outliers",
+     true,
+     "30 isolated outliers removed, errors ×1.30; ΔBIC -760.7"
+    ],
+    [
+     "season_offsets",
+     false,
+     "free baseline per season; ΔBIC 6.8"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-7-3-3112",
+   "exotic": "N1neg",
+   "dbic_all": -25596.664005716942,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -25596.7 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.9"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-7-4-10944",
+   "exotic": "E2pos",
+   "dbic_all": -1073.3575522148367,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1073.4 (E2pos vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.4"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.18 > 6.69? (3023 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 16.7 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-7-4-7534",
+   "exotic": "N1neg",
+   "dbic_all": -359.9264231485831,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -359.9 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -2.5"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.25 > 6.69? (3798 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 120.7 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-7-5-62156",
+   "exotic": "N1neg",
+   "dbic_all": -4152.101978507688,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -4152.1 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -2.8"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.13 > 6.69? (4464 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 3.7 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-7-6-23414",
+   "exotic": "N1neg",
+   "dbic_all": -53014.203723497776,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -53014.2 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -2.7"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 3.58 > 6.69? (2795 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 345.7 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-7-6-5162",
+   "exotic": "E2neg",
+   "dbic_all": -243.87616028508546,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -243.9 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.7"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-8-0-552",
+   "exotic": "E2pos",
+   "dbic_all": -2223.886264154913,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -2223.9 (E2pos vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -10.1"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-8-0-7859",
+   "exotic": "E2pos",
+   "dbic_all": -822.7366381850779,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -822.7 (E2pos vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -18.5"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-8-3-60387",
+   "exotic": "N1neg",
+   "dbic_all": -415.6673252410819,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -415.7 (N1neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.3"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.15 > 6.69? (4213 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     false,
+     "9 neighbours; |S| > 5: [('gb20-R-8-3-4364', 5.3)]"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb20-R-8-4-3924",
+   "exotic": "E2neg",
+   "dbic_all": -530.2386946537708,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -530.2 (E2neg vs PSPL)"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -5.7"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.39 > 6.69? (4195 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 156.9 vs a trapezoidal dip"
+    ]
+   ]
+  }
+ ]
+}
