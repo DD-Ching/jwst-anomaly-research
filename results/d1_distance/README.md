@@ -1,4 +1,4 @@
-# D1 distance self-consistency (hypothesis round 1, owner idea 1; D-TBD)
+# D1 distance self-consistency (hypothesis round 1, owner idea 1; D-073)
 
 Question: does any single sightline carry two independent distance measures that no ordinary model reconciles?
 Result: **no**. Every per-lens and per-FRB pull is far below the 5σ trials-corrected threshold.

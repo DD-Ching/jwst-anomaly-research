@@ -3323,7 +3323,37 @@ injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T�
 - CHIME/FRB Catalog 2 is added (the S1 second half).
 - The χ² systematic (10 %) is calibrated on real same-burst data, e.g. GBM vs. Swift-BAT.
 
-## D-TBD D1 distance self-consistency: per-lens H0-free ratio R = D_dt/((1+z_d) D_d) and per-FRB DM-z predictive tails (2026-10-09)
+## D-072 S3 hybrid images: COSMOGRAIL XIX doubles, SIS leg-split lag window, template regression; null without a useful limit (2026-10-09)
+
+**Decision.** S3 (D-069) is tested with `scripts/s3_hybrid.py` on the COSMOGRAIL XIX R-band curves (CDS
+J/A+A/640/A105) of the 7 doubles whose published delay is not flagged uncertain and exceeds 3σ. Lags are a
+model_prediction under an SIS (ASSUMPTION): the geometric delays of both images are equal, so with a fraction f of the
+potential delay on the source leg, s_L − s_T = −Δt (D_ls/D_s + f). f is unobservable, so each direction scans the
+window f ∈ [0, 1]; the copy into the trailing image arrives before the leading image when D_ls/D_s + f > 1. Image j is
+fitted as a smooth cubic B-spline (3000-d knots) + m F_i(t − τ) + a F_i(t − τ − δ), F_i interpolated across gaps
+≤ 40 d; r = a/m. The window maximum of r (|lag| ≥ 10 d) is compared with same-width windows at off-model lags,
+and injections go through the same window maximum. A system is screened only if the main-term fit recovers its
+published delay. Result: no copy (lowest p = 0.02 of 12 windows, on the main-image wing); sensitivity
+r95 ≈ 0.38–2.4 per system and direction, i.e. only copies comparable to the main image are excluded.
+
+**Alternatives rejected.**
+- Microlensing B-splines with 120–730-d knots: the published delay is not recovered (6 of 7 systems off by
+  50–250 d); only the 3000-d spline recovers 6 of 7 within 3σ + 4 d (J1620: wrong-sign minimum at −206 d).
+- Quoting B-on-A1's ~10⁻² sensitivity: quasar variability is red (time-scales ≳ 100 d), so a copy at lags
+  ≲ 100 d is nearly collinear with the main image and with a delay error. The same fit recovers r = 0.1 within 0.03
+  on a synthetic curve with 20-d variability (`tests/test_s3_hybrid.py`), so the loss is the data, not the code.
+- Treating the r95 values as limits: window-maximum injection efficiencies scatter from 0.67 to 4.7 over 8 trials,
+  the r(δ) scans have a positive offset of 0.1–1 at all lags (template–microlensing degeneracy), and the null
+  windows overlap and are not matched in |lag| (approximate p). They are sensitivities.
+
+**Evidence.** `results/s3_hybrid/summary.json`, `scans.json`; CHANGELOG 2026-10-09.
+
+**Revisit if.**
+- A lensed transient with fast intrinsic variability (SN Refsdal, SN H0pe, a lensed FRB) gives a sharp template:
+  then a copy at r ~ 10⁻² is reachable (B-on-A1).
+- Lens models with image positions and a source position are wanted for quads (the SIS window does not apply).
+
+## D-073 D1 distance self-consistency: per-lens H0-free ratio R = D_dt/((1+z_d) D_d) and per-FRB DM-z predictive tails (2026-10-09)
 
 **Decision.**
 - Data (derived posteriors, pinned by sha256 in `data/manifests/d1_distance.ecsv`): H0LiCOW-public

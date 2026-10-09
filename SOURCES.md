@@ -1045,7 +1045,12 @@ Exploration Program."
 - Fermi GBM Data Tools (GDT), https://astro-gdt.readthedocs.io/projects/astro-gdt-fermi/en/latest/ (docs 2.2.x,
   opened 2026-10-09): TTE, PHAII, RSP, trigdat, poshist, scat, tcat and catalogue finders; no bcat reader listed.
 
-## D1 distance self-consistency (accessed 2026-10-09; D-TBD)
+## COSMOGRAIL XIX light curves (accessed 2026-10-09; D-072)
+- Millon et al. 2020, A&A 640, A105, arXiv:2002.05736: R-band light curves of 23 lensed quasars, CDS
+  J/A+A/640/A105 (https://cdsarc.cds.unistra.fr/ftp/J/A+A/640/A105/, `lcab/*.dat`); delays and redshifts from the
+  paper's Tables 1 and 4 (arXiv source `tabdelay.tex`, `tabdata.tex`). `scripts/s3_hybrid.py`.
+
+## D1 distance self-consistency (accessed 2026-10-09; D-073)
 
 - H0LiCOW public distance posteriors, https://github.com/shsuyu/H0LiCOW-public (commit 57cf973, 2025-05-14):
   `h0licow_distance_chains/*`, `MontePython_cosmo_sampling/data/timedelay_6lenses/B1608_Dd_Ddt_params.dat` and the
