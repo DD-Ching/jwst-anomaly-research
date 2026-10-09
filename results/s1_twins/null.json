@@ -1,5 +1,5 @@
 {
- "provenance": "model_prediction",
+ "provenance": "simulated",
  "source": "pulse-shuffled surrogate catalogues (jwst_anomaly.burst_twins.pulse_shuffle), same pair set",
  "n_catalogues": 100,
  "per_catalogue_max_rho": [

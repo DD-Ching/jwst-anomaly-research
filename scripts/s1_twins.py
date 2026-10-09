@@ -7,7 +7,7 @@ pair),
 ``null.json`` (surrogate-null summary), ``injections.ecsv.gz`` and ``summary.json``. Plots go to
 --plots.
 
-  python scripts/s1_twins.py [--null 100] [--inject 3000] [--plots <dir>]
+  python scripts/s1_twins.py [--null 100] [--inject 5000] [--inject-sens 1000] [--plots <dir>]
 
 Every number is a screen statistic; a match is an anomaly, never evidence of new physics.
 """
@@ -219,21 +219,46 @@ def pair_rho(x, ex, kx, y, ey, ky):
 
 
 def injection_one(args):
-    """One synthetic twin through the chain: eligibility, threshold, chi2, re-trigger veto."""
-    seed, a, b, ratio = args
+    """One synthetic twin through the chain: eligibility, threshold, chi2, re-trigger veto.
+
+    The copy gets its own stored window and resolution k, emulated from its T90: A's catalogue T90
+    scaled by the ratio of the cumulative-fluence durations (copy / A'), then ``bt.window_for``.
+    A copy whose k differs
+    from A's by more than ``max_dk`` is lost (not scored), as a real pair would be.
+    """
+    seed, a, b, ratio, jitter = args
     rng = np.random.default_rng(seed)
     B = G["bursts"]
-    fa, ea = B[a]["flux"], B[a]["errs"]
-    eb = B[b]["errs"] * np.sqrt(B[b]["dt"] / B[a]["dt"])  # B's noise at A's bin width
+    A = B[a]
+    fa, ea = A["flux"], A["errs"]
+    eb = B[b]["errs"] * np.sqrt(B[b]["dt"] / A["dt"])  # B's noise at A's bin width
     nb = eb.shape[1]
     na = fa.shape[1]
     eb = eb[:, np.arange(na) % nb] if nb < na else eb[:, :na]
-    fa2, ea2, fi, ei = bt.inject_twin(bt.template(fa), ea, eb, ratio, rng, P.inject_gain_jitter)
-    npk = len(bt.find_pulses(fi, ei, P))
-    eligible = npk >= P.min_pulses and len(bt.find_pulses(fa2, ea2, P)) >= P.min_pulses
-    r, lag, x, ex, y, ey = pair_rho(fa2, ea2, B[a]["k"], fi, ei, B[a]["k"])
+    fa2, ea2, fi, ei = bt.inject_twin(bt.template(fa), ea, eb, ratio, rng, jitter)
+    # --- emulate the copy's catalogue T90, stored window and k
+    t90a = max(A["t90"], P.base_dt)
+    t90s_a = A["t_lo"] + P.pad_frac * t90a + P.pad_s  # window_for: t_lo = t90_start - pad
+    ia0, ia1 = bt.duration_bins(fa2)
+    ic0, ic1 = bt.duration_bins(fi)
+    t90c = t90a * max(ic1 - ic0 + 1, 1) / max(ia1 - ia0 + 1, 1)
+    t90s_c = t90s_a + (ic0 - ia0) * A["dt"]
+    lo_c, hi_c, dt_c = bt.window_for(t90s_c, t90c, P)
+    k_raw = int(round(np.log2(dt_c / P.base_dt)))
+    lost_k = abs(k_raw - A["k"]) > P.max_dk
+    k_c = max(k_raw, A["k"])  # a finer copy is compared at A's level anyway
+    j0 = int(np.clip(np.floor((lo_c - A["t_lo"]) / A["dt"]), 0, na - 1))
+    j1 = int(np.clip(np.ceil((hi_c - A["t_lo"]) / A["dt"]), j0 + 1, na))
+    yc, eyc = bt.rebin_factor(fi[:, j0:j1], ei[:, j0:j1], 2 ** (k_c - A["k"]))
+    if yc.shape[1] < 3:
+        yc, eyc, k_c, lost_k = fi, ei, A["k"], True
+    npk = len(bt.find_pulses(yc, eyc, P))
+    eligible = (
+        (not lost_k) and npk >= P.min_pulses and len(bt.find_pulses(fa2, ea2, P)) >= P.min_pulses
+    )
+    r, lag, x, ex, y, ey = pair_rho(fa2, ea2, A["k"], yc, eyc, k_c)
     chi2, dof, pval = bt.twin_chi2(x, ex, y, ey, lag)
-    dtd = abs(B[a]["mjd"] - B[b]["mjd"])
+    dtd = abs(A["mjd"] - B[b]["mjd"])
     flagged = eligible and r > G["rho_star"]
     passed = flagged and pval >= P.chi2_p_min and dtd >= P.retrigger_days
     passed_deep = (
@@ -243,8 +268,11 @@ def injection_one(args):
         a,
         b,
         ratio,
+        jitter,
         bt.snr_total(fi, ei),
         npk,
+        int(k_raw - A["k"]),
+        bool(lost_k),
         bool(eligible),
         float(r),
         float(pval),
@@ -299,7 +327,13 @@ def contact_sheet(B, rows, path, ncol=4):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--null", type=int, default=100, help="surrogate catalogues")
-    ap.add_argument("--inject", type=int, default=3000)
+    ap.add_argument(
+        "--inject", type=int, default=5000, help="injections at the primary gain jitter"
+    )
+    ap.add_argument(
+        "--inject-sens", type=int, default=1000, help="injections per sensitivity jitter"
+    )
+    ap.add_argument("--jitter-grid", type=float, nargs="*", default=[0.05, 0.10, 0.20])
     ap.add_argument("--cpu", type=int, default=os.cpu_count() or 1)
     ap.add_argument("--plots", type=Path, default=None)
     ap.add_argument("--seed", type=int, default=20261009)
@@ -444,7 +478,7 @@ def main(argv=None):
     rows.sort(key=lambda d: -d["rho"])
     pt = Table([{k: v for k, v in d.items() if not k.startswith("_")} for d in rows])
     pt.meta = {
-        "provenance": str(Provenance.MODEL_PREDICTION),
+        "provenance": str(Provenance.DERIVED),
         "source": "scripts/s1_twins.py over results/s1_twins/lc_*.ecsv.gz; "
         "top 300 real pairs by rho (s = 1) and "
         f"every pair above rho* = {rho_star:.4f} (95 % of the per-catalogue surrogate maximum, "
@@ -510,17 +544,19 @@ def main(argv=None):
         flush=True,
     )
 
-    # ---- injections through the whole chain
+    # ---- injections through the whole chain (primary gain jitter) + jitter sensitivity runs
     G["rho_star"] = rho_star
     rng = np.random.default_rng(a.seed)
     elig_idx = np.flatnonzero(elig)
     ratios = (1.0, 0.5, 0.3, 0.2, 0.1)
+    jitters = [P.inject_gain_jitter] + [x for x in a.jitter_grid if x != P.inject_gain_jitter]
     jobs = []
-    for q in range(a.inject):
-        ia = int(rng.choice(elig_idx))
-        cand = np.flatnonzero(incons[ia])
-        ib = int(rng.choice(cand))
-        jobs.append((a.seed + 50000 + q, ia, ib, ratios[q % len(ratios)]))
+    for jit in jitters:
+        n_j = a.inject if jit == P.inject_gain_jitter else a.inject_sens
+        for q in range(n_j):
+            ia = int(rng.choice(elig_idx))
+            ib = int(rng.choice(np.flatnonzero(incons[ia])))
+            jobs.append((a.seed + 50000 + len(jobs), ia, ib, ratios[q % len(ratios)], float(jit)))
     gi = dict(g, rho_star=rho_star)
     with cf.ProcessPoolExecutor(a.cpu, initializer=_init, initargs=(gi,)) as pool:
         inj = list(pool.map(injection_one, jobs, chunksize=20))
@@ -530,8 +566,11 @@ def main(argv=None):
             "a",
             "b",
             "ratio",
+            "gain_jitter",
             "snr_copy",
             "npulse_copy",
+            "dk_copy",
+            "lost_k",
             "eligible",
             "rho",
             "chi2_p",
@@ -547,44 +586,94 @@ def main(argv=None):
     it.meta = {
         "provenance": str(Provenance.SIMULATED),
         "source": "jwst_anomaly.burst_twins.inject_twin: smoothed template of eligible burst a, "
-        "re-noised as a and "
-        "as a copy in slot b (b's background noise, independent realisations), "
-        f"flux ratio as listed; chain = >= {P.min_pulses} pulses, rho > rho* = {rho_star:.4f}, "
-        f"chi2 p >= {P.chi2_p_min}, delay >= {P.retrigger_days} d; scripts/s1_twins.py seed "
-        f"{a.seed}",
+        "re-noised as a and as a copy in slot b (b's background noise, independent realisations, "
+        "per-band gain jitter as listed); the copy gets its own window and k from a T90 proxy; "
+        f"chain = >= {P.min_pulses} pulses, |dk| <= {P.max_dk}, rho > rho* = {rho_star:.4f}, "
+        f"chi2 p >= {P.chi2_p_min}, delay >= {P.retrigger_days} d; recovered_deep is post hoc "
+        f"(illustrative); scripts/s1_twins.py seed {a.seed}",
     }
     write_ecsv_gz(it, OUT / "injections.ecsv.gz")
-    eff = {}
-    for rt in ratios:
-        m = it["ratio"] == rt
-        eff[str(rt)] = {
-            "n": int(m.sum()),
-            "eligible": float(it["eligible"][m].mean()),
-            "flagged": float(it["flagged"][m].mean()),
-            "recovered": float(it["recovered"][m].mean()),
-            "recovered_deep": float(it["recovered_deep"][m].mean()),
-        }
+
+    def efficiencies(tab):
+        out = {}
+        for rt in ratios:
+            m = tab["ratio"] == rt
+            out[str(rt)] = {
+                "n": int(m.sum()),
+                "lost_k": float(tab["lost_k"][m].mean()),
+                "eligible": float(tab["eligible"][m].mean()),
+                "flagged": float(tab["flagged"][m].mean()),
+                "recovered": float(tab["recovered"][m].mean()),
+                "recovered_deep_posthoc": float(tab["recovered_deep"][m].mean()),
+            }
+        return out
+
+    prim = it[it["gain_jitter"] == P.inject_gain_jitter]
+    eff = efficiencies(prim)
     eff_mean = float(np.mean([eff[str(x)]["recovered"] for x in ratios]))
-    eff_mean_deep = float(np.mean([eff[str(x)]["recovered_deep"] for x in ratios]))
+    eff_mean_deep = float(np.mean([eff[str(x)]["recovered_deep_posthoc"] for x in ratios]))
     n_surv = len(survivors)
     n_elig = int(elig.sum())
     mu95 = bt.poisson_upper_limit(n_surv)
+    mu95_deep = bt.poisson_upper_limit(len(deep_survivors))
+
+    def pair_limit(mu, e):
+        return mu / (n_elig * e) if e > 0 else None
+
+    sens = {}
+    for jit in jitters:
+        e_j = efficiencies(it[it["gain_jitter"] == jit])
+        e1 = e_j["1.0"]["recovered"]
+        em = float(np.mean([e_j[str(x)]["recovered"] for x in ratios]))
+        sens[f"{jit:.2f}"] = {
+            "n": int((it["gain_jitter"] == jit).sum()),
+            "eff_ratio1": e1,
+            "eff_mean_ratio_0.1_1": em,
+            "f95_twin_pairs_per_eligible_burst_ratio1": pair_limit(mu95, e1),
+            "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": pair_limit(mu95, em),
+        }
+    f1 = pair_limit(mu95, eff["1.0"]["recovered"])
+    fm = pair_limit(mu95, eff_mean)
     limits = {
+        "definition": "f95 = mu95 / (N_eligible * efficiency): 95 % upper limit on twin PAIRS "
+        "per eligible "
+        "burst; the fraction of eligible bursts that have a twin is 2 * f95",
+        "chain": "primary (rho > rho*, chi2, re-trigger veto)",
+        "gain_jitter": P.inject_gain_jitter,
         "survivors_k": n_surv,
         "poisson_mu95": mu95,
         "n_eligible": n_elig,
-        "f95_ratio1": mu95 / (n_elig * eff["1.0"]["recovered"])
-        if eff["1.0"]["recovered"] > 0
-        else None,
-        "f95_ratio_0.1_1_mean": mu95 / (n_elig * eff_mean) if eff_mean > 0 else None,
-        "deep_survivors_k": len(deep_survivors),
-        "deep_mu95": bt.poisson_upper_limit(len(deep_survivors)),
-        "deep_f95_ratio1": bt.poisson_upper_limit(len(deep_survivors))
-        / (n_elig * eff["1.0"]["recovered_deep"]),
-        "deep_f95_ratio_0.1_1_mean": bt.poisson_upper_limit(len(deep_survivors))
-        / (n_elig * eff_mean_deep),
+        "f95_twin_pairs_per_eligible_burst_ratio1": f1,
+        "f95_fraction_of_bursts_with_twin_ratio1": 2 * f1 if f1 else None,
+        "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": fm,
+        "f95_fraction_of_bursts_with_twin_mean_ratio_0.1_1": 2 * fm if fm else None,
+        "gain_jitter_sensitivity": sens,
+        "deep_posthoc_illustrative": {
+            "note": "rho > 0.90 was chosen after seeing that it gives k = 0; "
+            "illustrative, NOT a limit",
+            "survivors_k": len(deep_survivors),
+            "f95_twin_pairs_per_eligible_burst_ratio1": pair_limit(
+                mu95_deep, eff["1.0"]["recovered_deep_posthoc"]
+            ),
+            "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": pair_limit(
+                mu95_deep, eff_mean_deep
+            ),
+        },
     }
+    import astropy
+    import scipy
+
     summary = {
+        "argv": sys.argv,
+        "args": {k: (str(v) if isinstance(v, Path) else v) for k, v in vars(a).items()},
+        "seed": a.seed,
+        "n_injections": len(it),
+        "n_injections_primary": len(prim),
+        "versions": {
+            "numpy": np.__version__,
+            "scipy": scipy.__version__,
+            "astropy": astropy.__version__,
+        },
         "catalogue_bursts": len(cat),
         "bcat_status": {
             k: int(v)
@@ -607,7 +696,7 @@ def main(argv=None):
         "automated_survivors": [
             (d["burst1"], d["burst2"], d["rho"], d["chi2_p"]) for d in survivors
         ],
-        "deep_chain": {
+        "deep_chain_posthoc_illustrative": {
             "rho_prescreen": P.rho_prescreen_deep,
             "pairs": int(deep_idx.size),
             "chi2_pass": deep_chi2_pass,
@@ -621,7 +710,7 @@ def main(argv=None):
     write_json(summary, OUT / "summary.json")
     write_json(
         {
-            "provenance": str(Provenance.MODEL_PREDICTION),
+            "provenance": str(Provenance.SIMULATED),
             "source": "pulse-shuffled surrogate catalogues "
             "(jwst_anomaly.burst_twins.pulse_shuffle), same pair set",
             "n_catalogues": a.null,
@@ -689,10 +778,10 @@ def main(argv=None):
         ax[0].axvline(rho_star, color="k", ls="--", label="rho*")
         ax[0].axvline(r.max(), color="r", label="real max")
         ax[0].legend(fontsize=7)
-        snr = np.asarray(it["snr_copy"])
+        snr = np.asarray(prim["snr_copy"])
         for rt in ratios:
-            m = it["ratio"] == rt
-            ax[1].scatter(snr[m], np.asarray(it["rho"])[m], s=3, label=f"ratio {rt}")
+            m = prim["ratio"] == rt
+            ax[1].scatter(snr[m], np.asarray(prim["rho"])[m], s=3, label=f"ratio {rt}")
         ax[1].axhline(rho_star, color="k", ls="--")
         ax[1].set_xscale("log")
         ax[1].set_xlabel("copy peak S/N")

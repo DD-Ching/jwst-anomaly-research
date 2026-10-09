@@ -3249,10 +3249,15 @@ injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T�
 - Position cut: sep > 3·sqrt(σ1² + σ2² + 2·3.7°²).
 - Chain: ρ > ρ* (95 % of the per-catalogue maximum over 100 pulse-shuffled surrogate catalogues), then a
   noise-consistency χ² test of a scaled, shifted copy with a 10 % flux systematic (p ≥ 10⁻³), then a re-trigger
-  veto (delay ≥ 1 d). A secondary "deep" chain uses ρ > 0.90.
+  veto (delay ≥ 1 d). Only this primary chain gives the limit. A "deep" chain (ρ > 0.90) is post hoc and
+  illustrative only: its threshold was chosen after seeing that it yields k = 0.
 - Injections start from a smoothed template (Gaussian, 1.5 bins) of a real eligible burst. One member is re-noised
-  as A; the other is a copy in another burst's slot, with that burst's background noise and independent
-  realisations, flux ratios 1–0.1 and 5 % per-band gain jitter. Both pass through the whole chain.
+  as A. The other is a copy in another burst's slot, with that burst's background noise and independent
+  realisations, at flux ratios 1–0.1, with a per-band gain mismatch of 15 % (see Evidence). The copy gets its own
+  window and resolution k from a T90 proxy (A's catalogue T90 × the ratio of 5–95 % cumulative-fluence durations).
+  A copy with |Δk| > 1 is lost. Both members pass through the whole chain.
+- Limit units: f95 = μ95 / (N_eligible · ε) is the 95 % upper limit on twin PAIRS per eligible burst. The fraction
+  of eligible bursts that have a twin is 2·f95.
 - `scripts/s1_ingest.py`, `scripts/s1_twins.py`, `src/jwst_anomaly/burst_twins.py`. All thresholds are ASSUMPTIONs
   in `burst_twins.Params`.
 
@@ -3287,11 +3292,27 @@ injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T�
 - Positive controls: 8 same-source re-trigger pairs (GRB 091024, 130925, 150201, 220627, 250702 ×3, and
   bn210925800/bn210926869 at 1.3°) are all removed by the position cut.
 - Result: 6 pairs flagged at ρ > ρ* = 0.964. All 6 fail χ² (p < 10⁻¹⁰⁰): they are bright single-envelope
-  look-alikes. 0 survivors in either chain.
-- Injection recovery at flux ratio 1 is 37 % (primary chain) and 58 % (deep chain); about 90 % at copy peak
-  S/N > 50 and about 0 below 10.
-- 95 % upper limit on the twin fraction per eligible burst at ratio 1: 5.7 × 10⁻³ (primary) and 3.7 × 10⁻³
-  (deep). Averaged over ratios 1–0.1: 1.3 × 10⁻² and 7.9 × 10⁻³.
+  look-alikes. 0 survivors (primary chain; the post-hoc deep chain also has 0).
+- Band mismatch from data. In bright bins (summed S/N > 15) of the 522 eligible bursts with at least 8 such bins,
+  the noise-subtracted scatter of ln(f_50–300 / f_rest) has percentiles 10/25/50/75/90 of
+  0.075/0.13/0.21/0.32/0.42. The median 0.21 / √2 gives 0.15 per band, which is the injected value. It includes
+  intrinsic spectral evolution within each burst, so it sits on the high side for a pure response mismatch.
+- Error calibration. In off-T90 bins, std(flux/err) has a median of 1.00 in band 1 and 0.87 in band 2, so the
+  quoted errors are about right and the injected noise equals them.
+- Injection recovery, primary chain, 15 % jitter, 5,000 injections: 29.5 / 18.0 / 11.4 / 6.4 / 2.7 % at flux
+  ratio 1 / 0.5 / 0.3 / 0.2 / 0.1.
+  - By copy peak S/N: 72 % above 50, 48 % at 20–50, 7 % at 10–20, and 0 below 10.
+  - The χ² test removes 13 % of flagged injections. The window/k emulation loses 0.9 % of copies, so the stored
+    window and k (which depend only on catalogue T90) are a small effect.
+- 95 % upper limit, primary chain only, at ratio 1: **7.2 × 10⁻³ twin pairs per eligible burst**, i.e. 1.4 % of
+  eligible bursts have a twin. Averaged over ratios 1–0.1: 1.6 × 10⁻² pairs per burst (3.1 %).
+- Sensitivity to the per-band mismatch (1,000 injections each; ratio-1 efficiency, f95 pairs per burst at
+  ratio 1):
+  - 5 %: 41.5 %, 5.1 × 10⁻³;
+  - 10 %: 38.0 %, 5.6 × 10⁻³;
+  - 15 %: 29.5 %, 7.2 × 10⁻³;
+  - 20 %: 22.5 %, 9.4 × 10⁻³.
+- Deep chain (post hoc, illustrative, not a limit): 49 % at ratio 1, 4.3 × 10⁻³ pairs per burst.
 - Closest call: bn100528075/bn250207053 passes χ² only at s = 0.71 (p = 0.0016, ρ_s = 0.943 < ρ*), with a faint
   partner (S/N 12). Vetted as population similarity at low S/N (PR body).
 

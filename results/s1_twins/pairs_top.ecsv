@@ -26,7 +26,7 @@
 # - {name: snr_1, datatype: float64}
 # - {name: snr_2, datatype: float64}
 # meta: !!omap
-# - {provenance: model_prediction}
+# - {provenance: derived}
 # - {source: 'scripts/s1_twins.py over results/s1_twins/lc_*.ecsv.gz; top 300 real pairs by rho (s = 1) and every pair above rho* = 0.9636
 #     (95 % of the per-catalogue surrogate maximum, ASSUMPTION)'}
 # schema: astropy-2.0

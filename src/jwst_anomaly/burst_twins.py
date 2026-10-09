@@ -68,9 +68,11 @@ class Params:
     chi2_sys_frac: float = (
         0.10  # per-bin flux systematic added in quadrature (response/deconvolution mismatch)
     )
-    inject_gain_jitter: float = (
-        0.05  # per-band gain scatter of an injected copy (different detector geometry)
-    )
+    # Per-band gain scatter of an injected copy (response mismatch). ASSUMPTION from data: the
+    # median within-burst scatter of ln(f_50-300 / f_rest) in bright bins of eligible bursts,
+    # noise-subtracted, is 0.21, i.e. 0.21 / sqrt(2) = 0.15 per band (includes intrinsic spectral
+    # evolution, so it is on the high side).
+    inject_gain_jitter: float = 0.15
     retrigger_days: float = (
         1.0  # pairs closer in time than this are duplicate / re-trigger candidates
     )
@@ -440,6 +442,22 @@ def inject_twin(
     gain = 1.0 + gain_jitter * rng.normal(size=(templ.shape[0], 1)) if gain_jitter > 0 else 1.0
     fb = ratio * gain * templ + rng.normal(size=templ.shape) * np.sqrt(var_b)
     return fa, np.array(err_a, float), fb, np.sqrt(var_b) * np.ones_like(templ)
+
+
+def duration_bins(flux: np.ndarray, lo: float = 0.05, hi: float = 0.95) -> tuple[int, int]:
+    """T90-like interval (bin indices) of the summed-band curve from its cumulative fluence.
+
+    Used only as a relative proxy (copy vs. original), not as a catalogue T90.
+    """
+    tot = np.asarray(flux, float).sum(0)
+    c = np.cumsum(tot)
+    total = c[-1]
+    n = len(tot)
+    if not np.isfinite(total) or total <= 0:
+        return 0, n - 1
+    i0 = min(int(np.searchsorted(c, lo * total)), n - 1)
+    i1 = min(int(np.searchsorted(c, hi * total)), n - 1)
+    return i0, max(i1, i0)
 
 
 def snr_total(flux: np.ndarray, err: np.ndarray) -> float:

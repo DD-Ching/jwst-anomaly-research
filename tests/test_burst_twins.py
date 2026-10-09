@@ -190,3 +190,38 @@ def test_reduce_bcat_and_encode_roundtrip():
     f2, e2 = bt.decode(units, fs, es)
     ok = np.isfinite(red["flux"])
     assert np.allclose(f2[ok], red["flux"][ok], atol=max(units) / 10)
+
+
+def test_duration_bins_proxy():
+    f, _ = burst(noise=0.0, pulses=((50, 1, 5, 10),))
+    i0, i1 = bt.duration_bins(f)
+    assert 45 <= i0 <= 55 < i1 < 80
+
+
+# ------------------------------------------------------------------------ batched scoring (driver)
+
+
+def test_score_all_matches_pairwise_xcorr():
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+    import s1_twins as s
+
+    rng = np.random.default_rng(0)
+    lcs, ks = [], []
+    for _ in range(30):
+        n = int(rng.integers(40, 257))
+        f = np.abs(rng.normal(size=(2, n))) * (rng.random((2, n)) < 0.3) * 5
+        lcs.append((f, np.ones_like(f)))
+        ks.append(int(rng.integers(0, 3)))
+    ks = np.array(ks)
+    allowed = np.abs(ks[:, None] - ks[None]) <= 1
+    np.fill_diagonal(allowed, False)
+    i, j, r, lag, _ = s.best_per_pair(*s.score_all(lcs, ks, allowed))
+    assert len(r) == int(np.triu(allowed, 1).sum())
+    for a, b, rr, lg in zip(i, j, r, lag, strict=True):
+        r2, l2, *_ = s.pair_rho(lcs[a][0], lcs[a][1], ks[a], lcs[b][0], lcs[b][1], ks[b])
+        assert rr == pytest.approx(r2, abs=1e-9)
+        if rr > 1e-6:
+            assert abs(lg) == abs(l2)  # same lag (sign depends on pair order)

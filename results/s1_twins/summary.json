@@ -1,4 +1,36 @@
 {
+ "argv": [
+  "scripts/s1_twins.py",
+  "--null",
+  "100",
+  "--inject",
+  "5000",
+  "--inject-sens",
+  "1000",
+  "--plots",
+  "/tmp/claude-0/-home-user-jwst-anomaly-research/b0ac7c45-4e45-5ff8-b32a-815a2c5bc74e/scratchpad/s1-twins/plots"
+ ],
+ "args": {
+  "null": 100,
+  "inject": 5000,
+  "inject_sens": 1000,
+  "jitter_grid": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "cpu": 4,
+  "plots": "/tmp/claude-0/-home-user-jwst-anomaly-research/b0ac7c45-4e45-5ff8-b32a-815a2c5bc74e/scratchpad/s1-twins/plots",
+  "seed": 20261009
+ },
+ "seed": 20261009,
+ "n_injections": 8000,
+ "n_injections_primary": 5000,
+ "versions": {
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "astropy": "8.0.1"
+ },
  "catalogue_bursts": 4390,
  "bcat_status": {
   "no bcat file": 1,
@@ -30,7 +62,7 @@
   "rho_prescreen_deep": 0.9,
   "chi2_p_min": 0.001,
   "chi2_sys_frac": 0.1,
-  "inject_gain_jitter": 0.05,
+  "inject_gain_jitter": 0.15,
   "retrigger_days": 1.0
  },
  "rho_star": 0.9636397113654587,
@@ -49,7 +81,7 @@
  },
  "flagged_real": 6,
  "automated_survivors": [],
- "deep_chain": {
+ "deep_chain_posthoc_illustrative": {
   "rho_prescreen": 0.9,
   "pairs": 1860,
   "chi2_pass": 0,
@@ -164,50 +196,92 @@
  "injection_efficiency": {
   "1.0": {
    "n": 1000,
-   "eligible": 0.701,
-   "flagged": 0.371,
-   "recovered": 0.371,
-   "recovered_deep": 0.578
+   "lost_k": 0.001,
+   "eligible": 0.696,
+   "flagged": 0.349,
+   "recovered": 0.295,
+   "recovered_deep_posthoc": 0.493
   },
   "0.5": {
    "n": 1000,
+   "lost_k": 0.001,
    "eligible": 0.445,
-   "flagged": 0.225,
-   "recovered": 0.225,
-   "recovered_deep": 0.354
+   "flagged": 0.209,
+   "recovered": 0.18,
+   "recovered_deep_posthoc": 0.307
   },
   "0.3": {
    "n": 1000,
-   "eligible": 0.291,
-   "flagged": 0.135,
-   "recovered": 0.135,
-   "recovered_deep": 0.221
+   "lost_k": 0.004,
+   "eligible": 0.295,
+   "flagged": 0.126,
+   "recovered": 0.114,
+   "recovered_deep_posthoc": 0.202
   },
   "0.2": {
    "n": 1000,
-   "eligible": 0.185,
-   "flagged": 0.082,
-   "recovered": 0.082,
-   "recovered_deep": 0.142
+   "lost_k": 0.015,
+   "eligible": 0.18,
+   "flagged": 0.073,
+   "recovered": 0.064,
+   "recovered_deep_posthoc": 0.12
   },
   "0.1": {
    "n": 1000,
+   "lost_k": 0.025,
    "eligible": 0.06,
    "flagged": 0.028,
-   "recovered": 0.028,
-   "recovered_deep": 0.048
+   "recovered": 0.027,
+   "recovered_deep_posthoc": 0.047
   }
  },
  "limits": {
+  "definition": "f95 = mu95 / (N_eligible * efficiency): 95 % upper limit on twin PAIRS per eligible burst; the fraction of eligible bursts that have a twin is 2 * f95",
+  "chain": "primary (rho > rho*, chi2, re-trigger veto)",
+  "gain_jitter": 0.15,
   "survivors_k": 0,
   "poisson_mu95": 2.9957322735539895,
   "n_eligible": 1414,
-  "f95_ratio1": 0.005710572887898049,
-  "f95_ratio_0.1_1_mean": 0.012595853397206758,
-  "deep_survivors_k": 0,
-  "deep_mu95": 2.9957322735539895,
-  "deep_f95_ratio1": 0.003665436922854977,
-  "deep_f95_ratio_0.1_1_mean": 0.00788764907449805
+  "f95_twin_pairs_per_eligible_burst_ratio1": 0.007181771326814157,
+  "f95_fraction_of_bursts_with_twin_ratio1": 0.014363542653628315,
+  "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.01557810692213365,
+  "f95_fraction_of_bursts_with_twin_mean_ratio_0.1_1": 0.0311562138442673,
+  "gain_jitter_sensitivity": {
+   "0.15": {
+    "n": 5000,
+    "eff_ratio1": 0.295,
+    "eff_mean_ratio_0.1_1": 0.136,
+    "f95_twin_pairs_per_eligible_burst_ratio1": 0.007181771326814157,
+    "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.01557810692213365
+   },
+   "0.05": {
+    "n": 1000,
+    "eff_ratio1": 0.415,
+    "eff_mean_ratio_0.1_1": 0.17099999999999999,
+    "f95_twin_pairs_per_eligible_burst_ratio1": 0.005105114557614883,
+    "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.01238960550532267
+   },
+   "0.10": {
+    "n": 1000,
+    "eff_ratio1": 0.38,
+    "eff_mean_ratio_0.1_1": 0.178,
+    "f95_twin_pairs_per_eligible_burst_ratio1": 0.0055753224773952,
+    "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.01190237382814706
+   },
+   "0.20": {
+    "n": 1000,
+    "eff_ratio1": 0.225,
+    "eff_mean_ratio_0.1_1": 0.11500000000000002,
+    "f95_twin_pairs_per_eligible_burst_ratio1": 0.009416100184045227,
+    "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.018422804707914575
+   }
+  },
+  "deep_posthoc_illustrative": {
+   "note": "rho > 0.90 was chosen after seeing that it gives k = 0; illustrative, NOT a limit",
+   "survivors_k": 0,
+   "f95_twin_pairs_per_eligible_burst_ratio1": 0.004297408806105835,
+   "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.009061687516724452
+  }
  },
- "runtime_s": 300
+ "runtime_s": 134
 }
