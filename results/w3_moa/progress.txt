@@ -58,3 +58,4 @@
 2026-10-09T09:34:22Z queue: START gb15 09:32:44 procs 3 |   12046 light curves, 144/s, 57 MB/s, CPU 86 %, retries 1
 2026-10-09T09:43:25Z queue: START gb15 09:32:44 procs 3 | fitting 61 pre-screen passes of 83145
 2026-10-09T09:52:29Z queue: START gb15 09:32:44 procs 3 | 50/61 fitted, 478 s
+2026-10-09T10:01:32Z queue: START gb15 09:32:44 procs 3 | 25/61 fitted, 235 s
