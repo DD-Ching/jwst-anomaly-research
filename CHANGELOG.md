@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: D1 FRB screen with YMW16 beside NE2001 (in progress)
+- Plan: re-run the D-073 FRB DM–z tails with the YMW16 Galactic model; a flag under either model is reported.
+
 ## 2026-10-09: S2 on DES-SN5YR: no flat-kernel term; γ < 0.019 mag per unit T/⟨T⟩ (D-070 addendum)
 - Same chain as D-070 (`scripts/s2_flat_kernel.py --sample des`, `results/s2_flat_kernel/fit_des_*.json`) on the
   DES-SN5YR Dovekie Hubble diagram: DES-discovered SNe only, MU/MUERR (BEAMS-renormalised), P(Ia) ≥ 0.5 (ASSUMPTION),
