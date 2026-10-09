@@ -1,0 +1,41 @@
+{
+ "provenance": "model_prediction",
+ "n_frb": 94,
+ "n_trials": 188,
+ "local_one_sided_sigma_threshold": 5.814021122152544,
+ "flag_low": [],
+ "flag_high": [],
+ "max_z_low": [
+  "20220319D",
+  4.0886
+ ],
+ "max_z_high": [
+  "20190520B",
+  2.3722
+ ],
+ "low_flag_reachable_dm_gt_0": 94,
+ "median_dm_low_detect_over_dm_ism": 2.5713262364551785,
+ "median_dm_high_detect": 10191.48635,
+ "injections_low_recovered": "94/94",
+ "injections_high_recovered": "94/94",
+ "injections_wrong_side_flags": 0,
+ "ism_model": "ymw16",
+ "vs_ne2001": {
+  "n_joined": 94,
+  "flag_either": [],
+  "ism_ratio_median": 0.8414,
+  "ism_ratio_16_84": [
+   0.7083,
+   1.3067
+  ],
+  "ism_ratio_range": [
+   0.3616,
+   1.9093
+  ],
+  "n_ism_ratio_beyond_frac_err": 54,
+  "max_abs_pull_change": [
+   "20180916B",
+   1.4982
+  ]
+ }
+}
