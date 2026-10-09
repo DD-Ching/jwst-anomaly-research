@@ -48,5 +48,5 @@ def test_compare_ism_flags_either_model(tmp_path, monkeypatch):
 def test_ymw16_known_sightline():
     pytest.importorskip("ymw16")
     # FRB 20121102A (l = 174.95, b = -0.22): YMW16 gives ~287 pc cm^-3 through the whole disc
-    dm = d1.ymw16_dm_ism(82.99458, 33.14793)
+    dm = float(d1.ymw16_dm_ism(82.99458, 33.14793)[0])
     assert 250.0 < dm < 320.0

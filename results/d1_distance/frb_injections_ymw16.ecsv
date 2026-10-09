@@ -11,7 +11,7 @@
 # - {name: flag_high, datatype: bool}
 # meta: !!omap
 # - {provenance: simulated}
-# - {source: frb.ecsv inputs with DM_obs replaced by 0.9 x dm_low_detect / 1.1 x dm_high_detect}
+# - {source: frb_ymw16.ecsv inputs with DM_obs replaced by 0.9 x dm_low_detect / 1.1 x dm_high_detect}
 # - {local_one_sided_sigma_threshold: 5.814021122152544}
 # schema: astropy-2.0
 frb side dm_injected physical z_low z_high flag_low flag_high

@@ -6,10 +6,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Question: is the D-073 FRB null (and its 3.26σ extreme) an artefact of NE2001? Ordinary explanation for any
   low-side outlier: Galactic-model error at low latitude. A flag under YMW16 alone would have needed vetting.
 - `scripts/d1_distance.py frb --ism ymw16`: YMW16 to 30 kpc per RA/Dec, same chain and 5.81σ threshold. Known case
-  FRB 20121102A: 287 pc cm⁻³ (published YMW16 value). NE2001 output reproduced byte-identical.
+  FRB 20121102A: 287 pc cm⁻³ (published YMW16 value). NE2001 path re-run: identical pulls and flags.
 - **Result: no flag under YMW16 or under either model.** Max low pull FRB 20220319D 4.09σ (NE2001: 3.26σ;
   DM_obs 111 below both models, 127 and 211); max high 20190520B 2.37σ; injections 94/94 per side.
-  YMW16/NE2001 median 0.84, range 0.36–1.91; > 20 % apart for 53/94 bursts. Outputs `results/d1_distance/*_ymw16*`,
+  YMW16/NE2001 median 0.84, range 0.36–1.91; > 20 % apart for 54/94 bursts. Outputs `results/d1_distance/*_ymw16*`,
   `frb_ism_compare.ecsv`.
 - **Failed route:** `pip install pygedm` fails in the cloud image (its NE2001 extension needs libf2c) and the
   package import fails on current SciPy (`integrate.simps`); built without `ne21c`, `ymw16` imported directly.

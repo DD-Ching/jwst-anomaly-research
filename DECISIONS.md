@@ -3416,7 +3416,9 @@ package is built without `ne21c` and only `ymw16` is imported (recipe in `result
 check: FRB 20121102A gives 287 pc cm⁻³ (the published YMW16 value; NE2001 stored 158). **Null under YMW16 and under
 either model:** no flag; max low pull FRB 20220319D 4.09σ (YMW16 211 vs NE2001 127 vs DM_obs 111), max high
 FRB 20190520B 2.37σ; injections 94/94 per side. YMW16/NE2001 ratio median 0.84 (16–84 %: 0.71–1.31, range 0.36–1.91),
-so the models differ by more than the ±20 % ISM error (ASSUMPTION) for 53 of 94 bursts; a burst
+so the models differ by more than the ±20 % ISM error (ASSUMPTION) for 54 of 94 bursts; the ±20 % is therefore too narrow
+as a model error. Widening it only broadens the predictive distribution and lowers the pulls, so the null stands, but
+the per-burst low-side DM limits under either single model are optimistic; a burst
 counts as flagged if either model flags it (`frb_ism_compare.ecsv`, `flag_either`). The 20220319D pull is model error
 on a low-latitude sightline (both models exceed its total DM), not a sightline anomaly. Rejected: building NE2001 in
 pygedm (needs a system f2c library; the stored NE2001 values are already the reference).

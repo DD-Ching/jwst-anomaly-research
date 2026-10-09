@@ -41,9 +41,7 @@ TDCOSMO = "https://github.com/TDCOSMO/TDCOSMO2025_public"
 TDCOSMO_COMMIT = "d7f38db341f68be1df0d9ac1fc528c45113f94cf"  # 2026-01-21
 FRBREPO = "https://github.com/FRBs/FRB"
 FRB_COMMIT = "996fcda9b0b22431e3171208b4c8e1cf2798e823"  # 2026-05-06
-YMW16_DIST_PC = (
-    30_000.0  # ASSUMPTION: path length that exits the YMW16 disc (its DM saturates well inside)
-)
+PYGEDM_SDIST = "https://files.pythonhosted.org/packages/source/p/pygedm/pygedm-3.3.0.tar.gz"
 
 # (repo, commit, path) -> sha256
 FILES = {
@@ -573,8 +571,8 @@ def write_manifest(rows: list, tag: str) -> None:
     new.write(MANIFEST, overwrite=True)
 
 
-def ymw16_dm_ism(ra_deg: float, dec_deg: float, dist_pc: float = YMW16_DIST_PC) -> float:
-    """YMW16 (Yao, Manchester & Wang 2017) Milky-Way DM to `dist_pc` along (ra, dec) in pc cm^-3.
+def ymw16_dm_ism(ra_deg, dec_deg, dist_pc: float = dc.FRB_DEFAULT.ymw16_dist_pc) -> np.ndarray:
+    """YMW16 (Yao, Manchester & Wang 2017) Milky-Way DM to `dist_pc` along each (ra, dec), pc cm^-3.
 
     Uses the compiled `ymw16` extension of pygedm directly (`dmdtau`, ndir = 2: distance to DM,
     mode 1: Galactic). The `pygedm` package itself is not imported: its YT2020 halo module calls
@@ -582,17 +580,29 @@ def ymw16_dm_ism(ra_deg: float, dec_deg: float, dist_pc: float = YMW16_DIST_PC) 
     """
     import importlib.util
 
-    import ymw16  # compiled extension shipped by pygedm
     from astropy import units as u
     from astropy.coordinates import SkyCoord
 
     spec = importlib.util.find_spec("pygedm")
-    if spec is None or not spec.submodule_search_locations:
-        raise SystemExit("YMW16 needs pygedm (its ymw16 extension and parameter files)")
+    if spec is None or not spec.submodule_search_locations or not importlib.util.find_spec("ymw16"):
+        raise SystemExit(
+            "YMW16 needs pygedm's ymw16 extension (results/d1_distance/README.md has a recipe)"
+        )
+    import ymw16  # compiled extension shipped by pygedm
+
     datapath = str(spec.submodule_search_locations[0])
-    g = SkyCoord(ra_deg * u.deg, dec_deg * u.deg).galactic
-    r = ymw16.dmdtau(float(g.l.deg), float(g.b.deg), float(dist_pc), 0.0, 2, 1, 0, datapath, "")
-    return float(r["DM"])
+    g = SkyCoord(np.atleast_1d(ra_deg) * u.deg, np.atleast_1d(dec_deg) * u.deg).galactic
+    return np.array(
+        [
+            ymw16.dmdtau(float(gl), float(gb), float(dist_pc), 0.0, 2, 1, 0, datapath, "")["DM"]
+            for gl, gb in zip(g.l.deg, g.b.deg, strict=True)
+        ]
+    )
+
+
+def _js(d: dict) -> str:
+    """Canonical form for comparing params dicts (tuples written to ECSV come back as lists)."""
+    return json.dumps(d, sort_keys=True, default=str)
 
 
 def compare_ism(t: Table, ne: Table, model: str, thr: float) -> dict:
@@ -606,9 +616,11 @@ def compare_ism(t: Table, ne: Table, model: str, thr: float) -> dict:
         ne[keep],
         t["frb", f"dm_ism_{model}", "z_low", "z_high", "flag_low", "flag_high"],
         keys="frb",
+        metadata_conflicts="silent",
         table_names=["ne2001", model],
     )
-    j["ism_ratio"] = np.round(j[f"dm_ism_{model}"] / j["dm_ism_ne2001"], 3)
+    r = np.asarray(j[f"dm_ism_{model}"] / j["dm_ism_ne2001"], dtype=float)
+    j["ism_ratio"] = np.round(r, 3)
     j["flag_either"] = (
         j["flag_low_ne2001"]
         | j["flag_high_ne2001"]
@@ -620,7 +632,6 @@ def compare_ism(t: Table, ne: Table, model: str, thr: float) -> dict:
     j.meta["source"] = f"frb.ecsv (NE2001) joined to frb_{model}.ecsv; scripts/d1_distance.py frb"
     j.meta["local_one_sided_sigma_threshold"] = thr
     j.write(OUT / "frb_ism_compare.ecsv", overwrite=True)
-    r = np.asarray(j["ism_ratio"])
     dz = np.maximum(
         np.abs(j[f"z_low_{model}"] - j["z_low_ne2001"]),
         np.abs(j[f"z_high_{model}"] - j["z_high_ne2001"]),
@@ -628,8 +639,10 @@ def compare_ism(t: Table, ne: Table, model: str, thr: float) -> dict:
     return {
         "n_joined": len(j),
         "flag_either": [str(x) for x in j["frb"][j["flag_either"]]],
-        "ism_ratio_median": float(np.median(r)),
-        "ism_ratio_range": [float(r.min()), float(r.max())],
+        "ism_ratio_median": round(float(np.median(r)), 4),
+        "ism_ratio_16_84": [round(float(x), 4) for x in np.percentile(r, [16, 84])],
+        "ism_ratio_range": [round(float(r.min()), 4), round(float(r.max()), 4)],
+        "n_ism_ratio_beyond_frac_err": int(np.sum(np.abs(r - 1) > dc.FRB_DEFAULT.ism_frac_err)),
         "max_abs_pull_change": [str(j["frb"][np.argmax(dz)]), float(np.max(dz))],
     }
 
@@ -667,11 +680,16 @@ def run_frb(args) -> None:
                     FRB_COMMIT,
                 )
             )
-            if "DM" not in d or "DMISM" not in d or z <= 0:
-                missing.append((name, "no DM/DMISM or z<=0"))
+            need = ("DM", "DMISM") if args.ism == "ne2001" else ("DM", "ra", "dec")
+            if any(k not in d for k in need) or z <= 0:
+                missing.append((name, f"no {'/'.join(need)} or z<=0"))
                 continue
-            ism = d["DMISM"]["value"] if args.ism == "ne2001" else ymw16_dm_ism(d["ra"], d["dec"])
+            ism = d["DMISM"]["value"] if args.ism == "ne2001" else (d["ra"], d["dec"])
             inputs.append((name, z, d["DM"]["value"], ism, h["Projects"]))
+    if args.ism == "ymw16":  # one vectorised coordinate transform for all bursts
+        ra, dec = np.array([x[3] for x in inputs], dtype=float).T
+        dm_ism = ymw16_dm_ism(ra, dec, p.ymw16_dist_pc)
+        inputs = [(*x[:3], float(v), x[4]) for x, v in zip(inputs, dm_ism, strict=True)]
     n = len(inputs)
     n_trials = 2 * n  # one low and one high one-sided test per burst
     thr = dc.local_sigma_threshold(n_trials, p.flag_sigma_global, one_sided=True)
@@ -731,7 +749,7 @@ def run_frb(args) -> None:
         + (
             "DMISM as stored, NE2001 via frb/mw.py ismDM"
             if args.ism == "ne2001"
-            else f"DM_ISM from YMW16 (pygedm ymw16 extension) to {YMW16_DIST_PC:.0f} pc at ra/dec"
+            else f"DM_ISM from YMW16 (pygedm ymw16 extension) to {p.ymw16_dist_pc:.0f} pc at ra/dec"
         )
         + "); Macquart+2020 DM_cosmic PDF, log-normal host; grid "
         "convolution (distance_consistency.FRBPredictive); scripts/d1_distance.py frb"
@@ -748,11 +766,16 @@ def run_frb(args) -> None:
     it = it["frb", "side", "dm_injected", "physical", "z_low", "z_high", "flag_low", "flag_high"]
     it.meta["provenance"] = str(Provenance.SIMULATED)
     it.meta["source"] = (
-        "frb.ecsv inputs with DM_obs replaced by 0.9 x dm_low_detect / 1.1 x dm_high_detect"
+        f"frb{sfx}.ecsv inputs with DM_obs replaced by 0.9 x dm_low_detect / 1.1 x dm_high_detect"
     )
     it.meta["local_one_sided_sigma_threshold"] = thr
     it.write(OUT / f"frb_injections{sfx}.ecsv", overwrite=True)
-    write_manifest(rows_m, "frb")
+    if args.ism == "ne2001":
+        write_manifest(rows_m, "frb")
+    else:  # same FRB inputs; record only the YMW16 code
+        sd = Path(args.pygedm_sdist) if args.pygedm_sdist else None
+        if sd and sd.exists():
+            write_manifest([(PYGEDM_SDIST, sha256(sd), sd.stat().st_size, "3.3.0")], "frb_ymw16")
 
     phys = it[it["physical"]]
     lo_i, hi_i = phys[phys["side"] == "low"], phys[phys["side"] == "high"]
@@ -776,8 +799,21 @@ def run_frb(args) -> None:
         "injections_wrong_side_flags": int(lo_i["flag_high"].sum() + hi_i["flag_low"].sum()),
     }
     summary["ism_model"] = args.ism
-    if args.ism != "ne2001" and (OUT / "frb.ecsv").exists():
-        summary["vs_ne2001"] = compare_ism(t, Table.read(OUT / "frb.ecsv"), args.ism, thr)
+    if args.ism != "ne2001":
+        ne = Table.read(OUT / "frb.ecsv") if (OUT / "frb.ecsv").exists() else None
+        ne_params = dict(ne.meta.get("params", {})) if ne is not None else {}
+        cur = dict(t.meta["params"])
+        if ne is None:
+            reason = "frb.ecsv missing: run the ne2001 path first"
+        elif sorted(ne["frb"]) != sorted(t["frb"]) or _js(ne_params) != _js(cur):
+            reason = "frb.ecsv has other bursts or params: re-run the ne2001 path first"
+        else:
+            reason = None
+        if reason:
+            print("vs_ne2001 skipped:", reason)
+            summary["vs_ne2001"] = f"skipped: {reason}"
+        else:
+            summary["vs_ne2001"] = compare_ism(t, ne, args.ism, thr)
     (OUT / f"frb_summary{sfx}.json").write_text(json.dumps(summary, indent=1) + "\n")
     print(t["frb", "z", "dm_obs", ism_col, "dm_pred_median", "z_low", "z_high"][:8])
     print(json.dumps(summary, indent=1))
@@ -805,6 +841,9 @@ def main() -> None:
         choices=("ne2001", "ymw16"),
         default="ne2001",
         help="Galactic DM model: ne2001 (DMISM stored in the FRB repo) or ymw16 (needs pygedm)",
+    )
+    b.add_argument(
+        "--pygedm-sdist", help="pygedm 3.3.0 sdist used for --ism ymw16 (manifest sha256)"
     )
     args = ap.parse_args()
     run_lenses(args) if args.cmd == "lenses" else run_frb(args)

@@ -23,11 +23,16 @@
  "vs_ne2001": {
   "n_joined": 94,
   "flag_either": [],
-  "ism_ratio_median": 0.8414999999999999,
-  "ism_ratio_range": [
-   0.362,
-   1.909
+  "ism_ratio_median": 0.8414,
+  "ism_ratio_16_84": [
+   0.7083,
+   1.3067
   ],
+  "ism_ratio_range": [
+   0.3616,
+   1.9093
+  ],
+  "n_ism_ratio_beyond_frac_err": 54,
   "max_abs_pull_change": [
    "20180916B",
    1.4982

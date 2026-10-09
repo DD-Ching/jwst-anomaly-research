@@ -257,7 +257,10 @@ class FRBParams:
     )  # ASSUMPTION: log-normal DM_host, median 68.2 (Macquart+2020)
     host_sigma: float = 0.88  # ASSUMPTION: log-normal DM_host width (Macquart+2020)
     halo_range: tuple[float, float] = (10.0, 80.0)  # ASSUMPTION: Milky Way halo DM, uniform
-    ism_frac_err: float = 0.2  # ASSUMPTION: Gaussian 20 % (1 sigma) error on the NE2001 DM_ISM
+    ism_frac_err: float = (
+        0.2  # ASSUMPTION: Gaussian 20 % (1 sigma) error on DM_ISM (NE2001 or YMW16)
+    )
+    ymw16_dist_pc: float = 30_000.0  # ASSUMPTION: YMW16 path length; leaves its disc (DM saturates)
     z_sigma_floor: float = 0.02  # ASSUMPTION: sigma = F max(z, floor)^-1/2 (z^-1/2 diverges at 0)
     delta_max: float = 20.0  # ASSUMPTION: p(Delta) truncated at 20 <DM_cosmic> (Delta^-3 tail)
     n_grid: int = (
