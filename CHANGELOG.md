@@ -6,8 +6,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Hypothesis: a negative-mass lens shears background galaxies radially; ordinary mass gives tangential shear.
 - **Convention found wrong in the archive docs:** MER `position_angle` is PA east of north (25 VIS cutouts, median
   |Δ| 0.78°), not THETA_IMAGE "CCW/x". Four SZ clusters in EDF-S then show tangential shear (S = −1.5 to −5.0).
-- Pilot: 0.3° discs in EDF-F and EDF-S, θ_E = 30″/1′/2′: **0 flags** (field-max p_random 0.07–0.99); off-grid
-  injections (R = 0.5 ASSUMPTION) 0.70–0.83 at 1′, 1.0 at 2′, ≤ 0.03 at 30″. n₉₅ ≈ 10 deg⁻² (1′), 12 deg⁻² (2′).
+- Pilot: 0.3° discs in EDF-F and EDF-S, θ_E = 30″/1′/2′: **0 flags** (field-max p_random 0.07–0.99); off-grid,
+  whole-chain injections (R = 0.5 ASSUMPTION) 0.88–1.0 at 1′, 1.0 at 2′, ≤ 0.18 at 30″. n₉₅ ≈ 8.1 deg⁻² (1′),
+  12 deg⁻² (2′).
   The DR10 count floor was 6′.
 - **Failed approaches (rules):** unquoted `position_angle` breaks IRSA's ADQL parser (quote it); IRSA returns query
   errors as a VOTable with HTTP 200 (check the body); the EDF-N 0.3° row query hung > 15 min; IBE cutouts come

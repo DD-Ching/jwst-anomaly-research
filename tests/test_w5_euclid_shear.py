@@ -90,3 +90,30 @@ def test_density_limits():
     fields = {"A": {"theta_e": {f"{t:g}": row for t in wes.THETA_E_ARCSEC}}}
     lim = wes.density_limits(fields)
     assert np.isclose(lim["60"]["n95_deg2"], 30.0)
+
+
+def test_sheared_catalogue_whole_chain():
+    rng = np.random.default_rng(3)
+    n = 20000
+    gals = Table(
+        {
+            "semimajor_axis": rng.uniform(3, 6, n),
+            "ellipticity": rng.uniform(0, 0.6, n),
+            "position_angle": rng.uniform(-90, 90, n),
+        }
+    )
+    g = np.full(n, 0.1 + 0j)  # shear along PA 0 (+e1)
+    out = wes.sheared_catalogue(gals, g, rng)
+    e = wes.galaxy_shapes(out, 1.0)
+    e0 = wes.galaxy_shapes(wes.sheared_catalogue(gals, np.zeros(n, complex), rng), 1.0)
+    assert np.nanmean(e.real) > 0.05 and abs(np.nanmean(e0.real)) < 0.01
+    # area kept: a * b unchanged
+    b_in = gals["semimajor_axis"] * (1 - gals["ellipticity"])
+    b_out = out["semimajor_axis"] * (1 - out["ellipticity"])
+    np.testing.assert_allclose(out["semimajor_axis"] * b_out, gals["semimajor_axis"] * b_in)
+
+
+def test_density_limits_gated_by_efficiency():
+    blind = {"flags": [], "injection_efficiency": 0.1, "area_deg2": 0.2}
+    lim = wes.density_limits({"A": {"theta_e": {f"{t:g}": blind for t in wes.THETA_E_ARCSEC}}})
+    assert lim["60"]["n95_deg2"] is None

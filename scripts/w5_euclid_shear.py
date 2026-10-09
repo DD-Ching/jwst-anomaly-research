@@ -29,6 +29,7 @@ Everything fetched is cached under ``$JWST_ANOMALY_DATA/euclid_q1_shear/`` (giti
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import sys
@@ -79,6 +80,7 @@ GRID_STEP_OVER_THETA_E = 1.0  # grid spacing in θ_E (ASSUMPTION)
 N_NULL = 200  # rotation draws (ASSUMPTION)
 N_INJ = 40  # injections per θ_E and field (ASSUMPTION)
 MIN_N = 20  # sources needed in an aperture (ASSUMPTION)
+MIN_EFFICIENCY = 0.5  # quote a limit only if every field's efficiency reaches this (ASSUMPTION)
 
 
 def vis_flux_ujy(mag: float) -> float:
@@ -99,10 +101,11 @@ def disc_query(ra: float, dec: float, radius: float, star: bool) -> str:
 
 def fetch(ra: float, dec: float, radius: float, star: bool, cache: Path) -> Table:
     """Rows in a disc (CONTAINS uses IRSA's spatial index, D-065), cached as ECSV."""
-    path = cache / f"{'star' if star else 'gal'}_{ra:.4f}_{dec:+.4f}_{radius:.3f}.ecsv"
+    q = disc_query(ra, dec, radius, star)
+    key = hashlib.sha1(q.encode()).hexdigest()[:10]  # a changed selection never reuses old rows
+    path = cache / f"{'star' if star else 'gal'}_{ra:.4f}_{dec:+.4f}_{radius:.3f}_{key}.ecsv"
     if path.exists():
         return Table.read(path)
-    q = disc_query(ra, dec, radius, star)
     for attempt in range(4):
         try:
             r = requests.post(TAP, data={"QUERY": q, "FORMAT": "csv"}, timeout=900)
@@ -156,7 +159,8 @@ def star_psf(stars: Table) -> dict:
         "sigma_px_median": float(np.median(a[ok] * np.sqrt(1.0 - ell[ok]))),
         "mean_e1": float(e.real.mean()),
         "mean_e2": float(e.imag.mean()),
-        "mean_e_err": float(np.std(np.abs(e)) / np.sqrt(len(e)) / math.sqrt(2)),
+        # error of the mean of one component (e1 or e2): rms|e| / sqrt(2 N)
+        "mean_e_err": float(np.sqrt(np.mean(np.abs(e) ** 2) / (2 * len(e)))),
         "rms_abs_e": float(np.sqrt(np.mean(np.abs(e) ** 2))),
     }
 
@@ -170,6 +174,30 @@ def galaxy_shapes(gals: Table, psf_sigma: float) -> np.ndarray:
     )
     resolved = a * np.sqrt(np.clip(1.0 - ell, 0, 1)) > MIN_SIZE_OVER_PSF * psf_sigma
     return np.where(resolved & (np.abs(eps) < 1.0), eps, np.nan + 0j)
+
+
+def sheared_catalogue(gals: Table, g: np.ndarray, rng: np.random.Generator) -> Table:
+    """Catalogue copy whose *observed* moments carry the reduced shear ``g`` (for injections).
+
+    Each row's observed ellipticity (no PSF deconvolution) is rotated by a random angle (removing
+    any real signal, as the null does) and sheared; ``ellipticity``, ``position_angle`` and
+    ``semimajor_axis`` (area kept) are rewritten, so the resolved cut and the PSF deconvolution of
+    :func:`galaxy_shapes` run on the injected shapes (whole chain)."""
+    a = np.asarray(gals["semimajor_axis"], float)
+    ell = np.clip(np.asarray(gals["ellipticity"], float), 0.0, 0.999)
+    pa = pa_east_of_north(gals["position_angle"])
+    q = 1.0 - ell
+    e_obs = (1.0 - q) / (1.0 + q) * np.exp(2j * np.deg2rad(pa))
+    e_new = apply_shear(e_obs * np.exp(1j * rng.uniform(0, 2 * np.pi, len(a))), g)
+    m = np.minimum(np.abs(e_new), 0.999)
+    q_new = (1.0 - m) / (1.0 + m)
+    return Table(
+        {
+            "semimajor_axis": a * np.sqrt(q / q_new),
+            "ellipticity": 1.0 - q_new,
+            "position_angle": np.rad2deg(np.angle(e_new) / 2.0),
+        }
+    )
 
 
 def radial_shear(x, y, cx: float, cy: float, theta_e: float, r_min: float) -> np.ndarray:
@@ -192,13 +220,10 @@ def apply_shear(e: np.ndarray, g: np.ndarray) -> np.ndarray:
 def cmd_validate(args) -> dict:
     cache = paths.data_root() / "euclid_q1_shear"
     jobs = [(n, c) for n, c in CLUSTERS.items()]
-    with ThreadPoolExecutor(8) as ex:
-        gal = list(
-            ex.map(lambda j: fetch(j[1][0], j[1][1], CLUSTER_RADIUS_DEG, False, cache), jobs)
-        )
-        star = list(
-            ex.map(lambda j: fetch(j[1][0], j[1][1], CLUSTER_RADIUS_DEG, True, cache), jobs)
-        )
+    with ThreadPoolExecutor(8) as ex:  # galaxy and star queries all in flight at once
+        fg = [ex.submit(fetch, c[0], c[1], CLUSTER_RADIUS_DEG, False, cache) for _, c in jobs]
+        fs = [ex.submit(fetch, c[0], c[1], CLUSTER_RADIUS_DEG, True, cache) for _, c in jobs]
+        gal, star = [f.result() for f in fg], [f.result() for f in fs]
     out = {}
     for (name, (ra, dec, z, m)), g, s in zip(jobs, gal, star, strict=True):
         psf = star_psf(s)
@@ -214,6 +239,12 @@ def cmd_validate(args) -> dict:
             # Same statistic with PA rotated by 90° (the TAP description's reading) for the record.
             sw, _ = am.snr(-e[ok])
             res[kind]["S_if_pa_plus_90"] = float(sw[0])
+        # Faint galaxies only (VIS > 23): fewer cluster members, same sign expected.
+        mag = 23.9 - 2.5 * np.log10(np.asarray(g["flux_detection_total"], float))
+        fk = ok & (mag > 23.0)
+        r_in, r_out = CLUSTER_APERTURE
+        am = es.ApertureMass(x[fk], y[fk], [0.0], [0.0], r_out, "tophat", r_in, MIN_N)
+        res["tophat_faint_vis_gt_23"] = {"S": float(am.snr(e[fk])[0][0]), "n": int(am.n[0])}
         # Tangential-shear profile in annuli (derived), for the record.
         prof = []
         for r_in, r_out in ((60, 150), (150, 300), (300, 600)):
@@ -265,12 +296,14 @@ def screen_field(name: str, cache: Path, rng: np.random.Generator) -> dict:
             rr = (rmax - r_out) * math.sqrt(rng.uniform())
             aa = rng.uniform(0, 2 * np.pi)
             ix, iy = rr * math.cos(aa), rr * math.sin(aa)
-            gi = RESPONSIVITY * radial_shear(x, y, ix, iy, te, r_in)
-            ei = apply_shear(e * np.exp(1j * rng.uniform(0, 2 * np.pi, len(e))), gi)
+            gi = RESPONSIVITY * radial_shear(x_all, y_all, ix, iy, te, r_in)
+            ei = galaxy_shapes(sheared_catalogue(g, gi, rng), psf["sigma_px_median"])
+            oi = np.isfinite(ei)
             near = tree.query_ball_point([ix, iy], step)
-            si, _ = es.ApertureMass(x, y, cx[near], cy[near], r_out, "pointmass", r_in, MIN_N).snr(
-                ei
+            am_i = es.ApertureMass(
+                x_all[oi], y_all[oi], cx[near], cy[near], r_out, "pointmass", r_in, MIN_N
             )
+            si, _ = am_i.snr(ei[oi])
             det.append(bool(np.any(si > thr)))  # NaN (too few sources) counts as missed
         res["theta_e"][f"{te:g}"] = {
             "n_centres": int(len(cx)),
@@ -298,11 +331,18 @@ def screen_field(name: str, cache: Path, rng: np.random.Generator) -> dict:
 def cmd_screen(args) -> dict:
     cache = paths.data_root() / "euclid_q1_shear"
     names = list(DEFAULT_PILOTS) if not args.field else [args.field]
-    with ThreadPoolExecutor(8) as ex:  # prefetch every disc concurrently
-        list(ex.map(lambda n: fetch(*PILOTS[n], PILOT_RADIUS_DEG, False, cache), names))
-        list(ex.map(lambda n: fetch(*PILOTS[n], PILOT_RADIUS_DEG, True, cache), names))
-    rng = np.random.default_rng(args.seed)
-    out = {n: screen_field(n, cache, rng) for n in names}
+    with ThreadPoolExecutor(8) as ex:  # prefetch every disc, galaxies and stars, concurrently
+        futs = [
+            ex.submit(fetch, *PILOTS[n], PILOT_RADIUS_DEG, st, cache)
+            for n in names
+            for st in (False, True)
+        ]
+        [f.result() for f in futs]
+    # one generator per field (seed, field index) so a single-field run reproduces its numbers
+    out = {
+        n: screen_field(n, cache, np.random.default_rng([args.seed, list(PILOTS).index(n)]))
+        for n in names
+    }
     out["limits"] = density_limits(out)
     return out
 
@@ -319,7 +359,10 @@ def density_limits(fields: dict) -> dict:
         out[k] = {
             "n_flags": n_flags,
             "effective_area_deg2": eff_area,
-            "n95_deg2": 3.0 / eff_area if n_flags == 0 and eff_area > 0 else None,
+            # no limit where injections show the test is blind (scripts/CLAUDE.md)
+            "n95_deg2": 3.0 / eff_area
+            if n_flags == 0 and min(r["injection_efficiency"] for r in rows) >= MIN_EFFICIENCY
+            else None,
         }
     return out
 
@@ -364,9 +407,8 @@ def cmd_pacheck(args) -> dict:
     from astropy.wcs import WCS
 
     ra0, dec0, rad = PACHECK_CENTRE
-    g = fetch(
-        61.2836742, -46.8110099, CLUSTER_RADIUS_DEG, False, paths.data_root() / "euclid_q1_shear"
-    )
+    ra_c, dec_c = CLUSTERS["ACT-CL J0405.1-4648"][:2]
+    g = fetch(ra_c, dec_c, CLUSTER_RADIUS_DEG, False, paths.data_root() / "euclid_q1_shear")
     mag = 23.9 - 2.5 * np.log10(np.asarray(g["flux_detection_total"], float))
     x, y = tangent_plane(g["ra"], g["dec"], ra0, dec0)
     sel = np.flatnonzero(
@@ -418,17 +460,33 @@ def main(argv: list[str] | None = None) -> int:
             "statistics": "derived",
             "injections": "model_prediction (negative point mass, radial reduced shear)",
             "service": f"{TAP} table {TABLE}",
-            "accessed_utc": time.strftime("%Y-%m-%dT%H:%MZ", time.gmtime()),
+            # run time; IRSA rows may come from an earlier cache (file mtimes under the data root)
+            "run_utc": time.strftime("%Y-%m-%dT%H:%MZ", time.gmtime()),
+            "first_irsa_access_utc": "2026-10-09",
             "assumptions": {
                 "vis_limit": VIS_LIMIT,
                 "star_mags": STAR_MAGS,
                 "min_size_over_psf": MIN_SIZE_OVER_PSF,
                 "responsivity": RESPONSIVITY,
+                "galaxy_selection": GAL_SEL,
+                "star_selection": STAR_SEL,
+                "theta_e_arcsec": THETA_E_ARCSEC,
+                "grid_step_over_theta_e": GRID_STEP_OVER_THETA_E,
+                "aperture_over_theta_e": [1.5, 3.0],
+                "threshold": "99th percentile of the field maximum under shape rotations",
+                "n_null": N_NULL,
+                "n_inj": N_INJ,
+                "min_n": MIN_N,
+                "min_efficiency": MIN_EFFICIENCY,
+                "cluster_aperture_arcsec": CLUSTER_APERTURE,
+                "pilot_radius_deg": PILOT_RADIUS_DEG,
+                "seed": getattr(args, "seed", None),
                 "pa_mapping": "PA E of N = position_angle (25 MER VIS cutouts, 4 clusters)",
             },
         }
     }
-    path = out_dir / f"{args.cmd}.json"
+    field = getattr(args, "field", None)
+    path = out_dir / (f"{args.cmd}_{field}.json" if field else f"{args.cmd}.json")
     path.write_text(json.dumps({**meta, "results": res}, indent=1) + "\n")
     return 0
 

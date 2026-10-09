@@ -3134,11 +3134,12 @@ not return in 5 min; the same selection with `CONTAINS(POINT, CIRCLE)` (r = 0.25
 - Trusting the TAP column description (`position_angle` "CCW/x", THETA_IMAGE): image moments on 25 MER VIS cutouts
   contradict it (89° off); using it would flip tangential and radial, the sign under test.
 - A PSF-corrected shear catalogue (none public for Q1); building one (KSB/metacal) before a pilot shows need.
-- Grid-centred injections: best case; injections are placed off-grid and detected at any centre within one step.
+- Grid-centred injections on deconvolved shapes: best case; injections are off-grid, applied to observed moments
+  before the cuts, and detected at any centre within one step.
 
 **Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear screen"; `results/w5_shear/`. Four SZ clusters show
-tangential shear (S = −1.5 to −5.0); pilot null (0 flags); injection efficiency 0.70–0.83 at 1′, 1.0 at 2′, ≤ 0.03 at
-30″; n₉₅ ≈ 10 deg⁻² (1′), 12 deg⁻² (2′).
+tangential shear (S = −1.5 to −5.0); pilot null (0 flags); whole-chain injection efficiency 0.88–1.0 at 1′, 1.0 at
+2′, ≤ 0.18 at 30″; n₉₅ ≈ 8.1 deg⁻² (1′), 12 deg⁻² (2′).
 
 **Revisit if.**
 - A PSF-corrected Euclid shear catalogue becomes public (DR1), or cluster-calibrated R differs from 0.5 by > 30 %.

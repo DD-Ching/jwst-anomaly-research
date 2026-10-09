@@ -4,7 +4,8 @@
   "statistics": "derived",
   "injections": "model_prediction (negative point mass, radial reduced shear)",
   "service": "https://irsa.ipac.caltech.edu/TAP/sync table euclid_q1_mer_catalogue",
-  "accessed_utc": "2026-10-09T01:29Z",
+  "run_utc": "2026-10-09T01:35Z",
+  "first_irsa_access_utc": "2026-10-09",
   "assumptions": {
    "vis_limit": 24.5,
    "star_mags": [
@@ -13,6 +14,29 @@
    ],
    "min_size_over_psf": 1.2,
    "responsivity": 0.5,
+   "galaxy_selection": "vis_det = 1 AND spurious_flag = 0 AND det_quality_flag = 0 AND point_like_prob < 0.1",
+   "star_selection": "vis_det = 1 AND spurious_flag = 0 AND det_quality_flag = 0 AND point_like_prob > 0.9",
+   "theta_e_arcsec": [
+    30.0,
+    60.0,
+    120.0
+   ],
+   "grid_step_over_theta_e": 1.0,
+   "aperture_over_theta_e": [
+    1.5,
+    3.0
+   ],
+   "threshold": "99th percentile of the field maximum under shape rotations",
+   "n_null": 200,
+   "n_inj": 40,
+   "min_n": 20,
+   "min_efficiency": 0.5,
+   "cluster_aperture_arcsec": [
+    60.0,
+    600.0
+   ],
+   "pilot_radius_deg": 0.3,
+   "seed": null,
    "pa_mapping": "PA E of N = position_angle (25 MER VIS cutouts, 4 clusters)"
   }
  },

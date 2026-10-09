@@ -1276,15 +1276,17 @@ median sigma); statistics **derived**; injections **model_prediction**.
   (median |Δ| 0.78°; +90° gives 89°, the mirror 35.5°). The TAP description ("CCW/x, THETA_IMAGE") is wrong.
 - **Sign check on known mass:** four SZ clusters in EDF-S (PSZ2 G255.60-46.18, ACT-CL J0405.9-4915, J0405.1-4648,
   J0402.2-4611) all give tangential shear in a 1–10′ annulus, S = −2.3, −4.9, −5.0, −1.5 (radial would be > 0);
-  faint galaxies (VIS > 23) alone keep the sign. Stars: mean ε₁ ≈ −0.01 to −0.02 (PSF elongated E–W, 1–2 %);
-  a constant PSF ellipticity cancels over a full annulus (gradients are not tested yet).
-- **Screen:** 0.3° pilot discs in EDF-F and EDF-S (~24 k resolved galaxies each); point-mass filter over
+  faint galaxies (VIS > 23) alone keep the sign (S = −2.1, −3.7, −4.2, −1.0). Stars: mean ε₁ = +0.007 to +0.020
+  (± 0.001–0.003; PSF elongated N–S by 1–2 %), ε₂ up to −0.012; a constant PSF ellipticity cancels over a full
+  annulus (gradients are not tested yet).
+- **Screen:** 0.3° pilot discs in EDF-F and EDF-S (11.9 k and 14.4 k resolved galaxies); point-mass filter over
   1.5–3 θ_E on a grid of step θ_E; threshold = 99th percentile of the field maximum under 200 shape rotations
   (ASSUMPTION). Field maxima S = 2.4–3.5, p_random 0.07–0.99: **no flag at any θ_E**.
-- **Injections** (40 per field and θ_E, off-grid, R = 0.5 ASSUMPTION): efficiency 0.03 / 0.0 at 30″, 0.70 / 0.83 at
-  60″, 1.0 / 1.0 at 120″ (EDF-F / EDF-S).
-- **Limits** (95 %, Poisson, derived): n₉₅ ≈ **10 deg⁻² at θ_E = 1′** (effective area 0.30 deg²) and
-  **12 deg⁻² at 2′** (0.25 deg²); no limit at 30″. The D-063 count floor was θ_E ≈ 6′, so shapes open 1–6′.
+- **Injections** (40 per field and θ_E, off-grid, whole chain: shear R g applied to the observed moments of every
+  catalogue row, then the resolved cut and PSF deconvolution; R = 0.5 ASSUMPTION): efficiency 0.05 / 0.18 at 30″,
+  0.88 / 1.0 at 60″, 1.0 / 1.0 at 120″ (EDF-F / EDF-S).
+- **Limits** (95 %, Poisson, derived; quoted only where every field's efficiency ≥ 0.5): n₉₅ ≈ **8.1 deg⁻² at
+  θ_E = 1′** (effective area 0.37 deg²) and **12 deg⁻² at 2′** (0.25 deg²); no limit at 30″. The D-063 count floor was θ_E ≈ 6′, so shapes open 1–6′.
 - Limitations: R is assumed (a cluster-mass calibration of R is next); 0.6 deg² of 63 deg²; EDF-N not fetched
   (the 0.3° row query hung > 15 min); PSF-anisotropy gradients and blends are untested, but they would need a
   radial pattern centred on a trial point to fake a flag.
