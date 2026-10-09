@@ -1,7 +1,7 @@
 # S1 burst twins (Fermi GBM)
 
 This is a wide-separation, any-delay light-curve twin search over the Fermi GBM burst catalogue. It tests
-hypothesis S1 from docs/hypotheses/round-1/summary.md. Decision: DECISIONS.md "S1 burst twins" (D-TBD). Sources:
+hypothesis S1 from docs/hypotheses/round-1/summary.md. Decision: DECISIONS.md "S1 burst twins" (D-071). Sources:
 SOURCES.md "S1 burst twins". A match is an anomaly, never evidence of new physics.
 
 Reproduce (about 3 min of streaming, then about 7 min on 4 cores):
