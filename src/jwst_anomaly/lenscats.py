@@ -540,7 +540,7 @@ def bright_galaxy_near(systems: Table, sources: Table, mag_max, radius_arcsec: f
 
 
 PAIR_COLUMNS = ("n_images", "img1", "img2", "sep", "theta_e")
-PAIR_TEST_COLUMNS = ("status", "n_images", "sep", "theta_e", "defl_mag")
+PAIR_TEST_COLUMNS = ("status", "n_images", "n_lens_images", "sep", "theta_e", "defl_mag")
 
 
 def _types(sources: Table) -> np.ndarray:
@@ -636,6 +636,7 @@ def quasar_pair_test(
     rows = {c: [] for c in PAIR_TEST_COLUMNS}
     for im, m in zip(images, np.asarray(mag_max, float), strict=True):
         status, dmag = "blended", np.nan
+        n_lens = 0  # images classified as lens images; 0 when the pair test did not run
         if im["img2"] >= 0 and im["sep"] < sep_min:
             status = "too close"
         elif im["img2"] >= 0:
@@ -658,6 +659,7 @@ def quasar_pair_test(
             near = np.asarray(tree.query_ball_point(mid_xyz, image_radius * rad), int)
             near = near[(near != i1) & (near != i2)]
             imgs = np.concatenate([[i1, i2], near[is_image(near)]]).astype(int)
+            n_lens = int(len(imgs))
             centre = xyz[imgs].sum(axis=0)
             centre /= np.linalg.norm(centre)
             r = float(np.max(np.linalg.norm(xyz[imgs] - centre, axis=1)) / rad)
@@ -677,6 +679,9 @@ def quasar_pair_test(
                 status = "none"
         rows["status"].append(status)
         rows["n_images"].append(int(im["n_images"]))
+        # images actually classified as lens images (pair + colour-consistent PSF sources); 0
+        # when the pair test did not run
+        rows["n_lens_images"].append(n_lens)
         rows["sep"].append(float(im["sep"]))
         rows["theta_e"].append(float(im["theta_e"]))
         rows["defl_mag"].append(dmag)
@@ -684,6 +689,7 @@ def quasar_pair_test(
         {
             "status": np.asarray(rows["status"], dtype=object),
             "n_images": np.asarray(rows["n_images"], int),
+            "n_lens_images": np.asarray(rows["n_lens_images"], int),
             "sep": np.asarray(rows["sep"], float),
             "theta_e": np.asarray(rows["theta_e"], float),
             "defl_mag": np.asarray(rows["defl_mag"], float),

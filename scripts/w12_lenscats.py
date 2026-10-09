@@ -295,7 +295,14 @@ def deflector_test(t: Table, src: Table, p: Params, images: Table) -> Table:
     r = sel == "radio"
     status[r] = rad[r]
     used = (q | (r & radio_pair)) & (np.asarray(images["img2"]) >= 0)
-    return Table({"test_status": status, "n_bright_gal": np.asarray(ngal, int), "used_pair": used})
+    return Table(
+        {
+            "test_status": status,
+            "n_bright_gal": np.asarray(ngal, int),
+            "used_pair": used,
+            "n_lens_images": np.asarray(pair["n_lens_images"], int),
+        }
+    )
 
 
 PAIR_MISMATCH = "LS pair is not the catalogued pair (separation)"
@@ -314,7 +321,10 @@ def pair_check(t: Table, images: Table, used_pair, p: Params) -> tuple[np.ndarra
     match = lenscats.pair_match(images["sep"], sep_cat, p.sep_match)
     # a quad's two brightest images are often a fold or cusp pair, closer than 2 theta_E: there
     # only a pair wider than 2 theta_E (+ tolerance) is not the catalogued system
-    quad = np.asarray(images["n_images"]) >= 3
+    # quads by the images the pair test classified as lens images, not by raw PSF neighbours
+    # (a red PSF-typed source is the deflector, not a third image)
+    n_lens = t["n_lens_images"] if "n_lens_images" in t.colnames else images["n_images"]
+    quad = np.asarray(n_lens) >= 3
     too_wide = np.asarray(images["sep"], float) > sep_cat + p.sep_match
     wrong = np.where(quad, too_wide, ~match)
     decided_status = np.isin(np.asarray(t["test_status"]), ("deflector", "none"))

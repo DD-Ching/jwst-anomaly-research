@@ -183,11 +183,13 @@ def test_pair_check_requires_the_catalogued_pair():
     assert sep_cat[0] == pytest.approx(2.4) and np.isnan(sep_cat[2]) and np.isnan(sep_cat[3])
     assert list(mismatch) == [False, True, False, False]
     # a quad's brightest pair may be a fold/cusp pair closer than 2 theta_E: not a mismatch
-    quad = images.copy()
-    quad["n_images"] = 4
     t2 = t.copy()
     t2["theta_e"] = [2.0, 0.8, np.nan, 2.0]  # 2.4" pair vs 4.0" (closer: fold) and 1.6" (wider)
-    assert list(w12.pair_check(t2, quad, used, p)[1]) == [False, True, False, False]
+    t2["n_lens_images"] = [4, 4, 0, 0]
+    assert list(w12.pair_check(t2, images, used, p)[1]) == [False, True, False, False]
+    # raw PSF neighbours that the pair test did not accept as images do not make a quad
+    t2["n_lens_images"] = [2, 2, 0, 0]
+    assert list(w12.pair_check(t2, images, used, p)[1]) == [True, True, False, False]
 
 
 def test_dedup_same_lens_keeps_the_deflector_copy():
