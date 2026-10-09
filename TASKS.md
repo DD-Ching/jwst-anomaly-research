@@ -11,7 +11,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - GW sky maps, so GW channels get directions;
    - a time-resolved CHIME uptime series (only from the collaboration: owner decision); it would also decide
      the 100 s–1 h residual;
-   - "which event comes first" and antipodal (> 170°) channels (antipodal in progress: claude/e1-antipodal);
+   - "which event comes first" (signed lags); antipodal channels are null (D-074 addendum 2);
    - IceTracks-DR2, Swift, Einstein Probe.
 0. **D1 distance self-consistency** (D-073 + addenda; owner idea 1): H0LiCOW (R and D_dt LOO), 94 localized FRBs
    (NE2001 and YMW16) and TDCOSMO 2025 power-law D_dt LOO on 8 lenses (addendum 2: max 1.12σ with κ_ext): all null.
