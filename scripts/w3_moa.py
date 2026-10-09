@@ -1399,14 +1399,23 @@ def fit_eclipse(lc: w3.LightCurve, lo: float, hi: float) -> dict:
             "tc": float(tc), "duration": float(10.0**ld), "ingress": float(fin)}  # fmt: skip
 
 
+def eclipse_flux(lc: w3.LightCurve, ecl: dict) -> np.ndarray:
+    """Model flux of a ``fit_eclipse`` result on ``lc`` (baseline and depth re-solved)."""
+    sh = trapezoid(lc.t, ecl["tc"], ecl["duration"], ecl["ingress"])
+    coef, _ = w3.linear_fluxes_n(-sh[None, :], lc.f, lc.w)
+    return coef[1] - coef[0] * sh
+
+
 def jackknife_nights(lc: w3.LightCurve, res: dict, ex: str, best_o: str, ecl: dict) -> dict:
     """Drop whole nights (MOA takes several exposures a night, so one bad night is several bad
-    epochs) in order of their contribution to the exotic preference over the best ordinary model
-    (single lens or eclipse); at most 2 and never fewer than 2 nights left inside the feature
-    (ASSUMPTION). Returns ΔBIC (exotic − best ordinary) after the drops."""
+    epochs) in order of their contribution to the exotic preference, at most 2 and never fewer than
+    2 nights left inside the feature (ASSUMPTION). The nights are ranked twice, against the best
+    single-lens model and against the eclipse (trapezoid) model, because the preference over each
+    can rest on different nights (gb7-R-8-6-94052: one bright night at the predicted ingress spike
+    carried the whole preference over the trapezoid). Returns the larger ΔBIC (exotic − best
+    ordinary, single lens or eclipse, refitted on the subset) of the two rankings."""
     fe = w3.model_flux(ex, lc, res[ex])
     fo = w3.model_flux(best_o, lc, res[best_o])
-    dchi = (lc.f - fe) ** 2 * lc.w - (lc.f - fo) ** 2 * lc.w
     nt = nights(lc.t)
     inside = np.abs(fe - fo) > 3.0 * np.median(lc.sf)
     feat_nights = np.unique(nt[inside])
@@ -1414,16 +1423,22 @@ def jackknife_nights(lc: w3.LightCurve, res: dict, ex: str, best_o: str, ecl: di
     out = {"n_nights": int(feat_nights.size), "n_dropped": n_drop, "dbic": np.nan}
     if not n_drop:
         return out
-    per = {k: float(dchi[nt == k].sum()) for k in np.unique(nt)}
-    worst = sorted(per, key=per.get)[:n_drop]
-    sub = lc.subset(~np.isin(nt, worst))
-    d = refit_both(sub, res, ex)
-    # the eclipse alternative on the same subset
     lo, hi = float(lc.t[inside].min()), float(lc.t[inside].max())
-    e2 = fit_eclipse(sub, lo, hi)
-    e_bic = w3.optimise(ex, sub, [_start(ex, res[ex])])["bic"]
-    out["dbic"] = float(max(d, e_bic - e2["bic"]))
-    out["dropped"] = [int(x) for x in worst]
+    fecl = eclipse_flux(lc, ecl)
+    best, dropped = -np.inf, []
+    for alt in (fo, fecl):
+        dchi = (lc.f - fe) ** 2 * lc.w - (lc.f - alt) ** 2 * lc.w
+        per = {k: float(dchi[nt == k].sum()) for k in np.unique(nt)}
+        worst = sorted(per, key=per.get)[:n_drop]
+        sub = lc.subset(~np.isin(nt, worst))
+        d = refit_both(sub, res, ex)
+        e2 = fit_eclipse(sub, lo, hi)
+        e_bic = w3.optimise(ex, sub, [_start(ex, res[ex])])["bic"]
+        dd = float(max(d, e_bic - e2["bic"]))
+        if dd > best:
+            best, dropped = dd, [int(x) for x in worst]
+    out["dbic"] = best
+    out["dropped"] = dropped
     return out
 
 
