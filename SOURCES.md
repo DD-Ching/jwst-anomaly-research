@@ -1057,6 +1057,8 @@ Exploration Program."
   `TDCOSMO_sample/TDCOSMO_data/SDSS1206+4332/final_D_d.npy`, `final_D_dt.npy`, `TDCOSMO_sample/tdcosmo_sample.yaml`.
   Paper: TDCOSMO Collaboration 2025, A&A 704, A63 (arXiv:2506.03023).
 - FRBs/FRB repository, https://github.com/FRBs/FRB (commit 996fcda, 2026-05-06, BSD-3):
-  `frb/data/Galaxies/public_hosts.csv` and `frb/data/FRBs/FRB*.json` (DM, DMISM). Macquart et al. 2020, Nature 581,
+  `frb/data/Galaxies/public_hosts.csv` and `frb/data/FRBs/FRB*.json` (DM, DMISM). `DMISM` is NE2001 (Cordes &
+  Lazio 2002, arXiv:astro-ph/0207156) from `frb/mw.py` `ismDM` (python `ne2001` package, `ElectronDensity().DM(l, b,
+  100.)`), set by `frb/builds/build_frbs.py`; used as stored, not recomputed. Macquart et al. 2020, Nature 581,
   391 (arXiv:2005.13161) for ⟨DM_cosmic⟩, p(Δ) and the host log-normal; James et al. 2022, MNRAS 516, 4862
   (arXiv:2208.00819) for F ≈ 0.32.

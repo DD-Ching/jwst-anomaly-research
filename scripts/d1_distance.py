@@ -80,6 +80,12 @@ FILES = {
         "MontePython_cosmo_sampling/data/timedelay_6lenses/B1608_Dd_Ddt_params.dat",
         "494da93a660138f6fa083b36915cc669d8c76975dc2597d802fc4fa0cb360028",
     ),
+    "H0LiCOW_likelihood": (
+        H0LICOW,
+        H0LICOW_COMMIT,
+        "MontePython_cosmo_sampling/likelihoods/timedelay_6lenses/__init__.py",
+        "778c1953a2d626b24b29025f7ec2c6711a498c203ffc8bb2eb0ca9b679e012f6",
+    ),
     "TDCOSMO_J1206_Dd": (
         TDCOSMO,
         TDCOSMO_COMMIT,
@@ -117,7 +123,29 @@ REDSHIFTS = {
 }
 JOINT = ["B1608", "RXJ1131", "PG1115", "J1206"]
 ALL = JOINT + ["HE0435", "WFI2033"]
-INJ_FACTORS = (0.7, 0.8, 0.9, 1.1, 1.25, 1.5, 2.0)
+INJ_FACTORS = (
+    0.15,
+    0.2,
+    0.25,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    1.0,
+    1.1,
+    1.25,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    8.0,
+)  # 1.0 = baseline with the injection seed
 
 
 def sha256(path: Path) -> str:
@@ -154,6 +182,7 @@ def load_lenses(roots: dict[str, Path], rng: np.random.Generator, n_keep: int, r
     td_dd = np.load(pinned("TDCOSMO_J1206_Dd", roots, rows))
     td_ddt = np.load(pinned("TDCOSMO_J1206_Ddt", roots, rows))
     pinned("TDCOSMO_yaml", roots, rows)
+    pinned("H0LiCOW_likelihood", roots, rows)  # source of the lens redshifts (REDSHIFTS)
     same = (
         len(td_dd) == len(j)
         and np.allclose(np.sort(td_dd), np.sort(j["dd"]))
@@ -252,6 +281,22 @@ def ddt_loo(
         }
         for n, r in zip(ALL, loo, strict=True)
     ]
+
+
+def _crossing(sub: Table, col: str, thr: float, below: bool) -> float | None:
+    """Factor nearest 1 at which the injected |z| first reaches thr (None if outside the grid)."""
+    f = np.asarray(sub["factor"], float)
+    z = np.abs(np.asarray(sub[col], float))
+    idx = np.where(f <= 1.0)[0][::-1] if below else np.where(f >= 1.0)[0]
+    prev = None
+    for i in idx:
+        if z[i] >= thr:
+            if prev is None:
+                return float(f[i])
+            lf = np.interp(thr, [z[prev], z[i]], [np.log(f[prev]), np.log(f[i])])
+            return round(float(np.exp(lf)), 3)
+        prev = i
+    return None
 
 
 def run_lenses(args) -> None:
@@ -417,17 +462,27 @@ def run_lenses(args) -> None:
     it.meta["source"] = (
         "lenses.ecsv inputs, one lens's D_dt samples x `factor` (scripts/d1_distance.py)"
     )
+
+    # injected flag through the whole chain (max |pull| over the statistics vs the threshold)
+    zcols = ["z_A", "z_C", "z_D"]
+    it["flag"] = [bool(np.nanmax(np.abs([row[c] for c in zcols])) >= thr) for row in it]
     it.write(OUT / "injections.ecsv", overwrite=True)
 
-    # minimum detectable factor at the trials-corrected threshold (linear in ln f)
+    # minimum detectable factor per lens and statistic: where the injected |z| crosses thr
+    # (interpolated in ln f between the bracketing injections; the baseline pull is included)
     sens = {}
-    for r in rows:
+    for name in ALL:
+        sub = it[it["lens"] == name]
+        sub.sort("factor")
         s = {}
-        if r["has_Dd"]:
-            s["ratio_loo_C"] = float(np.exp(thr * r["sig_lnR_C"]))
-            s["ratio_prior_A"] = float(np.exp(thr * r["sig_lnR_A"]))
-        s["ddt_loo_D"] = float(np.exp(thr * r["sig_lnDdt_D"]))
-        sens[r["lens"]] = s
+        for c in zcols:
+            if np.all(np.isnan(sub[c])):
+                continue
+            s[c] = {
+                "down": _crossing(sub, c, thr, below=True),
+                "up": _crossing(sub, c, thr, below=False),
+            }
+        sens[name] = s
 
     summary = {
         "provenance": str(Provenance.MODEL_PREDICTION),
@@ -436,7 +491,7 @@ def run_lenses(args) -> None:
         "flagged": [r["lens"] for r in rows if r["flag"]],
         "max_abs_z": {r["lens"]: round(float(r["max_abs_z"]), 3) for r in rows},
         "null": null_summary,
-        "min_factor_at_threshold": sens,
+        "min_factor_at_threshold_from_injections": sens,
         "j1206_tdcosmo2025_identical_to_h0licow": lens["J1206"]["tdcosmo_identical"],
         "b1608_dd_ddt_correlation": "none (analytic independent fits)",
         "params": {k: v for k, v in vars(params).items()},
@@ -521,10 +576,8 @@ def run_frb(args) -> None:
     root = Path(args.frb)
     rows_m: list = []
     hosts = pinned("FRB_hosts", {FRBREPO: root}, rows_m)
-    p = dc.FRBParams(n_draw=args.n_pred)
-    rng = np.random.default_rng(args.seed)
-    out = []
-    missing = []
+    p = dc.FRBParams()
+    inputs, missing = [], []
     with open(hosts, newline="") as f:
         for h in csv.DictReader(f):
             name = h["FRB"].strip()
@@ -553,62 +606,108 @@ def run_frb(args) -> None:
             if "DM" not in d or "DMISM" not in d or z <= 0:
                 missing.append((name, "no DM/DMISM or z<=0"))
                 continue
-            dm, ism = d["DM"]["value"], d["DMISM"]["value"]
-            r = dc.frb_predictive_tails(dm, ism, z, rng, p)
-            out.append(
+            inputs.append((name, z, d["DM"]["value"], d["DMISM"]["value"], h["Projects"]))
+    n = len(inputs)
+    n_trials = 2 * n  # one low and one high one-sided test per burst
+    thr = dc.local_sigma_threshold(n_trials, p.flag_sigma_global, one_sided=True)
+
+    def flags(r):
+        return bool(r["z_low"] >= thr), bool(r["z_high"] >= thr)
+
+    out, inj = [], []
+    for name, z, dm, ism, proj in inputs:
+        pred = dc.FRBPredictive(ism, z, p)
+        r = dc.frb_predictive_tails(dm, ism, z, p, mean_dm=pred.mean_dm)
+        lo, hi = pred.detect_limits(thr)
+        fl, fh = flags(r)
+        out.append(
+            {
+                "frb": name,
+                "z": z,
+                "dm_obs": dm,
+                "dm_ism_ne2001": ism,
+                "projects": proj,
+                **r,
+                "dm_low_detect": lo,
+                "dm_high_detect": hi,
+                "flag_low": fl,
+                "flag_high": fh,
+            }
+        )
+        # injection through the whole chain: an observed DM just beyond each detection limit
+        for side, dm_inj in (("low", 0.9 * lo), ("high", 1.1 * hi)):
+            if not np.isfinite(dm_inj) or dm_inj <= 0:
+                inj.append({"frb": name, "side": side, "dm_injected": dm_inj, "physical": False})
+                continue
+            ri = dc.frb_predictive_tails(dm_inj, ism, z, p, mean_dm=pred.mean_dm)
+            il, ih = flags(ri)
+            inj.append(
                 {
                     "frb": name,
-                    "z": z,
-                    "dm_obs": dm,
-                    "dm_ism_ne2001": ism,
-                    "projects": h["Projects"],
-                    **r,
+                    "side": side,
+                    "dm_injected": dm_inj,
+                    "physical": True,
+                    "z_low": ri["z_low"],
+                    "z_high": ri["z_high"],
+                    "flag_low": il,
+                    "flag_high": ih,
                 }
             )
     t = Table(rows=out)
-    n = len(t)
-    thr = dc.local_sigma_threshold(2 * n, 5.0)
-    t["flag_low"] = t["z_low"] >= thr
-    t["flag_high"] = t["z_high"] >= thr
     for c in t.colnames:
-        if t[c].dtype.kind == "f":
-            t[c] = np.round(t[c], 5)
+        if t[c].dtype.kind == "f" and not c.startswith("p_"):
+            t[c] = np.round(t[c], 4)
     t.sort("z_low", reverse=True)
     t.meta["provenance"] = str(Provenance.MODEL_PREDICTION)
     t.meta["source"] = (
-        f"FRBs/FRB@{FRB_COMMIT[:7]} public_hosts.csv + frb/data/FRBs/*.json (DM, DMISM = NE2001); "
-        "Macquart+2020 DM_cosmic PDF, log-normal host; scripts/d1_distance.py frb"
+        f"FRBs/FRB@{FRB_COMMIT[:7]} public_hosts.csv + frb/data/FRBs/*.json (DM; DMISM as stored, "
+        "NE2001 via frb/mw.py ismDM); Macquart+2020 DM_cosmic PDF, log-normal host; grid "
+        "convolution (distance_consistency.FRBPredictive); scripts/d1_distance.py frb"
     )
-    t.meta["n_trials"] = 2 * n
+    t.meta["n_trials"] = n_trials
     t.meta["local_one_sided_sigma_threshold"] = thr
     t.meta["skipped"] = [f"{a}: {b}" for a, b in missing]
     t.meta["params"] = {k: v for k, v in vars(p).items()}
     t.write(OUT / "frb.ecsv", overwrite=True)
+
+    it = Table(
+        rows=[{k: r.get(k, np.nan) for k in inj[-1].keys() | set().union(*inj)} for r in inj]
+    )
+    it = it["frb", "side", "dm_injected", "physical", "z_low", "z_high", "flag_low", "flag_high"]
+    it.meta["provenance"] = str(Provenance.SIMULATED)
+    it.meta["source"] = (
+        "frb.ecsv inputs with DM_obs replaced by 0.9 x dm_low_detect / 1.1 x dm_high_detect"
+    )
+    it.meta["local_one_sided_sigma_threshold"] = thr
+    it.write(OUT / "frb_injections.ecsv", overwrite=True)
     write_manifest(rows_m, "frb")
-    print(
-        t[
-            "frb",
-            "z",
-            "dm_obs",
-            "dm_ism_ne2001",
-            "dm_pred_median",
-            "z_low",
-            "z_high",
-            "p_below_floor",
-        ][:12]
-    )
-    print(
-        "n",
-        n,
-        "thr",
-        thr,
-        "skipped",
-        len(missing),
-        "flag_low",
-        int(t["flag_low"].sum()),
-        "flag_high",
-        int(t["flag_high"].sum()),
-    )
+
+    phys = it[it["physical"]]
+    lo_i, hi_i = phys[phys["side"] == "low"], phys[phys["side"] == "high"]
+    low_ok = np.array([x > 0 for x in t["dm_low_detect"]])
+    summary = {
+        "provenance": str(Provenance.MODEL_PREDICTION),
+        "n_frb": n,
+        "n_trials": n_trials,
+        "local_one_sided_sigma_threshold": thr,
+        "flag_low": [str(x) for x in t["frb"][t["flag_low"]]],
+        "flag_high": [str(x) for x in t["frb"][t["flag_high"]]],
+        "max_z_low": [str(t["frb"][0]), float(t["z_low"][0])],
+        "max_z_high": [str(t["frb"][np.argmax(t["z_high"])]), float(np.max(t["z_high"]))],
+        "low_flag_reachable_dm_gt_0": int(low_ok.sum()),
+        "median_dm_low_detect_over_dm_ism": float(
+            np.median(
+                np.asarray(t["dm_low_detect"])[low_ok] / np.asarray(t["dm_ism_ne2001"])[low_ok]
+            )
+        ),
+        "median_dm_high_detect": float(np.nanmedian(t["dm_high_detect"])),
+        "injections_low_recovered": f"{int(lo_i['flag_low'].sum())}/{len(lo_i)}",
+        "injections_high_recovered": f"{int(hi_i['flag_high'].sum())}/{len(hi_i)}",
+        "injections_wrong_side_flags": int(lo_i["flag_high"].sum() + hi_i["flag_low"].sum()),
+    }
+    (OUT / "frb_summary.json").write_text(json.dumps(summary, indent=1) + "\n")
+    print(t["frb", "z", "dm_obs", "dm_ism_ne2001", "dm_pred_median", "z_low", "z_high"][:8])
+    print(json.dumps(summary, indent=1))
 
 
 def main() -> None:
@@ -627,7 +726,6 @@ def main() -> None:
     a.add_argument("--seed", type=int, default=20261009)
     b = sub.add_parser("frb")
     b.add_argument("--frb", default=str(d / "FRB"))
-    b.add_argument("--n-pred", type=int, default=200_000)
     b.add_argument("--seed", type=int, default=20261009)
     args = ap.parse_args()
     run_lenses(args) if args.cmd == "lenses" else run_frb(args)

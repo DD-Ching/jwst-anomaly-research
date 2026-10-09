@@ -3337,9 +3337,14 @@ injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T�
   H0 + Ωm fit to the other five. Sidak over 18 (lens, statistic) pulls: 5σ global = 5.53σ local (ASSUMPTION).
 - Null: all 23 non-identity permutations of the 4 joint lenses' (z_d, z_s); 100 random permutations of the 6.
   Injection: one lens's D_dt × f, f = 0.7–2.0, through the same statistics.
-- FRBs: DM_obs vs Monte Carlo predictive DM_ISM(NE2001, ±20 %) + DM_halo U(10, 80) + ⟨DM_cosmic⟩(z)·Δ
-  (Macquart+2020 p(Δ), σ = 0.32 z^−1/2, z floored at 0.02) + log-normal DM_host(e^μ = 68.2, σ = 0.88)/(1+z);
-  one-sided tails both ways, Sidak over 2×94. All thresholds in `distance_consistency.Params`/`FRBParams`.
+- FRBs: DM_obs vs the predictive distribution of DM_ISM (the JSON `DMISM`, NE2001 via FRBs/FRB `frb/mw.py`
+  `ismDM`; Gaussian ±20 %, ASSUMPTION) + DM_halo U(10, 80) + ⟨DM_cosmic⟩(z)·Δ (Macquart+2020 p(Δ), σ = 0.32 z^−1/2,
+  z floored at 0.02, Δ truncated at 20) + log-normal DM_host (e^μ = 68.2, σ = 0.88)/(1+z). The CDF is a deterministic
+  grid convolution (ISM + halo analytic, cosmic on a uniform DM grid, host through its analytic CDF/SF; all sums of
+  positive terms), so tails stay accurate far below 1e-10. A Monte Carlo floored at 1/N was rejected: it capped z at
+  ~4.3σ, below the flag. One-sided tails both ways; Sidak over 2×94 with a global two-sided 5σ gives 5.81σ local
+  one-sided. Per burst, the DM at which each tail reaches 5.81σ is recorded, and DM_obs = 0.9× / 1.1× those limits
+  is injected through the same chain. All thresholds are in `distance_consistency.Params`/`FRBParams`.
 - Code: `src/jwst_anomaly/distance_consistency.py`, `scripts/d1_distance.py`; outputs `results/d1_distance/`.
 
 **Alternatives rejected.**
@@ -3352,10 +3357,15 @@ injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T�
 - A Gaussian DM residual: the cosmic term is skewed and the host term log-normal (data-inventory §1.2).
 
 **Evidence.** Lenses: max |pull| 1.3σ (RXJ1131, statistic D); every |pull| < 1.3σ; no flag. Shuffled-z null:
-median max|pull| 3.8σ (R LOO) and 15σ (D_dt LOO) vs observed 0.84σ and 1.29σ. Injections recovered ln f to
-≲ 0.01. Sensitivity at the 5σ trials-corrected threshold: the R tests need a D_dt/D_d inconsistency factor of
-×2.3–6 (D_d errors 15–30 %), the D_dt LOO test ×1.4–1.8. FRBs: no burst beyond 5.9σ local either way; the lowest
-is FRB 20220319D (DM 111 < NE2001 DM_ISM 127; 3.3σ low), a known low-latitude case where NE2001 overestimates.
+median max|pull| 3.8σ (R LOO) and 15σ (D_dt LOO) vs observed 0.84σ and 1.29σ. Injections (D_dt × f, f = 0.15–8, 21
+values per lens, baseline pull included) give the factor at which the injected |z| crosses 5.53σ: R prior (A) ×0.21–0.43
+down / ×2.0–6.8 up; R LOO (C) ×0.22–0.39 / ×2.5–7.9; D_dt LOO (D) ×0.54–0.78 / ×1.29–1.85 (per lens in
+`results/d1_distance/lens_summary.json`). So only a D_dt/D_d inconsistency of a factor ≳ 2–8 (R) would be flagged;
+D_d errors are 15–30 %. FRBs: no flag (threshold 5.81σ one-sided). Lowest: FRB 20220319D, DM 111 < its NE2001 DM_ISM
+127, 3.26σ low (a low-latitude sightline; NE2001 is the likely overestimate). Highest: FRB 20190520B, 2.37σ (known
+large DM_host). Injections just beyond each burst's limits flag 94/94 low and 94/94 high, with no wrong-side flags. The
+low limit is above DM_ISM for most bursts (median 2.3× DM_ISM) because Macquart's p(Δ) has a sharp lower cutoff
+(Δ ≳ 0.4); that cutoff is an ASSUMPTION and sets the low-side sensitivity.
 
 **Revisit if.** Per-lens D_d posteriors for the other TDCOSMO 2025 lenses (or the 2025 λ_MST-free kinematics) are
 released; JWST/KCWI spatially resolved kinematics shrink D_d errors below ~10 % (the R test then reaches ×1.5);

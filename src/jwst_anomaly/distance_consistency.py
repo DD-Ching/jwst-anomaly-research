@@ -223,10 +223,16 @@ def leave_one_out(
     return out
 
 
-def local_sigma_threshold(n_trials: int, global_sigma: float = 5.0) -> float:
-    """Local two-sided sigma that corresponds to `global_sigma` after n_trials (Sidak)."""
+def local_sigma_threshold(
+    n_trials: int, global_sigma: float = 5.0, one_sided: bool = False
+) -> float:
+    """Local sigma that corresponds to a global two-sided `global_sigma` after n_trials (Sidak).
+
+    one_sided=True converts the local p to a one-sided sigma (for one-tailed tests)."""
     p_glob = sigma_to_p(global_sigma)
     p_loc = -np.expm1(np.log1p(-p_glob) / n_trials)
+    if one_sided:
+        return float(stats.norm.isf(p_loc))
     return float(p_to_sigma(p_loc))
 
 
@@ -244,20 +250,20 @@ def global_sigma(local_sigma: float, n_trials: int) -> float:
 @dataclass(frozen=True)
 class FRBParams:
     f_d: float = 0.844  # ASSUMPTION: diffuse-baryon fraction (Macquart et al. 2020 fiducial)
-    feedback_F: float = (
-        0.32  # ASSUMPTION: sigma_DM = F z^-1/2 (Macquart+2020 form; F from James et al. 2022)
-    )
+    feedback_F: float = 0.32  # ASSUMPTION: sigma_DM = F z^-1/2 (Macquart+2020 form; James+2022 F)
     alpha: float = 3.0  # Macquart+2020 p(Delta) shape (alpha = beta = 3)
     host_mu: float = float(
         np.log(68.2)
-    )  # ASSUMPTION: log-normal DM_host median 68.2 (Macquart+2020)
+    )  # ASSUMPTION: log-normal DM_host, median 68.2 (Macquart+2020)
     host_sigma: float = 0.88  # ASSUMPTION: log-normal DM_host width (Macquart+2020)
     halo_range: tuple[float, float] = (10.0, 80.0)  # ASSUMPTION: Milky Way halo DM, uniform
-    ism_frac_err: float = 0.2  # ASSUMPTION: 20 % (1 sigma) error on the NE2001 DM_ISM
-    z_sigma_floor: float = (
-        0.02  # ASSUMPTION: sigma_DM = F max(z, floor)^-1/2 (the z^-1/2 form diverges at z -> 0)
+    ism_frac_err: float = 0.2  # ASSUMPTION: Gaussian 20 % (1 sigma) error on the NE2001 DM_ISM
+    z_sigma_floor: float = 0.02  # ASSUMPTION: sigma = F max(z, floor)^-1/2 (z^-1/2 diverges at 0)
+    delta_max: float = 20.0  # ASSUMPTION: p(Delta) truncated at 20 <DM_cosmic> (Delta^-3 tail)
+    n_grid: int = (
+        20_001  # DM grid points of the convolution (finer if the cosmic or ISM term needs it)
     )
-    n_draw: int = 200_000
+    flag_sigma_global: float = 5.0  # ASSUMPTION: trials-corrected flag threshold
 
 
 FRB_DEFAULT = FRBParams()
@@ -282,62 +288,141 @@ def macquart_mean_dm(z, cosmo=None, f_d: float = 0.844, n: int = 400) -> np.ndar
     return out
 
 
-def _macquart_c0(sigma: float, alpha: float = 3.0) -> float:
-    """C0 such that <Delta> = 1 for the Macquart+2020 p(Delta) (alpha = beta).
+def _macquart_unnorm(x, c0: float, sigma: float, alpha: float = 3.0):
+    """Macquart+2020 p(Delta) ~ Delta^-alpha exp(-(Delta^-alpha - C0)^2 / (2 alpha^2 sigma^2))."""
+    x = np.asarray(x, float)
+    out = np.zeros_like(x)
+    ok = x > 0
+    xa = x[ok] ** (-alpha)
+    out[ok] = xa * np.exp(-((xa - c0) ** 2) / (2 * alpha**2 * sigma**2))
+    return out
 
-    p(Delta) ~ Delta^-beta exp(-(Delta^-alpha - C0)^2 / (2 alpha^2 sigma^2))."""
+
+def _macquart_c0(sigma: float, alpha: float = 3.0, delta_max: float = 20.0) -> float:
+    """C0 such that <Delta> = 1 for the Macquart+2020 p(Delta) truncated at delta_max."""
     from scipy.optimize import brentq
 
-    x = np.linspace(1e-3, 20, 40000)
+    x = np.linspace(1e-3, delta_max, 40000)
 
     def mean_minus_one(c0):
-        p = x ** (-alpha) * np.exp(-((x ** (-alpha) - c0) ** 2) / (2 * alpha**2 * sigma**2))
+        p = _macquart_unnorm(x, c0, sigma, alpha)
         return np.trapezoid(x * p, x) / np.trapezoid(p, x) - 1.0
 
     return brentq(mean_minus_one, -30, 30)
 
 
+def macquart_sigma(z: float, p: FRBParams = FRB_DEFAULT) -> float:
+    return p.feedback_F / np.sqrt(max(z, p.z_sigma_floor))
+
+
 def draw_macquart_delta(
-    z: float, rng: np.random.Generator, p: FRBParams = FRB_DEFAULT
+    z: float, rng: np.random.Generator, p: FRBParams = FRB_DEFAULT, n: int = 200_000
 ) -> np.ndarray:
-    """Draws of Delta = DM_cosmic / <DM_cosmic> from the Macquart+2020 PDF with sigma = F z^-1/2."""
-    sigma = p.feedback_F / np.sqrt(max(z, p.z_sigma_floor))
-    c0 = _macquart_c0(sigma, p.alpha)
-    x = np.linspace(1e-3, 20, 40000)
-    pdf = x ** (-p.alpha) * np.exp(-((x ** (-p.alpha) - c0) ** 2) / (2 * p.alpha**2 * sigma**2))
-    cdf = np.cumsum(pdf)
+    """Monte Carlo draws of Delta = DM_cosmic / <DM_cosmic> (used only to cross-check the grid)."""
+    sigma = macquart_sigma(z, p)
+    c0 = _macquart_c0(sigma, p.alpha, p.delta_max)
+    x = np.linspace(1e-3, p.delta_max, 40000)
+    cdf = np.cumsum(_macquart_unnorm(x, c0, sigma, p.alpha))
     cdf /= cdf[-1]
-    return np.interp(rng.uniform(size=p.n_draw), cdf, x)
+    return np.interp(rng.uniform(size=n), cdf, x)
+
+
+def _uniform_gauss_pdf(y, mean: float, s: float, lo: float, hi: float) -> np.ndarray:
+    """PDF of N(mean, s) + U(lo, hi), written to avoid cancellation in both tails."""
+    u1 = (np.asarray(y, float) - lo - mean) / s
+    u2 = (np.asarray(y, float) - hi - mean) / s
+    val = np.where(
+        u2 > 0, stats.norm.sf(u2) - stats.norm.sf(u1), stats.norm.cdf(u1) - stats.norm.cdf(u2)
+    )
+    return np.clip(val, 0.0, None) / (hi - lo)
+
+
+class FRBPredictive:
+    """Predictive distribution of DM_obs = DM_ISM + DM_halo + DM_cosmic + DM_host/(1+z) for one FRB.
+
+    ISM (Gaussian) + halo (uniform) is analytic; the cosmic term is convolved on a uniform DM grid
+    (direct sum of positive terms, no FFT round-off); the host log-normal enters via its analytic
+    CDF/SF. Tail probabilities are sums of positive terms, so they stay accurate far below 1e-10."""
+
+    def __init__(self, dm_ism: float, z: float, p: FRBParams = FRB_DEFAULT, mean_dm=None):
+        self.p, self.z = p, z
+        self.mean_dm = float(macquart_mean_dm(z, f_d=p.f_d)[0] if mean_dm is None else mean_dm)
+        s = max(p.ism_frac_err * dm_ism, 1e-3)
+        lo_h, hi_h = p.halo_range
+        y_lo, y_hi = dm_ism + lo_h - 14 * s, dm_ism + hi_h + 14 * s
+        span = (y_hi - y_lo) + p.delta_max * self.mean_dm
+        dx = min(span / (p.n_grid - 1), self.mean_dm / 50.0, s / 5.0)
+        self.dx = dx
+        y = y_lo + dx * np.arange(int(np.ceil((y_hi - y_lo) / dx)) + 1)
+        p_ih = _uniform_gauss_pdf(y, dm_ism, s, lo_h, hi_h)
+        sigma = macquart_sigma(z, p)
+        c0 = _macquart_c0(sigma, p.alpha, p.delta_max)
+        c = dx * np.arange(int(np.ceil(p.delta_max * self.mean_dm / dx)) + 1)
+        p_c = _macquart_unnorm(c / self.mean_dm, c0, sigma, p.alpha)
+        p_c /= p_c.sum()
+        self.p_ih_w = p_ih * dx / np.sum(p_ih * dx)  # weights of ISM + halo on y
+        self.y = y
+        w = np.convolve(self.p_ih_w, p_c)
+        self.a = y_lo + dx * np.arange(w.size)  # grid of ISM + halo + cosmic
+        self.w = w / w.sum()
+
+    def _host_cdf_sf(self, t):
+        t = np.asarray(t, float)
+        pos = t > 0
+        arg = np.full(t.shape, -np.inf)
+        arg[pos] = (np.log((1 + self.z) * t[pos]) - self.p.host_mu) / self.p.host_sigma
+        return stats.norm.cdf(arg), stats.norm.sf(arg)
+
+    def tails(self, dm_obs: float) -> tuple[float, float]:
+        """(P(pred <= obs), P(pred >= obs))."""
+        cdf, sf = self._host_cdf_sf(dm_obs - self.a)
+        return float(np.sum(self.w * cdf)), float(np.sum(self.w * sf))
+
+    def p_below_floor(self, dm_obs: float) -> float:
+        """P(DM_ISM + DM_halo >= DM_obs): the observed DM is below the Milky-Way-only floor."""
+        return float(np.sum(self.p_ih_w[self.y >= dm_obs]))
+
+    def quantile_dm(self, q: float) -> float:
+        from scipy.optimize import brentq
+
+        hi = self.a[-1] + 1e5
+        return float(brentq(lambda d: self.tails(d)[0] - q, self.a[0] - 1.0, hi, xtol=1e-3))
+
+    def detect_limits(self, sigma_one_sided: float) -> tuple[float, float]:
+        """DM at which the low (high) one-sided tail reaches `sigma_one_sided`; nan if none."""
+        from scipy.optimize import brentq
+
+        p_thr = stats.norm.sf(sigma_one_sided)
+        med = self.quantile_dm(0.5)
+        lo_end = min(self.a[0] - 1.0, 0.0) - 1e3
+        low = brentq(
+            lambda d: np.log(max(self.tails(d)[0], 1e-300)) - np.log(p_thr), lo_end, med, xtol=1e-3
+        )
+        hi_end = self.a[-1] + 1e7
+        if self.tails(hi_end)[1] > p_thr:
+            high = np.nan
+        else:
+            high = brentq(
+                lambda d: np.log(max(self.tails(d)[1], 1e-300)) - np.log(p_thr),
+                med,
+                hi_end,
+                xtol=1e-3,
+            )
+        return float(low), float(high)
 
 
 def frb_predictive_tails(
-    dm_obs: float,
-    dm_ism: float,
-    z: float,
-    rng: np.random.Generator,
-    p: FRBParams = FRB_DEFAULT,
-    mean_dm=None,
+    dm_obs: float, dm_ism: float, z: float, p: FRBParams = FRB_DEFAULT, mean_dm=None
 ) -> dict:
-    """Lower/upper predictive tail probabilities of the observed DM given z (Monte Carlo)."""
-    mean_dm = macquart_mean_dm(z, f_d=p.f_d)[0] if mean_dm is None else mean_dm
-    ism = dm_ism * (1 + p.ism_frac_err * rng.standard_normal(p.n_draw))
-    halo = rng.uniform(*p.halo_range, p.n_draw)
-    cosmic = mean_dm * draw_macquart_delta(z, rng, p)
-    host = np.exp(p.host_mu + p.host_sigma * rng.standard_normal(p.n_draw)) / (1 + z)
-    pred = ism + halo + cosmic + host
-    p_low = max(
-        float(np.mean(pred <= dm_obs)), 1.0 / p.n_draw
-    )  # P(pred <= obs): small when obs is too LOW
-    p_high = max(float(np.mean(pred >= dm_obs)), 1.0 / p.n_draw)  # small when obs is too HIGH
-    floor = ism + halo  # DM_cosmic and DM_host are >= 0
+    """One-sided predictive tails of the observed DM given z (deterministic grid convolution)."""
+    pred = FRBPredictive(dm_ism, z, p, mean_dm)
+    p_low, p_high = pred.tails(dm_obs)
     return {
-        "dm_pred_median": float(np.median(pred)),
-        "p_low": min(p_low, 1.0),
-        "p_high": min(p_high, 1.0),
-        "z_low": float(stats.norm.isf(min(p_low, 0.5))),  # one-sided sigma, obs below prediction
-        "z_high": float(stats.norm.isf(min(p_high, 0.5))),
-        "p_below_floor": max(
-            float(np.mean(floor >= dm_obs)), 0.0
-        ),  # obs below MW-only (no cosmic/host)
-        "mean_dm_cosmic": float(mean_dm),
+        "dm_pred_median": pred.quantile_dm(0.5),
+        "p_low": p_low,
+        "p_high": p_high,
+        "z_low": float(stats.norm.isf(min(max(p_low, 1e-300), 0.5))),  # obs below prediction
+        "z_high": float(stats.norm.isf(min(max(p_high, 1e-300), 0.5))),  # obs above prediction
+        "p_below_floor": pred.p_below_floor(dm_obs),
+        "mean_dm_cosmic": pred.mean_dm,
     }

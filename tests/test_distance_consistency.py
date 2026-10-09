@@ -78,19 +78,52 @@ def test_trials_threshold_round_trip():
     assert dc.local_sigma_threshold(1, 5.0) == pytest.approx(5.0)
 
 
+def test_one_sided_threshold():
+    thr1 = dc.local_sigma_threshold(188, 5.0, one_sided=True)
+    assert thr1 == pytest.approx(5.81, abs=0.01)
+    assert thr1 < dc.local_sigma_threshold(188, 5.0)
+
+
 def test_macquart_mean_and_delta():
     dm1 = dc.macquart_mean_dm(1.0)[0]
     assert 850 < dm1 < 1050  # ~ 1000 z pc cm^-3 at z ~ 1 (Macquart et al. 2020)
     rng = np.random.default_rng(3)
-    d = dc.draw_macquart_delta(0.5, rng, dc.FRBParams(n_draw=50_000))
+    d = dc.draw_macquart_delta(0.5, rng, n=50_000)
     assert d.mean() == pytest.approx(1.0, abs=0.03)
     assert d.min() >= 0
 
 
-def test_frb_tails_flag_low_dm():
-    rng = np.random.default_rng(4)
-    p = dc.FRBParams(n_draw=50_000)
-    low = dc.frb_predictive_tails(60.0, 40.0, 0.8, rng, p)
-    ok = dc.frb_predictive_tails(900.0, 40.0, 0.8, rng, p)
-    assert low["z_low"] > 3.5 and low["p_below_floor"] > 0.0
+def test_frb_grid_matches_monte_carlo():
+    p = dc.FRB_DEFAULT
+    dm_ism, z = 50.0, 0.4
+    pred = dc.FRBPredictive(dm_ism, z, p)
+    rng = np.random.default_rng(5)
+    n = 200_000
+    mc = (
+        dm_ism * (1 + p.ism_frac_err * rng.standard_normal(n))
+        + rng.uniform(*p.halo_range, n)
+        + pred.mean_dm * dc.draw_macquart_delta(z, rng, p, n)
+        + np.exp(p.host_mu + p.host_sigma * rng.standard_normal(n)) / (1 + z)
+    )
+    for d in np.percentile(mc, [1, 10, 50, 90, 99]):
+        lo, hi = pred.tails(d)
+        assert lo == pytest.approx(np.mean(mc <= d), abs=0.003)
+        assert lo + hi == pytest.approx(1.0, abs=1e-6)
+
+
+def test_frb_tails_reach_beyond_threshold():
+    # A Monte Carlo floored at 1/N caps near 4.3-4.8 sigma; the grid must reach the 5.81 sigma flag.
+    p = dc.FRB_DEFAULT
+    thr = dc.local_sigma_threshold(188, 5.0, one_sided=True)
+    low = dc.frb_predictive_tails(20.0, 40.0, 0.8, p)  # far below the Milky-Way floor
+    high = dc.frb_predictive_tails(60_000.0, 40.0, 0.8, p)  # beyond any host + cosmic draw
+    ok = dc.frb_predictive_tails(900.0, 40.0, 0.8, p)
+    assert low["z_low"] > thr and low["p_below_floor"] > 0.5
+    assert high["z_high"] > thr
     assert ok["z_low"] < 2.0 and ok["z_high"] < 2.0
+    pred = dc.FRBPredictive(40.0, 0.8, p)
+    lo, hi = pred.detect_limits(thr)
+    assert 0 < lo < ok["dm_pred_median"] < hi
+    assert dc.frb_predictive_tails(0.9 * lo, 40.0, 0.8, p)["z_low"] >= thr
+    assert dc.frb_predictive_tails(1.1 * hi, 40.0, 0.8, p)["z_high"] >= thr
+    assert dc.frb_predictive_tails(1.1 * lo, 40.0, 0.8, p)["z_low"] < thr
