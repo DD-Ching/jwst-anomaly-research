@@ -443,6 +443,37 @@ def name_position_offset(name: str, ra: float, dec: float) -> float:
     return float(np.hypot(ex_ra, ex_dec))
 
 
+_DESIGNATION = re.compile(r"(?:^|[^0-9.])(\d{4})\d*(?:\.\d+)?([+-])(\d{2})")  # not decimal degrees
+
+
+def designation_key(name: str) -> str:
+    """``HHMM+DD`` of a lens designation with survey prefix, J/B, spaces and suffixes such as
+    "*" or "A" removed (MG0414+0534, "B2114+022*", "SDSS J1322+1052" -> 0414+05, 2114+02,
+    1322+10); "" when the name has none. Equal keys plus a small separation identify one lens
+    listed twice (``same_lens_groups``)."""
+    m = _DESIGNATION.search(str(name).replace(" ", ""))
+    return f"{m.group(1)}{m.group(2)}{m.group(3)}" if m else ""
+
+
+def same_lens_groups(names, ra, dec, radius_arcsec: float) -> np.ndarray:
+    """Group label per row: rows with the same ``designation_key`` within ``radius_arcsec`` of
+    each other (transitively) share a label; rows without a designation are their own group.
+    ``derived``."""
+    keys = np.array([designation_key(n) for n in names], dtype=object)
+    n = len(keys)
+    label = np.arange(n)
+    xyz = _unit(np.asarray(ra, float), np.asarray(dec, float)) if n else np.zeros((0, 3))
+    lim = 2 * np.sin(np.radians(radius_arcsec / 3600) / 2)
+    for i in range(n):
+        if not keys[i]:
+            continue
+        for j in range(i + 1, n):
+            if keys[j] == keys[i] and np.linalg.norm(xyz[i] - xyz[j]) <= lim:
+                old, new = max(label[i], label[j]), min(label[i], label[j])
+                label[label == old] = new
+    return label
+
+
 def position_quantum_arcsec(ra: float, dec: float, printed_decimals: int = 5) -> float:
     """Rounding step of a catalogued position (arcsec on the sky); 0 for a precise position.
 
@@ -509,7 +540,7 @@ def bright_galaxy_near(systems: Table, sources: Table, mag_max, radius_arcsec: f
 
 
 PAIR_COLUMNS = ("n_images", "img1", "img2", "sep", "theta_e")
-PAIR_TEST_COLUMNS = ("status", "n_images", "sep", "theta_e", "defl_mag")
+PAIR_TEST_COLUMNS = ("status", "n_images", "n_lens_images", "sep", "theta_e", "defl_mag")
 
 
 def _types(sources: Table) -> np.ndarray:
@@ -556,6 +587,20 @@ def pair_images(systems: Table, sources: Table, image_radius: float = 3.0) -> Ta
     return out
 
 
+PAIR_SEP_TOL = 0.5  # arcsec, ASSUMPTION (D-064): the deep-imaging pair is the catalogued pair
+
+
+def pair_match(sep_ls, sep_cat, tol: float = PAIR_SEP_TOL) -> np.ndarray:
+    """True where the deep-imaging image pair (``pair_images`` ``sep``) has the catalogued image
+    separation within ``tol`` arcsec, i.e. the pair test ran on the catalogued images and not on
+    two unrelated point sources (D-064). False where either separation is unknown; callers decide
+    what an unknown catalogued separation means. ``derived``."""
+    a = np.asarray(sep_ls, float)
+    b = np.asarray(sep_cat, float)
+    with np.errstate(invalid="ignore"):
+        return np.abs(a - b) <= tol
+
+
 def quasar_pair_test(
     systems: Table,
     sources: Table,
@@ -591,6 +636,7 @@ def quasar_pair_test(
     rows = {c: [] for c in PAIR_TEST_COLUMNS}
     for im, m in zip(images, np.asarray(mag_max, float), strict=True):
         status, dmag = "blended", np.nan
+        n_lens = 0  # images classified as lens images; 0 when the pair test did not run
         if im["img2"] >= 0 and im["sep"] < sep_min:
             status = "too close"
         elif im["img2"] >= 0:
@@ -613,6 +659,7 @@ def quasar_pair_test(
             near = np.asarray(tree.query_ball_point(mid_xyz, image_radius * rad), int)
             near = near[(near != i1) & (near != i2)]
             imgs = np.concatenate([[i1, i2], near[is_image(near)]]).astype(int)
+            n_lens = int(len(imgs))
             centre = xyz[imgs].sum(axis=0)
             centre /= np.linalg.norm(centre)
             r = float(np.max(np.linalg.norm(xyz[imgs] - centre, axis=1)) / rad)
@@ -632,6 +679,9 @@ def quasar_pair_test(
                 status = "none"
         rows["status"].append(status)
         rows["n_images"].append(int(im["n_images"]))
+        # images actually classified as lens images (pair + colour-consistent PSF sources); 0
+        # when the pair test did not run
+        rows["n_lens_images"].append(n_lens)
         rows["sep"].append(float(im["sep"]))
         rows["theta_e"].append(float(im["theta_e"]))
         rows["defl_mag"].append(dmag)
@@ -639,6 +689,7 @@ def quasar_pair_test(
         {
             "status": np.asarray(rows["status"], dtype=object),
             "n_images": np.asarray(rows["n_images"], int),
+            "n_lens_images": np.asarray(rows["n_lens_images"], int),
             "sep": np.asarray(rows["sep"], float),
             "theta_e": np.asarray(rows["theta_e"], float),
             "defl_mag": np.asarray(rows["defl_mag"], float),
