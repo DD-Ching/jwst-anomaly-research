@@ -7,17 +7,30 @@
  "flag_high": [],
  "max_z_low": [
   "20220319D",
-  3.2556
+  4.0886
  ],
  "max_z_high": [
   "20190520B",
-  2.3654
+  2.3722
  ],
  "low_flag_reachable_dm_gt_0": 94,
- "median_dm_low_detect_over_dm_ism": 2.297594154612898,
- "median_dm_high_detect": 10204.46235,
+ "median_dm_low_detect_over_dm_ism": 2.5713262364551785,
+ "median_dm_high_detect": 10191.48635,
  "injections_low_recovered": "94/94",
  "injections_high_recovered": "94/94",
  "injections_wrong_side_flags": 0,
- "ism_model": "ne2001"
+ "ism_model": "ymw16",
+ "vs_ne2001": {
+  "n_joined": 94,
+  "flag_either": [],
+  "ism_ratio_median": 0.8414999999999999,
+  "ism_ratio_range": [
+   0.362,
+   1.909
+  ],
+  "max_abs_pull_change": [
+   "20180916B",
+   1.4982
+  ]
+ }
 }
