@@ -1,0 +1,138 @@
+{
+ "provenance": {
+  "shapes": "observed (Euclid Q1 MER catalogue, IRSA TAP; SExtractor moments)",
+  "statistics": "derived",
+  "injections": "model_prediction (negative point mass, radial reduced shear)",
+  "service": "https://irsa.ipac.caltech.edu/TAP/sync table euclid_q1_mer_catalogue",
+  "accessed_utc": "2026-10-09T01:29Z",
+  "assumptions": {
+   "vis_limit": 24.5,
+   "star_mags": [
+    19.0,
+    22.0
+   ],
+   "min_size_over_psf": 1.2,
+   "responsivity": 0.5,
+   "pa_mapping": "PA E of N = position_angle (25 MER VIS cutouts, 4 clusters)"
+  }
+ },
+ "results": {
+  "EDF-F": {
+   "n_gal": 19554,
+   "n_resolved": 11897,
+   "psf": {
+    "n_stars": 475,
+    "sigma_px_median": 1.675381709754603,
+    "mean_e1": 0.007446062923919449,
+    "mean_e2": -0.011979293873149737,
+    "mean_e_err": 0.001501669231709621,
+    "rms_abs_e": 0.05740064955660696
+   },
+   "theta_e": {
+    "30": {
+     "n_centres": 3409,
+     "area_deg2": 0.23673611111111112,
+     "S_max": 3.496952081100798,
+     "S_min": -3.222538618223996,
+     "S_cross_absmax": 3.4288301199329583,
+     "null_max_q50": 3.423997527676164,
+     "threshold_p01": 4.220591861709671,
+     "p_random_of_S_max": 0.43,
+     "flags": [],
+     "injection_efficiency": 0.025
+    },
+    "60": {
+     "n_centres": 709,
+     "area_deg2": 0.19694444444444445,
+     "S_max": 3.048494535971325,
+     "S_min": -2.724699154680549,
+     "S_cross_absmax": 3.3975649252264977,
+     "null_max_q50": 3.087220883994424,
+     "threshold_p01": 4.251137236811577,
+     "p_random_of_S_max": 0.56,
+     "flags": [],
+     "injection_efficiency": 0.7
+    },
+    "120": {
+     "n_centres": 113,
+     "area_deg2": 0.12555555555555556,
+     "S_max": 3.2685672049342163,
+     "S_min": -2.687055743412618,
+     "S_cross_absmax": 2.4067121010162884,
+     "null_max_q50": 2.5029756128949927,
+     "threshold_p01": 3.7781313020753506,
+     "p_random_of_S_max": 0.07,
+     "flags": [],
+     "injection_efficiency": 1.0
+    }
+   }
+  },
+  "EDF-S": {
+   "n_gal": 21654,
+   "n_resolved": 14379,
+   "psf": {
+    "n_stars": 612,
+    "sigma_px_median": 1.7221779151418226,
+    "mean_e1": 0.015691587045354446,
+    "mean_e2": -0.0029919761912082757,
+    "mean_e_err": 0.0007812337407348127,
+    "rms_abs_e": 0.039145706093953604
+   },
+   "theta_e": {
+    "30": {
+     "n_centres": 3409,
+     "area_deg2": 0.23673611111111112,
+     "S_max": 3.351733309155743,
+     "S_min": -3.119611399360987,
+     "S_cross_absmax": 3.5824999917518685,
+     "null_max_q50": 3.4283397932707893,
+     "threshold_p01": 4.229103448056206,
+     "p_random_of_S_max": 0.645,
+     "flags": [],
+     "injection_efficiency": 0.0
+    },
+    "60": {
+     "n_centres": 709,
+     "area_deg2": 0.19694444444444445,
+     "S_max": 2.438457477768994,
+     "S_min": -2.8029418983072407,
+     "S_cross_absmax": 3.4461225117444707,
+     "null_max_q50": 3.083218522335711,
+     "threshold_p01": 4.1894872536140895,
+     "p_random_of_S_max": 0.99,
+     "flags": [],
+     "injection_efficiency": 0.825
+    },
+    "120": {
+     "n_centres": 113,
+     "area_deg2": 0.12555555555555556,
+     "S_max": 2.4335281697137985,
+     "S_min": -2.261792415367813,
+     "S_cross_absmax": 3.4342119182532556,
+     "null_max_q50": 2.5176752518052616,
+     "threshold_p01": 3.7140956145626705,
+     "p_random_of_S_max": 0.565,
+     "flags": [],
+     "injection_efficiency": 1.0
+    }
+   }
+  },
+  "limits": {
+   "30": {
+    "n_flags": 0,
+    "effective_area_deg2": 0.0059184027777777785,
+    "n95_deg2": 506.8935171604576
+   },
+   "60": {
+    "n_flags": 0,
+    "effective_area_deg2": 0.3003402777777778,
+    "n95_deg2": 9.988670258271867
+   },
+   "120": {
+    "n_flags": 0,
+    "effective_area_deg2": 0.2511111111111111,
+    "n95_deg2": 11.946902654867257
+   }
+  }
+ }
+}
