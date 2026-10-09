@@ -70,6 +70,8 @@ PSPL bumps. MOA adds shared-epoch tests (field- and chip-wide Poisson), a neighb
 - An exotic feature must be bracketed by baseline on both sides; a one-sided step or secular change is not an umbra
   crossing (`feature_bracketed`, ≥ 20 epochs each side; `step_ramp`, a level change plus ramp with free t_s):
   gb19-R-4-4-31159 (a season-boundary step that never recovers) passed every other test.
+- A jackknife must rank nights against every close ordinary alternative, not only the best single lens: one bright
+  night at a predicted caustic spike carried gb7-R-8-6-94052's whole preference over a flat (eclipse) dip.
 - Uniform injection magnitudes re-weighted to the luminosity function leave n_eff ≈ 20–25 of 60: draw them from
   the LF (`--sampling lf`).
 - Streaming: a parent that downloads ranges and ships bytes to workers was OOM-killed (8–14 GB); each worker reads
