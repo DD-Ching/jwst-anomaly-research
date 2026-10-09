@@ -135,11 +135,9 @@ def point_magnification(beta, n: float, sign: int) -> np.ndarray:
     if n == 1 and sign == 1:
         return pspl(b)
     if n == 1 and sign == -1:
-        out = np.zeros_like(b)
-        ok = b > 2.0
-        bo = b[ok]
-        out[ok] = (bo * bo - 2.0) / (bo * np.sqrt(bo * bo - 4.0))
-        return out
+        with np.errstate(invalid="ignore", divide="ignore"):  # masked below (umbra, NaN)
+            v = (b * b - 2.0) / (b * np.sqrt(b * b - 4.0))
+        return np.where(b > 2.0, v, 0.0)
     if n == 2 and sign == 1:
         lb, la = _n2_table(1)
         x = np.log10(np.maximum(b, 1e-300))
@@ -169,12 +167,19 @@ def exotic_magnification(beta, n: float, sign: int, rho: float, near: float | No
     b = np.asarray(beta, float)
     a = np.ones_like(b)
     close = b < P.beta_far
-    a[close] = point_magnification(b[close], n, sign)
+    sel = np.zeros_like(close)
     if rho > 0:
         if sign == -1:
-            sel = np.abs(b - es.caustic_beta(n)) < near * rho
+            bc = es.caustic_beta(n)
+            # a disk wholly inside the umbra (b + ρ < β_c) has A = 0 exactly, as its point
+            # source: every integration node has A = 0, so the integral is +0
+            sel = (np.abs(b - bc) < near * rho) & ~(b + rho < bc - 1e-9)
         else:
             sel = b < near * rho
+    # the point source only where the finite source does not overwrite it (element-wise: same)
+    pt = close & ~sel
+    a[pt] = point_magnification(b[pt], n, sign)
+    if rho > 0:
         if sel.any():
             a[sel] = es.finite_source_magnification(
                 b[sel],
@@ -195,19 +200,19 @@ def straight_beta(t, t0, te, u0):
 # ----------------------------------------------------------------------------- linear fluxes
 
 
-def linear_fluxes(a, f, w, f_min: float | None = None):
+def linear_fluxes(a, f, w, f_min: float | None = None, sums=None):
     """Weighted least-squares F = fs·A + fb with fb ≥ −F_min and fs ≥ 0 (published convention).
 
     ``a`` has shape (N,) or (K, N); returns fs, fb, χ² with shape () or (K,). ``f_min`` defaults
     to the OGLE ``F_MIN``; ``inf`` leaves fb free (difference fluxes, MOA-II, D-062).
+    ``sums``: ``(w.sum(), f @ w, w * f)`` precomputed for this (f, w) (``LightCurve.sums``).
     """
     f_min = ogle.F_MIN if f_min is None else f_min
     a = np.atleast_2d(a)
-    sw = w.sum()
+    sw, sf, wf = (w.sum(), f @ w, w * f) if sums is None else sums
     sa = a @ w
     saa = (a * a) @ w
-    sf = f @ w
-    saf = a @ (w * f)
+    saf = a @ wf
     det = saa * sw - sa * sa
     with np.errstate(divide="ignore", invalid="ignore"):
         fs = np.where(det > 0, (saf * sw - sa * sf) / det, 0.0)
@@ -240,6 +245,13 @@ class LightCurve:
         self.ra, self.dec, self.event_id = ra, dec, event_id
         self.seasons = None  # one-hot season design (with_season_offsets), else one blend flux
         self.n_extra = 0  # linear parameters beyond fs, fb (BIC)
+
+    def sums(self):
+        """``(Σw, f·w, w·f)`` of ``linear_fluxes``, cached (t, f, sf are never modified)."""
+        s = self.__dict__.get("_sums")
+        if s is None:
+            s = self._sums = (self.w.sum(), self.f @ self.w, self.w * self.f)
+        return s
 
     def with_season_offsets(self, gap_days: float = 60.0, trend: bool = False) -> LightCurve:
         """Copy whose blend flux is free per observing season (gaps > ``gap_days`` split them),
@@ -378,7 +390,7 @@ def chi2_of(model: str, lc: LightCurve, p: dict):
     if not np.all(np.isfinite(a)):
         return np.inf, 0.0, 0.0
     if lc.seasons is None:
-        fs, fb, chi2 = linear_fluxes(a, lc.f, lc.w, lc.f_min)
+        fs, fb, chi2 = linear_fluxes(a, lc.f, lc.w, lc.f_min, lc.sums())
         return chi2, fs, fb
     m = np.vstack([a, lc.seasons]).T
     sw = np.sqrt(lc.w)

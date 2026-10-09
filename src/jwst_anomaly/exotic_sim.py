@@ -288,19 +288,30 @@ def finite_source_magnification(
     t = 0.5 * np.pi * (nodes + 1.0)
     u = 0.5 * (1.0 - np.cos(t))
     du = 0.25 * np.pi * np.sin(t) * weights  # d u = sin(t)/2 dt, dt = pi/2 d(node)
-    rr = a_[..., None] + (b_ - a_)[..., None] * u  # (N, 3, n_nodes)
-    w = (b_ - a_)[..., None] * du
-    bb = np.broadcast_to(b[:, None, None], rr.shape)
-    full = rr <= rho - bb  # whole circle inside the disk (source disk covers the lens)
-    with np.errstate(divide="ignore", invalid="ignore"):
-        cosphi = (rr**2 + bb**2 - rho**2) / (2.0 * rr * bb)
-    phi = np.where(full, np.pi, np.arccos(np.clip(np.nan_to_num(cosphi, nan=1.0), -1.0, 1.0)))
-    arc = 2.0 * rr * phi
-    amp_fn = point_magnification or (lambda x: total_magnification(x, n, sign))
-    amp = np.asarray(amp_fn(np.maximum(rr, 0.0).ravel()), float).reshape(rr.shape)
-    # a node rounding onto the caustic (measure zero) would give inf * 0
-    amp = np.where(np.isfinite(amp), amp, 0.0)
-    integrand = amp * arc * w
+    # Most sub-intervals have zero width (b ≥ ρ, or the caustic outside the disk); their
+    # integrand is exactly +0 (w = 0, amp and arc finite), so it is evaluated only on the others
+    # and scattered into a zero array of the full (N, 3, n_nodes) shape: the sum below then runs
+    # over the same layout and is bit-identical, at ~1/3 to 1/2 of the cost.
+    integrand = np.zeros(a_.shape + (nodes.size,))
+    nz = b_ > a_
+    if nz.any():
+        a0 = a_[nz][:, None]
+        width = (b_ - a_)[nz][:, None]
+        bb = np.broadcast_to(b[:, None], a_.shape)[nz][:, None]
+        rr = a0 + width * u  # (M, n_nodes)
+        w = width * du
+        full = rr <= rho - bb  # whole circle inside the disk (source disk covers the lens)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            cosphi = (rr**2 + bb**2 - rho**2) / (2.0 * rr * bb)
+        # = clip(nan_to_num(cosphi, nan=1), -1, 1): ±inf clip to ±1 either way
+        cosphi = np.clip(np.where(np.isnan(cosphi), 1.0, cosphi), -1.0, 1.0)
+        phi = np.where(full, np.pi, np.arccos(cosphi))
+        arc = 2.0 * rr * phi
+        amp_fn = point_magnification or (lambda x: total_magnification(x, n, sign))
+        amp = np.asarray(amp_fn(np.maximum(rr, 0.0).ravel()), float).reshape(rr.shape)
+        # a node rounding onto the caustic (measure zero) would give inf * 0
+        amp = np.where(np.isfinite(amp), amp, 0.0)
+        integrand[nz] = amp * arc * w
     out = np.sum(integrand, axis=(1, 2)) / (np.pi * rho**2)
     out[~np.isfinite(b)] = np.nan
     return out
