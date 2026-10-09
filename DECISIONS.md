@@ -3234,6 +3234,13 @@ includes its cost. The candidate records give the verdicts and evidence.
   field queue finishes. Adding the model then would be post hoc and needs a full re-injection. Until then gb18 has an
   efficiency-only table and is not in the combined limit: its injections did not face that model, so a zero-event
   limit from them would overstate ε.
+- **Follow-up (open, 2026-10-09), from gb17-R-6-1-3829** (a ~30-d periodic variable; docs/candidates/gb17-R-6-1-3829.md):
+  (i) repeated deficits *inside* the feature window are not counted (the test looks only outside it);
+  (ii) there is no periodicity / variability-model test;
+  (iii) there is no cap on the exotic fit's own χ²/dof (6.7 here).
+  gb17 is efficiency-only and stays out of the combined limit, as gb18. When the queue finishes, all four gaps
+  (these three and the gb18 slow dip with season offsets) are added as one recorded post-hoc chain change, and
+  every field is re-injected.
 
 **Revisit if.** A field's quiet χ²/dof distribution is bimodal or its 95th percentile exceeds ~10 (the quantile then
 admits variables); the archive stops honouring range requests; a survivor appears (stop, /vet-candidate, owner).
