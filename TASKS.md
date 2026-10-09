@@ -4,13 +4,18 @@ Prioritized queue. Agents pick from **Now** first; in-flight work is visible as 
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
+0. **D1 distance self-consistency** (D-073; owner idea 1): 4 H0LiCOW lenses (H0-free R) + 6 (leave-one-out D_dt) and 94
+   localized FRBs (DM–z tails): null, max pull 1.29σ. Injection-calibrated reach: R only ×2–8 / ×0.2–0.4, D_dt
+   ×1.3–1.85 / ×0.54–0.78. Next: per-lens D_d for the other TDCOSMO 2025 lenses (hierArc kinematics), D_dt LOO on the
+   TDCOSMO power-law chains, YMW16 beside NE2001 for FRBs.
 1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
    mismatch). Next: CHIME/FRB Catalog 2 (CANFAR downloads reset by the proxy; try another route), TTE for short and
    faint bursts, an s ≠ 1 chain, a generative pulse-model null.
 2. **S2 flat-kernel SN residuals** (D-070): Pantheon+ × LS DR9 null; γ < 0.025 mag per unit T/⟨T⟩ (α = 2, one-sided 95 %,
    dilution- and chain-corrected); α = 1 is kernel-degenerate. Next: DES-SN5YR + DES Y3 Gold, where SN lensing is detected (positive
    control), and the full Pantheon+ covariance.
-3. **S3 hybrid images** (limit only): COSMOGRAIL light curves at model lags s_i − s_j, including before the leading image.
+3. **S3 hybrid images** (D-072): COSMOGRAIL doubles null, sensitivity only r ≈ 0.4–2.4 (red quasar variability makes
+   the copy collinear with the main image). Next, low priority: SN Refsdal / SN H0pe imaging at the model lags.
 4. **System A round 2** after S1–S3, starting from the round-1 failure modes.
 
 ## Continuing (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)

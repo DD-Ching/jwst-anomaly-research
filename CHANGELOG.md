@@ -2,6 +2,48 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: D1 distance self-consistency: no inconsistent sightline in strong lenses or localized FRBs (D-073)
+- Hypothesis (owner idea 1): one sightline whose independent distance measures no ordinary model reconciles.
+  Ordinary explanations: mass-sheet degeneracy, line-of-sight convergence, kinematic anisotropy, substructure, wrong
+  redshifts; for FRBs, Galactic ISM model error and host DM.
+- Lenses: H0LiCOW public posteriors. The H0-free R = D_dt/((1+z_d)D_d) = D_s/D_ds for B1608, RXJ1131, PG1115, J1206
+  (prior-predictive ΛCDM / wCDM and leave-one-out), plus leave-one-out D_dt for those and HE0435, WFI2033. **Max pull
+  1.29σ** against 5.53σ (18 trials). Shuffled redshifts give a median max pull of 3.8σ (C) / 15σ (D).
+- Injection-calibrated reach (|z| crossing the threshold, baseline pull included): R tests ×2–8 up / ×0.2–0.4 down;
+  D_dt ×1.3–1.85 / ×0.54–0.78. A ≲ 30 % mismatch on one sightline is not excluded.
+- FRBs: 94 localized FRBs (FRBs/FRB repo) against the Macquart predictive distribution (grid convolution, tails to
+  ≪ 1e-10). Nothing flagged at the one-sided 5.81σ; the lowest is FRB 20220319D at 3.26σ (DM below its NE2001 DM_ISM,
+  a known low-latitude case). Injections flag 94/94 low and 94/94 high.
+- **Failed approaches (rules):**
+  - A Monte Carlo predictive tail floored at 1/N capped z at 4.26σ below a 5.93σ threshold, so the screen could
+    never flag (found by review). Tails must reach past the threshold: test it.
+  - Sensitivity factors from a Gaussian extrapolation ignored baseline pulls. Read them from injections.
+  - TDCOSMO 2025's SDSS1206 D_d file duplicates H0LiCOW's samples and adds no lens.
+- **Next:** see TASKS "Now" 0.
+
+## 2026-10-09: S3 hybrid images: no copies in 6 COSMOGRAIL doubles; sensitivity only r ≈ 0.4–2.4 (D-072)
+- Hypothesis (A1 P2): image j carries a faint copy at lag s_i − s_j; the copy into the trailing image can precede the
+  leading image. Ordinary mimics: quasar red noise (correlates at all lags), delay errors, microlensing.
+- Data: COSMOGRAIL XIX (CDS J/A+A/640/A105), 7 doubles with secure delays. SIS lag window for f ∈ [0, 1]
+  (D_ls/D_s = 0.46–0.68). `scripts/s3_hybrid.py`, `results/s3_hybrid/`.
+- Known-case gate: the main-term fit recovers the published delay (sign, ≠ 0, within 3σ + 4 d) in 6 of 7. J1620 fails
+  with a wrong-sign minimum at τ_BA = −206 d (published +171.5 d) and is not screened.
+- **Result:** no copy. Window maxima against same-width off-model windows (|lag| < 10 d excluded from both): lowest
+  p = 0.02 (J1226 into-trail, a window on the visible main-image wing) of 12 windows; the windows overlap, so p is
+  approximate and the run-wide chance of p ≤ 0.02 is ~0.2. Sensitivity r95 ≈ 0.38 (J1455 into-trail) to 2.4: only
+  copies comparable to the main image are excluded, far from B-on-A1's ~10⁻². Not quoted as limits: the
+  window-maximum injection efficiency is 0.67–4.7 (> 1 is the copy–main degeneracy; capped at 1 in r95), the
+  null windows are not matched in |lag| (windows next to the wing get low p), and for HE0047 the delay gate
+  (±14.5 d around 10.4 d) is weak.
+- **Failed approaches (rules):** microlensing splines with 120–730-d knots absorb the quasar variability and fit any
+  delay (6 of 7 published delays missed); use the delay recovery as the gate for every setting. Quasar variability
+  is too slow for copies at lags ≲ 100 d: the copy is collinear with the main image (a synthetic 20-d DRW recovers
+  r = 0.1 ± 0.03, so the loss is the data). /code-review: inject through the window maximum, not the fit at the
+  injected lag; hold the observed window to the null's wing rule; inject a smoothed copy (the template's noise
+  otherwise rides along); fit the main term at the validated delay.
+- **Next:** S3 needs a sharp template: SN Refsdal / SN H0pe pre-explosion and post-peak HST/JWST imaging at the
+  model lags (B-on-A1: a few × 10⁻²). Low priority; S1 and S2 (DES-SN5YR) first.
+
 ## 2026-10-09: S1 burst twins in Fermi GBM: null; < 7.2 × 10⁻³ twin pairs per eligible burst (D-071)
 - Hypothesis (D-069 S1, from A2 P1): pairs of GRBs far apart on the sky whose light curves match at any delay.
   Ordinary mimics: single-envelope look-alikes, re-triggers, ordinary lensing (excluded by the position cut).
