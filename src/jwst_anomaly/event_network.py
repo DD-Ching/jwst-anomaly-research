@@ -113,11 +113,15 @@ def mjd_year(mjd) -> np.ndarray:
 
 
 def gbm_events(cat: Table, p: Params | None = None) -> Table:
-    """HEASARC fermigbrst rows -> events. 1-sigma = stat (+) systematic, or a tiny radius when
-    error_radius is 0 (position from another instrument)."""
+    """HEASARC fermigbrst rows -> events. 1-sigma = stat (+) systematic; below gbm_external_deg
+    (position from another instrument, usually error_radius = 0) it is max(error_radius, 0.05°)."""
     p = p or Params()
     er = np.asarray(cat["error_radius"], dtype=float)
-    sig = np.where(er < p.gbm_external_deg, p.gbm_external_sigma_deg, np.hypot(er, p.gbm_sys_deg))
+    sig = np.where(
+        er < p.gbm_external_deg,
+        np.maximum(er, p.gbm_external_sigma_deg),
+        np.hypot(er, p.gbm_sys_deg),
+    )
     return _events(
         cat["trigger_name"], "GBM", cat["trigger_time"], cat["ra"], cat["dec"], sig, "fermigbrst"
     )
@@ -326,23 +330,27 @@ def empirical_p(obs: np.ndarray, null: np.ndarray) -> np.ndarray:
     return (1.0 + (null >= obs[None]).sum(axis=0)) / (null.shape[0] + 1.0)
 
 
+def pooled_cell_p(obs: np.ndarray, null: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    """Per-cell upper-tail p for every row of the pooled ensemble (the N scrambles plus the
+    observation as the last row), with one formula for all rows: (#rows >= value) / (N + 1).
+    The observation is exchangeable with the scrambles under H0, so the observed row and the
+    scramble rows are treated identically (review finding 1 on PR #112)."""
+    allv = np.vstack([null[:, mask], obs[mask][None]])
+    n = allv.shape[0]
+    srt = np.sort(allv, axis=0)
+    out = np.empty(allv.shape, dtype=float)
+    for c in range(allv.shape[1]):
+        out[:, c] = (n - np.searchsorted(srt[:, c], allv[:, c], side="left")) / n
+    return out
+
+
 def global_p(obs: np.ndarray, null: np.ndarray, mask: np.ndarray) -> tuple[float, float]:
-    """Trials-corrected p: the observed minimum per-cell p over ``mask`` cells, compared with the
-    same minimum computed for every scramble against the ensemble (look-elsewhere over all tested
-    cells)."""
-    nn = null.shape[0]
-    flat = null[:, mask]
-    o = obs[mask]
-    p_obs = (1.0 + (flat >= o[None]).sum(axis=0)) / (nn + 1.0)
-    # per-scramble p: fraction of the ensemble >= its value (ties count as >=)
-    srt = np.sort(flat, axis=0)
-    p_null = np.empty_like(flat, dtype=float)
-    for c in range(flat.shape[1]):
-        col = srt[:, c]
-        p_null[:, c] = (nn - np.searchsorted(col, flat[:, c], side="left")) / nn
-    min_obs = p_obs.min()
-    min_null = p_null.min(axis=1)
-    return float(min_obs), float((1.0 + np.count_nonzero(min_null <= min_obs)) / (nn + 1.0))
+    """Trials-corrected p over the ``mask`` cells: the observed minimum per-cell p, ranked among the
+    same minimum for every row of the pooled ensemble (scrambles + observation). Uniform under H0;
+    its floor is 1 / (N + 1)."""
+    pv = pooled_cell_p(obs, null, mask)
+    mins = pv.min(axis=1)
+    return float(mins[-1]), float(np.count_nonzero(mins <= mins[-1]) / len(mins))
 
 
 def empirical_floor(n_scrambles: int) -> float:

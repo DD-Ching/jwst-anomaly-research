@@ -204,3 +204,46 @@ def test_upper_limit_poisson_and_gaussian_regimes():
     assert ul[1] == pytest.approx(6.296, abs=1e-3)
     big = rng.normal(1000, 30, size=(5000, 1))
     assert en.upper_limit_95(np.array([1000.0]), big)[0] == pytest.approx(1.645 * 30, rel=0.05)
+
+
+def test_global_p_is_uniform_under_h0():
+    """Review finding 1 (PR #112): the observation is pooled with the scrambles and ranked with one
+    formula, so the trials-corrected p is uniform when the observation is a draw from the null."""
+    rng = np.random.default_rng(8)
+    trials, n, cells = 600, 999, 8
+    mask = np.ones(cells, bool)
+    gps = np.array(
+        [
+            en.global_p(rng.normal(size=cells), rng.normal(size=(n, cells)), mask)[1]
+            for _ in range(trials)
+        ]
+    )
+    for alpha in (0.05, 0.2, 0.5):
+        tol = 3 * np.sqrt(alpha * (1 - alpha) / trials)
+        assert abs(np.mean(gps <= alpha) - alpha) < tol
+    # an observation beyond the whole ensemble keeps the look-elsewhere factor: with 8 cells the
+    # global p is about 8 / (n + 1), not 1 / (n + 1)
+    null = rng.normal(size=(n, cells))
+    obs = np.zeros(cells)
+    obs[3] = 10.0
+    pmin, gp = en.global_p(obs, null, mask)
+    assert pmin == pytest.approx(1 / (n + 1))
+    assert 3 / (n + 1) < gp < 15 / (n + 1)
+
+
+def test_gbm_sigma_for_externally_localized_bursts():
+    from astropy.table import Table
+
+    cat = Table(
+        {
+            "trigger_name": ["a", "b", "c"],
+            "trigger_time": [59000.0, 59001.0, 59002.0],
+            "ra": [1.0, 2.0, 3.0],
+            "dec": [0.0, 0.0, 0.0],
+            "error_radius": [0.0, 0.2, 4.0],
+        }
+    )
+    sig = en.gbm_events(cat)["sigma"]
+    assert sig[0] == pytest.approx(0.05)
+    assert sig[1] == pytest.approx(0.2)
+    assert sig[2] == pytest.approx(np.hypot(4.0, 3.7))

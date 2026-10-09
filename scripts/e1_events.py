@@ -238,28 +238,14 @@ def close_pairs(
 # ------------------------------------------------------------------------------------- injection
 
 
-def family_threshold(null: np.ndarray, mask: np.ndarray, alpha: float) -> float:
-    """Per-cell p threshold p* with a family-wise false-alarm rate <= alpha over ``mask`` cells:
-    the alpha quantile of the per-scramble minimum per-cell p (same convention as en.global_p)."""
-    flat = null[:, mask]
-    nn = flat.shape[0]
-    srt = np.sort(flat, axis=0)
-    p_null = np.empty_like(flat, dtype=float)
-    for c in range(flat.shape[1]):
-        p_null[:, c] = (nn - np.searchsorted(srt[:, c], flat[:, c], side="left")) / nn
-    min_null = np.sort(p_null.min(axis=1))
-    k = max(int(np.floor(alpha * nn)) - 1, 0)
-    return float(min_null[k])
-
-
 def injections(samples, p, null_jit, mask, n_trials, rng) -> tuple[Table, float]:
     """Inject n wide-separation pairs at a known lag bin into channel (A, B), recount that channel,
-    and call the injection detected when the injected cell's p (jit null) is <= p*, the per-cell
-    threshold with a family-wise false-alarm rate DETECT_P over all tested cells."""
+    and call the injection detected when the injected cell's analytic p (jit null) times the number
+    of tested cells (Bonferroni) is <= DETECT_P: a real family-wise 3 sigma rule. The empirical
+    ensemble cannot reach it (floor 1e-4 x 75 cells), see en.reachable()."""
     obs0 = count_all(samples, p)
     nlag = len(p.lag_edges) - 1
-    p_star = family_threshold(null_jit, mask, DETECT_P)
-    nn = null_jit.shape[0]
+    p_star = DETECT_P / int(mask.sum())  # per-cell analytic threshold
     rows = []
     for c, (a, b) in enumerate(CHANNELS):
         cls = 2 if "GW" in (a, b) else 1
@@ -281,8 +267,7 @@ def injections(samples, p, null_jit, mask, n_trials, rng) -> tuple[Table, float]
                     x = o[k, cls]
                     rec.append((x - obs0[c, k, cls]) / max(m, 1))
                     nmov.append(m)
-                    ge = nn - np.searchsorted(col, x, side="left")
-                    det += (ge + 1.0) / (nn + 1.0) <= p_star
+                    det += en.analytic_p(np.array([x]), col[:, None])[0] <= p_star
                 rows.append(
                     (
                         f"{a}-{b}",
@@ -307,21 +292,36 @@ def injections(samples, p, null_jit, mask, n_trials, rng) -> tuple[Table, float]
         "provenance": str(Provenance.SIMULATED),
         "source": "synthetic wide-separation lagged pairs injected into the real catalogues "
         "(event_network.inject_pairs); eff = net count gain per moved event (moving an event "
-        f"also removes its old pairs); detected = injected-cell p (jit null) <= p* = {p_star:.3g}, "
-        f"the per-cell threshold for a family-wise false-alarm rate {DETECT_P}",
+        "also removes its old pairs); detected = injected-cell analytic p (jit null) x "
+        f"{int(mask.sum())} cells <= {DETECT_P} (Bonferroni family-wise 3 sigma), "
+        f"i.e. per-cell p <= {p_star:.3g}",
     }
     return t, p_star
 
 
-def limits(counts: Table, inj: Table, ev: dict[str, Table]) -> Table:
+def eligible_anchors(ev: dict[str, Table], a: str, b: str, days: float) -> int:
+    """Anchors an injection can use: A events with at least one B event within +-days (the
+    injection draws anchors near the moved B event), i.e. A events inside B's live time. For a
+    same-catalogue channel, all events."""
+    ta = np.asarray(ev[a]["mjd"], float)
+    if a == b:
+        return len(ta)
+    tb = np.sort(np.asarray(ev[b]["mjd"], float))
+    lo, hi = np.searchsorted(tb, ta - days), np.searchsorted(tb, ta + days)
+    return int(np.count_nonzero(hi > lo))
+
+
+def limits(counts: Table, inj: Table, ev: dict[str, Table], p: en.Params) -> Table:
     """95 % upper limit on dependent wide-separation (GW: any-separation) pairs per lag bin, and
-    the corresponding rate per anchor event: ul95_pairs / min(eff, 1) / N_A. eff is the net
+    the rate per eligible anchor: ul95_pairs / min(eff, 1) / N_elig (eligible_anchors). The
+    rate is NaN (``valid`` False) when no injected n reached 50 % detection. eff is the net
     gain per moved event at the grid point nearest the limit; the n50 column is the smallest
     injected n detected in >= 50 % of trials (family-wise 3 sigma)."""
     rows = []
     labels = list(dict.fromkeys(counts["lag"]))
     for ch in dict.fromkeys(inj["channel"]):
-        a = ch.split("-")[0]
+        a, b = ch.split("-")
+        n_elig = eligible_anchors(ev, a, b, p.inject_local_days)
         sub = inj[inj["channel"] == ch]
         cls = sub["cls"][0]
         for k in sorted(set(sub["lag_bin"])):
@@ -343,13 +343,15 @@ def limits(counts: Table, inj: Table, ev: dict[str, Table]) -> Table:
                     r["ul95_pairs"],
                     round(eff, 3),
                     n50,
-                    float(r["ul95_pairs"] / eff / len(ev[a])),
+                    n_elig,
+                    n50 > 0,
+                    float(r["ul95_pairs"] / eff / n_elig) if n50 > 0 else float("nan"),
                 )
             )
     t = Table(
         rows=rows,
         names=("channel", "cls", "lag", "obs", "jit_mean", "ul95_pairs", "eff", "n50_detect",
-               "ul95_rate_per_anchor"),
+               "n_anchor_eligible", "valid", "ul95_rate_per_anchor"),
     )  # fmt: skip
     t.meta = {
         "provenance": str(Provenance.DERIVED),
@@ -406,6 +408,28 @@ def chime_vet(paths: dict[str, Path], p: en.Params, n: int) -> dict:
                     "p": pv[:nlag, j].round(5).tolist(),
                 }
         out["variants"][name] = res
+    # Calibration (review finding 3): does each null keep an injected wide 1 h-1 d signal? A null
+    # that absorbs the injection cannot discriminate uptime from dependence.
+    s = en.Sample.from_table(en.chime_events(variants["all"]))
+    k = 3
+    rng = np.random.default_rng(4_100_000)
+    cal = {}
+    for ninj in (0, 300, 600):
+        sb = s if ninj == 0 else en.inject_pairs(s, s, ninj, *p.lag_edges[k : k + 2], p, True, rng)
+        o = en.count_channel(sb, sb, p, True)[k, 1]
+        row = {"n_moved": int(np.count_nonzero(sb.mjd != s.mjd)), "obs": int(o)}
+        for kind in ("jit", "jitday", "inday"):
+            nl = np.array(
+                [
+                    en.count_channel(*(2 * [_scramble(kind, sb, rng, p)]), p, True)[k, 1]
+                    for _ in range(min(n, 300))
+                ]
+            )
+            row[f"{kind}_null_mean"] = round(float(nl.mean()), 1)
+            row[f"{kind}_excess_kept"] = round(float(o - nl.mean()), 1)
+            row[f"{kind}_z"] = round(float((o - nl.mean()) / nl.std()), 2)
+        cal[str(ninj)] = row
+    out["injection_calibration_1h_1d_wide"] = cal
     return out
 
 
@@ -438,7 +462,9 @@ def main(argv=None) -> int:
         print(k, len(v), f"MJD {v['mjd'].min():.1f}-{v['mjd'].max():.1f}", flush=True)
 
     obs = count_all(samples, p)
-    cache = data_root() / "e1_events" / f"nulls_{a.perm}_{a.jit}_{a.jitday}.npz"
+    cache = (
+        data_root() / "e1_events" / f"nulls_v2_{a.perm}_{a.jit}_{a.jitday}.npz"
+    )  # bump on any count change
     if cache.exists() and not a.refresh:  # untracked cache of the null ensembles (seeds fixed)
         z = np.load(cache)
         perm, jit, jday = z["perm"], z["jit"], z["jday"]
@@ -532,7 +558,7 @@ def main(argv=None) -> int:
 
     inj, p_star = injections(samples, p, jit, mask, a.inject, np.random.default_rng(11))
     inj.write(OUT / "injections.ecsv", format="ascii.ecsv", overwrite=True)
-    lim = limits(counts, inj, ev)
+    lim = limits(counts, inj, ev, p)
     lim.write(OUT / "limits.ecsv", format="ascii.ecsv", overwrite=True)
     wide = mask & (np.arange(3) != 0)[None, None, :]  # wide (localized) and all (GW) cells only
     gp_wide = en.global_p(obs, jit, wide)
