@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: W5 count deficits in Euclid Q1 (in progress)
+- Plan: deeper counts for θ_E < 6′ (D-063 "Revisit if"). Euclid Q1 MER (IRSA TAP) as a second `CountMapSurvey`;
+  same screen, cross-field null (EDF-N / EDF-F / EDF-S), vetting and injections as D-063.
+
 ## 2026-10-08: Efficiency rules for routine cycles (owner text)
 - docs/cloud-routine-prompt.md gets the owner's "EFFICIENCY RULES" after "MOVE FAST, SAFELY": result first, a review
   stopping rule (fix only result/provenance/reproducibility/guarded-file findings, list the rest, ≤ 3 rounds), verify
