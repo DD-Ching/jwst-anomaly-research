@@ -648,6 +648,10 @@ more than θ_E. The test is therefore defined per selection class (ASSUMPTIONs i
 - Deflector candidates lie inside the smallest circle about the images' centroid that holds every image (the circle
   with the pair as diameter for a double; a fold or cusp pair of a quad leaves the lens outside the pair circle), and
   more than 0.5″ from every image. The ±5″ box limits the circle to pairs within 3″ of the position.
+- **The LS pair must be the catalogued pair** (D-064 check, `lenscats.pair_match`, D-056 amendment 2026-10-08). The
+  catalogues give θ_E, not image positions, so the catalogued separation is 2θ_E (SIS `model_prediction`). A system
+  whose status came from the LS pair (`used_pair`) and whose pair separation differs from 2θ_E by > 0.5″ is
+  undecided. Without a catalogued θ_E the pair is unchecked and the system stays decided.
 
 **Status rules.**
 - A candidate with m_z ≤ typical required magnitude + 2 rms is a "deflector". Where that magnitude is undefined, the
@@ -656,9 +660,26 @@ more than θ_E. The test is therefore defined per selection class (ASSUMPTIONs i
   should be, and whether it is luminous enough depends on the Faber–Jackson scatter beyond the margin. Such a system
   can neither show nor exclude a dark deflector.
 - Position and imaging problems are evaluated on every covered system and remove it from N whatever the test said.
-  In the 343 covered quasar and radio systems: maskbits 9, rounded positions 5, name/RA–Dec mismatch 1.
+  In the 343 covered quasar and radio systems: maskbits 9, rounded positions 5, name/RA–Dec mismatch 1, LS pair
+  not the catalogued pair 1.
 - A position counts as rounded if either axis is a whole 0.01° or 0.1°, or if both axes show a finer step.
-- **Decided: 29 systems**, of which 13 have a deflector and 16 do not ("none").
+- **One entry per lens** (D-056 amendment 2026-10-08, `dedup_same_lens`). Three radio lenses are listed twice in
+  lenscat, about 11″ apart (beyond the 3″ merge): MG0414+0534 (L00042, L04558), B2114+022 (L00194, L10187) and
+  B2319+052 (L00211, L04612). Decided systems with the same designation (`lenscats.designation_key`: survey prefix,
+  J/B, spaces and suffixes removed, HHMM±DD) within 30″ (ASSUMPTION, `Params.same_lens_radius`) are one lens. A copy
+  with a deflector is kept, since a deflector seen at one catalogued position of the lens explains it; otherwise the
+  first copy is kept (the catalogues give no lens-galaxy position). Each of the three keeps its "deflector" copy. The
+  dropped "none" copies sit on empty sky about 11″ from the lens (L04558 cutout inspected). The merged ids are in
+  `summary.json` `vetting.same_lens_merged`.
+- **Decided: 25 systems**, of which 12 have a deflector and 13 do not ("none"). Before the pair check and the
+  dedup: 29, 13 and 16.
+- **Pair check coverage.** 15 decided systems got their status from the LS pair; none of the 15 has a catalogued
+  θ_E, so the check removed only a system that has one: 115252+004733 (θ_E 1.67″, so 3.34″ expected; LS pair 4.18″;
+  "deflector" before). Its cutout shows an 18.1 mag (z) red galaxy at the centre and two faint PSF sources
+  (z ≈ 23.2–23.3) about 2″ either side. The galaxy is plainly there, but the faint pair is not the catalogued one,
+  so the system is undecided. Three of the 15 have separations in the SQLS tables pinned for D-064
+  (`data/manifests/w12_niq_inputs.json`): J1322+1052 1.88″, J1349+1227 2.99″ and J1515+1511 2.03″, against LS
+  2.00″, 3.01″ and 2.01″. All three match (a one-off check, not part of the chain). The other 12 are unchecked.
 
 **Required lens light.**
 - SIS σ from θ_E: the catalogue's, else (quasar and radio systems only) half the image separation, else 1″. Then an
@@ -681,16 +702,16 @@ simulated:
 - loss to "faint galaxy": an unrelated faint source in the search circle removes a dark-lens system from N but not
   an ordinary one (a few × 10⁻³ sources arcsec⁻² over 3–10 arcsec² gives an efficiency near 0.98, not 1).
 
-### Vetting of the 16 "none" systems (`candidates_vetted.ecsv`; all cutouts inspected)
+### Vetting of the 13 "none" systems (`candidates_vetted.ecsv`; all cutouts inspected)
 
 | Ordinary explanation | Systems |
 |---|---|
 | SIMBAD galaxy within 3″ (catalogued lens galaxy: HE1104−1805, 2M1134−2103, J1322+1052, J1349+1227, J1515+1511, MG0751+2716) | 6 |
-| lens redshift published (MG1549+305, MG2016+112, MG0414+0534, MG1131+0456, B2319+052, B2114+022) | 6 |
+| lens redshift published (MG1549+305, MG2016+112, MG1131+0456) | 3 |
 | literature: HSC J2212−0103, lens galaxy fitted in HSC with i = 22.40 (He et al. 2025, arXiv:2509.03858) | 1 |
 | **open in the typical variant:** SuGOHI IX 090434−005328 (A), 091517+040747 (C), 104122−005618 (B), CHITAH pairs of 2.0–2.25″ | 3 |
 
-- 13 of the 16 have a deflector in the literature that the LS test missed. LS DR10 often does not detect real lens
+- 10 of the 13 have a deflector in the literature that the LS test missed. LS DR10 often does not detect real lens
   galaxies next to quasar images, so a "none" is weak evidence.
 - All three open pairs need a conservative lens (m_z 23.3–23.5) fainter than the local depth (22.9–23.2). An ordinary
   lens below the LS depth explains them, so none survives every ordinary test, and there is no `docs/candidates/` file.
@@ -700,12 +721,15 @@ simulated:
 
 | Variant | quasar: k / N / f_dark < | radio: k / N / f_dark < | all |
 |---|---|---|---|
-| typical | 3 / 16 / 0.48 | 0 / 13 / 0.23 | 3 / 29 / 0.27 |
-| conservative | 0 / 6 / 0.50 | 0 / 0 / — | 0 / 6 / 0.50 |
+| typical | 3 / 15 / 0.52 | 0 / 10 / 0.30 | 3 / 25 / 0.31 |
+| conservative | 0 / 5 / 0.60 | 0 / 0 / — | 0 / 5 / 0.60 |
+
+With the pair check and one entry per lens (D-056 amendment 2026-10-08). Before them: typical quasar 3 / 16 / 0.48,
+radio 0 / 13 / 0.23 and all 3 / 29 / 0.27; conservative 0 / 6 / 0.50.
 
 f_dark is the fraction of quasar- or radio-selected galaxy-scale lenses whose deflector is dark (fainter than an
 ordinary lens of that θ_E).
-- These limits are **weak and rest on an assumed complete test.** LS DR10 decides only 29 of the 343 covered quasar
+- These limits are **weak and rest on an assumed complete test.** LS DR10 decides only 25 of the 343 covered quasar
   and radio systems (242 blended, 65 closer than 2″).
 - There is **no limit** on galaxy-finder or sub-mm systems, or on W1: there is no image geometry, and W1 pairs are
   unlikely to pass lens finders.
@@ -722,6 +746,8 @@ ordinary lens of that θ_E).
   - 468 covered systems with rounded positions (a random 32 inspected);
   - candidates their own papers rejected (MJV16999, Spingola et al. 2019);
   - name-based merges across lists.
+- Copies of one lens are merged only when both carry a designation (HHMM±DD) and lie within 30″. Copies with
+  different names, or more than 30″ apart, would still count twice.
 - HSC-SSP imaging (account required) and HST photometry were not used. They would decide the 307 blended or close
   lensed quasars.
 - Relation to D-051: D-051 limits dark deflectors per unit area in JWST deep fields. This is a per-lens fraction in
@@ -1123,6 +1149,29 @@ population still is galaxies; Milky Way stars are excluded by the extended-model
   the ordinary tests remove are left out of both the null and the search sample.
 - No limit below θ_E ≈ 6′ or above 32′ (the regions are 10° high; 1° needs a larger contiguous area).
 - Not combinable with the W1 radial/shear limits (different mass and θ_E ranges and selection).
+
+### Euclid Q1: deeper counts do not open θ_E < 6′; shapes would (2026-10-09, D-065)
+
+`scripts/w5_euclid_feasibility.py` → `results/w5_counts/euclid_q1_feasibility.json`. Galaxy densities are
+**observed** (IRSA TAP counts in 0.1° discs inside EDF-F, EDF-S and EDF-N); the gains are **model_prediction**.
+- Extended VIS detections (`vis_det`, clean flags, `point_like_prob` < 0.1; ASSUMPTION): 2.8 × 10⁴ (VIS < 23.5),
+  6.8 × 10⁴ (< 24.5) and 1.07 × 10⁵ deg⁻² (< 25.0); field-to-field spread ±10 %. VIS < 24.5 is 1.81× the DR10
+  r < 23.5 density; the count slope d log N/dm = 0.378 (DR10 0.365), so the predicted deficit profile is the same.
+- The screen's scatter is mostly galaxy clustering, which does not shrink with depth: DR10 Z scatter is 1.1× (2′),
+  1.6× (4′) and 2.4× (8′) the Poisson value. With 1.81× the galaxies and the same (half the) clustering variance
+  (ASSUMPTION range), the count S/N gains only ×1.24 (1.36) at 2′, ×1.10 (1.39) at 4′, ×1.04 (1.40) at 8′.
+  DR10 reached ε ≈ 0.5 at 8′; its 4′ S/N is 0.72 and its 2′ S/N 0.52 of that, so Euclid Q1 counts reach
+  0.79–1.0 at 4′ and 0.65–0.71 at 2′: at best a floor near 4–6′ instead of 6–8′, on 63 deg² instead of 340 deg²
+  (n₉₅ ≥ 5× weaker above 8′). Not worth a ~3.5 h row fetch.
+- Densities are counts over the full disc (masked area not subtracted, so lower bounds); 10 % more galaxies would
+  change the 4′ gain by < 1 %, because the clustering term dominates. The clustering ratio is not measured: at 0.3
+  the 4′ gain would be ×1.6 (S/N 1.15 of DR10 at 8′), so counts could reach ≈ 4′ at best.
+- A radial-shear test (point-mass γ = (θ_E/θ)², mean 0.21 over 1.5–3 θ_E, outside the critical curve where κ = 0;
+  σ_γ = 0.3 per component and S/N ≥ 6, ASSUMPTIONs) reaches θ_E ≈ 0.44′ ≈ 26″ with VIS < 24.5 shapes
+  (≈ 9 × 10⁷ M☉ at 1 kpc, 9 × 10¹⁰ M☉ at 1 Mpc), an order of magnitude below the count floor in θ_E. The sign of the tangential shear separates a negative-mass
+  lens (radial) from every ordinary foreground mass (tangential). MER `ellipticity` / `position_angle` are
+  SExtractor image moments without PSF correction (`position_angle` is CCW from the image x axis), so the test
+  needs a PSF-anisotropy check on stars first.
 
 ## W1/W2 in rejected lensed-quasar pairs
 

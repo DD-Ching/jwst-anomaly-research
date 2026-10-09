@@ -1006,3 +1006,10 @@ Exploration Program."
 - MAST HAP cutouts (`astroquery.mast.Hapcut`, https://mast.stsci.edu/hapcut/api/v0.1/astrocut ; accessed 2026-10-09):
   HST ACS/WFC F814W skycell cutouts from program 17308 (J0130+0725, J0728+2607, J2308+3201) and WFC3/UVIS F814W
   from program 17199 (SDSS J1515+1511), used by D-064's archival HST addendum. Not stored (outputs/, gitignored).
+
+## Euclid Q1 MER catalogue (accessed 2026-10-09; D-065)
+
+- Euclid Quick Data Release Q1 MER catalogue, table `euclid_q1_mer_catalogue` on the IRSA TAP service
+  https://irsa.ipac.caltech.edu/TAP (sync endpoint `/TAP/sync`), queried 2026-10-09 for counts only
+  (`scripts/w5_euclid_feasibility.py`). Use `CONTAINS(POINT, CIRCLE)` for spatial cuts; plain RA/Dec ranges are
+  not indexed. The service output is not pinned.

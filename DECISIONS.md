@@ -2765,6 +2765,27 @@ orphan counts.
 - A lens list publishes image positions (W1 geometry).
 - Tractor can be re-run on injected images (a measured completeness).
 
+**Amendment (2026-10-08): the LS pair must be the catalogued pair (D-064 check); one entry per lens.**
+- `lenscats.pair_match` (moved from `scripts/w12_niq.py`, tolerance `PAIR_SEP_TOL` = 0.5″, ASSUMPTION) is shared by
+  both scripts. In `w12_lenscats.py`, `deflector_test` reports `used_pair`, and `pair_check` compares the LS pair
+  with 2θ_E (SIS `model_prediction`; the catalogues give no image positions). A pair-based status with a mismatch
+  is undecided. Without a catalogued θ_E the system stays decided and is counted as unchecked in `summary.json`.
+- `dedup_same_lens` (vet) keeps one decided entry per lens. Entries match on the same designation
+  (`lenscats.designation_key`, HHMM±DD after removing the prefix, J/B, spaces and suffixes) within 30″
+  (`Params.same_lens_radius`, ASSUMPTION). A copy with a deflector is kept (a deflector seen at one catalogued
+  position explains the lens), else the first copy. Merged ids: `summary.json` `vetting.same_lens_merged`. Three
+  radio lenses are listed twice in lenscat about 11″ apart: MG0414+0534, B2114+022, B2319+052. For each, the
+  "deflector" copy is kept and the "none" copy, on empty sky, is dropped.
+- Re-run (`derived`): decided 29 → 25 (deflector 13 → 12, none 16 → 13). 115252+004733 (θ_E 1.67″, LS pair 4.18″)
+  becomes undecided. Typical: quasar 3 / 15 / < 0.52, radio 0 / 10 / < 0.30, all 3 / 25 / < 0.31.
+  Conservative: 0 / 5 / < 0.60. The three open CHITAH pairs are unchanged.
+- Coverage is thin: 0 of the 15 pair-decided systems have a catalogued θ_E. A one-off check against the SQLS
+  separations pinned for D-064 matched the three that have one (J1322+1052, J1349+1227, J1515+1511).
+- Rejected: requiring a catalogued separation for every decided system (no pair-decided system has one, so the
+  quasar class would have N = 0); importing the D-064 VizieR tables into the D-056 chain (3 of 15 matches, all
+  consistent: a second pinned input set for no change); a hard-coded duplicate list; widening the 3″ catalogue merge
+  (it would merge distinct close systems before any test).
+
 ## D-057 W3 in OGLE-IV Mróz samples: one fitter for ordinary and exotic models; disk sample null (2026-10-08)
 
 **Decision.**
@@ -3077,3 +3098,28 @@ and measures the residual flux between the images.
 
 **Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 11 colour-matched pairs;
 spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ tables add pairs of 2–3″.
+
+## D-065 W5 in Euclid Q1: no count screen; next is a radial-shear screen on Euclid Q1 shapes (2026-10-09)
+
+**Decision.** Do not port the D-063 count screen to Euclid Q1. Its S/N at θ_E ≤ 4′ is limited by galaxy clustering,
+not by the galaxy density, so 1.8× more galaxies buy ×1.0–1.4 in S/N on a fifth of the area
+(docs/exotic_limits.md "Euclid Q1"). For θ_E < 6′ the next W5/W1 test is the sign of the tangential shear of
+Euclid Q1 MER shapes around trial centres (radial for a negative-mass lens; forecast floor θ_E ≈ 26″).
+
+**Alternatives rejected.**
+- Euclid Q1 MER counts per pixel (IRSA TAP): ~3.5 h of row queries for 63 deg²; forecast in Evidence.
+- HSC PDR3 counts: account needed (D-063), and the same clustering limit applies.
+- Server-side HTM aggregation (`GROUP BY floor(htm20/65536)` works on IRSA for small boxes) would avoid the row
+  fetch, but does not change the S/N argument.
+
+**Evidence.** `results/w5_counts/euclid_q1_feasibility.json` (densities observed 2026-10-09; gains and the shear
+floor are model_prediction with stated ASSUMPTIONs). IRSA TAP: a `ra BETWEEN` / `dec BETWEEN` box of 0.25 deg² did
+not return in 5 min; the same selection with `CONTAINS(POINT, CIRCLE)` (r = 0.25°) returned 12,323 rows in 40 s;
+`COUNT(*)` in a 0.1° disc takes a few seconds.
+
+**Revisit if.**
+- A count screen is needed at θ_E ≈ 4–6′ specifically (a larger Euclid release removes the area penalty), or a
+  counts-in-cells measurement gives a Euclid/DR10 clustering-variance ratio well below 0.5 (ASSUMPTION range 0.5–1;
+  at 0.3 counts would reach ≈ 4′).
+- The shear screen finds Euclid Q1 MER moments unusable (PSF anisotropy) and no PSF-corrected shape catalogue is
+  public.

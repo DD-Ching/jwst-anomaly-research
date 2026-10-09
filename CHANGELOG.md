@@ -17,6 +17,39 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - a 60-px cutout cannot hold the pair, because the catalogue position is one image.
 - **Next:** spectra or two-epoch flux ratios for J0130+0725 (binary vs lens); an empirical PSF for J0728+2607;
   Euclid DR1 when public for the 9 pairs without HST imaging.
+## 2026-10-09: W5 in Euclid Q1: deeper counts cannot open θ_E < 6′; shapes could (D-065)
+- Hypothesis: Euclid Q1's deeper counts lower the D-063 floor (blind below θ_E ≈ 6′). Measured (IRSA TAP counts,
+  three deep fields): VIS < 24.5 extended galaxies 6.8 × 10⁴ deg⁻², 1.81× DR10, same count slope. With the
+  clustering-inflated scatter measured in DR10, the count S/N gains only ×1.0–1.4 (Z scatter at 4′ is 1.6× Poisson
+  and clustering does not shrink with depth), on 63 instead of 340 deg². Count screen not built.
+- Forecast (model_prediction): a radial-shear test on the same galaxies reaches θ_E ≈ 26″ (1.5–3 θ_E annulus, S/N ≥ 6,
+  σ_γ = 0.3, ASSUMPTIONs); the shear sign separates a negative-mass lens from ordinary foreground mass.
+- **Failed approach (rule):** IRSA TAP does not index plain RA/Dec ranges (0.25 deg² box > 5 min); use
+  `CONTAINS(POINT, CIRCLE)` (40 s for 12 k rows).
+- **Next:** Euclid Q1 radial-shear screen: PSF-anisotropy check on stars, synthetic shear injections, trial centres
+  on a grid, cross-field null (EDF-N/F/S).
+
+## 2026-10-08: D-056 amendment — the LS pair must be the catalogued pair; one entry per lens (W1/W2)
+- `lenscats.pair_match` (moved from D-064's `w12_niq`) now gates the D-056 quasar pair test: a status from an LS image
+  pair whose separation differs from the catalogued 2θ_E by > 0.5″ is undecided. Only 115252+004733 changed (LS pair
+  4.18″ vs 3.34″ expected; the cutout shows an 18.1 mag lens galaxy with an unrelated faint pair). None of the 15
+  pair-decided systems has a catalogued θ_E, so the pipeline checks 0 of 15; a one-off manual check of the 3 also in
+  SQLS matches (1.88/2.99/2.03″ vs LS 2.00/3.01/2.01″). For quads (≥ 3 LS images) only a pair wider than 2θ_E + 0.5″
+  is a mismatch (a fold/cusp pair is closer than 2θ_E); the check applies only to "deflector"/"none" statuses.
+- Same lens listed twice beyond the 3″ merge (MG0414+0534, B2114+022, B2319+052; ~11″ apart): decided systems are
+  grouped by designation within 30″ (ASSUMPTION; decimal-degree names give no key) over all covered sensitive
+  systems, and a deflector at any copy (decided or not) explains the lens. Each had counted once as
+  "deflector" and once as "none".
+- New limits (typical, `derived`): quasar 3/15 < 0.52, radio 0/10 < 0.30, all **3/25 < 0.31**; conservative 0/5 < 0.60
+  (were 0.48 / 0.23 / 0.27 / 0.50). No new unexplained system; the 3 CHITAH pairs stay open as before.
+- **Rules:** a pair test must check that its pair is the catalogued one; name-match decided systems before counting N.
+
+## 2026-10-08: Efficiency rules for routine cycles (owner text)
+- docs/cloud-routine-prompt.md gets the owner's "EFFICIENCY RULES" after "MOVE FAST, SAFELY": result first, a review
+  stopping rule (fix only result/provenance/reproducibility/guarded-file findings, list the rest, ≤ 3 rounds), verify
+  the branch after forked skills (they can leave HEAD detached, which stranded two commits on #98), fail fast on
+  data access, calibrate before flagging, a 35-minute time box, one unit per cycle.
+- **Owner action:** paste the updated prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`).
 
 ## 2026-10-08: W5 count deficits in Legacy Surveys DR10: 340.5 deg² null, first W5 limit (D-063, #94)
 - Two sessions (a cloud run's 10° pilot, then a worktree worker on the full 20° × 10° regions; see the coordination
