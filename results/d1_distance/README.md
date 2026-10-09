@@ -4,6 +4,7 @@ Question: does any single sightline carry two independent distance measures that
 Result: **no**. Every per-lens and per-FRB pull is far below the 5σ trials-corrected threshold.
 
 Reproduce: `python scripts/d1_distance.py lenses --h0licow <clone> --tdcosmo <clone>` and
+`python scripts/d1_distance.py tdcosmo --tdcosmo <clone>`,
 `python scripts/d1_distance.py frb --frb <clone> [--ism ymw16]` (inputs pinned in
 `data/manifests/d1_distance.ecsv`; seed 20261009).
 
@@ -13,6 +14,8 @@ Reproduce: `python scripts/d1_distance.py lenses --h0licow <clone> --tdcosmo <cl
 | `lens_summary.json` | model_prediction | trials, threshold, shuffled-redshift null, minimum detectable factor per lens |
 | `injections.ecsv` | simulated | one lens's D_dt × f (0.15–8, f = 1 is the baseline): pulls and the whole-chain flag; the detectable factors in `lens_summary.json` come from where these cross the threshold |
 | `lenses.png` | model_prediction | R vs flat ΛCDM (Ωm = 0.3), and all pulls with the 5σ trials-corrected lines |
+| `tdcosmo_lenses.ecsv` | model_prediction | statistic D on the TDCOSMO 2025 power-law D_dt chains, 8 lenses × (`kext`: own κ_ext PDF; `nokext`: κ_ext = 0); D-073 addendum 2 |
+| `tdcosmo_summary.json`, `tdcosmo_injections.ecsv` | model_prediction / simulated | trials, threshold, shuffled-z null, detectable factors; D_dt × f injections |
 | `frb.ecsv` | model_prediction | per localized FRB: predictive median DM, one-sided low/high tails (grid convolution), P(below the MW-only floor), the DM at which each tail reaches the 5.81σ flag |
 | `frb_injections.ecsv` | simulated | DM_obs = 0.9 × low limit and 1.1 × high limit per FRB, through the same chain |
 | `frb_summary.json` | model_prediction | FRB flags, extremes, sensitivity and injection recovery |

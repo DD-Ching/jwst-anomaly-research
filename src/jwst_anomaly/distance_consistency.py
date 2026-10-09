@@ -242,6 +242,60 @@ def global_sigma(local_sigma: float, n_trials: int) -> float:
     return float(p_to_sigma(p_glob))
 
 
+def draw_from_hist(
+    pdf: np.ndarray, edges: np.ndarray, n: int, rng: np.random.Generator
+) -> np.ndarray:
+    """n draws from a binned PDF (bin chosen by pdf * width, uniform within the bin)."""
+    pdf = np.clip(np.asarray(pdf, float), 0.0, None)
+    edges = np.asarray(edges, float)
+    mass = pdf * np.diff(edges)
+    k = rng.choice(len(mass), size=n, p=mass / mass.sum())
+    return edges[k] + rng.uniform(0.0, 1.0, n) * (edges[k + 1] - edges[k])
+
+
+def resample(x: np.ndarray, n: int, rng: np.random.Generator, weights=None) -> np.ndarray:
+    """n equal-weight draws from (weighted) posterior samples."""
+    x = np.asarray(x, float)
+    p = None if weights is None else np.asarray(weights, float) / np.sum(weights)
+    return rng.choice(x, size=n, replace=True, p=p)
+
+
+def ddt_with_kext(ddt_model: np.ndarray, kappa_ext: np.ndarray) -> np.ndarray:
+    """D_dt = D_dt^model / (1 - kappa_ext): the hierArc / TDCOSMO convention, lambda_int = 1."""
+    return np.asarray(ddt_model, float) / (1.0 - np.asarray(kappa_ext, float))
+
+
+def load_array_pickle(path) -> list[np.ndarray]:
+    """Read a Python-2 pickle that holds only numpy arrays, refusing every other class.
+
+    The TDCOSMO SDSS1206 pre-LOS file is such a pickle; a plain pickle.load would run arbitrary code
+    from a downloaded file."""
+    import importlib
+    import pickle
+
+    allowed = {
+        ("numpy.core.multiarray", "_reconstruct"),
+        ("numpy._core.multiarray", "_reconstruct"),
+        ("numpy", "ndarray"),
+        ("numpy", "dtype"),
+        ("numpy.core.multiarray", "scalar"),
+        ("numpy._core.multiarray", "scalar"),
+        ("_codecs", "encode"),  # bytes in protocol-2 pickles written by Python 3
+    }
+
+    class _Arrays(pickle.Unpickler):
+        def find_class(self, module, name):
+            if (module, name) not in allowed:
+                raise pickle.UnpicklingError(f"refused class {module}.{name}")
+            if module.startswith("numpy.core"):
+                module = module.replace("numpy.core", "numpy._core", 1)
+            return getattr(importlib.import_module(module), name)
+
+    with open(path, "rb") as f:
+        out = _Arrays(f, encoding="latin1").load()
+    return [np.asarray(x) for x in out]
+
+
 # --------------------------------------------------------------------------------------------------
 # FRB DM-z (Macquart relation)
 # --------------------------------------------------------------------------------------------------

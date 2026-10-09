@@ -2,8 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-09: D1 TDCOSMO 2025 D_dt leave-one-out (in progress)
-- Plan: D-073 statistic D on the TDCOSMO 2025 power-law D_dt chains for the 6 H0LiCOW lenses plus DES0408 and WGD2038.
+## 2026-10-09: D1 on TDCOSMO 2025 power-law chains: 8 lenses null with κ_ext; without it RXJ1131 is 5.7σ off (D-073 addendum 2)
+- Hypothesis: one lens's D_dt disagrees with the H0 + Ωm of the others (a sightline-specific distance anomaly).
+  Ordinary explanations: κ_ext, internal mass sheet / model choice, time-delay systematics. A flag with κ_ext applied
+  would have gone to composite models and κ_ext vetting.
+- `scripts/d1_distance.py tdcosmo`: power-law D_dt^model chains (6 H0LiCOW lenses + DES0408 + WGD2038), each lens's
+  own TDCOSMO κ_ext PDF applied identically, H0 + Ωm LOO; 100 shuffled-z nulls; injections.
+- **With κ_ext: max |pull| 1.12σ (RXJ1131), threshold 5.51σ; null.** Reach ×0.41–0.78 / ×1.36–1.88 (WGD2038 ×0.25 /
+  ×3.3). LOO H0 72.2–74.4.
+- **Without κ_ext: RXJ1131 −5.67σ, DES0408 +3.9σ**, both removed by the measured κ_ext (positive control: the test
+  sees a ~7 % line-of-sight convergence).
+- Safety: SDSS1206's pre-LOS file is a pickle; read with a numpy-only unpickler (arbitrary classes refused, tested).
+- Data: whole TDCOSMO2025_public checkout (661 MB, cloud) streamed by git, used, deleted; 16 files pinned in
+  `data/manifests/d1_distance.ecsv`. Failed approach: `git clone --no-checkout` then `git checkout <sha>` fetches the
+  whole tree; check out paths only.
+- **Next:** composite-model chains (TDCOSMO SDSS1206 `final_composite_*`, others where released) for a model-choice
+  check; per-lens D_d needs a data-only reader for `*_const_processed.pkl`.
 
 ## 2026-10-09: E1 causal event network: no wide-separation dependence between GRBs, neutrinos, GW events and FRBs (D-074)
 - Hypothesis (owner idea 4): events in different directions that depend on each other at lags no ordinary path

@@ -127,3 +127,42 @@ def test_frb_tails_reach_beyond_threshold():
     assert dc.frb_predictive_tails(0.9 * lo, 40.0, 0.8, p)["z_low"] >= thr
     assert dc.frb_predictive_tails(1.1 * hi, 40.0, 0.8, p)["z_high"] >= thr
     assert dc.frb_predictive_tails(1.1 * lo, 40.0, 0.8, p)["z_low"] < thr
+
+
+def test_draw_from_hist_matches_binned_pdf():
+    rng = np.random.default_rng(1)
+    edges = np.linspace(-0.2, 1.0, 13)
+    pdf = np.zeros(12)
+    pdf[2], pdf[3] = 1.0, 3.0
+    x = dc.draw_from_hist(pdf, edges, 40_000, rng)
+    assert x.min() >= edges[2] and x.max() <= edges[4]
+    assert np.mean(x >= edges[3]) == pytest.approx(0.75, abs=0.01)
+
+
+def test_resample_honours_weights():
+    rng = np.random.default_rng(2)
+    x = dc.resample(np.array([1.0, 2.0]), 20_000, rng, weights=[1.0, 3.0])
+    assert np.mean(x == 2.0) == pytest.approx(0.75, abs=0.01)
+
+
+def test_ddt_with_kext_convention():
+    # hierArc/TDCOSMO: D_dt^model = (1 - kappa_ext) D_dt, so a positive kappa_ext raises D_dt
+    assert dc.ddt_with_kext(np.array([900.0]), np.array([0.1]))[0] == pytest.approx(1000.0)
+
+
+def test_load_array_pickle_reads_arrays_and_refuses_other_classes(tmp_path):
+    import pickle
+
+    good = tmp_path / "good.pkl"
+    good.write_bytes(pickle.dumps([np.arange(3.0), np.ones(2)], protocol=2))
+    a, b = dc.load_array_pickle(good)
+    assert a.tolist() == [0.0, 1.0, 2.0] and b.tolist() == [1.0, 1.0]
+
+    class Evil:
+        def __reduce__(self):
+            return (print, ("ran",))
+
+    bad = tmp_path / "bad.pkl"
+    bad.write_bytes(pickle.dumps([Evil()], protocol=2))
+    with pytest.raises(pickle.UnpicklingError):
+        dc.load_array_pickle(bad)
