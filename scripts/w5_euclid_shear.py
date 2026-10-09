@@ -87,26 +87,32 @@ def vis_flux_ujy(mag: float) -> float:
     return 10 ** ((23.9 - mag) / 2.5)
 
 
-def disc_query(ra: float, dec: float, radius: float, star: bool) -> str:
+def _selection(star: bool) -> str:
     sel = STAR_SEL if star else GAL_SEL
     lo = STAR_MAGS[1] if star else VIS_LIMIT
     flux = f"flux_detection_total > {vis_flux_ujy(lo):.4f}"
     if star:
         flux += f" AND flux_detection_total < {vis_flux_ujy(STAR_MAGS[0]):.4f}"
+    return f"{sel} AND {flux}"
+
+
+def disc_query(ra: float, dec: float, radius: float, star: bool) -> str:
     return (
         f"SELECT {COLUMNS} FROM {TABLE} WHERE 1 = CONTAINS(POINT('ICRS', ra, dec), "
-        f"CIRCLE('ICRS', {ra}, {dec}, {radius})) AND {sel} AND {flux}"
+        f"CIRCLE('ICRS', {ra}, {dec}, {radius})) AND {_selection(star)}"
     )
 
 
-def fetch(ra: float, dec: float, radius: float, star: bool, cache: Path) -> Table:
-    """Rows in a disc (CONTAINS uses IRSA's spatial index, D-065), cached as ECSV."""
-    q = disc_query(ra, dec, radius, star)
-    key = hashlib.sha1(q.encode()).hexdigest()[:10]  # a changed selection never reuses old rows
-    path = cache / f"{'star' if star else 'gal'}_{ra:.4f}_{dec:+.4f}_{radius:.3f}_{key}.ecsv"
+def tile_query(tileid: int, star: bool) -> str:
+    """Rows of one MER tile (``tileid`` is indexed; each object belongs to one tile)."""
+    return f"SELECT {COLUMNS} FROM {TABLE} WHERE tileid = {int(tileid)} AND {_selection(star)}"
+
+
+def run_query(q: str, path: Path) -> Table:
+    """IRSA TAP sync query, cached as ECSV under ``path`` (key: hash of the query)."""
     if path.exists():
         return Table.read(path)
-    for attempt in range(4):
+    for attempt in range(5):
         try:
             r = requests.post(TAP, data={"QUERY": q, "FORMAT": "csv"}, timeout=900)
             r.raise_for_status()
@@ -116,12 +122,80 @@ def fetch(ra: float, dec: float, radius: float, star: bool, cache: Path) -> Tabl
             t = Table.read(r.text, format="ascii.csv")
             break
         except (requests.RequestException, ValueError, RuntimeError):
-            if attempt == 3:
+            if attempt == 4:
                 raise
-            time.sleep(2 ** (attempt + 1))
-    cache.mkdir(parents=True, exist_ok=True)
+            time.sleep(5 * 2**attempt)  # 504s under load: back off 5-40 s
+    path.parent.mkdir(parents=True, exist_ok=True)
     t.write(path, overwrite=True)
     return t
+
+
+def _key(q: str) -> str:
+    return hashlib.sha1(q.encode()).hexdigest()[:10]  # a changed selection never reuses old rows
+
+
+def fetch(ra: float, dec: float, radius: float, star: bool, cache: Path) -> Table:
+    """Rows in a disc (CONTAINS uses IRSA's spatial index, D-065), cached as ECSV."""
+    q = disc_query(ra, dec, radius, star)
+    kind = "star" if star else "gal"
+    return run_query(q, cache / f"{kind}_{ra:.4f}_{dec:+.4f}_{radius:.3f}_{_key(q)}.ecsv")
+
+
+def fetch_tile(tileid: int, star: bool, cache: Path) -> Table:
+    q = tile_query(tileid, star)
+    return run_query(q, cache / "tiles" / f"{'star' if star else 'gal'}_{tileid}_{_key(q)}.ecsv")
+
+
+# Q1 MER tiles (VIS mosaics in IRSA ObsCore): tileid and centre. Tiles are assigned to the
+# nearest Deep Field centre within SURVEY_FIELD_RADIUS_DEG; LDN1641 (a dust cloud) is left out.
+TILE_LIST_QUERY = (
+    "SELECT obs_id, s_ra, s_dec FROM ivoa.obscore WHERE obs_collection = "
+    "'euclid_DpdMerBksMosaic' AND energy_bandpassname = 'VIS'"
+)
+SURVEY_FIELD_RADIUS_DEG = 6.0  # ASSUMPTION; the Deep Fields are < 3.5° in radius
+N_FETCH_THREADS = 8  # 16 gave IRSA 504s with no gain in rate (0.34 queries/s), 2026-10-09
+
+
+def q1_tiles(cache: Path) -> dict[str, list[tuple[int, float, float]]]:
+    """Field name -> [(tileid, RA, Dec)] for the Q1 MER tiles near each Deep Field centre."""
+    t = run_query(TILE_LIST_QUERY, cache / f"q1_tiles_{_key(TILE_LIST_QUERY)}.ecsv")
+    out: dict[str, list] = {n: [] for n in PILOTS}
+    for oid, ra, dec in zip(t["obs_id"], t["s_ra"], t["s_dec"], strict=True):
+        tid = int(str(oid).split("_")[0])
+        sep = {n: _sep_deg(ra, dec, *c) for n, c in PILOTS.items()}
+        n = min(sep, key=sep.get)
+        if sep[n] < SURVEY_FIELD_RADIUS_DEG:
+            out[n].append((tid, float(ra), float(dec)))
+    return {n: sorted(set(v)) for n, v in out.items()}
+
+
+def _sep_deg(ra1, dec1, ra2, dec2) -> float:
+    a1, d1, a2, d2 = map(math.radians, (ra1, dec1, ra2, dec2))
+    c = math.sin(d1) * math.sin(d2) + math.cos(d1) * math.cos(d2) * math.cos(a1 - a2)
+    return math.degrees(math.acos(min(1.0, max(-1.0, c))))
+
+
+def cmd_fetch(args) -> dict:
+    """Prefetch every tile's galaxies and stars (concurrent; cached; progress logged)."""
+    cache = paths.data_root() / "euclid_q1_shear"
+    tiles = q1_tiles(cache)
+    jobs = [(t[0], st) for n in tiles for t in tiles[n] for st in (False, True)]
+    t0, done, rows, failed = time.time(), 0, 0, []
+
+    def one(j):
+        try:
+            return len(fetch_tile(j[0], j[1], cache))
+        except Exception as exc:  # report and continue; a re-run fetches only what is missing
+            failed.append([j[0], j[1], repr(exc)[:200]])
+            return 0
+
+    with ThreadPoolExecutor(N_FETCH_THREADS) as ex:
+        for n_rows in ex.map(one, jobs):
+            done, rows = done + 1, rows + n_rows
+            if done % 20 == 0 or done == len(jobs):
+                rate = done / (time.time() - t0)
+                print(f"fetch {done}/{len(jobs)}, {rows} rows, {rate:.2f} q/s", flush=True)
+    return {"n_tiles": {n: len(v) for n, v in tiles.items()}, "rows": rows, "failed": failed}
 
 
 def tangent_plane(ra, dec, ra0: float, dec0: float) -> tuple[np.ndarray, np.ndarray]:
@@ -215,6 +289,124 @@ def radial_shear(x, y, cx: float, cy: float, theta_e: float, r_min: float) -> np
 def apply_shear(e: np.ndarray, g: np.ndarray) -> np.ndarray:
     """Lensed ellipticity (ε + g)/(1 + g* ε) (Seitz & Schneider 1997), |g| < 1."""
     return (e + g) / (1.0 + np.conj(g) * e)
+
+
+# R calibration (the cluster shear against an NFW halo of the catalogued M500; D-TBD).
+CAL_ZS = (0.8, 1.0, 1.2)  # single effective source plane for VIS < 24.5 (ASSUMPTION; 1.0 fiducial)
+
+
+def _nfw_h(x: np.ndarray) -> np.ndarray:
+    """x² Σ̄(<x) / (4 ρ_s r_s) for an NFW halo (Wright & Brainerd 2000)."""
+    x = np.asarray(x, float)
+    out = np.empty_like(x)
+    lo, hi = x < 1, x > 1
+    out[lo] = np.log(x[lo] / 2) + 2 / np.sqrt(1 - x[lo] ** 2) * np.arctanh(
+        np.sqrt((1 - x[lo]) / (1 + x[lo]))
+    )
+    out[hi] = np.log(x[hi] / 2) + 2 / np.sqrt(x[hi] ** 2 - 1) * np.arctan(
+        np.sqrt((x[hi] - 1) / (1 + x[hi]))
+    )
+    out[~(lo | hi)] = 1 + math.log(0.5)
+    return out
+
+
+def _nfw_f(x: np.ndarray) -> np.ndarray:
+    """Σ(x) / (2 ρ_s r_s) for an NFW halo (Wright & Brainerd 2000)."""
+    x = np.asarray(x, float)
+    out = np.full_like(x, 1.0 / 3.0)
+    lo, hi = x < 1, x > 1
+    out[lo] = (1 - 2 / np.sqrt(1 - x[lo] ** 2) * np.arctanh(np.sqrt((1 - x[lo]) / (1 + x[lo])))) / (
+        x[lo] ** 2 - 1
+    )
+    out[hi] = (1 - 2 / np.sqrt(x[hi] ** 2 - 1) * np.arctan(np.sqrt((x[hi] - 1) / (1 + x[hi])))) / (
+        x[hi] ** 2 - 1
+    )
+    return out
+
+
+def _m_nfw(x):
+    return np.log1p(x) - x / (1 + x)
+
+
+def nfw_from_m500(m500: float, z: float) -> dict:
+    """NFW r_s (Mpc) and ρ_s (M☉/Mpc³) from M500 (M☉): Duffy et al. 2008 c200(M200) (full
+    sample), solved by iteration (model_prediction; Planck18 cosmology)."""
+    from astropy.cosmology import Planck18 as cosmo
+
+    rho_c = cosmo.critical_density(z).to("Msun / Mpc3").value
+    h = cosmo.H0.value / 100.0
+    m200 = m500 * 1.4
+    for _ in range(50):
+        c = 5.71 * (m200 * h / 2e12) ** -0.084 * (1 + z) ** -0.47
+        r200 = (3 * m200 / (4 * math.pi * 200 * rho_c)) ** (1 / 3)
+        rs = r200 / c
+        rho_s = m200 / (4 * math.pi * rs**3 * _m_nfw(c))
+        # r500 where the mean density is 500 ρ_c: solve on a grid of x = r/rs
+        xs = np.geomspace(0.05, c, 4000)
+        mean_rho = 3 * rho_s * _m_nfw(xs) / xs**3
+        x500 = float(np.interp(-500 * rho_c, -mean_rho, xs))
+        m500_model = 4 * math.pi * rho_s * rs**3 * _m_nfw(x500)
+        m200 *= m500 / m500_model
+    return {"rs_mpc": rs, "rho_s": rho_s, "c200": c, "m200": m200}
+
+
+def nfw_reduced_shear(theta_arcsec, m500: float, z_l: float, z_s: float) -> np.ndarray:
+    """Tangential reduced shear g_t(θ) of the NFW halo of ``m500`` at z_l for sources at z_s."""
+    from astropy import constants as const
+    from astropy import units as u
+    from astropy.cosmology import Planck18 as cosmo
+
+    p = nfw_from_m500(m500, z_l)
+    # flat cosmology: D_ls = (χ_s - χ_l) / (1 + z_s)
+    chi_l, chi_s = (cosmo.comoving_distance(z).to("Mpc").value for z in (z_l, z_s))
+    d_l, d_s, d_ls = chi_l / (1 + z_l), chi_s / (1 + z_s), (chi_s - chi_l) / (1 + z_s)
+    sig_crit = (
+        (const.c**2 / (4 * math.pi * const.G) * d_s / (d_l * d_ls) / u.Mpc).to("Msun / Mpc2").value
+    )
+    x = np.radians(np.asarray(theta_arcsec, float) / 3600.0) * d_l / p["rs_mpc"]
+    k0 = p["rho_s"] * p["rs_mpc"] / sig_crit
+    kappa = 2 * k0 * _nfw_f(x)
+    gamma = 4 * k0 * _nfw_h(x) / x**2 - kappa
+    return gamma / (1 - kappa)
+
+
+def cmd_calibrate(args) -> dict:
+    """Shear responsivity R = measured <e_t> / predicted <g_t> over the ``validate`` profiles
+    (4 SZ clusters x 3 annuli), weighted least squares; one fit per assumed z_s (derived).
+    Cluster-member dilution and miscentring lower the measured shear, so R is biased low."""
+    val = json.loads((paths.repo_root() / "results" / "w5_shear" / "validate.json").read_text())
+    out = {"per_zs": {}}
+    for zs in CAL_ZS:
+        num = den = 0.0
+        rows = []
+        for name, r in val["results"].items():
+            m500 = r["m500_1e14"] * 1e14
+            for prof in r["profile"]:
+                r_in, r_out = prof["r_arcsec"]
+                th = np.sqrt(np.linspace(r_in**2, r_out**2, 200))  # uniform in area
+                pred = float(np.mean(nfw_reduced_shear(th, m500, r["z"], zs)))
+                rows.append(
+                    {
+                        "cluster": name,
+                        "r_arcsec": [r_in, r_out],
+                        "g_t_pred": pred,
+                        "e_t": prof["mean_e_t"],
+                        "err": prof["err"],
+                    }
+                )
+                num += prof["mean_e_t"] * pred / prof["err"] ** 2
+                den += pred**2 / prof["err"] ** 2
+        r_fit, r_err = num / den, 1.0 / math.sqrt(den)
+        chi2 = sum((q["e_t"] - r_fit * q["g_t_pred"]) ** 2 / q["err"] ** 2 for q in rows)
+        out["per_zs"][f"{zs:g}"] = {
+            "R": r_fit,
+            "R_err": r_err,
+            "chi2": chi2,
+            "dof": len(rows) - 1,
+            "rows": rows,
+        }
+        print(f"z_s={zs}: R = {r_fit:.2f} +- {r_err:.2f}, chi2 {chi2:.1f}/{len(rows) - 1}")
+    return out
 
 
 def cmd_validate(args) -> dict:
@@ -347,11 +539,182 @@ def cmd_screen(args) -> dict:
     return out
 
 
-def density_limits(fields: dict) -> dict:
+SURVEY_THETA_E_ARCSEC = (
+    60.0,
+    120.0,
+    240.0,
+)  # 30″ blind (D-066); 4′ meets the 6′ count floor
+COVERAGE_MIN = 0.8  # annulus count >= this x the field median (ASSUMPTION)
+MIN_TILE_STARS = 30  # fewer stars: the tile uses the field median PSF sigma (ASSUMPTION)
+SURVEY_NULL_CHUNK = 10  # rotation draws per sparse product (memory: N_gal x chunk complex)
+
+
+def load_survey_field(name: str, cache: Path) -> dict:
+    """Cached tile rows of one Deep Field, PSF-deconvolved per tile, in the field tangent plane."""
+    tiles = q1_tiles(cache)[name]
+    gals, stars = (
+        [fetch_tile(t, False, cache) for t, _, _ in tiles],
+        [fetch_tile(t, True, cache) for t, _, _ in tiles],
+    )
+    psfs = [star_psf(st) if len(st) >= MIN_TILE_STARS else None for st in stars]
+    sig_med = float(np.median([p["sigma_px_median"] for p in psfs if p]))
+    ra0 = float(np.degrees(np.angle(np.mean(np.exp(1j * np.radians([t[1] for t in tiles]))))))
+    dec0 = float(np.mean([t[2] for t in tiles]))
+    cols = {"ra": [], "dec": [], "e": [], "sig": [], "tile": []}
+    for (tid, _, _), g, p in zip(tiles, gals, psfs, strict=True):
+        if not len(g):
+            continue
+        sig = p["sigma_px_median"] if p else sig_med
+        cols["ra"].append(np.asarray(g["ra"], float))
+        cols["dec"].append(np.asarray(g["dec"], float))
+        cols["e"].append(galaxy_shapes(g, sig))
+        cols["sig"].append(np.full(len(g), sig))
+        cols["tile"].append(np.full(len(g), tid))
+    cat = Table({k: np.concatenate(v) for k, v in cols.items() if k != "e"})
+    for c in ("ellipticity", "position_angle", "semimajor_axis"):
+        cat[c] = np.concatenate([np.asarray(g[c], float) for g in gals if len(g)])
+    e = np.concatenate(cols["e"])
+    x, y = tangent_plane(cat["ra"], cat["dec"], ra0, dec0)
+    return {
+        "cat": cat,
+        "e": e,
+        "x": x,
+        "y": y,
+        "centre": (ra0, dec0),
+        "n_tiles": len(tiles),
+        "n_tiles_with_rows": int(sum(1 for g in gals if len(g))),
+        "psf_sigma_px": {"median": sig_med, "n_tiles_fallback": int(sum(p is None for p in psfs))},
+        "star_e_tiles": [
+            {"tileid": t, "mean_e1": p["mean_e1"], "mean_e2": p["mean_e2"], "err": p["mean_e_err"]}
+            for (t, _, _), p in zip(tiles, psfs, strict=True)
+            if p
+        ],
+    }
+
+
+def tile_shapes(cat: Table, rows: np.ndarray) -> np.ndarray:
+    """``galaxy_shapes`` of catalogue rows, each with its own tile's PSF sigma."""
+    out = np.full(len(rows), np.nan + 0j)
+    sig = np.asarray(cat["sig"], float)[rows]
+    for sv in np.unique(sig):
+        m = sig == sv
+        out[m] = galaxy_shapes(cat[rows[m]], float(sv))
+    return out
+
+
+def survey_field(name: str, cache: Path, seed: int) -> dict:
+    rng = np.random.default_rng([seed, list(PILOTS).index(name)])
+    f = load_survey_field(name, cache)
+    cat, x_all, y_all = f["cat"], f["x"], f["y"]
+    ok = np.isfinite(f["e"])
+    x, y, e = x_all[ok], y_all[ok], f["e"][ok]
+    res = {k: f[k] for k in ("centre", "n_tiles", "n_tiles_with_rows", "psf_sigma_px")}
+    res |= {"n_gal": len(cat), "n_resolved": int(ok.sum()), "theta_e": {}}
+    res["star_e_tiles"] = f["star_e_tiles"]
+    for te in SURVEY_THETA_E_ARCSEC:
+        r_in, r_out = 1.5 * te, 3.0 * te
+        step = GRID_STEP_OVER_THETA_E * te
+        gx, gy = np.meshgrid(
+            np.arange(x.min(), x.max() + step, step), np.arange(y.min(), y.max() + step, step)
+        )
+        am = es.ApertureMass(x, y, gx.ravel(), gy.ravel(), r_out, "pointmass", r_in, MIN_N)
+        n_med = float(np.median(am.n[am.n > 0]))
+        valid = am.n >= COVERAGE_MIN * n_med  # full annulus inside the footprint (masks aside)
+        cx, cy = gx.ravel()[valid], gy.ravel()[valid]
+        am = es.ApertureMass(x, y, cx, cy, r_out, "pointmass", r_in, MIN_N)
+        sv, sx = am.snr(e)
+        null = am.null_max(e, N_NULL, rng, chunk=SURVEY_NULL_CHUNK)
+        smax = float(np.nanmax(sv))
+        thr = float(np.quantile(null, 0.99))  # field-wise 1 % false-alarm threshold (ASSUMPTION)
+        tree = cKDTree(np.c_[cx, cy])
+        all_tree = cKDTree(np.c_[x_all, y_all])
+        det = []
+        for _ in range(N_INJ):
+            # off-grid: a random valid centre plus a uniform offset within one grid cell
+            k = rng.integers(len(cx))
+            ix, iy = cx[k] + rng.uniform(-step, step) / 2, cy[k] + rng.uniform(-step, step) / 2
+            rows = np.asarray(all_tree.query_ball_point([ix, iy], r_out + step), int)
+            gi = RESPONSIVITY * radial_shear(x_all[rows], y_all[rows], ix, iy, te, r_in)
+            sub = sheared_catalogue(cat[rows], gi, rng)
+            sub["sig"] = cat["sig"][rows]
+            ei = tile_shapes(sub, np.arange(len(rows)))
+            oi = np.isfinite(ei)
+            near = tree.query_ball_point([ix, iy], step)
+            am_i = es.ApertureMass(
+                x_all[rows][oi],
+                y_all[rows][oi],
+                cx[near],
+                cy[near],
+                r_out,
+                "pointmass",
+                r_in,
+                MIN_N,
+            )
+            si, _ = am_i.snr(ei[oi])
+            det.append(bool(np.any(si > thr)))  # NaN (too few sources) counts as missed
+        flags = []
+        for i in np.flatnonzero(sv > thr):
+            ra, dec = offsets_to_radec(cx[i], cy[i], *f["centre"])
+            flags.append({"ra": ra, "dec": dec, "S": float(sv[i]), "S_cross": float(sx[i])})
+        # Known mass (CLUSTERS) inside the field: S at the nearest valid centre must be < 0.
+        known = {}
+        for cname, (cra, cdec, *_rest) in CLUSTERS.items():
+            kx, ky = tangent_plane([cra], [cdec], *f["centre"])
+            d, i = tree.query([kx[0], ky[0]])
+            if d <= step:
+                known[cname] = {"S": float(sv[i]), "S_cross": float(sx[i]), "offset_arcsec": d}
+        res["theta_e"][f"{te:g}"] = {
+            "known_clusters": known,
+            "n_centres": int(len(cx)),
+            "median_annulus_n": n_med,
+            "area_deg2": float(len(cx) * step**2 / 3600.0**2),
+            "S_max": smax,
+            "S_min": float(np.nanmin(sv)),
+            "S_cross_absmax": float(np.nanmax(np.abs(sx))),
+            "null_max_q50": float(np.median(null)),
+            "threshold_p01": thr,
+            "p_random_of_S_max": float(np.mean(null >= smax)),
+            "flags": flags,
+            "injection_efficiency": float(np.mean(det)),
+        }
+        print(
+            name,
+            te,
+            json.dumps({k: v for k, v in res["theta_e"][f"{te:g}"].items() if k != "flags"}),
+            flush=True,
+        )
+    return res
+
+
+def offsets_to_radec(x: float, y: float, ra0: float, dec0: float) -> tuple[float, float]:
+    """Inverse of :func:`tangent_plane` for one point (x West, y North, arcsec)."""
+    k = math.pi / 180.0 / 3600.0
+    xi, eta = -x * k, y * k
+    d0 = math.radians(dec0)
+    den = math.cos(d0) - eta * math.sin(d0)
+    ra = ra0 + math.degrees(math.atan2(xi, den))
+    dec = math.degrees(math.atan2(math.sin(d0) + eta * math.cos(d0), math.hypot(xi, den)))
+    return float(ra % 360.0), float(dec)
+
+
+def cmd_survey(args) -> dict:
+    """All Q1 Deep Fields (tiles from ``fetch``), one process per field."""
+    from concurrent.futures import ProcessPoolExecutor
+
+    cache = paths.data_root() / "euclid_q1_shear"
+    names = [args.field] if args.field else list(PILOTS)
+    with ProcessPoolExecutor(min(len(names), args.workers)) as ex:
+        futs = {n: ex.submit(survey_field, n, cache, args.seed) for n in names}
+        out = {n: fu.result() for n, fu in futs.items()}
+    out["limits"] = density_limits(out, SURVEY_THETA_E_ARCSEC)
+    return out
+
+
+def density_limits(fields: dict, theta_e=THETA_E_ARCSEC) -> dict:
     """95 % upper limit on the sky density of negative point masses per θ_E, with zero flags:
     n95 = 3 / Σ ε_i A_i over fields (derived; Poisson, efficiency from the injections)."""
     out = {}
-    for te in THETA_E_ARCSEC:
+    for te in theta_e:
         k = f"{te:g}"
         rows = [f["theta_e"][k] for f in fields.values()]
         n_flags = sum(len(r["flags"]) for r in rows)
@@ -445,6 +808,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("validate")
+    sub.add_parser("fetch")
+    sub.add_parser("calibrate")
+    sv = sub.add_parser("survey")
+    sv.add_argument("--field", choices=list(PILOTS))
+    sv.add_argument("--seed", type=int, default=20261009)
+    sv.add_argument("--workers", type=int, default=3)
     pc = sub.add_parser("pacheck")
     pc.add_argument("-n", type=int, default=25)
     s = sub.add_parser("screen")
@@ -453,7 +822,14 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
     out_dir = paths.repo_root() / "results" / "w5_shear"
     out_dir.mkdir(parents=True, exist_ok=True)
-    res = {"validate": cmd_validate, "screen": cmd_screen, "pacheck": cmd_pacheck}[args.cmd](args)
+    res = {
+        "calibrate": cmd_calibrate,
+        "fetch": cmd_fetch,
+        "survey": cmd_survey,
+        "validate": cmd_validate,
+        "screen": cmd_screen,
+        "pacheck": cmd_pacheck,
+    }[args.cmd](args)
     meta = {
         "provenance": {
             "shapes": "observed (Euclid Q1 MER catalogue, IRSA TAP; SExtractor moments)",
