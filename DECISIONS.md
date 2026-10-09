@@ -3334,7 +3334,7 @@ fitted as a smooth cubic B-spline (3000-d knots) + m F_i(t − τ) + a F_i(t −
 ≤ 40 d; r = a/m. The window maximum of r (|lag| ≥ 10 d) is compared with same-width windows at off-model lags,
 and injections go through the same window maximum. A system is screened only if the main-term fit recovers its
 published delay. Result: no copy (lowest p = 0.02 of 12 windows, on the main-image wing); sensitivity
-r95 ≈ 0.47–2.7 per system and direction, i.e. only copies comparable to the main image are excluded.
+r95 ≈ 0.38–2.4 per system and direction, i.e. only copies comparable to the main image are excluded.
 
 **Alternatives rejected.**
 - Microlensing B-splines with 120–730-d knots: the published delay is not recovered (6 of 7 systems off by
@@ -3342,9 +3342,9 @@ r95 ≈ 0.47–2.7 per system and direction, i.e. only copies comparable to the 
 - Quoting B-on-A1's ~10⁻² sensitivity: quasar variability is red (time-scales ≳ 100 d), so a copy at lags
   ≲ 100 d is nearly collinear with the main image and with a delay error. The same fit recovers r = 0.1 within 0.03
   on a synthetic curve with 20-d variability (`tests/test_s3_hybrid.py`), so the loss is the data, not the code.
-- Treating the r95 values as limits: window-maximum injection efficiencies scatter from 0.5 to 5.6 over 8 trials,
+- Treating the r95 values as limits: window-maximum injection efficiencies scatter from 0.67 to 4.7 over 8 trials,
   the r(δ) scans have a positive offset of 0.1–1 at all lags (template–microlensing degeneracy), and the null
-  windows overlap (approximate p). They are sensitivities.
+  windows overlap and are not matched in |lag| (approximate p). They are sensitivities.
 
 **Evidence.** `results/s3_hybrid/summary.json`, `scans.json`; CHANGELOG 2026-10-09.
 

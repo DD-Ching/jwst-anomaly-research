@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-09: S3 hybrid images: no copies in 6 COSMOGRAIL doubles; sensitivity only r ≈ 0.5–3 (D-072)
+## 2026-10-09: S3 hybrid images: no copies in 6 COSMOGRAIL doubles; sensitivity only r ≈ 0.4–2.4 (D-072)
 - Hypothesis (A1 P2): image j carries a faint copy at lag s_i − s_j; the copy into the trailing image can precede the
   leading image. Ordinary mimics: quasar red noise (correlates at all lags), delay errors, microlensing.
 - Data: COSMOGRAIL XIX (CDS J/A+A/640/A105), 7 doubles with secure delays. SIS lag window for f ∈ [0, 1]
@@ -11,14 +11,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   with a wrong-sign minimum at τ_BA = −206 d (published +171.5 d) and is not screened.
 - **Result:** no copy. Window maxima against same-width off-model windows (|lag| < 10 d excluded from both): lowest
   p = 0.02 (J1226 into-trail, a window on the visible main-image wing) of 12 windows; the windows overlap, so p is
-  approximate and the run-wide chance of p ≤ 0.02 is ~0.2. Sensitivity r95 ≈ 0.47 (J1455 into-trail) to 2.7: only
+  approximate and the run-wide chance of p ≤ 0.02 is ~0.2. Sensitivity r95 ≈ 0.38 (J1455 into-trail) to 2.4: only
   copies comparable to the main image are excluded, far from B-on-A1's ~10⁻². Not quoted as limits: the
-  window-maximum injection efficiency is 0.5–5.6 (> 1 is the copy–main degeneracy; capped at 1 in r95).
+  window-maximum injection efficiency is 0.67–4.7 (> 1 is the copy–main degeneracy; capped at 1 in r95), the
+  null windows are not matched in |lag| (windows next to the wing get low p), and for HE0047 the delay gate
+  (±14.5 d around 10.4 d) is weak.
 - **Failed approaches (rules):** microlensing splines with 120–730-d knots absorb the quasar variability and fit any
   delay (6 of 7 published delays missed); use the delay recovery as the gate for every setting. Quasar variability
   is too slow for copies at lags ≲ 100 d: the copy is collinear with the main image (a synthetic 20-d DRW recovers
   r = 0.1 ± 0.03, so the loss is the data). /code-review: inject through the window maximum, not the fit at the
-  injected lag; hold the observed window to the null's wing rule.
+  injected lag; hold the observed window to the null's wing rule; inject a smoothed copy (the template's noise
+  otherwise rides along); fit the main term at the validated delay.
 - **Next:** S3 needs a sharp template: SN Refsdal / SN H0pe pre-explosion and post-peak HST/JWST imaging at the
   model lags (B-on-A1: a few × 10⁻²). Low priority; S1 and S2 (DES-SN5YR) first.
 

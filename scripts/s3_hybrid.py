@@ -26,7 +26,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import asdict, dataclass
+from itertools import repeat
 from pathlib import Path
 
 import numpy as np
@@ -75,9 +78,13 @@ class Params:
     lag_step: float = 2.0  # days; lag grid
     null_span: float = 3.0  # null windows cover |lag| <= null_span * window span (ASSUMPTION)
     min_points: int = 40  # overlapping epochs needed for a fit
-    wing: float = (
-        10.0  # days; |lag| below this is the main-term wing, excluded everywhere (ASSUMPTION)
-    )
+    n_inject: int = 8  # injection trials per window
+    min_null: int = 10  # null windows needed for a p-value
+    min_eff: float = 0.5  # injection efficiency needed to quote a sensitivity (ASSUMPTION)
+    val_range: float = 300.0  # days; delay search range of the known-case gate
+    val_sigma: float = 3.0  # gate tolerance in published sigma, plus 2 lag steps (ASSUMPTION)
+    smooth: float = 5.0  # days; boxcar half-width of the noise-reduced injection template
+    wing: float = 10.0  # days; |lag| < wing is the main-term wing, excluded everywhere (ASSUMPTION)
     inject_r: float = 0.05  # injected copy / main flux ratio
     quantile: float = 0.95  # one-sided level for the window statistic and the limit (ASSUMPTION)
 
@@ -193,6 +200,25 @@ def scan(lc: dict, src: str, dst: str, tau_ji: float, lags: np.ndarray, p: Param
     )
 
 
+def smooth_curve(t: np.ndarray, f: np.ndarray, half_width: float) -> np.ndarray:
+    """Boxcar mean of a light curve over +-half_width days (a noise-reduced injection template)."""
+    lo = np.searchsorted(t, t - half_width, side="left")
+    hi = np.searchsorted(t, t + half_width, side="right")
+    c = np.r_[0.0, np.cumsum(f)]
+    return (c[hi] - c[lo]) / (hi - lo)
+
+
+def finite(x):
+    """JSON-safe copy: non-finite floats become None (strict parsers reject NaN)."""
+    if isinstance(x, dict):
+        return {k: finite(v) for k, v in x.items()}
+    if isinstance(x, list | tuple):
+        return [finite(v) for v in x]
+    if isinstance(x, float | np.floating):
+        return float(x) if np.isfinite(x) else None
+    return x
+
+
 def window_stat(lags: np.ndarray, r: np.ndarray, lo: float, hi: float, wing: float = 0.0) -> float:
     """Window maximum of r, ignoring lags on the main-term wing (|lag| < wing)."""
     sel = (lags >= lo) & (lags <= hi) & (np.abs(lags) >= wing) & np.isfinite(r)
@@ -201,7 +227,7 @@ def window_stat(lags: np.ndarray, r: np.ndarray, lo: float, hi: float, wing: flo
 
 def validate_delay(lc: dict, system: System, p: Params) -> dict:
     """Known case: the main-term fit quality peaks near the published delay."""
-    taus = np.arange(-300.0, 300.0 + p.lag_step, p.lag_step)
+    taus = np.arange(-p.val_range, p.val_range + p.lag_step, p.lag_step)
     chi = []
     for tau in taus:
         main = interp_template(lc["t"], lc["A"], lc["t"] - tau, p.max_gap)
@@ -220,16 +246,17 @@ def validate_delay(lc: dict, system: System, p: Params) -> dict:
     return {"best_tau_BA": best, "published_tau_BA": -system.dt_ab, "dt_err": system.dt_err}
 
 
-def run_system(system: System, cache: Path, p: Params, rng: np.random.Generator) -> dict:
+def run_system(system: System, cache: Path, p: Params, seed: int) -> dict:
+    rng = np.random.default_rng([seed, SYSTEMS.index(system)])
     lc = read_ab(fetch(system, cache))
     win = lag_window(system)
-    lead, trail, delay = win["lead"], win["trail"], win["delay"]
+    lead, trail = win["lead"], win["trail"]
     res = {"system": asdict(system), "n_epochs": int(len(lc["t"])), "window": win}
     v = validate_delay(lc, system, p)
     miss = abs(v["best_tau_BA"] - v["published_tau_BA"])
     # The sign must match and the delay must differ from 0, or a delay-free fit would pass.
     v["passed"] = bool(
-        miss <= 3 * system.dt_err + 2 * p.lag_step
+        miss <= p.val_sigma * system.dt_err + 2 * p.lag_step
         and np.sign(v["best_tau_BA"]) == np.sign(v["published_tau_BA"])
         and abs(v["best_tau_BA"]) > 2 * p.lag_step
     )
@@ -238,13 +265,16 @@ def run_system(system: System, cache: Path, p: Params, rng: np.random.Generator)
     if not v["passed"]:  # the template fit cannot find the known delay: no screen on this system
         res["directions"] = out
         return res
+    # The main term uses the validated delay (inside the gate around the published one); the lag
+    # windows keep the published delay.
+    tau_fit = abs(v["best_tau_BA"])
     for name, (src, dst, tau) in {
-        "into_trail": (lead, trail, delay),
-        "into_lead": (trail, lead, -delay),
+        "into_trail": (lead, trail, tau_fit),
+        "into_lead": (trail, lead, -tau_fit),
     }.items():
         lo, hi = win[name]
         span = hi - lo
-        reach = p.null_span * max(span, delay)
+        reach = p.null_span * span
         lags = np.arange(-reach - span, reach + span + p.lag_step, p.lag_step)
         r = scan(lc, src, dst, tau, lags, p)
         # Null: same-width windows off the model window; the wing is excluded from both statistics.
@@ -255,16 +285,20 @@ def run_system(system: System, cache: Path, p: Params, rng: np.random.Generator)
         ]
         null = np.array([v for v in null if np.isfinite(v)])
         obs = window_stat(lags, r, lo, hi, p.wing)
-        ok_null = len(null) >= 10 and np.isfinite(obs)
+        ok_null = len(null) >= p.min_null and np.isfinite(obs)
         thresh = float(np.quantile(null, p.quantile)) if ok_null else np.nan
         # Injection through the screen statistic: a copy of amplitude inject_r at a random lag in
         # the window, then the window maximum on the same lag grid, minus the maximum without it.
         m = fit_copy(lc["t"], lc[dst], lc["e" + dst], lc["t"], lc[src], tau, None, p)[1]
         sel = (lags >= lo) & (lags <= hi) & (np.abs(lags) >= p.wing)
         rec = []
-        for _ in range(8 if ok_null else 0):
-            lag = rng.uniform(lo, hi)
-            copy = interp_template(lc["t"], lc[src], lc["t"] - tau - lag, p.max_gap)
+        # Inject only where the statistic looks (windows are one-sided, so clip at the wing), and
+        # inject a smoothed copy so the template's own noise is not injected with it.
+        lo_i, hi_i = (lo, min(hi, -p.wing)) if hi < 0 else (max(lo, p.wing), hi)
+        clean = smooth_curve(lc["t"], lc[src], p.smooth)
+        for _ in range(p.n_inject if ok_null and hi_i > lo_i else 0):
+            lag = rng.uniform(lo_i, hi_i)
+            copy = interp_template(lc["t"], clean, lc["t"] - tau - lag, p.max_gap)
             ok = np.isfinite(copy)
             sub = {k: v[ok] for k, v in lc.items()}
             f_inj = sub[dst] + p.inject_r * m * (copy[ok] - 1.0)
@@ -284,7 +318,7 @@ def run_system(system: System, cache: Path, p: Params, rng: np.random.Generator)
         eff = float(np.nanmedian(rec)) if rec else np.nan
         # Sensitivity, not a limit (D-072): a copy r adds ~ eff * r to the window maximum; the
         # one-sided 95 % bound (ASSUMPTION) uses the null spread; eff > 1 is degeneracy, capped.
-        if ok_null and eff > 0.5:
+        if ok_null and eff > p.min_eff:
             limit = float(max(obs, np.median(null)) + (thresh - np.median(null))) / min(eff, 1.0)
         else:
             limit = np.nan
@@ -313,9 +347,13 @@ def main(argv=None) -> None:
     args = ap.parse_args(argv)
     p = Params()
     cache = paths.data_root() / "cosmograil_xix"
-    rng = np.random.default_rng(args.seed)
     OUT.mkdir(parents=True, exist_ok=True)
-    results = [run_system(s, cache, p, rng) for s in SYSTEMS]
+    for s in SYSTEMS:  # fetch serially (CDS etiquette), fit in a process pool
+        fetch(s, cache)
+    os.environ.setdefault("OMP_NUM_THREADS", "1")
+    with ProcessPoolExecutor(max_workers=min(len(SYSTEMS), os.cpu_count() or 1)) as pool:
+        results = list(pool.map(run_system, SYSTEMS, repeat(cache), repeat(p), repeat(args.seed)))
+    results = finite(results)
     summary = {"params": asdict(p), "source": CDS, "provenance": "derived", "systems": []}
     for res in results:
         row = {
@@ -327,8 +365,12 @@ def main(argv=None) -> None:
             row[k] = {kk: d[kk] for kk in d if kk not in ("lags", "r")}
         summary["systems"].append(row)
         print(json.dumps(row))
-    (OUT / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
-    (OUT / "scans.json").write_text(json.dumps(results) + "\n")
+    scans = {
+        "provenance": "derived r(lag) scans; windows are model_prediction (SIS, ASSUMPTION)",
+        "systems": results,
+    }
+    (OUT / "summary.json").write_text(json.dumps(summary, indent=1, allow_nan=False) + "\n")
+    (OUT / "scans.json").write_text(json.dumps(scans, allow_nan=False) + "\n")
 
 
 if __name__ == "__main__":
