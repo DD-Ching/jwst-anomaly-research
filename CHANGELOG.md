@@ -2,6 +2,12 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: D1 handoff: TDCOSMO 2025 per-lens files listed
+- File names in TDCOSMO2025_public d7f38db recorded in SOURCES.md: D_dt chains for the 6 D-073 lenses plus DES0408 and
+  WGD2038; new per-lens D_d only inside hierArc likelihoods. Next: TASKS "Now" 0.
+- An equal-weight NE2001/YMW16 mixture cannot flag more than the per-model runs (its tail is their average); a wider
+  ISM error only lowers the pulls. Neither can turn the FRB null into a flag, so both wait.
+
 ## 2026-10-09: D1 FRBs with YMW16 beside NE2001: still null (D-073 addendum)
 - Question: is the D-073 FRB null (and its 3.26σ extreme) an artefact of NE2001? Ordinary explanation for any
   low-side outlier: Galactic-model error at low latitude. A flag under YMW16 alone would have needed vetting.
@@ -13,9 +19,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `frb_ism_compare.ecsv`.
 - **Failed route:** `pip install pygedm` fails in the cloud image (its NE2001 extension needs libf2c) and the
   package import fails on current SciPy (`integrate.simps`); built without `ne21c`, `ymw16` imported directly.
-- **Next:** TASKS "Now" 0: D_dt leave-one-out on the TDCOSMO 2025 chains (file inventory there; adds DES0408 and
-  WGD2038). A model-marginalised ISM term cannot flag more than the per-model runs (its tail is their average), so it
-  is low value.
+- **Next:** TASKS "Now" 0 (per-lens TDCOSMO D_d; a model-marginalised ISM term).
 
 ## 2026-10-09: S2 on DES-SN5YR: no flat-kernel term; γ < 0.019 mag per unit T/⟨T⟩ (D-070 addendum)
 - Same chain as D-070 (`scripts/s2_flat_kernel.py --sample des`, `results/s2_flat_kernel/fit_des_*.json`) on the
