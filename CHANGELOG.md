@@ -2,6 +2,12 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: Efficiency rules 8–13 for routine cycles (owner text)
+- docs/cloud-routine-prompt.md "EFFICIENCY RULES" gets the owner's rules 8–13: merge main before the final review;
+  state-file conflict handling (own CHANGELOG block first, both entries kept); one CI wait per head SHA; verify
+  outcomes on GitHub; agents and the owner share the DD-Ching account; stop when the next unit needs a human.
+- **Owner action:** paste the updated prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`).
+
 ## 2026-10-09: D-064 addendum: archival HST of the untestable rejected pairs; J0130+0725 has no lens light to F814W ≈ 23
 - Coverage: 2 of the 11 untestable pairs have HST F814W imaging (program 17308), and so do 2 controls.
 - Method: a two-PSF fit, halo correction, and the residual flux between the images, with empirical sky-aperture
