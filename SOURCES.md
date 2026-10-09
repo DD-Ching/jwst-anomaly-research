@@ -1003,6 +1003,9 @@ Exploration Program."
   Lemon et al. 2023, MNRAS 520, 3305 (arXiv:2206.07714), `J/MNRAS/520/3305/table1`; Inada et al. 2008, AJ 135, 496,
   `J/AJ/135/496/table2,table3`; Inada et al. 2010, AJ 140, 403, `J/AJ/140/403/table2,table3`; Inada et al. 2012,
   AJ 143, 119, `J/AJ/143/119/table3,table4`; Hennawi et al. 2006, AJ 131, 1, `J/AJ/131/1/binqso`.
+- MAST HAP cutouts (`astroquery.mast.Hapcut`, https://mast.stsci.edu/hapcut/api/v0.1/astrocut ; accessed 2026-10-09):
+  HST ACS/WFC F814W skycell cutouts from program 17308 (J0130+0725, J0728+2607, J2308+3201) and WFC3/UVIS F814W
+  from program 17199 (SDSS J1515+1511), used by D-064's archival HST addendum. Not stored (outputs/, gitignored).
 
 ## Euclid Q1 MER catalogue (accessed 2026-10-09; D-065)
 

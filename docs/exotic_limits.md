@@ -1228,6 +1228,39 @@ The ordinary explanations are binary quasars, unrelated pairs and lens galaxies 
 - Most rejected pairs are closer than LS can resolve (46 "too close"; the Lemon UQP median separation is 1.22″).
 - One pair (J0041−5350) is not decided: its LS pair (3.3″) is not the catalogued one (1.1″).
 
+**Archival HST follow-up of the 11 untestable pairs** (`scripts/w12_niq_hst.py`; `results/w12_niq/hst_residuals.ecsv`,
+`hst_injections.ecsv`, `hst_residuals.jpg`; MAST HAP cutouts).
+- Coverage: HST F814W imaging exists for 2 of the 11 pairs (J0130+0725, J0728+2607; ACS, program 17308, 674 s)
+  and for 2 of the 5 control lenses (J2308+3201, ACS 17308; SDSS J1515+1511, WFC3/UVIS 17199). The other 9 pairs
+  have no HST imaging of any kind within 10″ in MAST (`Observations.query_region`, 2026-10-09).
+- Method:
+  - two point sources with a shared Moffat profile plus a background, fitted on a stamp around the pair;
+  - the residual of each image's PSF halo is removed, using its radial profile on the side facing away from the
+    other image;
+  - the residual flux is summed in the pair-diameter circle beyond 0.3″ from each image;
+  - its error is the larger of two estimates: the pixel MAD times a drizzle noise-correlation factor (≈ 1.5), and
+    the scatter of same-area apertures on empty sky in the full cutout. The second wins (≈ 2.3× the first) and
+    includes large-scale background structure. Missing pixels are masked;
+  - the fitted pair must match the catalogued separation within 0.5″.
+  Thresholds are ASSUMPTIONs (`Params`: 5σ, 0.3″ core mask).
+- Validation (the chain is trusted only because of these):
+  - both control lenses show their lens galaxies at S/N 42 (J2308, F814W 21.2) and 16 (J1515, F814W 21.8);
+  - an early-type lens galaxy (Sersic n = 4, r_eff 0.3″) injected at the SIS-predicted position into the real
+    J0130 stamp, through the whole chain (peak finding, fit, pair check, residual), is recovered at 51 / 20 / 8.0 /
+    3.2 / 1.3σ above the baseline for F814W = 21 / 22 / 23 / 24 / 25.
+- **J0130+0725 (z = 1.54, 2.06″): no residual (S/N 0.45). Limit F814W ≈ 23.0**: the faintest injection in the
+  unbroken run recovered at ≥ 5σ above the baseline. The noise-only 5σ limit is 23.7. An ordinary lens needs
+  m_z ≈ 19.4 (typical) or 21.7 (conservative, 2σ under-luminous). Assuming F814W − z ≈ 0–0.6 for the lens
+  (ASSUMPTION), that is F814W ≈ 19.4–20.0 (typical) or 21.7–22.3 (conservative). The limit is ≈ 3.5 mag fainter
+  than a typical lens and ≥ 0.7 mag fainter than the conservative one. No ordinary lens galaxy is visible. The leading ordinary explanation remains a binary quasar
+  (Lemon et al. 2023 classify it as a UQP), and it is untested here: spectra of both images, or the flux-ratio
+  stability between epochs, are needed. It is **not** a candidate until that test runs (scripts/CLAUDE.md).
+- **J0728+2607 (z = 1.03, 2.15″): inconclusive.** S/N 5.0 (F814W 23.5 if real), but the stamp shows the residual at
+  the image cores (core mismatch of the Moffat model), plus a compact spot about 0.25″ from image B, inside the
+  mask. An empirical PSF (a star in the same visit, or a focus-matched PSF model) is needed before any statement.
+- The halo correction and the empirical aperture noise are essential. With white-noise errors and no halo
+  correction, J0130 read S/N 26 and J0728 35, from symmetric PSF-halo mismatch alone.
+
 **Consequence for D-056.** D-056's quasar-class limits assume that a dark lens gives "none" (true). Its "none"
 systems were explained by literature lens galaxies, never by LS. This measurement confirms the D-056 vetting finding
 (13 of 16 "none" systems had a literature lens galaxy): at ≤ 3″, LS DR10 cannot show a lens galaxy, so only

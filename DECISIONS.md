@@ -3077,6 +3077,25 @@ colour-mismatched, 2 are catalogued binaries and 1 has two redshifts; 11 remain 
 - The Tractor rows the test ran on are pinned too (sha256 of the sorted rows), and so are the brick summary and
   every VizieR table. VizieR error, empty or truncated responses are refused.
 
+**Addendum (2026-10-09, archival HST).** `scripts/w12_niq_hst.py` tests the pairs with HST F814W imaging: 2 of the 11,
+and 2 controls. It fits two Moffat PSFs, removes the halo residual from the profile facing away from the other image,
+and measures the residual flux between the images.
+- Validation: both controls are detected (S/N 42 and 16), and injections run through the whole chain are recovered
+  at ≥ 5σ above the baseline to F814W = 23. Errors are the larger of a drizzle-corrected pixel error and the
+  empirical scatter of same-area sky apertures; the latter dominates (≈ 2.3×).
+- Result:
+  - J0130+0725 has no lens light to F814W ≈ 23 (injection-calibrated): ≈ 3.5 mag below a typical ordinary lens and
+    ≥ 0.7 mag below a 2σ under-luminous one (F814W − z assumed 0–0.6). A binary quasar remains the untested
+    ordinary explanation;
+  - J0728+2607 is inconclusive (PSF-core residuals).
+- Rejected alternatives:
+  - the "combined_skycells" HAP cutout, whose WCS does not describe its pixels (separations of 10⁴″);
+  - an aperture statistic without the halo correction, which gave S/N 18–24 from PSF mismatch alone;
+  - white-noise aperture errors on drizzled pixels: S/N is ~3.5× too high once the drizzle correlation and
+    large-scale sky structure are included;
+  - injections that skip peak finding and the pair check (not the whole chain);
+  - a 0.15″ core mask, which left core residuals.
+
 **Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 11 colour-matched pairs;
 spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ tables add pairs of 2–3″.
 
