@@ -64,6 +64,9 @@ PSPL bumps. MOA adds shared-epoch tests (field- and chip-wide Poisson), a neighb
 - Fitting every shape pass before the shared-epoch cut wasted a chunk (131 / 133 flagged dip-shaped variables).
 - A fixed variable-baseline threshold (χ²/dof > 2) lost 73 / 188 vetted MOA injections (35 % of quiet carriers
   exceed it from red noise): use the field's 95th percentile of quiet χ²/dof (gb22 5.3, gb21 6.3; loss 1–2 / 130).
+- A far-field exotic fit (u0 ≫ 1) with cancelling giant fs/fb can mimic any smooth dip — require the fit domain
+  and a physical source flux (`exotic_in_domain`: u0 < 2, f_s ≤ 3 × DoPHOT or Gaia RP reference) and test a smooth
+  Gaussian dip (`smooth_dip`); gb20-R-4-0-49379 (a red giant's ~270-d dimming) passed every other test.
 - Uniform injection magnitudes re-weighted to the luminosity function leave n_eff ≈ 20–25 of 60: draw them from
   the LF (`--sampling lf`).
 - Streaming: a parent that downloads ranges and ships bytes to workers was OOM-killed (8–14 GB); each worker reads
