@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: J0728+2607 decided with an empirical PSF: no light between the images to F814W ≈ 23 (D-064 addendum)
+- The PSF is the median of 6 unsaturated Gaia stars in the same HST F814W cutout. The control lens J2308+3201 is
+  detected (S/N 49). J0728's residual is centred on its images, and after the halo correction there is no light
+  between them (S/N 1.6). Whole-chain injections are recovered to F814W = 23, ≥ 1.8 mag below any ordinary lens.
+  J0130+0725 has 1 usable star, so it has no empirical-PSF result.
+- Both D-064 HST pairs therefore have no visible deflector; binary quasars remain the untested ordinary explanation
+  (spectra of both images, or time delays, are needed).
+- **Failed approach:** the lens-vs-mirror aperture test. The control gives only 3.1σ, because real lens positions
+  depart from the SIS flux-ratio rule.
 ## 2026-10-09: W5/W1 radial-shear screen on Euclid Q1 MER shapes: pilot null, first limits at θ_E = 1–2′ (D-066)
 - Hypothesis: a negative-mass lens shears background galaxies radially; ordinary mass gives tangential shear.
 - **Convention found wrong in the archive docs:** MER `position_angle` is PA east of north (25 VIS cutouts, median

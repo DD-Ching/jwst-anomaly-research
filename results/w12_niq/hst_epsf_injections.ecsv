@@ -1,0 +1,16 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: name, datatype: string}
+# - {name: inject_mag, datatype: int64}
+# - {name: snr_above_baseline, datatype: float64}
+# meta: !!omap
+# - {provenance: simulated}
+# - {source: 'Sersic n=4, r_eff 0.3 arcsec at the SIS-predicted position; whole ePSF chain'}
+# schema: astropy-2.0
+name inject_mag snr_above_baseline
+J0728+2607 21 51.93819384214584
+J0728+2607 22 20.6766473438257
+J0728+2607 23 8.227987596269234
+J0728+2607 24 3.2765930387027806
+J0728+2607 25 1.3048034261244954
