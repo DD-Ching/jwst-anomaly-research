@@ -1026,6 +1026,11 @@ Exploration Program."
 - Pantheon+SH0ES distances (Scolnic et al. 2022, ApJ 938, 113, arXiv:2112.03863; Brout et al. 2022, ApJ 938, 110,
   arXiv:2202.04077): `Pantheon+SH0ES.dat` from https://github.com/PantheonPlusSH0ES/DataRelease (branch `main`,
   `Pantheon+_Data/4_DISTANCES_AND_COVAR/`), accessed 2026-10-09 (`scripts/s2_flat_kernel.py`, D-070).
+- DES-SN5YR data release (DES Collaboration 2024, ApJL 973, L14, arXiv:2401.02929), Dovekie re-analysis files:
+  https://github.com/des-science/DES-SN5YR (branch `main`, HEAD c9a4fca of 2026-01-28),
+  `4_DISTANCES_COVMAT/DES-Dovekie_HD.csv`, `DES-Dovekie_Metadata.csv`, `0_DATA/DES-SN5YR_DES/DES-SN5YR_DES_HEAD.FITS.gz`
+  (sha256 in `results/s2_flat_kernel/fit_des_alpha2.json`), accessed 2026-10-09 (D-070 addendum). The Dovekie
+  paper reference is not recorded here (not verified this cycle).
 - Legacy Surveys DR9 Tractor + DR9 photometric redshifts (Data Lab TAP tables `ls_dr9.tractor`, `ls_dr9.photo_z`,
   joined on `ls_id`; https://www.legacysurvey.org/dr9/), batched box queries, accessed 2026-10-09 (D-070).
 
