@@ -8,3 +8,4 @@
 2026-10-09T00:06:48Z queue: STOP gb20 00:06:00 | gb20: flags survive every test: ['gb20-R-4-0-49379'] — stop and report
 2026-10-09T00:15:51Z queue: START gb22 00:12:51 | 650/2200 injections, 142 s
 2026-10-09T00:24:53Z queue: START gb22 00:12:51 | 1800/2200 injections, 653 s
+2026-10-09T00:33:57Z queue: START gb21 00:28:20 | 450/2200 injections, 254 s
