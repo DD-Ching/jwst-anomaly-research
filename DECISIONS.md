@@ -3218,7 +3218,7 @@ shell densities per photometric region; discs with < 50 % of the region's median
 X_flat uses A3's (1+δ)^α with α = 2 (Poisson-unbiased N(N−1)/E, only shells expecting ≥ 1 galaxy).
 Errors come from χ²/dof scaling and a z-matched scramble. A 1 % leverage-trimmed refit is required, and
 limits are divided by the shot-noise dilution λ from Poisson-only columns and by the recovery ratio of a whole-chain
-injection on half-thinned counts. Result: null; γ < 0.027 mag per unit T/⟨T⟩ (one-sided 95 %).
+injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T⟩ (one-sided 95 %).
 
 **Alternatives rejected.**
 - α = 2 over all shells: shells with E ≪ 1 turn 3–5 galaxies into X ≈ 20–54 and fake a tight limit.

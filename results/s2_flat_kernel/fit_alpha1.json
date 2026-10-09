@@ -12,6 +12,7 @@
   "n_scramble": 1000,
   "n_chain": 20,
   "chain_gamma": 0.01,
+  "min_chain_ratio": 0.3,
   "min_coverage": 0.5,
   "seed": 69,
   "trim_pct": 99.0,
@@ -53,16 +54,16 @@
  "lambda_flat_trim": 0.11488211571405116,
  "chain_inject_gamma": 0.01,
  "chain_recovered_full": [
-  0.09368087222710293,
-  0.2856467997957982
+  -0.24185851158536997,
+  1.054172031230905
  ],
  "chain_recovered_trim": [
-  -0.11620065578215569,
-  1.075179882545572
+  0.09455745160699228,
+  0.4846491937838941
  ],
  "per_unit": "mag per unit fractional excess of the weighted foreground count (X)",
  "norm_mean_1_plus_x": 1.011038776537797,
- "chain_recovery_ratio": 0.001,
- "gamma_norm_upper95_one_sided": 1007.2893633279432,
+ "chain_recovery_ratio": -24.185851158536998,
+ "gamma_norm_upper95_one_sided": null,
  "gamma_norm_upper95_unit": "mag per unit T/<T>, corrected for shot-noise dilution"
 }

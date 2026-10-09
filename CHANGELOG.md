@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-09: S2 flat-kernel SN residuals: no flat-kernel term; γ < 0.027 mag per unit T/⟨T⟩ at α = 2 (D-070)
+## 2026-10-09: S2 flat-kernel SN residuals: no flat-kernel term; γ < 0.025 mag per unit T/⟨T⟩ at α = 2 (D-070)
 - Hypothesis (A3 P2b): SN Ia residuals track a flat-kernel foreground column ∫(1+δ)^α dχ, with sign +γ (fainter),
   after the lensing-kernel column is fitted. Ordinary mimics: lensing magnification, grey dust (colour), host-group
   overlap, leverage of a few sightlines, disc coverage, shot noise in the column (regression dilution).
@@ -11,15 +11,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **α = 2 (A3's fiducial), 505 SNe** (shells expecting ≥ 1 galaxy, so z_s ≳ 0.2; coverage and 5σ cuts remove 15):
   γ_F = −0.0003 ± 0.0018 per unit X (scramble p = 0.83); 1 % trimmed +0.0024 ± 0.0043; no colour term
   (−0.0017 ± 0.0012). Dilution λ = 0.92 (0.75 trimmed). Whole-chain injection (γ = 0.01 on full counts, measured on
-  half-thinned counts, 20 trials) recovers 1.04 (full) / 0.72 (trimmed) of the input; the limit is divided by 0.72.
-  **One-sided 95 %: γ < 0.027 mag per unit galaxy-traced T/⟨T⟩.** A3's fiducial is 0.01–0.04 (B-on-A3 expected a
+  half-thinned counts, 20 trials) recovers 1.04 (full) / 0.78 (trimmed) of the input; the limit is divided by 0.78.
+  **One-sided 95 %: γ < 0.025 mag per unit galaxy-traced T/⟨T⟩.** A3's fiducial is 0.01–0.04 (B-on-A3 expected a
   ~0.015 reach), and its kill threshold is 0.005. Converting to a matter column (bias b ~ 1–2, ASSUMPTION) weakens the
   limit by up to ~b².
 - Lensing column: γ_L = −0.017 ± 0.013 (the lensing sign, p = 0.21). The positive control is not detected, as
   expected at this N (Smith+2014: 1.4σ with 608 SNe).
 - **Failed approaches (rules):**
   - The linear (α = 1) flat column is 0.996-correlated with the lensing column in 2′ disc counts. It cannot separate
-    the kernels: the chain injection is not recovered.
+    the kernels: the chain injection is not recovered, so it sets no limit.
   - N(N−1)/E in shells with E ≪ 1 (z_g ≈ 0.045 in a 2′ disc) gave X ≈ 20–54 from 3–5 galaxies. These sightlines
     drove a spurious "γ < 0.0093" in the first pass. Require E ≥ 1 per shell.
   - Scrambled-column injections recover γ exactly but cannot see regression dilution. Use the Poisson-only λ and the

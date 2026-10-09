@@ -58,6 +58,7 @@ class Params:
     n_scramble: int = 1000
     n_chain: int = 20  # whole-chain injections (thinned counts)
     chain_gamma: float = 0.01  # mag per unit X injected in the chain test (A3's fiducial scale)
+    min_chain_ratio: float = 0.3  # ASSUMPTION: below this recovery the test sets no limit
     min_coverage: float = 0.5  # ASSUMPTION: disc galaxy count >= half the region median (edges)
     seed: int = 69
     trim_pct: float = 99.0  # ASSUMPTION: leverage cut for the robustness fit
@@ -406,22 +407,23 @@ def chain_injection(c, sne, y, err, z, p: Params, rng, gamma: float) -> np.ndarr
     pt = replace(p, min_shell_expect=p.min_shell_expect / 2)  # same shells after thinning
     out = []
     for _ in range(p.n_chain):
+        # SN i gets the whole sightline (counts, shells, weights) of a donor SN at similar z
         perm = z_perm(z, rng)
-        counts = c["counts"][perm]
-        region = c["region"][perm]
-        x_true = xcols(counts, region, sne, p, c["geo"])[1]
+        counts, region, sne_p = c["counts"][perm], c["region"][perm], sne[perm]
+        geo = [c["geo"][j] for j in perm]
+        x_true = xcols(counts, region, sne_p, p, geo)[1]
         thin = rng.binomial(counts.astype(int), 0.5).astype(float)
-        xl_t, xf_t, nb_t = xcols(thin, region, sne, pt, c["geo"])
+        xl_t, xf_t, nb_t = xcols(thin, region, sne_p, pt, geo)
         ct = {**c, "counts": thin, "region": region, "xl": xl_t, "xf": xf_t, "nbar": nb_t}
-        ct["ngal"] = c["ngal"][perm]
+        ct["ngal"], ct["geo"] = c["ngal"][perm], geo
         yi = y + gamma * np.nan_to_num(x_true)
         sel = selection(ct, yi, err, z, pt) & np.isfinite(x_true)
         xs = xf_t[sel]
         keep = xs <= np.percentile(xs, p.trim_pct)
         b = wls(yi[sel], err[sel], z[sel], xl_t[sel], xs)[0][3]
         bt = wls(yi[sel][keep], err[sel][keep], z[sel][keep], xl_t[sel][keep], xs[keep])[0][3]
-        lam_f = attenuation(ct, sne, pt, rng, sel, n_sim=5)[1]
-        lam_ft = attenuation(ct, sne, pt, rng, sel, p.trim_pct, n_sim=5)[1]
+        lam_f = attenuation(ct, sne_p, pt, rng, sel, n_sim=5)[1]
+        lam_ft = attenuation(ct, sne_p, pt, rng, sel, p.trim_pct, n_sim=5)[1]
         out.append((b / lam_f, bt / lam_ft))
     return np.array(out)
 
@@ -442,7 +444,7 @@ def fit(p: Params) -> dict:
     lim = limit(c, sne, y, err, z, sel, p, rng)
     beta, sig = lim["beta"], lim["sig"]
     inj = chain_injection(c, sne, y, err, z, p, rng, p.chain_gamma)
-    ratio = float(max(min(inj[:, 0].mean(), inj[:, 1].mean()) / p.chain_gamma, 1e-3))
+    ratio = float(min(inj[:, 0].mean(), inj[:, 1].mean()) / p.chain_gamma)
     xl, xf = c["xl"][sel], c["xf"][sel]
     bc, ec, _ = wls(colour[sel], np.full(sel.sum(), 0.05), z[sel], xl, xf)  # rescaled errors
     finite = np.isfinite(c["xl"]) & np.isfinite(c["xf"])
@@ -492,7 +494,10 @@ def fit(p: Params) -> dict:
         # A3's sign is +gamma (fainter); its unit is the column normalised to its mean, T / <T>
         # divided by the whole-chain recovery ratio when the dilution correction under-recovers
         "chain_recovery_ratio": ratio,
-        "gamma_norm_upper95_one_sided": lim["upper"] / min(ratio, 1.0),
+        # no limit when the chain does not recover the signal (ASSUMPTION: ratio < min_chain_ratio)
+        "gamma_norm_upper95_one_sided": (
+            lim["upper"] / min(ratio, 1.0) if ratio >= p.min_chain_ratio else None
+        ),
         "gamma_norm_upper95_unit": "mag per unit T/<T>, corrected for shot-noise dilution",
     }
 
