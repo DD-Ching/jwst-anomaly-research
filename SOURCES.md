@@ -1029,7 +1029,7 @@ Exploration Program."
 - Legacy Surveys DR9 Tractor + DR9 photometric redshifts (Data Lab TAP tables `ls_dr9.tractor`, `ls_dr9.photo_z`,
   joined on `ls_id`; https://www.legacysurvey.org/dr9/), batched box queries, accessed 2026-10-09 (D-070).
 
-## S1 burst twins: Fermi GBM (accessed 2026-10-09; D-TBD)
+## S1 burst twins: Fermi GBM (accessed 2026-10-09; D-071)
 
 - Fermi GBM burst catalogue, HEASARC table `fermigbrst` via TAP https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync
   (ADQL, VOTable), 4,390 rows, 2026-10-09; columns kept and the response sha256 are in
@@ -1038,7 +1038,7 @@ Exploration Program."
 - GBM burst-catalogue "bcat" files `glg_bcat_all_bn<id>_v<NN>.fit`, HEASARC FTP
   https://heasarc.gsfc.nasa.gov/FTP/fermi/data/gbm/bursts/<YYYY>/bn<id>/current/ , newest version per burst,
   4,389 of 4,390 present (bn number, file name, size and sha256 per row in `results/s1_twins/lc_<YYYY>.ecsv.gz`);
-  streamed into memory, never stored. HDU 2 `PHTFLUX`/`PHTFLUXB` used; HDU 1 `PHTCNTS` rejected (D-TBD).
+  streamed into memory, never stored. HDU 2 `PHTFLUX`/`PHTFLUXB` used; HDU 1 `PHTCNTS` rejected (D-071).
 - GBM localisation systematic: Connaughton et al. 2015 (arXiv:1411.2685), 3.7° (68 %) core plus a
   ~10 % tail to ~14°.
 - Prior lensed-GRB search (method and gap): Ahlgren & Larsson 2020 (arXiv:2006.07095).

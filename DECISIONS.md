@@ -3234,7 +3234,7 @@ injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T�
 - DES-SN5YR + DES Y3 Gold are set up: repeat there with the lensing detection as the positive control.
 - A3 fixes how its matter column maps to galaxy counts (bias), which sets the conversion of this limit.
 
-## D-TBD S1 burst twins in Fermi GBM: bcat HDU 2 light curves, multi-band max cross-correlation, chi2 twin test; null and limit (2026-10-09)
+## D-071 S1 burst twins in Fermi GBM: bcat HDU 2 light curves, multi-band max cross-correlation, chi2 twin test; null and limit (2026-10-09)
 
 **Decision.**
 - Data: the HEASARC `fermigbrst` catalogue over TAP, and the per-burst bcat files streamed from the HEASARC FTP.
