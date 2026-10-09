@@ -2,9 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-09: W5 count deficits in Euclid Q1 (in progress)
-- Plan: deeper counts for θ_E < 6′ (D-063 "Revisit if"). Euclid Q1 MER (IRSA TAP) as a second `CountMapSurvey`;
-  same screen, cross-field null (EDF-N / EDF-F / EDF-S), vetting and injections as D-063.
+## 2026-10-09: W5 in Euclid Q1: deeper counts cannot open θ_E < 6′; shapes could (D-065)
+- Hypothesis: Euclid Q1's deeper counts lower the D-063 floor (blind below θ_E ≈ 6′). Measured (IRSA TAP counts,
+  three deep fields): VIS < 24.5 extended galaxies 6.8 × 10⁴ deg⁻², 1.81× DR10, same count slope. With the
+  clustering-inflated scatter measured in DR10, the count S/N gains only ×1.0–1.4 (Z scatter at 4′ is 1.6× Poisson
+  and clustering does not shrink with depth), on 63 instead of 340 deg². Count screen not built.
+- Forecast (model_prediction): a radial-shear test on the same galaxies reaches θ_E ≈ 18″ (S/N ≥ 6, σ_γ = 0.3,
+  ASSUMPTIONs); the shear sign separates a negative-mass lens from ordinary foreground mass.
+- **Failed approach (rule):** IRSA TAP does not index plain RA/Dec ranges (0.25 deg² box > 5 min); use
+  `CONTAINS(POINT, CIRCLE)` (40 s for 12 k rows).
+- **Next:** Euclid Q1 radial-shear screen: PSF-anisotropy check on stars, synthetic shear injections, trial centres
+  on a grid, cross-field null (EDF-N/F/S).
 
 ## 2026-10-08: Efficiency rules for routine cycles (owner text)
 - docs/cloud-routine-prompt.md gets the owner's "EFFICIENCY RULES" after "MOVE FAST, SAFELY": result first, a review
@@ -53,7 +61,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   Commit-age heuristics cannot see a session that is coding but has not pushed.
 - docs/cloud-routine-prompt.md gets the owner's "COORDINATION AND DISPATCH" section (dispatch first; `claimed` label +
   claim comment with a 10-minute heartbeat, stale after 20; re-check before every push, `-alt` branch on collision;
-  "D-TBD" until merge). It replaces the 15-minute commit-age rule; docs/operations.md and its label table follow.
+  "D-065" until merge). It replaces the 15-minute commit-age rule; docs/operations.md and its label table follow.
 - **Owner action:** paste the new prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`); this file is only the copy.
 
 ## 2026-10-08: Governance — owner decisions on scope, parallelism, cloud disk and layout
