@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -94,16 +95,25 @@ def two_psf_fit(img: np.ndarray, peaks: list[tuple[float, float]]):
 
 
 def find_two_peaks(
-    img: np.ndarray, centre: tuple[float, float], radius_px: float, min_sep_px: float
+    img: np.ndarray,
+    centre: tuple[float, float],
+    radius_px: float,
+    min_sep_px: float,
+    sep_px: float | None = None,
+    tol_px: float | None = None,
 ):
-    """Brightest pixel within ``radius_px`` of ``centre`` and the brightest one at least
-    ``min_sep_px`` from it (the two quasar images)."""
+    """Brightest pixel within ``radius_px`` of ``centre`` (image A) and the brightest one at least
+    ``min_sep_px`` from it; with ``sep_px``, only in the annulus sep_px ± tol_px around A (image B
+    at the catalogued separation, so a lens galaxy between them is never taken as B)."""
     yy, xx = np.indices(img.shape)
     sm = img.copy()
     within = np.hypot(xx - centre[0], yy - centre[1]) <= radius_px
     sm[~within] = -np.inf
     y1, x1 = np.unravel_index(np.argmax(sm), sm.shape)
-    sm[np.hypot(xx - x1, yy - y1) < min_sep_px] = -np.inf
+    d1 = np.hypot(xx - x1, yy - y1)
+    sm[d1 < min_sep_px] = -np.inf
+    if sep_px is not None:
+        sm[np.abs(d1 - sep_px) > tol_px] = -np.inf
     y2, x2 = np.unravel_index(np.argmax(sm), sm.shape)
     return [(float(x1), float(y1)), (float(x2), float(y2))]
 
@@ -169,20 +179,25 @@ def run(args) -> None:
         d = out / name
         d.mkdir(exist_ok=True)
         c = SkyCoord(float(r["ra"]), float(r["dec"]), unit="deg")
-        try:
-            files = list(d.glob("*.fits")) or list(
-                Hapcut.download_cutouts(c, size=[p.size_px, p.size_px], path=str(d))["Local Path"]
-            )
-            f = pick_image(files, c, p.search_arcsec)
-        except Exception as e:  # no HAP footprint, service error: recorded, never a pass
-            files, f = [], None
-            print(f"{name}: no HAP cutout ({type(e).__name__})")
+        f, err_note = None, ""
+        for attempt in range(2):  # one retry: a service error is never recorded as "no data"
+            try:
+                files = list(d.glob("*.fits")) or list(
+                    Hapcut.download_cutouts(c, size=[p.size_px, p.size_px], path=str(d))[
+                        "Local Path"
+                    ]
+                )
+                f, err_note = pick_image(files, c, p.search_arcsec), ""
+                break
+            except Exception as e:
+                err_note = f"error: {type(e).__name__}"
+                time.sleep(5 * (attempt + 1))
         row = {
             "name": name,
             "group": str(r["group"]),
             "sep_cat": float(r["sep_cat"]),
             "hst_image": f.name if f else "",
-            "status": "no HST F814W HAP cutout",
+            "status": err_note or "no HST F814W HAP cutout",
         }
         if f is not None:
             with fits.open(f) as h:
@@ -195,7 +210,10 @@ def run(args) -> None:
             img = np.where(valid_all, data, np.median(data[valid_all]))
             pix = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix))) * 3600)
             x0, y0 = w.world_to_pixel(c)
-            peaks = find_two_peaks(img, (x0, y0), p.search_arcsec / pix, 0.5 * r["sep_cat"] / pix)
+            sep_px, tol_px = float(r["sep_cat"]) / pix, p.sep_match_arcsec / pix
+            peaks = find_two_peaks(
+                img, (x0, y0), p.search_arcsec / pix, 0.5 * sep_px, sep_px, tol_px
+            )
             # fit on a stamp around the pair (the full cutout holds unrelated sources)
             xm, ym = np.mean([q[0] for q in peaks]), np.mean([q[1] for q in peaks])
             half = int(1.5 * r["sep_cat"] / pix) + 10
@@ -203,17 +221,27 @@ def run(args) -> None:
             stamp = (slice(y0s, int(ym) + half), slice(x0s, int(xm) + half))
             img, valid = img[stamp], valid_all[stamp]
             peaks = [(x - x0s, y - y0s) for x, y in peaks]
+            centre = (float(x0) - x0s, float(y0) - y0s)
             fit, res = two_psf_fit(img, peaks)
             # aperture noise: pixel MAD x the drizzle correlation factor
             noise = 1.4826 * np.median(np.abs(res[valid] - np.median(res[valid]))) * corr
+            # empirical check: the same-area aperture on empty sky in the full cutout (all
+            # correlation scales); the larger of the two errors is used
+            npix_ap = residual_between(res, fit, pix, p, 1.0, valid)["n_pix"]
+            emp = empirical_aperture_noise(data, valid_all, npix_ap)
+            if np.isfinite(emp) and npix_ap:
+                noise = max(noise, emp / np.sqrt(npix_ap))
             clean = remove_halos(res, fit)
             row.update(residual_between(clean, fit, pix, p, noise, valid), pixel_arcsec=pix)
             row["noise_corr"] = corr
+            row["aperture_noise_empirical"] = emp
             row["resid_snr_raw"] = residual_between(res, fit, pix, p, noise, valid)["resid_snr"]
             snr = row["resid_snr"]
             # the S/N states a residual only; lens light or core mismatch needs the stamp
             if abs(row["sep_arcsec"] - row["sep_cat"]) > p.sep_match_arcsec:
                 row["status"] = "pair mismatch"
+            elif not np.isfinite(noise):
+                row["status"] = "noise not estimable"
             elif not np.isfinite(snr) or snr <= -p.detect_sigma:
                 row["status"] = "fit inconclusive (over-subtraction)"
             else:
@@ -225,14 +253,15 @@ def run(args) -> None:
             row["mag_5sigma"] = zp - 2.5 * np.log10(p.detect_sigma * row["resid_err"])
             row["mag_limit_inject"] = np.nan
             if row["status"] == "no residual":
-                rec = inject_recovery(img, peaks, fit, pix, p, zp, noise, valid)
+                rec = inject_recovery(img, centre, sep_px, tol_px, fit, pix, p, zp, noise, valid)
                 for mag, s_inj, frac in rec:
                     inj.append(
                         {"name": name, "inject_mag": mag, "recovered_snr": s_inj,
                          "snr_above_baseline": s_inj - snr, "flux_frac": frac}
                     )  # fmt: skip
-                ok = [mag for mag, s_inj, _ in rec if s_inj - snr >= p.detect_sigma]
-                row["mag_limit_inject"] = max(ok) if ok else np.nan
+                row["mag_limit_inject"] = contiguous_limit(
+                    [(mag, bool(s_inj - snr >= p.detect_sigma)) for mag, s_inj, _ in rec]
+                )
             panels.append((name, row, img, res, clean, fit))
         rows.append(row)
         print(row)
@@ -280,11 +309,14 @@ def ab_zeropoint(hdr, primary) -> float:
 
 
 def inject_recovery(
-    img, peaks, fit, pix, p: Params, zp: float, noise: float, valid, mags=(21, 22, 23, 24, 25)
-):
+    img, centre, sep_px, tol_px, fit, pix, p: Params, zp: float, noise: float, valid,
+    mags=(21, 22, 23, 24, 25),
+):  # fmt: skip
     """Inject an early-type lens galaxy (Sersic n = 4, r_eff 0.3") at the SIS-predicted position
     (on the line between the images, at sep * f / (1 + f) from the fainter one, f = faint/bright)
-    into the real stamp and re-measure with the same chain. Returns (mag, S/N, flux fraction)."""
+    into the real stamp and run the whole chain again: peak finding (image B in the annulus at the
+    catalogued separation), the two-PSF fit, the pair-separation check and the residual. A
+    detection whose pair does not match counts as missed. Returns (mag, S/N, flux fraction)."""
     (x1, y1, a1), (x2, y2, a2) = (
         (fit.x_0_1.value, fit.y_0_1.value, fit.amplitude_1.value),
         (fit.x_0_2.value, fit.y_0_2.value, fit.amplitude_2.value),
@@ -299,10 +331,53 @@ def inject_recovery(
     out = []
     for mag in mags:
         flux = 10 ** (-0.4 * (mag - zp))
-        f2, res = two_psf_fit(img + flux * g, peaks)
+        im2 = img + flux * g
+        pk = find_two_peaks(im2, centre, p.search_arcsec / pix, 0.5 * sep_px, sep_px, tol_px)
+        f2, res = two_psf_fit(im2, pk)
         m = residual_between(remove_halos(res, f2), f2, pix, p, noise, valid)
+        if abs(m["sep_arcsec"] - sep_px * pix) > p.sep_match_arcsec:
+            out.append((mag, np.nan, np.nan))  # pair mismatch: missed
+            continue
         out.append((mag, m["resid_snr"], m["resid_flux"] / flux))
     return out
+
+
+def contiguous_limit(passed) -> float:
+    """Faintest magnitude of the unbroken run of passes from the bright end (NaN if the
+    brightest fails)."""
+    lim = np.nan
+    for mag, ok in sorted(passed):
+        if not ok:
+            break
+        lim = mag
+    return lim
+
+
+def empirical_aperture_noise(data, valid, npix: int, n: int = 200, seed: int = 0) -> float:
+    """Robust std of sums over ``n`` random circular apertures of ``npix`` pixels on source-free
+    sky (apertures touching a > 5 sigma pixel, i.e. a source, or missing data are skipped; a 3
+    sigma cut rejects ~all apertures of ~2000 pixels by chance)."""
+    if not npix:
+        return np.nan
+    rng = np.random.default_rng(seed)
+    med = np.median(data[valid])
+    sd = 1.4826 * np.median(np.abs(data[valid] - med))
+    rad = np.sqrt(npix / np.pi)
+    yy, xx = np.indices(data.shape)
+    sums = []
+    for _ in range(20 * n):
+        if len(sums) >= n:
+            break
+        x, y = rng.uniform(rad, data.shape[1] - rad), rng.uniform(rad, data.shape[0] - rad)
+        ap = np.hypot(xx - x, yy - y) <= rad
+        v = data[ap]
+        if not valid[ap].all() or np.any(np.abs(v - med) > 5 * sd):
+            continue
+        sums.append(float((v - med).sum()))
+    if len(sums) < 20:
+        return np.nan
+    a = np.asarray(sums)
+    return float(1.4826 * np.median(np.abs(a - np.median(a))))
 
 
 def sheet(panels, path: Path) -> None:

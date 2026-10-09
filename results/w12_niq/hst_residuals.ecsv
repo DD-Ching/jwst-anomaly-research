@@ -14,6 +14,7 @@
 # - {name: flux_ratio_images, datatype: float64}
 # - {name: pixel_arcsec, datatype: float64}
 # - {name: noise_corr, datatype: float64}
+# - {name: aperture_noise_empirical, datatype: float64}
 # - {name: resid_snr_raw, datatype: float64}
 # - {name: zp_ab, datatype: float64}
 # - {name: mag_resid, datatype: float64}
@@ -24,20 +25,20 @@
 # - {source: scripts/w12_niq_hst.py on MAST HAP cutouts (hapcut)}
 # - params: {detect_sigma: 5.0, image_mask_arcsec: 0.3, search_arcsec: 3.5, sep_match_arcsec: 0.5, size_px: 250}
 # schema: astropy-2.0
-name group sep_cat hst_image status sep_arcsec resid_flux resid_err resid_snr n_pix flux_ratio_images pixel_arcsec noise_corr resid_snr_raw zp_ab mag_resid mag_5sigma mag_limit_inject
-J0628-7448 control 2.61 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
-J1550+0221 control 2.03 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
-J2308+3201 control 2.63 hst_cutout_skycell-p2082x06y03-ra347d0777-decn32d0294_acs_wfc_f814w.fits "residual >= 5 sigma" 2.631493435234434 81.30423950623968 0.8482257703839311 95.85212138678487 3236 1.9031068801272266 0.039999999999999584 1.5436584764965895 82.2176115372438 25.932105634514066 21.156822654718265 24.36340196655295 nan
-J151538.59+151135.8 control 2.03 hst_cutout_skycell-p1646x12y16-ra228d9107-decn15d1932_wfc3_uvis_f814w.fits "residual >= 5 sigma" 2.010697856380893 21.91544042929503 0.404986060903442 54.11406106275883 1822 1.4535908202459724 0.039999999999999584 1.5387720358235255 57.3593470950268 25.1115569914 21.759681483928425 24.34553179151647 nan
-J132236.41+105239.4 control 1.88 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
-J0130+0725 rejected 2.06 hst_cutout_skycell-p1418x18y17-ra22d5859-decn7d4212_acs_wfc_f814w.fits "no residual" 2.060191336179752 0.7288148314682734 0.6998625434839629 1.0413685347985393 1917 1.5052250465302681 0.039999999999999584 1.4437831510792885 17.722074945948915 25.931923196105878 26.275380191108145 24.57196630833158 24.0
-J0728+2607 rejected 2.15 hst_cutout_skycell-p1874x19y12-ra112d116-decn26d1173_acs_wfc_f814w.fits "residual >= 5 sigma" 2.1494269410961704 9.59795684023981 0.8645060177679809 11.10224410585392 2090 2.0664917680123116 0.039999999999999584 1.4556327221906995 24.142694253433714 25.931983050806743 23.476536069105755 24.34263798817917 nan
-J0941-2443 rejected 2.25 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
-J1428+0500 rejected 2.23 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
-J2355-4553 rejected 2.2 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
-J092718.37+211357.4 rejected 2.36 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
-J124257.32+254303.0 rejected 2.77 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
-J090437.41+113426.2 rejected 2.06 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
-J094235.04+231028.9 rejected 2.45 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
-J132405.19+282331.9 rejected 2.03 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
-J171101.70+292950.9 rejected 2.18 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" ""
+name group sep_cat hst_image status sep_arcsec resid_flux resid_err resid_snr n_pix flux_ratio_images pixel_arcsec noise_corr aperture_noise_empirical resid_snr_raw zp_ab mag_resid mag_5sigma mag_limit_inject
+J0628-7448 control 2.61 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J1550+0221 control 2.03 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J2308+3201 control 2.63 hst_cutout_skycell-p2082x06y03-ra347d0777-decn32d0294_acs_wfc_f814w.fits "residual >= 5 sigma" 2.631493435234434 81.30423950623968 1.952257995801314 41.64625765708182 3236 1.9031068801272266 0.039999999999999584 1.5436584764965895 1.9522579958013142 35.722274942805726 25.932105634514066 21.156822654718265 23.458337598097145 nan
+J151538.59+151135.8 control 2.03 hst_cutout_skycell-p1646x12y16-ra228d9107-decn15d1932_wfc3_uvis_f814w.fits "residual >= 5 sigma" 2.010697856380893 21.91544042929503 1.4027338941651266 15.62337697866677 1822 1.4535908202459724 0.039999999999999584 1.5387720358235255 1.4027338941651264 16.56032989053421 25.1115569914 21.759681483928425 22.996693753197437 nan
+J132236.41+105239.4 control 1.88 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J0130+0725 rejected 2.06 hst_cutout_skycell-p1418x18y17-ra22d5859-decn7d4212_acs_wfc_f814w.fits "no residual" 2.060191336179752 0.7288148314682734 1.6038606405923141 0.454412816813759 1917 1.5052250465302681 0.039999999999999584 1.4437831510792885 1.6038606405923141 7.733225776339721 25.931923196105878 26.275380191108145 23.67158161088659 23.0
+J0728+2607 rejected 2.15 hst_cutout_skycell-p1874x19y12-ra112d116-decn26d1173_acs_wfc_f814w.fits "residual >= 5 sigma" 2.1494269410961704 9.59795684023981 1.9078749368190764 5.03070544877648 2090 2.0664917680123116 0.039999999999999584 1.4556327221906995 1.9078749368190764 10.939660700205078 25.931983050806743 23.476536069105755 23.483183282848266 nan
+J0941-2443 rejected 2.25 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J1428+0500 rejected 2.23 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J2355-4553 rejected 2.2 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J092718.37+211357.4 rejected 2.36 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J124257.32+254303.0 rejected 2.77 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J090437.41+113426.2 rejected 2.06 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J094235.04+231028.9 rejected 2.45 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J132405.19+282331.9 rejected 2.03 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J171101.70+292950.9 rejected 2.18 "" "no HST F814W HAP cutout" "" "" "" "" "" "" "" "" "" "" "" "" "" ""

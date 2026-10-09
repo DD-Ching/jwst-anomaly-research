@@ -2,17 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-09: D-064 addendum: archival HST of the untestable rejected pairs; J0130+0725 has no lens light to F814W ≈ 24
+## 2026-10-09: D-064 addendum: archival HST of the untestable rejected pairs; J0130+0725 has no lens light to F814W ≈ 23
 - Coverage: 2 of the 11 untestable pairs have HST F814W imaging (program 17308), and so do 2 controls.
-- Method: a two-PSF fit, halo correction, and the residual flux between the images, with drizzle-correlated
-  errors. Validated on both controls (S/N 96, 54) and on injections into the real stamp (recovered to F814W = 24).
-- **J0130+0725:** no residual (S/N 1.0). The limit F814W ≈ 24.0 is ≥ 2 mag fainter than any ordinary lens. A
-  binary quasar remains the untested ordinary explanation; it needs spectra of both images. Not a candidate.
+- Method: a two-PSF fit, halo correction, and the residual flux between the images, with empirical sky-aperture
+  errors. Validated on both controls (S/N 42, 16) and on whole-chain injections (recovered to F814W = 23).
+- **J0130+0725:** no residual (S/N 0.45). The limit F814W ≈ 23.0 is ≈ 3.5 mag below a typical ordinary lens and
+  ≥ 0.7 mag below a 2σ under-luminous one. A binary quasar remains the untested ordinary explanation; it needs
+  spectra of both images. Not a candidate.
 - **J0728+2607:** inconclusive (residuals at the image cores); it needs an empirical PSF.
 - **Failed approaches:**
   - the HAP "combined_skycells" product has a WCS that does not describe its pixels;
   - without the halo correction, PSF mismatch alone gives S/N 18–24;
-  - white-noise errors on drizzled pixels overstate S/N by ~1.5;
+  - white-noise errors on drizzled pixels overstate S/N by ~3.5;
   - a 60-px cutout cannot hold the pair, because the catalogue position is one image.
 - **Next:** spectra or two-epoch flux ratios for J0130+0725 (binary vs lens); an empirical PSF for J0728+2607;
   Euclid DR1 when public for the 9 pairs without HST imaging.
