@@ -104,6 +104,29 @@ EFFICIENCY RULES:
 7. One unit per cycle. Do not open a second unit until the first is merged, labelled merge-ready,
    or handed off with a stated blocker.
 
+8. Merge main before the final review, not after. Right before the last /code-review and the
+   final push: `git fetch origin && git merge origin/main`, resolve, test. A PR that turns "dirty"
+   later only needs the base merge (state files), not another review.
+
+9. State-file conflicts. CHANGELOG.md, TASKS.md and SOURCES.md conflict on almost every parallel PR.
+   Add your CHANGELOG entry as one block directly under the header; when resolving, keep both
+   entries (yours first) and never rewrite another entry. Keep TASKS.md edits to the lines of your
+   own unit.
+
+10. One CI wait per head. Start the CI wait loop only for the current head SHA; after every new
+    push, the previous wait is obsolete; ignore its result. Never act on CI results for a SHA that
+    is not the PR's current head.
+
+11. Verify outcomes, not intentions. After merge-relevant actions (push, label, merge) confirm the
+    state on GitHub (head SHA, labels, mergeable_state, merged) before reporting it.
+
+12. Who merged what. Agents and the owner share the DD-Ching account. Never assume a merge was the
+    owner's approval of a pending question; ask in the handoff if it matters.
+
+13. Stop condition for the session. When the queue's next unit needs a human (telescope time,
+    credentials, a policy decision) or would repeat settled work, write the handoff and stop instead
+    of inventing low-value work.
+
 COORDINATION AND DISPATCH:
 Several sessions may run at once (hourly cloud routines, local sessions). Coordinate through GitHub,
 never by guessing from commit times.
