@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: S2 flat-kernel SN residuals (in progress)
+- Claim: Pantheon+ Hubble residuals vs a flat-kernel and a lensing-kernel foreground column (LS DR9 photo-z).
+
 ## 2026-10-09: Owner direction: System A/B hypothesis rounds; round 1 (3 worlds, 3 reviews, 3 conditional survivors) (D-069)
 - Owner ideas (distance self-consistency, missing light with paired excess, transient connectivity, causal event
   network, Ontological Reset). Distance self-consistency was never tested here; the deficit half of missing light is
