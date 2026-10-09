@@ -21,14 +21,14 @@ Round 3 kept the round-1 rules (D-069) and added two lessons from round 2 (D-075
 | World | Main prediction | B verdict | Main reason |
 |---|---|---|---|
 | R3-A | ZTF split-sample pair statistic Ŝ = 1/D ≈ 6 × 10⁻¹⁰ | **FAIL as written**. Conditional only for a repaired axiom; the cheapest test is a lab test outside scope | Axiom A5 gives zero. The Lorentzian signature is not derived. D is chosen (it spans 10⁸–10¹⁵). The Fermilab Holometer cross-correlation already disfavours the nominal amplitude at about 67 % (reviewer's own normalisation). ZTF would need about 3 TB of downloads and reaches about 1.8σ at nominal D, and every systematic biases Ŝ upward |
-| R3-B | NS–WD dipole radiation with α_NS ≈ 2–9 × 10⁻³ | **FAIL (excluded)** | J1738+0333 alone excludes s ≥ 8 × 10⁻³ at 6.7σ (7.1σ in preprint 2605.01436). The combined bound is α_NS < 2.2 × 10⁻³ (95 %, reviewer's combination); the self-consistent minimum is disfavoured at about 2σ and the no-feedback corner survives. The model is Brans–Dicke with ω = 0 plus scalarisation |
+| R3-B | NS–WD dipole radiation with α_NS ≈ 2–9 × 10⁻³ | **FAIL (mostly excluded)** | J1738+0333 alone excludes s ≥ 8 × 10⁻³ at 6.7σ (7.1σ in preprint 2605.01436). The combined bound is α_NS < 2.2 × 10⁻³ (95 %, reviewer's combination); the self-consistent minimum is disfavoured at about 2σ and the no-feedback corner survives. The model is Brans–Dicke with ω = 0 plus scalarisation |
 | R3-C | SN Ia rate δ ln Γ = K Δλ: −6 % (10¹⁴ M☉ groups) to −20 % (cluster cores) | Not excluded; conditional PASS for P1/P3, but **untestable as posed** | λ has no Φ term (my derivation: λ = 1 − 1/γ). K ≈ −2.4 to −4 × 10³ falls at the weak edge, where its kill cannot fire. The published cluster/field SN Ia ratios (×0.6 to ×3.5; ZTF excesses ×3–8) scatter 10–40× the signal. The ZTF BTS Ia sample at z < 0.1 is about 5 × 10³, which gives 0.5–2σ, and the systematics floor exceeds the signal at any N |
 
 ## What this project can test
 
 Nothing in round 3 earns search compute:
 - **R3-A:** needs a lab test of independent noise sources, about 400 s per device pair.
-- **R3-B:** already excluded. Its bound is recorded: α_NS < 2.2 × 10⁻³ (95 %).
+- **R3-B:** mostly excluded. Its bound is recorded: α_NS < 2.2 × 10⁻³ (95 %).
 - **R3-C:** the public sample is about 16× too small, and the environment systematics exceed the signal.
 
 ## Lessons (rules)
