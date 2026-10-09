@@ -2,8 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-09: E1 GW sky maps (in progress)
-- Plan: give GWTC events directions from public sky maps; redo GW same/wide/antipodal and signed-lag channels.
+## 2026-10-09: E1 GW sky maps (in progress, PR #122; no real-data result yet)
+- Hypothesis: GW events have same-direction, wide or antipodal partners (GBM, ICECAT-1, CHIME, GW) at lags no
+  ordinary path explains. Until now GW channels were lag-only (the GWOSC CSV has no positions).
+- Sources: GWOSC GWTC lists 391 events: GWTC-5.0 161, GWTC-4.1 140, GWTC-2.1 54, GWTC-3 35, GWTC-1 1 (GW170817).
+  PE sky-map tarballs on Zenodo: GWTC-2.1 rec. 6513631 (87 MB), GWTC-3 rec. 8177023 (72 MB), GWTC-4.1
+  rec. 20275769 (276 MB), GWTC-5.0 rec. 20348005 (269 MB). GW170817 has no map in them; a 1.05° Gaussian at SSS17a
+  stands in (positive control only, ASSUMPTION).
+- Built: `scripts/e1_gw_skymaps.py` (tarballs fetched into memory by parallel range requests, never written to
+  disk; flat RING/NESTED and multi-order maps reduced to nside-32 NESTED; one map per event; per-tarball cache so a
+  failed fetch loses nothing) and `scripts/e1_gw_directional.py` (same/wide/antipodal classes against the 90 % / 99 %
+  regions, maps rotated with the scrambled GW time so hour angle is kept; `jit` null; injections from the map).
+  Offline tests: `tests/test_e1_gw_skymaps.py` (8 pass; full suite 874 passed, 23 skipped).
+- Failed approaches: (1) one sequential gzip stream per tarball: Zenodo gives ~0.1–0.4 MB/s per connection;
+  (2) four tarballs in a process pool: one proxy-dropped HEAD request killed the pool and lost the finished
+  tarballs (now: 1-byte range probe with retries, one tarball at a time, per-tarball cache). Throughput fell to
+  ~0.15 MB/s after ~450 MB in this session, so the 704 MB did not finish within the run.
+- **Next (continue this PR):** run `python scripts/e1_gw_skymaps.py` (expect 10–40 min at Zenodo's rate; start it
+  first and in the background), then `python scripts/e1_gw_directional.py --n 1000`; check the GW170817 × GRB
+  170817A control comes out `same`; then signed-lag GW cells; state files and D-NNN.
+
 
 ## 2026-10-09: E1 signed-lag ("which event comes first") channels: null, global p = 0.68 (D-074 addendum 3)
 - Hypothesis: one catalogue leads another at lags no ordinary path explains (sign asymmetry D = N_after − N_before).
