@@ -128,3 +128,28 @@ def test_z_perm_stays_in_bin():
     z = np.repeat([0.12, 0.33], 30)
     perm = s2.z_perm(z, np.random.default_rng(5))
     assert np.array_equal(z[perm], z) and sorted(perm) == list(range(60))
+
+
+def test_load_des_joins_hd_meta_and_positions(tmp_path, monkeypatch):
+    hd = (
+        "# comment\nVARNAMES: CID IDSURVEY zHD zHEL MU MUERR PROBIA_BEAMS\n"
+        "SN: 101 10 0.50 0.50 42.2 0.15 0.99\n"
+        "SN: 102 10 0.60 0.60 42.6 0.20 0.10\n"  # likely core collapse: cut
+        "SN: 103 10 0.05 0.05 36.7 0.12 1.00\n"  # below z_min: cut
+        "SN: 101 150 0.03 0.03 35.4 0.12 1.00\n"  # same CID, other survey: ignored
+        "SN: 104 10 0.70 0.70 43.0 0.18 0.90\n"  # no position: ignored
+    )
+    meta = (
+        "VARNAMES: CID IDSURVEY c\n"
+        "SN: 101 10 -0.05\nSN: 102 10 0.1\nSN: 103 10 0.0\nSN: 101 150 0.2\nSN: 104 10 0.0\n"
+    )
+    (tmp_path / "DES-Dovekie_HD.csv").write_text(hd)
+    (tmp_path / "DES-Dovekie_Metadata.csv").write_text(meta)
+    head = Table(
+        {"SNID": ["101", "102", "103"], "RA": [35.1, 35.2, 9.0], "DEC": [-5.0, -5.1, -43.0]}
+    )
+    head.write(tmp_path / "DES-SN5YR_DES_HEAD.FITS.gz")
+    monkeypatch.setattr(s2, "cache", lambda: tmp_path)
+    t = s2.load_des(s2.Params(sample="des"))
+    assert list(t["cid"]) == ["101"]
+    assert t["ra"][0] == 35.1 and t["m"][0] == 42.2 and t["c"][0] == -0.05 and t["err"][0] == 0.15

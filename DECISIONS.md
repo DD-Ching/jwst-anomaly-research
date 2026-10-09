@@ -3234,6 +3234,13 @@ injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T�
 - DES-SN5YR + DES Y3 Gold are set up: repeat there with the lensing detection as the positive control.
 - A3 fixes how its matter column maps to galaxy counts (bias), which sets the conversion of this limit.
 
+**Addendum (2026-10-09, DES-SN5YR).** Repeated with `--sample des` on the DES-SN5YR Dovekie Hubble diagram (DES SNe,
+MU/MUERR, P(Ia) ≥ 0.5, positions from the DES HEAD table) and the same LS DR9 z < 21 galaxies, so both samples share
+one calibrated chain. 1,414 SNe fitted: γ_F = +0.0009 ± 0.0025, **γ < 0.019 mag per unit T/⟨T⟩** (chain recovery 0.57);
+lensing control γ_L = −0.018 ± 0.011 (1.7σ, right sign). Rejected for this cycle: DES Y3 Gold (new access path and a
+second galaxy calibration; it is the next step because the control needs deeper galaxies). Revisit if: a deeper
+galaxy column is set up, or the full covariances change the errors by > 20 %.
+
 ## D-071 S1 burst twins in Fermi GBM: bcat HDU 2 light curves, multi-band max cross-correlation, chi2 twin test; null and limit (2026-10-09)
 
 **Decision.**

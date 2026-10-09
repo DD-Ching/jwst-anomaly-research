@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: S2 on DES-SN5YR: no flat-kernel term; γ < 0.019 mag per unit T/⟨T⟩ (D-070 addendum)
+- Same chain as D-070 (`scripts/s2_flat_kernel.py --sample des`, `results/s2_flat_kernel/fit_des_*.json`) on the
+  DES-SN5YR Dovekie Hubble diagram: DES-discovered SNe only, MU/MUERR (BEAMS-renormalised), P(Ia) ≥ 0.5 (ASSUMPTION),
+  0.1 < z < 1.3: 1,518 SNe, 1,414 fitted after coverage and 5σ cuts; LS DR9 galaxies (47.2 k) as before.
+- **α = 2: γ_F = +0.0009 ± 0.0025 (scramble p = 0.68); trimmed −0.0012 ± 0.0044; colour term +0.0008 ± 0.0018.**
+  λ_F = 0.86 (0.81 trimmed); whole-chain recovery 0.57 (limit divided by it). **One-sided 95 %: γ < 0.019 mag per
+  unit T/⟨T⟩** (Pantheon+: 0.025). Still above A3's kill threshold 0.005; excludes the upper half of its 0.01–0.04
+  fiducial only if the galaxy-to-matter bias is ~1 (ASSUMPTION).
+- α = 1: kernel-degenerate again (corr(X_L, X_F) = 0.99), no limit, as in D-070.
+- **Positive control:** γ_L = −0.018 ± 0.011 (lensing sign, scramble p = 0.095; λ_L = 0.60). Pantheon+ gave
+  −0.017 ± 0.013; naively combined −0.018 ± 0.008 (~2σ), but the samples overlap (DES 3YR spectroscopic SNe are in
+  Pantheon+), so this is indicative only. The control is still not a detection with z < 21 LS DR9 galaxies.
+- Not done (failed route): the DES Y3 Gold / deeper-galaxy column the D-070 revisit asked for; LS DR9 at z < 21 was
+  kept so that the two samples share one calibrated chain.
+- **Next:** a deeper galaxy column (DES Y3 Gold or LS DR10 z < 22 with photo-z quality cuts) so the lensing control
+  detects; the full DES-SN5YR STAT+SYS covariance (inverse matrices in the repo) instead of diagonal errors.
+
 ## 2026-10-09: D1 distance self-consistency: no inconsistent sightline in strong lenses or localized FRBs (D-073)
 - Hypothesis (owner idea 1): one sightline whose independent distance measures no ordinary model reconciles.
   Ordinary explanations: mass-sheet degeneracy, line-of-sight convergence, kinematic anisotropy, substructure, wrong

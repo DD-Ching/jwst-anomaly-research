@@ -13,6 +13,7 @@ z-matched scramble null -> injection-recovery of gamma_F.
 
     python scripts/s2_flat_kernel.py fetch      # Data Lab TAP, batched boxes, cached per chunk
     python scripts/s2_flat_kernel.py fit        # columns, regression, scramble null, injections
+    python scripts/s2_flat_kernel.py fetch --sample des   # DES-SN5YR (Dovekie) instead of Pantheon+
 """
 
 from __future__ import annotations
@@ -38,6 +39,12 @@ PPLUS_URL = (
     "https://raw.githubusercontent.com/PantheonPlusSH0ES/DataRelease/main/"
     "Pantheon%2B_Data/4_DISTANCES_AND_COVAR/Pantheon%2BSH0ES.dat"
 )
+DES_URL = "https://raw.githubusercontent.com/des-science/DES-SN5YR/main/"
+DES_FILES = {  # DES-SN5YR Dovekie re-analysis (repo HEAD c9a4fca, 2026-01-28)
+    "hd": "4_DISTANCES_COVMAT/DES-Dovekie_HD.csv",
+    "meta": "4_DISTANCES_COVMAT/DES-Dovekie_Metadata.csv",
+    "head": "0_DATA/DES-SN5YR_DES/DES-SN5YR_DES_HEAD.FITS.gz",
+}
 COLS = "t.ra, t.dec, t.dered_mag_z, t.release, p.z_phot_median, p.z_spec"
 QUERY_VERSION = 2  # 2: brick_primary, maskbits = 0, no DUP, dereddened z (countmap selection)
 FETCH_Z = (0.1, 1.3)  # SN redshift range of the galaxy fetch
@@ -64,6 +71,8 @@ class Params:
     trim_pct: float = 99.0  # ASSUMPTION: leverage cut for the robustness fit
     min_shell_expect: float = 1.0  # ASSUMPTION: alpha = 2 uses shells expecting >= 1 galaxy
     alpha: int = 1  # flat column on (1 + delta)^alpha; A3's fiducial is alpha >= 2 (1 or 2 here)
+    sample: str = "pantheon"  # "pantheon" (Pantheon+) or "des" (DES-SN5YR Dovekie, DES SNe only)
+    min_probia: float = 0.5  # ASSUMPTION (des): BEAMS P(Ia) cut against core-collapse contamination
 
 
 def cache() -> Path:
@@ -101,12 +110,67 @@ def load_pantheon(p: Params) -> Table:
     return Table(rows=rows, names=["cid", "ra", "dec", "z", "m", "c", "err"])
 
 
+def _download(name: str, url: str) -> Path:
+    f = cache() / name
+    if not f.exists():
+        r = requests.get(url, timeout=300)
+        r.raise_for_status()
+        f.write_bytes(r.content)
+    return f
+
+
+def _snana_rows(f: Path) -> dict[str, dict[str, str]]:
+    """SNANA key table (``VARNAMES:`` header, ``SN:`` rows) keyed by (IDSURVEY, CID)."""
+    names, out = None, {}
+    for line in f.read_text().splitlines():
+        tok = line.split()
+        if not tok:
+            continue
+        if tok[0] == "VARNAMES:":
+            names = tok[1:]
+        elif tok[0] == "SN:" and names:
+            row = dict(zip(names, tok[1:], strict=True))
+            out[f"{row['IDSURVEY']}:{row['CID']}"] = row
+    return out
+
+
+def load_des(p: Params) -> Table:
+    """DES-SN5YR (Dovekie) DES-discovered SNe: MU, MUERR (observed, BEAMS-renormalised), positions.
+
+    MU replaces Pantheon+'s m_b_corr (the offset M is fitted in the regression either way); SALT3
+    colour c from the metadata; positions from the DES HEAD table (SNID = CID).
+    """
+    hd = _snana_rows(_download("DES-Dovekie_HD.csv", DES_URL + DES_FILES["hd"]))
+    meta = _snana_rows(_download("DES-Dovekie_Metadata.csv", DES_URL + DES_FILES["meta"]))
+    head = Table.read(_download("DES-SN5YR_DES_HEAD.FITS.gz", DES_URL + DES_FILES["head"]))
+    pos = {str(s).strip(): (float(r), float(d)) for s, r, d in head.iterrows("SNID", "RA", "DEC")}
+    rows = []
+    for key, r in hd.items():
+        if r["IDSURVEY"] != "10" or r["CID"] not in pos or key not in meta:
+            continue
+        z = float(r["zHD"])
+        if not (p.z_min < z < p.z_max) or float(r["PROBIA_BEAMS"]) < p.min_probia:
+            continue
+        ra, dec = pos[r["CID"]]
+        rows.append(
+            (r["CID"], ra, dec, z, float(r["MU"]), float(meta[key]["c"]), float(r["MUERR"]))
+        )
+    return Table(rows=rows, names=["cid", "ra", "dec", "z", "m", "c", "err"])
+
+
+def load_sne(p: Params) -> Table:
+    return load_des(p) if p.sample == "des" else load_pantheon(p)
+
+
 def galaxy_dir(p: Params) -> Path:
     """Galaxy chunks keyed by everything that selects them (never reuse stale chunks).
 
     The SN list of the fetch is always the default z range; fits on a narrower range use a subset.
     """
-    key = json.dumps([QUERY_VERSION, FETCH_Z, p.radius_arcsec, p.mag_z_max, p.batch])
+    key = [QUERY_VERSION, FETCH_Z, p.radius_arcsec, p.mag_z_max, p.batch]
+    if p.sample != "pantheon":  # keeps the Pantheon+ cache key of D-070
+        key += [p.sample, p.min_probia]
+    key = json.dumps(key)
     d = cache() / f"gal_{hashlib.sha1(key.encode()).hexdigest()[:10]}"
     d.mkdir(parents=True, exist_ok=True)
     return d
@@ -143,7 +207,7 @@ def query(sne: Table, p: Params) -> Table:
 
 def fetch(p: Params) -> None:
     """Sequential batched queries (Data Lab etiquette: batch, no concurrency)."""
-    sne = load_pantheon(replace(p, z_min=FETCH_Z[0], z_max=FETCH_Z[1]))
+    sne = load_sne(replace(p, z_min=FETCH_Z[0], z_max=FETCH_Z[1]))
     sne = sne[np.argsort(sne["ra"])]
     out = galaxy_dir(p)
     for k in range(0, len(sne), p.batch):
@@ -428,8 +492,23 @@ def chain_injection(c, sne, y, err, z, p: Params, rng, gamma: float) -> np.ndarr
     return np.array(out)
 
 
+def sample_provenance(p: Params) -> dict:
+    def sha(name: str) -> str:
+        return hashlib.sha256((cache() / name).read_bytes()).hexdigest()
+
+    if p.sample == "des":
+        return {
+            "des_sn5yr": "observed (MU, MUERR, c; DES Collaboration 2024, Dovekie re-analysis)",
+            "des_sn5yr_files": {name: sha(Path(path).name) for name, path in DES_FILES.items()},
+        }
+    return {
+        "pantheon_plus": "observed (m_b_corr, Brout et al. 2022 / Scolnic et al. 2022)",
+        "pantheon_plus_sha256": sha("PantheonPlusSH0ES.dat"),
+    }
+
+
 def fit(p: Params) -> dict:
-    sne = load_pantheon(p)
+    sne = load_sne(p)
     files = sorted(galaxy_dir(p).glob("gal_*.ecsv"))
     if not files:
         raise SystemExit("run `fetch` first")
@@ -451,10 +530,7 @@ def fit(p: Params) -> dict:
     return {
         "params": asdict(p),
         "provenance": {
-            "pantheon_plus": "observed (m_b_corr, Brout et al. 2022 / Scolnic et al. 2022)",
-            "pantheon_plus_sha256": hashlib.sha256(
-                (cache() / "PantheonPlusSH0ES.dat").read_bytes()
-            ).hexdigest(),
+            **sample_provenance(p),
             "galaxies": "observed (LS DR9 Tractor + DR9 photo-z, Data Lab TAP)",
             "columns": "derived",
             "residual_model": "model_prediction (flat LCDM Om = 0.334)",
@@ -509,15 +585,20 @@ def main() -> None:
     ap.add_argument("cmd", choices=["fetch", "fit"])
     ap.add_argument("--z-min", type=float, default=None, help="fit only SNe above this z")
     ap.add_argument("--alpha", type=int, default=1, choices=[1, 2], help="flat column power")
+    ap.add_argument("--sample", default="pantheon", choices=["pantheon", "des"])
     a = ap.parse_args()
-    p = Params()
-    fit_p = Params(alpha=a.alpha, **({} if a.z_min is None else {"z_min": a.z_min}))
+    p = Params(sample=a.sample)
+    fit_p = replace(p, alpha=a.alpha, **({} if a.z_min is None else {"z_min": a.z_min}))
     if a.cmd == "fetch":
         fetch(p)
     else:
         res = fit(fit_p)
         OUT.mkdir(parents=True, exist_ok=True)
-        tag = ("" if a.z_min is None else f"_zmin{a.z_min:g}") + f"_alpha{a.alpha}"
+        tag = (
+            ("" if a.sample == "pantheon" else f"_{a.sample}")
+            + ("" if a.z_min is None else f"_zmin{a.z_min:g}")
+            + f"_alpha{a.alpha}"
+        )
         (OUT / f"fit{tag}.json").write_text(json.dumps(res, indent=1) + "\n")
         print(json.dumps({k: v for k, v in res.items() if k != "params"}, indent=1))
 
