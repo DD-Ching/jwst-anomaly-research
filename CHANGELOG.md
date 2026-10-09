@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: Hypothesis round 3: derived small effects in large-N data; no testable survivor; new rounds paused (D-076)
+- Brief: a derived small amplitude in a large-N public quantity never analysed for it. **Results:**
+  - R3-A (same-exposure pair correlation, about 2.4 × 10⁻⁵): fails as written (axiom A5 gives zero). The Holometer
+    disfavours it at about 67 %.
+  - R3-B (condensate scalar charge in neutron stars): excluded by J1738+0333 (6.7σ) and the NS–WD combination,
+    α_NS < 2.2 × 10⁻³.
+  - R3-C (SN Ia rate vs "clock depth"): not excluded but untestable. About 5 × 10³ public SNe Ia give 0.5–2σ, and
+    environment systematics are 10–40× the signal.
+- **Rule:** three rounds (9 worlds) produced survivors only in round 1, and those were null in data. New rounds are
+  paused; compute goes to data-limited open searches (D-076).
+
 ## 2026-10-09: D1 on TDCOSMO 2025 power-law chains: 8 lenses null with κ_ext; without it RXJ1131 is 5.7σ off (D-073 addendum 2)
 - Hypothesis: one lens's D_dt disagrees with the H0 + Ωm of the others (a sightline-specific distance anomaly).
   Ordinary explanations: κ_ext, internal mass sheet / model choice, time-delay systematics. A flag with κ_ext applied

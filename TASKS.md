@@ -26,8 +26,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    z < 22) so the control detects, and the full Pantheon+ / DES-SN5YR covariances.
 3. **S3 hybrid images** (D-072): COSMOGRAIL doubles null, sensitivity only r ≈ 0.4–2.4 (red quasar variability makes
    the copy collinear with the main image). Next, low priority: SN Refsdal / SN H0pe imaging at the model lags.
-4. **System A round 3** (round 2 done, D-075: nothing testable here). Brief: a derived small effect in a large-N
-   quantity that is measured but never analysed for it. Optional: the B0218+357 VLA polarisation sign test (R2-B).
+4. **System A rounds paused** (D-076: rounds 2–3 gave no testable survivor). Restart only with a new owner brief.
+   Optional: the B0218+357 VLA polarisation sign test (R2-B).
 
 ## Continuing (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
 1. **W3 in published microlensing samples** (D-057–D-059, D-061). Mróz 2019 bulge (5,790) and 2020 disk (460) fitted and
