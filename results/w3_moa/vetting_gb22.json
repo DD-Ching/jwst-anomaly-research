@@ -23,6 +23,10 @@
    30
   ],
   [
+   "exotic_in_domain",
+   30
+  ],
+  [
    "repeated_deficit",
    17
   ],
@@ -39,39 +43,39 @@
    6
   ],
   [
+   "smooth_dip",
+   3
+  ],
+  [
    "robust_errors_outliers",
-   4
-  ],
-  [
-   "season_offsets",
-   4
-  ],
-  [
-   "season_trends",
-   4
-  ],
-  [
-   "observing_conditions",
-   4
-  ],
-  [
-   "refit_all_ordinary",
-   4
-  ],
-  [
-   "binary_source",
-   4
-  ],
-  [
-   "binary_lens",
-   4
-  ],
-  [
-   "exotic_feature_sampled",
    1
   ],
   [
-   "jackknife_epochs",
+   "season_offsets",
+   1
+  ],
+  [
+   "season_trends",
+   1
+  ],
+  [
+   "observing_conditions",
+   1
+  ],
+  [
+   "refit_all_ordinary",
+   1
+  ],
+  [
+   "binary_source",
+   1
+  ],
+  [
+   "binary_lens",
+   1
+  ],
+  [
+   "exotic_feature_sampled",
    0
   ]
  ],
@@ -86,6 +90,11 @@
      "screen_flag",
      true,
      "ΔBIC -113.5 (N1neg vs FSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -113.5; u0 1.10, f_s 5.8e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "repeated_deficit",
@@ -121,6 +130,11 @@
      "ΔBIC -341.2 (N1neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -341.2; u0 0.03, f_s 2.09e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -6.0"
@@ -147,6 +161,11 @@
      "screen_flag",
      true,
      "ΔBIC -769.6 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -769.6; u0 0.65, f_s 2.97e+04 vs 3 × 2.89e+05 (Gaia DR3 RP 14.25)"
     ],
     [
      "repeated_deficit",
@@ -182,6 +201,11 @@
      "ΔBIC -1879.3 (E2neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -1879.3; u0 0.24, f_s 3.72e+03 vs 3 × 3.38e+04 (Gaia DR3 RP 16.58)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.5"
@@ -215,6 +239,11 @@
      "ΔBIC -231.4 (N1neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -231.4; u0 0.56, f_s 7.04e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -11.2"
@@ -231,6 +260,11 @@
      "screen_flag",
      true,
      "ΔBIC -856.7 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -856.7; u0 1.09, f_s 2.23e+03 vs 3 × 1.45e+05 (default 14.2)"
     ],
     [
      "repeated_deficit",
@@ -251,6 +285,11 @@
      "ΔBIC -1316.3 (N1neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -1316.3; u0 0.58, f_s 8.3e+03 vs 3 × 9.4e+03 (Gaia DR3 RP 17.17)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -9.7"
@@ -267,6 +306,11 @@
      "screen_flag",
      true,
      "ΔBIC -754.1 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -754.1; u0 1.42, f_s 1.34e+04 vs 3 × 1.45e+05 (default 14.2)"
     ],
     [
      "repeated_deficit",
@@ -287,6 +331,11 @@
      "ΔBIC -1421.0 (N1neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -1421.0; u0 0.18, f_s 5.83e+03 vs 3 × 1.17e+04 (Gaia DR3 RP 16.93)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -9.7"
@@ -305,6 +354,11 @@
      "ΔBIC -354.9 (N1neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -354.9; u0 1.61, f_s 861 vs 3 × 4.02e+03 (Gaia DR3 RP 18.09)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -8.1"
@@ -321,6 +375,11 @@
      "screen_flag",
      true,
      "ΔBIC -2741.2 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -2741.2; u0 0.61, f_s 2.14e+03 vs 3 × 8.54e+03 (Gaia DR3 RP 17.27)"
     ],
     [
      "repeated_deficit",
@@ -356,6 +415,11 @@
      "ΔBIC -94.9 (E2neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -94.9; u0 1.82, f_s 65.7 vs 3 × 1.45e+05 (default 14.2)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.1"
@@ -376,6 +440,11 @@
      "ΔBIC -94.9 vs a trapezoidal dip"
     ],
     [
+     "smooth_dip",
+     true,
+     "ΔBIC -94.9 vs a Gaussian dip (σ 194.7 d)"
+    ],
+    [
      "robust_errors_outliers",
      false,
      "29 isolated outliers removed, errors ×1.33; ΔBIC 15.4"
@@ -385,13 +454,18 @@
   {
    "event_id": "gb22-R-3-0-1169",
    "exotic": "N1neg",
-   "dbic_all": -3383.435665551795,
+   "dbic_all": -3398.8125343831525,
    "survives": false,
    "tests": [
     [
      "screen_flag",
      true,
      "ΔBIC -3398.8 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -3398.8; u0 1.67, f_s 4.22e+04 vs 3 × 2.52e+05 (Gaia DR3 RP 14.40)"
     ],
     [
      "repeated_deficit",
@@ -414,49 +488,9 @@
      "ΔBIC -24.1 vs a trapezoidal dip"
     ],
     [
-     "robust_errors_outliers",
-     true,
-     "53 isolated outliers removed, errors ×2.30; ΔBIC -640.2"
-    ],
-    [
-     "season_offsets",
-     true,
-     "free baseline per season; ΔBIC -3160.5"
-    ],
-    [
-     "season_trends",
-     true,
-     "offset + drift per season; ΔBIC -3306.0"
-    ],
-    [
-     "observing_conditions",
-     true,
-     "baseline linear in ('fwhm', 'airmass', 'sky'); ΔBIC -3314.7"
-    ],
-    [
-     "refit_all_ordinary",
-     true,
-     "ΔBIC -3383.4 vs PAR (FSPL, PAR)"
-    ],
-    [
-     "binary_source",
-     true,
-     "ΔBIC -1962.5"
-    ],
-    [
-     "binary_lens",
-     true,
-     "ΔBIC -1950.4"
-    ],
-    [
-     "exotic_feature_sampled",
-     true,
-     "6 epochs on 3 nights inside, Δχ² in -3415.3 / out 39.9"
-    ],
-    [
-     "jackknife_epochs",
+     "smooth_dip",
      false,
-     "ΔBIC [481.0, 1460.0, 1476.5]"
+     "ΔBIC 16.0 vs a Gaussian dip (σ 0.2 d)"
     ]
    ]
   },
@@ -470,6 +504,11 @@
      "screen_flag",
      true,
      "ΔBIC -141.8 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -141.8; u0 0.82, f_s 6.52e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "repeated_deficit",
@@ -488,6 +527,11 @@
      "screen_flag",
      true,
      "ΔBIC -524.5 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -524.5; u0 1.30, f_s 2.34e+03 vs 3 × 7.38e+03 (Gaia DR3 RP 18.23)"
     ],
     [
      "repeated_deficit",
@@ -510,6 +554,11 @@
      "ΔBIC -181.0 vs a trapezoidal dip"
     ],
     [
+     "smooth_dip",
+     true,
+     "ΔBIC -42.6 vs a Gaussian dip (σ 0.1 d)"
+    ],
+    [
      "robust_errors_outliers",
      false,
      "11 isolated outliers removed, errors ×1.21; ΔBIC 7.2"
@@ -528,6 +577,11 @@
      "ΔBIC -747.9 (N1neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -747.9; u0 1.38, f_s 1.22e+04 vs 3 × 1.07e+05 (Gaia DR3 RP 15.33)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -6.3"
@@ -544,6 +598,11 @@
      "screen_flag",
      true,
      "ΔBIC -868.5 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -868.5; u0 0.20, f_s 2.06e+03 vs 3 × 1.65e+04 (Gaia DR3 RP 17.36)"
     ],
     [
      "repeated_deficit",
@@ -579,6 +638,11 @@
      "ΔBIC -996.2 (N1neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -996.2; u0 1.65, f_s 3.94e+03 vs 3 × 8.04e+03 (Gaia DR3 RP 18.14)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -7.5"
@@ -597,6 +661,11 @@
      "ΔBIC -784.1 (E2neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -784.1; u0 0.00, f_s 3.96e+03 vs 3 × 1.04e+04 (Gaia DR3 RP 17.85)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -7.4"
@@ -613,6 +682,11 @@
      "screen_flag",
      true,
      "ΔBIC -3259.6 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -3259.6; u0 1.59, f_s 5.84e+03 vs 3 × 1.52e+04 (Gaia DR3 RP 17.45)"
     ],
     [
      "repeated_deficit",
@@ -635,44 +709,9 @@
      "ΔBIC -960.0 vs a trapezoidal dip"
     ],
     [
-     "robust_errors_outliers",
-     true,
-     "10 isolated outliers removed, errors ×1.61; ΔBIC -558.7"
-    ],
-    [
-     "season_offsets",
-     true,
-     "free baseline per season; ΔBIC -3166.0"
-    ],
-    [
-     "season_trends",
-     true,
-     "offset + drift per season; ΔBIC -3153.0"
-    ],
-    [
-     "observing_conditions",
-     true,
-     "baseline linear in ('fwhm', 'airmass', 'sky'); ΔBIC -3290.4"
-    ],
-    [
-     "refit_all_ordinary",
-     true,
-     "ΔBIC -3259.6 vs PSPL (FSPL, PAR)"
-    ],
-    [
-     "binary_source",
-     true,
-     "ΔBIC -3259.6"
-    ],
-    [
-     "binary_lens",
-     true,
-     "ΔBIC -3259.6"
-    ],
-    [
-     "exotic_feature_sampled",
+     "smooth_dip",
      false,
-     "6 epochs on 1 nights inside, Δχ² in -3352.1 / out 84.5"
+     "ΔBIC 20.2 vs a Gaussian dip (σ 0.1 d)"
     ]
    ]
   },
@@ -686,6 +725,11 @@
      "screen_flag",
      true,
      "ΔBIC -961.6 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -961.6; u0 0.97, f_s 2.72e+03 vs 3 × 1.29e+04 (Gaia DR3 RP 17.63)"
     ],
     [
      "repeated_deficit",
@@ -704,6 +748,11 @@
      "screen_flag",
      true,
      "ΔBIC -2479.6 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -2479.6; u0 1.14, f_s 2.77e+03 vs 3 × 6.34e+04 (Gaia DR3 RP 15.89)"
     ],
     [
      "repeated_deficit",
@@ -739,6 +788,11 @@
      "ΔBIC -389.3 (N1neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -389.3; u0 0.42, f_s 1.93e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -9.4"
@@ -755,6 +809,11 @@
      "screen_flag",
      true,
      "ΔBIC -334.2 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -334.2; u0 0.51, f_s 1.34e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "repeated_deficit",
@@ -785,6 +844,11 @@
      "ΔBIC -3888.6 (E2neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -3888.6; u0 0.99, f_s 1.58e+04 vs 3 × 2.6e+04 (Gaia DR3 RP 16.86)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.2"
@@ -806,6 +870,11 @@
      "screen_flag",
      true,
      "ΔBIC -185.8 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -185.8; u0 1.45, f_s 2.11e+03 vs 3 × 6.27e+03 (Gaia DR3 RP 18.41)"
     ],
     [
      "repeated_deficit",
@@ -841,6 +910,11 @@
      "ΔBIC -792.8 (N1neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -792.8; u0 0.49, f_s 1.09e+04 vs 3 × 4.78e+03 (Gaia DR3 RP 18.70)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.3"
@@ -859,6 +933,11 @@
      "eclipse_dip",
      true,
      "ΔBIC -32.6 vs a trapezoidal dip"
+    ],
+    [
+     "smooth_dip",
+     true,
+     "ΔBIC -52.6 vs a Gaussian dip (σ 0.1 d)"
     ],
     [
      "robust_errors_outliers",
@@ -914,6 +993,11 @@
      "ΔBIC -2004.5 (N1neg vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -2004.5; u0 1.06, f_s 7.89e+04 vs 3 × 1.98e+05 (Gaia DR3 RP 14.66)"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.1"
@@ -934,51 +1018,16 @@
      "ΔBIC -70.4 vs a trapezoidal dip"
     ],
     [
-     "robust_errors_outliers",
-     true,
-     "5 isolated outliers removed, errors ×1.46; ΔBIC -940.4"
-    ],
-    [
-     "season_offsets",
-     true,
-     "free baseline per season; ΔBIC -1990.2"
-    ],
-    [
-     "season_trends",
-     true,
-     "offset + drift per season; ΔBIC -1991.4"
-    ],
-    [
-     "observing_conditions",
-     true,
-     "baseline linear in ('fwhm', 'airmass', 'sky'); ΔBIC -2013.0"
-    ],
-    [
-     "refit_all_ordinary",
-     true,
-     "ΔBIC -2004.5 vs PSPL (FSPL, PAR)"
-    ],
-    [
-     "binary_source",
-     true,
-     "ΔBIC -2004.5"
-    ],
-    [
-     "binary_lens",
-     true,
-     "ΔBIC -2004.5"
-    ],
-    [
-     "exotic_feature_sampled",
+     "smooth_dip",
      false,
-     "3 epochs on 2 nights inside, Δχ² in -2035.7 / out 23.1"
+     "ΔBIC 85.5 vs a Gaussian dip (σ 0.5 d)"
     ]
    ]
   },
   {
    "event_id": "gb22-R-8-6-5967",
-   "exotic": "E2pos",
-   "dbic_all": -2586.735519321369,
+   "exotic": "N1neg",
+   "dbic_all": -2585.0240684110154,
    "survives": false,
    "tests": [
     [
@@ -987,9 +1036,14 @@
      "ΔBIC -2586.7 (E2pos vs PSPL)"
     ],
     [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -2585.0; u0 1.62, f_s 2.67e+03 vs 3 × 1.44e+04 (Gaia DR3 RP 17.50)"
+    ],
+    [
      "repeated_deficit",
      true,
-     "z_min outside the feature -5.7"
+     "z_min outside the feature -5.6"
     ],
     [
      "variable_baseline",
@@ -1004,7 +1058,7 @@
     [
      "eclipse_dip",
      false,
-     "ΔBIC 8.2 vs a trapezoidal dip"
+     "ΔBIC 5.7 vs a trapezoidal dip"
     ]
    ]
   },
@@ -1018,6 +1072,11 @@
      "screen_flag",
      true,
      "ΔBIC -488.2 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -488.2; u0 1.87, f_s 7.58e+03 vs 3 × 5.23e+04 (Gaia DR3 RP 16.10)"
     ],
     [
      "repeated_deficit",
