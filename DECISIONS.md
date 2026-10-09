@@ -3176,3 +3176,35 @@ efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049
 **Revisit if.**
 - Euclid DR1 (≈ 2000 deg², PSF-corrected shapes) is public: the same code scales by tile.
 - A flag appears, or per-tile star ellipticity gradients show radial patterns on 1–12′ scales.
+
+## D-069 Owner direction 2026-10-09: System A (invention) / System B (destruction) hypothesis rounds; round 1 survivors (2026-10-09)
+
+**Decision.** New hypotheses come from System A groups that work without literature and from minimal axioms, with
+space, time, matter and causality not assumed fundamental ("Ontological Reset"). One System B reviewer per text then
+attacks it with verified references. Only predictions that pass B get a data inventory and search compute. At least
+30 % of exploration goes to quantities current searches never measure. Round 1 kept three conditional survivors,
+in order:
+- S1, burst twins (GRB/FRB pairs far apart on the sky at any delay);
+- S2, flat-kernel SN residuals;
+- S3, lensed-transient hybrid images (limit only).
+
+W1–W5 screens and the MOA-II run continue to completion (PR #95), but new compute goes to S1 first.
+
+**Alternatives rejected.**
+- More literature-anchored lens signatures only: the owner asked for at least 30 % on unmeasured quantities.
+- A blind causal-network timing search between unrelated events as the first test: B-on-A1 §7 shows it is testable
+  in principle for pairs ≳ 0.1° apart, but its cost is chance coincidences and observer-side common causes, which S1
+  controls with scrambled catalogues at lower cost.
+- A2 P2/P3/P4 and all of A3 except P2b: see the failure list in docs/hypotheses/round-1/summary.md.
+
+**Evidence.** docs/hypotheses/round-1/ (three System A texts, three System B reviews, summary). Key gap references
+(opened 2026-10-09):
+- arXiv:2006.07095, Fermi GBM lensed-GRB search: position-consistent pairs only.
+- arXiv:2204.06014, CHIME/FRB lens interferometry: delays ≲ 100 ms.
+- arXiv:2406.05047, DES SN lensing magnification.
+- arXiv:0903.5303, disordered locality: the common renaming of the A1/A2/A3 links.
+
+**Revisit if.**
+- S1–S3 are run and null: start System A round 2 from the recorded failure modes (no Lorentz derivation,
+  disordered-locality renaming, cosmic-opacity redundancy).
+- The owner changes the 30 % budget or the process.

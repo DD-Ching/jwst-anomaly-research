@@ -3,7 +3,16 @@
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
-## Now (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
+## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
+1. **S1 burst twins**: GRB pairs far apart on the sky with matching light curves at any delay (Fermi GBM catalogue +
+   light curves; CHIME/FRB Catalog 2 for FRBs). Time-scrambled catalogue null; catalogue duplicates, re-triggers and
+   lensed pairs as positive controls; single-pulse look-alikes and the pair trials factor are the main mimics.
+2. **S2 flat-kernel SN residuals**: Pantheon+ / DES-SN5YR residuals vs a flat-kernel and a lensing-kernel foreground
+   column (Legacy Surveys / DES Y3 galaxies).
+3. **S3 hybrid images** (limit only): COSMOGRAIL light curves at model lags s_i − s_j, including before the leading image.
+4. **System A round 2** after S1–S3, starting from the round-1 failure modes.
+
+## Continuing (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
 1. **W3 in published microlensing samples** (D-057–D-059, D-061). Mróz 2019 bulge (5,790) and 2020 disk (460) fitted and
    vetted: 127 + 6 flags, **0 survive** (the D-059 chunk survivors BLG667.04.62161 and BLG624.18.69573 fail
    `feature_coverage`). **The published samples cannot limit W3:** 0 of 600 injected W3 events pass the emulated Mróz
