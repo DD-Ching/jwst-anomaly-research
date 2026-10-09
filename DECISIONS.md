@@ -3225,8 +3225,9 @@ W1–W5 screens and the MOA-II run continue to completion (PR #95), but new comp
 - Chain: ρ > ρ* (95 % of the per-catalogue maximum over 100 pulse-shuffled surrogate catalogues), then a
   noise-consistency χ² test of a scaled, shifted copy with a 10 % flux systematic (p ≥ 10⁻³), then a re-trigger
   veto (delay ≥ 1 d). A secondary "deep" chain uses ρ > 0.90.
-- Injections copy a real eligible burst into another burst's slot, with that burst's background noise, flux ratios
-  1–0.1 and 5 % per-band gain jitter, and pass through the whole chain.
+- Injections start from a smoothed template (Gaussian, 1.5 bins) of a real eligible burst. One member is re-noised
+  as A; the other is a copy in another burst's slot, with that burst's background noise and independent
+  realisations, flux ratios 1–0.1 and 5 % per-band gain jitter. Both pass through the whole chain.
 - `scripts/s1_ingest.py`, `scripts/s1_twins.py`, `src/jwst_anomaly/burst_twins.py`. All thresholds are ASSUMPTIONs
   in `burst_twins.Params`.
 
@@ -3245,6 +3246,8 @@ W1–W5 screens and the MOA-II run continue to completion (PR #95), but new comp
   replace the spectral cut with matched bands inside ρ plus the χ² test.
 - Pulse-count threshold judged on the S/N with background error only: it counts Poisson fluctuations on bright
   pulses as pulses.
+- Injecting a copy of the burst itself (with its own noise realisation) into the slot: the pair then shares noise,
+  so faint copies reached ρ ≈ 1. That version overstated the ratio-1 efficiency (83 % instead of 37 %).
 
 **Evidence.**
 - The catalogue has 4,390 bursts and 4,389 bcat files reduced. 1,414 bursts are eligible. 998,991 eligible pairs
@@ -3258,6 +3261,14 @@ W1–W5 screens and the MOA-II run continue to completion (PR #95), but new comp
   (S/N 5–10).
 - Positive controls: 8 same-source re-trigger pairs (GRB 091024, 130925, 150201, 220627, 250702 ×3, and
   bn210925800/bn210926869 at 1.3°) are all removed by the position cut.
+- Result: 6 pairs flagged at ρ > ρ* = 0.964. All 6 fail χ² (p < 10⁻¹⁰⁰): they are bright single-envelope
+  look-alikes. 0 survivors in either chain.
+- Injection recovery at flux ratio 1 is 37 % (primary chain) and 58 % (deep chain); about 90 % at copy peak
+  S/N > 50 and about 0 below 10.
+- 95 % upper limit on the twin fraction per eligible burst at ratio 1: 5.7 × 10⁻³ (primary) and 3.7 × 10⁻³
+  (deep). Averaged over ratios 1–0.1: 1.3 × 10⁻² and 7.9 × 10⁻³.
+- Closest call: bn100528075/bn250207053 passes χ² only at s = 0.71 (p = 0.0016, ρ_s = 0.943 < ρ*), with a faint
+  partner (S/N 12). Vetted as population similarity at low S/N (PR body).
 
 **Revisit if.**
 - A better null that keeps the population envelope becomes available (e.g. a pulse-parameter generative model

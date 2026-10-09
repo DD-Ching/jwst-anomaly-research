@@ -1,0 +1,213 @@
+{
+ "catalogue_bursts": 4390,
+ "bcat_status": {
+  "no bcat file": 1,
+  "ok": 4389
+ },
+ "bursts_reduced": 4389,
+ "eligible_bursts": 1414,
+ "eligible_pairs": 998991,
+ "pairs_scored_s1": 510294,
+ "params": {
+  "base_dt": 0.064,
+  "max_bins": 256,
+  "pad_frac": 0.25,
+  "pad_s": 2.0,
+  "bad_abs": 1000000.0,
+  "pulse_prominence_sigma": 5.0,
+  "pulse_min_sep_bins": 2,
+  "min_pulses": 2,
+  "sys_deg": 3.7,
+  "sys_tail_deg": 14.0,
+  "pos_nsigma": 3.0,
+  "max_dk": 1,
+  "stretch_grid": [
+   0.5,
+   0.71,
+   1.41,
+   2.0
+  ],
+  "rho_prescreen_deep": 0.9,
+  "chi2_p_min": 0.001,
+  "chi2_sys_frac": 0.1,
+  "inject_gain_jitter": 0.05,
+  "retrigger_days": 1.0
+ },
+ "rho_star": 0.9636397113654587,
+ "real_max_rho": 0.9691340311695898,
+ "real_pairs_above": {
+  "0.8": 40041,
+  "0.9": 1860,
+  "0.95": 56,
+  "rho_star": 6
+ },
+ "null_pairs_above_per_catalogue": {
+  "0.8": 5323.22,
+  "0.9": 145.71,
+  "0.95": 4.77,
+  "rho_star": 0.0
+ },
+ "flagged_real": 6,
+ "automated_survivors": [],
+ "deep_chain": {
+  "rho_prescreen": 0.9,
+  "pairs": 1860,
+  "chi2_pass": 0,
+  "survivors": []
+ },
+ "positive_controls_retrigger": [
+  {
+   "burst1": "bn091024372",
+   "burst2": "bn091024380",
+   "delay_s": 630.9,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.6614,
+   "chi2_p": 3.29e-184,
+   "npulse": [
+    2,
+    3
+   ]
+  },
+  {
+   "burst1": "bn130925164",
+   "burst2": "bn130925173",
+   "delay_s": 783.4,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.3348,
+   "chi2_p": 7.16e-35,
+   "npulse": [
+    1,
+    3
+   ]
+  },
+  {
+   "burst1": "bn150201574",
+   "burst2": "bn150201590",
+   "delay_s": 1380.8,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.7383,
+   "chi2_p": 5.6e-36,
+   "npulse": [
+    5,
+    0
+   ]
+  },
+  {
+   "burst1": "bn220627890",
+   "burst2": "bn220627901",
+   "delay_s": 956.3,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.7311,
+   "chi2_p": 0.0,
+   "npulse": [
+    14,
+    6
+   ]
+  },
+  {
+   "burst1": "bn250702548",
+   "burst2": "bn250702581",
+   "delay_s": 2823.7,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.4467,
+   "chi2_p": 3.78e-179,
+   "npulse": [
+    2,
+    3
+   ]
+  },
+  {
+   "burst1": "bn210925800",
+   "burst2": "bn210926869",
+   "delay_s": 92330.7,
+   "sep_deg": 1.309,
+   "removed_by_position_cut": true,
+   "rho": 0.5562,
+   "chi2_p": 1.39e-66,
+   "npulse": [
+    4,
+    1
+   ]
+  },
+  {
+   "burst1": "bn250702581",
+   "burst2": "bn250702682",
+   "delay_s": 8727.3,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.5717,
+   "chi2_p": 1.4e-301,
+   "npulse": [
+    3,
+    4
+   ]
+  },
+  {
+   "burst1": "bn250702548",
+   "burst2": "bn250702682",
+   "delay_s": 11551.0,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.5152,
+   "chi2_p": 2.07e-105,
+   "npulse": [
+    2,
+    4
+   ]
+  }
+ ],
+ "injection_efficiency": {
+  "1.0": {
+   "n": 1000,
+   "eligible": 0.701,
+   "flagged": 0.371,
+   "recovered": 0.371,
+   "recovered_deep": 0.578
+  },
+  "0.5": {
+   "n": 1000,
+   "eligible": 0.445,
+   "flagged": 0.225,
+   "recovered": 0.225,
+   "recovered_deep": 0.354
+  },
+  "0.3": {
+   "n": 1000,
+   "eligible": 0.291,
+   "flagged": 0.135,
+   "recovered": 0.135,
+   "recovered_deep": 0.221
+  },
+  "0.2": {
+   "n": 1000,
+   "eligible": 0.185,
+   "flagged": 0.082,
+   "recovered": 0.082,
+   "recovered_deep": 0.142
+  },
+  "0.1": {
+   "n": 1000,
+   "eligible": 0.06,
+   "flagged": 0.028,
+   "recovered": 0.028,
+   "recovered_deep": 0.048
+  }
+ },
+ "limits": {
+  "survivors_k": 0,
+  "poisson_mu95": 2.9957322735539895,
+  "n_eligible": 1414,
+  "f95_ratio1": 0.005710572887898049,
+  "f95_ratio_0.1_1_mean": 0.012595853397206758,
+  "deep_survivors_k": 0,
+  "deep_mu95": 2.9957322735539895,
+  "deep_f95_ratio1": 0.003665436922854977,
+  "deep_f95_ratio_0.1_1_mean": 0.00788764907449805
+ },
+ "runtime_s": 300
+}

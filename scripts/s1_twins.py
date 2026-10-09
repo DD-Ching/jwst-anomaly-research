@@ -398,6 +398,11 @@ def main(argv=None):
             bi["flux"], bi["errs"], bi["k"], bj["flux"], bj["errs"], bj["k"]
         )
         chi2, dof, pval = bt.twin_chi2(x, ex, y, ey, lg)
+        p_s = pval
+        if s_arg[q] != 1.0:  # chi2 of the stretched comparison (secondary s grid)
+            ys, eys = bt.stretch(y, ey, float(s_arg[q]))
+            _, lgs = bt.xcorr_max(x, ys)
+            p_s = bt.twin_chi2(x, ex, ys, eys, lgs)[2]
         dtd = abs(bi["mjd"] - bj["mjd"])
         rows.append(
             {
@@ -421,6 +426,7 @@ def main(argv=None):
                 "chi2": round(float(chi2), 1),
                 "dof": dof,
                 "chi2_p": float(f"{pval:.3g}"),
+                "chi2_p_s": float(f"{p_s:.3g}"),
                 "flag": bool(r[m] > rho_star),
                 "v_chi2": bool(pval >= P.chi2_p_min),
                 "v_retrigger": bool(dtd >= P.retrigger_days),
