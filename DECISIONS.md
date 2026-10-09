@@ -3612,3 +3612,34 @@ kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0L
 **Revisit if.**
 - Parity-resolved circular polarimetry of a lensed radio quasar is published, or a lensed FRB is confirmed (R2-B).
 - DESI DR3 or a CMB analysis pushes the Σm_ν tension past 5σ, or relaxes it (R2-C).
+
+## D-076 Hypothesis round 3: derived small effects in large-N data; no testable survivor; pause new rounds (2026-10-09)
+
+**Decision.**
+- Round 3 (brief: a derived small effect in a large-N quantity never analysed for it) gives nothing that earns
+  search compute:
+  - R3-A (universal same-exposure pair correlation) fails as written. Its decisive test is in a lab.
+  - R3-B (condensate scalar charge) is mostly excluded by NS–WD dipole bounds (upper half at 6.7σ; self-consistent
+    minimum at about 2σ; the no-feedback corner survives). Recorded: α_NS < 2.2 × 10⁻³ (95 %, reviewer's
+    combination).
+  - R3-C (SN Ia rate vs "clock depth") is not excluded but cannot be tested with about 5 × 10³ public SNe Ia under
+    environment systematics.
+- New System A rounds are paused. Compute goes to open searches limited by data (MOA-II, CHIME baseband, Euclid DR1,
+  Gaia DR4) until the owner sets a new brief.
+
+**Alternatives rejected.**
+- A ZTF same-exposure correlation search for R3-A: about 3 TB to download, about 1.8σ at nominal D, and systematics bias it
+  upward.
+- A ZTF BTS Poisson GLM for R3-C: 0.5–2σ at N ≈ 5 × 10³; the kill needs N ≈ 8 × 10⁴.
+- A stacked s(M) Ṗb template fit for R3-B: bound-setting only, and mass-resolved fits already exist.
+- Continuing System A rounds at the same cadence: rounds 2–3 (6 worlds) produced no testable survivor.
+
+**Evidence.** docs/hypotheses/round-3/ (texts, reviews, summary). Key references opened 2026-10-09:
+- arXiv:1512.01216 (Holometer);
+- 2605.01436 (J1738+0333 update);
+- the cluster SN Ia rate papers listed in B-on-R3C.md.
+
+**Revisit if.**
+- The owner sets a new System A brief.
+- Rubin/LSST public alerts give ≥ 10⁵ SNe Ia with hosts (R3-C).
+- A lab cross-correlation of independent noise sources at 10⁻⁵ is published (R3-A).

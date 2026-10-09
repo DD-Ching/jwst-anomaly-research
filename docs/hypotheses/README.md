@@ -32,3 +32,4 @@ untested prediction is not evidence. Nothing is announced outside the repository
 |---|---|---|
 | 1 (2026-10-09) | [round-1/](round-1/summary.md) | 3 conditional: burst twins, flat-kernel SN residuals, lensed-transient hybrid images (limit only) |
 | 2 (2026-10-09) | [round-2/](round-2/summary.md) | none testable here (R2-A excluded; R2-B inconsistent and disfavoured; R2-C not novel, tracked externally) |
+| 3 (2026-10-09) | [round-3/](round-3/summary.md) | none testable here (R3-A fails as written; R3-B mostly excluded by J1738+0333; R3-C under systematics) |
