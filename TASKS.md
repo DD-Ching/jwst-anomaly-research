@@ -13,12 +13,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - a time-resolved CHIME uptime series (only from the collaboration: owner decision);
    - "which event comes first" and antipodal (> 170°) channels;
    - IceTracks-DR2, Swift, Einstein Probe.
-0. **D1 distance self-consistency** (D-073; owner idea 1): 4 H0LiCOW lenses (H0-free R) + 6 (leave-one-out D_dt) and 94
-   localized FRBs (DM–z tails): null, max pull 1.29σ. Injection-calibrated reach: R only ×2–8 / ×0.2–0.4, D_dt
-   ×1.3–1.85 / ×0.54–0.78. FRBs also null under YMW16 (D-073 addendum; max 4.09σ, Galactic-model error). Next: D_dt
-   LOO on the TDCOSMO 2025 power-law chains for the same 6 lenses plus DES0408 and WGD2038 (files in SOURCES.md);
-   apply the WGD2038 sample weights; its chain has no kinematics and DES0408's no κ_ext, so harmonise κ_ext and the
-   mass-sheet treatment before comparing. New per-lens D_d only via the hierArc `*_const_processed.pkl` likelihoods.
+0. **D1 distance self-consistency** (D-073 + addenda; owner idea 1): H0LiCOW (R and D_dt LOO), 94 localized FRBs
+   (NE2001 and YMW16) and TDCOSMO 2025 power-law D_dt LOO on 8 lenses (addendum 2: max 1.12σ with κ_ext): all null.
+   Reach: R ×2–8 / ×0.2–0.4; D_dt ×1.36–1.85 / ×0.41–0.78. Next: composite-model D_dt chains as a model-choice check;
+   new per-lens D_d needs a numpy-only reader for the hierArc `*_const_processed.pkl` likelihoods.
 1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
    mismatch). Next: CHIME/FRB Catalog 2 (CANFAR downloads reset by the proxy; try another route), TTE for short and
    faint bursts, an s ≠ 1 chain, a generative pulse-model null.

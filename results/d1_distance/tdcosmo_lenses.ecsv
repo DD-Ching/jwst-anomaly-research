@@ -1,0 +1,47 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: lens, datatype: string}
+# - {name: variant, datatype: string}
+# - {name: z_d, datatype: float64}
+# - {name: z_s, datatype: float64}
+# - {name: Ddt_p16, datatype: float64}
+# - {name: Ddt_p50, datatype: float64}
+# - {name: Ddt_p84, datatype: float64}
+# - {name: kext_p16, datatype: float64}
+# - {name: kext_p50, datatype: float64}
+# - {name: kext_p84, datatype: float64}
+# - {name: n_chain, datatype: int64}
+# - {name: z_D_loo, datatype: float64}
+# - {name: zemp_D_loo, datatype: float64}
+# - {name: dlnDdt_D, datatype: float64}
+# - {name: sig_lnDdt_D, datatype: float64}
+# - {name: H0_loo_others, datatype: float64}
+# - {name: global_sigma, datatype: float64}
+# - {name: beyond_threshold, datatype: bool}
+# - {name: flag, datatype: bool}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: 'TDCOSMO2025_public@d7f38db power-law D_dt chains, kappa_ext PDFs (derived); flat LCDM predictions (astropy.cosmology); scripts/d1_distance.py
+#     tdcosmo'}
+# - {n_trials: 8}
+# - {local_sigma_threshold: 5.38695112552313}
+# - {seed: 20261009}
+# schema: astropy-2.0
+lens variant z_d z_s Ddt_p16 Ddt_p50 Ddt_p84 kext_p16 kext_p50 kext_p84 n_chain z_D_loo zemp_D_loo dlnDdt_D sig_lnDdt_D H0_loo_others global_sigma beyond_threshold flag
+B1608 kext 0.6304 1.394 5035.9205 5341.8782 5907.6766 0.0574 0.1026 0.1865 500000 0.9659 1.746 0.1333 0.138 74.4462 0.0485 False False
+RXJ1131 kext 0.295 0.654 2025.9197 2096.1134 2202.5202 0.0435 0.0695 0.1125 3000000 -1.1175 -1.2548 -0.0652 0.0584 72.2375 0.1084 False False
+PG1115 kext 0.311 1.722 1336.6566 1458.0807 1585.3813 -0.0257 -0.0054 0.0266 1000000 -1.0522 -1.0778 -0.096 0.0912 72.6871 0.0786 False False
+J1206 kext 0.745 1.789 5235.8831 5883.8503 6539.8558 -0.025 -0.0037 0.0321 16889 0.6084 0.547 0.0703 0.1156 73.2575 0.0024 False False
+HE0435 kext 0.4546 1.693 2544.6378 2718.2387 2906.1408 -0.0175 0.004 0.0365 1000000 0.5164 0.5309 0.0381 0.0738 73.481 0.0007 False False
+WFI2033 kext 0.6575 1.662 4566.1713 4834.898 5286.3154 0.0149 0.0588 0.1382 480112 0.6906 0.6949 0.0592 0.0857 73.526 0.0058 False False
+DES0408 kext 0.597 2.375 3258.1273 3366.2868 3509.7952 -0.0639 -0.0396 -0.0016 30000 -0.3876 -0.5135 -0.0203 0.0524 72.4648 0.0001 False False
+WGD2038 kext 0.2283 0.777 1171.2633 1495.7413 1821.258 -0.0065 -0.0003 0.0097 567880 0.3752 0.4927 0.0877 0.2337 73.343 0.0001 False False
+B1608 nokext 0.6304 1.394 4644.571 4774.698 4914.2588 0.0 0.0 0.0 500000 1.1108 1.1145 0.0337 0.0303 77.8478 0.1051 False False
+RXJ1131 nokext 0.295 0.654 1912.3112 1946.8524 1981.6768 0.0 0.0 0.0 3000000 -5.6746 -4.5648 -0.1326 0.0234 73.4003 5.3074 True False
+PG1115 nokext 0.311 1.722 1342.2006 1457.8748 1574.5916 0.0 0.0 0.0 1000000 -0.4379 -0.4096 -0.0356 0.0813 77.4858 0.0002 False False
+J1206 nokext 0.745 1.789 5240.0791 5843.5669 6473.327 0.0 0.0 0.0 16889 1.1045 1.0627 0.1158 0.1049 77.5747 0.102 False False
+HE0435 nokext 0.4546 1.693 2535.7812 2694.6905 2853.1696 0.0 0.0 0.0 1000000 1.313 1.296 0.0793 0.0604 77.647 0.2363 False False
+WFI2033 nokext 0.6575 1.662 4388.9247 4540.455 4675.246 0.0 0.0 0.0 480112 0.8783 0.8661 0.0291 0.0331 77.7018 0.0274 False False
+DES0408 nokext 0.597 2.375 3417.7005 3491.8935 3567.0322 0.0 0.0 0.0 30000 3.9377 4.1075 0.103 0.0262 79.7674 3.4066 False False
+WGD2038 nokext 0.2283 0.777 1168.9593 1493.1026 1815.8048 0.0 0.0 0.0 567880 0.607 0.703 0.1412 0.2327 77.5293 0.0023 False False

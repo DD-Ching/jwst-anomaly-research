@@ -14,6 +14,7 @@ Null: every permutation of the redshift pairs across lenses. Injection: scale on
 FRBs (second probe): DM_obs vs the Macquart-relation predictive distribution per localized host.
 
     python scripts/d1_distance.py lenses --h0licow DIR --tdcosmo DIR
+    python scripts/d1_distance.py tdcosmo --tdcosmo DIR   # statistic D, TDCOSMO 2025 power-law
     python scripts/d1_distance.py frb --frb DIR
 Inputs are shallow clones of the three public repos; every file used is pinned by sha256.
 """
@@ -258,14 +259,19 @@ def ratio_stats(
 
 
 def ddt_loo(
-    lens: dict, rng, params: dc.Params, redshifts: dict, scale: dict | None = None
+    lens: dict,
+    rng,
+    params: dc.Params,
+    redshifts: dict,
+    scale: dict | None = None,
+    names: list[str] = ALL,
 ) -> list[dict]:
     """Statistic D: LOO pull of ln D_dt vs H0 + Omega_m fitted to the other lenses."""
     scale = scale or {}
-    ln_obs = [np.log(lens[n]["ddt"] * scale.get(n, 1.0)) for n in ALL]
-    w = [lens[n]["w"] for n in ALL]
-    zd = np.array([redshifts[n][0] for n in ALL])
-    zs = np.array([redshifts[n][1] for n in ALL])
+    ln_obs = [np.log(lens[n]["ddt"] * scale.get(n, 1.0)) for n in names]
+    w = [lens[n]["w"] for n in names]
+    zd = np.array([redshifts[n][0] for n in names])
+    zs = np.array([redshifts[n][1] for n in names])
     om, grid = dc.grid_ln_model(zd, zs, "ddt", params)
     ln_s = np.linspace(
         np.log(dc.C_KMS / params.h0_range[1]), np.log(dc.C_KMS / params.h0_range[0]), params.n_lns
@@ -280,7 +286,7 @@ def ddt_loo(
             "sig_lnDdt_D": r["sigma_ln"],
             "H0_loo_others": float(dc.C_KMS / np.exp(r["lns_post_mean"])),
         }
-        for n, r in zip(ALL, loo, strict=True)
+        for n, r in zip(names, loo, strict=True)
     ]
 
 
@@ -819,6 +825,283 @@ def run_frb(args) -> None:
     print(json.dumps(summary, indent=1))
 
 
+# ---- TDCOSMO 2025 power-law D_dt chains (D-073 addendum 2: statistic D on 8 lenses) ----
+_TD = "TDCOSMO_sample/TDCOSMO_data/"
+J1206_KHIST = (
+    "kappahist_J1206_measured_5innermask_nobeta_zgap-1.0_-1.0_fiducial_120_gal_120_zoverr_45_gal_45_"
+    "zoverr_24_med_increments4_4_4_4.cat"
+)
+WGD2038_KHIST = (
+    "kappahist_2038_measured_3innermask_nobeta_removehandpicked_zgap-1.0_-1.0_fiducial_120_gal_120_"
+    "oneoverr_45_gal_45_zoverr_22.5_med_increments2_2_2_2_emptymsk.cat"
+)
+# lens -> (D_dt^model file, kappa_ext file, sha256 of each); the pairing is the one in TDCOSMO's
+# tdcosmo_sample.ipynb (the power-law models behind the TDCOSMO 2025 likelihoods).
+TDCOSMO_PL = {
+    "B1608": (
+        "B1608+656/B1608_Dtmod_n5e5.dat",
+        "049903c193a9cd8d588f99d0dcc722073cbe3645553435d67d56153d58223a19",
+        "B1608+656/B1608_kext.txt",
+        "eab36e676bc1ef629d293b7ef24f25376c2f4f9cf60a0cd709c0731b7431833d",
+    ),
+    "RXJ1131": (
+        "RXJ1131-1231/rxj_powerlaw_Ddt.dat",
+        "1c715fe33eb4ca8dd6eace556198e96d794d5f53a01a173c95f489023a47cfff",
+        "RXJ1131-1231/kappa_powerlaw_rxj.dat",
+        "9e5d313f6634072bf724e7ec72ad7a799d647f35186db98d0c1ac0d8969682c5",
+    ),
+    "PG1115": (
+        "PG1115+080/pg_powerlaw_Ddt.dat",
+        "3b51740e01d62ea63d5c2345a75476569a1f7c4b875790d614767689bcd0f7b8",
+        "PG1115+080/kappa_powerlaw_pg.dat",
+        "7a6bb6ef03d5b9bf1a3c3cee83c4baf5f84ec22e2ef4e527e2264f6422398fd7",
+    ),
+    "J1206": (
+        "SDSS1206+4332/angular_diameter_pre_LOS_power_law.txt",
+        "32bd7ec755a7e4c128d14cc56d5f7738881df5911e2f67ead2e5d66802c315cd",
+        f"SDSS1206+4332/{J1206_KHIST}",
+        "bc498dbebbc99f03520963e01921ae49f829585fe44367732a178fdc7d046760",
+    ),
+    "HE0435": (
+        "HE0435-1223/he_powerlaw_Ddt.dat",
+        "891cec93d84277a5abd3fef84bbc46e00921dad61520231a97eb115f74245e1c",
+        "HE0435-1223/kappa_powerlaw_he.dat",
+        "d4d09087f7b213532368ad3606fbf6f423886f071afb9331ad4e2437b6eaed11",
+    ),
+    "WFI2033": (
+        "WFI2033-4723/wfi2033_pl_dt_nokext.dat",
+        "27de2eb954b29b631e81a85eea1b5ac11f3c34baddbe976a6e3e25538e8443cc",
+        "WFI2033-4723/wfi2033_kext_bic_pdf.dat",
+        "faf3eb5165f8a72453d7a01ec552491675b0c3cdd27b1fd234a338efd7c6c5b8",
+    ),
+    "DES0408": (
+        "DES0408-5354/power_law_dist_post_no_kext.txt",
+        "1d7167d7cc695eb406062db0a741cdb47879ce6a8e8b53df932067de326e9e5d",
+        "DES0408-5354/kext_sampled.txt",
+        "3b08ec4e566daac686665639d05a5a818e5f84b9686df6f7236c131594aef048",
+    ),
+    "WGD2038": (
+        "WGD2038-4008/desj2038_pl_nokext_nokin_dt_weight.csv",
+        "ac816f55de9b4b1d41635c80a4d1a6db3acf1f0bc2bc6c74772a912796931d53",
+        f"WGD2038-4008/{WGD2038_KHIST}",
+        "b7288742f9c596570d947e223dc64fb4d76e34dc3966f6a851b054c524b79ca7",
+    ),
+}
+# Redshifts from TDCOSMO_sample/tdcosmo_sample.yaml (the 6 H0LiCOW lenses agree with REDSHIFTS).
+TD_REDSHIFTS = {**REDSHIFTS, "DES0408": (0.597, 2.375), "WGD2038": (0.2283, 0.777)}
+TD_ALL = ALL + ["DES0408", "WGD2038"]
+# "kext": own TDCOSMO kappa_ext PDF per lens (the test); "nokext": kappa_ext = 0 (diagnostic)
+KEXT_VARIANTS = ("kext", "nokext")
+for _n, (_fd, _dsha, _fk, _ksha) in TDCOSMO_PL.items():
+    FILES[f"TD_{_n}_ddt"] = (TDCOSMO, TDCOSMO_COMMIT, _TD + _fd, _dsha)
+    FILES[f"TD_{_n}_kext"] = (TDCOSMO, TDCOSMO_COMMIT, _TD + _fk, _ksha)
+
+
+def load_tdcosmo_pl(root: Path, rng: np.random.Generator, n_keep: int, rows: list) -> dict:
+    """{lens: {"ddt_model", "kappa"}}: n_keep equal-weight draws each (derived posteriors).
+
+    Readers follow tdcosmo_sample.ipynb: single-column chains with a header line; WFI2033 and
+    WGD2038 carry weights; B1608 is (weight, Dt^mod, gamma', kappa); SDSS1206 is a pickle of
+    (D_d D_s / D_ds, D_d, kappa_pert), D_dt = (1 + z_d) x first / (1 + kappa_pert); the J1206 and
+    WGD2038 kappa_ext files are histograms on [-0.1, 1] and [-0.2, 1]."""
+    import pandas as pd
+
+    def col(path, skip=1, sep=","):
+        return pd.read_csv(path, sep=sep, header=None, skiprows=skip, comment="#").to_numpy()
+
+    roots = {TDCOSMO: root}
+    pinned("TDCOSMO_yaml", roots, rows)  # source of TD_REDSHIFTS
+    out = {}
+    for name in TDCOSMO_PL:
+        pd_ = pinned(f"TD_{name}_ddt", roots, rows)
+        pk = pinned(f"TD_{name}_kext", roots, rows)
+        w = None
+        if name == "B1608":
+            a = col(pd_, skip=1, sep=r"\s+")
+            ddt, w = a[:, 1], a[:, 0]
+        elif name == "J1206":
+            first, _, kpert = dc.load_array_pickle(pd_)
+            ddt = (1 + TD_REDSHIFTS[name][0]) * first / (1 + kpert)
+            ddt = ddt[ddt > 0]
+        elif name in ("WFI2033", "WGD2038"):
+            a = col(pd_)
+            ddt, w = a[:, 0], a[:, 1]
+        elif name == "DES0408":
+            ddt = col(pd_, skip=0)[:, 0]
+        else:
+            ddt = col(pd_)[:, 0]
+        if name in ("J1206", "WGD2038"):
+            pdf = np.loadtxt(pk, usecols=[0], comments="#")
+            lo = -0.1 if name == "J1206" else -0.2
+            kappa = dc.draw_from_hist(pdf, np.linspace(lo, 1.0, len(pdf) + 1), n_keep, rng)
+        elif name == "WFI2033":
+            a = col(pk)
+            kappa = dc.resample(a[:, 0], n_keep, rng, a[:, 1])
+        elif name in ("B1608", "DES0408"):
+            kappa = dc.resample(col(pk, skip=0)[:, 0], n_keep, rng)
+        else:
+            kappa = dc.resample(col(pk)[:, 0], n_keep, rng)
+        out[name] = {
+            "ddt_model": dc.resample(ddt, n_keep, rng, w),
+            "kappa": kappa,
+            "n_chain": int(len(ddt)),
+        }
+    return out
+
+
+def _td_lens(td: dict, variant: str) -> dict:
+    """lens dict for ddt_loo: D_dt with the variant's kappa_ext treatment, equal weights."""
+    return {
+        n: {
+            "ddt": d["ddt_model"]
+            if variant == "nokext"
+            else dc.ddt_with_kext(d["ddt_model"], d["kappa"]),
+            "w": None,
+        }
+        for n, d in td.items()
+    }
+
+
+def run_tdcosmo(args) -> None:
+    params = dc.Params(n_pred=args.n_pred, n_obs=args.n_obs)
+    nparams = dc.Params(n_pred=args.n_null_pred, n_obs=args.n_obs)
+    rng = np.random.default_rng(args.seed)
+    rows_m: list = []
+    td = load_tdcosmo_pl(Path(args.tdcosmo), rng, params.n_obs, rows_m)
+    OUT.mkdir(parents=True, exist_ok=True)
+    n_trials = len(TD_ALL)  # ASSUMPTION: Sidak over the kext pulls (nokext is a diagnostic)
+    thr = dc.local_sigma_threshold(n_trials, params.flag_sigma_global)
+
+    rows, null, sens = [], {}, {}
+    inj_rows = []
+    for v in KEXT_VARIANTS:
+        lens = _td_lens(td, v)
+        res = ddt_loo(lens, rng, params, TD_REDSHIFTS, names=TD_ALL)
+        for r in res:
+            q = np.percentile(lens[r["lens"]]["ddt"], [16, 50, 84])
+            k = np.percentile(td[r["lens"]]["kappa"], [16, 50, 84]) if v == "kext" else (0, 0, 0)
+            rows.append(
+                {
+                    "lens": r["lens"],
+                    "variant": v,
+                    "z_d": TD_REDSHIFTS[r["lens"]][0],
+                    "z_s": TD_REDSHIFTS[r["lens"]][1],
+                    "Ddt_p16": q[0],
+                    "Ddt_p50": q[1],
+                    "Ddt_p84": q[2],
+                    "kext_p16": k[0],
+                    "kext_p50": k[1],
+                    "kext_p84": k[2],
+                    "n_chain": td[r["lens"]]["n_chain"],
+                    **{c: r[c] for c in r if c != "lens"},
+                    "global_sigma": dc.global_sigma(r["z_D_loo"], n_trials),
+                    "beyond_threshold": bool(abs(r["z_D_loo"]) >= thr),
+                    "flag": bool(v == "kext" and abs(r["z_D_loo"]) >= thr),
+                }
+            )
+        # null: random non-identity permutations of the redshift pairs across the 8 lenses
+        vals = []
+        while len(vals) < args.n_null:
+            p = rng.permutation(len(TD_ALL))
+            if np.all(p == np.arange(len(TD_ALL))):
+                continue
+            z = {TD_ALL[j]: TD_REDSHIFTS[TD_ALL[p[j]]] for j in range(len(TD_ALL))}
+            vals.append(
+                max(abs(x["z_D_loo"]) for x in ddt_loo(lens, rng, nparams, z, names=TD_ALL))
+            )
+        obs = max(abs(r["z_D_loo"]) for r in res)
+        null[v] = {
+            "observed_max_abs_z": round(obs, 3),
+            "n_perm": len(vals),
+            "null_median": round(float(np.median(vals)), 3),
+            "frac_null_ge_observed": float(np.mean(np.array(vals) >= obs)),
+        }
+        # injection: one lens's D_dt x f through the same statistic; the f = 1 run under the same
+        # settings is the baseline of the recovered shift
+        for name in TD_ALL:
+            recs = {}
+            for f in INJ_FACTORS:
+                recs[f] = {
+                    x["lens"]: x
+                    for x in ddt_loo(lens, rng, nparams, TD_REDSHIFTS, {name: f}, names=TD_ALL)
+                }[name]
+            for f, dd in recs.items():
+                inj_rows.append(
+                    {
+                        "lens": name,
+                        "variant": v,
+                        "factor": f,
+                        "dlnDdt_D_recovered": dd["dlnDdt_D"] - recs[1.0]["dlnDdt_D"],
+                        "z_D": dd["z_D_loo"],
+                        "beyond_threshold": bool(abs(dd["z_D_loo"]) >= thr),
+                    }
+                )
+    t = Table(rows=rows)
+    it = Table(rows=inj_rows)
+    for tab in (t, it):
+        for c in tab.colnames:
+            if tab[c].dtype.kind == "f":
+                tab[c] = np.round(tab[c], 4)
+    src = (
+        f"TDCOSMO2025_public@{TDCOSMO_COMMIT[:7]} power-law D_dt chains, kappa_ext PDFs "
+        "(derived); "
+        "flat LCDM predictions (astropy.cosmology); scripts/d1_distance.py tdcosmo"
+    )
+    t.meta.update(
+        {
+            "provenance": str(Provenance.MODEL_PREDICTION),
+            "source": src,
+            "n_trials": n_trials,
+            "local_sigma_threshold": thr,
+            "seed": args.seed,
+        }
+    )
+    it.meta.update(
+        {
+            "provenance": str(Provenance.SIMULATED),
+            "source": "tdcosmo_lenses.ecsv inputs, one lens's D_dt x `factor`",
+        }
+    )
+    t.write(OUT / "tdcosmo_lenses.ecsv", overwrite=True)
+    it.write(OUT / "tdcosmo_injections.ecsv", overwrite=True)
+    for v in KEXT_VARIANTS:
+        sv = it[it["variant"] == v]
+        sens[v] = {}
+        for name in TD_ALL:
+            sub = sv[sv["lens"] == name]
+            sub.sort("factor")
+            sens[v][name] = {
+                "down": _crossing(sub, "z_D", thr, below=True),
+                "up": _crossing(sub, "z_D", thr, below=False),
+            }
+    summary = {
+        "provenance": str(Provenance.MODEL_PREDICTION),
+        "n_trials": n_trials,
+        "local_sigma_threshold": round(thr, 3),
+        "flagged": [r["lens"] for r in rows if r["flag"]],
+        "nokext_beyond_threshold_diagnostic": [
+            r["lens"] for r in rows if r["variant"] == "nokext" and r["beyond_threshold"]
+        ],
+        "z_D_loo": {f"{r['lens']}/{r['variant']}": round(float(r["z_D_loo"]), 3) for r in rows},
+        "H0_loo_others": {
+            f"{r['lens']}/{r['variant']}": round(float(r["H0_loo_others"]), 1) for r in rows
+        },
+        "null": null,
+        "min_factor_at_threshold_from_injections": sens,
+        "params": {k: v for k, v in vars(params).items()},
+    }
+    (OUT / "tdcosmo_summary.json").write_text(json.dumps(summary, indent=1, default=str) + "\n")
+    write_manifest(rows_m, "tdcosmo")
+    print(t["lens", "variant", "Ddt_p50", "kext_p50", "z_D_loo", "H0_loo_others", "flag"])
+    print(
+        json.dumps(
+            {k: v for k, v in summary.items() if k not in ("params", "z_D_loo")},
+            indent=1,
+            default=str,
+        )
+    )
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -833,6 +1116,13 @@ def main() -> None:
     a.add_argument("--n-null-pred", type=int, default=50_000)
     a.add_argument("--n-null6", type=int, default=100)
     a.add_argument("--seed", type=int, default=20261009)
+    c = sub.add_parser("tdcosmo")
+    c.add_argument("--tdcosmo", default=str(d / "TDCOSMO2025_public"))
+    c.add_argument("--n-pred", type=int, default=200_000)
+    c.add_argument("--n-obs", type=int, default=200_000)
+    c.add_argument("--n-null-pred", type=int, default=50_000)
+    c.add_argument("--n-null", type=int, default=100)
+    c.add_argument("--seed", type=int, default=20261009)
     b = sub.add_parser("frb")
     b.add_argument("--frb", default=str(d / "FRB"))
     b.add_argument("--seed", type=int, default=20261009)
@@ -846,7 +1136,7 @@ def main() -> None:
         "--pygedm-sdist", help="pygedm 3.3.0 sdist used for --ism ymw16 (manifest sha256)"
     )
     args = ap.parse_args()
-    run_lenses(args) if args.cmd == "lenses" else run_frb(args)
+    {"lenses": run_lenses, "tdcosmo": run_tdcosmo, "frb": run_frb}[args.cmd](args)
 
 
 if __name__ == "__main__":

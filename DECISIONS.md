@@ -3423,6 +3423,34 @@ counts as flagged if either model flags it (`frb_ism_compare.ecsv`, `flag_either
 on a low-latitude sightline (both models exceed its total DM), not a sightline anomaly. Rejected: building NE2001 in
 pygedm (needs a system f2c library; the stored NE2001 values are already the reference).
 
+**Addendum 2 (2026-10-09): statistic D on the TDCOSMO 2025 power-law chains, 8 lenses.**
+`scripts/d1_distance.py tdcosmo` runs the D_dt leave-one-out (H0 + Ωm free, flat ΛCDM) on the power-law,
+kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0LiCOW lenses plus DES0408 and WGD2038
+(file pairing and readers as in TDCOSMO's `tdcosmo_sample.ipynb`; redshifts from `tdcosmo_sample.yaml`).
+- κ_ext harmonised: every lens gets D_dt = D_dt^model/(1 − κ_ext) (hierArc convention, λ_int = 1) with an independent
+  draw from its own TDCOSMO κ_ext distribution (`kext`); the `nokext` variant sets κ_ext = 0 for all as a diagnostic.
+  The mass sheet is treated the same for all (power law, no internal MST; a sample-wide factor is absorbed by H0).
+  WGD2038's chain is weighted (weights applied); DES0408 has no κ_ext in its chain, so its own PDF is applied like
+  the others'.
+- SDSS1206: the pre-LOS power-law pickle (D_d D_s/D_ds, D_d, κ_pert) is read with an unpickler that admits numpy
+  arrays only (`distance_consistency.load_array_pickle`); D_dt = (1 + z_d) × first / (1 + κ_pert), as in the notebook.
+- Sidak over the 8 `kext` pulls: 5.39σ local (ASSUMPTION; `nokext` is a diagnostic and never flags). Null: 100
+  random redshift permutations. Injection: D_dt × f, f = 0.15–8 (baseline = the f = 1 run under the same settings).
+- Checked: the RXJ1131, PG1115 and HE0435 κ_ext files have as many rows as their D_dt chains but are uncorrelated
+  with them (|r| < 0.003; ln D_dt width identical paired or shuffled), so independent draws (TDCOSMO's own
+  treatment) lose nothing; B1608's chain κ column is all zero. The WGD2038 histogram range [−0.2, 1], 2000 bins, is
+  the one in TDCOSMO's `plotkappa_handpickedpaper2038.py`; its narrow κ_ext (16–84 %: −0.007 to 0.010) is as published.
+- **Result, `kext`: null.** Max |pull| 1.12σ (RXJ1131 −1.12, PG1115 −1.05, B1608 +0.97; the rest < 0.7σ); LOO H0 of
+  the others 72.2–74.4. Shuffled-z null median max|pull| 15.8σ. Detectable factors ×0.41–0.78 down / ×1.36–1.85 up
+  for the seven tight lenses, ×0.26 / ×3.2 for WGD2038 (σ_ln D_dt ≈ 0.24).
+- **`nokext`: RXJ1131 −5.67σ (beyond the threshold), DES0408 +3.9σ.** Explained by line-of-sight convergence: removing the
+  measured κ_ext (RXJ1131 median 0.070, B1608 0.103, WFI2033 0.059, DES0408 −0.040) moves the others' H0 to 77.5–79.8
+  while RXJ1131, the most precise chain (σ_ln = 0.023), stays at 73.4. With κ_ext the tension is gone (−1.1σ). This
+  is a real-data positive control: the statistic resolves a ~7 % sightline convergence on the precise lenses, so an
+  exotic per-sightline distance effect would have to be smaller than the κ_ext uncertainties (±3–5 %) or mimic κ_ext.
+- Limitations: power-law models only (no composite); no kinematics, so no per-lens D_d (new D_d only via the hierArc
+  `*_const_processed.pkl` likelihoods, not read: pickles from a download need a data-only reader first).
+
 ## D-074 E1 causal event network: lag × separation pair counts across GBM, ICECAT-1, GWTC and CHIME Cat 2 with sidereal-scrambled nulls (2026-10-09)
 
 **Decision.**
