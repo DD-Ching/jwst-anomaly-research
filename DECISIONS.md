@@ -3408,6 +3408,21 @@ low limit is above DM_ISM for most bursts (median 2.3× DM_ISM) because Macquart
 released; JWST/KCWI spatially resolved kinematics shrink D_d errors below ~10 % (the R test then reaches ×1.5);
 a YMW16 or empirical Galactic DM model replaces NE2001 at low latitude.
 
+**Addendum (2026-10-09): YMW16 beside NE2001.** `scripts/d1_distance.py frb --ism ymw16` replaces the stored NE2001
+`DMISM` by YMW16 (Yao, Manchester & Wang 2017) to 30 kpc at each burst's RA/Dec, everything else unchanged (±20 %,
+halo, cosmic, host, 5.81σ). YMW16 comes from pygedm 3.3.0's compiled `ymw16` extension, called directly: pygedm's
+NE2001 extension needs libf2c (not in the cloud image) and its package import fails on SciPy ≥ 1.14 (`simps`), so the
+package is built without `ne21c` and only `ymw16` is imported (recipe in `results/d1_distance/README.md`). Known-case
+check: FRB 20121102A gives 287 pc cm⁻³ (the published YMW16 value; NE2001 stored 158). **Null under YMW16 and under
+either model:** no flag; max low pull FRB 20220319D 4.09σ (YMW16 211 vs NE2001 127 vs DM_obs 111), max high
+FRB 20190520B 2.37σ; injections 94/94 per side. YMW16/NE2001 ratio median 0.84 (16–84 %: 0.71–1.31, range 0.36–1.91),
+so the models differ by more than the ±20 % ISM error (ASSUMPTION) for 54 of 94 bursts; the ±20 % is therefore too narrow
+as a model error. Widening it only broadens the predictive distribution and lowers the pulls, so the null stands, but
+the per-burst low-side DM limits under either single model are optimistic; a burst
+counts as flagged if either model flags it (`frb_ism_compare.ecsv`, `flag_either`). The 20220319D pull is model error
+on a low-latitude sightline (both models exceed its total DM), not a sightline anomaly. Rejected: building NE2001 in
+pygedm (needs a system f2c library; the stored NE2001 values are already the reference).
+
 ## D-TBD E1 causal event network: lag × separation pair counts across GBM, ICECAT-1, GWTC and CHIME Cat 2 with sidereal-scrambled nulls (2026-10-09)
 
 **Decision.**

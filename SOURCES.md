@@ -1107,3 +1107,6 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   100.)`), set by `frb/builds/build_frbs.py`; used as stored, not recomputed. Macquart et al. 2020, Nature 581,
   391 (arXiv:2005.13161) for ⟨DM_cosmic⟩, p(Δ) and the host log-normal; James et al. 2022, MNRAS 516, 4862
   (arXiv:2208.00819) for F ≈ 0.32.
+- YMW16 Galactic electron-density model, Yao, Manchester & Wang 2017, ApJ 835, 29 (arXiv:1610.09448), through pygedm
+  3.3.0 (https://pypi.org/project/pygedm/3.3.0/, sdist; Price, Flynn & Deller 2021, PASA 38, e038, arXiv:2106.15816):
+  only its compiled `ymw16` extension and parameter files are used (D-073 addendum). Accessed 2026-10-09.
