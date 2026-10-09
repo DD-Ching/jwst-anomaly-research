@@ -238,62 +238,122 @@ def close_pairs(
 # ------------------------------------------------------------------------------------- injection
 
 
-def injections(samples, p, null_jit, mask, n_trials, rng) -> Table:
-    """Inject n wide-separation pairs at a known lag bin into channel (A, B); measure the recovered
-    count excess and whether the global trials-corrected p (jit null) falls below DETECT_P."""
-    obs0 = count_all(samples, p)
-    nlag = len(p.lag_edges) - 1
-    rows = []
-    # precompute per-scramble min-p distribution once (detection threshold on the min per-cell p)
-    flat = null_jit[:, mask]
-    srt = np.sort(flat, axis=0)
+def family_threshold(null: np.ndarray, mask: np.ndarray, alpha: float) -> float:
+    """Per-cell p threshold p* with a family-wise false-alarm rate <= alpha over ``mask`` cells:
+    the alpha quantile of the per-scramble minimum per-cell p (same convention as en.global_p)."""
+    flat = null[:, mask]
     nn = flat.shape[0]
+    srt = np.sort(flat, axis=0)
     p_null = np.empty_like(flat, dtype=float)
     for c in range(flat.shape[1]):
         p_null[:, c] = (nn - np.searchsorted(srt[:, c], flat[:, c], side="left")) / nn
     min_null = np.sort(p_null.min(axis=1))
+    k = max(int(np.floor(alpha * nn)) - 1, 0)
+    return float(min_null[k])
+
+
+def injections(samples, p, null_jit, mask, n_trials, rng) -> tuple[Table, float]:
+    """Inject n wide-separation pairs at a known lag bin into channel (A, B), recount that channel,
+    and call the injection detected when the injected cell's p (jit null) is <= p*, the per-cell
+    threshold with a family-wise false-alarm rate DETECT_P over all tested cells."""
+    obs0 = count_all(samples, p)
+    nlag = len(p.lag_edges) - 1
+    p_star = family_threshold(null_jit, mask, DETECT_P)
+    nn = null_jit.shape[0]
+    rows = []
     for c, (a, b) in enumerate(CHANNELS):
         cls = 2 if "GW" in (a, b) else 1
         for k in range(nlag):
             lo, hi = p.lag_edges[k], p.lag_edges[k + 1]
-            base = float(null_jit[:, c, k, cls].mean())
-            sd = float(null_jit[:, c, k, cls].std())
+            col = np.sort(null_jit[:, c, k, cls])
+            sd = float(col.std())
             grid = sorted(
                 {max(1, int(round(x))) for x in (np.array([1, 2, 3, 5, 8]) * max(sd, 1.0))}
             )
             for n in grid:
-                det, rec = 0, []
+                det, rec, nmov = 0, [], []
                 for _ in range(n_trials):
                     sb = en.inject_pairs(samples[a], samples[b], n, lo, hi, p, a == b, rng)
+                    m = int(np.count_nonzero(sb.mjd != samples[b].mjd))
                     # only channel c is recounted (the moved B events also enter other channels;
-                    # those changes are second order and ignored)
-                    o = obs0.copy()
-                    o[c] = en.count_channel(sb if a == b else samples[a], sb, p, same=(a == b))
-                    rec.append(o[c, k, cls] - obs0[c, k, cls])
-                    pc = (1.0 + (flat >= o[mask][None]).sum(axis=0)) / (nn + 1.0)
-                    g = (1.0 + np.searchsorted(min_null, pc.min(), side="right")) / (nn + 1.0)
-                    det += g < DETECT_P
+                    # those second-order changes are ignored)
+                    o = en.count_channel(sb if a == b else samples[a], sb, p, same=(a == b))
+                    x = o[k, cls]
+                    rec.append((x - obs0[c, k, cls]) / max(m, 1))
+                    nmov.append(m)
+                    ge = nn - np.searchsorted(col, x, side="left")
+                    det += (ge + 1.0) / (nn + 1.0) <= p_star
                 rows.append(
                     (
                         f"{a}-{b}",
                         CLASSES[cls],
                         k,
                         n,
-                        base,
+                        float(np.mean(nmov)),
+                        float(col.mean()),
                         sd,
-                        float(np.mean(rec)) / n,
+                        float(np.mean(rec)),
                         det / n_trials,
                     )
                 )
     t = Table(
         rows=rows,
-        names=("channel", "cls", "lag_bin", "n_inj", "null_mean", "null_sd", "eff", "det_frac"),
-    )
+        names=(
+            "channel", "cls", "lag_bin", "n_inj", "n_moved", "null_mean", "null_sd", "eff",
+            "det_frac",
+        ),
+    )  # fmt: skip
     t.meta = {
         "provenance": str(Provenance.SIMULATED),
         "source": "synthetic wide-separation lagged pairs injected into the real catalogues "
-        "(event_network.inject_pairs); detection = global trials-corrected p (jit null) < "
-        f"{DETECT_P}",
+        "(event_network.inject_pairs); eff = net count gain per moved event (moving an event "
+        f"also removes its old pairs); detected = injected-cell p (jit null) <= p* = {p_star:.3g}, "
+        f"the per-cell threshold for a family-wise false-alarm rate {DETECT_P}",
+    }
+    return t, p_star
+
+
+def limits(counts: Table, inj: Table, ev: dict[str, Table]) -> Table:
+    """95 % upper limit on dependent wide-separation (GW: any-separation) pairs per lag bin, and
+    the corresponding rate per anchor event: ul95_pairs / min(eff, 1) / N_A. eff is the net
+    gain per moved event at the grid point nearest the limit; the n50 column is the smallest
+    injected n detected in >= 50 % of trials (family-wise 3 sigma)."""
+    rows = []
+    labels = list(dict.fromkeys(counts["lag"]))
+    for ch in dict.fromkeys(inj["channel"]):
+        a = ch.split("-")[0]
+        sub = inj[inj["channel"] == ch]
+        cls = sub["cls"][0]
+        for k in sorted(set(sub["lag_bin"])):
+            s = sub[sub["lag_bin"] == k]
+            r = counts[
+                (counts["channel"] == ch) & (counts["lag"] == labels[k]) & (counts["cls"] == cls)
+            ][0]
+            j = int(np.argmin(np.abs(s["n_inj"] - r["ul95_pairs"])))
+            eff = float(min(max(s["eff"][j], 1e-3), 1.0))  # capped at 1 (conservative)
+            det = s[s["det_frac"] >= 0.5]
+            n50 = int(det["n_inj"].min()) if len(det) else -1
+            rows.append(
+                (
+                    ch,
+                    cls,
+                    labels[k],
+                    int(r["obs"]),
+                    r["jit_mean"],
+                    r["ul95_pairs"],
+                    round(eff, 3),
+                    n50,
+                    float(r["ul95_pairs"] / eff / len(ev[a])),
+                )
+            )
+    t = Table(
+        rows=rows,
+        names=("channel", "cls", "lag", "obs", "jit_mean", "ul95_pairs", "eff", "n50_detect",
+               "ul95_rate_per_anchor"),
+    )  # fmt: skip
+    t.meta = {
+        "provenance": str(Provenance.DERIVED),
+        "source": "counts.ecsv (jit null) and injections.ecsv",
     }
     return t
 
@@ -319,9 +379,15 @@ def main(argv=None) -> int:
         print(k, len(v), f"MJD {v['mjd'].min():.1f}-{v['mjd'].max():.1f}", flush=True)
 
     obs = count_all(samples, p)
-    perm = run_null("perm", a.perm, samples, p, a.cpu, 1_000_000)
-    jit = run_null("jit", a.jit, samples, p, a.cpu, 2_000_000)
-    jday = run_null("jitday", a.jitday, samples, p, a.cpu, 3_000_000)
+    cache = data_root() / "e1_events" / f"nulls_{a.perm}_{a.jit}_{a.jitday}.npz"
+    if cache.exists() and not a.refresh:  # untracked cache of the null ensembles (seeds fixed)
+        z = np.load(cache)
+        perm, jit, jday = z["perm"], z["jit"], z["jday"]
+    else:
+        perm = run_null("perm", a.perm, samples, p, a.cpu, 1_000_000)
+        jit = run_null("jit", a.jit, samples, p, a.cpu, 2_000_000)
+        jday = run_null("jitday", a.jitday, samples, p, a.cpu, 3_000_000)
+        np.savez_compressed(cache, perm=perm, jit=jit, jday=jday)
     mask = test_mask(p)
 
     wins = [w for w, _ in en.windows_for(p)]
@@ -405,8 +471,13 @@ def main(argv=None) -> int:
         t.write(OUT / f"same_dir_pairs_{ca}-{cb}.ecsv", format="ascii.ecsv", overwrite=True)
         dup[f"{ca}-{cb}"] = len(t)
 
-    inj = injections(samples, p, jit, mask, a.inject, np.random.default_rng(11))
+    inj, p_star = injections(samples, p, jit, mask, a.inject, np.random.default_rng(11))
     inj.write(OUT / "injections.ecsv", format="ascii.ecsv", overwrite=True)
+    lim = limits(counts, inj, ev)
+    lim.write(OUT / "limits.ecsv", format="ascii.ecsv", overwrite=True)
+    wide = mask & (np.arange(3) != 0)[None, None, :]  # wide (localized) and all (GW) cells only
+    gp_wide = en.global_p(obs, jit, wide)
+    gp_wide_day = en.global_p(obs, jday, wide)
 
     summary = {
         "provenance": "derived",
@@ -418,6 +489,15 @@ def main(argv=None) -> int:
         "global_jit": {"min_cell_p": gp_jit[0], "trials_corrected_p": gp_jit[1]},
         "global_jit_core_5_channels": {"min_cell_p": gp_core[0], "trials_corrected_p": gp_core[1]},
         "global_jitday": {"min_cell_p": gp_jday[0], "trials_corrected_p": gp_jday[1]},
+        "global_jit_wide_and_gw_cells": {
+            "min_cell_p": gp_wide[0],
+            "trials_corrected_p": gp_wide[1],
+        },
+        "global_jitday_wide_and_gw_cells": {
+            "min_cell_p": gp_wide_day[0],
+            "trials_corrected_p": gp_wide_day[1],
+        },
+        "injection_detection_p_star": p_star,
         "n_jitday": a.jitday,
         "positive_control_gw170817": pc,
         "positive_control_chime_repeaters": rep,

@@ -76,6 +76,8 @@ class Params:
     orbit_half_s: float = 120.0
     day_k: tuple[int, ...] = tuple(range(1, 8))
     day_half_s: float = 600.0
+    # --- injection (ASSUMPTION): anchors within this many days of the moved event ---
+    inject_local_days: float = 30.0
 
 
 # ----------------------------------------------------------------------------------------- events
@@ -371,31 +373,32 @@ def inject_pairs(
     same: bool,
     rng: np.random.Generator,
 ) -> Sample:
-    """Return a copy of ``b`` in which ``n`` events are moved to t_A + lag (lag log-uniform in
-    [lag_lo, lag_hi], random sign) of distinct random ``a`` events, keeping their own RA/Dec,
-    accepted only when the pair is wide (or unlocalized). These are synthetic dependent wide-
-    separation pairs (provenance: simulated)."""
+    """Return a copy of ``b`` in which up to ``n`` events are moved to t_A + lag (lag log-uniform
+    in [lag_lo, lag_hi], random sign) of distinct ``a`` anchors, keeping their own RA/Dec. The
+    anchor is drawn among the ``a`` events within ``p.inject_local_days`` of the moved event, so
+    events stay in their own observing era, and the pair must be wide (or unlocalized). These are
+    synthetic dependent wide-separation pairs (provenance: simulated)."""
     mjd = b.mjd.copy()
-    ib = rng.permutation(len(b.mjd))
-    ia = rng.permutation(len(a.mjd))
-    done, k = 0, 0
-    used_a: set[int] = set()
-    for j in ib:
-        if done >= n or k >= len(ia):
+    order = np.argsort(a.mjd)
+    ta = a.mjd[order]
+    anchors: set[int] = set()  # a events used as anchors (never moved when a is b)
+    moved: set[int] = set()  # b events moved (never used as anchors when a is b)
+    for j in rng.permutation(len(b.mjd)):
+        if len(moved) >= n:
             break
-        while k < len(ia):
-            i = ia[k]
-            k += 1
-            if same and (i == j or j in used_a):
+        if same and j in anchors:
+            continue
+        lo = np.searchsorted(ta, b.mjd[j] - p.inject_local_days)
+        hi = np.searchsorted(ta, b.mjd[j] + p.inject_local_days)
+        for i in order[lo + rng.permutation(hi - lo)][:20]:
+            if i in anchors or (same and (i == j or i in moved)):
                 continue
             sep = sep_deg(a.ra[i], a.dec[i], b.ra[j], b.dec[j])
-            if sep_class(np.atleast_1d(sep), a.sigma[i : i + 1], b.sigma[j : j + 1], p)[0] in (
-                1,
-                2,
-            ):
+            cls = sep_class(np.atleast_1d(sep), a.sigma[i : i + 1], b.sigma[j : j + 1], p)[0]
+            if cls in (1, 2):
                 lag = np.exp(rng.uniform(np.log(max(lag_lo, 1e-3)), np.log(lag_hi)))
                 mjd[j] = a.mjd[i] + rng.choice((-1.0, 1.0)) * lag / DAY
-                used_a.add(i)
-                done += 1
+                anchors.add(int(i))
+                moved.add(int(j))
                 break
     return Sample(b.cat, mjd, b.ra, b.dec, b.sigma, b.year)
