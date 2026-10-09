@@ -200,6 +200,24 @@ def test_a_slow_smooth_dimming_is_fitted_as_a_gaussian_dip():
     assert sd["chi2"] == pytest.approx(t.size, rel=0.1)  # noise-limited
 
 
+def test_a_one_sided_step_is_fitted_by_the_step_model_and_is_not_bracketed():
+    t = _cadence(n=1500)
+    f, sf = _noise(t)
+    ts = 2454400.0
+    f = f + np.where(t >= ts, -2000.0 + 1.5 * (t - ts), 0.0)  # step + partial recovery (simulated)
+    lc = wm.to_lightcurve(t, f, sf)
+    st = wm.fit_step_ramp(lc)
+    assert st["ts"] == pytest.approx(ts, abs=3.0)
+    assert st["step"] == pytest.approx(-2000.0, rel=0.1)
+    assert st["ramp_per_day"] == pytest.approx(1.5, rel=0.2)
+    assert st["chi2"] == pytest.approx(t.size, rel=0.15)
+    # a feature that runs to the end of the data has no baseline after its egress
+    n_bef, n_aft = wm.bracketing(t, ts - 5.0, t.max() + 50.0)
+    assert n_bef > wm.BRACKET_MIN_EPOCHS and n_aft == 0
+    # a W3 umbra in the middle of the data is bracketed
+    assert min(wm.bracketing(t, 2454470.0, 2454490.0)) >= wm.BRACKET_MIN_EPOCHS
+
+
 def test_exotic_domain_needs_u0_below_2_and_a_physical_source_flux():
     res = {
         "E2pos": {"u0": 6.67, "fs": 2.53e6, "bic": 6724.0},  # gb20-R-4-0-49379's far-field fit

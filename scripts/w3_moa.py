@@ -858,6 +858,7 @@ DOMAIN_U0_MAX = 2.0  # the injection and limit domain: umbra crossings with u0 <
 FS_MAX_FACTOR = 3.0  # ASSUMPTION: fitted source flux ≤ 3 × the object's reference flux
 FS_REF_DEFAULT_MAG = 14.2  # ASSUMPTION: no reference magnitude → the bright end of the injections
 REF_MATCH_ARCSEC = 1.0  # ASSUMPTION: Gaia DR3 counterpart radius for the reference flux
+BRACKET_MIN_EPOCHS = 20  # ASSUMPTION: baseline epochs required before ingress and after egress
 
 _POP: tuple | None = None  # (field, per-chip) deficit populations (passed to the workers)
 _BASELINE: float | None = None  # calibrated variable-baseline threshold of the field
@@ -1116,6 +1117,46 @@ def fit_smooth_dip(lc: w3.LightCurve, lo: float, hi: float) -> dict:
             "tc": float(best.x[0]), "sigma": float(10.0 ** best.x[1])}  # fmt: skip
 
 
+def bracketing(t, lo: float, hi: float) -> tuple[int, int]:
+    """Epochs before the exotic feature's ingress and after its egress, inside the data."""
+    t = np.asarray(t, float)
+    return int(np.sum(t < lo)), int(np.sum(t > hi))
+
+
+def step_ramp(t, ts: float) -> np.ndarray:
+    """Design rows of the ordinary step model: H(t − ts) and (t − ts) H(t − ts) (days)."""
+    x = np.asarray(t, float) - ts
+    h = (x >= 0).astype(float)
+    return np.vstack([h, x * h])
+
+
+def fit_step_ramp(lc: w3.LightCurve) -> dict:
+    """Ordinary step: baseline, a change of level at ts and a linear ramp after it (a reference or
+    photometric-scale change, a secular change of the star; gb19-R-4-4-31159). Linear in the
+    three fluxes; ts scanned over every 3rd night, then every epoch near the best. k = 4."""
+    t = np.asarray(lc.t, float)
+    nt = nights(t)
+    first = np.r_[0, np.flatnonzero(np.diff(nt)) + 1]  # first epoch of each night
+    cand = t[first[1::3]] if first.size > 3 else t[first]
+
+    def chi2(ts):
+        if not (t[0] < ts <= t[-1]):
+            return np.inf, None
+        coef, c2 = w3.linear_fluxes_n(step_ramp(t, ts), lc.f, lc.w)
+        return c2, coef
+
+    vals = [chi2(x)[0] for x in cand]
+    best = float(cand[int(np.argmin(vals))])
+    near = t[(t > best - 10.0) & (t < best + 10.0)]
+    vals2 = [chi2(x)[0] for x in near] if near.size else [np.inf]
+    if near.size and min(vals2) < min(vals):
+        best = float(near[int(np.argmin(vals2))])
+    c2, coef = chi2(best)
+    k = 4
+    return {"chi2": float(c2), "k": k, "bic": float(c2) + k * math.log(t.size), "ts": best,
+            "step": float(coef[0]), "ramp_per_day": float(coef[1])}  # fmt: skip
+
+
 SCREEN_MODELS = ("PSPL", "FSPL", *w3.EXOTIC)  # PAR only in vetting (it can only remove flags)
 
 
@@ -1168,6 +1209,16 @@ def vet_one(job) -> dict:
     out["feature_window"] = (lo, hi)
     if not add("exotic_in_domain", d0 < P.flag_dbic, f"{ex} ΔBIC {d0:.1f}; {dom[ex][1]}"):
         return record()
+    # --- the feature must be bracketed by baseline: a one-sided step or secular change is not an
+    # umbra crossing (gb19-R-4-4-31159)
+    n_bef, n_aft = bracketing(lc.t, lo, hi)
+    out["bracket"] = (n_bef, n_aft)
+    if not add(
+        "feature_bracketed",
+        min(n_bef, n_aft) >= BRACKET_MIN_EPOCHS,
+        f"{n_bef} epochs before ingress, {n_aft} after egress (need {BRACKET_MIN_EPOCHS} each)",
+    ):
+        return record()
     # --- no fitting: shape and neighbourhood
     outside = (lc.t < lo) | (lc.t > hi)
     s2 = deficit_scan(lc.t[outside], lc.f[outside], lc.sf[outside])["z_min"]
@@ -1207,6 +1258,16 @@ def vet_one(job) -> dict:
         "smooth_dip",
         d_sd < P.flag_dbic,
         f"ΔBIC {d_sd:.1f} vs a Gaussian dip (σ {sd['sigma']:.1f} d)",
+    ):
+        return record()
+    st = fit_step_ramp(lc)
+    out["step_ramp"] = st
+    d_st = res[ex]["bic"] - min(ordinary[best_o]["bic"], st["bic"])
+    if not add(
+        "step_ramp",
+        d_st < P.flag_dbic,
+        f"ΔBIC {d_st:.1f} vs a step at {st['ts']:.1f} ({st['step']:.0f} counts, "
+        f"ramp {st['ramp_per_day']:.2f}/d)",
     ):
         return record()
     # --- refits from the screen optimum: systematics models
