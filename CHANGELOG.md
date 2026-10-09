@@ -5,11 +5,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-09: Hypothesis round 3: derived small effects in large-N data; no testable survivor; new rounds paused (D-076)
 - Brief: a derived small amplitude in a large-N public quantity never analysed for it. **Results:**
   - R3-A (same-exposure pair correlation, about 2.4 × 10⁻⁵): fails as written (axiom A5 gives zero). The Holometer
-    disfavours it at about 67 %.
-  - R3-B (condensate scalar charge in neutron stars): excluded by J1738+0333 (6.7σ) and the NS–WD combination,
-    α_NS < 2.2 × 10⁻³.
+    disfavours it at about 67 % (reviewer estimate).
+  - R3-B (condensate scalar charge in neutron stars): upper half (s ≥ 8 × 10⁻³) excluded at 6.7σ by J1738+0333; self-consistent
+    minimum disfavoured at about 2σ; only the no-feedback corner survives. α_NS < 2.2 × 10⁻³ (95 %, reviewer's combination).
   - R3-C (SN Ia rate vs "clock depth"): not excluded but untestable. About 5 × 10³ public SNe Ia give 0.5–2σ, and
-    environment systematics are 10–40× the signal.
+    environment systematics are 10–40× the signal (reviewer estimates).
 - **Rule:** three rounds (9 worlds) produced survivors only in round 1, and those were null in data. New rounds are
   paused; compute goes to data-limited open searches (D-076).
 

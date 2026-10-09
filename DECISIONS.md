@@ -3619,7 +3619,8 @@ kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0L
 - Round 3 (brief: a derived small effect in a large-N quantity never analysed for it) gives nothing that earns
   search compute:
   - R3-A (universal same-exposure pair correlation) fails as written. Its decisive test is in a lab.
-  - R3-B (condensate scalar charge) is excluded by NS–WD dipole bounds. Recorded: α_NS < 2.2 × 10⁻³ (95 %, reviewer's
+  - R3-B (condensate scalar charge) is mostly excluded by NS–WD dipole bounds (upper half at 6.7σ; self-consistent
+    minimum at about 2σ; the no-feedback corner survives). Recorded: α_NS < 2.2 × 10⁻³ (95 %, reviewer's
     combination).
   - R3-C (SN Ia rate vs "clock depth") is not excluded but cannot be tested with about 5 × 10³ public SNe Ia under
     environment systematics.
@@ -3627,7 +3628,7 @@ kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0L
   Gaia DR4) until the owner sets a new brief.
 
 **Alternatives rejected.**
-- A ZTF same-exposure correlation search for R3-A: about 3 TB to download, at most 1.8σ, and systematics bias it
+- A ZTF same-exposure correlation search for R3-A: about 3 TB to download, about 1.8σ at nominal D, and systematics bias it
   upward.
 - A ZTF BTS Poisson GLM for R3-C: 0.5–2σ at N ≈ 5 × 10³; the kill needs N ≈ 8 × 10⁴.
 - A stacked s(M) Ṗb template fit for R3-B: bound-setting only, and mass-resolved fits already exist.
