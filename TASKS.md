@@ -9,7 +9,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    `feature_coverage`). **The published samples cannot limit W3:** 0 of 600 injected W3 events pass the emulated Mróz
    selection (PSPL controls 15–43 %), so the chunk re-fits only re-test a selection that excludes the signal. Next:
    light curves from **before** a PSPL selection. **MOA-II 9-year Cut-0 light curves keep W3 (D-062):** gb22
-   null (30 flags, 0 survive); D-TBD re-run with the calibrated baseline test and 200 LF-drawn injections per cell:
+   null (30 flags, 0 survive); D-068 re-run with the calibrated baseline test and 200 LF-drawn injections per cell:
    Γ₉₅ ≈ 1.1–3.3 × 10⁻⁶ per star per yr (t_E 10–300 d; 4–7 × 10⁻⁶ at 3 d). Next: stream the Nunota et al. 2024
    Table 1 fields, smallest first (`w3_moa.py --field gbN run-field`; gb21, gb20, gb19 …), then `combine`. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
    injections both selected and flagged; one real flag, not a candidate). Next: Gaia DR3 variables with epoch
@@ -17,15 +17,21 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    public seasons, OGLE EWS (owner decision, terms). Optional:
    re-fit the bulge under D-058's bounded π_E (`merge-chunks`, then `vet` + `revet`; can only add flags); re-run the
    6 arXiv name queries that errored.
-2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.27 (typical) for quasar/radio-selected
-   lenses, the only selections sensitive to a dark lens). Next: HSC PDR3 photometry or PSF-subtracted HST
+2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.31 (typical, 3/25 after the 2026-10-08
+   pair-match and one-entry-per-lens amendment) for quasar/radio-selected lenses, the only selections sensitive to a
+   dark lens). Next: HSC PDR3 photometry or PSF-subtracted HST
    image models for the 307 blended or too-close lensed quasars (makes the test decisive; HST *catalogue* photometry
    is not: D-060, efficiency 0.46); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar pairs: LS DR10 cannot decide them
-   (D-064, control efficiency 0/5 at 1.9–2.6″); the 11 colour-matched ones need HST/Euclid/HSC image models or spectra; port D-064's LS-pair = catalogued-pair
-   check (`w12_niq` `pair_match`) into the shared D-056 quasar pair test and re-run D-056; HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
+   (D-064, control efficiency 0/5 at 1.9–2.6″); of the 11 colour-matched ones, J0130+0725 has no lens light in HST to
+   F814W ≈ 23 (D-064 addendum: binary vs dark lens needs spectra of both images or two-epoch flux ratios), J0728+2607
+   has none either with an empirical PSF (F814W ≈ 23), and 9 have no HST (Euclid DR1 when public); catalogued image separations for the 15
+   pair-decided systems the pair check cannot test yet (incl. the 3 CHITAH pairs; HSC lens models); HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
 3. **W5** (D-063): Legacy Surveys DR10, 340.5 deg², 40 flags, 0 survivors; n₉₅ ≈ 0.012–0.018 deg⁻² at θ_E = 8–32′.
-   Next: HSC / Euclid counts for θ_E < 6′; a larger contiguous area for θ_E ≈ 1°.
+   Euclid Q1 counts would not open θ_E < 6′ (D-065: clustering-limited, ×1.0–1.4 S/N on a fifth of the area).
+   **Euclid Q1 radial-shear screen (D-066, D-067):** all three Deep Fields (60 deg²) null; R = 0.56 ± 0.16 from SZ
+   clusters (R = 0.5 kept); n₉₅ ≈ 0.049 / 0.051 deg⁻² at θ_E = 2′ / 4′; 1′ not limited (efficiency 0.43–0.58). Next:
+   per-tile star-ellipticity gradient test; Euclid DR1 when public; θ_E ≤ 1′ and ≈ 1° are still open.
 4. **Warp:** monitor the literature (checked 2026-10-08: no distant-observer EM template — Lentz & Felton 2024 give fluxes only; Clough et al.
    2024 waveform not public; O3 superluminal-burst search already null, Kuwahara & Cannon 2023). Recheck monthly.
 

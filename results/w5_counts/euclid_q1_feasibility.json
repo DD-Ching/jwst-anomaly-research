@@ -1,0 +1,52 @@
+{
+ "provenance": {
+  "densities": "observed (IRSA TAP counts, Euclid Q1 MER; masked area not subtracted)",
+  "service": "https://irsa.ipac.caltech.edu/TAP/sync table euclid_q1_mer_catalogue",
+  "accessed_utc": "2026-10-09T00:32Z",
+  "query_template": "SELECT COUNT(*) AS n FROM euclid_q1_mer_catalogue WHERE 1 = CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', 0.0, 0.0, 0.1)) AND vis_det = 1 AND spurious_flag = 0 AND det_quality_flag = 0 AND point_like_prob < 0.1 AND flux_detection_total > 0.5754",
+  "forecasts": "model_prediction",
+  "assumptions": {
+   "selection": "vis_det = 1 AND spurious_flag = 0 AND det_quality_flag = 0 AND point_like_prob < 0.1",
+   "clustering_ratio": [
+    0.5,
+    1.0
+   ],
+   "sigma_gamma": 0.3,
+   "detect_snr": 6.0
+  }
+ },
+ "radius_deg": 0.1,
+ "density_deg2": {
+  "EDF-F VIS<23.5": 28456.903824830886,
+  "EDF-F VIS<24.5": 69678.03408563178,
+  "EDF-F VIS<25.0": 109275.78392689534,
+  "EDF-S VIS<23.5": 31162.537857393105,
+  "EDF-S VIS<24.5": 70664.79473280153,
+  "EDF-S VIS<25.0": 111885.92499360241,
+  "EDF-N VIS<23.5": 25241.9739743746,
+  "EDF-N VIS<24.5": 62293.24472616783,
+  "EDF-N VIS<25.0": 98485.07878526484
+ },
+ "mean_density_deg2": {
+  "VIS<23.5": 28287.13855219953,
+  "VIS<24.5": 67545.35784820038,
+  "VIS<25.0": 106548.92923525418
+ },
+ "dr10_density_deg2": 37374.59246661226,
+ "density_ratio_vis24p5_over_dr10": 1.807253360917326,
+ "count_slope_dlog10N_dm_23p5_24p5": 0.37800648920714397,
+ "counts_snr_gain_over_dr10": {
+  "2 arcmin, clustering x0.5": 1.3583804232901353,
+  "2 arcmin, clustering x1": 1.2416517993461096,
+  "4 arcmin, clustering x0.5": 1.3867464622038101,
+  "4 arcmin, clustering x1": 1.096027230713968,
+  "8 arcmin, clustering x0.5": 1.4009215135644262,
+  "8 arcmin, clustering x1": 1.0424883052672194
+ },
+ "dr10_snr_relative_to_8arcmin": {
+  "2": 0.5244160535464035,
+  "4": 0.7242708739343623,
+  "8": 1.0
+ },
+ "shear_theta_e_min_arcmin": 0.43938729538910903
+}

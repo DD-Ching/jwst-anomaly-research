@@ -26,7 +26,7 @@ docs/exotic_limits.md "W3 in the OGLE-IV microlensing samples", "W3 in MOA-II".
   [--sample bulge2019|disk2020]` (`fit --chunk K/N` writes tracked tables under `results/w3_ogle/`).
 - Gaia DR3: `python scripts/w3_gaia.py fetch|fit|inject|summary|manifest`.
 - MOA-II: `python scripts/w3_moa.py --field gbF prescreen|merge-prescreen|fit|merge-chunks|vet|sheet|inject|limit|
-  summary|combine|manifest|run-field` (D-062, D-TBD). `prescreen` streams the field tar by HTTP range reads (never
+  summary|combine|manifest|run-field` (D-062, D-068). `prescreen` streams the field tar by HTTP range reads (never
   stored) into one tracked table per 4 GiB in `results/w3_moa/prescreen/`; `run-field` runs every stage, skipping
   finished pre-screen and fit chunks; `combine` sums N_s T ε over the tracked `limits_gb*.ecsv`. Long queues run
   detached (`setsid nohup`, logs under `derived/w3_moa/`): harness background tasks are killed after 30 min.

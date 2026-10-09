@@ -1,4 +1,4 @@
-"""Stream MOA-II field tars with parallel HTTP byte-range reads (D-TBD).
+"""Stream MOA-II field tars with parallel HTTP byte-range reads (D-068).
 
 The field tars (3.5–508 GB, uncompressed, ``Accept-Ranges: bytes``) are never written to disk:
 a byte range ``[a, b)`` is downloaded, its light-curve members are found by walking the tar

@@ -948,15 +948,15 @@ Exploration Program."
 
   `metadata.ipac` has 2,409,061 rows (gb22: 18,599), equal to the Cut-0 count of Nunota et al. 2024. The
   per-object path `data/Contributed/MOA/gb{F}/R/{C}/gb{F}-R-{C}-{S}-{ID}.ipac` (used by the archive viewer;
-  undocumented; uncompressed) also answers; D-TBD uses it only for vetting neighbours without a recorded tar offset.
-- The other 21 field tars `bulk/gb{F}.tar` (D-TBD) are streamed with HTTP byte-range reads, never stored. Sizes and
+  undocumented; uncompressed) also answers; D-068 uses it only for vetting neighbours without a recorded tar offset.
+- The other 21 field tars `bulk/gb{F}.tar` (D-068) are streamed with HTTP byte-range reads, never stored. Sizes and
   Last-Modified (HEAD, 2026-10-08) are in `moa.TAR_BYTES` / `moa.TAR_LAST_MODIFIED` (7.7–508.5 GB, ≈ 2.4 TB in
   all; Last-Modified 2023-10-10 … 13). No whole-file sha256 exists for a streamed tar: each is pinned by the sha256
   of every 64 MiB range (tracked per chunk in `results/w3_moa/prescreen/`) and a field digest over them
   (`moa_stream.range_digest`, rows in `data/manifests/moa_ii.ecsv`). The archive occasionally answers a range
   request with HTTP 200 (whole file); such replies are closed unread and retried.
 - Nunota et al. 2024 Table 1 N_s (20 fields; `moa.NUNOTA_NS`) is the adopted N_s per field where published
-  (D-TBD); gb6 and gb22 use the N_s-per-Cut-0-object model.
+  (D-068); gb6 and gb22 use the N_s-per-Cut-0-object model.
 - Koshimoto, Sumi, Bennett et al. 2023, "Terrestrial and Neptune mass free-floating planet candidates from the
   MOA-II 9-year Galactic Bulge survey", arXiv:2303.08279 (e-print read for Cut-0, Table 2: S/N of SIM > 2.7,
   N_continue,8 ≥ 3, σ_x,y ≤ 1/0.8 px, positive and negative PSF profiles; the archive page still quotes the
@@ -1011,3 +1011,23 @@ Exploration Program."
   Lemon et al. 2023, MNRAS 520, 3305 (arXiv:2206.07714), `J/MNRAS/520/3305/table1`; Inada et al. 2008, AJ 135, 496,
   `J/AJ/135/496/table2,table3`; Inada et al. 2010, AJ 140, 403, `J/AJ/140/403/table2,table3`; Inada et al. 2012,
   AJ 143, 119, `J/AJ/143/119/table3,table4`; Hennawi et al. 2006, AJ 131, 1, `J/AJ/131/1/binqso`.
+- MAST HAP cutouts (`astroquery.mast.Hapcut`, https://mast.stsci.edu/hapcut/api/v0.1/astrocut ; accessed 2026-10-09):
+  HST ACS/WFC F814W skycell cutouts from program 17308 (J0130+0725, J0728+2607, J2308+3201) and WFC3/UVIS F814W
+  from program 17199 (SDSS J1515+1511), used by D-064's archival HST addendum. Not stored (outputs/, gitignored).
+
+## Euclid Q1 MER catalogue (accessed 2026-10-09; D-065)
+
+- Euclid Quick Data Release Q1 MER catalogue, table `euclid_q1_mer_catalogue` on the IRSA TAP service
+  https://irsa.ipac.caltech.edu/TAP (sync endpoint `/TAP/sync`), queried 2026-10-09 for counts only
+  (`scripts/w5_euclid_feasibility.py`). Use `CONTAINS(POINT, CIRCLE)` for spatial cuts; plain RA/Dec ranges are
+  not indexed. The service output is not pinned.
+- Same table, rows (shapes) in 0.2–0.3° discs, 2026-10-09 (`scripts/w5_euclid_shear.py`, D-066). The column
+  `position_angle` must be quoted in ADQL; its description ("CCW/x") is wrong: it is PA east of north.
+- Euclid Q1 MER VIS mosaics (IRSA SIA collection `euclid_DpdMerBksMosaic`; IBE cutouts
+  `?center=RA,Dec&size=8arcsec`, gzip-compressed), tile 102022477, accessed 2026-10-09 (`pacheck`).
+- Planck PSZ2 (Planck Collaboration 2016, A&A 594, A27; VizieR J/A+A/594/A27) and ACT DR5 clusters (Hilton et al.
+  2021, ApJS 253, 3; VizieR J/ApJS/253/3), queried 2026-10-09 for clusters inside Q1 (`CLUSTERS` in the script).
+- Q1 MER tile list: IRSA ObsCore (`ivoa.obscore`, `obs_collection = 'euclid_DpdMerBksMosaic'`, VIS), 352 tiles,
+  2026-10-09; whole-tile rows fetched by the indexed `tileid` column (`w5_euclid_shear.py fetch`, D-067).
+- NFW lensing (R calibration, D-067): Wright & Brainerd 2000, ApJ 534, 34 (arXiv:astro-ph/9908213); c200(M200):
+  Duffy et al. 2008, MNRAS 390, L64 (arXiv:0804.2486); astropy `Planck18` cosmology.

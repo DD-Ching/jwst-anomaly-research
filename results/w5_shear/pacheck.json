@@ -1,0 +1,103 @@
+{
+ "provenance": {
+  "shapes": "observed (Euclid Q1 MER catalogue, IRSA TAP; SExtractor moments)",
+  "statistics": "derived",
+  "injections": "model_prediction (negative point mass, radial reduced shear)",
+  "service": "https://irsa.ipac.caltech.edu/TAP/sync table euclid_q1_mer_catalogue",
+  "run_utc": "2026-10-09T01:35Z",
+  "first_irsa_access_utc": "2026-10-09",
+  "assumptions": {
+   "vis_limit": 24.5,
+   "star_mags": [
+    19.0,
+    22.0
+   ],
+   "min_size_over_psf": 1.2,
+   "responsivity": 0.5,
+   "galaxy_selection": "vis_det = 1 AND spurious_flag = 0 AND det_quality_flag = 0 AND point_like_prob < 0.1",
+   "star_selection": "vis_det = 1 AND spurious_flag = 0 AND det_quality_flag = 0 AND point_like_prob > 0.9",
+   "theta_e_arcsec": [
+    30.0,
+    60.0,
+    120.0
+   ],
+   "grid_step_over_theta_e": 1.0,
+   "aperture_over_theta_e": [
+    1.5,
+    3.0
+   ],
+   "threshold": "99th percentile of the field maximum under shape rotations",
+   "n_null": 200,
+   "n_inj": 40,
+   "min_n": 20,
+   "min_efficiency": 0.5,
+   "cluster_aperture_arcsec": [
+    60.0,
+    600.0
+   ],
+   "pilot_radius_deg": 0.3,
+   "seed": null,
+   "pa_mapping": "PA E of N = position_angle (25 MER VIS cutouts, 4 clusters)"
+  }
+ },
+ "results": {
+  "n": 25,
+  "pa_image_deg": [
+   176.31,
+   29.39,
+   117.48,
+   72.44,
+   98.18,
+   155.6,
+   91.81,
+   49.66,
+   166.79,
+   56.9,
+   65.13,
+   93.23,
+   59.81,
+   128.87,
+   17.07,
+   146.92,
+   13.85,
+   158.53,
+   47.19,
+   77.22,
+   13.89,
+   73.3,
+   175.92,
+   87.99,
+   114.96
+  ],
+  "position_angle": [
+   -3.3317537308,
+   29.702989578,
+   -63.300552368,
+   72.043861389,
+   -80.368934631,
+   -22.983215332,
+   -87.357582092,
+   48.757568359,
+   -13.460009575,
+   56.83940506,
+   68.018440247,
+   -86.634468079,
+   60.588920593,
+   -48.815074921,
+   18.090417862,
+   -32.539810181,
+   13.924560547,
+   -21.173196793,
+   45.987781525,
+   80.261734009,
+   5.0232691765,
+   75.037902832,
+   -4.5875492096,
+   88.306434631,
+   -62.274803162
+  ],
+  "median_abs_diff_as_is": 0.7758456115445256,
+  "median_abs_diff_plus_90": 89.22415438845547,
+  "median_abs_diff_mirror": 35.51244755489006
+ }
+}

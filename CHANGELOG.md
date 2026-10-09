@@ -2,6 +2,101 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: W5/W1 Euclid Q1 radial-shear survey: all Deep Fields (60 deg²) null; R calibrated (D-067)
+- Hypothesis as D-066 (negative mass shears background galaxies radially). Ordinary radial patterns: PSF-anisotropy
+  gradients, blends, tile edges; known clusters must give the opposite (tangential) sign.
+- **R = 0.56 ± 0.16** (z_s = 1, scaled by √(χ²/dof); 0.50–0.67 for z_s = 0.8–1.2) from the 4 SZ clusters against
+  NFW haloes of their M500: the assumed R = 0.5 is consistent.
+- **All 344 Q1 tiles of EDF-F/S/N** fetched by `tileid` (4.78 M rows, 4.60 M of them galaxies; 25 min) and screened at θ_E = 1′, 2′, 4′:
+  **0 flags** (field maxima S = 3.3–4.4 against thresholds 4.3–5.1); known clusters 8/9 negative (EDF-S minimum is
+  ACT-CL J0405.9-4915). Injection efficiency 0.43–0.58 at 1′ (no limit: below the 0.5 gate), 1.0 at 2′–4′.
+  **n₉₅ ≈ 0.049 / 0.051 deg⁻²** at θ_E = 2′ / 4′. With D-063, negative point masses are limited from 2′ to 32′.
+- **Failed approaches (rules):** injecting into the observed moments before the PSF deconvolution boosted the
+  injected shear ~1.6× over the calibrated R (found by /code-review before merge; the first run's 1′ limit 0.062 deg⁻²
+  is withdrawn and the D-066 pilot efficiencies are optimistic): inject where R is calibrated. 16 IRSA threads → 504s,
+  no gain; killing a fetch truncated a cache file (writes
+  are atomic now); `pgrep -f`/`pkill -f` waiters matched their own shell again (wait on the log file).
+- **Next:** per-tile star-ellipticity gradient test (data in `survey.json`); θ_E ≤ 1′ needs fainter or better shapes
+  (Euclid DR1); DR1 scale-up when public; θ_E ≈ 1° needs a larger contiguous area than Q1.
+
+## 2026-10-09: J0728+2607 decided with an empirical PSF: no light between the images to F814W ≈ 23 (D-064 addendum)
+- The PSF is the median of 6 unsaturated Gaia stars in the same HST F814W cutout. The control lens J2308+3201 is
+  detected (S/N 49). J0728's residual is centred on its images, and after the halo correction there is no light
+  between them (S/N 1.6). Whole-chain injections are recovered to F814W = 23, ≥ 1.8 mag below any ordinary lens.
+  J0130+0725 has 1 usable star, so it has no empirical-PSF result.
+- Both D-064 HST pairs therefore have no visible deflector; binary quasars remain the untested ordinary explanation
+  (spectra of both images, or time delays, are needed).
+- **Failed approach:** the lens-vs-mirror aperture test. The control gives only 3.1σ, because real lens positions
+  depart from the SIS flux-ratio rule.
+## 2026-10-09: W5/W1 radial-shear screen on Euclid Q1 MER shapes: pilot null, first limits at θ_E = 1–2′ (D-066)
+- Hypothesis: a negative-mass lens shears background galaxies radially; ordinary mass gives tangential shear.
+- **Convention found wrong in the archive docs:** MER `position_angle` is PA east of north (25 VIS cutouts, median
+  |Δ| 0.78°), not THETA_IMAGE "CCW/x". Four SZ clusters in EDF-S then show tangential shear (S = −1.5 to −5.0).
+- Pilot: 0.3° discs in EDF-F and EDF-S, θ_E = 30″/1′/2′: **0 flags** (field-max p_random 0.07–0.99); off-grid,
+  whole-chain injections (R = 0.5 ASSUMPTION) 0.88–1.0 at 1′, 1.0 at 2′, ≤ 0.18 at 30″. n₉₅ ≈ 8.1 deg⁻² (1′),
+  12 deg⁻² (2′).
+  The DR10 count floor was 6′.
+- **Failed approaches (rules):** unquoted `position_angle` breaks IRSA's ADQL parser (quote it); IRSA returns query
+  errors as a VOTable with HTTP 200 (check the body); the EDF-N 0.3° row query hung > 15 min; IBE cutouts come
+  gzip-compressed; `pkill -f` on a pattern in your own command kills your shell.
+- **Next:** calibrate R on the SZ clusters (shear vs. their M500 NFW prediction); scale to all Q1 (63 deg²; fetch
+  in ≤ 0.2° discs in parallel, EDF-N too); star-ellipticity maps for PSF gradients; flag vetting via `/vet-candidate`.
+
+## 2026-10-09: Efficiency rules 8–13 for routine cycles (owner text)
+- docs/cloud-routine-prompt.md "EFFICIENCY RULES" gets the owner's rules 8–13: merge main before the final review;
+  state-file conflict handling (own CHANGELOG block first, both entries kept); one CI wait per head SHA; verify
+  outcomes on GitHub; agents and the owner share the DD-Ching account; stop when the next unit needs a human.
+- **Owner action:** paste the updated prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`).
+
+## 2026-10-09: D-064 addendum: archival HST of the untestable rejected pairs; J0130+0725 has no lens light to F814W ≈ 23
+- Coverage: 2 of the 11 untestable pairs have HST F814W imaging (program 17308), and so do 2 controls.
+- Method: a two-PSF fit, halo correction, and the residual flux between the images, with empirical sky-aperture
+  errors. Validated on both controls (S/N 42, 16) and on whole-chain injections (recovered to F814W = 23).
+- **J0130+0725:** no residual (S/N 0.45). The limit F814W ≈ 23.0 is ≈ 3.5 mag below a typical ordinary lens and
+  ≥ 0.7 mag below a 2σ under-luminous one. A binary quasar remains the untested ordinary explanation; it needs
+  spectra of both images. Not a candidate.
+- **J0728+2607:** inconclusive (residuals at the image cores); it needs an empirical PSF.
+- **Failed approaches:**
+  - the HAP "combined_skycells" product has a WCS that does not describe its pixels;
+  - without the halo correction, PSF mismatch alone gives S/N 18–24;
+  - white-noise errors on drizzled pixels overstate S/N by ~3.5;
+  - a 60-px cutout cannot hold the pair, because the catalogue position is one image.
+- **Next:** spectra or two-epoch flux ratios for J0130+0725 (binary vs lens); an empirical PSF for J0728+2607;
+  Euclid DR1 when public for the 9 pairs without HST imaging.
+## 2026-10-09: W5 in Euclid Q1: deeper counts cannot open θ_E < 6′; shapes could (D-065)
+- Hypothesis: Euclid Q1's deeper counts lower the D-063 floor (blind below θ_E ≈ 6′). Measured (IRSA TAP counts,
+  three deep fields): VIS < 24.5 extended galaxies 6.8 × 10⁴ deg⁻², 1.81× DR10, same count slope. With the
+  clustering-inflated scatter measured in DR10, the count S/N gains only ×1.0–1.4 (Z scatter at 4′ is 1.6× Poisson
+  and clustering does not shrink with depth), on 63 instead of 340 deg². Count screen not built.
+- Forecast (model_prediction): a radial-shear test on the same galaxies reaches θ_E ≈ 26″ (1.5–3 θ_E annulus, S/N ≥ 6,
+  σ_γ = 0.3, ASSUMPTIONs); the shear sign separates a negative-mass lens from ordinary foreground mass.
+- **Failed approach (rule):** IRSA TAP does not index plain RA/Dec ranges (0.25 deg² box > 5 min); use
+  `CONTAINS(POINT, CIRCLE)` (40 s for 12 k rows).
+- **Next:** Euclid Q1 radial-shear screen: PSF-anisotropy check on stars, synthetic shear injections, trial centres
+  on a grid, cross-field null (EDF-N/F/S).
+
+## 2026-10-08: D-056 amendment — the LS pair must be the catalogued pair; one entry per lens (W1/W2)
+- `lenscats.pair_match` (moved from D-064's `w12_niq`) now gates the D-056 quasar pair test: a status from an LS image
+  pair whose separation differs from the catalogued 2θ_E by > 0.5″ is undecided. Only 115252+004733 changed (LS pair
+  4.18″ vs 3.34″ expected; the cutout shows an 18.1 mag lens galaxy with an unrelated faint pair). None of the 15
+  pair-decided systems has a catalogued θ_E, so the pipeline checks 0 of 15; a one-off manual check of the 3 also in
+  SQLS matches (1.88/2.99/2.03″ vs LS 2.00/3.01/2.01″). For quads (≥ 3 LS images) only a pair wider than 2θ_E + 0.5″
+  is a mismatch (a fold/cusp pair is closer than 2θ_E); the check applies only to "deflector"/"none" statuses.
+- Same lens listed twice beyond the 3″ merge (MG0414+0534, B2114+022, B2319+052; ~11″ apart): decided systems are
+  grouped by designation within 30″ (ASSUMPTION; decimal-degree names give no key) over all covered sensitive
+  systems, and a deflector at any copy (decided or not) explains the lens. Each had counted once as
+  "deflector" and once as "none".
+- New limits (typical, `derived`): quasar 3/15 < 0.52, radio 0/10 < 0.30, all **3/25 < 0.31**; conservative 0/5 < 0.60
+  (were 0.48 / 0.23 / 0.27 / 0.50). No new unexplained system; the 3 CHITAH pairs stay open as before.
+- **Rules:** a pair test must check that its pair is the catalogued one; name-match decided systems before counting N.
+
+## 2026-10-08: Efficiency rules for routine cycles (owner text)
+- docs/cloud-routine-prompt.md gets the owner's "EFFICIENCY RULES" after "MOVE FAST, SAFELY": result first, a review
+  stopping rule (fix only result/provenance/reproducibility/guarded-file findings, list the rest, ≤ 3 rounds), verify
+  the branch after forked skills (they can leave HEAD detached, which stranded two commits on #98), fail fast on
+  data access, calibrate before flagging, a 35-minute time box, one unit per cycle.
+- **Owner action:** paste the updated prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`).
+
 ## 2026-10-08: W5 count deficits in Legacy Surveys DR10: 340.5 deg² null, first W5 limit (D-063, #94)
 - Two sessions (a cloud run's 10° pilot, then a worktree worker on the full 20° × 10° regions; see the coordination
   entry below). DR10 Tractor galaxies (r < 23.5) counted per `nest4096` HEALPix pixel on the Data Lab server
@@ -36,7 +131,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   in D-064 "Evidence".
 - **Next:** HST/Euclid/HSC image models or spectra for the 11 colour-matched pairs; the LaTeX-only NIQ tables.
 
-## 2026-10-08: W3 MOA-II: calibrated baseline test, LF-drawn injections, streaming pipeline; gb22 re-run null (D-TBD)
+## 2026-10-08: W3 MOA-II: calibrated baseline test, LF-drawn injections, streaming pipeline; gb22 re-run null (D-068)
 - Cloud runs (session that opened #95, taken over at 23:12 UTC after 35 min idle to land it). The variable-baseline
   threshold is now the 95th percentile of the field's quiet χ²/dof (5.31 in gb22; ASSUMPTION), injections are drawn
   from the luminosity function, 200 per cell.

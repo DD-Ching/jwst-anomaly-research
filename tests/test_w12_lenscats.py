@@ -158,3 +158,68 @@ def test_empty_inputs_keep_schema():
     one = _system("quasar")
     none_src = _sources(IMAGES)[:0]
     assert lenscats.pair_images(one, none_src)["n_images"][0] == 0
+
+
+def test_pair_check_requires_the_catalogued_pair():
+    # D-064: the test must run on the catalogued images; IMAGES are 2.4" apart
+    p = w12.Params()
+    src = _sources(IMAGES)
+    t = Table(
+        {
+            "system_id": ["a", "b", "c", "d"],
+            "ra": [10.0] * 4,
+            "dec": [0.0] * 4,
+            "selection": ["quasar", "quasar", "quasar", "galaxy"],
+            "defl_mag_max": [21.0] * 4,
+            "theta_e": [1.2, 2.0, np.nan, 2.0],  # match, 4" (another pair), unknown, insensitive
+        }
+    )
+    images = lenscats.pair_images(t, src, p.image_radius)
+    test = w12.deflector_test(t, src, p, images)
+    used = test["used_pair"]
+    t["test_status"] = test["test_status"]
+    assert list(used) == [True, True, True, False]
+    sep_cat, mismatch = w12.pair_check(t, images, used, p)
+    assert sep_cat[0] == pytest.approx(2.4) and np.isnan(sep_cat[2]) and np.isnan(sep_cat[3])
+    assert list(mismatch) == [False, True, False, False]
+    # a quad's brightest pair may be a fold/cusp pair closer than 2 theta_E: not a mismatch
+    t2 = t.copy()
+    t2["theta_e"] = [2.0, 0.8, np.nan, 2.0]  # 2.4" pair vs 4.0" (closer: fold) and 1.6" (wider)
+    t2["n_lens_images"] = [4, 4, 0, 0]
+    assert list(w12.pair_check(t2, images, used, p)[1]) == [False, True, False, False]
+    # raw PSF neighbours that the pair test did not accept as images do not make a quad
+    t2["n_lens_images"] = [2, 2, 0, 0]
+    assert list(w12.pair_check(t2, images, used, p)[1]) == [True, True, False, False]
+
+
+def test_dedup_same_lens_keeps_the_deflector_copy():
+    t = Table(
+        {
+            "system_id": ["L1", "L2", "L3", "L4", "L5"],
+            "name": ["MG0414+0534", "MG0414+0534", "B2319+052", "B2319+052", "J1000+0100"],
+            "ra": [63.0, 63.0 + 11 * D, 350.0, 350.0 + 12 * D, 150.0],
+            "dec": [5.0, 5.0, 5.0, 5.0, 1.0],
+            "test_status": ["none", "deflector", "none", "none", "none"],
+        }
+    )
+    keep, merged = w12.dedup_same_lens(t, np.ones(5, bool), w12.Params())
+    assert list(keep) == [False, True, True, False, True]
+    assert [m["kept"] for m in merged] == ["L2", "L3"]
+    assert merged[0]["dropped"] == ["L1 (none)"]
+    # undecided copies are not decided afterwards either
+    keep, _ = w12.dedup_same_lens(t, np.array([True, False, True, True, True]), w12.Params())
+    assert list(keep) == [True, False, True, False, True]
+    # a deflector at an undecided copy (in the pool) still explains the decided "none" copy
+    dec = np.array([True, False, True, True, True])
+    keep, merged = w12.dedup_same_lens(t, dec, w12.Params(), pool=np.ones(5, bool))
+    assert list(keep) == [False, False, True, False, True]
+    assert merged[0]["kept"] == "" and merged[0]["dropped"] == ["L1 (none)", "L2 (deflector)"]
+
+
+def test_radio_used_pair_only_without_galaxy():
+    p = w12.Params()
+    gal = [(10.0 + 0.3 * D, 0.0, "DEV", 22.0, 20.0, 0)]
+    for rows, expect in ((IMAGES + gal, False), (IMAGES, True), (gal, False)):
+        t, src = _system("radio"), _sources(rows)
+        images = lenscats.pair_images(t, src, p.image_radius)
+        assert bool(w12.deflector_test(t, src, p, images)["used_pair"][0]) is expect

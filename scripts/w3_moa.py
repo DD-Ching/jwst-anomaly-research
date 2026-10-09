@@ -1,6 +1,6 @@
 """W3 in the MOA-II 9-year release, any field gb1 … gb22: pre-screen, fits, vetting, limit.
 
-D-062 (method, gb22 pilot) and D-TBD (streaming, calibration, all fields). The release holds every
+D-062 (method, gb22 pilot) and D-068 (streaming, calibration, all fields). The release holds every
 Cut-0 variable object (difference-image detections of positive *or negative* PSF profiles;
 ``jwst_anomaly.moa``), before any bump or PSPL cut, so a W3 event (the source flux drops toward
 zero inside an umbra between two caustic spikes; ``exotic_sim``) can be in it. Fitting every light
@@ -848,13 +848,13 @@ def merge_chunks(n: int) -> Path:
 REPEAT_S = 6.0  # ASSUMPTION: a second deficit this significant outside the feature = variable star
 NEIGHBOUR_PX = 12.0  # ASSUMPTION: Cut-0 objects within 12 px (7″, ~3.5 seeing FWHM) share flux
 BASELINE_CHI2 = 2.0  # D-057/D-062 fixed threshold; used only when no field calibration is set
-BASELINE_Q = 0.95  # ASSUMPTION (D-TBD): threshold = this quantile of the field's quiet χ²/dof
+BASELINE_Q = 0.95  # ASSUMPTION (D-068): threshold = this quantile of the field's quiet χ²/dof
 NEIGHBOUR_S = 5.0  # ASSUMPTION: |S| of a neighbour's notch over the same window = shared feature
 MIN_FEATURE_NIGHTS = 3  # ASSUMPTION: nights with epochs inside the exotic feature
 COINC_Z = 5.0  # deficits with z_min < −5 form the population for the shared-epoch test
 COINC_P = 1e-3  # ASSUMPTION: Poisson probability below which a shared epoch is a frame systematic
 
-DOMAIN_U0_MAX = 2.0  # the injection and limit domain: umbra crossings with u0 < 2 (D-TBD)
+DOMAIN_U0_MAX = 2.0  # the injection and limit domain: umbra crossings with u0 < 2 (D-068)
 FS_MAX_FACTOR = 3.0  # ASSUMPTION: fitted source flux ≤ 3 × the object's reference flux
 FS_REF_DEFAULT_MAG = 14.2  # ASSUMPTION: no reference magnitude → the bright end of the injections
 REF_MATCH_ARCSEC = 1.0  # ASSUMPTION: Gaia DR3 counterpart radius for the reference flux
@@ -883,7 +883,7 @@ def deficit_population(pre: Table, chip: int | None = None) -> dict:
 
 
 def calibrate_baseline(pre: Table, q: float | None = None) -> dict:
-    """Variable-baseline threshold of a field (``derived``, D-TBD): the ``BASELINE_Q`` quantile
+    """Variable-baseline threshold of a field (``derived``, D-068): the ``BASELINE_Q`` quantile
     of the whole-light-curve χ²/dof about a constant (errors × the point-to-point scale, the
     vetting statistic) over the field's quiet light curves, the injection carriers. Difference
     photometry has red noise, so a fixed χ²/dof > 2 removed 35 % of quiet gb22 carriers; the
@@ -1636,7 +1636,7 @@ def quiet_carriers(pre: Table, n: int, seed: int) -> list[str]:
 def sample_magnitudes(rng, size: int, sampling: str = "lf") -> np.ndarray:
     """Source magnitudes in ``INJ_IS``: ``"lf"`` draws from the luminosity function
     ∝ 10^(LF_SLOPE·I)
-    (D-TBD: every injection then has the same weight, n_eff = n), ``"uniform"`` as D-062."""
+    (D-068: every injection then has the same weight, n_eff = n), ``"uniform"`` as D-062."""
     lo, hi = INJ_IS
     u = rng.uniform(0.0, 1.0, size)
     if sampling == "uniform":
@@ -2009,7 +2009,7 @@ def write_manifest() -> Path:
     tab = Table(rows)
     tab.meta.update(
         provenance=schema.Provenance.OBSERVED.value,
-        source="jwst_anomaly.moa.FILES and streamed field tars (MOA-II 9-year; D-062, D-TBD)",
+        source="jwst_anomaly.moa.FILES and streamed field tars (MOA-II 9-year; D-062, D-068)",
     )
     path = paths.manifests_dir() / "moa_ii.ecsv"
     tab.write(path, overwrite=True)

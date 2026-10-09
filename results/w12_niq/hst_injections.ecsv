@@ -1,0 +1,19 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: name, datatype: string}
+# - {name: inject_mag, datatype: int64}
+# - {name: recovered_snr, datatype: float64}
+# - {name: snr_above_baseline, datatype: float64}
+# - {name: flux_frac, datatype: float64}
+# meta: !!omap
+# - {provenance: simulated}
+# - {source: 'Sersic n=4, r_eff=0.3 arcsec, ellip 0.2, at the SIS-predicted lens position, injected into the real stamp and run through
+#     the same fit (scripts/w12_niq_hst.py)'}
+# schema: astropy-2.0
+name inject_mag recovered_snr snr_above_baseline flux_frac
+J0130+0725 21 51.15660627033502 50.70219345352126 0.8733448686834341
+J0130+0725 22 20.634251260416313 20.179838443602556 0.8850872118194614
+J0130+0725 23 8.488520748955715 8.034107932141955 0.9145961436592186
+J0130+0725 24 3.6482661747247267 3.193853357910968 0.9873789583859299
+J0130+0725 25 1.7260306174163498 1.2716178006025909 1.1733993587561808

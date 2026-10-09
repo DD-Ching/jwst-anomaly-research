@@ -38,3 +38,9 @@ D-063 (this search). Results: docs/exotic_limits.md "W5 count deficits".
   injections after adding any test.
 - HyperLEDA returns sexagesimal unless `_RAJ2000` / `_DEJ2000` are requested.
 - Data Lab served ~1 chunk/min after a 30-min 502 outage: probe the service and resume from cached chunks.
+- Euclid Q1 counts are clustering-limited at θ_E ≤ 4′ (D-065: ×1.0–1.4 S/N over DR10); do not port the count screen
+  for small θ_E, use shapes. IRSA TAP: spatial cuts only with `CONTAINS(POINT, CIRCLE)`; RA/Dec ranges time out.
+- Euclid Q1 shapes over all tiles (`w5_euclid_shear.py fetch` then `survey`): query by the indexed `tileid` (352 VIS
+  tiles from ObsCore `euclid_DpdMerBksMosaic`), 8 threads ≈ 0.4–0.5 queries/s (~25 min for all 688); 16 threads gave
+  504s and no gain. Cache writes are atomic (a killed fetch once left a truncated ECSV). Survey peak memory
+  ≈ 1.5–6 GB per field: `--workers 2` on 15 GB.

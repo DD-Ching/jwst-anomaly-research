@@ -91,7 +91,7 @@ class NiqParams:
     # the 3" image search only for pairs up to image_radius; wider pairs are dropped
     sep_max: float = w12.Params().image_radius
     # the LS image pair must be the catalogued pair: separations agree within sep_match
-    sep_match: float = 0.5
+    sep_match: float = lenscats.PAIR_SEP_TOL
     # entries closer than this in two tables are one system (merged transitively)
     dedup_arcsec: float = w12.Params().merge_radius
     # Hennawi et al. 2006 binary match radius around the catalogued position
@@ -612,7 +612,7 @@ def cmd_screen(args) -> None:
     sc["dgz"] = pair_colour_difference(images, src)
     sc["colour_match"] = np.abs(sc["dgz"]) <= P.colour_tol
     sc["colour_mismatch"] = np.abs(sc["dgz"]) > P.colour_tol  # NaN (no colour) is neither
-    sc["pair_match"] = np.abs(sc["sep_ls"] - sc["sep_cat"]) <= P.sep_match
+    sc["pair_match"] = lenscats.pair_match(sc["sep_ls"], sc["sep_cat"], P.sep_match)
     sc["test_status"] = w12.deflector_test(sc, src, p, images)["test_status"]
     sc["undecided_flags"] = w12.flags_undecided(sc, src, p)
     sc["detectable_typical"] = sc["req_mag_z_typical"] < sc["depth_z"] - p.margin

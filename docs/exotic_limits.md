@@ -648,6 +648,10 @@ more than θ_E. The test is therefore defined per selection class (ASSUMPTIONs i
 - Deflector candidates lie inside the smallest circle about the images' centroid that holds every image (the circle
   with the pair as diameter for a double; a fold or cusp pair of a quad leaves the lens outside the pair circle), and
   more than 0.5″ from every image. The ±5″ box limits the circle to pairs within 3″ of the position.
+- **The LS pair must be the catalogued pair** (D-064 check, `lenscats.pair_match`, D-056 amendment 2026-10-08). The
+  catalogues give θ_E, not image positions, so the catalogued separation is 2θ_E (SIS `model_prediction`). A system
+  whose status came from the LS pair (`used_pair`) and whose pair separation differs from 2θ_E by > 0.5″ is
+  undecided. Without a catalogued θ_E the pair is unchecked and the system stays decided.
 
 **Status rules.**
 - A candidate with m_z ≤ typical required magnitude + 2 rms is a "deflector". Where that magnitude is undefined, the
@@ -656,9 +660,26 @@ more than θ_E. The test is therefore defined per selection class (ASSUMPTIONs i
   should be, and whether it is luminous enough depends on the Faber–Jackson scatter beyond the margin. Such a system
   can neither show nor exclude a dark deflector.
 - Position and imaging problems are evaluated on every covered system and remove it from N whatever the test said.
-  In the 343 covered quasar and radio systems: maskbits 9, rounded positions 5, name/RA–Dec mismatch 1.
+  In the 343 covered quasar and radio systems: maskbits 9, rounded positions 5, name/RA–Dec mismatch 1, LS pair
+  not the catalogued pair 1.
 - A position counts as rounded if either axis is a whole 0.01° or 0.1°, or if both axes show a finer step.
-- **Decided: 29 systems**, of which 13 have a deflector and 16 do not ("none").
+- **One entry per lens** (D-056 amendment 2026-10-08, `dedup_same_lens`). Three radio lenses are listed twice in
+  lenscat, about 11″ apart (beyond the 3″ merge): MG0414+0534 (L00042, L04558), B2114+022 (L00194, L10187) and
+  B2319+052 (L00211, L04612). Decided systems with the same designation (`lenscats.designation_key`: survey prefix,
+  J/B, spaces and suffixes removed, HHMM±DD) within 30″ (ASSUMPTION, `Params.same_lens_radius`) are one lens. A copy
+  with a deflector is kept, since a deflector seen at one catalogued position of the lens explains it; otherwise the
+  first copy is kept (the catalogues give no lens-galaxy position). Each of the three keeps its "deflector" copy. The
+  dropped "none" copies sit on empty sky about 11″ from the lens (L04558 cutout inspected). The merged ids are in
+  `summary.json` `vetting.same_lens_merged`.
+- **Decided: 25 systems**, of which 12 have a deflector and 13 do not ("none"). Before the pair check and the
+  dedup: 29, 13 and 16.
+- **Pair check coverage.** 15 decided systems got their status from the LS pair; none of the 15 has a catalogued
+  θ_E, so the check removed only a system that has one: 115252+004733 (θ_E 1.67″, so 3.34″ expected; LS pair 4.18″;
+  "deflector" before). Its cutout shows an 18.1 mag (z) red galaxy at the centre and two faint PSF sources
+  (z ≈ 23.2–23.3) about 2″ either side. The galaxy is plainly there, but the faint pair is not the catalogued one,
+  so the system is undecided. Three of the 15 have separations in the SQLS tables pinned for D-064
+  (`data/manifests/w12_niq_inputs.json`): J1322+1052 1.88″, J1349+1227 2.99″ and J1515+1511 2.03″, against LS
+  2.00″, 3.01″ and 2.01″. All three match (a one-off check, not part of the chain). The other 12 are unchecked.
 
 **Required lens light.**
 - SIS σ from θ_E: the catalogue's, else (quasar and radio systems only) half the image separation, else 1″. Then an
@@ -681,16 +702,16 @@ simulated:
 - loss to "faint galaxy": an unrelated faint source in the search circle removes a dark-lens system from N but not
   an ordinary one (a few × 10⁻³ sources arcsec⁻² over 3–10 arcsec² gives an efficiency near 0.98, not 1).
 
-### Vetting of the 16 "none" systems (`candidates_vetted.ecsv`; all cutouts inspected)
+### Vetting of the 13 "none" systems (`candidates_vetted.ecsv`; all cutouts inspected)
 
 | Ordinary explanation | Systems |
 |---|---|
 | SIMBAD galaxy within 3″ (catalogued lens galaxy: HE1104−1805, 2M1134−2103, J1322+1052, J1349+1227, J1515+1511, MG0751+2716) | 6 |
-| lens redshift published (MG1549+305, MG2016+112, MG0414+0534, MG1131+0456, B2319+052, B2114+022) | 6 |
+| lens redshift published (MG1549+305, MG2016+112, MG1131+0456) | 3 |
 | literature: HSC J2212−0103, lens galaxy fitted in HSC with i = 22.40 (He et al. 2025, arXiv:2509.03858) | 1 |
 | **open in the typical variant:** SuGOHI IX 090434−005328 (A), 091517+040747 (C), 104122−005618 (B), CHITAH pairs of 2.0–2.25″ | 3 |
 
-- 13 of the 16 have a deflector in the literature that the LS test missed. LS DR10 often does not detect real lens
+- 10 of the 13 have a deflector in the literature that the LS test missed. LS DR10 often does not detect real lens
   galaxies next to quasar images, so a "none" is weak evidence.
 - All three open pairs need a conservative lens (m_z 23.3–23.5) fainter than the local depth (22.9–23.2). An ordinary
   lens below the LS depth explains them, so none survives every ordinary test, and there is no `docs/candidates/` file.
@@ -700,12 +721,15 @@ simulated:
 
 | Variant | quasar: k / N / f_dark < | radio: k / N / f_dark < | all |
 |---|---|---|---|
-| typical | 3 / 16 / 0.48 | 0 / 13 / 0.23 | 3 / 29 / 0.27 |
-| conservative | 0 / 6 / 0.50 | 0 / 0 / — | 0 / 6 / 0.50 |
+| typical | 3 / 15 / 0.52 | 0 / 10 / 0.30 | 3 / 25 / 0.31 |
+| conservative | 0 / 5 / 0.60 | 0 / 0 / — | 0 / 5 / 0.60 |
+
+With the pair check and one entry per lens (D-056 amendment 2026-10-08). Before them: typical quasar 3 / 16 / 0.48,
+radio 0 / 13 / 0.23 and all 3 / 29 / 0.27; conservative 0 / 6 / 0.50.
 
 f_dark is the fraction of quasar- or radio-selected galaxy-scale lenses whose deflector is dark (fainter than an
 ordinary lens of that θ_E).
-- These limits are **weak and rest on an assumed complete test.** LS DR10 decides only 29 of the 343 covered quasar
+- These limits are **weak and rest on an assumed complete test.** LS DR10 decides only 25 of the 343 covered quasar
   and radio systems (242 blended, 65 closer than 2″).
 - There is **no limit** on galaxy-finder or sub-mm systems, or on W1: there is no image geometry, and W1 pairs are
   unlikely to pass lens finders.
@@ -722,6 +746,8 @@ ordinary lens of that θ_E).
   - 468 covered systems with rounded positions (a random 32 inspected);
   - candidates their own papers rejected (MJV16999, Spingola et al. 2019);
   - name-based merges across lists.
+- Copies of one lens are merged only when both carry a designation (HHMM±DD) and lie within 30″. Copies with
+  different names, or more than 30″ apart, would still count twice.
 - HSC-SSP imaging (account required) and HST photometry were not used. They would decide the 307 blended or close
   lensed quasars.
 - Relation to D-051: D-051 limits dark deflectors per unit area in JWST deep fields. This is a per-lens fraction in
@@ -1009,7 +1035,7 @@ dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no pu
 - Not a statement about OGLE or the Mróz samples, and not combinable with the D-052 JWST limits without a lens
   population model.
 
-### Calibrated re-run of gb22 and the streaming pipeline (D-TBD)
+### Calibrated re-run of gb22 and the streaming pipeline (D-068)
 
 The pilot numbers above are superseded by this re-run (same real-data result, stricter injections).
 
@@ -1174,6 +1200,30 @@ population still is galaxies; Milky Way stars are excluded by the extended-model
 - No limit below θ_E ≈ 6′ or above 32′ (the regions are 10° high; 1° needs a larger contiguous area).
 - Not combinable with the W1 radial/shear limits (different mass and θ_E ranges and selection).
 
+### Euclid Q1: deeper counts do not open θ_E < 6′; shapes would (2026-10-09, D-065)
+
+`scripts/w5_euclid_feasibility.py` → `results/w5_counts/euclid_q1_feasibility.json`. Galaxy densities are
+**observed** (IRSA TAP counts in 0.1° discs inside EDF-F, EDF-S and EDF-N); the gains are **model_prediction**.
+- Extended VIS detections (`vis_det`, clean flags, `point_like_prob` < 0.1; ASSUMPTION): 2.8 × 10⁴ (VIS < 23.5),
+  6.8 × 10⁴ (< 24.5) and 1.07 × 10⁵ deg⁻² (< 25.0); field-to-field spread ±10 %. VIS < 24.5 is 1.81× the DR10
+  r < 23.5 density; the count slope d log N/dm = 0.378 (DR10 0.365), so the predicted deficit profile is the same.
+- The screen's scatter is mostly galaxy clustering, which does not shrink with depth: DR10 Z scatter is 1.1× (2′),
+  1.6× (4′) and 2.4× (8′) the Poisson value. With 1.81× the galaxies and the same (half the) clustering variance
+  (ASSUMPTION range), the count S/N gains only ×1.24 (1.36) at 2′, ×1.10 (1.39) at 4′, ×1.04 (1.40) at 8′.
+  DR10 reached ε ≈ 0.5 at 8′; its 4′ S/N is 0.72 and its 2′ S/N 0.52 of that, so Euclid Q1 counts reach
+  0.79–1.0 at 4′ and 0.65–0.71 at 2′: at best a floor near 4–6′ instead of 6–8′, on 63 deg² instead of 340 deg²
+  (n₉₅ ≥ 5× weaker above 8′). Not worth a ~3.5 h row fetch.
+- Densities are counts over the full disc (masked area not subtracted, so lower bounds); 10 % more galaxies would
+  change the 4′ gain by < 1 %, because the clustering term dominates. The clustering ratio is not measured: at 0.3
+  the 4′ gain would be ×1.6 (S/N 1.15 of DR10 at 8′), so counts could reach ≈ 4′ at best.
+- A radial-shear test (point-mass γ = (θ_E/θ)², mean 0.21 over 1.5–3 θ_E, outside the critical curve where κ = 0;
+  σ_γ = 0.3 per component and S/N ≥ 6, ASSUMPTIONs) reaches θ_E ≈ 0.44′ ≈ 26″ with VIS < 24.5 shapes
+  (≈ 9 × 10⁷ M☉ at 1 kpc, 9 × 10¹⁰ M☉ at 1 Mpc), an order of magnitude below the count floor in θ_E. The sign of the tangential shear separates a negative-mass
+  lens (radial) from every ordinary foreground mass (tangential). MER `ellipticity` / `position_angle` are
+  SExtractor image moments without PSF correction, so the test needs a PSF-anisotropy check on stars first.
+  (Correction, D-066: `position_angle` is PA east of north, not CCW from the image x axis as the TAP column
+  description says.)
+
 ## W1/W2 in rejected lensed-quasar pairs
 
 D-064; `scripts/w12_niq.py screen --sheet` (`--repin` only after inspecting changed inputs); outputs `results/w12_niq/`
@@ -1229,7 +1279,107 @@ The ordinary explanations are binary quasars, unrelated pairs and lens galaxies 
 - Most rejected pairs are closer than LS can resolve (46 "too close"; the Lemon UQP median separation is 1.22″).
 - One pair (J0041−5350) is not decided: its LS pair (3.3″) is not the catalogued one (1.1″).
 
+**Archival HST follow-up of the 11 untestable pairs** (`scripts/w12_niq_hst.py`; `results/w12_niq/hst_residuals.ecsv`,
+`hst_injections.ecsv`, `hst_residuals.jpg`; MAST HAP cutouts).
+- Coverage: HST F814W imaging exists for 2 of the 11 pairs (J0130+0725, J0728+2607; ACS, program 17308, 674 s)
+  and for 2 of the 5 control lenses (J2308+3201, ACS 17308; SDSS J1515+1511, WFC3/UVIS 17199). The other 9 pairs
+  have no HST imaging of any kind within 10″ in MAST (`Observations.query_region`, 2026-10-09).
+- Method:
+  - two point sources with a shared Moffat profile plus a background, fitted on a stamp around the pair;
+  - the residual of each image's PSF halo is removed, using its radial profile on the side facing away from the
+    other image;
+  - the residual flux is summed in the pair-diameter circle beyond 0.3″ from each image;
+  - its error is the larger of two estimates: the pixel MAD times a drizzle noise-correlation factor (≈ 1.5), and
+    the scatter of same-area apertures on empty sky in the full cutout. The second wins (≈ 2.3× the first) and
+    includes large-scale background structure. Missing pixels are masked;
+  - the fitted pair must match the catalogued separation within 0.5″.
+  Thresholds are ASSUMPTIONs (`Params`: 5σ, 0.3″ core mask).
+- Validation (the chain is trusted only because of these):
+  - both control lenses show their lens galaxies at S/N 42 (J2308, F814W 21.2) and 16 (J1515, F814W 21.8);
+  - an early-type lens galaxy (Sersic n = 4, r_eff 0.3″) injected at the SIS-predicted position into the real
+    J0130 stamp, through the whole chain (peak finding, fit, pair check, residual), is recovered at 51 / 20 / 8.0 /
+    3.2 / 1.3σ above the baseline for F814W = 21 / 22 / 23 / 24 / 25.
+- **J0130+0725 (z = 1.54, 2.06″): no residual (S/N 0.45). Limit F814W ≈ 23.0**: the faintest injection in the
+  unbroken run recovered at ≥ 5σ above the baseline. The noise-only 5σ limit is 23.7. An ordinary lens needs
+  m_z ≈ 19.4 (typical) or 21.7 (conservative, 2σ under-luminous). Assuming F814W − z ≈ 0–0.6 for the lens
+  (ASSUMPTION), that is F814W ≈ 19.4–20.0 (typical) or 21.7–22.3 (conservative). The limit is ≈ 3.5 mag fainter
+  than a typical lens and ≥ 0.7 mag fainter than the conservative one. No ordinary lens galaxy is visible. The leading ordinary explanation remains a binary quasar
+  (Lemon et al. 2023 classify it as a UQP), and it is untested here: spectra of both images, or the flux-ratio
+  stability between epochs, are needed. It is **not** a candidate until that test runs (scripts/CLAUDE.md).
+- **J0728+2607 (z = 1.03, 2.15″):** inconclusive with the Moffat model (S/N 5.0, residual at the image cores).
+  Decided with an empirical PSF (`scripts/w12_niq_epsf.py`; `results/w12_niq/hst_epsf_*`):
+  - the PSF is the median of 6 unsaturated, isolated Gaia stars (G 16.5–21) in the same F814W skycell cutout;
+  - stars with flat (saturated) cores are rejected, at least 3 stars are required, and the PSF stamp is 2″;
+  - the residual is centred on the images (a ring around B, a centring dipole at A), and after the halo
+    correction there is no light between the images (S/N 1.6);
+  - the control J2308+3201 gives S/N 49 through the same chain. J0130+0725 has only 1 usable star, so it has no
+    empirical-PSF result; its Moffat-chain result stands;
+  - whole-chain injections are recovered at ≥ 5σ above the baseline to **F814W = 23**;
+  - J0728 would need an ordinary lens at m_z ≈ 18.8 (typical) or 20.6 (conservative), i.e. F814W ≈ 18.8–21.2
+    (F814W − z assumed 0–0.6), which is ≥ 1.8 mag brighter than the limit.
+  So neither HST pair has a visible deflector. A binary quasar remains the untested ordinary explanation for both.
+  A mirror test (lens position vs the mirror point beyond the faint image) is not usable: the control gives only
+  3.1σ, because its lens is not where the SIS flux-ratio rule puts it.
+- The halo correction and the empirical aperture noise are essential. With white-noise errors and no halo
+  correction, J0130 read S/N 26 and J0728 35, from symmetric PSF-halo mismatch alone.
+
 **Consequence for D-056.** D-056's quasar-class limits assume that a dark lens gives "none" (true). Its "none"
 systems were explained by literature lens galaxies, never by LS. This measurement confirms the D-056 vetting finding
 (13 of 16 "none" systems had a literature lens galaxy): at ≤ 3″, LS DR10 cannot show a lens galaxy, so only
 literature or deeper imaging decides.
+
+### Euclid Q1 radial-shear screen: pilot null; first W5/W1 limits at θ_E = 1–2′ (2026-10-09, D-066)
+
+`scripts/w5_euclid_shear.py` → `results/w5_shear/{pacheck,validate,screen}.json`. Shapes **observed** (MER
+`ellipticity`, `position_angle`, `semimajor_axis`; VIS < 24.5, extended, clean flags, resolved > 1.2× the stars'
+median sigma); statistics **derived**; injections **model_prediction**.
+- **Angle convention** (lensing-independent): moments on 25 VIS cutouts give PA east of north = `position_angle`
+  (median |Δ| 0.78°; +90° gives 89°, the mirror 35.5°). The TAP description ("CCW/x, THETA_IMAGE") is wrong.
+- **Sign check on known mass:** four SZ clusters in EDF-S (PSZ2 G255.60-46.18, ACT-CL J0405.9-4915, J0405.1-4648,
+  J0402.2-4611) all give tangential shear in a 1–10′ annulus, S = −2.3, −4.9, −5.0, −1.5 (radial would be > 0);
+  faint galaxies (VIS > 23) alone keep the sign (S = −2.1, −3.7, −4.2, −1.0). Stars: mean ε₁ = +0.007 to +0.020
+  (± 0.001–0.003; PSF elongated N–S by 1–2 %), ε₂ up to −0.012; a constant PSF ellipticity cancels over a full
+  annulus (gradients are not tested yet).
+- **Screen:** 0.3° pilot discs in EDF-F and EDF-S (11.9 k and 14.4 k resolved galaxies); point-mass filter over
+  1.5–3 θ_E on a grid of step θ_E; threshold = 99th percentile of the field maximum under 200 shape rotations
+  (ASSUMPTION). Field maxima S = 2.4–3.5, p_random 0.07–0.99: **no flag at any θ_E**.
+- **Injections** (40 per field and θ_E, off-grid, whole chain: shear R g applied to the observed moments of every
+  catalogue row, then the resolved cut and PSF deconvolution; R = 0.5 ASSUMPTION): efficiency 0.05 / 0.18 at 30″,
+  0.88 / 1.0 at 60″, 1.0 / 1.0 at 120″ (EDF-F / EDF-S).
+- *Superseded (D-067): these injections sheared the observed moments before the deconvolution, ~1.6× over R, so the
+  efficiencies and limits below are optimistic; `screen.json` is from that chain. The survey below replaces them.*
+- **Limits** (95 %, Poisson, derived; quoted only where every field's efficiency ≥ 0.5): n₉₅ ≈ **8.1 deg⁻² at
+  θ_E = 1′** (effective area 0.37 deg²) and **12 deg⁻² at 2′** (0.25 deg²); no limit at 30″. The D-063 count floor was θ_E ≈ 6′, so shapes open 1–6′.
+- Limitations: R is assumed (a cluster-mass calibration of R is next); 0.6 deg² of 63 deg²; EDF-N not fetched
+  (the 0.3° row query hung > 15 min); PSF-anisotropy gradients and blends are untested, but they would need a
+  radial pattern centred on a trial point to fake a flag.
+
+### Euclid Q1 radial-shear survey: all three Deep Fields (60 deg²) null; R calibrated (2026-10-09, D-067)
+
+`w5_euclid_shear.py fetch` (352 ObsCore VIS tiles; 344 in EDF-F/S/N by indexed `tileid`, LDN1641 left out),
+`calibrate`, `survey` → `results/w5_shear/{fetch,calibrate,survey}.json`. Same shapes, cuts and statistic as the
+pilot; PSF sigma per tile from its stars (field median when < 30 stars).
+- **Responsivity R (derived):** the `validate` profiles of the 4 SZ clusters (3 annuli each) against NFW haloes of
+  the catalogued M500 (Duffy+08 c200, Wright & Brainerd 2000; model_prediction) give R = 0.56 ± 0.16 at z_s = 1.0
+  (0.67 ± 0.19 at 0.8, 0.50 ± 0.15 at 1.2; single source plane, ASSUMPTION); errors scaled by √(χ²/dof), χ² = 33/11
+  (unscaled ± 0.09). Member dilution and miscentring bias R low. The assumed R = 0.5 stays (within
+  the D-066 30 % revisit bound) and is conservative.
+- **Survey:** 4.78 M rows (4.60 M galaxies, 2.9 M resolved); θ_E = 1′, 2′, 4′ (30″ dropped: blind); centres where the
+  1.5–3 θ_E annulus holds ≥ 0.8 × the field median count (ASSUMPTION); field-wise 1 % thresholds S = 4.3–5.1 from
+  200 rotations. Field maxima S = 3.3–4.4 (p_random 0.22–0.81): **0 flags in any field at any θ_E**.
+- **Known mass, whole chain:** at the 3 SZ clusters with valid centres, 8 of 9 S values are negative (tangential;
+  −5.24 at ACT-CL J0405.9-4915 for θ_E = 4′ is the EDF-S minimum); the exception is +0.16 (PSZ2 G255.60-46.18 at 1′).
+- **Injections** (40 per field and θ_E, off-grid, R = 0.5): the deconvolved shapes of the rows near the centre are
+  rotated at random and sheared by R g (`inject_shapes`), the space in which R was calibrated. Efficiency **0.58 /
+  0.43 / 0.55 at 1′** (EDF-F/S/N), 1.0 at 2′ and 4′.
+- **Failed approach (corrected before merge):** the first run sheared the *observed* moments and then deconvolved
+  them, which boosts the injected shear by tr_obs/tr_int (median 1.6×, 10–90 % 1.15–2.6× for the resolved
+  galaxies) over the calibrated R. It gave 0.78–0.85 at 1′ and a 1′ limit (0.062 deg⁻²) that is withdrawn. The D-066
+  pilot injections used the same chain, so its efficiencies (and n₉₅ ≈ 8.1 / 12 deg⁻²) are optimistic; this survey
+  supersedes them.
+- **Limits** (95 %, Poisson, derived): **none at θ_E = 1′** (EDF-S efficiency 0.43 < 0.5, ASSUMPTION gate);
+  n₉₅ ≈ **0.049 deg⁻² at 2′** (60.7 deg²) and **0.051 at 4′** (58.7 deg²). With D-063 (0.012–0.018 deg⁻² at
+  8–32′) negative point masses now have a limit from θ_E = 2′ to 32′.
+- Limitations: shapes are SExtractor moments, not a shear catalogue; one effective z_s; PSF-anisotropy gradients
+  untested (per-tile star means are in `survey.json` for that check); blends untested; θ_E ≤ 1′ not limited;
+  the injection keeps each galaxy's resolved flag (a shear changes the size by ≲ |g||ε|; D-067 rule exception).

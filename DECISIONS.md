@@ -2765,6 +2765,27 @@ orphan counts.
 - A lens list publishes image positions (W1 geometry).
 - Tractor can be re-run on injected images (a measured completeness).
 
+**Amendment (2026-10-08): the LS pair must be the catalogued pair (D-064 check); one entry per lens.**
+- `lenscats.pair_match` (moved from `scripts/w12_niq.py`, tolerance `PAIR_SEP_TOL` = 0.5″, ASSUMPTION) is shared by
+  both scripts. In `w12_lenscats.py`, `deflector_test` reports `used_pair`, and `pair_check` compares the LS pair
+  with 2θ_E (SIS `model_prediction`; the catalogues give no image positions). A pair-based status with a mismatch
+  is undecided. Without a catalogued θ_E the system stays decided and is counted as unchecked in `summary.json`.
+- `dedup_same_lens` (vet) keeps one decided entry per lens. Entries match on the same designation
+  (`lenscats.designation_key`, HHMM±DD after removing the prefix, J/B, spaces and suffixes) within 30″
+  (`Params.same_lens_radius`, ASSUMPTION). A copy with a deflector is kept (a deflector seen at one catalogued
+  position explains the lens), else the first copy. Merged ids: `summary.json` `vetting.same_lens_merged`. Three
+  radio lenses are listed twice in lenscat about 11″ apart: MG0414+0534, B2114+022, B2319+052. For each, the
+  "deflector" copy is kept and the "none" copy, on empty sky, is dropped.
+- Re-run (`derived`): decided 29 → 25 (deflector 13 → 12, none 16 → 13). 115252+004733 (θ_E 1.67″, LS pair 4.18″)
+  becomes undecided. Typical: quasar 3 / 15 / < 0.52, radio 0 / 10 / < 0.30, all 3 / 25 / < 0.31.
+  Conservative: 0 / 5 / < 0.60. The three open CHITAH pairs are unchanged.
+- Coverage is thin: 0 of the 15 pair-decided systems have a catalogued θ_E. A one-off check against the SQLS
+  separations pinned for D-064 matched the three that have one (J1322+1052, J1349+1227, J1515+1511).
+- Rejected: requiring a catalogued separation for every decided system (no pair-decided system has one, so the
+  quasar class would have N = 0); importing the D-064 VizieR tables into the D-056 chain (3 of 15 matches, all
+  consistent: a second pinned input set for no change); a hard-coded duplicate list; widening the 3″ catalogue merge
+  (it would merge distinct close systems before any test).
+
 ## D-057 W3 in OGLE-IV Mróz samples: one fitter for ordinary and exotic models; disk sample null (2026-10-08)
 
 **Decision.**
@@ -3056,10 +3077,107 @@ colour-mismatched, 2 are catalogued binaries and 1 has two redshifts; 11 remain 
 - The Tractor rows the test ran on are pinned too (sha256 of the sorted rows), and so are the brick summary and
   every VizieR table. VizieR error, empty or truncated responses are refused.
 
+**Addendum (2026-10-09, archival HST).** `scripts/w12_niq_hst.py` tests the pairs with HST F814W imaging: 2 of the 11,
+and 2 controls. It fits two Moffat PSFs, removes the halo residual from the profile facing away from the other image,
+and measures the residual flux between the images.
+- Validation: both controls are detected (S/N 42 and 16), and injections run through the whole chain are recovered
+  at ≥ 5σ above the baseline to F814W = 23. Errors are the larger of a drizzle-corrected pixel error and the
+  empirical scatter of same-area sky apertures; the latter dominates (≈ 2.3×).
+- Result:
+  - J0130+0725 has no lens light to F814W ≈ 23 (injection-calibrated): ≈ 3.5 mag below a typical ordinary lens and
+    ≥ 0.7 mag below a 2σ under-luminous one (F814W − z assumed 0–0.6). A binary quasar remains the untested
+    ordinary explanation;
+  - J0728+2607 is inconclusive with the Moffat model (PSF-core residuals). With an empirical PSF from 6 Gaia stars in
+    the same cutout (`w12_niq_epsf.py`; control S/N 49) it has no light between the images (S/N 1.6; injections
+    recovered to F814W = 23), ≥ 1.8 mag below any ordinary lens.
+- Rejected alternatives:
+  - the "combined_skycells" HAP cutout, whose WCS does not describe its pixels (separations of 10⁴″);
+  - an aperture statistic without the halo correction, which gave S/N 18–24 from PSF mismatch alone;
+  - white-noise aperture errors on drizzled pixels: S/N is ~3.5× too high once the drizzle correlation and
+    large-scale sky structure are included;
+  - injections that skip peak finding and the pair check (not the whole chain);
+  - a 0.15″ core mask, which left core residuals.
+
 **Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 11 colour-matched pairs;
 spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ tables add pairs of 2–3″.
 
-## D-TBD W3 MOA-II: calibrated variable-baseline test, LF-drawn injections and a streaming per-field pipeline; gb22 re-run null (2026-10-08)
+## D-065 W5 in Euclid Q1: no count screen; next is a radial-shear screen on Euclid Q1 shapes (2026-10-09)
+
+**Decision.** Do not port the D-063 count screen to Euclid Q1. Its S/N at θ_E ≤ 4′ is limited by galaxy clustering,
+not by the galaxy density, so 1.8× more galaxies buy ×1.0–1.4 in S/N on a fifth of the area
+(docs/exotic_limits.md "Euclid Q1"). For θ_E < 6′ the next W5/W1 test is the sign of the tangential shear of
+Euclid Q1 MER shapes around trial centres (radial for a negative-mass lens; forecast floor θ_E ≈ 26″).
+
+**Alternatives rejected.**
+- Euclid Q1 MER counts per pixel (IRSA TAP): ~3.5 h of row queries for 63 deg²; forecast in Evidence.
+- HSC PDR3 counts: account needed (D-063), and the same clustering limit applies.
+- Server-side HTM aggregation (`GROUP BY floor(htm20/65536)` works on IRSA for small boxes) would avoid the row
+  fetch, but does not change the S/N argument.
+
+**Evidence.** `results/w5_counts/euclid_q1_feasibility.json` (densities observed 2026-10-09; gains and the shear
+floor are model_prediction with stated ASSUMPTIONs). IRSA TAP: a `ra BETWEEN` / `dec BETWEEN` box of 0.25 deg² did
+not return in 5 min; the same selection with `CONTAINS(POINT, CIRCLE)` (r = 0.25°) returned 12,323 rows in 40 s;
+`COUNT(*)` in a 0.1° disc takes a few seconds.
+
+**Revisit if.**
+- A count screen is needed at θ_E ≈ 4–6′ specifically (a larger Euclid release removes the area penalty), or a
+  counts-in-cells measurement gives a Euclid/DR10 clustering-variance ratio well below 0.5 (ASSUMPTION range 0.5–1;
+  at 0.3 counts would reach ≈ 4′).
+- The shear screen finds Euclid Q1 MER moments unusable (PSF anisotropy) and no PSF-corrected shape catalogue is
+  public.
+
+## D-066 W5/W1 radial-shear screen on Euclid Q1 MER shapes: `ApertureMass` reused; pilot null; limits at θ_E = 1–2′ (2026-10-09)
+
+**Decision.** Search for radial (negative-mass) shear with the D-050 catalogue aperture-mass statistic
+(`exotic_screens.ApertureMass`, point-mass filter over 1.5–3 θ_E) on Euclid Q1 MER SExtractor moments, fetched per
+0.3° disc from IRSA TAP. The catalogue `position_angle` is used as PA east of north. Pilot: EDF-F and EDF-S.
+
+**Alternatives rejected.**
+- Trusting the TAP column description (`position_angle` "CCW/x", THETA_IMAGE): image moments on 25 MER VIS cutouts
+  contradict it (89° off); using it would flip tangential and radial, the sign under test.
+- A PSF-corrected shear catalogue (none public for Q1); building one (KSB/metacal) before a pilot shows need.
+- Grid-centred injections on deconvolved shapes: best case; injections are off-grid, applied to observed moments
+  before the cuts, and detected at any centre within one step.
+
+**Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear screen"; `results/w5_shear/`. Four SZ clusters show
+tangential shear (S = −1.5 to −5.0); pilot null (0 flags); whole-chain injection efficiency 0.88–1.0 at 1′, 1.0 at
+2′, ≤ 0.18 at 30″; n₉₅ ≈ 8.1 deg⁻² (1′), 12 deg⁻² (2′). *Superseded by D-067: these injections were boosted
+~1.6× over R (efficiencies optimistic; `results/w5_shear/screen.json` is from that chain).*
+
+**Revisit if.**
+- A PSF-corrected Euclid shear catalogue becomes public (DR1), or cluster-calibrated R differs from 0.5 by > 30 %.
+- PSF-anisotropy gradients (star ellipticity maps) show radial patterns on trial-centre scales.
+
+## D-067 W5/W1 radial-shear survey of all Euclid Q1 Deep Fields: tile fetch by `tileid`, R calibrated on SZ clusters, 60 deg² null (2026-10-09)
+
+**Decision.** Fetch the Q1 MER rows per tile with the indexed `tileid` (tile list from IRSA ObsCore), run the D-066
+screen per Deep Field with per-tile PSF sizes and a coverage cut, and keep R = 0.5 after calibrating it on the four
+SZ clusters against NFW haloes (in-house ~40 lines: Wright & Brainerd 2000, Duffy et al. 2008 c200).
+
+**Alternatives rejected.**
+- More `CONTAINS` discs: overlapping discs double-count rows; edge handling per disc wastes the aperture border.
+- 16 concurrent IRSA queries: 504 gateway time-outs and no rate gain over 8 (0.3–0.5 queries/s).
+- colossus / pyccl for the NFW shear: a dependency for textbook formulas checked by a unit test.
+- Per-source photo-z (`euclid_q1_phz_photo_z`) for Σ_crit: one source plane bracketed by z_s = 0.8–1.2 already
+  keeps R within ±20 %; worth it only if a flag needs a mass.
+
+- Injecting by shearing the observed moments before the PSF deconvolution (the D-066 chain): it boosts the
+  injected shear by tr_obs/tr_int (median 1.6×) over the R calibrated on deconvolved shapes. Injections now shear
+  the deconvolved shapes by R g (`inject_shapes`); D-066's pilot efficiencies are superseded.
+- Rule exception (scripts/CLAUDE.md "inject through the whole chain"): injections skip the resolved cut and the
+  deconvolution, because R is defined on their output; a shear changes a galaxy's size by a fraction ≲ |g||ε|, so
+  only galaxies that close to the 1.2 × PSF cut could change their resolved flag (kept as is). Revisit if a limit
+  hinges on them.
+
+**Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear survey"; `results/w5_shear/`. R = 0.56 ± 0.16
+(z_s = 1, scaled by √(χ²/dof)); 0 flags over 60 deg² at θ_E = 1′, 2′, 4′; known clusters negative (8/9);
+efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049 / 0.051 deg⁻² at 2′ / 4′.
+
+**Revisit if.**
+- Euclid DR1 (≈ 2000 deg², PSF-corrected shapes) is public: the same code scales by tile.
+- A flag appears, or per-tile star ellipticity gradients show radial patterns on 1–12′ scales.
+
+## D-068 W3 MOA-II: calibrated variable-baseline test, LF-drawn injections and a streaming per-field pipeline; gb22 re-run null (2026-10-08)
 
 **Decision.**
 - The variable-baseline vetting test's threshold is the 95th percentile (ASSUMPTION, `BASELINE_Q`) of the field's

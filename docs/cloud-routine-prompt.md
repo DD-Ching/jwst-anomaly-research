@@ -72,6 +72,61 @@ MOVE FAST, SAFELY:
   squash-merge with mcp__github__merge_pull_request (merge_method squash, expectedHeadSha = the reviewed
   head). If merging is unavailable or refused, label the PR merge-ready for the owner or a local session.
 
+EFFICIENCY RULES:
+1. Result first, polish second. Once a cycle's scientific result is stable (the headline numbers
+   have not changed across two consecutive fix rounds), stop widening the work. Finish the PR.
+
+2. Review stopping rule. Run /code-review on the final diff. Fix a finding only if it changes:
+   a count or limit in the results, a scientific conclusion, data or provenance correctness,
+   reproducibility (pins, manifests), or a guarded-file / security rule. For every other finding
+   (style, hypothetical inputs that do not occur in the pinned data, refactors, performance on
+   small tables, duplicated helpers), write one line in the PR body under "Review findings not
+   fixed" saying why, and move on. At most 3 review rounds per PR; if round 3 still finds a
+   result-changing bug, fix it and merge after CI, then list the rest as follow-ups in TASKS.md.
+
+3. Verify the branch after every skill. /code-review and other forked skills may leave the
+   checkout detached. After each one run `git status -sb` and `git rev-parse HEAD`; if detached,
+   `git switch <branch>` (fast-forward any commits made while detached) before committing.
+   After every push, confirm `git log -1 origin/<branch>` equals your HEAD.
+
+4. Fail fast on data access. If a service rejects a query form twice (e.g. Data Lab TAP rejects
+   GROUP BY expressions or sub-selects), switch approach immediately (row queries + client-side
+   binning, another mirror) and record the limit in DECISIONS/SOURCES. Do not retry the same
+   failing form.
+
+5. Calibrate before you flag. Before quoting any flag threshold, measure the null on the real
+   field (clustering, systematics) and run a control or injection set through the full chain.
+   A screen with no control sample does not get a result paragraph.
+
+6. Time box. Check `date -u` at each step. At about 35 minutes into the run, stop starting new
+   work: commit, push, update the claim heartbeat, write the handoff, and merge or label the PR.
+
+7. One unit per cycle. Do not open a second unit until the first is merged, labelled merge-ready,
+   or handed off with a stated blocker.
+
+8. Merge main before the final review, not after. Right before the last /code-review and the
+   final push: `git fetch origin && git merge origin/main`, resolve, test. A PR that turns "dirty"
+   later only needs the base merge (state files), not another review.
+
+9. State-file conflicts. CHANGELOG.md, TASKS.md and SOURCES.md conflict on almost every parallel PR.
+   Add your CHANGELOG entry as one block directly under the header; when resolving, keep both
+   entries (yours first) and never rewrite another entry. Keep TASKS.md edits to the lines of your
+   own unit.
+
+10. One CI wait per head. Start the CI wait loop only for the current head SHA; after every new
+    push, the previous wait is obsolete; ignore its result. Never act on CI results for a SHA that
+    is not the PR's current head.
+
+11. Verify outcomes, not intentions. After merge-relevant actions (push, label, merge) confirm the
+    state on GitHub (head SHA, labels, mergeable_state, merged) before reporting it.
+
+12. Who merged what. Agents and the owner share the DD-Ching account. Never assume a merge was the
+    owner's approval of a pending question; ask in the handoff if it matters.
+
+13. Stop condition for the session. When the queue's next unit needs a human (telescope time,
+    credentials, a policy decision) or would repeat settled work, write the handoff and stop instead
+    of inventing low-value work.
+
 COORDINATION AND DISPATCH:
 Several sessions may run at once (hourly cloud routines, local sessions). Coordinate through GitHub,
 never by guessing from commit times.

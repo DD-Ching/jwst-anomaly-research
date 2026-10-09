@@ -1,0 +1,39 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: name, datatype: string}
+# - {name: group, datatype: string}
+# - {name: n_psf_stars, datatype: int64}
+# - {name: status, datatype: string}
+# - {name: sep_arcsec, datatype: float64}
+# - {name: resid_flux, datatype: float64}
+# - {name: resid_err, datatype: float64}
+# - {name: resid_snr, datatype: float64}
+# - {name: n_pix, datatype: int64}
+# - {name: flux_ratio_images, datatype: float64}
+# - {name: zp_ab, datatype: float64}
+# - {name: aperture_noise_empirical, datatype: float64}
+# - {name: noise_corr, datatype: float64}
+# - {name: resid_snr_raw, datatype: float64}
+# - {name: halo_removed_snr, datatype: float64}
+# - {name: halo_removed_flux, datatype: float64}
+# - {name: mag_resid, datatype: float64}
+# - {name: mag_limit_inject, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: 'scripts/w12_niq_epsf.py: empirical Gaia-star PSF on MAST HAP F814W cutouts'}
+# - params:
+#     fit_box_px: 3.0
+#     flat_core: 0.85
+#     min_psf_stars: 3
+#     noise_window_px: 600
+#     psf_half: 50
+#     size_px: 2200
+#     star_gmag: !!python/tuple [16.5, 21.0]
+#     star_isolation_arcsec: 2.0
+#     star_min_dist_arcsec: 4.0
+# schema: astropy-2.0
+name group n_psf_stars status sep_arcsec resid_flux resid_err resid_snr n_pix flux_ratio_images zp_ab aperture_noise_empirical noise_corr resid_snr_raw halo_removed_snr halo_removed_flux mag_resid mag_limit_inject
+J2308+3201 control 3 "light between images" 2.6295902049772923 62.713974858218684 1.5964131084498512 39.28430211846306 3226 1.9194751065908187 25.932105634514066 1.5964131084498512 1.4826697245435183 39.28430211846306 49.46407816496994 78.96510277994608 21.18851762206325 nan
+J0130+0725 rejected 1 "too few PSF stars (1)" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+J0728+2607 rejected 6 "none between images" 2.148301554478463 6.215653032755214 1.5397438033036888 4.0368099026726725 2089 2.056155162035886 25.931983050806743 1.5397438033036888 1.4339703621869935 4.0368099026726725 1.5566856801784699 2.396897129746387 24.98285956244996 23.0
