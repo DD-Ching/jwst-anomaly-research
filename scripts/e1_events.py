@@ -358,6 +358,44 @@ def limits(counts: Table, inj: Table, ev: dict[str, Table]) -> Table:
     return t
 
 
+def chime_vet(paths: dict[str, Path], p: en.Params, n: int) -> dict:
+    """Vet the CHIME-CHIME lag excess: is it direction-independent exposure clustering? Recount
+    with (a) all one-per-source bursts, (b) excluded_flag = 0 only (CHIME's flag for bursts from
+    non-nominal or low-sensitivity periods), (c) (b) without the unflagged 2023-08-25 same-position
+    episode (FRB20230825D-I, DM 221-223, within 5 min). Nulls: jit and jitday, n scrambles each."""
+    import pandas as pd
+
+    df = pd.read_csv(paths["chimefrbcat2.csv"])
+    variants = {
+        "all": df,
+        "excluded_flag_0": df[df["excluded_flag"] == 0],
+        "excluded_flag_0_no_20230825_episode": df[
+            (df["excluded_flag"] == 0) & ~df["tns_name"].isin([f"FRB20230825{x}" for x in "EFGHI"])
+        ],
+    }
+    out = {"n_scrambles": n, "lags": en.lag_labels(p), "variants": {}}
+    nlag = len(p.lag_edges) - 1
+    for name, d in variants.items():
+        s = en.Sample.from_table(en.chime_events(d))
+        obs = en.count_channel(s, s, p, same=True)
+        res = {"n_events": len(s.mjd)}
+        for kind, pp in (("jit", p), ("jitday", P_DAY)):
+            rng = np.random.default_rng(4_000_000)
+            null = np.stack(
+                [en.count_channel(*(2 * [en.scramble_jit(s, rng, pp)]), p, True) for _ in range(n)]
+            )
+            pv, z = en.empirical_p(obs, null), en.z_score(obs, null)
+            for j, cl in ((1, "wide"), (2, "all")):
+                res[f"{kind}_{cl}"] = {
+                    "obs": obs[:nlag, j].tolist(),
+                    "null_mean": null[:, :nlag, j].mean(axis=0).round(2).tolist(),
+                    "z": z[:nlag, j].round(2).tolist(),
+                    "p": pv[:nlag, j].round(5).tolist(),
+                }
+        out["variants"][name] = res
+    return out
+
+
 # ------------------------------------------------------------------------------------- main
 
 
@@ -369,10 +407,18 @@ def main(argv=None) -> int:
     ap.add_argument("--inject", type=int, default=40, help="trials per (channel, bin, n)")
     ap.add_argument("--cpu", type=int, default=1)
     ap.add_argument("--refresh", action="store_true")
+    ap.add_argument("--chime-vet", type=int, default=0, help="only run the CHIME vet (n)")
     a = ap.parse_args(argv)
     p = en.Params()
     OUT.mkdir(parents=True, exist_ok=True)
     paths = fetch(a.refresh)
+    if a.chime_vet:
+        res = chime_vet(paths, p, a.chime_vet)
+        with open(OUT / "chime_vet.json", "w") as fh:
+            json.dump(res, fh, indent=1)
+            fh.write("\n")
+        print(json.dumps(res, indent=1))
+        return 0
     ev = load(paths)
     samples = {k: en.Sample.from_table(v) for k, v in ev.items()}
     for k, v in ev.items():
