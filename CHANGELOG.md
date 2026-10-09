@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: E1 CHIME 100 s–1 h wide cell under the calibrated rate-modulated null: z 3.7 → 2.5, family-wise null (D-074 addendum)
+- Hypothesis: the 100 s–1 h CHIME–CHIME wide excess (396 vs 330, z = 3.7 `jit`) is lag dependence beyond a smooth
+  detection-rate modulation. Ordinary: week-scale rate modulation, daily duty cycle, sub-day outages.
+- `scripts/e1_chime_flag.py --cell 100s-1h` (2,000 scrambles, 30 s): 7-day null z = 2.52 (analytic p × 45 = 0.26);
+  time of day kept z = 2.42; 3-day z = 0.48 (not primary, D-074 (d)). The 7-day null keeps ≥ 97 % of 300 injected pairs.
+- Result: null at the family level; a local 2.5σ residual remains that only hour-scale uptime could decide.
+- Failed approach (not run, reasoned): an hour-resolved running mean of the catalogue's own counts would absorb the
+  tested pairs, as the in-day null did.
+- **Next:** E1 GW sky maps (GW channels get directions), then "which event comes first" / antipodal channels.
+
 ## 2026-10-09: Hypothesis round 3: derived small effects in large-N data; no testable survivor; new rounds paused (D-076)
 - Brief: a derived small amplitude in a large-N public quantity never analysed for it. **Results:**
   - R3-A (same-exposure pair correlation, about 2.4 × 10⁻⁵): fails as written (axiom A5 gives zero). The Holometer

@@ -1,0 +1,74 @@
+{
+ "cell": "CHIME-CHIME 100s-1h wide",
+ "n_scrambles": 2000,
+ "full": {
+  "obs": 396,
+  "jit_mean": 329.6,
+  "z_jit": 3.74
+ },
+ "d_rate_modulated_null": {
+  "running_mean_7d": {
+   "0": {
+    "obs": 396,
+    "null_mean": 348.9,
+    "null_sd": 18.7,
+    "z": 2.52,
+    "excess_kept": 47.1,
+    "analytic_p": 0.005789021509968461,
+    "bonferroni_45": 0.2605059679485807
+   },
+   "300": {
+    "obs": 701,
+    "null_mean": 352.0,
+    "null_sd": 19.0,
+    "z": 18.38,
+    "excess_kept": 349.0,
+    "analytic_p": 9.235556387455642e-76,
+    "bonferroni_45": 4.156000374355039e-74
+   }
+  },
+  "running_mean_3d": {
+   "0": {
+    "obs": 396,
+    "null_mean": 386.1,
+    "null_sd": 20.7,
+    "z": 0.48,
+    "excess_kept": 9.9,
+    "analytic_p": 0.31634525536261743,
+    "bonferroni_45": 1.0
+   },
+   "300": {
+    "obs": 698,
+    "null_mean": 393.8,
+    "null_sd": 20.7,
+    "z": 14.68,
+    "excess_kept": 304.2,
+    "analytic_p": 4.23517891372836e-49,
+    "bonferroni_45": 1.905830511177762e-47
+   }
+  }
+ },
+ "d_rate_modulated_null_keep_tod": {
+  "running_mean_7d": {
+   "0": {
+    "obs": 396,
+    "null_mean": 349.6,
+    "null_sd": 19.2,
+    "z": 2.42,
+    "excess_kept": 46.4,
+    "analytic_p": 0.007770532564167013,
+    "bonferroni_45": 0.34967396538751555
+   },
+   "300": {
+    "obs": 696,
+    "null_mean": 352.8,
+    "null_sd": 19.8,
+    "z": 17.36,
+    "excess_kept": 343.2,
+    "analytic_p": 7.819387792807372e-68,
+    "bonferroni_45": 3.5187245067633177e-66
+   }
+  }
+ },
+ "runtime_s": 29
+}

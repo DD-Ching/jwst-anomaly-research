@@ -3577,10 +3577,31 @@ kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0L
 - GW sky maps are added (then GW channels get same/wide classes and GW170817 enters the same-direction channel).
 - A time-resolved CHIME uptime or sensitivity series is published or obtained. It would confirm (or refute) that the
   rate modulation behind the CHIME flag is instrumental; an exposure-weighted null built from it must keep an
-  injected signal. The 100 s–1 h CHIME cell was not re-tested under the rate-modulated null.
+  injected signal. Sub-day (hour-resolved) uptime would also decide the 100 s–1 h residual (addendum).
 - A CHIME Cat 2 revision assigns FRB20230825D–I to a repeater.
 - IceTracks-DR2, Swift or Einstein Probe catalogues are added.
 - Signed-lag (precursor) channels are wanted.
+
+**Addendum (2026-10-09): the CHIME–CHIME 100 s–1 h wide cell under the rate-modulated null.**
+- Hypothesis: the 100 s–1 h wide excess (396 vs 329.6 ± 17.8 under `jit`, z = 3.7) is lag dependence that a smooth
+  detection-rate modulation does not explain. Ordinary explanations: week-scale rate modulation (as for 1 h–1 d),
+  the daily duty cycle, and sub-day outages or sensitivity changes. A family-wise > 3σ residual under the calibrated
+  null would have sent the cell to per-pair vetting.
+- `scripts/e1_chime_flag.py --cell 100s-1h`, 2,000 scrambles; `results/e1_events/chime_rate_null_100s_1h.json`.
+  The same D-074 (d) null, plus a `keep_tod` variant that keeps each event's UTC time of day.
+- **Results (z; analytic p × 45 cells):**
+  - 7-day running mean: 396 vs 348.9 ± 18.7, z = 2.52, p_fw = 0.26.
+  - 7-day, time of day kept: 396 vs 349.6 ± 19.2, z = 2.42, p_fw = 0.35 (the daily duty cycle adds nothing).
+  - 3-day running mean: z = 0.48. Not used as the primary null: it over-predicts the 1 h–1 d cell (z = −5.5, D-074 (d)).
+- Calibration: 300 injected wide pairs in this bin raise the count by 300–305; the null mean moves by ≤ 8, so the
+  7-day null keeps ≥ 97 % of an injected dependent signal (1 h–1 d: 87 %).
+- **Decision: null at the family level.** The week-scale modulation explains about 30 % of the jit excess (19 of 66
+  pairs); the rest is a local 2.5σ that a day-resolution null cannot test, because it needs hour-scale rate
+  structure. Unlike 1 h–1 d (z = −0.9), the cell stays a weak, unexplained-at-low-significance residual; no STOP.
+- Alternatives rejected: an hour-resolved running mean of the catalogue's own counts. With about 2 bursts per day
+  it would absorb the very pairs it tests (as the in-day null did, `chime_vet.json`).
+- Revisit if: a time-resolved CHIME uptime series is obtained (owner decision); then use an hour-resolved
+  exposure-weighted null for both 100 s–1 h and 1 h–1 d.
 
 ## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)
 
