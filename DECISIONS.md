@@ -3242,18 +3242,20 @@ model_prediction under an SIS (ASSUMPTION): the geometric delays of both images 
 potential delay on the source leg, s_L − s_T = −Δt (D_ls/D_s + f). f is unobservable, so each direction scans the
 window f ∈ [0, 1]; the copy into the trailing image arrives before the leading image when D_ls/D_s + f > 1. Image j is
 fitted as a smooth cubic B-spline (3000-d knots) + m F_i(t − τ) + a F_i(t − τ − δ), F_i interpolated across gaps
-≤ 40 d; r = a/m. The window maximum of r is compared with same-width windows at off-model lags. Result: no copy
-(lowest p = 0.03 of 12 windows, all adjacent to the main-image wing or one of 53 null windows); sensitivity
-r95 ≈ 0.27–2.3 per system and direction, i.e. only copies comparable to the main image are excluded.
+≤ 40 d; r = a/m. The window maximum of r (|lag| ≥ 10 d) is compared with same-width windows at off-model lags,
+and injections go through the same window maximum. A system is screened only if the main-term fit recovers its
+published delay. Result: no copy (lowest p = 0.02 of 12 windows, on the main-image wing); sensitivity
+r95 ≈ 0.47–2.7 per system and direction, i.e. only copies comparable to the main image are excluded.
 
 **Alternatives rejected.**
 - Microlensing B-splines with 120–730-d knots: the published delay is not recovered (6 of 7 systems off by
-  50–250 d); only the 3000-d spline recovers 6 of 7 within 3σ + 2 d (J1620 fails: too few overlapping epochs).
+  50–250 d); only the 3000-d spline recovers 6 of 7 within 3σ + 4 d (J1620: wrong-sign minimum at −206 d).
 - Quoting B-on-A1's ~10⁻² sensitivity: quasar variability is red (time-scales ≳ 100 d), so a copy at lags
   ≲ 100 d is nearly collinear with the main image and with a delay error. The same fit recovers r = 0.1 within 0.03
   on a synthetic curve with 20-d variability (`tests/test_s3_hybrid.py`), so the loss is the data, not the code.
-- Treating the r95 values as limits: injection efficiencies scatter between 1.05 and 2.3 over 8 trials, and the
-  r(δ) scans have a positive offset of 0.1–1 at all lags (template–microlensing degeneracy). They are sensitivities.
+- Treating the r95 values as limits: window-maximum injection efficiencies scatter from 0.5 to 5.6 over 8 trials,
+  the r(δ) scans have a positive offset of 0.1–1 at all lags (template–microlensing degeneracy), and the null
+  windows overlap (approximate p). They are sensitivities.
 
 **Evidence.** `results/s3_hybrid/summary.json`, `scans.json`; CHANGELOG 2026-10-09.
 

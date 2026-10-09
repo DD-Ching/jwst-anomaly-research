@@ -75,6 +75,9 @@ class Params:
     lag_step: float = 2.0  # days; lag grid
     null_span: float = 3.0  # null windows cover |lag| <= null_span * window span (ASSUMPTION)
     min_points: int = 40  # overlapping epochs needed for a fit
+    wing: float = (
+        10.0  # days; |lag| below this is the main-term wing, excluded everywhere (ASSUMPTION)
+    )
     inject_r: float = 0.05  # injected copy / main flux ratio
     quantile: float = 0.95  # one-sided level for the window statistic and the limit (ASSUMPTION)
 
@@ -131,8 +134,6 @@ def lag_window(system: System) -> dict:
         "into_trail": (-delta * (q + 1.0), -delta * q),
         # copy at L of T's source leg: later than L by Delta * g
         "into_lead": (delta * q, delta * (q + 1.0)),
-        # copies at T that arrive before the leading image's own signal (g > 1)
-        "precursor_g": 1.0,
     }
 
 
@@ -185,17 +186,16 @@ def fit_copy(
     return a / m, m, int(good.sum())
 
 
-def scan(
-    lc: dict, src: str, dst: str, tau_ji: float, lags: np.ndarray, p: Params, extra=None
-) -> np.ndarray:
-    f_j = lc[dst] if extra is None else lc[dst] + extra
+def scan(lc: dict, src: str, dst: str, tau_ji: float, lags: np.ndarray, p: Params, f_j=None):
+    f_j = lc[dst] if f_j is None else f_j
     return np.array(
         [fit_copy(lc["t"], f_j, lc["e" + dst], lc["t"], lc[src], tau_ji, lag, p)[0] for lag in lags]
     )
 
 
-def window_stat(lags: np.ndarray, r: np.ndarray, lo: float, hi: float) -> float:
-    sel = (lags >= lo) & (lags <= hi) & np.isfinite(r)
+def window_stat(lags: np.ndarray, r: np.ndarray, lo: float, hi: float, wing: float = 0.0) -> float:
+    """Window maximum of r, ignoring lags on the main-term wing (|lag| < wing)."""
+    sel = (lags >= lo) & (lags <= hi) & (np.abs(lags) >= wing) & np.isfinite(r)
     return float(np.max(r[sel])) if sel.any() else np.nan
 
 
@@ -227,7 +227,12 @@ def run_system(system: System, cache: Path, p: Params, rng: np.random.Generator)
     res = {"system": asdict(system), "n_epochs": int(len(lc["t"])), "window": win}
     v = validate_delay(lc, system, p)
     miss = abs(v["best_tau_BA"] - v["published_tau_BA"])
-    v["passed"] = bool(miss <= 3 * system.dt_err + 2 * p.lag_step)
+    # The sign must match and the delay must differ from 0, or a delay-free fit would pass.
+    v["passed"] = bool(
+        miss <= 3 * system.dt_err + 2 * p.lag_step
+        and np.sign(v["best_tau_BA"]) == np.sign(v["published_tau_BA"])
+        and abs(v["best_tau_BA"]) > 2 * p.lag_step
+    )
     res["validation"] = v
     out = {}
     if not v["passed"]:  # the template fit cannot find the known delay: no screen on this system
@@ -242,36 +247,45 @@ def run_system(system: System, cache: Path, p: Params, rng: np.random.Generator)
         reach = p.null_span * max(span, delay)
         lags = np.arange(-reach - span, reach + span + p.lag_step, p.lag_step)
         r = scan(lc, src, dst, tau, lags, p)
-        # Null: same-width windows off the model window and off the main-term wing (|lag| < 10 d).
+        # Null: same-width windows off the model window; the wing is excluded from both statistics.
+        # The windows overlap (start every 2 lag steps), so the p-value is approximate (D-071).
         starts = np.arange(-reach - span, reach, p.lag_step * 2)
         null = [
-            window_stat(lags, r, s, s + span)
-            for s in starts
-            if (s + span < lo or s > hi) and not (s - 10.0 < 0.0 < s + span + 10.0)
+            window_stat(lags, r, s, s + span, p.wing) for s in starts if s + span < lo or s > hi
         ]
         null = np.array([v for v in null if np.isfinite(v)])
-        obs = window_stat(lags, r, lo, hi)
-        thresh = float(np.quantile(null, p.quantile)) if len(null) >= 10 else np.nan
-        # Injection: a copy of amplitude inject_r at a random lag in the window, same fit.
+        obs = window_stat(lags, r, lo, hi, p.wing)
+        ok_null = len(null) >= 10 and np.isfinite(obs)
+        thresh = float(np.quantile(null, p.quantile)) if ok_null else np.nan
+        # Injection through the screen statistic: a copy of amplitude inject_r at a random lag in
+        # the window, then the window maximum on the same lag grid, minus the maximum without it.
+        m = fit_copy(lc["t"], lc[dst], lc["e" + dst], lc["t"], lc[src], tau, None, p)[1]
+        sel = (lags >= lo) & (lags <= hi) & (np.abs(lags) >= p.wing)
         rec = []
-        for _ in range(8):
+        for _ in range(8 if ok_null else 0):
             lag = rng.uniform(lo, hi)
-            _, m, _ = fit_copy(lc["t"], lc[dst], lc["e" + dst], lc["t"], lc[src], tau, None, p)
             copy = interp_template(lc["t"], lc[src], lc["t"] - tau - lag, p.max_gap)
-            extra = np.where(np.isfinite(copy), p.inject_r * m * (copy - 1.0), np.nan)
-            ok = np.isfinite(extra)
+            ok = np.isfinite(copy)
             sub = {k: v[ok] for k, v in lc.items()}
-            r_inj = fit_copy(
-                sub["t"], sub[dst] + extra[ok], sub["e" + dst], lc["t"], lc[src], tau, lag, p
-            )[0]
-            r_null = fit_copy(sub["t"], sub[dst], sub["e" + dst], lc["t"], lc[src], tau, lag, p)[0]
-            rec.append((r_inj - r_null) / p.inject_r)
-        rec = np.array(rec)
-        eff = float(np.nanmedian(rec))
-        # Sensitivity, not a limit (D-071): a copy r adds ~ eff * r to the window maximum;
-        # the one-sided 95 % bound (ASSUMPTION) uses the spread of the null window maxima.
-        if np.isfinite(thresh) and eff > 0.5:
-            limit = float(max(obs, np.median(null)) + (thresh - np.median(null))) / eff
+            f_inj = sub[dst] + p.inject_r * m * (copy[ok] - 1.0)
+            r_inj = np.array(
+                [
+                    fit_copy(sub["t"], f_inj, sub["e" + dst], lc["t"], lc[src], tau, x, p)[0]
+                    for x in lags[sel]
+                ]
+            )
+            r_0 = np.array(
+                [
+                    fit_copy(sub["t"], sub[dst], sub["e" + dst], lc["t"], lc[src], tau, x, p)[0]
+                    for x in lags[sel]
+                ]
+            )
+            rec.append((np.nanmax(r_inj) - np.nanmax(r_0)) / p.inject_r)
+        eff = float(np.nanmedian(rec)) if rec else np.nan
+        # Sensitivity, not a limit (D-071): a copy r adds ~ eff * r to the window maximum; the
+        # one-sided 95 % bound (ASSUMPTION) uses the null spread; eff > 1 is degeneracy, capped.
+        if ok_null and eff > 0.5:
+            limit = float(max(obs, np.median(null)) + (thresh - np.median(null))) / min(eff, 1.0)
         else:
             limit = np.nan
         out[name] = {
@@ -280,7 +294,7 @@ def run_system(system: System, cache: Path, p: Params, rng: np.random.Generator)
             "null_n": int(len(null)),
             "null_median": float(np.median(null)) if len(null) else np.nan,
             "null_q95": thresh,
-            "p_value": float((np.sum(null >= obs) + 1) / (len(null) + 1)) if len(null) else np.nan,
+            "p_value": float((np.sum(null >= obs) + 1) / (len(null) + 1)) if ok_null else np.nan,
             "injection_efficiency": eff,
             "r95_sensitivity": limit,
             "lags": lags.tolist(),

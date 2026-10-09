@@ -2,22 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-09: S3 hybrid images: no copies in 6 COSMOGRAIL doubles; sensitivity only r ≈ 0.3–2 (D-071)
+## 2026-10-09: S3 hybrid images: no copies in 6 COSMOGRAIL doubles; sensitivity only r ≈ 0.5–3 (D-071)
 - Hypothesis (A1 P2): image j carries a faint copy at lag s_i − s_j; the copy into the trailing image can precede the
   leading image. Ordinary mimics: quasar red noise (correlates at all lags), delay errors, microlensing.
 - Data: COSMOGRAIL XIX (CDS J/A+A/640/A105), 7 doubles with secure delays. SIS lag window for f ∈ [0, 1]
   (D_ls/D_s = 0.46–0.68). `scripts/s3_hybrid.py`, `results/s3_hybrid/`.
-- Known-case check: the main-term fit recovers the published delay in 6 of 7 (J1620 has too few overlapping epochs and
-  is dropped).
-- **Result:** no copy. Window maxima vs same-width off-model windows: lowest p = 0.03 (J1226 both directions, which
-  sit on the wing of the main-image term next to lag 0; J0158 into-trail likewise; J1515 into-trail p = 0.04, one
-  of 12 windows). Sensitivity r95 ≈ 0.27 (J1455, J1515 into-trail) to 2.3 per window: only copies comparable to the
-  main image are excluded, far from B-on-A1's ~10⁻². Not quoted as limits (injection efficiency 1.05–2.3 over 8
-  trials; r(δ) has a 0.1–1 offset at all lags).
+- Known-case gate: the main-term fit recovers the published delay (sign, ≠ 0, within 3σ + 4 d) in 6 of 7. J1620 fails
+  with a wrong-sign minimum at τ_BA = −206 d (published +171.5 d) and is not screened.
+- **Result:** no copy. Window maxima against same-width off-model windows (|lag| < 10 d excluded from both): lowest
+  p = 0.02 (J1226 into-trail, a window on the visible main-image wing) of 12 windows; the windows overlap, so p is
+  approximate and the run-wide chance of p ≤ 0.02 is ~0.2. Sensitivity r95 ≈ 0.47 (J1455 into-trail) to 2.7: only
+  copies comparable to the main image are excluded, far from B-on-A1's ~10⁻². Not quoted as limits: the
+  window-maximum injection efficiency is 0.5–5.6 (> 1 is the copy–main degeneracy; capped at 1 in r95).
 - **Failed approaches (rules):** microlensing splines with 120–730-d knots absorb the quasar variability and fit any
   delay (6 of 7 published delays missed); use the delay recovery as the gate for every setting. Quasar variability
   is too slow for copies at lags ≲ 100 d: the copy is collinear with the main image (a synthetic 20-d DRW recovers
-  r = 0.1 ± 0.03, so the loss is the data).
+  r = 0.1 ± 0.03, so the loss is the data). /code-review: inject through the window maximum, not the fit at the
+  injected lag; hold the observed window to the null's wing rule.
 - **Next:** S3 needs a sharp template: SN Refsdal / SN H0pe pre-explosion and post-peak HST/JWST imaging at the
   model lags (B-on-A1: a few × 10⁻²). Low priority; S1 and S2 (DES-SN5YR) first.
 
