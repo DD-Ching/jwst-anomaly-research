@@ -1054,3 +1054,21 @@ Exploration Program."
 - Millon et al. 2020, A&A 640, A105, arXiv:2002.05736: R-band light curves of 23 lensed quasars, CDS
   J/A+A/640/A105 (https://cdsarc.cds.unistra.fr/ftp/J/A+A/640/A105/, `lcab/*.dat`); delays and redshifts from the
   paper's Tables 1 and 4 (arXiv source `tabdelay.tex`, `tabdata.tex`). `scripts/s3_hybrid.py`.
+
+## D1 distance self-consistency (accessed 2026-10-09; D-073)
+
+- H0LiCOW public distance posteriors, https://github.com/shsuyu/H0LiCOW-public (commit 57cf973, 2025-05-14):
+  `h0licow_distance_chains/*`, `MontePython_cosmo_sampling/data/timedelay_6lenses/B1608_Dd_Ddt_params.dat` and the
+  lens redshifts in `MontePython_cosmo_sampling/likelihoods/timedelay_6lenses/__init__.py`. Papers: Wong et al.
+  2020, MNRAS 498, 1420 (arXiv:1907.04869); Suyu et al. 2010 (B1608 D_dt); Jee et al. 2019, Science 365, 1134
+  (B1608 D_d); Chen et al. 2019, MNRAS 490, 1743 (HE0435, RXJ1131, PG1115); Birrer et al. 2019, MNRAS 484, 4726
+  (J1206); Rusu et al. 2020 (WFI2033, arXiv:1905.09338).
+- TDCOSMO 2025 public release, https://github.com/TDCOSMO/TDCOSMO2025_public (commit d7f38db, 2026-01-21):
+  `TDCOSMO_sample/TDCOSMO_data/SDSS1206+4332/final_D_d.npy`, `final_D_dt.npy`, `TDCOSMO_sample/tdcosmo_sample.yaml`.
+  Paper: TDCOSMO Collaboration 2025, A&A 704, A63 (arXiv:2506.03023).
+- FRBs/FRB repository, https://github.com/FRBs/FRB (commit 996fcda, 2026-05-06, BSD-3):
+  `frb/data/Galaxies/public_hosts.csv` and `frb/data/FRBs/FRB*.json` (DM, DMISM). `DMISM` is NE2001 (Cordes &
+  Lazio 2002, arXiv:astro-ph/0207156) from `frb/mw.py` `ismDM` (python `ne2001` package, `ElectronDensity().DM(l, b,
+  100.)`), set by `frb/builds/build_frbs.py`; used as stored, not recomputed. Macquart et al. 2020, Nature 581,
+  391 (arXiv:2005.13161) for ⟨DM_cosmic⟩, p(Δ) and the host log-normal; James et al. 2022, MNRAS 516, 4862
+  (arXiv:2208.00819) for F ≈ 0.32.
