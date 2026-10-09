@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: E1 signed-lag ("which event comes first") channels: null, global p = 0.68 (D-074 addendum 3)
+- Hypothesis: one catalogue leads another at lags no ordinary path explains (sign asymmetry D = N_after − N_before).
+- `scripts/e1_signed_lag.py`: 45 cells (6 cross channels × 5 lags × class), `jit` null (2,000 scrambles, 52 s).
+  Pooled global p = 0.68. The largest |z| is GW170817 → GRB 170817A (D = −1, Skellam p = 0.05), the known ordinary
+  ordering.
+- Failed approach: a Gaussian tail on one-pair cells (z = −4.4 for GW170817 alone, Bonferroni 6 × 10⁻⁴). Replaced by a
+  Skellam tail where the null sd < 1. The empirical p could not be used instead: its floor (1/2001 × 45) makes
+  injections undetectable.
+- Sensitivity: 3–10 one-sided injected pairs at ≤ 100 s.
+- **Next:** E1 GW sky maps (GW cells get directions; redo antipodal and signed lags), then D1 composite-model chains.
+
 ## 2026-10-09: E1 antipodal lag channels: null, global p = 0.56 (D-074 addendum 2)
 - Hypothesis: a dependent event appears near the antipode of a first event, at 0 s–7 d lags. Ordinary: the D-074
   observer-side common causes.
