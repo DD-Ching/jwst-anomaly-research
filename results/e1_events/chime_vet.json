@@ -560,5 +560,46 @@
     ]
    }
   }
+ },
+ "injection_calibration_1h_1d_wide": {
+  "0": {
+   "n_moved": 0,
+   "obs": 8099,
+   "jit_null_mean": 7795.3,
+   "jit_excess_kept": 303.7,
+   "jit_z": 3.75,
+   "jitday_null_mean": 7747.7,
+   "jitday_excess_kept": 351.3,
+   "jitday_z": 4.29,
+   "inday_null_mean": 8146.3,
+   "inday_excess_kept": -47.3,
+   "inday_z": -0.93
+  },
+  "300": {
+   "n_moved": 300,
+   "obs": 8327,
+   "jit_null_mean": 7861.7,
+   "jit_excess_kept": 465.3,
+   "jit_z": 5.57,
+   "jitday_null_mean": 7807.0,
+   "jitday_excess_kept": 520.0,
+   "jitday_z": 6.15,
+   "inday_null_mean": 8313.6,
+   "inday_excess_kept": 13.4,
+   "inday_z": 0.25
+  },
+  "600": {
+   "n_moved": 600,
+   "obs": 8859,
+   "jit_null_mean": 8060.0,
+   "jit_excess_kept": 799.0,
+   "jit_z": 8.8,
+   "jitday_null_mean": 7986.1,
+   "jitday_excess_kept": 872.9,
+   "jitday_z": 9.53,
+   "inday_null_mean": 8686.8,
+   "inday_excess_kept": 172.2,
+   "inday_z": 3.14
+  }
  }
 }

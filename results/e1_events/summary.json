@@ -11,47 +11,50 @@
  "tested_cells": 75,
  "global_perm": {
   "min_cell_p": 9.999000099990002e-05,
-  "trials_corrected_p": 9.999000099990002e-05
+  "trials_corrected_p": 0.0020997900209979003
  },
  "global_jit": {
   "min_cell_p": 9.999000099990002e-05,
-  "trials_corrected_p": 9.999000099990002e-05
+  "trials_corrected_p": 0.0035996400359964
  },
  "global_jit_core_5_channels": {
   "min_cell_p": 0.014298570142985701,
-  "trials_corrected_p": 0.27757224277572246
+  "trials_corrected_p": 0.2776722327767223
  },
  "global_jitday": {
   "min_cell_p": 9.999000099990002e-05,
-  "trials_corrected_p": 9.999000099990002e-05
+  "trials_corrected_p": 0.0046995300469953
  },
  "global_jit_wide_and_gw_cells": {
   "min_cell_p": 0.00019998000199980003,
-  "trials_corrected_p": 0.0027997200279972004
+  "trials_corrected_p": 0.0057994200579942
  },
  "global_jitday_wide_and_gw_cells": {
   "min_cell_p": 9.999000099990002e-05,
-  "trials_corrected_p": 9.999000099990002e-05
+  "trials_corrected_p": 0.0032996700329967
  },
- "injection_detection_p_star": 0.0001,
+ "injection_detection_p_star": 1.8e-05,
  "analytic_tail_model_prediction": {
   "jit": {
    "n_cells": 45,
    "min_cell_p": 9.90328176617337e-05,
    "cell": "CHIME-CHIME 1h-1d wide",
-   "bonferroni_p": 0.004456476794778017
+   "bonferroni_p": 0.004456476794778017,
+   "empirical_pooled_global_p": 0.0057994200579942
   },
   "jitday": {
    "n_cells": 45,
    "min_cell_p": 9.91256901758211e-06,
    "cell": "CHIME-CHIME 1h-1d wide",
-   "bonferroni_p": 0.0004460656057911949
+   "bonferroni_p": 0.0004460656057911949,
+   "empirical_pooled_global_p": 0.0032996700329967
   },
   "jit_all_cells": {
    "n_cells": 75,
    "min_cell_p": 5.634597367716648e-12,
    "cell": "CHIME-CHIME 100s-1h same",
-   "bonferroni_p": 4.2259480257874866e-10
+   "bonferroni_p": 4.2259480257874866e-10,
+   "empirical_pooled_global_p": 0.0035996400359964
   }
  },
  "reachability": {

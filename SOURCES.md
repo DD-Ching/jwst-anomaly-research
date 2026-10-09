@@ -1066,6 +1066,11 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - CHIME/FRB Catalog 2, CANFAR doi:10.11570/25.0066, `data/table/chimefrbcat2.csv` (4,057,396 bytes). It
   downloaded at the first attempt on 2026-10-09 (an earlier session's download had been reset by the proxy).
   Paper: arXiv:2601.09399.
+- CHIME/FRB Catalog 2 exposure, same DOI, `data/exposure/chimefrbcat2_exposure.h5` (216,024,090 bytes, sha256
+  cd8411f92d0ac31bd05dff47f62797638c354444de27a5c056113ca00470d514; `data/manifests/e1_chime_exposure.ecsv`). It
+  holds two HEALPix nside-4096 RING maps of time-integrated exposure (s), upper and lower transit, 2018-09-04 to
+  2023-09-15, with no time axis. It was reduced to `results/e1_events/chime_exposure_dec_profile.ecsv` and deleted.
+  The CANFAR release has no time-resolved uptime file (directories listed 2026-10-09).
 - Positive control: Abbott et al. 2017, ApJL 848, L13 (arXiv:1710.05834): GRB 170817A began 1.74 ± 0.05 s
   after the GW170817 merger. SSS17a position: Coulter et al. 2017, Science, doi:10.1126/science.aap9811
   (arXiv:1710.05452).

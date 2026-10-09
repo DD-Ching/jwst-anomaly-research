@@ -17,7 +17,8 @@ Reproduce (about 20 min single-process; the null ensembles are cached untracked 
 | `counts.ecsv` | derived | per channel × lag window × class: observed pairs; `perm`, `jit` and `jitday` null mean, sd, z and empirical p; 95 % upper limit on added pairs. Rows with `tested = False` are the vetting windows (k × 95.6 min orbit, k × sidereal day, k × solar day) |
 | `limits.ecsv` | derived | per wide (GW: any-separation) cell: limit on dependent pairs, injection efficiency, smallest injected n detected in ≥ 50 % of trials, limit per anchor event |
 | `injections.ecsv` | simulated | synthetic wide-separation lagged pairs injected into the real catalogues |
-| `chime_vet.json` | derived | CHIME–CHIME lag excess vetting: excluded_flag, the 2023-08-25 same-position episode, the in-day null |
+| `chime_vet.json` | derived | CHIME–CHIME lag excess vetting: excluded_flag, the 2023-08-25 same-position episode, the in-day null, and an injection calibration of each null (the in-day null absorbs most of an injected signal, so it does not discriminate) |
+| `chime_exposure_dec_profile.ecsv` | derived | CHIME Cat 2 exposure maps (216 MB, sha256 in `data/manifests/e1_chime_exposure.ecsv`) reduced to a 0.1° Dec profile per transit. The file is time-integrated, with no time axis, so it cannot model per-day uptime. Downloaded at the PR #112 review's request, reduced by `scripts/e1_chime_exposure.py` (needs `h5py`), and the raw file deleted |
 | `same_dir_pairs_*.ecsv` | derived | same-direction pairs within 7 d (re-triggers, unflagged repeaters, duplicates) |
 | `summary.json` | derived | event counts, global (trials-corrected) p per null and family, analytic tails, reachability, positive controls |
 

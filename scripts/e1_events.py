@@ -576,6 +576,7 @@ def main(argv=None) -> int:
             "min_cell_p": float(pa[j]),
             "cell": f"{cell[0][0]}-{cell[0][1]} {cell[1]} {cell[2]}",
             "bonferroni_p": float(min(1.0, pa[j] * m.sum())),
+            "empirical_pooled_global_p": en.global_p(obs, nul, m)[1],
         }
     reach = {
         "empirical_floor": en.empirical_floor(a.jit),
