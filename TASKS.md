@@ -4,13 +4,13 @@ Prioritized queue. Agents pick from **Now** first; in-flight work is visible as 
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
-1. **S1 burst twins**: GRB pairs far apart on the sky with matching light curves at any delay (Fermi GBM catalogue +
-   light curves; CHIME/FRB Catalog 2 for FRBs). Time-scrambled catalogue null; catalogue duplicates, re-triggers and
-   lensed pairs as positive controls; single-pulse look-alikes and the pair trials factor are the main mimics.
+1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
+   mismatch). Next: CHIME/FRB Catalog 2 (CANFAR downloads reset by the proxy; try another route), TTE for short and
+   faint bursts, an s ≠ 1 chain, a generative pulse-model null.
 2. **S2 flat-kernel SN residuals** (D-070): Pantheon+ × LS DR9 null; γ < 0.025 mag per unit T/⟨T⟩ (α = 2, one-sided 95 %,
    dilution- and chain-corrected); α = 1 is kernel-degenerate. Next: DES-SN5YR + DES Y3 Gold, where SN lensing is detected (positive
    control), and the full Pantheon+ covariance.
-3. **S3 hybrid images** (D-071): COSMOGRAIL doubles null, sensitivity only r ≈ 0.5–3 (red quasar variability makes
+3. **S3 hybrid images** (D-072): COSMOGRAIL doubles null, sensitivity only r ≈ 0.5–3 (red quasar variability makes
    the copy collinear with the main image). Next, low priority: SN Refsdal / SN H0pe imaging at the model lags.
 4. **System A round 2** after S1–S3, starting from the round-1 failure modes.
 

@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-09: S3 hybrid images: no copies in 6 COSMOGRAIL doubles; sensitivity only r ≈ 0.5–3 (D-071)
+## 2026-10-09: S3 hybrid images: no copies in 6 COSMOGRAIL doubles; sensitivity only r ≈ 0.5–3 (D-072)
 - Hypothesis (A1 P2): image j carries a faint copy at lag s_i − s_j; the copy into the trailing image can precede the
   leading image. Ordinary mimics: quasar red noise (correlates at all lags), delay errors, microlensing.
 - Data: COSMOGRAIL XIX (CDS J/A+A/640/A105), 7 doubles with secure delays. SIS lag window for f ∈ [0, 1]
@@ -21,6 +21,25 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   injected lag; hold the observed window to the null's wing rule.
 - **Next:** S3 needs a sharp template: SN Refsdal / SN H0pe pre-explosion and post-peak HST/JWST imaging at the
   model lags (B-on-A1: a few × 10⁻²). Low priority; S1 and S2 (DES-SN5YR) first.
+
+## 2026-10-09: S1 burst twins in Fermi GBM: null; < 7.2 × 10⁻³ twin pairs per eligible burst (D-071)
+- Hypothesis (D-069 S1, from A2 P1): pairs of GRBs far apart on the sky whose light curves match at any delay.
+  Ordinary mimics: single-envelope look-alikes, re-triggers, ordinary lensing (excluded by the position cut).
+- Data: HEASARC `fermigbrst` (4,390 bursts) and bcat HDU 2 light curves (4,389; streamed, sha256 recorded).
+  `scripts/s1_ingest.py`, `scripts/s1_twins.py`, `results/s1_twins/`.
+- 1,414 multi-pulse bursts; 510,294 pairs with inconsistent positions (sep > 3·√(σ₁² + σ₂² + 2·3.7²) deg).
+  Pulse-shuffle null ρ* = 0.964 (a pre-screen: the surrogates under-predict the real high-ρ tail ~12×). 6 pairs
+  flagged, all bright single-envelope look-alikes failing the χ² twin test (p < 10⁻¹⁰⁰). **0 survivors.**
+- Injections with a 15 % per-band mismatch measured from the data: ratio-1 efficiency 29.5 %. **95 %: < 7.2 × 10⁻³
+  twin pairs per eligible burst (1.4 % of bursts have a twin) at flux ratio 1, 1.6 × 10⁻² averaged over ratios 1–0.1.**
+  Sensitivity: 5.1–9.4 × 10⁻³ for 5–20 % mismatch.
+- **Failed approaches (rules):**
+  - bcat HDU 1 `PHTCNTS` fill values made 84 % of bursts look multi-pulse.
+  - Self-copy injections shared the target's noise (recovery 83 % vs 37 %).
+  - Injections whose noise matches the χ² errors exactly pass χ² by construction: inject a measured band mismatch.
+  - A ρ threshold chosen so that k = 0 (ρ > 0.90) is post hoc and illustrative, not a limit.
+- **Next:** CHIME/FRB Catalog 2 (the proxy resets CANFAR downloads); TTE light curves for short and faint bursts; an
+  s ≠ 1 chain with energy-channel mapping; a generative pulse-model null.
 
 ## 2026-10-09: S2 flat-kernel SN residuals: no flat-kernel term; γ < 0.025 mag per unit T/⟨T⟩ at α = 2 (D-070)
 - Hypothesis (A3 P2b): SN Ia residuals track a flat-kernel foreground column ∫(1+δ)^α dχ, with sign +γ (fainter),

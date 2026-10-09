@@ -1,0 +1,287 @@
+{
+ "argv": [
+  "scripts/s1_twins.py",
+  "--null",
+  "100",
+  "--inject",
+  "5000",
+  "--inject-sens",
+  "1000",
+  "--plots",
+  "/tmp/claude-0/-home-user-jwst-anomaly-research/b0ac7c45-4e45-5ff8-b32a-815a2c5bc74e/scratchpad/s1-twins/plots"
+ ],
+ "args": {
+  "null": 100,
+  "inject": 5000,
+  "inject_sens": 1000,
+  "jitter_grid": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "cpu": 4,
+  "plots": "/tmp/claude-0/-home-user-jwst-anomaly-research/b0ac7c45-4e45-5ff8-b32a-815a2c5bc74e/scratchpad/s1-twins/plots",
+  "seed": 20261009
+ },
+ "seed": 20261009,
+ "n_injections": 8000,
+ "n_injections_primary": 5000,
+ "versions": {
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "astropy": "8.0.1"
+ },
+ "catalogue_bursts": 4390,
+ "bcat_status": {
+  "no bcat file": 1,
+  "ok": 4389
+ },
+ "bursts_reduced": 4389,
+ "eligible_bursts": 1414,
+ "eligible_pairs": 998991,
+ "pairs_scored_s1": 510294,
+ "params": {
+  "base_dt": 0.064,
+  "max_bins": 256,
+  "pad_frac": 0.25,
+  "pad_s": 2.0,
+  "bad_abs": 1000000.0,
+  "pulse_prominence_sigma": 5.0,
+  "pulse_min_sep_bins": 2,
+  "min_pulses": 2,
+  "sys_deg": 3.7,
+  "sys_tail_deg": 14.0,
+  "pos_nsigma": 3.0,
+  "max_dk": 1,
+  "stretch_grid": [
+   0.5,
+   0.71,
+   1.41,
+   2.0
+  ],
+  "rho_prescreen_deep": 0.9,
+  "chi2_p_min": 0.001,
+  "chi2_sys_frac": 0.1,
+  "inject_gain_jitter": 0.15,
+  "retrigger_days": 1.0
+ },
+ "rho_star": 0.9636397113654587,
+ "real_max_rho": 0.9691340311695898,
+ "real_pairs_above": {
+  "0.8": 40041,
+  "0.9": 1860,
+  "0.95": 56,
+  "rho_star": 6
+ },
+ "null_pairs_above_per_catalogue": {
+  "0.8": 5323.22,
+  "0.9": 145.71,
+  "0.95": 4.77,
+  "rho_star": 0.0
+ },
+ "flagged_real": 6,
+ "automated_survivors": [],
+ "deep_chain_posthoc_illustrative": {
+  "rho_prescreen": 0.9,
+  "pairs": 1860,
+  "chi2_pass": 0,
+  "survivors": []
+ },
+ "positive_controls_retrigger": [
+  {
+   "burst1": "bn091024372",
+   "burst2": "bn091024380",
+   "delay_s": 630.9,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.6614,
+   "chi2_p": 3.29e-184,
+   "npulse": [
+    2,
+    3
+   ]
+  },
+  {
+   "burst1": "bn130925164",
+   "burst2": "bn130925173",
+   "delay_s": 783.4,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.3348,
+   "chi2_p": 7.16e-35,
+   "npulse": [
+    1,
+    3
+   ]
+  },
+  {
+   "burst1": "bn150201574",
+   "burst2": "bn150201590",
+   "delay_s": 1380.8,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.7383,
+   "chi2_p": 5.6e-36,
+   "npulse": [
+    5,
+    0
+   ]
+  },
+  {
+   "burst1": "bn220627890",
+   "burst2": "bn220627901",
+   "delay_s": 956.3,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.7311,
+   "chi2_p": 0.0,
+   "npulse": [
+    14,
+    6
+   ]
+  },
+  {
+   "burst1": "bn250702548",
+   "burst2": "bn250702581",
+   "delay_s": 2823.7,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.4467,
+   "chi2_p": 3.78e-179,
+   "npulse": [
+    2,
+    3
+   ]
+  },
+  {
+   "burst1": "bn210925800",
+   "burst2": "bn210926869",
+   "delay_s": 92330.7,
+   "sep_deg": 1.309,
+   "removed_by_position_cut": true,
+   "rho": 0.5562,
+   "chi2_p": 1.39e-66,
+   "npulse": [
+    4,
+    1
+   ]
+  },
+  {
+   "burst1": "bn250702581",
+   "burst2": "bn250702682",
+   "delay_s": 8727.3,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.5717,
+   "chi2_p": 1.4e-301,
+   "npulse": [
+    3,
+    4
+   ]
+  },
+  {
+   "burst1": "bn250702548",
+   "burst2": "bn250702682",
+   "delay_s": 11551.0,
+   "sep_deg": 0.0,
+   "removed_by_position_cut": true,
+   "rho": 0.5152,
+   "chi2_p": 2.07e-105,
+   "npulse": [
+    2,
+    4
+   ]
+  }
+ ],
+ "injection_efficiency": {
+  "1.0": {
+   "n": 1000,
+   "lost_k": 0.001,
+   "eligible": 0.696,
+   "flagged": 0.349,
+   "recovered": 0.295,
+   "recovered_deep_posthoc": 0.493
+  },
+  "0.5": {
+   "n": 1000,
+   "lost_k": 0.001,
+   "eligible": 0.445,
+   "flagged": 0.209,
+   "recovered": 0.18,
+   "recovered_deep_posthoc": 0.307
+  },
+  "0.3": {
+   "n": 1000,
+   "lost_k": 0.004,
+   "eligible": 0.295,
+   "flagged": 0.126,
+   "recovered": 0.114,
+   "recovered_deep_posthoc": 0.202
+  },
+  "0.2": {
+   "n": 1000,
+   "lost_k": 0.015,
+   "eligible": 0.18,
+   "flagged": 0.073,
+   "recovered": 0.064,
+   "recovered_deep_posthoc": 0.12
+  },
+  "0.1": {
+   "n": 1000,
+   "lost_k": 0.025,
+   "eligible": 0.06,
+   "flagged": 0.028,
+   "recovered": 0.027,
+   "recovered_deep_posthoc": 0.047
+  }
+ },
+ "limits": {
+  "definition": "f95 = mu95 / (N_eligible * efficiency): 95 % upper limit on twin PAIRS per eligible burst; the fraction of eligible bursts that have a twin is 2 * f95",
+  "chain": "primary (rho > rho*, chi2, re-trigger veto)",
+  "gain_jitter": 0.15,
+  "survivors_k": 0,
+  "poisson_mu95": 2.9957322735539895,
+  "n_eligible": 1414,
+  "f95_twin_pairs_per_eligible_burst_ratio1": 0.007181771326814157,
+  "f95_fraction_of_bursts_with_twin_ratio1": 0.014363542653628315,
+  "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.01557810692213365,
+  "f95_fraction_of_bursts_with_twin_mean_ratio_0.1_1": 0.0311562138442673,
+  "gain_jitter_sensitivity": {
+   "0.15": {
+    "n": 5000,
+    "eff_ratio1": 0.295,
+    "eff_mean_ratio_0.1_1": 0.136,
+    "f95_twin_pairs_per_eligible_burst_ratio1": 0.007181771326814157,
+    "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.01557810692213365
+   },
+   "0.05": {
+    "n": 1000,
+    "eff_ratio1": 0.415,
+    "eff_mean_ratio_0.1_1": 0.17099999999999999,
+    "f95_twin_pairs_per_eligible_burst_ratio1": 0.005105114557614883,
+    "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.01238960550532267
+   },
+   "0.10": {
+    "n": 1000,
+    "eff_ratio1": 0.38,
+    "eff_mean_ratio_0.1_1": 0.178,
+    "f95_twin_pairs_per_eligible_burst_ratio1": 0.0055753224773952,
+    "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.01190237382814706
+   },
+   "0.20": {
+    "n": 1000,
+    "eff_ratio1": 0.225,
+    "eff_mean_ratio_0.1_1": 0.11500000000000002,
+    "f95_twin_pairs_per_eligible_burst_ratio1": 0.009416100184045227,
+    "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.018422804707914575
+   }
+  },
+  "deep_posthoc_illustrative": {
+   "note": "rho > 0.90 was chosen after seeing that it gives k = 0; illustrative, NOT a limit",
+   "survivors_k": 0,
+   "f95_twin_pairs_per_eligible_burst_ratio1": 0.004297408806105835,
+   "f95_twin_pairs_per_eligible_burst_mean_ratio_0.1_1": 0.009061687516724452
+  }
+ },
+ "runtime_s": 134
+}

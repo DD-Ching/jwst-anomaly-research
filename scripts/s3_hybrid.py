@@ -248,7 +248,7 @@ def run_system(system: System, cache: Path, p: Params, rng: np.random.Generator)
         lags = np.arange(-reach - span, reach + span + p.lag_step, p.lag_step)
         r = scan(lc, src, dst, tau, lags, p)
         # Null: same-width windows off the model window; the wing is excluded from both statistics.
-        # The windows overlap (start every 2 lag steps), so the p-value is approximate (D-071).
+        # The windows overlap (start every 2 lag steps), so the p-value is approximate (D-072).
         starts = np.arange(-reach - span, reach, p.lag_step * 2)
         null = [
             window_stat(lags, r, s, s + span, p.wing) for s in starts if s + span < lo or s > hi
@@ -282,7 +282,7 @@ def run_system(system: System, cache: Path, p: Params, rng: np.random.Generator)
             )
             rec.append((np.nanmax(r_inj) - np.nanmax(r_0)) / p.inject_r)
         eff = float(np.nanmedian(rec)) if rec else np.nan
-        # Sensitivity, not a limit (D-071): a copy r adds ~ eff * r to the window maximum; the
+        # Sensitivity, not a limit (D-072): a copy r adds ~ eff * r to the window maximum; the
         # one-sided 95 % bound (ASSUMPTION) uses the null spread; eff > 1 is degeneracy, capped.
         if ok_null and eff > 0.5:
             limit = float(max(obs, np.median(null)) + (thresh - np.median(null))) / min(eff, 1.0)
