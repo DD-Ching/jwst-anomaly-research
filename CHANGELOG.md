@@ -2,6 +2,25 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: D1 distance self-consistency: no inconsistent sightline in strong lenses or localized FRBs (D-073)
+- Hypothesis (owner idea 1): one sightline whose independent distance measures no ordinary model reconciles.
+  Ordinary explanations: mass-sheet degeneracy, line-of-sight convergence, kinematic anisotropy, substructure, wrong
+  redshifts; for FRBs, Galactic ISM model error and host DM.
+- Lenses: H0LiCOW public posteriors. The H0-free R = D_dt/((1+z_d)D_d) = D_s/D_ds for B1608, RXJ1131, PG1115, J1206
+  (prior-predictive ΛCDM / wCDM and leave-one-out), plus leave-one-out D_dt for those and HE0435, WFI2033. **Max pull
+  1.29σ** against 5.53σ (18 trials). Shuffled redshifts give a median max pull of 3.8σ (C) / 15σ (D).
+- Injection-calibrated reach (|z| crossing the threshold, baseline pull included): R tests ×2–8 up / ×0.2–0.4 down;
+  D_dt ×1.3–1.85 / ×0.54–0.78. A ≲ 30 % mismatch on one sightline is not excluded.
+- FRBs: 94 localized FRBs (FRBs/FRB repo) against the Macquart predictive distribution (grid convolution, tails to
+  ≪ 1e-10). Nothing flagged at the one-sided 5.81σ; the lowest is FRB 20220319D at 3.26σ (DM below its NE2001 DM_ISM,
+  a known low-latitude case). Injections flag 94/94 low and 94/94 high.
+- **Failed approaches (rules):**
+  - A Monte Carlo predictive tail floored at 1/N capped z at 4.26σ below a 5.93σ threshold, so the screen could
+    never flag (found by review). Tails must reach past the threshold: test it.
+  - Sensitivity factors from a Gaussian extrapolation ignored baseline pulls. Read them from injections.
+  - TDCOSMO 2025's SDSS1206 D_d file duplicates H0LiCOW's samples and adds no lens.
+- **Next:** see TASKS "Now" 0.
+
 ## 2026-10-09: S3 hybrid images: no copies in 6 COSMOGRAIL doubles; sensitivity only r ≈ 0.4–2.4 (D-072)
 - Hypothesis (A1 P2): image j carries a faint copy at lag s_i − s_j; the copy into the trailing image can precede the
   leading image. Ordinary mimics: quasar red noise (correlates at all lags), delay errors, microlensing.
