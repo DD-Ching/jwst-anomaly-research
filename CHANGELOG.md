@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: (in progress) W5/W1 Euclid Q1 radial-shear screen scaled beyond the pilot (D-066 next)
+- Plan: tile Q1 in ≤ 0.2° discs fetched in parallel, re-run screen + injections, calibrate R on the SZ clusters.
+
 ## 2026-10-09: J0728+2607 decided with an empirical PSF: no light between the images to F814W ≈ 23 (D-064 addendum)
 - The PSF is the median of 6 unsaturated Gaia stars in the same HST F814W cutout. The control lens J2308+3201 is
   detected (S/N 49). J0728's residual is centred on its images, and after the halo correction there is no light
