@@ -3553,3 +3553,31 @@ pygedm (needs a system f2c library; the stored NE2001 values are already the ref
 - A CHIME Cat 2 revision assigns FRB20230825D–I to a repeater.
 - IceTracks-DR2, Swift or Einstein Probe catalogues are added.
 - Signed-lag (precursor) channels are wanted.
+
+## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)
+
+**Decision.**
+- Round 2 of the D-069 process ran with the round-1 failure modes as hard rules for System A.
+- None of its predictions gets search compute here:
+  - R2-A (perfect-reflector GW afterglow) is excluded by published GW250114 and GWTC-4.0 analyses and by the ergoregion
+    instability.
+  - R2-B (polarisation mirror at saddle images) is internally inconsistent and disfavoured by B0218+357.
+  - R2-C (Σm_ν = 58.8 meV) is not novel. It is tracked externally through DESI DR3, KATRIN final and CMB birefringence.
+- Round 3 targets a derived small effect in a large-N quantity that is measured but never analysed for it.
+
+**Alternatives rejected.**
+- Reprocessing the raw VLA data for B0218+357 now: R2-B already fails on internal consistency. Kept as an optional
+  low-priority task.
+- Re-running public DESI/CMB chains for R2-C: it would only reproduce the published collaboration results.
+- A stacked GW echo search for R2-A: already done, more completely, in arXiv:2603.19021 and 2610.12429.
+
+**Evidence.** docs/hypotheses/round-2/ (texts, reviews, summary). Key references opened 2026-10-09:
+- arXiv:2610.12429 (GW250114 near-horizon reflectivity);
+- 2603.19021 (GWTC-4.0 remnant tests);
+- 1706.06155 (echo recipe);
+- 1802.10088 (B0218+357 VLA reanalysis);
+- 2503.14744 (DESI DR2 neutrino constraints).
+
+**Revisit if.**
+- Parity-resolved circular polarimetry of a lensed radio quasar is published, or a lensed FRB is confirmed (R2-B).
+- DESI DR3 or a CMB analysis pushes the Σm_ν tension past 5σ, or relaxes it (R2-C).
