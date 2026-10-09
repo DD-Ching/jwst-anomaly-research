@@ -189,6 +189,35 @@ def test_a_flat_bottomed_dip_is_fitted_as_an_eclipse():
     assert ecl["chi2"] < flat - 100.0
 
 
+def test_a_slow_smooth_dimming_is_fitted_as_a_gaussian_dip():
+    t = np.linspace(0.0, 1000.0, 2001)
+    f, sf = _noise(t)
+    f = f - 600.0 * wm.gauss_dip(t, 400.0, 80.0)  # a slow red-giant-like dimming (simulated)
+    lc = wm.to_lightcurve(t, f, sf)
+    sd = wm.fit_smooth_dip(lc, 250.0, 550.0)
+    assert sd["tc"] == pytest.approx(400.0, abs=10.0)
+    assert sd["sigma"] == pytest.approx(80.0, rel=0.15)
+    assert sd["chi2"] == pytest.approx(t.size, rel=0.1)  # noise-limited
+
+
+def test_exotic_domain_needs_u0_below_2_and_a_physical_source_flux():
+    res = {
+        "E2pos": {"u0": 6.67, "fs": 2.53e6, "bic": 6724.0},  # gb20-R-4-0-49379's far-field fit
+        "N1neg": {"u0": 0.0, "fs": 3903.0, "bic": 8485.0},
+        "E2neg": {"u0": 0.5, "fs": 9.0e6, "bic": 8791.0},
+    }
+    ev = {"event_id": "gb20-R-4-0-49379", "dophot_mag": np.nan, "ref_mag": 15.91}
+    dom = wm.exotic_domain(res, ev)
+    assert dom["N1neg"][0] and not dom["E2pos"][0] and not dom["E2neg"][0]
+    f_ref, label = wm.reference_flux(ev)
+    assert f_ref == pytest.approx(wm.moa.mag_to_counts(15.91, 4)) and "Gaia" in label
+    f_def, label = wm.reference_flux({"event_id": "gb20-R-2-0-1"})  # no counterpart: default
+    assert f_def == pytest.approx(wm.moa.mag_to_counts(wm.FS_REF_DEFAULT_MAG, 2))
+    assert wm.reference_flux({"event_id": "gb20-R-4-0-1", "dophot_mag": 17.0})[1].startswith(
+        "DoPHOT"
+    )
+
+
 def test_merge_chunks_joins_complete_chunks_and_refuses_bad_ones(tmp_path, monkeypatch):
     ids = [f"gb22-R-1-0-{i}" for i in range(7)]
     pre = Table({"event_id": ids, "z_min": [-20.0] * 7, "s_min": [-9.0] * 7, "z_min2": [0.0] * 7})
@@ -390,3 +419,50 @@ def test_published_star_counts_are_used_where_they_exist():
     model = wm.field_star_counts("gb22")
     assert model["n_s_low"] < model["n_s"] < model["n_s_high"]
     assert wm.parse_chunk_list("1-3,7") == [0, 1, 2, 6] and wm.parse_chunk_list(None) is None
+
+
+def test_open_flags_give_an_efficiency_table_and_no_limit(tmp_path, monkeypatch):
+    monkeypatch.setattr(wm, "out_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "FIELD", "gb20")
+    vet = {"flags": [{"event_id": "gb20-R-4-0-1", "survives": True}], "fit_errors": []}
+    (tmp_path / "vetting_gb20.json").write_text(wm.json.dumps(vet))
+    rows = [
+        {
+            "kind": "W3",
+            "tE": te,
+            "rho": rho,
+            "Is": 18.0,
+            "cut0": True,
+            "prescreen": True,
+            "flagged": True,
+            "recovered": i % 2 == 0,
+            "error": "",
+        }  # fmt: skip
+        for te in wm.INJ_TE
+        for rho in wm.INJ_RHO
+        for i in range(4)
+    ] + [
+        {
+            "kind": "PSPL",
+            "tE": te,
+            "rho": 0.0,
+            "Is": 18.0,
+            "cut0": True,
+            "prescreen": False,
+            "flagged": False,
+            "recovered": False,
+            "error": "",
+        }  # fmt: skip
+        for te in wm.INJ_TE
+    ]
+    inj = Table(rows)
+    inj.meta["is_sampling"] = "lf"
+    inj.write(tmp_path / "injections_gb20.ecsv")
+    with pytest.raises(SystemExit, match="flags survive"):
+        wm.run_limit()
+    eff = Table.read(wm.run_limit(efficiency_only=True))
+    assert "rate95_per_star_yr" not in eff.colnames
+    assert list(eff.meta["open_flags"]) == ["gb20-R-4-0-1"]
+    assert eff["p_recovered"][0] == pytest.approx(0.5)
+    assert not (tmp_path / "limits_gb20.ecsv").exists()  # combine never sees the field

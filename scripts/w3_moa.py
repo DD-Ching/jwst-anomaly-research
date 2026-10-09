@@ -854,6 +854,11 @@ MIN_FEATURE_NIGHTS = 3  # ASSUMPTION: nights with epochs inside the exotic featu
 COINC_Z = 5.0  # deficits with z_min < −5 form the population for the shared-epoch test
 COINC_P = 1e-3  # ASSUMPTION: Poisson probability below which a shared epoch is a frame systematic
 
+DOMAIN_U0_MAX = 2.0  # the injection and limit domain: umbra crossings with u0 < 2 (D-TBD)
+FS_MAX_FACTOR = 3.0  # ASSUMPTION: fitted source flux ≤ 3 × the object's reference flux
+FS_REF_DEFAULT_MAG = 14.2  # ASSUMPTION: no reference magnitude → the bright end of the injections
+REF_MATCH_ARCSEC = 1.0  # ASSUMPTION: Gaia DR3 counterpart radius for the reference flux
+
 _POP: tuple | None = None  # (field, per-chip) deficit populations (passed to the workers)
 _BASELINE: float | None = None  # calibrated variable-baseline threshold of the field
 
@@ -1045,6 +1050,72 @@ def res_from_row(row) -> dict:
     return res
 
 
+def reference_flux(ev: dict) -> tuple[float, str]:
+    """Counts of the object's reference flux for the source-flux bound of ``exotic_in_domain``:
+    DoPHOT magnitude from the release where present, else the Gaia DR3 RP magnitude of a
+    counterpart within ``REF_MATCH_ARCSEC`` (``ev["ref_mag"]``; MOA-Red ≈ RP, ASSUMPTION), else
+    ``FS_REF_DEFAULT_MAG`` (the brightest injected source)."""
+    chip = moa.parse_event_id(str(ev["event_id"]))[1] if "-R-" in str(ev["event_id"]) else 1
+    for key, label in (("dophot_mag", "DoPHOT"), ("ref_mag", "Gaia DR3 RP")):
+        m = ev.get(key)
+        if m is not None and np.isfinite(float(m)):
+            return float(moa.mag_to_counts(float(m), chip)), f"{label} {float(m):.2f}"
+    return float(moa.mag_to_counts(FS_REF_DEFAULT_MAG, chip)), f"default {FS_REF_DEFAULT_MAG}"
+
+
+def exotic_domain(res: dict, ev: dict) -> dict:
+    """Per exotic model: inside the domain the limit is defined on (u0 < ``DOMAIN_U0_MAX``) and with
+    a physical source flux (0 < f_s ≤ ``FS_MAX_FACTOR`` × the reference flux)? A far-field fit
+    (u0 ≫ 1) with cancelling giant f_s and f_b can mimic any smooth dip (gb20-R-4-0-49379)."""
+    f_ref, label = reference_flux(ev)
+    out = {}
+    for m in w3.EXOTIC:
+        if m not in res:
+            continue
+        u0, fs = float(res[m].get("u0", np.nan)), float(res[m].get("fs", np.nan))
+        ok = bool(u0 < DOMAIN_U0_MAX and 0.0 < fs <= FS_MAX_FACTOR * f_ref)
+        out[m] = (ok, f"u0 {u0:.2f}, f_s {fs:.3g} vs {FS_MAX_FACTOR:g} × {f_ref:.3g} ({label})")
+    return out
+
+
+def gauss_dip(t, tc: float, sigma: float) -> np.ndarray:
+    return np.exp(-0.5 * ((np.asarray(t, float) - tc) / sigma) ** 2)
+
+
+def fit_smooth_dip(lc: w3.LightCurve, lo: float, hi: float) -> dict:
+    """Ordinary smooth dimming: baseline − A × Gaussian(tc, σ), A ≥ 0 and baseline from a weighted
+    linear solve; Nelder–Mead over (tc, log σ) (slow red-giant variability, a slow subtraction
+    residual). k = 4."""
+    from scipy.optimize import minimize
+
+    span = float(lc.t.max() - lc.t.min())
+
+    def chi2(x):
+        tc, ls = x
+        if not (-1.0 <= ls <= math.log10(span)):
+            return 1e30
+        g = gauss_dip(lc.t, tc, 10.0**ls)
+        coef, c2 = w3.linear_fluxes_n(-g[None, :], lc.f, lc.w)
+        return c2 if coef[0] >= 0 else 1e30
+
+    tc0, w0 = 0.5 * (lo + hi), max(hi - lo, 0.5)
+    starts = [
+        (tc0 + dt * w0, math.log10(w0 * g))
+        for dt in (-0.25, 0.0, 0.25)
+        for g in (0.1, 0.25, 0.5, 1.0)
+    ]
+    vals = [chi2(np.array(x)) for x in starts]
+    best = None
+    for i in np.argsort(vals)[:3]:
+        r = minimize(chi2, np.array(starts[i]), method="Nelder-Mead",
+                     options={"maxfev": 1000, "xatol": 1e-5})  # fmt: skip
+        if best is None or r.fun < best.fun:
+            best = r
+    k = 4
+    return {"chi2": float(best.fun), "k": k, "bic": float(best.fun) + k * math.log(lc.t.size),
+            "tc": float(best.x[0]), "sigma": float(10.0 ** best.x[1])}  # fmt: skip
+
+
 SCREEN_MODELS = ("PSPL", "FSPL", *w3.EXOTIC)  # PAR only in vetting (it can only remove flags)
 
 
@@ -1064,8 +1135,10 @@ def vet_one(job) -> dict:
     if res is None:
         res = fit_moa(lc, scan, models=SCREEN_MODELS)
 
+    allowed = list(w3.EXOTIC)
+
     def summary():
-        ex = min(w3.EXOTIC, key=lambda m: res[m]["bic"])
+        ex = min(allowed, key=lambda m: res[m]["bic"])
         ordinary = {m: res[m] for m in w3.ORDINARY if m in res}
         best_o = min(ordinary, key=lambda m: ordinary[m]["bic"])
         return ex, ordinary, best_o, res[ex]["bic"] - ordinary[best_o]["bic"]
@@ -1080,6 +1153,20 @@ def vet_one(job) -> dict:
         return out
 
     if not add("screen_flag", d0 < P.flag_dbic, f"ΔBIC {d0:.1f} ({ex} vs {best_o})"):
+        return record()
+    # --- the fit must lie in the limit's domain with a physical source flux; a flag is re-judged
+    # on its in-domain exotic models only
+    dom = exotic_domain(res, ev)
+    out["domain"] = {m: v[1] for m, v in dom.items()}
+    allowed = [m for m in w3.EXOTIC if dom.get(m, (False,))[0]]
+    if not allowed:
+        add("exotic_in_domain", False, f"no in-domain exotic fit: {out['domain']}")
+        return record()
+    ex, ordinary, best_o, d0 = summary()
+    out.update(exotic=ex, dbic_all=float(d0), best_ordinary=best_o)
+    lo, hi = feature_window(res[ex], ex)
+    out["feature_window"] = (lo, hi)
+    if not add("exotic_in_domain", d0 < P.flag_dbic, f"{ex} ΔBIC {d0:.1f}; {dom[ex][1]}"):
         return record()
     # --- no fitting: shape and neighbourhood
     outside = (lc.t < lo) | (lc.t > hi)
@@ -1111,6 +1198,16 @@ def vet_one(job) -> dict:
     out["eclipse"] = ecl
     d_ecl = res[ex]["bic"] - min(ordinary[best_o]["bic"], ecl["bic"])
     if not add("eclipse_dip", d_ecl < P.flag_dbic, f"ΔBIC {d_ecl:.1f} vs a trapezoidal dip"):
+        return record()
+    # --- slow smooth dimming (red-giant variability, a slow subtraction residual)
+    sd = fit_smooth_dip(lc, lo, hi)
+    out["smooth_dip"] = sd
+    d_sd = res[ex]["bic"] - min(ordinary[best_o]["bic"], sd["bic"])
+    if not add(
+        "smooth_dip",
+        d_sd < P.flag_dbic,
+        f"ΔBIC {d_sd:.1f} vs a Gaussian dip (σ {sd['sigma']:.1f} d)",
+    ):
         return record()
     # --- refits from the screen optimum: systematics models
     bad = w3.isolated_outliers(lc, w3.model_flux(best_o, lc, ordinary[best_o])) | (
@@ -1281,6 +1378,34 @@ def _vet_worker(job):
         }
 
 
+def gaia_rp_mags(ra, dec) -> tuple[np.ndarray, str]:
+    """Gaia DR3 RP magnitude of the nearest counterpart within ``REF_MATCH_ARCSEC`` (NaN: none), one
+    batched CDS XMatch (``observed``); a failed query gives NaN everywhere (then the default
+    reference flux, the lenient bound) and says so."""
+    out = np.full(len(ra), np.nan)
+    if not len(ra):
+        return out, "no flags"
+    import astropy.units as u
+    from astroquery.xmatch import XMatch
+
+    pos = Table({"ra": np.asarray(ra, float), "dec": np.asarray(dec, float)})
+    pos["idx"] = np.arange(len(pos))
+    try:
+        m = XMatch.query(cat1=pos, cat2="vizier:I/355/gaiadr3",
+                         max_distance=REF_MATCH_ARCSEC * u.arcsec, colRA1="ra",
+                         colDec1="dec")  # fmt: skip
+    except Exception as exc:  # noqa: BLE001
+        return out, f"query failed: {exc!r}"[:200]
+    m.sort("angDist")
+    for row in m[::-1]:  # nearest written last
+        if np.isfinite(float(row["RPmag"])):
+            out[int(row["idx"])] = float(row["RPmag"])
+    return (
+        out,
+        f"vizier:I/355/gaiadr3 within {REF_MATCH_ARCSEC}″: {int(np.isfinite(out).sum())} matched",
+    )
+
+
 def neighbours_of(ev: Table, eid: str, radius_px: float = NEIGHBOUR_PX) -> list[str]:
     """Cut-0 objects of the same chip and subframe within ``radius_px`` pixels."""
     r = ev[ev["event_id"] == eid][0]
@@ -1311,13 +1436,19 @@ def run_vet(procs: int) -> Path:
     neigh = {str(e): neighbours_of(ev, str(e)) for e in flags["event_id"]}
     ids = set(map(str, flags["event_id"])) | {n for v in neigh.values() for n in v}
     arrays = load_arrays(ids, aux=True)
+    fl_ids = [str(e) for e in flags["event_id"]]
+    rp, rp_note = gaia_rp_mags(
+        [float(pos[e]["ra"]) for e in fl_ids], [float(pos[e]["dec"]) for e in fl_ids]
+    )
     jobs = []
-    for r in flags:
+    for i, r in enumerate(flags):
         eid = str(r["event_id"])
         t, f, sf, ax = arrays[eid]
         scan = {k: float(r[k]) for k in SCAN_KEYS}
         nb = [(n, *arrays[n][:3]) for n in neigh[eid] if n in arrays]
-        d = {"event_id": eid, "ra": float(pos[eid]["ra"]), "dec": float(pos[eid]["dec"])}
+        d = {"event_id": eid, "ra": float(pos[eid]["ra"]), "dec": float(pos[eid]["dec"]),
+             "dophot_mag": float(pos[eid]["dophot_magnitude"]),
+             "ref_mag": float(rp[i])}  # fmt: skip
         jobs.append((d, t, f, sf, ax, scan, nb, True, res_from_row(r)))
     print(f"vetting {len(jobs)} flags", flush=True)
     t1 = time.time()
@@ -1353,6 +1484,7 @@ def run_vet(procs: int) -> Path:
         "n_flags": len(flags),
         "wall_time_s": time.time() - t1,
         "variable_xmatch": var,
+        "gaia_rp_xmatch": rp_note,
         "flags": sorted(out, key=lambda o: o["event_id"]),
     }
     path.write_text(json.dumps(rec, indent=1, default=float))
@@ -1612,11 +1744,13 @@ def field_star_counts(field: str | None = None) -> dict:
     }
 
 
-def run_limit() -> Path:
-    """95 % limit per monitored star per year; needs a complete null vetting (zero survivors)."""
+def run_limit(efficiency_only: bool = False) -> Path:
+    """95 % limit per monitored star per year; needs a complete null vetting (zero survivors).
+    ``efficiency_only``: a field with flags still open gets its efficiency table only
+    (``efficiency_<field>.ecsv``, no rate columns; never read by ``combine``)."""
     vet = json.loads((out_dir() / f"vetting_{FIELD}.json").read_text())
     open_flags = [o["event_id"] for o in vet["flags"] if o.get("survives")]
-    if open_flags:
+    if open_flags and not efficiency_only:
         raise SystemExit(f"no zero-event limit: flags survive: {open_flags}")
     if vet.get("fit_errors", ["vetting record predates fit_errors"]):
         raise SystemExit(f"no zero-event limit: passes without a fit: {vet.get('fit_errors')}")
@@ -1686,6 +1820,15 @@ def run_limit() -> Path:
             "(model_prediction)"
         ),
     )
+    if efficiency_only:
+        tab.remove_columns(["rate95_per_star_yr", "rate95_conservative"])
+        tab.meta["open_flags"] = open_flags
+        tab.meta["source"] += " (efficiency only: flags open, no limit)"
+        path = out_dir() / f"efficiency_{FIELD}.ecsv"
+        tab.write(path, overwrite=True)
+        tab.write(results_dir() / f"efficiency_{FIELD}.ecsv", overwrite=True)
+        tab.pprint(max_width=250, max_lines=50)
+        return path
     path = out_dir() / f"limits_{FIELD}.ecsv"
     tab.write(path, overwrite=True)
     tab.write(results_dir() / f"limits_{FIELD}.ecsv", overwrite=True)  # tracked (small)
@@ -1931,7 +2074,8 @@ def main(argv=None) -> int:
     i.add_argument("--sampling", choices=("lf", "uniform"), default="lf")
     i.add_argument("--seed", type=int, default=60)
     i.add_argument("--prescreen-only", action="store_true", help="Cut-0 and pre-screen only")
-    sub.add_parser("limit", help="95 %% rate limit per monitored star per year")
+    lim = sub.add_parser("limit", help="95 %% rate limit per monitored star per year")
+    lim.add_argument("--efficiency-only", action="store_true", help="flags open: ε table only")
     sub.add_parser("combine", help="combined limit over the fields with tracked limit tables")
     sub.add_parser("summary", help="tracked compact vetting record of the field")
     sub.add_parser("manifest", help="write data/manifests/moa_ii.ecsv")
@@ -1960,7 +2104,7 @@ def main(argv=None) -> int:
         run_inject(min(a.procs, ncpu), a.per_cell, a.per_ctrl, a.seed, a.prescreen_only,
                    a.sampling, a.carriers)  # fmt: skip
     elif a.cmd == "limit":
-        run_limit()
+        run_limit(a.efficiency_only)
     elif a.cmd == "combine":
         run_combine()
     elif a.cmd == "summary":
