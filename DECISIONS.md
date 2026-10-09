@@ -3493,18 +3493,38 @@ pygedm (needs a system f2c library; the stored NE2001 values are already the ref
 
   Beside them, the analytic Bonferroni p over the 45 wide/GW cells is 4.5 × 10⁻³ (`jit`) and 4.5 × 10⁻⁴ (`jitday`,
   3.3σ). All 75 cells give an analytic 4 × 10⁻¹⁰, but that is CHIME–CHIME *same-direction* (see below).
-- **Open flag: CHIME–CHIME wide (and all-separation) clustering at 100 s–1 d is unexplained under `jit` and
-  `jitday`. The in-day null does not discriminate.**
-  - Counts: 8,099 vs 7,793 ± 82 at 1 h–1 d (z = 3.7 `jit`, 4.3 `jitday`); 396 vs 329 ± 18 at 100 s–1 h.
-  - It is direction-independent: the wide fraction under `perm` is normal (z_perm = −0.7 and −2.5), and the
+- **CHIME–CHIME wide (and all-separation) clustering at 100 s–1 d.**
+  - Status: unexplained under `jit` and `jitday`; the in-day null does not discriminate. **It is reproduced by a
+    calibrated rate-modulated null** (test d below), so it is attributed to smooth (~week-scale) modulation of the
+    CHIME detection rate. The cause of that modulation (uptime or sensitivity) is a hypothesis: no CHIME uptime
+    series exists to confirm it.
+  - Counts: 8,099 vs 7,793 ± 82 at 1 h–1 d (z = 3.7 `jit`, 4.3 `jitday`); 396 vs 329 ± 18 at 100 s–1 h. It is
+    direction-independent: the wide fraction under `perm` is normal (z_perm = −0.7 and −2.5), and the
     all-separation counts show the same excess.
   - In the `excluded_flag` = 0 subset (post hoc, 2,000 scrambles) the per-cell z is 5.3 (`jit`) and 5.8 (`jitday`)
     at 1 h–1 d. The Gaussian Bonferroni over 45 cells is 5.2σ, or 4.96σ including the three post-hoc subsets.
-  - Without the 2023-08-25 episode: z = 5.2 and 5.7.
-  - Hypothesis, untested: day-to-day CHIME uptime or sensitivity variation (an observer-side common cause). No
-    published CHIME time-resolved exposure exists to test it.
-  - Under the brief's STOP rule (> 5σ under a calibrated exposure null), no calibrated exposure null exists, so the
-    rule cannot trigger. The subset number is borderline and is reported to the owner as an open flag, not a result.
+  - Ordinary-explanation tests on the 1 h–1 d wide cell (`chime_flag_tests.json`, `scripts/e1_chime_flag.py`,
+    1,000 scrambles unless stated):
+    - (a) Busy days.
+      - The 14 busiest days (top 1 %, 107 bursts) touch 578 cell pairs against 206 in scrambles. Dropping them
+        lowers z from 3.9 to 2.9. Dropping the top 5 % lowers it to 2.1, and the top 10 % to 2.8.
+      - A 30-day-block jackknife (63 blocks) keeps z between 3.4 and 4.8. No single month carries the excess.
+    - (b) Epochs and seasons. The excess is present in most years (z = 3.0, 2.7, 1.5, 0.2, 2.2 and 3.0 for 2018–2023)
+      and in both the Catalog 1 period (`catalog1_flag`, z = 3.2) and later (z = 2.9). It is strongest in MAM
+      (z = 3.9; DJF 1.2, JJA 2.2, SON 2.7). It is not a commissioning-only effect.
+    - (c) Property independence.
+      - Cell pairs do not share DM, fluence or S/N more than scrambled pairs do (KS p = 0.55, 0.98 and 0.47).
+      - Dec difference: p = 0.04, but the median differs by only 0.3°, and with 5 properties tested it is not
+        significant.
+      - Sidereal-phase difference: p = 0.09.
+    - (d) Rate-modulated null. Times are redrawn from the catalogue's own 7-day running mean of daily counts
+      (uniform within the day; Dec and hour angle kept).
+      - Calibration: 300 injected 1 h–1 d wide pairs raise the observed count by 190, of which the null absorbs
+        24. It keeps about 87 % of an injected dependent signal.
+      - Data: z = −0.86 (8,099 vs 8,209 ± 128). The jit excess disappears.
+      - A 3-day running mean over-predicts pairs (z = −5.5) because daily counts are under-dispersed (Fano 0.86).
+  - Under the brief's STOP rule (> 5σ trials-corrected under a calibrated rate or exposure null) the full-catalogue
+    cell has z = −0.9 under the calibrated null (d). No STOP.
 - CHIME–CHIME same-direction at 10 s–1 h (12 vs 0.6 pairs at 100 s–1 h). 11 of the 12 pairs are one unflagged
   same-position episode: FRB20230825D–I, six bursts within 5 min at (347.35°, +48.75°) with DM 221–223 pc cm⁻³ and
   no `repeater_name`. This is a catalogue effect (one source, six nodes).
@@ -3527,8 +3547,9 @@ pygedm (needs a system f2c library; the stored NE2001 values are already the ref
 
 **Revisit if.**
 - GW sky maps are added (then GW channels get same/wide classes and GW170817 enters the same-direction channel).
-- A time-resolved CHIME uptime or sensitivity series is published or obtained. It is the only discriminating test of
-  the open CHIME flag; an exposure-weighted null built from it must keep an injected signal.
+- A time-resolved CHIME uptime or sensitivity series is published or obtained. It would confirm (or refute) that the
+  rate modulation behind the CHIME flag is instrumental; an exposure-weighted null built from it must keep an
+  injected signal. The 100 s–1 h CHIME cell was not re-tested under the rate-modulated null.
 - A CHIME Cat 2 revision assigns FRB20230825D–I to a repeater.
 - IceTracks-DR2, Swift or Einstein Probe catalogues are added.
 - Signed-lag (precursor) channels are wanted.
