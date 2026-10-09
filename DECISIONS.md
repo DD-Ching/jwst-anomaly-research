@@ -3228,6 +3228,12 @@ includes its cost. The candidate records give the verdicts and evidence.
   | **all** | **87 → 58 (−33 %)** | **168 → 152 (−10 %)** | 191 → 185 (−3 %) | 167 → 163 (−2 %) | 63 → 63 | **676 → 621 (−8 %)** |
 
   The cost falls on short events, whose caustic spikes are sampled on one or two nights.
+- **Follow-up (open, 2026-10-09).** gb18-R-9-4-24509 passed the whole chain and was explained only by a vetting note
+  (docs/candidates/gb18-R-9-4-24509.md). The chain gap: season-offset comparisons are made only against single-lens
+  models, and a slow (flat-bottomed) dip with per-season offsets is missing. The chain is left unchanged until the
+  field queue finishes. Adding the model then would be post hoc and needs a full re-injection. Until then gb18 has an
+  efficiency-only table and is not in the combined limit: its injections did not face that model, so a zero-event
+  limit from them would overstate ε.
 
 **Revisit if.** A field's quiet χ²/dof distribution is bimodal or its 95th percentile exceeds ~10 (the quantile then
 admits variables); the archive stops honouring range requests; a survivor appears (stop, /vet-candidate, owner).
