@@ -3160,8 +3160,13 @@ SZ clusters against NFW haloes (in-house ~40 lines: Wright & Brainerd 2000, Duff
 - Per-source photo-z (`euclid_q1_phz_photo_z`) for Σ_crit: one source plane bracketed by z_s = 0.8–1.2 already
   keeps R within ±20 %; worth it only if a flag needs a mass.
 
-**Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear survey"; `results/w5_shear/`. R = 0.56 ± 0.09
-(z_s = 1); 0 flags over 60 deg² at θ_E = 1′, 2′, 4′; known clusters negative (8/9); n₉₅ ≈ 0.062 / 0.049 / 0.051 deg⁻².
+- Injecting by shearing the observed moments before the PSF deconvolution (the D-066 chain): it boosts the
+  injected shear by tr_obs/tr_int (median 1.6×) over the R calibrated on deconvolved shapes. Injections now shear
+  the deconvolved shapes by R g (`inject_shapes`); D-066's pilot efficiencies are superseded.
+
+**Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear survey"; `results/w5_shear/`. R = 0.56 ± 0.16
+(z_s = 1, scaled by √(χ²/dof)); 0 flags over 60 deg² at θ_E = 1′, 2′, 4′; known clusters negative (8/9);
+efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049 / 0.051 deg⁻² at 2′ / 4′.
 
 **Revisit if.**
 - Euclid DR1 (≈ 2000 deg², PSF-corrected shapes) is public: the same code scales by tile.

@@ -1308,19 +1308,26 @@ median sigma); statistics **derived**; injections **model_prediction**.
 `calibrate`, `survey` → `results/w5_shear/{fetch,calibrate,survey}.json`. Same shapes, cuts and statistic as the
 pilot; PSF sigma per tile from its stars (field median when < 30 stars).
 - **Responsivity R (derived):** the `validate` profiles of the 4 SZ clusters (3 annuli each) against NFW haloes of
-  the catalogued M500 (Duffy+08 c200, Wright & Brainerd 2000; model_prediction) give R = 0.56 ± 0.09 at z_s = 1.0
-  (0.67 ± 0.11 at 0.8, 0.50 ± 0.08 at 1.2; single source plane, ASSUMPTION); χ² = 33/11, so the error is
-  ≈ ±0.15 after scaling by √(χ²/dof). Member dilution and miscentring bias R low. The assumed R = 0.5 stays (within
+  the catalogued M500 (Duffy+08 c200, Wright & Brainerd 2000; model_prediction) give R = 0.56 ± 0.16 at z_s = 1.0
+  (0.67 ± 0.19 at 0.8, 0.50 ± 0.15 at 1.2; single source plane, ASSUMPTION); errors scaled by √(χ²/dof), χ² = 33/11
+  (unscaled ± 0.09). Member dilution and miscentring bias R low. The assumed R = 0.5 stays (within
   the D-066 30 % revisit bound) and is conservative.
 - **Survey:** 4.6 M rows, 2.9 M resolved galaxies; θ_E = 1′, 2′, 4′ (30″ dropped: blind); centres where the
   1.5–3 θ_E annulus holds ≥ 0.8 × the field median count (ASSUMPTION); field-wise 1 % thresholds S = 4.4–5.3 from
   200 rotations. Field maxima S = 3.3–4.4 (p_random 0.21–0.81): **0 flags in any field at any θ_E**.
 - **Known mass, whole chain:** at the 3 SZ clusters with valid centres, 8 of 9 S values are negative (tangential;
   −5.24 at ACT-CL J0405.9-4915 for θ_E = 4′ is the EDF-S minimum); the exception is +0.16 (PSZ2 G255.60-46.18 at 1′).
-- **Injections** (40 per field and θ_E, off-grid, R = 0.5): efficiency 0.78 / 0.85 / 0.78 at 1′ (EDF-F/S/N), 1.0 at
-  2′ and 4′.
-- **Limits** (95 %, Poisson, derived): n₉₅ ≈ **0.062 deg⁻² at θ_E = 1′** (effective area 48.6 deg²), **0.049 at
-  2′** (60.7 deg²) and **0.051 at 4′** (58.7 deg²), 130–250× below the pilot. With D-063 (0.012–0.018 deg⁻² at
-  8–32′) negative point masses now have a limit from θ_E = 1′ to 32′.
+- **Injections** (40 per field and θ_E, off-grid, R = 0.5): the deconvolved shapes of the rows near the centre are
+  rotated at random and sheared by R g (`inject_shapes`), the space in which R was calibrated. Efficiency **0.58 /
+  0.43 / 0.55 at 1′** (EDF-F/S/N), 1.0 at 2′ and 4′.
+- **Failed approach (corrected before merge):** the first run sheared the *observed* moments and then deconvolved
+  them, which boosts the injected shear by tr_obs/tr_int (median 1.6×, 10–90 % 1.15–2.6× for the resolved
+  galaxies) over the calibrated R. It gave 0.78–0.85 at 1′ and a 1′ limit (0.062 deg⁻²) that is withdrawn. The D-066
+  pilot injections used the same chain, so its efficiencies (and n₉₅ ≈ 8.1 / 12 deg⁻²) are optimistic; this survey
+  supersedes them.
+- **Limits** (95 %, Poisson, derived): **none at θ_E = 1′** (EDF-S efficiency 0.43 < 0.5, ASSUMPTION gate);
+  n₉₅ ≈ **0.049 deg⁻² at 2′** (60.7 deg²) and **0.051 at 4′** (58.7 deg²). With D-063 (0.012–0.018 deg⁻² at
+  8–32′) negative point masses now have a limit from θ_E = 2′ to 32′.
 - Limitations: shapes are SExtractor moments, not a shear catalogue; one effective z_s; PSF-anisotropy gradients
-  untested (per-tile star means are in `survey.json` for that check); blends untested; θ_E < 1′ blind.
+  untested (per-tile star means are in `survey.json` for that check); blends untested; θ_E ≤ 1′ not limited;
+  the injection keeps each galaxy's resolved flag (the shear's change of size is second order).

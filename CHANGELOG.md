@@ -5,15 +5,18 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-09: W5/W1 Euclid Q1 radial-shear survey: all Deep Fields (60 deg²) null; R calibrated (D-067)
 - Hypothesis as D-066 (negative mass shears background galaxies radially). Ordinary radial patterns: PSF-anisotropy
   gradients, blends, tile edges; known clusters must give the opposite (tangential) sign.
-- **R = 0.56 ± 0.09** (z_s = 1; 0.50–0.67 for z_s = 0.8–1.2) from the 4 SZ clusters against NFW haloes of their
-  M500: the assumed R = 0.5 holds and is conservative.
+- **R = 0.56 ± 0.16** (z_s = 1, scaled by √(χ²/dof); 0.50–0.67 for z_s = 0.8–1.2) from the 4 SZ clusters against
+  NFW haloes of their M500: the assumed R = 0.5 is consistent.
 - **All 344 Q1 tiles of EDF-F/S/N** fetched by `tileid` (4.6 M rows, 25 min) and screened at θ_E = 1′, 2′, 4′:
   **0 flags** (field maxima S = 3.3–4.4 against thresholds 4.4–5.3); known clusters 8/9 negative (EDF-S minimum is
-  ACT-CL J0405.9-4915). Injection efficiency 0.78–0.85 at 1′, 1.0 at 2′–4′. **n₉₅ ≈ 0.062 / 0.049 / 0.051 deg⁻²**
-  at θ_E = 1′ / 2′ / 4′ (pilot: 8.1 / 12). With D-063, negative point masses are limited from 1′ to 32′.
-- **Failed approaches (rules):** 16 IRSA threads → 504s, no gain; killing a fetch truncated a cache file (writes
+  ACT-CL J0405.9-4915). Injection efficiency 0.43–0.58 at 1′ (no limit: below the 0.5 gate), 1.0 at 2′–4′.
+  **n₉₅ ≈ 0.049 / 0.051 deg⁻²** at θ_E = 2′ / 4′. With D-063, negative point masses are limited from 2′ to 32′.
+- **Failed approaches (rules):** injecting into the observed moments before the PSF deconvolution boosted the
+  injected shear ~1.6× over the calibrated R (found by /code-review before merge; the first run's 1′ limit 0.062 deg⁻²
+  is withdrawn and the D-066 pilot efficiencies are optimistic): inject where R is calibrated. 16 IRSA threads → 504s,
+  no gain; killing a fetch truncated a cache file (writes
   are atomic now); `pgrep -f`/`pkill -f` waiters matched their own shell again (wait on the log file).
-- **Next:** per-tile star-ellipticity gradient test (data in `survey.json`); θ_E < 1′ needs fainter or better shapes
+- **Next:** per-tile star-ellipticity gradient test (data in `survey.json`); θ_E ≤ 1′ needs fainter or better shapes
   (Euclid DR1); DR1 scale-up when public; θ_E ≈ 1° needs a larger contiguous area than Q1.
 
 ## 2026-10-09: J0728+2607 decided with an empirical PSF: no light between the images to F814W ≈ 23 (D-064 addendum)

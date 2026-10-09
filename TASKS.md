@@ -28,9 +28,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
 3. **W5** (D-063): Legacy Surveys DR10, 340.5 deg², 40 flags, 0 survivors; n₉₅ ≈ 0.012–0.018 deg⁻² at θ_E = 8–32′.
    Euclid Q1 counts would not open θ_E < 6′ (D-065: clustering-limited, ×1.0–1.4 S/N on a fifth of the area).
-   **Euclid Q1 radial-shear screen (D-066, D-067):** all three Deep Fields (60 deg²) null; R = 0.56 ± 0.09 from SZ
-   clusters (R = 0.5 kept); n₉₅ ≈ 0.062 / 0.049 / 0.051 deg⁻² at θ_E = 1′ / 2′ / 4′. Next: per-tile star-ellipticity
-   gradient test; Euclid DR1 when public; θ_E < 1′ and ≈ 1° are still open.
+   **Euclid Q1 radial-shear screen (D-066, D-067):** all three Deep Fields (60 deg²) null; R = 0.56 ± 0.16 from SZ
+   clusters (R = 0.5 kept); n₉₅ ≈ 0.049 / 0.051 deg⁻² at θ_E = 2′ / 4′; 1′ not limited (efficiency 0.43–0.58). Next:
+   per-tile star-ellipticity gradient test; Euclid DR1 when public; θ_E ≤ 1′ and ≈ 1° are still open.
 4. **Warp:** monitor the literature (checked 2026-10-08: no distant-observer EM template — Lentz & Felton 2024 give fluxes only; Clough et al.
    2024 waveform not public; O3 superluminal-burst search already null, Kuwahara & Cannon 2023). Recheck monthly.
 
