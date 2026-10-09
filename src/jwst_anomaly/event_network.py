@@ -345,6 +345,37 @@ def global_p(obs: np.ndarray, null: np.ndarray, mask: np.ndarray) -> tuple[float
     return float(min_obs), float((1.0 + np.count_nonzero(min_null <= min_obs)) / (nn + 1.0))
 
 
+def empirical_floor(n_scrambles: int) -> float:
+    """Smallest per-cell p an ensemble of n scrambles can give, 1 / (n + 1)."""
+    return 1.0 / (n_scrambles + 1.0)
+
+
+def reachable(n_scrambles: int, alpha: float, n_cells: int = 1) -> bool:
+    """Can an empirical ensemble of this size cross a (Bonferroni) trials-corrected threshold
+    alpha over n_cells? With 1e4 scrambles 3 sigma (1.35e-3) is reachable for one cell, but no
+    family-wise 5 sigma claim (2.9e-7) is: that needs the analytic tail (:func:`analytic_p`)."""
+    return empirical_floor(n_scrambles) * n_cells <= alpha
+
+
+#: ASSUMPTION: below this null mean the cell is Poisson; above it Gaussian with the null sd.
+POISSON_MEAN_MAX = 30.0
+
+
+def analytic_p(obs: np.ndarray, null: np.ndarray) -> np.ndarray:
+    """Upper-tail p per cell from a fitted null: Poisson(mean) when the null mean is below
+    POISSON_MEAN_MAX, else Gaussian(mean, sd of the ensemble), which keeps over-dispersion. Unlike
+    the empirical p it is not floored at 1 / (n + 1), so tails beyond the ensemble are reachable;
+    it is an extrapolation (model_prediction) and is quoted beside the empirical p."""
+    from scipy import stats
+
+    mu, sd = null.mean(axis=0), null.std(axis=0)
+    obs = np.asarray(obs, dtype=float)
+    pois = stats.poisson.sf(obs - 1, np.maximum(mu, 1e-12))
+    with np.errstate(divide="ignore", invalid="ignore"):
+        gaus = stats.norm.sf(np.where(sd > 0, (obs - mu) / sd, 0.0))
+    return np.where(mu < POISSON_MEAN_MAX, pois, np.where(sd > 0, gaus, 1.0))
+
+
 def z_score(obs, null) -> np.ndarray:
     mu, sd = null.mean(axis=0), null.std(axis=0)
     with np.errstate(divide="ignore", invalid="ignore"):
@@ -352,11 +383,19 @@ def z_score(obs, null) -> np.ndarray:
 
 
 def upper_limit_95(obs: np.ndarray, null: np.ndarray) -> np.ndarray:
-    """Neyman-style 95 % upper limit on additional pairs s: P(null + s <= obs) < 5 % -> s95 = obs -
-    q05(null), floored at the 1.645-sigma sensitivity when the observation fluctuates low."""
+    """95 % upper limit on the mean number of additional (dependent) pairs per cell.
+
+    - Null mean < POISSON_MEAN_MAX: the classical Poisson upper limit on the observed count with no
+      background subtraction, 0.5 * chi2.ppf(0.95, 2 obs + 2) (3.00 for obs = 0). Conservative.
+    - Otherwise: s95 = obs - q05(null), i.e. P(null + s <= obs) < 5 %, floored at the 1.645-sigma
+      sensitivity of the ensemble when the observation fluctuates low."""
+    from scipy import stats
+
+    obs = np.asarray(obs, dtype=float)
     q05 = np.quantile(null, 0.05, axis=0)
-    floor = 1.645 * null.std(axis=0)
-    return np.maximum(obs - q05, floor)
+    gauss = np.maximum(obs - q05, 1.645 * null.std(axis=0))
+    pois = 0.5 * stats.chi2.ppf(0.95, 2 * obs + 2)
+    return np.where(null.mean(axis=0) < POISSON_MEAN_MAX, pois, gauss)
 
 
 # -----------------------------------------------------------------------------------------

@@ -358,6 +358,14 @@ def limits(counts: Table, inj: Table, ev: dict[str, Table]) -> Table:
     return t
 
 
+def _scramble(kind: str, s: en.Sample, rng, p: en.Params) -> en.Sample:
+    """jit / jitday as in the main run; inday keeps each event's UTC day and redraws its time of
+    day uniformly (keeps day-to-day exposure, removes sub-day clustering)."""
+    if kind == "inday":
+        return s.with_times(np.floor(s.mjd) + rng.uniform(0, 1, len(s.mjd)))
+    return en.scramble_jit(s, rng, P_DAY if kind == "jitday" else p)
+
+
 def chime_vet(paths: dict[str, Path], p: en.Params, n: int) -> dict:
     """Vet the CHIME-CHIME lag excess: is it direction-independent exposure clustering? Recount
     with (a) all one-per-source bursts, (b) excluded_flag = 0 only (CHIME's flag for bursts from
@@ -379,10 +387,15 @@ def chime_vet(paths: dict[str, Path], p: en.Params, n: int) -> dict:
         s = en.Sample.from_table(en.chime_events(d))
         obs = en.count_channel(s, s, p, same=True)
         res = {"n_events": len(s.mjd)}
-        for kind, pp in (("jit", p), ("jitday", P_DAY)):
+        # daily exposure proxy: Fano factor of the counts per UTC day with >= 1 event
+        days = np.floor(s.mjd).astype(int)
+        cnt = np.bincount(days - days.min())
+        cnt = cnt[cnt > 0]
+        res["daily_count_fano"] = round(float(cnt.var() / cnt.mean()), 3)
+        for kind in ("jit", "jitday", "inday"):
             rng = np.random.default_rng(4_000_000)
             null = np.stack(
-                [en.count_channel(*(2 * [en.scramble_jit(s, rng, pp)]), p, True) for _ in range(n)]
+                [en.count_channel(*(2 * [_scramble(kind, s, rng, p)]), p, True) for _ in range(n)]
             )
             pv, z = en.empirical_p(obs, null), en.z_score(obs, null)
             for j, cl in ((1, "wide"), (2, "all")):
@@ -524,6 +537,26 @@ def main(argv=None) -> int:
     wide = mask & (np.arange(3) != 0)[None, None, :]  # wide (localized) and all (GW) cells only
     gp_wide = en.global_p(obs, jit, wide)
     gp_wide_day = en.global_p(obs, jday, wide)
+    # Reachability: the empirical global p is floored at 1/(n+1), so a 5 sigma family-wise claim
+    # needs the analytic tail with a Bonferroni factor over the tested cells.
+    analytic = {}
+    for name, nul, m in (("jit", jit, wide), ("jitday", jday, wide), ("jit_all_cells", jit, mask)):
+        pa = en.analytic_p(obs, nul)[m]
+        j = int(np.argmin(pa))
+        cells = [(ch, lab, cl) for ch in CHANNELS for lab in labels for cl in CLASSES]
+        cell = [c for c, mm in zip(cells, m.ravel(), strict=True) if mm][j]
+        analytic[name] = {
+            "n_cells": int(m.sum()),
+            "min_cell_p": float(pa[j]),
+            "cell": f"{cell[0][0]}-{cell[0][1]} {cell[1]} {cell[2]}",
+            "bonferroni_p": float(min(1.0, pa[j] * m.sum())),
+        }
+    reach = {
+        "empirical_floor": en.empirical_floor(a.jit),
+        "3sigma_one_cell": en.reachable(a.jit, 1.35e-3),
+        "3sigma_family_bonferroni": en.reachable(a.jit, 1.35e-3, int(mask.sum())),
+        "5sigma_one_cell": en.reachable(a.jit, 2.87e-7),
+    }
 
     summary = {
         "provenance": "derived",
@@ -544,6 +577,8 @@ def main(argv=None) -> int:
             "trials_corrected_p": gp_wide_day[1],
         },
         "injection_detection_p_star": p_star,
+        "analytic_tail_model_prediction": analytic,
+        "reachability": reach,
         "n_jitday": a.jitday,
         "positive_control_gw170817": pc,
         "positive_control_chime_repeaters": rep,

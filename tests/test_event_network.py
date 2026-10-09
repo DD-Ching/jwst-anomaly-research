@@ -175,3 +175,32 @@ def test_loaders():
     gw = en.gw_events(pd.DataFrame({"name": ["GW170817"], "gps": [1187008882.4]}))
     assert gw["mjd"][0] == pytest.approx(57982.528524, abs=2e-5)  # 12:41:04.4 UTC
     assert not np.isfinite(gw["sigma"][0])
+
+
+def test_thresholds_are_reachable_with_default_scrambles():
+    """D1 review rule: a threshold the ensemble cannot reach is not a test. 1e4 scrambles reach a
+    one-cell 3 sigma (and the injection p* = 1e-4), but no 5 sigma: the analytic tail covers it."""
+    assert en.empirical_floor(10_000) == pytest.approx(1 / 10_001)
+    assert en.reachable(10_000, 1.35e-3)
+    assert not en.reachable(10_000, 1.35e-3, n_cells=75)
+    assert not en.reachable(10_000, 2.87e-7)
+    rng = np.random.default_rng(6)
+    null = rng.poisson(100.0, size=(10_000, 3))
+    obs = np.array([100, 160, 200])
+    emp = en.empirical_p(obs, null)
+    ana = en.analytic_p(obs, null)
+    assert emp[1] == emp[2] == pytest.approx(en.empirical_floor(10_000))  # floored
+    assert ana[2] < ana[1] < 2.87e-7 < 0.3 < ana[0]  # the analytic tail resolves beyond the floor
+    # Poisson branch for small null means: one pair over a null of 0.06 gives p ~ 0.058
+    small = rng.poisson(0.06, size=(10_000, 1))
+    assert en.analytic_p(np.array([1]), small)[0] == pytest.approx(1 - np.exp(-small.mean()))
+
+
+def test_upper_limit_poisson_and_gaussian_regimes():
+    rng = np.random.default_rng(7)
+    small = rng.poisson(0.1, size=(5000, 2))
+    ul = en.upper_limit_95(np.array([0, 2]), small)
+    assert ul[0] == pytest.approx(2.996, abs=1e-3)  # classical 95 % limit for zero counts
+    assert ul[1] == pytest.approx(6.296, abs=1e-3)
+    big = rng.normal(1000, 30, size=(5000, 1))
+    assert en.upper_limit_95(np.array([1000.0]), big)[0] == pytest.approx(1.645 * 30, rel=0.05)
