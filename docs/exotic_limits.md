@@ -1150,6 +1150,29 @@ population still is galaxies; Milky Way stars are excluded by the extended-model
 - No limit below θ_E ≈ 6′ or above 32′ (the regions are 10° high; 1° needs a larger contiguous area).
 - Not combinable with the W1 radial/shear limits (different mass and θ_E ranges and selection).
 
+### Euclid Q1: deeper counts do not open θ_E < 6′; shapes would (2026-10-09, D-065)
+
+`scripts/w5_euclid_feasibility.py` → `results/w5_counts/euclid_q1_feasibility.json`. Galaxy densities are
+**observed** (IRSA TAP counts in 0.1° discs inside EDF-F, EDF-S and EDF-N); the gains are **model_prediction**.
+- Extended VIS detections (`vis_det`, clean flags, `point_like_prob` < 0.1; ASSUMPTION): 2.8 × 10⁴ (VIS < 23.5),
+  6.8 × 10⁴ (< 24.5) and 1.07 × 10⁵ deg⁻² (< 25.0); field-to-field spread ±10 %. VIS < 24.5 is 1.81× the DR10
+  r < 23.5 density; the count slope d log N/dm = 0.378 (DR10 0.365), so the predicted deficit profile is the same.
+- The screen's scatter is mostly galaxy clustering, which does not shrink with depth: DR10 Z scatter is 1.1× (2′),
+  1.6× (4′) and 2.4× (8′) the Poisson value. With 1.81× the galaxies and the same (half the) clustering variance
+  (ASSUMPTION range), the count S/N gains only ×1.24 (1.36) at 2′, ×1.10 (1.39) at 4′, ×1.04 (1.40) at 8′.
+  DR10 reached ε ≈ 0.5 at 8′; its 4′ S/N is 0.72 and its 2′ S/N 0.52 of that, so Euclid Q1 counts reach
+  0.79–1.0 at 4′ and 0.65–0.71 at 2′: at best a floor near 4–6′ instead of 6–8′, on 63 deg² instead of 340 deg²
+  (n₉₅ ≥ 5× weaker above 8′). Not worth a ~3.5 h row fetch.
+- Densities are counts over the full disc (masked area not subtracted, so lower bounds); 10 % more galaxies would
+  change the 4′ gain by < 1 %, because the clustering term dominates. The clustering ratio is not measured: at 0.3
+  the 4′ gain would be ×1.6 (S/N 1.15 of DR10 at 8′), so counts could reach ≈ 4′ at best.
+- A radial-shear test (point-mass γ = (θ_E/θ)², mean 0.21 over 1.5–3 θ_E, outside the critical curve where κ = 0;
+  σ_γ = 0.3 per component and S/N ≥ 6, ASSUMPTIONs) reaches θ_E ≈ 0.44′ ≈ 26″ with VIS < 24.5 shapes
+  (≈ 9 × 10⁷ M☉ at 1 kpc, 9 × 10¹⁰ M☉ at 1 Mpc), an order of magnitude below the count floor in θ_E. The sign of the tangential shear separates a negative-mass
+  lens (radial) from every ordinary foreground mass (tangential). MER `ellipticity` / `position_angle` are
+  SExtractor image moments without PSF correction (`position_angle` is CCW from the image x axis), so the test
+  needs a PSF-anisotropy check on stars first.
+
 ## W1/W2 in rejected lensed-quasar pairs
 
 D-064; `scripts/w12_niq.py screen --sheet` (`--repin` only after inspecting changed inputs); outputs `results/w12_niq/`

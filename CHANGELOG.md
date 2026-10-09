@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: W5 in Euclid Q1: deeper counts cannot open θ_E < 6′; shapes could (D-065)
+- Hypothesis: Euclid Q1's deeper counts lower the D-063 floor (blind below θ_E ≈ 6′). Measured (IRSA TAP counts,
+  three deep fields): VIS < 24.5 extended galaxies 6.8 × 10⁴ deg⁻², 1.81× DR10, same count slope. With the
+  clustering-inflated scatter measured in DR10, the count S/N gains only ×1.0–1.4 (Z scatter at 4′ is 1.6× Poisson
+  and clustering does not shrink with depth), on 63 instead of 340 deg². Count screen not built.
+- Forecast (model_prediction): a radial-shear test on the same galaxies reaches θ_E ≈ 26″ (1.5–3 θ_E annulus, S/N ≥ 6,
+  σ_γ = 0.3, ASSUMPTIONs); the shear sign separates a negative-mass lens from ordinary foreground mass.
+- **Failed approach (rule):** IRSA TAP does not index plain RA/Dec ranges (0.25 deg² box > 5 min); use
+  `CONTAINS(POINT, CIRCLE)` (40 s for 12 k rows).
+- **Next:** Euclid Q1 radial-shear screen: PSF-anisotropy check on stars, synthetic shear injections, trial centres
+  on a grid, cross-field null (EDF-N/F/S).
+
 ## 2026-10-08: D-056 amendment — the LS pair must be the catalogued pair; one entry per lens (W1/W2)
 - `lenscats.pair_match` (moved from D-064's `w12_niq`) now gates the D-056 quasar pair test: a status from an LS image
   pair whose separation differs from the catalogued 2θ_E by > 0.5″ is undecided. Only 115252+004733 changed (LS pair
