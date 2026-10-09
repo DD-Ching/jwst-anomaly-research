@@ -1044,3 +1044,19 @@ Exploration Program."
 - Prior lensed-GRB search (method and gap): Ahlgren & Larsson 2020 (arXiv:2006.07095).
 - Fermi GBM Data Tools (GDT), https://astro-gdt.readthedocs.io/projects/astro-gdt-fermi/en/latest/ (docs 2.2.x,
   opened 2026-10-09): TTE, PHAII, RSP, trigdat, poshist, scat, tcat and catalogue finders; no bcat reader listed.
+
+## D1 distance self-consistency (accessed 2026-10-09; D-TBD)
+
+- H0LiCOW public distance posteriors, https://github.com/shsuyu/H0LiCOW-public (commit 57cf973, 2025-05-14):
+  `h0licow_distance_chains/*`, `MontePython_cosmo_sampling/data/timedelay_6lenses/B1608_Dd_Ddt_params.dat` and the
+  lens redshifts in `MontePython_cosmo_sampling/likelihoods/timedelay_6lenses/__init__.py`. Papers: Wong et al.
+  2020, MNRAS 498, 1420 (arXiv:1907.04869); Suyu et al. 2010 (B1608 D_dt); Jee et al. 2019, Science 365, 1134
+  (B1608 D_d); Chen et al. 2019, MNRAS 490, 1743 (HE0435, RXJ1131, PG1115); Birrer et al. 2019, MNRAS 484, 4726
+  (J1206); Rusu et al. 2020 (WFI2033, arXiv:1905.09338).
+- TDCOSMO 2025 public release, https://github.com/TDCOSMO/TDCOSMO2025_public (commit d7f38db, 2026-01-21):
+  `TDCOSMO_sample/TDCOSMO_data/SDSS1206+4332/final_D_d.npy`, `final_D_dt.npy`, `TDCOSMO_sample/tdcosmo_sample.yaml`.
+  Paper: TDCOSMO Collaboration 2025, A&A 704, A63 (arXiv:2506.03023).
+- FRBs/FRB repository, https://github.com/FRBs/FRB (commit 996fcda, 2026-05-06, BSD-3):
+  `frb/data/Galaxies/public_hosts.csv` and `frb/data/FRBs/FRB*.json` (DM, DMISM). Macquart et al. 2020, Nature 581,
+  391 (arXiv:2005.13161) for ⟨DM_cosmic⟩, p(Δ) and the host log-normal; James et al. 2022, MNRAS 516, 4862
+  (arXiv:2208.00819) for F ≈ 0.32.

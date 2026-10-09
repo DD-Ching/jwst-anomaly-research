@@ -3322,3 +3322,41 @@ injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T�
 - TTE-based light curves are needed for short GRBs (64 ms is coarse for T90 < 1 s).
 - CHIME/FRB Catalog 2 is added (the S1 second half).
 - The χ² systematic (10 %) is calibrated on real same-burst data, e.g. GBM vs. Swift-BAT.
+
+## D-TBD D1 distance self-consistency: per-lens H0-free ratio R = D_dt/((1+z_d) D_d) and per-FRB DM-z predictive tails (2026-10-09)
+
+**Decision.**
+- Data (derived posteriors, pinned by sha256 in `data/manifests/d1_distance.ecsv`): H0LiCOW-public
+  `h0licow_distance_chains/` (joint D_d–D_dt for RXJ1131, PG1115, J1206; D_dt for HE0435, WFI2033) and the
+  B1608 analytic shifted-log-normal fits (`B1608_Dd_Ddt_params.dat`; D_d and D_dt independent, so no correlation).
+  The TDCOSMO 2025 SDSS1206 `final_D_d.npy`/`final_D_dt.npy` are the same 67,570 samples as H0LiCOW
+  `J1206_final.csv` (checked), so they add no lens. Redshifts from the H0LiCOW likelihood = TDCOSMO yaml.
+- Statistics per lens (ln space, random-pair Δ = obs − pred; Gaussian pull plus an empirical tail check):
+  A prior-predictive vs flat ΛCDM, Ωm ~ U(0.1, 0.5); B flat wCDM, w ~ U(−2, −0.5); C leave-one-out vs the other
+  joint lenses with Ωm and a common ln-scale free (absorbs a sample-wide λ_MST); D leave-one-out ln D_dt vs the
+  H0 + Ωm fit to the other five. Sidak over 18 (lens, statistic) pulls: 5σ global = 5.53σ local (ASSUMPTION).
+- Null: all 23 non-identity permutations of the 4 joint lenses' (z_d, z_s); 100 random permutations of the 6.
+  Injection: one lens's D_dt × f, f = 0.7–2.0, through the same statistics.
+- FRBs: DM_obs vs Monte Carlo predictive DM_ISM(NE2001, ±20 %) + DM_halo U(10, 80) + ⟨DM_cosmic⟩(z)·Δ
+  (Macquart+2020 p(Δ), σ = 0.32 z^−1/2, z floored at 0.02) + log-normal DM_host(e^μ = 68.2, σ = 0.88)/(1+z);
+  one-sided tails both ways, Sidak over 2×94. All thresholds in `distance_consistency.Params`/`FRBParams`.
+- Code: `src/jwst_anomaly/distance_consistency.py`, `scripts/d1_distance.py`; outputs `results/d1_distance/`.
+
+**Alternatives rejected.**
+- hierArc / lenstronomy likelihoods: built for the hierarchical population fit in which λ_MST and anisotropy are
+  population parameters, which is exactly what hides a per-lens outlier. The per-lens question needs only the
+  published samples and D_s/D_ds, so astropy.cosmology (E(z), tabulated per (Ωm, w)) suffices. Revisit for
+  TDCOSMO 2025 lenses whose kinematics exist only as `*_const_processed.pkl` likelihoods.
+- `frb` package (FRBs/FRB) for ⟨DM_cosmic⟩: heavy dependency for one integral; the same formula is implemented
+  with astropy (Planck18 parameters, f_d = 0.844) and tested against ~900–1000 pc cm⁻³ at z = 1.
+- A Gaussian DM residual: the cosmic term is skewed and the host term log-normal (data-inventory §1.2).
+
+**Evidence.** Lenses: max |pull| 1.3σ (RXJ1131, statistic D); every |pull| < 1.3σ; no flag. Shuffled-z null:
+median max|pull| 3.8σ (R LOO) and 15σ (D_dt LOO) vs observed 0.84σ and 1.29σ. Injections recovered ln f to
+≲ 0.01. Sensitivity at the 5σ trials-corrected threshold: the R tests need a D_dt/D_d inconsistency factor of
+×2.3–6 (D_d errors 15–30 %), the D_dt LOO test ×1.4–1.8. FRBs: no burst beyond 5.9σ local either way; the lowest
+is FRB 20220319D (DM 111 < NE2001 DM_ISM 127; 3.3σ low), a known low-latitude case where NE2001 overestimates.
+
+**Revisit if.** Per-lens D_d posteriors for the other TDCOSMO 2025 lenses (or the 2025 λ_MST-free kinematics) are
+released; JWST/KCWI spatially resolved kinematics shrink D_d errors below ~10 % (the R test then reaches ×1.5);
+a YMW16 or empirical Galactic DM model replaces NE2001 at low latitude.
