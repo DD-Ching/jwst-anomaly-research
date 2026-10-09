@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: S2 on DES-SN5YR (in progress)
+- Plan: repeat D-070 on DES-SN5YR Hubble residuals with DES/LS galaxy columns; the lensing column is the positive
+  control (DES-SN5YR detects SN lensing). Claimed by a cloud routine.
+
 ## 2026-10-09: S3 hybrid images: no copies in 6 COSMOGRAIL doubles; sensitivity only r ≈ 0.4–2.4 (D-072)
 - Hypothesis (A1 P2): image j carries a faint copy at lag s_i − s_j; the copy into the trailing image can precede the
   leading image. Ordinary mimics: quasar red noise (correlates at all lags), delay errors, microlensing.
