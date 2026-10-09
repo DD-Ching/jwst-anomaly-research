@@ -2,5 +2,6 @@
   "size_px": 250,
   "search_arcsec": 3.5,
   "image_mask_arcsec": 0.3,
-  "detect_sigma": 5.0
+  "detect_sigma": 5.0,
+  "sep_match_arcsec": 0.5
 }

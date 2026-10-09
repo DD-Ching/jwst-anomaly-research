@@ -2,7 +2,8 @@
 
 For each pair with HAP imaging (MAST hapcut, F814W preferred), fit two point sources with a shared
 Moffat profile plus a constant background, then measure the residual flux inside the circle that
-has the two images as its diameter (minus 0.15" around each image). The D-064 control lenses with
+has the two images as its diameter (beyond ``Params.image_mask_arcsec`` from each image, after
+removing each image's halo residual). The D-064 control lenses with
 HST imaging go through the same chain first: the test is trusted only if it shows their lens
 galaxies. Thresholds are ASSUMPTIONs (``Params``); outputs are ``derived``.
 
@@ -48,6 +49,7 @@ class Params:
     # residual excludes the image cores (PSF-core mismatch; 0.15" left core residuals in J0728)
     image_mask_arcsec: float = 0.3
     detect_sigma: float = 5.0  # residual flux / its noise for "residual >= 5 sigma"
+    sep_match_arcsec: float = 0.5  # the fitted pair must be the catalogued pair (as D-064)
 
 
 def pick_image(files, c: SkyCoord, radius_arcsec: float) -> Path | None:
@@ -129,7 +131,9 @@ def remove_halos(res: np.ndarray, fit, nbin: float = 1.0) -> np.ndarray:
     return out
 
 
-def residual_between(res: np.ndarray, fit, pix_arcsec: float, p: Params, noise: float) -> dict:
+def residual_between(
+    res: np.ndarray, fit, pix_arcsec: float, p: Params, noise: float, valid=None
+) -> dict:
     """Residual flux in the pair-diameter circle, excluding the image cores, and its S/N."""
     (x1, y1), (x2, y2) = (fit.x_0_1.value, fit.y_0_1.value), (fit.x_0_2.value, fit.y_0_2.value)
     xc, yc = (x1 + x2) / 2, (y1 + y2) / 2
@@ -138,6 +142,8 @@ def residual_between(res: np.ndarray, fit, pix_arcsec: float, p: Params, noise: 
     core = p.image_mask_arcsec / pix_arcsec
     m = (np.hypot(xx - xc, yy - yc) <= r) & (np.hypot(xx - x1, yy - y1) > core)
     m &= np.hypot(xx - x2, yy - y2) > core
+    if valid is not None:
+        m &= valid  # missing or edge pixels are not data
     flux = float(res[m].sum())
     err = float(noise * np.sqrt(m.sum()))
     return {
@@ -163,23 +169,30 @@ def run(args) -> None:
         d = out / name
         d.mkdir(exist_ok=True)
         c = SkyCoord(float(r["ra"]), float(r["dec"]), unit="deg")
-        files = list(d.glob("*.fits")) or list(
-            Hapcut.download_cutouts(c, size=[p.size_px, p.size_px], path=str(d))["Local Path"]
-        )
-        f = pick_image(files, c, p.search_arcsec)
+        try:
+            files = list(d.glob("*.fits")) or list(
+                Hapcut.download_cutouts(c, size=[p.size_px, p.size_px], path=str(d))["Local Path"]
+            )
+            f = pick_image(files, c, p.search_arcsec)
+        except Exception as e:  # no HAP footprint, service error: recorded, never a pass
+            files, f = [], None
+            print(f"{name}: no HAP cutout ({type(e).__name__})")
         row = {
             "name": name,
             "group": str(r["group"]),
             "sep_cat": float(r["sep_cat"]),
             "hst_image": f.name if f else "",
-            "status": "no HST F814W",
+            "status": "no HST F814W HAP cutout",
         }
         if f is not None:
             with fits.open(f) as h:
                 hdu = next(x for x in h if x.data is not None and x.data.ndim == 2)
-                img = np.nan_to_num(hdu.data.astype(float))
+                data = hdu.data.astype(float)
                 w = WCS(hdu.header)
                 zp = ab_zeropoint(hdu.header, h[0].header)
+            valid_all = np.isfinite(data) & (data != 0)  # 0 = outside the drizzled footprint
+            corr = noise_correlation(data, valid_all)
+            img = np.where(valid_all, data, np.median(data[valid_all]))
             pix = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix))) * 3600)
             x0, y0 = w.world_to_pixel(c)
             peaks = find_two_peaks(img, (x0, y0), p.search_arcsec / pix, 0.5 * r["sep_cat"] / pix)
@@ -187,28 +200,39 @@ def run(args) -> None:
             xm, ym = np.mean([q[0] for q in peaks]), np.mean([q[1] for q in peaks])
             half = int(1.5 * r["sep_cat"] / pix) + 10
             y0s, x0s = max(int(ym) - half, 0), max(int(xm) - half, 0)
-            img = img[y0s : int(ym) + half, x0s : int(xm) + half]
+            stamp = (slice(y0s, int(ym) + half), slice(x0s, int(xm) + half))
+            img, valid = img[stamp], valid_all[stamp]
             peaks = [(x - x0s, y - y0s) for x, y in peaks]
             fit, res = two_psf_fit(img, peaks)
-            mad = 1.4826 * np.median(np.abs(res - np.median(res)))
+            # aperture noise: pixel MAD x the drizzle correlation factor
+            noise = 1.4826 * np.median(np.abs(res[valid] - np.median(res[valid]))) * corr
             clean = remove_halos(res, fit)
-            row.update(residual_between(clean, fit, pix, p, mad), pixel_arcsec=pix)
-            raw = residual_between(res, fit, pix, p, mad)
-            row["resid_snr_raw"] = raw["resid_snr"]
+            row.update(residual_between(clean, fit, pix, p, noise, valid), pixel_arcsec=pix)
+            row["noise_corr"] = corr
+            row["resid_snr_raw"] = residual_between(res, fit, pix, p, noise, valid)["resid_snr"]
+            snr = row["resid_snr"]
             # the S/N states a residual only; lens light or core mismatch needs the stamp
-            row["status"] = (
-                "residual >= 5 sigma" if row["resid_snr"] >= p.detect_sigma else "no residual"
-            )
+            if abs(row["sep_arcsec"] - row["sep_cat"]) > p.sep_match_arcsec:
+                row["status"] = "pair mismatch"
+            elif not np.isfinite(snr) or snr <= -p.detect_sigma:
+                row["status"] = "fit inconclusive (over-subtraction)"
+            else:
+                row["status"] = "residual >= 5 sigma" if snr >= p.detect_sigma else "no residual"
             row["zp_ab"] = zp
             row["mag_resid"] = (
                 zp - 2.5 * np.log10(row["resid_flux"]) if row["resid_flux"] > 0 else np.nan
             )
             row["mag_5sigma"] = zp - 2.5 * np.log10(p.detect_sigma * row["resid_err"])
+            row["mag_limit_inject"] = np.nan
             if row["status"] == "no residual":
-                for mag, snr, frac in inject_recovery(img, peaks, fit, pix, p, zp):
+                rec = inject_recovery(img, peaks, fit, pix, p, zp, noise, valid)
+                for mag, s_inj, frac in rec:
                     inj.append(
-                        {"name": name, "inject_mag": mag, "recovered_snr": snr, "flux_frac": frac}
-                    )
+                        {"name": name, "inject_mag": mag, "recovered_snr": s_inj,
+                         "snr_above_baseline": s_inj - snr, "flux_frac": frac}
+                    )  # fmt: skip
+                ok = [mag for mag, s_inj, _ in rec if s_inj - snr >= p.detect_sigma]
+                row["mag_limit_inject"] = max(ok) if ok else np.nan
             panels.append((name, row, img, res, clean, fit))
         rows.append(row)
         print(row)
@@ -231,6 +255,23 @@ def run(args) -> None:
     sheet(panels, res_dir / "hst_residuals.jpg")
 
 
+def noise_correlation(img: np.ndarray, valid: np.ndarray, block: int = 5) -> float:
+    """Factor by which drizzle-correlated noise inflates an aperture sum: std of block sums of
+    source-free background pixels over sqrt(block²) x the pixel std (1 for white noise)."""
+    good = valid & np.isfinite(img)
+    med = np.median(img[good])
+    sd = 1.4826 * np.median(np.abs(img[good] - med))
+    bg = good & (np.abs(img - med) < 3 * sd)
+    n0, n1 = (s // block * block for s in img.shape)
+    a = np.where(bg, img - med, np.nan)[:n0, :n1].reshape(n0 // block, block, n1 // block, block)
+    full = np.isfinite(a).all(axis=(1, 3))
+    sums = np.nansum(a, axis=(1, 3))[full]
+    if len(sums) < 20:
+        return np.nan
+    sd_sum = 1.4826 * np.median(np.abs(sums - np.median(sums)))
+    return float(sd_sum / (block * sd))
+
+
 def ab_zeropoint(hdr, primary) -> float:
     """AB zero point for an image in electrons/s from PHOTFLAM and PHOTPLAM (STScI convention)."""
     pf = hdr.get("PHOTFLAM", primary.get("PHOTFLAM"))
@@ -238,7 +279,9 @@ def ab_zeropoint(hdr, primary) -> float:
     return float(-2.5 * np.log10(pf) - 5 * np.log10(pl) - 2.408) if pf and pl else np.nan
 
 
-def inject_recovery(img, peaks, fit, pix, p: Params, zp: float, mags=(21, 22, 23, 24, 25)):
+def inject_recovery(
+    img, peaks, fit, pix, p: Params, zp: float, noise: float, valid, mags=(21, 22, 23, 24, 25)
+):
     """Inject an early-type lens galaxy (Sersic n = 4, r_eff 0.3") at the SIS-predicted position
     (on the line between the images, at sep * f / (1 + f) from the fainter one, f = faint/bright)
     into the real stamp and re-measure with the same chain. Returns (mag, S/N, flux fraction)."""
@@ -257,8 +300,7 @@ def inject_recovery(img, peaks, fit, pix, p: Params, zp: float, mags=(21, 22, 23
     for mag in mags:
         flux = 10 ** (-0.4 * (mag - zp))
         f2, res = two_psf_fit(img + flux * g, peaks)
-        mad = 1.4826 * np.median(np.abs(res - np.median(res)))
-        m = residual_between(remove_halos(res, f2), f2, pix, p, mad)
+        m = residual_between(remove_halos(res, f2), f2, pix, p, noise, valid)
         out.append((mag, m["resid_snr"], m["resid_flux"] / flux))
     return out
 
@@ -272,20 +314,19 @@ def sheet(panels, path: Path) -> None:
 
     n = len(panels)
     fig, axes = plt.subplots(n, 3, figsize=(9, 3 * n), squeeze=False)
-    for i, (name, row, img, model, res, _fit) in enumerate(panels):
-        sl = (slice(None), slice(None))  # the stamp is already cropped around the pair
-        vmax = np.percentile(img[sl], 99.5)
-        rs = np.percentile(np.abs(res[sl]), 99)
+    for i, (name, row, img, raw, clean, _fit) in enumerate(panels):
+        vmax = np.percentile(img, 99.5)
+        rs = np.percentile(np.abs(raw), 99)
         div = {"vmin": -rs, "vmax": rs, "cmap": "RdBu_r"}
         for ax, im, title, kw in (
             (
                 axes[i, 0],
-                img[sl],
+                img,
                 f"{name} ({row['group']}) F814W",
                 {"vmin": -0.05 * vmax, "vmax": vmax},
             ),
-            (axes[i, 1], model[sl], f"two-PSF resid S/N={row['resid_snr_raw']:.1f}", div),
-            (axes[i, 2], res[sl], f"halos removed S/N={row['resid_snr']:.1f}", div),
+            (axes[i, 1], raw, f"two-PSF resid S/N={row['resid_snr_raw']:.1f}", div),
+            (axes[i, 2], clean, f"halos removed S/N={row['resid_snr']:.1f}", div),
         ):
             ax.imshow(im, origin="lower", **({"cmap": "gray_r"} | kw))
             ax.set_title(title, fontsize=8)

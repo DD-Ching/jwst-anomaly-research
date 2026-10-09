@@ -3059,14 +3059,16 @@ colour-mismatched, 2 are catalogued binaries and 1 has two redshifts; 11 remain 
 **Addendum (2026-10-09, archival HST).** `scripts/w12_niq_hst.py` tests the pairs with HST F814W imaging: 2 of the 11,
 and 2 controls. It fits two Moffat PSFs, removes the halo residual from the profile facing away from the other image,
 and measures the residual flux between the images.
-- Validation: both controls are detected (S/N 148 and 83), and injections are recovered to F814W = 25.
+- Validation: both controls are detected (S/N 96 and 54), and injections are recovered at ≥ 5σ above the baseline to
+  F814W = 24. Errors include a drizzle noise-correlation factor of about 1.5.
 - Result:
-  - J0130+0725 has no lens light to F814W ≈ 25 (5σ), ≥ 3 mag below any ordinary lens. A binary quasar remains the
-    untested ordinary explanation;
+  - J0130+0725 has no lens light to F814W ≈ 24 (injection-calibrated), ≥ 2 mag below any ordinary lens. A binary
+    quasar remains the untested ordinary explanation;
   - J0728+2607 is inconclusive (PSF-core residuals).
 - Rejected alternatives:
   - the "combined_skycells" HAP cutout, whose WCS does not describe its pixels (separations of 10⁴″);
-  - an aperture statistic without the halo correction, which gave S/N 26–35 from PSF mismatch alone;
+  - an aperture statistic without the halo correction, which gave S/N 18–24 from PSF mismatch alone;
+  - white-noise aperture errors on drizzled pixels, which inflate S/N by ~1.5;
   - a 0.15″ core mask, which left core residuals.
 
 **Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 11 colour-matched pairs;
