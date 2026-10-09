@@ -62,3 +62,4 @@
 2026-10-09T10:10:36Z queue: START gb15 09:32:44 procs 3 | 550/2200 injections, 297 s
 2026-10-09T10:19:39Z queue: START gb15 09:32:44 procs 3 | 1100/2200 injections, 885 s
 2026-10-09T10:28:42Z queue: START gb15 09:32:44 procs 3 | 1600/2200 injections, 1412 s
+2026-10-09T10:37:45Z queue: START gb18 10:33:52 procs 4 |   28629 light curves, 141/s, 70 MB/s, CPU 99 %, retries 1
