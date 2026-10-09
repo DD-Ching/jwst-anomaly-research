@@ -1013,3 +1013,9 @@ Exploration Program."
   https://irsa.ipac.caltech.edu/TAP (sync endpoint `/TAP/sync`), queried 2026-10-09 for counts only
   (`scripts/w5_euclid_feasibility.py`). Use `CONTAINS(POINT, CIRCLE)` for spatial cuts; plain RA/Dec ranges are
   not indexed. The service output is not pinned.
+- Same table, rows (shapes) in 0.2–0.3° discs, 2026-10-09 (`scripts/w5_euclid_shear.py`, D-066). The column
+  `position_angle` must be quoted in ADQL; its description ("CCW/x") is wrong: it is PA east of north.
+- Euclid Q1 MER VIS mosaics (IRSA SIA collection `euclid_DpdMerBksMosaic`; IBE cutouts
+  `?center=RA,Dec&size=8arcsec`, gzip-compressed), tile 102022477, accessed 2026-10-09 (`pacheck`).
+- Planck PSZ2 (Planck Collaboration 2016, A&A 594, A27; VizieR J/A+A/594/A27) and ACT DR5 clusters (Hilton et al.
+  2021, ApJS 253, 3; VizieR J/ApJS/253/3), queried 2026-10-09 for clusters inside Q1 (`CLUSTERS` in the script).
