@@ -3177,7 +3177,7 @@ efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049
 - Euclid DR1 (≈ 2000 deg², PSF-corrected shapes) is public: the same code scales by tile.
 - A flag appears, or per-tile star ellipticity gradients show radial patterns on 1–12′ scales.
 
-## D-TBD Owner direction 2026-10-09: System A (invention) / System B (destruction) hypothesis rounds; round 1 survivors (2026-10-09)
+## D-069 Owner direction 2026-10-09: System A (invention) / System B (destruction) hypothesis rounds; round 1 survivors (2026-10-09)
 
 **Decision.** New hypotheses come from System A groups that work without literature and from minimal axioms, with
 space, time, matter and causality not assumed fundamental ("Ontological Reset"). One System B reviewer per text then
@@ -3188,7 +3188,7 @@ in order:
 - S2, flat-kernel SN residuals;
 - S3, lensed-transient hybrid images (limit only).
 
-W1–W5 screens and the MOA-II run continue to completion (D-068), but new compute goes to S1 first.
+W1–W5 screens and the MOA-II run continue to completion (PR #95), but new compute goes to S1 first.
 
 **Alternatives rejected.**
 - More literature-anchored lens signatures only: the owner asked for at least 30 % on unmeasured quantities.

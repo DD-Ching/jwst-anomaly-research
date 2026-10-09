@@ -2,17 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-09: Owner direction: System A/B hypothesis rounds; round 1 (3 worlds, 3 reviews, 3 conditional survivors) (D-TBD)
+## 2026-10-09: Owner direction: System A/B hypothesis rounds; round 1 (3 worlds, 3 reviews, 3 conditional survivors) (D-069)
 - Owner ideas (distance self-consistency, missing light with paired excess, transient connectivity, causal event
   network, Ontological Reset). Distance self-consistency was never tested here; the deficit half of missing light is
   W3/W5.
 - System A (no literature): A1 states + transitions; A2 no identity, one quantity "carry"; A3 bridged Markov
-  substrate with a fixed pattern of distance disagreement. System B (verified references) failed 13 of 16
-  predictions. All three link mechanisms are disordered locality (arXiv:0903.5303) renamed, and achromatic dimming
+  substrate with a fixed pattern of distance disagreement. System B (verified references) failed 14 of 17
+  predictions (plus A2's foundations). All three link mechanisms are disordered locality (arXiv:0903.5303) renamed, and achromatic dimming
   is the known cosmic-opacity test.
 - **Survivors (conditional):** S1 burst twins (GRB/FRB, wide separation, any delay: untested by 2006.07095 and
   2204.06014); S2 flat-kernel SN residuals (new ~0.015 mag limit reachable); S3 hybrid images (limit only).
-- B corrected A1's "blindness theorem": a timing dependence between events ≳ 0.1° apart is provably spacelike; the
+- B corrected A1's "blindness theorem": a timing dependence between events ≳ 0.1° apart is provably spacelike at Gpc distances with spectroscopic redshifts (B-est); the
   obstacle is chance coincidences and common causes.
 - **Next:** S1 on the Fermi GBM catalogue and CHIME/FRB Catalog 2, with time-scrambled nulls and lensing/duplicates as
   positive controls (docs/hypotheses/round-1/summary.md).
@@ -152,7 +152,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   Commit-age heuristics cannot see a session that is coding but has not pushed.
 - docs/cloud-routine-prompt.md gets the owner's "COORDINATION AND DISPATCH" section (dispatch first; `claimed` label +
   claim comment with a 10-minute heartbeat, stale after 20; re-check before every push, `-alt` branch on collision;
-  "D-TBD" until merge). It replaces the 15-minute commit-age rule; docs/operations.md and its label table follow.
+  "D-069" until merge). It replaces the 15-minute commit-age rule; docs/operations.md and its label table follow.
 - **Owner action:** paste the new prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`); this file is only the copy.
 
 ## 2026-10-08: Governance — owner decisions on scope, parallelism, cloud disk and layout

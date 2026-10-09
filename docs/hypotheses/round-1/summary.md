@@ -31,20 +31,21 @@ screens). Idea 2's deficit half is W3/W5 (D-052, D-057–D-063, D-066/D-067); it
 **Common verdict on the foundations.** None of the three derives Lorentz invariance or gravity. All three long-range
 link mechanisms are, in B's reading, Markopoulou–Smolin "disordered locality" (gr-qc/0702044; cosmology in
 0903.5303) under new names. Each achromatic-dimming prediction is the existing cosmic-opacity / distance-duality
-test, already limited to Δτ ≲ 0.01–0.05 (1004.2053).
+test, already limited to Δτ ≲ 0.01–0.05 (1004.2053; 2506.22599).
 
 ## Survivor table
 
 | # | Prediction (source) | Verdict | Why it survives | Data | Reach of existing data |
 |---|---|---|---|---|---|
 | S1 | **Burst twins**: pairs of GRBs or FRBs far apart on the sky, with matching light curves at any delay (A2 P1, made model-agnostic; s fixed at 1, free-s secondary) | conditional PASS | Lensed-burst searches cut on sky position first (Fermi GBM, 2006.07095) or used delays ≲ 100 ms (CHIME, 2204.06014); wide separations at arbitrary delay are untested. Also an instance of the owner's idea 4. | Fermi GBM burst catalogue + TTE/CTIME light curves; CHIME/FRB Catalog 2 | ~6 × 10⁻³ twins per burst from the 500 brightest multi-pulse GRBs [calc] |
-| S2 | **Flat-kernel SN residuals**: SN Ia Hubble residuals regressed on a uniformly weighted foreground column versus the lensing-kernel column (A3 P2b) | conditional PASS | Lensing magnification is detected (DES-5YR, 2406.05047), but a flat-kernel term has not been fitted; a kernel-shape test, not an amplitude test | DES-SN5YR or Pantheon+ public tables + DES Y3 / Legacy Surveys galaxies; DESI DR2 BAO | σ_γ ≈ 0.007 mag, i.e. a new ~0.015 mag (2σ) limit; cannot reach A3's own kill threshold of 0.005 [calc] |
-| S3 | **Hybrid images**: faint copies in lensed transients at model-fixed lags s_i − s_j, some before the leading image (A1 P2) | conditional PASS, limit only | Geometrically sound; precursor flux at these lags is unmeasured | COSMOGRAIL light curves; SN Refsdal / H0pe pre-explosion imaging | ~10⁻² stacked, against a predicted amplitude ≪ 10⁻¹⁰ under A1's own scaling [B-est] |
+| S2 | **Flat-kernel SN residuals**: SN Ia Hubble residuals regressed on a uniformly weighted foreground column versus the lensing-kernel column (A3 P2b) | conditional PASS | Lensing magnification is detected (DES-5YR, 2406.05047), but a flat-kernel term has not been fitted; a kernel-shape test, not an amplitude test | DES-SN5YR or Pantheon+ public tables + DES Y3 / Legacy Surveys galaxies; DESI DR2 BAO | σ_γ ≈ 0.007 mag, i.e. a new ~0.015 mag (2σ) limit; cannot reach A3's own kill threshold of 0.005 [est] |
+| S3 | **Hybrid images**: faint copies in lensed transients at model-fixed lags s_i − s_j, some before the leading image (A1 P2) | conditional PASS, limit only | Geometrically sound; precursor flux at these lags is unmeasured | COSMOGRAIL light curves; SN Refsdal / H0pe pre-explosion imaging | ~10⁻² per system, against a predicted amplitude ≪ 10⁻¹⁰ under A1's own scaling [B-est] |
 
 **Failed, with the main reason:**
+- A1 D3 (not a prediction until its hop parameters are fixed).
 - A1 P1 (consistency relation untestable at current EBL precision).
 - A1 P3 (Bullet Cluster offset).
-- A1 P4 (Lorentz-invariance limits put the broadening ≲ 0.2 ns).
+- A1 P4 (interferometric coherence [B-est] puts the broadening ≲ 0.2 ns; Lorentz-invariance limits ≲ 4 × 10⁻¹⁹ s).
 - A1 P5 (internal error; laboratory bound 10⁻¹⁸).
 - A2 P2 (internally inconsistent; no FRB below the Macquart floor).
 - A2 P3 (cosmic opacity).
@@ -60,7 +61,7 @@ test, already limited to Δτ ≲ 0.01–0.05 (1004.2053).
 
 A1 claimed that blind timing searches between distinct extragalactic events cannot test light-cone violation even
 in principle. B showed this is false. For a pair 1° apart at z = 0.5 the transverse separation (~108 Mly) exceeds
-the radial error (~1–14 Mly), so a dependence within a 10-yr window is provably spacelike. The argument holds only
+the radial error (~1–14 Mly), so a dependence within a 10-yr window is provably spacelike [B-est, Gpc distances with spectroscopic redshifts]. The argument holds only
 for pairs closer than about 0.1° at Gpc distances. The real obstacles are chance coincidences and common causes at
 the observer (exposure, triggers, follow-up chains), which S1's scrambled-catalogue null must control.
 

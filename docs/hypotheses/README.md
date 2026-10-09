@@ -3,7 +3,7 @@
 Every file here is a **hypothesis** (charter label). Nothing in this directory is established physics, and an
 untested prediction is not evidence. Nothing is announced outside the repository without the owner.
 
-## Process (D-TBD)
+## Process (D-069)
 
 1. **System A — Physics Invention.** Each group starts from minimal axioms it chooses (an "Ontological Reset"):
    space, time, matter, mass, energy, particles, fields and causality may not be assumed fundamental. Groups work

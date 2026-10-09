@@ -3,7 +3,7 @@
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
-## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-TBD; docs/hypotheses/)
+## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 1. **S1 burst twins**: GRB pairs far apart on the sky with matching light curves at any delay (Fermi GBM catalogue +
    light curves; CHIME/FRB Catalog 2 for FRBs). Time-scrambled catalogue null; catalogue duplicates, re-triggers and
    lensed pairs as positive controls; single-pulse look-alikes and the pair trials factor are the main mimics.
