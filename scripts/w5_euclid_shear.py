@@ -174,7 +174,8 @@ def q1_tiles(cache: Path) -> dict[str, list[tuple[int, float, float]]]:
         n = min(sep, key=sep.get)
         if sep[n] < SURVEY_FIELD_RADIUS_DEG:
             out[n].append((tid, float(ra), float(dec)))
-    return {n: sorted(set(v)) for n, v in out.items()}
+    # one entry per tileid (several obs_ids of a tile may list slightly different centres)
+    return {n: sorted({t[0]: t for t in v}.values()) for n, v in out.items()}
 
 
 def _sep_deg(ra1, dec1, ra2, dec2) -> float:
@@ -203,6 +204,8 @@ def cmd_fetch(args) -> dict:
             if done % 20 == 0 or done == len(jobs):
                 rate = done / (time.time() - t0)
                 print(f"fetch {done}/{len(jobs)}, {rows} rows, {rate:.2f} q/s", flush=True)
+    if failed:
+        print(f"fetch: {len(failed)} queries failed; re-run fetch before survey", file=sys.stderr)
     return {"n_tiles": {n: len(v) for n, v in tiles.items()}, "rows": rows, "failed": failed}
 
 
@@ -258,28 +261,17 @@ def galaxy_shapes(gals: Table, psf_sigma: float) -> np.ndarray:
     return np.where(resolved & (np.abs(eps) < 1.0), eps, np.nan + 0j)
 
 
-def sheared_catalogue(gals: Table, g: np.ndarray, rng: np.random.Generator) -> Table:
-    """Catalogue copy whose *observed* moments carry the reduced shear ``g`` (for injections).
-
-    Each row's observed ellipticity (no PSF deconvolution) is rotated by a random angle (removing
-    any real signal, as the null does) and sheared; ``ellipticity``, ``position_angle`` and
-    ``semimajor_axis`` (area kept) are rewritten, so the resolved cut and the PSF deconvolution of
-    :func:`galaxy_shapes` run on the injected shapes (whole chain)."""
-    a = np.asarray(gals["semimajor_axis"], float)
-    ell = np.clip(np.asarray(gals["ellipticity"], float), 0.0, 0.999)
-    pa = pa_east_of_north(gals["position_angle"])
-    q = 1.0 - ell
-    e_obs = (1.0 - q) / (1.0 + q) * np.exp(2j * np.deg2rad(pa))
-    e_new = apply_shear(e_obs * np.exp(1j * rng.uniform(0, 2 * np.pi, len(a))), g)
-    m = np.minimum(np.abs(e_new), 0.999)
-    q_new = (1.0 - m) / (1.0 + m)
-    return Table(
-        {
-            "semimajor_axis": a * np.sqrt(q / q_new),
-            "ellipticity": 1.0 - q_new,
-            "position_angle": np.rad2deg(np.angle(e_new) / 2.0),
-        }
-    )
+def inject_shapes(e: np.ndarray, g: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+    """Injected shapes: PSF-deconvolved ellipticities ``e`` (NaN = unresolved, kept NaN), each
+    rotated by a random angle (removing any real signal, as the null does), then sheared by
+    ``RESPONSIVITY * g``. R is calibrated on these deconvolved shapes (``calibrate``), so this is
+    the response a real pre-PSF shear produces; shearing the observed moments before the
+    deconvolution would boost the injection by about tr_obs/tr_int (D-067 addendum)."""
+    e = np.asarray(e, complex)
+    rot = e * np.exp(1j * rng.uniform(0, 2 * np.pi, len(e)))
+    with np.errstate(invalid="ignore"):  # NaN rows stay NaN
+        out = apply_shear(rot, RESPONSIVITY * np.asarray(g, complex))
+    return np.where(np.isfinite(e) & (np.abs(out) < 1.0), out, np.nan + 0j)
 
 
 def radial_shear(x, y, cx: float, cy: float, theta_e: float, r_min: float) -> np.ndarray:
@@ -406,14 +398,18 @@ def cmd_calibrate(args) -> dict:
                 den += pred**2 / prof["err"] ** 2
         r_fit, r_err = num / den, 1.0 / math.sqrt(den)
         chi2 = sum((q["e_t"] - r_fit * q["g_t_pred"]) ** 2 / q["err"] ** 2 for q in rows)
+        # scaled by sqrt(chi2/dof) when the scatter exceeds the shape noise
+        r_err_scaled = r_err * math.sqrt(max(1.0, chi2 / (len(rows) - 1)))
         out["per_zs"][f"{zs:g}"] = {
             "R": r_fit,
             "R_err": r_err,
+            "R_err_scaled": r_err_scaled,
             "chi2": chi2,
             "dof": len(rows) - 1,
             "rows": rows,
         }
-        print(f"z_s={zs}: R = {r_fit:.2f} +- {r_err:.2f}, chi2 {chi2:.1f}/{len(rows) - 1}")
+        dof = len(rows) - 1
+        print(f"z_s={zs}: R = {r_fit:.2f} +- {r_err_scaled:.2f} (scaled), chi2 {chi2:.1f}/{dof}")
     return out
 
 
@@ -496,8 +492,7 @@ def screen_field(name: str, cache: Path, rng: np.random.Generator) -> dict:
             rr = (rmax - r_out) * math.sqrt(rng.uniform())
             aa = rng.uniform(0, 2 * np.pi)
             ix, iy = rr * math.cos(aa), rr * math.sin(aa)
-            gi = RESPONSIVITY * radial_shear(x_all, y_all, ix, iy, te, r_in)
-            ei = galaxy_shapes(sheared_catalogue(g, gi, rng), psf["sigma_px_median"])
+            ei = inject_shapes(e_all, radial_shear(x_all, y_all, ix, iy, te, r_in), rng)
             oi = np.isfinite(ei)
             near = tree.query_ball_point([ix, iy], step)
             am_i = es.ApertureMass(
@@ -565,6 +560,9 @@ def load_survey_field(name: str, cache: Path) -> dict:
         [fetch_tile(t, True, cache) for t, _, _ in tiles],
     )
     psfs = [star_psf(st) if len(st) >= MIN_TILE_STARS else None for st in stars]
+    psfs = [p if p and p["n_stars"] >= MIN_TILE_STARS else None for p in psfs]
+    if not any(psfs):
+        raise RuntimeError(f"{name}: no tile has {MIN_TILE_STARS} usable PSF stars")
     sig_med = float(np.median([p["sigma_px_median"] for p in psfs if p]))
     ra0 = float(np.degrees(np.angle(np.mean(np.exp(1j * np.radians([t[1] for t in tiles]))))))
     dec0 = float(np.mean([t[2] for t in tiles]))
@@ -600,16 +598,6 @@ def load_survey_field(name: str, cache: Path) -> dict:
     }
 
 
-def tile_shapes(cat: Table, rows: np.ndarray) -> np.ndarray:
-    """``galaxy_shapes`` of catalogue rows, each with its own tile's PSF sigma."""
-    out = np.full(len(rows), np.nan + 0j)
-    sig = np.asarray(cat["sig"], float)[rows]
-    for sv in np.unique(sig):
-        m = sig == sv
-        out[m] = galaxy_shapes(cat[rows[m]], float(sv))
-    return out
-
-
 def survey_field(name: str, cache: Path, seed: int) -> dict:
     rng = np.random.default_rng([seed, list(PILOTS).index(name)])
     f = load_survey_field(name, cache)
@@ -619,6 +607,7 @@ def survey_field(name: str, cache: Path, seed: int) -> dict:
     res = {k: f[k] for k in ("centre", "n_tiles", "n_tiles_with_rows", "psf_sigma_px")}
     res |= {"n_gal": len(cat), "n_resolved": int(ok.sum()), "theta_e": {}}
     res["star_e_tiles"] = f["star_e_tiles"]
+    all_tree = cKDTree(np.c_[x_all, y_all])
     for te in SURVEY_THETA_E_ARCSEC:
         r_in, r_out = 1.5 * te, 3.0 * te
         step = GRID_STEP_OVER_THETA_E * te
@@ -635,17 +624,14 @@ def survey_field(name: str, cache: Path, seed: int) -> dict:
         smax = float(np.nanmax(sv))
         thr = float(np.quantile(null, 0.99))  # field-wise 1 % false-alarm threshold (ASSUMPTION)
         tree = cKDTree(np.c_[cx, cy])
-        all_tree = cKDTree(np.c_[x_all, y_all])
         det = []
         for _ in range(N_INJ):
             # off-grid: a random valid centre plus a uniform offset within one grid cell
             k = rng.integers(len(cx))
             ix, iy = cx[k] + rng.uniform(-step, step) / 2, cy[k] + rng.uniform(-step, step) / 2
             rows = np.asarray(all_tree.query_ball_point([ix, iy], r_out + step), int)
-            gi = RESPONSIVITY * radial_shear(x_all[rows], y_all[rows], ix, iy, te, r_in)
-            sub = sheared_catalogue(cat[rows], gi, rng)
-            sub["sig"] = cat["sig"][rows]
-            ei = tile_shapes(sub, np.arange(len(rows)))
+            gi = radial_shear(x_all[rows], y_all[rows], ix, iy, te, r_in)
+            ei = inject_shapes(f["e"][rows], gi, rng)
             oi = np.isfinite(ei)
             near = tree.query_ball_point([ix, iy], step)
             am_i = es.ApertureMass(
@@ -705,13 +691,26 @@ def offsets_to_radec(x: float, y: float, ra0: float, dec0: float) -> tuple[float
     return float(ra % 360.0), float(dec)
 
 
+def _single_thread() -> None:
+    """Pool initializer: one BLAS/OpenMP thread per field process (no oversubscription)."""
+    import os
+
+    os.environ["OMP_NUM_THREADS"] = "1"
+    try:
+        from threadpoolctl import threadpool_limits
+
+        threadpool_limits(1)
+    except ImportError:
+        pass
+
+
 def cmd_survey(args) -> dict:
     """All Q1 Deep Fields (tiles from ``fetch``), one process per field."""
     from concurrent.futures import ProcessPoolExecutor
 
     cache = paths.data_root() / "euclid_q1_shear"
     names = [args.field] if args.field else list(PILOTS)
-    with ProcessPoolExecutor(min(len(names), args.workers)) as ex:
+    with ProcessPoolExecutor(min(len(names), args.workers), initializer=_single_thread) as ex:
         futs = {n: ex.submit(survey_field, n, cache, args.seed) for n in names}
         out = {n: fu.result() for n, fu in futs.items()}
     out["limits"] = density_limits(out, SURVEY_THETA_E_ARCSEC)
@@ -821,7 +820,7 @@ def main(argv: list[str] | None = None) -> int:
     sv = sub.add_parser("survey")
     sv.add_argument("--field", choices=list(PILOTS))
     sv.add_argument("--seed", type=int, default=20261009)
-    sv.add_argument("--workers", type=int, default=3)
+    sv.add_argument("--workers", type=int, default=2)  # 1.5-6 GB peak per field (15 GB host)
     pc = sub.add_parser("pacheck")
     pc.add_argument("-n", type=int, default=25)
     s = sub.add_parser("screen")
@@ -854,7 +853,9 @@ def main(argv: list[str] | None = None) -> int:
                 "responsivity": RESPONSIVITY,
                 "galaxy_selection": GAL_SEL,
                 "star_selection": STAR_SEL,
-                "theta_e_arcsec": THETA_E_ARCSEC,
+                "theta_e_arcsec": (
+                    SURVEY_THETA_E_ARCSEC if args.cmd == "survey" else THETA_E_ARCSEC
+                ),
                 "grid_step_over_theta_e": GRID_STEP_OVER_THETA_E,
                 "aperture_over_theta_e": [1.5, 3.0],
                 "threshold": "99th percentile of the field maximum under shape rotations",
@@ -864,6 +865,10 @@ def main(argv: list[str] | None = None) -> int:
                 "min_efficiency": MIN_EFFICIENCY,
                 "cluster_aperture_arcsec": CLUSTER_APERTURE,
                 "pilot_radius_deg": PILOT_RADIUS_DEG,
+                "survey_field_radius_deg": SURVEY_FIELD_RADIUS_DEG,
+                "coverage_min": COVERAGE_MIN,
+                "min_tile_stars": MIN_TILE_STARS,
+                "injection": "deconvolved shapes rotated, then sheared by R g (inject_shapes)",
                 "seed": getattr(args, "seed", None),
                 "pa_mapping": "PA E of N = position_angle (25 MER VIS cutouts, 4 clusters)",
             },

@@ -4,7 +4,7 @@
   "statistics": "derived",
   "injections": "model_prediction (negative point mass, radial reduced shear)",
   "service": "https://irsa.ipac.caltech.edu/TAP/sync table euclid_q1_mer_catalogue",
-  "run_utc": "2026-10-09T02:17Z",
+  "run_utc": "2026-10-09T04:13Z",
   "first_irsa_access_utc": "2026-10-09",
   "assumptions": {
    "vis_limit": 24.5,
@@ -36,6 +36,10 @@
     600.0
    ],
    "pilot_radius_deg": 0.3,
+   "survey_field_radius_deg": 6.0,
+   "coverage_min": 0.8,
+   "min_tile_stars": 30,
+   "injection": "deconvolved shapes rotated, then sheared by R g (inject_shapes)",
    "seed": null,
    "pa_mapping": "PA E of N = position_angle (25 MER VIS cutouts, 4 clusters)"
   }
@@ -45,6 +49,7 @@
    "0.8": {
     "R": 0.6733640591186837,
     "R_err": 0.11026391661714277,
+    "R_err_scaled": 0.18762285291775468,
     "chi2": 31.849111882849165,
     "dof": 11,
     "rows": [
@@ -173,6 +178,7 @@
    "1": {
     "R": 0.5555821471482179,
     "R_err": 0.09251161164897927,
+    "R_err_scaled": 0.16041945272866243,
     "chi2": 33.07609664366135,
     "dof": 11,
     "rows": [
@@ -301,6 +307,7 @@
    "1.2": {
     "R": 0.49652602919192834,
     "R_err": 0.0834851118425007,
+    "R_err_scaled": 0.14627791646500676,
     "chi2": 33.770084711271956,
     "dof": 11,
     "rows": [

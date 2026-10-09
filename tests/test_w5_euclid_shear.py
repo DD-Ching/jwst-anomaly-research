@@ -92,25 +92,18 @@ def test_density_limits():
     assert np.isclose(lim["60"]["n95_deg2"], 30.0)
 
 
-def test_sheared_catalogue_whole_chain():
+def test_inject_shapes_shears_deconvolved_shapes_by_r():
     rng = np.random.default_rng(3)
-    n = 20000
-    gals = Table(
-        {
-            "semimajor_axis": rng.uniform(3, 6, n),
-            "ellipticity": rng.uniform(0, 0.6, n),
-            "position_angle": rng.uniform(-90, 90, n),
-        }
-    )
+    n = 40000
+    e = rng.uniform(0, 0.4, n) * np.exp(2j * rng.uniform(0, np.pi, n))
+    e[:10] = np.nan
     g = np.full(n, 0.1 + 0j)  # shear along PA 0 (+e1)
-    out = wes.sheared_catalogue(gals, g, rng)
-    e = wes.galaxy_shapes(out, 1.0)
-    e0 = wes.galaxy_shapes(wes.sheared_catalogue(gals, np.zeros(n, complex), rng), 1.0)
-    assert np.nanmean(e.real) > 0.05 and abs(np.nanmean(e0.real)) < 0.01
-    # area kept: a * b unchanged
-    b_in = gals["semimajor_axis"] * (1 - gals["ellipticity"])
-    b_out = out["semimajor_axis"] * (1 - out["ellipticity"])
-    np.testing.assert_allclose(out["semimajor_axis"] * b_out, gals["semimajor_axis"] * b_in)
+    out = wes.inject_shapes(e, g, rng)
+    assert np.isnan(out[:10]).all() and np.isfinite(out[10:]).all()
+    # response in the deconvolved space is R g (to first order), not boosted by the PSF
+    assert abs(np.nanmean(out.real) - wes.RESPONSIVITY * 0.1) < 0.006
+    zero = wes.inject_shapes(e, np.zeros(n, complex), rng)
+    assert abs(np.nanmean(zero.real)) < 0.005  # random rotation removes any real signal
 
 
 def test_density_limits_gated_by_efficiency():
@@ -133,20 +126,6 @@ def test_tile_query_uses_indexed_tileid_and_selection():
     assert wes.STAR_SEL in wes.tile_query(1, star=True)
 
 
-def test_tile_shapes_use_each_rows_psf():
-    cat = Table(
-        {
-            "semimajor_axis": [3.0, 3.0],
-            "ellipticity": [0.3, 0.3],
-            "position_angle": [10.0, 10.0],
-            "sig": [1.0, 2.0],
-        }
-    )
-    e = wes.tile_shapes(cat, np.arange(2))
-    np.testing.assert_allclose(e[0], wes.galaxy_shapes(cat[:1], 1.0)[0])
-    np.testing.assert_allclose(e[1], wes.galaxy_shapes(cat[1:], 2.0)[0])
-
-
 def _synthetic_field(rng, n=6000, half=1500.0, lens=None):
     """Field of random galaxies in a 2 x ``half`` arcsec box, optional radial lens (x, y, θ_E)."""
     x, y = rng.uniform(-half, half, n), rng.uniform(-half, half, n)
@@ -163,13 +142,9 @@ def _synthetic_field(rng, n=6000, half=1500.0, lens=None):
             "tile": np.zeros(n, int),
         }
     )
+    e = wes.galaxy_shapes(cat, 1.0)
     if lens is not None:
-        g = wes.radial_shear(x, y, *lens, 1.5 * lens[2])
-        cat = Table(cat)
-        sh = wes.sheared_catalogue(cat, g, rng)
-        for c in ("semimajor_axis", "ellipticity", "position_angle"):
-            cat[c] = sh[c]
-    e = wes.tile_shapes(cat, np.arange(n))
+        e = wes.apply_shear(e, wes.radial_shear(x, y, *lens, 1.5 * lens[2]))
     return {
         "cat": cat,
         "e": e,
