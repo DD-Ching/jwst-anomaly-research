@@ -39,3 +39,4 @@
 2026-10-09T06:42:19Z queue: START gb7 06:16:51 | 1550/2200 injections, 1384 s
 2026-10-09T06:51:22Z queue: START gb7 06:16:51 | 2000/2200 injections, 1917 s
 2026-10-09T07:00:25Z queue: START gb22 06:54:10 | 1150/2200 injections, 331 s
+2026-10-09T07:09:28Z queue: START gb21 07:06:08 | wrote /home/user/jwst-anomaly-research/data/derived/w3_moa/fits_gb21.ecsv: 38 fits from 1 chunks
