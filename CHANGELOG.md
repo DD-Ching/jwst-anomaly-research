@@ -2,6 +2,27 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: E1 causal event network: no wide-separation dependence between GRBs, neutrinos, GW events and FRBs (D-074)
+- Hypothesis (owner idea 4): events in different directions that depend on each other at lags no ordinary path
+  explains. Ordinary explanations: observer-side common causes (uptime, exposure, Sun, follow-up chains, shared
+  triggers, duplicates).
+- Data (4.7 MB, pinned): Fermi GBM 4,390; ICECAT-1 340; GWTC 391 (no sky positions, so lag only); CHIME/FRB Cat 2
+  3,641 sources. Lag × separation pair counts in 75 cells. Nulls keep declination and hour angle; GBM is shifted in
+  whole orbits.
+- **Five requested channels: family p = 0.28.** All wide/GW cells: pooled family p = 0.0058 (jit) / 0.0033 (jitday).
+  The driver, CHIME–CHIME 1 h–1 d wide (z ≈ 3.9; 5.8 per cell in the post-hoc nominal-flag subset), disappears
+  under a calibrated rate-modulated null (7-day running mean of daily counts, keeps 87 % of an injected signal):
+  z = −0.86. Same-direction CHIME excess: one unflagged six-burst episode (FRB20230825D–I).
+- Positive controls: GBM re-triggers recovered. GW170817 × GRB 170817A is the only GBM–GW pair within 10 s, but
+  blind lag counting gives only p = 0.058 without GW sky maps.
+- Limits (95 %, family-wise 3σ detection, anchors inside the partner's live time) in `results/e1_events/limits.ecsv`.
+- **Failed approaches (rules):**
+  - Observed and scrambled p computed with different rank formulas lost the trials factor beyond the ensemble.
+    Pool the observation with the scrambles.
+  - A "keep each event's day" null removes ~85 % of an injected dependent signal, so it is not a vetting test.
+  - Resampling times with replacement self-pairs events.
+  - The CHIME Cat 2 exposure file (216 MB, downloaded and deleted) has no time axis, so it cannot model uptime.
+
 ## 2026-10-09: D1 handoff: TDCOSMO 2025 per-lens files listed
 - File names in TDCOSMO2025_public d7f38db recorded in SOURCES.md: D_dt chains for the 6 D-073 lenses plus DES0408 and
   WGD2038; new per-lens D_d only inside hierArc likelihoods. Next: TASKS "Now" 0.

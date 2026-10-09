@@ -3422,3 +3422,134 @@ the per-burst low-side DM limits under either single model are optimistic; a bur
 counts as flagged if either model flags it (`frb_ism_compare.ecsv`, `flag_either`). The 20220319D pull is model error
 on a low-latitude sightline (both models exceed its total DM), not a sightline anomaly. Rejected: building NE2001 in
 pygedm (needs a system f2c library; the stored NE2001 values are already the reference).
+
+## D-074 E1 causal event network: lag × separation pair counts across GBM, ICECAT-1, GWTC and CHIME Cat 2 with sidereal-scrambled nulls (2026-10-09)
+
+**Decision.**
+- Hypothesis (owner idea 4): events from different directions are dependent at lags no ordinary path explains.
+  Nodes:
+  - 4,390 GBM bursts (`fermigbrst`);
+  - 340 ICECAT-1 v4 tracks (8 `CR_VETO` dropped);
+  - 391 GWTC events;
+  - 3,641 CHIME/FRB Cat 2 sources (sub-bursts dropped, one node per repeater).
+
+  All are pinned in `data/manifests/e1_events.ecsv`. The CANFAR download worked on the first try this time.
+- Statistic: pair counts per channel (9 channels) × lag bin (0–10 s, 10–100 s, 100 s–1 h, 1 h–1 d, 1–7 d, |Δt|) ×
+  class.
+  - "Same" means sep ≤ 3·σ_comb. "Wide" means sep > 3·σ_comb and > 0.1°.
+  - σ_GBM = stat ⊕ 3.7°. Below an `error_radius` of 0.5° (a position from another instrument, usually 0) it is
+    max(error_radius, 0.05°).
+  - σ_ICECAT = mean 90 % error / 2.146. σ_CHIME = max(ra_err, dec_err).
+  - GW events have no position in the CSV, so GW channels count all pairs (lag only).
+- Nulls, 10⁴ each. All keep Dec and hour angle and permute times within catalogue × calendar year.
+  - `perm`: the time multiset is unchanged, so this null tests only whether separation depends on lag.
+  - `jit` (primary for lag excess): adds an independent shift per event. GBM gets k × 95.6 min orbit ± 5 min within
+    ±3 d, which keeps orbit phase (SAA, occultation); the others get uniform ±3 d.
+  - `jitday` (vetting): the ground instruments and GW shift by whole days.
+- Trials (review finding 1 on PR #112): the observation is pooled with the scrambles. Every row's per-cell p is
+  (#rows ≥ value)/(N + 1), and the global p is the rank of the observed minimum among all rows' minima. This is
+  uniform under H0 (tested). The empirical floor is 1/(N + 1) = 10⁻⁴, which makes the family-wise floor about
+  (cells at the floor)/(N + 1). A family-wise 3σ or 5σ is therefore not reachable empirically (`reachable()`,
+  tested). Such claims use `analytic_p` (Poisson for null mean < 30, else Gaussian with the ensemble sd) ×
+  Bonferroni, a model_prediction, quoted beside the pooled empirical p.
+- Injection (review finding 2): a B event is moved to t_A ± lag (log-uniform in the bin) of a wide-separated A anchor
+  within ±30 d.
+  - Detection: the injected cell's analytic p × 75 cells ≤ 1.35 × 10⁻³ (family-wise 3σ), i.e. per-cell p ≤ 1.8 ×
+    10⁻⁵. The earlier empirical rule (p ≤ 10⁻⁴) was only about 2.7σ family-wise.
+  - Limits: the Poisson classical UL on the count when the null mean is < 30, else obs − q05(null). The rate is UL /
+    min(eff, 1) / N_eligible.
+  - N_eligible counts the A events with a B event within ±30 d, i.e. those inside B's live time (review finding 4).
+  - A cell where no injected n reached 50 % detection has `valid` = False and no rate.
+- Code: `src/jwst_anomaly/event_network.py`, `scripts/e1_events.py`, `scripts/e1_chime_exposure.py`, and
+  `tests/test_event_network.py`. All thresholds are ASSUMPTIONs in `event_network.Params`.
+
+**Alternatives rejected.**
+- Reusing published coincidence-search code. Curtin+2023 (CHIME × GBM/BAT) and Masaoka+2026 (CHIME Cat 2 ×
+  ICECAT-1) publish no code (checked 2026-10-09). Both test *same-direction* coincidences, which is the opposite of
+  E1's wide channel. IceCube/GBM stacking analyses are likewise position-matched. Brainerd+1995 (BATSE
+  time-dependent two-point correlation) is the closest method, but it is a same-direction repeater test. The new
+  quantity is the wide-separation lag CCF, which is a few lines of numpy. No new dependency (`h5py` is used only
+  for the one-off exposure reduction, from a scratch environment).
+- A bootstrap with replacement for the uptime null: duplicated draws make self-pairs at lags < 2·jitter. Rejected.
+- `perm` alone: it preserves every lag, so GW170817 × GRB 170817A gets p = 1 by construction.
+- Ranking the observation with (1 + r)/(N + 1) but the scrambles with r/N. This dropped the trials factor whenever
+  the observation lay beyond the ensemble: it reported 10⁻⁴ where the pooled p is 0.0036. Fixed after review.
+- The in-day null (keep each event's UTC day, redraw the time of day) as an uptime test: it absorbs most of an
+  injected real signal (`chime_vet.json`: 300 injected 1 h–1 d wide pairs give z = 5.6 under `jit` but 0.25 under
+  in-day), so it cannot discriminate uptime from dependence.
+- The CHIME Cat 2 exposure file as an uptime model. It holds two HEALPix nside-4096 maps of *time-integrated*
+  exposure (upper and lower transit, 2018-09-04 to 2023-09-15) and has no time axis. It cannot give a per-day uptime
+  series, and its sky part (Dec dependence) is already preserved by the Dec + hour-angle nulls. It was reduced to
+  `chime_exposure_dec_profile.ecsv` and deleted. No CHIME Cat 2 file with a time-resolved uptime or injection
+  series exists in the CANFAR release (checked: `table/`, `exposure/`, `localizations/`, `dynamic_spectra/`,
+  `additional_figures/`).
+
+**Evidence.** See `results/e1_events/`.
+- Requested five channels (GBM–GBM, GBM–ICECAT, GBM–GW, ICECAT–ICECAT, ICECAT–GW), `jit`: min cell p = 0.014
+  (ICECAT–ICECAT 1 h–1 d wide, 36 vs 25.4 ± 4.4). Trials-corrected p = 0.28. Null.
+- All 9 channels, pooled empirical trials-corrected p:
+  - all 75 cells: 0.0036 (`jit`) and 0.0047 (`jitday`);
+  - wide and GW cells (45): 0.0058 (`jit`) and 0.0033 (`jitday`).
+
+  Beside them, the analytic Bonferroni p over the 45 wide/GW cells is 4.5 × 10⁻³ (`jit`) and 4.5 × 10⁻⁴ (`jitday`,
+  3.3σ). All 75 cells give an analytic 4 × 10⁻¹⁰, but that is CHIME–CHIME *same-direction* (see below).
+- **CHIME–CHIME wide (and all-separation) clustering at 100 s–1 d.**
+  - Status: unexplained under `jit` and `jitday`; the in-day null does not discriminate. **It is reproduced by a
+    calibrated rate-modulated null** (test d below), so it is attributed to smooth (~week-scale) modulation of the
+    CHIME detection rate. The cause of that modulation (uptime or sensitivity) is a hypothesis: no CHIME uptime
+    series exists to confirm it.
+  - Counts: 8,099 vs 7,793 ± 82 at 1 h–1 d (z = 3.7 `jit`, 4.3 `jitday`); 396 vs 329 ± 18 at 100 s–1 h. It is
+    direction-independent: the wide fraction under `perm` is normal (z_perm = −0.7 and −2.5), and the
+    all-separation counts show the same excess.
+  - In the `excluded_flag` = 0 subset (post hoc, 2,000 scrambles) the per-cell z is 5.3 (`jit`) and 5.8 (`jitday`)
+    at 1 h–1 d. The Gaussian Bonferroni over 45 cells is 5.2σ, or 4.96σ including the three post-hoc subsets.
+  - Ordinary-explanation tests on the 1 h–1 d wide cell (`chime_flag_tests.json`, `scripts/e1_chime_flag.py`,
+    1,000 scrambles unless stated):
+    - (a) Busy days.
+      - The 14 busiest days (top 1 %, 107 bursts) touch 578 cell pairs against 206 in scrambles. Dropping them
+        lowers z from 3.9 to 2.9. Dropping the top 5 % lowers it to 2.1, and the top 10 % to 2.8.
+      - A 30-day-block jackknife (63 blocks) keeps z between 3.4 and 4.8. No single month carries the excess.
+    - (b) Epochs and seasons. The excess is present in most years (z = 3.0, 2.7, 1.5, 0.2, 2.2 and 3.0 for 2018–2023)
+      and in both the Catalog 1 period (`catalog1_flag`, z = 3.2) and later (z = 2.9). It is strongest in MAM
+      (z = 3.9; DJF 1.2, JJA 2.2, SON 2.7). It is not a commissioning-only effect.
+    - (c) Property independence.
+      - Cell pairs do not share DM, fluence or S/N more than scrambled pairs do (KS p = 0.55, 0.98 and 0.47).
+      - Dec difference: p = 0.04, but the median differs by only 0.3°, and with 5 properties tested it is not
+        significant.
+      - Sidereal-phase difference: p = 0.09.
+    - (d) Rate-modulated null. Times are redrawn from the catalogue's own 7-day running mean of daily counts
+      (uniform within the day; Dec and hour angle kept).
+      - Calibration: 300 injected 1 h–1 d wide pairs raise the observed count by 190, of which the null absorbs
+        24. It keeps about 87 % of an injected dependent signal.
+      - Data: z = −0.86 (8,099 vs 8,209 ± 128). The jit excess disappears.
+      - A 3-day running mean over-predicts pairs (z = −5.5) because daily counts are under-dispersed (Fano 0.86).
+  - Under the brief's STOP rule (> 5σ trials-corrected under a calibrated rate or exposure null) the full-catalogue
+    cell has z = −0.9 under the calibrated null (d). No STOP.
+- CHIME–CHIME same-direction at 10 s–1 h (12 vs 0.6 pairs at 100 s–1 h). 11 of the 12 pairs are one unflagged
+  same-position episode: FRB20230825D–I, six bursts within 5 min at (347.35°, +48.75°) with DM 221–223 pc cm⁻³ and
+  no `repeater_name`. This is a catalogue effect (one source, six nodes).
+- Positive controls.
+  - GW170817 × GRB 170817A: the only GBM–GW pair at 0–10 s (Δt = 2.07 s trigger − merger; the published onset is
+    1.74 s). The null mean is 0.06, so the blind count gives p = 0.058: a single coincidence is not detectable
+    without sky maps. 50 % detection at family-wise 3σ needs ≥ 3 injected pairs. The GBM row's position lies 1.2″
+    from SSS17a.
+  - GBM re-triggers (GRB 091024, 130925, 150201, 220627, 250702 ×3) appear in the same-direction channel.
+  - CHIME with every repeater burst as a node: same-direction pairs 30 / 120 / 219 / 480 / 2,513 vs perm
+    1.6 / 6.8 / 13.6 / 33 / 195.
+- Orbit, sidereal-day and solar-day lag windows (k = 1–15 orbits, 1–7 days) show no excess (|z| < 2.5).
+- 95 % limits, dependent wide (GW: any-separation) partners per eligible anchor, `limits.ecsv`:
+  - lags ≤ 100 s: 6.8 × 10⁻⁴ (GBM–GBM), 1.0 × 10⁻³ (GBM–ICECAT, 2,910 eligible), 5.1 × 10⁻³ (GBM–GW, 935
+    eligible), 8.8 × 10⁻³ (ICECAT–ICECAT), 4.5 × 10⁻² (ICECAT–GW, 66 eligible), and 0.8–2.8 × 10⁻³ (CHIME
+    cross-channels);
+  - longer lags: 4 × 10⁻³ to 0.75.
+
+  ICECAT–ICECAT 100 s–1 h is not valid: no injected n reached 50 % detection.
+
+**Revisit if.**
+- GW sky maps are added (then GW channels get same/wide classes and GW170817 enters the same-direction channel).
+- A time-resolved CHIME uptime or sensitivity series is published or obtained. It would confirm (or refute) that the
+  rate modulation behind the CHIME flag is instrumental; an exposure-weighted null built from it must keep an
+  injected signal. The 100 s–1 h CHIME cell was not re-tested under the rate-modulated null.
+- A CHIME Cat 2 revision assigns FRB20230825D–I to a repeater.
+- IceTracks-DR2, Swift or Einstein Probe catalogues are added.
+- Signed-lag (precursor) channels are wanted.

@@ -4,6 +4,15 @@ Prioritized queue. Agents pick from **Now** first; in-flight work is visible as 
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
+0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
+   separation. The five requested channels are null (family p = 0.28). The CHIME–CHIME 1 h–1 d wide excess (z ≈ 3.9)
+   is reproduced by a calibrated rate-modulated null (week-scale detection-rate modulation; its cause is a
+   hypothesis). Next:
+   - GW sky maps, so GW channels get directions;
+   - re-test the CHIME 100 s–1 h cell under the rate-modulated null;
+   - a time-resolved CHIME uptime series (only from the collaboration: owner decision);
+   - "which event comes first" and antipodal (> 170°) channels;
+   - IceTracks-DR2, Swift, Einstein Probe.
 0. **D1 distance self-consistency** (D-073; owner idea 1): 4 H0LiCOW lenses (H0-free R) + 6 (leave-one-out D_dt) and 94
    localized FRBs (DM–z tails): null, max pull 1.29σ. Injection-calibrated reach: R only ×2–8 / ×0.2–0.4, D_dt
    ×1.3–1.85 / ×0.54–0.78. FRBs also null under YMW16 (D-073 addendum; max 4.09σ, Galactic-model error). Next: D_dt

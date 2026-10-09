@@ -1050,6 +1050,41 @@ Exploration Program."
 - Fermi GBM Data Tools (GDT), https://astro-gdt.readthedocs.io/projects/astro-gdt-fermi/en/latest/ (docs 2.2.x,
   opened 2026-10-09): TTE, PHAII, RSP, trigdat, poshist, scat, tcat and catalogue finders; no bcat reader listed.
 
+## E1 causal event network: GBM × ICECAT-1 × GWTC × CHIME/FRB Cat 2 (accessed 2026-10-09; D-074)
+
+Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total; event tables only).
+
+- Fermi GBM burst catalogue, HEASARC `fermigbrst` via TAP https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync
+  (columns trigger_name, ra, dec, error_radius, trigger_time, t90, fluence, last_modified), 4,390 rows.
+  Catalogue papers as in "S1 burst twins".
+- IceCube ICECAT-1 v4, Harvard Dataverse doi:10.7910/DVN/SCRUCD, file `IceCube_Gold_Bronze_Tracks.tab`
+  (datafile 7502710, original CSV; the Dataverse md5 cfb7a988cfd2591ba71ab95cd365a3fa matched), 348 tracks
+  (340 after dropping `CR_VETO`). Paper: Abbasi et al. 2023, ApJS 269, 25 (arXiv:2304.01174).
+- GWOSC cumulative GWTC confident event list,
+  https://gwosc.org/api/v2/catalogs/GWTC/events?include-default-parameters=true&format=csv (391 events,
+  GWTC-1 to GWTC-5.0). The CSV has no sky positions; sky maps are in the Zenodo PE releases.
+- CHIME/FRB Catalog 2, CANFAR doi:10.11570/25.0066, `data/table/chimefrbcat2.csv` (4,057,396 bytes). It
+  downloaded at the first attempt on 2026-10-09 (an earlier session's download had been reset by the proxy).
+  Paper: arXiv:2601.09399.
+- CHIME/FRB Catalog 2 exposure, same DOI, `data/exposure/chimefrbcat2_exposure.h5` (216,024,090 bytes, sha256
+  cd8411f92d0ac31bd05dff47f62797638c354444de27a5c056113ca00470d514; `data/manifests/e1_chime_exposure.ecsv`). It
+  holds two HEALPix nside-4096 RING maps of time-integrated exposure (s), upper and lower transit, 2018-09-04 to
+  2023-09-15, with no time axis. It was reduced to `results/e1_events/chime_exposure_dec_profile.ecsv` and deleted.
+  The CANFAR release has no time-resolved uptime file (directories listed 2026-10-09).
+- Positive control: Abbott et al. 2017, ApJL 848, L13 (arXiv:1710.05834): GRB 170817A began 1.74 ± 0.05 s
+  after the GW170817 merger. SSS17a position: Coulter et al. 2017, Science, doi:10.1126/science.aap9811
+  (arXiv:1710.05452).
+- GBM instrument: Meegan et al. 2009, ApJ 702, 791 (arXiv:0908.0450). The ~95.6 min orbital period used for the
+  orbit-phase null is an ASSUMPTION (a ~96 min low-Earth orbit), not taken from that abstract.
+- Prior coincidence searches. Both are same-direction only, and no public code was found on 2026-10-09:
+  - Curtin et al. 2023, ApJ 954, 154 (arXiv:2208.00803): CHIME/FRB × GBM/BAT GRBs, 3σ position overlap,
+    ≤ 1 week;
+  - Masaoka et al. 2026 (arXiv:2603.24983): CHIME Cat 2 × ICECAT-1, best post-trial p = 0.076.
+- Time-dependent two-point correlation of a burst catalogue (a same-direction repeater test): Brainerd et al. 1995,
+  ApJL (arXiv:astro-ph/9501010, doi:10.1086/187784).
+- The antipodal (~176°) BATSE correlation peak is explained by a position-determination bias: Maoz 1994, MNRAS
+  269, L1 (arXiv:astro-ph/9308040).
+
 ## COSMOGRAIL XIX light curves (accessed 2026-10-09; D-072)
 - Millon et al. 2020, A&A 640, A105, arXiv:2002.05736: R-band light curves of 23 lensed quasars, CDS
   J/A+A/640/A105 (https://cdsarc.cds.unistra.fr/ftp/J/A+A/640/A105/, `lcab/*.dat`); delays and redshifts from the

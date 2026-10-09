@@ -1,0 +1,157 @@
+{
+ "provenance": "derived",
+ "events": {
+  "GBM": 4390,
+  "ICECAT": 340,
+  "GW": 391,
+  "CHIME": 3641
+ },
+ "n_perm": 10000,
+ "n_jit": 10000,
+ "tested_cells": 75,
+ "global_perm": {
+  "min_cell_p": 9.999000099990002e-05,
+  "trials_corrected_p": 0.0020997900209979003
+ },
+ "global_jit": {
+  "min_cell_p": 9.999000099990002e-05,
+  "trials_corrected_p": 0.0035996400359964
+ },
+ "global_jit_core_5_channels": {
+  "min_cell_p": 0.014298570142985701,
+  "trials_corrected_p": 0.2776722327767223
+ },
+ "global_jitday": {
+  "min_cell_p": 9.999000099990002e-05,
+  "trials_corrected_p": 0.0046995300469953
+ },
+ "global_jit_wide_and_gw_cells": {
+  "min_cell_p": 0.00019998000199980003,
+  "trials_corrected_p": 0.0057994200579942
+ },
+ "global_jitday_wide_and_gw_cells": {
+  "min_cell_p": 9.999000099990002e-05,
+  "trials_corrected_p": 0.0032996700329967
+ },
+ "injection_detection_p_star": 1.8e-05,
+ "analytic_tail_model_prediction": {
+  "jit": {
+   "n_cells": 45,
+   "min_cell_p": 9.90328176617337e-05,
+   "cell": "CHIME-CHIME 1h-1d wide",
+   "bonferroni_p": 0.004456476794778017,
+   "empirical_pooled_global_p": 0.0057994200579942
+  },
+  "jitday": {
+   "n_cells": 45,
+   "min_cell_p": 9.91256901758211e-06,
+   "cell": "CHIME-CHIME 1h-1d wide",
+   "bonferroni_p": 0.0004460656057911949,
+   "empirical_pooled_global_p": 0.0032996700329967
+  },
+  "jit_all_cells": {
+   "n_cells": 75,
+   "min_cell_p": 5.634597367716648e-12,
+   "cell": "CHIME-CHIME 100s-1h same",
+   "bonferroni_p": 4.2259480257874866e-10,
+   "empirical_pooled_global_p": 0.0035996400359964
+  }
+ },
+ "reachability": {
+  "empirical_floor": 9.999000099990002e-05,
+  "3sigma_one_cell": true,
+  "3sigma_family_bonferroni": false,
+  "5sigma_one_cell": false
+ },
+ "n_jitday": 10000,
+ "positive_control_gw170817": {
+  "gw": "GW170817",
+  "gbm": "bn170817529",
+  "dt_s": 2.0746241323649883,
+  "published_dt_s": 1.74,
+  "gbm_row_sep_from_ngc4993_deg": 0.0003254978114786832,
+  "gbm_row_sigma_deg": 0.05,
+  "note": "GWTC CSV has no sky position, so GW channels are lag-only (class 'all'); the GBM catalogue row for 170817A carries the optical-counterpart position (error_radius = 0)."
+ },
+ "positive_control_chime_repeaters": {
+  "n_events": 4539,
+  "same_obs": [
+   30,
+   120,
+   219,
+   480,
+   2513
+  ],
+  "same_perm_mean": [
+   1.56,
+   6.8,
+   13.6,
+   33.0,
+   194.57
+  ],
+  "same_perm_sd": [
+   1.17,
+   2.99,
+   4.01,
+   7.29,
+   30.37
+  ]
+ },
+ "same_direction_pairs_within_7d": {
+  "GBM-GBM": 1829,
+  "ICECAT-ICECAT": 1,
+  "CHIME-CHIME": 33,
+  "GBM-ICECAT": 149,
+  "CHIME-GBM": 1526
+ },
+ "params": {
+  "lag_edges": [
+   0.0,
+   10.0,
+   100.0,
+   3600.0,
+   86400.0,
+   604800.0
+  ],
+  "n_sigma": 3.0,
+  "min_wide_deg": 0.1,
+  "gbm_sys_deg": 3.7,
+  "gbm_external_deg": 0.5,
+  "gbm_external_sigma_deg": 0.05,
+  "icecat_90_to_sigma": 2.146,
+  "jitter_s": 259200.0,
+  "quantum_s": {
+   "GBM": 5736.0
+  },
+  "orbit_slop_s": 300.0,
+  "orbit_k": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "orbit_half_s": 120.0,
+  "day_k": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "day_half_s": 600.0,
+  "inject_local_days": 30.0
+ }
+}
