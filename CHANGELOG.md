@@ -13,7 +13,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `frb_ism_compare.ecsv`.
 - **Failed route:** `pip install pygedm` fails in the cloud image (its NE2001 extension needs libf2c) and the
   package import fails on current SciPy (`integrate.simps`); built without `ne21c`, `ymw16` imported directly.
-- **Next:** TASKS "Now" 0 (per-lens TDCOSMO D_d; a model-marginalised ISM term).
+- **Next:** TASKS "Now" 0: D_dt leave-one-out on the TDCOSMO 2025 chains (file inventory there; adds DES0408 and
+  WGD2038). A model-marginalised ISM term cannot flag more than the per-model runs (its tail is their average), so it
+  is low value.
 
 ## 2026-10-09: S2 on DES-SN5YR: no flat-kernel term; γ < 0.019 mag per unit T/⟨T⟩ (D-070 addendum)
 - Same chain as D-070 (`scripts/s2_flat_kernel.py --sample des`, `results/s2_flat_kernel/fit_des_*.json`) on the

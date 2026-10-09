@@ -7,10 +7,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 0. **D1 distance self-consistency** (D-073; owner idea 1): 4 H0LiCOW lenses (H0-free R) + 6 (leave-one-out D_dt) and 94
    localized FRBs (DM–z tails): null, max pull 1.29σ. Injection-calibrated reach: R only ×2–8 / ×0.2–0.4, D_dt
    ×1.3–1.85 / ×0.54–0.78. Next: D_dt LOO on the TDCOSMO 2025 power-law chains (commit d7f38db
-   `TDCOSMO_sample/TDCOSMO_data/`, checked 2026-10-09): D_dt without κ_ext for HE0435, PG1115, RXJ1131, WFI2033,
-   B1608 (`B1608_Dtmod_n5e5.dat`), **DES0408** (`power_law_dist_post_no_kext.txt`) and **WGD2038**
-   (`desj2038_pl_nokext_nokin_dt_weight.csv`, weighted) — two lenses H0LiCOW lacks; convolve each with its κ_ext file
-   (`*kext*`, `kappa_powerlaw_*.dat`, `kappahist_*`). Per-lens D_d exists as a file only for SDSS1206; for the others it
+   `TDCOSMO_sample/TDCOSMO_data/`, file names only, checked 2026-10-09): power-law D_dt chains for HE0435, PG1115,
+   RXJ1131, WFI2033 (`nokext`), B1608 (`B1608_Dtmod_n5e5.dat`; columns unchecked), **DES0408** (`power_law_dist_post_no_kext.txt`) and **WGD2038**
+   (`desj2038_pl_nokext_nokin_dt_weight.csv`, weighted) — two lenses H0LiCOW lacks; where a chain excludes κ_ext,
+   convolve with the lens's κ_ext file (`*kext*`, `kappa_powerlaw_*.dat`, `kappahist_*`). Per-lens D_d exists as a file only for SDSS1206; for the others it
    is only inside the hierArc `*_const_processed.pkl` kinematic likelihoods (needs hierArc/lenstronomy). FRBs under YMW16 too (D-073 addendum): null under either model, max 4.09σ (20220319D,
    Galactic-model error); models differ by > 20 % for 54/94, so next is a model-marginalised ISM term (both models).
 1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
