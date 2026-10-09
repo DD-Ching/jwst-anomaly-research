@@ -443,7 +443,7 @@ def name_position_offset(name: str, ra: float, dec: float) -> float:
     return float(np.hypot(ex_ra, ex_dec))
 
 
-_DESIGNATION = re.compile(r"(?:^|[^0-9])(\d{4})\d*(?:\.\d+)?([+-])(\d{2})")
+_DESIGNATION = re.compile(r"(?:^|[^0-9.])(\d{4})\d*(?:\.\d+)?([+-])(\d{2})")  # not decimal degrees
 
 
 def designation_key(name: str) -> str:

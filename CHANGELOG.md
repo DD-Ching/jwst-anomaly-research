@@ -5,10 +5,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-08: D-056 amendment — the LS pair must be the catalogued pair; one entry per lens (W1/W2)
 - `lenscats.pair_match` (moved from D-064's `w12_niq`) now gates the D-056 quasar pair test: a status from an LS image
   pair whose separation differs from the catalogued 2θ_E by > 0.5″ is undecided. Only 115252+004733 changed (LS pair
-  4.18″ vs 3.34″ expected; the cutout shows an 18.1 mag lens galaxy with an unrelated faint pair). 12 pair-decided
-  systems have no catalogued θ_E and stay unchecked; the 3 also in SQLS match (1.88/2.99/2.03″ vs LS 2.00/3.01/2.01″).
+  4.18″ vs 3.34″ expected; the cutout shows an 18.1 mag lens galaxy with an unrelated faint pair). None of the 15
+  pair-decided systems has a catalogued θ_E, so the pipeline checks 0 of 15; a one-off manual check of the 3 also in
+  SQLS matches (1.88/2.99/2.03″ vs LS 2.00/3.01/2.01″). For quads (≥ 3 LS images) only a pair wider than 2θ_E + 0.5″
+  is a mismatch (a fold/cusp pair is closer than 2θ_E); the check applies only to "deflector"/"none" statuses.
 - Same lens listed twice beyond the 3″ merge (MG0414+0534, B2114+022, B2319+052; ~11″ apart): decided systems are
-  grouped by designation within 30″ (ASSUMPTION) and keep the copy with a deflector. Each had counted once as
+  grouped by designation within 30″ (ASSUMPTION; decimal-degree names give no key) over all covered sensitive
+  systems, and a deflector at any copy (decided or not) explains the lens. Each had counted once as
   "deflector" and once as "none".
 - New limits (typical, `derived`): quasar 3/15 < 0.52, radio 0/10 < 0.30, all **3/25 < 0.31**; conservative 0/5 < 0.60
   (were 0.48 / 0.23 / 0.27 / 0.50). No new unexplained system; the 3 CHITAH pairs stay open as before.

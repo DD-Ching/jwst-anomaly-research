@@ -312,7 +312,13 @@ def pair_check(t: Table, images: Table, used_pair, p: Params) -> tuple[np.ndarra
     sens = np.isin(np.asarray(t["selection"]), ("quasar", "radio"))
     sep_cat = np.where(sens & np.isfinite(th) & (th > 0), 2 * th, np.nan)
     match = lenscats.pair_match(images["sep"], sep_cat, p.sep_match)
-    mismatch = np.asarray(used_pair, bool) & np.isfinite(sep_cat) & ~match
+    # a quad's two brightest images are often a fold or cusp pair, closer than 2 theta_E: there
+    # only a pair wider than 2 theta_E (+ tolerance) is not the catalogued system
+    quad = np.asarray(images["n_images"]) >= 3
+    too_wide = np.asarray(images["sep"], float) > sep_cat + p.sep_match
+    wrong = np.where(quad, too_wide, ~match)
+    decided_status = np.isin(np.asarray(t["test_status"]), ("deflector", "none"))
+    mismatch = np.asarray(used_pair, bool) & np.isfinite(sep_cat) & wrong & decided_status
     return sep_cat, mismatch
 
 
@@ -338,7 +344,7 @@ def flags_undecided(t: Table, src: Table, p: Params) -> np.ndarray:
     return np.array(reasons, dtype=object)
 
 
-def dedup_same_lens(t: Table, decided, p: Params) -> tuple[np.ndarray, list[dict]]:
+def dedup_same_lens(t: Table, decided, p: Params, pool=None) -> tuple[np.ndarray, list[dict]]:
     """One entry per lens among the decided systems. Catalogues list some lenses twice beyond
     the merge radius (lenscat: MG0414+0534 about 11'' apart); copies share a designation
     (``lenscats.designation_key``) within ``same_lens_radius``. Kept: a copy with a deflector (a
@@ -346,7 +352,10 @@ def dedup_same_lens(t: Table, decided, p: Params) -> tuple[np.ndarray, list[dict
     (the catalogues give no lens-galaxy position to prefer one). Returns the new decided mask and
     the merged groups."""
     keep = np.asarray(decided, bool).copy()
-    idx = np.flatnonzero(keep)
+    # copies are found among all ``pool`` systems (covered and sensitive), so a deflector seen at
+    # an undecided copy still explains the decided "none" copy of the same lens
+    pool = keep if pool is None else (np.asarray(pool, bool) | keep)
+    idx = np.flatnonzero(pool)
     lab = lenscats.same_lens_groups(
         np.asarray(t["name"])[idx],
         np.asarray(t["ra"], float)[idx],
@@ -358,16 +367,21 @@ def dedup_same_lens(t: Table, decided, p: Params) -> tuple[np.ndarray, list[dict
     merged = []
     for g in np.unique(lab):
         m = idx[lab == g]
-        if len(m) < 2:
+        if len(m) < 2 or not keep[m].any():
             continue
         defl = m[status[m] == "deflector"]
-        k = defl[0] if len(defl) else m[0]
+        dec = m[keep[m]]
+        if len(defl):  # the lens has a visible deflector: keep one decided deflector copy, if any
+            dd = dec[status[dec] == "deflector"]
+            k = dd[0] if len(dd) else -1
+        else:
+            k = dec[0]
         keep[m[m != k]] = False
         merged.append(
             {
-                "name": str(t["name"][k]),
-                "kept": str(sid[k]),
-                "kept_status": str(status[k]),
+                "name": str(t["name"][k if k >= 0 else m[0]]),
+                "kept": str(sid[k]) if k >= 0 else "",  # "": deflector only at an undecided copy
+                "kept_status": str(status[k]) if k >= 0 else "",
                 "dropped": [f"{sid[j]} ({status[j]})" for j in m if j != k],
             }
         )
@@ -665,7 +679,7 @@ def cmd_vet(args, p: Params) -> None:
     decided = cov & sens & (np.asarray(res["undecided"]) == "")
     decided &= np.isin(res["test_status"], ("deflector", "none"))  # "faint galaxy" undecided
     n_before_dedup = int(decided.sum())
-    decided, same_lens = dedup_same_lens(res, decided, p)
+    decided, same_lens = dedup_same_lens(res, decided, p, pool=cov & sens)
     cand = res[decided & (res["test_status"] == "none")]
     add_xmatch(cand, p)
     used = np.asarray(res["used_pair"], bool)

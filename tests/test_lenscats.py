@@ -253,6 +253,7 @@ def test_pair_match():
 def test_designation_key_and_same_lens_groups():
     assert lenscats.designation_key("MG0414+0534") == "0414+05"
     assert lenscats.designation_key("B2114+022*") == "2114+02"
+    assert lenscats.designation_key("DESI-049.7700-49.3639") == ""  # decimal degrees: no key
     assert lenscats.designation_key("SDSS J1322+1052") == "1322+10"
     assert lenscats.designation_key("221216-010345") == "2212-01"
     assert lenscats.designation_key("[SML2019] MJV16999") == ""
