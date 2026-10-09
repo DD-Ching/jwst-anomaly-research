@@ -306,4 +306,24 @@ def test_range_reader_checks_status_range_and_pinned_size():
         with pytest.raises(OSError, match=match):
             _reader(resp).read(0, 10)
     small = _Resp(200, b"y" * 50, {"Content-Length": "50"})
-    assert _reader(small).read(0, 10) == b"y" * 10
+    assert _reader(small, total=50).read(0, 10) == b"y" * 10
+    with pytest.raises(OSError, match="pinned"):  # e.g. an HTML error page for a pinned tar
+        _reader(small).read(0, 10)
+
+
+def test_truncated_source_raises_instead_of_looping(tmp_path):
+    from jwst_anomaly import moa_stream
+
+    path = _big_tar(tmp_path)
+    total = path.stat().st_size
+    cut = tmp_path / "cut.tar"
+    cut.write_bytes(path.read_bytes()[: total // 2 + 700])  # ends inside a member
+    reader = moa_stream.RangeReader(path=cut)
+    with pytest.raises(OSError, match="truncated"):
+        for a, b in moa_stream.segments(0, total, 1536):
+            moa_stream.read_segment(reader, a, b, total)
+
+
+def test_light_curve_with_a_leading_blank_line_is_parsed():
+    cols = moa.parse_lightcurve(("\n" + LC).encode())
+    assert cols["HJD"].size == 4

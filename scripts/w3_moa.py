@@ -848,6 +848,9 @@ def merge_chunks(n: int) -> Path:
 REPEAT_S = 6.0  # ASSUMPTION: a second deficit this significant outside the feature = variable star
 NEIGHBOUR_PX = 12.0  # ASSUMPTION: Cut-0 objects within 12 px (7″, ~3.5 seeing FWHM) share flux
 BASELINE_CHI2 = 2.0  # D-057/D-062 fixed threshold; used only when no field calibration is set
+# Version of the vetting + injection chain; bump on ANY pre-screen, fit or vetting change, so that
+# `limit` and `combine` refuse injections and limit tables of an older chain (scripts/CLAUDE.md).
+CHAIN_VERSION = "2026-10-09.1"  # D-068: injections vetted against the injected source flux
 BASELINE_Q = 0.95  # ASSUMPTION (D-068): threshold = this quantile of the field's quiet χ²/dof
 NEIGHBOUR_S = 5.0  # ASSUMPTION: |S| of a neighbour's notch over the same window = shared feature
 MIN_FEATURE_NIGHTS = 3  # ASSUMPTION: nights with epochs inside the exotic feature
@@ -1451,12 +1454,16 @@ def gaia_rp_mags(ra, dec) -> tuple[np.ndarray, str]:
 
     pos = Table({"ra": np.asarray(ra, float), "dec": np.asarray(dec, float)})
     pos["idx"] = np.arange(len(pos))
-    try:
-        m = XMatch.query(cat1=pos, cat2="vizier:I/355/gaiadr3",
-                         max_distance=REF_MATCH_ARCSEC * u.arcsec, colRA1="ra",
-                         colDec1="dec")  # fmt: skip
-    except Exception as exc:  # noqa: BLE001
-        return out, f"query failed: {exc!r}"[:200]
+    for attempt in range(3):  # a rate-limited query is retried, never recorded as a pass
+        try:
+            m = XMatch.query(cat1=pos, cat2="vizier:I/355/gaiadr3",
+                             max_distance=REF_MATCH_ARCSEC * u.arcsec, colRA1="ra",
+                             colDec1="dec")  # fmt: skip
+            break
+        except Exception as exc:  # noqa: BLE001
+            if attempt == 2:
+                return out, f"query failed: {exc!r}"[:200]
+            time.sleep(10.0 * (attempt + 1))
     m.sort("angDist")
     for row in m[::-1]:  # nearest written last
         if np.isfinite(float(row["RPmag"])):
@@ -1535,6 +1542,11 @@ def run_vet(procs: int) -> Path:
         o["tests"].append(("variable_catalogues", not hits, f"matches: {hits or 'none'} (2″)"))
         if failed:
             o["tests"].append(("variable_catalogues_failed", True, f"queries failed: {failed}"))
+            o["complete"] = False
+        dophot = float(pos[o["event_id"]]["dophot_magnitude"])
+        if rp_note.startswith("query failed") and not np.isfinite(dophot):
+            # the source-flux bound fell back to the lenient default: not a complete vetting
+            o["tests"].append(("reference_flux_failed", True, rp_note))
             o["complete"] = False
         o["survives"] = all(ok for _, ok, _ in o["tests"])
     path = out_dir() / f"vetting_{FIELD}.json"
@@ -1683,7 +1695,9 @@ def _inject_worker(job):
         row.update(flagged=False, survives=False, failed_test="")
         if row["cut0"] and row["prescreen"] and not prm.get("prescreen_only"):
             t1 = time.time()
-            d = {"event_id": eid, "ra": prm["ra"], "dec": prm["dec"]}
+            # The injected source magnitude is the reference flux of the source-flux bound, as
+            # the DoPHOT or Gaia magnitude is for a real object (D-068; stricter: no blend light).
+            d = {"event_id": eid, "ra": prm["ra"], "dec": prm["dec"], "ref_mag": prm["Is"]}
             o = vet_one((d, t, f2, sf, ax, {k: scan[k] for k in SCAN_KEYS}, [], False, None))
             row["flagged"] = bool(o["tests"][0][1])
             row["survives"] = bool(o["survives"])
@@ -1759,6 +1773,7 @@ def run_inject(
         wall_time_s=round(time.time() - t1, 1),
         seed=seed,
         is_sampling=sampling,
+        chain=CHAIN_VERSION,
         baseline_chi2=baseline_threshold(),
         n_carriers=len(arrays),
     )
@@ -1818,6 +1833,9 @@ def run_limit(efficiency_only: bool = False) -> Path:
     inj = Table.read(out_dir() / f"injections_{FIELD}.ecsv")
     if not no_error(inj).all():  # dropping them would bias the efficiency upward
         raise SystemExit(f"{int((~no_error(inj)).sum())} injections failed; rerun inject")
+    if inj.meta.get("chain") != CHAIN_VERSION:
+        chain = inj.meta.get("chain")
+        raise SystemExit(f"injections from chain {chain}, not {CHAIN_VERSION}; rerun inject")
     sampling = inj.meta.get("is_sampling", "uniform")
     ns = field_star_counts()
     n_s, n_lo = ns["n_s"], ns["n_s_low"]
@@ -1871,6 +1889,7 @@ def run_limit(efficiency_only: bool = False) -> Path:
         n_s_source=ns["n_s_source"],
         baseline_chi2=inj.meta.get("baseline_chi2"),
         is_sampling=sampling,
+        chain=CHAIN_VERSION,
         assumptions=(
             f"N_s = {n_s:.3g} (range {n_lo:.3g}–{ns['n_s_high']:.3g}) monitored stars, "
             f"10 ≤ I ≤ 21.4 ({ns['n_s_source']}); T = {years:.2f} yr; LF ∝ 10^({LF_SLOPE} I) "
@@ -1904,6 +1923,10 @@ def run_combine() -> Path:
     if not files:
         raise SystemExit("no per-field limit tables in results/w3_moa/")
     tabs = [Table.read(p) for p in files]
+    chains = {p.name: t.meta.get("chain") for p, t in zip(files, tabs, strict=True)}
+    stale = [name for name, c in chains.items() if c != CHAIN_VERSION]
+    if stale:  # a combined limit must not mix vetting chains
+        raise SystemExit(f"limit tables from an older chain (rerun inject + limit): {stale}")
     rows = []
     for te in INJ_TE:
         for rho in INJ_RHO:

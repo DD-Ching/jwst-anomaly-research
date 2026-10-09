@@ -3177,7 +3177,7 @@ efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049
 - Euclid DR1 (≈ 2000 deg², PSF-corrected shapes) is public: the same code scales by tile.
 - A flag appears, or per-tile star ellipticity gradients show radial patterns on 1–12′ scales.
 
-## D-068 W3 MOA-II: calibrated variable-baseline test, LF-drawn injections and a streaming per-field pipeline; gb22 re-run null (2026-10-08)
+## D-068 W3 MOA-II: calibrated variable-baseline test, LF-drawn injections and a streaming per-field pipeline; six fields null, limits withdrawn pending the corrected chain (2026-10-08, amended 2026-10-09)
 
 **Decision.**
 - The variable-baseline vetting test's threshold is the 95th percentile (ASSUMPTION, `BASELINE_Q`) of the field's
@@ -3191,6 +3191,18 @@ efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049
   are pinned by per-range sha256 in the manifest.
 - gb22 re-run: same 30 flags as D-062, 0 survivors; Γ₉₅ ≈ 1.1–3.3 × 10⁻⁶ per star per year at t_E = 10–300 d,
   4–7 × 10⁻⁶ at 3 d (docs/exotic_limits.md "Calibrated re-run of gb22"). Supersedes D-062's limit numbers.
+  **Amendment 2026-10-09: withdrawn** with every limit of this PR, see below.
+- Six fields (gb11, gb16, gb19, gb20, gb21, gb22; 296,618 Cut-0 light curves) streamed and vetted: 234 flags,
+  **0 survivors** (docs/exotic_limits.md "Six fields"). New vetting tests `exotic_in_domain`, `smooth_dip`,
+  `feature_bracketed`, `step_ramp`.
+- **Injections are vetted against the injected source magnitude** as the reference flux of `exotic_in_domain`'s
+  source-flux bound (f_s ≤ 3 × reference). Before 2026-10-09 they got the lenient 14.2 mag default while real flags
+  got their DoPHOT / Gaia magnitude, so efficiencies, and all per-field and combined limits, were biased high; the
+  tables were removed. `CHAIN_VERSION` tags injection and limit tables; `limit` and `combine` refuse another
+  version (bump it on any pre-screen, fit or vetting change).
+- `fit`, `vet`, `inject` and `run-field` refuse to run without MulensModel (without it, the parallax refit and the
+  binary-lens test were skipped silently). A failed Gaia XMatch is retried and, if it still fails, marks flags
+  without a DoPHOT magnitude incomplete instead of passing them on the lenient default.
 
 **Alternatives rejected.**
 - Fixed χ²/dof > 2: 35 % of quiet carriers exceed it from the red noise of difference photometry alone; it was the
@@ -3201,6 +3213,10 @@ efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049
 **Evidence.** The HTTP stream reproduces the D-062 pre-screen of gb22 exactly (81 s vs 203 s from the local tar);
 the fixed-width IPAC parser is bit-identical to the token parser on 15,461 gb21 light curves; gb21 test throughput
 258 light curves/s (72 MB/s, 4 cores). 103 / 2,000 W3 injections recovered, 0 / 200 PSPL controls.
+
+**Evidence (2026-10-09).** `/code-review` of the PR diff found the injection reference-flux gap; a unit test now
+checks that injections carry `ref_mag = I_s`. A fresh cloud venv without the `mulens` extra re-vetted gb11 without
+the binary-lens test (no error), which is how the silent skip was found.
 
 **Revisit if.** A field's quiet χ²/dof distribution is bimodal or its 95th percentile exceeds ~10 (the quantile then
 admits variables); the archive stops honouring range requests; a survivor appears (stop, /vet-candidate, owner).

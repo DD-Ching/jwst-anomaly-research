@@ -9,9 +9,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    `feature_coverage`). **The published samples cannot limit W3:** 0 of 600 injected W3 events pass the emulated Mróz
    selection (PSPL controls 15–43 %), so the chunk re-fits only re-test a selection that excludes the signal. Next:
    light curves from **before** a PSPL selection. **MOA-II 9-year Cut-0 light curves keep W3 (D-062):** gb22
-   null (30 flags, 0 survive); D-068 re-run with the calibrated baseline test and 200 LF-drawn injections per cell:
-   Γ₉₅ ≈ 1.1–3.3 × 10⁻⁶ per star per yr (t_E 10–300 d; 4–7 × 10⁻⁶ at 3 d). Next: stream the Nunota et al. 2024
-   Table 1 fields, smallest first (`w3_moa.py --field gbN run-field`; gb21, gb20, gb19 …), then `combine`. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
+   null (30 flags, 0 survive). **D-068: six fields streamed (gb11, gb16, gb19–gb22; 296,618 light curves), 234 flags,
+   0 survive; limits withdrawn** (injections had a lenient source-flux bound). Next: re-run `w3_moa.py --field gbN
+   run-field` (injections + limit, ~20 min per field on 4 cores; pre-screen and fits are tracked) for the six
+   fields, then `combine`; then stream more Nunota et al. 2024 Table 1 fields (gb15 32.8 GB, gb7, gb12 …). Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
    injections both selected and flagged; one real flag, not a candidate). Next: Gaia DR3 variables with epoch
    photometry (vari_summary; check by injection whether W3 survives the variability classifier first), KMTNet
    public seasons, OGLE EWS (owner decision, terms). Optional:

@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: W3 MOA-II six fields null; limits withdrawn after review (D-068, #95)
+- Cloud runs streamed gb11, gb16, gb19, gb20, gb21 and gb22 (296,618 Cut-0 light curves; no tar on disk): 234 flags,
+  **0 survive** (vetting records for gb20-R-4-0-49379 and gb19-R-4-4-31159; gb11 contact sheet inspected: eclipse
+  dips, repeated deficits, unsampled features). New tests: `exotic_in_domain`, `smooth_dip`, `feature_bracketed`,
+  `step_ramp`. `derived`.
+- **Limits withdrawn:** `/code-review` found that injections were vetted against the lenient 14.2 mag default
+  reference flux, while real flags used their own magnitude, so efficiencies were biased high. Injections now use
+  I_s; `CHAIN_VERSION` makes `limit`/`combine` refuse old tables. Other fixes: a truncated tar looped forever in
+  `read_segment`; a 200 reply skipped the size pin; the Gaia XMatch is retried, and a failure marks flags incomplete.
+- **Failed approaches (rules):** a fresh cloud venv without the `mulens` extra skipped the parallax and binary-lens
+  tests silently (the stages now refuse to run); `pkill -f` killed the calling shell again (kill by PID).
+- **Handoff / next:** a run that died at 03:16 left gb11's injections unfinished; it was taken over at 05:12. Re-run
+  `w3_moa.py --field gbN run-field` for the six fields (injections + limit, ~20 min each), then `combine`, in a new
+  `[field: W3 MOA-II limits]` PR; then more Nunota Table 1 fields.
+
 ## 2026-10-09: W5/W1 Euclid Q1 radial-shear survey: all Deep Fields (60 deg²) null; R calibrated (D-067)
 - Hypothesis as D-066 (negative mass shears background galaxies radially). Ordinary radial patterns: PSF-anisotropy
   gradients, blends, tile edges; known clusters must give the opposite (tangential) sign.

@@ -1038,6 +1038,10 @@ dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no pu
 ### Calibrated re-run of gb22 and the streaming pipeline (D-068)
 
 The pilot numbers above are superseded by this re-run (same real-data result, stricter injections).
+**Its limit table below is withdrawn too** (2026-10-09 review, D-068): injections were vetted against the default
+14.2 mag reference flux, so the source-flux bound of `exotic_in_domain` (added after this run) was off for them while
+it applied to real flags. The efficiencies, and every per-field and combined limit made before `CHAIN_VERSION`
+2026-10-09.1, are biased high. The real-data null stands.
 
 - **Variable-baseline test, calibrated.** Threshold = 95th percentile (ASSUMPTION, `BASELINE_Q`) of the χ²/dof
   about a constant of the field's quiet light curves (1,458 in gb22: median 1.68, 35 % above the old fixed 2.0),
@@ -1067,6 +1071,23 @@ The pilot numbers above are superseded by this re-run (same real-data result, st
   ranges (the parent holds no light-curve bytes; an earlier design was OOM-killed on gb21). gb22 by HTTP: 81 s
   (203 s from the local tar); gb21 test: 258 light curves/s, 72 MB/s on 4 cores. Streamed tars are pinned by the
   sha256 of each 64 MiB range (manifest rows). No whole tar is written to disk (cloud-disk decision).
+
+### Six fields: gb11, gb16, gb19, gb20, gb21, gb22 (D-068)
+
+- **Real data** (`derived`; `results/w3_moa/vetting_gb*.json`; the gb11 contact sheet inspected): 296,618 Cut-0
+  light curves streamed (gb11 64,090; gb16 64,353; gb19 53,861; gb20 52,005; gb21 43,710; gb22 18,599), 234 flags,
+  **0 survive** the vetting chain. The two flags that survived longest have vetting records:
+  `docs/candidates/gb20-R-4-0-49379.md` (slow dimming of a red giant, outside the exotic domain) and
+  `docs/candidates/gb19-R-4-4-31159.md` (one-sided season-boundary step). Most flags fail the repeated-deficit,
+  bracketing, neighbour and eclipse-dip tests (eclipsing binaries and shared-epoch systematics).
+- **Vetting tests added in this run** (each re-run on every field and in the injections): `exotic_in_domain`
+  (u₀ < 2 and f_s ≤ 3 × the DoPHOT / Gaia DR3 RP reference flux; a far-field fit with cancelling f_s and f_b mimics
+  any dip), `smooth_dip` (Gaussian dimming), `feature_bracketed` (≥ 20 baseline epochs before ingress and after
+  egress) and `step_ramp` (level change plus ramp).
+- **Limits: pending the corrected-chain re-run.** Injections now use the injected source magnitude as the
+  reference flux (stricter than a real object's DoPHOT magnitude, which includes blend light), and `limit` /
+  `combine` refuse tables of an older `CHAIN_VERSION`. The withdrawn old-chain combined value (4 fields, Γ₉₅ ≈
+  1.5–5 × 10⁻⁷ per star per year) must not be quoted.
 
 ### All 22 fields (next)
 

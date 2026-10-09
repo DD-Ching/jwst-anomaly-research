@@ -296,7 +296,7 @@ def _parse_tokens(raw: bytes, columns=None) -> dict[str, np.ndarray] | None:
             names = [h.strip().decode() for h in raw[pos:end].strip().strip(b"|").split(b"|")]
         pos = end + 1
     if names is None:
-        raise ValueError("no IPAC header")
+        return None  # e.g. a leading blank line: the line parser finds the header anywhere
     toks = raw[pos:].split()
     nc = len(names)
     if not toks or len(toks) % nc:
