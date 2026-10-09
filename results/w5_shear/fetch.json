@@ -4,7 +4,7 @@
   "statistics": "derived",
   "injections": "model_prediction (negative point mass, radial reduced shear)",
   "service": "https://irsa.ipac.caltech.edu/TAP/sync table euclid_q1_mer_catalogue",
-  "run_utc": "2026-10-09T02:58Z",
+  "run_utc": "2026-10-09T04:32Z",
   "first_irsa_access_utc": "2026-10-09",
   "assumptions": {
    "vis_limit": 24.5,
