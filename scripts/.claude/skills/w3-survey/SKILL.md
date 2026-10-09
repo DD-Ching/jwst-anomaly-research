@@ -67,6 +67,9 @@ PSPL bumps. MOA adds shared-epoch tests (field- and chip-wide Poisson), a neighb
 - A far-field exotic fit (u0 ≫ 1) with cancelling giant fs/fb can mimic any smooth dip — require the fit domain
   and a physical source flux (`exotic_in_domain`: u0 < 2, f_s ≤ 3 × DoPHOT or Gaia RP reference) and test a smooth
   Gaussian dip (`smooth_dip`); gb20-R-4-0-49379 (a red giant's ~270-d dimming) passed every other test.
+- An exotic feature must be bracketed by baseline on both sides; a one-sided step or secular change is not an umbra
+  crossing (`feature_bracketed`, ≥ 20 epochs each side; `step_ramp`, a level change plus ramp with free t_s):
+  gb19-R-4-4-31159 (a season-boundary step that never recovers) passed every other test.
 - Uniform injection magnitudes re-weighted to the luminosity function leave n_eff ≈ 20–25 of 60: draw them from
   the LF (`--sampling lf`).
 - Streaming: a parent that downloads ranges and ships bytes to workers was OOM-killed (8–14 GB); each worker reads
