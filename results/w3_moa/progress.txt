@@ -73,3 +73,4 @@
 2026-10-09T11:50:11Z queue: START gb17 11:38:59 procs 4 |   84938 light curves, 120/s, 64 MB/s, CPU 99 %, retries 1
 2026-10-09T11:59:15Z queue: START gb17 11:38:59 procs 4 | 50/85 fitted, 289 s
 2026-10-09T12:08:18Z queue: STOP gb17 12:06:09 | gb17: flags survive every test: ['gb17-R-6-1-3829'] — stop and report
+2026-10-09T12:17:21Z queue: START gb17-inject 12:15:57 procs 4 |
