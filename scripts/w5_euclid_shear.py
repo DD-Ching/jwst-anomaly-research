@@ -564,25 +564,20 @@ def load_survey_field(name: str, cache: Path) -> dict:
     if not any(psfs):
         raise RuntimeError(f"{name}: no tile has {MIN_TILE_STARS} usable PSF stars")
     sig_med = float(np.median([p["sigma_px_median"] for p in psfs if p]))
-    ra0 = float(np.degrees(np.angle(np.mean(np.exp(1j * np.radians([t[1] for t in tiles]))))))
+    ra0 = float(np.degrees(np.angle(np.mean(np.exp(1j * np.radians([t[1] for t in tiles]))))) % 360)
     dec0 = float(np.mean([t[2] for t in tiles]))
-    cols = {"ra": [], "dec": [], "e": [], "sig": [], "tile": []}
-    for (tid, _, _), g, p in zip(tiles, gals, psfs, strict=True):
+    cols = {"ra": [], "dec": [], "e": []}
+    for g, p in zip(gals, psfs, strict=True):
         if not len(g):
             continue
         sig = p["sigma_px_median"] if p else sig_med
         cols["ra"].append(np.asarray(g["ra"], float))
         cols["dec"].append(np.asarray(g["dec"], float))
         cols["e"].append(galaxy_shapes(g, sig))
-        cols["sig"].append(np.full(len(g), sig))
-        cols["tile"].append(np.full(len(g), tid))
-    cat = Table({k: np.concatenate(v) for k, v in cols.items() if k != "e"})
-    for c in ("ellipticity", "position_angle", "semimajor_axis"):
-        cat[c] = np.concatenate([np.asarray(g[c], float) for g in gals if len(g)])
-    e = np.concatenate(cols["e"])
-    x, y = tangent_plane(cat["ra"], cat["dec"], ra0, dec0)
+    ra, dec, e = (np.concatenate(cols[k]) for k in ("ra", "dec", "e"))
+    x, y = tangent_plane(ra, dec, ra0, dec0)
     return {
-        "cat": cat,
+        "n_gal": len(e),
         "e": e,
         "x": x,
         "y": y,
@@ -601,11 +596,11 @@ def load_survey_field(name: str, cache: Path) -> dict:
 def survey_field(name: str, cache: Path, seed: int) -> dict:
     rng = np.random.default_rng([seed, list(PILOTS).index(name)])
     f = load_survey_field(name, cache)
-    cat, x_all, y_all = f["cat"], f["x"], f["y"]
+    x_all, y_all = f["x"], f["y"]
     ok = np.isfinite(f["e"])
     x, y, e = x_all[ok], y_all[ok], f["e"][ok]
     res = {k: f[k] for k in ("centre", "n_tiles", "n_tiles_with_rows", "psf_sigma_px")}
-    res |= {"n_gal": len(cat), "n_resolved": int(ok.sum()), "theta_e": {}}
+    res |= {"n_gal": f["n_gal"], "n_resolved": int(ok.sum()), "theta_e": {}}
     res["star_e_tiles"] = f["star_e_tiles"]
     all_tree = cKDTree(np.c_[x_all, y_all])
     for te in SURVEY_THETA_E_ARCSEC:

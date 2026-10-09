@@ -1296,6 +1296,8 @@ median sigma); statistics **derived**; injections **model_prediction**.
 - **Injections** (40 per field and θ_E, off-grid, whole chain: shear R g applied to the observed moments of every
   catalogue row, then the resolved cut and PSF deconvolution; R = 0.5 ASSUMPTION): efficiency 0.05 / 0.18 at 30″,
   0.88 / 1.0 at 60″, 1.0 / 1.0 at 120″ (EDF-F / EDF-S).
+- *Superseded (D-067): these injections sheared the observed moments before the deconvolution, ~1.6× over R, so the
+  efficiencies and limits below are optimistic; `screen.json` is from that chain. The survey below replaces them.*
 - **Limits** (95 %, Poisson, derived; quoted only where every field's efficiency ≥ 0.5): n₉₅ ≈ **8.1 deg⁻² at
   θ_E = 1′** (effective area 0.37 deg²) and **12 deg⁻² at 2′** (0.25 deg²); no limit at 30″. The D-063 count floor was θ_E ≈ 6′, so shapes open 1–6′.
 - Limitations: R is assumed (a cluster-mass calibration of R is next); 0.6 deg² of 63 deg²; EDF-N not fetched
@@ -1312,9 +1314,9 @@ pilot; PSF sigma per tile from its stars (field median when < 30 stars).
   (0.67 ± 0.19 at 0.8, 0.50 ± 0.15 at 1.2; single source plane, ASSUMPTION); errors scaled by √(χ²/dof), χ² = 33/11
   (unscaled ± 0.09). Member dilution and miscentring bias R low. The assumed R = 0.5 stays (within
   the D-066 30 % revisit bound) and is conservative.
-- **Survey:** 4.6 M rows, 2.9 M resolved galaxies; θ_E = 1′, 2′, 4′ (30″ dropped: blind); centres where the
-  1.5–3 θ_E annulus holds ≥ 0.8 × the field median count (ASSUMPTION); field-wise 1 % thresholds S = 4.4–5.3 from
-  200 rotations. Field maxima S = 3.3–4.4 (p_random 0.21–0.81): **0 flags in any field at any θ_E**.
+- **Survey:** 4.78 M rows (4.60 M galaxies, 2.9 M resolved); θ_E = 1′, 2′, 4′ (30″ dropped: blind); centres where the
+  1.5–3 θ_E annulus holds ≥ 0.8 × the field median count (ASSUMPTION); field-wise 1 % thresholds S = 4.3–5.1 from
+  200 rotations. Field maxima S = 3.3–4.4 (p_random 0.22–0.81): **0 flags in any field at any θ_E**.
 - **Known mass, whole chain:** at the 3 SZ clusters with valid centres, 8 of 9 S values are negative (tangential;
   −5.24 at ACT-CL J0405.9-4915 for θ_E = 4′ is the EDF-S minimum); the exception is +0.16 (PSZ2 G255.60-46.18 at 1′).
 - **Injections** (40 per field and θ_E, off-grid, R = 0.5): the deconvolved shapes of the rows near the centre are
@@ -1330,4 +1332,4 @@ pilot; PSF sigma per tile from its stars (field median when < 30 stars).
   8–32′) negative point masses now have a limit from θ_E = 2′ to 32′.
 - Limitations: shapes are SExtractor moments, not a shear catalogue; one effective z_s; PSF-anisotropy gradients
   untested (per-tile star means are in `survey.json` for that check); blends untested; θ_E ≤ 1′ not limited;
-  the injection keeps each galaxy's resolved flag (the shear's change of size is second order).
+  the injection keeps each galaxy's resolved flag (a shear changes the size by ≲ |g||ε|; D-067 rule exception).

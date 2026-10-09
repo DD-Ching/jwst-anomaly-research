@@ -7,8 +7,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   gradients, blends, tile edges; known clusters must give the opposite (tangential) sign.
 - **R = 0.56 ± 0.16** (z_s = 1, scaled by √(χ²/dof); 0.50–0.67 for z_s = 0.8–1.2) from the 4 SZ clusters against
   NFW haloes of their M500: the assumed R = 0.5 is consistent.
-- **All 344 Q1 tiles of EDF-F/S/N** fetched by `tileid` (4.6 M rows, 25 min) and screened at θ_E = 1′, 2′, 4′:
-  **0 flags** (field maxima S = 3.3–4.4 against thresholds 4.4–5.3); known clusters 8/9 negative (EDF-S minimum is
+- **All 344 Q1 tiles of EDF-F/S/N** fetched by `tileid` (4.78 M rows, 4.60 M of them galaxies; 25 min) and screened at θ_E = 1′, 2′, 4′:
+  **0 flags** (field maxima S = 3.3–4.4 against thresholds 4.3–5.1); known clusters 8/9 negative (EDF-S minimum is
   ACT-CL J0405.9-4915). Injection efficiency 0.43–0.58 at 1′ (no limit: below the 0.5 gate), 1.0 at 2′–4′.
   **n₉₅ ≈ 0.049 / 0.051 deg⁻²** at θ_E = 2′ / 4′. With D-063, negative point masses are limited from 2′ to 32′.
 - **Failed approaches (rules):** injecting into the observed moments before the PSF deconvolution boosted the

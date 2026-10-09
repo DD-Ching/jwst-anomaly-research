@@ -146,7 +146,7 @@ def _synthetic_field(rng, n=6000, half=1500.0, lens=None):
     if lens is not None:
         e = wes.apply_shear(e, wes.radial_shear(x, y, *lens, 1.5 * lens[2]))
     return {
-        "cat": cat,
+        "n_gal": n,
         "e": e,
         "x": x,
         "y": y,

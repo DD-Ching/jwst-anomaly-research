@@ -3141,7 +3141,8 @@ not return in 5 min; the same selection with `CONTAINS(POINT, CIRCLE)` (r = 0.25
 
 **Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear screen"; `results/w5_shear/`. Four SZ clusters show
 tangential shear (S = −1.5 to −5.0); pilot null (0 flags); whole-chain injection efficiency 0.88–1.0 at 1′, 1.0 at
-2′, ≤ 0.18 at 30″; n₉₅ ≈ 8.1 deg⁻² (1′), 12 deg⁻² (2′).
+2′, ≤ 0.18 at 30″; n₉₅ ≈ 8.1 deg⁻² (1′), 12 deg⁻² (2′). *Superseded by D-067: these injections were boosted
+~1.6× over R (efficiencies optimistic; `results/w5_shear/screen.json` is from that chain).*
 
 **Revisit if.**
 - A PSF-corrected Euclid shear catalogue becomes public (DR1), or cluster-calibrated R differs from 0.5 by > 30 %.
@@ -3163,6 +3164,10 @@ SZ clusters against NFW haloes (in-house ~40 lines: Wright & Brainerd 2000, Duff
 - Injecting by shearing the observed moments before the PSF deconvolution (the D-066 chain): it boosts the
   injected shear by tr_obs/tr_int (median 1.6×) over the R calibrated on deconvolved shapes. Injections now shear
   the deconvolved shapes by R g (`inject_shapes`); D-066's pilot efficiencies are superseded.
+- Rule exception (scripts/CLAUDE.md "inject through the whole chain"): injections skip the resolved cut and the
+  deconvolution, because R is defined on their output; a shear changes a galaxy's size by a fraction ≲ |g||ε|, so
+  only galaxies that close to the 1.2 × PSF cut could change their resolved flag (kept as is). Revisit if a limit
+  hinges on them.
 
 **Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear survey"; `results/w5_shear/`. R = 0.56 ± 0.16
 (z_s = 1, scaled by √(χ²/dof)); 0 flags over 60 deg² at θ_E = 1′, 2′, 4′; known clusters negative (8/9);
