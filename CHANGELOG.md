@@ -2,6 +2,13 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-08: Efficiency rules for routine cycles (owner text)
+- docs/cloud-routine-prompt.md gets the owner's "EFFICIENCY RULES" after "MOVE FAST, SAFELY": result first, a review
+  stopping rule (fix only result/provenance/reproducibility/guarded-file findings, list the rest, ≤ 3 rounds), verify
+  the branch after forked skills (they can leave HEAD detached, which stranded two commits on #98), fail fast on
+  data access, calibrate before flagging, a 35-minute time box, one unit per cycle.
+- **Owner action:** paste the updated prompt into the routine (`trig_01PNAmgcfqef8CvhPAY8ggbP`).
+
 ## 2026-10-08: W5 count deficits in Legacy Surveys DR10: 340.5 deg² null, first W5 limit (D-063, #94)
 - Two sessions (a cloud run's 10° pilot, then a worktree worker on the full 20° × 10° regions; see the coordination
   entry below). DR10 Tractor galaxies (r < 23.5) counted per `nest4096` HEALPix pixel on the Data Lab server
