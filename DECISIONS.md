@@ -3603,6 +3603,22 @@ kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0L
 - Revisit if: a time-resolved CHIME uptime series is obtained (owner decision); then use an hour-resolved
   exposure-weighted null for both 100 s–1 h and 1 h–1 d.
 
+**Addendum 2 (2026-10-09): antipodal lag channels.**
+- Hypothesis (owner idea 4 follow-up): dependent events appear at the antipode of a first event (a "through the
+  Earth / through the sky" link). Ordinary explanations: the same observer-side common causes as D-074; a GBM
+  localization flip is not a concern because GBM errors set the antipodal radius.
+- `scripts/e1_antipodal.py`: pairs with 180° − sep ≤ max(10°, 3σ_comb) (ASSUMPTION `ANTI_MIN_DEG`), five lag bins
+  × six localized channels (GW has no positions) = 30 cells; `jit` null, 2,000 scrambles; pooled trials
+  (`en.global_p`) and an analytic Bonferroni tail. Injection: B moved to t_A ± lag and to A's antipode (scattered by
+  B's own error), 20 trials at n = 3, 10, 30, 100 per cell; detection = family-wise 3σ.
+- **Result: null.** Pooled global p = 0.56 (min cell p 0.054); min analytic p × 30 = 1. Largest z: CHIME–GBM
+  1 h–1 d, 258 vs 230.5 ± 16.4 (z = 1.7). `results/e1_events/antipodal.json` gives the per-cell 95 % upper limits.
+- Sensitivity (`n50_injected`): 3 pairs at lags ≤ 100 s in most channels (10 for GBM–GBM 10–100 s and the CHIME–GBM
+  10–100 s cell); 3–30 at 100 s–1 h; 10–100 at 1 h–7 d; GBM–GBM 1–7 d not reached at 100.
+- Limitation: the CHIME–CHIME injections put B at A's antipode even where CHIME cannot see it (Dec < −11°). They
+  calibrate the statistic, not the instrument.
+- Revisit if: GW sky maps are added (GW–X antipodal channels), or signed-lag channels are built.
+
 ## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)
 
 **Decision.**

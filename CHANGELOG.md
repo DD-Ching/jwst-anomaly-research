@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: E1 antipodal lag channels: null, global p = 0.56 (D-074 addendum 2)
+- Hypothesis: a dependent event appears near the antipode of a first event, at 0 s–7 d lags. Ordinary: the D-074
+  observer-side common causes.
+- `scripts/e1_antipodal.py`: 180° − sep ≤ max(10°, 3σ_comb); 30 cells (6 localized channels × 5 lag bins); `jit` null
+  (2,000 scrambles, 19 s on 4 cores). Pooled global p = 0.56. Max z = 1.7 (CHIME–GBM 1 h–1 d, 258 vs 230 ± 16).
+- Injection-calibrated: 3 pairs at ≤ 100 s detected at family-wise 3σ in most channels, 3–30 at 100 s–1 h, 10–100 at 1 h–7 d.
+- Fixed before the run: a same-catalogue channel must count the injected sample with itself (`pairs_within`
+  assumes ta is tb); counting the original against the injected copy undercounted.
+- **Next:** E1 GW sky maps (GW–X same/wide/antipodal channels), signed-lag ("which comes first") channels.
+
 ## 2026-10-09: E1 CHIME 100 s–1 h wide cell under the calibrated rate-modulated null: z 3.7 → 2.5, family-wise null (D-074 addendum)
 - Hypothesis: the 100 s–1 h CHIME–CHIME wide excess (396 vs 330, z = 3.7 `jit`) is lag dependence beyond a smooth
   detection-rate modulation. Ordinary: week-scale rate modulation, daily duty cycle, sub-day outages.
