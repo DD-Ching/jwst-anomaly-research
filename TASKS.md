@@ -10,7 +10,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 2. **S2 flat-kernel SN residuals** (D-070): Pantheon+ × LS DR9 null; γ < 0.025 mag per unit T/⟨T⟩ (α = 2, one-sided 95 %,
    dilution- and chain-corrected); α = 1 is kernel-degenerate. Next: DES-SN5YR + DES Y3 Gold, where SN lensing is detected (positive
    control), and the full Pantheon+ covariance.
-3. **S3 hybrid images** (limit only): COSMOGRAIL light curves at model lags s_i − s_j, including before the leading image.
+3. **S3 hybrid images** (D-071): COSMOGRAIL doubles null, sensitivity only r ≈ 0.3–2 (red quasar variability makes
+   the copy collinear with the main image). Next, low priority: SN Refsdal / SN H0pe imaging at the model lags.
 4. **System A round 2** after S1–S3, starting from the round-1 failure modes.
 
 ## Continuing (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)

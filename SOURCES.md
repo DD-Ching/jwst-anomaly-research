@@ -1028,3 +1028,8 @@ Exploration Program."
   `Pantheon+_Data/4_DISTANCES_AND_COVAR/`), accessed 2026-10-09 (`scripts/s2_flat_kernel.py`, D-070).
 - Legacy Surveys DR9 Tractor + DR9 photometric redshifts (Data Lab TAP tables `ls_dr9.tractor`, `ls_dr9.photo_z`,
   joined on `ls_id`; https://www.legacysurvey.org/dr9/), batched box queries, accessed 2026-10-09 (D-070).
+
+## COSMOGRAIL XIX light curves (accessed 2026-10-09; D-071)
+- Millon et al. 2020, A&A 640, A105, arXiv:2002.05736: R-band light curves of 23 lensed quasars, CDS
+  J/A+A/640/A105 (https://cdsarc.cds.unistra.fr/ftp/J/A+A/640/A105/, `lcab/*.dat`); delays and redshifts from the
+  paper's Tables 1 and 4 (arXiv source `tabdelay.tex`, `tabdata.tex`). `scripts/s3_hybrid.py`.
