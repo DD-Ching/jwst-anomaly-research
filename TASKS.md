@@ -20,7 +20,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    lenses, the only selections sensitive to a dark lens). Next: HSC PDR3 photometry or PSF-subtracted HST
    image models for the 307 blended or too-close lensed quasars (makes the test decisive; HST *catalogue* photometry
    is not: D-060, efficiency 0.46); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar pairs: LS DR10 cannot decide them
-   (D-064, control efficiency 0/5 at 1.9–2.6″); the 11 colour-matched ones need HST/Euclid/HSC image models or spectra (archive coverage check in progress, claude/w12-niq-hst); port D-064's LS-pair = catalogued-pair
+   (D-064, control efficiency 0/5 at 1.9–2.6″); of the 11 colour-matched ones, J0130+0725 has no lens light in HST to F814W ≈ 25 (D-064 addendum: binary vs dark
+   lens needs spectra of both images or two-epoch flux ratios), J0728+2607 needs an empirical PSF, and 9 have no HST
+   (Euclid DR1 when public); port D-064's LS-pair = catalogued-pair
    check (`w12_niq` `pair_match`) into the shared D-056 quasar pair test and re-run D-056; HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
 3. **W5** (D-063): Legacy Surveys DR10, 340.5 deg², 40 flags, 0 survivors; n₉₅ ≈ 0.012–0.018 deg⁻² at θ_E = 8–32′.

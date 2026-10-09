@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: D-064 addendum: archival HST of the untestable rejected pairs; J0130+0725 has no lens light to F814W ≈ 25
+- Coverage: 2 of the 11 untestable pairs have HST F814W imaging (program 17308), and so do 2 controls.
+- Method: a two-PSF fit, halo correction, and the residual flux between the images. Validated on both controls
+  (S/N 148, 83) and on injections into the real stamp (recovered to F814W = 25).
+- **J0130+0725:** no residual (S/N 1.5). The 5σ limit F814W ≈ 25.0 is ≥ 3 mag fainter than any ordinary lens. A
+  binary quasar remains the untested ordinary explanation; it needs spectra of both images. Not a candidate.
+- **J0728+2607:** inconclusive (residuals at the image cores); it needs an empirical PSF.
+- **Failed approaches:**
+  - the HAP "combined_skycells" product has a WCS that does not describe its pixels;
+  - without the halo correction, PSF mismatch alone gives S/N 26–35;
+  - a 60-px cutout cannot hold the pair, because the catalogue position is one image.
+- **Next:** spectra or two-epoch flux ratios for J0130+0725 (binary vs lens); an empirical PSF for J0728+2607;
+  Euclid DR1 when public for the 9 pairs without HST imaging.
+
 ## 2026-10-08: W5 count deficits in Legacy Surveys DR10: 340.5 deg² null, first W5 limit (D-063, #94)
 - Two sessions (a cloud run's 10° pilot, then a worktree worker on the full 20° × 10° regions; see the coordination
   entry below). DR10 Tractor galaxies (r < 23.5) counted per `nest4096` HEALPix pixel on the Data Lab server
