@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: D1 TDCOSMO 2025 D_dt leave-one-out (in progress)
+- Plan: D-073 statistic D on the TDCOSMO 2025 power-law D_dt chains for the 6 H0LiCOW lenses plus DES0408 and WGD2038.
+
 ## 2026-10-09: E1 causal event network: no wide-separation dependence between GRBs, neutrinos, GW events and FRBs (D-074)
 - Hypothesis (owner idea 4): events in different directions that depend on each other at lags no ordinary path
   explains. Ordinary explanations: observer-side common causes (uptime, exposure, Sun, follow-up chains, shared
