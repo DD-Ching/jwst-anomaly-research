@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: W5/W1 radial-shear screen on Euclid Q1 MER shapes — in progress (claim)
+- Plan: PSF-anisotropy check on stars, synthetic shear injections, trial-centre grid, cross-field null (D-065 next).
+
 ## 2026-10-09: Efficiency rules 8–13 for routine cycles (owner text)
 - docs/cloud-routine-prompt.md "EFFICIENCY RULES" gets the owner's rules 8–13: merge main before the final review;
   state-file conflict handling (own CHANGELOG block first, both entries kept); one CI wait per head SHA; verify
