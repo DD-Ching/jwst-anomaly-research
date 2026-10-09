@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: J0728+2607 decided with an empirical PSF: no light between the images to F814W ≈ 23 (D-064 addendum)
+- The PSF is the median of 6 Gaia stars in the same HST F814W cutout. The control lens J2308+3201 is detected
+  (S/N 38). J0728's residual is centred on its images, and after the halo correction there is no light between them
+  (S/N 3.3). Whole-chain injections are recovered to F814W = 23, ≥ 1.8 mag below any ordinary lens.
+- Both D-064 HST pairs therefore have no visible deflector; binary quasars remain the untested ordinary explanation
+  (spectra of both images, or time delays, are needed).
+- **Failed approach:** the lens-vs-mirror aperture test. The control gives only 3.1σ, because real lens positions
+  depart from the SIS flux-ratio rule.
+
 ## 2026-10-09: Efficiency rules 8–13 for routine cycles (owner text)
 - docs/cloud-routine-prompt.md "EFFICIENCY RULES" gets the owner's rules 8–13: merge main before the final review;
   state-file conflict handling (own CHANGELOG block first, both entries kept); one CI wait per head SHA; verify

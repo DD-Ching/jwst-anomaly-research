@@ -1255,9 +1255,19 @@ The ordinary explanations are binary quasars, unrelated pairs and lens galaxies 
   than a typical lens and ≥ 0.7 mag fainter than the conservative one. No ordinary lens galaxy is visible. The leading ordinary explanation remains a binary quasar
   (Lemon et al. 2023 classify it as a UQP), and it is untested here: spectra of both images, or the flux-ratio
   stability between epochs, are needed. It is **not** a candidate until that test runs (scripts/CLAUDE.md).
-- **J0728+2607 (z = 1.03, 2.15″): inconclusive.** S/N 5.0 (F814W 23.5 if real), but the stamp shows the residual at
-  the image cores (core mismatch of the Moffat model), plus a compact spot about 0.25″ from image B, inside the
-  mask. An empirical PSF (a star in the same visit, or a focus-matched PSF model) is needed before any statement.
+- **J0728+2607 (z = 1.03, 2.15″):** inconclusive with the Moffat model (S/N 5.0, residual at the image cores).
+  Decided with an empirical PSF (`scripts/w12_niq_epsf.py`; `results/w12_niq/hst_epsf_*`):
+  - the PSF is the median of 6 unsaturated, isolated Gaia stars (G 16.5–21) in the same F814W skycell cutout;
+  - the residual is centred on the images (a ring around B, a centring dipole at A), and after the halo
+    correction there is no light between the images (S/N 3.3);
+  - the control J2308+3201 gives S/N 38 through the same chain, and J0130+0725 stays null (S/N 0.5, but with a
+    1-star PSF);
+  - whole-chain injections are recovered at ≥ 5σ above the baseline to **F814W = 23** for both pairs;
+  - J0728 would need an ordinary lens at m_z ≈ 18.8 (typical) or 20.6 (conservative), i.e. F814W ≈ 18.8–21.2
+    (F814W − z assumed 0–0.6), which is ≥ 1.8 mag brighter than the limit.
+  So neither HST pair has a visible deflector. A binary quasar remains the untested ordinary explanation for both.
+  A mirror test (lens position vs the mirror point beyond the faint image) is not usable: the control gives only
+  3.1σ, because its lens is not where the SIS flux-ratio rule puts it.
 - The halo correction and the empirical aperture noise are essential. With white-noise errors and no halo
   correction, J0130 read S/N 26 and J0728 35, from symmetric PSF-halo mismatch alone.
 
