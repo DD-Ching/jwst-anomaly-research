@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-09: S3 hybrid images (in progress)
+- Plan: COSMOGRAIL XIX light curves (CDS J/A+A/640/A105) of doubles; limit on faint copies a_ij at the
+  thin-lens source-leg lags s_i − s_j (both potential conventions), off-model lags and phase-randomized curves as null.
+
 ## 2026-10-09: S2 flat-kernel SN residuals: no flat-kernel term; γ < 0.025 mag per unit T/⟨T⟩ at α = 2 (D-070)
 - Hypothesis (A3 P2b): SN Ia residuals track a flat-kernel foreground column ∫(1+δ)^α dχ, with sign +γ (fainter),
   after the lensing-kernel column is fitted. Ordinary mimics: lensing magnification, grey dust (colour), host-group
