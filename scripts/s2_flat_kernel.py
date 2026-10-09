@@ -18,17 +18,18 @@ z-matched scramble null -> injection-recovery of gamma_F.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import io
 import json
 import time
-from concurrent.futures import ThreadPoolExecutor
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 import numpy as np
 import requests
 from astropy.cosmology import FlatLambdaCDM
 from astropy.table import Table, vstack
+from w12_lenscats import box_terms
 
 from jwst_anomaly import paths
 
@@ -37,7 +38,9 @@ PPLUS_URL = (
     "https://raw.githubusercontent.com/PantheonPlusSH0ES/DataRelease/main/"
     "Pantheon%2B_Data/4_DISTANCES_AND_COVAR/Pantheon%2BSH0ES.dat"
 )
-COLS = "t.ra, t.dec, t.mag_z, t.release, p.z_phot_median, p.z_spec"
+COLS = "t.ra, t.dec, t.dered_mag_z, t.release, p.z_phot_median, p.z_spec"
+QUERY_VERSION = 2  # 2: brick_primary, maskbits = 0, no DUP, dereddened z (countmap selection)
+FETCH_Z = (0.1, 1.3)  # SN redshift range of the galaxy fetch
 OUT = paths.repo_root() / "results" / "s2_flat_kernel"
 
 
@@ -51,10 +54,11 @@ class Params:
     host_gap: float = 0.05  # ASSUMPTION: drop galaxies with z_g > z_s - gap (host and its group)
     shell_dz: float = 0.05
     om: float = 0.334  # Pantheon+ flat LCDM (Brout et al. 2022)
-    batch: int = 40  # boxes per TAP query
-    workers: int = 2  # Data Lab: batch, little concurrency
+    batch: int = 60  # boxes per TAP query
     n_scramble: int = 1000
-    n_inject: int = 200
+    n_chain: int = 20  # whole-chain injections (thinned counts)
+    chain_gamma: float = 0.01  # mag per unit X injected in the chain test (A3's fiducial scale)
+    min_coverage: float = 0.5  # ASSUMPTION: disc galaxy count >= half the region median (edges)
     seed: int = 69
     trim_pct: float = 99.0  # ASSUMPTION: leverage cut for the robustness fit
     min_shell_expect: float = 1.0  # ASSUMPTION: alpha = 2 uses shells expecting >= 1 galaxy
@@ -96,32 +100,32 @@ def load_pantheon(p: Params) -> Table:
     return Table(rows=rows, names=["cid", "ra", "dec", "z", "m", "c", "err"])
 
 
-def box_terms(ra: float, dec: float, half_arcsec: float) -> list[str]:
-    h = half_arcsec / 3600
-    dpart = f"t.dec BETWEEN {dec - h:.7f} AND {dec + h:.7f}"
-    hr = h / np.cos(np.radians(abs(dec) + h))
-    lo, hi = ra - hr, ra + hr
-    if lo < 0:
-        ranges = [(0.0, hi), (lo + 360, 360.0)]
-    elif hi >= 360:
-        ranges = [(lo, 360.0), (0.0, hi - 360)]
-    else:
-        ranges = [(lo, hi)]
-    return [f"(t.ra BETWEEN {a:.7f} AND {b:.7f} AND {dpart})" for a, b in ranges]
+def galaxy_dir(p: Params) -> Path:
+    """Galaxy chunks keyed by everything that selects them (never reuse stale chunks).
+
+    The SN list of the fetch is always the default z range; fits on a narrower range use a subset.
+    """
+    key = json.dumps([QUERY_VERSION, FETCH_Z, p.radius_arcsec, p.mag_z_max, p.batch])
+    d = cache() / f"gal_{hashlib.sha1(key.encode()).hexdigest()[:10]}"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
 
 
 def query(sne: Table, p: Params) -> Table:
     terms = [
         t
         for r, d in zip(sne["ra"], sne["dec"], strict=True)
-        for t in box_terms(r, d, p.radius_arcsec)
+        for t in box_terms(r, d, p.radius_arcsec)  # unqualified ra/dec: only the tractor has them
     ]
     q = (
         f"SELECT {COLS} FROM ls_dr9.tractor t JOIN ls_dr9.photo_z p ON t.ls_id = p.ls_id "
-        f"WHERE t.mag_z < {p.mag_z_max} AND t.type <> 'PSF' AND (" + " OR ".join(terms) + ")"
+        f"WHERE t.brick_primary = 1 AND t.maskbits = 0 AND t.type <> 'PSF' AND t.type <> 'DUP' "
+        f"AND t.dered_mag_z > 0 AND t.dered_mag_z < {p.mag_z_max} AND (" + " OR ".join(terms) + ")"
     )
     err = ""
     for attempt in range(4):
+        if attempt:
+            time.sleep(10 * attempt)
         try:
             r = requests.post(
                 TAP,
@@ -133,29 +137,24 @@ def query(sne: Table, p: Params) -> Table:
             err = r.text[:300]
         except requests.RequestException as e:
             err = str(e)
-        time.sleep(10 * (attempt + 1))
     raise RuntimeError(f"Data Lab TAP failed: {err}")
 
 
 def fetch(p: Params) -> None:
-    sne = load_pantheon(p)
+    """Sequential batched queries (Data Lab etiquette: batch, no concurrency)."""
+    sne = load_pantheon(replace(p, z_min=FETCH_Z[0], z_max=FETCH_Z[1]))
     sne = sne[np.argsort(sne["ra"])]
-    chunks = [sne[i : i + p.batch] for i in range(0, len(sne), p.batch)]
-
-    def one(k: int) -> str:
-        f = cache() / f"gal_{k:03d}.ecsv"
+    out = galaxy_dir(p)
+    for k in range(0, len(sne), p.batch):
+        f = out / f"gal_{k // p.batch:03d}.ecsv"
         if f.exists():
-            return f"{k} cached"
+            continue
         t0 = time.time()
-        g = query(chunks[k], p)
+        g = query(sne[k : k + p.batch], p)
         tmp = f.with_suffix(".tmp")
         g.write(tmp, format="ascii.ecsv", overwrite=True)
         tmp.replace(f)
-        return f"{k} {len(g)} rows {time.time() - t0:.0f}s"
-
-    with ThreadPoolExecutor(p.workers) as ex:
-        for msg in ex.map(one, range(len(chunks))):
-            print(msg, flush=True)
+        print(f"{k // p.batch} {len(g)} rows {time.time() - t0:.0f}s", flush=True)
 
 
 def ang_sep_arcsec(ra1, dec1, ra2, dec2):
@@ -171,56 +170,77 @@ def lens_weight(zg: np.ndarray, zs: float, cosmo: FlatLambdaCDM) -> np.ndarray:
     return np.clip((1 + zg) * cl * (cs - cl) / cs, 0, None)
 
 
+REGION = {9010: 0, 9011: 1}  # DR9 south (DECam) and north (BASS/MzLS): different depths
+
+
+def shell_edges(p: Params) -> tuple[np.ndarray, np.ndarray]:
+    edges = np.arange(p.z_gal_min, p.z_max + p.shell_dz, p.shell_dz)
+    return edges, 0.5 * (edges[1:] + edges[:-1])
+
+
+def geometry(sne: Table, p: Params) -> list:
+    """Per SN: foreground-shell mask and lensing weights (computed once, reused by every xcols)."""
+    cosmo = FlatLambdaCDM(H0=70, Om0=p.om)
+    edges, mid = shell_edges(p)
+    out = []
+    for zs in np.asarray(sne["z"]):
+        ok = edges[1:] <= zs - p.host_gap
+        out.append((ok, lens_weight(mid[ok], zs, cosmo) if ok.any() else None))
+    return out
+
+
 def columns(sne: Table, gal: Table, p: Params) -> dict:
     """Per-SN weighted foreground counts in a disc, relative to the mean-shell-density expectation.
 
-    Mean shell densities are per photometric region (release 9010 north, 9011 south: different
-    depths), estimated from all SN discs of that region. X = sum(w) / E[sum(w)] - 1 (derived).
+    Mean shell densities are per photometric region (``REGION``), estimated from all SN discs of
+    that region. X = sum(w) / E[sum(w)] - 1 (derived). ``ngal`` (all redshifts) is the coverage
+    proxy for discs cut by the footprint edge or masks.
     """
-    edges = np.arange(p.z_gal_min, p.z_max + p.shell_dz, p.shell_dz)
-    mid = 0.5 * (edges[1:] + edges[:-1])
+    edges, mid = shell_edges(p)
     zg_all = np.where(gal["z_spec"] > 0, gal["z_spec"], gal["z_phot_median"])
     counts = np.zeros((len(sne), len(mid)))
     region = np.full(len(sne), -1)
     ngal = np.zeros(len(sne), int)
-    # galaxies near each SN (both arrays modest: ~1e3 SNe, ~1e5 galaxies)
     order = np.argsort(gal["dec"])
     gdec = np.asarray(gal["dec"])[order]
+    gra = np.asarray(gal["ra"])[order]
+    grel = np.asarray(gal["release"])[order]
+    gz = np.asarray(zg_all)[order]
     h = p.radius_arcsec / 3600
     for i, s in enumerate(sne):
         lo, hi = np.searchsorted(gdec, [s["dec"] - h, s["dec"] + h])
-        idx = order[lo:hi]
-        sep = ang_sep_arcsec(s["ra"], s["dec"], np.asarray(gal["ra"])[idx], gdec[lo:hi])
-        idx = idx[sep < p.radius_arcsec]
-        if len(idx) == 0:
+        sel = lo + np.flatnonzero(
+            ang_sep_arcsec(s["ra"], s["dec"], gra[lo:hi], gdec[lo:hi]) < p.radius_arcsec
+        )
+        regs = [REGION[r] for r in grel[sel] if r in REGION]
+        if not regs:
             continue
-        rel = np.asarray(gal["release"])[idx]
-        region[i] = int(np.bincount(rel - 9010, minlength=2).argmax())
-        zg = zg_all[idx]
+        region[i] = int(np.bincount(regs, minlength=2).argmax())
+        zg = gz[sel]
         keep = (zg >= p.z_gal_min) & (zg < s["z"] - p.host_gap)
         counts[i] = np.histogram(zg[keep], edges)[0]
-        ngal[i] = len(idx)
-    xl, xf, nbar = xcols(counts, region, sne, p)
+        ngal[i] = len(sel)
+    geo = geometry(sne, p)
+    xl, xf, nbar = xcols(counts, region, sne, p, geo)
     return {
         "xl": xl,
         "xf": xf,
         "counts": counts,
         "region": region,
-        "has": region >= 0,
         "ngal": ngal,
         "nbar": nbar,
+        "geo": geo,
         "mid": mid.tolist(),
     }
 
 
-def xcols(counts, region, sne, p: Params, nbar: dict | None = None):
+def xcols(counts, region, sne, p: Params, geo: list, nbar: dict | None = None):
     """Columns from per-shell counts; mean shell densities from the data unless ``nbar``."""
-    cosmo = FlatLambdaCDM(H0=70, Om0=p.om)
-    edges = np.arange(p.z_gal_min, p.z_max + p.shell_dz, p.shell_dz)
-    mid = 0.5 * (edges[1:] + edges[:-1])
+    edges, mid = shell_edges(p)
     xl = np.full(len(sne), np.nan)
     xf = np.full(len(sne), np.nan)
     nbar = {} if nbar is None else nbar
+    zs = np.asarray(sne["z"])
     for reg in (0, 1):
         m = region == reg
         if m.sum() == 0:
@@ -230,14 +250,13 @@ def xcols(counts, region, sne, p: Params, nbar: dict | None = None):
         else:  # shell densities: only discs whose SN lies behind the shell contribute
             nb = np.zeros(len(mid))
             for k in range(len(mid)):
-                behind = m & (sne["z"] - p.host_gap > edges[k + 1])
+                behind = m & (zs - p.host_gap > edges[k + 1])
                 nb[k] = counts[behind, k].mean() if behind.any() else 0.0
             nbar[reg] = nb.tolist()
         for i in np.flatnonzero(m):
-            ok = edges[1:] <= sne["z"][i] - p.host_gap
-            if not ok.any():
+            ok, wl = geo[i]
+            if wl is None:
                 continue
-            wl = lens_weight(mid[ok], sne["z"][i], cosmo)
             el = np.sum(wl * nb[ok])
             ef = np.sum(nb[ok])
             if el > 0 and ef > 0:
@@ -253,29 +272,37 @@ def xcols(counts, region, sne, p: Params, nbar: dict | None = None):
     return xl, xf, nbar
 
 
+def _trimmed_var(x: np.ndarray, trim_pct: float | None) -> float:
+    x = x[np.isfinite(x)]
+    if trim_pct is not None:
+        x = x[x <= np.percentile(x, trim_pct)]
+    return float(np.var(x))
+
+
 def attenuation(
-    c: dict, sne: Table, p: Params, rng, n_sim: int = 20, xf_max: float = np.inf
+    c: dict, sne: Table, p: Params, rng, sel: np.ndarray, trim_pct: float | None = None, n_sim=20
 ) -> tuple[float, float]:
     """Errors-in-variables factor lambda = 1 - var(Poisson-only column) / var(observed column).
 
     Shot noise in the counts dilutes a true column-brightness relation by lambda (regression
-    dilution); a coefficient fitted on the noisy column must be divided by lambda. Per-column
-    approximation (ASSUMPTION): ignores the noise covariance between the two columns.
+    dilution); a coefficient fitted on the noisy column must be divided by lambda. Observed and
+    simulated columns get the same selection ``sel`` and the same trimming (each at its own
+    percentile). Per-column approximation (ASSUMPTION): ignores the noise covariance between the
+    two columns and clustering beyond Poisson in the noise model.
     """
     region = c["region"]
     expect = np.zeros_like(c["counts"])
     for reg, nb in c["nbar"].items():
         expect[region == reg] = np.asarray(nb)
-    ok = np.isfinite(c["xl"]) & np.isfinite(c["xf"])
-    ok[ok] &= c["xf"][ok] <= xf_max
     vl, vf = [], []
     for _ in range(n_sim):
-        sl, sf, _ = xcols(rng.poisson(expect).astype(float), region, sne, p, c["nbar"])
-        vl.append(np.nanvar(sl[ok]))
-        vf.append(np.nanvar(sf[ok]))
+        sim = rng.poisson(expect).astype(float)
+        sl, sf, _ = xcols(sim, region, sne, p, c["geo"], c["nbar"])
+        vl.append(_trimmed_var(sl[sel], trim_pct))
+        vf.append(_trimmed_var(sf[sel], trim_pct))
     return (
-        float(1 - np.mean(vl) / np.var(c["xl"][ok])),
-        float(1 - np.mean(vf) / np.var(c["xf"][ok])),
+        float(1 - np.mean(vl) / _trimmed_var(c["xl"][sel], trim_pct)),
+        float(1 - np.mean(vf) / _trimmed_var(c["xf"][sel], trim_pct)),
     )
 
 
@@ -307,105 +334,167 @@ def scramble(z, xl, xf, rng, dz=0.05):
     return out_l, out_f
 
 
+def z_perm(z: np.ndarray, rng, dz=0.05) -> np.ndarray:
+    """Index permutation within z_s bins."""
+    out = np.arange(len(z))
+    bins = np.floor(z / dz).astype(int)
+    for b in np.unique(bins):
+        i = np.flatnonzero(bins == b)
+        out[i] = rng.permutation(i)
+    return out
+
+
+def selection(c: dict, y: np.ndarray, err: np.ndarray, z: np.ndarray, p: Params) -> np.ndarray:
+    """Fit sample: finite columns, disc coverage, and no > 5 sigma Hubble outliers (ASSUMPTIONs)."""
+    ok = np.isfinite(c["xl"]) & np.isfinite(c["xf"])
+    for reg in (0, 1):
+        m = ok & (c["region"] == reg)
+        if m.any():
+            ok[m] &= c["ngal"][m] >= p.min_coverage * np.median(c["ngal"][m])
+    a0 = np.column_stack([np.ones_like(z), z])
+    b0 = np.linalg.lstsq(a0[ok] / err[ok, None], y[ok] / err[ok], rcond=None)[0]
+    ok &= np.abs(y - a0 @ b0) < 5 * err
+    return ok
+
+
+def limit(c, sne, y, err, z, sel, p: Params, rng) -> dict:
+    """Coefficients, scramble errors, trimmed refit, dilution and the one-sided 95 % limit."""
+    xl, xf = c["xl"][sel], c["xf"][sel]
+    ys, es, zs = y[sel], err[sel], z[sel]
+    beta, sig, rchi2 = wls(ys, es, zs, xl, xf)
+    null = np.array(
+        [wls(ys, es, zs, *scramble(zs, xl, xf, rng))[0][2:] for _ in range(p.n_scramble)]
+    )
+    keep = xf <= np.percentile(xf, p.trim_pct)
+    bt, st, _ = wls(ys[keep], es[keep], zs[keep], xl[keep], xf[keep])
+    nt = np.array(
+        [
+            wls(ys[keep], es[keep], zs[keep], *scramble(zs[keep], xl[keep], xf[keep], rng))[0][3]
+            for _ in range(p.n_scramble // 4)
+        ]
+    )
+    lam_l, lam_f = attenuation(c, sne, p, rng, sel)
+    lam_ft = attenuation(c, sne, p, rng, sel, p.trim_pct)[1]
+    sf_cal = max(sig[3], null[:, 1].std())
+    st_cal = max(st[3], nt.std())
+    norm = float(np.mean(1 + xf))
+    up_full = max(beta[3] + 1.645 * sf_cal, 0) / max(lam_f, 1e-3)
+    up_trim = max(bt[3] + 1.645 * st_cal, 0) / max(lam_ft, 1e-3)
+    return {
+        "beta": beta,
+        "sig": sig,
+        "rchi2": rchi2,
+        "null": null,
+        "trim_n": int(keep.sum()),
+        "bt": bt,
+        "st_cal": st_cal,
+        "sf_cal": sf_cal,
+        "lam": (lam_l, lam_f, lam_ft),
+        "norm": norm,
+        "upper": float(max(up_full, up_trim) * norm),
+    }
+
+
+def chain_injection(c, sne, y, err, z, p: Params, rng, gamma: float) -> np.ndarray:
+    """Whole-chain check of the dilution correction (scripts/CLAUDE.md: inject through the chain).
+
+    Truth: the full-count column of a z-matched permutation of sightlines (so the real sky signal
+    in y is uncorrelated with it), y += gamma * X_true. Observed: the same counts binomially thinned
+    to half, then the whole chain (shell densities, columns, selection, fit, trimming, dilution).
+    Returns the recovered gamma estimates (fit / lambda, full and trimmed).
+    """
+    pt = replace(p, min_shell_expect=p.min_shell_expect / 2)  # same shells after thinning
+    out = []
+    for _ in range(p.n_chain):
+        perm = z_perm(z, rng)
+        counts = c["counts"][perm]
+        region = c["region"][perm]
+        x_true = xcols(counts, region, sne, p, c["geo"])[1]
+        thin = rng.binomial(counts.astype(int), 0.5).astype(float)
+        xl_t, xf_t, nb_t = xcols(thin, region, sne, pt, c["geo"])
+        ct = {**c, "counts": thin, "region": region, "xl": xl_t, "xf": xf_t, "nbar": nb_t}
+        ct["ngal"] = c["ngal"][perm]
+        yi = y + gamma * np.nan_to_num(x_true)
+        sel = selection(ct, yi, err, z, pt) & np.isfinite(x_true)
+        xs = xf_t[sel]
+        keep = xs <= np.percentile(xs, p.trim_pct)
+        b = wls(yi[sel], err[sel], z[sel], xl_t[sel], xs)[0][3]
+        bt = wls(yi[sel][keep], err[sel][keep], z[sel][keep], xl_t[sel][keep], xs[keep])[0][3]
+        lam_f = attenuation(ct, sne, pt, rng, sel, n_sim=5)[1]
+        lam_ft = attenuation(ct, sne, pt, rng, sel, p.trim_pct, n_sim=5)[1]
+        out.append((b / lam_f, bt / lam_ft))
+    return np.array(out)
+
+
 def fit(p: Params) -> dict:
     sne = load_pantheon(p)
-    files = sorted(cache().glob("gal_*.ecsv"))
+    files = sorted(galaxy_dir(p).glob("gal_*.ecsv"))
     if not files:
         raise SystemExit("run `fetch` first")
     gal = vstack([Table.read(f) for f in files])
-    gal = gal[
-        np.unique(
-            np.column_stack([np.round(gal["ra"], 6), np.round(gal["dec"], 6)]),
-            axis=0,
-            return_index=True,
-        )[1]
-    ]
+    # a galaxy inside two SN boxes of different chunks comes back twice with identical values
+    gal = gal[np.unique(np.column_stack([gal["ra"], gal["dec"]]), axis=0, return_index=True)[1]]
     c = columns(sne, gal, p)
     y = residuals(sne, p)
-    ok = np.isfinite(c["xl"]) & np.isfinite(c["xf"])
-    cols = (sne["z"], sne["err"], c["xl"], c["xf"], y, sne["c"])
-    z, err, xl, xf, y, col = (np.asarray(v)[ok] for v in cols)
-    # robust: drop > 5 sigma Hubble-residual outliers of the base fit (ASSUMPTION; count reported)
-    a0 = np.column_stack([np.ones_like(z), z])
-    b0 = np.linalg.lstsq(a0 / err[:, None], y / err, rcond=None)[0]
-    clip = np.abs(y - a0 @ b0) < 5 * err
-    z, err, xl, xf, y, col = z[clip], err[clip], xl[clip], xf[clip], y[clip], col[clip]
-    beta, sig, rchi2 = wls(y, err, z, xl, xf)
+    err, z, colour = (np.asarray(sne[k]) for k in ("err", "z", "c"))
+    sel = selection(c, y, err, z, p)
     rng = np.random.default_rng(p.seed)
-    null = np.array([wls(y, err, z, *scramble(z, xl, xf, rng))[0][2:] for _ in range(p.n_scramble)])
-    gf_inj = 3 * sig[3]
-    rec = []
-    for _ in range(p.n_inject):
-        # carrier: a scrambled column pair, so the real sky signal in y is uncorrelated with it
-        sl, sf = scramble(z, xl, xf, rng)
-        bi = wls(y + gf_inj * sf, err, z, sl, sf)[0]
-        rec.append(bi[3])
-    rec = np.array(rec)
-    corr = float(np.corrcoef(xl, xf)[0, 1])
-    bc, ec, _ = wls(col, np.full_like(col, 0.05), z, xl, xf)  # errors rescaled by chi2/dof
-    res = {
+    lim = limit(c, sne, y, err, z, sel, p, rng)
+    beta, sig = lim["beta"], lim["sig"]
+    inj = chain_injection(c, sne, y, err, z, p, rng, p.chain_gamma)
+    ratio = float(max(min(inj[:, 0].mean(), inj[:, 1].mean()) / p.chain_gamma, 1e-3))
+    xl, xf = c["xl"][sel], c["xf"][sel]
+    bc, ec, _ = wls(colour[sel], np.full(sel.sum(), 0.05), z[sel], xl, xf)  # rescaled errors
+    finite = np.isfinite(c["xl"]) & np.isfinite(c["xf"])
+    return {
         "params": asdict(p),
         "provenance": {
             "pantheon_plus": "observed (m_b_corr, Brout et al. 2022 / Scolnic et al. 2022)",
+            "pantheon_plus_sha256": hashlib.sha256(
+                (cache() / "PantheonPlusSH0ES.dat").read_bytes()
+            ).hexdigest(),
             "galaxies": "observed (LS DR9 Tractor + DR9 photo-z, Data Lab TAP)",
             "columns": "derived",
             "residual_model": "model_prediction (flat LCDM Om = 0.334)",
             "thresholds": "assumption (Params)",
         },
         "n_sne_input": len(sne),
-        "n_sne_with_columns": int(ok.sum()),
-        "n_clipped_5sigma": int((~clip).sum()),
-        "n_sne_fit": len(y),
+        "n_sne_with_columns": int(finite.sum()),
+        "n_cut_coverage_or_5sigma": int((finite & ~sel).sum()),
+        "n_sne_fit": int(sel.sum()),
         "n_galaxies": len(gal),
-        "corr_xl_xf": corr,
+        "corr_xl_xf": float(np.corrcoef(xl, xf)[0, 1]),
         "std_xl": float(np.std(xl)),
         "std_xf": float(np.std(xf)),
-        "reduced_chi2": float(rchi2),
+        "reduced_chi2": float(lim["rchi2"]),
         "gamma_lens": float(beta[2]),
-        "gamma_lens_err": float(sig[2]),
+        "gamma_lens_err": float(max(sig[2], lim["null"][:, 0].std())),
         "gamma_flat": float(beta[3]),
-        "gamma_flat_err": float(sig[3]),
+        "gamma_flat_err": float(lim["sf_cal"]),
+        "p_scramble_flat": float(np.mean(np.abs(lim["null"][:, 1]) >= abs(beta[3]))),
+        "p_scramble_lens": float(np.mean(np.abs(lim["null"][:, 0]) >= abs(beta[2]))),
         # grey-dust mimic (B-on-A3 P2b item 2): SALT colour c regressed on the same columns
         "colour_lens": float(bc[2]),
         "colour_lens_err": float(ec[2]),
         "colour_flat": float(bc[3]),
         "colour_flat_err": float(ec[3]),
-        "scramble_std_lens": float(null[:, 0].std()),
-        "scramble_std_flat": float(null[:, 1].std()),
-        "p_scramble_flat": float(np.mean(np.abs(null[:, 1]) >= abs(beta[3]))),
-        "p_scramble_lens": float(np.mean(np.abs(null[:, 0]) >= abs(beta[2]))),
-        "inject_gamma_flat": float(gf_inj),
-        "inject_recovered_mean": float(rec.mean()),
-        "inject_recovered_std": float(rec.std()),
-        "inject_fraction_detected_2sigma": float(np.mean(rec / sig[3] > 2)),
+        "trim_n": lim["trim_n"],
+        "gamma_flat_trim": float(lim["bt"][3]),
+        "gamma_flat_trim_err": float(lim["st_cal"]),
+        "lambda_lens": lim["lam"][0],
+        "lambda_flat": lim["lam"][1],
+        "lambda_flat_trim": lim["lam"][2],
+        "chain_inject_gamma": p.chain_gamma,
+        "chain_recovered_full": [float(inj[:, 0].mean()), float(inj[:, 0].std())],
+        "chain_recovered_trim": [float(inj[:, 1].mean()), float(inj[:, 1].std())],
+        "per_unit": "mag per unit fractional excess of the weighted foreground count (X)",
+        "norm_mean_1_plus_x": lim["norm"],
+        # A3's sign is +gamma (fainter); its unit is the column normalised to its mean, T / <T>
+        # divided by the whole-chain recovery ratio when the dilution correction under-recovers
+        "chain_recovery_ratio": ratio,
+        "gamma_norm_upper95_one_sided": lim["upper"] / min(ratio, 1.0),
+        "gamma_norm_upper95_unit": "mag per unit T/<T>, corrected for shot-noise dilution",
     }
-    sf_cal = max(sig[3], res["scramble_std_flat"])
-    res["gamma_flat_95"] = float(abs(beta[3]) + 1.96 * sf_cal)
-    res["per_unit"] = "mag per unit fractional excess of the weighted foreground count (X)"
-    # robustness: drop the sightlines above the p.trim_pct percentile of X_flat (leverage)
-    keep = xf <= np.percentile(xf, p.trim_pct)
-    bt, st, _ = wls(y[keep], err[keep], z[keep], xl[keep], xf[keep])
-    nt = np.array(
-        [
-            wls(y[keep], err[keep], z[keep], *scramble(z[keep], xl[keep], xf[keep], rng))[0][3]
-            for _ in range(p.n_scramble)
-        ]
-    )
-    res["trim_n"] = int(keep.sum())
-    res["gamma_flat_trim"] = float(bt[3])
-    res["gamma_flat_trim_err"] = float(max(st[3], nt.std()))
-    # shot noise dilutes the coefficient (regression dilution): divide by lambda
-    lam_l, lam_f = attenuation(c, sne, p, rng)
-    lam_ft = attenuation(c, sne, p, rng, xf_max=float(np.percentile(xf, p.trim_pct)))[1]
-    res["lambda_lens"], res["lambda_flat"], res["lambda_flat_trim"] = lam_l, lam_f, lam_ft
-    # A3's sign is +gamma (fainter); its unit is the column normalised to its mean, T / <T>
-    norm = float(np.mean(1 + xf))
-    up_full = max(beta[3] + 1.645 * sf_cal, 0) / max(lam_f, 1e-3)
-    up_trim = max(bt[3] + 1.645 * res["gamma_flat_trim_err"], 0) / max(lam_ft, 1e-3)
-    res["norm_mean_1_plus_x"] = norm
-    res["gamma_norm_upper95_one_sided"] = float(max(up_full, up_trim) * norm)
-    res["gamma_norm_upper95_unit"] = "mag per unit T/<T>, corrected for shot-noise dilution"
-    return res
 
 
 def main() -> None:

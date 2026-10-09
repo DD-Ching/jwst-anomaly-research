@@ -2,26 +2,31 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-09: S2 flat-kernel SN residuals: no flat-kernel term; γ < 0.035 mag per unit T/⟨T⟩ at α = 2 (D-070)
+## 2026-10-09: S2 flat-kernel SN residuals: no flat-kernel term; γ < 0.027 mag per unit T/⟨T⟩ at α = 2 (D-070)
 - Hypothesis (A3 P2b): SN Ia residuals track a flat-kernel foreground column ∫(1+δ)^α dχ, with sign +γ (fainter),
   after the lensing-kernel column is fitted. Ordinary mimics: lensing magnification, grey dust (colour), host-group
-  overlap (z_s > 0.2), leverage of a few sightlines, shot noise in the column (regression dilution).
-- Data: Pantheon+ (944 unique Hubble-flow SNe, z 0.1–1.3) and LS DR9 photo-z galaxies (z < 21 mag, 2′ discs,
-  32.8 k galaxies). `scripts/s2_flat_kernel.py`, `results/s2_flat_kernel/`.
-- **α = 2 (A3's fiducial), 634 SNe with shells expecting ≥ 1 galaxy (all z_s > 0.2):** γ_F = +0.0007 ± 0.0016 per
-  unit X (scramble p = 0.69); 1 % trimmed +0.0043 ± 0.0038; no colour term (−0.0017 ± 0.0012). Dilution λ = 0.46
-  (trimmed). **One-sided 95 %: γ < 0.035 mag per unit galaxy-traced T/⟨T⟩**, the top of A3's fiducial 0.01–0.04
-  (B-on-A3 expected ~0.015 reach). A matter column (bias b ~ 1–2, ASSUMPTION) weakens it by up to ~b².
-- Lensing column: γ_L = −0.019 ± 0.009 (2.1σ, the lensing sign): a hint of the positive control, not a detection.
+  overlap, leverage of a few sightlines, disc coverage, shot noise in the column (regression dilution).
+- Data: Pantheon+ (944 unique Hubble-flow SNe, z 0.1–1.3) and LS DR9 photo-z galaxies (countmap selection, dereddened
+  z < 21 mag, 2′ discs, 32.3 k galaxies). `scripts/s2_flat_kernel.py`, `results/s2_flat_kernel/`.
+- **α = 2 (A3's fiducial), 505 SNe** (shells expecting ≥ 1 galaxy, so z_s ≳ 0.2; coverage and 5σ cuts remove 15):
+  γ_F = −0.0003 ± 0.0018 per unit X (scramble p = 0.83); 1 % trimmed +0.0024 ± 0.0043; no colour term
+  (−0.0017 ± 0.0012). Dilution λ = 0.92 (0.75 trimmed). Whole-chain injection (γ = 0.01 on full counts, measured on
+  half-thinned counts, 20 trials) recovers 1.04 (full) / 0.72 (trimmed) of the input; the limit is divided by 0.72.
+  **One-sided 95 %: γ < 0.027 mag per unit galaxy-traced T/⟨T⟩.** A3's fiducial is 0.01–0.04 (B-on-A3 expected a
+  ~0.015 reach), and its kill threshold is 0.005. Converting to a matter column (bias b ~ 1–2, ASSUMPTION) weakens the
+  limit by up to ~b².
+- Lensing column: γ_L = −0.017 ± 0.013 (the lensing sign, p = 0.21). The positive control is not detected, as
+  expected at this N (Smith+2014: 1.4σ with 608 SNe).
 - **Failed approaches (rules):**
-  - The linear (α = 1) flat column is 0.995-correlated with the lensing column in 2′ disc counts, so it cannot
-    separate the kernels (limit ≥ 0.26 mag).
+  - The linear (α = 1) flat column is 0.996-correlated with the lensing column in 2′ disc counts. It cannot separate
+    the kernels: the chain injection is not recovered.
   - N(N−1)/E in shells with E ≪ 1 (z_g ≈ 0.045 in a 2′ disc) gave X ≈ 20–54 from 3–5 galaxies. These sightlines
-    drove a spurious "γ < 0.0093" and a −2σ γ_F. Require E ≥ 1 per shell.
-  - Scrambled-column injections recover γ exactly but cannot see regression dilution. Correct with a Poisson-only
-    simulation (`attenuation`).
+    drove a spurious "γ < 0.0093" in the first pass. Require E ≥ 1 per shell.
+  - Scrambled-column injections recover γ exactly but cannot see regression dilution. Use the Poisson-only λ and the
+    thinned-count chain injection. λ on a trimmed sample must trim the simulations too (found by /code-review).
+  - Raw `mag_z` with no maskbits/brick_primary/DUP cuts was the first query; use the repository's countmap selection.
 - **Next:** DES-SN5YR + DES Y3 Gold (Shah+2024's setup: lensing detected at 6σ, the positive control; deeper
-  galaxies → more shells with E ≥ 1, higher λ); the full Pantheon+ covariance in place of the diagonal errors.
+  galaxies give more shells with E ≥ 1); the full Pantheon+ covariance in place of the diagonal errors.
 
 ## 2026-10-09: Owner direction: System A/B hypothesis rounds; round 1 (3 worlds, 3 reviews, 3 conditional survivors) (D-069)
 - Owner ideas (distance self-consistency, missing light with paired excess, transient connectivity, causal event

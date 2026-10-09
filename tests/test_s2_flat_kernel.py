@@ -103,3 +103,28 @@ def test_alpha2_column_is_unbiased_for_poisson():
     )
     c = s2.columns(sne, gal, s2.Params(alpha=2))
     assert abs(np.nanmean(c["xf"])) < 0.05  # unclustered field: <(1 + delta)^2> = 1
+    # a pure Poisson field has no signal in the column: dilution factor near 0
+    sel = np.isfinite(c["xf"])
+    lam_l, lam_f = s2.attenuation(c, sne, s2.Params(alpha=2), rng, sel, n_sim=10)
+    assert abs(lam_l) < 0.3 and abs(lam_f) < 0.3
+
+
+def test_unknown_release_is_ignored():
+    sne = Table({"ra": [10.0], "dec": [0.0], "z": [0.8]})
+    gal = Table(
+        {
+            "ra": [10.0, 10.001],
+            "dec": [0.0, 0.0],
+            "release": [9999, 9999],
+            "z_spec": [-99.0, -99.0],
+            "z_phot_median": [0.3, 0.4],
+        }
+    )
+    c = s2.columns(sne, gal, P)
+    assert c["region"][0] == -1 and np.isnan(c["xf"][0])
+
+
+def test_z_perm_stays_in_bin():
+    z = np.repeat([0.12, 0.33], 30)
+    perm = s2.z_perm(z, np.random.default_rng(5))
+    assert np.array_equal(z[perm], z) and sorted(perm) == list(range(60))
