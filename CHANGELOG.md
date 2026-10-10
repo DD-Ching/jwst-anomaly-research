@@ -3,6 +3,20 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 
+## 2026-10-10: Acceleration V2 audit, first pass: MOA pre-screen chunks reused across vetting changes; injection-loss map
+- Owner brief "Autonomous research acceleration V2": measured audit in `docs/audits/2026-10-10-acceleration-v2.md`
+  (what the repository already covers, the gb12 injection-loss funnel, ranked next units).
+- **Redundancy removed:** a vetting-only `Params` change invalidated every streamed MOA pre-screen chunk; gb12
+  (342 s) and gb7 (487 s) re-streamed rows byte-identical to the tracked ones. Chunk validity now depends only on
+  the pre-screen parameters, the tracked-row constants and `PRESCREEN_CODE` (D-078 addendum 3). gb15, gb17, gb18:
+  all 31 tracked chunks are reused (0 s instead of ~6–8 min each).
+- **Where W3 injections are lost (gb12):** Cut-0 45 % kept, shape cut 23 %, shared-epoch test 75 %, vetting 63 %.
+  Faint sources (I_s > 19.5) carry most of the loss (near the noise). Testable design losses: the shared-epoch veto
+  (25 % of shape passes) and short / long t_E vetting (`jackknife_nights` at 3 d, `feature_bracketed` at 300 d).
+  Sparse sampling does make real peak-dip-peak signals fail as ordinary dips at t_E = 3 d.
+- **Next:** gb15, gb17, gb18 with the reuse fix, then `combine`; a shared-epoch masking study on a dev/validation
+  injection split with the real flags as the false-positive check.
+
 ## 2026-10-10: W3 MOA-II gb12 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have
   changed the plan (vetting record, owner notified).
