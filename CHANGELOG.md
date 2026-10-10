@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: D1 kinematic D_s/D_ds per lens (in progress)
+- Plan: per-lens D_s/D_ds from the TDCOSMO 2025 hierArc kinematic likelihoods vs flat ΛCDM and the other lenses.
+
 ## 2026-10-10: D1 handoff: hierArc kinematic pickles are readable with the existing safe unpickler
 - RXJ1131's `*_const_processed.pkl` is a `DdtHistKin` dict with numpy-only globals; details and next step in TASKS
   "Now" 0 (D1). Not yet used for any result.
