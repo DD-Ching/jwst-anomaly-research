@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: D1 handoff: hierArc kinematic pickles are readable with the existing safe unpickler
+- RXJ1131's `*_const_processed.pkl` is a `DdtHistKin` dict with numpy-only globals; details and next step in TASKS
+  "Now" 0 (D1). Not yet used for any result.
+
 ## 2026-10-10: D1 composite model on SDSS1206: null; model choice moves its pull 0.61σ → 0.54σ (D-073 addendum 3)
 - Hypothesis: the D-073 null depends on the power-law mass model; a composite (stars + NFW) model could shift one lens
   out of line. Only SDSS1206 has a public composite D_dt chain in TDCOSMO 2025.
