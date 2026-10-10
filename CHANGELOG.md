@@ -3,8 +3,20 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 
-## 2026-10-10: W3 MOA-II gb12 re-run under CHAIN_VERSION 2026-10-10.1 (in progress)
-- Claim; results follow.
+## 2026-10-10: W3 MOA-II gb12 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
+- Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have
+  changed the plan (vetting record, owner notified).
+- `run-field --procs 4` in 1,528 s (pre-screen re-streamed 342 s at ~215 light curves/s, CPU 99 %; 73,386 light
+  curves, 5,532 shape passes, 51 off shared epochs; 51 fits 203 s, 46 flags; 2,200 injections). **0 survive.**
+  First failing test: repeated deficit 17, residual deficit 9, eclipse dip 9, bracketing 4, χ² cap 3, other 4.
+  Contact sheet inspected: box dips, quasi-periodic variables, caustic spikes only in the models.
+- Gaia DR3 RP reference matched for 32 / 46 flags this time (VizieR I/355 cone), so the source-flux bound used real
+  references, unlike the earlier cloud runs.
+- Limits (`results/w3_moa/limits_gb12.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 2.3 × 10⁻⁷–1.5 × 10⁻⁶ per star per year
+  (N_s = 1.61 × 10⁷, Nunota et al. 2024, 79 / 80 subfields). Vetting keeps 99 / 156 flagged W3 injections (63 %);
+  PSPL controls: 0 false W3 calls.
+- **Next:** gb15, gb17, gb18 (gb7 in flight), then `combine`; audit which vetting tests remove injected W3 signals
+  (37 % loss per field).
 
 ## 2026-10-10: W3 MOA-II gb11 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have
