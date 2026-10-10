@@ -2,6 +2,51 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: Owner brief: Neutrino Frontier round 1 (E-NF1 ghost pairs: null) and Part 0 speed-ups (D-077, D-078)
+- **Neutrino Frontier** (new program, `docs/neutrino_frontier/`). N-A (literature-blind) wrote four frameworks;
+  N-B (adversarial, checked references) judged three KNOWN-REDUNDANT: stochastic distance (NF-H01), pseudo-Dirac
+  partners (NF-H02; N-A's δm² window is already excluded, arXiv:2406.06476), and the ν–γ Shapiro-delay test
+  (NF-H03). Only NF-H04, delayed "ghost" copies at unrelated positions, is CONDITIONALLY VIABLE, as phenomenology
+  (ladder B). The data audit confirms IceTracks-DR2 (doi:10.7910/DVN/MMIIZA, 1.64 M tracks, CC0) and that every
+  audited host is reachable; track catalogs carry no flavor.
+- **E-NF1 (NF-H04), ICECAT-1 v4, 340 alerts:** wide pairs in 7 lag bins out to 180 d, counts and signalness
+  products (14 cells), 20,000 scrambles. It reproduces D-074 exactly (36 and 138). **Null:** pooled global
+  p = 0.058; the largest cell is 1 h–1 d weighted, z = 2.7, Bonferroni p = 0.094. The 36 pairs were inspected:
+  they span all 13 years, 6 are same-run and two are alert triplets (ordinary day-scale clustering). 95 % CLs
+  limits on R_g per astrophysical alert: ≤ 0.02 (Δt ≤ 10 s), ≤ 0.05 (10 s–1 h), ≤ 0.2 (1 h–1 d), ≤ 0.1
+  (1–7 d), ≤ 0.5 (7–30 d); at 30–180 d only R_g = 1 is excluded. Label: statistical null; a parameter limit on an ad-hoc model.
+- `/code-review` (10 findings, 9 fixed): manifest written only after a successful release; deterministic pin
+  choice; refusal of an underpowered `--n`; CLs limit needs every larger R_g to pass; durable copy accepted by
+  content digest; NaN distance maps for unmapped GW events; unused masks removed; ghost Dec and error from one
+  event. Not changed: `wide_pair_stats` duplicates `count_channel`'s binning (it adds weights; D-074 counts
+  reproduce exactly).
+- Failed approaches (E-NF1): classical limits excluded R_g = 0 on a low fluctuation, so CLs replaced them.
+  Injections tested against the observation plus ghosts gave limits that were too tight; they now use a null draw
+  plus the ghost excess. Without subtracting the random pairs that extra ghost events add, sensitivity at large R_g
+  was overstated.
+- **Speed-ups (Part 0)**, measured on this 4-core cloud machine:
+
+  | Item | Before | After | Gain |
+  |---|---|---|---|
+  | S-2 `classify_gw_gw` per scramble (≈ 644 real GW–GW pairs, 30 seeds, identical classes) | 808 ms | 1.79 ms (numba); 28 ms (numpy fallback) | ×452; ×29 |
+  | S-2 GW–GW pairs/s | 797 | 360,419 | ×452 |
+  | E1 GW `count_all` per scramble (4 channels) | ≈ 0.8 s | 8.1 ms | ≈ ×100 |
+  | `GWMaps` build (skip the 109 unmapped events' distance maps) | 150 s (36 maps + 355 uniform) | 27–29 s (282 maps) | ×5 |
+  | E1 GW directional, full run (`--n 1000` null + injections + map build, same inputs, 60 cells identical, global p 0.833) | 333 s | 52 s | ×6.4 |
+  | S-4 GW sky-map tarballs (704 MB, parallel ranges into memory, per-tarball cache) | > 40 min, unfinished (2026-10-09) | 159 s + 122 s for GWTC-4.1/5.0 (1.7–2.2 MB/s); cached re-run 1 s | — |
+  | E-NF1 null (ICECAT, 14 cells; jit pass counted only to 7 d after review) | 1,375 scrambles/s | 1,982 scrambles/s (4 cores) | ×1.4 |
+- S-1: the store (`derived_store.py`, `derived_publish.py`, durable-first fetch in `e1_gw_skymaps.py`) is built and
+  tested. **Release creation from cloud sessions is refused** (HTTP 403, "not permitted for this session type"),
+  so the first asset waits for the owner or a local session. Today's re-reduction reproduces the pinned maps
+  digest exactly (c5c2e4ff…).
+- Found: the live HEASARC GBM table (8cc2…, 4,391 rows) matches neither pinned snapshot (D-074 5b42…, #122
+  0cb3…), so both GBM-dependent E1 scripts stop in a fresh session until the snapshot is in the durable store or
+  re-pinned. `nf_ghost.py` now fetches only ICECAT-1.
+- S-5: the claim rule is now a 10-minute heartbeat and a takeover only after 60 minutes with no commit and no
+  heartbeat (docs/cloud-routine-prompt.md, research-cycle skill, docs/operations.md).
+- **Next:** publish `derived-data-20261010` (GW maps plus the GBM snapshot) from a session that may create
+  releases; E-NF1 on IceTracks-DR2 (stream per-season files, good-run null); TXS 2014–15 SkyLLH benchmark first.
+
 ## 2026-10-10: W3 MOA-II: the four D-068 chain gaps closed as one post-hoc change (D-068 addendum, CHAIN_VERSION 2026-10-10.1)
 - Hypothesis tested: the chain's survivors gb17-R-6-1-3829 (periodic variable) and gb18-R-9-4-24509 (slow dip with
   season levels) got through four gaps; new tests `exotic_chi2_cap`, `residual_deficit`, `periodic_variable`,

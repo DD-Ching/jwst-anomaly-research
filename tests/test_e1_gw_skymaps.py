@@ -166,3 +166,42 @@ def test_skip_leaves_out_a_known_pair(tmp_path):
     )
     assert D.count_channel(m, gw, gw.mjd, np.zeros(1), b)[0, 0] == 2
     assert D.count_channel(m, gw, gw.mjd, np.zeros(1), b, skip=[(0, 1)])[0, 0] == 1
+
+
+def test_rotated_pixels_match_lonlat_to_healpix():
+    rng = np.random.default_rng(3)
+    dr = rng.uniform(-720, 720, 40)
+    m_hp = D._hp()
+    import astropy.units as u
+
+    lon, lat = m_hp.healpix_to_lonlat(np.arange(12 * D.NSIDE**2))
+    got = D.rotated_pixels(dr)
+    got_a = D.rotated_pixels(dr, antipode=True)
+    for k, d in enumerate(dr):
+        ref = m_hp.lonlat_to_healpix(np.mod(lon.deg + d, 360) * u.deg, lat)
+        ref_a = m_hp.lonlat_to_healpix(np.mod(lon.deg + d + 180, 360) * u.deg, -lat)
+        assert np.array_equal(got[k], ref)
+        assert np.array_equal(got_a[k], ref_a)
+
+
+def test_vectorized_gw_gw_equals_the_loop(tmp_path):
+    rng = np.random.default_rng(11)
+    centres = [(rng.uniform(0, 360), rng.uniform(-80, 80)) for _ in range(12)]
+    vec = D.pix_vectors()
+    prob = []
+    for k, (r, d) in enumerate(centres):  # mix compact, broad and two-lobe maps
+        p = D.gaussian_map(r, d, 2.0 + 6 * (k % 3), vec)
+        if k % 4 == 0:
+            p = p + D.gaussian_map(r + 180, -d, 5.0, vec)
+        prob.append(p / p.sum())
+    names = np.array([f"GW{k:06d}_000000" for k in range(len(centres))])
+    np.savez(tmp_path / "m.npz", name=names, prob=np.array(prob, dtype=np.float32))
+    m = D.GWMaps(list(names), tmp_path / "m.npz")
+    i, j = np.triu_indices(len(names), 1)
+    for seed in range(5):  # fixed seeds: rotations as under scrambles
+        rot = np.random.default_rng(seed).uniform(-360, 360, len(names))
+        ref = D._classify_gw_gw_loop(m, i, j, rot)
+        assert np.array_equal(D._classify_gw_gw_numpy(m, i, j, rot), ref)
+        if D._gw_gw_kernel is not None:
+            assert np.array_equal(D.classify_gw_gw(m, i, j, rot), ref)
+    assert set(np.unique(ref)) >= {1, 2}

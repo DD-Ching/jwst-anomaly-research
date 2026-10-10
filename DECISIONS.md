@@ -3884,3 +3884,92 @@ into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any 
 - The owner sets a new System A brief.
 - Rubin/LSST public alerts give ≥ 10⁵ SNe Ia with hosts (R3-C).
 - A lab cross-correlation of independent noise sources at 10⁻⁵ is published (R3-A).
+
+## D-077 Owner brief 2026-10-10: Neutrino Frontier program; round 1 (four frameworks), data audit and E-NF1 ghost-pair null (2026-10-10)
+
+**Decision.**
+- Owner brief (DD-Ching, 2026-10-10) recorded here: a new, independent Neutrino Frontier program. Neutrinos are
+  probes of emergent spacetime, locality and distance, mass and flavor, hidden degrees of freedom, causal
+  structure, and wormhole or warp physics. The brief restarts hypothesis rounds **for this program only**; it
+  supersedes D-076's pause here and nowhere else. It takes no resources from MOA-II, S1, E1/D1 follow-ups or
+  data validation without a documented allocation decision. Merge policy, guarded files, WIP cap, cloud-disk
+  and notification rules are unchanged.
+- Layout: `docs/neutrino_frontier/` (README with the NF-H registry and experiments, round files, data audit);
+  code in `src/jwst_anomaly/neutrino_frontier.py` and `scripts/nf_*.py`, reusing `event_network.py` and the
+  E1 loaders and nulls.
+- Round 1 (N-A literature-blind invention, N-B adversarial review with checked references):
+  - NF-H01 granular locality (stochastic distance): KNOWN-REDUNDANT, UNTESTABLE NOW (needs ≥ 2 multi-event
+    neutrino flares at different distances).
+  - NF-H02 twin-sheet flavor = pseudo-Dirac partners: KNOWN-REDUNDANT; N-A's δm² window is excluded by public
+    IceCube data (arXiv:2406.06476).
+  - NF-H03 second causal cone = ν–γ Shapiro-delay EP test: KNOWN-REDUNDANT; robust |ε| ≲ 10⁻³–5 × 10⁻³
+    (SN1987A); the LSS-scale bound is ill-defined (arXiv:1907.12453); D-074 GBM × ICECAT covers the rescan.
+  - NF-H04 sparse nonlocal links ("ghost" neutrinos): CONDITIONALLY VIABLE as phenomenology (ladder B). The
+    TXS-flare ghost test is rejected (all-sky flare trials swamp it).
+- E-NF1 (NF-H04): ICECAT-1 v4 wide pairs (D-074 classes) in 7 lag bins (to 180 d), counts and Σ s_i s_j
+  (signalness), 14 cells; `jit` ≤ 7 d, cyclic ±1 yr jitter beyond; 20,000 scrambles (the script refuses fewer
+  than the per-cell threshold needs); empirical p; injection of ghosts with R_g × signalness; **95 % CLs** limits
+  on R_g. ASSUMPTIONs: weighting, the long-bin null
+  (stationary alert rate on ~1 yr), the R_g grid.
+
+**Alternatives rejected.**
+- F3 ε-line rescan of GBM × ICECAT (D-074 null; background ~2.4 pairs; no bound without a signal normalization).
+- F1/F2 compute: no repo data can add to published work.
+- A TXS 2014–15 ghost search in the 10-year track sample: IceCube's all-sky flare search finds chance hot spots at
+  pre-trial p 9 × 10⁻⁶–3.5 × 10⁻⁷ (arXiv:2107.12134), so even R_g = 1 is not decidable.
+- Classical (non-CLs) upper limits: a low fluctuation (1–7 d: 138 vs 149.5) "excluded" even R_g = 0 at 94 %.
+- Testing injected catalogues against the observed catalogue plus ghosts: any ghost exceeds the observation, so
+  limits came out too tight; the fix draws the background from the null and adds the ghost excess.
+- Within-year permutation (D-074 `perm`) for the long bins: it keeps every pairwise lag, so it has no power.
+
+**Evidence.** `results/nf/ghost_pairs.json`; reproduces D-074 (wide 36 at 1 h–1 d, 138 at 1–7 d). Pooled global
+p = 0.058; min Bonferroni p = 0.094 (1 h–1 d, weighted, z = 2.7). The 36 pairs at 1 h–1 d were inspected:
+spread over all 13 years; 6 are two alerts in one run and two are alert triplets (ordinary day-scale clustering
+the ±3 d jitter keeps; without same-run pairs 30 vs 25.4, ~1σ, post hoc). 95 % CLs limits on R_g (per
+astrophysical alert; the smallest grid R_g above which every grid point passes): ≤ 0.02 at Δt ≤ 10 s, ≤ 0.05
+at 10 s–1 h, ≤ 0.2 at 1 h–1 d, ≤ 0.1 at 1–7 d, ≤ 0.5 at 7–30 d; at 30–180 d only R_g = 1 is excluded (R_g,50 not
+reached). Round files: docs/neutrino_frontier/.
+
+**Revisit if.**
+- IceTracks-DR2 (doi:10.7910/DVN/MMIIZA) is streamed: R_g limits on the 1.6 M-event track sample, with its
+  good-run lists as an uptime-aware null.
+- A second public multi-event neutrino flare at a different distance appears (NF-H01).
+- The owner sets a round-2 brief.
+
+## D-078 Pipeline speed-ups (owner brief 2026-10-10, Part 0): numba kernel for GW-GW sky-map classes, durable derived-data store, 60-minute claim rule (2026-10-10)
+
+**Decision.**
+- S-2: `classify_gw_gw` (E1 GW sky maps) uses an exact ring-shift rotation (an RA rotation keeps a HEALPix pixel
+  centre on its iso-latitude ring and moves it by floor(dr/w + 0.5) slots; the antipode sits on the mirror ring)
+  and per-ring 128-bit masks. A numba kernel tests each pair ring by ring (window of B's doubled mask AND A's
+  mask, early exit). numba is in the `dev` extra (so CI tests it) and a `fast` extra; without it a vectorized
+  numpy bitmask path runs. The per-pair loop stays as the test reference. Unmapped GW events get no distance
+  maps (never counted).
+- S-1: `src/jwst_anomaly/derived_store.py`: reduced products (< 50 MB, never raw archives) are GitHub Release
+  assets tagged `derived-data-YYYYMMDD`, pinned in `data/manifests/derived_data.ecsv` (sha256, size, sources,
+  code commit). Scripts try the durable copy first and verify it, then the source (`e1_gw_skymaps.py` accepts it
+  only when its content digest equals the pinned `maps_sha256`). `scripts/derived_publish.py` publishes.
+- S-5: a claimed unit heartbeats at least every 10 min; takeover only after 60 min with no commit AND no
+  heartbeat (docs/cloud-routine-prompt.md, research-cycle skill, docs/operations.md).
+- S-3/S-4: profile before any run > 10 min; large fetches start in the background in the first minutes, with
+  parallel range requests into memory, per-file caches and retried size probes (already in
+  `e1_gw_skymaps.py`).
+
+**Alternatives rejected.**
+- Re-download each run: 704 MB from Zenodo at 0.15–2 MB/s per session (yesterday it did not finish in 40 min).
+- git-lfs: bandwidth quota on a public repo and data in git history (CLAUDE.md).
+- Owner-machine cache: not reachable from cloud sessions.
+- numba as a core dependency (D-004 rejected PyOD partly for that); kept optional with a fallback.
+- Precomputed per-pair shift tables (the pair set never saturates: 21k rows after 200 scrambles; 13×) and
+  precomputed rotation tables (scattered gathers; 21×): slower than the kernel.
+- A grid in RA rotation: not exact; the ring shift is exact (0 mismatches in 3.7 M rotated centres).
+
+**Evidence.** CHANGELOG 2026-10-10 speed table. 30 fixed-seed scrambles, 19,313 real GW–GW pairs: loop, numpy
+and numba classes identical; loop 808 ms, numpy 28 ms (×29), numba 1.79 ms (×452) per scramble.
+- Release creation from a cloud session: HTTP 403 "Creating, editing, or deleting releases is not permitted for
+  this session type". The store is built and tested; the first asset waits for a session that may publish.
+- The live HEASARC GBM table no longer matches either pinned snapshot (D-074 5b42…, #122 0cb3…; live 8cc2…, 4,391
+  rows): a pinned GBM snapshot cannot be re-fetched. It belongs in the durable store.
+
+**Revisit if.** Cloud sessions gain release permission (publish the GW maps and the pinned GBM snapshot), or
+another store is approved by the owner.
