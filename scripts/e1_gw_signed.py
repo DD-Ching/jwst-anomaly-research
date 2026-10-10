@@ -98,7 +98,6 @@ def main(argv=None) -> int:
     ap.add_argument("--cpu", type=int, default=os.cpu_count() or 1)
     a = ap.parse_args(argv)
     t0 = time.time()
-    E.MANIFEST = D.EVENTS_MANIFEST
     ev = E.load(E.fetch(False))
     s = {k: en.Sample.from_table(v) for k, v in ev.items()}
     names = [str(x) for x in ev["GW"]["name"]]

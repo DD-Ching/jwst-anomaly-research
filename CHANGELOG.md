@@ -2,6 +2,46 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: E1 re-pinned to one GBM snapshot (8cc2…, 4,392 bursts): every E1 conclusion unchanged (D-078 addendum 2)
+- Hypothesis before running: only bursts added or revised after the old pins differ, so every E1 channel stays
+  null; a family p below 0.01 would have changed the plan.
+- Fresh fetch: only `fermigbrst.vot` changed (sha256 8cc2823f…, 424,672 B, 4,392 rows; D-078 lists 4,391 rows for
+  this digest). ICECAT-1, GWTC and CHIME Cat 2 match their pins. `data/manifests/e1_gw_events.ecsv` is removed:
+  every E1 script (GW ones included) now reads the single `e1_events.ecsv`, so the pins cannot diverge again.
+- Like-for-like check (observed counts only): the new snapshot minus bn261008763 and bn261007236 (triggered
+  2026-10-07/08, last modified 2026-10-09) reproduces all 75 tracked D-074 observed counts. The other revision
+  after 2026-10-09 (bn260930833) changes no cell. No trigger is later than 2026-10-08, so a trigger-date cut is a
+  no-op. With the new bursts, 5 GBM–GBM cells gain 1–10 pairs (1d–7d all 17,523 → 17,533).
+- Re-runs (same seeds and scramble counts as tracked; 4 cores): `e1_events.py` 456 s, antipodal (`--n 2000`),
+  signed lag, CHIME flag, GW directional, GW signed (15–51 s each).
+
+  | Result | old pin | new pin |
+  |---|---|---|
+  | D-074 five requested channels, family p (jit) | 0.278 | 0.273 |
+  | D-074 wide + GW cells, pooled p (jit / jitday) | 0.0058 / 0.0033 | 0.0053 / 0.0029 |
+  | D-074 all 75 cells, global p (perm / jit / jitday) | 0.0021 / 0.0036 / 0.0047 | 0.0020 / 0.0043 / 0.0041 |
+  | Antipodal global p (addendum 2) | 0.557 | 0.531 |
+  | Signed-lag global p (addendum 3) | 0.676 | 0.568 |
+  | GW sky-map channels global p (addendum 4) | 0.829 | 0.833 |
+  | Signed-lag GW cells global p (addendum 5) | 0.555 | 0.551 |
+  | CHIME flag tests (CHIME only) | — | identical |
+
+  The wide + GW driver is still CHIME–CHIME 1 h–1 d wide, which the calibrated rate-modulated null explains
+  (D-074 addendum; CHIME-only, not re-run). Changes outside GBM cells are Monte Carlo noise from shifted
+  random streams: one RNG per scramble serves all catalogues in order, so two extra GBM bursts reshuffle the
+  CHIME and ICECAT draws too (|Δz| ≤ 0.36, |Δp| ≤ 0.01 in counts.ecsv). Injection outputs in limits.ecsv move more
+  (40 trials per cell): `ul95_rate_per_anchor` ≤ 24 %, `eff` up to 19 % (CHIME–CHIME 1d–7d wide 0.999 → 0.806),
+  `n50_detect` GBM–ICECAT 0s–10s wide 3 → 5.
+- Fixed after `/code-review`: the null-ensemble cache name now carries the input digests (an old-snapshot cache
+  was silently reused without `--refresh`); `e1_gw_events.ecsv` and its override removed (see above).
+- Not done (follow-up): per-catalogue random streams in the nulls (`SeedSequence` keyed by catalogue) would make
+  re-pins like-for-like outside the changed catalogue, but they change every tracked number, so they need their
+  own PR.
+- **Open risk / next (local session):** `main` pins a snapshot that only this ephemeral session held (cloud
+  sessions cannot create releases, D-078). HEASARC serves 8cc2… until its next GBM update, so a local session
+  should fetch it right away, check the digest, publish it to the derived-data store and wire `e1_events.fetch`
+  to it. If the digest has moved on, run `e1_events.py --refresh` there and publish that snapshot instead.
+
 ## 2026-10-10: First derived-data release `derived-data-20261010` (GW sky maps); pinned GBM snapshot not recoverable (D-078 addendum)
 - Local session on the owner's machine (cloud sessions cannot create releases); details in the D-078 addendum.
   Asset `gw_skymaps_nside32.npz`, 4,337,802 B, sha256 ab0330588b9a380f2f49b0d4dae809ea6cd1ed6ac1d99718e23f66d00c8e1ad5
