@@ -50,3 +50,17 @@ def test_ymw16_known_sightline():
     # FRB 20121102A (l = 174.95, b = -0.22): YMW16 gives ~287 pc cm^-3 through the whole disc
     dm = float(d1.ymw16_dm_ism(82.99458, 33.14793)[0])
     assert 250.0 < dm < 320.0
+
+
+def test_td_lens_uses_a_final_j1206_chain_as_given():
+    td = {
+        n: {"ddt_model": np.full(4, 5000.0), "kappa": np.full(4, 0.1), "n_chain": 4}
+        for n in ("J1206", "RXJ1131")
+    }
+    plain = d1._td_lens(td, "kext")
+    assert plain["J1206"]["ddt"] == pytest.approx(np.full(4, 5000.0 / 0.9))
+    final = np.array([5700.0, 5710.0, 5720.0, 5730.0])
+    swapped = d1._td_lens(td, "kext", final)
+    assert swapped["J1206"]["ddt"] is final  # kappa_ext already folded in: not applied twice
+    assert swapped["RXJ1131"]["ddt"] == pytest.approx(plain["RXJ1131"]["ddt"])
+    assert set(d1.J1206_FINAL) == {"final_power_law", "final_composite"}

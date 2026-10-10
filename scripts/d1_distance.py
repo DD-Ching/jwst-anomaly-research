@@ -892,6 +892,20 @@ TD_REDSHIFTS = {**REDSHIFTS, "DES0408": (0.597, 2.375), "WGD2038": (0.2283, 0.77
 TD_ALL = ALL + ["DES0408", "WGD2038"]
 # "kext": own TDCOSMO kappa_ext PDF per lens (the test); "nokext": kappa_ext = 0 (diagnostic)
 KEXT_VARIANTS = ("kext", "nokext")
+# SDSS1206 final D_dt chains (kappa_ext and kappa_pert already applied; TDCOSMO 2025 release):
+# a model-choice check, composite against power law (`tdcosmo --j1206`); the power-law one also
+# validates this script's pre-LOS power-law + kappa_ext treatment
+J1206_FINAL = {
+    "final_power_law": "1a54159f2169f265c515ba050c2333bed0e5192398696dd48037dbcce7857015",
+    "final_composite": "66fae30996064ad6d633bc0f21014378468791505ab0e92720cbadb286a37fb7",
+}
+for _m, _sha in J1206_FINAL.items():
+    FILES[f"TD_J1206_{_m}"] = (
+        TDCOSMO,
+        TDCOSMO_COMMIT,
+        f"{_TD}SDSS1206+4332/{_m}_D_dt.npy",
+        _sha,
+    )
 for _n, (_fd, _dsha, _fk, _ksha) in TDCOSMO_PL.items():
     FILES[f"TD_{_n}_ddt"] = (TDCOSMO, TDCOSMO_COMMIT, _TD + _fd, _dsha)
     FILES[f"TD_{_n}_kext"] = (TDCOSMO, TDCOSMO_COMMIT, _TD + _fk, _ksha)
@@ -949,9 +963,10 @@ def load_tdcosmo_pl(root: Path, rng: np.random.Generator, n_keep: int, rows: lis
     return out
 
 
-def _td_lens(td: dict, variant: str) -> dict:
-    """lens dict for ddt_loo: D_dt with the variant's kappa_ext treatment, equal weights."""
-    return {
+def _td_lens(td: dict, variant: str, j1206=None) -> dict:
+    """lens dict for ddt_loo: D_dt with the variant's kappa_ext treatment, equal weights.
+    ``j1206``: SDSS1206 D_dt samples that already include kappa_ext (a final chain) or None."""
+    out = {
         n: {
             "ddt": d["ddt_model"]
             if variant == "nokext"
@@ -960,6 +975,9 @@ def _td_lens(td: dict, variant: str) -> dict:
         }
         for n, d in td.items()
     }
+    if j1206 is not None:
+        out["J1206"] = {"ddt": j1206, "w": None}
+    return out
 
 
 def run_tdcosmo(args) -> None:
@@ -969,17 +987,28 @@ def run_tdcosmo(args) -> None:
     rows_m: list = []
     td = load_tdcosmo_pl(Path(args.tdcosmo), rng, params.n_obs, rows_m)
     OUT.mkdir(parents=True, exist_ok=True)
+    j1206, variants, tag = None, KEXT_VARIANTS, ""
+    if args.j1206 != "prelos_power_law":  # final chain: kappa_ext included, so kext only
+        a = np.load(pinned(f"TD_J1206_{args.j1206}", {TDCOSMO: Path(args.tdcosmo)}, rows_m))
+        j1206 = dc.resample(a[a > 0], params.n_obs, rng)
+        variants, tag = ("kext",), f"_j1206_{args.j1206}"
     n_trials = len(TD_ALL)  # ASSUMPTION: Sidak over the kext pulls (nokext is a diagnostic)
     thr = dc.local_sigma_threshold(n_trials, params.flag_sigma_global)
 
     rows, null, sens = [], {}, {}
     inj_rows = []
-    for v in KEXT_VARIANTS:
-        lens = _td_lens(td, v)
+    for v in variants:
+        lens = _td_lens(td, v, j1206)
         res = ddt_loo(lens, rng, params, TD_REDSHIFTS, names=TD_ALL)
         for r in res:
             q = np.percentile(lens[r["lens"]]["ddt"], [16, 50, 84])
-            k = np.percentile(td[r["lens"]]["kappa"], [16, 50, 84]) if v == "kext" else (0, 0, 0)
+            k = (
+                np.percentile(td[r["lens"]]["kappa"], [16, 50, 84])
+                if v == "kext" and not (j1206 is not None and r["lens"] == "J1206")
+                else (np.nan,) * 3  # nokext, or a final chain with kappa_ext folded in
+            )
+            if v == "nokext":
+                k = (0, 0, 0)
             rows.append(
                 {
                     "lens": r["lens"],
@@ -1054,6 +1083,7 @@ def run_tdcosmo(args) -> None:
             "n_trials": n_trials,
             "local_sigma_threshold": thr,
             "seed": args.seed,
+            "j1206_chain": args.j1206,
         }
     )
     it.meta.update(
@@ -1062,9 +1092,9 @@ def run_tdcosmo(args) -> None:
             "source": "tdcosmo_lenses.ecsv inputs, one lens's D_dt x `factor`",
         }
     )
-    t.write(OUT / "tdcosmo_lenses.ecsv", overwrite=True)
-    it.write(OUT / "tdcosmo_injections.ecsv", overwrite=True)
-    for v in KEXT_VARIANTS:
+    t.write(OUT / f"tdcosmo_lenses{tag}.ecsv", overwrite=True)
+    it.write(OUT / f"tdcosmo_injections{tag}.ecsv", overwrite=True)
+    for v in variants:
         sv = it[it["variant"] == v]
         sens[v] = {}
         for name in TD_ALL:
@@ -1076,6 +1106,7 @@ def run_tdcosmo(args) -> None:
             }
     summary = {
         "provenance": str(Provenance.MODEL_PREDICTION),
+        "j1206_chain": args.j1206,
         "n_trials": n_trials,
         "local_sigma_threshold": round(thr, 3),
         "flagged": [r["lens"] for r in rows if r["flag"]],
@@ -1090,7 +1121,9 @@ def run_tdcosmo(args) -> None:
         "min_factor_at_threshold_from_injections": sens,
         "params": {k: v for k, v in vars(params).items()},
     }
-    (OUT / "tdcosmo_summary.json").write_text(json.dumps(summary, indent=1, default=str) + "\n")
+    (OUT / f"tdcosmo_summary{tag}.json").write_text(
+        json.dumps(summary, indent=1, default=str) + "\n"
+    )
     write_manifest(rows_m, "tdcosmo")
     print(t["lens", "variant", "Ddt_p50", "kext_p50", "z_D_loo", "H0_loo_others", "flag"])
     print(
@@ -1123,6 +1156,13 @@ def main() -> None:
     c.add_argument("--n-null-pred", type=int, default=50_000)
     c.add_argument("--n-null", type=int, default=100)
     c.add_argument("--seed", type=int, default=20261009)
+    c.add_argument(
+        "--j1206",
+        choices=("prelos_power_law", *J1206_FINAL),
+        default="prelos_power_law",
+        help="SDSS1206 chain: the pre-LOS power law + kappa_ext (default) or a TDCOSMO final "
+        "chain (kappa_ext included; final_composite is the model-choice check)",
+    )
     b = sub.add_parser("frb")
     b.add_argument("--frb", default=str(d / "FRB"))
     b.add_argument("--seed", type=int, default=20261009)
