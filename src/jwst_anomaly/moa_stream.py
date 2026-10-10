@@ -89,6 +89,9 @@ class RangeReader:
                     elif r.status_code == 200:  # range ignored: read only a small file
                         n = r.headers.get("Content-Length")
                         if a == 0 and n is not None and int(n) <= SMALL_FILE:
+                            if self.total is not None and int(n) != self.total:
+                                msg = f"{self.url}: size {n} is not the pinned {self.total}"
+                                raise OSError(msg)
                             data = r.content
                             if len(data) >= b:
                                 return data[:b]
@@ -135,7 +138,10 @@ def read_segment(
             return out
         end = min(max(need, base + len(buf) + (1 << 20)), total)
         end += (-end) % 512 if end < total else 0
-        buf = buf + reader.read(base + len(buf), min(end, total))  # rare: a member past `stop`
+        more = reader.read(base + len(buf), min(end, total))  # rare: a member past `stop`
+        if not more:  # a short (truncated) source would otherwise loop here forever
+            raise OSError(f"no bytes at offset {base + len(buf)} of {total}: truncated source?")
+        buf = buf + more
 
 
 def read_segment_hashed(reader: RangeReader, start: int, stop: int, total: int):

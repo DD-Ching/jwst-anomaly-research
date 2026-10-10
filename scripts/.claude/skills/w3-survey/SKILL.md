@@ -30,7 +30,8 @@ docs/exotic_limits.md "W3 in the OGLE-IV microlensing samples", "W3 in MOA-II".
   stored) into one tracked table per 4 GiB in `results/w3_moa/prescreen/`; `run-field` runs every stage, skipping
   finished pre-screen and fit chunks; `combine` sums N_s T ε over the tracked `limits_gb*.ecsv`. Long queues run
   detached (`setsid nohup`, logs under `derived/w3_moa/`): harness background tasks are killed after 30 min.
-- Always `OMP_NUM_THREADS=1` with process pools; `JWST_ANOMALY_DATA` set.
+- Always `OMP_NUM_THREADS=1` with process pools; `JWST_ANOMALY_DATA` set; install the `mulens` extra (fresh cloud venvs
+  lack it, and without it the parallax and binary-lens tests were skipped silently; the stages now refuse to run).
 
 ## 4. Vetting chain (cheapest first; never drop a test for speed)
 refit with every ordinary model (PSPL, FSPL, parallax with |π_E| ≤ 5, D-058) → robust errors / isolated outliers →

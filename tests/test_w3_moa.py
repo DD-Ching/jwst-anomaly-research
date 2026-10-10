@@ -424,11 +424,16 @@ def test_combined_limit_sums_star_years_times_efficiency(tmp_path, monkeypatch):
             for te in wm.INJ_TE
             for rho in wm.INJ_RHO
         ]
-        Table(rows).write(tmp_path / f"limits_{field}.ecsv")
+        Table(rows, meta={"chain": wm.CHAIN_VERSION}).write(tmp_path / f"limits_{field}.ecsv")
     out = Table.read(wm.run_combine())
     assert out["rate95_per_star_yr"][0] == pytest.approx(3.0 / (4e6 * 8.0 * 0.1))
     assert out["rate95_conservative"][0] == pytest.approx(2 * out["rate95_per_star_yr"][0])
     assert out["n_fields"][0] == 2 and out["n_inj"][0] == 400
+    stale = Table.read(tmp_path / "limits_gb21.ecsv")
+    stale.meta["chain"] = "older"
+    stale.write(tmp_path / "limits_gb21.ecsv", overwrite=True)
+    with pytest.raises(SystemExit, match="older chain"):
+        wm.run_combine()
 
 
 def test_published_star_counts_are_used_where_they_exist():
@@ -476,6 +481,7 @@ def test_open_flags_give_an_efficiency_table_and_no_limit(tmp_path, monkeypatch)
     ]
     inj = Table(rows)
     inj.meta["is_sampling"] = "lf"
+    inj.meta["chain"] = wm.CHAIN_VERSION
     inj.write(tmp_path / "injections_gb20.ecsv")
     with pytest.raises(SystemExit, match="flags survive"):
         wm.run_limit()
@@ -492,3 +498,25 @@ def test_fit_and_vet_stages_refuse_to_run_without_mulensmodel(monkeypatch, cmd):
     with pytest.raises(SystemExit) as exc:
         wm.main(["--field", "gb22", cmd])
     assert exc.value.code == 2
+
+
+def test_injections_are_vetted_against_the_injected_source_flux(monkeypatch):
+    """exotic_in_domain's source-flux bound uses the injected magnitude, not the lenient default."""
+    seen = {}
+
+    def fake_vet(job):
+        seen["d"] = job[0]
+        return {"tests": [("screen_flag", True, "")], "survives": False, "dbic_all": 0.0,
+                "exotic": "N1neg"}  # fmt: skip
+
+    monkeypatch.setattr(wm, "cut0_emulated", lambda *a, **k: True)
+    monkeypatch.setattr(wm, "prescreen_pass", lambda *a, **k: True)
+    monkeypatch.setattr(wm, "_POP", None)
+    monkeypatch.setattr(wm, "vet_one", fake_vet)
+    t = _cadence()
+    prm = {"Is": 19.5, "t0": float(t[450]), "tE": 30.0, "u0": 0.3, "rho": 0.01, "ra": 270.0,
+           "dec": -25.0}  # fmt: skip
+    row = wm._inject_worker(("W3", "gb22-R-2-1-7", t, np.zeros_like(t), np.ones_like(t), None, prm))
+    assert row["error"] == ""
+    assert seen["d"]["ref_mag"] == 19.5
+    assert wm.reference_flux(seen["d"])[1].endswith("19.50")
