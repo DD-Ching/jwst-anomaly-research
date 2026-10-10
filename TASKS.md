@@ -78,7 +78,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    2026-10-10, `CHAIN_VERSION` 2026-10-10.1). All eleven fields re-run under it (gb18 last): 0 survivors, limits tracked (CHANGELOG 2026-10-10; gb18's t_E = 300 d,
    ρ = 0.1 cell has 0 recoveries). **Combined (11 fields): Γ₉₅ ≈ 3.2 × 10⁻⁸–1.8 × 10⁻⁷ per star per year**
    (`results/w3_moa/limits_combined.ecsv`; no field > 19 % of any cell). The lenient-reference fields were re-vetted with a working CDS XMatch: 0 survivors (CHANGELOG 2026-10-10). Next:
-   then gb13 (stopped at 25 / 78 fits) and more Nunota et al. 2024 Table 1 fields. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
+   gb13 run (2026-10-10): 69 flags, one chain survivor gb13-R-7-0-76483 (a one-off 2013 dimming, no caustic spikes;
+   `docs/candidates/gb13-R-7-0-76483.md`): `/vet-candidate` it, then gb13 injections and `combine`; then more Nunota
+   et al. 2024 Table 1 fields. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
    injections both selected and flagged; one real flag, not a candidate). Next: Gaia DR3 variables with epoch
    photometry (vari_summary; check by injection whether W3 survives the variability classifier first), KMTNet
    public seasons, OGLE EWS (owner decision, terms). Optional:

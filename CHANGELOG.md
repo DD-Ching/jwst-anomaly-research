@@ -2,8 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-10: W3 MOA-II gb13 under CHAIN_VERSION 2026-10-10.1 (in progress)
-- Plan: `run-field --field gb13` (stopped at 25 / 78 fits on 2026-10-09), then `combine` over twelve fields.
+## 2026-10-10: W3 MOA-II gb13 under CHAIN_VERSION 2026-10-10.1: one chain survivor, likely an ordinary dimming
+- Hypothesis before running: 0 survivors, as in the other eleven fields; a survivor whose data show caustic spikes
+  would have changed the plan.
+- `run-field --procs 4`: all 13 pre-screen chunks reused (100,150 light curves, 1,512 shape passes, 78 off shared
+  epochs); 78 fits 481 s, 69 flags; CDS XMatch worked (Gaia DR3 RP for 45 / 69). **68 fail** (repeated deficit 25,
+  residual deficit 17, eclipse dip 10, bracketing 10, neighbour 3, χ² cap 2, smooth dip 1). **gb13-R-7-0-76483
+  passes every test**; `run-field` stopped before injections, as designed.
+- Contact sheet and whole light curve inspected (`docs/candidates/gb13-R-7-0-76483.md`): a one-off ≈ 150-d dimming in
+  2013 only, deepest at HJD ≈ 2456537; no caustic spikes in the data; the exotic preference drops from ΔBIC −7,122
+  to −73 after removing 2 of 62 nights, against a red-noise baseline (χ²/dof 1.57). Likely an ordinary dimming;
+  not a candidate until vetted. Owner notified.
+- Failed approach (cloud I/O): the first run's `metadata.ipac.tar.gz` download failed its sha256 (same size and
+  Last-Modified upstream); a plain retry passed. Treat a single checksum failure as a transfer error.
+- **Next:** `/vet-candidate gb13-R-7-0-76483`; then gb13 injections (`run-field` refuses while a survivor stands)
+  and `combine` with twelve fields.
 
 ## 2026-10-10: W3 MOA-II cloud re-vet of the lenient-reference fields: 0 survivors
 - Hypothesis before running: a working Gaia DR3 RP reference only tightens `exotic_in_domain`, so 0 survivors stays.

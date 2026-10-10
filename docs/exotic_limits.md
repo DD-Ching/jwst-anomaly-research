@@ -1083,6 +1083,9 @@ it applied to real flags. The efficiencies, and every per-field and combined lim
   chain gaps these two expose are listed in D-068; gb17 and gb18 stay out of any combined limit until the chain
   carries those tests and every field is re-injected.
 - gb13 was being streamed when the run stopped (25 / 78 flags fitted, 2026-10-09 13:02Z); it is not in this table.
+  Re-run 2026-10-10 under CHAIN_VERSION 2026-10-10.1: 100,150 light curves, 69 flags, one chain survivor
+  (`docs/candidates/gb13-R-7-0-76483.md`, a one-off 2013 dimming without caustic spikes; vetting pending), no
+  injections yet, so gb13 is still outside the combined limit.
 
 #### The first six (gb11, gb16, gb19, gb20, gb21, gb22)
 
