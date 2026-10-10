@@ -172,12 +172,37 @@ def reduce_tar(key: str) -> dict:
     }
 
 
+def durable_copy(out: Path) -> bool:
+    """S-1: fetch the published reduced maps (``derived_store``) and accept them only when their
+    content digest equals the one pinned in ``MANIFEST``. False means: reduce from the source."""
+    from astropy.table import Table
+
+    from jwst_anomaly import derived_store
+
+    npz = out / "gw_skymaps_nside32.npz"
+    if not MANIFEST.exists():
+        return False
+    want = Table.read(MANIFEST, format="ascii.ecsv").meta.get("maps_sha256")
+
+    def ok() -> bool:
+        if want is None or not npz.exists():
+            return False
+        z = np.load(npz)
+        return maps_digest(z["name"], z["prob"]) == want
+
+    # a local reduction is accepted by its content digest (npz bytes differ between runs)
+    return ok() or (derived_store.fetch(npz.name, npz) is not None and ok())
+
+
 def main(argv=None) -> None:
     from astropy.table import Table
 
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=None, help="default: <data root>/e1_events")
     ap.add_argument("--tar", nargs="*", default=list(TARS))
+    ap.add_argument(
+        "--refresh", action="store_true", help="skip the durable copy; reduce from the tarballs"
+    )
     a = ap.parse_args(argv)
     if a.out is None:
         from jwst_anomaly.paths import data_root
@@ -185,6 +210,9 @@ def main(argv=None) -> None:
         a.out = data_root() / "e1_events"
     a.out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
+    if not a.refresh and set(a.tar) == set(TARS) and durable_copy(a.out):
+        print(f"durable copy verified in {time.time() - t0:.0f} s; nothing to reduce")
+        return
     # one tarball per call; for speed run one process per --tar KEY, then a plain run merges the
     # caches. Each reduced tarball is cached so a failed fetch never loses the others.
     res = []

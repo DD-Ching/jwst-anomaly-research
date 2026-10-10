@@ -1138,3 +1138,55 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - YMW16 Galactic electron-density model, Yao, Manchester & Wang 2017, ApJ 835, 29 (arXiv:1610.09448), through pygedm
   3.3.0 (https://pypi.org/project/pygedm/3.3.0/, sdist; Price, Flynn & Deller 2021, PASA 38, e038, arXiv:2106.15816):
   only its compiled `ymw16` extension and parameter files are used (D-073 addendum). Accessed 2026-10-09.
+
+## Neutrino Frontier round-1 review (accessed 2026-10-10; docs/neutrino_frontier/round1_review.md)
+- Stuttard 2021, "Neutrino signals of lightcone fluctuations resulting from fluctuating space-time", arXiv:2103.15313
+- "Probing Lorentz Violation in Neutrino Propagation from a Core-Collapse Supernova", arXiv:1110.4848
+- Perlman et al. 2015, "New Constraints on Quantum Gravity from X-ray and Gamma-Ray Observations", ApJ 805, 10, arXiv:1411.7262
+- Beacom et al. 2004, "Pseudo-Dirac Neutrinos, a Challenge for Neutrino Telescopes", arXiv:hep-ph/0307151
+- Rink & Sen 2022, "Constraints on pseudo-Dirac neutrinos using high-energy neutrinos from NGC 1068", arXiv:2211.16520
+- Dixit, Miranda & Razzaque 2024, "Searching for Pseudo-Dirac neutrinos from Astrophysical sources in IceCube data", arXiv:2406.06476
+- Martinez-Soler, Perez-Gonzalez & Sen 2022, "SN1987A still shining: A Quest for Pseudo-Dirac Neutrinos", PRD 105, 095019, arXiv:2105.12736
+- Sen 2022, "Constraining pseudo-Dirac neutrinos from a galactic core-collapse supernova", arXiv:2205.13291
+- Longo 1988, PRL 60, 173, doi:10.1103/PhysRevLett.60.173 (SN1987A nu-gamma Shapiro delay)
+- Krauss & Tremaine 1988, PRL 60, 176, doi:10.1103/PhysRevLett.60.176 (SN1987A WEP test)
+- Boran, Desai & Kahya 2019, "Constraints on differential Shapiro delay between neutrinos and photons from IceCube-170922A", EPJC 79, 185, arXiv:1807.05201
+- "Multimessenger Tests of Einstein's Weak Equivalence Principle and Lorentz Invariance with a High-energy Neutrino from a Flaring Blazar", arXiv:1807.06504
+- Minazzoli, Johnson-McDaniel & Sakellariadou 2019, "Shortcomings of Shapiro delay-based tests of the equivalence principle on cosmological scales", arXiv:1907.12453; Moriond summary arXiv:2203.11215
+- LVK 2017, "Gravitational Waves and Gamma-rays from a Binary Neutron Star Merger: GW170817 and GRB 170817A", arXiv:1710.05834
+- IceCube 2018, "Neutrino emission from the direction of the blazar TXS 0506+056 prior to the IceCube-170922A alert", Science 361, 147, arXiv:1807.08794
+- IceCube et al. 2018, "Multi-messenger observations of a flaring blazar coincident with high-energy neutrino IceCube-170922A", arXiv:1807.08816
+- IceCube 2017, "Extending the search for muon neutrinos coincident with gamma-ray bursts in IceCube data", ApJ 843, 112, arXiv:1702.06868
+- IceCube 2021, "Every Flare, Everywhere: An All-Sky Untriggered Search for Astrophysical Neutrino Transients Using IceCube Data", ICRC2021, arXiv:2107.12134
+- IceCube 2021, "IceCube Data for Neutrino Point-Source Searches Years 2008-2018", arXiv:2101.09836
+- IceCube 2023, "IceCat-1: the IceCube Event Catalog of Alert Tracks", arXiv:2304.01174
+- Stein et al. 2021, "A tidal disruption event coincident with a high-energy neutrino", arXiv:2005.05340
+- Päs, Pakvasa & Weiler 2005, "Sterile-active neutrino oscillations and shortcuts in the extra dimension", PRD 72, 095017, arXiv:hep-ph/0504096
+- 2024, "The neutrino flavor oscillations in the static and spherically symmetric black-hole-like wormholes", arXiv:2412.02144
+- LVK 2023, "Search for gravitational-lensing signatures in the full third observing run of the LIGO-Virgo network", arXiv:2304.08393
+
+## Neutrino Frontier data audit (accessed 2026-10-10; docs/neutrino_frontier/data_audit.md)
+- IceCube IceTracks-DR2, Harvard Dataverse doi:10.7910/DVN/MMIIZA (v3.1, 2026-10-05; CC0), 2008-04-06 to
+  2022-05-23, 1,643,355 track events; paper arXiv:2605.19040. Events and uptime files (28, ~210 MB) streamed
+  2026-10-10 via `https://dataverse.harvard.edu/api/access/datafile/<id>`; ids and sha256 of the served `.tab`
+  in `data/manifests/nf_icetracks_dr2.ecsv` (Dataverse's md5 is of the original CSV, not the served file).
+- IceCube IceTracks-DR1 (10-yr PS), doi:10.7910/DVN/VKL316 (v2.0) / data DOI 10.21234/CPKQ-K003, arXiv:2101.09836;
+  same events as HEASARC TAP table `icecubepsc` (1,134,450 rows).
+- IceCube HESE 12-yr DirectFit, doi:10.7910/DVN/PZNO2T (v2.0; `data.tab`, 164 events), PoS(ICRC2023)1030.
+- IceCube HESE 7.5-yr, doi:10.21234/4EQJ-BB17 (zip 78,998,573 B), PRD 104, 022002 (arXiv:2011.03545).
+- IceCube flavor composition 11.4 yr, doi:10.7910/DVN/CBNMEB (v2.0), arXiv:2510.24957.
+- IceCube TXS 0506+056 2008-2017 events, doi:10.21234/B4QG92 (zip 31,520 B), Science 361, 147
+  (doi:10.1126/science.aat2890).
+- IceCube GW O3 joint search replication data, doi:10.7910/DVN/34B5AP (v1.0), arXiv:2601.07595.
+- IceCat-2 preliminary (7 events), doi:10.7910/DVN/RX28YT (v1.0); proceedings arXiv:2507.06176.
+- GCN AMON IceCube gold/bronze and cascade tables, https://gcn.gsfc.nasa.gov/amon_icecube_gold_bronze_events.html,
+  https://gcn.gsfc.nasa.gov/amon_icecube_cascade_events.html (live pages; snapshot sha256 to be pinned on use).
+- GCN Circulars, https://gcn.nasa.gov/circulars/<id>.json and archive.json.tar.gz (31.4 MB, daily).
+- ANTARES 2007-2017 point-source tracks, https://opendata.km3net.de dataset "ANTARES 2007-2017 Point Source
+  Analysis" v1.1 (DOI 10.5072/FK2/HZQTC5 is a DataCite test prefix, not persistent; CC BY 4.0).
+- KM3-230213A event data, https://opendata.km3net.de v1.0 (test-prefix DOI 10.5072/FK2/JW72C9); Nature 638, 376
+  (doi:10.1038/s41586-024-08543-1).
+- Swift GRB Burst Advocate compilation, HEASARC TAP table `swiftgrbba` (2,043 rows on 2026-10-10).
+- SkyLLH, PyPI `skyllh` 26.1.0 (2026-09-09), https://github.com/icecube/skyllh.
+- SN1987A: Hirata+ 1988 PRD 38, 448; Bionta+ 1987 PRL 58, 1494; Bratton+ 1988 PRD 37, 3361; Alexeyev+ 1988
+  PLB 205, 209; compilation Loredo & Lamb 2002 PRD 65, 063002 (astro-ph/0107260).

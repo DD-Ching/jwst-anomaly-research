@@ -31,6 +31,28 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 4. **System A rounds paused** (D-076: rounds 2–3 gave no testable survivor). Restart only with a new owner brief.
    Optional: the B0218+357 VLA polarisation sign test (R2-B).
 
+## Neutrino Frontier (owner brief 2026-10-10, D-077; docs/neutrino_frontier/)
+Independent program; takes no resources from MOA-II, S1, E1/D1 or data validation without an allocation decision.
+1. **E-NF1 follow-up (NF-H04 ghosts):** ICECAT-1 null (global p = 0.058), CLs limits R_g ≤ 0.02–0.05 (Δt ≤ 1 h),
+   ≤ 0.1–0.2 (1 h–7 d), ≤ 0.5 (7–30 d). **IceTracks-DR2 short lags (E-NF1b, D-079): null**, R ≤ 0.002 per northern
+   track with log10 E ≥ 4 (≤ 100 s), ≤ 0.01 (100 s–1 h). The DR2 forecast rules out R_g ~ 10⁻³ at every lag and any
+   gain beyond 1 h (optimistic floor ≥ 0.055 at 1 h–1 d, ≥ 0.64 at 30–180 d). Next, only if NF-H04 gets a
+   quantitative prediction: f_astro per cut from the DR2 effective areas (turns R into R_g per astrophysical
+   neutrino); the 30–180 d bin has no public sample that can reach it.
+2. **Benchmark first:** TXS 0506+056 2014–15 flare in IceTracks-DR2 with SkyLLH 26.1.0 (12.7 signal events,
+   γ = 2.3; 2014 response matrix 817 MB: stream in the cloud, stated reason on the owner's machine).
+3. **Round 2** (N-A then N-B): only frameworks with a prediction decidable on IceTracks-DR2, GCN alerts after
+   ICECAT-1 (77 event times; clean revisions and retractions first), HESE-12 topology labels or KM3NeT/ANTARES.
+4. GW–neutrino ghost corner (N-B: missed by LVK lensing searches): GW sky maps now exist (D-074 addendum 4).
+   Define a GW-parent ghost test only if round 2 gives it a quantitative prediction.
+
+## Part 0 speed-ups (owner brief 2026-10-10, D-078)
+- Publish the first `derived-data-YYYYMMDD` release (needs the owner or a local session: cloud sessions get 403):
+  `python scripts/derived_publish.py data/e1_events/gw_skymaps_nside32.npz --sources "..."`, plus the GBM
+  snapshot the E1 pins (the live HEASARC table no longer matches either pin).
+- Profile every null/injection script once before runs > 10 min (S-3); next candidates: `e1_events.py` injection
+  loops, `GWMaps` construction (region distances, ~27 s).
+
 ## Continuing (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
 1. **W3 in published microlensing samples** (D-057–D-059, D-061). Mróz 2019 bulge (5,790) and 2020 disk (460) fitted and
    vetted: 127 + 6 flags, **0 survive** (the D-059 chunk survivors BLG667.04.62161 and BLG624.18.69573 fail

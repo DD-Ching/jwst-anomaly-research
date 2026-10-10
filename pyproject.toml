@@ -33,7 +33,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.6", "pre-commit>=4"]
+dev = ["pytest>=8", "ruff>=0.6", "pre-commit>=4", "numba>=0.60"]
+# Compiled hot loops (E1 GW-GW sky-map classes, S-2); every caller has a numpy fallback.
+fast = ["numba>=0.60"]
 # Byte-range reads of cloud-hosted FITS (s3://stpubdata) without full downloads.
 cloud = ["fsspec>=2024.2", "s3fs>=2024.2"]
 # Ordinary microlensing fits (point/finite-source/binary lens, parallax) for W3 vetting (D-054).

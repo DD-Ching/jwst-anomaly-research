@@ -1,0 +1,342 @@
+{
+ "test": "E-NF1b IceTracks-DR2 short-lag ghost pairs (NF-H04), wide separation, D-074 classes",
+ "provenance": "derived (observed IceTracks-DR2 v3.1); injections simulated; limits model_prediction",
+ "limit_meaning": "R = ghosts per event above the cut; per astrophysical neutrino R_g = R / f_astro",
+ "mjd_min_post_hoc": null,
+ "full_release": {
+  "note": "txs, forecast and these totals use the whole release, not the --mjd-min cut",
+  "n_events": 1643355,
+  "uptime_days_union": 4963.4
+ },
+ "test_uptime_days_union": 4963.4,
+ "txs_known_case": {
+  "ra": 77.3582,
+  "dec": 5.6931,
+  "t0": 57020.0,
+  "dt": 185.0,
+  "log10e": 3.5,
+  "r_deg": 1.0,
+  "on": 6,
+  "expected": 1.111,
+  "p_poisson": 0.0010201983897029047
+ },
+ "forecast_optimistic": [
+  {
+   "log10e_min": 3.5,
+   "n": 55500,
+   "bins": [
+    {
+     "pairs": 138,
+     "rg_floor": 0.0006349913580794989
+    },
+    {
+     "pairs": 1191,
+     "rg_floor": 0.0018654523164040428
+    },
+    {
+     "pairs": 45982,
+     "rg_floor": 0.01159103454448917
+    },
+    {
+     "pairs": 1047551,
+     "rg_floor": 0.055324291316220894
+    },
+    {
+     "pairs": 6468635,
+     "rg_floor": 0.13747843977323704
+    },
+    {
+     "pairs": 24339924,
+     "rg_floor": 0.26667842438164985
+    },
+    {
+     "pairs": 142214710,
+     "rg_floor": 0.6446151846674663
+    }
+   ]
+  },
+  {
+   "log10e_min": 4.0,
+   "n": 7583,
+   "bins": [
+    {
+     "pairs": 9,
+     "rg_floor": 0.0011868653567189767
+    },
+    {
+     "pairs": 43,
+     "rg_floor": 0.0025942655377694844
+    },
+    {
+     "pairs": 1819,
+     "rg_floor": 0.016873164799263714
+    },
+    {
+     "pairs": 41650,
+     "rg_floor": 0.08073980600801221
+    },
+    {
+     "pairs": 254945,
+     "rg_floor": 0.19975766287740596
+    },
+    {
+     "pairs": 956944,
+     "rg_floor": 0.38701113499492484
+    },
+    {
+     "pairs": 5328128,
+     "rg_floor": 0.9132034078519446
+    }
+   ]
+  },
+  {
+   "log10e_min": 4.5,
+   "n": 1110,
+   "bins": [
+    {
+     "pairs": 1,
+     "rg_floor": 0.002702702702702703
+    },
+    {
+     "pairs": 1,
+     "rg_floor": 0.002702702702702703
+    },
+    {
+     "pairs": 63,
+     "rg_floor": 0.021452037657280463
+    },
+    {
+     "pairs": 1373,
+     "rg_floor": 0.10014598547918327
+    },
+    {
+     "pairs": 8230,
+     "rg_floor": 0.2451874255144157
+    },
+    {
+     "pairs": 30641,
+     "rg_floor": 0.47309650896331895
+    },
+    {
+     "pairs": 169580,
+     "rg_floor": 1.1129754669649017
+    }
+   ]
+  },
+  {
+   "log10e_min": 5.0,
+   "n": 168,
+   "bins": [
+    {
+     "pairs": 0,
+     "rg_floor": 0.017857142857142856
+    },
+    {
+     "pairs": 0,
+     "rg_floor": 0.017857142857142856
+    },
+    {
+     "pairs": 2,
+     "rg_floor": 0.02525381361380527
+    },
+    {
+     "pairs": 35,
+     "rg_floor": 0.10564428184106459
+    },
+    {
+     "pairs": 227,
+     "rg_floor": 0.26904498523784576
+    },
+    {
+     "pairs": 834,
+     "rg_floor": 0.5156974670783446
+    },
+    {
+     "pairs": 4423,
+     "rg_floor": 1.1876006939048434
+    }
+   ]
+  },
+  {
+   "log10e_min": 5.5,
+   "n": 15,
+   "bins": [
+    {
+     "pairs": 0,
+     "rg_floor": 0.2
+    },
+    {
+     "pairs": 0,
+     "rg_floor": 0.2
+    },
+    {
+     "pairs": 0,
+     "rg_floor": 0.2
+    },
+    {
+     "pairs": 1,
+     "rg_floor": 0.2
+    },
+    {
+     "pairs": 1,
+     "rg_floor": 0.2
+    },
+    {
+     "pairs": 6,
+     "rg_floor": 0.4898979485566356
+    },
+    {
+     "pairs": 24,
+     "rg_floor": 0.9797958971132712
+    }
+   ]
+  }
+ ],
+ "n_scrambles": 5000,
+ "per_cell_threshold": 0.00022500000000000002,
+ "min_p_bonferroni": 0.47750449910017995,
+ "r_grid": [
+  0.001,
+  0.002,
+  0.005,
+  0.01,
+  0.02,
+  0.05,
+  0.1
+ ],
+ "inj_trials": 200,
+ "speed": {
+  "null_s": 12.4,
+  "injections_s": 3.8,
+  "cpu": 4
+ },
+ "cells": [
+  {
+   "log10e_min": 4.0,
+   "n_events": 7583,
+   "lag": "0s-10s",
+   "obs": 9,
+   "null_mean": 5.219,
+   "null_sd": 2.258,
+   "p_empirical": 0.07958408318336332,
+   "p_bonferroni": 0.47750449910017995,
+   "r50": 0.002,
+   "r_ul95_cls": 0.002,
+   "detect_frac": {
+    "0.001": 0.155,
+    "0.002": 0.79,
+    "0.005": 1.0,
+    "0.01": 1.0,
+    "0.02": 1.0,
+    "0.05": 1.0,
+    "0.1": 1.0
+   }
+  },
+  {
+   "log10e_min": 4.0,
+   "n_events": 7583,
+   "lag": "10s-100s",
+   "obs": 42,
+   "null_mean": 46.971,
+   "null_sd": 6.87,
+   "p_empirical": 0.7866426714657069,
+   "p_bonferroni": 1.0,
+   "r50": 0.005,
+   "r_ul95_cls": 0.002,
+   "detect_frac": {
+    "0.001": 0.015,
+    "0.002": 0.13,
+    "0.005": 0.96,
+    "0.01": 1.0,
+    "0.02": 1.0,
+    "0.05": 1.0,
+    "0.1": 1.0
+   }
+  },
+  {
+   "log10e_min": 4.0,
+   "n_events": 7583,
+   "lag": "100s-1h",
+   "obs": 1808,
+   "null_mean": 1808.21,
+   "null_sd": 42.199,
+   "p_empirical": 0.505498900219956,
+   "p_bonferroni": 1.0,
+   "r50": 0.05,
+   "r_ul95_cls": 0.01,
+   "detect_frac": {
+    "0.001": 0.0,
+    "0.002": 0.005,
+    "0.005": 0.005,
+    "0.01": 0.035,
+    "0.02": 0.46,
+    "0.05": 1.0,
+    "0.1": 1.0
+   }
+  },
+  {
+   "log10e_min": 4.5,
+   "n_events": 1110,
+   "lag": "0s-10s",
+   "obs": 1,
+   "null_mean": 0.178,
+   "null_sd": 0.428,
+   "p_empirical": 0.16096780643871225,
+   "p_bonferroni": 0.9658068386322736,
+   "r50": 0.005,
+   "r_ul95_cls": 0.005,
+   "detect_frac": {
+    "0.001": 0.04,
+    "0.002": 0.165,
+    "0.005": 0.8,
+    "0.01": 1.0,
+    "0.02": 1.0,
+    "0.05": 1.0,
+    "0.1": 1.0
+   }
+  },
+  {
+   "log10e_min": 4.5,
+   "n_events": 1110,
+   "lag": "10s-100s",
+   "obs": 1,
+   "null_mean": 1.551,
+   "null_sd": 1.244,
+   "p_empirical": 0.79124175164967,
+   "p_bonferroni": 1.0,
+   "r50": 0.01,
+   "r_ul95_cls": 0.005,
+   "detect_frac": {
+    "0.001": 0.015,
+    "0.002": 0.055,
+    "0.005": 0.38,
+    "0.01": 0.935,
+    "0.02": 1.0,
+    "0.05": 1.0,
+    "0.1": 1.0
+   }
+  },
+  {
+   "log10e_min": 4.5,
+   "n_events": 1110,
+   "lag": "100s-1h",
+   "obs": 62,
+   "null_mean": 58.883,
+   "null_sd": 7.688,
+   "p_empirical": 0.36112777444511096,
+   "p_bonferroni": 1.0,
+   "r50": 0.05,
+   "r_ul95_cls": 0.02,
+   "detect_frac": {
+    "0.001": 0.0,
+    "0.002": 0.005,
+    "0.005": 0.0,
+    "0.01": 0.005,
+    "0.02": 0.155,
+    "0.05": 0.99,
+    "0.1": 1.0
+   }
+  }
+ ],
+ "runtime_s": 31
+}
