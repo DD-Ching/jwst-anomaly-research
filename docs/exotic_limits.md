@@ -1155,12 +1155,12 @@ conservative column uses the low N_s.
   deficit 6, bracketing 4, robust errors 2, χ² cap 1, neighbour 1, smooth dip 1, slow dip seasons 1. Injections:
   vetting keeps 103 / 163 flagged W3 injections. Pre-screen pass 5.5–11 %. PSPL controls: 0 / 40 per cell called W3.
 
-- **gb12** (73,386 light curves; N_s = 1.61 × 10⁷ from Nunota et al. 2024 Table 1, 79 / 80 subfields, conservative
-  range 1.61–1.63 × 10⁷; quiet χ²/dof 95th percentile 5.7): 46 flags, **0 survive**; contact sheet inspected
+- **gb12** (73,386 light curves; N_s = 1.61 × 10⁷ from Nunota et al. 2024 Table 1, 79 / 80 subfields, range
+  1.61–1.63 × 10⁷, the low end used for both limit columns; quiet χ²/dof 95th percentile 5.7): 46 flags, **0 survive**; contact sheet inspected
   (few-day to ~100-d box dips, quasi-periodic variables, sparse light curves whose caustic spikes exist only in the
   models). First failing test: repeated deficit 17, residual deficit 9, eclipse dip 9, bracketing 4, χ² cap 3, fit
-  domain 1, smooth dip 1, periodic variable 1, neighbour 1. Gaia DR3 RP reference matched for 32 / 46 flags (VizieR
-  I/355 cone, 1″). Injections: vetting keeps 99 / 156 flagged W3 injections. Pre-screen pass 4.5–11.5 %. PSPL
+  domain 1, smooth dip 1, periodic variable 1, neighbour 1. Gaia DR3 RP reference for 32 / 46 flags (batched CDS
+  XMatch with `vizier:I/355/gaiadr3`, 1″). Injections: vetting keeps 99 / 156 flagged W3 injections. Pre-screen pass 4.5–11.5 %. PSPL
   controls: 0 / 40 per cell called W3.
 
 Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every field):
@@ -1229,6 +1229,8 @@ lenient default reference (MOA-Red 14.2) on all 234 real flags (none has a DoPHO
 chain, so 0 survivors stands; the VSX / Gaia variability match runs only on flags still alive and was not reached.
 Injections use the injected-source flux and are unaffected. The tracked `vetting_gbN.json` records the run's
 `gaia_rp_xmatch` status from gb16 on (gb19–gb22 dropped it); re-run `vet` where CDS works before interpreting any survivor.
+The gb12 cloud run (2026-10-10) got a working XMatch (32 / 46 flags with an RP reference), so gb12 is not in the
+lenient-reference group, and a cloud retry of the re-vets above is worth trying.
 
 The t_E = 300 d, ρ = 0.1 cell rests on one recovered injection (efficiency uncertain by ~100 %); `combine` should
 not let a single field's one-recovery cell dominate the combined 300-d limit.
