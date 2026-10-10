@@ -3,8 +3,19 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 
-## 2026-10-10: W3 MOA-II gb17 re-run under CHAIN_VERSION 2026-10-10.1 (in progress)
-- Claimed by a cloud routine session; results follow.
+## 2026-10-10: W3 MOA-II gb17 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
+- Hypothesis before running: 0 survivors; gb17-R-6-1-3829 (the D-068 chain survivor, a ~30-d periodic variable)
+  should now fail inside the chain. A survivor that held up on the contact sheet would have changed the plan.
+- `run-field --procs 4` in 1,797 s: all 13 pre-screen chunks reused (D-078 addendum 3, 0 s instead of ~8 min;
+  100,448 light curves, 1,437 shape passes, 85 off shared epochs); 85 fits 479 s (fit chunks still key on the whole
+  `Params`), 75 flags; 2,200 injections 1,175 s. **0 survive.** gb17-R-6-1-3829 fails `exotic_chi2_cap`
+  (6.67 > 5.46), as the D-068 addendum intended. Contact sheet inspected: box dips, slow dimmings, variables;
+  caustic spikes only in the models.
+- CDS XMatch worked from the cloud again (Gaia DR3 RP for 53 / 75 flags).
+- Limits (`results/w3_moa/limits_gb17.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 2.3 × 10⁻⁷–1.9 × 10⁻⁶ per star per year
+  (N_s = 1.80 × 10⁷, Nunota et al. 2024, 79 / 80 subfields; the 300-d cells rest on 2 recoveries). Vetting keeps
+  86 / 156 flagged W3 injections (55 %); PSPL controls: 0 false W3 calls.
+- **Next:** gb18 (gb15 is in #140), then `combine`; the fit-chunk reuse fix (D-078 audit) would save ~8 min here.
 
 ## 2026-10-10: Acceleration V2 audit, first pass: MOA pre-screen chunks reused across vetting changes; injection-loss map
 - Owner brief "Autonomous research acceleration V2": measured audit in `docs/audits/2026-10-10-acceleration-v2.md`
