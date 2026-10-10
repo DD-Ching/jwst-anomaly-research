@@ -1153,6 +1153,11 @@ gb20 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb20.ecsv`):
 | 100 | 1.8 | 10 / 13 | 6.5 / 5.0 × 10⁻⁷ |
 | 300 | 17 | 4 / 1 | 1.6 / 6.5 × 10⁻⁶ |
 
+Cloud runs of gb22, gb21 and gb20: the batched CDS XMatch failed ("Too many jobs" or a truncated, non-VOTable
+reply through the proxy), so `exotic_in_domain` used the lenient default reference (I = 14.2) on every real flag and the
+VSX / Gaia DR3 variability match was empty. Both only loosen the chain, so 0 survivors stands; injections use the
+injected-source flux and are unaffected. Re-run both matches (`vet`) before interpreting any future survivor.
+
 The t_E = 300 d, ρ = 0.1 cell rests on one recovered injection (efficiency uncertain by ~100 %); `combine` should
 not let a single field's one-recovery cell dominate the combined 300-d limit.
 
