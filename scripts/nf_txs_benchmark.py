@@ -34,7 +34,8 @@ import sys
 import time
 from pathlib import Path
 
-os.environ.setdefault("OMP_NUM_THREADS", "1")  # SkyLLH trial pool: one thread per process
+if __name__ == "__main__":  # SkyLLH trial pool: one thread per process (set before numpy loads)
+    os.environ.setdefault("OMP_NUM_THREADS", "1")
 
 import numpy as np  # noqa: E402
 from scipy import stats  # noqa: E402
@@ -44,6 +45,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from jwst_anomaly.acquire import sha256_file  # noqa: E402
 from jwst_anomaly.burst_twins import angsep_deg  # noqa: E402
+from jwst_anomaly.neutrino_frontier import DR2_COLUMNS  # noqa: E402
 
 OUT = ROOT / "results" / "nf" / "txs_skyllh_benchmark.json"
 MANIFEST = ROOT / "data" / "manifests" / "nf_skyllh_dr2.ecsv"
@@ -94,6 +96,16 @@ def snap_edges(
     return (edges[0], edges[1]), (snapped[0], snapped[1])
 
 
+def read_events(path: Path) -> np.ndarray:
+    """Original DR2 events CSV as an array in ``DR2_COLUMNS`` order (header checked)."""
+    with open(path) as f:
+        head = f.readline().lstrip("#").split()
+    names = [h.split("[")[0].replace("log10(E/GeV)", "log10e").lower() for h in head]
+    if names != list(DR2_COLUMNS):
+        raise SystemExit(f"{path}: unexpected header {head}")
+    return np.loadtxt(path)
+
+
 def agrees(fit: dict, target: dict, tol: dict = TOL) -> bool:
     return all(abs(fit[k] - target[k]) <= tol[k] for k in tol)
 
@@ -104,6 +116,7 @@ def _sha256_stream(url: str, dest: Path, tries: int = 5) -> str:
     import requests
 
     tmp = dest.with_suffix(dest.suffix + ".part")
+    retry = (requests.ConnectionError, requests.Timeout, requests.exceptions.ChunkedEncodingError)
     for k in range(tries):
         try:
             with requests.get(url, stream=True, timeout=900) as r:
@@ -116,14 +129,11 @@ def _sha256_stream(url: str, dest: Path, tries: int = 5) -> str:
                             f.write(chunk)
                     tmp.replace(dest)
                     return h.hexdigest()
-        except (
-            requests.ConnectionError,
-            requests.Timeout,
-            requests.exceptions.ChunkedEncodingError,
-        ):
-            tmp.unlink(missing_ok=True)
+        except retry:
             if k == tries - 1:
                 raise
+        finally:
+            tmp.unlink(missing_ok=True)  # any failure (incl. a full disk) leaves no partial file
         time.sleep(2 ** (k + 1))
     raise SystemExit(f"{url}: still failing after {tries} tries")
 
@@ -165,7 +175,7 @@ def fit_windows(base: Path, version: str, trials: int, cpu: int) -> dict:
     cfg = Config()
     ds = create_datasets(SAMPLES[version][0], cfg=cfg, base_path=str(base.resolve()), names=SEASON)
     ds = ds if isinstance(ds, list) else [ds]
-    ev = np.loadtxt(base / SAMPLES[version][1] / "events" / f"{SEASON}_exp.csv")
+    ev = read_events(base / SAMPLES[version][1] / "events" / f"{SEASON}_exp.csv")
     sep = angsep_deg(ev[:, 6], ev[:, 7], TXS["ra"], TXS["dec"])
     rounded = rounded_window(TXS["t0"], TXS["dt"])
     (lo, hi), snapped = snap_edges(ev[:, 3], sep, rounded)
@@ -251,6 +261,8 @@ def main(argv=None) -> int:
         "fits": fits,
         "seconds": round(time.time() - t0, 1),
     }
+    if OUT.exists():  # a partial run (one IRF version) keeps the other version's fits
+        out["fits"] = {**json.loads(OUT.read_text()).get("fits", {}), **fits}
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, indent=1) + "\n")
     print(f"wrote {OUT.relative_to(ROOT)}")

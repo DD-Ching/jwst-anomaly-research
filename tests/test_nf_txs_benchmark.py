@@ -56,3 +56,19 @@ def test_manifest_covers_both_irf_versions():
         }
     assert all(len(m) == 32 for m in man["md5"])
     assert all(len(h) == 64 for h in man["sha256"])
+
+
+def test_read_events_checks_header(tmp_path):
+    good = tmp_path / "ok.csv"
+    good.write_text(
+        "#  run  event  subevent  MJD[days]  log10(E/GeV)  AngErr[deg]  RA[deg]  Dec[deg]"
+        "  Azimuth[deg]  Zenith[deg]\n"
+        " 124551 214972 0 56757.39954178 2.69 1.23 151.087 46.800 281.057 136.734\n"
+        " 124551 644311 0 56757.40133608 3.08 1.56 312.199 6.632 120.652 96.680\n"
+    )
+    ev = tb.read_events(good)
+    assert ev.shape == (2, 10) and ev[1, 7] == pytest.approx(6.632)
+    bad = tmp_path / "bad.csv"
+    bad.write_text("# run event MJD RA Dec\n1 2 3 4 5\n")
+    with pytest.raises(SystemExit):
+        tb.read_events(bad)

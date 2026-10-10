@@ -4066,9 +4066,11 @@ KM3NeT ARCA releases).
 
 **Evidence.** `results/nf/txs_skyllh_benchmark.json`. Snapped window: n_s = 12.72, γ = 2.26, TS = 23.0 (v1 IRFs);
 12.75 / 2.26 / 22.9 (v2). Paper: 12.7 / 2.3 (SkyLLH), 12.56 / 2.26 (internal). Printed window: 11.08 / 2.21
-(v1), 11.11 / 2.22 (v2). The IRF binning fix moves n_s by 0.03. Fixed-window background, 50,000 SkyLLH scrambles per window: p < 2 × 10⁻⁵ (not comparable with the paper's
+(v1), 11.11 / 2.22 (v2). The IRF binning fix moves n_s by 0.03. Fixed-window background (v2 IRFs), 50,000 SkyLLH scrambles per window: p < 2 × 10⁻⁵ (not comparable with the paper's
 free-window pre-trial p).
-Edge sensitivity (T0 and ΔT each moved by up to ± 2.5 d): n_s 10.3–13.0.
+The snap rule was chosen after the printed window missed (post hoc): the match is a consistency check that
+the paper's box ends on these two events, not a blind test. n_s moves by ~1 event per edge event, so the tolerance
+alone cannot separate a correct setup from a lucky window.
 
 **Revisit if** a new SkyLLH release changes the PDFs (re-run the benchmark), or a test needs multi-season
 time-dependent fits (SkyLLH single-dataset limit).
