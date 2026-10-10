@@ -1,0 +1,248 @@
+{
+ "params": {
+  "max_gap": 40.0,
+  "knot_spacing": 3000.0,
+  "lag_step": 2.0,
+  "null_span": 3.0,
+  "min_points": 40,
+  "n_inject": 8,
+  "min_null": 10,
+  "min_eff": 0.5,
+  "val_range": 300.0,
+  "val_sigma": 3.0,
+  "smooth": 5.0,
+  "wing": 10.0,
+  "inject_r": 0.05,
+  "quantile": 0.95
+ },
+ "source": "https://cdsarc.cds.unistra.fr/ftp/J/A+A/640/A105/",
+ "provenance": "derived",
+ "systems": [
+  {
+   "name": "HE0047-1756",
+   "validation": {
+    "best_tau_BA": 8.0,
+    "published_tau_BA": 10.4,
+    "dt_err": 3.5,
+    "passed": true
+   },
+   "dls_over_ds": 0.6612323246658348,
+   "into_trail": {
+    "window_days": [
+     -17.276816176524683,
+     -6.876816176524683
+    ],
+    "observed_window_max_r": 0.1946514357311069,
+    "null_n": 12,
+    "null_median": 0.018886835945127724,
+    "null_q95": 0.44911150811273437,
+    "p_value": 0.38461538461538464,
+    "injection_efficiency": 0.9926930668330005,
+    "r95_sensitivity": 0.629475644362323
+   },
+   "into_lead": {
+    "window_days": [
+     6.876816176524683,
+     17.276816176524683
+    ],
+    "observed_window_max_r": 0.9115478078547171,
+    "null_n": 12,
+    "null_median": 0.5989053398700384,
+    "null_q95": 0.6653433144846814,
+    "p_value": 0.07692307692307693,
+    "injection_efficiency": 1.6219689042730934,
+    "r95_sensitivity": 0.9779857824693602
+   }
+  },
+  {
+   "name": "J0158-4325",
+   "validation": {
+    "best_tau_BA": 32.0,
+    "published_tau_BA": 22.7,
+    "dt_err": 3.6,
+    "passed": true
+   },
+   "dls_over_ds": 0.6805621395011741,
+   "into_trail": {
+    "window_days": [
+     -38.14876056667665,
+     -15.44876056667665
+    ],
+    "observed_window_max_r": 0.7547942178000057,
+    "null_n": 29,
+    "null_median": -0.01750656763874021,
+    "null_q95": 0.3795734109030987,
+    "p_value": 0.06666666666666667,
+    "injection_efficiency": 2.019530828521007,
+    "r95_sensitivity": 1.1518741963418446
+   },
+   "into_lead": {
+    "window_days": [
+     15.44876056667665,
+     38.14876056667665
+    ],
+    "observed_window_max_r": 0.600808297324448,
+    "null_n": 28,
+    "null_median": 0.7614453969258956,
+    "null_q95": 0.8140717077014908,
+    "p_value": 0.7241379310344828,
+    "injection_efficiency": 0.6688371893001965,
+    "r95_sensitivity": 1.217144801043813
+   }
+  },
+  {
+   "name": "J1226-0006",
+   "validation": {
+    "best_tau_BA": -34.0,
+    "published_tau_BA": -33.7,
+    "dt_err": 2.7,
+    "passed": true
+   },
+   "dls_over_ds": 0.45720554157965004,
+   "into_trail": {
+    "window_days": [
+     -49.107826751234214,
+     -15.407826751234207
+    ],
+    "observed_window_max_r": 1.7585123252367767,
+    "null_n": 42,
+    "null_median": 0.29479394293021316,
+    "null_q95": 0.5675126791663202,
+    "p_value": 0.023255813953488372,
+    "injection_efficiency": 4.665240719089425,
+    "r95_sensitivity": 2.0312310614728837
+   },
+   "into_lead": {
+    "window_days": [
+     15.407826751234207,
+     49.107826751234214
+    ],
+    "observed_window_max_r": 0.894961018462054,
+    "null_n": 43,
+    "null_median": -0.01628583827936267,
+    "null_q95": 0.3617373035436407,
+    "p_value": 0.045454545454545456,
+    "injection_efficiency": 2.880830311484659,
+    "r95_sensitivity": 1.2729841602850573
+   }
+  },
+  {
+   "name": "J1335+0118",
+   "validation": {
+    "best_tau_BA": 56.0,
+    "published_tau_BA": 56.0,
+    "dt_err": 6.1,
+    "passed": true
+   },
+   "dls_over_ds": 0.6220215463862867,
+   "into_trail": {
+    "window_days": [
+     -90.83320659763206,
+     -34.833206597632056
+    ],
+    "observed_window_max_r": 0.3165591626536139,
+    "null_n": 68,
+    "null_median": 0.3094842272910049,
+    "null_q95": 0.6048395805430049,
+    "p_value": 0.36231884057971014,
+    "injection_efficiency": 1.4547017587003657,
+    "r95_sensitivity": 0.6119145159056139
+   },
+   "into_lead": {
+    "window_days": [
+     34.833206597632056,
+     90.83320659763206
+    ],
+    "observed_window_max_r": 0.7222611131068583,
+    "null_n": 64,
+    "null_median": 0.6608020570678061,
+    "null_q95": 0.8277830841471217,
+    "p_value": 0.4461538461538462,
+    "injection_efficiency": 0.7183724207894593,
+    "r95_sensitivity": 1.2378567362162043
+   }
+  },
+  {
+   "name": "J1455+1447",
+   "validation": {
+    "best_tau_BA": 46.0,
+    "published_tau_BA": 47.2,
+    "dt_err": 7.8,
+    "passed": true
+   },
+   "dls_over_ds": 0.6141982265736625,
+   "into_trail": {
+    "window_days": [
+     -76.19015629427687,
+     -28.990156294276872
+    ],
+    "observed_window_max_r": 0.16848476683555152,
+    "null_n": 33,
+    "null_median": 0.06314862687010167,
+    "null_q95": 0.24533297227496403,
+    "p_value": 0.14705882352941177,
+    "injection_efficiency": 0.9287869103802873,
+    "r95_sensitivity": 0.37755604468718673
+   },
+   "into_lead": {
+    "window_days": [
+     28.990156294276872,
+     76.19015629427687
+    ],
+    "observed_window_max_r": 0.308346221517683,
+    "null_n": 34,
+    "null_median": 0.3721744929101994,
+    "null_q95": 0.6710794779617834,
+    "p_value": 0.6285714285714286,
+    "injection_efficiency": 0.8824530689727061,
+    "r95_sensitivity": 0.7604704448963048
+   }
+  },
+  {
+   "name": "J1515+1511",
+   "validation": {
+    "best_tau_BA": 212.0,
+    "published_tau_BA": 210.2,
+    "dt_err": 5.7,
+    "passed": true
+   },
+   "dls_over_ds": 0.49827345990102584,
+   "into_trail": {
+    "window_days": [
+     -314.9370812711956,
+     -104.73708127119562
+    ],
+    "observed_window_max_r": 0.20624887279474832,
+    "null_n": 85,
+    "null_median": 0.048171674240380914,
+    "null_q95": 0.3566228081072355,
+    "p_value": 0.3488372093023256,
+    "injection_efficiency": 0.855454988772481,
+    "r95_sensitivity": 0.6016681338198306
+   },
+   "into_lead": {
+    "window_days": [
+     104.73708127119562,
+     314.9370812711956
+    ],
+    "observed_window_max_r": 0.3023396261162469,
+    "null_n": 172,
+    "null_median": 0.9178850199919869,
+    "null_q95": 2.0144892580127616,
+    "p_value": 0.7283236994219653,
+    "injection_efficiency": 0.8537891340973369,
+    "r95_sensitivity": 2.35946930871001
+   }
+  },
+  {
+   "name": "J1620+1203",
+   "validation": {
+    "best_tau_BA": -206.0,
+    "published_tau_BA": 171.5,
+    "dt_err": 8.7,
+    "passed": false
+   },
+   "dls_over_ds": 0.5775444789549253
+  }
+ ]
+}

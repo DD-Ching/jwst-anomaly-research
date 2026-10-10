@@ -3261,3 +3261,560 @@ The recovered counts in the amendment table above come from the old chain (injec
 
 **Revisit if.** A field's quiet χ²/dof distribution is bimodal or its 95th percentile exceeds ~10 (the quantile then
 admits variables); the archive stops honouring range requests; a survivor appears (stop, /vet-candidate, owner).
+## D-069 Owner direction 2026-10-09: System A (invention) / System B (destruction) hypothesis rounds; round 1 survivors (2026-10-09)
+
+**Decision.** New hypotheses come from System A groups that work without literature and from minimal axioms, with
+space, time, matter and causality not assumed fundamental ("Ontological Reset"). One System B reviewer per text then
+attacks it with verified references. Only predictions that pass B get a data inventory and search compute. At least
+30 % of exploration goes to quantities current searches never measure. Round 1 kept three conditional survivors,
+in order:
+- S1, burst twins (GRB/FRB pairs far apart on the sky at any delay);
+- S2, flat-kernel SN residuals;
+- S3, lensed-transient hybrid images (limit only).
+
+W1–W5 screens and the MOA-II run continue to completion (PR #95), but new compute goes to S1 first.
+
+**Alternatives rejected.**
+- More literature-anchored lens signatures only: the owner asked for at least 30 % on unmeasured quantities.
+- A blind causal-network timing search between unrelated events as the first test: B-on-A1 §7 shows it is testable
+  in principle for pairs ≳ 0.1° apart, but its cost is chance coincidences and observer-side common causes, which S1
+  controls with scrambled catalogues at lower cost.
+- A2 P2/P3/P4 and all of A3 except P2b: see the failure list in docs/hypotheses/round-1/summary.md.
+
+**Evidence.** docs/hypotheses/round-1/ (three System A texts, three System B reviews, summary). Key gap references
+(opened 2026-10-09):
+- arXiv:2006.07095, Fermi GBM lensed-GRB search: position-consistent pairs only.
+- arXiv:2204.06014, CHIME/FRB lens interferometry: delays ≲ 100 ms.
+- arXiv:2406.05047, DES SN lensing magnification.
+- arXiv:0903.5303, disordered locality: the common renaming of the A1/A2/A3 links.
+
+**Revisit if.**
+- S1–S3 are run and null: start System A round 2 from the recorded failure modes (no Lorentz derivation,
+  disordered-locality renaming, cosmic-opacity redundancy).
+- The owner changes the 30 % budget or the process.
+
+## D-070 S2 flat-kernel SN residuals: Pantheon+ × LS DR9 photo-z counts, α = 2 column, dilution-corrected limit (2026-10-09)
+
+**Decision.** S2 (D-069) is tested with `scripts/s2_flat_kernel.py`. Pantheon+ residuals against flat ΛCDM
+(Ω_m = 0.334) are regressed by WLS on [1, z, X_lens, X_flat]. The columns are per-SN counts of LS DR9 galaxies
+(countmap selection, dereddened z < 21 mag, 2′ disc, z_g < z_s − 0.05, Δz = 0.05 shells) relative to the mean
+shell densities per photometric region; discs with < 50 % of the region's median galaxy count are dropped.
+X_flat uses A3's (1+δ)^α with α = 2 (Poisson-unbiased N(N−1)/E, only shells expecting ≥ 1 galaxy).
+Errors come from χ²/dof scaling and a z-matched scramble. A 1 % leverage-trimmed refit is required, and
+limits are divided by the shot-noise dilution λ from Poisson-only columns and by the recovery ratio of a whole-chain
+injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T⟩ (one-sided 95 %).
+
+**Alternatives rejected.**
+- α = 2 over all shells: shells with E ≪ 1 turn 3–5 galaxies into X ≈ 20–54 and fake a tight limit.
+- α = 1 flat column: 0.995-correlated with the lensing column at this depth, so it is kernel-degenerate.
+- Scramble-carrier injections alone as the efficiency: they miss regression dilution.
+- A halo-model κ (Shah+2024): more work for a test that cannot detect lensing in Pantheon+ anyway; it belongs to the
+  DES-SN5YR follow-up.
+- DES-SN5YR first: needs DES Y3 Gold access and setup; Pantheon+ and DR9 photo-z were reachable in one cycle.
+
+**Evidence.** `results/s2_flat_kernel/fit_*.json`; CHANGELOG 2026-10-09.
+
+**Revisit if.**
+- DES-SN5YR + DES Y3 Gold are set up: repeat there with the lensing detection as the positive control.
+- A3 fixes how its matter column maps to galaxy counts (bias), which sets the conversion of this limit.
+
+**Addendum (2026-10-09, DES-SN5YR).** Repeated with `--sample des` on the DES-SN5YR Dovekie Hubble diagram (DES SNe,
+MU/MUERR, P(Ia) ≥ 0.5, positions from the DES HEAD table) and the same LS DR9 z < 21 galaxies, so both samples share
+one calibrated chain. 1,414 SNe fitted: γ_F = +0.0009 ± 0.0025, **γ < 0.019 mag per unit T/⟨T⟩** (chain recovery 0.57);
+lensing control γ_L = −0.018 ± 0.011 (1.7σ, right sign). Rejected for this cycle: DES Y3 Gold (new access path and a
+second galaxy calibration; it is the next step because the control needs deeper galaxies). Revisit if: a deeper
+galaxy column is set up, or the full covariances change the errors by > 20 %.
+
+## D-071 S1 burst twins in Fermi GBM: bcat HDU 2 light curves, multi-band max cross-correlation, chi2 twin test; null and limit (2026-10-09)
+
+**Decision.**
+- Data: the HEASARC `fermigbrst` catalogue over TAP, and the per-burst bcat files streamed from the HEASARC FTP.
+  Each burst is reduced to two matched bands from bcat HDU 2: `PHTFLUXB` (50–300 keV) and `PHTFLUX − PHTFLUXB`
+  (10–50 plus 300–1000 keV). The window is T90 ± (0.25 T90 + 2 s) at 64 ms · 2^k, with at most 256 bins. The
+  results are tracked in `results/s1_twins/lc_<YYYY>.ecsv.gz` (~150 kB per year).
+- Eligibility: at least 2 pulses. A pulse is a summed-band peak whose prominence is ≥ 5σ of the local error,
+  sqrt(σ_peak² + σ_base²), so the test includes source Poisson noise.
+- Statistic: the maximum over lag of the multi-band normalised cross-correlation ρ, with s = 1 primary. Pairs are
+  compared at a common resolution, |Δk| ≤ 1. A coarse s grid (0.5, 0.71, 1.41, 2) is secondary and runs on the top
+  pairs only.
+- Position cut: sep > 3·sqrt(σ1² + σ2² + 2·3.7°²).
+- Chain: ρ > ρ* (95 % of the per-catalogue maximum over 100 pulse-shuffled surrogate catalogues), then a
+  noise-consistency χ² test of a scaled, shifted copy with a 10 % flux systematic (p ≥ 10⁻³), then a re-trigger
+  veto (delay ≥ 1 d). Only this primary chain gives the limit. A "deep" chain (ρ > 0.90) is post hoc and
+  illustrative only: its threshold was chosen after seeing that it yields k = 0.
+- Injections start from a smoothed template (Gaussian, 1.5 bins) of a real eligible burst. One member is re-noised
+  as A. The other is a copy in another burst's slot, with that burst's background noise and independent
+  realisations, at flux ratios 1–0.1, with a per-band gain mismatch of 15 % (see Evidence). The copy gets its own
+  window and resolution k from a T90 proxy (A's catalogue T90 × the ratio of 5–95 % cumulative-fluence durations).
+  A copy with |Δk| > 1 is lost. Both members pass through the whole chain.
+- Limit units: f95 = μ95 / (N_eligible · ε) is the 95 % upper limit on twin PAIRS per eligible burst. The fraction
+  of eligible bursts that have a twin is 2·f95.
+- `scripts/s1_ingest.py`, `scripts/s1_twins.py`, `src/jwst_anomaly/burst_twins.py`. All thresholds are ASSUMPTIONs
+  in `burst_twins.Params`.
+
+**Alternatives rejected.**
+- bcat HDU 1 `PHTCNTS` (per-detector deconvolved 8- or 128-channel spectra): in ~40 % of faint bins, single channels
+  carry the fill value −9.9e36. Dropping those bins left only the positive fluctuations, which looked like spiky
+  multi-pulse bursts (84 % of bursts appeared "multi-pulse"). Rejected after visual inspection.
+- TTE/CTIME with our own background fits: these are ~10–100× more data and need per-burst background modelling,
+  while bcat already holds rmfit's background-subtracted, deconvolved fluxes. They are kept as a follow-up for
+  candidates only.
+- GDT (official) for reading: no bcat reader is listed, and bcat is a plain FITS table, so `astropy.io.fits` is
+  enough. GDT stays the tool for TTE/RSP follow-up.
+- `astroquery.heasarc`: plain HEASARC TAP is one request (4 s) with no extra dependency.
+- The 2006.07095 method (position, spectrum and duration cuts first, then cross-correlation): its position-first
+  cut is exactly what S1 inverts. We keep its cross-correlation and its warning about single-pulse look-alikes, and
+  replace the spectral cut with matched bands inside ρ plus the χ² test.
+- Pulse-count threshold judged on the S/N with background error only: it counts Poisson fluctuations on bright
+  pulses as pulses.
+- Injecting a copy of the burst itself (with its own noise realisation) into the slot: the pair then shares noise,
+  so faint copies reached ρ ≈ 1. That version overstated the ratio-1 efficiency (83 % instead of 37 %).
+
+**Evidence.**
+- The catalogue has 4,390 bursts and 4,389 bcat files reduced. 1,414 bursts are eligible. 998,991 eligible pairs
+  give 510,294 pairs after the position and resolution cuts.
+- Results are in `results/s1_twins/summary.json`, `null.json`, `pairs_top.ecsv` and `injections.ecsv.gz`; the PR
+  body has the numbers.
+- The surrogate null under-predicts the real high-ρ tail about 12×: 1,860 real pairs have ρ > 0.9, against 146
+  per surrogate catalogue. It is also near-degenerate, because a 2-pulse burst has one alternative order. So ρ* is
+  a pre-screen, not a calibrated false-alarm rate, and the χ² test decides.
+- At ρ > 0.9, 0 of the 1,860 real pairs pass χ². At ρ > 0.8, 24 of 40,041 pass, all with a faint partner
+  (S/N 5–10).
+- Positive controls: 8 same-source re-trigger pairs (GRB 091024, 130925, 150201, 220627, 250702 ×3, and
+  bn210925800/bn210926869 at 1.3°) are all removed by the position cut.
+- Result: 6 pairs flagged at ρ > ρ* = 0.964. All 6 fail χ² (p < 10⁻¹⁰⁰): they are bright single-envelope
+  look-alikes. 0 survivors (primary chain; the post-hoc deep chain also has 0).
+- Band mismatch from data. In bright bins (summed S/N > 15) of the 522 eligible bursts with at least 8 such bins,
+  the noise-subtracted scatter of ln(f_50–300 / f_rest) has percentiles 10/25/50/75/90 of
+  0.075/0.13/0.21/0.32/0.42. The median 0.21 / √2 gives 0.15 per band, which is the injected value. It includes
+  intrinsic spectral evolution within each burst, so it sits on the high side for a pure response mismatch.
+- Error calibration. In off-T90 bins, std(flux/err) has a median of 1.00 in band 1 and 0.87 in band 2, so the
+  quoted errors are about right and the injected noise equals them.
+- Injection recovery, primary chain, 15 % jitter, 5,000 injections: 29.5 / 18.0 / 11.4 / 6.4 / 2.7 % at flux
+  ratio 1 / 0.5 / 0.3 / 0.2 / 0.1.
+  - By copy peak S/N: 72 % above 50, 48 % at 20–50, 7 % at 10–20, and 0 below 10.
+  - The χ² test removes 13 % of flagged injections. The window/k emulation loses 0.9 % of copies, so the stored
+    window and k (which depend only on catalogue T90) are a small effect.
+- 95 % upper limit, primary chain only, at ratio 1: **7.2 × 10⁻³ twin pairs per eligible burst**, i.e. 1.4 % of
+  eligible bursts have a twin. Averaged over ratios 1–0.1: 1.6 × 10⁻² pairs per burst (3.1 %).
+- Sensitivity to the per-band mismatch (1,000 injections each; ratio-1 efficiency, f95 pairs per burst at
+  ratio 1):
+  - 5 %: 41.5 %, 5.1 × 10⁻³;
+  - 10 %: 38.0 %, 5.6 × 10⁻³;
+  - 15 %: 29.5 %, 7.2 × 10⁻³;
+  - 20 %: 22.5 %, 9.4 × 10⁻³.
+- Deep chain (post hoc, illustrative, not a limit): 49 % at ratio 1, 4.3 × 10⁻³ pairs per burst.
+- Closest call: bn100528075/bn250207053 passes χ² only at s = 0.71 (p = 0.0016, ρ_s = 0.943 < ρ*), with a faint
+  partner (S/N 12). Vetted as population similarity at low S/N (PR body).
+
+**Revisit if.**
+- A better null that keeps the population envelope becomes available (e.g. a pulse-parameter generative model
+  fitted to the catalogue).
+- TTE-based light curves are needed for short GRBs (64 ms is coarse for T90 < 1 s).
+- CHIME/FRB Catalog 2 is added (the S1 second half).
+- The χ² systematic (10 %) is calibrated on real same-burst data, e.g. GBM vs. Swift-BAT.
+
+## D-072 S3 hybrid images: COSMOGRAIL XIX doubles, SIS leg-split lag window, template regression; null without a useful limit (2026-10-09)
+
+**Decision.** S3 (D-069) is tested with `scripts/s3_hybrid.py` on the COSMOGRAIL XIX R-band curves (CDS
+J/A+A/640/A105) of the 7 doubles whose published delay is not flagged uncertain and exceeds 3σ. Lags are a
+model_prediction under an SIS (ASSUMPTION): the geometric delays of both images are equal, so with a fraction f of the
+potential delay on the source leg, s_L − s_T = −Δt (D_ls/D_s + f). f is unobservable, so each direction scans the
+window f ∈ [0, 1]; the copy into the trailing image arrives before the leading image when D_ls/D_s + f > 1. Image j is
+fitted as a smooth cubic B-spline (3000-d knots) + m F_i(t − τ) + a F_i(t − τ − δ), F_i interpolated across gaps
+≤ 40 d; r = a/m. The window maximum of r (|lag| ≥ 10 d) is compared with same-width windows at off-model lags,
+and injections go through the same window maximum. A system is screened only if the main-term fit recovers its
+published delay. Result: no copy (lowest p = 0.02 of 12 windows, on the main-image wing); sensitivity
+r95 ≈ 0.38–2.4 per system and direction, i.e. only copies comparable to the main image are excluded.
+
+**Alternatives rejected.**
+- Microlensing B-splines with 120–730-d knots: the published delay is not recovered (6 of 7 systems off by
+  50–250 d); only the 3000-d spline recovers 6 of 7 within 3σ + 4 d (J1620: wrong-sign minimum at −206 d).
+- Quoting B-on-A1's ~10⁻² sensitivity: quasar variability is red (time-scales ≳ 100 d), so a copy at lags
+  ≲ 100 d is nearly collinear with the main image and with a delay error. The same fit recovers r = 0.1 within 0.03
+  on a synthetic curve with 20-d variability (`tests/test_s3_hybrid.py`), so the loss is the data, not the code.
+- Treating the r95 values as limits: window-maximum injection efficiencies scatter from 0.67 to 4.7 over 8 trials,
+  the r(δ) scans have a positive offset of 0.1–1 at all lags (template–microlensing degeneracy), and the null
+  windows overlap and are not matched in |lag| (approximate p). They are sensitivities.
+
+**Evidence.** `results/s3_hybrid/summary.json`, `scans.json`; CHANGELOG 2026-10-09.
+
+**Revisit if.**
+- A lensed transient with fast intrinsic variability (SN Refsdal, SN H0pe, a lensed FRB) gives a sharp template:
+  then a copy at r ~ 10⁻² is reachable (B-on-A1).
+- Lens models with image positions and a source position are wanted for quads (the SIS window does not apply).
+
+## D-073 D1 distance self-consistency: per-lens H0-free ratio R = D_dt/((1+z_d) D_d) and per-FRB DM-z predictive tails (2026-10-09)
+
+**Decision.**
+- Data (derived posteriors, pinned by sha256 in `data/manifests/d1_distance.ecsv`): H0LiCOW-public
+  `h0licow_distance_chains/` (joint D_d–D_dt for RXJ1131, PG1115, J1206; D_dt for HE0435, WFI2033) and the
+  B1608 analytic shifted-log-normal fits (`B1608_Dd_Ddt_params.dat`; D_d and D_dt independent, so no correlation).
+  The TDCOSMO 2025 SDSS1206 `final_D_d.npy`/`final_D_dt.npy` are the same 67,570 samples as H0LiCOW
+  `J1206_final.csv` (checked), so they add no lens. Redshifts from the H0LiCOW likelihood = TDCOSMO yaml.
+- Statistics per lens (ln space, random-pair Δ = obs − pred; Gaussian pull plus an empirical tail check):
+  A prior-predictive vs flat ΛCDM, Ωm ~ U(0.1, 0.5); B flat wCDM, w ~ U(−2, −0.5); C leave-one-out vs the other
+  joint lenses with Ωm and a common ln-scale free (absorbs a sample-wide λ_MST); D leave-one-out ln D_dt vs the
+  H0 + Ωm fit to the other five. Sidak over 18 (lens, statistic) pulls: 5σ global = 5.53σ local (ASSUMPTION).
+- Null: all 23 non-identity permutations of the 4 joint lenses' (z_d, z_s); 100 random permutations of the 6.
+  Injection: one lens's D_dt × f, f = 0.7–2.0, through the same statistics.
+- FRBs: DM_obs vs the predictive distribution of DM_ISM (the JSON `DMISM`, NE2001 via FRBs/FRB `frb/mw.py`
+  `ismDM`; Gaussian ±20 %, ASSUMPTION) + DM_halo U(10, 80) + ⟨DM_cosmic⟩(z)·Δ (Macquart+2020 p(Δ), σ = 0.32 z^−1/2,
+  z floored at 0.02, Δ truncated at 20) + log-normal DM_host (e^μ = 68.2, σ = 0.88)/(1+z). The CDF is a deterministic
+  grid convolution (ISM + halo analytic, cosmic on a uniform DM grid, host through its analytic CDF/SF; all sums of
+  positive terms), so tails stay accurate far below 1e-10. A Monte Carlo floored at 1/N was rejected: it capped z at
+  ~4.3σ, below the flag. One-sided tails both ways; Sidak over 2×94 with a global two-sided 5σ gives 5.81σ local
+  one-sided. Per burst, the DM at which each tail reaches 5.81σ is recorded, and DM_obs = 0.9× / 1.1× those limits
+  is injected through the same chain. All thresholds are in `distance_consistency.Params`/`FRBParams`.
+- Code: `src/jwst_anomaly/distance_consistency.py`, `scripts/d1_distance.py`; outputs `results/d1_distance/`.
+
+**Alternatives rejected.**
+- hierArc / lenstronomy likelihoods: built for the hierarchical population fit in which λ_MST and anisotropy are
+  population parameters, which is exactly what hides a per-lens outlier. The per-lens question needs only the
+  published samples and D_s/D_ds, so astropy.cosmology (E(z), tabulated per (Ωm, w)) suffices. Revisit for
+  TDCOSMO 2025 lenses whose kinematics exist only as `*_const_processed.pkl` likelihoods.
+- `frb` package (FRBs/FRB) for ⟨DM_cosmic⟩: heavy dependency for one integral; the same formula is implemented
+  with astropy (Planck18 parameters, f_d = 0.844) and tested against ~900–1000 pc cm⁻³ at z = 1.
+- A Gaussian DM residual: the cosmic term is skewed and the host term log-normal (data-inventory §1.2).
+
+**Evidence.** Lenses: max |pull| 1.3σ (RXJ1131, statistic D); every |pull| < 1.3σ; no flag. Shuffled-z null:
+median max|pull| 3.8σ (R LOO) and 15σ (D_dt LOO) vs observed 0.84σ and 1.29σ. Injections (D_dt × f, f = 0.15–8, 21
+values per lens, baseline pull included) give the factor at which the injected |z| crosses 5.53σ: R prior (A) ×0.21–0.43
+down / ×2.0–6.8 up; R LOO (C) ×0.22–0.39 / ×2.5–7.9; D_dt LOO (D) ×0.54–0.78 / ×1.29–1.85 (per lens in
+`results/d1_distance/lens_summary.json`). So only a D_dt/D_d inconsistency of a factor ≳ 2–8 (R) would be flagged;
+D_d errors are 15–30 %. FRBs: no flag (threshold 5.81σ one-sided). Lowest: FRB 20220319D, DM 111 < its NE2001 DM_ISM
+127, 3.26σ low (a low-latitude sightline; NE2001 is the likely overestimate). Highest: FRB 20190520B, 2.37σ (known
+large DM_host). Injections just beyond each burst's limits flag 94/94 low and 94/94 high, with no wrong-side flags. The
+low limit is above DM_ISM for most bursts (median 2.3× DM_ISM) because Macquart's p(Δ) has a sharp lower cutoff
+(Δ ≳ 0.4); that cutoff is an ASSUMPTION and sets the low-side sensitivity.
+
+**Revisit if.** Per-lens D_d posteriors for the other TDCOSMO 2025 lenses (or the 2025 λ_MST-free kinematics) are
+released; JWST/KCWI spatially resolved kinematics shrink D_d errors below ~10 % (the R test then reaches ×1.5);
+a YMW16 or empirical Galactic DM model replaces NE2001 at low latitude.
+
+**Addendum (2026-10-09): YMW16 beside NE2001.** `scripts/d1_distance.py frb --ism ymw16` replaces the stored NE2001
+`DMISM` by YMW16 (Yao, Manchester & Wang 2017) to 30 kpc at each burst's RA/Dec, everything else unchanged (±20 %,
+halo, cosmic, host, 5.81σ). YMW16 comes from pygedm 3.3.0's compiled `ymw16` extension, called directly: pygedm's
+NE2001 extension needs libf2c (not in the cloud image) and its package import fails on SciPy ≥ 1.14 (`simps`), so the
+package is built without `ne21c` and only `ymw16` is imported (recipe in `results/d1_distance/README.md`). Known-case
+check: FRB 20121102A gives 287 pc cm⁻³ (the published YMW16 value; NE2001 stored 158). **Null under YMW16 and under
+either model:** no flag; max low pull FRB 20220319D 4.09σ (YMW16 211 vs NE2001 127 vs DM_obs 111), max high
+FRB 20190520B 2.37σ; injections 94/94 per side. YMW16/NE2001 ratio median 0.84 (16–84 %: 0.71–1.31, range 0.36–1.91),
+so the models differ by more than the ±20 % ISM error (ASSUMPTION) for 54 of 94 bursts; the ±20 % is therefore too narrow
+as a model error. Widening it only broadens the predictive distribution and lowers the pulls, so the null stands, but
+the per-burst low-side DM limits under either single model are optimistic; a burst
+counts as flagged if either model flags it (`frb_ism_compare.ecsv`, `flag_either`). The 20220319D pull is model error
+on a low-latitude sightline (both models exceed its total DM), not a sightline anomaly. Rejected: building NE2001 in
+pygedm (needs a system f2c library; the stored NE2001 values are already the reference).
+
+**Addendum 2 (2026-10-09): statistic D on the TDCOSMO 2025 power-law chains, 8 lenses.**
+`scripts/d1_distance.py tdcosmo` runs the D_dt leave-one-out (H0 + Ωm free, flat ΛCDM) on the power-law,
+kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0LiCOW lenses plus DES0408 and WGD2038
+(file pairing and readers as in TDCOSMO's `tdcosmo_sample.ipynb`; redshifts from `tdcosmo_sample.yaml`).
+- κ_ext harmonised: every lens gets D_dt = D_dt^model/(1 − κ_ext) (hierArc convention, λ_int = 1) with an independent
+  draw from its own TDCOSMO κ_ext distribution (`kext`); the `nokext` variant sets κ_ext = 0 for all as a diagnostic.
+  The mass sheet is treated the same for all (power law, no internal MST; a sample-wide factor is absorbed by H0).
+  WGD2038's chain is weighted (weights applied); DES0408 has no κ_ext in its chain, so its own PDF is applied like
+  the others'.
+- SDSS1206: the pre-LOS power-law pickle (D_d D_s/D_ds, D_d, κ_pert) is read with an unpickler that admits numpy
+  arrays only (`distance_consistency.load_array_pickle`); D_dt = (1 + z_d) × first / (1 + κ_pert), as in the notebook.
+- Sidak over the 8 `kext` pulls: 5.39σ local (ASSUMPTION; `nokext` is a diagnostic and never flags). Null: 100
+  random redshift permutations. Injection: D_dt × f, f = 0.15–8 (baseline = the f = 1 run under the same settings).
+- Checked: the RXJ1131, PG1115 and HE0435 κ_ext files have as many rows as their D_dt chains but are uncorrelated
+  with them (|r| < 0.003; ln D_dt width identical paired or shuffled), so independent draws (TDCOSMO's own
+  treatment) lose nothing; B1608's chain κ column is all zero. The WGD2038 histogram range [−0.2, 1], 2000 bins, is
+  the one in TDCOSMO's `plotkappa_handpickedpaper2038.py`; its narrow κ_ext (16–84 %: −0.007 to 0.010) is as published.
+- **Result, `kext`: null.** Max |pull| 1.12σ (RXJ1131 −1.12, PG1115 −1.05, B1608 +0.97; the rest < 0.7σ); LOO H0 of
+  the others 72.2–74.4. Shuffled-z null median max|pull| 15.8σ. Detectable factors ×0.41–0.78 down / ×1.36–1.85 up
+  for the seven tight lenses, ×0.26 / ×3.2 for WGD2038 (σ_ln D_dt ≈ 0.24).
+- **`nokext`: RXJ1131 −5.67σ (beyond the threshold), DES0408 +3.9σ.** Explained by line-of-sight convergence: removing the
+  measured κ_ext (RXJ1131 median 0.070, B1608 0.103, WFI2033 0.059, DES0408 −0.040) moves the others' H0 to 77.5–79.8
+  while RXJ1131, the most precise chain (σ_ln = 0.023), stays at 73.4. With κ_ext the tension is gone (−1.1σ). This
+  is a real-data positive control: the statistic resolves a ~7 % sightline convergence on the precise lenses, so an
+  exotic per-sightline distance effect would have to be smaller than the κ_ext uncertainties (±3–5 %) or mimic κ_ext.
+- Limitations: power-law models only (no composite); no kinematics, so no per-lens D_d (new D_d only via the hierArc
+  `*_const_processed.pkl` likelihoods, not read: pickles from a download need a data-only reader first).
+
+## D-074 E1 causal event network: lag × separation pair counts across GBM, ICECAT-1, GWTC and CHIME Cat 2 with sidereal-scrambled nulls (2026-10-09)
+
+**Decision.**
+- Hypothesis (owner idea 4): events from different directions are dependent at lags no ordinary path explains.
+  Nodes:
+  - 4,390 GBM bursts (`fermigbrst`);
+  - 340 ICECAT-1 v4 tracks (8 `CR_VETO` dropped);
+  - 391 GWTC events;
+  - 3,641 CHIME/FRB Cat 2 sources (sub-bursts dropped, one node per repeater).
+
+  All are pinned in `data/manifests/e1_events.ecsv`. The CANFAR download worked on the first try this time.
+- Statistic: pair counts per channel (9 channels) × lag bin (0–10 s, 10–100 s, 100 s–1 h, 1 h–1 d, 1–7 d, |Δt|) ×
+  class.
+  - "Same" means sep ≤ 3·σ_comb. "Wide" means sep > 3·σ_comb and > 0.1°.
+  - σ_GBM = stat ⊕ 3.7°. Below an `error_radius` of 0.5° (a position from another instrument, usually 0) it is
+    max(error_radius, 0.05°).
+  - σ_ICECAT = mean 90 % error / 2.146. σ_CHIME = max(ra_err, dec_err).
+  - GW events have no position in the CSV, so GW channels count all pairs (lag only).
+- Nulls, 10⁴ each. All keep Dec and hour angle and permute times within catalogue × calendar year.
+  - `perm`: the time multiset is unchanged, so this null tests only whether separation depends on lag.
+  - `jit` (primary for lag excess): adds an independent shift per event. GBM gets k × 95.6 min orbit ± 5 min within
+    ±3 d, which keeps orbit phase (SAA, occultation); the others get uniform ±3 d.
+  - `jitday` (vetting): the ground instruments and GW shift by whole days.
+- Trials (review finding 1 on PR #112): the observation is pooled with the scrambles. Every row's per-cell p is
+  (#rows ≥ value)/(N + 1), and the global p is the rank of the observed minimum among all rows' minima. This is
+  uniform under H0 (tested). The empirical floor is 1/(N + 1) = 10⁻⁴, which makes the family-wise floor about
+  (cells at the floor)/(N + 1). A family-wise 3σ or 5σ is therefore not reachable empirically (`reachable()`,
+  tested). Such claims use `analytic_p` (Poisson for null mean < 30, else Gaussian with the ensemble sd) ×
+  Bonferroni, a model_prediction, quoted beside the pooled empirical p.
+- Injection (review finding 2): a B event is moved to t_A ± lag (log-uniform in the bin) of a wide-separated A anchor
+  within ±30 d.
+  - Detection: the injected cell's analytic p × 75 cells ≤ 1.35 × 10⁻³ (family-wise 3σ), i.e. per-cell p ≤ 1.8 ×
+    10⁻⁵. The earlier empirical rule (p ≤ 10⁻⁴) was only about 2.7σ family-wise.
+  - Limits: the Poisson classical UL on the count when the null mean is < 30, else obs − q05(null). The rate is UL /
+    min(eff, 1) / N_eligible.
+  - N_eligible counts the A events with a B event within ±30 d, i.e. those inside B's live time (review finding 4).
+  - A cell where no injected n reached 50 % detection has `valid` = False and no rate.
+- Code: `src/jwst_anomaly/event_network.py`, `scripts/e1_events.py`, `scripts/e1_chime_exposure.py`, and
+  `tests/test_event_network.py`. All thresholds are ASSUMPTIONs in `event_network.Params`.
+
+**Alternatives rejected.**
+- Reusing published coincidence-search code. Curtin+2023 (CHIME × GBM/BAT) and Masaoka+2026 (CHIME Cat 2 ×
+  ICECAT-1) publish no code (checked 2026-10-09). Both test *same-direction* coincidences, which is the opposite of
+  E1's wide channel. IceCube/GBM stacking analyses are likewise position-matched. Brainerd+1995 (BATSE
+  time-dependent two-point correlation) is the closest method, but it is a same-direction repeater test. The new
+  quantity is the wide-separation lag CCF, which is a few lines of numpy. No new dependency (`h5py` is used only
+  for the one-off exposure reduction, from a scratch environment).
+- A bootstrap with replacement for the uptime null: duplicated draws make self-pairs at lags < 2·jitter. Rejected.
+- `perm` alone: it preserves every lag, so GW170817 × GRB 170817A gets p = 1 by construction.
+- Ranking the observation with (1 + r)/(N + 1) but the scrambles with r/N. This dropped the trials factor whenever
+  the observation lay beyond the ensemble: it reported 10⁻⁴ where the pooled p is 0.0036. Fixed after review.
+- The in-day null (keep each event's UTC day, redraw the time of day) as an uptime test: it absorbs most of an
+  injected real signal (`chime_vet.json`: 300 injected 1 h–1 d wide pairs give z = 5.6 under `jit` but 0.25 under
+  in-day), so it cannot discriminate uptime from dependence.
+- The CHIME Cat 2 exposure file as an uptime model. It holds two HEALPix nside-4096 maps of *time-integrated*
+  exposure (upper and lower transit, 2018-09-04 to 2023-09-15) and has no time axis. It cannot give a per-day uptime
+  series, and its sky part (Dec dependence) is already preserved by the Dec + hour-angle nulls. It was reduced to
+  `chime_exposure_dec_profile.ecsv` and deleted. No CHIME Cat 2 file with a time-resolved uptime or injection
+  series exists in the CANFAR release (checked: `table/`, `exposure/`, `localizations/`, `dynamic_spectra/`,
+  `additional_figures/`).
+
+**Evidence.** See `results/e1_events/`.
+- Requested five channels (GBM–GBM, GBM–ICECAT, GBM–GW, ICECAT–ICECAT, ICECAT–GW), `jit`: min cell p = 0.014
+  (ICECAT–ICECAT 1 h–1 d wide, 36 vs 25.4 ± 4.4). Trials-corrected p = 0.28. Null.
+- All 9 channels, pooled empirical trials-corrected p:
+  - all 75 cells: 0.0036 (`jit`) and 0.0047 (`jitday`);
+  - wide and GW cells (45): 0.0058 (`jit`) and 0.0033 (`jitday`).
+
+  Beside them, the analytic Bonferroni p over the 45 wide/GW cells is 4.5 × 10⁻³ (`jit`) and 4.5 × 10⁻⁴ (`jitday`,
+  3.3σ). All 75 cells give an analytic 4 × 10⁻¹⁰, but that is CHIME–CHIME *same-direction* (see below).
+- **CHIME–CHIME wide (and all-separation) clustering at 100 s–1 d.**
+  - Status: unexplained under `jit` and `jitday`; the in-day null does not discriminate. **It is reproduced by a
+    calibrated rate-modulated null** (test d below), so it is attributed to smooth (~week-scale) modulation of the
+    CHIME detection rate. The cause of that modulation (uptime or sensitivity) is a hypothesis: no CHIME uptime
+    series exists to confirm it.
+  - Counts: 8,099 vs 7,793 ± 82 at 1 h–1 d (z = 3.7 `jit`, 4.3 `jitday`); 396 vs 329 ± 18 at 100 s–1 h. It is
+    direction-independent: the wide fraction under `perm` is normal (z_perm = −0.7 and −2.5), and the
+    all-separation counts show the same excess.
+  - In the `excluded_flag` = 0 subset (post hoc, 2,000 scrambles) the per-cell z is 5.3 (`jit`) and 5.8 (`jitday`)
+    at 1 h–1 d. The Gaussian Bonferroni over 45 cells is 5.2σ, or 4.96σ including the three post-hoc subsets.
+  - Ordinary-explanation tests on the 1 h–1 d wide cell (`chime_flag_tests.json`, `scripts/e1_chime_flag.py`,
+    1,000 scrambles unless stated):
+    - (a) Busy days.
+      - The 14 busiest days (top 1 %, 107 bursts) touch 578 cell pairs against 206 in scrambles. Dropping them
+        lowers z from 3.9 to 2.9. Dropping the top 5 % lowers it to 2.1, and the top 10 % to 2.8.
+      - A 30-day-block jackknife (63 blocks) keeps z between 3.4 and 4.8. No single month carries the excess.
+    - (b) Epochs and seasons. The excess is present in most years (z = 3.0, 2.7, 1.5, 0.2, 2.2 and 3.0 for 2018–2023)
+      and in both the Catalog 1 period (`catalog1_flag`, z = 3.2) and later (z = 2.9). It is strongest in MAM
+      (z = 3.9; DJF 1.2, JJA 2.2, SON 2.7). It is not a commissioning-only effect.
+    - (c) Property independence.
+      - Cell pairs do not share DM, fluence or S/N more than scrambled pairs do (KS p = 0.55, 0.98 and 0.47).
+      - Dec difference: p = 0.04, but the median differs by only 0.3°, and with 5 properties tested it is not
+        significant.
+      - Sidereal-phase difference: p = 0.09.
+    - (d) Rate-modulated null. Times are redrawn from the catalogue's own 7-day running mean of daily counts
+      (uniform within the day; Dec and hour angle kept).
+      - Calibration: 300 injected 1 h–1 d wide pairs raise the observed count by 190, of which the null absorbs
+        24. It keeps about 87 % of an injected dependent signal.
+      - Data: z = −0.86 (8,099 vs 8,209 ± 128). The jit excess disappears.
+      - A 3-day running mean over-predicts pairs (z = −5.5) because daily counts are under-dispersed (Fano 0.86).
+  - Under the brief's STOP rule (> 5σ trials-corrected under a calibrated rate or exposure null) the full-catalogue
+    cell has z = −0.9 under the calibrated null (d). No STOP.
+- CHIME–CHIME same-direction at 10 s–1 h (12 vs 0.6 pairs at 100 s–1 h). 11 of the 12 pairs are one unflagged
+  same-position episode: FRB20230825D–I, six bursts within 5 min at (347.35°, +48.75°) with DM 221–223 pc cm⁻³ and
+  no `repeater_name`. This is a catalogue effect (one source, six nodes).
+- Positive controls.
+  - GW170817 × GRB 170817A: the only GBM–GW pair at 0–10 s (Δt = 2.07 s trigger − merger; the published onset is
+    1.74 s). The null mean is 0.06, so the blind count gives p = 0.058: a single coincidence is not detectable
+    without sky maps. 50 % detection at family-wise 3σ needs ≥ 3 injected pairs. The GBM row's position lies 1.2″
+    from SSS17a.
+  - GBM re-triggers (GRB 091024, 130925, 150201, 220627, 250702 ×3) appear in the same-direction channel.
+  - CHIME with every repeater burst as a node: same-direction pairs 30 / 120 / 219 / 480 / 2,513 vs perm
+    1.6 / 6.8 / 13.6 / 33 / 195.
+- Orbit, sidereal-day and solar-day lag windows (k = 1–15 orbits, 1–7 days) show no excess (|z| < 2.5).
+- 95 % limits, dependent wide (GW: any-separation) partners per eligible anchor, `limits.ecsv`:
+  - lags ≤ 100 s: 6.8 × 10⁻⁴ (GBM–GBM), 1.0 × 10⁻³ (GBM–ICECAT, 2,910 eligible), 5.1 × 10⁻³ (GBM–GW, 935
+    eligible), 8.8 × 10⁻³ (ICECAT–ICECAT), 4.5 × 10⁻² (ICECAT–GW, 66 eligible), and 0.8–2.8 × 10⁻³ (CHIME
+    cross-channels);
+  - longer lags: 4 × 10⁻³ to 0.75.
+
+  ICECAT–ICECAT 100 s–1 h is not valid: no injected n reached 50 % detection.
+
+**Revisit if.**
+- GW sky maps are added (then GW channels get same/wide classes and GW170817 enters the same-direction channel).
+- A time-resolved CHIME uptime or sensitivity series is published or obtained. It would confirm (or refute) that the
+  rate modulation behind the CHIME flag is instrumental; an exposure-weighted null built from it must keep an
+  injected signal. Sub-day (hour-resolved) uptime would also decide the 100 s–1 h residual (addendum).
+- A CHIME Cat 2 revision assigns FRB20230825D–I to a repeater.
+- IceTracks-DR2, Swift or Einstein Probe catalogues are added.
+- Signed-lag (precursor) channels are wanted.
+
+**Addendum (2026-10-09): the CHIME–CHIME 100 s–1 h wide cell under the rate-modulated null.**
+- Hypothesis: the 100 s–1 h wide excess (396 vs 329.6 ± 17.8 under `jit`, z = 3.7) is lag dependence that a smooth
+  detection-rate modulation does not explain. Ordinary explanations: week-scale rate modulation (as for 1 h–1 d),
+  the daily duty cycle, and sub-day outages or sensitivity changes. A family-wise > 3σ residual under the calibrated
+  null would have sent the cell to per-pair vetting.
+- `scripts/e1_chime_flag.py --cell 100s-1h`, 2,000 scrambles; `results/e1_events/chime_rate_null_100s_1h.json`.
+  The same D-074 (d) null, plus a `keep_tod` variant that keeps each event's UTC time of day.
+- **Results (z; analytic p × 45 cells):**
+  - 7-day running mean: 396 vs 348.9 ± 18.7, z = 2.52, p_fw = 0.26.
+  - 7-day, time of day kept: 396 vs 349.6 ± 19.2, z = 2.42, p_fw = 0.35 (the daily duty cycle adds nothing).
+  - 3-day running mean: z = 0.48. Not used as the primary null: it over-predicts the 1 h–1 d cell (z = −5.5, D-074 (d)).
+- Calibration: 300 injected wide pairs in this bin raise the count by 300–305; the null mean moves by ≤ 8, so the
+  7-day null keeps ≥ 97 % of an injected dependent signal (1 h–1 d: 87 %).
+- **Decision: null at the family level.** The week-scale modulation explains about 30 % of the jit excess (19 of 66
+  pairs); the rest is a local 2.5σ that a day-resolution null cannot test, because it needs hour-scale rate
+  structure. Unlike 1 h–1 d (z = −0.9), the cell stays a weak, unexplained-at-low-significance residual; no STOP.
+- Alternatives rejected: an hour-resolved running mean of the catalogue's own counts. With about 2 bursts per day
+  it would absorb the very pairs it tests (as the in-day null did, `chime_vet.json`).
+- Revisit if: a time-resolved CHIME uptime series is obtained (owner decision); then use an hour-resolved
+  exposure-weighted null for both 100 s–1 h and 1 h–1 d.
+
+**Addendum 2 (2026-10-09): antipodal lag channels.**
+- Hypothesis (owner idea 4 follow-up): dependent events appear at the antipode of a first event (a "through the
+  Earth / through the sky" link). Ordinary explanations: the same observer-side common causes as D-074; a GBM
+  localization flip is not a concern because GBM errors set the antipodal radius.
+- `scripts/e1_antipodal.py`: pairs with 180° − sep ≤ max(10°, 3σ_comb) (ASSUMPTION `ANTI_MIN_DEG`), five lag bins
+  × six localized channels (GW has no positions) = 30 cells; `jit` null, 2,000 scrambles; pooled trials
+  (`en.global_p`) and an analytic Bonferroni tail. Injection: B moved to t_A ± lag and to A's antipode (scattered by
+  B's own error), 20 trials at n = 3, 10, 30, 100 per cell; detection = family-wise 3σ.
+- **Result: null.** Pooled global p = 0.56 (min cell p 0.054); min analytic p × 30 = 1. Largest z: CHIME–GBM
+  1 h–1 d, 258 vs 230.5 ± 16.4 (z = 1.7). `results/e1_events/antipodal.json` gives the per-cell 95 % upper limits.
+- Sensitivity (`n50_injected`): 3 pairs at lags ≤ 100 s in most channels (10 for GBM–GBM 10–100 s and the CHIME–GBM
+  10–100 s cell); 3–30 at 100 s–1 h; 10–100 at 1 h–7 d; GBM–GBM 1–7 d not reached at 100.
+- Limitation: the CHIME–CHIME injections put B at A's antipode even where CHIME cannot see it (Dec < −11°). They
+  calibrate the statistic, not the instrument.
+- Revisit if: GW sky maps are added (GW–X antipodal channels), or signed-lag channels are built.
+
+**Addendum 3 (2026-10-09): signed-lag ("which event comes first") channels.**
+- Hypothesis: one catalogue's events lead another's (A → B) at lags no ordinary path explains, visible as a sign
+  asymmetry that the pair counts (|Δt|) cannot see. Ordinary explanations: physical counterparts with a known order
+  (GW170817 → GRB 170817A), follow-up chains, and uptime (sign-symmetric, so it cannot make D ≠ 0 on its own).
+- `scripts/e1_signed_lag.py`: D = N(t_B > t_A) − N(t_B < t_A) for the six cross channels × five lag bins × class (same
+  and wide; all for GW channels) = 45 cells; `jit` null, 2,000 scrambles; pooled two-sided trials (`en.global_p` on
+  |D − μ|). Analytic tail: Gaussian, or Skellam(λ, λ) with λ = sd²/2 where the null sd < 1 (ASSUMPTION
+  `GAUSS_SD_MIN`). The Gaussian on a one-pair cell gave z = −4.4 for GW170817 alone and was rejected. Injections
+  move B to t_A + lag (one sign) in the tested class.
+- **Result: null.** Pooled global p = 0.68 (min cell p 0.032); min analytic p × 45 = 1.
+  - Largest |z|: GBM–GW 0–10 s, D = −1. This is GW170817 before GRB 170817A, the ordinary positive control (Skellam
+    p = 0.05, not detectable alone).
+  - Next: CHIME–GW 1 h–1 d, D = −45 vs +3.7 ± 22.6 (p = 0.03).
+- Sensitivity (`n50_injected`): 3–10 one-sided pairs at ≤ 100 s, 10–100 at 100 s–1 d (2 cells not reached), and mostly not reached at
+  1–7 d (≥ 100).
+- Revisit if: GW sky maps are added (GW cells get same/wide classes).
+
+**Addendum 4 (2026-10-10): GW channels with sky maps.**
+- Hypothesis: GW events have same-direction, wide or antipodal partners (GBM, ICECAT-1, CHIME, GW) at lags no
+  ordinary path explains. Before this the GW channels were lag-only. Ordinary explanations: as D-074, plus
+  GW170817 × GRB 170817A (a known counterpart).
+- Data: 282 PE sky maps (GWTC-2.1 / 3 / 4.1 / 5.0 Zenodo tarballs, 704 MB streamed in about 3.5 min with 12 range
+  connections per tarball, one process per `--tar`; reduced to nside-32 NESTED; `scripts/e1_gw_skymaps.py`).
+  The other 109 GWTC entries (GWTC-4.1: 52, GWTC-5.0: 57) have no PE parameters in the GWOSC CSV either and are
+  left out. GW170817: Gaussian at SSS17a, σ 1.05° (ASSUMPTION).
+- `scripts/e1_gw_directional.py`: same = partner within 3σ (+1.3° pixel slop, ASSUMPTION) of the 90 % region;
+  wide = more than max(3σ, 0.1°) outside the 99 % region; antipodal = antipode within the same tolerance of the
+  90 % region and not same; GW–GW by region overlap. Maps rotate in RA with the scrambled GW time (hour angle
+  kept). 4 channels × 5 lags × 3 classes = 60 cells, `jit` null, 1,000 scrambles (266 s on 4 cores).
+- The control pair GW170817 × GRB 170817A is classified `same` at 0–10 s and is left out of the family (both
+  observation and null; with it the 0–10 s GW–GBM same cell would be 1 vs ≈ 0). The catalogue snapshot is pinned
+  separately in `data/manifests/e1_gw_events.ecsv`, because the GBM TAP table grew since the D-074 pin.
+- **Result: null.** Pooled global p = 0.83 (min cell p 0.053); min analytic p × 60 = 1. Largest z: GW–ICECAT
+  1–7 d antipodal, 14 vs 8.3 ± 2.9 (z = 2.0); GW–GW 1 h–1 d antipodal, 17 vs 11.1 ± 3.4 (z = 1.8).
+- Sensitivity (`n50_injected`, 10 trials, family-wise 3σ): 3 pairs at ≤ 10 s (GW–GBM, ICECAT, CHIME), 3–10 at
+  10–100 s, 10–30 at 100 s–1 h; at 1 h–7 d mostly > 30 (not reached). GW–GW is not injected. 95 % upper limits per
+  cell are in `results/e1_events/gw_directional.json` (3 extra pairs in every empty cell).
+- Revisit if: new GWTC PE releases (more mapped O4 events), or signed-lag GW cells with directions are built.
+
+**Addendum 5 (2026-10-10): signed-lag GW cells with sky-map classes.**
+- Hypothesis: as addendum 3, with GW cells split by the addendum 4 sky-map classes. Ordinary explanations: known
+  counterparts with a fixed order (GW170817 → GRB 170817A, left out of the family); catalogue edges (GW events
+  after CHIME Cat 2 ends have only earlier partners). The per-year `jit` scramble keeps the edges, so its mean D is
+  not 0 (GW–CHIME 1–7 d wide: −66.5 ± 52.7) and every cell is tested against the null mean, never against 0.
+- `scripts/e1_gw_signed.py`: D = N(t_B > t_GW) − N(t_B < t_GW) for GW × {GBM, ICECAT, CHIME} × 5 lags × {same, wide,
+  antipodal} = 45 cells; `jit` null, 1,000 scrambles; two-sided pooled trials and the addendum 3 Gaussian / Skellam
+  tail. GW–GW is not a cell (D is antisymmetric within one catalogue). Injections put B after the GW event in the
+  tested class (`e1_gw_directional.inject(..., sign=1)`), 10 trials at n = 3, 10, 30.
+- **Result: null.** Pooled global p = 0.56 (min cell p 0.030); min analytic p × 45 = 0.78. Largest |z|: GW–CHIME
+  1 h–1 d antipodal, D = 10 vs −0.3 ± 4.3 (z = 2.4).
+- Sensitivity (`n50_injected`): 3 pairs at ≤ 10 s, 3–10 at 10–100 s, 10–30 at 100 s–1 h, and mostly not reached
+  (> 30) at 1 h–7 d.
+- Revisit if: new GWTC PE releases, or a time-resolved CHIME uptime series (owner decision).
+
+## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)
+
+**Decision.**
+- Round 2 of the D-069 process ran with the round-1 failure modes as hard rules for System A.
+- None of its predictions gets search compute here:
+  - R2-A (perfect-reflector GW afterglow) is excluded by the ergoregion instability and the GWTC-4.0 remnant null,
+    with the GW250114 reflectivity bound (preprint) as support.
+  - R2-B (polarisation mirror at saddle images) is internally inconsistent and disfavoured by B0218+357.
+  - R2-C (Σm_ν = 58.8 meV) is not novel. It is tracked externally through DESI DR3, KATRIN final and CMB birefringence.
+- Round 3 targets a derived small effect in a large-N quantity that is measured but never analysed for it.
+
+**Alternatives rejected.**
+- Reprocessing the raw VLA data for B0218+357 now: R2-B already fails on internal consistency. Kept as an optional
+  low-priority task.
+- Re-running public DESI/CMB chains for R2-C: it would only reproduce the published collaboration results.
+- A stacked GW echo search for R2-A: equivalent windows already tested (GWTC-4.0 cWB, O4a events, 2603.19021) and an
+  energy-normalised bound set for GW250114 (2610.12429). R2-A's exact stack was not run; it is moot given the
+  ergoregion exclusion.
+
+**Evidence.** docs/hypotheses/round-2/ (texts, reviews, summary). Key references opened 2026-10-09:
+- arXiv:2610.12429 (GW250114 near-horizon reflectivity);
+- 2603.19021 (GWTC-4.0 remnant tests);
+- 1706.06155 (echo recipe);
+- 1802.10088 (B0218+357 VLA reanalysis);
+- 2503.14744 (DESI DR2 neutrino constraints);
+- 2605.21456 (DES-Dovekie: negative neutrino mass or negative dark energy).
+
+**Revisit if.**
+- Parity-resolved circular polarimetry of a lensed radio quasar is published, or a lensed FRB is confirmed (R2-B).
+- DESI DR3 or a CMB analysis pushes the Σm_ν tension past 5σ, or relaxes it (R2-C).
+
+## D-076 Hypothesis round 3: derived small effects in large-N data; no testable survivor; pause new rounds (2026-10-09)
+
+**Decision.**
+- Round 3 (brief: a derived small effect in a large-N quantity never analysed for it) gives nothing that earns
+  search compute:
+  - R3-A (universal same-exposure pair correlation) fails as written. Its decisive test is in a lab.
+  - R3-B (condensate scalar charge) is mostly excluded by NS–WD dipole bounds (upper half at 6.7σ; self-consistent
+    minimum at about 2σ; the no-feedback corner survives). Recorded: α_NS < 2.2 × 10⁻³ (95 %, reviewer's
+    combination).
+  - R3-C (SN Ia rate vs "clock depth") is not excluded but cannot be tested with about 5 × 10³ public SNe Ia under
+    environment systematics.
+- New System A rounds are paused. Compute goes to open searches limited by data (MOA-II, CHIME baseband, Euclid DR1,
+  Gaia DR4) until the owner sets a new brief.
+
+**Alternatives rejected.**
+- A ZTF same-exposure correlation search for R3-A: about 3 TB to download, about 1.8σ at nominal D, and systematics bias it
+  upward.
+- A ZTF BTS Poisson GLM for R3-C: 0.5–2σ at N ≈ 5 × 10³; the kill needs N ≈ 8 × 10⁴.
+- A stacked s(M) Ṗb template fit for R3-B: bound-setting only, and mass-resolved fits already exist.
+- Continuing System A rounds at the same cadence: rounds 2–3 (6 worlds) produced no testable survivor.
+
+**Evidence.** docs/hypotheses/round-3/ (texts, reviews, summary). Key references opened 2026-10-09:
+- arXiv:1512.01216 (Holometer);
+- 2605.01436 (J1738+0333 update);
+- the cluster SN Ia rate papers listed in B-on-R3C.md.
+
+**Revisit if.**
+- The owner sets a new System A brief.
+- Rubin/LSST public alerts give ≥ 10⁵ SNe Ia with hosts (R3-C).
+- A lab cross-correlation of independent noise sources at 10⁻⁵ is published (R3-A).

@@ -3,7 +3,33 @@
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
-## Now (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
+## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
+0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
+   separation. The five requested channels are null (family p = 0.28). The CHIME–CHIME 1 h–1 d wide excess (z ≈ 3.9)
+   is reproduced by a calibrated rate-modulated null (week-scale detection-rate modulation; its cause is a
+   hypothesis). The 100 s–1 h wide cell drops to z = 2.5 under it (family-wise p = 0.26, D-074 addendum). Next:
+   - a time-resolved CHIME uptime series (only from the collaboration: owner decision); it would also decide
+     the 100 s–1 h residual;
+   - signed-lag ("which comes first", addendum 3), antipodal (addendum 2) and GW sky-map channels (addendum 4:
+     282 maps, global p = 0.83) and signed-lag GW cells by sky-map class (addendum 5, p = 0.56) are null;
+   - IceTracks-DR2, Swift, Einstein Probe.
+0. **D1 distance self-consistency** (D-073 + addenda; owner idea 1): H0LiCOW (R and D_dt LOO), 94 localized FRBs
+   (NE2001 and YMW16) and TDCOSMO 2025 power-law D_dt LOO on 8 lenses (addendum 2: max 1.12σ with κ_ext): all null.
+   Reach: R ×2–8 / ×0.2–0.4; D_dt ×1.36–1.85 / ×0.41–0.78. Next: composite-model D_dt chains as a model-choice check;
+   new per-lens D_d needs a numpy-only reader for the hierArc `*_const_processed.pkl` likelihoods.
+1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
+   mismatch). Next: CHIME/FRB Catalog 2 (CANFAR downloads reset by the proxy; try another route), TTE for short and
+   faint bursts, an s ≠ 1 chain, a generative pulse-model null.
+2. **S2 flat-kernel SN residuals** (D-070 + addendum): Pantheon+ × LS DR9 null (γ < 0.025), DES-SN5YR × LS DR9 null
+   (γ < 0.019 mag per unit T/⟨T⟩, α = 2, one-sided 95 %, dilution- and chain-corrected); α = 1 is kernel-degenerate. The
+   lensing positive control is only ~1.7σ (DES) / ~2σ combined. Next: a deeper galaxy column (DES Y3 Gold or LS DR10
+   z < 22) so the control detects, and the full Pantheon+ / DES-SN5YR covariances.
+3. **S3 hybrid images** (D-072): COSMOGRAIL doubles null, sensitivity only r ≈ 0.4–2.4 (red quasar variability makes
+   the copy collinear with the main image). Next, low priority: SN Refsdal / SN H0pe imaging at the model lags.
+4. **System A rounds paused** (D-076: rounds 2–3 gave no testable survivor). Restart only with a new owner brief.
+   Optional: the B0218+357 VLA polarisation sign test (R2-B).
+
+## Continuing (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
 1. **W3 in published microlensing samples** (D-057–D-059, D-061). Mróz 2019 bulge (5,790) and 2020 disk (460) fitted and
    vetted: 127 + 6 flags, **0 survive** (the D-059 chunk survivors BLG667.04.62161 and BLG624.18.69573 fail
    `feature_coverage`). **The published samples cannot limit W3:** 0 of 600 injected W3 events pass the emulated Mróz

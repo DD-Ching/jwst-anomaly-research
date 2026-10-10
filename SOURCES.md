@@ -1031,3 +1031,103 @@ Exploration Program."
   2026-10-09; whole-tile rows fetched by the indexed `tileid` column (`w5_euclid_shear.py fetch`, D-067).
 - NFW lensing (R calibration, D-067): Wright & Brainerd 2000, ApJ 534, 34 (arXiv:astro-ph/9908213); c200(M200):
   Duffy et al. 2008, MNRAS 390, L64 (arXiv:0804.2486); astropy `Planck18` cosmology.
+- Pantheon+SH0ES distances (Scolnic et al. 2022, ApJ 938, 113, arXiv:2112.03863; Brout et al. 2022, ApJ 938, 110,
+  arXiv:2202.04077): `Pantheon+SH0ES.dat` from https://github.com/PantheonPlusSH0ES/DataRelease (branch `main`,
+  `Pantheon+_Data/4_DISTANCES_AND_COVAR/`), accessed 2026-10-09 (`scripts/s2_flat_kernel.py`, D-070).
+- DES-SN5YR data release (DES Collaboration 2024, ApJL 973, L14, arXiv:2401.02929), Dovekie re-analysis files:
+  https://github.com/des-science/DES-SN5YR (branch `main`, HEAD c9a4fca of 2026-01-28),
+  `4_DISTANCES_COVMAT/DES-Dovekie_HD.csv`, `DES-Dovekie_Metadata.csv`, `0_DATA/DES-SN5YR_DES/DES-SN5YR_DES_HEAD.FITS.gz`
+  (sha256 in `results/s2_flat_kernel/fit_des_alpha2.json`), accessed 2026-10-09 (D-070 addendum). The Dovekie
+  paper reference is not recorded here (not verified this cycle).
+- Legacy Surveys DR9 Tractor + DR9 photometric redshifts (Data Lab TAP tables `ls_dr9.tractor`, `ls_dr9.photo_z`,
+  joined on `ls_id`; https://www.legacysurvey.org/dr9/), batched box queries, accessed 2026-10-09 (D-070).
+
+## S1 burst twins: Fermi GBM (accessed 2026-10-09; D-071)
+
+- Fermi GBM burst catalogue, HEASARC table `fermigbrst` via TAP https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync
+  (ADQL, VOTable), 4,390 rows, 2026-10-09; columns kept and the response sha256 are in
+  `results/s1_twins/catalogue.ecsv.gz` (meta). Catalogue papers: von Kienlin et al. 2020
+  (arXiv:2002.11460); Poolakkil et al. 2021 (arXiv:2103.13528, doi:10.3847/1538-4357/abf24d).
+- GBM burst-catalogue "bcat" files `glg_bcat_all_bn<id>_v<NN>.fit`, HEASARC FTP
+  https://heasarc.gsfc.nasa.gov/FTP/fermi/data/gbm/bursts/<YYYY>/bn<id>/current/ , newest version per burst,
+  4,389 of 4,390 present (bn number, file name, size and sha256 per row in `results/s1_twins/lc_<YYYY>.ecsv.gz`);
+  streamed into memory, never stored. HDU 2 `PHTFLUX`/`PHTFLUXB` used; HDU 1 `PHTCNTS` rejected (D-071).
+- GBM localisation systematic: Connaughton et al. 2015 (arXiv:1411.2685), 3.7° (68 %) core plus a
+  ~10 % tail to ~14°.
+- Prior lensed-GRB search (method and gap): Ahlgren & Larsson 2020 (arXiv:2006.07095).
+- Fermi GBM Data Tools (GDT), https://astro-gdt.readthedocs.io/projects/astro-gdt-fermi/en/latest/ (docs 2.2.x,
+  opened 2026-10-09): TTE, PHAII, RSP, trigdat, poshist, scat, tcat and catalogue finders; no bcat reader listed.
+
+## E1 causal event network: GBM × ICECAT-1 × GWTC × CHIME/FRB Cat 2 (accessed 2026-10-09; D-074)
+
+Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total; event tables only).
+
+- Fermi GBM burst catalogue, HEASARC `fermigbrst` via TAP https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync
+  (columns trigger_name, ra, dec, error_radius, trigger_time, t90, fluence, last_modified), 4,390 rows.
+  Catalogue papers as in "S1 burst twins".
+- IceCube ICECAT-1 v4, Harvard Dataverse doi:10.7910/DVN/SCRUCD, file `IceCube_Gold_Bronze_Tracks.tab`
+  (datafile 7502710, original CSV; the Dataverse md5 cfb7a988cfd2591ba71ab95cd365a3fa matched), 348 tracks
+  (340 after dropping `CR_VETO`). Paper: Abbasi et al. 2023, ApJS 269, 25 (arXiv:2304.01174).
+- GWOSC cumulative GWTC confident event list,
+  https://gwosc.org/api/v2/catalogs/GWTC/events?include-default-parameters=true&format=csv (391 events,
+  GWTC-1 to GWTC-5.0). The CSV has no sky positions; sky maps are in the Zenodo PE releases.
+- GWTC parameter-estimation sky maps (accessed 2026-10-10; D-074 addendum 4), Zenodo records, sha256 and sizes in
+  `data/manifests/e1_gw_skymaps.ecsv`: GWTC-2.1 rec. 6513631 `IGWN-GWTC2p1-v2-PESkyMaps.tar.gz` (54 maps);
+  GWTC-3 rec. 8177023 `IGWN-GWTC3p0-v2-PESkyLocalizations.tar.gz` (36); GWTC-4.1 rec. 20275769
+  `IGWN-GWTC4p1-18965dda8_5-Archived_Skymaps.tar.gz` (88); GWTC-5.0 rec. 20348005
+  `IGWN-GWTC5p0-29ebe06b7_25-Archived_Skymaps.tar.gz` (104). Streamed into memory, reduced to nside 32, never
+  stored. The 109 GWTC-4.1 / 5.0 list entries without a map also have no PE parameters in the GWOSC CSV.
+  GW170817 has no map in these releases (a Gaussian at SSS17a stands in, positive control only).
+- CHIME/FRB Catalog 2, CANFAR doi:10.11570/25.0066, `data/table/chimefrbcat2.csv` (4,057,396 bytes). It
+  downloaded at the first attempt on 2026-10-09 (an earlier session's download had been reset by the proxy).
+  Paper: arXiv:2601.09399.
+- CHIME/FRB Catalog 2 exposure, same DOI, `data/exposure/chimefrbcat2_exposure.h5` (216,024,090 bytes, sha256
+  cd8411f92d0ac31bd05dff47f62797638c354444de27a5c056113ca00470d514; `data/manifests/e1_chime_exposure.ecsv`). It
+  holds two HEALPix nside-4096 RING maps of time-integrated exposure (s), upper and lower transit, 2018-09-04 to
+  2023-09-15, with no time axis. It was reduced to `results/e1_events/chime_exposure_dec_profile.ecsv` and deleted.
+  The CANFAR release has no time-resolved uptime file (directories listed 2026-10-09).
+- Positive control: Abbott et al. 2017, ApJL 848, L13 (arXiv:1710.05834): GRB 170817A began 1.74 ± 0.05 s
+  after the GW170817 merger. SSS17a position: Coulter et al. 2017, Science, doi:10.1126/science.aap9811
+  (arXiv:1710.05452).
+- GBM instrument: Meegan et al. 2009, ApJ 702, 791 (arXiv:0908.0450). The ~95.6 min orbital period used for the
+  orbit-phase null is an ASSUMPTION (a ~96 min low-Earth orbit), not taken from that abstract.
+- Prior coincidence searches. Both are same-direction only, and no public code was found on 2026-10-09:
+  - Curtin et al. 2023, ApJ 954, 154 (arXiv:2208.00803): CHIME/FRB × GBM/BAT GRBs, 3σ position overlap,
+    ≤ 1 week;
+  - Masaoka et al. 2026 (arXiv:2603.24983): CHIME Cat 2 × ICECAT-1, best post-trial p = 0.076.
+- Time-dependent two-point correlation of a burst catalogue (a same-direction repeater test): Brainerd et al. 1995,
+  ApJL (arXiv:astro-ph/9501010, doi:10.1086/187784).
+- The antipodal (~176°) BATSE correlation peak is explained by a position-determination bias: Maoz 1994, MNRAS
+  269, L1 (arXiv:astro-ph/9308040).
+
+## COSMOGRAIL XIX light curves (accessed 2026-10-09; D-072)
+- Millon et al. 2020, A&A 640, A105, arXiv:2002.05736: R-band light curves of 23 lensed quasars, CDS
+  J/A+A/640/A105 (https://cdsarc.cds.unistra.fr/ftp/J/A+A/640/A105/, `lcab/*.dat`); delays and redshifts from the
+  paper's Tables 1 and 4 (arXiv source `tabdelay.tex`, `tabdata.tex`). `scripts/s3_hybrid.py`.
+
+## D1 distance self-consistency (accessed 2026-10-09; D-073)
+
+- H0LiCOW public distance posteriors, https://github.com/shsuyu/H0LiCOW-public (commit 57cf973, 2025-05-14):
+  `h0licow_distance_chains/*`, `MontePython_cosmo_sampling/data/timedelay_6lenses/B1608_Dd_Ddt_params.dat` and the
+  lens redshifts in `MontePython_cosmo_sampling/likelihoods/timedelay_6lenses/__init__.py`. Papers: Wong et al.
+  2020, MNRAS 498, 1420 (arXiv:1907.04869); Suyu et al. 2010 (B1608 D_dt); Jee et al. 2019, Science 365, 1134
+  (B1608 D_d); Chen et al. 2019, MNRAS 490, 1743 (HE0435, RXJ1131, PG1115); Birrer et al. 2019, MNRAS 484, 4726
+  (J1206); Rusu et al. 2020 (WFI2033, arXiv:1905.09338).
+- TDCOSMO 2025 public release, https://github.com/TDCOSMO/TDCOSMO2025_public (commit d7f38db, 2026-01-21):
+  `TDCOSMO_sample/TDCOSMO_data/SDSS1206+4332/final_D_d.npy`, `final_D_dt.npy`, `TDCOSMO_sample/tdcosmo_sample.yaml`.
+  Paper: TDCOSMO Collaboration 2025, A&A 704, A63 (arXiv:2506.03023). Other per-lens files there (names only,
+  listed 2026-10-09; read 2026-10-09 by `d1_distance.py tdcosmo`, sha256 in `data/manifests/d1_distance.ecsv`): power-law D_dt chains `HE0435-1223/he_powerlaw_Ddt.dat`,
+  `PG1115+080/pg_powerlaw_Ddt.dat`, `RXJ1131-1231/rxj_powerlaw_Ddt.dat`, `WFI2033-4723/wfi2033_pl_dt_nokext.dat`,
+  `B1608+656/B1608_Dtmod_n5e5.dat`, `DES0408-5354/power_law_dist_post_no_kext.txt`,
+  `WGD2038-4008/desj2038_pl_nokext_nokin_dt_weight.csv` (weighted), `SDSS1206+4332/angular_diameter_pre_LOS_power_law.txt`
+  (pickle); κ_ext
+  files beside them (`*kext*`, `kappa_powerlaw_*.dat`, `kappahist_*`); kinematic likelihoods `*_const_processed.pkl`.
+- FRBs/FRB repository, https://github.com/FRBs/FRB (commit 996fcda, 2026-05-06, BSD-3):
+  `frb/data/Galaxies/public_hosts.csv` and `frb/data/FRBs/FRB*.json` (DM, DMISM). `DMISM` is NE2001 (Cordes &
+  Lazio 2002, arXiv:astro-ph/0207156) from `frb/mw.py` `ismDM` (python `ne2001` package, `ElectronDensity().DM(l, b,
+  100.)`), set by `frb/builds/build_frbs.py`; used as stored, not recomputed. Macquart et al. 2020, Nature 581,
+  391 (arXiv:2005.13161) for ⟨DM_cosmic⟩, p(Δ) and the host log-normal; James et al. 2022, MNRAS 516, 4862
+  (arXiv:2208.00819) for F ≈ 0.32.
+- YMW16 Galactic electron-density model, Yao, Manchester & Wang 2017, ApJ 835, 29 (arXiv:1610.09448), through pygedm
+  3.3.0 (https://pypi.org/project/pygedm/3.3.0/, sdist; Price, Flynn & Deller 2021, PASA 38, e038, arXiv:2106.15816):
+  only its compiled `ymw16` extension and parameter files are used (D-073 addendum). Accessed 2026-10-09.
