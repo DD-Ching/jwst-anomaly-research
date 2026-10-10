@@ -31,20 +31,32 @@
    92
   ],
   [
+   "exotic_chi2_cap",
+   82
+  ],
+  [
    "repeated_deficit",
-   59
+   52
+  ],
+  [
+   "residual_deficit",
+   28
+  ],
+  [
+   "periodic_variable",
+   27
   ],
   [
    "variable_baseline",
-   56
+   27
   ],
   [
    "neighbour_shares_feature",
-   45
+   23
   ],
   [
    "eclipse_dip",
-   6
+   5
   ],
   [
    "smooth_dip",
@@ -55,6 +67,7 @@
    0
   ]
  ],
+ "gaia_rp_xmatch": "vizier:I/355/gaiadr3 within 1.0″: 88 matched",
  "flags": [
   {
    "event_id": "gb15-R-1-0-24872",
@@ -78,9 +91,24 @@
      "1086 epochs before ingress, 5304 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 4.21 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.0"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.4 at 2454266.0–2454268.9 (feature 2454257.4–2454266.6)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 26.28 d, 2-harmonic BIC gain per half 111.2 / 4.7 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -157,24 +185,19 @@
      "6106 epochs before ingress, 60 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.07 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.9"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.63 > 5.34? (5949 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "3 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 2043.8 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -10.1 at 2456881.9–2456884.1 (feature 2456868.9–2456904.2)"
     ]
    ]
   },
@@ -198,6 +221,11 @@
      "feature_bracketed",
      true,
      "5965 epochs before ingress, 481 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.27 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -228,6 +256,11 @@
      "5793 epochs before ingress, 661 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.59 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -6.5"
@@ -254,6 +287,11 @@
      "feature_bracketed",
      true,
      "3106 epochs before ingress, 1778 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.87 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -284,9 +322,24 @@
      "707 epochs before ingress, 1472 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.59 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.4"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.2 at 2454142.2–2454168.1 (feature 2454625.1–2454724.2)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 33.48 d, 2-harmonic BIC gain per half 23.7 / -24.2 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -327,9 +380,24 @@
      "3855 epochs before ingress, 460 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.40 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.3"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.3 at 2455405.2–2455406.1 (feature 2456488.2–2456494.3)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 40.22 d, 2-harmonic BIC gain per half -8.0 / -30.5 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -370,24 +438,9 @@
      "1806 epochs before ingress, 3535 after egress (need 20 each)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -4.0"
-    ],
-    [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.28 > 5.34? (5270 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "exotic_chi2_cap",
      false,
-     "ΔBIC 10956.6 vs a trapezoidal dip"
+     "E2neg χ²/dof without its spikes 5.90 > 5.34?"
     ]
    ]
   },
@@ -436,14 +489,9 @@
      "71 epochs before ingress, 5161 after egress (need 20 each)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -4.2"
-    ],
-    [
-     "variable_baseline",
+     "exotic_chi2_cap",
      false,
-     "baseline χ²/dof 8.77 > 5.34? (4944 pts, errors × point-to-point scale)"
+     "N1neg χ²/dof without its spikes 11.61 > 5.34?"
     ]
    ]
   },
@@ -505,9 +553,24 @@
      "2288 epochs before ingress, 3948 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.85 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.3"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -6.0 at 2454708.9–2454737.0 (feature 2454632.3–2454773.4)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 26.95 d, 2-harmonic BIC gain per half 53.4 / -25.8 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -548,6 +611,11 @@
      "2799 epochs before ingress, 2301 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 3.29 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -12.2"
@@ -574,6 +642,11 @@
      "feature_bracketed",
      true,
      "998 epochs before ingress, 4584 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.12 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -604,9 +677,24 @@
      "1735 epochs before ingress, 3815 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.50 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.7"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.2 at 2454653.8–2454662.1 (feature 2454464.4–2454816.9)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 88.21 d, 2-harmonic BIC gain per half 33.4 / 17.7 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -647,24 +735,19 @@
      "1745 epochs before ingress, 3508 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 5.11 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.2"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 3.33 > 5.34? (5208 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 5264.8 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -8.2 at 2454654.2–2454657.2 (feature 2454426.9–2455111.9)"
     ]
    ]
   },
@@ -688,6 +771,11 @@
      "feature_bracketed",
      true,
      "506 epochs before ingress, 5773 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.13 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -718,9 +806,24 @@
      "1812 epochs before ingress, 3874 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 4.42 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.9"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the E2neg residuals -5.9 at 2456839.9–2456840.9 (feature 2454612.5–2454617.4)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 78.13 d, 2-harmonic BIC gain per half 76.3 / 15.8 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -789,19 +892,19 @@
      "683 epochs before ingress, 5555 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.88 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.4"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 0.74 > 5.34? (5913 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
+     "residual_deficit",
      false,
-     "4 neighbours; |S| > 5: [('gb15-R-2-2-21320', -10.9), ('gb15-R-2-2-21401', -8.4), ('gb15-R-2-2-23769', -14.0)]"
+     "z_min of the N1neg residuals -9.8 at 2454199.1–2454202.1 (feature 2454115.8–2454227.8)"
     ]
    ]
   },
@@ -827,19 +930,19 @@
      "682 epochs before ingress, 5560 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.93 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.3"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 0.82 > 5.34? (5920 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
+     "residual_deficit",
      false,
-     "4 neighbours; |S| > 5: [('gb15-R-2-2-21186', -14.9), ('gb15-R-2-2-21401', -8.7), ('gb15-R-2-2-23769', -13.8)]"
+     "z_min of the N1neg residuals -9.4 at 2454199.1–2454202.1 (feature 2454134.2–2454224.6)"
     ]
    ]
   },
@@ -865,9 +968,24 @@
      "1190 epochs before ingress, 5104 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.63 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.6"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.6 at 2455008.0–2455010.2 (feature 2454283.8–2454309.7)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 14.22 d, 2-harmonic BIC gain per half 8.1 / -16.8 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -908,6 +1026,11 @@
      "2598 epochs before ingress, 2999 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.75 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -7.5"
@@ -936,9 +1059,24 @@
      "348 epochs before ingress, 5950 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 5.10 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.8"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the E2neg residuals -4.7 at 2453885.2–2453895.2 (feature 2453923.9–2453956.1)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 27.96 d, 2-harmonic BIC gain per half 57.8 / -8.7 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -997,9 +1135,24 @@
      "4709 epochs before ingress, 1040 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.27 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.4"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -4.3 at 2455364.1–2455365.1 (feature 2455929.5–2456268.3)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 70.43 d, 2-harmonic BIC gain per half 17.9 / -9.8 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -1035,24 +1188,19 @@
      "2133 epochs before ingress, 3906 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.85 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.3"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.56 > 5.34? (5656 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 1187.8 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -6.1 at 2454696.0–2454706.0 (feature 2454627.2–2454697.3)"
     ]
    ]
   },
@@ -1078,24 +1226,9 @@
      "658 epochs before ingress, 3598 after egress (need 20 each)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -5.0"
-    ],
-    [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 2.28 > 5.34? (4089 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "exotic_chi2_cap",
      false,
-     "ΔBIC 28488.0 vs a trapezoidal dip"
+     "E2neg χ²/dof without its spikes 7.18 > 5.34?"
     ]
    ]
   },
@@ -1139,6 +1272,11 @@
      "729 epochs before ingress, 5632 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.95 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -7.6"
@@ -1165,6 +1303,11 @@
      "feature_bracketed",
      true,
      "751 epochs before ingress, 5607 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.16 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -1195,24 +1338,24 @@
      "1820 epochs before ingress, 3929 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 4.64 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.6"
     ],
     [
-     "variable_baseline",
+     "residual_deficit",
      true,
-     "baseline χ²/dof 3.51 > 5.34? (5749 pts, errors × point-to-point scale)"
+     "z_min of the N1neg residuals -4.3 at 2454348.8–2454377.0 (feature 2454480.1–2454789.0)"
     ],
     [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "periodic_variable",
      false,
-     "ΔBIC 7946.4 vs a trapezoidal dip"
+     "P 29.93 d, 2-harmonic BIC gain per half 29.8 / 42.5 (fail if both > 25)"
     ]
    ]
   },
@@ -1236,6 +1379,11 @@
      "feature_bracketed",
      true,
      "5001 epochs before ingress, 1480 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "E2pos χ²/dof without its spikes 1.19 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -1266,9 +1414,9 @@
      "1224 epochs before ingress, 5167 after egress (need 20 each)"
     ],
     [
-     "repeated_deficit",
+     "exotic_chi2_cap",
      false,
-     "z_min outside the feature -12.1"
+     "N1neg χ²/dof without its spikes 21.15 > 5.34?"
     ]
    ]
   },
@@ -1292,6 +1440,11 @@
      "feature_bracketed",
      true,
      "2766 epochs before ingress, 2194 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.23 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -1345,9 +1498,9 @@
      "600 epochs before ingress, 5858 after egress (need 20 each)"
     ],
     [
-     "repeated_deficit",
+     "exotic_chi2_cap",
      false,
-     "z_min outside the feature -7.4"
+     "N1neg χ²/dof without its spikes 5.36 > 5.34?"
     ]
    ]
   },
@@ -1373,19 +1526,19 @@
      "4505 epochs before ingress, 398 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2pos χ²/dof without its spikes 1.32 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.3"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.21 > 5.34? (4566 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
+     "residual_deficit",
      false,
-     "1 neighbours; |S| > 5: [('gb15-R-3-3-6269', -127.2)]"
+     "z_min of the E2pos residuals -18.8 at 2456535.8–2456541.9 (feature 2455701.4–2456791.2)"
     ]
    ]
   },
@@ -1429,24 +1582,19 @@
      "181 epochs before ingress, 5790 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 4.49 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.7"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 2.04 > 5.34? (5797 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 17754.4 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -13.3 at 2453887.2–2453896.1 (feature 2453891.0–2454045.8)"
     ]
    ]
   },
@@ -1472,19 +1620,19 @@
      "751 epochs before ingress, 5633 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.93 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.6"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 0.84 > 5.34? (6011 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
+     "residual_deficit",
      false,
-     "2 neighbours; |S| > 5: [('gb15-R-3-4-22812', -6.9), ('gb15-R-3-4-24416', -15.3)]"
+     "z_min of the N1neg residuals -9.2 at 2454199.1–2454202.1 (feature 2454175.0–2454218.2)"
     ]
    ]
   },
@@ -1510,9 +1658,9 @@
      "3215 epochs before ingress, 1933 after egress (need 20 each)"
     ],
     [
-     "repeated_deficit",
+     "exotic_chi2_cap",
      false,
-     "z_min outside the feature -6.4"
+     "N1neg χ²/dof without its spikes 6.01 > 5.34?"
     ]
    ]
   },
@@ -1574,6 +1722,11 @@
      "464 epochs before ingress, 5770 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 2.21 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -10.1"
@@ -1600,6 +1753,11 @@
      "feature_bracketed",
      true,
      "5294 epochs before ingress, 595 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.88 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -1630,24 +1788,9 @@
      "682 epochs before ingress, 3815 after egress (need 20 each)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -5.4"
-    ],
-    [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 5.15 > 5.34? (4259 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "exotic_chi2_cap",
      false,
-     "ΔBIC 164.9 vs a trapezoidal dip"
+     "N1neg χ²/dof without its spikes 9.24 > 5.34?"
     ]
    ]
   },
@@ -1673,9 +1816,24 @@
      "842 epochs before ingress, 5219 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.16 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.0"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -4.9 at 2454274.8–2454283.1 (feature 2454257.1–2454272.9)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 57.33 d, 2-harmonic BIC gain per half -3.5 / -25.3 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -1716,24 +1874,19 @@
      "673 epochs before ingress, 1031 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.80 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.8"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 0.97 > 5.34? (1557 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 83.7 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -23.3 at 2454651.2–2454660.2 (feature 2454049.9–2456344.0)"
     ]
    ]
   },
@@ -1759,9 +1912,24 @@
      "4942 epochs before ingress, 233 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 3.31 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.6"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -4.0 at 2456014.2–2456043.2 (feature 2455948.3–2456851.0)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 27.66 d, 2-harmonic BIC gain per half 19.2 / 5.5 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -1812,14 +1980,9 @@
      "5576 epochs before ingress, 574 after egress (need 20 each)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -2.2"
-    ],
-    [
-     "variable_baseline",
+     "exotic_chi2_cap",
      false,
-     "baseline χ²/dof 9.58 > 5.34? (6039 pts, errors × point-to-point scale)"
+     "N1neg χ²/dof without its spikes 11.32 > 5.34?"
     ]
    ]
   },
@@ -1845,24 +2008,19 @@
      "1873 epochs before ingress, 2186 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.36 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.0"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.20 > 5.34? (4006 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 530.1 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -6.3 at 2454971.1–2454980.2 (feature 2454533.1–2455578.0)"
     ]
    ]
   },
@@ -1888,9 +2046,24 @@
      "1046 epochs before ingress, 4746 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.91 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.9"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.9 at 2456116.9–2456117.8 (feature 2454248.1–2454252.4)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 39.18 d, 2-harmonic BIC gain per half -5.4 / -7.8 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -1931,19 +2104,19 @@
      "4941 epochs before ingress, 1050 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 3.57 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.7"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 2.18 > 5.34? (5991 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
+     "residual_deficit",
      false,
-     "1 neighbours; |S| > 5: [('gb15-R-4-2-61225', 6.7)]"
+     "z_min of the N1neg residuals -6.2 at 2456113.9–2456123.9 (feature 2455940.0–2456266.8)"
     ]
    ]
   },
@@ -1969,9 +2142,24 @@
      "5272 epochs before ingress, 1206 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 1.02 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.4"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the E2neg residuals -3.3 at 2454339.1–2454349.1 (feature 2456115.9–2456120.3)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 27.71 d, 2-harmonic BIC gain per half 16.5 / -7.7 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -2017,6 +2205,11 @@
      "5550 epochs before ingress, 639 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 4.63 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -7.9"
@@ -2045,9 +2238,24 @@
      "6338 epochs before ingress, 51 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.63 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.3"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -4.3 at 2454348.9–2454349.8 (feature 2456868.2–2456907.7)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 27.00 d, 2-harmonic BIC gain per half 54.0 / -5.1 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -2111,9 +2319,24 @@
      "2725 epochs before ingress, 3676 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.39 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.0"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.0 at 2454509.2–2454606.0 (feature 2454983.8–2454989.0)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 29.48 d, 2-harmonic BIC gain per half -12.8 / -13.4 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -2205,6 +2428,11 @@
      "2074 epochs before ingress, 4414 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.31 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -14.6"
@@ -2231,6 +2459,11 @@
      "feature_bracketed",
      true,
      "2285 epochs before ingress, 3936 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.94 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -2261,24 +2494,19 @@
      "1793 epochs before ingress, 3795 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 4.04 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.1"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 3.13 > 5.34? (5578 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 3137.6 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -6.5 at 2454653.0–2454662.1 (feature 2454467.0–2454832.3)"
     ]
    ]
   },
@@ -2302,6 +2530,11 @@
      "feature_bracketed",
      true,
      "5371 epochs before ingress, 424 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.53 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -2332,29 +2565,19 @@
      "4206 epochs before ingress, 1189 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2pos χ²/dof without its spikes 0.93 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.9"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 0.83 > 5.34? (5218 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
-     true,
-     "ΔBIC -99.5 vs a trapezoidal dip"
-    ],
-    [
-     "smooth_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 11.0 vs a Gaussian dip (σ 326.8 d)"
+     "z_min of the E2pos residuals -19.6 at 2456023.0–2456026.0 (feature 2455604.4–2456087.0)"
     ]
    ]
   },
@@ -2378,6 +2601,11 @@
      "feature_bracketed",
      true,
      "2092 epochs before ingress, 3934 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.21 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -2408,6 +2636,11 @@
      "2163 epochs before ingress, 3890 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.21 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -6.9"
@@ -2436,19 +2669,19 @@
      "2574 epochs before ingress, 467 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.53 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.8"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.59 > 5.34? (2894 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
+     "residual_deficit",
      false,
-     "1 neighbours; |S| > 5: [('gb15-R-5-1-4106', -26.2)]"
+     "z_min of the N1neg residuals -14.4 at 2455662.1–2455672.0 (feature 2454875.7–2456758.7)"
     ]
    ]
   },
@@ -2497,9 +2730,24 @@
      "4956 epochs before ingress, 1258 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.39 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.5"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.3 at 2456105.0–2456114.1 (feature 2456009.8–2456108.5)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 27.05 d, 2-harmonic BIC gain per half 82.1 / -20.9 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -2540,24 +2788,19 @@
      "5484 epochs before ingress, 623 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.64 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.7"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.31 > 5.34? (5963 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "3 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 1525.3 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -6.6 at 2456450.0–2456458.0 (feature 2456379.2–2456529.6)"
     ]
    ]
   },
@@ -2601,6 +2844,11 @@
      "2032 epochs before ingress, 4375 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.66 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -9.4"
@@ -2627,6 +2875,11 @@
      "feature_bracketed",
      true,
      "5194 epochs before ingress, 376 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.74 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -2657,14 +2910,9 @@
      "3326 epochs before ingress, 2286 after egress (need 20 each)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -5.9"
-    ],
-    [
-     "variable_baseline",
+     "exotic_chi2_cap",
      false,
-     "baseline χ²/dof 26.67 > 5.34? (4568 pts, errors × point-to-point scale)"
+     "N1neg χ²/dof without its spikes 24.26 > 5.34?"
     ]
    ]
   },
@@ -2688,6 +2936,11 @@
      "feature_bracketed",
      true,
      "185 epochs before ingress, 6198 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.90 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -2718,24 +2971,19 @@
      "2292 epochs before ingress, 4121 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.36 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.8"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.25 > 5.34? (5983 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 768.6 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -11.7 at 2454651.2–2454654.2 (feature 2454648.0–2454658.5)"
     ]
    ]
   },
@@ -2761,9 +3009,24 @@
      "282 epochs before ingress, 6022 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 1.39 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.6"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the E2neg residuals -3.6 at 2455418.0–2455420.0 (feature 2453912.7–2453917.8)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 27.19 d, 2-harmonic BIC gain per half -10.5 / -28.2 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -2804,6 +3067,11 @@
      "1701 epochs before ingress, 4504 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 2.07 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -7.6"
@@ -2832,24 +3100,19 @@
      "4931 epochs before ingress, 1373 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.32 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.8"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.03 > 5.34? (6069 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 39.4 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -11.4 at 2456024.2–2456025.2 (feature 2456014.5–2456057.2)"
     ]
    ]
   },
@@ -2875,24 +3138,19 @@
      "1291 epochs before ingress, 4697 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 3.97 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -6.0"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 3.30 > 5.34? (5422 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 6548.6 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -7.4 at 2454331.8–2454334.8 (feature 2454321.6–2454340.5)"
     ]
    ]
   },
@@ -2916,6 +3174,11 @@
      "feature_bracketed",
      true,
      "4510 epochs before ingress, 1565 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.49 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -2969,9 +3232,24 @@
      "5823 epochs before ingress, 641 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.21 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.9"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.1 at 2456527.0–2456530.0 (feature 2456520.9–2456526.2)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 33.15 d, 2-harmonic BIC gain per half 69.1 / 13.8 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -3012,24 +3290,19 @@
      "697 epochs before ingress, 1260 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.57 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.1"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.21 > 5.34? (1760 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 1.2 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -16.1 at 2455475.9–2455477.0 (feature 2454069.4–2456109.1)"
     ]
    ]
   },
@@ -3078,9 +3351,24 @@
      "4944 epochs before ingress, 1349 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 3.15 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.1"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -4.9 at 2454349.0–2454350.0 (feature 2455979.6–2456079.2)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 27.14 d, 2-harmonic BIC gain per half 19.0 / -25.2 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -3144,9 +3432,24 @@
      "4860 epochs before ingress, 1030 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.21 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.6"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.7 at 2455609.2–2455873.9 (feature 2455956.8–2456292.4)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 27.71 d, 2-harmonic BIC gain per half -6.2 / -4.9 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -3187,24 +3490,9 @@
      "1950 epochs before ingress, 4208 after egress (need 20 each)"
     ],
     [
-     "repeated_deficit",
-     true,
-     "z_min outside the feature -4.9"
-    ],
-    [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 3.92 > 5.34? (5832 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "1 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "exotic_chi2_cap",
      false,
-     "ΔBIC 12386.2 vs a trapezoidal dip"
+     "N1neg χ²/dof without its spikes 5.96 > 5.34?"
     ]
    ]
   },
@@ -3230,24 +3518,19 @@
      "4305 epochs before ingress, 1858 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.10 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.2"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.93 > 5.34? (5989 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 479.1 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -6.4 at 2455676.1–2455685.2 (feature 2455614.6–2455724.6)"
     ]
    ]
   },
@@ -3296,9 +3579,24 @@
      "5795 epochs before ingress, 604 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 3.95 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.9"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -2.9 at 2454135.2–2454410.9 (feature 2456523.9–2456545.1)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 17.10 d, 2-harmonic BIC gain per half 21.4 / -3.6 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -3337,6 +3635,11 @@
      "feature_bracketed",
      true,
      "397 epochs before ingress, 2918 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.94 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -3385,6 +3688,11 @@
      "4304 epochs before ingress, 1812 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2pos χ²/dof without its spikes 3.18 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -11.2"
@@ -3411,6 +3719,11 @@
      "feature_bracketed",
      true,
      "1795 epochs before ingress, 4007 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 3.89 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -3441,9 +3754,24 @@
      "1284 epochs before ingress, 3036 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.48 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.3"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -4.5 at 2454627.2–2454657.2 (feature 2454458.0–2455167.0)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 96.31 d, 2-harmonic BIC gain per half -6.4 / -31.3 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -3520,9 +3848,24 @@
      "2556 epochs before ingress, 3531 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 1.28 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.1"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the E2neg residuals -5.3 at 2454996.8–2455006.8 (feature 2454881.9–2455134.3)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 28.11 d, 2-harmonic BIC gain per half 25.8 / -30.7 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -3586,6 +3929,11 @@
      "1286 epochs before ingress, 5065 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.11 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -6.7"
@@ -3614,9 +3962,24 @@
      "5506 epochs before ingress, 569 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.75 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.3"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -2.9 at 2456389.2–2456419.1 (feature 2456402.4–2456580.6)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 80.53 d, 2-harmonic BIC gain per half -15.0 / 99.2 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -3652,24 +4015,19 @@
      "1774 epochs before ingress, 2160 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.34 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.4"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 0.89 > 5.34? (3561 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 1461.1 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -12.6 at 2454607.1–2454617.0 (feature 2454389.7–2455539.9)"
     ]
    ]
   },
@@ -3695,9 +4053,24 @@
      "2317 epochs before ingress, 4069 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.85 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.0"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.4 at 2454668.8–2454677.0 (feature 2454650.2–2454665.0)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 23.52 d, 2-harmonic BIC gain per half -5.3 / -18.7 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -3738,24 +4111,19 @@
      "5826 epochs before ingress, 470 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.54 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.3"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.31 > 5.34? (6137 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 1110.0 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -6.9 at 2456770.0–2456799.2 (feature 2456706.6–2456761.7)"
     ]
    ]
   },
@@ -3781,24 +4149,19 @@
      "20 epochs before ingress, 6096 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.69 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.9"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.38 > 5.34? (5826 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 77.3 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -7.7 at 2453859.3–2453860.2 (feature 2453848.6–2453901.8)"
     ]
    ]
   },
@@ -3842,9 +4205,24 @@
      "5196 epochs before ingress, 669 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.72 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.0"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.4 at 2456451.0–2456458.0 (feature 2456431.0–2456479.2)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 35.39 d, 2-harmonic BIC gain per half 11.8 / -4.9 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -3885,19 +4263,19 @@
      "5750 epochs before ingress, 604 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.17 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.6"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.05 > 5.34? (6144 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
+     "residual_deficit",
      false,
-     "1 neighbours; |S| > 5: [('gb15-R-9-4-178843', 5.4)]"
+     "z_min of the N1neg residuals -8.2 at 2456534.9–2456535.8 (feature 2456524.5–2456541.2)"
     ]
    ]
   },
@@ -3921,6 +4299,11 @@
      "feature_bracketed",
      true,
      "106 epochs before ingress, 6299 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.36 > 5.34?"
     ],
     [
      "repeated_deficit",
@@ -3951,6 +4334,11 @@
      "702 epochs before ingress, 5782 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 5.33 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -7.8"
@@ -3979,9 +4367,24 @@
      "2540 epochs before ingress, 3548 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2pos χ²/dof without its spikes 1.31 > 5.34?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.3"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the E2pos residuals -5.5 at 2454348.8–2454349.8 (feature 2454878.2–2455163.3)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 17.12 d, 2-harmonic BIC gain per half 11.5 / -16.2 (fail if both > 25)"
     ],
     [
      "variable_baseline",
