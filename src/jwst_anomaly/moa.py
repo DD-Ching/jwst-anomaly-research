@@ -297,9 +297,12 @@ def _parse_tokens(raw: bytes, columns=None) -> dict[str, np.ndarray] | None:
         pos = end + 1
     if names is None:
         return None  # e.g. a leading blank line: the line parser finds the header anywhere
-    toks = raw[pos:].split()
+    body = raw[pos:]
+    toks = body.split()
     nc = len(names)
-    if not toks or len(toks) % nc:
+    # every data row must hold nc tokens: ragged rows whose counts merely sum to a multiple of nc
+    # would shift columns, so they go to the line parser, which drops them
+    if not toks or any(len(line.split()) != nc for line in body.split(b"\n") if line.strip()):
         return None
     want = None if columns is None else {"HJD", *columns}
     out: dict[str, np.ndarray] = {}

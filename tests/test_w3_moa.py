@@ -303,7 +303,7 @@ def test_vet_and_limit_refuse_partial_or_failed_inputs(tmp_path, monkeypatch):
     with pytest.raises(SystemExit, match="exactly the pre-screen passes"):
         wm.check_complete_fits(fits)
     wm.check_complete_fits(Table({"event_id": ids[::-1]}))  # complete: no error
-    vet = {"flags": [], "fit_errors": ["gb22-R-1-0-3"]}
+    vet = {"flags": [], "fit_errors": ["gb22-R-1-0-3"], "chain": wm.CHAIN_VERSION}
     (tmp_path / "vetting_gb22.json").write_text(wm.json.dumps(vet))
     with pytest.raises(SystemExit, match="passes without a fit"):
         wm.run_limit()
@@ -442,6 +442,16 @@ def test_published_star_counts_are_used_where_they_exist():
     model = wm.field_star_counts("gb22")
     assert model["n_s_low"] < model["n_s"] < model["n_s_high"]
     assert wm.parse_chunk_list("1-3,7") == [0, 1, 2, 6] and wm.parse_chunk_list(None) is None
+    for bad in ("0", "0-2", "5-3"):
+        with pytest.raises(SystemExit, match="bad chunk range"):
+            wm.parse_chunk_list(bad)
+
+
+def test_step_ramp_without_an_admissible_step_time_explains_nothing():
+    t = np.array([100.0, 100.01, 100.02])  # one night: no admissible step time
+    lc = wm.w3.LightCurve(t=t, f=np.ones(3), sf=np.ones(3))
+    st = wm.fit_step_ramp(lc)
+    assert st["bic"] == np.inf and np.isnan(st["ts"])
 
 
 def test_open_flags_give_an_efficiency_table_and_no_limit(tmp_path, monkeypatch):
@@ -449,7 +459,7 @@ def test_open_flags_give_an_efficiency_table_and_no_limit(tmp_path, monkeypatch)
     monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
     monkeypatch.setattr(wm, "FIELD", "gb20")
     vet = {"flags": [{"event_id": "gb20-R-4-0-1", "survives": True}], "fit_errors": []}
-    (tmp_path / "vetting_gb20.json").write_text(wm.json.dumps(vet))
+    (tmp_path / "vetting_gb20.json").write_text(wm.json.dumps(vet))  # no chain stamp: old vetting
     rows = [
         {
             "kind": "W3",
@@ -483,6 +493,10 @@ def test_open_flags_give_an_efficiency_table_and_no_limit(tmp_path, monkeypatch)
     inj.meta["is_sampling"] = "lf"
     inj.meta["chain"] = wm.CHAIN_VERSION
     inj.write(tmp_path / "injections_gb20.ecsv")
+    with pytest.raises(SystemExit, match="vetting from chain None"):
+        wm.run_limit(efficiency_only=True)
+    vet["chain"] = wm.CHAIN_VERSION
+    (tmp_path / "vetting_gb20.json").write_text(wm.json.dumps(vet))
     with pytest.raises(SystemExit, match="flags survive"):
         wm.run_limit()
     eff = Table.read(wm.run_limit(efficiency_only=True))

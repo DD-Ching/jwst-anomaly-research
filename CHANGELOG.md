@@ -9,6 +9,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Merged `claude/w3-moa-fields-alt2` (injections vetted against the injected source flux, `CHAIN_VERSION`, refusal
   without MulensModel, truncated-tar and size-pin fixes). Every old-chain `limits_*` and `efficiency_*` table is
   deleted: none may be quoted.
+- `/code-review` fixes: the vetting record carries `CHAIN_VERSION` and `limit` refuses a mismatch (the eleven
+  tracked records predate the stamp, so every field is re-vetted before a limit); a non-finite night-jackknife refit
+  now fails the test (it returned −inf and passed; this could only have kept flags, so 0 survivors stands);
+  `fit_step_ramp` without an admissible step time; ragged rows go to the line parser; chunk ranges are checked.
+  Not changed (follow-ups): duplicate check over all streamed ids, `prefetch` floor above `--conns`, repeated chunk
+  reads, per-field metadata pass, unnamed quiet-carrier thresholds in `is_quiet`.
 - **Handoff / next:** add the four chain gaps in D-068 as one post-hoc change, re-inject every field, `combine`;
   gb13 stopped at 25 / 78 fits (run died 2026-10-09 13:02Z); then more Nunota Table 1 fields.
 

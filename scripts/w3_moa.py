@@ -1149,11 +1149,14 @@ def fit_step_ramp(lc: w3.LightCurve) -> dict:
         return c2, coef
 
     vals = [chi2(x)[0] for x in cand]
-    best = float(cand[int(np.argmin(vals))])
+    if not np.isfinite(vals).any():  # no admissible step time: the model cannot explain the dip
+        return {"chi2": np.inf, "k": 4, "bic": np.inf, "ts": np.nan, "step": np.nan,
+                "ramp_per_day": np.nan}  # fmt: skip
+    best = float(cand[int(np.nanargmin(vals))])
     near = t[(t > best - 10.0) & (t < best + 10.0)]
     vals2 = [chi2(x)[0] for x in near] if near.size else [np.inf]
-    if near.size and min(vals2) < min(vals):
-        best = float(near[int(np.argmin(vals2))])
+    if near.size and np.nanmin(vals2) < np.nanmin(vals):
+        best = float(near[int(np.nanargmin(vals2))])
     c2, coef = chi2(best)
     k = 4
     return {"chi2": float(c2), "k": k, "bic": float(c2) + k * math.log(t.size), "ts": best,
@@ -1438,6 +1441,9 @@ def jackknife_nights(lc: w3.LightCurve, res: dict, ex: str, best_o: str, ecl: di
         e2 = fit_eclipse(sub, lo, hi)
         e_bic = w3.optimise(ex, sub, [_start(ex, res[ex])])["bic"]
         dd = float(max(d, e_bic - e2["bic"]))
+        if not np.isfinite(dd):  # a failed refit must fail the test, never pass it
+            best, dropped = np.nan, [int(x) for x in worst]
+            break
         if dd > best:
             best, dropped = dd, [int(x) for x in worst]
     out["dbic"] = best
@@ -1567,6 +1573,7 @@ def run_vet(procs: int) -> Path:
     path = out_dir() / f"vetting_{FIELD}.json"
     rec = {
         "provenance": "derived",
+        "chain": CHAIN_VERSION,
         "n_fit": len(fits),
         "fit_errors": sorted(map(str, fits["event_id"][~ok])),  # unscreened: no null limit
         "n_flags": len(flags),
@@ -1840,6 +1847,8 @@ def run_limit(efficiency_only: bool = False) -> Path:
     ``efficiency_only``: a field with flags still open gets its efficiency table only
     (``efficiency_<field>.ecsv``, no rate columns; never read by ``combine``)."""
     vet = json.loads((out_dir() / f"vetting_{FIELD}.json").read_text())
+    if vet.get("chain") != CHAIN_VERSION:  # real flags and injections must face the same chain
+        raise SystemExit(f"vetting from chain {vet.get('chain')}, not {CHAIN_VERSION}; rerun vet")
     open_flags = [o["event_id"] for o in vet["flags"] if o.get("survives")]
     if open_flags and not efficiency_only:
         raise SystemExit(f"no zero-event limit: flags survive: {open_flags}")
@@ -2131,7 +2140,10 @@ def parse_chunk_list(text: str | None) -> list[int] | None:
     out = []
     for part in text.split(","):
         a, _, b = part.partition("-")
-        out.extend(range(int(a) - 1, int(b or a)))
+        lo, hi = int(a), int(b or a)
+        if lo < 1 or hi < lo:
+            raise SystemExit(f"bad chunk range {part!r} (1-based, ascending)")
+        out.extend(range(lo - 1, hi))
     return out
 
 

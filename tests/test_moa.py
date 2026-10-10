@@ -327,3 +327,15 @@ def test_truncated_source_raises_instead_of_looping(tmp_path):
 def test_light_curve_with_a_leading_blank_line_is_parsed():
     cols = moa.parse_lightcurve(("\n" + LC).encode())
     assert cols["HJD"].size == 4
+
+
+def test_ragged_rows_never_shift_columns():
+    lines = LC.splitlines()
+    data = [i for i, ln in enumerate(lines) if ln.strip() and ln[0] not in "|\\"]
+    assert len(data) >= 2
+    a, b = data[0], data[1]
+    toks_a = lines[a].split()
+    lines[b] = lines[b] + " " + toks_a[-1]  # one row gains a token ...
+    lines[a] = " ".join(toks_a[:-1])  # ... another loses one: the total still divides
+    ragged = ("\n".join(lines) + "\n").encode()
+    assert moa._parse_tokens(ragged) is None
