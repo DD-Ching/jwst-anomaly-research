@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: E1 GW channels with sky maps: null, global p = 0.83 (D-074 addendum 4)
+- Hypothesis: GW events have same-direction, wide or antipodal partners (GBM, ICECAT-1, CHIME, GW) at lags no
+  ordinary path explains. Until now the GW channels were lag-only.
+- `scripts/e1_gw_skymaps.py` streamed the four GWTC PE sky-map tarballs (704 MB, about 3.5 min, one process per `--tar` then a merge run; the
+  2026-10-09 run got 0.15–1 MB/s and did not finish) into 282 nside-32 maps. The 109 unmapped GWTC-4.1 / 5.0 entries
+  have no PE parameters in the GWOSC CSV either.
+- `scripts/e1_gw_directional.py --n 1000` (266 s, 4 cores): 60 cells, pooled global p = 0.83, min analytic p × 60 = 1.
+  Largest z: GW–ICECAT 1–7 d antipodal (14 vs 8.3 ± 2.9). Control GW170817 × GRB 170817A is `same` at 0–10 s; it
+  is left out of the family and reported apart.
+- Sensitivity: 3 injected pairs at ≤ 10 s, 3–10 at 10–100 s, 10–30 at 100 s–1 h, mostly > 30 at 1 h–7 d.
+- Catalogue snapshot pinned separately (`data/manifests/e1_gw_events.ecsv`): the GBM TAP table grew since the
+  D-074 pin, so `e1_events.fetch` refuses the old one. Rerunning older E1 scripts needs `--refresh` or that pin.
+- **Next:** signed-lag GW cells with same/wide classes; then D1 composite-model chains.
+
 ## 2026-10-09: E1 signed-lag ("which event comes first") channels: null, global p = 0.68 (D-074 addendum 3)
 - Hypothesis: one catalogue leads another at lags no ordinary path explains (sign asymmetry D = N_after − N_before).
 - `scripts/e1_signed_lag.py`: 45 cells (6 cross channels × 5 lags × class), `jit` null (2,000 scrambles, 52 s).

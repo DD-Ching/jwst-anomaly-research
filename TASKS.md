@@ -8,10 +8,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    separation. The five requested channels are null (family p = 0.28). The CHIME–CHIME 1 h–1 d wide excess (z ≈ 3.9)
    is reproduced by a calibrated rate-modulated null (week-scale detection-rate modulation; its cause is a
    hypothesis). The 100 s–1 h wide cell drops to z = 2.5 under it (family-wise p = 0.26, D-074 addendum). Next:
-   - GW sky maps, so GW channels get directions;
    - a time-resolved CHIME uptime series (only from the collaboration: owner decision); it would also decide
      the 100 s–1 h residual;
-   - signed-lag ("which comes first", addendum 3) and antipodal (addendum 2) channels are null; redo both with GW sky maps;
+   - signed-lag ("which comes first", addendum 3), antipodal (addendum 2) and GW sky-map channels (addendum 4:
+     282 maps, global p = 0.83) are null; next: signed-lag GW cells with same/wide classes;
    - IceTracks-DR2, Swift, Einstein Probe.
 0. **D1 distance self-consistency** (D-073 + addenda; owner idea 1): H0LiCOW (R and D_dt LOO), 94 localized FRBs
    (NE2001 and YMW16) and TDCOSMO 2025 power-law D_dt LOO on 8 lenses (addendum 2: max 1.12σ with κ_ext): all null.

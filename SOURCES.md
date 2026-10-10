@@ -1063,6 +1063,13 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - GWOSC cumulative GWTC confident event list,
   https://gwosc.org/api/v2/catalogs/GWTC/events?include-default-parameters=true&format=csv (391 events,
   GWTC-1 to GWTC-5.0). The CSV has no sky positions; sky maps are in the Zenodo PE releases.
+- GWTC parameter-estimation sky maps (accessed 2026-10-10; D-074 addendum 4), Zenodo records, sha256 and sizes in
+  `data/manifests/e1_gw_skymaps.ecsv`: GWTC-2.1 rec. 6513631 `IGWN-GWTC2p1-v2-PESkyMaps.tar.gz` (54 maps);
+  GWTC-3 rec. 8177023 `IGWN-GWTC3p0-v2-PESkyLocalizations.tar.gz` (36); GWTC-4.1 rec. 20275769
+  `IGWN-GWTC4p1-18965dda8_5-Archived_Skymaps.tar.gz` (88); GWTC-5.0 rec. 20348005
+  `IGWN-GWTC5p0-29ebe06b7_25-Archived_Skymaps.tar.gz` (104). Streamed into memory, reduced to nside 32, never
+  stored. The 109 GWTC-4.1 / 5.0 list entries without a map also have no PE parameters in the GWOSC CSV.
+  GW170817 has no map in these releases (a Gaussian at SSS17a stands in, positive control only).
 - CHIME/FRB Catalog 2, CANFAR doi:10.11570/25.0066, `data/table/chimefrbcat2.csv` (4,057,396 bytes). It
   downloaded at the first attempt on 2026-10-09 (an earlier session's download had been reset by the proxy).
   Paper: arXiv:2601.09399.

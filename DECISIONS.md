@@ -3636,6 +3636,28 @@ kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0L
   1–7 d (≥ 100).
 - Revisit if: GW sky maps are added (GW cells get same/wide classes).
 
+**Addendum 4 (2026-10-10): GW channels with sky maps.**
+- Hypothesis: GW events have same-direction, wide or antipodal partners (GBM, ICECAT-1, CHIME, GW) at lags no
+  ordinary path explains. Before this the GW channels were lag-only. Ordinary explanations: as D-074, plus
+  GW170817 × GRB 170817A (a known counterpart).
+- Data: 282 PE sky maps (GWTC-2.1 / 3 / 4.1 / 5.0 Zenodo tarballs, 704 MB streamed in about 3.5 min with 12 range
+  connections per tarball, one process per `--tar`; reduced to nside-32 NESTED; `scripts/e1_gw_skymaps.py`).
+  The other 109 GWTC entries (GWTC-4.1: 52, GWTC-5.0: 57) have no PE parameters in the GWOSC CSV either and are
+  left out. GW170817: Gaussian at SSS17a, σ 1.05° (ASSUMPTION).
+- `scripts/e1_gw_directional.py`: same = partner within 3σ (+1.3° pixel slop, ASSUMPTION) of the 90 % region;
+  wide = more than max(3σ, 0.1°) outside the 99 % region; antipodal = antipode within the same tolerance of the
+  90 % region and not same; GW–GW by region overlap. Maps rotate in RA with the scrambled GW time (hour angle
+  kept). 4 channels × 5 lags × 3 classes = 60 cells, `jit` null, 1,000 scrambles (266 s on 4 cores).
+- The control pair GW170817 × GRB 170817A is classified `same` at 0–10 s and is left out of the family (both
+  observation and null; with it the 0–10 s GW–GBM same cell would be 1 vs ≈ 0). The catalogue snapshot is pinned
+  separately in `data/manifests/e1_gw_events.ecsv`, because the GBM TAP table grew since the D-074 pin.
+- **Result: null.** Pooled global p = 0.83 (min cell p 0.053); min analytic p × 60 = 1. Largest z: GW–ICECAT
+  1–7 d antipodal, 14 vs 8.3 ± 2.9 (z = 2.0); GW–GW 1 h–1 d antipodal, 17 vs 11.1 ± 3.4 (z = 1.8).
+- Sensitivity (`n50_injected`, 10 trials, family-wise 3σ): 3 pairs at ≤ 10 s (GW–GBM, ICECAT, CHIME), 3–10 at
+  10–100 s, 10–30 at 100 s–1 h; at 1 h–7 d mostly > 30 (not reached). GW–GW is not injected. 95 % upper limits per
+  cell are in `results/e1_events/gw_directional.json` (3 extra pairs in every empty cell).
+- Revisit if: new GWTC PE releases (more mapped O4 events), or signed-lag GW cells with directions are built.
+
 ## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)
 
 **Decision.**
