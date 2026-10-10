@@ -4,8 +4,19 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 
 
 
-## 2026-10-10: W3 MOA-II gb7 re-run under CHAIN_VERSION 2026-10-10.1 (in progress)
-- Claimed by a cloud routine run; `run-field --field gb7 --procs 4`.
+## 2026-10-10: W3 MOA-II gb7 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
+- Hypothesis before running: 0 survivors as in D-068 (gb7-R-8-6-94052 was the known jackknife case); a survivor
+  that held up on the contact sheet would have changed the plan (vetting record, CDS-dependent tests where CDS works).
+- `run-field --procs 4` in 2,670 s (pre-screen re-streamed 487 s at ~150 light curves/s, CPU 99 %; 75,328 light
+  curves, 1,450 shape passes, 44 off shared epochs; 44 fits 289 s, 42 flags; 2,200 injections 1,297 s).
+  **0 survive**; gb7-R-8-6-94052 still fails `jackknife_nights`. Contact sheet inspected.
+- Limits (`results/w3_moa/limits_gb7.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 2.7 × 10⁻⁷–1.4 × 10⁻⁶ per star per
+  year (N_s = 1.63 × 10⁷, Nunota et al. 2024, 78 / 80 subfields; the t_E = 300 d, ρ = 0.1 cell rests on 3
+  recoveries). Vetting keeps 100 / 169 flagged W3 injections (59 %); pre-screen pass 6–12.5 %. PSPL controls: 0
+  false W3 calls. Quiet χ²/dof 95th percentile 6.1.
+- CDS XMatch failed again from the cloud ("Too many jobs", recorded in `vetting_gb7.json`): lenient default
+  source-flux bound; 0 survivors stands.
+- **Next:** gb11 (#136), then gb12, gb15, gb17, gb18, then `combine`.
 
 ## 2026-10-10: W3 MOA-II gb16 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have
