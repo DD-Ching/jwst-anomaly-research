@@ -1188,6 +1188,16 @@ conservative column uses the low N_s.
   (batched CDS XMatch from the cloud worked). Injections: vetting keeps 86 / 156 flagged W3 injections (55 %).
   Pre-screen pass 2.5–11 %. PSPL controls: 0 / 40 per cell called W3.
 
+- **gb18** (83,855 light curves; N_s = 1.55 × 10⁷ from Nunota et al. 2024 Table 1, 78 / 80 subfields; quiet
+  χ²/dof 95th percentile 5.9): 67 flags, **0 survive**; contact sheet inspected (box dips, slow dimmings,
+  variables; caustic spikes only in the models). gb18-R-9-4-24509, the D-068 chain survivor, now fails
+  `slow_dip_seasons` (ΔBIC 8.6 for a slow σ = 415 d dip with 9 season levels over E2neg). First failing test:
+  repeated deficit 20, residual deficit 11, eclipse dip 9, bracketing 7, neighbour 6, χ² cap 3, fit domain 3,
+  smooth dip 3, feature sampling 2, slow dip 2, jackknife 1. Gaia DR3 RP reference for 39 / 67 flags (batched CDS
+  XMatch from the cloud worked). Injections: vetting keeps 83 / 162 flagged W3 injections (51 %). Pre-screen pass
+  3–12.5 %. PSPL controls: 0 / 40 per cell called W3. The t_E = 300 d, ρ = 0.1 cell has **0 recoveries**
+  (6 flagged): no limit there (Γ₉₅ = ∞); `combine` must handle it.
+
 Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every field):
 
 | t_E (d) | M (M☉, model) | gb22 rec. / 200 | gb22 Γ₉₅ per star per yr (conservative) | gb21 rec. / 200 | gb21 Γ₉₅ per star per yr |
@@ -1277,6 +1287,16 @@ gb17 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb17.ecsv`; the t_E = 300 d cells 
 | 30 | 0.17 | 16 / 8 | 2.4 / 4.9 × 10⁻⁷ |
 | 100 | 1.8 | 13 / 13 | 3.0 / 3.0 × 10⁻⁷ |
 | 300 | 17 | 2 / 2 | 1.9 / 1.9 × 10⁻⁶ |
+
+gb18 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb18.ecsv`; no recovery in the t_E = 300 d, ρ = 0.1 cell):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 2 / 9 | 2.3 × 10⁻⁶ / 5.0 × 10⁻⁷ |
+| 10 | 0.018 | 5 / 15 | 9.0 / 3.0 × 10⁻⁷ |
+| 30 | 0.17 | 16 / 12 | 2.8 / 3.8 × 10⁻⁷ |
+| 100 | 1.8 | 9 / 11 | 5.0 / 4.1 × 10⁻⁷ |
+| 300 | 17 | 4 / 0 | 1.1 × 10⁻⁶ / — |
 
 Cloud runs of gb22, gb21, gb20, gb19, gb16, gb11 and gb7: the batched CDS XMatch for the Gaia DR3 RP reference failed on all 3 attempts
 ("Too many jobs"; a later retry gave a truncated, non-VOTable reply through the proxy), so `exotic_in_domain` used the

@@ -3,8 +3,21 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 
-## 2026-10-10: W3 MOA-II gb18 re-run under CHAIN_VERSION 2026-10-10.1 (in progress)
-- Plan: `w3_moa.py --field gb18 run-field --procs 4` with the tracked pre-screen chunks reused.
+## 2026-10-10: W3 MOA-II gb18 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
+- Hypothesis before running: 0 survivors; gb18-R-9-4-24509 (the D-068 chain survivor, a red giant's slow dimming)
+  should now fail inside the chain. A survivor that held up on the contact sheet would have changed the plan.
+- `run-field --procs 4` in 1,890 s: all 10 pre-screen chunks reused (83,855 light curves, 1,497 shape passes, 70 off
+  shared epochs); 70 fits 400 s, 67 flags; 2,200 injections 1,126 s. **0 survive.** gb18-R-9-4-24509 fails
+  `slow_dip_seasons` (ΔBIC 8.6). Contact sheet inspected: box dips, slow dimmings, variables; caustic spikes only
+  in the models. CDS XMatch worked from the cloud (Gaia DR3 RP for 39 / 67 flags).
+- Limits (`results/w3_moa/limits_gb18.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 2.8 × 10⁻⁷–2.3 × 10⁻⁶ per star per year
+  (N_s = 1.55 × 10⁷, 78 / 80 subfields); the t_E = 300 d, ρ = 0.1 cell recovered 0 / 200 (no limit there).
+  Vetting keeps 83 / 162 flagged W3 injections (51 %); PSPL controls: 0 false W3 calls.
+- All eleven D-068 fields are now re-run under the new chain: 0 survivors in each.
+- Failed approach (tooling): a `pgrep -f "<pattern>"` wait loop matches its own shell command line and never exits;
+  wait on the PID instead.
+- **Next:** `combine` (check it handles an infinite-Γ cell), the cloud re-vet of the lenient-reference fields
+  (gb7, gb11, gb16, gb19–gb22), then gb13.
 
 ## 2026-10-10: W3 MOA-II gb17 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors; gb17-R-6-1-3829 (the D-068 chain survivor, a ~30-d periodic variable)
