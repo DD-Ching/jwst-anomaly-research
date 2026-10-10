@@ -15,7 +15,23 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Limits (`results/w3_moa/limits_gb17.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 2.3 × 10⁻⁷–1.9 × 10⁻⁶ per star per year
   (N_s = 1.80 × 10⁷, Nunota et al. 2024, 79 / 80 subfields; the 300-d cells rest on 2 recoveries). Vetting keeps
   86 / 156 flagged W3 injections (55 %); PSPL controls: 0 false W3 calls.
-- **Next:** gb18 (gb15 is in #140), then `combine`; the fit-chunk reuse fix (D-078 audit) would save ~8 min here.
+- **Next:** gb18 (the last re-run field), then `combine`; the fit-chunk reuse fix (D-078 audit) would save ~8 min here.
+
+## 2026-10-10: W3 MOA-II gb15 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
+- Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have
+  changed the plan (vetting record, owner notified).
+- `run-field --procs 4` in 2,686 s (pre-screen re-streamed ~810 s, 8 chunks, 56–200 light curves/s as archive
+  throughput fell from 78 to 22 MB/s; 83,145 light curves, 4,936 shape passes, 122 off shared epochs; fits 2 chunks,
+  118 flags; 2,200 injections 1,182 s). **0 survive.** First failing test: repeated deficit 30, residual deficit 24,
+  eclipse dip 18, bracketing 14, fit domain 12, χ² cap 10, other 11. Contact sheet inspected: smooth U/V dimmings,
+  eclipse-like boxes, variables; caustic spikes only in the models.
+- CDS XMatch worked from the cloud again (Gaia DR3 RP reference for 88 / 118 flags).
+- Limits (`results/w3_moa/limits_gb15.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 3.2 × 10⁻⁷–3.4 × 10⁻⁶ per star per year
+  (N_s = 1.04 × 10⁷, Nunota et al. 2024, only 62 / 80 subfields: the low end of 1.04–1.34 × 10⁷; both t_E = 300 d
+  cells rest on 2 recoveries). Vetting keeps 114 / 171 flagged W3 injections (67 %); PSPL controls: 0 false W3 calls.
+- The re-streamed gb15 pre-screen rows equal the tracked ones row for row (only header metadata differs), a third
+  check of D-078 addendum 3; the tracked chunks are kept unchanged.
+- **Next:** gb17, gb18 (pre-screen now reused, D-078 addendum 3), then `combine`.
 
 ## 2026-10-10: Acceleration V2 audit, first pass: MOA pre-screen chunks reused across vetting changes; injection-loss map
 - Owner brief "Autonomous research acceleration V2": measured audit in `docs/audits/2026-10-10-acceleration-v2.md`

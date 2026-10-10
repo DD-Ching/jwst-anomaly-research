@@ -1169,6 +1169,16 @@ conservative column uses the low N_s.
   domain 1, smooth dip 1, periodic variable 1, neighbour 1. Gaia DR3 RP reference for 32 / 46 flags (batched CDS
   XMatch with `vizier:I/355/gaiadr3`, 1″). Injections: vetting keeps 99 / 156 flagged W3 injections. Pre-screen pass 4.5–11.5 %. PSPL
   controls: 0 / 40 per cell called W3.
+
+- **gb15** (83,145 light curves; N_s = 1.04 × 10⁷ from Nunota et al. 2024 Table 1, 62 / 80 subfields, range
+  1.04–1.34 × 10⁷, the low end used for both limit columns; quiet χ²/dof 95th percentile 5.3): 118 flags, **0 survive**;
+  contact sheet inspected (smooth U- and V-shaped dimmings of ~50–300 d, eclipse-like boxes, variables; caustic spikes
+  exist only in the models). First failing test: repeated deficit 30, residual deficit 24, eclipse dip 18, bracketing
+  14, fit domain 12, χ² cap 10, smooth dip 4, neighbour 4, periodic variable 1, step ramp 1. Gaia DR3 RP reference
+  for 88 / 118 flags (batched CDS XMatch, `vizier:I/355/gaiadr3`, 1″). Injections: vetting keeps 114 / 171 flagged W3
+  injections (67 %). Pre-screen pass 3.5–12.5 %. PSPL controls: 0 / 40 per cell called W3. Both t_E = 300 d cells rest
+  on 2 recoveries.
+
 - **gb17** (100,448 light curves; N_s = 1.80 × 10⁷ from Nunota et al. 2024 Table 1, 79 / 80 subfields; quiet
   χ²/dof 95th percentile 5.5): 75 flags, **0 survive**; contact sheet inspected (box dips, slow dimmings,
   quasi-periodic variables; caustic spikes only in the models). gb17-R-6-1-3829, the D-068 chain survivor, now fails
@@ -1248,6 +1258,16 @@ gb12 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb12.ecsv`):
 | 100 | 1.8 | 15 / 11 | 2.9 / 4.0 × 10⁻⁷ |
 | 300 | 17 | 6 / 3 | 7.3 × 10⁻⁷ / 1.5 × 10⁻⁶ |
 
+gb15 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb15.ecsv`):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 7 / 9 | 9.6 / 7.5 × 10⁻⁷ |
+| 10 | 0.018 | 17 / 17 | 4.0 / 4.0 × 10⁻⁷ |
+| 30 | 0.17 | 21 / 10 | 3.2 / 6.7 × 10⁻⁷ |
+| 100 | 1.8 | 14 / 15 | 4.8 / 4.5 × 10⁻⁷ |
+| 300 | 17 | 2 / 2 | 3.4 / 3.4 × 10⁻⁶ |
+
 gb17 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb17.ecsv`; the t_E = 300 d cells rest on 2 recoveries each):
 
 | t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
@@ -1264,7 +1284,7 @@ lenient default reference (MOA-Red 14.2) on all 276 real flags (none has a DoPHO
 chain, so 0 survivors stands; the VSX / Gaia variability match runs only on flags still alive and was not reached.
 Injections use the injected-source flux and are unaffected. The tracked `vetting_gbN.json` records the run's
 `gaia_rp_xmatch` status from gb16 on (gb19–gb22 dropped it); re-run `vet` where CDS works before interpreting any survivor.
-The gb12 cloud run (2026-10-10) got a working XMatch (32 / 46 flags with an RP reference), so gb12 is not in the
+The gb12 and gb15 cloud runs (2026-10-10) got a working XMatch (32 / 46 and 88 / 118 flags with an RP reference), so they are not in the
 lenient-reference group, and a cloud retry of the re-vets above is worth trying.
 
 The t_E = 300 d, ρ = 0.1 cell rests on one recovered injection (efficiency uncertain by ~100 %); `combine` should
