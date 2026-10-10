@@ -1308,7 +1308,30 @@ The gb12 and gb15 cloud runs (2026-10-10) got a working XMatch (32 / 46 and 88 /
 lenient-reference group, and a cloud retry of the re-vets above is worth trying.
 
 The t_E = 300 d, ρ = 0.1 cell rests on one recovered injection (efficiency uncertain by ~100 %); `combine` should
-not let a single field's one-recovery cell dominate the combined 300-d limit.
+not let a single field's one-recovery cell dominate the combined 300-d limit. It does not: the combined table's
+`max_field_share` (one field's share of Σ N_s T ε) is ≤ 0.19 in every cell (below).
+
+### Combined limit, eleven fields (CHAIN_VERSION 2026-10-10.1)
+
+`w3_moa.py combine` → `results/w3_moa/limits_combined.ecsv` (derived): gb7, gb11, gb12, gb15–gb22, 0 survivors in
+every field, Σ N_s ≈ 1.37 × 10⁸ monitored stars (Nunota et al. 2024 Table 1; gb22 from the model count, ASSUMPTION),
+Σ N_s T ≈ 1.18 × 10⁹ star-years. Γ₉₅ = 3 / Σ_f N_s,f T ε_f per cell. Masses are a **model_prediction** (n = 1,
+D_L = 4 kpc, D_S = 8 kpc, μ_rel = 5 mas/yr). The relative uncertainty of Σ N_s T ε from injection counting
+(binomial, ≈ 1/√n_rec per field, summed) is 8–18 %; the conservative N_s range moves the limits by < 2 %.
+
+| t_E (d) | M (M☉, model) | rec. / 2,200 (ρ = 0.01 / 0.1) | max field share | Γ₉₅ per star per yr (ρ = 0.01 / 0.1) |
+|---|---|---|---|---|
+| 3 | 0.0017 | 43 / 57 | 0.16 / 0.19 | 1.3 × 10⁻⁷ / 9.5 × 10⁻⁸ |
+| 10 | 0.018 | 112 / 140 | 0.17 / 0.17 | 5.1 / 3.9 × 10⁻⁸ |
+| 30 | 0.17 | 173 / 126 | 0.14 / 0.17 | 3.2 / 4.6 × 10⁻⁸ |
+| 100 | 1.8 | 120 / 131 | 0.16 / 0.15 | 4.5 / 4.4 × 10⁻⁸ |
+| 300 | 17 | 48 / 34 | 0.18 / 0.19 | 1.3 / 1.8 × 10⁻⁷ |
+
+Scope: an upper limit on the rate of W3-shaped events (flux vanishing between caustic spikes) per monitored bulge
+star per year in these eleven fields, for the injected shapes and the vetting chain of D-068 + addendum. It is not
+a limit on wormhole or negative-mass abundance until a model maps abundance to this event rate. The lenient-reference
+fields (gb7, gb11, gb16, gb19–gb22, above) affect only real-flag vetting, not the injections, so the limit stands.
+gb13 (25 / 78 fits) and the other Nunota et al. 2024 fields are not included.
 
 ### All 22 fields (next)
 

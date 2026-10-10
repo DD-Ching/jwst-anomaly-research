@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: W3 MOA-II combined limit over the eleven re-run fields
+- Hypothesis before running: `combine` gives a finite limit in every cell, and no single field's few recoveries
+  carry a cell (the gb18 t_E = 300 d, ρ = 0.1 cell has 0 / 200). A cell with share near 1 would have meant more
+  injections before quoting it.
+- `w3_moa.py combine` (`results/w3_moa/limits_combined.ecsv`, docs/exotic_limits.md "Combined limit"): 11 fields,
+  0 survivors, Σ N_s ≈ 1.37 × 10⁸ stars, 1.18 × 10⁹ star-years. **Γ₉₅ ≈ 3.2 × 10⁻⁸–1.8 × 10⁻⁷ W3 events per star
+  per year** (t_E 3–300 d, ρ 0.01/0.1); best 3.2 × 10⁻⁸ at t_E = 30 d, ρ = 0.01. Injection-counting uncertainty
+  8–18 %. New column `max_field_share` (≤ 0.19 everywhere); a zero-efficiency field cell adds no exposure (test).
+- Failed approach (coordination): a 60-min-stale claim (#142, no heartbeat during a ~32-min run) was taken over
+  while its session was still alive; it merged 5 min later and the duplicate run was stopped. Heartbeat during
+  long runs, and re-check the PR before starting a takeover run.
+- **Next:** the cloud re-vet of the lenient-reference fields (gb7, gb11, gb16, gb19–gb22); then gb13 and more
+  Nunota et al. 2024 fields (re-run `combine` after each).
+
 
 ## 2026-10-10: W3 MOA-II gb18 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors; gb18-R-9-4-24509 (the D-068 chain survivor, a red giant's slow dimming)

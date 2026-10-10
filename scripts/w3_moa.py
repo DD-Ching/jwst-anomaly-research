@@ -2178,9 +2178,11 @@ def run_combine() -> Path:
         for rho in INJ_RHO:
             exp = exp_lo = 0.0
             n_inj = n_rec = 0
+            per_field = []
             for t in tabs:
                 r = t[(np.asarray(t["tE_days"]) == te) & (np.asarray(t["rho"]) == rho)][0]
-                exp += float(r["n_s"]) * float(r["years"]) * float(r["eff_per_star"])
+                per_field.append(float(r["n_s"]) * float(r["years"]) * float(r["eff_per_star"]))
+                exp += per_field[-1]
                 exp_lo += float(r["n_s_low"]) * float(r["years"]) * float(r["eff_per_star"])
                 n_inj += int(r["n_inj"])
                 n_rec += int(r["n_recovered"])
@@ -2189,6 +2191,8 @@ def run_combine() -> Path:
                 "mass_msun_model": (te / w3.einstein_time_days(1.0)[0]) ** 2,
                 "n_fields": len(tabs), "n_inj": n_inj, "n_recovered": n_rec,
                 "star_years_eff": exp,
+                # a cell carried by one field's few recoveries would show a share near 1
+                "max_field_share": max(per_field) / exp if exp > 0 else np.nan,
                 "rate95_per_star_yr": 3.0 / exp if exp > 0 else np.inf,
                 "rate95_conservative": 3.0 / exp_lo if exp_lo > 0 else np.inf,
             })  # fmt: skip
