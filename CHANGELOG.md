@@ -2,9 +2,34 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-10: E1 GBM re-pin (in progress)
-- Claimed by a cloud routine: one new snapshot for `e1_events.ecsv` and `e1_gw_events.ecsv`, then re-run of the E1
-  scripts (TASKS "Part 0").
+## 2026-10-10: E1 re-pinned to one GBM snapshot (8cc2…, 4,392 bursts): every E1 conclusion unchanged (D-078 addendum 2)
+- Hypothesis before running: only bursts added or revised after the old pins differ, so every E1 channel stays
+  null; a family p below 0.01 would have changed the plan.
+- Fresh fetch: only `fermigbrst.vot` changed (sha256 8cc2823f…, 424,672 B, 4,392 rows; the D-078 entry's
+  "4,391 rows" for the same digest is a miscount). ICECAT-1, GWTC and CHIME Cat 2 match their pins.
+  `e1_events.ecsv` and `e1_gw_events.ecsv` now pin the same four files.
+- Like-for-like check (observed counts only): the new snapshot minus bn261008763 and bn261007236 (triggered
+  2026-10-07/08, last modified 2026-10-09) reproduces all 75 tracked D-074 observed counts. The other revision
+  after 2026-10-09 (bn260930833) changes no cell. No trigger is later than 2026-10-08, so a trigger-date cut is a
+  no-op. With the new bursts, 5 GBM–GBM cells gain 1–10 pairs (1d–7d all 17,523 → 17,533).
+- Re-runs (same seeds and scramble counts as tracked; 4 cores): `e1_events.py` 456 s, antipodal (`--n 2000`),
+  signed lag, CHIME flag, GW directional, GW signed (15–51 s each).
+
+  | Result | old pin | new pin |
+  |---|---|---|
+  | D-074 five requested channels, family p (jit) | 0.278 | 0.273 |
+  | D-074 wide + GW cells, pooled p (jit / jitday) | 0.0058 / 0.0033 | 0.0053 / 0.0029 |
+  | Antipodal global p (addendum 2) | 0.557 | 0.531 |
+  | Signed-lag global p (addendum 3) | 0.676 | 0.568 |
+  | GW sky-map channels global p (addendum 4) | 0.829 | 0.833 |
+  | Signed-lag GW cells global p (addendum 5) | 0.555 | 0.551 |
+  | CHIME flag tests (CHIME only) | — | identical |
+
+  The wide + GW driver is still CHIME–CHIME 1 h–1 d wide, which the calibrated rate-modulated null explains
+  (D-074 addendum; CHIME-only, not re-run). Changes outside GBM cells are Monte Carlo noise from shifted
+  random streams (|Δz| ≤ 0.36, |Δp| ≤ 0.01). Injection limits moved by ≤ 24 % (40 trials per cell).
+- **Next (local session):** publish this snapshot (`fermigbrst.vot` 8cc2…) to the derived-data store and wire
+  `e1_events.fetch` to it. It is in the cloud session's data root only, which is lost when the run ends.
 
 ## 2026-10-10: First derived-data release `derived-data-20261010` (GW sky maps); pinned GBM snapshot not recoverable (D-078 addendum)
 - Local session on the owner's machine (cloud sessions cannot create releases); details in the D-078 addendum.
