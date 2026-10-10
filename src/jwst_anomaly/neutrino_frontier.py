@@ -33,16 +33,23 @@ def n_bins(gp: GhostParams) -> int:
 
 
 def wide_pair_stats(
-    s: en.Sample, w: np.ndarray, gp: GhostParams, p: en.Params | None = None
+    s: en.Sample,
+    w: np.ndarray,
+    gp: GhostParams,
+    p: en.Params | None = None,
+    group: np.ndarray | None = None,
 ) -> np.ndarray:
     """(n_bins, 2): wide-pair count and sum of w_i w_j per lag bin, unordered pairs of one catalogue
-    (bin 0 includes lag 0). Wide = D-074 separation class 1."""
+    (bin 0 includes lag 0). Wide = D-074 separation class 1. Pairs with equal ``group`` (one IceCube
+    readout) are not counted."""
     p = p or en.Params()
     e = np.asarray(gp.lag_edges)
     i, j = en.pairs_within(s.mjd, s.mjd, e[-1], True)
     lag = np.abs(s.mjd[j] - s.mjd[i]) * DAY
     sep = en.sep_deg(s.ra[i], s.dec[i], s.ra[j], s.dec[j])
     wide = (en.sep_class(sep, s.sigma[i], s.sigma[j], p) == 1) & (lag <= e[-1])
+    if group is not None:
+        wide &= group[i] != group[j]
     k = np.clip(np.searchsorted(e, lag[wide], side="right") - 1, 0, n_bins(gp) - 1)
     out = np.zeros((n_bins(gp), 2))
     out[:, 0] = np.bincount(k, minlength=n_bins(gp))
@@ -89,3 +96,93 @@ def inject_ghosts(
         np.concatenate([s.year, en.mjd_year(t)]),
     )
     return sample, np.concatenate([w, w[parent][keep]])
+
+
+# --- IceTracks-DR2 (E-NF1b, D-079) -------------------------------------------------------------
+
+#: columns of the IceTracks-DR2 ``events/<season>_exp.tab`` files (doi:10.7910/DVN/MMIIZA)
+DR2_COLUMNS = (
+    "run",
+    "event",
+    "subevent",
+    "mjd",
+    "log10e",
+    "angerr",
+    "ra",
+    "dec",
+    "azimuth",
+    "zenith",
+)
+
+
+def read_icetracks_tab(lines) -> np.ndarray:
+    """Float array from the lines of one IceTracks-DR2 events or uptime ``.tab`` file as Dataverse
+    serves it (a ``#`` header line, then whitespace columns, each row in double quotes)."""
+    rows = [
+        ln.replace('"', "").split()
+        for ln in lines
+        if ln.strip() and not ln.lstrip().startswith("#")
+    ]
+    return np.array(rows, dtype=float)
+
+
+def dedupe_events(ev: np.ndarray) -> np.ndarray:
+    """Time-sorted events, one per (run, event, subevent): the seasons overlap by weeks."""
+    key = np.round(ev[:, :3]).astype(np.int64)
+    _, idx = np.unique(key, axis=0, return_index=True)
+    ev = ev[np.sort(idx)]
+    return ev[np.argsort(ev[:, 3], kind="stable")]
+
+
+def in_uptime(mjd: np.ndarray, start: np.ndarray, stop: np.ndarray) -> np.ndarray:
+    """True where ``mjd`` lies in a good-run interval ``[start, stop]`` (intervals may overlap)."""
+    o = np.argsort(start)
+    s, e = start[o], np.maximum.accumulate(stop[o])
+    k = np.searchsorted(s, mjd, side="right") - 1
+    return (k >= 0) & (mjd <= e[np.clip(k, 0, None)])
+
+
+def jitter_uptime(
+    s: en.Sample,
+    start: np.ndarray,
+    stop: np.ndarray,
+    half_width_days: float,
+    rng: np.random.Generator,
+    max_tries: int = 100,
+) -> en.Sample:
+    """Uptime-aware jitter null: an independent uniform shift of +-half_width per event, redrawn
+    until the new time is inside a good run (an event that never lands keeps its time); Dec and hour
+    angle kept (``Sample.with_times``)."""
+    new = s.mjd.copy()
+    todo = np.arange(len(new))
+    for _ in range(max_tries):
+        if not len(todo):
+            break
+        cand = s.mjd[todo] + rng.uniform(-half_width_days, half_width_days, len(todo))
+        ok = in_uptime(cand, start, stop)
+        new[todo[ok]] = cand[ok]
+        todo = todo[~ok]
+    return s.with_times(new)
+
+
+def wide_pair_counts(
+    s: en.Sample, group: np.ndarray, lag_edges, p: en.Params | None = None
+) -> np.ndarray:
+    """Wide-pair counts per lag bin (``wide_pair_stats`` column 0); pairs within one ``group``
+    (one IceCube (run, event): split or coincident muons of one readout) are not counted."""
+    gp = GhostParams(lag_edges=tuple(lag_edges))
+    return wide_pair_stats(s, np.ones(len(s.mjd)), gp, p, group)[:, 0]
+
+
+def union_days(start: np.ndarray, stop: np.ndarray) -> float:
+    """Total length of the union of the intervals ``[start, stop]`` (overlapping good runs once)."""
+    o = np.argsort(start)
+    s, e = start[o], stop[o]
+    total, cur_s, cur_e = 0.0, s[0], e[0]
+    for a, b in zip(s[1:], e[1:], strict=True):
+        if a > cur_e:
+            total += cur_e - cur_s
+            cur_s, cur_e = a, b
+        else:
+            cur_e = max(cur_e, b)
+    return float(total + cur_e - cur_s)

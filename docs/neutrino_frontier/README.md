@@ -51,3 +51,28 @@ copies of alert tracks.
   limits on R_g: ≤ 0.02 (≤ 10 s), ≤ 0.05 (10 s–1 h), ≤ 0.2 (1 h–1 d), ≤ 0.1 (1–7 d), ≤ 0.5 (7–30 d); 30–180 d
   excludes only R_g = 1. NF-H04 stays at ladder B; the parameter region above these limits is rejected for alert
   tracks. `results/nf/ghost_pairs.json`; D-077.
+
+### E-NF1b: IceTracks-DR2 short-lag ghost pairs (NF-H04), pre-registered 2026-10-10 09:14 UTC
+- **Why only short lags:** a forecast on the DR2 times (every event counted as astrophysical, the most
+  optimistic case) gives a reachable R floor of max(3√B, 3)/N per bin. For northern tracks it is ≥ 0.055 at
+  1 h–1 d, ≥ 0.14 at 1–7 d, ≥ 0.27 at 7–30 d and ≥ 0.64 at 30–180 d for every cut, so DR2 cannot beat the ICECAT-1
+  limits beyond 1 h and cannot reach R_g ~ 10⁻³ at any lag. Below 1 h the floor is 0.001–0.003.
+- **Hypothesis:** as E-NF1, with R = ghosts per event above the energy cut (R_g per astrophysical neutrino is
+  R / f_astro; f_astro is not estimated here).
+- **Ordinary explanations:** coincident or split muons of one readout (pairs within one (run, event) are dropped),
+  detector-rate and uptime changes (uptime-aware null), atmospheric-muon pairs (north only).
+- **Sample and cells:** IceTracks-DR2 v3.1, deduplicated on (run, event, subevent), Dec > −5°,
+  log10(E/GeV) ≥ 4.0 and ≥ 4.5 (ASSUMPTION); bins 0–10 s, 10–100 s, 100 s–1 h; D-074 wide pairs; 6 cells.
+- **Null:** every time jittered uniformly by ±3 d and redrawn until it lies in a good run (DR2 uptime lists);
+  Dec and hour angle kept. 5,000 scrambles, empirical p, detection = family-wise 3σ (p × 6 ≤ 1.35 × 10⁻³).
+- **Known case first:** the TXS 0506+056 2014–15 box (MJD 57020 ± 92.5 d, log10 E ≥ 3.5, within 1° or the event
+  error) must show an on-source excess over the same-Dec-band expectation.
+- **Limit:** ghosts injected with probability R per event (lag log-uniform in the bin, RA uniform, Dec and error
+  from one sample event); 95 % CLs as E-NF1 (null draw plus the ghost excess). `scripts/nf_ghost_dr2.py`.
+- **Result (2026-10-10): null.** Known case: TXS box 6 on-source vs 1.11 expected (Poisson p = 1.0 × 10⁻³).
+  Six cells (5,000 scrambles): min Bonferroni p = 0.48 (log10 E ≥ 4, 0–10 s: 9 pairs vs 5.2 ± 2.3). All 9 pairs
+  are from IC40/IC59 (2008–10), where the rate above log10 E = 4 (north) is 3.8–10.5 d⁻¹ against 0.57–0.58 d⁻¹ in
+  IC79/IC86: the energy proxy is not uniform across detector configurations; the jitter null absorbs it. 95 % CLs
+  limits on R per event above the cut: ≤ 0.002 (log10 E ≥ 4, ≤ 100 s), ≤ 0.01 (100 s–1 h); ≤ 0.005 (log10 E ≥ 4.5,
+  ≤ 100 s), ≤ 0.02 (100 s–1 h). Post hoc, IC86 only (2,267 / 174 events): 0 wide pairs at ≤ 100 s, limits
+  0.002–0.05. R_g per astrophysical neutrino = R / f_astro (not estimated). `results/nf/ghost_pairs_dr2*.json`.
