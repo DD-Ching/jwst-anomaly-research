@@ -2,9 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-10: Neutrino Frontier benchmark 1 (TXS 0506+056 2014–15 box, SkyLLH on IceTracks-DR2): in progress
-- Plan: reproduce IceTracks-DR2 Table 6 (box T0 = MJD 57020, ΔT = 185 d: n̂s = 12.7, γ̂ = 2.3) with SkyLLH 26.1.0,
-  streaming the IC86 IRFs. A mismatch beyond ~1 event / 0.1 in γ would mean our DR2 handling is wrong.
+## 2026-10-10: Neutrino Frontier benchmark 1 reproduced: SkyLLH TXS 0506+056 2014–15 box on IceTracks-DR2
+- Hypothesis before running: SkyLLH 26.1.0 on IC86_IV with the Table 6 box gives n̂s ≈ 12.7, γ̂ ≈ 2.3
+  (arXiv:2605.19040 section 5). A miss by > 1 event or > 0.1 in γ (ASSUMPTION) would mean our DR2 handling is wrong.
+- `scripts/nf_txs_benchmark.py` (D-080): the printed window (MJD 56927.5–57112.5) gives n̂s = 11.1, γ̂ = 2.22, TS = 20.3
+  under both IRF versions, 1.6 events short. Table 6 rounds T0 and ΔT to whole days, and an on-source event
+  (MJD 57112.653, 0.38° from TXS, σ = 0.20°) lies 0.15 d past the printed stop. With both edges snapped to the
+  on-source events (56927.860–57112.653: T0 = 57020.26, ΔT = 184.8 d) the fit gives **n̂s = 12.72, γ̂ = 2.26, TS = 23.0**
+  (Dataverse 1.0 IRFs, as in the paper), or 12.75 / 2.26 with the ≥ 2.0 IRFs. Paper: 12.7 / 2.3 (SkyLLH), 12.56 / 2.26
+  (internal tools). **Reproduced.**
+- Fixed-window background (SkyLLH scrambles, 50,000 trials per window): 0 trials reach the observed TS, p < 2 × 10⁻⁵
+  (half-χ²₂ Wilks: 2 × 10⁻⁵ / 5 × 10⁻⁶). This is a p-value for a fixed window, not the paper's free-window pre-trial
+  p (4.18 × 10⁻³). It is not a new result.
+- Failed approaches: multi-season time-dependent fits (SkyLLH supports one dataset only; the box is inside IC86_IV
+  anyway). `pkill -f <script>` killed the waiting shell itself, as scripts/CLAUDE.md warns.
+- Disk: about 1.4 GB of IRFs streamed, sha256-checked (`data/manifests/nf_skyllh_dr2.ecsv`) and deleted (`--cleanup`).
+- **Next:** time-integrated benchmark (Table 8: TXS 8.8 / 2.0, NGC 1068 80.1 / 3.2; all 14 seasons, 3.4 GB of IRFs,
+  cloud only). SkyLLH is now validated for IC86 box fits on DR2.
 
 ## 2026-10-10: W3 MOA-II cloud re-vet of the lenient-reference fields: 0 survivors
 - Hypothesis before running: a working Gaia DR3 RP reference only tightens `exotic_in_domain`, so 0 survivors stays.

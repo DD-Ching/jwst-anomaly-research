@@ -13,14 +13,14 @@ edges on event times, so the script fits two windows:
 
 1. ``fetch`` streams the IC86_IV events and uptime plus the IC86 IRFs (smearing matrix 817 MB, v2;
    598 MB, v1) from Harvard Dataverse into the data root and checks each against
-   ``data/manifests/nf_skyllh_dr2.ecsv`` (Dataverse md5 of the original CSV).
+   ``data/manifests/nf_skyllh_dr2.ecsv`` (sha256 pin; Dataverse's md5 is listed too).
 2. ``run`` fits both windows under each IRF version and, with ``--trials N``, estimates the
    fixed-window background TS distribution (SkyLLH's scrambled background, empirical p).
 3. ``--cleanup`` deletes the raw files afterwards (cloud-disk decision).
 
 Writes ``results/nf/txs_skyllh_benchmark.json``.
 
-  python scripts/nf_txs_benchmark.py [--irfs v2 v1] [--trials 2000] [--cpu 4] [--cleanup]
+  python scripts/nf_txs_benchmark.py [--irfs v2 v1] [--trials 50000] [--cpu 4] [--cleanup]
 """
 
 from __future__ import annotations
@@ -34,11 +34,16 @@ import sys
 import time
 from pathlib import Path
 
-import numpy as np
-from scipy import stats
+os.environ.setdefault("OMP_NUM_THREADS", "1")  # SkyLLH trial pool: one thread per process
+
+import numpy as np  # noqa: E402
+from scipy import stats  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
+
+from jwst_anomaly.acquire import sha256_file  # noqa: E402
+from jwst_anomaly.burst_twins import angsep_deg  # noqa: E402
 
 OUT = ROOT / "results" / "nf" / "txs_skyllh_benchmark.json"
 MANIFEST = ROOT / "data" / "manifests" / "nf_skyllh_dr2.ecsv"
@@ -49,7 +54,8 @@ SAMPLES = {
     "v2": ("IceTracks-DR2", "icecube_14year_ps_v2"),
 }
 SEASON = "IC86_IV"
-#: Table 6 / section 5 of arXiv:2605.19040 (catalogue position, rounded window) and the targets
+#: Table 6 / section 5 of arXiv:2605.19040 (the paper's catalogue position, not the VLBI one
+#: nf_ghost_dr2 uses; rounded window) and the targets
 TXS = {"ra": 77.35, "dec": 5.7, "t0": 57020.0, "dt": 185.0}
 PAPER = {
     "skyllh": {"ns": 12.7, "gamma": 2.3},
@@ -59,13 +65,6 @@ PAPER = {
 SNAP_DEG = 1.0
 SNAP_DAYS = 1.0
 TOL = {"ns": 1.0, "gamma": 0.1}
-
-
-def angsep_deg(ra1, dec1, ra2, dec2):
-    """Great-circle separation in degrees (inputs in degrees)."""
-    r1, d1, r2, d2 = map(np.deg2rad, (ra1, dec1, ra2, dec2))
-    c = np.sin(d1) * np.sin(d2) + np.cos(d1) * np.cos(d2) * np.cos(r1 - r2)
-    return np.rad2deg(np.arccos(np.clip(c, -1.0, 1.0)))
 
 
 def rounded_window(t0: float, dt: float) -> tuple[float, float]:
@@ -78,42 +77,51 @@ def snap_edges(
     window: tuple[float, float],
     snap_deg: float = SNAP_DEG,
     snap_days: float = SNAP_DAYS,
-) -> tuple[float, float]:
+) -> tuple[tuple[float, float], tuple[bool, bool]]:
     """Move each window edge to the nearest on-source event within ``snap_days``; an edge with no
-    such event stays where it is. Edges land exactly on event times (``run`` pads them by 1e-3 d
-    so the edge events are inside the box)."""
+    such event stays where it is. Returns the edges and which of them were snapped (snapped
+    edges land exactly on event times; ``fit_windows`` pads them by 1e-3 d so the edge events
+    are inside the box)."""
     on = mjd[sep_deg < snap_deg]
-    out = []
+    edges, snapped = [], []
     for edge in window:
         d = np.abs(on - edge)
-        out.append(float(on[np.argmin(d)]) if d.size and d.min() <= snap_days else float(edge))
-    if out[0] >= out[1]:
-        raise ValueError(f"snapped window {out} is empty")
-    return out[0], out[1]
+        hit = bool(d.size and d.min() <= snap_days)
+        edges.append(float(on[np.argmin(d)]) if hit else float(edge))
+        snapped.append(hit)
+    if edges[0] >= edges[1]:
+        raise ValueError(f"snapped window {edges} is empty")
+    return (edges[0], edges[1]), (snapped[0], snapped[1])
 
 
 def agrees(fit: dict, target: dict, tol: dict = TOL) -> bool:
     return all(abs(fit[k] - target[k]) <= tol[k] for k in tol)
 
 
-def _md5_stream(url: str, dest: Path, tries: int = 5) -> str:
-    """Stream ``url`` to ``dest`` with back-off on 429/5xx (scripts/CLAUDE.md); returns the md5."""
+def _sha256_stream(url: str, dest: Path, tries: int = 5) -> str:
+    """Stream ``url`` to ``dest`` with back-off on 429/5xx and on dropped or stalled transfers
+    (scripts/CLAUDE.md); returns the sha256. A failed attempt leaves no partial file."""
     import requests
 
+    tmp = dest.with_suffix(dest.suffix + ".part")
     for k in range(tries):
         try:
             with requests.get(url, stream=True, timeout=900) as r:
                 if r.status_code != 429 and r.status_code < 500:
                     r.raise_for_status()
-                    h = hashlib.md5()
-                    tmp = dest.with_suffix(dest.suffix + ".part")
+                    h = hashlib.sha256()
                     with open(tmp, "wb") as f:
                         for chunk in r.iter_content(1 << 22):
                             h.update(chunk)
                             f.write(chunk)
                     tmp.replace(dest)
                     return h.hexdigest()
-        except requests.ConnectionError:
+        except (
+            requests.ConnectionError,
+            requests.Timeout,
+            requests.exceptions.ChunkedEncodingError,
+        ):
+            tmp.unlink(missing_ok=True)
             if k == tries - 1:
                 raise
         time.sleep(2 ** (k + 1))
@@ -121,7 +129,7 @@ def _md5_stream(url: str, dest: Path, tries: int = 5) -> str:
 
 
 def fetch(base: Path, versions: list[str]) -> None:
-    """Download the manifest's files for ``versions`` (skipping files whose md5 already matches)."""
+    """Download the manifest's files for ``versions``; a file whose sha256 matches is kept."""
     from astropy.table import Table
 
     man = Table.read(MANIFEST, format="ascii.ecsv")
@@ -130,14 +138,14 @@ def fetch(base: Path, versions: list[str]) -> None:
             continue
         dest = base / SAMPLES[row["irf_version"]][1] / row["file"]
         dest.parent.mkdir(parents=True, exist_ok=True)
-        if dest.exists() and hashlib.md5(dest.read_bytes()).hexdigest() == row["md5"]:
+        if dest.exists() and sha256_file(dest) == row["sha256"]:
             continue
         t = time.time()
-        got = _md5_stream(URL.format(int(row["dataverse_file_id"])), dest)
-        if got != row["md5"]:
+        got = _sha256_stream(URL.format(int(row["dataverse_file_id"])), dest)
+        if got != row["sha256"]:
             dest.unlink()
             what = f"{row['file']} ({row['irf_version']})"
-            raise SystemExit(f"{what}: md5 {got} != pinned {row['md5']}")
+            raise SystemExit(f"{what}: sha256 {got} != pinned {row['sha256']}")
         mb = row["size"] / 1e6
         print(
             f"{row['irf_version']} {row['file']}: {mb:.1f} MB, {time.time() - t:.0f} s", flush=True
@@ -160,9 +168,10 @@ def fit_windows(base: Path, version: str, trials: int, cpu: int) -> dict:
     ev = np.loadtxt(base / SAMPLES[version][1] / "events" / f"{SEASON}_exp.csv")
     sep = angsep_deg(ev[:, 6], ev[:, 7], TXS["ra"], TXS["dec"])
     rounded = rounded_window(TXS["t0"], TXS["dt"])
-    snapped = snap_edges(ev[:, 3], sep, rounded)
+    (lo, hi), snapped = snap_edges(ev[:, 3], sep, rounded)
     on = sep < SNAP_DEG
-    windows = {"rounded": rounded, "event_edges": (snapped[0] - 1e-3, snapped[1] + 1e-3)}
+    pad = 1e-3
+    windows = {"rounded": rounded, "event_edges": (lo - pad * snapped[0], hi + pad * snapped[1])}
     src = PointLikeSource(ra=np.deg2rad(TXS["ra"]), dec=np.deg2rad(TXS["dec"]))
     ana = create_analysis(
         cfg=cfg, datasets=ds, source=src, box={"start": rounded[0], "stop": rounded[1]}
@@ -177,6 +186,7 @@ def fit_windows(base: Path, version: str, trials: int, cpu: int) -> dict:
             "stop_mjd": round(stop, 4),
             "t0_mjd": round((start + stop) / 2, 3),
             "dt_days": round(stop - start, 3),
+            "edges_snapped": list(snapped) if name == "event_edges" else [False, False],
             "n_on_source_in_box": int(((ev[:, 3] >= start) & (ev[:, 3] <= stop) & on).sum()),
             "ts": round(float(ts), 3),
             **fit,
@@ -206,15 +216,22 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--irfs", nargs="+", choices=sorted(SAMPLES), default=["v2", "v1"])
     ap.add_argument("--trials", type=int, default=0, help="background trials per window (v2 only)")
-    ap.add_argument("--cpu", type=int, default=os.cpu_count() or 1)
+    ap.add_argument("--cpu", type=int, default=os.cpu_count() or 1, help="trial processes")
     ap.add_argument("--cleanup", action="store_true", help="delete the raw files afterwards")
     a = ap.parse_args(argv)
     from jwst_anomaly.paths import data_root
 
     base = data_root() / "nf_skyllh"
     t0 = time.time()
-    fetch(base, a.irfs)
-    fits = {v: fit_windows(base, v, a.trials if v == "v2" else 0, a.cpu) for v in a.irfs}
+    fits = {}
+    for v in a.irfs:  # one IRF version on disk at a time when cleaning up
+        sub = base / SAMPLES[v][1]
+        try:
+            fetch(base, [v])
+            fits[v] = fit_windows(base, v, a.trials if v == "v2" else 0, a.cpu)
+        finally:
+            if a.cleanup:
+                shutil.rmtree(sub, ignore_errors=True)
     from importlib.metadata import version
 
     out = {
@@ -236,8 +253,6 @@ def main(argv=None) -> int:
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, indent=1) + "\n")
-    if a.cleanup:
-        shutil.rmtree(base)
     print(f"wrote {OUT.relative_to(ROOT)}")
     return 0
 

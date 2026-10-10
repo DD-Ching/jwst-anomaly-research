@@ -5,22 +5,23 @@
 # - {name: dataverse_file_id, datatype: int64}
 # - {name: file, datatype: string}
 # - {name: md5, datatype: string}
+# - {name: sha256, datatype: string}
 # - {name: size, datatype: int64}
 # meta: !!omap
 # - {provenance: observed}
 # - {source: 'IceCube IceTracks-DR2, Harvard Dataverse doi:10.7910/DVN/MMIIZA (CC0); v2 = files of dataset version 3.1
 #     (IRF binning fixed in 2.0), v1 = files of dataset version 1.0 (the IRFs arXiv:2605.19040 used); original CSVs via
-#     https://dataverse.harvard.edu/api/access/datafile/<id>?format=original, md5 as listed by Dataverse'}
+#     https://dataverse.harvard.edu/api/access/datafile/<id>?format=original, md5 as listed by Dataverse, sha256 of the downloaded file (the pin)'}
 # - {retrieved: '2026-10-10'}
 # - {note: 'scripts/nf_txs_benchmark.py; raw files are deleted after use (cloud-disk decision); IC86 smearing matrix
 #     817 MB (v2) / 598 MB (v1): the stated reason is the TXS benchmark (TASKS Neutrino Frontier item 2)'}
 # schema: astropy-2.0
-irf_version dataverse_file_id file md5 size
-v2 14153506 irfs/IC86_effectiveArea.csv 780664d6f775be6b6e3e0c7833aafbf4 125914
-v2 13597964 uptime/IC86_IV_exp.csv 356c48825db0ba5a1a38b82112b65f92 49455
-v2 13597923 events/IC86_IV_exp.csv 8c9e667bc4dbfa1e656b833c2cd95bb7 16967262
-v2 14153513 irfs/IC86_smearing.csv ce7467a16a7ee77314df90245f9f76b9 817376195
-v1 13597927 irfs/IC86_effectiveArea.csv d60178dd2ea5b08b04853d03633446d1 148107
-v1 13597923 events/IC86_IV_exp.csv 8c9e667bc4dbfa1e656b833c2cd95bb7 16967262
-v1 13597964 uptime/IC86_IV_exp.csv 356c48825db0ba5a1a38b82112b65f92 49455
-v1 13597978 irfs/IC86_smearing.csv ae8fc2d157d60f4d68e12c5c8a35bef6 598080195
+irf_version dataverse_file_id file md5 sha256 size
+v2 14153506 irfs/IC86_effectiveArea.csv 780664d6f775be6b6e3e0c7833aafbf4 d4eb0489931f0644889a9c16bd6fcd8d7789d778b813940b5972a9c0bdb8fd0a 125914
+v2 13597964 uptime/IC86_IV_exp.csv 356c48825db0ba5a1a38b82112b65f92 b22b55e9e22fcb94d8f6bd4f097280b0ed5f99e1f1f283704a22b0926a0ade55 49455
+v2 13597923 events/IC86_IV_exp.csv 8c9e667bc4dbfa1e656b833c2cd95bb7 e4ea3efc74ad8fd64a9377affc24776a06ca1a590e1f321e89a018c3fb8350c6 16967262
+v2 14153513 irfs/IC86_smearing.csv ce7467a16a7ee77314df90245f9f76b9 ba0ca39de734f2a561da0a5357c0370146ebe21ac59486d9995cdfd16f08d90d 817376195
+v1 13597927 irfs/IC86_effectiveArea.csv d60178dd2ea5b08b04853d03633446d1 3c77fcfaad2d3cf4b950981b7794d0b784e568a0426994b92c8d8cffaef0f162 148107
+v1 13597923 events/IC86_IV_exp.csv 8c9e667bc4dbfa1e656b833c2cd95bb7 e4ea3efc74ad8fd64a9377affc24776a06ca1a590e1f321e89a018c3fb8350c6 16967262
+v1 13597964 uptime/IC86_IV_exp.csv 356c48825db0ba5a1a38b82112b65f92 b22b55e9e22fcb94d8f6bd4f097280b0ed5f99e1f1f283704a22b0926a0ade55 49455
+v1 13597978 irfs/IC86_smearing.csv ae8fc2d157d60f4d68e12c5c8a35bef6 6b7c32617dd27e1b0ee08fcc884220a69f5111c65bbc7e2b4ba57a72f3cce085 598080195

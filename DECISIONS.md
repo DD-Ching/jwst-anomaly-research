@@ -4053,7 +4053,7 @@ KM3NeT ARCA releases).
   T0 and ΔT to whole days and a box flare fit puts its edges on events. Agreement tolerance |Δn_s| ≤ 1,
   |Δγ| ≤ 0.1 (ASSUMPTION).
 - Raw files (IC86_IV events and uptime, IC86 IRFs: smearing matrix 817 MB v2 / 598 MB v1) are streamed into the data
-  root, md5-checked against `data/manifests/nf_skyllh_dr2.ecsv` and deleted after use (`--cleanup`). Stated reason
+  root, sha256-checked against `data/manifests/nf_skyllh_dr2.ecsv` and deleted after use (`--cleanup`). Stated reason
   for > 200 MB: the benchmark needs the full IC86 smearing matrix (SkyLLH builds the signal PDFs from it).
 
 **Alternatives rejected.**
@@ -4066,7 +4066,8 @@ KM3NeT ARCA releases).
 
 **Evidence.** `results/nf/txs_skyllh_benchmark.json`. Snapped window: n_s = 12.72, γ = 2.26, TS = 23.0 (v1 IRFs);
 12.75 / 2.26 / 22.9 (v2). Paper: 12.7 / 2.3 (SkyLLH), 12.56 / 2.26 (internal). Printed window: 11.08 / 2.21
-(v1), 11.11 / 2.22 (v2). The IRF binning fix moves n_s by 0.03. Background trials: see the CHANGELOG entry.
+(v1), 11.11 / 2.22 (v2). The IRF binning fix moves n_s by 0.03. Fixed-window background, 50,000 SkyLLH scrambles per window: p < 2 × 10⁻⁵ (not comparable with the paper's
+free-window pre-trial p).
 Edge sensitivity (T0 and ΔT each moved by up to ± 2.5 d): n_s 10.3–13.0.
 
 **Revisit if** a new SkyLLH release changes the PDFs (re-run the benchmark), or a test needs multi-season

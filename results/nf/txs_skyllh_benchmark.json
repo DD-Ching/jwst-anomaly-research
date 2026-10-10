@@ -1,0 +1,119 @@
+{
+ "test": "Neutrino Frontier benchmark 1: TXS 0506+056 2014-15 box flare, SkyLLH on IceTracks-DR2",
+ "provenance": "derived (observed IceTracks-DR2 IC86_IV; IRFs are model_prediction)",
+ "source": {
+  "ra_deg": 77.35,
+  "dec_deg": 5.7,
+  "season": "IC86_IV"
+ },
+ "paper": {
+  "ref": "arXiv:2605.19040 Table 6 and section 5",
+  "skyllh": {
+   "ns": 12.7,
+   "gamma": 2.3
+  },
+  "internal": {
+   "ns": 12.56,
+   "gamma": 2.26,
+   "p_pre": 0.00418
+  },
+  "t0": 57020.0,
+  "dt": 185.0
+ },
+ "assumptions": {
+  "snap_deg": 1.0,
+  "snap_days": 1.0,
+  "agreement_tolerance": {
+   "ns": 1.0,
+   "gamma": 0.1
+  }
+ },
+ "skyllh_version": "26.1.0",
+ "fits": {
+  "v2": {
+   "rounded": {
+    "start_mjd": 56927.5,
+    "stop_mjd": 57112.5,
+    "t0_mjd": 57020.0,
+    "dt_days": 185.0,
+    "edges_snapped": [
+     false,
+     false
+    ],
+    "n_on_source_in_box": 17,
+    "ts": 20.256,
+    "ns": 11.109,
+    "gamma": 2.217,
+    "agrees_with_paper_skyllh": false,
+    "p_wilks_half_chi2_2dof": 1.9973442965287402e-05,
+    "bkg_trials": {
+     "n": 50000,
+     "n_ge_obs": 0,
+     "p_empirical": 1.999960000799984e-05,
+     "frac_ts_zero": 0.4726,
+     "ts_median": 0.017,
+     "seconds": 434.9
+    }
+   },
+   "event_edges": {
+    "start_mjd": 56927.8591,
+    "stop_mjd": 57112.654,
+    "t0_mjd": 57020.257,
+    "dt_days": 184.795,
+    "edges_snapped": [
+     true,
+     true
+    ],
+    "n_on_source_in_box": 18,
+    "ts": 22.948,
+    "ns": 12.753,
+    "gamma": 2.258,
+    "agrees_with_paper_skyllh": true,
+    "p_wilks_half_chi2_2dof": 5.198418112749364e-06,
+    "bkg_trials": {
+     "n": 50000,
+     "n_ge_obs": 0,
+     "p_empirical": 1.999960000799984e-05,
+     "frac_ts_zero": 0.4726,
+     "ts_median": 0.017,
+     "seconds": 399.7
+    }
+   }
+  },
+  "v1": {
+   "rounded": {
+    "start_mjd": 56927.5,
+    "stop_mjd": 57112.5,
+    "t0_mjd": 57020.0,
+    "dt_days": 185.0,
+    "edges_snapped": [
+     false,
+     false
+    ],
+    "n_on_source_in_box": 17,
+    "ts": 20.315,
+    "ns": 11.077,
+    "gamma": 2.214,
+    "agrees_with_paper_skyllh": false,
+    "p_wilks_half_chi2_2dof": 1.9395336692854335e-05
+   },
+   "event_edges": {
+    "start_mjd": 56927.8591,
+    "stop_mjd": 57112.654,
+    "t0_mjd": 57020.257,
+    "dt_days": 184.795,
+    "edges_snapped": [
+     true,
+     true
+    ],
+    "n_on_source_in_box": 18,
+    "ts": 22.99,
+    "ns": 12.723,
+    "gamma": 2.257,
+    "agrees_with_paper_skyllh": true,
+    "p_wilks_half_chi2_2dof": 5.091549560761326e-06
+   }
+  }
+ },
+ "seconds": 854.0
+}
