@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: W3 MOA-II chain gaps (D-068 follow-ups) — in progress
+- Claim: add the four D-068 vetting gaps as one recorded post-hoc chain change.
+
 ## 2026-10-10: D1 kinematic D_s/D_ds on 76 lenses: null, max 2.49σ vs 5.78σ (D-073 addendum 4)
 - Hypothesis: one lens's kinematics demand a D_s/D_ds no FLRW model gives its redshifts. Data: the hierArc
   kinematic likelihood pickles in TDCOSMO 2025 (TDCOSMO 8, SLACS KCWI 13, SLACS SDSS 41, SL2S 14), read numpy-only.
