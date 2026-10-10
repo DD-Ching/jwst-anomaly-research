@@ -5,8 +5,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 
 ## Division of labour (owner brief 2026-10-10)
 - **Local-only (owner machine):** GitHub releases for derived data; files that exist only locally.
-- **Cloud routine:** TXS 0506+056 SkyLLH benchmark on IceTracks-DR2 (stream; the ~817 MB response matrix is fine
-  in the cloud), E-NF1 on IceTracks-DR2 (short lags done, D-079; rest per Neutrino Frontier item 1), round 2,
+- **Cloud routine:** TXS 0506+056 SkyLLH benchmark on IceTracks-DR2 (done, D-080), E-NF1 on IceTracks-DR2 (short lags done, D-079; rest per Neutrino Frontier item 1), round 2,
   all scans.
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
@@ -45,8 +44,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    gain beyond 1 h (optimistic floor ≥ 0.055 at 1 h–1 d, ≥ 0.64 at 30–180 d). Next, only if NF-H04 gets a
    quantitative prediction: f_astro per cut from the DR2 effective areas (turns R into R_g per astrophysical
    neutrino); the 30–180 d bin has no public sample that can reach it.
-2. **Benchmark first:** TXS 0506+056 2014–15 flare in IceTracks-DR2 with SkyLLH 26.1.0 (12.7 signal events,
-   γ = 2.3; 2014 response matrix 817 MB: stream in the cloud, stated reason on the owner's machine).
+2. **Benchmarks:** TXS 0506+056 2014–15 box with SkyLLH **reproduced** (D-080: n̂s 12.72, γ̂ 2.26 vs 12.7 / 2.3,
+   once the box edges sit on the edge events). Next: the time-integrated benchmark (arXiv:2605.19040 Table 8: TXS
+   8.8 / 2.0 and NGC 1068 80.1 / 3.2 with SkyLLH, all 14 seasons; needs the IC40/IC59/IC79 IRFs too: 3.4 GB of
+   smearing matrices, all on disk at once; cloud only, delete after use).
 3. **Round 2** (N-A then N-B): only frameworks with a prediction decidable on IceTracks-DR2, GCN alerts after
    ICECAT-1 (77 event times; clean revisions and retractions first), HESE-12 topology labels or KM3NeT/ANTARES.
 4. GW–neutrino ghost corner (N-B: missed by LVK lensing searches): GW sky maps now exist (D-074 addendum 4).
