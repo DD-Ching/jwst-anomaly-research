@@ -462,9 +462,11 @@ def main(argv=None) -> int:
         print(k, len(v), f"MJD {v['mjd'].min():.1f}-{v['mjd'].max():.1f}", flush=True)
 
     obs = count_all(samples, p)
+    # keyed by the input digests so a re-pinned catalogue never reuses stale nulls
+    inputs = sha256(b"".join(sha256(paths[fn].read_bytes()).encode() for fn in sorted(paths)))
     cache = (
-        data_root() / "e1_events" / f"nulls_v2_{a.perm}_{a.jit}_{a.jitday}.npz"
-    )  # bump on any count change
+        data_root() / "e1_events" / f"nulls_v2_{a.perm}_{a.jit}_{a.jitday}_{inputs[:12]}.npz"
+    )  # bump v2 on any count change
     if cache.exists() and not a.refresh:  # untracked cache of the null ensembles (seeds fixed)
         z = np.load(cache)
         perm, jit, jday = z["perm"], z["jit"], z["jday"]

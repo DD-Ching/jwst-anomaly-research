@@ -3991,15 +3991,16 @@ recoverable.**
   invented or downloaded here; `e1_events.fetch` is unchanged until a snapshot is published.
 
 **Addendum 2 (2026-10-10, cloud routine): E1 re-pinned to one GBM snapshot.**
-- `data/manifests/e1_events.ecsv` and `e1_gw_events.ecsv` both pin `fermigbrst.vot` sha256 8cc2823f… (424,672 B,
-  4,392 rows; it is the "live 8cc2…" above, whose row count there should read 4,392). ICECAT-1, GWTC and CHIME Cat 2
-  re-fetched with unchanged digests.
+- `data/manifests/e1_events.ecsv` pins `fermigbrst.vot` sha256 8cc2823f… (424,672 B, 4,392 rows; the "live 8cc2…"
+  above). ICECAT-1, GWTC and CHIME Cat 2 re-fetched with unchanged digests. `e1_gw_events.ecsv` (addendum 4 of
+  D-074) is removed: the GW scripts read the same manifest.
 - Relative to the D-074 pin: the new table minus bn261008763 and bn261007236 reproduces every tracked observed
   count (75 cells). All E1 scripts re-run with tracked seeds and scramble counts: D-074 core family p 0.278 → 0.273;
   addenda 2–5 global p 0.557 → 0.531, 0.676 → 0.568, 0.829 → 0.833, 0.555 → 0.551. No conclusion changes (CHANGELOG
   2026-10-10).
 - The snapshot still exists only in an ephemeral session: a local session must publish it to the derived-data store
-  (it can be re-fetched only while HEASARC serves this digest).
+  (it can be re-fetched only while HEASARC serves this digest; otherwise re-pin there with `--refresh`).
+- The null-ensemble cache is keyed by the input digests. Per-catalogue random streams are a follow-up.
 
 ## D-079 E-NF1b: IceTracks-DR2 short-lag ghost pairs: null; DR2 cannot reach R_g ~ 10⁻³ or improve lags > 1 h (2026-10-10)
 

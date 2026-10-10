@@ -55,8 +55,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 ## Part 0 speed-ups (owner brief 2026-10-10, D-078)
 - Done: `derived-data-20261010` holds the GW sky maps; a fresh session takes them in ~3 s (D-078 addendum).
 - **E1 GBM re-pinned (cloud, D-078 addendum 2):** one snapshot (8cc2…, 4,392 bursts) in both E1 manifests; every
-  E1 conclusion unchanged. **Next (local session):** publish it to the derived-data store and wire
-  `e1_events.fetch` to the durable copy (the cloud copy is not kept).
+  E1 conclusion unchanged. **Next (local session, soon):** fetch 8cc2… while HEASARC still serves it, publish it to
+  the derived-data store and wire `e1_events.fetch` to it (else `--refresh` and publish that). Later: per-catalogue
+  RNG streams in the E1 nulls (own PR).
 - Profile every null/injection script once before runs > 10 min (S-3); next candidates: `e1_events.py` injection
   loops, `GWMaps` construction (region distances, ~27 s).
 
