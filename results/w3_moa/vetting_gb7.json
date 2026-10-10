@@ -111,7 +111,7 @@
    0
   ]
  ],
- "gaia_rp_xmatch": "query failed: InvalidQueryError('Message: Too many jobs are being processed, try later!')",
+ "gaia_rp_xmatch": "vizier:I/355/gaiadr3 within 1.0″: 25 matched",
  "flags": [
   {
    "event_id": "gb7-R-1-0-49231",
@@ -127,7 +127,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -5082.1; u0 0.00, f_s 1.71e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -5082.1; u0 0.00, f_s 1.71e+03 vs 3 × 7.85e+04 (Gaia DR3 RP 15.66)"
     ],
     [
      "feature_bracketed",
@@ -165,7 +165,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -3491.8; u0 0.00, f_s 3.62e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -3491.8; u0 0.00, f_s 3.62e+03 vs 3 × 1.36e+05 (Gaia DR3 RP 15.06)"
     ],
     [
      "feature_bracketed",
@@ -236,7 +236,7 @@
     [
      "exotic_in_domain",
      true,
-     "E2neg ΔBIC -689.4; u0 1.50, f_s 379 vs 3 × 3.02e+05 (default 14.2)"
+     "E2neg ΔBIC -689.4; u0 1.50, f_s 379 vs 3 × 1.07e+05 (Gaia DR3 RP 15.33)"
     ],
     [
      "feature_bracketed",
@@ -391,7 +391,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -818.5; u0 0.72, f_s 3.18e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -818.5; u0 0.72, f_s 3.18e+03 vs 3 × 2.92e+04 (Gaia DR3 RP 16.74)"
     ],
     [
      "feature_bracketed",
@@ -454,7 +454,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -102.8; u0 0.00, f_s 1.45e+04 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -102.8; u0 0.00, f_s 1.45e+04 vs 3 × 3.48e+04 (Gaia DR3 RP 16.54)"
     ],
     [
      "feature_bracketed",
@@ -545,7 +545,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -2186.6; u0 0.16, f_s 5.64e+03 vs 3 × 1.45e+05 (default 14.2)"
+     "N1neg ΔBIC -2186.6; u0 0.16, f_s 5.64e+03 vs 3 × 1.33e+05 (Gaia DR3 RP 14.29)"
     ],
     [
      "feature_bracketed",
@@ -626,7 +626,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -3883.1; u0 0.37, f_s 5.02e+03 vs 3 × 1.45e+05 (default 14.2)"
+     "N1neg ΔBIC -3883.1; u0 0.37, f_s 5.02e+03 vs 3 × 9.92e+04 (Gaia DR3 RP 14.61)"
     ],
     [
      "feature_bracketed",
@@ -727,7 +727,7 @@
     [
      "exotic_in_domain",
      true,
-     "E2pos ΔBIC -1895.5; u0 1.09, f_s 4.79e+04 vs 3 × 3.02e+05 (default 14.2)"
+     "E2pos ΔBIC -1895.5; u0 1.09, f_s 4.79e+04 vs 3 × 8.96e+04 (Gaia DR3 RP 15.52)"
     ],
     [
      "feature_bracketed",
@@ -750,7 +750,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -8118.9; u0 0.99, f_s 2.38e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -8118.9; u0 0.99, f_s 2.38e+03 vs 3 × 1.11e+05 (Gaia DR3 RP 15.29)"
     ],
     [
      "feature_bracketed",
@@ -788,7 +788,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -15811.3; u0 0.23, f_s 8.04e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -15811.3; u0 0.23, f_s 8.04e+03 vs 3 × 5.44e+04 (Gaia DR3 RP 16.06)"
     ],
     [
      "feature_bracketed",
@@ -821,7 +821,7 @@
     [
      "exotic_in_domain",
      true,
-     "E2neg ΔBIC -6369.3; u0 0.00, f_s 3.87e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "E2neg ΔBIC -6369.3; u0 0.00, f_s 3.87e+03 vs 3 × 1.63e+05 (Gaia DR3 RP 14.87)"
     ],
     [
      "feature_bracketed",
@@ -879,7 +879,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -951.6; u0 0.00, f_s 1.01e+04 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -951.6; u0 0.00, f_s 1.01e+04 vs 3 × 2.31e+05 (Gaia DR3 RP 14.49)"
     ],
     [
      "feature_bracketed",
@@ -917,7 +917,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -10698.2; u0 0.00, f_s 4.83e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -10698.2; u0 0.00, f_s 4.83e+03 vs 3 × 2.51e+05 (Gaia DR3 RP 14.40)"
     ],
     [
      "feature_bracketed",
@@ -940,7 +940,7 @@
     [
      "exotic_in_domain",
      true,
-     "E2neg ΔBIC -14478.9; u0 0.00, f_s 2.99e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "E2neg ΔBIC -14478.9; u0 0.00, f_s 2.99e+03 vs 3 × 9.8e+04 (Gaia DR3 RP 15.42)"
     ],
     [
      "feature_bracketed",
@@ -963,7 +963,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -796.8; u0 0.00, f_s 4.73e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -796.8; u0 0.00, f_s 4.73e+03 vs 3 × 6.92e+04 (Gaia DR3 RP 15.80)"
     ],
     [
      "feature_bracketed",
@@ -1117,7 +1117,7 @@
     [
      "exotic_in_domain",
      true,
-     "E2neg ΔBIC -531.6; u0 1.81, f_s 1.31e+04 vs 3 × 3.02e+05 (default 14.2)"
+     "E2neg ΔBIC -531.6; u0 1.81, f_s 1.31e+04 vs 3 × 3.9e+04 (Gaia DR3 RP 16.42)"
     ],
     [
      "feature_bracketed",
@@ -1208,7 +1208,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -5311.6; u0 1.25, f_s 5.84e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -5311.6; u0 1.25, f_s 5.84e+03 vs 3 × 6.25e+04 (Gaia DR3 RP 15.91)"
     ],
     [
      "feature_bracketed",
@@ -1241,7 +1241,7 @@
     [
      "exotic_in_domain",
      true,
-     "E2pos ΔBIC -1128.7; u0 0.99, f_s 1.32e+04 vs 3 × 3.02e+05 (default 14.2)"
+     "E2pos ΔBIC -1128.7; u0 0.99, f_s 1.32e+04 vs 3 × 7.98e+04 (Gaia DR3 RP 15.65)"
     ],
     [
      "feature_bracketed",
@@ -1322,7 +1322,7 @@
     [
      "exotic_in_domain",
      false,
-     "E2pos ΔBIC 8.8; u0 0.00, f_s 5.51 vs 3 × 3.02e+05 (default 14.2)"
+     "E2pos ΔBIC 8.8; u0 0.00, f_s 5.51 vs 3 × 2.72e+04 (Gaia DR3 RP 16.81)"
     ]
    ]
   },
@@ -1340,7 +1340,7 @@
     [
      "exotic_in_domain",
      true,
-     "E2neg ΔBIC -431.1; u0 1.87, f_s 231 vs 3 × 3.02e+05 (default 14.2)"
+     "E2neg ΔBIC -431.1; u0 1.87, f_s 231 vs 3 × 3.08e+04 (Gaia DR3 RP 16.68)"
     ],
     [
      "feature_bracketed",
@@ -1363,7 +1363,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -13324.1; u0 1.67, f_s 1.53e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -13324.1; u0 1.67, f_s 1.53e+03 vs 3 × 3.76e+04 (Gaia DR3 RP 16.46)"
     ],
     [
      "feature_bracketed",
@@ -1401,7 +1401,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -185.3; u0 1.50, f_s 6.85e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -185.3; u0 1.50, f_s 6.85e+03 vs 3 × 5.47e+04 (Gaia DR3 RP 16.05)"
     ],
     [
      "feature_bracketed",
@@ -1434,7 +1434,7 @@
     [
      "exotic_in_domain",
      true,
-     "E2neg ΔBIC -3262.3; u0 1.42, f_s 2.23e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "E2neg ΔBIC -3262.3; u0 1.42, f_s 2.23e+03 vs 3 × 1.63e+05 (Gaia DR3 RP 14.87)"
     ],
     [
      "feature_bracketed",
@@ -1457,7 +1457,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -8524.3; u0 0.09, f_s 4.86e+03 vs 3 × 3.02e+05 (default 14.2)"
+     "N1neg ΔBIC -8524.3; u0 0.09, f_s 4.86e+03 vs 3 × 3.29e+04 (Gaia DR3 RP 16.61)"
     ],
     [
      "feature_bracketed",
@@ -1490,7 +1490,7 @@
     [
      "exotic_in_domain",
      true,
-     "E2neg ΔBIC -1666.3; u0 0.55, f_s 2.54e+04 vs 3 × 3.02e+05 (default 14.2)"
+     "E2neg ΔBIC -1666.3; u0 0.55, f_s 2.54e+04 vs 3 × 1.8e+05 (Gaia DR3 RP 14.76)"
     ],
     [
      "feature_bracketed",
