@@ -89,3 +89,71 @@ def inject_ghosts(
         np.concatenate([s.year, en.mjd_year(t)]),
     )
     return sample, np.concatenate([w, w[parent][keep]])
+
+
+# --- IceTracks-DR2 (E-NF1b, D-TBD) -------------------------------------------------------------
+
+#: column order of the IceTracks-DR2 ``events/<season>_exp.tab`` files (Dataverse doi:10.7910/DVN/MMIIZA)
+DR2_COLUMNS = ("run", "event", "subevent", "mjd", "log10e", "angerr", "ra", "dec", "azimuth", "zenith")
+
+
+def read_icetracks_tab(lines) -> np.ndarray:
+    """(n, 10) float array from the lines of one IceTracks-DR2 events or uptime ``.tab`` file as
+    Dataverse serves it (a ``#`` header line, then whitespace columns, each row in double quotes)."""
+    rows = [ln.replace('"', "").split() for ln in lines if ln.strip() and not ln.lstrip().startswith("#")]
+    return np.array(rows, dtype=float)
+
+
+def dedupe_events(ev: np.ndarray) -> np.ndarray:
+    """Time-sorted events, one per (run, event, subevent): the seasons overlap by weeks."""
+    key = np.round(ev[:, :3]).astype(np.int64)
+    _, idx = np.unique(key, axis=0, return_index=True)
+    ev = ev[np.sort(idx)]
+    return ev[np.argsort(ev[:, 3], kind="stable")]
+
+
+def in_uptime(mjd: np.ndarray, start: np.ndarray, stop: np.ndarray) -> np.ndarray:
+    """True where ``mjd`` lies inside a good-run interval ``[start, stop]`` (intervals may overlap)."""
+    o = np.argsort(start)
+    s, e = start[o], np.maximum.accumulate(stop[o])
+    k = np.searchsorted(s, mjd, side="right") - 1
+    return (k >= 0) & (mjd <= e[np.clip(k, 0, None)])
+
+
+def jitter_uptime(
+    s: en.Sample,
+    start: np.ndarray,
+    stop: np.ndarray,
+    half_width_days: float,
+    rng: np.random.Generator,
+    max_tries: int = 100,
+) -> en.Sample:
+    """Uptime-aware jitter null: an independent uniform shift of +-half_width per event, redrawn
+    until the new time is inside a good run (an event that never lands keeps its time); Dec and hour
+    angle kept (``Sample.with_times``)."""
+    new = s.mjd.copy()
+    todo = np.arange(len(new))
+    for _ in range(max_tries):
+        if not len(todo):
+            break
+        cand = s.mjd[todo] + rng.uniform(-half_width_days, half_width_days, len(todo))
+        ok = in_uptime(cand, start, stop)
+        new[todo[ok]] = cand[ok]
+        todo = todo[~ok]
+    return s.with_times(new)
+
+
+def wide_pair_counts(
+    s: en.Sample, group: np.ndarray, lag_edges, p: en.Params | None = None
+) -> np.ndarray:
+    """Wide-pair (D-074 class 1) counts per lag bin, unordered pairs; pairs within one ``group``
+    (one IceCube (run, event): split or coincident muons of one readout) are not counted."""
+    p = p or en.Params()
+    e = np.asarray(lag_edges, float)
+    i, j = en.pairs_within(s.mjd, s.mjd, e[-1], True)
+    lag = np.abs(s.mjd[j] - s.mjd[i]) * DAY
+    sep = en.sep_deg(s.ra[i], s.dec[i], s.ra[j], s.dec[j])
+    wide = (en.sep_class(sep, s.sigma[i], s.sigma[j], p) == 1) & (lag <= e[-1])
+    wide &= group[i] != group[j]
+    k = np.clip(np.searchsorted(e, lag[wide], side="right") - 1, 0, len(e) - 2)
+    return np.bincount(k, minlength=len(e) - 1).astype(float)
