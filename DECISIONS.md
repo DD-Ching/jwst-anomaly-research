@@ -3977,15 +3977,16 @@ another store is approved by the owner.
 **Addendum (2026-10-10, local session on the owner's machine): first release; the pinned GBM snapshot is not
 recoverable.**
 - Published `derived-data-20261010` (pre-release, not latest): `gw_skymaps_nside32.npz`, 4,337,802 B, sha256
-  ab033058…8e1ad5, code commit 67fffba (main), pinned in `data/manifests/derived_data.ecsv`. The npz is a fresh
+  ab033058…8e1ad5, code commit 67fffba (main; the tag itself sits on c92249c because `derived_publish.py` had no
+  `--target` yet, fixed in the same PR), pinned in `data/manifests/derived_data.ecsv`. The npz is a fresh
   re-reduction (`e1_gw_skymaps.py --refresh`, 704 MB streamed into memory, 675 s); its content digest equals the
   pinned `maps_sha256` c5c2e4ff… and all four tarball sha256 equal their pins.
 - Fresh-session check (`JWST_ANOMALY_DATA` = an empty directory): "durable copy verified in 1 s", 2.7 s wall, no
   tarball fetched.
 - Neither pinned `fermigbrst.vot` (D-074 5b42…, 424,481 B; #122 0cb3…, 424,579 B) exists on the owner's machine:
   no file matched either name or either size in the data root, the old clone and its worktrees, the home folder
-  (23.4 M files) or drives E: and G:. Both were fetched only in cloud sessions, and the live HEASARC table has
-  moved on, so they cannot be recovered. **Decision:** E1 is re-pinned to a new snapshot in a separate PR that
+  (23.4 M files) or drives E: and G:. They were presumably fetched in ephemeral cloud sessions (inference, not
+  checked), and the live HEASARC table has moved on, so neither can be re-fetched. **Decision:** E1 is re-pinned to a new snapshot in a separate PR that
   re-runs the affected E1 results and reports every change (TASKS "Part 0", cloud routine). No GBM snapshot was
   invented or downloaded here; `e1_events.fetch` is unchanged until a snapshot is published.
 

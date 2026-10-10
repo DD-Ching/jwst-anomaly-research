@@ -3,21 +3,18 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-10: First derived-data release `derived-data-20261010` (GW sky maps); pinned GBM snapshot not recoverable (D-078 addendum)
-- Local session on the owner's machine (cloud sessions cannot create releases). Re-reduced the GWTC sky maps with
-  `e1_gw_skymaps.py --refresh`: 704 MB streamed from Zenodo into memory in 675 s, nothing stored but the 4.3 MB
-  npz (the 200 MB rule holds because no archive is saved). All four tarball sha256 and the content digest
-  (c5c2e4ff…) equal the pins; `e1_gw_skymaps.ecsv` is unchanged.
-- Published pre-release `derived-data-20261010` (not latest; tag on main): `gw_skymaps_nside32.npz`, 4,337,802 B,
-  sha256 ab0330588b9a380f2f49b0d4dae809ea6cd1ed6ac1d99718e23f66d00c8e1ad5, code commit 67fffba; pinned in
-  `data/manifests/derived_data.ecsv`. `--sources` lists only the Zenodo records (no GBM file in this release).
-- Fresh-session check (`JWST_ANOMALY_DATA` = an empty directory): `e1_gw_skymaps.py` printed "durable copy verified
-  in 1 s", 2.7 s wall, no tarball fetched (row added to the Part 0 speed table below).
-- GBM: neither pinned `fermigbrst.vot` (5b42…, 0cb3…) exists on this machine. Searched by name and by both pinned
-  sizes: the data root, the old clone, its worktrees, 23.4 M files under the home folder, drives E: and G:. Nothing
-  was downloaded or invented; E1 is re-pinned by the cloud routine (TASKS "Part 0").
-- TASKS: division of labour, local-only vs cloud routine (owner brief 2026-10-10).
-- **Next (cloud routine):** E1 GBM re-pin PR that re-runs the affected E1 results; TXS SkyLLH benchmark; round 2.
-  Next local session: publish the new GBM snapshot and wire `e1_events.fetch` to the durable copy.
+- Local session on the owner's machine (cloud sessions cannot create releases); details in the D-078 addendum.
+  Asset `gw_skymaps_nside32.npz`, 4,337,802 B, sha256 ab0330588b9a380f2f49b0d4dae809ea6cd1ed6ac1d99718e23f66d00c8e1ad5
+  (pre-release, not latest), pinned in `data/manifests/derived_data.ecsv`.
+- 200 MB rule: the 704 MB of tarballs were streamed into memory and never saved; only reduced products stay in the
+  data root (the 4.3 MB npz and four per-tarball caches, 28 MB). The re-reduction reproduces every pin.
+- Fresh session (empty data root): 2.7 s wall instead of streaming (row added to the Part 0 speed table below).
+- GBM: neither pinned `fermigbrst.vot` is on this machine; nothing downloaded or invented.
+- Fixed after `/code-review` (8 findings, 8 addressed): `derived_publish.py` creates the tag at the recorded code commit
+  (`--target`; this release's tag sits on c92249c, its code commit is 67fffba); the TASKS re-pin item now names
+  the procedure (one snapshot, a copy for the GW manifest, maps first, a like-for-like window).
+- **Next (cloud routine):** E1 GBM re-pin (TASKS "Part 0"); TXS SkyLLH benchmark; round 2. Next local session:
+  publish the new GBM snapshot and wire `e1_events.fetch` to the durable copy.
 
 ## 2026-10-10: W3 MOA-II gb22 and gb21 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, first new-chain limits
 - `w3_moa.py --field gbN run-field` (~20 min per field on 4 cores). gb22: 30 flags, gb21: 36 flags, **0 survive**;
