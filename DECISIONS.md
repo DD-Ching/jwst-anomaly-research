@@ -3535,6 +3535,19 @@ kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0L
 - Limitations: power-law models only (no composite); no kinematics, so no per-lens D_d (new D_d only via the hierArc
   `*_const_processed.pkl` likelihoods, not read: pickles from a download need a data-only reader first).
 
+**Addendum 3 (2026-10-10): composite-model check on SDSS1206.** TDCOSMO 2025 publishes a composite-model D_dt
+chain for SDSS1206 only (`final_composite_D_dt.npy`, κ_ext and κ_pert included; the other seven lenses have power-law
+chains only), so the model-choice check is one lens. `scripts/d1_distance.py tdcosmo --j1206 final_composite` swaps it
+into statistic D (`kext` only, everything else as addendum 2).
+- Validation: `--j1206 final_power_law` (TDCOSMO's own final power-law chain) reproduces this script's pre-LOS power
+  law + κ_ext treatment: D_dt 16/50/84 % 5231/5881/6540 vs 5236/5884/6540 Mpc; J1206 pull 0.606σ vs 0.608σ. In
+  these runs the J1206 `kext_p*` columns are 0: κ_ext is inside the chain.
+- **Result: null.** Composite D_dt median 5708 Mpc (−2.9 % against the power law, narrower); J1206 pull 0.54σ (power
+  law 0.61σ); max |pull| 1.14σ (RXJ1131) against 5.39σ; LOO H0 of the others 72.2–74.1. Detectable factors for J1206:
+  ×0.62 / ×1.49 (power law ×0.50 / ×1.74).
+- Rejected: the pre-LOS composite pickle (`angular_diameter_pre_LOS_composite.txt`): its κ_pert array has 20,000
+  rows against 400,000 distance rows, so the per-sample pairing the power-law reader uses is undefined there.
+
 ## D-074 E1 causal event network: lag × separation pair counts across GBM, ICECAT-1, GWTC and CHIME Cat 2 with sidereal-scrambled nulls (2026-10-09)
 
 **Decision.**

@@ -16,6 +16,7 @@ Reproduce: `python scripts/d1_distance.py lenses --h0licow <clone> --tdcosmo <cl
 | `lenses.png` | model_prediction | R vs flat ΛCDM (Ωm = 0.3), and all pulls with the 5σ trials-corrected lines |
 | `tdcosmo_lenses.ecsv` | model_prediction | statistic D on the TDCOSMO 2025 power-law D_dt chains, 8 lenses × (`kext`: own κ_ext PDF; `nokext`: κ_ext = 0); D-073 addendum 2 |
 | `tdcosmo_summary.json`, `tdcosmo_injections.ecsv` | model_prediction / simulated | trials, threshold, shuffled-z null, detectable factors; D_dt × f injections |
+| `tdcosmo_*_j1206_final_composite.*`, `tdcosmo_*_j1206_final_power_law.*` | as above | `tdcosmo --j1206 final_composite` / `final_power_law`: SDSS1206 replaced by TDCOSMO's final chain (κ_ext included), `kext` only; composite = model-choice check, power law = validation; D-073 addendum 3 |
 | `frb.ecsv` | model_prediction | per localized FRB: predictive median DM, one-sided low/high tails (grid convolution), P(below the MW-only floor), the DM at which each tail reaches the 5.81σ flag |
 | `frb_injections.ecsv` | simulated | DM_obs = 0.9 × low limit and 1.1 × high limit per FRB, through the same chain |
 | `frb_summary.json` | model_prediction | FRB flags, extremes, sensitivity and injection recovery |
