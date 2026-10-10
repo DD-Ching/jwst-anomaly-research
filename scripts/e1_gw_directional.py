@@ -42,7 +42,6 @@ import e1_events as E  # noqa: E402
 from jwst_anomaly import event_network as en  # noqa: E402
 
 OUT = ROOT / "results" / "e1_events" / "gw_directional.json"
-EVENTS_MANIFEST = ROOT / "data" / "manifests" / "e1_gw_events.ecsv"
 SKYMAP_MANIFEST = ROOT / "data" / "manifests" / "e1_gw_skymaps.ecsv"
 MAPS = (
     Path(os.environ.get("JWST_ANOMALY_DATA", ROOT / "data"))
@@ -561,9 +560,6 @@ def main(argv=None) -> int:
     ap.add_argument("--cpu", type=int, default=os.cpu_count() or 1)
     a = ap.parse_args(argv)
     t0 = time.time()
-    # This run pins its own catalogue snapshot: the GBM TAP table grows daily, so the D-074 pin
-    # (data/manifests/e1_events.ecsv) no longer matches a fresh fetch.
-    E.MANIFEST = EVENTS_MANIFEST
     ev = E.load(E.fetch(False))
     s = {k: en.Sample.from_table(v) for k, v in ev.items()}
     names = [str(x) for x in ev["GW"]["name"]]

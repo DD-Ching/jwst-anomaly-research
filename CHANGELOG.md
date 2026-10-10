@@ -2,6 +2,46 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: E1 re-pinned to one GBM snapshot (8cc2…, 4,392 bursts): every E1 conclusion unchanged (D-078 addendum 2)
+- Hypothesis before running: only bursts added or revised after the old pins differ, so every E1 channel stays
+  null; a family p below 0.01 would have changed the plan.
+- Fresh fetch: only `fermigbrst.vot` changed (sha256 8cc2823f…, 424,672 B, 4,392 rows; D-078 lists 4,391 rows for
+  this digest). ICECAT-1, GWTC and CHIME Cat 2 match their pins. `data/manifests/e1_gw_events.ecsv` is removed:
+  every E1 script (GW ones included) now reads the single `e1_events.ecsv`, so the pins cannot diverge again.
+- Like-for-like check (observed counts only): the new snapshot minus bn261008763 and bn261007236 (triggered
+  2026-10-07/08, last modified 2026-10-09) reproduces all 75 tracked D-074 observed counts. The other revision
+  after 2026-10-09 (bn260930833) changes no cell. No trigger is later than 2026-10-08, so a trigger-date cut is a
+  no-op. With the new bursts, 5 GBM–GBM cells gain 1–10 pairs (1d–7d all 17,523 → 17,533).
+- Re-runs (same seeds and scramble counts as tracked; 4 cores): `e1_events.py` 456 s, antipodal (`--n 2000`),
+  signed lag, CHIME flag, GW directional, GW signed (15–51 s each).
+
+  | Result | old pin | new pin |
+  |---|---|---|
+  | D-074 five requested channels, family p (jit) | 0.278 | 0.273 |
+  | D-074 wide + GW cells, pooled p (jit / jitday) | 0.0058 / 0.0033 | 0.0053 / 0.0029 |
+  | D-074 all 75 cells, global p (perm / jit / jitday) | 0.0021 / 0.0036 / 0.0047 | 0.0020 / 0.0043 / 0.0041 |
+  | Antipodal global p (addendum 2) | 0.557 | 0.531 |
+  | Signed-lag global p (addendum 3) | 0.676 | 0.568 |
+  | GW sky-map channels global p (addendum 4) | 0.829 | 0.833 |
+  | Signed-lag GW cells global p (addendum 5) | 0.555 | 0.551 |
+  | CHIME flag tests (CHIME only) | — | identical |
+
+  The wide + GW driver is still CHIME–CHIME 1 h–1 d wide, which the calibrated rate-modulated null explains
+  (D-074 addendum; CHIME-only, not re-run). Changes outside GBM cells are Monte Carlo noise from shifted
+  random streams: one RNG per scramble serves all catalogues in order, so two extra GBM bursts reshuffle the
+  CHIME and ICECAT draws too (|Δz| ≤ 0.36, |Δp| ≤ 0.01 in counts.ecsv). Injection outputs in limits.ecsv move more
+  (40 trials per cell): `ul95_rate_per_anchor` ≤ 24 %, `eff` up to 19 % (CHIME–CHIME 1d–7d wide 0.999 → 0.806),
+  `n50_detect` GBM–ICECAT 0s–10s wide 3 → 5.
+- Fixed after `/code-review`: the null-ensemble cache name now carries the input digests (an old-snapshot cache
+  was silently reused without `--refresh`); `e1_gw_events.ecsv` and its override removed (see above).
+- Not done (follow-up): per-catalogue random streams in the nulls (`SeedSequence` keyed by catalogue) would make
+  re-pins like-for-like outside the changed catalogue, but they change every tracked number, so they need their
+  own PR.
+- **Open risk / next (local session):** `main` pins a snapshot that only this ephemeral session held (cloud
+  sessions cannot create releases, D-078). HEASARC serves 8cc2… until its next GBM update, so a local session
+  should fetch it right away, check the digest, publish it to the derived-data store and wire `e1_events.fetch`
+  to it. If the digest has moved on, run `e1_events.py --refresh` there and publish that snapshot instead.
+
 ## 2026-10-10: W3 MOA-II gb20 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - `run-field --procs 4` in 2,144 s (pre-screen re-streamed 299 s, rows identical to the tracked tables; 51 fits;
   2,200 injections 1,075 s). 48 flags (as in D-068), **0 survive**; contact sheet inspected (eclipse-like boxes,
@@ -14,6 +54,20 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   default; 0 survivors stands (docs/exotic_limits.md, note under the gb20 table).
 - gb19 was planned in the same run but not started (40-min run budget).
 - **Next:** `run-field` for gb19, gb16, gb11, gb7, gb12, gb15, gb17, gb18, then `combine`.
+
+## 2026-10-10: First derived-data release `derived-data-20261010` (GW sky maps); pinned GBM snapshot not recoverable (D-078 addendum)
+- Local session on the owner's machine (cloud sessions cannot create releases); details in the D-078 addendum.
+  Asset `gw_skymaps_nside32.npz`, 4,337,802 B, sha256 ab0330588b9a380f2f49b0d4dae809ea6cd1ed6ac1d99718e23f66d00c8e1ad5
+  (pre-release, not latest), pinned in `data/manifests/derived_data.ecsv`.
+- 200 MB rule: the 704 MB of tarballs were streamed into memory and never saved; only reduced products stay in the
+  data root (the 4.3 MB npz and four per-tarball caches, 28 MB). The re-reduction reproduces every pin.
+- Fresh session (empty data root): 2.7 s wall instead of streaming (row added to the Part 0 speed table below).
+- GBM: neither pinned `fermigbrst.vot` is on this machine; nothing downloaded or invented.
+- Fixed after `/code-review` (8 findings, 8 addressed): `derived_publish.py` creates the tag at the recorded code commit
+  (`--target`; this release's tag sits on c92249c, its code commit is 67fffba); the TASKS re-pin item now names
+  the procedure (one snapshot, a copy for the GW manifest, maps first, a like-for-like window).
+- **Next (cloud routine):** E1 GBM re-pin (TASKS "Part 0"); TXS SkyLLH benchmark; round 2. Next local session:
+  publish the new GBM snapshot and wire `e1_events.fetch` to the durable copy.
 
 ## 2026-10-10: W3 MOA-II gb22 and gb21 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, first new-chain limits
 - `w3_moa.py --field gbN run-field` (~20 min per field on 4 cores). gb22: 30 flags, gb21: 36 flags, **0 survive**;
@@ -85,6 +139,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   | E1 GW directional, full run (`--n 1000` null + injections + map build, same inputs, 60 cells identical, global p 0.833) | 333 s | 52 s | ×6.4 |
   | S-4 GW sky-map tarballs (704 MB, parallel ranges into memory, per-tarball cache) | > 40 min, unfinished (2026-10-09) | 159 s + 122 s for GWTC-4.1/5.0 (1.7–2.2 MB/s); cached re-run 1 s | — |
   | E-NF1 null (ICECAT, 14 cells; jit pass counted only to 7 d after review) | 1,375 scrambles/s | 1,982 scrambles/s (4 cores) | ×1.4 |
+  | S-1 GW sky maps in a fresh session (owner's machine, empty data root, `derived-data-20261010`) | ~5 min to > 40 min of streaming (675 s on the owner's machine) | 2.7 s wall | ≈ ×250 |
 - S-1: the store (`derived_store.py`, `derived_publish.py`, durable-first fetch in `e1_gw_skymaps.py`) is built and
   tested. **Release creation from cloud sessions is refused** (HTTP 403, "not permitted for this session type"),
   so the first asset waits for the owner or a local session. Today's re-reduction reproduces the pinned maps

@@ -67,6 +67,39 @@ def test_fetch_refuses_wrong_bytes_and_errors(tmp_path, monkeypatch):
     assert ds.fetch("a.npz", dest, m) is None
 
 
+def test_publish_tags_the_code_commit_and_pins_only_after_success(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+    import derived_publish as P
+
+    f = tmp_path / "a.npz"
+    f.write_bytes(b"maps")
+    monkeypatch.setattr(ds, "MANIFEST", tmp_path / "derived_data.ecsv")
+    calls = []
+
+    def run(cmd, **kw):
+        calls.append(cmd)
+        if cmd[0] == "git":
+            return subprocess.CompletedProcess(cmd, 0, stdout="abc123\n")
+        if fail:
+            raise subprocess.CalledProcessError(1, cmd)
+        return subprocess.CompletedProcess(cmd, 0)
+
+    monkeypatch.setattr(P.subprocess, "run", run)
+    fail = True
+    with pytest.raises(subprocess.CalledProcessError):
+        P.main([str(f), "--sources", "u", "--tag", "derived-data-20261010"])
+    assert not ds.MANIFEST.exists()  # a refused release leaves no pin
+    fail = False
+    assert P.main([str(f), "--sources", "u", "--tag", "derived-data-20261010"]) == 0
+    gh = calls[-1]
+    assert gh[gh.index("--target") + 1] == "abc123"
+    assert ds.pinned("a.npz", ds.MANIFEST)["code_commit"] == "abc123"
+
+
 def test_manifest_row_refuses_large_files(tmp_path, monkeypatch):
     f = tmp_path / "big.bin"
     f.write_bytes(b"0" * 10)

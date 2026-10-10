@@ -1,7 +1,7 @@
 {
  "provenance": "derived",
  "events": {
-  "GBM": 4390,
+  "GBM": 4392,
   "ICECAT": 340,
   "GW": 391,
   "CHIME": 3641
@@ -11,50 +11,50 @@
  "tested_cells": 75,
  "global_perm": {
   "min_cell_p": 9.999000099990002e-05,
-  "trials_corrected_p": 0.0020997900209979003
+  "trials_corrected_p": 0.001999800019998
  },
  "global_jit": {
   "min_cell_p": 9.999000099990002e-05,
-  "trials_corrected_p": 0.0035996400359964
+  "trials_corrected_p": 0.004299570042995701
  },
  "global_jit_core_5_channels": {
-  "min_cell_p": 0.014298570142985701,
-  "trials_corrected_p": 0.2776722327767223
+  "min_cell_p": 0.014098590140985901,
+  "trials_corrected_p": 0.27277272272772723
  },
  "global_jitday": {
   "min_cell_p": 9.999000099990002e-05,
-  "trials_corrected_p": 0.0046995300469953
+  "trials_corrected_p": 0.0040995900409959
  },
  "global_jit_wide_and_gw_cells": {
   "min_cell_p": 0.00019998000199980003,
-  "trials_corrected_p": 0.0057994200579942
+  "trials_corrected_p": 0.0052994700529947
  },
  "global_jitday_wide_and_gw_cells": {
   "min_cell_p": 9.999000099990002e-05,
-  "trials_corrected_p": 0.0032996700329967
+  "trials_corrected_p": 0.0028997100289971
  },
  "injection_detection_p_star": 1.8e-05,
  "analytic_tail_model_prediction": {
   "jit": {
    "n_cells": 45,
-   "min_cell_p": 9.90328176617337e-05,
+   "min_cell_p": 9.235035044789158e-05,
    "cell": "CHIME-CHIME 1h-1d wide",
-   "bonferroni_p": 0.004456476794778017,
-   "empirical_pooled_global_p": 0.0057994200579942
+   "bonferroni_p": 0.004155765770155121,
+   "empirical_pooled_global_p": 0.0052994700529947
   },
   "jitday": {
    "n_cells": 45,
-   "min_cell_p": 9.91256901758211e-06,
+   "min_cell_p": 9.713002804675949e-06,
    "cell": "CHIME-CHIME 1h-1d wide",
-   "bonferroni_p": 0.0004460656057911949,
-   "empirical_pooled_global_p": 0.0032996700329967
+   "bonferroni_p": 0.0004370851262104177,
+   "empirical_pooled_global_p": 0.0028997100289971
   },
   "jit_all_cells": {
    "n_cells": 75,
-   "min_cell_p": 5.634597367716648e-12,
+   "min_cell_p": 5.505712694909012e-12,
    "cell": "CHIME-CHIME 100s-1h same",
-   "bonferroni_p": 4.2259480257874866e-10,
-   "empirical_pooled_global_p": 0.0035996400359964
+   "bonferroni_p": 4.129284521181759e-10,
+   "empirical_pooled_global_p": 0.004299570042995701
   }
  },
  "reachability": {
@@ -98,7 +98,7 @@
   ]
  },
  "same_direction_pairs_within_7d": {
-  "GBM-GBM": 1829,
+  "GBM-GBM": 1830,
   "ICECAT-ICECAT": 1,
   "CHIME-CHIME": 33,
   "GBM-ICECAT": 149,

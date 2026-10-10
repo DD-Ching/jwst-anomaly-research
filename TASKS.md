@@ -3,10 +3,16 @@
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
+## Division of labour (owner brief 2026-10-10)
+- **Local-only (owner machine):** GitHub releases for derived data; files that exist only locally.
+- **Cloud routine:** TXS 0506+056 SkyLLH benchmark on IceTracks-DR2 (stream; the ~817 MB response matrix is fine
+  in the cloud), E-NF1 on IceTracks-DR2 (short lags done, D-079; rest per Neutrino Frontier item 1), round 2,
+  all scans.
+
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
-   separation. The five requested channels are null (family p = 0.28). The CHIME–CHIME 1 h–1 d wide excess (z ≈ 3.9)
-   is reproduced by a calibrated rate-modulated null (week-scale detection-rate modulation; its cause is a
+   separation. The five requested channels are null (family p = 0.27 on the re-pinned GBM snapshot). The
+   CHIME–CHIME 1 h–1 d wide excess (z ≈ 3.9) is reproduced by a calibrated rate-modulated null (week-scale detection-rate modulation; its cause is a
    hypothesis). The 100 s–1 h wide cell drops to z = 2.5 under it (family-wise p = 0.26, D-074 addendum). Next:
    - a time-resolved CHIME uptime series (only from the collaboration: owner decision); it would also decide
      the 100 s–1 h residual;
@@ -47,9 +53,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    Define a GW-parent ghost test only if round 2 gives it a quantitative prediction.
 
 ## Part 0 speed-ups (owner brief 2026-10-10, D-078)
-- Publish the first `derived-data-YYYYMMDD` release (needs the owner or a local session: cloud sessions get 403):
-  `python scripts/derived_publish.py data/e1_events/gw_skymaps_nside32.npz --sources "..."`, plus the GBM
-  snapshot the E1 pins (the live HEASARC table no longer matches either pin).
+- Done: `derived-data-20261010` holds the GW sky maps; a fresh session takes them in ~3 s (D-078 addendum).
+- **E1 GBM re-pinned (cloud, D-078 addendum 2):** one snapshot (8cc2…, 4,392 bursts) in both E1 manifests; every
+  E1 conclusion unchanged. **Next (local session, soon):** fetch 8cc2… while HEASARC still serves it, publish it to
+  the derived-data store and wire `e1_events.fetch` to it (else `--refresh` and publish that). Later: per-catalogue
+  RNG streams in the E1 nulls (own PR).
 - Profile every null/injection script once before runs > 10 min (S-3); next candidates: `e1_events.py` injection
   loops, `GWMaps` construction (region distances, ~27 s).
 

@@ -3974,6 +3974,34 @@ and numba classes identical; loop 808 ms, numpy 28 ms (×29), numba 1.79 ms (×4
 **Revisit if.** Cloud sessions gain release permission (publish the GW maps and the pinned GBM snapshot), or
 another store is approved by the owner.
 
+**Addendum (2026-10-10, local session on the owner's machine): first release; the pinned GBM snapshot is not
+recoverable.**
+- Published `derived-data-20261010` (pre-release, not latest): `gw_skymaps_nside32.npz`, 4,337,802 B, sha256
+  ab033058…8e1ad5, code commit 67fffba (main; the tag itself sits on c92249c because `derived_publish.py` had no
+  `--target` yet, fixed in the same PR), pinned in `data/manifests/derived_data.ecsv`. The npz is a fresh
+  re-reduction (`e1_gw_skymaps.py --refresh`, 704 MB streamed into memory, 675 s); its content digest equals the
+  pinned `maps_sha256` c5c2e4ff… and all four tarball sha256 equal their pins.
+- Fresh-session check (`JWST_ANOMALY_DATA` = an empty directory): "durable copy verified in 1 s", 2.7 s wall, no
+  tarball fetched.
+- Neither pinned `fermigbrst.vot` (D-074 5b42…, 424,481 B; #122 0cb3…, 424,579 B) exists on the owner's machine:
+  no file matched either name or either size in the data root, the old clone and its worktrees, the home folder
+  (23.4 M files) or drives E: and G:. They were presumably fetched in ephemeral cloud sessions (inference, not
+  checked), and the live HEASARC table has moved on, so neither can be re-fetched. **Decision:** E1 is re-pinned to a new snapshot in a separate PR that
+  re-runs the affected E1 results and reports every change (TASKS "Part 0", cloud routine). No GBM snapshot was
+  invented or downloaded here; `e1_events.fetch` is unchanged until a snapshot is published.
+
+**Addendum 2 (2026-10-10, cloud routine): E1 re-pinned to one GBM snapshot.**
+- `data/manifests/e1_events.ecsv` pins `fermigbrst.vot` sha256 8cc2823f… (424,672 B, 4,392 rows; the "live 8cc2…"
+  above). ICECAT-1, GWTC and CHIME Cat 2 re-fetched with unchanged digests. `e1_gw_events.ecsv` (addendum 4 of
+  D-074) is removed: the GW scripts read the same manifest.
+- Relative to the D-074 pin: the new table minus bn261008763 and bn261007236 reproduces every tracked observed
+  count (75 cells). All E1 scripts re-run with tracked seeds and scramble counts: D-074 core family p 0.278 → 0.273;
+  addenda 2–5 global p 0.557 → 0.531, 0.676 → 0.568, 0.829 → 0.833, 0.555 → 0.551. No conclusion changes (CHANGELOG
+  2026-10-10).
+- The snapshot still exists only in an ephemeral session: a local session must publish it to the derived-data store
+  (it can be re-fetched only while HEASARC serves this digest; otherwise re-pin there with `--refresh`).
+- The null-ensemble cache is keyed by the input digests. Per-catalogue random streams are a follow-up.
+
 ## D-079 E-NF1b: IceTracks-DR2 short-lag ghost pairs: null; DR2 cannot reach R_g ~ 10⁻³ or improve lags > 1 h (2026-10-10)
 
 **Decision.**

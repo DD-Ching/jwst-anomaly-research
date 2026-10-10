@@ -8,10 +8,12 @@ type").
   python scripts/derived_publish.py data/e1_events/gw_skymaps_nside32.npz \
       --sources "Zenodo 6513631, 8177023, 20275769, 20348005 (GWTC PE sky maps, CC BY 4.0)"
 
-It runs ``gh release create derived-data-YYYYMMDD <files> --prerelease --latest=false`` and,
-only when that succeeds, appends the manifest rows (``data/manifests/derived_data.ecsv``). Commit
-the manifest change in a PR afterwards. Only reduced products below ``derived_store.MAX_BYTES``;
-never raw archives.
+It runs ``gh release create derived-data-YYYYMMDD <files> --target <HEAD> --prerelease
+--latest=false`` and, only when that succeeds, appends the manifest rows
+(``data/manifests/derived_data.ecsv``). The tag is created at the recorded code commit, so it
+keeps that commit reachable after a squash merge; push it first (a commit GitHub does not have is
+refused and nothing is pinned). Commit the manifest change in a PR afterwards. Only reduced
+products below ``derived_store.MAX_BYTES``; never raw archives.
 """
 
 from __future__ import annotations
@@ -51,7 +53,8 @@ def main(argv=None) -> int:
         "Derived (reduced) data products for ephemeral cloud sessions (S-1). Not a code release. "
         f"Inputs: {a.sources}. Pinned in data/manifests/derived_data.ecsv; code commit {commit}."
     )
-    cmd = ["gh", "release", "create", a.tag, *map(str, a.files), "--prerelease", "--latest=false"]
+    cmd = ["gh", "release", "create", a.tag, *map(str, a.files), "--target", commit]
+    cmd += ["--prerelease", "--latest=false"]
     subprocess.run([*cmd, "--title", a.tag, "--notes", notes], check=True, cwd=ROOT)
     # pin only after the release exists (a refused or failed release leaves no dangling row)
     if ds.MANIFEST.exists():
