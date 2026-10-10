@@ -42,13 +42,39 @@ RG_GRID = (0.003, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0)
 INJ_TRIALS = 200
 
 
+ICECAT_FILE = "icecat1_gold_bronze_tracks.csv"
+
+
+def fetch_icecat() -> Path:
+    """Only the ICECAT-1 file, pinned by the D-074 manifest (the other E1 catalogues are not needed
+    here; the live HEASARC GBM table no longer matches its pin, see CHANGELOG 2026-10-10)."""
+    import hashlib
+
+    import requests
+    from astropy.table import Table
+
+    from jwst_anomaly.paths import data_root
+
+    path = data_root() / "e1_events" / ICECAT_FILE
+    if not path.exists():
+        r = requests.get(E.SOURCES[ICECAT_FILE], timeout=600)
+        r.raise_for_status()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(r.content)
+    pin = {row["file"]: row["sha256"] for row in Table.read(E.MANIFEST, format="ascii.ecsv")}
+    got = hashlib.sha256(path.read_bytes()).hexdigest()
+    if got != pin[ICECAT_FILE]:
+        raise SystemExit(f"{ICECAT_FILE}: sha256 {got} != pinned {pin[ICECAT_FILE]}")
+    return path
+
+
 def load() -> tuple[en.Sample, np.ndarray, list[str]]:
     """ICECAT-1 v4 (CR_VETO dropped, D-074 loader) and its SIGNAL column (signalness)."""
     import pandas as pd
 
-    paths = E.fetch(False)
-    t = E.load(paths)["ICECAT"]
-    df = pd.read_csv(paths["icecat1_gold_bronze_tracks.csv"]).drop_duplicates("NAME")
+    df = pd.read_csv(fetch_icecat())
+    t = en.icecat_events(df)
+    df = df.drop_duplicates("NAME")
     names = [str(x) for x in t["name"]]
     w = df.set_index("NAME").loc[names, "SIGNAL"].to_numpy(float)
     return en.Sample.from_table(t), w, names

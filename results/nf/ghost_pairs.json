@@ -24,8 +24,8 @@
  ],
  "inj_trials": 200,
  "speed": {
-  "null_s": 14.1,
-  "scrambles_per_s": 1421.2,
+  "null_s": 14.5,
+  "scrambles_per_s": 1375.0,
   "cpu": 4
  },
  "cells": [
@@ -352,5 +352,5 @@
    }
   }
  ],
- "runtime_s": 51
+ "runtime_s": 52
 }
