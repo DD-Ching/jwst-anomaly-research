@@ -64,5 +64,11 @@ def test_injection_after_gives_positive_d(tmp_path):
         np.full(30, 2023),
     )
     base = G.signed_channel(m, gw, gw.mjd, b)[0, 0]
-    sb = D.inject(m, gw, b, 1, 0.0, 10.0, "same", rng, sign=1)
-    assert G.signed_channel(m, gw, gw.mjd, sb)[0, 0] >= base
+    hits = 0
+    for _ in range(20):
+        sb = D.inject(m, gw, b, 1, 0.0, 10.0, "same", rng, sign=1)
+        moved = np.flatnonzero(sb.mjd != b.mjd)
+        assert len(moved) == 1 and sb.mjd[moved[0]] > gw.mjd[0]  # always after the GW event
+        hits += G.signed_channel(m, gw, gw.mjd, sb)[0, 0] == base + 1
+    # a counterpart drawn from the map lies outside the 90 % region about 10 % of the time
+    assert hits >= 15

@@ -1,9 +1,11 @@
 """E1: signed-lag ("which event comes first") GW cells with sky-map classes (D-074 addenda 3-4).
 
 For GW x B (B = GBM, ICECAT, CHIME), lag bin and sky-map class (same / wide / antipodal, as in
-``e1_gw_directional``), D = N(t_B > t_GW) - N(t_B < t_GW). Ordinary pairs and the ``jit`` null are
-symmetric in sign. GW-GW is left out (D is antisymmetric within one catalogue). The known pair
-GW170817 x GRB 170817A is left out of the family, as in addendum 4. Two-sided statistics and the
+``e1_gw_directional``), D = N(t_B > t_GW) - N(t_B < t_GW). Each cell is tested against the
+``jit`` null mean, not against 0: the per-year scramble keeps catalogue edges (GW events after
+CHIME Cat 2 ends have only earlier partners), so the null mean of D can be far from 0. GW-GW is
+left out (D is antisymmetric within one catalogue). The known pair GW170817 x GRB 170817A is left
+out of the family, as in addendum 4. Two-sided statistics and the
 Skellam tail as in ``e1_signed_lag``; injections put B after the GW event in the tested class.
 
 Writes ``results/e1_events/gw_signed.json``.
@@ -42,28 +44,19 @@ INJ_N = (3, 10, 30)
 INJ_TRIALS = 10
 
 
-def signed_channel(m, gw, orig, b: en.Sample, skip=(), p: en.Params = P) -> np.ndarray:
+def signed_channel(m, gw, orig, b: en.Sample, skip=(), rot=None) -> np.ndarray:
     """D per (lag bin, class) for GW x b; only GW events with a map count."""
-    e = np.asarray(p.lag_edges)
-    i, j = en.pairs_within(gw.mjd, b.mjd, e[-1], False)
-    keep = m.has[i]
-    for gi, bj in skip:
-        keep &= ~((i == gi) & (j == bj))
-    i, j = i[keep], j[keep]
-    dt = (b.mjd[j] - gw.mjd[i]) * en.DAY
-    k = np.clip(np.searchsorted(e, np.abs(dt), side="right") - 1, 0, NLAG - 1)
-    c = D.classify_x(m, i, D.rotation(gw, orig), b.ra[j], b.dec[j], b.sigma[j], p)
-    sgn = np.sign(dt)
-    out = np.zeros((NLAG, 3), np.int64)
-    for q in range(3):
-        sel = (c >> q) & 1 == 1
-        out[:, q] = np.bincount(k[sel], weights=sgn[sel], minlength=NLAG).astype(np.int64)
-    return out
+    if rot is None:
+        rot = D.rotation(gw, orig)
+    return D.count_channel(m, gw, orig, rot, b, skip=skip, signed=True)
 
 
 def count_all(m, s, orig, skip=None) -> np.ndarray:
     skip = skip or {}
-    return np.stack([signed_channel(m, s["GW"], orig, s[b], skip.get(b, ())) for b in PARTNERS])
+    rot = D.rotation(s["GW"], orig)
+    return np.stack(
+        [signed_channel(m, s["GW"], orig, s[b], skip.get(b, ()), rot) for b in PARTNERS]
+    )
 
 
 _W: dict = {}
@@ -115,7 +108,7 @@ def main(argv=None) -> int:
     bj = [str(x) for x in ev["GBM"]["name"]].index(E.PC_GBM)
     skip = {"GBM": [(gi, bj)]}
     obs = count_all(m, s, orig, skip)
-    pc = signed_channel(m, s["GW"], orig, s["GBM"])[0] - obs[0, 0]
+    pc = signed_channel(m, s["GW"], orig, s["GBM"]) - obs[0]
     null = run_null(m, s, orig, a.n, a.cpu, skip)
     mu = null.mean(axis=0)
     mask = np.ones(obs.shape, bool)
@@ -160,6 +153,12 @@ def main(argv=None) -> int:
                         "null_sd": round(float(sd[c, k, q]), 2),
                         "z": round(float(z[c, k, q]), 2),
                         "analytic_p": float(pa[c, k, q]),
+                        "ul95_extra_after_pairs": round(
+                            float(
+                                en.upper_limit_95(obs[c, k, q : q + 1], null[:, c, k, q : q + 1])[0]
+                            ),
+                            1,
+                        ),
                         "n50_injected": n50,
                     }
                 )

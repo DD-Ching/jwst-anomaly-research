@@ -9,7 +9,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   is antisymmetric there). Pooled global p = 0.56, min analytic p × 45 = 0.78. Largest: GW–CHIME 1 h–1 d antipodal,
   D = 10 vs −0.3 ± 4.3 (z = 2.4; it was z = 3.1 with 40 scrambles: the smoke-run null sd was too small).
 - Control GW170817 → GRB 170817A gives D = +1 at 0–10 s same; it is left out of the family.
-- Sensitivity: 3 one-sided pairs at ≤ 10 s, 3–10 at 10–100 s, 10–30 at 100 s–1 h, mostly > 30 at 1 h–7 d.
+- Sensitivity: 3 one-sided pairs at ≤ 10 s, 3–10 at 10–100 s, 10–30 at 100 s–1 h, mostly > 30 at 1 h–7 d. Per-cell 95 %
+  upper limits on extra after-pairs are in `results/e1_events/gw_signed.json`. Cells are tested against the null mean
+  (catalogue edges make it non-zero, e.g. GW–CHIME 1–7 d wide −66.5 ± 52.7).
 - **Next:** D1 composite-model D_dt chains; E1 IceTracks-DR2 / Swift / Einstein Probe when they can be fetched.
 
 ## 2026-10-10: E1 GW channels with sky maps: null, global p = 0.83 (D-074 addendum 4)
