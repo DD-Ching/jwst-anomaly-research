@@ -79,3 +79,50 @@ def test_pair_ratio_and_empirical_p():
     null = np.arange(100, dtype=float)[:, None, None] * np.ones((1, 1, 2))
     p = G.empirical_p(np.array([[98.0, 1000.0]]), null)
     assert p[0, 0] == pytest.approx(3 / 101) and p[0, 1] == pytest.approx(1 / 101)
+
+
+# --- IceTracks-DR2 helpers (E-NF1b) ---
+
+
+def test_read_icetracks_tab_and_dedupe():
+    lines = [
+        "#  run  event  subevent  MJD  log10(E/GeV)  AngErr  RA  Dec  Az  Zen",
+        '"  110782  744977  255  54562.379  3.31  0.48  203.0  16.7  218.3  106.7"',
+        '"  110782  744977  255  54562.379  3.31  0.48  203.0  16.7  218.3  106.7"',
+        '"  110782  1620385  255  54562.300  5.17  0.62  75.0  -13.3  349.1  76.6"',
+    ]
+    a = nf.read_icetracks_tab(lines)
+    assert a.shape == (3, 10)
+    d = nf.dedupe_events(a)
+    assert len(d) == 2 and np.all(np.diff(d[:, 3]) >= 0)
+
+
+def test_in_uptime_overlapping_intervals():
+    start, stop = np.array([0.0, 5.0, 6.0]), np.array([1.0, 10.0, 7.0])
+    got = nf.in_uptime(np.array([-1.0, 0.5, 2.0, 6.5, 9.0, 11.0]), start, stop)
+    assert got.tolist() == [False, True, False, True, True, False]
+
+
+def test_jitter_uptime_lands_in_good_runs_and_keeps_hour_angle():
+    rng = np.random.default_rng(1)
+    t = np.linspace(55000.2, 55009.8, 200)
+    s = en.Sample("x", t, np.full(200, 10.0), np.zeros(200), np.ones(200), en.mjd_year(t))
+    start = np.arange(55000.0, 55010.0, 1.0)
+    stop = start + 0.5
+    j = nf.jitter_uptime(s, start, stop, 3.0, rng)
+    moved = j.mjd != t
+    assert moved.mean() > 0.9
+    assert nf.in_uptime(j.mjd[moved], start, stop).all()
+    ha0 = en.gmst_deg(t) - s.ra
+    ha1 = en.gmst_deg(j.mjd) - j.ra
+    assert np.allclose(np.mod(ha1 - ha0 + 180, 360) - 180, 0, atol=1e-6)
+
+
+def test_wide_pair_counts_drops_same_readout():
+    t = 55000 + np.array([0.0, 5.0, 50.0]) / en.DAY
+    s = en.Sample(
+        "x", t, np.array([0.0, 90.0, 180.0]), np.zeros(3), np.full(3, 0.5), en.mjd_year(t)
+    )
+    edges = (0.0, 10.0, 100.0)
+    assert nf.wide_pair_counts(s, np.array([1, 2, 3]), edges).tolist() == [1.0, 2.0]
+    assert nf.wide_pair_counts(s, np.array([1, 1, 3]), edges).tolist() == [0.0, 2.0]

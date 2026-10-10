@@ -1167,7 +1167,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 
 ## Neutrino Frontier data audit (accessed 2026-10-10; docs/neutrino_frontier/data_audit.md)
 - IceCube IceTracks-DR2, Harvard Dataverse doi:10.7910/DVN/MMIIZA (v3.1, 2026-10-05; CC0), 2008-04-06 to
-  2022-05-23, 1,643,355 track events; paper arXiv:2605.19040.
+  2022-05-23, 1,643,355 track events; paper arXiv:2605.19040. Events and uptime files (28, ~210 MB) streamed
+  2026-10-10 via `https://dataverse.harvard.edu/api/access/datafile/<id>`; ids and sha256 of the served `.tab`
+  in `data/manifests/nf_icetracks_dr2.ecsv` (Dataverse's md5 is of the original CSV, not the served file).
 - IceCube IceTracks-DR1 (10-yr PS), doi:10.7910/DVN/VKL316 (v2.0) / data DOI 10.21234/CPKQ-K003, arXiv:2101.09836;
   same events as HEASARC TAP table `icecubepsc` (1,134,450 rows).
 - IceCube HESE 12-yr DirectFit, doi:10.7910/DVN/PZNO2T (v2.0; `data.tab`, 164 events), PoS(ICRC2023)1030.

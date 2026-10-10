@@ -93,14 +93,29 @@ def inject_ghosts(
 
 # --- IceTracks-DR2 (E-NF1b, D-TBD) -------------------------------------------------------------
 
-#: column order of the IceTracks-DR2 ``events/<season>_exp.tab`` files (Dataverse doi:10.7910/DVN/MMIIZA)
-DR2_COLUMNS = ("run", "event", "subevent", "mjd", "log10e", "angerr", "ra", "dec", "azimuth", "zenith")
+#: columns of the IceTracks-DR2 ``events/<season>_exp.tab`` files (doi:10.7910/DVN/MMIIZA)
+DR2_COLUMNS = (
+    "run",
+    "event",
+    "subevent",
+    "mjd",
+    "log10e",
+    "angerr",
+    "ra",
+    "dec",
+    "azimuth",
+    "zenith",
+)
 
 
 def read_icetracks_tab(lines) -> np.ndarray:
-    """(n, 10) float array from the lines of one IceTracks-DR2 events or uptime ``.tab`` file as
-    Dataverse serves it (a ``#`` header line, then whitespace columns, each row in double quotes)."""
-    rows = [ln.replace('"', "").split() for ln in lines if ln.strip() and not ln.lstrip().startswith("#")]
+    """Float array from the lines of one IceTracks-DR2 events or uptime ``.tab`` file as Dataverse
+    serves it (a ``#`` header line, then whitespace columns, each row in double quotes)."""
+    rows = [
+        ln.replace('"', "").split()
+        for ln in lines
+        if ln.strip() and not ln.lstrip().startswith("#")
+    ]
     return np.array(rows, dtype=float)
 
 
@@ -113,7 +128,7 @@ def dedupe_events(ev: np.ndarray) -> np.ndarray:
 
 
 def in_uptime(mjd: np.ndarray, start: np.ndarray, stop: np.ndarray) -> np.ndarray:
-    """True where ``mjd`` lies inside a good-run interval ``[start, stop]`` (intervals may overlap)."""
+    """True where ``mjd`` lies in a good-run interval ``[start, stop]`` (intervals may overlap)."""
     o = np.argsort(start)
     s, e = start[o], np.maximum.accumulate(stop[o])
     k = np.searchsorted(s, mjd, side="right") - 1

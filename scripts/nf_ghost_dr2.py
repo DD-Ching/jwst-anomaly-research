@@ -8,14 +8,18 @@
    max(3 sqrt(B), 3) / N with B the observed pairs in the bin) for northern energy cuts; it decides
    which bins can improve on the ICECAT-1 limits (E-NF1).
 4. Test (pre-registered in the README before the run): northern tracks (Dec > -5 deg) with
-   log10(E/GeV) >= 4.0 and >= 4.5, lag bins 0-10 s, 10-100 s, 100 s-1 h; wide pairs (D-074 class 1),
-   pairs of one (run, event) excluded; null = uptime-aware +-3 d jitter (hour angle kept); empirical p,
-   family-wise 3 sigma over 6 cells; injected ghosts (one per event with probability R) and 95 % CLs
-   limits on R per event above the cut.
+   log10(E/GeV) >= 4.0 and >= 4.5, lag bins 0-10 s, 10-100 s, 100 s-1 h; wide pairs (D-074
+   class 1), pairs of one (run, event) excluded; null = uptime-aware +-3 d jitter (hour angle
+   kept); empirical p, family-wise 3 sigma over 6 cells; injected ghosts (one per event with
+   probability R) and 95 % CLs limits on R per event above the cut.
 
 Writes ``results/nf/ghost_pairs_dr2.json``.
 
-  python scripts/nf_ghost_dr2.py [--n 5000] [--cpu 4]
+  python scripts/nf_ghost_dr2.py [--n 5000] [--cpu 4] [--mjd-min 55694.4]
+
+``--mjd-min 55694.4`` (IC86 seasons only; post hoc robustness check, not part of the
+pre-registered family) writes ``results/nf/ghost_pairs_dr2_ic86.json``: the log10 E proxy rate
+above the cuts differs by ~18x between IC59 and IC86 (CHANGELOG 2026-10-10).
 """
 
 from __future__ import annotations
@@ -95,7 +99,12 @@ def txs_check(ev: np.ndarray) -> dict:
     band = hi & (np.abs(ev[:, 7] - TXS["dec"]) < 3.0)
     frac = (near & ~box).sum() / max((band & ~box).sum(), 1)
     on, exp = int((near & box).sum()), float(frac * (band & box).sum())
-    return {**TXS, "on": on, "expected": round(exp, 3), "p_poisson": float(stats.poisson.sf(on - 1, exp))}
+    return {
+        **TXS,
+        "on": on,
+        "expected": round(exp, 3),
+        "p_poisson": float(stats.poisson.sf(on - 1, exp)),
+    }
 
 
 def forecast(ev: np.ndarray) -> list[dict]:
@@ -105,7 +114,7 @@ def forecast(ev: np.ndarray) -> list[dict]:
         tt = np.sort(ev[north & (ev[:, 4] >= c), 3])
         n = len(tt)
         row = {"log10e_min": c, "n": n, "bins": []}
-        for lo, hi in zip(ALL_EDGES[:-1], ALL_EDGES[1:]):
+        for lo, hi in zip(ALL_EDGES[:-1], ALL_EDGES[1:], strict=True):
             b = int(
                 (
                     np.searchsorted(tt, tt + hi / DAY, "right")
@@ -156,7 +165,9 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=5000)
     ap.add_argument("--cpu", type=int, default=os.cpu_count() or 1)
+    ap.add_argument("--mjd-min", type=float, default=None, help="post hoc: events from this MJD on")
     a = ap.parse_args(argv)
+    out_path = OUT if a.mjd_min is None else OUT.with_name("ghost_pairs_dr2_ic86.json")
     nb = len(LAG_EDGES) - 1
     thresh = DETECT_P / (nb * len(CUTS))
     if 1.0 / (a.n + 1) > thresh:
@@ -166,6 +177,8 @@ def main(argv=None) -> int:
     txs = txs_check(ev)
     fc = forecast(ev)
     north = ev[:, 7] > DEC_MIN
+    if a.mjd_min is not None:
+        north &= ev[:, 3] >= a.mjd_min
     samples = [sample_of(ev[north & (ev[:, 4] >= c)]) for c in CUTS]
     obs = np.array([nf.wide_pair_counts(s, g, LAG_EDGES, P) for s, g in samples])
     t1 = time.time()
@@ -179,7 +192,7 @@ def main(argv=None) -> int:
     rng = np.random.default_rng(9_800_000)
     cells = []
     labels = en.lag_labels(en.Params(lag_edges=LAG_EDGES))
-    for q, (c, (s, g)) in enumerate(zip(CUTS, samples)):
+    for q, (c, (s, g)) in enumerate(zip(CUTS, samples, strict=True)):
         ones = np.ones(len(s.mjd))
         for k in range(nb):
             lo, hi = LAG_EDGES[k], LAG_EDGES[k + 1]
@@ -218,11 +231,16 @@ def main(argv=None) -> int:
                 }
             )
     out = {
-        "test": "E-NF1b IceTracks-DR2 short-lag ghost pairs (NF-H04), wide separation, D-074 classes",
+        "test": (
+            "E-NF1b IceTracks-DR2 short-lag ghost pairs (NF-H04), wide separation, D-074 classes"
+        ),
         "provenance": (
             "derived (observed IceTracks-DR2 v3.1); injections simulated; limits model_prediction"
         ),
-        "limit_meaning": "R = ghosts per event above the cut; per astrophysical neutrino R_g = R / f_astro",
+        "limit_meaning": (
+            "R = ghosts per event above the cut; per astrophysical neutrino R_g = R / f_astro"
+        ),
+        "mjd_min_post_hoc": a.mjd_min,
         "n_events_total": len(ev),
         "livetime_days_sum": round(float((up[:, 1] - up[:, 0]).sum()), 1),
         "txs_known_case": txs,
@@ -236,13 +254,19 @@ def main(argv=None) -> int:
         "cells": cells,
         "runtime_s": round(time.time() - t0),
     }
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUT, "w") as fh:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_path, "w") as fh:
         json.dump(out, fh, indent=1)
         fh.write("\n")
-    print(json.dumps({k: v for k, v in out.items() if k not in ("cells", "forecast_optimistic")}, indent=1))
+    print(
+        json.dumps(
+            {k: v for k, v in out.items() if k not in ("cells", "forecast_optimistic")}, indent=1
+        )
+    )
     for row in fc:
-        print(row["log10e_min"], row["n"], [f"{b['pairs']}/{b['rg_floor']:.2g}" for b in row["bins"]])
+        print(
+            row["log10e_min"], row["n"], [f"{b['pairs']}/{b['rg_floor']:.2g}" for b in row["bins"]]
+        )
     for cell in cells:
         print({k: v for k, v in cell.items() if k != "detect_frac"})
     return 0

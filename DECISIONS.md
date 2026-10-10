@@ -3973,3 +3973,33 @@ and numba classes identical; loop 808 ms, numpy 28 ms (×29), numba 1.79 ms (×4
 
 **Revisit if.** Cloud sessions gain release permission (publish the GW maps and the pinned GBM snapshot), or
 another store is approved by the owner.
+
+## D-TBD E-NF1b: IceTracks-DR2 short-lag ghost pairs: null; DR2 cannot reach R_g ~ 10⁻³ or improve lags > 1 h (2026-10-10)
+
+**Decision.**
+- Run NF-H04 on IceTracks-DR2 only at lags ≤ 1 h. Pre-registered (docs/neutrino_frontier/README.md, E-NF1b):
+  northern tracks (Dec > −5°), log10 E ≥ 4.0 and ≥ 4.5, bins 0–10 s / 10–100 s / 100 s–1 h, D-074 wide pairs
+  without pairs of one (run, event), uptime-aware ±3 d jitter null, 5,000 scrambles, 95 % CLs limits on R (ghosts
+  per event above the cut). ASSUMPTIONs: cuts, bins, R grid, ghost passes the cut (ε = 1).
+- Stream the 28 events/uptime files (sha256 of the served `.tab` pinned in `data/manifests/nf_icetracks_dr2.ecsv`),
+  keep only a reduced `.npz` under the data root.
+- Close the TASKS goal "reach R_g ~ 10⁻³ and 30–180 d with DR2": not reachable (Evidence).
+
+**Alternatives rejected.**
+- All lags on DR2: the optimistic floor max(3√B, 3)/N (every event astrophysical) is ≥ 0.055 at 1 h–1 d, ≥ 0.14 at
+  1–7 d, ≥ 0.27 at 7–30 d and ≥ 0.64 at 30–180 d for every northern cut (log10 E ≥ 3.5–5.5): no gain over ICECAT-1.
+- An ICECAT-alert-parent × DR2-ghost cross test: R_g per alert is bounded by ~3 / (astrophysical alerts ≈ 130)
+  whatever the ghost sample, so it cannot beat the alert–alert limits by much.
+- Southern tracks: dominated by atmospheric muons with a high energy cut (log10 E median 4.9).
+- urllib downloads (403 from Dataverse); `requests` and curl work.
+
+**Evidence.** `results/nf/ghost_pairs_dr2.json`, `results/nf/ghost_pairs_dr2_ic86.json` (identical on re-run, fixed
+seeds). 1,643,355 events, no duplicate (run, event, subevent) (the paper's count). TXS 0506+056 2014–15 box: 6 on
+vs 1.11 expected (p = 1.0 × 10⁻³). Min Bonferroni p = 0.48; limits R ≤ 0.002 (log10 E ≥ 4, ≤ 100 s), ≤ 0.005
+(≥ 4.5, ≤ 100 s), ≤ 0.02 (100 s–1 h). The 9 pairs at 0–10 s are all IC40/IC59; the rate above log10 E = 4 (north) is
+×7–18 higher there than in IC79/IC86 (energy-proxy scale differs by configuration). IC86-only (post hoc): 0 pairs
+at ≤ 100 s.
+
+**Revisit if** NF-H04 gets a quantitative R_g or lag prediction; f_astro per cut is computed from the DR2 effective
+areas (turns R into R_g); a public track sample with a much larger astrophysical count appears (IceCube-Gen2,
+KM3NeT ARCA releases).
