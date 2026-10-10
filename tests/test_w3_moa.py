@@ -134,8 +134,9 @@ def test_neighbours_and_fit_rows_round_trip():
     assert res["N1neg"]["k"] == 5 and res["N1neg"]["rho"] == 0.01
 
 
-def test_vetting_removes_a_star_with_repeated_dips():
+def test_vetting_removes_a_star_with_repeated_dips(monkeypatch):
     """A flagged deficit that repeats elsewhere is a variable star, not one lensing event."""
+    monkeypatch.setattr(wm, "_BASELINE", 50.0)  # isolate the repeat test from the χ²/dof cap
     t = _cadence(n=500)
     f, sf = _noise(t)
     sig = _w3(t, fs=3000.0)
@@ -534,3 +535,66 @@ def test_injections_are_vetted_against_the_injected_source_flux(monkeypatch):
     assert row["error"] == ""
     assert seen["d"]["ref_mag"] == 19.5
     assert wm.reference_flux(seen["d"])[1].endswith("19.50")
+
+
+def test_a_periodic_variable_is_found_in_both_halves_and_one_dip_is_not():
+    """D-068 addendum: periodic residuals (gb17-R-6-1-3829) fail; one dip in one half does not."""
+    t = _cadence(n=1500)
+    f, sf = _noise(t)
+    lc = wm.to_lightcurve(t, f + 400.0 * np.sin(2 * np.pi * t / 30.0), sf)  # simulated, P = 30 d
+    per = wm.periodic_residuals(lc, np.zeros(t.size))
+    short = wm.periodic_residuals(lc.subset(t < t[0] + 20), np.zeros(int(np.sum(t < t[0] + 20))))
+    assert np.isnan(short["gain"])  # too few nights: untestable
+    assert per["period"] == pytest.approx(30.0, rel=0.03)
+    assert per["gain"] > wm.P.period_gain
+    one = f - 600.0 * wm.gauss_dip(t, 2454100.0, 8.0)  # one dip, first season only
+    per1 = wm.periodic_residuals(wm.to_lightcurve(t, one, sf), np.zeros(t.size))
+    assert per1["gain"] < wm.P.period_gain
+    white = wm.periodic_residuals(wm.to_lightcurve(t, f, sf), np.zeros(t.size))
+    assert white["gain"] < wm.P.period_gain
+
+
+def test_deficits_the_exotic_model_leaves_are_found():
+    t = _cadence(n=1500)
+    f, sf = _noise(t)
+    lc = wm.to_lightcurve(t, f, sf)
+    flat = {"fs": 1.0, "fb": -1.0}  # a model at its baseline everywhere: no spike epochs
+    assert wm.residual_deficit(lc, np.zeros(t.size), flat, "N1neg")["z_min"] > -wm.REPEAT_S
+    dips = np.zeros(t.size)
+    for c in (2454400.0, 2454430.0, 2454460.0, 2454490.0):
+        dips[np.abs(t - c) < 3] -= 800.0  # repeated ~30-d minima (simulated)
+    lc2 = wm.to_lightcurve(t, f + dips, sf)
+    assert wm.residual_deficit(lc2, np.zeros(t.size), flat, "N1neg")["z_min"] < -wm.REPEAT_S
+
+
+def test_a_flat_slow_dip_with_season_levels_is_fitted():
+    """gb18-R-9-4-24509-like: a flat-bottomed slow dimming plus one baseline level per season."""
+    t = _cadence(n=1500)
+    f, sf = _noise(t)
+    onehot = wm.to_lightcurve(t, f, sf).with_season_offsets().seasons
+    assert onehot.shape[0] == 3
+    levels = np.array([1500.0, 0.0, -300.0]) @ onehot
+    f = f + levels - 2000.0 * wm.gen_gauss_dip(t, 2454480.0, 200.0, 6.0)
+    sds = wm.fit_slow_dip_seasons(wm.to_lightcurve(t, f, sf), 2454300.0, 2454700.0)
+    assert sds["tc"] == pytest.approx(2454480.0, abs=30.0)
+    assert sds["p"] > 3.0
+    assert sds["chi2"] == pytest.approx(t.size, rel=0.1)
+    assert sds["k"] == 4 + 3
+
+
+def test_exotic_chi2_dof_leaves_out_the_caustic_spikes():
+    t = np.arange(100.0)
+    sf = np.ones(100)
+    model = np.zeros(100)
+    model[50] = 30.0  # one spike the data miss (a fit at another u0)
+    f = np.where(np.arange(100) % 2 == 0, 2.0, -2.0)  # χ² 4 per epoch elsewhere
+    lc = wm.to_lightcurve(t, f, sf)
+    c = wm.exotic_chi2_dof(lc, model, {"fs": 1.0, "fb": -1.0, "k": 9}, "N1neg")
+    assert c == pytest.approx(4.0 * 99 / 90)
+    # an attractive model's bump is its feature, never left out
+    c2 = wm.exotic_chi2_dof(lc, model, {"fs": 1.0, "fb": -1.0, "k": 9}, "E2pos")
+    assert c2 == pytest.approx((4.0 * 99 + 28.0**2) / 91)
+    # a bright source's wings (magnification < 1 + spike_frac) are not spikes
+    wing = np.full(100, 50.0)
+    assert not wm.spike_epochs(lc, wing, {"fs": 1000.0, "fb": -1000.0}, "N1neg").any()
+    assert wm.CHAIN_VERSION == "2026-10-10.1"

@@ -77,6 +77,16 @@ class Params:
     cut0_n: int = 3
     cut0_gap_days: float = 8.0
     max_points_fit: int = 6000
+    # D-068 addendum 2026-10-10: post-hoc chain change after gb17-R-6-1-3829 and gb18-R-9-4-24509
+    period_min_d: float = 2.5  # nightly means: above the ~2-d Nyquist period of one sample a night
+    period_max_d: float = 100.0  # longer, secular changes are the slow-dip and step models' job
+    period_gain: float = 25.0  # BIC gain of a 2-harmonic periodic term required in BOTH halves
+    period_min_nights: int = 30  # fewer nights: periodicity untestable
+    slow_dip_power: tuple = (2.0, 10.0)  # generalized-Gaussian exponents: Gaussian to flat-bottomed
+    spike_sigma: float = 3.0  # spike epochs: model above baseline by this many median errors …
+    spike_frac: float = (
+        0.1  # … and by this fraction of f_s (a bright source's wings are not spikes)
+    )
 
 
 P = Params()
@@ -850,7 +860,7 @@ NEIGHBOUR_PX = 12.0  # ASSUMPTION: Cut-0 objects within 12 px (7″, ~3.5 seeing
 BASELINE_CHI2 = 2.0  # D-057/D-062 fixed threshold; used only when no field calibration is set
 # Version of the vetting + injection chain; bump on ANY pre-screen, fit or vetting change, so that
 # `limit` and `combine` refuse injections and limit tables of an older chain (scripts/CLAUDE.md).
-CHAIN_VERSION = "2026-10-09.1"  # D-068: injections vetted against the injected source flux
+CHAIN_VERSION = "2026-10-10.1"  # D-068 addendum: the four post-hoc gaps of gb17 and gb18 closed
 BASELINE_Q = 0.95  # ASSUMPTION (D-068): threshold = this quantile of the field's quiet χ²/dof
 NEIGHBOUR_S = 5.0  # ASSUMPTION: |S| of a neighbour's notch over the same window = shared feature
 MIN_FEATURE_NIGHTS = 3  # ASSUMPTION: nights with epochs inside the exotic feature
@@ -1022,15 +1032,17 @@ def _start(model: str, r: dict) -> tuple:
     return x
 
 
-def refit_both(lcx: w3.LightCurve, res: dict, ex: str) -> float:
-    """ΔBIC (exotic − best ordinary) on a modified light curve, each family restarted at its fit."""
+def refit_both(lcx: w3.LightCurve, res: dict, ex: str, with_exotic: bool = False):
+    """ΔBIC (exotic − best ordinary) on a modified light curve, each family restarted at its fit
+    (``with_exotic``: also the exotic BIC)."""
     best_o = np.inf
     for m in w3.ORDINARY:
         if m in res:
             r = w3.optimise(m, lcx, [_start(m, res[m])], t0_par=res[m].get("t0_par"))
             best_o = min(best_o, r["bic"])
     e = w3.optimise(ex, lcx, [_start(ex, res[ex])])
-    return float(e["bic"] - best_o)
+    d = float(e["bic"] - best_o)
+    return (d, float(e["bic"])) if with_exotic else d
 
 
 def res_from_row(row) -> dict:
@@ -1163,6 +1175,132 @@ def fit_step_ramp(lc: w3.LightCurve) -> dict:
             "step": float(coef[0]), "ramp_per_day": float(coef[1])}  # fmt: skip
 
 
+def exotic_chi2_dof(lc: w3.LightCurve, model_f: np.ndarray, r: dict, model: str) -> float:
+    """χ²/dof of the exotic fit (errors × the point-to-point scale, as the variable-baseline
+    statistic) over every epoch except its caustic spikes (``spike_epochs``): a W3 fit that
+    misses a spike's height (a local optimum in u0) is still a W3 event; a fit that misses the
+    rest of the light curve is not one (gb17-R-6-1-3829)."""
+    keep = ~spike_epochs(lc, model_f, r, model)
+    n = int(keep.sum()) - int(r["k"])
+    if n < 1:
+        return np.nan
+    return float(np.sum((lc.f[keep] - model_f[keep]) ** 2 * lc.w[keep]) / n)
+
+
+def spike_epochs(lc: w3.LightCurve, model_f: np.ndarray, r: dict, model: str) -> np.ndarray:
+    """Epochs on a repulsive exotic fit's caustic spikes: model above its baseline f_s + f_b by
+    ``spike_sigma`` median errors and by ``spike_frac`` × f_s (magnification > 1.1: a bright
+    source's wings stay in). A fit at another local optimum (u0) misses the spike heights of a
+    real event, so the residual tests leave them out. An attractive model's bump is its feature:
+    nothing is left out."""
+    if w3.EXOTIC[model][1] != -1:
+        return np.zeros(lc.t.size, bool)
+    thr = max(P.spike_sigma * float(np.median(lc.sf)), P.spike_frac * abs(float(r["fs"])))
+    return model_f > r["fs"] + r["fb"] + thr
+
+
+def residual_deficit(lc: w3.LightCurve, model_f: np.ndarray, r: dict, model: str) -> dict:
+    """``deficit_scan`` of the exotic fit's residuals over the whole light curve, spike epochs
+    left out, so the red-noise normalisation uses the whole curve. Deficits the exotic model
+    leaves, above all inside its own window, are repeated dips of a variable, not one crossing
+    (gb17-R-6-1-3829: eleven ~30-d-spaced minima inside one 500-d "umbra")."""
+    m = ~spike_epochs(lc, model_f, r, model)
+    return deficit_scan(lc.t[m], (lc.f - model_f)[m], lc.sf[m])
+
+
+def nightly_means(t, r, sf) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Weighted mean residual per night (MOA's within-night epochs share red noise)."""
+    nt = nights(t)
+    keys, inv = np.unique(nt, return_inverse=True)
+    w = 1.0 / np.asarray(sf, float) ** 2
+    sw = np.bincount(inv, w)
+    return (np.bincount(inv, w * t) / sw, np.bincount(inv, w * r) / sw, 1.0 / np.sqrt(sw))
+
+
+def harmonic_gain(t, y, sy, period: float) -> float:
+    """BIC gain of a 2-harmonic term at ``period`` over a constant, errors rescaled so the
+    harmonic model has χ²/dof ≥ 1 (red noise; an F-test-like scale, ASSUMPTION); k = 4
+    amplitudes + the period."""
+    if t.size < 12:
+        return 0.0
+    w = 1.0 / sy**2
+    ph = 2.0 * np.pi * t / period
+    a = np.vstack([np.sin(ph), np.cos(ph), np.sin(2 * ph), np.cos(2 * ph)])
+    c0 = float(np.sum((y - np.sum(w * y) / np.sum(w)) ** 2 * w))
+    _coef, c1 = w3.linear_fluxes_n(a, y, w)
+    scale = max(c1 / (t.size - 5), 1.0)
+    return float((c0 - c1) / scale - 5.0 * math.log(t.size))
+
+
+def periodic_residuals(lc: w3.LightCurve, model_f: np.ndarray) -> dict:
+    """Periodic variability the exotic fit leaves (gb17-R-6-1-3829, P ≈ 30 d): Lomb–Scargle of
+    the nightly mean residuals over ``PERIOD_RANGE_D``, then the 2-harmonic BIC gain at that
+    period separately in the first and the second half of the nights. A periodic variable repeats
+    in both halves; one umbra crossing lies in one. ``gain`` is the smaller of the two; NaN with
+    fewer than ``period_min_nights`` nights (untestable)."""
+    from astropy.timeseries import LombScargle
+
+    t, y, sy = nightly_means(lc.t, lc.f - model_f, lc.sf)
+    out = {"period": np.nan, "gain": np.nan, "gains": (np.nan, np.nan)}
+    if t.size < P.period_min_nights:
+        return out
+    fmin, fmax = 1.0 / P.period_max_d, 1.0 / P.period_min_d
+    freq, power = LombScargle(t, y, sy).autopower(
+        minimum_frequency=fmin, maximum_frequency=fmax, samples_per_peak=5
+    )
+    period = float(1.0 / freq[int(np.argmax(power))])
+    half = t.size // 2
+    g = tuple(harmonic_gain(t[s], y[s], sy[s], period) for s in (slice(0, half), slice(half, None)))
+    out.update(period=period, gain=float(min(g)), gains=g)
+    return out
+
+
+def gen_gauss_dip(t, tc: float, sigma: float, p: float) -> np.ndarray:
+    """exp(−|Δt/σ|^p): a Gaussian (p = 2; σ here is √2 × ``gauss_dip``'s σ) to a flat-bottomed
+    dip (large p)."""
+    return np.exp(-(np.abs((np.asarray(t, float) - tc) / sigma) ** p))
+
+
+def fit_slow_dip_seasons(lc: w3.LightCurve, lo: float, hi: float) -> dict:
+    """Ordinary slow dimming with one baseline level per season (gb18-R-9-4-24509: a red giant's
+    flat-bottomed ~6 % dip with season-to-season baseline changes): depth × generalized Gaussian
+    (tc, σ, p) and the season levels from a weighted linear solve, depth ≥ 0. Nelder–Mead over
+    (tc, log σ, p). k = 3 + 1 + seasons."""
+    from scipy.optimize import minimize
+
+    span = float(lc.t.max() - lc.t.min())
+    onehot = lc.with_season_offsets().seasons  # the season rule of the exotic comparison
+    # season one-hot rows replace linear_fluxes_n's constant: drop the last season (collinear)
+    seasons = onehot[:-1]
+
+    def chi2(x):
+        tc, ls, p = x
+        if not (-1.0 <= ls <= math.log10(span) and P.slow_dip_power[0] <= p <= P.slow_dip_power[1]):
+            return 1e30
+        g = gen_gauss_dip(lc.t, tc, 10.0**ls, p)
+        coef, c2 = w3.linear_fluxes_n(np.vstack([-g, seasons]), lc.f, lc.w)
+        return c2 if coef[0] >= 0 else 1e30
+
+    tc0, w0 = 0.5 * (lo + hi), max(hi - lo, 0.5)
+    starts = [
+        (tc0 + dt * w0, math.log10(w0 * g), p)
+        for dt in (-0.2, 0.0, 0.2)
+        for g in (0.25, 0.5)
+        for p in (2.0, 5.0)
+    ]
+    vals = [chi2(np.array(x)) for x in starts]
+    best = None
+    for i in np.argsort(vals)[:3]:
+        r = minimize(chi2, np.array(starts[i]), method="Nelder-Mead",
+                     options={"maxfev": 1500, "xatol": 1e-5})  # fmt: skip
+        if best is None or r.fun < best.fun:
+            best = r
+    k = 4 + onehot.shape[0]
+    return {"chi2": float(best.fun), "k": k, "bic": float(best.fun) + k * math.log(lc.t.size),
+            "tc": float(best.x[0]), "sigma": float(10.0 ** best.x[1]), "p": float(best.x[2]),
+            "n_seasons": int(onehot.shape[0])}  # fmt: skip
+
+
 SCREEN_MODELS = ("PSPL", "FSPL", *w3.EXOTIC)  # PAR only in vetting (it can only remove flags)
 
 
@@ -1225,11 +1363,41 @@ def vet_one(job) -> dict:
         f"{n_bef} epochs before ingress, {n_aft} after egress (need {BRACKET_MIN_EPOCHS} each)",
     ):
         return record()
+    # --- the exotic fit must describe the whole light curve as well as a quiet star's baseline
+    # (gb17-R-6-1-3829: χ²/dof 6.7 against a quiet-star threshold of 5.46)
+    f_ex = w3.model_flux(ex, lc, res[ex])
+    c_ex = exotic_chi2_dof(lc, f_ex, res[ex], ex)
+    out["chi2_dof_exotic"] = c_ex
+    if not add(
+        "exotic_chi2_cap" if np.isfinite(c_ex) else "exotic_chi2_cap_untestable",
+        not (c_ex > baseline_threshold()),
+        f"{ex} χ²/dof without its spikes {c_ex:.2f} > {baseline_threshold():.2f}?",
+    ):
+        return record()
     # --- no fitting: shape and neighbourhood
     outside = (lc.t < lo) | (lc.t > hi)
     s2 = deficit_scan(lc.t[outside], lc.f[outside], lc.sf[outside])["z_min"]
     out["z_min_outside"] = s2
     if not add("repeated_deficit", s2 > -REPEAT_S, f"z_min outside the feature {s2:.1f}"):
+        return record()
+    rd = residual_deficit(lc, f_ex, res[ex], ex)
+    out["z_min_residual"] = rd["z_min"]
+    if not add(
+        "residual_deficit",
+        not (rd["z_min"] < -REPEAT_S),
+        f"z_min of the {ex} residuals {rd['z_min']:.1f} at {rd['t_lo']:.1f}–{rd['t_hi']:.1f} "
+        f"(feature {lo:.1f}–{hi:.1f})",
+    ):
+        return record()
+    keep = ~spike_epochs(lc, f_ex, res[ex], ex)
+    per = periodic_residuals(lc.subset(keep), f_ex[keep])
+    out["periodic"] = per
+    if not add(
+        "periodic_variable" if np.isfinite(per["gain"]) else "periodic_variable_untestable",
+        not (per["gain"] > P.period_gain),
+        f"P {per['period']:.2f} d, 2-harmonic BIC gain per half "
+        f"{per['gains'][0]:.1f} / {per['gains'][1]:.1f} (fail if both > {P.period_gain:g})",
+    ):
         return record()
     far = (lc.t < lo - 60.0) | (lc.t > hi + 60.0)
     if far.sum() > 20:
@@ -1291,11 +1459,21 @@ def vet_one(job) -> dict:
         f"ΔBIC {d1:.1f}",
     ):
         return record()
-    d2 = refit_both(lc.with_season_offsets(), res, ex)
+    d2, e_s = refit_both(lc.with_season_offsets(), res, ex, with_exotic=True)
     if not add("season_offsets", d2 < P.flag_dbic, f"free baseline per season; ΔBIC {d2:.1f}"):
         return record()
     d2t = refit_both(lc.with_season_offsets(trend=True), res, ex)
     if not add("season_trends", d2t < P.flag_dbic, f"offset + drift per season; ΔBIC {d2t:.1f}"):
+        return record()
+    sds = fit_slow_dip_seasons(lc, lo, hi)
+    out["slow_dip_seasons"] = sds
+    d2s = float(e_s - sds["bic"])
+    if not add(
+        "slow_dip_seasons",
+        d2s < P.flag_dbic,
+        f"ΔBIC {d2s:.1f}, {ex} vs a slow dip (σ {sds['sigma']:.0f} d, p {sds['p']:.1f}), both "
+        f"with {sds['n_seasons']} season levels",
+    ):
         return record()
     d2c = refit_both(with_regressors(lc, ax), res, ex)
     if not add(

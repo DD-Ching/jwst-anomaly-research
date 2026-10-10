@@ -3259,6 +3259,25 @@ checks that injections carry `ref_mag = I_s`. A fresh cloud venv without the `mu
 the binary-lens test (no error), which is how the silent skip was found.
 The recovered counts in the amendment table above come from the old chain (injection reference flux at the 14.2 mag default) and are kept only as a record of the relative cost of each vetting change. Every limit and efficiency table was withdrawn (`CHAIN_VERSION` 2026-10-09.1); per-field limits wait for a re-injection under the corrected chain.
 
+**Addendum (2026-10-10): the four open gaps closed as one recorded post-hoc chain change** (`CHAIN_VERSION`
+2026-10-10.1; motivated by gb17-R-6-1-3829 and gb18-R-9-4-24509, both seen before the change). New tests in
+`vet_one`, all thresholds ASSUMPTIONs in `scripts/w3_moa.py`:
+- `exotic_chi2_cap` (gap iii): the exotic fit's χ²/dof, caustic-spike epochs left out (model > f_s + f_b + 3 median
+  errors), must not exceed the field's calibrated quiet-baseline threshold. Spikes are left out because a synthetic
+  W3 event fitted at another u0 local optimum (u0 0 vs 0.5) had χ²/dof 1.69 against a white-noise 1.06, all of it on
+  the spike nights.
+- `repeated_deficit_in_window` (gap i): `deficit_scan` z_min of the exotic residuals inside the feature window,
+  spike epochs left out, must stay above −`REPEAT_S`.
+- `periodic_variable` (gap ii): Lomb–Scargle of the nightly mean exotic residuals, P = 1.1–100 d; fails when a
+  2-harmonic term at that period gains BIC > 25 (errors rescaled to χ²/dof = 1) in **both** halves of the nights.
+  One umbra crossing lies in one half; a periodic variable repeats in both.
+- `slow_dip_seasons` (gap iv): the exotic model with one level per season against a generalized-Gaussian dip
+  exp(−|Δt/σ|^p), p = 2–10 (Gaussian to flat-bottomed), with the same season levels.
+Validation (synthetic, 6 W3 events in white noise, quiet threshold 1.06): all six pass every new test; unit tests
+show a 30-d sinusoid fails in both halves, a single dip and white noise do not, and the slow-dip model recovers a
+flat (p = 6) dip with three season levels at χ² ≈ N. Every field's real flags and injections must be re-run under
+the new chain before any limit is quoted (`limit` and `combine` refuse 2026-10-09.1 tables).
+
 **Revisit if.** A field's quiet χ²/dof distribution is bimodal or its 95th percentile exceeds ~10 (the quantile then
 admits variables); the archive stops honouring range requests; a survivor appears (stop, /vet-candidate, owner).
 ## D-069 Owner direction 2026-10-09: System A (invention) / System B (destruction) hypothesis rounds; round 1 survivors (2026-10-09)
