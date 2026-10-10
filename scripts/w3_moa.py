@@ -2175,6 +2175,7 @@ def write_vetting_summary() -> Path:
         "baseline_calibration": calibrate_baseline(pre) if "chi2_const" in pre.colnames else None,
         "n_flags": vet["n_flags"],
         "funnel": vetting_funnel(vet),
+        "gaia_rp_xmatch": vet.get("gaia_rp_xmatch"),  # a failed query loosens exotic_in_domain
         "flags": [
             {
                 "event_id": o["event_id"],
