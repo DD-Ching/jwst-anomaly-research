@@ -1,47 +1,60 @@
-"""W3 in the MOA-II 9-year release, pilot field gb22: pre-screen, fits, vetting, limit (D-062).
+"""W3 in the MOA-II 9-year release, any field gb1 … gb22: pre-screen, fits, vetting, limit.
 
-The release holds every Cut-0 variable object (difference-image detections of positive *or
-negative* PSF profiles; ``jwst_anomaly.moa``), before any bump or PSPL cut, so a W3 event (the
-source flux drops toward zero inside an umbra between two caustic spikes; ``exotic_sim``) can be in
-it. Fitting all 18,599 gb22 light curves with every model is too slow, so:
+D-062 (method, gb22 pilot) and D-068 (streaming, calibration, all fields). The release holds every
+Cut-0 variable object (difference-image detections of positive *or negative* PSF profiles;
+``jwst_anomaly.moa``), before any bump or PSPL cut, so a W3 event (the source flux drops toward
+zero inside an umbra between two caustic spikes; ``exotic_sim``) can be in it. Fitting every light
+curve with every model is too slow, so (``--field gbF``, default gb22):
 
-- ``prescreen``: a W3-shaped matched statistic on every light curve (``deficit_scan``): the most
-  significant box of width W = 1 … 300 d that is below both its flanks and the median flux, in
-  units of the light curve's own spread of that statistic (red noise), and no second such deficit
-  elsewhere (``prescreen_pass``). Thresholds are set from the real distribution and the injections.
+- ``prescreen``: streams the field tar with concurrent HTTP range reads (``moa_stream``; the tar is
+  never stored) into a process pool computing a W3-shaped matched statistic on every light curve
+  (``deficit_scan``): the most significant box of width W = 1 … 300 d that is below both its
+  flanks and the median flux, in units of the light curve's own spread of that statistic (red
+  noise), and no second such deficit elsewhere (``prescreen_pass``). One tracked table per 4 GiB
+  of tar in ``results/w3_moa/prescreen/`` (resumable); ``merge-prescreen`` joins them.
 - ``fit``: the passes are fitted with the ordinary (PSPL, FSPL, PAR) and exotic (N1neg, E2pos,
   E2neg) models of ``scripts/w3_microlensing.py`` on one trajectory, blend flux free (difference
   flux), extra exotic starts on the deficit. Flag: ΔBIC < −10 (ASSUMPTION, as D-057).
-- ``vet``: flags through ordinary explanations, cheapest first (``vet_one``).
-- ``inject``: W3 events (``exotic_sim``, ``simulated``) added to real gb22 light curves of quiet
-  objects, through a light-curve-level Cut-0 emulation, the pre-screen, the fit and the vetting.
-- ``limit``: 95 % upper limit on the W3 rate per monitored star per year for gb22.
+- ``vet``: flags through ordinary explanations, cheapest first (``vet_one``); the variable-baseline
+  threshold is calibrated on the field's quiet light curves (``calibrate_baseline``).
+- ``inject``: W3 events (``exotic_sim``, ``simulated``) added to real light curves of the field's
+  quiet objects, through a light-curve-level Cut-0 emulation, the pre-screen, the fit and vetting.
+- ``limit``: 95 % upper limit on the W3 rate per monitored star per year for the field;
+  ``combine``: the same over every field with a tracked limit table.
+- ``run-field``: every stage in order, resumable.
 
-Outputs go to ``$JWST_ANOMALY_DATA/derived/w3_moa/`` (never in git). Exotic physics is a
-hypothesis: a flag is an anomaly to vet, never a discovery.
+Outputs go to ``$JWST_ANOMALY_DATA/derived/w3_moa/``, except the small tracked tables in
+``results/w3_moa/``. Exotic physics is a hypothesis: a flag is an anomaly to vet, never a discovery.
 """
 
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import math
 import os
 import sys
 import time
+import zlib
 from dataclasses import asdict, dataclass, replace
 from multiprocessing import Pool
 from pathlib import Path
 
-import numpy as np
-from astropy.table import Table, vstack
+# one thread per process: the stages run process pools sized to the cores (never oversubscribe);
+# set before numpy loads its BLAS
+for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
+    os.environ.setdefault(_v, "1")
+
+import numpy as np  # noqa: E402
+from astropy.table import Table, vstack  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import w3_microlensing as w3  # noqa: E402
 
 from jwst_anomaly import exotic_sim as es  # noqa: E402
-from jwst_anomaly import moa, paths, schema  # noqa: E402
+from jwst_anomaly import moa, moa_stream, paths, schema  # noqa: E402
 
 FIELD = "gb22"
 REPEAT_GAP = 4.0  # ASSUMPTION: boxes this many widths from the deficit count as a second dip
@@ -78,14 +91,24 @@ def out_dir() -> Path:
 # ----------------------------------------------------------------------------- pre-screen
 
 
+def _median(x: np.ndarray) -> float:
+    """``np.median`` of a 1-d array without its wrapper overhead (bit-identical: the mean of the
+    two middle values is their sum / 2, as ``np.mean`` computes it; NaN or empty: ``np.median``)."""
+    n = x.size
+    if n == 0 or np.isnan(x).any():
+        return float(np.median(x))
+    lo, hi = np.partition(x, ((n - 1) // 2, n // 2))[[(n - 1) // 2, n // 2]]
+    return float(lo) if n % 2 else float((lo + hi) / 2.0)
+
+
 def robust_scale(f: np.ndarray, sf: np.ndarray) -> tuple[float, float]:
     """Median flux and the error scale from point-to-point scatter (1.4826 MAD of successive
     differences of f/σ, / √2, ≥ 1): insensitive to slow trends and to the event itself."""
-    b = float(np.median(f))
+    b = _median(f)
     if f.size < 3:
         return b, 1.0
     d = np.diff(f) / np.hypot(sf[1:], sf[:-1])
-    s = 1.4826 * float(np.median(np.abs(d - np.median(d))))
+    s = 1.4826 * _median(np.abs(d - _median(d)))
     return b, max(s, 1.0)
 
 
@@ -99,7 +122,7 @@ def spread_of(x: np.ndarray, valid: np.ndarray) -> float:
     if valid.sum() < 10:
         return 1.0
     v = x[valid]
-    return max(1.4826 * float(np.median(np.abs(v - np.median(v)))), 1.0)
+    return max(1.4826 * _median(np.abs(v - _median(v))), 1.0)
 
 
 def deficit_scan(t, f, sf, widths=None, n_min=None) -> dict:
@@ -200,25 +223,43 @@ def cut0_emulated(t, signal, sf, snr=None, n_req=None, gap=None) -> bool:
     return best >= n_req
 
 
-def _prescreen_worker(job):
-    ids, tar_path = job
-    field = moa.MoaField(FIELD, tar_path=Path(tar_path))
-    rows = []
-    with open(tar_path, "rb") as fh:
-        idx = field.index()
-        for eid in ids:
-            try:
-                field._index = idx
-                cols = field.read_member(eid, fh)
-                t, f, sf, kind = moa.select_flux(cols)
-                ok = np.isfinite(f) & np.isfinite(sf) & (sf > 0)
-                t, f, sf = t[ok], f[ok], sf[ok]
-                row = {"event_id": eid, "flux_kind": kind, **deficit_scan(t, f, sf)}
-                row["error"] = ""
-            except Exception as exc:  # noqa: BLE001 — one bad file must not stop the pass
-                row = {"event_id": eid, "error": repr(exc)[:200]}
-            rows.append(row)
-    return rows
+PRESCREEN_COLUMNS = ("HJD", "flux", "cor_flux", "flux_err", "included")
+
+
+def baseline_chi2(f, sf, err_scale: float) -> float:
+    """χ²/dof of a constant (weighted mean) with errors × the point-to-point scale: the statistic
+    of the variable-baseline vetting test, here on a whole light curve (``derived``)."""
+    f = np.asarray(f, float)
+    if f.size < 3:
+        return float("nan")
+    w = 1.0 / (np.asarray(sf, float) * err_scale) ** 2
+    m = np.sum(w * f) / np.sum(w)
+    return float(np.sum((f - m) ** 2 * w) / (f.size - 1))
+
+
+def scan_member(eid: str, raw: bytes) -> dict:
+    """Pre-screen row of one light-curve member (gzipped IPAC bytes)."""
+    try:
+        cols = moa.parse_lightcurve(raw, columns=PRESCREEN_COLUMNS)
+        t, f, sf, kind = moa.select_flux(cols)
+        ok = np.isfinite(f) & np.isfinite(sf) & (sf > 0)
+        t, f, sf = t[ok], f[ok], sf[ok]
+        row = {"event_id": eid, "flux_kind": kind, **deficit_scan(t, f, sf)}
+        row["chi2_const"] = baseline_chi2(f, sf, row["err_scale"])
+        row["error"] = ""
+    except Exception as exc:  # noqa: BLE001 — one bad file must not stop the pass
+        row = {"event_id": eid, "error": repr(exc)[:200]}
+    return row
+
+
+def _scan_batch(batch):
+    """Worker: ``[(event_id, offset_data, size, gz_bytes)]`` -> pre-screen rows with offsets."""
+    out = []
+    for eid, off, size, raw in batch:
+        row = scan_member(eid, raw)
+        row["offset"], row["size"] = int(off), int(size)
+        out.append(row)
+    return out
 
 
 def rows_to_table(rows: list[dict], fill=None) -> Table:
@@ -240,39 +281,333 @@ def rows_to_table(rows: list[dict], fill=None) -> Table:
     return Table(cols)
 
 
-def run_prescreen(procs: int) -> Path:
-    field = moa.MoaField(FIELD)
-    idx = field.index()
-    ids = [k for k, _ in sorted(idx.items(), key=lambda kv: kv[1][0])]
-    tar = str(field.tar_path())
-    chunks = [(ids[i : i + 250], tar) for i in range(0, len(ids), 250)]
-    t1 = time.time()
-    rows = []
-    with _pool(procs) as pool:
-        for part in pool.imap_unordered(_prescreen_worker, chunks):
-            rows.extend(part)
-    tab = rows_to_table(rows, {"error": "", "flux_kind": ""})
-    tab.sort("event_id")
-    tab.meta.update(
-        provenance=schema.Provenance.DERIVED.value,
-        source=f"scripts/w3_moa.py prescreen: deficit_scan on every {field.name} light curve",
-        params=json.dumps(asdict(P)),
-        wall_time_s=round(time.time() - t1, 1),
+CHUNK_BYTES = (
+    4 * 2**30
+)  # tar bytes per tracked pre-screen chunk (~1–2 min of download, ~1 min CPU/GB)
+SEG_BYTES = 64 * 2**20  # one HTTP range read
+QUIET_TRACK_MOD = 4  # ASSUMPTION: 1 in 4 quiet light curves (by crc32 of the id) is tracked
+TRACK_COLUMNS = (
+    "event_id",
+    "flux_kind",
+    "z_min",
+    "s_min",
+    "z_max",
+    "z_min2",
+    "spread",
+    "width",
+    "t_lo",
+    "t_hi",
+    "err_scale",
+    "n_points",
+    "chi2_const",
+    "offset",
+    "size",
+    "error",
+)
+
+
+def field_number(field: str | None = None) -> int:
+    return int((field or FIELD).removeprefix("gb"))
+
+
+def n_chunks(field: str | None = None) -> int:
+    return math.ceil(moa.TAR_BYTES[field_number(field)] / CHUNK_BYTES)
+
+
+def local_tar(field: str | None = None) -> Path | None:
+    """The whole tar under ``raw/moa/`` if a session downloaded it (only gb22 is pinned)."""
+    url = moa.tar_url(field_number(field))
+    if url not in moa.FILES:
+        return None
+    p = paths.data_root() / "raw" / "moa" / f"{moa.FILES[url][0][:12]}_{url.rsplit('/', 1)[-1]}"
+    return p if p.exists() else None
+
+
+def reader_for(field: str | None = None, source: str = "auto") -> moa_stream.RangeReader:
+    """``source``: ``auto`` (local tar if present, else HTTP), ``local`` or ``http``."""
+    p = None if source == "http" else local_tar(field)
+    if source == "local" and p is None:
+        raise SystemExit(f"no local tar for {field or FIELD}")
+    if p is not None:
+        return moa_stream.RangeReader(path=p)
+    f = field_number(field)
+    return moa_stream.RangeReader(url=moa.tar_url(f), total=moa.TAR_BYTES[f])
+
+
+def is_quiet(tab: Table) -> np.ndarray:
+    """No significant notch either way (|z| < 4), S > −5 and ≥ 1,000 epochs: stand-ins for the
+    difference light curve of a constant star (ASSUMPTION; see ``quiet_carriers``)."""
+    return (
+        no_error(tab)
+        & (np.asarray(tab["z_min"], float) > -4.0)
+        & (np.asarray(tab["z_max"], float) < 4.0)
+        & (np.asarray(tab["s_min"], float) > -P.prescreen_s)
+        & (np.asarray(tab["n_points"], float) >= 1000)
     )
-    path = out_dir() / f"prescreen_{FIELD}.ecsv"
-    tab.write(path, overwrite=True)
-    ok = np.asarray(tab["error"], str) == ""
-    s = np.asarray(tab["s_min"])[ok]
-    z = np.asarray(tab["z_min"])[ok]
-    print(f"wrote {path}: {len(tab)} light curves ({(~ok).sum()} errors), {time.time() - t1:.0f} s")
-    for thr in (5, 6, 8, 10, 12, 15, 20, 30):
-        print(
-            f"  z_min < -{thr}: {(z < -thr).sum()} (and S_min < -{P.prescreen_s}: "
-            f"{((z < -thr) & (s < -P.prescreen_s)).sum()})"
-        )
-    n_shape = int((no_error(tab) & prescreen_pass(tab["z_min"], tab["s_min"], tab["z_min2"])).sum())
-    print(f"shape passes: {n_shape}; not at a shared epoch: {len(passes(tab))}")
+
+
+def tracked_mask(tab: Table) -> np.ndarray:
+    """Rows kept in the tracked chunk tables: every error, every deficit in the shared-epoch
+    population (z < −``COINC_Z``, a superset of the pre-screen passes) and a deterministic 1 in
+    ``QUIET_TRACK_MOD`` sample of the quiet light curves (injection carriers and the baseline
+    calibration)."""
+    ids = np.asarray(tab["event_id"], str)
+    sample = np.array([zlib.crc32(e.encode()) % QUIET_TRACK_MOD == 0 for e in ids], bool)
+    z = np.asarray(tab["z_min"], float) if "z_min" in tab.colnames else np.zeros(len(tab))
+    return ~no_error(tab) | (z < -COINC_Z) | (is_quiet(tab) & sample)
+
+
+def prescreen_chunk_path(field: str, k: int, n: int) -> Path:
+    d = results_dir() / "prescreen"
+    d.mkdir(parents=True, exist_ok=True)
+    return d / f"{field}_c{k + 1:03d}of{n:03d}.ecsv.gz"
+
+
+def _chunk_done(field: str, k: int, n: int) -> bool:
+    p = prescreen_chunk_path(field, k, n)
+    if not p.exists():
+        return False
+    tab = Table.read(p, format="ascii.ecsv")
+    return (
+        tab.meta.get("params") == json.dumps(asdict(P))
+        and tab.meta.get("chunk_bytes") == CHUNK_BYTES
+        and set(TRACK_COLUMNS) <= set(tab.colnames)
+    )
+
+
+def _write_prescreen_chunk(field: str, k: int, n: int, rows: list, stats: dict) -> Path:
+    tab = rows_to_table(rows, {"error": "", "flux_kind": ""})
+    for c in TRACK_COLUMNS:
+        if c not in tab.colnames:
+            tab[c] = [""] * len(tab) if c in ("flux_kind", "error") else np.full(len(tab), np.nan)
+    tab.sort("event_id")
+    ok = no_error(tab)
+    shape = ok & prescreen_pass(tab["z_min"], tab["s_min"], tab["z_min2"])
+    meta = {
+        "provenance": schema.Provenance.DERIVED.value,
+        "source": (
+            f"scripts/w3_moa.py stream-prescreen: deficit_scan on every light curve of "
+            f"{moa.tar_url(field_number(field))} bytes [{k * CHUNK_BYTES}, "
+            f"{min((k + 1) * CHUNK_BYTES, moa.TAR_BYTES[field_number(field)])})"
+        ),
+        "params": json.dumps(asdict(P)),
+        "chunk_bytes": CHUNK_BYTES,
+        "chunk": f"{k + 1}/{n}",
+        "n_members": len(tab),
+        "n_errors": int((~ok).sum()),
+        "n_shape": int(shape.sum()),
+        "n_quiet": int(is_quiet(tab).sum()),
+        "quiet_track_mod": QUIET_TRACK_MOD,
+        "quiet_chi2_hist": chi2_histogram(np.asarray(tab["chi2_const"], float)[is_quiet(tab)]),
+        **stats,
+    }
+    full = out_dir() / "prescreen_full"
+    full.mkdir(exist_ok=True)
+    tab.meta.update(meta)
+    tab.write(full / f"{field}_c{k + 1:03d}of{n:03d}.ecsv", overwrite=True)  # untracked
+    small = tab[tracked_mask(tab)][list(TRACK_COLUMNS)]
+    small.meta.update(meta)
+    path = prescreen_chunk_path(field, k, n)
+    w3.write_ecsv_gz(small, path)
     return path
+
+
+def _stream_worker(wid: int, segs: list, total: int, url, path, pin, prefetch: int, queue) -> None:
+    """One pre-screen process: reads its own byte ranges (``prefetch`` threads download the next
+    segments while this one is scanned) and puts ``(segment, rows, MB, retries)`` on ``queue``;
+    the parent holds no light-curve bytes. ``None`` marks the end, ``("error", text)`` a failure."""
+    from collections import deque
+    from concurrent.futures import ThreadPoolExecutor
+
+    moa_stream.limit_heap_growth()
+    try:
+        reader = moa_stream.RangeReader(url=url, path=path, total=pin)
+        with ThreadPoolExecutor(prefetch) as ex:
+            futs = deque()
+            nxt = 0
+            while nxt < len(segs) and len(futs) < prefetch:
+                k, a, b = segs[nxt]
+                futs.append(ex.submit(moa_stream.read_segment_hashed, reader, a, b, total))
+                nxt += 1
+            for s in segs:
+                members, sha = futs.popleft().result()
+                if nxt < len(segs):
+                    k, a, b = segs[nxt]
+                    futs.append(ex.submit(moa_stream.read_segment_hashed, reader, a, b, total))
+                    nxt += 1
+                rows = _scan_batch(members)
+                del members
+                queue.put((s, rows, reader.n_retries, sha))
+        queue.put(None)
+    except Exception as exc:  # noqa: BLE001 — reported to the parent, which stops the run
+        queue.put(("error", f"worker {wid}: {exc!r}"[:500]))
+
+
+def run_stream_prescreen(field: str, procs: int, conns: int, chunks=None, source: str = "auto",
+                         log_every: float = 30.0) -> list[Path]:  # fmt: skip
+    """Pre-screen a whole field tar without storing it. ``procs`` processes each read their own
+    64 MB byte ranges (segments dealt round-robin) with ``conns / procs`` prefetch threads, so
+    downloads overlap the scan and no process holds more than a few segments. One tracked table
+    per ``CHUNK_BYTES`` of tar; finished chunks are skipped (resumable)."""
+    import multiprocessing as mp
+    import queue as queue_mod
+    from collections import defaultdict
+
+    n, total = n_chunks(field), moa.TAR_BYTES[field_number(field)]
+    todo = [k for k in (range(n) if chunks is None else chunks) if not _chunk_done(field, k, n)]
+    if not todo:
+        print(f"{field}: all {n} pre-screen chunks done")
+        return []
+    reader = reader_for(field, source)
+    segs = [
+        (k, a, b)
+        for k in todo
+        for a, b in moa_stream.segments(
+            k * CHUNK_BYTES, min((k + 1) * CHUNK_BYTES, total), SEG_BYTES
+        )
+    ]
+    seg_left = {k: sum(1 for s in segs if s[0] == k) for k in todo}
+    seg_pos = {s: i for i, s in enumerate(segs)}
+    seg_sha: dict = {}
+    prefetch = max(1, conns // procs)
+    print(f"{field}: {len(todo)} of {n} chunks, {len(segs)} segments of {SEG_BYTES >> 20} MB, "
+          f"{procs} processes × {prefetch} prefetching connections, source "
+          f"{reader.url or reader.path}", flush=True)  # fmt: skip
+    ctx = mp.get_context("fork") if "fork" in mp.get_all_start_methods() else mp.get_context()
+    queue = ctx.Queue(maxsize=4 * procs)
+    workers = [
+        ctx.Process(
+            target=_stream_worker,
+            args=(i, segs[i::procs], total, reader.url, reader.path, reader.total, prefetch, queue),
+            daemon=True,
+        )
+        for i in range(procs)
+    ]
+    for w in workers:
+        w.start()
+    rows = defaultdict(list)
+    t_chunk = {k: None for k in todo}
+    meter_chunk, bytes_chunk = {}, defaultdict(int)
+    meter = moa_stream.CpuMeter()
+    retries = [0] * procs
+    written = []
+    t0 = t_log = time.time()
+    for k in todo[:1]:
+        t_chunk[k], meter_chunk[k] = t0, moa_stream.CpuMeter()
+    n_items = n_items_log = bytes_log = 0
+    finished = 0
+    try:
+        while finished < procs:
+            try:
+                msg = queue.get(timeout=60)
+            except queue_mod.Empty:
+                dead = [w.exitcode for w in workers if not w.is_alive() and w.exitcode]
+                if dead:
+                    raise SystemExit(
+                        f"{field} pre-screen: a worker died (exit codes {dead})"
+                    ) from None
+                continue
+            if msg is None:
+                finished += 1
+                continue
+            if msg[0] == "error":
+                raise SystemExit(f"{field} pre-screen failed: {msg[1]}")
+            s, out, nret, sha = msg
+            seg_sha[s] = sha
+            k = s[0]
+            if t_chunk[k] is None:  # a later chunk started (rough: its first finished segment)
+                t_chunk[k], meter_chunk[k] = time.time(), moa_stream.CpuMeter()
+            retries[seg_pos[s] % procs] = nret
+            rows[k].extend(out)
+            n_items += len(out)
+            bytes_chunk[k] += s[2] - s[1]
+            bytes_log += s[2] - s[1]
+            seg_left[k] -= 1
+            if seg_left[k] == 0:
+                wall = time.time() - t_chunk[k]
+                busy = meter_chunk[k].busy()
+                st = {
+                    "wall_time_s": round(wall, 1),
+                    "items_per_s": round(len(rows[k]) / wall, 1),
+                    "mb_per_s": round(bytes_chunk[k] / 1e6 / wall, 1),
+                    "cpu_percent": None if busy is None else round(busy, 1),
+                    "procs": procs,
+                    "conns": procs * prefetch,
+                    "segment_bytes": SEG_BYTES,
+                    "segment_sha256": [seg_sha[x] for x in segs if x[0] == k],
+                }
+                written.append(_write_prescreen_chunk(field, k, n, rows.pop(k), st))
+                shown = {k2: v for k2, v in st.items() if k2 != "segment_sha256"}
+                print(f"{field} chunk {k + 1}/{n}: {shown}", flush=True)
+            now = time.time()
+            if now - t_log >= log_every:
+                busy = meter.busy()
+                print(
+                    f"  {n_items} light curves, {(n_items - n_items_log) / (now - t_log):.0f}/s, "
+                    f"{bytes_log / 1e6 / (now - t_log):.0f} MB/s, CPU "
+                    f"{busy if busy is None else round(busy)} %, retries {sum(retries)}",
+                    flush=True,
+                )
+                t_log, n_items_log, bytes_log = now, n_items, 0
+    finally:
+        for w in workers:
+            if w.is_alive() and finished < procs:
+                w.terminate()
+            w.join()
+    print(f"{field}: {n_items} light curves in {time.time() - t0:.0f} s", flush=True)
+    return written
+
+
+def merge_prescreen(field: str) -> Path:
+    """Join the tracked pre-screen chunks of a field into the table the later stages read.
+    Refused unless every chunk exists with the current ``Params`` and the member count equals the
+    field's Cut-0 count in the metadata (no member lost or duplicated at a range boundary)."""
+    n = n_chunks(field)
+    parts = []
+    for k in range(n):
+        p = prescreen_chunk_path(field, k, n)
+        if not p.exists():
+            raise SystemExit(f"missing pre-screen chunk {k + 1}/{n} of {field}: {p}")
+        tab = Table.read(p, format="ascii.ecsv")
+        if tab.meta.get("params") != json.dumps(asdict(P)):
+            raise SystemExit(f"pre-screen chunk {k + 1}/{n} of {field} has other Params; rerun")
+        parts.append(tab)
+    tab = vstack(parts, metadata_conflicts="silent")
+    tab.sort("event_id")
+    n_members = sum(int(t.meta["n_members"]) for t in parts)
+    expected = moa.CUT0_PER_FIELD[field_number(field)]
+    if n_members != expected:
+        raise SystemExit(f"{field}: {n_members} light curves streamed, metadata has {expected}")
+    if len(set(tab["event_id"])) != len(tab):
+        raise SystemExit(f"{field}: duplicate light curves across chunks")
+    keys = ("n_members", "n_errors", "n_shape", "n_quiet", "wall_time_s")
+    tab.meta = {
+        "provenance": schema.Provenance.DERIVED.value,
+        "source": f"scripts/w3_moa.py merge-prescreen: {n} tracked chunk tables of {field}",
+        "params": json.dumps(asdict(P)),
+        "tracked_subset": True,
+        **{k: sum(float(t.meta.get(k, 0)) for t in parts) for k in keys},
+        "quiet_track_mod": QUIET_TRACK_MOD,
+        "quiet_chi2_hist": np.sum([t.meta["quiet_chi2_hist"] for t in parts], axis=0).tolist(),
+        "range_sha256": field_range_digest(field) or "",
+    }
+    tab.meta["n_members"] = int(tab.meta["n_members"])
+    path = out_dir() / f"prescreen_{field}.ecsv"
+    tab.write(path, overwrite=True)
+    print(
+        f"wrote {path}: {len(tab)} tracked rows of {n_members} light curves; "
+        f"{int(tab.meta['n_shape'])} shape passes, {len(passes(tab))} not at a shared epoch"
+    )
+    return path
+
+
+def read_prescreen(field: str | None = None) -> Table:
+    return Table.read(out_dir() / f"prescreen_{field or FIELD}.ecsv")
+
+
+def n_light_curves(pre: Table) -> int:
+    """Light curves screened (a merged table holds a tracked subset; its meta has the count)."""
+    return int(pre.meta.get("n_members", len(pre)))
 
 
 # ----------------------------------------------------------------------------- fit
@@ -339,11 +674,35 @@ def _fit_worker(job):
 AUX = ("fwhm", "airmass", "sky")  # observing conditions per epoch (vetting regressors)
 
 
-def load_arrays(field: moa.MoaField, ids, aux: bool = False) -> dict:
-    """``event_id -> (t, f, sf)`` (plus a dict of ``AUX`` columns when ``aux``) for the requested
-    light curves, included epochs only (one pass over the tar)."""
+@functools.lru_cache(maxsize=2)
+def _local_index(path: Path) -> dict[str, tuple[int, int]]:
+    """Member offsets of a local field tar (header walk only)."""
+    return moa.MoaField(tar_path=path).index()
+
+
+def load_arrays(ids, aux: bool = False, pre: Table | None = None, field: str | None = None) -> dict:
+    """``event_id -> (t, f, sf)`` (plus a dict of ``AUX`` columns when ``aux``), included epochs
+    only. Members with a tar offset in the pre-screen table are read by byte range (local tar or
+    HTTP); others (vetting neighbours) from the per-object archive files."""
+    pre = read_prescreen(field) if pre is None else pre
+    loc = {}
+    if "offset" in pre.colnames:
+        loc = {
+            str(e): (int(o), int(s))
+            for e, o, s in zip(pre["event_id"], pre["offset"], pre["size"], strict=True)
+        }
+    ids = list(dict.fromkeys(map(str, ids)))
+    reader = reader_for(field)
+    if reader.path is not None and any(e not in loc for e in ids):
+        loc = {**_local_index(reader.path), **loc}  # the pinned local tar has every member
+    raws = moa_stream.fetch_members(reader, [(e, *loc[e]) for e in ids if e in loc])
+    missing = [e for e in ids if e not in loc]
+    if missing:
+        raws.update(moa_stream.fetch_objects(missing))
+    want = (*PRESCREEN_COLUMNS, *AUX) if aux else PRESCREEN_COLUMNS
     out = {}
-    for eid, cols in field.iter_light_curves(ids):
+    for eid in ids:
+        cols = moa.parse_lightcurve(raws[eid], columns=want)
         t, f, sf, _kind = moa.select_flux(cols)
         inc = cols["included"] & np.isfinite(cols["flux"]) & np.isfinite(cols["flux_err"])
         ok = np.isfinite(f) & np.isfinite(sf) & (sf > 0)
@@ -395,7 +754,7 @@ def chunk_name(chunk: tuple[int, int]) -> str:
 def run_fit(procs: int, limit: int | None = None, chunk: tuple[int, int] | None = None) -> Path:
     """Fit the pre-screen passes; ``chunk=(k, n)`` fits every n-th pass from k (0-based)."""
     field = moa.MoaField(FIELD)
-    pre = Table.read(out_dir() / f"prescreen_{FIELD}.ecsv")
+    pre = read_prescreen()
     sel = passes(pre)
     if chunk is not None:
         sel = sel[chunk[0] :: chunk[1]]
@@ -403,7 +762,7 @@ def run_fit(procs: int, limit: int | None = None, chunk: tuple[int, int] | None 
         sel = sel[:limit]
     ev = field.events()
     pos = {r["event_id"]: (float(r["ra"]), float(r["dec"])) for r in ev}
-    arrays = load_arrays(field, sel["event_id"])
+    arrays = load_arrays(sel["event_id"], pre=pre)
     jobs = []
     for r in sel:
         eid = str(r["event_id"])
@@ -411,7 +770,7 @@ def run_fit(procs: int, limit: int | None = None, chunk: tuple[int, int] | None 
         scan = {k: float(r[k]) for k in SCAN_KEYS}
         d = {"event_id": eid, "ra": pos[eid][0], "dec": pos[eid][1]}
         jobs.append((d, t, f, sf, scan))
-    print(f"fitting {len(jobs)} pre-screen passes of {len(pre)}", flush=True)
+    print(f"fitting {len(jobs)} pre-screen passes of {n_light_curves(pre)}", flush=True)
     t1 = time.time()
     rows = []
     with _pool(procs) as pool:
@@ -427,7 +786,7 @@ def run_fit(procs: int, limit: int | None = None, chunk: tuple[int, int] | None 
         params=json.dumps(asdict(P)),
         fit_params=json.dumps(asdict(w3.P)),
         wall_time_s=round(time.time() - t1, 1),
-        n_prescreen=len(pre),
+        n_prescreen=n_light_curves(pre),
         n_passes=len(passes(pre)),
         chunk="" if chunk is None else f"{chunk[0] + 1}/{chunk[1]}",
     )
@@ -445,23 +804,33 @@ def run_fit(procs: int, limit: int | None = None, chunk: tuple[int, int] | None 
     return path
 
 
+def fit_chunk_problem(tab: Table, ids: list, k: int, n: int) -> str | None:
+    """Why the tracked fit chunk ``k`` of ``n`` cannot be used (None: it can): fitted with other
+    ``Params``, or not exactly its share ``ids[k::n]`` of the current pre-screen passes."""
+    if tab.meta.get("fit_params") != json.dumps(asdict(w3.P)) or tab.meta.get(
+        "params"
+    ) != json.dumps(asdict(P)):
+        return "was fitted with other Params; refit it"
+    if sorted(tab["event_id"]) != sorted(ids[k::n]):
+        return "does not hold exactly its pre-screen passes"
+    return None
+
+
 def merge_chunks(n: int) -> Path:
     """Join the tracked chunk tables 1..n of n into the table `vet` reads. Refused unless every
     chunk is present, was fitted with the current pre-screen and fit ``Params`` and holds exactly
     its own passes of the current pre-screen (deterministic, recomputed in each session)."""
-    pre = Table.read(out_dir() / f"prescreen_{FIELD}.ecsv")
+    pre = read_prescreen()
     ids = list(passes(pre)["event_id"])
-    fit_params, params = json.dumps(asdict(w3.P)), json.dumps(asdict(P))
     parts = []
     for k in range(n):
         path = results_dir() / f"{chunk_name((k, n))}.gz"
         if not path.exists():
             raise SystemExit(f"missing chunk {k + 1}/{n}: {path}")
         tab = Table.read(path, format="ascii.ecsv")
-        if tab.meta.get("fit_params") != fit_params or tab.meta.get("params") != params:
-            raise SystemExit(f"chunk {k + 1}/{n} was fitted with other Params; refit it")
-        if sorted(tab["event_id"]) != sorted(ids[k::n]):
-            raise SystemExit(f"chunk {k + 1}/{n} does not hold exactly its pre-screen passes")
+        problem = fit_chunk_problem(tab, ids, k, n)
+        if problem:
+            raise SystemExit(f"chunk {k + 1}/{n} {problem}")
         parts.append(tab)
     tab = vstack(parts, metadata_conflicts="silent")
     tab.sort("event_id")
@@ -478,13 +847,24 @@ def merge_chunks(n: int) -> Path:
 
 REPEAT_S = 6.0  # ASSUMPTION: a second deficit this significant outside the feature = variable star
 NEIGHBOUR_PX = 12.0  # ASSUMPTION: Cut-0 objects within 12 px (7″, ~3.5 seeing FWHM) share flux
-BASELINE_CHI2 = 2.0  # ASSUMPTION (as D-057): χ²/dof of a constant outside the feature
+BASELINE_CHI2 = 2.0  # D-057/D-062 fixed threshold; used only when no field calibration is set
+# Version of the vetting + injection chain; bump on ANY pre-screen, fit or vetting change, so that
+# `limit` and `combine` refuse injections and limit tables of an older chain (scripts/CLAUDE.md).
+CHAIN_VERSION = "2026-10-09.1"  # D-068: injections vetted against the injected source flux
+BASELINE_Q = 0.95  # ASSUMPTION (D-068): threshold = this quantile of the field's quiet χ²/dof
 NEIGHBOUR_S = 5.0  # ASSUMPTION: |S| of a neighbour's notch over the same window = shared feature
 MIN_FEATURE_NIGHTS = 3  # ASSUMPTION: nights with epochs inside the exotic feature
 COINC_Z = 5.0  # deficits with z_min < −5 form the population for the shared-epoch test
 COINC_P = 1e-3  # ASSUMPTION: Poisson probability below which a shared epoch is a frame systematic
 
+DOMAIN_U0_MAX = 2.0  # the injection and limit domain: umbra crossings with u0 < 2 (D-068)
+FS_MAX_FACTOR = 3.0  # ASSUMPTION: fitted source flux ≤ 3 × the object's reference flux
+FS_REF_DEFAULT_MAG = 14.2  # ASSUMPTION: no reference magnitude → the bright end of the injections
+REF_MATCH_ARCSEC = 1.0  # ASSUMPTION: Gaia DR3 counterpart radius for the reference flux
+BRACKET_MIN_EPOCHS = 20  # ASSUMPTION: baseline epochs required before ingress and after egress
+
 _POP: tuple | None = None  # (field, per-chip) deficit populations (passed to the workers)
+_BASELINE: float | None = None  # calibrated variable-baseline threshold of the field
 
 
 def deficit_population(pre: Table, chip: int | None = None) -> dict:
@@ -503,6 +883,54 @@ def deficit_population(pre: Table, chip: int | None = None) -> dict:
         order = np.argsort(c[m])
         out[key] = (c[m][order], ids[m][order])
     return out
+
+
+def calibrate_baseline(pre: Table, q: float | None = None) -> dict:
+    """Variable-baseline threshold of a field (``derived``, D-068): the ``BASELINE_Q`` quantile
+    of the whole-light-curve χ²/dof about a constant (errors × the point-to-point scale, the
+    vetting statistic) over the field's quiet light curves, the injection carriers. Difference
+    photometry has red noise, so a fixed χ²/dof > 2 removed 35 % of quiet gb22 carriers; the
+    quantile removes a fixed small fraction of them and every baseline noisier than that."""
+    q = BASELINE_Q if q is None else q
+    hist = pre.meta.get("quiet_chi2_hist")
+    if hist is not None:  # every quiet light curve of the field (the rows are a sample)
+        h = np.asarray(hist, float)
+        n = int(h.sum())
+        cdf = np.concatenate([[0.0], np.cumsum(h)]) / max(n, 1)
+        thr, med = (float(10 ** np.interp(x, cdf, np.log10(CHI2_BINS))) for x in (q, 0.5))
+        above2 = float(1.0 - np.interp(math.log10(2.0), np.log10(CHI2_BINS), cdf))
+    else:
+        c = np.asarray(pre["chi2_const"], float)[is_quiet(pre)]
+        c = c[np.isfinite(c)]
+        n = int(c.size)
+        thr, med, above2 = (
+            (float(np.quantile(c, q)), float(np.median(c)), float(np.mean(c > 2.0)))
+            if n
+            else (np.nan,) * 3
+        )
+    if n < 50:
+        raise SystemExit(f"{FIELD}: {n} quiet light curves; too few to calibrate the baseline")
+    return {"threshold": thr, "q": q, "n_quiet": n, "frac_above_2": above2, "median": med}
+
+
+CHI2_BINS = np.logspace(-1.0, 3.0, 801)  # χ²/dof histogram edges (0.5 % wide) for the calibration
+
+
+def chi2_histogram(c: np.ndarray) -> list[int]:
+    """Counts of ``c`` in ``CHI2_BINS`` (values outside are clipped into the end bins)."""
+    c = np.clip(c[np.isfinite(c)], CHI2_BINS[0], CHI2_BINS[-1] * 0.999999)
+    return np.histogram(c, CHI2_BINS)[0].astype(int).tolist()
+
+
+def baseline_threshold() -> float:
+    return BASELINE_CHI2 if _BASELINE is None else _BASELINE
+
+
+def set_field_context(pre: Table) -> None:
+    """Shared-epoch populations and the baseline calibration of the field, for vet and inject."""
+    global _POP, _BASELINE
+    _POP = (deficit_population(pre), chip_populations(pre))
+    _BASELINE = calibrate_baseline(pre)["threshold"] if "chi2_const" in pre.colnames else None
 
 
 def chip_populations(pre: Table) -> dict:
@@ -626,6 +1054,115 @@ def res_from_row(row) -> dict:
     return res
 
 
+def reference_flux(ev: dict) -> tuple[float, str]:
+    """Counts of the object's reference flux for the source-flux bound of ``exotic_in_domain``:
+    DoPHOT magnitude from the release where present, else the Gaia DR3 RP magnitude of a
+    counterpart within ``REF_MATCH_ARCSEC`` (``ev["ref_mag"]``; MOA-Red ≈ RP, ASSUMPTION), else
+    ``FS_REF_DEFAULT_MAG`` (the brightest injected source)."""
+    chip = moa.parse_event_id(str(ev["event_id"]))[1] if "-R-" in str(ev["event_id"]) else 1
+    for key, label in (("dophot_mag", "DoPHOT"), ("ref_mag", "Gaia DR3 RP")):
+        m = ev.get(key)
+        if m is not None and np.isfinite(float(m)):
+            return float(moa.mag_to_counts(float(m), chip)), f"{label} {float(m):.2f}"
+    return float(moa.mag_to_counts(FS_REF_DEFAULT_MAG, chip)), f"default {FS_REF_DEFAULT_MAG}"
+
+
+def exotic_domain(res: dict, ev: dict) -> dict:
+    """Per exotic model: inside the domain the limit is defined on (u0 < ``DOMAIN_U0_MAX``) and with
+    a physical source flux (0 < f_s ≤ ``FS_MAX_FACTOR`` × the reference flux)? A far-field fit
+    (u0 ≫ 1) with cancelling giant f_s and f_b can mimic any smooth dip (gb20-R-4-0-49379)."""
+    f_ref, label = reference_flux(ev)
+    out = {}
+    for m in w3.EXOTIC:
+        if m not in res:
+            continue
+        u0, fs = float(res[m].get("u0", np.nan)), float(res[m].get("fs", np.nan))
+        ok = bool(u0 < DOMAIN_U0_MAX and 0.0 < fs <= FS_MAX_FACTOR * f_ref)
+        out[m] = (ok, f"u0 {u0:.2f}, f_s {fs:.3g} vs {FS_MAX_FACTOR:g} × {f_ref:.3g} ({label})")
+    return out
+
+
+def gauss_dip(t, tc: float, sigma: float) -> np.ndarray:
+    return np.exp(-0.5 * ((np.asarray(t, float) - tc) / sigma) ** 2)
+
+
+def fit_smooth_dip(lc: w3.LightCurve, lo: float, hi: float) -> dict:
+    """Ordinary smooth dimming: baseline − A × Gaussian(tc, σ), A ≥ 0 and baseline from a weighted
+    linear solve; Nelder–Mead over (tc, log σ) (slow red-giant variability, a slow subtraction
+    residual). k = 4."""
+    from scipy.optimize import minimize
+
+    span = float(lc.t.max() - lc.t.min())
+
+    def chi2(x):
+        tc, ls = x
+        if not (-1.0 <= ls <= math.log10(span)):
+            return 1e30
+        g = gauss_dip(lc.t, tc, 10.0**ls)
+        coef, c2 = w3.linear_fluxes_n(-g[None, :], lc.f, lc.w)
+        return c2 if coef[0] >= 0 else 1e30
+
+    tc0, w0 = 0.5 * (lo + hi), max(hi - lo, 0.5)
+    starts = [
+        (tc0 + dt * w0, math.log10(w0 * g))
+        for dt in (-0.25, 0.0, 0.25)
+        for g in (0.1, 0.25, 0.5, 1.0)
+    ]
+    vals = [chi2(np.array(x)) for x in starts]
+    best = None
+    for i in np.argsort(vals)[:3]:
+        r = minimize(chi2, np.array(starts[i]), method="Nelder-Mead",
+                     options={"maxfev": 1000, "xatol": 1e-5})  # fmt: skip
+        if best is None or r.fun < best.fun:
+            best = r
+    k = 4
+    return {"chi2": float(best.fun), "k": k, "bic": float(best.fun) + k * math.log(lc.t.size),
+            "tc": float(best.x[0]), "sigma": float(10.0 ** best.x[1])}  # fmt: skip
+
+
+def bracketing(t, lo: float, hi: float) -> tuple[int, int]:
+    """Epochs before the exotic feature's ingress and after its egress, inside the data."""
+    t = np.asarray(t, float)
+    return int(np.sum(t < lo)), int(np.sum(t > hi))
+
+
+def step_ramp(t, ts: float) -> np.ndarray:
+    """Design rows of the ordinary step model: H(t − ts) and (t − ts) H(t − ts) (days)."""
+    x = np.asarray(t, float) - ts
+    h = (x >= 0).astype(float)
+    return np.vstack([h, x * h])
+
+
+def fit_step_ramp(lc: w3.LightCurve) -> dict:
+    """Ordinary step: baseline, a change of level at ts and a linear ramp after it (a reference or
+    photometric-scale change, a secular change of the star; gb19-R-4-4-31159). Linear in the
+    three fluxes; ts scanned over every 3rd night, then every epoch near the best. k = 4."""
+    t = np.asarray(lc.t, float)
+    nt = nights(t)
+    first = np.r_[0, np.flatnonzero(np.diff(nt)) + 1]  # first epoch of each night
+    cand = t[first[1::3]] if first.size > 3 else t[first]
+
+    def chi2(ts):
+        if not (t[0] < ts <= t[-1]):
+            return np.inf, None
+        coef, c2 = w3.linear_fluxes_n(step_ramp(t, ts), lc.f, lc.w)
+        return c2, coef
+
+    vals = [chi2(x)[0] for x in cand]
+    if not np.isfinite(vals).any():  # no admissible step time: the model cannot explain the dip
+        return {"chi2": np.inf, "k": 4, "bic": np.inf, "ts": np.nan, "step": np.nan,
+                "ramp_per_day": np.nan}  # fmt: skip
+    best = float(cand[int(np.nanargmin(vals))])
+    near = t[(t > best - 10.0) & (t < best + 10.0)]
+    vals2 = [chi2(x)[0] for x in near] if near.size else [np.inf]
+    if near.size and np.nanmin(vals2) < np.nanmin(vals):
+        best = float(near[int(np.nanargmin(vals2))])
+    c2, coef = chi2(best)
+    k = 4
+    return {"chi2": float(c2), "k": k, "bic": float(c2) + k * math.log(t.size), "ts": best,
+            "step": float(coef[0]), "ramp_per_day": float(coef[1])}  # fmt: skip
+
+
 SCREEN_MODELS = ("PSPL", "FSPL", *w3.EXOTIC)  # PAR only in vetting (it can only remove flags)
 
 
@@ -645,8 +1182,10 @@ def vet_one(job) -> dict:
     if res is None:
         res = fit_moa(lc, scan, models=SCREEN_MODELS)
 
+    allowed = list(w3.EXOTIC)
+
     def summary():
-        ex = min(w3.EXOTIC, key=lambda m: res[m]["bic"])
+        ex = min(allowed, key=lambda m: res[m]["bic"])
         ordinary = {m: res[m] for m in w3.ORDINARY if m in res}
         best_o = min(ordinary, key=lambda m: ordinary[m]["bic"])
         return ex, ordinary, best_o, res[ex]["bic"] - ordinary[best_o]["bic"]
@@ -661,6 +1200,30 @@ def vet_one(job) -> dict:
         return out
 
     if not add("screen_flag", d0 < P.flag_dbic, f"ΔBIC {d0:.1f} ({ex} vs {best_o})"):
+        return record()
+    # --- the fit must lie in the limit's domain with a physical source flux; a flag is re-judged
+    # on its in-domain exotic models only
+    dom = exotic_domain(res, ev)
+    out["domain"] = {m: v[1] for m, v in dom.items()}
+    allowed = [m for m in w3.EXOTIC if dom.get(m, (False,))[0]]
+    if not allowed:
+        add("exotic_in_domain", False, f"no in-domain exotic fit: {out['domain']}")
+        return record()
+    ex, ordinary, best_o, d0 = summary()
+    out.update(exotic=ex, dbic_all=float(d0), best_ordinary=best_o)
+    lo, hi = feature_window(res[ex], ex)
+    out["feature_window"] = (lo, hi)
+    if not add("exotic_in_domain", d0 < P.flag_dbic, f"{ex} ΔBIC {d0:.1f}; {dom[ex][1]}"):
+        return record()
+    # --- the feature must be bracketed by baseline: a one-sided step or secular change is not an
+    # umbra crossing (gb19-R-4-4-31159)
+    n_bef, n_aft = bracketing(lc.t, lo, hi)
+    out["bracket"] = (n_bef, n_aft)
+    if not add(
+        "feature_bracketed",
+        min(n_bef, n_aft) >= BRACKET_MIN_EPOCHS,
+        f"{n_bef} epochs before ingress, {n_aft} after egress (need {BRACKET_MIN_EPOCHS} each)",
+    ):
         return record()
     # --- no fitting: shape and neighbourhood
     outside = (lc.t < lo) | (lc.t > hi)
@@ -677,8 +1240,9 @@ def vet_one(job) -> dict:
     out["chi2_out"] = chi_out
     if not add(
         "variable_baseline" if np.isfinite(chi_out) else "variable_baseline_untestable",
-        not (chi_out > BASELINE_CHI2),
-        f"baseline χ²/dof {chi_out:.2f} ({int(far.sum())} pts, errors × point-to-point scale)",
+        not (chi_out > baseline_threshold()),
+        f"baseline χ²/dof {chi_out:.2f} > {baseline_threshold():.2f}? ({int(far.sum())} pts, "
+        "errors × point-to-point scale)",
     ):
         return record()
     s_n = [(nid, notch_in_window(nt, nf, nsf, lo, hi)) for nid, nt, nf, nsf in neigh]
@@ -691,6 +1255,26 @@ def vet_one(job) -> dict:
     out["eclipse"] = ecl
     d_ecl = res[ex]["bic"] - min(ordinary[best_o]["bic"], ecl["bic"])
     if not add("eclipse_dip", d_ecl < P.flag_dbic, f"ΔBIC {d_ecl:.1f} vs a trapezoidal dip"):
+        return record()
+    # --- slow smooth dimming (red-giant variability, a slow subtraction residual)
+    sd = fit_smooth_dip(lc, lo, hi)
+    out["smooth_dip"] = sd
+    d_sd = res[ex]["bic"] - min(ordinary[best_o]["bic"], sd["bic"])
+    if not add(
+        "smooth_dip",
+        d_sd < P.flag_dbic,
+        f"ΔBIC {d_sd:.1f} vs a Gaussian dip (σ {sd['sigma']:.1f} d)",
+    ):
+        return record()
+    st = fit_step_ramp(lc)
+    out["step_ramp"] = st
+    d_st = res[ex]["bic"] - min(ordinary[best_o]["bic"], st["bic"])
+    if not add(
+        "step_ramp",
+        d_st < P.flag_dbic,
+        f"ΔBIC {d_st:.1f} vs a step at {st['ts']:.1f} ({st['step']:.0f} counts, "
+        f"ramp {st['ramp_per_day']:.2f}/d)",
+    ):
         return record()
     # --- refits from the screen optimum: systematics models
     bad = w3.isolated_outliers(lc, w3.model_flux(best_o, lc, ordinary[best_o])) | (
@@ -821,14 +1405,23 @@ def fit_eclipse(lc: w3.LightCurve, lo: float, hi: float) -> dict:
             "tc": float(tc), "duration": float(10.0**ld), "ingress": float(fin)}  # fmt: skip
 
 
+def eclipse_flux(lc: w3.LightCurve, ecl: dict) -> np.ndarray:
+    """Model flux of a ``fit_eclipse`` result on ``lc`` (baseline and depth re-solved)."""
+    sh = trapezoid(lc.t, ecl["tc"], ecl["duration"], ecl["ingress"])
+    coef, _ = w3.linear_fluxes_n(-sh[None, :], lc.f, lc.w)
+    return coef[1] - coef[0] * sh
+
+
 def jackknife_nights(lc: w3.LightCurve, res: dict, ex: str, best_o: str, ecl: dict) -> dict:
     """Drop whole nights (MOA takes several exposures a night, so one bad night is several bad
-    epochs) in order of their contribution to the exotic preference over the best ordinary model
-    (single lens or eclipse); at most 2 and never fewer than 2 nights left inside the feature
-    (ASSUMPTION). Returns ΔBIC (exotic − best ordinary) after the drops."""
+    epochs) in order of their contribution to the exotic preference, at most 2 and never fewer than
+    2 nights left inside the feature (ASSUMPTION). The nights are ranked twice, against the best
+    single-lens model and against the eclipse (trapezoid) model, because the preference over each
+    can rest on different nights (gb7-R-8-6-94052: one bright night at the predicted ingress spike
+    carried the whole preference over the trapezoid). Returns the larger ΔBIC (exotic − best
+    ordinary, single lens or eclipse, refitted on the subset) of the two rankings."""
     fe = w3.model_flux(ex, lc, res[ex])
     fo = w3.model_flux(best_o, lc, res[best_o])
-    dchi = (lc.f - fe) ** 2 * lc.w - (lc.f - fo) ** 2 * lc.w
     nt = nights(lc.t)
     inside = np.abs(fe - fo) > 3.0 * np.median(lc.sf)
     feat_nights = np.unique(nt[inside])
@@ -836,16 +1429,25 @@ def jackknife_nights(lc: w3.LightCurve, res: dict, ex: str, best_o: str, ecl: di
     out = {"n_nights": int(feat_nights.size), "n_dropped": n_drop, "dbic": np.nan}
     if not n_drop:
         return out
-    per = {k: float(dchi[nt == k].sum()) for k in np.unique(nt)}
-    worst = sorted(per, key=per.get)[:n_drop]
-    sub = lc.subset(~np.isin(nt, worst))
-    d = refit_both(sub, res, ex)
-    # the eclipse alternative on the same subset
     lo, hi = float(lc.t[inside].min()), float(lc.t[inside].max())
-    e2 = fit_eclipse(sub, lo, hi)
-    e_bic = w3.optimise(ex, sub, [_start(ex, res[ex])])["bic"]
-    out["dbic"] = float(max(d, e_bic - e2["bic"]))
-    out["dropped"] = [int(x) for x in worst]
+    fecl = eclipse_flux(lc, ecl)
+    best, dropped = -np.inf, []
+    for alt in (fo, fecl):
+        dchi = (lc.f - fe) ** 2 * lc.w - (lc.f - alt) ** 2 * lc.w
+        per = {k: float(dchi[nt == k].sum()) for k in np.unique(nt)}
+        worst = sorted(per, key=per.get)[:n_drop]
+        sub = lc.subset(~np.isin(nt, worst))
+        d = refit_both(sub, res, ex)
+        e2 = fit_eclipse(sub, lo, hi)
+        e_bic = w3.optimise(ex, sub, [_start(ex, res[ex])])["bic"]
+        dd = float(max(d, e_bic - e2["bic"]))
+        if not np.isfinite(dd):  # a failed refit must fail the test, never pass it
+            best, dropped = np.nan, [int(x) for x in worst]
+            break
+        if dd > best:
+            best, dropped = dd, [int(x) for x in worst]
+    out["dbic"] = best
+    out["dropped"] = dropped
     return out
 
 
@@ -861,6 +1463,38 @@ def _vet_worker(job):
         }
 
 
+def gaia_rp_mags(ra, dec) -> tuple[np.ndarray, str]:
+    """Gaia DR3 RP magnitude of the nearest counterpart within ``REF_MATCH_ARCSEC`` (NaN: none), one
+    batched CDS XMatch (``observed``); a failed query gives NaN everywhere (then the default
+    reference flux, the lenient bound) and says so."""
+    out = np.full(len(ra), np.nan)
+    if not len(ra):
+        return out, "no flags"
+    import astropy.units as u
+    from astroquery.xmatch import XMatch
+
+    pos = Table({"ra": np.asarray(ra, float), "dec": np.asarray(dec, float)})
+    pos["idx"] = np.arange(len(pos))
+    for attempt in range(3):  # a rate-limited query is retried, never recorded as a pass
+        try:
+            m = XMatch.query(cat1=pos, cat2="vizier:I/355/gaiadr3",
+                             max_distance=REF_MATCH_ARCSEC * u.arcsec, colRA1="ra",
+                             colDec1="dec")  # fmt: skip
+            break
+        except Exception as exc:  # noqa: BLE001
+            if attempt == 2:
+                return out, f"query failed: {exc!r}"[:200]
+            time.sleep(10.0 * (attempt + 1))
+    m.sort("angDist")
+    for row in m[::-1]:  # nearest written last
+        if np.isfinite(float(row["RPmag"])):
+            out[int(row["idx"])] = float(row["RPmag"])
+    return (
+        out,
+        f"vizier:I/355/gaiadr3 within {REF_MATCH_ARCSEC}″: {int(np.isfinite(out).sum())} matched",
+    )
+
+
 def neighbours_of(ev: Table, eid: str, radius_px: float = NEIGHBOUR_PX) -> list[str]:
     """Cut-0 objects of the same chip and subframe within ``radius_px`` pixels."""
     r = ev[ev["event_id"] == eid][0]
@@ -874,13 +1508,14 @@ def check_complete_fits(fits: Table) -> None:
     before `merge-chunks`) or a ``--limit`` run would turn a partial screen into a null result."""
     if fits.meta.get("chunk", ""):
         raise SystemExit(f"fit table holds chunk {fits.meta['chunk']} only; run merge-chunks")
-    pre = Table.read(out_dir() / f"prescreen_{FIELD}.ecsv")
+    pre = read_prescreen()
     if sorted(map(str, fits["event_id"])) != sorted(map(str, passes(pre)["event_id"])):
         raise SystemExit("fit table does not hold exactly the pre-screen passes; refit")
 
 
 def run_vet(procs: int) -> Path:
     field = moa.MoaField(FIELD)
+    set_field_context(read_prescreen())
     fits = Table.read(out_dir() / f"fits_{FIELD}.ecsv")
     check_complete_fits(fits)
     ok = no_error(fits)
@@ -889,14 +1524,20 @@ def run_vet(procs: int) -> Path:
     pos = {r["event_id"]: r for r in ev}
     neigh = {str(e): neighbours_of(ev, str(e)) for e in flags["event_id"]}
     ids = set(map(str, flags["event_id"])) | {n for v in neigh.values() for n in v}
-    arrays = load_arrays(field, ids, aux=True)
+    arrays = load_arrays(ids, aux=True)
+    fl_ids = [str(e) for e in flags["event_id"]]
+    rp, rp_note = gaia_rp_mags(
+        [float(pos[e]["ra"]) for e in fl_ids], [float(pos[e]["dec"]) for e in fl_ids]
+    )
     jobs = []
-    for r in flags:
+    for i, r in enumerate(flags):
         eid = str(r["event_id"])
         t, f, sf, ax = arrays[eid]
         scan = {k: float(r[k]) for k in SCAN_KEYS}
         nb = [(n, *arrays[n][:3]) for n in neigh[eid] if n in arrays]
-        d = {"event_id": eid, "ra": float(pos[eid]["ra"]), "dec": float(pos[eid]["dec"])}
+        d = {"event_id": eid, "ra": float(pos[eid]["ra"]), "dec": float(pos[eid]["dec"]),
+             "dophot_mag": float(pos[eid]["dophot_magnitude"]),
+             "ref_mag": float(rp[i])}  # fmt: skip
         jobs.append((d, t, f, sf, ax, scan, nb, True, res_from_row(r)))
     print(f"vetting {len(jobs)} flags", flush=True)
     t1 = time.time()
@@ -923,15 +1564,22 @@ def run_vet(procs: int) -> Path:
         if failed:
             o["tests"].append(("variable_catalogues_failed", True, f"queries failed: {failed}"))
             o["complete"] = False
+        dophot = float(pos[o["event_id"]]["dophot_magnitude"])
+        if rp_note.startswith("query failed") and not np.isfinite(dophot):
+            # the source-flux bound fell back to the lenient default: not a complete vetting
+            o["tests"].append(("reference_flux_failed", True, rp_note))
+            o["complete"] = False
         o["survives"] = all(ok for _, ok, _ in o["tests"])
     path = out_dir() / f"vetting_{FIELD}.json"
     rec = {
         "provenance": "derived",
+        "chain": CHAIN_VERSION,
         "n_fit": len(fits),
         "fit_errors": sorted(map(str, fits["event_id"][~ok])),  # unscreened: no null limit
         "n_flags": len(flags),
         "wall_time_s": time.time() - t1,
         "variable_xmatch": var,
+        "gaia_rp_xmatch": rp_note,
         "flags": sorted(out, key=lambda o: o["event_id"]),
     }
     path.write_text(json.dumps(rec, indent=1, default=float))
@@ -970,7 +1618,7 @@ def contact_sheet(path_png: Path, ids=None, max_panels: int = 24) -> None:
     vet = sorted(vet, key=lambda o: (not o.get("survives"), o["dbic_all"]))[:max_panels]
     if not vet:
         return
-    arrays = load_arrays(moa.MoaField(FIELD), [o["event_id"] for o in vet])
+    arrays = load_arrays([o["event_id"] for o in vet])
     ncol = 3
     nrow = math.ceil(len(vet) / ncol)
     fig, axes = plt.subplots(nrow, ncol, figsize=(5.2 * ncol, 3.3 * nrow), squeeze=False)
@@ -1006,7 +1654,7 @@ def contact_sheet(path_png: Path, ids=None, max_panels: int = 24) -> None:
 
 INJ_TE = (3.0, 10.0, 30.0, 100.0, 300.0)  # days (ASSUMPTION: grid, as D-057)
 INJ_RHO = (0.01, 0.1)
-INJ_IS = (14.2, 21.4)  # source MOA-Red magnitudes, uniform (Koshimoto et al. 2023's range)
+INJ_IS = (14.2, 21.4)  # source MOA-Red magnitudes (Koshimoto et al. 2023's range)
 LF_SLOPE = 0.319  # dex/mag: Gaia DR3 RP counts in gb22, RP 13–17.5 (ASSUMPTION: extends to 21.4)
 
 
@@ -1014,16 +1662,31 @@ def quiet_carriers(pre: Table, n: int, seed: int) -> list[str]:
     """Light curves with no significant notch either way (``|z| < 4``) and ≥ 1,000 epochs: stand-ins
     for the difference light curve of a constant star (ASSUMPTION; constant stars are not Cut-0
     objects, so their own light curves are not in the release)."""
-    ok = (
-        no_error(pre)
-        & (np.asarray(pre["z_min"], float) > -4.0)
-        & (np.asarray(pre["z_max"], float) < 4.0)
-        & (np.asarray(pre["s_min"], float) > -P.prescreen_s)
-        & (np.asarray(pre["n_points"]) >= 1000)
-    )
-    ids = np.asarray(pre["event_id"][ok], str)
+    ids = np.asarray(pre["event_id"][is_quiet(pre)], str)
     rng = np.random.default_rng(seed)
     return list(rng.choice(ids, size=min(n, ids.size), replace=False))
+
+
+def sample_magnitudes(rng, size: int, sampling: str = "lf") -> np.ndarray:
+    """Source magnitudes in ``INJ_IS``: ``"lf"`` draws from the luminosity function
+    ∝ 10^(LF_SLOPE·I)
+    (D-068: every injection then has the same weight, n_eff = n), ``"uniform"`` as D-062."""
+    lo, hi = INJ_IS
+    u = rng.uniform(0.0, 1.0, size)
+    if sampling == "uniform":
+        return lo + (hi - lo) * u
+    a = LF_SLOPE * math.log(10.0)
+    return np.log(np.exp(a * lo) + u * (np.exp(a * hi) - np.exp(a * lo))) / a
+
+
+def sampling_density(mag, sampling: str) -> np.ndarray:
+    """Probability density of ``sample_magnitudes`` at ``mag``."""
+    mag = np.asarray(mag, float)
+    lo, hi = INJ_IS
+    if sampling == "uniform":
+        return np.full(mag.shape, 1.0 / (hi - lo))
+    a = LF_SLOPE * math.log(10.0)
+    return a * np.exp(a * mag) / (math.exp(a * hi) - math.exp(a * lo))
 
 
 def injected_signal(t, kind: str, fs: float, prm: dict) -> np.ndarray:
@@ -1054,7 +1717,9 @@ def _inject_worker(job):
         row.update(flagged=False, survives=False, failed_test="")
         if row["cut0"] and row["prescreen"] and not prm.get("prescreen_only"):
             t1 = time.time()
-            d = {"event_id": eid, "ra": prm["ra"], "dec": prm["dec"]}
+            # The injected source magnitude is the reference flux of the source-flux bound, as
+            # the DoPHOT or Gaia magnitude is for a real object (D-068; stricter: no blend light).
+            d = {"event_id": eid, "ra": prm["ra"], "dec": prm["dec"], "ref_mag": prm["Is"]}
             o = vet_one((d, t, f2, sf, ax, {k: scan[k] for k in SCAN_KEYS}, [], False, None))
             row["flagged"] = bool(o["tests"][0][1])
             row["survives"] = bool(o["survives"])
@@ -1070,17 +1735,22 @@ def _inject_worker(job):
 
 
 def run_inject(
-    procs: int, per_cell: int, per_ctrl: int, seed: int = 60, prescreen_only: bool = False
+    procs: int,
+    per_cell: int,
+    per_ctrl: int,
+    seed: int = 60,
+    prescreen_only: bool = False,
+    sampling: str = "lf",
+    n_carriers: int = 300,
 ) -> Path:
     """Injection-recovery through the whole chain: Cut-0 emulation, pre-screen, fit, vetting
     (binary lens and the VSX/Gaia match excepted). W3: n = 1, ε < 0, u0 ~ U[0, 2); PSPL controls:
     u0 ~ U[0, 1) (they measure how often an ordinary event ends as a W3 survivor)."""
     field = moa.MoaField(FIELD)
-    pre = Table.read(out_dir() / f"prescreen_{FIELD}.ecsv")
-    global _POP
-    _POP = (deficit_population(pre), chip_populations(pre))  # the real field's coincidences
-    carriers = quiet_carriers(pre, 300, seed)
-    arrays = load_arrays(field, carriers, aux=True)
+    pre = read_prescreen()
+    set_field_context(pre)  # the real field's coincidences and baseline calibration
+    carriers = quiet_carriers(pre, n_carriers, seed)
+    arrays = load_arrays(carriers, aux=True, pre=pre)
     ev = field.events()
     pos = {r["event_id"]: (float(r["ra"]), float(r["dec"])) for r in ev}
     rng = np.random.default_rng(seed)
@@ -1099,7 +1769,7 @@ def run_inject(
                         "rho": rho,
                         "u0": float(rng.uniform(0.0, umax)),
                         "t0": float(rng.uniform(moa.T_START, moa.T_END)),
-                        "Is": float(rng.uniform(*INJ_IS)),
+                        "Is": float(sample_magnitudes(rng, 1, sampling)[0]),
                         "ra": pos[eid][0],
                         "dec": pos[eid][1],
                     }
@@ -1124,6 +1794,10 @@ def run_inject(
         params=json.dumps(asdict(P)),
         wall_time_s=round(time.time() - t1, 1),
         seed=seed,
+        is_sampling=sampling,
+        chain=CHAIN_VERSION,
+        baseline_chi2=baseline_threshold(),
+        n_carriers=len(arrays),
     )
     path = out_dir() / f"injections_{FIELD}{'_prescreen' if prescreen_only else ''}.ecsv"
     tab.write(path, overwrite=True)
@@ -1149,18 +1823,46 @@ def lf_fraction_injected() -> float:
     return integral(*INJ_IS) / integral(10.0, INJ_IS[1])
 
 
-def run_limit() -> Path:
-    """95 % limit per monitored star per year; needs a complete null vetting (zero survivors)."""
+def field_star_counts(field: str | None = None) -> dict:
+    """Monitored stars (10 ≤ I_s ≤ 21.4) of a field: Nunota et al. 2024 Table 1 where published
+    (their N_s counts only the subfields they used; the screen covers all 80, so the published value
+    is adopted as is — conservative — and N_s × 80 / n_sub is the upper end), else the N_s per
+    Cut-0 object model (median, min, max; ASSUMPTION)."""
+    f = field_number(field)
+    if f in moa.NUNOTA_NS:
+        nsub, ns = moa.NUNOTA_NS[f]
+        return {"n_s": float(ns), "n_s_low": float(ns), "n_s_high": ns * 80.0 / nsub,
+                "n_s_source": f"Nunota et al. 2024 Table 1 ({nsub}/80 subfields)"}  # fmt: skip
+    est, lo, hi = moa.star_count_estimate(moa.CUT0_PER_FIELD[f])
+    return {
+        "n_s": est,
+        "n_s_low": lo,
+        "n_s_high": hi,
+        "n_s_source": "N_s per Cut-0 object model (median of Nunota et al.'s 20 fields)",
+    }
+
+
+def run_limit(efficiency_only: bool = False) -> Path:
+    """95 % limit per monitored star per year; needs a complete null vetting (zero survivors).
+    ``efficiency_only``: a field with flags still open gets its efficiency table only
+    (``efficiency_<field>.ecsv``, no rate columns; never read by ``combine``)."""
     vet = json.loads((out_dir() / f"vetting_{FIELD}.json").read_text())
+    if vet.get("chain") != CHAIN_VERSION:  # real flags and injections must face the same chain
+        raise SystemExit(f"vetting from chain {vet.get('chain')}, not {CHAIN_VERSION}; rerun vet")
     open_flags = [o["event_id"] for o in vet["flags"] if o.get("survives")]
-    if open_flags:
+    if open_flags and not efficiency_only:
         raise SystemExit(f"no zero-event limit: flags survive: {open_flags}")
     if vet.get("fit_errors", ["vetting record predates fit_errors"]):
         raise SystemExit(f"no zero-event limit: passes without a fit: {vet.get('fit_errors')}")
     inj = Table.read(out_dir() / f"injections_{FIELD}.ecsv")
     if not no_error(inj).all():  # dropping them would bias the efficiency upward
         raise SystemExit(f"{int((~no_error(inj)).sum())} injections failed; rerun inject")
-    n_s, n_lo, n_hi = moa.star_count_estimate(moa.CUT0_PER_FIELD[22])
+    if inj.meta.get("chain") != CHAIN_VERSION:
+        chain = inj.meta.get("chain")
+        raise SystemExit(f"injections from chain {chain}, not {CHAIN_VERSION}; rerun inject")
+    sampling = inj.meta.get("is_sampling", "uniform")
+    ns = field_star_counts()
+    n_s, n_lo = ns["n_s"], ns["n_s_low"]
     years = (moa.T_END - moa.T_START) / 365.25
     frac = lf_fraction_injected()
     kind = np.asarray(inj["kind"], str)
@@ -1172,12 +1874,14 @@ def run_limit() -> Path:
                 (kind == "W3") & (np.asarray(inj["tE"]) == te) & (np.asarray(inj["rho"]) == rho)
             ]
             rec = np.asarray(w["recovered"], bool)
-            wt = lf_weights(w["Is"])
+            wt = lf_weights(w["Is"]) / sampling_density(w["Is"], sampling)
             eff_inj = float(np.sum(wt * rec) / np.sum(wt)) if len(w) else np.nan
             eff = eff_inj * frac  # stars brighter than 14.2 counted with efficiency 0
             lim = 3.0 / (n_s * years * eff) if eff > 0 else np.inf
+            bright = np.asarray(w["Is"]) < 19.0
             rows.append(
                 {
+                    "field": FIELD,
                     "tE_days": te,
                     "rho": rho,
                     "mass_msun_model": (te / w3.einstein_time_days(1.0)[0]) ** 2,
@@ -1188,12 +1892,14 @@ def run_limit() -> Path:
                     ),
                     "p_flag": float(np.mean(np.asarray(w["flagged"], bool))),
                     "p_recovered": float(rec.mean()),
-                    "p_recovered_bright": float(rec[np.asarray(w["Is"]) < 19.0].mean())
-                    if (np.asarray(w["Is"]) < 19.0).any()
-                    else np.nan,
+                    "n_recovered": int(rec.sum()),
+                    "p_recovered_bright": float(rec[bright].mean()) if bright.any() else np.nan,
                     "eff_per_star": eff,
-                    # Kish effective sample size of the LF weights (the faint end dominates)
+                    # Kish effective sample size of the LF weights
                     "n_eff_lf": float(wt.sum() ** 2 / np.sum(wt**2)) if len(w) else 0.0,
+                    "n_s": n_s,
+                    "n_s_low": n_lo,
+                    "years": years,
                     "rate95_per_star_yr": lim,
                     "rate95_conservative": 3.0 / (n_lo * years * eff) if eff > 0 else np.inf,
                     "n_ctrl": len(ctrl),
@@ -1203,20 +1909,107 @@ def run_limit() -> Path:
     tab = Table(rows)
     tab.meta.update(
         provenance=schema.Provenance.DERIVED.value,
-        source="scripts/w3_moa.py limit: injection-recovery through the full gb22 chain",
+        source=f"scripts/w3_moa.py limit: injection-recovery through the full {FIELD} chain",
+        n_s_source=ns["n_s_source"],
+        baseline_chi2=inj.meta.get("baseline_chi2"),
+        is_sampling=sampling,
+        chain=CHAIN_VERSION,
         assumptions=(
-            f"N_s = {n_s:.3g} (range {n_lo:.3g}–{n_hi:.3g}) monitored stars, 10 ≤ I ≤ 21.4, from "
-            "N_s per Cut-0 object of Nunota et al. 2024's 20 fields; T = "
-            f"{years:.2f} yr; LF ∝ 10^({LF_SLOPE} I) (Gaia DR3 RP); injections I_s ~ "
-            "U[14.2, 21.4], "
-            "MOA-Red ≈ I; carrier noise unchanged by the source (sky/blend dominated); Cut-0 "
-            "emulated at light-curve level; 95 % Poisson for 0 events = 3.0; mass: n = 1, "
-            "D_L = 4 kpc, D_S = 8 kpc, μ_rel = 5 mas/yr (model_prediction)"
+            f"N_s = {n_s:.3g} (range {n_lo:.3g}–{ns['n_s_high']:.3g}) monitored stars, "
+            f"10 ≤ I ≤ 21.4 ({ns['n_s_source']}); T = {years:.2f} yr; LF ∝ 10^({LF_SLOPE} I) "
+            f"(Gaia DR3 RP in gb22, assumed for every field); injections I_s in 14.2–21.4 "
+            f"({sampling} sampling), MOA-Red ≈ I; carrier noise unchanged by the source "
+            "(sky/blend dominated); Cut-0 emulated at light-curve level; 95 % Poisson for 0 "
+            "events = 3.0; mass: n = 1, D_L = 4 kpc, D_S = 8 kpc, μ_rel = 5 mas/yr "
+            "(model_prediction)"
         ),
     )
+    if efficiency_only:
+        tab.remove_columns(["rate95_per_star_yr", "rate95_conservative"])
+        tab.meta["open_flags"] = open_flags
+        tab.meta["source"] += " (efficiency only: flags open, no limit)"
+        path = out_dir() / f"efficiency_{FIELD}.ecsv"
+        tab.write(path, overwrite=True)
+        tab.write(results_dir() / f"efficiency_{FIELD}.ecsv", overwrite=True)
+        tab.pprint(max_width=250, max_lines=50)
+        return path
     path = out_dir() / f"limits_{FIELD}.ecsv"
     tab.write(path, overwrite=True)
+    tab.write(results_dir() / f"limits_{FIELD}.ecsv", overwrite=True)  # tracked (small)
     tab.pprint(max_width=250, max_lines=50)
+    return path
+
+
+def run_combine() -> Path:
+    """Combined 95 % limit over every field with a tracked zero-survivor limit table:
+    Γ₉₅ = 3 / Σ_f N_s,f T ε_f per t_E × ρ cell (``derived``)."""
+    files = sorted(results_dir().glob("limits_gb*.ecsv"))
+    if not files:
+        raise SystemExit("no per-field limit tables in results/w3_moa/")
+    tabs = [Table.read(p) for p in files]
+    chains = {p.name: t.meta.get("chain") for p, t in zip(files, tabs, strict=True)}
+    stale = [name for name, c in chains.items() if c != CHAIN_VERSION]
+    if stale:  # a combined limit must not mix vetting chains
+        raise SystemExit(f"limit tables from an older chain (rerun inject + limit): {stale}")
+    rows = []
+    for te in INJ_TE:
+        for rho in INJ_RHO:
+            exp = exp_lo = 0.0
+            n_inj = n_rec = 0
+            for t in tabs:
+                r = t[(np.asarray(t["tE_days"]) == te) & (np.asarray(t["rho"]) == rho)][0]
+                exp += float(r["n_s"]) * float(r["years"]) * float(r["eff_per_star"])
+                exp_lo += float(r["n_s_low"]) * float(r["years"]) * float(r["eff_per_star"])
+                n_inj += int(r["n_inj"])
+                n_rec += int(r["n_recovered"])
+            rows.append({
+                "tE_days": te, "rho": rho,
+                "mass_msun_model": (te / w3.einstein_time_days(1.0)[0]) ** 2,
+                "n_fields": len(tabs), "n_inj": n_inj, "n_recovered": n_rec,
+                "star_years_eff": exp,
+                "rate95_per_star_yr": 3.0 / exp if exp > 0 else np.inf,
+                "rate95_conservative": 3.0 / exp_lo if exp_lo > 0 else np.inf,
+            })  # fmt: skip
+    out = Table(rows)
+    out.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source="scripts/w3_moa.py combine: " + ", ".join(str(t["field"][0]) for t in tabs),
+        fields=[str(t["field"][0]) for t in tabs],
+        assumptions="per-field assumptions in each limits_<field>.ecsv; zero survivors in all",
+    )
+    path = results_dir() / "limits_combined.ecsv"
+    out.write(path, overwrite=True)
+    out.pprint(max_width=250)
+    return path
+
+
+def write_vetting_summary() -> Path:
+    """Tracked compact vetting record of a field (no fit parameters): funnel, flags, tests."""
+    vet = json.loads((out_dir() / f"vetting_{FIELD}.json").read_text())
+    pre = read_prescreen()
+    rec = {
+        "provenance": "derived",
+        "field": FIELD,
+        "n_light_curves": n_light_curves(pre),
+        "n_shape": int(pre.meta.get("n_shape", 0)),
+        "n_passes": len(passes(pre)),
+        "baseline_chi2": baseline_threshold(),
+        "baseline_calibration": calibrate_baseline(pre) if "chi2_const" in pre.colnames else None,
+        "n_flags": vet["n_flags"],
+        "funnel": vetting_funnel(vet),
+        "flags": [
+            {
+                "event_id": o["event_id"],
+                "exotic": o.get("exotic"),
+                "dbic_all": o.get("dbic_all"),
+                "survives": o.get("survives"),
+                "tests": [[n, bool(ok), note] for n, ok, note in o["tests"]],
+            }
+            for o in vet["flags"]
+        ],
+    }
+    path = results_dir() / f"vetting_{FIELD}.json"
+    path.write_text(json.dumps(rec, indent=1, default=float, ensure_ascii=False) + "\n")
     return path
 
 
@@ -1226,23 +2019,44 @@ LAST_MODIFIED = {  # HTTP Last-Modified of the pinned files, read 2026-10-08 (th
 }
 
 
+def field_range_digest(field: str) -> str | None:
+    """Content pin of a streamed field tar from its tracked pre-screen chunks: sha256 over the
+    ordered sha256s of its 64 MiB ranges (``moa_stream.range_digest``); None until complete."""
+    n = n_chunks(field)
+    shas = []
+    for k in range(n):
+        p = prescreen_chunk_path(field, k, n)
+        if not p.exists():
+            return None
+        meta = Table.read(p, format="ascii.ecsv").meta
+        if meta.get("segment_bytes") != SEG_BYTES or "segment_sha256" not in meta:
+            return None
+        shas.extend(meta["segment_sha256"])
+    return moa_stream.range_digest(shas)
+
+
 def write_manifest() -> Path:
-    """Pinned MOA-II files as a tracked manifest (URL, sha256, size, retrieval date, release)."""
-    names = [u.rsplit("/", 1)[-1] for u in moa.FILES]
-    tab = Table(
-        {
-            "url": list(moa.FILES),
-            "sha256": [v[0] for v in moa.FILES.values()],
-            "size_bytes": [v[1] for v in moa.FILES.values()],
-            "retrieved_utc": ["2026-10-08"] * len(names),
-            "last_modified": [LAST_MODIFIED[n] for n in names],
-            "release": ["MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"]
-            * len(names),
-        }
-    )
+    """Pinned MOA-II files as a tracked manifest (URL, sha256, size, retrieval date, release).
+    Downloaded files carry a whole-file sha256; streamed field tars carry ``range_sha256`` (sha256
+    over the sha256s of consecutive 64 MiB byte ranges, recorded per chunk in results/w3_moa/)."""
+    rows = []
+    release = "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+    for url, (sha, size) in moa.FILES.items():
+        name = url.rsplit("/", 1)[-1]
+        rows.append({"url": url, "sha256": sha, "range_sha256": "", "size_bytes": size,
+                     "retrieved_utc": "2026-10-08", "last_modified": LAST_MODIFIED[name],
+                     "release": release})  # fmt: skip
+    for f in sorted(moa.TAR_BYTES):
+        dig = field_range_digest(f"gb{f}")
+        if dig:
+            rows.append({"url": moa.tar_url(f), "sha256": "", "range_sha256": dig,
+                         "size_bytes": moa.TAR_BYTES[f], "retrieved_utc": "2026-10-08",
+                         "last_modified": moa.TAR_LAST_MODIFIED[f],
+                         "release": release})  # fmt: skip
+    tab = Table(rows)
     tab.meta.update(
         provenance=schema.Provenance.OBSERVED.value,
-        source="jwst_anomaly.moa.FILES (MOA-II 9-year release; D-062)",
+        source="jwst_anomaly.moa.FILES and streamed field tars (MOA-II 9-year; D-062, D-068)",
     )
     path = paths.manifests_dir() / "moa_ii.ecsv"
     tab.write(path, overwrite=True)
@@ -1263,56 +2077,156 @@ def use_moa_fit_params() -> None:
     w3.P = replace(w3.P, **MOA_FIT_BOUNDS)
 
 
-def _init_worker(pop: tuple | None = None) -> None:
+def _init_worker(ctx: dict | None = None) -> None:
     """Pool initializer: spawned workers (Windows, macOS) re-import this module without running
-    `main`, so the MOA fit bounds and the shared-epoch populations are set here, not inherited."""
-    global _POP
+    `main`, so the MOA fit bounds, the field, its shared-epoch populations and its baseline
+    calibration are set here, not inherited."""
+    global _POP, _BASELINE, FIELD
     use_moa_fit_params()
-    _POP = pop
+    ctx = ctx or {}
+    _POP = ctx.get("pop")
+    _BASELINE = ctx.get("baseline")
+    FIELD = ctx.get("field", FIELD)
+
+
+def _ctx() -> dict:
+    return {"pop": _POP, "baseline": _BASELINE, "field": FIELD}
 
 
 def _pool(procs: int):
-    return Pool(procs, initializer=_init_worker, initargs=(_POP,))
+    return Pool(procs, initializer=_init_worker, initargs=(_ctx(),))
+
+
+FITS_PER_CHUNK = 120  # pre-screen passes per tracked fit chunk (~30 min on 4 cores)
+
+
+def run_field(procs: int, conns: int, per_cell: int, per_ctrl: int) -> None:
+    """Every stage for ``FIELD``, resumable: streamed pre-screen (finished chunks skipped), fits in
+    tracked chunks (finished chunks skipped), vetting, contact sheet, injections, limit. Stops
+    before the limit if any flag survives (``run_limit`` refuses)."""
+    t0 = time.time()
+    run_stream_prescreen(FIELD, procs, conns)
+    merge_prescreen(FIELD)
+    pre = read_prescreen()
+    n_pass = len(passes(pre))
+    n = max(1, math.ceil(n_pass / FITS_PER_CHUNK))
+    ids = list(passes(pre)["event_id"])
+    for k in range(n):
+        path = results_dir() / f"{chunk_name((k, n))}.gz"
+        ok = (
+            path.exists()
+            and fit_chunk_problem(Table.read(path, format="ascii.ecsv"), ids, k, n) is None
+        )
+        if not ok:
+            run_fit(procs, None, (k, n))
+    merge_chunks(n)
+    run_vet(procs)
+    contact_sheet(out_dir() / f"contact_sheet_{FIELD}.png")
+    vet = json.loads((out_dir() / f"vetting_{FIELD}.json").read_text())
+    alive = [o["event_id"] for o in vet["flags"] if o.get("survives")]
+    set_field_context(pre)
+    write_vetting_summary()
+    if alive:
+        raise SystemExit(f"{FIELD}: flags survive every test: {alive} — stop and report")
+    run_inject(procs, per_cell, per_ctrl)
+    run_limit()
+    print(f"{FIELD}: chain done in {time.time() - t0:.0f} s", flush=True)
+
+
+def parse_chunk_list(text: str | None) -> list[int] | None:
+    """``"3"``, ``"1-5"``, ``"1,4,7-9"`` (1-based) -> 0-based chunk numbers; None = all."""
+    if not text:
+        return None
+    out = []
+    for part in text.split(","):
+        a, _, b = part.partition("-")
+        lo, hi = int(a), int(b or a)
+        if lo < 1 or hi < lo:
+            raise SystemExit(f"bad chunk range {part!r} (1-based, ascending)")
+        out.extend(range(lo - 1, hi))
+    return out
+
+
+def set_field(field: str) -> None:
+    global FIELD
+    if field_number(field) not in moa.CUT0_PER_FIELD:
+        raise SystemExit(f"unknown MOA field {field!r}")
+    FIELD = field
 
 
 def main(argv=None) -> int:
-    os.environ.setdefault("OMP_NUM_THREADS", "1")
     use_moa_fit_params()
+    ncpu = os.cpu_count() or 4
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--field", default="gb22", help="MOA field, gb1 … gb22")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    p = sub.add_parser("prescreen", help="deficit statistic on every light curve of the field")
-    p.add_argument("--procs", type=int, default=4)
+    p = sub.add_parser("prescreen", help="stream the field tar and pre-screen every light curve")
+    p.add_argument("--procs", type=int, default=ncpu)
+    p.add_argument("--conns", type=int, default=8, help="concurrent HTTP range reads")
+    p.add_argument("--source", choices=("auto", "local", "http"), default="auto")
+    p.add_argument("--chunks", default=None, help="1-based chunk list, e.g. 1-5,9 (default all)")
+    sub.add_parser("merge-prescreen", help="join the tracked pre-screen chunks of the field")
     f = sub.add_parser("fit", help="ordinary and exotic fits of the pre-screen passes")
-    f.add_argument("--procs", type=int, default=4)
+    f.add_argument("--procs", type=int, default=ncpu)
     f.add_argument("--limit", type=int, default=None)
     f.add_argument("--chunk", default=None, help="K/N: fit every N-th pass from the K-th")
     m = sub.add_parser("merge-chunks", help="join the tracked chunk fit tables 1..N")
     m.add_argument("--n", type=int, required=True)
     v = sub.add_parser("vet", help="vet the flags of the fit stage")
-    v.add_argument("--procs", type=int, default=4)
+    v.add_argument("--procs", type=int, default=ncpu)
     c = sub.add_parser("sheet", help="contact sheet of the vetted flags")
     c.add_argument("--out", type=Path, default=None)
     c.add_argument("--survivors-only", action="store_true")
     i = sub.add_parser("inject", help="injection-recovery through the whole chain")
-    i.add_argument("--procs", type=int, default=4)
-    i.add_argument("--per-cell", type=int, default=30)
-    i.add_argument("--per-ctrl", type=int, default=20)
+    i.add_argument("--procs", type=int, default=ncpu)
+    i.add_argument("--per-cell", type=int, default=200)
+    i.add_argument("--per-ctrl", type=int, default=40)
+    i.add_argument("--carriers", type=int, default=300)
+    i.add_argument("--sampling", choices=("lf", "uniform"), default="lf")
+    i.add_argument("--seed", type=int, default=60)
     i.add_argument("--prescreen-only", action="store_true", help="Cut-0 and pre-screen only")
-    sub.add_parser("limit", help="95 %% rate limit per monitored star per year")
+    lim = sub.add_parser("limit", help="95 %% rate limit per monitored star per year")
+    lim.add_argument("--efficiency-only", action="store_true", help="flags open: ε table only")
+    sub.add_parser("combine", help="combined limit over the fields with tracked limit tables")
+    sub.add_parser("summary", help="tracked compact vetting record of the field")
     sub.add_parser("manifest", help="write data/manifests/moa_ii.ecsv")
+    r = sub.add_parser("run-field", help="every stage for the field (resumable)")
+    r.add_argument("--procs", type=int, default=ncpu)
+    r.add_argument("--conns", type=int, default=8)
+    r.add_argument("--per-cell", type=int, default=200)
+    r.add_argument("--per-ctrl", type=int, default=40)
     a = ap.parse_args(argv)
+    if a.cmd in ("fit", "vet", "inject", "run-field") and not w3.have_mm():
+        # Without MulensModel the parallax refit and the binary-lens test are skipped, which
+        # inflates the injection efficiency and leaves real flags incomplete (D-068).
+        ap.error(f"{a.cmd} needs MulensModel: pip install -e '.[mulens]'")
+    set_field(a.field)
     if a.cmd == "prescreen":
-        run_prescreen(min(a.procs, 4))
+        run_stream_prescreen(
+            FIELD, min(a.procs, ncpu), a.conns, parse_chunk_list(a.chunks), a.source
+        )
+        if all(_chunk_done(FIELD, k, n_chunks()) for k in range(n_chunks())):
+            merge_prescreen(FIELD)
+    elif a.cmd == "merge-prescreen":
+        merge_prescreen(FIELD)
     elif a.cmd == "fit":
-        run_fit(min(a.procs, 4), a.limit, w3.parse_chunk(a.chunk))
+        run_fit(min(a.procs, ncpu), a.limit, w3.parse_chunk(a.chunk))
     elif a.cmd == "merge-chunks":
         merge_chunks(a.n)
     elif a.cmd == "vet":
-        run_vet(min(a.procs, 4))
+        run_vet(min(a.procs, ncpu))
     elif a.cmd == "inject":
-        run_inject(min(a.procs, 4), a.per_cell, a.per_ctrl, prescreen_only=a.prescreen_only)
+        run_inject(min(a.procs, ncpu), a.per_cell, a.per_ctrl, a.seed, a.prescreen_only,
+                   a.sampling, a.carriers)  # fmt: skip
     elif a.cmd == "limit":
-        run_limit()
+        run_limit(a.efficiency_only)
+    elif a.cmd == "combine":
+        run_combine()
+    elif a.cmd == "summary":
+        set_field_context(read_prescreen())
+        print(write_vetting_summary())
+    elif a.cmd == "run-field":
+        run_field(min(a.procs, ncpu), a.conns, a.per_cell, a.per_ctrl)
     elif a.cmd == "manifest":
         print(write_manifest())
     elif a.cmd == "sheet":

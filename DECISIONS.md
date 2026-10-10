@@ -3177,6 +3177,90 @@ efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049
 - Euclid DR1 (≈ 2000 deg², PSF-corrected shapes) is public: the same code scales by tile.
 - A flag appears, or per-tile star ellipticity gradients show radial patterns on 1–12′ scales.
 
+## D-068 W3 MOA-II: calibrated variable-baseline test, LF-drawn injections and a streaming per-field pipeline; eleven fields, 0 candidates, limits withdrawn pending the corrected chain (2026-10-08, amended 2026-10-09)
+
+**Decision.**
+- The variable-baseline vetting test's threshold is the 95th percentile (ASSUMPTION, `BASELINE_Q`) of the field's
+  quiet-light-curve χ²/dof about a constant (`calibrate_baseline`), not D-057/D-062's fixed χ²/dof > 2. gb22: 5.31.
+- Injection magnitudes are drawn from the luminosity function (`--sampling lf`), 200 per t_E × ρ cell, 40 PSPL
+  controls per t_E; uniform draws re-weighted afterwards left n_eff ≈ 20–25 per cell.
+- Fields are streamed (`jwst_anomaly.moa_stream`): concurrent HTTP range reads of the uncompressed tar, member
+  headers resynchronised at 512-byte blocks, each pre-screen process reading its own 64 MiB ranges. Per-chunk
+  pre-screen tables are tracked in `results/w3_moa/prescreen/` (resumable, `merge-prescreen` checks the Cut-0
+  member count); per-field limit and vetting summaries in `results/w3_moa/`; `combine` joins fields. Streamed tars
+  are pinned by per-range sha256 in the manifest.
+- gb22 re-run: same 30 flags as D-062, 0 survivors; Γ₉₅ ≈ 1.1–3.3 × 10⁻⁶ per star per year at t_E = 10–300 d,
+  4–7 × 10⁻⁶ at 3 d (docs/exotic_limits.md "Calibrated re-run of gb22"). Supersedes D-062's limit numbers.
+  **Amendment 2026-10-09: withdrawn** with every limit of this PR, see below.
+- Six fields (gb11, gb16, gb19, gb20, gb21, gb22; 296,618 Cut-0 light curves) streamed and vetted: 234 flags,
+  **0 survivors** (docs/exotic_limits.md "Six fields"). New vetting tests `exotic_in_domain`, `smooth_dip`,
+  `feature_bracketed`, `step_ramp`.
+- **Injections are vetted against the injected source magnitude** as the reference flux of `exotic_in_domain`'s
+  source-flux bound (f_s ≤ 3 × reference). Before 2026-10-09 they got the lenient 14.2 mag default while real flags
+  got their DoPHOT / Gaia magnitude, so efficiencies, and all per-field and combined limits, were biased high; the
+  tables were removed. `CHAIN_VERSION` tags injection and limit tables; `limit` and `combine` refuse another
+  version (bump it on any pre-screen, fit or vetting change).
+- `fit`, `vet`, `inject` and `run-field` refuse to run without MulensModel (without it, the parallax refit and the
+  binary-lens test were skipped silently). A failed Gaia XMatch is retried and, if it still fails, marks flags
+  without a DoPHOT magnitude incomplete instead of passing them on the lenient default.
+
+**Alternatives rejected.**
+- Fixed χ²/dof > 2: 35 % of quiet carriers exceed it from the red noise of difference photometry alone; it was the
+  largest injection loss (73 of 188 vetted injections, D-062).
+- Downloading each tar: 3.5–508 GB per field (≈ 2.4 TB total); against the cloud-disk owner decision.
+- A parent process that reads ranges and ships bytes to workers: OOM-killed on gb21.
+
+**Evidence.** The HTTP stream reproduces the D-062 pre-screen of gb22 exactly (81 s vs 203 s from the local tar);
+the fixed-width IPAC parser is bit-identical to the token parser on 15,461 gb21 light curves; gb21 test throughput
+258 light curves/s (72 MB/s, 4 cores). 103 / 2,000 W3 injections recovered, 0 / 200 PSPL controls.
+
+**Amendment (2026-10-09): vetting tests added post hoc, each after an automated survivor was seen.** Each change
+was followed by a re-run of the vetting and the injections of every field already done, so every quoted limit
+includes its cost. The candidate records give the verdicts and evidence.
+- `exotic_in_domain` and `smooth_dip`, added after seeing gb20-R-4-0-49379: u₀ < 2 and f_s ≤ 3 × the
+  DoPHOT or Gaia DR3 RP reference flux; a Gaussian dip. Cost on gb22: 0 injections.
+- `feature_bracketed` and `step_ramp`, added after seeing gb19-R-4-4-31159: ≥ 20 epochs before the ingress and
+  after the egress; a level change plus ramp. Cost on gb22: 103 → 93, mostly long t_E near the data edges.
+- The night jackknife ranks nights against the eclipse model too (c63a6d5), changed after seeing
+  gb7-R-8-6-94052. Its exotic preference over a trapezoid rested on one night. Paired re-run of gb22 (same seed,
+  identical injections; W3 recovered, ρ summed, before → after): 3 d 8 → 6 (−25 %, small counts), 10 d 22 → 20,
+  30 d 28 → 25, 100 d 22 → 21, 300 d 13 → 13; total 93 → 85 (−9 %). PSPL controls falsely recovered: 0 → 0.
+  Kept, not tuned: a threshold set on the flag that motivated the change would be post hoc twice over.
+  All seven paired fields (W3 recovered, before → after; PSPL controls 0 → 0 in each):
+
+  | Field | 3 d | 10 d | 30 d | 100 d | 300 d | total |
+  |---|---|---|---|---|---|---|
+  | gb22 | 8 → 6 | 22 → 20 | 28 → 25 | 22 → 21 | 13 → 13 | 93 → 85 |
+  | gb21 | 13 → 6 | 26 → 24 | 33 → 32 | 28 → 28 | 10 → 10 | 110 → 100 |
+  | gb20 | 10 → 6 | 21 → 18 | 22 → 22 | 27 → 25 | 5 → 5 | 85 → 76 |
+  | gb19 | 12 → 7 | 24 → 21 | 24 → 24 | 18 → 18 | 8 → 8 | 86 → 78 |
+  | gb16 | 11 → 9 | 20 → 19 | 24 → 23 | 20 → 20 | 4 → 4 | 79 → 75 |
+  | gb11 | 19 → 15 | 27 → 23 | 31 → 31 | 24 → 23 | 14 → 14 | 115 → 106 |
+  | gb12 | 14 → 9 | 28 → 27 | 29 → 28 | 28 → 28 | 9 → 9 | 108 → 101 |
+  | **all** | **87 → 58 (−33 %)** | **168 → 152 (−10 %)** | 191 → 185 (−3 %) | 167 → 163 (−2 %) | 63 → 63 | **676 → 621 (−8 %)** |
+
+  The cost falls on short events, whose caustic spikes are sampled on one or two nights.
+- **Follow-up (open, 2026-10-09).** gb18-R-9-4-24509 passed the whole chain and was explained only by a vetting note
+  (docs/candidates/gb18-R-9-4-24509.md). The chain gap: season-offset comparisons are made only against single-lens
+  models, and a slow (flat-bottomed) dip with per-season offsets is missing. The chain is left unchanged until the
+  field queue finishes. Adding the model then would be post hoc and needs a full re-injection. Until then gb18 has an
+  efficiency-only table and is not in the combined limit: its injections did not face that model, so a zero-event
+  limit from them would overstate ε.
+- **Follow-up (open, 2026-10-09), from gb17-R-6-1-3829** (a ~30-d periodic variable; docs/candidates/gb17-R-6-1-3829.md):
+  (i) repeated deficits *inside* the feature window are not counted (the test looks only outside it);
+  (ii) there is no periodicity / variability-model test;
+  (iii) there is no cap on the exotic fit's own χ²/dof (6.7 here).
+  gb17 is efficiency-only and stays out of the combined limit, as gb18. When the queue finishes, all four gaps
+  (these three and the gb18 slow dip with season offsets) are added as one recorded post-hoc chain change, and
+  every field is re-injected.
+
+**Evidence (2026-10-09).** `/code-review` of the PR diff found the injection reference-flux gap; a unit test now
+checks that injections carry `ref_mag = I_s`. A fresh cloud venv without the `mulens` extra re-vetted gb11 without
+the binary-lens test (no error), which is how the silent skip was found.
+The recovered counts in the amendment table above come from the old chain (injection reference flux at the 14.2 mag default) and are kept only as a record of the relative cost of each vetting change. Every limit and efficiency table was withdrawn (`CHAIN_VERSION` 2026-10-09.1); per-field limits wait for a re-injection under the corrected chain.
+
+**Revisit if.** A field's quiet χ²/dof distribution is bimodal or its 95th percentile exceeds ~10 (the quantile then
+admits variables); the archive stops honouring range requests; a survivor appears (stop, /vet-candidate, owner).
 ## D-069 Owner direction 2026-10-09: System A (invention) / System B (destruction) hypothesis rounds; round 1 survivors (2026-10-09)
 
 **Decision.** New hypotheses come from System A groups that work without literature and from minimal axioms, with

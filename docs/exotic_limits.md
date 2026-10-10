@@ -1035,6 +1035,89 @@ dropped. gb22 is not in Nunota et al. 2024 (no clear red clump), so it has no pu
 - Not a statement about OGLE or the Mróz samples, and not combinable with the D-052 JWST limits without a lens
   population model.
 
+### Calibrated re-run of gb22 and the streaming pipeline (D-068)
+
+The pilot numbers above are superseded by this re-run (same real-data result, stricter injections).
+**Its limit table below is withdrawn too** (2026-10-09 review, D-068): injections were vetted against the default
+14.2 mag reference flux, so the source-flux bound of `exotic_in_domain` (added after this run) was off for them while
+it applied to real flags. The efficiencies, and every per-field and combined limit made before `CHAIN_VERSION`
+2026-10-09.1, are biased high. The real-data null stands.
+
+- **Variable-baseline test, calibrated.** Threshold = 95th percentile (ASSUMPTION, `BASELINE_Q`) of the χ²/dof
+  about a constant of the field's quiet light curves (1,458 in gb22: median 1.68, 35 % above the old fixed 2.0),
+  i.e. **5.31** in gb22, instead of the fixed 2.0. It removes variables, not the field's typical red noise.
+- **Injections** drawn from the luminosity function itself (`--sampling lf`, so n_eff = n = 200 per cell), not
+  uniform magnitudes re-weighted afterwards (n_eff ≈ 20–25). 2,000 W3 injections, 200 PSPL controls.
+- **Real data** (`derived`, `results/w3_moa/vetting_gb22.json`): the streamed pre-screen reproduces D-062's exactly
+  (18,599 light curves, 1,058 shape passes, 30 passes); the 30 flags are D-062's 30 (same event IDs; contact sheet
+  inspected then); **0 survive**. First failing test per flag: repeated deficit 13, eclipse dip 8, exotic feature not
+  sampled 3, neighbour shares the feature 2, robust errors 2, epoch jackknife 1, variable baseline 1.
+- **Limit, withdrawn** (old chain; the table was deleted with every old-chain limit, see "Eleven fields"; kept here
+  only as a record, not to be quoted; `derived` from `simulated`; ρ = 0.01 / 0.1):
+
+| t_E (d) | Cut-0 | pre-screen | recovered / 200 | ε per star | **Γ₉₅ per star per yr** |
+|---|---|---|---|---|---|
+| 3 | 0.18 / 0.15 | 0.035 / 0.030 | 5 / 3 | 0.025 / 0.015 | 4.0 / 6.7 × 10⁻⁶ |
+| 10 | 0.31 / 0.29 | 0.060 / 0.080 | 11 / 12 | 0.055 / 0.060 | 1.8 / 1.7 × 10⁻⁶ |
+| 30 | 0.41 / 0.35 | 0.110 / 0.080 | 18 / 13 | 0.090 / 0.065 | 1.1 / 1.5 × 10⁻⁶ |
+| 100 | 0.51 / 0.41 | 0.055 / 0.085 | 10 / 14 | 0.050 / 0.070 | 2.0 / 1.4 × 10⁻⁶ |
+| 300 | 0.68 / 0.47 | 0.065 / 0.055 | 11 / 6 | 0.055 / 0.030 | 1.8 / 3.3 × 10⁻⁶ |
+
+  **Γ₉₅ ≈ 1.1–3.3 × 10⁻⁶ per monitored star per year for t_E = 10–300 d, 4–7 × 10⁻⁶ at 3 d**; 103 / 2,000
+  recovered, 0 / 200 PSPL controls end as W3 survivors. N_s and T as above (ASSUMPTION; `rate95_conservative` for
+  the low N_s). With LF-drawn magnitudes most injections are faint, so Cut-0 and the pre-screen now dominate the
+  losses; the per-cell binomial uncertainty of ε is ~±25–45 %.
+- **Streaming** (`moa_stream`, `w3_moa.py --field gbN prescreen|run-field`): concurrent HTTP range reads of the
+  uncompressed tar, member headers resynchronised at 512-byte blocks, each worker process reads its own 64 MiB
+  ranges (the parent holds no light-curve bytes; an earlier design was OOM-killed on gb21). gb22 by HTTP: 81 s
+  (203 s from the local tar); gb21 test: 258 light curves/s, 72 MB/s on 4 cores. Streamed tars are pinned by the
+  sha256 of each 64 MiB range (manifest rows). No whole tar is written to disk (cloud-disk decision).
+
+### Eleven fields: gb7, gb11, gb12, gb15–gb22 (D-068)
+
+- **Real data, all eleven fields** (`derived`; `results/w3_moa/vetting_gb*.json`): 712,780 Cut-0 light curves streamed
+  (gb7 75,328; gb12 73,386; gb15 83,145; gb17 100,448; gb18 83,855; and the six below), 582 flags. Nine fields have
+  0 chain survivors. One flag each in gb17 and gb18 passed the whole chain and was explained only by a vetting note
+  outside the chain: `docs/candidates/gb17-R-6-1-3829.md` (a ~30-d periodic variable) and
+  `docs/candidates/gb18-R-9-4-24509.md` (slow dimming of a red giant with season offsets). **0 candidates.** The four
+  chain gaps these two expose are listed in D-068; gb17 and gb18 stay out of any combined limit until the chain
+  carries those tests and every field is re-injected.
+- gb13 was being streamed when the run stopped (25 / 78 flags fitted, 2026-10-09 13:02Z); it is not in this table.
+
+#### The first six (gb11, gb16, gb19, gb20, gb21, gb22)
+
+- **Real data** (`derived`; `results/w3_moa/vetting_gb*.json`; the gb11 contact sheet inspected): 296,618 Cut-0
+  light curves streamed (gb11 64,090; gb16 64,353; gb19 53,861; gb20 52,005; gb21 43,710; gb22 18,599), 234 flags,
+  **0 survive** the vetting chain. The two flags that survived longest have vetting records:
+  `docs/candidates/gb20-R-4-0-49379.md` (slow dimming of a red giant, outside the exotic domain) and
+  `docs/candidates/gb19-R-4-4-31159.md` (one-sided season-boundary step). Most flags fail the repeated-deficit,
+  bracketing, neighbour and eclipse-dip tests (eclipsing binaries and shared-epoch systematics).
+- **Vetting tests added in this run** (each re-run on every field and in the injections): `exotic_in_domain`
+  (u₀ < 2 and f_s ≤ 3 × the DoPHOT / Gaia DR3 RP reference flux; a far-field fit with cancelling f_s and f_b mimics
+  any dip), `smooth_dip` (Gaussian dimming), `feature_bracketed` (≥ 20 baseline epochs before ingress and after
+  egress) and `step_ramp` (level change plus ramp).
+- **Limits: pending the corrected-chain re-run.** Injections now use the injected source magnitude as the
+  reference flux (stricter than a real object's DoPHOT magnitude, which includes blend light), and `limit` /
+  `combine` refuse tables of an older `CHAIN_VERSION`. The withdrawn old-chain combined value (4 fields, Γ₉₅ ≈
+  1.5–5 × 10⁻⁷ per star per year) must not be quoted.
+
+### All 22 fields (next)
+
+Plan (owner step 3a, 2026-10-08):
+
+1. **Calibrate the variable-baseline test** on the carrier distribution: its threshold becomes relative to
+   the field's own quiet-light-curve χ²/dof distribution (a high quantile, ASSUMPTION) instead of the fixed
+   χ²/dof > 2, so it removes variables but not the typical red noise of difference photometry; the real gb22
+   flags it removed before are re-inspected. Injections rise to ≥ 200 per t_E × ρ cell.
+2. **Stream each field** from the archive with parallel HTTP range reads (the tars are uncompressed; member
+   headers are resynchronised at 512-byte blocks), pre-screen members in a process pool while the next
+   ranges download, and never write a whole tar to disk. Per-field result tables go to `results/w3_moa/`
+   and are resumable by chunk.
+3. Order: fields with a published N_s (Nunota et al. 2024, Table 1), smallest first; then gb6.
+   Tar sizes (HTTP HEAD, 2026-10-08, GB): gb1 70.1, gb2 60.5, gb3 214.5, gb4 280.6, gb5 508.5, gb6 7.7,
+   gb7 30.7, gb8 77.9, gb9 430.8, gb10 220.9, gb11 22.4, gb12 27.5, gb13 53.6, gb14 212.0, gb15 32.8,
+   gb16 22.3, gb17 52.3, gb18 41.9, gb19 16.3, gb20 15.2, gb21 12.3, gb22 3.5 (total ≈ 2.4 TB).
+
 ## W5 count deficits
 
 D-063; `src/jwst_anomaly/countmap.py` (count-map adapter, matched filter, injector), `scripts/w5_counts.py`

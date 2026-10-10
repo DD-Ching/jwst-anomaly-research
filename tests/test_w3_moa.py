@@ -189,6 +189,53 @@ def test_a_flat_bottomed_dip_is_fitted_as_an_eclipse():
     assert ecl["chi2"] < flat - 100.0
 
 
+def test_a_slow_smooth_dimming_is_fitted_as_a_gaussian_dip():
+    t = np.linspace(0.0, 1000.0, 2001)
+    f, sf = _noise(t)
+    f = f - 600.0 * wm.gauss_dip(t, 400.0, 80.0)  # a slow red-giant-like dimming (simulated)
+    lc = wm.to_lightcurve(t, f, sf)
+    sd = wm.fit_smooth_dip(lc, 250.0, 550.0)
+    assert sd["tc"] == pytest.approx(400.0, abs=10.0)
+    assert sd["sigma"] == pytest.approx(80.0, rel=0.15)
+    assert sd["chi2"] == pytest.approx(t.size, rel=0.1)  # noise-limited
+
+
+def test_a_one_sided_step_is_fitted_by_the_step_model_and_is_not_bracketed():
+    t = _cadence(n=1500)
+    f, sf = _noise(t)
+    ts = 2454400.0
+    f = f + np.where(t >= ts, -2000.0 + 1.5 * (t - ts), 0.0)  # step + partial recovery (simulated)
+    lc = wm.to_lightcurve(t, f, sf)
+    st = wm.fit_step_ramp(lc)
+    assert st["ts"] == pytest.approx(ts, abs=3.0)
+    assert st["step"] == pytest.approx(-2000.0, rel=0.1)
+    assert st["ramp_per_day"] == pytest.approx(1.5, rel=0.2)
+    assert st["chi2"] == pytest.approx(t.size, rel=0.15)
+    # a feature that runs to the end of the data has no baseline after its egress
+    n_bef, n_aft = wm.bracketing(t, ts - 5.0, t.max() + 50.0)
+    assert n_bef > wm.BRACKET_MIN_EPOCHS and n_aft == 0
+    # a W3 umbra in the middle of the data is bracketed
+    assert min(wm.bracketing(t, 2454470.0, 2454490.0)) >= wm.BRACKET_MIN_EPOCHS
+
+
+def test_exotic_domain_needs_u0_below_2_and_a_physical_source_flux():
+    res = {
+        "E2pos": {"u0": 6.67, "fs": 2.53e6, "bic": 6724.0},  # gb20-R-4-0-49379's far-field fit
+        "N1neg": {"u0": 0.0, "fs": 3903.0, "bic": 8485.0},
+        "E2neg": {"u0": 0.5, "fs": 9.0e6, "bic": 8791.0},
+    }
+    ev = {"event_id": "gb20-R-4-0-49379", "dophot_mag": np.nan, "ref_mag": 15.91}
+    dom = wm.exotic_domain(res, ev)
+    assert dom["N1neg"][0] and not dom["E2pos"][0] and not dom["E2neg"][0]
+    f_ref, label = wm.reference_flux(ev)
+    assert f_ref == pytest.approx(wm.moa.mag_to_counts(15.91, 4)) and "Gaia" in label
+    f_def, label = wm.reference_flux({"event_id": "gb20-R-2-0-1"})  # no counterpart: default
+    assert f_def == pytest.approx(wm.moa.mag_to_counts(wm.FS_REF_DEFAULT_MAG, 2))
+    assert wm.reference_flux({"event_id": "gb20-R-4-0-1", "dophot_mag": 17.0})[1].startswith(
+        "DoPHOT"
+    )
+
+
 def test_merge_chunks_joins_complete_chunks_and_refuses_bad_ones(tmp_path, monkeypatch):
     ids = [f"gb22-R-1-0-{i}" for i in range(7)]
     pre = Table({"event_id": ids, "z_min": [-20.0] * 7, "s_min": [-9.0] * 7, "z_min2": [0.0] * 7})
@@ -231,9 +278,12 @@ def test_pool_workers_get_moa_bounds_and_populations(monkeypatch):
     # spawned workers (Windows) do not run main(): the initializer must set both
     monkeypatch.setattr(wm.w3, "P", wm.replace(wm.w3.P, te_bounds=(0.5, 50.0)))
     monkeypatch.setattr(wm, "_POP", None)
-    wm._init_worker(("field", "chips"))
+    monkeypatch.setattr(wm, "_BASELINE", None)
+    monkeypatch.setattr(wm, "FIELD", "gb22")
+    wm._init_worker({"pop": ("field", "chips"), "baseline": 3.5, "field": "gb5"})
     assert wm.w3.P.te_bounds == wm.MOA_FIT_BOUNDS["te_bounds"]
     assert wm._POP == ("field", "chips")
+    assert wm.baseline_threshold() == 3.5 and wm.FIELD == "gb5"
 
 
 def test_vet_and_limit_refuse_partial_or_failed_inputs(tmp_path, monkeypatch):
@@ -253,7 +303,7 @@ def test_vet_and_limit_refuse_partial_or_failed_inputs(tmp_path, monkeypatch):
     with pytest.raises(SystemExit, match="exactly the pre-screen passes"):
         wm.check_complete_fits(fits)
     wm.check_complete_fits(Table({"event_id": ids[::-1]}))  # complete: no error
-    vet = {"flags": [], "fit_errors": ["gb22-R-1-0-3"]}
+    vet = {"flags": [], "fit_errors": ["gb22-R-1-0-3"], "chain": wm.CHAIN_VERSION}
     (tmp_path / "vetting_gb22.json").write_text(wm.json.dumps(vet))
     with pytest.raises(SystemExit, match="passes without a fit"):
         wm.run_limit()
@@ -262,3 +312,225 @@ def test_vet_and_limit_refuse_partial_or_failed_inputs(tmp_path, monkeypatch):
     Table({"kind": ["W3", "W3"], "error": ["", "boom"]}).write(tmp_path / "injections_gb22.ecsv")
     with pytest.raises(SystemExit, match="1 injections failed"):
         wm.run_limit()
+
+
+def _scan_table(n=400, seed=7):
+    """Pre-screen rows: quiet light curves with red-noise χ²/dof and a few deficits (simulated)."""
+    rng = np.random.default_rng(seed)
+    tab = Table(
+        {
+            "event_id": [f"gb21-R-{1 + i % 10}-0-{i}" for i in range(n)],
+            "flux_kind": ["difference"] * n,
+            "z_min": rng.uniform(-3.5, -0.5, n),
+            "s_min": np.full(n, -1.0),
+            "z_max": np.full(n, 2.0),
+            "z_min2": np.zeros(n),
+            "width": np.full(n, 10.0),
+            "t_lo": rng.uniform(2453824.0, 2456900.0, n),
+            "n_points": np.full(n, 2000),
+            "err_scale": np.ones(n),
+            "chi2_const": np.exp(rng.normal(0.5, 0.5, n)),
+            "offset": 512 * np.arange(n),
+            "size": np.full(n, 100),
+            "error": np.array([""] * n, dtype="U200"),
+        }
+    )
+    tab["t_hi"] = tab["t_lo"] + 10.0
+    tab["z_min"][:20] = -12.0  # deficits: always tracked
+    tab["s_min"][:20] = -9.0
+    return tab
+
+
+def test_baseline_calibration_is_a_quantile_of_the_quiet_light_curves():
+    tab = _scan_table()
+    cal = wm.calibrate_baseline(tab)
+    quiet = np.asarray(tab["chi2_const"])[wm.is_quiet(tab)]
+    assert cal["n_quiet"] == quiet.size == 380
+    assert cal["threshold"] == pytest.approx(np.quantile(quiet, wm.BASELINE_Q))
+    tab.meta["quiet_chi2_hist"] = wm.chi2_histogram(quiet)  # the merged-table path
+    cal_h = wm.calibrate_baseline(tab)
+    assert cal_h["threshold"] == pytest.approx(cal["threshold"], rel=0.02)
+    assert cal_h["frac_above_2"] == pytest.approx(np.mean(quiet > 2.0), abs=0.01)
+    with pytest.raises(SystemExit, match="too few"):
+        few = tab[:60]
+        few.meta.pop("quiet_chi2_hist")
+        wm.calibrate_baseline(few)
+
+
+def test_tracked_columns_hold_everything_the_fit_and_vetting_read():
+    assert set(wm.SCAN_KEYS) <= set(wm.TRACK_COLUMNS)
+
+
+def test_tracked_rows_keep_deficits_errors_and_a_quiet_sample():
+    tab = _scan_table()
+    tab["error"][25] = "boom"
+    keep = wm.tracked_mask(tab)
+    assert keep[:20].all() and keep[25]
+    frac = keep[wm.is_quiet(tab)].mean()
+    assert 0.15 < frac < 0.35  # 1 in QUIET_TRACK_MOD = 4
+    assert np.array_equal(keep, wm.tracked_mask(tab))  # deterministic
+
+
+def test_lf_sampling_gives_equal_weights():
+    rng = np.random.default_rng(1)
+    mags = wm.sample_magnitudes(rng, 20000, "lf")
+    assert mags.min() >= wm.INJ_IS[0] and mags.max() <= wm.INJ_IS[1]
+    w = wm.lf_weights(mags) / wm.sampling_density(mags, "lf")
+    assert np.ptp(w) / w.mean() < 1e-9  # n_eff = n
+    # the sample follows the LF: its density ratio over 3 mag is 10^(3 × slope)
+    hist, _ = np.histogram(mags, [17.0, 17.5, 20.0, 20.5])
+    assert hist[2] / hist[0] == pytest.approx(10 ** (3 * wm.LF_SLOPE), rel=0.15)
+    u = wm.sample_magnitudes(rng, 10, "uniform")
+    assert np.allclose(wm.sampling_density(u, "uniform"), 1 / np.ptp(wm.INJ_IS))
+
+
+def test_merge_prescreen_checks_the_member_count(tmp_path, monkeypatch):
+    monkeypatch.setattr(wm, "out_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "FIELD", "gb21")
+    monkeypatch.setitem(wm.moa.CUT0_PER_FIELD, 21, 400)
+    monkeypatch.setitem(wm.moa.TAR_BYTES, 21, 2 * wm.CHUNK_BYTES - 1)
+    tab = _scan_table()
+    rows = [dict(zip(tab.colnames, r, strict=True)) for r in tab]
+    with pytest.raises(SystemExit, match="missing pre-screen chunk 1/2"):
+        wm.merge_prescreen("gb21")
+    wm._write_prescreen_chunk("gb21", 0, 2, rows[:150], {"wall_time_s": 1.0})
+    assert wm._chunk_done("gb21", 0, 2) and not wm._chunk_done("gb21", 1, 2)
+    wm._write_prescreen_chunk("gb21", 1, 2, rows[150:399], {"wall_time_s": 1.0})
+    with pytest.raises(SystemExit, match="399 light curves streamed, metadata has 400"):
+        wm.merge_prescreen("gb21")
+    wm._write_prescreen_chunk("gb21", 1, 2, rows[150:], {"wall_time_s": 1.0})
+    pre = Table.read(wm.merge_prescreen("gb21"))
+    assert wm.n_light_curves(pre) == 400 and len(pre) < 400
+    assert wm.calibrate_baseline(pre)["n_quiet"] == 380  # from the histogram, not the sample
+    assert pre.meta["provenance"] == "derived" and pre.meta["source"]
+
+
+def test_combined_limit_sums_star_years_times_efficiency(tmp_path, monkeypatch):
+    monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
+    for field, ns in (("gb21", 1e6), ("gb20", 3e6)):
+        rows = [
+            {
+                "field": field,
+                "tE_days": te,
+                "rho": rho,
+                "n_s": ns,
+                "n_s_low": ns / 2,
+                "years": 8.0,
+                "eff_per_star": 0.1,
+                "n_inj": 200,
+                "n_recovered": 20,
+            }  # fmt: skip
+            for te in wm.INJ_TE
+            for rho in wm.INJ_RHO
+        ]
+        Table(rows, meta={"chain": wm.CHAIN_VERSION}).write(tmp_path / f"limits_{field}.ecsv")
+    out = Table.read(wm.run_combine())
+    assert out["rate95_per_star_yr"][0] == pytest.approx(3.0 / (4e6 * 8.0 * 0.1))
+    assert out["rate95_conservative"][0] == pytest.approx(2 * out["rate95_per_star_yr"][0])
+    assert out["n_fields"][0] == 2 and out["n_inj"][0] == 400
+    stale = Table.read(tmp_path / "limits_gb21.ecsv")
+    stale.meta["chain"] = "older"
+    stale.write(tmp_path / "limits_gb21.ecsv", overwrite=True)
+    with pytest.raises(SystemExit, match="older chain"):
+        wm.run_combine()
+
+
+def test_published_star_counts_are_used_where_they_exist():
+    pub = wm.field_star_counts("gb21")
+    assert pub["n_s"] == wm.moa.NUNOTA_NS[21][1] and "Table 1" in pub["n_s_source"]
+    model = wm.field_star_counts("gb22")
+    assert model["n_s_low"] < model["n_s"] < model["n_s_high"]
+    assert wm.parse_chunk_list("1-3,7") == [0, 1, 2, 6] and wm.parse_chunk_list(None) is None
+    for bad in ("0", "0-2", "5-3"):
+        with pytest.raises(SystemExit, match="bad chunk range"):
+            wm.parse_chunk_list(bad)
+
+
+def test_step_ramp_without_an_admissible_step_time_explains_nothing():
+    t = np.array([100.0, 100.01, 100.02])  # one night: no admissible step time
+    lc = wm.w3.LightCurve(t=t, f=np.ones(3), sf=np.ones(3))
+    st = wm.fit_step_ramp(lc)
+    assert st["bic"] == np.inf and np.isnan(st["ts"])
+
+
+def test_open_flags_give_an_efficiency_table_and_no_limit(tmp_path, monkeypatch):
+    monkeypatch.setattr(wm, "out_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "FIELD", "gb20")
+    vet = {"flags": [{"event_id": "gb20-R-4-0-1", "survives": True}], "fit_errors": []}
+    (tmp_path / "vetting_gb20.json").write_text(wm.json.dumps(vet))  # no chain stamp: old vetting
+    rows = [
+        {
+            "kind": "W3",
+            "tE": te,
+            "rho": rho,
+            "Is": 18.0,
+            "cut0": True,
+            "prescreen": True,
+            "flagged": True,
+            "recovered": i % 2 == 0,
+            "error": "",
+        }  # fmt: skip
+        for te in wm.INJ_TE
+        for rho in wm.INJ_RHO
+        for i in range(4)
+    ] + [
+        {
+            "kind": "PSPL",
+            "tE": te,
+            "rho": 0.0,
+            "Is": 18.0,
+            "cut0": True,
+            "prescreen": False,
+            "flagged": False,
+            "recovered": False,
+            "error": "",
+        }  # fmt: skip
+        for te in wm.INJ_TE
+    ]
+    inj = Table(rows)
+    inj.meta["is_sampling"] = "lf"
+    inj.meta["chain"] = wm.CHAIN_VERSION
+    inj.write(tmp_path / "injections_gb20.ecsv")
+    with pytest.raises(SystemExit, match="vetting from chain None"):
+        wm.run_limit(efficiency_only=True)
+    vet["chain"] = wm.CHAIN_VERSION
+    (tmp_path / "vetting_gb20.json").write_text(wm.json.dumps(vet))
+    with pytest.raises(SystemExit, match="flags survive"):
+        wm.run_limit()
+    eff = Table.read(wm.run_limit(efficiency_only=True))
+    assert "rate95_per_star_yr" not in eff.colnames
+    assert list(eff.meta["open_flags"]) == ["gb20-R-4-0-1"]
+    assert eff["p_recovered"][0] == pytest.approx(0.5)
+    assert not (tmp_path / "limits_gb20.ecsv").exists()  # combine never sees the field
+
+
+@pytest.mark.parametrize("cmd", ["fit", "vet", "inject", "run-field"])
+def test_fit_and_vet_stages_refuse_to_run_without_mulensmodel(monkeypatch, cmd):
+    monkeypatch.setattr(wm.w3, "have_mm", lambda: False)
+    with pytest.raises(SystemExit) as exc:
+        wm.main(["--field", "gb22", cmd])
+    assert exc.value.code == 2
+
+
+def test_injections_are_vetted_against_the_injected_source_flux(monkeypatch):
+    """exotic_in_domain's source-flux bound uses the injected magnitude, not the lenient default."""
+    seen = {}
+
+    def fake_vet(job):
+        seen["d"] = job[0]
+        return {"tests": [("screen_flag", True, "")], "survives": False, "dbic_all": 0.0,
+                "exotic": "N1neg"}  # fmt: skip
+
+    monkeypatch.setattr(wm, "cut0_emulated", lambda *a, **k: True)
+    monkeypatch.setattr(wm, "prescreen_pass", lambda *a, **k: True)
+    monkeypatch.setattr(wm, "_POP", None)
+    monkeypatch.setattr(wm, "vet_one", fake_vet)
+    t = _cadence()
+    prm = {"Is": 19.5, "t0": float(t[450]), "tE": 30.0, "u0": 0.3, "rho": 0.01, "ra": 270.0,
+           "dec": -25.0}  # fmt: skip
+    row = wm._inject_worker(("W3", "gb22-R-2-1-7", t, np.zeros_like(t), np.ones_like(t), None, prm))
+    assert row["error"] == ""
+    assert seen["d"]["ref_mag"] == 19.5
+    assert wm.reference_flux(seen["d"])[1].endswith("19.50")

@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: W3 MOA-II eleven fields: 582 flags, 0 candidates; limits withdrawn pending the corrected chain (D-068, #95)
+- Lands the streamed MOA-II work: gb7, gb11, gb12, gb15–gb22 (712,780 Cut-0 light curves, 582 flags). Nine fields
+  have 0 chain survivors; gb17-R-6-1-3829 (periodic variable) and gb18-R-9-4-24509 (red-giant slow dimming) passed
+  the chain and are explained only by vetting notes (docs/candidates/). `derived`. No W3 candidate.
+- Merged `claude/w3-moa-fields-alt2` (injections vetted against the injected source flux, `CHAIN_VERSION`, refusal
+  without MulensModel, truncated-tar and size-pin fixes). Every old-chain `limits_*` and `efficiency_*` table is
+  deleted: none may be quoted.
+- `/code-review` fixes: the vetting record carries `CHAIN_VERSION` and `limit` refuses a mismatch (the eleven
+  tracked records predate the stamp, so every field is re-vetted before a limit); a non-finite night-jackknife refit
+  now fails the test (it returned −inf and passed; this could only have kept flags, so 0 survivors stands);
+  `fit_step_ramp` without an admissible step time; ragged rows go to the line parser; chunk ranges are checked.
+  Not changed (follow-ups): duplicate check over all streamed ids, `prefetch` floor above `--conns`, repeated chunk
+  reads, per-field metadata pass, unnamed quiet-carrier thresholds in `is_quiet`.
+- **Handoff / next:** add the four chain gaps in D-068 as one post-hoc change, re-inject every field, `combine`;
+  gb13 stopped at 25 / 78 fits (run died 2026-10-09 13:02Z); then more Nunota Table 1 fields.
+
 ## 2026-10-10: E1 signed-lag GW cells with sky-map classes: null, global p = 0.56 (D-074 addendum 5)
 - Hypothesis: GW events lead (or follow) GBM, ICECAT-1 or CHIME events in a given sky-map class (same, wide,
   antipodal) at lags no ordinary path explains: D = N_after − N_before.
@@ -262,6 +278,20 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   obstacle is chance coincidences and common causes.
 - **Next:** S1 on the Fermi GBM catalogue and CHIME/FRB Catalog 2, with time-scrambled nulls and lensing/duplicates as
   positive controls (docs/hypotheses/round-1/summary.md).
+## 2026-10-09: W3 MOA-II six fields null; limits withdrawn after review (D-068, #95)
+- Cloud runs streamed gb11, gb16, gb19, gb20, gb21 and gb22 (296,618 Cut-0 light curves; no tar on disk): 234 flags,
+  **0 survive** (vetting records for gb20-R-4-0-49379 and gb19-R-4-4-31159; gb11 contact sheet inspected: eclipse
+  dips, repeated deficits, unsampled features). New tests: `exotic_in_domain`, `smooth_dip`, `feature_bracketed`,
+  `step_ramp`. `derived`.
+- **Limits withdrawn:** `/code-review` found that injections were vetted against the lenient 14.2 mag default
+  reference flux, while real flags used their own magnitude, so efficiencies were biased high. Injections now use
+  I_s; `CHAIN_VERSION` makes `limit`/`combine` refuse old tables. Other fixes: a truncated tar looped forever in
+  `read_segment`; a 200 reply skipped the size pin; the Gaia XMatch is retried, and a failure marks flags incomplete.
+- **Failed approaches (rules):** a fresh cloud venv without the `mulens` extra skipped the parallax and binary-lens
+  tests silently (the stages now refuse to run); `pkill -f` killed the calling shell again (kill by PID).
+- **Handoff / next:** a run that died at 03:16 left gb11's injections unfinished; it was taken over at 05:12. Re-run
+  `w3_moa.py --field gbN run-field` for the six fields (injections + limit, ~20 min each), then `combine`, in a new
+  `[field: W3 MOA-II limits]` PR; then more Nunota Table 1 fields.
 
 ## 2026-10-09: W5/W1 Euclid Q1 radial-shear survey: all Deep Fields (60 deg²) null; R calibrated (D-067)
 - Hypothesis as D-066 (negative mass shears background galaxies radially). Ordinary radial patterns: PSF-anisotropy
@@ -391,6 +421,19 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `z2` semantics, time-stamped VizieR headers) and sample-definition bugs were caught in review and fixed; the list is
   in D-064 "Evidence".
 - **Next:** HST/Euclid/HSC image models or spectra for the 11 colour-matched pairs; the LaTeX-only NIQ tables.
+
+## 2026-10-08: W3 MOA-II: calibrated baseline test, LF-drawn injections, streaming pipeline; gb22 re-run null (D-068)
+- Cloud runs (session that opened #95, taken over at 23:12 UTC after 35 min idle to land it). The variable-baseline
+  threshold is now the 95th percentile of the field's quiet χ²/dof (5.31 in gb22; ASSUMPTION), injections are drawn
+  from the luminosity function, 200 per cell.
+- gb22: same 30 flags as D-062 (event IDs identical; contact sheet inspected in D-062), **0 survivors**.
+  **Γ₉₅ ≈ 1.1–3.3 × 10⁻⁶ per star per year for t_E = 10–300 d, 4–7 × 10⁻⁶ at 3 d** (103 / 2,000 recovered,
+  0 / 400 PSPL controls; `derived`, N_s ASSUMPTION). Supersedes D-062's numbers.
+- Streaming per-field pipeline (`moa_stream`, `w3_moa.py --field`): no tar on disk; gb22 by HTTP in 81 s;
+  258 light curves/s on gb21 (test only, no gb21 result yet).
+- **Failed approach:** a parent process reading ranges for its workers was OOM-killed on gb21.
+- **Handoff / next:** `w3_moa.py --field gbN run-field` for the Nunota et al. 2024 Table 1 fields, smallest first
+  (gb21 12.3 GB, gb20 15.2 GB, gb19 16.3 GB …; sizes in docs/exotic_limits.md), then `combine`.
 
 ## 2026-10-08: Coordination and dispatch rules for concurrent sessions (owner text)
 - Two sessions worked PR #94 (W5) at once: a cloud run started from its 20:39 skeleton, another session pushed the full
