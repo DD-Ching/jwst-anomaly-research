@@ -16,6 +16,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   Sparse sampling does make real peak-dip-peak signals fail as ordinary dips at t_E = 3 d.
 - **Next:** gb15, gb17, gb18 with the reuse fix, then `combine`; a shared-epoch masking study on a dev/validation
   injection split with the real flags as the false-positive check.
+
 ## 2026-10-10: W3 MOA-II gb12 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have
   changed the plan (vetting record, owner notified).

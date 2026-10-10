@@ -622,9 +622,40 @@ def test_prescreen_chunks_survive_vetting_param_changes(tmp_path, monkeypatch):
     monkeypatch.setattr(wm, "PRESCREEN_CODE", 2)
     assert not wm._chunk_done("gb21", 0, 2)
     monkeypatch.setattr(wm, "PRESCREEN_CODE", 1)
+
     # chunks written before prescreen_params existed: judged on the same keys of their params
-    legacy = {"params": json.dumps(dataclasses.asdict(dataclasses.replace(p0, spike_sigma=7.0)))}
-    assert wm._chunk_params_ok(legacy)
-    legacy = {"params": json.dumps(dataclasses.asdict(dataclasses.replace(p0, n_min=4)))}
+    def legacy_meta(p, mod=wm.QUIET_TRACK_MOD):
+        return {"params": json.dumps(dataclasses.asdict(p)), "quiet_track_mod": mod}
+
+    assert wm._chunk_params_ok(legacy_meta(dataclasses.replace(p0, spike_sigma=7.0)))
+    assert not wm._chunk_params_ok(legacy_meta(p0, mod=8))
+    monkeypatch.setattr(wm, "COINC_Z", 4.0)
+    assert not wm._chunk_params_ok(legacy_meta(p0))
+    monkeypatch.setattr(wm, "COINC_Z", wm.LEGACY_COINC_Z)
+    # values, not strings: an int threshold equal to the float one is the same input
+    monkeypatch.setattr(wm, "P", dataclasses.replace(p0, prescreen_z=int(p0.prescreen_z)))
+    assert wm._chunk_done("gb21", 0, 2)
+    monkeypatch.setattr(wm, "P", p0)
+    legacy = legacy_meta(dataclasses.replace(p0, n_min=4))
     assert not wm._chunk_params_ok(legacy)
     assert not wm._chunk_params_ok({})
+    # merge_prescreen accepts chunks streamed under other vetting Params
+    monkeypatch.setattr(wm, "FIELD", "gb21")
+    monkeypatch.setitem(wm.moa.CUT0_PER_FIELD, 21, 400)
+    wm._write_prescreen_chunk("gb21", 1, 2, rows[150:], {"wall_time_s": 1.0})
+    monkeypatch.setattr(wm, "P", dataclasses.replace(p0, period_gain=99.0))
+    pre = Table.read(wm.merge_prescreen("gb21"))
+    assert wm.n_light_curves(pre) == 400
+    assert json.loads(pre.meta["prescreen_params"]) == json.loads(wm.prescreen_params())
+
+
+def test_prescreen_param_keys_cover_every_param_the_scan_reads():
+    import inspect
+    import re
+
+    funcs = (wm.deficit_scan, wm.scan_member, wm.baseline_chi2, wm.robust_scale, wm.spread_of,
+             wm.is_quiet, wm.prescreen_pass, wm.tracked_mask)  # fmt: skip
+    read = set()
+    for f in funcs:
+        read |= set(re.findall(r"\bP\.(\w+)", inspect.getsource(f)))
+    assert read and read <= set(wm.PRESCREEN_PARAM_KEYS), read - set(wm.PRESCREEN_PARAM_KEYS)
