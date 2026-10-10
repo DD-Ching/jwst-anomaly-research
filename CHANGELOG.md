@@ -3,6 +3,9 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 
+## 2026-10-10: W3 MOA-II gb16 re-run under CHAIN_VERSION 2026-10-10.1 (in progress)
+- Claimed by a cloud routine session; `run-field --field gb16`.
+
 ## 2026-10-10: W3 MOA-II gb19 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have
   changed the plan (vetting record, CDS-dependent tests where CDS works).
