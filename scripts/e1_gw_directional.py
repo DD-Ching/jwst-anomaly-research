@@ -43,6 +43,7 @@ from jwst_anomaly import event_network as en  # noqa: E402
 
 OUT = ROOT / "results" / "e1_events" / "gw_directional.json"
 EVENTS_MANIFEST = ROOT / "data" / "manifests" / "e1_gw_events.ecsv"
+SKYMAP_MANIFEST = ROOT / "data" / "manifests" / "e1_gw_skymaps.ecsv"
 MAPS = (
     Path(os.environ.get("JWST_ANOMALY_DATA", ROOT / "data"))
     / "e1_events"
@@ -122,8 +123,16 @@ def long_name(name: str, mjd: float, idx) -> str:
 class GWMaps:
     """Per-GW-event distance maps (deg) to the 90 % and 99 % regions, aligned with a GW Sample."""
 
-    def __init__(self, names, npz_path=MAPS, mjd=None):
+    def __init__(self, names, npz_path=MAPS, mjd=None, manifest=None):
         z = np.load(npz_path)
+        if manifest is not None:  # pinned reduced maps (data/manifests/e1_gw_skymaps.ecsv)
+            from astropy.table import Table
+            from e1_gw_skymaps import maps_digest
+
+            want = Table.read(manifest, format="ascii.ecsv").meta["maps_sha256"]
+            got = maps_digest(z["name"], z["prob"])
+            if got != want:
+                raise SystemExit(f"{npz_path}: maps sha256 {got} != pinned {want}")
         idx = {str(n): k for k, n in enumerate(z["name"])}
         if mjd is not None:  # CSV short names (GW150914) -> tarball names (GW150914_095045)
             names = [
@@ -328,7 +337,7 @@ def main(argv=None) -> int:
     ev = E.load(E.fetch(False))
     s = {k: en.Sample.from_table(v) for k, v in ev.items()}
     names = [str(x) for x in ev["GW"]["name"]]
-    m = GWMaps(names, mjd=s["GW"].mjd)
+    m = GWMaps(names, mjd=s["GW"].mjd, manifest=SKYMAP_MANIFEST)
     orig = s["GW"].mjd.copy()
     # positive control: GW170817 x GRB 170817A, a known ordinary pair, is left out of the family
     # and reported apart (it would otherwise dominate the 0-10 s GW-GBM cell)

@@ -3641,7 +3641,7 @@ kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0L
   ordinary path explains. Before this the GW channels were lag-only. Ordinary explanations: as D-074, plus
   GW170817 × GRB 170817A (a known counterpart).
 - Data: 282 PE sky maps (GWTC-2.1 / 3 / 4.1 / 5.0 Zenodo tarballs, 704 MB streamed in about 3.5 min with 12 range
-  connections per tarball and four tarballs at once; reduced to nside-32 NESTED; `scripts/e1_gw_skymaps.py`).
+  connections per tarball, one process per `--tar`; reduced to nside-32 NESTED; `scripts/e1_gw_skymaps.py`).
   The other 109 GWTC entries (GWTC-4.1: 52, GWTC-5.0: 57) have no PE parameters in the GWOSC CSV either and are
   left out. GW170817: Gaussian at SSS17a, σ 1.05° (ASSUMPTION).
 - `scripts/e1_gw_directional.py`: same = partner within 3σ (+1.3° pixel slop, ASSUMPTION) of the 90 % region;

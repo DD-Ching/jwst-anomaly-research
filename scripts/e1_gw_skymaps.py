@@ -51,8 +51,9 @@ def to_nested32(table, header) -> np.ndarray:
     if "UNIQ" in cols:
         uniq = np.asarray(table[cols["UNIQ"]], dtype=np.int64)
         dens = np.asarray(table[cols["PROBDENSITY"]], dtype=float)
-        order = (np.floor(np.log2(uniq / 4)) // 2).astype(np.int64)
-        ipix = uniq - 4 * (np.int64(4) ** order)
+        from astropy_healpix import uniq_to_level_ipix
+
+        order, ipix = (np.asarray(x, dtype=np.int64) for x in uniq_to_level_ipix(uniq))
         prob = dens * 4 * np.pi / (12 * 4.0**order)
         hi = order >= ORDER
         np.add.at(out, ipix[hi] >> (2 * (order[hi] - ORDER)), prob[hi])
@@ -72,6 +73,13 @@ def to_nested32(table, header) -> np.ndarray:
         out = prob.reshape(NPIX, f).sum(1)
     out = np.clip(out, 0, None)
     return out / out.sum()
+
+
+def maps_digest(names, prob) -> str:
+    """Content digest of the reduced maps (the npz file itself carries zip timestamps)."""
+    h = hashlib.sha256("\n".join(map(str, names)).encode())
+    h.update(np.ascontiguousarray(prob, dtype=np.float32).tobytes())
+    return h.hexdigest()
 
 
 def _rank(name: str) -> int:
@@ -95,9 +103,11 @@ def fetch_bytes(url: str, connections: int = CONNECTIONS) -> bytes:
     size = None
     for attempt in range(6):  # size from a 1-byte range request; the proxy drops some requests
         try:
-            r = requests.get(url, headers={"Range": "bytes=0-0"}, timeout=60)
-            size = int(r.headers["Content-Range"].split("/")[1])
-            break
+            r = requests.get(url, headers={"Range": "bytes=0-0"}, timeout=60, stream=True)
+            if r.status_code == 206:
+                size = int(r.headers["Content-Range"].split("/")[1])
+                break
+            r.close()  # a server that ignores Range would send the whole body
         except (requests.RequestException, KeyError, ValueError):
             time.sleep(2**attempt)
     if size is None:
@@ -119,7 +129,7 @@ def fetch_bytes(url: str, connections: int = CONNECTIONS) -> bytes:
 
     with ThreadPoolExecutor(connections) as ex:
         list(ex.map(get, range(0, size, CHUNK)))
-    return bytes(buf)
+    return buf  # no bytes() copy: peak memory stays one archive
 
 
 def reduce_tar(key: str) -> dict:
@@ -152,20 +162,31 @@ def reduce_tar(key: str) -> dict:
             except Exception as e:  # noqa: BLE001 - a bad member is logged, not fatal
                 print(f"{key}: skip {m.name}: {e}", flush=True)
     sha = hashlib.sha256(data).hexdigest()
-    return {"key": key, "maps": best, "sha256": sha, "bytes": len(data), "url": url}
+    return {
+        "key": key,
+        "maps": best,
+        "sha256": sha,
+        "bytes": len(data),
+        "url": url,
+        "retrieved": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t0)),
+    }
 
 
 def main(argv=None) -> None:
     from astropy.table import Table
 
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--out", type=Path, default=Path("data/e1_events"))
+    ap.add_argument("--out", type=Path, default=None, help="default: <data root>/e1_events")
     ap.add_argument("--tar", nargs="*", default=list(TARS))
     a = ap.parse_args(argv)
+    if a.out is None:
+        from jwst_anomaly.paths import data_root
+
+        a.out = data_root() / "e1_events"
     a.out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
-    # one tarball at a time (Zenodo throughput is per client); each reduced tarball is cached so a
-    # failed fetch never loses the others
+    # one tarball per call; for speed run one process per --tar KEY, then a plain run merges the
+    # caches. Each reduced tarball is cached so a failed fetch never loses the others.
     res = []
     for key in a.tar:
         cache = a.out / f"gw_skymaps_{key}.pkl"
@@ -175,19 +196,33 @@ def main(argv=None) -> None:
         r = reduce_tar(key)
         cache.write_bytes(pickle.dumps(r))
         res.append(r)
+    if set(a.tar) != set(TARS):
+        print(f"cached {a.tar}; run without --tar to write the merged maps and the manifest")
+        return
     names, members, cats, maps = [], [], [], []
     man = Table(
-        names=("catalog", "url", "sha256", "bytes", "n_events"), dtype=(str, str, str, int, int)
+        names=("catalog", "url", "sha256", "bytes", "n_events", "retrieved"),
+        dtype=(str, str, str, int, int, str),
     )
     for r in res:
-        man.add_row((r["key"], r["url"], r["sha256"], r["bytes"], len(r["maps"])))
+        man.add_row(
+            (
+                r["key"],
+                r["url"],
+                r["sha256"],
+                r["bytes"],
+                len(r["maps"]),
+                r.get("retrieved", "2026-10-10 (cache without a timestamp)"),
+            )
+        )
         for ev, (_, mem, p) in sorted(r["maps"].items()):
             names.append(ev)
             members.append(mem)
             cats.append(r["key"])
             maps.append(p.astype(np.float32))
+    npz = a.out / "gw_skymaps_nside32.npz"
     np.savez_compressed(
-        a.out / "gw_skymaps_nside32.npz",
+        npz,
         name=np.array(names),
         member=np.array(members),
         catalog=np.array(cats),
@@ -196,7 +231,12 @@ def main(argv=None) -> None:
     man.meta["provenance"] = (
         "observed (GWTC PE sky maps), streamed; reduced to nside 32 NESTED: derived"
     )
-    man.meta["retrieved"] = time.strftime("%Y-%m-%d", time.gmtime())
+    man.meta["reason"] = (
+        "E1 GW channels need sky directions (D-074 addendum 4); the maps exist only in these "
+        "whole-release tarballs, which are streamed into memory and never stored"
+    )
+    man.meta["preference"] = list(PREFER)
+    man.meta["maps_sha256"] = maps_digest(np.array(names), np.array(maps))
     man.write(MANIFEST, overwrite=True)
     print(man)
     print(f"{len(names)} maps in {time.time() - t0:.0f} s")

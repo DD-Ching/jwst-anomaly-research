@@ -5,7 +5,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-10: E1 GW channels with sky maps: null, global p = 0.83 (D-074 addendum 4)
 - Hypothesis: GW events have same-direction, wide or antipodal partners (GBM, ICECAT-1, CHIME, GW) at lags no
   ordinary path explains. Until now the GW channels were lag-only.
-- `scripts/e1_gw_skymaps.py` streamed the four GWTC PE sky-map tarballs (704 MB, about 3.5 min, four at once; the
+- `scripts/e1_gw_skymaps.py` streamed the four GWTC PE sky-map tarballs (704 MB, about 3.5 min, one process per `--tar` then a merge run; the
   2026-10-09 run got 0.15–1 MB/s and did not finish) into 282 nside-32 maps. The 109 unmapped GWTC-4.1 / 5.0 entries
   have no PE parameters in the GWOSC CSV either.
 - `scripts/e1_gw_directional.py --n 1000` (266 s, 4 cores): 60 cells, pooled global p = 0.83, min analytic p × 60 = 1.
