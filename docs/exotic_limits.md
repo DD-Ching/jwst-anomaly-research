@@ -1107,8 +1107,9 @@ it applied to real flags. The efficiencies, and every per-field and combined lim
 the tracked 2026-10-09 tables, only the parameter header differs), then fit, vet, contact sheet, 2,000 W3 + 200 PSPL
 injections (LF-drawn, injected-source reference flux) and limit. Tables: `results/w3_moa/limits_gb*.ecsv` (chain
 2026-10-10.1; `derived` from `simulated`). ρ = 0.01 / 0.1; mass scale is a `model_prediction` (n = 1, D_L = 4 kpc,
-D_S = 8 kpc, μ_rel = 5 mas/yr); N_s from the per-Cut-0-object model (median of Nunota et al.'s 20 fields; ASSUMPTION
-for these fields, which have no published N_s); conservative column uses the low N_s.
+D_S = 8 kpc, μ_rel = 5 mas/yr); N_s from Nunota et al. 2024 Table 1 where published (gb21, gb20; conservative =
+central), else from the per-Cut-0-object model (median of Nunota et al.'s 20 fields; ASSUMPTION, gb22); the
+conservative column uses the low N_s.
 
 - **gb22** (18,599 light curves): 30 flags (D-062's), **0 survive**; contact sheet inspected (short dips, scatter,
   eclipse-like boxes; no caustic spikes in the data). First failing test (from the `funnel` in
@@ -1123,6 +1124,14 @@ for these fields, which have no published N_s); conservative column uses the low
   3, residual deficit 3, neighbour 1, smooth dip 1. Injections: vetting keeps 96 / 170 flagged W3 injections; the new
   tests remove 9 (`residual_deficit` 7, `slow_dip_seasons` 1, `exotic_chi2_cap` 1). Pre-screen pass 4–12 %.
   PSPL controls: 0 / 40 per cell called W3.
+- **gb20** (52,005 light curves; N_s = 1.07 × 10⁷ from Nunota et al. 2024 Table 1, 79 / 80 subfields, so no
+  conservative range; quiet χ²/dof 95th percentile 6.7, vs gb22 5.3, gb21 6.3; D-068 revisits above ~10): 48 flags
+  (D-068's), **0 survive**; contact sheet inspected (eclipse-like boxes, slow dimmings, season steps, periodic and
+  scattered variables; no caustic spikes in the data). First failing test: eclipse dip 15, repeated deficit 10,
+  bracketing 9, residual deficit 6, χ² cap 4, exotic domain 1, neighbour 1, season offsets 1, slow dip with season
+  levels 1. Injections: vetting keeps 73 / 124 flagged W3 injections; the new tests remove 8 (`residual_deficit` 4,
+  `slow_dip_seasons` 2, `exotic_chi2_cap` 1, `periodic_variable` 1). Pre-screen pass 2.5–11 %. PSPL controls:
+  0 / 40 per cell called W3.
 
 Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every field):
 
@@ -1133,6 +1142,26 @@ Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every f
 | 30 | 0.17 | 14 / 11 | 1.4 / 1.8 × 10⁻⁶ (2.1 / 2.6 × 10⁻⁶) | 16 / 16 | 5.3 / 5.3 × 10⁻⁷ |
 | 100 | 1.8 | 7 / 13 | 2.9 / 1.5 × 10⁻⁶ (4.1 / 2.2 × 10⁻⁶) | 10 / 15 | 8.4 / 5.6 × 10⁻⁷ |
 | 300 | 17 | 8 / 4 | 2.5 / 5.0 × 10⁻⁶ (3.6 / 7.2 × 10⁻⁶) | 5 / 5 | 1.7 / 1.7 × 10⁻⁶ |
+
+gb20 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb20.ecsv`):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 2 / 4 | 3.3 / 1.6 × 10⁻⁶ |
+| 10 | 0.018 | 6 / 11 | 1.1 × 10⁻⁶ / 5.9 × 10⁻⁷ |
+| 30 | 0.17 | 11 / 11 | 5.9 / 5.9 × 10⁻⁷ |
+| 100 | 1.8 | 10 / 13 | 6.5 / 5.0 × 10⁻⁷ |
+| 300 | 17 | 4 / 1 | 1.6 / 6.5 × 10⁻⁶ |
+
+Cloud runs of gb22, gb21 and gb20: the batched CDS XMatch for the Gaia DR3 RP reference failed on all 3 attempts
+("Too many jobs"; a later retry gave a truncated, non-VOTable reply through the proxy), so `exotic_in_domain` used the
+lenient default reference (MOA-Red 14.2) on all 114 real flags (none has a DoPHOT magnitude). This only loosens the
+chain, so 0 survivors stands; the VSX / Gaia variability match runs only on flags still alive and was not reached.
+Injections use the injected-source flux and are unaffected. The tracked `vetting_gbN.json` drops the run's
+`gaia_rp_xmatch` status (it is in the derived record); re-run `vet` where CDS works before interpreting any survivor.
+
+The t_E = 300 d, ρ = 0.1 cell rests on one recovered injection (efficiency uncertain by ~100 %); `combine` should
+not let a single field's one-recovery cell dominate the combined 300-d limit.
 
 ### All 22 fields (next)
 

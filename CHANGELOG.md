@@ -42,6 +42,19 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   should fetch it right away, check the digest, publish it to the derived-data store and wire `e1_events.fetch`
   to it. If the digest has moved on, run `e1_events.py --refresh` there and publish that snapshot instead.
 
+## 2026-10-10: W3 MOA-II gb20 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
+- `run-field --procs 4` in 2,144 s (pre-screen re-streamed 299 s, rows identical to the tracked tables; 51 fits;
+  2,200 injections 1,075 s). 48 flags (as in D-068), **0 survive**; contact sheet inspected (eclipse-like boxes,
+  slow dimmings, season steps, variables; no caustic spikes in the data).
+- Limits (`results/w3_moa/limits_gb20.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 5.0 × 10⁻⁷–6.5 × 10⁻⁶ per star per
+  year (t_E 3–300 d, published N_s; the 6.5 × 10⁻⁶ at t_E = 300 d, ρ = 0.1 rests on 1 recovered injection).
+  Quiet χ²/dof 95th percentile 6.7 (gb22 5.3, gb21 6.3; D-068 revisits above ~10). Vetting keeps 73 / 124 flagged W3 injections (59 %); the four new tests cost
+  8. Pre-screen pass 2.5–11 % stays the limiting factor. PSPL controls: 0 false W3 calls.
+- Failed approach (env): CDS XMatch from the cloud failed (gb22/gb21 too), so the source-flux bound used the lenient
+  default; 0 survivors stands (docs/exotic_limits.md, note under the gb20 table).
+- gb19 was planned in the same run but not started (40-min run budget).
+- **Next:** `run-field` for gb19, gb16, gb11, gb7, gb12, gb15, gb17, gb18, then `combine`.
+
 ## 2026-10-10: First derived-data release `derived-data-20261010` (GW sky maps); pinned GBM snapshot not recoverable (D-078 addendum)
 - Local session on the owner's machine (cloud sessions cannot create releases); details in the D-078 addendum.
   Asset `gw_skymaps_nside32.npz`, 4,337,802 B, sha256 ab0330588b9a380f2f49b0d4dae809ea6cd1ed6ac1d99718e23f66d00c8e1ad5
