@@ -3,6 +3,9 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 
+## 2026-10-10: W3 MOA-II gb18 re-run under CHAIN_VERSION 2026-10-10.1 (in progress)
+- Plan: `w3_moa.py --field gb18 run-field --procs 4` with the tracked pre-screen chunks reused.
+
 ## 2026-10-10: W3 MOA-II gb17 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors; gb17-R-6-1-3829 (the D-068 chain survivor, a ~30-d periodic variable)
   should now fail inside the chain. A survivor that held up on the contact sheet would have changed the plan.
