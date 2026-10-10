@@ -85,3 +85,8 @@ PSPL bumps. MOA adds shared-epoch tests (field- and chip-wide Poisson), a neighb
 - `table3.dat` (Mróz 2019) rows overflow their byte ranges: split on whitespace, sexagesimal on colons.
 - Pool sizing, BLAS pinning and how to wait on runs: `scripts/CLAUDE.md` "Parallel topology".
 - 6 of 212 arXiv name queries hit the rate limit (recorded as −1); re-run before any publication-facing claim.
+- A chain that compares only against single-lens and one-dip models lets variables through: gb17-R-6-1-3829 (a
+  ~30-d periodic variable inside a 500-d "umbra", χ²/dof 6.7) and gb18-R-9-4-24509 (a flat slow dip with season
+  levels) passed it. Test the exotic fit's own χ²/dof, residual deficits inside the window, periodic residuals in
+  both halves and a slow dip with season levels (D-068 addendum 2026-10-10). Leave caustic-spike epochs out of
+  residual tests: a fit at another u0 optimum misses the spike heights of a real event.
