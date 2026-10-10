@@ -52,15 +52,17 @@ def test_ymw16_known_sightline():
     assert 250.0 < dm < 320.0
 
 
-def test_td_lens_uses_a_final_j1206_chain_as_given():
-    td = {
-        n: {"ddt_model": np.full(4, 5000.0), "kappa": np.full(4, 0.1), "n_chain": 4}
-        for n in ("J1206", "RXJ1131")
-    }
-    plain = d1._td_lens(td, "kext")
-    assert plain["J1206"]["ddt"] == pytest.approx(np.full(4, 5000.0 / 0.9))
-    final = np.array([5700.0, 5710.0, 5720.0, 5730.0])
-    swapped = d1._td_lens(td, "kext", final)
-    assert swapped["J1206"]["ddt"] is final  # kappa_ext already folded in: not applied twice
-    assert swapped["RXJ1131"]["ddt"] == pytest.approx(plain["RXJ1131"]["ddt"])
-    assert set(d1.J1206_FINAL) == {"final_power_law", "final_composite"}
+def test_manifest_keeps_the_date_and_merges_runs_for_an_unchanged_file(tmp_path, monkeypatch):
+    path = tmp_path / "m.ecsv"
+    monkeypatch.setattr(d1, "MANIFEST", path)
+    Table(
+        rows=[
+            ("u1", "s1", 1, "2026-01-01", "c", "lenses"),
+            ("u2", "s2", 2, "2026-01-01", "c", "x"),
+        ],
+        names=("url", "sha256", "size_bytes", "retrieved_utc", "commit", "used_by"),
+    ).write(path)
+    d1.write_manifest([("u1", "s1", 1, "c"), ("u2", "new", 2, "c")], "tdcosmo")
+    t = {r["url"]: r for r in Table.read(path)}
+    assert t["u1"]["retrieved_utc"] == "2026-01-01" and t["u1"]["used_by"] == "lenses,tdcosmo"
+    assert t["u2"]["retrieved_utc"] != "2026-01-01" and t["u2"]["used_by"] == "tdcosmo"
