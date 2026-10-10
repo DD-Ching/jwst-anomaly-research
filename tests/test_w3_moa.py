@@ -598,3 +598,33 @@ def test_exotic_chi2_dof_leaves_out_the_caustic_spikes():
     wing = np.full(100, 50.0)
     assert not wm.spike_epochs(lc, wing, {"fs": 1000.0, "fb": -1000.0}, "N1neg").any()
     assert wm.CHAIN_VERSION == "2026-10-10.1"
+
+
+def test_prescreen_chunks_survive_vetting_param_changes(tmp_path, monkeypatch):
+    import dataclasses
+    import json
+
+    monkeypatch.setattr(wm, "out_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
+    monkeypatch.setitem(wm.moa.TAR_BYTES, 21, 2 * wm.CHUNK_BYTES - 1)
+    tab = _scan_table()
+    rows = [dict(zip(tab.colnames, r, strict=True)) for r in tab]
+    wm._write_prescreen_chunk("gb21", 0, 2, rows[:150], {"wall_time_s": 1.0})
+    assert wm._chunk_done("gb21", 0, 2)
+    p0 = wm.P
+    # a vetting-only change keeps the streamed chunk
+    monkeypatch.setattr(wm, "P", dataclasses.replace(p0, period_gain=99.0))
+    assert wm._chunk_done("gb21", 0, 2)
+    # a pre-screen change, or a pre-screen code bump, re-streams it
+    monkeypatch.setattr(wm, "P", dataclasses.replace(p0, prescreen_z=9.0))
+    assert not wm._chunk_done("gb21", 0, 2)
+    monkeypatch.setattr(wm, "P", p0)
+    monkeypatch.setattr(wm, "PRESCREEN_CODE", 2)
+    assert not wm._chunk_done("gb21", 0, 2)
+    monkeypatch.setattr(wm, "PRESCREEN_CODE", 1)
+    # chunks written before prescreen_params existed: judged on the same keys of their params
+    legacy = {"params": json.dumps(dataclasses.asdict(dataclasses.replace(p0, spike_sigma=7.0)))}
+    assert wm._chunk_params_ok(legacy)
+    legacy = {"params": json.dumps(dataclasses.asdict(dataclasses.replace(p0, n_min=4)))}
+    assert not wm._chunk_params_ok(legacy)
+    assert not wm._chunk_params_ok({})

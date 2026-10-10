@@ -373,13 +373,49 @@ def prescreen_chunk_path(field: str, k: int, n: int) -> Path:
     return d / f"{field}_c{k + 1:03d}of{n:03d}.ecsv.gz"
 
 
+# The only Params a pre-screen chunk depends on: deficit_scan (widths, n_min) and the shape and
+# quiet counts in its metadata (prescreen_*). Vetting-only Params (period_*, spike_*, ...) must not
+# invalidate a streamed chunk: before this, every vetting change re-streamed whole field tars.
+PRESCREEN_PARAM_KEYS = ("widths", "n_min", "prescreen_z", "prescreen_s", "prescreen_repeat")
+PRESCREEN_CODE = (
+    1  # bump when deficit_scan, baseline_chi2 or the tracked rows change (chunks re-stream)
+)
+
+
+def prescreen_params(params: dict | None = None) -> str:
+    """JSON of the pre-screen Params (from ``params``, default the current ``P``) and the
+    module constants that decide which rows a chunk tracks."""
+    d = asdict(P) if params is None else params
+    sub = {k: d[k] for k in PRESCREEN_PARAM_KEYS}
+    sub["widths"] = list(sub["widths"])
+    return json.dumps(
+        {**sub, "coinc_z": COINC_Z, "quiet_track_mod": QUIET_TRACK_MOD, "code": PRESCREEN_CODE}
+    )
+
+
+def _chunk_params_ok(meta) -> bool:
+    """A chunk's pre-screen Params equal the current ones. Chunks written before
+    ``prescreen_params`` existed (code version 1: their rows are byte-identical to a re-stream,
+    checked on gb12) are judged on the same keys of their full ``params``."""
+    if "prescreen_params" in meta:
+        return meta["prescreen_params"] == prescreen_params()
+    try:
+        old = json.loads(meta.get("params", ""))
+        legacy = {k: old[k] for k in PRESCREEN_PARAM_KEYS}
+    except (ValueError, KeyError, TypeError):
+        return False
+    cur = json.loads(prescreen_params())
+    legacy["widths"] = list(legacy["widths"])
+    return cur["code"] == 1 and all(legacy[k] == cur[k] for k in PRESCREEN_PARAM_KEYS)
+
+
 def _chunk_done(field: str, k: int, n: int) -> bool:
     p = prescreen_chunk_path(field, k, n)
     if not p.exists():
         return False
     tab = Table.read(p, format="ascii.ecsv")
     return (
-        tab.meta.get("params") == json.dumps(asdict(P))
+        _chunk_params_ok(tab.meta)
         and tab.meta.get("chunk_bytes") == CHUNK_BYTES
         and set(TRACK_COLUMNS) <= set(tab.colnames)
     )
@@ -401,6 +437,7 @@ def _write_prescreen_chunk(field: str, k: int, n: int, rows: list, stats: dict) 
             f"{min((k + 1) * CHUNK_BYTES, moa.TAR_BYTES[field_number(field)])})"
         ),
         "params": json.dumps(asdict(P)),
+        "prescreen_params": prescreen_params(),
         "chunk_bytes": CHUNK_BYTES,
         "chunk": f"{k + 1}/{n}",
         "n_members": len(tab),
@@ -579,7 +616,7 @@ def merge_prescreen(field: str) -> Path:
         if not p.exists():
             raise SystemExit(f"missing pre-screen chunk {k + 1}/{n} of {field}: {p}")
         tab = Table.read(p, format="ascii.ecsv")
-        if tab.meta.get("params") != json.dumps(asdict(P)):
+        if not _chunk_params_ok(tab.meta):
             raise SystemExit(f"pre-screen chunk {k + 1}/{n} of {field} has other Params; rerun")
         parts.append(tab)
     tab = vstack(parts, metadata_conflicts="silent")

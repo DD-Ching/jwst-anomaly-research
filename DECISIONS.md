@@ -4002,6 +4002,15 @@ recoverable.**
   (it can be re-fetched only while HEASARC serves this digest; otherwise re-pin there with `--refresh`).
 - The null-ensemble cache is keyed by the input digests. Per-catalogue random streams are a follow-up.
 
+**Addendum 3 (2026-10-10): MOA pre-screen chunks keyed on pre-screen inputs only.** `_chunk_done` and
+`merge_prescreen` compared the whole `w3_moa.Params`, so vetting-only parameters (D-068 addendum: `period_*`,
+`slow_dip_power`, `spike_*`) forced full re-streams with byte-identical rows (gb12 chunks 1, 4 and 7 diffed against
+`main`: only metadata differs). Chunks now carry `prescreen_params` (`widths`, `n_min`, `prescreen_z/s/repeat`,
+`COINC_Z`, `QUIET_TRACK_MOD`, `PRESCREEN_CODE`). Older chunks are judged on the same keys of their `params`
+when `PRESCREEN_CODE` = 1. Bump `PRESCREEN_CODE` whenever `deficit_scan`, `baseline_chi2` or the tracked-row rule
+changes. Rejected: keep the full-Params key (it costs 6–8 min and 24–30 GB of range reads per field re-run for no
+change), and hash the scan source code (it breaks on comment edits and still needs a version for semantics).
+
 ## D-079 E-NF1b: IceTracks-DR2 short-lag ghost pairs: null; DR2 cannot reach R_g ~ 10⁻³ or improve lags > 1 h (2026-10-10)
 
 **Decision.**
