@@ -24,6 +24,11 @@ copies of alert tracks.
 
 ## Experiments
 
+### Benchmark 1: TXS 0506+056 2014–15 box with SkyLLH (D-080)
+- Reproduced: n̂s = 12.72, γ̂ = 2.26 (IC86_IV, Dataverse 1.0 IRFs) vs 12.7 / 2.3 in arXiv:2605.19040 section 5,
+  with the Table 6 box edges snapped (post hoc) to the on-source events at MJD 56927.860 and 57112.653. The printed rounded
+  window gives 11.1 / 2.22. `scripts/nf_txs_benchmark.py`, `results/nf/txs_skyllh_benchmark.json`.
+
 ### E-NF1: ICECAT-1 ghost-pair limit (NF-H04), pre-registered 2026-10-10
 - **Hypothesis:** a fraction R_g of astrophysical alert tracks have a delayed copy (ghost) at an unrelated sky
   position after Δt_g ∈ [0, 180 d].

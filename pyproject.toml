@@ -40,6 +40,8 @@ fast = ["numba>=0.60"]
 cloud = ["fsspec>=2024.2", "s3fs>=2024.2"]
 # Ordinary microlensing fits (point/finite-source/binary lens, parallax) for W3 vetting (D-054).
 mulens = ["MulensModel>=3.12"]
+# IceCube public-data likelihood fits (Neutrino Frontier benchmarks; D-080).
+nf = ["skyllh>=26.1"]
 
 [project.scripts]
 jwst-anomaly = "jwst_anomaly.cli:main"
