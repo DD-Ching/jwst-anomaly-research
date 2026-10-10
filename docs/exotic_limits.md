@@ -1123,6 +1123,13 @@ for these fields, which have no published N_s); conservative column uses the low
   3, residual deficit 3, neighbour 1, smooth dip 1. Injections: vetting keeps 96 / 170 flagged W3 injections; the new
   tests remove 9 (`residual_deficit` 7, `slow_dip_seasons` 1, `exotic_chi2_cap` 1). Pre-screen pass 4–12 %.
   PSPL controls: 0 / 40 per cell called W3.
+- **gb20** (52,005 light curves; N_s = 1.07 × 10⁷ from Nunota et al. 2024 Table 1, 79 / 80 subfields): 48 flags
+  (D-068's), **0 survive**; contact sheet inspected (eclipse-like boxes, slow dimmings, season steps, periodic and
+  scattered variables; no caustic spikes in the data). First failing test: eclipse dip 15, repeated deficit 10,
+  bracketing 9, residual deficit 6, χ² cap 4, exotic domain 1, neighbour 1, season offsets 1, slow dip with season
+  levels 1. Injections: vetting keeps 73 / 124 flagged W3 injections; the new tests remove 8 (`residual_deficit` 4,
+  `slow_dip_seasons` 2, `exotic_chi2_cap` 1, `periodic_variable` 1). Pre-screen pass 2.5–11 %. PSPL controls:
+  0 / 40 per cell called W3.
 
 Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every field):
 
@@ -1133,6 +1140,16 @@ Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every f
 | 30 | 0.17 | 14 / 11 | 1.4 / 1.8 × 10⁻⁶ (2.1 / 2.6 × 10⁻⁶) | 16 / 16 | 5.3 / 5.3 × 10⁻⁷ |
 | 100 | 1.8 | 7 / 13 | 2.9 / 1.5 × 10⁻⁶ (4.1 / 2.2 × 10⁻⁶) | 10 / 15 | 8.4 / 5.6 × 10⁻⁷ |
 | 300 | 17 | 8 / 4 | 2.5 / 5.0 × 10⁻⁶ (3.6 / 7.2 × 10⁻⁶) | 5 / 5 | 1.7 / 1.7 × 10⁻⁶ |
+
+gb20 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb20.ecsv`):
+
+| t_E (d) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|
+| 3 | 2 / 4 | 3.3 / 1.6 × 10⁻⁶ |
+| 10 | 6 / 11 | 1.1 × 10⁻⁶ / 5.9 × 10⁻⁷ |
+| 30 | 11 / 11 | 5.9 / 5.9 × 10⁻⁷ |
+| 100 | 10 / 13 | 6.5 / 5.0 × 10⁻⁷ |
+| 300 | 4 / 1 | 1.6 / 6.5 × 10⁻⁶ |
 
 ### All 22 fields (next)
 

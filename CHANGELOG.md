@@ -2,8 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-10: W3 MOA-II gb20, gb19 re-run under CHAIN_VERSION 2026-10-10.1 (in progress)
-- Plan: `run-field` for gb20 then gb19 (re-vet tracked flags, injections, limits).
+## 2026-10-10: W3 MOA-II gb20 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
+- `run-field --procs 4` in 2,144 s (pre-screen re-streamed 299 s, rows identical to the tracked tables; 51 fits;
+  2,200 injections 1,075 s). 48 flags (as in D-068), **0 survive**; contact sheet inspected (eclipse-like boxes,
+  slow dimmings, season steps, variables; no caustic spikes in the data).
+- Limits (`results/w3_moa/limits_gb20.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 5.0 × 10⁻⁷–6.5 × 10⁻⁶ per star per
+  year (t_E 3–300 d, published N_s). Vetting keeps 73 / 124 flagged W3 injections (59 %); the four new tests cost
+  8. Pre-screen pass 2.5–11 % stays the limiting factor. PSPL controls: 0 false W3 calls.
+- gb19 was planned in the same run but not started (40-min run budget).
+- **Next:** `run-field` for gb19, gb16, gb11, gb7, gb12, gb15, gb17, gb18, then `combine`.
 
 ## 2026-10-10: W3 MOA-II gb22 and gb21 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, first new-chain limits
 - `w3_moa.py --field gbN run-field` (~20 min per field on 4 cores). gb22: 30 flags, gb21: 36 flags, **0 survive**;
