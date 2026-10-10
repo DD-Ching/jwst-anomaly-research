@@ -49,7 +49,7 @@ MOVE FAST, SAFELY:
 - Coordination and parallel work: see COORDINATION AND DISPATCH below. Do not use /batch here, because it
   waits for a plan approval that never comes. Bring a stale agent PR up to date by merging origin/main into it.
   Transition: a draft `[field: <unit>]` claim PR without a `claimed` label (opened under the older rule) is in
-  flight while its newest commit or comment is under 20 minutes old. A `local-wip` PR without any CLAIM comment
+  flight while its newest commit or comment is under 60 minutes old. A `local-wip` PR without any CLAIM comment
   (labelled under the older rule) stays in flight unconditionally.
 - Batch network I/O. Prefer pipeline catalogs and S3 byte-range cutouts. Cloud disk (CLAUDE.md owner decision
   2026-10-08): stream data, never store a whole archive tar, log the reason, delete after use. Never put data or
@@ -134,7 +134,8 @@ never by guessing from commit times.
 1. Dispatch first. Each cycle starts as the dispatcher, not as a worker:
    a. `git fetch origin`; list open PRs, their labels and their newest comments; list remote claude/* branches.
    b. Build the in-flight list. An item is in flight when it has a `claimed` or `local-wip` label AND
-      a claim heartbeat (see 2) under 20 minutes old. A claim with no heartbeat for 20 minutes or more is stale.
+      a commit or a claim heartbeat (see 2) under 60 minutes old. A claim is stale only when it has had no
+      commit AND no heartbeat for 60 minutes or more (owner brief 2026-10-10, S-5; D-078).
    c. Answer unanswered owner comments first, on any PR.
    d. From TASKS.md "Now", choose the highest-value units that are NOT in flight and touch disjoint files.
       Prefer finishing a stale claimed PR over starting new work.
@@ -151,7 +152,8 @@ never by guessing from commit times.
    - Heartbeat at least every 10 minutes while you work: push a WIP commit, or edit your claim
      comment with "heartbeat <UTC> status: <one line>". A long silent coding stretch is not allowed.
    - When you stop, remove `claimed` and leave the handoff in the PR body or CHANGELOG.
-   - Take over a claimed unit only when its heartbeat is 20 minutes or more old. When you do, write
+   - Take over a claimed unit only when it has had no commit AND no heartbeat for 60 minutes or more
+     (a long computation may not commit, but it must still heartbeat). When you do, write
      "TAKEOVER from <old session> at <UTC>" in a comment first.
 
 3. Re-check before every push. `git fetch origin <branch>` and re-read the PR's latest comments.
