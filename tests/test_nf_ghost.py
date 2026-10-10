@@ -126,3 +126,7 @@ def test_wide_pair_counts_drops_same_readout():
     edges = (0.0, 10.0, 100.0)
     assert nf.wide_pair_counts(s, np.array([1, 2, 3]), edges).tolist() == [1.0, 2.0]
     assert nf.wide_pair_counts(s, np.array([1, 1, 3]), edges).tolist() == [0.0, 2.0]
+
+
+def test_union_days_counts_overlap_once():
+    assert nf.union_days(np.array([0.0, 0.5, 3.0]), np.array([1.0, 2.0, 4.0])) == 3.0

@@ -38,6 +38,9 @@ from scipy import stats
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from nf_ghost import E, empirical_p  # noqa: E402
 
 from jwst_anomaly import event_network as en  # noqa: E402
 from jwst_anomaly import neutrino_frontier as nf  # noqa: E402
@@ -55,37 +58,54 @@ ALL_EDGES = (0.0, 10.0, 100.0, 3600.0, DAY, 7 * DAY, 30 * DAY, 180 * DAY)
 FORECAST_CUTS = (3.5, 4.0, 4.5, 5.0, 5.5)
 R_GRID = (0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1)
 INJ_TRIALS = 200
-DETECT_P = 1.35e-3
 TXS = {"ra": 77.3582, "dec": 5.6931, "t0": 57020.0, "dt": 185.0, "log10e": 3.5, "r_deg": 1.0}
 
 
-def fetch() -> tuple[np.ndarray, np.ndarray]:
-    """(events, uptime) arrays; cached as one reduced .npz under the data root."""
+def _get(url: str, tries: int = 5) -> bytes:
+    """GET with back-off on 429/5xx and connection errors (scripts/CLAUDE.md)."""
     import requests
+
+    for k in range(tries):
+        try:
+            r = requests.get(url, timeout=900)
+            if r.status_code != 429 and r.status_code < 500:
+                r.raise_for_status()
+                return r.content
+        except requests.ConnectionError:
+            if k == tries - 1:
+                raise
+        time.sleep(2 ** (k + 1))
+    raise SystemExit(f"{url}: still failing after {tries} tries")
+
+
+def fetch() -> tuple[np.ndarray, np.ndarray]:
+    """(events, uptime) arrays; cached as one reduced .npz under the data root, tied to the
+    manifest digest (a cache from another manifest is rebuilt)."""
     from astropy.table import Table
 
     from jwst_anomaly.paths import data_root
 
-    cache = data_root() / "nf_icetracks_dr2" / "dr2_v3.1_reduced.npz"
+    digest = hashlib.sha256(MANIFEST.read_bytes()).hexdigest()
+    cache = data_root() / "nf_icetracks_dr2" / f"dr2_reduced_{digest[:12]}.npz"
     if cache.exists():
         d = np.load(cache)
-        return d["ev"], d["up"]
+        if str(d["manifest_sha256"]) == digest:
+            return d["ev"], d["up"]
     man = Table.read(MANIFEST, format="ascii.ecsv")
 
     def get(row):
-        r = requests.get(URL.format(int(row["dataverse_file_id"])), timeout=900)
-        r.raise_for_status()
-        got = hashlib.sha256(r.content).hexdigest()
+        raw = _get(URL.format(int(row["dataverse_file_id"])))
+        got = hashlib.sha256(raw).hexdigest()
         if got != row["sha256"]:
             raise SystemExit(f"{row['file']}: sha256 {got} != pinned {row['sha256']}")
-        return str(row["file"]), nf.read_icetracks_tab(r.text.splitlines())
+        return str(row["file"]), nf.read_icetracks_tab(raw.decode().splitlines())
 
     with cf.ThreadPoolExecutor(8) as ex:
         parts = dict(ex.map(get, man))
     ev = nf.dedupe_events(np.vstack([v for k, v in parts.items() if k.startswith("events/")]))
     up = np.vstack([v for k, v in parts.items() if k.startswith("uptime/")])
     cache.parent.mkdir(parents=True, exist_ok=True)
-    np.savez(cache, ev=ev, up=up)
+    np.savez(cache, ev=ev, up=up, manifest_sha256=digest)
     return ev, up
 
 
@@ -127,18 +147,20 @@ def forecast(ev: np.ndarray) -> list[dict]:
 
 
 def sample_of(ev: np.ndarray) -> tuple[en.Sample, np.ndarray]:
+    """Sample and its readout group (index of the unique (run, event) pair)."""
     t = ev[:, 3]
     s = en.Sample("dr2", t, ev[:, 6], ev[:, 7], ev[:, 5], en.mjd_year(t))
-    group = np.round(ev[:, 0]).astype(np.int64) * 10**8 + np.round(ev[:, 1]).astype(np.int64)
+    re_ = np.round(ev[:, :2]).astype(np.int64)
+    group = np.unique(re_, axis=0, return_inverse=True)[1].ravel()
     return s, group
 
 
 _W: dict = {}
 
 
-def _init(samples, up):
+def _init(samples, up, null, obs, mu, thresh):
     os.environ["OMP_NUM_THREADS"] = "1"
-    _W.update(samples=samples, up=up)
+    _W.update(samples=samples, up=up, null=null, obs=obs, mu=mu, thresh=thresh)
 
 
 def _null_chunk(seeds):
@@ -157,8 +179,30 @@ def _null_chunk(seeds):
     return np.array(out)
 
 
-def empirical_p(obs, null):
-    return (1.0 + (null >= obs[None] - 1e-9).sum(axis=0)) / (null.shape[0] + 1.0)
+def _inject_job(job):
+    """(detection fraction, CLs) for one (cut q, bin k, R) cell; seeded per job."""
+    q, k, r, seed = job
+    s, g = _W["samples"][q]
+    null, obs, mu, thresh = _W["null"][:, q, k], _W["obs"][q, k], _W["mu"][q, k], _W["thresh"]
+    rng = np.random.default_rng(seed)
+    ones = np.ones(len(s.mjd))
+    n0 = len(s.mjd)
+    d = ab = 0
+    for _ in range(INJ_TRIALS):
+        si, _w = nf.inject_ghosts(s, ones, r, LAG_EDGES[k], LAG_EDGES[k + 1], rng)
+        n1 = len(si.mjd)
+        gi = np.concatenate([g, g.max() + 1 + np.arange(n1 - n0)])
+        # remove the random-pair increase from the extra events (as E-NF1)
+        excess = (
+            nf.wide_pair_counts(si, gi, LAG_EDGES, P)[k]
+            - (n1 * (n1 - 1) / (n0 * (n0 - 1)) - 1.0) * mu
+            - obs
+        )
+        o = null[rng.integers(len(null))] + excess  # a background draw plus the ghost excess
+        d += empirical_p(np.array([o]), null[:, None])[0] <= thresh
+        ab += o <= obs
+    p_b = (null <= obs).mean()
+    return d / INJ_TRIALS, (ab / INJ_TRIALS) / max(p_b, 1e-12)
 
 
 def main(argv=None) -> int:
@@ -169,52 +213,49 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     out_path = OUT if a.mjd_min is None else OUT.with_name("ghost_pairs_dr2_ic86.json")
     nb = len(LAG_EDGES) - 1
-    thresh = DETECT_P / (nb * len(CUTS))
-    if 1.0 / (a.n + 1) > thresh:
+    thresh = E.DETECT_P / (nb * len(CUTS))
+    if en.empirical_floor(a.n) > thresh:
         raise SystemExit(f"--n {a.n} cannot reach the per-cell threshold {thresh:.2e}")
     t0 = time.time()
     ev, up = fetch()
+    up_full = up
     txs = txs_check(ev)
     fc = forecast(ev)
-    north = ev[:, 7] > DEC_MIN
+    keep = ev[:, 7] > DEC_MIN
     if a.mjd_min is not None:
-        north &= ev[:, 3] >= a.mjd_min
-    samples = [sample_of(ev[north & (ev[:, 4] >= c)]) for c in CUTS]
+        keep &= ev[:, 3] >= a.mjd_min
+        up = up[up[:, 1] > a.mjd_min].copy()
+        up[:, 0] = np.maximum(up[:, 0], a.mjd_min)  # jittered times stay inside the restricted span
+    samples = [sample_of(ev[keep & (ev[:, 4] >= c)]) for c in CUTS]
     obs = np.array([nf.wide_pair_counts(s, g, LAG_EDGES, P) for s, g in samples])
     t1 = time.time()
     seeds = np.arange(a.n) + 9_700_000
     chunks = [seeds[i : i + 250] for i in range(0, a.n, 250)]
-    with cf.ProcessPoolExecutor(a.cpu, initializer=_init, initargs=(samples, up)) as ex:
+    with cf.ProcessPoolExecutor(
+        a.cpu, initializer=_init, initargs=(samples, up, None, None, None, 0)
+    ) as ex:
         null = np.concatenate(list(ex.map(_null_chunk, chunks)))  # (n, cuts, bins)
     t_null = time.time() - t1
     pe = empirical_p(obs, null)
     mu, sd = null.mean(axis=0), null.std(axis=0)
-    rng = np.random.default_rng(9_800_000)
+    jobs = [
+        (q, k, r, 9_800_000 + 1000 * (q * nb + k) + i)
+        for q in range(len(CUTS))
+        for k in range(nb)
+        for i, r in enumerate(R_GRID)
+    ]
+    t2 = time.time()
+    with cf.ProcessPoolExecutor(
+        a.cpu, initializer=_init, initargs=(samples, up, null, obs, mu, thresh)
+    ) as ex:
+        res = dict(zip([j[:3] for j in jobs], ex.map(_inject_job, jobs), strict=True))
+    t_inj = time.time() - t2
     cells = []
     labels = en.lag_labels(en.Params(lag_edges=LAG_EDGES))
-    for q, (c, (s, g)) in enumerate(zip(CUTS, samples, strict=True)):
-        ones = np.ones(len(s.mjd))
+    for q, (c, (s, _g)) in enumerate(zip(CUTS, samples, strict=True)):
         for k in range(nb):
-            lo, hi = LAG_EDGES[k], LAG_EDGES[k + 1]
-            det, cls = {}, {}
-            p_b = (null[:, q, k] <= obs[q, k]).mean()
-            for r in R_GRID:
-                d = ab = 0
-                for _ in range(INJ_TRIALS):
-                    si, _w = nf.inject_ghosts(s, ones, r, lo, hi, rng)
-                    gi = np.concatenate([g, -1 - np.arange(len(si.mjd) - len(s.mjd))])
-                    n0, n1 = len(s.mjd), len(si.mjd)
-                    excess = (
-                        nf.wide_pair_counts(si, gi, LAG_EDGES, P)[k]
-                        - (n1 * (n1 - 1) / (n0 * (n0 - 1)) - 1.0) * mu[q, k]
-                        - obs[q, k]
-                    )
-                    o = null[rng.integers(len(null)), q, k] + excess
-                    d += empirical_p(np.array([o]), null[:, q, k][:, None])[0] <= thresh
-                    ab += o <= obs[q, k]
-                det[r] = d / INJ_TRIALS
-                cls[r] = (ab / INJ_TRIALS) / max(p_b, 1e-12)
-            ok = [cls[r] <= 0.05 for r in R_GRID]
+            det = {r: res[(q, k, r)][0] for r in R_GRID}
+            ok = [res[(q, k, r)][1] <= 0.05 for r in R_GRID]
             cells.append(
                 {
                     "log10e_min": c,
@@ -226,6 +267,7 @@ def main(argv=None) -> int:
                     "p_empirical": float(pe[q, k]),
                     "p_bonferroni": min(1.0, float(pe[q, k]) * nb * len(CUTS)),
                     "r50": next((r for r in R_GRID if det[r] >= 0.5), None),
+                    # smallest grid R from which every larger R also has CLs <= 0.05 (as E-NF1)
                     "r_ul95_cls": next((r for i, r in enumerate(R_GRID) if all(ok[i:])), None),
                     "detect_frac": {str(r): v for r, v in det.items()},
                 }
@@ -241,8 +283,12 @@ def main(argv=None) -> int:
             "R = ghosts per event above the cut; per astrophysical neutrino R_g = R / f_astro"
         ),
         "mjd_min_post_hoc": a.mjd_min,
-        "n_events_total": len(ev),
-        "livetime_days_sum": round(float((up[:, 1] - up[:, 0]).sum()), 1),
+        "full_release": {
+            "note": "txs, forecast and these totals use the whole release, not the --mjd-min cut",
+            "n_events": len(ev),
+            "uptime_days_union": round(nf.union_days(up_full[:, 0], up_full[:, 1]), 1),
+        },
+        "test_uptime_days_union": round(nf.union_days(up[:, 0], up[:, 1]), 1),
         "txs_known_case": txs,
         "forecast_optimistic": fc,
         "n_scrambles": a.n,
@@ -250,7 +296,7 @@ def main(argv=None) -> int:
         "min_p_bonferroni": min(1.0, float(pe.min()) * pe.size),
         "r_grid": list(R_GRID),
         "inj_trials": INJ_TRIALS,
-        "speed": {"null_s": round(t_null, 1), "cpu": a.cpu},
+        "speed": {"null_s": round(t_null, 1), "injections_s": round(t_inj, 1), "cpu": a.cpu},
         "cells": cells,
         "runtime_s": round(time.time() - t0),
     }
@@ -258,11 +304,8 @@ def main(argv=None) -> int:
     with open(out_path, "w") as fh:
         json.dump(out, fh, indent=1)
         fh.write("\n")
-    print(
-        json.dumps(
-            {k: v for k, v in out.items() if k not in ("cells", "forecast_optimistic")}, indent=1
-        )
-    )
+    skip = ("cells", "forecast_optimistic")
+    print(json.dumps({k: v for k, v in out.items() if k not in skip}, indent=1))
     for row in fc:
         print(
             row["log10e_min"], row["n"], [f"{b['pairs']}/{b['rg_floor']:.2g}" for b in row["bins"]]

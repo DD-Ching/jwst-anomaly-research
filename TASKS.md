@@ -34,8 +34,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 ## Neutrino Frontier (owner brief 2026-10-10, D-077; docs/neutrino_frontier/)
 Independent program; takes no resources from MOA-II, S1, E1/D1 or data validation without an allocation decision.
 1. **E-NF1 follow-up (NF-H04 ghosts):** ICECAT-1 null (global p = 0.058), CLs limits R_g ≤ 0.02–0.05 (Δt ≤ 1 h),
-   ≤ 0.1–0.2 (1 h–7 d), ≤ 0.5 (7–30 d). **IceTracks-DR2 short lags (E-NF1b, D-TBD): null**, R ≤ 0.002 per northern
-   track with log10 E ≥ 4 (≤ 100 s), ≤ 0.02 (100 s–1 h). The DR2 forecast rules out R_g ~ 10⁻³ at every lag and any
+   ≤ 0.1–0.2 (1 h–7 d), ≤ 0.5 (7–30 d). **IceTracks-DR2 short lags (E-NF1b, D-079): null**, R ≤ 0.002 per northern
+   track with log10 E ≥ 4 (≤ 100 s), ≤ 0.01 (100 s–1 h). The DR2 forecast rules out R_g ~ 10⁻³ at every lag and any
    gain beyond 1 h (optimistic floor ≥ 0.055 at 1 h–1 d, ≥ 0.64 at 30–180 d). Next, only if NF-H04 gets a
    quantitative prediction: f_astro per cut from the DR2 effective areas (turns R into R_g per astrophysical
    neutrino); the 30–180 d bin has no public sample that can reach it.

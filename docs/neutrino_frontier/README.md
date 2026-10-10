@@ -73,6 +73,6 @@ copies of alert tracks.
   Six cells (5,000 scrambles): min Bonferroni p = 0.48 (log10 E ≥ 4, 0–10 s: 9 pairs vs 5.2 ± 2.3). All 9 pairs
   are from IC40/IC59 (2008–10), where the rate above log10 E = 4 (north) is 3.8–10.5 d⁻¹ against 0.57–0.58 d⁻¹ in
   IC79/IC86: the energy proxy is not uniform across detector configurations; the jitter null absorbs it. 95 % CLs
-  limits on R per event above the cut: ≤ 0.002 (log10 E ≥ 4, ≤ 100 s), ≤ 0.02 (100 s–1 h); ≤ 0.005 (log10 E ≥ 4.5,
+  limits on R per event above the cut: ≤ 0.002 (log10 E ≥ 4, ≤ 100 s), ≤ 0.01 (100 s–1 h); ≤ 0.005 (log10 E ≥ 4.5,
   ≤ 100 s), ≤ 0.02 (100 s–1 h). Post hoc, IC86 only (2,267 / 174 events): 0 wide pairs at ≤ 100 s, limits
-  0.002–0.02. R_g per astrophysical neutrino = R / f_astro (not estimated). `results/nf/ghost_pairs_dr2*.json`.
+  0.002–0.05. R_g per astrophysical neutrino = R / f_astro (not estimated). `results/nf/ghost_pairs_dr2*.json`.

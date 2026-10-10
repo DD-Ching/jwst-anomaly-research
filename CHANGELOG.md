@@ -2,18 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-10: E-NF1b IceTracks-DR2 short-lag ghost pairs: null; DR2 cannot reach R_g ~ 10⁻³ (D-TBD)
-- Streamed IceTracks-DR2 v3.1 (28 files, ~210 MB, 3 s, sha256 pinned; raw not kept): 1,643,355 events, 4,963 d
-  uptime, no duplicates. Known case: TXS 0506+056 2014–15 box 6 on vs 1.11 expected (p = 1.0 × 10⁻³).
+## 2026-10-10: E-NF1b IceTracks-DR2 short-lag ghost pairs: null; DR2 cannot reach R_g ~ 10⁻³ (D-079)
+- Streamed IceTracks-DR2 v3.1 (28 files, ~210 MB, 3 s, sha256 pinned; raw not kept): 1,643,355 events, 4,963.4 d
+  good-run union, no duplicates. Known case: TXS 0506+056 2014–15 box 6 on vs 1.11 expected (p = 1.0 × 10⁻³).
 - Forecast first (most optimistic: every event astrophysical): reachable R ≥ 0.055 (1 h–1 d), 0.14 (1–7 d),
   0.27 (7–30 d), 0.64 (30–180 d) for every northern cut, so DR2 cannot improve ICECAT-1 beyond 1 h and R_g ~ 10⁻³ is
   out of reach at every lag (TASKS target withdrawn).
-- Pre-registered short-lag test (6 cells, 5,000 uptime-aware scrambles, 44 s on 4 cores): **null**, min Bonferroni
+- Pre-registered short-lag test (6 cells, 5,000 uptime-aware scrambles; 33 s wall on 4 cores: null 12.4 s,
+  injections 3.8 s): **null**, min Bonferroni
   p = 0.48. 95 % CLs limits per northern track: R ≤ 0.002 (log10 E ≥ 4, ≤ 100 s), ≤ 0.005 (≥ 4.5, ≤ 100 s),
-  ≤ 0.02 (100 s–1 h); R_g per astrophysical neutrino is R / f_astro (not estimated).
+  ≤ 0.01–0.02 (100 s–1 h); R_g per astrophysical neutrino is R / f_astro (not estimated).
 - Found: the 9 pairs at 0–10 s (log10 E ≥ 4) are all from IC40/IC59, where the northern rate above the cut is
   ×7–18 the IC79/IC86 rate (the energy proxy differs by configuration); the jitter null absorbs it (p = 0.08).
   Post hoc IC86-only: 0 pairs at ≤ 100 s. Any future DR2 energy cut must be per season.
+- `/code-review` (10 findings, 9 fixed): good-run union instead of a sum; cache tied to the manifest digest;
+  `--mjd-min` also restricts the null's uptime and labels full-release fields; (run, event) group by unique
+  index; retry with back-off; injections on the process pool (×4); shared `empirical_p`/`DETECT_P`/floor;
+  `wide_pair_counts` reuses `wide_pair_stats`.
 - Failed approach: urllib gets 403 from Dataverse (use requests/curl); Dataverse md5 is of the original CSV, so the
   manifest pins the sha256 of the served `.tab`.
 - **Next:** NF-H04 needs a quantitative prediction before more compute (TASKS); TXS SkyLLH benchmark stays

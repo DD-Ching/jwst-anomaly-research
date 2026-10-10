@@ -93,7 +93,7 @@ Action.
   "CLAIM <session> started <UTC> expected-end <UTC> unit: <scope> files: <paths>". Heartbeat at least every 10
   minutes while working (a WIP push, or edit that comment with "heartbeat <UTC> status: <one line>"); before every
   push, `git fetch origin <branch>` and re-read the PR's comments, and on a collision push to `claude/<slug>-alt`
-  instead and comment your findings on their PR. Remove the label when you stop. Write "D-TBD" until just before
+  instead and comment your findings on their PR. Remove the label when you stop. Write "D-079" until just before
   merge. Draft claim PRs do not count toward the WIP cap. Step 8 updates this PR instead of creating another.
 - Environment: if `.venv` is missing, create it as CLAUDE.md "Environment" says (Linux and cloud:
   `.venv/bin/python`). If uv can't fetch Python 3.12 there, use `uv venv .venv --python python3`, which is

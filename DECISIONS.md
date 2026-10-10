@@ -3974,7 +3974,7 @@ and numba classes identical; loop 808 ms, numpy 28 ms (×29), numba 1.79 ms (×4
 **Revisit if.** Cloud sessions gain release permission (publish the GW maps and the pinned GBM snapshot), or
 another store is approved by the owner.
 
-## D-TBD E-NF1b: IceTracks-DR2 short-lag ghost pairs: null; DR2 cannot reach R_g ~ 10⁻³ or improve lags > 1 h (2026-10-10)
+## D-079 E-NF1b: IceTracks-DR2 short-lag ghost pairs: null; DR2 cannot reach R_g ~ 10⁻³ or improve lags > 1 h (2026-10-10)
 
 **Decision.**
 - Run NF-H04 on IceTracks-DR2 only at lags ≤ 1 h. Pre-registered (docs/neutrino_frontier/README.md, E-NF1b):
@@ -3994,9 +3994,9 @@ another store is approved by the owner.
 - urllib downloads (403 from Dataverse); `requests` and curl work.
 
 **Evidence.** `results/nf/ghost_pairs_dr2.json`, `results/nf/ghost_pairs_dr2_ic86.json` (identical on re-run, fixed
-seeds). 1,643,355 events, no duplicate (run, event, subevent) (the paper's count). TXS 0506+056 2014–15 box: 6 on
+seeds). 1,643,355 events, no duplicate (run, event, subevent) (the paper's count); good-run union 4,963.4 d. TXS 0506+056 2014–15 box: 6 on
 vs 1.11 expected (p = 1.0 × 10⁻³). Min Bonferroni p = 0.48; limits R ≤ 0.002 (log10 E ≥ 4, ≤ 100 s), ≤ 0.005
-(≥ 4.5, ≤ 100 s), ≤ 0.02 (100 s–1 h). The 9 pairs at 0–10 s are all IC40/IC59; the rate above log10 E = 4 (north) is
+(≥ 4.5, ≤ 100 s), ≤ 0.01–0.02 (100 s–1 h). The 9 pairs at 0–10 s are all IC40/IC59; the rate above log10 E = 4 (north) is
 ×7–18 higher there than in IC79/IC86 (energy-proxy scale differs by configuration). IC86-only (post hoc): 0 pairs
 at ≤ 100 s.
 

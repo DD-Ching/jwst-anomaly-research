@@ -33,16 +33,23 @@ def n_bins(gp: GhostParams) -> int:
 
 
 def wide_pair_stats(
-    s: en.Sample, w: np.ndarray, gp: GhostParams, p: en.Params | None = None
+    s: en.Sample,
+    w: np.ndarray,
+    gp: GhostParams,
+    p: en.Params | None = None,
+    group: np.ndarray | None = None,
 ) -> np.ndarray:
     """(n_bins, 2): wide-pair count and sum of w_i w_j per lag bin, unordered pairs of one catalogue
-    (bin 0 includes lag 0). Wide = D-074 separation class 1."""
+    (bin 0 includes lag 0). Wide = D-074 separation class 1. Pairs with equal ``group`` (one IceCube
+    readout) are not counted."""
     p = p or en.Params()
     e = np.asarray(gp.lag_edges)
     i, j = en.pairs_within(s.mjd, s.mjd, e[-1], True)
     lag = np.abs(s.mjd[j] - s.mjd[i]) * DAY
     sep = en.sep_deg(s.ra[i], s.dec[i], s.ra[j], s.dec[j])
     wide = (en.sep_class(sep, s.sigma[i], s.sigma[j], p) == 1) & (lag <= e[-1])
+    if group is not None:
+        wide &= group[i] != group[j]
     k = np.clip(np.searchsorted(e, lag[wide], side="right") - 1, 0, n_bins(gp) - 1)
     out = np.zeros((n_bins(gp), 2))
     out[:, 0] = np.bincount(k, minlength=n_bins(gp))
@@ -91,7 +98,7 @@ def inject_ghosts(
     return sample, np.concatenate([w, w[parent][keep]])
 
 
-# --- IceTracks-DR2 (E-NF1b, D-TBD) -------------------------------------------------------------
+# --- IceTracks-DR2 (E-NF1b, D-079) -------------------------------------------------------------
 
 #: columns of the IceTracks-DR2 ``events/<season>_exp.tab`` files (doi:10.7910/DVN/MMIIZA)
 DR2_COLUMNS = (
@@ -161,14 +168,21 @@ def jitter_uptime(
 def wide_pair_counts(
     s: en.Sample, group: np.ndarray, lag_edges, p: en.Params | None = None
 ) -> np.ndarray:
-    """Wide-pair (D-074 class 1) counts per lag bin, unordered pairs; pairs within one ``group``
+    """Wide-pair counts per lag bin (``wide_pair_stats`` column 0); pairs within one ``group``
     (one IceCube (run, event): split or coincident muons of one readout) are not counted."""
-    p = p or en.Params()
-    e = np.asarray(lag_edges, float)
-    i, j = en.pairs_within(s.mjd, s.mjd, e[-1], True)
-    lag = np.abs(s.mjd[j] - s.mjd[i]) * DAY
-    sep = en.sep_deg(s.ra[i], s.dec[i], s.ra[j], s.dec[j])
-    wide = (en.sep_class(sep, s.sigma[i], s.sigma[j], p) == 1) & (lag <= e[-1])
-    wide &= group[i] != group[j]
-    k = np.clip(np.searchsorted(e, lag[wide], side="right") - 1, 0, len(e) - 2)
-    return np.bincount(k, minlength=len(e) - 1).astype(float)
+    gp = GhostParams(lag_edges=tuple(lag_edges))
+    return wide_pair_stats(s, np.ones(len(s.mjd)), gp, p, group)[:, 0]
+
+
+def union_days(start: np.ndarray, stop: np.ndarray) -> float:
+    """Total length of the union of the intervals ``[start, stop]`` (overlapping good runs once)."""
+    o = np.argsort(start)
+    s, e = start[o], stop[o]
+    total, cur_s, cur_e = 0.0, s[0], e[0]
+    for a, b in zip(s[1:], e[1:], strict=True):
+        if a > cur_e:
+            total += cur_e - cur_s
+            cur_s, cur_e = a, b
+        else:
+            cur_e = max(cur_e, b)
+    return float(total + cur_e - cur_s)
