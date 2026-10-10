@@ -2,6 +2,8 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: W3 MOA-II cloud re-vet of the lenient-reference fields (WIP)
+
 ## 2026-10-10: W3 MOA-II combined limit over the eleven re-run fields
 - Hypothesis before running: `combine` gives a finite limit in every cell, and no single field's few recoveries
   carry a cell (the gb18 t_E = 300 d, ρ = 0.1 cell has 0 / 200). A cell with share near 1 would have meant more
