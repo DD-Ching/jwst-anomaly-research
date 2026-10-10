@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: W3 MOA-II gb20, gb19 re-run under CHAIN_VERSION 2026-10-10.1 (in progress)
+- Plan: `run-field` for gb20 then gb19 (re-vet tracked flags, injections, limits).
+
 ## 2026-10-10: W3 MOA-II gb22 and gb21 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, first new-chain limits
 - `w3_moa.py --field gbN run-field` (~20 min per field on 4 cores). gb22: 30 flags, gb21: 36 flags, **0 survive**;
   contact sheets inspected (dips, season steps, scatter; no caustic spikes in the data). Pre-screen rows identical to
