@@ -48,6 +48,18 @@ class Params:
     n_obs: int = 200_000  # posterior samples kept per lens (random subsample)
     density_bins: int = 300  # histogram density of ln X used as a 1-D likelihood
     flag_sigma_global: float = 5.0  # ASSUMPTION: trials-corrected flag threshold
+    # Kinematic D_s/D_ds (D-073 addendum 4)
+    kin_ln_ratio: tuple[float, float, int] = (
+        float(np.log(0.04)),
+        float(np.log(40.0)),
+        2000,
+    )  # ASSUMPTION: flat prior in ln D_s/D_ds on this grid; its upper end is a prior bound
+    kin_n_ani: int = 31  # a_ani nodes, flat over the published grid (ASSUMPTION)
+    kin_n_gam: int = (
+        41  # gamma_pl nodes over the published grid (prior truncated to it, as hierArc)
+    )
+    kin_tau_max: float = 2.0  # upper bound of the intrinsic-scatter fit (ln units)
+    kin_inj_ln_f: tuple[float, float, int] = (-4.0, 4.0, 321)  # injection ln f scan
 
 
 DEFAULT = Params()
@@ -58,7 +70,7 @@ DEFAULT = Params()
 # --------------------------------------------------------------------------------------------------
 
 
-_ZGRID = np.linspace(0.0, 3.0, 3001)
+_ZGRID = np.linspace(0.0, 5.0, 5001)
 
 
 @lru_cache(maxsize=4096)
@@ -70,10 +82,10 @@ def _chi_table(om: float, w: float) -> np.ndarray:
 
 
 def comoving_dimensionless(z: Sequence[float], om: float, w: float = -1.0) -> np.ndarray:
-    """Comoving distance / (c/H0), flat (w)CDM, radiation neglected, z <= 3."""
+    """Comoving distance / (c/H0), flat (w)CDM, radiation neglected, z <= 5."""
     z = np.asarray(z, dtype=float)
     if np.any(z > _ZGRID[-1]):
-        raise ValueError("z > 3 not tabulated")
+        raise ValueError("z > 5 not tabulated")
     return np.interp(z, _ZGRID, _chi_table(round(float(om), 10), round(float(w), 10)))
 
 
@@ -265,11 +277,11 @@ def ddt_with_kext(ddt_model: np.ndarray, kappa_ext: np.ndarray) -> np.ndarray:
     return np.asarray(ddt_model, float) / (1.0 - np.asarray(kappa_ext, float))
 
 
-def load_array_pickle(path) -> list[np.ndarray]:
-    """Read a Python-2 pickle that holds only numpy arrays, refusing every other class.
+def load_data_pickle(path):
+    """Read a pickle of numpy arrays inside plain containers, refusing every other class.
 
-    The TDCOSMO SDSS1206 pre-LOS file is such a pickle; a plain pickle.load would run arbitrary code
-    from a downloaded file."""
+    TDCOSMO publishes posteriors and hierArc likelihoods as pickles (arrays inside dicts and
+    lists); a plain pickle.load would run arbitrary code from a downloaded file."""
     import importlib
     import pickle
 
@@ -292,8 +304,138 @@ def load_array_pickle(path) -> list[np.ndarray]:
             return getattr(importlib.import_module(module), name)
 
     with open(path, "rb") as f:
-        out = _Arrays(f, encoding="latin1").load()
-    return [np.asarray(x) for x in out]
+        return _Arrays(f, encoding="latin1").load()
+
+
+def load_array_pickle(path) -> list[np.ndarray]:
+    """A pickled sequence of numpy arrays (TDCOSMO SDSS1206 pre-LOS file), via load_data_pickle."""
+    return [np.asarray(x) for x in load_data_pickle(path)]
+
+
+# --------------------------------------------------------------------------------------------------
+# Kinematic D_s/D_ds per lens (hierArc IFUKinCov / DdtHistKin likelihood terms, D-073 addendum 4)
+# --------------------------------------------------------------------------------------------------
+
+
+def _kin_scaling(lens: dict, names: list, ani: np.ndarray, gam: np.ndarray | None) -> np.ndarray:
+    """J scaling per (a_ani[, gamma_pl]) node and IFU bin: shape (n_ani, n_gam, n_bin).
+
+    hierArc KinScaling: linear interpolation in a_ani (1-D grids) or a bivariate spline
+    (a_ani, gamma_pl); here linear in both, on nodes inside the published grid."""
+    from scipy.interpolate import RegularGridInterpolator
+
+    axes = [np.asarray(a, float) for a in lens["j_kin_scaling_param_axes"]]
+    grids = [np.asarray(g, float) for g in lens["j_kin_scaling_grid_list"]]
+    if len(axes) == 1:
+        sc = np.stack([np.interp(ani, axes[0], g) for g in grids], axis=-1)
+        return sc[:, None, :]
+    aa, gg = np.meshgrid(ani, gam, indexing="ij")
+    by_name = {"a_ani": aa.ravel(), "gamma_pl": gg.ravel()}
+    pts = np.column_stack([by_name[n] for n in names])
+    sc = [RegularGridInterpolator(tuple(axes), g)(pts).reshape(aa.shape) for g in grids]
+    return np.stack(sc, axis=-1)
+
+
+def kin_ln_ratio_loglike(lens: dict, ln_ratio: np.ndarray, params: Params = DEFAULT):
+    """ln L(ln D_s/D_ds) of one lens's hierArc kinematic term, marginalized over its nuisances.
+
+    Model (hierArc KinLikelihood): sigma_v = c sqrt(J s(a_ani[, gamma_pl]) D_s/D_ds * lam), with
+    covariance C_meas + C_sqrtJ s D_s/D_ds c^2; lam = lambda_int (1 - kappa_ext) is set to 1 here,
+    so the inferred ratio is the one that holds when the lens's own mass model is exact.
+    a_ani: flat over the published grid (ASSUMPTION). gamma_pl: the lens's Gaussian prior truncated
+    to the published grid (hierArc bounds the interpolation the same way), else flat (ASSUMPTION).
+    Returns (ln L on the grid, a dict of the nuisance treatment)."""
+    names = list(lens["kin_scaling_param_list"])
+    axes = dict(zip(names, lens["j_kin_scaling_param_axes"], strict=True))
+    if set(names) - {"a_ani", "gamma_pl"} or "a_ani" not in names:
+        raise ValueError(f"unsupported kinematic scaling parameters {names}")
+    a_ax = np.asarray(axes["a_ani"], float)
+    ani = np.linspace(a_ax.min(), a_ax.max(), params.kin_n_ani)
+    gam, w_gam, in_grid = None, np.ones(1), None
+    if "gamma_pl" in names:
+        g_ax = np.asarray(axes["gamma_pl"], float)
+        gam = np.linspace(g_ax.min(), g_ax.max(), params.kin_n_gam)
+        prior = {p[0]: p[1:] for p in lens.get("prior_list") or []}
+        if "gamma_pl" in prior:
+            mu, sd = map(float, prior["gamma_pl"])
+            w_gam = np.exp(-0.5 * ((gam - mu) / sd) ** 2)
+            in_grid = float(np.diff(stats.norm.cdf([gam[0], gam[-1]], mu, sd))[0])
+        else:
+            w_gam = np.ones(len(gam))
+    w_gam = w_gam / w_gam.sum()
+    scale = _kin_scaling(lens, names, ani, gam)  # (n_ani, n_gam, n_bin)
+    j = np.asarray(lens["j_model"], float)
+    sig = np.asarray(lens["sigma_v_measurement"], float)
+    c_meas = np.atleast_2d(np.asarray(lens["error_cov_measurement"], float))
+    c_j = np.asarray(lens["error_cov_j_sqrt"], float)
+    c_j = np.full_like(c_meas, float(c_j)) if c_j.ndim == 0 else np.atleast_2d(c_j)
+    rt = np.sqrt(scale)
+    c_s = c_j * (rt[..., :, None] * rt[..., None, :]) * C_KMS**2  # (n_ani, n_gam, n_bin, n_bin)
+    out = np.empty(len(ln_ratio))
+    step = max(1, int(2e6 // max(1, c_s.size)))  # bound memory for the 14-bin IFU lenses
+    for k in range(0, len(ln_ratio), step):
+        r = np.exp(np.asarray(ln_ratio[k : k + step], float))[:, None, None, None]
+        pred = np.sqrt(j * scale[None] * r) * C_KMS  # (n_r, n_ani, n_gam, n_bin)
+        cov = c_meas + c_s[None] * r[..., None]
+        delta = sig - pred
+        sol = np.linalg.solve(cov, delta[..., None])[..., 0]
+        _, lndet = np.linalg.slogdet(cov)
+        ll = -0.5 * (np.sum(delta * sol, axis=-1) + lndet + len(sig) * np.log(2 * np.pi))
+        mx = ll.max(axis=(1, 2), keepdims=True)
+        out[k : k + step] = (
+            np.log(np.einsum("rag,g->r", np.exp(ll - mx), w_gam) / len(ani)) + mx[:, 0, 0]
+        )
+    info = {
+        "a_ani_range": [float(ani[0]), float(ani[-1])],
+        "gamma_pl": None if gam is None else ("prior" if np.ptp(w_gam) > 0 else "flat"),
+        "gamma_prior_in_grid": in_grid,
+        "n_bins": int(len(sig)),
+    }
+    return out, info
+
+
+def grid_moments(x: np.ndarray, lnl: np.ndarray) -> tuple[np.ndarray, float, float]:
+    """Normalized density on a uniform grid (flat prior in x), its median and half 16-84 % width.
+
+    Quantiles, not moments: the hierArc kinematic term (Gaussian in sigma_v with an error that
+    scales with the prediction) has a power-law upper tail, so mean and sd depend on the grid
+    end."""
+    p = np.exp(lnl - np.max(lnl))
+    p = p / np.trapezoid(p, x)
+    cdf = np.concatenate([[0.0], np.cumsum(0.5 * (p[1:] + p[:-1]) * np.diff(x))])
+    q16, q50, q84 = np.interp([0.16, 0.5, 0.84], cdf / cdf[-1], x)
+    return p, float(q50), float(0.5 * (q84 - q16))
+
+
+def offset_scatter_fit(
+    m: np.ndarray, s: np.ndarray, tau_max: float = DEFAULT.kin_tau_max
+) -> tuple[float, float, float]:
+    """ML common offset delta and intrinsic scatter tau for y_i ~ N(delta, s_i^2 + tau^2).
+
+    Returns (delta, sd(delta), tau), tau in [0, tau_max] (callers check for tau near tau_max).
+    Gaussian per-lens summaries (ASSUMPTION)."""
+    from scipy.optimize import minimize_scalar
+
+    m, s = np.asarray(m, float), np.asarray(s, float)
+
+    def prof(tau):
+        v = s**2 + tau**2
+        d = np.sum(m / v) / np.sum(1 / v)
+        return 0.5 * np.sum((m - d) ** 2 / v + np.log(v)), d, float(np.sqrt(1 / np.sum(1 / v)))
+
+    res = minimize_scalar(lambda t: prof(t)[0], bounds=(0.0, tau_max), method="bounded")
+    tau = float(res.x) if prof(res.x)[0] < prof(0.0)[0] else 0.0
+    _, d, sd = prof(tau)
+    return float(d), sd, tau
+
+
+def grid_pull(x: np.ndarray, dens: np.ndarray, mu: float, sd: float) -> float:
+    """Signed sigma of y_obs (density on grid x) against y_pred ~ N(mu, sd): two-sided tail of
+    Delta = y_obs - y_pred, computed on the grid (no Gaussian approximation for y_obs)."""
+    p_neg = float(np.trapezoid(dens * stats.norm.sf((x - mu) / sd), x))  # P(Delta < 0)
+    p_neg = min(max(p_neg, 0.0), 1.0)
+    p2 = 2.0 * min(p_neg, 1.0 - p_neg)
+    return float(np.sign(0.5 - p_neg) * p_to_sigma(p2))
 
 
 # --------------------------------------------------------------------------------------------------

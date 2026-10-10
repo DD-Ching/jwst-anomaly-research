@@ -3548,6 +3548,39 @@ into statistic D (`kext` only, everything else as addendum 2).
 - Rejected: the pre-LOS composite pickle (`angular_diameter_pre_LOS_composite.txt`): its κ_pert array has 20,000
   rows against 400,000 distance rows, so the per-sample pairing the power-law reader uses is undefined there.
 
+**Addendum 4 (2026-10-10): kinematic D_s/D_ds per lens, 76 lenses.** `scripts/d1_distance.py kinematic` reads the
+hierArc kinematic likelihoods TDCOSMO 2025 ships as pickles (8 TDCOSMO lenses; SLACS KCWI 13, SLACS SDSS 41 not in
+KCWI, SL2S 14: `ExternalLenses/`) with `distance_consistency.load_data_pickle` (numpy-only globals) and turns each
+into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any D_dt.
+- Model (hierArc 1.2.0 `KinLikelihood` + `_displace_lambda_mst`, read, not installed): σ_v = c √(J s(a_ani[, γ_pl])
+  (D_s/D_ds) λ), covariance C_meas + C_√J s (D_s/D_ds) c², λ = λ_int (1 − κ_ext). Here λ = 1, a_ani flat over the
+  published grid (31 nodes), γ_pl (RXJ1131 and the 13 SLACS KCWI lenses) from each lens's Gaussian prior truncated
+  to the published grid [1.5, 2.5] (41 nodes; hierArc bounds it the same way; `gamma_prior_in_grid`, lowest
+  SDSSJ0029−0055 0.23, SDSSJ1402+6321 0.59); flat prior in ln D_s/D_ds on [0.04, 40] (ASSUMPTIONs, all in
+  `Params.kin_*`). The term is Gaussian in σ_v with an error proportional to the prediction, so its upper
+  tail is a power law: the grid end is a prior bound and per-lens summaries are median and half 16–84 % width.
+  Moving the bound to 400 (`--ratio-max 400`) changes the max pull by 2 × 10⁻⁴σ and δ, τ by < 10⁻³.
+- Statistic: y = ln(D_s/D_ds)_kin − ln(D_s/D_ds)_ΛCDM; leave-one-out pull of each lens against the others' common
+  offset δ (absorbs a population λ) and Gaussian intrinsic scatter τ (ML; absorbs per-lens λ_int, anisotropy and
+  profile scatter), tail computed on the lens's own grid density. Ωm 0.3 (0.1 and 0.5 as checks). Sidak over 76:
+  5.78σ local. Null: 100 shuffled redshift pairs. Injection: one lens's D_s/D_ds × f.
+- **Result: null.** Max |pull| 2.49σ (SDSSJ2302−0840, SLACS SDSS, −0.63 in ln), 2.63σ / 2.54σ at Ωm 0.1 / 0.5; next
+  SDSSJ1538+5817 (KCWI, +0.29) +2.48σ. Shuffled-z null median max|pull| 2.71σ (p ≥ observed 0.79): the redshift lever is weak against τ = 0.15,
+  so this tests per-lens outliers, not the redshift dependence. Pooled δ = −0.06 ± 0.03. Detectable factors (median
+  over lenses): × 0.21 down / × 5.6 up; TDCOSMO × 0.19–0.39 / × 2.9–9.0, SLACS KCWI × 0.30–0.45 / × 1.6–2.9,
+  SLACS SDSS × 0.02–0.42 / × 3.7–52, SL2S × 0.02–0.22 / × 3.3–32 (two SL2S lenses not reached down, one up, within
+  × 0.018–55).
+- Sample offsets (δ ± sd, τ): KCWI +0.06 ± 0.04 (0.12), SLACS SDSS −0.15 ± 0.04 (0.03), TDCOSMO −0.11 ± 0.05
+  (0.0), SL2S −0.36 ± 0.15 (0.35). KCWI vs SDSS differ by 0.2 on the same SLACS lenses (aperture and data
+  systematics; hypothesis, not tested). With λ = 1 (diagnostic `z_lambda1`, never flags) the precise KCWI lenses sit
+  up to 10σ high: λ_int ≠ 1 per lens, the mass-sheet degeneracy this test cannot break.
+- Cross-check, not a validation: the TDCOSMO 2025 kinematic ratios differ from the H0LiCOW joint R (composite
+  models, other anisotropy priors) by −0.43 to +0.30 in ln (PG1115 1.04 vs 1.61; J1206 2.48 vs 1.83), within
+  their 1–1.6σ widths. Synthetic lenses recover the injected ratio to 0.01 in ln (tests).
+- Limitations: λ and anisotropy are marginalised only through δ, τ and flat grids, so a real per-sightline distance
+  anomaly smaller than ×2–5 is indistinguishable from a mass-profile difference; the Gaussian summaries of the
+  others are approximate for the heavy-tailed SL2S lenses.
+
 ## D-074 E1 causal event network: lag × separation pair counts across GBM, ICECAT-1, GWTC and CHIME Cat 2 with sidereal-scrambled nulls (2026-10-09)
 
 **Decision.**

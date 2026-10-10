@@ -166,3 +166,83 @@ def test_load_array_pickle_reads_arrays_and_refuses_other_classes(tmp_path):
     bad.write_bytes(pickle.dumps([Evil()], protocol=2))
     with pytest.raises(pickle.UnpicklingError):
         dc.load_array_pickle(bad)
+
+
+def test_load_data_pickle_reads_containers_and_refuses_other_classes(tmp_path):
+    import collections
+    import pickle
+
+    good = tmp_path / "lens.pkl"
+    good.write_bytes(pickle.dumps([{"z_lens": 0.3, "j_model": np.arange(3.0)}], protocol=2))
+    (lens,) = dc.load_data_pickle(good)
+    assert lens["z_lens"] == 0.3 and np.array_equal(lens["j_model"], np.arange(3.0))
+    bad = tmp_path / "bad.pkl"
+    bad.write_bytes(pickle.dumps(collections.OrderedDict(a=1)))
+    with pytest.raises(pickle.UnpicklingError):
+        dc.load_data_pickle(bad)
+
+
+def _synthetic_kin_lens(ratio, n_bin=1, gamma_axis=False):
+    j = np.full(n_bin, 4e-7)
+    sig = np.sqrt(j * ratio) * dc.C_KMS  # exact sigma_v at a_ani-scaling 1
+    lens = {
+        "j_model": j,
+        "sigma_v_measurement": sig,
+        "error_cov_measurement": np.diag((0.02 * sig) ** 2),
+        "error_cov_j_sqrt": np.zeros((n_bin, n_bin)) if n_bin > 1 else np.array(0.0),
+        "kin_scaling_param_list": ["a_ani"],
+        "j_kin_scaling_param_axes": [np.linspace(-0.5, 1.0, 7)],
+        "j_kin_scaling_grid_list": [np.ones(7)] * n_bin,
+        "prior_list": [],
+    }
+    if gamma_axis:
+        lens["kin_scaling_param_list"] = ["a_ani", "gamma_pl"]
+        lens["j_kin_scaling_param_axes"] = [np.linspace(-0.5, 1.0, 7), np.linspace(1.5, 2.5, 5)]
+        lens["j_kin_scaling_grid_list"] = [np.ones((7, 5))] * n_bin
+        lens["prior_list"] = [["gamma_pl", 2.0, 0.05]]
+    return lens
+
+
+@pytest.mark.parametrize("n_bin,gamma_axis", [(1, False), (3, True)])
+def test_kin_ln_ratio_recovers_injected_ratio(n_bin, gamma_axis):
+    x = np.linspace(np.log(0.1), np.log(20.0), 1500)
+    lnl, info = dc.kin_ln_ratio_loglike(_synthetic_kin_lens(1.8, n_bin, gamma_axis), x)
+    _, med, hw = dc.grid_moments(x, lnl)
+    assert med == pytest.approx(np.log(1.8), abs=0.01)
+    # 2 % sigma_v errors per bin -> 4 % on sigma_v^2, sqrt(n_bin) better with independent bins
+    assert hw == pytest.approx(0.04 / np.sqrt(n_bin), rel=0.1)
+    assert info["n_bins"] == n_bin and info["gamma_pl"] == ("prior" if gamma_axis else None)
+
+
+def test_grid_pull_and_offset_scatter_fit():
+    x = np.linspace(-10, 10, 4001)
+    dens = np.exp(-0.5 * (x - 3.0) ** 2) / np.sqrt(2 * np.pi)
+    assert dc.grid_pull(x, dens, 0.0, 1e-9) == pytest.approx(3.0, abs=0.01)
+    assert dc.grid_pull(x, dens, 6.0, np.sqrt(8.0)) == pytest.approx(-1.0, abs=0.01)
+    rng = np.random.default_rng(1)
+    s = np.full(400, 0.1)
+    d, sd, tau = dc.offset_scatter_fit(0.2 + rng.normal(0, 0.1, 400), s)
+    assert d == pytest.approx(0.2, abs=0.03) and tau < 0.05
+    d, sd, tau = dc.offset_scatter_fit(-0.1 + rng.normal(0, np.hypot(0.1, 0.3), 400), s)
+    assert d == pytest.approx(-0.1, abs=0.06) and tau == pytest.approx(0.3, abs=0.05)
+
+
+def test_kin_axis_order_and_gamma_prior_truncation():
+    x = np.linspace(np.log(0.1), np.log(20.0), 600)
+    lens = _synthetic_kin_lens(1.8, 1, gamma_axis=True)
+    # a_ani-dependent scaling so a swapped axis order would change the answer
+    lens["j_kin_scaling_grid_list"] = [np.outer(np.linspace(0.9, 1.1, 7), np.ones(5))]
+    ref, _ = dc.kin_ln_ratio_loglike(lens, x)
+    swapped = {
+        **lens,
+        "kin_scaling_param_list": ["gamma_pl", "a_ani"],
+        "j_kin_scaling_param_axes": lens["j_kin_scaling_param_axes"][::-1],
+        "j_kin_scaling_grid_list": [g.T for g in lens["j_kin_scaling_grid_list"]],
+    }
+    got, _ = dc.kin_ln_ratio_loglike(swapped, x)
+    assert np.allclose(got, ref)
+    lens["prior_list"] = [["gamma_pl", 2.687, 0.25]]  # SDSSJ0029-0055: mean beyond the grid
+    _, info = dc.kin_ln_ratio_loglike(lens, x)
+    assert info["gamma_prior_in_grid"] == pytest.approx(0.2, abs=0.05)
+    with pytest.raises(ValueError):
+        dc.kin_ln_ratio_loglike({**lens, "kin_scaling_param_list": ["a_ani", "m2l"]}, x)

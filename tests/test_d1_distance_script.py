@@ -66,3 +66,18 @@ def test_manifest_keeps_the_date_and_merges_runs_for_an_unchanged_file(tmp_path,
     t = {r["url"]: r for r in Table.read(path)}
     assert t["u1"]["retrieved_utc"] == "2026-01-01" and t["u1"]["used_by"] == "lenses,tdcosmo"
     assert t["u2"]["retrieved_utc"] != "2026-01-01" and t["u2"]["used_by"] == "tdcosmo"
+
+
+def test_kin_loo_pulls_flags_only_the_shifted_lens():
+    rng = np.random.default_rng(3)
+    n = 30
+    x = np.linspace(-3.0, 3.0, 3001)
+    y_pred = rng.uniform(0.3, 1.0, n)
+    s = np.full(n, 0.1)
+    m = y_pred + rng.normal(0.0, 0.1, n)
+    m[7] += 1.5  # 15 sigma above the others
+    dens = np.exp(-0.5 * ((x[None] - m[:, None]) / s[:, None]) ** 2)
+    dens /= np.trapezoid(dens, x)[:, None]
+    out = d1.kin_loo_pulls(x, dens, m, s, y_pred)
+    assert out[7, 0] > 8.0
+    assert np.max(np.abs(np.delete(out[:, 0], 7))) < 4.0
