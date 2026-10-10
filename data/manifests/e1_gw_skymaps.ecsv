@@ -1,0 +1,17 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: catalog, datatype: string}
+# - {name: url, datatype: string}
+# - {name: sha256, datatype: string}
+# - {name: bytes, datatype: int64}
+# - {name: n_events, datatype: int64}
+# meta: !!omap
+# - {provenance: 'observed (GWTC PE sky maps), streamed; reduced to nside 32 NESTED: derived'}
+# - {retrieved: '2026-10-10'}
+# schema: astropy-2.0
+catalog url sha256 bytes n_events
+GWTC-2.1 https://zenodo.org/records/6513631/files/IGWN-GWTC2p1-v2-PESkyMaps.tar.gz?download=1 89bc2705eaa8a6ececa875b85c53a09e8f5edb9c537e5dc0f571620279ad32a0 87364125 54
+GWTC-3 https://zenodo.org/records/8177023/files/IGWN-GWTC3p0-v2-PESkyLocalizations.tar.gz?download=1 7a2554afa372619701104f208b6e8fba64be3743ac755c11ca728803ac616acb 71637588 36
+GWTC-4.1 https://zenodo.org/records/20275769/files/IGWN-GWTC4p1-18965dda8_5-Archived_Skymaps.tar.gz?download=1 8fbe990ee4377bbdb8af5f3d99580782809ebb90c8d14b09a41a2776fd1208eb 275530187 88
+GWTC-5.0 https://zenodo.org/records/20348005/files/IGWN-GWTC5p0-29ebe06b7_25-Archived_Skymaps.tar.gz?download=1 175b3d925286921d4ab49503faf4496d8c3f96eeeea2cd31eafbb77f0aafda7e 268678148 104

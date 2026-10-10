@@ -42,6 +42,7 @@ import e1_events as E  # noqa: E402
 from jwst_anomaly import event_network as en  # noqa: E402
 
 OUT = ROOT / "results" / "e1_events" / "gw_directional.json"
+EVENTS_MANIFEST = ROOT / "data" / "manifests" / "e1_gw_events.ecsv"
 MAPS = (
     Path(os.environ.get("JWST_ANOMALY_DATA", ROOT / "data"))
     / "e1_events"
@@ -201,13 +202,16 @@ def classify_gw_gw(m: GWMaps, i, j, rot) -> np.ndarray:
     return out
 
 
-def count_channel(m, gw, orig, rot, b: en.Sample | None, p: en.Params = P) -> np.ndarray:
-    """Counts (n_lag, 3 classes) for GW x b (b None = GW x GW). Only GW events with a map count."""
+def count_channel(m, gw, orig, rot, b: en.Sample | None, p: en.Params = P, skip=()) -> np.ndarray:
+    """Counts (n_lag, 3 classes) for GW x b (b None = GW x GW). Only GW events with a map count;
+    ``skip`` holds (GW index, b index) pairs left out (known ordinary pairs, reported apart)."""
     e = np.asarray(p.lag_edges)
     same_cat = b is None
     bb = gw if same_cat else b
     i, j = en.pairs_within(gw.mjd, bb.mjd, e[-1], same_cat)
     keep = m.has[i] & (m.has[j] if same_cat else True)
+    for gi, bj in skip:
+        keep &= ~((i == gi) & (j == bj))
     i, j = i[keep], j[keep]
     lag = np.abs(bb.mjd[j] - gw.mjd[i]) * en.DAY
     k = np.clip(np.searchsorted(e, lag, side="right") - 1, 0, NLAG - 1)
@@ -223,41 +227,49 @@ def count_channel(m, gw, orig, rot, b: en.Sample | None, p: en.Params = P) -> np
     return out
 
 
-def count_all(m, s, orig) -> np.ndarray:
+def count_all(m, s, orig, skip=None) -> np.ndarray:
+    """``skip``: {partner catalogue: [(GW index, partner index), ...]} left out of the counts."""
     gw = s["GW"]
     rot = rotation(gw, orig)
+    skip = skip or {}
     return np.stack(
-        [count_channel(m, gw, orig, rot, None if b == "GW" else s[b]) for _, b in CHANNELS]
+        [
+            count_channel(m, gw, orig, rot, None if b == "GW" else s[b], skip=skip.get(b, ()))
+            for _, b in CHANNELS
+        ]
     )
 
 
 _W: dict = {}
 
 
-def _init(m, s, orig):
+def _init(m, s, orig, skip=None):
     os.environ["OMP_NUM_THREADS"] = "1"
-    _W.update(m=m, s=s, orig=orig)
+    _W.update(m=m, s=s, orig=orig, skip=skip)
 
 
 def _null_chunk(seeds):
-    m, s, orig = _W["m"], _W["s"], _W["orig"]
+    m, s, orig, skip = _W["m"], _W["s"], _W["orig"], _W["skip"]
     return np.stack(
         [
             count_all(
-                m, {k: en.scramble_jit(v, np.random.default_rng(sd), P) for k, v in s.items()}, orig
+                m,
+                {k: en.scramble_jit(v, np.random.default_rng(sd), P) for k, v in s.items()},
+                orig,
+                skip,
             )
             for sd in seeds
         ]
     )
 
 
-def run_null(m, s, orig, n, cpu, base_seed=8_000_000):
+def run_null(m, s, orig, n, cpu, base_seed=8_000_000, skip=None):
     seeds = np.arange(n) + base_seed
     chunks = [seeds[i : i + 25] for i in range(0, n, 25)]
     if cpu <= 1:
-        _init(m, s, orig)
+        _init(m, s, orig, skip)
         return np.concatenate([_null_chunk(c) for c in chunks])
-    with cf.ProcessPoolExecutor(cpu, initializer=_init, initargs=(m, s, orig)) as ex:
+    with cf.ProcessPoolExecutor(cpu, initializer=_init, initargs=(m, s, orig, skip)) as ex:
         return np.concatenate(list(ex.map(_null_chunk, chunks)))
 
 
@@ -310,22 +322,28 @@ def main(argv=None) -> int:
     ap.add_argument("--cpu", type=int, default=os.cpu_count() or 1)
     a = ap.parse_args(argv)
     t0 = time.time()
+    # This run pins its own catalogue snapshot: the GBM TAP table grows daily, so the D-074 pin
+    # (data/manifests/e1_events.ecsv) no longer matches a fresh fetch.
+    E.MANIFEST = EVENTS_MANIFEST
     ev = E.load(E.fetch(False))
     s = {k: en.Sample.from_table(v) for k, v in ev.items()}
     names = [str(x) for x in ev["GW"]["name"]]
     m = GWMaps(names, mjd=s["GW"].mjd)
     orig = s["GW"].mjd.copy()
-    obs = count_all(m, s, orig)
-    # positive control: GW170817 x GRB 170817A
+    # positive control: GW170817 x GRB 170817A, a known ordinary pair, is left out of the family
+    # and reported apart (it would otherwise dominate the 0-10 s GW-GBM cell)
     gi = names.index(E.PC_GW)
     bj = [str(x) for x in ev["GBM"]["name"]].index(E.PC_GBM)
+    skip = {"GBM": [(gi, bj)]}
+    obs = count_all(m, s, orig, skip)
+    obs_with_pc = count_all(m, s, orig)
     gb = s["GBM"]
     pc = int(
         classify_x(
             m, np.array([gi]), np.zeros(len(names)), gb.ra[[bj]], gb.dec[[bj]], gb.sigma[[bj]]
         )[0]
     )
-    null = run_null(m, s, orig, a.n, a.cpu)
+    null = run_null(m, s, orig, a.n, a.cpu, skip=skip)
     mask = np.ones(obs.shape, bool)
     pmin, pglob = en.global_p(obs, null, mask)
     pa = en.analytic_p(obs, null)
@@ -353,7 +371,9 @@ def main(argv=None) -> int:
                                 cls,
                                 rng,
                             )
-                            o = count_channel(m, s["GW"], orig, rot0, sb)[k, q]
+                            o = count_channel(m, s["GW"], orig, rot0, sb, skip=skip.get(cb, ()))[
+                                k, q
+                            ]
                             p1 = en.analytic_p(np.array([o]), null[:, c, k, q][:, None])[0]
                             det += p1 * ncell <= E.DETECT_P
                         if det >= INJ_TRIALS / 2:
@@ -391,6 +411,8 @@ def main(argv=None) -> int:
             "same": bool(pc & 1),
             "wide": bool(pc & 2),
             "antipodal": bool(pc & 4),
+            "left_out_of_family": True,
+            "gw_gbm_counts_with_pair": obs_with_pc[0].tolist(),
         },
         "n_scrambles": a.n,
         "n_cells": ncell,

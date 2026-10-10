@@ -144,3 +144,25 @@ def test_short_csv_name_maps_to_tarball_name():
     idx = {"GW150914_095045": 0}
     assert D.long_name("GW150914", mjd, idx) == "GW150914_095045"
     assert D.long_name("GW150914", mjd + 1.0, idx) == "GW150914"
+
+
+def test_skip_leaves_out_a_known_pair(tmp_path):
+    m, _ = _maps(tmp_path, [(100.0, 20.0)])
+    gw = en.Sample(
+        "GW",
+        np.array([60000.0]),
+        np.array([np.nan]),
+        np.array([np.nan]),
+        np.array([np.nan]),
+        np.array([2023]),
+    )
+    b = en.Sample(
+        "GBM",
+        np.array([60000.0 + 2 / en.DAY, 60000.0 + 5 / en.DAY]),
+        np.array([100.0, 100.5]),
+        np.array([20.0, 20.0]),
+        np.array([0.5, 0.5]),
+        np.array([2023, 2023]),
+    )
+    assert D.count_channel(m, gw, gw.mjd, np.zeros(1), b)[0, 0] == 2
+    assert D.count_channel(m, gw, gw.mjd, np.zeros(1), b, skip=[(0, 1)])[0, 0] == 1
