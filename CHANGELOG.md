@@ -2,8 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-10: W3 MOA-II chain gaps (D-068 follow-ups) — in progress
-- Claim: add the four D-068 vetting gaps as one recorded post-hoc chain change.
+## 2026-10-10: W3 MOA-II: the four D-068 chain gaps closed as one post-hoc change (D-068 addendum, CHAIN_VERSION 2026-10-10.1)
+- Hypothesis tested: the chain's survivors gb17-R-6-1-3829 (periodic variable) and gb18-R-9-4-24509 (slow dip with
+  season levels) got through four gaps; new tests `exotic_chi2_cap`, `residual_deficit`, `periodic_variable`,
+  `slow_dip_seasons` (thresholds in `Params`, ASSUMPTIONs).
+- Validation: 6 synthetic W3 events in white noise pass every new test; unit tests for each model.
+- Real-data controls (`vet` re-run, local only; tracked summaries wait for `run-field`): gb17 75 flags, gb18 67
+  flags, **0 survivors**. gb17-R-6-1-3829 now fails `exotic_chi2_cap` (6.67 > 5.46); gb18-R-9-4-24509 fails
+  `slow_dip_seasons` (ΔBIC +8.6, σ 415 d, p 5.2: the vetting note's model, found independently). First failures
+  at the new tests: `residual_deficit` 13 + 11, `exotic_chi2_cap` 6 + 3, `slow_dip_seasons` 0 + 2.
+- Failed approach: residual tests over every epoch failed a synthetic W3 event fitted at another u0 optimum
+  (χ²/dof 1.69 vs 1.06, all on the spike nights): caustic-spike epochs are now left out. `/code-review` fixes:
+  bright-source wings not spikes, whole-curve residual scan (window-only scans lost the red-noise normalisation),
+  F-test error scale, P ≥ 2.5 d (nightly Nyquist), untestable cases named, no duplicate season refit.
+  Not changed: `fit_slow_dip_seasons` duplicates `fit_smooth_dip`'s optimiser loop.
+- **Next:** `run-field` for every field under the new chain (injections + limits; ~20 min per field), then `combine`.
+  Every 2026-10-09.1 vetting record is stale; no limit may be quoted until then.
 
 ## 2026-10-10: D1 kinematic D_s/D_ds on 76 lenses: null, max 2.49σ vs 5.78σ (D-073 addendum 4)
 - Hypothesis: one lens's kinematics demand a D_s/D_ds no FLRW model gives its redshifts. Data: the hierArc

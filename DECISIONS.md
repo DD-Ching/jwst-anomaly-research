@@ -3261,16 +3261,17 @@ The recovered counts in the amendment table above come from the old chain (injec
 
 **Addendum (2026-10-10): the four open gaps closed as one recorded post-hoc chain change** (`CHAIN_VERSION`
 2026-10-10.1; motivated by gb17-R-6-1-3829 and gb18-R-9-4-24509, both seen before the change). New tests in
-`vet_one`, all thresholds ASSUMPTIONs in `scripts/w3_moa.py`:
-- `exotic_chi2_cap` (gap iii): the exotic fit's χ²/dof, caustic-spike epochs left out (model > f_s + f_b + 3 median
-  errors), must not exceed the field's calibrated quiet-baseline threshold. Spikes are left out because a synthetic
+`vet_one`, all thresholds ASSUMPTIONs in `Params` of `scripts/w3_moa.py`:
+- `exotic_chi2_cap` (gap iii): the exotic fit's χ²/dof, caustic-spike epochs of a repulsive model left out (model
+  above f_s + f_b by max(3 median errors, 0.1 f_s)), must not exceed the field's calibrated quiet-baseline threshold. Spikes are left out because a synthetic
   W3 event fitted at another u0 local optimum (u0 0 vs 0.5) had χ²/dof 1.69 against a white-noise 1.06, all of it on
   the spike nights.
-- `repeated_deficit_in_window` (gap i): `deficit_scan` z_min of the exotic residuals inside the feature window,
-  spike epochs left out, must stay above −`REPEAT_S`.
-- `periodic_variable` (gap ii): Lomb–Scargle of the nightly mean exotic residuals, P = 1.1–100 d; fails when a
-  2-harmonic term at that period gains BIC > 25 (errors rescaled to χ²/dof = 1) in **both** halves of the nights.
-  One umbra crossing lies in one half; a periodic variable repeats in both.
+- `residual_deficit` (gap i): `deficit_scan` z_min of the exotic residuals, spike epochs left out, must stay above
+  −`REPEAT_S`; scanned over the whole curve so the red-noise normalisation never rests on a short window.
+- `periodic_variable` (gap ii): Lomb–Scargle of the nightly mean exotic residuals, P = 2.5–100 d (above the
+  one-sample-a-night Nyquist period; shorter periods are not covered); fails when a 2-harmonic term at that period
+  gains BIC > 25 (errors rescaled by the harmonic model's χ²/dof, F-test-like) in **both** halves of the nights.
+  One umbra crossing lies in one half; a periodic variable repeats in both. < 30 nights: `_untestable`.
 - `slow_dip_seasons` (gap iv): the exotic model with one level per season against a generalized-Gaussian dip
   exp(−|Δt/σ|^p), p = 2–10 (Gaussian to flat-bottomed), with the same season levels.
 Validation (synthetic, 6 W3 events in white noise, quiet threshold 1.06): all six pass every new test; unit tests
