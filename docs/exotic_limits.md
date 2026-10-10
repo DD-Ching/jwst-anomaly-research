@@ -1132,6 +1132,14 @@ conservative column uses the low N_s.
   levels 1. Injections: vetting keeps 73 / 124 flagged W3 injections; the new tests remove 8 (`residual_deficit` 4,
   `slow_dip_seasons` 2, `exotic_chi2_cap` 1, `periodic_variable` 1). Pre-screen pass 2.5–11 %. PSPL controls:
   0 / 40 per cell called W3.
+- **gb19** (53,861 light curves; N_s = 1.21 × 10⁷ from Nunota et al. 2024 Table 1, 78 / 80 subfields, so no
+  conservative range; quiet χ²/dof 95th percentile 6.4): 48 flags (D-068's), **0 survive**, including
+  gb19-R-4-4-31159 (now fails `feature_bracketed`, as `docs/candidates/gb19-R-4-4-31159.md` found by hand); contact
+  sheet inspected (semi-regular variables, slow dimmings, season steps, eclipse-like boxes; caustic spikes only in
+  the models, never in the data). First failing test: eclipse dip 16, bracketing 9, repeated deficit 7, residual
+  deficit 6, exotic domain 3, χ² cap 3, neighbour 2, smooth dip 2. Injections: vetting keeps 78 / 112 flagged W3
+  injections; the new tests remove 2 (`slow_dip_seasons` 1, `exotic_chi2_cap` 1). Pre-screen pass 2–8.5 %.
+  PSPL controls: 0 / 40 per cell called W3.
 
 Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every field):
 
@@ -1153,9 +1161,19 @@ gb20 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb20.ecsv`):
 | 100 | 1.8 | 10 / 13 | 6.5 / 5.0 × 10⁻⁷ |
 | 300 | 17 | 4 / 1 | 1.6 / 6.5 × 10⁻⁶ |
 
-Cloud runs of gb22, gb21 and gb20: the batched CDS XMatch for the Gaia DR3 RP reference failed on all 3 attempts
+gb19 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb19.ecsv`):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 3 / 4 | 1.9 / 1.4 × 10⁻⁶ |
+| 10 | 0.018 | 12 / 9 | 4.8 / 6.4 × 10⁻⁷ |
+| 30 | 0.17 | 14 / 10 | 4.1 / 5.8 × 10⁻⁷ |
+| 100 | 1.8 | 10 / 8 | 5.8 / 7.2 × 10⁻⁷ |
+| 300 | 17 | 2 / 6 | 2.9 × 10⁻⁶ / 9.7 × 10⁻⁷ |
+
+Cloud runs of gb22, gb21, gb20 and gb19: the batched CDS XMatch for the Gaia DR3 RP reference failed on all 3 attempts
 ("Too many jobs"; a later retry gave a truncated, non-VOTable reply through the proxy), so `exotic_in_domain` used the
-lenient default reference (MOA-Red 14.2) on all 114 real flags (none has a DoPHOT magnitude). This only loosens the
+lenient default reference (MOA-Red 14.2) on all 162 real flags (none has a DoPHOT magnitude). This only loosens the
 chain, so 0 survivors stands; the VSX / Gaia variability match runs only on flags still alive and was not reached.
 Injections use the injected-source flux and are unaffected. The tracked `vetting_gbN.json` drops the run's
 `gaia_rp_xmatch` status (it is in the derived record); re-run `vet` where CDS works before interpreting any survivor.

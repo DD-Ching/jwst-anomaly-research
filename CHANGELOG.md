@@ -3,9 +3,18 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 
-## 2026-10-10: W3 MOA-II gb19 re-run under CHAIN_VERSION 2026-10-10.1 (in progress)
-- Plan: `w3_moa.py --field gb19 run-field --procs 4`; hypothesis: 0 survivors as in D-068 (gb19-R-4-4-31159 was
-  explained by `feature_bracketed`); a survivor that passes the contact-sheet check would change the plan.
+## 2026-10-10: W3 MOA-II gb19 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
+- Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have
+  changed the plan (vetting record, CDS-dependent tests where CDS works).
+- `run-field --procs 4` in 1,596 s (pre-screen re-streamed, rows identical to the tracked tables; 51 fits; 2,200
+  injections 686 s). 48 flags, **0 survive**; gb19-R-4-4-31159 now fails `feature_bracketed`. Contact sheet
+  inspected (variables, slow dimmings, season steps, eclipse-like boxes; no caustic spikes in the data).
+- Limits (`results/w3_moa/limits_gb19.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 4.1 × 10⁻⁷–2.9 × 10⁻⁶ per star per
+  year (t_E 3–300 d, N_s = 1.21 × 10⁷ from Nunota et al. 2024; the 2.9 × 10⁻⁶ at t_E = 300 d, ρ = 0.01 rests on 2
+  recoveries). Vetting keeps 78 / 112 flagged W3 injections (70 %); pre-screen pass 2–8.5 % stays the limiting
+  factor. PSPL controls: 0 false W3 calls. Quiet χ²/dof 95th percentile 6.4.
+- CDS XMatch failed again from the cloud ("Too many jobs"): lenient default source-flux bound; 0 survivors stands.
+- **Next:** `run-field` for gb16, gb11, gb7, gb12, gb15, gb17, gb18, then `combine`.
 
 ## 2026-10-10: E1 re-pinned to one GBM snapshot (8cc2…, 4,392 bursts): every E1 conclusion unchanged (D-078 addendum 2)
 - Hypothesis before running: only bursts added or revised after the old pins differ, so every E1 channel stays
