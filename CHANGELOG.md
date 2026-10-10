@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: E1 GBM re-pin (in progress)
+- Claimed by a cloud routine: one new snapshot for `e1_events.ecsv` and `e1_gw_events.ecsv`, then re-run of the E1
+  scripts (TASKS "Part 0").
+
 ## 2026-10-10: First derived-data release `derived-data-20261010` (GW sky maps); pinned GBM snapshot not recoverable (D-078 addendum)
 - Local session on the owner's machine (cloud sessions cannot create releases); details in the D-078 addendum.
   Asset `gw_skymaps_nside32.npz`, 4,337,802 B, sha256 ab0330588b9a380f2f49b0d4dae809ea6cd1ed6ac1d99718e23f66d00c8e1ad5
