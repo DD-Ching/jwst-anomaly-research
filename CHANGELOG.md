@@ -3,6 +3,22 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 
+## 2026-10-10: W3 MOA-II gb11 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
+- Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have
+  changed the plan (vetting record, CDS-dependent tests where CDS works).
+- `run-field --procs 4` in 1,981 s (pre-screen re-streamed 334 s at ~190 light curves/s, CPU 99 %; 64,090 light
+  curves, 1,579 shape passes, 44 off shared epochs; 44 fits 238 s, 41 flags; 2,200 injections 973 s). **0 survive**.
+  First failing test: eclipse dip 13, repeated deficit 12, residual deficit 6, bracketing 4, robust errors 2,
+  χ² cap 1, neighbour 1, smooth dip 1, slow dip seasons 1. Contact sheet inspected (eclipse-like few-day boxes, slow
+  dimmings, a deep V-shaped ~15-d dip in gb11-R-2-7-83307 that the box model misfits; caustic spikes only in models).
+- Limits (`results/w3_moa/limits_gb11.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 4.0 × 10⁻⁷–1.1 × 10⁻⁶ per star per
+  year (N_s = 1.09 × 10⁷ from Nunota et al. 2024, 76 / 80 subfields; every cell ≥ 6 recoveries). Vetting keeps
+  103 / 163 flagged W3 injections (63 %); pre-screen pass 5.5–11 %. PSPL controls: 0 false W3 calls. Quiet χ²/dof
+  95th percentile 6.1.
+- CDS XMatch failed again from the cloud ("Too many jobs"; recorded in `vetting_gb11.json`): lenient default
+  source-flux bound; 0 survivors stands.
+- **Next:** `run-field` for gb7, gb12, gb15, gb17, gb18, then `combine`.
+
 ## 2026-10-10: W3 MOA-II gb16 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have
   changed the plan (vetting record, CDS-dependent tests where CDS works).
