@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: W3 MOA-II gb2 (in progress)
+- Plan: `run-field` on gb2 under CHAIN_VERSION 2026-10-10.1, then `combine` over twelve fields.
+
 ## 2026-10-10: Neutrino Frontier benchmark 1 reproduced: SkyLLH TXS 0506+056 2014–15 box on IceTracks-DR2
 - Hypothesis before running: SkyLLH 26.1.0 on IC86_IV with the Table 6 box gives n̂s ≈ 12.7, γ̂ ≈ 2.3
   (arXiv:2605.19040 section 5). A miss by > 1 event or > 0.1 in γ (ASSUMPTION) would mean our DR2 handling is wrong.
