@@ -1179,6 +1179,15 @@ conservative column uses the low N_s.
   injections (67 %). Pre-screen pass 3.5–12.5 %. PSPL controls: 0 / 40 per cell called W3. Both t_E = 300 d cells rest
   on 2 recoveries.
 
+- **gb17** (100,448 light curves; N_s = 1.80 × 10⁷ from Nunota et al. 2024 Table 1, 79 / 80 subfields; quiet
+  χ²/dof 95th percentile 5.5): 75 flags, **0 survive**; contact sheet inspected (box dips, slow dimmings,
+  quasi-periodic variables; caustic spikes only in the models). gb17-R-6-1-3829, the D-068 chain survivor, now fails
+  `exotic_chi2_cap` (χ²/dof without spikes 6.67 > 5.46). First failing test: repeated deficit 27, eclipse dip 16,
+  residual deficit 13, χ² cap 6, fit domain 5, bracketing 3, robust errors 2, neighbour 2, feature sampling 1
+  (gb17-R-10-3-142464, 7 epochs on 2 nights, as under the old chain). Gaia DR3 RP reference for 53 / 75 flags
+  (batched CDS XMatch from the cloud worked). Injections: vetting keeps 86 / 156 flagged W3 injections (55 %).
+  Pre-screen pass 2.5–11 %. PSPL controls: 0 / 40 per cell called W3.
+
 Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every field):
 
 | t_E (d) | M (M☉, model) | gb22 rec. / 200 | gb22 Γ₉₅ per star per yr (conservative) | gb21 rec. / 200 | gb21 Γ₉₅ per star per yr |
@@ -1258,6 +1267,16 @@ gb15 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb15.ecsv`):
 | 30 | 0.17 | 21 / 10 | 3.2 / 6.7 × 10⁻⁷ |
 | 100 | 1.8 | 14 / 15 | 4.8 / 4.5 × 10⁻⁷ |
 | 300 | 17 | 2 / 2 | 3.4 / 3.4 × 10⁻⁶ |
+
+gb17 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb17.ecsv`; the t_E = 300 d cells rest on 2 recoveries each):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 4 / 3 | 9.7 × 10⁻⁷ / 1.3 × 10⁻⁶ |
+| 10 | 0.018 | 8 / 17 | 4.9 / 2.3 × 10⁻⁷ |
+| 30 | 0.17 | 16 / 8 | 2.4 / 4.9 × 10⁻⁷ |
+| 100 | 1.8 | 13 / 13 | 3.0 / 3.0 × 10⁻⁷ |
+| 300 | 17 | 2 / 2 | 1.9 / 1.9 × 10⁻⁶ |
 
 Cloud runs of gb22, gb21, gb20, gb19, gb16, gb11 and gb7: the batched CDS XMatch for the Gaia DR3 RP reference failed on all 3 attempts
 ("Too many jobs"; a later retry gave a truncated, non-VOTable reply through the proxy), so `exotic_in_domain` used the
