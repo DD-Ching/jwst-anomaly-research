@@ -1101,6 +1101,39 @@ it applied to real flags. The efficiencies, and every per-field and combined lim
   `combine` refuse tables of an older `CHAIN_VERSION`. The withdrawn old-chain combined value (4 fields, Γ₉₅ ≈
   1.5–5 × 10⁻⁷ per star per year) must not be quoted.
 
+### Re-run under `CHAIN_VERSION` 2026-10-10.1 (D-068 addendum 2026-10-10)
+
+`w3_moa.py --field gbN run-field` per field (pre-screen re-streamed because the `Params` changed; rows identical to
+the tracked 2026-10-09 tables, only the parameter header differs), then fit, vet, contact sheet, 2,000 W3 + 200 PSPL
+injections (LF-drawn, injected-source reference flux) and limit. Tables: `results/w3_moa/limits_gb*.ecsv` (chain
+2026-10-10.1; `derived` from `simulated`). ρ = 0.01 / 0.1; mass scale is a `model_prediction` (n = 1, D_L = 4 kpc,
+D_S = 8 kpc, μ_rel = 5 mas/yr); N_s from the per-Cut-0-object model (median of Nunota et al.'s 20 fields; ASSUMPTION
+for these fields, which have no published N_s); conservative column uses the low N_s.
+
+- **gb22** (18,599 light curves): 30 flags (D-062's), **0 survive**; contact sheet inspected (short dips, scatter,
+  eclipse-like boxes; no caustic spikes in the data). First failing test (from the `funnel` in
+  `vetting_gb22.json`): repeated deficit 12, eclipse dip 7, residual deficit 3, smooth dip 3, χ² cap 2, bracketing 1,
+  robust errors 1, exotic feature sampled 1. Injections: vetting keeps
+  81 / 130 flagged W3 injections; the four new tests remove 6 of them (`slow_dip_seasons`, `residual_deficit`,
+  `exotic_chi2_cap` 2 each; `periodic_variable` 0). The efficiency is set by the **pre-screen**
+  (3–11 % of injections pass it vs 16–68 % Cut-0), not by vetting. PSPL controls: 0 / 40 per cell called W3.
+- **gb21** (43,710 light curves; N_s = 8.32 × 10⁶ from Nunota et al. 2024 Table 1, 73 / 80 subfields, so no
+  conservative range): 36 flags, **0 survive**; contact sheet inspected (slow dimmings, season-level steps, short
+  dips; no caustic spikes in the data). First failing test: repeated deficit 14, eclipse dip 9, bracketing 5, χ² cap
+  3, residual deficit 3, neighbour 1, smooth dip 1. Injections: vetting keeps 96 / 170 flagged W3 injections; the new
+  tests remove 9 (`residual_deficit` 7, `slow_dip_seasons` 1, `exotic_chi2_cap` 1). Pre-screen pass 4–12 %.
+  PSPL controls: 0 / 40 per cell called W3.
+
+Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every field):
+
+| t_E (d) | M (M☉, model) | gb22 rec. / 200 | gb22 Γ₉₅ per star per yr (conservative) | gb21 rec. / 200 | gb21 Γ₉₅ per star per yr |
+|---|---|---|---|---|---|
+| 3 | 0.0017 | 3 / 2 | 6.7 / 10.0 × 10⁻⁶ (9.6 / 14 × 10⁻⁶) | 3 / 3 | 2.8 / 2.8 × 10⁻⁶ |
+| 10 | 0.018 | 9 / 10 | 2.2 / 2.0 × 10⁻⁶ (3.2 / 2.9 × 10⁻⁶) | 10 / 13 | 8.4 / 6.5 × 10⁻⁷ |
+| 30 | 0.17 | 14 / 11 | 1.4 / 1.8 × 10⁻⁶ (2.1 / 2.6 × 10⁻⁶) | 16 / 16 | 5.3 / 5.3 × 10⁻⁷ |
+| 100 | 1.8 | 7 / 13 | 2.9 / 1.5 × 10⁻⁶ (4.1 / 2.2 × 10⁻⁶) | 10 / 15 | 8.4 / 5.6 × 10⁻⁷ |
+| 300 | 17 | 8 / 4 | 2.5 / 5.0 × 10⁻⁶ (3.6 / 7.2 × 10⁻⁶) | 5 / 5 | 1.7 / 1.7 × 10⁻⁶ |
+
 ### All 22 fields (next)
 
 Plan (owner step 3a, 2026-10-08):
