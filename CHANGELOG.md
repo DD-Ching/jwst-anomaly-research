@@ -14,7 +14,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Sensitivity: 3 injected pairs at ≤ 10 s, 3–10 at 10–100 s, 10–30 at 100 s–1 h, mostly > 30 at 1 h–7 d.
 - Catalogue snapshot pinned separately (`data/manifests/e1_gw_events.ecsv`): the GBM TAP table grew since the
   D-074 pin, so `e1_events.fetch` refuses the old one. Rerunning older E1 scripts needs `--refresh` or that pin.
-- **Next:** signed-lag GW cells with same/wide classes; then D1 composite-model chains.
+- **Next:** signed-lag GW cells with same/wide classes (in progress, branch `claude/e1-gw-signed`); then D1 composite-model chains.
 
 ## 2026-10-09: E1 signed-lag ("which event comes first") channels: null, global p = 0.68 (D-074 addendum 3)
 - Hypothesis: one catalogue leads another at lags no ordinary path explains (sign asymmetry D = N_after − N_before).
