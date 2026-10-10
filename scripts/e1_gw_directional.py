@@ -157,8 +157,12 @@ class GWMaps:
             self.in90.append(r90)
             self.in99.append(r99)
             self.prob.append(p / p.sum())
-            self.d90.append(region_distance(r90, vec).astype(np.float32))
-            self.d99.append(region_distance(r99, vec).astype(np.float32))
+            if self.has[i]:
+                self.d90.append(region_distance(r90, vec).astype(np.float32))
+                self.d99.append(region_distance(r99, vec).astype(np.float32))
+            else:  # never counted (count_channel keeps mapped events only); skip the cost
+                self.d90.append(np.full(len(vec), 180.0, np.float32))
+                self.d99.append(np.full(len(vec), 180.0, np.float32))
         self.d90, self.d99 = np.array(self.d90), np.array(self.d99)
         self.in90, self.in99 = np.array(self.in90), np.array(self.in99)
         self.prob = np.array(self.prob)
@@ -195,7 +199,8 @@ def classify_x(m: GWMaps, gi, rot, ra, dec, sig, p: en.Params = P) -> np.ndarray
     return np.where(ok, same * 1 + wide * 2 + anti * 4, 0)
 
 
-def classify_gw_gw(m: GWMaps, i, j, rot) -> np.ndarray:
+def _classify_gw_gw_loop(m: GWMaps, i, j, rot) -> np.ndarray:
+    """Reference per-pair implementation (kept for tests of :func:`classify_gw_gw`)."""
     out = np.zeros(len(i), np.int64)
     for k, (a, b) in enumerate(zip(i, j, strict=True)):
         # B's regions in A's frame: rotate B's pixel centres by rot_b - rot_a.
@@ -209,6 +214,223 @@ def classify_gw_gw(m: GWMaps, i, j, rot) -> np.ndarray:
         anti = bool(m.in90[a][pa90].any()) and not same
         out[k] = same * 1 + wide * 2 + anti * 4
     return out
+
+
+_RINGS: dict = {}
+
+
+def ring_tables() -> dict:
+    """HEALPix nside-32 ring structure of the NESTED pixels: ring id, position in the ring (by RA),
+    ring length, ring start, mirror ring (-Dec) and the NESTED index of each ring slot.
+
+    A rotation in RA keeps a pixel centre on its iso-latitude ring and moves it by
+    ``floor(dr / w + 0.5)`` slots (w = 360 / ring length); the antipode lies on the mirror ring
+    at the same slot. Tested equal to ``lonlat_to_healpix`` on rotated pixel centres."""
+    if not _RINGS:
+        lon, lat = _hp().healpix_to_lonlat(np.arange(12 * NSIDE**2))
+        ra, dec = lon.deg, lat.deg
+        key = np.round(dec, 9)
+        rings = np.unique(key)
+        ring = np.searchsorted(rings, key)
+        order = np.lexsort((ra, ring))
+        n_r = np.bincount(ring)
+        start = np.concatenate([[0], np.cumsum(n_r)[:-1]])
+        pos = np.empty(len(ring), np.int64)
+        pos[order] = np.arange(len(ring)) - start[ring[order]]
+        mirror_ring = np.searchsorted(rings, np.round(-rings, 9))
+        _RINGS.update(
+            ring=ring,
+            pos=pos,
+            n=n_r[ring],
+            w=360.0 / n_r[ring],
+            start=start,
+            mirror=mirror_ring[ring],
+            mirror_ring=mirror_ring,
+            n_ring=n_r,
+            w_ring=360.0 / n_r,
+            order=order,
+        )
+    return _RINGS
+
+
+def rotated_pixels(dr: np.ndarray, antipode: bool = False) -> np.ndarray:
+    """NESTED pixel of every pixel centre rotated by ``dr`` deg in RA (and sent to its antipode),
+    shape (len(dr), NPIX)."""
+    t = ring_tables()
+    d = np.asarray(dr, float)[:, None] + (180.0 if antipode else 0.0)
+    shift = np.floor(d / t["w"][None, :] + 0.5).astype(np.int64)
+    ring = t["mirror"] if antipode else t["ring"]
+    slot = t["start"][ring][None, :] + (t["pos"][None, :] + shift) % t["n"][None, :]
+    return t["order"][slot]
+
+
+_ONES = np.uint64(0xFFFFFFFFFFFFFFFF)
+
+
+def _ring_masks(region: np.ndarray) -> np.ndarray:
+    """Boolean regions (n_events, NPIX) -> per-ring bitmasks (n_events, n_rings, 2) uint64 [hi, lo];
+    bit p of ring r is slot p (slots < 64 in lo, the rest in hi)."""
+    t = ring_tables()
+    e, q = np.nonzero(region)
+    pos = t["pos"][q].astype(np.uint64)
+    out = np.zeros((region.shape[0], len(t["n_ring"]), 2), np.uint64)
+    hi = pos >= 64
+    np.bitwise_or.at(out, (e[hi], t["ring"][q][hi], 0), np.uint64(1) << (pos[hi] - np.uint64(64)))
+    np.bitwise_or.at(out, (e[~hi], t["ring"][q][~hi], 1), np.uint64(1) << pos[~hi])
+    return out
+
+
+def _bitmasks(m: GWMaps) -> dict:
+    """Ring bitmasks of the 90 % and 99 % regions and of the slop-dilated 99 % region
+    (d99 <= PIX_SLOP_DEG), built once per GWMaps."""
+    if getattr(m, "_masks", None) is None:
+        t = ring_tables()
+        n = t["n_ring"].astype(np.uint64)
+        full_hi = np.where(
+            n > 64,
+            (np.uint64(1) << np.minimum(n - np.uint64(64), np.uint64(63))) - np.uint64(1),
+            np.uint64(0),
+        )
+        full_hi = np.where(n >= 128, _ONES, full_hi)
+        full_lo = np.where(
+            n >= 64, _ONES, (np.uint64(1) << np.minimum(n, np.uint64(63))) - np.uint64(1)
+        )
+        m._masks = {
+            "m90": _ring_masks(m.in90),
+            "m99": _ring_masks(m.in99),
+            "dil": _ring_masks(m.d99 <= PIX_SLOP_DEG),
+            "any99": m.in99.any(axis=1),
+            "full": (full_hi, full_lo),
+            "d90": _doubled(m.in90),
+            "d99": _doubled(m.in99),
+        }
+    return m._masks
+
+
+def _doubled(region: np.ndarray) -> np.ndarray:
+    """Per-ring masks with every slot p also set at p + n (ring length n): (events, rings, 5) uint64
+    words, lowest bits first. A cyclic left rotation by s is the n-bit window at offset n - s."""
+    t = ring_tables()
+    e, q = np.nonzero(region)
+    pos = t["pos"][q]
+    ring = t["ring"][q]
+    out = np.zeros((region.shape[0], len(t["n_ring"]), 5), np.uint64)
+    for bitpos in (pos, pos + t["n_ring"][ring]):
+        np.bitwise_or.at(
+            out, (e, ring, bitpos // 64), np.uint64(1) << (bitpos % 64).astype(np.uint64)
+        )
+    return out
+
+
+def _window(words: np.ndarray, offset: np.ndarray):
+    """128-bit window (hi, lo) of ``words`` (..., 5) starting at bit ``offset`` (0..128)."""
+    k = (offset // 64)[..., None]
+    sh = (offset % 64).astype(np.uint64)
+    w0 = np.take_along_axis(words, k, axis=-1)[..., 0]
+    w1 = np.take_along_axis(words, k + 1, axis=-1)[..., 0]
+    w2 = np.take_along_axis(words, k + 2, axis=-1)[..., 0]
+    up = np.uint64(64) - np.maximum(sh, np.uint64(1))
+    has = sh > 0
+    lo = (w0 >> sh) | np.where(has, w1 << up, np.uint64(0))
+    hi = (w1 >> sh) | np.where(has, w2 << up, np.uint64(0))
+    return hi, lo
+
+
+def _classify_gw_gw_numpy(m: GWMaps, i, j, rot) -> np.ndarray:
+    """Classes for GW(i) x GW(j) pairs (bit 0 same, bit 1 wide, bit 2 antipodal), vectorized over
+    pairs. A rotation in RA is a cyclic shift of each ring's slots (``ring_tables``), so B's regions
+    are rotated as per-ring bitmasks (a window of the doubled mask) and compared with A's by AND
+    (S-2; equals :func:`_classify_gw_gw_loop`)."""
+    i, j = np.asarray(i, np.int64), np.asarray(j, np.int64)
+    if not len(i):
+        return np.zeros(0, np.int64)
+    t, bm = ring_tables(), _bitmasks(m)
+    n_ring, w_ring = t["n_ring"], t["w_ring"]
+    fh, fl = bm["full"][0][None, :], bm["full"][1][None, :]
+    dr = np.asarray(rot, float)[j] - np.asarray(rot, float)[i]
+
+    def hits(b_doubled, a_mask, shift_deg):
+        s = np.floor(shift_deg[:, None] / w_ring[None, :] + 0.5).astype(np.int64) % n_ring
+        hi, lo = _window(b_doubled, n_ring[None, :] - s)
+        return (((hi & fh & a_mask[..., 0]) | (lo & fl & a_mask[..., 1])) != 0).any(axis=1)
+
+    b90 = bm["d90"][j]
+    a90 = bm["m90"][i]
+    same = hits(b90, a90, dr)
+    wide = bm["any99"][j] & ~hits(bm["d99"][j], bm["dil"][i], dr)
+    # antipode of B's slot p on ring r lies on the mirror ring at slot p + shift(dr + 180)
+    anti = hits(b90, a90[:, t["mirror_ring"]], dr + 180.0) & ~same
+    return same * 1 + wide * 2 + anti * 4
+
+
+try:  # optional: numba (extra "dev"/"fast"); the numpy path above is the fallback
+    import numba
+
+    @numba.njit(inline="always")
+    def _win(w, r, o):
+        """128-bit window (hi, lo) of the 5-word doubled mask w[r] at bit offset o (0..128)."""
+        k = o // 64
+        b = np.uint64(o % 64)
+        w0, w1, w2 = w[r, k], w[r, k + 1], w[r, k + 2]
+        if b == 0:
+            return w1, w0
+        u = np.uint64(64) - b
+        return (w1 >> b) | (w2 << u), (w0 >> b) | (w1 << u)
+
+    @numba.njit(cache=True, nogil=True)
+    def _gw_gw_kernel(i, j, dr, d90, d99, m90, dil, any99, n_ring, w_ring, mirror, fh, fl):
+        out = np.zeros(len(i), np.int64)
+        nr = len(n_ring)
+        for p in range(len(i)):
+            a, b = i[p], j[p]
+            same = False
+            hit99 = False
+            anti = False
+            for r in range(nr):
+                n = n_ring[r]
+                b90 = (d90[b, r, 0] | d90[b, r, 1] | d90[b, r, 2]) != 0
+                b99 = (d99[b, r, 0] | d99[b, r, 1] | d99[b, r, 2]) != 0
+                if not b99:
+                    continue  # 90 % is inside 99 %
+                s = np.int64(np.floor(dr[p] / w_ring[r] + 0.5)) % n
+                if not hit99 and (dil[a, r, 0] | dil[a, r, 1]) != 0:
+                    hi, lo = _win(d99[b], r, n - s)
+                    if ((hi & fh[r] & dil[a, r, 0]) | (lo & fl[r] & dil[a, r, 1])) != 0:
+                        hit99 = True
+                if b90 and not same and (m90[a, r, 0] | m90[a, r, 1]) != 0:
+                    hi, lo = _win(d90[b], r, n - s)
+                    if ((hi & fh[r] & m90[a, r, 0]) | (lo & fl[r] & m90[a, r, 1])) != 0:
+                        same = True
+                mr = mirror[r]
+                if b90 and not anti and (m90[a, mr, 0] | m90[a, mr, 1]) != 0:
+                    sa = np.int64(np.floor((dr[p] + 180.0) / w_ring[r] + 0.5)) % n
+                    hi, lo = _win(d90[b], r, n - sa)
+                    if ((hi & fh[r] & m90[a, mr, 0]) | (lo & fl[r] & m90[a, mr, 1])) != 0:
+                        anti = True
+                if same and hit99 and anti:
+                    break
+            wide = any99[b] and not hit99
+            out[p] = same * 1 + wide * 2 + (anti and not same) * 4
+        return out
+
+except ImportError:  # pragma: no cover - exercised only without numba
+    _gw_gw_kernel = None
+
+
+def classify_gw_gw(m: GWMaps, i, j, rot) -> np.ndarray:
+    """Classes for GW(i) x GW(j) pairs (bit 0 same, bit 1 wide, bit 2 antipodal), equal to
+    :func:`_classify_gw_gw_loop`. With numba: a compiled per-pair, per-ring bitmask test (window of
+    B's doubled ring mask AND A's mask) with early exit; without it, the vectorized numpy path."""
+    i, j = np.asarray(i, np.int64), np.asarray(j, np.int64)
+    if _gw_gw_kernel is None or not len(i):
+        return _classify_gw_gw_numpy(m, i, j, rot)
+    t, bm = ring_tables(), _bitmasks(m)
+    dr = np.asarray(rot, float)[j] - np.asarray(rot, float)[i]
+    return _gw_gw_kernel(
+        i, j, dr, bm["d90"], bm["d99"], bm["m90"], bm["dil"], bm["any99"],
+        t["n_ring"].astype(np.int64), t["w_ring"], t["mirror_ring"].astype(np.int64),
+        bm["full"][0], bm["full"][1],
+    )  # fmt: skip
 
 
 def count_channel(
