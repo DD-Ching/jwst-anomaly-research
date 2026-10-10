@@ -11,7 +11,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    - a time-resolved CHIME uptime series (only from the collaboration: owner decision); it would also decide
      the 100 s–1 h residual;
    - signed-lag ("which comes first", addendum 3), antipodal (addendum 2) and GW sky-map channels (addendum 4:
-     282 maps, global p = 0.83) are null; next: signed-lag GW cells with same/wide classes;
+     282 maps, global p = 0.83) and signed-lag GW cells by sky-map class (addendum 5, p = 0.56) are null;
    - IceTracks-DR2, Swift, Einstein Probe.
 0. **D1 distance self-consistency** (D-073 + addenda; owner idea 1): H0LiCOW (R and D_dt LOO), 94 localized FRBs
    (NE2001 and YMW16) and TDCOSMO 2025 power-law D_dt LOO on 8 lenses (addendum 2: max 1.12σ with κ_ext): all null.

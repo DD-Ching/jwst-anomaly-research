@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: E1 signed-lag GW cells with sky-map classes: null, global p = 0.56 (D-074 addendum 5)
+- Hypothesis: GW events lead (or follow) GBM, ICECAT-1 or CHIME events in a given sky-map class (same, wide,
+  antipodal) at lags no ordinary path explains: D = N_after − N_before.
+- `scripts/e1_gw_signed.py --n 1000` (71 s): 45 cells (3 channels × 5 lags × 3 classes; GW–GW left out because D
+  is antisymmetric there). Pooled global p = 0.56, min analytic p × 45 = 0.78. Largest: GW–CHIME 1 h–1 d antipodal,
+  D = 10 vs −0.3 ± 4.3 (z = 2.4; it was z = 3.1 with 40 scrambles: the smoke-run null sd was too small).
+- Control GW170817 → GRB 170817A gives D = +1 at 0–10 s same; it is left out of the family.
+- Sensitivity: 3 one-sided pairs at ≤ 10 s, 3–10 at 10–100 s, 10–30 at 100 s–1 h, mostly > 30 at 1 h–7 d. Per-cell 95 %
+  upper limits on extra after-pairs are in `results/e1_events/gw_signed.json`. Cells are tested against the null mean
+  (catalogue edges make it non-zero, e.g. GW–CHIME 1–7 d wide −66.5 ± 52.7).
+- **Next:** D1 composite-model D_dt chains; E1 IceTracks-DR2 / Swift / Einstein Probe when they can be fetched.
+
 ## 2026-10-10: E1 GW channels with sky maps: null, global p = 0.83 (D-074 addendum 4)
 - Hypothesis: GW events have same-direction, wide or antipodal partners (GBM, ICECAT-1, CHIME, GW) at lags no
   ordinary path explains. Until now the GW channels were lag-only.

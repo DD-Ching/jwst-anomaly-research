@@ -211,9 +211,12 @@ def classify_gw_gw(m: GWMaps, i, j, rot) -> np.ndarray:
     return out
 
 
-def count_channel(m, gw, orig, rot, b: en.Sample | None, p: en.Params = P, skip=()) -> np.ndarray:
+def count_channel(
+    m, gw, orig, rot, b: en.Sample | None, p: en.Params = P, skip=(), signed=False
+) -> np.ndarray:
     """Counts (n_lag, 3 classes) for GW x b (b None = GW x GW). Only GW events with a map count;
-    ``skip`` holds (GW index, b index) pairs left out (known ordinary pairs, reported apart)."""
+    ``skip`` holds (GW index, b index) pairs left out (known ordinary pairs, reported apart).
+    ``signed``: D = N(t_b > t_GW) - N(t_b < t_GW) per cell instead of counts (b not None)."""
     e = np.asarray(p.lag_edges)
     same_cat = b is None
     bb = gw if same_cat else b
@@ -222,7 +225,9 @@ def count_channel(m, gw, orig, rot, b: en.Sample | None, p: en.Params = P, skip=
     for gi, bj in skip:
         keep &= ~((i == gi) & (j == bj))
     i, j = i[keep], j[keep]
-    lag = np.abs(bb.mjd[j] - gw.mjd[i]) * en.DAY
+    dt = (bb.mjd[j] - gw.mjd[i]) * en.DAY
+    lag = np.abs(dt)
+    w = np.sign(dt) if signed else None
     k = np.clip(np.searchsorted(e, lag, side="right") - 1, 0, NLAG - 1)
     c = (
         classify_gw_gw(m, i, j, rot)
@@ -232,7 +237,9 @@ def count_channel(m, gw, orig, rot, b: en.Sample | None, p: en.Params = P, skip=
     out = np.zeros((NLAG, 3), np.int64)
     for q in range(3):
         sel = (c >> q) & 1 == 1
-        out[:, q] = np.bincount(k[sel], minlength=NLAG)
+        out[:, q] = np.bincount(
+            k[sel], weights=None if w is None else w[sel], minlength=NLAG
+        ).astype(np.int64)
     return out
 
 
@@ -282,9 +289,9 @@ def run_null(m, s, orig, n, cpu, base_seed=8_000_000, skip=None):
         return np.concatenate(list(ex.map(_null_chunk, chunks)))
 
 
-def inject(m, gw, b, n, lag_lo, lag_hi, cls, rng, p: en.Params = P) -> en.Sample:
+def inject(m, gw, b, n, lag_lo, lag_hi, cls, rng, p: en.Params = P, sign=None) -> en.Sample:
     """Copy of ``b`` with up to n events moved next to distinct mapped GW anchors (provenance:
-    simulated)."""
+    simulated). ``sign`` +1 puts B after the GW event, -1 before, None either at random."""
     mjd, ra, dec = b.mjd.copy(), b.ra.copy(), b.dec.copy()
     used: set[int] = set()
     moved = 0
@@ -301,7 +308,8 @@ def inject(m, gw, b, n, lag_lo, lag_hi, cls, rng, p: en.Params = P) -> en.Sample
             continue
         i = int(rng.choice(near))
         lag = np.exp(rng.uniform(np.log(max(lag_lo, 1e-3)), np.log(lag_hi)))
-        mjd[j] = gw.mjd[i] + rng.choice((-1.0, 1.0)) * lag / en.DAY
+        sgn = rng.choice((-1.0, 1.0)) if sign is None else float(sign)
+        mjd[j] = gw.mjd[i] + sgn * lag / en.DAY
         if cls == "wide":
             out = np.flatnonzero(
                 m.d99[i]
