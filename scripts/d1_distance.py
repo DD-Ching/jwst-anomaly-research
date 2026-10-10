@@ -23,6 +23,7 @@ Inputs are shallow clones of the three public repos; every file used is pinned b
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import hashlib
 import itertools
 import json
@@ -1177,7 +1178,6 @@ KIN_FILES = {
         ),
     ],
 }
-KIN_LN_GRID = (np.log(0.04), np.log(40.0), 2000)  # ln D_s/D_ds grid (flat prior; ASSUMPTION)
 
 
 def _pinned_kin(root: Path, rel: str, digest: str, rows: list) -> Path:
@@ -1228,12 +1228,16 @@ def run_kinematic(args) -> None:
     rng = np.random.default_rng(args.seed)
     rows: list = []
     lenses = load_kin_lenses(Path(args.tdcosmo), rows)
-    x = np.linspace(*KIN_LN_GRID)
+    params = dc.DEFAULT
+    if args.ratio_max is not None:  # robustness of the upper prior bound (power-law tail)
+        lo, _, n_x = params.kin_ln_ratio
+        params = dataclasses.replace(params, kin_ln_ratio=(lo, float(np.log(args.ratio_max)), n_x))
+    x = np.linspace(*params.kin_ln_ratio)
     zd = np.array([float(L["z_lens"]) for L in lenses])
     zs = np.array([float(L["z_source"]) for L in lenses])
     dens, m, s, info = [], [], [], []
     for L in lenses:
-        ll, inf = dc.kin_ln_ratio_loglike(L, x)
+        ll, inf = dc.kin_ln_ratio_loglike(L, x, params)
         p, mm, ss = dc.grid_moments(x, ll)
         dens.append(p)
         m.append(mm)
@@ -1264,12 +1268,10 @@ def run_kinematic(args) -> None:
         yp = np.log(dc.ratio_model(zd[k], zs[k], om0))
         null_max.append(float(np.max(np.abs(kin_loo_pulls(x, dens, m, s, yp)[:, 0]))))
     # Injection: D_s/D_ds of one lens times f (a shift of its ln grid); factor where |pull| > thr
-    lnf = np.linspace(-4.0, 4.0, 321)  # x0.018 to x55; NaN = not reached in this range
+    lnf = np.linspace(*params.kin_inj_ln_f)  # NaN = threshold not reached in this range
     inj = []
     for i in range(n):
-        keep = np.arange(n) != i
-        d, sd_d, tau = dc.offset_scatter_fit(m[keep] - y0[keep], s[keep])
-        sd = float(np.sqrt(sd_d**2 + tau**2))
+        _, d, sd, _ = res[om0][i]  # the others' offset and predictive sd, as in the LOO pull
         zz = np.array([dc.grid_pull(x + f - y0[i], dens[i], d, sd) for f in lnf])
         up = lnf[(lnf > 0) & (zz > thr)]
         dn = lnf[(lnf < 0) & (zz < -thr)]
@@ -1286,6 +1288,9 @@ def run_kinematic(args) -> None:
     t["z_d"], t["z_s"] = zd, zs
     t["n_bins"] = [i["n_bins"] for i in info]
     t["gamma_pl"] = [str(i["gamma_pl"]) for i in info]
+    t["gamma_prior_in_grid"] = [
+        np.nan if i["gamma_prior_in_grid"] is None else i["gamma_prior_in_grid"] for i in info
+    ]
     t["ln_ratio_kin_p50"], t["ln_ratio_kin_hw68"] = m, s
     t["upper_edge_rel_density"] = hi_edge
     t[f"ratio_lcdm_om{om0}"] = np.exp(y0)
@@ -1302,7 +1307,8 @@ def run_kinematic(args) -> None:
     t.meta["provenance"] = str(Provenance.MODEL_PREDICTION)
     t.meta["source"] = f"TDCOSMO2025_public@{TDCOSMO_COMMIT[:7]} hierArc kinematic likelihoods"
     OUT.mkdir(parents=True, exist_ok=True)
-    t.write(OUT / "kinematic_lenses.ecsv", overwrite=True)
+    tag = "" if args.ratio_max is None else f"_rmax{args.ratio_max:g}"
+    t.write(OUT / f"kinematic_lenses{tag}.ecsv", overwrite=True)
     worst = int(np.argmax(np.abs(z0)))
     summary = {
         "provenance": str(Provenance.MODEL_PREDICTION),
@@ -1315,6 +1321,9 @@ def run_kinematic(args) -> None:
         "offset_all": dict(
             zip(("delta", "sd", "tau"), dc.offset_scatter_fit(m - y0, s), strict=True)
         ),
+        "tau_at_bound": bool(np.any(res[om0][:, 3] > 0.99 * params.kin_tau_max)),
+        "ln_ratio_grid": list(params.kin_ln_ratio),
+        "n_upper_edge_gt_1e-3": int(np.sum(hi_edge > 1e-3)),
         "null_max_abs_z": {
             "n": args.n_null,
             "median": float(np.median(null_max)),
@@ -1332,8 +1341,11 @@ def run_kinematic(args) -> None:
         "for the others' fit; "
         "D_s/D_ds <= 40 (grid end; the hierArc term has a power-law upper tail)",
     }
-    (OUT / "kinematic_summary.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
-    plot_kinematic(t, summary, om0)
+    (OUT / f"kinematic_summary{tag}.json").write_text(
+        json.dumps(summary, indent=1, default=float) + "\n"
+    )
+    if not tag:
+        plot_kinematic(t, summary, om0)
     write_manifest(rows, "kinematic")
     print(json.dumps(summary, indent=1, default=float))
 
@@ -1359,9 +1371,8 @@ def plot_kinematic(t: Table, summary: dict, om0: float) -> None:
     a1.axhline(off["delta"], color="0.5", lw=1, ls="--")
     a1.axhline(0.0, color="0.75", lw=0.8)
     thr = summary["local_sigma_threshold"]
-    for ax in (a2,):
-        for v in (-thr, thr):
-            ax.axhline(v, color="0.5", lw=1, ls="--")
+    a2.axhline(-thr, color="0.5", lw=1, ls="--")
+    a2.axhline(thr, color="0.5", lw=1, ls="--")
     for name in colors:
         i = order[np.asarray(t["sample"])[order] == name]
         xs = np.nonzero(np.isin(order, i))[0]
@@ -1424,6 +1435,12 @@ def main() -> None:
     k.add_argument("--om", type=float, nargs="+", default=[0.3, 0.1, 0.5])
     k.add_argument("--n-null", type=int, default=100)
     k.add_argument("--seed", type=int, default=20261010)
+    k.add_argument(
+        "--ratio-max",
+        type=float,
+        help="upper D_s/D_ds grid end (prior bound; default Params.kin_ln_ratio); a robustness "
+        "run writes kinematic_*_rmax<N> outputs",
+    )
     b = sub.add_parser("frb")
     b.add_argument("--frb", default=str(d / "FRB"))
     b.add_argument("--seed", type=int, default=20261009)

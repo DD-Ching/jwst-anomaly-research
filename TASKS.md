@@ -17,7 +17,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    (NE2001 and YMW16) and TDCOSMO 2025 power-law D_dt LOO on 8 lenses (addendum 2: max 1.12σ with κ_ext): all null.
    Reach: R ×2–8 / ×0.2–0.4; D_dt ×1.36–1.85 / ×0.41–0.78. Composite model (SDSS1206 only): null
    (addendum 3). Kinematic D_s/D_ds from the hierArc likelihood pickles on 76 lenses (TDCOSMO, SLACS KCWI/SDSS,
-   SL2S): null, max 2.56σ vs 5.78σ, detectable ×0.21 / ×5.6 (addendum 4). Paused: revisit with λ_int-free
+   SL2S): null, max 2.49σ vs 5.78σ, detectable ×0.21 / ×5.6 (addendum 4). Paused: revisit with λ_int-free
    (spatially resolved JWST/KCWI) kinematics or new time-delay lenses.
 1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
    mismatch). Next: CHIME/FRB Catalog 2 (CANFAR downloads reset by the proxy; try another route), TTE for short and

@@ -225,3 +225,24 @@ def test_grid_pull_and_offset_scatter_fit():
     assert d == pytest.approx(0.2, abs=0.03) and tau < 0.05
     d, sd, tau = dc.offset_scatter_fit(-0.1 + rng.normal(0, np.hypot(0.1, 0.3), 400), s)
     assert d == pytest.approx(-0.1, abs=0.06) and tau == pytest.approx(0.3, abs=0.05)
+
+
+def test_kin_axis_order_and_gamma_prior_truncation():
+    x = np.linspace(np.log(0.1), np.log(20.0), 600)
+    lens = _synthetic_kin_lens(1.8, 1, gamma_axis=True)
+    # a_ani-dependent scaling so a swapped axis order would change the answer
+    lens["j_kin_scaling_grid_list"] = [np.outer(np.linspace(0.9, 1.1, 7), np.ones(5))]
+    ref, _ = dc.kin_ln_ratio_loglike(lens, x)
+    swapped = {
+        **lens,
+        "kin_scaling_param_list": ["gamma_pl", "a_ani"],
+        "j_kin_scaling_param_axes": lens["j_kin_scaling_param_axes"][::-1],
+        "j_kin_scaling_grid_list": [g.T for g in lens["j_kin_scaling_grid_list"]],
+    }
+    got, _ = dc.kin_ln_ratio_loglike(swapped, x)
+    assert np.allclose(got, ref)
+    lens["prior_list"] = [["gamma_pl", 2.687, 0.25]]  # SDSSJ0029-0055: mean beyond the grid
+    _, info = dc.kin_ln_ratio_loglike(lens, x)
+    assert info["gamma_prior_in_grid"] == pytest.approx(0.2, abs=0.05)
+    with pytest.raises(ValueError):
+        dc.kin_ln_ratio_loglike({**lens, "kin_scaling_param_list": ["a_ani", "m2l"]}, x)

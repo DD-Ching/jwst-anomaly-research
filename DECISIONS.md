@@ -3554,21 +3554,24 @@ KCWI, SL2S 14: `ExternalLenses/`) with `distance_consistency.load_data_pickle` (
 into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any D_dt.
 - Model (hierArc 1.2.0 `KinLikelihood` + `_displace_lambda_mst`, read, not installed): σ_v = c √(J s(a_ani[, γ_pl])
   (D_s/D_ds) λ), covariance C_meas + C_√J s (D_s/D_ds) c², λ = λ_int (1 − κ_ext). Here λ = 1, a_ani flat over the
-  published grid, γ_pl from the lens's Gaussian prior (RXJ1131) or flat (SLACS KCWI); flat prior in ln D_s/D_ds on
-  [0.04, 40] (ASSUMPTIONs). The term is Gaussian in σ_v with an error proportional to the prediction, so its upper
+  published grid (31 nodes), γ_pl (RXJ1131 and the 13 SLACS KCWI lenses) from each lens's Gaussian prior truncated
+  to the published grid [1.5, 2.5] (41 nodes; hierArc bounds it the same way; `gamma_prior_in_grid`, lowest
+  SDSSJ0029−0055 0.23, SDSSJ1402+6321 0.59); flat prior in ln D_s/D_ds on [0.04, 40] (ASSUMPTIONs, all in
+  `Params.kin_*`). The term is Gaussian in σ_v with an error proportional to the prediction, so its upper
   tail is a power law: the grid end is a prior bound and per-lens summaries are median and half 16–84 % width.
+  Moving the bound to 400 (`--ratio-max 400`) changes the max pull by 2 × 10⁻⁴σ and δ, τ by < 10⁻³.
 - Statistic: y = ln(D_s/D_ds)_kin − ln(D_s/D_ds)_ΛCDM; leave-one-out pull of each lens against the others' common
   offset δ (absorbs a population λ) and Gaussian intrinsic scatter τ (ML; absorbs per-lens λ_int, anisotropy and
   profile scatter), tail computed on the lens's own grid density. Ωm 0.3 (0.1 and 0.5 as checks). Sidak over 76:
   5.78σ local. Null: 100 shuffled redshift pairs. Injection: one lens's D_s/D_ds × f.
-- **Result: null.** Max |pull| 2.56σ (SDSSJ1538+5817, KCWI, +0.30 in ln), 2.63σ at Ωm 0.1/0.5; next SDSSJ2302−0840
-  −2.49σ. Shuffled-z null median max|pull| 2.73σ (p ≥ observed 0.68): the redshift lever is weak against τ = 0.15,
+- **Result: null.** Max |pull| 2.49σ (SDSSJ2302−0840, SLACS SDSS, −0.63 in ln), 2.63σ / 2.54σ at Ωm 0.1 / 0.5; next
+  SDSSJ1538+5817 (KCWI, +0.29) +2.48σ. Shuffled-z null median max|pull| 2.71σ (p ≥ observed 0.79): the redshift lever is weak against τ = 0.15,
   so this tests per-lens outliers, not the redshift dependence. Pooled δ = −0.06 ± 0.03. Detectable factors (median
   over lenses): × 0.21 down / × 5.6 up; TDCOSMO × 0.19–0.39 / × 2.9–9.0, SLACS KCWI × 0.30–0.45 / × 1.6–2.9,
   SLACS SDSS × 0.02–0.42 / × 3.7–52, SL2S × 0.02–0.22 / × 3.3–32 (two SL2S lenses not reached down, one up, within
   × 0.018–55).
-- Sample offsets (δ ± sd, τ): KCWI +0.05 ± 0.04 (0.12), SLACS SDSS −0.15 ± 0.04 (0.03), TDCOSMO −0.12 ± 0.07
-  (0.08), SL2S −0.36 ± 0.15 (0.35). KCWI vs SDSS differ by 0.2 on the same SLACS lenses (aperture and data
+- Sample offsets (δ ± sd, τ): KCWI +0.06 ± 0.04 (0.12), SLACS SDSS −0.15 ± 0.04 (0.03), TDCOSMO −0.11 ± 0.05
+  (0.0), SL2S −0.36 ± 0.15 (0.35). KCWI vs SDSS differ by 0.2 on the same SLACS lenses (aperture and data
   systematics; hypothesis, not tested). With λ = 1 (diagnostic `z_lambda1`, never flags) the precise KCWI lenses sit
   up to 10σ high: λ_int ≠ 1 per lens, the mass-sheet degeneracy this test cannot break.
 - Cross-check, not a validation: the TDCOSMO 2025 kinematic ratios differ from the H0LiCOW joint R (composite

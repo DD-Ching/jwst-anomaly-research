@@ -10,35 +10,33 @@
  "local_sigma_threshold": 5.778354706744786,
  "flagged": [],
  "max_abs_z_loo": {
-  "0.3": 2.4904817130040917,
-  "0.1": 2.6320149150695724,
-  "0.5": 2.540472626152131
+  "0.3": 2.4907063633762254
  },
  "worst": {
   "lens": "SDSSJ2302-0840",
-  "z": -2.4904817130040917
+  "z": -2.4907063633762254
  },
  "offset_all": {
-  "delta": -0.059789491604253314,
-  "sd": 0.029584054428653812,
-  "tau": 0.15482465752783198
+  "delta": -0.059755208972497816,
+  "sd": 0.029584728523300623,
+  "tau": 0.1548109225890079
  },
  "tau_at_bound": false,
  "ln_ratio_grid": [
   -3.2188758248682006,
-  3.6888794541139363,
+  5.991464547107982,
   2000
  ],
- "n_upper_edge_gt_1e-3": 4,
+ "n_upper_edge_gt_1e-3": 0,
  "null_max_abs_z": {
   "n": 100,
-  "median": 2.711723227451366,
+  "median": 2.7119745401902784,
   "p_ge_observed": 0.79
  },
  "inj_factor_median": {
   "down": 0.214934515345988,
   "up": 5.61252102969316,
-  "n_not_reached_down": 2,
+  "n_not_reached_down": 13,
   "n_not_reached_up": 1
  },
  "assumptions": "lambda_int (1 - kappa_ext) common to all lenses up to a Gaussian intrinsic scatter fitted on the others; a_ani flat over the grid; gamma_pl from the lens's prior or flat; flat prior in ln D_s/D_ds; Gaussian summaries (median, half 16-84 % width) for the others' fit; D_s/D_ds <= 40 (grid end; the hierArc term has a power-law upper tail)"

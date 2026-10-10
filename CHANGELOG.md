@@ -2,16 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-10: D1 kinematic D_s/D_ds on 76 lenses: null, max 2.56σ vs 5.78σ (D-073 addendum 4)
+## 2026-10-10: D1 kinematic D_s/D_ds on 76 lenses: null, max 2.49σ vs 5.78σ (D-073 addendum 4)
 - Hypothesis: one lens's kinematics demand a D_s/D_ds no FLRW model gives its redshifts. Data: the hierArc
   kinematic likelihood pickles in TDCOSMO 2025 (TDCOSMO 8, SLACS KCWI 13, SLACS SDSS 41, SL2S 14), read numpy-only.
-- `d1_distance.py kinematic` (30 s): LOO pull vs the others' offset and intrinsic scatter (τ = 0.15 in ln). Max
-  SDSSJ1538+5817 +2.56σ; shuffled-z null median 2.73σ (p = 0.68). Detectable ×0.21 / ×5.6 (median lens; KCWI
-  ×0.30–0.45 / ×1.6–2.9). Plot `results/d1_distance/kinematic_lenses.png` checked: SL2S sits low as a sample
+- `d1_distance.py kinematic` (~1 min): LOO pull vs the others' offset and intrinsic scatter (τ = 0.15 in ln). Max
+  SDSSJ2302−0840 −2.49σ; shuffled-z null median 2.71σ (p = 0.79); upper prior bound ×10 changes nothing.
+  Detectable ×0.21 / ×5.6 (median lens; KCWI ×0.30–0.45 / ×1.6–2.9). Plot `results/d1_distance/kinematic_lenses.png` checked: SL2S sits low as a sample
   (δ −0.36 ± 0.15), KCWI vs SDSS differ by 0.2 on the same lenses; sample systematics, no single-lens outlier.
 - Failed approach: mean/sd summaries and a grid-edge refusal; the hierArc term has a power-law upper tail
-  (error ∝ prediction), so quantiles and a stated grid bound (D_s/D_ds ≤ 40) replace them. `_ZGRID` now reaches
-  z = 5 (SL2S sources to z 3.35).
+  (error ∝ prediction), so quantiles and a stated grid bound (D_s/D_ds ≤ 40) replace them. `/code-review`: γ_pl grid
+  0.1 → 0.025 steps (moved SDSSJ1538 2.56σ → 2.48σ), axes by name, ASSUMPTIONs into `Params.kin_*`, τ-bound flag.
+  `_ZGRID` now reaches z = 5 (SL2S sources to z 3.35).
 - **Next:** W3 MOA-II chain gaps and re-injection (D-068); D1 is exhausted on public data until per-lens λ_int-free
   kinematics (JWST/KCWI IFU) or new time-delay lenses appear.
 
