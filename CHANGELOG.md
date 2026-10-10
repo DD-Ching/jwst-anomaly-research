@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: W3 MOA-II run-field under CHAIN_VERSION 2026-10-10.1 (in progress)
+- Plan: `w3_moa.py --field gbN run-field` per field (re-vet, injections, limit), gb22 and gb21 first.
+
 ## 2026-10-10: W3 MOA-II: the four D-068 chain gaps closed as one post-hoc change (D-068 addendum, CHAIN_VERSION 2026-10-10.1)
 - Hypothesis tested: the chain's survivors gb17-R-6-1-3829 (periodic variable) and gb18-R-9-4-24509 (slow dip with
   season levels) got through four gaps; new tests `exotic_chi2_cap`, `residual_deficit`, `periodic_variable`,
