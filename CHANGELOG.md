@@ -2,6 +2,8 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: W3 MOA-II combine over the eleven re-run fields (WIP)
+
 
 ## 2026-10-10: W3 MOA-II gb18 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors; gb18-R-9-4-24509 (the D-068 chain survivor, a red giant's slow dimming)
