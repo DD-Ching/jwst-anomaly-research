@@ -10,9 +10,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   year (t_E 3–300 d, published N_s; the 6.5 × 10⁻⁶ at t_E = 300 d, ρ = 0.1 rests on 1 recovered injection).
   Quiet χ²/dof 95th percentile 6.7 (gb22 5.3, gb21 6.3; D-068 revisits above ~10). Vetting keeps 73 / 124 flagged W3 injections (59 %); the four new tests cost
   8. Pre-screen pass 2.5–11 % stays the limiting factor. PSPL controls: 0 false W3 calls.
-- Failed approach (env): CDS XMatch from the cloud failed twice ("Too many jobs", then a truncated non-VOTable reply),
-  as in the gb22/gb21 re-runs: `exotic_in_domain` fell back to the lenient default reference and the variability match was
-  empty. Only loosens the chain (0 survivors stands); re-run `vet` where CDS works before interpreting any survivor.
+- Failed approach (env): CDS XMatch from the cloud failed (gb22/gb21 too), so the source-flux bound used the lenient
+  default; 0 survivors stands (docs/exotic_limits.md, note under the gb20 table).
 - gb19 was planned in the same run but not started (40-min run budget).
 - **Next:** `run-field` for gb19, gb16, gb11, gb7, gb12, gb15, gb17, gb18, then `combine`.
 
