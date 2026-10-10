@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: gb13-R-7-0-76483 vetted: explained by red noise, not a candidate
+- Hypothesis before measuring: the exotic preference comes from white-noise errors on a red-noise star; a GP
+  baseline that still preferred E2pos by ΔBIC > 10 (ASSUMPTION) would have kept the candidate open.
+- Nightly means with a Matérn-3/2 GP (celerite2; hyper-parameters from the other eight seasons: 402 counts,
+  τ = 28 d): the ordinary trapezoidal dip beats E2pos by ΔBIC 13.9 (2013, fixed GP) and 19.6 (all 1,477 nights, GP
+  re-fitted); the Gaussian dip ties or wins. Under white noise E2pos led the trapezoid by 52.6. Figure inspected:
+  smooth season-long dimming, no caustic spikes. VIRAC2 Ks (178 epochs, 2010–2019) has a faint-tail skew +2.54;
+  EROS-2 (1996–2003) is quiet within 0.05 mag. No public 2013 epoch photometry found on VizieR.
+- Verdict: an ordinary dimming of a red-noise variable (`docs/candidates/gb13-R-7-0-76483.md`). The chain's
+  white-noise BIC lets such dimmings through; a GP-baseline test is proposed (owner decision: it needs injection
+  re-runs on every field).
+- Failed approach (tooling): a dense-matrix GP (O(N³) Cholesky on 1,477 nights inside Nelder–Mead) did not finish
+  in 15 min; celerite2's O(N) Matérn-3/2 did all fits in 8 s.
+- **Next:** owner decision on the GP-baseline chain test; then gb13 injections and `combine` with twelve fields.
+
 ## 2026-10-10: W3 MOA-II gb13 under CHAIN_VERSION 2026-10-10.1: one chain survivor, likely an ordinary dimming
 - Hypothesis before running: 0 survivors, as in the other eleven fields; a survivor whose data show caustic spikes
   would have changed the plan.
