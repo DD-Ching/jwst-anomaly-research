@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: E-NF1 on IceTracks-DR2 (in progress)
+- Plan: ghost-pair test (NF-H04) on IceTracks-DR2 per-season event files (streamed), good-run lists as an
+  uptime-aware null; TXS 0506+056 2014–15 box excess as the known-case check first.
+
 ## 2026-10-10: Owner brief: Neutrino Frontier round 1 (E-NF1 ghost pairs: null) and Part 0 speed-ups (D-077, D-078)
 - **Neutrino Frontier** (new program, `docs/neutrino_frontier/`). N-A (literature-blind) wrote four frameworks;
   N-B (adversarial, checked references) judged three KNOWN-REDUNDANT: stochastic distance (NF-H01), pseudo-Dirac
