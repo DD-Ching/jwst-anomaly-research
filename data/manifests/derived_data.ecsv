@@ -1,0 +1,16 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: name, datatype: string}
+# - {name: tag, datatype: string}
+# - {name: sha256, datatype: string}
+# - {name: size, datatype: int64}
+# - {name: sources, datatype: string}
+# - {name: code_commit, datatype: string}
+# - {name: created, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: 'reduced products published as GitHub Release assets (S-1, derived_store.py)'}
+# schema: astropy-2.0
+name tag sha256 size sources code_commit created
+gw_skymaps_nside32.npz derived-data-20261010 ab0330588b9a380f2f49b0d4dae809ea6cd1ed6ac1d99718e23f66d00c8e1ad5 4337802 "Zenodo 6513631, 8177023, 20275769, 20348005 (GWTC PE sky maps, CC BY 4.0)" 67fffba660934eefbb037c5c932b6415d60b21e4 2026-10-10T10:06:28Z

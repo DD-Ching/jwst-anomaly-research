@@ -2,7 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-10: Local session: first derived-data release (in progress, claim)
+## 2026-10-10: First derived-data release `derived-data-20261010` (GW sky maps); pinned GBM snapshot not recoverable (D-078 addendum)
+- Local session on the owner's machine (cloud sessions cannot create releases). Re-reduced the GWTC sky maps with
+  `e1_gw_skymaps.py --refresh`: 704 MB streamed from Zenodo into memory in 675 s, nothing stored but the 4.3 MB
+  npz (the 200 MB rule holds because no archive is saved). All four tarball sha256 and the content digest
+  (c5c2e4ff…) equal the pins; `e1_gw_skymaps.ecsv` is unchanged.
+- Published pre-release `derived-data-20261010` (not latest; tag on main): `gw_skymaps_nside32.npz`, 4,337,802 B,
+  sha256 ab0330588b9a380f2f49b0d4dae809ea6cd1ed6ac1d99718e23f66d00c8e1ad5, code commit 67fffba; pinned in
+  `data/manifests/derived_data.ecsv`. `--sources` lists only the Zenodo records (no GBM file in this release).
+- Fresh-session check (`JWST_ANOMALY_DATA` = an empty directory): `e1_gw_skymaps.py` printed "durable copy verified
+  in 1 s", 2.7 s wall, no tarball fetched (row added to the Part 0 speed table below).
+- GBM: neither pinned `fermigbrst.vot` (5b42…, 0cb3…) exists on this machine. Searched by name and by both pinned
+  sizes: the data root, the old clone, its worktrees, 23.4 M files under the home folder, drives E: and G:. Nothing
+  was downloaded or invented; E1 is re-pinned by the cloud routine (TASKS "Part 0").
+- TASKS: division of labour, local-only vs cloud routine (owner brief 2026-10-10).
+- **Next (cloud routine):** E1 GBM re-pin PR that re-runs the affected E1 results; TXS SkyLLH benchmark; round 2.
+  Next local session: publish the new GBM snapshot and wire `e1_events.fetch` to the durable copy.
 
 ## 2026-10-10: E-NF1b IceTracks-DR2 short-lag ghost pairs: null; DR2 cannot reach R_g ~ 10⁻³ (D-079)
 - Streamed IceTracks-DR2 v3.1 (28 files, ~210 MB, 3 s, sha256 pinned; raw not kept): 1,643,355 events, 4,963.4 d
@@ -59,6 +74,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   | E1 GW directional, full run (`--n 1000` null + injections + map build, same inputs, 60 cells identical, global p 0.833) | 333 s | 52 s | ×6.4 |
   | S-4 GW sky-map tarballs (704 MB, parallel ranges into memory, per-tarball cache) | > 40 min, unfinished (2026-10-09) | 159 s + 122 s for GWTC-4.1/5.0 (1.7–2.2 MB/s); cached re-run 1 s | — |
   | E-NF1 null (ICECAT, 14 cells; jit pass counted only to 7 d after review) | 1,375 scrambles/s | 1,982 scrambles/s (4 cores) | ×1.4 |
+  | S-1 GW sky maps in a fresh session (owner's machine, empty data root, `derived-data-20261010`) | ~5 min to > 40 min of streaming (675 s on the owner's machine) | 2.7 s wall | ≈ ×250 |
 - S-1: the store (`derived_store.py`, `derived_publish.py`, durable-first fetch in `e1_gw_skymaps.py`) is built and
   tested. **Release creation from cloud sessions is refused** (HTTP 403, "not permitted for this session type"),
   so the first asset waits for the owner or a local session. Today's re-reduction reproduces the pinned maps
