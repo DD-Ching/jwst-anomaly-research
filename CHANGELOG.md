@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: W3 MOA-II gb13 under CHAIN_VERSION 2026-10-10.1 (in progress)
+- Plan: `run-field --field gb13` (stopped at 25 / 78 fits on 2026-10-09), then `combine` over twelve fields.
+
 ## 2026-10-10: W3 MOA-II cloud re-vet of the lenient-reference fields: 0 survivors
 - Hypothesis before running: a working Gaia DR3 RP reference only tightens `exotic_in_domain`, so 0 survivors stays.
   A new survivor would have reopened the combined limit.
