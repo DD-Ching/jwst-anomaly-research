@@ -7,7 +7,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   2,200 injections 1,075 s). 48 flags (as in D-068), **0 survive**; contact sheet inspected (eclipse-like boxes,
   slow dimmings, season steps, variables; no caustic spikes in the data).
 - Limits (`results/w3_moa/limits_gb20.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 5.0 × 10⁻⁷–6.5 × 10⁻⁶ per star per
-  year (t_E 3–300 d, published N_s). Vetting keeps 73 / 124 flagged W3 injections (59 %); the four new tests cost
+  year (t_E 3–300 d, published N_s; the 6.5 × 10⁻⁶ at t_E = 300 d, ρ = 0.1 rests on 1 recovered injection).
+  Quiet χ²/dof 95th percentile 6.7 (gb22 5.3, gb21 6.3; D-068 revisits above ~10). Vetting keeps 73 / 124 flagged W3 injections (59 %); the four new tests cost
   8. Pre-screen pass 2.5–11 % stays the limiting factor. PSPL controls: 0 false W3 calls.
 - gb19 was planned in the same run but not started (40-min run budget).
 - **Next:** `run-field` for gb19, gb16, gb11, gb7, gb12, gb15, gb17, gb18, then `combine`.
