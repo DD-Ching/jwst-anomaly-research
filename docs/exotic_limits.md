@@ -1148,6 +1148,13 @@ conservative column uses the low N_s.
   eclipse dip 3, bracketing 2, feature sampled 1, χ² cap 1, jackknife 1. Injections: vetting keeps 71 / 122 flagged
   W3 injections. Pre-screen pass 3–11 %. PSPL controls: 0 / 40 per cell called W3.
 
+- **gb11** (64,090 light curves; N_s = 1.09 × 10⁷ from Nunota et al. 2024 Table 1, 76 / 80 subfields, conservative
+  range 1.09–1.15 × 10⁷; quiet χ²/dof 95th percentile 6.1): 41 flags, **0 survive**; contact sheet inspected
+  (eclipse-like few-day box dips, slow dimmings, one deep V-shaped ~15-d dip in gb11-R-2-7-83307 that the umbra box
+  misfits; caustic spikes only in the models). First failing test: eclipse dip 13, repeated deficit 12, residual
+  deficit 6, bracketing 4, robust errors 2, χ² cap 1, neighbour 1, smooth dip 1, slow dip seasons 1. Injections:
+  vetting keeps 103 / 163 flagged W3 injections. Pre-screen pass 5.5–11 %. PSPL controls: 0 / 40 per cell called W3.
+
 - **gb7** (75,328 light curves; N_s = 1.63 × 10⁷ from Nunota et al. 2024 Table 1, 78 / 80 subfields; quiet χ²/dof
   95th percentile 6.1): 1,450 shape passes, 44 off shared epochs, 42 flags, **0 survive**; contact sheet inspected
   (variables, slow and season-long dimmings, short few-point dips; caustic spikes only in the models). First failing
@@ -1195,6 +1202,16 @@ gb16 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb16.ecsv`):
 | 100 | 1.8 | 9 / 11 | 5.2 / 4.2 × 10⁻⁷ |
 | 300 | 17 | 2 / 2 | 2.3 / 2.3 × 10⁻⁶ |
 
+gb11 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb11.ecsv`):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 8 / 7 | 8.0 / 9.1 × 10⁻⁷ |
+| 10 | 0.018 | 12 / 11 | 5.3 / 5.8 × 10⁻⁷ |
+| 30 | 0.17 | 14 / 16 | 4.6 / 4.0 × 10⁻⁷ |
+| 100 | 1.8 | 12 / 9 | 5.3 / 7.1 × 10⁻⁷ |
+| 300 | 17 | 8 / 6 | 8.0 × 10⁻⁷ / 1.1 × 10⁻⁶ |
+
 gb7 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb7.ecsv`):
 
 | t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
@@ -1205,9 +1222,9 @@ gb7 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb7.ecsv`):
 | 100 | 1.8 | 11 / 12 | 3.9 / 3.6 × 10⁻⁷ |
 | 300 | 17 | 5 / 3 | 8.6 × 10⁻⁷ / 1.4 × 10⁻⁶ |
 
-Cloud runs of gb22, gb21, gb20, gb19, gb16 and gb7: the batched CDS XMatch for the Gaia DR3 RP reference failed on all 3 attempts
+Cloud runs of gb22, gb21, gb20, gb19, gb16, gb11 and gb7: the batched CDS XMatch for the Gaia DR3 RP reference failed on all 3 attempts
 ("Too many jobs"; a later retry gave a truncated, non-VOTable reply through the proxy), so `exotic_in_domain` used the
-lenient default reference (MOA-Red 14.2) on all 235 real flags (none has a DoPHOT magnitude). This only loosens the
+lenient default reference (MOA-Red 14.2) on all 276 real flags (none has a DoPHOT magnitude). This only loosens the
 chain, so 0 survivors stands; the VSX / Gaia variability match runs only on flags still alive and was not reached.
 Injections use the injected-source flux and are unaffected. The tracked `vetting_gbN.json` records the run's
 `gaia_rp_xmatch` status from gb16 on (gb19–gb22 dropped it); re-run `vet` where CDS works before interpreting any survivor.
