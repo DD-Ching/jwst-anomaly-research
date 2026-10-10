@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: First derived-data release `derived-data-20261010` (GW sky maps); pinned GBM snapshot not recoverable (D-078 addendum)
+- Local session on the owner's machine (cloud sessions cannot create releases); details in the D-078 addendum.
+  Asset `gw_skymaps_nside32.npz`, 4,337,802 B, sha256 ab0330588b9a380f2f49b0d4dae809ea6cd1ed6ac1d99718e23f66d00c8e1ad5
+  (pre-release, not latest), pinned in `data/manifests/derived_data.ecsv`.
+- 200 MB rule: the 704 MB of tarballs were streamed into memory and never saved; only reduced products stay in the
+  data root (the 4.3 MB npz and four per-tarball caches, 28 MB). The re-reduction reproduces every pin.
+- Fresh session (empty data root): 2.7 s wall instead of streaming (row added to the Part 0 speed table below).
+- GBM: neither pinned `fermigbrst.vot` is on this machine; nothing downloaded or invented.
+- Fixed after `/code-review` (8 findings, 8 addressed): `derived_publish.py` creates the tag at the recorded code commit
+  (`--target`; this release's tag sits on c92249c, its code commit is 67fffba); the TASKS re-pin item now names
+  the procedure (one snapshot, a copy for the GW manifest, maps first, a like-for-like window).
+- **Next (cloud routine):** E1 GBM re-pin (TASKS "Part 0"); TXS SkyLLH benchmark; round 2. Next local session:
+  publish the new GBM snapshot and wire `e1_events.fetch` to the durable copy.
+
 ## 2026-10-10: W3 MOA-II gb22 and gb21 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, first new-chain limits
 - `w3_moa.py --field gbN run-field` (~20 min per field on 4 cores). gb22: 30 flags, gb21: 36 flags, **0 survive**;
   contact sheets inspected (dips, season steps, scatter; no caustic spikes in the data). Pre-screen rows identical to
@@ -72,6 +86,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   | E1 GW directional, full run (`--n 1000` null + injections + map build, same inputs, 60 cells identical, global p 0.833) | 333 s | 52 s | ×6.4 |
   | S-4 GW sky-map tarballs (704 MB, parallel ranges into memory, per-tarball cache) | > 40 min, unfinished (2026-10-09) | 159 s + 122 s for GWTC-4.1/5.0 (1.7–2.2 MB/s); cached re-run 1 s | — |
   | E-NF1 null (ICECAT, 14 cells; jit pass counted only to 7 d after review) | 1,375 scrambles/s | 1,982 scrambles/s (4 cores) | ×1.4 |
+  | S-1 GW sky maps in a fresh session (owner's machine, empty data root, `derived-data-20261010`) | ~5 min to > 40 min of streaming (675 s on the owner's machine) | 2.7 s wall | ≈ ×250 |
 - S-1: the store (`derived_store.py`, `derived_publish.py`, durable-first fetch in `e1_gw_skymaps.py`) is built and
   tested. **Release creation from cloud sessions is refused** (HTTP 403, "not permitted for this session type"),
   so the first asset waits for the owner or a local session. Today's re-reduction reproduces the pinned maps
