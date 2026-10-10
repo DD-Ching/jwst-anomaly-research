@@ -54,11 +54,12 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 
 ## Part 0 speed-ups (owner brief 2026-10-10, D-078)
 - Done: `derived-data-20261010` holds the GW sky maps; a fresh session takes them in ~3 s (D-078 addendum).
-- **E1 GBM re-pin (cloud routine):** neither pinned `fermigbrst.vot` exists anywhere (D-078 addendum). In its own
-  PR: fetch a new HEASARC snapshot, re-pin `data/manifests/e1_events.ecsv` (5b42…) and `e1_gw_events.ecsv` (0cb3…),
-  re-run the affected results (`e1_events.py`, `e1_antipodal.py`, `e1_signed_lag.py`, `e1_chime_flag.py`;
-  `e1_gw_directional.py`, `e1_gw_signed.py`) and report every changed number, including any change in the
-  other three pins. Then a local session publishes the new snapshot and wires `e1_events.fetch` to it.
+- **E1 GBM re-pin (cloud routine):** neither pinned `fermigbrst.vot` is on the owner's machine or re-fetchable
+  (D-078 addendum). In its own PR: fetch a new HEASARC snapshot, re-pin `data/manifests/e1_events.ecsv` (5b42…)
+  and `e1_gw_events.ecsv` (0cb3…), re-run the affected results (`e1_events.py`, `e1_antipodal.py`,
+  `e1_signed_lag.py`, `e1_chime_flag.py`; `e1_gw_directional.py`, `e1_gw_signed.py`) and report every changed
+  number, including any change in the other three pins. Then a local session publishes the new snapshot and wires
+  `e1_events.fetch` to it.
 - Profile every null/injection script once before runs > 10 min (S-3); next candidates: `e1_events.py` injection
   loops, `GWMaps` construction (region distances, ~27 s).
 
