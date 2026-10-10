@@ -2,8 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-10: W3 MOA-II run-field under CHAIN_VERSION 2026-10-10.1 (in progress)
-- Plan: `w3_moa.py --field gbN run-field` per field (re-vet, injections, limit), gb22 and gb21 first.
+## 2026-10-10: W3 MOA-II gb22 and gb21 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, first new-chain limits
+- `w3_moa.py --field gbN run-field` (~20 min per field on 4 cores). gb22: 30 flags, gb21: 36 flags, **0 survive**;
+  contact sheets inspected (dips, season steps, scatter; no caustic spikes in the data). Pre-screen rows identical to
+  the tracked tables (only the `Params` header changed).
+- Limits (`results/w3_moa/limits_gb22.ecsv`, `limits_gb21.ecsv`; docs/exotic_limits.md "Re-run under
+  CHAIN_VERSION 2026-10-10.1"): gb22 Γ₉₅ ≈ 1.4–10 × 10⁻⁶ per star per year (t_E 3–300 d). The efficiency is
+  pre-screen-limited (3–11 % pass); vetting keeps 62 % of flagged injections, and the four new tests cost ~5 %.
+GB21_CL
+- **Next:** `run-field` for gb20, gb19, gb16, gb11, gb7, gb12, gb15, gb17, gb18 (gb17/gb18 have the most light
+  curves, ~35 min each), then `combine`; the pre-screen dominates the efficiency loss, so a better pre-screen is the
+  lever for deeper limits.
 
 ## 2026-10-10: W3 MOA-II: the four D-068 chain gaps closed as one post-hoc change (D-068 addendum, CHAIN_VERSION 2026-10-10.1)
 - Hypothesis tested: the chain's survivors gb17-R-6-1-3829 (periodic variable) and gb18-R-9-4-24509 (slow dip with

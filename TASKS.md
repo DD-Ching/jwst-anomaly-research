@@ -40,8 +40,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    null (30 flags, 0 survive). **D-068: eleven fields streamed (gb7, gb11, gb12, gb15–gb22; 712,780 light curves), 582
    flags, 0 candidates (gb17, gb18: one chain survivor each, explained outside the chain); limits withdrawn**
    (injections had a lenient source-flux bound). The four D-068 chain gaps are closed (D-068 addendum
-   2026-10-10, `CHAIN_VERSION` 2026-10-10.1). Next: `w3_moa.py --field gbN run-field`
-   for every field (re-vets the flags under the new chain, then injections + limit, ~20 min per field on 4 cores),
+   2026-10-10, `CHAIN_VERSION` 2026-10-10.1). gb22 and gb21 re-run under it: 0 survivors, limits tracked (CHANGELOG 2026-10-10). Next:
+   `w3_moa.py --field gbN run-field` for the other nine fields (re-vets the flags under the new chain, then injections + limit, ~20 min per field on 4 cores),
    then `combine`; then gb13 (stopped at 25 / 78 fits) and more Nunota et al. 2024 Table 1 fields. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
    injections both selected and flagged; one real flag, not a candidate). Next: Gaia DR3 variables with epoch
    photometry (vari_summary; check by injection whether W3 survives the variability classifier first), KMTNet
