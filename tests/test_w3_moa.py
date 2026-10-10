@@ -430,6 +430,13 @@ def test_combined_limit_sums_star_years_times_efficiency(tmp_path, monkeypatch):
     assert out["rate95_per_star_yr"][0] == pytest.approx(3.0 / (4e6 * 8.0 * 0.1))
     assert out["rate95_conservative"][0] == pytest.approx(2 * out["rate95_per_star_yr"][0])
     assert out["n_fields"][0] == 2 and out["n_inj"][0] == 400
+    assert out["max_field_share"][0] == pytest.approx(0.75)
+    zero = Table.read(tmp_path / "limits_gb20.ecsv")
+    zero["eff_per_star"][-1] = 0.0  # a cell with no recovered injection (Γ₉₅ = inf per field)
+    zero.write(tmp_path / "limits_gb20.ecsv", overwrite=True)
+    out = Table.read(wm.run_combine())
+    assert out["rate95_per_star_yr"][-1] == pytest.approx(3.0 / (1e6 * 8.0 * 0.1))
+    assert out["max_field_share"][-1] == pytest.approx(1.0)
     stale = Table.read(tmp_path / "limits_gb21.ecsv")
     stale.meta["chain"] = "older"
     stale.write(tmp_path / "limits_gb21.ecsv", overwrite=True)
