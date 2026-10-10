@@ -1117,15 +1117,22 @@ for these fields, which have no published N_s); conservative column uses the low
   81 / 130 flagged W3 injections; the four new tests remove 6 of them (`slow_dip_seasons`, `residual_deficit`,
   `exotic_chi2_cap` 2 each; `periodic_variable` 0). The efficiency is set by the **pre-screen**
   (3–11 % of injections pass it vs 16–68 % Cut-0), not by vetting. PSPL controls: 0 / 40 per cell called W3.
-GB21_PLACEHOLDER
+- **gb21** (43,710 light curves; N_s = 8.32 × 10⁶ from Nunota et al. 2024 Table 1, 73 / 80 subfields, so no
+  conservative range): 36 flags, **0 survive**; contact sheet inspected (slow dimmings, season-level steps, short
+  dips; no caustic spikes in the data). First failing test: repeated deficit 14, eclipse dip 9, bracketing 5, χ² cap
+  3, residual deficit 3, neighbour 1, smooth dip 1. Injections: vetting keeps 96 / 170 flagged W3 injections; the new
+  tests remove 9 (`residual_deficit` 7, `slow_dip_seasons` 1, `exotic_chi2_cap` 1). Pre-screen pass 4–12 %.
+  PSPL controls: 0 / 40 per cell called W3.
 
-| t_E (d) | M (M☉, model) | gb22 recovered / 200 | gb22 Γ₉₅ per star per yr (conservative) |
-|---|---|---|---|
-| 3 | 0.0017 | 3 / 2 | 6.7 / 10.0 × 10⁻⁶ (9.6 / 14 × 10⁻⁶) |
-| 10 | 0.018 | 9 / 10 | 2.2 / 2.0 × 10⁻⁶ (3.2 / 2.9 × 10⁻⁶) |
-| 30 | 0.17 | 14 / 11 | 1.4 / 1.8 × 10⁻⁶ (2.1 / 2.6 × 10⁻⁶) |
-| 100 | 1.8 | 7 / 13 | 2.9 / 1.5 × 10⁻⁶ (4.1 / 2.2 × 10⁻⁶) |
-| 300 | 17 | 8 / 4 | 2.5 / 5.0 × 10⁻⁶ (3.6 / 7.2 × 10⁻⁶) |
+Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every field):
+
+| t_E (d) | M (M☉, model) | gb22 rec. / 200 | gb22 Γ₉₅ per star per yr (conservative) | gb21 rec. / 200 | gb21 Γ₉₅ per star per yr |
+|---|---|---|---|---|---|
+| 3 | 0.0017 | 3 / 2 | 6.7 / 10.0 × 10⁻⁶ (9.6 / 14 × 10⁻⁶) | 3 / 3 | 2.8 / 2.8 × 10⁻⁶ |
+| 10 | 0.018 | 9 / 10 | 2.2 / 2.0 × 10⁻⁶ (3.2 / 2.9 × 10⁻⁶) | 10 / 13 | 8.4 / 6.5 × 10⁻⁷ |
+| 30 | 0.17 | 14 / 11 | 1.4 / 1.8 × 10⁻⁶ (2.1 / 2.6 × 10⁻⁶) | 16 / 16 | 5.3 / 5.3 × 10⁻⁷ |
+| 100 | 1.8 | 7 / 13 | 2.9 / 1.5 × 10⁻⁶ (4.1 / 2.2 × 10⁻⁶) | 10 / 15 | 8.4 / 5.6 × 10⁻⁷ |
+| 300 | 17 | 8 / 4 | 2.5 / 5.0 × 10⁻⁶ (3.6 / 7.2 × 10⁻⁶) | 5 / 5 | 1.7 / 1.7 × 10⁻⁶ |
 
 ### All 22 fields (next)
 
