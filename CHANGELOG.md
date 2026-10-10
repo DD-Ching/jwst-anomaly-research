@@ -15,7 +15,23 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Limits (`results/w3_moa/limits_gb15.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 3.2 × 10⁻⁷–3.4 × 10⁻⁶ per star per year
   (N_s = 1.04 × 10⁷, Nunota et al. 2024, only 62 / 80 subfields: the low end of 1.04–1.34 × 10⁷; both t_E = 300 d
   cells rest on 2 recoveries). Vetting keeps 114 / 171 flagged W3 injections (67 %); PSPL controls: 0 false W3 calls.
-- **Next:** gb17, gb18, then `combine`; the pre-screen re-stream (~40 % of the run) is what PR #139 removes.
+- The re-streamed gb15 pre-screen rows equal the tracked ones row for row (only header metadata differs), a third
+  check of D-078 addendum 3; the tracked chunks are kept unchanged.
+- **Next:** gb17, gb18 (pre-screen now reused, D-078 addendum 3), then `combine`.
+
+## 2026-10-10: Acceleration V2 audit, first pass: MOA pre-screen chunks reused across vetting changes; injection-loss map
+- Owner brief "Autonomous research acceleration V2": measured audit in `docs/audits/2026-10-10-acceleration-v2.md`
+  (what the repository already covers, the gb12 injection-loss funnel, ranked next units).
+- **Redundancy removed:** a vetting-only `Params` change invalidated every streamed MOA pre-screen chunk; gb12
+  (342 s) and gb7 (487 s) re-streamed rows byte-identical to the tracked ones. Chunk validity now depends only on
+  the pre-screen parameters, the tracked-row constants and `PRESCREEN_CODE` (D-078 addendum 3). gb15, gb17, gb18:
+  all 31 tracked chunks are reused (0 s instead of ~6–8 min each).
+- **Where W3 injections are lost (gb12):** Cut-0 45 % kept, shape cut 23 %, shared-epoch test 75 %, vetting 63 %.
+  Faint sources (I_s > 19.5) carry most of the loss (near the noise). Testable design losses: the shared-epoch veto
+  (25 % of shape passes) and short / long t_E vetting (`jackknife_nights` at 3 d, `feature_bracketed` at 300 d).
+  Sparse sampling does make real peak-dip-peak signals fail as ordinary dips at t_E = 3 d.
+- **Next:** gb15, gb17, gb18 with the reuse fix, then `combine`; a shared-epoch masking study on a dev/validation
+  injection split with the real flags as the false-positive check.
 
 ## 2026-10-10: W3 MOA-II gb12 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have

@@ -53,6 +53,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    Define a GW-parent ghost test only if round 2 gives it a quantitative prediction.
 
 ## Part 0 speed-ups (owner brief 2026-10-10, D-078)
+- **Acceleration V2 audit** (`docs/audits/2026-10-10-acceleration-v2.md`): MOA pre-screen reuse done (D-078
+  addendum 3). Next, by information per hour: the shared-epoch masking study (dev/validation injection split,
+  real flags as the false-positive check), then profile `run_inject` (≈ 60 % of a field run), then the
+  short-t_E jackknife study. Same fix for fit chunks (`fit_chunk_problem` still keys on the whole `Params`;
+  ~200–290 s of refits per field after a vetting-only change).
 - Done: `derived-data-20261010` holds the GW sky maps; a fresh session takes them in ~3 s (D-078 addendum).
 - **E1 GBM re-pinned (cloud, D-078 addendum 2):** one snapshot (8cc2…, 4,392 bursts) in both E1 manifests; every
   E1 conclusion unchanged. **Next (local session, soon):** fetch 8cc2… while HEASARC still serves it, publish it to
