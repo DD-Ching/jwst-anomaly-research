@@ -282,9 +282,9 @@ def run_null(m, s, orig, n, cpu, base_seed=8_000_000, skip=None):
         return np.concatenate(list(ex.map(_null_chunk, chunks)))
 
 
-def inject(m, gw, b, n, lag_lo, lag_hi, cls, rng, p: en.Params = P) -> en.Sample:
+def inject(m, gw, b, n, lag_lo, lag_hi, cls, rng, p: en.Params = P, sign=None) -> en.Sample:
     """Copy of ``b`` with up to n events moved next to distinct mapped GW anchors (provenance:
-    simulated)."""
+    simulated). ``sign`` +1 puts B after the GW event, -1 before, None either at random."""
     mjd, ra, dec = b.mjd.copy(), b.ra.copy(), b.dec.copy()
     used: set[int] = set()
     moved = 0
@@ -301,7 +301,8 @@ def inject(m, gw, b, n, lag_lo, lag_hi, cls, rng, p: en.Params = P) -> en.Sample
             continue
         i = int(rng.choice(near))
         lag = np.exp(rng.uniform(np.log(max(lag_lo, 1e-3)), np.log(lag_hi)))
-        mjd[j] = gw.mjd[i] + rng.choice((-1.0, 1.0)) * lag / en.DAY
+        sgn = rng.choice((-1.0, 1.0)) if sign is None else float(sign)
+        mjd[j] = gw.mjd[i] + sgn * lag / en.DAY
         if cls == "wide":
             out = np.flatnonzero(
                 m.d99[i]

@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: E1 signed-lag GW cells with sky-map classes: null, global p = 0.56 (D-074 addendum 5)
+- Hypothesis: GW events lead (or follow) GBM, ICECAT-1 or CHIME events in a given sky-map class (same, wide,
+  antipodal) at lags no ordinary path explains: D = N_after − N_before.
+- `scripts/e1_gw_signed.py --n 1000` (71 s): 45 cells (3 channels × 5 lags × 3 classes; GW–GW left out because D
+  is antisymmetric there). Pooled global p = 0.56, min analytic p × 45 = 0.78. Largest: GW–CHIME 1 h–1 d antipodal,
+  D = 10 vs −0.3 ± 4.3 (z = 2.4; it was z = 3.1 with 40 scrambles: the smoke-run null sd was too small).
+- Control GW170817 → GRB 170817A gives D = +1 at 0–10 s same; it is left out of the family.
+- Sensitivity: 3 one-sided pairs at ≤ 10 s, 3–10 at 10–100 s, 10–30 at 100 s–1 h, mostly > 30 at 1 h–7 d.
+- **Next:** D1 composite-model D_dt chains; E1 IceTracks-DR2 / Swift / Einstein Probe when they can be fetched.
+
 ## 2026-10-10: E1 GW channels with sky maps: null, global p = 0.83 (D-074 addendum 4)
 - Hypothesis: GW events have same-direction, wide or antipodal partners (GBM, ICECAT-1, CHIME, GW) at lags no
   ordinary path explains. Until now the GW channels were lag-only.
@@ -14,7 +24,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Sensitivity: 3 injected pairs at ≤ 10 s, 3–10 at 10–100 s, 10–30 at 100 s–1 h, mostly > 30 at 1 h–7 d.
 - Catalogue snapshot pinned separately (`data/manifests/e1_gw_events.ecsv`): the GBM TAP table grew since the
   D-074 pin, so `e1_events.fetch` refuses the old one. Rerunning older E1 scripts needs `--refresh` or that pin.
-- **Next:** signed-lag GW cells with same/wide classes (in progress, branch `claude/e1-gw-signed`); then D1 composite-model chains.
+- **Next:** signed-lag GW cells with same/wide classes; then D1 composite-model chains.
 
 ## 2026-10-09: E1 signed-lag ("which event comes first") channels: null, global p = 0.68 (D-074 addendum 3)
 - Hypothesis: one catalogue leads another at lags no ordinary path explains (sign asymmetry D = N_after − N_before).

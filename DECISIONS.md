@@ -3656,7 +3656,20 @@ kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0L
 - Sensitivity (`n50_injected`, 10 trials, family-wise 3σ): 3 pairs at ≤ 10 s (GW–GBM, ICECAT, CHIME), 3–10 at
   10–100 s, 10–30 at 100 s–1 h; at 1 h–7 d mostly > 30 (not reached). GW–GW is not injected. 95 % upper limits per
   cell are in `results/e1_events/gw_directional.json` (3 extra pairs in every empty cell).
-- Revisit if: new GWTC PE releases (more mapped O4 events), or signed-lag GW cells with directions are built.
+- Revisit if: new GWTC PE releases (more mapped O4 events).
+
+**Addendum 5 (2026-10-10): signed-lag GW cells with sky-map classes.**
+- Hypothesis: as addendum 3, with GW cells split by the addendum 4 sky-map classes. Ordinary explanations: known
+  counterparts with a fixed order (GW170817 → GRB 170817A, left out of the family); uptime is sign-symmetric.
+- `scripts/e1_gw_signed.py`: D = N(t_B > t_GW) − N(t_B < t_GW) for GW × {GBM, ICECAT, CHIME} × 5 lags × {same, wide,
+  antipodal} = 45 cells; `jit` null, 1,000 scrambles; two-sided pooled trials and the addendum 3 Gaussian / Skellam
+  tail. GW–GW is not a cell (D is antisymmetric within one catalogue). Injections put B after the GW event in the
+  tested class (`e1_gw_directional.inject(..., sign=1)`), 10 trials at n = 3, 10, 30.
+- **Result: null.** Pooled global p = 0.56 (min cell p 0.030); min analytic p × 45 = 0.78. Largest |z|: GW–CHIME
+  1 h–1 d antipodal, D = 10 vs −0.3 ± 4.3 (z = 2.4).
+- Sensitivity (`n50_injected`): 3 pairs at ≤ 10 s, 3–10 at 10–100 s, 10–30 at 100 s–1 h, and mostly not reached
+  (> 30) at 1 h–7 d.
+- Revisit if: new GWTC PE releases, or a time-resolved CHIME uptime series (owner decision).
 
 ## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)
 
