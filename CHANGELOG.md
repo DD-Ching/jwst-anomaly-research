@@ -2,6 +2,8 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: Local session: first derived-data release (in progress, claim)
+
 ## 2026-10-10: E-NF1b IceTracks-DR2 short-lag ghost pairs: null; DR2 cannot reach R_g ~ 10⁻³ (D-079)
 - Streamed IceTracks-DR2 v3.1 (28 files, ~210 MB, 3 s, sha256 pinned; raw not kept): 1,643,355 events, 4,963.4 d
   good-run union, no duplicates. Known case: TXS 0506+056 2014–15 box 6 on vs 1.11 expected (p = 1.0 × 10⁻³).
