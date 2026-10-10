@@ -3,6 +3,21 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 
+## 2026-10-10: W3 MOA-II gb12 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
+- Hypothesis before running: 0 survivors as in D-068; a survivor that held up on the contact sheet would have
+  changed the plan (vetting record, owner notified).
+- `run-field --procs 4` in 1,528 s (pre-screen re-streamed 342 s at ~215 light curves/s, CPU 99 %; 73,386 light
+  curves, 5,532 shape passes, 51 left after the shared-epoch test; 51 fits 203 s, 46 flags; 2,200 injections). **0 survive.**
+  First failing test: repeated deficit 17, residual deficit 9, eclipse dip 9, bracketing 4, χ² cap 3, other 4.
+  Contact sheet inspected: box dips, quasi-periodic variables, caustic spikes only in the models.
+- The batched CDS XMatch (cat2 `vizier:I/355/gaiadr3`, 1″) worked from the cloud this time: Gaia DR3 RP reference
+  for 32 / 46 flags, so the source-flux bound used real references, unlike the earlier cloud runs.
+- Limits (`results/w3_moa/limits_gb12.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 2.3 × 10⁻⁷–1.5 × 10⁻⁶ per star per year
+  (N_s = 1.61 × 10⁷, Nunota et al. 2024, 79 / 80 subfields). Vetting keeps 99 / 156 flagged W3 injections (63 %);
+  PSPL controls: 0 false W3 calls.
+- **Next:** gb15, gb17, gb18, then `combine`; audit which vetting tests remove injected W3 signals
+  (37 % loss per field).
+
 ## 2026-10-10: W3 MOA-II gb7 re-run under CHAIN_VERSION 2026-10-10.1: 0 survivors, limits tracked
 - Hypothesis before running: 0 survivors as in D-068 (gb7-R-8-6-94052 was the known jackknife case); a survivor
   that held up on the contact sheet would have changed the plan (vetting record, CDS-dependent tests where CDS works).
