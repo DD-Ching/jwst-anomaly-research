@@ -2,6 +2,11 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+
+## 2026-10-10: W3 MOA-II gb19 re-run under CHAIN_VERSION 2026-10-10.1 (in progress)
+- Plan: `w3_moa.py --field gb19 run-field --procs 4`; hypothesis: 0 survivors as in D-068 (gb19-R-4-4-31159 was
+  explained by `feature_bracketed`); a survivor that passes the contact-sheet check would change the plan.
+
 ## 2026-10-10: E1 re-pinned to one GBM snapshot (8cc2…, 4,392 bursts): every E1 conclusion unchanged (D-078 addendum 2)
 - Hypothesis before running: only bursts added or revised after the old pins differ, so every E1 channel stays
   null; a family p below 0.01 would have changed the plan.
