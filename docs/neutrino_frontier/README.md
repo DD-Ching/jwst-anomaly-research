@@ -42,4 +42,12 @@ copies of alert tracks.
 - **Sensitivity and limit:** inject ghosts (R_g × signalness of each parent; Δt log-uniform in the bin; RA uniform,
   Dec from the catalogue, error resampled). R_g,50 = smallest R_g detected in ≥ 50 % of trials; 95 % upper limit
   = smallest R_g whose injected statistic exceeds the observed one in ≥ 95 % of trials.
-- **Result:** see CHANGELOG 2026-10-10 and `results/nf/ghost_pairs.json`.
+- **Deviations from this pre-registration (made before the final run, recorded in D-077):** per-cell p is
+  empirical from 20,000 scrambles (floor 5 × 10⁻⁵ < 9.6 × 10⁻⁵), not analytic, because the weighted statistic is
+  not an integer count; the limit is a 95 % CLs limit (the classical one excluded R_g = 0 on a low fluctuation),
+  computed as a null draw plus the ghost excess; a ghost's Dec and error come from the same catalogue event.
+- **Result (2026-10-10): null.** Reproduces D-074 (36, 138). Pooled global p = 0.058; largest cell 1 h–1 d
+  weighted (z = 2.7, Bonferroni p = 0.094; its 36 pairs inspected: all years, 6 same-run, two triplets). 95 % CLs
+  limits on R_g: ≤ 0.02 (≤ 10 s), ≤ 0.05 (10 s–1 h), ≤ 0.2 (1 h–1 d), ≤ 0.1 (1–7 d), ≤ 0.5 (7–30 d); 30–180 d
+  excludes only R_g = 1. NF-H04 stays at ladder B; the parameter region above these limits is rejected for alert
+  tracks. `results/nf/ghost_pairs.json`; D-077.

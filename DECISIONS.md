@@ -3907,8 +3907,9 @@ into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any 
   - NF-H04 sparse nonlocal links ("ghost" neutrinos): CONDITIONALLY VIABLE as phenomenology (ladder B). The
     TXS-flare ghost test is rejected (all-sky flare trials swamp it).
 - E-NF1 (NF-H04): ICECAT-1 v4 wide pairs (D-074 classes) in 7 lag bins (to 180 d), counts and Σ s_i s_j
-  (signalness), 14 cells; `jit` ≤ 7 d, cyclic ±1 yr jitter beyond; 20,000 scrambles; empirical p; injection of
-  ghosts with R_g × signalness; **95 % CLs** limits on R_g. ASSUMPTIONs: weighting, the long-bin null
+  (signalness), 14 cells; `jit` ≤ 7 d, cyclic ±1 yr jitter beyond; 20,000 scrambles (the script refuses fewer
+  than the per-cell threshold needs); empirical p; injection of ghosts with R_g × signalness; **95 % CLs** limits
+  on R_g. ASSUMPTIONs: weighting, the long-bin null
   (stationary alert rate on ~1 yr), the R_g grid.
 
 **Alternatives rejected.**
@@ -3925,8 +3926,9 @@ into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any 
 p = 0.058; min Bonferroni p = 0.094 (1 h–1 d, weighted, z = 2.7). The 36 pairs at 1 h–1 d were inspected:
 spread over all 13 years; 6 are two alerts in one run and two are alert triplets (ordinary day-scale clustering
 the ±3 d jitter keeps; without same-run pairs 30 vs 25.4, ~1σ, post hoc). 95 % CLs limits on R_g (per
-astrophysical alert): ≤ 0.05 at Δt ≤ 10 s, ≤ 0.02 at 10 s–1 h, ≤ 0.2 at 1 h–1 d, ≤ 0.1–0.2 at 1–7 d, ≤ 0.5 at
-7–30 d, unconstrained at 30–180 d (R_g,50 not reached at R_g = 1). Round files: docs/neutrino_frontier/.
+astrophysical alert; the smallest grid R_g above which every grid point passes): ≤ 0.02 at Δt ≤ 10 s, ≤ 0.05
+at 10 s–1 h, ≤ 0.2 at 1 h–1 d, ≤ 0.1 at 1–7 d, ≤ 0.5 at 7–30 d; at 30–180 d only R_g = 1 is excluded (R_g,50 not
+reached). Round files: docs/neutrino_frontier/.
 
 **Revisit if.**
 - IceTracks-DR2 (doi:10.7910/DVN/MMIIZA) is streamed: R_g limits on the 1.6 M-event track sample, with its

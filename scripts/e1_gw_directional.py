@@ -160,9 +160,10 @@ class GWMaps:
             if self.has[i]:
                 self.d90.append(region_distance(r90, vec).astype(np.float32))
                 self.d99.append(region_distance(r99, vec).astype(np.float32))
-            else:  # never counted (count_channel keeps mapped events only); skip the cost
-                self.d90.append(np.full(len(vec), 180.0, np.float32))
-                self.d99.append(np.full(len(vec), 180.0, np.float32))
+            else:  # never counted (count_channel keeps mapped events only); skip the cost.
+                # NaN makes every class test False: a caller without the has-filter counts nothing
+                self.d90.append(np.full(len(vec), np.nan, np.float32))
+                self.d99.append(np.full(len(vec), np.nan, np.float32))
         self.d90, self.d99 = np.array(self.d90), np.array(self.d99)
         self.in90, self.in99 = np.array(self.in90), np.array(self.in99)
         self.prob = np.array(self.prob)
@@ -297,7 +298,6 @@ def _bitmasks(m: GWMaps) -> dict:
         )
         m._masks = {
             "m90": _ring_masks(m.in90),
-            "m99": _ring_masks(m.in99),
             "dil": _ring_masks(m.d99 <= PIX_SLOP_DEG),
             "any99": m.in99.any(axis=1),
             "full": (full_hi, full_lo),

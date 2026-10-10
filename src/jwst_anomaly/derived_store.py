@@ -40,7 +40,8 @@ def pinned(name: str, manifest: Path = MANIFEST) -> dict | None:
     rows = [r for r in t if r["name"] == name]
     if not rows:
         return None
-    r = max(rows, key=lambda r: str(r["tag"]))
+    # newest tag, then newest creation time; on a full tie the last row written wins
+    r = max(enumerate(rows), key=lambda kr: (str(kr[1]["tag"]), str(kr[1]["created"]), kr[0]))[1]
     return {c: r[c].item() if hasattr(r[c], "item") else r[c] for c in t.colnames}
 
 

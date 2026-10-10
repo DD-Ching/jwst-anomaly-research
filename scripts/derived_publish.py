@@ -8,10 +8,10 @@ type").
   python scripts/derived_publish.py data/e1_events/gw_skymaps_nside32.npz \
       --sources "Zenodo 6513631, 8177023, 20275769, 20348005 (GWTC PE sky maps, CC BY 4.0)"
 
-It writes the manifest rows (``data/manifests/derived_data.ecsv``) first, then runs
-``gh release create derived-data-YYYYMMDD <files> --prerelease --latest=false``. Commit the
-manifest change in a PR afterwards. Only reduced products below ``derived_store.MAX_BYTES``; never
-raw archives.
+It runs ``gh release create derived-data-YYYYMMDD <files> --prerelease --latest=false`` and,
+only when that succeeds, appends the manifest rows (``data/manifests/derived_data.ecsv``). Commit
+the manifest change in a PR afterwards. Only reduced products below ``derived_store.MAX_BYTES``;
+never raw archives.
 """
 
 from __future__ import annotations
@@ -47,6 +47,13 @@ def main(argv=None) -> int:
         print(f"{r['name']}: {r['size']} B sha256 {r['sha256']} -> {a.tag}")
     if a.dry_run:
         return 0
+    notes = (
+        "Derived (reduced) data products for ephemeral cloud sessions (S-1). Not a code release. "
+        f"Inputs: {a.sources}. Pinned in data/manifests/derived_data.ecsv; code commit {commit}."
+    )
+    cmd = ["gh", "release", "create", a.tag, *map(str, a.files), "--prerelease", "--latest=false"]
+    subprocess.run([*cmd, "--title", a.tag, "--notes", notes], check=True, cwd=ROOT)
+    # pin only after the release exists (a refused or failed release leaves no dangling row)
     if ds.MANIFEST.exists():
         new = vstack([Table.read(ds.MANIFEST, format="ascii.ecsv"), new])
     new.meta = {
@@ -54,12 +61,6 @@ def main(argv=None) -> int:
         "source": "reduced products published as GitHub Release assets (S-1, derived_store.py)",
     }
     new.write(ds.MANIFEST, format="ascii.ecsv", overwrite=True)
-    notes = (
-        "Derived (reduced) data products for ephemeral cloud sessions (S-1). Not a code release. "
-        f"Inputs: {a.sources}. Pinned in data/manifests/derived_data.ecsv; code commit {commit}."
-    )
-    cmd = ["gh", "release", "create", a.tag, *map(str, a.files), "--prerelease", "--latest=false"]
-    subprocess.run([*cmd, "--title", a.tag, "--notes", notes], check=True, cwd=ROOT)
     return 0
 
 

@@ -180,11 +180,18 @@ def durable_copy(out: Path) -> bool:
     from jwst_anomaly import derived_store
 
     npz = out / "gw_skymaps_nside32.npz"
-    if derived_store.fetch(npz.name, npz) is None or not MANIFEST.exists():
+    if not MANIFEST.exists():
         return False
     want = Table.read(MANIFEST, format="ascii.ecsv").meta.get("maps_sha256")
-    z = np.load(npz)
-    return want is not None and maps_digest(z["name"], z["prob"]) == want
+
+    def ok() -> bool:
+        if want is None or not npz.exists():
+            return False
+        z = np.load(npz)
+        return maps_digest(z["name"], z["prob"]) == want
+
+    # a local reduction is accepted by its content digest (npz bytes differ between runs)
+    return ok() or (derived_store.fetch(npz.name, npz) is not None and ok())
 
 
 def main(argv=None) -> None:

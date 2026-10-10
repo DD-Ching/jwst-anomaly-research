@@ -85,7 +85,7 @@ def inject_ghosts(
         np.concatenate([s.mjd, t]),
         np.concatenate([s.ra, ra]),
         np.concatenate([s.dec, s.dec[draw]]),
-        np.concatenate([s.sigma, s.sigma[rng.integers(0, len(s.mjd), n)]]),
+        np.concatenate([s.sigma, s.sigma[draw]]),  # Dec and error from the same event
         np.concatenate([s.year, en.mjd_year(t)]),
     )
     return sample, np.concatenate([w, w[parent][keep]])

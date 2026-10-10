@@ -36,6 +36,7 @@ OUT = ROOT / "results" / "nf" / "ghost_pairs.json"
 GP = nf.GhostParams()
 P = en.Params()
 NB = nf.n_bins(GP)
+GP_SHORT = nf.GhostParams(lag_edges=GP.lag_edges[: GP.long_from_bin + 1])
 STATS = ("count", "signal_weighted")
 #: ASSUMPTION: R_g grid and trials per point for the sensitivity and the limit.
 RG_GRID = (0.003, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0)
@@ -97,9 +98,10 @@ def _null_chunk(seeds):
     out = []
     for sd in seeds:
         rng = np.random.default_rng(sd)
-        short = stats_of(en.scramble_jit(s, rng, P), w)
+        # jit pass counts only out to 7 d (its bins); the cyclic pass gives the long bins
+        short = nf.wide_pair_stats(en.scramble_jit(s, rng, P), w, GP_SHORT, P)
         long_ = stats_of(nf.scramble_cyclic(s, rng, GP.long_jitter_days), w)
-        out.append(np.vstack([short[: GP.long_from_bin], long_[GP.long_from_bin :]]))
+        out.append(np.vstack([short, long_[GP.long_from_bin :]]))
     return np.stack(out)
 
 
@@ -131,6 +133,12 @@ def main(argv=None) -> int:
     ap.add_argument("--n", type=int, default=20_000)
     ap.add_argument("--cpu", type=int, default=os.cpu_count() or 1)
     a = ap.parse_args(argv)
+    thresh = E.DETECT_P / (NB * len(STATS))  # per-cell p for family-wise 3 sigma
+    if en.empirical_floor(a.n) > thresh:
+        raise SystemExit(
+            f"--n {a.n}: empirical floor {en.empirical_floor(a.n):.2e} > per-cell threshold "
+            f"{thresh:.2e}; no injection could be detected (use --n >= {int(1 / thresh)})"
+        )
     t0 = time.time()
     s, w, names = load()
     obs = stats_of(s, w)
@@ -144,7 +152,6 @@ def main(argv=None) -> int:
     mu, sd = null.mean(axis=0), null.std(axis=0)
     with np.errstate(divide="ignore", invalid="ignore"):
         z = np.where(sd > 0, (obs - mu) / sd, 0.0)
-    thresh = E.DETECT_P / ncell  # per-cell p for family-wise 3 sigma
     labels = [*en.lag_labels(en.Params(lag_edges=GP.lag_edges))]
     rng = np.random.default_rng(9_500_000)
     cells = []
@@ -171,7 +178,10 @@ def main(argv=None) -> int:
                 above[st][rg] = (ab[q] / INJ_TRIALS) / max(p_b[q], 1e-12)
         for q, st in enumerate(STATS):
             r50 = next((rg for rg in RG_GRID if det[st][rg] >= 0.5), None)
-            ul95 = next((rg for rg in RG_GRID if above[st][rg] <= 0.05), None)
+            # the smallest grid R_g from which every larger R_g also has CLs <= 0.05 (Monte Carlo
+            # CLs is not monotonic point by point)
+            ok = [above[st][rg] <= 0.05 for rg in RG_GRID]
+            ul95 = next((rg for k2, rg in enumerate(RG_GRID) if all(ok[k2:])), None)
             cells.append(
                 {
                     "lag": labels[k],
