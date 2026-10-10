@@ -4040,3 +4040,34 @@ at ≤ 100 s.
 **Revisit if** NF-H04 gets a quantitative R_g or lag prediction; f_astro per cut is computed from the DR2 effective
 areas (turns R into R_g); a public track sample with a much larger astrophysical count appears (IceCube-Gen2,
 KM3NeT ARCA releases).
+
+## D-080 Neutrino Frontier benchmark 1: SkyLLH reproduces the IceTracks-DR2 TXS 0506+056 2014–15 box fit (2026-10-10)
+
+**Decision.**
+- Adopt SkyLLH (PyPI `skyllh` ≥ 26.1, optional extra `nf`; IceCube's public-data likelihood framework, the tool
+  arXiv:2605.19040 used) for point-source and time-window fits on IceTracks-DR2. No in-house likelihood.
+- Benchmark before use: `scripts/nf_txs_benchmark.py` fits the TXS 0506+056 box (IC86_IV, catalogue position
+  77.35°, 5.7°) with n_s and γ free, under the Dataverse 1.0 IRFs (what the paper used) and the ≥ 2.0 IRFs (binning
+  fix). Two windows: Table 6 as printed ([T0 − ΔT/2, T0 + ΔT/2] = MJD 56927.5–57112.5) and the same window with
+  each edge snapped to the nearest on-source event (< 1° from TXS, ≤ 1 d away; ASSUMPTIONs), because Table 6 rounds
+  T0 and ΔT to whole days and a box flare fit puts its edges on events. Agreement tolerance |Δn_s| ≤ 1,
+  |Δγ| ≤ 0.1 (ASSUMPTION).
+- Raw files (IC86_IV events and uptime, IC86 IRFs: smearing matrix 817 MB v2 / 598 MB v1) are streamed into the data
+  root, md5-checked against `data/manifests/nf_skyllh_dr2.ecsv` and deleted after use (`--cleanup`). Stated reason
+  for > 200 MB: the benchmark needs the full IC86 smearing matrix (SkyLLH builds the signal PDFs from it).
+
+**Alternatives rejected.**
+- The printed window as is: n_s = 11.1, γ = 2.22 (both IRF versions), 1.6 events short. The event at MJD 57112.653
+  (0.38° from TXS, σ = 0.20°) lies 0.15 d after the printed stop; with the snapped edges (56927.860–57112.653:
+  T0 = 57020.26, ΔT = 184.8 d, both round to Table 6) the fit matches.
+- Multi-season fits (IC86_III–V): SkyLLH's time-dependent analysis supports one dataset only; the box lies inside
+  IC86_IV (56757–57160), so nothing is lost.
+- The whole-release zip that SkyLLH's dataset definition downloads: per-file streaming of the 4 needed files instead.
+
+**Evidence.** `results/nf/txs_skyllh_benchmark.json`. Snapped window: n_s = 12.72, γ = 2.26, TS = 23.0 (v1 IRFs);
+12.75 / 2.26 / 22.9 (v2). Paper: 12.7 / 2.3 (SkyLLH), 12.56 / 2.26 (internal). Printed window: 11.08 / 2.21
+(v1), 11.11 / 2.22 (v2). The IRF binning fix moves n_s by 0.03. Background trials: see the CHANGELOG entry.
+Edge sensitivity (T0 and ΔT each moved by up to ± 2.5 d): n_s 10.3–13.0.
+
+**Revisit if** a new SkyLLH release changes the PDFs (re-run the benchmark), or a test needs multi-season
+time-dependent fits (SkyLLH single-dataset limit).
