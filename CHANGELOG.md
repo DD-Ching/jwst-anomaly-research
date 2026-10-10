@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: W3 MOA-II eleven fields: 582 flags, 0 candidates; limits withdrawn pending the corrected chain (D-068, #95)
+- Lands the streamed MOA-II work: gb7, gb11, gb12, gb15–gb22 (712,780 Cut-0 light curves, 582 flags). Nine fields
+  have 0 chain survivors; gb17-R-6-1-3829 (periodic variable) and gb18-R-9-4-24509 (red-giant slow dimming) passed
+  the chain and are explained only by vetting notes (docs/candidates/). `derived`. No W3 candidate.
+- Merged `claude/w3-moa-fields-alt2` (injections vetted against the injected source flux, `CHAIN_VERSION`, refusal
+  without MulensModel, truncated-tar and size-pin fixes). Every old-chain `limits_*` and `efficiency_*` table is
+  deleted: none may be quoted.
+- **Handoff / next:** add the four chain gaps in D-068 as one post-hoc change, re-inject every field, `combine`;
+  gb13 stopped at 25 / 78 fits (run died 2026-10-09 13:02Z); then more Nunota Table 1 fields.
+
 ## 2026-10-10: E1 signed-lag GW cells with sky-map classes: null, global p = 0.56 (D-074 addendum 5)
 - Hypothesis: GW events lead (or follow) GBM, ICECAT-1 or CHIME events in a given sky-map class (same, wide,
   antipodal) at lags no ordinary path explains: D = N_after − N_before.

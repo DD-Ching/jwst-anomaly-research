@@ -1052,7 +1052,8 @@ it applied to real flags. The efficiencies, and every per-field and combined lim
   (18,599 light curves, 1,058 shape passes, 30 passes); the 30 flags are D-062's 30 (same event IDs; contact sheet
   inspected then); **0 survive**. First failing test per flag: repeated deficit 13, eclipse dip 8, exotic feature not
   sampled 3, neighbour shares the feature 2, robust errors 2, epoch jackknife 1, variable baseline 1.
-- **Limit** (`derived` from `simulated`; `results/w3_moa/limits_gb22.ecsv`; ρ = 0.01 / 0.1):
+- **Limit, withdrawn** (old chain; the table was deleted with every old-chain limit, see "Eleven fields"; kept here
+  only as a record, not to be quoted; `derived` from `simulated`; ρ = 0.01 / 0.1):
 
 | t_E (d) | Cut-0 | pre-screen | recovered / 200 | ε per star | **Γ₉₅ per star per yr** |
 |---|---|---|---|---|---|
@@ -1072,7 +1073,18 @@ it applied to real flags. The efficiencies, and every per-field and combined lim
   (203 s from the local tar); gb21 test: 258 light curves/s, 72 MB/s on 4 cores. Streamed tars are pinned by the
   sha256 of each 64 MiB range (manifest rows). No whole tar is written to disk (cloud-disk decision).
 
-### Six fields: gb11, gb16, gb19, gb20, gb21, gb22 (D-068)
+### Eleven fields: gb7, gb11, gb12, gb15–gb22 (D-068)
+
+- **Real data, all eleven fields** (`derived`; `results/w3_moa/vetting_gb*.json`): 712,780 Cut-0 light curves streamed
+  (gb7 75,328; gb12 73,386; gb15 83,145; gb17 100,448; gb18 83,855; and the six below), 582 flags. Nine fields have
+  0 chain survivors. One flag each in gb17 and gb18 passed the whole chain and was explained only by a vetting note
+  outside the chain: `docs/candidates/gb17-R-6-1-3829.md` (a ~30-d periodic variable) and
+  `docs/candidates/gb18-R-9-4-24509.md` (slow dimming of a red giant with season offsets). **0 candidates.** The four
+  chain gaps these two expose are listed in D-068; gb17 and gb18 stay out of any combined limit until the chain
+  carries those tests and every field is re-injected.
+- gb13 was being streamed when the run stopped (25 / 78 flags fitted, 2026-10-09 13:02Z); it is not in this table.
+
+#### The first six (gb11, gb16, gb19, gb20, gb21, gb22)
 
 - **Real data** (`derived`; `results/w3_moa/vetting_gb*.json`; the gb11 contact sheet inspected): 296,618 Cut-0
   light curves streamed (gb11 64,090; gb16 64,353; gb19 53,861; gb20 52,005; gb21 43,710; gb22 18,599), 234 flags,

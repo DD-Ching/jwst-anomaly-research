@@ -3177,7 +3177,7 @@ efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049
 - Euclid DR1 (≈ 2000 deg², PSF-corrected shapes) is public: the same code scales by tile.
 - A flag appears, or per-tile star ellipticity gradients show radial patterns on 1–12′ scales.
 
-## D-068 W3 MOA-II: calibrated variable-baseline test, LF-drawn injections and a streaming per-field pipeline; six fields null, limits withdrawn pending the corrected chain (2026-10-08, amended 2026-10-09)
+## D-068 W3 MOA-II: calibrated variable-baseline test, LF-drawn injections and a streaming per-field pipeline; eleven fields, 0 candidates, limits withdrawn pending the corrected chain (2026-10-08, amended 2026-10-09)
 
 **Decision.**
 - The variable-baseline vetting test's threshold is the 95th percentile (ASSUMPTION, `BASELINE_Q`) of the field's
