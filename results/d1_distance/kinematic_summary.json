@@ -1,0 +1,38 @@
+{
+ "provenance": "model_prediction",
+ "n_lenses": 76,
+ "by_sample": {
+  "SL2S": 14,
+  "SLACS-KCWI": 13,
+  "SLACS-SDSS": 41,
+  "TDCOSMO": 8
+ },
+ "local_sigma_threshold": 5.778354706744786,
+ "flagged": [],
+ "max_abs_z_loo": {
+  "0.3": 2.5630862320976626,
+  "0.1": 2.632218086944575,
+  "0.5": 2.6241970584363883
+ },
+ "worst": {
+  "lens": "SDSSJ1538+5817",
+  "z": 2.5630862320976626
+ },
+ "offset_all": {
+  "delta": -0.060593855508884006,
+  "sd": 0.029597296797337986,
+  "tau": 0.15430359931189513
+ },
+ "null_max_abs_z": {
+  "n": 100,
+  "median": 2.7289122128224683,
+  "p_ge_observed": 0.68
+ },
+ "inj_factor_median": {
+  "down": 0.214934515345988,
+  "up": 5.61252102969316,
+  "n_not_reached_down": 2,
+  "n_not_reached_up": 1
+ },
+ "assumptions": "lambda_int (1 - kappa_ext) common to all lenses up to a Gaussian intrinsic scatter fitted on the others; a_ani flat over the grid; gamma_pl from the lens's prior or flat; flat prior in ln D_s/D_ds; Gaussian summaries (median, half 16-84 % width) for the others' fit; D_s/D_ds <= 40 (grid end; the hierArc term has a power-law upper tail)"
+}

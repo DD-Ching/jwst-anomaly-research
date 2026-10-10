@@ -5,6 +5,7 @@ Result: **no**. Every per-lens and per-FRB pull is far below the 5σ trials-corr
 
 Reproduce: `python scripts/d1_distance.py lenses --h0licow <clone> --tdcosmo <clone>` and
 `python scripts/d1_distance.py tdcosmo --tdcosmo <clone>`,
+`python scripts/d1_distance.py kinematic --tdcosmo <clone>` (seed 20261010),
 `python scripts/d1_distance.py frb --frb <clone> [--ism ymw16]` (inputs pinned in
 `data/manifests/d1_distance.ecsv`; seed 20261009).
 
@@ -17,6 +18,7 @@ Reproduce: `python scripts/d1_distance.py lenses --h0licow <clone> --tdcosmo <cl
 | `tdcosmo_lenses.ecsv` | model_prediction | statistic D on the TDCOSMO 2025 power-law D_dt chains, 8 lenses × (`kext`: own κ_ext PDF; `nokext`: κ_ext = 0); D-073 addendum 2 |
 | `tdcosmo_summary.json`, `tdcosmo_injections.ecsv` | model_prediction / simulated | trials, threshold, shuffled-z null, detectable factors; D_dt × f injections |
 | `tdcosmo_*_j1206_final_composite.*`, `tdcosmo_*_j1206_final_power_law.*` | as above | `tdcosmo --j1206 final_composite` / `final_power_law`: SDSS1206 replaced by TDCOSMO's final chain (κ_ext included), `kext` only; composite = model-choice check, power law = validation; D-073 addendum 3 |
+| `kinematic_lenses.ecsv`, `kinematic_summary.json`, `kinematic_lenses.png` | model_prediction | per lens (76: TDCOSMO 8, SLACS KCWI 13, SLACS SDSS 41, SL2S 14): kinematic ln D_s/D_ds (λ = 1) from the hierArc likelihood pickles, y = minus ln D_s/D_ds(ΛCDM), LOO pull vs the others' offset + intrinsic scatter (Ωm 0.3/0.1/0.5), λ = 1 pull (diagnostic), D_s/D_ds × f injection factors, shuffled-z null; D-073 addendum 4 |
 | `frb.ecsv` | model_prediction | per localized FRB: predictive median DM, one-sided low/high tails (grid convolution), P(below the MW-only floor), the DM at which each tail reaches the 5.81σ flag |
 | `frb_injections.ecsv` | simulated | DM_obs = 0.9 × low limit and 1.1 × high limit per FRB, through the same chain |
 | `frb_summary.json` | model_prediction | FRB flags, extremes, sensitivity and injection recovery |

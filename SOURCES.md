@@ -1116,6 +1116,12 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - TDCOSMO 2025 public release, https://github.com/TDCOSMO/TDCOSMO2025_public (commit d7f38db, 2026-01-21):
   `TDCOSMO_sample/TDCOSMO_data/SDSS1206+4332/final_D_d.npy`, `final_D_dt.npy`, `TDCOSMO_sample/tdcosmo_sample.yaml`;
   `final_composite_D_dt.npy` and `final_power_law_D_dt.npy` (read 2026-10-10, D-073 addendum 3).
+  hierArc kinematic likelihood pickles `TDCOSMO_sample/<lens>_const_processed.pkl` (8 lenses),
+  `ExternalLenses/SLACS/slacs_{kcwi,sdss}_const_processed.pkl`, `ExternalLenses/SL2S/sl2s_const_processed.pkl`
+  (read 2026-10-10 with a numpy-only unpickler, D-073 addendum 4).
+- hierArc 1.2.0 (PyPI `hierarc`, https://github.com/sibirrer/hierArc; read 2026-10-10, not a dependency):
+  `Likelihood/LensLikelihood/kin_likelihood.py`, `Likelihood/kin_scaling.py`, `Likelihood/transformed_cosmography.py`
+  give the σ_v model and λ convention reproduced in `distance_consistency.kin_ln_ratio_loglike`.
   Paper: TDCOSMO Collaboration 2025, A&A 704, A63 (arXiv:2506.03023). Other per-lens files there (names only,
   listed 2026-10-09; read 2026-10-09 by `d1_distance.py tdcosmo`, sha256 in `data/manifests/d1_distance.ecsv`): power-law D_dt chains `HE0435-1223/he_powerlaw_Ddt.dat`,
   `PG1115+080/pg_powerlaw_Ddt.dat`, `RXJ1131-1231/rxj_powerlaw_Ddt.dat`, `WFI2033-4723/wfi2033_pl_dt_nokext.dat`,

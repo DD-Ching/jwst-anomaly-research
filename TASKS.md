@@ -16,11 +16,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 0. **D1 distance self-consistency** (D-073 + addenda; owner idea 1): H0LiCOW (R and D_dt LOO), 94 localized FRBs
    (NE2001 and YMW16) and TDCOSMO 2025 power-law D_dt LOO on 8 lenses (addendum 2: max 1.12σ with κ_ext): all null.
    Reach: R ×2–8 / ×0.2–0.4; D_dt ×1.36–1.85 / ×0.41–0.78. Composite model (SDSS1206 only): null
-   (addendum 3). Next: new per-lens D_d from the hierArc `*_const_processed.pkl` likelihoods. Format checked
-   2026-10-10 (RXJ1131): a dict (`DdtHistKin`: ddt_samples/weights, sigma_v_measurement, j_model, error_cov_*,
-   j_kin_scaling_grid_list, kappa_pdf) whose only globals are numpy `_reconstruct`/`ndarray`/`dtype`/`scalar`, so
-   `distance_consistency.load_array_pickle`'s allowlist reads it; it needs a variant that returns the dict, not
-   `list(out)`. Then σ_v² ∝ (D_s/D_ds) J gives D_d per lens (hierArc's kinematic likelihood; reuse-check first).
+   (addendum 3). Kinematic D_s/D_ds from the hierArc likelihood pickles on 76 lenses (TDCOSMO, SLACS KCWI/SDSS,
+   SL2S): null, max 2.56σ vs 5.78σ, detectable ×0.21 / ×5.6 (addendum 4). Paused: revisit with λ_int-free
+   (spatially resolved JWST/KCWI) kinematics or new time-delay lenses.
 1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
    mismatch). Next: CHIME/FRB Catalog 2 (CANFAR downloads reset by the proxy; try another route), TTE for short and
    faint bursts, an s ≠ 1 chain, a generative pulse-model null.

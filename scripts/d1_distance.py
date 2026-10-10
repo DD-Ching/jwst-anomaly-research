@@ -15,6 +15,7 @@ FRBs (second probe): DM_obs vs the Macquart-relation predictive distribution per
 
     python scripts/d1_distance.py lenses --h0licow DIR --tdcosmo DIR
     python scripts/d1_distance.py tdcosmo --tdcosmo DIR   # statistic D, TDCOSMO 2025 power-law
+    python scripts/d1_distance.py kinematic --tdcosmo DIR  # kinematic D_s/D_ds, 76 lenses
     python scripts/d1_distance.py frb --frb DIR
 Inputs are shallow clones of the three public repos; every file used is pinned by sha256.
 """
@@ -1145,6 +1146,251 @@ def run_tdcosmo(args) -> None:
     )
 
 
+# ---- Kinematic D_s/D_ds per lens from the hierArc likelihood pickles (D-073 addendum 4) ----
+KIN_FILES = {
+    "TDCOSMO": [
+        ("B1608+656", "2e53afe816fd7787e6dfad5da1fbb77ef720514e58338738d06fc1890c504620"),
+        ("DES0408-5354", "aad7370a703256a8aba94e3c595bd247f84dd439a3461e26c6bf28eb5e6ecfcb"),
+        ("HE0435-1223", "6085ce9ec0c624a18259967f1aeda738da601d524bee8e94a154337f5112cb54"),
+        ("PG1115+080", "d0208a4b9e7aa91c1acffcf1bfff4ccc20f32d7a92b8c66023518264364cf1f3"),
+        ("RXJ1131-1231", "43e3d45075af2f021f362857de0027427c3ba6202456916fa4d99974b3e93293"),
+        ("SDSS1206+4332", "f298f12f1cc7b505f7b1698ced2fbc1c2fdfd44a2a799c185b9306dec29da586"),
+        ("WFI2033-4723", "de1002ce59fa439ebece4db155784bcfdafa9fc5fadc72a320fe7bb893caf4f6"),
+        ("WGD2038-4008", "7b847b4ef9cae72bd2e1f7707171921ebe2592820e4667385b0cfc67518828b9"),
+    ],
+    # (sample, path, sha256); SLACS KCWI IFU data replace the SDSS single aperture for its 13 lenses
+    "external": [
+        (
+            "SLACS-KCWI",
+            "ExternalLenses/SLACS/slacs_kcwi_const_processed.pkl",
+            "613c9a364b9f8dd5b678b6f4774fa79f39fa014f5e1ac172a119a1c20d4dbf9b",
+        ),
+        (
+            "SLACS-SDSS",
+            "ExternalLenses/SLACS/slacs_sdss_const_processed.pkl",
+            "d69e6a4a12158b74b2e89dd9a5b0d478c9f3233b27233381d30ed9858c4639a9",
+        ),
+        (
+            "SL2S",
+            "ExternalLenses/SL2S/sl2s_const_processed.pkl",
+            "b6d2fecd2451cfba0231dbf64321a22bf6ea1426411a0c283d399497017891ef",
+        ),
+    ],
+}
+KIN_LN_GRID = (np.log(0.04), np.log(40.0), 2000)  # ln D_s/D_ds grid (flat prior; ASSUMPTION)
+
+
+def _pinned_kin(root: Path, rel: str, digest: str, rows: list) -> Path:
+    path = root / rel
+    got = sha256(path)
+    if got != digest:
+        raise SystemExit(f"sha256 mismatch for {path}: {got} != {digest}")
+    rows.append(
+        (f"{TDCOSMO}/blob/{TDCOSMO_COMMIT}/{rel}", digest, path.stat().st_size, TDCOSMO_COMMIT)
+    )
+    return path
+
+
+def load_kin_lenses(root: Path, rows: list) -> list[dict]:
+    """Every lens likelihood dict with a `sample` key; a SLACS lens appears once (KCWI first)."""
+    out, seen = [], set()
+    for name, digest in KIN_FILES["TDCOSMO"]:
+        lens = dc.load_data_pickle(
+            _pinned_kin(root, f"TDCOSMO_sample/{name}_const_processed.pkl", digest, rows)
+        )
+        out.append({**lens, "sample": "TDCOSMO"})
+        seen.add(name)
+    for sample, rel, digest in KIN_FILES["external"]:
+        for lens in dc.load_data_pickle(_pinned_kin(root, rel, digest, rows)):
+            if lens["name"] in seen:
+                continue
+            seen.add(lens["name"])
+            out.append({**lens, "sample": sample})
+    return out
+
+
+def kin_loo_pulls(
+    x: np.ndarray, dens: np.ndarray, m: np.ndarray, s: np.ndarray, y_pred: np.ndarray
+):
+    """Per lens: pull of y = ln(D_s/D_ds)_kin - ln(D_s/D_ds)_LCDM against the others' offset and
+    intrinsic scatter. dens: (n_lens, n_grid) densities of ln(D_s/D_ds)_kin on x."""
+    n = len(m)
+    out = np.empty((n, 4))
+    for i in range(n):
+        keep = np.arange(n) != i
+        d, sd_d, tau = dc.offset_scatter_fit(m[keep] - y_pred[keep], s[keep])
+        sd = float(np.sqrt(sd_d**2 + tau**2))
+        out[i] = (dc.grid_pull(x - y_pred[i], dens[i], d, sd), d, sd, tau)
+    return out
+
+
+def run_kinematic(args) -> None:
+    rng = np.random.default_rng(args.seed)
+    rows: list = []
+    lenses = load_kin_lenses(Path(args.tdcosmo), rows)
+    x = np.linspace(*KIN_LN_GRID)
+    zd = np.array([float(L["z_lens"]) for L in lenses])
+    zs = np.array([float(L["z_source"]) for L in lenses])
+    dens, m, s, info = [], [], [], []
+    for L in lenses:
+        ll, inf = dc.kin_ln_ratio_loglike(L, x)
+        p, mm, ss = dc.grid_moments(x, ll)
+        dens.append(p)
+        m.append(mm)
+        s.append(ss)
+        info.append(inf)
+    dens, m, s = np.array(dens), np.array(m), np.array(s)
+    # The lower tail falls like a Gaussian; the upper one like a power law (hierArc's
+    # prediction-proportional model error), so the grid end acts as a prior bound there.
+    lo_edge = dens[:, 0] / dens.max(axis=1)
+    if np.any(lo_edge > 1e-3):
+        raise SystemExit(f"ln D_s/D_ds grid truncates a posterior: {np.max(lo_edge):.2g}")
+    hi_edge = dens[:, -1] / dens.max(axis=1)
+    n = len(lenses)
+    thr = dc.local_sigma_threshold(n, dc.DEFAULT.flag_sigma_global)
+    res = {}
+    for om in args.om:
+        y_pred = np.log(dc.ratio_model(zd, zs, om))
+        res[om] = kin_loo_pulls(x, dens, m, s, y_pred)
+    om0 = args.om[0]
+    y0 = np.log(dc.ratio_model(zd, zs, om0))
+    z0 = res[om0][:, 0]
+    # lambda = 1 prior-predictive pull (diagnostic: lambda_int (1 - kappa_ext) != 1 is expected)
+    z_lam1 = np.array([dc.grid_pull(x - y0[i], dens[i], 0.0, 1e-6) for i in range(n)])
+    # Null: shuffled redshift pairs (each lens keeps its own kinematics)
+    null_max = []
+    for _ in range(args.n_null):
+        k = rng.permutation(n)
+        yp = np.log(dc.ratio_model(zd[k], zs[k], om0))
+        null_max.append(float(np.max(np.abs(kin_loo_pulls(x, dens, m, s, yp)[:, 0]))))
+    # Injection: D_s/D_ds of one lens times f (a shift of its ln grid); factor where |pull| > thr
+    lnf = np.linspace(-4.0, 4.0, 321)  # x0.018 to x55; NaN = not reached in this range
+    inj = []
+    for i in range(n):
+        keep = np.arange(n) != i
+        d, sd_d, tau = dc.offset_scatter_fit(m[keep] - y0[keep], s[keep])
+        sd = float(np.sqrt(sd_d**2 + tau**2))
+        zz = np.array([dc.grid_pull(x + f - y0[i], dens[i], d, sd) for f in lnf])
+        up = lnf[(lnf > 0) & (zz > thr)]
+        dn = lnf[(lnf < 0) & (zz < -thr)]
+        inj.append(
+            (
+                float(np.exp(dn.max())) if dn.size else np.nan,
+                float(np.exp(up.min())) if up.size else np.nan,
+            )
+        )
+    inj = np.array(inj)
+    t = Table()
+    t["lens"] = [str(L["name"]) for L in lenses]
+    t["sample"] = [L["sample"] for L in lenses]
+    t["z_d"], t["z_s"] = zd, zs
+    t["n_bins"] = [i["n_bins"] for i in info]
+    t["gamma_pl"] = [str(i["gamma_pl"]) for i in info]
+    t["ln_ratio_kin_p50"], t["ln_ratio_kin_hw68"] = m, s
+    t["upper_edge_rel_density"] = hi_edge
+    t[f"ratio_lcdm_om{om0}"] = np.exp(y0)
+    t["y"] = m - y0
+    for om in args.om:
+        t[f"z_loo_om{om}"] = res[om][:, 0]
+    t["offset_others"], t["pred_sd_others"], t["tau_others"] = res[om0][:, 1:].T
+    t["z_lambda1"] = z_lam1
+    t["inj_factor_down"], t["inj_factor_up"] = inj.T
+    t["flag"] = np.abs(z0) > thr
+    for c in t.colnames:
+        if t[c].dtype.kind == "f":
+            t[c].info.format = ".4g"
+    t.meta["provenance"] = str(Provenance.MODEL_PREDICTION)
+    t.meta["source"] = f"TDCOSMO2025_public@{TDCOSMO_COMMIT[:7]} hierArc kinematic likelihoods"
+    OUT.mkdir(parents=True, exist_ok=True)
+    t.write(OUT / "kinematic_lenses.ecsv", overwrite=True)
+    worst = int(np.argmax(np.abs(z0)))
+    summary = {
+        "provenance": str(Provenance.MODEL_PREDICTION),
+        "n_lenses": n,
+        "by_sample": {k: int(np.sum(t["sample"] == k)) for k in sorted(set(t["sample"]))},
+        "local_sigma_threshold": thr,
+        "flagged": [str(v) for v in t["lens"][t["flag"]]],
+        "max_abs_z_loo": {str(om): float(np.max(np.abs(res[om][:, 0]))) for om in args.om},
+        "worst": {"lens": str(t["lens"][worst]), "z": float(z0[worst])},
+        "offset_all": dict(
+            zip(("delta", "sd", "tau"), dc.offset_scatter_fit(m - y0, s), strict=True)
+        ),
+        "null_max_abs_z": {
+            "n": args.n_null,
+            "median": float(np.median(null_max)),
+            "p_ge_observed": float(np.mean(np.array(null_max) >= np.max(np.abs(z0)))),
+        },
+        "inj_factor_median": {  # lenses that never cross count as infinitely insensitive
+            "down": float(np.median(np.nan_to_num(inj[:, 0], nan=0.0))),
+            "up": float(np.median(np.nan_to_num(inj[:, 1], nan=np.inf))),
+            "n_not_reached_down": int(np.isnan(inj[:, 0]).sum()),
+            "n_not_reached_up": int(np.isnan(inj[:, 1]).sum()),
+        },
+        "assumptions": "lambda_int (1 - kappa_ext) common to all lenses up to a Gaussian intrinsic "
+        "scatter fitted on the others; a_ani flat over the grid; gamma_pl from the lens's prior "
+        "or flat; flat prior in ln D_s/D_ds; Gaussian summaries (median, half 16-84 % width) "
+        "for the others' fit; "
+        "D_s/D_ds <= 40 (grid end; the hierArc term has a power-law upper tail)",
+    }
+    (OUT / "kinematic_summary.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
+    plot_kinematic(t, summary, om0)
+    write_manifest(rows, "kinematic")
+    print(json.dumps(summary, indent=1, default=float))
+
+
+def plot_kinematic(t: Table, summary: dict, om0: float) -> None:
+    """y = ln(D_s/D_ds)_kin - ln(D_s/D_ds)_LCDM per lens (68 % bars) and the LOO pulls."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    colors = {
+        "TDCOSMO": "#2a78d6",
+        "SLACS-KCWI": "#eb6834",
+        "SLACS-SDSS": "#1baf7a",
+        "SL2S": "#eda100",
+    }
+    marks = {"TDCOSMO": "o", "SLACS-KCWI": "s", "SLACS-SDSS": "^", "SL2S": "D"}
+    fig, (a1, a2) = plt.subplots(2, 1, figsize=(12, 7), sharex=True)
+    order = np.lexsort((t["y"], [list(colors).index(v) for v in t["sample"]]))
+    off = summary["offset_all"]
+    a1.axhspan(off["delta"] - off["tau"], off["delta"] + off["tau"], color="0.9", lw=0)
+    a1.axhline(off["delta"], color="0.5", lw=1, ls="--")
+    a1.axhline(0.0, color="0.75", lw=0.8)
+    thr = summary["local_sigma_threshold"]
+    for ax in (a2,):
+        for v in (-thr, thr):
+            ax.axhline(v, color="0.5", lw=1, ls="--")
+    for name in colors:
+        i = order[np.asarray(t["sample"])[order] == name]
+        xs = np.nonzero(np.isin(order, i))[0]
+        a1.errorbar(
+            xs,
+            t["y"][i],
+            yerr=t["ln_ratio_kin_hw68"][i],
+            fmt=marks[name],
+            ms=5,
+            color=colors[name],
+            lw=1.2,
+            label=f"{name} ({len(i)})",
+        )
+        a2.plot(xs, t[f"z_loo_om{om0}"][i], marks[name], ms=5, color=colors[name])
+    a1.set_ylabel("ln(D_s/D_ds)_kin − ln(D_s/D_ds)_ΛCDM")
+    a1.set_title(f"Kinematic D_s/D_ds per lens (λ = 1; Ωm = {om0}); dashed: pooled offset, band ±τ")
+    a1.legend(loc="lower right", fontsize=8, frameon=False)
+    a2.set_ylabel("LOO pull (σ)")
+    a2.set_title(f"Leave-one-out pull; dashed: ±{thr:.2f}σ (global 5σ over {len(t)} lenses)")
+    a2.set_xticks(np.arange(len(t)))
+    a2.set_xticklabels(np.asarray(t["lens"])[order], rotation=90, fontsize=6)
+    for ax in (a1, a2):
+        ax.spines[["top", "right"]].set_visible(False)
+        ax.grid(axis="y", color="0.92", lw=0.6)
+    fig.tight_layout()
+    fig.savefig(OUT / "kinematic_lenses.png", dpi=110)
+    plt.close(fig)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -1173,6 +1419,11 @@ def main() -> None:
         help="SDSS1206 chain: the pre-LOS power law + kappa_ext (default) or a TDCOSMO final "
         "chain (kappa_ext included; final_composite is the model-choice check)",
     )
+    k = sub.add_parser("kinematic")
+    k.add_argument("--tdcosmo", default=str(d / "TDCOSMO2025_public"))
+    k.add_argument("--om", type=float, nargs="+", default=[0.3, 0.1, 0.5])
+    k.add_argument("--n-null", type=int, default=100)
+    k.add_argument("--seed", type=int, default=20261010)
     b = sub.add_parser("frb")
     b.add_argument("--frb", default=str(d / "FRB"))
     b.add_argument("--seed", type=int, default=20261009)
@@ -1186,7 +1437,12 @@ def main() -> None:
         "--pygedm-sdist", help="pygedm 3.3.0 sdist used for --ism ymw16 (manifest sha256)"
     )
     args = ap.parse_args()
-    {"lenses": run_lenses, "tdcosmo": run_tdcosmo, "frb": run_frb}[args.cmd](args)
+    {
+        "lenses": run_lenses,
+        "tdcosmo": run_tdcosmo,
+        "kinematic": run_kinematic,
+        "frb": run_frb,
+    }[args.cmd](args)
 
 
 if __name__ == "__main__":
