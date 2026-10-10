@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: Neutrino Frontier benchmark 1 (TXS 0506+056 2014–15 box, SkyLLH on IceTracks-DR2): in progress
+- Plan: reproduce IceTracks-DR2 Table 6 (box T0 = MJD 57020, ΔT = 185 d: n̂s = 12.7, γ̂ = 2.3) with SkyLLH 26.1.0,
+  streaming the IC86 IRFs. A mismatch beyond ~1 event / 0.1 in γ would mean our DR2 handling is wrong.
+
 ## 2026-10-10: W3 MOA-II cloud re-vet of the lenient-reference fields: 0 survivors
 - Hypothesis before running: a working Gaia DR3 RP reference only tightens `exotic_in_domain`, so 0 survivors stays.
   A new survivor would have reopened the combined limit.
