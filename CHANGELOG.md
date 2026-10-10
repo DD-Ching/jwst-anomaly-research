@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: D1 composite model on SDSS1206: null; model choice moves its pull 0.61σ → 0.54σ (D-073 addendum 3)
+- Hypothesis: the D-073 null depends on the power-law mass model; a composite (stars + NFW) model could shift one lens
+  out of line. Only SDSS1206 has a public composite D_dt chain in TDCOSMO 2025.
+- `d1_distance.py tdcosmo --j1206 final_composite` (κ_ext included in the chain): J1206 0.54σ, max |pull| 1.13σ vs
+  5.39σ, null. Validation first: TDCOSMO's final power-law chain gives 0.607σ vs this pipeline's 0.608σ.
+- Failed approach: the pre-LOS composite pickle cannot be paired per sample (κ_pert 20,000 vs 400,000 rows).
+- **Next:** new per-lens D_d via a numpy-only reader for the hierArc `*_const_processed.pkl`; W3 MOA-II chain gaps
+  and re-injection (D-068).
+
 ## 2026-10-10: W3 MOA-II eleven fields: 582 flags, 0 candidates; limits withdrawn pending the corrected chain (D-068, #95)
 - Lands the streamed MOA-II work: gb7, gb11, gb12, gb15–gb22 (712,780 Cut-0 light curves, 582 flags). Nine fields
   have 0 chain survivors; gb17-R-6-1-3829 (periodic variable) and gb18-R-9-4-24509 (red-giant slow dimming) passed
