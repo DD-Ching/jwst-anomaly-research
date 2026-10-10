@@ -1141,6 +1141,13 @@ conservative column uses the low N_s.
   injections; the new tests remove 2 (`slow_dip_seasons` 1, `exotic_chi2_cap` 1). Pre-screen pass 2–8.5 %.
   PSPL controls: 0 / 40 per cell called W3.
 
+- **gb16** (64,353 light curves; N_s = 1.50 × 10⁷ from Nunota et al. 2024 Table 1, 79 / 80 subfields, so no
+  conservative range; quiet χ²/dof 95th percentile 6.2): 31 flags, **0 survive**; contact sheet inspected (slow
+  dimmings, short few-point dips, one deep ~20-d dip that the umbra box misfits; caustic spikes only in the models,
+  never in the data). First failing test: repeated deficit 10, neighbour 6, residual deficit 4, exotic domain 3,
+  eclipse dip 3, bracketing 2, feature sampled 1, χ² cap 1, jackknife 1. Injections: vetting keeps 71 / 122 flagged
+  W3 injections. Pre-screen pass 3–11 %. PSPL controls: 0 / 40 per cell called W3.
+
 Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every field):
 
 | t_E (d) | M (M☉, model) | gb22 rec. / 200 | gb22 Γ₉₅ per star per yr (conservative) | gb21 rec. / 200 | gb21 Γ₉₅ per star per yr |
@@ -1171,12 +1178,22 @@ gb19 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb19.ecsv`):
 | 100 | 1.8 | 10 / 8 | 5.8 / 7.2 × 10⁻⁷ |
 | 300 | 17 | 2 / 6 | 2.9 × 10⁻⁶ / 9.7 × 10⁻⁷ |
 
-Cloud runs of gb22, gb21, gb20 and gb19: the batched CDS XMatch for the Gaia DR3 RP reference failed on all 3 attempts
+gb16 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb16.ecsv`):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 3 / 5 | 1.6 × 10⁻⁶ / 9.3 × 10⁻⁷ |
+| 10 | 0.018 | 6 / 10 | 7.8 / 4.7 × 10⁻⁷ |
+| 30 | 0.17 | 16 / 7 | 2.9 / 6.7 × 10⁻⁷ |
+| 100 | 1.8 | 9 / 11 | 5.2 / 4.2 × 10⁻⁷ |
+| 300 | 17 | 2 / 2 | 2.3 / 2.3 × 10⁻⁶ |
+
+Cloud runs of gb22, gb21, gb20, gb19 and gb16: the batched CDS XMatch for the Gaia DR3 RP reference failed on all 3 attempts
 ("Too many jobs"; a later retry gave a truncated, non-VOTable reply through the proxy), so `exotic_in_domain` used the
-lenient default reference (MOA-Red 14.2) on all 162 real flags (none has a DoPHOT magnitude). This only loosens the
+lenient default reference (MOA-Red 14.2) on all 193 real flags (none has a DoPHOT magnitude). This only loosens the
 chain, so 0 survivors stands; the VSX / Gaia variability match runs only on flags still alive and was not reached.
-Injections use the injected-source flux and are unaffected. The tracked `vetting_gbN.json` drops the run's
-`gaia_rp_xmatch` status (it is in the derived record); re-run `vet` where CDS works before interpreting any survivor.
+Injections use the injected-source flux and are unaffected. The tracked `vetting_gbN.json` records the run's
+`gaia_rp_xmatch` status from gb16 on (gb19–gb22 dropped it); re-run `vet` where CDS works before interpreting any survivor.
 
 The t_E = 300 d, ρ = 0.1 cell rests on one recovered injection (efficiency uncertain by ~100 %); `combine` should
 not let a single field's one-recovery cell dominate the combined 300-d limit.

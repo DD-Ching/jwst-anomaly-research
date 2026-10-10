@@ -31,16 +31,28 @@
    26
   ],
   [
+   "exotic_chi2_cap",
+   25
+  ],
+  [
    "repeated_deficit",
    15
   ],
   [
+   "residual_deficit",
+   11
+  ],
+  [
+   "periodic_variable",
+   11
+  ],
+  [
    "variable_baseline",
-   15
+   11
   ],
   [
    "neighbour_shares_feature",
-   9
+   5
   ],
   [
    "eclipse_dip",
@@ -64,6 +76,10 @@
   ],
   [
    "season_trends",
+   2
+  ],
+  [
+   "slow_dip_seasons",
    2
   ],
   [
@@ -91,6 +107,7 @@
    0
   ]
  ],
+ "gaia_rp_xmatch": "query failed: E19('None:1:0: E19: File does not appear to be a VOTABLE')",
  "flags": [
   {
    "event_id": "gb16-R-1-1-32103",
@@ -106,7 +123,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -3762.4; u0 1.16, f_s 4.32e+03 vs 3 × 1.2e+05 (Gaia DR3 RP 15.21)"
+     "N1neg ΔBIC -3762.4; u0 1.16, f_s 4.32e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -114,24 +131,19 @@
      "2323 epochs before ingress, 2647 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.08 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.6"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.15 > 6.21? (4924 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 251.0 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -11.4 at 2455052.2–2455055.0 (feature 2454822.5–2455218.8)"
     ]
    ]
   },
@@ -149,7 +161,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -1602.4; u0 0.04, f_s 4.42e+03 vs 3 × 2.32e+05 (Gaia DR3 RP 14.49)"
+     "N1neg ΔBIC -1602.4; u0 0.04, f_s 4.42e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -157,24 +169,19 @@
      "2004 epochs before ingress, 2343 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.11 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.9"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 0.81 > 6.21? (4330 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 8.9 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -6.4 at 2455051.1–2455052.1 (feature 2454831.3–2455197.5)"
     ]
    ]
   },
@@ -218,9 +225,24 @@
      "2370 epochs before ingress, 3142 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.10 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.3"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.3 at 2454722.8–2454724.0 (feature 2454742.2–2454755.6)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 90.77 d, 2-harmonic BIC gain per half -23.2 / 0.5 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -274,6 +296,11 @@
      "2041 epochs before ingress, 3621 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.42 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -6.2"
@@ -294,7 +321,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -1018.9; u0 1.97, f_s 4.52e+03 vs 3 × 2.5e+03 (Gaia DR3 RP 18.60)"
+     "N1neg ΔBIC -1018.9; u0 1.97, f_s 4.52e+03 vs 3 × 1.45e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -302,9 +329,24 @@
      "246 epochs before ingress, 690 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.04 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.9"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -4.9 at 2453875.3–2453960.0 (feature 2454647.0–2454664.9)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 2.70 d, 2-harmonic BIC gain per half -10.3 / -16.8 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -340,9 +382,24 @@
      "727 epochs before ingress, 4860 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.02 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.6"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.5 at 2454170.2–2454180.2 (feature 2454154.9–2454201.4)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 10.06 d, 2-harmonic BIC gain per half -16.5 / -28.2 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -370,12 +427,17 @@
     [
      "exotic_in_domain",
      true,
-     "E2neg ΔBIC -421.4; u0 0.77, f_s 5.3e+03 vs 3 × 3.63e+04 (Gaia DR3 RP 15.70)"
+     "E2neg ΔBIC -421.4; u0 0.77, f_s 5.3e+03 vs 3 × 1.45e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
      true,
      "895 epochs before ingress, 3810 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 0.71 > 6.21?"
     ],
     [
      "repeated_deficit",
@@ -406,6 +468,11 @@
      "3979 epochs before ingress, 1470 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.33 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -7.0"
@@ -426,7 +493,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -613.2; u0 0.00, f_s 2.29e+03 vs 3 × 3.32e+04 (Gaia DR3 RP 16.60)"
+     "N1neg ΔBIC -613.2; u0 0.00, f_s 2.29e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -434,9 +501,24 @@
      "5507 epochs before ingress, 26 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.41 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.6"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -4.7 at 2456881.9–2456891.1 (feature 2456845.5–2456930.0)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 27.06 d, 2-harmonic BIC gain per half 29.4 / -19.9 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -469,7 +551,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -145.7; u0 0.00, f_s 4.6e+03 vs 3 × 4.25e+04 (Gaia DR3 RP 16.33)"
+     "N1neg ΔBIC -145.7; u0 0.00, f_s 4.6e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -477,9 +559,24 @@
      "4972 epochs before ingress, 586 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.04 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.7"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.9 at 2456483.9–2456513.9 (feature 2456518.3–2456558.7)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 29.17 d, 2-harmonic BIC gain per half 8.7 / -5.2 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -512,12 +609,17 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -1551.5; u0 0.34, f_s 1.65e+04 vs 3 × 2.97e+05 (Gaia DR3 RP 14.22)"
+     "N1neg ΔBIC -1551.5; u0 0.34, f_s 1.65e+04 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
      true,
      "1591 epochs before ingress, 3311 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.21 > 6.21?"
     ],
     [
      "repeated_deficit",
@@ -540,12 +642,17 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -1201.3; u0 0.21, f_s 3.44e+04 vs 3 × 2.99e+05 (Gaia DR3 RP 14.21)"
+     "N1neg ΔBIC -1201.3; u0 0.21, f_s 3.44e+04 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
      true,
      "2369 epochs before ingress, 1931 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.58 > 6.21?"
     ],
     [
      "repeated_deficit",
@@ -576,9 +683,24 @@
      "301 epochs before ingress, 4747 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.51 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.2"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.2 at 2454615.0–2454616.0 (feature 2453921.1–2454141.4)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 15.49 d, 2-harmonic BIC gain per half -2.2 / -19.9 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -606,12 +728,17 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -847.4; u0 1.48, f_s 6.92e+03 vs 3 × 7.62e+03 (Gaia DR3 RP 18.19)"
+     "N1neg ΔBIC -847.4; u0 1.48, f_s 6.92e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
      true,
      "1830 epochs before ingress, 3830 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.11 > 6.21?"
     ],
     [
      "repeated_deficit",
@@ -634,7 +761,7 @@
     [
      "exotic_in_domain",
      false,
-     "E2pos ΔBIC 7.8; u0 0.00, f_s 253 vs 3 × 3.89e+04 (Gaia DR3 RP 16.43)"
+     "E2pos ΔBIC 7.8; u0 0.00, f_s 253 vs 3 × 3.02e+05 (default 14.2)"
     ]
    ]
   },
@@ -652,7 +779,7 @@
     [
      "exotic_in_domain",
      true,
-     "E2neg ΔBIC -496.1; u0 1.73, f_s 2.26e+03 vs 3 × 8.41e+03 (Gaia DR3 RP 18.09)"
+     "E2neg ΔBIC -496.1; u0 1.73, f_s 2.26e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -660,9 +787,24 @@
      "2640 epochs before ingress, 2384 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 1.80 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -5.9"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the E2neg residuals -5.9 at 2456424.2–2456425.1 (feature 2455304.7–2455310.0)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 3.91 d, 2-harmonic BIC gain per half 31.8 / 2.7 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -705,6 +847,11 @@
      "offset + drift per season; ΔBIC -inf"
     ],
     [
+     "slow_dip_seasons",
+     true,
+     "ΔBIC -273.9, E2neg vs a slow dip (σ 1 d, p 2.0), both with 9 season levels"
+    ],
+    [
      "observing_conditions",
      true,
      "baseline linear in ('fwhm', 'airmass', 'sky'); ΔBIC -inf"
@@ -745,7 +892,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -4495.0; u0 0.04, f_s 3.14e+03 vs 3 × 1.7e+05 (Gaia DR3 RP 14.82)"
+     "N1neg ΔBIC -4495.0; u0 0.04, f_s 3.14e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -753,9 +900,24 @@
      "4015 epochs before ingress, 1127 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.67 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.3"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.4 at 2454354.1–2454354.9 (feature 2455971.8–2456268.0)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 2.86 d, 2-harmonic BIC gain per half -11.1 / -22.8 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -783,7 +945,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -726.5; u0 0.20, f_s 3.53e+03 vs 3 × 1.65e+04 (Gaia DR3 RP 17.35)"
+     "N1neg ΔBIC -726.5; u0 0.20, f_s 3.53e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -791,9 +953,24 @@
      "877 epochs before ingress, 4787 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.86 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.6"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.6 at 2454573.1–2454576.1 (feature 2454210.9–2454216.2)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 3.57 d, 2-harmonic BIC gain per half -22.4 / -28.6 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -834,6 +1011,11 @@
      "4173 epochs before ingress, 1432 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.65 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      false,
      "z_min outside the feature -7.2"
@@ -854,12 +1036,17 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -1411.0; u0 1.32, f_s 7.39e+03 vs 3 × 9.89e+03 (Gaia DR3 RP 17.91)"
+     "N1neg ΔBIC -1411.0; u0 1.32, f_s 7.39e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
      true,
      "5446 epochs before ingress, 179 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.97 > 6.21?"
     ],
     [
      "repeated_deficit",
@@ -882,12 +1069,17 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -1453.3; u0 0.74, f_s 7.42e+03 vs 3 × 2.3e+04 (Gaia DR3 RP 17.00)"
+     "N1neg ΔBIC -1453.3; u0 0.74, f_s 7.42e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
      true,
      "1253 epochs before ingress, 3705 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.58 > 6.21?"
     ],
     [
      "repeated_deficit",
@@ -910,7 +1102,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -12534.2; u0 1.40, f_s 7.16e+03 vs 3 × 1.14e+05 (Gaia DR3 RP 15.25)"
+     "N1neg ΔBIC -12534.2; u0 1.40, f_s 7.16e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -933,7 +1125,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -330.5; u0 1.91, f_s 1.46e+04 vs 3 × 6.75e+04 (Gaia DR3 RP 15.83)"
+     "N1neg ΔBIC -330.5; u0 1.91, f_s 1.46e+04 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -941,9 +1133,9 @@
      "1925 epochs before ingress, 1454 after egress (need 20 each)"
     ],
     [
-     "repeated_deficit",
+     "exotic_chi2_cap",
      false,
-     "z_min outside the feature -6.0"
+     "N1neg χ²/dof without its spikes 6.52 > 6.21?"
     ]
    ]
   },
@@ -961,7 +1153,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -130.9; u0 0.19, f_s 2.92e+03 vs 3 × 8.89e+03 (Gaia DR3 RP 18.03)"
+     "N1neg ΔBIC -130.9; u0 0.19, f_s 2.92e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -969,9 +1161,24 @@
      "5413 epochs before ingress, 163 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.64 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.5"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.5 at 2456879.1–2456881.9 (feature 2456859.7–2456866.5)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 27.44 d, 2-harmonic BIC gain per half -7.3 / -27.5 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -1012,6 +1219,11 @@
      "season_trends",
      true,
      "offset + drift per season; ΔBIC -41.5"
+    ],
+    [
+     "slow_dip_seasons",
+     true,
+     "ΔBIC -58.9, N1neg vs a slow dip (σ 2 d, p 2.0), both with 9 season levels"
     ],
     [
      "observing_conditions",
@@ -1059,7 +1271,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -295.2; u0 0.50, f_s 8.97e+03 vs 3 × 1.55e+05 (Gaia DR3 RP 14.93)"
+     "N1neg ΔBIC -295.2; u0 0.50, f_s 8.97e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -1082,12 +1294,17 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -1468.0; u0 1.06, f_s 2.55e+03 vs 3 × 1.78e+05 (Gaia DR3 RP 14.77)"
+     "N1neg ΔBIC -1468.0; u0 1.06, f_s 2.55e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
      true,
      "2445 epochs before ingress, 2627 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.94 > 6.21?"
     ],
     [
      "repeated_deficit",
@@ -1110,7 +1327,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -505.1; u0 0.81, f_s 1.97e+04 vs 3 × 2.25e+05 (Gaia DR3 RP 14.52)"
+     "N1neg ΔBIC -505.1; u0 0.81, f_s 1.97e+04 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -1118,9 +1335,24 @@
      "3178 epochs before ingress, 69 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.67 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -4.0"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -4.0 at 2454922.1–2454931.1 (feature 2456888.7–2456894.1)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 4.08 d, 2-harmonic BIC gain per half -21.5 / -20.0 (fail if both > 25)"
     ],
     [
      "variable_baseline",
@@ -1148,7 +1380,7 @@
     [
      "exotic_in_domain",
      true,
-     "N1neg ΔBIC -885.6; u0 0.98, f_s 1.64e+03 vs 3 × 3.15e+04 (Gaia DR3 RP 16.65)"
+     "N1neg ΔBIC -885.6; u0 0.98, f_s 1.64e+03 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -1156,24 +1388,19 @@
      "1180 epochs before ingress, 4476 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.10 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -3.5"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.00 > 6.21? (5117 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 485.6 vs a trapezoidal dip"
+     "z_min of the N1neg residuals -11.7 at 2454277.3–2454278.3 (feature 2454274.4–2454287.0)"
     ]
    ]
   },
@@ -1191,7 +1418,7 @@
     [
      "exotic_in_domain",
      true,
-     "E2neg ΔBIC -32474.0; u0 0.44, f_s 1.88e+04 vs 3 × 1.59e+05 (Gaia DR3 RP 14.90)"
+     "E2neg ΔBIC -32474.0; u0 0.44, f_s 1.88e+04 vs 3 × 3.02e+05 (default 14.2)"
     ],
     [
      "feature_bracketed",
@@ -1199,24 +1426,19 @@
      "4853 epochs before ingress, 666 after egress (need 20 each)"
     ],
     [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 2.35 > 6.21?"
+    ],
+    [
      "repeated_deficit",
      true,
      "z_min outside the feature -2.8"
     ],
     [
-     "variable_baseline",
-     true,
-     "baseline χ²/dof 1.53 > 6.21? (5213 pts, errors × point-to-point scale)"
-    ],
-    [
-     "neighbour_shares_feature",
-     true,
-     "0 neighbours; |S| > 5: []"
-    ],
-    [
-     "eclipse_dip",
+     "residual_deficit",
      false,
-     "ΔBIC 6506.0 vs a trapezoidal dip"
+     "z_min of the E2neg residuals -8.0 at 2456492.0–2456502.0 (feature 2456479.3–2456513.9)"
     ]
    ]
   }
