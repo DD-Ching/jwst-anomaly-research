@@ -1306,6 +1306,13 @@ Injections use the injected-source flux and are unaffected. The tracked `vetting
 `gaia_rp_xmatch` status from gb16 on (gb19–gb22 dropped it); re-run `vet` where CDS works before interpreting any survivor.
 The gb12 and gb15 cloud runs (2026-10-10) got a working XMatch (32 / 46 and 88 / 118 flags with an RP reference), so they are not in the
 lenient-reference group, and a cloud retry of the re-vets above is worth trying.
+**Re-vetted 2026-10-10 (cloud, CHAIN_VERSION 2026-10-10.1):** the batched XMatch worked for all seven fields (Gaia DR3 RP
+reference for 192 / 276 flags: gb7 25 / 42, gb11 29 / 41, gb16 23 / 31, gb19 36 / 48, gb20 31 / 48, gb21 27 / 36,
+gb22 21 / 30). **0 survivors**; the lenient-reference group is closed. 274 / 276 flags fail the same first test.
+Two flags fail a different first test, because the tighter source-flux bound selects another in-domain exotic solution:
+gb19-R-1-0-51315 (repeated deficit → eclipse dip, a shallow ~250-d dimming) and gb20-R-5-5-38429 (bracketing →
+χ² cap, a shallow ~20-d dip in a noisy baseline). Neither shows the predicted caustic spikes in the data (contact
+sheets inspected). The tracked `vetting_gbN.json` files now carry the working `gaia_rp_xmatch` note.
 
 The t_E = 300 d, ρ = 0.1 cell rests on one recovered injection (efficiency uncertain by ~100 %); `combine` should
 not let a single field's one-recovery cell dominate the combined 300-d limit. It does not: the combined table's

@@ -2,7 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-10: W3 MOA-II cloud re-vet of the lenient-reference fields (WIP)
+## 2026-10-10: W3 MOA-II cloud re-vet of the lenient-reference fields: 0 survivors
+- Hypothesis before running: a working Gaia DR3 RP reference only tightens `exotic_in_domain`, so 0 survivors stays.
+  A new survivor would have reopened the combined limit.
+- `merge-prescreen`, `merge-chunks --n 1`, `vet --procs 4` and `summary` for gb7, gb11, gb16 and gb19–gb22 (41–127 s
+  per field; no injections needed: they never used the reference). CDS XMatch worked for every field (RP for
+  192 / 276 flags). **0 survivors.** 274 flags fail the same first test as before. gb19-R-1-0-51315 and
+  gb20-R-5-5-38429 fail a different ordinary test (another in-domain exotic solution); contact sheets inspected,
+  no caustic spikes in the data. The combined limit (below) stands.
+- **Next:** gb13 (stopped at 25 / 78 fits), then more Nunota et al. 2024 Table 1 fields, `combine` after each.
 
 ## 2026-10-10: W3 MOA-II combined limit over the eleven re-run fields
 - Hypothesis before running: `combine` gives a finite limit in every cell, and no single field's few recoveries
