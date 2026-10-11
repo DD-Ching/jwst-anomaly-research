@@ -33,8 +33,8 @@ def test_bound_limits():
 
 
 def test_nist_2015_cannot_compete_with_dedicated_tests():
-    best = max(r["best_bound"] for r in vb.nist_best_case())
-    assert best < 100  # vs ~5e6 c already published (Cocciaro et al. 2018)
+    best = max(r["bound"] for r in vb.nist_best_case())
+    assert best < 5e6 / 100  # every envelope >= 100x below Cocciaro et al. 2018 (~5e6 c)
 
 
 def test_requirements_close_at_target():
@@ -42,3 +42,8 @@ def test_requirements_close_at_target():
     assert v == pytest.approx(6.31e8, rel=1e-3)
     req = vb.requirements(v)
     assert req["check_bound_at_budget"] == pytest.approx(v, rel=1e-6)
+
+
+def test_chsh_statistics():
+    # 16 (1 - E^2) at S = 2.6: sigma_S sqrt(N) ~ 3.0, so ~650 coincidences for 5 sigma
+    assert vb.chsh_events_per_window() == pytest.approx(650, rel=0.05)

@@ -71,11 +71,18 @@ PUBLISHED = {
     },
 }
 
-# NIST 2015 (Shalm et al., PRL 115, 250402; arXiv:1511.03189). Alice-Bob baseline read off Fig. 3b
-# (~185 m; ASSUMPTION within the paper's 1 m position uncertainty); a measurement is spread over
-# the aggregated 12.6 ns pump slots inside a ~200 ns Pockels window (text below Fig. 3; Table I),
-# so even a perfectly centred pair has rho >= (slot spread) / (light time).
-NIST2015 = {"baseline_m": 185.0, "slot_ns": 12.6, "aggregate_pulses": (1, 3, 5, 7)}
+# NIST 2015 (Shalm et al., PRL 115, 250402; arXiv:1511.03189): Alice-Bob 184.9 m (Fig. 4a), timing
+# uncertainty 3.7 ns (Table I margins), time tags 78.125 ps (File_Folder_Descriptions.pdf), about
+# two days of runs in total, and a Bell violation of only p = 2.5e-3 (1 pulse) to 5.9e-9 (5 pulses)
+# over the whole dataset (Table I). The Alice-Bob detection offset t_AB is a fixed fibre/geometry
+# delay the paper does not give (both photons come from one pump pulse, so aggregating slots does
+# not change it).
+NIST2015 = {
+    "baseline_m": 184.9,
+    "timing_sigma_ns": 3.7,
+    "tag_ns": 0.078125,
+    "window_hours_for_significance": 1.0,  # ASSUMPTION: shortest window with a usable violation
+}
 
 
 def calibration() -> list[dict]:
@@ -96,16 +103,23 @@ def calibration() -> list[dict]:
 
 
 def nist_best_case() -> list[dict]:
-    """Optimistic upper envelope of what NIST 2015 data could bound: lab offset 0 (the real
-    geometry is asymmetric, so the true rho is larger) and a frame aligned at every instant."""
+    """Envelopes of what the NIST 2015 data could bound, each assuming a zero lab offset t_AB
+    (unknown; any real offset only weakens them): (i) the stated 3.7 ns timing uncertainty,
+    (ii) the 78 ps time-tag floor, (iii) the rotation residual of the shortest window in which the
+    violation is significant (hours; frame at beta = 1e-3), with the tag floor as rho."""
     light_ns = NIST2015["baseline_m"] / C_M_S * 1e9
-    out = []
-    for n in NIST2015["aggregate_pulses"]:
-        rho = n * NIST2015["slot_ns"] / light_ns
-        out.append(
-            {"aggregate_pulses": n, "rho_min": rho, "best_bound": speed_bound(rho, 0.0, 0.0)}
-        )
-    return out
+    rho_t = NIST2015["timing_sigma_ns"] / light_ns
+    rho_tag = NIST2015["tag_ns"] / light_ns
+    res = rotation_residual(1e-3, NIST2015["window_hours_for_significance"] * 3600.0)
+    return [
+        {"case": "timing uncertainty 3.7 ns", "rho": rho_t, "bound": speed_bound(rho_t, 0, 0)},
+        {"case": "time-tag floor 78 ps", "rho": rho_tag, "bound": speed_bound(rho_tag, 0, 0)},
+        {
+            "case": "tag floor + 1 h window rotation (beta 1e-3)",
+            "rho": rho_tag,
+            "bound": speed_bound(rho_tag, 1e-3, res),
+        },
+    ]
 
 
 def required_speed(distance_ly: float, one_way_latency_s: float) -> float:
@@ -127,9 +141,11 @@ def requirements(target: float, beta: float = BETA_CMB, baselines_m=(1.2e3, 18e3
 
 
 def chsh_events_per_window(s_quantum: float = 2.6, s_local: float = 2.0, z: float = 5.0) -> float:
-    """Coincidences per window to tell the quantum CHSH value from the local bound at z sigma, with
-    sigma_S ~ 2 / sqrt(N) (ASSUMPTION: order of magnitude for four equally sampled settings)."""
-    return (z * 2.0 / (s_quantum - s_local)) ** 2
+    """Coincidences per window to tell the quantum CHSH value from the local bound at z sigma.
+    Four settings, N/4 each, |E| = S/4: var(S) = 4 * (1 - E^2) / (N/4) = 16 (1 - E^2) / N."""
+    e = s_quantum / 4.0
+    sigma_1 = math.sqrt(16.0 * (1.0 - e * e))  # sigma_S * sqrt(N)
+    return (z * sigma_1 / (s_quantum - s_local)) ** 2
 
 
 def main(argv=None) -> int:

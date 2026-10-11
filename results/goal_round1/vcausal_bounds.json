@@ -25,24 +25,19 @@
  ],
  "nist2015_best_case": [
   {
-   "aggregate_pulses": 1,
-   "rho_min": 0.02041829713945946,
-   "best_bound": 48.97568064417312
+   "case": "timing uncertainty 3.7 ns",
+   "rho": 0.005999091912385073,
+   "bound": 166.69189514091437
   },
   {
-   "aggregate_pulses": 3,
-   "rho_min": 0.06125489141837837,
-   "best_bound": 16.325226881391043
+   "case": "time-tag floor 78 ps",
+   "rho": 0.00012667001504191452,
+   "bound": 7894.528153873705
   },
   {
-   "aggregate_pulses": 5,
-   "rho_min": 0.1020914856972973,
-   "best_bound": 9.795136128834624
-  },
-  {
-   "aggregate_pulses": 7,
-   "rho_min": 0.14292807997621623,
-   "best_bound": 6.996525806310444
+   "case": "tag floor + 1 h window rotation (beta 1e-3)",
+   "rho": 0.00012667001504191452,
+   "bound": 3877.0475974728615
   }
  ],
  "targets": {
@@ -95,6 +90,6 @@
    "check_bound_at_budget": 10519191996.27304
   }
  },
- "chsh_coincidences_per_window_5sigma": 277.7777777777777,
+ "chsh_coincidences_per_window_5sigma": 641.6666666666664,
  "bancal_gap_ratio_vs_chsh": 0.06946037306599145
 }

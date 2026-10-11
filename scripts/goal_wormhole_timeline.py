@@ -24,7 +24,7 @@ import json
 import math
 from dataclasses import asdict, dataclass
 
-G_EARTH_LY_PER_YR2 = 1.0323  # 9.81 m/s^2 in ly / yr^2 (c = 1)
+G_EARTH_LY_PER_YR2 = 9.81 * (365.25 * 86400) ** 2 / 9.4607304725808e15  # 9.81 m/s^2, ly/yr^2
 
 
 @dataclass(frozen=True)
@@ -81,9 +81,10 @@ def loop_margin_years(
 
     Routes with one carried wormhole (shift s) and ordinary light (speed 1): Earth -> light -> B ->
     throat -> Earth returns D - s later. With a second short connection of shift s2 between the
-    same places (e.g. a wormhole moved slowly, s2 ~ 0): going out through the one with the larger
-    shift and back through the other returns |s - s2| earlier, i.e. margin -|s - s2| < 0 whenever
-    the shifts differ. A margin <= 0 means a closed causal curve."""
+    same places (e.g. a wormhole moved slowly, s2 ~ 0): going out through the one with the smaller
+    shift and back through the one with the larger shift returns |s - s2| earlier, i.e. margin
+    -|s - s2| < 0 whenever the shifts differ (Visser gr-qc/9311026 Sec. VI, |T1 + T2| > l12 + l21
+    with T2 = -s2 and co-located mouths). A margin <= 0 means a closed causal curve."""
     margins = {"light_plus_throat": distance_ly - shift_years}
     if other_shift_years is not None:
         margins["two_throats"] = -abs(shift_years - other_shift_years)

@@ -129,34 +129,34 @@
    "mother_elapsed": 0.0
   },
   "arrive": {
-   "t_earth_frame": 21.851701345442187,
-   "tau_traveller": 6.040933036646337,
-   "mother_elapsed_via_throat": 6.040933036646337,
-   "mother_elapsed_via_light": 41.85170134544219
+   "t_earth_frame": 21.851103907544083,
+   "tau_traveller": 6.039495103824995,
+   "mother_elapsed_via_throat": 6.039495103824995,
+   "mother_elapsed_via_light": 41.851103907544086
   },
   "first_call_after_arrival": {
-   "t_earth_frame_destination": 21.851701345442187,
-   "earth_time_at_mother": 6.040933036646337,
+   "t_earth_frame_destination": 21.851103907544083,
+   "earth_time_at_mother": 6.039495103824995,
    "round_trip_latency_years": 0.0
   },
   "home_via_throat": {
-   "tau_traveller": 7.040933036646337,
-   "mother_elapsed": 7.040933036646337,
-   "t_earth_frame_departure_from_destination": 22.851701345442187
+   "tau_traveller": 7.039495103824995,
+   "mother_elapsed": 7.039495103824995,
+   "t_earth_frame_departure_from_destination": 22.851103907544083
   },
   "home_via_ship": {
-   "tau_traveller": 9.890778689104094,
-   "mother_elapsed": 43.05372154746239
+   "tau_traveller": 9.889340756282751,
+   "mother_elapsed": 43.05312410956428
   },
   "loop_margin_years": {
-   "light_plus_throat": 4.189231691204149,
-   "two_throats": -15.81076830879585
+   "light_plus_throat": 4.188391196280913,
+   "two_throats": -15.811608803719087
   },
-  "shift_years": 15.81076830879585,
+  "shift_years": 15.811608803719087,
   "trip": {
    "distance_ly": 20.0,
-   "earth_years": 21.851701345442187,
-   "proper_years": 6.040933036646337
+   "earth_years": 21.851103907544083,
+   "proper_years": 6.039495103824995
   }
  },
  {
@@ -289,34 +289,34 @@
    "mother_elapsed": 0.0
   },
   "arrive": {
-   "t_earth_frame": 101.91900832745574,
-   "tau_traveller": 9.020746123477455,
-   "mother_elapsed_via_throat": 9.020746123477455,
-   "mother_elapsed_via_light": 201.91900832745574
+   "t_earth_frame": 101.91836787297689,
+   "tau_traveller": 9.018347261633814,
+   "mother_elapsed_via_throat": 9.018347261633814,
+   "mother_elapsed_via_light": 201.9183678729769
   },
   "first_call_after_arrival": {
-   "t_earth_frame_destination": 101.91900832745574,
-   "earth_time_at_mother": 9.020746123477455,
+   "t_earth_frame_destination": 101.91836787297689,
+   "earth_time_at_mother": 9.018347261633814,
    "round_trip_latency_years": 0.0
   },
   "home_via_throat": {
-   "tau_traveller": 10.020746123477455,
-   "mother_elapsed": 10.020746123477455,
-   "t_earth_frame_departure_from_destination": 102.91900832745574
+   "tau_traveller": 10.018347261633814,
+   "mother_elapsed": 10.018347261633814,
+   "t_earth_frame_departure_from_destination": 102.91836787297689
   },
   "home_via_ship": {
-   "tau_traveller": 24.269974385766236,
-   "mother_elapsed": 203.92910933755675
+   "tau_traveller": 24.267575523922595,
+   "mother_elapsed": 203.9284688830779
   },
   "loop_margin_years": {
-   "light_plus_throat": 7.101737796021709,
-   "two_throats": -92.89826220397829
+   "light_plus_throat": 7.099979388656919,
+   "two_throats": -92.90002061134308
   },
-  "shift_years": 92.89826220397829,
+  "shift_years": 92.90002061134308,
   "trip": {
    "distance_ly": 100.0,
-   "earth_years": 101.91900832745574,
-   "proper_years": 9.020746123477455
+   "earth_years": 101.91836787297689,
+   "proper_years": 9.018347261633814
   }
  }
 ]

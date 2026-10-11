@@ -4118,3 +4118,29 @@ jackknife's own feature definition, |exotic − best ordinary model| > 3 median 
 dropped nights and ΔBIC. It then tries a night-robust likelihood term (a per-night systematic error instead of
 dropping nights), tuned on dev, checked for false positives against the real gb12 flags and the PSPL
 controls, and evaluated once on validation.
+
+## D-TBD Goal round 1: test data adequacy and calibrate before any Bell-data scan; a carried wormhole is bookkeeping only (2026-10-11)
+
+**Decision.** Owner brief 2026-10-11.
+- Before any analysis of Bell-test data for preferred-frame influences, (i) reproduce the published bipartite
+  bounds from each paper's parameters (positive control) and (ii) compute the best bound the candidate dataset
+  could give. Scan only if (ii) exceeds the published bounds.
+- For NIST 2015, (ii) gives at most 1.7 × 10²–7.9 × 10³ c, against 5 × 10⁶ c published, and the data is bipartite.
+  No scan.
+- Interstellar-channel claims for v-causal models need the multipartite (Bancal configuration R) test. It has
+  never been run, and its theory items come first.
+- The carried-wormhole accounting is kept as bookkeeping only: it assumes a short rigid throat, which is the
+  unsolved premise.
+
+**Alternatives rejected.**
+- Scanning the NIST time tags for sidereal modulation: the reach (§3 of docs/goal_round1/README.md) is ≥ 600×
+  below published bounds.
+- Treating a vanishing bipartite Bell violation as a channel: it is not one (outcome table, §1.1).
+
+**Evidence.** docs/goal_round1/README.md §§1–3; `results/goal_round1/`. Independent review findings are folded in
+(§4).
+
+**Revisit if.**
+- A public multipartite or high-rate, long-baseline, fs-synchronised Bell dataset appears.
+- A theory derives the configuration-R tolerance that makes a feasible test.
+- A short-throat solution without matter that violates ANEC is published.

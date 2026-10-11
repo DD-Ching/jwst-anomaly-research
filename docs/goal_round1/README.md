@@ -29,9 +29,9 @@ covers (Salart et al. 2008 Eqs. 2–3; Yin et al. 2013 Eq. 2; Cocciaro et al. 20
 |---|---|---|---|
 | Bipartite: Bell violation persists at frame simultaneity | — | v-causal models with V < bound in the covered frames | anything about V > bound; controllability |
 | Bipartite: violation vanishes reproducibly at a fixed sidereal phase, not at a solar phase, on two baselines | a v-causal model with V near the bound in one frame (to be vetted against drifts) | QM as the complete description of that run | a usable channel |
-| Multipartite (Bancal et al. configuration R): S ≤ 7 | QM | v-causal models with V below that configuration's reach, under the theorem's assumptions | V above reach |
-| Multipartite: S > 7 in R | the signalling branch of the theorem (a no-signalling violation; first check that it is not an experimental artefact) | QM + no-signalling for that model class | that the dependence carries messages at useful rates |
-| Multipartite: a three-party marginal depends on a remote setting (direct check) | controllable signalling at speed ≲ V | — | a rate or practical interstellar geometry |
+| Multipartite (Bancal configuration R, B and C timed at random, App. E v1): S > 7, as QM predicts (7.2014) | QM | **no-signalling** v-causal models at any finite V in that frame (Bancal's claim covers all finite v), given λ does not know the measurement timings (App. E) | signalling v-causal models: they reproduce S > 7 and must be caught through their marginals |
+| Multipartite: S ≤ 7 in R | a contradiction with QM, which must first be vetted as an artefact; or a model whose λ knows the timings | QM as the complete description | a channel |
+| Multipartite: a three-party marginal depends on a remote setting (direct check) | controllable signalling at speed ≲ V | QM's no-signalling | a rate or practical interstellar geometry |
 
 ### 1.2 Bancal et al. 2012 (Nature Phys. 8, 867; arXiv:1110.3795): modified and completed
 
@@ -91,7 +91,7 @@ Each hypothesis is labelled G (geometric or causal), F (uses the field equations
 | Graham & Olum 2007, PRD 76, 064001 | Condition 1 (a conjecture, §I): no self-consistent semiclassical solution violates ANEC on a complete achronal null geodesic. With it: no complete achronal null geodesics (Lemma 1), topological censorship for **simply connected** spacetimes (Th. 1), no compactly generated time machines (Th. 2–3) | F (self-consistent Einstein equations) + M; sub-Planckian curvature | **§IV.D: achronal ANEC does not rule out Olum-type superluminal travel** (it would need ANEC on half-geodesics, which the Casimir effect violates). A wormhole joining a region to itself with a throat longer than the exterior distance is not excluded (§IV.A) |
 | Kontou & Olum 2015, PRD 92, 124009 | achronal ANEC proven for a free, massless, minimally coupled scalar in a Hadamard state, to first order in curvature, in a background obeying null convergence (Th. 1) | as stated | back-reaction, non-minimal coupling ("remains an open question", §VIII), higher spin, interacting fields |
 | Hartman, Kundu & Tajdini 2017; Faulkner et al. 2016 | ANEC in flat-space QFT (from causality / relative entropy) | interacting d > 2 CFT-like theories (HKT); a formal continuum limit (Faulkner et al. §5.1) | curved spacetime and gravity (HKT §1); general achronal geodesics (Faulkner et al. §5.2) |
-| Maldacena, Milekhin & Popov 2018, arXiv:1807.04726 | traversable 4D wormholes exist but are "long": going through takes longer than the ambient path. Short ones "are not allowed by the Einstein equations combined with the achronal average null energy condition" (§1; Fig. 7, §5.5) | Einstein equations + achronal ANEC | — |
+| Maldacena, Milekhin & Popov 2018, arXiv:1807.04726 | traversable 4D wormholes, constructed in a specific setup, are "long": going through takes longer than the ambient path. Short ones "are not allowed by the Einstein equations combined with the achronal average null energy condition" (§1; Fig. 7, §5.5) | Einstein equations + achronal ANEC | — |
 | Gao, Jafferis & Wall 2016, arXiv:1608.05687 | null geodesics through the wormhole are chronal, so the wormhole gives no faster-than-light travel over long distances (§5) | — | — |
 
 **Corrections to the previous report**
@@ -137,8 +137,9 @@ Each hypothesis is labelled G (geometric or causal), F (uses the field equations
    - Earth frame: t = D/β.
    - Through the throat, the mother sees the arrival at her own time τ.
    - By ordinary light she sees it at D/β + D.
-3. **First two-way call.** Earth event t ↔ destination event t + s, with near-zero round-trip latency. Both clocks
-   read τ on their own side.
+3. **First two-way call.** Earth event t ↔ destination event t + s, with near-zero round-trip latency. The mother's
+   clock and the ship's clock read the same value (τ at arrival). Destination clocks synchronised with Earth in S
+   read τ + s.
 4. **Return through the throat** after a stay Δ: the traveller exits on Earth at t = τ + Δ, which is the mother's
    elapsed time.
 5. **Loops.**
@@ -226,20 +227,38 @@ information?), a positive control (three published bounds) and a direct link to 
    | Yin 2013 (ρ = 6.84 × 10⁻⁶, T = 1800 s) | 1.38 × 10⁴ c | 1.38 × 10⁴ c |
    | Cocciaro 2018 (ρ = 1.83 × 10⁻⁷, δt = 0.494 s) | 4.97 × 10⁶ c | ≈ 5 × 10⁶ c |
 
-   `tests/test_goal_vcausal_bounds.py` asserts agreement within 2 %.
+   `tests/test_goal_vcausal_bounds.py` asserts agreement within 2 %. Notes from the independent review:
+   - The orientation factors cos 5.8° (Salart) and A = cos 18° (Cocciaro Eq. 8) are dropped. With them the values
+     are 5.42 × 10⁴ and 5.00 × 10⁶.
+   - Salart's 5.4 × 10⁴ c is at χ = 90°. His frame-independent claim is "> 10⁴ c", with the minima near
+     χ ≈ 0°/180°.
+   - By Cocciaro's own argument (Eq. 6), the Salart and Yin windows should be doubled. That gives 3.2 × 10⁴ c and
+     7.2 × 10³ c (Cocciaro Fig. 7 caption). The published values were reproduced as published.
 
 2. **Public NIST 2015 data has no discriminating power** for V. Shalm et al. 2015 (PRL 115, 250402) give:
-   - a baseline of about 185 m (Fig. 3b);
-   - 12.6 ns pump slots, of which 1–7 are aggregated (Table I);
-   - spacelike margins of 25.7–63.5 ns (Table I).
+   - an Alice–Bob distance of 184.9 m (Fig. 4a);
+   - a timing uncertainty of 3.7 ns (Table I margins, 63.5–25.7 ± 3.7 ns);
+   - a violation of only p = 2.5 × 10⁻³ (1 pulse) to 5.9 × 10⁻⁹ (5 pulses) over the whole dataset, which is about
+     2 days of runs.
 
-   The repository is public and holds two-party time tags at 78.125 ps with a GPS PPS channel (100 ns jumps
-   possible), and run start times to the minute (`File_Folder_Descriptions.pdf`; NIST licence: free use with
+   The repository is public. It holds two-party time tags at 78.125 ps with a GPS PPS channel (100 ns jumps
+   possible) and run start times to the minute (`File_Folder_Descriptions.pdf`; NIST licence: free use with
    attribution).
-   - Even with a perfectly centred pair (lab offset 0, which the asymmetric geometry does not give) and a perfectly
-     aligned frame, ρ ≥ slot spread / light time gives V ≤ 49c (1 slot), 16c (3), 9.8c (5) and 7c (7 slots).
-   - That is about 10⁵ below the published 5 × 10⁶ c.
+
+   The Alice–Bob detection offset t_AB is a fixed fibre-and-geometry delay that the paper does not give. Both photons
+   come from one pump pulse, so aggregating slots does not change it. Assuming a zero offset, which can only flatter
+   the data, the envelopes are:
+
+   | Case | Bound |
+   |---|---|
+   | timing uncertainty 3.7 ns | V ≤ 1.7 × 10² c |
+   | time-tag floor 78 ps | V ≤ 7.9 × 10³ c |
+   | tag floor + rotation over a 1 h window (the shortest with a usable violation, ASSUMPTION; β = 10⁻³) | V ≤ 3.9 × 10³ c |
+
+   - Every envelope is ≥ 600× below the published 5 × 10⁶ c.
    - The data is bipartite, so it cannot test the Bancal prediction at all.
+   - A first draft of this argument used the slot spread as ρ. The independent review showed that is the wrong
+     quantity. The conclusion is unchanged.
    - No scan was run, by design. Nothing was downloaded except the two description PDFs (0.45 MB).
 
 3. **Requirements for the goal** (frame = CMB, β = 1.23 × 10⁻³ [ASSUMPTION]; the budget is split equally between the
@@ -253,8 +272,10 @@ information?), a positive control (three published bounds) and a direct link to 
    | 100 ly, 0.3 s | 1.05 × 10¹⁰ | ≤ 4.8 × 10⁻¹¹ | ≤ 1.1 ms | 0.2 / 2.9 / 16 fs |
 
    - The gap to the best published bound is ×130 to ×2,100 in V.
-   - Statistics [estimate]: with σ_S ~ 2/√N, a 5σ separation of the CHSH value 2.6 from 2 needs about 280
-     coincidences per window. Windows at one sidereal phase recur every sidereal day, so they can be stacked.
+   - "Window" T is the half-width convention (Yin Eq. 5). If T is the acquisition time per measurement, Cocciaro's
+     Eq. 6 halves it: 8.8, 2.6, 1.8 and 0.53 ms.
+   - Statistics [estimate]: var(S) ≈ 16(1 − E²)/N with E = S/4, so a 5σ separation of S = 2.6 from 2 needs about
+     650 coincidences per window. Windows at one sidereal phase recur every sidereal day, so they can be stacked.
    - The multipartite test is harder. The Bancal gap (7.2014 − 7)/7 = 2.9 % is 0.069 of the CHSH relative gap, so it
      needs ~200× more events at equal noise [estimate]. It also needs near-ideal 4-qubit fidelity (Barnea Sec. IV;
      Li et al. 2026).
@@ -264,11 +285,51 @@ information?), a positive control (three published bounds) and a direct link to 
   configuration R was not done.
 - The CMB frame is one candidate frame; others need the multi-orientation scan (Bancal App. E: eight planar
   configurations).
-- The NIST bound is an optimistic envelope from published timing. The real offset is larger, so the true bound is
-  lower.
+- The NIST bounds are optimistic envelopes, with a zero offset assumed. Any real offset only lowers them.
 - The literature search for re-analyses of loophole-free data was rate-limited and found none. That is not proof
   that none exists.
 
 ## 4. Round bookkeeping
 
-Filled in at the end of the round (section 5 of the PR body).
+- **Time.** 2026-10-11 03:43 → 04:05 UTC, from `main` d2d9484.
+- **Compute.**
+  - New calculations: well under 1 CPU-minute. Both scripts run in under a second.
+  - The full offline test suite takes about 1 minute.
+  - Four literature and review subagents ran for about 18 minutes of wall time in total, all of it reading
+    papers.
+  - The 2-hour budget was not needed.
+- **Data.**
+  - NIST belltestdata description PDFs (0.45 MB; S3 bucket `nist-belltestdata`).
+  - arXiv and journal PDFs, read by the subagents into the session scratchpad. Not committed.
+  - No dataset was scanned.
+- **Done.**
+  - §1 corrections, with paper citations.
+  - §2 event accounting, with tests.
+  - §3 calibration, data-adequacy check and requirement table, with tests.
+  - An independent numerical and logical review. It found that two rows of the §1.1 table were inverted and that
+    the NIST argument used the wrong quantity; both are fixed.
+- **Not done.**
+  - A dedicated timing-tolerance derivation for Bancal configuration R.
+  - Noise and visibility modelling of the 4-party and cluster-state tests.
+  - A scan of other loophole-free datasets (Delft, Vienna, Munich). Their two-party geometry excludes the
+    multipartite test in the same way, and their bipartite reach was not computed.
+  - Candidate C (modified-gravity escape from Gao–Wald).
+- **Unchanged.** The schedules of other work, the selection thresholds, permissions, and the MOA-II, S1, E1 and
+  neutrino work.
+
+## 5. What this round supports next
+
+1. **The decisive v-causal experiment is multipartite and has never been done** (Li et al. 2026, p.2). The cheapest
+   new information is theoretical:
+   - derive the timing tolerance of configuration R;
+   - find the noise threshold of the 4-qubit (or cluster-state) witness at a stated visibility;
+   - check whether R can be laid out with B, C and the receiver co-located, which an interstellar channel needs.
+
+   Only then does an experimental design make sense. Two-party public Bell data cannot help.
+2. **Carried wormhole.** The accounting is closed for one link. The open premise is a short throat, which
+   Maldacena–Milekhin–Popov say "is not allowed by the Einstein equations combined with the achronal average null
+   energy condition". The question worth effort is candidate C: is there a gravity theory with R_kk < 0 on a
+   throat-crossing geodesic, no exotic matter, and consistency with GW170817 and the solar-system bounds? That needs
+   a literature unit before any data.
+3. **Existing searches** (MOA-II, S1, E1, neutrinos) remain bound-setting. Their decision value depends on the first
+   abundance or rate model that predicts a number in their reach. No such model exists yet.
