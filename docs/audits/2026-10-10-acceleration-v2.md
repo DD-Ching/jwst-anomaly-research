@@ -43,7 +43,8 @@ Two losses are design choices and can be tested:
    nights carry the spikes when sampling is sparse); 300 d 22 → 9 (`feature_bracketed` 10: a 300-d umbra plus the
    20-epoch baseline on both sides rarely fits inside a season gap pattern). 10–100 d: 72–76 % kept. This answers
    the brief's question "can a real peak-dip-peak lose its peaks to sparse sampling and be rejected as an ordinary
-   dip?": yes, measurably at t_E = 3 d through `jackknife_nights`. At other t_E the losses go to
+   dip?": partly. D-082 (2026-10-11, a frozen t_E = 3 d sample) shows that the `eclipse_dip` losses are
+   unsampled spikes; the `jackknife_nights` share is still undecided. At other t_E the losses go to
    `repeated_deficit` (9) and `exotic_feature_sampled` (5).
    These tests exist because real false positives passed without them (w3-survey failed-approach rules). Any change
    needs the background flags (real, 46 per field) as the false-positive check. It also needs injections it was

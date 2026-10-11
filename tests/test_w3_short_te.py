@@ -13,10 +13,28 @@ st = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(st)
 
 
-def test_split_is_frozen_and_balanced():
-    a = [st.split_of(i, 3003) for i in range(2000)]
-    assert a == [st.split_of(i, 3003) for i in range(2000)]  # deterministic
-    assert set(a) == {"dev", "validation"}
+def test_split_depends_on_the_injection_not_on_row_order():
+    rows = [
+        {
+            "event_id": f"gb12-R-1-1-{i}",
+            "tE": 3.0,
+            "rho": 0.01,
+            "u0": i / 997,
+            "t0": 5000.0 + i,
+            "Is": 19.0,
+        }  # fmt: skip
+        for i in range(2000)
+    ]
+    a = [st.split_of(r, 3003) for r in rows]
+    b = [st.split_of(r, 3003) for r in reversed(rows)][::-1]
+    assert a == b  # order-free and deterministic
     assert abs(a.count("dev") - 1000) < 100
-    # the tracked sample's split (998 dev / 1002 validation) is the one this function gives
-    assert a.count("dev") == 998
+    assert a != [st.split_of(r, 3004) for r in rows]  # the seed enters
+
+
+def test_tracked_sample_uses_the_job_key():
+    from astropy.table import Table
+
+    p = st.OUT / "injections_gb12_te3_seed3003.ecsv.gz"
+    tab = Table.read(p, format="ascii.ecsv")
+    assert list(tab["split"]) == [st.split_of(r, 3003) for r in tab]

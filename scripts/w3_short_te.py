@@ -12,9 +12,9 @@ Later stages tune classifiers on ``dev`` only and report recovery on ``validatio
 from __future__ import annotations
 
 import argparse
+import hashlib
 import shutil
 import sys
-import zlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,9 +27,16 @@ from astropy.table import Table  # noqa: E402
 OUT = ROOT / "results" / "w3_moa" / "short_te"
 
 
-def split_of(i: int, seed: int) -> str:
-    """Frozen assignment (ASSUMPTION: 50/50): independent of every outcome column."""
-    return "validation" if zlib.crc32(f"{seed}:{i}".encode()) % 2 else "dev"
+SPIKE_SIGMA = 3.0  # ASSUMPTION: spike / umbra epochs: injected flux beyond 3 median errors
+JOB_KEYS = ("event_id", "tE", "rho", "u0", "t0", "Is")  # the inputs that define one injection
+
+
+def split_of(row, seed: int) -> str:
+    """Frozen assignment (ASSUMPTION: 50/50) from a SHA-256 of the injection's own inputs and the
+    seed. It does not depend on the table's row order (pool completion order) or on any outcome."""
+    key = f"{seed}|" + "|".join(repr(float(row[k])) if k != "event_id" else str(row[k])
+                                for k in JOB_KEYS)  # fmt: skip
+    return "validation" if hashlib.sha256(key.encode()).digest()[0] & 1 else "dev"
 
 
 def sampling_diagnostics(tab: Table, field: str) -> Table:
@@ -41,14 +48,14 @@ def sampling_diagnostics(tab: Table, field: str) -> Table:
     wm.set_field(field)
     pre = wm.read_prescreen()
     flagged = tab[np.asarray(tab["flagged"], bool)]
-    arrays = wm.load_arrays(list(dict.fromkeys(flagged["event_id"])), aux=True, pre=pre)
+    arrays = wm.load_arrays(list(dict.fromkeys(flagged["event_id"])), aux=False, pre=pre)
     rows = []
     for r in flagged:
-        t, f, sf, _ = arrays[r["event_id"]]
+        t, f, sf = arrays[r["event_id"]][:3]
         fs = float(wm.moa.mag_to_counts(float(r["Is"]), wm.moa.parse_event_id(r["event_id"])[1]))
         prm = {k: float(r[k]) for k in ("tE", "rho", "u0", "t0")}
         sig = wm.injected_signal(t, "W3", fs, prm)
-        thr = 3.0 * float(np.median(sf))
+        thr = SPIKE_SIGMA * float(np.median(sf))
         nt = wm.nights(t)
         up, down = sig > thr, sig < -thr
         tc = prm["t0"]
@@ -86,7 +93,18 @@ def main(argv=None) -> int:
     ap.add_argument("--seed", type=int, default=3003)
     ap.add_argument("--procs", type=int, default=4)
     ap.add_argument("--diagnose", action="store_true", help="sampling diagnostics of the sample")
+    ap.add_argument("--resplit", action="store_true", help="rewrite the split column (job key)")
     a = ap.parse_args(argv)
+    if a.resplit:
+        path = OUT / f"injections_{a.field}_te3_seed{a.seed}.ecsv.gz"
+        tab = Table.read(path, format="ascii.ecsv")
+        tab["split"] = [split_of(r, a.seed) for r in tab]
+        wm.w3.write_ecsv_gz(tab, path)
+        print(
+            f"re-split {path}: {sum(tab['split'] == 'dev')} dev, "
+            f"{sum(tab['split'] != 'dev')} validation"
+        )
+        return 0
     if a.diagnose:
         tab = Table.read(
             OUT / f"injections_{a.field}_te3_seed{a.seed}.ecsv.gz", format="ascii.ecsv"
@@ -99,16 +117,23 @@ def main(argv=None) -> int:
     wm.set_field(a.field)
     prod = wm.out_dir() / f"injections_{a.field}.ecsv"
     keep = prod.with_suffix(".production.ecsv")
-    if prod.exists():
+    had_prod = prod.exists()
+    if keep.exists():
+        raise SystemExit(f"{keep} exists (an interrupted run?): restore it to {prod} first")
+    if had_prod:
         shutil.copy2(prod, keep)  # run_inject writes to the production path
+    te_grid = wm.INJ_TE
     wm.INJ_TE = (3.0,)
     try:
         path = wm.run_inject(a.procs, a.per_cell, 0, a.seed, False, "lf")
         tab = Table.read(path)
     finally:
-        if keep.exists():
+        wm.INJ_TE = te_grid
+        if had_prod:
             shutil.move(keep, prod)
-    tab["split"] = [split_of(i, a.seed) for i in range(len(tab))]
+        else:
+            prod.unlink(missing_ok=True)  # never leave the study table as production injections
+    tab["split"] = [split_of(r, a.seed) for r in tab]
     tab.meta["study"] = "W3 short-event recovery, stage 1 (t_E = 3 d; frozen dev/validation split)"
     OUT.mkdir(parents=True, exist_ok=True)
     out = OUT / f"injections_{a.field}_te3_seed{a.seed}.ecsv.gz"
