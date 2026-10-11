@@ -8,6 +8,8 @@ Later stages tune classifiers on ``dev`` only and report recovery on ``validatio
     python scripts/w3_short_te.py --field gb12 --per-cell 1000 --seed 3003 --procs 4
     python scripts/w3_short_te.py --field gb12 --seed 3003 --diagnose   # dev split only
     python scripts/w3_short_te.py --field gb12 --seed 3003 --revet --procs 4   # stage 2, dev only
+    python scripts/w3_short_te.py --field gb12 --seed 3003 --revet --night-robust --procs 4
+    python scripts/w3_short_te.py --field gb7 --real gb7-R-8-6-94052 --night-robust   # FP check
 """
 
 from __future__ import annotations
@@ -30,6 +32,99 @@ OUT = ROOT / "results" / "w3_moa" / "short_te"
 
 SPIKE_SIGMA = 3.0  # ASSUMPTION: spike / umbra epochs: injected flux beyond 3 median errors
 JOB_KEYS = ("event_id", "tE", "rho", "u0", "t0", "Is")  # the inputs that define one injection
+
+
+NIGHT_MARGIN_D = (
+    1.0  # ASSUMPTION: nights within 1 d of the feature are left out of the σ_night estimate
+)
+
+
+def night_chi2(r, w, nt, s2: float) -> float:
+    """χ² of residuals ``r`` (weights ``w``) when every exposure of a night shares one Gaussian
+    offset of variance ``s2`` (per-night systematic error, marginalised): per night,
+    Σwr² − s2 (Σwr)² / (1 + s2 Σw) (Sherman–Morrison). The log-determinant is the same for every
+    model on the same light curve, so it cancels in a ΔBIC."""
+    import numpy as np
+
+    _, inv = np.unique(nt, return_inverse=True)
+    a = np.bincount(inv, w)
+    b = np.bincount(inv, w * r)
+    c = np.bincount(inv, w * r * r)
+    return float((c - s2 * b * b / (1.0 + s2 * a)).sum())
+
+
+def night_variance(r, w, nt) -> float:
+    """Maximum-likelihood σ_night² from per-night weighted mean residuals ``r`` (the light curve
+    outside the feature): m_n ~ N(0, 1/Σw + s2). ``derived``; 0 when the nights scatter as white
+    noise."""
+    import numpy as np
+    from scipy.optimize import minimize_scalar
+
+    _, inv = np.unique(nt, return_inverse=True)
+    a = np.bincount(inv, w)
+    m = np.bincount(inv, w * r) / a
+    v0 = 1.0 / a
+
+    def nll(ls):
+        v = v0 + 10.0**ls
+        return float(np.sum(np.log(v) + m * m / v))
+
+    hi = float(np.log10(max(np.var(m), 1e-12))) + 1.0
+    ls = minimize_scalar(nll, bounds=(hi - 12.0, hi), method="bounded").x
+    s2 = 10.0**ls
+    return 0.0 if nll(ls) >= nll(hi - 12.0) - 1e-6 else float(s2)
+
+
+def night_robust(lc, res: dict, ex: str, best_o: str, ecl: dict) -> dict:
+    """Stage 2 step 2 (D-082): the exotic preference under a per-night systematic error instead of
+    dropping nights. σ_night² is fitted to the best ordinary model's residuals outside the feature;
+    ΔBIC = χ²_night(exotic) − χ²_night(alt) + the BIC penalty difference, against the best single
+    lens and against the eclipse dip, at the white-noise best fits (no refit: an approximation);
+    the larger (least favourable to the exotic model) is returned."""
+    import numpy as np
+
+    fe = wm.w3.model_flux(ex, lc, res[ex])
+    fo = wm.w3.model_flux(best_o, lc, res[best_o])
+    nt = wm.nights(lc.t)
+    inside = np.abs(fe - fo) > 3.0 * np.median(lc.sf)
+    if not inside.any():
+        return {
+            "nr_s_night": np.nan,
+            "nr_dbic": np.nan,
+            "nr_dbic_lens": np.nan,
+            "nr_dbic_ecl": np.nan,
+        }
+    lo, hi = float(lc.t[inside].min()), float(lc.t[inside].max())
+    out_ = (lc.t < lo - NIGHT_MARGIN_D) | (lc.t > hi + NIGHT_MARGIN_D)
+    s2 = night_variance((lc.f - fo)[out_], lc.w[out_], nt[out_])
+    fecl = wm.eclipse_flux(lc, ecl)
+    pen_e = res[ex]["bic"] - res[ex]["chi2"]
+    ce = night_chi2(lc.f - fe, lc.w, nt, s2)
+    d_lens = (
+        ce
+        - night_chi2(lc.f - fo, lc.w, nt, s2)
+        + pen_e
+        - (res[best_o]["bic"] - res[best_o]["chi2"])
+    )
+    d_ecl = ce - night_chi2(lc.f - fecl, lc.w, nt, s2) + pen_e - (ecl["bic"] - ecl["chi2"])
+    return {"nr_s_night": float(np.sqrt(s2)), "nr_dbic": float(max(d_lens, d_ecl)),
+            "nr_dbic_lens": float(d_lens), "nr_dbic_ecl": float(d_ecl)}  # fmt: skip
+
+
+def patch_night_robust() -> None:
+    """Record ``night_robust`` next to the production jackknife (its result and the vetting are
+    unchanged): the jackknife's returned dict carries the extra keys into ``vet_one``'s record."""
+    orig = wm.jackknife_nights
+    if getattr(orig, "_night_robust", False):
+        return
+
+    def both(lc, res, ex, best_o, ecl):
+        out = orig(lc, res, ex, best_o, ecl)
+        out.update(night_robust(lc, res, ex, best_o, ecl))
+        return out
+
+    both._night_robust = True
+    wm.jackknife_nights = both
 
 
 def split_of(row, seed: int) -> str:
@@ -127,7 +222,35 @@ def _revet_worker(job):
         "spike_nights": len(spike),
         "dropped_spike_nights": sum(x in spike for x in dropped),
         "spikes_left": len(spike - set(dropped)),
+        **{k: float(jn.get(k, np.nan)) for k in NR_KEYS},
     }
+
+
+NR_KEYS = ("nr_s_night", "nr_dbic", "nr_dbic_lens", "nr_dbic_ecl")
+
+
+def vet_real(field: str, eid: str) -> dict:
+    """The production vetting of one real flag (``run_vet``'s job, without neighbours, binary-lens
+    fit or catalogue queries: the record stops where the chain stops)."""
+    import numpy as np
+
+    wm.use_moa_fit_params()
+    wm.set_field(field)
+    pre = wm.read_prescreen()
+    wm.set_field_context(pre)
+    from astropy.table import vstack
+
+    chunks = sorted((ROOT / "results" / "w3_moa").glob(f"fits_{field}_chunk*.ecsv.gz"))
+    fits = vstack([Table.read(c, format="ascii.ecsv") for c in chunks])
+    r = fits[np.asarray(fits["event_id"], str) == eid][0]
+    ev = wm.moa.MoaField(field).events()
+    pos = ev[np.asarray(ev["event_id"], str) == eid][0]
+    t, f, sf, ax = wm.load_arrays([eid], aux=True, pre=pre)[eid]
+    rp, _ = wm.gaia_rp_mags([float(pos["ra"])], [float(pos["dec"])])
+    d = {"event_id": eid, "ra": float(pos["ra"]), "dec": float(pos["dec"]),
+         "dophot_mag": float(pos["dophot_magnitude"]), "ref_mag": float(rp[0])}  # fmt: skip
+    scan = {k: float(r[k]) for k in wm.SCAN_KEYS}
+    return wm.vet_one((d, t, f, sf, ax, scan, [], False, wm.res_from_row(r)))
 
 
 def _filled(col):
@@ -168,8 +291,20 @@ def main(argv=None) -> int:
     ap.add_argument("--procs", type=int, default=4)
     ap.add_argument("--diagnose", action="store_true", help="sampling diagnostics of the sample")
     ap.add_argument("--revet", action="store_true", help="stage 2: re-vet flagged dev injections")
+    ap.add_argument("--night-robust", action="store_true", help="stage 2 step 2: record ΔBIC "
+                    "under a per-night systematic error next to the jackknife")  # fmt: skip
+    ap.add_argument("--real", default="", help="vet one real flag of --field (FP check)")
     ap.add_argument("--resplit", action="store_true", help="rewrite the split column (job key)")
     a = ap.parse_args(argv)
+    if a.night_robust:
+        patch_night_robust()
+    if a.real:
+        import json
+
+        o = vet_real(a.field, a.real)
+        print(json.dumps({k: o[k] for k in ("event_id", "tests", "survives", "jackknife_nights")
+                          if k in o}, default=str, indent=1))  # fmt: skip
+        return 0
     if a.resplit:
         path = OUT / f"injections_{a.field}_te3_seed{a.seed}.ecsv.gz"
         tab = Table.read(path, format="ascii.ecsv")
@@ -185,7 +320,8 @@ def main(argv=None) -> int:
             OUT / f"injections_{a.field}_te3_seed{a.seed}.ecsv.gz", format="ascii.ecsv"
         )
         d = revet_dev(tab, a.field, a.procs)
-        out = OUT / f"revet_dev_{a.field}_te3_seed{a.seed}.ecsv"
+        nr = "_nightrobust" if a.night_robust else ""
+        out = OUT / f"revet_dev_{a.field}_te3_seed{a.seed}{nr}.ecsv"
         d.write(out, overwrite=True)
         same = int(sum(_filled(d["failed_test"]) == _filled(d["stage1_failed"])))
         print(f"wrote {out}: {len(d)} dev flags; failing test reproduced for {same}")

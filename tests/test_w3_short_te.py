@@ -38,3 +38,39 @@ def test_tracked_sample_uses_the_job_key():
     p = st.OUT / "injections_gb12_te3_seed3003.ecsv.gz"
     tab = Table.read(p, format="ascii.ecsv")
     assert list(tab["split"]) == [st.split_of(r, 3003) for r in tab]
+
+
+def _nightly(n_nights=300, per_night=6, s_night=0.0, seed=1):
+    import numpy as np
+
+    rng = np.random.default_rng(seed)
+    nt = np.repeat(np.arange(n_nights), per_night)
+    w = np.full(nt.size, 1.0 / 0.5**2)  # σ = 0.5 per exposure
+    r = rng.normal(0.0, 0.5, nt.size) + rng.normal(0.0, s_night, n_nights)[nt]
+    return r, w, nt
+
+
+def test_night_chi2_reduces_to_white_noise_without_a_night_term():
+    import numpy as np
+
+    r, w, nt = _nightly()
+    assert np.isclose(st.night_chi2(r, w, nt, 0.0), float((w * r * r).sum()))
+
+
+def test_night_chi2_absorbs_a_single_offset_night():
+    import numpy as np
+
+    r, w, nt = _nightly()
+    bad = r.copy()
+    bad[nt == 7] += 5.0  # one night 10σ high in every exposure
+    white = float((w * bad * bad).sum()) - float((w * r * r).sum())
+    robust = st.night_chi2(bad, w, nt, 1.0) - st.night_chi2(r, w, nt, 1.0)
+    assert white > 500.0
+    assert robust < 0.1 * white  # the night term caps what one coherent night can contribute
+    assert np.isfinite(robust)
+
+
+def test_night_variance_recovers_known_cases():
+    assert st.night_variance(*_nightly(s_night=0.0)) < 0.01  # white noise: ~0
+    s2 = st.night_variance(*_nightly(s_night=0.4))
+    assert 0.25**2 < s2 < 0.55**2  # injected σ_night = 0.4
