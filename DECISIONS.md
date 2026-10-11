@@ -4315,3 +4315,41 @@ S > 7 or setting dependence in R trials.
 - A model couples matter directly to the æther.
 - A controlled strong-coupling or UV-complete treatment fixes the front.
 - A source and detector class is proposed whose moments escape the computed configuration.
+
+## D-TBD Goal round 9: no next executable unit on current inputs; khronometric linear matter response equals EA's at c13 = 0 and has an instantaneous part at c13 ≠ 0 (2026-10-11)
+
+**Decision (proposal).** Do not open a new physics unit beyond the P3 linear check.
+- P1 (multipartite v-causal) lacks data.
+- P2 (exotic lenses) is the scheduled MOA-II search; a survivor would be a candidate only.
+- P3 (khronometric): at linear order, with ordinary matter coupled to the metric only, the tidal response equals
+  EA's for c13 = 0, so the Blas–Sibiryakov instantaneous term does not enter. For c13 ≠ 0 (GW170817 bounds it,
+  does not zero it) the response has an instantaneous, non-local part I_ij = −2A k_ik_jρ/k²,
+  A = 4πG c13²/[c14(1 − c13)²]. Nothing else in the full tidal tensor cancels it. It is a transient until
+  max(c_S, c_T) arrives. It is model-internal and not shown usable: a lab-scale sender needs κ′ ≳ 10⁵⁵.
+- Fastest-front reception with the designated devices is closed within the controlled domain. The khronometric
+  identity κ′ = (c_s²/2)(α2 − α1/8) + (β − α/4)/(1 − β)² (1311.7144v4 Eqs. 48, 49, 118), with |α1| ≲ 10⁻⁴,
+  |α2| ≲ 10⁻⁷ and c_s ≤ D/(cτ), gives κ′ ≤ 6.3 × 10⁻⁶ (D/cτ)² + 10⁻¹⁵, 47–60 orders short. The points that would
+  suffice have α2 v²Φ ≫ 1. There the solar-system PPN expansion fails, and no controlled prediction for the
+  actual sender and receiver environments has been established, so they are not a feasible exception.
+- Status (owner, 2026-10-11): this scheme is **paused**. The instantaneous response is a model-internal linear
+  result, not an experimental finding and not a usable channel.
+
+**Open.**
+- The non-linear elliptic part, i.e. whether a local conserved source with fixed boundary conditions drives it.
+  It needs a second-order calculation; the owner decides whether to fund it.
+- Undetermined and not started: for the c13 ≠ 0 term, reception after the fronts arrive and repeated modulation
+  (both need the full time response); the non-linear and strong-coupling questions.
+
+**Alternatives rejected.**
+- Reading "instantaneous" in the literature as a channel.
+- Treating the external S^μu_μ source as ordinary matter.
+- Forcing a choice to keep research going.
+
+**Evidence.** docs/goal_round9/README.md §§2–3; `results/goal_round9/khronometric.json`.
+
+**Revisit if.**
+- A four-party spacelike dataset, or an S4 below the realistic QM prediction, appears.
+- An unexplained W3 survivor or an abundance model appears.
+- A second-order or non-linear khronometric result with a matter-only source appears.
+- A scheme reading after the fronts arrive is proposed, or a non-linear treatment of the α2 v²Φ ≫ 1 region
+  appears.

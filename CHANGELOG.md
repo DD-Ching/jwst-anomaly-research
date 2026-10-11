@@ -2,6 +2,46 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 9: no next executable unit on current inputs; khronometric "instantaneous" term absent from the linear matter response at c13 = 0, present (model-internal) at c13 ≠ 0
+- Owner brief: choose one worthwhile physics problem from the whole project, and run a minimal check only if a
+  differing prediction, data and a light test all exist. Revised after owner review, with a bounded P3 check.
+  Write-up `docs/goal_round9/README.md`; code `scripts/goal_khronometric.py`; results `results/goal_round9/`.
+- **P1** (multipartite v-causal): no four-party spacelike data. A low S4 counts only against a realistic QM
+  prediction.
+- **P2** (W3 exotic lenses): data exist but sit in the scheduled MOA-II search. A survivor would be a candidate
+  only. Templates kept separate: W3 = negative-mass or repulsive lens; Ellis = W4 gutters.
+- **P3** (Hořava / khronometric):
+  - Controls reproduced from Blas–Sibiryakov: the external-source instantaneous term is transverse and traceless,
+    vanishes for gradient sources, and is cancelled by EA's transverse modes.
+  - New [derived]: with matter coupled to the metric only, the linear khronometric tidal response equals EA's
+    (identical for c13 = 0). The instantaneous term does not enter, and round 8's trade-off carries over.
+  - The non-linear elliptic part stays open (second-order calculation costed, not started).
+  - **Owner review 2 (c13 ≠ 0):** the linear conclusion is scoped to c13 = 0.
+    - The 3D kernel confirms ΔE_ij = Aω(k_iP_jm + k_jP_im)j_m/(ω² − c_V²k²).
+    - A full-tensor support test (bare k² in the 3D kernel) finds an instantaneous part
+      I_ij = −2A k_ik_jρ/k² in khronometric at c13 ≠ 0 that nothing else cancels. GR, EA and khronometric at
+      c13 = 0 show none.
+    - Position space (FFT check ≤ 4.4 %): I_ij = −(2c13²/c14) × the Newtonian tidal tensor of the current
+      source, a transient until max(c_S, c_T). It is model-internal, not shown usable: a lab sender at 20 ly
+      needs κ′ ≳ 10⁵⁵.
+  - **Owner review 3 (PPN × window):**
+    - Identity [analytic, by hand and symbolic]: κ′ = (c_s²/2)(α2 − α1/8) + (β − α/4)/(1 − β)², from
+      1311.7144v4 Eqs. 48, 49 and 118.
+    - With the PPN bounds and c_s ≤ D/(cτ): κ′ ≤ 6.3 × 10⁻⁶ (D/cτ)² + 10⁻¹⁵. That is 47–60 orders below the
+      designated devices' need, for either sign of β and the λ ≈ −β tuning.
+    - The points that would suffice need α2 ≥ 10⁴², so α2 v²Φ ≥ 10²⁶ at 1 AU. The solar-system PPN expansion
+      fails there, and no controlled prediction for the actual sender and receiver environments has been
+      established, so they are not a feasible exception. Fastest-front reception only.
+  - **Owner closing (2026-10-11):** the designated-device, fastest-front scheme is paused. Reception after the
+    fronts, repeated modulation and the non-linear questions are undetermined and not started. The instantaneous
+    response stays a model-internal linear result, not an experimental finding or a usable channel.
+  - Failed approach: one sympy `simplify` pass over the 3D kernel ran > 30 min. Exact rational parameter points
+    with `cancel` and `factor_list` take ~80 s.
+- **Corrections:**
+  - Jacobson citation fixed (1001.4823v3).
+  - ~10³⁸ M☉ scoped to round 6's model.
+  - The "only near-term route" remark withdrawn.
+
 ## 2026-10-11: Goal round 8: Einstein–æther spin-0 trades speed for coupling (κ ∝ 1/c_S²); no practical low-latency channel found in the computed case; line paused
 - Owner brief: a bounded unit on EA spin-0/spin-1 modes, built from the action, matter coupling and a measurable
   response. Krasnikov stays paused. Write-up `docs/goal_round8/README.md`; code `scripts/goal_ea_response.py`;

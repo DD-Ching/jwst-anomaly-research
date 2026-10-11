@@ -1324,3 +1324,15 @@ Inequalities* (Springer, 2017); Wald & Yurtsever; Flanagan & Wald.
   observations", arXiv:1311.7144v4 [445976e4…].
 
 **Citation level only:** Zosso, arXiv:2610.06528; Taherasghari & Will, arXiv:2506.03843.
+
+## Goal round 9 (2026-10-11; docs/goal_round9/README.md)
+
+**Read** (arXiv PDFs, accessed 2026-10-11; sha256 prefixes):
+- Jacobson, "Extended Hořava gravity and Einstein-aether theory", PRD 81, 101502 (2010), Erratum PRD 82, 129901,
+  arXiv:1001.4823v3 [66fd0b22…] (full).
+- Blas & Sibiryakov, "Hořava gravity vs. thermodynamics: the black hole case", arXiv:1110.2195v2 [d1a83782…]
+  (§2, App. A).
+- Yagi, Blas, Barausse & Yunes, arXiv:1311.7144v4 [445976e4…] (re-read 2026-10-11 for owner review 3: §II PPN
+  bounds, Eqs. 48, 49, 53 and 118).
+- Bhattacharyya, Coates, Colombo & Sotiriou, "Evolution and spherical collapse in Einstein-æther theory and Hořava
+  gravity", arXiv:1512.04899v2 [b8343d3b…] (§§II, IV).
