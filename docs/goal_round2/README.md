@@ -191,8 +191,9 @@ QM, which does not signal; the theorem says nothing about configurations outside
     - 9.9 × 10⁻⁷ and 7.9 × 10⁻⁹ for β_max = 0.1;
     - 2.1 × 10⁻⁸ and 1.7 × 10⁻¹⁰ for β_max = 0.9, about 5× below the leading-order 1/(2 r β) because of
       relativistic corrections.
-  - **Without a bound on the frame speed there is no positive worst-case fraction.** It falls as (1 − β_max):
-    2 × 10⁻¹⁰ at β_max = 0.999 and r = 5 × 10⁶.
+  - **Without a bound on the frame speed there is no positive worst-case fraction.** It falls as (1 − β_max²)/(2 r β_max):
+    2 × 10⁻¹⁰ at β_max = 0.999 and r = 5 × 10⁶. For any window shorter than d/c, a frame with β∥ > cT/d moves the
+    B ∼ C interval out of the window, so without a speed bound the worst case is exactly 0 (independent review).
   - The earlier 2/(rβ) was a typical-case estimate for one frame, not a guarantee. It is withdrawn.
   - The window must also keep A and D before B and C, inside their past v-cones, in every frame considered. That
     is a further margin on the lab schedule.
