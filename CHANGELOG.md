@@ -2,6 +2,29 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 4: the beyond-Horndeski wormhole (2212.05969) fails the complete stability set and gives no time-advantage channel
+- Owner brief: a concrete modified-gravity wormhole. Write-up: `docs/goal_round4/README.md`; code
+  `scripts/goal_bh_wormhole.py` (sympy added to the dev extra); results `results/goal_round4/`.
+- Tests round 1's open premise ("candidate C": a short throat without exotic matter) on one fixed model:
+  A = 1, B = 1 + sech, J = τ ln(1 + 2 cosh), τ = 100. The model's choices (H = G = 1, Ξ = Γ = 0) fix every
+  stability coefficient from the metric.
+- **Positive controls:** F > 1 and the Fig. 2 positivity reproduce; Eq. (33) at large ℓ equals Appendix B.
+- **New [derived]:**
+  - The 2404.06297 sufficient set fails on this solution: (39b) for ℓ = 2 near the throat; (39c) near the throat
+    and the Θ crossing, and in a far zone for ℓ ≲ 20.
+  - One even-parity angular mode is superluminal, c² up to 1.83.
+  - The odd sector passes.
+  - A real tachyon is not shown; that needs the low-ℓ eigenproblem.
+  - Two inconsistencies were found in 2404.06297: det K (22) vs (129)–(130) differ by a factor 4, and (42) vs
+    (132)–(133).
+- **Channel:** the ends are separate asymptotic regions with equal clock rates (A = 1). No exterior path and no time
+  shift exist, so no time advantage. Light crosses in the proper distance; the throat is 9 × 10⁻³³ m.
+- **Observations:** the project's Ellis-lens limits (1/b² law) and GW170817 (cosmological background) do not apply
+  to this model. No distinguishing prediction at the published parameters.
+- **Failed approach (rule):** read formulas from page images, not from pdftotext. Two transcription slips (P4 with an
+  extra J, M11 with √B in place of 1/√B) were caught only by checking against the paper's own Fig. 2 positivity and
+  against the Eq. (33) leading order.
+
 ## 2026-10-11: Goal round 3: LC4 is the best of the three hidden-influence criteria compared; the line is paused pending capability
 - Owner brief (continues #152 and #154). Write-up: `docs/goal_round3/README.md`; code
   `scripts/goal_hic_witnesses.py`; results `results/goal_round3/`.
