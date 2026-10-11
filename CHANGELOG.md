@@ -83,6 +83,20 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Next:**
   - Configuration-R timing tolerance and noise threshold (theory).
   - A literature unit on modified-gravity theories with R_kk < 0 consistent with GW170817.
+## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
+  would have gone to `/vet-candidate` before injections.
+- `run-field --procs 4` (cloud), split across three runs: 120,726 light curves streamed in 1,068 s (19 tracked
+  pre-screen chunks; 2,256 shape passes, 77 off shared epochs); 77 fits in 675 s, 0 errors, 73 flags; **0 survive**
+  (`results/w3_moa/vetting_gb8.json`, reproduced by the third run's re-vet). CDS XMatch worked (Gaia DR3 RP for
+  43 / 73). Contact sheet inspected: variables, box and eclipse dips, slow trends; caustic spikes only in the models.
+- Injections (2,200 on 267 carriers) in 2,876 s (third run; the second run's were lost when it ended mid-run). Limits
+  (`results/w3_moa/limits_gb8.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 1.7 × 10⁻⁷–1.0 × 10⁻⁶ per star per year
+  (N_s = 2.23 × 10⁷); the t_E = 300 d cells rest on 3 recoveries each. **Combined, fourteen fields: Γ₉₅ ≈ 2.1 × 10⁻⁸–
+  1.2 × 10⁻⁷** (was 2.4 × 10⁻⁸–1.4 × 10⁻⁷; max field share 0.19).
+- Failed approach: a takeover run that starts injections near the end of its slot loses them, because `inject`
+  writes only at the end. Start injections at the top of a run, or make `inject` chunked and resumable like `fit`.
+- **Next:** gb13 after the owner decides #145; then gb3–gb6, gb9, gb10, gb14.
 
 ## 2026-10-11: W3 MOA-II gb1 (thirteenth field): 0 survivors; combined limit over thirteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1 and a finite limit in every cell. A
