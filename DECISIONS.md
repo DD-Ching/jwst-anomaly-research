@@ -4165,3 +4165,19 @@ controls, and evaluated once on validation.
 
 **Revisit if.** A model fixes the branch and the per-direction amplitude, or an R-configuration experiment reports
 S > 7 or setting dependence in R trials.
+
+## D-TBD Goal round 3: LC4 Experiment v1 is the only kept design; pause the v-causal communication line (2026-10-11)
+
+**Decision.**
+- Of Bancal (S ≤ 7), LC4 (S4 ≤ 6) and LC5 (S5 ≤ 10), only the LC4 Experiment-v1 specification is kept.
+- No further theory units on this line until a trigger in docs/goal_round3/README.md §8 fires.
+
+**Alternatives rejected.**
+- Bancal: its thresholds (visibility 0.972, readout flip 0.5 %) are beyond the best sources.
+- LC5: it is more fragile than LC4 under every local noise model computed.
+- The maximal Bancal state: its threshold of 0.9526 cannot beat LC4's 0.879, so it was not computed.
+- A direct signalling test now: it needs ~10¹³ trials with an unknown frame.
+
+**Evidence.** docs/goal_round3/README.md §§4–7; `results/goal_round3/hic_witnesses.json`.
+
+**Revisit if.** Any trigger of §8 fires.

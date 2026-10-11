@@ -2,6 +2,30 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 3: LC4 is the only hidden-influence criterion worth an experiment; the line is paused pending capability
+- Owner brief (continues #152 and #154). Write-up: `docs/goal_round3/README.md`; code
+  `scripts/goal_hic_witnesses.py`; results `results/goal_round3/`.
+- Round-2 revisions:
+  - The L/2 limit applies only to the theorem's guarantee (fixed receivers, worse direction). It is not a physical
+    impossibility.
+  - Hoeffding counts are sufficient for one named rule, not minimal.
+  - The R-trial fraction is now exact for independent uniform times: worst case ≈ 1/(2 r β_max), and there is no
+    positive worst case without a bound on β.
+  - The #152 and #154 titles and bodies were updated.
+- **Positive controls:** all three quantum values and white thresholds reproduce Bancal and Li et al.; the generic
+  LP reproduces round 2 to 1e-8.
+- **Result [derived]:**
+  - LC4 is the most robust under dephasing, depolarising, amplitude damping, readout flips and detection loss
+    without postselection (η ≥ 0.949). LC5 wins only under white noise. Bancal needs visibility ≥ 0.972.
+  - The LP shows that each witness is optimal for its own state and settings, so the maximal Bancal state cannot
+    change the choice and was not computed.
+  - The forced signal for LC4 is 0.0259, 4× Bancal's.
+- **Decision:** keep the LC4 Experiment-v1 specification; wait for a platform with four spacelike-separated parties,
+  no postselection, η ≥ 0.97 and visibility ≥ 0.95. The direct signalling test needs ~10¹³ trials with an unknown
+  frame. Triggers are in §8.
+- **Failed approach (rule):** quoting LC5's lower white-noise threshold as "more robust" is wrong under local noise.
+  Compare witnesses under the noise the platform actually has.
+
 ## 2026-10-11: Goal round 2: Bancal v-causal models give no guaranteed low-latency or two-way channel; round-1 wording fixes
 - Owner brief (continuation of #152). Full write-up: `docs/goal_round2/README.md`; code
   `scripts/goal_bancal_channel.py`; results `results/goal_round2/`.
