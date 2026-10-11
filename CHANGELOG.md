@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: S1 blind spots: single-pulse bursts are structurally unsearchable; TTE adds little for short bursts
+- Owner brief: bring the 2,975 excluded bursts in with TTE. `docs/s1_blind/` (plan written first);
+  `scripts/s1_blind_spots.py`; `results/s1_blind/`.
+- **Why they are excluded:** 846 have no resolved pulse (faint); 2,129 have a single pulse (522 of them short).
+  Of 741 short bursts, 699 are excluded.
+- **Single pulse** (frozen M2, 1,167 bursts with S/N ≥ 10): unrelated pairs pass the consistency test at 39 %, so
+  about 20 false candidates would appear. Deformed recovery is 4.8 %. Both pre-declared criteria fail: a
+  **structural** blind spot.
+- **TTE pilot** (30 bright short bursts; streamed and deleted, 497 MB): 17 % gain ≥ 2 pulses with multi-resolution
+  counting. The control is 87 % (13 / 15 bcat-resolved short bursts). Below the pre-declared 25 %, so not run on
+  all 699 (about 0.6 h and 10 GB if wanted).
+- **Failed approach:** finest-bin TTE pulse counting lost 40 % of known structure (control 9 / 15). Fixed by
+  multi-resolution counting, after seeing the control (labelled).
+- **Next:** another observable for these bursts (spectral lag, E_peak(t)) or another messenger. Not started.
+
 ## 2026-10-11: S1 M2 calibration and full re-screen: 747,709 pairs, 0 candidates (exploratory)
 - Owner review of #167: calibrate, freeze, then re-screen the whole S1 catalogue with M2. `docs/s1_deform/README.md`
   §8; `docs/s1_m2/calibration_plan.md`; `scripts/s1_m2_search.py`; `results/s1_m2/`.
