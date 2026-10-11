@@ -26,6 +26,8 @@ allowed-tools:
   - Bash(gh pr diff *)
   - Bash(gh pr comment *)
   - Bash(gh pr create *)
+  - Bash(gh pr edit *)
+  - Bash(gh pr ready *)
   - Bash(gh pr merge *)
   - Bash(gh release create *)
   - Bash(gh issue list *)
@@ -76,6 +78,23 @@ Action.
   comments that have no reply or fix yet.
 - `gh issue list --state open --json number,title,author,labels`. Act only on issues the owner authored.
 - Read TASKS.md, the newest CHANGELOG.md entry (the handoff) and `grep '^## ' DECISIONS.md`.
+- **Claim before setup** (CLAUDE.md Parallelism decision): as soon as you know which unit you will work on, and the
+  WIP cap (step 3, counted now from the PR list above) does not block new feature work, skip the unit if it is in
+  flight: a `claimed` or `local-wip` label and a commit or claim heartbeat under 60 minutes old (docs/cloud-routine-prompt.md
+  "COORDINATION AND DISPATCH"; a stale claim may be taken over after a "TAKEOVER from <session> at <UTC>" comment).
+  An unlabelled draft `[field: <unit>]` claim PR from the older rule is in flight while its newest commit or comment
+  is under 60 minutes old; a `local-wip` PR without any CLAIM comment stays in flight unconditionally.
+  Otherwise create `claude/<slug>` from `origin/main`, commit
+  one small file change (e.g. the plan as a CHANGELOG or docs line; GitHub refuses a PR without commits), push, and
+  open a draft PR titled `[field: <unit>] ...` labelled `agent` within 5 minutes of starting, before environment
+  setup or long reviews. In cloud runs use the GitHub MCP tools (docs/operations.md §3) for the PR list and the
+  draft. Label it `claimed` (local sessions: `local-wip`) with the REST labels call
+  (`gh api -X POST repos/DD-Ching/jwst-anomaly-research/issues/<n>/labels -f "labels[]=claimed"`) and post one comment
+  "CLAIM <session> started <UTC> expected-end <UTC> unit: <scope> files: <paths>". Heartbeat at least every 10
+  minutes while working (a WIP push, or edit that comment with "heartbeat <UTC> status: <one line>"); before every
+  push, `git fetch origin <branch>` and re-read the PR's comments, and on a collision push to `claude/<slug>-alt`
+  instead and comment your findings on their PR. Remove the label when you stop. Write "D-TBD" until just before
+  merge. Draft claim PRs do not count toward the WIP cap. Step 8 updates this PR instead of creating another.
 - Environment: if `.venv` is missing, create it as CLAUDE.md "Environment" says (Linux and cloud:
   `.venv/bin/python`). If uv can't fetch Python 3.12 there, use `uv venv .venv --python python3`, which is
   preinstalled and >=3.11.
@@ -96,7 +115,7 @@ reply with evidence (`gh pr comment`).
 
 ## 3. WIP cap
 
-Count the open PRs labelled `agent` that are waiting for the owner. All PRs that share one `batch-<slug>` label count
+Count the open, non-draft PRs labelled `agent` that are waiting for the owner (draft claim PRs are in-flight work). All PRs that share one `batch-<slug>` label count
 as a single item. **With 3 or more items**, open no new feature PR. Do only these:
 - step 2;
 - merge `origin/main` into stale PR branches;
@@ -119,7 +138,7 @@ evidence.
 
 | Mode | Use it when |
 |---|---|
-| Single thread (default) | Sequential, tightly coupled or exploratory work; most cycles |
+| Single thread | Sequential, tightly coupled or exploratory work (still overlap I/O and compute: CLAUDE.md Parallelism) |
 | Research subagent | A separable question (tool survey, literature, data-format check) whose raw findings would bloat this context. Keep only its conclusion |
 | `/reuse-check <need>` | Before building any new subsystem or adding a dependency, unless a DECISIONS.md entry covers it and its "Revisit if" doesn't hold |
 | `/batch <instruction>` | CLAUDE.md "Parallel work" criteria hold (3 or more independent units, disjoint files, stable interface landed first) |
@@ -132,9 +151,11 @@ work" defines ownership. Beyond it:
 
 ## 5. Implement
 
-- `git switch -c claude/<slug> origin/main`. If the work truly depends on an unmerged PR, branch from that PR's
+- Work on the claim branch from step 1 if you made one (`git switch claude/<slug>`); otherwise
+  `git switch -c claude/<slug> origin/main`. If the work truly depends on an unmerged PR, branch from that PR's
   branch instead and write "Depends on #N (stacked on `<branch>`)" in the PR body.
-- Follow CLAUDE.md "Layout and contracts". Never commit data; manifests are the record.
+- Follow `src/jwst_anomaly/CLAUDE.md` (stage contracts), `scripts/CLAUDE.md` (search conventions) and
+  `data/manifests/CLAUDE.md` (data and provenance). Never commit data; manifests are the record.
 - Cloud runs: anything not committed is lost when the run ends, and the disk is small. Prefer pipeline catalogs and
   S3 byte-range reads over downloads. A `403` with `x-deny-reason: host_not_allowed` means the host is missing from
   the environment allowlist (docs/operations.md §3). Report it in the handoff; don't work around it.
@@ -159,7 +180,9 @@ Keep them terse; link instead of repeating. Batch workers leave TASKS.md and CHA
 
 - Make coherent, descriptive commits. Check that no file is over 1 MB and that there is no data and no secret.
 - `git push -u origin claude/<slug>`, then
-  `gh pr create --base main --label agent [--label needs-human] --title "..." --body "..."`.
+  `gh pr create --base main --label agent [--label needs-human] --title "..." --body "..."`. If a draft claim PR
+  exists for the branch, update its title and body instead (`gh pr edit`) and mark it ready (`gh pr ready <n>`;
+  cloud: `mcp__github__update_pull_request` with `draft: false`).
   - Pass the body inline (a heredoc is fine). `--body-file` is denied.
   - Create a missing label first with `gh label create`.
   - Body sections: Summary / Evidence (test output, numbers) / Decisions / Limitations / Next.

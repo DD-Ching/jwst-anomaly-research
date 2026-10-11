@@ -29,6 +29,7 @@ macro-magnification), point or uniform-disk source, geometric optics.
 from __future__ import annotations
 
 import math
+from functools import lru_cache
 
 import astropy.constants as const
 import numpy as np
@@ -246,12 +247,23 @@ def count_ratio(
     return cumulative_counts(flux_limit / mu) / mu / cumulative_counts(flux_limit)
 
 
+@lru_cache(maxsize=16)
+def _gauss_legendre(n_nodes: int) -> tuple[np.ndarray, np.ndarray]:
+    """Cached Gauss-Legendre nodes and weights (recomputing them dominated fitter run time)."""
+    nodes, weights = np.polynomial.legendre.leggauss(n_nodes)
+    nodes.setflags(write=False)
+    weights.setflags(write=False)
+    return nodes, weights
+
+
 def _check_rho(rho: float) -> None:
     if not rho >= 0:
         raise ValueError("rho must be non-negative")
 
 
-def finite_source_magnification(beta, rho: float, n: float = 1.0, sign: int = 1, n_nodes: int = 48):
+def finite_source_magnification(
+    beta, rho: float, n: float = 1.0, sign: int = 1, n_nodes: int = 48, point_magnification=None
+):
     """Total magnification of a uniform disk of radius ``rho`` (Einstein radii) centred at ``beta``.
 
     The lens is axisymmetric, so the disk average reduces to a 1-D integral over the source radius
@@ -259,7 +271,8 @@ def finite_source_magnification(beta, rho: float, n: float = 1.0, sign: int = 1,
     b range is split at the disk's inner radii and at the caustic (umbra edge) of a repulsive lens;
     each piece uses Gauss-Legendre in t with b = lo + (hi - lo)(1 - cos t)/2, which absorbs the
     1/sqrt singularities at the caustic and the disk edges. Agrees with inverse ray shooting
-    (``tests/test_exotic_sim.py``).
+    (``tests/test_exotic_sim.py``). ``point_magnification(b)`` replaces
+    ``total_magnification(b, n, sign)`` inside the integral (e.g. a faster tabulated equivalent).
     """
     _check_rho(rho)
     if rho == 0:
@@ -271,22 +284,34 @@ def finite_source_magnification(beta, rho: float, n: float = 1.0, sign: int = 1,
     cuts = np.stack([lo, np.abs(b - rho), np.full_like(b, bc), hi], axis=1)
     cuts = np.sort(np.clip(cuts, lo[:, None], hi[:, None]), axis=1)
     a_, b_ = cuts[:, :-1], cuts[:, 1:]  # (N, 3) sub-intervals
-    nodes, weights = np.polynomial.legendre.leggauss(n_nodes)
+    nodes, weights = _gauss_legendre(int(n_nodes))
     t = 0.5 * np.pi * (nodes + 1.0)
     u = 0.5 * (1.0 - np.cos(t))
     du = 0.25 * np.pi * np.sin(t) * weights  # d u = sin(t)/2 dt, dt = pi/2 d(node)
-    rr = a_[..., None] + (b_ - a_)[..., None] * u  # (N, 3, n_nodes)
-    w = (b_ - a_)[..., None] * du
-    bb = np.broadcast_to(b[:, None, None], rr.shape)
-    full = rr <= rho - bb  # whole circle inside the disk (source disk covers the lens)
-    with np.errstate(divide="ignore", invalid="ignore"):
-        cosphi = (rr**2 + bb**2 - rho**2) / (2.0 * rr * bb)
-    phi = np.where(full, np.pi, np.arccos(np.clip(np.nan_to_num(cosphi, nan=1.0), -1.0, 1.0)))
-    arc = 2.0 * rr * phi
-    amp = total_magnification(np.maximum(rr, 0.0).ravel(), n, sign).reshape(rr.shape)
-    # a node rounding onto the caustic (measure zero) would give inf * 0
-    amp = np.where(np.isfinite(amp), amp, 0.0)
-    integrand = amp * arc * w
+    # Most sub-intervals have zero width (b ≥ ρ, or the caustic outside the disk); their
+    # integrand is exactly +0 (w = 0, amp and arc finite), so it is evaluated only on the others
+    # and scattered into a zero array of the full (N, 3, n_nodes) shape: the sum below then runs
+    # over the same layout and is bit-identical, at ~1/3 to 1/2 of the cost.
+    integrand = np.zeros(a_.shape + (nodes.size,))
+    nz = b_ > a_
+    if nz.any():
+        a0 = a_[nz][:, None]
+        width = (b_ - a_)[nz][:, None]
+        bb = np.broadcast_to(b[:, None], a_.shape)[nz][:, None]
+        rr = a0 + width * u  # (M, n_nodes)
+        w = width * du
+        full = rr <= rho - bb  # whole circle inside the disk (source disk covers the lens)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            cosphi = (rr**2 + bb**2 - rho**2) / (2.0 * rr * bb)
+        # = clip(nan_to_num(cosphi, nan=1), -1, 1): ±inf clip to ±1 either way
+        cosphi = np.clip(np.where(np.isnan(cosphi), 1.0, cosphi), -1.0, 1.0)
+        phi = np.where(full, np.pi, np.arccos(cosphi))
+        arc = 2.0 * rr * phi
+        amp_fn = point_magnification or (lambda x: total_magnification(x, n, sign))
+        amp = np.asarray(amp_fn(np.maximum(rr, 0.0).ravel()), float).reshape(rr.shape)
+        # a node rounding onto the caustic (measure zero) would give inf * 0
+        amp = np.where(np.isfinite(amp), amp, 0.0)
+        integrand[nz] = amp * arc * w
     out = np.sum(integrand, axis=(1, 2)) / (np.pi * rho**2)
     out[~np.isfinite(b)] = np.nan
     return out

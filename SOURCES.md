@@ -719,6 +719,14 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
     064024 (2012), doi:10.1103/PhysRevD.85.064024.
   - arXiv:2608.10800, Fell & Loeb, "Radiative Signatures from Warp Drives Traveling Through the Earth's
     Atmosphere" (2026, preprint).
+  - Literature check 2026-10-08 (arXiv API, 2023–2026; INSPIRE citations of 2406.02466, none searches data):
+    arXiv:2310.16067, Kuwahara & Cannon, "Development and Application of a Detection System for a Novel Class of
+    Gravitational-Wave Transients" (2023): LIGO/Virgo/KAGRA O3 search for GW bursts from superluminal curvature
+    sources, null. arXiv:2212.02065, Sellers, Bobrick, Martire et al. (2022): GWs from accelerating massive
+    spacecraft (not a warp metric). arXiv:2405.19381, Lentz & Felton, "Motivating Emissions from Positive Energy Warp
+    Bubbles" (2024): order-of-magnitude EM fluxes for a bubble 100 lyr away (Eqs. 12–13, Figs. 6–8; no template).
+    arXiv:2311.12069, Pieri (2023): no quantitative prediction for a distant observer. The Clough et al. waveform is not public (no data statement or
+    Zenodo record found).
 
 ## Injection-recovery limits (D-049)
 
@@ -736,8 +744,11 @@ Crossref. The papers marked "full text" were read in their arXiv source for the 
 - **Schneider 1996**, "Detection of (dark) matter concentrations via weak gravitational lensing", MNRAS 283, 837,
   doi:10.1093/mnras/283.3.837, https://arxiv.org/abs/astro-ph/9601039. Catalogue aperture-mass estimator.
 - **Schirmer et al. 2007**, "GaBoDS IX. A sample of 158 shear-selected mass concentration candidates", A&A 462, 875,
-  doi:10.1051/0004-6361:20065955, https://arxiv.org/abs/astro-ph/0607022. Shear-shaped filter (formula still to be
-  read from the full text).
+  doi:10.1051/0004-6361:20065955, https://arxiv.org/abs/astro-ph/0607022. Shear-shaped filter Q_TANH, eqs. 15–16,
+  read from the arXiv full text on 2026-10-08 (D-053).
+- **Seitz & Schneider**, "Steps towards nonlinear cluster inversion through gravitational distortions III. Including
+  a redshift distribution of the sources", https://arxiv.org/abs/astro-ph/9601079 (A&A, 1997), accessed 2026-10-08.
+  Reduced-shear inversion ε_s = (ε − g)/(1 − g* ε) used by `exotic_screens.remove_cluster_shear` (D-053).
 
 ## Deep-field orphan-pair screen (accessed 2026-10-08; D-051)
 
@@ -820,3 +831,365 @@ jwst 3.0.0 / photutils 3.0.0 (file headers).
 - SuGOHI public lens list (no licence stated): https://www-utap.phys.s.u-tokyo.ac.jp/~oguri/sugohi/
 - Prior-art check (no survey light-curve search for negative-mass or Ellis lenses found): arXiv:1711.04560,
   arXiv:0807.2774, arXiv:1302.7170, arXiv:gr-qc/9805075.
+
+## Published lens catalogues and deep-imaging checks (D-056, accessed 2026-10-08)
+
+- lenscat 1.1.3 `catalog.csv` (MIT; Vujeva et al., arXiv:2406.04398), 32,838 rows, 3,824,227 bytes, sha256
+  `7de5111afb6486c119198cb2df868a2e6a15f79869e6cdc8109ec7d59b06a7cc` (identical at HEAD 053719a):
+  https://raw.githubusercontent.com/lenscat/lenscat/f531b8a8f3fa4bbd1ee8a58b2ddcd54e6936ea14/lenscat/data/catalog.csv
+- Euclid Q1 Strong Lensing Discovery Engine v0.0.3 (CC-BY-4.0; Zenodo record 15025832, concept DOI
+  10.5281/zenodo.15003116; Walmsley et al. arXiv:2503.15324, lens models arXiv:2503.15325–15328), files at
+  `https://zenodo.org/api/records/15025832/files/<name>/content`:
+  - `q1_discovery_engine_lens_catalog.csv`, 2,584 rows, 422,423 bytes, sha256
+    `ee5e60cd507413eabf3da8ffa37a3c527212da00feb29083cf516a86d6f26877`;
+  - `modeling_lens_mass.csv` (PyAutoLens SIE + shear, 336 lenses), 322,960 bytes, sha256
+    `f2a52616a1ac65137b34abe0892d251e18e2c60e9a64c459914102f44ec49db5`;
+  - `modeling_sersic_magnitude.csv` (lens VIS/Y/J/H magnitudes), 288,390 bytes, sha256
+    `7c7506af33f27d65cc618e998cbbb0868c36a106703f303d6b0b0a74240d94f2`.
+  `lens.zip` (3.05 GB), `group.zip`, `unsuccess.zip` were not downloaded.
+- SuGOHI public candidate list (HSC-SSP; no licence stated; cite SuGOHI I–X and HOLISMOKES VI, VIII, XIII, XVI as
+  listed on the page), 3,961 rows, 423,170 bytes, sha256
+  `72fb96dc8d13851c20304b25b8889087d92df27cf1549e6522c8657befda4a55`, served by a PHP script (may change in place):
+  https://www-utap.phys.s.u-tokyo.ac.jp/~oguri/sugohi/download_list.php?file=list_ra_asc_public.csv
+- Legacy Surveys DR10 Tractor catalogue `ls_dr10.tractor` via NOIRLab Astro Data Lab TAP (synchronous ADQL; table
+  upload and q3c functions are rejected by the ADQL front end on 2026-10-08, so box ORs are batched 300 per query):
+  https://datalab.noirlab.edu/tap ; cutouts https://www.legacysurvey.org/viewer/cutout.jpg (layer `ls-dr10`).
+  Cite Dey et al. 2019 (AJ 157, 168) and the DR10 acknowledgement at https://www.legacysurvey.org/acknowledgment/
+- Cluster catalogues via CDS XMatch: redMaPPer SDSS DR8 v6.3 (Rykoff et al. 2016, VizieR J/ApJS/224/1) and
+  Wen, Han & Liu 2012 (VizieR J/ApJS/199/34); SIMBAD (CDS XMatch `simbad`).
+- Lemon et al. lensed-quasar database (https://research.ast.cam.ac.uk/lensedquasars/): HTTP 500 on 2026-10-08;
+  its entries enter through lenscat.
+- Prior art on dark lenses (arXiv API, 2026-10-08): Jackson, Helbig & Browne 1998, "Lensing galaxies: light or
+  dark?" (astro-ph/9804136; lens galaxies found in 12 of 12 JVAS/CLASS lenses); Koopmans et al. 2000, CLASS
+  B0827+525 "dark lens or binary radio-loud quasar" (astro-ph/0007286); Frey, Paragi & Campbell 2010,
+  J1218+2953 (arXiv:1002.1714).
+- Spingola et al. 2019, mJIVE-20 VLBI lens search (arXiv:1811.09152; MJV16999 rejected, sect. 4.1.12); SMILE
+  milli-lens searches (Casadio et al. 2021, arXiv:2107.06896; Pötzl et al. 2024, arXiv:2409.15229). Cluster-survey
+  references in `lenscats.CLUSTER_SURVEY_REFS` were checked by title on the arXiv API (2026-10-08); the two DOI-only
+  ones (Lopes et al. 2004 NoSOCS, Gioia et al. 1990 EMSS) by their lenscat names (NSCS, MS cluster designations).
+- Legacy Surveys DR10 brick summary `ls_dr10.bricks_s` via Data Lab TAP (query and sha256 of the 2026-10-08 download,
+  332,581 bricks / 23.5 MB, recorded in the run's summary.json; not pinned, the service output may change): footprint
+  (nexp_r, nexp_z) and per-brick 5σ galaxy depth for D-056. He et al. 2025, lensed-quasar confirmations
+  (arXiv:2509.03858; HSC J2212−0103 lens-light fit).
+
+## OGLE-IV microlensing samples (accessed 2026-10-08; D-057)
+
+Cite Mróz et al. as their pages ask; data are pinned in `src/jwst_anomaly/ogle.py` (`FILES`) and
+`data/manifests/ogle_mroz.ecsv`, fetched with `photometry.fetch_catalog`. Not OGLE EWS seasons (D-054).
+
+- Mróz, Udalski, Szymański et al. 2019, ApJS 244, 29, arXiv:1906.02210 (v2 e-print read for the selection,
+  Table 2, and the efficiency definition): https://www.astrouw.edu.pl/ogle/ogle4/microlensing_maps/
+  5,790 events in 112 low-cadence bulge fields (D-054 said 5,836; the nine high-cadence fields come from
+  Mróz et al. 2017, Nature 548, 183, and have no light curves here).
+
+  | File | Bytes | sha256 |
+  |---|---|---|
+  | README | 2,688 | 9e3e62038163881521d5a895b27ba0980edd502c20dcdb65f772ff4c0d9b2136 |
+  | table3.dat | 1,542,323 | ca47555840c808967e9a257dba9071acddd499dc078efb5f5c361b3ec8fef67f |
+  | table6.dat | 7,355 | a3e27a63b597e49563a061480c0ea37ae475e569900549d04dd8a8afa3ad50da |
+  | table7.dat | 10,537 | 56455aecadfea463c9ba623d7fe459a552a1017a2532601d3c610057fa24aa2d |
+  | eff.tar.gz | 15,845 | dd5ffa37e4860dfb137691f90e93e11278c16bef705c8950d5f4a5bacc133ac1 |
+  | phot.tar.gz | 50,731,904 | 5dafa6835b8456b00eb379d1803a6f6dae46bb5eac54fb8c2f809fe4685bfe6f |
+
+- Mróz, Udalski, Szymański et al. 2020, ApJS 249, 16, arXiv:2004.07289 (v2 e-print read):
+  https://www.astrouw.edu.pl/ogle/ogle4/galactic_disk_microlensing/ — 460 events that pass the selection
+  (Table B1); the "630" of the abstract adds 170 possible events (Table B2, `data_c/`), not used.
+
+  | File | Bytes | sha256 |
+  |---|---|---|
+  | README | 2,571 | a456c9f2f0041b81aa1b3dbc21e0be0b7957e29dae7051cc1d88534270b85f33 |
+  | table_A1.txt | 139,773 | 60990a6d207171333c8771b9dcc1240217da80ad7f272d20c5faf3432271a954 |
+  | table_B1.txt | 131,669 | 065fea96c0f0343f268c675b3132dd36c2c0243ba6c6a1690b784549fbeec410 |
+  | eff21.tar.gz | 213,175 | aacd45898288269573cb73ecd936c96fb0992563f65f6752b63701129d11f563 |
+  | data.tar.gz | 497,649 | 74868d53863167ebca08cbbbc2df6214433bfc7382f8ee82705529ca206c93c7 |
+
+- Skowron et al. 2016, Acta Astron. 66, 1 (reference list of arXiv:1906.02210): error-bar correction
+  already applied to the published photometry.
+- Vetting catalogues via CDS XMatch (astroquery 0.4.11): AAVSO VSX `B/vsx/vsx`; Gaia DR3 variability
+  classification `I/358/vclassre`. Literature: arXiv API `all:"<event name>"` (export.arxiv.org); the
+  per-name queries are rate-limited and returned an error for 6 of 212 bulge names on 2026-10-08
+  (recorded as −1 in the vetting record, so they can be re-run).
+- Mróz et al. 2017, Nature 548, 183 (reference list of arXiv:1906.02210): the nine high-cadence bulge fields,
+  whose events are in the 2019 optical-depth analysis but whose light curves are not in `phot.tar.gz`.
+- Hubble Source Catalog v3 (Whitmore et al. 2016, AJ 151, 134), summary `magaper2` via the MAST catalogs API
+  `https://catalogs.mast.stsci.edu/api/v0.1/hsc/v3/summary/magaper2.csv` (cone search; accessed 2026-10-08; D-060).
+
+## Gaia DR3 microlensing candidates (accessed 2026-10-08; D-061)
+
+- Wyrzykowski, Kruszyńska, Rybicki et al. 2023, "Gaia Data Release 3: Microlensing events from all over the sky",
+  A&A 674, A23, doi:10.1051/0004-6361/202243756, arXiv:2206.06121. The v2 e-print source
+  (https://arxiv.org/src/2206.06121v2, 2,461,772 bytes, sha256 40c60eee14f1a5e691cf7efb5b1233878fcabd37496eb4a0865fa5e7afa07295)
+  was read for the Sample A cuts (Appendix C, Table C.1), the error rescaling (Eq. 9–10) and Table D.1 (Method
+  A / B / A+B, parsed by `gaia_mulens.parse_method_table`).
+- Gaia archive TAP `SELECT * FROM gaiadr3.vari_microlensing` (363 rows) and `gaiadr3.gaia_source` positions
+  (https://gea.esac.esa.int/tap-server/tap/sync); DR3 epoch photometry from the DataLink service
+  (https://gea.esac.esa.int/data-server/data, `RETRIEVAL_TYPE=EPOCH_PHOTOMETRY`, INDIVIDUAL CSV). sha256 of every
+  cached file: `data/manifests/gaia_dr3_mulens.ecsv`.
+
+## MOA-II 9-year bulge release (accessed 2026-10-08; D-062)
+
+Pinned in `src/jwst_anomaly/moa.py` (`FILES`) and `data/manifests/moa_ii.ecsv`; fetched with
+`photometry.fetch_catalog` into `$JWST_ANOMALY_DATA/raw/moa/`. Licence not stated; the archive asks for this
+acknowledgement: "This paper makes use of data obtained by the MOA collaboration with the 1.8-metre MOA-II
+telescope at the University of Canterbury Mount John Observatory, Lake Tekapo, New Zealand. The MOA
+collaboration is supported by JSPS KAKENHI grant and the Royal Society of New Zealand Marsden Fund. These data
+are made available using services at the NASA Exoplanet Archive, which is operated by the California Institute
+of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet
+Exploration Program."
+
+- NASA Exoplanet Archive, MOA mission page (2006–2014, ~2.4 M light curves, 22 fields, selection text):
+  https://exoplanetarchive.ipac.caltech.edu/docs/MOAMission.html ; columns and flux zero point (20 mag =
+  691.8 counts on chip 2, 1,445 on other chips): https://exoplanetarchive.ipac.caltech.edu/docs/API_moa_columns.html
+
+  | File | Bytes | Last-Modified | sha256 |
+  |---|---|---|---|
+  | bulk/metadata.ipac.tar.gz | 97,332,954 | 2023-10-13 | b339ec176933f4bfcad09d6e17f08166c7a18ffea2ddc567b6cca83fa25fe55c |
+  | bulk/gb22.tar | 3,510,138,880 | 2023-10-10 | 1cb0173e676915dcf602647e5a2dc315f0ab51c8f2a612ffcdcab4e44edad2d0 |
+
+  `metadata.ipac` has 2,409,061 rows (gb22: 18,599), equal to the Cut-0 count of Nunota et al. 2024. The
+  per-object path `data/Contributed/MOA/gb{F}/R/{C}/gb{F}-R-{C}-{S}-{ID}.ipac` (used by the archive viewer;
+  undocumented; uncompressed) also answers; D-068 uses it only for vetting neighbours without a recorded tar offset.
+- The other 21 field tars `bulk/gb{F}.tar` (D-068) are streamed with HTTP byte-range reads, never stored. Sizes and
+  Last-Modified (HEAD, 2026-10-08) are in `moa.TAR_BYTES` / `moa.TAR_LAST_MODIFIED` (7.7–508.5 GB, ≈ 2.4 TB in
+  all; Last-Modified 2023-10-10 … 13). No whole-file sha256 exists for a streamed tar: each is pinned by the sha256
+  of every 64 MiB range (tracked per chunk in `results/w3_moa/prescreen/`) and a field digest over them
+  (`moa_stream.range_digest`, rows in `data/manifests/moa_ii.ecsv`). The archive occasionally answers a range
+  request with HTTP 200 (whole file); such replies are closed unread and retried.
+- Nunota et al. 2024 Table 1 N_s (20 fields; `moa.NUNOTA_NS`) is the adopted N_s per field where published
+  (D-068); gb6 and gb22 use the N_s-per-Cut-0-object model.
+- Koshimoto, Sumi, Bennett et al. 2023, "Terrestrial and Neptune mass free-floating planet candidates from the
+  MOA-II 9-year Galactic Bulge survey", arXiv:2303.08279 (e-print read for Cut-0, Table 2: S/N of SIM > 2.7,
+  N_continue,8 ≥ 3, σ_x,y ≤ 1/0.8 px, positive and negative PSF profiles; the archive page still quotes the
+  Sumi et al. 2011 cuts S/N > 5, N_detect,continue > 2).
+- Nunota, Sumi, Koshimoto et al. 2024, "The Microlensing Event Rate and Optical Depth from MOA-II 9 year
+  Survey toward the Galactic Bulge", arXiv:2410.23553 (e-print read): 2,409,061 Cut-0 objects; span
+  HJD 2453824–2456970; Table 1 N_s (10 ≤ I_s ≤ 21.4) for 20 fields; gb6 and gb22 excluded (no clear RCG).
+- Sumi et al. 2011, Nature 473, 349, doi:10.1038/nature10092, arXiv:1105.3544: the selection the archive page cites.
+- Gaia DR3 `gaiadr3.gaia_source` via the ESA TAP service (https://gea.esac.esa.int/tap-server/tap), queried
+  2026-10-08: RP histogram within 0.3° of (279.148°, −23.767°) for the luminosity-function slope (D-062).
+- Rejected readers (D-062): merida 0.3.2 (https://pypi.org/project/merida/), qusi 1.5.6
+  (https://pypi.org/project/qusi/).
+
+## W5 count-deficit screen (accessed 2026-10-08; D-063)
+
+- Legacy Surveys DR10 Tractor `ls_dr10.tractor` via NOIRLab Astro Data Lab TAP (https://datalab.noirlab.edu/tap),
+  aggregated server-side per `nest4096` pixel in 2° × 2° chunks (three queries per chunk:
+  `countmap.chunk_queries`); regions RA 20–40° and 50–70°, Dec −30° to −20° (DES-wide area). The service output is
+  not pinned (it may change); chunk FITS files are cached under `$JWST_ANOMALY_DATA/cache/w5_counts/`. The ADQL
+  front end rejected sub-selects, CASE, SIGN and GROUP BY on expressions on 2026-10-08, and returned HTTP 502 for
+  ~30 min the same evening. Cite Dey et al. 2019 (AJ 157, 168) and https://www.legacysurvey.org/acknowledgment/
+- Galaxy number counts N(< r) of the same selection: `results/w5_counts/numcounts.ecsv` (observed; boxes in its
+  meta).
+- Legacy Surveys DR10 random catalogues (Myers et al. 2023, arXiv:2208.08518, doi:10.3847/1538-3881/aca5f9;
+  ~19.9 GB per file, not used): https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr10/south/randoms/
+- astropy-healpix 2.0.1 (BSD-3-Clause; https://pypi.org/project/astropy-healpix/) for nest4096 geometry. Rejected:
+  healpy 1.20.1 (GPL-2.0, no Windows wheels; https://pypi.org/project/healpy/), healsparse 1.15.0 and hpgeom
+  (GPL-3.0-or-later; https://pypi.org/project/healsparse/), Pylians 0.12 (https://pypi.org/project/pylians/).
+- Gaia DR3 `gaiadr3.gaia_source` (G < 9) via the ESA TAP service https://gea.esac.esa.int/tap-server/tap, queried
+  2026-10-08, for the bright-star vetting test.
+- Wen & Han 2024, galaxy clusters from the DESI Legacy Surveys and WISE, ApJS 272, 39 (VizieR J/ApJS/272/39,
+  table2; M500 ≥ 3 × 10¹⁴ M☉ and z ≤ 0.6 used), queried 2026-10-08 through astroquery.vizier, for the
+  cluster-depletion test.
+- HyperLEDA PGC (Paturel et al. 2003, A&A 412, 45; VizieR VII/237/pgc), galaxies with D25 ≥ 1′ (logD25 ≥ 1.0 in
+  log 0.1′), queried 2026-10-08, for the large-galaxy (sky over-subtraction) test.
+- Safonova, Torres & Romero 2001, "Macrolensing signatures of large-scale violations of the weak energy
+  condition", MPLA 16, 153, arXiv:astro-ph/0104075, doi:10.1142/S0217732301003188: the W5 "central void" in the
+  background galaxy field.
+- Safonova & Torres 2002, "Degeneracy in exotic gravitational lensing", MPLA 17, 1685, arXiv:gr-qc/0208039,
+  doi:10.1142/S0217732302008083.
+- Broadhurst, Taylor & Peacock 1995, ApJ 438, 49, arXiv:astro-ph/9406052, doi:10.1086/175053, and Umetsu &
+  Broadhurst 2008, ApJ 684, 177, arXiv:0712.3441, doi:10.1086/589683: count depletion behind clusters by
+  magnification bias (the main ordinary mimic).
+- Amendola, Frieman & Waga 1999, MNRAS 309, 465, arXiv:astro-ph/9811458, doi:10.1046/j.1365-8711.1999.02841.x:
+  lensing by voids (mimic context).
+- Void finders considered and not used: VIDE (Sutter et al. 2015, arXiv:1406.1191); REVOLVER (Nadathur et al. 2019,
+  arXiv:1904.01030); DES SV photometric voids (Sánchez et al. 2017, arXiv:1605.03982). DES Y6 Gold (Bechtol et al.
+  2025, arXiv:2501.05739) and HSC-SSP PDR3 (Aihara et al. 2022, arXiv:2108.13045) masks not used.
+
+- Rejected lensed-quasar candidates and controls (D-064, `data/manifests/w12_niq_inputs.json` has URLs, bytes, sha256;
+  accessed 2026-10-08), VizieR ASU-TSV `https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=<ID>&-out.max=5000&-out.all`:
+  Lemon et al. 2023, MNRAS 520, 3305 (arXiv:2206.07714), `J/MNRAS/520/3305/table1`; Inada et al. 2008, AJ 135, 496,
+  `J/AJ/135/496/table2,table3`; Inada et al. 2010, AJ 140, 403, `J/AJ/140/403/table2,table3`; Inada et al. 2012,
+  AJ 143, 119, `J/AJ/143/119/table3,table4`; Hennawi et al. 2006, AJ 131, 1, `J/AJ/131/1/binqso`.
+- MAST HAP cutouts (`astroquery.mast.Hapcut`, https://mast.stsci.edu/hapcut/api/v0.1/astrocut ; accessed 2026-10-09):
+  HST ACS/WFC F814W skycell cutouts from program 17308 (J0130+0725, J0728+2607, J2308+3201) and WFC3/UVIS F814W
+  from program 17199 (SDSS J1515+1511), used by D-064's archival HST addendum. Not stored (outputs/, gitignored).
+
+## Euclid Q1 MER catalogue (accessed 2026-10-09; D-065)
+
+- Euclid Quick Data Release Q1 MER catalogue, table `euclid_q1_mer_catalogue` on the IRSA TAP service
+  https://irsa.ipac.caltech.edu/TAP (sync endpoint `/TAP/sync`), queried 2026-10-09 for counts only
+  (`scripts/w5_euclid_feasibility.py`). Use `CONTAINS(POINT, CIRCLE)` for spatial cuts; plain RA/Dec ranges are
+  not indexed. The service output is not pinned.
+- Same table, rows (shapes) in 0.2–0.3° discs, 2026-10-09 (`scripts/w5_euclid_shear.py`, D-066). The column
+  `position_angle` must be quoted in ADQL; its description ("CCW/x") is wrong: it is PA east of north.
+- Euclid Q1 MER VIS mosaics (IRSA SIA collection `euclid_DpdMerBksMosaic`; IBE cutouts
+  `?center=RA,Dec&size=8arcsec`, gzip-compressed), tile 102022477, accessed 2026-10-09 (`pacheck`).
+- Planck PSZ2 (Planck Collaboration 2016, A&A 594, A27; VizieR J/A+A/594/A27) and ACT DR5 clusters (Hilton et al.
+  2021, ApJS 253, 3; VizieR J/ApJS/253/3), queried 2026-10-09 for clusters inside Q1 (`CLUSTERS` in the script).
+- Q1 MER tile list: IRSA ObsCore (`ivoa.obscore`, `obs_collection = 'euclid_DpdMerBksMosaic'`, VIS), 352 tiles,
+  2026-10-09; whole-tile rows fetched by the indexed `tileid` column (`w5_euclid_shear.py fetch`, D-067).
+- NFW lensing (R calibration, D-067): Wright & Brainerd 2000, ApJ 534, 34 (arXiv:astro-ph/9908213); c200(M200):
+  Duffy et al. 2008, MNRAS 390, L64 (arXiv:0804.2486); astropy `Planck18` cosmology.
+- Pantheon+SH0ES distances (Scolnic et al. 2022, ApJ 938, 113, arXiv:2112.03863; Brout et al. 2022, ApJ 938, 110,
+  arXiv:2202.04077): `Pantheon+SH0ES.dat` from https://github.com/PantheonPlusSH0ES/DataRelease (branch `main`,
+  `Pantheon+_Data/4_DISTANCES_AND_COVAR/`), accessed 2026-10-09 (`scripts/s2_flat_kernel.py`, D-070).
+- DES-SN5YR data release (DES Collaboration 2024, ApJL 973, L14, arXiv:2401.02929), Dovekie re-analysis files:
+  https://github.com/des-science/DES-SN5YR (branch `main`, HEAD c9a4fca of 2026-01-28),
+  `4_DISTANCES_COVMAT/DES-Dovekie_HD.csv`, `DES-Dovekie_Metadata.csv`, `0_DATA/DES-SN5YR_DES/DES-SN5YR_DES_HEAD.FITS.gz`
+  (sha256 in `results/s2_flat_kernel/fit_des_alpha2.json`), accessed 2026-10-09 (D-070 addendum). The Dovekie
+  paper reference is not recorded here (not verified this cycle).
+- Legacy Surveys DR9 Tractor + DR9 photometric redshifts (Data Lab TAP tables `ls_dr9.tractor`, `ls_dr9.photo_z`,
+  joined on `ls_id`; https://www.legacysurvey.org/dr9/), batched box queries, accessed 2026-10-09 (D-070).
+
+## S1 burst twins: Fermi GBM (accessed 2026-10-09; D-071)
+
+- Fermi GBM burst catalogue, HEASARC table `fermigbrst` via TAP https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync
+  (ADQL, VOTable), 4,390 rows, 2026-10-09; columns kept and the response sha256 are in
+  `results/s1_twins/catalogue.ecsv.gz` (meta). Catalogue papers: von Kienlin et al. 2020
+  (arXiv:2002.11460); Poolakkil et al. 2021 (arXiv:2103.13528, doi:10.3847/1538-4357/abf24d).
+- GBM burst-catalogue "bcat" files `glg_bcat_all_bn<id>_v<NN>.fit`, HEASARC FTP
+  https://heasarc.gsfc.nasa.gov/FTP/fermi/data/gbm/bursts/<YYYY>/bn<id>/current/ , newest version per burst,
+  4,389 of 4,390 present (bn number, file name, size and sha256 per row in `results/s1_twins/lc_<YYYY>.ecsv.gz`);
+  streamed into memory, never stored. HDU 2 `PHTFLUX`/`PHTFLUXB` used; HDU 1 `PHTCNTS` rejected (D-071).
+- GBM localisation systematic: Connaughton et al. 2015 (arXiv:1411.2685), 3.7° (68 %) core plus a
+  ~10 % tail to ~14°.
+- Prior lensed-GRB search (method and gap): Ahlgren & Larsson 2020 (arXiv:2006.07095).
+- Fermi GBM Data Tools (GDT), https://astro-gdt.readthedocs.io/projects/astro-gdt-fermi/en/latest/ (docs 2.2.x,
+  opened 2026-10-09): TTE, PHAII, RSP, trigdat, poshist, scat, tcat and catalogue finders; no bcat reader listed.
+
+## E1 causal event network: GBM × ICECAT-1 × GWTC × CHIME/FRB Cat 2 (accessed 2026-10-09; D-074)
+
+Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total; event tables only).
+
+- Fermi GBM burst catalogue, HEASARC `fermigbrst` via TAP https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync
+  (columns trigger_name, ra, dec, error_radius, trigger_time, t90, fluence, last_modified), 4,390 rows.
+  Catalogue papers as in "S1 burst twins".
+- IceCube ICECAT-1 v4, Harvard Dataverse doi:10.7910/DVN/SCRUCD, file `IceCube_Gold_Bronze_Tracks.tab`
+  (datafile 7502710, original CSV; the Dataverse md5 cfb7a988cfd2591ba71ab95cd365a3fa matched), 348 tracks
+  (340 after dropping `CR_VETO`). Paper: Abbasi et al. 2023, ApJS 269, 25 (arXiv:2304.01174).
+- GWOSC cumulative GWTC confident event list,
+  https://gwosc.org/api/v2/catalogs/GWTC/events?include-default-parameters=true&format=csv (391 events,
+  GWTC-1 to GWTC-5.0). The CSV has no sky positions; sky maps are in the Zenodo PE releases.
+- GWTC parameter-estimation sky maps (accessed 2026-10-10; D-074 addendum 4), Zenodo records, sha256 and sizes in
+  `data/manifests/e1_gw_skymaps.ecsv`: GWTC-2.1 rec. 6513631 `IGWN-GWTC2p1-v2-PESkyMaps.tar.gz` (54 maps);
+  GWTC-3 rec. 8177023 `IGWN-GWTC3p0-v2-PESkyLocalizations.tar.gz` (36); GWTC-4.1 rec. 20275769
+  `IGWN-GWTC4p1-18965dda8_5-Archived_Skymaps.tar.gz` (88); GWTC-5.0 rec. 20348005
+  `IGWN-GWTC5p0-29ebe06b7_25-Archived_Skymaps.tar.gz` (104). Streamed into memory, reduced to nside 32, never
+  stored. The 109 GWTC-4.1 / 5.0 list entries without a map also have no PE parameters in the GWOSC CSV.
+  GW170817 has no map in these releases (a Gaussian at SSS17a stands in, positive control only).
+- CHIME/FRB Catalog 2, CANFAR doi:10.11570/25.0066, `data/table/chimefrbcat2.csv` (4,057,396 bytes). It
+  downloaded at the first attempt on 2026-10-09 (an earlier session's download had been reset by the proxy).
+  Paper: arXiv:2601.09399.
+- CHIME/FRB Catalog 2 exposure, same DOI, `data/exposure/chimefrbcat2_exposure.h5` (216,024,090 bytes, sha256
+  cd8411f92d0ac31bd05dff47f62797638c354444de27a5c056113ca00470d514; `data/manifests/e1_chime_exposure.ecsv`). It
+  holds two HEALPix nside-4096 RING maps of time-integrated exposure (s), upper and lower transit, 2018-09-04 to
+  2023-09-15, with no time axis. It was reduced to `results/e1_events/chime_exposure_dec_profile.ecsv` and deleted.
+  The CANFAR release has no time-resolved uptime file (directories listed 2026-10-09).
+- Positive control: Abbott et al. 2017, ApJL 848, L13 (arXiv:1710.05834): GRB 170817A began 1.74 ± 0.05 s
+  after the GW170817 merger. SSS17a position: Coulter et al. 2017, Science, doi:10.1126/science.aap9811
+  (arXiv:1710.05452).
+- GBM instrument: Meegan et al. 2009, ApJ 702, 791 (arXiv:0908.0450). The ~95.6 min orbital period used for the
+  orbit-phase null is an ASSUMPTION (a ~96 min low-Earth orbit), not taken from that abstract.
+- Prior coincidence searches. Both are same-direction only, and no public code was found on 2026-10-09:
+  - Curtin et al. 2023, ApJ 954, 154 (arXiv:2208.00803): CHIME/FRB × GBM/BAT GRBs, 3σ position overlap,
+    ≤ 1 week;
+  - Masaoka et al. 2026 (arXiv:2603.24983): CHIME Cat 2 × ICECAT-1, best post-trial p = 0.076.
+- Time-dependent two-point correlation of a burst catalogue (a same-direction repeater test): Brainerd et al. 1995,
+  ApJL (arXiv:astro-ph/9501010, doi:10.1086/187784).
+- The antipodal (~176°) BATSE correlation peak is explained by a position-determination bias: Maoz 1994, MNRAS
+  269, L1 (arXiv:astro-ph/9308040).
+
+## COSMOGRAIL XIX light curves (accessed 2026-10-09; D-072)
+- Millon et al. 2020, A&A 640, A105, arXiv:2002.05736: R-band light curves of 23 lensed quasars, CDS
+  J/A+A/640/A105 (https://cdsarc.cds.unistra.fr/ftp/J/A+A/640/A105/, `lcab/*.dat`); delays and redshifts from the
+  paper's Tables 1 and 4 (arXiv source `tabdelay.tex`, `tabdata.tex`). `scripts/s3_hybrid.py`.
+
+## D1 distance self-consistency (accessed 2026-10-09; D-073)
+
+- H0LiCOW public distance posteriors, https://github.com/shsuyu/H0LiCOW-public (commit 57cf973, 2025-05-14):
+  `h0licow_distance_chains/*`, `MontePython_cosmo_sampling/data/timedelay_6lenses/B1608_Dd_Ddt_params.dat` and the
+  lens redshifts in `MontePython_cosmo_sampling/likelihoods/timedelay_6lenses/__init__.py`. Papers: Wong et al.
+  2020, MNRAS 498, 1420 (arXiv:1907.04869); Suyu et al. 2010 (B1608 D_dt); Jee et al. 2019, Science 365, 1134
+  (B1608 D_d); Chen et al. 2019, MNRAS 490, 1743 (HE0435, RXJ1131, PG1115); Birrer et al. 2019, MNRAS 484, 4726
+  (J1206); Rusu et al. 2020 (WFI2033, arXiv:1905.09338).
+- TDCOSMO 2025 public release, https://github.com/TDCOSMO/TDCOSMO2025_public (commit d7f38db, 2026-01-21):
+  `TDCOSMO_sample/TDCOSMO_data/SDSS1206+4332/final_D_d.npy`, `final_D_dt.npy`, `TDCOSMO_sample/tdcosmo_sample.yaml`;
+  `final_composite_D_dt.npy` and `final_power_law_D_dt.npy` (read 2026-10-10, D-073 addendum 3).
+  hierArc kinematic likelihood pickles `TDCOSMO_sample/<lens>_const_processed.pkl` (8 lenses),
+  `ExternalLenses/SLACS/slacs_{kcwi,sdss}_const_processed.pkl`, `ExternalLenses/SL2S/sl2s_const_processed.pkl`
+  (read 2026-10-10 with a numpy-only unpickler, D-073 addendum 4).
+- hierArc 1.2.0 (PyPI `hierarc`, https://github.com/sibirrer/hierArc; read 2026-10-10, not a dependency):
+  `Likelihood/LensLikelihood/kin_likelihood.py`, `Likelihood/kin_scaling.py`, `Likelihood/transformed_cosmography.py`
+  give the σ_v model and λ convention reproduced in `distance_consistency.kin_ln_ratio_loglike`.
+  Paper: TDCOSMO Collaboration 2025, A&A 704, A63 (arXiv:2506.03023). Other per-lens files there (names only,
+  listed 2026-10-09; read 2026-10-09 by `d1_distance.py tdcosmo`, sha256 in `data/manifests/d1_distance.ecsv`): power-law D_dt chains `HE0435-1223/he_powerlaw_Ddt.dat`,
+  `PG1115+080/pg_powerlaw_Ddt.dat`, `RXJ1131-1231/rxj_powerlaw_Ddt.dat`, `WFI2033-4723/wfi2033_pl_dt_nokext.dat`,
+  `B1608+656/B1608_Dtmod_n5e5.dat`, `DES0408-5354/power_law_dist_post_no_kext.txt`,
+  `WGD2038-4008/desj2038_pl_nokext_nokin_dt_weight.csv` (weighted), `SDSS1206+4332/angular_diameter_pre_LOS_power_law.txt`
+  (pickle); κ_ext
+  files beside them (`*kext*`, `kappa_powerlaw_*.dat`, `kappahist_*`); kinematic likelihoods `*_const_processed.pkl`.
+- FRBs/FRB repository, https://github.com/FRBs/FRB (commit 996fcda, 2026-05-06, BSD-3):
+  `frb/data/Galaxies/public_hosts.csv` and `frb/data/FRBs/FRB*.json` (DM, DMISM). `DMISM` is NE2001 (Cordes &
+  Lazio 2002, arXiv:astro-ph/0207156) from `frb/mw.py` `ismDM` (python `ne2001` package, `ElectronDensity().DM(l, b,
+  100.)`), set by `frb/builds/build_frbs.py`; used as stored, not recomputed. Macquart et al. 2020, Nature 581,
+  391 (arXiv:2005.13161) for ⟨DM_cosmic⟩, p(Δ) and the host log-normal; James et al. 2022, MNRAS 516, 4862
+  (arXiv:2208.00819) for F ≈ 0.32.
+- YMW16 Galactic electron-density model, Yao, Manchester & Wang 2017, ApJ 835, 29 (arXiv:1610.09448), through pygedm
+  3.3.0 (https://pypi.org/project/pygedm/3.3.0/, sdist; Price, Flynn & Deller 2021, PASA 38, e038, arXiv:2106.15816):
+  only its compiled `ymw16` extension and parameter files are used (D-073 addendum). Accessed 2026-10-09.
+
+## Neutrino Frontier round-1 review (accessed 2026-10-10; docs/neutrino_frontier/round1_review.md)
+- Stuttard 2021, "Neutrino signals of lightcone fluctuations resulting from fluctuating space-time", arXiv:2103.15313
+- "Probing Lorentz Violation in Neutrino Propagation from a Core-Collapse Supernova", arXiv:1110.4848
+- Perlman et al. 2015, "New Constraints on Quantum Gravity from X-ray and Gamma-Ray Observations", ApJ 805, 10, arXiv:1411.7262
+- Beacom et al. 2004, "Pseudo-Dirac Neutrinos, a Challenge for Neutrino Telescopes", arXiv:hep-ph/0307151
+- Rink & Sen 2022, "Constraints on pseudo-Dirac neutrinos using high-energy neutrinos from NGC 1068", arXiv:2211.16520
+- Dixit, Miranda & Razzaque 2024, "Searching for Pseudo-Dirac neutrinos from Astrophysical sources in IceCube data", arXiv:2406.06476
+- Martinez-Soler, Perez-Gonzalez & Sen 2022, "SN1987A still shining: A Quest for Pseudo-Dirac Neutrinos", PRD 105, 095019, arXiv:2105.12736
+- Sen 2022, "Constraining pseudo-Dirac neutrinos from a galactic core-collapse supernova", arXiv:2205.13291
+- Longo 1988, PRL 60, 173, doi:10.1103/PhysRevLett.60.173 (SN1987A nu-gamma Shapiro delay)
+- Krauss & Tremaine 1988, PRL 60, 176, doi:10.1103/PhysRevLett.60.176 (SN1987A WEP test)
+- Boran, Desai & Kahya 2019, "Constraints on differential Shapiro delay between neutrinos and photons from IceCube-170922A", EPJC 79, 185, arXiv:1807.05201
+- "Multimessenger Tests of Einstein's Weak Equivalence Principle and Lorentz Invariance with a High-energy Neutrino from a Flaring Blazar", arXiv:1807.06504
+- Minazzoli, Johnson-McDaniel & Sakellariadou 2019, "Shortcomings of Shapiro delay-based tests of the equivalence principle on cosmological scales", arXiv:1907.12453; Moriond summary arXiv:2203.11215
+- LVK 2017, "Gravitational Waves and Gamma-rays from a Binary Neutron Star Merger: GW170817 and GRB 170817A", arXiv:1710.05834
+- IceCube 2018, "Neutrino emission from the direction of the blazar TXS 0506+056 prior to the IceCube-170922A alert", Science 361, 147, arXiv:1807.08794
+- IceCube et al. 2018, "Multi-messenger observations of a flaring blazar coincident with high-energy neutrino IceCube-170922A", arXiv:1807.08816
+- IceCube 2017, "Extending the search for muon neutrinos coincident with gamma-ray bursts in IceCube data", ApJ 843, 112, arXiv:1702.06868
+- IceCube 2021, "Every Flare, Everywhere: An All-Sky Untriggered Search for Astrophysical Neutrino Transients Using IceCube Data", ICRC2021, arXiv:2107.12134
+- IceCube 2021, "IceCube Data for Neutrino Point-Source Searches Years 2008-2018", arXiv:2101.09836
+- IceCube 2023, "IceCat-1: the IceCube Event Catalog of Alert Tracks", arXiv:2304.01174
+- Stein et al. 2021, "A tidal disruption event coincident with a high-energy neutrino", arXiv:2005.05340
+- Päs, Pakvasa & Weiler 2005, "Sterile-active neutrino oscillations and shortcuts in the extra dimension", PRD 72, 095017, arXiv:hep-ph/0504096
+- 2024, "The neutrino flavor oscillations in the static and spherically symmetric black-hole-like wormholes", arXiv:2412.02144
+- LVK 2023, "Search for gravitational-lensing signatures in the full third observing run of the LIGO-Virgo network", arXiv:2304.08393
+
+## Neutrino Frontier data audit (accessed 2026-10-10; docs/neutrino_frontier/data_audit.md)
+- IceCube IceTracks-DR2, Harvard Dataverse doi:10.7910/DVN/MMIIZA (v3.1, 2026-10-05; CC0), 2008-04-06 to
+  2022-05-23, 1,643,355 track events; paper arXiv:2605.19040. Events and uptime files (28, ~210 MB) streamed
+  2026-10-10 via `https://dataverse.harvard.edu/api/access/datafile/<id>`; ids and sha256 of the served `.tab`
+  in `data/manifests/nf_icetracks_dr2.ecsv` (Dataverse's md5 is of the original CSV, not the served file).
+- IceTracks-DR2 IC86 IRFs and IC86_IV files for the TXS benchmark (D-080): Dataverse version 1.0 IRFs (file ids
+  13597927, 13597978) and version 3.1 IRFs (14153506, 14153513), original CSVs; ids and md5 in
+  `data/manifests/nf_skyllh_dr2.ecsv` (accessed 2026-10-10). Benchmark values: arXiv:2605.19040 Table 6 and section 5.
+- IceCube IceTracks-DR1 (10-yr PS), doi:10.7910/DVN/VKL316 (v2.0) / data DOI 10.21234/CPKQ-K003, arXiv:2101.09836;
+  same events as HEASARC TAP table `icecubepsc` (1,134,450 rows).
+- IceCube HESE 12-yr DirectFit, doi:10.7910/DVN/PZNO2T (v2.0; `data.tab`, 164 events), PoS(ICRC2023)1030.
+- IceCube HESE 7.5-yr, doi:10.21234/4EQJ-BB17 (zip 78,998,573 B), PRD 104, 022002 (arXiv:2011.03545).
+- IceCube flavor composition 11.4 yr, doi:10.7910/DVN/CBNMEB (v2.0), arXiv:2510.24957.
+- IceCube TXS 0506+056 2008-2017 events, doi:10.21234/B4QG92 (zip 31,520 B), Science 361, 147
+  (doi:10.1126/science.aat2890).
+- IceCube GW O3 joint search replication data, doi:10.7910/DVN/34B5AP (v1.0), arXiv:2601.07595.
+- IceCat-2 preliminary (7 events), doi:10.7910/DVN/RX28YT (v1.0); proceedings arXiv:2507.06176.
+- GCN AMON IceCube gold/bronze and cascade tables, https://gcn.gsfc.nasa.gov/amon_icecube_gold_bronze_events.html,
+  https://gcn.gsfc.nasa.gov/amon_icecube_cascade_events.html (live pages; snapshot sha256 to be pinned on use).
+- GCN Circulars, https://gcn.nasa.gov/circulars/<id>.json and archive.json.tar.gz (31.4 MB, daily).
+- ANTARES 2007-2017 point-source tracks, https://opendata.km3net.de dataset "ANTARES 2007-2017 Point Source
+  Analysis" v1.1 (DOI 10.5072/FK2/HZQTC5 is a DataCite test prefix, not persistent; CC BY 4.0).
+- KM3-230213A event data, https://opendata.km3net.de v1.0 (test-prefix DOI 10.5072/FK2/JW72C9); Nature 638, 376
+  (doi:10.1038/s41586-024-08543-1).
+- Swift GRB Burst Advocate compilation, HEASARC TAP table `swiftgrbba` (2,043 rows on 2026-10-10).
+- SkyLLH, PyPI `skyllh` 26.1.0 (2026-09-09), https://github.com/icecube/skyllh.
+- SN1987A: Hirata+ 1988 PRD 38, 448; Bionta+ 1987 PRL 58, 1494; Bratton+ 1988 PRD 37, 3361; Alexeyev+ 1988
+  PLB 205, 209; compilation Loredo & Lamb 2002 PRD 65, 063002 (astro-ph/0107260).

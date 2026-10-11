@@ -2580,6 +2580,52 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
 - JADES or more NEXUS epochs enlarge the compact sample.
 - A W3 model with cluster macro-magnification is needed for caustic-crossing stars in arcs.
 
+## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
+
+**Decision.**
+- D-050's catalogue aperture-mass map is `exotic_screens.py shear` (Schirmer Q_TANH, R_ap = 10″, 1″ grid, sources at
+  1–10″, rotation null) with `scripts/inject_shear.py` for injection-recovery. It replaces `radial` for W1 limits at
+  ≥ 2 × 10¹² M☉ (5–8× stronger); `radial` stays as an independent screen. Method and tables: docs/exotic_limits.md
+  "W1 negative-mass lenses (shear screen)".
+- **Responsivity.** The cluster shear removed is R g with R fitted per field (0.41–0.48): catalogue isophotal
+  moments respond to shear by R, not 1. Injected images keep R of the lens-induced change of their measured moments (image minus source, so the cluster shear cancels), and painted images face the spike veto; only resolved sources are painted (unresolved ones have no measured shape), and not those with κ ≥ 1, |g| ≥ 1 or |R g| ≥ 1 or spike segments. Fewer than 20
+  calibrating rows, or an R outside (0, 1.5] or below 3σ, is an error, not R = 1.
+- **Spike veto.** Diffraction-spike segments (`spike_segments`, D-043, Gaia stars where the field uses them) are
+  dropped: they point radially at their star, the W1 sign.
+- **E/B rule.** A peak counts only if p_random < 0.05 against the rotation null *and* S exceeds the field's largest
+  |S_×|. Adopted after seeing real B-mode extremes beyond the rotation null (conservative; post hoc).
+- All thresholds are ASSUMPTIONs.
+
+**Alternatives rejected.**
+- Removing the full model g: leaves −(1 − R) g ≈ −0.55 g, a radial pattern of the W1 sign around every mass
+  concentration (measured slope of ε along g: 0.41–0.48 in four fields).
+- No spike veto (first run): Abell 370 E max 4.51 and B max 4.68 (both p < 0.005), Abell 2744 E 3.92 (p 0.01). With
+  the veto: 3.48 / 3.46 and 3.39. Spikes, not lensing.
+- The rotation null alone: B-mode extremes still reach p 0.005–0.04 in three fields after the veto.
+- Point-mass 1/x² (4″, 10″) and top-hat 6″ filters: lower injection efficiency than Schirmer 10″ in MACS0416 and
+  Abell 2744 (50 injections each; numbers in the doc).
+- Hetterscheidt et al. (2005) as the source of the filter's cut-off: the exponential box E(x) is Schirmer et al.'s
+  own (eq. 16), read from the full text.
+
+**Evidence** (`derived`; four photo-z fields, 30.2 arcmin²).
+- Unit tests: phases and PSF deconvolution, (ε − g)/(1 − g*ε) inverts the lens mapping, sign (radial ring S = +√2n,
+  tangential −√2n), a strong synthetic ring beats the rotation null, R recovered from diluted shear, a massive
+  W1 injection recovered on a synthetic field.
+- Real data: ε along the model g rises with |g| in MACS0416 and Abell 2744 (e.g. +0.059 ± 0.010 at ⟨|g|⟩ = 0.14,
+  +0.255 ± 0.024 at 0.42), so the screen sees the cluster's real shear; after removing R g the residual is
+  consistent with 0.
+- Real fields: S_max 3.39 / 3.79 / 3.40 / 3.48 (Abell 2744, MACS0416, MACS1149, Abell 370), p_rot 0.58 / 0.050 /
+  0.19 / 0.20; only Abell 370 exceeds its max |S_×| (3.46), and not the rotation null: null.
+- Recovered (of 800, four fields): 0, 1, 33, 197, 405 at 2 × 10¹⁰, 2 × 10¹¹, 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉
+  (radial: 0, 0, 8, 84, 156 of 1,600). 95 % limits: 7.7 × 10³, 1.3 × 10³, 6.5 × 10² deg⁻² at the top three masses
+  (radial headline 6.1 × 10⁴, 7.0 × 10³, 4.0 × 10³).
+- Wall time 58–168 s per field (1,000 injections).
+
+**Revisit if.**
+- A proper weak-lensing shape catalogue (PSF-anisotropy-corrected, calibrated) exists for these fields: the E/B
+  floor would drop and the limits improve.
+- DJA photo-z for SMACS 0723 and El Gordo are reachable again (tarballs 404 on 2026-10-08).
+
 ## D-054 Survey-agnostic exotic signatures; MulensModel for ordinary microlensing fits; OGLE-IV Mróz samples first for W3 (2026-10-08)
 
 **Context.** Owner direction (2026-10-08): find observational evidence of traversable wormholes / negative-mass
@@ -2654,3 +2700,1421 @@ in docs/orphan_pairs.md).
 
 **Revisit if.** A run gives P < 0.05 under both (e) and (f), or a segmentation-map same_galaxy rule changes the
 orphan counts.
+
+## D-056 W1/W2 in published lens catalogues: per-class deflector tests; weak limits; three open quasar pairs (2026-10-08)
+
+**Decision.**
+- `jwst_anomaly.lenscats` reads lenscat 1.1.3, the Euclid Q1 Discovery Engine tables and the SuGOHI list (pinned by
+  sha256). It merges them by position (3″; `entries`, `refs` keep provenance) and exposes them as a
+  `signatures.CatalogueSurvey` (`PublishedLensSurvey`). It holds the pure tests:
+  - `brick_coverage`: footprint and depth from the brick summary;
+  - `pair_images` and `quasar_pair_test`;
+  - `bright_galaxy_near`;
+  - SIS σ, the Faber–Jackson fit and the required lens magnitude;
+  - position checks: signed J2000 name vs RA/Dec, and rounding.
+- `scripts/w12_lenscats.py screen | vet`.
+  - DR10 coverage and depth come from `ls_dr10.bricks_s`; Tractor boxes come from the Data Lab TAP, split at RA 0/360
+    and full RA near the poles.
+  - Only lensed-quasar and radio-interferometric systems are tested; galaxy-finder and sub-mm systems are
+    insensitive.
+  - "faint galaxy", "blended", "too close" and position or mask problems are undecided and removed from N.
+  - Limits are s₉₅(k_class) / N_class, with test completeness assumed (no injection factor). Known biases of
+    that assumption: a faint unrelated source in the circle removes a dark-lens system as "faint galaxy" (true
+    efficiency near 0.98); a colourless pair takes a compact PSF-typed lens as an image (more "none").
+- Thresholds are ASSUMPTIONs in `Params`.
+
+**Result** (`derived`; run `summary.json`).
+- Of 20,986 galaxy-scale systems, 17,555 are in the DR10 footprint: 17,102 galaxy-selected, 110 sub-mm, 325 quasar,
+  18 radio.
+- 29 quasar and radio systems are decided: 13 with a deflector, 16 "none". Of the 16 "none":
+  - 13 have a literature lens galaxy (SIMBAD 6, published z_l 6, He et al. 2025 1);
+  - 3 SuGOHI IX CHITAH pairs are open in the typical variant but explained by a lens below the LS depth in the
+    conservative variant.
+- Typical: f_dark < 0.48 (quasar, k = 3, N = 16), < 0.23 (radio, k = 0, N = 13).
+- Conservative: < 0.50 (quasar, k = 0, N = 6); no radio limit (N = 0).
+- Nothing goes to `/vet-candidate`. Earlier limits (1.5 × 10⁻⁴, then 0.13) are withdrawn (PR #81 reviews).
+
+**Alternatives rejected.**
+- Coverage from "a Tractor source within 5″": it drops the dark configuration itself, and it counted stray DECam
+  detections north of the DR10 footprint.
+- Counting galaxy-finder or sub-mm systems in N: they have zero sensitivity.
+- Counting a galaxy fainter than required as an explanation: it is undecided.
+- A recovery factor from deleting deflectors and re-running the same code: it is 1 by construction.
+- Data Lab TAP uploads and `q3c_*` in ADQL (rejected by the service); per-object viewer calls.
+- The Lemon lensed-quasar database (HTTP 500 on 2026-10-08) and HSC imaging (account required).
+
+**Evidence.**
+- FJ calibration on 605 galaxy-selected lenses (LS z): a = 20.41, k = 0.67, rms 0.88 mag.
+- Median required m_z is 19.73 (typical) and 25.05 (conservative), against a median brick depth of 23.43.
+- Catalogue defects: cluster-survey rows typed "galaxy" (14 references), AGEL declinations, SPT positions, 468
+  rounded positions covered, rejected candidates kept (MJV16999), name-based merges.
+- Tests: `tests/test_lenscats.py` and `tests/test_w12_lenscats.py`. They cover:
+  - a dark pair reaching "none";
+  - quad images never counted as the deflector, while a red PSF-typed lens is;
+  - a fold-quad lens outside the brightest pair's circle (search circle holds every image; final review);
+  - a deflector beyond image_radius inside the pair circle;
+  - faint-galaxy, close, blended and insensitive cases;
+  - empty inputs keeping the schema;
+  - brick coverage independent of sources;
+  - RA-wrap and pole boxes, signed declinations, rounding and Poisson limits.
+
+**Revisit if.**
+- HSC PDR or HST photometry is available for the 307 blended or close lensed quasars.
+- The CHITAH lens models or spectra of the three open pairs are checked.
+- A public list of rejected lensed-quasar candidates (binary or "nearly identical" quasars) appears.
+- A lens list publishes image positions (W1 geometry).
+- Tractor can be re-run on injected images (a measured completeness).
+
+**Amendment (2026-10-08): the LS pair must be the catalogued pair (D-064 check); one entry per lens.**
+- `lenscats.pair_match` (moved from `scripts/w12_niq.py`, tolerance `PAIR_SEP_TOL` = 0.5″, ASSUMPTION) is shared by
+  both scripts. In `w12_lenscats.py`, `deflector_test` reports `used_pair`, and `pair_check` compares the LS pair
+  with 2θ_E (SIS `model_prediction`; the catalogues give no image positions). A pair-based status with a mismatch
+  is undecided. Without a catalogued θ_E the system stays decided and is counted as unchecked in `summary.json`.
+- `dedup_same_lens` (vet) keeps one decided entry per lens. Entries match on the same designation
+  (`lenscats.designation_key`, HHMM±DD after removing the prefix, J/B, spaces and suffixes) within 30″
+  (`Params.same_lens_radius`, ASSUMPTION). A copy with a deflector is kept (a deflector seen at one catalogued
+  position explains the lens), else the first copy. Merged ids: `summary.json` `vetting.same_lens_merged`. Three
+  radio lenses are listed twice in lenscat about 11″ apart: MG0414+0534, B2114+022, B2319+052. For each, the
+  "deflector" copy is kept and the "none" copy, on empty sky, is dropped.
+- Re-run (`derived`): decided 29 → 25 (deflector 13 → 12, none 16 → 13). 115252+004733 (θ_E 1.67″, LS pair 4.18″)
+  becomes undecided. Typical: quasar 3 / 15 / < 0.52, radio 0 / 10 / < 0.30, all 3 / 25 / < 0.31.
+  Conservative: 0 / 5 / < 0.60. The three open CHITAH pairs are unchanged.
+- Coverage is thin: 0 of the 15 pair-decided systems have a catalogued θ_E. A one-off check against the SQLS
+  separations pinned for D-064 matched the three that have one (J1322+1052, J1349+1227, J1515+1511).
+- Rejected: requiring a catalogued separation for every decided system (no pair-decided system has one, so the
+  quasar class would have N = 0); importing the D-064 VizieR tables into the D-056 chain (3 of 15 matches, all
+  consistent: a second pinned input set for no change); a hard-coded duplicate list; widening the 3″ catalogue merge
+  (it would merge distinct close systems before any test).
+
+## D-057 W3 in OGLE-IV Mróz samples: one fitter for ordinary and exotic models; disk sample null (2026-10-08)
+
+**Decision.**
+- `jwst_anomaly.ogle.OgleMrozSample` (a D-054 `LightCurveSurvey`) reads the published Mróz et al. 2019 (bulge,
+  5,790 events) and 2020 (disk, 460 events of Table B1) products, pinned by sha256 (`data/manifests/ogle_mroz.ecsv`).
+- `scripts/w3_microlensing.py fit` fits PSPL, FSPL, PSPL+parallax and the exotic `N1neg`, `E2pos`, `E2neg` models on
+  the same straight trajectory with shared linear source/blend fluxes; ΔBIC = BIC(exotic) − min BIC(ordinary).
+  ASSUMPTION: flag at ΔBIC < −10. `vet` then tests refits, robust errors, baseline variability, per-season offsets
+  and drifts, binary source, binary lens, arXiv mentions and VSX / Gaia DR3 variable matches; a flag survives only
+  if every test keeps the exotic preference.
+- **Disk sample (all 460 events): null.** 6 flags (all `E2pos`, ΔBIC −12.6 … −33.8 on first fit); 0 survive. Every
+  flag loses its preference once each season gets a free baseline offset and drift (`derived`).
+
+**Alternatives rejected.** Refitting exotic models in a second library (D-054: geometry must match exactly);
+treating a better exotic fit as a candidate without season-systematics tests (all 6 disk flags were systematics).
+
+**Evidence.** CHANGELOG 2026-10-08 "W3 OGLE-IV disk sample"; contact sheet inspected (sparse peak coverage in
+GD1279.14.87 and GD1081.21.615; post-peak dips below baseline in BLG979.24.9765 and BLG775.24.26593 that a
+per-season drift absorbs). No rate limit yet: injections are built on bulge light curves only.
+
+**Amendment (2026-10-08, same day): bulge sample, injections and the selection answer.**
+- **Bulge sample (all 5,790 events): null.** 127 flags (E2pos 96, E2neg 22, N1neg 9; ΔBIC −10.2 … −2788); 0 survive.
+  Free blend per season removes 73 → 14, season drifts → 9, binary source → 7, and two further tests, which need the
+  survivors' fits and therefore run in `revet`, remove the rest: **feature coverage** (≥ 3 epochs where the exotic and
+  the best ordinary model differ by > 3σ at the epochs, with the Δχ² coming from them) leaves 1; an **epoch jackknife**
+  (drop up to 3 most influential epochs, keeping ≥ 3 inside the feature; review of PR #88: dropping 3 of 5 killed a
+  synthetic t_E = 3 d W3 event) keeps it; **two unrelated PSPL bumps** explain it,
+  BLG519.21.110304, whose N1neg spikes sit on the 2011 event and a 1-day bump in 2015 (ΔBIC +24.4 for the exotic).
+- **The published samples cannot contain a W3 event.** 0 of 600 injected n = 1, ε < 0 events (t_E 3–300 d,
+  ρ ∈ {0.01, 0.1}, u₀ ~ U[0, 2)) pass the emulated Mróz selection, in every t_E, ρ and u₀ bin, while PSPL controls on
+  the same light curves pass 15–43 % and the fitter flags 42–97 % of the injections. They fail the one-bump, PSPL
+  fit-quality, χ₃₊, three-consecutive-points and blend cuts, four at a time on average. The emulation is stricter than
+  the published selection (63.9 % of the real events pass it), which cannot bridge that gap.
+- **Therefore no W3 rate limit from these samples** (the measured efficiency is 0). The 95 % bound on the recovery
+  fraction (3/60) says even the strongest limit they could give would be 0.8–3.9 × 10⁻⁸ per star per year, against an
+  ordinary rate of 5–25 × 10⁻⁶. A W3 limit needs a search on the OGLE light curves before the PSPL selection, which
+  the published products do not contain (and OGLE EWS terms are still an owner decision, D-054).
+- Evidence: docs/exotic_limits.md "W3 in the OGLE-IV microlensing samples"; survivors inspected on a contact sheet
+  before this entry. Wall time ≈ 5 CPU hours (bulge fit 10,413 s on 4 cores; vet 6,592 s; inject 1,974 s).
+- **Params caveat:** this bulge run predates D-058, so its parallax fits are unbounded. A bound makes the ordinary
+  family less flexible, so re-fitting under D-058 can only add flags, never remove one; the vetting chain and the
+  injection/selection result are unaffected. The chunked tables of D-059 are the re-fit under the current Params.
+
+**Revisit if.** A light-curve-level OGLE/KMTNet/MOA data set becomes usable (then a real W3 limit is possible, and the
+selection emulation here is the baseline to beat); or the season-offset/drift test is shown to absorb injected W3
+signals at small u₀ (it is applied to injections through `flag_vetted`, which stays at 43–86 %, so it does not now);
+or the D-059 chunk re-fit under the bounded parallax of D-058 produces flags that pass the `revet` tests (this run,
+with unbounded parallax, produced none); or the `revet` tests are run in the injection loop and remove injected W3
+events (they are checked only on synthetic unit-test events now).
+
+## D-058 W3 fitter: parallax bounded at |π_E| ≤ 5; disk sample still null (2026-10-08)
+
+**Decision.** ASSUMPTION: `w3_microlensing.Params.pie_max = 5`; the PAR objective rejects larger |π_E| in `fit`,
+`vet` and injections. Observed microlensing parallaxes are ≲ 1–2 even for nearby disk lenses, so 5 is generous.
+Disk re-fit: 7 flags, 0 survivors (`derived`).
+
+**Alternatives rejected.** Unbounded π_E (unphysical fits, π_E up to ~10³); a Gaussian prior on π_E (needs a
+population model; a hard bound is enough for a flag screen).
+
+**Evidence.** CHANGELOG 2026-10-08 "bounded parallax": simulated injections show no absorption either way
+(25 / 25 flagged); the bound adds one marginal real flag (GD1217.10.8703), removed by season offsets.
+
+**Revisit if.** Bulge injections with real cadences show the bound changes recovery, or a published event with
+|π_E| > 5 appears in the samples.
+
+## D-059 W3 bulge chunk fit tables are tracked in git (`results/w3_ogle/`) and joined by `merge-chunks` (2026-10-08)
+
+**Decision.** `w3_microlensing.py fit --chunk K/N` (complete chunks, no `--limit`) also writes its `derived` table
+as deterministic gzipped ECSV to `results/w3_ogle/fits_<sample>_chunkKofN.ecsv.gz`; `merge-chunks --n N` joins
+chunks 1..N into the table `vet` reads and sets `chunk = ""` (the whole sample) only when every chunk exists,
+was fitted with the current `Params` and holds exactly its own events (none skipped). `limit` keeps refusing anything else.
+Raw light curves and all other outputs stay out of git.
+
+**Alternatives rejected.** Fitting all 5,790 bulge events in one session (~4 h; cloud sessions end after ~40 min);
+keeping chunk tables only under `$JWST_ANOMALY_DATA` (lost with each ephemeral session — chunk 1/12 of
+2026-10-08 was lost this way and must be refitted); GitHub release assets (extra credentials and tooling for
+~100 kB files); a compact column subset (the contact sheet and audits need the model parameters).
+
+**Evidence.** A chunk table is ~480 rows × 57 columns; gzipped ~0.2 MB (CHANGELOG 2026-10-08 "chunk 2/12"),
+so all 12 chunks stay ~2–3 MB, under the 1 MB per-file rule.
+
+**Revisit if.** The tracked tables exceed ~10 MB in total, or a local session can fit the whole sample at once.
+
+## D-060 W2 deflector test at HST resolution: the Hubble Source Catalog is not decisive (2026-10-08)
+
+**Decision.** Do not use HSC v3 catalogue photometry to decide whether a lensed quasar lacks a deflector.
+`scripts/w12_hsc_probe.py` stays as the reproducible probe and as the validation harness (known-lens efficiency)
+for a pixel-level replacement.
+
+**Alternatives rejected.** Counting HSC "none" systems toward f_dark (efficiency 0.46 on known lenses would need a
+correction larger than the signal); widening the deflector radius or lowering the CI cut (the lens galaxy is
+missing from the catalogue, not mis-typed, in the four inspected misses: H1413+117, HE1104−1805, SBS0909+532, HE2149−2745).
+
+**Evidence** (`derived`, run 2026-10-08). 444 quasar/radio systems; 71 with HSC sources in ≥ 2 HSC images (91 with any); known-lens systems
+13 deflector / 15 none / 38 undecided (sources in ≥ 2 HSC images; 15 / 20 / 48 without that cut); no-lens-z systems 1 none (HS0810+2554) / 4 undecided. Tests:
+`tests/test_w12_hsc_probe.py`.
+
+**Revisit if.** PSF-subtracted HST image models (or another deeper/sharper survey) reach an efficiency ≥ 0.9 on
+the known-lens set; HSC v4 or a lens-aware HST catalogue appears.
+
+## D-061 W3 in the Gaia DR3 microlensing candidates: the published selection also rejects W3 (2026-10-08)
+
+**Decision.** Do not use `gaiadr3.vari_microlensing` (Wyrzykowski et al. 2023) to limit W3: its Sample A selection
+passes almost no injected W3 event. `jwst_anomaly.gaia_mulens.GaiaDR3Microlensing` (a D-054 `LightCurveSurvey`:
+TAP events, Table D.1 sample labels from the pinned arXiv source, DataLink G epoch photometry) and
+`scripts/w3_gaia.py` (`fetch`, `fit`, `inject`, `summary`, `manifest`; the D-057 fitter) stay as the harness for
+the next Gaia-cadence sample.
+
+**Alternatives rejected.** Fitting the 363 candidates and quoting the flag count as a limit (the selection removes
+the signal first, as in D-057); emulating the Extractor cuts with guessed definitions (they fail 126 of 163 real
+Sample A events, so `selected` leaves them out; `selected_ext` keeps them for the record).
+
+**Evidence** (`derived`, run 2026-10-08; tables in `results/w3_gaia/`, inputs in `data/manifests/gaia_dr3_mulens.ecsv`).
+- Emulation audit: published cuts (score, u0, t_E, G0, skewness, amplitude, t_first, parallax χ²/dof and π_E,
+  skew–Abbe with log10; the stricter first-year branch read in JD − 2450000, since Gaia time never reaches the published 6824.5–7189.5 window) pass **143 / 163** real Sample A events (149 with ln); 19 / 200 B-only events. G errors
+  rescaled by Eq. 9–10; Level 0 refit reproduces the published t_E (checked on 6 events). Not emulated: colour and RP
+  cuts, u0/t_E error cuts, Extractor cuts, visual inspection (ASSUMPTIONs in `SelParams`).
+- Injections on 166 PSPL-subtracted candidate light curves (30 per cell; t_E 10/30/100/300 d, ρ 0.01/0.1, u0 < 2,
+  t0 uniform in the DR3 window): **W3 2 / 240 selected (0.8 %)**, PSPL controls 17 / 120 (14 %); ε_W3/ε_PSPL ≈ 0.06.
+  Both selected W3 events have u0 ≈ 1.9 (outside the caustic) and are not flagged; **0 / 240 are selected and
+  flagged**. The fitter alone flags 139 / 240 (58 %). W3 events fail the skew–Abbe cut (213), the score (223), skewness
+  < 0 (153) and the parallax χ²/dof (141).
+- Fits of all 363 (0 errors): one flag, 4053892503992268288 (Sample B, ΔBIC −40.3, `E2neg`/`N1neg`, t_E ≈ 346 d,
+  u0 ≈ 1.47). Light curve inspected: the event peaks at the end of the DR3 window (no post-peak data) and the
+  baseline scatters by ~0.4 mag; the exotic fit uses the baseline wiggles. Not a candidate.
+
+**Revisit if.** Gaia DR4 publishes epoch photometry for all sources (then a W3 screen before any microlensing
+selection becomes possible); Gaia publishes the Extractor definitions; or a microlensing catalogue appears whose
+selection does not require a single brightening.
+
+## D-062 W3 in the MOA-II 9-year release: thin in-house adapter, notch pre-screen, gb22 pilot null and first W3 rate limit (2026-10-08)
+
+**Decision.** Read the MOA-II 2006–2014 release (NASA Exoplanet Archive) with a thin adapter,
+`jwst_anomaly.moa.MoaField`, a `signatures.LightCurveSurvey` over one field's bulk tar. Its light curves are read in
+place through a tar-header index; they are difference fluxes in counts, returned by the new
+`signatures.standard_flux_light_curve`. Its events are all Cut-0 objects of the field. The pinned files are the
+metadata tarball (97 MB) and `gb22.tar` (3.5 GB; stated reason: light curves exist only as per-field tars, and gb22 is
+the smallest). The W3 search is `scripts/w3_moa.py`:
+- a notch pre-screen. A deficit must sit below both its flanks and the median flux, normalised by the light curve's
+  own red noise. It must be single, and its epoch must not be shared by improbably many objects of the field or chip;
+- the `w3_microlensing` fitter with the blend flux free (`linear_fluxes(f_min=inf)`), t_E ≤ 1,000 d and ρ ≤ 0.3;
+- cheapest-first vetting that stops at the first failure. It adds MOA-specific ordinary tests (neighbour objects,
+  seeing/airmass/sky regressors, a trapezoidal eclipse model, ≥ 3 nights in the feature, a night jackknife);
+- injection-recovery through Cut-0 emulation, pre-screen, fit and vetting;
+- a 95 % limit per monitored star per year. N_s comes from the N_s-per-Cut-0-object ratio of Nunota et al. 2024.
+- `fit --chunk K/N` and `merge-chunks` (as D-059) for fields too large for one session; gb22 no longer needs them.
+The 3.5 GB download is for cloud sessions; the owner's machine need not fetch it.
+
+Pilot result for gb22: 18,599 light curves, 30 flags, **0 survivors**. Γ₉₅ ≈ 1.2–4.4 × 10⁻⁶ per star per year for
+t_E = 10–300 d and 0.6–1.1 × 10⁻⁵ at 3 d (docs/exotic_limits.md "W3 in MOA-II (pilot: gb22)").
+
+**Alternatives rejected.**
+- astroquery `NasaExoplanetArchive`: TAP has no MOA table (2026-10-08).
+- merida 0.3.2: it scrapes a temporary Firefly workspace URL with a spoofed User-Agent and has heavy runtime dependencies.
+- qusi / ramjet `MoaDataInterface`: it reads internal feather files, not the public release.
+- Per-object HTTP files (`data/Contributed/MOA/gb{F}/R/{C}/…ipac`): fine for a few events, but undocumented, and
+  18,599 requests where a whole field is screened.
+- Fitting every shape pass: 1,058 light curves at ~26–35 s each (~2.5 h on 4 cores; chunk 1/8 of them,
+  `results/w3_moa/fits_gb22_chunk1of8.ecsv.gz`, flagged 131 / 133, so the flag carries no information there);
+  97 % of them sit at epochs shared with other objects.
+- The first pre-screen statistics:
+  - a plain box mean against the median: 10,367 passes at S < −8, dominated by trends and season offsets;
+  - a notch against the flanks with white-noise errors: 13,462 passes;
+  - the notch normalised by its own spread: 4,855 passes, and it passed 44–76 % of Cut-0-detected PSPL controls (a baseline box
+    between bright flanks). Requiring the box below the median flux too brought the PSPL controls to 0/250.
+- Keeping parallax in the screen fit: it can only remove flags, so it is fitted in vetting. Unbounded t_E/ρ: one fit
+  took 200 s with an exact finite-source integral on every epoch.
+
+**Evidence.**
+- `metadata.ipac` has 2,409,061 rows, the Cut-0 count of Nunota et al. 2024 (arXiv:2410.23553, Sect. 2.2).
+- Cut-0 cuts: Koshimoto et al. 2023 (arXiv:2303.08279), Table 2. The archive page quotes the older Sumi et al. 2011
+  values.
+- N_s per Cut-0 object over 20 fields: median 188, range 131–240. gb22 is not in Nunota et al.'s Table 1.
+- First vetting pass: 9 survivors, inspected; they are one- or two-night drops and spike-less flat dips. The eclipse
+  model, the chip-level shared-epoch test and the ≥ 3-night rule were then added, and the injections were re-run
+  after the change: 101/600 W3 injections recovered, 0/100 PSPL controls. The largest efficiency loss is the
+  variable-baseline test (35 % of carriers have χ²/dof > 2 alone); a stricter carrier definition gave 171/600.
+- D-054's "no verified bulk MOA endpoint" no longer holds.
+
+**Revisit if.**
+- NExScI publishes a TAP table or API for MOA, or a maintained reader appears.
+- MOA publishes machine-readable W3-relevant efficiencies or image-level injections. The Cut-0 emulation is
+  light-curve level.
+- The other 21 fields are screened. The largest tars are 474 GB, so per-object HTTP or a cloud session is needed.
+- A survivor appears: stop and report to the owner (/vet-candidate).
+- Any W3 limit is quoted outside the repository: `needs-human` (D-054).
+
+## D-063 W5 count-deficit screen: DR10 Tractor counts aggregated per nest4096 on Data Lab, astropy-healpix, cross-region null; 340.5 deg² null and first W5 limit (2026-10-08)
+
+**Decision.**
+- **Count maps, not catalogues:** `jwst_anomaly.countmap.LegacySurveysCountMap`, a `signatures.CountMapSurvey`
+  (new protocol: `count_map()` per HEALPix pixel, `nside`, `area_deg2()`; it also answers `catalogue()`). Legacy
+  Surveys DR10 `ls_dr10.tractor` is aggregated server-side on the Data Lab TAP with `GROUP BY nest4096`, three
+  queries per 2° × 2° chunk (galaxies r < 23.5 extended unmasked; all sources with depth, nobs, E(B−V); sources
+  with any maskbit → unmasked fraction w). Pixels split between chunks are summed (`combine_duplicates`).
+- **Geometry:** astropy-healpix (now a core dependency; BSD-3-Clause, wheels everywhere).
+- **Prediction:** `countmap.deficit_profile` = `exotic_sim.count_ratio` (n = 1, ε < 0) with measured counts of the
+  same selection, |μ| capped at 30 at the critical curve.
+- **Screen** (`scripts/w5_counts.py`): scipy-FFT local least-squares matched filter on a 0.25′ raster, θ_E = 2–32′;
+  **null from a second, disjoint region** (each region's ordinarily-vetted peaks calibrate the other), with an
+  exponential tail fit for the expected number of false peaks N_false; detection at N_false < 0.01.
+- **Vetting**, cheapest first, the same code for flags and injections: mask, depth, depth_edge, dust, Gaia DR3
+  bright star, HyperLEDA large galaxy, Wen & Han 2024 cluster, cosmic variance.
+- **First run:** desA + desB (RA 20–40° and 50–70°, Dec −30° to −20°), 340.5 deg², 12.5 M galaxies: 40 flags,
+  **0 survivors**; 95 % sky density of θ_E = 8–32′ lenses **n₉₅ ≈ 0.012–0.018 deg⁻²**; blind below θ_E ≈ 6′
+  (docs/exotic_limits.md "W5 count deficits").
+
+**Alternatives rejected.**
+- Per-object catalogue downloads (~12 M rows) and DR10 random catalogues (~19.9 GB per file, unordered on the sky,
+  so no byte-range region cut): counts, a mask proxy and depth are all the statistic needs.
+- healpy 1.20.1 (GPL-2.0, no Windows wheels); healsparse 1.15.0 / hpgeom (GPL-3.0-or-later; only needed for DES/LSST
+  mask files, not used); HSC-SSP PDR3 randoms (account needed, smaller area); DES Y6 Gold masks (healsparse tooling).
+- Void finders (VIDE, REVOLVER, Pylians, 2-D tunnel finders): they find the under-densities that are the
+  background W5 must beat, not the target; voids enter through the null.
+- A Gaussian significance: the Poisson σ of A is ×1.1 (2′) to ×5.8 (32′) too small because of clustering.
+- A null from the raw peaks of the other region: desB's artefacts (NGC 1398, deep tiles) raised desA's thresholds;
+  peaks the ordinary tests remove are now left out of both samples.
+- Veto radii growing with θ_E (a mimic anywhere inside θ_E): they vetoed 90 % of random 32′ positions. A mimic now
+  vetoes only if it reaches the core (0.5 θ_E) and can empty ≥ 10 % of it.
+- Data Lab ADQL: sub-selects, CASE, SIGN and GROUP BY on expressions are rejected (2026-10-08).
+
+**Evidence.**
+- Prior art: no published count-deficit search for negative-mass lenses was found (arXiv API, "negative mass" /
+  wormhole with number counts, depletion, deficit, void; the 42 INSPIRE citers of Safonova, Torres & Romero 2001,
+  astro-ph/0104075, which predicts the "central void"). Survey limits so far come from SDSS quasar lensing
+  (Takahashi & Asada 2013, arXiv:1303.1301). A W5 limit would be new: `needs-human` before any outside use.
+- Offline tests on synthetic Poisson maps: an injected deficit gives A = 1.10 ± 0.25 at the centre; the null map
+  gives median Z ≈ 0; the chunk-edge artefact (pixels split between chunks gave a deficit along every chunk
+  boundary in the pilot) is fixed and tested; pixels cut by the outer region border are dropped (code review).
+- Injections (5,232 in total, 3 realisations per region and θ_E) through the full screen and vetting:
+  ε = 0.50–0.73 at θ_E = 8–32′, 0.005 at 6′, 0 at ≤ 4′. The `depth_edge` test was added after inspecting the one
+  first-pass survivor (a deficit of all sources along a deep-tile edge); the injections ran after the change.
+
+**Revisit if.**
+- Data Lab exposes DR10 randoms or a pixelised mask; or the w proxy shows systematics in a larger area.
+- θ_E < 6′ becomes a priority (deeper counts, e.g. HSC or Euclid, or catalogue-level positions), or θ_E ≳ 1°
+  (a larger contiguous area; the regions are 10° high).
+- A survivor appears: stop and report to the owner (/vet-candidate).
+- A published count-deficit search appears (compare; do not repeat). Any outside quotation: `needs-human`.
+
+## D-064 W1/W2 in rejected lensed-quasar pairs: LS DR10 cannot decide them; measured control efficiency 0/5 (2026-10-08)
+
+**Decision.** Test the pairs that lens searches rejected for lack of a lens galaxy with the unchanged D-056 chain
+(`scripts/w12_niq.py`, importing `w12_lenscats`; D-056 Faber–Jackson calibration fixed). Add a control sample of real
+lenses from the same tables to *measure* the test's efficiency, which D-056 had to assume.
+- Inputs: VizieR tables pinned by the sha256 of their data lines (the ASU-TSV header carries the request time):
+  - Lemon et al. 2023 table1: UQP / QSO pair rejected, lens / quad control;
+  - SQLS DR3/DR5/DR7 candidate tables (Inada et al. 2008, 2010, 2012): "no lens(ing) object", "QSO pair" and
+    "binary" rejected, "SDSS lens"/"known lens" control; SQLS QSO+star / different SED / not QSO rows describe
+    another companion and are dropped without vetoing. A Lemon non-pair class (QSO + star, projected, …) vetoes a
+    rejection of the same system, and Lemon classes with "?" are undecided;
+  - Hennawi et al. 2006 binaries, for vetting.
+- Mismatched or missing pins are refused.
+- Sample rules (ASSUMPTIONs):
+  - catalogued separation ≤ 3″, because positions are one image;
+  - transitive 3″ merging, with a group containing a lens counted as a control;
+  - the LS pair must match the catalogued separation within 0.5″.
+- Vetting adds image colour (|Δ(g − z)| ≤ 0.5) and quoted-redshift agreement (|Δz| / (1 + z) ≤ 0.01).
+
+Result: 0 of 5 decided control lenses (1.9–2.6″) show their lens galaxy. Rejected: 24 "none". Of these, 10 are
+colour-mismatched, 2 are catalogued binaries and 1 has two redshifts; 11 remain untestable. No limit and no candidate
+(docs/exotic_limits.md "W1/W2 in rejected lensed-quasar pairs").
+
+**Alternatives rejected.**
+- Deriving a dark-lens fraction from the rejected "none" count: control lenses give "none" too, so k carries no
+  information.
+- Separations up to 6″ (D-056's θ_E ≤ 3″): SQLS positions are one image, so 3–6″ pairs never fit the 3″ image search.
+- Hashing the raw ASU-TSV: its header embeds the request time, so a fresh download never matches.
+- The Lemon lensed-quasar database (HTTP 500 again on 2026-10-08).
+- Gaia GraL invalidated candidates (Stern et al. 2021): mostly star pairs, with one quasar pair.
+- Williams et al. 2018: no separation or redshift.
+- Dawes et al. 2023: unconfirmed candidates, not rejections.
+- NIQ tables that exist only in arXiv LaTeX (Lemon 2018/2019/2020, Anguita et al. 2018, Agnello et al. 2018):
+  deferred. The Lemon 2023 UQPs and the SQLS rejections are the machine-readable superset.
+
+**Evidence.**
+- `results/w12_niq/summary.json` and `systems.ecsv`.
+- The contact sheets show lens light blended into the control images, and blue+orange rejected pairs.
+- Review bugs fixed before merge:
+  - the Hennawi coordinates are sexagesimal and silently matched nothing; `binary_match` now raises if nothing
+    parses;
+  - wide pairs were tested on unrelated LS pairs;
+  - the greedy dedup was not transitive;
+  - Lemon's `z2` is a second quasar redshift only when `n_z2` is blank (or "zqso="). "z_lens=" and "zgal=" are
+    other objects, and flagged values are not used;
+  - a rejection that another catalogue classifies as a non-pair is now vetoed (J0947+0247);
+  - SQLS pair-format tables put the quasar z on the primary row and θ, the comment and the companion's z on the
+    next row. Both are now read, and flagged redshifts ("(") are not used.
+- The Tractor rows the test ran on are pinned too (sha256 of the sorted rows), and so are the brick summary and
+  every VizieR table. VizieR error, empty or truncated responses are refused.
+
+**Addendum (2026-10-09, archival HST).** `scripts/w12_niq_hst.py` tests the pairs with HST F814W imaging: 2 of the 11,
+and 2 controls. It fits two Moffat PSFs, removes the halo residual from the profile facing away from the other image,
+and measures the residual flux between the images.
+- Validation: both controls are detected (S/N 42 and 16), and injections run through the whole chain are recovered
+  at ≥ 5σ above the baseline to F814W = 23. Errors are the larger of a drizzle-corrected pixel error and the
+  empirical scatter of same-area sky apertures; the latter dominates (≈ 2.3×).
+- Result:
+  - J0130+0725 has no lens light to F814W ≈ 23 (injection-calibrated): ≈ 3.5 mag below a typical ordinary lens and
+    ≥ 0.7 mag below a 2σ under-luminous one (F814W − z assumed 0–0.6). A binary quasar remains the untested
+    ordinary explanation;
+  - J0728+2607 is inconclusive with the Moffat model (PSF-core residuals). With an empirical PSF from 6 Gaia stars in
+    the same cutout (`w12_niq_epsf.py`; control S/N 49) it has no light between the images (S/N 1.6; injections
+    recovered to F814W = 23), ≥ 1.8 mag below any ordinary lens.
+- Rejected alternatives:
+  - the "combined_skycells" HAP cutout, whose WCS does not describe its pixels (separations of 10⁴″);
+  - an aperture statistic without the halo correction, which gave S/N 18–24 from PSF mismatch alone;
+  - white-noise aperture errors on drizzled pixels: S/N is ~3.5× too high once the drizzle correlation and
+    large-scale sky structure are included;
+  - injections that skip peak finding and the pair check (not the whole chain);
+  - a 0.15″ core mask, which left core residuals.
+
+**Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 11 colour-matched pairs;
+spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ tables add pairs of 2–3″.
+
+## D-065 W5 in Euclid Q1: no count screen; next is a radial-shear screen on Euclid Q1 shapes (2026-10-09)
+
+**Decision.** Do not port the D-063 count screen to Euclid Q1. Its S/N at θ_E ≤ 4′ is limited by galaxy clustering,
+not by the galaxy density, so 1.8× more galaxies buy ×1.0–1.4 in S/N on a fifth of the area
+(docs/exotic_limits.md "Euclid Q1"). For θ_E < 6′ the next W5/W1 test is the sign of the tangential shear of
+Euclid Q1 MER shapes around trial centres (radial for a negative-mass lens; forecast floor θ_E ≈ 26″).
+
+**Alternatives rejected.**
+- Euclid Q1 MER counts per pixel (IRSA TAP): ~3.5 h of row queries for 63 deg²; forecast in Evidence.
+- HSC PDR3 counts: account needed (D-063), and the same clustering limit applies.
+- Server-side HTM aggregation (`GROUP BY floor(htm20/65536)` works on IRSA for small boxes) would avoid the row
+  fetch, but does not change the S/N argument.
+
+**Evidence.** `results/w5_counts/euclid_q1_feasibility.json` (densities observed 2026-10-09; gains and the shear
+floor are model_prediction with stated ASSUMPTIONs). IRSA TAP: a `ra BETWEEN` / `dec BETWEEN` box of 0.25 deg² did
+not return in 5 min; the same selection with `CONTAINS(POINT, CIRCLE)` (r = 0.25°) returned 12,323 rows in 40 s;
+`COUNT(*)` in a 0.1° disc takes a few seconds.
+
+**Revisit if.**
+- A count screen is needed at θ_E ≈ 4–6′ specifically (a larger Euclid release removes the area penalty), or a
+  counts-in-cells measurement gives a Euclid/DR10 clustering-variance ratio well below 0.5 (ASSUMPTION range 0.5–1;
+  at 0.3 counts would reach ≈ 4′).
+- The shear screen finds Euclid Q1 MER moments unusable (PSF anisotropy) and no PSF-corrected shape catalogue is
+  public.
+
+## D-066 W5/W1 radial-shear screen on Euclid Q1 MER shapes: `ApertureMass` reused; pilot null; limits at θ_E = 1–2′ (2026-10-09)
+
+**Decision.** Search for radial (negative-mass) shear with the D-050 catalogue aperture-mass statistic
+(`exotic_screens.ApertureMass`, point-mass filter over 1.5–3 θ_E) on Euclid Q1 MER SExtractor moments, fetched per
+0.3° disc from IRSA TAP. The catalogue `position_angle` is used as PA east of north. Pilot: EDF-F and EDF-S.
+
+**Alternatives rejected.**
+- Trusting the TAP column description (`position_angle` "CCW/x", THETA_IMAGE): image moments on 25 MER VIS cutouts
+  contradict it (89° off); using it would flip tangential and radial, the sign under test.
+- A PSF-corrected shear catalogue (none public for Q1); building one (KSB/metacal) before a pilot shows need.
+- Grid-centred injections on deconvolved shapes: best case; injections are off-grid, applied to observed moments
+  before the cuts, and detected at any centre within one step.
+
+**Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear screen"; `results/w5_shear/`. Four SZ clusters show
+tangential shear (S = −1.5 to −5.0); pilot null (0 flags); whole-chain injection efficiency 0.88–1.0 at 1′, 1.0 at
+2′, ≤ 0.18 at 30″; n₉₅ ≈ 8.1 deg⁻² (1′), 12 deg⁻² (2′). *Superseded by D-067: these injections were boosted
+~1.6× over R (efficiencies optimistic; `results/w5_shear/screen.json` is from that chain).*
+
+**Revisit if.**
+- A PSF-corrected Euclid shear catalogue becomes public (DR1), or cluster-calibrated R differs from 0.5 by > 30 %.
+- PSF-anisotropy gradients (star ellipticity maps) show radial patterns on trial-centre scales.
+
+## D-067 W5/W1 radial-shear survey of all Euclid Q1 Deep Fields: tile fetch by `tileid`, R calibrated on SZ clusters, 60 deg² null (2026-10-09)
+
+**Decision.** Fetch the Q1 MER rows per tile with the indexed `tileid` (tile list from IRSA ObsCore), run the D-066
+screen per Deep Field with per-tile PSF sizes and a coverage cut, and keep R = 0.5 after calibrating it on the four
+SZ clusters against NFW haloes (in-house ~40 lines: Wright & Brainerd 2000, Duffy et al. 2008 c200).
+
+**Alternatives rejected.**
+- More `CONTAINS` discs: overlapping discs double-count rows; edge handling per disc wastes the aperture border.
+- 16 concurrent IRSA queries: 504 gateway time-outs and no rate gain over 8 (0.3–0.5 queries/s).
+- colossus / pyccl for the NFW shear: a dependency for textbook formulas checked by a unit test.
+- Per-source photo-z (`euclid_q1_phz_photo_z`) for Σ_crit: one source plane bracketed by z_s = 0.8–1.2 already
+  keeps R within ±20 %; worth it only if a flag needs a mass.
+
+- Injecting by shearing the observed moments before the PSF deconvolution (the D-066 chain): it boosts the
+  injected shear by tr_obs/tr_int (median 1.6×) over the R calibrated on deconvolved shapes. Injections now shear
+  the deconvolved shapes by R g (`inject_shapes`); D-066's pilot efficiencies are superseded.
+- Rule exception (scripts/CLAUDE.md "inject through the whole chain"): injections skip the resolved cut and the
+  deconvolution, because R is defined on their output; a shear changes a galaxy's size by a fraction ≲ |g||ε|, so
+  only galaxies that close to the 1.2 × PSF cut could change their resolved flag (kept as is). Revisit if a limit
+  hinges on them.
+
+**Evidence.** docs/exotic_limits.md "Euclid Q1 radial-shear survey"; `results/w5_shear/`. R = 0.56 ± 0.16
+(z_s = 1, scaled by √(χ²/dof)); 0 flags over 60 deg² at θ_E = 1′, 2′, 4′; known clusters negative (8/9);
+efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049 / 0.051 deg⁻² at 2′ / 4′.
+
+**Revisit if.**
+- Euclid DR1 (≈ 2000 deg², PSF-corrected shapes) is public: the same code scales by tile.
+- A flag appears, or per-tile star ellipticity gradients show radial patterns on 1–12′ scales.
+
+## D-068 W3 MOA-II: calibrated variable-baseline test, LF-drawn injections and a streaming per-field pipeline; eleven fields, 0 candidates, limits withdrawn pending the corrected chain (2026-10-08, amended 2026-10-09)
+
+**Decision.**
+- The variable-baseline vetting test's threshold is the 95th percentile (ASSUMPTION, `BASELINE_Q`) of the field's
+  quiet-light-curve χ²/dof about a constant (`calibrate_baseline`), not D-057/D-062's fixed χ²/dof > 2. gb22: 5.31.
+- Injection magnitudes are drawn from the luminosity function (`--sampling lf`), 200 per t_E × ρ cell, 40 PSPL
+  controls per t_E; uniform draws re-weighted afterwards left n_eff ≈ 20–25 per cell.
+- Fields are streamed (`jwst_anomaly.moa_stream`): concurrent HTTP range reads of the uncompressed tar, member
+  headers resynchronised at 512-byte blocks, each pre-screen process reading its own 64 MiB ranges. Per-chunk
+  pre-screen tables are tracked in `results/w3_moa/prescreen/` (resumable, `merge-prescreen` checks the Cut-0
+  member count); per-field limit and vetting summaries in `results/w3_moa/`; `combine` joins fields. Streamed tars
+  are pinned by per-range sha256 in the manifest.
+- gb22 re-run: same 30 flags as D-062, 0 survivors; Γ₉₅ ≈ 1.1–3.3 × 10⁻⁶ per star per year at t_E = 10–300 d,
+  4–7 × 10⁻⁶ at 3 d (docs/exotic_limits.md "Calibrated re-run of gb22"). Supersedes D-062's limit numbers.
+  **Amendment 2026-10-09: withdrawn** with every limit of this PR, see below.
+- Six fields (gb11, gb16, gb19, gb20, gb21, gb22; 296,618 Cut-0 light curves) streamed and vetted: 234 flags,
+  **0 survivors** (docs/exotic_limits.md "Six fields"). New vetting tests `exotic_in_domain`, `smooth_dip`,
+  `feature_bracketed`, `step_ramp`.
+- **Injections are vetted against the injected source magnitude** as the reference flux of `exotic_in_domain`'s
+  source-flux bound (f_s ≤ 3 × reference). Before 2026-10-09 they got the lenient 14.2 mag default while real flags
+  got their DoPHOT / Gaia magnitude, so efficiencies, and all per-field and combined limits, were biased high; the
+  tables were removed. `CHAIN_VERSION` tags injection and limit tables; `limit` and `combine` refuse another
+  version (bump it on any pre-screen, fit or vetting change).
+- `fit`, `vet`, `inject` and `run-field` refuse to run without MulensModel (without it, the parallax refit and the
+  binary-lens test were skipped silently). A failed Gaia XMatch is retried and, if it still fails, marks flags
+  without a DoPHOT magnitude incomplete instead of passing them on the lenient default.
+
+**Alternatives rejected.**
+- Fixed χ²/dof > 2: 35 % of quiet carriers exceed it from the red noise of difference photometry alone; it was the
+  largest injection loss (73 of 188 vetted injections, D-062).
+- Downloading each tar: 3.5–508 GB per field (≈ 2.4 TB total); against the cloud-disk owner decision.
+- A parent process that reads ranges and ships bytes to workers: OOM-killed on gb21.
+
+**Evidence.** The HTTP stream reproduces the D-062 pre-screen of gb22 exactly (81 s vs 203 s from the local tar);
+the fixed-width IPAC parser is bit-identical to the token parser on 15,461 gb21 light curves; gb21 test throughput
+258 light curves/s (72 MB/s, 4 cores). 103 / 2,000 W3 injections recovered, 0 / 200 PSPL controls.
+
+**Amendment (2026-10-09): vetting tests added post hoc, each after an automated survivor was seen.** Each change
+was followed by a re-run of the vetting and the injections of every field already done, so every quoted limit
+includes its cost. The candidate records give the verdicts and evidence.
+- `exotic_in_domain` and `smooth_dip`, added after seeing gb20-R-4-0-49379: u₀ < 2 and f_s ≤ 3 × the
+  DoPHOT or Gaia DR3 RP reference flux; a Gaussian dip. Cost on gb22: 0 injections.
+- `feature_bracketed` and `step_ramp`, added after seeing gb19-R-4-4-31159: ≥ 20 epochs before the ingress and
+  after the egress; a level change plus ramp. Cost on gb22: 103 → 93, mostly long t_E near the data edges.
+- The night jackknife ranks nights against the eclipse model too (c63a6d5), changed after seeing
+  gb7-R-8-6-94052. Its exotic preference over a trapezoid rested on one night. Paired re-run of gb22 (same seed,
+  identical injections; W3 recovered, ρ summed, before → after): 3 d 8 → 6 (−25 %, small counts), 10 d 22 → 20,
+  30 d 28 → 25, 100 d 22 → 21, 300 d 13 → 13; total 93 → 85 (−9 %). PSPL controls falsely recovered: 0 → 0.
+  Kept, not tuned: a threshold set on the flag that motivated the change would be post hoc twice over.
+  All seven paired fields (W3 recovered, before → after; PSPL controls 0 → 0 in each):
+
+  | Field | 3 d | 10 d | 30 d | 100 d | 300 d | total |
+  |---|---|---|---|---|---|---|
+  | gb22 | 8 → 6 | 22 → 20 | 28 → 25 | 22 → 21 | 13 → 13 | 93 → 85 |
+  | gb21 | 13 → 6 | 26 → 24 | 33 → 32 | 28 → 28 | 10 → 10 | 110 → 100 |
+  | gb20 | 10 → 6 | 21 → 18 | 22 → 22 | 27 → 25 | 5 → 5 | 85 → 76 |
+  | gb19 | 12 → 7 | 24 → 21 | 24 → 24 | 18 → 18 | 8 → 8 | 86 → 78 |
+  | gb16 | 11 → 9 | 20 → 19 | 24 → 23 | 20 → 20 | 4 → 4 | 79 → 75 |
+  | gb11 | 19 → 15 | 27 → 23 | 31 → 31 | 24 → 23 | 14 → 14 | 115 → 106 |
+  | gb12 | 14 → 9 | 28 → 27 | 29 → 28 | 28 → 28 | 9 → 9 | 108 → 101 |
+  | **all** | **87 → 58 (−33 %)** | **168 → 152 (−10 %)** | 191 → 185 (−3 %) | 167 → 163 (−2 %) | 63 → 63 | **676 → 621 (−8 %)** |
+
+  The cost falls on short events, whose caustic spikes are sampled on one or two nights.
+- **Follow-up (open, 2026-10-09).** gb18-R-9-4-24509 passed the whole chain and was explained only by a vetting note
+  (docs/candidates/gb18-R-9-4-24509.md). The chain gap: season-offset comparisons are made only against single-lens
+  models, and a slow (flat-bottomed) dip with per-season offsets is missing. The chain is left unchanged until the
+  field queue finishes. Adding the model then would be post hoc and needs a full re-injection. Until then gb18 has an
+  efficiency-only table and is not in the combined limit: its injections did not face that model, so a zero-event
+  limit from them would overstate ε.
+- **Follow-up (open, 2026-10-09), from gb17-R-6-1-3829** (a ~30-d periodic variable; docs/candidates/gb17-R-6-1-3829.md):
+  (i) repeated deficits *inside* the feature window are not counted (the test looks only outside it);
+  (ii) there is no periodicity / variability-model test;
+  (iii) there is no cap on the exotic fit's own χ²/dof (6.7 here).
+  gb17 is efficiency-only and stays out of the combined limit, as gb18. When the queue finishes, all four gaps
+  (these three and the gb18 slow dip with season offsets) are added as one recorded post-hoc chain change, and
+  every field is re-injected.
+
+**Evidence (2026-10-09).** `/code-review` of the PR diff found the injection reference-flux gap; a unit test now
+checks that injections carry `ref_mag = I_s`. A fresh cloud venv without the `mulens` extra re-vetted gb11 without
+the binary-lens test (no error), which is how the silent skip was found.
+The recovered counts in the amendment table above come from the old chain (injection reference flux at the 14.2 mag default) and are kept only as a record of the relative cost of each vetting change. Every limit and efficiency table was withdrawn (`CHAIN_VERSION` 2026-10-09.1); per-field limits wait for a re-injection under the corrected chain.
+
+**Addendum (2026-10-10): the four open gaps closed as one recorded post-hoc chain change** (`CHAIN_VERSION`
+2026-10-10.1; motivated by gb17-R-6-1-3829 and gb18-R-9-4-24509, both seen before the change). New tests in
+`vet_one`, all thresholds ASSUMPTIONs in `Params` of `scripts/w3_moa.py`:
+- `exotic_chi2_cap` (gap iii): the exotic fit's χ²/dof, caustic-spike epochs of a repulsive model left out (model
+  above f_s + f_b by max(3 median errors, 0.1 f_s)), must not exceed the field's calibrated quiet-baseline threshold. Spikes are left out because a synthetic
+  W3 event fitted at another u0 local optimum (u0 0 vs 0.5) had χ²/dof 1.69 against a white-noise 1.06, all of it on
+  the spike nights.
+- `residual_deficit` (gap i): `deficit_scan` z_min of the exotic residuals, spike epochs left out, must stay above
+  −`REPEAT_S`; scanned over the whole curve so the red-noise normalisation never rests on a short window.
+- `periodic_variable` (gap ii): Lomb–Scargle of the nightly mean exotic residuals, P = 2.5–100 d (above the
+  one-sample-a-night Nyquist period; shorter periods are not covered); fails when a 2-harmonic term at that period
+  gains BIC > 25 (errors rescaled by the harmonic model's χ²/dof, F-test-like) in **both** halves of the nights.
+  One umbra crossing lies in one half; a periodic variable repeats in both. < 30 nights: `_untestable`.
+- `slow_dip_seasons` (gap iv): the exotic model with one level per season against a generalized-Gaussian dip
+  exp(−|Δt/σ|^p), p = 2–10 (Gaussian to flat-bottomed), with the same season levels.
+Validation (synthetic, 6 W3 events in white noise, quiet threshold 1.06): all six pass every new test; unit tests
+show a 30-d sinusoid fails in both halves, a single dip and white noise do not, and the slow-dip model recovers a
+flat (p = 6) dip with three season levels at χ² ≈ N. Every field's real flags and injections must be re-run under
+the new chain before any limit is quoted (`limit` and `combine` refuse 2026-10-09.1 tables).
+
+**Revisit if.** A field's quiet χ²/dof distribution is bimodal or its 95th percentile exceeds ~10 (the quantile then
+admits variables); the archive stops honouring range requests; a survivor appears (stop, /vet-candidate, owner).
+## D-069 Owner direction 2026-10-09: System A (invention) / System B (destruction) hypothesis rounds; round 1 survivors (2026-10-09)
+
+**Decision.** New hypotheses come from System A groups that work without literature and from minimal axioms, with
+space, time, matter and causality not assumed fundamental ("Ontological Reset"). One System B reviewer per text then
+attacks it with verified references. Only predictions that pass B get a data inventory and search compute. At least
+30 % of exploration goes to quantities current searches never measure. Round 1 kept three conditional survivors,
+in order:
+- S1, burst twins (GRB/FRB pairs far apart on the sky at any delay);
+- S2, flat-kernel SN residuals;
+- S3, lensed-transient hybrid images (limit only).
+
+W1–W5 screens and the MOA-II run continue to completion (PR #95), but new compute goes to S1 first.
+
+**Alternatives rejected.**
+- More literature-anchored lens signatures only: the owner asked for at least 30 % on unmeasured quantities.
+- A blind causal-network timing search between unrelated events as the first test: B-on-A1 §7 shows it is testable
+  in principle for pairs ≳ 0.1° apart, but its cost is chance coincidences and observer-side common causes, which S1
+  controls with scrambled catalogues at lower cost.
+- A2 P2/P3/P4 and all of A3 except P2b: see the failure list in docs/hypotheses/round-1/summary.md.
+
+**Evidence.** docs/hypotheses/round-1/ (three System A texts, three System B reviews, summary). Key gap references
+(opened 2026-10-09):
+- arXiv:2006.07095, Fermi GBM lensed-GRB search: position-consistent pairs only.
+- arXiv:2204.06014, CHIME/FRB lens interferometry: delays ≲ 100 ms.
+- arXiv:2406.05047, DES SN lensing magnification.
+- arXiv:0903.5303, disordered locality: the common renaming of the A1/A2/A3 links.
+
+**Revisit if.**
+- S1–S3 are run and null: start System A round 2 from the recorded failure modes (no Lorentz derivation,
+  disordered-locality renaming, cosmic-opacity redundancy).
+- The owner changes the 30 % budget or the process.
+
+## D-070 S2 flat-kernel SN residuals: Pantheon+ × LS DR9 photo-z counts, α = 2 column, dilution-corrected limit (2026-10-09)
+
+**Decision.** S2 (D-069) is tested with `scripts/s2_flat_kernel.py`. Pantheon+ residuals against flat ΛCDM
+(Ω_m = 0.334) are regressed by WLS on [1, z, X_lens, X_flat]. The columns are per-SN counts of LS DR9 galaxies
+(countmap selection, dereddened z < 21 mag, 2′ disc, z_g < z_s − 0.05, Δz = 0.05 shells) relative to the mean
+shell densities per photometric region; discs with < 50 % of the region's median galaxy count are dropped.
+X_flat uses A3's (1+δ)^α with α = 2 (Poisson-unbiased N(N−1)/E, only shells expecting ≥ 1 galaxy).
+Errors come from χ²/dof scaling and a z-matched scramble. A 1 % leverage-trimmed refit is required, and
+limits are divided by the shot-noise dilution λ from Poisson-only columns and by the recovery ratio of a whole-chain
+injection on half-thinned counts. Result: null; γ < 0.025 mag per unit T/⟨T⟩ (one-sided 95 %).
+
+**Alternatives rejected.**
+- α = 2 over all shells: shells with E ≪ 1 turn 3–5 galaxies into X ≈ 20–54 and fake a tight limit.
+- α = 1 flat column: 0.995-correlated with the lensing column at this depth, so it is kernel-degenerate.
+- Scramble-carrier injections alone as the efficiency: they miss regression dilution.
+- A halo-model κ (Shah+2024): more work for a test that cannot detect lensing in Pantheon+ anyway; it belongs to the
+  DES-SN5YR follow-up.
+- DES-SN5YR first: needs DES Y3 Gold access and setup; Pantheon+ and DR9 photo-z were reachable in one cycle.
+
+**Evidence.** `results/s2_flat_kernel/fit_*.json`; CHANGELOG 2026-10-09.
+
+**Revisit if.**
+- DES-SN5YR + DES Y3 Gold are set up: repeat there with the lensing detection as the positive control.
+- A3 fixes how its matter column maps to galaxy counts (bias), which sets the conversion of this limit.
+
+**Addendum (2026-10-09, DES-SN5YR).** Repeated with `--sample des` on the DES-SN5YR Dovekie Hubble diagram (DES SNe,
+MU/MUERR, P(Ia) ≥ 0.5, positions from the DES HEAD table) and the same LS DR9 z < 21 galaxies, so both samples share
+one calibrated chain. 1,414 SNe fitted: γ_F = +0.0009 ± 0.0025, **γ < 0.019 mag per unit T/⟨T⟩** (chain recovery 0.57);
+lensing control γ_L = −0.018 ± 0.011 (1.7σ, right sign). Rejected for this cycle: DES Y3 Gold (new access path and a
+second galaxy calibration; it is the next step because the control needs deeper galaxies). Revisit if: a deeper
+galaxy column is set up, or the full covariances change the errors by > 20 %.
+
+## D-071 S1 burst twins in Fermi GBM: bcat HDU 2 light curves, multi-band max cross-correlation, chi2 twin test; null and limit (2026-10-09)
+
+**Decision.**
+- Data: the HEASARC `fermigbrst` catalogue over TAP, and the per-burst bcat files streamed from the HEASARC FTP.
+  Each burst is reduced to two matched bands from bcat HDU 2: `PHTFLUXB` (50–300 keV) and `PHTFLUX − PHTFLUXB`
+  (10–50 plus 300–1000 keV). The window is T90 ± (0.25 T90 + 2 s) at 64 ms · 2^k, with at most 256 bins. The
+  results are tracked in `results/s1_twins/lc_<YYYY>.ecsv.gz` (~150 kB per year).
+- Eligibility: at least 2 pulses. A pulse is a summed-band peak whose prominence is ≥ 5σ of the local error,
+  sqrt(σ_peak² + σ_base²), so the test includes source Poisson noise.
+- Statistic: the maximum over lag of the multi-band normalised cross-correlation ρ, with s = 1 primary. Pairs are
+  compared at a common resolution, |Δk| ≤ 1. A coarse s grid (0.5, 0.71, 1.41, 2) is secondary and runs on the top
+  pairs only.
+- Position cut: sep > 3·sqrt(σ1² + σ2² + 2·3.7°²).
+- Chain: ρ > ρ* (95 % of the per-catalogue maximum over 100 pulse-shuffled surrogate catalogues), then a
+  noise-consistency χ² test of a scaled, shifted copy with a 10 % flux systematic (p ≥ 10⁻³), then a re-trigger
+  veto (delay ≥ 1 d). Only this primary chain gives the limit. A "deep" chain (ρ > 0.90) is post hoc and
+  illustrative only: its threshold was chosen after seeing that it yields k = 0.
+- Injections start from a smoothed template (Gaussian, 1.5 bins) of a real eligible burst. One member is re-noised
+  as A. The other is a copy in another burst's slot, with that burst's background noise and independent
+  realisations, at flux ratios 1–0.1, with a per-band gain mismatch of 15 % (see Evidence). The copy gets its own
+  window and resolution k from a T90 proxy (A's catalogue T90 × the ratio of 5–95 % cumulative-fluence durations).
+  A copy with |Δk| > 1 is lost. Both members pass through the whole chain.
+- Limit units: f95 = μ95 / (N_eligible · ε) is the 95 % upper limit on twin PAIRS per eligible burst. The fraction
+  of eligible bursts that have a twin is 2·f95.
+- `scripts/s1_ingest.py`, `scripts/s1_twins.py`, `src/jwst_anomaly/burst_twins.py`. All thresholds are ASSUMPTIONs
+  in `burst_twins.Params`.
+
+**Alternatives rejected.**
+- bcat HDU 1 `PHTCNTS` (per-detector deconvolved 8- or 128-channel spectra): in ~40 % of faint bins, single channels
+  carry the fill value −9.9e36. Dropping those bins left only the positive fluctuations, which looked like spiky
+  multi-pulse bursts (84 % of bursts appeared "multi-pulse"). Rejected after visual inspection.
+- TTE/CTIME with our own background fits: these are ~10–100× more data and need per-burst background modelling,
+  while bcat already holds rmfit's background-subtracted, deconvolved fluxes. They are kept as a follow-up for
+  candidates only.
+- GDT (official) for reading: no bcat reader is listed, and bcat is a plain FITS table, so `astropy.io.fits` is
+  enough. GDT stays the tool for TTE/RSP follow-up.
+- `astroquery.heasarc`: plain HEASARC TAP is one request (4 s) with no extra dependency.
+- The 2006.07095 method (position, spectrum and duration cuts first, then cross-correlation): its position-first
+  cut is exactly what S1 inverts. We keep its cross-correlation and its warning about single-pulse look-alikes, and
+  replace the spectral cut with matched bands inside ρ plus the χ² test.
+- Pulse-count threshold judged on the S/N with background error only: it counts Poisson fluctuations on bright
+  pulses as pulses.
+- Injecting a copy of the burst itself (with its own noise realisation) into the slot: the pair then shares noise,
+  so faint copies reached ρ ≈ 1. That version overstated the ratio-1 efficiency (83 % instead of 37 %).
+
+**Evidence.**
+- The catalogue has 4,390 bursts and 4,389 bcat files reduced. 1,414 bursts are eligible. 998,991 eligible pairs
+  give 510,294 pairs after the position and resolution cuts.
+- Results are in `results/s1_twins/summary.json`, `null.json`, `pairs_top.ecsv` and `injections.ecsv.gz`; the PR
+  body has the numbers.
+- The surrogate null under-predicts the real high-ρ tail about 12×: 1,860 real pairs have ρ > 0.9, against 146
+  per surrogate catalogue. It is also near-degenerate, because a 2-pulse burst has one alternative order. So ρ* is
+  a pre-screen, not a calibrated false-alarm rate, and the χ² test decides.
+- At ρ > 0.9, 0 of the 1,860 real pairs pass χ². At ρ > 0.8, 24 of 40,041 pass, all with a faint partner
+  (S/N 5–10).
+- Positive controls: 8 same-source re-trigger pairs (GRB 091024, 130925, 150201, 220627, 250702 ×3, and
+  bn210925800/bn210926869 at 1.3°) are all removed by the position cut.
+- Result: 6 pairs flagged at ρ > ρ* = 0.964. All 6 fail χ² (p < 10⁻¹⁰⁰): they are bright single-envelope
+  look-alikes. 0 survivors (primary chain; the post-hoc deep chain also has 0).
+- Band mismatch from data. In bright bins (summed S/N > 15) of the 522 eligible bursts with at least 8 such bins,
+  the noise-subtracted scatter of ln(f_50–300 / f_rest) has percentiles 10/25/50/75/90 of
+  0.075/0.13/0.21/0.32/0.42. The median 0.21 / √2 gives 0.15 per band, which is the injected value. It includes
+  intrinsic spectral evolution within each burst, so it sits on the high side for a pure response mismatch.
+- Error calibration. In off-T90 bins, std(flux/err) has a median of 1.00 in band 1 and 0.87 in band 2, so the
+  quoted errors are about right and the injected noise equals them.
+- Injection recovery, primary chain, 15 % jitter, 5,000 injections: 29.5 / 18.0 / 11.4 / 6.4 / 2.7 % at flux
+  ratio 1 / 0.5 / 0.3 / 0.2 / 0.1.
+  - By copy peak S/N: 72 % above 50, 48 % at 20–50, 7 % at 10–20, and 0 below 10.
+  - The χ² test removes 13 % of flagged injections. The window/k emulation loses 0.9 % of copies, so the stored
+    window and k (which depend only on catalogue T90) are a small effect.
+- 95 % upper limit, primary chain only, at ratio 1: **7.2 × 10⁻³ twin pairs per eligible burst**, i.e. 1.4 % of
+  eligible bursts have a twin. Averaged over ratios 1–0.1: 1.6 × 10⁻² pairs per burst (3.1 %).
+- Sensitivity to the per-band mismatch (1,000 injections each; ratio-1 efficiency, f95 pairs per burst at
+  ratio 1):
+  - 5 %: 41.5 %, 5.1 × 10⁻³;
+  - 10 %: 38.0 %, 5.6 × 10⁻³;
+  - 15 %: 29.5 %, 7.2 × 10⁻³;
+  - 20 %: 22.5 %, 9.4 × 10⁻³.
+- Deep chain (post hoc, illustrative, not a limit): 49 % at ratio 1, 4.3 × 10⁻³ pairs per burst.
+- Closest call: bn100528075/bn250207053 passes χ² only at s = 0.71 (p = 0.0016, ρ_s = 0.943 < ρ*), with a faint
+  partner (S/N 12). Vetted as population similarity at low S/N (PR body).
+
+**Revisit if.**
+- A better null that keeps the population envelope becomes available (e.g. a pulse-parameter generative model
+  fitted to the catalogue).
+- TTE-based light curves are needed for short GRBs (64 ms is coarse for T90 < 1 s).
+- CHIME/FRB Catalog 2 is added (the S1 second half).
+- The χ² systematic (10 %) is calibrated on real same-burst data, e.g. GBM vs. Swift-BAT.
+
+## D-072 S3 hybrid images: COSMOGRAIL XIX doubles, SIS leg-split lag window, template regression; null without a useful limit (2026-10-09)
+
+**Decision.** S3 (D-069) is tested with `scripts/s3_hybrid.py` on the COSMOGRAIL XIX R-band curves (CDS
+J/A+A/640/A105) of the 7 doubles whose published delay is not flagged uncertain and exceeds 3σ. Lags are a
+model_prediction under an SIS (ASSUMPTION): the geometric delays of both images are equal, so with a fraction f of the
+potential delay on the source leg, s_L − s_T = −Δt (D_ls/D_s + f). f is unobservable, so each direction scans the
+window f ∈ [0, 1]; the copy into the trailing image arrives before the leading image when D_ls/D_s + f > 1. Image j is
+fitted as a smooth cubic B-spline (3000-d knots) + m F_i(t − τ) + a F_i(t − τ − δ), F_i interpolated across gaps
+≤ 40 d; r = a/m. The window maximum of r (|lag| ≥ 10 d) is compared with same-width windows at off-model lags,
+and injections go through the same window maximum. A system is screened only if the main-term fit recovers its
+published delay. Result: no copy (lowest p = 0.02 of 12 windows, on the main-image wing); sensitivity
+r95 ≈ 0.38–2.4 per system and direction, i.e. only copies comparable to the main image are excluded.
+
+**Alternatives rejected.**
+- Microlensing B-splines with 120–730-d knots: the published delay is not recovered (6 of 7 systems off by
+  50–250 d); only the 3000-d spline recovers 6 of 7 within 3σ + 4 d (J1620: wrong-sign minimum at −206 d).
+- Quoting B-on-A1's ~10⁻² sensitivity: quasar variability is red (time-scales ≳ 100 d), so a copy at lags
+  ≲ 100 d is nearly collinear with the main image and with a delay error. The same fit recovers r = 0.1 within 0.03
+  on a synthetic curve with 20-d variability (`tests/test_s3_hybrid.py`), so the loss is the data, not the code.
+- Treating the r95 values as limits: window-maximum injection efficiencies scatter from 0.67 to 4.7 over 8 trials,
+  the r(δ) scans have a positive offset of 0.1–1 at all lags (template–microlensing degeneracy), and the null
+  windows overlap and are not matched in |lag| (approximate p). They are sensitivities.
+
+**Evidence.** `results/s3_hybrid/summary.json`, `scans.json`; CHANGELOG 2026-10-09.
+
+**Revisit if.**
+- A lensed transient with fast intrinsic variability (SN Refsdal, SN H0pe, a lensed FRB) gives a sharp template:
+  then a copy at r ~ 10⁻² is reachable (B-on-A1).
+- Lens models with image positions and a source position are wanted for quads (the SIS window does not apply).
+
+## D-073 D1 distance self-consistency: per-lens H0-free ratio R = D_dt/((1+z_d) D_d) and per-FRB DM-z predictive tails (2026-10-09)
+
+**Decision.**
+- Data (derived posteriors, pinned by sha256 in `data/manifests/d1_distance.ecsv`): H0LiCOW-public
+  `h0licow_distance_chains/` (joint D_d–D_dt for RXJ1131, PG1115, J1206; D_dt for HE0435, WFI2033) and the
+  B1608 analytic shifted-log-normal fits (`B1608_Dd_Ddt_params.dat`; D_d and D_dt independent, so no correlation).
+  The TDCOSMO 2025 SDSS1206 `final_D_d.npy`/`final_D_dt.npy` are the same 67,570 samples as H0LiCOW
+  `J1206_final.csv` (checked), so they add no lens. Redshifts from the H0LiCOW likelihood = TDCOSMO yaml.
+- Statistics per lens (ln space, random-pair Δ = obs − pred; Gaussian pull plus an empirical tail check):
+  A prior-predictive vs flat ΛCDM, Ωm ~ U(0.1, 0.5); B flat wCDM, w ~ U(−2, −0.5); C leave-one-out vs the other
+  joint lenses with Ωm and a common ln-scale free (absorbs a sample-wide λ_MST); D leave-one-out ln D_dt vs the
+  H0 + Ωm fit to the other five. Sidak over 18 (lens, statistic) pulls: 5σ global = 5.53σ local (ASSUMPTION).
+- Null: all 23 non-identity permutations of the 4 joint lenses' (z_d, z_s); 100 random permutations of the 6.
+  Injection: one lens's D_dt × f, f = 0.7–2.0, through the same statistics.
+- FRBs: DM_obs vs the predictive distribution of DM_ISM (the JSON `DMISM`, NE2001 via FRBs/FRB `frb/mw.py`
+  `ismDM`; Gaussian ±20 %, ASSUMPTION) + DM_halo U(10, 80) + ⟨DM_cosmic⟩(z)·Δ (Macquart+2020 p(Δ), σ = 0.32 z^−1/2,
+  z floored at 0.02, Δ truncated at 20) + log-normal DM_host (e^μ = 68.2, σ = 0.88)/(1+z). The CDF is a deterministic
+  grid convolution (ISM + halo analytic, cosmic on a uniform DM grid, host through its analytic CDF/SF; all sums of
+  positive terms), so tails stay accurate far below 1e-10. A Monte Carlo floored at 1/N was rejected: it capped z at
+  ~4.3σ, below the flag. One-sided tails both ways; Sidak over 2×94 with a global two-sided 5σ gives 5.81σ local
+  one-sided. Per burst, the DM at which each tail reaches 5.81σ is recorded, and DM_obs = 0.9× / 1.1× those limits
+  is injected through the same chain. All thresholds are in `distance_consistency.Params`/`FRBParams`.
+- Code: `src/jwst_anomaly/distance_consistency.py`, `scripts/d1_distance.py`; outputs `results/d1_distance/`.
+
+**Alternatives rejected.**
+- hierArc / lenstronomy likelihoods: built for the hierarchical population fit in which λ_MST and anisotropy are
+  population parameters, which is exactly what hides a per-lens outlier. The per-lens question needs only the
+  published samples and D_s/D_ds, so astropy.cosmology (E(z), tabulated per (Ωm, w)) suffices. Revisit for
+  TDCOSMO 2025 lenses whose kinematics exist only as `*_const_processed.pkl` likelihoods.
+- `frb` package (FRBs/FRB) for ⟨DM_cosmic⟩: heavy dependency for one integral; the same formula is implemented
+  with astropy (Planck18 parameters, f_d = 0.844) and tested against ~900–1000 pc cm⁻³ at z = 1.
+- A Gaussian DM residual: the cosmic term is skewed and the host term log-normal (data-inventory §1.2).
+
+**Evidence.** Lenses: max |pull| 1.3σ (RXJ1131, statistic D); every |pull| < 1.3σ; no flag. Shuffled-z null:
+median max|pull| 3.8σ (R LOO) and 15σ (D_dt LOO) vs observed 0.84σ and 1.29σ. Injections (D_dt × f, f = 0.15–8, 21
+values per lens, baseline pull included) give the factor at which the injected |z| crosses 5.53σ: R prior (A) ×0.21–0.43
+down / ×2.0–6.8 up; R LOO (C) ×0.22–0.39 / ×2.5–7.9; D_dt LOO (D) ×0.54–0.78 / ×1.29–1.85 (per lens in
+`results/d1_distance/lens_summary.json`). So only a D_dt/D_d inconsistency of a factor ≳ 2–8 (R) would be flagged;
+D_d errors are 15–30 %. FRBs: no flag (threshold 5.81σ one-sided). Lowest: FRB 20220319D, DM 111 < its NE2001 DM_ISM
+127, 3.26σ low (a low-latitude sightline; NE2001 is the likely overestimate). Highest: FRB 20190520B, 2.37σ (known
+large DM_host). Injections just beyond each burst's limits flag 94/94 low and 94/94 high, with no wrong-side flags. The
+low limit is above DM_ISM for most bursts (median 2.3× DM_ISM) because Macquart's p(Δ) has a sharp lower cutoff
+(Δ ≳ 0.4); that cutoff is an ASSUMPTION and sets the low-side sensitivity.
+
+**Revisit if.** Per-lens D_d posteriors for the other TDCOSMO 2025 lenses (or the 2025 λ_MST-free kinematics) are
+released; JWST/KCWI spatially resolved kinematics shrink D_d errors below ~10 % (the R test then reaches ×1.5);
+a YMW16 or empirical Galactic DM model replaces NE2001 at low latitude.
+
+**Addendum (2026-10-09): YMW16 beside NE2001.** `scripts/d1_distance.py frb --ism ymw16` replaces the stored NE2001
+`DMISM` by YMW16 (Yao, Manchester & Wang 2017) to 30 kpc at each burst's RA/Dec, everything else unchanged (±20 %,
+halo, cosmic, host, 5.81σ). YMW16 comes from pygedm 3.3.0's compiled `ymw16` extension, called directly: pygedm's
+NE2001 extension needs libf2c (not in the cloud image) and its package import fails on SciPy ≥ 1.14 (`simps`), so the
+package is built without `ne21c` and only `ymw16` is imported (recipe in `results/d1_distance/README.md`). Known-case
+check: FRB 20121102A gives 287 pc cm⁻³ (the published YMW16 value; NE2001 stored 158). **Null under YMW16 and under
+either model:** no flag; max low pull FRB 20220319D 4.09σ (YMW16 211 vs NE2001 127 vs DM_obs 111), max high
+FRB 20190520B 2.37σ; injections 94/94 per side. YMW16/NE2001 ratio median 0.84 (16–84 %: 0.71–1.31, range 0.36–1.91),
+so the models differ by more than the ±20 % ISM error (ASSUMPTION) for 54 of 94 bursts; the ±20 % is therefore too narrow
+as a model error. Widening it only broadens the predictive distribution and lowers the pulls, so the null stands, but
+the per-burst low-side DM limits under either single model are optimistic; a burst
+counts as flagged if either model flags it (`frb_ism_compare.ecsv`, `flag_either`). The 20220319D pull is model error
+on a low-latitude sightline (both models exceed its total DM), not a sightline anomaly. Rejected: building NE2001 in
+pygedm (needs a system f2c library; the stored NE2001 values are already the reference).
+
+**Addendum 2 (2026-10-09): statistic D on the TDCOSMO 2025 power-law chains, 8 lenses.**
+`scripts/d1_distance.py tdcosmo` runs the D_dt leave-one-out (H0 + Ωm free, flat ΛCDM) on the power-law,
+kinematics-free D_dt^model chains behind the TDCOSMO 2025 likelihoods: the 6 H0LiCOW lenses plus DES0408 and WGD2038
+(file pairing and readers as in TDCOSMO's `tdcosmo_sample.ipynb`; redshifts from `tdcosmo_sample.yaml`).
+- κ_ext harmonised: every lens gets D_dt = D_dt^model/(1 − κ_ext) (hierArc convention, λ_int = 1) with an independent
+  draw from its own TDCOSMO κ_ext distribution (`kext`); the `nokext` variant sets κ_ext = 0 for all as a diagnostic.
+  The mass sheet is treated the same for all (power law, no internal MST; a sample-wide factor is absorbed by H0).
+  WGD2038's chain is weighted (weights applied); DES0408 has no κ_ext in its chain, so its own PDF is applied like
+  the others'.
+- SDSS1206: the pre-LOS power-law pickle (D_d D_s/D_ds, D_d, κ_pert) is read with an unpickler that admits numpy
+  arrays only (`distance_consistency.load_array_pickle`); D_dt = (1 + z_d) × first / (1 + κ_pert), as in the notebook.
+- Sidak over the 8 `kext` pulls: 5.39σ local (ASSUMPTION; `nokext` is a diagnostic and never flags). Null: 100
+  random redshift permutations. Injection: D_dt × f, f = 0.15–8 (baseline = the f = 1 run under the same settings).
+- Checked: the RXJ1131, PG1115 and HE0435 κ_ext files have as many rows as their D_dt chains but are uncorrelated
+  with them (|r| < 0.003; ln D_dt width identical paired or shuffled), so independent draws (TDCOSMO's own
+  treatment) lose nothing; B1608's chain κ column is all zero. The WGD2038 histogram range [−0.2, 1], 2000 bins, is
+  the one in TDCOSMO's `plotkappa_handpickedpaper2038.py`; its narrow κ_ext (16–84 %: −0.007 to 0.010) is as published.
+- **Result, `kext`: null.** Max |pull| 1.12σ (RXJ1131 −1.12, PG1115 −1.05, B1608 +0.97; the rest < 0.7σ); LOO H0 of
+  the others 72.2–74.4. Shuffled-z null median max|pull| 15.8σ. Detectable factors ×0.41–0.78 down / ×1.36–1.85 up
+  for the seven tight lenses, ×0.26 / ×3.2 for WGD2038 (σ_ln D_dt ≈ 0.24).
+- **`nokext`: RXJ1131 −5.67σ (beyond the threshold), DES0408 +3.9σ.** Explained by line-of-sight convergence: removing the
+  measured κ_ext (RXJ1131 median 0.070, B1608 0.103, WFI2033 0.059, DES0408 −0.040) moves the others' H0 to 77.5–79.8
+  while RXJ1131, the most precise chain (σ_ln = 0.023), stays at 73.4. With κ_ext the tension is gone (−1.1σ). This
+  is a real-data positive control: the statistic resolves a ~7 % sightline convergence on the precise lenses, so an
+  exotic per-sightline distance effect would have to be smaller than the κ_ext uncertainties (±3–5 %) or mimic κ_ext.
+- Limitations: power-law models only (no composite); no kinematics, so no per-lens D_d (new D_d only via the hierArc
+  `*_const_processed.pkl` likelihoods, not read: pickles from a download need a data-only reader first).
+
+**Addendum 3 (2026-10-10): composite-model check on SDSS1206.** TDCOSMO 2025 publishes a composite-model D_dt
+chain for SDSS1206 only (`final_composite_D_dt.npy`, κ_ext and κ_pert included; the other seven lenses have power-law
+chains only), so the model-choice check is one lens. `scripts/d1_distance.py tdcosmo --j1206 final_composite` swaps it
+into statistic D (`kext` only, everything else as addendum 2).
+- Validation: `--j1206 final_power_law` (TDCOSMO's own final power-law chain) reproduces this script's pre-LOS power
+  law + κ_ext treatment: D_dt 16/50/84 % 5231/5881/6540 vs 5236/5884/6540 Mpc; J1206 pull 0.606σ vs 0.608σ. In
+  these runs the J1206 `kext_p*` columns are 0: κ_ext is inside the chain.
+- **Result: null.** Composite D_dt median 5708 Mpc (−2.9 % against the power law, narrower); J1206 pull 0.54σ (power
+  law 0.61σ); max |pull| 1.14σ (RXJ1131) against 5.39σ; LOO H0 of the others 72.2–74.1. Detectable factors for J1206:
+  ×0.62 / ×1.49 (power law ×0.50 / ×1.74).
+- Rejected: the pre-LOS composite pickle (`angular_diameter_pre_LOS_composite.txt`): its κ_pert array has 20,000
+  rows against 400,000 distance rows, so the per-sample pairing the power-law reader uses is undefined there.
+
+**Addendum 4 (2026-10-10): kinematic D_s/D_ds per lens, 76 lenses.** `scripts/d1_distance.py kinematic` reads the
+hierArc kinematic likelihoods TDCOSMO 2025 ships as pickles (8 TDCOSMO lenses; SLACS KCWI 13, SLACS SDSS 41 not in
+KCWI, SL2S 14: `ExternalLenses/`) with `distance_consistency.load_data_pickle` (numpy-only globals) and turns each
+into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any D_dt.
+- Model (hierArc 1.2.0 `KinLikelihood` + `_displace_lambda_mst`, read, not installed): σ_v = c √(J s(a_ani[, γ_pl])
+  (D_s/D_ds) λ), covariance C_meas + C_√J s (D_s/D_ds) c², λ = λ_int (1 − κ_ext). Here λ = 1, a_ani flat over the
+  published grid (31 nodes), γ_pl (RXJ1131 and the 13 SLACS KCWI lenses) from each lens's Gaussian prior truncated
+  to the published grid [1.5, 2.5] (41 nodes; hierArc bounds it the same way; `gamma_prior_in_grid`, lowest
+  SDSSJ0029−0055 0.23, SDSSJ1402+6321 0.59); flat prior in ln D_s/D_ds on [0.04, 40] (ASSUMPTIONs, all in
+  `Params.kin_*`). The term is Gaussian in σ_v with an error proportional to the prediction, so its upper
+  tail is a power law: the grid end is a prior bound and per-lens summaries are median and half 16–84 % width.
+  Moving the bound to 400 (`--ratio-max 400`) changes the max pull by 2 × 10⁻⁴σ and δ, τ by < 10⁻³.
+- Statistic: y = ln(D_s/D_ds)_kin − ln(D_s/D_ds)_ΛCDM; leave-one-out pull of each lens against the others' common
+  offset δ (absorbs a population λ) and Gaussian intrinsic scatter τ (ML; absorbs per-lens λ_int, anisotropy and
+  profile scatter), tail computed on the lens's own grid density. Ωm 0.3 (0.1 and 0.5 as checks). Sidak over 76:
+  5.78σ local. Null: 100 shuffled redshift pairs. Injection: one lens's D_s/D_ds × f.
+- **Result: null.** Max |pull| 2.49σ (SDSSJ2302−0840, SLACS SDSS, −0.63 in ln), 2.63σ / 2.54σ at Ωm 0.1 / 0.5; next
+  SDSSJ1538+5817 (KCWI, +0.29) +2.48σ. Shuffled-z null median max|pull| 2.71σ (p ≥ observed 0.79): the redshift lever is weak against τ = 0.15,
+  so this tests per-lens outliers, not the redshift dependence. Pooled δ = −0.06 ± 0.03. Detectable factors (median
+  over lenses): × 0.21 down / × 5.6 up; TDCOSMO × 0.19–0.39 / × 2.9–9.0, SLACS KCWI × 0.30–0.45 / × 1.6–2.9,
+  SLACS SDSS × 0.02–0.42 / × 3.7–52, SL2S × 0.02–0.22 / × 3.3–32 (two SL2S lenses not reached down, one up, within
+  × 0.018–55).
+- Sample offsets (δ ± sd, τ): KCWI +0.06 ± 0.04 (0.12), SLACS SDSS −0.15 ± 0.04 (0.03), TDCOSMO −0.11 ± 0.05
+  (0.0), SL2S −0.36 ± 0.15 (0.35). KCWI vs SDSS differ by 0.2 on the same SLACS lenses (aperture and data
+  systematics; hypothesis, not tested). With λ = 1 (diagnostic `z_lambda1`, never flags) the precise KCWI lenses sit
+  up to 10σ high: λ_int ≠ 1 per lens, the mass-sheet degeneracy this test cannot break.
+- Cross-check, not a validation: the TDCOSMO 2025 kinematic ratios differ from the H0LiCOW joint R (composite
+  models, other anisotropy priors) by −0.43 to +0.30 in ln (PG1115 1.04 vs 1.61; J1206 2.48 vs 1.83), within
+  their 1–1.6σ widths. Synthetic lenses recover the injected ratio to 0.01 in ln (tests).
+- Limitations: λ and anisotropy are marginalised only through δ, τ and flat grids, so a real per-sightline distance
+  anomaly smaller than ×2–5 is indistinguishable from a mass-profile difference; the Gaussian summaries of the
+  others are approximate for the heavy-tailed SL2S lenses.
+
+## D-074 E1 causal event network: lag × separation pair counts across GBM, ICECAT-1, GWTC and CHIME Cat 2 with sidereal-scrambled nulls (2026-10-09)
+
+**Decision.**
+- Hypothesis (owner idea 4): events from different directions are dependent at lags no ordinary path explains.
+  Nodes:
+  - 4,390 GBM bursts (`fermigbrst`);
+  - 340 ICECAT-1 v4 tracks (8 `CR_VETO` dropped);
+  - 391 GWTC events;
+  - 3,641 CHIME/FRB Cat 2 sources (sub-bursts dropped, one node per repeater).
+
+  All are pinned in `data/manifests/e1_events.ecsv`. The CANFAR download worked on the first try this time.
+- Statistic: pair counts per channel (9 channels) × lag bin (0–10 s, 10–100 s, 100 s–1 h, 1 h–1 d, 1–7 d, |Δt|) ×
+  class.
+  - "Same" means sep ≤ 3·σ_comb. "Wide" means sep > 3·σ_comb and > 0.1°.
+  - σ_GBM = stat ⊕ 3.7°. Below an `error_radius` of 0.5° (a position from another instrument, usually 0) it is
+    max(error_radius, 0.05°).
+  - σ_ICECAT = mean 90 % error / 2.146. σ_CHIME = max(ra_err, dec_err).
+  - GW events have no position in the CSV, so GW channels count all pairs (lag only).
+- Nulls, 10⁴ each. All keep Dec and hour angle and permute times within catalogue × calendar year.
+  - `perm`: the time multiset is unchanged, so this null tests only whether separation depends on lag.
+  - `jit` (primary for lag excess): adds an independent shift per event. GBM gets k × 95.6 min orbit ± 5 min within
+    ±3 d, which keeps orbit phase (SAA, occultation); the others get uniform ±3 d.
+  - `jitday` (vetting): the ground instruments and GW shift by whole days.
+- Trials (review finding 1 on PR #112): the observation is pooled with the scrambles. Every row's per-cell p is
+  (#rows ≥ value)/(N + 1), and the global p is the rank of the observed minimum among all rows' minima. This is
+  uniform under H0 (tested). The empirical floor is 1/(N + 1) = 10⁻⁴, which makes the family-wise floor about
+  (cells at the floor)/(N + 1). A family-wise 3σ or 5σ is therefore not reachable empirically (`reachable()`,
+  tested). Such claims use `analytic_p` (Poisson for null mean < 30, else Gaussian with the ensemble sd) ×
+  Bonferroni, a model_prediction, quoted beside the pooled empirical p.
+- Injection (review finding 2): a B event is moved to t_A ± lag (log-uniform in the bin) of a wide-separated A anchor
+  within ±30 d.
+  - Detection: the injected cell's analytic p × 75 cells ≤ 1.35 × 10⁻³ (family-wise 3σ), i.e. per-cell p ≤ 1.8 ×
+    10⁻⁵. The earlier empirical rule (p ≤ 10⁻⁴) was only about 2.7σ family-wise.
+  - Limits: the Poisson classical UL on the count when the null mean is < 30, else obs − q05(null). The rate is UL /
+    min(eff, 1) / N_eligible.
+  - N_eligible counts the A events with a B event within ±30 d, i.e. those inside B's live time (review finding 4).
+  - A cell where no injected n reached 50 % detection has `valid` = False and no rate.
+- Code: `src/jwst_anomaly/event_network.py`, `scripts/e1_events.py`, `scripts/e1_chime_exposure.py`, and
+  `tests/test_event_network.py`. All thresholds are ASSUMPTIONs in `event_network.Params`.
+
+**Alternatives rejected.**
+- Reusing published coincidence-search code. Curtin+2023 (CHIME × GBM/BAT) and Masaoka+2026 (CHIME Cat 2 ×
+  ICECAT-1) publish no code (checked 2026-10-09). Both test *same-direction* coincidences, which is the opposite of
+  E1's wide channel. IceCube/GBM stacking analyses are likewise position-matched. Brainerd+1995 (BATSE
+  time-dependent two-point correlation) is the closest method, but it is a same-direction repeater test. The new
+  quantity is the wide-separation lag CCF, which is a few lines of numpy. No new dependency (`h5py` is used only
+  for the one-off exposure reduction, from a scratch environment).
+- A bootstrap with replacement for the uptime null: duplicated draws make self-pairs at lags < 2·jitter. Rejected.
+- `perm` alone: it preserves every lag, so GW170817 × GRB 170817A gets p = 1 by construction.
+- Ranking the observation with (1 + r)/(N + 1) but the scrambles with r/N. This dropped the trials factor whenever
+  the observation lay beyond the ensemble: it reported 10⁻⁴ where the pooled p is 0.0036. Fixed after review.
+- The in-day null (keep each event's UTC day, redraw the time of day) as an uptime test: it absorbs most of an
+  injected real signal (`chime_vet.json`: 300 injected 1 h–1 d wide pairs give z = 5.6 under `jit` but 0.25 under
+  in-day), so it cannot discriminate uptime from dependence.
+- The CHIME Cat 2 exposure file as an uptime model. It holds two HEALPix nside-4096 maps of *time-integrated*
+  exposure (upper and lower transit, 2018-09-04 to 2023-09-15) and has no time axis. It cannot give a per-day uptime
+  series, and its sky part (Dec dependence) is already preserved by the Dec + hour-angle nulls. It was reduced to
+  `chime_exposure_dec_profile.ecsv` and deleted. No CHIME Cat 2 file with a time-resolved uptime or injection
+  series exists in the CANFAR release (checked: `table/`, `exposure/`, `localizations/`, `dynamic_spectra/`,
+  `additional_figures/`).
+
+**Evidence.** See `results/e1_events/`.
+- Requested five channels (GBM–GBM, GBM–ICECAT, GBM–GW, ICECAT–ICECAT, ICECAT–GW), `jit`: min cell p = 0.014
+  (ICECAT–ICECAT 1 h–1 d wide, 36 vs 25.4 ± 4.4). Trials-corrected p = 0.28. Null.
+- All 9 channels, pooled empirical trials-corrected p:
+  - all 75 cells: 0.0036 (`jit`) and 0.0047 (`jitday`);
+  - wide and GW cells (45): 0.0058 (`jit`) and 0.0033 (`jitday`).
+
+  Beside them, the analytic Bonferroni p over the 45 wide/GW cells is 4.5 × 10⁻³ (`jit`) and 4.5 × 10⁻⁴ (`jitday`,
+  3.3σ). All 75 cells give an analytic 4 × 10⁻¹⁰, but that is CHIME–CHIME *same-direction* (see below).
+- **CHIME–CHIME wide (and all-separation) clustering at 100 s–1 d.**
+  - Status: unexplained under `jit` and `jitday`; the in-day null does not discriminate. **It is reproduced by a
+    calibrated rate-modulated null** (test d below), so it is attributed to smooth (~week-scale) modulation of the
+    CHIME detection rate. The cause of that modulation (uptime or sensitivity) is a hypothesis: no CHIME uptime
+    series exists to confirm it.
+  - Counts: 8,099 vs 7,793 ± 82 at 1 h–1 d (z = 3.7 `jit`, 4.3 `jitday`); 396 vs 329 ± 18 at 100 s–1 h. It is
+    direction-independent: the wide fraction under `perm` is normal (z_perm = −0.7 and −2.5), and the
+    all-separation counts show the same excess.
+  - In the `excluded_flag` = 0 subset (post hoc, 2,000 scrambles) the per-cell z is 5.3 (`jit`) and 5.8 (`jitday`)
+    at 1 h–1 d. The Gaussian Bonferroni over 45 cells is 5.2σ, or 4.96σ including the three post-hoc subsets.
+  - Ordinary-explanation tests on the 1 h–1 d wide cell (`chime_flag_tests.json`, `scripts/e1_chime_flag.py`,
+    1,000 scrambles unless stated):
+    - (a) Busy days.
+      - The 14 busiest days (top 1 %, 107 bursts) touch 578 cell pairs against 206 in scrambles. Dropping them
+        lowers z from 3.9 to 2.9. Dropping the top 5 % lowers it to 2.1, and the top 10 % to 2.8.
+      - A 30-day-block jackknife (63 blocks) keeps z between 3.4 and 4.8. No single month carries the excess.
+    - (b) Epochs and seasons. The excess is present in most years (z = 3.0, 2.7, 1.5, 0.2, 2.2 and 3.0 for 2018–2023)
+      and in both the Catalog 1 period (`catalog1_flag`, z = 3.2) and later (z = 2.9). It is strongest in MAM
+      (z = 3.9; DJF 1.2, JJA 2.2, SON 2.7). It is not a commissioning-only effect.
+    - (c) Property independence.
+      - Cell pairs do not share DM, fluence or S/N more than scrambled pairs do (KS p = 0.55, 0.98 and 0.47).
+      - Dec difference: p = 0.04, but the median differs by only 0.3°, and with 5 properties tested it is not
+        significant.
+      - Sidereal-phase difference: p = 0.09.
+    - (d) Rate-modulated null. Times are redrawn from the catalogue's own 7-day running mean of daily counts
+      (uniform within the day; Dec and hour angle kept).
+      - Calibration: 300 injected 1 h–1 d wide pairs raise the observed count by 190, of which the null absorbs
+        24. It keeps about 87 % of an injected dependent signal.
+      - Data: z = −0.86 (8,099 vs 8,209 ± 128). The jit excess disappears.
+      - A 3-day running mean over-predicts pairs (z = −5.5) because daily counts are under-dispersed (Fano 0.86).
+  - Under the brief's STOP rule (> 5σ trials-corrected under a calibrated rate or exposure null) the full-catalogue
+    cell has z = −0.9 under the calibrated null (d). No STOP.
+- CHIME–CHIME same-direction at 10 s–1 h (12 vs 0.6 pairs at 100 s–1 h). 11 of the 12 pairs are one unflagged
+  same-position episode: FRB20230825D–I, six bursts within 5 min at (347.35°, +48.75°) with DM 221–223 pc cm⁻³ and
+  no `repeater_name`. This is a catalogue effect (one source, six nodes).
+- Positive controls.
+  - GW170817 × GRB 170817A: the only GBM–GW pair at 0–10 s (Δt = 2.07 s trigger − merger; the published onset is
+    1.74 s). The null mean is 0.06, so the blind count gives p = 0.058: a single coincidence is not detectable
+    without sky maps. 50 % detection at family-wise 3σ needs ≥ 3 injected pairs. The GBM row's position lies 1.2″
+    from SSS17a.
+  - GBM re-triggers (GRB 091024, 130925, 150201, 220627, 250702 ×3) appear in the same-direction channel.
+  - CHIME with every repeater burst as a node: same-direction pairs 30 / 120 / 219 / 480 / 2,513 vs perm
+    1.6 / 6.8 / 13.6 / 33 / 195.
+- Orbit, sidereal-day and solar-day lag windows (k = 1–15 orbits, 1–7 days) show no excess (|z| < 2.5).
+- 95 % limits, dependent wide (GW: any-separation) partners per eligible anchor, `limits.ecsv`:
+  - lags ≤ 100 s: 6.8 × 10⁻⁴ (GBM–GBM), 1.0 × 10⁻³ (GBM–ICECAT, 2,910 eligible), 5.1 × 10⁻³ (GBM–GW, 935
+    eligible), 8.8 × 10⁻³ (ICECAT–ICECAT), 4.5 × 10⁻² (ICECAT–GW, 66 eligible), and 0.8–2.8 × 10⁻³ (CHIME
+    cross-channels);
+  - longer lags: 4 × 10⁻³ to 0.75.
+
+  ICECAT–ICECAT 100 s–1 h is not valid: no injected n reached 50 % detection.
+
+**Revisit if.**
+- GW sky maps are added (then GW channels get same/wide classes and GW170817 enters the same-direction channel).
+- A time-resolved CHIME uptime or sensitivity series is published or obtained. It would confirm (or refute) that the
+  rate modulation behind the CHIME flag is instrumental; an exposure-weighted null built from it must keep an
+  injected signal. Sub-day (hour-resolved) uptime would also decide the 100 s–1 h residual (addendum).
+- A CHIME Cat 2 revision assigns FRB20230825D–I to a repeater.
+- IceTracks-DR2, Swift or Einstein Probe catalogues are added.
+- Signed-lag (precursor) channels are wanted.
+
+**Addendum (2026-10-09): the CHIME–CHIME 100 s–1 h wide cell under the rate-modulated null.**
+- Hypothesis: the 100 s–1 h wide excess (396 vs 329.6 ± 17.8 under `jit`, z = 3.7) is lag dependence that a smooth
+  detection-rate modulation does not explain. Ordinary explanations: week-scale rate modulation (as for 1 h–1 d),
+  the daily duty cycle, and sub-day outages or sensitivity changes. A family-wise > 3σ residual under the calibrated
+  null would have sent the cell to per-pair vetting.
+- `scripts/e1_chime_flag.py --cell 100s-1h`, 2,000 scrambles; `results/e1_events/chime_rate_null_100s_1h.json`.
+  The same D-074 (d) null, plus a `keep_tod` variant that keeps each event's UTC time of day.
+- **Results (z; analytic p × 45 cells):**
+  - 7-day running mean: 396 vs 348.9 ± 18.7, z = 2.52, p_fw = 0.26.
+  - 7-day, time of day kept: 396 vs 349.6 ± 19.2, z = 2.42, p_fw = 0.35 (the daily duty cycle adds nothing).
+  - 3-day running mean: z = 0.48. Not used as the primary null: it over-predicts the 1 h–1 d cell (z = −5.5, D-074 (d)).
+- Calibration: 300 injected wide pairs in this bin raise the count by 300–305; the null mean moves by ≤ 8, so the
+  7-day null keeps ≥ 97 % of an injected dependent signal (1 h–1 d: 87 %).
+- **Decision: null at the family level.** The week-scale modulation explains about 30 % of the jit excess (19 of 66
+  pairs); the rest is a local 2.5σ that a day-resolution null cannot test, because it needs hour-scale rate
+  structure. Unlike 1 h–1 d (z = −0.9), the cell stays a weak, unexplained-at-low-significance residual; no STOP.
+- Alternatives rejected: an hour-resolved running mean of the catalogue's own counts. With about 2 bursts per day
+  it would absorb the very pairs it tests (as the in-day null did, `chime_vet.json`).
+- Revisit if: a time-resolved CHIME uptime series is obtained (owner decision); then use an hour-resolved
+  exposure-weighted null for both 100 s–1 h and 1 h–1 d.
+
+**Addendum 2 (2026-10-09): antipodal lag channels.**
+- Hypothesis (owner idea 4 follow-up): dependent events appear at the antipode of a first event (a "through the
+  Earth / through the sky" link). Ordinary explanations: the same observer-side common causes as D-074; a GBM
+  localization flip is not a concern because GBM errors set the antipodal radius.
+- `scripts/e1_antipodal.py`: pairs with 180° − sep ≤ max(10°, 3σ_comb) (ASSUMPTION `ANTI_MIN_DEG`), five lag bins
+  × six localized channels (GW has no positions) = 30 cells; `jit` null, 2,000 scrambles; pooled trials
+  (`en.global_p`) and an analytic Bonferroni tail. Injection: B moved to t_A ± lag and to A's antipode (scattered by
+  B's own error), 20 trials at n = 3, 10, 30, 100 per cell; detection = family-wise 3σ.
+- **Result: null.** Pooled global p = 0.56 (min cell p 0.054); min analytic p × 30 = 1. Largest z: CHIME–GBM
+  1 h–1 d, 258 vs 230.5 ± 16.4 (z = 1.7). `results/e1_events/antipodal.json` gives the per-cell 95 % upper limits.
+- Sensitivity (`n50_injected`): 3 pairs at lags ≤ 100 s in most channels (10 for GBM–GBM 10–100 s and the CHIME–GBM
+  10–100 s cell); 3–30 at 100 s–1 h; 10–100 at 1 h–7 d; GBM–GBM 1–7 d not reached at 100.
+- Limitation: the CHIME–CHIME injections put B at A's antipode even where CHIME cannot see it (Dec < −11°). They
+  calibrate the statistic, not the instrument.
+- Revisit if: GW sky maps are added (GW–X antipodal channels), or signed-lag channels are built.
+
+**Addendum 3 (2026-10-09): signed-lag ("which event comes first") channels.**
+- Hypothesis: one catalogue's events lead another's (A → B) at lags no ordinary path explains, visible as a sign
+  asymmetry that the pair counts (|Δt|) cannot see. Ordinary explanations: physical counterparts with a known order
+  (GW170817 → GRB 170817A), follow-up chains, and uptime (sign-symmetric, so it cannot make D ≠ 0 on its own).
+- `scripts/e1_signed_lag.py`: D = N(t_B > t_A) − N(t_B < t_A) for the six cross channels × five lag bins × class (same
+  and wide; all for GW channels) = 45 cells; `jit` null, 2,000 scrambles; pooled two-sided trials (`en.global_p` on
+  |D − μ|). Analytic tail: Gaussian, or Skellam(λ, λ) with λ = sd²/2 where the null sd < 1 (ASSUMPTION
+  `GAUSS_SD_MIN`). The Gaussian on a one-pair cell gave z = −4.4 for GW170817 alone and was rejected. Injections
+  move B to t_A + lag (one sign) in the tested class.
+- **Result: null.** Pooled global p = 0.68 (min cell p 0.032); min analytic p × 45 = 1.
+  - Largest |z|: GBM–GW 0–10 s, D = −1. This is GW170817 before GRB 170817A, the ordinary positive control (Skellam
+    p = 0.05, not detectable alone).
+  - Next: CHIME–GW 1 h–1 d, D = −45 vs +3.7 ± 22.6 (p = 0.03).
+- Sensitivity (`n50_injected`): 3–10 one-sided pairs at ≤ 100 s, 10–100 at 100 s–1 d (2 cells not reached), and mostly not reached at
+  1–7 d (≥ 100).
+- Revisit if: GW sky maps are added (GW cells get same/wide classes).
+
+**Addendum 4 (2026-10-10): GW channels with sky maps.**
+- Hypothesis: GW events have same-direction, wide or antipodal partners (GBM, ICECAT-1, CHIME, GW) at lags no
+  ordinary path explains. Before this the GW channels were lag-only. Ordinary explanations: as D-074, plus
+  GW170817 × GRB 170817A (a known counterpart).
+- Data: 282 PE sky maps (GWTC-2.1 / 3 / 4.1 / 5.0 Zenodo tarballs, 704 MB streamed in about 3.5 min with 12 range
+  connections per tarball, one process per `--tar`; reduced to nside-32 NESTED; `scripts/e1_gw_skymaps.py`).
+  The other 109 GWTC entries (GWTC-4.1: 52, GWTC-5.0: 57) have no PE parameters in the GWOSC CSV either and are
+  left out. GW170817: Gaussian at SSS17a, σ 1.05° (ASSUMPTION).
+- `scripts/e1_gw_directional.py`: same = partner within 3σ (+1.3° pixel slop, ASSUMPTION) of the 90 % region;
+  wide = more than max(3σ, 0.1°) outside the 99 % region; antipodal = antipode within the same tolerance of the
+  90 % region and not same; GW–GW by region overlap. Maps rotate in RA with the scrambled GW time (hour angle
+  kept). 4 channels × 5 lags × 3 classes = 60 cells, `jit` null, 1,000 scrambles (266 s on 4 cores).
+- The control pair GW170817 × GRB 170817A is classified `same` at 0–10 s and is left out of the family (both
+  observation and null; with it the 0–10 s GW–GBM same cell would be 1 vs ≈ 0). The catalogue snapshot is pinned
+  separately in `data/manifests/e1_gw_events.ecsv`, because the GBM TAP table grew since the D-074 pin.
+- **Result: null.** Pooled global p = 0.83 (min cell p 0.053); min analytic p × 60 = 1. Largest z: GW–ICECAT
+  1–7 d antipodal, 14 vs 8.3 ± 2.9 (z = 2.0); GW–GW 1 h–1 d antipodal, 17 vs 11.1 ± 3.4 (z = 1.8).
+- Sensitivity (`n50_injected`, 10 trials, family-wise 3σ): 3 pairs at ≤ 10 s (GW–GBM, ICECAT, CHIME), 3–10 at
+  10–100 s, 10–30 at 100 s–1 h; at 1 h–7 d mostly > 30 (not reached). GW–GW is not injected. 95 % upper limits per
+  cell are in `results/e1_events/gw_directional.json` (3 extra pairs in every empty cell).
+- Revisit if: new GWTC PE releases (more mapped O4 events), or signed-lag GW cells with directions are built.
+
+**Addendum 5 (2026-10-10): signed-lag GW cells with sky-map classes.**
+- Hypothesis: as addendum 3, with GW cells split by the addendum 4 sky-map classes. Ordinary explanations: known
+  counterparts with a fixed order (GW170817 → GRB 170817A, left out of the family); catalogue edges (GW events
+  after CHIME Cat 2 ends have only earlier partners). The per-year `jit` scramble keeps the edges, so its mean D is
+  not 0 (GW–CHIME 1–7 d wide: −66.5 ± 52.7) and every cell is tested against the null mean, never against 0.
+- `scripts/e1_gw_signed.py`: D = N(t_B > t_GW) − N(t_B < t_GW) for GW × {GBM, ICECAT, CHIME} × 5 lags × {same, wide,
+  antipodal} = 45 cells; `jit` null, 1,000 scrambles; two-sided pooled trials and the addendum 3 Gaussian / Skellam
+  tail. GW–GW is not a cell (D is antisymmetric within one catalogue). Injections put B after the GW event in the
+  tested class (`e1_gw_directional.inject(..., sign=1)`), 10 trials at n = 3, 10, 30.
+- **Result: null.** Pooled global p = 0.56 (min cell p 0.030); min analytic p × 45 = 0.78. Largest |z|: GW–CHIME
+  1 h–1 d antipodal, D = 10 vs −0.3 ± 4.3 (z = 2.4).
+- Sensitivity (`n50_injected`): 3 pairs at ≤ 10 s, 3–10 at 10–100 s, 10–30 at 100 s–1 h, and mostly not reached
+  (> 30) at 1 h–7 d.
+- Revisit if: new GWTC PE releases, or a time-resolved CHIME uptime series (owner decision).
+
+## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)
+
+**Decision.**
+- Round 2 of the D-069 process ran with the round-1 failure modes as hard rules for System A.
+- None of its predictions gets search compute here:
+  - R2-A (perfect-reflector GW afterglow) is excluded by the ergoregion instability and the GWTC-4.0 remnant null,
+    with the GW250114 reflectivity bound (preprint) as support.
+  - R2-B (polarisation mirror at saddle images) is internally inconsistent and disfavoured by B0218+357.
+  - R2-C (Σm_ν = 58.8 meV) is not novel. It is tracked externally through DESI DR3, KATRIN final and CMB birefringence.
+- Round 3 targets a derived small effect in a large-N quantity that is measured but never analysed for it.
+
+**Alternatives rejected.**
+- Reprocessing the raw VLA data for B0218+357 now: R2-B already fails on internal consistency. Kept as an optional
+  low-priority task.
+- Re-running public DESI/CMB chains for R2-C: it would only reproduce the published collaboration results.
+- A stacked GW echo search for R2-A: equivalent windows already tested (GWTC-4.0 cWB, O4a events, 2603.19021) and an
+  energy-normalised bound set for GW250114 (2610.12429). R2-A's exact stack was not run; it is moot given the
+  ergoregion exclusion.
+
+**Evidence.** docs/hypotheses/round-2/ (texts, reviews, summary). Key references opened 2026-10-09:
+- arXiv:2610.12429 (GW250114 near-horizon reflectivity);
+- 2603.19021 (GWTC-4.0 remnant tests);
+- 1706.06155 (echo recipe);
+- 1802.10088 (B0218+357 VLA reanalysis);
+- 2503.14744 (DESI DR2 neutrino constraints);
+- 2605.21456 (DES-Dovekie: negative neutrino mass or negative dark energy).
+
+**Revisit if.**
+- Parity-resolved circular polarimetry of a lensed radio quasar is published, or a lensed FRB is confirmed (R2-B).
+- DESI DR3 or a CMB analysis pushes the Σm_ν tension past 5σ, or relaxes it (R2-C).
+
+## D-076 Hypothesis round 3: derived small effects in large-N data; no testable survivor; pause new rounds (2026-10-09)
+
+**Decision.**
+- Round 3 (brief: a derived small effect in a large-N quantity never analysed for it) gives nothing that earns
+  search compute:
+  - R3-A (universal same-exposure pair correlation) fails as written. Its decisive test is in a lab.
+  - R3-B (condensate scalar charge) is mostly excluded by NS–WD dipole bounds (upper half at 6.7σ; self-consistent
+    minimum at about 2σ; the no-feedback corner survives). Recorded: α_NS < 2.2 × 10⁻³ (95 %, reviewer's
+    combination).
+  - R3-C (SN Ia rate vs "clock depth") is not excluded but cannot be tested with about 5 × 10³ public SNe Ia under
+    environment systematics.
+- New System A rounds are paused. Compute goes to open searches limited by data (MOA-II, CHIME baseband, Euclid DR1,
+  Gaia DR4) until the owner sets a new brief.
+
+**Alternatives rejected.**
+- A ZTF same-exposure correlation search for R3-A: about 3 TB to download, about 1.8σ at nominal D, and systematics bias it
+  upward.
+- A ZTF BTS Poisson GLM for R3-C: 0.5–2σ at N ≈ 5 × 10³; the kill needs N ≈ 8 × 10⁴.
+- A stacked s(M) Ṗb template fit for R3-B: bound-setting only, and mass-resolved fits already exist.
+- Continuing System A rounds at the same cadence: rounds 2–3 (6 worlds) produced no testable survivor.
+
+**Evidence.** docs/hypotheses/round-3/ (texts, reviews, summary). Key references opened 2026-10-09:
+- arXiv:1512.01216 (Holometer);
+- 2605.01436 (J1738+0333 update);
+- the cluster SN Ia rate papers listed in B-on-R3C.md.
+
+**Revisit if.**
+- The owner sets a new System A brief.
+- Rubin/LSST public alerts give ≥ 10⁵ SNe Ia with hosts (R3-C).
+- A lab cross-correlation of independent noise sources at 10⁻⁵ is published (R3-A).
+
+## D-077 Owner brief 2026-10-10: Neutrino Frontier program; round 1 (four frameworks), data audit and E-NF1 ghost-pair null (2026-10-10)
+
+**Decision.**
+- Owner brief (DD-Ching, 2026-10-10) recorded here: a new, independent Neutrino Frontier program. Neutrinos are
+  probes of emergent spacetime, locality and distance, mass and flavor, hidden degrees of freedom, causal
+  structure, and wormhole or warp physics. The brief restarts hypothesis rounds **for this program only**; it
+  supersedes D-076's pause here and nowhere else. It takes no resources from MOA-II, S1, E1/D1 follow-ups or
+  data validation without a documented allocation decision. Merge policy, guarded files, WIP cap, cloud-disk
+  and notification rules are unchanged.
+- Layout: `docs/neutrino_frontier/` (README with the NF-H registry and experiments, round files, data audit);
+  code in `src/jwst_anomaly/neutrino_frontier.py` and `scripts/nf_*.py`, reusing `event_network.py` and the
+  E1 loaders and nulls.
+- Round 1 (N-A literature-blind invention, N-B adversarial review with checked references):
+  - NF-H01 granular locality (stochastic distance): KNOWN-REDUNDANT, UNTESTABLE NOW (needs ≥ 2 multi-event
+    neutrino flares at different distances).
+  - NF-H02 twin-sheet flavor = pseudo-Dirac partners: KNOWN-REDUNDANT; N-A's δm² window is excluded by public
+    IceCube data (arXiv:2406.06476).
+  - NF-H03 second causal cone = ν–γ Shapiro-delay EP test: KNOWN-REDUNDANT; robust |ε| ≲ 10⁻³–5 × 10⁻³
+    (SN1987A); the LSS-scale bound is ill-defined (arXiv:1907.12453); D-074 GBM × ICECAT covers the rescan.
+  - NF-H04 sparse nonlocal links ("ghost" neutrinos): CONDITIONALLY VIABLE as phenomenology (ladder B). The
+    TXS-flare ghost test is rejected (all-sky flare trials swamp it).
+- E-NF1 (NF-H04): ICECAT-1 v4 wide pairs (D-074 classes) in 7 lag bins (to 180 d), counts and Σ s_i s_j
+  (signalness), 14 cells; `jit` ≤ 7 d, cyclic ±1 yr jitter beyond; 20,000 scrambles (the script refuses fewer
+  than the per-cell threshold needs); empirical p; injection of ghosts with R_g × signalness; **95 % CLs** limits
+  on R_g. ASSUMPTIONs: weighting, the long-bin null
+  (stationary alert rate on ~1 yr), the R_g grid.
+
+**Alternatives rejected.**
+- F3 ε-line rescan of GBM × ICECAT (D-074 null; background ~2.4 pairs; no bound without a signal normalization).
+- F1/F2 compute: no repo data can add to published work.
+- A TXS 2014–15 ghost search in the 10-year track sample: IceCube's all-sky flare search finds chance hot spots at
+  pre-trial p 9 × 10⁻⁶–3.5 × 10⁻⁷ (arXiv:2107.12134), so even R_g = 1 is not decidable.
+- Classical (non-CLs) upper limits: a low fluctuation (1–7 d: 138 vs 149.5) "excluded" even R_g = 0 at 94 %.
+- Testing injected catalogues against the observed catalogue plus ghosts: any ghost exceeds the observation, so
+  limits came out too tight; the fix draws the background from the null and adds the ghost excess.
+- Within-year permutation (D-074 `perm`) for the long bins: it keeps every pairwise lag, so it has no power.
+
+**Evidence.** `results/nf/ghost_pairs.json`; reproduces D-074 (wide 36 at 1 h–1 d, 138 at 1–7 d). Pooled global
+p = 0.058; min Bonferroni p = 0.094 (1 h–1 d, weighted, z = 2.7). The 36 pairs at 1 h–1 d were inspected:
+spread over all 13 years; 6 are two alerts in one run and two are alert triplets (ordinary day-scale clustering
+the ±3 d jitter keeps; without same-run pairs 30 vs 25.4, ~1σ, post hoc). 95 % CLs limits on R_g (per
+astrophysical alert; the smallest grid R_g above which every grid point passes): ≤ 0.02 at Δt ≤ 10 s, ≤ 0.05
+at 10 s–1 h, ≤ 0.2 at 1 h–1 d, ≤ 0.1 at 1–7 d, ≤ 0.5 at 7–30 d; at 30–180 d only R_g = 1 is excluded (R_g,50 not
+reached). Round files: docs/neutrino_frontier/.
+
+**Revisit if.**
+- IceTracks-DR2 (doi:10.7910/DVN/MMIIZA) is streamed: R_g limits on the 1.6 M-event track sample, with its
+  good-run lists as an uptime-aware null.
+- A second public multi-event neutrino flare at a different distance appears (NF-H01).
+- The owner sets a round-2 brief.
+
+## D-078 Pipeline speed-ups (owner brief 2026-10-10, Part 0): numba kernel for GW-GW sky-map classes, durable derived-data store, 60-minute claim rule (2026-10-10)
+
+**Decision.**
+- S-2: `classify_gw_gw` (E1 GW sky maps) uses an exact ring-shift rotation (an RA rotation keeps a HEALPix pixel
+  centre on its iso-latitude ring and moves it by floor(dr/w + 0.5) slots; the antipode sits on the mirror ring)
+  and per-ring 128-bit masks. A numba kernel tests each pair ring by ring (window of B's doubled mask AND A's
+  mask, early exit). numba is in the `dev` extra (so CI tests it) and a `fast` extra; without it a vectorized
+  numpy bitmask path runs. The per-pair loop stays as the test reference. Unmapped GW events get no distance
+  maps (never counted).
+- S-1: `src/jwst_anomaly/derived_store.py`: reduced products (< 50 MB, never raw archives) are GitHub Release
+  assets tagged `derived-data-YYYYMMDD`, pinned in `data/manifests/derived_data.ecsv` (sha256, size, sources,
+  code commit). Scripts try the durable copy first and verify it, then the source (`e1_gw_skymaps.py` accepts it
+  only when its content digest equals the pinned `maps_sha256`). `scripts/derived_publish.py` publishes.
+- S-5: a claimed unit heartbeats at least every 10 min; takeover only after 60 min with no commit AND no
+  heartbeat (docs/cloud-routine-prompt.md, research-cycle skill, docs/operations.md).
+- S-3/S-4: profile before any run > 10 min; large fetches start in the background in the first minutes, with
+  parallel range requests into memory, per-file caches and retried size probes (already in
+  `e1_gw_skymaps.py`).
+
+**Alternatives rejected.**
+- Re-download each run: 704 MB from Zenodo at 0.15–2 MB/s per session (yesterday it did not finish in 40 min).
+- git-lfs: bandwidth quota on a public repo and data in git history (CLAUDE.md).
+- Owner-machine cache: not reachable from cloud sessions.
+- numba as a core dependency (D-004 rejected PyOD partly for that); kept optional with a fallback.
+- Precomputed per-pair shift tables (the pair set never saturates: 21k rows after 200 scrambles; 13×) and
+  precomputed rotation tables (scattered gathers; 21×): slower than the kernel.
+- A grid in RA rotation: not exact; the ring shift is exact (0 mismatches in 3.7 M rotated centres).
+
+**Evidence.** CHANGELOG 2026-10-10 speed table. 30 fixed-seed scrambles, 19,313 real GW–GW pairs: loop, numpy
+and numba classes identical; loop 808 ms, numpy 28 ms (×29), numba 1.79 ms (×452) per scramble.
+- Release creation from a cloud session: HTTP 403 "Creating, editing, or deleting releases is not permitted for
+  this session type". The store is built and tested; the first asset waits for a session that may publish.
+- The live HEASARC GBM table no longer matches either pinned snapshot (D-074 5b42…, #122 0cb3…; live 8cc2…, 4,391
+  rows): a pinned GBM snapshot cannot be re-fetched. It belongs in the durable store.
+
+**Revisit if.** Cloud sessions gain release permission (publish the GW maps and the pinned GBM snapshot), or
+another store is approved by the owner.
+
+**Addendum (2026-10-10, local session on the owner's machine): first release; the pinned GBM snapshot is not
+recoverable.**
+- Published `derived-data-20261010` (pre-release, not latest): `gw_skymaps_nside32.npz`, 4,337,802 B, sha256
+  ab033058…8e1ad5, code commit 67fffba (main; the tag itself sits on c92249c because `derived_publish.py` had no
+  `--target` yet, fixed in the same PR), pinned in `data/manifests/derived_data.ecsv`. The npz is a fresh
+  re-reduction (`e1_gw_skymaps.py --refresh`, 704 MB streamed into memory, 675 s); its content digest equals the
+  pinned `maps_sha256` c5c2e4ff… and all four tarball sha256 equal their pins.
+- Fresh-session check (`JWST_ANOMALY_DATA` = an empty directory): "durable copy verified in 1 s", 2.7 s wall, no
+  tarball fetched.
+- Neither pinned `fermigbrst.vot` (D-074 5b42…, 424,481 B; #122 0cb3…, 424,579 B) exists on the owner's machine:
+  no file matched either name or either size in the data root, the old clone and its worktrees, the home folder
+  (23.4 M files) or drives E: and G:. They were presumably fetched in ephemeral cloud sessions (inference, not
+  checked), and the live HEASARC table has moved on, so neither can be re-fetched. **Decision:** E1 is re-pinned to a new snapshot in a separate PR that
+  re-runs the affected E1 results and reports every change (TASKS "Part 0", cloud routine). No GBM snapshot was
+  invented or downloaded here; `e1_events.fetch` is unchanged until a snapshot is published.
+
+**Addendum 2 (2026-10-10, cloud routine): E1 re-pinned to one GBM snapshot.**
+- `data/manifests/e1_events.ecsv` pins `fermigbrst.vot` sha256 8cc2823f… (424,672 B, 4,392 rows; the "live 8cc2…"
+  above). ICECAT-1, GWTC and CHIME Cat 2 re-fetched with unchanged digests. `e1_gw_events.ecsv` (addendum 4 of
+  D-074) is removed: the GW scripts read the same manifest.
+- Relative to the D-074 pin: the new table minus bn261008763 and bn261007236 reproduces every tracked observed
+  count (75 cells). All E1 scripts re-run with tracked seeds and scramble counts: D-074 core family p 0.278 → 0.273;
+  addenda 2–5 global p 0.557 → 0.531, 0.676 → 0.568, 0.829 → 0.833, 0.555 → 0.551. No conclusion changes (CHANGELOG
+  2026-10-10).
+- The snapshot still exists only in an ephemeral session: a local session must publish it to the derived-data store
+  (it can be re-fetched only while HEASARC serves this digest; otherwise re-pin there with `--refresh`).
+- The null-ensemble cache is keyed by the input digests. Per-catalogue random streams are a follow-up.
+
+**Addendum 3 (2026-10-10): MOA pre-screen chunks keyed on pre-screen inputs only.** `_chunk_done` and
+`merge_prescreen` compared the whole `w3_moa.Params`, so vetting-only parameters (D-068 addendum: `period_*`,
+`slow_dip_power`, `spike_*`) forced full re-streams with byte-identical rows (gb12 chunks 1, 4 and 7 diffed against
+`main`: only metadata differs). Chunks now carry `prescreen_params` (`widths`, `n_min`, `prescreen_z/s/repeat`,
+`COINC_Z`, `QUIET_TRACK_MOD`, `PRESCREEN_CODE`). Older chunks are judged on the same keys of their `params`
+when `PRESCREEN_CODE` = 1. Bump `PRESCREEN_CODE` whenever `deficit_scan`, `baseline_chi2` or the tracked-row rule
+changes. Rejected: keep the full-Params key (it costs 6–8 min and 24–30 GB of range reads per field re-run for no
+change), and hash the scan source code (it breaks on comment edits and still needs a version for semantics).
+
+## D-079 E-NF1b: IceTracks-DR2 short-lag ghost pairs: null; DR2 cannot reach R_g ~ 10⁻³ or improve lags > 1 h (2026-10-10)
+
+**Decision.**
+- Run NF-H04 on IceTracks-DR2 only at lags ≤ 1 h. Pre-registered (docs/neutrino_frontier/README.md, E-NF1b):
+  northern tracks (Dec > −5°), log10 E ≥ 4.0 and ≥ 4.5, bins 0–10 s / 10–100 s / 100 s–1 h, D-074 wide pairs
+  without pairs of one (run, event), uptime-aware ±3 d jitter null, 5,000 scrambles, 95 % CLs limits on R (ghosts
+  per event above the cut). ASSUMPTIONs: cuts, bins, R grid, ghost passes the cut (ε = 1).
+- Stream the 28 events/uptime files (sha256 of the served `.tab` pinned in `data/manifests/nf_icetracks_dr2.ecsv`),
+  keep only a reduced `.npz` under the data root.
+- Close the TASKS goal "reach R_g ~ 10⁻³ and 30–180 d with DR2": not reachable (Evidence).
+
+**Alternatives rejected.**
+- All lags on DR2: the optimistic floor max(3√B, 3)/N (every event astrophysical) is ≥ 0.055 at 1 h–1 d, ≥ 0.14 at
+  1–7 d, ≥ 0.27 at 7–30 d and ≥ 0.64 at 30–180 d for every northern cut (log10 E ≥ 3.5–5.5): no gain over ICECAT-1.
+- An ICECAT-alert-parent × DR2-ghost cross test: R_g per alert is bounded by ~3 / (astrophysical alerts ≈ 130)
+  whatever the ghost sample, so it cannot beat the alert–alert limits by much.
+- Southern tracks: dominated by atmospheric muons with a high energy cut (log10 E median 4.9).
+- urllib downloads (403 from Dataverse); `requests` and curl work.
+
+**Evidence.** `results/nf/ghost_pairs_dr2.json`, `results/nf/ghost_pairs_dr2_ic86.json` (identical on re-run, fixed
+seeds). 1,643,355 events, no duplicate (run, event, subevent) (the paper's count); good-run union 4,963.4 d. TXS 0506+056 2014–15 box: 6 on
+vs 1.11 expected (p = 1.0 × 10⁻³). Min Bonferroni p = 0.48; limits R ≤ 0.002 (log10 E ≥ 4, ≤ 100 s), ≤ 0.005
+(≥ 4.5, ≤ 100 s), ≤ 0.01–0.02 (100 s–1 h). The 9 pairs at 0–10 s are all IC40/IC59; the rate above log10 E = 4 (north) is
+×7–18 higher there than in IC79/IC86 (energy-proxy scale differs by configuration). IC86-only (post hoc): 0 pairs
+at ≤ 100 s.
+
+**Revisit if** NF-H04 gets a quantitative R_g or lag prediction; f_astro per cut is computed from the DR2 effective
+areas (turns R into R_g); a public track sample with a much larger astrophysical count appears (IceCube-Gen2,
+KM3NeT ARCA releases).
+
+## D-080 Neutrino Frontier benchmark 1: SkyLLH reproduces the IceTracks-DR2 TXS 0506+056 2014–15 box fit (2026-10-10)
+
+**Decision.**
+- Adopt SkyLLH (PyPI `skyllh` ≥ 26.1, optional extra `nf`; IceCube's public-data likelihood framework, the tool
+  arXiv:2605.19040 used) for point-source and time-window fits on IceTracks-DR2. No in-house likelihood.
+- Benchmark before use: `scripts/nf_txs_benchmark.py` fits the TXS 0506+056 box (IC86_IV, catalogue position
+  77.35°, 5.7°) with n_s and γ free, under the Dataverse 1.0 IRFs (what the paper used) and the ≥ 2.0 IRFs (binning
+  fix). Two windows: Table 6 as printed ([T0 − ΔT/2, T0 + ΔT/2] = MJD 56927.5–57112.5) and the same window with
+  each edge snapped to the nearest on-source event (< 1° from TXS, ≤ 1 d away; ASSUMPTIONs), because Table 6 rounds
+  T0 and ΔT to whole days and a box flare fit puts its edges on events. Agreement tolerance |Δn_s| ≤ 1,
+  |Δγ| ≤ 0.1 (ASSUMPTION).
+- Raw files (IC86_IV events and uptime, IC86 IRFs: smearing matrix 817 MB v2 / 598 MB v1) are streamed into the data
+  root, sha256-checked against `data/manifests/nf_skyllh_dr2.ecsv` and deleted after use (`--cleanup`). Stated reason
+  for > 200 MB: the benchmark needs the full IC86 smearing matrix (SkyLLH builds the signal PDFs from it).
+
+**Alternatives rejected.**
+- The printed window as is: n_s = 11.1, γ = 2.22 (both IRF versions), 1.6 events short. The event at MJD 57112.653
+  (0.38° from TXS, σ = 0.20°) lies 0.15 d after the printed stop; with the snapped edges (56927.860–57112.653:
+  T0 = 57020.26, ΔT = 184.8 d, both round to Table 6) the fit matches.
+- Multi-season fits (IC86_III–V): SkyLLH's time-dependent analysis supports one dataset only; the box lies inside
+  IC86_IV (56757–57160), so nothing is lost.
+- The whole-release zip that SkyLLH's dataset definition downloads: per-file streaming of the 4 needed files instead.
+
+**Evidence.** `results/nf/txs_skyllh_benchmark.json`. Snapped window: n_s = 12.72, γ = 2.26, TS = 23.0 (v1 IRFs);
+12.75 / 2.26 / 22.9 (v2). Paper: 12.7 / 2.3 (SkyLLH), 12.56 / 2.26 (internal). Printed window: 11.08 / 2.21
+(v1), 11.11 / 2.22 (v2). The IRF binning fix moves n_s by 0.03. Fixed-window background (v2 IRFs), 50,000 SkyLLH scrambles per window: p < 2 × 10⁻⁵ (not comparable with the paper's
+free-window pre-trial p).
+The snap rule was chosen after the printed window missed (post hoc): the match is a consistency check that
+the paper's box ends on these two events, not a blind test. n_s moves by ~1 event per edge event, so the tolerance
+alone cannot separate a correct setup from a lucky window.
+
+**Revisit if** a new SkyLLH release changes the PDFs (re-run the benchmark), or a test needs multi-season
+time-dependent fits (SkyLLH single-dataset limit).
+
+## D-082 W3 short-event (t_E = 3 d) recovery study: frozen sample, loss diagnosis on dev only (2026-10-11)
+
+**Decision.** Owner directive V2.1, priority 1. The production chain (CHAIN_VERSION 2026-10-10.1, unchanged) runs
+2,000 W3 injections at t_E = 3 d (ρ = 0.01 and 0.1, LF magnitudes, seed 3003; no limit uses this seed) on the
+300 gb12 quiet carriers (`scripts/w3_short_te.py`, `results/w3_moa/short_te/`).
+- **Split.** Each injection is assigned dev or validation by the SHA-256 of its own inputs (event_id, t_E, ρ,
+  u0, t0, I_s) and the seed. This is independent of row order and of every outcome.
+- **Analysis.** The loss is diagnosed on dev only. For each flagged injection, count spike nights (injected flux
+  above `SPIKE_SIGMA` = 3 median errors) and umbra nights (injected flux below −3 median errors).
+- **Validation.** It has been read only for its baseline recovery counts. The stage-2 classifier uses it once,
+  as its final evaluation.
+
+**Alternatives rejected.**
+- A split keyed on the row index (the first version). `run_inject` collects rows with `imap_unordered`, so rows
+  come in completion order, and slow (flagged) injections cluster late. `/code-review` found that this split
+  was neither reproducible nor independent of the outcome: flagged injections divided 72/46, p ≈ 0.02.
+- crc32 % 2: it is an affine function of the input bits, not a random draw.
+- Re-using the production gb12 injections: only 23 flagged at t_E = 3 d, and they feed the published limits.
+- Relaxing `jackknife_nights` directly: the test exists because one bright night carried gb7-R-8-6-94052's
+  preference (w3-survey failed-approach rule).
+
+**Evidence.** Baseline recovery of flagged injections:
+- dev: 21 / 57 = 0.37 (Clopper–Pearson 95 % 0.24–0.51);
+- validation: 27 / 61 = 0.44 (0.32–0.58).
+
+First failing test on dev: `jackknife_nights` 14, `eclipse_dip` 12, others 10.
+
+Spike nights on dev:
+- **`eclipse_dip` losses (12):** 11 have ≤ 1 spike night, and 1 has spikes on both sides of the umbra. With the
+  peaks unsampled, these signals cannot be told from a flat dip in the data. This is a sampling limit, not a rule
+  defect.
+- **`jackknife_nights` losses (14):** 1–4 spike nights; 9 have spikes on both sides.
+- **Recovered (21):** 0–9 spike nights; 17 have spikes on both sides.
+
+The jackknife losses and the recoveries overlap in spike nights, so this proxy cannot separate a sampling
+limit from a rule loss for `jackknife_nights`. No bound on the rule-attributable loss is claimed. A first draft
+gave "≤ 8 %"; it is withdrawn: it rested on the row-order split and on a proxy that differs from the
+jackknife's own feature definition, |exotic − best ordinary model| > 3 median errors.
+
+**Revisit if.** Stage 2 re-vets the flagged dev injections and records the jackknife's own feature nights,
+dropped nights and ΔBIC. It then tries a night-robust likelihood term (a per-night systematic error instead of
+dropping nights), tuned on dev, checked for false positives against the real gb12 flags and the PSPL
+controls, and evaluated once on validation.

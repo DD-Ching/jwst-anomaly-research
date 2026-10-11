@@ -74,7 +74,7 @@ equation is β = x − sign·sgn(x)/|x|ⁿ, and μ = 1/(λ_t λ_r) with λ_t = 1
 | W2 | Ellis wormhole, static (model_prediction) | Two tangential images on opposite sides (like a point mass) with no luminous deflector. | Total μ < 1 for β > 1.11; minimum 0.958 at β = 1.67. Inner image at x = −0.618 (β = 2) carries 3.4 % of the flux (Abe 2010). | static | n < 10⁻⁴ h³ Mpc⁻³ for a = 10–10⁴ pc (Takahashi & Asada 2013) | dark subhalo or faint galaxy lens; chance pairs | dark-lens search; flux ratio (D-031). The 4 % deficit is not measurable on one object. |
 | W3 | Negative mass, microlensing (model_prediction, simulated) | A compact source (a caustic-crossing star in a cluster arc, or an AGN disk) **vanishes**, between two caustic spikes. | Umbra β < 2: the lensed flux goes to 0 for 2 t_E √(4 − u₀²). Spike peak, simulated with `exotic_sim` (uniform disk of radius ρ θ_E; not a paper value): 7.0 for ρ = 0.01, 2.35 for ρ = 0.1, 1.53 for ρ = 0.3. For n = 2 (n = 3) repulsive lenses the caustic is at β = 1.89 (1.76). | t_E ≈ 12 yr (\|M\|/M☉)^½ | negative-mass density ≲ O(10⁻³⁶) g cm⁻³ from GRB data (Torres, Romero & Anchordoqui 1998) | demagnified saddle-point images and microlensing by intracluster stars (Kelly et al.); SN fading; AGN variability; persistence (D-039); subtraction residuals | transient / dimming (D-027) |
 | W4 | Ellis or n > 1, microlensing (model_prediction) | Shallow, time-symmetric "gutters" either side of the peak. | 4.2 % deep for n = 2 (Abe: about 4 %), still 4 % for ρ = 0.3. 14 % for n = 3 (the paper's text says ~10 %, but its Fig. 2c shows about 13–14 %) and 59 % for n = 10 (Kitamura et al. 2013). A finite source makes them shallower (Tsukamoto & Gong 2018). | few t_E | none | any 4 % variability | Not practical: 5σ needs about 0.8 % photometry per epoch. Only n ≳ 3 is testable. |
-| W5 | Image-plane counts (simulated) | A deficit of sources above a flux limit inside about θ_E of a dark centre, surrounded by radial arcs (ε < 0). | N_obs/N = N(>S/\|μ\|)/(\|μ\| N(>S)) (`count_ratio`). At x = 0.3, \|μ\| = 0.008. | static | as W1 | masks around bright stars and galaxies; deblending; cosmic variance | counts, around radial-screen centres only (without a lens position, stacking is impossible) |
+| W5 | Image-plane counts (simulated) | A deficit of sources above a flux limit inside about θ_E of a dark centre, surrounded by radial arcs (ε < 0). | N_obs/N = N(>S/\|μ\|)/(\|μ\| N(>S)) (`count_ratio`). At x = 0.3, \|μ\| = 0.008. | static | as W1 | masks around bright stars and galaxies; deblending; cosmic variance | counts: wide-field matched filter in Legacy Surveys DR10 (D-063; docs/exotic_limits.md "W5 count deficits"); stacking around radial-screen centres not done |
 | W6 | Centroid shifts, wave optics (model_prediction) | Nothing: µas shifts (Toki et al. 2011; Kitamura et al. 2014) and femtolensing of GRBs (Yoo et al. 2013) | — | — | n ≲ 10⁻⁹ AU⁻³ for a ~ 1 cm (Yoo et al. 2013) | — | none |
 
 Notes.
@@ -107,6 +107,21 @@ branch stops here until a paper supplies one. We do not invent one.
   bubble faster than 0.1c in Earth's air (Fell & Loeb 2026): both effects are local to the destination or to Earth.
   Neither paper gives a flux, spectrum or rate for a distant source.
 - The warp row of the "Signatures" table above stands. No JWST screen is calibrated for warp signatures.
+- **Literature check 2026-10-08** (SOURCES.md):
+  - **Lentz & Felton 2024** (arXiv:2405.19381, §III.2–III.3) give the one electromagnetic estimate for a distant
+    observer (**model_prediction**, order of magnitude): a bubble of size D passing r = 100 lyr away at v_s ≫ c along
+    a 1 lyr path gives an ~11 h transient; ISM photons scattered by the bubble give F ~ 3 × 10⁻⁷ Jy·Hz (v_s/c)(D/km)²
+    (100 lyr/r)² (spectrum: the ISM spectrum boosted in frequency, their Fig. 6), and ISM gas and dust re-radiated as
+    light at most F ~ 3 × 10² Jy·Hz (= 3 × 10⁻²⁴ W m⁻²) × the same factors, with no spectral shape given.
+  - Why nothing to screen: the signal is an hours-long point transient whose dominant term has no spectrum or
+    light-curve shape, so it has no template that separates it from ordinary transients; and for D = 1 km it is ~10⁴
+    below a deep JWST broadband limit (~10⁶ Jy·Hz band-integrated, an **assumption**-level comparison) unless
+    v_s D² ≳ 10³–10⁴ c·km². An unclassified transient in a survey cannot be attributed to it.
+  - Clough et al. collapse burst: f ~ c/R, above the ground-based band unless R ≳ 100 km (an extrapolation); waveform
+    not public. A LIGO/Virgo/KAGRA O3 search for superluminal-source GW bursts already returned a null (Kuwahara &
+    Cannon 2023).
+  - Keep monitoring; revisit when a prediction with a distinguishing spectral, temporal or lensing template appears,
+    or the Clough et al. waveform is released.
 
 ## Screens and results (D-031)
 

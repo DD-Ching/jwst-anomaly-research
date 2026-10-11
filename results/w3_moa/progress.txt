@@ -1,0 +1,81 @@
+2026-10-08T23:20:09Z queue: START gb21 23:19:53 | 30/36 vetted, 1 s
+2026-10-08T23:20:50Z queue: START gb21 23:19:53 | 2200 injections on 300 carriers
+2026-10-08T23:21:33Z queue: START gb21 23:19:53 | 100/2200 injections, 24 s
+2026-10-08T23:30:36Z queue: START gb21 23:19:53 | 900/2200 injections, 579 s
+2026-10-08T23:39:39Z queue: START gb21 23:19:53 | 1550/2200 injections, 1088 s
+2026-10-08T23:48:42Z queue: START gb21 23:19:53 | 2150/2200 injections, 1619 s
+2026-10-08T23:57:44Z queue: START gb20 23:49:46 | fitting 51 pre-screen passes of 52005
+2026-10-09T00:06:48Z queue: STOP gb20 00:06:00 | gb20: flags survive every test: ['gb20-R-4-0-49379'] — stop and report
+2026-10-09T00:15:51Z queue: START gb22 00:12:51 | 650/2200 injections, 142 s
+2026-10-09T00:24:53Z queue: START gb22 00:12:51 | 1800/2200 injections, 653 s
+2026-10-09T00:33:57Z queue: START gb21 00:28:20 | 450/2200 injections, 254 s
+2026-10-09T00:42:59Z queue: START gb21 00:28:20 | 1000/2200 injections, 784 s
+2026-10-09T00:52:02Z queue: START gb21 00:28:20 | 1550/2200 injections, 1266 s
+2026-10-09T01:01:06Z queue: START gb20 00:59:53 | 40/48 vetted, 44 s
+2026-10-09T01:10:08Z queue: START gb20 00:59:53 | 1300/2200 injections, 478 s
+2026-10-09T01:19:12Z queue: START gb20 00:59:53 | 2150/2200 injections, 1013 s
+2026-10-09T01:28:14Z queue: START gb19 01:19:45 | 40/48 vetted, 3 s
+2026-10-09T01:37:17Z queue: START gb19-inject 01:29:42 |
+2026-10-09T01:46:21Z queue: START gb22 01:43:50 | 650/2200 injections, 115 s
+2026-10-09T01:55:24Z queue: START gb21 01:53:30 | 250/2200 injections, 84 s
+2026-10-09T02:04:27Z queue: START gb21 01:53:30 | 1500/2200 injections, 617 s
+2026-10-09T02:13:30Z queue: START gb20 02:09:42 | 800/2200 injections, 157 s
+2026-10-09T02:22:33Z queue: START gb19 02:21:23 | 300/2200 injections, 35 s
+2026-10-09T02:31:36Z queue: START gb19 02:21:23 | 2050/2200 injections, 580 s
+2026-10-09T02:40:39Z queue: START gb16 02:32:59 | 25/32 fitted, 119 s
+2026-10-09T02:49:42Z queue: START gb16 02:32:59 | 1350/2200 injections, 443 s
+2026-10-09T02:58:45Z queue: START gb11 02:53:45 |   55176 light curves, 204/s, 71 MB/s, CPU 99 %, retries 1
+2026-10-09T03:07:48Z queue: START gb11 02:53:45 | 450/2200 injections, 153 s
+2026-10-09T03:16:52Z queue: START gb11 02:53:45 | 1500/2200 injections, 706 s
+2026-10-09T05:20:51Z queue:  |
+2026-10-09T05:29:54Z queue: START gb12 05:20:51 | 25/51 fitted, 123 s
+2026-10-09T05:38:57Z queue: START gb12 05:20:51 | 900/2200 injections, 310 s
+2026-10-09T05:48:00Z queue: START gb12 05:20:51 | 1950/2200 injections, 873 s
+2026-10-09T05:57:03Z queue: START gb7 05:49:19 | wrote /home/user/jwst-anomaly-research/data/derived/w3_moa/prescreen_gb7.ecsv: 10841 tracked rows of 75328 light curves; 1450 shape passes, 44 not at a shared e
+2026-10-09T06:06:07Z queue: STOP gb7 06:03:46 | gb7: flags survive every test: ['gb7-R-8-6-94052'] — stop and report
+2026-10-09T06:15:10Z queue: STOP gb7 06:03:46 | gb7: flags survive every test: ['gb7-R-8-6-94052'] — stop and report
+2026-10-09T06:24:13Z queue: START gb7 06:16:51 | 450/2200 injections, 287 s
+2026-10-09T06:33:16Z queue: START gb7 06:16:51 | 1050/2200 injections, 818 s
+2026-10-09T06:42:19Z queue: START gb7 06:16:51 | 1550/2200 injections, 1384 s
+2026-10-09T06:51:22Z queue: START gb7 06:16:51 | 2000/2200 injections, 1917 s
+2026-10-09T07:00:25Z queue: START gb22 06:54:10 | 1150/2200 injections, 331 s
+2026-10-09T07:09:28Z queue: START gb21 07:06:08 | wrote /home/user/jwst-anomaly-research/data/derived/w3_moa/fits_gb21.ecsv: 38 fits from 1 chunks
+2026-10-09T07:18:31Z queue: START gb21 07:06:08 | 850/2200 injections, 399 s
+2026-10-09T07:27:35Z queue: START gb21 07:06:08 | 1650/2200 injections, 934 s
+2026-10-09T07:36:38Z queue: START gb20 07:33:34 procs 3 | 300/2200 injections, 69 s
+2026-10-09T07:45:41Z queue: START gb20 07:33:34 procs 3 | 1200/2200 injections, 606 s
+2026-10-09T07:54:44Z queue: START gb20 07:33:34 procs 3 | 2050/2200 injections, 1183 s
+2026-10-09T08:03:48Z queue: START gb19 07:55:34 procs 3 | 950/2200 injections, 447 s
+2026-10-09T08:12:52Z queue: START gb19 07:55:34 procs 3 | 1950/2200 injections, 970 s
+2026-10-09T08:21:55Z queue: START gb16 08:15:53 procs 3 | 600/2200 injections, 241 s
+2026-10-09T08:30:58Z queue: START gb16 08:15:53 procs 3 | 1500/2200 injections, 811 s
+2026-10-09T08:40:01Z queue: START gb11 08:35:58 procs 4 | 250/2200 injections, 117 s
+2026-10-09T08:49:05Z queue: START gb11 08:35:58 procs 4 | 1150/2200 injections, 646 s
+2026-10-09T08:58:08Z queue: START gb11 08:35:58 procs 4 | 1600/2200 injections, 1194 s
+2026-10-09T09:07:12Z queue: START gb12 09:04:28 procs 3 | 50/2200 injections, 36 s
+2026-10-09T09:16:15Z queue: START gb12 09:04:28 procs 3 | 950/2200 injections, 584 s
+2026-10-09T09:25:18Z queue: START gb12 09:04:28 procs 3 | 1500/2200 injections, 1104 s
+2026-10-09T09:34:22Z queue: START gb15 09:32:44 procs 3 |   12046 light curves, 144/s, 57 MB/s, CPU 86 %, retries 1
+2026-10-09T09:43:25Z queue: START gb15 09:32:44 procs 3 | fitting 61 pre-screen passes of 83145
+2026-10-09T09:52:29Z queue: START gb15 09:32:44 procs 3 | 50/61 fitted, 478 s
+2026-10-09T10:01:32Z queue: START gb15 09:32:44 procs 3 | 25/61 fitted, 235 s
+2026-10-09T10:10:36Z queue: START gb15 09:32:44 procs 3 | 550/2200 injections, 297 s
+2026-10-09T10:19:39Z queue: START gb15 09:32:44 procs 3 | 1100/2200 injections, 885 s
+2026-10-09T10:28:42Z queue: START gb15 09:32:44 procs 3 | 1600/2200 injections, 1412 s
+2026-10-09T10:37:45Z queue: START gb18 10:33:52 procs 4 |   28629 light curves, 141/s, 70 MB/s, CPU 99 %, retries 1
+2026-10-09T10:46:48Z queue: START gb18 10:33:52 procs 4 | fitting 70 pre-screen passes of 83855
+2026-10-09T10:55:51Z queue: START gb18 10:33:52 procs 4 | 60/67 vetted, 43 s
+2026-10-09T11:04:54Z queue: STOP gb18 10:59:48 | gb18: flags survive every test: ['gb18-R-9-4-24509'] — stop and report
+2026-10-09T11:13:57Z queue: STOP gb18 10:59:48 | gb18: flags survive every test: ['gb18-R-9-4-24509'] — stop and report
+2026-10-09T11:23:02Z queue: START gb18-inject 11:14:15 procs 4 |
+2026-10-09T11:32:05Z queue: START gb18-inject 11:14:15 procs 4 |
+2026-10-09T11:41:08Z queue: START gb17 11:38:59 procs 4 |   15463 light curves, 129/s, 66 MB/s, CPU 99 %, retries 1
+2026-10-09T11:50:11Z queue: START gb17 11:38:59 procs 4 |   84938 light curves, 120/s, 64 MB/s, CPU 99 %, retries 1
+2026-10-09T11:59:15Z queue: START gb17 11:38:59 procs 4 | 50/85 fitted, 289 s
+2026-10-09T12:08:18Z queue: STOP gb17 12:06:09 | gb17: flags survive every test: ['gb17-R-6-1-3829'] — stop and report
+2026-10-09T12:17:21Z queue: START gb17-inject 12:15:57 procs 4 |
+2026-10-09T12:26:25Z queue: START gb17-inject 12:15:57 procs 4 |
+2026-10-09T12:35:28Z queue: START gb17-inject 12:15:57 procs 4 |
+2026-10-09T12:44:32Z queue: START gb13 12:42:52 procs 4 |   10782 light curves, 125/s, 67 MB/s, CPU 99 %, retries 1
+2026-10-09T12:53:35Z queue: START gb13 12:42:52 procs 4 |   78183 light curves, 123/s, 67 MB/s, CPU 99 %, retries 1
+2026-10-09T13:02:39Z queue: START gb13 12:42:52 procs 4 | 25/78 fitted, 194 s

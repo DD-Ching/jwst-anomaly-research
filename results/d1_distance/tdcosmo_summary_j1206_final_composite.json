@@ -1,0 +1,94 @@
+{
+ "provenance": "model_prediction",
+ "j1206_chain": "final_composite",
+ "n_trials": 8,
+ "local_sigma_threshold": 5.387,
+ "flagged": [],
+ "nokext_beyond_threshold_diagnostic": null,
+ "z_D_loo": {
+  "B1608/kext": 0.936,
+  "RXJ1131/kext": -1.139,
+  "PG1115/kext": -1.071,
+  "J1206/kext": 0.544,
+  "HE0435/kext": 0.488,
+  "WFI2033/kext": 0.66,
+  "DES0408/kext": -0.422,
+  "WGD2038/kext": 0.367
+ },
+ "H0_loo_others": {
+  "B1608/kext": 74.1,
+  "RXJ1131/kext": 72.2,
+  "PG1115/kext": 72.6,
+  "J1206/kext": 73.3,
+  "HE0435/kext": 73.3,
+  "WFI2033/kext": 73.3,
+  "DES0408/kext": 72.4,
+  "WGD2038/kext": 73.2
+ },
+ "null": {
+  "kext": {
+   "observed_max_abs_z": 1.139,
+   "n_perm": 100,
+   "null_median": 16.239,
+   "frac_null_ge_observed": 1.0
+  }
+ },
+ "min_factor_at_threshold_from_injections": {
+  "kext": {
+   "B1608": {
+    "down": 0.416,
+    "up": 1.854
+   },
+   "RXJ1131": {
+    "down": 0.783,
+    "up": 1.462
+   },
+   "PG1115": {
+    "down": 0.675,
+    "up": 1.803
+   },
+   "J1206": {
+    "down": 0.618,
+    "up": 1.487
+   },
+   "HE0435": {
+    "down": 0.65,
+    "up": 1.432
+   },
+   "WFI2033": {
+    "down": 0.597,
+    "up": 1.495
+   },
+   "DES0408": {
+    "down": 0.774,
+    "up": 1.351
+   },
+   "WGD2038": {
+    "down": 0.261,
+    "up": 3.25
+   }
+  }
+ },
+ "params": {
+  "om_range": [
+   0.1,
+   0.5
+  ],
+  "w_range": [
+   -2.0,
+   -0.5
+  ],
+  "h0_range": [
+   50.0,
+   100.0
+  ],
+  "lns_half_width": 0.7,
+  "n_om": 41,
+  "n_w": 31,
+  "n_lns": 281,
+  "n_pred": 200000,
+  "n_obs": 200000,
+  "density_bins": 300,
+  "flag_sigma_global": 5.0
+ }
+}

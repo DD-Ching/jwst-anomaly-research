@@ -4,9 +4,9 @@ Each signature of D-047 (W1 negative-mass radial pair with an empty umbra, W2 El
 deflector, W3 inverted-microlensing light curve, W5 count deficit) is one :class:`Signature` entry:
 how it is predicted and injected (``exotic_sim``, ``simulated``), which screens implement it, on
 which kind of survey data it runs, and where its vetting rules and limits are recorded. A new
-survey enters through a thin adapter that satisfies :class:`LightCurveSurvey` or
-:class:`CatalogueSurvey`, and new screens take the adapter. The JWST screens registered below
-predate the layer and still read JWST level-3 catalogues directly.
+survey enters through a thin adapter that satisfies :class:`LightCurveSurvey`,
+:class:`CatalogueSurvey` or :class:`CountMapSurvey`, and new screens take the adapter. The JWST
+screens registered below predate the layer and still read JWST level-3 catalogues directly.
 
 Exotic physics is a hypothesis: a screen flag is an anomaly, not evidence, until every ordinary
 explanation has been tested (/vet-candidate), and a null result is reported as a limit.
@@ -24,7 +24,7 @@ from astropy.table import Table
 
 from jwst_anomaly import exotic_sim, schema
 
-DATA_KINDS = ("catalogue", "light_curve", "image")
+DATA_KINDS = ("catalogue", "count_map", "light_curve", "image")
 
 
 @dataclass(frozen=True)
@@ -93,6 +93,8 @@ register(
         screens=(
             "scripts/exotic_screens.py radial",
             "scripts/inject_radial.py",
+            "scripts/exotic_screens.py shear",
+            "scripts/inject_shear.py",
             "scripts/orphan_pairs.py",
         ),
         ordinary_mimics=(
@@ -117,15 +119,17 @@ register(
             "scripts/exotic_screens.py fluxratio",
             "scripts/orphan_pairs.py",
             "scripts/inject_pairs.py",
+            "scripts/w12_lenscats.py",  # published lens catalogues, no visible deflector
         ),
         ordinary_mimics=(
             "knots of one galaxy",
             "physical companions and groups",
             "faint or dark ordinary lens galaxies",
             "chance SED matches",
+            "catalogue position errors and blended lens light",
         ),
         limits_doc=_LIMITS,
-        decisions=("D-047", "D-048", "D-051"),
+        decisions=("D-047", "D-048", "D-051", "D-056"),
         lens=_ELLIS,
     )
 )
@@ -136,7 +140,11 @@ register(
         data_kinds=("light_curve",),
         predict=_bound(exotic_sim.light_curve, _NEG),
         inject=_bound(exotic_sim.inject_light_curve, _NEG),
-        screens=("scripts/dimming_screen.py",),
+        screens=(
+            "scripts/dimming_screen.py",
+            "scripts/w3_microlensing.py",
+            "scripts/w3_moa.py",  # MOA-II light curves before any bump cut (D-062)
+        ),
         ordinary_mimics=(
             "binary-lens caustic crossings",
             "blending and photometric systematics",
@@ -145,7 +153,7 @@ register(
             "persistence and saturated-star wings",
         ),
         limits_doc=_LIMITS,
-        decisions=("D-047", "D-052", "D-054"),
+        decisions=("D-047", "D-052", "D-054", "D-057", "D-062"),
         lens=_NEG,
     )
 )
@@ -153,13 +161,22 @@ register(
     Signature(
         code="W5",
         name="background-count deficit inside about theta_E",
-        data_kinds=("catalogue",),
+        data_kinds=("count_map",),
         predict=_bound(exotic_sim.count_ratio, _NEG),
+        # count-map injection is map-level (countmap.inject_deficit thins pixel counts with the
+        # exotic_sim profile from countmap.deficit_profile); it is not an exotic_sim image injector
         inject=None,
-        screens=(),
-        ordinary_mimics=("masks and bright-star halos", "deblending", "cosmic variance"),
-        limits_doc="",  # no W5 screen or limit yet
-        decisions=("D-047",),
+        screens=("scripts/w5_counts.py screen", "scripts/w5_counts.py inject"),
+        ordinary_mimics=(
+            "masks and bright-star halos",
+            "depth and dust variations",
+            "survey edges",
+            "deblending and crowding",
+            "magnification-bias depletion behind galaxy clusters",
+            "voids and cosmic variance",
+        ),
+        limits_doc=_LIMITS,
+        decisions=("D-047", "D-063"),
         lens=_NEG,
     )
 )
@@ -168,6 +185,7 @@ register(
 # ----------------------------------------------------------------------------- survey adapters
 
 LIGHT_CURVE_COLUMNS = schema.LIGHT_CURVE_COLUMNS
+LIGHT_CURVE_FLUX_COLUMNS = schema.LIGHT_CURVE_FLUX_COLUMNS
 
 
 @runtime_checkable
@@ -175,7 +193,9 @@ class LightCurveSurvey(Protocol):
     """A time-domain survey: an event or source list and one light curve per entry.
 
     ``events()`` has at least ``event_id, ra, dec`` (deg), plus any published fit parameters;
-    ``light_curve(event_id)`` returns :func:`standard_light_curve` output. ``efficiency(t_e)``
+    ``light_curve(event_id)`` returns :func:`standard_light_curve` output, or
+    :func:`standard_flux_light_curve` output for difference-imaging surveys whose flux relative to
+    a reference image can be negative (MOA-II, D-062). ``efficiency(t_e)``
     is the survey's published detection efficiency for an event time scale (days), or None when
     the survey publishes none (limits then need injection-recovery on the survey's cadence).
     """
@@ -196,6 +216,24 @@ class CatalogueSurvey(Protocol):
     name: str
 
     def catalogue(self) -> Table: ...
+
+    def area_deg2(self) -> float: ...
+
+
+@runtime_checkable
+class CountMapSurvey(Protocol):
+    """An imaging survey aggregated to galaxy counts per HEALPix pixel (W5, D-063).
+
+    ``count_map()`` has one row per ``nest`` pixel at ``nside``: at least ``pix``, ``n_gal``
+    (selected galaxies, ``observed``) and ``w`` (unmasked fraction of the pixel). Count maps are
+    used where a per-object catalogue would be a multi-GB download for a statistic that needs
+    only counts, mask and depth.
+    """
+
+    name: str
+    nside: int
+
+    def count_map(self) -> Table: ...
 
     def area_deg2(self) -> float: ...
 
@@ -221,5 +259,43 @@ def standard_light_curve(time, mag, mag_err, band, source: str, time_system: str
         source=source,
         time_system=time_system,
         n_dropped=int((~ok).sum()),  # non-finite or non-positive-error rows (cadence audit)
+    )
+    return out
+
+
+def standard_flux_light_curve(
+    time,
+    flux,
+    flux_err,
+    band,
+    source: str,
+    time_system: str,
+    flux_unit: str,
+    flux_kind: str = "difference",
+) -> Table:
+    """One flux light curve in the shared layout, ``observed`` (finite rows only, time-sorted).
+
+    For difference-imaging photometry the flux is relative to a reference image and can be negative,
+    so it has no magnitude. ``flux_unit`` and ``flux_kind`` (e.g. "difference", "detrended
+    difference") are recorded in ``meta`` with ``time_system`` and ``n_dropped`` (non-finite rows or
+    non-positive errors).
+    """
+    t = np.asarray(time, float)
+    f = np.asarray(flux, float)
+    e = np.asarray(flux_err, float)
+    if not (t.shape == f.shape == e.shape):
+        raise ValueError("time, flux and flux_err must have one shape")
+    b = np.broadcast_to(np.asarray(band, str), t.shape)
+    ok = np.isfinite(t) & np.isfinite(f) & np.isfinite(e) & (e > 0)
+    order = np.argsort(t[ok], kind="stable")
+    cols = (t, f, e, b)
+    out = Table({k: c[ok][order] for k, c in zip(LIGHT_CURVE_FLUX_COLUMNS, cols, strict=True)})
+    out.meta.update(
+        provenance=schema.Provenance.OBSERVED.value,
+        source=source,
+        time_system=time_system,
+        flux_unit=flux_unit,
+        flux_kind=flux_kind,
+        n_dropped=int((~ok).sum()),
     )
     return out

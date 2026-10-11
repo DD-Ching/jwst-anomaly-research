@@ -1,0 +1,23 @@
+{
+ "provenance": "model_prediction",
+ "n_frb": 94,
+ "n_trials": 188,
+ "local_one_sided_sigma_threshold": 5.814021122152544,
+ "flag_low": [],
+ "flag_high": [],
+ "max_z_low": [
+  "20220319D",
+  3.2556
+ ],
+ "max_z_high": [
+  "20190520B",
+  2.3654
+ ],
+ "low_flag_reachable_dm_gt_0": 94,
+ "median_dm_low_detect_over_dm_ism": 2.297594154612898,
+ "median_dm_high_detect": 10204.46235,
+ "injections_low_recovered": "94/94",
+ "injections_high_recovered": "94/94",
+ "injections_wrong_side_flags": 0,
+ "ism_model": "ne2001"
+}

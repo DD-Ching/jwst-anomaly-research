@@ -98,6 +98,9 @@ TARGET_COLUMNS = ("source_uid", "ra", "dec")
 
 # Time-domain light curves shared by survey adapters (signatures.standard_light_curve, D-054).
 LIGHT_CURVE_COLUMNS = ("time", "mag", "mag_err", "band")
+# Difference-imaging surveys whose flux can be negative (signatures.standard_flux_light_curve,
+# D-062): flux relative to a reference image, in the survey's own units.
+LIGHT_CURVE_FLUX_COLUMNS = ("time", "flux", "flux_err", "band")
 
 # lensmodel.LensModel.evaluate -> one row per position (model_prediction, D-024).
 LENS_PREDICTION_COLUMNS = (

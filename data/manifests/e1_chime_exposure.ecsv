@@ -1,0 +1,19 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: uri, datatype: string}
+# - {name: file, datatype: string}
+# - {name: sha256, datatype: string}
+# - {name: size, datatype: int64}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'CHIME/FRB Catalog 2 exposure maps (doi:10.11570/25.0066): two HEALPix nside-4096 RING maps of time-integrated exposure (upper/lower
+#     transit), 2018-09-04 to 2023-09-15'}
+# - {retrieved: '2026-10-09'}
+# - {pipeline_version: 0.0.1}
+# - {reason: 'authorised by the PR #112 review: the only published CHIME exposure model that might separate day-level uptime from event
+#     dependence. It has no time axis, so it cannot; reduced to results/e1_events/chime_exposure_dec_profile.ecsv by scripts/e1_chime_exposure.py
+#     and the raw file deleted (streamed to scratch, never stored in the data root)'}
+# schema: astropy-2.0
+uri file sha256 size
+https://www.canfar.net/storage/vault/file/AstroDataCitationDOI/CISTI.CANFAR/25.0066/data/exposure/chimefrbcat2_exposure.h5 chimefrbcat2_exposure.h5 cd8411f92d0ac31bd05dff47f62797638c354444de27a5c056113ca00470d514 216024090

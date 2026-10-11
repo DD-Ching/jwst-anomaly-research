@@ -1,0 +1,40 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: lens, datatype: string}
+# - {name: variant, datatype: string}
+# - {name: z_d, datatype: float64}
+# - {name: z_s, datatype: float64}
+# - {name: Ddt_p16, datatype: float64}
+# - {name: Ddt_p50, datatype: float64}
+# - {name: Ddt_p84, datatype: float64}
+# - {name: kext_p16, datatype: float64}
+# - {name: kext_p50, datatype: float64}
+# - {name: kext_p84, datatype: float64}
+# - {name: n_chain, datatype: int64}
+# - {name: z_D_loo, datatype: float64}
+# - {name: zemp_D_loo, datatype: float64}
+# - {name: dlnDdt_D, datatype: float64}
+# - {name: sig_lnDdt_D, datatype: float64}
+# - {name: H0_loo_others, datatype: float64}
+# - {name: global_sigma, datatype: float64}
+# - {name: beyond_threshold, datatype: bool}
+# - {name: flag, datatype: bool}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: 'TDCOSMO2025_public@d7f38db power-law D_dt chains, SDSS1206 final_composite_D_dt.npy (kappa_ext included), kappa_ext PDFs
+#     (derived); flat LCDM predictions (astropy.cosmology); scripts/d1_distance.py tdcosmo'}
+# - {n_trials: 8}
+# - {local_sigma_threshold: 5.38695112552313}
+# - {seed: 20261009}
+# - {j1206_chain: final_composite}
+# schema: astropy-2.0
+lens variant z_d z_s Ddt_p16 Ddt_p50 Ddt_p84 kext_p16 kext_p50 kext_p84 n_chain z_D_loo zemp_D_loo dlnDdt_D sig_lnDdt_D H0_loo_others global_sigma beyond_threshold flag
+B1608 kext 0.6304 1.394 5035.9205 5341.8782 5907.6766 0.0574 0.1026 0.1865 500000 0.9358 1.6795 0.129 0.1378 74.1305 0.0402 False False
+RXJ1131 kext 0.295 0.654 2025.9197 2096.1134 2202.5202 0.0435 0.0695 0.1125 3000000 -1.1387 -1.2738 -0.066 0.058 72.1793 0.1194 False False
+PG1115 kext 0.311 1.722 1336.6566 1458.0807 1585.3813 -0.0257 -0.0054 0.0266 1000000 -1.071 -1.0955 -0.0974 0.0909 72.5897 0.0865 False False
+J1206 kext 0.745 1.789 5348.129 5707.9796 6149.9049 0.0 0.0 0.0 33792 0.5441 0.5649 0.0442 0.0813 73.2575 0.0011 False False
+HE0435 kext 0.4546 1.693 2544.6378 2718.2387 2906.1408 -0.0175 0.004 0.0365 1000000 0.4881 0.4991 0.0358 0.0734 73.3169 0.0005 False False
+WFI2033 kext 0.6575 1.662 4566.1713 4834.898 5286.3154 0.0149 0.0588 0.1382 480112 0.6604 0.6519 0.0564 0.0854 73.3278 0.0042 False False
+DES0408 kext 0.597 2.375 3258.1273 3366.2868 3509.7952 -0.0639 -0.0396 -0.0016 30000 -0.4221 -0.5542 -0.0217 0.0514 72.3688 0.0002 False False
+WGD2038 kext 0.2283 0.777 1171.2633 1495.7413 1821.258 -0.0065 -0.0003 0.0097 567880 0.3672 0.4854 0.0858 0.2336 73.2012 0.0001 False False

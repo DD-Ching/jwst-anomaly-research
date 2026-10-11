@@ -1,0 +1,1768 @@
+{
+ "provenance": "derived",
+ "field": "gb7",
+ "n_light_curves": 75328,
+ "n_shape": 1450,
+ "n_passes": 44,
+ "baseline_chi2": 6.072021956909882,
+ "baseline_calibration": {
+  "threshold": 6.072021956909882,
+  "q": 0.95,
+  "n_quiet": 2480,
+  "frac_above_2": 0.40318952137421626,
+  "median": 1.6966802323464638
+ },
+ "n_flags": 42,
+ "funnel": [
+  [
+   "flags",
+   42
+  ],
+  [
+   "screen_flag",
+   42
+  ],
+  [
+   "exotic_in_domain",
+   41
+  ],
+  [
+   "feature_bracketed",
+   33
+  ],
+  [
+   "exotic_chi2_cap",
+   32
+  ],
+  [
+   "repeated_deficit",
+   17
+  ],
+  [
+   "residual_deficit",
+   10
+  ],
+  [
+   "periodic_variable",
+   10
+  ],
+  [
+   "variable_baseline",
+   10
+  ],
+  [
+   "neighbour_shares_feature",
+   10
+  ],
+  [
+   "eclipse_dip",
+   4
+  ],
+  [
+   "smooth_dip",
+   1
+  ],
+  [
+   "step_ramp",
+   1
+  ],
+  [
+   "robust_errors_outliers",
+   1
+  ],
+  [
+   "season_offsets",
+   1
+  ],
+  [
+   "season_trends",
+   1
+  ],
+  [
+   "slow_dip_seasons",
+   1
+  ],
+  [
+   "observing_conditions",
+   1
+  ],
+  [
+   "refit_all_ordinary",
+   1
+  ],
+  [
+   "binary_source",
+   1
+  ],
+  [
+   "binary_lens",
+   1
+  ],
+  [
+   "exotic_feature_sampled",
+   1
+  ],
+  [
+   "jackknife_epochs",
+   1
+  ],
+  [
+   "jackknife_nights",
+   0
+  ]
+ ],
+ "gaia_rp_xmatch": "vizier:I/355/gaiadr3 within 1.0″: 25 matched",
+ "flags": [
+  {
+   "event_id": "gb7-R-1-0-49231",
+   "exotic": "N1neg",
+   "dbic_all": -5082.071062465551,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -5082.1 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -5082.1; u0 0.00, f_s 1.71e+03 vs 3 × 7.85e+04 (Gaia DR3 RP 15.66)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "3701 epochs before ingress, 1151 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 4.48 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.4"
+    ],
+    [
+     "residual_deficit",
+     false,
+     "z_min of the N1neg residuals -7.7 at 2455797.0–2455807.0 (feature 2455558.4–2456319.8)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-1-1-18083",
+   "exotic": "N1neg",
+   "dbic_all": -3491.773912162311,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -3491.8 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -3491.8; u0 0.00, f_s 3.62e+03 vs 3 × 1.36e+05 (Gaia DR3 RP 15.06)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "2840 epochs before ingress, 3274 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.20 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -2.8"
+    ],
+    [
+     "residual_deficit",
+     false,
+     "z_min of the N1neg residuals -8.1 at 2455049.0–2455078.9 (feature 2454826.5–2455188.6)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-1-2-161869",
+   "exotic": "N1neg",
+   "dbic_all": -2372.8238702497674,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -2372.8 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -2372.8; u0 0.00, f_s 4.41e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "5184 epochs before ingress, 1378 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.74 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.9"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-10-0-125763",
+   "exotic": "E2neg",
+   "dbic_all": -689.429112792217,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -689.4 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -689.4; u0 1.50, f_s 379 vs 3 × 1.07e+05 (Gaia DR3 RP 15.33)"
+    ],
+    [
+     "feature_bracketed",
+     false,
+     "0 epochs before ingress, 1154 after egress (need 20 each)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-10-2-192548",
+   "exotic": "N1neg",
+   "dbic_all": -108.60408560039286,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -108.6 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -108.6; u0 0.02, f_s 1.66e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "5892 epochs before ingress, 688 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.94 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -6.5"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-10-3-38362",
+   "exotic": "E2neg",
+   "dbic_all": -230.64709404750556,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -230.6 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -230.6; u0 0.47, f_s 2.06e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "859 epochs before ingress, 5715 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 1.18 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -8.4"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-10-4-38448",
+   "exotic": "N1neg",
+   "dbic_all": -357.8810628409574,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -357.9 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -357.9; u0 0.93, f_s 5.51e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "835 epochs before ingress, 5652 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.27 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -9.8"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-10-4-41583",
+   "exotic": "N1neg",
+   "dbic_all": -76.40637977047936,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -76.4 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -76.4; u0 0.20, f_s 1.32e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "860 epochs before ingress, 5730 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.12 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.3"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-10-4-54381",
+   "exotic": "N1neg",
+   "dbic_all": -818.4564232716803,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -818.5 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -818.5; u0 0.72, f_s 3.18e+03 vs 3 × 2.92e+04 (Gaia DR3 RP 16.74)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "1337 epochs before ingress, 5266 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.89 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.0"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.0 at 2456934.9–2456936.9 (feature 2454276.1–2454280.6)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 27.15 d, 2-harmonic BIC gain per half -6.3 / -30.5 (fail if both > 25)"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 0.90 > 6.07? (5985 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "1 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     true,
+     "ΔBIC -233.7 vs a trapezoidal dip"
+    ],
+    [
+     "smooth_dip",
+     false,
+     "ΔBIC 23.6 vs a Gaussian dip (σ 0.1 d)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-10-7-72430",
+   "exotic": "N1neg",
+   "dbic_all": -102.7938751283873,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -102.8 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -102.8; u0 0.00, f_s 1.45e+04 vs 3 × 3.48e+04 (Gaia DR3 RP 16.54)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "3806 epochs before ingress, 1957 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.28 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.7"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.7 at 2456054.2–2456054.9 (feature 2455775.0–2455779.9)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 6.39 d, 2-harmonic BIC gain per half -18.0 / -23.9 (fail if both > 25)"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.24 > 6.07? (5446 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "1 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC -1.6 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-2-1-13066",
+   "exotic": "N1neg",
+   "dbic_all": -474.5706493876751,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -474.6 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -474.6; u0 0.40, f_s 1.07e+04 vs 3 × 1.45e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "514 epochs before ingress, 5851 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 0.52 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.6"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-2-1-186",
+   "exotic": "N1neg",
+   "dbic_all": -2186.590650778464,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -2186.6 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -2186.6; u0 0.16, f_s 5.64e+03 vs 3 × 1.33e+05 (Gaia DR3 RP 14.29)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "2455 epochs before ingress, 3966 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 4.68 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -5.6"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.5 at 2455326.9–2455328.3 (feature 2454644.6–2454652.1)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 68.90 d, 2-harmonic BIC gain per half 657.6 / 6.2 (fail if both > 25)"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 4.77 > 6.07? (5899 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "2 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 191.8 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-2-2-205",
+   "exotic": "N1neg",
+   "dbic_all": -10592.471570940967,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -10592.5 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -10592.5; u0 0.74, f_s 70.8 vs 3 × 1.45e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     false,
+     "0 epochs before ingress, 2992 after egress (need 20 each)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-2-5-88997",
+   "exotic": "N1neg",
+   "dbic_all": -3883.050400709202,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -3883.1 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -3883.1; u0 0.37, f_s 5.02e+03 vs 3 × 9.92e+04 (Gaia DR3 RP 14.61)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "5368 epochs before ingress, 604 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 3.41 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -5.5"
+    ],
+    [
+     "residual_deficit",
+     false,
+     "z_min of the N1neg residuals -11.1 at 2456467.1–2456474.2 (feature 2456470.5–2456615.2)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-3-0-81486",
+   "exotic": "N1neg",
+   "dbic_all": -548.2640658593546,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -548.3 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -548.3; u0 0.00, f_s 1.02e+04 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "4802 epochs before ingress, 1489 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.22 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.2"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.2 at 2453975.1–2453976.0 (feature 2456039.2–2456043.9)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 7.20 d, 2-harmonic BIC gain per half -14.5 / -30.9 (fail if both > 25)"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.19 > 6.07? (6107 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "3 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     true,
+     "ΔBIC -27.1 vs a trapezoidal dip"
+    ],
+    [
+     "smooth_dip",
+     false,
+     "ΔBIC 17.1 vs a Gaussian dip (σ 0.1 d)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-3-4-27050",
+   "exotic": "E2pos",
+   "dbic_all": -1895.5259800357308,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1895.5 (E2pos vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2pos ΔBIC -1895.5; u0 1.09, f_s 4.79e+04 vs 3 × 8.96e+04 (Gaia DR3 RP 15.52)"
+    ],
+    [
+     "feature_bracketed",
+     false,
+     "0 epochs before ingress, 3073 after egress (need 20 each)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-3-4-28058",
+   "exotic": "N1neg",
+   "dbic_all": -8118.880124371892,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -8118.9 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -8118.9; u0 0.99, f_s 2.38e+03 vs 3 × 1.11e+05 (Gaia DR3 RP 15.29)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "842 epochs before ingress, 4813 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.77 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -5.1"
+    ],
+    [
+     "residual_deficit",
+     false,
+     "z_min of the N1neg residuals -6.4 at 2454349.0–2454377.0 (feature 2454166.5–2454458.7)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-3-6-110355",
+   "exotic": "N1neg",
+   "dbic_all": -15811.252689324836,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -15811.3 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -15811.3; u0 0.23, f_s 8.04e+03 vs 3 × 5.44e+04 (Gaia DR3 RP 16.06)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "6392 epochs before ingress, 41 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.85 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -10.6"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-3-6-6023",
+   "exotic": "E2neg",
+   "dbic_all": -6369.258249737048,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -6369.3 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -6369.3; u0 0.00, f_s 3.87e+03 vs 3 × 1.63e+05 (Gaia DR3 RP 14.87)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "358 epochs before ingress, 5922 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 1.57 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.1"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the E2neg residuals -4.3 at 2453957.0–2453967.0 (feature 2453921.7–2453999.7)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 90.25 d, 2-harmonic BIC gain per half 29.3 / -16.9 (fail if both > 25)"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.49 > 6.07? (5918 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 834.3 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-4-0-72353",
+   "exotic": "N1neg",
+   "dbic_all": -951.5907947018641,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -951.6 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -951.6; u0 0.00, f_s 1.01e+04 vs 3 × 2.31e+05 (Gaia DR3 RP 14.49)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "4521 epochs before ingress, 1143 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 3.37 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -4.0"
+    ],
+    [
+     "residual_deficit",
+     false,
+     "z_min of the N1neg residuals -6.2 at 2456238.9–2456538.9 (feature 2455969.1–2456266.9)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-4-0-74307",
+   "exotic": "N1neg",
+   "dbic_all": -10698.184574192835,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -10698.2 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -10698.2; u0 0.00, f_s 4.83e+03 vs 3 × 2.51e+05 (Gaia DR3 RP 14.40)"
+    ],
+    [
+     "feature_bracketed",
+     false,
+     "4460 epochs before ingress, 0 after egress (need 20 each)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-4-4-18166",
+   "exotic": "E2neg",
+   "dbic_all": -14478.890122432214,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -14478.9 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -14478.9; u0 0.00, f_s 2.99e+03 vs 3 × 9.8e+04 (Gaia DR3 RP 15.42)"
+    ],
+    [
+     "feature_bracketed",
+     false,
+     "4669 epochs before ingress, 0 after egress (need 20 each)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-4-6-23787",
+   "exotic": "N1neg",
+   "dbic_all": -796.8286050222341,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -796.8 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -796.8; u0 0.00, f_s 4.73e+03 vs 3 × 6.92e+04 (Gaia DR3 RP 15.80)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "2616 epochs before ingress, 4016 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.12 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -2.7"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.8 at 2454656.1–2454657.1 (feature 2454654.9–2454659.9)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 26.92 d, 2-harmonic BIC gain per half -9.3 / -18.6 (fail if both > 25)"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.08 > 6.07? (6139 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "1 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     true,
+     "ΔBIC -46.3 vs a trapezoidal dip"
+    ],
+    [
+     "smooth_dip",
+     false,
+     "ΔBIC 96.9 vs a Gaussian dip (σ 0.1 d)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-4-7-81248",
+   "exotic": "E2neg",
+   "dbic_all": -138.38903676008522,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -138.4 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -138.4; u0 0.80, f_s 2.43e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "5156 epochs before ingress, 1028 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 1.22 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -6.1"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-5-6-3598",
+   "exotic": "E2neg",
+   "dbic_all": -3496.6320421330984,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -3496.6 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -3496.6; u0 1.52, f_s 8.48e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "446 epochs before ingress, 4368 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 2.46 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -4.2"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the E2neg residuals -4.2 at 2455027.1–2455028.0 (feature 2453948.7–2453954.8)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 7.47 d, 2-harmonic BIC gain per half -3.1 / -17.3 (fail if both > 25)"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 2.36 > 6.07? (4321 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 209.5 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-6-1-41197",
+   "exotic": "E2neg",
+   "dbic_all": -531.6301431808033,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -531.6 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -531.6; u0 1.81, f_s 1.31e+04 vs 3 × 3.9e+04 (Gaia DR3 RP 16.42)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "2597 epochs before ingress, 2802 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 1.27 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.7"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-6-1-60455",
+   "exotic": "E2neg",
+   "dbic_all": -1389.2074352407644,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1389.2 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -1389.2; u0 0.20, f_s 2.18e+04 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "4838 epochs before ingress, 1596 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "E2neg χ²/dof without its spikes 1.12 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -5.3"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the E2neg residuals -5.3 at 2456031.0–2456032.0 (feature 2456024.1–2456028.6)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 5.40 d, 2-harmonic BIC gain per half -17.6 / -21.8 (fail if both > 25)"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 0.93 > 6.07? (6196 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "0 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 42.3 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-6-2-21212",
+   "exotic": "N1neg",
+   "dbic_all": -5311.60111861782,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -5311.6 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -5311.6; u0 1.25, f_s 5.84e+03 vs 3 × 6.25e+04 (Gaia DR3 RP 15.91)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "1133 epochs before ingress, 5469 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.76 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -8.0"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-6-3-25943",
+   "exotic": "E2pos",
+   "dbic_all": -1128.6608594171485,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1128.7 (E2pos vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2pos ΔBIC -1128.7; u0 0.99, f_s 1.32e+04 vs 3 × 7.98e+04 (Gaia DR3 RP 15.65)"
+    ],
+    [
+     "feature_bracketed",
+     false,
+     "0 epochs before ingress, 5121 after egress (need 20 each)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-6-3-4988",
+   "exotic": "N1neg",
+   "dbic_all": -207.58113352238888,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -207.6 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -207.6; u0 0.16, f_s 3.15e+04 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "1806 epochs before ingress, 3495 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.10 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.3"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -3.3 at 2454597.9–2454598.9 (feature 2454635.7–2454640.9)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 16.06 d, 2-harmonic BIC gain per half -13.9 / -28.5 (fail if both > 25)"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 1.10 > 6.07? (4790 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "1 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     false,
+     "ΔBIC 10.3 vs a trapezoidal dip"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-6-5-25881",
+   "exotic": "E2pos",
+   "dbic_all": 8.771803696532515,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -969.9 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     false,
+     "E2pos ΔBIC 8.8; u0 0.00, f_s 5.51 vs 3 × 2.72e+04 (Gaia DR3 RP 16.81)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-6-5-60456",
+   "exotic": "E2neg",
+   "dbic_all": -431.1057450758053,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -431.1 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -431.1; u0 1.87, f_s 231 vs 3 × 3.08e+04 (Gaia DR3 RP 16.68)"
+    ],
+    [
+     "feature_bracketed",
+     false,
+     "0 epochs before ingress, 3037 after egress (need 20 each)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-6-6-61268",
+   "exotic": "N1neg",
+   "dbic_all": -13324.05105741772,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -13324.1 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -13324.1; u0 1.67, f_s 1.53e+03 vs 3 × 3.76e+04 (Gaia DR3 RP 16.46)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "3548 epochs before ingress, 636 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 3.04 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.2"
+    ],
+    [
+     "residual_deficit",
+     false,
+     "z_min of the N1neg residuals -23.7 at 2456115.2–2456125.2 (feature 2455331.4–2456656.2)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-6-7-4422",
+   "exotic": "N1neg",
+   "dbic_all": -185.2678713189889,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -185.3 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -185.3; u0 1.50, f_s 6.85e+03 vs 3 × 5.47e+04 (Gaia DR3 RP 16.05)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "2741 epochs before ingress, 3065 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 2.84 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.8"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-7-1-3118",
+   "exotic": "E2neg",
+   "dbic_all": -3262.3415827094213,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -3262.3 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -3262.3; u0 1.42, f_s 2.23e+03 vs 3 × 1.63e+05 (Gaia DR3 RP 14.87)"
+    ],
+    [
+     "feature_bracketed",
+     false,
+     "3978 epochs before ingress, 0 after egress (need 20 each)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-7-5-98601",
+   "exotic": "N1neg",
+   "dbic_all": -8524.341111422826,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -8524.3 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -8524.3; u0 0.09, f_s 4.86e+03 vs 3 × 3.29e+04 (Gaia DR3 RP 16.61)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "5579 epochs before ingress, 1048 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.66 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -7.9"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-7-6-361",
+   "exotic": "E2neg",
+   "dbic_all": -1666.340237531549,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -1666.3 (E2neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "E2neg ΔBIC -1666.3; u0 0.55, f_s 2.54e+04 vs 3 × 1.8e+05 (Gaia DR3 RP 14.76)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "996 epochs before ingress, 5217 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     false,
+     "E2neg χ²/dof without its spikes 17.82 > 6.07?"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-8-0-2",
+   "exotic": "N1neg",
+   "dbic_all": -136.0656634134666,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -136.1 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -136.1; u0 0.31, f_s 8.06e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "4037 epochs before ingress, 2274 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.62 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -6.4"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-8-0-22719",
+   "exotic": "N1neg",
+   "dbic_all": -6214.010684675453,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -6214.0 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -6214.0; u0 0.00, f_s 1.71e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "956 epochs before ingress, 5401 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.91 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -11.7"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-8-2-93927",
+   "exotic": "N1neg",
+   "dbic_all": -53.84997469098016,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -53.8 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -53.8; u0 0.13, f_s 7.32e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "6247 epochs before ingress, 147 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.69 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -3.4"
+    ],
+    [
+     "residual_deficit",
+     false,
+     "z_min of the N1neg residuals -9.2 at 2456862.2–2456863.1 (feature 2456862.0–2456866.5)"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-8-4-82167",
+   "exotic": "N1neg",
+   "dbic_all": -563.2526335975854,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -563.3 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -563.3; u0 0.42, f_s 1.96e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "802 epochs before ingress, 5202 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.70 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     false,
+     "z_min outside the feature -6.5"
+    ]
+   ]
+  },
+  {
+   "event_id": "gb7-R-8-6-94052",
+   "exotic": "N1neg",
+   "dbic_all": -566.3396961806984,
+   "survives": false,
+   "tests": [
+    [
+     "screen_flag",
+     true,
+     "ΔBIC -589.7 (N1neg vs PSPL)"
+    ],
+    [
+     "exotic_in_domain",
+     true,
+     "N1neg ΔBIC -589.7; u0 0.69, f_s 2.28e+03 vs 3 × 3.02e+05 (default 14.2)"
+    ],
+    [
+     "feature_bracketed",
+     true,
+     "5739 epochs before ingress, 194 after egress (need 20 each)"
+    ],
+    [
+     "exotic_chi2_cap",
+     true,
+     "N1neg χ²/dof without its spikes 1.01 > 6.07?"
+    ],
+    [
+     "repeated_deficit",
+     true,
+     "z_min outside the feature -5.0"
+    ],
+    [
+     "residual_deficit",
+     true,
+     "z_min of the N1neg residuals -5.1 at 2456858.9–2456861.9 (feature 2456853.8–2456869.0)"
+    ],
+    [
+     "periodic_variable",
+     true,
+     "P 3.99 d, 2-harmonic BIC gain per half 4.0 / -24.0 (fail if both > 25)"
+    ],
+    [
+     "variable_baseline",
+     true,
+     "baseline χ²/dof 0.90 > 6.07? (5583 pts, errors × point-to-point scale)"
+    ],
+    [
+     "neighbour_shares_feature",
+     true,
+     "1 neighbours; |S| > 5: []"
+    ],
+    [
+     "eclipse_dip",
+     true,
+     "ΔBIC -52.7 vs a trapezoidal dip"
+    ],
+    [
+     "smooth_dip",
+     true,
+     "ΔBIC -144.1 vs a Gaussian dip (σ 2.3 d)"
+    ],
+    [
+     "step_ramp",
+     true,
+     "ΔBIC -451.6 vs a step at 2456856.1 (-722 counts, ramp 12.37/d)"
+    ],
+    [
+     "robust_errors_outliers",
+     true,
+     "13 isolated outliers removed, errors ×1.06; ΔBIC -189.0"
+    ],
+    [
+     "season_offsets",
+     true,
+     "free baseline per season; ΔBIC -inf"
+    ],
+    [
+     "season_trends",
+     true,
+     "offset + drift per season; ΔBIC -inf"
+    ],
+    [
+     "slow_dip_seasons",
+     true,
+     "ΔBIC -88.6, N1neg vs a slow dip (σ 4 d, p 10.0), both with 9 season levels"
+    ],
+    [
+     "observing_conditions",
+     true,
+     "baseline linear in ('fwhm', 'airmass', 'sky'); ΔBIC -inf"
+    ],
+    [
+     "refit_all_ordinary",
+     true,
+     "ΔBIC -566.3 vs PAR (FSPL, PAR)"
+    ],
+    [
+     "binary_source",
+     true,
+     "ΔBIC -566.3"
+    ],
+    [
+     "binary_lens",
+     true,
+     "ΔBIC -566.3"
+    ],
+    [
+     "exotic_feature_sampled",
+     true,
+     "28 epochs on 7 nights inside, Δχ² in -489.4 / out -68.3"
+    ],
+    [
+     "jackknife_epochs",
+     true,
+     "ΔBIC [-467.1, -374.4, -294.6]"
+    ],
+    [
+     "jackknife_nights",
+     false,
+     "ΔBIC 47.9 after dropping the 2 most influential night(s) of 7 in the feature"
+    ]
+   ]
+  }
+ ]
+}

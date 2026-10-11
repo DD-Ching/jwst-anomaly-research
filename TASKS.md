@@ -3,26 +3,121 @@
 Prioritized queue. Agents pick from **Now** first; in-flight work is visible as open PRs.
 Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and the CHANGELOG entries of 2026-10-08.
 
-## Now (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
-1. **W3 in published microlensing samples:** an OGLE-IV adapter (`LightCurveSurvey`) for Mróz et al. 2019 (bulge,
-   5,836 events) and 2020 (plane, 630); fit PSPL / finite source / parallax (MulensModel) and the n = 1 ε < 0 and
-   Ellis models on the same trajectory; rank by ΔBIC; vet binary lenses, blending, variables, systematics, parallax
-   first; inject-recover on the real cadence and the published efficiencies → rate limits per star per year.
-   Then Gaia DR3 `vari_microlensing` + epoch photometry, then KMTNet. OGLE EWS seasons wait for the owner (terms).
-2. **W1/W2 in wide imaging:** pin lenscat, Euclid Q1 and SuGOHI tables; look for confirmed multiple-image systems
-   or radial arcs with no visible deflector in their own imaging; reuse catalogues before any finder.
-3. **W5:** background-count deficits around empty regions in a wide survey, with calibrated nulls.
-4. **Warp:** monitor the literature (incl. Clough, Dietrich & Khan 2024) and any detector band that could test it.
+## Division of labour (owner brief 2026-10-10)
+- **Local-only (owner machine):** GitHub releases for derived data; files that exist only locally.
+- **Cloud routine:** TXS 0506+056 SkyLLH benchmark on IceTracks-DR2 (done, D-080), E-NF1 on IceTracks-DR2 (short lags done, D-079; rest per Neutrino Frontier item 1), round 2,
+  all scans.
+
+## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
+0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
+   separation. The five requested channels are null (family p = 0.27 on the re-pinned GBM snapshot). The
+   CHIME–CHIME 1 h–1 d wide excess (z ≈ 3.9) is reproduced by a calibrated rate-modulated null (week-scale detection-rate modulation; its cause is a
+   hypothesis). The 100 s–1 h wide cell drops to z = 2.5 under it (family-wise p = 0.26, D-074 addendum). Next:
+   - a time-resolved CHIME uptime series (only from the collaboration: owner decision); it would also decide
+     the 100 s–1 h residual;
+   - signed-lag ("which comes first", addendum 3), antipodal (addendum 2) and GW sky-map channels (addendum 4:
+     282 maps, global p = 0.83) and signed-lag GW cells by sky-map class (addendum 5, p = 0.56) are null;
+   - IceTracks-DR2, Swift, Einstein Probe.
+0. **D1 distance self-consistency** (D-073 + addenda; owner idea 1): H0LiCOW (R and D_dt LOO), 94 localized FRBs
+   (NE2001 and YMW16) and TDCOSMO 2025 power-law D_dt LOO on 8 lenses (addendum 2: max 1.12σ with κ_ext): all null.
+   Reach: R ×2–8 / ×0.2–0.4; D_dt ×1.36–1.85 / ×0.41–0.78. Composite model (SDSS1206 only): null
+   (addendum 3). Kinematic D_s/D_ds from the hierArc likelihood pickles on 76 lenses (TDCOSMO, SLACS KCWI/SDSS,
+   SL2S): null, max 2.49σ vs 5.78σ, detectable ×0.21 / ×5.6 (addendum 4). Paused: revisit with λ_int-free
+   (spatially resolved JWST/KCWI) kinematics or new time-delay lenses.
+1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
+   mismatch). Next: CHIME/FRB Catalog 2 (CANFAR downloads reset by the proxy; try another route), TTE for short and
+   faint bursts, an s ≠ 1 chain, a generative pulse-model null.
+2. **S2 flat-kernel SN residuals** (D-070 + addendum): Pantheon+ × LS DR9 null (γ < 0.025), DES-SN5YR × LS DR9 null
+   (γ < 0.019 mag per unit T/⟨T⟩, α = 2, one-sided 95 %, dilution- and chain-corrected); α = 1 is kernel-degenerate. The
+   lensing positive control is only ~1.7σ (DES) / ~2σ combined. Next: a deeper galaxy column (DES Y3 Gold or LS DR10
+   z < 22) so the control detects, and the full Pantheon+ / DES-SN5YR covariances.
+3. **S3 hybrid images** (D-072): COSMOGRAIL doubles null, sensitivity only r ≈ 0.4–2.4 (red quasar variability makes
+   the copy collinear with the main image). Next, low priority: SN Refsdal / SN H0pe imaging at the model lags.
+4. **System A rounds paused** (D-076: rounds 2–3 gave no testable survivor). Restart only with a new owner brief.
+   Optional: the B0218+357 VLA polarisation sign test (R2-B).
+
+## Neutrino Frontier (owner brief 2026-10-10, D-077; docs/neutrino_frontier/)
+Independent program; takes no resources from MOA-II, S1, E1/D1 or data validation without an allocation decision.
+1. **E-NF1 follow-up (NF-H04 ghosts):** ICECAT-1 null (global p = 0.058), CLs limits R_g ≤ 0.02–0.05 (Δt ≤ 1 h),
+   ≤ 0.1–0.2 (1 h–7 d), ≤ 0.5 (7–30 d). **IceTracks-DR2 short lags (E-NF1b, D-079): null**, R ≤ 0.002 per northern
+   track with log10 E ≥ 4 (≤ 100 s), ≤ 0.01 (100 s–1 h). The DR2 forecast rules out R_g ~ 10⁻³ at every lag and any
+   gain beyond 1 h (optimistic floor ≥ 0.055 at 1 h–1 d, ≥ 0.64 at 30–180 d). Next, only if NF-H04 gets a
+   quantitative prediction: f_astro per cut from the DR2 effective areas (turns R into R_g per astrophysical
+   neutrino); the 30–180 d bin has no public sample that can reach it.
+2. **Benchmarks:** TXS 0506+056 2014–15 box with SkyLLH **reproduced** (D-080: n̂s 12.72, γ̂ 2.26 vs 12.7 / 2.3,
+   once the box edges sit on the edge events). Next: the time-integrated benchmark (arXiv:2605.19040 Table 8: TXS
+   8.8 / 2.0 and NGC 1068 80.1 / 3.2 with SkyLLH, all 14 seasons; needs the IC40/IC59/IC79 IRFs too: 3.4 GB of
+   smearing matrices, all on disk at once; cloud only, delete after use).
+3. **Round 2** (N-A then N-B): only frameworks with a prediction decidable on IceTracks-DR2, GCN alerts after
+   ICECAT-1 (77 event times; clean revisions and retractions first), HESE-12 topology labels or KM3NeT/ANTARES.
+4. GW–neutrino ghost corner (N-B: missed by LVK lensing searches): GW sky maps now exist (D-074 addendum 4).
+   Define a GW-parent ghost test only if round 2 gives it a quantitative prediction.
+
+## Part 0 speed-ups (owner brief 2026-10-10, D-078)
+- **W3 short-event study (D-082):** stage 1 done (frozen t_E = 3 d sample; `eclipse_dip` losses are unsampled
+  spikes; the `jackknife_nights` share is undecided). Stage 2: re-vet the dev flags recording the jackknife's own
+  feature nights and ΔBIC, then a night-robust likelihood test on dev, an FP check on the real gb12 flags and PSPL
+  controls, and one validation evaluation.
+- **Injection speed (V2.1 P2):** compiled W3 finite-source integrand (46 % of fit time) with an identical-outcome
+  test on fixed injections; then 2-column closed-form solves in place of `lstsq`.
+- **Acceleration V2 audit** (`docs/audits/2026-10-10-acceleration-v2.md`): MOA pre-screen reuse done (D-078
+  addendum 3). Next, by information per hour: the shared-epoch masking study (dev/validation injection split,
+  real flags as the false-positive check), then profile `run_inject` (≈ 60 % of a field run), then the
+  short-t_E jackknife study. Same fix for fit chunks (`fit_chunk_problem` still keys on the whole `Params`;
+  ~200–290 s of refits per field after a vetting-only change).
+- Done: `derived-data-20261010` holds the GW sky maps; a fresh session takes them in ~3 s (D-078 addendum).
+- **E1 GBM re-pinned (cloud, D-078 addendum 2):** one snapshot (8cc2…, 4,392 bursts) in both E1 manifests; every
+  E1 conclusion unchanged. **Next (local session, soon):** fetch 8cc2… while HEASARC still serves it, publish it to
+  the derived-data store and wire `e1_events.fetch` to it (else `--refresh` and publish that). Later: per-catalogue
+  RNG streams in the E1 nulls (own PR).
+- Profile every null/injection script once before runs > 10 min (S-3); next candidates: `e1_events.py` injection
+  loops, `GWMaps` construction (region distances, ~27 s).
+
+## Continuing (owner direction 2026-10-08: evidence of wormholes / negative mass / warp in any public dataset; D-054)
+1. **W3 in published microlensing samples** (D-057–D-059, D-061). Mróz 2019 bulge (5,790) and 2020 disk (460) fitted and
+   vetted: 127 + 6 flags, **0 survive** (the D-059 chunk survivors BLG667.04.62161 and BLG624.18.69573 fail
+   `feature_coverage`). **The published samples cannot limit W3:** 0 of 600 injected W3 events pass the emulated Mróz
+   selection (PSPL controls 15–43 %), so the chunk re-fits only re-test a selection that excludes the signal. Next:
+   light curves from **before** a PSPL selection. **MOA-II 9-year Cut-0 light curves keep W3 (D-062):** gb22
+   null (30 flags, 0 survive). **D-068: eleven fields streamed (gb7, gb11, gb12, gb15–gb22; 712,780 light curves), 582
+   flags, 0 candidates (gb17, gb18: one chain survivor each, explained outside the chain); limits withdrawn**
+   (injections had a lenient source-flux bound). The four D-068 chain gaps are closed (D-068 addendum
+   2026-10-10, `CHAIN_VERSION` 2026-10-10.1). All eleven fields re-run under it (gb18 last): 0 survivors, limits tracked (CHANGELOG 2026-10-10; gb18's t_E = 300 d,
+   ρ = 0.1 cell has 0 recoveries). **Combined (12 fields, gb2 added): Γ₉₅ ≈ 2.8 × 10⁻⁸–1.5 × 10⁻⁷ per star per year**
+   (`results/w3_moa/limits_combined.ecsv`; no field > 20 % of any cell). The lenient-reference fields were re-vetted with a working CDS XMatch: 0 survivors (CHANGELOG 2026-10-10). Next:
+   Next: gb1, gb8 (pre-fetch the metadata with curl, CHANGELOG 2026-10-10),
+   gb13 after the owner decides #145, then the large Nunota et al. 2024 Table 1 fields. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
+   injections both selected and flagged; one real flag, not a candidate). Next: Gaia DR3 variables with epoch
+   photometry (vari_summary; check by injection whether W3 survives the variability classifier first), KMTNet
+   public seasons, OGLE EWS (owner decision, terms). Optional:
+   re-fit the bulge under D-058's bounded π_E (`merge-chunks`, then `vet` + `revet`; can only add flags); re-run the
+   6 arXiv name queries that errored.
+2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.31 (typical, 3/25 after the 2026-10-08
+   pair-match and one-entry-per-lens amendment) for quasar/radio-selected lenses, the only selections sensitive to a
+   dark lens). Next: HSC PDR3 photometry or PSF-subtracted HST
+   image models for the 307 blended or too-close lensed quasars (makes the test decisive; HST *catalogue* photometry
+   is not: D-060, efficiency 0.46); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar pairs: LS DR10 cannot decide them
+   (D-064, control efficiency 0/5 at 1.9–2.6″); of the 11 colour-matched ones, J0130+0725 has no lens light in HST to
+   F814W ≈ 23 (D-064 addendum: binary vs dark lens needs spectra of both images or two-epoch flux ratios), J0728+2607
+   has none either with an empirical PSF (F814W ≈ 23), and 9 have no HST (Euclid DR1 when public); catalogued image separations for the 15
+   pair-decided systems the pair check cannot test yet (incl. the 3 CHITAH pairs; HSC lens models); HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
+   deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
+3. **W5** (D-063): Legacy Surveys DR10, 340.5 deg², 40 flags, 0 survivors; n₉₅ ≈ 0.012–0.018 deg⁻² at θ_E = 8–32′.
+   Euclid Q1 counts would not open θ_E < 6′ (D-065: clustering-limited, ×1.0–1.4 S/N on a fifth of the area).
+   **Euclid Q1 radial-shear screen (D-066, D-067):** all three Deep Fields (60 deg²) null; R = 0.56 ± 0.16 from SZ
+   clusters (R = 0.5 kept); n₉₅ ≈ 0.049 / 0.051 deg⁻² at θ_E = 2′ / 4′; 1′ not limited (efficiency 0.43–0.58). Next:
+   per-tile star-ellipticity gradient test; Euclid DR1 when public; θ_E ≤ 1′ and ≈ 1° are still open.
+4. **Warp:** monitor the literature (checked 2026-10-08: no distant-observer EM template — Lentz & Felton 2024 give fluxes only; Clough et al.
+   2024 waveform not public; O3 superluminal-burst search already null, Kuwahara & Cannon 2023). Recheck monthly.
 
 ## JWST focus (D-047 screens; continues under the direction above)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
-   - W1: `radial` is blind below about 10¹² M☉ (D-049; limits only from 2 × 10¹² M☉, θ_E(z_s = 2) ≳ 2″). Next: a W1-specific screen (collinear radial
-     image pairs flanking an empty centre, orientation against the candidate centre, local null), benchmarked with
-     `scripts/inject_radial.py`. Design settled in D-050: a sign-flipped catalogue aperture-mass map (Schneider
-     1996 estimator, Schirmer+07 filter) on cluster-shear-corrected shapes, rotation null; build in
-     `exotic_screens.py`, benchmark against `radial`; expect gains mainly at θ_E ≥ 2–3″; then pixel-level injections; other lens redshifts → volume density vs Takahashi &
-     Asada; photo-z for Abell S1063 (DJA v7.5, 75 MB) and MACS0717 to bring both back into the W1 limits (D-049
-     excludes them: without photo-z their members are painted as images);
+   - W1: the shear screen (D-053, `exotic_screens.py shear`, `inject_shear.py`) is built; four fields null; limits
+     7.7 × 10³ / 1.3 × 10³ / 6.5 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, still blind at ≤ 2 × 10¹¹ M☉. Next:
+     lower the B-mode floor (Abell 2744 max S_× 4.21: PSF-anisotropy model from stars, blend rejection, drop edge
+     apertures with < 50 % coverage); add SMACS 0723 and El Gordo when DJA photo-z is reachable (tarballs 404
+     2026-10-08) and MACS0717 / Abell S1063 with photo-z (DJA v7.5, 75 MB); stack S around `radial` and orphan-pair
+     centres; other lens redshifts → volume density vs Takahashi & Asada;
    - W2 / dark deflectors (D-048 clusters, D-051 deep fields: null, limits; D-055: the flanking-field orphan
      excess was a null (e) artefact, no excess under the fixed (e) or the companion-aware (f); D-048 clusters re-run, null): segmentation-map
      adjacency for the same-galaxy and visible-lens rules (the main efficiency losses); pixel-level injections;
