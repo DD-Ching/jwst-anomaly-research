@@ -20,7 +20,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - **Positive control:** reproduces Salart 5.4 × 10⁴, Yin 1.38 × 10⁴ and Cocciaro 5 × 10⁶ c from each paper's
     parameters.
   - **Data adequacy:** public NIST 2015 data allows at most 1.7 × 10²–7.9 × 10³ c (zero offset assumed) and is
-    bipartite, so it has no discriminating power. Not scanned.
+    bipartite, so it has no discriminating power (≤ 4.8 × 10³ c for a 30 min run in the CMB frame). Not
+    scanned.
   - **Requirements:** 20 ly / 1 s one-way needs V ≥ 6.3 × 10⁸ c, i.e. lab simultaneity ρ ≤ 7.9 × 10⁻¹⁰
     (48 fs at 18 km) and windows ≤ 18 ms.
 - **Failed approach (rule):** the first NIST envelope used the aggregated-slot spread as ρ. That is the wrong

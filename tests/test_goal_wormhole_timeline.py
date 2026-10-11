@@ -11,7 +11,6 @@ import numpy as np
 import pytest
 
 _DIR = Path(__file__).resolve().parents[1] / "scripts"
-sys.path.insert(0, str(_DIR))
 _spec = importlib.util.spec_from_file_location(
     "goal_wormhole_timeline", _DIR / "goal_wormhole_timeline.py"
 )
@@ -59,6 +58,7 @@ def test_throat_maps_invert_and_reproduce_the_mother_s_times():
     ev = gw.timeline(tr, stay_years=1.0, ship_return_beta=0.99)
     assert ev["arrive"]["mother_elapsed_via_throat"] == pytest.approx(tr.proper_years)
     assert ev["home_via_throat"]["mother_elapsed"] == pytest.approx(tr.proper_years + 1.0)
+    assert "two_throats" not in ev["loop_margin_years"]  # the one-link scenario has no second link
     # going home by ship instead costs the mother more than two light-crossing times
     assert ev["home_via_ship"]["mother_elapsed"] > 2 * 20.0
     with pytest.raises(ValueError):

@@ -253,7 +253,7 @@ information?), a positive control (three published bounds) and a direct link to 
    |---|---|
    | timing uncertainty 3.7 ns | V ≤ 1.7 × 10² c |
    | time-tag floor 78 ps | V ≤ 7.9 × 10³ c |
-   | tag floor + rotation over a 1 h window (the shortest with a usable violation, ASSUMPTION; β = 10⁻³) | V ≤ 3.9 × 10³ c |
+   | tag floor + rotation over one ~30 min run (Table I: 1.77 × 10⁸ trials at 99,100 trials/s gives the p = 5.9 × 10⁻⁹ result; ASSUMPTION: no shorter window is usable; CMB frame) | V ≤ 4.8 × 10³ c |
 
    - Every envelope is ≥ 600× below the published 5 × 10⁶ c.
    - The data is bipartite, so it cannot test the Bancal prediction at all.

@@ -76,8 +76,9 @@ def earth_to_throat(earth_time: float, trip: Trip) -> float:
 
 def loop_margin_years(
     shift_years: float, distance_ly: float, other_shift_years: float | None = None
-):
-    """Time by which the fastest closed route returns *after* it started (> 0: no causal loop).
+) -> dict[str, float]:
+    """Named margins: the time by which each closed route returns *after* it started (> 0: no
+    causal loop).
 
     Routes with one carried wormhole (shift s) and ordinary light (speed 1): Earth -> light -> B ->
     throat -> Earth returns D - s later. With a second short connection of shift s2 between the
@@ -91,7 +92,12 @@ def loop_margin_years(
     return margins
 
 
-def timeline(trip: Trip, stay_years: float = 1.0, ship_return_beta: float | None = None) -> dict:
+def timeline(
+    trip: Trip,
+    stay_years: float = 1.0,
+    ship_return_beta: float | None = None,
+    hypothetical_second_link_shift: float | None = None,
+) -> dict:
     """Named events with Earth-frame time t (S), traveller proper time tau and the mother's age
     increment (she stays at mouth A on Earth, so her age increment = Earth time t of the event she
     takes part in)."""
@@ -125,7 +131,14 @@ def timeline(trip: Trip, stay_years: float = 1.0, ship_return_beta: float | None
             "tau_traveller": tau_ret + back.proper_years,
             "mother_elapsed": trip.earth_years + stay_years + back.earth_years,
         }
-    ev["loop_margin_years"] = loop_margin_years(s, trip.distance_ly, other_shift_years=0.0)
+    ev["loop_margin_years"] = loop_margin_years(s, trip.distance_ly)
+    if hypothetical_second_link_shift is not None:  # not part of the one-link scenario
+        ev["hypothetical_second_link"] = {
+            "shift_years": hypothetical_second_link_shift,
+            "loop_margin_years": loop_margin_years(
+                s, trip.distance_ly, other_shift_years=hypothetical_second_link_shift
+            )["two_throats"],
+        }
     ev["shift_years"] = s
     ev["trip"] = asdict(trip)
     return ev
@@ -136,13 +149,20 @@ def main(argv=None) -> int:
     ap.add_argument("--distance", type=float, nargs="+", default=[20.0, 100.0])
     ap.add_argument("--beta", type=float, nargs="+", default=[0.9, 0.99, 0.999])
     a = ap.parse_args(argv)
-    out = []
+    out = {
+        "provenance": "model_prediction under an unsolved premise (a short rigid traversable "
+        "throat; "
+        "docs/goal_round1/README.md section 2); ASSUMPTIONs in the module docstring",
+        "rows": [],
+    }
     for d in a.distance:
         trips = [("coast", b, coast_trip(d, b)) for b in a.beta]
         trips.append(("1g", None, accel_trip(d)))
         for kind, b, tr in trips:
-            ev = timeline(tr, stay_years=1.0, ship_return_beta=0.99)
-            out.append({"distance_ly": d, "profile": kind, "beta": b, **ev})
+            ev = timeline(
+                tr, stay_years=1.0, ship_return_beta=0.99, hypothetical_second_link_shift=0.0
+            )
+            out["rows"].append({"distance_ly": d, "profile": kind, "beta": b, **ev})
     print(json.dumps(out, indent=1))
     return 0
 

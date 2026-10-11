@@ -28,6 +28,11 @@ import math
 OMEGA_SIDEREAL = 7.2921159e-5  # rad / s
 C_M_S = 299_792_458.0
 BETA_CMB = 369.82e3 / C_M_S  # Planck 2018 dipole velocity / c (ASSUMPTION: candidate frame)
+BETA_PUBLISHED = 1e-3  # the frame speed the three calibration papers quote their bounds at
+BANCAL_S_LOCAL, BANCAL_S_QUANTUM = (
+    7.0,
+    7.2014,
+)  # Bancal et al. 2012 Lemma 1 (Eq. 4) and 4-qubit state
 LY_LIGHT_SECONDS = 365.25 * 86400.0
 
 
@@ -81,13 +86,16 @@ NIST2015 = {
     "baseline_m": 184.9,
     "timing_sigma_ns": 3.7,
     "tag_ns": 0.078125,
-    "window_hours_for_significance": 1.0,  # ASSUMPTION: shortest window with a usable violation
+    # Table I: 1.77e8 trials at 99,100 trials/s, i.e. one ~30 min run gives p = 5.9e-9 (5 pulses);
+    # ASSUMPTION: no shorter window carries a usable violation
+    "window_s_for_significance": 1.77e8 / 99_100.0,
 }
 
 
 def calibration() -> list[dict]:
     rows = []
     for name, p in PUBLISHED.items():
+        assert p["beta"] == BETA_PUBLISHED
         res = rotation_residual(p["beta"], p["window_s"])
         v = speed_bound(p["rho"], p["beta"], res)
         rows.append(
@@ -106,18 +114,18 @@ def nist_best_case() -> list[dict]:
     """Envelopes of what the NIST 2015 data could bound, each assuming a zero lab offset t_AB
     (unknown; any real offset only weakens them): (i) the stated 3.7 ns timing uncertainty,
     (ii) the 78 ps time-tag floor, (iii) the rotation residual of the shortest window in which the
-    violation is significant (hours; frame at beta = 1e-3), with the tag floor as rho."""
+    violation is significant (one ~30 min run; CMB frame), with the tag floor as rho."""
     light_ns = NIST2015["baseline_m"] / C_M_S * 1e9
     rho_t = NIST2015["timing_sigma_ns"] / light_ns
     rho_tag = NIST2015["tag_ns"] / light_ns
-    res = rotation_residual(1e-3, NIST2015["window_hours_for_significance"] * 3600.0)
+    res = rotation_residual(BETA_CMB, NIST2015["window_s_for_significance"])
     return [
         {"case": "timing uncertainty 3.7 ns", "rho": rho_t, "bound": speed_bound(rho_t, 0, 0)},
         {"case": "time-tag floor 78 ps", "rho": rho_tag, "bound": speed_bound(rho_tag, 0, 0)},
         {
-            "case": "tag floor + 1 h window rotation (beta 1e-3)",
+            "case": "tag floor + 30 min window rotation (CMB frame)",
             "rho": rho_tag,
-            "bound": speed_bound(rho_tag, 1e-3, res),
+            "bound": speed_bound(rho_tag, BETA_CMB, res),
         },
     ]
 
@@ -127,16 +135,18 @@ def required_speed(distance_ly: float, one_way_latency_s: float) -> float:
 
 
 def requirements(target: float, beta: float = BETA_CMB, baselines_m=(1.2e3, 18e3, 1e5)) -> dict:
-    """Budget split equally between the lab offset and the rotation residual (ASSUMPTION):
-    rho <= 1/(2 V), T <= 1/(V beta omega). Timing precision sigma_t = rho r / c per baseline."""
-    rho_max = 1.0 / (2.0 * target)
-    t_max = 1.0 / (target * beta * OMEGA_SIDEREAL)
+    """Budget split equally between the lab offset and the rotation residual (ASSUMPTION): solve
+    target^2 = 1 + (1 - beta^2)(1 - rho^2) / (2 eps)^2 for eps, then rho = eps and the window T
+    whose residual beta omega T / 2 = eps. Timing precision sigma_t = rho r / c per baseline."""
+    eps = 0.5 * math.sqrt((1.0 - beta**2) / (target**2 - 1.0))
+    eps = 0.5 * math.sqrt((1.0 - beta**2) * (1.0 - eps**2) / (target**2 - 1.0))  # rho^2 term
+    t_max = 2.0 * eps / (beta * OMEGA_SIDEREAL)
     return {
         "target_V_over_c": target,
-        "rho_max": rho_max,
+        "rho_max": eps,
         "window_max_s": t_max,
-        "sigma_t_fs": {f"{r / 1e3:g} km": rho_max * r / C_M_S * 1e15 for r in baselines_m},
-        "check_bound_at_budget": speed_bound(rho_max, beta, rotation_residual(beta, t_max)),
+        "sigma_t_fs": {f"{r / 1e3:g} km": eps * r / C_M_S * 1e15 for r in baselines_m},
+        "check_bound_at_budget": speed_bound(eps, beta, rotation_residual(beta, t_max)),
     }
 
 
@@ -163,7 +173,9 @@ def main(argv=None) -> int:
         "nist2015_best_case": nist_best_case(),
         "targets": {k: {"V_over_c": v, **requirements(v)} for k, v in targets.items()},
         "chsh_coincidences_per_window_5sigma": chsh_events_per_window(),
-        "bancal_gap_ratio_vs_chsh": (7.2014 - 7.0) / 7.0 / ((2 * math.sqrt(2) - 2) / 2),
+        "bancal_gap_ratio_vs_chsh": (BANCAL_S_QUANTUM - BANCAL_S_LOCAL)
+        / BANCAL_S_LOCAL
+        / ((2 * math.sqrt(2) - 2) / 2),
     }
     print(json.dumps(out, indent=1))
     return 0

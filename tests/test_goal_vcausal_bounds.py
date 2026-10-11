@@ -40,8 +40,10 @@ def test_nist_2015_cannot_compete_with_dedicated_tests():
 def test_requirements_close_at_target():
     v = vb.required_speed(20, 1.0)
     assert v == pytest.approx(6.31e8, rel=1e-3)
-    req = vb.requirements(v)
-    assert req["check_bound_at_budget"] == pytest.approx(v, rel=1e-6)
+    for beta in (vb.BETA_CMB, 1e-2, 0.1):
+        req = vb.requirements(v, beta=beta)
+        assert req["check_bound_at_budget"] >= v * (1 - 1e-12)
+        assert req["check_bound_at_budget"] == pytest.approx(v, rel=1e-9)
 
 
 def test_chsh_statistics():
