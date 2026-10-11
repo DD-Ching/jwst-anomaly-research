@@ -10,7 +10,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (wavefront c); Alcubierre (no control).
   - Benchmark 1908.03273: t_transit = d + logs, so it approaches the exterior light time without beating it.
 - Screened three explicit claims:
-  - **Krasnikov tube:** passes conditionally. One-way advance ηD for messages sent after the tube is laid at ≤ c.
+  - **Krasnikov tube:** passes conditionally. Advance ηD for messages sent after the tube is laid at ≤ c, one way per
+    tube.
   - **Scharnhorst effect:** formal only, inside one gap.
   - **Lentz soliton:** fails. It cannot be deployed from a free choice, and its positive energy is not established
     (Santiago–Schuster–Visser).
@@ -18,8 +19,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **New [derived]:**
   - The tube's walls scale as |T| = 0.1225 η/ε² and R̂ = 3.08 η/ε² (small η, thin wall).
   - With ER's own sampling rule (τ0 = σ r_c), the QI allows ε ≤ √(0.73η)/σ² l_P. So any 20–100 ly advance needs walls
-    ≲ 10⁴ l_P (1 s: sub-Planck), and 10³⁸–10⁴³ M☉ of negative energy. Small η does not help.
-  - Scharnhorst: Δt · m_e c²/ħ ≤ 7 × 10⁻⁷ even at a = ƛ_C, so the advance is unresolvable where it is derived.
+    ≲ 10⁴ l_P (1 s: sub-Planck, so no semiclassical wall), and 10³⁸–10⁴³ M☉ of negative energy. Under that
+    prescription (an extrapolation of ER's criterion) small η does not help; under ER's shortcut walls stay ≤ 10⁻²⁷ m.
+  - Two tubes with η ≤ 1 give a two-way advance without closed timelike curves.
+  - Scharnhorst: Δt · m_e c²/ħ ≤ 7 × 10⁻⁷ even at a = ƛ_C. The soft-photon result has no front, so it does not
+    show that information arrives early.
 - **Failed approach (rule):** sampling a quantum inequality at τ0 = ε when the curvature radius is ε/√η understates
   the bound. Use the largest sampling time the flat-space criterion allows.
 

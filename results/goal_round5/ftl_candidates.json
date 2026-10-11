@@ -38,7 +38,7 @@
    "deployment": "tube exists only for t > x: built by an outbound trip at <= c, so nothing can be read early before t = D at the far end",
    "far_to_near_arrival": "t_s + D (1 - eta), exterior light t_s + D: advance eta D",
    "near_to_far": "no advance (the +x branch of the light cone is unchanged)",
-   "two_tubes": "a second tube for the other direction allows closed timelike curves (ER Sec. 4)"
+   "two_tubes": "a second tube laid from the far end gives the other direction the same advance; closed timelike curves need eta > 1 (ER Sec. 4: delta < 1)"
   },
   "rows": [
    {
@@ -152,6 +152,6 @@
     "advance_times_mec2_over_hbar": 7.137360061687603e-07
    }
   ],
-  "note": "the advance exists only for propagation normal to the plates, across one gap"
+  "note": "speed c / sqrt(1 - xi cos^2 phi / (1 + xi)) (LSV Eqs. 3.4, 3.7): largest along the normal, so the advance per gap is at most the normal-incidence value"
  }
 }

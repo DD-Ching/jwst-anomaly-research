@@ -20,8 +20,9 @@ A. Krasnikov tube (Krasnikov, PRD 57, 4760 (1998), gr-qc/9511068; Everett & Roma
       advance over D = 20 and 100 light years, and the negative energy that implies (ER Eq. 51).
 B. Scharnhorst effect (QED between perfect plates; Liberati, Sonego & Visser, Ann. Phys. 298, 167
    (2002), gr-qc/0107091, "LSV", Eq. 3.3): xi = 11 pi^2 alpha^2 / (4050 (a m_e)^4), light normal
-   to the plates moves at c sqrt(1 + xi). Computed here [derived]: the time advance across one gap
-   and whether it is resolvable inside the soft-photon regime (omega << m_e) where xi is derived.
+   to the plates moves at c sqrt(1 + xi) (faster than c in every direction except parallel to the
+   plates). Computed here [derived]: the time advance across one gap, and its size in units of the
+   shortest time scale of the soft-photon regime (omega << m_e) where xi is derived.
 """
 
 from __future__ import annotations
@@ -275,8 +276,8 @@ def krasnikov_task() -> dict:
             "nothing can be read early before t = D at the far end",
             "far_to_near_arrival": "t_s + D (1 - eta), exterior light t_s + D: advance eta D",
             "near_to_far": "no advance (the +x branch of the light cone is unchanged)",
-            "two_tubes": "a second tube for the other direction allows closed timelike curves "
-            "(ER Sec. 4)",
+            "two_tubes": "a second tube laid from the far end gives the other direction the same "
+            "advance; closed timelike curves need eta > 1 (ER Sec. 4: delta < 1)",
         },
         "rows": rows,
     }
@@ -335,7 +336,8 @@ def scharnhorst(gaps_m=(1e-6, 1e-8, 1e-10)) -> dict:
         "xi_1um": xi(1e-6),
         "LSV_quoted_xi_1um": 4.36e-32,  # LSV below Eq. (3.3); the formula gives 3.17e-32
         "rows": rows,
-        "note": "the advance exists only for propagation normal to the plates, across one gap",
+        "note": "speed c / sqrt(1 - xi cos^2 phi / (1 + xi)) (LSV Eqs. 3.4, 3.7): largest along "
+        "the normal, so the advance per gap is at most the normal-incidence value",
     }
 
 
