@@ -26,8 +26,10 @@ def test_positive_controls_reproduce_the_paper():
     assert pc["no_ghost_2P1_minus_F_min"] > 0 and pc["N_min"] > 0
     # the leading order in l of Eq. (33) equals Appendix B (M12, M22 tightly; M11 up to points
     # where it vanishes)
-    assert pc["eq33_vs_appendixB_max_rel_diff_l1e4"][1] < 1e-5
-    assert pc["eq33_vs_appendixB_max_rel_diff_l1e4"][2] < 1e-3
+    lead = pc[f"eq33_vs_appendixB_max_rel_diff_l{bh.P.high_l}"]
+    assert lead[1] < 1e-5 and lead[2] < 1e-3
+    # internal inconsistency of 2404.06297: det K of Appendix B is 4 x their Eq. (22)
+    assert pc["detK_appendixB_over_eq22_range"] == pytest.approx([4.0, 4.0], rel=1e-9)
 
 
 def test_angular_mode_is_superluminal_and_tensor_mode_luminal_far_away():
@@ -44,10 +46,17 @@ def test_results_do_not_depend_on_the_throat_scale():
 
 def test_low_l_sufficient_conditions_fail_and_odd_sector_passes():
     rows = {r["l"]: r for r in bh.low_l_conditions(XS, ells=(2, 50))}
-    lo, hi, _ = rows[2]["M22_le_0"]
+    ((lo, hi, _),) = rows[2]["M22_le_0_segments"]
     assert lo < 0 < hi < 0.6  # (39b) fails around the throat for l = 2
-    assert rows[2]["cond39c_fail_fraction_inner_|r|<3tau"] > 0.1
-    assert rows[2]["odd_tachyon_le_0"] is None and rows[50]["odd_tachyon_le_0"] is None
+    assert rows[2]["cond39c_fail_fraction_inner"] > 0.1
+    assert rows[2]["odd_tachyon_fail_segments"] == []
+    assert rows[50]["odd_tachyon_fail_segments"] == []
+    assert rows[2]["non_finite_points"] == 0
+
+
+def test_segments_split_disjoint_runs():
+    xs = [0, 1, 2, 3, 4, 5]
+    assert bh.segments(xs, [True, True, False, False, True, True]) == [[0, 1, 2], [4, 5, 2]]
 
 
 def test_crossing_time_integral():

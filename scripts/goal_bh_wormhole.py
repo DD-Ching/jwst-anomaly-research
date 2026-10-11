@@ -32,6 +32,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+from dataclasses import asdict, dataclass
 from functools import lru_cache
 
 import numpy as np
@@ -44,6 +45,24 @@ REDUCED_PLANCK_LENGTH_M = 8.1e-35  # sqrt(8 pi G hbar / c^3), rounded
 C_M_S = 299_792_458.0
 
 x, L = sp.symbols("x L", real=True)
+
+
+@dataclass(frozen=True)
+class Params:
+    """Numerical choices (ASSUMPTIONs); every headline number depends on them."""
+
+    x_max: float = 10.0  # grid half-width in units of tau
+    n_grid: int = 4001
+    throat_gap: float = 1e-6  # |r/tau| excluded at the throat, where J' = 0
+    inner_zone: float = 3.0  # |r/tau| below which a point counts as "near the throat"
+    superluminal_margin: float = 1e-9  # c^2 > 1 + margin counts as superluminal
+    high_l: int = 10**4  # l used for the l >> 1 angular speeds and the Eq. (33) limit
+    control_l: int = 10  # l of the Fig. 2 positivity control (their choice)
+    scale_tau: int = 10**4  # second throat size for the scale check
+    low_ls: tuple = (2, 3, 4, 5, 6, 8, 10, 20, 50)
+
+
+P = Params()
 
 
 @lru_cache(maxsize=4)
@@ -127,6 +146,10 @@ def expressions(tau_value: int = TAU) -> dict:
         "cond39c": detG * detM - Q12**2 / 4 * M22 * G11,
         "K11": K11, "K12": K12, "K22": K22, "m11": m11, "m12": m12, "m22": m22,
         "odd_tachyon": V + 6 / J**2,
+        "cr1_sq": 1 / F, "cr2_sq": cs2,  # Eq. (31): radial speeds, G / F and c_s2 (Eq. 83)
+        "detK_eq22": L * B / (4 * (L - 2)) * two_jj**2 * (2 * P1 - F) / F,
+        "detM_eq42": -B * h**2 / (4 * J**2 * F**2)
+        * (J**4 / sb * d(sb / J**3 * P4) + 2 / B + (F * P4 + 2 * jp) ** 2 / (4 * F)),  # / l^4
     }  # fmt: skip
 
 
@@ -135,9 +158,9 @@ def numeric(tau_value: int = TAU) -> dict:
     return {k: sp.lambdify((x, L), v, "numpy") for k, v in expressions(tau_value).items()}
 
 
-def grid(n: int = 4001, xmax: float = 10.0) -> np.ndarray:
+def grid(n: int = P.n_grid, xmax: float = P.x_max) -> np.ndarray:
     xs = np.linspace(-xmax, xmax, n)
-    return xs[np.abs(xs) > 1e-6]  # J' = 0 at the throat: coefficients are evaluated off it
+    return xs[np.abs(xs) > P.throat_gap]  # J' = 0 at the throat: coefficients evaluated off it
 
 
 def ev(name: str, xs, ell: int, tau_value: int = TAU):
@@ -145,76 +168,127 @@ def ev(name: str, xs, ell: int, tau_value: int = TAU):
     return np.asarray(vals, dtype=float) * np.ones_like(xs)
 
 
-def positive_controls(xs) -> dict:
-    """Claims of arXiv:2212.05969 Sec. 4 that this module must reproduce."""
-    out = {"F_min": float(ev("F", xs, 10).min())}
-    for k in ("K11", "G11", "detG", "m11"):
-        out[f"{k}_min_l10"] = float(ev(k, xs, 10).min())
-    detk = ev("K11", xs, 10) * ev("K22", xs, 10) - ev("K12", xs, 10) ** 2
-    detm = ev("m11", xs, 10) * ev("m22", xs, 10) - ev("m12", xs, 10) ** 2
-    out["detK_min_l10"] = float(detk.min())
-    out["detM_l2_min"] = float(detm.min())
-    out["no_ghost_2P1_minus_F_min"] = float(ev("P1m", xs, 10).min())
-    out["N_min"] = float(ev("N", xs, 10).min())
-    # leading order of Eq. (33) equals Appendix B (Eqs. 41, 132, 133)
-    big = 10**4
-    lead = [
-        float(np.max(np.abs(ev(a, xs, big) / (big * (big + 1)) / ev(b, xs, big) - 1)))
-        for a, b in (("M11", "m11"), ("M12", "m12"), ("M22", "m22"))
-    ]
-    out["eq33_vs_appendixB_max_rel_diff_l1e4"] = lead
+def segments(xs, mask) -> list:
+    """Contiguous runs of True as [first x, last x, points]."""
+    out, start = [], None
+    for i, m in enumerate(mask):
+        if m and start is None:
+            start = i
+        if start is not None and (not m or i == len(mask) - 1):
+            end = i if m else i - 1
+            out.append([float(xs[start]), float(xs[end]), end - start + 1])
+            start = None
     return out
 
 
-def angular_speeds(xs, ell: int = 10**4, tau_value: int = TAU) -> dict:
+def positive_controls(xs, tau_value: int = TAU) -> dict:
+    """Claims of arXiv:2212.05969 Sec. 4 that this module must reproduce, plus internal checks of
+    2404.06297 (its Eq. 22 against Appendix B, its Eq. 42 against Eqs. 41, 132, 133)."""
+    lc = P.control_l
+
+    def e(name, ell=lc):
+        return ev(name, xs, ell, tau_value)
+
+    out = {"F_min": float(e("F").min()), "F_max": float(e("F").max())}
+    for k in ("K11", "G11", "detG", "m11"):
+        out[f"{k}_min_l{lc}"] = float(e(k).min())
+    detk = e("K11") * e("K22") - e("K12") ** 2
+    detm = e("m11") * e("m22") - e("m12") ** 2
+    out[f"detK_min_l{lc}"] = float(detk.min())
+    out["detM_l2_min"] = float(detm.min())
+    out["no_ghost_2P1_minus_F_min"] = float(e("P1m").min())
+    out["N_min"] = float(e("N").min())
+    out["radial_c2_tensor_range"] = [float(e("cr1_sq").min()), float(e("cr1_sq").max())]
+    out["radial_c2_scalar_range"] = [float(e("cr2_sq").min()), float(e("cr2_sq").max())]
+    ratio_k = detk / e("detK_eq22")
+    ratio_m = detm / e("detM_eq42")
+    out["detK_appendixB_over_eq22_range"] = [float(ratio_k.min()), float(ratio_k.max())]
+    out["detM_appendixB_over_eq42_range"] = [float(ratio_m.min()), float(ratio_m.max())]
+    big = P.high_l
+    lead = [
+        float(np.max(np.abs(e(a, big) / (big * (big + 1)) / e(b, big) - 1)))
+        for a, b in (("M11", "m11"), ("M12", "m12"), ("M22", "m22"))
+    ]
+    out[f"eq33_vs_appendixB_max_rel_diff_l{big}"] = lead
+    return out
+
+
+def angular_speeds(xs, ell: int = P.high_l, tau_value: int = TAU) -> dict:
     """c_a^2 = eigenvalues of (J^2 / A) K^-1 M^(l^2) / l^2 for l >> 1 (2404.06297 below Eq. 44)."""
-    k11, k12, k22 = (ev(n, xs, ell, tau_value) for n in ("K11", "K12", "K22"))
-    m11, m12, m22 = (ev(n, xs, ell, tau_value) for n in ("m11", "m12", "m22"))
+    k = np.stack(
+        [
+            np.stack([ev("K11", xs, ell, tau_value), ev("K12", xs, ell, tau_value)], -1),
+            np.stack([ev("K12", xs, ell, tau_value), ev("K22", xs, ell, tau_value)], -1),
+        ],
+        -2,
+    )
+    m = np.stack(
+        [
+            np.stack([ev("m11", xs, ell, tau_value), ev("m12", xs, ell, tau_value)], -1),
+            np.stack([ev("m12", xs, ell, tau_value), ev("m22", xs, ell, tau_value)], -1),
+        ],
+        -2,
+    )
     j2 = ev("J", xs, ell, tau_value) ** 2
-    c2 = []
-    for i in range(len(xs)):
-        k = np.array([[k11[i], k12[i]], [k12[i], k22[i]]])
-        m = np.array([[m11[i], m12[i]], [m12[i], m22[i]]])
-        c2.append(np.sort(np.linalg.eigvals(j2[i] * np.linalg.solve(k, m)).real))
-    c2 = np.array(c2)
+    lam = np.linalg.eigvals(j2[:, None, None] * np.linalg.solve(k, m))
+    c2 = np.sort(lam.real, axis=1)
     i_max = int(np.argmax(c2[:, 1]))
     return {
         "max_c2": float(c2[i_max, 1]),
         "r_over_tau_at_max": float(xs[i_max]),
-        "fraction_of_grid_superluminal": float(np.mean(c2[:, 1] > 1 + 1e-9)),
-        "min_c2": float(c2[:, 0].min()),
+        "fraction_of_grid_superluminal": float(np.mean(c2[:, 1] > 1 + P.superluminal_margin)),
+        "slower_mode_c2_range": [float(c2[:, 0].min()), float(c2[:, 0].max())],
         "edge_values_c2": [float(c2[0, 0]), float(c2[0, 1])],
+        "max_abs_imag": float(np.abs(lam.imag).max()),  # complex c^2 would signal an instability
+        "non_finite_points": int((~np.isfinite(lam)).any(axis=1).sum()),
     }
 
 
-def low_l_conditions(xs, ells=(2, 3, 4, 5, 6, 8, 10, 20, 50)) -> list:
-    """2404.06297 Eqs. (39b), (39c) and (6d) for each l on the grid: where they fail."""
+def low_l_conditions(xs, ells=P.low_ls, tau_value: int = TAU) -> list:
+    """2404.06297 Eqs. (39b), (39c) and (6d) for each l on the grid: where they fail. Non-finite
+    values (poles at Theta = 0) are counted separately, never as passes."""
     rows = []
+    inner = np.abs(xs) < P.inner_zone
     for ell in ells:
-        m22 = ev("M22", xs, ell)
-        c39 = ev("cond39c", xs, ell)
-        theta = ev("Theta", xs, ell)
-        odd = ev("odd_tachyon", xs, ell)
-
-        def span(mask):
-            if not mask.any():
-                return None
-            return [float(xs[mask].min()), float(xs[mask].max()), int(mask.sum())]
-
-        inner = np.abs(xs) < 3.0
-        bad = c39 <= 0
+        m22 = ev("M22", xs, ell, tau_value)
+        c39 = ev("cond39c", xs, ell, tau_value)
+        theta = ev("Theta", xs, ell, tau_value)
+        odd = ev("odd_tachyon", xs, ell, tau_value)
+        finite = np.isfinite(m22) & np.isfinite(c39) & np.isfinite(odd)
+        bad = ~(c39 > 0)
+        sign_change = np.diff(np.sign(theta)) != 0
         rows.append(
             {
                 "l": ell,
-                "M22_le_0": span(m22 <= 0),
-                "cond39c_fail_fraction_inner_|r|<3tau": float(bad[inner].mean()),
+                "M22_le_0_segments": segments(xs, ~(m22 > 0)),
+                "cond39c_fail_segments": segments(xs, bad),
+                "cond39c_fail_fraction_inner": float(bad[inner].mean()),
                 "cond39c_fail_fraction_outer": float(bad[~inner].mean()),
-                "theta_zero_near": [float(v) for v in xs[1:][np.diff(np.sign(theta)) != 0]],
-                "odd_tachyon_le_0": span(odd <= 0),
+                "theta_sign_changes_at": [float(v) for v in xs[1:][sign_change]],
+                "odd_tachyon_fail_segments": segments(xs, ~(odd > 0)),
+                "non_finite_points": int((~finite).sum()),
                 "grid_points": int(len(xs)),
             }
         )
     return rows
+
+
+def mp_crosscheck(points=((2, 0.2), (2, 3.0), (2, 8.0), (10, 4.0)), dps: int = 40) -> list:
+    """Evaluate the low-l conditions at a few points with mpmath (dps digits) against float64."""
+    import mpmath as mp
+
+    mp.mp.dps = dps
+    exprs = expressions()
+    out = []
+    for ell, xv in points:
+        lv = ell * (ell + 1)
+        row = {"l": ell, "x": xv}
+        for name in ("M22", "cond39c"):
+            hi = sp.lambdify((x, L), exprs[name], "mpmath")(mp.mpf(xv), mp.mpf(lv))
+            lo = float(ev(name, np.array([xv]), ell)[0])
+            row[name] = [float(hi), lo, abs(float(hi) - lo) / max(abs(float(hi)), 1e-300)]
+        out.append(row)
+    return out
 
 
 def crossing_time() -> dict:
@@ -235,19 +309,27 @@ def crossing_time() -> dict:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--n", type=int, default=4001)
+    ap.add_argument("--n", type=int, default=P.n_grid)
+    ap.add_argument("--skip-mp", action="store_true", help="skip the mpmath cross-check (~1 min)")
     a = ap.parse_args(argv)
     xs = grid(a.n)
     out = {
         "provenance": "derived from the published solution and stability set (no data); "
         "sufficient-condition checks, not proofs of instability",
         "model": {"tau": TAU, "w": W_PARAM, "u": 0, "source": "arXiv:2212.05969v1 Sec. 4"},
+        "params": asdict(P),
         "positive_controls": positive_controls(xs),
         "angular_speeds_high_l": angular_speeds(xs),
         "low_l_conditions": low_l_conditions(xs),
         "timing": crossing_time(),
-        "scale_check_tau_1e4": angular_speeds(grid(401), tau_value=10**4),
+        "scale_check": {
+            "tau": P.scale_tau,
+            "angular_speeds_high_l": angular_speeds(xs, tau_value=P.scale_tau),
+            "low_l_conditions": low_l_conditions(xs, tau_value=P.scale_tau),
+        },
     }
+    if not a.skip_mp:
+        out["mpmath_crosscheck"] = mp_crosscheck()
     print(json.dumps(out, indent=1))
     return 0
 

@@ -14,7 +14,7 @@ Nothing here is a new-physics result. Reproducing the papers is not a discovery,
 says nothing about other mechanisms.
 
 Code: `scripts/goal_bh_wormhole.py`. Tests: `tests/test_goal_bh_wormhole.py`. Output:
-`results/goal_round4/bh_wormhole.json` (about 18 s).
+`results/goal_round4/bh_wormhole.json` (about 37 s).
 
 ## 0. What the project already had, and what this round adds
 
@@ -66,13 +66,13 @@ So the complete set can be checked without the unpublished Lagrangian functions.
 | **Solution exists** | **Holds, as published** (not re-derived here) | Reconstruction in 2212.05969 §4.1–4.2. The background equations were not re-checked: the Lagrangian functions are not tabulated. |
 | No ghosts, no radial or angular gradient instabilities (high ℓ) | **Holds** [paper, reproduced] | F_min = 1.0000001 > 1. K11, det K, G11, det G, M11^(ℓ²), det M^(ℓ²) > 0 on the grid, as in their Fig. 2. 2P1 − F > 0 and N > 0. |
 | Odd-parity tachyons, condition (6d) | **Holds** [derived] | V + 6H/J² > 0 at every grid point for ℓ = 2–50. |
-| Even-parity tachyons and low-ℓ angular modes, (39b) and (39c) | **Sufficient condition fails** [derived, new]. Whether a real tachyon exists is **UNKNOWN**. | (39b) M22 > 0 fails for ℓ = 2 at \|r\| < 0.455τ. (39c) fails near the throat and the Θ = 0 crossing, and also for r ≳ 6τ when ℓ ≲ 20. The set is sufficient, not necessary (2404.06297 §1, §4). |
-| (Sub)luminality | **Fails** [derived, quantitative; agrees with 2212.05969 §4.2] | One even-parity mode has angular speed² up to **1.83** at \|r\| ≈ 1.4τ. It stays above 1 at every grid point and tends to 1 far away. The other mode lies in 0.16–0.82. Radial speeds are ≤ 1. |
+| Even-parity tachyons and low-ℓ angular modes, (39b) and (39c) | **Sufficient condition fails** [derived, new]. Whether a real tachyon exists is **UNKNOWN**. | (39b) M22 > 0 fails for ℓ = 2 at \|r\| < 0.455τ. (39c) fails near the throat or around the Θ = 0 crossing for every ℓ computed. It also fails beyond 6.3τ (ℓ = 2) to 9.6τ (ℓ = 20), out to the grid edge at 10τ. The set is sufficient, not necessary (2404.06297 §1, §4). |
+| (Sub)luminality | **Fails** [derived, quantitative; agrees with 2212.05969 §4.2] | One even-parity mode has angular speed² up to **1.83** at \|r\| ≈ 1.4τ. It stays above 1 at every grid point and tends to 1 far away. The other mode lies in 0.16–0.82. Radial speeds² are 0.68–1 (tensor) and 0.50–1 (scalar). |
 | Nonlinear stability | **UNKNOWN** | Not addressed by any source found. |
 | Validity of the effective theory | **UNKNOWN**, with two warning signs | The throat is 110 Planck lengths. The reconstructed functions grow as (−π)^(−7/2) and (−π)^(−11/2) as π → 0 at large r (Eq. 86), so the couplings of perturbations there are not shown to be weak. |
 | Formation or control | **UNKNOWN** | No mechanism is given. The solution is static and eternal. |
 
-**Scale.** Every condition above is unchanged when τ is rescaled: the τ = 10⁴ check gives the same speeds to 10⁻⁹.
+**Scale.** The conditions are homogeneous in τ. A full rerun at τ = 10⁴ on the same grid (`scale_check`) gives the same angular speeds to 10⁻¹⁵ and identical failure segments for every ℓ.
 So making the throat macroscopic does not cure the failures. That would in any case be a different reconstructed
 Lagrangian.
 
@@ -86,7 +86,7 @@ which is a prerequisite for any channel.
 - The model's choices reduce every coefficient to the metric (§1).
 - sympy builds Eqs. (5), (22), (24), (27), (33)–(37), (41)–(43) and (129)–(133) symbolically.
 - numpy evaluates them on 4,000 points in −10 ≤ r/τ ≤ 10, avoiding the point r = 0, where J′ = 0.
-- An mpmath (60-digit) evaluation at eight points agrees with the float64 values.
+- A 40-digit mpmath evaluation at four points agrees with float64 to ≤ 2 × 10⁻¹² relative (`mpmath_crosscheck`). Complex eigenvalues and non-finite points are counted; both are 0.
 
 **Positive controls.**
 - F > 1, matching their statement below Eq. 72.
@@ -96,8 +96,9 @@ which is a prerequisite for any channel.
 - The tensor-like angular eigenvalue tends to 1 in the flat far zone, which confirms the normalisation of the speeds.
 
 **Inconsistencies found in 2404.06297.**
-- det K from Appendix B (129)–(130) is exactly 4 × Eq. (22).
-- det M^(ℓ²) from (41), (132) and (133) is not proportional to Eq. (42).
+- det K from Appendix B (129)–(130) is exactly 4 × Eq. (22) (`detK_appendixB_over_eq22_range`).
+- det M^(ℓ²) from (41), (132) and (133) is 4.0–5.9 × Eq. (42), so the two are not proportional
+  (`detM_appendixB_over_eq42_range`).
 
 The speeds use the Appendix B components, because those agree with Eq. (33) and give a luminal tensor mode far
 away. This choice changes no conclusion: Eqs. (22) and (42) also give a positive det K and det M^(ℓ²).
@@ -106,9 +107,11 @@ away. This choice changes no conclusion: Eqs. (22) and (42) also give a positive
 1. **Superluminality is confirmed and quantified.** The maximum angular speed² is 1.83, at |r| ≈ 1.4τ.
 2. **The low-ℓ sufficient conditions fail.** This is new: no earlier source evaluated them on this solution.
    - (39b) fails for ℓ = 2 around the throat.
-   - (39c) fails over 47 % of the inner zone (|r| < 3τ) for ℓ = 2. The failing fraction falls with ℓ, to 2 % at
-     ℓ = 50, where only the neighbourhood of the Θ = 0 crossing fails.
-   - (39c) also fails in a far zone, r ≳ 6τ, for ℓ ≲ 20. That zone is nearly flat (B − 1 ≲ 5 × 10⁻³). The failure
+   - Inner zone (|r| < 3τ): (39c) fails on 0.38τ < |r| < 1.79τ for ℓ = 2 (47 % of the zone) and on |r| < 1.6τ for
+     ℓ = 3–4. For larger ℓ the failing band shrinks to 1.28τ < |r| < 1.35τ at ℓ = 50, around the Θ = 0 crossing
+     (2 %).
+   - (39c) also fails in a far zone: from 6.3τ outward for ℓ = 2, from 8.2τ for ℓ = 10 and from 9.6τ for ℓ = 20, all
+     out to the grid edge. It does not fail within 10τ for ℓ = 50. That zone is nearly flat (B − 1 ≲ 4 × 10⁻³). The failure
      there may come from the criterion treating v and v′ as independent rather than from a real mode. **UNKNOWN.**
 3. **What it settles.** The model is *not shown* to be linearly stable, because the only published complete criterion
    fails, and it *is* superluminal in one sector. **It does not show that a tachyon exists.** Only the low-ℓ
@@ -204,6 +207,6 @@ line. This proposal is for the owner to decide.
 ## 8. Bookkeeping
 
 - **Time.** 2026-10-11 06:15 → about 06:50 UTC.
-- **Compute.** About 18 s for the script. A 60-digit cross-check takes about 1 min.
+- **Compute.** About 37 s for the script, including the τ = 10⁴ rerun and the mpmath cross-check.
 - **Data.** Only the two papers (arXiv PDFs, sha256 `2a8ea802…` and `22eb223e…`, kept in the scratchpad and not
   committed), the INSPIRE citation lists and the arXiv search results.
