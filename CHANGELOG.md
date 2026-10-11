@@ -2,6 +2,35 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 6: the Krasnikov tube's QI bound holds for the "wait ≤ 1 yr" target; no field and state is known to source it
+- Owner brief: check the tube's physical source against Everett–Roman, Krasnikov 2003 and later work; no new
+  candidates. Write-up `docs/goal_round6/README.md`; code `scripts/goal_krasnikov_source.py`; results
+  `results/goal_round6/`.
+- "Wait 1 s" (latency D(1 − η)) means η ≈ 1, not round 5's "1 s early" (η ≈ 10⁻⁹). The latency rows (1 s – 1 yr,
+  20/100 ly) all have η ≥ 0.95.
+- **New [derived]:**
+  - The mid-tube metric is stationary but not static. Static observers are geodesic. t is a time function for
+    η < 1. NEC fails in the wall for every null direction except outgoing light (R_ll ≡ 0 there; ∂t + ∂x is a null
+    Killing field). The radial integral across the wall vanishes.
+  - Kontou–Olum curved-QI corrections at τ0 = σ r_c are ≤ 10⁻⁴ for the latency rows. So a flat bound there is backed
+    by a theorem (free, minimally coupled scalar). It is their Gaussian bound, 2× looser than ER's Lorentzian one:
+    ε_max ≈ 1.0–1.45 × 10⁴ l_P (∝ σ⁻²). For the 1 s advance rows τ0 ≈ 140ε and the expansion fails; the 1 day and
+    1 yr advance rows are inside (1 day at 100 ly borderline).
+  - Weyl/Ricci ≈ 0.22–0.33, so Krasnikov's Weyl loophole does not apply. Periodic and portal loopholes do not apply.
+  - The integrated wall gives α_eff = 0.33 (round 5 used ER's 0.01). E_neg ≈ −2.8 × 10⁴⁴ / 10⁴¹ / 10³⁸ M☉ (20 ly;
+    1 m / 1 mm / 1 µm radius), ×5 at 100 ly; ×1/3 with proper-volume weighting.
+  - Necessary condition for free fields (stationary ground-state minimum): the ground-state ⟨T_tt⟩ must be at least
+    as negative as required. The one-loop estimate supports only ε ≈ 0.06 √N l_P (Planckian for any realistic N);
+    "2.7 × 10¹⁰ fields to reach the QI bound" is the identity 270/σ⁴.
+  - Olum 1998 and Graham–Olum 2007 (read after review): the self-consistent AANEC conjecture rules out CTCs, but
+    Graham–Olum say "additional constraints are necessary" for superluminal communication.
+- **Rescoped:** "no semiclassical wall" (advance rows only, within ER's assumptions); "no matter model exists" →
+  "none is known".
+- **Next (proposal):** G2 (is the complete shortcut null geodesic achronal, with negative ANEC? field-independent,
+  cheapest) and G1 (the ground-state ⟨T_tt⟩ of a free scalar on the ER wall).
+- **Failed approach (rule):** do not treat a loophole's inapplicability, or a prohibition's inapplicability, as
+  feasibility. Do not quote the round-5 1 s advance-row wall bounds as established: τ0 = σ r_c ≈ 140ε there.
+
 ## 2026-10-11: Goal round 5: no screened candidate gives a usable early read; the Krasnikov tube needs Planck-thin walls
 - Owner brief: which concrete candidates predict that a receiver reads a freely chosen message before exterior light
   arrives? Write-up: `docs/goal_round5/README.md`; code `scripts/goal_ftl_candidates.py`; results
@@ -19,7 +48,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **New [derived]:**
   - The tube's walls scale as |T| = 0.1225 η/ε² and R̂ = 3.08 η/ε² (small η, thin wall).
   - With ER's own sampling rule (τ0 = σ r_c), the QI allows ε ≤ √(0.73η)/σ² l_P. So any 20–100 ly advance needs walls
-    ≲ 10⁴ l_P (1 s: sub-Planck, so no semiclassical wall), and 10³⁸–10⁴³ M☉ of negative energy. Under that
+    ≲ 10⁴ l_P (1 s: sub-Planck, so the QI analysis gives no consistent wall; rescoped in round 6), and 10³⁸–10⁴³ M☉ of negative energy. Under that
     prescription (an extrapolation of ER's criterion) small η does not help; under ER's shortcut walls stay ≤ 10⁻²⁷ m.
   - Two tubes with η ≤ 1 give a two-way advance without closed timelike curves.
   - Scharnhorst: Δt · m_e c²/ħ ≤ 7 × 10⁻⁷ even at a = ƛ_C. The soft-photon result has no front, so it does not

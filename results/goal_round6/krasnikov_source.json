@@ -1,0 +1,522 @@
+{
+ "provenance": "derived from the ER metric, the flat-space quantum inequality and the Kontou-Olum curved-spacetime corrections (no data); estimates under the stated ASSUMPTIONs",
+ "params": {
+  "sigma": 0.01,
+  "n_dir": 2000,
+  "latencies_s": [
+   1.0,
+   60.0,
+   86400.0,
+   31557600.0
+  ],
+  "distances_ly": [
+   20.0,
+   100.0
+  ],
+  "radii_m": [
+   1.0,
+   0.001,
+   1e-06
+  ],
+  "alphas": [
+   0.01,
+   0.1,
+   1.0
+  ],
+  "weyl_etas": [
+   1e-06,
+   0.01,
+   0.5,
+   1.0,
+   1.5,
+   1.9
+  ]
+ },
+ "weyl_vs_ricci": [
+  {
+   "eta": 1e-06,
+   "max_abs_weyl": 1.0264003755086314e-06,
+   "max_abs_ricci": 3.0792016810368008e-06,
+   "ratio_max": 0.33333327330577167,
+   "ratio_at_most_negative_T": 0.3333332009372894,
+   "weyl_trace_residual": 1.0587911840678754e-21
+  },
+  {
+   "eta": 0.01,
+   "max_abs_weyl": 0.010289739939654218,
+   "max_abs_ricci": 0.030891564789276488,
+   "ratio_max": 0.33309222144765344,
+   "ratio_at_most_negative_T": 0.33309238226037385,
+   "weyl_trace_residual": 8.673617379884035e-18
+  },
+  {
+   "eta": 0.5,
+   "max_abs_weyl": 0.5885241787970193,
+   "max_abs_ricci": 1.8408481602495694,
+   "ratio_max": 0.31970272807140776,
+   "ratio_at_most_negative_T": 0.31968810791447627,
+   "weyl_trace_residual": 5.551115123125783e-16
+  },
+  {
+   "eta": 1.0,
+   "max_abs_weyl": 1.3949507953041538,
+   "max_abs_ricci": 4.629195259189308,
+   "ratio_max": 0.30133764449340716,
+   "ratio_at_most_negative_T": 0.30128832486929163,
+   "weyl_trace_residual": 1.9984014443252818e-15
+  },
+  {
+   "eta": 1.5,
+   "max_abs_weyl": 2.6344526003896345,
+   "max_abs_ricci": 9.659861620325533,
+   "ratio_max": 0.2727215672371976,
+   "ratio_at_most_negative_T": 0.27240273738218146,
+   "weyl_trace_residual": 3.9968028886505635e-15
+  },
+  {
+   "eta": 1.9,
+   "max_abs_weyl": 4.4818051033390445,
+   "max_abs_ricci": 20.226092408331542,
+   "ratio_max": 0.22158531726538028,
+   "ratio_at_most_negative_T": 0.21926680214427183,
+   "weyl_trace_residual": 8.881784197001252e-15
+  }
+ ],
+ "latency_rows": [
+  {
+   "D_ly": 20.0,
+   "latency_s": 1.0,
+   "advance_over_light_s": 631151999.0,
+   "eta": 0.9999999984155956,
+   "rc_over_eps": 0.47673992764756196,
+   "eps_max_planck_tau_sigma_rc": 10248.826062687514,
+   "eps_max_planck_tau_sigma_min_rc_eps": 10248.826062687514,
+   "curvature_radius_planck_at_eps_max": 4886.024595598093,
+   "wall_integrals_eps1": {
+    "I_neg": -0.057877636187511836,
+    "I_pos": 0.05155585090562,
+    "effective_alpha": 0.3306081874930539,
+    "I_neg_proper_volume": -0.019357349621553298,
+    "I_pos_proper_volume": 0.04588316018498292
+   },
+   "negative_energy_solar_integrated": {
+    "rho_1m": -2.813052858154419e+44,
+    "rho_0.001m": -2.8130528581544186e+41,
+    "rho_1e-06m": -2.813052858154419e+38
+   },
+   "negative_energy_solar_ER_band": {
+    "rho_1m_alpha_0.01": -8.50872109213424e+42,
+    "rho_1m_alpha_0.1": -8.508721092134242e+43,
+    "rho_1m_alpha_1": -8.508721092134241e+44,
+    "rho_0.001m_alpha_0.01": -8.50872109213424e+39,
+    "rho_0.001m_alpha_0.1": -8.508721092134241e+40,
+    "rho_0.001m_alpha_1": -8.508721092134239e+41,
+    "rho_1e-06m_alpha_0.01": -8.508721092134238e+36,
+    "rho_1e-06m_alpha_0.1": -8.50872109213424e+37,
+    "rho_1e-06m_alpha_1": -8.508721092134239e+38
+   }
+  },
+  {
+   "D_ly": 20.0,
+   "latency_s": 60.0,
+   "advance_over_light_s": 631151940.0,
+   "eta": 0.9999999049357365,
+   "rc_over_eps": 0.4767399601314425,
+   "eps_max_planck_tau_sigma_rc": 10248.82536435791,
+   "eps_max_planck_tau_sigma_min_rc_eps": 10248.82536435791,
+   "curvature_radius_planck_at_eps_max": 4886.024595598106,
+   "wall_integrals_eps1": {
+    "I_neg": -0.0578776280793177,
+    "I_pos": 0.05155584448911722,
+    "effective_alpha": 0.3306081862311367,
+    "I_neg_proper_volume": -0.01935735808577851,
+    "I_pos_proper_volume": 0.04588315520413741
+   },
+   "negative_energy_solar_integrated": {
+    "rho_1m": -2.8130526557426377e+44,
+    "rho_0.001m": -2.8130526557426383e+41,
+    "rho_1e-06m": -2.8130526557426376e+38
+   },
+   "negative_energy_solar_ER_band": {
+    "rho_1m_alpha_0.01": -8.508720512370981e+42,
+    "rho_1m_alpha_0.1": -8.508720512370983e+43,
+    "rho_1m_alpha_1": -8.50872051237098e+44,
+    "rho_0.001m_alpha_0.01": -8.508720512370979e+39,
+    "rho_0.001m_alpha_0.1": -8.5087205123709825e+40,
+    "rho_0.001m_alpha_1": -8.50872051237098e+41,
+    "rho_1e-06m_alpha_0.01": -8.508720512370979e+36,
+    "rho_1e-06m_alpha_0.1": -8.508720512370982e+37,
+    "rho_1e-06m_alpha_1": -8.508720512370979e+38
+   }
+  },
+  {
+   "D_ly": 20.0,
+   "latency_s": 86400.0,
+   "advance_over_light_s": 631065600.0,
+   "eta": 0.9998631074606434,
+   "rc_over_eps": 0.4767875011505282,
+   "eps_max_planck_tau_sigma_rc": 10247.803442469343,
+   "eps_max_planck_tau_sigma_min_rc_eps": 10247.803442469343,
+   "curvature_radius_planck_at_eps_max": 4886.024595616739,
+   "wall_integrals_eps1": {
+    "I_neg": -0.057865763477507694,
+    "I_pos": 0.05154645508509931,
+    "effective_alpha": 0.330606340311968,
+    "I_neg_proper_volume": -0.019369416807946717,
+    "I_pos_proper_volume": 0.04587586642723139
+   },
+   "negative_energy_solar_integrated": {
+    "rho_1m": -2.8127564582156147e+44,
+    "rho_0.001m": -2.812756458215614e+41,
+    "rho_1e-06m": -2.8127564582156137e+38
+   },
+   "negative_energy_solar_ER_band": {
+    "rho_1m_alpha_0.01": -8.507872098161913e+42,
+    "rho_1m_alpha_0.1": -8.5078720981619135e+43,
+    "rho_1m_alpha_1": -8.507872098161912e+44,
+    "rho_0.001m_alpha_0.01": -8.507872098161912e+39,
+    "rho_0.001m_alpha_0.1": -8.507872098161911e+40,
+    "rho_0.001m_alpha_1": -8.507872098161911e+41,
+    "rho_1e-06m_alpha_0.01": -8.507872098161913e+36,
+    "rho_1e-06m_alpha_0.1": -8.507872098161912e+37,
+    "rho_1e-06m_alpha_1": -8.507872098161911e+38
+   }
+  },
+  {
+   "D_ly": 20.0,
+   "latency_s": 31557600.0,
+   "advance_over_light_s": 599594400.0,
+   "eta": 0.95,
+   "rc_over_eps": 0.49466725482397883,
+   "eps_max_planck_tau_sigma_rc": 9877.396467193443,
+   "eps_max_planck_tau_sigma_min_rc_eps": 9877.396467193443,
+   "curvature_radius_planck_at_eps_max": 4886.024595234647,
+   "wall_integrals_eps1": {
+    "I_neg": -0.05365490458673071,
+    "I_pos": 0.048185904037694946,
+    "effective_alpha": 0.32997080682320484,
+    "I_neg_proper_volume": -0.021851907408606656,
+    "I_pos_proper_volume": 0.04324099281219155
+   },
+   "negative_energy_solar_integrated": {
+    "rho_1m": -2.705877743786803e+44,
+    "rho_0.001m": -2.705877743786803e+41,
+    "rho_1e-06m": -2.705877743786803e+38
+   },
+   "negative_energy_solar_ER_band": {
+    "rho_1m_alpha_0.01": -8.200354964239569e+42,
+    "rho_1m_alpha_0.1": -8.200354964239567e+43,
+    "rho_1m_alpha_1": -8.200354964239568e+44,
+    "rho_0.001m_alpha_0.01": -8.200354964239567e+39,
+    "rho_0.001m_alpha_0.1": -8.200354964239568e+40,
+    "rho_0.001m_alpha_1": -8.200354964239567e+41,
+    "rho_1e-06m_alpha_0.01": -8.200354964239567e+36,
+    "rho_1e-06m_alpha_0.1": -8.200354964239566e+37,
+    "rho_1e-06m_alpha_1": -8.200354964239565e+38
+   }
+  },
+  {
+   "D_ly": 100.0,
+   "latency_s": 1.0,
+   "advance_over_light_s": 3155759999.0,
+   "eta": 0.9999999996831191,
+   "rc_over_eps": 0.47673992720710245,
+   "eps_max_planck_tau_sigma_rc": 10248.826072156395,
+   "eps_max_planck_tau_sigma_min_rc_eps": 10248.826072156395,
+   "curvature_radius_planck_at_eps_max": 4886.024595598094,
+   "wall_integrals_eps1": {
+    "I_neg": -0.057877636297453454,
+    "I_pos": 0.05155585099262342,
+    "effective_alpha": 0.33060818751016463,
+    "I_neg_proper_volume": -0.01935734950671979,
+    "I_pos_proper_volume": 0.0458831602525198
+   },
+   "negative_energy_solar_integrated": {
+    "rho_1m": -1.4065264304494926e+45,
+    "rho_0.001m": -1.406526430449492e+42,
+    "rho_1e-06m": -1.4065264304494923e+39
+   },
+   "negative_energy_solar_ER_band": {
+    "rho_1m_alpha_0.01": -4.254360549997717e+43,
+    "rho_1m_alpha_0.1": -4.254360549997717e+44,
+    "rho_1m_alpha_1": -4.254360549997717e+45,
+    "rho_0.001m_alpha_0.01": -4.254360549997717e+40,
+    "rho_0.001m_alpha_0.1": -4.254360549997717e+41,
+    "rho_0.001m_alpha_1": -4.254360549997717e+42,
+    "rho_1e-06m_alpha_0.01": -4.254360549997716e+37,
+    "rho_1e-06m_alpha_0.1": -4.254360549997716e+38,
+    "rho_1e-06m_alpha_1": -4.254360549997716e+39
+   }
+  },
+  {
+   "D_ly": 100.0,
+   "latency_s": 60.0,
+   "advance_over_light_s": 3155759940.0,
+   "eta": 0.9999999809871473,
+   "rc_over_eps": 0.4767399337038783,
+   "eps_max_planck_tau_sigma_rc": 10248.82593249047,
+   "eps_max_planck_tau_sigma_min_rc_eps": 10248.82593249047,
+   "curvature_radius_planck_at_eps_max": 4886.024595598095,
+   "wall_integrals_eps1": {
+    "I_neg": -0.05787763467581456,
+    "I_pos": 0.05155584970932283,
+    "effective_alpha": 0.3306081872577811,
+    "I_neg_proper_volume": -0.019357351200215377,
+    "I_pos_proper_volume": 0.04588315925635069
+   },
+   "negative_energy_solar_integrated": {
+    "rho_1m": -1.406526410208314e+45,
+    "rho_0.001m": -1.4065264102083145e+42,
+    "rho_1e-06m": -1.406526410208314e+39
+   },
+   "negative_energy_solar_ER_band": {
+    "rho_1m_alpha_0.01": -4.254360492021392e+43,
+    "rho_1m_alpha_0.1": -4.254360492021391e+44,
+    "rho_1m_alpha_1": -4.2543604920213914e+45,
+    "rho_0.001m_alpha_0.01": -4.2543604920213905e+40,
+    "rho_0.001m_alpha_0.1": -4.254360492021392e+41,
+    "rho_0.001m_alpha_1": -4.2543604920213907e+42,
+    "rho_1e-06m_alpha_0.01": -4.254360492021391e+37,
+    "rho_1e-06m_alpha_0.1": -4.254360492021392e+38,
+    "rho_1e-06m_alpha_1": -4.2543604920213905e+39
+   }
+  },
+  {
+   "D_ly": 100.0,
+   "latency_s": 86400.0,
+   "advance_over_light_s": 3155673600.0,
+   "eta": 0.9999726214921287,
+   "rc_over_eps": 0.47674944119701484,
+   "eps_max_planck_tau_sigma_rc": 10248.62154706269,
+   "eps_max_planck_tau_sigma_min_rc_eps": 10248.62154706269,
+   "curvature_radius_planck_at_eps_max": 4886.024595601823,
+   "wall_integrals_eps1": {
+    "I_neg": -0.057875261619833175,
+    "I_pos": 0.051553971757930556,
+    "effective_alpha": 0.3306078179526334,
+    "I_neg_proper_volume": -0.01935980006861218,
+    "I_pos_proper_volume": 0.04588170147827448
+   },
+   "negative_energy_solar_integrated": {
+    "rho_1m": -1.4064967896699358e+45,
+    "rho_0.001m": -1.4064967896699356e+42,
+    "rho_1e-06m": -1.4064967896699356e+39
+   },
+   "negative_energy_solar_ER_band": {
+    "rho_1m_alpha_0.01": -4.25427565016459e+43,
+    "rho_1m_alpha_0.1": -4.254275650164591e+44,
+    "rho_1m_alpha_1": -4.2542756501645894e+45,
+    "rho_0.001m_alpha_0.01": -4.25427565016459e+40,
+    "rho_0.001m_alpha_0.1": -4.25427565016459e+41,
+    "rho_0.001m_alpha_1": -4.25427565016459e+42,
+    "rho_1e-06m_alpha_0.01": -4.254275650164589e+37,
+    "rho_1e-06m_alpha_0.1": -4.25427565016459e+38,
+    "rho_1e-06m_alpha_1": -4.254275650164589e+39
+   }
+  },
+  {
+   "D_ly": 100.0,
+   "latency_s": 31557600.0,
+   "advance_over_light_s": 3124202400.0,
+   "eta": 0.99,
+   "rc_over_eps": 0.4802364109797169,
+   "eps_max_planck_tau_sigma_rc": 10174.206878282177,
+   "eps_max_planck_tau_sigma_min_rc_eps": 10174.206878282177,
+   "curvature_radius_planck_at_eps_max": 4886.024595791382,
+   "wall_integrals_eps1": {
+    "I_neg": -0.05701500680898761,
+    "I_pos": 0.050872038814144274,
+    "effective_alpha": 0.3304753845110381,
+    "I_neg_proper_volume": -0.02006566338819341,
+    "I_pos_proper_volume": 0.045351256729620947
+   },
+   "negative_energy_solar_integrated": {
+    "rho_1m": -1.3957249773117492e+45,
+    "rho_0.001m": -1.3957249773117492e+42,
+    "rho_1e-06m": -1.3957249773117494e+39
+   },
+   "negative_energy_solar_ER_band": {
+    "rho_1m_alpha_0.01": -4.223385591567807e+43,
+    "rho_1m_alpha_0.1": -4.223385591567808e+44,
+    "rho_1m_alpha_1": -4.223385591567807e+45,
+    "rho_0.001m_alpha_0.01": -4.2233855915678073e+40,
+    "rho_0.001m_alpha_0.1": -4.223385591567807e+41,
+    "rho_0.001m_alpha_1": -4.223385591567807e+42,
+    "rho_1e-06m_alpha_0.01": -4.223385591567806e+37,
+    "rho_1e-06m_alpha_0.1": -4.223385591567807e+38,
+    "rho_1e-06m_alpha_1": -4.223385591567807e+39
+   }
+  }
+ ],
+ "self_consistency": [
+  {
+   "eta": 0.999999999,
+   "T_coeff": 0.1750641346050646,
+   "R_coeff": 4.399840650764382,
+   "eps_self_consistent_planck_N1": 0.06237236916524459,
+   "eps_qi_max_planck": 10248.826067053238,
+   "fields_needed_to_reach_qi_thickness": 26999999999.999992,
+   "qi_over_polarisation_factor_sigma^-4": 99999999.99999999
+  },
+  {
+   "eta": 0.95,
+   "T_coeff": 0.16260500467690914,
+   "R_coeff": 4.086708628827647,
+   "eps_self_consistent_planck_N1": 0.06011192060559651,
+   "eps_qi_max_planck": 9877.396467193443,
+   "fields_needed_to_reach_qi_thickness": 26999999999.999992,
+   "qi_over_polarisation_factor_sigma^-4": 99999999.99999999
+  },
+  {
+   "eta": 0.01,
+   "T_coeff": 0.0012286913570580978,
+   "R_coeff": 0.030880375245577997,
+   "eps_self_consistent_planck_N1": 0.0052253459755208335,
+   "eps_qi_max_planck": 858.6119584684793,
+   "fields_needed_to_reach_qi_thickness": 26999999999.999992,
+   "qi_over_polarisation_factor_sigma^-4": 99999999.99999999
+  }
+ ],
+ "kontou_olum_corrections": [
+  {
+   "eta": 1.6e-09,
+   "flat_gaussian_coeff": 0.01899801290596589,
+   "flat_lorentzian_coeff_er": 0.009498860966469166,
+   "eps_max_planck_gaussian_t0_sigma_rc": 0.48501248037569683,
+   "t0_over_eps": 142.4692237204123,
+   "ricci_term_rel": 6.99468236670017e-05,
+   "second_derivative_term_rel": 156.78581969493086,
+   "second_derivative_term_rel_per_unit_24a_11b": 9072.489391118952,
+   "third_derivative_term_rel": 715106.6932868442
+  },
+  {
+   "eta": 0.0001,
+   "flat_gaussian_coeff": 0.01899801290596589,
+   "flat_lorentzian_coeff_er": 0.009498860966469166,
+   "eps_max_planck_gaussian_t0_sigma_rc": 121.25485331683697,
+   "t0_over_eps": 0.5698687490322604,
+   "ricci_term_rel": 6.99470763539961e-05,
+   "second_derivative_term_rel": 0.002508496828520735,
+   "second_derivative_term_rel_per_unit_24a_11b": 0.14515541589598055,
+   "third_derivative_term_rel": 0.045764701548459796
+  },
+  {
+   "eta": 0.01,
+   "flat_gaussian_coeff": 0.01899801290596589,
+   "flat_lorentzian_coeff_er": 0.009498860966469166,
+   "eps_max_planck_gaussian_t0_sigma_rc": 1214.2699753797283,
+   "t0_over_eps": 0.05690608594795928,
+   "ricci_term_rel": 6.997215382669018e-05,
+   "second_derivative_term_rel": 2.5009372784261634e-05,
+   "second_derivative_term_rel_per_unit_24a_11b": 0.0014471797877208706,
+   "third_derivative_term_rel": 4.5553892372567295e-05
+  },
+  {
+   "eta": 0.95,
+   "flat_gaussian_coeff": 0.01899801290596589,
+   "flat_lorentzian_coeff_er": 0.009498860966469166,
+   "eps_max_planck_gaussian_t0_sigma_rc": 13968.855018544567,
+   "t0_over_eps": 0.004946672548239789,
+   "ricci_term_rel": 7.332834057750351e-05,
+   "second_derivative_term_rel": 1.8002687190149485e-07,
+   "second_derivative_term_rel_per_unit_24a_11b": 1.0417344429621587e-05,
+   "third_derivative_term_rel": 2.726935433561468e-08
+  },
+  {
+   "eta": 0.999999999,
+   "flat_gaussian_coeff": 0.01899801290596589,
+   "flat_lorentzian_coeff_er": 0.009498860966469166,
+   "eps_max_planck_gaussian_t0_sigma_rc": 14494.139818772066,
+   "t0_over_eps": 0.004767399274444836,
+   "ricci_term_rel": 7.359299110085823e-05,
+   "second_derivative_term_rel": 1.6624863710491866e-07,
+   "second_derivative_term_rel_per_unit_24a_11b": 9.620060024287547e-06,
+   "third_derivative_term_rel": 2.4148864616488962e-08
+  }
+ ],
+ "null_sphere_nec": [
+  {
+   "eta": 0.01,
+   "min_Rll_all_directions_eps1": -0.06169222319243128,
+   "direction_of_min_e1_e2_e3": [
+    -0.9995,
+    -0.0017792157857009067,
+    0.031568724890115016
+   ],
+   "outgoing_e0_plus_e1_max_abs": 6.938893903907228e-18,
+   "incoming_e0_minus_e1_min": -0.06173844382526853,
+   "radial_e0_plus_e2_min": -0.030869215231308315,
+   "radial_e0_plus_e2_integral_across_wall": 4.1388765870804234e-13,
+   "radial_scale_integral_abs": 0.020050160369211145
+  },
+  {
+   "eta": 0.95,
+   "min_Rll_all_directions_eps1": -7.7951875682952325,
+   "direction_of_min_e1_e2_e3": [
+    -0.9995,
+    -0.0017792157857009067,
+    0.031568724890115016
+   ],
+   "outgoing_e0_plus_e1_max_abs": 1.7763568394002505e-15,
+   "incoming_e0_minus_e1_min": -7.801384384099124,
+   "radial_e0_plus_e2_min": -3.9006913431292327,
+   "radial_e0_plus_e2_integral_across_wall": 7.079359443987657e-09,
+   "radial_scale_integral_abs": 2.5553627226719504
+  },
+  {
+   "eta": 0.999999999,
+   "min_Rll_all_directions_eps1": -8.363026500531864,
+   "direction_of_min_e1_e2_e3": [
+    -0.9995,
+    -0.0017792157857009067,
+    0.031568724890115016
+   ],
+   "outgoing_e0_plus_e1_max_abs": 1.7763568394002505e-15,
+   "incoming_e0_minus_e1_min": -8.369704272689999,
+   "radial_e0_plus_e2_min": -4.184851223973495,
+   "radial_e0_plus_e2_integral_across_wall": 8.23637422799226e-09,
+   "radial_scale_integral_abs": 2.745166526355266
+  }
+ ],
+ "null_and_causal": [
+  {
+   "outgoing_Rll_symbolic": "0",
+   "outgoing_fixed_rho_radial_acceleration": "0",
+   "incoming_Rll_min_eps1": -0.062230543268979054,
+   "incoming_Rll_max_eps1": 0.061869567368088824,
+   "g_inv_tt": "-4*k(rho)/(k(rho)**2 + 2*k(rho) + 1)",
+   "k_min": 0.9900000000206115,
+   "t_is_time_function": true,
+   "stationary_twist_xi_dt_plus_v_dx": "(v - 1)**2*Derivative(k(rho), rho)/2",
+   "outgoing_killing_norm": "0",
+   "max_incoming_coordinate_speed_grid": 1.01010101007998,
+   "incoming_coordinate_speed_analytic": 1.0101010101010102
+  },
+  {
+   "outgoing_Rll_symbolic": "0",
+   "outgoing_fixed_rho_radial_acceleration": "0",
+   "incoming_Rll_min_eps1": -145.39164137013216,
+   "incoming_Rll_max_eps1": 11.173652908705007,
+   "g_inv_tt": "-4*k(rho)/(k(rho)**2 + 2*k(rho) + 1)",
+   "k_min": 0.05000000195809606,
+   "t_is_time_function": true,
+   "stationary_twist_xi_dt_plus_v_dx": "(v - 1)**2*Derivative(k(rho), rho)/2",
+   "outgoing_killing_norm": "0",
+   "max_incoming_coordinate_speed_grid": 19.999999216761605,
+   "incoming_coordinate_speed_analytic": 19.999999999999982
+  },
+  {
+   "outgoing_Rll_symbolic": "0",
+   "outgoing_fixed_rho_radial_acceleration": "0",
+   "incoming_Rll_min_eps1": -7038662300.587375,
+   "incoming_Rll_max_eps1": 12.456997054463555,
+   "g_inv_tt": "-4*k(rho)/(k(rho)**2 + 2*k(rho) + 1)",
+   "k_min": 3.0611536638858183e-09,
+   "t_is_time_function": true,
+   "stationary_twist_xi_dt_plus_v_dx": "(v - 1)**2*Derivative(k(rho), rho)/2",
+   "outgoing_killing_norm": "0",
+   "max_incoming_coordinate_speed_grid": 326674224.7530963,
+   "incoming_coordinate_speed_analytic": 1000000028.2819322
+  }
+ ]
+}
