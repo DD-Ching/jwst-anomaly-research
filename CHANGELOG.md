@@ -2,6 +2,29 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: S1 deformed-twin test: the screen was blind to stretched/energy-shifted copies; M2 recovers them
+- Owner brief: does S1 miss same-source signals that arrive deformed (delay, time stretch with the matching energy
+  shift, brightness, response)? Pre-registered (`docs/s1_deform/preregistration.md`); write-up
+  `docs/s1_deform/README.md`; code `scripts/s1_deform.py`; results `results/s1_deform/`.
+- **From code, confirmed by injections:**
+  - multi-year delays are covered (E1 is not: its lags stop at 7 d);
+  - energy shift is not covered (two bands, fixed band ratio);
+  - flagging uses s = 1 only, and the stretch grid is display-only;
+  - the D-071 injections and limit are for s = 1 copies;
+  - the pulse-shuffle null is near-degenerate (two-pulse bursts swap; the surrogate maxima take 2 values).
+- **Pre-registered run** (equal per-pair false-alarm rate 10⁻⁴ on a calibration half; injections on the other
+  half): deformed copies recovered by M0 / M1 / M2 = 0 / 74 / 117 of 1,440; undeformed 29 / 26 / 26 of 180. Decision
+  rules met. The coarse grid misses off-grid stretches.
+- **Post hoc** (step-1.05 grid, fresh seed): 0 / 185 / 259 of 1,440 deformed versus 39 / 36 / 37 of 180 undeformed.
+  M2 recovers 18 % of deformed copies and 21 % of undeformed ones.
+- **Hold-out real pairs** (240,104): no pair passes χ² and the delay cut under any method. No candidates.
+- **Owner's link hypothesis** (short check):
+  - 1405.3171 has virtual Euclidean wormholes, and fields **reduce** their density;
+  - 1502.03809 is a visualisation;
+  - testable only as a mouth population (opacity plus other-side glow), which needs σ(λ), an exit kernel and n.
+- **Next:** a non-degenerate null, then a full M2 re-screen with a limit; the cosmic-opacity bound on the mouth
+  population (about 1 h).
+
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
   would have gone to `/vet-candidate` before injections.
