@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: W3 MOA-II gb8 (fourteenth field), in progress
+- Plan: pre-screen + fit + vet this run (tracked chunks), injections and limits next run. Hypothesis: 0 survivors under CHAIN_VERSION 2026-10-10.1.
+
 ## 2026-10-11: W3 MOA-II gb1 (thirteenth field): 0 survivors; combined limit over thirteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1 and a finite limit in every cell. A
   survivor with caustic spikes in the data would have stopped injections and gone to `/vet-candidate`.
