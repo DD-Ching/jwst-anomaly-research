@@ -17,6 +17,11 @@ Computed here [derived]:
    sigma min(r_c, eps)) and of the negative-energy estimate to the tube radius (a message needs
    only a radius above the carrier wavelength) and to the band fraction alpha (ER Eq. 49).
 4. A semiclassical-scale check: the wall thickness and curvature radius in Planck lengths.
+5. Null energy on the wall: R_ab l^a l^b for the outgoing (exterior light) and incoming
+   (shortcut) null directions, and whether t is a time function (slices t = const spacelike,
+   bounded light speeds), which the curved-spacetime QEI theorems assume (global hyperbolicity).
+6. The size of the first-order curvature corrections of the Kontou & Olum (arXiv:1410.0665)
+   curved-spacetime QI for the static geodesic observer at the sampling time actually used.
 """
 
 from __future__ import annotations
@@ -172,6 +177,33 @@ def weyl_ricci(eta: float, eps: float = 1.0) -> dict:
     }
 
 
+def kontou_olum_terms(eta: float, sigma: float = P.sigma) -> dict:
+    """Size of the first-order curvature corrections in Kontou & Olum (arXiv:1410.0665, Eq. 130)
+    for a static (geodesic) observer on the wall, relative to the flat term 3.76, with the
+    sampling width t0 = sigma r_c. Order-of-magnitude estimate [derived]: rho-derivatives of the
+    static-frame Ricci components stand in for the Fermi-frame derivatives (both are O(1/eps)
+    per derivative here), and the unknown curvature-squared couplings (24|a| + 11|b|) are kept
+    as a separate factor."""
+    r, k, k1, k2 = fc.wall_profile(eta, 1.0)
+    R = riemann_array(r, k, k1, k2)
+    eta_m = np.diag([-1.0, 1.0, 1.0, 1.0])
+    ric = np.einsum("ac,nabcd->nbd", eta_m, R)
+    d1 = np.gradient(ric, r, axis=0)
+    d2 = np.gradient(d1, r, axis=0)
+    d3 = np.gradient(d2, r, axis=0)
+    r_c = float(np.max(np.abs(R))) ** -0.5
+    t0 = sigma * r_c
+    rm, r2, r3 = (float(np.max(np.abs(a))) for a in (ric, d2, d3))
+    return {
+        "eta": eta,
+        "t0_over_eps": t0,
+        "ricci_term_rel": 2.63 * rm * t0**2 / 3.76,
+        "second_derivative_term_rel": 3.42 * r2 * t0**4 / 3.76,
+        "second_derivative_term_rel_per_unit_24a_11b": 197.9 * r2 * t0**4 / 3.76,
+        "third_derivative_term_rel": 6.99 * r3 * t0**5 / 3.76,
+    }
+
+
 def wall_energy_integrals(eta: float) -> dict:
     """Integrals of the static energy density across the wall at eps = 1 (they scale as 1/eps):
     I_neg = int min(T, 0) d rho and I_pos = int max(T, 0) d rho. They replace ER's guess
@@ -183,6 +215,85 @@ def wall_energy_integrals(eta: float) -> dict:
         "I_neg": float(np.sum(np.minimum(tt, 0.0)) * dr),
         "I_pos": float(np.sum(np.maximum(tt, 0.0)) * dr),
         "effective_alpha": float(-np.sum(np.minimum(tt, 0.0)) * dr / -tt.min()),
+        # proper volume on t = const (sqrt(det h) = sqrt(k) rho): a sensitivity check, since the
+        # t-slices are not orthogonal to the static observers
+        "I_neg_proper_volume": float(
+            np.sum(np.minimum(tt, 0.0) * np.sqrt(np.clip(k, 0, None))) * dr
+        ),
+    }
+
+
+@lru_cache(maxsize=1)
+def null_ricci():
+    """R_ab l^a l^b for the two null directions of the (t, x) block, from the coordinate metric
+    (ER Eq. 5 at mid-tube, k = k(rho)), with l^t = 1. Outgoing l = (1, 1): exterior light speed,
+    also the fastest +x direction. Incoming l = (1, -1/k): the shortcut direction. Returns the
+    two expressions and, for the outgoing curves at fixed rho, the radial geodesic acceleration."""
+    t, x, r, ph = sp.symbols("t x rho phi", real=True)
+    k = sp.Function("k")(r)
+    xs = [t, x, r, ph]
+    g = sp.Matrix([[-1, (1 - k) / 2, 0, 0], [(1 - k) / 2, k, 0, 0], [0, 0, 1, 0], [0, 0, 0, r**2]])
+    gi = sp.simplify(g.inv())
+    gam = [
+        [
+            [
+                sp.simplify(
+                    sum(
+                        gi[a, d]
+                        * (
+                            sp.diff(g[d, b], xs[c])
+                            + sp.diff(g[d, c], xs[b])
+                            - sp.diff(g[b, c], xs[d])
+                        )
+                        for d in range(4)
+                    )
+                    / 2
+                )
+                for c in range(4)
+            ]
+            for b in range(4)
+        ]
+        for a in range(4)
+    ]
+
+    def ric(b, c):
+        return sp.simplify(
+            sum(
+                sp.diff(gam[a][b][c], xs[a])
+                - sp.diff(gam[a][b][a], xs[c])
+                + sum(gam[a][a][d] * gam[d][b][c] - gam[a][c][d] * gam[d][b][a] for d in range(4))
+                for a in range(4)
+            )
+        )
+
+    ricci = sp.Matrix(4, 4, lambda b, c: ric(b, c))
+    out_l = sp.Matrix([1, 1, 0, 0])
+    in_l = sp.Matrix([1, -1 / k, 0, 0])
+    r_out = sp.simplify((out_l.T * ricci * out_l)[0])
+    r_in = sp.simplify((in_l.T * ricci * in_l)[0])
+    pairs = itertools.product(range(4), repeat=2)
+    acc_out = sp.simplify(sum(gam[2][a][b] * out_l[a] * out_l[b] for a, b in pairs))
+    k0, k1, k2 = sp.symbols("k0 k1 k2")
+    sub = {sp.Derivative(k, (r, 2)): k2, sp.Derivative(k, r): k1}
+    f_in = sp.lambdify((r, k0, k1, k2), r_in.subs(sub).subs(k, k0), "numpy")
+    return r_out, r_in, acc_out, f_in, sp.simplify(gi[0, 0])
+
+
+def null_and_causal(eta: float) -> dict:
+    """NEC along both null directions on the wall, and the causal structure of the t-slices."""
+    r_out, _, acc_out, f_in, gtt_inv = null_ricci()
+    r, k, k1, k2 = fc.wall_profile(eta, 1.0)
+    rin = np.asarray(f_in(r, k, k1, k2), dtype=float)
+    k_min = float(np.min(k))
+    return {
+        "outgoing_Rll_symbolic": str(r_out),
+        "outgoing_fixed_rho_radial_acceleration": str(acc_out),
+        "incoming_Rll_min_eps1": float(rin.min()),
+        "incoming_Rll_max_eps1": float(rin.max()),
+        "g_inv_tt": str(gtt_inv),
+        "k_min": k_min,
+        "t_is_time_function": bool(k_min > 0),
+        "max_incoming_coordinate_speed": float(1 / k_min) if k_min > 0 else None,
     }
 
 
@@ -273,6 +384,10 @@ def main(argv=None) -> int:
         "weyl_vs_ricci": [weyl_ricci(e) for e in P.weyl_etas],
         "latency_rows": latency_rows(),
         "self_consistency": [self_consistency(e) for e in (1 - 1e-9, 0.95, 1e-2)],
+        "kontou_olum_corrections": [
+            kontou_olum_terms(e) for e in (1.6e-9, 1e-4, 1e-2, 0.95, 1 - 1e-9)
+        ],
+        "null_and_causal": [null_and_causal(e) for e in (1e-2, 0.95, 1 - 1e-9)],
     }
     print(json.dumps(out, indent=1))
     return 0

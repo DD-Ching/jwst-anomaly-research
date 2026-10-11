@@ -24,6 +24,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
   exist?).
 - Round 5 done (docs/goal_round5/): Krasnikov tube (conditional; Planck-thin walls under the QI), Scharnhorst
   (unresolvable in its own regime), Lentz soliton (fails). PR left unmerged for the owner.
+- Round 6 done (docs/goal_round6/): for the "wait ≤ 1 yr" target (η ≈ 1) the QI bound (ε ≲ 10⁴ l_P) is backed by
+  Kontou–Olum for a free, minimally coupled scalar; no field and state is known to source the tube. Next, if the owner
+  agrees: G1, the ground-state ⟨T_tt⟩ of a free scalar on the ER wall (sign and size), then G2 (AANEC along
+  shortcut null geodesics). PR left unmerged for the owner.
 - Not covered and still open as explicit-claim classes: Lorentz-violating gravity with superluminal spin-0/1 modes
   (Einstein–aether, Hořava), Gödel/Gott global geometries, non-local quantum gravity, tachyons.
 

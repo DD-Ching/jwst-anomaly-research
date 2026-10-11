@@ -94,7 +94,8 @@
    "wall_integrals_eps1": {
     "I_neg": -0.057877636187511836,
     "I_pos": 0.05155585090562,
-    "effective_alpha": 0.3306081874930539
+    "effective_alpha": 0.3306081874930539,
+    "I_neg_proper_volume": -0.019357349621553298
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -2.813052858154419e+44,
@@ -125,7 +126,8 @@
    "wall_integrals_eps1": {
     "I_neg": -0.0578776280793177,
     "I_pos": 0.05155584448911722,
-    "effective_alpha": 0.3306081862311367
+    "effective_alpha": 0.3306081862311367,
+    "I_neg_proper_volume": -0.01935735808577851
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -2.8130526557426377e+44,
@@ -156,7 +158,8 @@
    "wall_integrals_eps1": {
     "I_neg": -0.057865763477507694,
     "I_pos": 0.05154645508509931,
-    "effective_alpha": 0.330606340311968
+    "effective_alpha": 0.330606340311968,
+    "I_neg_proper_volume": -0.019369416807946717
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -2.8127564582156147e+44,
@@ -187,7 +190,8 @@
    "wall_integrals_eps1": {
     "I_neg": -0.05365490458673071,
     "I_pos": 0.048185904037694946,
-    "effective_alpha": 0.32997080682320484
+    "effective_alpha": 0.32997080682320484,
+    "I_neg_proper_volume": -0.021851907408606656
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -2.705877743786803e+44,
@@ -218,7 +222,8 @@
    "wall_integrals_eps1": {
     "I_neg": -0.057877636297453454,
     "I_pos": 0.05155585099262342,
-    "effective_alpha": 0.33060818751016463
+    "effective_alpha": 0.33060818751016463,
+    "I_neg_proper_volume": -0.01935734950671979
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -1.4065264304494926e+45,
@@ -249,7 +254,8 @@
    "wall_integrals_eps1": {
     "I_neg": -0.05787763467581456,
     "I_pos": 0.05155584970932283,
-    "effective_alpha": 0.3306081872577811
+    "effective_alpha": 0.3306081872577811,
+    "I_neg_proper_volume": -0.019357351200215377
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -1.406526410208314e+45,
@@ -280,7 +286,8 @@
    "wall_integrals_eps1": {
     "I_neg": -0.057875261619833175,
     "I_pos": 0.051553971757930556,
-    "effective_alpha": 0.3306078179526334
+    "effective_alpha": 0.3306078179526334,
+    "I_neg_proper_volume": -0.01935980006861218
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -1.4064967896699358e+45,
@@ -311,7 +318,8 @@
    "wall_integrals_eps1": {
     "I_neg": -0.05701500680898761,
     "I_pos": 0.050872038814144274,
-    "effective_alpha": 0.3304753845110381
+    "effective_alpha": 0.3304753845110381,
+    "I_neg_proper_volume": -0.02006566338819341
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -1.3957249773117492e+45,
@@ -358,6 +366,80 @@
    "eps_qi_max_planck": 858.6119584684793,
    "fields_needed_to_reach_qi_thickness": 26999999999.999992,
    "qi_over_polarisation_factor_sigma^-4": 99999999.99999999
+  }
+ ],
+ "kontou_olum_corrections": [
+  {
+   "eta": 1.6e-09,
+   "t0_over_eps": 142.4692237204123,
+   "ricci_term_rel": 6.99468236670017e-05,
+   "second_derivative_term_rel": 156.78581969493086,
+   "second_derivative_term_rel_per_unit_24a_11b": 9072.489391118952,
+   "third_derivative_term_rel": 715106.6932868442
+  },
+  {
+   "eta": 0.0001,
+   "t0_over_eps": 0.5698687490322604,
+   "ricci_term_rel": 6.99470763539961e-05,
+   "second_derivative_term_rel": 0.002508496828520735,
+   "second_derivative_term_rel_per_unit_24a_11b": 0.14515541589598055,
+   "third_derivative_term_rel": 0.045764701548459796
+  },
+  {
+   "eta": 0.01,
+   "t0_over_eps": 0.05690608594795928,
+   "ricci_term_rel": 6.997215382669018e-05,
+   "second_derivative_term_rel": 2.5009372784261634e-05,
+   "second_derivative_term_rel_per_unit_24a_11b": 0.0014471797877208706,
+   "third_derivative_term_rel": 4.5553892372567295e-05
+  },
+  {
+   "eta": 0.95,
+   "t0_over_eps": 0.004946672548239789,
+   "ricci_term_rel": 7.332834057750351e-05,
+   "second_derivative_term_rel": 1.8002687190149485e-07,
+   "second_derivative_term_rel_per_unit_24a_11b": 1.0417344429621587e-05,
+   "third_derivative_term_rel": 2.726935433561468e-08
+  },
+  {
+   "eta": 0.999999999,
+   "t0_over_eps": 0.004767399274444836,
+   "ricci_term_rel": 7.359299110085823e-05,
+   "second_derivative_term_rel": 1.6624863710491866e-07,
+   "second_derivative_term_rel_per_unit_24a_11b": 9.620060024287547e-06,
+   "third_derivative_term_rel": 2.4148864616488962e-08
+  }
+ ],
+ "null_and_causal": [
+  {
+   "outgoing_Rll_symbolic": "0",
+   "outgoing_fixed_rho_radial_acceleration": "0",
+   "incoming_Rll_min_eps1": -0.062230543268979054,
+   "incoming_Rll_max_eps1": 0.061869567368088824,
+   "g_inv_tt": "-4*k(rho)/(k(rho)**2 + 2*k(rho) + 1)",
+   "k_min": 0.9900000000206115,
+   "t_is_time_function": true,
+   "max_incoming_coordinate_speed": 1.01010101007998
+  },
+  {
+   "outgoing_Rll_symbolic": "0",
+   "outgoing_fixed_rho_radial_acceleration": "0",
+   "incoming_Rll_min_eps1": -145.39164137013216,
+   "incoming_Rll_max_eps1": 11.173652908705007,
+   "g_inv_tt": "-4*k(rho)/(k(rho)**2 + 2*k(rho) + 1)",
+   "k_min": 0.05000000195809606,
+   "t_is_time_function": true,
+   "max_incoming_coordinate_speed": 19.999999216761605
+  },
+  {
+   "outgoing_Rll_symbolic": "0",
+   "outgoing_fixed_rho_radial_acceleration": "0",
+   "incoming_Rll_min_eps1": -7038662300.587375,
+   "incoming_Rll_max_eps1": 12.456997054463555,
+   "g_inv_tt": "-4*k(rho)/(k(rho)**2 + 2*k(rho) + 1)",
+   "k_min": 3.0611536638858183e-09,
+   "t_is_time_function": true,
+   "max_incoming_coordinate_speed": 326674224.7530963
   }
  ]
 }

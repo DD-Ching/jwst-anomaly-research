@@ -4227,3 +4227,24 @@ S > 7 or setting dependence in R trials.
 - A QI for interacting or non-minimally coupled fields permits macroscopic negative-energy layers.
 - A candidate states a self-consistent source and a same-clock advance over exterior light.
 - A front-velocity calculation for the Casimir vacuum appears.
+
+## D-TBD Goal round 6: keep the Krasnikov tube as reference with the latency rows; next step is G1, not a design (2026-10-11)
+
+**Decision (proposal).**
+- The goal-relevant Krasnikov numbers are the "wait ≤ 1 yr" rows (η ≈ 1): ε_max ≈ 10⁴ l_P at σ = 0.01, and
+  10³⁸–10⁴⁵ M☉ of negative energy. They replace the round-5 advance rows.
+- "No matter model exists" is restated as "none is known".
+- Run G1 (the ground-state ⟨T_tt⟩ of a free scalar on the ER wall) before any further work; pause the line if it is
+  non-negative or insufficient.
+
+**Alternatives rejected.**
+- Treating Krasnikov 2003's loopholes as feasibility.
+- Quoting the advance-row bounds as proven (τ0 ≫ ε there).
+- Adding candidates (brief).
+
+**Evidence.** docs/goal_round6/README.md §§1–7; `results/goal_round6/krasnikov_source.json`.
+
+**Revisit if.**
+- A QEI or a source construction for non-minimally coupled or interacting fields permits sustained macroscopic
+  negative density.
+- G1 or G2 is computed.

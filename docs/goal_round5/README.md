@@ -103,8 +103,10 @@ the τ0 = σ r_c extrapolation above):
 - The negative energy needed is of order 10³⁸–10⁴³ solar masses.
 - Under τ0 = σ r_c, thinning the effect (small η) does not help: it makes the walls thinner still. Under ER's
   shortcut, ε ∝ η^−1/2, so thinning helps, but the walls stay ≤ 10⁻²⁷ m for every advance ≥ 1 s.
-- The 1 s rows (0.34 and 0.15 l_P) are below the Planck length. They mean **no semiclassical wall exists**, not a
-  physical thickness.
+- The 1 s rows (0.34 and 0.15 l_P) are below the Planck length. Within these assumptions, the semiclassical QI
+  analysis gives no consistent wall. Outside them it neither proves nor excludes one, and for these rows the bound
+  itself needs τ0 ≫ ε, which is unproven (rescoped in round 6, docs/goal_round6/README.md §§2, 5).
+- Round 6 adds that the energy column uses ER's α = 0.01; integrating the wall gives α_eff ≈ 0.33 (×33).
 
 **What it leaves open.**
 - Interacting or non-minimally coupled fields.
@@ -133,7 +135,8 @@ The LSV Eq. (3.3) formula gives ξ = 11π²α²/(4050 (a m_e)⁴).
   - One tube gives one direction, with an advance up to ηD. Two tubes give both directions, with no CTC if η ≤ 1.
   - Its source, under the stated QI assumptions, needs Planck-thin negative-energy walls and 10³⁸–10⁴³ M☉ of
     negative energy for the 20–100 ly task.
-  - No self-consistent matter model exists.
+  - No self-consistent matter model is known (in the literature checked and here). Its non-existence is not
+    established (round 6 §§5–6).
 - **Scharnhorst effect:** only formally.
   - The advance is confined to crossing one gap: ≤ 5 × 10⁻⁴⁷ s at 1 µm.
   - The soft-photon result does not establish early arrival of information, because it has no front.

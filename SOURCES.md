@@ -1273,3 +1273,28 @@ arXiv:2104.06488 (a target of Santiago–Schuster–Visser).
 
 **Cited through LSV, not opened:** Scharnhorst, Phys. Lett. B 236, 354 (1990), the original Casimir-vacuum result.
 Kontou & Olum 2015 is listed under Goal round 1.
+
+## Goal round 6 (2026-10-11; docs/goal_round6/README.md)
+
+**Read in full** (arXiv PDFs, accessed 2026-10-11; sha256 prefixes in brackets; journal references only where
+the paper or a prior entry states them):
+- Krasnikov, "The quantum inequalities do not forbid spacetime shortcuts", gr-qc/0207057v3 [45cbd90a…].
+- Roman, "Some thoughts on energy conditions and wormholes", gr-qc/0409090 [24333d67…].
+- Krasnikov, "Counter example to a quantum inequality", gr-qc/0409007v3 [4e601218…].
+- Fewster, "Comments on 'Counter example to the quantum inequality'", gr-qc/0409043 [59350de2…].
+- Fewster & Roman, "On wormholes with arbitrarily small quantities of exotic matter", gr-qc/0507013 [183395b5…];
+  proceedings version gr-qc/0510079 [0604b9db…].
+- Fewster & Smith, "Absolute quantum energy inequalities in curved spacetime", gr-qc/0702056 [29888fd7…].
+- Fewster & Osterbrink, "Quantum energy inequalities for the non-minimally coupled scalar field",
+  arXiv:0708.2450v2 [43264d1d…].
+- Olum & Graham, "Static negative energies near a domain wall", Phys. Lett. B 554, 175 (2003), gr-qc/0205134
+  [deb160cb…].
+- Kontou & Sanders, "Energy conditions in general relativity and quantum field theory", arXiv:2003.01815v2
+  [7313d79e…].
+- Pfenning & Ford, "Scalar field quantum inequalities in static spacetimes", PRD 57, 3489 (1998), gr-qc/9710055
+  [4e4858e6…].
+- Ford & Roman, PRD 53, 5496 (1996), gr-qc/9510071 [55783db4…].
+- Kontou & Olum, "Quantum inequality in spacetimes with small curvature", arXiv:1410.0665v2 [0d88abf6…].
+
+**Cited through Kontou–Sanders, not opened:** Olum, PRL 81, 3567 (1998); Graham & Olum, PRD 76, 064001 (2007);
+Ford & Roman, PRD 51, 4277 (1995); Fewster, *Quantum Energy Inequalities* (Springer, 2017).
