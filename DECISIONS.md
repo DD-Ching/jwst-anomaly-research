@@ -4316,21 +4316,25 @@ S > 7 or setting dependence in R trials.
 - A controlled strong-coupling or UV-complete treatment fixes the front.
 - A source and detector class is proposed whose moments escape the computed configuration.
 
-## D-TBD Goal round 9: no next executable unit for the communication goal on current inputs (2026-10-11)
+## D-TBD Goal round 9: no next executable unit on current inputs; the khronometric linear matter response equals EA's (2026-10-11)
 
-**Decision (proposal).** Do not open a new physics unit now.
+**Decision (proposal).** Do not open a new physics unit beyond the P3 linear check.
 - P1 (multipartite v-causal) lacks data.
-- P2 (exotic lenses) is already the scheduled MOA-II search.
-- P3 (khronometric instantaneous mode) lacks a controlled theory.
+- P2 (exotic lenses) is the scheduled MOA-II search; a survivor would be a candidate only.
+- P3 (khronometric): at linear order, with ordinary matter coupled to the metric only, the tidal response equals
+  EA's (identical for c13 = 0), so the Blas–Sibiryakov instantaneous term does not enter.
+
+**Open.** The non-linear elliptic part, i.e. whether a local conserved source with fixed boundary conditions
+drives it. It needs a second-order calculation; the owner decides whether to fund it.
 
 **Alternatives rejected.**
+- Reading "instantaneous" in the literature as a channel.
+- Treating the external S^μu_μ source as ordinary matter.
 - Forcing a choice to keep research going.
-- Re-running round 8 for khronometric theory.
-- A single-device LC4 dataset analysis, which would not test the signalling models relevant to communication.
 
-**Evidence.** docs/goal_round9/README.md §§2–3.
+**Evidence.** docs/goal_round9/README.md §§2–3; `results/goal_round9/khronometric.json`.
 
 **Revisit if.**
-- A four-party spacelike dataset or platform, or an S4 ≤ 6 report, appears.
-- An unexplained W3 survivor or an exotic-lens abundance model appears.
-- A concrete published mechanism with a matter coupling and a controllable early-reading prediction appears.
+- A four-party spacelike dataset, or an S4 below the realistic QM prediction, appears.
+- An unexplained W3 survivor or an abundance model appears.
+- A second-order or non-linear khronometric result with a matter-only source appears.

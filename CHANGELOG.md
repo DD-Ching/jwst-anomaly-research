@@ -2,16 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: Goal round 9: no next executable unit for the communication goal on current inputs
-- Owner brief: choose one worthwhile physics problem from the whole project and run a minimal check only if a
-  differing prediction, data and a light test all exist. Write-up `docs/goal_round9/README.md`.
-- Compared three problems:
-  - P1, multipartite v-causal influences: no four-party spacelike data.
-  - P2, exotic or negative-mass lenses (W3): data exist but are already in the scheduled MOA-II search; nulls need
-    an abundance model.
-  - P3, khronometric / Hořava instantaneous mode: no controlled strong-coupling theory; otherwise the same as round 8.
-- **Result:** not enough basis to select a unit. No new evidence; no computation. The required new inputs are
-  listed in §3 of the write-up.
+## 2026-10-11: Goal round 9: no next executable unit on current inputs; khronometric "instantaneous" term absent from the linear matter response
+- Owner brief: choose one worthwhile physics problem from the whole project, and run a minimal check only if a
+  differing prediction, data and a light test all exist. Revised after owner review, with a bounded P3 check.
+  Write-up `docs/goal_round9/README.md`; code `scripts/goal_khronometric.py`; results `results/goal_round9/`.
+- **P1** (multipartite v-causal): no four-party spacelike data. A low S4 counts only against a realistic QM
+  prediction.
+- **P2** (W3 exotic lenses): data exist but sit in the scheduled MOA-II search. A survivor would be a candidate
+  only. Templates kept separate: W3 = negative-mass or repulsive lens; Ellis = W4 gutters.
+- **P3** (Hořava / khronometric):
+  - Controls reproduced from Blas–Sibiryakov: the external-source instantaneous term is transverse and traceless,
+    vanishes for gradient sources, and is cancelled by EA's transverse modes.
+  - New [derived]: with matter coupled to the metric only, the linear khronometric tidal response equals EA's
+    (identical for c13 = 0). The instantaneous term does not enter, and round 8's trade-off carries over.
+  - The non-linear elliptic part stays open (second-order calculation costed, not started).
+- **Corrections:**
+  - Jacobson citation fixed (1001.4823v3).
+  - ~10³⁸ M☉ scoped to round 6's model.
+  - The "only near-term route" remark withdrawn.
 
 ## 2026-10-11: Goal round 8: Einstein–æther spin-0 trades speed for coupling (κ ∝ 1/c_S²); no practical low-latency channel found in the computed case; line paused
 - Owner brief: a bounded unit on EA spin-0/spin-1 modes, built from the action, matter coupling and a measurable

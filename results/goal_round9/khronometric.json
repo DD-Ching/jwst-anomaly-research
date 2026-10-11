@@ -1,0 +1,35 @@
+{
+ "provenance": "derived symbolically (no data): Blas-Sibiryakov controls and the linearised khronometric tidal response with matter coupled to the metric only",
+ "bs_controls": {
+  "partial_fraction_residual": "0",
+  "instantaneous_trace_position_space": "0",
+  "instantaneous_divergence_position_space": [
+   "0",
+   "0",
+   "0"
+  ],
+  "gradient_source_exchange": "sigma**2*(px**2 + py**2 + pz**2)/(alpha*p0**2)",
+  "transverse_decomposition_residual": "Matrix([[0, 0, 0], [0, 0, 0], [0, 0, 0]])",
+  "ea_instantaneous_sum": "Matrix([[0, 0, 0], [0, 0, 0], [0, 0, 0]])"
+ },
+ "khronometric_vs_ea": {
+  "n_solutions": 1,
+  "difference_c13_0": {
+   "xx": "0",
+   "yy": "0",
+   "zz": "0",
+   "xy": "0",
+   "xz": "0",
+   "yz": "0"
+  },
+  "difference_general": {
+   "xx": "0",
+   "yy": "0",
+   "zz": "0",
+   "xy": "0",
+   "xz": "-8*pi*G*jx*k*omega*(c1 + c3)**2/((c1 + c3 - 1)*(c1**2*k**2 - 2*c1**2*omega**2 - 2*c1*c3*omega**2 - 2*c1*c4*omega**2 - 2*c1*k**2 + 2*c1*omega**2 - c3**2*k**2 - 2*c3*c4*omega**2 + 2*c4*omega**2))",
+   "yz": "-8*pi*G*jy*k*omega*(c1 + c3)**2/((c1 + c3 - 1)*(c1**2*k**2 - 2*c1**2*omega**2 - 2*c1*c3*omega**2 - 2*c1*c4*omega**2 - 2*c1*k**2 + 2*c1*omega**2 - c3**2*k**2 - 2*c3*c4*omega**2 + 2*c4*omega**2))"
+  },
+  "khronometric_Exz": "8*pi*G*jx*omega/(k*(c1 + c3 - 1))"
+ }
+}
