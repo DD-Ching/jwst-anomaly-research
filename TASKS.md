@@ -54,6 +54,12 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    Define a GW-parent ghost test only if round 2 gives it a quantitative prediction.
 
 ## Part 0 speed-ups (owner brief 2026-10-10, D-078)
+- **W3 short-event study (D-082):** stage 1 done (frozen t_E = 3 d sample; `eclipse_dip` losses are unsampled
+  spikes; the `jackknife_nights` share is undecided). Stage 2: re-vet the dev flags recording the jackknife's own
+  feature nights and ΔBIC, then a night-robust likelihood test on dev, an FP check on the real gb12 flags and PSPL
+  controls, and one validation evaluation.
+- **Injection speed (V2.1 P2):** compiled W3 finite-source integrand (46 % of fit time) with an identical-outcome
+  test on fixed injections; then 2-column closed-form solves in place of `lstsq`.
 - **Acceleration V2 audit** (`docs/audits/2026-10-10-acceleration-v2.md`): MOA pre-screen reuse done (D-078
   addendum 3). Next, by information per hour: the shared-epoch masking study (dev/validation injection split,
   real flags as the false-positive check), then profile `run_inject` (≈ 60 % of a field run), then the
