@@ -43,7 +43,8 @@ Two losses are design choices and can be tested:
    nights carry the spikes when sampling is sparse); 300 d 22 → 9 (`feature_bracketed` 10: a 300-d umbra plus the
    20-epoch baseline on both sides rarely fits inside a season gap pattern). 10–100 d: 72–76 % kept. This answers
    the brief's question "can a real peak-dip-peak lose its peaks to sparse sampling and be rejected as an ordinary
-   dip?": yes, measurably at t_E = 3 d through `jackknife_nights`. At other t_E the losses go to
+   dip?": partly. D-082 (2026-10-11, a frozen t_E = 3 d sample) shows that the `eclipse_dip` losses are
+   unsampled spikes; the `jackknife_nights` share is still undecided. At other t_E the losses go to
    `repeated_deficit` (9) and `exotic_feature_sampled` (5).
    These tests exist because real false positives passed without them (w3-survey failed-approach rules). Any change
    needs the background flags (real, 46 per field) as the false-positive check. It also needs injections it was
@@ -73,3 +74,34 @@ Two losses are design choices and can be tested:
 Not done here, and why: GPU (the fits are small scalar optimisations with branchy vetting; no profile suggests a
 GPU-shaped kernel); adaptive grids for the W3 limit (the 5 × 2 grid is set by the published-limit format, and
 cells are cheap compared with the streaming).
+
+## V2.1 priority 2: injection profile (2026-10-11)
+Measured on gb12 (production chain, 4 cores; `injections_gb12.ecsv`, `seconds` column, plus `cProfile` on 6
+pre-screen-passing injections, one process):
+- Wall time 849 s, 3,396 CPU-s. The 158 injections that pass Cut-0 and the pre-screen use 3,310 CPU-s (97 %):
+  median 18.6 s, 90th percentile 35.5 s each. The other 1,842 injections (signal injection, Cut-0 emulation,
+  deficit scan, shared-epoch test) use the remaining ~3 %. Carrier loading happens once per run. So reusing
+  preprocessed observations, vectorizing the injection, caching or reducing disk access cannot gain more than
+  ~3 %. The cost is in fitting and vetting.
+- Inside `vet_one` (163.7 s for 6 injections): 415 Nelder–Mead minimisations (≈ 340 function evaluations
+  each) take 141 s. By total time, the cost of the model evaluations is:
+
+  | function | time |
+  |---|---|
+  | `exotic_sim.finite_source_magnification` | 76 s (46 %) |
+  | `point_magnification` | 33 s |
+  | `numpy.linalg.lstsq` in the multi-season linear fluxes | 19 s |
+  | `numpy.interp` | 13 s |
+  | `linear_fluxes` | 10 s |
+
+  The finite-source integrand is many small array operations: 69,523 calls at ~0.5 ms each.
+- Candidates, in order of expected gain per risk:
+  1. A fused, compiled integrand for the W3 case (n = 1, ε < 0, analytic point magnification), with the
+     numpy path kept as the reference (the D-078 pattern).
+  2. Closed-form 2-parameter solves in place of `lstsq` where the design has two columns.
+  3. Warm-started refits in the jackknife and season tests.
+
+  Each changes floating-point summation order, so an optimizer can take another path near ties. Acceptance
+  test: identical `failed_test` / `recovered` on a fixed set of injections, and real flags before and after.
+  Not done in this cycle: it needs about 25 CPU-min per comparison run, and the short-event sample had the
+  cores.

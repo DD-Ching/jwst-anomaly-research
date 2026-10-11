@@ -54,6 +54,12 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    Define a GW-parent ghost test only if round 2 gives it a quantitative prediction.
 
 ## Part 0 speed-ups (owner brief 2026-10-10, D-078)
+- **W3 short-event study (D-082):** stage 1 done (frozen t_E = 3 d sample; `eclipse_dip` losses are unsampled
+  spikes; the `jackknife_nights` share is undecided). Stage 2: re-vet the dev flags recording the jackknife's own
+  feature nights and ΔBIC, then a night-robust likelihood test on dev, an FP check on the real gb12 flags and PSPL
+  controls, and one validation evaluation.
+- **Injection speed (V2.1 P2):** compiled W3 finite-source integrand (46 % of fit time) with an identical-outcome
+  test on fixed injections; then 2-column closed-form solves in place of `lstsq`.
 - **Acceleration V2 audit** (`docs/audits/2026-10-10-acceleration-v2.md`): MOA pre-screen reuse done (D-078
   addendum 3). Next, by information per hour: the shared-epoch masking study (dev/validation injection split,
   real flags as the false-positive check), then profile `run_inject` (≈ 60 % of a field run), then the
@@ -77,11 +83,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    flags, 0 candidates (gb17, gb18: one chain survivor each, explained outside the chain); limits withdrawn**
    (injections had a lenient source-flux bound). The four D-068 chain gaps are closed (D-068 addendum
    2026-10-10, `CHAIN_VERSION` 2026-10-10.1). All eleven fields re-run under it (gb18 last): 0 survivors, limits tracked (CHANGELOG 2026-10-10; gb18's t_E = 300 d,
-   ρ = 0.1 cell has 0 recoveries). **Combined (12 fields, gb2 added): Γ₉₅ ≈ 2.8 × 10⁻⁸–1.5 × 10⁻⁷ per star per year**
-   (`results/w3_moa/limits_combined.ecsv`; no field > 20 % of any cell). The lenient-reference fields were re-vetted with a working CDS XMatch: 0 survivors (CHANGELOG 2026-10-10).
+   ρ = 0.1 cell has 0 recoveries). **Combined (13 fields, gb1 added): Γ₉₅ ≈ 2.4 × 10⁻⁸–1.4 × 10⁻⁷ per star per year**
+   (`results/w3_moa/limits_combined.ecsv`; no field > 21 % of any cell). The lenient-reference fields were re-vetted with a working CDS XMatch: 0 survivors (CHANGELOG 2026-10-10).
    gb13 run (2026-10-10): 69 flags, one chain survivor gb13-R-7-0-76483, **explained** by `/vet-candidate` (a smooth
    2013 dimming of a red-noise star: under a GP baseline an ordinary trapezoidal dip beats E2pos by ΔBIC 14–20;
-   `docs/candidates/gb13-R-7-0-76483.md`). Next: gb1, gb8 (pre-fetch the metadata with curl, CHANGELOG 2026-10-10);
+   `docs/candidates/gb13-R-7-0-76483.md`). Next: gb8 (78 GB; a field run takes ~85 min in the cloud, more than one routine slot: pre-fetch the metadata with curl, CHANGELOG 2026-10-10);
    decide whether to add a GP-baseline chain test (it removes the gb13 flag; every field's injections would need a re-run;
    owner decision on #145), then gb13 injections (`run-field` refuses while the chain survivor stands) and `combine`;
    then the large Nunota et al. 2024 Table 1 fields. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
