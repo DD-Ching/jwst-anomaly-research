@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: W3 MOA-II gb4 (sixteenth field): in progress
+## 2026-10-11: W3 MOA-II gb4 (sixteenth field): 0 survivors; combined limit over sixteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections.
 - gb4 is the largest field so far: 66 pre-screen chunks of 4 GiB (~265 GB streamed, never stored). Run 1 (cloud,
@@ -34,9 +34,18 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Failed approach: a wait loop `while pgrep -f "<inject command>"` never ends, because the pattern also matches the
   waiting shell's own command line; it held the run ~25 min past the chunk's end. Wait on the PID (`wait` or
   `kill -0 <pid>`) instead.
-- **Next:** `merge-prescreen`, then `inject --field gb4 --procs 4 --chunk 3/4` and 4/4 (~15–23 min each, detached
-  with `setsid nohup`), then `merge-inject --n 4`, `limit`, `combine`. Remaining large fields (gb5, gb6, gb9,
-  gb10, gb14) can use the same chunking for injections.
+- Run 7 (cloud, 21:08–22:25Z): chunks 3/4 (1,746 s) and 4/4 (1,828 s), 0 errors; W3 500 → 52 / 57 flagged → 28 / 28
+  recovered; PSPL controls 0 / 50 flagged each. `merge-inject --n 4` (2,200 injections on 287 carriers). `limit` needs
+  the full `vetting_gb4.json`, which a fresh clone lacks (only the compact record is tracked), so `merge-chunks --n 2`
+  and `vet` were re-run: **0 of 114 survive** again, and the regenerated compact record is byte-identical.
+- gb4 limits (`results/w3_moa/limits_gb4.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 1.7 × 10⁻⁷–9.0 × 10⁻⁷ per star per year
+  (N_s = 2.60 × 10⁷); vetting keeps 107 / 207 flagged W3 injections; the t_E = 300 d cells rest on 3 / 4 recoveries.
+  **Combined, sixteen fields: Γ₉₅ ≈ 1.7 × 10⁻⁸–9.8 × 10⁻⁸** (was 1.9 × 10⁻⁸–1.1 × 10⁻⁷ over fifteen; max field share
+  0.19). This branch merges `claude/w3-moa-gb3` (#160) so the combine includes gb3: merge #160 first.
+- Failed approach: the venv lacked the `mulens` extra, so the first `inject` exited at once; install
+  `.[dev,cloud,mulens]` on a fresh clone.
+- **Next:** gb13 after the owner decides #145; then gb5, gb6, gb9, gb10, gb14 with chunked fits and injections
+  (a fresh clone needs `merge-prescreen` and, before `limit`, `merge-chunks` + `vet`).
 
 ## 2026-10-11: W3 MOA-II gb3 (fifteenth field): 0 survivors; combined limit over fifteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
