@@ -111,19 +111,30 @@ was run.
   - One test is below the Bonferroni threshold: run XOR_2, Alice | a, z = 3.13, p = 0.0017 (relative shift 3.7 %).
   - A second test is below 0.05 (03_43, B | b, z = 2.30).
   - Fisher's combined p = 0.39; KS test of the 24 p-values against uniform, p = 0.095.
-  - **The pre-registered continue rule is not met.** No other run shows a significant shift in that comparison;
-    the largest is XOR_1, z = 1.58.
-- **Combined bound over the six runs** (inverse-variance; 95 % upper limit on the setting-induced shift |δ| of the
-  remote click probability):
+  - **Neither pre-registered rule applies (owner review, 2026-10-11).**
+    - "Continue" needs the shift in ≥ 2 runs. No other run shows one in that comparison; the largest is XOR_1,
+      z = 1.58.
+    - "Stop (null)" needs no family-wise significant shift. XOR_2 is one.
+    - The rules did not cover a single, unreplicated hit. The result is therefore **undetermined under the
+      pre-registered rules**. It is not a pre-defined null, and the rules are not changed after the fact.
+    - The combined p-value is not used to erase the single-run deviation.
+- **Indicative pooled limits** (fixed-effect inverse-variance over the six runs; Wald 95 % interval on the
+  setting-induced shift |δ| of the remote click probability). These are **not rigorous capacity bounds**:
+  - they assume one common δ for all runs, which XOR_2 does not obviously share (heterogeneity p = 0.12);
+  - the interval is a large-sample Wald interval;
+  - the "mutual information" is computed for a uniform binary input switching a Bernoulli output. It is not
+    maximised over input distributions, and it ignores memory and timing.
+  - XOR_2 alone has δ̂ = 1.2 × 10⁻⁵ (3.7 % of p; Wald 95 % upper ≈ 1.9 × 10⁻⁵), which is above the pooled limit.
+    The pooled numbers therefore do not bound a run-specific effect.
 
-| Comparison | click prob. p | δ̂ (z) | \|δ\|₉₅ | \|δ\|₉₅ / p | mutual information ≤ (bits/trial) | trials per bit ≥ |
+| Comparison | click prob. p | δ̂ (z) | \|δ\|₉₅ | \|δ\|₉₅ / p | indicative MI, uniform input (bits/trial) | indicative trials per bit |
 |---|---|---|---|---|---|---|
 | Alice \| a (Bob's choice) | 3.06 × 10⁻⁴ | 3.2 × 10⁻⁶ (2.09) | 6.2 × 10⁻⁶ | 2.0 % | 2.3 × 10⁻⁸ | 4.4 × 10⁷ |
 | Alice \| a′ | 8.94 × 10⁻⁴ | (0.78) | 7.2 × 10⁻⁶ | 0.8 % | 1.0 × 10⁻⁸ | 9.6 × 10⁷ |
 | Bob \| b (Alice's choice) | 3.06 × 10⁻⁴ | (1.08) | 4.7 × 10⁻⁶ | 1.5 % | 1.3 × 10⁻⁸ | 7.8 × 10⁷ |
 | Bob \| b′ | 9.73 × 10⁻⁴ | (−1.25) | 8.8 × 10⁻⁶ | 0.9 % | 1.4 × 10⁻⁸ | 7.0 × 10⁷ |
 
-  - At 99,100 trials/s, these mean **≤ 2.2 × 10⁻³ bits/s** in either direction for this apparatus at 184.9 m.
+  - At 99,100 trials/s these correspond to about 2 × 10⁻³ bits/s, under the assumptions above (indicative only).
   - The four combined z values were not pre-registered as a family. With 4 comparisons, Alice | a's z = 2.09 is not
     significant.
 - **Post hoc** (not pre-registered; reported for completeness):
@@ -136,14 +147,17 @@ was run.
     a law that holds across runs.
 
 **Conclusion** [derived]:
-- **Null under the pre-registered rule.** In the only public loophole-free spacelike Bell dataset, a party's free
-  setting choice does not measurably change the other party's click statistics.
-- The data bound any such effect to ≤ 0.8–2.0 % of the click probability, i.e. ≤ 2 × 10⁻⁸ bits per trial.
+- **Undetermined under the pre-registered rules** (see above). Five of the six runs show no setting-dependent
+  shift. One run (XOR_2) shows an unreplicated 3.1σ deviation that is not explained.
+- It is **not** evidence of superluminal signalling: it does not replicate, and a run-specific systematic has not
+  been excluded. It is **not** erased either: the combined p-value does not remove a single-run deviation.
+- The pooled effect is ≤ 0.8–2.0 % of the click probability. That is an indicative fixed-effect limit, not a
+  capacity bound.
 - This agrees with NIST's own diagnostics, which it reproduces exactly, and with quantum mechanics.
 - **It is not new physics evidence.**
 - **What it adds:**
   - an independent, pre-registered reproduction;
-  - an explicit channel-capacity bound for the send/receive step of entanglement-based signalling on real
+  - an indicative (not rigorous) limit on the send/receive step of entanglement-based signalling on real
     spacelike data;
   - one localised, unexplained 3.1σ run-level shift (XOR_2). It is flagged for an optional raw-time-tag crosstalk
     check, not claimed.
@@ -201,15 +215,20 @@ they predict a marginal shift in this geometry. Mapping it to 20–100 ly needs 
     - new data tightened Lorentz-invariance bounds.
 - **What was verified and the result.**
   - The NIST 2015 no-signalling diagnostics were reproduced exactly and extended with a pre-registered test.
-  - The test is null (one run-level 3.1σ hit that does not replicate).
-  - The bound is |δ| ≤ 0.8–2.0 % of the remote click probability, i.e. ≤ 2 × 10⁻⁸ bits/trial (≤ 2 × 10⁻³ bits/s)
-    for this apparatus.
-- **Which gap moved?** The send/receive step of an entanglement-based channel now has a measured, quantitative
-  capacity bound on real spacelike data, instead of only the theorem that QM forbids it. Any proposed signalling
-  model must predict less than that in this geometry. It closes nothing by itself.
+  - Outcome: **undetermined** under the pre-registered rules. There is one unreplicated 3.1σ run-level deviation
+    (XOR_2); the other five runs are null.
+  - Indicative pooled limit: |δ| ≤ 0.8–2.0 % of the remote click probability (fixed-effect, uniform-input MI
+    ~10⁻⁸ bits/trial). It is not a rigorous capacity bound.
+- **Which gap moved?** Only a little. The send/receive step now has an indicative measured limit on real
+  spacelike data, plus one open run-level deviation. It closes nothing by itself.
 - **Next concrete action, cost and stop condition** (owner decides; nothing started):
   - (a) Optional: a time-tag crosstalk check of run XOR_2. One ~1.4 GB hdf5 file, about 1 h. Stop if Alice's
     shift tracks Bob's Pockels-cell drive timing or vanishes under a stricter click window.
-  - (b) H-R10 sidereal test on six runs: about 2–3 h, ~8 GB streamed. Stop if there is no bin-level shift.
+  - (b) H-R10 sidereal test: **kept as a hypothesis only**. Before any multi-GB download, these must be shown
+    from metadata alone:
+    - sidereal coverage of the six runs;
+    - the per-bin detectable shift given the counts per minute;
+    - controls for ordinary drift and device periodicities (fridge, laser mode-locking, PPS jumps).
+    Stop if coverage or power is insufficient.
   - (c) The Delft 2015 cross-check once 4TU downloads return: about 1 h. Stop if null.
   - Second-order, non-linear and strong-coupling work stays unstarted.

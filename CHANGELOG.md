@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: Goal round 10: external search and one minimal verification; NIST 2015 no-signalling null
+## 2026-10-11: Goal round 10: external search and one minimal verification; NIST 2015 no-signalling check undetermined (one unreplicated run-level deviation)
 - Owner brief: search external tools, papers, corrections and public data for anything that closes a gap in the
   communication chain; compare up to three opportunities; run one cheap verification. Write-up
   `docs/goal_round10/README.md`; pre-registration `docs/goal_round10/preregistration.md`; code
@@ -15,8 +15,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Verification:** NIST 2015 no-signalling, pre-registered.
   - Independent G and Fisher tests reproduce NIST's diagnostics exactly (|Δz| ≤ 3 × 10⁻⁴, 120 cells).
   - Primary family (24 tests): one hit, XOR_2 Alice | a, z = 3.13 (p = 0.0017), not replicated in any other run.
-    Fisher combined p = 0.39. Null under the pre-registered rule.
-  - Bound: |δ| ≤ 0.8–2.0 % of the remote click probability, ≤ 2.3 × 10⁻⁸ bits/trial (≤ 2.2 × 10⁻³ bits/s).
+    Fisher combined p = 0.39. Owner review: the pre-registered rules covered neither this case nor its
+    opposite. "Stop" needed no family-wise hit; "continue" needed ≥ 2 runs. So the outcome is **undetermined**,
+    not a pre-defined null.
+  - Indicative pooled limit |δ| ≤ 0.8–2.0 % of the remote click probability. It is fixed-effect with a Wald
+    interval, and its mutual information assumes a uniform input, so it is not a rigorous capacity bound. The
+    XOR_2 shift alone exceeds it.
   - Post hoc: the XOR_2 shift persists across both time segments of that run; the cross-run heterogeneity test
     gives p = 0.12. Flagged, not claimed.
 - **Failed approach:** reading the trial totals from a fixed spreadsheet row. The layout differs between files, so
