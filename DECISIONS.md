@@ -4097,3 +4097,47 @@ CHANGELOG.md and edited the same TASKS.md line and docs/exotic_limits.md tables.
 #138 merged. Each needed a manual `origin/main` merge and another CI cycle.
 
 **Revisit if.** GitHub honours merge drivers in its mergeability check, or the field programme ends.
+
+## D-082 W3 short-event (t_E = 3 d) recovery study: frozen sample, loss diagnosis on dev only (2026-10-11)
+
+**Decision.** Owner directive V2.1, priority 1. The production chain (CHAIN_VERSION 2026-10-10.1, unchanged) runs
+2,000 W3 injections at t_E = 3 d (ρ = 0.01 and 0.1, LF magnitudes, seed 3003; no limit uses this seed) on the
+300 gb12 quiet carriers (`scripts/w3_short_te.py`, `results/w3_moa/short_te/`).
+- **Split.** Each injection is assigned dev or validation by the SHA-256 of its own inputs (event_id, t_E, ρ,
+  u0, t0, I_s) and the seed. This is independent of row order and of every outcome.
+- **Analysis.** The loss is diagnosed on dev only. For each flagged injection, count spike nights (injected flux
+  above `SPIKE_SIGMA` = 3 median errors) and umbra nights (injected flux below −3 median errors).
+- **Validation.** It has been read only for its baseline recovery counts. The stage-2 classifier uses it once,
+  as its final evaluation.
+
+**Alternatives rejected.**
+- A split keyed on the row index (the first version). `run_inject` collects rows with `imap_unordered`, so rows
+  come in completion order, and slow (flagged) injections cluster late. `/code-review` found that this split
+  was neither reproducible nor independent of the outcome: flagged injections divided 72/46, p ≈ 0.02.
+- crc32 % 2: it is an affine function of the input bits, not a random draw.
+- Re-using the production gb12 injections: only 23 flagged at t_E = 3 d, and they feed the published limits.
+- Relaxing `jackknife_nights` directly: the test exists because one bright night carried gb7-R-8-6-94052's
+  preference (w3-survey failed-approach rule).
+
+**Evidence.** Baseline recovery of flagged injections:
+- dev: 21 / 57 = 0.37 (Clopper–Pearson 95 % 0.24–0.51);
+- validation: 27 / 61 = 0.44 (0.32–0.58).
+
+First failing test on dev: `jackknife_nights` 14, `eclipse_dip` 12, others 10.
+
+Spike nights on dev:
+- **`eclipse_dip` losses (12):** 11 have ≤ 1 spike night, and 1 has spikes on both sides of the umbra. With the
+  peaks unsampled, these signals cannot be told from a flat dip in the data. This is a sampling limit, not a rule
+  defect.
+- **`jackknife_nights` losses (14):** 1–4 spike nights; 9 have spikes on both sides.
+- **Recovered (21):** 0–9 spike nights; 17 have spikes on both sides.
+
+The jackknife losses and the recoveries overlap in spike nights, so this proxy cannot separate a sampling
+limit from a rule loss for `jackknife_nights`. No bound on the rule-attributable loss is claimed. A first draft
+gave "≤ 8 %"; it is withdrawn: it rested on the row-order split and on a proxy that differs from the
+jackknife's own feature definition, |exotic − best ordinary model| > 3 median errors.
+
+**Revisit if.** Stage 2 re-vets the flagged dev injections and records the jackknife's own feature nights,
+dropped nights and ΔBIC. It then tries a night-robust likelihood term (a per-night systematic error instead of
+dropping nights), tuned on dev, checked for false positives against the real gb12 flags and the PSPL
+controls, and evaluated once on validation.
