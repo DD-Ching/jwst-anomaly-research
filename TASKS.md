@@ -9,8 +9,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
   all scans.
 
 ## Goal round 1 (owner brief 2026-10-11: contact and return over 20–100 ly; docs/goal_round1/)
-- Done: corrections, carried-wormhole accounting, v-causal calibration and data adequacy (public Bell data:
-  no discriminating power). PR left unmerged for the owner.
+- Done: corrections, carried-wormhole accounting, v-causal calibration and data adequacy (NIST 2015 cannot improve
+  the bipartite V bound; other datasets not assessed). PR left unmerged for the owner.
 - Next, by information per cost:
   1. Bancal configuration R: timing tolerance, noise and visibility threshold, and whether B, C and the receiver
      can be co-located (theory, no data).

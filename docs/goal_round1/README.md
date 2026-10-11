@@ -30,7 +30,7 @@ covers (Salart et al. 2008 Eqs. 2–3; Yin et al. 2013 Eq. 2; Cocciaro et al. 20
 | Bipartite: Bell violation persists at frame simultaneity | — | v-causal models with V < bound in the covered frames | anything about V > bound; controllability |
 | Bipartite: violation vanishes reproducibly at a fixed sidereal phase, not at a solar phase, on two baselines | a v-causal model with V near the bound in one frame (to be vetted against drifts) | QM as the complete description of that run | a usable channel |
 | Multipartite (Bancal configuration R, B and C timed at random, App. E v1): S > 7, as QM predicts (7.2014) | QM | **no-signalling** v-causal models at any finite V in that frame (Bancal's claim covers all finite v), given λ does not know the measurement timings (App. E) | signalling v-causal models: they reproduce S > 7 and must be caught through their marginals |
-| Multipartite: S ≤ 7 in R | a contradiction with QM, which must first be vetted as an artefact; or a model whose λ knows the timings | QM as the complete description | a channel |
+| Multipartite: S ≤ 7 in R | nothing by itself. It is an anomaly only if the state preparation, measurements, noise model and statistics are controlled well enough that QM predicts S > 7 for **that apparatus** (not the ideal 7.2014), and the shortfall is significant against that prediction. Then the candidates are an uncontrolled artefact, a model whose λ knows the timings (App. E), or a no-signalling v-causal model | nothing, unless the conditions just listed hold | a channel |
 | Multipartite: a three-party marginal depends on a remote setting (direct check) | controllable signalling at speed ≲ V | QM's no-signalling | a rate or practical interstellar geometry |
 
 ### 1.2 Bancal et al. 2012 (Nature Phys. 8, 867; arXiv:1110.3795): modified and completed
@@ -235,34 +235,64 @@ information?), a positive control (three published bounds) and a direct link to 
    - By Cocciaro's own argument (Eq. 6), the Salart and Yin windows should be doubled. That gives 3.2 × 10⁴ c and
      7.2 × 10³ c (Cocciaro Fig. 7 caption). The published values were reproduced as published.
 
-2. **Public NIST 2015 data has no discriminating power** for V. Shalm et al. 2015 (PRL 115, 250402) give:
+2. **The NIST 2015 public data cannot improve the bipartite bound on V.** That is the only dataset and the only
+   question assessed. Shalm et al. 2015 (PRL 115, 250402) give:
    - an Alice–Bob distance of 184.9 m (Fig. 4a);
    - a timing uncertainty of 3.7 ns (Table I margins, 63.5–25.7 ± 3.7 ns);
-   - a violation of only p = 2.5 × 10⁻³ (1 pulse) to 5.9 × 10⁻⁹ (5 pulses) over the whole dataset, which is about
-     2 days of runs.
+   - a violation of p = 2.5 × 10⁻³ (1 pulse) to 5.9 × 10⁻⁹ (5 pulses). Each Table I row is one run of about
+     30 min (1.77 × 10⁸ trials at 99,100 trials/s); the runs span 2015-09-18/19.
 
    The repository is public. It holds two-party time tags at 78.125 ps with a GPS PPS channel (100 ns jumps
    possible) and run start times to the minute (`File_Folder_Descriptions.pdf`; NIST licence: free use with
    attribution).
 
    The Alice–Bob detection offset t_AB is a fixed fibre-and-geometry delay that the paper does not give. Both photons
-   come from one pump pulse, so aggregating slots does not change it. Assuming a zero offset, which can only flatter
-   the data, the envelopes are:
+   come from one pump pulse, so aggregating slots does not change it.
 
-   | Case | Bound |
+   The numbers below are **estimates of the strongest lower bound on V such an analysis could reach, under the
+   listed assumptions.** They are not measurements of V, and not constraints anyone has derived from the data:
+   - "V" is the hypothetical influence speed.
+   - The bound is the experiment's sensitivity, i.e. what a null result would at best exclude.
+   - The real constraint from these data would be weaker, because the offset is unknown and nonzero.
+
+   | Case (each assumes a zero A–B offset, which can only flatter the data) | Lower bound reachable on V |
    |---|---|
-   | timing uncertainty 3.7 ns | V ≤ 1.7 × 10² c |
-   | time-tag floor 78 ps | V ≤ 7.9 × 10³ c |
-   | tag floor + rotation over one ~30 min run (Table I: 1.77 × 10⁸ trials at 99,100 trials/s gives the p = 5.9 × 10⁻⁹ result; ASSUMPTION: no shorter window is usable; CMB frame) | V ≤ 4.8 × 10³ c |
+   | timing uncertainty 3.7 ns | ≈ 1.7 × 10² c |
+   | time-tag floor 78 ps | ≈ 7.9 × 10³ c |
+   | tag floor + rotation over one ~30 min run (ASSUMPTION: no shorter window gives a usable violation; CMB frame) | ≈ 4.8 × 10³ c |
 
-   - Every envelope is ≥ 600× below the published 5 × 10⁶ c.
-   - The data is bipartite, so it cannot test the Bancal prediction at all.
+   - Every estimate is ≥ 600× below the bound already published from a dedicated experiment (Cocciaro 2018, about
+     5 × 10⁶ c).
+   - The data is bipartite, so it cannot test the multipartite Bancal prediction at all.
+   - **Scope of the conclusion.** It covers one dataset and one question (an improved bipartite V bound). The other
+     loophole-free tests were not assessed, and their geometries and assumptions differ (figures from memory, not
+     re-opened this round):
+     - Delft 2015: electron spins about 1.3 km apart, event-ready entanglement swapping, few trials;
+     - Vienna 2015: photons, about 60 m;
+     - Munich 2017: atoms, about 400 m;
+     - BIG Bell Test 2018: human-chosen settings.
+
+     All are bipartite, so none tests the multipartite prediction. Whether their timing could beat 5 × 10⁶ c was not
+     computed; their baselines and timing precisions make it unlikely [estimate, unverified]. The dedicated speed
+     tests differ again: Salart and Cocciaro left the locality and freedom-of-choice loopholes open, Cocciaro also
+     the detection loophole, and Yin assumed fair sampling (literature audit, §1).
    - A first draft of this argument used the slot spread as ρ. The independent review showed that is the wrong
      quantity. The conclusion is unchanged.
    - No scan was run, by design. Nothing was downloaded except the two description PDFs (0.45 MB).
 
-3. **Requirements for the goal** (frame = CMB, β = 1.23 × 10⁻³ [ASSUMPTION]; the budget is split equally between the
-   lab offset and the rotation residual):
+3. **Three different requirements, kept apart.**
+   - (a) **A bipartite speed bound** at a given V. The table below gives it. It can only exclude slower influences in
+     the covered frames, and it is not a communication test.
+   - (b) **A multipartite (Bancal configuration R) test.** S > 7 under conditions i–iii of App. E, with random B/C
+     timings. It needs no synchronisation, only a finite timing accuracy δ applied to the ordering conditions
+     (App. E), so it has no fs requirement of type (a). Its demands are a 4-qubit state with S > 7 after noise (gap
+     0.2014; Barnea Sec. IV calls this class fragile), continuous random timing, and the geometry of iii. Its outcome
+     concerns no-signalling v-causal models, not a channel.
+   - (c) **A working channel.** The communication specification (latency, rate, error) depends on the signalling
+     magnitude and the geometry. It is analysed in docs/goal_round2/README.md, not here.
+
+   Requirement (a) only (frame = CMB, β = 1.23 × 10⁻³ [ASSUMPTION]; the budget is split equally between the lab offset
+   and the rotation residual):
 
    | Target | V/c | ρ | window T | timing σ_t at 1.2 / 18 / 100 km |
    |---|---|---|---|---|
@@ -271,13 +301,13 @@ information?), a positive control (three published bounds) and a direct link to 
    | 100 ly, 1 s | 3.2 × 10⁹ | ≤ 1.6 × 10⁻¹⁰ | ≤ 3.5 ms | 0.6 / 9.5 / 53 fs |
    | 100 ly, 0.3 s | 1.05 × 10¹⁰ | ≤ 4.8 × 10⁻¹¹ | ≤ 1.1 ms | 0.2 / 2.9 / 16 fs |
 
-   - The gap to the best published bound is ×130 to ×2,100 in V.
+   - The gap to the best published bound is ×130 to ×2,100 in V. Reaching it would still only be requirement (a).
    - "Window" T is the half-width convention (Yin Eq. 5). If T is the acquisition time per measurement, Cocciaro's
      Eq. 6 halves it: 8.8, 2.6, 1.8 and 0.53 ms.
    - Statistics [estimate]: var(S) ≈ 16(1 − E²)/N with E = S/4, so a 5σ separation of S = 2.6 from 2 needs about
      650 coincidences per window. Windows at one sidereal phase recur every sidereal day, so they can be stacked.
-   - The multipartite test is harder. The Bancal gap (7.2014 − 7)/7 = 2.9 % is 0.069 of the CHSH relative gap, so it
-     needs ~200× more events at equal noise [estimate]. It also needs near-ideal 4-qubit fidelity (Barnea Sec. IV;
+   - For (b): the Bancal gap (7.2014 − 7)/7 = 2.9 % is 0.069 of the CHSH relative gap, so it needs ~200× more events
+     at equal noise [estimate, a rough proxy]. It also needs near-ideal 4-qubit fidelity (Barnea Sec. IV;
      Li et al. 2026).
 
 **Limitations**
@@ -325,7 +355,7 @@ information?), a positive control (three published bounds) and a direct link to 
    - find the noise threshold of the 4-qubit (or cluster-state) witness at a stated visibility;
    - check whether R can be laid out with B, C and the receiver co-located, which an interstellar channel needs.
 
-   Only then does an experimental design make sense. Two-party public Bell data cannot help.
+   Only then does an experimental design make sense. Two-party Bell data cannot test it.
 2. **Carried wormhole.** The accounting is closed for one link. The open premise is a short throat, which
    Maldacena–Milekhin–Popov say "is not allowed by the Einstein equations combined with the achronal average null
    energy condition". The question worth effort is candidate C: is there a gravity theory with R_kk < 0 on a

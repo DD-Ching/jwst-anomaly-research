@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: Goal round 1: corrections, carried-wormhole accounting, v-causal bounds; public Bell data has no discriminating power
+## 2026-10-11: Goal round 1: corrections, carried-wormhole accounting, v-causal bounds; NIST 2015 data cannot improve the bipartite V bound
 - Owner brief (contact and fast return over 20–100 ly). Full write-up: `docs/goal_round1/README.md`.
 - Corrections to the previous chat assessment, from full texts:
   - "Raising the hidden-influence speed bound closes the communication path" is withdrawn. It only excludes slower
@@ -19,9 +19,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - v-causal bounds (`scripts/goal_vcausal_bounds.py`):
   - **Positive control:** reproduces Salart 5.4 × 10⁴, Yin 1.38 × 10⁴ and Cocciaro 5 × 10⁶ c from each paper's
     parameters.
-  - **Data adequacy:** public NIST 2015 data allows at most 1.7 × 10²–7.9 × 10³ c (zero offset assumed) and is
-    bipartite, so it has no discriminating power (≤ 4.8 × 10³ c for a 30 min run in the CMB frame). Not
-    scanned.
+  - **Data adequacy:** public NIST 2015 data is
+    bipartite. Reachable lower-bound strength under zero-offset assumptions: ≈ 1.7 × 10²–7.9 × 10³ c, against
+    5 × 10⁶ c published. So it cannot improve the bipartite bound; other datasets were not assessed. Not scanned.
   - **Requirements:** 20 ly / 1 s one-way needs V ≥ 6.3 × 10⁸ c, i.e. lab simultaneity ρ ≤ 7.9 × 10⁻¹⁰
     (48 fs at 18 km) and windows ≤ 18 ms.
 - **Failed approach (rule):** the first NIST envelope used the aggregated-slot spread as ρ. That is the wrong

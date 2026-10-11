@@ -4125,8 +4125,9 @@ controls, and evaluated once on validation.
 - Before any analysis of Bell-test data for preferred-frame influences, (i) reproduce the published bipartite
   bounds from each paper's parameters (positive control) and (ii) compute the best bound the candidate dataset
   could give. Scan only if (ii) exceeds the published bounds.
-- For NIST 2015, (ii) gives at most 1.7 × 10²–7.9 × 10³ c, against 5 × 10⁶ c published, and the data is bipartite.
-  No scan.
+- For NIST 2015, (ii) gives a reachable lower-bound strength of only ≈ 1.7 × 10²–7.9 × 10³ c under zero-offset
+  assumptions, against 5 × 10⁶ c published, and the data is bipartite. No scan. Other loophole-free datasets were
+  not assessed.
 - Interstellar-channel claims for v-causal models need the multipartite (Bancal configuration R) test. It has
   never been run, and its theory items come first.
 - The carried-wormhole accounting is kept as bookkeeping only: it assumes a short rigid throat, which is the

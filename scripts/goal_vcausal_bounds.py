@@ -111,7 +111,8 @@ def calibration() -> list[dict]:
 
 
 def nist_best_case() -> list[dict]:
-    """Envelopes of what the NIST 2015 data could bound, each assuming a zero lab offset t_AB
+    """Sensitivity estimates (the strongest lower bound on V an analysis could reach, not a measured
+    constraint) for the NIST 2015 data, each assuming a zero lab offset t_AB
     (unknown; any real offset only weakens them): (i) the stated 3.7 ns timing uncertainty,
     (ii) the 78 ps time-tag floor, (iii) the rotation residual of the shortest window in which the
     violation is significant (one ~30 min run; CMB frame), with the tag floor as rho."""
