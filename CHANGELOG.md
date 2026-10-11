@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 7: the Krasnikov tube's achronal and shortcut rays carry exactly zero ANEC; G2 demoted, G1 method set out
+- Owner brief: rescope round 6's evidence, decide G2 on the complete geometry, assess G1 for feasibility, scope stop
+  conditions. Write-up `docs/goal_round7/README.md`; code `scripts/goal_krasnikov_g2.py`; results
+  `results/goal_round7/`. Round-6 text corrected in place.
+- **Rescoped:**
+  - Round 6's curved-QEI numbers are a conditional estimate (derivative stand-in, tails, unknown a and b, no
+    second-order remainder bound), not a verified upper bound.
+  - Fewster–Osterbrink give arbitrarily negative energy over any bounded region for ξ > 0 on a fixed background.
+    Only a self-consistent tube source is "not found".
+- **New [derived], complete ER tube with η < 1:**
+  - u = t − x never decreases along causal curves, so every outgoing ray is a complete achronal null geodesic.
+  - R_xx ≡ 0 for any k(u, x, ρ).
+  - The region where k = k(x) is flat, so shortcut rays used after completion run through exact Minkowski space.
+  - ANEC = 0 on both families: no AANEC conflict, and Olum's theorem does not apply. Wall-, junction- and
+    front-crossing geodesics are undecided.
+- **G1:** ε_sc = l_P √(8πNF(η)) by dimensional analysis. DeWitt–Schwinger cannot rule out light fields. A
+  planar-wall t-splitting mode sum (Levi–Ori) is feasible at medium cost; not started.
+- **Failed approach (rule):** do not infer negative ANEC on a "fastest" ray from Olum's defocusing when the ray
+  bundle crosses only flat, parallel-ray regions. Condition 1 and the generic condition fail there.
+
 ## 2026-10-11: Goal round 6: the Krasnikov tube's QI bound holds for the "wait ≤ 1 yr" target; no field and state is known to source it
 - Owner brief: check the tube's physical source against Everett–Roman, Krasnikov 2003 and later work; no new
   candidates. Write-up `docs/goal_round6/README.md`; code `scripts/goal_krasnikov_source.py`; results

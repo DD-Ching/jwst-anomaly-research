@@ -4251,3 +4251,27 @@ S > 7 or setting dependence in R trials.
 - A QEI or a source construction for non-minimally coupled or interacting fields permits sustained macroscopic
   negative density.
 - G1 or G2 is computed.
+
+## D-TBD Goal round 7: pause the Krasnikov line for research value; G1 stays a ready, well-posed unit (2026-10-11)
+
+**Decision (proposal).**
+- G2's two natural targets are settled with ANEC exactly 0: the achronal outgoing rays and the post-completion
+  shortcut rays. The rest of G2, wall- and front-crossing geodesics, is undecided and demoted.
+- G1 reduces to one pure number F(η) per field (ε_sc = l_P √(8πNF)).
+- Pause the line for research value, not as a statement of physical impossibility.
+
+**Scope of stop conditions.**
+- A G1 failure rules out only the fields and assumptions computed.
+- An AANEC conflict is conditional on the conjecture.
+
+**Alternatives rejected.**
+- Calling round-6 QEI numbers a verified bound.
+- Inferring negative ANEC on flat-core shortcut rays.
+- Using DeWitt–Schwinger to exclude light fields.
+
+**Evidence.** docs/goal_round7/README.md §§1–6; `results/goal_round7/krasnikov_g2.json`.
+
+**Revisit if.**
+- The owner wants the G1 mode sum.
+- A wall-crossing geodesic is shown to be complete, achronal and ANEC-negative.
+- A second-order curved-QEI remainder bound appears.
