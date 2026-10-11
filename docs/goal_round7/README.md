@@ -1,4 +1,4 @@
-# Goal round 7: rescoped Krasnikov evidence, a decided part of G2, and the G1 method
+# Goal round 7: rescoped Krasnikov evidence, the axial-ray ANEC result for smooth profiles, and the G1 method
 
 Owner brief (2026-10-11). Continue from #158:
 1. Separate "a theorem of the right type exists" from "this model satisfies all its premises".
@@ -67,88 +67,125 @@ read here does not supply.
 
 ## 3. G2: ANEC on the tube's achronal and shortcut rays
 
-**Geometry specified.** The complete ER tube (Eqs. 12–13): the front θ(t − x − ρ) laid at light speed, both end
-caps, and walls of width ε.
+**Geometry specified.** The ER tube (Eqs. 12–13): the front θ(t − x − ρ) laid at light speed, both end caps, and
+walls of width ε.
 
 k = 1 − η θ(ρ_max − ρ) θ(t − x − ρ)[θ(x) − θ(x + ε − D)]
 
-The bracket lies in [0, 1] for a monotone step, and η < 1, so k ≥ 1 − η > 0. Two idealisations are covered:
+The bracket lies in [0, 1] for a monotone step, and η < 1, so k ≥ 1 − η > 0. Two idealisations:
 - the **built** channel (with the front);
 - the **eternal** tube (no front factor).
 
-Two step functions are used:
+Steps:
 - ER Eq. 7: compact, exactly 0 or 1 outside [0, ε]. The code uses a C∞ smoothstep.
-- ER's own Eq. 35: a tanh step whose tails reach everywhere.
+- ER's own Eq. 35: a tanh step with tails.
 
 The metric factorises: ds² = −(dt − dx)(dt + k dx) + dρ² + ρ²dφ² [lit: ER Eq. 4]. With u = t − x it becomes
 ds² = −du² − (1 + k) du dx + dρ² + ρ²dφ².
 
-**Result A: outgoing rays.** Any k(u, x, ρ), any step, built or eternal [derived; symbolic].
+**Axis regularity: the ER metric as written is not smooth on the axis** [derived; owner's check, revised in
+round 7]. A function of ρ alone is differentiable at the axis, in Cartesian (y, z), only if its ρ-derivative
+vanishes there. It is C^n only if it is a C^n function of ρ² = y² + z².
+- **ER's tanh radial factor.** k_ρ(0) = η θ′(R) ≠ 0. For η = 0.999 and R = 10ε, k_ρ(0) = 7.87544 × 10⁻³³/ε, so
+  ∂_y k jumps by 2k_ρ(0) across the axis.
+  - The metric is only Lipschitz on the axis, and the general null curvature keeps a term
+    −(1 + k)k_ρ/(2ρk²), which diverges like 1/ρ there.
+  - The finite on-axis values reported before for the tanh profile (e.g. −6.30665 × 10⁻²⁶/ε²) are **withdrawn**:
+    the axis expansion k = k0 + k2ρ²/2 + … does not apply to that profile.
+- **The front factor θ(t − x − ρ).** Even with the compact step, it has ∂_ρ = −θ′(t − x) ≠ 0 on the axis while the
+  front crosses it (0 < t − x < ε). The code finds −2.0/ε at t − x = ε/2 and 0 once the front has passed.
+  - So the **built** ER geometry is not C¹ on the axis segment {ρ = 0, 0 < t − x < ε, 0 < x < D}.
+  - Until that set is regularised, which would be a **model modification** and is not done here, claims about a
+    "complete smooth geometry" for the built tube are withdrawn. Geodesic statements below are limited to
+    geodesics that avoid that set.
+- **What is smooth:**
+  - the compact radial step with R > ε, which is identically 1 near the axis;
+  - radial factors that are smooth functions of ρ², such as exp[−(ρ/R)²] and exp[−(ρ/R)⁴] (§3, Result C checks).
+
+**Result A: outgoing rays** [derived; symbolic, any k(u, x, ρ)].
 - **Achronal.** For a future causal vector, (dt − dx)(dt + k dx) ≥ dρ² + ρ²dφ² ≥ 0. With k > 0 both factors are
-  ≥ 0, so du ≥ 0, strictly for timelike vectors. u is a null coordinate (g^uu = 0), not a time function, but it
-  never decreases along causal curves. So each line L = {u, ρ, φ fixed} is **achronal**.
-  - Monte Carlo check: dx/dt stays below 1 for random causal vectors.
-- **Complete null geodesics.** g_xx = 0, the only nonzero Γ^a_xx is Γ^x_xx = ∂_x k/(1 + k), and the affine
-  parameter is dλ ∝ (1 + k)dx with 1 + k ∈ [2 − η, 2].
-- **R_xx ≡ 0, and the screen tidal tensor R_AxBx (A, B ∈ ρ, φ) vanishes.** The rays are shear-free, carry exactly
-  zero ANEC, and fail the generic condition. This is consistent with Hawking–Ellis: a complete achronal null
-  geodesic cannot satisfy both NEC and the generic condition.
+  ≥ 0, so du ≥ 0, strictly for timelike vectors. u is a null coordinate (g^uu = 0), not a time function.
+  - The argument uses only the pointwise cone, so it holds for piecewise-C¹ timelike curves even where the metric
+    is merely continuous.
+  - Each line L = {u, ρ, φ fixed} is therefore **achronal** as a point set.
+- **Complete null geodesics.** Where the metric is smooth along L, g_xx = 0, the only nonzero Γ^a_xx is
+  Γ^x_xx = ∂_x k/(1 + k), and dλ ∝ (1 + k)dx with 1 + k ∈ [2 − η, 2].
+  - Scope: lines with ρ > 0, and axis lines where k is smooth at the axis.
+  - Excluded: built-tube axis lines with 0 < u < ε, which lie in the front–axis set.
+- **R_xx ≡ 0, and the screen tidal tensor R_AxBx (A, B ∈ ρ, φ) vanishes** for any k(u, x, ρ). The rays are
+  shear-free, carry ANEC = 0, and fail the generic condition. This is consistent with Hawking–Ellis.
 
 **Result B: core shortcut rays with the compact step** [derived].
-- Wherever k depends on x alone, the spacetime is flat (symbolic). With the compact step this is the core
-  {ρ < ρ_max − ε, t − x − ρ > ε}, both caps included, plus the exterior.
-- **They are the fastest −x paths.** For a future causal vector with dx < 0, dt − dx > 0 forces
-  dt ≥ k(t, x, ρ)|dx|. For the ER form, k(t, x, ρ) ≥ k_ax(x) := 1 − η[θ(x) − θ(x + ε − D)], with equality in the
-  core.
+- Wherever k depends on x alone, the spacetime is flat. With the compact step and R > ε this is the core
+  {ρ < R − ε, t − x − ρ > ε}, caps included, plus the exterior. It is smooth, including at the axis.
+- **Fastest −x paths.** For a future causal vector with dx < 0, dt ≥ k(t, x, ρ)|dx| ≥ k_ax(x)|dx|, where
+  k_ax(x) = 1 − η[θ(x) − θ(x + ε − D)]. Equality holds in the core.
 - **They stay in the core.** An incoming ray at fixed (ρ, φ) has d(t − x)/dt = 1 + 1/k > 0. If it enters at x = D
-  after completion (t − D − ρ > ε) with ρ < ρ_max − ε, it never meets the front or the walls.
-- **Numerical check:** 64 rays (η = 0.999, D = 400ε, ρ_max = 50ε) find ∂_ρ k = ∂_u k = 0 along every ray, with
-  transit time 11.4ε against 410ε for light outside.
+  after completion (t − D − ρ > ε) with ρ < R − ε, it never meets the front or the walls.
+- **Numerical check:** 64 rays (η = 0.999, D = 400ε, R = 50ε) find ∂_ρ k = ∂_u k = 0 along every ray, with
+  transit 11.4ε against 410ε for light outside.
   - Positive control: rays launched before completion register ∂k = 2.0/ε, with transit 214–238ε.
-- **So their ANEC is exactly 0, but this is a marginal case.** It needs a step that is exactly 1 inside the core.
-  Oblique rays can reach the wall and are not covered.
+- **Their ANEC is exactly 0, a marginal case** that depends on a step that is exactly 1 in the core.
 
-**Result C: the axial shortcut ray, for any step monotone in ρ** [derived; symbolic, with numerical checks].
-Premises:
+**Result C: the axial shortcut ray, eternal tube, radial factor smooth at the axis** [derived; symbolic, with
+numerical checks].
+
+Premises (required regularity stated):
 - (P1) η < 1.
-- (P2) k = k(x, ρ) along the ray. This holds in the eternal tube; in the built tube it needs a compact front and
-  entry after completion.
-- (P3) The axis minimises k(x, ·) for every x. This is automatic for ER Eq. 12 with any step that is monotone in ρ.
+- (P2) Eternal tube: k = k(x, ρ), so ∂t is Killing.
+  - The built tube would also need its front regularised near the axis, which would be a model modification
+    (not done).
+- (P3) k = K(x, ρ²) with K ∈ C⁴ in both arguments: the metric is C⁴ and the curvature C², smooth at the axis.
+  The exterior is asymptotically flat (k → 1 as |x| → ∞, with ∫|∂²_ρk(x, 0)|dx < ∞).
+- (P4) The axis minimises k(x, ·) for every x. For k = 1 − η g(ρ) B(x) with B ≥ 0, this means g is non-increasing.
 
 Then:
-- **Achronal.** w := t + ∫k(x, 0)dx never decreases along causal curves. For dx ≤ 0: dt + k(x, ρ)dx ≥ 0 and
-  k(x, 0) ≤ k(x, ρ). For dx > 0 it holds trivially. w increases strictly along timelike curves.
-  - Monte Carlo check over the whole tube: min dw/|v| = +0.002, for both steps.
-  - The axial incoming ray keeps w constant. It is a null geodesic: the radial acceleration ∝ ∂_ρ k vanishes on
-    the axis, and the ρ = 0 plane is fixed by the rotations. It is complete, so it is a **complete achronal null
-    geodesic**.
-- **Its null curvature:** R_ab l^a l^b = −(1 + k0) k2 / k0² (symbolic), with k0 = k(x, 0) and k2 = ∂²_ρ k(x, 0).
-  - P3 gives k2 ≥ 0, so **R_ll ≤ 0 along the whole ray**. ANEC is < 0 unless k2 = 0 almost everywhere on the axis.
-  - Compact step (ρ_max ≥ ε): k2 ≡ 0, ANEC = 0, marginal.
-  - ER's tanh step (Eq. 35), mid-tube, in units of 1/ε²:
+- **Achronal.** w := t + ∫k(x, 0)dx never decreases along causal curves (cone inequality plus P4). It increases
+  strictly along timelike curves.
+  - Monte Carlo check of the cone inequality: min dw/|v| = +0.002.
+  - The axial incoming ray keeps w constant. It is a null geodesic: the radial acceleration ∝ ∂_ρ k = 0 on the
+    axis by P3, and the ρ = 0 plane is the fixed set of the rotations. With P3 it is complete, so it is a
+    **complete achronal null geodesic**.
+- **Local curvature, not yet ANEC.** The general incoming R_ll, normalised with l^t = 1, is
+  −[(1 + k)k_ρρ − k_ρ²]/(2k²) − (1 + k)k_ρ/(2ρk²). Under P3, k_ρ/ρ → k2 := ∂²_ρk(x, 0), so on the axis
+  R_ll → −(1 + k0)k2/k0², with k0 = k(x, 0). P4 gives k2 ≥ 0.
+- **Affine normalisation and ANEC.** Normalise to unit exterior Killing energy, E = −g(∂t, l) = 1:
+  - l = (2k0/(1 + k0), −2/(1 + k0), 0, 0); checked symbolically: g(l, l) = 0 and E = 1.
+  - This is the affine tangent, because ∂t is Killing (P2). Then R_ab l^a l^b = −4k2/(1 + k0) and
+    dλ = −(1 + k0)dx/2.
+  - So **ANEC = ∫R_ab l^a l^b dλ = −2∫k2(x)dx**. It converges under P3's integrability condition and is ≤ 0, with
+    equality iff k2 = 0 almost everywhere on the axis.
+- **Checks on two smooth radial factors** (mathematical examples, not source models; η = 0.999, R = 10ε,
+  D = 400ε, compact box B(x)):
 
-    | η | ρ_max = 3ε | 10ε | 50ε |
-    |---|---|---|---|
-    | 0.95 | −5.3 × 10⁻⁵ | −2.5 × 10⁻²⁹ | −2.7 × 10⁻¹⁶⁸ |
-    | 0.999 | −0.13 | −6.3 × 10⁻²⁶ | −6.7 × 10⁻¹⁶⁵ |
+  | Radial factor g(ρ) | k2 (mid-tube) | −2∫k2 dx | Direct ∫R_ll dλ at ρ = 10⁻⁵R | R_ll at ρ = R/2 (l^t = 1) |
+  |---|---|---|---|---|
+  | exp[−(ρ/R)²] | 0.020/ε² > 0 | −15.944/ε | −15.944/ε (agrees to 2 × 10⁻⁷) | −0.23/ε² |
+  | exp[−(ρ/R)⁴] | 0 | 0 | −6.4 × 10⁻⁹/ε (→ 0 as ρ²) | −4.6/ε² |
 
-    These values are exponentially small but strictly negative.
+  The second example shows that k2 = 0 needs neither a compact step nor a flat core: the curvature off the axis
+  is nonzero.
 
-**What this decides** (conditional on the self-consistent AANEC conjecture of Graham–Olum, which is not a theorem):
-- An eternal tube, or a built one with a compact front, in class P1–P3, can be self-consistent only if
-  **T_ab l^a l^b = 0 along the entire axis** (k2 ≡ 0).
-  - ER's own tanh profile fails this.
-  - The compact-step profile meets it only marginally.
-  - Any semiclassical source whose null energy on the axis is negative anywhere, while the axis stays the fastest
-    line, would conflict with the conjecture.
-- Round 6's inference ("negative ANEC on an achronal shortcut ray via Olum") is thus **right in generic cases,
-  wrong only in the marginal flat-core case**. Round 6 is annotated accordingly.
+**What this decides** (three kinds of statement, kept separate):
+- **Geometry, recomputable without any conjecture:**
+  - Under P1–P4 the axial shortcut ray is complete and achronal, with ANEC = −2∫k2 dx ≤ 0.
+  - Outgoing rays (Result A) have ANEC = 0.
+  - The ER tanh profile and the built front are not smooth on the axis, so these statements do not apply to them
+    as written.
+- **Conditional on Graham–Olum's self-consistent AANEC conjecture** (not a theorem): a self-consistent eternal tube
+  satisfying P1–P4 needs k2 = 0 almost everywhere on the axis, i.e. null energy T_ll = 0 on the axis. Equivalently,
+  if a self-consistent source keeps the axis as the fastest line, it cannot have negative null energy anywhere on
+  it.
+- **Experimentally testable predictions:** none. Nothing here predicts a laboratory or astronomical observable.
 
 **What it does not decide:**
-- Profiles where the axis is not the fastest line for some x (k2 < 0 there, i.e. positive null energy on the axis).
-  The fastest rays are then elsewhere.
-- The built tube with a tailed front (P2 fails).
+- Profiles where the axis is not the fastest line.
+- Any regularised built tube (a model modification).
+- Profiles that are not smooth at the axis.
 - Oblique wall- and front-crossing geodesics, whose achronality is not determined.
+
+Round 6's inference ("negative ANEC on an achronal shortcut ray via Olum") holds under P1–P4 whenever k2 ≠ 0 on a
+set of positive measure. It fails in the k2 ≡ 0 cases, which include, but are not limited to, flat cores.
 
 ## 4. G1: is the source computation feasible, and what would it decide?
 
@@ -201,39 +238,42 @@ What this means:
 
 - **G1 failing** (N F ≲ 1 for the computed fields) would rule out only those free fields, under the stated state,
   renormalisation and planar-wall assumptions.
-- **An AANEC conflict** (§3: the axial ray of any P1–P3 tube with k2 ≠ 0) limits the tube only if the
+- **An AANEC conflict** (§3: the axial ray of an eternal P1–P4 tube with k2 ≠ 0) limits the tube only if the
   self-consistent AANEC conjecture holds.
 - **Pausing for low research value** is a resource decision. It is not a statement that the tube is physically
   impossible.
 
 ## 6. Answers
 
-**New, testable physical judgement** [derived; symbolic plus numerical checks]:
-- In the Everett–Roman tube with η < 1 (eternal, or built with a compact front), take any step that is monotone in
-  ρ. Then the axial shortcut ray is a **complete achronal null geodesic**.
-- Its null curvature is R_ll = −(1 + k0)k2/k0² ≤ 0, so its ANEC integral is negative unless ∂²_ρ k = 0 along the
-  whole axis.
-- The outgoing rays are achronal with ANEC exactly 0.
-- **Consequence, conditional on the self-consistent AANEC conjecture:** a self-consistent source must make the
-  null energy T_ll vanish along the entire axis, or make the axis not the fastest line. ER's own tanh profile
-  violates this; a compact flat-core profile meets it only marginally.
-- **How to test it:**
-  - recompute R_ll on the axis for another profile;
-  - find a timelike curve with Δw < 0 under P1–P3;
-  - or show the conjecture fails.
+**What this round adds that can be checked** [derived; symbolic plus numerical checks]:
+- **Geometry, valid without any conjecture:**
+  - In the eternal Everett–Roman-type tube with η < 1, take a radial factor that is smooth at the axis (P3) and
+    makes the axis the fastest line (P4). Then the axial shortcut ray is a complete achronal null geodesic.
+  - With unit exterior Killing energy, its ANEC integral is exactly −2∫∂²_ρk(x, 0)dx ≤ 0.
+  - Outgoing rays are achronal and shear-free, with ANEC = 0.
+  - ER's own tanh profile, and its built front, are not smooth on the axis (k_ρ(0) = 7.87544 × 10⁻³³/ε for
+    η = 0.999, R = 10ε). The axis statements do not apply to them until they are regularised, which would be a
+    model modification.
+- **Conditional on the self-consistent AANEC conjecture:** a self-consistent source of such a tube needs zero
+  null energy along the axis, or an axis that is not the fastest line.
+- **Experimentally testable predictions:** none.
+- **How to check it:**
+  - recompute ∂²_ρk on the axis for another smooth profile;
+  - find a timelike curve with Δw < 0 under P1–P4;
+  - or settle the conjecture.
 
-**Does it change the research decision?** Yes, in two ways.
-- G2 is no longer a cheap way to *exclude* the tube, but it is not idle either. It turns into a sharp necessary
-  condition: on-axis T_ll = 0. That condition joins G1: any G1 computation must also report the sign of ⟨T_ll⟩ on
-  the axis, which needs the cylindrical problem rather than the planar limit.
-- A source passing G1 (large enough N F) would still face this axis condition, which looks like a fine-tuning
-  requirement along 20–100 ly. That lowers the expected value of G1 further.
+**Does it change the research decision?** Partly.
+- G2 becomes a necessary condition, conditional on AANEC: on-axis T_ll = 0. It is not an exclusion.
+- Any future G1 computation should also report the sign of ⟨T_ll⟩ on the axis, which needs the cylindrical
+  problem.
+- **Retracted:** the earlier remark that this condition is a "fine-tuning requirement along 20–100 ly". No
+  perturbation analysis supports it. The exp[−(ρ/R)⁴] example satisfies k2 = 0 with a curved core, and how a
+  self-consistent source would respond near the axis has not been computed.
 
-**Proposal for the owner.**
-- Pause the Krasnikov line for research value. Its numbers (≥ 10³⁸ M☉, Planck-thin walls on the one-loop scale)
-  and the on-axis AANEC condition make any engineering use remote.
-- Keep G1, with the axis-sign output, as a well-posed unit.
-- The pause is not a claim of physical impossibility. The AANEC condition is conditional on a conjecture.
+**Status (owner decision 2026-10-11).**
+- This specific Krasnikov model (ER metric, η < 1) is **paused at "no self-consistent physical source found"**.
+- The G1 method draft (§4) is kept. No large computation is started.
+- The pause is not a claim of physical impossibility, and the AANEC condition is conditional on a conjecture.
 
 ## 7. Bookkeeping
 
@@ -241,6 +281,9 @@ What this means:
   Levi–Ori abstract (arXiv:1503.02810; method only, not relied on for any result).
 - **Independent review** (21 findings in round 6; 12 in this round) applied. Its main finding: "exactly zero
   ANEC" held only for compact steps. That led to Result C.
+- **Owner review (2026-10-11):** the axis regularity of the tanh profile and of the front. Result C is now
+  restricted to smooth radial factors in the eternal tube, the finite tanh axis values are withdrawn, and the
+  normalised ANEC cross-check and the two smooth examples are added.
 - **Not covered:**
   - profiles where the axis is not fastest, tailed fronts, and oblique wall- and front-crossing geodesics (§3);
   - the second-order QEI remainder (§1);

@@ -17,12 +17,18 @@ Checked here [derived]:
    along causal curves (u is a null coordinate, not a time function).
 2. Where k depends on x alone the spacetime is flat. With the compact step this is the core
    {rho < rho_max - eps, t - x - rho > eps} plus the exterior.
-3. Axial incoming ray. For k(x, rho) (eternal tube, or after completion with the compact front),
-   w = t + int k(x, 0) dx never decreases along causal curves if the axis minimises k(x, .) for
-   every x (true for ER Eq. 12 with any step that is monotone in rho). The axial ray keeps w
-   constant, so it is a complete achronal null geodesic. On it R_ll = -(1 + k0) k2 / k0^2 with
-   k0 = k(x, 0), k2 = d^2 k / d rho^2 (x, 0) >= 0: its ANEC integral is <= 0, and < 0 unless k2
-   vanishes along the whole axis (compact step: 0, a marginal case; tanh step: < 0).
+3. Axis regularity. ER's radial factor theta(R - rho) with the tanh step has k_rho(0) != 0, and
+   the front factor theta(t - x - rho) has d/d rho != 0 on the axis while the front crosses it
+   (0 < t - x < eps). Both are kinks in Cartesian coordinates: the metric is not C^1 there. The
+   axis results below therefore need a radial factor smooth at the axis, k = K(x, rho^2) with K
+   at least C^2 (C^4 for the curvature to be C^2), and exclude the front-crossing set.
+4. Axial incoming ray, eternal tube, k = K(x, rho^2) with the axis minimising k(x, .) for every x:
+   w = t + int k(x, 0) dx never decreases along causal curves, so the axial ray is a complete
+   achronal null geodesic. With the affine tangent of unit exterior Killing energy,
+   l = (2 k0 / (1 + k0), -2 / (1 + k0), 0, 0), R_ab l^a l^b = -4 k2 / (1 + k0) and
+   d lambda = -(1 + k0) dx / 2, so ANEC = -2 int k2(x) dx (k2 = d^2 k / d rho^2 on the axis >= 0).
+   Checked on two smooth radial factors: exp(-(rho/R)^2) (k2 > 0, ANEC < 0) and exp(-(rho/R)^4)
+   (k2 = 0, ANEC = 0, curved off the axis). These are mathematical checks, not source models.
 """
 
 from __future__ import annotations
@@ -222,7 +228,8 @@ def early_rays(p: Params = P) -> dict:
 @lru_cache(maxsize=1)
 def axis_null_ricci() -> dict:
     """Incoming null direction l = (1, -1/k, 0, 0) for k = k(x, rho): R_ab l^a l^b, its axis limit
-    with k = k0(x) + k2(x) rho^2 / 2 + ..., and the radial acceleration of the curve."""
+    with k = k0(x) + k2(x) rho^2 / 2 + ... (valid only if k is a smooth function of rho^2, i.e.
+    smooth at the axis; not for the ER tanh profile), and the radial acceleration of the curve."""
     t, x, rho, phi = sp.symbols("t x rho phi", real=True)
     k = sp.Function("k")(x, rho)
     xs = [t, x, rho, phi]
@@ -249,21 +256,97 @@ def axis_null_ricci() -> dict:
     }
 
 
-def axis_anec_density(eta: float, rho_max_over_eps: float, step: str) -> str:
-    """R_ll (l^t = 1) on the axis at mid-tube, -(1 + k0) k2 / k0^2, in units of 1/eps^2, for the
-    eternal tube. Compact step with rho_max >= eps: theta is identically 1 near the axis, so k2 = 0.
-    Tanh step (ER Eq. 35): theta(z) = (tanh y + 1) / 2 with y = 2 (2 z - 1), so
-    theta'' = -16 sech^2(y) tanh(y) and k2 = -eta theta''(rho_max) > 0 (evaluated in mpmath; the
-    tail is ~exp(-8 rho_max / eps))."""
+def radial_derivative_at_axis_tanh(eta: float, r_over_eps: float) -> str:
+    """k_rho(0) for ER's tanh radial factor, k = 1 - eta theta(R - rho) (mid-tube, B = 1):
+    k_rho(0) = eta theta'(R) = eta 2 sech^2(y) / eps with y = 2 (2 R / eps - 1). Nonzero, so
+    k(sqrt(y^2 + z^2)) has a kink on the axis: its Cartesian y-derivative jumps by 2 k_rho(0)."""
     import mpmath as mp
 
-    if step == "compact":
-        return "0" if rho_max_over_eps >= 1 else "undefined (rho_max < eps)"
     mp.mp.dps = 60
-    y = 2 * (2 * mp.mpf(rho_max_over_eps) - 1)
-    k0 = 1 - eta * (mp.tanh(y) + 1) / 2
-    k2 = 16 * eta * mp.sech(y) ** 2 * mp.tanh(y)
-    return mp.nstr(-(1 + k0) * k2 / k0**2, 6)
+    y = 2 * (2 * mp.mpf(r_over_eps) - 1)
+    return mp.nstr(eta * 2 * mp.sech(y) ** 2, 6)
+
+
+def front_axis_derivative(t_minus_x_over_eps: float) -> float:
+    """d/d rho of the front factor theta(t - x - rho) at rho = 0 (compact step, eps = 1): nonzero
+    while the front crosses the axis (0 < t - x < eps): a kink there in Cartesian coordinates."""
+    h = 1e-6
+    return float(
+        (theta(t_minus_x_over_eps - h, 1.0) - theta(t_minus_x_over_eps + h, 1.0)) / (2 * h)
+    )
+
+
+@lru_cache(maxsize=1)
+def axial_normalisation() -> dict:
+    """Eternal tube, axis, k0 = k(x, 0), k2 = d^2k/drho^2(x, 0) (k smooth at the axis). Affine
+    tangent of the incoming axial ray with exterior Killing energy E = -g(d_t, l) = 1:
+    l = (2 k0 / (1 + k0), -2 / (1 + k0), 0, 0). Returns g(l, l), E, R_ab l^a l^b, d lambda / dx."""
+    k0, k2 = sp.symbols("k0 k2", positive=True)
+    lt, lx = 2 * k0 / (1 + k0), -2 / (1 + k0)
+    g = sp.Matrix([[-1, (1 - k0) / 2], [(1 - k0) / 2, k0]])
+    lv = sp.Matrix([lt, lx])
+    norm = sp.simplify((lv.T * g * lv)[0])
+    energy = sp.simplify(-(sp.Matrix([1, 0]).T * g * lv)[0])
+    rll_unit = -(1 + k0) * k2 / k0**2  # R_ll for l^t = 1 (axis_null_ricci)
+    rll = sp.simplify(rll_unit * lt**2)
+    dlam_dx = sp.simplify(1 / lx)
+    return {
+        "g_ll": str(norm),
+        "killing_energy": str(energy),
+        "R_ll_affine": str(rll),
+        "dlambda_dx": str(dlam_dx),
+        "anec_integrand_per_dx": str(sp.simplify(rll * sp.Abs(dlam_dx))),
+    }
+
+
+def _rll_general(k, k1, k2, rho):
+    """General incoming R_ll (l^t = 1) for k = k(x, rho), keeping the k_rho / rho term."""
+    return -((1 + k) * k2 - k1**2) / (2 * k**2) - (1 + k) * k1 / (2 * rho * k**2)
+
+
+def smooth_axis_examples(eta: float = 0.999, r_len: float = 10.0, d_len: float = 400.0) -> dict:
+    """Two radial factors that are smooth at the axis (functions of rho^2), eternal tube,
+    k = 1 - eta g(rho) B(x) with B the compact box over [0, D]: g2 = exp(-(rho/R)^2) (k2 > 0) and
+    g4 = exp(-(rho/R)^4) (k2 = 0 but curved off the axis). Mathematical checks, not source models.
+    ANEC along the axial ray with E = 1: -2 int k2 dx, cross-checked against the general R_ll at
+    rho = 1e-5 R times the affine weight."""
+    xg = np.linspace(-5.0, d_len + 5.0, 200001)
+    bx = theta(xg, 1.0) - theta(xg + 1.0 - d_len, 1.0)
+    out = {}
+    for name, power in (("exp_rho2", 2), ("exp_rho4", 4)):
+        rho = 1e-5 * r_len
+        gv = math.exp(-((rho / r_len) ** power))
+        g1 = -power * rho ** (power - 1) / r_len**power * gv
+        g2v = (power * (power - 1) * rho ** (power - 2) / r_len**power) * (-gv) + (
+            power * rho ** (power - 1) / r_len**power
+        ) ** 2 * gv
+        g2_axis = -2 / r_len**2 if power == 2 else 0.0  # g''(0)
+        k0 = 1 - eta * bx
+        k2_axis = -eta * g2_axis * bx
+        anec_formula = float(-2 * np.trapezoid(k2_axis, xg))
+        kk = 1 - eta * gv * bx
+        rll_small_rho = _rll_general(kk, -eta * g1 * bx, -eta * g2v * bx, rho)
+        weight = (2 * k0 / (1 + k0)) ** 2 * (1 + k0) / 2  # (l^t)^2 |d lambda / dx|
+        anec_direct = float(np.trapezoid(rll_small_rho * weight, xg))
+        # off-axis curvature: R_ll at rho = R / 2, mid-tube
+        rr = r_len / 2
+        g_r = math.exp(-((rr / r_len) ** power))
+        g1r = -power * rr ** (power - 1) / r_len**power * g_r
+        g2r = (power * (power - 1) * rr ** (power - 2) / r_len**power) * (-g_r) + (
+            power * rr ** (power - 1) / r_len**power
+        ) ** 2 * g_r
+        k_mid = 1 - eta * g_r
+        out[name] = {
+            "k_rho_at_axis": 0.0,
+            "k2_axis_mid_tube": float(-eta * g2_axis) + 0.0,
+            "anec_minus_2_int_k2": anec_formula + 0.0,
+            "anec_direct_rho_1e-5R": anec_direct,
+            "R_ll_unit_at_rho_R_over_2_mid_tube": float(
+                _rll_general(k_mid, -eta * g1r, -eta * g2r, rr)
+            ),
+            "axis_minimises_k": True,  # g decreasing in rho
+        }
+    return out
 
 
 def w_monotone_check(step, n: int = 5000, p: Params = P) -> dict:
@@ -296,12 +379,16 @@ def main(argv=None) -> int:
         "incoming_rays_after_completion": incoming_rays(),
         "incoming_rays_before_completion_control": early_rays(),
         "axis_null_ricci": axis_null_ricci(),
-        "axis_anec_density_mid_tube": {
-            f"{step}_rho_max_{r:g}eps_eta_{e:g}": axis_anec_density(e, r, step)
-            for step in ("compact", "tanh")
-            for r in (3.0, 10.0, 50.0)
-            for e in (0.95, 0.999)
+        "axis_regularity": {
+            "tanh_radial_k_rho_at_axis_eta0.999_R10eps": radial_derivative_at_axis_tanh(
+                0.999, 10.0
+            ),
+            "compact_radial_k_rho_at_axis": 0.0,
+            "front_d_drho_at_axis_t_minus_x_half_eps": front_axis_derivative(0.5),
+            "front_d_drho_at_axis_t_minus_x_2eps": front_axis_derivative(2.0),
         },
+        "axial_normalisation": axial_normalisation(),
+        "smooth_axis_examples": smooth_axis_examples(),
         "w_monotone_check": {
             "compact": w_monotone_check(theta),
             "tanh": w_monotone_check(theta_tanh),

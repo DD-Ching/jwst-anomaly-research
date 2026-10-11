@@ -5,6 +5,8 @@ import sys
 from dataclasses import replace
 from pathlib import Path
 
+import pytest
+
 _DIR = Path(__file__).resolve().parents[1] / "scripts"
 _spec = importlib.util.spec_from_file_location("goal_krasnikov_g2", _DIR / "goal_krasnikov_g2.py")
 g2 = importlib.util.module_from_spec(_spec)
@@ -44,12 +46,31 @@ def test_core_rays_after_completion_stay_flat_and_early_rays_do_not():
     assert early["max_dk_drho_or_du_along_rays"] > 0.1
 
 
-def test_axis_null_ricci_and_sign_of_axial_anec():
+def test_axis_regularity_of_er_profiles():
+    # owner's value: ER tanh radial factor, eta = 0.999, R = 10 eps -> k_rho(0) = 7.87544e-33 / eps
+    assert float(g2.radial_derivative_at_axis_tanh(0.999, 10.0)) == pytest.approx(
+        7.87544e-33, rel=1e-5
+    )
+    assert abs(g2.front_axis_derivative(0.5)) > 0.1  # front crossing the axis: kink
+    assert g2.front_axis_derivative(2.0) == 0.0  # after the front: smooth
+
+
+def test_axial_normalisation_and_anec_formula():
     ax = g2.axis_null_ricci()
-    assert ax["R_ll_on_axis"] == "-(k0(x) + 1)*k2(x)/k0(x)**2"
-    assert "Derivative(k(x, rho), rho)" in ax["radial_acceleration"]  # zero on the axis
-    assert g2.axis_anec_density(0.999, 10.0, "compact") == "0"
-    assert float(g2.axis_anec_density(0.999, 10.0, "tanh")) < 0
+    assert ax["R_ll_on_axis"] == "-(k0(x) + 1)*k2(x)/k0(x)**2"  # for k smooth at the axis
+    n = g2.axial_normalisation()
+    assert n["g_ll"] == "0" and n["killing_energy"] == "1"
+    assert n["R_ll_affine"] == "-4*k2/(k0 + 1)"
+    assert n["anec_integrand_per_dx"] == "-2*k2"
+
+
+def test_smooth_axis_examples():
+    ex = g2.smooth_axis_examples(d_len=60.0)
+    a, b = ex["exp_rho2"], ex["exp_rho4"]
+    assert a["anec_minus_2_int_k2"] < 0
+    assert a["anec_direct_rho_1e-5R"] == pytest.approx(a["anec_minus_2_int_k2"], rel=1e-4)
+    assert b["anec_minus_2_int_k2"] == 0.0 and abs(b["anec_direct_rho_1e-5R"]) < 1e-6
+    assert b["R_ll_unit_at_rho_R_over_2_mid_tube"] < 0  # k2 = 0 does not mean a flat core
 
 
 def test_w_never_decreases_along_causal_vectors():

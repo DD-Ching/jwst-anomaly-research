@@ -49,19 +49,36 @@
   "R_ll_on_axis": "-(k0(x) + 1)*k2(x)/k0(x)**2",
   "radial_acceleration": "-(k(x, rho) + 1)*Derivative(k(x, rho), rho)/(2*k(x, rho)**2)"
  },
- "axis_anec_density_mid_tube": {
-  "compact_rho_max_3eps_eta_0.95": "0",
-  "compact_rho_max_3eps_eta_0.999": "0",
-  "compact_rho_max_10eps_eta_0.95": "0",
-  "compact_rho_max_10eps_eta_0.999": "0",
-  "compact_rho_max_50eps_eta_0.95": "0",
-  "compact_rho_max_50eps_eta_0.999": "0",
-  "tanh_rho_max_3eps_eta_0.95": "-5.26336e-5",
-  "tanh_rho_max_3eps_eta_0.999": "-0.131913",
-  "tanh_rho_max_10eps_eta_0.95": "-2.51636e-29",
-  "tanh_rho_max_10eps_eta_0.999": "-6.30665e-26",
-  "tanh_rho_max_50eps_eta_0.95": "-2.67016e-168",
-  "tanh_rho_max_50eps_eta_0.999": "-6.69214e-165"
+ "axis_regularity": {
+  "tanh_radial_k_rho_at_axis_eta0.999_R10eps": "7.87544e-33",
+  "compact_radial_k_rho_at_axis": 0.0,
+  "front_d_drho_at_axis_t_minus_x_half_eps": -1.9999999999742446,
+  "front_d_drho_at_axis_t_minus_x_2eps": 0.0
+ },
+ "axial_normalisation": {
+  "g_ll": "0",
+  "killing_energy": "1",
+  "R_ll_affine": "-4*k2/(k0 + 1)",
+  "dlambda_dx": "-k0/2 - 1/2",
+  "anec_integrand_per_dx": "-2*k2"
+ },
+ "smooth_axis_examples": {
+  "exp_rho2": {
+   "k_rho_at_axis": 0.0,
+   "k2_axis_mid_tube": 0.01998,
+   "anec_minus_2_int_k2": -15.944039999999998,
+   "anec_direct_rho_1e-5R": -15.944036817084825,
+   "R_ll_unit_at_rho_R_over_2_mid_tube": -0.22799530324592454,
+   "axis_minimises_k": true
+  },
+  "exp_rho4": {
+   "k_rho_at_axis": 0.0,
+   "k2_axis_mid_tube": 0.0,
+   "anec_minus_2_int_k2": 0.0,
+   "anec_direct_rho_1e-5R": -6.377616000000003e-09,
+   "R_ll_unit_at_rho_R_over_2_mid_tube": -4.643546224612763,
+   "axis_minimises_k": true
+  }
  },
  "w_monotone_check": {
   "compact": {

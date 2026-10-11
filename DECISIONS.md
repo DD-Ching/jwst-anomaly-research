@@ -4252,14 +4252,19 @@ S > 7 or setting dependence in R trials.
   negative density.
 - G1 or G2 is computed.
 
-## D-TBD Goal round 7: pause the Krasnikov line for research value; G2 becomes an on-axis AANEC condition, G1 stays ready (2026-10-11)
+## D-TBD Goal round 7: pause this Krasnikov model at "no self-consistent physical source found"; keep the G1 method draft (2026-10-11)
 
-**Decision (proposal).**
-- G2 is settled as a conditional necessary condition, not an exclusion. Under P1–P3 the axial shortcut ray is
-  complete and achronal with ANEC ≤ 0. So, if self-consistent AANEC holds, T_ll = 0 is required along the whole
-  axis (or the axis must not be the fastest line).
-- G1 reduces to F(η) per field plus the sign of ⟨T_ll⟩ on the axis.
-- Pause the line for research value, not as a statement of physical impossibility.
+**Decision (owner, 2026-10-11).**
+- The specific Krasnikov model (ER metric, η < 1) is paused at "no self-consistent physical source found". That is
+  not a claim of physical impossibility.
+- The G1 method draft is kept. No large computation starts automatically.
+
+**Findings carried.**
+- Geometry, no conjecture needed: in the eternal tube with k = K(x, ρ²) smooth and the axis fastest, the axial
+  shortcut ray is complete and achronal, with ANEC = −2∫∂²_ρk(x, 0)dx ≤ 0. Outgoing rays have ANEC 0.
+- ER's tanh profile and its built front are not smooth on the axis.
+- Conditional on self-consistent AANEC: on-axis T_ll = 0, or the axis is not fastest.
+- No testable prediction.
 
 **Scope of stop conditions.**
 - A G1 failure rules out only the fields and assumptions computed.
@@ -4268,12 +4273,14 @@ S > 7 or setting dependence in R trials.
 **Alternatives rejected.**
 - Calling round-6 QEI numbers a verified bound.
 - Treating the flat-core zero as generic.
+- Using an axis expansion on profiles that are not smooth at the axis.
 - Using DeWitt–Schwinger to exclude light fields.
+- The unsupported "fine-tuning" remark.
 
 **Evidence.** docs/goal_round7/README.md §§1–6; `results/goal_round7/krasnikov_g2.json`.
 
 **Revisit if.**
-- The owner wants the G1 mode sum.
-- A profile with a non-fastest axis or a tailed front needs deciding.
+- The owner asks for G1.
+- A regularised built tube is wanted (a model modification).
 - A second-order curved-QEI remainder bound appears.
 - The AANEC conjecture is proved or refuted.
