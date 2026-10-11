@@ -4184,15 +4184,18 @@ S > 7 or setting dependence in R trials.
 
 **Revisit if.** Any trigger of §8 fires.
 
-## D-TBD Goal round 4: the beyond-Horndeski wormhole of 2212.05969 is not a channel candidate (2026-10-11)
+## D-TBD Goal round 4: pause the communication use of the beyond-Horndeski solution of 2212.05969 (2026-10-11)
 
-**Decision.**
-- The model is not pursued as a communication channel.
-- It fails the complete sufficient stability set of 2404.06297: low-ℓ conditions (39b) and (39c) fail, and one
-  angular mode is superluminal with c² ≤ 1.83. It is not shown to be linearly stable.
-- Even if it were stable, it joins two separate asymptotic regions with equal clock rates, so it offers no shortcut
-  and no time shift.
-- The next unit, if any, needs an intra-universe solution with a computed stability spectrum.
+**Decision** (owner, 2026-10-11).
+- The communication use of this one solution is paused. The results are kept, and nothing is concluded about
+  wormholes or modified gravity in general.
+- Three separate findings:
+  - **Stability:** not established. The complete sufficient set of 2404.06297 fails at low ℓ. A real tachyon is not
+    shown.
+  - **Propagation:** one sector is superluminal (c² ≤ 1.83). This is not an instability.
+  - **EFT consistency:** open.
+- Channel: the ends are separate asymptotic regions, so no shortcut comparison is established within one exterior.
+  Equal clock rates are neutral.
 
 **Alternatives rejected.**
 - Citing the paper titles as evidence of stability.

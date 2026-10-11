@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: Goal round 4: the beyond-Horndeski wormhole (2212.05969) fails the complete stability set and gives no time-advantage channel
+## 2026-10-11: Goal round 4: the beyond-Horndeski wormhole (2212.05969) fails the complete sufficient stability set and establishes no same-exterior shortcut
 - Owner brief: a concrete modified-gravity wormhole. Write-up: `docs/goal_round4/README.md`; code
   `scripts/goal_bh_wormhole.py` (sympy added to the dev extra); results `results/goal_round4/`.
 - Tests round 1's open premise ("candidate C": a short throat without exotic matter) on one fixed model:
@@ -17,9 +17,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - A real tachyon is not shown; that needs the low-ℓ eigenproblem.
   - Two inconsistencies were found in 2404.06297: det K (22) vs (129)–(130) differ by a factor 4, and (42) vs
     (132)–(133) by 4F(r).
-- **Channel:** the ends are separate asymptotic regions with equal clock rates (A = 1). No exterior path and no time
-  shift exist, so no time advantage. Light crosses in the proper distance; the throat is 9 × 10⁻³³ m.
-- **Observations:** the project's Ellis-lens limits (1/b² law) and GW170817 (cosmological background) do not apply
+- **Channel:** the ends are separate asymptotic regions, so the solution establishes no shortcut comparison within one
+  exterior space. Equal clock rates (A = 1) and no time shift are neutral, not a failure. The 1.1066τ is a coordinate
+  difference. On the Planck reading of their Fig. 1 the throat is 9 × 10⁻³³ m; transmission was not computed.
+- **Separated (closing revision):** not established as stable; superluminal in one sector (not an instability); EFT
+  consistency open. Only this solution's communication use is paused, not wormholes or modified gravity in general.
+- **Observations:** the project's Ellis-lens limits (1/b² law) and GW170817 (cosmological background) cannot be applied directly (the model must first be mapped onto them); they do not apply
   to this model. No distinguishing prediction at the published parameters.
 - **Failed approach (rule):** read formulas from page images, not from pdftotext. Two transcription slips (P4 with an
   extra J, M11 with √B in place of 1/√B) were caught only by checking against the paper's own Fig. 2 positivity and
