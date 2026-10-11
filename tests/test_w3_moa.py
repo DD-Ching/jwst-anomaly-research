@@ -666,3 +666,34 @@ def test_prescreen_param_keys_cover_every_param_the_scan_reads():
     for f in funcs:
         read |= set(re.findall(r"\bP\.(\w+)", inspect.getsource(f)))
     assert read and read <= set(wm.PRESCREEN_PARAM_KEYS), read - set(wm.PRESCREEN_PARAM_KEYS)
+
+
+def test_merge_inject_joins_only_complete_matching_chunks(tmp_path, monkeypatch):
+    """`merge-inject` joins chunk k of n only if it holds range(n_jobs)[k::n] of the same run."""
+    monkeypatch.setattr(wm, "out_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
+    monkeypatch.setattr(wm, "FIELD", "gb22")
+    meta = {"params": wm.json.dumps(wm.asdict(wm.P)), "chain": wm.CHAIN_VERSION, "seed": 60,
+            "is_sampling": "lf", "baseline_chi2": 2.0, "n_carriers": 3, "n_jobs": 5,
+            "per_cell": 1, "per_ctrl": 1, "source": "test", "wall_time_s": 1.0}  # fmt: skip
+
+    def chunk(k, idx, **over):
+        tab = Table({"inj": idx, "kind": ["W3"] * len(idx)}, meta={**meta, **over})
+        wm.w3.write_ecsv_gz(tab, tmp_path / f"injections_gb22_chunk{k}of2.ecsv.gz")
+
+    with pytest.raises(SystemExit, match="missing injection chunk 1/2"):
+        wm.merge_inject(2)
+    chunk(1, [0, 2, 4])
+    chunk(2, [1, 3], seed=61)
+    with pytest.raises(SystemExit, match="other settings than chunk 1"):
+        wm.merge_inject(2)
+    chunk(2, [1])
+    with pytest.raises(SystemExit, match="exactly its injections"):
+        wm.merge_inject(2)
+    chunk(2, [1, 3], chain="old")
+    with pytest.raises(SystemExit, match="another chain"):
+        wm.merge_inject(2)
+    chunk(2, [1, 3])
+    tab = Table.read(wm.merge_inject(2))
+    assert list(tab["inj"]) == [0, 1, 2, 3, 4]
+    assert tab.meta["chunk"] == "" and tab.meta["wall_time_s"] == 2.0

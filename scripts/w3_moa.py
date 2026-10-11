@@ -1964,10 +1964,14 @@ def run_inject(
     prescreen_only: bool = False,
     sampling: str = "lf",
     n_carriers: int = 300,
+    chunk: tuple[int, int] | None = None,
 ) -> Path:
     """Injection-recovery through the whole chain: Cut-0 emulation, pre-screen, fit, vetting
     (binary lens and the VSX/Gaia match excepted). W3: n = 1, ε < 0, u0 ~ U[0, 2); PSPL controls:
-    u0 ~ U[0, 1) (they measure how often an ordinary event ends as a W3 survivor)."""
+    u0 ~ U[0, 1) (they measure how often an ordinary event ends as a W3 survivor).
+    ``chunk=(k, n)`` runs every n-th injection from k (0-based) of the same seeded job list and
+    writes a tracked chunk table that `merge-inject` joins (a field's injections outlast one
+    routine slot)."""
     field = moa.MoaField(FIELD)
     pre = read_prescreen()
     set_field_context(pre)  # the real field's coincidences and baseline calibration
@@ -1997,8 +2001,12 @@ def run_inject(
                     }
                     if prescreen_only:
                         prm["prescreen_only"] = True
+                    prm["inj"] = len(jobs)  # position in the seeded job list (chunk check)
                     jobs.append((kind, eid, t, f, sf, ax, prm))
-    print(f"{len(jobs)} injections on {len(arrays)} carriers", flush=True)
+    n_jobs = len(jobs)
+    if chunk is not None:
+        jobs = jobs[chunk[0] :: chunk[1]]
+    print(f"{len(jobs)} of {n_jobs} injections on {len(arrays)} carriers", flush=True)
     t1 = time.time()
     rows = []
     with _pool(procs) as pool:
@@ -2020,10 +2028,60 @@ def run_inject(
         chain=CHAIN_VERSION,
         baseline_chi2=baseline_threshold(),
         n_carriers=len(arrays),
+        n_jobs=n_jobs,
+        per_cell=per_cell,
+        per_ctrl=per_ctrl,
+        chunk="" if chunk is None else f"{chunk[0] + 1}/{chunk[1]}",
     )
-    path = out_dir() / f"injections_{FIELD}{'_prescreen' if prescreen_only else ''}.ecsv"
+    tab.sort("inj")
+    name = f"injections_{FIELD}{'_prescreen' if prescreen_only else ''}"
+    if chunk is not None:
+        name += f"_chunk{chunk[0] + 1}of{chunk[1]}"
+    path = out_dir() / f"{name}.ecsv"
     tab.write(path, overwrite=True)
+    if chunk is not None and not prescreen_only:  # what `merge-inject` joins
+        w3.write_ecsv_gz(tab, results_dir() / f"{name}.ecsv.gz")
     print(f"wrote {path}: {len(tab)} rows, {time.time() - t1:.0f} s")
+    return path
+
+
+INJECT_RUN_KEYS = ("params", "seed", "is_sampling", "chain", "baseline_chi2", "n_carriers",
+                   "n_jobs", "per_cell", "per_ctrl")  # fmt: skip
+
+
+def inject_chunk_problem(tab: Table, k: int, n: int, ref: dict | None) -> str | None:
+    """Why the tracked injection chunk ``k`` of ``n`` cannot be joined (None: it can): another
+    chain, ``Params`` or run setting than the current chain or chunk 1, or not exactly its share
+    ``range(n_jobs)[k::n]`` of the seeded job list."""
+    if tab.meta.get("chain") != CHAIN_VERSION or tab.meta.get("params") != json.dumps(asdict(P)):
+        return "was run with another chain or Params; rerun it"
+    if ref is not None and any(tab.meta.get(key) != ref.get(key) for key in INJECT_RUN_KEYS):
+        return "was run with other settings than chunk 1"
+    if list(tab["inj"]) != list(range(int(tab.meta["n_jobs"]))[k::n]):
+        return "does not hold exactly its injections"
+    return None
+
+
+def merge_inject(n: int) -> Path:
+    """Join the tracked injection chunks 1..n of n into the table `limit` reads."""
+    parts = []
+    for k in range(n):
+        path = results_dir() / f"injections_{FIELD}_chunk{k + 1}of{n}.ecsv.gz"
+        if not path.exists():
+            raise SystemExit(f"missing injection chunk {k + 1}/{n}: {path}")
+        tab = Table.read(path, format="ascii.ecsv")
+        problem = inject_chunk_problem(tab, k, n, parts[0].meta if parts else None)
+        if problem:
+            raise SystemExit(f"injection chunk {k + 1}/{n} {problem}")
+        parts.append(tab)
+    tab = vstack(parts, metadata_conflicts="silent")
+    tab.sort("inj")
+    tab.meta["chunk"] = ""
+    tab.meta["source"] = f"{parts[0].meta['source']} ({n} chunks, merge-inject)"
+    tab.meta["wall_time_s"] = round(sum(float(t.meta.get("wall_time_s", 0)) for t in parts), 1)
+    path = out_dir() / f"injections_{FIELD}.ecsv"
+    tab.write(path, overwrite=True)
+    print(f"wrote {path}: {len(tab)} injections from {n} chunks")
     return path
 
 
@@ -2412,6 +2470,9 @@ def main(argv=None) -> int:
     i.add_argument("--sampling", choices=("lf", "uniform"), default="lf")
     i.add_argument("--seed", type=int, default=60)
     i.add_argument("--prescreen-only", action="store_true", help="Cut-0 and pre-screen only")
+    i.add_argument("--chunk", default=None, help="K/N: every N-th injection from the K-th")
+    mi = sub.add_parser("merge-inject", help="join the tracked injection chunks 1..N")
+    mi.add_argument("--n", type=int, required=True)
     lim = sub.add_parser("limit", help="95 %% rate limit per monitored star per year")
     lim.add_argument("--efficiency-only", action="store_true", help="flags open: ε table only")
     sub.add_parser("combine", help="combined limit over the fields with tracked limit tables")
@@ -2444,7 +2505,9 @@ def main(argv=None) -> int:
         run_vet(min(a.procs, ncpu))
     elif a.cmd == "inject":
         run_inject(min(a.procs, ncpu), a.per_cell, a.per_ctrl, a.seed, a.prescreen_only,
-                   a.sampling, a.carriers)  # fmt: skip
+                   a.sampling, a.carriers, w3.parse_chunk(a.chunk))  # fmt: skip
+    elif a.cmd == "merge-inject":
+        merge_inject(a.n)
     elif a.cmd == "limit":
         run_limit(a.efficiency_only)
     elif a.cmd == "combine":
