@@ -4097,4 +4097,3 @@ CHANGELOG.md and edited the same TASKS.md line and docs/exotic_limits.md tables.
 #138 merged. Each needed a manual `origin/main` merge and another CI cycle.
 
 **Revisit if.** GitHub honours merge drivers in its mergeability check, or the field programme ends.
-
