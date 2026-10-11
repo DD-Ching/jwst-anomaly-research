@@ -2,19 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: W3 MOA-II gb3 (fifteenth field), in progress
+## 2026-10-11: W3 MOA-II gb3 (fifteenth field): 0 survivors; combined limit over fifteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
-  goes to `/vet-candidate` before injections.
-- Run 1 (cloud, `prescreen --procs 4`, 09:11–09:45Z): chunks 1–30 of 50 tracked (102,120 light curves, ~55 per s,
-  ~70 s per chunk; 4 HTTP retries). Stopped at the time budget after chunk 30 was written.
-- Run 2 (cloud, takeover 10:12Z, `prescreen --procs 4 --chunks 31-50`): chunks 31–50 in 1,611 s, 0 retries. Merged:
-  167,431 light curves, 1,797 shape passes, 75 not at a shared epoch (17,631 tracked rows).
-- Fits: 75 in 1,972 s (~26 s each on 4 procs, ~2× gb8), 0 errors, 72 flags (`results/w3_moa/fits_gb3_chunk1of1.ecsv.gz`).
-  Vetting: **0 survive** (`results/w3_moa/vetting_gb3.json`); CDS XMatch worked (Gaia DR3 RP for 52 / 72). Contact
-  sheet inspected: variables, box and eclipse dips, slow trends; caustic spikes only in the models.
-- **Next:** start a run with `python scripts/w3_moa.py --field gb3 run-field --procs 4` at its top: pre-screen and
-  fits are reused, vetting re-runs in ~3 min, then injections (~50–85 min, untracked until done) and the limit;
-  then `combine` for fifteen fields.
+  would have gone to `/vet-candidate` before injections.
+- Four cloud runs. Pre-screen (`prescreen --procs 4`, chunks 1–30, then 31–50): 167,431 light curves, 1,797 shape
+  passes, 75 not at a shared epoch. `run-field --procs 4` (takeover 12:11Z) reused the pre-screen chunks, refit the 75
+  passes in 2,070 s (0 errors, 72 flags), vetted (**0 survive**, `results/w3_moa/vetting_gb3.json`, same as the
+  earlier vet) and ran 2,200 injections in 6,430 s (~0.34 per s; chain 8,885 s). CDS XMatch worked (Gaia DR3 RP for
+  52 / 72). Contact sheet inspected: box and eclipse dips, variables, slow trends; caustic spikes only in the models.
+- Limits (`results/w3_moa/limits_gb3.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 1.5 × 10⁻⁷–1.5 × 10⁻⁶ per star per year
+  (N_s = 2.27 × 10⁷); the t_E = 300 d cells rest on 2 recoveries each. **Combined, fifteen fields: Γ₉₅ ≈ 1.9 × 10⁻⁸–
+  1.1 × 10⁻⁷** (was 2.1 × 10⁻⁸–1.2 × 10⁻⁷; max field share 0.19).
+- Failed approach: the earlier run's tracked fit chunk (98a6aac) carried the default `w3_microlensing` bounds
+  (t_E ≤ 5,000 d, log ρ ≤ 0) in its header, not `MOA_FIT_BOUNDS`, so `run-field` did not reuse it and refit (1a4689c).
+  Vetting is unchanged. Run fits through the `w3_moa.py` CLI, which sets the MOA bounds in `main`.
+- Timing: injections ran at ~0.34 per s on 4 procs (gb8: 0.77 per s), so a 167k-curve field needs ~110 min for
+  injections alone. `inject` still writes only at the end (gb8 entry).
+- **Next:** gb13 after the owner decides #145; then gb4–gb6, gb9, gb10, gb14.
 
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
