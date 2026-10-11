@@ -1,0 +1,124 @@
+{
+ "provenance": "derived symbolically from the linearised Einstein-aether action (no data); the link budget uses the stated ASSUMPTION source and detector",
+ "params": {
+  "c2_max": 0.095,
+  "c14_max_region_i": 2e-07,
+  "distances_ly": [
+   20.0,
+   100.0
+  ],
+  "latencies_s": [
+   1.0,
+   86400.0,
+   31557600.0
+  ],
+  "source_mass_kg": 1000000000000.0,
+  "source_radius_m": 1000.0,
+  "source_stroke_m": 10.0,
+  "source_freq_hz": 1.0,
+  "detector_asd_s2_per_rthz": 1e-20,
+  "snr": 5.0
+ },
+ "controls": {
+  "pole_minus_literature_speed2": {
+   "S": [
+    "0"
+   ],
+   "V": [
+    "0"
+   ],
+   "T": [
+    "0"
+   ]
+  },
+  "static_Ezz_minus_4piGN_rho": "0",
+  "tensor_kernel_over_GR": "1"
+ },
+ "spherical_source": {
+  "c_S^2": "-c2*(c14 - 2)/(c14*(3*c2 + 2))",
+  "pole_Exx_over_alpha_cS2_k4_Q": "1",
+  "kappa": "c14*(c14 + 3*c2)/(3*c2*(c14 - 2)**2)",
+  "kappa_leading_c14_to_0": "c14/4",
+  "remainder_Exx": "4*pi*G*Q*(-3*W*c14*c2 - 2*W*c14 + c14*c2*k**2 + 3*c2**2*k**2)/(3*c14*(3*c2 + 2)**2)",
+  "remainder_diff": "-4*pi*G*Q/(3*(3*c2 + 2))",
+  "no_instantaneous_term": true
+ },
+ "far_field_general": {
+  "xx": {
+   "exact": "c14*(Ixx*c14*c2 - 2*Ixx*c2 + Iyy*c14*c2 - 2*Iyy*c2 - 2*Izz*c14*c2 - 2*Izz*c14 - 2*Izz*c2)/(2*c2*(c14 - 2)**2)",
+   "leading_c14_to_0": "-c14*(Ixx + Iyy + Izz)/4"
+  },
+  "zz": {
+   "exact": "-c14*(c14*c2 + c14 + c2)*(Ixx*c14*c2 - 2*Ixx*c2 + Iyy*c14*c2 - 2*Iyy*c2 - 2*Izz*c14*c2 - 2*Izz*c14 - 2*Izz*c2)/(c2**2*(c14 - 2)**3)",
+   "leading_c14_to_0": "-c14*(Ixx + Iyy + Izz)/4"
+  }
+ },
+ "yagi_comparison": {
+  "Z_c13_0": "-2*(c14 + 3*c2)/(3*c2*(c14 - 2))",
+  "Ikk_ours_minus_yagi": "0",
+  "Qnn_ours_over_yagi": "1/2",
+  "Qnn_order": "O(c14^2)"
+ },
+ "link_budget": [
+  {
+   "D_ly": 20.0,
+   "latency_s": 1.0,
+   "c_S_required_over_c": 631152000.0,
+   "c14": 2.0873701615845287e-19,
+   "kappa": 5.218425403961321e-20,
+   "tidal_signal_s-2": 7.103251555151715e-62,
+   "integration_time_s_for_snr": 4.954794176674289e+83,
+   "gr_quadrupole_scale_s-2": 1.3611867575532682e-42
+  },
+  {
+   "D_ly": 20.0,
+   "latency_s": 86400.0,
+   "c_S_required_over_c": 7305.0,
+   "c14": 1.558213476142204e-09,
+   "kappa": 3.895533717724086e-10,
+   "tidal_signal_s-2": 5.302548910168277e-52,
+   "integration_time_s_for_snr": 8.89141011509777e+63,
+   "gr_quadrupole_scale_s-2": 1.3611867575532682e-42
+  },
+  {
+   "D_ly": 20.0,
+   "latency_s": 31557600.0,
+   "c_S_required_over_c": 20.0,
+   "c14": 2e-07,
+   "kappa": 5.0000045087727807e-08,
+   "tidal_signal_s-2": 6.805939925048143e-50,
+   "integration_time_s_for_snr": 5.3971412719564985e+59,
+   "gr_quadrupole_scale_s-2": 1.3611867575532682e-42
+  },
+  {
+   "D_ly": 100.0,
+   "latency_s": 1.0,
+   "c_S_required_over_c": 3155760000.0,
+   "c14": 8.349480646338113e-21,
+   "kappa": 2.0873701615845283e-21,
+   "tidal_signal_s-2": 5.682601244121372e-64,
+   "integration_time_s_for_snr": 7.741865901053578e+87,
+   "gr_quadrupole_scale_s-2": 2.7223735151065367e-43
+  },
+  {
+   "D_ly": 100.0,
+   "latency_s": 86400.0,
+   "c_S_required_over_c": 36525.0,
+   "c14": 6.232853904568817e-11,
+   "kappa": 1.5582134765801013e-11,
+   "tidal_signal_s-2": 4.2420390995237473e-54,
+   "integration_time_s_for_snr": 1.389282849224352e+68,
+   "gr_quadrupole_scale_s-2": 2.7223735151065367e-43
+  },
+  {
+   "D_ly": 100.0,
+   "latency_s": 31557600.0,
+   "c_S_required_over_c": 100.0,
+   "c14": 2e-07,
+   "kappa": 5.0000045087727807e-08,
+   "tidal_signal_s-2": 1.3611879850096288e-50,
+   "integration_time_s_for_snr": 1.3492853179891246e+61,
+   "gr_quadrupole_scale_s-2": 2.7223735151065367e-43
+  }
+ ]
+}

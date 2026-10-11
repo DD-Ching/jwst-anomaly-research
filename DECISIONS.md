@@ -4284,3 +4284,23 @@ S > 7 or setting dependence in R trials.
 - A regularised built tube is wanted (a model modification).
 - A second-order curved-QEI remainder bound appears.
 - The AANEC conjecture is proved or refuted.
+
+## D-TBD Goal round 8: do not pursue Einstein–æther spin-0/1 modes as a low-latency channel (2026-10-11)
+
+**Decision (proposal).**
+- Excluded under the stated assumptions (matter minimally coupled, linearised EA in the allowed region, c13 = 0,
+  tidal readout, controllable sources): the spin-0 coupling to matter falls as κ ≈ c14/4 ≲ 0.083/c_S².
+- The spin-1 mode does not reach a metric detector for c13 = 0.
+- No further theory chain or large computation.
+
+**Alternatives rejected.**
+- Treating "not excluded by data" as viable.
+- Treating 2505.09544's conjecture as an exclusion.
+- Using per-helicity scalar shares as early signals.
+
+**Evidence.** docs/goal_round8/README.md §§1–5; `results/goal_round8/ea_response.json`.
+
+**Revisit if.**
+- A model couples matter directly to the æther.
+- A controlled strong-coupling (c14 → 0) theory appears.
+- The Taherasghari–Will dipole dispute changes the coupling of weakly gravitating sources.

@@ -1306,3 +1306,21 @@ Inequalities* (Springer, 2017); Wald & Yurtsever; Flanagan & Wald.
 - Re-read: Everett & Roman (gr-qc/9702049) Eqs. (4)–(13); Fewster & Osterbrink (0708.2450v2) §§3, 6.
 - Abstract only: Levi & Ori, "Pragmatic mode-sum regularization method for semiclassical black-hole spacetimes",
   PRD 91, 104028 (2015), arXiv:1503.02810 (method for a possible G1; not relied on for any result).
+
+## Goal round 8 (2026-10-11; docs/goal_round8/README.md)
+
+**Read in full** (arXiv PDFs, accessed 2026-10-11; sha256 prefixes):
+- Oost, Mukohyama & Wang, "Constraints on Einstein-aether theory after GW170817", arXiv:1802.04303v3 [f4b827c8…].
+- Schumacher, Perkins, Shaw, Yagi & Yunes, "Gravitational wave constraints on Einstein-æther theory with
+  LIGO/Virgo data", arXiv:2304.06801v2 [ed20d8c6…].
+- Heisenberg, Rosatello, Xu & Zosso, "Constraining superluminal Einstein-Æther gravity through gravitational
+  memory", arXiv:2505.09544v3
+  (PRD 112, 024052) [66a87246…].
+- Vaglio, Carleo, Susobhanan, Barausse et al., "Constraints on Einstein-æther gravity from the precision timing of
+  PSR J1738+0333", arXiv:2605.01436v1 [541a7dfb…].
+- Foster, "Radiation damping in Einstein-aether theory", gr-qc/0602004v5 [25f1a33c…].
+- Jacobson & Mattingly, "Einstein-aether waves", gr-qc/0402005v2 [353650b0…].
+- Yagi, Blas, Barausse & Yunes, "Constraints on Einstein-Æther theory and Hořava gravity from binary pulsar
+  observations", arXiv:1311.7144v4 [445976e4…].
+
+**Citation level only:** Zosso, arXiv:2610.06528; Taherasghari & Will, arXiv:2506.03843.

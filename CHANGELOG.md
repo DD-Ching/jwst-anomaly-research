@@ -2,6 +2,29 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 8: Einstein–æther spin-0 is not excluded by data but cannot carry a controllable low-latency bit (κ ∝ 1/c_S²)
+- Owner brief: a bounded unit on EA spin-0/spin-1 modes, built from the action, matter coupling and a measurable
+  response. Krasnikov stays paused. Write-up `docs/goal_round8/README.md`; code `scripts/goal_ea_response.py`;
+  results `results/goal_round8/`.
+- **Literature screen:**
+  - Data do not bound c_S or c_V from above: region (i) of 1802.04303 has c14 ≤ 2 × 10⁻⁷ and c_S ≈ √(c2/c14) → ∞.
+  - The only exclusion of superluminal EA (2505.09544) is a stated conjecture.
+  - No EFT cutoff for c14 → 0 is given.
+- **Controls reproduced:** mode speeds, G_N = G/(1 − c14/2), the GR quadrupole field, and Yagi Eq. 106's breathing
+  I_kk term. The vector mode does not reach a metric detector for c13 = 0.
+- **New [derived]:**
+  - Exact exterior field of a pulsating sphere: E_ij = −κG[δ_ij Q⁽⁴⁾/r + ∂_i∂_j(Q̈/r)] at t − r/c_S, with
+    κ = c14(c14 + 3c2)/(3c2(2 − c14)²) ≈ c14/4 and no instantaneous part.
+  - Far-field breathing amplitude −(c14/4)Gω⁴I_kk/r.
+  - c14 ≈ 2c2/((2 + 3c2)c_S²), so a faster mode couples more weakly.
+  - Link budget (mountain-scale source, 10⁻²⁰ s⁻²/√Hz): 10⁵⁹–10⁸⁸ s to read one bit at 20–100 ly.
+- **Unresolved:** a factor ½ against Yagi on the O(c14²) n̂n̂Q̈ term.
+- **Judgement:** low-latency channel excluded under the stated assumptions (minimal coupling, linear EA, c13 = 0,
+  controllable sources). The beyond-GR breathing precursor is a known prediction, capped at ~c14/4 of the GR
+  amplitude.
+- **Failed approach (rule):** the per-helicity scalar-sector share of a static field is not physical (nonlocal
+  projectors). Use a source whose exterior is single-sector (spherical) or the full 3D kernel.
+
 ## 2026-10-11: Goal round 7: smooth eternal Krasnikov tube, the axial shortcut ray has ANEC = −2∫∂²_ρk dx ≤ 0; model paused at "no self-consistent source found"
 - Owner brief: rescope round 6's evidence, decide G2 on the complete geometry, assess G1 for feasibility, scope stop
   conditions. Then an owner review on axis regularity. Write-up `docs/goal_round7/README.md`; code

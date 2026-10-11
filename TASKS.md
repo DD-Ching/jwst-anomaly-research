@@ -32,8 +32,11 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
   ANEC = −2∫∂²_ρk dx ≤ 0 (AANEC-conditional: T_ll = 0 on the axis). The ER tanh profile and its front are not
   smooth on the axis. **This Krasnikov model is paused at "no self-consistent physical source found"** (owner);
   the G1 method draft is kept and not started. PR left unmerged for the owner.
+- Round 8 done (docs/goal_round8/): Einstein–æther spin-0 is superluminal-allowed by data but couples to matter
+  with κ ≈ c14/4 ∝ 1/c_S²; low-latency channel excluded under stated assumptions; spin-1 decouples for c13 = 0.
+  No follow-up started. PR left unmerged for the owner.
 - Not covered and still open as explicit-claim classes: Lorentz-violating gravity with superluminal spin-0/1 modes
-  (Einstein–aether, Hořava), Gödel/Gott global geometries, non-local quantum gravity, tachyons.
+  (Hořava; Einstein–aether done in round 8), Gödel/Gott global geometries, non-local quantum gravity, tachyons.
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
