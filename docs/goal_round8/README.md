@@ -35,7 +35,7 @@ derivation (§3).
 | Speeds | c_T² = 1/(1 − c13); c_V² = (2c1 − c1² + c3²)/(2c14(1 − c13)); c_S² = c123(2 − c14)/(c14(1 − c13)(2 + c13 + 3c2)) (Jacobson–Mattingly gr-qc/0402005; 1802.04303 Eq. 3.4) | derived in the papers; reproduced here |
 | Tensor speed | \|c13\| ≲ 10⁻¹⁵ (GW170817) | data |
 | PPN | \|α1\| ≤ 10⁻⁴, \|α2\| ≤ 10⁻⁷, with α1 = −4c14 for c13 = 0 (1802.04303 Eq. 1.2) | data |
-| Allowed region | (i) 0 < c14 ≤ 2 × 10⁻⁷ with c14 ≲ c2 ≲ 0.095; (ii) 2 × 10⁻⁶ ≲ c14 ≲ 2.5 × 10⁻⁵ with c2 − c14 ≲ 2 × 10⁻⁷ (1802.04303 Eq. 3.23). Region (ii) has c2/c14 ≤ 1.1, so c_S ≤ 1.05 at c14 = 2 × 10⁻⁶ (κ ≤ 5 × 10⁻⁷; up to ~1 yr early at 20 ly; also excluded below). **Region (i) lets c_S ≈ √(c2/c14) → ∞.** c_ω, and hence c_V, is unconstrained (2304.06801; 2605.01436). | data plus stability and Cherenkov assumptions |
+| Allowed region | (i) 0 < c14 ≤ 2 × 10⁻⁷ with c14 ≲ c2 ≲ 0.095; (ii) 2 × 10⁻⁶ ≲ c14 ≲ 2.5 × 10⁻⁵ with c2 − c14 ≲ 2 × 10⁻⁷ (1802.04303 Eq. 3.23). Region (ii) has c2/c14 ≤ 1.1, so c_S ≤ 1.05 at c14 = 2 × 10⁻⁶ (κ ≤ 5 × 10⁻⁷; up to ~1 yr early at 20 ly; no practical channel found there either, §4). **Region (i) lets c_S ≈ √(c2/c14) → ∞.** c_ω, and hence c_V, is unconstrained (2304.06801; 2605.01436). | data plus stability and Cherenkov assumptions |
 | Cherenkov | Constrains only subluminal modes; "c_N > 1 is allowed. This does not violate causality" (2304.06801 fn. 9) | theory |
 | GW data | GW170817 and GW190425 posteriors on c_a and c_θ follow the priors (2304.06801) | data, uninformative |
 | Pulsar | PSR J1738+0333 gives α1 > −7.2 × 10⁻⁵ at 90 % (2605.01436v1) | data |
@@ -57,8 +57,10 @@ communication question is examined next.
   through geodesic deviation. At linear order this is a coordinate- and gauge-invariant local quantity.
 - **Timing.** A component on the c_S cone arrives at D/c_S, before light (D/c), if c_S > 1. Three different times
   must be kept apart:
-  - the mode speed (here the characteristic speed, so also the front speed, because the linearised equations are
-    hyperbolic);
+  - the mode speed. In the linearised EA equations this is the characteristic speed, so the equations' own
+    signal cone reaches the receiver at D/c_S. **Not established:** that this is a physical superluminal front of
+    information. That would need the theory's behaviour at all frequencies, including above the EFT cutoff, which
+    is unknown (no cutoff is given in the sources read). This gap is marked open and is not addressed here;
   - the arrival of the front;
   - the time to accumulate enough signal-to-noise ratio to read the bit.
 - **Frequency range.** All results are low-frequency EFT statements (frequencies ≪ any cutoff). Nothing is
@@ -110,35 +112,41 @@ units c = 1.
      G_N − G. The part G propagates on the light cone.
    - So the near-zone and far-zone c_S signals both carry the factor c14 for every slow source, not just spherical
      ones.
+   - **What κ means.** κ multiplies a specific source moment (I_kk and its derivatives) and a reference scale
+     G·(moment)/r. It is not a universal ratio "scalar signal / actual GR signal". The tensor field depends on a
+     different moment (the transverse-traceless part of I_ij) and a different angular projection. For a spherical
+     pulsation the GR field vanishes while the scalar does not; for a circular binary the reverse holds at leading
+     order.
 3. **Trade-off.** c_S² = c2(2 − c14)/(c14(2 + 3c2)) gives c14 ≈ 2c2/((2 + 3c2)c_S²) ≤ 0.083/c_S² for
    c2 ≤ 0.095, so **κ ≈ c14/4 ≤ 0.021/c_S²**. The faster the spin-0 mode, the weaker it couples to matter, as
    1/c_S². This holds in both the near zone and the far zone (result 2). Nothing diverges as c14 → 0 in the linear theory
    (consistent with the fluxes in Foster gr-qc/0602004 and Yagi 1311.7144).
 
-**Link budget** (ASSUMPTION, deliberately generous):
+**Link budget** for one specified configuration (ASSUMPTIONs; it is not an upper bound over all controllable
+sources or detectors):
 - Sender: a 10¹² kg shell (a large mountain) at R = 1 km, pulsating by ±10 m at 1 Hz, so ΔQ = 2 × 10¹⁶ kg m².
 - Receiver: tidal noise 10⁻²⁰ s⁻²/√Hz.
 - SNR 5.
 - c_S = D/latency, with c14 at its largest allowed value (region i).
 
-| D | Latency | c_S needed | κ | Tidal signal | Integration time for SNR 5 |
-|---|---|---|---|---|---|
-| 20 ly | 1 s | 6.3 × 10⁸ | 5 × 10⁻²⁰ | 7 × 10⁻⁶² s⁻² | 5 × 10⁸³ s |
-| 20 ly | 1 day | 7.3 × 10³ | 4 × 10⁻¹⁰ | 5 × 10⁻⁵² s⁻² | 9 × 10⁶³ s |
-| 20 ly | 1 yr | 20 | 5 × 10⁻⁸ | 7 × 10⁻⁵⁰ s⁻² | 5 × 10⁵⁹ s |
-| 100 ly | 1 s | 3.2 × 10⁹ | 2 × 10⁻²¹ | 6 × 10⁻⁶⁴ s⁻² | 8 × 10⁸⁷ s |
+The gap is shown as the SNR reached in a fixed one-year observation (SNR = E√T/ASD, T = 1 yr), and as the factor
+by which the source strength ΔQ would have to grow to reach SNR 5 in that year. Both use the same computed signal.
 
-The age of the universe is 4 × 10¹⁷ s.
-- Even GR's own quadrupole field from this source at 20 ly (1.4 × 10⁻⁴² s⁻², the κ = 1 scale) would need
-  1.35 × 10⁴⁵ s.
-- The barrier is the weakness of gravitational coupling to any controllable source. That is shared with GR, and
-  EA adds a further factor κ ≤ 0.021/c_S².
-- **A cleverer sender does not help** (independent review):
-  - SNR 5 within one year, at one-year latency over 20 ly, needs ΔQ ≈ 2.6 × 10⁴² kg m², about a solar mass
-    pulsating by ~1 km at 1 Hz.
-  - At 1 s latency it needs ~10⁵⁴ kg m².
-  - Going to 100 Hz with the best LIGO-band tidal noise gains ~10⁶ in amplitude.
-  - Strong-field (sensitivity) terms are at least as suppressed, and a sender cannot build such bodies.
+| D | Latency | c_S needed | κ | Tidal signal | SNR in 1 yr | Source strength × needed for SNR 5 in 1 yr |
+|---|---|---|---|---|---|---|
+| 20 ly | 1 s | 6.3 × 10⁸ | 5 × 10⁻²⁰ | 7 × 10⁻⁶² s⁻² | 4 × 10⁻³⁸ | 1 × 10³⁸ |
+| 20 ly | 1 day | 7.3 × 10³ | 4 × 10⁻¹⁰ | 5 × 10⁻⁵² s⁻² | 3 × 10⁻²⁸ | 2 × 10²⁸ |
+| 20 ly | 1 yr | 20 | 5 × 10⁻⁸ | 7 × 10⁻⁵⁰ s⁻² | 4 × 10⁻²⁶ | 1 × 10²⁶ |
+| 100 ly | 1 s | 3.2 × 10⁹ | 2 × 10⁻²¹ | 6 × 10⁻⁶⁴ s⁻² | 3 × 10⁻⁴⁰ | 2 × 10⁴⁰ |
+
+- **Formal extrapolation only.** The JSON also lists the integration time for SNR 5 (10⁵⁹–10⁸⁸ s). That number
+  assumes stationary Gaussian noise and perfectly coherent accumulation over the whole time. It is not an
+  achievable waiting time and not a lower bound on the resources needed per bit.
+- **Reference scale.** G Q⁽⁴⁾/(c⁴r) with the same ΔQ is 1.4 × 10⁻⁴² s⁻² at 20 ly (SNR ≈ 8 × 10⁻¹⁹ in a year). It is
+  a scale, not the GR field of this source, which vanishes for a spherical pulsation (Birkhoff). So this
+  configuration is already far from detectable at κ = 1, and EA adds κ ≤ 0.021/c_S².
+- Larger sources, other frequencies and better detectors would change these numbers. No upper bound over all of
+  them was computed.
 
 ## 4. The two kinds of value, kept separate
 
@@ -148,32 +156,41 @@ here.
   whose I_kk changes (e.g. core collapse, eccentric or asymmetric systems). Circular binaries have constant I_kk at
   leading order.
 - It arrives D(1 − 1/c_S) before the tensor wave.
-- Existing tests (2304.06801; pulsar timing 2605.01436) bound c14 through α1. The amplitude is κ ≈ c14/4: ≤ 6 × 10⁻⁶
-  of the GR scale in region (ii), and ≤ 5 × 10⁻⁸ in the superluminal region (i).
-- **Observable prediction:** a breathing-polarisation precursor to a GW event, with lead time D(1 − 1/c_S), at a
-  fraction ~c14/4 of the GR amplitude.
+- Existing tests (2304.06801; pulsar timing 2605.01436) bound c14 through α1. The scalar coefficient is κ ≈ c14/4
+  (≤ 6 × 10⁻⁶ in region (ii), ≤ 5 × 10⁻⁸ in region (i)) times G·I_kk-type moments/r.
+- How large the scalar signal is relative to an event's tensor signal depends on the event: it scales as
+  κ times the ratio of the event's I_kk⁽⁴⁾ to its transverse-traceless I_ij⁽⁴⁾, and on the viewing angle. Core collapse with a large breathing
+  moment and a small quadrupole is relatively favourable; circular binaries are unfavourable.
+- **Observable prediction:** a breathing-polarisation precursor with lead time D(1 − 1/c_S) and amplitude
+  ≈ κ·G·I_kk⁽⁴⁾/(c⁴D) (radiation zone).
 - **Main false signals:** non-Gaussian detector transients (glitches); polarisation leakage of tensor noise into
   the breathing null-stream; the unknown lead time (for c_S ≫ 1 the precursor arrives ~D/c before the event: years
   to millennia for Galactic sources), which makes a blind search with an enormous trials factor.
 - **Smallest verification step:** a breathing null-stream search in archival multi-detector data at the scalar
-  frequency band of one well-localised event, scanning lead times. Its sensitivity is capped at ~c14/4 ≲ 5 × 10⁻⁸
-  of the event's GR strain, so it is not worth running for this question.
+  frequency band of one well-localised event, scanning lead times. Its reach would need an event-specific
+  estimate of I_kk⁽⁴⁾ (not done). It is not pursued here, since it does not serve the communication question.
 
-**(ii) Seconds-scale interstellar latency.** **Excluded under the stated assumptions:**
+**(ii) Seconds-scale interstellar latency.** **Not found in the computed model, parameters and equipment.**
+The computed case is:
 - matter coupled minimally to the metric;
 - linearised EA in the allowed region with c13 = 0;
 - a detector reading the tidal tensor;
-- any controllable source up to mountain scale.
+- the specified source and detector above.
 
-The required c_S forces κ ≤ 0.021/c_S². Even at a latency of one year with a year of integration, the signal is
-26 orders of magnitude short in amplitude (52 in integration time: 5 × 10⁵⁹ s against 3 × 10⁷ s). The trade-off is quantitative: raising c_S by 10 lowers the signal by 100 and multiplies
-the integration time by 10⁴.
+The required c_S forces κ ≤ 0.021/c_S² (this trade-off holds in the stated parameter region for every slow source).
+For the specified configuration and a one-year observation, the SNR is 4 × 10⁻²⁶ even at one-year latency, so the
+source would have to be ~10²⁶ times stronger. Raising c_S by 10 lowers the amplitude by 100.
 
 ## 5. Judgement
 
-**Excluded under the stated assumptions** as a low-latency channel. The arrival time of the front is not the
-obstacle: the c_S front does reach the receiver before light. The obstacle is that the amplitude a matter source
-can put into that front falls as 1/c_S².
+**In the computed model, parameters and equipment, no practical low-latency channel was found. This supports
+pausing the scheme.** Two things are kept separate:
+- **In the linearised equations,** the c_S characteristic cone allows an early response, but the amplitude a matter
+  source puts on it falls as 1/c_S². That trade-off is the main established result.
+- **Whether that cone is a physical superluminal information front** is not established. The theory's full
+  high-frequency behaviour and cutoff are unknown, and this stays open.
+
+This is not a proof that no source or detector could ever work. No upper bound over all of them was computed.
 
 What could change this (inputs not supplied here, and not pursued):
 - a non-minimal matter–æther coupling. That would be a new model, constrained by Lorentz-violation tests.

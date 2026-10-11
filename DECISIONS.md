@@ -4285,24 +4285,33 @@ S > 7 or setting dependence in R trials.
 - A second-order curved-QEI remainder bound appears.
 - The AANEC conjecture is proved or refuted.
 
-## D-TBD Goal round 8: do not pursue Einstein–æther spin-0/1 modes as a low-latency channel (2026-10-11)
+## D-TBD Goal round 8: pause the Einstein–æther channel line; no practical low-latency channel found in the computed case (2026-10-11)
 
-**Decision (proposal).**
-- Excluded under the stated assumptions (matter minimally coupled, linearised EA in the allowed region, c13 = 0,
-  tidal readout, controllable sources): the spin-0 coupling to matter falls as κ ≈ c14/4 ≲ 0.021/c_S², for every
-  slow source.
-- With c13 ≠ 0 the spin-1 mode couples with κ_V ≤ 1/((1 − c13)c_V²): the same trade-off.
-- The spin-1 mode does not reach a metric detector for c13 = 0.
-- No further theory chain or large computation.
+**Decision (owner, 2026-10-11).** Pause the EA line. Do not start another theory chain, G1 or a large computation.
+
+**What is kept.**
+- The source → propagation → tidal-readout calculation, with controls reproduced (mode speeds, G_N, GR quadrupole,
+  Yagi Eq. 106).
+- The trade-off in the stated parameter region: κ ≈ c14/4 ≲ 0.021/c_S² for every slow source.
+- With c13 ≠ 0, the spin-1 mode has κ_V ≤ 1/((1 − c13)c_V²).
+
+**Scope of the conclusion.**
+- In the computed model (minimal coupling, linearised EA, tidal readout) with the specified source and detector,
+  no practical low-latency channel was found. This is not an upper bound over all controllable sources or detectors.
+- The linearised characteristic cone allows an early response. A physical superluminal information front is not
+  established, because the cutoff and high-frequency behaviour are unknown. This gap is open.
+- κ is a coefficient on specific source moments, not a universal scalar/GR signal ratio.
+- The 10⁵⁹–10⁸⁸ s integration times are formal extrapolations.
 
 **Alternatives rejected.**
 - Treating "not excluded by data" as viable.
 - Treating 2505.09544's conjecture as an exclusion.
 - Using per-helicity scalar shares as early signals.
+- Generalising the link budget to all senders.
 
 **Evidence.** docs/goal_round8/README.md §§1–5; `results/goal_round8/ea_response.json`.
 
 **Revisit if.**
 - A model couples matter directly to the æther.
-- A controlled strong-coupling (c14 → 0) theory appears.
-- The Taherasghari–Will dipole dispute changes the coupling of weakly gravitating sources.
+- A controlled strong-coupling or UV-complete treatment fixes the front.
+- A source and detector class is proposed whose moments escape the computed configuration.
