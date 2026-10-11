@@ -15,6 +15,25 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Next:** gb8 (78 GB; start it at the top of a run or split stages across runs: pre-screen chunks and fits are
   tracked and reused), `combine`; gb13 waits on the owner (#145).
 
+## 2026-10-11: W3 short events (t_E = 3 d): `eclipse_dip` losses are unsampled spikes; the `jackknife_nights` share is undecided (D-082)
+- Hypothesis: sparse sampling leaves the caustic spikes on few nights, so genuine peak-dip-peak signals fail as
+  ordinary dips. If failed injections had well-sampled spikes, the rule would be the loss.
+- Frozen sample: 2,000 t_E = 3 d W3 injections, production chain, gb12 carriers, seed 3003 (846 s on 4 cores).
+  dev / validation are assigned by a SHA-256 of each injection's inputs. Flagged → recovered: dev 57 → 21
+  (0.37, 95 % 0.24–0.51); validation 61 → 27 (0.44), read for the baseline only.
+- Dev: 11 / 12 `eclipse_dip` losses have ≤ 1 spike night, so they are indistinguishable from a flat dip in the
+  data. The `jackknife_nights` losses (14) and the recoveries (21) overlap in spike nights, so the proxy cannot
+  attribute that loss. Stage 2 must record the jackknife's own feature nights.
+- **Failed approach (rule):** a split keyed on the row index is not frozen. `run_inject` writes rows in pool
+  completion order, so slow (flagged) injections collect late (`/code-review`; flagged 72/46, p ≈ 0.02). Key a
+  split on each injection's inputs. The first draft's "≤ 8 % rule-attributable" bound is withdrawn.
+- Injection profile (`docs/audits/2026-10-10-acceleration-v2.md`, V2.1 priority 2): 97 % of injection CPU is
+  fitting and vetting of the pre-screen passes (median 18.6 s each); the finite-source integrand is 46 % of that.
+  Data reuse, vectorized injection and caching cannot gain more than ~3 %.
+- **Next:** stage 2 of the short-event study (re-vet the dev flags with the jackknife details recorded; then a
+  night-robust likelihood term; FP check on real flags and PSPL controls; one validation run); a compiled W3
+  finite-source integrand with an identical-outcome test on fixed injections.
+
 ## 2026-10-10: W3 MOA-II gb2 (twelfth field): 0 survivors; combined limit over twelve fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1 and a finite limit in every cell. A
   survivor that held up on the contact sheet would have stopped injections and gone to `/vet-candidate`.
