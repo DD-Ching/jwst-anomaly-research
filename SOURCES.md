@@ -1229,3 +1229,20 @@ Full texts read 2026-10-11, through arXiv PDFs or the cited archives.
 - Visser: hep-th/9202090, hep-th/9303023, gr-qc/9311026 and gr-qc/9702043.
 
 **Not opened:** Frolov & Novikov, PRD 42, 1057 (1990); Hawking, PRD 46, 603 (1992).
+
+## Goal round 3 (2026-10-11; docs/goal_round3/README.md)
+
+**Theory, read in full:** Li, Hu, Deng & Scarani, arXiv:2608.05271v1 (2026), including the Supplemental Material
+(LC4 is Eq. 5, LC5 is Eq. 6/S94, noise in SM VIII). Bancal et al. 2012, App. E (see Goal round 1).
+
+**Experimental capability.** Numbers were read on arXiv (full text unless noted) by a subagent, 2026-10-11:
+- Walther et al., Nature 434, 169 (2005), quant-ph/0503126.
+- Kiesel et al., PRL 95, 210502 (2005), quant-ph/0508128.
+- Zhang et al., arXiv:1702.04130 (journal reference not checked).
+- Mao, Li, Yu & Fan, PRL 129, 150401 (2022), arXiv:2201.12753.
+- Erven et al., Nat. Photon. 8, 292 (2014), arXiv:1309.1379.
+- Hensen et al., Nature 526, 682 (2015), arXiv:1508.05949.
+- Rosenfeld et al., PRL 119, 010402 (2017), arXiv:1611.04604.
+- Storz et al., Nature 617, 265 (2023), read through PMC10172133.
+- Pompili et al., Science 372, 259 (2021), arXiv:2102.04471.
+- Monz et al., PRL 106, 130506 (2011), arXiv:1009.6126.

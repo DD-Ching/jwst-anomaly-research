@@ -2,6 +2,37 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 3: LC4 is the best of the three hidden-influence criteria compared; the line is paused pending capability
+- Owner brief (continues #152 and #154). Write-up: `docs/goal_round3/README.md`; code
+  `scripts/goal_hic_witnesses.py`; results `results/goal_round3/`.
+- Round-2 revisions:
+  - The L/2 limit applies only to the theorem's guarantee (fixed receivers, worse direction). It is not a physical
+    impossibility.
+  - Hoeffding counts are sufficient for one named rule, not minimal.
+  - The R-trial fraction is now exact for independent uniform times: worst case ≈ 1/(2 r β_max), and there is no
+    positive worst case without a bound on β.
+  - The #152 and #154 titles and bodies were updated.
+- **Positive controls:** all three quantum values and white thresholds reproduce Bancal and Li et al.; the generic
+  LP reproduces round 2 to 1e-8.
+- **Result [derived]:**
+  - LC4 is the most robust under dephasing, depolarising, amplitude damping, readout flips and detection loss
+    without postselection (η ≥ 0.949). LC5 wins only under white noise. Bancal needs visibility ≥ 0.972.
+  - The LP shows that each witness is optimal for its own state and settings, so the maximal Bancal state cannot
+    change the choice and was not computed.
+  - The forced signal for LC4 is 0.0259, 4× Bancal's.
+- **Decision:** keep the LC4 Experiment-v1 specification; wait for a platform with four spacelike-separated parties,
+  no postselection, and the combined condition of README §6a (e.g. V ≥ 0.97 with η ≥ 0.99, or 0.98 with
+  0.98, flips ≤ 0.5 %). V = 0.95 with η = 0.97 gives S4 = 6.016 and 1.1 × 10⁸ Azuma trials (owner check, reproduced). The direct signalling test needs ~10¹³ trials with an unknown
+  frame. Triggers are in §8.
+- **Failed approach (rule):** a wait condition built from single-error thresholds (V ≥ 0.95, η ≥ 0.97) leaves no
+  margin once errors combine (owner review). State conditions from the combined model and per noise model; never
+  equate a quoted fidelity with an LC4 visibility.
+- **Failed approach (rule):** quoting LC5's lower white-noise threshold as "more robust" is wrong under local noise.
+  Compare witnesses under the noise the platform actually has.
+- **Failed approach (rule):** the first draft claimed that a v1-only deficit (S ≤ bound in v1, QM in timelike
+  controls) is the signature of no-signalling v-causal models. Under λ-independence, App. D makes the ABD marginal
+  independent of C's timing, so no such v-causal signature exists. The independent review caught it.
+
 ## 2026-10-11: Goal round 2: Bancal v-causal models give no guaranteed low-latency or two-way channel; round-1 wording fixes
 - Owner brief (continuation of #152). Full write-up: `docs/goal_round2/README.md`; code
   `scripts/goal_bancal_channel.py`; results `results/goal_round2/`.
@@ -52,6 +83,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Next:**
   - Configuration-R timing tolerance and noise threshold (theory).
   - A literature unit on modified-gravity theories with R_kk < 0 consistent with GW170817.
+
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
   would have gone to `/vet-candidate` before injections.
