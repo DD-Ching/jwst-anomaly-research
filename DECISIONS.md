@@ -4252,12 +4252,13 @@ S > 7 or setting dependence in R trials.
   negative density.
 - G1 or G2 is computed.
 
-## D-TBD Goal round 7: pause the Krasnikov line for research value; G1 stays a ready, well-posed unit (2026-10-11)
+## D-TBD Goal round 7: pause the Krasnikov line for research value; G2 becomes an on-axis AANEC condition, G1 stays ready (2026-10-11)
 
 **Decision (proposal).**
-- G2's two natural targets are settled with ANEC exactly 0: the achronal outgoing rays and the post-completion
-  shortcut rays. The rest of G2, wall- and front-crossing geodesics, is undecided and demoted.
-- G1 reduces to one pure number F(η) per field (ε_sc = l_P √(8πNF)).
+- G2 is settled as a conditional necessary condition, not an exclusion. Under P1–P3 the axial shortcut ray is
+  complete and achronal with ANEC ≤ 0. So, if self-consistent AANEC holds, T_ll = 0 is required along the whole
+  axis (or the axis must not be the fastest line).
+- G1 reduces to F(η) per field plus the sign of ⟨T_ll⟩ on the axis.
 - Pause the line for research value, not as a statement of physical impossibility.
 
 **Scope of stop conditions.**
@@ -4266,12 +4267,13 @@ S > 7 or setting dependence in R trials.
 
 **Alternatives rejected.**
 - Calling round-6 QEI numbers a verified bound.
-- Inferring negative ANEC on flat-core shortcut rays.
+- Treating the flat-core zero as generic.
 - Using DeWitt–Schwinger to exclude light fields.
 
 **Evidence.** docs/goal_round7/README.md §§1–6; `results/goal_round7/krasnikov_g2.json`.
 
 **Revisit if.**
 - The owner wants the G1 mode sum.
-- A wall-crossing geodesic is shown to be complete, achronal and ANEC-negative.
+- A profile with a non-fastest axis or a tailed front needs deciding.
 - A second-order curved-QEI remainder bound appears.
+- The AANEC conjecture is proved or refuted.

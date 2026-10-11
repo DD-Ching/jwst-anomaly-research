@@ -2,25 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: Goal round 7: the Krasnikov tube's achronal and shortcut rays carry exactly zero ANEC; G2 demoted, G1 method set out
+## 2026-10-11: Goal round 7: the Krasnikov tube's axial shortcut ray is achronal with ANEC ≤ 0, so AANEC requires T_ll = 0 on the axis
 - Owner brief: rescope round 6's evidence, decide G2 on the complete geometry, assess G1 for feasibility, scope stop
   conditions. Write-up `docs/goal_round7/README.md`; code `scripts/goal_krasnikov_g2.py`; results
-  `results/goal_round7/`. Round-6 text corrected in place.
+  `results/goal_round7/`. Round-6 text annotated in place.
 - **Rescoped:**
-  - Round 6's curved-QEI numbers are a conditional estimate (derivative stand-in, tails, unknown a and b, no
-    second-order remainder bound), not a verified upper bound.
+  - Round 6's curved-QEI numbers are a conditional estimate (derivative stand-in; Kontou–Olum's region is the
+    causal hull of the whole worldline; unknown a and b; no second-order remainder bound).
   - Fewster–Osterbrink give arbitrarily negative energy over any bounded region for ξ > 0 on a fixed background.
     Only a self-consistent tube source is "not found".
-- **New [derived], complete ER tube with η < 1:**
-  - u = t − x never decreases along causal curves, so every outgoing ray is a complete achronal null geodesic.
-  - R_xx ≡ 0 for any k(u, x, ρ).
-  - The region where k = k(x) is flat, so shortcut rays used after completion run through exact Minkowski space.
-  - ANEC = 0 on both families: no AANEC conflict, and Olum's theorem does not apply. Wall-, junction- and
-    front-crossing geodesics are undecided.
-- **G1:** ε_sc = l_P √(8πNF(η)) by dimensional analysis. DeWitt–Schwinger cannot rule out light fields. A
-  planar-wall t-splitting mode sum (Levi–Ori) is feasible at medium cost; not started.
-- **Failed approach (rule):** do not infer negative ANEC on a "fastest" ray from Olum's defocusing when the ray
-  bundle crosses only flat, parallel-ray regions. Condition 1 and the generic condition fail there.
+- **New [derived], ER tube with η < 1:**
+  - Outgoing rays are complete, achronal and shear-free, with R_ll ≡ 0 for any k: ANEC 0.
+  - With a compact step the core shortcut rays run through flat space: ANEC 0, a marginal case.
+  - For any step monotone in ρ (eternal, or built with a compact front), w = t + ∫k(x,0)dx proves the axial
+    shortcut ray complete and achronal. On it R_ll = −(1 + k)∂²_ρk/k² ≤ 0, so ANEC < 0 unless ∂²_ρk ≡ 0 along the
+    axis. ER's tanh profile gives < 0.
+  - Conditional on the self-consistent AANEC conjecture, a self-consistent source needs T_ll = 0 along the whole
+    axis, or an axis that is not the fastest line.
+- **G1:** ε_sc = l_P √(8πNF(η)), with F implicit through ln(με). DeWitt–Schwinger cannot rule out light fields;
+  heavy fields need m ≫ m_P/√N. A planar t-splitting mode sum (Levi–Ori) is feasible at medium cost; the axis
+  sign needs the cylindrical version. Not started.
+- **Failed approach (rule):** "exactly zero" results that rest on compact steps are marginal. Check a generic
+  (tailed) profile before concluding (round-7 review).
 
 ## 2026-10-11: Goal round 6: the Krasnikov tube's QI bound holds for the "wait ≤ 1 yr" target; no field and state is known to source it
 - Owner brief: check the tube's physical source against Everett–Roman, Krasnikov 2003 and later work; no new

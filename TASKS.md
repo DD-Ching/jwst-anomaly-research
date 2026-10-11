@@ -28,8 +28,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
   Kontou–Olum for a free, minimally coupled scalar; no field and state is known to source the tube. Next, if the owner
   agrees: G2 (is the complete shortcut null geodesic achronal, with negative ANEC?) and G1 (the ground-state
   ⟨T_tt⟩ of a free scalar on the ER wall, sign and size). PR left unmerged for the owner.
-- Round 7 done (docs/goal_round7/): G2's outgoing and post-completion shortcut rays have ANEC exactly 0 (no AANEC
-  conflict); wall-crossing geodesics undecided. G1 method set out (planar-wall mode sum, F(η)); not started.
+- Round 7 done (docs/goal_round7/): the axial shortcut ray is complete and achronal with ANEC ≤ 0, so
+  self-consistent AANEC needs T_ll = 0 along the axis (conditional). Outgoing rays have ANEC 0. G1 method set out
+  (mode sum, F(η) plus the axis sign of ⟨T_ll⟩); not started.
   Proposal: pause the Krasnikov line for research value. PR left unmerged for the owner.
 - Not covered and still open as explicit-claim classes: Lorentz-violating gravity with superluminal spin-0/1 modes
   (Einstein–aether, Hořava), Gödel/Gott global geometries, non-local quantum gravity, tachyons.

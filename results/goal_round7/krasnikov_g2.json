@@ -1,5 +1,5 @@
 {
- "provenance": "derived symbolically from ER Eqs. (12)-(13) (no data); the ray check uses the stated ASSUMPTION profile",
+ "provenance": "derived symbolically from ER Eqs. (12)-(13) (no data); numerical checks use the stated ASSUMPTION profiles (compact C-infinity step; ER Eq. 35 tanh step)",
  "params": {
   "eta": 0.999,
   "eps": 1.0,
@@ -9,6 +9,11 @@
   "seed": 7
  },
  "outgoing_lines": {
+  "screen_tidal_R_AxBx": {
+   "22": "0",
+   "23": "0",
+   "33": "0"
+  },
   "g_xx": "0",
   "Gamma_a_xx": [
    "0",
@@ -27,10 +32,43 @@
   "k=0.5": 0.9963042320402751,
   "k=0.001": 0.9944888176637489
  },
- "incoming_rays": {
+ "incoming_rays_after_completion": {
   "max_dk_drho_or_du_along_rays": 0.0,
-  "transit_time_min_eps": 11.39899999863701,
-  "transit_time_max_eps": 11.39899999863701,
+  "transit_time_min_eps": 11.39899999862348,
+  "transit_time_max_eps": 11.39899999862348,
   "exterior_light_time_eps": 410.0
+ },
+ "incoming_rays_before_completion_control": {
+  "max_dk_drho_or_du_along_rays": 1.997999969229336,
+  "transit_time_min_eps": 214.28098134267074,
+  "transit_time_max_eps": 238.32314474388724,
+  "exterior_light_time_eps": 410.0
+ },
+ "axis_null_ricci": {
+  "R_ll": "-(rho*k(x, rho)*Derivative(k(x, rho), (rho, 2)) - rho*Derivative(k(x, rho), rho)**2 + rho*Derivative(k(x, rho), (rho, 2)) + k(x, rho)*Derivative(k(x, rho), rho) + Derivative(k(x, rho), rho))/(2*rho*k(x, rho)**2)",
+  "R_ll_on_axis": "-(k0(x) + 1)*k2(x)/k0(x)**2",
+  "radial_acceleration": "-(k(x, rho) + 1)*Derivative(k(x, rho), rho)/(2*k(x, rho)**2)"
+ },
+ "axis_anec_density_mid_tube": {
+  "compact_rho_max_3eps_eta_0.95": "0",
+  "compact_rho_max_3eps_eta_0.999": "0",
+  "compact_rho_max_10eps_eta_0.95": "0",
+  "compact_rho_max_10eps_eta_0.999": "0",
+  "compact_rho_max_50eps_eta_0.95": "0",
+  "compact_rho_max_50eps_eta_0.999": "0",
+  "tanh_rho_max_3eps_eta_0.95": "-5.26336e-5",
+  "tanh_rho_max_3eps_eta_0.999": "-0.131913",
+  "tanh_rho_max_10eps_eta_0.95": "-2.51636e-29",
+  "tanh_rho_max_10eps_eta_0.999": "-6.30665e-26",
+  "tanh_rho_max_50eps_eta_0.95": "-2.67016e-168",
+  "tanh_rho_max_50eps_eta_0.999": "-6.69214e-165"
+ },
+ "w_monotone_check": {
+  "compact": {
+   "min_normalised_dw": 0.0019425931844329694
+  },
+  "tanh": {
+   "min_normalised_dw": 0.0019425931844329694
+  }
  }
 }

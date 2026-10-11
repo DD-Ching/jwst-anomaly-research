@@ -57,8 +57,9 @@ ER metric at mid-tube: ds² = −dt² + (1 − k)dx dt + k dx² + dρ² + ρ²d�
      (η ≈ 1). It lies close to the incoming direction e0 − e1.
    - Radial light, e0 + e2: minimum −4.2/ε² at η ≈ 1. But its integral straight across the wall vanishes (≤ 10⁻⁸ of
      ∫|R_ll|).
-   - So NEC fails in the wall for every direction except outgoing light. The integrated failure that a shortcut
-     needs (Olum 1998, §3) has not been located yet (G2).
+   - So NEC fails in the wall for every direction except outgoing light. Olum 1998 needs only a pointwise WEC failure on
+     the fastest path (§3). Round 7 §3 finds the integrated value on the achronal rays: 0 on outgoing rays, ≤ 0
+     on the axial shortcut ray.
 
 ## 2. Sampling time and curvature validity
 
@@ -90,7 +91,7 @@ flat term 3.76:
 | 1 s early, 20 ly | 1.6 × 10⁻⁹ | 140 | 7 × 10⁻⁵ | 160 | 9 × 10³ | 7 × 10⁵ |
 
 The derivatives are taken along ρ of the static-frame Ricci components: an order-of-magnitude stand-in for the
-Fermi-frame derivatives. The frames can differ by an O(1) boost, since ∇_ρ∂t ∝ k′ ≠ 0. a and b are the undetermined
+Fermi-frame derivatives. The frames can differ by an O(1) boost, since ∇_ρ∂t ∝ k′ ≠ 0 (round 7 §1 corrects this: for the static geodesic observer the difference is a pure rotation). a and b are the undetermined
 coefficients of the curvature-squared counterterms.
 
 Two caveats:
@@ -101,7 +102,7 @@ Two caveats:
 
 **What it settles.**
 - **Latency rows (the owner's target).** τ0 = σ r_c ≈ 0.005ε is far inside the curvature radius (r_c ≈ 0.48ε) and
-  the variation scale (≈ ε). The first-order corrections are estimated at ≤ 10⁻⁴, unless 24|a| + 11|b| ≳ 10⁵.
+  the variation scale (≈ ε). The first-order corrections are estimated at ≤ 10⁻⁴ for 24|a| + 11|b| ≲ 10. That term is 10⁻⁵ per unit, so it reaches 10 % at ~10⁴ and O(1) at ~10⁵.
   *Rescoped in round 7 (docs/goal_round7/README.md §1):*
   - Theorems of the right type exist: Fewster–Smith, made explicit to first order by Kontou–Olum.
   - This model has not been shown to satisfy all their premises.
@@ -142,7 +143,7 @@ Two caveats:
 | Interacting fields evade QIs | Olum–Graham 2003 [lit] | Not shown to help | Their 2+1D static negative density is small, set by the Lagrangian, confined near a wall with positive energy, and the system obeys ANEC, which "is sufficient to rule out superluminal travel" [lit]. No 3+1D interacting state that sources a tube profile is known. Interacting QEIs remain an open problem [lit: Kontou–Sanders §6]. |
 | Static ground state is the lowest constant density | Fewster–Roman 2005 §8 (static) [lit]; stationary curves: Kontou–Sanders §4.3, citing Ford–Roman 1995 and Fewster 2017 [lit] | Yes (free fields with a ground state; ∂t timelike since g_tt = −1) | See §6: this turns the question into one about the ground state of this background. Kontou–Sanders add that "it appears to be unknown under what conditions the ground state ... will have a non-negative energy density" [lit], which is G1. |
 | Superluminal travel needs WEC violation on the fastest path | Olum 1998 (gr-qc/9805003) [lit] | Yes, if the tube meets Olum's Condition 1 | Olum names the Krasnikov tube as an example. Any path P that is fastest to a destination surface is a null geodesic, and the Raychaudhuri equation forces R_ab K^a K^b < 0 somewhere on P. That is a pointwise condition, already violated by the classical tube, and Olum notes the Casimir effect also satisfies Condition 1. It is not a prohibition. |
-| Self-consistent achronal ANEC (AANEC) | Graham–Olum 2007 (0705.3193) [lit]; Kontou–Sanders §5.3 | Time machines: no (η < 1). Shortcut: open (G2) | Graham–Olum conjecture that no self-consistent semiclassical solution violates ANEC on a complete achronal null geodesic. From it they prove no CTCs and no wormholes between different asymptotically flat regions. On superluminal communication they write that "additional constraints are necessary" (§IV D) [lit]. Kontou–Sanders §5.3 state more strongly that the theorem "also prohibits warp drive spacetimes" via Olum's proof. We take the primary source's narrower statement. For a finite tube in Minkowski space, the shortcut geodesic extends into flat regions where R_ll = 0. If that complete geodesic is achronal, Olum's defocusing argument (his Eqs. 3–8; our inference) makes its complete ANEC integral negative, which contradicts the conjecture. Whether it is achronal is G2. **Corrected in round 7 §3:** this inference fails for the core shortcut rays. Their complete geodesics lie in a flat region, so the ANEC integral is 0; Olum's Condition 1 and the generic condition both fail there. |
+| Self-consistent achronal ANEC (AANEC) | Graham–Olum 2007 (0705.3193) [lit]; Kontou–Sanders §5.3 | Time machines: no (η < 1). Shortcut: open (G2) | Graham–Olum conjecture that no self-consistent semiclassical solution violates ANEC on a complete achronal null geodesic. From it they prove no CTCs and no wormholes between different asymptotically flat regions. On superluminal communication they write that "additional constraints are necessary" (§IV D) [lit]. Kontou–Sanders §5.3 state more strongly that the theorem "also prohibits warp drive spacetimes" via Olum's proof. We take the primary source's narrower statement. For a finite tube in Minkowski space, the shortcut geodesic extends into flat regions where R_ll = 0. If that complete geodesic is achronal, Olum's defocusing argument (his Eqs. 3–8; our inference) makes its complete ANEC integral negative, which contradicts the conjecture. Whether it is achronal is G2. **Round 7 §3:** with a compact step the core rays are flat, so ANEC = 0 (a marginal case). For any step monotone in ρ (eternal tube, or compact front), the axial ray is complete and achronal, with R_ll = −(1 + k)∂²_ρk/k² ≤ 0, so its ANEC is < 0 unless ∂²_ρk ≡ 0 on the axis. The inference therefore holds generically, conditional on the conjecture. |
 
 ## 4. The negative-energy estimate: model, size and observer
 
@@ -246,7 +247,7 @@ globally hyperbolic, with ∂t timelike everywhere (§1). Compare it with T_requ
   - It is negative and within the reach of a known field content: write down the self-consistent semiclassical
     problem.
 
-**G2 (co-equal with G1; independent of the field content).** Check Olum's Condition 1 for the computed tube, and
+**G2 (co-equal with G1; independent of the field content; partly decided in round 7 §3).** Check Olum's Condition 1 for the computed tube, and
 locate the fastest null geodesic between exterior points that uses the shortcut. Check whether its complete
 extension is achronal, and integrate R_ab l^a l^b along it. A negative complete integral on an achronal geodesic
 conflicts with Graham–Olum's self-consistent AANEC conjecture. That is a conjecture, not a theorem, so a conflict
@@ -290,7 +291,7 @@ end caps and build-out, and stability would still be untested.
 
 **Decision (proposal for the owner).** Keep the Krasnikov tube as the reference trade-off, with the "wait ≤ 1 yr"
 rows (§4) replacing the round-5 advance rows as the goal-relevant numbers. Before any further work on this line, run
-G2 (cheapest, field-independent) and G1 (offline, one script each). *Round 7 rescopes the stop conditions:*
+G2 (cheapest, field-independent; round 7 §3 turns it into the on-axis condition T_ll = 0) and G1 (offline, one script each). *Round 7 rescopes the stop conditions:*
 - A G1 failure would rule out only the field and assumptions computed.
 - A G2 AANEC conflict would be a conditional limit, holding only if the conjecture holds.
 - Pausing for low research value is not a statement of physical impossibility.
