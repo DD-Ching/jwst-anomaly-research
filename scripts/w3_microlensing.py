@@ -164,6 +164,21 @@ try:  # optional: numba (extra "dev"/"fast"); the exotic_sim integral is the ref
     import numba
 
     @numba.njit(cache=True, nogil=True, inline="always")
+    def _interp_uniform(x, xp, fp):
+        """``np.interp`` on an evenly spaced, increasing ``xp`` (x inside it): the bracket by index
+        arithmetic, corrected by one step for rounding; numpy's slope formula."""
+        last = xp.size - 1
+        if x >= xp[last]:
+            return fp[last]
+        j = min(max(int((x - xp[0]) / (xp[1] - xp[0])), 0), last - 1)
+        while j > 0 and xp[j] > x:
+            j -= 1
+        while j < last - 1 and xp[j + 1] <= x:
+            j += 1
+        slope = (fp[j + 1] - fp[j]) / (xp[j + 1] - xp[j])
+        return slope * (x - xp[j]) + fp[j]
+
+    @numba.njit(cache=True, nogil=True, inline="always")
     def _point_amp(x, n2, sign, bc, tx, ty):
         """``point_magnification`` at one radius x ≥ 0 for n = 1 (closed form) or n = 2 (table)."""
         if not n2:
@@ -179,7 +194,7 @@ try:  # optional: numba (extra "dev"/"fast"); the exotic_sim integral is the ref
                 return 10.0 ** ty[0] * 10.0 ** tx[0] / max(x, 1e-300)
             if lx > tx[-1]:
                 return 1.0
-            return 10.0 ** np.interp(lx, tx, ty)
+            return 10.0 ** _interp_uniform(lx, tx, ty)
         d = x - bc
         if not d > 0.0:
             return 0.0
@@ -188,7 +203,7 @@ try:  # optional: numba (extra "dev"/"fast"); the exotic_sim integral is the ref
             return 10.0 ** ty[0] * np.sqrt(10.0 ** tx[0] / d)
         if lx > tx[-1]:
             return 1.0
-        return 10.0 ** np.interp(lx, tx, ty)
+        return 10.0 ** _interp_uniform(lx, tx, ty)
 
     @numba.njit(cache=True, nogil=True, error_model="numpy")  # IEEE x / 0, as in numpy
     def _fs_kernel(b, rho, n2, sign, bc, nodes, weights, tx, ty):
@@ -244,9 +259,9 @@ except ImportError:  # pragma: no cover - exercised only without numba
 
 FS_REFERENCE = os.environ.get("W3_FS_REFERENCE") == "1"  # read at import: pool workers inherit it
 _NO_TABLE = np.zeros(1)
-# n = 2 stays on the numpy path: its scalar table interpolation in the kernel is slower than
-# numpy's vectorized one (149 vs 125 µs per call; n = 1: 17 vs 86 µs; CHANGELOG 2026-10-11)
-KERNEL_N = (1.0,)
+# Per call: n = 1 17 vs 86 µs, n = 2 ~35 vs 110 µs (kernel vs numpy). n = 2 needs the uniform-grid
+# lookup: np.interp's binary search inside the kernel was slower than numpy (CHANGELOG 2026-10-11)
+KERNEL_N = (1.0, 2.0)
 
 
 def finite_source_fast(beta, rho: float, n: float, sign: int, n_nodes: int = 32) -> np.ndarray:
