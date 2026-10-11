@@ -68,3 +68,19 @@ def test_detection_model_is_ideal_at_unit_efficiency():
     assign = {(p, s): -1 for p in w.parties for s in (0, 1)}
     ro = hw.readout_affine(w, eta=1.0, assign=assign)
     assert hw.witness_value(rho, w, ro) == pytest.approx(hw.witness_value(rho, w))
+
+
+def test_combined_cost_matches_owner_check():
+    # owner check: visibility 0.95, eta 0.97, no-click = +1 gives S = 6.01572, 1.09e7 (5 sigma),
+    # 1.14e8 (Azuma) trials
+    row = hw.combined_cost(hw.lc4_witness(), (0.95,), (0.97,), (0.0,))[0]
+    assert row["S"] == pytest.approx(6.01572, abs=1e-5)
+    assert row["gaussian_z"] == pytest.approx(1.09e7, rel=0.01)
+    assert row["azuma"] == pytest.approx(1.14e8, rel=0.01)
+
+
+def test_fidelity_does_not_fix_s():
+    tab = hw.equal_fidelity_table(hw.lc4_witness(), 0.95)
+    values = [r["S"] for r in tab.values()]
+    assert all(r["fidelity"] == pytest.approx(0.95, abs=1e-6) for r in tab.values())
+    assert max(values) - min(values) > 0.05

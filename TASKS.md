@@ -12,7 +12,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 - Done: corrections, carried-wormhole accounting, v-causal calibration and data adequacy (NIST 2015 cannot improve
   the bipartite V bound; other datasets not assessed). PR left unmerged for the owner.
 - Round 2 done (docs/goal_round2/): no channel is guaranteed by the theorem alone; revised after owner review.
-- Round 3 done (docs/goal_round3/): LC4 Experiment v1 is the only design kept. **The line is paused** until a trigger
+- Round 3 done (docs/goal_round3/): LC4 Experiment v1 is kept as a conditional design (best of the three
+  criteria compared). **The line is paused** until a trigger
   in docs/goal_round3/README.md §8 fires (a four-party spacelike platform with no postselection, an observed
   S4 ≤ 6, a known frame, a branch-fixing model, a fast high-efficiency photonic source, or a better witness).
 - Next (open, not on this line): modified-gravity escape from Gao–Wald (literature unit).

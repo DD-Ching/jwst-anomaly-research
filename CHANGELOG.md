@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: Goal round 3: LC4 is the only hidden-influence criterion worth an experiment; the line is paused pending capability
+## 2026-10-11: Goal round 3: LC4 is the best of the three hidden-influence criteria compared; the line is paused pending capability
 - Owner brief (continues #152 and #154). Write-up: `docs/goal_round3/README.md`; code
   `scripts/goal_hic_witnesses.py`; results `results/goal_round3/`.
 - Round-2 revisions:
@@ -21,8 +21,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     change the choice and was not computed.
   - The forced signal for LC4 is 0.0259, 4× Bancal's.
 - **Decision:** keep the LC4 Experiment-v1 specification; wait for a platform with four spacelike-separated parties,
-  no postselection, η ≥ 0.97 and visibility ≥ 0.95. The direct signalling test needs ~10¹³ trials with an unknown
+  no postselection, and the combined condition of README §6a (e.g. V ≥ 0.97 with η ≥ 0.99, or 0.98 with
+  0.98, flips ≤ 0.5 %). V = 0.95 with η = 0.97 gives S4 = 6.016 and 1.1 × 10⁸ Azuma trials (owner check, reproduced). The direct signalling test needs ~10¹³ trials with an unknown
   frame. Triggers are in §8.
+- **Failed approach (rule):** a wait condition built from single-error thresholds (V ≥ 0.95, η ≥ 0.97) leaves no
+  margin once errors combine (owner review). State conditions from the combined model and per noise model; never
+  equate a quoted fidelity with an LC4 visibility.
 - **Failed approach (rule):** quoting LC5's lower white-noise threshold as "more robust" is wrong under local noise.
   Compare witnesses under the noise the platform actually has.
 - **Failed approach (rule):** the first draft claimed that a v1-only deficit (S ≤ bound in v1, QM in timelike

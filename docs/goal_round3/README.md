@@ -17,7 +17,8 @@ are in `docs/goal_round2/README.md` §3.1, §5 and §8.
 
 ## 1. Verdict
 
-- **Most promising criterion: LC4.** It is the most noise-robust under every realistic noise model computed, needs
+- **Most promising criterion among the three compared: LC4.** It is the most noise-robust under every local noise
+  model computed here, needs
   ≥ 50× fewer trials than Bancal (3.5 × 10³ against 2.0 × 10⁵ at 5σ for ideal states), uses 6 low-weight terms, and fits Bancal's 4-site geometry unchanged.
   - LC5 is better only under pure white noise.
   - The Bancal criterion is not a practical target: it is violated only above 97.2 % visibility and with less than
@@ -28,10 +29,12 @@ are in `docs/goal_round2/README.md` §3.1, §5 and §8.
 - **The communication-relevant test is out of reach.** It is the direct observation of signalling in B ∼ C
   ("R") trials, and with an unknown frame it needs ~10¹³ trials (§6).
 - **Decision (§8):**
-  - Keep the LC4 Experiment-v1 specification as the only design in this line.
-  - Wait for one capability: four spacelike-separated parties with no postselection, visibility ≳ 0.95 and detection
-    ≳ 0.97.
-  - Pause further expansion of this line.
+  - Keep the LC4 Experiment-v1 specification as the design kept from this comparison of three criteria.
+  - Wait for a platform that meets the combined condition of §6a. In short: four spacelike-separated parties, no
+    postselection, 4-party white-noise-equivalent visibility ≥ 0.97 with per-detector efficiency ≥ 0.99, or
+    ≥ 0.98 with ≥ 0.98, and readout flips ≤ 0.5 %.
+  - Pause further expansion of this line. The research direction was accepted by the owner on 2026-10-11, and small
+    criterion improvements do not reopen it.
 
 ## 2. Do the criteria answer the same question? [paper]
 
@@ -133,6 +136,55 @@ that reproduces these marginals):
   direct signalling test needs ~17× fewer trials.
 - The LP is a relaxation of the model class, so these are lower bounds.
 
+## 6a. Combined cost: noise and detection loss together [derived; `lc4_combined_cost` in the results]
+
+The thresholds of §4 hold one error source at a time. In a real experiment the margins add up. Model: white noise
+at visibility V, per-detector efficiency η with no-click recorded as +1 (the best assignment for LC4), and a
+symmetric readout flip. Trials per configuration follow the Experiment-v1 estimator of §6.
+
+| V | η | flip | S4 (bound 6) | 5σ trials | Azuma, p = 10⁻⁶ |
+|---|---|---|---|---|---|
+| 0.95 | 0.97 | 0 | 6.0157 | 1.09 × 10⁷ | 1.14 × 10⁸ |
+| 0.95 | 0.97 | 0.005 | 5.867 (no violation) | — | — |
+| 0.95 | 0.98 | 0.005 | 6.0168 | 9.6 × 10⁶ | 1.0 × 10⁸ |
+| 0.95 | 0.99 | 0 | 6.327 | 2.4 × 10⁴ | 2.7 × 10⁵ |
+| 0.97 | 0.98 | 0.005 | 6.143 | 1.3 × 10⁵ | 1.4 × 10⁶ |
+| 0.97 | 0.99 | 0.005 | 6.300 | 2.9 × 10⁴ | 3.2 × 10⁵ |
+| 0.98 | 0.98 | 0.005 | 6.207 | 6.2 × 10⁴ | 6.6 × 10⁵ |
+| 0.99 | 0.99 | 0.005 | 6.430 | 1.4 × 10⁴ | 1.5 × 10⁵ |
+
+The owner's check is reproduced: V = 0.95 with η = 0.97 gives S ≈ 6.0157, 1.09 × 10⁷ (5σ) and 1.14 × 10⁸
+(Azuma) trials.
+
+**Further errors that shrink the margin**
+- Each 0.5 % readout flip costs about 0.15 in S. At V = 0.95, η = 0.97 that alone removes the violation.
+- Dephasing, amplitude damping and coherent miscalibration lower S further (§4 and the fidelity table below).
+- Drift between acquisition blocks biases the shared AD marginal.
+- Trials lost to the 2δ timing margins raise every count.
+- The 8 frame-free configurations multiply the totals by 8.
+
+**Updated wait condition.** The earlier "V ≥ 0.95 and η ≥ 0.97" was a single-error threshold. It leaves 0.016 of
+margin and costs ~10⁸ trials per configuration, so it is replaced. An experiment worth designing needs both:
+- S4 ≥ 6.2 after all errors;
+- ≲ 10⁶ Azuma trials per configuration.
+
+That is, for example, V ≥ 0.97 with η ≥ 0.99, or V ≥ 0.98 with η ≥ 0.98, both with readout flips ≤ 0.5 %.
+
+**Fidelity is not visibility** [derived; `lc4_equal_fidelity_0.95`]. A platform's state fidelity F fixes S only
+once a noise model is given; under white noise, F = V + (1 − V)/16. At the same F = 0.95, S4 is:
+
+| Noise model | S4 |
+|---|---|
+| white noise (V = 0.947) | 6.464 |
+| local dephasing | 6.570 |
+| local depolarising | 6.542 |
+| amplitude damping | 6.528 |
+| a coherent Y rotation of 0.23 rad on every qubit | 6.402 |
+
+So platforms are compared here only by state *and* noise model. The fidelities in §7 are for GHZ or cluster
+states under each paper's own noise. They are not LC4 visibilities, and the table above shows they can be
+optimistic or pessimistic.
+
 ## 6. What can make a fake signal, and how the design removes it [derived]
 
 **Postselection and detection loss**
@@ -185,6 +237,8 @@ Frame-free coverage multiplies these by the 8 configurations of App. E.
 
 ## 7. Existing capability [literature; numbers as read by a subagent; anything not found is UNKNOWN]
 
+Fidelities below refer to each paper's own state (mostly GHZ, not LC4) and are not LC4 visibilities (§6a).
+
 | Platform (source) | Fidelity or visibility | Rate | Spacelike? | Postselected? |
 |---|---|---|---|---|
 | SPDC 4-photon GHZ (Zhang et al. arXiv:1702.04130, Fig. 3) | F = 0.981 | 0.42 /s | no | yes |
@@ -200,13 +254,15 @@ UNKNOWN: superconducting 4/5-qubit cluster fidelity, 5-ion GHZ fidelity, any pho
 Li et al. p.2 (three searches; not a full crawl of the citing papers).
 
 **Gaps for LC4 Experiment v1**
-1. **No platform combines the requirements**: four parties spacelike-separated from each other, no postselection with
-   per-detector efficiency ≥ 0.969, and visibility ≥ 0.95.
+1. **None of the platforms found** (§7 list; the search was not exhaustive) combines the requirements of §6a: four
+   parties spacelike-separated from each other, no postselection with per-detector efficiency ≥ 0.98–0.99, and LC4
+   visibility ≥ 0.97–0.98.
    - Photonic sources have the visibility but 14–76 % system efficiency.
    - Heralded matter nodes have the efficiency, but their multi-node fidelity (0.54) is far below threshold.
-2. **Rate.** At visibility 0.95, LC4 needs 1.2 × 10⁵ trials (Azuma) per configuration.
-   - At the 3-node GHZ rate (1 per 90 s) that would be ~4 months per configuration.
-   - At the postselected photonic 0.42 /s it would be ~3 days, but that run would not be a valid test.
+2. **Rate.** At the §6a condition, LC4 needs ~3 × 10⁵ to 7 × 10⁵ trials (Azuma) per configuration. At V = 0.95 and
+   η = 0.97 it would need 1.1 × 10⁸.
+   - At the 3-node GHZ rate (1 per 90 s), 3 × 10⁵ trials take ~10 months per configuration.
+   - At the postselected photonic 0.42 /s they take ~8 days, but that run would not be a valid test.
 3. **Per-trial random settings and continuous random B and C timing** at four stations. These are demonstrated
    separately (Pockels cells, as in Erven and Shalm), but not together at four stations.
 4. **Timing is not the bottleneck for v1.** v1 needs no synchronisation (App. E). The windows that matter are the
@@ -215,7 +271,8 @@ Li et al. p.2 (three searches; not a full crawl of the citing papers).
 ## 8. Decision and what would change it
 
 **Decision.**
-1. **Continue: the LC4 Experiment-v1 specification** (§2–§6) is the only design in this line worth keeping.
+1. **Keep the LC4 Experiment-v1 specification** (§2–§6a) as a conditional design: it is the best of the three
+   criteria compared, under the noise models computed. It is not a claim that no other test could be better.
 2. **Wait for capability.** No new experiment design work is started until a platform reports one of the trigger
    conditions below.
 3. **Pause expansion of the low-latency line through v-causal models.** No more theory units on it:
@@ -224,11 +281,12 @@ Li et al. p.2 (three searches; not a full crawl of the citing papers).
    - the direct signalling test needs ~10¹³ trials, or a known frame.
 
 **Triggers that change this decision**
-1. **A published platform with four spacelike-separated parties**, no postselection, detection efficiency ≥ 0.97
-   and 4-party visibility ≥ 0.95 (equivalently F ≳ 0.95). Then write the full LC4 v1 protocol, with rates and the
-   8 configurations.
-2. **Any report of S4 ≤ 6 (or S ≤ 7) in a v1 configuration while timelike-ordered controls give the QM value.**
-   That has top priority: vet loopholes, then design the direct signalling test.
+1. **A published platform with four spacelike-separated parties** and no postselection that meets §6a: S4 ≥ 6.2
+   predicted from its measured LC4 correlators or noise model (not from a fidelity alone), e.g. V ≥ 0.97 with
+   η ≥ 0.99 or V ≥ 0.98 with η ≥ 0.98, and readout flips ≤ 0.5 %. Then write the full LC4 v1 protocol, with rates
+   and the 8 configurations.
+2. **Any report of S4 ≤ 6 (or S ≤ 7) where QM predicts a violation**, in a v1 configuration or in other
+   measurements of the same marginals (§3). That has top priority: vet loopholes and calibration first.
 3. **Independent evidence fixing the preferred frame** (speed and direction), or a bound β_max far below the CMB
    speed. The worst-case R fraction ≈ 1/(2 r β_max) then rises, and the trial count falls as β_max². With a fully known
    frame and B–C timing better than d/v, R trials can be scheduled (f → 1) and a 5σ direct test needs ~25/δ² ≈ 10⁵ trials. Recompute it.
@@ -246,7 +304,8 @@ Li et al. p.2 (three searches; not a full crawl of the citing papers).
   - §3 row 2 was logically wrong. Under λ-independence, a deviation cannot be specific to v1; the row is now split.
   - LC5 also fits Bancal's 4-site layout.
   - With no bound on the frame speed, the worst-case R fraction is exactly 0 for windows shorter than d/c.
-- **Time.** 2026-10-11 05:40 → about 06:10 UTC, including the round-2 revisions.
+- **Time.** 2026-10-11 05:40 → about 06:10 UTC, including the round-2 revisions. Closing revision (§6a, wording):
+  about 06:15–06:30 UTC.
 - **Compute.** About 30 s for the full script (LPs of up to 1024 variables). The tests take about 10 s.
 - **Data.** None. Papers only (arXiv PDFs in the scratchpad, not committed).
 - **Not done.**

@@ -213,6 +213,16 @@ def amplitude_damping(rho: np.ndarray, g: float) -> np.ndarray:
     return local_channel(rho, [k0, k1])
 
 
+def coherent_rotation(rho: np.ndarray, theta: float) -> np.ndarray:
+    """The same small Y rotation exp(-i theta Y / 2) on every qubit (a calibration error)."""
+    u = math.cos(theta / 2) * I2 - 1j * math.sin(theta / 2) * SY
+    return local_channel(rho, [u])
+
+
+def fidelity(rho: np.ndarray, w: Witness) -> float:
+    return float(np.real(w.psi.conj() @ rho @ w.psi))
+
+
 # ----------------------------------------------------------------------------- correlators
 
 
@@ -573,6 +583,55 @@ def trials_needed(mom: dict, bound: float, z: float = 5.0, p_value: float = 1e-6
     }
 
 
+# ----------------------------------------------------------------------------- experiment cost
+
+
+def equal_fidelity_table(w: Witness, target: float = 0.95) -> dict:
+    """S at the same state fidelity F under different noise models: F alone does not fix S, so a
+    platform's quoted fidelity must come with its noise model before comparing it to a threshold
+    (white noise: F = V + (1 - V) / 2^n)."""
+    rho = density(w)
+    models = {
+        "white": (white, 0.5, 1.0),
+        "dephasing": (dephasing, 0.0, 0.5),
+        "depolarising": (depolarising, 0.0, 1.0),
+        "amplitude_damping": (amplitude_damping, 0.0, 1.0),
+        "coherent_Y_rotation": (coherent_rotation, 0.0, 1.0),
+    }
+    out = {}
+    for name, (fn, lo, hi) in models.items():
+        x = bisect(lambda t, f=fn: fidelity(f(rho, t), w) - target, lo, hi, tol=1e-9)
+        r = fn(rho, x)
+        out[name] = {"parameter": x, "fidelity": fidelity(r, w), "S": witness_value(r, w)}
+    return out
+
+
+def combined_cost(
+    w: Witness,
+    visibilities=(0.95, 0.97, 0.98, 0.99),
+    efficiencies=(0.97, 0.98, 0.99, 1.0),
+    flips=(0.0, 0.005),
+) -> list:
+    """Experiment-v1 cost with white noise, detection loss (no-click recorded as +1, the best
+    assignment for LC4 found by detection_threshold) and symmetric readout flips together."""
+    rho = density(w)
+    rows = []
+    for v, eta, fl in itertools.product(visibilities, efficiencies, flips):
+        ro = readout_affine(w, flip=fl, eta=eta)
+        r = white(rho, v)
+        mom = v1_estimator_moments(distribution(r, w, ro), w)
+        rows.append(
+            {
+                "visibility": v,
+                "eta": eta,
+                "readout_flip": fl,
+                "S": witness_value(r, w, ro),
+                **trials_needed(mom, w.bound),
+            }
+        )
+    return rows
+
+
 # ----------------------------------------------------------------------------- main
 
 
@@ -632,6 +691,9 @@ def main(argv=None) -> int:
     for make in WITNESSES:
         w = make()
         out["witnesses"][w.name] = analyse(w, with_lp=not (a.no_lp5 and w.n == 5))
+    lc4 = lc4_witness()
+    out["lc4_equal_fidelity_0.95"] = equal_fidelity_table(lc4)
+    out["lc4_combined_cost"] = combined_cost(lc4)
     out["r_fraction_worst_case"] = bancal.r_fraction_table()
     print(json.dumps(_finite(out), indent=1, default=str, allow_nan=False))
     return 0
