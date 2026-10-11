@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 9: no next executable unit for the communication goal on current inputs
+- Owner brief: choose one worthwhile physics problem from the whole project and run a minimal check only if a
+  differing prediction, data and a light test all exist. Write-up `docs/goal_round9/README.md`.
+- Compared three problems:
+  - P1, multipartite v-causal influences: no four-party spacelike data.
+  - P2, exotic or negative-mass lenses (W3): data exist but are already in the scheduled MOA-II search; nulls need
+    an abundance model.
+  - P3, khronometric / Hořava instantaneous mode: no controlled strong-coupling theory; otherwise the same as round 8.
+- **Result:** not enough basis to select a unit. No new evidence; no computation. The required new inputs are
+  listed in §3 of the write-up.
+
 ## 2026-10-11: Goal round 8: Einstein–æther spin-0 trades speed for coupling (κ ∝ 1/c_S²); no practical low-latency channel found in the computed case; line paused
 - Owner brief: a bounded unit on EA spin-0/spin-1 modes, built from the action, matter coupling and a measurable
   response. Krasnikov stays paused. Write-up `docs/goal_round8/README.md`; code `scripts/goal_ea_response.py`;
