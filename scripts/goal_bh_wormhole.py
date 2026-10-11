@@ -291,6 +291,29 @@ def mp_crosscheck(points=((2, 0.2), (2, 3.0), (2, 8.0), (10, 4.0)), dps: int = 4
     return out
 
 
+FAR_POINTS = ((50, 11.0), (50, 12.0), (200, 14.0), (200, 16.0))
+
+
+def far_zone_probe(points=FAR_POINTS, dps: int = 50) -> list:
+    """Sign of (39c) beyond the grid edge, in mpmath: 2 P1 - F -> 0 exponentially there, so float64
+    is not trusted. Shows whether the far-zone failure moves outward with l or stops."""
+    import mpmath as mp
+
+    mp.mp.dps = dps
+    exprs = expressions()
+    f39 = sp.lambdify((x, L), exprs["cond39c"], "mpmath")
+    fp = sp.lambdify((x, L), exprs["P1m"], "mpmath")
+    return [
+        {
+            "l": ell,
+            "x": xv,
+            "cond39c": float(f39(mp.mpf(xv), mp.mpf(ell * (ell + 1)))),
+            "2P1_minus_F": float(fp(mp.mpf(xv), mp.mpf(ell * (ell + 1)))),
+        }
+        for ell, xv in points
+    ]
+
+
 def crossing_time() -> dict:
     """Radial light from r = -R to r = +R through the throat takes 2R - tau * I (A = 1, so Killing
     time is proper time of static clocks at both ends), I = int (1 - 1/sqrt(1 + sech x)) dx."""
@@ -330,6 +353,7 @@ def main(argv=None) -> int:
     }
     if not a.skip_mp:
         out["mpmath_crosscheck"] = mp_crosscheck()
+        out["far_zone_probe"] = far_zone_probe()
     print(json.dumps(out, indent=1))
     return 0
 

@@ -11,12 +11,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Positive controls:** F > 1 and the Fig. 2 positivity reproduce; Eq. (33) at large ℓ equals Appendix B.
 - **New [derived]:**
   - The 2404.06297 sufficient set fails on this solution: (39b) for ℓ = 2 near the throat; (39c) near the throat
-    and the Θ crossing, and in a far zone for ℓ ≲ 20.
+    and the Θ crossing, and in a far zone for every ℓ tested.
   - One even-parity angular mode is superluminal, c² up to 1.83.
   - The odd sector passes.
   - A real tachyon is not shown; that needs the low-ℓ eigenproblem.
   - Two inconsistencies were found in 2404.06297: det K (22) vs (129)–(130) differ by a factor 4, and (42) vs
-    (132)–(133).
+    (132)–(133) by 4F(r).
 - **Channel:** the ends are separate asymptotic regions with equal clock rates (A = 1). No exterior path and no time
   shift exist, so no time advantage. Light crosses in the proper distance; the throat is 9 × 10⁻³³ m.
 - **Observations:** the project's Ellis-lens limits (1/b² law) and GW170817 (cosmological background) do not apply
