@@ -2,6 +2,36 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 8: Einstein–æther spin-0 trades speed for coupling (κ ∝ 1/c_S²); no practical low-latency channel found in the computed case; line paused
+- Owner brief: a bounded unit on EA spin-0/spin-1 modes, built from the action, matter coupling and a measurable
+  response. Krasnikov stays paused. Write-up `docs/goal_round8/README.md`; code `scripts/goal_ea_response.py`;
+  results `results/goal_round8/`.
+- **Literature screen:**
+  - Data do not bound c_S or c_V from above: region (i) of 1802.04303 has c14 ≤ 2 × 10⁻⁷ and c_S ≈ √(c2/c14) → ∞.
+  - The only exclusion of superluminal EA (2505.09544) is a stated conjecture.
+  - No EFT cutoff for c14 → 0 is given.
+- **Controls reproduced:** mode speeds, G_N = G/(1 − c14/2), the GR quadrupole field, and Yagi Eq. 106's breathing
+  I_kk term. The vector mode does not reach a metric detector for c13 = 0.
+- **New [derived]:**
+  - Exterior field of a pulsating sphere (linear, c13 = 0): E_ij = −κG[δ_ij Q⁽⁴⁾/r + ∂_i∂_j(Q̈/r)] at t − r/c_S, with
+    κ = c14(c14 + 3c2)/(3c2(2 − c14)²) ≈ c14/4 and no instantaneous part.
+  - Far-field breathing amplitude −(c14/4)Gω⁴I_kk/r.
+  - c14 ≈ 2c2/((2 + 3c2)c_S²), so a faster mode couples more weakly.
+  - Link budget for one specified configuration (mountain-scale source, 10⁻²⁰ s⁻²/√Hz): SNR 4 × 10⁻²⁶ to
+    3 × 10⁻⁴⁰ in a one-year observation at 20–100 ly. The 10⁵⁹–10⁸⁸ s integration times are formal extrapolations.
+  - Any slow source: E^S_ij = −[Gc14/(2(2 − c14))](δ_ij∂_t² + ∂_i∂_j)(∂_t²I_kk + ∂_k∂_l I_kl)[·]_ret/r (form
+    found by the review, verified).
+  - Spin-1 with c13 ≠ 0: κ_V ≤ 1/((1 − c13)c_V²).
+- **Review:** the "factor ½ vs Yagi" was our transcription of Eq. 106 ((3/2)(Z − 1)); there is full agreement.
+- **Judgement (owner closing, 2026-10-11):** in the computed model, parameters and equipment no practical low-latency
+  channel was found, which supports pausing the EA line.
+  - Not an upper bound over all sources and detectors.
+  - The linearised characteristic cone allows an early response, but a physical superluminal information front is
+    not established (unknown cutoff and high-frequency behaviour).
+  - κ is a coefficient on specific source moments, not a universal scalar/GR signal ratio.
+- **Failed approach (rule):** the per-helicity scalar-sector share of a static field is not physical (nonlocal
+  projectors). The full 3D kernel splits cleanly by cone: G on c, G_N − G on c_S.
+
 ## 2026-10-11: Goal round 7: smooth eternal Krasnikov tube, the axial shortcut ray has ANEC = −2∫∂²_ρk dx ≤ 0; model paused at "no self-consistent source found"
 - Owner brief: rescope round 6's evidence, decide G2 on the complete geometry, assess G1 for feasibility, scope stop
   conditions. Then an owner review on axis regularity. Write-up `docs/goal_round7/README.md`; code

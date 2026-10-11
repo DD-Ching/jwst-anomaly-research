@@ -1,0 +1,222 @@
+# Goal round 8: can Einstein–æther's superluminal spin-0 / spin-1 modes carry a controllable bit?
+
+Owner brief (2026-10-11). The Krasnikov line stays paused and G1 is not started. The new bounded unit is
+Einstein–æther (EA) spin-0 and spin-1 modes, approached from the action, the matter coupling and a measurable
+response:
+1. applicability screen;
+2. sender operation → propagation → receiver readout;
+3. one minimal computation, after reproducing published controls;
+4. separate value (i), a testable signal beyond known physics, from value (ii), seconds-scale interstellar
+   latency;
+5. a definite judgement.
+
+Code `scripts/goal_ea_response.py`; results `results/goal_round8/ea_response.json`; tests
+`tests/test_goal_ea_response.py`.
+
+Labels: [lit] = stated in the cited paper (with its own status: proved, data-constrained or conjectured);
+[derived] = computed in this round; [ASSUMPTION] = a choice made here.
+
+**Repository check.** EA appears only in round 5's "not covered" list and as a data citation (2605.01436) in
+docs/hypotheses/round-3/B-on-R3B.md. No earlier communication analysis exists. This differs from the Bancal
+hidden-influence model (rounds 2–3): here a definite Lagrangian fixes both the source coupling and the readout.
+
+## 1. Applicability screen [lit]
+
+**Action** (signature −+++, matter coupled to g only):
+
+S = (1/16πG)∫√−g [R − c1(∇u)² − c2(∇·u)² − c3 ∇_a u_b ∇^b u^a + c4 a²] + λ(u² + 1)
+
+Conventions differ across papers: signature, the sign of the c4 term, and c_a = c14, c_σ = c13,
+c_θ = c13 + 3c2, c_ω = c1 − c3 in 2304 and 2605. The mode speeds below were checked against our own
+derivation (§3).
+
+| Item | Statement | Status |
+|---|---|---|
+| Speeds | c_T² = 1/(1 − c13); c_V² = (2c1 − c1² + c3²)/(2c14(1 − c13)); c_S² = c123(2 − c14)/(c14(1 − c13)(2 + c13 + 3c2)) (Jacobson–Mattingly gr-qc/0402005; 1802.04303 Eq. 3.4) | derived in the papers; reproduced here |
+| Tensor speed | \|c13\| ≲ 10⁻¹⁵ (GW170817) | data |
+| PPN | \|α1\| ≤ 10⁻⁴, \|α2\| ≤ 10⁻⁷, with α1 = −4c14 for c13 = 0 (1802.04303 Eq. 1.2) | data |
+| Allowed region | (i) 0 < c14 ≤ 2 × 10⁻⁷ with c14 ≲ c2 ≲ 0.095; (ii) 2 × 10⁻⁶ ≲ c14 ≲ 2.5 × 10⁻⁵ with c2 − c14 ≲ 2 × 10⁻⁷ (1802.04303 Eq. 3.23). Region (ii) has c2/c14 ≤ 1.1, so c_S ≤ 1.05 at c14 = 2 × 10⁻⁶ (κ ≤ 5 × 10⁻⁷; up to ~1 yr early at 20 ly; no practical channel found there either, §4). **Region (i) lets c_S ≈ √(c2/c14) → ∞.** c_ω, and hence c_V, is unconstrained (2304.06801; 2605.01436). | data plus stability and Cherenkov assumptions |
+| Cherenkov | Constrains only subluminal modes; "c_N > 1 is allowed. This does not violate causality" (2304.06801 fn. 9) | theory |
+| GW data | GW170817 and GW190425 posteriors on c_a and c_θ follow the priors (2304.06801) | data, uninformative |
+| Pulsar | PSR J1738+0333 gives α1 > −7.2 × 10⁻⁵ at 90 % (2605.01436v1) | data |
+| Superluminal exclusion | 2505.09544 (v3, Oct 2026; PRD 112, 024052) conjectures that gravitational memory with superluminal modes excludes the superluminal parameter space. In its own words this is a "conjecture". It has no quantitative amplitude and neglects finite-size and nonlinear effects. No rebuttal among 13 INSPIRE citations. Zosso 2610.06528 (an EM analogue; abstract level only) reports that finite superluminal sources give finite bursts. | conjecture |
+| EFT range | No paper read here gives a strong-coupling or cutoff scale as c14 → 0. At c14 = 0 the æther equation loses its time derivatives (instantaneous limit; 1802.04303 fn. 4). | open |
+| Causality | Signals are causal with respect to the widest cone, i.e. the æther frame. A global time is "only guaranteed whenever the æther field is hypersurface orthogonal … in EÆ theory it is not true in general" (2505.09544 App. C). | stated in the paper |
+
+**Screen result.** Data do **not** bound c_S or c_V from above. A superluminal spin-0 mode (region i) is not
+excluded by data; the exclusion that exists is a conjecture. "Not excluded" is not the same as viable, so the
+communication question is examined next.
+
+## 2. The communication chain
+
+- **Sender.** The sender can only move ordinary matter, which couples to the metric alone. The source is a
+  conserved T^{μν}. Its mass monopole and dipole are fixed by energy and momentum conservation, so the lowest
+  radiating scalar moment is Q = I_kk = ∫ρr² (and T^{ij} via the virial identity ∫T^{ij} = ½Ï_ij).
+- **Propagation.** Linearised EA about the æther rest frame has three cones: c_T = 1 (with c13 = 0), c_V and c_S.
+- **Receiver.** A freely falling detector at rest in the æther frame reads the tidal tensor E_ij = R_{0i0j}
+  through geodesic deviation. At linear order this is a coordinate- and gauge-invariant local quantity.
+- **Timing.** A component on the c_S cone arrives at D/c_S, before light (D/c), if c_S > 1. Three different times
+  must be kept apart:
+  - the mode speed. In the linearised EA equations this is the characteristic speed, so the equations' own
+    signal cone reaches the receiver at D/c_S. **Not established:** that this is a physical superluminal front of
+    information. That would need the theory's behaviour at all frequencies, including above the EFT cutoff, which
+    is unknown (no cutoff is given in the sources read). This gap is marked open and is not addressed here;
+  - the arrival of the front;
+  - the time to accumulate enough signal-to-noise ratio to read the bit.
+- **Frequency range.** All results are low-frequency EFT statements (frequencies ≪ any cutoff). Nothing is
+  extrapolated to high frequency.
+
+## 3. Calculation [derived; reproduces published controls]
+
+Quadratic EA action in Fourier space, plane wave along z, gauge v^i = 0 = h_0z, general conserved source
+(ρ, j_⊥, transverse stresses; longitudinal parts fixed by conservation). The response is the gauge-invariant
+E_ij(ω, k).
+
+**Positive controls** (all reproduced exactly; `controls()`):
+- The poles of the response sit at the published c_S², c_V² and c_T².
+- The static limit gives E_zz = 4πG_N ρ with G_N = G/(1 − c14/2).
+- The tensor far field is E_xy = −Gω⁴I_xy/r, as in GR, for c13 = 0.
+- **Yagi, Blas, Barausse & Yunes (1311.7144v4) Eq. 106**, breathing polarisation, weakly gravitating source, c13 = 0:
+  - our I_kk coefficient equals theirs exactly, including their Z = 2(c14 + 3c2)/(3c2(2 − c14));
+  - our n̂n̂Q̈ coefficient also equals theirs. Their Eq. 106 has (3/2)(Z − 1) on this term, as does Foster's
+    Eq. 90 (ratio 3(Z − 1) : Z). A first draft copied it as 3(Z − 1) and reported a spurious factor ½; the
+    independent review caught it. **Full agreement with Yagi Eq. 106 in the weak field.**
+- **Vector sector.** With c13 = 0, E_xz from a current has no c_V pole. The spin-1 mode does not reach a metric
+  detector from a matter source. This agrees with 2304.06801 (β1 = −2c_σ/c_V = 0).
+  - With c13 ≠ 0 the c_V residue is nonzero: E_xz r/(Gω⁴I_xz) = −c13²/(2c14c_V⁴(1 − c13)²).
+  - That is bounded, because 2c14c_V²(1 − c13) = 2c1(1 − c13) + c13² with c1 ≥ 0. So
+    **κ_V ≤ 1/((1 − c13)c_V²)**: the same 1/c² trade-off as the scalar. A grid check gives max κ_V c_V²(1 − c13) = 1.
+  - The verdict therefore does not rest on c13 being exactly 0.
+
+**New results:**
+Scope of "exact": linear order, c13 = 0, leading order in source size over wavelength (truncated multipoles),
+units c = 1.
+
+1. **Exterior field of a pulsating spherical source** (Q = ∫ρr², c13 = 0). The exterior tidal field
+   contains only the c_S pole; the remainders are local contact terms, so there is no instantaneous piece.
+   Spherical sources also have no exterior field in GR (Birkhoff), so the whole exterior change is spin-0:
+
+   E_ij(t, r) = −κ G [δ_ij Q⁽⁴⁾(t_S)/r + ∂_i∂_j(Q̈(t_S)/r)], with t_S = t − r/c_S and
+   κ = c14(c14 + 3c2)/(3c2(2 − c14)²) = c14/4 + O(c14²).
+
+   In SI units: −κ(G/c²)[δ_ij Q⁽⁴⁾/(c²r) + ∂_i∂_j(Q̈/r)].
+
+2. **Any slow source.** The independent review found this closed form; it is checked here against every component
+   of the full response (`general_source_kernel`, residual 0):
+
+   E^S_ij = −[G c14/(2(2 − c14))](δ_ij∂_t² + ∂_i∂_j)(∂_t²I_kk + ∂_k∂_l I_kl), acting on [·]_{t − r/c_S}/r.
+
+   - It reduces to result 1 for I = δQ/3.
+   - Its far field is −(c14/4)Gω⁴I_kk δ_ij/r + O(c14²), equal to Yagi Eq. 106.
+   - Its static limit is the fraction c14/(2 − c14) of the Newtonian quadrupole tidal field, i.e. the part
+     G_N − G. The part G propagates on the light cone.
+   - So the near-zone and far-zone c_S signals both carry the factor c14 for every slow source, not just spherical
+     ones.
+   - **What κ means.** κ multiplies a specific source moment (I_kk and its derivatives) and a reference scale
+     G·(moment)/r. It is not a universal ratio "scalar signal / actual GR signal". The tensor field depends on a
+     different moment (the transverse-traceless part of I_ij) and a different angular projection. For a spherical
+     pulsation the GR field vanishes while the scalar does not; for a circular binary the reverse holds at leading
+     order.
+3. **Trade-off.** c_S² = c2(2 − c14)/(c14(2 + 3c2)) gives c14 ≈ 2c2/((2 + 3c2)c_S²) ≤ 0.083/c_S² for
+   c2 ≤ 0.095, so **κ ≈ c14/4 ≤ 0.021/c_S²**. The faster the spin-0 mode, the weaker it couples to matter, as
+   1/c_S². This holds in both the near zone and the far zone (result 2). Nothing diverges as c14 → 0 in the linear theory
+   (consistent with the fluxes in Foster gr-qc/0602004 and Yagi 1311.7144).
+
+**Link budget** for one specified configuration (ASSUMPTIONs; it is not an upper bound over all controllable
+sources or detectors):
+- Sender: a 10¹² kg shell (a large mountain) at R = 1 km, pulsating by ±10 m at 1 Hz, so ΔQ = 2 × 10¹⁶ kg m².
+- Receiver: tidal noise 10⁻²⁰ s⁻²/√Hz.
+- SNR 5.
+- c_S = D/latency, with c14 at its largest allowed value (region i).
+
+The gap is shown as the SNR reached in a fixed one-year observation (SNR = E√T/ASD, T = 1 yr), and as the factor
+by which the source strength ΔQ would have to grow to reach SNR 5 in that year. Both use the same computed signal.
+
+| D | Latency | c_S needed | κ | Tidal signal | SNR in 1 yr | Source strength × needed for SNR 5 in 1 yr |
+|---|---|---|---|---|---|---|
+| 20 ly | 1 s | 6.3 × 10⁸ | 5 × 10⁻²⁰ | 7 × 10⁻⁶² s⁻² | 4 × 10⁻³⁸ | 1 × 10³⁸ |
+| 20 ly | 1 day | 7.3 × 10³ | 4 × 10⁻¹⁰ | 5 × 10⁻⁵² s⁻² | 3 × 10⁻²⁸ | 2 × 10²⁸ |
+| 20 ly | 1 yr | 20 | 5 × 10⁻⁸ | 7 × 10⁻⁵⁰ s⁻² | 4 × 10⁻²⁶ | 1 × 10²⁶ |
+| 100 ly | 1 s | 3.2 × 10⁹ | 2 × 10⁻²¹ | 6 × 10⁻⁶⁴ s⁻² | 3 × 10⁻⁴⁰ | 2 × 10⁴⁰ |
+
+- **Formal extrapolation only.** The JSON also lists the integration time for SNR 5 (10⁵⁹–10⁸⁸ s). That number
+  assumes stationary Gaussian noise and perfectly coherent accumulation over the whole time. It is not an
+  achievable waiting time and not a lower bound on the resources needed per bit.
+- **Reference scale.** G Q⁽⁴⁾/(c⁴r) with the same ΔQ is 1.4 × 10⁻⁴² s⁻² at 20 ly (SNR ≈ 8 × 10⁻¹⁹ in a year). It is
+  a scale, not the GR field of this source, which vanishes for a spherical pulsation (Birkhoff). So this
+  configuration is already far from detectable at κ = 1, and EA adds κ ≤ 0.021/c_S².
+- Larger sources, other frequencies and better detectors would change these numbers. No upper bound over all of
+  them was computed.
+
+## 4. The two kinds of value, kept separate
+
+**(i) A testable signal beyond known physics.** Yes, conditionally. It is already a published prediction, not new
+here.
+- For c14 > 0, EA predicts a breathing (scalar) tidal component of amplitude ≈ (c14/4)GÏ_kk-type/r from sources
+  whose I_kk changes (e.g. core collapse, eccentric or asymmetric systems). Circular binaries have constant I_kk at
+  leading order.
+- It arrives D(1 − 1/c_S) before the tensor wave.
+- Existing tests (2304.06801; pulsar timing 2605.01436) bound c14 through α1. The scalar coefficient is κ ≈ c14/4
+  (≤ 6 × 10⁻⁶ in region (ii), ≤ 5 × 10⁻⁸ in region (i)) times G·I_kk-type moments/r.
+- How large the scalar signal is relative to an event's tensor signal depends on the event: it scales as
+  κ times the ratio of the event's I_kk⁽⁴⁾ to its transverse-traceless I_ij⁽⁴⁾, and on the viewing angle. Core collapse with a large breathing
+  moment and a small quadrupole is relatively favourable; circular binaries are unfavourable.
+- **Observable prediction:** a breathing-polarisation precursor with lead time D(1 − 1/c_S) and amplitude
+  ≈ κ·G·I_kk⁽⁴⁾/(c⁴D) (radiation zone).
+- **Main false signals:** non-Gaussian detector transients (glitches); polarisation leakage of tensor noise into
+  the breathing null-stream; the unknown lead time (for c_S ≫ 1 the precursor arrives ~D/c before the event: years
+  to millennia for Galactic sources), which makes a blind search with an enormous trials factor.
+- **Smallest verification step:** a breathing null-stream search in archival multi-detector data at the scalar
+  frequency band of one well-localised event, scanning lead times. Its reach would need an event-specific
+  estimate of I_kk⁽⁴⁾ (not done). It is not pursued here, since it does not serve the communication question.
+
+**(ii) Seconds-scale interstellar latency.** **Not found in the computed model, parameters and equipment.**
+The computed case is:
+- matter coupled minimally to the metric;
+- linearised EA in the allowed region with c13 = 0;
+- a detector reading the tidal tensor;
+- the specified source and detector above.
+
+The required c_S forces κ ≤ 0.021/c_S² (this trade-off holds in the stated parameter region for every slow source).
+For the specified configuration and a one-year observation, the SNR is 4 × 10⁻²⁶ even at one-year latency, so the
+source would have to be ~10²⁶ times stronger. Raising c_S by 10 lowers the amplitude by 100.
+
+## 5. Judgement
+
+**In the computed model, parameters and equipment, no practical low-latency channel was found. This supports
+pausing the scheme.** Two things are kept separate:
+- **In the linearised equations,** the c_S characteristic cone allows an early response, but the amplitude a matter
+  source puts on it falls as 1/c_S². That trade-off is the main established result.
+- **Whether that cone is a physical superluminal information front** is not established. The theory's full
+  high-frequency behaviour and cutoff are unknown, and this stays open.
+
+This is not a proof that no source or detector could ever work. No upper bound over all of them was computed.
+
+What could change this (inputs not supplied here, and not pursued):
+- a non-minimal matter–æther coupling. That would be a new model, constrained by Lorentz-violation tests.
+- a nonlinear or strong-coupling regime as c14 → 0. No controlled theory of it exists in the sources read.
+- a resolution of the Taherasghari–Will (2506.03843) dipole dispute. It concerns only bodies with sensitivities,
+  i.e. strongly self-gravitating ones, which a sender cannot build.
+
+No candidate passes, so no further theory chain or large computation follows.
+
+## 6. Bookkeeping
+
+- **Read** (full text via a literature subagent; key formulas re-checked here):
+  - 1802.04303v3, 2304.06801v2, 2505.09544v3, 2605.01436v1;
+  - Foster gr-qc/0602004v5; Jacobson–Mattingly gr-qc/0402005v2; Yagi et al. 1311.7144v4.
+- **Abstract or citation level only:** Zosso 2610.06528; Taherasghari & Will 2506.03843.
+- **New this round** [derived]: the gauge-invariant tidal response with a general conserved source; the
+  spherical-source exterior field; the general slow-source kernel (form found by the review); the vector bound;
+  the κ ∝ 1/c_S² trade-off; the link budget.
+- **Reproduced:** speeds, G_N, the GR quadrupole field, and Yagi Eq. 106 (both terms).
+- **Independent review** (round 8) applied:
+  - the Yagi coefficient transcription;
+  - the general-source kernel;
+  - the c13 ≠ 0 vector bound;
+  - corrected numbers;
+  - c2 inverted consistently in the link budget;
+  - tests compare sympy expressions, not strings.
+- **Open lead, not checked:** the khronometric/Hořava literature (Blas–Pujolàs–Sibiryakov) discusses a
+  strong-coupling scale ~√α·M_P. Even at c14 ~ 10⁻¹⁹ such a scale lies far above 1 Hz, so it would not rescue
+  the channel.
