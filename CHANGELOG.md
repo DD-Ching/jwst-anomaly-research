@@ -2,20 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
-- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
-  would have gone to `/vet-candidate` before injections.
-- `run-field --procs 4` (cloud), split across three runs: 120,726 light curves streamed in 1,068 s (19 tracked
-  pre-screen chunks; 2,256 shape passes, 77 off shared epochs); 77 fits in 675 s, 0 errors, 73 flags; **0 survive**
-  (`results/w3_moa/vetting_gb8.json`, reproduced by the third run's re-vet). CDS XMatch worked (Gaia DR3 RP for
-  43 / 73). Contact sheet inspected: variables, box and eclipse dips, slow trends; caustic spikes only in the models.
-- Injections (2,200 on 267 carriers) in 2,876 s (third run; the second run's were lost when it ended mid-run). Limits
-  (`results/w3_moa/limits_gb8.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 1.7 × 10⁻⁷–1.0 × 10⁻⁶ per star per year
-  (N_s = 2.23 × 10⁷); the t_E = 300 d cells rest on 3 recoveries each. **Combined, fourteen fields: Γ₉₅ ≈ 2.1 × 10⁻⁸–
-  1.2 × 10⁻⁷** (was 2.4 × 10⁻⁸–1.4 × 10⁻⁷; max field share 0.19).
-- Failed approach: a takeover run that starts injections near the end of its slot loses them, because `inject`
-  writes only at the end. Start injections at the top of a run, or make `inject` chunked and resumable like `fit`.
-- **Next:** gb13 after the owner decides #145; then gb3–gb6, gb9, gb10, gb14.
+## 2026-10-11: Goal round 2: Bancal v-causal models give no guaranteed low-latency or two-way channel; round-1 wording fixes
+- Owner brief (continuation of #152). Full write-up: `docs/goal_round2/README.md`; code
+  `scripts/goal_bancal_channel.py`; results `results/goal_round2/`.
+- Round-1 fixes (on #152): NIST rows are now "lower-bound strength reachable under the listed assumptions"; "S ≤ 7
+  excludes QM" qualified (statistics, noise and loopholes); "public Bell data has no discriminating power" narrowed
+  to NIST 2015 and the bipartite bound; experiment needs split into bipartite, multipartite and channel.
+- **Positive control:** the paper's 4-qubit state and observables give S = 7.2014 (Lemma 1 bound 7); QM marginals
+  are exactly no-signalling.
+- **Timeline [derived]:** Fig. 3 at 20 ly needs 15.00 yr in both directions for any v. For fixed receivers at A and D, the
+  theorem guarantees nothing better than L/2 in the worse direction (proof: triangle inequality; grid 0.505 L).
+  This limits the guarantee; it is not a physical impossibility. Clustering B, C, D at the
+  receiver gives ~L/v one way only, and only if the model's branch is known; the theorem does not supply it.
+- **Signal size [derived, exact LP]:** each direction alone can be 0; at least one direction carries mean total
+  variation ≥ 0.0063. At ε = 10⁻³, a fixed threshold rule decides a bit in
+  3.5 × 10⁵ trials (Hoeffding, i.i.d. and calibrated; sufficient, not minimal). With an unknown frame, the
+  worst-case R fraction is ≈ 1/(2 r β_max), and it is not positive without a bound β_max.
+- **Next experiment:** Bancal Experiment v1 (no sync; excludes no-signalling v-causal models), then a direct R test
+  needing ps B–C timing over ~100 km. Missing physics (branch, amplitude per direction, v and frame) is listed in §6.
+- **Failed approach (rule):** the first draft wrote the 100 km timing as 67 fs; it is 67 ps (d/(c·5 × 10⁶)).
+  Recompute every unit conversion from the script, never by hand.
 
 ## 2026-10-11: Goal round 1: corrections, carried-wormhole accounting, v-causal bounds; NIST 2015 data cannot improve the bipartite V bound
 - Owner brief (contact and fast return over 20–100 ly). Full write-up: `docs/goal_round1/README.md`.
@@ -46,6 +52,20 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Next:**
   - Configuration-R timing tolerance and noise threshold (theory).
   - A literature unit on modified-gravity theories with R_kk < 0 consistent with GW170817.
+## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
+  would have gone to `/vet-candidate` before injections.
+- `run-field --procs 4` (cloud), split across three runs: 120,726 light curves streamed in 1,068 s (19 tracked
+  pre-screen chunks; 2,256 shape passes, 77 off shared epochs); 77 fits in 675 s, 0 errors, 73 flags; **0 survive**
+  (`results/w3_moa/vetting_gb8.json`, reproduced by the third run's re-vet). CDS XMatch worked (Gaia DR3 RP for
+  43 / 73). Contact sheet inspected: variables, box and eclipse dips, slow trends; caustic spikes only in the models.
+- Injections (2,200 on 267 carriers) in 2,876 s (third run; the second run's were lost when it ended mid-run). Limits
+  (`results/w3_moa/limits_gb8.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 1.7 × 10⁻⁷–1.0 × 10⁻⁶ per star per year
+  (N_s = 2.23 × 10⁷); the t_E = 300 d cells rest on 3 recoveries each. **Combined, fourteen fields: Γ₉₅ ≈ 2.1 × 10⁻⁸–
+  1.2 × 10⁻⁷** (was 2.4 × 10⁻⁸–1.4 × 10⁻⁷; max field share 0.19).
+- Failed approach: a takeover run that starts injections near the end of its slot loses them, because `inject`
+  writes only at the end. Start injections at the top of a run, or make `inject` chunked and resumable like `fit`.
+- **Next:** gb13 after the owner decides #145; then gb3–gb6, gb9, gb10, gb14.
 
 ## 2026-10-11: W3 MOA-II gb1 (thirteenth field): 0 survivors; combined limit over thirteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1 and a finite limit in every cell. A

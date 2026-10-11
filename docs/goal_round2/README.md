@@ -1,0 +1,275 @@
+# Goal round 2: when could a remote receiver read the sender's bit in a Bancal-type v-causal model?
+
+Owner brief 2026-10-11 (continues #152, `docs/goal_round1/README.md`). Labels: **[paper]** Bancal, Pironio, Acín,
+Liang, Scarani & Gisin, Nature Phys. 8, 867 (2012), arXiv:1110.3795v2, read in full (main text, Fig. 3, App. B–E);
+**[derived]** this round; **[estimate]**; **[ASSUMPTION]**. Nothing here is evidence for new physics. Standard
+quantum mechanics (QM) is the no-signalling baseline throughout.
+
+Code: `scripts/goal_bancal_channel.py`; tests: `tests/test_goal_bancal_channel.py`; outputs:
+`results/goal_round2/bancal_channel.json` (L = 20 ly) and `bancal_channel_100ly.json`. Run time about 2 s.
+
+## 1. The model and what the theorem actually provides [paper]
+
+**Model and premises**
+- A preferred frame exists. Influences propagate inside v-cones (v = r c > c).
+- The model reproduces the QM predictions whenever each later measurement lies inside the v-cones of the earlier
+  ones. This holds for A < D < B < C and A < D < C < B.
+
+**Configuration R = A < D < (B ∼ C), the conditions of App. E**
+- i) t_A, t_D < t_B, t_C.
+- ii) B and C lie outside each other's v-cones.
+- iii) Two points exist:
+  - A′, inside the future light cones of A, B and C but outside D's;
+  - D′, inside those of D, B and C but outside A's.
+
+**What follows in R** (App. C, D; Lemma 1)
+- The BC correlations conditioned on (a, x, d, w) are local.
+- The ABD and ACD marginals equal the QM ones.
+- So S = 7.2014 > 7 forces a violation of no-signalling: the BCD marginal depends on A's setting x, or the ABC
+  marginal depends on D's setting w, or both (Fig. 3 caption).
+
+**What the theorem does not provide**
+- Which of the two branches occurs.
+- How large the dependence is.
+- Any rate.
+- Any statement about layouts that break i)–iii).
+
+## 2. Positive control
+
+| Quantity | This round | Paper |
+|---|---|---|
+| ⟨Ψ\|Ψ⟩ | 1.000 | — |
+| S (Lemma 1, Eq. 4) from the App. B state and observables | 7.20139 | 7.2014 |
+| QM: BCD marginal dependence on x; ABC marginal dependence on w | exactly 0 | — (QM is no-signalling) |
+| LP with no-signalling imposed on top of the R constraints | infeasible | Lemma 1 |
+
+## 3. Event timeline, counted from the sender's free choice [derived]
+
+Sender A at Earth, x = 0. D at the star, x = L. The privileged frame is taken as the rest frame of both
+[ASSUMPTION]. Times are in L/c.
+
+| # | Event | Fig. 3, r → ∞ | Needs |
+|---|---|---|---|
+| E0 | A chooses bit x and measures | t = 0 | A's share of a 4-party state |
+| E1 | D measures with its own setting w | t = 1/r (inside A's v-cone) | D's share |
+| E2 | B and C measure | t = 2/(1+r), with B ∼ C | B's and C's shares; \|t_B − t_C\| < \|x_B − x_C\|/v |
+| E3 | B and C broadcast outcome and setting at light speed | from E2 | ordinary radio |
+| E4 | the B, C and D records are together at the star (D′) | max(t_B + L − x_B, t_C + L − x_C) | E3 |
+| E5 | x decoded at the star | E4 + statistics (§6) | many trials |
+| Back | if instead ABC depends on w: A, B and C records together at Earth (A′) | max(t_B + x_B, t_C + x_C) | E3 |
+
+**Fig. 3 itself**
+- Positions [paper]: d_B = ¼(1 + 1/r) + 1/(1+r), d_C = ¾(1 + 1/r) − 1/(1+r), d_D = 1.
+- Times: t_A = 0, t_B = t_C = 2/(1+r), t_D = 1/r.
+- At L = 20 ly the stations sit at 5 and 15 ly for r → ∞, and E4 comes at **15.00 yr** in both directions. That
+  confirms the owner's estimate. Light takes 20 yr, so the effective speed is only 1.33 c, however large v is.
+- These times assume the receivers sit at the A and D sites. D′ need only be some event in the joint future light
+  cones of B, C and D outside A's; for Fig. 3 at r → ∞ the earliest is at x = 5L/8, t = 3L/8 (7.5 yr), but 7.5 ly
+  short of the star. A receiver fixed at the star waits 15 yr.
+
+| Layout (L = 20 ly) | r = 2 | r = 10 | r = 10⁴ | r = 6.3 × 10⁸ |
+|---|---|---|---|---|
+| Fig. 3: A → star / star → A (yr) | 19.17 / 19.17 | 16.32 / 16.32 | 15.00 / 15.00 | 15.00 / 15.00 |
+| B and C at the midpoint, 0.04 ly apart | 25.0 (not superluminal) / 15.0 | 13.0 / 11.0 | 10.02 / 10.02 | 10.02 / 10.02 |
+| best layout keeping both directions superluminal (grid) | 17.6 | 12.0 | 10.1 | 10.1 |
+| B and C next to D (0.02–0.04 ly) | 10.1 / 20.0 | 2.0 / 20.0 | 0.04 / 19.98 | 0.04 / 19.98 |
+
+At 100 ly the same layouts give 75.0, 50.1 and 50.5 yr, and 0.2 / 99.9 yr for B and C next to D, at r = 6.3 × 10⁸.
+
+### 3.1 What the L/2 bound covers [derived]
+
+**Scope.** This is a statement about one problem only:
+- receivers fixed at the A and D sites;
+- records collected there over ordinary light-speed links;
+- the worse of the two directions, because the theorem leaves the branch open.
+
+It says the theorem does not *guarantee* better. It does **not** say that better is physically impossible. A
+specific model whose branch and amplitude are known (§6) could signal in a known direction with latency ≈ L/v
+(§3.2), and nothing here excludes such a model.
+
+
+The theorem allows either branch, so a guaranteed channel needs both collection points (condition iii). Put B and
+C anywhere in space, and let L be the A–D distance.
+- The star collects the B and C records no earlier than max_k(t_k + |x_star − x_k|).
+- Earth collects them no earlier than max_k(t_k + |x_Earth − x_k|).
+- By the triangle inequality, |x_Earth − x_k| + |x_star − x_k| ≥ L for each station k.
+- So the worse of the two latencies is ≥ L/2 + O(L/v); with t_k ≥ t_D + |x_star − x_k|/v it is ≥ (L/2)(1 + 1/r).
+- This holds in any dimension and for any station placement, for receivers at the A and D sites. It bounds "some
+  signal, direction unknown": with the branch unknown, no single R layout guarantees an Earth → star channel at all.
+
+The grid search (201 × 201 points) reaches 0.505 L, with B and C at the midpoint; the JSON carries
+the analytic bound alongside. For 20 ly that is ≥ 10 yr; for 100 ly, ≥ 50 yr. So,
+**the theorem alone guarantees no low-latency arrangement** That includes putting all the receiving
+stations on one planet: as the last table row shows, that keeps one direction superluminal only marginally
+(19.98 yr against 20).
+
+### 3.2 Concentrating the receiving stations needs an extra assumption [derived]
+
+With B, C and D next to the star, the A → D′ latency falls to the v-cone limit: B and C must lie inside A's future
+v-cone (from the QM-reproduction premise, not from App. E, whose condition i) is a time ordering only), so
+t_B ≥ L/v (1 s at 20 ly for v = 6.3 × 10⁸ c). It also includes the local record collection.
+
+That helps only if the realised branch is "BCD depends on x" in this layout, and the theorem does not supply that
+(§4). **The hidden-influence speed v bounds the communication speed from above. It is not the communication speed.**
+
+## 4. How large is the signal, and in which direction? [derived, exact LP]
+
+**Linear programme** over P(abcd|xyzw) ≥ 0 (256 variables).
+- Constraints:
+  - normalisation;
+  - ABD = QM for every z, ACD = QM for every y (App. D);
+  - for each (a, x, d, w), the conditional BC correlations are local (the eight CHSH facets in joint form; App. C).
+- Signal measure: total-variation distance between the receiver's record distributions under the two values of
+  the sender's setting, averaged over the 8 setting combinations of the other parties.
+
+| Quantity | Value |
+|---|---|
+| smallest A → D′ signal (BCD dependence on x) | 0 |
+| smallest D → A′ signal (ABC dependence on w) | 0 |
+| smallest max(A → D′, D → A′) | **0.0063** |
+| smallest sum | 0.0126 |
+| smallest A → D′ signal if D → A′ is silent | 0.0160 |
+| smallest D → A′ signal if A → D′ is silent | 0.0126 |
+
+**What this means [derived]**
+- Any v-causal model that reproduces the QM marginals of this state signals with a mean total variation of at
+  least 0.0063 in at least one direction.
+- Either direction may carry nothing in the LP. The LP is a relaxation of the v-causal class, so its lower bounds
+  hold, but a zero shows only that the constraints do not force a direction, not that a model realises it.
+- The mean TV equals the TV of the full record (settings and outcomes) for uniformly random settings. A receiver
+  who fixes the best setting pair does better: the smallest possible largest TV per setting pair is 0.0126
+  (`min_max_per_setting` in the results), so 0.0063 is conservative.
+- A two-way channel is therefore **not guaranteed**, even in a single R configuration.
+- Two mirrored configurations, one with A on Earth and one with A at the star, give a two-way channel only if the
+  model's branch choice follows the parties' roles rather than a spatial direction. That is an extra assumption
+  [ASSUMPTION], and the theorem does not supply it.
+- The numbers hold for this state and these observables only. Other states give other bounds; the maximal state
+  (S = 7.3481) was not computed.
+
+## 5. Sync, deployment, record arrival and statistical time, kept separate [derived / estimate]
+
+**Deployment.** Every trial consumes one 4-party entangled state.
+- The B, C and D shares must reach their stations at ≤ c before use: about 10 yr to the midpoint and 20 yr to the
+  star for 20 ly.
+- They must stay coherent until they are used.
+- Nothing can top the stock up faster than light.
+
+**Single-record arrival.** This is E4 in §3: 15 yr for Fig. 3. With fixed receivers at A and D and the worst direction, the theorem guarantees nothing better than 10 yr (§3.1). With an extra
+directional assumption (§3.2) it falls to about L/v.
+
+**Trials per bit.** With a per-trial total variation δ, the following decision rule decides a bit at error ≤ ε
+after n = 2 ln(1/ε)/δ² trials (Hoeffding): count the occurrences of the event with the largest probability
+difference, and compare the count with a threshold fixed in advance.
+- This n is **sufficient for this rule only**. It is not a minimum resource requirement.
+- It assumes:
+  - i.i.d. trials;
+  - both outcome distributions known in advance (calibrated on control data, with no drift);
+  - the decision rule and event chosen before the data are seen.
+- Other rules can need far fewer trials, and δ alone gives no lower bound. Two distributions with total variation δ
+  can be told apart in about ln(1/ε)/δ trials when the event is impossible under one of them, against 2 ln(1/ε)/δ²
+  here. A minimum needs the full distributions (the Chernoff information).
+
+- At δ = 0.0063: n ≈ 3.5 × 10⁵ for ε = 10⁻³ and 7.0 × 10⁵ for ε = 10⁻⁶.
+- An 8 kbit/s voice link at ε = 10⁻³ would consume about **2.8 × 10⁹ pre-positioned 4-party states per second**
+  [estimate].
+- Trials can run in parallel, so the statistical *time* is n divided by the trial rate. It is limited by detector
+  rates and the size of the stock.
+
+**B ∼ C has to occur.** The theorem forces signalling only in R. In B < C or C < B configurations the model reproduces
+QM, which does not signal; the theorem says nothing about configurations outside its premises (e.g. A ∼ D).
+- So B and C must be measured within |x_B − x_C|/v of each other in the privileged frame. For 0.04 ly and
+  v = 6.3 × 10⁸ c, that window is 2.0 ms.
+- Arranging this needs the frame to be known: the simultaneity ambiguity at β ≈ 1.23 × 10⁻³ (CMB) is
+  β·d/c ≈ 1,560 s for that separation.
+- **R-trial fraction with an unknown frame** [derived; `r_fraction` in the script, exact Lorentz transformation].
+  - Protocol: t_B and t_C are drawn independently and uniformly from a lab window [0, T]. The baseline d lies along
+    x. The frame has any direction and any speed up to β_max. Trials count as R when |Δt′| < |Δx′|/v.
+  - With a known bound β_max, the worst-case fraction is positive. Over the windows tried, it is largest at
+    T = 2β_max·d/c, where it reaches about 1/(2 r β_max):
+    - 8.1 × 10⁻⁵ at r = 5 × 10⁶ and 6.4 × 10⁻⁷ at r = 6.3 × 10⁸, for β_max = 1.23 × 10⁻³ (CMB speed; an
+      ASSUMPTION about the frame);
+    - 9.9 × 10⁻⁷ and 7.9 × 10⁻⁹ for β_max = 0.1;
+    - 2.1 × 10⁻⁸ and 1.7 × 10⁻¹⁰ for β_max = 0.9, about 5× below the leading-order 1/(2 r β) because of
+      relativistic corrections.
+  - **Without a bound on the frame speed there is no positive worst-case fraction.** It falls as (1 − β_max²)/(2 r β_max):
+    2 × 10⁻¹⁰ at β_max = 0.999 and r = 5 × 10⁶. For any window shorter than d/c, a frame with β∥ > cT/d moves the
+    B ∼ C interval out of the window, so without a speed bound the worst case is exactly 0 (independent review).
+  - The earlier 2/(rβ) was a typical-case estimate for one frame, not a guarantee. It is withdrawn.
+  - The window must also keep A and D before B and C, inside their past v-cones, in every frame considered. That
+    is a further margin on the lab schedule.
+  - The signal is diluted by this fraction f. The Hoeffding count for the rule above grows as 1/(fδ)²: 5.3 × 10¹³
+    trials per bit at r = 5 × 10⁶ with β_max at the CMB speed (`unknown_frame_dilution` in the results).
+- For B and C 1 km apart at v = 6.3 × 10⁸ c the window is 5.3 fs.
+
+## 6. Missing physical assumptions
+
+None of these is in the theorem. All are needed for a rate or an error rate in a chosen direction:
+1. Which branch the model realises in a given layout and frame, and whether it depends on geometry. This is
+   needed for any one-way guarantee and for concentrating the receiving stations.
+2. The signal amplitude per direction. The LP gives only the joint bound 0.0063 (at least one direction).
+3. The value of v and the privileged frame. Both are needed to schedule B ∼ C, and v is unknown above the bipartite
+   bounds (≳ 5 × 10⁶ c in near-CMB frames; round 1).
+4. The state dependence: the bound changes with the state and the observables.
+5. Decoherence of stored shares over decades, and the stock needed per bit.
+6. Whether a signalling model is consistent with the rest of physics. Signalling with a privileged frame avoids
+   paradoxes, but it contradicts QM's no-signalling, which is tested to high precision in ordinary settings.
+
+## 7. Answers
+
+**Which model and layout deserve an experimental design?**
+- The Bancal v-causal class in configuration R, with B and C adjacent (the central layout is the best guaranteed
+  one).
+- The interstellar layouts are not the target. For fixed receivers at A and D, the theorem guarantees nothing better than L/2 in the worse direction (10 yr at 20 ly). That is a limit of the guarantee, not a physical impossibility (§3.1).
+- A laboratory-scale R experiment is what can separate the model class from QM.
+
+**What does it predict?** QM predicts exactly zero setting dependence in the BCD and ABC marginals. Any v-causal
+model that reproduces the QM marginals of this state with these observables predicts a mean total variation of at
+least 0.0063 in at least one of them, in the R trials that the theorem covers.
+
+**Minimal next verification steps**
+1. **Bancal's Experiment v1** (App. E): S > 7 with random B and C timing.
+   - It needs no synchronisation.
+   - In a fixed frame it excludes **no-signalling** v-causal models at any finite v. For an unknown frame it needs
+     all 8 rotated configurations of App. E, and continuously random timing (or the λ-independence hypothesis).
+     It cannot test signalling models.
+   - It has never been done (Li, Hu, Deng & Scarani, arXiv:2608.05271, p.2; read in round 1, not in Bancal). It needs S > 7 after noise, from a gap of 0.2014.
+2. **A direct test for signalling in R trials.**
+   - It needs B ∼ C, i.e. a B–C timing better than d_BC/v.
+   - To reach models not already excluded by the bipartite bounds (v ≳ 5 × 10⁶ c), d_BC/(cδ) must exceed 5 × 10⁶.
+     For d_BC = 100 km that means δ < 67 ps; reaching 6.3 × 10⁸ c needs δ < 0.53 ps [derived].
+   - A 1 km, 10 ps set-up reaches only v ≲ 3 × 10⁵ c, which is already excluded in those frames.
+   - If the frame is unknown, the simultaneity ambiguity β·d_BC/c ≈ 0.41 µs at 100 km (CMB β) far exceeds that
+     window. With random timing over T = 2β_max·d/c, the worst-case R fraction is 8.1 × 10⁻⁵ at v = 5 × 10⁶ c
+     (6.4 × 10⁻⁷ at 6.3 × 10⁸ c), for frames up to the CMB speed (§5). There is no positive worst case without
+     a bound on the frame speed.
+
+   So the decisive direct test needs picosecond B–C timing over ~100 km plus either knowledge of the frame or a very
+   large number of trials.
+
+**Scope.** This round is limited to the Bancal class with this 4-qubit state, the theorem's premises, and 1-D or 3-D
+layouts with point stations. It does not exclude other new physics, other signalling mechanisms, or models outside
+the v-causal premises. Within that scope, **no layout found gives guaranteed low-latency or two-way
+communication**. Low latency needs the additional assumptions in §6, items 1–3.
+
+## 8. Bookkeeping
+
+- **Revision after owner review (2026-10-11).**
+  - The L/2 limit is now restricted to fixed receivers at A and D, record collection there, and the worse
+    direction. It separates "not guaranteed by the theorem" from "physically impossible" (§3.1).
+  - The Hoeffding count is now labelled sufficient for one named rule, with its assumptions; it is not a minimum
+    (§5).
+  - The R-trial fraction is recomputed for an explicit random-timing protocol and frame range. There is no
+    positive worst case without a bound on the frame speed, and the 2/(rβ) estimate is withdrawn (§5, §7).
+- **Independent review** (separate agent, own code, against arXiv:1110.3795v2). Confirmed: the state, the
+  observables, S = 7.2014 and the local maximum 7 of Eq. 4; Fig. 3 positions and times; the L/2 bound (grid
+  0.8775 / 0.5975 / 0.5025 L at r = 2 / 10 / 10⁴); every LP value to 10⁻¹⁵, with locality encoded instead as a
+  mixture of deterministic BC strategies; the statistics and sync numbers. Fixed from it: D′ off the star (§3),
+  the scope of the L/2 bound, the premise behind t_B ≥ L/v, the LP-relaxation caveat, "forces signalling only in
+  R", the v the dilution refers to and its 1/(fδ)² cost, and the frame/timing qualifiers on Experiment v1.
+- **Time.** 2026-10-11 05:09 → about 05:40 UTC.
+- **Compute.** About 2 s per run (7 LPs and the grids). The tests take under 1 s.
+- **Data.** The arXiv PDF of 1110.3795v2 (in the scratchpad, not committed). No other downloads.
+- **Not done.**
+  - The maximal-violation state (7.3481) and other states.
+  - Noise models.
+  - Noise-robust witnesses (Li et al. 2026).
