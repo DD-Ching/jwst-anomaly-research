@@ -1,0 +1,457 @@
+{
+ "provenance": "derived (exact quantum predictions, exact LP) under the stated model assumptions; no data",
+ "witnesses": {
+  "Bancal2012": {
+   "source": "Bancal et al. 2012, Eq. 4 and App. B (arXiv:1110.3795v2)",
+   "parties": "ABCD",
+   "early": "AD",
+   "bound": 7.0,
+   "quantum_value": 7.2013899370070185,
+   "quantum_value_from_distribution": 7.20138993700702,
+   "quoted": {
+    "quantum": 7.2014,
+    "white_threshold": 0.972
+   },
+   "terms": 23,
+   "max_body": 3,
+   "relative_gap": 0.028769991001002637,
+   "thresholds": {
+    "white_visibility_min": 0.9720346033573151,
+    "dephasing_p_max": 0.007833212614059448,
+    "depolarising_q_max": 0.009763568639755249,
+    "amplitude_damping_g_max": 0.012759119272232056,
+    "readout_flip_max": 0.004881769418716431,
+    "detection_efficiency_min": {
+     "eta_min": 0.9862160682678223,
+     "assignment": {
+      "A0": -1,
+      "A1": -1,
+      "B0": -1,
+      "B1": -1,
+      "C0": -1,
+      "C1": 1,
+      "D0": -1,
+      "D1": -1
+     }
+    },
+    "at_white_0.98": {
+     "readout_flip_max": 0.0014100968837738037,
+     "detection_efficiency_min": 0.9960217475891113
+    },
+    "at_white_0.95": {
+     "readout_flip_max": null,
+     "detection_efficiency_min": null
+    }
+   },
+   "v1_statistics": {
+    "ideal": {
+     "mean": 7.20138993700702,
+     "var": 325.4098481577858,
+     "range": 120.0,
+     "gap": 0.20138993700702024,
+     "gaussian_z": 200583.48322967498,
+     "azuma": 2452584.071589347
+    },
+    "white_0.98": {
+     "mean": 7.057362138266868,
+     "var": 327.998107528317,
+     "range": 120.0,
+     "gap": 0.057362138266867646,
+     "gaussian_z": 2492072.556531313,
+     "azuma": 30230739.53968991
+    },
+    "white_0.95": {
+     "mean": 6.84132044015667,
+     "var": 331.80270655857584,
+     "range": 120.0,
+     "gap": -0.15867955984333015,
+     "gaussian_z": Infinity,
+     "azuma": Infinity
+    },
+    "white_0.92": {
+     "mean": 6.6252787420464605,
+     "var": 335.51395755819055,
+     "range": 120.0,
+     "gap": -0.3747212579535395,
+     "gaussian_z": Infinity,
+     "azuma": Infinity
+    }
+   },
+   "lp_white_threshold": 0.9720458984375,
+   "forced_signal": {
+    "white_1.0": {
+     "min_max_signal": 0.006293435531469362,
+     "signals_at_optimum": {
+      "A": 0.00629343553146945,
+      "D": 0.006293435531469322
+     }
+    },
+    "white_0.99": {
+     "min_max_signal": 0.004043001176154603,
+     "signals_at_optimum": {
+      "A": 0.004043001176154567,
+      "D": 0.004043001176154581
+     }
+    },
+    "white_0.97": {
+     "min_max_signal": 0.0,
+     "signals_at_optimum": {
+      "A": 0.0,
+      "D": 0.0
+     }
+    },
+    "white_0.95": {
+     "min_max_signal": 0.0,
+     "signals_at_optimum": {
+      "A": 0.0,
+      "D": 0.0
+     }
+    },
+    "white_0.9": {
+     "min_max_signal": 0.0,
+     "signals_at_optimum": {
+      "A": 0.0,
+      "D": 0.0
+     }
+    },
+    "dephasing_0.02": {
+     "min_max_signal": 0.0,
+     "signals_at_optimum": {
+      "A": 0.0,
+      "D": 0.0
+     }
+    },
+    "readout_flip_0.01": {
+     "min_max_signal": 0.0,
+     "signals_at_optimum": {
+      "A": 0.0,
+      "D": 0.0
+     }
+    }
+   }
+  },
+  "LC4": {
+   "source": "Li et al. 2026, Eq. 5 (arXiv:2608.05271v1)",
+   "parties": "ABCD",
+   "early": "AD",
+   "bound": 6.0,
+   "quantum_value": 6.82842712474619,
+   "quantum_value_from_distribution": 6.828427124746192,
+   "quoted": {
+    "quantum": 6.82842712474619,
+    "white_threshold": 0.8787
+   },
+   "terms": 6,
+   "max_body": 3,
+   "relative_gap": 0.1380711874576983,
+   "thresholds": {
+    "white_visibility_min": 0.8786796629428864,
+    "dephasing_p_max": 0.041593462228775024,
+    "depolarising_q_max": 0.05054625868797302,
+    "amplitude_damping_g_max": 0.07133147120475769,
+    "readout_flip_max": 0.025273114442825317,
+    "detection_efficiency_min": {
+     "eta_min": 0.948768138885498,
+     "assignment": {
+      "A0": 1,
+      "A1": 1,
+      "B0": 1,
+      "B1": 1,
+      "C0": 1,
+      "C1": 1,
+      "D0": 1,
+      "D1": 1
+     }
+    },
+    "at_white_0.98": {
+     "readout_flip_max": 0.021402686834335327,
+     "detection_efficiency_min": 0.9567036628723145
+    },
+    "at_white_0.95": {
+     "readout_flip_max": 0.015390902757644653,
+     "detection_efficiency_min": 0.9689640998840332
+    }
+   },
+   "v1_statistics": {
+    "ideal": {
+     "mean": 6.828427124746192,
+     "var": 97.3725830020305,
+     "range": 64.0,
+     "gap": 0.8284271247461916,
+     "gaussian_z": 3547.0562748477014,
+     "azuma": 41227.62059686709
+    },
+    "white_0.98": {
+     "mean": 6.691858582251262,
+     "var": 99.21902871515007,
+     "range": 64.0,
+     "gap": 0.6918585822512622,
+     "gaussian_z": 5182.034676412191,
+     "azuma": 59110.1724319336
+    },
+    "white_0.95": {
+     "mean": 6.487005768508869,
+     "var": 101.91875615933277,
+     "range": 64.0,
+     "gap": 0.4870057685088689,
+     "gaussian_z": 10743.008334717399,
+     "azuma": 119296.7687452778
+    },
+    "white_0.92": {
+     "mean": 6.282152954766481,
+     "var": 104.53455425291855,
+     "range": 64.0,
+     "gap": 0.28215295476648095,
+     "gaussian_z": 32826.96068747839,
+     "azuma": 355408.3983883441
+    }
+   },
+   "lp_white_threshold": 0.87872314453125,
+   "forced_signal": {
+    "white_1.0": {
+     "min_max_signal": 0.02588834764831844,
+     "signals_at_optimum": {
+      "A": 0.025888347648318433,
+      "D": 0.025888347648318433
+     }
+    },
+    "white_0.99": {
+     "min_max_signal": 0.02375446417183525,
+     "signals_at_optimum": {
+      "A": 0.023754464171835257,
+      "D": 0.023754464171835233
+     }
+    },
+    "white_0.97": {
+     "min_max_signal": 0.01948669721886885,
+     "signals_at_optimum": {
+      "A": 0.01948669721886887,
+      "D": 0.019486697218868854
+     }
+    },
+    "white_0.95": {
+     "min_max_signal": 0.015218930265902528,
+     "signals_at_optimum": {
+      "A": 0.015218930265902474,
+      "D": 0.015218930265902543
+     }
+    },
+    "white_0.9": {
+     "min_max_signal": 0.004549512883486595,
+     "signals_at_optimum": {
+      "A": 0.004549512883486595,
+      "D": 0.004549512883486597
+     }
+    },
+    "dephasing_0.02": {
+     "min_max_signal": 0.013255757467538008,
+     "signals_at_optimum": {
+      "A": 0.013255757467538026,
+      "D": 0.013255757467538013
+     }
+    },
+    "readout_flip_0.01": {
+     "min_max_signal": 0.015388787390630557,
+     "signals_at_optimum": {
+      "A": 0.015388787390630519,
+      "D": 0.015388787390630607
+     }
+    }
+   }
+  },
+  "LC5": {
+   "source": "Li et al. 2026, Eq. 6 (arXiv:2608.05271v1)",
+   "parties": "ABCDE",
+   "early": "ADE",
+   "bound": 10.0,
+   "quantum_value": 11.656854249492378,
+   "quantum_value_from_distribution": 11.656854249492394,
+   "quoted": {
+    "quantum": 11.65685424949238,
+    "white_threshold": 0.8579
+   },
+   "terms": 14,
+   "max_body": 4,
+   "relative_gap": 0.16568542494923788,
+   "thresholds": {
+    "white_visibility_min": 0.8578643500804901,
+    "dephasing_p_max": 0.03955534100532532,
+    "depolarising_q_max": 0.043949514627456665,
+    "amplitude_damping_g_max": 0.060059577226638794,
+    "readout_flip_max": 0.021974772214889526,
+    "detection_efficiency_min": {
+     "eta_min": 0.9555678367614746,
+     "assignment": {
+      "A0": 1,
+      "A1": 1,
+      "B0": 1,
+      "B1": 1,
+      "C0": 1,
+      "C1": 1,
+      "D0": 1,
+      "D1": -1,
+      "E0": 1,
+      "E1": 1
+     }
+    },
+    "at_white_0.98": {
+     "readout_flip_max": 0.019132941961288452,
+     "detection_efficiency_min": 0.9613680839538574
+    },
+    "at_white_0.95": {
+     "readout_flip_max": 0.014727801084518433,
+     "detection_efficiency_min": 0.9703278541564941
+    }
+   },
+   "v1_statistics": {
+    "ideal": {
+     "mean": 11.656854249492394,
+     "var": 651.8334777586291,
+     "range": 136.0,
+     "gap": 1.656854249492394,
+     "gaussian_z": 5936.193629040584,
+     "azuma": 46542.1185644314
+    },
+    "white_0.98": {
+     "mean": 11.423717164502541,
+     "var": 656.8201003229354,
+     "range": 136.0,
+     "gap": 1.4237171645025413,
+     "gaussian_z": 8101.006889624332,
+     "azuma": 63032.90431433731
+    },
+    "white_0.95": {
+     "mean": 11.074011537017853,
+     "var": 664.0962107929055,
+     "range": 136.0,
+     "gap": 1.074011537017853,
+     "gaussian_z": 14393.059401408276,
+     "azuma": 110763.55011877505
+    },
+    "white_0.92": {
+     "mean": 10.72430590953296,
+     "var": 671.1277332110942,
+     "range": 136.0,
+     "gap": 0.7243059095329603,
+     "gaussian_z": 31981.669959541618,
+     "azuma": 243540.22504088687
+    }
+   },
+   "lp_white_threshold": 0.85791015625,
+   "forced_signal": {
+    "white_1.0": {
+     "min_max_signal": 0.019416260736238786,
+     "signals_at_optimum": {
+      "A": 0.01941626073623892,
+      "D": 0.019416260736238776,
+      "E": 0.019416260736238786
+     }
+    },
+    "white_0.99": {
+     "min_max_signal": 0.018050223128876428,
+     "signals_at_optimum": {
+      "A": 0.018050223128876462,
+      "D": 0.01805022312887642,
+      "E": 0.018050223128876428
+     }
+    },
+    "white_0.97": {
+     "min_max_signal": 0.015318147914151661,
+     "signals_at_optimum": {
+      "A": 0.01531814791415163,
+      "D": 0.015318147914151647,
+      "E": 0.015318147914151647
+     }
+    },
+    "white_0.95": {
+     "min_max_signal": 0.01258607269942689,
+     "signals_at_optimum": {
+      "A": 0.012586072699426836,
+      "D": 0.012586072699426878,
+      "E": 0.012586072699426888
+     }
+    },
+    "white_0.9": {
+     "min_max_signal": 0.005755884662614941,
+     "signals_at_optimum": {
+      "A": 0.005755884662614918,
+      "D": 0.005755884662614924,
+      "E": 0.005755884662614914
+     }
+    },
+    "dephasing_0.02": {
+     "min_max_signal": 0.009566554031941572,
+     "signals_at_optimum": {
+      "A": 0.009566554031941532,
+      "D": 0.00956655403194158,
+      "E": 0.009566554031941586
+     }
+    },
+    "readout_flip_0.01": {
+     "min_max_signal": 0.010315117844794573,
+     "signals_at_optimum": {
+      "A": 0.010315117844794578,
+      "D": 0.010315117844794575,
+      "E": 0.01031511784479456
+     }
+    }
+   }
+  }
+ },
+ "r_fraction_worst_case": [
+  {
+   "r": 5000000.0,
+   "beta_max": 0.001233586736861806,
+   "fraction": 8.106430203735915e-05,
+   "beta": 0.001233586736861806,
+   "cos_angle": 1.0,
+   "window_over_d_c": 0.002467173473723612,
+   "leading_order_1_over_2_r_beta": 8.106442539613865e-05
+  },
+  {
+   "r": 630000000.0,
+   "beta_max": 0.001233586736861806,
+   "fraction": 6.433674764050323e-07,
+   "beta": 0.001233586736861806,
+   "cos_angle": -1.0,
+   "window_over_d_c": 0.002467173473723612,
+   "leading_order_1_over_2_r_beta": 6.4336845552491e-07
+  },
+  {
+   "r": 5000000.0,
+   "beta_max": 0.1,
+   "fraction": 9.899999999368747e-07,
+   "beta": 0.1,
+   "cos_angle": -1.0,
+   "window_over_d_c": 0.2,
+   "leading_order_1_over_2_r_beta": 1e-06
+  },
+  {
+   "r": 630000000.0,
+   "beta_max": 0.1,
+   "fraction": 7.857142825251628e-09,
+   "beta": 0.1,
+   "cos_angle": 1.0,
+   "window_over_d_c": 0.2,
+   "leading_order_1_over_2_r_beta": 7.936507936507936e-09
+  },
+  {
+   "r": 5000000.0,
+   "beta_max": 0.9,
+   "fraction": 2.1111111081495437e-08,
+   "beta": 0.9,
+   "cos_angle": -1.0,
+   "window_over_d_c": 1.8,
+   "leading_order_1_over_2_r_beta": 1.1111111111111111e-07
+  },
+  {
+   "r": 630000000.0,
+   "beta_max": 0.9,
+   "fraction": 1.675484195828858e-10,
+   "beta": 0.9,
+   "cos_angle": 1.0,
+   "window_over_d_c": 1.8,
+   "leading_order_1_over_2_r_beta": 8.818342151675485e-10
+  }
+ ]
+}
