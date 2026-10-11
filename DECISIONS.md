@@ -4325,14 +4325,17 @@ S > 7 or setting dependence in R trials.
   EA's for c13 = 0, so the Blas–Sibiryakov instantaneous term does not enter. For c13 ≠ 0 (GW170817 bounds it,
   does not zero it) the response has an instantaneous, non-local part I_ij = −2A k_ik_jρ/k²,
   A = 4πG c13²/[c14(1 − c13)²]. Nothing else in the full tidal tensor cancels it. It is a transient until
-  max(c_S, c_T) arrives. It is model-internal and not shown usable: a lab-scale sender needs κ′ ≳ 10⁵⁵. With
-  c2 ≥ 0 and c13 > 0, the window caps κ′ ≲ c13 c_S².
+  max(c_S, c_T) arrives. It is model-internal and not shown usable: a lab-scale sender needs κ′ ≳ 10⁵⁵.
+- Fastest-front reception with the designated devices is closed within the controlled domain. The khronometric
+  identity κ′ = (c_s²/2)(α2 − α1/8) + (β − α/4)/(1 − β)² (1311.7144v4 Eqs. 48, 49, 118), with |α1| ≲ 10⁻⁴,
+  |α2| ≲ 10⁻⁷ and c_s ≤ D/(cτ), gives κ′ ≤ 6.3 × 10⁻⁶ (D/cτ)² + 10⁻¹⁵, 47–60 orders short. The points that would
+  suffice have α2 v²Φ ≫ 1 in the solar system: the current calculation loses control there.
 
 **Open.**
 - The non-linear elliptic part, i.e. whether a local conserved source with fixed boundary conditions drives it.
   It needs a second-order calculation; the owner decides whether to fund it.
-- For the c13 ≠ 0 term: the allowed khronometric region at c14 ≪ c13² with c13 + c2 ≈ 0, and the EFT range
-  there.
+- For the c13 ≠ 0 term: schemes other than fastest-front reception (after the fronts arrive, repeated
+  modulation), which need the full time response.
 
 **Alternatives rejected.**
 - Reading "instantaneous" in the literature as a channel.
@@ -4345,4 +4348,5 @@ S > 7 or setting dependence in R trials.
 - A four-party spacelike dataset, or an S4 below the realistic QM prediction, appears.
 - An unexplained W3 survivor or an abundance model appears.
 - A second-order or non-linear khronometric result with a matter-only source appears.
-- Khronometric bounds or a strong-coupling scale at c14 ≪ c13² appear (decides the c13 ≠ 0 term).
+- A scheme reading after the fronts arrive is proposed, or a non-linear treatment of the α2 v²Φ ≫ 1 region
+  appears.

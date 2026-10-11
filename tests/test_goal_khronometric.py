@@ -64,3 +64,14 @@ def test_link_budget_c13_scaling():
     # kappa needed scales as r^5 / sqrt(tau)
     ratio = rows[(100.0, 1.0)]["kappa_required"] / rows[(20.0, 1.0)]["kappa_required"]
     assert abs(ratio / 5**5 - 1) < 1e-9
+
+
+def test_ppn_identity_and_window_bound():
+    r = kh.ppn_identity()
+    assert _zero(r["identity_residual"])
+    w = kh.ppn_window_check()
+    assert abs(w["coef_cS2"] - 6.3e-6) < 1e-12
+    for row in w["rows"]:
+        assert row["kappa_allowed_PPN"] < row["kappa_required"] * 1e-40
+        assert row["kappa_cap_perturbative_only"] < row["kappa_required"] * 1e-20
+        assert row["alpha2_v2_phi_floor"] > 1e20  # the needed points lie outside control

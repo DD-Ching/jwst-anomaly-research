@@ -24,6 +24,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     - Position space (FFT check ≤ 4.4 %): I_ij = −(2c13²/c14) × the Newtonian tidal tensor of the current
       source, a transient until max(c_S, c_T). It is model-internal, not shown usable: a lab sender at 20 ly
       needs κ′ ≳ 10⁵⁵.
+  - **Owner review 3 (PPN × window):**
+    - Identity [analytic, by hand and symbolic]: κ′ = (c_s²/2)(α2 − α1/8) + (β − α/4)/(1 − β)², from
+      1311.7144v4 Eqs. 48, 49 and 118.
+    - With the PPN bounds and c_s ≤ D/(cτ): κ′ ≤ 6.3 × 10⁻⁶ (D/cτ)² + 10⁻¹⁵. That is 47–60 orders below the
+      designated devices' need, for either sign of β and the λ ≈ −β tuning.
+    - The points that would suffice need α2 ≥ 10⁴², so α2 v²Φ ≥ 10²⁶ at 1 AU: "current calculation loses
+      control". Fastest-front reception only.
   - Failed approach: one sympy `simplify` pass over the 3D kernel ran > 30 min. Exact rational parameter points
     with `cancel` and `factor_list` take ~80 s.
 - **Corrections:**

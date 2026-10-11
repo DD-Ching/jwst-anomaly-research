@@ -463,6 +463,118 @@ def link_budget_c13(p=ea.P) -> dict:
     return {"angular_factor": ang, "delta_I_kg_m2": di, "rows": rows}
 
 
+# ------------------------------------------------------------------ PPN x receive window (round 9c)
+# Owner review 3: can tuning (alpha -> 0, lambda + beta -> 0) give the round-8 receiver the kappa'
+# it needs before the fastest front arrives, given the PPN bounds? Khronometric formulas only.
+# alpha = c14, beta = c13, lambda = c2; kappa' = beta^2 / (alpha (1 - beta)^2).
+
+# Weak-field PPN bounds as quoted by Yagi et al. 1311.7144v4 Sec. II (citing Will's review):
+ALPHA1_MAX = 1e-4
+ALPHA2_MAX = 1e-7
+BETA_MAX = 1e-15  # GW170817, |c13| (round 8)
+# Solar-system background for the perturbativity criterion (ASSUMPTIONs): Earth's orbital speed is
+# a floor on its speed relative to any frame over a year; the CMB dipole speed 369.8 km/s is the
+# usual guess for the aether frame; Phi = G M_sun / (1 AU c^2).
+V_FLOOR = 2.98e4 / ea.C_SI
+V_CMB = 3.698e5 / ea.C_SI
+PHI_1AU = 9.87e-9
+
+
+def khronometric_ppn():
+    """Yagi et al. 1311.7144v4 Eqs. (48), (49), (118): alpha_1, alpha_2, c_s^2 (khronometric;
+    exact in the couplings, weak-field 1PN)."""
+    a, b, lam = sp.symbols("alpha beta lambda", real=True)
+    a1 = 4 * (a - 2 * b) / (b - 1)
+    a2 = (
+        (a - 2 * b)
+        * (-(b**2) + b * (a - 3) + a + lam * (-1 - 3 * b + 2 * a))
+        / ((b - 1) * (lam + b) * (a - 2))
+    )
+    cs2 = (a - 2) * (b + lam) / (a * (b - 1) * (2 + b + 3 * lam))
+    return (a, b, lam), a1, a2, cs2
+
+
+def ppn_identity() -> dict:
+    """General symbolic check (not parameter points): kappa' = (c_s^2 / 2)(alpha_2 - alpha_1 / 8)
+    + (beta - alpha / 4) / (1 - beta)^2, and the factorised pieces used in the write-up."""
+    (a, b, lam), a1, a2, cs2 = khronometric_ppn()
+    kap = b**2 / (a * (1 - b) ** 2)
+    rhs = cs2 / 2 * (a2 - a1 / 8) + (b - a / 4) / (1 - b) ** 2
+    return {
+        "identity_residual": str(sp.cancel(kap - rhs)),
+        "alpha2_minus_alpha1_over_8": str(sp.factor(sp.cancel(a2 - a1 / 8))),
+        "kappa_minus_second_term": str(sp.factor(sp.cancel(kap - (b - a / 4) / (1 - b) ** 2))),
+        "singular_or_degenerate": [
+            "alpha = 0 (kappa', c_s^2 diverge)",
+            "lambda + beta = 0 (c_s^2 = 0; alpha_2 diverges unless alpha = 2 beta)",
+            "alpha = 2 (c_s^2 = 0; alpha_2 diverges)",
+            "beta = 1",
+            "2 + beta + 3 lambda = 0 (c_s^2 diverges)",
+            "c_s^2 < 0 (gradient instability; no bound derived)",
+            "alpha = 2 beta (alpha_1 = alpha_2 = 0, kappa' = beta / (2 (1 - beta)^2))",
+        ],
+    }
+
+
+def ppn_window_check(p=ea.P) -> dict:
+    """For each round-8 distance and receive time tau:
+    - the window X = D / (c tau) >= max(c_S, c_T) >= c_S;
+    - the needed kappa' (link_budget_c13);
+    - the PPN-allowed kappa' <= (X^2 / 2)(alpha2_max + alpha1_max / 8) + beta_max / (1 - beta_max)^2
+      (alpha > 0, c_s^2 >= 0, either sign of beta; from ppn_identity);
+    - the alpha_2 the needed kappa' implies through the same identity, and the perturbativity
+      measure alpha_2 v^2 Phi at 1 AU (the PPN metric's preferred-frame term)."""
+    import math
+
+    coef = (ALPHA2_MAX + ALPHA1_MAX / 8) / 2
+    second = BETA_MAX / (1 - BETA_MAX) ** 2
+    lb = link_budget_c13(p)
+    rows = []
+    for r0 in lb["rows"]:
+        x = r0["window_needed_c_max_at_most"]
+        k_req = r0["kappa_required"]
+        k_ppn = coef * x**2 + second
+        a2_need = 2 * (k_req - second) / x**2 - ALPHA1_MAX / 8
+        rows.append(
+            {
+                "distance_ly": r0["distance_ly"],
+                "receive_time_s": r0["receive_time_s"],
+                "X_max_cS": x,
+                "kappa_required": k_req,
+                "kappa_allowed_PPN": k_ppn,
+                "log10_shortfall": math.log10(k_req / k_ppn),
+                "alpha2_implied_by_required": a2_need,
+                "alpha2_v2_phi_floor": a2_need * V_FLOOR**2 * PHI_1AU,
+                "alpha2_v2_phi_cmb": a2_need * V_CMB**2 * PHI_1AU,
+                # perturbativity alone (alpha_2 v^2 Phi < 1 at 1 AU, v = floor); no observed alpha_2
+                "kappa_cap_perturbative_only": x**2 / 2 / (V_FLOOR**2 * PHI_1AU) + second,
+            }
+        )
+    # receive time below which the PPN cap would reach the requirement (formal; flat-ASD assumption)
+    thr = {}
+    for d_ly in p.distances_ly:
+        r = d_ly * ea.LY_M
+        e_unit = ea.G_SI * lb["delta_I_kg_m2"] * lb["angular_factor"] / r**5
+        # coef (r / c tau)^2 = snr asd / (e_unit sqrt(tau))
+        #   ->  tau^(3/2) = coef r^2 e_unit / (c^2 snr asd)
+        t32 = coef * r**2 * e_unit / (ea.C_SI**2 * p.snr * p.detector_asd_s2_per_rthz)
+        thr[str(d_ly)] = float(t32 ** (2 / 3))
+    return {
+        "coef_cS2": coef,
+        "beta_term": second,
+        "rows": rows,
+        "tau_threshold_s": thr,
+        "assumptions": {
+            "alpha1_max": ALPHA1_MAX,
+            "alpha2_max": ALPHA2_MAX,
+            "beta_max": BETA_MAX,
+            "v_floor": V_FLOOR,
+            "v_cmb": V_CMB,
+            "phi_1au": PHI_1AU,
+        },
+    }
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.parse_args(argv)
@@ -474,6 +586,8 @@ def main(argv=None) -> int:
         "c13_nonzero": c13_check(),
         "position_space_check": position_space_check(),
         "link_budget_c13": link_budget_c13(),
+        "ppn_identity": ppn_identity(),
+        "ppn_window_check": ppn_window_check(),
     }
     print(json.dumps(out, indent=1))
     return 0
