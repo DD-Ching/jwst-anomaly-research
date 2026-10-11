@@ -10,7 +10,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (46,883 tar members, 0 errors), ~80–90 s per chunk CPU-bound at 99 % (chunk 21: 216 s, slower archive reads).
   At this rate the pre-screen needs ~3 more routine runs; then fit (chunked by hand if > ~60 passes), vet, inject
   in chunks (`inject --chunk K/N`, from #165), limit, combine.
-- **Next:** `prescreen --procs 4 --chunks 22-119` (detached, `setsid nohup`; stop it by its PID, never `pkill -f`,
+- Run 2 (cloud, 23:13–23:46Z, same command, `--chunks 22-119`): chunks 22–61 tracked (40 chunks, 0 errors,
+  mean 120 s per chunk wall, 78 s when archive reads are fast); stopped by PID at the slot's end.
+- **Next:** `prescreen --procs 4 --chunks 62-119` (about two more runs; detached, `setsid nohup`; stop it by its PID, never `pkill -f`,
   which kills the harness shell), committing tracked chunks every ~10 min.
 
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
