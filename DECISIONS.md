@@ -4145,3 +4145,22 @@ controls, and evaluated once on validation.
 - A public multipartite or high-rate, long-baseline, fs-synchronised Bell dataset appears.
 - A theory derives the configuration-R tolerance that makes a feasible test.
 - A short-throat solution without matter that violates ANEC is published.
+
+## D-TBD Goal round 2: the Bancal v-causal class is a lab-test target, not an interstellar channel design (2026-10-11)
+
+**Decision.** Owner brief 2026-10-11 (continuation of #152).
+- Interstellar channel designs based on Bancal-type v-causal models are not pursued: under the theorem alone every
+  layout that keeps both branches available has worst latency ≥ L/2, and each single direction can carry no signal
+  (exact LP).
+- The model class is a laboratory-test target: Experiment v1 first (no synchronisation), then a direct R-trial
+  signalling test with ps B–C timing.
+
+**Alternatives rejected.**
+- Clustering all receiving stations on one planet as a design: it needs the realised branch, which the theorem
+  does not give.
+- Quoting v as a communication speed: v bounds it from above only.
+
+**Evidence.** docs/goal_round2/README.md §§2–7; `results/goal_round2/`.
+
+**Revisit if.** A model fixes the branch and the per-direction amplitude, or an R-configuration experiment reports
+S > 7 or setting dependence in R trials.

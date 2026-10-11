@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 2: Bancal v-causal models give no guaranteed low-latency or two-way channel; round-1 wording fixes
+- Owner brief (continuation of #152). Full write-up: `docs/goal_round2/README.md`; code
+  `scripts/goal_bancal_channel.py`; results `results/goal_round2/`.
+- Round-1 fixes (on #152): NIST rows are now "lower-bound strength reachable under the listed assumptions"; "S ≤ 7
+  excludes QM" qualified (statistics, noise and loopholes); "public Bell data has no discriminating power" narrowed
+  to NIST 2015 and the bipartite bound; experiment needs split into bipartite, multipartite and channel.
+- **Positive control:** the paper's 4-qubit state and observables give S = 7.2014 (Lemma 1 bound 7); QM marginals
+  are exactly no-signalling.
+- **Timeline [derived]:** Fig. 3 at 20 ly needs 15.00 yr in both directions for any v. Any layout that keeps both
+  branches available has worst latency ≥ L/2 (proof: triangle inequality; grid 0.505 L). Clustering B, C, D at the
+  receiver gives ~L/v one way only, and only if the model's branch is known; the theorem does not supply it.
+- **Signal size [derived, exact LP]:** each direction alone can be 0; at least one direction carries mean total
+  variation ≥ 0.0063. At ε = 10⁻³ that is ~3.5 × 10⁵ four-party states per bit.
+- **Next experiment:** Bancal Experiment v1 (no sync; excludes no-signalling v-causal models), then a direct R test
+  needing ps B–C timing over ~100 km. Missing physics (branch, amplitude per direction, v and frame) is listed in §6.
+- **Failed approach (rule):** the first draft wrote the 100 km timing as 67 fs; it is 67 ps (d/(c·5 × 10⁶)).
+  Recompute every unit conversion from the script, never by hand.
+
 ## 2026-10-11: Goal round 1: corrections, carried-wormhole accounting, v-causal bounds; NIST 2015 data cannot improve the bipartite V bound
 - Owner brief (contact and fast return over 20–100 ly). Full write-up: `docs/goal_round1/README.md`.
 - Corrections to the previous chat assessment, from full texts:
