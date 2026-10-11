@@ -6,6 +6,7 @@ only, on one field, with a seed that no limit uses, and writes a tracked table w
 Later stages tune classifiers on ``dev`` only and report recovery on ``validation`` once.
 
     python scripts/w3_short_te.py --field gb12 --per-cell 1000 --seed 3003 --procs 4
+    python scripts/w3_short_te.py --field gb12 --seed 3003 --diagnose   # dev split only
 """
 
 from __future__ import annotations
@@ -31,13 +32,68 @@ def split_of(i: int, seed: int) -> str:
     return "validation" if zlib.crc32(f"{seed}:{i}".encode()) % 2 else "dev"
 
 
+def sampling_diagnostics(tab: Table, field: str) -> Table:
+    """Per flagged injection (``derived``): how well the injected signal is sampled. Spike nights
+    have an epoch where the injected flux rises above 3 median errors; umbra nights one where it
+    falls below −3 median errors (the jackknife's own feature threshold)."""
+    import numpy as np
+
+    wm.set_field(field)
+    pre = wm.read_prescreen()
+    flagged = tab[np.asarray(tab["flagged"], bool)]
+    arrays = wm.load_arrays(list(dict.fromkeys(flagged["event_id"])), aux=True, pre=pre)
+    rows = []
+    for r in flagged:
+        t, f, sf, _ = arrays[r["event_id"]]
+        fs = float(wm.moa.mag_to_counts(float(r["Is"]), wm.moa.parse_event_id(r["event_id"])[1]))
+        prm = {k: float(r[k]) for k in ("tE", "rho", "u0", "t0")}
+        sig = wm.injected_signal(t, "W3", fs, prm)
+        thr = 3.0 * float(np.median(sf))
+        nt = wm.nights(t)
+        up, down = sig > thr, sig < -thr
+        tc = prm["t0"]
+        rows.append(
+            {
+                "event_id": r["event_id"],
+                "split": r["split"],
+                "rho": prm["rho"],
+                "u0": prm["u0"],
+                "Is": float(r["Is"]),
+                "failed_test": str(r["failed_test"] or "")
+                if not np.ma.is_masked(r["failed_test"])
+                else "",
+                "recovered": bool(r["recovered"]),
+                "spike_nights": int(np.unique(nt[up]).size),
+                "spike_before": bool((up & (t < tc)).any()),
+                "spike_after": bool((up & (t > tc)).any()),
+                "umbra_nights": int(np.unique(nt[down]).size),
+                "feature_nights": int(np.unique(nt[up | down]).size),
+            }
+        )
+    out = Table(rows=rows)
+    out.meta.update(
+        provenance="derived",
+        source=f"scripts/w3_short_te.py --diagnose: injected-signal sampling of flagged {field} "
+        "t_E = 3 d injections (simulated signals on real carriers)",
+    )
+    return out
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--field", default="gb12")
     ap.add_argument("--per-cell", type=int, default=1000)
     ap.add_argument("--seed", type=int, default=3003)
     ap.add_argument("--procs", type=int, default=4)
+    ap.add_argument("--diagnose", action="store_true", help="sampling diagnostics of the sample")
     a = ap.parse_args(argv)
+    if a.diagnose:
+        tab = Table.read(OUT / f"injections_{a.field}_te3_seed{a.seed}.ecsv.gz")
+        d = sampling_diagnostics(tab, a.field)
+        out = OUT / f"diagnostics_{a.field}_te3_seed{a.seed}.ecsv"
+        d.write(out, overwrite=True)
+        print(f"wrote {out}: {len(d)} flagged injections")
+        return 0
     wm.set_field(a.field)
     prod = wm.out_dir() / f"injections_{a.field}.ecsv"
     keep = prod.with_suffix(".production.ecsv")
