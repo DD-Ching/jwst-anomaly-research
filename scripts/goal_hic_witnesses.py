@@ -172,6 +172,12 @@ def density(w: Witness) -> np.ndarray:
     return np.outer(w.psi, w.psi.conj())
 
 
+def white_distribution(p_ideal: np.ndarray, vis: float) -> np.ndarray:
+    """P under white noise: affine in vis, uniform outcomes 1 / 2^n for every setting."""
+    n = p_ideal.ndim // 2
+    return vis * p_ideal + (1 - vis) / 2**n
+
+
 def white(rho: np.ndarray, vis: float) -> np.ndarray:
     d = rho.shape[0]
     return vis * rho + (1 - vis) * np.eye(d) / d
@@ -303,45 +309,53 @@ def noise_thresholds(w: Witness) -> dict:
     return out
 
 
-def detection_threshold(w: Witness, rho: np.ndarray) -> dict:
-    """Lowest per-detector efficiency eta at which some no-click assignment (each party and
-    setting picks +1 or -1) still violates the bound; no postselection. Uses the expansion of
-    each term in eta, so all 4^n assignments are searched exactly."""
+def detection_threshold(w: Witness, rho: np.ndarray, grid: int = 2001) -> dict:
+    """Lowest per-detector efficiency eta such that some no-click assignment (each party and
+    setting records +1 or -1 on no click; no postselection) violates the bound at eta and at every
+    efficiency above it. Each assignment's S(eta) is a polynomial (degree <= max body); it is
+    evaluated exactly on a grid over [0, 1] for all 4^n assignments at once, and the crossing below
+    the violated tail is refined by bisection."""
     keys = [(p, s) for p in w.parties for s in (0, 1)]
-    # pre-compute ideal sub-correlators for every subset of every term
-    cache = {}
+    signs = np.array(list(itertools.product((1, -1), repeat=len(keys))), dtype=float)
+    col = {k: i for i, k in enumerate(keys)}
+    etas = np.linspace(0.0, 1.0, grid)
+
+    corr = {}
     for _, parts in w.terms:
         for r in range(len(parts) + 1):
             for sub in itertools.combinations(parts, r):
-                if sub not in cache:
-                    cache[sub] = expectation(rho, w, {p: w.obs[p][s] for p, s in sub})
+                if sub not in corr:
+                    corr[sub] = expectation(rho, w, {p: w.obs[p][s] for p, s in sub})
 
-    def value(eta, assign):
-        total = 0.0
+    def values(eta: np.ndarray, sg: np.ndarray) -> np.ndarray:  # (assignments, len(eta))
+        total = np.zeros((len(sg), len(eta)))
         for coef, parts in w.terms:
-            acc = 0.0
             for r in range(len(parts) + 1):
                 for sub in itertools.combinations(parts, r):
                     rest = [x for x in parts if x not in sub]
-                    acc += (
-                        eta ** len(sub)
-                        * np.prod([(1 - eta) * assign[x] for x in rest])
-                        * cache[sub]
-                    )
-            total += coef * acc
+                    sgn = np.prod(sg[:, [col[x] for x in rest]], axis=1) if rest else 1.0
+                    weight = eta**r * (1 - eta) ** len(rest)
+                    total += coef * corr[sub] * np.outer(np.ones(len(sg)) * sgn, weight)
         return total
 
-    best = (None, None)
-    for signs in itertools.product((1, -1), repeat=len(keys)):
-        assign = dict(zip(keys, signs, strict=True))
-        if value(1.0, assign) <= w.bound:
-            continue
-        eta = bisect(lambda e, a=assign: value(e, a) - w.bound, 0.0, 1.0, tol=1e-6)
-        if eta is not None and (best[0] is None or eta < best[0]):
-            best = (eta, assign)
-    if best[0] is None:
+    viol = values(etas, signs) > w.bound
+    tail = np.flip(np.logical_and.accumulate(np.flip(viol, axis=1), axis=1), axis=1)
+    if not tail[:, -1].any():
         return {"eta_min": None}
-    return {"eta_min": best[0], "assignment": {f"{p}{s}": v for (p, s), v in best[1].items()}}
+    first = np.where(tail.any(axis=1), tail.argmax(axis=1), grid)
+    k = int(first.argmin())
+    i0 = int(first[k])
+    if i0 == 0:
+        eta = 0.0
+    else:
+        row = signs[k : k + 1]
+
+        def fk(e):
+            return float(values(np.array([e]), row)[0, 0] - w.bound)
+
+        eta = bisect(fk, float(etas[i0 - 1]), float(etas[i0]), tol=1e-7)
+    assign = {f"{p}{s}": int(v) for (p, s), v in zip(keys, signs[k], strict=True)}
+    return {"eta_min": eta, "assignment": assign}
 
 
 # ----------------------------------------------------------------------------- exact LP
@@ -487,16 +501,17 @@ def lp_white_threshold(w: Witness, tol: float = 1e-4) -> float:
     HIC distribution: the best threshold any no-BC witness reaches for this state and setting."""
     rho = density(w)
 
+    p_ideal = distribution(rho, w)
+
     def forced(v):
-        return (
-            1.0
-            if not hic_lp(distribution(white(rho, v), w), w, "feasible_ns")["ns_feasible"]
-            else -1.0
-        )
+        ns = hic_lp(white_distribution(p_ideal, v), w, "feasible_ns")["ns_feasible"]
+        return -1.0 if ns else 1.0
 
     lo, hi = 0.5, 1.0
     if forced(hi) < 0:
-        return math.nan
+        return None
+    if forced(lo) > 0:
+        raise ValueError("marginals still force signalling at visibility 0.5; widen the search")
     while hi - lo > tol:
         mid = 0.5 * (lo + hi)
         if forced(mid) > 0:
@@ -519,6 +534,8 @@ def v1_estimator_moments(p_obs: np.ndarray, w: Witness) -> dict:
     info = []
     for coef, parts in w.terms:
         names = {p for p, _ in parts}
+        if {"B", "C"} <= names:
+            raise ValueError("Experiment v1 cannot estimate a term containing both B and C")
         fam = "B" if "B" in names else ("C" if "C" in names else None)
         pi = (0.5 if fam else 1.0) * 0.5 ** len(parts)
         info.append((coef, parts, fam, pi))
@@ -567,30 +584,40 @@ def analyse(w: Witness, with_lp: bool = True) -> dict:
         "parties": w.parties,
         "early": w.early,
         "bound": w.bound,
-        "quantum_value": witness_value(rho, w),
-        "quantum_value_from_distribution": None,
+        "quantum_value": (sq := witness_value(rho, w)),
         "quoted": w.quoted,
         "terms": len(w.terms),
         "max_body": max(len(p) for _, p in w.terms),
-        "relative_gap": witness_value(rho, w) / w.bound - 1,
+        "relative_gap": sq / w.bound - 1,
         "thresholds": noise_thresholds(w),
     }
     mom = v1_estimator_moments(p_ideal, w)
-    out["quantum_value_from_distribution"] = mom["mean"]
+    out["quantum_value_from_distribution"] = mom["mean"]  # Experiment-v1 estimator mean
     stats = {"ideal": {**mom, **trials_needed(mom, w.bound)}}
     for v in (0.98, 0.95, 0.92):
-        m = v1_estimator_moments(distribution(white(rho, v), w), w)
+        m = v1_estimator_moments(white_distribution(p_ideal, v), w)
         stats[f"white_{v}"] = {**m, **trials_needed(m, w.bound)}
     out["v1_statistics"] = stats
     if with_lp:
         out["lp_white_threshold"] = lp_white_threshold(w)
         sig = {}
         for v in (1.0, 0.99, 0.97, 0.95, 0.9):
-            sig[f"white_{v}"] = hic_lp(distribution(white(rho, v), w), w)
+            sig[f"white_{v}"] = hic_lp(white_distribution(p_ideal, v), w)
         sig["dephasing_0.02"] = hic_lp(distribution(dephasing(rho, 0.02), w), w)
         sig["readout_flip_0.01"] = hic_lp(distribution(rho, w, readout_affine(w, flip=0.01)), w)
         out["forced_signal"] = sig
     return out
+
+
+def _finite(x):
+    """JSON has no inf / nan: write them as null."""
+    if isinstance(x, dict):
+        return {k: _finite(v) for k, v in x.items()}
+    if isinstance(x, list | tuple):
+        return [_finite(v) for v in x]
+    if isinstance(x, float) and not math.isfinite(x):
+        return None
+    return x
 
 
 def main(argv=None) -> int:
@@ -606,7 +633,7 @@ def main(argv=None) -> int:
         w = make()
         out["witnesses"][w.name] = analyse(w, with_lp=not (a.no_lp5 and w.n == 5))
     out["r_fraction_worst_case"] = bancal.r_fraction_table()
-    print(json.dumps(out, indent=1, default=str))
+    print(json.dumps(_finite(out), indent=1, default=str, allow_nan=False))
     return 0
 
 

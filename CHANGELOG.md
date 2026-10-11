@@ -25,6 +25,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   frame. Triggers are in §8.
 - **Failed approach (rule):** quoting LC5's lower white-noise threshold as "more robust" is wrong under local noise.
   Compare witnesses under the noise the platform actually has.
+- **Failed approach (rule):** the first draft claimed that a v1-only deficit (S ≤ bound in v1, QM in timelike
+  controls) is the signature of no-signalling v-causal models. Under λ-independence, App. D makes the ABD marginal
+  independent of C's timing, so no such v-causal signature exists. The independent review caught it.
 
 ## 2026-10-11: Goal round 2: Bancal v-causal models give no guaranteed low-latency or two-way channel; round-1 wording fixes
 - Owner brief (continuation of #152). Full write-up: `docs/goal_round2/README.md`; code

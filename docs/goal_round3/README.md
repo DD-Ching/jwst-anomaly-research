@@ -12,7 +12,7 @@ round; see SOURCES.md), **[ASSUMPTION]**, **UNKNOWN**. Nothing here is evidence 
 mechanics (QM) is the no-signalling baseline.
 
 Code: `scripts/goal_hic_witnesses.py`; tests: `tests/test_goal_hic_witnesses.py`; output:
-`results/goal_round3/hic_witnesses.json` (about 75 s). The round-2 report revisions requested in the same brief
+`results/goal_round3/hic_witnesses.json` (about 30 s). The round-2 report revisions requested in the same brief
 are in `docs/goal_round2/README.md` §3.1, §5 and §8.
 
 ## 1. Verdict
@@ -38,7 +38,7 @@ are in `docs/goal_round2/README.md` §3.1, §5 and §8.
 | | Bancal 2012 | Li 2026 LC4 | Li 2026 LC5 |
 |---|---|---|---|
 | Model set | NS ∩ local(BC given A, D) (App. C, Lemma 1) | HIC_AD = NS ∩ CL(BC\|AD) (Eq. 1) | HIC_ADE (Eq. 1) |
-| Spacetime premise | A < D < (B ∼ C), with App. E i)–iii) | the same, with E = AD (Fig. 1) | A ≺ D ≺ E ≺ (B ∼ C), and a 2-D layout for the collection points (S8–S10) |
+| Spacetime premise | A < D < (B ∼ C), with App. E i)–iii) | the same, with E = AD (Fig. 1) | A ≺ D ≺ E ≺ (B ∼ C) with five separate sites and a 2-D layout (S8–S10); or Bancal's 4-site layout with D and E as one system (main text after Eq. 6) |
 | How QM marginals reach the B ∼ C case | App. D: random B and C timing; QM holds in every v-connected chain | S18–S19 delay lemma (the same argument) | the same |
 | Measured data | ABD and ACD marginals only (no BC term) | ABD and ACD (supports AB, ABD, CD, ACD) | ABDE and ACDE |
 | State | 4-qubit state of App. B | linear cluster LC4 | linear cluster LC5 |
@@ -49,18 +49,30 @@ are in `docs/goal_round2/README.md` §3.1, §5 and §8.
 - Li et al. note that S4 ≤ 6 is also the ordinary local bound (main text, below Eq. 5). A violation measured without
   the v1 timing structure is therefore just a Bell violation. It says nothing about v-causal models unless the
   App. E conditions hold.
-- **LC5 needs a 2-D layout.** In 1-D, a middle early party never has a collection point (S21).
+- **LC5 needs a 2-D layout only with five separate sites.** In 1-D, a middle early party never has a collection
+  point (S21). Li et al. also allow LC5 in Bancal's 4-site layout, with D and E treated as one system that has two
+  four-outcome measurements and the same bound of 10.
 - **Frame-free protocol.** Bancal's eight rotated configurations cover every frame direction. The construction uses
-  only the roles A, D early and B, C late, so it carries over to LC4 [derived]. For LC5 it is UNKNOWN; nobody has
-  derived it.
+  only the roles A, D early and B, C late, so it carries over to LC4 [derived]. With D and E merged it plausibly carries
+  over to LC5 as well; that has not been derived.
 
 ## 3. Three different outcomes and what each supports [derived from the papers]
 
 | Observation (Experiment v1: ABD from B < C trials, ACD from C < B trials, random B and C times) | Supports | Does not support |
 |---|---|---|
 | **S above the bound, at the QM value** (QM's prediction) | Excludes **no-signalling** v-causal models for every finite v, in the frames the configurations cover. | Anything about signalling v-causal models: they reproduce QM marginals there too (App. D), so they predict the same S. It is not a channel. |
-| **S at or below the bound in v1 while timelike-ordered controls give the QM value** | A deviation from QM in exactly the configuration-dependent way no-signalling v-causal models predict. This would be new physics, if every loophole of §5 is closed. | Communication: these models do not signal. |
-| **Setting dependence of BCD on x, or of ABC on w, in B ∼ C trials only, absent in controls** | Direct, controllable superluminal signalling: the communication-relevant result. | Anything when it also appears in control trials: then it is an instrument effect (§5). |
+| **S at or below the bound in v1, and also in other measurements of the same ABD and ACD marginals** | A deviation from QM in the four-party marginals. Under λ-independence of the timing (App. D, Eq. 10), the ABD marginal does not depend on when C is measured. So a no-signalling v-causal model has to break QM even in v-connected configurations, i.e. break Bancal's QM-in-chains premise. This would be new physics only if every loophole of §6 is closed. It would also appear in ordinary lab measurements of the same marginals; it is not a v1-only signature. | Communication: these models do not signal. |
+| **S at or below the bound only with genuine continuous random B and C timing, but QM values with pre-set timing** | A model whose hidden variables use prior knowledge of the measurement times (the loophole in App. E). Otherwise retrocausality or an instrument artifact. | A v-causal model obeying λ-independence: it cannot produce this pattern. |
+| **Setting dependence of BCD on x, or of ABC on w, in B ∼ C trials only, absent in v-connected control trials** | Direct, controllable superluminal signalling: the communication-relevant result. | Anything when it also appears in control trials: then it is an instrument effect (§6). |
+
+**Consequence [derived].** Under λ-independence, v1's added value over a lab measurement of the same marginals lies
+in replacing assumptions with measurement:
+- spacelike separation removes ordinary communication;
+- continuous random timing removes timing knowledge.
+
+Under Bancal's Experiment-v3 hypothesis, one high-fidelity device would already decide the no-signalling question
+(LC4 marginals at visibility > 0.879). No such published LC4 dataset was found (UNKNOWN). Either way, the outcome
+would not test the signalling models that matter for communication.
 
 ## 4. Noise robustness [derived; positive controls reproduce the papers]
 
@@ -228,11 +240,17 @@ Li et al. p.2 (three searches; not a full crawl of the citing papers).
 
 ## 9. Bookkeeping
 
-- **Time.** 2026-10-11 05:40 → about 06:30 UTC, including the round-2 revisions.
-- **Compute.** About 75 s for the full script (LPs of up to 1024 variables). The tests take about 40 s.
+- **Independent review** (separate agent, own code, against both papers). Confirmed: the states, the observables and
+  the terms; every threshold in §4; the LP encoding and the values of §5 (with its own LP); the estimator and the trial
+  counts; the R fraction (exact integration and Monte Carlo). Fixed from it:
+  - §3 row 2 was logically wrong. Under λ-independence, a deviation cannot be specific to v1; the row is now split.
+  - LC5 also fits Bancal's 4-site layout.
+  - With no bound on the frame speed, the worst-case R fraction is exactly 0 for windows shorter than d/c.
+- **Time.** 2026-10-11 05:40 → about 06:10 UTC, including the round-2 revisions.
+- **Compute.** About 30 s for the full script (LPs of up to 1024 variables). The tests take about 10 s.
 - **Data.** None. Papers only (arXiv PDFs in the scratchpad, not committed).
 - **Not done.**
   - Noise correlated across qubits.
-  - The frame-free 8-configuration protocol for LC5.
+  - The frame-free 8-configuration protocol for LC5, with D and E merged.
   - The detection-loss LP: the witness thresholds are computed, but the LP threshold under loss is not.
   - A full literature crawl of the experiments citing Bancal et al.
