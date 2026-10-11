@@ -109,6 +109,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Next:**
   - Configuration-R timing tolerance and noise threshold (theory).
   - A literature unit on modified-gravity theories with R_kk < 0 consistent with GW170817.
+
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
   would have gone to `/vet-candidate` before injections.
