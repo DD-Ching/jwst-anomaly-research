@@ -4074,3 +4074,27 @@ alone cannot separate a correct setup from a lucky window.
 
 **Revisit if** a new SkyLLH release changes the PDFs (re-run the benchmark), or a test needs multi-season
 time-dependent fits (SkyLLH single-dataset limit).
+
+## D-081 One coordinating writer for shared state documents under parallel sessions (2026-10-11)
+
+**Decision.** Owner directive V2.1 (2026-10-11), priority 4: parallel sessions on one program write only
+structured result artifacts. One coordinator integrates CHANGELOG.md, TASKS.md and docs/exotic_limits.md at
+checkpoints. The coordinator is the session that opens the program's integration PR (for MOA-II, the
+`combine` PR). Worker PR bodies carry a "Coordinator notes" section with the text to fold in. Rule text:
+CLAUDE.md "Parallel work".
+
+**Alternatives rejected.**
+- `merge=union` in `.gitattributes` for CHANGELOG.md: GitHub's mergeability check ignores custom
+  merge drivers, so PRs would still show as conflicting. It also does not help TASKS.md or
+  docs/exotic_limits.md, whose edits change lines in place.
+- One file per worker for changelog fragments: a new management file type, which the directive asks to avoid.
+  The PR body already holds the text, and per-field `results/w3_moa/limits_gbN.ecsv` and `vetting_gbN.json`
+  are already the structured artifacts.
+
+**Evidence.** On 2026-10-10 the MOA-II field PRs (#135–#138, #140–#142) all added entries at the top of
+CHANGELOG.md and edited the same TASKS.md line and docs/exotic_limits.md tables. Observed in this session:
+#138 conflicted with `main` in all three files after #137 merged, and #139 conflicted in CHANGELOG.md after
+#138 merged. Each needed a manual `origin/main` merge and another CI cycle.
+
+**Revisit if.** GitHub honours merge drivers in its mergeability check, or the field programme ends.
+
