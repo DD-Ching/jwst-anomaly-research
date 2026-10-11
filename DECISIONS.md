@@ -4289,7 +4289,9 @@ S > 7 or setting dependence in R trials.
 
 **Decision (proposal).**
 - Excluded under the stated assumptions (matter minimally coupled, linearised EA in the allowed region, c13 = 0,
-  tidal readout, controllable sources): the spin-0 coupling to matter falls as κ ≈ c14/4 ≲ 0.083/c_S².
+  tidal readout, controllable sources): the spin-0 coupling to matter falls as κ ≈ c14/4 ≲ 0.021/c_S², for every
+  slow source.
+- With c13 ≠ 0 the spin-1 mode couples with κ_V ≤ 1/((1 − c13)c_V²): the same trade-off.
 - The spin-1 mode does not reach a metric detector for c13 = 0.
 - No further theory chain or large computation.
 

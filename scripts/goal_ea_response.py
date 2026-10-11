@@ -17,13 +17,17 @@ Positive controls [reproduced]:
 - static E_zz = 4 pi G_N rho with G_N = G/(1 - c14/2) (Carroll & Lim; Foster);
 - GR tensor far field E_xy = -G omega^4 I_xy / r for c13 = 0.
 
-New [derived]:
+New [derived] (linear order, c13 = 0, leading order in source size / wavelength, c = 1):
 - a spherically pulsating source (Q = int rho r^2) has an exterior field made only of the c_S pole,
   with no instantaneous part:
   E_ij = -kappa G [delta_ij Q''''(t_S)/r + d_i d_j (Q''(t_S)/r)], t_S = t - r/c_S,
-  kappa = c14 (c14 + 3 c2) / (3 c2 (2 - c14)^2)   (c13 = 0);
-- for a general slow source the far-field spin-0 tidal amplitude is
-  -(c14/4) G omega^4 I_kk / r delta_ij + O(c14^2);
+  kappa = c14 (c14 + 3 c2) / (3 c2 (2 - c14)^2)
+  (SI: -kappa (G/c^2) [delta_ij Q''''/(c^2 r) + d_i d_j (Q''/r)]);
+- any slow source (closed form found by the independent review, checked here per component):
+  E^S_ij = -[G c14 / (2 (2 - c14))](delta_ij d_t^2 + d_i d_j)(d_t^2 I_kk + d_k d_l I_kl) acting on
+  [ . ]_{t - r/c_S} / r; it reduces to the spherical result for I = delta Q / 3;
+- far field -(c14/4) G omega^4 I_kk delta_ij / r + O(c14^2), equal to Yagi et al. Eq. (106);
+- spin-1 with c13 != 0: kappa_V = c13^2 / (2 c14 c_V^4 (1 - c13)^2) <= 1 / ((1 - c13) c_V^2);
 - a link budget: c_S = D / latency fixes c14 <= 2 c2 / ((2 + 3 c2) c_S^2), so kappa ~ 1/c_S^2.
 """
 
@@ -287,7 +291,7 @@ def yagi_comparison() -> dict:
     """Published control: Yagi, Blas, Barausse & Yunes (1311.7144v4) Eq. (106) for weakly
     gravitating sources (sensitivity terms zero), breathing polarisation h_b = F/2 (2304.06801),
     transverse tidal E_xx = omega^2 h_b / 2 up to an overall sign convention:
-    |E_xx| r / (G omega^4) = c14 [3 (Z - 1) Q_nn + Z I_kk / 2] / (2 - c14), with Z from their
+    |E_xx| r / (G omega^4) = c14 [(3/2)(Z - 1) Q_nn + Z I_kk / 2] / (2 - c14), with Z from their
     Eqs. (42), (43), (107). Compares the I_kk and Q_nn = I_nn - I_kk/3 coefficients with ours."""
     c14, sub = _c13_zero()
     a1 = -8 * (C3**2 + C1 * C4) / (2 * C1 - C1**2 + C3**2)
@@ -297,7 +301,7 @@ def yagi_comparison() -> dict:
     cp = C1 + C3
     z = sp.factor(sp.simplify((((a1 - 2 * a2) * (1 - cp)) / (3 * (2 * cp - (C1 + C4)))).subs(sub)))
     yagi_ikk = sp.simplify(c14 * z / 2 / (2 - c14))
-    yagi_qnn = sp.simplify(c14 * 3 * (z - 1) / (2 - c14))
+    yagi_qnn = sp.simplify(c14 * sp.Rational(3, 2) * (z - 1) / (2 - c14))
     ixx, iyy, izz = sp.symbols("Ixx Iyy Izz")
     ours = sp.sympify(far_field_general()["xx"]["exact"], locals={"c14": c14, "c2": C2})
     ikk, qnn = sp.symbols("Ikk Qnn")
@@ -308,7 +312,66 @@ def yagi_comparison() -> dict:
         "Z_c13_0": str(z),
         "Ikk_ours_minus_yagi": str(sp.simplify(ours_ikk - yagi_ikk)),
         "Qnn_ours_over_yagi": str(sp.simplify(ours_qnn / yagi_qnn)),
-        "Qnn_order": "O(c14^2)",
+    }
+
+
+def general_source_kernel() -> dict:
+    """Any slow source, c13 = 0 (closed form found in the independent review, checked here):
+    E^S_ij = -[G c14 / (2 (2 - c14))] (delta_ij d_t^2 + d_i d_j)(d_t^2 I_kk + d_k d_l I_kl)
+    evaluated on [ . ]_{t - r/c_S} / r. In Fourier space its residue at omega^2 = c_S^2 k^2 is
+    4 pi C c_S^2 (W delta_ij + k_i k_j)(W I_kk + k_k k_l I_kl), C = G c14 / (2 (2 - c14)).
+    Compares that with the c_S-pole residue of the full response in the helicity frame (k = z)."""
+    e = tidal_response()
+    rho, jx, jy, sxx, syy, sxy = sp.symbols("rho jx jy Sxx Syy Sxy")
+    c14, sub = _c13_zero()
+    w2 = sp.symbols("W", positive=True)
+    ixx, iyy, izz, ixy, ixz, iyz = sp.symbols("Ixx Iyy Izz Ixy Ixz Iyz")
+    cs2 = sp.factor(sp.simplify(literature_speeds()["S"].subs(sub)))
+    src = {
+        rho: -(K**2) * izz / 2,
+        jx: -sp.sqrt(w2) * K * ixz / 2,
+        jy: -sp.sqrt(w2) * K * iyz / 2,
+        sxx: -w2 * ixx / 2,
+        syy: -w2 * iyy / 2,
+        sxy: -w2 * ixy / 2,
+    }
+    cc = GS * c14 / (2 * (2 - c14))
+    ikk = ixx + iyy + izz
+    expect = {"xx": w2, "zz": w2 + K**2, "xy": 0, "xz": 0}
+    out = {}
+    for comp, tens in expect.items():
+        ex = sp.factor(sp.simplify(e[comp].subs(sub).subs(W, sp.sqrt(w2)).subs(src)))
+        res = sp.simplify(sp.limit(ex * (w2 - cs2 * K**2), w2, cs2 * K**2))
+        pred = (4 * sp.pi * cc * cs2 * tens * (w2 * ikk + K**2 * izz)).subs(w2, cs2 * K**2)
+        out[comp] = str(sp.simplify(res - pred))
+    return out
+
+
+def vector_sector_c13() -> dict:
+    """Spin-1 mode with c13 != 0 (linear theory): far-field E_xz r / (G omega^4 I_xz) at the c_V
+    pole, written with c_V, and a grid check of kappa_V <= 1 / ((1 - c13) c_V^2). The bound
+    follows from 2 c14 c_V^2 (1 - c13) = 2 c1 (1 - c13) + c13^2 with c1 >= 0."""
+    e = tidal_response()
+    rho, jx, jy, sxx, syy, sxy = sp.symbols("rho jx jy Sxx Syy Sxy")
+    c13, c14, cv = sp.symbols("c13 c14 c_V", positive=True)
+    ixz = sp.symbols("Ixz")
+    ex = e["xz"].subs({rho: 0, jy: 0, sxx: 0, syy: 0, sxy: 0}).subs(jx, -W * K * ixz / 2)
+    ex = ex.subs({C3: c13 - C1, C4: c14 - C1})
+    cv2 = sp.simplify(literature_speeds()["V"].subs({C3: c13 - C1, C4: c14 - C1}))
+    res = sp.factor(sp.simplify(sp.limit(sp.factor(ex) * (W**2 - cv2 * K**2), W, sp.sqrt(cv2) * K)))
+    amp = sp.simplify((-(res / cv2) / (4 * sp.pi)).subs(K, W / sp.sqrt(cv2)) / (GS * W**4 * ixz))
+    c1sol = sp.solve(sp.Eq(cv2, cv**2), C1)[0]
+    amp_cv = sp.factor(sp.simplify(amp.subs(C1, c1sol)))
+    worst = 0.0
+    for c13v in (1e-15, 1e-6, 1e-2):
+        for c14v in (1e-25, 1e-12, 2e-7):
+            for c1v in (c14v, 1e-3, 0.1):
+                cvv2 = float(cv2.subs({c13: c13v, c14: c14v, C1: c1v}))
+                a = abs(float(amp.subs({c13: c13v, c14: c14v, C1: c1v})))
+                worst = max(worst, a * cvv2 * (1 - c13v))
+    return {
+        "far_field_Exz_r_over_G_w4_Ixz": str(amp_cv),
+        "max_kappaV_times_cV2_(1-c13)_on_grid": worst,
     }
 
 
@@ -323,8 +386,9 @@ def link_budget(p: Params = P) -> list:
         r = d_ly * LY_M
         for lat in p.latencies_s:
             c_s = r / (C_SI * lat)  # in units of c
-            c2 = p.c2_max
-            c14 = min(2 * c2 / ((2 + 3 * c2) * c_s**2), p.c14_max_region_i)
+            c14 = min(2 * p.c2_max / ((2 + 3 * p.c2_max) * c_s**2), p.c14_max_region_i)
+            # c2 that gives this c_S at this c14 (exact inversion of the c_S formula)
+            c2 = 2 * c_s**2 * c14 / (2 - c14 - 3 * c_s**2 * c14)
             kappa = c14 * (c14 + 3 * c2) / (3 * c2 * (2 - c14) ** 2)
             far = G_SI * omega**4 * dq / (C_SI**4 * r)
             near = 2 * G_SI * omega**2 * dq / (C_SI**2 * r**3)  # |d_i d_j (Q''/r)| ~ 2 Q''/r^3
@@ -336,6 +400,7 @@ def link_budget(p: Params = P) -> list:
                     "latency_s": lat,
                     "c_S_required_over_c": c_s,
                     "c14": c14,
+                    "c2": c2,
                     "kappa": kappa,
                     "tidal_signal_s-2": e_sig,
                     "integration_time_s_for_snr": t_int,
@@ -355,6 +420,8 @@ def main(argv=None) -> int:
         "controls": controls(),
         "spherical_source": spherical_source(),
         "far_field_general": far_field_general(),
+        "general_source_kernel_residual": general_source_kernel(),
+        "vector_sector_c13": vector_sector_c13(),
         "yagi_comparison": yagi_comparison(),
         "link_budget": link_budget(),
     }
