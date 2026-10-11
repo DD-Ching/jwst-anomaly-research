@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-10: W3 MOA-II gb2 (twelfth field): 0 survivors; combined limit over twelve fields
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1 and a finite limit in every cell. A
+  survivor that held up on the contact sheet would have stopped injections and gone to `/vet-candidate`.
+- `run-field --procs 4` (cloud): 60.5 GB streamed in 774 s (95,624 light curves; 2,189 shape passes, 61 off shared
+  epochs); 61 fits in 291 s, 60 flags; **0 survive**; 2,200 injections; chain 1,754 s. Contact sheet inspected: box
+  dips, variables, sparse few-night dips, caustic spikes only in the models. CDS XMatch worked (RP for 43 / 60).
+- Limits (`results/w3_moa/limits_gb2.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 2.1 × 10⁻⁷–9.9 × 10⁻⁷ per star per
+  year (N_s = 1.76 × 10⁷); every cell has ≥ 4 recoveries. **Combined, twelve fields: Γ₉₅ ≈ 2.8 × 10⁻⁸–1.5 × 10⁻⁷**
+  (was 3.2 × 10⁻⁸–1.8 × 10⁻⁷; max field share ≤ 0.20).
+- Failed approach (cloud I/O): `metadata.ipac.tar.gz` (97 MB) came back truncated twice through `urllib` (two
+  different wrong sha256 values); one `curl -C - --retry 3` into `data/raw/moa/b339ec176933_metadata.ipac.tar.gz`
+  gave the pinned file. Pre-fetch it that way before `run-field` in a fresh cloud session.
+- **Next:** gb1 (70 GB) and gb8 (78 GB), `combine` after each; gb13 waits on the owner (#145).
+
 ## 2026-10-10: gb13-R-7-0-76483 vetted: explained by red noise, not a candidate
 - Hypothesis before measuring: the exotic preference comes from white-noise errors on a red-noise star; a GP
   baseline that still preferred E2pos by ΔBIC > 10 (ASSUMPTION) would have kept the candidate open.

@@ -77,13 +77,14 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    flags, 0 candidates (gb17, gb18: one chain survivor each, explained outside the chain); limits withdrawn**
    (injections had a lenient source-flux bound). The four D-068 chain gaps are closed (D-068 addendum
    2026-10-10, `CHAIN_VERSION` 2026-10-10.1). All eleven fields re-run under it (gb18 last): 0 survivors, limits tracked (CHANGELOG 2026-10-10; gb18's t_E = 300 d,
-   ρ = 0.1 cell has 0 recoveries). **Combined (11 fields): Γ₉₅ ≈ 3.2 × 10⁻⁸–1.8 × 10⁻⁷ per star per year**
-   (`results/w3_moa/limits_combined.ecsv`; no field > 19 % of any cell). The lenient-reference fields were re-vetted with a working CDS XMatch: 0 survivors (CHANGELOG 2026-10-10). Next:
+   ρ = 0.1 cell has 0 recoveries). **Combined (12 fields, gb2 added): Γ₉₅ ≈ 2.8 × 10⁻⁸–1.5 × 10⁻⁷ per star per year**
+   (`results/w3_moa/limits_combined.ecsv`; no field > 20 % of any cell). The lenient-reference fields were re-vetted with a working CDS XMatch: 0 survivors (CHANGELOG 2026-10-10).
    gb13 run (2026-10-10): 69 flags, one chain survivor gb13-R-7-0-76483, **explained** by `/vet-candidate` (a smooth
    2013 dimming of a red-noise star: under a GP baseline an ordinary trapezoidal dip beats E2pos by ΔBIC 14–20;
-   `docs/candidates/gb13-R-7-0-76483.md`). Next: decide whether to add a GP-baseline chain test (it removes this
-   flag; every field's injections would need a re-run; owner decision on #145), then gb13 injections (`run-field`
-   refuses while the chain survivor stands) and `combine`; then more Nunota et al. 2024 Table 1 fields. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
+   `docs/candidates/gb13-R-7-0-76483.md`). Next: gb1, gb8 (pre-fetch the metadata with curl, CHANGELOG 2026-10-10);
+   decide whether to add a GP-baseline chain test (it removes the gb13 flag; every field's injections would need a re-run;
+   owner decision on #145), then gb13 injections (`run-field` refuses while the chain survivor stands) and `combine`;
+   then the large Nunota et al. 2024 Table 1 fields. Gaia DR3 `vari_microlensing` is ruled out (D-061: 0 / 240 W3
    injections both selected and flagged; one real flag, not a candidate). Next: Gaia DR3 variables with epoch
    photometry (vari_summary; check by injection whether W3 survives the variability classifier first), KMTNet
    public seasons, OGLE EWS (owner decision, terms). Optional:
