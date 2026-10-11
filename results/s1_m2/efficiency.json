@@ -1,0 +1,659 @@
+{
+ "frozen": {
+  "frozen_utc": "2026-10-11T22:06:22Z",
+  "data": {
+   "lc_and_catalogue_sha256": "0403d265d7c3d47f",
+   "source": "results/s1_twins (main eed9b36; GBM bcat via scripts/s1_ingest.py)"
+  },
+  "grid": [
+   0.5051,
+   0.5303,
+   0.5568,
+   0.5847,
+   0.6139,
+   0.6446,
+   0.6768,
+   0.7107,
+   0.7462,
+   0.7835,
+   0.8227,
+   0.8638,
+   0.907,
+   0.9524,
+   1.0,
+   1.05,
+   1.1025,
+   1.1576,
+   1.2155,
+   1.2763,
+   1.3401,
+   1.4071,
+   1.4775,
+   1.5513,
+   1.6289,
+   1.7103,
+   1.7959,
+   1.8856,
+   1.9799
+  ],
+  "grid_step": 1.05,
+  "statistic": "M2: max over grid of multi-band cross-correlation with free per-band scale (s1_deform.rho_free), |dk| <= 2",
+  "threshold_m2": 0.9716426305743394,
+  "threshold_basis": "calibration half (split seed 1), per-pair FAR 1e-4 of 185,392 real pairs",
+  "refinement": "ln s in +-0.03 step 0.002 around the best grid value, lag re-selected",
+  "consistency": "per-band chi2 p at the refined stretch (calibrated score, not an exact probability)",
+  "consistency_cut": 0.001,
+  "min_delay_days": 1.0,
+  "min_pulses": 2,
+  "position_cut": "3 sigma, 3.7 deg systematic",
+  "max_dk": 2,
+  "dedup": "connected components of candidate pairs sharing a burst",
+  "calibration_seed": 777,
+  "efficiency_seed": 4242,
+  "expected_false_candidates": "about FAR x pairs x 0.024 (unrelated pass rate 48/2000) ~ 1.8 -> exploratory search",
+  "data_used_for_tuning": "calibration half: thresholds, unrelated pass rate; hold-out half: seen with M0/M1/M2 and the fine grid (#167)"
+ },
+ "n": 1620,
+ "table": [
+  {
+   "s0": "all",
+   "ratio": "all",
+   "n": 1620,
+   "selected": 553,
+   "recovered": 271,
+   "selection_rate": 0.341,
+   "recovery_given_selected": 0.49,
+   "total_recovery": 0.167
+  },
+  {
+   "s0": "all",
+   "ratio": 1.0,
+   "n": 324,
+   "selected": 221,
+   "recovered": 119,
+   "selection_rate": 0.682,
+   "recovery_given_selected": 0.538,
+   "total_recovery": 0.367
+  },
+  {
+   "s0": "all",
+   "ratio": 0.5,
+   "n": 324,
+   "selected": 151,
+   "recovered": 73,
+   "selection_rate": 0.466,
+   "recovery_given_selected": 0.483,
+   "total_recovery": 0.225
+  },
+  {
+   "s0": "all",
+   "ratio": 0.3,
+   "n": 324,
+   "selected": 99,
+   "recovered": 42,
+   "selection_rate": 0.306,
+   "recovery_given_selected": 0.424,
+   "total_recovery": 0.13
+  },
+  {
+   "s0": "all",
+   "ratio": 0.2,
+   "n": 324,
+   "selected": 61,
+   "recovered": 27,
+   "selection_rate": 0.188,
+   "recovery_given_selected": 0.443,
+   "total_recovery": 0.083
+  },
+  {
+   "s0": "all",
+   "ratio": 0.1,
+   "n": 324,
+   "selected": 21,
+   "recovered": 10,
+   "selection_rate": 0.065,
+   "recovery_given_selected": 0.476,
+   "total_recovery": 0.031
+  },
+  {
+   "s0": 0.5,
+   "ratio": "all",
+   "n": 180,
+   "selected": 44,
+   "recovered": 25,
+   "selection_rate": 0.244,
+   "recovery_given_selected": 0.568,
+   "total_recovery": 0.139
+  },
+  {
+   "s0": 0.5,
+   "ratio": 1.0,
+   "n": 36,
+   "selected": 22,
+   "recovered": 14,
+   "selection_rate": 0.611,
+   "recovery_given_selected": 0.636,
+   "total_recovery": 0.389
+  },
+  {
+   "s0": 0.5,
+   "ratio": 0.5,
+   "n": 36,
+   "selected": 9,
+   "recovered": 6,
+   "selection_rate": 0.25,
+   "recovery_given_selected": 0.667,
+   "total_recovery": 0.167
+  },
+  {
+   "s0": 0.5,
+   "ratio": 0.3,
+   "n": 36,
+   "selected": 7,
+   "recovered": 4,
+   "selection_rate": 0.194,
+   "recovery_given_selected": 0.571,
+   "total_recovery": 0.111
+  },
+  {
+   "s0": 0.5,
+   "ratio": 0.2,
+   "n": 36,
+   "selected": 5,
+   "recovered": 1,
+   "selection_rate": 0.139,
+   "recovery_given_selected": 0.2,
+   "total_recovery": 0.028
+  },
+  {
+   "s0": 0.5,
+   "ratio": 0.1,
+   "n": 36,
+   "selected": 1,
+   "recovered": 0,
+   "selection_rate": 0.028,
+   "recovery_given_selected": 0.0,
+   "total_recovery": 0.0
+  },
+  {
+   "s0": 0.6,
+   "ratio": "all",
+   "n": 180,
+   "selected": 50,
+   "recovered": 14,
+   "selection_rate": 0.278,
+   "recovery_given_selected": 0.28,
+   "total_recovery": 0.078
+  },
+  {
+   "s0": 0.6,
+   "ratio": 1.0,
+   "n": 36,
+   "selected": 28,
+   "recovered": 8,
+   "selection_rate": 0.778,
+   "recovery_given_selected": 0.286,
+   "total_recovery": 0.222
+  },
+  {
+   "s0": 0.6,
+   "ratio": 0.5,
+   "n": 36,
+   "selected": 16,
+   "recovered": 5,
+   "selection_rate": 0.444,
+   "recovery_given_selected": 0.312,
+   "total_recovery": 0.139
+  },
+  {
+   "s0": 0.6,
+   "ratio": 0.3,
+   "n": 36,
+   "selected": 4,
+   "recovered": 0,
+   "selection_rate": 0.111,
+   "recovery_given_selected": 0.0,
+   "total_recovery": 0.0
+  },
+  {
+   "s0": 0.6,
+   "ratio": 0.2,
+   "n": 36,
+   "selected": 2,
+   "recovered": 1,
+   "selection_rate": 0.056,
+   "recovery_given_selected": 0.5,
+   "total_recovery": 0.028
+  },
+  {
+   "s0": 0.6,
+   "ratio": 0.1,
+   "n": 36,
+   "selected": 0,
+   "recovered": 0,
+   "selection_rate": 0.0,
+   "recovery_given_selected": null,
+   "total_recovery": 0.0
+  },
+  {
+   "s0": 0.71,
+   "ratio": "all",
+   "n": 180,
+   "selected": 55,
+   "recovered": 27,
+   "selection_rate": 0.306,
+   "recovery_given_selected": 0.491,
+   "total_recovery": 0.15
+  },
+  {
+   "s0": 0.71,
+   "ratio": 1.0,
+   "n": 36,
+   "selected": 23,
+   "recovered": 13,
+   "selection_rate": 0.639,
+   "recovery_given_selected": 0.565,
+   "total_recovery": 0.361
+  },
+  {
+   "s0": 0.71,
+   "ratio": 0.5,
+   "n": 36,
+   "selected": 15,
+   "recovered": 5,
+   "selection_rate": 0.417,
+   "recovery_given_selected": 0.333,
+   "total_recovery": 0.139
+  },
+  {
+   "s0": 0.71,
+   "ratio": 0.3,
+   "n": 36,
+   "selected": 9,
+   "recovered": 4,
+   "selection_rate": 0.25,
+   "recovery_given_selected": 0.444,
+   "total_recovery": 0.111
+  },
+  {
+   "s0": 0.71,
+   "ratio": 0.2,
+   "n": 36,
+   "selected": 4,
+   "recovered": 3,
+   "selection_rate": 0.111,
+   "recovery_given_selected": 0.75,
+   "total_recovery": 0.083
+  },
+  {
+   "s0": 0.71,
+   "ratio": 0.1,
+   "n": 36,
+   "selected": 4,
+   "recovered": 2,
+   "selection_rate": 0.111,
+   "recovery_given_selected": 0.5,
+   "total_recovery": 0.056
+  },
+  {
+   "s0": 0.85,
+   "ratio": "all",
+   "n": 180,
+   "selected": 59,
+   "recovered": 26,
+   "selection_rate": 0.328,
+   "recovery_given_selected": 0.441,
+   "total_recovery": 0.144
+  },
+  {
+   "s0": 0.85,
+   "ratio": 1.0,
+   "n": 36,
+   "selected": 25,
+   "recovered": 11,
+   "selection_rate": 0.694,
+   "recovery_given_selected": 0.44,
+   "total_recovery": 0.306
+  },
+  {
+   "s0": 0.85,
+   "ratio": 0.5,
+   "n": 36,
+   "selected": 15,
+   "recovered": 7,
+   "selection_rate": 0.417,
+   "recovery_given_selected": 0.467,
+   "total_recovery": 0.194
+  },
+  {
+   "s0": 0.85,
+   "ratio": 0.3,
+   "n": 36,
+   "selected": 10,
+   "recovered": 4,
+   "selection_rate": 0.278,
+   "recovery_given_selected": 0.4,
+   "total_recovery": 0.111
+  },
+  {
+   "s0": 0.85,
+   "ratio": 0.2,
+   "n": 36,
+   "selected": 6,
+   "recovered": 3,
+   "selection_rate": 0.167,
+   "recovery_given_selected": 0.5,
+   "total_recovery": 0.083
+  },
+  {
+   "s0": 0.85,
+   "ratio": 0.1,
+   "n": 36,
+   "selected": 3,
+   "recovered": 1,
+   "selection_rate": 0.083,
+   "recovery_given_selected": 0.333,
+   "total_recovery": 0.028
+  },
+  {
+   "s0": 1.0,
+   "ratio": "all",
+   "n": 180,
+   "selected": 64,
+   "recovered": 27,
+   "selection_rate": 0.356,
+   "recovery_given_selected": 0.422,
+   "total_recovery": 0.15
+  },
+  {
+   "s0": 1.0,
+   "ratio": 1.0,
+   "n": 36,
+   "selected": 25,
+   "recovered": 13,
+   "selection_rate": 0.694,
+   "recovery_given_selected": 0.52,
+   "total_recovery": 0.361
+  },
+  {
+   "s0": 1.0,
+   "ratio": 0.5,
+   "n": 36,
+   "selected": 15,
+   "recovered": 5,
+   "selection_rate": 0.417,
+   "recovery_given_selected": 0.333,
+   "total_recovery": 0.139
+  },
+  {
+   "s0": 1.0,
+   "ratio": 0.3,
+   "n": 36,
+   "selected": 14,
+   "recovered": 5,
+   "selection_rate": 0.389,
+   "recovery_given_selected": 0.357,
+   "total_recovery": 0.139
+  },
+  {
+   "s0": 1.0,
+   "ratio": 0.2,
+   "n": 36,
+   "selected": 7,
+   "recovered": 3,
+   "selection_rate": 0.194,
+   "recovery_given_selected": 0.429,
+   "total_recovery": 0.083
+  },
+  {
+   "s0": 1.0,
+   "ratio": 0.1,
+   "n": 36,
+   "selected": 3,
+   "recovered": 1,
+   "selection_rate": 0.083,
+   "recovery_given_selected": 0.333,
+   "total_recovery": 0.028
+  },
+  {
+   "s0": 1.2,
+   "ratio": "all",
+   "n": 180,
+   "selected": 69,
+   "recovered": 32,
+   "selection_rate": 0.383,
+   "recovery_given_selected": 0.464,
+   "total_recovery": 0.178
+  },
+  {
+   "s0": 1.2,
+   "ratio": 1.0,
+   "n": 36,
+   "selected": 25,
+   "recovered": 11,
+   "selection_rate": 0.694,
+   "recovery_given_selected": 0.44,
+   "total_recovery": 0.306
+  },
+  {
+   "s0": 1.2,
+   "ratio": 0.5,
+   "n": 36,
+   "selected": 23,
+   "recovered": 11,
+   "selection_rate": 0.639,
+   "recovery_given_selected": 0.478,
+   "total_recovery": 0.306
+  },
+  {
+   "s0": 1.2,
+   "ratio": 0.3,
+   "n": 36,
+   "selected": 10,
+   "recovered": 4,
+   "selection_rate": 0.278,
+   "recovery_given_selected": 0.4,
+   "total_recovery": 0.111
+  },
+  {
+   "s0": 1.2,
+   "ratio": 0.2,
+   "n": 36,
+   "selected": 10,
+   "recovered": 6,
+   "selection_rate": 0.278,
+   "recovery_given_selected": 0.6,
+   "total_recovery": 0.167
+  },
+  {
+   "s0": 1.2,
+   "ratio": 0.1,
+   "n": 36,
+   "selected": 1,
+   "recovered": 0,
+   "selection_rate": 0.028,
+   "recovery_given_selected": 0.0,
+   "total_recovery": 0.0
+  },
+  {
+   "s0": 1.41,
+   "ratio": "all",
+   "n": 180,
+   "selected": 65,
+   "recovered": 36,
+   "selection_rate": 0.361,
+   "recovery_given_selected": 0.554,
+   "total_recovery": 0.2
+  },
+  {
+   "s0": 1.41,
+   "ratio": 1.0,
+   "n": 36,
+   "selected": 24,
+   "recovered": 16,
+   "selection_rate": 0.667,
+   "recovery_given_selected": 0.667,
+   "total_recovery": 0.444
+  },
+  {
+   "s0": 1.41,
+   "ratio": 0.5,
+   "n": 36,
+   "selected": 16,
+   "recovered": 8,
+   "selection_rate": 0.444,
+   "recovery_given_selected": 0.5,
+   "total_recovery": 0.222
+  },
+  {
+   "s0": 1.41,
+   "ratio": 0.3,
+   "n": 36,
+   "selected": 12,
+   "recovered": 6,
+   "selection_rate": 0.333,
+   "recovery_given_selected": 0.5,
+   "total_recovery": 0.167
+  },
+  {
+   "s0": 1.41,
+   "ratio": 0.2,
+   "n": 36,
+   "selected": 9,
+   "recovered": 3,
+   "selection_rate": 0.25,
+   "recovery_given_selected": 0.333,
+   "total_recovery": 0.083
+  },
+  {
+   "s0": 1.41,
+   "ratio": 0.1,
+   "n": 36,
+   "selected": 4,
+   "recovered": 3,
+   "selection_rate": 0.111,
+   "recovery_given_selected": 0.75,
+   "total_recovery": 0.083
+  },
+  {
+   "s0": 1.7,
+   "ratio": "all",
+   "n": 180,
+   "selected": 71,
+   "recovered": 43,
+   "selection_rate": 0.394,
+   "recovery_given_selected": 0.606,
+   "total_recovery": 0.239
+  },
+  {
+   "s0": 1.7,
+   "ratio": 1.0,
+   "n": 36,
+   "selected": 22,
+   "recovered": 17,
+   "selection_rate": 0.611,
+   "recovery_given_selected": 0.773,
+   "total_recovery": 0.472
+  },
+  {
+   "s0": 1.7,
+   "ratio": 0.5,
+   "n": 36,
+   "selected": 18,
+   "recovered": 11,
+   "selection_rate": 0.5,
+   "recovery_given_selected": 0.611,
+   "total_recovery": 0.306
+  },
+  {
+   "s0": 1.7,
+   "ratio": 0.3,
+   "n": 36,
+   "selected": 17,
+   "recovered": 9,
+   "selection_rate": 0.472,
+   "recovery_given_selected": 0.529,
+   "total_recovery": 0.25
+  },
+  {
+   "s0": 1.7,
+   "ratio": 0.2,
+   "n": 36,
+   "selected": 11,
+   "recovered": 4,
+   "selection_rate": 0.306,
+   "recovery_given_selected": 0.364,
+   "total_recovery": 0.111
+  },
+  {
+   "s0": 1.7,
+   "ratio": 0.1,
+   "n": 36,
+   "selected": 3,
+   "recovered": 2,
+   "selection_rate": 0.083,
+   "recovery_given_selected": 0.667,
+   "total_recovery": 0.056
+  },
+  {
+   "s0": 2.0,
+   "ratio": "all",
+   "n": 180,
+   "selected": 76,
+   "recovered": 41,
+   "selection_rate": 0.422,
+   "recovery_given_selected": 0.539,
+   "total_recovery": 0.228
+  },
+  {
+   "s0": 2.0,
+   "ratio": 1.0,
+   "n": 36,
+   "selected": 27,
+   "recovered": 16,
+   "selection_rate": 0.75,
+   "recovery_given_selected": 0.593,
+   "total_recovery": 0.444
+  },
+  {
+   "s0": 2.0,
+   "ratio": 0.5,
+   "n": 36,
+   "selected": 24,
+   "recovered": 15,
+   "selection_rate": 0.667,
+   "recovery_given_selected": 0.625,
+   "total_recovery": 0.417
+  },
+  {
+   "s0": 2.0,
+   "ratio": 0.3,
+   "n": 36,
+   "selected": 16,
+   "recovered": 6,
+   "selection_rate": 0.444,
+   "recovery_given_selected": 0.375,
+   "total_recovery": 0.167
+  },
+  {
+   "s0": 2.0,
+   "ratio": 0.2,
+   "n": 36,
+   "selected": 7,
+   "recovered": 3,
+   "selection_rate": 0.194,
+   "recovery_given_selected": 0.429,
+   "total_recovery": 0.083
+  },
+  {
+   "s0": 2.0,
+   "ratio": 0.1,
+   "n": 36,
+   "selected": 2,
+   "recovered": 1,
+   "selection_rate": 0.056,
+   "recovery_given_selected": 0.5,
+   "total_recovery": 0.028
+  }
+ ]
+}

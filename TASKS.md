@@ -29,8 +29,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    addendum 1) found that S1's flagging never used the stretched similarity; it recovered 0 / 1,440 deformed
    injections in that test set. A stretch grid with step 1.05 plus a free per-band
    scale (M2) recovers 18 % of deformed copies (21 % undeformed) at the same false-alarm rate; the hold-out half
-   gave no candidate. Next: a non-degenerate null (the two-pulse shuffle is a fixed swap) and a full M2 re-screen
-   with a deformed-twin limit; then CHIME/FRB Catalog 2 and TTE for short and faint bursts.
+   gave no candidate. **Full M2 re-screen done** (frozen method, 747,709 pairs): 0 candidates, an exploratory search
+   (about 1.8 false candidates expected); conditional limit < 1.3 × 10⁻² deformed-twin pairs per eligible burst for
+   the injected population. Next: CHIME/FRB Catalog 2, and TTE light curves for single-pulse, short and faint
+   bursts (the largest blind region: 2,975 bursts).
 2. **S2 flat-kernel SN residuals** (D-070 + addendum): Pantheon+ × LS DR9 null (γ < 0.025), DES-SN5YR × LS DR9 null
    (γ < 0.019 mag per unit T/⟨T⟩, α = 2, one-sided 95 %, dilution- and chain-corrected); α = 1 is kernel-degenerate. The
    lensing positive control is only ~1.7σ (DES) / ~2σ combined. Next: a deeper galaxy column (DES Y3 Gold or LS DR10

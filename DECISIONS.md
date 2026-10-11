@@ -3454,6 +3454,19 @@ galaxy column is set up, or the full covariances change the errors by > 20 %.
   - time-resolved spectra (CSPEC/TTE) are used to test the E → E/s link per candidate;
   - a non-degenerate null changes ρ*.
 
+**Addendum 2 (2026-10-11): calibration and full M2 re-screen.**
+- **Decision (proposal):**
+  - the M2 consistency step uses a locally refined stretch;
+  - the cut is c = 10⁻³, chosen to keep ≥ 95 % of simulated true pairs (actually 98.6 % are kept);
+  - false alarms come from the real-pair background, not from the pulse shuffle. Real pairs outnumber the
+    surrogates 7.5–14× above ρ = 0.8.
+- **Full re-screen:** 747,709 pairs and 0 candidates. It is exploratory (about 1.8 false candidates expected).
+- **Conditional limit:** < 1.3 × 10⁻² deformed-twin pairs per eligible burst, for the injected population only.
+- **Evidence:** `docs/s1_deform/README.md` §8; `results/s1_m2/`.
+- **Revisit if:**
+  - S1 is extended to single-pulse bursts (TTE);
+  - a candidate needs the E → E/s spectral check.
+
 ## D-072 S3 hybrid images: COSMOGRAIL XIX doubles, SIS leg-split lag window, template regression; null without a useful limit (2026-10-09)
 
 **Decision.** S3 (D-069) is tested with `scripts/s3_hybrid.py` on the COSMOGRAIL XIX R-band curves (CDS

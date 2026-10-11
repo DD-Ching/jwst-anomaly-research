@@ -199,3 +199,113 @@ with blurring or opacity data.
 2. A deformed-twin rate limit from the full screen, with these efficiencies. Cheap once step 1 is done.
 3. The owner's mouth-population idea (§6) is on hold. It needs a transfer-equation treatment, not an absorption
    factor.
+
+## 8. Calibration, frozen method and the full-catalogue M2 re-screen (owner review, 2026-10-11)
+
+**Files:**
+- `docs/s1_m2/calibration_plan.md`: the freeze rule, written before the refined pass and the search.
+- `scripts/s1_m2_search.py`, `tests/test_s1_m2_search.py`.
+- Results: `results/s1_m2/` (`calibration_pass1_unrefined.json`, `calibration_refined.json`, `frozen.json`,
+  `search.json`, `efficiency.json`).
+
+**8.1 Consistency test, calibrated on simulated true pairs** (independent noise; seed 777; all eligible bursts as
+templates):
+- **Failure found.** The per-band χ² at the best grid stretch rejected **7.2 %** of true pairs above threshold
+  (p < 10⁻³), all of them stretched copies (s0 = 1: 0 %).
+  - Cause: grid discretisation (up to 2.5 % off the true stretch at step 1.05) on bright copies. Linear
+    interpolation without covariance adds to it.
+  - The cut rule then written in the code (1st percentile of the true p) degenerated to c = 4 × 10⁻³⁹, which
+    disables the test: 370 / 2,000 top unrelated pairs passed.
+- **Minimal fix.** Refine s locally (ln s ± 0.03 in steps of 0.002) and re-select the lag before χ².
+  - True-pair rejection at 10⁻³ falls to **1.4 %**: 0.8 % at brightness ratio 1, rising to 9 % at 0.1.
+  - The p distribution is still not uniform (median about 1, because the 10 % systematic is conservative). It is
+    used as a calibrated score, not as an exact probability.
+  - By the declared rule, c = 10⁻³ (the 5th percentile of the true-pair p is 0.37).
+
+**8.2 Does the old surrogate null represent unrelated bursts?** No (`results/s1_twins/null.json`).
+- Above ρ = 0.8, real pairs (almost all unrelated) outnumber the mean pulse-shuffled catalogue 7.5–14×. At
+  ρ ≥ 0.95 there are 56 real pairs against 4.8 surrogate pairs.
+- So the shuffle is less similar than real unrelated bursts. The old ρ* = 0.9636 therefore **underestimated** the
+  background false-alarm rate; its two-valued maxima were a symptom of the same problem.
+- This study's background is the real-pair distribution of the calibration half. It keeps real shapes, noise and
+  selection, and any true twins in it would only make it conservative.
+
+**8.3 False-alarm rates, kept separate:**
+- **Per-pair pre-screen:** 10⁻⁴ by construction (M2 threshold 0.9716 on 185,392 calibration-half pairs).
+- **False candidates over the full catalogue** (after stretch, lag, per-band scale and consistency):
+  - unrelated real pairs pass the consistency and delay cuts at **2.4 %** (48 of the 2,000 most similar
+    calibration-half pairs; 2 of the top 100);
+  - with about 75 pairs above threshold, **about 1.8 false candidates are expected**.
+  - Pairs share bursts (the top 2,000 involve only 291 distinct bursts), so this is an expectation, not a
+    family-wise probability. Extreme tails were not estimated.
+  - **The search is exploratory. No global significance is claimed.**
+
+**8.4 Frozen method** (`results/s1_m2/frozen.json`, frozen 2026-10-11T22:06:22Z and committed in 4b4d235 before
+any full-catalogue score was computed):
+- data hash `0403d265d7c3d47f` (results/s1_twins at main eed9b36);
+- grid step 1.05 on [0.5, 2] (29 values) and the M2 threshold 0.9716;
+- the refinement, c = 10⁻³, delay ≥ 1 d, ≥ 2 pulses, position inconsistency at 3σ with the 3.7° systematic,
+  |Δk| ≤ 2;
+- de-duplication by shared bursts; calibration seed 777; efficiency seed 4242.
+
+**Data already used for tuning:**
+- **Calibration half:** the threshold and the unrelated pass rate.
+- **Validation half:** seen with M0/M1/M2 and again with the fine grid. It is **not** an untouched validation
+  sample; a fresh noise seed is not fresh data.
+- **Simulated true pairs:** the consistency cut.
+
+**8.5 Full-catalogue re-screen** [obs; `search.json`; 414 s on 4 cores]:
+
+| | count |
+|---|---|
+| catalogue bursts / reduced | 4,390 / 4,389 |
+| eligible bursts (≥ 2 pulses) | 1,414 (2,975 excluded: < 2 pulses, mostly single-pulse or faint) |
+| eligible pairs | 998,991 |
+| excluded: positions consistent (same-source or ordinary-lensing region) | 38,632 |
+| excluded: resolution mismatch \|Δk\| > 2 (durations differing by more than about ×4–8) | 212,650 |
+| **scored** | **747,709** (calibration–calibration 185,392; validation–validation 188,055; cross-half 374,262) |
+| above the M2 threshold | 64 (74.8 expected from the per-pair rate) |
+| **pass consistency (c = 10⁻³) and delay ≥ 1 d** | **0** |
+
+- **No candidates.** Of the 64 pairs above threshold, 63 have χ² p ≤ 4 × 10⁻¹³.
+  - The closest call has p = 2.2 × 10⁻⁶, still more than two orders of magnitude below c (pair listed in
+    `search.json`: bn160724444 / bn260107831, s = 0.505 at the grid edge, two-pulse bursts, 9.5 yr apart).
+  - 11 of the 64 sit at the grid edges (s = 0.505 or 1.98).
+  - High similarity with strongly inconsistent residuals is what generic shape similarity between unrelated
+    bursts looks like; a stretched copy would show consistent residuals.
+- No threshold was changed after the search.
+
+**8.6 Efficiency of the frozen chain** (`efficiency.json`; seed 4242; templates from both halves):
+
+| injected | n | selected (pass) | recovered given selected | total |
+|---|---|---|---|---|
+| deformed, s0 ≠ 1 | 1,440 | 34.0 % | 49.9 % | **16.9 %** |
+| undeformed, s0 = 1 | 180 | 35.6 % | 42.2 % | 15.0 % |
+| brightness ratio 1 / 0.5 / 0.3 / 0.2 / 0.1 (all s0) | 324 each | 68 / 47 / 31 / 19 / 7 % | 54 / 48 / 42 / 44 / 48 % | 37 / 23 / 13 / 8 / 3 % |
+
+**8.7 Conditional upper limit.**
+- **The population it assumes.** Twins distributed like the injection set:
+  - s0 uniform over the nine values in [0.5, 2];
+  - a Band spectrum (α = −1, β = −2.3, E_peak ∈ {100, 200, 400} keV);
+  - brightness ratio uniform over {1, 0.5, 0.3, 0.2, 0.1};
+  - partner at a position-inconsistent sky location, with GBM-like noise and 15 % gain jitter.
+- **Result.** Zero candidates give f95 < 3.0 / (1,414 × 0.169) = **1.3 × 10⁻² deformed-twin pairs per eligible
+  burst** (5.8 × 10⁻³ at brightness ratio 1, where the total efficiency is 0.367).
+- **Scope.** This limit is **not** valid for:
+  - other stretch, spectral or brightness distributions;
+  - single-pulse bursts;
+  - pairs excluded by the position or resolution cuts;
+  - any wormhole population in general.
+
+**8.8 What remains invisible to this search:**
+- **Single-pulse and faint bursts:** 2,975 of 4,389 reduced bursts. The search requires ≥ 2 resolved pulses on
+  both members.
+- **Same-position pairs:** the S1 design excludes them. Ordinary lensing searches cover them (Ahlgren & Larsson
+  2020).
+- **Large duration mismatch:** stretches beyond about ×2, or |Δk| > 2; 212,650 eligible pairs were not scored.
+- **Faint copies.** Total efficiency is 3 % at brightness ratio 0.1, and selection loses most of them.
+- **Strong spectral evolution, or frequency shifts beyond what two bands can absorb.** The two-band data can
+  tolerate a shift but cannot test E → E/s. That needs CSPEC/TTE per candidate.
+- **Time-dependent stretch** (non-uniform s), dispersion, or partial copies (one pulse of a burst).
+- **Copies hidden in data gaps**, Earth occultation or SAA passages, i.e. no GBM trigger at all.
+- **Other messengers.** FRBs (CHIME Catalog 2 is still open), neutrinos and GW are not in this screen.

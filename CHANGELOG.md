@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: S1 M2 calibration and full re-screen: 747,709 pairs, 0 candidates (exploratory)
+- Owner review of #167: calibrate, freeze, then re-screen the whole S1 catalogue with M2. `docs/s1_deform/README.md`
+  §8; `docs/s1_m2/calibration_plan.md`; `scripts/s1_m2_search.py`; `results/s1_m2/`.
+- **Failed approach:** the per-band χ² at the best grid stretch rejected 7.2 % of simulated true pairs (grid
+  discretisation on bright copies). The coded cut rule then degenerated to c = 4 × 10⁻³⁹. A local stretch
+  refinement brings the true-pair rejection to 1.4 %; c = 10⁻³.
+- **The old pulse-shuffle null misrepresents unrelated bursts:** real pairs outnumber surrogates 7.5–14× above
+  ρ = 0.8, so the old ρ* underestimated the false-alarm rate.
+- **False alarms.** The real-pair background gives a per-pair rate of 10⁻⁴. Unrelated pairs pass the consistency
+  cut at 2.4 %, so about 1.8 false candidates are expected: an exploratory search.
+- **Frozen** (4b4d235) before the search.
+- **Full screen:** 747,709 pairs scored (including 374,262 cross-half pairs), 64 above threshold (74.8 expected),
+  **0 candidates**.
+- **Efficiency** (deformed): selection 34 %, recovery after selection 50 %, total 16.9 %.
+- **Conditional limit:** < 1.3 × 10⁻² deformed-twin pairs per eligible burst, for the injected population only.
+- **Still invisible:** single-pulse and faint bursts (2,975), same-position pairs, |Δk| > 2 (212,650 pairs), copies
+  at brightness ratio ≲ 0.1, and the E → E/s check (needs CSPEC/TTE per candidate).
+
 ## 2026-10-11: S1 deformed-twin test: the screen was blind to stretched/energy-shifted copies; M2 recovers them
 - Owner brief: does S1 miss same-source signals that arrive deformed (delay, time stretch with the matching energy
   shift, brightness, response)? Pre-registered (`docs/s1_deform/preregistration.md`); write-up
