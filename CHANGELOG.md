@@ -2,6 +2,36 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 7: smooth eternal Krasnikov tube, the axial shortcut ray has ANEC = −2∫∂²_ρk dx ≤ 0; model paused at "no self-consistent source found"
+- Owner brief: rescope round 6's evidence, decide G2 on the complete geometry, assess G1 for feasibility, scope stop
+  conditions. Then an owner review on axis regularity. Write-up `docs/goal_round7/README.md`; code
+  `scripts/goal_krasnikov_g2.py`; results `results/goal_round7/`. Round-6 text annotated in place.
+- **Rescoped:**
+  - Round 6's curved-QEI numbers are a conditional estimate.
+  - Fewster–Osterbrink give arbitrarily negative energy over any bounded region for ξ > 0 on a fixed background.
+    Only a self-consistent tube source is "not found".
+- **Axis regularity (owner review):** the ER metric as written is not C¹ on the axis.
+  - The tanh radial factor has k_ρ(0) = 7.87544 × 10⁻³³/ε (η = 0.999, R = 10ε).
+  - The front θ(t − x − ρ) kinks the axis while it crosses (0 < t − x < ε).
+  - The finite tanh on-axis values are withdrawn. "Complete smooth geometry" claims for the built tube are
+    withdrawn until it is regularised, which would be a model modification.
+- **New [derived]:**
+  - Outgoing rays are achronal, shear-free and have ANEC 0.
+  - With a compact step, the core shortcut rays are flat (ANEC 0, marginal).
+  - Eternal tube, k = K(x, ρ²) smooth, axis fastest: the axial ray is complete and achronal. With
+    l = (2k0/(1+k0), −2/(1+k0), 0, 0) (unit Killing energy), ANEC = −2∫k2 dx ≤ 0.
+  - Checks: exp[−(ρ/R)²] (k2 > 0, ANEC = −15.944/ε, direct integral agrees to 2 × 10⁻⁷) and exp[−(ρ/R)⁴] (k2 = 0,
+    ANEC 0, curved core).
+  - Conditional on self-consistent AANEC: T_ll = 0 on the axis, or an axis that is not fastest.
+  - No experimentally testable prediction.
+- **Retracted:** "fine-tuning along 20–100 ly" (no perturbation analysis).
+- **G1:** ε_sc = l_P √(8πNF(η)); the method draft is kept; not started.
+- **Status:** this Krasnikov model is paused at "no self-consistent physical source found" (owner). That is not a
+  claim of physical impossibility.
+- **Failed approaches (rules):**
+  - "Exactly zero" results that rest on compact steps are marginal.
+  - Check axis regularity (k_ρ(0) = 0, i.e. k a smooth function of ρ²) before using an axis expansion.
+
 ## 2026-10-11: Goal round 6: the Krasnikov tube's QI bound holds for the "wait ≤ 1 yr" target; no field and state is known to source it
 - Owner brief: check the tube's physical source against Everett–Roman, Krasnikov 2003 and later work; no new
   candidates. Write-up `docs/goal_round6/README.md`; code `scripts/goal_krasnikov_source.py`; results

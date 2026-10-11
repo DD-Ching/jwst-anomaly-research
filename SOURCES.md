@@ -1300,3 +1300,9 @@ the paper or a prior entry states them):
 
 **Cited through Kontou–Sanders, not opened:** Ford & Roman, PRD 51, 4277 (1995); Fewster, *Quantum Energy
 Inequalities* (Springer, 2017); Wald & Yurtsever; Flanagan & Wald.
+
+## Goal round 7 (2026-10-11; docs/goal_round7/README.md)
+
+- Re-read: Everett & Roman (gr-qc/9702049) Eqs. (4)–(13); Fewster & Osterbrink (0708.2450v2) §§3, 6.
+- Abstract only: Levi & Ori, "Pragmatic mode-sum regularization method for semiclassical black-hole spacetimes",
+  PRD 91, 104028 (2015), arXiv:1503.02810 (method for a possible G1; not relied on for any result).

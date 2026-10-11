@@ -1,0 +1,91 @@
+{
+ "provenance": "derived symbolically from ER Eqs. (12)-(13) (no data); numerical checks use the stated ASSUMPTION profiles (compact C-infinity step; ER Eq. 35 tanh step)",
+ "params": {
+  "eta": 0.999,
+  "eps": 1.0,
+  "rho_max": 50.0,
+  "d_len": 400.0,
+  "n_rays": 64,
+  "seed": 7
+ },
+ "outgoing_lines": {
+  "screen_tidal_R_AxBx": {
+   "22": "0",
+   "23": "0",
+   "33": "0"
+  },
+  "g_xx": "0",
+  "Gamma_a_xx": [
+   "0",
+   "Derivative(k(u, x, rho), x)/(k(u, x, rho) + 1)",
+   "0",
+   "0"
+  ],
+  "pregeodesic": true,
+  "R_xx": "0"
+ },
+ "flat_where_k_depends_on_x_only": {
+  "nonzero_riemann_components": []
+ },
+ "max_outgoing_speed": {
+  "k=1": 0.997222625603923,
+  "k=0.5": 0.9963042320402751,
+  "k=0.001": 0.9944888176637489
+ },
+ "incoming_rays_after_completion": {
+  "max_dk_drho_or_du_along_rays": 0.0,
+  "transit_time_min_eps": 11.39899999862348,
+  "transit_time_max_eps": 11.39899999862348,
+  "exterior_light_time_eps": 410.0
+ },
+ "incoming_rays_before_completion_control": {
+  "max_dk_drho_or_du_along_rays": 1.997999969229336,
+  "transit_time_min_eps": 214.28098134267074,
+  "transit_time_max_eps": 238.32314474388724,
+  "exterior_light_time_eps": 410.0
+ },
+ "axis_null_ricci": {
+  "R_ll": "-(rho*k(x, rho)*Derivative(k(x, rho), (rho, 2)) - rho*Derivative(k(x, rho), rho)**2 + rho*Derivative(k(x, rho), (rho, 2)) + k(x, rho)*Derivative(k(x, rho), rho) + Derivative(k(x, rho), rho))/(2*rho*k(x, rho)**2)",
+  "R_ll_on_axis": "-(k0(x) + 1)*k2(x)/k0(x)**2",
+  "radial_acceleration": "-(k(x, rho) + 1)*Derivative(k(x, rho), rho)/(2*k(x, rho)**2)"
+ },
+ "axis_regularity": {
+  "tanh_radial_k_rho_at_axis_eta0.999_R10eps": "7.87544e-33",
+  "compact_radial_k_rho_at_axis": 0.0,
+  "front_d_drho_at_axis_t_minus_x_half_eps": -1.9999999999742446,
+  "front_d_drho_at_axis_t_minus_x_2eps": 0.0
+ },
+ "axial_normalisation": {
+  "g_ll": "0",
+  "killing_energy": "1",
+  "R_ll_affine": "-4*k2/(k0 + 1)",
+  "dlambda_dx": "-k0/2 - 1/2",
+  "anec_integrand_per_dx": "-2*k2"
+ },
+ "smooth_axis_examples": {
+  "exp_rho2": {
+   "k_rho_at_axis": 0.0,
+   "k2_axis_mid_tube": 0.01998,
+   "anec_minus_2_int_k2": -15.944039999999998,
+   "anec_direct_rho_1e-5R": -15.944036817084825,
+   "R_ll_unit_at_rho_R_over_2_mid_tube": -0.22799530324592454,
+   "axis_minimises_k": true
+  },
+  "exp_rho4": {
+   "k_rho_at_axis": 0.0,
+   "k2_axis_mid_tube": 0.0,
+   "anec_minus_2_int_k2": 0.0,
+   "anec_direct_rho_1e-5R": -6.377616000000003e-09,
+   "R_ll_unit_at_rho_R_over_2_mid_tube": -4.643546224612763,
+   "axis_minimises_k": true
+  }
+ },
+ "w_monotone_check": {
+  "compact": {
+   "min_normalised_dw": 0.0019425931844329694
+  },
+  "tanh": {
+   "min_normalised_dw": 0.0019425931844329694
+  }
+ }
+}

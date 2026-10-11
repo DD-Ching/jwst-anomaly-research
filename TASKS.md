@@ -28,6 +28,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
   Kontou–Olum for a free, minimally coupled scalar; no field and state is known to source the tube. Next, if the owner
   agrees: G2 (is the complete shortcut null geodesic achronal, with negative ANEC?) and G1 (the ground-state
   ⟨T_tt⟩ of a free scalar on the ER wall, sign and size). PR left unmerged for the owner.
+- Round 7 done (docs/goal_round7/): smooth eternal tube, the axial shortcut ray is complete and achronal with
+  ANEC = −2∫∂²_ρk dx ≤ 0 (AANEC-conditional: T_ll = 0 on the axis). The ER tanh profile and its front are not
+  smooth on the axis. **This Krasnikov model is paused at "no self-consistent physical source found"** (owner);
+  the G1 method draft is kept and not started. PR left unmerged for the owner.
 - Not covered and still open as explicit-claim classes: Lorentz-violating gravity with superluminal spin-0/1 modes
   (Einstein–aether, Hořava), Gödel/Gott global geometries, non-local quantum gravity, tachyons.
 
