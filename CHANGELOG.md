@@ -11,9 +11,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Run 2 (cloud, 16:10–16:50Z, `prescreen --procs 4 --chunks 36-66`): chunks 36–66 tracked (94,639 light curves in
   2,252 s, ~42 per s). Pre-screen complete: **205,886 light curves, 2,350 shape passes, 118 not at a shared epoch**
   (gb3: 75 of 167k), so the fit stage has ~1.6× gb3's work (~55 min at 4 procs).
-- **Next:** `run-field --procs 4` at the top of a run: it reuses the 66 tracked chunks, then fits (~55 min), vets and
-  injects. Split fit and inject across runs (`inject` writes only at the end; at gb3's 0.34 per s, 2,200 injections
-  take ~110 min).
+- Run 3 (cloud, 17:12–17:45Z): `fit --procs 4 --chunk 1/2` tracked (`results/w3_moa/fits_gb4_chunk1of2.ecsv.gz`):
+  59 fits in 1,727 s, 0 errors, 57 flags. `run-field` would fit all 118 passes as one chunk (`FITS_PER_CHUNK` = 120,
+  ~55 min, past a routine slot), so the fit is split in two by hand.
+- **Next:** `merge-prescreen`, `fit --procs 4 --chunk 2/2` (~29 min), then `merge-chunks 2` and `vet`; injections at
+  the top of a later run (`inject` writes only at the end; at gb3's 0.34 per s, 2,200 injections take ~110 min).
+  `run-field` cannot be used for the fit stage here (it would refit everything as 1 of 1).
 
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
