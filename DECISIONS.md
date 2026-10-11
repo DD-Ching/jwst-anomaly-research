@@ -4074,3 +4074,40 @@ alone cannot separate a correct setup from a lucky window.
 
 **Revisit if** a new SkyLLH release changes the PDFs (re-run the benchmark), or a test needs multi-season
 time-dependent fits (SkyLLH single-dataset limit).
+
+## D-082 W3 short-event (t_E = 3 d) recovery study: frozen sample, loss diagnosis on dev only (2026-10-11)
+
+**Decision.** Owner directive V2.1, priority 1. The production chain (CHAIN_VERSION 2026-10-10.1, unchanged) runs
+2,000 W3 injections at t_E = 3 d (ρ = 0.01 and 0.1, LF magnitudes, seed 3003; no limit uses this seed) on the
+300 gb12 quiet carriers. Before any analysis, the injections are split dev / validation by crc32(seed:index) % 2
+(`scripts/w3_short_te.py`, `results/w3_moa/short_te/`). The loss is diagnosed on dev only: for each flagged
+injection, count the nights on which the injected flux rises above 3 median errors (spike nights; the jackknife's
+own feature threshold) and the nights on which it falls below −3 median errors (umbra nights).
+Validation is used once, by the stage-2 classifier.
+
+**Alternatives rejected.**
+- Re-using the production gb12 injections (23 flagged at t_E = 3 d): too few, and they enter the published limits.
+- Relaxing `jackknife_nights` directly: it exists because one bright night carried gb7-R-8-6-94052's
+  preference (w3-survey failed-approach rule).
+
+**Evidence.** Baseline recovery of flagged injections:
+- dev: 28 / 72 = 0.39 (Clopper–Pearson 95 % 0.28–0.51);
+- validation: 20 / 46 = 0.43 (0.29–0.59).
+
+First failing test on dev: `jackknife_nights` 21, `eclipse_dip` 11, others 12.
+
+Spike nights on dev:
+- **`eclipse_dip` losses (11):** 0–1 spike nights each, none with spikes on both sides of the umbra. The peaks
+  were not sampled, so these signals are indistinguishable from a flat dip in the data. This is a sampling
+  limit, not a rule defect.
+- **`jackknife_nights` losses (21):** 15 have ≤ 2 spike nights. Dropping two nights removes every spike, so the
+  preference rests on ≤ 2 nights by construction. 6 have ≥ 3 spike nights; 9 have spikes on both sides.
+- **Recovered (28):** 15 have ≥ 3 spike nights and 19 have spikes on both sides.
+
+The rule-attributable loss is therefore at most the 6 jackknife failures with ≥ 3 spike nights: 6 / 72 = 8 %
+(3–17 %) of dev flags. Recovering all of them would lift dev recovery from 0.39 to 0.47 (0.35–0.59), which is
+an upper bound before any false-positive cost.
+
+**Revisit if.** Stage 2 (a likelihood-based night-robust test, e.g. a per-night systematic-error term in place of
+dropping nights) is tuned on dev, checked against the real gb12 flags and the PSPL controls for false positives, and
+evaluated once on validation.

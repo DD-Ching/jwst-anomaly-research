@@ -88,7 +88,9 @@ def main(argv=None) -> int:
     ap.add_argument("--diagnose", action="store_true", help="sampling diagnostics of the sample")
     a = ap.parse_args(argv)
     if a.diagnose:
-        tab = Table.read(OUT / f"injections_{a.field}_te3_seed{a.seed}.ecsv.gz")
+        tab = Table.read(
+            OUT / f"injections_{a.field}_te3_seed{a.seed}.ecsv.gz", format="ascii.ecsv"
+        )
         d = sampling_diagnostics(tab, a.field)
         out = OUT / f"diagnostics_{a.field}_te3_seed{a.seed}.ecsv"
         d.write(out, overwrite=True)

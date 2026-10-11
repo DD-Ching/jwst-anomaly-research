@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: W3 short events (t_E = 3 d): the loss is mostly unsampled caustic spikes; rule-attributable ≤ 8 % (D-082)
+- Hypothesis: sparse sampling leaves the caustic spikes on ≤ 2 nights, so `jackknife_nights` or `eclipse_dip`
+  rejects genuine peak-dip-peak signals. If failed injections had well-sampled spikes, the rule would be the loss.
+- Frozen sample: 2,000 t_E = 3 d W3 injections, production chain, gb12 carriers, seed 3003, dev / validation fixed
+  before analysis (846 s on 4 cores). Flagged → recovered: dev 72 → 28 (0.39, 95 % 0.28–0.51), validation 46 → 20.
+- Dev only: all 11 `eclipse_dip` losses have 0–1 spike nights and no spikes on both sides of the umbra, so they
+  are indistinguishable from a flat dip in the data. 15 / 21 `jackknife_nights` losses have ≤ 2 spike nights, and
+  6 have ≥ 3. A better rule can recover at most those 6: dev recovery 0.39 → ≤ 0.47, before any false-positive cost.
+- Injection profile (`docs/audits/2026-10-10-acceleration-v2.md`, V2.1 priority 2): 97 % of injection CPU is
+  fitting and vetting of the pre-screen passes (median 18.6 s each). The finite-source integrand is 46 % of that.
+  Data reuse, vectorized injection and caching cannot gain more than ~3 %.
+- **Next:** stage 2 of the short-event study (a night-robust likelihood term instead of dropping nights; tune on
+  dev, false-positive check on real flags and PSPL controls, one validation run); a compiled W3 finite-source
+  integrand with an identical-outcome test on fixed injections.
+
 ## 2026-10-10: W3 MOA-II gb2 (twelfth field): 0 survivors; combined limit over twelve fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1 and a finite limit in every cell. A
   survivor that held up on the contact sheet would have stopped injections and gone to `/vet-candidate`.
