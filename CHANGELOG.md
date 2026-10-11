@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: W3 MOA-II gb1 (thirteenth field): in progress
+- Plan: `run-field --procs 4` on gb1 under CHAIN_VERSION 2026-10-10.1, then `combine` over thirteen fields.
+
 ## 2026-10-10: W3 MOA-II gb2 (twelfth field): 0 survivors; combined limit over twelve fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1 and a finite limit in every cell. A
   survivor that held up on the contact sheet would have stopped injections and gone to `/vet-candidate`.
