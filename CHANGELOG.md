@@ -2,8 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: W3 MOA-II gb8 (fourteenth field), in progress
-- Plan: pre-screen + fit + vet this run (tracked chunks), injections and limits next run. Hypothesis: 0 survivors under CHAIN_VERSION 2026-10-10.1.
+## 2026-10-11: W3 MOA-II gb8 (fourteenth field), stage 1: 0 survivors (injections pending)
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
+  would have gone to `/vet-candidate` before injections.
+- `run-field --procs 4` (cloud), split across runs: 120,726 light curves streamed in 1,068 s (19 tracked pre-screen
+  chunks; 2,256 shape passes, 77 off shared epochs); 77 fits in 675 s, 0 errors, 73 flags; **0 survive**
+  (`results/w3_moa/vetting_gb8.json`). CDS XMatch worked (Gaia DR3 RP for 43 / 73). Contact sheet inspected:
+  variables, box and eclipse dips, slow trends; caustic spikes only in the models, never in the data.
+- Injections (2,200 on 267 carriers) were stopped at the run's 40-minute budget; nothing from them is kept.
+- **Next:** `run-field --field gb8` (skips the tracked pre-screen and fit chunks) → injections, `limit`, `combine`,
+  docs/exotic_limits.md; then mark this PR ready.
 
 ## 2026-10-11: W3 MOA-II gb1 (thirteenth field): 0 survivors; combined limit over thirteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1 and a finite limit in every cell. A
