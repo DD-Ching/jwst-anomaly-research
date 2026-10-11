@@ -27,8 +27,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   → 28 recovered; PSPL controls 0 / 50 flagged.
 - Failed approach: `pkill -f` on the injection also killed the harness shell that ran it (scripts/CLAUDE.md warns);
   the first chunk-1 start was lost, ~3 min.
-- **Next:** `inject --field gb4 --procs 4 --chunk 2/4`, then 3/4 and 4/4 (~23 min each, one or two per routine slot,
-  detached with `setsid nohup`), then `merge-inject --n 4`, `limit`, `combine`. Remaining large fields (gb5, gb6, gb9,
+- Run 6 (cloud, 20:08–20:58Z): chunk 2/4 tracked: 550 injections on 246 carriers in 878 s (0.63 per s), 0 errors;
+  W3 500 → 51 flagged → 23 recovered; PSPL controls 0 / 50 flagged. A fresh clone needs `merge-prescreen` before
+  `inject` (it reads `data/derived/w3_moa/prescreen_gb4.ecsv`), and the `metadata.ipac.tar.gz` download was truncated
+  once more (sha256 mismatch; the retry was clean).
+- Failed approach: a wait loop `while pgrep -f "<inject command>"` never ends, because the pattern also matches the
+  waiting shell's own command line; it held the run ~25 min past the chunk's end. Wait on the PID (`wait` or
+  `kill -0 <pid>`) instead.
+- **Next:** `merge-prescreen`, then `inject --field gb4 --procs 4 --chunk 3/4` and 4/4 (~15–23 min each, detached
+  with `setsid nohup`), then `merge-inject --n 4`, `limit`, `combine`. Remaining large fields (gb5, gb6, gb9,
   gb10, gb14) can use the same chunking for injections.
 
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
