@@ -1,0 +1,36 @@
+{
+ "provenance": "derived symbolically from ER Eqs. (12)-(13) (no data); the ray check uses the stated ASSUMPTION profile",
+ "params": {
+  "eta": 0.999,
+  "eps": 1.0,
+  "rho_max": 50.0,
+  "d_len": 400.0,
+  "n_rays": 64,
+  "seed": 7
+ },
+ "outgoing_lines": {
+  "g_xx": "0",
+  "Gamma_a_xx": [
+   "0",
+   "Derivative(k(u, x, rho), x)/(k(u, x, rho) + 1)",
+   "0",
+   "0"
+  ],
+  "pregeodesic": true,
+  "R_xx": "0"
+ },
+ "flat_where_k_depends_on_x_only": {
+  "nonzero_riemann_components": []
+ },
+ "max_outgoing_speed": {
+  "k=1": 0.997222625603923,
+  "k=0.5": 0.9963042320402751,
+  "k=0.001": 0.9944888176637489
+ },
+ "incoming_rays": {
+  "max_dk_drho_or_du_along_rays": 0.0,
+  "transit_time_min_eps": 11.39899999863701,
+  "transit_time_max_eps": 11.39899999863701,
+  "exterior_light_time_eps": 410.0
+ }
+}
