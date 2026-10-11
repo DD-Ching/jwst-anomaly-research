@@ -44,16 +44,36 @@ def test_integrated_negative_energy_and_self_consistency():
     assert w["I_neg"] < 0 < w["I_pos"] and 0.2 < w["effective_alpha"] < 0.5
     sc = ks.self_consistency(1 - 1e-9)
     assert sc["eps_self_consistent_planck_N1"] < 1.0  # one field's polarisation: sub-Planck wall
+    # identity of the estimate (C_QI / (c sigma^4)), checked only to pin the bookkeeping
     assert sc["fields_needed_to_reach_qi_thickness"] == pytest.approx(270 / ks.P.sigma**4, rel=1e-6)
 
 
-def test_null_energy_is_violated_only_in_the_shortcut_direction():
+def test_null_energy_and_causal_structure():
     for eta in (1e-2, 0.95):
         nc = ks.null_and_causal(eta)
         assert nc["outgoing_Rll_symbolic"] == "0"  # exterior light direction: NEC saturated
-        assert nc["outgoing_fixed_rho_radial_acceleration"] == "0"  # those curves are geodesics
+        assert nc["outgoing_killing_norm"] == "0"  # d_t + d_x is a null Killing field
         assert nc["incoming_Rll_min_eps1"] < 0  # shortcut direction: NEC violated in the wall
         assert nc["t_is_time_function"] and nc["k_min"] == pytest.approx(1 - eta, rel=1e-6)
+        sph = ks.null_sphere_nec(eta)
+        assert sph["outgoing_e0_plus_e1_max_abs"] < 1e-9
+        assert sph["radial_e0_plus_e2_min"] < 0  # NEC also fails for radial light
+        # but its integral straight across the wall vanishes
+        assert (
+            abs(sph["radial_e0_plus_e2_integral_across_wall"])
+            < 1e-6 * sph["radial_scale_integral_abs"]
+        )
+        assert sph["min_Rll_all_directions_eps1"] <= sph["incoming_e0_minus_e1_min"] + 1e-2
+
+
+def test_stationary_not_static():
+    import sympy as sp
+
+    twist = sp.sympify(ks.killing_checks()[0], locals={"k": sp.Function("k")})
+    v = sp.Symbol("v")
+    # nonzero for every v != 1 where k' != 0; v = 1 is the null Killing field
+    assert sp.simplify(twist.subs(v, 1)) == 0
+    assert sp.simplify(twist.subs(v, 0)) != 0
 
 
 def test_curved_qi_corrections_small_for_latency_rows_only():

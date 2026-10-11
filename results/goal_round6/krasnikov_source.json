@@ -1,7 +1,8 @@
 {
- "provenance": "derived from the ER metric and the flat-space quantum inequality (no data); estimates under the stated ASSUMPTIONs",
+ "provenance": "derived from the ER metric, the flat-space quantum inequality and the Kontou-Olum curved-spacetime corrections (no data); estimates under the stated ASSUMPTIONs",
  "params": {
   "sigma": 0.01,
+  "n_dir": 2000,
   "latencies_s": [
    1.0,
    60.0,
@@ -95,7 +96,8 @@
     "I_neg": -0.057877636187511836,
     "I_pos": 0.05155585090562,
     "effective_alpha": 0.3306081874930539,
-    "I_neg_proper_volume": -0.019357349621553298
+    "I_neg_proper_volume": -0.019357349621553298,
+    "I_pos_proper_volume": 0.04588316018498292
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -2.813052858154419e+44,
@@ -127,7 +129,8 @@
     "I_neg": -0.0578776280793177,
     "I_pos": 0.05155584448911722,
     "effective_alpha": 0.3306081862311367,
-    "I_neg_proper_volume": -0.01935735808577851
+    "I_neg_proper_volume": -0.01935735808577851,
+    "I_pos_proper_volume": 0.04588315520413741
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -2.8130526557426377e+44,
@@ -159,7 +162,8 @@
     "I_neg": -0.057865763477507694,
     "I_pos": 0.05154645508509931,
     "effective_alpha": 0.330606340311968,
-    "I_neg_proper_volume": -0.019369416807946717
+    "I_neg_proper_volume": -0.019369416807946717,
+    "I_pos_proper_volume": 0.04587586642723139
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -2.8127564582156147e+44,
@@ -191,7 +195,8 @@
     "I_neg": -0.05365490458673071,
     "I_pos": 0.048185904037694946,
     "effective_alpha": 0.32997080682320484,
-    "I_neg_proper_volume": -0.021851907408606656
+    "I_neg_proper_volume": -0.021851907408606656,
+    "I_pos_proper_volume": 0.04324099281219155
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -2.705877743786803e+44,
@@ -223,7 +228,8 @@
     "I_neg": -0.057877636297453454,
     "I_pos": 0.05155585099262342,
     "effective_alpha": 0.33060818751016463,
-    "I_neg_proper_volume": -0.01935734950671979
+    "I_neg_proper_volume": -0.01935734950671979,
+    "I_pos_proper_volume": 0.0458831602525198
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -1.4065264304494926e+45,
@@ -255,7 +261,8 @@
     "I_neg": -0.05787763467581456,
     "I_pos": 0.05155584970932283,
     "effective_alpha": 0.3306081872577811,
-    "I_neg_proper_volume": -0.019357351200215377
+    "I_neg_proper_volume": -0.019357351200215377,
+    "I_pos_proper_volume": 0.04588315925635069
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -1.406526410208314e+45,
@@ -287,7 +294,8 @@
     "I_neg": -0.057875261619833175,
     "I_pos": 0.051553971757930556,
     "effective_alpha": 0.3306078179526334,
-    "I_neg_proper_volume": -0.01935980006861218
+    "I_neg_proper_volume": -0.01935980006861218,
+    "I_pos_proper_volume": 0.04588170147827448
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -1.4064967896699358e+45,
@@ -319,7 +327,8 @@
     "I_neg": -0.05701500680898761,
     "I_pos": 0.050872038814144274,
     "effective_alpha": 0.3304753845110381,
-    "I_neg_proper_volume": -0.02006566338819341
+    "I_neg_proper_volume": -0.02006566338819341,
+    "I_pos_proper_volume": 0.045351256729620947
    },
    "negative_energy_solar_integrated": {
     "rho_1m": -1.3957249773117492e+45,
@@ -371,6 +380,9 @@
  "kontou_olum_corrections": [
   {
    "eta": 1.6e-09,
+   "flat_gaussian_coeff": 0.01899801290596589,
+   "flat_lorentzian_coeff_er": 0.009498860966469166,
+   "eps_max_planck_gaussian_t0_sigma_rc": 0.48501248037569683,
    "t0_over_eps": 142.4692237204123,
    "ricci_term_rel": 6.99468236670017e-05,
    "second_derivative_term_rel": 156.78581969493086,
@@ -379,6 +391,9 @@
   },
   {
    "eta": 0.0001,
+   "flat_gaussian_coeff": 0.01899801290596589,
+   "flat_lorentzian_coeff_er": 0.009498860966469166,
+   "eps_max_planck_gaussian_t0_sigma_rc": 121.25485331683697,
    "t0_over_eps": 0.5698687490322604,
    "ricci_term_rel": 6.99470763539961e-05,
    "second_derivative_term_rel": 0.002508496828520735,
@@ -387,6 +402,9 @@
   },
   {
    "eta": 0.01,
+   "flat_gaussian_coeff": 0.01899801290596589,
+   "flat_lorentzian_coeff_er": 0.009498860966469166,
+   "eps_max_planck_gaussian_t0_sigma_rc": 1214.2699753797283,
    "t0_over_eps": 0.05690608594795928,
    "ricci_term_rel": 6.997215382669018e-05,
    "second_derivative_term_rel": 2.5009372784261634e-05,
@@ -395,6 +413,9 @@
   },
   {
    "eta": 0.95,
+   "flat_gaussian_coeff": 0.01899801290596589,
+   "flat_lorentzian_coeff_er": 0.009498860966469166,
+   "eps_max_planck_gaussian_t0_sigma_rc": 13968.855018544567,
    "t0_over_eps": 0.004946672548239789,
    "ricci_term_rel": 7.332834057750351e-05,
    "second_derivative_term_rel": 1.8002687190149485e-07,
@@ -403,11 +424,58 @@
   },
   {
    "eta": 0.999999999,
+   "flat_gaussian_coeff": 0.01899801290596589,
+   "flat_lorentzian_coeff_er": 0.009498860966469166,
+   "eps_max_planck_gaussian_t0_sigma_rc": 14494.139818772066,
    "t0_over_eps": 0.004767399274444836,
    "ricci_term_rel": 7.359299110085823e-05,
    "second_derivative_term_rel": 1.6624863710491866e-07,
    "second_derivative_term_rel_per_unit_24a_11b": 9.620060024287547e-06,
    "third_derivative_term_rel": 2.4148864616488962e-08
+  }
+ ],
+ "null_sphere_nec": [
+  {
+   "eta": 0.01,
+   "min_Rll_all_directions_eps1": -0.06169222319243128,
+   "direction_of_min_e1_e2_e3": [
+    -0.9995,
+    -0.0017792157857009067,
+    0.031568724890115016
+   ],
+   "outgoing_e0_plus_e1_max_abs": 6.938893903907228e-18,
+   "incoming_e0_minus_e1_min": -0.06173844382526853,
+   "radial_e0_plus_e2_min": -0.030869215231308315,
+   "radial_e0_plus_e2_integral_across_wall": 4.1388765870804234e-13,
+   "radial_scale_integral_abs": 0.020050160369211145
+  },
+  {
+   "eta": 0.95,
+   "min_Rll_all_directions_eps1": -7.7951875682952325,
+   "direction_of_min_e1_e2_e3": [
+    -0.9995,
+    -0.0017792157857009067,
+    0.031568724890115016
+   ],
+   "outgoing_e0_plus_e1_max_abs": 1.7763568394002505e-15,
+   "incoming_e0_minus_e1_min": -7.801384384099124,
+   "radial_e0_plus_e2_min": -3.9006913431292327,
+   "radial_e0_plus_e2_integral_across_wall": 7.079359443987657e-09,
+   "radial_scale_integral_abs": 2.5553627226719504
+  },
+  {
+   "eta": 0.999999999,
+   "min_Rll_all_directions_eps1": -8.363026500531864,
+   "direction_of_min_e1_e2_e3": [
+    -0.9995,
+    -0.0017792157857009067,
+    0.031568724890115016
+   ],
+   "outgoing_e0_plus_e1_max_abs": 1.7763568394002505e-15,
+   "incoming_e0_minus_e1_min": -8.369704272689999,
+   "radial_e0_plus_e2_min": -4.184851223973495,
+   "radial_e0_plus_e2_integral_across_wall": 8.23637422799226e-09,
+   "radial_scale_integral_abs": 2.745166526355266
   }
  ],
  "null_and_causal": [
@@ -419,7 +487,10 @@
    "g_inv_tt": "-4*k(rho)/(k(rho)**2 + 2*k(rho) + 1)",
    "k_min": 0.9900000000206115,
    "t_is_time_function": true,
-   "max_incoming_coordinate_speed": 1.01010101007998
+   "stationary_twist_xi_dt_plus_v_dx": "(v - 1)**2*Derivative(k(rho), rho)/2",
+   "outgoing_killing_norm": "0",
+   "max_incoming_coordinate_speed_grid": 1.01010101007998,
+   "incoming_coordinate_speed_analytic": 1.0101010101010102
   },
   {
    "outgoing_Rll_symbolic": "0",
@@ -429,7 +500,10 @@
    "g_inv_tt": "-4*k(rho)/(k(rho)**2 + 2*k(rho) + 1)",
    "k_min": 0.05000000195809606,
    "t_is_time_function": true,
-   "max_incoming_coordinate_speed": 19.999999216761605
+   "stationary_twist_xi_dt_plus_v_dx": "(v - 1)**2*Derivative(k(rho), rho)/2",
+   "outgoing_killing_norm": "0",
+   "max_incoming_coordinate_speed_grid": 19.999999216761605,
+   "incoming_coordinate_speed_analytic": 19.999999999999982
   },
   {
    "outgoing_Rll_symbolic": "0",
@@ -439,7 +513,10 @@
    "g_inv_tt": "-4*k(rho)/(k(rho)**2 + 2*k(rho) + 1)",
    "k_min": 3.0611536638858183e-09,
    "t_is_time_function": true,
-   "max_incoming_coordinate_speed": 326674224.7530963
+   "stationary_twist_xi_dt_plus_v_dx": "(v - 1)**2*Derivative(k(rho), rho)/2",
+   "outgoing_killing_norm": "0",
+   "max_incoming_coordinate_speed_grid": 326674224.7530963,
+   "incoming_coordinate_speed_analytic": 1000000028.2819322
   }
  ]
 }

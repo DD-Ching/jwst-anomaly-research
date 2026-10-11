@@ -1295,6 +1295,8 @@ the paper or a prior entry states them):
   [4e4858e6…].
 - Ford & Roman, PRD 53, 5496 (1996), gr-qc/9510071 [55783db4…].
 - Kontou & Olum, "Quantum inequality in spacetimes with small curvature", arXiv:1410.0665v2 [0d88abf6…].
+- Olum, "Superluminal travel requires negative energies", PRL 81, 3567 (1998), gr-qc/9805003v2 [128bf69b…].
+- Graham & Olum, "Achronal averaged null energy condition", PRD 76, 064001 (2007), arXiv:0705.3193v2 [1204eaee…].
 
-**Cited through Kontou–Sanders, not opened:** Olum, PRL 81, 3567 (1998); Graham & Olum, PRD 76, 064001 (2007);
-Ford & Roman, PRD 51, 4277 (1995); Fewster, *Quantum Energy Inequalities* (Springer, 2017).
+**Cited through Kontou–Sanders, not opened:** Ford & Roman, PRD 51, 4277 (1995); Fewster, *Quantum Energy
+Inequalities* (Springer, 2017); Wald & Yurtsever; Flanagan & Wald.

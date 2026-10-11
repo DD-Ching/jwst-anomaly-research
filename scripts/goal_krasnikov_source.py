@@ -56,6 +56,7 @@ class Params:
     """Numerical choices (ASSUMPTIONs)."""
 
     sigma: float = 0.01
+    n_dir: int = 2000  # null directions sampled on the sphere
     latencies_s: tuple = (1.0, 60.0, 86400.0, fc.YEAR_S)
     distances_ly: tuple = (20.0, 100.0)
     radii_m: tuple = (1.0, 1e-3, 1e-6)  # human-size, mm-wave, optical carrier
@@ -194,8 +195,16 @@ def kontou_olum_terms(eta: float, sigma: float = P.sigma) -> dict:
     r_c = float(np.max(np.abs(R))) ** -0.5
     t0 = sigma * r_c
     rm, r2, r3 = (float(np.max(np.abs(a))) for a in (ric, d2, d3))
+    # flat Gaussian bound of KO Eq. (130): int g^2 T >= -3.76 / (16 pi^2 t0^3), int g^2 = t0
+    # sqrt(pi/2) for g = exp(-t^2/t0^2), so |T| <= C_G / t0^4 against ER's Lorentzian 3/(32 pi^2)
+    c_gauss = 3.76 / (16 * math.pi**2 * math.sqrt(math.pi / 2))
+    c_lor = 3 / (32 * math.pi**2)
+    lim = fc.qi_wall_limit(eta, sigma)
     return {
         "eta": eta,
+        "flat_gaussian_coeff": c_gauss,
+        "flat_lorentzian_coeff_er": c_lor,
+        "eps_max_planck_gaussian_t0_sigma_rc": lim["eps_max_planck"] * math.sqrt(c_gauss / c_lor),
         "t0_over_eps": t0,
         "ricci_term_rel": 2.63 * rm * t0**2 / 3.76,
         "second_derivative_term_rel": 3.42 * r2 * t0**4 / 3.76,
@@ -219,6 +228,9 @@ def wall_energy_integrals(eta: float) -> dict:
         # t-slices are not orthogonal to the static observers
         "I_neg_proper_volume": float(
             np.sum(np.minimum(tt, 0.0) * np.sqrt(np.clip(k, 0, None))) * dr
+        ),
+        "I_pos_proper_volume": float(
+            np.sum(np.maximum(tt, 0.0) * np.sqrt(np.clip(k, 0, None))) * dr
         ),
     }
 
@@ -279,6 +291,54 @@ def null_ricci():
     return r_out, r_in, acc_out, f_in, sp.simplify(gi[0, 0])
 
 
+def null_sphere_nec(eta: float, n_dir: int = P.n_dir) -> dict:
+    """R_ab l^a l^b over all null directions l = e0 + n (static orthonormal frame, eps = 1; e1 is
+    along the outgoing light direction, e2 radial). Also the radial integral across the wall."""
+    r, k, k1, k2 = fc.wall_profile(eta, 1.0)
+    R = riemann_array(r, k, k1, k2)
+    eta_m = np.diag([-1.0, 1.0, 1.0, 1.0])
+    ric = np.einsum("ac,nabcd->nbd", eta_m, R)
+    i = np.arange(n_dir) + 0.5
+    z = 1 - 2 * i / n_dir
+    az = math.pi * (1 + 5**0.5) * i
+    n = np.stack([z, np.sqrt(1 - z**2) * np.cos(az), np.sqrt(1 - z**2) * np.sin(az)], axis=1)
+    ls = np.concatenate([np.ones((n_dir, 1)), n], axis=1)  # components along e0..e3
+    rll = np.einsum("da,nab,db->nd", ls, ric, ls)  # (rho, direction)
+    j = np.unravel_index(np.argmin(rll), rll.shape)
+    dr = r[1] - r[0]
+
+    def along(vec):
+        v = np.asarray(vec, dtype=float)
+        return np.einsum("a,nab,b->n", v, ric, v)
+
+    rad = along([1, 0, 1, 0])
+    return {
+        "eta": eta,
+        "min_Rll_all_directions_eps1": float(rll.min()),
+        "direction_of_min_e1_e2_e3": [float(c) for c in n[j[1]]],
+        "outgoing_e0_plus_e1_max_abs": float(np.max(np.abs(along([1, 1, 0, 0])))),
+        "incoming_e0_minus_e1_min": float(along([1, -1, 0, 0]).min()),
+        "radial_e0_plus_e2_min": float(rad.min()),
+        "radial_e0_plus_e2_integral_across_wall": float(np.sum(rad) * dr),
+        "radial_scale_integral_abs": float(np.sum(np.abs(rad)) * dr),
+    }
+
+
+@lru_cache(maxsize=1)
+def killing_checks():
+    """(i) xi = d_t + v d_x: the t-rho-x component of xi_flat ^ d xi_flat (zero for every v would
+    mean hypersurface-orthogonal); (ii) the norm of d_t + d_x (identically zero: a null Killing
+    field, whose integral curves are affinely parametrised null geodesics)."""
+    rho, v = sp.symbols("rho v", real=True)
+    k = sp.Function("k")(rho)
+    xi_t = -1 + v * (1 - k) / 2  # xi_a = g_ab xi^b with xi = (1, v, 0, 0)
+    xi_x = (1 - k) / 2 + v * k
+    # coefficient of dt ^ drho ^ dx in xi ^ d xi (up to sign)
+    twist = sp.factor(sp.simplify(xi_t * sp.diff(xi_x, rho) - xi_x * sp.diff(xi_t, rho)))
+    norm_out = sp.simplify(-1 + (1 - k) + k)  # g(l, l) for l = (1, 1, 0, 0)
+    return str(twist), str(norm_out)
+
+
 def null_and_causal(eta: float) -> dict:
     """NEC along both null directions on the wall, and the causal structure of the t-slices."""
     r_out, _, acc_out, f_in, gtt_inv = null_ricci()
@@ -293,7 +353,12 @@ def null_and_causal(eta: float) -> dict:
         "g_inv_tt": str(gtt_inv),
         "k_min": k_min,
         "t_is_time_function": bool(k_min > 0),
-        "max_incoming_coordinate_speed": float(1 / k_min) if k_min > 0 else None,
+        "stationary_twist_xi_dt_plus_v_dx": killing_checks()[0],
+        "outgoing_killing_norm": killing_checks()[1],
+        # 1 / k on the grid (k_min > 1 - eta slightly, since theta < 1 at the grid edge); the
+        # analytic value deep inside the tube is 1 / (1 - eta)
+        "max_incoming_coordinate_speed_grid": float(1 / k_min) if k_min > 0 else None,
+        "incoming_coordinate_speed_analytic": float(1 / (1 - eta)) if eta < 1 else None,
     }
 
 
@@ -305,9 +370,12 @@ def self_consistency(eta: float, n_fields: float = 1.0) -> dict:
     |T| = a_t / eps^2 (Einstein equations); one-loop vacuum polarisation of N fields in a
     curvature R ~ a_r / eps^2 is ~ N c R^2 with c = 1 / (2880 pi^2) (ASSUMPTION: typical one-loop
     coefficient; the sign and the exact tensor structure are not computed). Equality gives
-    eps_sc = sqrt(N c a_r^2 / a_t) Planck lengths. A static negative density cannot come from an
-    excited state alone: along a static worldline T is constant, and the flat-space QI with
-    unbounded tau0 forces T >= 0, so the curvature itself must produce it."""
+    eps_sc = sqrt(N c a_r^2 / a_t) Planck lengths. Why the polarisation: for a free field with a
+    ground state on this stationary background, the long-time average of the energy density
+    along a stationary curve is lowest in the ground state (Kontou & Sanders 2020 Sec. 4.3;
+    Fewster & Roman 2005 Sec. 8 for static), so the ground state's own polarisation must reach
+    the required density. fields_needed = C_QI / (c sigma^4) = 270 / sigma^4 is an identity of
+    this estimate (independent of eta and of the profile), not a property of the geometry."""
     lim = fc.qi_wall_limit(eta, P.sigma)
     a_t, a_r = lim["T_coeff"], lim["R_coeff"]
     eps_sc = math.sqrt(n_fields * POLARISATION_COEFF * a_r**2 / a_t)
@@ -378,7 +446,8 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.parse_args(argv)
     out = {
-        "provenance": "derived from the ER metric and the flat-space quantum inequality (no data); "
+        "provenance": "derived from the ER metric, the flat-space quantum inequality and the "
+        "Kontou-Olum curved-spacetime corrections (no data); "
         "estimates under the stated ASSUMPTIONs",
         "params": asdict(P),
         "weyl_vs_ricci": [weyl_ricci(e) for e in P.weyl_etas],
@@ -387,6 +456,7 @@ def main(argv=None) -> int:
         "kontou_olum_corrections": [
             kontou_olum_terms(e) for e in (1.6e-9, 1e-4, 1e-2, 0.95, 1 - 1e-9)
         ],
+        "null_sphere_nec": [null_sphere_nec(e) for e in (1e-2, 0.95, 1 - 1e-9)],
         "null_and_causal": [null_and_causal(e) for e in (1e-2, 0.95, 1 - 1e-9)],
     }
     print(json.dumps(out, indent=1))
