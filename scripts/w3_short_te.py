@@ -7,6 +7,7 @@ Later stages tune classifiers on ``dev`` only and report recovery on ``validatio
 
     python scripts/w3_short_te.py --field gb12 --per-cell 1000 --seed 3003 --procs 4
     python scripts/w3_short_te.py --field gb12 --seed 3003 --diagnose   # dev split only
+    python scripts/w3_short_te.py --field gb12 --seed 3003 --revet --procs 4   # stage 2, dev only
 """
 
 from __future__ import annotations
@@ -86,6 +87,79 @@ def sampling_diagnostics(tab: Table, field: str) -> Table:
     return out
 
 
+def _revet_worker(job):
+    """Re-run the production vetting on one injected light curve (``_inject_worker``'s inputs) and
+    keep what the jackknife itself used: its feature nights, the nights it dropped and its ΔBIC."""
+    import numpy as np
+
+    r, t, f, sf, ax = job
+    eid = r["event_id"]
+    prm = {k: float(r[k]) for k in ("tE", "rho", "u0", "t0")}
+    sig = wm.injected_signal(
+        t, "W3", float(wm.moa.mag_to_counts(r["Is"], wm.moa.parse_event_id(eid)[1])), prm
+    )
+    f2 = f + sig
+    scan = wm.deficit_scan(t, f2, sf)
+    d = {"event_id": eid, "ra": r["ra"], "dec": r["dec"], "ref_mag": r["Is"]}
+    o = wm.vet_one((d, t, f2, sf, ax, {k: scan[k] for k in wm.SCAN_KEYS}, [], False, None))
+    failed = next(((nm, note) for nm, ok, note in o["tests"] if not ok), ("", ""))
+    jn = o.get("jackknife_nights", {})
+    nt = wm.nights(t)
+    thr = SPIKE_SIGMA * float(np.median(sf))
+    spike = set(np.unique(nt[sig > thr]).tolist())
+    dropped = [int(x) for x in jn.get("dropped", [])]
+    return {
+        "event_id": eid,
+        "rho": prm["rho"],
+        "u0": prm["u0"],
+        "Is": float(r["Is"]),
+        "stage1_failed": "" if np.ma.is_masked(r["failed_test"]) else str(r["failed_test"]),
+        "failed_test": failed[0],
+        "failed_note": failed[1][:200],
+        "survives": bool(o["survives"]),
+        "exotic": str(o.get("exotic", "")),
+        "dbic_all": float(o.get("dbic_all", np.nan)),
+        "jk_ran": bool(jn),
+        "jk_feature_nights": int(jn.get("n_nights", -1)),
+        "jk_n_dropped": int(jn.get("n_dropped", -1)),
+        "jk_dbic": float(jn.get("dbic", np.nan)),
+        "jk_dropped": ",".join(map(str, dropped)),
+        "spike_nights": len(spike),
+        "dropped_spike_nights": sum(x in spike for x in dropped),
+        "spikes_left": len(spike - set(dropped)),
+    }
+
+
+def _filled(col):
+    """String column with ECSV's masked empty strings back as ""."""
+    import numpy as np
+
+    return np.asarray(col.filled("") if hasattr(col, "filled") else col, str)
+
+
+def revet_dev(tab: Table, field: str, procs: int) -> Table:
+    """Stage 2, step 1 (D-082 "Revisit if"): re-vet the flagged dev injections with the production
+    chain and record the jackknife's own feature nights, dropped nights and ΔBIC (``derived``)."""
+    import numpy as np
+
+    wm.use_moa_fit_params()
+    wm.set_field(field)
+    pre = wm.read_prescreen()
+    wm.set_field_context(pre)
+    sel = tab[np.asarray(tab["flagged"], bool) & (np.asarray(tab["split"], str) == "dev")]
+    arrays = wm.load_arrays(list(dict.fromkeys(sel["event_id"])), aux=True, pre=pre)
+    jobs = [(dict(zip(sel.colnames, r, strict=True)), *arrays[r["event_id"]]) for r in sel]
+    with wm._pool(procs) as pool:
+        rows = list(pool.imap(_revet_worker, jobs, 1))
+    out = Table(rows=rows)
+    out.meta.update(
+        provenance="derived",
+        source=f"scripts/w3_short_te.py --revet: production vetting re-run on flagged dev {field} "
+        "t_E = 3 d injections (simulated signals on real carriers)",
+    )
+    return out
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--field", default="gb12")
@@ -93,6 +167,7 @@ def main(argv=None) -> int:
     ap.add_argument("--seed", type=int, default=3003)
     ap.add_argument("--procs", type=int, default=4)
     ap.add_argument("--diagnose", action="store_true", help="sampling diagnostics of the sample")
+    ap.add_argument("--revet", action="store_true", help="stage 2: re-vet flagged dev injections")
     ap.add_argument("--resplit", action="store_true", help="rewrite the split column (job key)")
     a = ap.parse_args(argv)
     if a.resplit:
@@ -104,6 +179,16 @@ def main(argv=None) -> int:
             f"re-split {path}: {sum(tab['split'] == 'dev')} dev, "
             f"{sum(tab['split'] != 'dev')} validation"
         )
+        return 0
+    if a.revet:
+        tab = Table.read(
+            OUT / f"injections_{a.field}_te3_seed{a.seed}.ecsv.gz", format="ascii.ecsv"
+        )
+        d = revet_dev(tab, a.field, a.procs)
+        out = OUT / f"revet_dev_{a.field}_te3_seed{a.seed}.ecsv"
+        d.write(out, overwrite=True)
+        same = int(sum(_filled(d["failed_test"]) == _filled(d["stage1_failed"])))
+        print(f"wrote {out}: {len(d)} dev flags; failing test reproduced for {same}")
         return 0
     if a.diagnose:
         tab = Table.read(
