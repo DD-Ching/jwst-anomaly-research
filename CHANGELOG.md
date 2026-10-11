@@ -48,6 +48,37 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   gave the pinned file. Pre-fetch it that way before `run-field` in a fresh cloud session.
 - **Next:** gb1 (70 GB) and gb8 (78 GB), `combine` after each; gb13 waits on the owner (#145).
 
+## 2026-10-10: gb13-R-7-0-76483 vetted: explained by red noise, not a candidate
+- Hypothesis before measuring: the exotic preference comes from white-noise errors on a red-noise star; a GP
+  baseline that still preferred E2pos by ΔBIC > 10 (ASSUMPTION) would have kept the candidate open.
+- Nightly means with a Matérn-3/2 GP (celerite2; hyper-parameters from the other eight seasons: 402 counts,
+  τ = 28 d): the ordinary trapezoidal dip beats E2pos by ΔBIC 13.9 (2013, fixed GP) and 19.6 (all 1,477 nights, GP
+  re-fitted); the Gaussian dip ties or wins. Under white noise E2pos led the trapezoid by 52.6. Figure inspected:
+  smooth season-long dimming, no caustic spikes. VIRAC2 Ks (178 epochs, 2010–2019) has a faint-tail skew +2.54;
+  EROS-2 (1996–2003) is quiet within 0.05 mag. No public 2013 epoch photometry found on VizieR.
+- Verdict: an ordinary dimming of a red-noise variable (`docs/candidates/gb13-R-7-0-76483.md`). The chain's
+  white-noise BIC lets such dimmings through; a GP-baseline test is proposed (owner decision: it needs injection
+  re-runs on every field).
+- Failed approach (tooling): a dense-matrix GP (O(N³) Cholesky on 1,477 nights inside Nelder–Mead) did not finish
+  in 15 min; celerite2's O(N) Matérn-3/2 did all fits in 8 s.
+- **Next:** owner decision on the GP-baseline chain test; then gb13 injections and `combine` with twelve fields.
+
+## 2026-10-10: W3 MOA-II gb13 under CHAIN_VERSION 2026-10-10.1: one chain survivor, likely an ordinary dimming
+- Hypothesis before running: 0 survivors, as in the other eleven fields; a survivor whose data show caustic spikes
+  would have changed the plan.
+- `run-field --procs 4`: all 13 pre-screen chunks reused (100,150 light curves, 1,512 shape passes, 78 off shared
+  epochs); 78 fits 481 s, 69 flags; CDS XMatch worked (Gaia DR3 RP for 45 / 69). **68 fail** (repeated deficit 25,
+  residual deficit 17, eclipse dip 10, bracketing 10, neighbour 3, χ² cap 2, smooth dip 1). **gb13-R-7-0-76483
+  passes every test**; `run-field` stopped before injections, as designed.
+- Contact sheet and whole light curve inspected (`docs/candidates/gb13-R-7-0-76483.md`): a one-off ≈ 150-d dimming in
+  2013 only, deepest at HJD ≈ 2456537; no caustic spikes in the data; the exotic preference drops from ΔBIC −7,122
+  to −73 after removing 2 of 62 nights, against a red-noise baseline (χ²/dof 1.57). Likely an ordinary dimming;
+  not a candidate until vetted. Owner notified.
+- Failed approach (cloud I/O): the first run's `metadata.ipac.tar.gz` download failed its sha256 (same size and
+  Last-Modified upstream); a plain retry passed. Treat a single checksum failure as a transfer error.
+- **Next:** `/vet-candidate gb13-R-7-0-76483`; then gb13 injections (`run-field` refuses while a survivor stands)
+  and `combine` with twelve fields.
+
 ## 2026-10-10: Neutrino Frontier benchmark 1 reproduced: SkyLLH TXS 0506+056 2014–15 box on IceTracks-DR2
 - Hypothesis before running: SkyLLH 26.1.0 on IC86_IV with the Table 6 box gives n̂s ≈ 12.7, γ̂ ≈ 2.3
   (arXiv:2605.19040 section 5). A miss by > 1 event or > 0.1 in γ (ASSUMPTION) would mean our DR2 handling is wrong.

@@ -1193,3 +1193,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - SkyLLH, PyPI `skyllh` 26.1.0 (2026-09-09), https://github.com/icecube/skyllh.
 - SN1987A: Hirata+ 1988 PRD 38, 448; Bionta+ 1987 PRL 58, 1494; Bratton+ 1988 PRD 37, 3361; Alexeyev+ 1988
   PLB 205, 209; compilation Loredo & Lamb 2002 PRD 65, 063002 (astro-ph/0107260).
+- EROS-2 light curves, VizieR II/390 (`xcat`, `xtime`), https://vizier.cds.unistra.fr/viz-bin/VizieR?-source=II/390
+  (accessed 2026-10-10; gb13-R-7-0-76483 vetting).
+- VIRAC2 source catalogue (VVVX DR3), VizieR II/387/virac2, https://vizier.cds.unistra.fr/viz-bin/VizieR?-source=II/387
+  (accessed 2026-10-10; Ks epoch statistics only).
+- celerite2 0.3.3 (PyPI `celerite2`), https://github.com/exoplanet-dev/celerite2; used in a scratch vetting fit, not a
+  project dependency.
