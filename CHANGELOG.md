@@ -3,7 +3,13 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-11: W3 MOA-II gb4 (sixteenth field): in progress
-- Claimed 15:12Z; pre-screen under CHAIN_VERSION 2026-10-10.1 (tracked chunks), then fit, vet, injections, limit.
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
+  goes to `/vet-candidate` before injections.
+- gb4 is the largest field so far: 66 pre-screen chunks of 4 GiB (~265 GB streamed, never stored). Run 1 (cloud,
+  15:08–15:43Z, `prescreen --procs 4`): chunks 1–35 tracked in `results/w3_moa/prescreen/` (~112k light curves,
+  ~57 per s, ~1 chunk per min, CPU-bound at 99 %).
+- **Next:** `prescreen --procs 4 --chunks 36-66` (~35 min), then `run-field --procs 4` at the top of a run for fit,
+  vet and injections (injections alone may exceed one slot at gb3's 0.34 per s; `inject` writes only at the end).
 
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
