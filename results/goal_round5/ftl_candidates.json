@@ -1,0 +1,157 @@
+{
+ "provenance": "derived from published metrics, field-theory results and the flat-space quantum inequality (no data); estimates under the stated ASSUMPTIONs",
+ "params": {
+  "sigma": 0.01,
+  "n_wall": 1000000.0,
+  "alpha_band": 0.01,
+  "rho_max_m": 1.0,
+  "grid": 20001,
+  "distances_ly": [
+   20.0,
+   100.0
+  ],
+  "advances_s": [
+   1.0,
+   86400.0,
+   31557600.0
+  ],
+  "scharnhorst_min_gap_compton": 1.0
+ },
+ "krasnikov_controls": {
+  "max_rel_diff_vs_ER_eq14_delta_small": 1.9157781158462024e-11,
+  "endcap_T_at_rho_max_minus_eps": -0.04203374323795681,
+  "ER_eq38_value": -0.04198797791881546,
+  "endcap_T_times_8pi_eps2": -1.0564231916739582,
+  "small_eta_T_coeff_over_eta": [
+   0.12286913570580978,
+   0.12252100530099844,
+   0.12251753765260469
+  ],
+  "small_eta_R_coeff_over_eta": [
+   3.0880375245578,
+   3.079288054250319,
+   3.0792009027666025
+  ]
+ },
+ "krasnikov_task": {
+  "timing": {
+   "deployment": "tube exists only for t > x: built by an outbound trip at <= c, so nothing can be read early before t = D at the far end",
+   "far_to_near_arrival": "t_s + D (1 - eta), exterior light t_s + D: advance eta D",
+   "near_to_far": "no advance (the +x branch of the light cone is unchanged)",
+   "two_tubes": "a second tube laid from the far end gives the other direction the same advance; closed timelike curves need eta > 1 (ER Sec. 4: delta < 1)"
+  },
+  "rows": [
+   {
+    "D_ly": 20.0,
+    "advance_s": 1.0,
+    "eta": 1.5844043907014474e-09,
+    "eps_max_planck": 0.3412774692993959,
+    "eps_max_m": 5.515914161424952e-36,
+    "rc_over_eps": 14316.86832371001,
+    "eps_max_shortcut_m": 1.1306119212229679e-27,
+    "negative_energy_solar_masses_at_eps_max": -2.8333340787520466e+38
+   },
+   {
+    "D_ly": 20.0,
+    "advance_s": 86400.0,
+    "eta": 0.00013689253935660506,
+    "eps_max_planck": 100.31664221458152,
+    "eps_max_m": 1.6213727456252846e-33,
+    "rc_over_eps": 48.70602207108541,
+    "eps_max_shortcut_m": 3.8463446016076564e-30,
+    "negative_energy_solar_masses_at_eps_max": -8.328430283952529e+40
+   },
+   {
+    "D_ly": 20.0,
+    "advance_s": 31557600.0,
+    "eta": 0.05,
+    "eps_max_planck": 1931.051265254208,
+    "eps_max_m": 3.12107126272344e-32,
+    "rc_over_eps": 2.53024074423878,
+    "eps_max_shortcut_m": 1.998146720887899e-31,
+    "negative_energy_solar_masses_at_eps_max": -1.6031862183950863e+42
+   },
+   {
+    "D_ly": 20.0,
+    "advance_s": 631152000.0,
+    "eta": 1.0,
+    "eps_max_planck": 10248.826074523613,
+    "eps_max_m": 1.6564716387079162e-31,
+    "rc_over_eps": 0.47673992709698765,
+    "eps_max_shortcut_m": null,
+    "negative_energy_solar_masses_at_eps_max": -8.508721101960733e+42
+   },
+   {
+    "D_ly": 100.0,
+    "advance_s": 1.0,
+    "eta": 3.168808781402895e-10,
+    "eps_max_planck": 0.1526239240808565,
+    "eps_max_m": 2.4667918041530475e-36,
+    "rc_over_eps": 32013.49080252934,
+    "eps_max_shortcut_m": 2.528125112484246e-27,
+    "negative_energy_solar_masses_at_eps_max": -6.335527601908431e+38
+   },
+   {
+    "D_ly": 100.0,
+    "advance_s": 86400.0,
+    "eta": 2.7378507871321012e-05,
+    "eps_max_planck": 44.86226395347492,
+    "eps_max_m": 7.2508858426123615e-34,
+    "rc_over_eps": 108.91168120436343,
+    "eps_max_shortcut_m": 8.600822634243522e-30,
+    "negative_energy_solar_masses_at_eps_max": -1.8622644731053514e+41
+   },
+   {
+    "D_ly": 100.0,
+    "advance_s": 31557600.0,
+    "eta": 0.01,
+    "eps_max_planck": 858.6119584684793,
+    "eps_max_m": 1.3877358709344721e-32,
+    "rc_over_eps": 5.690608594795928,
+    "eps_max_shortcut_m": 4.493908703823776e-31,
+    "negative_energy_solar_masses_at_eps_max": -3.564159283732734e+42
+   },
+   {
+    "D_ly": 100.0,
+    "advance_s": 3155760000.0,
+    "eta": 1.0,
+    "eps_max_planck": 10248.826074523613,
+    "eps_max_m": 1.6564716387079162e-31,
+    "rc_over_eps": 0.47673992709698765,
+    "eps_max_shortcut_m": null,
+    "negative_energy_solar_masses_at_eps_max": -4.2543605509803664e+43
+   }
+  ]
+ },
+ "scharnhorst": {
+  "xi_1um": 3.1741972901086616e-32,
+  "LSV_quoted_xi_1um": 4.36e-32,
+  "rows": [
+   {
+    "gap_m": 1e-06,
+    "xi": 3.1741972901086616e-32,
+    "advance_s": 5.293991235277609e-47,
+    "advance_times_mec2_over_hbar": 4.1099587067374276e-26
+   },
+   {
+    "gap_m": 1e-08,
+    "xi": 3.1741972901086604e-24,
+    "advance_s": 5.293991235277607e-41,
+    "advance_times_mec2_over_hbar": 4.1099587067374254e-20
+   },
+   {
+    "gap_m": 1e-10,
+    "xi": 3.174197290108661e-16,
+    "advance_s": 5.293991235277607e-35,
+    "advance_times_mec2_over_hbar": 4.109958706737426e-14
+   },
+   {
+    "gap_m": 3.861592678419398e-13,
+    "xi": 1.4274735405962346e-06,
+    "advance_s": 9.193552613473643e-28,
+    "advance_times_mec2_over_hbar": 7.137360061687603e-07
+   }
+  ],
+  "note": "speed c / sqrt(1 - xi cos^2 phi / (1 + xi)) (LSV Eqs. 3.4, 3.7): largest along the normal, so the advance per gap is at most the normal-incidence value"
+ }
+}

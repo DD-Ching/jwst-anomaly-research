@@ -4207,3 +4207,23 @@ S > 7 or setting dependence in R trials.
 **Revisit if.**
 - A Θ-regular low-ℓ eigenanalysis of this solution is published or done here.
 - An intra-universe beyond-Horndeski or DHOST wormhole with a complete stability check appears.
+
+## D-TBD Goal round 5: no screened early-read candidate merits a design; keep the Krasnikov QI trade-off as reference (2026-10-11)
+
+**Decision (proposal).**
+- Of the Krasnikov tube, the Scharnhorst effect and the Lentz soliton, none merits an experimental or engineering
+  design.
+- The Krasnikov tube is the only one that passes the functional screen (geometry level). Under the flat-space QI it
+  needs walls ≲ 10⁴ l_P and 10³⁸–10⁴³ M☉ of negative energy for 20–100 ly.
+
+**Alternatives rejected.**
+- Counting a short transit or a coordinate-length difference as an advance (benchmark 1908.03273).
+- ER's τ0 = ε sampling for weak tubes.
+- Recomputing MMP, GJW, Alcubierre or Drummond–Hathrell: their conclusions are reused.
+
+**Evidence.** docs/goal_round5/README.md §§0–3; `results/goal_round5/ftl_candidates.json`.
+
+**Revisit if.**
+- A QI for interacting or non-minimally coupled fields permits macroscopic negative-energy layers.
+- A candidate states a self-consistent source and a same-clock advance over exterior light.
+- A front-velocity calculation for the Casimir vacuum appears.
