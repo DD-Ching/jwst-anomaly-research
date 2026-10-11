@@ -4,14 +4,15 @@
  "S_local_bound": 7.0,
  "quantum_is_no_signalling": true,
  "lp": {
-  "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal) | Optimization terminated successfully. (HiGHS Status 7: Optimal) | Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "status": "r1: Optimization terminated successfully. (HiGHS Status 7: Optimal) | r2: Optimization terminated successfully. (HiGHS Status 7: Optimal) | r3: Optimization terminated successfully. (HiGHS Status 7: Optimal) | r4: Optimization terminated successfully. (HiGHS Status 7: Optimal) | r6: Optimization terminated successfully. (HiGHS Status 7: Optimal) | r7: Optimization terminated successfully. (HiGHS Status 7: Optimal) | r8: Optimization terminated successfully. (HiGHS Status 7: Optimal) | r5: The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
   "min_bcd_on_x": 0.0,
   "min_abc_on_w": 0.0,
-  "min_of_max": 0.006293435531469351,
+  "min_of_max": 0.006293435531469334,
   "min_of_sum": 0.012586871062938626,
   "min_bcd_on_x_if_abc_silent": 0.015991059936570632,
   "min_abc_on_w_if_bcd_silent": 0.012586871062938725,
-  "ns_feasible": false
+  "ns_feasible": false,
+  "min_max_per_setting": 0.012586871062938695
  },
  "timing": {
   "r=2": {
@@ -118,6 +119,8 @@
     }
    },
    "best_guaranteed_grid": {
+    "analytic_lower_bound_L_over_c": 0.75,
+    "grid_n": 201,
     "worst_latency_L_over_c": 0.880000000625,
     "xB": 0.75,
     "xC": 0.755,
@@ -228,6 +231,8 @@
     }
    },
    "best_guaranteed_grid": {
+    "analytic_lower_bound_L_over_c": 0.55,
+    "grid_n": 201,
     "worst_latency_L_over_c": 0.6000000001450001,
     "xB": 0.55,
     "xC": 0.555,
@@ -338,6 +343,8 @@
     }
    },
    "best_guaranteed_grid": {
+    "analytic_lower_bound_L_over_c": 0.50005,
+    "grid_n": 201,
     "worst_latency_L_over_c": 0.50505000000015,
     "xB": 0.5,
     "xC": 0.505,
@@ -448,6 +455,8 @@
     }
    },
    "best_guaranteed_grid": {
+    "analytic_lower_bound_L_over_c": 0.5000000007936508,
+    "grid_n": 201,
     "worst_latency_L_over_c": 0.5050000007936508,
     "xB": 0.5,
     "xC": 0.505,
@@ -456,27 +465,38 @@
   }
  },
  "statistics": {
-  "tv_at_least_one_direction": 0.006293435531469351,
-  "trials_per_bit_eps_1e-3": 348811.9568482661,
-  "trials_per_bit_eps_1e-6": 697623.9136965323,
-  "states_per_s_for_8_kbit_per_s_voice_eps_1e-3": 2790495654.786129
+  "tv_at_least_one_direction": 0.006293435531469334,
+  "trials_per_bit_eps_1e-3": 348811.95684826805,
+  "trials_per_bit_eps_1e-6": 697623.9136965361,
+  "states_per_s_for_8_kbit_per_s_voice_eps_1e-3": 2790495654.7861443,
+  "max_tv_best_setting_pair": 0.012586871062938695,
+  "unknown_frame_dilution": {
+   "r=5e+06": {
+    "R_trial_fraction": 0.0003242577015845546,
+    "trials_per_bit_eps_1e-3": 3317498717255.8506
+   },
+   "r=6.3e+08": {
+    "R_trial_fraction": 2.57347382209964e-06,
+    "trials_per_bit_eps_1e-3": 5.266860963515388e+16
+   }
+  }
  },
  "sync": {
   "B-C 0.04 ly apart, r=10000": {
    "window_s": 126.2304,
-   "frame_ambiguity_s_at_CMB_beta": 1557.683136
+   "frame_ambiguity_s_at_CMB_beta": 1557.1614722876052
   },
   "B-C 0.04 ly apart, r=6.3e+08": {
    "window_s": 0.002003657142857143,
-   "frame_ambiguity_s_at_CMB_beta": 1557.683136
+   "frame_ambiguity_s_at_CMB_beta": 1557.1614722876052
   },
   "B-C 1.0570042385869967e-13 ly apart, r=10000": {
    "window_s": 3.335651695963301e-10,
-   "frame_ambiguity_s_at_CMB_beta": 4.116194192818713e-09
+   "frame_ambiguity_s_at_CMB_beta": 4.1148156909309174e-09
   },
   "B-C 1.0570042385869967e-13 ly apart, r=6.3e+08": {
    "window_s": 5.294685231687779e-15,
-   "frame_ambiguity_s_at_CMB_beta": 4.116194192818713e-09
+   "frame_ambiguity_s_at_CMB_beta": 4.1148156909309174e-09
   }
  }
 }

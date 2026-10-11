@@ -15,7 +15,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
   channel. PR left unmerged for the owner.
 - Next, by information per cost:
   1. Experiment v1 noise budget: the visibility at which S > 7 survives with random B/C timing; LP for the maximal
-     state (S = 7.3481) and per-setting maximum signal (theory, no data).
+     state (S = 7.3481) (theory, no data).
   2. Modified-gravity escape from Gao–Wald: theories with R_kk < 0 and no exotic matter that survive GW170817 and
      solar-system bounds (literature unit).
 

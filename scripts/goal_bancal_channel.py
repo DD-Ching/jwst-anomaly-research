@@ -117,6 +117,16 @@ def bell_value(p: np.ndarray) -> float:
     return total
 
 
+def quantum_is_no_signalling(p: np.ndarray, tol: float = 1e-12) -> bool:
+    """True if, for every party k, the outcome marginal of the other three does not depend on k's
+    setting (axes 0-3 outcomes a, b, c, d; axes 4-7 settings x, y, z, w)."""
+    for k in range(4):
+        m = p.sum(axis=k)  # setting axis 4 + k becomes 3 + k
+        if not np.allclose(m.take(0, axis=3 + k), m.take(1, axis=3 + k), atol=tol, rtol=0):
+            return False
+    return True
+
+
 # ----------------------------------------------------------------------------- signalling LP
 
 
@@ -130,6 +140,7 @@ class LPResult:
     min_bcd_on_x_if_abc_silent: float | None  # A -> D' signal forced when D -> A' carries none
     min_abc_on_w_if_bcd_silent: float | None
     ns_feasible: bool  # can a fully no-signalling P satisfy the constraints? (Lemma 1: no)
+    min_max_per_setting: float | None  # min over models of the largest TV over direction, settings
 
 
 def _vid(a, b, c, d, x, y, z, w) -> int:
@@ -178,14 +189,13 @@ def signalling_lp(pq: np.ndarray | None = None) -> LPResult:
     signs = [s for s in itertools.product((1, -1), repeat=4) if s.count(-1) % 2 == 1]
     for a, d, x, w in itertools.product(BITS, repeat=4):
         p_ad = pq[a, :, :, d, x, 0, 0, w].sum()
-        for s in signs:
-            for overall in (1, -1):
-                r = row()
-                for k, (y, z) in enumerate(itertools.product(BITS, repeat=2)):
-                    for b, c in itertools.product(BITS, repeat=2):
-                        r[_vid(a, b, c, d, x, y, z, w)] += overall * s[k] * (-1) ** (b + c)
-                ub_rows.append(r)
-                ub_b.append(2.0 * p_ad)
+        for s in signs:  # the 8 odd-minus patterns already contain each facet's negation
+            r = row()
+            for k, (y, z) in enumerate(itertools.product(BITS, repeat=2)):
+                for b, c in itertools.product(BITS, repeat=2):
+                    r[_vid(a, b, c, d, x, y, z, w)] += s[k] * (-1) ** (b + c)
+            ub_rows.append(r)
+            ub_b.append(2.0 * p_ad)
     # |BCD(x=0) - BCD(x=1)| <= u, |ABC(w=0) - ABC(w=1)| <= u
     k = n_p
     for b, c, d, y, z, w in itertools.product(BITS, repeat=6):
@@ -240,12 +250,26 @@ def signalling_lp(pq: np.ndarray | None = None) -> LPResult:
         e[j] = 1.0
         rows.append(e)
     r5 = solve(zero, extra_eq=rows, extra_eqb=[0.0] * len(rows))
+    # largest TV over (direction, setting triple): diff index j = outcome * 8 + triple
+    per_setting = []
+    for base, size in ((n_p, n_dx), (n_p + n_dx, n_dw)):
+        for triple in range(8):
+            e = np.zeros(n)
+            for j in range(triple, size, 8):
+                e[base + j] = 0.5
+            per_setting.append(e - t)
+    r8 = solve(t, extra_ub=per_setting, extra_b=[0.0] * len(per_setting))
+
+    solves = {"r1": r1, "r2": r2, "r3": r3, "r4": r4, "r6": r6, "r7": r7, "r8": r8}
+    failed = {k: v.message for k, v in solves.items() if v.status != 0}
+    if failed or r5.status not in (0, 2):  # 2 = infeasible, the expected Lemma 1 outcome
+        raise RuntimeError(f"LP did not finish: {failed}, ns check: {r5.message}")
 
     def val(res):
-        return float(res.fun) if res.status == 0 else None
+        return float(res.fun)
 
     return LPResult(
-        status=f"{r1.message} | {r2.message} | {r3.message}",
+        status=" | ".join(f"{k}: {v.message}" for k, v in {**solves, "r5": r5}.items()),
         min_bcd_on_x=val(r1),
         min_abc_on_w=val(r2),
         min_of_max=val(r3),
@@ -253,6 +277,7 @@ def signalling_lp(pq: np.ndarray | None = None) -> LPResult:
         min_bcd_on_x_if_abc_silent=val(r6),
         min_abc_on_w_if_bcd_silent=val(r7),
         ns_feasible=r5.status == 0,
+        min_max_per_setting=val(r8),
     )
 
 
@@ -282,30 +307,22 @@ def fig3_layout(r: float) -> Layout:
     )
 
 
+def earliest_bc_layout(name: str, xb: float, xc: float, r: float) -> Layout:
+    """A at 0 (t = 0), D at 1 (t = 1/r); B and C measured together at the earliest time that puts
+    both inside the future v-cones of A and D (the ordering A < D < (B, C) of Fig. 3)."""
+    t = max(max(x / r, 1 / r + abs(1 - x) / r) for x in (xb, xc)) * (1 + 1e-9)
+    x = {"A": 0.0, "B": xb, "C": xc, "D": 1.0}
+    return Layout(name, x, {"A": 0, "B": t, "C": t, "D": 1 / r})
+
+
 def central_layout(r: float, half_gap: float = 1e-3) -> Layout:
     """B and C just either side of the midpoint, measured as soon as A's and D's v-cones allow."""
-    xb, xc = 0.5 - half_gap, 0.5 + half_gap
-    tb = max(xb / r, (1 - xb) / r + 1 / r) * (1 + 1e-9)
-    tc = max(xc / r, (1 - xc) / r + 1 / r) * (1 + 1e-9)
-    t = max(tb, tc)
-    return Layout(
-        "B, C at the midpoint",
-        {"A": 0.0, "B": xb, "C": xc, "D": 1.0},
-        {"A": 0, "B": t, "C": t, "D": 1 / r},
-    )
+    return earliest_bc_layout("B, C at the midpoint", 0.5 - half_gap, 0.5 + half_gap, r)
 
 
 def clustered_layout(r: float, offset: float = 1e-3) -> Layout:
     """B and C next to the receiver D (needed for low latency A -> D')."""
-    xb, xc = 1.0 - offset, 1.0 - 2 * offset
-    t = max(xb / r, 1 / r + (1 - xb) / r, xc / r, 1 / r + (1 - xc) / r) * (
-        1 + 1e-9
-    )  # v-cones of A, D
-    return Layout(
-        "B, C next to D",
-        {"A": 0.0, "B": xb, "C": xc, "D": 1.0},
-        {"A": 0, "B": t, "C": t, "D": 1 / r},
-    )
+    return earliest_bc_layout("B, C next to D", 1.0 - offset, 1.0 - 2 * offset, r)
 
 
 def in_future_vcone(e1, e2, lay: Layout, speed: float) -> bool:
@@ -355,7 +372,7 @@ def channel_timing(lay: Layout) -> dict:
     return out
 
 
-def best_guaranteed_latency(r: float, n: int = 401) -> dict:
+def best_guaranteed_latency(r: float, n: int = 201) -> dict:
     """Grid search over B, C positions in [0, 1] (measured at the earliest time the v-cone
     ordering allows, B ~ C) for the layout that minimises the WORSE of the two channel latencies
     while keeping both superluminal (the theorem does not say which direction signals)."""
@@ -365,14 +382,7 @@ def best_guaranteed_latency(r: float, n: int = 401) -> dict:
         for xc in xs:
             if xc <= xb:
                 continue
-            tb = max(xb / r, 1 / r + (1 - xb) / r)
-            tc = max(xc / r, 1 / r + (1 - xc) / r)
-            tt = max(tb, tc) * (1 + 1e-9)
-            lay = Layout(
-                "grid",
-                {"A": 0.0, "B": xb, "C": xc, "D": 1.0},
-                {"A": 0, "B": tt, "C": tt, "D": 1 / r},
-            )
+            lay = earliest_bc_layout("grid", xb, xc, r)
             cond = conditions(lay, r)
             if not all(cond.values()):
                 continue
@@ -384,7 +394,10 @@ def best_guaranteed_latency(r: float, n: int = 401) -> dict:
             )
             if best is None or worst < best[0]:
                 best = (worst, xb, xc)
-    return {"worst_latency_L_over_c": best[0], "xB": best[1], "xC": best[2]} if best else {}
+    out = {"analytic_lower_bound_L_over_c": 0.5 * (1 + 1 / r), "grid_n": n}  # section 3.1
+    if best:
+        out.update({"worst_latency_L_over_c": best[0], "xB": best[1], "xC": best[2]})
+    return out
 
 
 def trials_for_error(tv: float, eps: float) -> float:
@@ -394,6 +407,15 @@ def trials_for_error(tv: float, eps: float) -> float:
 
 
 LY_S = 365.25 * 86400.0  # light-seconds per light-year
+C_M_S = 299_792_458.0
+BETA_CMB = 369.82e3 / C_M_S  # Planck 2018 dipole / c (ASSUMPTION: candidate frame, as in round 1)
+V_MIN_UNEXCLUDED = 5e6  # c; published bipartite bound in near-CMB frames (Cocciaro et al. 2018)
+
+
+def r_trial_fraction(r: float, beta: float = BETA_CMB) -> float:
+    """Fraction of randomly timed trials that land in R when the frame is unknown: the B ~ C window
+    d / v over the simultaneity ambiguity beta d / c, doubled for either sign: f ~ 2 / (r beta)."""
+    return min(1.0, 2.0 / (r * beta))
 
 
 def bc_sync_window_s(separation_ly: float, r: float) -> float:
@@ -401,7 +423,7 @@ def bc_sync_window_s(separation_ly: float, r: float) -> float:
     return separation_ly * LY_S / r
 
 
-def frame_sync_ambiguity_s(separation_ly: float, beta: float = 1.234e-3) -> float:
+def frame_sync_ambiguity_s(separation_ly: float, beta: float = BETA_CMB) -> float:
     """Simultaneity offset between the lab and a frame moving at beta along the B-C line: about
     beta * d / c. B ~ C cannot be arranged unless the frame is known to better than the window."""
     return beta * separation_ly * LY_S
@@ -424,7 +446,7 @@ def main(argv=None) -> int:
         "provenance": "derived (exact LP and kinematics) under the stated model assumptions",
         "positive_control_S_quantum": bell_value(pq),
         "S_local_bound": S_LOCAL_BOUND,
-        "quantum_is_no_signalling": True,
+        "quantum_is_no_signalling": quantum_is_no_signalling(pq),
         "lp": lp.__dict__,
         "timing": {},
     }
@@ -436,6 +458,16 @@ def main(argv=None) -> int:
         "states_per_s_for_8_kbit_per_s_voice_eps_1e-3": stock_per_second(
             8e3, trials_for_error(tv_guaranteed, 1e-3)
         ),
+        "max_tv_best_setting_pair": lp.min_max_per_setting,
+        "unknown_frame_dilution": {
+            f"r={r:g}": {
+                "R_trial_fraction": r_trial_fraction(r),
+                "trials_per_bit_eps_1e-3": trials_for_error(
+                    r_trial_fraction(r) * tv_guaranteed, 1e-3
+                ),
+            }
+            for r in (V_MIN_UNEXCLUDED, 6.3e8)
+        },
     }
     out["sync"] = {
         f"B-C {d} ly apart, r={r:g}": {
@@ -458,10 +490,11 @@ def main(argv=None) -> int:
                 * a.distance_ly,
                 "positions_ly": {k: v * a.distance_ly for k, v in lay.x.items()},
             }
-        g = best_guaranteed_latency(r, n=201)
+        g = best_guaranteed_latency(r)
+        w = g.get("worst_latency_L_over_c")
         rows["best_guaranteed_grid"] = {
             **g,
-            "worst_latency_years": g.get("worst_latency_L_over_c", math.nan) * a.distance_ly,
+            "worst_latency_years": None if w is None else w * a.distance_ly,
         }
         out["timing"][f"r={r:g}"] = rows
     print(json.dumps(out, indent=1, default=str))

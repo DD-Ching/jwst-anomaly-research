@@ -32,6 +32,11 @@ def test_positive_control_reproduces_the_paper(pq):
         assert np.allclose(pq[:, :, :, :, 0, y, z, w].sum(0), pq[:, :, :, :, 1, y, z, w].sum(0))
     for x, y, z in itertools.product((0, 1), repeat=3):
         assert np.allclose(pq[:, :, :, :, x, y, z, 0].sum(3), pq[:, :, :, :, x, y, z, 1].sum(3))
+    assert bc.quantum_is_no_signalling(pq)
+    signalling = pq.copy()
+    signalling[0, 0, 0, 0, 0] += 0.01  # B, C, D outcome now depends on x
+    signalling[1, 0, 0, 0, 0] -= 0.02
+    assert not bc.quantum_is_no_signalling(signalling)
 
 
 def test_lp_reproduces_lemma_1_and_bounds_the_signal(pq):
@@ -42,6 +47,8 @@ def test_lp_reproduces_lemma_1_and_bounds_the_signal(pq):
     assert res.min_of_max > 1e-3
     assert res.min_of_sum >= res.min_of_max - 1e-12
     assert res.min_bcd_on_x_if_abc_silent >= res.min_of_sum - 1e-9
+    # fixing the best setting pair can only help the receiver
+    assert res.min_max_per_setting >= res.min_of_max - 1e-12
 
 
 @pytest.mark.parametrize("r", [2.0, 10.0, 1e4, 1e9])
@@ -60,7 +67,7 @@ def test_fig3_at_20_ly_needs_15_years_for_large_v():
 
 def test_no_guaranteed_layout_beats_half_the_light_time():
     g = bc.best_guaranteed_latency(1e9, n=101)
-    assert 0.5 <= g["worst_latency_L_over_c"] < 0.52
+    assert g["analytic_lower_bound_L_over_c"] <= g["worst_latency_L_over_c"] < 0.52
 
 
 def test_clustered_layout_is_fast_one_way_only():
@@ -76,3 +83,10 @@ def test_statistics_helpers():
     assert bc.trials_for_error(0.0, 1e-3) == float("inf")
     assert bc.trials_for_error(0.1, np.exp(-1)) == pytest.approx(200.0)
     assert bc.bc_sync_window_s(1.0, 1.0) == pytest.approx(365.25 * 86400)
+
+
+def test_unknown_frame_dilution():
+    f = bc.r_trial_fraction(5e6)
+    assert f == pytest.approx(2 / (5e6 * bc.BETA_CMB))
+    assert 3e-4 < f < 3.5e-4
+    assert bc.r_trial_fraction(1.0) == 1.0
