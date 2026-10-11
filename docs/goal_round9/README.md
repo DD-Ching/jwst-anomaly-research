@@ -314,11 +314,14 @@ integrated past the window. No second-order, non-linear or large parameter scan 
 - **At the points the device needs, (c) fails.** The identity forces α2 ≥ 2(κ′_needed − 10⁻¹⁵)/X² − |α1|/8 ≥ 10⁴²
   in every row. Then α2 v²Φ at 1 AU is ≥ 10²⁶ with v at Earth's orbital speed (a floor over a year), and ≥ 10²⁸
   at the CMB dipole speed (ASSUMPTION for the æther frame).
-- **Consequence.** There the weak-field expansion loses control. So does §2c's flat-background linear amplitude,
-  which needs the same khronon coupling to stay perturbative in the sender's and receiver's own surroundings.
-  These points are labelled **"current calculation loses control"**. They are not a feasible exception.
-- **Answer to Q1.** The bounds apply wherever the expansion is under control. They neither apply nor are needed at
-  the points the device would require, because there the linear signal formula itself is not established.
+- **Consequence.** There the solar-system PPN expansion loses control. That alone does not show that every
+  flat-background linear solution fails. It does mean that, at the extreme parameters required, no controlled
+  prediction has been established for the actual sender and receiver environments, which are themselves inside
+  gravitating, moving systems. These points are labelled **"no controlled prediction yet"** and cannot be treated
+  as a feasible exception.
+- **Answer to Q1.** The bounds apply wherever the expansion is under control. At the points the device would
+  require they do not apply, and no controlled prediction for the actual sender and receiver environments has
+  been established there either.
 
 **Q2. Do the existing inequalities close the tuned scheme?** [derived]
 - **Inside the controlled domain: yes.**
@@ -328,9 +331,21 @@ integrated past the window. No second-order, non-linear or large parameter scan 
     where the window is set by c_T and c_s ≤ X still holds.
   - Perturbativity alone gives the same answer without the observed α2 value: α2 v²Φ < 1 at 1 AU caps κ′ at
     X²/(2v²Φ) + 10⁻¹⁵ ≈ 2 × 10¹⁸–5 × 10³⁴, still 26–39 orders below need.
-- **Outside it:** the points with α2 v²Φ ≫ 1 are "current calculation loses control". Settling them would need a
-  non-linear or strong-coupling treatment, which was not started.
+- **Outside it:** the points with α2 v²Φ ≫ 1 are "no controlled prediction yet" (as above). Settling them would
+  need a controlled treatment of the real environments, possibly non-linear or strong-coupling. It was not
+  started.
 - **Stop.** The bound is enough for this scheme, so no strong-coupling scale was computed.
+
+**Status (owner decision, 2026-10-11):**
+- **Paused:** the designated-device, fastest-front reception scheme. This round's closing conclusion is accepted.
+- **Undetermined, not started:**
+  - reception after the fronts arrive;
+  - repeated modulation;
+  - the non-linear and strong-coupling questions (including the §2b elliptic part).
+  None is started automatically.
+- **Kept, with its standing:** the model-internal instantaneous linear response at c13 ≠ 0 (§2c). It is a derived
+  property of the linearised model. It is **not** an experimental finding and **not** a usable communication
+  channel.
 
 **Kinds of evidence in §§2c–2d:**
 - **Analytic:** the helicity ansatz and ΔE form (symbolic in all c_i), the split, the PPN identity and the bounds.
@@ -376,9 +391,13 @@ integrated past the window. No second-order, non-linear or large parameter scan 
     field of the quadrupole change, and it lasts until the khronon and tensor fronts arrive. This is a
     model-internal linear response. For a lab-scale sender it needs κ′ ≳ 10⁵⁵ (c14 ≲ 10⁻⁸⁶ at |c13| = 10⁻¹⁵).
   - The khronometric PPN identity κ′ = (c_s²/2)(α2 − α1/8) + (β − α/4)/(1 − β)² with the PPN bounds and the
-    receive window caps κ′ at 47–60 orders below that, including the λ ≈ −β tuning. The points that would
-    reach it make the weak-field expansion fail ("current calculation loses control"), so they are not a
-    feasible exception (§2d). Only the fastest-front scheme with the designated devices is covered.
+    receive window caps κ′ at 47–60 orders below that, including the λ ≈ −β tuning.
+  - At the points that would reach it, the solar-system PPN expansion fails. No controlled prediction for the
+    actual sender and receiver environments has been established there, so they cannot count as a feasible
+    exception (§2d).
+  - This covers only the fastest-front scheme with the designated devices, which is now paused. Reception after
+    the fronts, repeated modulation and the non-linear questions are undetermined and not started.
+  - None of this is an experimental finding or a usable channel.
   - [lit]: the controls (Blas–Sibiryakov instantaneous term and its EA cancellation; Bhattacharyya et al.'s
     elliptic mode).
   - [derived]: the khronometric = EA linear response (c13 = 0) and the c13 ≠ 0 instantaneous part.

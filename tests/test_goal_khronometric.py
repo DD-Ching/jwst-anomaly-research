@@ -74,4 +74,6 @@ def test_ppn_identity_and_window_bound():
     for row in w["rows"]:
         assert row["kappa_allowed_PPN"] < row["kappa_required"] * 1e-40
         assert row["kappa_cap_perturbative_only"] < row["kappa_required"] * 1e-20
-        assert row["alpha2_v2_phi_floor"] > 1e20  # the needed points lie outside control
+        assert (
+            row["alpha2_v2_phi_floor"] > 1e20
+        )  # the needed points lie outside the solar-system PPN expansion

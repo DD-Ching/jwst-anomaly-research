@@ -4329,13 +4329,16 @@ S > 7 or setting dependence in R trials.
 - Fastest-front reception with the designated devices is closed within the controlled domain. The khronometric
   identity κ′ = (c_s²/2)(α2 − α1/8) + (β − α/4)/(1 − β)² (1311.7144v4 Eqs. 48, 49, 118), with |α1| ≲ 10⁻⁴,
   |α2| ≲ 10⁻⁷ and c_s ≤ D/(cτ), gives κ′ ≤ 6.3 × 10⁻⁶ (D/cτ)² + 10⁻¹⁵, 47–60 orders short. The points that would
-  suffice have α2 v²Φ ≫ 1 in the solar system: the current calculation loses control there.
+  suffice have α2 v²Φ ≫ 1. There the solar-system PPN expansion fails, and no controlled prediction for the
+  actual sender and receiver environments has been established, so they are not a feasible exception.
+- Status (owner, 2026-10-11): this scheme is **paused**. The instantaneous response is a model-internal linear
+  result, not an experimental finding and not a usable channel.
 
 **Open.**
 - The non-linear elliptic part, i.e. whether a local conserved source with fixed boundary conditions drives it.
   It needs a second-order calculation; the owner decides whether to fund it.
-- For the c13 ≠ 0 term: schemes other than fastest-front reception (after the fronts arrive, repeated
-  modulation), which need the full time response.
+- Undetermined and not started: for the c13 ≠ 0 term, reception after the fronts arrive and repeated modulation
+  (both need the full time response); the non-linear and strong-coupling questions.
 
 **Alternatives rejected.**
 - Reading "instantaneous" in the literature as a channel.

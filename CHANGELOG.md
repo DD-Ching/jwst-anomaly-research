@@ -29,8 +29,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
       1311.7144v4 Eqs. 48, 49 and 118.
     - With the PPN bounds and c_s ≤ D/(cτ): κ′ ≤ 6.3 × 10⁻⁶ (D/cτ)² + 10⁻¹⁵. That is 47–60 orders below the
       designated devices' need, for either sign of β and the λ ≈ −β tuning.
-    - The points that would suffice need α2 ≥ 10⁴², so α2 v²Φ ≥ 10²⁶ at 1 AU: "current calculation loses
-      control". Fastest-front reception only.
+    - The points that would suffice need α2 ≥ 10⁴², so α2 v²Φ ≥ 10²⁶ at 1 AU. The solar-system PPN expansion
+      fails there, and no controlled prediction for the actual sender and receiver environments has been
+      established, so they are not a feasible exception. Fastest-front reception only.
+  - **Owner closing (2026-10-11):** the designated-device, fastest-front scheme is paused. Reception after the
+    fronts, repeated modulation and the non-linear questions are undetermined and not started. The instantaneous
+    response stays a model-internal linear result, not an experimental finding or a usable channel.
   - Failed approach: one sympy `simplify` pass over the 3D kernel ran > 30 min. Exact rational parameter points
     with `cancel` and `factor_list` take ~80 s.
 - **Corrections:**
