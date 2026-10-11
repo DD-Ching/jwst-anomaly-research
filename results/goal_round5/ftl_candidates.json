@@ -1,0 +1,148 @@
+{
+ "provenance": "derived from published metrics, field-theory results and the flat-space quantum inequality (no data); estimates under the stated ASSUMPTIONs",
+ "params": {
+  "sigma": 0.01,
+  "n_wall": 100.0,
+  "alpha_band": 0.01,
+  "rho_max_m": 1.0,
+  "grid": 20001,
+  "distances_ly": [
+   20.0,
+   100.0
+  ],
+  "advances_s": [
+   1.0,
+   86400.0,
+   31557600.0
+  ],
+  "scharnhorst_min_gap_compton": 1.0
+ },
+ "krasnikov_controls": {
+  "max_abs_diff_vs_ER_eq14_delta_small": 1.599809174024358e-11,
+  "endcap_T_at_rho_max_minus_eps": -0.04203374323795681,
+  "ER_eq38_value": -0.04198797791881546,
+  "small_eta_T_coeff_over_eta": [
+   0.12313702682140379,
+   0.12278816964454528,
+   0.12278469156831762
+  ],
+  "small_eta_R_coeff_over_eta": [
+   3.0880375245586755,
+   3.079288054251397,
+   3.0792009027676586
+  ]
+ },
+ "krasnikov_task": {
+  "timing": {
+   "deployment": "tube exists only for t > x: built by an outbound trip at <= c, so nothing can be read early before t = D at the far end",
+   "far_to_near_arrival": "t_s + D (1 - eta), exterior light t_s + D: advance eta D",
+   "near_to_far": "no advance (the +x branch of the light cone is unchanged)",
+   "two_tubes": "a second tube for the other direction allows closed timelike curves (ER Sec. 4)"
+  },
+  "rows": [
+   {
+    "D_ly": 20.0,
+    "advance_s": 1.0,
+    "eta": 1.5844043907014474e-09,
+    "eps_max_planck": 0.3409059928191292,
+    "eps_max_m": 5.5099101542388166e-36,
+    "eps_max_loose_m": 1.1293812635471539e-27,
+    "negative_energy_solar_masses_at_eps_max": -2.8426064087547043e+38
+   },
+   {
+    "D_ly": 20.0,
+    "advance_s": 86400.0,
+    "eta": 0.00013689253935660506,
+    "eps_max_planck": 100.20744712117327,
+    "eps_max_m": 1.6196078744683192e-33,
+    "eps_max_loose_m": 3.842157839083344e-30,
+    "negative_energy_solar_masses_at_eps_max": -8.355686194548377e+40
+   },
+   {
+    "D_ly": 20.0,
+    "advance_s": 31557600.0,
+    "eta": 0.05,
+    "eps_max_planck": 1928.9509102940522,
+    "eps_max_m": 3.1176765535173135e-32,
+    "eps_max_loose_m": 1.995973387920826e-31,
+    "negative_energy_solar_masses_at_eps_max": -1.6084288524748307e+42
+   },
+   {
+    "D_ly": 20.0,
+    "advance_s": 631152000.0,
+    "eta": 1.0,
+    "eps_max_planck": 10237.787598858184,
+    "eps_max_m": 1.6546875395592535e-31,
+    "eps_max_loose_m": 3.760789693279979e-32,
+    "negative_energy_solar_masses_at_eps_max": -8.536273329028156e+42
+   },
+   {
+    "D_ly": 100.0,
+    "advance_s": 1.0,
+    "eta": 3.168808781402895e-10,
+    "eps_max_planck": 0.1524577947485257,
+    "eps_max_m": 2.464106730512784e-36,
+    "eps_max_loose_m": 2.5253732782639732e-27,
+    "negative_energy_solar_masses_at_eps_max": -6.3562611620975776e+38
+   },
+   {
+    "D_ly": 100.0,
+    "advance_s": 86400.0,
+    "eta": 2.7378507871321012e-05,
+    "eps_max_planck": 44.81343176625516,
+    "eps_max_m": 7.242993315936873e-34,
+    "eps_max_loose_m": 8.591460713015297e-30,
+    "negative_energy_solar_masses_at_eps_max": -1.8683589122102612e+41
+   },
+   {
+    "D_ly": 100.0,
+    "advance_s": 31557600.0,
+    "eta": 0.01,
+    "eps_max_planck": 857.6774720684411,
+    "eps_max_m": 1.3862255026179783e-32,
+    "eps_max_loose_m": 4.489017674149182e-31,
+    "negative_energy_solar_masses_at_eps_max": -3.575822019689009e+42
+   },
+   {
+    "D_ly": 100.0,
+    "advance_s": 3155760000.0,
+    "eta": 1.0,
+    "eps_max_planck": 10237.787598858184,
+    "eps_max_m": 1.6546875395592535e-31,
+    "eps_max_loose_m": 3.760789693279979e-32,
+    "negative_energy_solar_masses_at_eps_max": -4.2681366645140786e+43
+   }
+  ]
+ },
+ "scharnhorst": {
+  "xi_1um": 3.1741972901086616e-32,
+  "LSV_quoted_xi_1um": 4.36e-32,
+  "rows": [
+   {
+    "gap_m": 1e-06,
+    "xi": 3.1741972901086616e-32,
+    "advance_s": 5.293991235277609e-47,
+    "advance_times_mec2_over_hbar": 4.1099587067374276e-26
+   },
+   {
+    "gap_m": 1e-08,
+    "xi": 3.1741972901086604e-24,
+    "advance_s": 5.293991235277607e-41,
+    "advance_times_mec2_over_hbar": 4.1099587067374254e-20
+   },
+   {
+    "gap_m": 1e-10,
+    "xi": 3.174197290108661e-16,
+    "advance_s": 5.293991235277607e-35,
+    "advance_times_mec2_over_hbar": 4.109958706737426e-14
+   },
+   {
+    "gap_m": 3.861592678419398e-13,
+    "xi": 1.4274735405962346e-06,
+    "advance_s": 9.193552613473643e-28,
+    "advance_times_mec2_over_hbar": 7.137360061687603e-07
+   }
+  ],
+  "note": "the advance exists only for propagation normal to the plates, across one gap"
+ }
+}

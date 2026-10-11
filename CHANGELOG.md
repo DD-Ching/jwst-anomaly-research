@@ -2,6 +2,27 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 5: no screened candidate gives a usable early read; the Krasnikov tube needs Planck-thin walls
+- Owner brief: which concrete candidates predict that a receiver reads a freely chosen message before exterior light
+  arrives? Write-up: `docs/goal_round5/README.md`; code `scripts/goal_ftl_candidates.py`; results
+  `results/goal_round5/`.
+- Reused, not recomputed: rounds 1–4; MMP (long); GJW (chronal, needs a boundary coupling); Drummond–Hathrell
+  (wavefront c); Alcubierre (no control).
+  - Benchmark 1908.03273: t_transit = d + logs, so it approaches the exterior light time without beating it.
+- Screened three explicit claims:
+  - **Krasnikov tube:** passes conditionally. One-way advance ηD for messages sent after the tube is laid at ≤ c.
+  - **Scharnhorst effect:** formal only, inside one gap.
+  - **Lentz soliton:** fails. It cannot be deployed from a free choice, and its positive energy is not established
+    (Santiago–Schuster–Visser).
+- **Positive controls:** an independent Einstein tensor reproduces ER Eq. (14) to 1.6 × 10⁻¹¹, and Eq. (38) to 0.1 %.
+- **New [derived]:**
+  - The tube's walls scale as |T| = 0.123 η/ε² and R̂ = 3.08 η/ε².
+  - With ER's own sampling rule (τ0 = σ r_c), the QI allows ε ≤ √(0.73η)/σ² l_P. So any 20–100 ly advance needs walls
+    ≲ 10⁴ l_P (1 s: sub-Planck), and 10³⁸–10⁴³ M☉ of negative energy. Small η does not help.
+  - Scharnhorst: Δt · m_e c²/ħ ≤ 7 × 10⁻⁷ even at a = ƛ_C, so the advance is unresolvable where it is derived.
+- **Failed approach (rule):** sampling a quantum inequality at τ0 = ε when the curvature radius is ε/√η understates
+  the bound. Use the largest sampling time the flat-space criterion allows.
+
 ## 2026-10-11: Goal round 4: the beyond-Horndeski wormhole (2212.05969) fails the complete sufficient stability set and establishes no same-exterior shortcut
 - Owner brief: a concrete modified-gravity wormhole. Write-up: `docs/goal_round4/README.md`; code
   `scripts/goal_bh_wormhole.py` (sympy added to the dev extra); results `results/goal_round4/`.

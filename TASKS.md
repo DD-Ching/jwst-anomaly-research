@@ -22,8 +22,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
   PR left unmerged for the owner.
 - Open item for that solution: the ℓ = 2 even-parity eigenproblem in a Θ-regular formulation (does a real tachyon
   exist?).
-- Round 5 (owner brief 2026-10-11): which concrete candidates predict that a receiver reads a freely chosen message
-  before exterior light arrives? Screen at most three candidates (docs/goal_round5/).
+- Round 5 done (docs/goal_round5/): Krasnikov tube (conditional; Planck-thin walls under the QI), Scharnhorst
+  (unresolvable in its own regime), Lentz soliton (fails). PR left unmerged for the owner.
+- Not covered and still open as explicit-claim classes: Lorentz-violating gravity with superluminal spin-0/1 modes
+  (Einstein–aether, Hořava), Gödel/Gott global geometries, non-local quantum gravity, tachyons.
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and

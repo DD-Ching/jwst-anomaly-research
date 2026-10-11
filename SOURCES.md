@@ -1257,3 +1257,16 @@ Full texts read 2026-10-11, through arXiv PDFs or the cited archives.
 **Abstracts only** (INSPIRE citing records and arXiv search, 2026-10-11):
 - 2411.05416, 2408.01480, 2404.10456 and 2609.00664.
 - 1812.07022 (the 2018 predecessor) and 1811.05481 (Franciolini et al.).
+
+## Goal round 5 (2026-10-11; docs/goal_round5/README.md)
+
+**Read in full** (arXiv PDFs; sha256 prefixes in brackets):
+- Fu, Grado-White & Marolf, CQG 36, 245018 (2019), arXiv:1908.03273v2 [39afdb29…].
+- Krasnikov, PRD 57, 4760 (1998), gr-qc/9511068 [c3aaf125…].
+- Everett & Roman, PRD 56, 2100 (1997), gr-qc/9702049 [b44b4fff…].
+- Liberati, Sonego & Visser, Ann. Phys. 298, 167 (2002), gr-qc/0107091 [2a692e7a…].
+- Lentz, arXiv:2006.07125v2 [12e765d1…].
+- Santiago, Schuster & Visser, arXiv:2105.03079v2 [4dca80f8…].
+
+**Abstract only:** Hollowood & Shore, Nucl. Phys. B 795, 138 (2008), arXiv:0707.2303; Fell & Heisenberg,
+arXiv:2104.06488.
