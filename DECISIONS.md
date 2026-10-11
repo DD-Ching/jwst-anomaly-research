@@ -4149,8 +4149,9 @@ controls, and evaluated once on validation.
 ## D-TBD Goal round 2: the Bancal v-causal class is a lab-test target, not an interstellar channel design (2026-10-11)
 
 **Decision.** Owner brief 2026-10-11 (continuation of #152).
-- Interstellar channel designs based on Bancal-type v-causal models are not pursued: under the theorem alone every
-  layout that keeps both branches available has worst latency ≥ L/2, and each single direction can carry no signal
+- Interstellar channel designs based on Bancal-type v-causal models are not pursued: under the theorem alone, for
+  fixed receivers at A and D, the worse direction is guaranteed nothing better than L/2 (a limit of the guarantee,
+  not a physical impossibility), and each single direction can carry no signal
   (exact LP).
 - The model class is a laboratory-test target: Experiment v1 first (no synchronisation), then a direct R-trial
   signalling test with ps B–C timing.

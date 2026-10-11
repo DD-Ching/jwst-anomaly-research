@@ -412,10 +412,91 @@ BETA_CMB = 369.82e3 / C_M_S  # Planck 2018 dipole / c (ASSUMPTION: candidate fra
 V_MIN_UNEXCLUDED = 5e6  # c; published bipartite bound in near-CMB frames (Cocciaro et al. 2018)
 
 
-def r_trial_fraction(r: float, beta: float = BETA_CMB) -> float:
-    """Fraction of randomly timed trials that land in R when the frame is unknown: the B ~ C window
-    d / v over the simultaneity ambiguity beta d / c, doubled for either sign: f ~ 2 / (r beta)."""
-    return min(1.0, 2.0 / (r * beta))
+def r_fraction(r: float, beta: float, cos_angle: float, window: float, d: float = 1.0) -> float:
+    """Fraction of trials with B ~ C in a frame moving at speed beta (c = 1) whose velocity makes
+    angle arccos(cos_angle) with the B -> C baseline (length d), when t_B and t_C are drawn
+    independently and uniformly from [0, window] in the lab (density of u = t_B - t_C is
+    triangular). Exact Lorentz transformation: B ~ C iff |dt'| < |dx'| / r."""
+    if window <= 0:
+        raise ValueError("window must be positive")
+    g = 1.0 / math.sqrt(1.0 - beta * beta)
+    bpar = beta * cos_angle
+    bperp = beta * math.sqrt(max(0.0, 1.0 - cos_angle**2))
+    # baseline along x, frame velocity in the x-y plane
+    bvec = np.array([bpar, bperp])
+    dr = np.array([d, 0.0])
+
+    def ok(u):
+        # event separation (u, dr) in the lab; frame moving with velocity bvec
+        bd = float(bvec @ dr)
+        dtp = g * (u - bd)
+        if beta > 0:
+            drp = dr + ((g - 1) * bd / beta**2 - g * u) * bvec
+        else:
+            drp = dr
+        return abs(dtp) < math.hypot(*drp) / r
+
+    # B ~ C holds on an interval of u around u0 = bpar d (where dt' = 0); find its ends
+    u0 = bpar * d
+
+    def edge(sign):
+        lo, hi = 0.0, 2.0 * d
+        if not ok(u0):
+            return 0.0
+        for _ in range(200):
+            mid = 0.5 * (lo + hi)
+            if ok(u0 + sign * mid):
+                lo = mid
+            else:
+                hi = mid
+        return lo
+
+    a, b = u0 - edge(-1), u0 + edge(1)
+
+    def cdf(u):  # CDF of the triangular density on [-T, T]
+        tt = window
+        u = max(-tt, min(tt, u))
+        if u <= 0:
+            return (tt + u) ** 2 / (2 * tt * tt)
+        return 1 - (tt - u) ** 2 / (2 * tt * tt)
+
+    return cdf(b) - cdf(a)
+
+
+def worst_r_fraction(r: float, beta_max: float, window: float, n_angle: int = 181) -> dict:
+    """Worst case over frame speeds 0..beta_max and directions (cos angle in [-1, 1])."""
+    worst = (math.inf, None, None)
+    for bt in np.linspace(0.0, beta_max, 9):
+        for ca in np.linspace(-1.0, 1.0, n_angle):
+            f = r_fraction(r, float(bt), float(ca), window)
+            if f < worst[0]:
+                worst = (f, float(bt), float(ca))
+    return {"fraction": worst[0], "beta": worst[1], "cos_angle": worst[2]}
+
+
+def r_fraction_table(r_values=(5e6, 6.3e8), beta_max_values=(BETA_CMB, 0.1, 0.9)) -> list:
+    """Worst-case R-trial fraction over frames with speed <= beta_max (ASSUMPTION: a known upper
+    bound) and any direction, for the lab window T (from a short list, the best kept). For the
+    worst-case frame the fraction ~ 2 w (T - s) / T^2 with s = beta_max d, w = d / r, which peaks
+    at T = 2 s at w / (2 s) = 1 / (2 r beta_max) (leading order; computed exactly here)."""
+    rows = []
+    for bm in beta_max_values:
+        for r in r_values:
+            best = None
+            for k in (1.0, 1.5, 2.0, 2.5, 3.0, 4.0):
+                win = k * bm  # in units of d / c
+                wf = worst_r_fraction(r, bm, win, n_angle=41)
+                if best is None or wf["fraction"] > best["fraction"]:
+                    best = {**wf, "window_over_d_c": win}
+            rows.append(
+                {
+                    "r": r,
+                    "beta_max": bm,
+                    **best,
+                    "leading_order_1_over_2_r_beta": 1.0 / (2 * r * bm),
+                }
+            )
+    return rows
 
 
 def bc_sync_window_s(separation_ly: float, r: float) -> float:
@@ -459,15 +540,15 @@ def main(argv=None) -> int:
             8e3, trials_for_error(tv_guaranteed, 1e-3)
         ),
         "max_tv_best_setting_pair": lp.min_max_per_setting,
-        "unknown_frame_dilution": {
-            f"r={r:g}": {
-                "R_trial_fraction": r_trial_fraction(r),
-                "trials_per_bit_eps_1e-3": trials_for_error(
-                    r_trial_fraction(r) * tv_guaranteed, 1e-3
+        "unknown_frame_dilution": [
+            {
+                **row,
+                "hoeffding_trials_per_bit_eps_1e-3": trials_for_error(
+                    row["fraction"] * tv_guaranteed, 1e-3
                 ),
             }
-            for r in (V_MIN_UNEXCLUDED, 6.3e8)
-        },
+            for row in r_fraction_table((V_MIN_UNEXCLUDED, 6.3e8))
+        ],
     }
     out["sync"] = {
         f"B-C {d} ly apart, r={r:g}": {

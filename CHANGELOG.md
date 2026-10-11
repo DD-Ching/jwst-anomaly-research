@@ -10,11 +10,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   to NIST 2015 and the bipartite bound; experiment needs split into bipartite, multipartite and channel.
 - **Positive control:** the paper's 4-qubit state and observables give S = 7.2014 (Lemma 1 bound 7); QM marginals
   are exactly no-signalling.
-- **Timeline [derived]:** Fig. 3 at 20 ly needs 15.00 yr in both directions for any v. Any layout that keeps both
-  branches available has worst latency ≥ L/2 (proof: triangle inequality; grid 0.505 L). Clustering B, C, D at the
+- **Timeline [derived]:** Fig. 3 at 20 ly needs 15.00 yr in both directions for any v. For fixed receivers at A and D, the
+  theorem guarantees nothing better than L/2 in the worse direction (proof: triangle inequality; grid 0.505 L).
+  This limits the guarantee; it is not a physical impossibility. Clustering B, C, D at the
   receiver gives ~L/v one way only, and only if the model's branch is known; the theorem does not supply it.
 - **Signal size [derived, exact LP]:** each direction alone can be 0; at least one direction carries mean total
-  variation ≥ 0.0063. At ε = 10⁻³ that is ~3.5 × 10⁵ four-party states per bit.
+  variation ≥ 0.0063. At ε = 10⁻³, a fixed threshold rule decides a bit in
+  3.5 × 10⁵ trials (Hoeffding, i.i.d. and calibrated; sufficient, not minimal). With an unknown frame, the
+  worst-case R fraction is ≈ 1/(2 r β_max), and it is not positive without a bound β_max.
 - **Next experiment:** Bancal Experiment v1 (no sync; excludes no-signalling v-causal models), then a direct R test
   needing ps B–C timing over ~100 km. Missing physics (branch, amplitude per direction, v and frame) is listed in §6.
 - **Failed approach (rule):** the first draft wrote the 100 km timing as 67 fs; it is 67 ps (d/(c·5 × 10⁶)).

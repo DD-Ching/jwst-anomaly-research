@@ -470,16 +470,68 @@
   "trials_per_bit_eps_1e-6": 697623.9136965361,
   "states_per_s_for_8_kbit_per_s_voice_eps_1e-3": 2790495654.7861443,
   "max_tv_best_setting_pair": 0.012586871062938695,
-  "unknown_frame_dilution": {
-   "r=5e+06": {
-    "R_trial_fraction": 0.0003242577015845546,
-    "trials_per_bit_eps_1e-3": 3317498717255.8506
+  "unknown_frame_dilution": [
+   {
+    "r": 5000000.0,
+    "beta_max": 0.001233586736861806,
+    "fraction": 8.106430203735915e-05,
+    "beta": 0.001233586736861806,
+    "cos_angle": 1.0,
+    "window_over_d_c": 0.002467173473723612,
+    "leading_order_1_over_2_r_beta": 8.106442539613865e-05,
+    "hoeffding_trials_per_bit_eps_1e-3": 53080141024057.414
    },
-   "r=6.3e+08": {
-    "R_trial_fraction": 2.57347382209964e-06,
-    "trials_per_bit_eps_1e-3": 5.266860963515388e+16
+   {
+    "r": 630000000.0,
+    "beta_max": 0.001233586736861806,
+    "fraction": 6.433674764050323e-07,
+    "beta": 0.001233586736861806,
+    "cos_angle": -1.0,
+    "window_over_d_c": 0.002467173473723612,
+    "leading_order_1_over_2_r_beta": 6.4336845552491e-07,
+    "hoeffding_trials_per_bit_eps_1e-3": 8.427003191126034e+17
+   },
+   {
+    "r": 5000000.0,
+    "beta_max": 0.1,
+    "fraction": 9.899999999368747e-07,
+    "beta": 0.1,
+    "cos_angle": -1.0,
+    "window_over_d_c": 0.2,
+    "leading_order_1_over_2_r_beta": 1e-06,
+    "hoeffding_trials_per_bit_eps_1e-3": 3.558942525178559e+17
+   },
+   {
+    "r": 630000000.0,
+    "beta_max": 0.1,
+    "fraction": 7.857142825251628e-09,
+    "beta": 0.1,
+    "cos_angle": 1.0,
+    "window_over_d_c": 0.2,
+    "leading_order_1_over_2_r_beta": 7.936507936507936e-09,
+    "hoeffding_trials_per_bit_eps_1e-3": 5.650177198119761e+21
+   },
+   {
+    "r": 5000000.0,
+    "beta_max": 0.9,
+    "fraction": 2.1111111081495437e-08,
+    "beta": 0.9,
+    "cos_angle": -1.0,
+    "window_over_d_c": 1.8,
+    "leading_order_1_over_2_r_beta": 1.1111111111111111e-07,
+    "hoeffding_trials_per_bit_eps_1e-3": 7.826528693623596e+20
+   },
+   {
+    "r": 630000000.0,
+    "beta_max": 0.9,
+    "fraction": 1.675484195828858e-10,
+    "beta": 0.9,
+    "cos_angle": 1.0,
+    "window_over_d_c": 1.8,
+    "leading_order_1_over_2_r_beta": 8.818342151675485e-10,
+    "hoeffding_trials_per_bit_eps_1e-3": 1.2425408977403835e+25
    }
-  }
+  ]
  },
  "sync": {
   "B-C 0.04 ly apart, r=10000": {

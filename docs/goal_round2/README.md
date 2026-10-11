@@ -76,7 +76,17 @@ Sender A at Earth, x = 0. D at the star, x = L. The privileged frame is taken as
 
 At 100 ly the same layouts give 75.0, 50.1 and 50.5 yr, and 0.2 / 99.9 yr for B and C next to D, at r = 6.3 × 10⁸.
 
-### 3.1 No layout guarantees better than half the light time [derived]
+### 3.1 What the L/2 bound covers [derived]
+
+**Scope.** This is a statement about one problem only:
+- receivers fixed at the A and D sites;
+- records collected there over ordinary light-speed links;
+- the worse of the two directions, because the theorem leaves the branch open.
+
+It says the theorem does not *guarantee* better. It does **not** say that better is physically impossible. A
+specific model whose branch and amplitude are known (§6) could signal in a known direction with latency ≈ L/v
+(§3.2), and nothing here excludes such a model.
+
 
 The theorem allows either branch, so a guaranteed channel needs both collection points (condition iii). Put B and
 C anywhere in space, and let L be the A–D distance.
@@ -89,7 +99,7 @@ C anywhere in space, and let L be the A–D distance.
 
 The grid search (201 × 201 points) reaches 0.505 L, with B and C at the midpoint; the JSON carries
 the analytic bound alongside. For 20 ly that is ≥ 10 yr; for 100 ly, ≥ 50 yr. So,
-**under the theorem's guarantee alone, no arrangement gives low latency.** That includes putting all the receiving
+**the theorem alone guarantees no low-latency arrangement** That includes putting all the receiving
 stations on one planet: as the last table row shows, that keeps one direction superluminal only marginally
 (19.98 yr against 20).
 
@@ -144,11 +154,21 @@ That helps only if the realised branch is "BCD depends on x" in this layout, and
 - They must stay coherent until they are used.
 - Nothing can top the stock up faster than light.
 
-**Single-record arrival.** This is E4 in §3: 15 yr for Fig. 3 and ≥ 10 yr for any guaranteed layout. With an extra
+**Single-record arrival.** This is E4 in §3: 15 yr for Fig. 3. With fixed receivers at A and D and the worst direction, the theorem guarantees nothing better than 10 yr (§3.1). With an extra
 directional assumption (§3.2) it falls to about L/v.
 
-**Trials per bit.** With a per-trial total variation δ, a threshold test on the best event decides a bit at error
-ε after n = 2 ln(1/ε)/δ² trials (Hoeffding).
+**Trials per bit.** With a per-trial total variation δ, the following decision rule decides a bit at error ≤ ε
+after n = 2 ln(1/ε)/δ² trials (Hoeffding): count the occurrences of the event with the largest probability
+difference, and compare the count with a threshold fixed in advance.
+- This n is **sufficient for this rule only**. It is not a minimum resource requirement.
+- It assumes:
+  - i.i.d. trials;
+  - both outcome distributions known in advance (calibrated on control data, with no drift);
+  - the decision rule and event chosen before the data are seen.
+- Other rules can need far fewer trials, and δ alone gives no lower bound. Two distributions with total variation δ
+  can be told apart in about ln(1/ε)/δ trials when the event is impossible under one of them, against 2 ln(1/ε)/δ²
+  here. A minimum needs the full distributions (the Chernoff information).
+
 - At δ = 0.0063: n ≈ 3.5 × 10⁵ for ε = 10⁻³ and 7.0 × 10⁵ for ε = 10⁻⁶.
 - An 8 kbit/s voice link at ε = 10⁻³ would consume about **2.8 × 10⁹ pre-positioned 4-party states per second**
   [estimate].
@@ -161,8 +181,23 @@ QM, which does not signal; the theorem says nothing about configurations outside
   v = 6.3 × 10⁸ c, that window is 2.0 ms.
 - Arranging this needs the frame to be known: the simultaneity ambiguity at β ≈ 1.23 × 10⁻³ (CMB) is
   β·d/c ≈ 1,560 s for that separation.
-- With random timing (App. E) over a window T_w, only a fraction ~(2|x_B − x_C|/v)/T_w of trials are in R, and the
-  signal is diluted by that factor; the trials per bit grow as 1/(fδ)².
+- **R-trial fraction with an unknown frame** [derived; `r_fraction` in the script, exact Lorentz transformation].
+  - Protocol: t_B and t_C are drawn independently and uniformly from a lab window [0, T]. The baseline d lies along
+    x. The frame has any direction and any speed up to β_max. Trials count as R when |Δt′| < |Δx′|/v.
+  - With a known bound β_max, the worst-case fraction is positive. Over the windows tried, it is largest at
+    T = 2β_max·d/c, where it reaches about 1/(2 r β_max):
+    - 8.1 × 10⁻⁵ at r = 5 × 10⁶ and 6.4 × 10⁻⁷ at r = 6.3 × 10⁸, for β_max = 1.23 × 10⁻³ (CMB speed; an
+      ASSUMPTION about the frame);
+    - 9.9 × 10⁻⁷ and 7.9 × 10⁻⁹ for β_max = 0.1;
+    - 2.1 × 10⁻⁸ and 1.7 × 10⁻¹⁰ for β_max = 0.9, about 5× below the leading-order 1/(2 r β) because of
+      relativistic corrections.
+  - **Without a bound on the frame speed there is no positive worst-case fraction.** It falls as (1 − β_max):
+    2 × 10⁻¹⁰ at β_max = 0.999 and r = 5 × 10⁶.
+  - The earlier 2/(rβ) was a typical-case estimate for one frame, not a guarantee. It is withdrawn.
+  - The window must also keep A and D before B and C, inside their past v-cones, in every frame considered. That
+    is a further margin on the lab schedule.
+  - The signal is diluted by this fraction f. The Hoeffding count for the rule above grows as 1/(fδ)²: 5.3 × 10¹³
+    trials per bit at r = 5 × 10⁶ with β_max at the CMB speed (`unknown_frame_dilution` in the results).
 - For B and C 1 km apart at v = 6.3 × 10⁸ c the window is 5.3 fs.
 
 ## 6. Missing physical assumptions
@@ -183,7 +218,7 @@ None of these is in the theorem. All are needed for a rate or an error rate in a
 **Which model and layout deserve an experimental design?**
 - The Bancal v-causal class in configuration R, with B and C adjacent (the central layout is the best guaranteed
   one).
-- The interstellar layouts are not the target: under the theorem they cannot beat L/2 (10 yr at 20 ly).
+- The interstellar layouts are not the target. For fixed receivers at A and D, the theorem guarantees nothing better than L/2 in the worse direction (10 yr at 20 ly). That is a limit of the guarantee, not a physical impossibility (§3.1).
 - A laboratory-scale R experiment is what can separate the model class from QM.
 
 **What does it predict?** QM predicts exactly zero setting dependence in the BCD and ABC marginals. Any v-causal
@@ -203,9 +238,9 @@ least 0.0063 in at least one of them, in the R trials that the theorem covers.
      For d_BC = 100 km that means δ < 67 ps; reaching 6.3 × 10⁸ c needs δ < 0.53 ps [derived].
    - A 1 km, 10 ps set-up reaches only v ≲ 3 × 10⁵ c, which is already excluded in those frames.
    - If the frame is unknown, the simultaneity ambiguity β·d_BC/c ≈ 0.41 µs at 100 km (CMB β) far exceeds that
-     window. With random timing over ≳ 0.4 µs, only f ~ 2c/(vβ) ≈ 3 × 10⁻⁴ of trials fall in R at v = 5 × 10⁶ c
-     (2.6 × 10⁻⁶ at 6.3 × 10⁸ c). Trials per bit scale as 1/(fδ)²: 3.3 × 10¹² at 5 × 10⁶ c
-     (`unknown_frame_dilution` in the results).
+     window. With random timing over T = 2β_max·d/c, the worst-case R fraction is 8.1 × 10⁻⁵ at v = 5 × 10⁶ c
+     (6.4 × 10⁻⁷ at 6.3 × 10⁸ c), for frames up to the CMB speed (§5). There is no positive worst case without
+     a bound on the frame speed.
 
    So the decisive direct test needs picosecond B–C timing over ~100 km plus either knowledge of the frame or a very
    large number of trials.
@@ -217,6 +252,13 @@ communication**. Low latency needs the additional assumptions in §6, items 1–
 
 ## 8. Bookkeeping
 
+- **Revision after owner review (2026-10-11).**
+  - The L/2 limit is now restricted to fixed receivers at A and D, record collection there, and the worse
+    direction. It separates "not guaranteed by the theorem" from "physically impossible" (§3.1).
+  - The Hoeffding count is now labelled sufficient for one named rule, with its assumptions; it is not a minimum
+    (§5).
+  - The R-trial fraction is recomputed for an explicit random-timing protocol and frame range. There is no
+    positive worst case without a bound on the frame speed, and the 2/(rβ) estimate is withdrawn (§5, §7).
 - **Independent review** (separate agent, own code, against arXiv:1110.3795v2). Confirmed: the state, the
   observables, S = 7.2014 and the local maximum 7 of Eq. 4; Fig. 3 positions and times; the L/2 bound (grid
   0.8775 / 0.5975 / 0.5025 L at r = 2 / 10 / 10⁴); every LP value to 10⁻¹⁵, with locality encoded instead as a

@@ -85,8 +85,14 @@ def test_statistics_helpers():
     assert bc.bc_sync_window_s(1.0, 1.0) == pytest.approx(365.25 * 86400)
 
 
-def test_unknown_frame_dilution():
-    f = bc.r_trial_fraction(5e6)
-    assert f == pytest.approx(2 / (5e6 * bc.BETA_CMB))
-    assert 3e-4 < f < 3.5e-4
-    assert bc.r_trial_fraction(1.0) == 1.0
+def test_r_fraction_matches_closed_forms():
+    # rest frame: P(|t_B - t_C| < d / r) = 1 - (1 - w / T)^2 for uniform times on [0, T]
+    r, T = 10.0, 0.5
+    w = 1.0 / r
+    assert bc.r_fraction(r, 0.0, 1.0, T) == pytest.approx(1 - (1 - w / T) ** 2, rel=1e-9)
+    # worst case over frames with speed <= beta_max: 1 / (2 r beta_max) at leading order
+    row = bc.r_fraction_table((5e6,), (bc.BETA_CMB,))[0]
+    assert row["fraction"] == pytest.approx(1 / (2 * 5e6 * bc.BETA_CMB), rel=1e-2)
+    # no positive guarantee without a bound on the frame speed: it falls as 1 - beta
+    near_c = bc.worst_r_fraction(5e6, 0.999, 2 * 0.999, n_angle=21)["fraction"]
+    assert near_c < 3e-10
