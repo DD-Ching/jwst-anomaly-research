@@ -2079,6 +2079,18 @@ def inject_chunk_problem(tab: Table, k: int, n: int, ref: dict | None) -> str | 
     return None
 
 
+def unmask(tab: Table) -> Table:
+    """ECSV reads empty strings (and absent values) back as masked: fill them as written."""
+    tab = tab.copy()
+    for c in tab.colnames:
+        if getattr(tab[c], "mask", None) is not None and np.any(tab[c].mask):
+            kind = tab[c].dtype.kind
+            fill = "" if kind in "US" else (np.nan if kind == "f" else None)
+            if fill is not None:
+                tab[c] = tab[c].filled(fill)
+    return tab
+
+
 def inject_chunks_tracked() -> int:
     """N of the field's tracked injection chunks (``injections_<F>_chunkKofN``), 0 if none."""
     ns = {
@@ -2105,7 +2117,7 @@ def merge_inject(n: int) -> Path:
             raise SystemExit(f"injection chunk {k + 1}/{n} {problem}")
         parts.append(tab)
     # rebuilt from rows, as an unchunked run: a chunk without vetted rows lacks those columns
-    rows = [{c: r[c] for c in p.colnames} for p in parts for r in p]
+    rows = [{c: r[c] for c in p.colnames} for p in map(unmask, parts) for r in p]
     tab = rows_to_table(rows, INJECT_FILL)
     tab.meta.update(parts[0].meta)
     tab.sort("inj")

@@ -19,9 +19,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (`results/w3_moa/vetting_gb4.json`). CDS XMatch worked (Gaia DR3 RP for 67 / 118). Contact sheet inspected: box and
   eclipse dips, variables and slow trends; caustic spikes only in the models. The first fit attempt stopped on a
   truncated `metadata.ipac.tar.gz` download (sha256 mismatch, same content-length upstream); the retry was clean.
-- **Next:** `inject` then `limit` and `combine` at the top of a run (`inject` writes only at the end; at gb3's
-  0.34 per s, 2,200 injections take ~110 min, longer than one routine slot, so it needs a long-lived session or a
-  chunked, resumable `inject`). `run-field` cannot be used for the fit stage here (it would refit all 118 as 1 of 1).
+- Run 5 (cloud, 19:07–19:45Z): `inject` is now chunked and resumable (`inject --chunk K/N`, `merge-inject --n N`;
+  tracked `results/w3_moa/injections_<F>_chunkKofN.ecsv.gz`, each carrying a SHA-256 of the seeded job list, so a
+  re-merged pre-screen cannot mix runs; `run-field` resumes the chunks; a chunk reads only its own carriers, 240 of
+  287). The seeded job list and the outcome per injection are unchanged; only the row order (now by job index) and the
+  new `inj` column differ. Chunk 1/4 tracked: 550 injections in 1,352 s (0.41 per s), 0 errors; W3 500 → 47 flagged
+  → 28 recovered; PSPL controls 0 / 50 flagged.
+- Failed approach: `pkill -f` on the injection also killed the harness shell that ran it (scripts/CLAUDE.md warns);
+  the first chunk-1 start was lost, ~3 min.
+- **Next:** `inject --field gb4 --procs 4 --chunk 2/4`, then 3/4 and 4/4 (~23 min each, one or two per routine slot,
+  detached with `setsid nohup`), then `merge-inject --n 4`, `limit`, `combine`. Remaining large fields (gb5, gb6, gb9,
+  gb10, gb14) can use the same chunking for injections.
 
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data

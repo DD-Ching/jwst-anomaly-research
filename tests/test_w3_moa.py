@@ -679,7 +679,8 @@ def test_merge_inject_joins_only_complete_matching_chunks(tmp_path, monkeypatch)
             "wall_time_s": 1.0}  # fmt: skip
 
     def chunk(k, idx, **over):
-        tab = Table({"inj": idx, "kind": ["W3"] * len(idx)}, meta={**meta, **over})
+        tab = Table({"inj": idx, "kind": ["W3"] * len(idx), "error": [""] * len(idx)},
+                    meta={**meta, **over})  # fmt: skip
         wm.w3.write_ecsv_gz(tab, tmp_path / f"injections_gb22_chunk{k}of2.ecsv.gz")
 
     with pytest.raises(SystemExit, match="missing injection chunk 1/2"):
@@ -701,3 +702,4 @@ def test_merge_inject_joins_only_complete_matching_chunks(tmp_path, monkeypatch)
     tab = Table.read(wm.merge_inject(2))
     assert list(tab["inj"]) == [0, 1, 2, 3, 4]
     assert tab.meta["chunk"] == "" and tab.meta["wall_time_s"] == 2.0
+    assert wm.no_error(tab).all()  # empty strings read back masked are filled, not lost
