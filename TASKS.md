@@ -26,7 +26,8 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    (spatially resolved JWST/KCWI) kinematics or new time-delay lenses.
 1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
    mismatch). **That limit covers undeformed twins only.** The S1 deformed-twin test (`docs/s1_deform/`, D-071
-   addendum 1) found that S1 has zero sensitivity at s ≠ 1. A stretch grid with step 1.05 plus a free per-band
+   addendum 1) found that S1's flagging never used the stretched similarity; it recovered 0 / 1,440 deformed
+   injections in that test set. A stretch grid with step 1.05 plus a free per-band
    scale (M2) recovers 18 % of deformed copies (21 % undeformed) at the same false-alarm rate; the hold-out half
    gave no candidate. Next: a non-degenerate null (the two-pulse shuffle is a fixed swap) and a full M2 re-screen
    with a deformed-twin limit; then CHIME/FRB Catalog 2 and TTE for short and faint bursts.

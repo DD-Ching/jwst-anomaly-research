@@ -21,9 +21,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Owner's link hypothesis** (short check):
   - 1405.3171 has virtual Euclidean wormholes, and fields **reduce** their density;
   - 1502.03809 is a visualisation;
-  - testable only as a mouth population (opacity plus other-side glow), which needs σ(λ), an exit kernel and n.
-- **Next:** a non-degenerate null, then a full M2 re-screen with a limit; the cosmic-opacity bound on the mouth
-  population (about 1 h).
+  - testable only as a mouth population, and only with a transfer treatment of photons removed from and injected
+    into each sightline. That needs σ(λ), an exit kernel and n. On hold.
+- **Next:** calibration and a full M2 re-screen (next entry).
 
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data

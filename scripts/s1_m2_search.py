@@ -1,12 +1,13 @@
 """S1 M2 search: calibration of the consistency test and the false-candidate rate, then one frozen
 full-catalogue re-screen (docs/s1_deform/README.md section 8).
 
-  python scripts/s1_m2_search.py calibrate [--cpu 4]   -> results/s1_m2/calibration.json
-  python scripts/s1_m2_search.py search    [--cpu 4]   -> results/s1_m2/search.json (needs frozen.json)
-  python scripts/s1_m2_search.py efficiency [--cpu 4]  -> results/s1_m2/efficiency.json (frozen.json)
+  python scripts/s1_m2_search.py calibrate [--cpu 4]  -> results/s1_m2/calibration_*.json
+  python scripts/s1_m2_search.py search [--cpu 4]     -> results/s1_m2/search.json (frozen.json)
+  python scripts/s1_m2_search.py efficiency [--cpu 4] -> results/s1_m2/efficiency.json
 
 M2 statistic: max over a log-uniform stretch grid (ratio 1.05 on [0.5, 2]) of the multi-band
-cross-correlation with a free per-band scale; consistency: per-band chi2 at the best stretch and lag.
+cross-correlation with a free per-band scale; consistency: per-band chi2 at a locally refined
+stretch and lag.
 Injected twins are simulated; recovering them measures search capability only.
 """
 
@@ -27,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 import s1_deform as sd  # noqa: E402
+
 from jwst_anomaly import burst_twins as bt  # noqa: E402
 
 OUT = ROOT / "results" / "s1_m2"
@@ -64,12 +66,12 @@ def m2_only(x, ex, kx, y, ey, ky, with_chi2: bool = False):
     if abs(kx - ky) > sd.MAX_DK_NEW:
         return (np.nan, np.nan, np.nan) if with_chi2 else (np.nan, np.nan)
     x, ex, y, ey = sd.to_common(x, ex, kx, y, ey, ky)
-    best, sb, lb = -1.0, 1.0, 0
+    best, sb = -1.0, 1.0
     for s in sd.S_GRID:
         ys = y if s == 1.0 else bt.stretch(y, ey, s)[0]
-        r, lag = sd.rho_free(x, ys)
+        r, _ = sd.rho_free(x, ys)
         if r > best:
-            best, sb, lb = r, s, lag
+            best, sb = r, s
     if not with_chi2:
         return best, sb
     return best, sb, refined_p(x, ex, y, ey, sb)[0]
@@ -79,7 +81,7 @@ _scores_orig = sd.scores
 
 
 def _scores_refined(x, ex, kx, y, ey, ky, with_chi2=False):
-    """sd.scores with M2's chi2 p (index 7) replaced by the refined-stretch p (calibrate/efficiency)."""
+    """sd.scores with M2's chi2 p (index 7) replaced by the refined-stretch p."""
     r = _scores_orig(x, ex, kx, y, ey, ky, with_chi2)
     if not with_chi2 or not np.isfinite(r[2]):
         return r
@@ -115,7 +117,9 @@ def setup():
     ra, dec, err = (np.array([b[c] for b in B]) for c in ("ra", "dec", "err"))
     sep = bt.angsep_deg(ra[:, None], dec[:, None], ra[None], dec[None])
     incons = bt.position_inconsistent(sep, err[:, None], err[None], P.sys_deg, P.pos_nsigma)
-    allowed = incons & elig[:, None] & elig[None] & (np.abs(ks[:, None] - ks[None]) <= sd.MAX_DK_NEW)
+    allowed = (
+        incons & elig[:, None] & elig[None] & (np.abs(ks[:, None] - ks[None]) <= sd.MAX_DK_NEW)
+    )
     np.fill_diagonal(allowed, False)
     rng = np.random.default_rng(1)  # same split as s1_deform (pre-registered seed)
     perm = rng.permutation(np.flatnonzero(elig))
@@ -165,7 +169,7 @@ def calibrate(a):
     k = max(int(round(sd.FAR * bg.shape[0])) - 1, 0)
     thr = float(v[k])
     out["calibration_half"] = {"pairs": int(bg.shape[0]), "threshold_m2": thr}
-    # 2. consistency test on simulated true pairs (independent noise), all eligible bursts as templates
+    # 2. consistency test on simulated true pairs (independent noise; all eligible templates)
     inj = run_injections(B, np.flatnonzero(elig), incons, None, 777, a.per_cell, a.cpu)
     above = (inj["elig"] > 0) & (np.nan_to_num(inj["m2"], nan=-1) > thr)
     p = inj["p2"][above]
@@ -175,8 +179,12 @@ def calibrate(a):
         "n_eligible": int((inj["elig"] > 0).sum()),
         "n_above_threshold": int(above.sum()),
         "frac_p_below_1e-3": float((p < 1e-3).mean()),
-        "frac_p_below_1e-3_s0_eq_1": float((p[st == 1.0] < 1e-3).mean()) if (st == 1.0).any() else None,
-        "frac_p_below_1e-3_s0_ne_1": float((p[st != 1.0] < 1e-3).mean()) if (st != 1.0).any() else None,
+        "frac_p_below_1e-3_s0_eq_1": float((p[st == 1.0] < 1e-3).mean())
+        if (st == 1.0).any()
+        else None,
+        "frac_p_below_1e-3_s0_ne_1": float((p[st != 1.0] < 1e-3).mean())
+        if (st != 1.0).any()
+        else None,
         "p_quantiles": {q: float(np.quantile(p, q)) for q in (0.005, 0.01, 0.05, 0.1, 0.5)},
         "frac_p_below_1e-3_by_ratio": {
             str(rt): float((p[inj["ratio"][above] == rt] < 1e-3).mean())
@@ -185,7 +193,7 @@ def calibrate(a):
         },
         "ks_uniform_p": float(__import__("scipy").stats.kstest(p, "uniform").pvalue),
     }
-    # declared rule (docs/s1_m2/calibration_plan.md): c = min(1e-3, 5th percentile of refined true-pair p)
+    # declared rule (docs/s1_m2/calibration_plan.md): c = min(1e-3, q05 of refined true-pair p)
     c = float(min(1e-3, np.quantile(p, 0.05)))
     out["consistency_cut"] = c
     # 3. unrelated real pairs (calibration half): chi2 pass rate near and above the threshold
@@ -194,7 +202,8 @@ def calibrate(a):
     g = {"B": B}
     _init(g)
     with cf.ProcessPoolExecutor(a.cpu, initializer=_init, initargs=(g,)) as pool:
-        res = list(pool.map(_chi2_job, [(int(bg[q, 0]), int(bg[q, 1])) for q in top], chunksize=10))
+        jobs = [(int(bg[q, 0]), int(bg[q, 1])) for q in top]
+        res = list(pool.map(_chi2_job, jobs, chunksize=10))
     pv = np.array([r[2] for r in res])
     dtd = np.array([abs(B[int(bg[q, 0])]["mjd"] - B[int(bg[q, 1])]["mjd"]) for q in top])
     passed = (pv >= c) & (dtd >= 1.0)
@@ -204,8 +213,14 @@ def calibrate(a):
         "m2_range": [float(bg[top[-1], 2]), float(bg[top[0], 2])],
         "pass_consistency_and_delay": int(passed.sum()),
         "pass_top_100": int(passed[:100].sum()),
-        "pass_rate_upper95": float(3.0 / top.size if passed.sum() == 0 else (passed.sum() + 1.645 * math.sqrt(passed.sum())) / top.size),
-        "distinct_bursts_in_top": int(len(set(bg[top, 0].astype(int)) | set(bg[top, 1].astype(int)))),
+        "pass_rate_upper95": float(
+            3.0 / top.size
+            if passed.sum() == 0
+            else (passed.sum() + 1.645 * math.sqrt(passed.sum())) / top.size
+        ),
+        "distinct_bursts_in_top": int(
+            len(set(bg[top, 0].astype(int)) | set(bg[top, 1].astype(int)))
+        ),
     }
     out["runtime_s"] = round(time.time() - t0, 1)
     OUT.mkdir(parents=True, exist_ok=True)
@@ -233,17 +248,22 @@ def search(a):
         "eligible_bursts_ge2_pulses": int(elig.sum()),
         "eligible_pairs": int(e2[iu].sum()),
         "excluded_position_consistent": int((e2 & ~incons)[iu].sum()),
-        "excluded_dk_gt2": int((e2 & incons & (np.abs(ks[:, None] - ks[None]) > sd.MAX_DK_NEW))[iu].sum()),
+        "excluded_dk_gt2": int(
+            (e2 & incons & (np.abs(ks[:, None] - ks[None]) > sd.MAX_DK_NEW))[iu].sum()
+        ),
         "pairs_scored": int(allowed[iu].sum()),
         "pairs_cal_cal": int(allowed[np.ix_(cal, cal)][np.triu_indices(cal.size, 1)].sum()),
         "pairs_val_val": int(allowed[np.ix_(val, val)][np.triu_indices(val.size, 1)].sum()),
     }
-    cover["pairs_cross_half"] = cover["pairs_scored"] - cover["pairs_cal_cal"] - cover["pairs_val_val"]
+    cover["pairs_cross_half"] = (
+        cover["pairs_scored"] - cover["pairs_cal_cal"] - cover["pairs_val_val"]
+    )
     bg = background(B, allowed, np.flatnonzero(elig), a.cpu)
     sel = np.flatnonzero(np.nan_to_num(bg[:, 2], nan=-np.inf) > fz["threshold_m2"])
     g = {"B": B}
     with cf.ProcessPoolExecutor(a.cpu, initializer=_init, initargs=(g,)) as pool:
-        res = list(pool.map(_chi2_job, [(int(bg[q, 0]), int(bg[q, 1])) for q in sel], chunksize=4))
+        jobs = [(int(bg[q, 0]), int(bg[q, 1])) for q in sel]
+        res = list(pool.map(_chi2_job, jobs, chunksize=4))
     flagged, cands = [], []
     for q, r in zip(sel, res, strict=True):
         i, j = int(bg[q, 0]), int(bg[q, 1])
@@ -288,17 +308,35 @@ def search(a):
         "runtime_s": round(time.time() - t0, 1),
     }
     (OUT / "search.json").write_text(json.dumps(out, indent=1) + "\n")
-    print(json.dumps({k: out[k] for k in ("coverage", "flagged_above_threshold", "expected_flagged_at_far", "candidates", "candidate_groups")}, indent=1))
+    print(
+        json.dumps(
+            {
+                k: out[k]
+                for k in (
+                    "coverage",
+                    "flagged_above_threshold",
+                    "expected_flagged_at_far",
+                    "candidates",
+                    "candidate_groups",
+                )
+            },
+            indent=1,
+        )
+    )
 
 
 # ------------------------------------------------------------------------------------ efficiency
 def efficiency(a):
     fz = json.loads((OUT / "frozen.json").read_text())
     cat, B, elig, ks, sep, incons, allowed, cal, val = setup()
-    inj = run_injections(B, np.flatnonzero(elig), incons, None, fz["efficiency_seed"], a.per_cell, a.cpu)
+    inj = run_injections(
+        B, np.flatnonzero(elig), incons, None, fz["efficiency_seed"], a.per_cell, a.cpu
+    )
     el = inj["elig"] > 0
     rec = el & (np.nan_to_num(inj["m2"], nan=-1) > fz["threshold_m2"])
-    rec &= (np.nan_to_num(inj["p2"]) >= fz["consistency_cut"]) & (inj["dtd"] >= fz["min_delay_days"])
+    rec &= (np.nan_to_num(inj["p2"]) >= fz["consistency_cut"]) & (
+        inj["dtd"] >= fz["min_delay_days"]
+    )
     rows = []
     for s0 in (None,) + sd.S_INJ:
         for ratio in (None,) + sd.RATIOS:

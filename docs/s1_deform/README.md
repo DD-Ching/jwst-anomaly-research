@@ -72,7 +72,10 @@ searches give unreliable constraints. S1 shares its "undeformed" assumption, so 
 - **Where M0 loses them** (ratio 1, eligible copies): at the ρ(s = 1) threshold.
   - The median ρ(s = 1) is 0.70–0.90 for deformed copies, against 0.96 at s0 = 1.
   - The |Δk| cut loses only 1 copy, and χ² loses a few.
-  - Eligibility (≥ 2 pulses) loses about 25–45 % for every method alike.
+  - Selection (≥ 2 pulses for both members and an emulated window) passes 56–78 % of copies at ratio 1, but only
+    26–48 % over all brightness ratios. The JSON field `eligible` is the **pass** fraction. Selection is the same
+    for all three methods, so the differences between methods arise after it (§8 gives selection rate, recovery
+    after selection and total recovery separately).
 - **Pre-registered decision rules:**
   - "Blind spot confirmed": M0 recovers 0 / 36 at |ln s0| ≥ ln 1.41 versus 12 / 36 at s0 = 1 (ratio 1). **Met.**
   - "Improvement": M1 and M2 recover more deformed copies at the same rate (74 and 117 vs 0); s0 = 1 is 26 vs 29,
@@ -110,10 +113,20 @@ searches give unreliable constraints. S1 shares its "undeformed" assumption, so 
 ## 5. Conclusions
 
 - **Search capability (method result, not physics):**
-  - Before: S1 had zero sensitivity to same-source copies stretched by 15 % or more, at any brightness. Its D-071
-    limit applies only to undeformed twins.
-  - Now: a stretch grid in the flagging statistic, a free per-band scale and a 5 % grid step recover about 18 % of
-    deformed injections, close to the 21 % for undeformed ones, at the same per-pair false-alarm rate.
+  - **Code-level finding** (holds generally): S1's candidate selection never used the stretched similarity. Flagging
+    and χ² are s = 1 only, and the stretch grid is display-only.
+  - **In this injection set:** the existing chain recovered **0 / 1,440** deformed copies (s0 ≠ 1, under this
+    stretch, brightness, spectral, noise and selection model). The D-071 limit applies only to undeformed twins.
+  - With a stretch grid in the flagging statistic, a free per-band scale and a 5 % grid step, about 18 % of the
+    deformed injections were recovered (21 % undeformed) at the same per-pair false-alarm rate. **That 18 % holds
+    only for these assumptions:**
+    - s0 ∈ [0.5, 2];
+    - a Band spectrum with α = −1, β = −2.3 and E_peak ∈ {100, 200, 400} keV;
+    - brightness ratios 1–0.1;
+    - 15 % gain jitter;
+    - the slot-burst noise;
+    - S1's selection.
+    It is not a general efficiency for every same-source signal.
 - **Real data:** no candidate in the hold-out half.
 - **Not done:**
   - the calibration half's real pairs were not searched;
@@ -133,14 +146,17 @@ may see the other side's scene rather than recognising "light in, light out".
     configurations, not solutions that carry signals.
   - They compute the Euclidean scalar Green function (G = N(k)/k², Eqs. 10, 17) and its shift in an external
     current (Eq. 22).
-  - Their result is that external fields **suppress** the virtual-wormhole density (δn < 0, Eq. 23). That is the
-    opposite of "a field creates a link".
+  - Within their model, a dilute gas of Euclidean virtual wormholes coupled to a massless scalar through the bias
+    kernel σ² of Eq. 22 (left unspecified), with an external current J, they find δn < 0 (Eq. 23): the external
+    field **reduces** the virtual-wormhole density. That result holds for that model and that coupling only. It is
+    not a general statement about fields and wormholes, but it does not support "a field creates a link".
   - They give no falsifiable formula; their remarks on observables (a shift in Λ, a speed of light slightly above
     c in a field) are qualitative.
 - **James, von Tunzelmann, Franklin & Thorne, arXiv:1502.03809** (Am. J. Phys. 83, 486).
-  - Ray tracing through a **classical traversable** wormhole (Ellis / "Dneg"). The images inside the mouth show the
-    **other side's sky**, and an Einstein ring appears.
-  - The setup assumes no constraint from physical laws, and it is a visualisation, not a prediction.
+  - A **conditional optical calculation for a specified geometry**: null geodesics through a given classical
+    traversable wormhole metric (Ellis / "Dneg" with chosen ρ, a and W). Within that geometry, images inside the mouth
+    show the **other side's sky**, and an Einstein ring appears.
+  - It assumes the metric exists and says nothing about how such a geometry is sourced or how common it is.
 - **Already in this repository:** macroscopic-mouth signatures (W2 demagnification, W4 gutters;
   `docs/exotic_lensing.md`) and the Ellis/W3 limits.
 
@@ -148,12 +164,16 @@ may see the other side's scene rather than recognising "light in, light out".
 a **population** of mouths.
 - Suppose mouths with cross-section σ(λ) and number density n reroute photons to an exit drawn from an exit
   kernel K(x_out | x_in).
-- Then a source at distance L is dimmed by a factor e^(−nσL) without a thermal re-emission spectrum.
-- A sky glow with the spectrum of the **other side's** sky is added.
-- The dimming is achromatic for mouths much larger than λ and suppressed for mouths much smaller than λ.
-- **Falsifiable against existing data:** cosmic-opacity and distance-duality limits (τ ≲ 0.1 to z ~ 1 from SN Ia
-  versus H(z), BAO and cluster distances; to be checked) constrain nσ. Diffuse-background limits constrain the
-  glow.
+- Rerouting is **not** pure absorption. Photons leave a line of sight (mouths on it send them elsewhere) and also
+  **enter** it (photons from the other side's sources exit into it). The direction and frequency maps of the exit
+  kernel decide the net effect.
+- A treatment therefore has to balance removal against injection along each sightline, including the other
+  side's radiation field and the angular and frequency mapping. Applying e^(−nσL) alone is wrong. In the limit
+  of an isotropic, statistically identical other side, the losses and gains can cancel for diffuse light while
+  imaging is still blurred.
+- **Possibly falsifiable against existing data** (not computed): image blurring or decorrelation of distant
+  compact sources, distance-duality and cosmic-opacity tests, and diffuse-background limits. Each needs the full
+  transfer equation, not an absorption factor.
 
 **What is missing for a definition.** Three quantities, without which nothing is testable: σ(λ), the exit kernel
 K, and n.
@@ -166,10 +186,9 @@ K, and n.
 - Virtual (Euclidean) wormholes do not carry signals. A population of traversable mouths needs a source of
   exotic stress-energy (rounds 4–7).
 
-**One next step** (not started): write σ(λ) and K for the Ellis mouth from 1502.03809's ray map, and turn the
-cosmic-opacity bound into a limit on n·σ as a function of mouth size. This is about 1 h of calculation. If even
-the maximal allowed n·σ gives no observable glow or blurring, the population version is closed for that size
-range.
+**One next step** (not started, owner: on hold): write σ(λ) and K for the Ellis mouth from 1502.03809's ray map,
+then the radiative-transfer balance (removal plus injection) along a sightline. Only after that can it be compared
+with blurring or opacity data.
 
 ## 7. Next actions (owner decides)
 
@@ -178,4 +197,5 @@ range.
    - Stop if no pair passes the chain at a properly estimated family-wise rate.
    - Any pair that does pass goes to `/vet-candidate` and a TTE spectral check (§4).
 2. A deformed-twin rate limit from the full screen, with these efficiencies. Cheap once step 1 is done.
-3. The cosmic-opacity bound on the owner's mouth-population idea (§6). About 1 h; it is independent.
+3. The owner's mouth-population idea (§6) is on hold. It needs a transfer-equation treatment, not an absorption
+   factor.
