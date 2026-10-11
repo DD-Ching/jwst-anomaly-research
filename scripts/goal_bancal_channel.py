@@ -422,9 +422,9 @@ def r_fraction(r: float, beta: float, cos_angle: float, window: float, d: float 
     g = 1.0 / math.sqrt(1.0 - beta * beta)
     bpar = beta * cos_angle
     bperp = beta * math.sqrt(max(0.0, 1.0 - cos_angle**2))
-    # baseline along x, frame velocity in the x-y plane
+    # B -> C baseline along +x, frame velocity in the x-y plane; (u, dr) is event B minus event C
     bvec = np.array([bpar, bperp])
-    dr = np.array([d, 0.0])
+    dr = np.array([-d, 0.0])
 
     def ok(u):
         # event separation (u, dr) in the lab; frame moving with velocity bvec
@@ -436,13 +436,15 @@ def r_fraction(r: float, beta: float, cos_angle: float, window: float, d: float 
             drp = dr
         return abs(dtp) < math.hypot(*drp) / r
 
-    # B ~ C holds on an interval of u around u0 = bpar d (where dt' = 0); find its ends
-    u0 = bpar * d
+    # B ~ C holds on an interval of u around u0 = beta . dr (where dt' = 0); find its ends
+    u0 = float(bvec @ dr)
 
     def edge(sign):
-        lo, hi = 0.0, 2.0 * d
         if not ok(u0):
             return 0.0
+        lo, hi = 0.0, 2.0 * d
+        while ok(u0 + sign * hi):
+            hi *= 2.0
         for _ in range(200):
             mid = 0.5 * (lo + hi)
             if ok(u0 + sign * mid):
@@ -464,7 +466,9 @@ def r_fraction(r: float, beta: float, cos_angle: float, window: float, d: float 
 
 
 def worst_r_fraction(r: float, beta_max: float, window: float, n_angle: int = 181) -> dict:
-    """Worst case over frame speeds 0..beta_max and directions (cos angle in [-1, 1])."""
+    """Worst case over frame speeds 0..beta_max and directions (cos angle in [-1, 1]) on a grid
+    that includes beta_max and cos = +-1, where the simultaneity shift beta . d is largest; the
+    tests check that random interior frames never fall below it."""
     worst = (math.inf, None, None)
     for bt in np.linspace(0.0, beta_max, 9):
         for ca in np.linspace(-1.0, 1.0, n_angle):
