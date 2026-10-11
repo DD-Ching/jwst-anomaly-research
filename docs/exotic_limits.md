@@ -1214,6 +1214,15 @@ conservative column uses the low N_s.
   vetting keeps 113 / 205 flagged W3 injections (55 %). Pre-screen pass 3.5–18 %. PSPL controls: 0 / 40 per cell
   called W3. Every cell has ≥ 2 recoveries (t_E = 300 d: 2 / 2).
 
+- **gb8** (new field; 120,726 light curves; N_s = 2.23 × 10⁷ from Nunota et al. 2024 Table 1, 78 / 80 subfields;
+  quiet χ²/dof 95th percentile 4.0): 2,256 shape passes, 77 off shared epochs, 73 flags, **0 survive** (reproduced
+  by a second run's re-vet); contact sheet inspected (box and eclipse dips, slow variables, sparsely sampled
+  features; caustic spikes only in the models, never in the data). First failing test: repeated deficit 32, eclipse
+  dip 17, smooth dip 6, bracketing 5, residual deficit 5, fit domain 2, χ² cap 2, neighbour 2, step + ramp 1,
+  feature sampling 1. Gaia DR3 RP reference for 43 / 73 flags. Injections: vetting keeps 122 / 208 flagged W3
+  injections (59 %). Pre-screen pass 3.5–15.5 %. PSPL controls: 0 / 40 per cell called W3. Every cell has ≥ 3
+  recoveries (t_E = 300 d: 3 / 3).
+
 Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every field):
 
 | t_E (d) | M (M☉, model) | gb22 rec. / 200 | gb22 Γ₉₅ per star per yr (conservative) | gb21 rec. / 200 | gb21 Γ₉₅ per star per yr |
@@ -1334,6 +1343,16 @@ gb1 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb1.ecsv`):
 | 100 | 1.8 | 11 / 18 | 3.0 / 1.8 × 10⁻⁷ |
 | 300 | 17 | 2 / 2 | 1.7 / 1.7 × 10⁻⁶ |
 
+gb8 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb8.ecsv`):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 5 / 10 | 6.3 / 3.1 × 10⁻⁷ |
+| 10 | 0.018 | 17 / 17 | 1.8 / 1.8 × 10⁻⁷ |
+| 30 | 0.17 | 17 / 17 | 1.8 / 1.8 × 10⁻⁷ |
+| 100 | 1.8 | 18 / 15 | 1.7 / 2.1 × 10⁻⁷ |
+| 300 | 17 | 3 / 3 | 1.0 / 1.0 × 10⁻⁶ |
+
 Cloud runs of gb22, gb21, gb20, gb19, gb16, gb11 and gb7: the batched CDS XMatch for the Gaia DR3 RP reference failed on all 3 attempts
 ("Too many jobs"; a later retry gave a truncated, non-VOTable reply through the proxy), so `exotic_in_domain` used the
 lenient default reference (MOA-Red 14.2) on all 276 real flags (none has a DoPHOT magnitude). This only loosens the
@@ -1352,32 +1371,33 @@ sheets inspected). The tracked `vetting_gbN.json` files now carry the working `g
 
 The t_E = 300 d, ρ = 0.1 cell rests on one recovered injection (efficiency uncertain by ~100 %); `combine` should
 not let a single field's one-recovery cell dominate the combined 300-d limit. It does not: the combined table's
-`max_field_share` (one field's share of Σ N_s T ε) is ≤ 0.21 in every cell (below).
+`max_field_share` (one field's share of Σ N_s T ε) is ≤ 0.19 in every cell (below).
 
-### Combined limit, thirteen fields (CHAIN_VERSION 2026-10-10.1)
+### Combined limit, fourteen fields (CHAIN_VERSION 2026-10-10.1)
 
-`w3_moa.py combine` → `results/w3_moa/limits_combined.ecsv` (derived): gb1, gb2, gb7, gb11, gb12, gb15–gb22, 0
-survivors in every field, Σ N_s ≈ 1.76 × 10⁸ monitored stars (Nunota et al. 2024 Table 1; gb22 from the model count,
-ASSUMPTION), Σ N_s T ≈ 1.51 × 10⁹ star-years. Γ₉₅ = 3 / Σ_f N_s,f T ε_f per cell. Masses are a **model_prediction**
+`w3_moa.py combine` → `results/w3_moa/limits_combined.ecsv` (derived): gb1, gb2, gb7, gb8, gb11, gb12, gb15–gb22, 0
+survivors in every field, Σ N_s ≈ 1.98 × 10⁸ monitored stars (Nunota et al. 2024 Table 1; gb22 from the model count,
+ASSUMPTION), Σ N_s T ≈ 1.70 × 10⁹ star-years. Γ₉₅ = 3 / Σ_f N_s,f T ε_f per cell. Masses are a **model_prediction**
 (n = 1, D_L = 4 kpc, D_S = 8 kpc, μ_rel = 5 mas/yr). The relative uncertainty of Σ N_s T ε from injection counting
-(binomial, ≈ 1/√n_rec per field, summed) is 8–18 % (eleven fields; gb2 and gb1 add 2–20 recoveries per cell); the
-conservative N_s range moves the limits by < 2 %.
+(binomial, ≈ 1/√n_rec per field, summed) is 8–18 % (eleven fields; gb2, gb1 and gb8 add 2–20 recoveries per cell);
+the conservative N_s range moves the limits by < 2 %.
 
-| t_E (d) | M (M☉, model) | rec. / 2,600 (ρ = 0.01 / 0.1) | max field share | Γ₉₅ per star per yr (ρ = 0.01 / 0.1) |
+| t_E (d) | M (M☉, model) | rec. / 2,800 (ρ = 0.01 / 0.1) | max field share | Γ₉₅ per star per yr (ρ = 0.01 / 0.1) |
 |---|---|---|---|---|
-| 3 | 0.0017 | 56 / 74 | 0.21 / 0.16 | 8.9 / 6.6 × 10⁻⁸ |
-| 10 | 0.018 | 145 / 171 | 0.17 / 0.16 | 3.5 / 2.9 × 10⁻⁸ |
-| 30 | 0.17 | 211 / 155 | 0.14 / 0.14 | 2.4 / 3.4 × 10⁻⁸ |
-| 100 | 1.8 | 143 / 164 | 0.12 / 0.17 | 3.5 / 3.1 × 10⁻⁸ |
-| 300 | 17 | 55 / 40 | 0.14 / 0.14 | 1.0 / 1.4 × 10⁻⁷ |
+| 3 | 0.0017 | 61 / 84 | 0.19 / 0.17 | 7.8 / 5.4 × 10⁻⁸ |
+| 10 | 0.018 | 162 / 188 | 0.16 / 0.14 | 2.9 / 2.5 × 10⁻⁸ |
+| 30 | 0.17 | 228 / 172 | 0.13 / 0.15 | 2.1 / 2.8 × 10⁻⁸ |
+| 100 | 1.8 | 161 / 179 | 0.17 / 0.15 | 2.9 / 2.7 × 10⁻⁸ |
+| 300 | 17 | 58 / 43 | 0.13 / 0.13 | 9.4 × 10⁻⁸ / 1.2 × 10⁻⁷ |
 
-Twelve fields (before gb1): 2.8 × 10⁻⁸–1.5 × 10⁻⁷; eleven fields (before gb2): 3.2 × 10⁻⁸–1.8 × 10⁻⁷. The largest
-field share (gb1 in the t_E = 3 d, ρ = 0.01 cell, 0.21) rests on 8 recoveries. Scope: an upper limit on the rate of
-W3-shaped events (flux vanishing between caustic spikes) per monitored bulge star per year in these thirteen fields,
-for the injected shapes and the vetting chain of D-068 + addendum. It is not a limit on wormhole or negative-mass
-abundance until a model maps abundance to this event rate. The lenient-reference fields (gb7, gb11, gb16, gb19–gb22,
-above) affect only real-flag vetting, not the injections, so the limit stands. gb13 (one chain survivor explained
-outside the chain, #145, waiting on the owner) and the other Nunota et al. 2024 fields are not included.
+Thirteen fields (before gb8): 2.4 × 10⁻⁸–1.4 × 10⁻⁷; twelve fields (before gb1): 2.8 × 10⁻⁸–1.5 × 10⁻⁷; eleven
+fields (before gb2): 3.2 × 10⁻⁸–1.8 × 10⁻⁷. The largest field share is 0.19 (t_E = 3 d, ρ = 0.01). Scope: an upper
+limit on the rate of W3-shaped events (flux vanishing between caustic spikes) per monitored bulge star per year in
+these fourteen fields, for the injected shapes and the vetting chain of D-068 + addendum. It is not a limit on
+wormhole or negative-mass abundance until a model maps abundance to this event rate. The lenient-reference fields
+(gb7, gb11, gb16, gb19–gb22, above) affect only real-flag vetting, not the injections, so the limit stands. gb13 (one
+chain survivor explained outside the chain, #145, waiting on the owner) and the other Nunota et al. 2024 fields are
+not included.
 
 ### All 22 fields (next)
 
