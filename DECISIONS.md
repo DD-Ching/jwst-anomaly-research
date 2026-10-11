@@ -4353,3 +4353,23 @@ S > 7 or setting dependence in R trials.
 - A second-order or non-linear khronometric result with a matter-only source appears.
 - A scheme reading after the fronts arrive is proposed, or a non-linear treatment of the α2 v²Φ ≫ 1 region
   appears.
+
+## D-TBD Goal round 10: external search finds no latency route; NIST 2015 no-signalling check is null (2026-10-11)
+
+**Decision (proposal):**
+- Do not adopt any external warp or wormhole construction as a communication candidate. Every one found is
+  subluminal, disputed, slower than the outside path, or a quantum simulation.
+- Reuse warpax (all-observer energy conditions) if a metric must be checked.
+- Record the NIST 2015 no-signalling bound (|δ| ≤ 0.8–2.0 % of the remote click probability; ≤ 2.3 × 10⁻⁸
+  bits/trial) as the measured capacity limit of the entanglement send/receive step for that apparatus.
+
+**Alternatives rejected:**
+- Counting tool completions, simulations or the "wormhole teleportation" experiment as channel evidence.
+- Treating the single XOR_2 3.1σ shift as a signal. It fails the pre-registered replication rule.
+
+**Evidence:** docs/goal_round10/README.md §§1–3; `results/goal_round10/nist_nosignal.json`.
+
+**Revisit if:**
+- a time-tag check of XOR_2 shows a setting-dependent shift that survives crosstalk controls;
+- the sidereal test (H-R10) or the Delft data show a shift;
+- a published positive-energy construction with a latency advantage appears.

@@ -2,6 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: Goal round 10: external search and one minimal verification; NIST 2015 no-signalling null
+- Owner brief: search external tools, papers, corrections and public data for anything that closes a gap in the
+  communication chain; compare up to three opportunities; run one cheap verification. Write-up
+  `docs/goal_round10/README.md`; pre-registration `docs/goal_round10/preregistration.md`; code
+  `scripts/goal_nist_nosignal.py`; results `results/goal_round10/nist_nosignal.json`.
+- **Search** (three read-only subagents): no external result gives a latency advantage over light.
+  - Physical warp shells (Fuchs et al. 2405.02709) are subluminal and disputed (2602.16495).
+  - Known-matter wormholes fail or are slower than the outside path.
+  - "Wormhole teleportation" is a quantum simulation.
+  - The tool to reuse is warpax 1.5.1 (all-observer energy conditions; MIT).
+- **Verification:** NIST 2015 no-signalling, pre-registered.
+  - Independent G and Fisher tests reproduce NIST's diagnostics exactly (|Δz| ≤ 3 × 10⁻⁴, 120 cells).
+  - Primary family (24 tests): one hit, XOR_2 Alice | a, z = 3.13 (p = 0.0017), not replicated in any other run.
+    Fisher combined p = 0.39. Null under the pre-registered rule.
+  - Bound: |δ| ≤ 0.8–2.0 % of the remote click probability, ≤ 2.3 × 10⁻⁸ bits/trial (≤ 2.2 × 10⁻³ bits/s).
+  - Post hoc: the XOR_2 shift persists across both time segments of that run; the cross-run heterogeneity test
+    gives p = 0.12. Flagged, not claimed.
+- **Failed approach:** reading the trial totals from a fixed spreadsheet row. The layout differs between files, so
+  totals are rebuilt from the 16 counts and cross-checked.
+- **Next (owner decides, nothing started):** XOR_2 time-tag crosstalk check (~1 h); H-R10 sidereal-gated
+  signalling test (~2–3 h); Delft cross-check.
+
 ## 2026-10-11: Goal round 9: no next executable unit on current inputs; khronometric "instantaneous" term absent from the linear matter response at c13 = 0, present (model-internal) at c13 ≠ 0
 - Owner brief: choose one worthwhile physics problem from the whole project, and run a minimal check only if a
   differing prediction, data and a light test all exist. Revised after owner review, with a bounded P3 check.

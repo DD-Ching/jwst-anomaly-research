@@ -1336,3 +1336,25 @@ Inequalities* (Springer, 2017); Wald & Yurtsever; Flanagan & Wald.
   bounds, Eqs. 48, 49, 53 and 118).
 - Bhattacharyya, Coates, Colombo & Sotiriou, "Evolution and spherical collapse in Einstein-æther theory and Hořava
   gravity", arXiv:1512.04899v2 [b8343d3b…] (§§II, IV).
+
+## Goal round 10 (2026-10-11; docs/goal_round10/README.md)
+
+**Data used:**
+- NIST belltestdata (Shalm et al., PRL 115, 250402, 2015), s3 bucket `nist-belltestdata`, `belldata/Peter's Data
+  Calculations/Diagnostic Statistics/*.xlsx` (six files; sha256 prefixes in `results/goal_round10/nist_nosignal.json`).
+  Also `3 Classical XORs/00_25_..._ClassicalRNGXOR_2...v4pc_ALL.xlsx` (post-hoc time segments) and the folder
+  description PDFs. Accessed 2026-10-11. NIST public-service licence; attribution required, modifications noted.
+
+**Read** (abstracts or PDFs; via survey subagents, key facts re-checked where used):
+- WarpFactory, github.com/NerdsWithAttitudes/WarpFactory (MIT; last push 2024-05-24); Helmerich et al.,
+  arXiv:2404.03095.
+- warpax 1.5.1, github.com/anindex/warpax (MIT; 2026-09-24); Le, arXiv:2602.18023v6.
+- Fuchs et al., arXiv:2405.02709 (CQG 41, 095013); Barzegar, Buchert & Vigneron, arXiv:2602.16495.
+- Maldacena & Milekhin, arXiv:2008.06618; Danielson et al., arXiv:2108.13361; Kain, arXiv:2305.11217,
+  arXiv:2308.00049; Weinbaum, arXiv:2607.28738.
+- Jafferis et al., Nature 612, 51 (2022); Kobrin, Schuster & Yao, arXiv:2302.07897.
+- Rybotycki et al., arXiv:2409.11348; Gill, arXiv:2209.00702v4; Adenier & Khrennikov, arXiv:1606.00784; Sołtan,
+  Dopierała & Bednorz, arXiv:1906.05503.
+- Broz et al., arXiv:2206.12976 (PRL 130, 200201); Bielińska, Eckstein & Horodecki, arXiv:2412.20854.
+- LVK GWTC-4 tests of GR, arXiv:2603.19019, arXiv:2603.19020; LHAASO, arXiv:2402.06009.
+- Garattini & Zatrimaylov, arXiv:2502.13153; Rodal, arXiv:2512.18008; Le, arXiv:2606.22531.
