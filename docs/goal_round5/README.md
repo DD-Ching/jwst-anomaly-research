@@ -53,7 +53,7 @@ Each makes an explicit claim of the effect:
 | **1. Equations and geometry** | Geometry is specified first (ER Eq. 13); the stress tensor follows from Einstein's equations (ER Eq. 14, reproduced here). **No matter Lagrangian produces it.** Inside the tube space is flat with opened light cones (Fig. 2). Both ends are in the users' own Minkowski space. | QED via the Euler–Heisenberg action; flat space with plates; same space. The effective metric (LSV Eq. 3.4) applies to propagation **normal to the plates** only. | Einstein–Maxwell–plasma is claimed, but "it is now a matter of finding the right configuration" (§4 end). **No self-consistent source is given.** The soliton is eternal and moves uniformly in one space. |
 | **2. Timing, same clocks** [derived] | Earth/star rest frame, distance D. The tube is laid by an outbound trip at ≤ c, so it exists only for t > x: **nothing is early before t = D**. Afterwards a message chosen at the star at t_s reaches Earth at t_s + D(1 − η), against t_s + D for light: **an advance of ηD (≤ 2D)**. Earth → star gets **no advance**. Two tubes for two-way use allow closed timelike curves (ER §4). | Across one gap a, the advance is a(1 − (1 + ξ)^−1/2)/c: **5 × 10⁻⁴⁷ s at a = 1 µm**, and only across the gap. Plates are opaque, so gaps cannot be chained. | A payload riding a superluminal soliton would beat light. But Lentz notes that superluminal speed forms horizons (§4), and no creation or loading is given. By Krasnikov's Prop. 1 (globally hyperbolic spacetimes), a traveller cannot hasten arrival without structure laid earlier. So the first free choice cannot beat light. |
 | **3. Hidden reliance** | The infrastructure is pre-laid at ≤ c. The message itself is chosen freely afterwards, so this passes. Clocks are external, not the traveller's. | None. | Relies on a pre-existing soliton, so the deployment question is unanswered. |
-| **4. Source, range of validity, stability** | NEC/WEC violated: the static energy density is negative on the inner wall (ER §5). Quantum-inequality bound: §3 below. Stability UNKNOWN. | Standard QED in the soft-photon regime ω ≪ m_e c²/ħ. The front velocity (ω → ∞) is not derived. LSV's Kramers–Kronig argument *suggests* it is enhanced, but Hollowood–Shore found Kramers–Kronig violated for the curved-space analogue. UNKNOWN. | Santiago, Schuster & Visser (2105.03079) [paper]: Lentz checked only Eulerian observers, which does not establish the WEC. "All physically reasonable warp drives will violate the null energy condition", and the null convergence condition even in modified gravity. |
+| **4. Source, range of validity, stability** | NEC/WEC violated: the static energy density is negative on the inner wall (ER §5). Quantum-inequality bound: §3 below. Stability UNKNOWN. | Standard QED in the soft-photon regime ω ≪ m_e c²/ħ. The front velocity (ω → ∞) is not derived. LSV's Kramers–Kronig argument *suggests* it is enhanced, but Hollowood–Shore found Kramers–Kronig violated for the curved-space analogue. UNKNOWN. | Santiago, Schuster & Visser (2105.03079) [paper]: Lentz (and Fell & Heisenberg, 2104.06488) checked only Eulerian observers, which does not establish the WEC. "All physically reasonable warp drives will violate the null energy condition", and the null convergence condition even in modified gravity. |
 | **Functional screen** | **Passes conditionally** (geometry level): a real advance for later messages, one way. | **Passes only formally.** The prediction holds inside a sub-µm gap, at a magnitude §3 shows to be unresolvable in its own regime. | **Fails**: deployment is not possible from free choice, and the positive-energy claim is not established. Not computed further. |
 
 ## 3. Calculations [derived]
@@ -68,31 +68,33 @@ energy be supplied for the owner's distances (20 and 100 ly) and some useful adv
 - The end-cap value of ER Eq. (38) (δ = 10⁻³, ρ_max = 100ε) is reproduced to 0.1 %: −0.04203 against −0.04199.
 
 **Small-η scaling.** η is the opening of the light cone; the advance is ηD.
-- The most negative static energy density is T_min = −0.1228 η/ε².
+- The most negative static energy density is T_min = −0.1225 η/ε², in the thin-wall limit ρ_max = 10⁶ε.
 - The largest orthonormal curvature component is R̂_max = 3.079 η/ε², so the curvature radius is
   r_c = ε/√(3.08 η) ≫ ε.
 
 **Bound.** The Ford–Roman flat-space quantum inequality (ER Eq. 43; massless scalar, Lorentzian sampling) gives
 |T| ≤ 3/(32π²τ0⁴).
 - ER require the sampling time to be shorter than the curvature radius: τ0 = σ r_c with σ = 0.01 [ASSUMPTION].
-  Applied consistently, this gives **ε ≤ √(0.73 η)/σ² Planck lengths**.
+  Applied consistently, this gives **ε ≤ √(0.73 η)/σ² Planck lengths** for small η. The table rows are evaluated
+  exactly at each η, which matters for η ~ 1 (1.02 × 10⁴ l_P against the closed form's 8.6 × 10³).
 - So a *smaller* advance needs *thinner* walls. ER's remark that a "weak" tube (η ≈ 10⁻⁶⁶) could have centimetre
   walls used τ0 = ε, not σ r_c. With r_c ≫ ε that sampling time is far below the limit their own criterion allows,
   so it gives a much weaker bound than that criterion does.
-- The looser prescription τ0 = σε is also listed below.
+- ER's shortcut τ0 = σε (their Eq. 42, which takes r_c ≈ ε) is listed below. It is allowed only where it does
+  not exceed σ r_c, i.e. r_c ≥ ε (η ≲ 0.32), and is marked "not allowed" otherwise.
 
-| D | Wanted advance | η | Thickest wall allowed (τ0 = σ r_c) | Looser (τ0 = σε) | Negative energy (1 m radius, at the thickest wall) |
+| D | Wanted advance | η | Thickest wall allowed (τ0 = σ r_c) | ER shortcut (τ0 = σε) | Negative energy (1 m radius, at the thickest wall) |
 |---|---|---|---|---|---|
 | 20 ly | 1 s | 1.6 × 10⁻⁹ | **0.34 l_P** (5.5 × 10⁻³⁶ m) | 1.1 × 10⁻²⁷ m | −2.8 × 10³⁸ M☉ |
-| 20 ly | 1 day | 1.4 × 10⁻⁴ | 100 l_P | 3.8 × 10⁻³⁰ m | −8.4 × 10⁴⁰ M☉ |
+| 20 ly | 1 day | 1.4 × 10⁻⁴ | 100 l_P | 3.9 × 10⁻³⁰ m | −8.3 × 10⁴⁰ M☉ |
 | 20 ly | 1 yr | 0.05 | 1.9 × 10³ l_P | 2.0 × 10⁻³¹ m | −1.6 × 10⁴² M☉ |
-| 20 ly | 20 yr (= D/c) | 1 | 1.0 × 10⁴ l_P | 3.8 × 10⁻³² m | −8.5 × 10⁴² M☉ |
-| 100 ly | 1 yr | 0.01 | 858 l_P | 4.5 × 10⁻³¹ m | −3.6 × 10⁴² M☉ |
-| 100 ly | 100 yr | 1 | 1.0 × 10⁴ l_P | 3.8 × 10⁻³² m | −4.3 × 10⁴³ M☉ |
+| 20 ly | 20 yr (= D/c) | 1 | 1.0 × 10⁴ l_P | not allowed (r_c = 0.48ε) | −8.5 × 10⁴² M☉ |
+| 100 ly | 1 yr | 0.01 | 859 l_P | 4.5 × 10⁻³¹ m | −3.6 × 10⁴² M☉ |
+| 100 ly | 100 yr | 1 | 1.0 × 10⁴ l_P | not allowed | −4.3 × 10⁴³ M☉ |
 
 **What it settles** (under the flat-space QI, a free massless scalar and σ = 0.01; these are the ER assumptions):
-- No useful advance over 20–100 ly comes with a wall thicker than about 10⁴ Planck lengths, or 10⁻²⁷ m with the
-  looser sampling.
+- No useful advance over 20–100 ly comes with a wall thicker than about 10⁴ Planck lengths, or 10⁻²⁷ m with ER's
+  shortcut where it is allowed.
 - The negative energy needed is of order 10³⁸–10⁴³ solar masses.
 - Thinning the effect (small η) does not help; it makes the walls thinner still.
 
@@ -132,7 +134,7 @@ advance is 10⁻⁴⁷ s.
 
 **Next minimal verification step.** For the Krasnikov line: check whether any QI for interacting or non-minimally
 coupled fields permits sustained negative energy density over macroscopic thickness. A literature check would
-decide it; Kontou–Olum-type results are a starting point. If none is found, pause the line.
+decide it. A starting point is Kontou–Olum 2015 (PRD 92, 124009; in SOURCES.md, Goal round 1). If none is found, pause the line.
 
 **Decision (proposal for the owner).**
 - No candidate in this screen merits an experimental or engineering design.

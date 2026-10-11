@@ -12,7 +12,7 @@ A. Krasnikov tube (Krasnikov, PRD 57, 4760 (1998), gr-qc/9511068; Everett & Roma
    eta D. The tube is laid at <= c by an outbound trip, so it exists only for t > x.
    Computed here [derived]:
    1. Positive controls: the energy density of ER Eq. (14) from an independent Einstein-tensor
-      calculation, and ER's T ~ -1/(8 pi eps^2) for delta -> 0 (Eq. 39).
+      calculation; ER Eq. (38) at the end cap; its delta -> 0 limit -1/(8 pi eps^2) (Eq. 39).
    2. For small eta: the most negative static energy density and the largest orthonormal
       curvature component, both as functions of eta and eps.
    3. The Ford-Roman quantum inequality (ER Eq. 43; massless scalar, flat-space form) applied
@@ -52,7 +52,7 @@ class Params:
     """Numerical choices (ASSUMPTIONs)."""
 
     sigma: float = 0.01  # sampling time / curvature radius for the flat-space QI (ER: sigma << 1)
-    n_wall: float = 100.0  # rho_max / eps
+    n_wall: float = 1e6  # rho_max / eps: thin-wall limit (the 1/rho term is O(eps/rho_max))
     alpha_band: float = 0.01  # fraction of the wall holding the most negative energy (ER Eq. 49)
     rho_max_m: float = 1.0  # tube radius for the energy estimate (ER's example)
     grid: int = 20001
@@ -211,29 +211,34 @@ def wall_extremes(eta: float, eps: float) -> dict:
 
 def qi_wall_limit(eta: float, sigma: float = P.sigma) -> dict:
     """Thickest wall (Planck lengths) allowed by the QI |T| <= 3 / (32 pi^2 tau0^4) with
-    tau0 = sigma r_c, r_c = R_max^-1/2. Both |T| and R_max scale as eta / eps^2 for small eta
-    (checked numerically), so eps_max follows in closed form from one evaluation at eps = 1."""
+    tau0 = sigma r_c, r_c = R_max^-1/2 (ER's criterion). In the thin-wall limit |T| and R_max are
+    exactly proportional to 1/eps^2 at fixed eta (the profile depends on rho/eps only), so one
+    evaluation at eps = 1 gives eps_max for any eta; their dependence on eta is linear only for
+    small eta, and is evaluated exactly here."""
     w = wall_extremes(eta, 1.0)
     a_t, a_r = -w["T_min"], w["R_max"]  # coefficients of 1 / eps^2
     # a_t / eps^2 <= 3 a_r^2 / (32 pi^2 sigma^4 eps^4)  =>  eps^2 <= 3 a_r^2 / (32 pi^2 sigma^4 a_t)
     eps_max = math.sqrt(3 * a_r**2 / (32 * math.pi**2 * sigma**4 * a_t))
-    # the looser prescription tau0 = sigma * eps (ER Eq. 42 with r_c ~ eps)
-    eps_max_loose = math.sqrt(3 / (32 * math.pi**2 * sigma**4 * a_t))
+    # ER's shortcut tau0 = sigma * eps (their Eq. 42, which takes r_c ~ eps). It is allowed only
+    # where it does not exceed sigma * r_c, i.e. r_c >= eps
+    rc_over_eps = 1 / math.sqrt(a_r)
+    eps_max_shortcut = None
+    if rc_over_eps >= 1:
+        eps_max_shortcut = math.sqrt(3 / (32 * math.pi**2 * sigma**4 * a_t))
     return {
         "eta": eta,
         "T_coeff": a_t,
         "R_coeff": a_r,
-        "rc_over_eps": 1 / math.sqrt(a_r),
+        "rc_over_eps": rc_over_eps,
         "eps_max_planck": eps_max,
-        "eps_max_planck_loose_tau0_sigma_eps": eps_max_loose,
+        "eps_max_planck_shortcut_tau0_sigma_eps": eps_max_shortcut,
     }
 
 
-def negative_energy_solar(eta: float, eps_planck: float, d_ly: float) -> float:
-    """ER Eq. (51): E ~ |T| * 2 pi rho_max (alpha eps) D, with |T| = a_t eta... evaluated with the
-    computed coefficient at the given wall thickness. Returned in solar masses (negative)."""
-    w = wall_extremes(eta, 1.0)
-    t_abs = -w["T_min"] / eps_planck**2  # Planck units
+def negative_energy_solar(t_coeff: float, eps_planck: float, d_ly: float) -> float:
+    """ER Eq. (51): E ~ |T| * 2 pi rho_max (alpha eps) D with |T| = t_coeff / eps^2 (Planck
+    units). Returned in solar masses (negative)."""
+    t_abs = t_coeff / eps_planck**2
     rho_max = P.rho_max_m / PLANCK_LENGTH_M
     d = d_ly * LY_M / PLANCK_LENGTH_M
     e_planck = t_abs * 2 * math.pi * rho_max * P.alpha_band * eps_planck * d
@@ -255,9 +260,12 @@ def krasnikov_task() -> dict:
                     "eta": eta,
                     "eps_max_planck": lim["eps_max_planck"],
                     "eps_max_m": lim["eps_max_planck"] * PLANCK_LENGTH_M,
-                    "eps_max_loose_m": lim["eps_max_planck_loose_tau0_sigma_eps"] * PLANCK_LENGTH_M,
+                    "rc_over_eps": lim["rc_over_eps"],
+                    "eps_max_shortcut_m": None
+                    if lim["eps_max_planck_shortcut_tau0_sigma_eps"] is None
+                    else lim["eps_max_planck_shortcut_tau0_sigma_eps"] * PLANCK_LENGTH_M,
                     "negative_energy_solar_masses_at_eps_max": negative_energy_solar(
-                        eta, lim["eps_max_planck"], d_ly
+                        lim["T_coeff"], lim["eps_max_planck"], d_ly
                     ),
                 }
             )
@@ -278,10 +286,11 @@ def krasnikov_controls() -> dict:
     """ER Eq. (14) from an independent Einstein tensor; ER Eq. (39) T ~ -1/(8 pi eps^2) as delta
     -> 0; and the small-eta scaling of T and R_max."""
     near = wall_extremes(2 - 1e-3, 1.0)  # mid-tube, delta = 1e-3
-    # ER Eq. (38): end cap (theta(x) = 1/2, so eta = 1 - delta/2), observer at rho = rho_max - eps
-    delta, n = 1e-3, P.n_wall
+    # ER Eq. (38): end cap (theta(x) = 1/2, so eta = 1 - delta/2), observer at rho = rho_max - eps;
+    # Eq. (38) is for finite n = rho_max / eps, so use n = 100 here
+    delta, n = 1e-3, 100.0
     f_t, _, _ = _numeric()
-    r, k, k1, k2 = wall_profile(1 - delta / 2, 1.0)
+    r, k, k1, k2 = wall_profile(1 - delta / 2, 1.0, n_wall=n)
     i = int(np.argmin(np.abs(r - (n - 1.0))))
     t_cap = float(f_t(r[i], k[i], k1[i], k2[i]))
     num = 0.271 * (
@@ -290,9 +299,12 @@ def krasnikov_controls() -> dict:
     t_eq38 = num / (8 * math.pi * (n - 1) * (1.018 + 0.491 * delta) ** 2)
     scal = [qi_wall_limit(e) for e in (1e-2, 1e-4, 1e-6)]
     return {
-        "max_abs_diff_vs_ER_eq14_delta_small": near["max_abs_diff_vs_ER_eq14"],
+        "max_rel_diff_vs_ER_eq14_delta_small": near["max_abs_diff_vs_ER_eq14"]
+        / max(abs(near["T_min"]), abs(near["T_max"])),
         "endcap_T_at_rho_max_minus_eps": t_cap,
         "ER_eq38_value": t_eq38,
+        # ER Eq. (39): for small delta and large n the end-cap value tends to -1 / (8 pi eps^2)
+        "endcap_T_times_8pi_eps2": t_cap * 8 * math.pi,
         "small_eta_T_coeff_over_eta": [s["T_coeff"] / s["eta"] for s in scal],
         "small_eta_R_coeff_over_eta": [s["R_coeff"] / s["eta"] for s in scal],
     }

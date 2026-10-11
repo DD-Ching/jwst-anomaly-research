@@ -16,7 +16,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     (Santiago–Schuster–Visser).
 - **Positive controls:** an independent Einstein tensor reproduces ER Eq. (14) to 1.6 × 10⁻¹¹, and Eq. (38) to 0.1 %.
 - **New [derived]:**
-  - The tube's walls scale as |T| = 0.123 η/ε² and R̂ = 3.08 η/ε².
+  - The tube's walls scale as |T| = 0.1225 η/ε² and R̂ = 3.08 η/ε² (small η, thin wall).
   - With ER's own sampling rule (τ0 = σ r_c), the QI allows ε ≤ √(0.73η)/σ² l_P. So any 20–100 ly advance needs walls
     ≲ 10⁴ l_P (1 s: sub-Planck), and 10³⁸–10⁴³ M☉ of negative energy. Small η does not help.
   - Scharnhorst: Δt · m_e c²/ħ ≤ 7 × 10⁻⁷ even at a = ƛ_C, so the advance is unresolvable where it is derived.

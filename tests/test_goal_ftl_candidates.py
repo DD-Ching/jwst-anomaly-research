@@ -18,8 +18,9 @@ _spec.loader.exec_module(fc)
 
 def test_positive_controls_reproduce_everett_roman():
     c = fc.krasnikov_controls()
-    assert c["max_abs_diff_vs_ER_eq14_delta_small"] < 1e-8  # independent Einstein tensor = Eq. 14
+    assert c["max_rel_diff_vs_ER_eq14_delta_small"] < 1e-9  # independent Einstein tensor = Eq. 14
     assert c["endcap_T_at_rho_max_minus_eps"] == pytest.approx(c["ER_eq38_value"], rel=5e-3)
+    assert c["endcap_T_times_8pi_eps2"] == pytest.approx(-1.0, abs=0.1)  # Eq. 39
 
 
 def test_small_eta_scaling_is_linear():
@@ -33,7 +34,9 @@ def test_qi_walls_are_planck_scale_for_the_20_ly_task():
     assert all(r["eps_max_planck"] < 2e4 for r in rows)
     one_second = next(r for r in rows if r["advance_s"] == 1.0)
     assert one_second["eps_max_planck"] < 1.0  # sub-Planck: no semiclassical tube at all
-    assert all(r["eps_max_loose_m"] < 1e-26 for r in rows)  # looser prescription still microscopic
+    # ER's tau0 = sigma eps shortcut, where allowed (r_c >= eps), is still microscopic
+    assert all(r["eps_max_shortcut_m"] < 1e-26 for r in rows if r["eps_max_shortcut_m"] is not None)
+    assert next(r for r in rows if r["eta"] == pytest.approx(1.0))["eps_max_shortcut_m"] is None
 
 
 def test_scharnhorst_advance_is_unresolvable_in_its_own_regime():

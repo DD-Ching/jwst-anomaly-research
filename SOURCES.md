@@ -1269,4 +1269,7 @@ Full texts read 2026-10-11, through arXiv PDFs or the cited archives.
 - Santiago, Schuster & Visser, arXiv:2105.03079v2 [4dca80f8…].
 
 **Abstract only:** Hollowood & Shore, Nucl. Phys. B 795, 138 (2008), arXiv:0707.2303; Fell & Heisenberg,
-arXiv:2104.06488.
+arXiv:2104.06488 (a target of Santiago–Schuster–Visser).
+
+**Cited through LSV, not opened:** Scharnhorst, Phys. Lett. B 236, 354 (1990), the original Casimir-vacuum result.
+Kontou & Olum 2015 is listed under Goal round 1.
