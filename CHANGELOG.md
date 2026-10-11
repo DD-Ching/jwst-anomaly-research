@@ -2,8 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: W3 MOA-II gb1 (thirteenth field): in progress
-- Plan: `run-field --procs 4` on gb1 under CHAIN_VERSION 2026-10-10.1, then `combine` over thirteen fields.
+## 2026-10-11: W3 MOA-II gb1 (thirteenth field): 0 survivors; combined limit over thirteen fields
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1 and a finite limit in every cell. A
+  survivor with caustic spikes in the data would have stopped injections and gone to `/vet-candidate`.
+- `run-field --procs 4` (cloud): 70.1 GB streamed in 1,249 s (109,715 light curves; 1,619 shape passes, 51 off shared
+  epochs); 51 fits in 590 s, 48 flags; **0 survive**; 2,200 injections in 2,982 s; chain 4,932 s. Contact sheet
+  inspected: variables, box dips, one long trend; caustic spikes only in the models. CDS XMatch worked (RP for 30 / 48).
+- Limits (`results/w3_moa/limits_gb1.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 1.7 × 10⁻⁷–1.7 × 10⁻⁶ per star per year
+  (N_s = 2.10 × 10⁷); the t_E = 300 d cells rest on 2 recoveries each. **Combined, thirteen fields: Γ₉₅ ≈ 2.4 × 10⁻⁸–
+  1.4 × 10⁻⁷** (was 2.8 × 10⁻⁸–1.5 × 10⁻⁷; max field share 0.21, gb1 at t_E = 3 d, ρ = 0.01).
+- Timing: injections ran at ~0.5–1 per s (gb2: ~1.3 per s), so a 70-GB field needs ~85 min, past one routine slot.
+- **Next:** gb8 (78 GB; start it at the top of a run or split stages across runs: pre-screen chunks and fits are
+  tracked and reused), `combine`; gb13 waits on the owner (#145).
 
 ## 2026-10-10: W3 MOA-II gb2 (twelfth field): 0 survivors; combined limit over twelve fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1 and a finite limit in every cell. A
