@@ -476,7 +476,7 @@
     "beta_max": 0.001233586736861806,
     "fraction": 8.106430203735915e-05,
     "beta": 0.001233586736861806,
-    "cos_angle": 1.0,
+    "cos_angle": -1.0,
     "window_over_d_c": 0.002467173473723612,
     "leading_order_1_over_2_r_beta": 8.106442539613865e-05,
     "hoeffding_trials_per_bit_eps_1e-3": 53080141024057.414
@@ -496,7 +496,7 @@
     "beta_max": 0.1,
     "fraction": 9.899999999368747e-07,
     "beta": 0.1,
-    "cos_angle": -1.0,
+    "cos_angle": 1.0,
     "window_over_d_c": 0.2,
     "leading_order_1_over_2_r_beta": 1e-06,
     "hoeffding_trials_per_bit_eps_1e-3": 3.558942525178559e+17
@@ -506,7 +506,7 @@
     "beta_max": 0.1,
     "fraction": 7.857142825251628e-09,
     "beta": 0.1,
-    "cos_angle": 1.0,
+    "cos_angle": -1.0,
     "window_over_d_c": 0.2,
     "leading_order_1_over_2_r_beta": 7.936507936507936e-09,
     "hoeffding_trials_per_bit_eps_1e-3": 5.650177198119761e+21
@@ -526,7 +526,7 @@
     "beta_max": 0.9,
     "fraction": 1.675484195828858e-10,
     "beta": 0.9,
-    "cos_angle": 1.0,
+    "cos_angle": -1.0,
     "window_over_d_c": 1.8,
     "leading_order_1_over_2_r_beta": 8.818342151675485e-10,
     "hoeffding_trials_per_bit_eps_1e-3": 1.2425408977403835e+25

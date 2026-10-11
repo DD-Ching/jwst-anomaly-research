@@ -96,3 +96,13 @@ def test_r_fraction_matches_closed_forms():
     # no positive guarantee without a bound on the frame speed: it falls as 1 - beta
     near_c = bc.worst_r_fraction(5e6, 0.999, 2 * 0.999, n_angle=21)["fraction"]
     assert near_c < 3e-10
+
+
+def test_worst_r_fraction_grid_is_the_minimum():
+    rng = np.random.default_rng(1)
+    for bm in (bc.BETA_CMB, 0.5):
+        win = 2 * bm
+        worst = bc.worst_r_fraction(1e3, bm, win, n_angle=41)["fraction"]
+        for _ in range(40):
+            f = bc.r_fraction(1e3, rng.uniform(0, bm), rng.uniform(-1, 1), win)
+            assert f >= worst * (1 - 1e-9)
