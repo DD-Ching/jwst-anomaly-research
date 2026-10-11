@@ -1,0 +1,100 @@
+{
+ "provenance": "model_prediction (formula) + literature parameters; no new measurement",
+ "calibration": [
+  {
+   "experiment": "Salart2008",
+   "reproduced_bound": 53978.723448396384,
+   "published_bound": 54000.0,
+   "ratio": 0.9996059897851182,
+   "source": "Nature 454, 861: rho-bar Eq. 3 text, fringe period 360 s, Fig. 5 (chi = 90 deg)"
+  },
+  {
+   "experiment": "Yin2013",
+   "reproduced_bound": 13798.988641570246,
+   "published_bound": 13800.0,
+   "ratio": 0.9999267131572642,
+   "source": "PRL 110, 260407: Eq. 2 and Eq. 5, T = 1800 s, theta = pi/2"
+  },
+  {
+   "experiment": "Cocciaro2018",
+   "reproduced_bound": 4974836.610323271,
+   "published_bound": 5000000.0,
+   "ratio": 0.9949673220646541,
+   "source": "PRA 97, 052124: Eq. 5-7, delta t = 2 Delta t = 0.494 s, Fig. 7 (chi = pi/2)"
+  }
+ ],
+ "nist2015_best_case": [
+  {
+   "aggregate_pulses": 1,
+   "rho_min": 0.02041829713945946,
+   "best_bound": 48.97568064417312
+  },
+  {
+   "aggregate_pulses": 3,
+   "rho_min": 0.06125489141837837,
+   "best_bound": 16.325226881391043
+  },
+  {
+   "aggregate_pulses": 5,
+   "rho_min": 0.1020914856972973,
+   "best_bound": 9.795136128834624
+  },
+  {
+   "aggregate_pulses": 7,
+   "rho_min": 0.14292807997621623,
+   "best_bound": 6.996525806310444
+  }
+ ],
+ "targets": {
+  "20 ly, 1 s one-way": {
+   "V_over_c": 631152000.0,
+   "target_V_over_c": 631152000.0,
+   "rho_max": 7.922021953507237e-10,
+   "window_max_s": 0.017613383178307962,
+   "sigma_t_fs": {
+    "1.2 km": 3.171002502073846,
+    "18 km": 47.56503753110769,
+    "100 km": 264.25020850615385
+   },
+   "check_bound_at_budget": 631151519.7763826
+  },
+  "20 ly, 0.3 s": {
+   "V_over_c": 2103840000.0,
+   "target_V_over_c": 2103840000.0,
+   "rho_max": 2.3766065860521713e-10,
+   "window_max_s": 0.0052840149534923875,
+   "sigma_t_fs": {
+    "1.2 km": 0.9513007506221538,
+    "18 km": 14.26951125933231,
+    "100 km": 79.27506255184616
+   },
+   "check_bound_at_budget": 2103838399.2546082
+  },
+  "100 ly, 1 s": {
+   "V_over_c": 3155760000.0,
+   "target_V_over_c": 3155760000.0,
+   "rho_max": 1.5844043907014476e-10,
+   "window_max_s": 0.003522676635661592,
+   "sigma_t_fs": {
+    "1.2 km": 0.6342005004147694,
+    "18 km": 9.51300750622154,
+    "100 km": 52.85004170123077
+   },
+   "check_bound_at_budget": 3155757598.881912
+  },
+  "100 ly, 0.3 s": {
+   "V_over_c": 10519200000.0,
+   "target_V_over_c": 10519200000.0,
+   "rho_max": 4.7532131721043425e-11,
+   "window_max_s": 0.0010568029906984776,
+   "sigma_t_fs": {
+    "1.2 km": 0.1902601501244308,
+    "18 km": 2.8539022518664616,
+    "100 km": 15.85501251036923
+   },
+   "check_bound_at_budget": 10519191996.27304
+  }
+ },
+ "chsh_coincidences_per_window_5sigma": 277.7777777777777,
+ "bancal_gap_ratio_vs_chsh": 0.06946037306599145
+}
