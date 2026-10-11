@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: Goal round 9: no next executable unit on current inputs; khronometric "instantaneous" term absent from the linear matter response
+## 2026-10-11: Goal round 9: no next executable unit on current inputs; khronometric "instantaneous" term absent from the linear matter response at c13 = 0, present (model-internal) at c13 ≠ 0
 - Owner brief: choose one worthwhile physics problem from the whole project, and run a minimal check only if a
   differing prediction, data and a light test all exist. Revised after owner review, with a bounded P3 check.
   Write-up `docs/goal_round9/README.md`; code `scripts/goal_khronometric.py`; results `results/goal_round9/`.
@@ -16,6 +16,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - New [derived]: with matter coupled to the metric only, the linear khronometric tidal response equals EA's
     (identical for c13 = 0). The instantaneous term does not enter, and round 8's trade-off carries over.
   - The non-linear elliptic part stays open (second-order calculation costed, not started).
+  - **Owner review 2 (c13 ≠ 0):** the linear conclusion is scoped to c13 = 0.
+    - The 3D kernel confirms ΔE_ij = Aω(k_iP_jm + k_jP_im)j_m/(ω² − c_V²k²).
+    - A full-tensor support test (bare k² in the 3D kernel) finds an instantaneous part
+      I_ij = −2A k_ik_jρ/k² in khronometric at c13 ≠ 0 that nothing else cancels. GR, EA and khronometric at
+      c13 = 0 show none.
+    - Position space (FFT check ≤ 4.4 %): I_ij = −(2c13²/c14) × the Newtonian tidal tensor of the current
+      source, a transient until max(c_S, c_T). It is model-internal, not shown usable: a lab sender at 20 ly
+      needs κ′ ≳ 10⁵⁵.
+  - Failed approach: one sympy `simplify` pass over the 3D kernel ran > 30 min. Exact rational parameter points
+    with `cancel` and `factor_list` take ~80 s.
 - **Corrections:**
   - Jacobson citation fixed (1001.4823v3).
   - ~10³⁸ M☉ scoped to round 6's model.

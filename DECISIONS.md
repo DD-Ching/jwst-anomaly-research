@@ -4316,16 +4316,23 @@ S > 7 or setting dependence in R trials.
 - A controlled strong-coupling or UV-complete treatment fixes the front.
 - A source and detector class is proposed whose moments escape the computed configuration.
 
-## D-TBD Goal round 9: no next executable unit on current inputs; the khronometric linear matter response equals EA's (2026-10-11)
+## D-TBD Goal round 9: no next executable unit on current inputs; khronometric linear matter response equals EA's at c13 = 0 and has an instantaneous part at c13 ≠ 0 (2026-10-11)
 
 **Decision (proposal).** Do not open a new physics unit beyond the P3 linear check.
 - P1 (multipartite v-causal) lacks data.
 - P2 (exotic lenses) is the scheduled MOA-II search; a survivor would be a candidate only.
 - P3 (khronometric): at linear order, with ordinary matter coupled to the metric only, the tidal response equals
-  EA's (identical for c13 = 0), so the Blas–Sibiryakov instantaneous term does not enter.
+  EA's for c13 = 0, so the Blas–Sibiryakov instantaneous term does not enter. For c13 ≠ 0 (GW170817 bounds it,
+  does not zero it) the response has an instantaneous, non-local part I_ij = −2A k_ik_jρ/k²,
+  A = 4πG c13²/[c14(1 − c13)²]. Nothing else in the full tidal tensor cancels it. It is a transient until
+  max(c_S, c_T) arrives. It is model-internal and not shown usable: a lab-scale sender needs κ′ ≳ 10⁵⁵. With
+  c2 ≥ 0 and c13 > 0, the window caps κ′ ≲ c13 c_S².
 
-**Open.** The non-linear elliptic part, i.e. whether a local conserved source with fixed boundary conditions
-drives it. It needs a second-order calculation; the owner decides whether to fund it.
+**Open.**
+- The non-linear elliptic part, i.e. whether a local conserved source with fixed boundary conditions drives it.
+  It needs a second-order calculation; the owner decides whether to fund it.
+- For the c13 ≠ 0 term: the allowed khronometric region at c14 ≪ c13² with c13 + c2 ≈ 0, and the EFT range
+  there.
 
 **Alternatives rejected.**
 - Reading "instantaneous" in the literature as a channel.
@@ -4338,3 +4345,4 @@ drives it. It needs a second-order calculation; the owner decides whether to fun
 - A four-party spacelike dataset, or an S4 below the realistic QM prediction, appears.
 - An unexplained W3 survivor or an abundance model appears.
 - A second-order or non-linear khronometric result with a matter-only source appears.
+- Khronometric bounds or a strong-coupling scale at c14 ≪ c13² appear (decides the c13 ≠ 0 term).

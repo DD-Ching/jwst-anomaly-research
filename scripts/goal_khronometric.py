@@ -22,6 +22,7 @@ import argparse
 import importlib.util
 import json
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 import sympy as sp
@@ -92,7 +93,8 @@ def bs_controls() -> dict:
     }
 
 
-def khronometric_vs_ea() -> dict:
+@lru_cache(maxsize=1)
+def khronometric_tidal() -> dict:
     """Linear tidal response, matter coupled to the metric only. Khronometric = EA with the
     covariant transverse aether u_perp = v_perp + h_0perp set to zero in the action, so the
     h_0perp equation becomes E[h_0perp] - E[v_perp] (chain rule). Gauge h_0x = h_0y = h_0z = 0
@@ -120,6 +122,8 @@ def khronometric_vs_ea() -> dict:
         txy: sxy,
     }
     sols = sp.solve([q.subs(fix).subs(src) for q in keep], unk, dict=True)
+    if len(sols) != 1:
+        raise RuntimeError(f"expected a unique linear solution, got {len(sols)}")
     sol = sols[0]
     val = {x: sol.get(x, 0) for x in f}
 
@@ -138,15 +142,325 @@ def khronometric_vs_ea() -> dict:
         )
 
     pairs = {"xx": (1, 1), "yy": (2, 2), "zz": (3, 3), "xy": (1, 2), "xz": (1, 3), "yz": (2, 3)}
-    ek = {n: sp.factor(sp.simplify(riem(0, i, 0, j))) for n, (i, j) in pairs.items()}
+    return {n: sp.factor(sp.simplify(riem(0, i, 0, j))) for n, (i, j) in pairs.items()}
+
+
+def khronometric_vs_ea() -> dict:
+    """Helicity-frame (k = z) difference E_khronometric - E_EA, for every c_i and for c13 = 0."""
+    ek = khronometric_tidal()
     eea = ea.tidal_response()
-    out = {"n_solutions": len(sols), "difference_c13_0": {}, "difference_general": {}}
+    pairs = ("xx", "yy", "zz", "xy", "xz", "yz")
+    out = {
+        "n_solutions": 1,  # khronometric_tidal raises otherwise
+        "difference_c13_0": {},
+        "difference_general": {},
+    }
     for n in pairs:
         d = sp.simplify(ek[n] - eea[n])
         out["difference_general"][n] = str(sp.factor(d))
         out["difference_c13_0"][n] = str(sp.factor(sp.simplify(d.subs(ea.C3, -ea.C1))))
     out["khronometric_Exz"] = str(ek["xz"])
     return out
+
+
+# ----------------------------------------------------------------------------- c13 != 0 (round 9b)
+# Owner review of #164: GW170817 bounds |c13| <~ 1e-15 but does not set c13 = 0. Does the linear
+# khronometric response to ordinary matter contain an instantaneous part when c13 != 0?
+
+_SRC = sp.symbols("rho jx jy Sxx Syy Sxy")
+KX, KY, KZ = sp.symbols("kx ky kz", real=True)
+KVEC = (KX, KY, KZ)
+K2 = KX**2 + KY**2 + KZ**2
+_SIJ = sp.symbols("S11 S12 S13 S22 S23 S33", real=True)
+
+
+def _smat():
+    s11, s12, s13, s22, s23, s33 = _SIJ
+    return sp.Matrix([[s11, s12, s13], [s12, s22, s23], [s13, s23, s33]])
+
+
+def helicity_coefficients(e: dict) -> tuple[dict, dict]:
+    """Rotation-covariant kernel from the helicity-frame (k = z) response. With khat = k/|k|,
+    P = 1 - khat khat, V = P j, S^T = P_mn S_mn and S^TT = P S P - P S^T / 2:
+    E_ij = a khat_i khat_j rho + b khat_i khat_j S^T + c P_ij rho + d P_ij S^T
+           + v (khat_i V_j + khat_j V_i) + t S^TT_ij.
+    Returns the six coefficients (functions of omega, k) and the frame residuals (0 when the
+    ansatz reproduces every frame component)."""
+    rho, jx, jy, sxx, syy, sxy = _SRC
+
+    def coef(expr, sym):
+        return sp.factor(sp.cancel(sp.diff(expr, sym)))
+
+    a, b = coef(e["zz"], rho), coef(e["zz"], sxx)
+    c = sp.factor(coef(e["xx"] + e["yy"], rho) / 2)
+    d = sp.factor(coef(e["xx"] + e["yy"], sxx) / 2)
+    t, v = coef(e["xy"], sxy), coef(e["xz"], jx)
+    sig = sxx + syy
+    model = {
+        "xx": c * rho + d * sig + t * (sxx - syy) / 2,
+        "yy": c * rho + d * sig - t * (sxx - syy) / 2,
+        "zz": a * rho + b * sig,
+        "xy": t * sxy,
+        "xz": v * jx,
+        "yz": v * jy,
+    }
+    res = {n: str(sp.cancel(e[n] - model[n])) for n in model}
+    return {"a": a, "b": b, "c": c, "d": d, "v": v, "t": t}, res
+
+
+def _sources():
+    """A general conserved source through its stresses: j_i = k_m S_im / omega,
+    rho = k_m k_n S_mn / omega^2 (any conserved T^{mu nu} at omega != 0)."""
+    w = ea.W
+    s = _smat()
+    kv = sp.Matrix(KVEC)
+    return s, kv, s * kv / w, (kv.T * s * kv)[0] / w**2
+
+
+def _coefficients_at(co: dict, ps: dict | None) -> dict:
+    """Coefficients at a parameter point; None is the GR limit c_i = eps r_i, eps -> 0 (EA's
+    scalar block is 0/0 at c_i = 0)."""
+    if ps is None:
+        eps = sp.Symbol("eps")
+        r = {ea.C1: eps / 10, ea.C2: eps / 7, ea.C3: eps / 20, ea.C4: eps / 5}
+        return {n: sp.cancel(x.subs(r)).subs(eps, 0) for n, x in co.items()}
+    return {n: sp.cancel(x.subs(ps)) for n, x in co.items()}
+
+
+def kernel_3d(co: dict, ps: dict | None) -> sp.Matrix:
+    """E_ij for a general wave vector (kx, ky, kz) and a general conserved source (`_sources`),
+    at a parameter point. Written with k_i and k^2 only (v / k and a, b, c, d, t are even in k)."""
+    k = ea.K
+    s, kv, j, rho = _sources()
+    pm = sp.eye(3) - kv * kv.T / K2
+    vv = pm * j
+    st = (pm * s).trace()
+    stt = pm * s * pm - pm * st / 2
+    c = _coefficients_at(co, ps)
+    c["v"] = sp.cancel(c["v"] / k)
+    c = {n: x.subs(k, sp.sqrt(K2)) for n, x in c.items()}
+    return (
+        (c["a"] * rho + c["b"] * st) * kv * kv.T / K2
+        + (c["c"] * rho + c["d"] * st) * pm
+        + c["v"] * (kv * vv.T + vv * kv.T)
+        + c["t"] * stt
+    )
+
+
+def nonlocal_denominator_factors(m: sp.Matrix) -> list[str]:
+    """Denominator factors free of omega. A bare k^2 = kx^2 + ky^2 + kz^2 is a spatially non-local
+    term with no retardation (instantaneous). Factors omega^n (time integrals of a local source)
+    and omega^2 - c^2 k^2 (retarded propagators) are causal."""
+    found = set()
+    for i in range(3):
+        for j in range(i, 3):
+            den = sp.denom(sp.cancel(sp.together(m[i, j])))
+            for f, _ in sp.factor_list(den)[1]:
+                if not f.has(ea.W) and f.free_symbols & set(KVEC):
+                    found.add(str(f))
+    return sorted(found)
+
+
+# Exact rational test points; the kernel is rational in the c_i, so generic values suffice.
+PARAM_SETS = {
+    "GR limit": None,
+    "c13=0": {
+        ea.C1: sp.Rational(1, 10),
+        ea.C2: sp.Rational(1, 7),
+        ea.C3: -sp.Rational(1, 10),
+        ea.C4: sp.Rational(1, 5),
+    },
+    "c13=3/20": {
+        ea.C1: sp.Rational(1, 10),
+        ea.C2: sp.Rational(1, 7),
+        ea.C3: sp.Rational(1, 20),
+        ea.C4: sp.Rational(1, 5),
+    },
+    "c13=1/1000": {
+        ea.C1: sp.Rational(1, 10),
+        ea.C2: sp.Rational(1, 7),
+        ea.C3: -sp.Rational(1, 10) + sp.Rational(1, 1000),
+        ea.C4: sp.Rational(1, 5),
+    },
+}
+
+
+def c13_coupling():
+    """A = 4 pi G c13^2 / (c14 (1 - c13)^2) and EA's c_V^2, in the c_i."""
+    c13, c14 = ea.C1 + ea.C3, ea.C1 + ea.C4
+    return 4 * sp.pi * ea.GS * c13**2 / (c14 * (1 - c13) ** 2), ea.literature_speeds()["V"]
+
+
+def instantaneous_part() -> sp.Matrix:
+    """I_ij = -2 A k_i k_j rho / k^2 (general direction, general conserved source)."""
+    amp, _ = c13_coupling()
+    _, kv, _, rho = _sources()
+    return -2 * amp * kv * kv.T * rho / K2
+
+
+def c13_check() -> dict:
+    """1. Helicity ansatz for EA and khronometric; only v differs, by A omega k / (omega^2 -
+    c_V^2 k^2): Delta E_ij = A omega (k_i P_jm + k_j P_im) j_m / (omega^2 - c_V^2 k^2) (owner).
+    2. Khronometric depends on c1 only through c13 and c14 (Jacobson 1001.4823v3: c1 is redundant
+    for a hypersurface-orthogonal aether), a check of the reduction.
+    3. Split of Delta E with k.j = omega rho and omega^2/(k^2(omega^2 - v^2 k^2)) = 1/k^2 +
+    v^2/(omega^2 - v^2 k^2): retarded(c_V) + I_ij, I_ij = -2 A k_i k_j rho / k^2.
+    4. Bare-k^2 factors of the full 3D kernel (GR limit, EA, khronometric) and of khronometric - I.
+    5. Pole bookkeeping of khronometric - I for a quadrupole source (S = -omega^2 q) at one k:
+    which fronts follow I, and the static limit (equal to EA's)."""
+    w, k = ea.W, ea.K
+    co_ea, res_ea = helicity_coefficients(ea.tidal_response())
+    co_kh, res_kh = helicity_coefficients(khronometric_tidal())
+    amp, cv2 = c13_coupling()
+    diff = {n: sp.factor(sp.cancel(co_kh[n] - co_ea[n])) for n in co_ea}
+    out = {
+        "frame_residuals_EA": res_ea,
+        "frame_residuals_khronometric": res_kh,
+        "khronometric_coefficients": {n: str(x) for n, x in co_kh.items()},
+        "coefficient_difference_kh_minus_EA": {n: str(x) for n, x in diff.items()},
+        "vector_difference_minus_owner_form": str(
+            sp.cancel(diff["v"] - amp * w * k / (w**2 - cv2 * k**2))
+        ),
+    }
+    c13s, c14s = sp.symbols("c13 c14", real=True)
+    re = {ea.C3: c13s - ea.C1, ea.C4: c14s - ea.C1}
+    out["khronometric_d_dc1_at_fixed_c13_c14"] = {
+        n: str(sp.cancel(sp.diff(sp.cancel(x.subs(re)), ea.C1))) for n, x in co_kh.items()
+    }
+    s, kv, j, rho = _sources()
+    pm = sp.eye(3) - kv * kv.T / K2
+    owner = amp * w * (kv * (pm * j).T + (pm * j) * kv.T) / (w**2 - cv2 * K2)
+    ret = (amp * w * (kv * j.T + j * kv.T) - 2 * amp * cv2 * kv * kv.T * rho) / (w**2 - cv2 * K2)
+    inst = instantaneous_part()
+    out["split_residual"] = [
+        str(sp.cancel(sp.together(owner[i, jj] - ret[i, jj] - inst[i, jj])))
+        for i in range(3)
+        for jj in range(i, 3)
+    ]
+    bare = {}
+    for pname, ps in PARAM_SETS.items():
+        bare[f"EA {pname}"] = nonlocal_denominator_factors(kernel_3d(co_ea, ps))
+        if ps is not None:
+            mk = kernel_3d(co_kh, ps)
+            bare[f"khronometric {pname}"] = nonlocal_denominator_factors(mk)
+            bare[f"khronometric - I {pname}"] = nonlocal_denominator_factors(mk - inst.subs(ps))
+    out["bare_k2_factors"] = bare
+    # 5. one wave vector (|k| = 3) and one quadrupole q; S_mn = -omega^2 q_mn
+    num = {KX: 1, KY: 2, KZ: 2}
+    sq = {x: -(w**2) * v for x, v in zip(_SIJ, (3, -1, 2, 5, 1, -4), strict=True)}
+    poles = {}
+    for pname in ("c13=3/20", "c13=1/1000"):
+        ps = PARAM_SETS[pname]
+        mk, me = kernel_3d(co_kh, ps), kernel_3d(co_ea, ps)
+        for idx in ((0, 1), (2, 2)):
+            tot = sp.cancel(mk[idx].subs(num).subs(sq))
+            ii = sp.cancel(inst[idx].subs(ps).subs(num).subs(sq))
+            rest = sp.apart(sp.cancel(tot - ii), w)
+            poles[f"{pname} E{idx[0] + 1}{idx[1] + 1}"] = {
+                "I": str(ii),
+                "khronometric_minus_I_terms": [str(x) for x in sp.Add.make_args(rest)],
+                "static_khronometric_minus_EA": str(
+                    sp.cancel(tot.subs(w, 0) - sp.cancel(me[idx].subs(num).subs(sq)).subs(w, 0))
+                ),
+            }
+    out["pole_bookkeeping"] = poles
+    return out
+
+
+def d4_inv_r(qmat, x):
+    """sum_mn q_mn d_i d_j d_m d_n (1/r) at x (3 x 3 numpy array)."""
+    import numpy as np
+
+    xs = sp.symbols("x y z", real=True)
+    r = sp.sqrt(sum(v**2 for v in xs))
+    out = np.zeros((3, 3))
+    for i in range(3):
+        for j in range(3):
+            expr = sum(
+                qmat[m][n] * sp.diff(1 / r, xs[i], xs[j], xs[m], xs[n])
+                for m in range(3)
+                for n in range(3)
+                if qmat[m][n]
+            )
+            out[i, j] = float(expr.subs(dict(zip(xs, x, strict=True))))
+    return out
+
+
+def position_space_check(n: int = 128, box: float = 16.0) -> dict:
+    """Smooth, local, conserved, non-spherical source with its stresses:
+    T^{ij} = q''_ij(t) f(x), T^{0i} = -d_j(q'_ij f), rho = d_i d_j(q_ij f), with
+    f = (3465 / (512 pi R^3)) (1 - r^2/R^2)^4 for r < R (int f = 1, C^3) and q switched on smoothly
+    from 0 (same prior state, decaying boundary conditions). The retarded parts vanish at the
+    receiver before the fastest front, so the receiver sees only I_ij = -2 A d_i d_j del^-2 rho.
+    Checks numerically (FFT, A = 1) that outside the source I_ij = (A / 2 pi) q_mn
+    d_i d_j d_m d_n (1/r) (shell theorem: del^-2 f = -1/(4 pi r) outside R)."""
+    import numpy as np
+
+    big_r = 1.0
+    h = box / n
+    ax = (np.arange(n) - n // 2) * h
+    x, y, z = np.meshgrid(ax, ax, ax, indexing="ij")
+    rr = np.sqrt(x**2 + y**2 + z**2)
+    f = np.where(rr < big_r, (1 - (rr / big_r) ** 2) ** 4, 0.0) * 3465 / (512 * np.pi * big_r**3)
+    q = np.array([[0.3, 1.0, 0.0], [1.0, -0.5, 0.2], [0.0, 0.2, 0.2]])  # non-spherical
+    kax = 2 * np.pi * np.fft.fftfreq(n, d=h)
+    kk = np.meshgrid(kax, kax, kax, indexing="ij")
+    k2 = kk[0] ** 2 + kk[1] ** 2 + kk[2] ** 2
+    k2[0, 0, 0] = 1.0
+    ft = np.fft.fftn(np.fft.ifftshift(f))
+    rho_k = -sum(q[m, nn] * kk[m] * kk[nn] for m in range(3) for nn in range(3)) * ft
+    out = {"n": n, "box_over_R": box, "points": []}
+    for pt in ((4.0, 0.0, 0.0), (2.4, 2.4, 2.4), (0.0, 3.2, -2.0)):
+        idx = tuple(int(round(c / h)) + n // 2 for c in pt)
+        num = np.zeros((3, 3))
+        for i in range(3):
+            for j in range(3):
+                ik = -2 * kk[i] * kk[j] * rho_k / k2
+                ik[0, 0, 0] = 0.0
+                num[i, j] = np.fft.fftshift(np.fft.ifftn(ik).real)[idx]
+        xyz = [ax[i] for i in idx]
+        ana = d4_inv_r(q.tolist(), xyz) / (2 * np.pi)
+        out["points"].append(
+            {
+                "x_over_R": [round(float(v), 3) for v in xyz],
+                "max_rel_error": float(np.max(np.abs(num - ana)) / np.max(np.abs(ana))),
+                "E_xx_numeric": float(num[0, 0]),
+                "E_xx_analytic": float(ana[0, 0]),
+            }
+        )
+    return out
+
+
+def link_budget_c13(p=ea.P) -> dict:
+    """Signal size of I_ij (model-internal linear response; ASSUMPTION-laden, generous).
+    Outside the sender, I_ij = kappa' G I_mn(t) d_i d_j d_m d_n (1/r), kappa' = c13^2 /
+    (c14 (1 - c13)^2), I_mn = int rho x_m x_n (energy and momentum conservation fix the monopole
+    and the dipole's time dependence, so the quadrupole leads). Sender: round 8's mass and stroke
+    moved non-spherically, Delta I = 2 M R stroke in I_xx - I_yy (ASSUMPTION); receiver on the x
+    axis, angular factor 36 (d_x^4 - d_x^2 d_y^2 of 1/r = 36 / r^5). It lasts until the fastest
+    front arrives, (r - R) / max(c_S, c_T). SNR = |I_xx| sqrt(tau) / ASD for a receive time tau
+    inside that window. Returns kappa' and c14 (at |c13| = 1e-15) needed for the round-8 SNR."""
+    import math
+
+    ang = abs(d4_inv_r([[1, 0, 0], [0, -1, 0], [0, 0, 0]], (1.0, 0.0, 0.0))[0, 0])
+    di = 2 * p.source_mass_kg * p.source_radius_m * p.source_stroke_m
+    rows = []
+    for d_ly in p.distances_ly:
+        r = d_ly * ea.LY_M
+        e_unit = ea.G_SI * di * ang / r**5  # I_xx / kappa'
+        for tau in p.latencies_s:
+            k_req = p.snr * p.detector_asd_s2_per_rthz / (e_unit * math.sqrt(tau))
+            rows.append(
+                {
+                    "distance_ly": d_ly,
+                    "receive_time_s": tau,
+                    "window_needed_c_max_at_most": r / (ea.C_SI * tau),
+                    "I_xx_per_kappa_s2": e_unit,
+                    "kappa_required": k_req,
+                    "c14_required_at_c13_1e-15": 1e-30 / k_req,
+                }
+            )
+    return {"angular_factor": ang, "delta_I_kg_m2": di, "rows": rows}
 
 
 def main(argv=None) -> int:
@@ -157,6 +471,9 @@ def main(argv=None) -> int:
         "khronometric tidal response with matter coupled to the metric only",
         "bs_controls": bs_controls(),
         "khronometric_vs_ea": khronometric_vs_ea(),
+        "c13_nonzero": c13_check(),
+        "position_space_check": position_space_check(),
+        "link_budget_c13": link_budget_c13(),
     }
     print(json.dumps(out, indent=1))
     return 0

@@ -69,10 +69,10 @@ The goal rounds have each paused their communication candidate:
 | Changed premise | Local Lorentz invariance of the gravity sector: a dynamical preferred foliation T (the round-5 §5 "not covered" class). |
 | How verified physics is recovered | The khronometric (BPSH IR) action is Einstein–æther with u_a = N∂_aT [lit: Jacobson, arXiv:1001.4823v3, the published version with its erratum; v3 fixes a typo in Eq. 10]. With small couplings it restores GR, PPN and GW170817 [lit: 1802.04303; 1311.7144]. |
 | First experimental constraint | PPN α1 and α2, binary pulsars and GW170817, as in round 8. |
-| Missing evidence | Settled at linear order by this round's check (§2b). The non-linear elliptic part is not settled (§2b). |
-| Prediction different from standard physics | At linear order with ordinary matter: none beyond round 8 (§2b). |
+| Missing evidence | Linear order: settled for c13 = 0 (§2b); for c13 ≠ 0 the linear response has an instantaneous part (§2c), whose usability is not settled. The non-linear elliptic part is not settled (§2b). |
+| Prediction different from standard physics | At linear order with ordinary matter: none beyond round 8 for c13 = 0 (§2b). For c13 ≠ 0: a transient tidal term with no retardation in the æther frame, ∝ c13²/c14 (§2c; model-internal). |
 | Decision-changing result | A demonstration that **local, conserved matter**, with the prior state and the outer boundary conditions held fixed, drives the slice-wise elliptic (instantaneous) part to a non-zero tidal response at a distant receiver. |
-| Minimal verification | §2b: done at linear order; the non-linear step is costed there. |
+| Minimal verification | §2b and §2c: done at linear order (c13 = 0 and c13 ≠ 0); the non-linear step is costed in §2b and not started. |
 | Gaps to communication | Round 8's amplitude trade-off at linear order, plus the non-linear question below. |
 
 ## 2b. P3 check (this round): khronometric instantaneous term, ordinary matter, tidal readout
@@ -108,18 +108,19 @@ and it is not assumed here.
   the metric only, with a general conserved source. The transverse covariant æther is set to zero in the action
   (u_⊥ = v_⊥ + h_0⊥ = 0, so the h_0⊥ equation becomes E[h_0⊥] − E[v_⊥]), in gauges h_0i = 0 and unitary khronon.
 - **Result.** The tidal tensor E_ij = R_{0i0j} at a receiver equals EA's exactly in the scalar and tensor sectors,
-  for every c_i.
+  for every c_i. **Scope (owner review 2): the conclusions below hold for c13 = 0 only; c13 ≠ 0 is §2c.**
   - The vector sector differs only by EA's c_V pole, which is proportional to c13²; khronometric has no pole there.
   - With c13 = 0 (GW170817) the two theories give the **identical** linear response.
-- **Consequences:**
+- **Consequences (c13 = 0 only):**
   - At linear order, the BS-type instantaneous term does not appear in the tidal response to ordinary matter.
   - Round 8's results carry over exactly to khronometric theory at linear order: the causal c_S cone and the
     coupling κ ≈ c14/4 ∝ 1/c_S².
   - The two cases are **the same** under: linear order, matter coupled to the metric only, c13 = 0, tidal readout.
-  - They **differ** only in the vector sector when c13 ≠ 0 (EA has the c_V pole, khronometric does not).
-- **Interpretation** [derived, not computed]. This is consistent with BS: at linear order, matter feeds the
-  khronon only through metric scalar potentials, i.e. gradient-type couplings, for which their instantaneous
-  piece vanishes.
+  - They **differ** only in the vector sector when c13 ≠ 0 (EA has the c_V pole, khronometric does not). GW170817
+    bounds |c13| ≲ 10⁻¹⁵ but does not set it to zero, so this difference must be checked in position space (§2c).
+- **Interpretation** [conj], for c13 = 0 only. This is consistent with BS: at linear order, matter then feeds the
+  khronon only through gradient-type couplings, for which their instantaneous piece vanishes. §2c shows that this
+  fails for c13 ≠ 0.
 
 **Not settled: the non-linear elliptic part** [lit + open].
 - **Spherical symmetry.** In spherical symmetry f_im(T) = 0 when the centre (or a universal horizon) is regular,
@@ -140,10 +141,108 @@ and it is not assumed here.
 - **Also not covered:** the UV (higher-spatial-derivative) Hořava dispersion, which has unbounded group velocity at
   high momentum.
 
-**Answer to the P3 question.** At linear order, no: with ordinary matter coupled only to the metric, the khronometric
-"instantaneous" term does not enter the receiver's tidal tensor, and the response equals EA's. Non-linearly the
+**Answer to the P3 question (scope corrected, §2c).** At linear order with c13 = 0, no: with ordinary matter coupled
+only to the metric, the khronometric "instantaneous" term does not enter the receiver's tidal tensor, and the response
+equals EA's. With c13 ≠ 0 it does enter (§2c). Non-linearly the
 question is open; it is not shown to exist and not shown to be absent. Using the word "instantaneous" in the
 literature is not evidence of a usable channel.
+
+## 2c. P3 with c13 ≠ 0: the linear khronometric response has an instantaneous part (owner review 2)
+
+**Scope correction.** GW170817 bounds |c13| ≲ 10⁻¹⁵ [lit: 1802.04303, via round 8] but does not set c13 = 0. §2b's
+"the instantaneous term does not enter at linear order" is established for c13 = 0 only. This section checks
+c13 ≠ 0 in position space. It stays at linear order: no second-order or non-linear step was started.
+
+**3D kernel** [derived; `scripts/goal_khronometric.py` `c13_check`, `results/goal_round9/khronometric.json`]:
+- **Ansatz.** E_ij = a k̂_ik̂_jρ + b k̂_ik̂_jS^T + c P_ijρ + d P_ijS^T + v(k̂_iV_j + k̂_jV_i) + t S^TT_ij, with
+  P = 1 − k̂k̂, V = Pj, S^T = P_mnS_mn and S^TT = PSP − PS^T/2. It reproduces every helicity-frame component of EA
+  and of khronometric exactly (residual 0).
+- **Only v differs.** ΔE_ij = E_khronometric − E_EA = A ω (k_iP_jm + k_jP_im) j_m / (ω² − c_V²k²), with
+  A = 4πG c13² / [c14(1 − c13)²]. This is the owner's form; the residual is 0 in every direction.
+  - Khronometric alone: v = −8πGω / ((1 − c13)k), t = 8πGω² / (k² − (1 − c13)ω²). The scalar coefficients equal EA's.
+- **Reduction check.** Khronometric depends on c1 only through c13 and c14 (∂/∂c1 = 0 at fixed c13 and c14), as a
+  hypersurface-orthogonal æther requires [lit: Jacobson 1001.4823v3].
+
+**Support test** [derived]:
+- **The source is local.** The input is the conserved T^{μν} itself, not Pj. Any conserved source is generated by
+  its stresses: j_i = k_mS_im/ω, ρ = k_mk_nS_mn/ω².
+- **Algebraic split.** With k·j = ωρ and ω²/[k²(ω² − v²k²)] = 1/k² + v²/(ω² − v²k²):
+  - ΔE_ij = [Aω(k_ij_j + k_jj_i) − 2Ac_V²k_ik_jρ] / (ω² − c_V²k²) + I_ij,
+  - I_ij = −2A k_ik_jρ / k² (residual 0).
+  - This split alone proves nothing, so the full tensor was tested.
+- **Full-tensor test.** A bare k² = k_x² + k_y² + k_z² in a denominator of the 3D kernel is a spatially non-local
+  term with no retardation. Factors ω^n (time integrals of a local source) and ω² − c²k² (retarded propagators) are
+  causal. Exact rational parameter points:
+
+| Kernel | Bare k² |
+|---|---|
+| GR limit (c_i → 0); EA at c13 = 0, 3/20 and 1/1000; khronometric at c13 = 0 | none |
+| khronometric at c13 = 3/20 and 1/1000 | **yes** |
+| khronometric − I_ij at c13 = 3/20 and 1/1000 | none |
+
+- **No further cancellation.** Nothing else in the full tidal tensor cancels I_ij, and I_ij is the whole
+  instantaneous part.
+- **Controls.** GR and EA show none; EA is causal, as round 8 assumed.
+
+**Position space** [derived]. Retarded prescription, a quiet prior state and fields that decay at infinity, the
+same for both theories:
+- **Instantaneous term.** I_ij(t, x) = −2A ∂_i∂_j∇⁻²ρ(t, x) = −κ_inst ∂_i∂_jΦ_N[ρ(t)], with
+  κ_inst = 2c13²(1 − c14/2) / [c14(1 − c13)²]. It is the Newtonian tidal tensor of the source's **current** mass
+  distribution, taken on the æther slice t.
+- **Validation source.** A smooth, local, conserved, non-spherical source with the stresses of its drive:
+  - T^{ij} = q̈_ij f, T^{0i} = −∂_j(q̇_ij f), ρ = ∂_i∂_j(q_ij f);
+  - f is a compact C³ radial bump; q is a generic symmetric matrix switched on from 0.
+  - Outside the source, I_ij = κ′ G I_mn(t) ∂_i∂_j∂_m∂_n(1/r), with κ′ = c13² / [c14(1 − c13)²] and I_mn = ∫ρx_mx_n.
+  - An FFT of the kernel agrees at three exterior points to ≤ 4.4 % (`position_space_check`; box periodicity and
+    grid).
+- **Window.** Every other term is retarded and vanishes at the receiver until the fastest front arrives, at
+  (r − R)/max(c_S, c_T). A source switched on at t = 0 therefore gives the receiver **exactly I_ij** for
+  0 < t < (r − R)/max(c_S, c_T).
+- **Transient, not a static change.** The static response equals EA's (ΔE(ω = 0) = 0; `pole_bookkeeping` checks
+  two components at one k). The c_T and c_S fronts that follow restore the static field. How the compensation
+  splits between them was not computed.
+- **Multipoles.** Energy and momentum conservation of the whole sender, drive included, fix ∫ρ and make ∫ρx move
+  uniformly. The controllable part therefore starts at the quadrupole and falls as r⁻⁵.
+
+**Status.** This is a **linear response inside the model** (khronometric, linearised about flat space with the æther
+at rest, matter coupled to the metric only). It is not a demonstrated channel. It is symmetric between sender and
+receiver. It is simultaneous on the æther foliation, so a single global foliation gives no closed loops [derived].
+
+**Dependences** [derived]:
+- **Amplitude:** κ′ G ΔI × (angular factor) / r⁵. The angular factor is 36 on axis for ΔI in I_xx − I_yy.
+- **Arrival:** no retardation in the æther frame, so it does not depend on r.
+- **Duration:** at most (r − R)/max(c_S, c_T).
+- **Coupling:** κ′ ∝ c13²/c14, which grows as c14 → 0 at fixed c13. The c14 denominator is kept.
+
+**Size at a fixed receive time τ** (`link_budget_c13`; round 8's generous receiver, ASD 10⁻²⁰ s⁻²/√Hz and SNR 5;
+sender: 10¹² kg moved 10 m at 1 km non-spherically, ΔI = 2 × 10¹⁶ kg m², ASSUMPTION):
+- SNR = |I_xx|√τ/ASD, valid while τ fits inside the window, i.e. max(c_S, c_T) ≤ r/(cτ).
+- Required values:
+
+| r | τ | κ′ needed | c14 needed at \|c13\| = 10⁻¹⁵ | window needs max(c_S, c_T) ≤ |
+|---|---|---|---|---|
+| 20 ly | 1 s / 1 d / 1 yr | 2.5 × 10⁵⁹ / 8.6 × 10⁵⁶ / 4.5 × 10⁵⁵ | 4 × 10⁻⁹⁰ / 1 × 10⁻⁸⁷ / 2 × 10⁻⁸⁶ | 6.3 × 10⁸ / 7,305 / 20 |
+| 100 ly | 1 s / 1 d / 1 yr | 7.9 × 10⁶² / 2.7 × 10⁶⁰ / 1.4 × 10⁵⁹ | 1 × 10⁻⁹³ / 4 × 10⁻⁹¹ / 7 × 10⁻⁹⁰ | 3.2 × 10⁹ / 36,525 / 100 |
+
+**What decides usability, not settled here:**
+- **Window versus coupling.** c_S² = (c13 + c2)(2 − c14) / [c14(1 − c13)(2 + c13 + 3c2)] grows as c14 → 0.
+  - With c2 ≥ 0 and c13 > 0, c_S² ≳ c13/c14, so κ′ ≲ 1.2 c13 c_S² ≲ 5 × 10⁻¹³ for the 20-ly, 1-yr window
+    (c_S ≤ 20). That is ~68 orders below need [derived].
+  - Only a tuned c13 + c2 ≈ 0 (c13 < 0, c2 ≈ |c13|, tuned to ~c14 (r/cτ)², i.e. ~10⁻⁸⁴ in absolute terms) escapes
+    this.
+  - Whether such a point is allowed in **khronometric** theory was not checked. The region (i)/(ii) bounds quoted
+    in round 8 are EA fits (1802.04303), and khronometric has no vector mode.
+- **EFT range.** c14 → 0 is the limit where the æther equation loses its time derivatives (round 8). No
+  strong-coupling scale was read. Perturbative validity of the linear khronon response at κ′ ≫ 1 was not checked.
+- **Existing data.** For any accelerated mass, a κ′ ≫ 1 transient would exceed the Newtonian tidal field of the
+  same mass change by that factor. Whether existing data already exclude this was not checked.
+- **Decision-changing result.** An allowed khronometric parameter point with κ′ ≳ 10⁵⁵ and
+  max(c_S, c_T) ≤ r/(cτ), inside a controlled EFT. It is neither shown nor excluded here.
+
+**Answer.** With c13 ≠ 0, the linear khronometric tidal response to ordinary, local, conserved matter has an
+instantaneous, spatially non-local part, I_ij = −2A k_ik_jρ/k². Nothing else in the full tidal tensor cancels it.
+It is a model-internal linear response, not evidence of a usable channel. Its size and window are tied to c13²/c14
+and c_S as above.
 
 ## 3. Comparison and choice
 
@@ -151,9 +250,11 @@ literature is not evidence of a usable channel.
 |---|---|---|---|---|
 | P1 v-causal | yes (S4 below the realistic QM prediction; B ∼ C signalling) | **no** (no four-party spacelike data) | — | yes, if positive |
 | P2 exotic lenses | yes (W3: flux to zero) | yes, but already scheduled in another program | the existing pipeline | a survivor is a candidate only; nulls need an abundance model |
-| P3 khronometric | not at linear order (§2b); non-linear part open | linear: done; non-linear: needs a second-order calculation | linear done; non-linear not light | only if the non-linear part gives a matter-driven response |
+| P3 khronometric | c13 = 0: not at linear order (§2b); c13 ≠ 0: yes, a linear instantaneous transient ∝ c13²/c14 (§2c); non-linear part open | linear: done; usability needs the allowed khronometric (c13, c14, c2) region and an EFT range; non-linear: needs a second-order calculation | linear done; non-linear not light | only if an allowed, controlled parameter point gives κ′ ≳ 10⁵⁵ inside the window (§2c), or the non-linear part gives a matter-driven response |
 
-**Result.** Not enough basis to select a further executable unit beyond the P3 linear check done here.
+**Result.** Not enough basis to select a further executable unit beyond the P3 linear checks done here (§2b, §2c).
+- The c13 ≠ 0 linear term exists in the model (§2c). Whether it is usable turns on the khronometric constraint
+  region at c14 ≪ c13² and on the EFT range there, neither of which was settled.
 - The next P3 step is a second-order or non-linear computation, which is beyond a light check. It is costed in §2b
   for the owner to decide.
 - P1 lacks data.
@@ -165,16 +266,23 @@ literature is not evidence of a usable channel.
    v-causal signalling branch and amplitude.
 2. **P2:** an unexplained W3 survivor (then vetting), or a quantitative abundance or rate model for exotic lenses.
 3. **P3:** an owner decision to fund the second-order khronometric calculation (§2b), or a published non-linear
-   result with a matter-only source.
+   result with a matter-only source. For the linear c13 ≠ 0 term (§2c): published khronometric (not EA) bounds on
+   c14 at |c13| ~ 10⁻¹⁵ with c13 + c2 ≈ 0, or a strong-coupling scale as c14 → 0.
 
 ## 4. Plain-language summary
 
-- **New evidence?** No new observational evidence. One new derived result: at linear order, the Hořava/khronometric
-  "instantaneous" term does not reach a receiver's tidal measurement when the sender only moves ordinary matter.
-  The theory then behaves exactly like round 8's Einstein–æther case.
+- **New evidence?** No new observational evidence. Two derived results:
+  - At linear order with c13 = 0, the Hořava/khronometric "instantaneous" term does not reach a receiver's tidal
+    measurement when the sender only moves ordinary matter. The theory then behaves exactly like round 8's
+    Einstein–æther case.
+  - With c13 ≠ 0 (allowed: GW170817 gives |c13| ≲ 10⁻¹⁵, not 0), it does. Moving ordinary matter gives a tidal
+    transient that arrives with no delay in the æther frame. Its size is c13²/c14 times the Newtonian tidal
+    field of the quadrupole change, and it lasts until the khronon and tensor fronts arrive. This is a
+    model-internal linear response. For a lab-scale sender it needs κ′ ≳ 10⁵⁵ (c14 ≲ 10⁻⁸⁶ at |c13| = 10⁻¹⁵), and
+    whether such parameters are allowed and inside the EFT is open (§2c).
   - [lit]: the controls (Blas–Sibiryakov instantaneous term and its EA cancellation; Bhattacharyya et al.'s
     elliptic mode).
-  - [derived]: the khronometric = EA linear response.
+  - [derived]: the khronometric = EA linear response (c13 = 0) and the c13 ≠ 0 instantaneous part.
   - [conj]: the non-linear question.
 - **Judgement changed:** P3 no longer rests on "a recomputation would only repeat round 8" or "needs a strong-
   coupling completion first". The linear part is now checked; only the non-linear part remains, with a stated cost.
@@ -191,9 +299,11 @@ literature is not evidence of a usable channel.
 - Inputs: repository files and PRs; three papers read for P3 (arXiv PDFs in the scratchpad, not committed):
   Jacobson 1001.4823v3 [66fd0b22…], Blas & Sibiryakov 1110.2195v2 [d1a83782…] (§2, App. A), Bhattacharyya et al.
   1512.04899v2 [b8343d3b…] (§§II, IV).
-- Computation: `scripts/goal_khronometric.py` (~20 s), results `results/goal_round9/khronometric.json`, tests
+- Computation: `scripts/goal_khronometric.py` (~80 s), results `results/goal_round9/khronometric.json`, tests
   `tests/test_goal_khronometric.py`.
 - Corrections in this revision (owner review): the Jacobson citation (1003.4987 → 1001.4823); W3 survivors are
   candidates only; the Ellis and negative-mass templates are separated; the ~10³⁸ M☉ figure is scoped to round 6's
-  model; a low S4 needs a realistic QM prediction; the "only route" remark is withdrawn.
+  model; a low S4 needs a realistic QM prediction; the "only route" remark is withdrawn. Owner review 2: the
+  linear conclusion is scoped to c13 = 0, and c13 ≠ 0 is checked in §2c (3D kernel, full-tensor support test,
+  position space, signal size).
 - State files: CHANGELOG entry and a proposed DECISIONS record (D-TBD), with no change to TASKS priorities.
