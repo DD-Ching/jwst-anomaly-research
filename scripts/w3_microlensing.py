@@ -163,12 +163,38 @@ def point_magnification(beta, n: float, sign: int) -> np.ndarray:
 try:  # optional: numba (extra "dev"/"fast"); the exotic_sim integral is the reference and fallback
     import numba
 
+    @numba.njit(cache=True, nogil=True, inline="always")
+    def _point_amp(x, n2, sign, bc, tx, ty):
+        """``point_magnification`` at one radius x ≥ 0 for n = 1 (closed form) or n = 2 (table)."""
+        if not n2:
+            if sign == 1:
+                x = max(x, 1e-12)
+                return (x * x + 2.0) / (x * np.sqrt(x * x + 4.0))
+            if x > 2.0:
+                return (x * x - 2.0) / (x * np.sqrt(x * x - 4.0))
+            return 0.0
+        if sign == 1:
+            lx = np.log10(max(x, 1e-300))
+            if lx < tx[0]:
+                return 10.0 ** ty[0] * 10.0 ** tx[0] / max(x, 1e-300)
+            if lx > tx[-1]:
+                return 1.0
+            return 10.0 ** np.interp(lx, tx, ty)
+        d = x - bc
+        if not d > 0.0:
+            return 0.0
+        lx = np.log10(d)
+        if lx < tx[0]:
+            return 10.0 ** ty[0] * np.sqrt(10.0 ** tx[0] / d)
+        if lx > tx[-1]:
+            return 1.0
+        return 10.0 ** np.interp(lx, tx, ty)
+
     @numba.njit(cache=True, nogil=True, error_model="numpy")  # IEEE x / 0, as in numpy
-    def _fs_n1_kernel(b, rho, sign, nodes, weights):
-        """``exotic_sim.finite_source_magnification`` for n = 1 with ``point_magnification``
-        (same sub-intervals, nodes and integrand; only the summation order differs)."""
+    def _fs_kernel(b, rho, n2, sign, bc, nodes, weights, tx, ty):
+        """``exotic_sim.finite_source_magnification`` with ``point_magnification`` for n = 1 or
+        2 (same sub-intervals, nodes and integrand; only the summation order differs)."""
         out = np.empty(b.size)
-        bc = 2.0 if sign == -1 else 0.0  # exotic_sim.caustic_beta(1)
         m = nodes.size
         uu = np.empty(m)
         dd = np.empty(m)
@@ -207,41 +233,41 @@ try:  # optional: numba (extra "dev"/"fast"); the exotic_sim integral is the ref
                         if np.isnan(c):
                             c = 1.0
                         phi = np.arccos(min(max(c, -1.0), 1.0))
-                    x = max(rr, 0.0)
-                    if sign == 1:
-                        x = max(x, 1e-12)
-                        amp = (x * x + 2.0) / (x * np.sqrt(x * x + 4.0))
-                    elif x > 2.0:
-                        amp = (x * x - 2.0) / (x * np.sqrt(x * x - 4.0))
-                    else:
-                        amp = 0.0
+                    amp = _point_amp(max(rr, 0.0), n2, sign, bc, tx, ty)
                     if np.isfinite(amp):
                         acc += amp * (2.0 * rr * phi) * w
             out[i] = acc / (np.pi * rho * rho)
         return out
 
 except ImportError:  # pragma: no cover - exercised only without numba
-    _fs_n1_kernel = None
+    _fs_kernel = None
 
 FS_REFERENCE = os.environ.get("W3_FS_REFERENCE") == "1"  # read at import: pool workers inherit it
+_NO_TABLE = np.zeros(1)
+# n = 2 stays on the numpy path: its scalar table interpolation in the kernel is slower than
+# numpy's vectorized one (149 vs 125 µs per call; n = 1: 17 vs 86 µs; CHANGELOG 2026-10-11)
+KERNEL_N = (1.0,)
 
 
-def finite_source_n1(beta, rho: float, sign: int, n_nodes: int = 32) -> np.ndarray:
-    """Finite-source n = 1 magnification with ``point_magnification`` inside the integral: the
-    compiled kernel when numba is installed, else ``exotic_sim.finite_source_magnification``
-    (also with ``W3_FS_REFERENCE=1``, for identical-outcome checks against the kernel)."""
+def finite_source_fast(beta, rho: float, n: float, sign: int, n_nodes: int = 32) -> np.ndarray:
+    """Finite-source magnification with ``point_magnification`` inside the integral: for n in
+    ``KERNEL_N`` the compiled kernel (n = 1 or 2) when numba is installed, else (and with
+    ``W3_FS_REFERENCE=1``, for identical-outcome checks) the exotic_sim integral."""
     b = np.ascontiguousarray(np.atleast_1d(np.asarray(beta, float)))
-    if FS_REFERENCE or _fs_n1_kernel is None or not rho > 0 or not b.size:
+    if FS_REFERENCE or _fs_kernel is None or n not in KERNEL_N or not rho > 0 or not b.size:
         return es.finite_source_magnification(
             b,
             rho,
-            1.0,
+            n,
             sign,
             n_nodes=n_nodes,
-            point_magnification=lambda x: point_magnification(x, 1.0, sign),
+            point_magnification=lambda x: point_magnification(x, n, sign),
         )
     nodes, weights = es._gauss_legendre(int(n_nodes))
-    return _fs_n1_kernel(b, float(rho), int(sign), nodes, weights)
+    n2 = n == 2.0
+    tx, ty = _n2_table(sign) if n2 else (_NO_TABLE, _NO_TABLE)
+    bc = es.caustic_beta(n) if sign == -1 else 0.0
+    return _fs_kernel(b, float(rho), n2, int(sign), bc, nodes, weights, tx, ty)
 
 
 def exotic_magnification(beta, n: float, sign: int, rho: float, near: float | None = None):
@@ -264,17 +290,8 @@ def exotic_magnification(beta, n: float, sign: int, rho: float, near: float | No
     pt = close & ~sel
     a[pt] = point_magnification(b[pt], n, sign)
     if rho > 0:
-        if sel.any() and n == 1:
-            a[sel] = finite_source_n1(b[sel], rho, sign, n_nodes=32)
-        elif sel.any():
-            a[sel] = es.finite_source_magnification(
-                b[sel],
-                rho,
-                n,
-                sign,
-                n_nodes=32,
-                point_magnification=lambda x: point_magnification(x, n, sign),
-            )
+        if sel.any():
+            a[sel] = finite_source_fast(b[sel], rho, n, sign, n_nodes=32)
     return a
 
 

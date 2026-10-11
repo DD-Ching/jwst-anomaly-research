@@ -65,22 +65,24 @@ def test_fast_magnification_matches_exotic_sim(sign):
         assert np.allclose(fs_got, fs_ref, rtol=5e-3, atol=1e-3)
 
 
+@pytest.mark.parametrize("n", [1.0, 2.0])
 @pytest.mark.parametrize("sign", [1, -1])
-def test_compiled_n1_finite_source_matches_the_reference_integral(sign, monkeypatch):
+def test_compiled_finite_source_matches_the_reference_integral(n, sign, monkeypatch):
     """The numba kernel (when installed) is the exotic_sim integral up to summation order."""
     rng = np.random.default_rng(7)
-    bc = 2.0 if sign == -1 else 0.0
+    bc = es.caustic_beta(n) if sign == -1 else 0.0
     for rho in (1e-3, 0.03, 0.3, 2.5):
         b = np.maximum(np.r_[bc + rho * rng.uniform(-3, 3, 500), 0.0, bc, bc + rho, np.nan], 0)
         b[-1] = np.nan
         ref = es.finite_source_magnification(
-            b, rho, 1.0, sign, 32, lambda x: w3.point_magnification(x, 1.0, sign)
+            b, rho, n, sign, 32, lambda x: w3.point_magnification(x, n, sign)
         )
-        got = w3.finite_source_n1(b, rho, sign)
+        monkeypatch.setattr(w3, "KERNEL_N", (1.0, 2.0))  # test the kernel for both n
+        got = w3.finite_source_fast(b, rho, n, sign)
         assert np.array_equal(np.isnan(got), np.isnan(ref))
         np.testing.assert_allclose(got, ref, rtol=1e-12, atol=1e-300)
         monkeypatch.setattr(w3, "FS_REFERENCE", True)  # the switch gives the reference itself
-        assert np.array_equal(w3.finite_source_n1(b, rho, sign), ref, equal_nan=True)
+        assert np.array_equal(w3.finite_source_fast(b, rho, n, sign), ref, equal_nan=True)
         monkeypatch.setattr(w3, "FS_REFERENCE", False)
 
 
