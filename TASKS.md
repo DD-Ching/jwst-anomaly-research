@@ -16,7 +16,14 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
   criteria compared). **The line is paused** until a trigger
   in docs/goal_round3/README.md §8 fires (a four-party spacelike platform with no postselection, an observed
   S4 ≤ 6, a known frame, a branch-fixing model, a fast high-efficiency photonic source, or a better witness).
-- Next (open, not on this line): modified-gravity escape from Gao–Wald (literature unit).
+- Round 4 done (docs/goal_round4/): the beyond-Horndeski wormhole of 2212.05969 fails the complete sufficient stability set
+  (low-ℓ sufficient conditions; superluminal angular mode, not an instability) and links separate asymptotic regions
+  (no same-exterior shortcut established). The communication use of this solution is paused (owner).
+  PR left unmerged for the owner.
+- Open item for that solution: the ℓ = 2 even-parity eigenproblem in a Θ-regular formulation (does a real tachyon
+  exist?).
+- Round 5 (owner brief 2026-10-11): which concrete candidates predict that a receiver reads a freely chosen message
+  before exterior light arrives? Screen at most three candidates (docs/goal_round5/).
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and

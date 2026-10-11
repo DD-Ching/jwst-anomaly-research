@@ -4183,3 +4183,27 @@ S > 7 or setting dependence in R trials.
 **Evidence.** docs/goal_round3/README.md §§4–7; `results/goal_round3/hic_witnesses.json`.
 
 **Revisit if.** Any trigger of §8 fires.
+
+## D-TBD Goal round 4: pause the communication use of the beyond-Horndeski solution of 2212.05969 (2026-10-11)
+
+**Decision** (owner, 2026-10-11).
+- The communication use of this one solution is paused. The results are kept, and nothing is concluded about
+  wormholes or modified gravity in general.
+- Three separate findings:
+  - **Stability:** not established. The complete sufficient set of 2404.06297 fails at low ℓ. A real tachyon is not
+    shown.
+  - **Propagation:** one sector is superluminal (c² ≤ 1.83). This is not an instability.
+  - **EFT consistency:** open.
+- Channel: the ends are separate asymptotic regions, so no shortcut comparison is established within one exterior.
+  Equal clock rates are neutral.
+
+**Alternatives rejected.**
+- Citing the paper titles as evidence of stability.
+- Applying GW170817 or the Ellis-lens limits: neither applies to this background or deflection law.
+- Reconstructing the Lagrangian functions: not needed, since Ξ = Γ = 0 and H = G = 1 fix the stability set.
+
+**Evidence.** docs/goal_round4/README.md §§2–5; `results/goal_round4/bh_wormhole.json`.
+
+**Revisit if.**
+- A Θ-regular low-ℓ eigenanalysis of this solution is published or done here.
+- An intra-universe beyond-Horndeski or DHOST wormhole with a complete stability check appears.

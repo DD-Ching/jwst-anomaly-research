@@ -1246,3 +1246,14 @@ Full texts read 2026-10-11, through arXiv PDFs or the cited archives.
 - Storz et al., Nature 617, 265 (2023), read through PMC10172133.
 - Pompili et al., Science 372, 259 (2021), arXiv:2102.04471.
 - Monz et al., PRL 106, 130506 (2011), arXiv:1009.6126.
+
+## Goal round 4 (2026-10-11; docs/goal_round4/README.md)
+
+**Read in full** (arXiv PDFs; formulas read from page images):
+- Mironov, Rubakov & Volkova, PRD 107, 104061 (2023), arXiv:2212.05969v1. Only v1 exists; sha256 2a8ea802…
+- Mironov & Volkova, arXiv:2404.06297v2 (2025-01-17). The comments field says "published in IJMPA ICNFP2022
+  Special Issue"; the journal reference was not checked. sha256 22eb223e…
+
+**Abstracts only** (INSPIRE citing records and arXiv search, 2026-10-11):
+- 2411.05416, 2408.01480, 2404.10456 and 2609.00664.
+- 1812.07022 (the 2018 predecessor) and 1811.05481 (Franciolini et al.).
