@@ -1,0 +1,482 @@
+{
+ "provenance": "derived (exact LP and kinematics) under the stated model assumptions",
+ "positive_control_S_quantum": 7.20138993700702,
+ "S_local_bound": 7.0,
+ "quantum_is_no_signalling": true,
+ "lp": {
+  "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal) | Optimization terminated successfully. (HiGHS Status 7: Optimal) | Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "min_bcd_on_x": 0.0,
+  "min_abc_on_w": 0.0,
+  "min_of_max": 0.006293435531469351,
+  "min_of_sum": 0.012586871062938626,
+  "min_bcd_on_x_if_abc_silent": 0.015991059936570632,
+  "min_abc_on_w_if_bcd_silent": 0.012586871062938725,
+  "ns_feasible": false
+ },
+ "timing": {
+  "r=2": {
+   "Bancal Fig. 3": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 0.9583333333333334,
+      "latency_from_sender": 0.9583333333333334,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.0434782608695652
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 1.4583333333333335,
+      "latency_from_sender": 0.9583333333333335,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.043478260869565
+     },
+     "both_superluminal_iii": true
+    },
+    "A_to_Dprime_latency_years": 95.83333333333334,
+    "D_to_Aprime_latency_years": 95.83333333333334,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 70.83333333333333,
+     "C": 79.16666666666667,
+     "D": 100.0
+    }
+   },
+   "B, C at the midpoint": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 1.2515000007505002,
+      "latency_from_sender": 1.2515000007505002,
+      "light_time": 1.0,
+      "superluminal": false,
+      "effective_speed_over_c": 0.7990411501400875
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 1.2515000007505002,
+      "latency_from_sender": 0.7515000007505002,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.3306719880257225
+     },
+     "both_superluminal_iii": false
+    },
+    "A_to_Dprime_latency_years": 125.15000007505002,
+    "D_to_Aprime_latency_years": 75.15000007505002,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 49.9,
+     "C": 50.1,
+     "D": 100.0
+    }
+   },
+   "B, C next to D": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 0.503000000501,
+      "latency_from_sender": 0.503000000501,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.988071568596374
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 1.5000000005010001,
+      "latency_from_sender": 1.0000000005010001,
+      "light_time": 1.0,
+      "superluminal": false,
+      "effective_speed_over_c": 0.9999999994989999
+     },
+     "both_superluminal_iii": false
+    },
+    "A_to_Dprime_latency_years": 50.3000000501,
+    "D_to_Aprime_latency_years": 100.00000005010001,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 99.9,
+     "C": 99.8,
+     "D": 100.0
+    }
+   },
+   "best_guaranteed_grid": {
+    "worst_latency_L_over_c": 0.880000000625,
+    "xB": 0.75,
+    "xC": 0.755,
+    "worst_latency_years": 88.00000006249999
+   }
+  },
+  "r=10": {
+   "Bancal Fig. 3": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 0.8159090909090909,
+      "latency_from_sender": 0.8159090909090909,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.2256267409470751
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 0.915909090909091,
+      "latency_from_sender": 0.815909090909091,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.2256267409470751
+     },
+     "both_superluminal_iii": true
+    },
+    "A_to_Dprime_latency_years": 81.5909090909091,
+    "D_to_Aprime_latency_years": 81.59090909090911,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 36.59090909090909,
+     "C": 73.4090909090909,
+     "D": 100.0
+    }
+   },
+   "B, C at the midpoint": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 0.6511000001501001,
+      "latency_from_sender": 0.6511000001501001,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.535862386376082
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 0.6511000001501001,
+      "latency_from_sender": 0.5511000001501001,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.814552712262086
+     },
+     "both_superluminal_iii": true
+    },
+    "A_to_Dprime_latency_years": 65.11000001501,
+    "D_to_Aprime_latency_years": 55.11000001501001,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 49.9,
+     "C": 50.1,
+     "D": 100.0
+    }
+   },
+   "B, C next to D": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 0.10220000010020003,
+      "latency_from_sender": 0.10220000010020003,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 9.784735802539815
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 1.0992000001002,
+      "latency_from_sender": 0.9992000001002,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.0008006404120493
+     },
+     "both_superluminal_iii": true
+    },
+    "A_to_Dprime_latency_years": 10.220000010020003,
+    "D_to_Aprime_latency_years": 99.92000001002,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 99.9,
+     "C": 99.8,
+     "D": 100.0
+    }
+   },
+   "best_guaranteed_grid": {
+    "worst_latency_L_over_c": 0.6000000001450001,
+    "xB": 0.55,
+    "xC": 0.555,
+    "worst_latency_years": 60.00000001450001
+   }
+  },
+  "r=10000": {
+   "Bancal Fig. 3": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 0.750074990001,
+      "latency_from_sender": 0.750074990001,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.3332000311044458
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 0.750174990001,
+      "latency_from_sender": 0.750074990001,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.3332000311044458
+     },
+     "both_superluminal_iii": true
+    },
+    "A_to_Dprime_latency_years": 75.0074990001,
+    "D_to_Aprime_latency_years": 75.0074990001,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 25.012499000099993,
+     "C": 74.99750099990001,
+     "D": 100.0
+    }
+   },
+   "B, C at the midpoint": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 0.5011501000001501,
+      "latency_from_sender": 0.5011501000001501,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.9954101575549927
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 0.5011501000001501,
+      "latency_from_sender": 0.5010501000001502,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.9958084031910188
+     },
+     "both_superluminal_iii": true
+    },
+    "A_to_Dprime_latency_years": 50.11501000001501,
+    "D_to_Aprime_latency_years": 50.105010000015014,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 49.9,
+     "C": 50.1,
+     "D": 100.0
+    }
+   },
+   "B, C next to D": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 0.002100200000100202,
+      "latency_from_sender": 0.002100200000100202,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 476.14512901261276
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 0.9991002000001002,
+      "latency_from_sender": 0.9990002000001003,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.00100080060034
+     },
+     "both_superluminal_iii": true
+    },
+    "A_to_Dprime_latency_years": 0.2100200000100202,
+    "D_to_Aprime_latency_years": 99.90002000001003,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 99.9,
+     "C": 99.8,
+     "D": 100.0
+    }
+   },
+   "best_guaranteed_grid": {
+    "worst_latency_L_over_c": 0.50505000000015,
+    "xB": 0.5,
+    "xC": 0.505,
+    "worst_latency_years": 50.505000000015
+   }
+  },
+  "r=6.3e+08": {
+   "Bancal Fig. 3": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 0.7500000011904762,
+      "latency_from_sender": 0.7500000011904762,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.3333333312169313
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 0.7500000027777777,
+      "latency_from_sender": 0.750000001190476,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.3333333312169315
+     },
+     "both_superluminal_iii": true
+    },
+    "A_to_Dprime_latency_years": 75.00000011904761,
+    "D_to_Aprime_latency_years": 75.0000001190476,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 25.000000198412696,
+     "C": 74.99999996031745,
+     "D": 100.0
+    }
+   },
+   "B, C at the midpoint": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 0.5010000023825397,
+      "latency_from_sender": 0.5010000023825397,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.9960079745397838
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 0.5010000023825397,
+      "latency_from_sender": 0.5010000007952381,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.9960079808636695
+     },
+     "both_superluminal_iii": true
+    },
+    "A_to_Dprime_latency_years": 50.10000023825397,
+    "D_to_Aprime_latency_years": 50.10000007952381,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 49.9,
+     "C": 50.1,
+     "D": 100.0
+    }
+   },
+   "B, C next to D": {
+    "conditions": {
+     "i_times": true,
+     "A<D": true,
+     "A,D<B": true,
+     "A,D<C": true,
+     "ii_B~C": true
+    },
+    "channels": {
+     "A_to_Dprime": {
+      "records_complete_at": 0.002000001590476194,
+      "latency_from_sender": 0.002000001590476194,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 499.9996023812677
+     },
+     "D_to_Aprime": {
+      "records_complete_at": 0.9990000015904762,
+      "latency_from_sender": 0.9990000000031746,
+      "light_time": 1.0,
+      "superluminal": true,
+      "effective_speed_over_c": 1.00100100099782
+     },
+     "both_superluminal_iii": true
+    },
+    "A_to_Dprime_latency_years": 0.2000001590476194,
+    "D_to_Aprime_latency_years": 99.90000000031746,
+    "positions_ly": {
+     "A": 0.0,
+     "B": 99.9,
+     "C": 99.8,
+     "D": 100.0
+    }
+   },
+   "best_guaranteed_grid": {
+    "worst_latency_L_over_c": 0.5050000007936508,
+    "xB": 0.5,
+    "xC": 0.505,
+    "worst_latency_years": 50.50000007936508
+   }
+  }
+ },
+ "statistics": {
+  "tv_at_least_one_direction": 0.006293435531469351,
+  "trials_per_bit_eps_1e-3": 348811.9568482661,
+  "trials_per_bit_eps_1e-6": 697623.9136965323,
+  "states_per_s_for_8_kbit_per_s_voice_eps_1e-3": 2790495654.786129
+ },
+ "sync": {
+  "B-C 0.04 ly apart, r=10000": {
+   "window_s": 126.2304,
+   "frame_ambiguity_s_at_CMB_beta": 1557.683136
+  },
+  "B-C 0.04 ly apart, r=6.3e+08": {
+   "window_s": 0.002003657142857143,
+   "frame_ambiguity_s_at_CMB_beta": 1557.683136
+  },
+  "B-C 1.0570042385869967e-13 ly apart, r=10000": {
+   "window_s": 3.335651695963301e-10,
+   "frame_ambiguity_s_at_CMB_beta": 4.116194192818713e-09
+  },
+  "B-C 1.0570042385869967e-13 ly apart, r=6.3e+08": {
+   "window_s": 5.294685231687779e-15,
+   "frame_ambiguity_s_at_CMB_beta": 4.116194192818713e-09
+  }
+ }
+}

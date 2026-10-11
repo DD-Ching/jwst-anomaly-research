@@ -1,0 +1,78 @@
+"""Offline tests for scripts/goal_bancal_channel.py (Bancal et al. 2012 timing and signalling)."""
+
+from __future__ import annotations
+
+import importlib.util
+import itertools
+import sys
+from pathlib import Path
+
+import numpy as np
+import pytest
+
+_DIR = Path(__file__).resolve().parents[1] / "scripts"
+_spec = importlib.util.spec_from_file_location(
+    "goal_bancal_channel", _DIR / "goal_bancal_channel.py"
+)
+bc = importlib.util.module_from_spec(_spec)
+sys.modules["goal_bancal_channel"] = bc
+_spec.loader.exec_module(bc)
+
+
+@pytest.fixture(scope="module")
+def pq():
+    return bc.quantum_distribution()
+
+
+def test_positive_control_reproduces_the_paper(pq):
+    assert np.linalg.norm(bc.quantum_state()) == pytest.approx(1.0)
+    assert bc.bell_value(pq) == pytest.approx(7.2014, abs=1e-4)  # App. B
+    # QM is no-signalling: the BCD marginal does not depend on x, the ABC marginal not on w
+    for y, z, w in itertools.product((0, 1), repeat=3):
+        assert np.allclose(pq[:, :, :, :, 0, y, z, w].sum(0), pq[:, :, :, :, 1, y, z, w].sum(0))
+    for x, y, z in itertools.product((0, 1), repeat=3):
+        assert np.allclose(pq[:, :, :, :, x, y, z, 0].sum(3), pq[:, :, :, :, x, y, z, 1].sum(3))
+
+
+def test_lp_reproduces_lemma_1_and_bounds_the_signal(pq):
+    res = bc.signalling_lp(pq)
+    assert not res.ns_feasible  # Lemma 1: S > 7 with local BC|AD forces signalling
+    assert res.min_bcd_on_x == pytest.approx(0.0, abs=1e-9)  # either direction alone can be silent
+    assert res.min_abc_on_w == pytest.approx(0.0, abs=1e-9)
+    assert res.min_of_max > 1e-3
+    assert res.min_of_sum >= res.min_of_max - 1e-12
+    assert res.min_bcd_on_x_if_abc_silent >= res.min_of_sum - 1e-9
+
+
+@pytest.mark.parametrize("r", [2.0, 10.0, 1e4, 1e9])
+def test_fig3_layout_meets_the_conditions(r):
+    lay = bc.fig3_layout(r)
+    assert all(bc.conditions(lay, r).values())
+    ch = bc.channel_timing(lay)
+    assert ch["both_superluminal_iii"]
+
+
+def test_fig3_at_20_ly_needs_15_years_for_large_v():
+    ch = bc.channel_timing(bc.fig3_layout(1e9))
+    assert ch["A_to_Dprime"]["latency_from_sender"] * 20 == pytest.approx(15.0, abs=1e-6)
+    assert ch["D_to_Aprime"]["latency_from_sender"] * 20 == pytest.approx(15.0, abs=1e-6)
+
+
+def test_no_guaranteed_layout_beats_half_the_light_time():
+    g = bc.best_guaranteed_latency(1e9, n=101)
+    assert 0.5 <= g["worst_latency_L_over_c"] < 0.52
+
+
+def test_clustered_layout_is_fast_one_way_only():
+    r = 1e9
+    lay = bc.clustered_layout(r)
+    assert all(bc.conditions(lay, r).values())
+    ch = bc.channel_timing(lay)
+    assert ch["A_to_Dprime"]["latency_from_sender"] < 0.01
+    assert ch["D_to_Aprime"]["latency_from_sender"] > 0.99
+
+
+def test_statistics_helpers():
+    assert bc.trials_for_error(0.0, 1e-3) == float("inf")
+    assert bc.trials_for_error(0.1, np.exp(-1)) == pytest.approx(200.0)
+    assert bc.bc_sync_window_s(1.0, 1.0) == pytest.approx(365.25 * 86400)
