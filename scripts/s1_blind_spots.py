@@ -77,12 +77,15 @@ def single_pulse(a):
     dtd = np.array([abs(B[int(bg[q, 0])]["mjd"] - B[int(bg[q, 1])]["mjd"]) for q in order])
     passed = (pv >= fz["consistency_cut"]) & (dtd >= 1.0)
     rate = float(passed.mean())
+    above = np.nan_to_num(bg[order, 2], nan=-np.inf) > thr  # pairs actually above the threshold
     n_flag_full = sd.FAR * out["pairs_all_single_pulse_allowed"]
     out["unrelated"] = {
         "n_top": int(order.size),
         "m2_range": [float(bg[order[-1], 2]), float(bg[order[0], 2])],
         "pass_rate": rate,
         "pass_top_100": int(passed[:100].sum()),
+        "n_above_threshold": int(above.sum()),
+        "pass_above_threshold": int(passed[above].sum()),
         "expected_flagged_full_single_pulse": round(n_flag_full, 1),
         "expected_false_candidates_full": round(n_flag_full * rate, 1),
     }

@@ -1,0 +1,124 @@
+{
+ "prominence_sigma": 5.0,
+ "events": {
+  "bn240905186": {
+   "t90": 1.28,
+   "nominal": 2,
+   "variants": {
+    "offset_0.0": 2,
+    "offset_0.25": 1,
+    "offset_0.5": 1,
+    "offset_0.75": 1,
+    "bkg_alt": 2,
+    "bkg_nominal_single_offset": 2,
+    "dets_top2": 2,
+    "dets_all_mask": 2,
+    "offset_0.25_bkg_alt": 1,
+    "offset_0.5_bkg_alt": 1,
+    "offset_0.75_bkg_alt": 1,
+    "dets_top2_bkg_alt": 2
+   },
+   "n_variants_ge2": 6,
+   "exposure_ok": true,
+   "robust": false
+  },
+  "bn101129726": {
+   "t90": 0.576,
+   "nominal": 2,
+   "variants": {
+    "offset_0.0": 2,
+    "offset_0.25": 1,
+    "offset_0.5": 1,
+    "offset_0.75": 2,
+    "bkg_alt": 2,
+    "bkg_nominal_single_offset": 2,
+    "dets_top2": 1,
+    "dets_all_mask": 2,
+    "offset_0.25_bkg_alt": 1,
+    "offset_0.5_bkg_alt": 1,
+    "offset_0.75_bkg_alt": 2,
+    "dets_top2_bkg_alt": 1
+   },
+   "n_variants_ge2": 6,
+   "exposure_ok": true,
+   "robust": false
+  },
+  "bn210528586": {
+   "t90": 1.024,
+   "nominal": 3,
+   "variants": {
+    "offset_0.0": 3,
+    "offset_0.25": 2,
+    "offset_0.5": 1,
+    "offset_0.75": 2,
+    "bkg_alt": 3,
+    "bkg_nominal_single_offset": 3,
+    "dets_top2": 3,
+    "dets_all_mask": 3,
+    "offset_0.25_bkg_alt": 2,
+    "offset_0.5_bkg_alt": 2,
+    "offset_0.75_bkg_alt": 2,
+    "dets_top2_bkg_alt": 3
+   },
+   "n_variants_ge2": 11,
+   "exposure_ok": true,
+   "robust": true
+  },
+  "bn081113230": {
+   "t90": 0.576,
+   "nominal": 2,
+   "variants": {
+    "offset_0.0": 2,
+    "offset_0.25": 2,
+    "offset_0.5": 1,
+    "offset_0.75": 2,
+    "bkg_alt": 2,
+    "bkg_nominal_single_offset": 2,
+    "dets_top2": 2,
+    "dets_all_mask": 2,
+    "offset_0.25_bkg_alt": 2,
+    "offset_0.5_bkg_alt": 1,
+    "offset_0.75_bkg_alt": 2,
+    "dets_top2_bkg_alt": 2
+   },
+   "n_variants_ge2": 10,
+   "exposure_ok": true,
+   "robust": true
+  },
+  "bn250330911": {
+   "t90": 0.448,
+   "nominal": 3,
+   "variants": {
+    "offset_0.0": 3,
+    "offset_0.25": 3,
+    "offset_0.5": 3,
+    "offset_0.75": 2,
+    "bkg_alt": 3,
+    "bkg_nominal_single_offset": 3,
+    "dets_top2": 3,
+    "dets_all_mask": 3,
+    "offset_0.25_bkg_alt": 3,
+    "offset_0.5_bkg_alt": 3,
+    "offset_0.75_bkg_alt": 2,
+    "dets_top2_bkg_alt": 4
+   },
+   "n_variants_ge2": 12,
+   "exposure_ok": true,
+   "robust": true
+  }
+ },
+ "controls": {
+  "negative_single_pulse": {
+   "n": 130,
+   "false_ge2_at_5sigma": 0.0
+  },
+  "positive_bcat_multi_pulse_short": {
+   "n": 34,
+   "recovered_ge2": 30,
+   "wilson95": [
+    0.734,
+    0.953
+   ]
+  }
+ }
+}

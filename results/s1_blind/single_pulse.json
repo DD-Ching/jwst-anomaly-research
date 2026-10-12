@@ -17,6 +17,8 @@
   ],
   "pass_rate": 0.3915,
   "pass_top_100": 47,
+  "n_above_threshold": 12,
+  "pass_above_threshold": 5,
   "expected_flagged_full_single_pulse": 51.8,
   "expected_false_candidates_full": 20.3
  },
@@ -38,5 +40,5 @@
   "b_deformed_total_recovery_ge_0.10": false,
   "deformed_total_recovery": 0.048
  },
- "runtime_s": 78.4
+ "runtime_s": 109.7
 }

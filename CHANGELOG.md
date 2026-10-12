@@ -2,6 +2,25 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-12: S1 TTE round 2: energy constraint helps (conditionally), TTE time structure barely; no candidates
+- Owner review of #169: scope corrections, then the question of whether TTE time and energy information improve
+  same-source discrimination. `docs/s1_blind/README.md` §5; `docs/s1_blind/plan_round2.md`;
+  `scripts/s1_tte.py`; `results/s1_blind/tte/`. Downloaded 965 MB (cap 1 GB).
+- **Corrections:**
+  - 5 / 30 (7–34 %) only pauses the run for resources.
+  - The single-pulse result is scoped to M2 with two bands.
+  - The "about 20 false candidates" estimate holds on above-threshold pairs too (5 / 12 pass; range 10–35).
+  - "Only pair with each other" is withdrawn: 292–397 compatible partners per event.
+- **New pulses:** 3 / 5 are robust across 12 variants. The negative control is 0 / 130 smooth pulses counted as
+  ≥ 2; the positive control 30 / 34.
+- **Failed approach:** the alternative background window extended past the TTE start, so no-data counted as zero.
+  Fixed with GTI-covered bins only.
+- **E_peak = E_peak,A / s:** 20 % of the 2,000 most similar unrelated pairs pass, against 77–96 % of simulated true
+  pairs (depending on the true systematic, 0.20 to 0.10). Only about half of pairs have a catalogue E_peak.
+- **Candidates:** 59 new TTE pairs, none.
+- **Decision:** do not expand TTE now. Next: validate the E_peak systematic, then apply the constraint to the
+  existing 747,709-pair screen.
+
 ## 2026-10-11: S1 blind spots: single-pulse bursts are structurally unsearchable; TTE adds little for short bursts
 - Owner brief: bring the 2,975 excluded bursts in with TTE. `docs/s1_blind/` (plan written first);
   `scripts/s1_blind_spots.py`; `results/s1_blind/`.
