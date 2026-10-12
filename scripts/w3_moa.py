@@ -1768,8 +1768,9 @@ def run_vet(procs: int) -> Path:
     with _pool(procs) as pool:
         for i, o in enumerate(pool.imap_unordered(_vet_worker, jobs, 1)):
             out.append(o)
-            if (i + 1) % 10 == 0:
-                print(f"{i + 1}/{len(jobs)} vetted, {time.time() - t1:.0f} s", flush=True)
+            # one line per flag, so a stalled vetting names its slow flag
+            dt = time.time() - t1
+            print(f"vetted {o['event_id']} ({i + 1}/{len(jobs)}, {dt:.0f} s)", flush=True)
     alive = [o for o in out if o.get("survives")]
     var = (
         w3.variable_catalogue_matches(

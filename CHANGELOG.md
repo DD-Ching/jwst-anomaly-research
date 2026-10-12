@@ -2,6 +2,57 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-12: W3 MOA-II gb9 (nineteenth field): 0 survivors; combined limit over nineteen fields
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
+  goes to `/vet-candidate` before injections. Run 1 (cloud, 07:35Z): tracked pre-screen chunks only.
+- Run 1 (cloud, 07:35–07:47Z): pre-screen chunks 1–13 of 101 tracked (~65–120 s per chunk on 4 procs, CPU 99 %,
+  35–64 MB/s; streamed, nothing stored). The run hit its time limit during chunk 14, which reruns.
+- Run 2 (cloud, 08:12–08:44Z, `prescreen --procs 4 --chunks 14-101`): chunks 14–50 tracked (37 chunks, 0 errors,
+  0 retries, mean 117 s per chunk wall, 30–82 MB/s); stopped by PID at the slot's end (chunk 51 reruns).
+- Run 3 (cloud, 09:10–09:40Z, `prescreen --procs 4 --chunks 51-101`): chunks 51–70 tracked (20 chunks, 0 errors,
+  at most 1 retry, mean 141 s per chunk wall, ~40–50 MB/s, CPU 99 %); stopped by `timeout` at the slot's end
+  (chunk 71 reruns).
+- Run 4 (cloud, 10:10–10:39Z, `prescreen --procs 4 --chunks 71-101`): chunks 71–89 tracked (19 chunks, 0 errors,
+  at most 1 retry, mean 131 s per chunk wall, ~45–50 MB/s, CPU 99 %); stopped by `timeout` at the slot's end
+  (chunk 90 reruns).
+- Run 5 (cloud, 11:13–11:24Z, `prescreen --procs 4 --chunks 90-101`): chunks 90–101 tracked (12 chunks, 0 errors,
+  0 retries, mean 60 s per chunk wall, ~65–78 MB/s, CPU 99 %); the pre-screen is complete: **237,123 light curves,
+  2,363 shape passes, 111 not at a shared epoch** (to fit; gb5 had 126). Fits (`fit --procs 4 --chunk K/4`):
+  chunk 1/4 28 fits, 0 errors, 28 flags, 466 s; chunk 2/4 28 / 0 / 28, 547 s; chunk 3/4 28 / 0 / 28, 585 s (run 5 ended 11:53Z).
+- Run 6 (cloud, 12:20–13:25Z): `merge-prescreen` (a fresh clone needs it before `fit`), fit chunk 4/4: 27 fits,
+  0 errors, 25 flags, 1,074 s; `merge-chunks --n 4`: 111 fits, **109 flags**. `vet --procs 4`: **0 of 109 flags
+  survive** (`results/w3_moa/vetting_gb9.json`); 100 / 109 took 21 s, the last 9 held one worker for ~20 min.
+  Quiet χ²/dof 95th percentile 3.42 (1,927 quiet curves); CDS XMatch worked (Gaia DR3 RP for 61 / 111). Contact sheet
+  inspected: box and eclipse dips, variables, noisy flat curves; caustic spikes only in the models.
+  Failed approach: `photometry.fetch_catalog` (urllib) got the 97 MB MOA `metadata.ipac.tar.gz` truncated twice
+  (different sha256 each time); `curl -C - --retry 3` into `$JWST_ANOMALY_DATA/cache/external/b339ec176933_metadata.ipac.tar.gz`
+  fetched it intact on the first try.
+- Run 7 (cloud, 13:24–14:10Z; started before run 6's late push): `vet --procs 4` reproduced the tracked record
+  exactly (same funnel, 0 / 109). The slow flag is gb9-R-10-3-499239 (ΔBIC −413, PSPL t_E ≈ 888 d, 25k epochs):
+  ~16 min in the binary-lens fit (py-spy: VBBL over every epoch, since the ±3 t_E window spans the whole light
+  curve); it passes binary source and binary lens (ΔBIC −378) and fails `exotic_feature_sampled` (11 epochs on
+  2 nights inside the feature). `vet` now logs each flag's id, so a stall names its flag.
+- Injection chunk 1/6 (`--procs 3` beside the slow vet): 367 in 1,234 s, 0 errors; W3 333 → 35 flagged →
+  **18 recovered**; PSPL 0 / 34 flagged. Chunk 2/6 (`--procs 4`): 367 in 502 s, 0 errors; W3 333 → 23 → **8**;
+  PSPL 0 / 34.
+- Run 8 (cloud, 14:19Z–): `merge-prescreen`, `merge-chunks --n 4` (111 fits). Injection chunk 3/6 (`--procs 4`):
+  367 in 1,097 s, 0 errors; W3 334 → 33 → **16**; PSPL 0 / 33. Chunk 4/6: 367 in 681 s, 0 errors; W3 334 → 29 →
+  **12**; PSPL 0 / 33. Chunk 5/6 was started at 14:51Z and stopped at the slot's end (reruns). Chunks 1–4 so far:
+  W3 1,334 → 120 flagged → 54 recovered; PSPL 0 / 134.
+- Run 9 (cloud, 15:10–15:50Z): `merge-prescreen`, `merge-chunks --n 4`. Injection chunk 5/6: 366 in 768 s, 0 errors;
+  W3 333 → 29 → **12**; PSPL 0 / 33. Chunk 6/6: 366 in 556 s, 0 errors. All six: **W3 2,000 → 178 flagged → 81
+  recovered** (46 % of flagged kept by vetting); PSPL controls 0 / 200 flagged. `limit` needs the full derived
+  vetting record, which a fresh clone lacks, so `vet --procs 4` ran a third time (770 s, the slow flag last):
+  identical record, 0 / 109.
+- gb9 limits (`results/w3_moa/limits_gb9.ecsv`; N_s = 3.33 × 10⁷, Nunota et al. 2024 Table 1): Γ₉₅ ≈ 1.4 × 10⁻⁷–
+  1.05 × 10⁻⁶ per star per year; the t_E = 300 d, ρ = 0.1 cell rests on 2 recoveries.
+- **Combined over nineteen fields:** Γ₉₅ ≈ 1.5 × 10⁻⁸–8.0 × 10⁻⁸ per star per year (eighteen fields:
+  1.5 × 10⁻⁸–8.6 × 10⁻⁸); gb9 holds 11 % of the stars and tightens the cells by 6–21 %; max field share 0.21 (gb9,
+  t_E = 300 d, ρ = 0.01, 8 recoveries) (`results/w3_moa/limits_combined.ecsv`, docs/exotic_limits.md).
+- Failed approach: `limit` on a fresh clone stops on the missing derived `vetting_gb9.json`; the tracked record
+  lacks the `chain` and `fit_errors` keys `limit` checks, so a field finished across runs re-runs `vet` before `limit`
+  (budget ~15 min here for gb9's slow binary-lens flag).
+- **Next:** gb13 after the owner decides #145; then gb10, gb14.
 ## 2026-10-12: Far-side wormhole light (Simpson–Visser) vs GRAVITY Sgr A* flares: summary-level only; observable not yet sufficient; paused
 - Owner exploration brief, then owner review of #172. `docs/wh_farside/README.md`; `scripts/wh_farside.py`;
   `results/wh_farside/check.json`.
