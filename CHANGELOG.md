@@ -26,6 +26,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   Contact sheet inspected: variables, box and eclipse dips, slow trends; caustic spikes only in the models.
 - Merged `claude/w3-moa-gb4` (#165, itself stacked on #160) into this branch for `inject --chunk K/N`, so `combine`
   will cover seventeen fields. gb5 injections use 6 chunks (~370 each, fits one routine slot).
+- Injection chunk 1/6 (cloud, 03:32–03:43Z): 367 in 612 s (0.60 per s), 0 errors; W3 333 → 25 flagged → 8 recovered;
+  PSPL controls 0 / 34 flagged.
 - **Next:** `merge-prescreen` (fresh clone; `pip install -e '.[mulens]'`), then
   `--field gb5 inject --procs 4 --chunk K/6` for each chunk not yet in `results/w3_moa/injections_gb5_chunk*of6*`
   (detached, wait on the PID), `merge-inject --n 6`, `limit`, `combine`.
