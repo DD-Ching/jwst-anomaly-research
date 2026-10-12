@@ -126,7 +126,9 @@ Count two things from the PR list (D-083; trial rule T2 in `docs/state/trial.md`
   label count as a single item. **With 3 or more**, open no new feature PR.
 - **Awaiting owner review:** open, non-draft `needs-human` PRs. They do not block authorized trial units, base
   merges, CI fixes or routine-search draft claims. With 10 or more of them, open at most one new needs-human PR per
-  ISO week, from a unit stage that passed its gate, or a candidate.
+  ISO week from high-risk or theory work, and only from a unit stage that passed its gate. A vetted candidate
+  (survived `/vet-candidate`) and a routine-search result needing owner judgement are not limited by this (trial rule
+  T2).
 
 Draft claim PRs and draft unit PRs are in-flight work and count toward neither. When the awaiting-merge cap
 blocks, do only these:

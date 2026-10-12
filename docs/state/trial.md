@@ -25,8 +25,14 @@ an interactive session) in the unit's session log.
 - **Awaiting merge:** non-draft agent PRs **without** `needs-human`. The cap of 3 applies to these.
 - **Awaiting owner review:** non-draft `needs-human` PRs. They never block an authorized unit's continuation,
   base merges, fixes, or routine-search draft claims.
-- **Owner-review backlog:** with ≥ 10 such PRs, open **at most one new needs-human PR per ISO week**. It must come
-  from a unit stage that passed its gate, or be a candidate.
+- **Owner-review backlog:** with ≥ 10 such PRs, open **at most one new needs-human PR per ISO week** from
+  high-risk or theory work, and only from a unit stage that passed its gate.
+- **Not limited by the backlog rule:**
+  - a candidate, meaning a screen hit that survived `/vet-candidate`'s ordinary-explanation tests;
+  - a routine-search result that needs owner judgement (for example a chain survivor, as in #145). Holding it back
+    could hide a real signal.
+  - Both are opened as needs-human PRs when they arise.
+- Unvetted screen hits are not candidates. They stay on their draft claim PR until vetted.
 - Draft claim PRs and unit PRs are in-flight work and count toward neither.
 - Human merge rights for scientific results are unchanged.
 
