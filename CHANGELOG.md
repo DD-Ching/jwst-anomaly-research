@@ -2,6 +2,29 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-12: W3 MOA-II gb10 (twentieth field): 0 survivors; combined limit over twenty fields
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
+  goes to `/vet-candidate` before injections. gb10 is a 220.9 GB tar, streamed (nothing stored) in 52 tracked
+  pre-screen chunks over three cloud runs (16:10–18:13Z), then fits, vetting and injections over four more.
+- Pre-screen: **181,820 light curves, 1,469 shape passes, 108 not at a shared epoch**; 0 errors. Run 2 did 20 chunks
+  in ~30 min, but CPU fell from 99 % to 51–88 % for chunks 42–49 (below the 70 % rule: an I/O stall, recovered at the
+  next run). The tracked per-chunk `wall_time_s` / `mb_per_s` overstate the stall: each chunk's clock starts at its
+  first finished segment, so the windows overlap (follow-up in TASKS.md).
+- Fits: 108, 0 errors, **101 flags**. `vet --procs 4`: **0 of 101 survive** (`results/w3_moa/vetting_gb10.json`;
+  reproduced exactly by run 7). Quiet χ²/dof 95th percentile 3.73; CDS XMatch worked (Gaia DR3 RP for 63 / 108).
+  Contact sheet inspected: box and eclipse dips, variables, noisy flat curves; caustic spikes only in the models.
+- Injections (six tracked chunks, 0 errors): **W3 2,000 → 209 flagged → 99 recovered** (47 % of flagged kept by
+  vetting); PSPL controls 0 / 200 flagged. gb10 limits (`results/w3_moa/limits_gb10.ecsv`; N_s = 2.15 × 10⁷,
+  Nunota et al. 2024 Table 1, 70/80 subfields): Γ₉₅ ≈ 1.7 × 10⁻⁷–3.3 × 10⁻⁶ per star per year; both t_E = 300 d
+  cells rest on 1 recovery, t_E = 3 d, ρ = 0.01 on 2.
+- **Combined over twenty fields:** Γ₉₅ ≈ 1.4 × 10⁻⁸–7.8 × 10⁻⁸ per star per year (nineteen fields: 1.5 × 10⁻⁸–
+  8.0 × 10⁻⁸); gb10 holds 6.4 % of the stars and tightens the cells by 2–9 %; counting uncertainty 6–15 %; max field
+  share 0.204 (gb9, t_E = 300 d, ρ = 0.01). Details: docs/exotic_limits.md "W3 in MOA-II".
+- Failed approaches: a `while pgrep -f "chunk 3/4"` wait loop matches its own command line and never exits (wait on a
+  PID or an output file); a fresh venv needs the `mulens` extra before `fit`; run 7 ran `vet --procs 4` beside
+  `inject --procs 4` on 4 cores (oversubscribed, against scripts/CLAUDE.md; both finished, avoid it).
+- **Next:** gb13 waits on the owner (#145); then gb14, the last large Nunota et al. 2024 field (TASKS.md).
+
 ## 2026-10-12: W3 MOA-II gb9 (nineteenth field): 0 survivors; combined limit over nineteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. Run 1 (cloud, 07:35Z): tracked pre-screen chunks only.
