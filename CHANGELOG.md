@@ -2,6 +2,46 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: W3 MOA-II gb5 (seventeenth field): 0 survivors; combined limit over seventeen fields
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
+  goes to `/vet-candidate` before injections.
+- gb5 is the largest field so far: **119 pre-screen chunks** of 4 GiB (~485 GB streamed, never stored; gb4 had 66).
+  Run 1 (cloud, 22:11–22:41Z, `prescreen --procs 4`): chunks 1–21 tracked in `results/w3_moa/prescreen/`
+  (46,883 tar members, 0 errors), ~80–90 s per chunk CPU-bound at 99 % (chunk 21: 216 s, slower archive reads).
+  At this rate the pre-screen needs ~3 more routine runs; then fit (chunked by hand if > ~60 passes), vet, inject
+  in chunks (`inject --chunk K/N`, from #165), limit, combine.
+- Run 2 (cloud, 23:13–23:46Z, same command, `--chunks 22-119`): chunks 22–61 tracked (40 chunks, 0 errors,
+  mean 120 s per chunk wall, 78 s when archive reads are fast); stopped by PID at the slot's end.
+- Run 3 (cloud, 00:10–00:44Z, `--chunks 62-119`): chunks 62–93 tracked (32 chunks, 0 errors, mean 101 s per
+  chunk wall); stopped by PID at the slot's end.
+- Run 4 (cloud, 01:09–01:34Z, `--chunks 94-119`): chunks 94–119 tracked (26 chunks, 0 errors, ~60–90 s per chunk);
+  the pre-screen is complete: **259,556 light curves, 1,802 shape passes, 126 not at a shared epoch** (to fit; gb4
+  had 118). A fresh clone needs `pip install -e '.[mulens]'` for `fit`.
+- Fit chunk 1/4 (cloud, 01:35–01:47Z): 32 fits, 0 errors, 31 flags, 699 s (`results/w3_moa/fits_gb5_chunk1of4.ecsv.gz`).
+- Fit chunk 2/4 (cloud, 02:11–02:30Z): 32 fits, 0 errors, 27 flags, 1,131 s (`results/w3_moa/fits_gb5_chunk2of4.ecsv.gz`).
+- Fit chunk 3/4 (cloud, 02:30–02:48Z): 31 fits, 0 errors, 27 flags, 1,060 s (`results/w3_moa/fits_gb5_chunk3of4.ecsv.gz`);
+  chunk 4/4 was started and stopped unfinished at the slot's end.
+- Fit chunk 4/4 (cloud, 03:10–03:27Z): 31 fits, 0 errors, 27 flags, 1,014 s. `merge-chunks --n 4` (126 fits),
+  `vet`: **0 of 112 flags survive** (`results/w3_moa/vetting_gb5.json`); CDS XMatch worked (Gaia DR3 RP for 67 / 126).
+  Contact sheet inspected: variables, box and eclipse dips, slow trends; caustic spikes only in the models.
+- Merged `claude/w3-moa-gb4` (#165, itself stacked on #160) into this branch for `inject --chunk K/N`, so `combine`
+  will cover seventeen fields. gb5 injections use 6 chunks (~370 each, fits one routine slot).
+- Injection chunk 1/6 (cloud, 03:32–03:43Z): 367 in 612 s (0.60 per s), 0 errors; W3 333 → 25 flagged → 8 recovered;
+  PSPL controls 0 / 34 flagged.
+- Injection chunk 2/6 (cloud, 03:44–04:00Z): 367 in 985 s, 0 errors; W3 333 → 21 flagged → 11 recovered; PSPL 0 / 34.
+- Injection chunk 3/6 (cloud, 04:16–04:34Z): 367 in 955 s, 0 errors; W3 334 → 26 flagged → 13 recovered; PSPL 0 / 33.
+- Injection chunk 4/6 (cloud, 04:34–04:49Z): 367 in 881 s, 0 errors; W3 334 → 23 flagged → 12 recovered; PSPL 0 / 33.
+- Injection chunks 5/6 and 6/6 (cloud, 05:10–05:31Z): 366 each in 485 s and 659 s, 0 errors; W3 333 → 26 → 9 and
+  333 → 32 → 14 recovered; PSPL 0 / 33 each. Total: W3 2,000 → 153 flagged → 67 recovered (44 %); PSPL 0 / 200.
+- `vet` re-run on the fresh clone reproduced the tracked record (0 / 112 survive, identical funnel).
+- gb5 limits (`results/w3_moa/limits_gb5.ecsv`): Γ₉₅ ≈ 1.8 × 10⁻⁷–1.2 × 10⁻⁶ per star per year
+  (N_s = 2.91 × 10⁷, 65 / 80 subfields); the weakest cells (t_E = 3 d, ρ = 0.01 and t_E = 300 d, ρ = 0.1) rest on
+  2 recoveries each.
+- **Combined over seventeen fields:** Γ₉₅ ≈ 1.6 × 10⁻⁸–9.0 × 10⁻⁸ per star per year (sixteen fields:
+  1.7 × 10⁻⁸–9.8 × 10⁻⁸); max field share 0.17 (`results/w3_moa/limits_combined.ecsv`, docs/exotic_limits.md).
+- **Next:** gb13 after the owner decides #145; then gb6, gb9, gb10, gb14 (chunked fits and injections). This PR is
+  stacked on #165 and #160: merge those first.
+
 ## 2026-10-11: W3 MOA-II gb4 (sixteenth field): 0 survivors; combined limit over sixteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections.
