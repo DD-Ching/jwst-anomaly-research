@@ -19,8 +19,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   0 retries, mean 60 s per chunk wall, ~65–78 MB/s, CPU 99 %); the pre-screen is complete: **237,123 light curves,
   2,363 shape passes, 111 not at a shared epoch** (to fit; gb5 had 126). Fits (`fit --procs 4 --chunk K/4`):
   chunk 1/4 28 fits, 0 errors, 28 flags, 466 s; chunk 2/4 28 / 0 / 28, 547 s; chunk 3/4 28 / 0 / 28, 585 s (run 5 ended 11:53Z).
-- **Next:** `fit --procs 4 --chunk 4/4` (~9 min; finished chunks are skipped by `run-field`), `merge-chunks --n 4`,
-  `vet`, contact sheet, then `inject --chunk K/N`, `limit`, `combine`.
+- Run 6 (cloud, 12:20–13:05Z): `merge-prescreen` (a fresh clone needs it before `fit`), fit chunk 4/4: 27 fits,
+  0 errors, 25 flags, 1,074 s; `merge-chunks --n 4`: 111 fits, **109 flags**. `vet --procs 4` vetted 100 / 109 in
+  21 s, then one worker ran > 15 min on the last flags; the slot ended before it finished (nothing tracked).
+  Failed approach: `photometry.fetch_catalog` (urllib) got the 97 MB MOA `metadata.ipac.tar.gz` truncated twice
+  (different sha256 each time); `curl -C - --retry 3` into `$JWST_ANOMALY_DATA/cache/external/b339ec176933_metadata.ipac.tar.gz`
+  fetched it intact on the first try.
+- **Next:** `merge-prescreen`, `merge-chunks --n 4`, `vet` (run detached; expect one slow flag), contact sheet, then
+  `inject --chunk K/6`, `merge-inject --n 6`, `limit`, `combine`. If `vet` stalls again, find which flag (log the
+  event id) before waiting a whole slot on it.
 
 ## 2026-10-12: W3 MOA-II gb6 (eighteenth field): 0 survivors; combined limit over eighteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
