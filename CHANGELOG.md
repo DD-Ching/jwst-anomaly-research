@@ -106,6 +106,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   0.19). This branch merges `claude/w3-moa-gb3` (#160) so the combine includes gb3: merge #160 first.
 - Failed approach: the venv lacked the `mulens` extra, so the first `inject` exited at once; install
   `.[dev,cloud,mulens]` on a fresh clone.
+- `/code-review` (2026-10-12) fixes in the chunk resume: a tracked chunk is reused or merged only if it has no
+  failed injection and matches the current job list (SHA-256) and baseline χ² calibration; `merge-inject` now checks
+  the current pre-screen too, and `run-field` resumes with the chunks' own seed, sampling and carrier count instead
+  of the defaults. The tracked gb4 chunks pass the new checks (`merge-inject --n 4`: 2,200 injections).
 - **Next:** gb13 after the owner decides #145; then gb5, gb6, gb9, gb10, gb14 with chunked fits and injections
   (a fresh clone needs `merge-prescreen` and, before `limit`, `merge-chunks` + `vet`).
 

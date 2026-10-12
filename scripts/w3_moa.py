@@ -1957,25 +1957,18 @@ def _inject_worker(job):
     return row
 
 
-def run_inject(
-    procs: int,
+def inject_specs(
+    pre: Table,
     per_cell: int,
     per_ctrl: int,
     seed: int = 60,
     prescreen_only: bool = False,
     sampling: str = "lf",
     n_carriers: int = 300,
-    chunk: tuple[int, int] | None = None,
-) -> Path:
-    """Injection-recovery through the whole chain: Cut-0 emulation, pre-screen, fit, vetting
-    (binary lens and the VSX/Gaia match excepted). W3: n = 1, ε < 0, u0 ~ U[0, 2); PSPL controls:
-    u0 ~ U[0, 1) (they measure how often an ordinary event ends as a W3 survivor).
-    ``chunk=(k, n)`` runs every n-th injection from k (0-based) of the same seeded job list and
-    writes a tracked chunk table that `merge-inject` joins (a field's injections outlast one
-    routine slot)."""
+) -> tuple[list, list[str], str]:
+    """The seeded injection job list ``(kind, event_id, prm)``, its carriers and its SHA-256,
+    built from the pre-screen before any light curve is read."""
     field = moa.MoaField(FIELD)
-    pre = read_prescreen()
-    set_field_context(pre)  # the real field's coincidences and baseline calibration
     carriers = quiet_carriers(pre, n_carriers, seed)
     ev = field.events()
     pos = {r["event_id"]: (float(r["ra"]), float(r["dec"])) for r in ev}
@@ -2002,9 +1995,33 @@ def run_inject(
                         prm["prescreen_only"] = True
                     prm["inj"] = len(specs)  # position in the seeded job list (chunk check)
                     specs.append((kind, eid, prm))
-    n_jobs = len(specs)
     # identifies the job list across sessions: a re-merged pre-screen changes the carriers
     jobs_sha = hashlib.sha256(json.dumps(specs, sort_keys=True).encode()).hexdigest()
+    return specs, carriers, jobs_sha
+
+
+def run_inject(
+    procs: int,
+    per_cell: int,
+    per_ctrl: int,
+    seed: int = 60,
+    prescreen_only: bool = False,
+    sampling: str = "lf",
+    n_carriers: int = 300,
+    chunk: tuple[int, int] | None = None,
+) -> Path:
+    """Injection-recovery through the whole chain: Cut-0 emulation, pre-screen, fit, vetting
+    (binary lens and the VSX/Gaia match excepted). W3: n = 1, ε < 0, u0 ~ U[0, 2); PSPL controls:
+    u0 ~ U[0, 1) (they measure how often an ordinary event ends as a W3 survivor).
+    ``chunk=(k, n)`` runs every n-th injection from k (0-based) of the same seeded job list and
+    writes a tracked chunk table that `merge-inject` joins (a field's injections outlast one
+    routine slot)."""
+    pre = read_prescreen()
+    set_field_context(pre)  # the real field's coincidences and baseline calibration
+    specs, carriers, jobs_sha = inject_specs(
+        pre, per_cell, per_ctrl, seed, prescreen_only, sampling, n_carriers
+    )
+    n_jobs = len(specs)
     name = f"injections_{FIELD}{'_prescreen' if prescreen_only else ''}"
     if chunk is not None:
         specs = specs[chunk[0] :: chunk[1]]
@@ -2012,14 +2029,12 @@ def run_inject(
             raise SystemExit(f"chunk {chunk[0] + 1}/{chunk[1]} of {n_jobs} injections is empty")
         name += f"_chunk{chunk[0] + 1}of{chunk[1]}"
         tracked = results_dir() / f"{name}.ecsv.gz"
-        if (
-            not prescreen_only
-            and tracked.exists()
-            and inject_chunk_problem(Table.read(tracked, format="ascii.ecsv"), *chunk, None) is None
-            and Table.read(tracked, format="ascii.ecsv").meta.get("jobs_sha") == jobs_sha
-        ):
-            print(f"{tracked} is complete for this job list; not rerun", flush=True)
-            return tracked
+        if not prescreen_only and tracked.exists():
+            old = Table.read(tracked, format="ascii.ecsv")
+            ref = {"jobs_sha": jobs_sha, "baseline_chi2": baseline_threshold()}
+            if inject_chunk_problem(old, *chunk, ref, keys=tuple(ref)) is None:
+                print(f"{tracked} is complete for this job list; not rerun", flush=True)
+                return tracked
     arrays = load_arrays(sorted({e for _, e, _ in specs}), aux=True, pre=pre)
     jobs = [(kind, eid, *arrays[eid], prm) for kind, eid, prm in specs]
     print(f"{len(jobs)} of {n_jobs} injections on {len(arrays)} carriers", flush=True)
@@ -2035,7 +2050,7 @@ def run_inject(
         provenance=schema.Provenance.DERIVED.value,
         source=(
             "scripts/w3_moa.py inject: exotic_sim.inject_light_curve (simulated) added to real "
-            f"{field.name} difference light curves of quiet Cut-0 objects"
+            f"{moa.MoaField(FIELD).name} difference light curves of quiet Cut-0 objects"
         ),
         params=json.dumps(asdict(P)),
         wall_time_s=round(time.time() - t1, 1),
@@ -2064,19 +2079,31 @@ INJECT_RUN_KEYS = ("params", "seed", "is_sampling", "chain", "baseline_chi2", "n
 INJECT_FILL = {"error": "", "failed_test": "", "exotic": "", "kind": ""}
 
 
-def inject_chunk_problem(tab: Table, k: int, n: int, ref: dict | None) -> str | None:
+def inject_chunk_problem(
+    tab: Table, k: int, n: int, ref: dict | None, keys: tuple = INJECT_RUN_KEYS
+) -> str | None:
     """Why the tracked injection chunk ``k`` of ``n`` cannot be joined (None: it can): another
-    chain, ``Params`` or run setting than the current chain or chunk 1, or not exactly its share
+    chain or ``Params`` than the current ones, other ``keys`` than ``ref`` (chunk 1, or the current
+    job list and baseline calibration), failed injections, or not exactly its share
     ``range(n_jobs)[k::n]`` of the seeded job list."""
     if tab.meta.get("chain") != CHAIN_VERSION or tab.meta.get("params") != json.dumps(asdict(P)):
         return "was run with another chain or Params; rerun it"
     if "inj" not in tab.colnames or "jobs_sha" not in tab.meta:
         return "predates chunked injections; rerun it"
-    if ref is not None and any(tab.meta.get(key) != ref.get(key) for key in INJECT_RUN_KEYS):
-        return "was run with other settings or another job list than chunk 1"
+    if ref is not None and any(tab.meta.get(key) != ref.get(key) for key in keys):
+        return "was run with other settings, job list or baseline calibration; rerun it"
+    if "error" in tab.colnames and np.any(unmask(tab)["error"] != ""):
+        return "has failed injections; rerun it"
     if list(tab["inj"]) != list(range(int(tab.meta["n_jobs"]))[k::n]):
         return "does not hold exactly its injections"
     return None
+
+
+def inject_settings(meta: dict) -> dict:
+    """The ``run_inject`` keyword settings a tracked chunk was run with (resume and merge rebuild
+    the same seeded job list from them)."""
+    return {"seed": int(meta["seed"]), "sampling": str(meta["is_sampling"]),
+            "n_carriers": int(meta["n_carriers"])}  # fmt: skip
 
 
 def unmask(tab: Table) -> Table:
@@ -2116,6 +2143,14 @@ def merge_inject(n: int) -> Path:
         if problem:
             raise SystemExit(f"injection chunk {k + 1}/{n} {problem}")
         parts.append(tab)
+    # the chunks must also match the current pre-screen (job list) and baseline calibration
+    m = parts[0].meta
+    pre = read_prescreen()
+    set_field_context(pre)
+    jobs_sha = inject_specs(pre, int(m["per_cell"]), int(m["per_ctrl"]), **inject_settings(m))[2]
+    current = {"jobs_sha": jobs_sha, "baseline_chi2": baseline_threshold()}
+    if inject_chunk_problem(parts[0], 0, n, current, keys=tuple(current)):
+        raise SystemExit("injection chunks were run on another pre-screen or baseline; rerun them")
     # rebuilt from rows, as an unchunked run: a chunk without vetted rows lacks those columns
     rows = [{c: r[c] for c in p.colnames} for p in map(unmask, parts) for r in p]
     tab = rows_to_table(rows, INJECT_FILL)
@@ -2460,8 +2495,11 @@ def run_field(procs: int, conns: int, per_cell: int, per_ctrl: int) -> None:
         raise SystemExit(f"{FIELD}: flags survive every test: {alive} — stop and report")
     n_inj = inject_chunks_tracked()
     if n_inj:  # resume a chunked injection run (`inject --chunk K/N`) instead of redoing it
+        m = Table.read(
+            results_dir() / f"injections_{FIELD}_chunk1of{n_inj}.ecsv.gz", format="ascii.ecsv"
+        ).meta  # the chunks' own seed, sampling and carriers, not the defaults
         for k in range(n_inj):
-            run_inject(procs, per_cell, per_ctrl, chunk=(k, n_inj))
+            run_inject(procs, per_cell, per_ctrl, chunk=(k, n_inj), **inject_settings(m))
         merge_inject(n_inj)
     else:
         run_inject(procs, per_cell, per_ctrl)
