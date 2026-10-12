@@ -5,11 +5,13 @@ Conditional model (docs/wh_farside/README.md): Sgr A* is a Simpson-Visser wormho
 and a NIR flare is a hot spot on a circular orbit on the *other* side of the throat.
 
 Shared parameters: M (fixed by stellar orbits, not by flares), the throat parameter a, and the
-distance R0. Inputs used to fix the orbit: the polarisation period P only. Prediction for data not
-used in that step: the astrometric loop radius on the sky.
-- Far side: every photon that crosses the throat has impact parameter b < b_c(a), so the image and
-  its centroid lie inside theta_c = b_c * theta_g, whatever the orbit radius (2408.07350 shows this
-  for ray-traced examples; here it is the general potential-barrier bound).
+distance R0. Inputs used to fix the orbit: the polarisation period P only, assuming it equals
+the orbital period. Prediction for data not used in that step: the astrometric loop radius.
+- Far side: every photon that crosses the throat has impact parameter b < b_c(a), so the true images
+  and their own centroid lie inside theta_c = b_c * theta_g, whatever the orbit radius (2408.07350
+  shows this for ray-traced examples; here it is the general potential-barrier bound). The observed
+  loop is a pipeline estimate of the total-light centroid; off-centre static light and astrometric
+  errors can make it exceed theta_c. Gaps against it are summary-level standardised differences.
 - Same side (ordinary control): loop radius ~ (R_e + 1) theta_g (GRAVITY 2023, Appendix A).
 Kepler's law holds exactly in the areal radius: Omega^2 = M / R^3 for this metric.
 
