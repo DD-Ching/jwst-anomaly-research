@@ -139,7 +139,9 @@ def main() -> int:
         "kepler_radius_M": {"value": round(re, 2), "mc_sd": round(float(re_mc.std()), 2)},
         "control_same_side": {
             "predicted_loop_uas": [round(ctrl[0], 1), round(ctrl[1], 1)],
-            "z_obs_minus_pred": round((R_LOOP[0] - ctrl[0]) / math.hypot(R_LOOP[1], ctrl[1]), 2),
+            "gap_summary_obs_minus_pred": round(
+                (R_LOOP[0] - ctrl[0]) / math.hypot(R_LOOP[1], ctrl[1]), 2
+            ),
         },
         "far_side": [],
     }
@@ -151,16 +153,29 @@ def main() -> int:
                 "a_M": a,
                 "b_crit_M": round(b_crit(a), 3),
                 "bound_uas": round(bnd, 1),
-                "z_obs_above_bound": round((R_LOOP[0] - bnd) / R_LOOP[1], 2),
-                "orbit_outside_throat": bool(orbit_ok),
+                "gap_summary_obs_above_bound": round((R_LOOP[0] - bnd) / R_LOOP[1], 2),
+                "orbit_outside_throat_if_Ppol_is_Porb": bool(orbit_ok),
                 "gravity_estimator_mass_at_bound_Msun": float(
                     f"{gravity_mass_estimator(bnd, p):.3g}"
                 ),
             }
         )
-    out["a_star_M_at_2sigma"] = round(a_star(*R_LOOP, m), 2)
-    out["a_star_M_at_3sigma"] = round(a_star(*R_LOOP, m, z=3.0), 2)
-    out["eht_shadow_a_max_M_2sigma"] = {
+    out["a_gap_2_summary_M"] = round(a_star(*R_LOOP, m), 2)
+    out["a_gap_3_summary_M"] = round(a_star(*R_LOOP, m, z=3.0), 2)
+    out["labels"] = {
+        "gap_summary": (
+            "standardised gap (obs - value) / published sigma, using GRAVITY's single averaged,"
+            " phase-wrapped loop radius 61 +- 9 uas; not a full exclusion significance (no"
+            " per-flare data, flare correlations, phase alignment or model systematics propagated)"
+        ),
+        "bound": (
+            "geometric bound on the true far-side image positions (b < b_c); the observed loop is a"
+            " pipeline estimate of the total-light centroid, which can exceed it through off-centre"
+            " static emission or astrometric errors"
+        ),
+        "orbit": "a > R_e excludes a far-side Kepler orbit only if P_pol equals the orbital period",
+    }
+    out["eht_shadow_a_max_M_2sigma_if_calibration_transfers"] = {
         k: round(a_max_eht(v + 2 * u), 2) for k, (v, u) in EHT_DELTA.items()
     }
     out["note_eht"] = (

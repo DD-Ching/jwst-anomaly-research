@@ -1,5 +1,9 @@
 # Far-side light through a wormhole throat: a period–astrometry test on Sgr A* flares
 
+> **Revised 2026-10-12 after owner review.** Two claims are withdrawn: that the flares are excluded as far-side
+> sources "for every allowed a", and that astrometric systematics cannot enlarge the loop. Gaps are now labelled
+> as summary-level standardised differences. Geometry and numbers are unchanged; §4–§7 were rewritten.
+
 Owner brief 2026-10-12: a bounded, high-risk exploration unit. Find one new prediction that existing data can test
 and that separates a specific channel model from ordinary explanations.
 
@@ -41,6 +45,8 @@ from the other side, and an orbit residual is degenerate with ordinary extended 
 - (ii) An accretion flow on the far side produces NIR flares.
 - (iii) The wormhole is reflection-symmetric (the same M on both sides).
 - (iv) Far-side spots move on Keplerian orbits.
+- (vi) The flare polarisation period equals the orbital period, also for light that crossed the throat.
+  Polarisation transport through the throat was not computed.
 - (v) The "other side" is another region, and nothing says it is a shortcut in our universe. Goal round 1 found no
   published construction that gives one. **This test is unrelated to usable communication.**
 
@@ -49,79 +55,118 @@ from the other side, and an orbit residual is degenerate with ordinary extended 
   - M = (4.297 ± 0.012) × 10⁶ M☉ from stellar orbits [lit];
   - R0 = 8.277 kpc [lit];
   - the flare **polarisation** period P = 60 ± 3 min [lit, GRAVITY 2023, arXiv:2307.11821].
-- **Step 1, period → orbit:** Kepler's law holds exactly in areal radius for SV (Ω² = M/R³, [ours]). P therefore
-  fixes the far-side orbit at R_e = 9.02 ± 0.30 M. This also requires a ≤ R_e, since the orbit must lie outside
-  the throat.
-- **Step 2, prediction for data not used above:** the **astrometric** loop radius.
-  - Every photon that crosses the throat has impact parameter b < b_c(a): √27 M for a ≤ 3M, and
-    a/√(1 − 2M/a) for a > 3M. This is the potential-barrier bound [ours]; a numerical check is in the tests.
-  - So the far-side image, and hence its centroid, lies inside b_c·θ_g, with θ_g = 5.12 µas. That is
-    **≤ 26.6 µas for a ≤ 3M, whatever the orbit radius** [pred].
+- **Step 1, period → orbit:** Kepler's law holds exactly in areal radius for SV (Ω² = M/R³, [ours]).
+  - If the polarisation period equals the orbital period (premise vi), P fixes the far-side orbit at
+    R_e = 9.02 ± 0.30 M.
+  - A far-side Kepler orbit then needs a ≤ R_e.
+- **Step 2, prediction for data not used above:** the astrometric loop. Three quantities must be kept apart.
+  - **(a) Geometric bound on the true far-side images** [pred, ours]: every photon that crosses the throat has
+    b < b_c(a). That is √27 M for a ≤ 3M, and a/√(1 − 2M/a) for a > 3M; a numerical check is in the tests. All
+    far-side image positions therefore lie inside b_c·θ_g, with θ_g = 5.12 µas: **26.6 µas for a ≤ 3M**.
+  - **(b) Centroid of the far-side images alone:** an intensity-weighted mean of points inside that disk, so it
+    is also inside b_c·θ_g.
+  - **(c) The observed loop radius:** a pipeline estimate from the centroid of **all** light, after phase
+    wrapping and fitting. It is not bounded by (a) unless the conditions in §5 hold.
 - **Ordinary same-side control:** loop radius ≈ (R_e + 1)·θ_g = **51.3 ± 1.5 µas** [ours, GRAVITY's Appendix A
   approximation].
 
-## 4. Result against published data [lit numbers; ours comparison]
-- **Observed:** mean loop radius of the four astrometric flares = **61 ± 9 µas** (GRAVITY 2023).
-- **Ordinary control:** consistent, 1.1σ above the same-side prediction.
-- **Far side** (σ = the published 9 µas):
+## 4. Result against published summary data [lit numbers; ours comparison]
+**What the 61 ± 9 µas is** (GRAVITY 2023, Sect. 3 and Fig. 3):
+- One "mean astrometric loop size" from four flares (2018–2022).
+- The flares were time-shifted to the solution that best represents a sinusoid in both sky coordinates. All
+  points were wrapped at a 60-min period and binned in 5-min bins; the error bars are the standard deviation of
+  the binned data.
+- The ± 9 is not defined further in the text.
+- The phase alignment, the averaging, any correlation between flares and the hot-spot model are **not**
+  propagated into our comparison. Per-flare astrometry is not tabulated publicly.
+
+**Every gap below is a standardised difference (observed − value)/9 µas on this one summary number. None is a
+full exclusion significance.**
+
+**4a. Without the EHT calibration** (astrometry plus the period):
 
 | a / M | 2.1–3 | 4 | 5 | 6 | 7 | 8 | 9 |
 |---|---|---|---|---|---|---|---|
 | far-side bound (µas) | 26.6 | 29.0 | 33.1 | 37.7 | 42.4 | 47.3 | 52.3 |
-| observed above the bound | 3.8σ | 3.6σ | 3.1σ | 2.6σ | 2.1σ | 1.5σ | 1.0σ |
+| summary gap, observed above the bound | 3.8 | 3.6 | 3.1 | 2.6 | 2.1 | 1.5 | 1.0 |
 
-- **The constraints on a:**
-  - Astrometry excludes a far-side origin of these flares for **a ≤ 7.1M at 2σ** (a ≤ 5.2M at 3σ).
-  - The period excludes **a > 9.0M**: no Keplerian 60-min orbit lies outside the throat.
-  - The EHT shadow-size bound (δ = −0.04 +0.09/−0.10 Keck, −0.08 ± 0.09 VLTI; arXiv:2311.09484) independently
-    limits the SV metric itself to **a ≲ 4.1–4.4M at 2σ**. That is our application: EHT's ring-to-shadow
-    calibration was not made for this wormhole.
-- **Combined:** in the symmetric SV model, **the four GRAVITY flares are not far-side sources for any allowed a**.
-  For a ≤ 3M, where the SV shadow equals Schwarzschild's, the exclusion is at 3.8σ.
-- **For asymmetric wormholes** (different mass on the far side): the period no longer fixes the orbit, but the
-  image bound b < √27 M still holds whenever the near side has its photon sphere at 3M. The 3.8σ exclusion holds
-  there too.
-- **Caveat:**
-  - The test uses one averaged loop radius from four flares. Per-flare astrometry is not tabulated publicly.
-  - Our implementation of GRAVITY's Appendix A mass estimator returns 6.6 × 10⁶ M☉ for 61 µas, against the
-    paper's quoted 5.1 ± 1.6. The bound test does not use this estimator.
+- **Same-side control:** gap 1.1, consistent.
+- **a ≤ 7.1M:** gap ≥ 2.
+- **a ≈ 7.1–9.0M:** the gap is < 2, so **this summary does not distinguish a far-side origin there** (1.5 at
+  8M, 1.0 at 9M).
+- **a > 9.0M:** a far-side Kepler orbit with a 60-min period cannot lie outside the throat. That limit depends on
+  premise (vi) and on the 3-min period error. It is not unconditional.
 
-## 5. Can ordinary physics mimic the far-side signature?
-The far-side signature is "loop ≤ b_c·θ_g at a 60-min period". It **can be mimicked**:
-- **Dilution** by the static quiescent flux shrinks the centroid motion. It would need about a 50 % static fraction.
-- **Sub-Keplerian motion:** a spot at R ≈ 4M moving at about 0.3 of the Keplerian speed has P ≈ 60 min.
-- **Non-orbital pattern motion.**
-- **Astrometric systematics** (phase-referencing).
+**4b. If EHT's shadow calibration transfers to this case:**
+- The EHT shadow-size bound (δ = −0.04 +0.09/−0.10 Keck, −0.08 ± 0.09 VLTI; arXiv:2311.09484) would limit the SV
+  metric to a ≲ 4.1–4.4M at 2σ.
+- In that range the summary gap is ≥ 3.4.
+- **What EHT covered:**
+  - its ring-to-shadow calibration library includes Kerr and non-Kerr GRMHD and semi-analytic images: JP and
+    Kerr-Sen metrics, a boson star, a dilaton black hole, and one semi-analytic flow in a **spinning traversable
+    (Teo) wormhole** whose throat equals the Kerr horizon radius;
+  - its metric tests include a **non-spinning Morris–Thorne wormhole** with one specific redshift function
+    (δ ≈ −0.48, ruled out).
+- **What EHT did not cover:**
+  - the Simpson–Visser metric;
+  - emission that reaches us **through** the throat from the other side;
+  - whether the ring still traces b_c in that configuration.
+- So 4b is conditional on the calibration transferring, which is not verified.
 
-So a **small** loop would **not** identify a far-side source, and as a detection test this observable has **no
-unique discriminating power**.
+**Withdrawn:** "the four flares are not far-side sources for any allowed a". Without the EHT transfer, a ≈ 7–9M
+is not distinguished by this summary.
 
-In the other direction it is robust. None of these mimics can make a far-side image **larger** than b_c·θ_g. A
-large observed loop therefore excludes a far-side origin regardless of the mimics. That is the only conclusion
-drawn here.
-
-Redshift and magnification: a Keplerian far-side orbit in a symmetric SV metric has the same Doppler and
-gravitational shifts as the same-side orbit, so the redshift adds no discrimination. Magnification was not
-computed.
+## 5. Conditions, mimics and systematics
+**When can (c) be compared with (a)?** If all emitting light (flare and static) lies inside a disk of radius ρ
+around the hole, the total-light centroid stays in that disk, and any fitted loop radius is ≤ ρ up to noise. This
+fails in three ways:
+- **Off-centre static emission or confusion.** If the static component's centroid sits a distance d from the
+  hole, the total-light centroid moves inside the convex hull of the far-side disk and that point.
+  - Flux changes then drive centroid motion along that line, with half-extent up to (ρ + d)/2.
+  - Reaching 61 µas with ρ = 26.6 µas needs d ≳ 95 µas, about 19 R_g, with matching flux modulation. That motion
+    is roughly linear rather than a loop, but after phase wrapping and fitting this was not checked.
+  - Static flux that is **not** central is therefore a real loophole. It is excluded only if the static emission
+    is centred within the disk, or its offset and flux are measured.
+- **Astrometric errors.** Phase-referencing errors, aberrations, noise and the wrapping/fitting step can bias a
+  fitted loop radius, including upward. A fitted radius of a noisy trajectory is biased high.
+  - **Withdrawn:** "systematics cannot enlarge the loop".
+  - The bound is unaffected only if the astrometric error model is known and propagated, which needs per-flare
+    data.
+- **Mimics of a small loop** (dilution by central static flux, sub-Keplerian motion, pattern motion): these
+  shrink the observed loop. A small loop would therefore not identify a far-side source either.
+- **Spectrum and redshift:** the local gravitational redshift and orbital speed are the same on both sides of a
+  symmetric SV metric. The observed spectrum also depends on emission direction, Doppler factors and image
+  weights along the different light paths, which were not computed. **The discriminating power of redshift is
+  not established**, which is not the same as having none.
+- **Magnification:** not computed.
 
 ## 6. Observability and budget
-- **Data:** published GRAVITY flare summaries (2018, arXiv:1810.12641; 2023) and EHT δ. Downloads: three paper
-  PDFs, about 10 MB. No archive data.
-- **Required precision:** a per-flare loop radius to about ±10 µas, which GRAVITY reaches for bright flares. The
-  expected far-side signal is ≤ 27 µas against about 50 µas for the same side.
-- **Search accounting:** 2 models considered, 1 observable and 1 published data summary. No search was run, so
-  there was no unseen validation set to keep. No threshold or choice was tuned after seeing the result.
+- **Data:**
+  - published GRAVITY flare summaries (2018, arXiv:1810.12641; 2023);
+  - EHT δ (arXiv:2311.09484);
+  - four paper PDFs read, in scratch only.
+  - No archive data.
+- **Required:** per-flare loop radii to about ±10 µas, plus the static-flux fraction and offset. GRAVITY reaches
+  this precision for bright flares, but the reduced per-flare data are not public.
+- **Search accounting:** 2 models considered, 1 observable, 1 published summary. No search was run and no choice
+  was tuned after seeing the result.
 
 ## 7. Decision
-**Pause this line.** The existing data already exclude a far-side origin for the observed flares within this
-model. A positive far-side identification would not be unique, because of dilution, sub-Keplerian motion and
-astrometric systematics.
+**Paused**, in a limited sense: **this observable is not yet sufficient to identify, or reliably exclude, a
+far-side origin.**
+- At summary level, the far-side origin is disfavoured for a ≲ 7M, or for all a if EHT's calibration transfers.
+- These conclusions rest on one averaged number, a central-static-flux condition and the premise P_pol = P_orb.
+- Not excluded is not support. The pause concerns this observable only, not the wormhole direction as a whole.
 
-Minimum inputs needed to reopen it:
-- (a) A second, model-specific observable that ordinary flows cannot produce, computed by ray tracing. Candidates
-  are the extra light-curve peaks of 2408.07350 or a transmitted-light polarisation signature. It must be shown
-  not to be mimicked before any data step.
-- (b) Per-flare astrometry with a measured static-flux fraction: GRAVITY reduced data from the collaboration, or a
-  reduction of ESO raw data, which takes days of work.
+Inputs that would make the comparison decisive against a stated ordinary model (for example GRAVITY's same-side
+orbiting hot spot plus a measured static component):
+- (a) Per-flare astrometry with the static-flux fraction and offset, and the astrometric error model. This needs
+  GRAVITY reduced data, or days of ESO raw-data reduction.
+- (b) A ray-traced far-side prediction for the SV metric:
+  - the image-weighted centroid;
+  - the light curve (2408.07350's extra peaks);
+  - the spectrum (Doppler weights);
+  - polarisation transport through the throat, which would test premise (vi).
+- (c) A check that EHT's ring-to-shadow calibration holds for through-throat emission.
 
-"Not done this round" is not the same as "physically impossible".
+Not done this round is not the same as physically impossible.

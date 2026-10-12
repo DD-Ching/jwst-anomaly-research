@@ -25,77 +25,82 @@
    51.3,
    1.5
   ],
-  "z_obs_minus_pred": 1.06
+  "gap_summary_obs_minus_pred": 1.06
  },
  "far_side": [
   {
    "a_M": 2.1,
    "b_crit_M": 5.196,
    "bound_uas": 26.6,
-   "z_obs_above_bound": 3.82,
-   "orbit_outside_throat": true,
+   "gap_summary_obs_above_bound": 3.82,
+   "orbit_outside_throat_if_Ppol_is_Porb": true,
    "gravity_estimator_mass_at_bound_Msun": 743000.0
   },
   {
    "a_M": 3.0,
    "b_crit_M": 5.196,
    "bound_uas": 26.6,
-   "z_obs_above_bound": 3.82,
-   "orbit_outside_throat": true,
+   "gap_summary_obs_above_bound": 3.82,
+   "orbit_outside_throat_if_Ppol_is_Porb": true,
    "gravity_estimator_mass_at_bound_Msun": 743000.0
   },
   {
    "a_M": 4.0,
    "b_crit_M": 5.657,
    "bound_uas": 29.0,
-   "z_obs_above_bound": 3.56,
-   "orbit_outside_throat": true,
+   "gap_summary_obs_above_bound": 3.56,
+   "orbit_outside_throat_if_Ppol_is_Porb": true,
    "gravity_estimator_mass_at_bound_Msun": 943000.0
   },
   {
    "a_M": 5.0,
    "b_crit_M": 6.455,
    "bound_uas": 33.1,
-   "z_obs_above_bound": 3.1,
-   "orbit_outside_throat": true,
+   "gap_summary_obs_above_bound": 3.1,
+   "orbit_outside_throat_if_Ppol_is_Porb": true,
    "gravity_estimator_mass_at_bound_Msun": 1360000.0
   },
   {
    "a_M": 6.0,
    "b_crit_M": 7.348,
    "bound_uas": 37.7,
-   "z_obs_above_bound": 2.59,
-   "orbit_outside_throat": true,
+   "gap_summary_obs_above_bound": 2.59,
+   "orbit_outside_throat_if_Ppol_is_Porb": true,
    "gravity_estimator_mass_at_bound_Msun": 1930000.0
   },
   {
    "a_M": 7.0,
    "b_crit_M": 8.283,
    "bound_uas": 42.4,
-   "z_obs_above_bound": 2.06,
-   "orbit_outside_throat": true,
+   "gap_summary_obs_above_bound": 2.06,
+   "orbit_outside_throat_if_Ppol_is_Porb": true,
    "gravity_estimator_mass_at_bound_Msun": 2640000.0
   },
   {
    "a_M": 8.0,
    "b_crit_M": 9.238,
    "bound_uas": 47.3,
-   "z_obs_above_bound": 1.52,
-   "orbit_outside_throat": true,
+   "gap_summary_obs_above_bound": 1.52,
+   "orbit_outside_throat_if_Ppol_is_Porb": true,
    "gravity_estimator_mass_at_bound_Msun": 3500000.0
   },
   {
    "a_M": 9.0,
    "b_crit_M": 10.205,
    "bound_uas": 52.3,
-   "z_obs_above_bound": 0.97,
-   "orbit_outside_throat": true,
+   "gap_summary_obs_above_bound": 0.97,
+   "orbit_outside_throat_if_Ppol_is_Porb": true,
    "gravity_estimator_mass_at_bound_Msun": 4500000.0
   }
  ],
- "a_star_M_at_2sigma": 7.11,
- "a_star_M_at_3sigma": 5.21,
- "eht_shadow_a_max_M_2sigma": {
+ "a_gap_2_summary_M": 7.11,
+ "a_gap_3_summary_M": 5.21,
+ "labels": {
+  "gap_summary": "standardised gap (obs - value) / published sigma, using GRAVITY's single averaged, phase-wrapped loop radius 61 +- 9 uas; not a full exclusion significance (no per-flare data, flare correlations, phase alignment or model systematics propagated)",
+  "bound": "geometric bound on the true far-side image positions (b < b_c); the observed loop is a pipeline estimate of the total-light centroid, which can exceed it through off-centre static emission or astrometric errors",
+  "orbit": "a > R_e excludes a far-side Kepler orbit only if P_pol equals the orbital period"
+ },
+ "eht_shadow_a_max_M_2sigma_if_calibration_transfers": {
   "Keck": 4.36,
   "VLTI": 4.08
  },

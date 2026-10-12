@@ -2,14 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-12: Far-side wormhole light (Simpson–Visser) vs GRAVITY Sgr A* flares: excluded for the observed flares; line paused
-- Owner exploration brief. `docs/wh_farside/README.md`; `scripts/wh_farside.py`; `results/wh_farside/check.json`.
-- **Joint prediction:** M (stellar orbits) and the polarisation period fix a far-side Keplerian orbit (9.0 M). Light
-  crossing the throat has b < b_c(a), so the predicted astrometric loop is ≤ 26.6 µas for a ≤ 3M. The same-side control
-  predicts 51.3 µas.
-- **Data:** GRAVITY 2023 mean loop 61 ± 9 µas. Same side consistent (1.1σ); far side excluded for a ≤ 7.1 M (2σ); the
-  period excludes a > 9.0 M; EHT δ limits a ≲ 4.1–4.4 M. A small loop would not be unique (dilution, sub-Keplerian
-  motion), so this is an exclusion test only. Paused; reopen inputs in §7.
+## 2026-10-12: Far-side wormhole light (Simpson–Visser) vs GRAVITY Sgr A* flares: summary-level only; observable not yet sufficient; paused
+- Owner exploration brief, then owner review of #172. `docs/wh_farside/README.md`; `scripts/wh_farside.py`;
+  `results/wh_farside/check.json`.
+- **Geometry kept:** light crossing the throat has b < b_c(a), so the true far-side image positions lie ≤ 26.6 µas
+  from the hole for a ≤ 3M. Kepler's law in areal radius plus P_pol = P_orb (an assumption) gives R_e = 9.0 M. The
+  same-side control predicts 51.3 µas.
+- **Against GRAVITY's single averaged loop (61 ± 9 µas), as summary-level standardised gaps only:**
+  - without EHT: ≥ 2 for a ≤ 7.1 M; not distinguished for a ≈ 7–9 M (1.5 at 8 M, 1.0 at 9 M); a > 9 M conditional
+    on P_pol = P_orb;
+  - if EHT's shadow calibration transfers (not verified for SV or through-throat emission): a ≲ 4.1–4.4 M, gaps ≥ 3.4.
+- **Withdrawn:**
+  - "excluded for all allowed a";
+  - "systematics cannot enlarge the loop": off-centre static flux (d ≳ 95 µas) and astrometric bias can.
+  - Redshift discriminating power is not established, rather than absent.
+- **Paused:** the observable is not yet sufficient. Decisive inputs are listed in §7.
 
 ## 2026-10-12: W3 MOA-II gb6 (eighteenth field): 0 survivors; combined limit over eighteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
