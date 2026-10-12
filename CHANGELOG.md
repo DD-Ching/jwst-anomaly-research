@@ -12,8 +12,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   in chunks (`inject --chunk K/N`, from #165), limit, combine.
 - Run 2 (cloud, 23:13–23:46Z, same command, `--chunks 22-119`): chunks 22–61 tracked (40 chunks, 0 errors,
   mean 120 s per chunk wall, 78 s when archive reads are fast); stopped by PID at the slot's end.
-- **Next:** `prescreen --procs 4 --chunks 62-119` (about two more runs; detached, `setsid nohup`; stop it by its PID, never `pkill -f`,
-  which kills the harness shell), committing tracked chunks every ~10 min.
+- Run 3 (cloud, 00:10–00:44Z, `--chunks 62-119`): chunks 62–93 tracked (32 chunks, 0 errors, mean 101 s per
+  chunk wall); stopped by PID at the slot's end.
+- **Next:** `prescreen --procs 4 --chunks 94-119` (one more run, ~45 min; detached, `setsid nohup`; stop it by its
+  PID, never `pkill -f` or `pgrep -f … | xargs kill`, which match and kill the harness shell), committing tracked
+  chunks every ~10 min; then `merge-prescreen` and a chunked fit.
 
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
