@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-11: W3 MOA-II gb5 (seventeenth field): in progress
+## 2026-10-11: W3 MOA-II gb5 (seventeenth field): 0 survivors; combined limit over seventeen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections.
 - gb5 is the largest field so far: **119 pre-screen chunks** of 4 GiB (~485 GB streamed, never stored; gb4 had 66).
@@ -31,9 +31,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Injection chunk 2/6 (cloud, 03:44–04:00Z): 367 in 985 s, 0 errors; W3 333 → 21 flagged → 11 recovered; PSPL 0 / 34.
 - Injection chunk 3/6 (cloud, 04:16–04:34Z): 367 in 955 s, 0 errors; W3 334 → 26 flagged → 13 recovered; PSPL 0 / 33.
 - Injection chunk 4/6 (cloud, 04:34–04:49Z): 367 in 881 s, 0 errors; W3 334 → 23 flagged → 12 recovered; PSPL 0 / 33.
-- **Next:** `merge-prescreen` (fresh clone; `pip install -e '.[mulens]'`), then
-  `--field gb5 inject --procs 4 --chunk K/6` for K = 5–6 (chunks 1–4 tracked in `results/w3_moa/injections_gb5_chunk*of6*`; ~10–16 min each)
-  (detached, wait on the PID), `merge-inject --n 6`, `limit`, `combine`.
+- Injection chunks 5/6 and 6/6 (cloud, 05:10–05:31Z): 366 each in 485 s and 659 s, 0 errors; W3 333 → 26 → 9 and
+  333 → 32 → 14 recovered; PSPL 0 / 33 each. Total: W3 2,000 → 153 flagged → 67 recovered (44 %); PSPL 0 / 200.
+- `vet` re-run on the fresh clone reproduced the tracked record (0 / 112 survive, identical funnel).
+- gb5 limits (`results/w3_moa/limits_gb5.ecsv`): Γ₉₅ ≈ 1.8 × 10⁻⁷–1.2 × 10⁻⁶ per star per year
+  (N_s = 2.91 × 10⁷, 65 / 80 subfields); the weakest cells (t_E = 3 d, ρ = 0.01 and t_E = 300 d, ρ = 0.1) rest on
+  2 recoveries each.
+- **Combined over seventeen fields:** Γ₉₅ ≈ 1.6 × 10⁻⁸–9.0 × 10⁻⁸ per star per year (sixteen fields:
+  1.7 × 10⁻⁸–9.8 × 10⁻⁸); max field share 0.17 (`results/w3_moa/limits_combined.ecsv`, docs/exotic_limits.md).
+- **Next:** gb13 after the owner decides #145; then gb6, gb9, gb10, gb14 (chunked fits and injections). This PR is
+  stacked on #165 and #160: merge those first.
 
 ## 2026-10-11: W3 MOA-II gb4 (sixteenth field): 0 survivors; combined limit over sixteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
