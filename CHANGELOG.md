@@ -9,7 +9,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   35–64 MB/s; streamed, nothing stored). The run hit its time limit during chunk 14, which reruns.
 - Run 2 (cloud, 08:12–08:44Z, `prescreen --procs 4 --chunks 14-101`): chunks 14–50 tracked (37 chunks, 0 errors,
   0 retries, mean 117 s per chunk wall, 30–82 MB/s); stopped by PID at the slot's end (chunk 51 reruns).
-- **Next:** `prescreen --procs 4 --chunks 51-101` (finished chunks are skipped; ~1.7 h, so split across runs), then
+- Run 3 (cloud, 09:10–09:40Z, `prescreen --procs 4 --chunks 51-101`): chunks 51–70 tracked (20 chunks, 0 errors,
+  at most 1 retry, mean 141 s per chunk wall, ~40–50 MB/s, CPU 99 %); stopped by `timeout` at the slot's end
+  (chunk 71 reruns).
+- **Next:** `prescreen --procs 4 --chunks 71-101` (finished chunks are skipped; ~1.2 h, so split across runs), then
   `run-field` with chunked fits and `inject --chunk K/N`.
 
 ## 2026-10-12: W3 MOA-II gb6 (eighteenth field): 0 survivors; combined limit over eighteen fields
