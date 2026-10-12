@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-12: W3 MOA-II gb10 (twentieth field), in progress
+## 2026-10-12: W3 MOA-II gb10 (twentieth field): 0 survivors; combined limit over twenty fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. gb10 is a 220.9 GB tar (~52 pre-screen chunks; several routine slots).
 - Run 1 (cloud, 16:10–16:42Z, `prescreen --procs 4`): chunks 1–29 of 52 tracked (0 errors, at most 1 retry per
@@ -32,8 +32,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   0 errors; W3 334 → 37 flagged → **16 recovered**; PSPL 0 / 33. Chunk 4/6: 367 in 783 s, 0 errors; W3 334 → 41 →
   **21**; PSPL 0 / 33. Chunk 5/6: 366 in 751 s, 0 errors; W3 333 → 28 → **16**; PSPL 0 / 33. Chunks 1–5: W3 1,667 →
   186 flagged → 86 recovered; PSPL 0 / 167. Run 6 ended 21:52Z.
-  **Next:** `merge-prescreen`, `merge-chunks --n 4`, `vet --procs 4` (~2 min, regenerates the derived record that
-  `limit` needs), inject chunk 6/6, `limit`, `combine`, docs/exotic_limits.md, TASKS.md; mark ready.
+- Run 7 (cloud, 22:08–22:30Z): `merge-prescreen`, `merge-chunks --n 4`; `vet --procs 4` (176 s, beside the injections)
+  reproduced the tracked record exactly (0 / 101). Injection chunk 6/6: 366 in 461 s, 0 errors; W3 333 → 23 flagged →
+  **13 recovered**; PSPL 0 / 33. All six: **W3 2,000 → 209 flagged → 99 recovered** (47 % of flagged kept by
+  vetting); PSPL controls 0 / 200 flagged.
+- gb10 limits (`results/w3_moa/limits_gb10.ecsv`; N_s = 2.15 × 10⁷, Nunota et al. 2024 Table 1, 70/80 subfields):
+  Γ₉₅ ≈ 1.7 × 10⁻⁷–3.3 × 10⁻⁶ per star per year; both t_E = 300 d cells rest on 1 recovery each, t_E = 3 d, ρ = 0.01
+  on 2.
+- **Combined over twenty fields:** Γ₉₅ ≈ 1.4 × 10⁻⁸–7.8 × 10⁻⁸ per star per year (nineteen fields: 1.5 × 10⁻⁸–
+  8.0 × 10⁻⁸); gb10 holds 6.4 % of the stars and tightens the cells by 2–9 %; max field share 0.20 (gb9, t_E = 300 d,
+  ρ = 0.01). Details: docs/exotic_limits.md "W3 in MOA-II".
+- **Next:** gb13 waits on the owner (#145); then gb14, the last large Nunota et al. 2024 field (TASKS.md).
 ## 2026-10-12: W3 MOA-II gb9 (nineteenth field): 0 survivors; combined limit over nineteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. Run 1 (cloud, 07:35Z): tracked pre-screen chunks only.
