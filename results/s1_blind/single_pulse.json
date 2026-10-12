@@ -1,0 +1,44 @@
+{
+ "pool_npulse1_snr_ge10": 1167,
+ "npulse1_all": 2129,
+ "pairs_all_single_pulse_allowed": 517629,
+ "n_cal": 583,
+ "n_val": 584,
+ "calibration": {
+  "pairs": 130202,
+  "threshold_m2": 0.9856847844016713,
+  "threshold_multi_pulse_frozen": 0.9716426305743394
+ },
+ "unrelated": {
+  "n_top": 2000,
+  "m2_range": [
+   0.955350052567697,
+   0.9910405830284073
+  ],
+  "pass_rate": 0.3915,
+  "pass_top_100": 47,
+  "n_above_threshold": 12,
+  "pass_above_threshold": 5,
+  "expected_flagged_full_single_pulse": 51.8,
+  "expected_false_candidates_full": 20.3
+ },
+ "injections": {
+  "n": 1080,
+  "deformed": {
+   "n": 960,
+   "selected": 505,
+   "recovered": 46
+  },
+  "undeformed": {
+   "n": 120,
+   "selected": 54,
+   "recovered": 4
+  }
+ },
+ "decision": {
+  "a_expected_false_le_3": false,
+  "b_deformed_total_recovery_ge_0.10": false,
+  "deformed_total_recovery": 0.048
+ },
+ "runtime_s": 109.7
+}

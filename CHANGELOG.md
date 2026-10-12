@@ -74,6 +74,57 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `merge-chunks`, during `vet`). Use the harness's background task (`run_in_background`) for long queues there.
 - **Next:** gb13 after the owner decides #145; then gb9, gb10, gb14. This PR is stacked on #168, #165 and #160:
   merge those first.
+## 2026-10-12: S1 round 3: catalogue E_peak gives no robust practical recovery gain; upgrade paused
+- Owner review of #169: compare A (M2) with B (M2 + E_peak, staged) on full recovery at equal false-candidate
+  burden. `docs/s1_energy/` (plan written first, amended for the literature systematic before any result);
+  `scripts/s1_energy.py`; `results/s1_energy/`. No TTE download.
+- **Scope corrections to round 2** (`docs/s1_blind/README.md` §5): the E_peak was the catalogue fluence value, not
+  TTE; "3–5×" applies to testable pairs only; 96 % was a same-model check; the TTE 0.9716 threshold was borrowed.
+- **Errors:** model choice offset −0.12; peak − fluence window sd 0.33 (excess 0.27); literature about 0.25 per
+  measurement; stretch error 0.011. Availability depends on fluence and type (65–87 %).
+- **Result:** ΔR = +1.8 / +1.4 percentage points (optimistic / central), −0.1 (window-spread sensitivity) and −1.0
+  (independent-analyses literature scenario). It does not reach the pre-declared practical gain that is robust
+  across error scenarios. The energy and shape checks are correlated (E_peak pass 38 % → 56 % with rising M2).
+  Flagged counts were matched at calibration; validation (6 vs 4) shows no added burden, but false-alarm
+  equivalence is not established.
+- **Not tested:** time-resolved spectra with the instrument response, other observables, any exotic mechanism.
+  The owner accepted the pause; #169 is closed out (report wording only, no re-runs).
+- **Decision:** S1 energy upgrade paused; no B screen. Reopen only with a demonstrated same-source E_peak
+  systematic ≲ 0.10 or a time-resolved spectral observable.
+
+## 2026-10-12: S1 TTE round 2: energy constraint helps (conditionally), TTE time structure barely; no candidates
+- Owner review of #169: scope corrections, then the question of whether TTE time and energy information improve
+  same-source discrimination. `docs/s1_blind/README.md` §5; `docs/s1_blind/plan_round2.md`;
+  `scripts/s1_tte.py`; `results/s1_blind/tte/`. Downloaded 965 MB (cap 1 GB).
+- **Corrections:**
+  - 5 / 30 (7–34 %) only pauses the run for resources.
+  - The single-pulse result is scoped to M2 with two bands.
+  - The "about 20 false candidates" estimate holds on above-threshold pairs too (5 / 12 pass; range 10–35).
+  - "Only pair with each other" is withdrawn: 292–397 compatible partners per event.
+- **New pulses:** 3 / 5 are robust across 12 variants. The negative control is 0 / 130 smooth pulses counted as
+  ≥ 2; the positive control 30 / 34.
+- **Failed approach:** the alternative background window extended past the TTE start, so no-data counted as zero.
+  Fixed with GTI-covered bins only.
+- **E_peak = E_peak,A / s:** 20 % of the 2,000 most similar unrelated pairs pass, against 77–96 % of simulated true
+  pairs (depending on the true systematic, 0.20 to 0.10). Only about half of pairs have a catalogue E_peak.
+- **Candidates:** 59 new TTE pairs, none.
+- **Decision:** do not expand TTE now. Next: validate the E_peak systematic, then apply the constraint to the
+  existing 747,709-pair screen.
+
+## 2026-10-11: S1 blind spots: single-pulse bursts are structurally unsearchable; TTE adds little for short bursts
+- Owner brief: bring the 2,975 excluded bursts in with TTE. `docs/s1_blind/` (plan written first);
+  `scripts/s1_blind_spots.py`; `results/s1_blind/`.
+- **Why they are excluded:** 846 have no resolved pulse (faint); 2,129 have a single pulse (522 of them short).
+  Of 741 short bursts, 699 are excluded.
+- **Single pulse** (frozen M2, 1,167 bursts with S/N ≥ 10): unrelated pairs pass the consistency test at 39 %, so
+  about 20 false candidates would appear. Deformed recovery is 4.8 %. Both pre-declared criteria fail: a
+  **structural** blind spot.
+- **TTE pilot** (30 bright short bursts; streamed and deleted, 497 MB): 17 % gain ≥ 2 pulses with multi-resolution
+  counting. The control is 87 % (13 / 15 bcat-resolved short bursts). Below the pre-declared 25 %, so not run on
+  all 699 (about 0.6 h and 10 GB if wanted).
+- **Failed approach:** finest-bin TTE pulse counting lost 40 % of known structure (control 9 / 15). Fixed by
+  multi-resolution counting, after seeing the control (labelled).
+- **Next:** another observable for these bursts (spectral lag, E_peak(t)) or another messenger. Not started.
 
 ## 2026-10-11: S1 M2 calibration and full re-screen: 747,709 pairs, 0 candidates (exploratory)
 - Owner review of #167: calibrate, freeze, then re-screen the whole S1 catalogue with M2. `docs/s1_deform/README.md`

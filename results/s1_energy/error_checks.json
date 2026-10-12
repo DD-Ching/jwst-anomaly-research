@@ -1,0 +1,79 @@
+{
+ "catalogue": {
+  "source": "HEASARC fermigbrst via TAP https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync",
+  "query": "SELECT trigger_name, t90, fluence, fluence_error, flux_1024, flux_1024_error, flnc_best_fitting_model, pflx_best_fitting_model, flnc_spectrum_start, flnc_spectrum_stop, pflx_spectrum_start, pflx_spectrum_stop, flnc_band_epeak, flnc_band_epeak_pos_err, flnc_band_epeak_neg_err, flnc_band_redfitstat, flnc_comp_epeak, flnc_comp_epeak_pos_err, flnc_comp_epeak_neg_err, flnc_comp_redfitstat, flnc_band_alpha, flnc_band_beta, flnc_comp_index, flnc_sbpl_brken, pflx_band_epeak, pflx_band_epeak_pos_err, pflx_band_epeak_neg_err, pflx_band_redfitstat, pflx_comp_epeak, pflx_comp_epeak_pos_err, pflx_comp_epeak_neg_err, pflx_comp_redfitstat, pflx_band_alpha, pflx_band_beta, pflx_comp_index, pflx_sbpl_brken FROM fermigbrst",
+  "accessed_utc": "2026-10-12T01:59:36Z",
+  "votable_sha256_16": "abd2859141d64f71"
+ },
+ "rows": 4392,
+ "availability": {
+  "round2_best_model_any": 0.638,
+  "comp_any_fit": 0.859,
+  "comp_quality_rule": 0.796
+ },
+ "availability_by_fluence_quartile": [
+  {
+   "fluence_range": [
+    5e-09,
+    9.3e-07
+   ],
+   "comp_quality": 0.647,
+   "round2": 0.379
+  },
+  {
+   "fluence_range": [
+    9.3e-07,
+    2.8e-06
+   ],
+   "comp_quality": 0.795,
+   "round2": 0.643
+  },
+  {
+   "fluence_range": [
+    2.8e-06,
+    8e-06
+   ],
+   "comp_quality": 0.87,
+   "round2": 0.784
+  },
+  {
+   "fluence_range": [
+    8e-06,
+    0.039
+   ],
+   "comp_quality": 0.873,
+   "round2": 0.748
+  }
+ ],
+ "availability_by_type": {
+  "short_t90_lt_2s": 0.668,
+  "long": 0.822,
+  "by_best_model": {
+   "": 0.0,
+   "flnc_band": 0.961,
+   "flnc_comp": 1.0,
+   "flnc_plaw": 0.634,
+   "flnc_sbpl": 0.937
+  }
+ },
+ "model_choice_band_minus_comp": {
+  "n": 3289,
+  "median": -0.119,
+  "robust_sd": 0.177,
+  "median_stat": 0.16,
+  "note": "same photons: stat errors are correlated, so the excess is a lower bound"
+ },
+ "window_peak_minus_fluence_comp": {
+  "n": 3101,
+  "median": 0.081,
+  "robust_sd": 0.331,
+  "median_stat": 0.189,
+  "excess_sd": 0.272,
+  "pull_robust_sd": 1.86
+ },
+ "sigma_ln_quantiles_quality": {
+  "0.1": 0.031,
+  "0.5": 0.104,
+  "0.9": 0.275
+ }
+}
