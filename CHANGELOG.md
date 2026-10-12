@@ -19,22 +19,23 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   0 retries, mean 60 s per chunk wall, ~65–78 MB/s, CPU 99 %); the pre-screen is complete: **237,123 light curves,
   2,363 shape passes, 111 not at a shared epoch** (to fit; gb5 had 126). Fits (`fit --procs 4 --chunk K/4`):
   chunk 1/4 28 fits, 0 errors, 28 flags, 466 s; chunk 2/4 28 / 0 / 28, 547 s; chunk 3/4 28 / 0 / 28, 585 s (run 5 ended 11:53Z).
-- Run 6 (cloud, 12:20–13:05Z): `merge-prescreen` (a fresh clone needs it before `fit`), fit chunk 4/4: 27 fits,
-  0 errors, 25 flags, 1,074 s; `merge-chunks --n 4`: 111 fits, **109 flags**. `vet --procs 4` vetted 100 / 109 in
-  21 s, then one worker ran > 15 min on the last flags; the slot ended before it finished (nothing tracked).
+- Run 6 (cloud, 12:20–13:25Z): `merge-prescreen` (a fresh clone needs it before `fit`), fit chunk 4/4: 27 fits,
+  0 errors, 25 flags, 1,074 s; `merge-chunks --n 4`: 111 fits, **109 flags**. `vet --procs 4`: **0 of 109 flags
+  survive** (`results/w3_moa/vetting_gb9.json`); 100 / 109 took 21 s, the last 9 held one worker for ~20 min.
+  Quiet χ²/dof 95th percentile 3.42 (1,927 quiet curves); CDS XMatch worked (Gaia DR3 RP for 61 / 111). Contact sheet
+  inspected: box and eclipse dips, variables, noisy flat curves; caustic spikes only in the models.
   Failed approach: `photometry.fetch_catalog` (urllib) got the 97 MB MOA `metadata.ipac.tar.gz` truncated twice
   (different sha256 each time); `curl -C - --retry 3` into `$JWST_ANOMALY_DATA/cache/external/b339ec176933_metadata.ipac.tar.gz`
   fetched it intact on the first try.
-- Run 7 (cloud, 13:24–14:05Z): metadata tar by curl (sha256 matched first try), `merge-prescreen`, `merge-chunks --n 4`,
-  `vet --procs 4`: **0 of 109 flags survive** (`results/w3_moa/vetting_gb9.json`, 0 incomplete; Gaia DR3 RP for
-  61 / 109; quiet χ²/dof 95th percentile 3.4). 108 flags vetted in 56 s; the last, gb9-R-10-3-499239 (ΔBIC −413,
-  PSPL t_E ≈ 888 d, 25k epochs), took ~16 min in the binary-lens fit (py-spy: VBBL over every epoch, since the
-  ±3 t_E window spans the whole light curve). It passed the binary-source and binary-lens tests (ΔBIC −378) and
-  failed `exotic_feature_sampled` (11 epochs on 2 nights inside the feature). `vet` now logs each flag's id.
-  Contact sheet inspected: box and eclipse dips, variables, red-noise scatter; caustic spikes only in the models.
+- Run 7 (cloud, 13:24–14:10Z; started before run 6's late push): `vet --procs 4` reproduced the tracked record
+  exactly (same funnel, 0 / 109). The slow flag is gb9-R-10-3-499239 (ΔBIC −413, PSPL t_E ≈ 888 d, 25k epochs):
+  ~16 min in the binary-lens fit (py-spy: VBBL over every epoch, since the ±3 t_E window spans the whole light
+  curve); it passes binary source and binary lens (ΔBIC −378) and fails `exotic_feature_sampled` (11 epochs on
+  2 nights inside the feature). `vet` now logs each flag's id, so a stall names its flag.
 - Injection chunk 1/6 (`--procs 3` beside the slow vet): 367 in 1,234 s, 0 errors; W3 333 → 35 flagged →
   **18 recovered**; PSPL 0 / 34 flagged.
-- **Next:** `inject --chunk K/6` for K = 2…6 (~15–20 min each on 4 procs), `merge-inject --n 6`, `limit`, `combine`.
+- **Next:** `merge-prescreen`, `merge-chunks --n 4`, then `inject --chunk K/6` for K = 2…6 (~15–20 min each on
+  4 procs, one routine slot each), `merge-inject --n 6`, `limit`, `combine`.
 
 ## 2026-10-12: W3 MOA-II gb6 (eighteenth field): 0 survivors; combined limit over eighteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
