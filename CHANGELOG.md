@@ -33,9 +33,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   curve); it passes binary source and binary lens (ΔBIC −378) and fails `exotic_feature_sampled` (11 epochs on
   2 nights inside the feature). `vet` now logs each flag's id, so a stall names its flag.
 - Injection chunk 1/6 (`--procs 3` beside the slow vet): 367 in 1,234 s, 0 errors; W3 333 → 35 flagged →
-  **18 recovered**; PSPL 0 / 34 flagged.
-- **Next:** `merge-prescreen`, `merge-chunks --n 4`, then `inject --chunk K/6` for K = 2…6 (~15–20 min each on
-  4 procs, one routine slot each), `merge-inject --n 6`, `limit`, `combine`.
+  **18 recovered**; PSPL 0 / 34 flagged. Chunk 2/6 (`--procs 4`): 367 in 502 s, 0 errors; W3 333 → 23 → **8**;
+  PSPL 0 / 34.
+- **Next:** `merge-prescreen`, `merge-chunks --n 4`, then `inject --chunk K/6` for K = 3…6 (~8–20 min each on
+  4 procs; two fit one slot), `merge-inject --n 6`, `limit`, `combine`.
 
 ## 2026-10-12: W3 MOA-II gb6 (eighteenth field): 0 survivors; combined limit over eighteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
