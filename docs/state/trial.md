@@ -64,13 +64,14 @@ needed. Unchanged CI, subscriptions, waiting for review and routine syncs are no
 ## Units
 | Unit | State file | Branch / PR | Status |
 |---|---|---|---|
-| X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-farside` (draft PR opened by the first unit run) | authorized; F0 feasibility done 2026-10-12; next S1 |
+| X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-farside` (draft PR opened by the first unit run) | authorized; F0 and S1 done 2026-10-12; next S2 |
 | X2 | — | — | empty; filled only by an S0-passed direction that differs from X1 in mechanism, observable or data |
 
 ## Weekly tally (hours of run time; append one line per run that works on the trial)
 | ISO week | Routine search | High-risk | Verification | Upkeep | Note |
 |---|---|---|---|---|---|
 | 2026-W42 | — | 1.5 (X1 F0) | — | 1.0 (trial set-up) | set-up session, not a routine run |
+| 2026-W42 | — | 0.5 (X1 S1) | — | 0.2 (orientation, PR) | cloud routine 01CJcx3Y |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
