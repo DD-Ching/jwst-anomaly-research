@@ -12,8 +12,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Run 3 (cloud, 09:10–09:40Z, `prescreen --procs 4 --chunks 51-101`): chunks 51–70 tracked (20 chunks, 0 errors,
   at most 1 retry, mean 141 s per chunk wall, ~40–50 MB/s, CPU 99 %); stopped by `timeout` at the slot's end
   (chunk 71 reruns).
-- **Next:** `prescreen --procs 4 --chunks 71-101` (finished chunks are skipped; ~1.2 h, so split across runs), then
-  `run-field` with chunked fits and `inject --chunk K/N`.
+- Run 4 (cloud, 10:10–10:39Z, `prescreen --procs 4 --chunks 71-101`): chunks 71–89 tracked (19 chunks, 0 errors,
+  at most 1 retry, mean 131 s per chunk wall, ~45–50 MB/s, CPU 99 %); stopped by `timeout` at the slot's end
+  (chunk 90 reruns).
+- **Next:** `prescreen --procs 4 --chunks 90-101` (finished chunks are skipped; ~25 min), then `run-field` with
+  chunked fits and `inject --chunk K/N`.
 
 ## 2026-10-12: W3 MOA-II gb6 (eighteenth field): 0 survivors; combined limit over eighteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
