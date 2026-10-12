@@ -17,10 +17,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Run 4 (cloud, 01:09–01:34Z, `--chunks 94-119`): chunks 94–119 tracked (26 chunks, 0 errors, ~60–90 s per chunk);
   the pre-screen is complete: **259,556 light curves, 1,802 shape passes, 126 not at a shared epoch** (to fit; gb4
   had 118). A fresh clone needs `pip install -e '.[mulens]'` for `fit`.
-- **Next:** `merge-prescreen` (fresh clone), then `fit --procs 4 --chunk K/4` for K = 1…4 (~32 passes, ~15 min
-  each; chunk 1/4 was started at 01:35Z and is committed only if it finished in this run, so check
-  `results/w3_moa/` for its table first), `merge-chunks 4`, `vet`, `sheet`; then chunked injections, limit,
-  combine.
+- Fit chunk 1/4 (cloud, 01:35–01:47Z): 32 fits, 0 errors, 31 flags, 699 s (`results/w3_moa/fits_gb5_chunk1of4.ecsv.gz`).
+- **Next:** `merge-prescreen` (fresh clone; `fit` also needs `pip install -e '.[mulens]'`), then
+  `fit --procs 4 --chunk K/4` for K = 2, 3, 4 (~12 min each, detached), `merge-chunks 4`, `vet`, `sheet`; then
+  chunked injections, limit, combine.
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
   would have gone to `/vet-candidate` before injections.
