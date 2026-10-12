@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-12: W3 MOA-II gb6 (eighteenth field): in progress
+## 2026-10-12: W3 MOA-II gb6 (eighteenth field): 0 survivors; combined limit over eighteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. gb6 is small (7.7 GB tar). Stacked on `claude/w3-moa-gb5` (#168).
 - Run 1 (cloud, 05:35–05:42Z): pre-screen 2 tracked chunks in 111 s (0 errors): **35,948 light curves, 800 shape
@@ -10,9 +10,19 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   survive** (`results/w3_moa/vetting_gb6.json`); CDS XMatch worked (Gaia DR3 RP for 29 / 32). The quiet χ²/dof 95th
   percentile is 5.5, against 2.1–2.6 in gb4 and gb5 (a noisier small field; the χ² cap scales with it). Contact sheet
   inspected: box and eclipse dips, single low points, variables; caustic spikes only in the models.
-- **Next:** `merge-prescreen`, `merge-chunks --n 1`, `vet` (fresh clone; `pip install -e '.[mulens]'`), then
-  `--field gb6 inject --procs 4 --chunk K/N` (2,200 injections; ~4 chunks of 550 fit one slot each at gb5 speed),
-  `merge-inject`, `limit`, `combine` (eighteen fields), docs/exotic_limits.md.
+- Run 2 (cloud, 06:13–06:40Z): `merge-prescreen`, `merge-chunks --n 1`, `vet` reproduced the tracked record (0 / 32,
+  identical funnel). Injections in four tracked chunks of 550 (0 errors, ~270–355 s each, ~2 per s: gb6's small
+  carrier set is fast): W3 2,000 → 135 flagged → **80 recovered** (59 %); PSPL controls 0 / 200 flagged.
+- gb6 limits (`results/w3_moa/limits_gb6.ecsv`): Γ₉₅ ≈ 8.0 × 10⁻⁷–1.0 × 10⁻⁵ per star per year. gb6 is not in
+  Nunota et al. 2024 Table 1, so N_s = 6.76 × 10⁶ comes from the Cut-0 object model (ASSUMPTION, as for gb22). The
+  t_E = 3 d, ρ = 0.01 cell rests on 1 recovery.
+- **Combined over eighteen fields:** Γ₉₅ ≈ 1.5 × 10⁻⁸–8.6 × 10⁻⁸ per star per year (seventeen fields:
+  1.6 × 10⁻⁸–9.0 × 10⁻⁸); gb6 holds 2.4 % of the stars and moves the cells by 0–5 %; max field share 0.17
+  (`results/w3_moa/limits_combined.ecsv`, docs/exotic_limits.md).
+- Failed approach: a `setsid nohup ... &` queue started from a cloud Bash call died when the call returned (after
+  `merge-chunks`, during `vet`). Use the harness's background task (`run_in_background`) for long queues there.
+- **Next:** gb13 after the owner decides #145; then gb9, gb10, gb14. This PR is stacked on #168, #165 and #160:
+  merge those first.
 
 ## 2026-10-11: W3 MOA-II gb5 (seventeenth field): 0 survivors; combined limit over seventeen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
