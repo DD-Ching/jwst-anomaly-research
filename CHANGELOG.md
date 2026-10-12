@@ -25,7 +25,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (`results/w3_moa/vetting_gb10.json`). Quiet χ²/dof 95th percentile 3.73 (2,430 quiet curves); CDS XMatch worked
   (Gaia DR3 RP for 63 / 108). The MOA `metadata.ipac.tar.gz` came intact on the first `curl -C - --retry 3`.
   Contact sheet inspected: box and eclipse dips, variables, noisy flat curves; caustic spikes only in the models.
-  Injection chunk 1/6 started 20:21Z.
+- Injection chunk 1/6 (`--procs 4`): 367 in 683 s, 0 errors; W3 333 → 42 flagged → **19 recovered**; PSPL 0 / 34.
+  Chunk 2/6 started 20:33Z (reruns if this slot ends first).
+  **Next:** `merge-prescreen`, `merge-chunks --n 4`, `vet --procs 4` (~2 min, regenerates the derived record that
+  `limit` needs), inject chunks 2–6 of 6, `limit`, `combine`, docs/exotic_limits.md, TASKS.md; mark ready.
 ## 2026-10-12: W3 MOA-II gb9 (nineteenth field): 0 survivors; combined limit over nineteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. Run 1 (cloud, 07:35Z): tracked pre-screen chunks only.
