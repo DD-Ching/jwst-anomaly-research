@@ -1,0 +1,104 @@
+{
+ "inputs": {
+  "M_S2_Msun": [
+   4297000.0,
+   12000.0
+  ],
+  "R0_pc": 8277.0,
+  "P_pol_min": [
+   60.0,
+   3.0
+  ],
+  "loop_radius_uas": [
+   61.0,
+   9.0
+  ],
+  "source": "GRAVITY Collaboration 2023, A&A 677, L10 (arXiv:2307.11821)"
+ },
+ "theta_g_uas": 5.124,
+ "kepler_radius_M": {
+  "value": 9.02,
+  "mc_sd": 0.3
+ },
+ "control_same_side": {
+  "predicted_loop_uas": [
+   51.3,
+   1.5
+  ],
+  "z_obs_minus_pred": 1.06
+ },
+ "far_side": [
+  {
+   "a_M": 2.1,
+   "b_crit_M": 5.196,
+   "bound_uas": 26.6,
+   "z_obs_above_bound": 3.82,
+   "orbit_outside_throat": true,
+   "gravity_estimator_mass_at_bound_Msun": 743000.0
+  },
+  {
+   "a_M": 3.0,
+   "b_crit_M": 5.196,
+   "bound_uas": 26.6,
+   "z_obs_above_bound": 3.82,
+   "orbit_outside_throat": true,
+   "gravity_estimator_mass_at_bound_Msun": 743000.0
+  },
+  {
+   "a_M": 4.0,
+   "b_crit_M": 5.657,
+   "bound_uas": 29.0,
+   "z_obs_above_bound": 3.56,
+   "orbit_outside_throat": true,
+   "gravity_estimator_mass_at_bound_Msun": 943000.0
+  },
+  {
+   "a_M": 5.0,
+   "b_crit_M": 6.455,
+   "bound_uas": 33.1,
+   "z_obs_above_bound": 3.1,
+   "orbit_outside_throat": true,
+   "gravity_estimator_mass_at_bound_Msun": 1360000.0
+  },
+  {
+   "a_M": 6.0,
+   "b_crit_M": 7.348,
+   "bound_uas": 37.7,
+   "z_obs_above_bound": 2.59,
+   "orbit_outside_throat": true,
+   "gravity_estimator_mass_at_bound_Msun": 1930000.0
+  },
+  {
+   "a_M": 7.0,
+   "b_crit_M": 8.283,
+   "bound_uas": 42.4,
+   "z_obs_above_bound": 2.06,
+   "orbit_outside_throat": true,
+   "gravity_estimator_mass_at_bound_Msun": 2640000.0
+  },
+  {
+   "a_M": 8.0,
+   "b_crit_M": 9.238,
+   "bound_uas": 47.3,
+   "z_obs_above_bound": 1.52,
+   "orbit_outside_throat": true,
+   "gravity_estimator_mass_at_bound_Msun": 3500000.0
+  },
+  {
+   "a_M": 9.0,
+   "b_crit_M": 10.205,
+   "bound_uas": 52.3,
+   "z_obs_above_bound": 0.97,
+   "orbit_outside_throat": true,
+   "gravity_estimator_mass_at_bound_Msun": 4500000.0
+  }
+ ],
+ "a_star_M_at_2sigma": 7.11,
+ "a_star_M_at_3sigma": 5.21,
+ "eht_shadow_a_max_M_2sigma": {
+  "Keck": 4.36,
+  "VLTI": 4.08
+ },
+ "note_eht": "our application of the EHT delta bound to the SV critical curve; EHT calibrated the ring-to-shadow relation on Kerr and non-Kerr GRMHD libraries, not on this wormhole",
+ "gravity_estimator_mass_at_observed_loop_Msun": 6550000.0
+}

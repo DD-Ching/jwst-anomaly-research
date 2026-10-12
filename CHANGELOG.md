@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-12: Far-side wormhole light (Simpson–Visser) vs GRAVITY Sgr A* flares: excluded for the observed flares; line paused
+- Owner exploration brief. `docs/wh_farside/README.md`; `scripts/wh_farside.py`; `results/wh_farside/check.json`.
+- **Joint prediction:** M (stellar orbits) and the polarisation period fix a far-side Keplerian orbit (9.0 M). Light
+  crossing the throat has b < b_c(a), so the predicted astrometric loop is ≤ 26.6 µas for a ≤ 3M. The same-side control
+  predicts 51.3 µas.
+- **Data:** GRAVITY 2023 mean loop 61 ± 9 µas. Same side consistent (1.1σ); far side excluded for a ≤ 7.1 M (2σ); the
+  period excludes a > 9.0 M; EHT δ limits a ≲ 4.1–4.4 M. A small loop would not be unique (dilution, sub-Keplerian
+  motion), so this is an exclusion test only. Paused; reopen inputs in §7.
+
 ## 2026-10-12: W3 MOA-II gb6 (eighteenth field): 0 survivors; combined limit over eighteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. gb6 is small (7.7 GB tar). Stacked on `claude/w3-moa-gb5` (#168).

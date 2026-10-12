@@ -1193,3 +1193,11 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - SkyLLH, PyPI `skyllh` 26.1.0 (2026-09-09), https://github.com/icecube/skyllh.
 - SN1987A: Hirata+ 1988 PRD 38, 448; Bionta+ 1987 PRL 58, 1494; Bratton+ 1988 PRD 37, 3361; Alexeyev+ 1988
   PLB 205, 209; compilation Loredo & Lamb 2002 PRD 65, 063002 (astro-ph/0107260).
+
+## Far-side wormhole light vs Sgr A* flares (accessed 2026-10-12; docs/wh_farside/README.md)
+- Chen, Cheng, Wang & Yang, "Observational Signatures of Traversable Wormholes", arXiv:2408.07350 (Simpson–Visser;
+  no public code found).
+- GRAVITY Collaboration 2023, A&A 677, L10, arXiv:2307.11821 (loop 61 ± 9 µas, P_pol = 60 ± 3 min, R0 = 8.277 kpc,
+  M = 4.297 × 10⁶ M☉); GRAVITY Collaboration 2018, A&A 618, L10, arXiv:1810.12641.
+- EHT Collaboration 2022, ApJL 930, L17, arXiv:2311.09484 (doi:10.3847/2041-8213/ac6756), Sect. 5 δ bounds.
+- Dai & Stojkovic, arXiv:1910.00429; Simonetti et al., PRD 104, 081502, arXiv:2007.12184 (model 2, not chosen).
