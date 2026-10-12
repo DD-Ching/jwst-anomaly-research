@@ -5,6 +5,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-12: W3 MOA-II gb9 (nineteenth field), in progress
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. Run 1 (cloud, 07:35Z): tracked pre-screen chunks only.
+- Run 1 (cloud, 07:35–07:47Z): pre-screen chunks 1–13 of 101 tracked (~65–120 s per chunk on 4 procs, CPU 99 %,
+  35–64 MB/s; streamed, nothing stored). The run hit its time limit during chunk 14, which reruns.
+- **Next:** `prescreen --procs 4 --chunks 14-101` (finished chunks are skipped; ~2.5 h, so split across runs), then
+  `run-field` with chunked fits and `inject --chunk K/N`.
 
 ## 2026-10-12: W3 MOA-II gb6 (eighteenth field): 0 survivors; combined limit over eighteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
