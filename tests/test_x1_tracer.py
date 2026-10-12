@@ -13,8 +13,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import wh_farside as wf  # noqa: E402
 import x1_tracer as xt  # noqa: E402
 
-# roundoff warnings near the photon sphere; accuracy is checked against the ODE route instead
-pytestmark = pytest.mark.filterwarnings("ignore::scipy.integrate.IntegrationWarning")
+# far side near b_c: scipy may report round-off; accuracy is checked against the ODE route instead
+FAR_WARN = pytest.mark.filterwarnings("ignore::scipy.integrate.IntegrationWarning")
 
 
 @pytest.mark.parametrize("b", [6.0, 8.0, 20.0])
@@ -35,10 +35,11 @@ def test_b_crit_two_routes(a):
     assert xt.turning_u(below, a) is None and xt.turning_u(above, a) is not None
 
 
+@FAR_WARN
 @pytest.mark.parametrize("a,frac", [(3.0, 0.5), (7.0, 0.99)])
 def test_far_side_quadrature_matches_ode(a, frac):
     b = frac * wf.b_crit(a)
-    assert abs(xt.phi_to_emitter(b, a, 9.0, "far")[0] / xt.phi_far_ode(b, a, 9.0) - 1) < 1e-6
+    assert abs(xt.phi_to_emitter(b, a, 9.0, "far")[0] / xt.phi_ode(b, a, 9.0, "far") - 1) < 1e-6
 
 
 def test_near_side_branches_meet_at_fold():
@@ -54,8 +55,21 @@ def test_face_on_primary_ring_near_r_plus_one():
     assert abs(rad.mean() - 10.0) < 0.5
 
 
+@FAR_WARN
 @pytest.mark.parametrize("a", [2.1, 7.0])
 def test_far_side_images_inside_b_crit(a):
     tr = xt.spot_track(a, 9.0, 155.0, "far", n_phase=12)
     assert np.nanmax(np.hypot(tr[:, 1], tr[:, 2])) < wf.b_crit(a)
     assert np.all(tr[:, 3] > 0)
+
+
+@pytest.mark.parametrize("a,br", [(5.0, 0), (5.0, 1), (0.0, 1)])
+def test_near_side_just_above_b_crit_matches_ode(a, br):
+    b = 1.001 * wf.b_crit(a)
+    q = xt.phi_to_emitter(b, a, 9.0, "near")[br]
+    assert abs(q / xt.phi_ode(b, a, 9.0, "near", br) - 1) < 1e-6
+
+
+def test_emitter_inside_throat_is_rejected():
+    with pytest.raises(ValueError):
+        xt.phi_to_emitter(3.0, 7.0, 6.0, "far")

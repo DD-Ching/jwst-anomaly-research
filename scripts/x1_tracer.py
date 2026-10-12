@@ -29,6 +29,7 @@ All outputs are model computations of a conditional, unestablished geometry
 
 from __future__ import annotations
 
+import functools
 import json
 import math
 import sys
@@ -44,6 +45,10 @@ import wh_farside as wf  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "x1"
 QUAD = {"epsabs": 0.0, "epsrel": 1e-10, "limit": 400}
+R_START = 2.0e3  # ODE rays start here (M); the regular range beyond is added by quadrature
+N_GRID = 1200  # b grid per image curve (converged to 1e-10 against 4,800 points; X1.md)
+# ASSUMPTION: S1 pass tolerances, pre-written in docs/state/units/X1.md "Tolerances"
+TOL = {"deflection_rel": 1e-6, "b_crit_rel": 1e-4, "swept_angle_rel": 1e-6, "appA_M": 0.5}
 
 
 def _pot(u: float, b: float) -> float:
@@ -114,6 +119,10 @@ def phi_to_emitter(b: float, a: float, re: float, side: str) -> list[float]:
     not turn (captured or transmitted); [] when it turns outside re.
     side 'far': [through the throat] when b < b_c(a) (no turn); [] otherwise.
     """
+    if re <= max(a, 3.0):
+        raise ValueError(
+            f"emitter radius {re} must exceed the throat a = {a} and the photon sphere"
+        )
     ue = 1.0 / re
     ut = turning_u(b, a)
     if side == "near":
@@ -131,7 +140,7 @@ def phi_to_emitter(b: float, a: float, re: float, side: str) -> list[float]:
     return [pin + _phi_range(b, a, ue, ua)]
 
 
-def b_crit_ode(a: float, r_start: float = 2.0e3, tol: float = 1e-6) -> float:
+def b_crit_ode(a: float, r_start: float = R_START, tol: float = 1e-6) -> float:
     """Capture/transmission boundary from ODE rays: largest b whose ray reaches r < 0 (far side)."""
 
     def w_prime(r, b):
@@ -168,11 +177,12 @@ def b_crit_ode(a: float, r_start: float = 2.0e3, tol: float = 1e-6) -> float:
     return 0.5 * (lo + hi)
 
 
-def phi_far_ode(b: float, a: float, re: float, r_start: float = 2.0e3) -> float:
-    """Second route for the far-side swept angle.
+def phi_ode(b: float, a: float, re: float, side: str, branch: int = 0) -> float:
+    """Second route for the swept angle to an emitter at areal radius re.
 
-    Integrates (r, r', phi) in the affine parameter from r_start through the throat to
-    r = -sqrt(re^2 - a^2); the regular range beyond r_start is added by quadrature.
+    Integrates (r, r', phi) in the affine parameter from R_START inwards (through the throat for
+    side 'far') to the branch-th crossing of the emitter radius; the regular range beyond R_START
+    is added by quadrature. Near side: branch 0 = inward crossing, 1 = outward after the turn.
     """
 
     def rhs(_, y):
@@ -181,16 +191,17 @@ def phi_far_ode(b: float, a: float, re: float, r_start: float = 2.0e3) -> float:
         wp = b * b * (-2.0 / rr**3 + 6.0 / rr**4) * r / rr
         return [y[1], -0.5 * wp, b / rr**2]
 
-    r_end = -math.sqrt(re * re - a * a)
+    r_e = math.sqrt(re * re - a * a) * (1.0 if side == "near" else -1.0)
 
     def reached(_, y):
-        return y[0] - r_end
+        return y[0] - r_e
 
-    reached.terminal = True
-    rr0 = math.sqrt(r_start**2 + a * a)
+    reached.terminal = side == "far" or branch == 0
+    reached.direction = 1.0 if (side == "near" and branch == 1) else -1.0
+    rr0 = math.sqrt(R_START**2 + a * a)
     v0 = -math.sqrt(_pot(1.0 / rr0, b))
     sol = integrate.solve_ivp(
-        rhs, (0.0, 1e7), [r_start, v0, 0.0], events=reached, rtol=1e-12, atol=1e-13
+        rhs, (0.0, 1e7), [R_START, v0, 0.0], events=reached, rtol=1e-12, atol=1e-13
     )
     return float(sol.y_events[0][0][2]) + _phi_range(b, a, 0.0, 1.0 / rr0)
 
@@ -200,7 +211,8 @@ def _fold_b(a: float, re: float) -> float:
     return re / math.sqrt(1.0 - 2.0 / re)
 
 
-def _tables(a: float, re: float, side: str, b_max: float, n: int = 1200):
+@functools.lru_cache(maxsize=32)
+def _tables(a: float, re: float, side: str, b_max: float, n: int = N_GRID):
     """Phi along one continuous image curve, as rows (b, branch, Phi).
 
     Near side: the direct branch for b up to the fold b_f (ray tangent at re), then the
@@ -224,12 +236,16 @@ def _tables(a: float, re: float, side: str, b_max: float, n: int = 1200):
 
 
 def _images(a: float, re: float, side: str, gamma: float, tables, kmax: int = 0):
-    """All images (b, side_sign, dPhi/db) with Phi(b) = gamma + 2 pi k or 2 pi - gamma + 2 pi k."""
+    """Images (b, side_sign, dPhi/db) with Phi(b) = gamma + 2 pi k or 2 pi - gamma + 2 pi k.
+
+    Returns (images, n_dropped); an image is dropped only if its finite difference leaves
+    the branch.
+    """
     rows, b_end = tables
     targets = []
     for k in range(kmax + 1):
         targets += [(gamma + 2 * math.pi * k, +1.0), (2 * math.pi - gamma + 2 * math.pi * k, -1.0)]
-    out = []
+    out, dropped = [], 0
     for tgt, sgn in targets:
         d = rows[:, 2] - tgt
         ok = (
@@ -250,9 +266,10 @@ def _images(a: float, re: float, side: str, gamma: float, tables, kmax: int = 0)
             eps = min(1e-6 * bs, 0.25 * (b_end - bs)) if b_end > bs else 1e-6 * bs
             hp, hm = h(bs + eps), h(bs - eps)
             if not (np.isfinite(hp) and np.isfinite(hm)):
+                dropped += 1
                 continue
             out.append((bs, sgn, (hp - hm) / (2 * eps)))
-    return out
+    return out, dropped
 
 
 def spot_track(
@@ -265,6 +282,8 @@ def spot_track(
     primary_only: bool = False,
 ):
     """Centroid track (M on the sky) and total flux of a Keplerian point spot over one orbit.
+
+    Rows: (phase, x_sky, y_sky, flux, n_dropped_images).
 
     Observer direction o = (sin i, 0, cos i); orbit in the z = 0 plane (of the emitter's own sheet).
     Sky axes: x_sky along (cos i, 0, -sin i), y_sky along (0, 1, 0).
@@ -286,7 +305,8 @@ def spot_track(
         pn = np.linalg.norm(proj)
         e = proj / pn if pn > 1e-12 else ex
         cx = cy = ftot = 0.0
-        for bs, sgn, dphidb in _images(a, re, side, gamma, tables, 0 if primary_only else kmax):
+        images, dropped = _images(a, re, side, gamma, tables, 0 if primary_only else kmax)
+        for bs, sgn, dphidb in images:
             if primary_only and sgn < 0:
                 continue
             pos = sgn * bs * e  # 3-vector in the sky plane
@@ -302,7 +322,8 @@ def spot_track(
             cx += w * float(pos @ ex)
             cy += w * float(pos @ ey)
             ftot += w
-        rows.append((ph, cx / ftot if ftot else np.nan, cy / ftot if ftot else np.nan, ftot))
+        cx, cy = (cx / ftot, cy / ftot) if ftot else (np.nan, np.nan)
+        rows.append((ph, cx, cy, ftot, dropped))
     return np.array(rows)
 
 
@@ -316,56 +337,55 @@ def run_checks() -> dict:
         c1.append({"b_M": b, "tracer": num, "exact": ex, "rel_err": abs(num / ex - 1)})
     out["check1_schwarzschild_deflection"] = {
         "rows": c1,
-        "tolerance": 1e-6,
-        "pass": all(r["rel_err"] < 1e-6 for r in c1),
+        "tolerance": TOL["deflection_rel"],
+        "pass": all(r["rel_err"] < TOL["deflection_rel"] for r in c1),
     }
+    # ODE rays only: the quadrature's turn test reduces algebraically to the analytic b_c
     c2 = []
     for a in (2.1, 3.0, 5.0, 7.0):
         bo, ba = b_crit_ode(a), wf.b_crit(a)
-        # quadrature route: largest b with no near-side turn
-        bq = optimize.brentq(
-            lambda b, a=a: (turning_u(b, a) is None) - 0.5, 0.5 * ba, 1.5 * ba, xtol=1e-12
-        )
-        c2.append(
-            {
-                "a_M": a,
-                "analytic": ba,
-                "ode": bo,
-                "quadrature": bq,
-                "rel_err_ode": abs(bo / ba - 1),
-                "rel_err_quad": abs(bq / ba - 1),
-            }
-        )
-    c2b = []
-    for a in (2.1, 3.0, 5.0, 7.0):
-        for fr in (0.3, 0.9, 0.999):
-            b = fr * wf.b_crit(a)
-            q, o = phi_to_emitter(b, a, 9.0, "far")[0], phi_far_ode(b, a, 9.0)
-            c2b.append({"a_M": a, "b_M": b, "quadrature": q, "ode": o, "rel_err": abs(q / o - 1)})
-    out["check2b_far_side_swept_angle_R9"] = {
-        "rows": c2b,
-        "tolerance": 1e-6,
-        "pass": all(r["rel_err"] < 1e-6 for r in c2b),
-        "note": "added in S1 (not pre-written): the far-side quadrature against an ODE route",
-    }
+        c2.append({"a_M": a, "analytic": ba, "ode": bo, "rel_err_ode": abs(bo / ba - 1)})
     out["check2_b_crit"] = {
         "rows": c2,
-        "tolerance": 1e-4,
-        "pass": all(max(r["rel_err_ode"], r["rel_err_quad"]) < 1e-4 for r in c2),
+        "tolerance": TOL["b_crit_rel"],
+        "pass": all(r["rel_err_ode"] < TOL["b_crit_rel"] for r in c2),
+        "note": "this boundary also tests check 4: rays above it never reach r < 0",
+    }
+    c2b = []
+    cases = [(a, "far", 0, fr) for a in (2.1, 3.0, 5.0, 7.0) for fr in (0.3, 0.9, 0.999)]
+    cases += [
+        (a, "near", br, fr) for a in (0.0, 3.0, 5.0, 7.0) for br in (0, 1) for fr in (1.001, 1.3)
+    ]
+    for a, side, br, fr in cases:
+        b = fr * wf.b_crit(a)
+        q = phi_to_emitter(b, a, 9.0, side)
+        if len(q) <= br:
+            continue
+        o = phi_ode(b, a, 9.0, side, br)
+        row = {"a_M": a, "side": side, "branch": br, "b_over_bc": fr, "quadrature": q[br], "ode": o}
+        c2b.append(row | {"rel_err": abs(q[br] / o - 1)})
+    out["check2b_swept_angle_R9"] = {
+        "rows": c2b,
+        "tolerance": TOL["swept_angle_rel"],
+        "pass": all(r["rel_err"] < TOL["swept_angle_rel"] for r in c2b),
+        "note": "added in S1 (not pre-written): quadrature vs ODE swept angle, far side below b_c"
+        " and near side (both branches) above it",
     }
     # GRAVITY 2023 App. A (after Gralla et al. 2019, Gates et al. 2020): the loop appears at
     # r_o = R + 1 M. That relation describes the direct (primary) image; we report the primary-only
     # loop (the check) and the centroid of all light (primary + secondary), which S2 must use.
-    c3 = {}
+    c3, tracks = {}, {}
     for name, inc in (("face_on_i179.5", 179.5), ("i155", 155.0)):
         for prim in (True, False):
-            tr = spot_track(0.0, 9.0, inc, "near", n_phase=72, kmax=0, primary_only=prim)
+            key = f"{name}_{'primary' if prim else 'all_light'}"
+            tr = tracks[key] = spot_track(0.0, 9.0, inc, "near", n_phase=72, primary_only=prim)
             rad = np.hypot(tr[:, 1], tr[:, 2])
-            c3[f"{name}_{'primary' if prim else 'all_light'}"] = {
+            c3[key] = {
                 "semi_major_M": float(rad.max()),
                 "mean_radius_M": float(rad.mean()),
                 "min_radius_M": float(rad.min()),
                 "flux_max_over_min": float(tr[:, 3].max() / tr[:, 3].min()),
+                "dropped_images": int(tr[:, 4].sum()),
             }
     prim_sm = c3["i155_primary"]["semi_major_M"]
     out["check3_schwarzschild_spot_R9_i155"] = {
@@ -373,18 +393,19 @@ def run_checks() -> dict:
         "gravity_appA_R_plus_1_M": 10.0,
         "diff_primary_semi_major_M": prim_sm - 10.0,
         "diff_primary_face_on_M": c3["face_on_i179.5_primary"]["mean_radius_M"] - 10.0,
-        "tolerance_M": 0.5,
-        "pass": bool(abs(prim_sm - 10.0) <= 0.5),
+        "tolerance_M": TOL["appA_M"],
+        "pass": bool(abs(prim_sm - 10.0) <= TOL["appA_M"]),
         "note": "App. A is an approximation for the direct image, so this is a sanity check, not"
         " an exact benchmark; k = 0 images only; no light-travel-time delays;"
         " bolometric g^4 weights",
     }
-    near_flux = float(spot_track(0.0, 9.0, 155.0, "near", n_phase=72)[:, 3].mean())
+    near_flux = float(tracks["i155_all_light"][:, 3].mean())
     c4 = []
     for a in (2.1, 3.0, 5.0, 7.0):
         with warnings.catch_warnings(record=True) as caught:
             warnings.simplefilter("always", integrate.IntegrationWarning)
-            trf = spot_track(a, 9.0, 155.0, "far", n_phase=72, kmax=0)
+            trf = spot_track(a, 9.0, 155.0, "far", n_phase=72)
+        n_quad = sum(issubclass(w.category, integrate.IntegrationWarning) for w in caught)
         radf = np.hypot(trf[:, 1], trf[:, 2])
         c4.append(
             {
@@ -393,15 +414,17 @@ def run_checks() -> dict:
                 "centroid_radius_max_M": float(np.nanmax(radf)),
                 "centroid_radius_mean_M": float(np.nanmean(radf)),
                 "flux_rel_to_schwarzschild_near_mean": float(np.nanmean(trf[:, 3]) / near_flux),
-                "quad_roundoff_warnings": len(caught),
+                "quad_roundoff_warnings": int(n_quad),
+                "dropped_images": int(trf[:, 4].sum()),
                 "inside_b_crit": bool(np.nanmax(radf) < wf.b_crit(a)),
             }
         )
     out["check4_far_side_inside_b_crit"] = {
         "rows": c4,
         "pass": all(r["inside_b_crit"] for r in c4),
-        "note": "every traced far-side image has b < b_c by construction; the figure comparison"
-        " with 2408.07350 Fig. 7 is figure-read only",
+        "note": "far-side tables stop at b_c, so inside_b_crit holds by construction; the"
+        " transmission boundary itself is tested by the ODE rays of check 2. The figure"
+        " comparison with 2408.07350 Fig. 7 is figure-read only and not done",
     }
     return out
 
