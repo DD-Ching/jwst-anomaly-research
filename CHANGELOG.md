@@ -14,10 +14,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   mean 120 s per chunk wall, 78 s when archive reads are fast); stopped by PID at the slot's end.
 - Run 3 (cloud, 00:10–00:44Z, `--chunks 62-119`): chunks 62–93 tracked (32 chunks, 0 errors, mean 101 s per
   chunk wall); stopped by PID at the slot's end.
-- **Next:** `prescreen --procs 4 --chunks 94-119` (one more run, ~45 min; detached, `setsid nohup`; stop it by its
-  PID, never `pkill -f` or `pgrep -f … | xargs kill`, which match and kill the harness shell), committing tracked
-  chunks every ~10 min; then `merge-prescreen` and a chunked fit.
-
+- Run 4 (cloud, 01:09–01:34Z, `--chunks 94-119`): chunks 94–119 tracked (26 chunks, 0 errors, ~60–90 s per chunk);
+  the pre-screen is complete: **259,556 light curves, 1,802 shape passes, 126 not at a shared epoch** (to fit; gb4
+  had 118). A fresh clone needs `pip install -e '.[mulens]'` for `fit`.
+- **Next:** `merge-prescreen` (fresh clone), then `fit --procs 4 --chunk K/4` for K = 1…4 (~32 passes, ~15 min
+  each; chunk 1/4 was started at 01:35Z and is committed only if it finished in this run, so check
+  `results/w3_moa/` for its table first), `merge-chunks 4`, `vet`, `sheet`; then chunked injections, limit,
+  combine.
 ## 2026-10-11: W3 MOA-II gb8 (fourteenth field): 0 survivors; combined limit over fourteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
   would have gone to `/vet-candidate` before injections.
