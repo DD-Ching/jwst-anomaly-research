@@ -105,6 +105,12 @@ asks whether one can be informative at all.
 | bn101129726 | 0.58 | 2 | 6 / 12 | no (depends on bin offset) |
 
 **5.2 Joint time–energy constraint** [obs; `epeak_test.json`]
+> **Scope (round 3 correction):** this is the **catalogue fluence-spectrum E_peak**, not a new TTE time-resolved
+> spectral analysis. The "3–5×" applies only to the pairs in these two samples that have a usable E_peak. In the
+> full catalogue, 36 % of bursts lack it, and missingness depends on brightness and type (see
+> `docs/s1_energy/README.md`). The 96 % true-pair pass rate uses the same error model to generate and to test,
+> so it is a check under that assumption, not a recovery efficiency. Round 3 replaces this with a full-recovery
+> comparison at equal false-candidate burden.
 - **Model:** one factor s, with t → s t and E → E/s, so the fluence E_peak of a true copy is E_peak,A / s.
   - E_peak is the GBM catalogue value (fermigbrst best-fitting Band or Comptonized model). The GBM team folded
     it with the detector response and background.
@@ -140,7 +146,9 @@ asks whether one can be informative at all.
   [0.5, 2], any data product): 397, 292 and 316. Of these, 37, 22 and 15 are bcat-multi-pulse, and 29, 17 and 11
   have TTE downloaded this round.
 - **Scoring:** 59 new pairs at one common TTE bin width, each built from its own events. Highest M2 = 0.914,
-  against the 0.9716 threshold (frozen on bcat data; not calibrated for TTE).
+  against the 0.9716 threshold. That threshold was frozen on bcat data and **borrowed, not calibrated for TTE**.
+  The only claim is that no pair passes this borrowed threshold. No general TTE detection capability or upper limit
+  follows.
   - The TTE background of 372 unrelated short-burst pairs has a 99th percentile of 0.889.
   - **No candidate.** Nothing passes the M2 threshold, χ² and E_peak together.
   - Example of the energy test at work: bn210528586 / bn130701761 passes the shape χ² (p = 0.018) but has E_peak
@@ -151,10 +159,11 @@ asks whether one can be informative at all.
 **5.4 Answer and decision**
 - **Does the new information separate same-source from unrelated signals better?**
   - TTE **time** structure: only marginally. It adds about 3 robust multi-pulse events per 30 bright short bursts.
-  - **Energy:** yes on testable pairs, conditionally. Requiring the E_peak ratio to match the time stretch
+  - **Energy (catalogue fluence E_peak, not TTE):** yes on testable pairs, conditionally. Requiring the E_peak ratio to match the time stretch
     removes about 80 % of unrelated look-alikes, but the gain depends on an unvalidated systematic and covers only
     about half the pairs.
-- **Real candidates:** none.
+- **Real candidates:** none (no pair passes the borrowed threshold; see 5.3 for scope). There is still no
+  evidence of new physics.
 - **Expand TTE to the remaining bright short bursts?** **Not recommended now.**
   - Expected yield: about 15 robust events (95 % interval about 5–38) out of 147.
   - Each would bring about 15–37 multi-pulse partners that also need TTE. That is a few hundred pairs, about

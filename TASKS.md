@@ -34,9 +34,11 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    the injected population. Blind spots (`docs/s1_blind/`): single-pulse bursts are structurally unsearchable by
    shape (39 % unrelated pass rate); TTE gives ≥ 2 pulses for only 17 % of bright short bursts (not run in full).
    Round 2 (#169): the catalogue E_peak constraint (E_peak ratio = time stretch) removes about 80 % of unrelated
-   look-alikes. TTE adds about 3 robust multi-pulse events per 30 bright short bursts, so it is not expanded. Next:
-   validate the E_peak systematic, then apply the constraint to the existing 747,709-pair screen; CHIME/FRB
-   Catalog 2.
+   look-alikes on testable pairs. TTE adds about 3 robust multi-pulse events per 30 bright short bursts, so it is
+   not expanded. Round 3 (`docs/s1_energy/`): at equal false-candidate burden, catalogue E_peak raises full
+   recovery by only +1.4 % (central) and not at all at the measured or published systematic, so **the S1 energy
+   upgrade is paused**. Reopen only with a same-source E_peak systematic ≲ 0.10 or time-resolved spectra. Next:
+   CHIME/FRB Catalog 2.
 2. **S2 flat-kernel SN residuals** (D-070 + addendum): Pantheon+ × LS DR9 null (γ < 0.025), DES-SN5YR × LS DR9 null
    (γ < 0.019 mag per unit T/⟨T⟩, α = 2, one-sided 95 %, dilution- and chain-corrected); α = 1 is kernel-degenerate. The
    lensing positive control is only ~1.7σ (DES) / ~2σ combined. Next: a deeper galaxy column (DES Y3 Gold or LS DR10

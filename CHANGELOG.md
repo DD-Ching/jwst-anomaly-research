@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-12: S1 round 3: catalogue E_peak does not raise full recovery at equal burden; upgrade paused
+- Owner review of #169: compare A (M2) with B (M2 + E_peak, staged) on full recovery at equal false-candidate
+  burden. `docs/s1_energy/` (plan written first, amended for the literature systematic before any result);
+  `scripts/s1_energy.py`; `results/s1_energy/`. No TTE download.
+- **Scope corrections to round 2** (`docs/s1_blind/README.md` §5): the E_peak was the catalogue fluence value, not
+  TTE; "3–5×" applies to testable pairs only; 96 % was a same-model check; the TTE 0.9716 threshold was borrowed.
+- **Errors:** model choice offset −0.12; peak − fluence window sd 0.33 (excess 0.27); literature about 0.25 per
+  measurement; stretch error 0.011. Availability depends on fluence and type (65–87 %).
+- **Result:** ΔR = +0.014 (central), −0.001 (window bracket), −0.010 (literature); all below +0.02. The energy and
+  shape checks are correlated (E_peak pass 38 % → 56 % with rising M2). Burden matched (val flagged 6 vs 4).
+- **Decision:** S1 energy upgrade paused; no B screen. Reopen only with a demonstrated same-source E_peak
+  systematic ≲ 0.10 or a time-resolved spectral observable.
+
 ## 2026-10-12: S1 TTE round 2: energy constraint helps (conditionally), TTE time structure barely; no candidates
 - Owner review of #169: scope corrections, then the question of whether TTE time and energy information improve
   same-source discrimination. `docs/s1_blind/README.md` §5; `docs/s1_blind/plan_round2.md`;
