@@ -5,6 +5,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-12: W3 MOA-II gb6 (eighteenth field): in progress
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. gb6 is small (7.7 GB tar). Stacked on `claude/w3-moa-gb5` (#168).
+- Run 1 (cloud, 05:35–05:42Z): pre-screen 2 tracked chunks in 111 s (0 errors): **35,948 light curves, 800 shape
+  passes, 32 not at a shared epoch**. Fit chunk 1/1: 32 fits, 0 errors, 32 flags, 118 s. `vet`: **0 of 32 flags
+  survive** (`results/w3_moa/vetting_gb6.json`); CDS XMatch worked (Gaia DR3 RP for 29 / 32). The quiet χ²/dof 95th
+  percentile is 5.5, against 2.1–2.6 in gb4 and gb5 (a noisier small field; the χ² cap scales with it). Contact sheet
+  inspected: box and eclipse dips, single low points, variables; caustic spikes only in the models.
+- **Next:** `merge-prescreen`, `merge-chunks --n 1`, `vet` (fresh clone; `pip install -e '.[mulens]'`), then
+  `--field gb6 inject --procs 4 --chunk K/N` (2,200 injections; ~4 chunks of 550 fit one slot each at gb5 speed),
+  `merge-inject`, `limit`, `combine` (eighteen fields), docs/exotic_limits.md.
 
 ## 2026-10-11: W3 MOA-II gb5 (seventeenth field): 0 survivors; combined limit over seventeen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
