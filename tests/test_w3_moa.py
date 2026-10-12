@@ -673,13 +673,19 @@ def test_merge_inject_joins_only_complete_matching_chunks(tmp_path, monkeypatch)
     monkeypatch.setattr(wm, "out_dir", lambda: tmp_path)
     monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
     monkeypatch.setattr(wm, "FIELD", "gb22")
+    current = {"jobs_sha": "a"}  # the job list the current pre-screen gives
+    monkeypatch.setattr(wm, "read_prescreen", lambda: None)
+    monkeypatch.setattr(wm, "set_field_context", lambda pre: None)
+    monkeypatch.setattr(wm, "baseline_threshold", lambda: 2.0)
+    monkeypatch.setattr(wm, "inject_specs", lambda *a, **k: ([], [], current["jobs_sha"]))
     meta = {"params": wm.json.dumps(wm.asdict(wm.P)), "chain": wm.CHAIN_VERSION, "seed": 60,
             "is_sampling": "lf", "baseline_chi2": 2.0, "n_carriers": 3, "n_jobs": 5,
             "per_cell": 1, "per_ctrl": 1, "jobs_sha": "a", "source": "test",
             "wall_time_s": 1.0}  # fmt: skip
 
-    def chunk(k, idx, **over):
-        tab = Table({"inj": idx, "kind": ["W3"] * len(idx), "error": [""] * len(idx)},
+    def chunk(k, idx, error="", **over):
+        errors = [""] * (len(idx) - 1) + [error]
+        tab = Table({"inj": idx, "kind": ["W3"] * len(idx), "error": errors},
                     meta={**meta, **over})  # fmt: skip
         wm.w3.write_ecsv_gz(tab, tmp_path / f"injections_gb22_chunk{k}of2.ecsv.gz")
 
@@ -689,7 +695,10 @@ def test_merge_inject_joins_only_complete_matching_chunks(tmp_path, monkeypatch)
         wm.merge_inject(0)
     chunk(1, [0, 2, 4])
     chunk(2, [1, 3], jobs_sha="b")  # another job list (e.g. a re-merged pre-screen)
-    with pytest.raises(SystemExit, match="another job list than chunk 1"):
+    with pytest.raises(SystemExit, match="other settings, job list"):
+        wm.merge_inject(2)
+    chunk(2, [1, 3], error="ValueError: truncated download")
+    with pytest.raises(SystemExit, match="failed injections"):
         wm.merge_inject(2)
     chunk(2, [1])
     with pytest.raises(SystemExit, match="exactly its injections"):
@@ -698,6 +707,10 @@ def test_merge_inject_joins_only_complete_matching_chunks(tmp_path, monkeypatch)
     with pytest.raises(SystemExit, match="another chain"):
         wm.merge_inject(2)
     chunk(2, [1, 3])
+    current["jobs_sha"] = "z"  # both chunks agree, but the pre-screen was re-merged since
+    with pytest.raises(SystemExit, match="another pre-screen or baseline"):
+        wm.merge_inject(2)
+    current["jobs_sha"] = "a"
     assert wm.inject_chunks_tracked() == 2
     tab = Table.read(wm.merge_inject(2))
     assert list(tab["inj"]) == [0, 1, 2, 3, 4]
