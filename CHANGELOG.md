@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-12: Exploration trial adopted (D-083): split WIP counters, pending index, unit state files; X1 F0 done
+- The owner approved #174. New files: `docs/state/trial.md` (rules T1–T6, version trial-2026-10-12.1, weekly
+  tally, ledger), `docs/state/pending.md` (provisional conclusions of open needs-human PRs) and
+  `docs/state/units/X1.md`.
+- Changed: research-cycle step 1 (trial dispatch) and step 3 (two WIP counters), the CLAUDE.md WIP paragraph,
+  TASKS.md (trial section; S1 "done; do not redo") and `docs/cloud-routine-prompt.md` (prompt version 2026-10-12.1).
+- **The routine's own prompt text is not updated from a session.** The repository files above take effect on the
+  routine's next run, because it reads them on every run.
+- X1 F0 feasibility: see the unit file.
+
 ## 2026-10-12: W3 MOA-II gb10 (twentieth field): 0 survivors; combined limit over twenty fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. gb10 is a 220.9 GB tar, streamed (nothing stored) in 52 tracked

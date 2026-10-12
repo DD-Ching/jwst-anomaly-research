@@ -1193,3 +1193,10 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - SkyLLH, PyPI `skyllh` 26.1.0 (2026-09-09), https://github.com/icecube/skyllh.
 - SN1987A: Hirata+ 1988 PRD 38, 448; Bionta+ 1987 PRL 58, 1494; Bratton+ 1988 PRD 37, 3361; Alexeyev+ 1988
   PLB 205, 209; compilation Loredo & Lamb 2002 PRD 65, 063002 (astro-ph/0107260).
+
+## Trial unit X1 feasibility (accessed 2026-10-12; docs/state/units/X1.md)
+- GRAVITY 2018-07-22 flare astrometry, CDS J/A+A/618/L10 (https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/618/L10;
+  `avg.dat`, `wais.dat`, `pfuhl.dat`). There is no CDS catalogue for A&A 677, L10 (ReadMe 404 on 2026-10-12).
+- ESO pipeline gravity-kit 1.9.7, https://ftp.eso.org/pub/dfs/pipelines/instruments/gravity/; raw data in programmes
+  0101.B-0576(C,E), 105.20B2.004 and 109.22ZA.002 (ESO archive).
+- Gyoto, https://github.com/gyoto/Gyoto (GPL-3, tag 2.0.2); einsteinpy (MIT), https://github.com/einsteinpy/einsteinpy.

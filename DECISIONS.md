@@ -4118,3 +4118,33 @@ jackknife's own feature definition, |exotic − best ordinary model| > 3 median 
 dropped nights and ΔBIC. It then tries a night-robust likelihood term (a per-night systematic error instead of
 dropping nights), tuned on dev, checked for false positives against the real gb12 flags and the PSPL
 controls, and evaluated once on validation.
+
+## D-083 Four-week high-risk exploration trial: split WIP counters, pending index, unit state files (owner-approved 2026-10-12)
+
+**Decision.** The owner approved a trial from 2026-10-12 to 2026-11-09 (PR #174; owner instruction in session):
+- a weekly split of run time: 45 % routine search, 30 % high-risk units (at most two in depth), 15 % verification
+  and 10 % upkeep;
+- two WIP counters: awaiting merge (cap 3) and awaiting owner review (backlog rule: with ≥ 10 open, at most one new
+  needs-human PR per ISO week);
+- `docs/state/pending.md`, which marks unmerged conclusions as provisional;
+- per-unit state files with pre-written stage gates;
+- a four-column outcome ledger;
+- an idle rule.
+
+Rules T1–T6 are in `docs/state/trial.md`, version trial-2026-10-12.1. First unit: X1 (far-side SV hot spots,
+`docs/state/units/X1.md`). The routine prompt copy moves to version 2026-10-12.1.
+
+**Alternatives rejected:**
+- Rebuilding the agent system or adding a routine. Rejected by the owner.
+- Counting all needs-human PRs toward the cap of 3. In practice this let only self-mergeable field sweeps advance:
+  14 needs-human PRs were open, while draft claim PRs and issue-recorded research stayed allowed.
+- A hard "< 10 % limit gain stops a field" rule. Replaced by batch judgement (T4).
+
+**Evidence.** Audit `docs/audits/2026-10-12-exploration-trial.md`:
+- The routine's activity was observed: claim PRs opened at minute :08–:11.
+- Its configuration was not readable from a session.
+- TASKS.md listed S1 work as "Next" that #167 and #169 had already done.
+
+**Revisit if.** The trial ends (2026-11-09) and the review of finished unknowns, method capability, candidates and
+verifications recommends continue, adjust or stop. Revisit earlier if the owner-review backlog keeps growing or a
+unit overruns its budget.

@@ -78,6 +78,11 @@ Action.
   comments that have no reply or fix yet.
 - `gh issue list --state open --json number,title,author,labels`. Act only on issues the owner authored.
 - Read TASKS.md, the newest CHANGELOG.md entry (the handoff) and `grep '^## ' DECISIONS.md`.
+- **Trial dispatch (D-083, until 2026-11-09):** read `docs/state/trial.md` (rules T1–T6, the week's tally,
+  authorized units) and `docs/state/pending.md` (provisional conclusions of open needs-human PRs: never redo work
+  marked "done; do not redo" there). For each authorized unit, read its state file: on `main`, or on the unit's
+  branch if newer (`git show origin/<branch>:docs/state/units/<id>.md`). Prefer that unit when T1 says so and it
+  is not in flight. Then continue from its "Next action". Do not repeat its verified steps.
 - **Claim before setup** (CLAUDE.md Parallelism decision): as soon as you know which unit you will work on, and the
   WIP cap (step 3, counted now from the PR list above) does not block new feature work, skip the unit if it is in
   flight: a `claimed` or `local-wip` label and a commit or claim heartbeat under 60 minutes old (docs/cloud-routine-prompt.md
@@ -90,7 +95,8 @@ Action.
   setup or long reviews. In cloud runs use the GitHub MCP tools (docs/operations.md §3) for the PR list and the
   draft. Label it `claimed` (local sessions: `local-wip`) with the REST labels call
   (`gh api -X POST repos/DD-Ching/jwst-anomaly-research/issues/<n>/labels -f "labels[]=claimed"`) and post one comment
-  "CLAIM <session> started <UTC> expected-end <UTC> unit: <scope> files: <paths>". Heartbeat at least every 10
+  "CLAIM <session> started <UTC> expected-end <UTC> unit: <scope> files: <paths> rules: trial-2026-10-12.1 prompt:
+  <PROMPT VERSION from your own prompt text, or none>". Heartbeat at least every 10
   minutes while working (a WIP push, or edit that comment with "heartbeat <UTC> status: <one line>"); before every
   push, `git fetch origin <branch>` and re-read the PR's comments, and on a collision push to `claude/<slug>-alt`
   instead and comment your findings on their PR. Remove the label when you stop. Write "D-TBD" until just before
@@ -115,15 +121,25 @@ reply with evidence (`gh pr comment`).
 
 ## 3. WIP cap
 
-Count the open, non-draft PRs labelled `agent` that are waiting for the owner (draft claim PRs are in-flight work). All PRs that share one `batch-<slug>` label count
-as a single item. **With 3 or more items**, open no new feature PR. Do only these:
+Count two things from the PR list (D-083; trial rule T2 in `docs/state/trial.md`):
+- **Awaiting merge:** open, non-draft `agent` PRs **without** `needs-human`. All PRs that share one `batch-<slug>`
+  label count as a single item. **With 3 or more**, open no new feature PR.
+- **Awaiting owner review:** open, non-draft `needs-human` PRs. They do not block authorized trial units, base
+  merges, CI fixes or routine-search draft claims. With 10 or more of them, open at most one new needs-human PR per
+  ISO week from high-risk or theory work, and only from a unit stage that passed its gate. A vetted candidate
+  (survived `/vet-candidate`) and a routine-search result needing owner judgement are not limited by this (trial rule
+  T2).
+
+Draft claim PRs and draft unit PRs are in-flight work and count toward neither. When the awaiting-merge cap
+blocks, do only these:
 - step 2;
 - merge `origin/main` into stale PR branches;
 - fix CI on open PRs;
+- continue an authorized trial unit on its draft PR;
 - research that touches no file of an open PR. Record its conclusion in a GitHub issue labelled `agent` so it isn't
   lost.
 
-Otherwise stop with the step 9 summary.
+Otherwise stop with the step 9 summary. If nothing qualifies, stay idle: do not create work to stay busy.
 
 ## 4. Choose the action and the execution mode
 
