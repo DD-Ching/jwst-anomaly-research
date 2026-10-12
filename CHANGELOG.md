@@ -30,9 +30,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   recovered; PSPL 0 / 68. Run 5 ended 20:46Z.
 - Run 6 (cloud, 21:10Z–): `merge-prescreen`, `merge-chunks --n 4`. Injection chunk 3/6 (`--procs 4`): 367 in 770 s,
   0 errors; W3 334 → 37 flagged → **16 recovered**; PSPL 0 / 33. Chunk 4/6: 367 in 783 s, 0 errors; W3 334 → 41 →
-  **21**; PSPL 0 / 33. Chunks 1–4: W3 1,334 → 158 flagged → 70 recovered; PSPL 0 / 134.
+  **21**; PSPL 0 / 33. Chunk 5/6: 366 in 751 s, 0 errors; W3 333 → 28 → **16**; PSPL 0 / 33. Chunks 1–5: W3 1,667 →
+  186 flagged → 86 recovered; PSPL 0 / 167. Run 6 ended 21:52Z.
   **Next:** `merge-prescreen`, `merge-chunks --n 4`, `vet --procs 4` (~2 min, regenerates the derived record that
-  `limit` needs), inject the remaining chunks of 6, `limit`, `combine`, docs/exotic_limits.md, TASKS.md; mark ready.
+  `limit` needs), inject chunk 6/6, `limit`, `combine`, docs/exotic_limits.md, TASKS.md; mark ready.
 ## 2026-10-12: W3 MOA-II gb9 (nineteenth field): 0 survivors; combined limit over nineteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. Run 1 (cloud, 07:35Z): tracked pre-screen chunks only.
