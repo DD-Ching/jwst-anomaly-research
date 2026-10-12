@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-12: X1 S1: Simpson–Visser ray tracer validated (gate passed)
+- New `scripts/x1_tracer.py` (quadrature in u = 1/R with regularised turning-point and throat endpoints, plus an
+  independent ODE route) and `tests/test_x1_tracer.py`; `scripts/wh_farside.py` and its tests copied from #172.
+- Checks (`results/x1/s1_checks.json`, derived): Schwarzschild deflection vs Darwin ≤ 4e-15; b_c(a) by ODE rays 4.8e-7;
+  swept angles (far side, and near side above b_c) quadrature vs ODE ≤ 8e-11. Numbers and limits: `docs/state/units/X1.md`.
+- Finding for S2: GRAVITY 2023 App. A's r_o = R + 1 M is the primary image (−0.05 M face-on in our tracer); the
+  all-light centroid is ~0.6 M smaller, so the ordinary model must be traced, not (R + 1) θ_g. Far-side spots at
+  R = 9 M give centroid radii ≈ 4–14 µas and 2.6–17 % of the near-side flux (a = 2.1–7 M).
+- Failed approaches: weighting images by b|db/dΦ|/sin γ alone (it omits 1/|cos α_e| and zeroes the image at the
+  fold where the ray is tangent at the emitter); a uniform b grid misses roots next to the fold (now refined).
+- **Next:** X1 S2 (state file "Next action").
+
 ## 2026-10-12: Exploration trial adopted (D-083): split WIP counters, pending index, unit state files; X1 F0 done
 - The owner approved #174. New files: `docs/state/trial.md` (rules T1–T6, version trial-2026-10-12.1, weekly
   tally, ledger), `docs/state/pending.md` (provisional conclusions of open needs-human PRs) and

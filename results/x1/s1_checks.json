@@ -1,0 +1,383 @@
+{
+ "labels": "derived (our computation) of a conditional geometry; tolerances from X1.md",
+ "check1_schwarzschild_deflection": {
+  "rows": [
+   {
+    "b_M": 6.0,
+    "tracer": 1.71938831023017,
+    "exact": 1.7193883102301761,
+    "rel_err": 3.6637359812630166e-15
+   },
+   {
+    "b_M": 8.0,
+    "tracer": 0.8587300180790951,
+    "exact": 0.8587300180790951,
+    "rel_err": 0.0
+   },
+   {
+    "b_M": 20.0,
+    "tracer": 0.23613599538846985,
+    "exact": 0.2361359953884703,
+    "rel_err": 1.887379141862766e-15
+   }
+  ],
+  "tolerance": 1e-06,
+  "pass": true
+ },
+ "check2_b_crit": {
+  "rows": [
+   {
+    "a_M": 2.1,
+    "analytic": 5.196152422706632,
+    "ode": 5.196154900425187,
+    "rel_err_ode": 4.76837158203125e-07
+   },
+   {
+    "a_M": 3.0,
+    "analytic": 5.196152422706632,
+    "ode": 5.196154900425187,
+    "rel_err_ode": 4.76837158203125e-07
+   },
+   {
+    "a_M": 5.0,
+    "analytic": 6.454972243679028,
+    "ode": 6.454975321649648,
+    "rel_err_ode": 4.76837158203125e-07
+   },
+   {
+    "a_M": 7.0,
+    "analytic": 8.282511696339462,
+    "ode": 8.282515645748802,
+    "rel_err_ode": 4.76837158203125e-07
+   }
+  ],
+  "tolerance": 0.0001,
+  "pass": true,
+  "note": "this boundary also tests check 4: rays above it never reach r < 0"
+ },
+ "check2b_swept_angle_R9": {
+  "rows": [
+   {
+    "a_M": 2.1,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.3,
+    "quadrature": 2.2213379228651835,
+    "ode": 2.2213379228744268,
+    "rel_err": 4.161115896295087e-12
+   },
+   {
+    "a_M": 2.1,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.9,
+    "quadrature": 10.130181949149984,
+    "ode": 10.130181949141274,
+    "rel_err": 8.597567102697212e-13
+   },
+   {
+    "a_M": 2.1,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.999,
+    "quadrature": 23.700804557821826,
+    "ode": 23.700804556952768,
+    "rel_err": 3.6667779923504895e-11
+   },
+   {
+    "a_M": 3.0,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.3,
+    "quadrature": 1.5058440366625916,
+    "ode": 1.5058440366753056,
+    "rel_err": 8.443135079971853e-12
+   },
+   {
+    "a_M": 3.0,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.9,
+    "quadrature": 7.654482661748087,
+    "ode": 7.65448266174202,
+    "rel_err": 7.926992395823618e-13
+   },
+   {
+    "a_M": 3.0,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.999,
+    "quadrature": 31.068575815370938,
+    "ode": 31.068575812913814,
+    "rel_err": 7.908718124838288e-11
+   },
+   {
+    "a_M": 5.0,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.3,
+    "quadrature": 1.018859496694081,
+    "ode": 1.0188594966939988,
+    "rel_err": 8.060219158778636e-14
+   },
+   {
+    "a_M": 5.0,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.9,
+    "quadrature": 4.7846144824324295,
+    "ode": 4.784614482427563,
+    "rel_err": 1.0171863351615684e-12
+   },
+   {
+    "a_M": 5.0,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.999,
+    "quadrature": 12.16409211267085,
+    "ode": 12.164092112246498,
+    "rel_err": 3.4885649924376594e-11
+   },
+   {
+    "a_M": 7.0,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.3,
+    "quadrature": 0.8230729984809131,
+    "ode": 0.8230729984809956,
+    "rel_err": 1.0025313912365164e-13
+   },
+   {
+    "a_M": 7.0,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.9,
+    "quadrature": 3.8834127706463057,
+    "ode": 3.8834127706427055,
+    "rel_err": 9.270362255620057e-13
+   },
+   {
+    "a_M": 7.0,
+    "side": "far",
+    "branch": 0,
+    "b_over_bc": 0.999,
+    "quadrature": 10.056884614614702,
+    "ode": 10.056884614261294,
+    "rel_err": 3.514100122004038e-11
+   },
+   {
+    "a_M": 0.0,
+    "side": "near",
+    "branch": 0,
+    "b_over_bc": 1.001,
+    "quadrature": 0.608567615162765,
+    "ode": 0.6085676151624032,
+    "rel_err": 5.946354519892338e-13
+   },
+   {
+    "a_M": 0.0,
+    "side": "near",
+    "branch": 0,
+    "b_over_bc": 1.3,
+    "quadrature": 0.8257109303637951,
+    "ode": 0.8257109303622219,
+    "rel_err": 1.9051427102567686e-12
+   },
+   {
+    "a_M": 0.0,
+    "side": "near",
+    "branch": 1,
+    "b_over_bc": 1.001,
+    "quadrature": 9.04366986502853,
+    "ode": 9.04366986542287,
+    "rel_err": 4.360400929215302e-11
+   },
+   {
+    "a_M": 0.0,
+    "side": "near",
+    "branch": 1,
+    "b_over_bc": 1.3,
+    "quadrature": 3.5415743546929406,
+    "ode": 3.5415743546933856,
+    "rel_err": 1.2567724638756772e-13
+   },
+   {
+    "a_M": 3.0,
+    "side": "near",
+    "branch": 0,
+    "b_over_bc": 1.001,
+    "quadrature": 0.620934111421473,
+    "ode": 0.620934111420775,
+    "rel_err": 1.1242118347354335e-12
+   },
+   {
+    "a_M": 3.0,
+    "side": "near",
+    "branch": 0,
+    "b_over_bc": 1.3,
+    "quadrature": 0.8430938220890729,
+    "ode": 0.8430938220874391,
+    "rel_err": 1.9377832671807482e-12
+   },
+   {
+    "a_M": 3.0,
+    "side": "near",
+    "branch": 1,
+    "b_over_bc": 1.001,
+    "quadrature": 21.624655404291936,
+    "ode": 21.624655405991984,
+    "rel_err": 7.861622464133688e-11
+   },
+   {
+    "a_M": 3.0,
+    "side": "near",
+    "branch": 1,
+    "b_over_bc": 1.3,
+    "quadrature": 3.966778842618096,
+    "ode": 3.966778842618954,
+    "rel_err": 2.162714451969805e-13
+   },
+   {
+    "a_M": 5.0,
+    "side": "near",
+    "branch": 0,
+    "b_over_bc": 1.001,
+    "quadrature": 0.8326535847005472,
+    "ode": 0.8326535846995988,
+    "rel_err": 1.1388667786604856e-12
+   },
+   {
+    "a_M": 5.0,
+    "side": "near",
+    "branch": 0,
+    "b_over_bc": 1.3,
+    "quadrature": 1.1858650198012683,
+    "ode": 1.185865019799126,
+    "rel_err": 1.8065549056700547e-12
+   },
+   {
+    "a_M": 5.0,
+    "side": "near",
+    "branch": 1,
+    "b_over_bc": 1.001,
+    "quadrature": 12.165204538865972,
+    "ode": 12.165204539281692,
+    "rel_err": 3.4172886742567243e-11
+   },
+   {
+    "a_M": 5.0,
+    "side": "near",
+    "branch": 1,
+    "b_over_bc": 1.3,
+    "quadrature": 3.459457821086199,
+    "ode": 3.45945782108684,
+    "rel_err": 1.851852005074761e-13
+   },
+   {
+    "a_M": 7.0,
+    "side": "near",
+    "branch": 0,
+    "b_over_bc": 1.001,
+    "quadrature": 1.273829974614678,
+    "ode": 1.2738299746137385,
+    "rel_err": 7.37410132956029e-13
+   },
+   {
+    "a_M": 7.0,
+    "side": "near",
+    "branch": 1,
+    "b_over_bc": 1.001,
+    "quadrature": 10.061466705052949,
+    "ode": 10.061466705400385,
+    "rel_err": 3.4531377757218706e-11
+   }
+  ],
+  "tolerance": 1e-06,
+  "pass": true,
+  "note": "added in S1 (not pre-written): quadrature vs ODE swept angle, far side below b_c and near side (both branches) above it"
+ },
+ "check3_schwarzschild_spot_R9_i155": {
+  "rows": {
+   "face_on_i179.5_primary": {
+    "semi_major_M": 9.967414173089583,
+    "mean_radius_M": 9.95174535931208,
+    "min_radius_M": 9.935821893927711,
+    "flux_max_over_min": 1.0260659775615186,
+    "dropped_images": 0
+   },
+   "face_on_i179.5_all_light": {
+    "semi_major_M": 9.386572449232734,
+    "mean_radius_M": 9.37200949607793,
+    "min_radius_M": 9.357620145936773,
+    "flux_max_over_min": 1.0245320351560456,
+    "dropped_images": 0
+   },
+   "i155_primary": {
+    "semi_major_M": 10.204681583380003,
+    "mean_radius_M": 9.6440394581419,
+    "min_radius_M": 8.517376842319674,
+    "flux_max_over_min": 3.526695804980286,
+    "dropped_images": 0
+   },
+   "i155_all_light": {
+    "semi_major_M": 9.876098402861526,
+    "mean_radius_M": 8.87019558489054,
+    "min_radius_M": 8.140874411784145,
+    "flux_max_over_min": 3.2505596953177474,
+    "dropped_images": 0
+   }
+  },
+  "gravity_appA_R_plus_1_M": 10.0,
+  "diff_primary_semi_major_M": 0.20468158338000286,
+  "diff_primary_face_on_M": -0.048254640687920514,
+  "tolerance_M": 0.5,
+  "pass": true,
+  "note": "App. A is an approximation for the direct image, so this is a sanity check, not an exact benchmark; k = 0 images only; no light-travel-time delays; bolometric g^4 weights"
+ },
+ "check4_far_side_inside_b_crit": {
+  "rows": [
+   {
+    "a_M": 2.1,
+    "b_crit_M": 5.196152422706632,
+    "centroid_radius_max_M": 2.1735290613500755,
+    "centroid_radius_mean_M": 1.6369811360950193,
+    "flux_rel_to_schwarzschild_near_mean": 0.02557785797884595,
+    "quad_roundoff_warnings": 0,
+    "dropped_images": 0,
+    "inside_b_crit": true
+   },
+   {
+    "a_M": 3.0,
+    "b_crit_M": 5.196152422706632,
+    "centroid_radius_max_M": 2.0051241440994763,
+    "centroid_radius_mean_M": 1.3572084422615134,
+    "flux_rel_to_schwarzschild_near_mean": 0.037663559237820415,
+    "quad_roundoff_warnings": 2,
+    "dropped_images": 0,
+    "inside_b_crit": true
+   },
+   {
+    "a_M": 5.0,
+    "b_crit_M": 6.454972243679028,
+    "centroid_radius_max_M": 1.55962442135574,
+    "centroid_radius_mean_M": 0.8213179877362831,
+    "flux_rel_to_schwarzschild_near_mean": 0.0831386320314678,
+    "quad_roundoff_warnings": 1,
+    "dropped_images": 0,
+    "inside_b_crit": true
+   },
+   {
+    "a_M": 7.0,
+    "b_crit_M": 8.282511696339462,
+    "centroid_radius_max_M": 2.7393132008089176,
+    "centroid_radius_mean_M": 1.3384859220227763,
+    "flux_rel_to_schwarzschild_near_mean": 0.1683797912819049,
+    "quad_roundoff_warnings": 2,
+    "dropped_images": 0,
+    "inside_b_crit": true
+   }
+  ],
+  "pass": true,
+  "note": "far-side tables stop at b_c, so inside_b_crit holds by construction; the transmission boundary itself is tested by the ODE rays of check 2. The figure comparison with 2408.07350 Fig. 7 is figure-read only and not done"
+ }
+}
