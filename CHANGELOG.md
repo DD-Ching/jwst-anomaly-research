@@ -36,8 +36,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   **18 recovered**; PSPL 0 / 34 flagged. Chunk 2/6 (`--procs 4`): 367 in 502 s, 0 errors; W3 333 → 23 → **8**;
   PSPL 0 / 34.
 - Run 8 (cloud, 14:19Z–): `merge-prescreen`, `merge-chunks --n 4` (111 fits). Injection chunk 3/6 (`--procs 4`):
-  367 in 1,097 s, 0 errors; W3 334 → 33 → **16**; PSPL 0 / 33.
-- **Next:** `merge-prescreen`, `merge-chunks --n 4`, then `inject --chunk K/6` for K = 4…6 (~8–20 min each on
+  367 in 1,097 s, 0 errors; W3 334 → 33 → **16**; PSPL 0 / 33. Chunk 4/6: 367 in 681 s, 0 errors; W3 334 → 29 →
+  **12**; PSPL 0 / 33. Chunk 5/6 was started at 14:51Z and stopped at the slot's end (reruns). Chunks 1–4 so far:
+  W3 1,334 → 120 flagged → 54 recovered; PSPL 0 / 134.
+- **Next:** `merge-prescreen`, `merge-chunks --n 4`, then `inject --chunk K/6` for K = 5, 6 (~8–20 min each on
   4 procs; two fit one slot), `merge-inject --n 6`, `limit`, `combine`.
 
 ## 2026-10-12: W3 MOA-II gb6 (eighteenth field): 0 survivors; combined limit over eighteen fields
