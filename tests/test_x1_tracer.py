@@ -73,3 +73,34 @@ def test_near_side_just_above_b_crit_matches_ode(a, br):
 def test_emitter_inside_throat_is_rejected():
     with pytest.raises(ValueError):
         xt.phi_to_emitter(3.0, 7.0, 6.0, "far")
+
+
+def _t_ode(b, a, re, side, br):
+    """Coordinate time to the emitter by ODE rays, on the same relative scale as time_to_emitter."""
+
+    def rhs(_, y):
+        r = y[0]
+        rr = math.sqrt(r * r + a * a)
+        wp = b * b * (-2 / rr**3 + 6 / rr**4) * r / rr
+        return [y[1], -0.5 * wp, 1 / (1 - 2 / rr)]
+
+    r_e = math.sqrt(re * re - a * a) * (1 if side == "near" else -1)
+
+    def ev(_, y):
+        return y[0] - r_e
+
+    ev.terminal = side == "far" or br == 0
+    ev.direction = 1.0 if (side == "near" and br == 1) else -1.0
+    rr0 = math.sqrt(xt.R_START**2 + a * a)
+    y0 = [xt.R_START, -math.sqrt(xt._pot(1 / rr0, b)), 0.0]
+    sol = xt.integrate.solve_ivp(rhs, (0, 1e7), y0, events=ev, rtol=1e-12, atol=1e-12)
+    return sol.y_events[0][0][2] + xt._t_open(b, a, 1 / rr0)
+
+
+@FAR_WARN
+@pytest.mark.parametrize(
+    "a,side,br,b",
+    [(0.0, "near", 0, 3.0), (0.0, "near", 1, 8.0), (5.0, "near", 1, 7.0), (3.0, "far", 0, 4.0)],
+)
+def test_light_travel_time_matches_ode(a, side, br, b):
+    assert abs(xt.time_to_emitter(b, a, 9.0, side)[br] - _t_ode(b, a, 9.0, side, br)) < 1e-6

@@ -140,6 +140,70 @@ def phi_to_emitter(b: float, a: float, re: float, side: str) -> list[float]:
     return [pin + _phi_range(b, a, ue, ua)]
 
 
+def _dtdu_reg(u: float, b: float, a: float) -> float:
+    """dt/du - 1/u^2 - 2/u (finite at u = 0); dt/du = 1/(u^2 f sqrt(1 - a^2 u^2) sqrt(_pot))."""
+    if u < 1e-6:
+        return 4.0 + 0.5 * (a * a + b * b)
+    log_h = -math.log1p(-2.0 * u) - 0.5 * math.log1p(-a * a * u * u)
+    log_h -= 0.5 * math.log1p(-b * b * u * u * (1.0 - 2.0 * u))
+    return (math.expm1(log_h) - 2.0 * u) / (u * u)
+
+
+def _t_open(b: float, a: float, u1: float) -> float:
+    """Coordinate time from our infinity to u1 (no turn), up to a constant common to all rays."""
+    return (
+        integrate.quad(_dtdu_reg, 0.0, u1, args=(b, a), **QUAD)[0] - 1.0 / u1 + 2.0 * math.log(u1)
+    )
+
+
+def _t_turn(b: float, a: float, ut: float, u0: float) -> float:
+    """Coordinate time from u0 (> 0) to the turning point ut (u = ut (1 - s^2), regular in s)."""
+
+    def f(s):
+        u = ut * (1.0 - s * s)
+        q = b * b * ((u + ut) - 2.0 * (u * u + u * ut + ut * ut))
+        fu = 1.0 - 2.0 * u
+        return 2.0 * math.sqrt(ut) / (u * u * fu * math.sqrt(1.0 - a * a * u * u) * math.sqrt(q))
+
+    return integrate.quad(f, 0.0, math.sqrt(max(0.0, 1.0 - u0 / ut)), **QUAD)[0]
+
+
+def _t_throat(b: float, a: float, u0: float) -> float:
+    """Coordinate time from u0 (> 0) to the throat u = 1/a (u = (1 - s^2)/a, regular in s)."""
+    ua = 1.0 / a
+
+    def f(s):
+        u = ua * (1.0 - s * s)
+        return 2.0 * ua / (u * u * (1.0 - 2.0 * u) * math.sqrt(2.0 - s * s) * math.sqrt(_pot(u, b)))
+
+    return integrate.quad(f, 0.0, math.sqrt(max(0.0, 1.0 - u0 / ua)), **QUAD)[0]
+
+
+def time_to_emitter(b: float, a: float, re: float, side: str) -> list[float]:
+    """Light travel times from the emitter to the observer, branch by branch as in phi_to_emitter.
+
+    Relative values only: the divergent distance term is dropped identically for every ray.
+    """
+    ue = 1.0 / re
+    ut = turning_u(b, a)
+    if side == "near":
+        if ut is None:
+            return [_t_open(b, a, ue)]
+        if ut < ue:
+            return []
+        um = 0.5 * ue
+        t_half = _t_open(b, a, um)
+        to_turn = t_half + _t_turn(b, a, ut, um)
+        te = to_turn - _t_turn(b, a, ut, ue)
+        return [te, 2.0 * to_turn - te]
+    if ut is not None or a <= 2.0:
+        return []
+    ua = 1.0 / a
+    um = 0.5 * min(ue, ua)
+    to_throat = _t_open(b, a, um) + _t_throat(b, a, um)
+    return [to_throat + _t_throat(b, a, ue)]
+
+
 def b_crit_ode(a: float, r_start: float = R_START, tol: float = 1e-6) -> float:
     """Capture/transmission boundary from ODE rays: largest b whose ray reaches r < 0 (far side)."""
 
