@@ -12,8 +12,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   CPU 99 %): 73–98 s per chunk at 44–59 MB/s through chunk 39, then the archive slowed (chunk 41 121 s / 36 MB/s,
   chunk 44 401 s / 11 MB/s, chunks 45–49 554–608 s / 7–8 MB/s); stopped by `timeout` at the slot's end. Same run: merged
   origin/main into #145, #167, #169 (stacked on #167) and #172 (CHANGELOG/TASKS conflicts only; tests pass).
-  **Next:** `prescreen --procs 4 --chunks 50-52` (rerun any chunk without a tracked table), then merge-prescreen,
-  fit, vet, inject, limit, combine.
+- Run 3 (cloud, 18:11–18:13Z, `prescreen --procs 4 --chunks 50-52`): chunks 50–52 tracked (0 errors, 0 retries;
+  the archive was fast again, 61–74 MB/s, chunk 50 in 71 s, chunk 52 in 154 s). The pre-screen is complete:
+  **181,820 light curves, 1,469 shape passes, 108 not at a shared epoch** (to fit). Fits (`fit --procs 4 --chunk K/4`)
+  started 18:23Z.
 ## 2026-10-12: W3 MOA-II gb9 (nineteenth field): 0 survivors; combined limit over nineteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. Run 1 (cloud, 07:35Z): tracked pre-screen chunks only.
