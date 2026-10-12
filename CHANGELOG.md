@@ -5,6 +5,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-12: W3 MOA-II gb10 (twentieth field), in progress
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. gb10 is a 220.9 GB tar (~52 pre-screen chunks; several routine slots).
+- Run 1 (cloud, 16:10–16:42Z, `prescreen --procs 4`): chunks 1–29 of 52 tracked (0 errors, at most 1 retry per
+  chunk, mean 122 s per chunk wall: ~70 s for chunks 1–8, then ~120–130 s at 33–35 MB/s, CPU 99 %; streamed, nothing
+  stored); stopped by `timeout` at the slot's end (chunk 30 reruns). **Next:** `prescreen --procs 4 --chunks 30-52`.
 ## 2026-10-12: W3 MOA-II gb9 (nineteenth field): 0 survivors; combined limit over nineteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. Run 1 (cloud, 07:35Z): tracked pre-screen chunks only.
