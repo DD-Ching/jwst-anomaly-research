@@ -2,12 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-12: Operations audit and four-week exploration trial plan (proposal only)
-- `docs/audits/2026-10-12-exploration-trial.md`. The hourly routine's activity is observed (W3 claim PRs at :08–:11), but
-  its enabled state is unverified. 14 needs-human PRs hold conclusions that are not on main (redo risk: TASKS S1
-  "Next"). The proposal covers: two WIP counters, a pending-conclusions index, stage gates, a four-column ledger,
-  an idle rule, a 45/30/15/10 split and the first unit, X1 (ray-traced far-side signatures).
-- Nothing is adopted; the schedule and prompt are unchanged.
+## 2026-10-12: Exploration trial adopted (D-083): split WIP counters, pending index, unit state files; X1 F0 done
+- The owner approved #174. New files: `docs/state/trial.md` (rules T1–T6, version trial-2026-10-12.1, weekly
+  tally, ledger), `docs/state/pending.md` (provisional conclusions of open needs-human PRs) and
+  `docs/state/units/X1.md`.
+- Changed: research-cycle step 1 (trial dispatch) and step 3 (two WIP counters), the CLAUDE.md WIP paragraph,
+  TASKS.md (trial section; S1 "done; do not redo") and `docs/cloud-routine-prompt.md` (prompt version 2026-10-12.1).
+- **The routine's own prompt text is not updated from a session.** The repository files above take effect on the
+  routine's next run, because it reads them on every run.
+- X1 F0 feasibility: see the unit file.
 
 ## 2026-10-12: W3 MOA-II gb10 (twentieth field): 0 survivors; combined limit over twenty fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data

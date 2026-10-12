@@ -1,5 +1,12 @@
 # Operations audit and a four-week trial for high-risk exploration (2026-10-12)
 
+> **Adopted 2026-10-12 with owner corrections (D-083).** The operative rules are in `docs/state/trial.md`
+> (version trial-2026-10-12.1). They supersede R1–R5 below where the two differ. Corrections:
+> - §2 item 1 overstated the WIP effect;
+> - the 10 % figure in R5 is a reference only (T4);
+> - the split is checked per week, not per run;
+> - X1's stages were re-budgeted after the F0 feasibility check (`docs/state/units/X1.md`).
+
 Owner brief 2026-10-12: diagnose how the long-running process actually works, then propose how to fit high-risk
 exploration into it without rebuilding the agent system. **This is a plan. Nothing here changes the schedule,
 the routine prompt, settings or any merge.** The owner decides what to adopt.
@@ -24,7 +31,10 @@ Concrete redo risk found:
    - 14 needs-human PRs exceed the cap of 3 permanently, so the routine may only open draft claim PRs that it can
      self-merge.
    - In practice that means routine field sweeps (W3).
-   - High-risk work always ends as needs-human, so the cap blocks it outright.
+   - *Corrected after owner review:* high-risk work is not blocked outright. Draft claim PRs are exempt, and
+     research that touches no open PR file stays allowed (recorded in an issue). The real effect is that such
+     work cannot end in a new PR while the cap is exceeded, so it piles up or stops, and nothing lets an
+     authorized unit continue across runs.
 2. **No home on main for unmerged conclusions.** Paused or settled findings live only on PR branches, which feeds
    the redo risk above.
 3. **No stage gates for multi-run units.** Units are sized to one ~40-minute run. Nothing lets a screened unit
@@ -81,7 +91,7 @@ the budget cap, the pass result and the stop result. A unit may span runs and we
   - independent verifications: none of a candidate. SkyLLH (D-080) is a benchmark reproduction.
 
 **R5. Idle rule.**
-- A routine-search unit runs only if its expected effect on a limit cell is ≥ 10 % or it covers new parameter
+- *(Adopted as a reference value only; see trial rule T4.)* A routine-search unit runs only if its expected effect on a limit cell is ≥ 10 % or it covers new parameter
   space.
 - A high-risk unit runs only if it has an open stage with budget left.
 - Otherwise the run stops after dispatch: no claim PR, no documentation-only edits.
@@ -122,10 +132,13 @@ candidate only if a held-out comparison favours the far-side model over the stat
 
 ## 7. Plan versus running process
 
-- **Written:** this plan (rules R1–R5, the split, unit X1 and its milestones).
-- **Not done:**
-  - no routine prompt, schedule or setting is changed;
-  - the routine's enabled state is inferred from activity, not verified;
-  - no rule here is active until the owner approves edits to `docs/cloud-routine-prompt.md`, the
-    research-cycle skill and the routine itself (the prompt says to edit the file first, then the routine);
-  - nothing here has been run as a trial.
+- **Adopted in the repository** (D-083):
+  - `docs/state/trial.md`, `docs/state/pending.md` and `docs/state/units/X1.md`;
+  - the research-cycle skill, CLAUDE.md, TASKS.md and `docs/cloud-routine-prompt.md`.
+- **Not done from a session:** updating the routine's own prompt text. No tool reads or edits routines here. The
+  routine reads the repository files above on every run, so the dispatch rules apply from its next run. The prompt
+  copy (version 2026-10-12.1) must be pasted into the routine by the owner.
+- **Acceptance** requires all three:
+  - a routine run's CLAIM comment shows the version it used;
+  - a run starts X1 S1;
+  - a later run continues from X1's state file.
