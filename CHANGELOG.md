@@ -2,6 +2,11 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-12: W3 MOA-II gb14 (twenty-first field), in progress
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
+  goes to `/vet-candidate` before injections. Plan: stream the tar in tracked pre-screen chunks across routine slots,
+  then fit, vet, inject (6 chunks), limit, combine.
+
 ## 2026-10-12: W3 MOA-II gb10 (twentieth field): 0 survivors; combined limit over twenty fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. gb10 is a 220.9 GB tar, streamed (nothing stored) in 52 tracked
