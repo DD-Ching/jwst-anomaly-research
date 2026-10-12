@@ -1226,6 +1226,52 @@ conservative column uses the low N_s.
   injections (59 %). Pre-screen pass 3.5–15.5 %. PSPL controls: 0 / 40 per cell called W3. Every cell has ≥ 3
   recoveries (t_E = 300 d: 3 / 3).
 
+- **gb3** (new field; 167,431 light curves; N_s = 2.27 × 10⁷ from Nunota et al. 2024 Table 1, 79 / 80 subfields;
+  quiet χ²/dof 95th percentile 3.7): 1,797 shape passes, 75 off shared epochs, 72 flags, **0 survive**; contact
+  sheet inspected (box and eclipse dips, variables, slow trends; caustic spikes only in the models, never in the
+  data). First failing test: repeated deficit 29, residual deficit 13, eclipse dip 12, bracketing 5, neighbour 4,
+  smooth dip 4, χ² cap 2, fit domain 1, slow dip 1, feature sampling 1. Gaia DR3 RP reference for 52 / 72 flags.
+  Injections: vetting keeps 119 / 231 flagged W3 injections (52 %). Pre-screen pass 6.5–17.5 %. PSPL controls:
+  0 / 40 per cell called W3. Every cell has ≥ 2 recoveries (t_E = 300 d: 2 / 2).
+
+- **gb4** (new field; 205,886 light curves; N_s = 2.60 × 10⁷ from Nunota et al. 2024 Table 1, 77 / 80 subfields;
+  quiet χ²/dof 95th percentile 2.1): 2,350 shape passes, 118 off shared epochs, 114 flags, **0 survive** (vetting
+  reproduced by a second run); contact sheet inspected (box and eclipse dips, variables, slow trends; caustic spikes
+  only in the models, never in the data). First failing test: repeated deficit 52, χ² cap 16, residual deficit 11,
+  eclipse dip 11, bracketing 9, neighbour 9, feature sampling 2, slow dip 1, fit domain 1, smooth dip 1, periodic 1.
+  Gaia DR3 RP reference for 67 / 118 fits. Injections (four tracked chunks of 550): vetting keeps 107 / 207 flagged
+  W3 injections (52 %). Pre-screen pass 4–17 %. PSPL controls: 0 / 40 per cell called W3. Every cell has ≥ 3
+  recoveries (t_E = 300 d: 3 / 4).
+
+- **gb5** (new field; 259,556 light curves, the largest so far; N_s = 2.91 × 10⁷ from Nunota et al. 2024 Table 1,
+  65 / 80 subfields, conservative range 2.91–3.59 × 10⁷; quiet χ²/dof 95th percentile 2.6): 1,802 shape passes, 126
+  off shared epochs, 112 flags, **0 survive** (vetting reproduced by a second run, identical funnel); contact sheet
+  inspected (variables, box and eclipse dips, slow trends; caustic spikes only in the models). First failing test:
+  repeated deficit 39, residual deficit 19, neighbour 15, bracketing 14, eclipse dip 12, χ² cap 4, fit domain 3,
+  smooth dip 3, slow dip 1, periodic 1, robust errors 1. Gaia DR3 RP reference for 67 / 126 fits. Injections (six
+  tracked chunks of ~367): vetting keeps 67 / 153 flagged W3 injections (44 %). Pre-screen pass 5–11 %. PSPL
+  controls: 0 / 40 per cell called W3. Every cell has ≥ 2 recoveries (t_E = 3 d, ρ = 0.01: 2; t_E = 300 d: 4 / 2).
+
+- **gb6** (new field; 35,948 light curves, the smallest so far; not in Nunota et al. 2024 Table 1, so N_s =
+  6.76 × 10⁶ from the Cut-0 object model, ASSUMPTION, conservative 4.71 × 10⁶; quiet χ²/dof 95th percentile 5.5, a
+  noisier field, against 2.1–2.6 in gb4 and gb5): 800 shape passes, 32 off shared epochs, 32 flags, **0 survive**
+  (vetting reproduced by a second run, identical funnel); contact sheet inspected (box and eclipse dips, single low
+  points, variables; caustic spikes only in the models). First failing test: repeated deficit 13, bracketing 3, χ²
+  cap 3, residual deficit 3, eclipse dip 3, smooth dip 3, fit domain 2, periodic 1, neighbour 1. Gaia DR3 RP
+  reference for 29 / 32 fits. Injections (four tracked chunks of 550, 0 errors): vetting keeps 80 / 135 flagged W3
+  injections (59 %). Pre-screen pass 4–9 %. PSPL controls: 0 / 40 per cell called W3. The t_E = 3 d, ρ = 0.01 cell
+  rests on 1 recovery (field limit 1.0 × 10⁻⁵).
+
+- **gb9** (237,123 light curves, 101 tracked pre-screen chunks over eight cloud runs; N_s = 3.33 × 10⁷, Nunota et
+  al. 2024 Table 1, 79/80 subfields; quiet χ²/dof 95th percentile 3.42): 2,363 shape passes, 111 off shared epochs,
+  111 fits (0 errors), 109 flags, **0 survive** (vetting reproduced by two later runs, identical funnel); contact
+  sheet inspected (box and eclipse dips, variables, noisy flat curves; caustic spikes only in the models). First
+  failing test: repeated deficit 41, eclipse dip 22, residual deficit 19, bracketing 8, χ² cap 7, neighbour 5, fit
+  domain 3, smooth dip 1, robust errors 1, slow dip with season levels 1, feature sampling 1 (gb9-R-10-3-499239,
+  ~13–16 min in the binary-lens fit over 25k epochs). Gaia DR3 RP reference for 61 / 111 fits. Injections (six
+  tracked chunks of ~367, 0 errors): vetting keeps 81 / 178 flagged W3 injections (46 %). Pre-screen pass 4–15 %.
+  PSPL controls: 0 / 40 per cell called W3. The t_E = 300 d, ρ = 0.1 cell rests on 2 recoveries.
+
 Per-field limits (ρ = 0.01 / 0.1; not yet combined, `combine` waits for every field):
 
 | t_E (d) | M (M☉, model) | gb22 rec. / 200 | gb22 Γ₉₅ per star per yr (conservative) | gb21 rec. / 200 | gb21 Γ₉₅ per star per yr |
@@ -1356,6 +1402,56 @@ gb8 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb8.ecsv`):
 | 100 | 1.8 | 18 / 15 | 1.7 / 2.1 × 10⁻⁷ |
 | 300 | 17 | 3 / 3 | 1.0 / 1.0 × 10⁻⁶ |
 
+gb3 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb3.ecsv`):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 8 / 13 | 3.9 / 2.4 × 10⁻⁷ |
+| 10 | 0.018 | 19 / 19 | 1.6 / 1.6 × 10⁻⁷ |
+| 30 | 0.17 | 21 / 13 | 1.5 / 2.4 × 10⁻⁷ |
+| 100 | 1.8 | 15 / 7 | 2.1 / 4.4 × 10⁻⁷ |
+| 300 | 17 | 2 / 2 | 1.5 / 1.5 × 10⁻⁶ |
+
+gb4 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb4.ecsv`):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 5 / 14 | 5.4 / 1.9 × 10⁻⁷ |
+| 10 | 0.018 | 10 / 16 | 2.7 / 1.7 × 10⁻⁷ |
+| 30 | 0.17 | 15 / 12 | 1.8 / 2.2 × 10⁻⁷ |
+| 100 | 1.8 | 12 / 16 | 2.2 / 1.7 × 10⁻⁷ |
+| 300 | 17 | 3 / 4 | 9.0 / 6.7 × 10⁻⁷ |
+
+gb5 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb5.ecsv`):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 2 / 5 | 12 / 4.8 × 10⁻⁷ |
+| 10 | 0.018 | 13 / 10 | 1.8 / 2.4 × 10⁻⁷ |
+| 30 | 0.17 | 9 / 8 | 2.7 / 3.0 × 10⁻⁷ |
+| 100 | 1.8 | 9 / 5 | 2.7 / 4.8 × 10⁻⁷ |
+| 300 | 17 | 4 / 2 | 6.0 / 12 × 10⁻⁷ |
+
+gb6 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb6.ecsv`):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 1 / 3 | 104 / 35 × 10⁻⁷ |
+| 10 | 0.018 | 9 / 11 | 12 / 9.4 × 10⁻⁷ |
+| 30 | 0.17 | 13 / 9 | 8.0 / 12 × 10⁻⁷ |
+| 100 | 1.8 | 12 / 13 | 8.6 / 8.0 × 10⁻⁷ |
+| 300 | 17 | 4 / 5 | 26 / 21 × 10⁻⁷ |
+
+gb9 (ρ = 0.01 / 0.1; `results/w3_moa/limits_gb9.ecsv`):
+
+| t_E (d) | M (M☉, model) | rec. / 200 | Γ₉₅ per star per yr |
+|---|---|---|---|
+| 3 | 0.0017 | 3 / 7 | 7.0 / 3.0 × 10⁻⁷ |
+| 10 | 0.018 | 10 / 10 | 2.1 / 2.1 × 10⁻⁷ |
+| 30 | 0.17 | 8 / 15 | 2.6 / 1.4 × 10⁻⁷ |
+| 100 | 1.8 | 9 / 9 | 2.3 / 2.3 × 10⁻⁷ |
+| 300 | 17 | 8 / 2 | 2.6 / 10.5 × 10⁻⁷ |
+
 Cloud runs of gb22, gb21, gb20, gb19, gb16, gb11 and gb7: the batched CDS XMatch for the Gaia DR3 RP reference failed on all 3 attempts
 ("Too many jobs"; a later retry gave a truncated, non-VOTable reply through the proxy), so `exotic_in_domain` used the
 lenient default reference (MOA-Red 14.2) on all 276 real flags (none has a DoPHOT magnitude). This only loosens the
@@ -1374,33 +1470,36 @@ sheets inspected). The tracked `vetting_gbN.json` files now carry the working `g
 
 The t_E = 300 d, ρ = 0.1 cell rests on one recovered injection (efficiency uncertain by ~100 %); `combine` should
 not let a single field's one-recovery cell dominate the combined 300-d limit. It does not: the combined table's
-`max_field_share` (one field's share of Σ N_s T ε) is ≤ 0.19 in every cell (below).
+`max_field_share` (one field's share of Σ N_s T ε) is ≤ 0.21 in every cell (below).
 
-### Combined limit, fourteen fields (CHAIN_VERSION 2026-10-10.1)
+### Combined limit, nineteen fields (CHAIN_VERSION 2026-10-10.1)
 
-`w3_moa.py combine` → `results/w3_moa/limits_combined.ecsv` (derived): gb1, gb2, gb7, gb8, gb11, gb12, gb15–gb22, 0
-survivors in every field, Σ N_s ≈ 1.98 × 10⁸ monitored stars (Nunota et al. 2024 Table 1; gb22 from the model count,
-ASSUMPTION), Σ N_s T ≈ 1.70 × 10⁹ star-years. Γ₉₅ = 3 / Σ_f N_s,f T ε_f per cell. Masses are a **model_prediction**
-(n = 1, D_L = 4 kpc, D_S = 8 kpc, μ_rel = 5 mas/yr). The relative uncertainty of Σ N_s T ε from injection counting
-(binomial, ≈ 1/√n_rec per field, summed) is 8–18 % (eleven fields; gb2, gb1 and gb8 add 2–20 recoveries per cell);
-the conservative N_s range moves the limits by < 2 %.
+`w3_moa.py combine` → `results/w3_moa/limits_combined.ecsv` (derived): gb1–gb9, gb11, gb12, gb15–gb22, 0
+survivors in every field, Σ N_s ≈ 3.16 × 10⁸ monitored stars (Nunota et al. 2024 Table 1; gb6 and gb22 from the model
+count, ASSUMPTION), Σ N_s T ≈ 2.72 × 10⁹ star-years. Γ₉₅ = 3 / Σ_f N_s,f T ε_f per cell. Masses are a
+**model_prediction** (n = 1, D_L = 4 kpc, D_S = 8 kpc, μ_rel = 5 mas/yr). The relative uncertainty of Σ N_s T ε from
+injection counting (binomial, ≈ 1/√n_rec per field, summed) is 8–18 % (eleven fields; gb2, gb1, gb8, gb3, gb4, gb5 and
+gb6 add 1–21 recoveries per cell; gb9 adds 2–15, which only lowers it); the conservative N_s range moves the limits by < 2 %.
 
-| t_E (d) | M (M☉, model) | rec. / 2,800 (ρ = 0.01 / 0.1) | max field share | Γ₉₅ per star per yr (ρ = 0.01 / 0.1) |
+| t_E (d) | M (M☉, model) | rec. / 3,800 (ρ = 0.01 / 0.1) | max field share | Γ₉₅ per star per yr (ρ = 0.01 / 0.1) |
 |---|---|---|---|---|
-| 3 | 0.0017 | 61 / 84 | 0.19 / 0.17 | 7.8 / 5.4 × 10⁻⁸ |
-| 10 | 0.018 | 162 / 188 | 0.16 / 0.14 | 2.9 / 2.5 × 10⁻⁸ |
-| 30 | 0.17 | 228 / 172 | 0.13 / 0.15 | 2.1 / 2.8 × 10⁻⁸ |
-| 100 | 1.8 | 161 / 179 | 0.17 / 0.15 | 2.9 / 2.7 × 10⁻⁸ |
-| 300 | 17 | 58 / 43 | 0.13 / 0.13 | 9.4 × 10⁻⁸ / 1.2 × 10⁻⁷ |
+| 3 | 0.0017 | 80 / 126 | 0.13 / 0.15 | 5.1 / 3.0 × 10⁻⁸ |
+| 10 | 0.018 | 223 / 254 | 0.11 / 0.10 | 1.8 / 1.6 × 10⁻⁸ |
+| 30 | 0.17 | 294 / 229 | 0.10 / 0.13 | 1.5 / 1.8 × 10⁻⁸ |
+| 100 | 1.8 | 218 / 229 | 0.11 / 0.11 | 1.9 / 1.9 × 10⁻⁸ |
+| 300 | 17 | 79 / 58 | 0.21 / 0.12 | 5.5 × 10⁻⁸ / 8.0 × 10⁻⁸ |
 
-Thirteen fields (before gb8): 2.4 × 10⁻⁸–1.4 × 10⁻⁷; twelve fields (before gb1): 2.8 × 10⁻⁸–1.5 × 10⁻⁷; eleven
-fields (before gb2): 3.2 × 10⁻⁸–1.8 × 10⁻⁷. The largest field share is 0.19 (t_E = 3 d, ρ = 0.01). Scope: an upper
-limit on the rate of W3-shaped events (flux vanishing between caustic spikes) per monitored bulge star per year in
-these fourteen fields, for the injected shapes and the vetting chain of D-068 + addendum. It is not a limit on
-wormhole or negative-mass abundance until a model maps abundance to this event rate. The lenient-reference fields
-(gb7, gb11, gb16, gb19–gb22, above) affect only real-flag vetting, not the injections, so the limit stands. gb13 (one
-chain survivor explained outside the chain, #145, waiting on the owner) and the other Nunota et al. 2024 fields are
-not included.
+Eighteen fields (before gb9): 1.5 × 10⁻⁸–8.6 × 10⁻⁸; seventeen fields (before gb6): 1.6 × 10⁻⁸–9.0 × 10⁻⁸; sixteen fields (before gb5): 1.7 × 10⁻⁸–9.8 × 10⁻⁸; fifteen fields (before gb4): 1.9 × 10⁻⁸–1.1 × 10⁻⁷; fourteen
+fields (before gb3): 2.1 × 10⁻⁸–1.2 × 10⁻⁷; thirteen fields (before gb8): 2.4 × 10⁻⁸–1.4 × 10⁻⁷; twelve fields
+(before gb1): 2.8 × 10⁻⁸–1.5 × 10⁻⁷; eleven fields (before gb2): 3.2 × 10⁻⁸–1.8 × 10⁻⁷. The largest field share is
+0.21 (gb9, t_E = 300 d, ρ = 0.01, resting on 8 recoveries); gb9 holds 11 % of the monitored stars and tightens the
+limits by 6–21 % (most at t_E = 300 d, ρ = 0.01). gb6 holds 2.4 % of the monitored stars and moves the limits by 0–5 %. gb5 holds 11 % of the monitored stars but 4–12 % of Σ N_s T ε per cell (lower
+recovery efficiency in the short-t_E and ρ = 0.1 cells), so the limits tighten by 4–13 %. Scope: an upper limit on the rate of W3-shaped events (flux vanishing between caustic spikes) per monitored
+bulge star per year in these nineteen fields, for the injected shapes and the vetting chain of D-068 + addendum. It
+is not a limit on wormhole or negative-mass abundance until a model maps abundance to this event rate. The
+lenient-reference fields (gb7, gb11, gb16, gb19–gb22, above) affect only real-flag vetting, not the injections, so
+the limit stands. gb13 (one chain survivor explained outside the chain, #145, waiting on the owner) and the other
+Nunota et al. 2024 fields are not included.
 
 ### All 22 fields (next)
 
