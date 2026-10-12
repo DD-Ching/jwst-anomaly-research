@@ -17,8 +17,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   **181,820 light curves, 1,469 shape passes, 108 not at a shared epoch** (to fit). Fits (`fit --procs 4 --chunk K/4`):
   chunk 1/4 27 fits, 0 errors, 26 flags, 688 s; chunk 2/4 27 / 0 / 25, 609 s; chunk 3/4 was started at 18:46Z and
   stopped at the slot's end (reruns).
-  **Next:** `merge-prescreen` (a fresh clone needs it before `fit`), `fit --procs 4 --chunk 3/4` and `4/4`,
-  `merge-chunks --n 4`, then vet, inject (6 chunks), limit, combine.
+- Run 4 (cloud, 19:09–19:45Z): `merge-prescreen`; fit chunk 3/4: 27 fits, 0 errors, 25 flags, 728 s. Failed approach:
+  a `while pgrep -f "chunk 3/4"` wait loop matches its own command line and never exits (~15 min idle); wait on a
+  PID or on the output file instead. A fresh venv also needs the `mulens` extra (`.[dev,cloud,mulens]`) before `fit`.
+  **Next:** `merge-prescreen`, `fit --procs 4 --chunk 4/4`, `merge-chunks --n 4`, then vet, inject (6 chunks), limit,
+  combine.
 ## 2026-10-12: W3 MOA-II gb9 (nineteenth field): 0 survivors; combined limit over nineteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. Run 1 (cloud, 07:35Z): tracked pre-screen chunks only.
