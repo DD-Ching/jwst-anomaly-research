@@ -8,6 +8,15 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 - **Cloud routine:** TXS 0506+056 SkyLLH benchmark on IceTracks-DR2 (done, D-080), E-NF1 on IceTracks-DR2 (short lags done, D-079; rest per Neutrino Frontier item 1), round 2,
   all scans.
 
+## Goal round 1 (owner brief 2026-10-11: contact and return over 20–100 ly; docs/goal_round1/)
+- Done: corrections, carried-wormhole accounting, v-causal calibration and data adequacy (NIST 2015 cannot improve
+  the bipartite V bound; other datasets not assessed). PR left unmerged for the owner.
+- Next, by information per cost:
+  1. Bancal configuration R: timing tolerance, noise and visibility threshold, and whether B, C and the receiver
+     can be co-located (theory, no data).
+  2. Modified-gravity escape from Gao–Wald: theories with R_kk < 0 and no exotic matter that survive GW170817 and
+     solar-system bounds (literature unit).
+
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
    separation. The five requested channels are null (family p = 0.27 on the re-pinned GBM snapshot). The

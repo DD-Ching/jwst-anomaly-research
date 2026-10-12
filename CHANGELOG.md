@@ -197,6 +197,36 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   writes only at the end. Start injections at the top of a run, or make `inject` chunked and resumable like `fit`.
 - **Next:** gb13 after the owner decides #145; then gb3–gb6, gb9, gb10, gb14.
 
+## 2026-10-11: Goal round 1: corrections, carried-wormhole accounting, v-causal bounds; NIST 2015 data cannot improve the bipartite V bound
+- Owner brief (contact and fast return over 20–100 ly). Full write-up: `docs/goal_round1/README.md`.
+- Corrections to the previous chat assessment, from full texts:
+  - "Raising the hidden-influence speed bound closes the communication path" is withdrawn. It only excludes slower
+    models in the covered frames.
+  - Bancal et al. 2012 is a disjunction. The receiver needs B's and C's outcomes over ordinary links. No
+    multipartite test has ever been run (Li et al. 2026).
+  - Achronal ANEC does not exclude Olum-type superluminal travel (Graham–Olum §IV.D).
+  - Gao–Wald is a geometric (R_kk) statement; it becomes a statement about matter only through the Einstein
+    equations.
+  - "Only configuration", "only lab test" and "no decision changes" are withdrawn or qualified.
+- Carried wormhole (`scripts/goal_wormhole_timeline.py`; premise unsolved): one link carried one way never closes a
+  loop (T < D for v < 1). At 20 ly, 0.999c the mother waits 0.9 yr through the throat. A second short link with
+  another shift closes a loop (Visser gr-qc/9311026 Sec. VI).
+- v-causal bounds (`scripts/goal_vcausal_bounds.py`):
+  - **Positive control:** reproduces Salart 5.4 × 10⁴, Yin 1.38 × 10⁴ and Cocciaro 5 × 10⁶ c from each paper's
+    parameters.
+  - **Data adequacy:** public NIST 2015 data is
+    bipartite. Reachable lower-bound strength under zero-offset assumptions: ≈ 1.7 × 10²–7.9 × 10³ c, against
+    5 × 10⁶ c published. So it cannot improve the bipartite bound; other datasets were not assessed. Not scanned.
+  - **Requirements:** 20 ly / 1 s one-way needs V ≥ 6.3 × 10⁸ c, i.e. lab simultaneity ρ ≤ 7.9 × 10⁻¹⁰
+    (48 fs at 18 km) and windows ≤ 18 ms.
+- **Failed approach (rule):** the first NIST envelope used the aggregated-slot spread as ρ. That is the wrong
+  quantity, because both photons share one pump pulse; the independent review caught it. Two rows of the outcome
+  table were also inverted: S > 7 in Bancal's configuration R is the QM prediction, and it excludes no-signalling
+  v-causal models.
+- **Next:**
+  - Configuration-R timing tolerance and noise threshold (theory).
+  - A literature unit on modified-gravity theories with R_kk < 0 consistent with GW170817.
+
 ## 2026-10-11: W3 MOA-II gb1 (thirteenth field): 0 survivors; combined limit over thirteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1 and a finite limit in every cell. A
   survivor with caustic spikes in the data would have stopped injections and gone to `/vet-candidate`.

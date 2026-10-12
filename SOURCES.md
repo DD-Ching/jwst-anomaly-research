@@ -1193,3 +1193,39 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - SkyLLH, PyPI `skyllh` 26.1.0 (2026-09-09), https://github.com/icecube/skyllh.
 - SN1987A: Hirata+ 1988 PRD 38, 448; Bionta+ 1987 PRL 58, 1494; Bratton+ 1988 PRD 37, 3361; Alexeyev+ 1988
   PLB 205, 209; compilation Loredo & Lamb 2002 PRD 65, 063002 (astro-ph/0107260).
+
+## Goal round 1 (2026-10-11; docs/goal_round1/README.md)
+
+Full texts read 2026-10-11, through arXiv PDFs or the cited archives.
+
+**Bell tests and v-causal models**
+- Salart, Baas, Branciard, Gisin & Zbinden, Nature 454, 861 (2008), arXiv:0808.3316.
+- Yin et al., PRL 110, 260407 (2013), arXiv:1303.0614.
+- Cocciaro, Faetti & Fronzoni, PRA 97, 052124 (2018), arXiv:1802.00423; and 2011, arXiv:1006.2697.
+- Bancal, Pironio, Acín, Liang, Scarani & Gisin, Nature Phys. 8, 867 (2012), arXiv:1110.3795.
+- Barnea, Bancal, Liang & Gisin, PRA 88, 022123 (2013), arXiv:1304.1812.
+- Li, Hu, Deng & Scarani, arXiv:2608.05271 (2026).
+- Shalm et al., PRL 115, 250402 (2015), arXiv:1511.03189.
+- NIST Bell test data, public S3 bucket `nist-belltestdata` (https://s3.amazonaws.com/nist-belltestdata/belldata/;
+  `File_Folder_Descriptions.pdf` 2015-12-23 and its addendum 2017-02, accessed 2026-10-11). NIST licence: free use
+  with attribution and a modification notice.
+
+**Energy conditions and wormholes**
+- Olum, PRL 81, 3567 (1998), gr-qc/9805003.
+- Gao & Wald, CQG 17, 4999 (2000), gr-qc/0007021.
+- Friedman, Schleich & Witt, PRL 71, 1486 (1993), gr-qc/9305017.
+- Graham & Olum, PRD 76, 064001 (2007), arXiv:0705.3193.
+- Kontou & Olum, PRD 92, 124009 (2015), arXiv:1507.00297.
+- Hartman, Kundu & Tajdini, arXiv:1610.05308.
+- Faulkner, Leigh, Parrikar & Wang, arXiv:1605.08072.
+- Visser, Bassett & Liberati, gr-qc/9810026.
+- Gao, Jafferis & Wall, arXiv:1608.05687.
+- Maldacena, Milekhin & Popov, arXiv:1807.04726.
+
+**Wormhole time shifts and chronology**
+- Morris, Thorne & Yurtsever, PRL 61, 1446 (1988) (Caltech authors repository, record m644f-tbz27).
+- Morris & Thorne, Am. J. Phys. 56, 395 (1988).
+- Kim & Thorne, PRD 43, 3929 (1991) (Caltech authors repository).
+- Visser: hep-th/9202090, hep-th/9303023, gr-qc/9311026 and gr-qc/9702043.
+
+**Not opened:** Frolov & Novikov, PRD 42, 1057 (1990); Hawking, PRD 46, 603 (1992).
