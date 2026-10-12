@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-12: S1 round 3: catalogue E_peak does not raise full recovery at equal burden; upgrade paused
+## 2026-10-12: S1 round 3: catalogue E_peak gives no robust practical recovery gain; upgrade paused
 - Owner review of #169: compare A (M2) with B (M2 + E_peak, staged) on full recovery at equal false-candidate
   burden. `docs/s1_energy/` (plan written first, amended for the literature systematic before any result);
   `scripts/s1_energy.py`; `results/s1_energy/`. No TTE download.
@@ -10,8 +10,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   TTE; "3–5×" applies to testable pairs only; 96 % was a same-model check; the TTE 0.9716 threshold was borrowed.
 - **Errors:** model choice offset −0.12; peak − fluence window sd 0.33 (excess 0.27); literature about 0.25 per
   measurement; stretch error 0.011. Availability depends on fluence and type (65–87 %).
-- **Result:** ΔR = +0.014 (central), −0.001 (window bracket), −0.010 (literature); all below +0.02. The energy and
-  shape checks are correlated (E_peak pass 38 % → 56 % with rising M2). Burden matched (val flagged 6 vs 4).
+- **Result:** ΔR = +1.8 / +1.4 percentage points (optimistic / central), −0.1 (window-spread sensitivity) and −1.0
+  (independent-analyses literature scenario). It does not reach the pre-declared practical gain that is robust
+  across error scenarios. The energy and shape checks are correlated (E_peak pass 38 % → 56 % with rising M2).
+  Flagged counts were matched at calibration; validation (6 vs 4) shows no added burden, but false-alarm
+  equivalence is not established.
+- **Not tested:** time-resolved spectra with the instrument response, other observables, any exotic mechanism.
+  The owner accepted the pause; #169 is closed out (report wording only, no re-runs).
 - **Decision:** S1 energy upgrade paused; no B screen. Reopen only with a demonstrated same-source E_peak
   systematic ≲ 0.10 or a time-resolved spectral observable.
 

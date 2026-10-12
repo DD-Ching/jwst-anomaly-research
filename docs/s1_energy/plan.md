@@ -101,3 +101,12 @@ narrow assumption. σ_sys,test stays 0.20.
 
 ## 5. Budget
 About 2 h. Catalogue/TAP queries and the existing reduced light curves only; no TTE downloads.
+
+## 6. Post-result notes (2026-10-12, owner review; thresholds and runs unchanged)
+- The 0.29 peak/fluence figure in sections 1 and 3 defines a sensitivity scenario only. It is not a proven bound
+  on same-interval, same-source measurement error.
+- Collazzi et al. quote "28 %, i.e. 0.12 in log10". In ln that is 0.25–0.28. Their value comes from independent
+  analyses, so √2 × 0.25 = 0.35 assumes independent errors. A homogeneous catalogue may share part of them. The
+  0.35 run is kept as that scenario, not re-run.
+- The burden was matched at calibration by flagged count. Validation did not show B adding burden; false-alarm
+  equivalence is not established.

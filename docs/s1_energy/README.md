@@ -17,14 +17,23 @@
 - [assump]: error models.
 
 ## 1. Answer
-**At equal false-candidate burden, catalogue E_peak does not recover meaningfully more same-source pairs, so the
-S1 energy upgrade is paused.**
-- The gain is +1.4 % of injected pairs in the central scenario (95 % CI 0.8–2.1 %). That is below the
-  pre-declared minimum of +2 %.
-- It vanishes at the measured window systematic (−0.1 %).
-- It turns negative at the published systematic (−1.0 %, CI −2.0 to −0.1 %).
-- Even the optimistic scenario (+1.8 %) misses the minimum.
-- No candidate. There is no evidence of new physics.
+**Adding the catalogue E_peak to the existing M2 shape method did not reach the pre-declared practical gain that is
+robust across the error scenarios. Under the pre-declared rule, the S1 energy upgrade is paused.**
+- **Small positive gains:** in the optimistic and central scenarios, total recovery rises by +1.8 percentage
+  points (95 % CI 1.2–2.5) and +1.4 percentage points (0.8–2.1). These gains are real within the simulation.
+  They fall short of the pre-declared minimum of +2 percentage points.
+- **No gain** in the sensitivity scenario based on the peak/fluence window spread: −0.1 percentage points
+  (−0.9 to +0.6).
+- **Negative** in the literature-based scenario of two independent analyses: −1.0 percentage points (−2.0 to
+  −0.1).
+- **Scope of what was tested:** catalogue-level fluence-spectrum E_peak added to the existing shape thresholds,
+  in a catalogue-level simulation. Not tested:
+  - full time-resolved spectroscopy with the instrument response;
+  - other observables;
+  - other messengers.
+  The result does not rule out wormhole or other exotic-lensing mechanisms. It only bounds what this particular
+  catalogue-level upgrade adds to S1.
+- No candidate. No evidence of new physics; simulated recovery, tests and CI are not physical evidence.
 
 ## 2. Error checks (catalogue only) [obs]
 - **Availability:**
@@ -40,15 +49,23 @@ S1 energy upgrade is paused.**
 - **Integration window and evolution:** for the same burst and model, ln E(peak 1 s) − ln E(fluence interval) has
   median +0.08 (harder at the peak) and robust sd 0.33. The median statistical error is 0.19, so the excess is about
   0.27 and the pull sd 1.86.
-  - A fainter copy's catalogue interval lies between these two windows. This brackets the copy-vs-original
-    systematic at about 0–0.29 in the difference.
+  - **How this number is used:** only to set a sensitivity scenario (0.29). It is **not** a proven lower or upper
+    bound on the measurement error of a same-source copy over the same physical interval. The two catalogue
+    windows share photons and differ in definition, so they are not two independent measurements of one interval.
 - **Literature:**
-  - Collazzi, Schaefer & Moree 2011 (arXiv:1101.1285): about 28 % per measurement from analysis choices, i.e.
-    about 0.35 in the difference.
+  - Collazzi, Schaefer & Moree 2011 (arXiv:1101.1285): the 1σ uncertainty from analyst choices is "28 %, i.e.
+    0.12 in log10(E_peak)". In ln this is 0.25 (from ln 1.28) to 0.28 (from 0.12 × ln 10); the paper's two
+    forms differ slightly.
+    - The value is inferred from pairs of published E_peak values for the same burst made by different
+      analyses.
+    - Our 0.35 scenario assumes two such **independent** analysis errors (√2 × 0.25). Within one homogeneous
+      catalogue, part of the analyst-choice error is shared, and the paper itself says identical definitions
+      reduce it. The applicable difference systematic could therefore be smaller. This is not verified.
+    - The 0.35 run is kept as an independent-analyses literature scenario, not as the established value.
   - Gruber et al. 2014 (arXiv:1401.5069): background selection up to 30 % for weak bursts.
   - Goldstein et al. 2012 (arXiv:1201.2981): Band and Comp E_peak differ beyond 1σ for 25 % of bursts.
-  - No published GBM number exists for "same spectrum, different brightness". **The systematic is therefore not
-    constrained below about 0.29–0.35. It is kept as a sensitivity range, not chosen.**
+  - No published GBM number exists for "same spectrum, different brightness". **The relevant systematic is not
+    established by any of these. It is kept as a sensitivity range, 0.10–0.35, not chosen.**
 - **Stretch uncertainty** [sim]: on 188 calibration-half injections with M2 > 0.9, ln(s_prog · s_phys) has robust
   sd 0.011 and no case with |Δ| > 0.1. The test uses 0.02. Stretch error is not the limiting factor.
 - **Time and energy checks are correlated** [obs]: among unrelated real pairs, the E_peak pass rate rises with
@@ -74,7 +91,10 @@ S1 energy upgrade is paused.**
   - B at the same flagged count gives thr_B = 0.9664, range 0.9656–0.9684 for 18 ± √18.
 - **Validation half** (188,055 real pairs):
   - flagged E-testable pairs: A 6, B 4;
-  - candidates after χ² and delay: A 0, B 0. The burden is matched.
+  - candidates after χ² and delay: A 0, B 0.
+  - The flagged counts were **matched at calibration**. The validation sample does not show B adding burden.
+    False-alarm-rate equivalence is **not established**: the counts are small, so the Poisson intervals are
+    wide.
 - **Validation injections:**
   - 1,800 copies from 643 validation-half templates, with independent noise;
   - brightness ratio 1–0.1, s_phys 0.5–2;
@@ -89,12 +109,13 @@ S1 energy upgrade is paused.**
 |---|---|---|---|---|---|
 | optimistic 0.10 | 98 % | 0.181 | 0.199 | +0.018 (0.012–0.025) | 33 / 0 |
 | central 0.20 | 95 % | 0.181 | 0.196 | +0.014 (0.008–0.021) | 32 / 6 |
-| measured bracket 0.29 | 89 % | 0.181 | 0.180 | −0.001 (−0.009–0.006) | 29 / 31 |
-| literature 0.35 | 85 % | 0.181 | 0.171 | −0.010 (−0.020 to −0.001) | 29 / 47 |
+| window-spread sensitivity 0.29 | 89 % | 0.181 | 0.180 | −0.001 (−0.009–0.006) | 29 / 31 |
+| literature, independent analyses 0.35 | 85 % | 0.181 | 0.171 | −0.010 (−0.020 to −0.001) | 29 / 47 |
 
 - The gain comes only from E-testable injections (central: 0.198 → 0.217). The 469 untestable ones are
   unchanged by construction.
 - Moving thr_B by ±√18 changes ΔR by less than 0.008.
+- Differences are in percentage points of total recovery.
 - **Why the gain is small:** at equal burden the energy cut removes only about 60 % of shape look-alikes, so the
   M2 threshold drops only from 0.9716 to 0.9664. Most of A's losses are elsewhere (pulse eligibility and the χ²
   test, about 50 % of selected copies), and energy information does not reach them.
@@ -106,12 +127,19 @@ S1 energy upgrade is paused.**
 - **What would justify reopening (minimum inputs):**
   - A same-source E_peak systematic of about 0.10 or less in the ln difference, demonstrated on real data. For
     example: matched-interval spectral fits of the same burst at artificially reduced S/N, or repeated bursts
-    from one source measured by GBM and an independent instrument. Even then, the catalogue-level gain is at
-    most about +2 %.
+    from one source measured by GBM and an independent instrument. In this simulation the 0.10 scenario gave
+    +1.8 percentage points. That is a single scenario result, not an upper limit on what energy information can
+    add.
   - Or an energy observable that sharply separates look-alikes while keeping true copies, i.e. passing well
     under 60 % of shape look-alikes at the real systematic. Candidates are time-resolved E_peak(t) tracks fitted
     over stretch-matched intervals with the GBM response (GBM Data Tools). That is a new spectral pipeline and is
     out of scope.
   - A larger lever is the shape side: eligibility and the χ² test lose about half of selected true copies, which
     is outside this question.
-- **Scope:** catalogue-level simulation only. It does not test instrument-level spectral fitting.
+- **Scope:** catalogue-level E_peak plus the existing shape thresholds, in a catalogue-level simulation. It does
+  not test:
+  - time-resolved spectra with the instrument response;
+  - other observables or messengers;
+  - any wormhole or exotic mechanism as such.
+- **Owner decision 2026-10-12:** the pause is accepted. #169 is closed out and S1 is paused; other searches
+  continue as scheduled.
