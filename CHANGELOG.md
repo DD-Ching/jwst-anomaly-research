@@ -28,8 +28,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   will cover seventeen fields. gb5 injections use 6 chunks (~370 each, fits one routine slot).
 - Injection chunk 1/6 (cloud, 03:32–03:43Z): 367 in 612 s (0.60 per s), 0 errors; W3 333 → 25 flagged → 8 recovered;
   PSPL controls 0 / 34 flagged.
+- Injection chunk 2/6 (cloud, 03:44–04:00Z): 367 in 985 s, 0 errors; W3 333 → 21 flagged → 11 recovered; PSPL 0 / 34.
 - **Next:** `merge-prescreen` (fresh clone; `pip install -e '.[mulens]'`), then
-  `--field gb5 inject --procs 4 --chunk K/6` for each chunk not yet in `results/w3_moa/injections_gb5_chunk*of6*`
+  `--field gb5 inject --procs 4 --chunk K/6` for K = 3–6 (chunks 1–2 tracked in `results/w3_moa/injections_gb5_chunk*of6*`; ~10–16 min each)
   (detached, wait on the PID), `merge-inject --n 6`, `limit`, `combine`.
 
 ## 2026-10-11: W3 MOA-II gb4 (sixteenth field): 0 survivors; combined limit over sixteen fields
