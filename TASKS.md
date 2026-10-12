@@ -187,8 +187,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 3. **Two-epoch search** (D-027): null results for SMACS/VENUS and Sunrise o010/o120; Earendel is steady
    (docs/fields/sunrise.md). Third epoch (o052, calibrated with `--controls`): 0 of 57 candidates. Next:
    - `n0022` and `n0150` are detector persistence (D-039). Run `scripts/persistence_check.py` on every future
-     single-epoch candidate before vetting. Next: `/vet-candidate n0153` (on sky in all 8 dithers, F150W ×1.9 over
-     2.9 yr; host, AGN colours, a pipeline-version check on neighbours);
+     single-epoch candidate before vetting. `n0153` is vetted (docs/candidates/n0153.md): real, nuclear, in a
+     z_phot ≈ 2 galaxy (a star is not excluded); it needs a third epoch (check MAST for WHL0137 revisits). Archival
+     follow-ups: DJA per-epoch mosaics (colour of the change), X-ray or radio counterparts;
    - forced photometry on all catalogued sources, not only catalog-stage candidates (the two-band rule misses
      blue transients);
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).

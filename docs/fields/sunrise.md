@@ -190,8 +190,10 @@ Outputs under `outputs/t_sunrise_e13/` (not committed). Every number is `derived
     epoch's dither vector.
   - `n0153` (24.333856, −8.426836): brighter by 0.63 mag in F150W (5.9σ) and 0.52 mag in F444W (3.6σ) in 2025;
     compact and unchanged in shape. Per `_cal` exposure (0.1″ apertures) F150W is 1.5–2.0 in all four o010 dithers
-    and 3.0–3.8 in all four o052 dithers (×1.9; jwst 2.0.1 against 3.0.0 calibration). Not persistence. A variable
-    (e.g. AGN) candidate; not yet vetted.
+    and 3.0–3.8 in all four o052 dithers (×1.9; jwst 2.0.1 against 3.0.0 calibration). Not persistence. Vetted
+    (docs/candidates/n0153.md): 388 local controls show no change (median Δm +0.003), so this is not calibration. The
+    F150W difference is nuclear (0.018″ from the centroid) in a compact z_phot ≈ 2.0 galaxy. Inconclusive: an AGN
+    or nuclear transient `hypothesis`, and a third epoch is needed.
   - `scripts/persistence_check.py` on o010, o120 and o052 (404 `_cal` files, S3 byte ranges, 1 min): `n0022` 8 of 8
     detections suspect, `n0150` 5/5, 4/4 and 2/2 at its three positions; `n0153` 0 of 39 suspect (36 clean) and Earendel
     0 of 4 (`on_sky`).
