@@ -3434,6 +3434,39 @@ galaxy column is set up, or the full covariances change the errors by > 20 %.
 - CHIME/FRB Catalog 2 is added (the S1 second half).
 - The χ² systematic (10 %) is calibrated on real same-burst data, e.g. GBM vs. Swift-BAT.
 
+**Addendum 1 (2026-10-11): deformed twins.**
+- **Decision (proposal):** the D-071 limit is restated as applying to undeformed (s = 1) twins only. Adopt M2 for
+  any future S1 screen:
+  - max over a log-uniform s grid with step 1.05 on [0.5, 2] in the flagging statistic;
+  - a free per-band scale;
+  - per-band χ² at the best s;
+  - |Δk| ≤ 2;
+  - thresholds at an equal per-pair false-alarm rate on a calibration half.
+- **Evidence:** `docs/s1_deform/README.md`.
+  - 0 / 1,440 deformed injections were recovered by the existing chain.
+  - With M2: 117 / 1,440 on the pre-registered grid, 259 / 1,440 on the post-hoc grid, against 37 / 180 undeformed
+    at the same false-alarm rate.
+  - The hold-out half gave no candidate.
+- **Alternatives rejected:**
+  - a stretch test only on the top-300 undeformed pairs, because it never flags;
+  - the coarse 7-point grid, because it misses stretches more than about 5 % off a grid point.
+- **Revisit if:**
+  - time-resolved spectra (CSPEC/TTE) are used to test the E → E/s link per candidate;
+  - a non-degenerate null changes ρ*.
+
+**Addendum 2 (2026-10-11): calibration and full M2 re-screen.**
+- **Decision (proposal):**
+  - the M2 consistency step uses a locally refined stretch;
+  - the cut is c = 10⁻³, chosen to keep ≥ 95 % of simulated true pairs (actually 98.6 % are kept);
+  - false alarms come from the real-pair background, not from the pulse shuffle. Real pairs outnumber the
+    surrogates 7.5–14× above ρ = 0.8.
+- **Full re-screen:** 747,709 pairs and 0 candidates. It is exploratory (about 1.8 false candidates expected).
+- **Conditional limit:** < 1.3 × 10⁻² deformed-twin pairs per eligible burst, for the injected population only.
+- **Evidence:** `docs/s1_deform/README.md` §8; `results/s1_m2/`.
+- **Revisit if:**
+  - S1 is extended to single-pulse bursts (TTE);
+  - a candidate needs the E → E/s spectral check.
+
 ## D-072 S3 hybrid images: COSMOGRAIL XIX doubles, SIS leg-split lag window, template regression; null without a useful limit (2026-10-09)
 
 **Decision.** S3 (D-069) is tested with `scripts/s3_hybrid.py` on the COSMOGRAIL XIX R-band curves (CDS

@@ -75,6 +75,46 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Next:** gb13 after the owner decides #145; then gb9, gb10, gb14. This PR is stacked on #168, #165 and #160:
   merge those first.
 
+## 2026-10-11: S1 M2 calibration and full re-screen: 747,709 pairs, 0 candidates (exploratory)
+- Owner review of #167: calibrate, freeze, then re-screen the whole S1 catalogue with M2. `docs/s1_deform/README.md`
+  §8; `docs/s1_m2/calibration_plan.md`; `scripts/s1_m2_search.py`; `results/s1_m2/`.
+- **Failed approach:** the per-band χ² at the best grid stretch rejected 7.2 % of simulated true pairs (grid
+  discretisation on bright copies). The coded cut rule then degenerated to c = 4 × 10⁻³⁹. A local stretch
+  refinement brings the true-pair rejection to 1.4 %; c = 10⁻³.
+- **The old pulse-shuffle null misrepresents unrelated bursts:** real pairs outnumber surrogates 7.5–14× above
+  ρ = 0.8, so the old ρ* underestimated the false-alarm rate.
+- **False alarms.** The real-pair background gives a per-pair rate of 10⁻⁴. Unrelated pairs pass the consistency
+  cut at 2.4 %, so about 1.8 false candidates are expected: an exploratory search.
+- **Frozen** (4b4d235) before the search.
+- **Full screen:** 747,709 pairs scored (including 374,262 cross-half pairs), 64 above threshold (74.8 expected),
+  **0 candidates**.
+- **Efficiency** (deformed): selection 34 %, recovery after selection 50 %, total 16.9 %.
+- **Conditional limit:** < 1.3 × 10⁻² deformed-twin pairs per eligible burst, for the injected population only.
+- **Still invisible:** single-pulse and faint bursts (2,975), same-position pairs, |Δk| > 2 (212,650 pairs), copies
+  at brightness ratio ≲ 0.1, and the E → E/s check (needs CSPEC/TTE per candidate).
+
+## 2026-10-11: S1 deformed-twin test: the screen was blind to stretched/energy-shifted copies; M2 recovers them
+- Owner brief: does S1 miss same-source signals that arrive deformed (delay, time stretch with the matching energy
+  shift, brightness, response)? Pre-registered (`docs/s1_deform/preregistration.md`); write-up
+  `docs/s1_deform/README.md`; code `scripts/s1_deform.py`; results `results/s1_deform/`.
+- **From code, confirmed by injections:**
+  - multi-year delays are covered (E1 is not: its lags stop at 7 d);
+  - energy shift is not covered (two bands, fixed band ratio);
+  - flagging uses s = 1 only, and the stretch grid is display-only;
+  - the D-071 injections and limit are for s = 1 copies;
+  - the pulse-shuffle null is near-degenerate (two-pulse bursts swap; the surrogate maxima take 2 values).
+- **Pre-registered run** (equal per-pair false-alarm rate 10⁻⁴ on a calibration half; injections on the other
+  half): deformed copies recovered by M0 / M1 / M2 = 0 / 74 / 117 of 1,440; undeformed 29 / 26 / 26 of 180. Decision
+  rules met. The coarse grid misses off-grid stretches.
+- **Post hoc** (step-1.05 grid, fresh seed): 0 / 185 / 259 of 1,440 deformed versus 39 / 36 / 37 of 180 undeformed.
+  M2 recovers 18 % of deformed copies and 21 % of undeformed ones.
+- **Hold-out real pairs** (240,104): no pair passes χ² and the delay cut under any method. No candidates.
+- **Owner's link hypothesis** (short check):
+  - 1405.3171 has virtual Euclidean wormholes, and fields **reduce** their density;
+  - 1502.03809 is a visualisation;
+  - testable only as a mouth population, and only with a transfer treatment of photons removed from and injected
+    into each sightline. That needs σ(λ), an exit kernel and n. On hold.
+- **Next:** calibration and a full M2 re-screen (next entry).
 ## 2026-10-11: W3 MOA-II gb5 (seventeenth field): 0 survivors; combined limit over seventeen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections.

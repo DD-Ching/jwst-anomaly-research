@@ -1,0 +1,1164 @@
+{
+ "frozen": {
+  "frozen_utc": "2026-10-11T22:06:22Z",
+  "data": {
+   "lc_and_catalogue_sha256": "0403d265d7c3d47f",
+   "source": "results/s1_twins (main eed9b36; GBM bcat via scripts/s1_ingest.py)"
+  },
+  "grid": [
+   0.5051,
+   0.5303,
+   0.5568,
+   0.5847,
+   0.6139,
+   0.6446,
+   0.6768,
+   0.7107,
+   0.7462,
+   0.7835,
+   0.8227,
+   0.8638,
+   0.907,
+   0.9524,
+   1.0,
+   1.05,
+   1.1025,
+   1.1576,
+   1.2155,
+   1.2763,
+   1.3401,
+   1.4071,
+   1.4775,
+   1.5513,
+   1.6289,
+   1.7103,
+   1.7959,
+   1.8856,
+   1.9799
+  ],
+  "grid_step": 1.05,
+  "statistic": "M2: max over grid of multi-band cross-correlation with free per-band scale (s1_deform.rho_free), |dk| <= 2",
+  "threshold_m2": 0.9716426305743394,
+  "threshold_basis": "calibration half (split seed 1), per-pair FAR 1e-4 of 185,392 real pairs",
+  "refinement": "ln s in +-0.03 step 0.002 around the best grid value, lag re-selected",
+  "consistency": "per-band chi2 p at the refined stretch (calibrated score, not an exact probability)",
+  "consistency_cut": 0.001,
+  "min_delay_days": 1.0,
+  "min_pulses": 2,
+  "position_cut": "3 sigma, 3.7 deg systematic",
+  "max_dk": 2,
+  "dedup": "connected components of candidate pairs sharing a burst",
+  "calibration_seed": 777,
+  "efficiency_seed": 4242,
+  "expected_false_candidates": "about FAR x pairs x 0.024 (unrelated pass rate 48/2000) ~ 1.8 -> exploratory search",
+  "data_used_for_tuning": "calibration half: thresholds, unrelated pass rate; hold-out half: seen with M0/M1/M2 and the fine grid (#167)"
+ },
+ "coverage": {
+  "catalogue_bursts": 4390,
+  "bursts_reduced": 4389,
+  "eligible_bursts_ge2_pulses": 1414,
+  "eligible_pairs": 998991,
+  "excluded_position_consistent": 38632,
+  "excluded_dk_gt2": 212650,
+  "pairs_scored": 747709,
+  "pairs_cal_cal": 185392,
+  "pairs_val_val": 188055,
+  "pairs_cross_half": 374262
+ },
+ "pairs_scored": 747709,
+ "flagged_above_threshold": 64,
+ "expected_flagged_at_far": 74.8,
+ "flagged": [
+  {
+   "burst1": "bn130320560",
+   "burst2": "bn160625945",
+   "m2": 0.9845,
+   "s_best": 0.5051,
+   "chi2_p": 0.0,
+   "delay_days": 1193.385,
+   "sep_deg": 103.8,
+   "npulse": [
+    3,
+    7
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn130427324",
+   "burst2": "bn160625945",
+   "m2": 0.9839,
+   "s_best": 0.5303,
+   "chi2_p": 0.0,
+   "delay_days": 1155.62,
+   "sep_deg": 124.8,
+   "npulse": [
+    6,
+    7
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn100528075",
+   "burst2": "bn130427324",
+   "m2": 0.9825,
+   "s_best": 1.9799,
+   "chi2_p": 1.06e-106,
+   "delay_days": 1065.249,
+   "sep_deg": 111.4,
+   "npulse": [
+    2,
+    6
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn200313071",
+   "burst2": "bn241223506",
+   "m2": 0.9805,
+   "s_best": 0.5568,
+   "chi2_p": 4.66e-39,
+   "delay_days": 1746.436,
+   "sep_deg": 97.2,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn150821406",
+   "burst2": "bn210610827",
+   "m2": 0.9802,
+   "s_best": 1.7959,
+   "chi2_p": 3.1e-60,
+   "delay_days": 2120.421,
+   "sep_deg": 106.4,
+   "npulse": [
+    2,
+    3
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn130815660",
+   "burst2": "bn190829830",
+   "m2": 0.9799,
+   "s_best": 0.6446,
+   "chi2_p": 1.37e-32,
+   "delay_days": 2205.17,
+   "sep_deg": 67.8,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn110721200",
+   "burst2": "bn200313071",
+   "m2": 0.9798,
+   "s_best": 0.907,
+   "chi2_p": 2.94e-43,
+   "delay_days": 3157.871,
+   "sep_deg": 113.0,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn170522657",
+   "burst2": "bn180305393",
+   "m2": 0.9796,
+   "s_best": 0.5568,
+   "chi2_p": 3.82e-13,
+   "delay_days": 286.736,
+   "sep_deg": 76.4,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn200829582",
+   "burst2": "bn241223506",
+   "m2": 0.9785,
+   "s_best": 0.5051,
+   "chi2_p": 5.28e-19,
+   "delay_days": 1576.924,
+   "sep_deg": 123.1,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn120119170",
+   "burst2": "bn141028455",
+   "m2": 0.9783,
+   "s_best": 1.6289,
+   "chi2_p": 2.15e-18,
+   "delay_days": 1013.285,
+   "sep_deg": 155.4,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn090820027",
+   "burst2": "bn190829830",
+   "m2": 0.9782,
+   "s_best": 1.1576,
+   "chi2_p": 1.55e-47,
+   "delay_days": 3661.804,
+   "sep_deg": 55.2,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn090820027",
+   "burst2": "bn141028455",
+   "m2": 0.9781,
+   "s_best": 0.5568,
+   "chi2_p": 3.41e-14,
+   "delay_days": 1895.428,
+   "sep_deg": 120.9,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn090820027",
+   "burst2": "bn110721200",
+   "m2": 0.9774,
+   "s_best": 1.4071,
+   "chi2_p": 8.54e-215,
+   "delay_days": 700.173,
+   "sep_deg": 125.5,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn090820027",
+   "burst2": "bn241223506",
+   "m2": 0.9771,
+   "s_best": 0.7462,
+   "chi2_p": 6.07e-76,
+   "delay_days": 5604.48,
+   "sep_deg": 92.0,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn150821406",
+   "burst2": "bn210204270",
+   "m2": 0.9771,
+   "s_best": 1.7959,
+   "chi2_p": 4.93e-260,
+   "delay_days": 1993.865,
+   "sep_deg": 123.2,
+   "npulse": [
+    2,
+    4
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn190310398",
+   "burst2": "bn190829830",
+   "m2": 0.9771,
+   "s_best": 1.1576,
+   "chi2_p": 1.13e-280,
+   "delay_days": 172.433,
+   "sep_deg": 58.8,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn131028076",
+   "burst2": "bn160821857",
+   "m2": 0.9769,
+   "s_best": 0.5051,
+   "chi2_p": 0.0,
+   "delay_days": 1028.782,
+   "sep_deg": 56.8,
+   "npulse": [
+    2,
+    4
+   ],
+   "half": [
+    "val",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn090820027",
+   "burst2": "bn160910722",
+   "m2": 0.9768,
+   "s_best": 1.7103,
+   "chi2_p": 0.0,
+   "delay_days": 2578.695,
+   "sep_deg": 101.0,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn160910722",
+   "burst2": "bn240403498",
+   "m2": 0.9768,
+   "s_best": 0.8227,
+   "chi2_p": 3.64e-90,
+   "delay_days": 2761.776,
+   "sep_deg": 142.7,
+   "npulse": [
+    2,
+    3
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn190310398",
+   "burst2": "bn241223506",
+   "m2": 0.9768,
+   "s_best": 0.907,
+   "chi2_p": 2.58e-79,
+   "delay_days": 2115.108,
+   "sep_deg": 156.0,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn190310398",
+   "burst2": "bn200313071",
+   "m2": 0.9767,
+   "s_best": 1.7959,
+   "chi2_p": 1.59e-54,
+   "delay_days": 368.673,
+   "sep_deg": 82.5,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn130518580",
+   "burst2": "bn160910722",
+   "m2": 0.9766,
+   "s_best": 1.7959,
+   "chi2_p": 1.6e-233,
+   "delay_days": 1211.142,
+   "sep_deg": 84.3,
+   "npulse": [
+    3,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn130628531",
+   "burst2": "bn190114873",
+   "m2": 0.9764,
+   "s_best": 0.9524,
+   "chi2_p": 9.26e-24,
+   "delay_days": 2026.342,
+   "sep_deg": 50.8,
+   "npulse": [
+    2,
+    4
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn150314205",
+   "burst2": "bn160910722",
+   "m2": 0.9763,
+   "s_best": 1.3401,
+   "chi2_p": 0.0,
+   "delay_days": 546.517,
+   "sep_deg": 57.5,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn150309958",
+   "burst2": "bn221023862",
+   "m2": 0.9762,
+   "s_best": 0.7835,
+   "chi2_p": 2.24e-120,
+   "delay_days": 2784.904,
+   "sep_deg": 72.6,
+   "npulse": [
+    2,
+    10
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn160421137",
+   "burst2": "bn190829830",
+   "m2": 0.9762,
+   "s_best": 1.9799,
+   "chi2_p": 5.59e-47,
+   "delay_days": 1225.693,
+   "sep_deg": 71.8,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn141028455",
+   "burst2": "bn160821857",
+   "m2": 0.976,
+   "s_best": 0.6768,
+   "chi2_p": 2.49e-101,
+   "delay_days": 663.403,
+   "sep_deg": 130.6,
+   "npulse": [
+    2,
+    4
+   ],
+   "half": [
+    "val",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn160910722",
+   "burst2": "bn220222098",
+   "m2": 0.9759,
+   "s_best": 1.3401,
+   "chi2_p": 1.36e-21,
+   "delay_days": 1990.376,
+   "sep_deg": 146.4,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn100528075",
+   "burst2": "bn160821857",
+   "m2": 0.9758,
+   "s_best": 0.7107,
+   "chi2_p": 1.9e-124,
+   "delay_days": 2277.782,
+   "sep_deg": 100.7,
+   "npulse": [
+    2,
+    4
+   ],
+   "half": [
+    "val",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn180305393",
+   "burst2": "bn200829582",
+   "m2": 0.9757,
+   "s_best": 1.8856,
+   "chi2_p": 4.71e-130,
+   "delay_days": 908.189,
+   "sep_deg": 74.5,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn090820027",
+   "burst2": "bn150314205",
+   "m2": 0.9755,
+   "s_best": 1.3401,
+   "chi2_p": 0.0,
+   "delay_days": 2032.178,
+   "sep_deg": 44.5,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn100528075",
+   "burst2": "bn190310398",
+   "m2": 0.9755,
+   "s_best": 1.4071,
+   "chi2_p": 1.56e-50,
+   "delay_days": 3208.323,
+   "sep_deg": 38.9,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn120204054",
+   "burst2": "bn131231198",
+   "m2": 0.9754,
+   "s_best": 1.4775,
+   "chi2_p": 3.73e-191,
+   "delay_days": 696.145,
+   "sep_deg": 77.9,
+   "npulse": [
+    2,
+    5
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn130518580",
+   "burst2": "bn141028455",
+   "m2": 0.9754,
+   "s_best": 0.7107,
+   "chi2_p": 3.16e-47,
+   "delay_days": 527.875,
+   "sep_deg": 55.7,
+   "npulse": [
+    3,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn100528075",
+   "burst2": "bn241223506",
+   "m2": 0.9749,
+   "s_best": 1.4775,
+   "chi2_p": 1.19e-63,
+   "delay_days": 5323.431,
+   "sep_deg": 154.5,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn130427324",
+   "burst2": "bn241223506",
+   "m2": 0.9748,
+   "s_best": 0.6446,
+   "chi2_p": 5.7e-310,
+   "delay_days": 4258.182,
+   "sep_deg": 63.6,
+   "npulse": [
+    6,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn191125206",
+   "burst2": "bn260226443",
+   "m2": 0.9747,
+   "s_best": 1.2155,
+   "chi2_p": 0.0,
+   "delay_days": 2285.237,
+   "sep_deg": 158.7,
+   "npulse": [
+    2,
+    4
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn120119170",
+   "burst2": "bn260226443",
+   "m2": 0.9746,
+   "s_best": 1.8856,
+   "chi2_p": 1.53e-52,
+   "delay_days": 5152.273,
+   "sep_deg": 79.7,
+   "npulse": [
+    2,
+    4
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn150309958",
+   "burst2": "bn160821857",
+   "m2": 0.9744,
+   "s_best": 0.907,
+   "chi2_p": 2.93e-103,
+   "delay_days": 530.899,
+   "sep_deg": 48.7,
+   "npulse": [
+    2,
+    4
+   ],
+   "half": [
+    "val",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn150309958",
+   "burst2": "bn180623849",
+   "m2": 0.9742,
+   "s_best": 1.5513,
+   "chi2_p": 8.96e-31,
+   "delay_days": 1201.891,
+   "sep_deg": 93.5,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn130427324",
+   "burst2": "bn130518580",
+   "m2": 0.9741,
+   "s_best": 0.7462,
+   "chi2_p": 0.0,
+   "delay_days": 21.255,
+   "sep_deg": 104.8,
+   "npulse": [
+    6,
+    3
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn200313071",
+   "burst2": "bn200829582",
+   "m2": 0.9741,
+   "s_best": 1.1025,
+   "chi2_p": 0.0,
+   "delay_days": 169.512,
+   "sep_deg": 86.7,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn110721200",
+   "burst2": "bn150314205",
+   "m2": 0.9739,
+   "s_best": 0.9524,
+   "chi2_p": 1.31e-76,
+   "delay_days": 1332.005,
+   "sep_deg": 150.5,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn090520876",
+   "burst2": "bn190829830",
+   "m2": 0.9738,
+   "s_best": 1.5513,
+   "chi2_p": 1.51e-162,
+   "delay_days": 3752.954,
+   "sep_deg": 84.2,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn130518580",
+   "burst2": "bn241223506",
+   "m2": 0.9738,
+   "s_best": 0.907,
+   "chi2_p": 1.83e-256,
+   "delay_days": 4236.926,
+   "sep_deg": 162.6,
+   "npulse": [
+    3,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn150110433",
+   "burst2": "bn190310398",
+   "m2": 0.9737,
+   "s_best": 1.1576,
+   "chi2_p": 5.81e-32,
+   "delay_days": 1519.965,
+   "sep_deg": 123.7,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn160821857",
+   "burst2": "bn241223506",
+   "m2": 0.9736,
+   "s_best": 1.9799,
+   "chi2_p": 0.0,
+   "delay_days": 3045.649,
+   "sep_deg": 77.6,
+   "npulse": [
+    4,
+    2
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn081221681",
+   "burst2": "bn120204054",
+   "m2": 0.9734,
+   "s_best": 0.5051,
+   "chi2_p": 1.03e-94,
+   "delay_days": 1139.372,
+   "sep_deg": 82.4,
+   "npulse": [
+    3,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn160521385",
+   "burst2": "bn170206453",
+   "m2": 0.9734,
+   "s_best": 1.8856,
+   "chi2_p": 2.84e-156,
+   "delay_days": 261.068,
+   "sep_deg": 71.1,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn090228204",
+   "burst2": "bn130310840",
+   "m2": 0.9733,
+   "s_best": 0.5847,
+   "chi2_p": 3.64e-27,
+   "delay_days": 1471.636,
+   "sep_deg": 33.9,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn110721200",
+   "burst2": "bn160910722",
+   "m2": 0.973,
+   "s_best": 1.1025,
+   "chi2_p": 0.0,
+   "delay_days": 1878.522,
+   "sep_deg": 127.7,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn100528075",
+   "burst2": "bn190829830",
+   "m2": 0.9728,
+   "s_best": 1.9799,
+   "chi2_p": 6.92e-140,
+   "delay_days": 3380.755,
+   "sep_deg": 97.2,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn141028455",
+   "burst2": "bn200313071",
+   "m2": 0.9726,
+   "s_best": 1.9799,
+   "chi2_p": 7.52e-122,
+   "delay_days": 1962.616,
+   "sep_deg": 111.7,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn110407998",
+   "burst2": "bn190829830",
+   "m2": 0.9725,
+   "s_best": 1.05,
+   "chi2_p": 1.17e-74,
+   "delay_days": 3065.833,
+   "sep_deg": 52.0,
+   "npulse": [
+    3,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn130320560",
+   "burst2": "bn190310398",
+   "m2": 0.9724,
+   "s_best": 0.7462,
+   "chi2_p": 6.26e-125,
+   "delay_days": 2180.837,
+   "sep_deg": 118.7,
+   "npulse": [
+    3,
+    2
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn110721200",
+   "burst2": "bn190829830",
+   "m2": 0.9723,
+   "s_best": 0.7107,
+   "chi2_p": 2.11e-62,
+   "delay_days": 2961.631,
+   "sep_deg": 70.5,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn141028455",
+   "burst2": "bn190829830",
+   "m2": 0.9723,
+   "s_best": 1.8856,
+   "chi2_p": 6.11e-89,
+   "delay_days": 1766.376,
+   "sep_deg": 82.0,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn160724444",
+   "burst2": "bn260107831",
+   "m2": 0.9723,
+   "s_best": 0.5051,
+   "chi2_p": 2.19e-06,
+   "delay_days": 3454.387,
+   "sep_deg": 77.4,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn090820027",
+   "burst2": "bn191125206",
+   "m2": 0.972,
+   "s_best": 0.5051,
+   "chi2_p": 6.19e-37,
+   "delay_days": 3749.179,
+   "sep_deg": 153.1,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn120204054",
+   "burst2": "bn210406949",
+   "m2": 0.972,
+   "s_best": 1.6289,
+   "chi2_p": 8.4e-255,
+   "delay_days": 3349.895,
+   "sep_deg": 76.2,
+   "npulse": [
+    2,
+    3
+   ],
+   "half": [
+    "val",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn090820027",
+   "burst2": "bn200829582",
+   "m2": 0.9718,
+   "s_best": 1.7103,
+   "chi2_p": 0.0,
+   "delay_days": 4027.556,
+   "sep_deg": 80.0,
+   "npulse": [
+    2,
+    2
+   ],
+   "half": [
+    "cal",
+    "cal"
+   ]
+  },
+  {
+   "burst1": "bn130518580",
+   "burst2": "bn260226443",
+   "m2": 0.9718,
+   "s_best": 0.6446,
+   "chi2_p": 3.09e-283,
+   "delay_days": 4666.863,
+   "sep_deg": 55.6,
+   "npulse": [
+    3,
+    4
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn130427324",
+   "burst2": "bn191227069",
+   "m2": 0.9717,
+   "s_best": 0.5303,
+   "chi2_p": 1.08e-74,
+   "delay_days": 2434.745,
+   "sep_deg": 146.8,
+   "npulse": [
+    6,
+    7
+   ],
+   "half": [
+    "cal",
+    "val"
+   ]
+  },
+  {
+   "burst1": "bn160821857",
+   "burst2": "bn221023862",
+   "m2": 0.9717,
+   "s_best": 0.8227,
+   "chi2_p": 0.0,
+   "delay_days": 2254.005,
+   "sep_deg": 57.2,
+   "npulse": [
+    4,
+    10
+   ],
+   "half": [
+    "val",
+    "cal"
+   ]
+  }
+ ],
+ "candidates": [],
+ "candidate_groups": [],
+ "runtime_s": 413.9
+}
