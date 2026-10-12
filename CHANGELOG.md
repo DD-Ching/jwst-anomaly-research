@@ -17,8 +17,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (chunk 90 reruns).
 - Run 5 (cloud, 11:13–11:24Z, `prescreen --procs 4 --chunks 90-101`): chunks 90–101 tracked (12 chunks, 0 errors,
   0 retries, mean 60 s per chunk wall, ~65–78 MB/s, CPU 99 %); the pre-screen is complete: **237,123 light curves,
-  2,363 shape passes, 111 not at a shared epoch** (to fit; gb5 had 126). Fit chunk 1/4 started 11:25Z.
-- **Next:** finish `fit --procs 4 --chunk K/4` (finished chunks are skipped by `run-field`), `merge-chunks --n 4`,
+  2,363 shape passes, 111 not at a shared epoch** (to fit; gb5 had 126). Fits (`fit --procs 4 --chunk K/4`):
+  chunk 1/4 28 fits, 0 errors, 28 flags, 466 s; chunk 2/4 28 / 0 / 28, 547 s; chunk 3/4 28 / 0 / 28, 585 s (run 5 ended 11:53Z).
+- **Next:** `fit --procs 4 --chunk 4/4` (~9 min; finished chunks are skipped by `run-field`), `merge-chunks --n 4`,
   `vet`, contact sheet, then `inject --chunk K/N`, `limit`, `combine`.
 
 ## 2026-10-12: W3 MOA-II gb6 (eighteenth field): 0 survivors; combined limit over eighteen fields
