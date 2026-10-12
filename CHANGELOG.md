@@ -20,8 +20,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - Run 4 (cloud, 19:09–19:45Z): `merge-prescreen`; fit chunk 3/4: 27 fits, 0 errors, 25 flags, 728 s. Failed approach:
   a `while pgrep -f "chunk 3/4"` wait loop matches its own command line and never exits (~15 min idle); wait on a
   PID or on the output file instead. A fresh venv also needs the `mulens` extra (`.[dev,cloud,mulens]`) before `fit`.
-  **Next:** `merge-prescreen`, `fit --procs 4 --chunk 4/4`, `merge-chunks --n 4`, then vet, inject (6 chunks), limit,
-  combine.
+- Run 5 (cloud, 20:09Z–): `merge-prescreen`; fit chunk 4/4: 27 fits, 0 errors, 25 flags, 407 s; `merge-chunks --n 4`:
+  108 fits, **101 flags**. `vet --procs 4` (~2 min; slowest flag gb10-R-8-0-184439, 71 s): **0 of 101 flags survive**
+  (`results/w3_moa/vetting_gb10.json`). Quiet χ²/dof 95th percentile 3.73 (2,430 quiet curves); CDS XMatch worked
+  (Gaia DR3 RP for 63 / 108). The MOA `metadata.ipac.tar.gz` came intact on the first `curl -C - --retry 3`.
+  Contact sheet inspected: box and eclipse dips, variables, noisy flat curves; caustic spikes only in the models.
+  Injection chunk 1/6 started 20:21Z.
 ## 2026-10-12: W3 MOA-II gb9 (nineteenth field): 0 survivors; combined limit over nineteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. Run 1 (cloud, 07:35Z): tracked pre-screen chunks only.
