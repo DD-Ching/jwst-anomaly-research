@@ -2,6 +2,55 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-11: W3 MOA-II gb4 (sixteenth field): 0 survivors; combined limit over sixteen fields
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
+  goes to `/vet-candidate` before injections.
+- gb4 is the largest field so far: 66 pre-screen chunks of 4 GiB (~265 GB streamed, never stored). Run 1 (cloud,
+  15:08–15:43Z, `prescreen --procs 4`): chunks 1–35 tracked in `results/w3_moa/prescreen/` (~112k light curves,
+  ~57 per s, ~1 chunk per min, CPU-bound at 99 %).
+- Run 2 (cloud, 16:10–16:50Z, `prescreen --procs 4 --chunks 36-66`): chunks 36–66 tracked (94,639 light curves in
+  2,252 s, ~42 per s). Pre-screen complete: **205,886 light curves, 2,350 shape passes, 118 not at a shared epoch**
+  (gb3: 75 of 167k), so the fit stage has ~1.6× gb3's work (~55 min at 4 procs).
+- Run 3 (cloud, 17:12–17:45Z): `fit --procs 4 --chunk 1/2` tracked (`results/w3_moa/fits_gb4_chunk1of2.ecsv.gz`):
+  59 fits in 1,727 s, 0 errors, 57 flags. `run-field` would fit all 118 passes as one chunk (`FITS_PER_CHUNK` = 120,
+  ~55 min, past a routine slot), so the fit is split in two by hand.
+- Run 4 (cloud, 18:08–18:31Z): `fit --procs 4 --chunk 2/2` tracked (`results/w3_moa/fits_gb4_chunk2of2.ecsv.gz`):
+  59 fits in 932 s, 0 errors, 57 flags; `merge-chunks --n 2` (118 fits), `vet`: **0 of 114 flags survive**
+  (`results/w3_moa/vetting_gb4.json`). CDS XMatch worked (Gaia DR3 RP for 67 / 118). Contact sheet inspected: box and
+  eclipse dips, variables and slow trends; caustic spikes only in the models. The first fit attempt stopped on a
+  truncated `metadata.ipac.tar.gz` download (sha256 mismatch, same content-length upstream); the retry was clean.
+- Run 5 (cloud, 19:07–19:45Z): `inject` is now chunked and resumable (`inject --chunk K/N`, `merge-inject --n N`;
+  tracked `results/w3_moa/injections_<F>_chunkKofN.ecsv.gz`, each carrying a SHA-256 of the seeded job list, so a
+  re-merged pre-screen cannot mix runs; `run-field` resumes the chunks; a chunk reads only its own carriers, 240 of
+  287). The seeded job list and the outcome per injection are unchanged; only the row order (now by job index) and the
+  new `inj` column differ. Chunk 1/4 tracked: 550 injections in 1,352 s (0.41 per s), 0 errors; W3 500 → 47 flagged
+  → 28 recovered; PSPL controls 0 / 50 flagged.
+- Failed approach: `pkill -f` on the injection also killed the harness shell that ran it (scripts/CLAUDE.md warns);
+  the first chunk-1 start was lost, ~3 min.
+- Run 6 (cloud, 20:08–20:58Z): chunk 2/4 tracked: 550 injections on 246 carriers in 878 s (0.63 per s), 0 errors;
+  W3 500 → 51 flagged → 23 recovered; PSPL controls 0 / 50 flagged. A fresh clone needs `merge-prescreen` before
+  `inject` (it reads `data/derived/w3_moa/prescreen_gb4.ecsv`), and the `metadata.ipac.tar.gz` download was truncated
+  once more (sha256 mismatch; the retry was clean).
+- Failed approach: a wait loop `while pgrep -f "<inject command>"` never ends, because the pattern also matches the
+  waiting shell's own command line; it held the run ~25 min past the chunk's end. Wait on the PID (`wait` or
+  `kill -0 <pid>`) instead.
+- Run 7 (cloud, 21:08–22:25Z): chunks 3/4 (1,746 s) and 4/4 (1,828 s), 0 errors; W3 500 → 52 / 57 flagged → 28 / 28
+  recovered; PSPL controls 0 / 50 flagged each. `merge-inject --n 4` (2,200 injections on 287 carriers). `limit` needs
+  the full `vetting_gb4.json`, which a fresh clone lacks (only the compact record is tracked), so `merge-chunks --n 2`
+  and `vet` were re-run: **0 of 114 survive** again, and the regenerated compact record is byte-identical.
+- gb4 limits (`results/w3_moa/limits_gb4.ecsv`, docs/exotic_limits.md): Γ₉₅ ≈ 1.7 × 10⁻⁷–9.0 × 10⁻⁷ per star per year
+  (N_s = 2.60 × 10⁷); vetting keeps 107 / 207 flagged W3 injections; the t_E = 300 d cells rest on 3 / 4 recoveries.
+  **Combined, sixteen fields: Γ₉₅ ≈ 1.7 × 10⁻⁸–9.8 × 10⁻⁸** (was 1.9 × 10⁻⁸–1.1 × 10⁻⁷ over fifteen; max field share
+  0.19). This branch merges `claude/w3-moa-gb3` (#160) so the combine includes gb3: merge #160 first.
+- Failed approach: the venv lacked the `mulens` extra, so the first `inject` exited at once; install
+  `.[dev,cloud,mulens]` on a fresh clone.
+- `/code-review` (2026-10-12) fixes in the chunk resume: a tracked chunk is reused or merged only if it has no
+  failed injection and matches the current job list (SHA-256) and baseline χ² calibration; `merge-inject` now checks
+  the current pre-screen too, and `run-field` resumes with the chunks' own seed, sampling and carrier count instead
+  of the defaults. The tracked gb4 chunks pass the new checks (`merge-inject --n 4`: 2,200 injections).
+- **Next:** gb13 after the owner decides #145; then gb5, gb6, gb9, gb10, gb14 with chunked fits and injections
+  (a fresh clone needs `merge-prescreen` and, before `limit`, `merge-chunks` + `vet`).
+
 ## 2026-10-11: W3 MOA-II gb3 (fifteenth field): 0 survivors; combined limit over fifteen fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1. A survivor with caustic spikes in the data
   would have gone to `/vet-candidate` before injections.
