@@ -18,6 +18,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   the pre-screen is complete: **259,556 light curves, 1,802 shape passes, 126 not at a shared epoch** (to fit; gb4
   had 118). A fresh clone needs `pip install -e '.[mulens]'` for `fit`.
 - Fit chunk 1/4 (cloud, 01:35–01:47Z): 32 fits, 0 errors, 31 flags, 699 s (`results/w3_moa/fits_gb5_chunk1of4.ecsv.gz`).
+- Fit chunk 2/4 (cloud, 02:11–02:30Z): 32 fits, 0 errors, 27 flags, 1,131 s (`results/w3_moa/fits_gb5_chunk2of4.ecsv.gz`).
 - **Next:** `merge-prescreen` (fresh clone; `fit` also needs `pip install -e '.[mulens]'`), then
   `fit --procs 4 --chunk K/4` for K = 2, 3, 4 (~12 min each, detached), `merge-chunks 4`, `vet`, `sheet`; then
   chunked injections, limit, combine.
