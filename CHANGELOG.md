@@ -30,8 +30,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   PSPL controls 0 / 34 flagged.
 - Injection chunk 2/6 (cloud, 03:44–04:00Z): 367 in 985 s, 0 errors; W3 333 → 21 flagged → 11 recovered; PSPL 0 / 34.
 - Injection chunk 3/6 (cloud, 04:16–04:34Z): 367 in 955 s, 0 errors; W3 334 → 26 flagged → 13 recovered; PSPL 0 / 33.
+- Injection chunk 4/6 (cloud, 04:34–04:49Z): 367 in 881 s, 0 errors; W3 334 → 23 flagged → 12 recovered; PSPL 0 / 33.
 - **Next:** `merge-prescreen` (fresh clone; `pip install -e '.[mulens]'`), then
-  `--field gb5 inject --procs 4 --chunk K/6` for K = 4–6 (chunks 1–3 tracked in `results/w3_moa/injections_gb5_chunk*of6*`; ~10–16 min each)
+  `--field gb5 inject --procs 4 --chunk K/6` for K = 5–6 (chunks 1–4 tracked in `results/w3_moa/injections_gb5_chunk*of6*`; ~10–16 min each)
   (detached, wait on the PID), `merge-inject --n 6`, `limit`, `combine`.
 
 ## 2026-10-11: W3 MOA-II gb4 (sixteenth field): 0 survivors; combined limit over sixteen fields
