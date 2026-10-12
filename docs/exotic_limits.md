@@ -1269,7 +1269,7 @@ conservative column uses the low N_s.
   tracked chunks of ~367, 0 errors): vetting keeps 81 / 178 flagged W3 injections (46 %). Pre-screen pass 4–15 %.
   PSPL controls: 0 / 40 per cell called W3. The t_E = 300 d, ρ = 0.1 cell rests on 2 recoveries.
 
-- **gb10** (181,820 light curves, 52 tracked pre-screen chunks over seven cloud runs; N_s = 2.15 × 10⁷, Nunota et
+- **gb10** (181,820 light curves, 52 tracked pre-screen chunks over three cloud runs, seven runs in all; N_s = 2.15 × 10⁷, Nunota et
   al. 2024 Table 1, 70/80 subfields; quiet χ²/dof 95th percentile 3.73): 1,469 shape passes, 108 off shared epochs,
   108 fits (0 errors), 101 flags, **0 survive** (vetting reproduced by a later run, identical record); contact sheet
   inspected (box and eclipse dips, variables, noisy flat curves; caustic spikes only in the models). First failing
@@ -1487,7 +1487,7 @@ sheets inspected). The tracked `vetting_gbN.json` files now carry the working `g
 
 The t_E = 300 d, ρ = 0.1 cell rests on one recovered injection (efficiency uncertain by ~100 %); `combine` should
 not let a single field's one-recovery cell dominate the combined 300-d limit. It does not: the combined table's
-`max_field_share` (one field's share of Σ N_s T ε) is ≤ 0.21 in every cell (≤ 0.20 with gb10; below).
+`max_field_share` (one field's share of Σ N_s T ε) is ≤ 0.21 in every cell (below).
 
 ### Combined limit, twenty fields (CHAIN_VERSION 2026-10-10.1)
 
@@ -1495,8 +1495,8 @@ not let a single field's one-recovery cell dominate the combined 300-d limit. It
 survivors in every field, Σ N_s ≈ 3.38 × 10⁸ monitored stars (Nunota et al. 2024 Table 1; gb6 and gb22 from the model
 count, ASSUMPTION), Σ N_s T ≈ 2.90 × 10⁹ star-years. Γ₉₅ = 3 / Σ_f N_s,f T ε_f per cell. Masses are a
 **model_prediction** (n = 1, D_L = 4 kpc, D_S = 8 kpc, μ_rel = 5 mas/yr). The relative uncertainty of Σ N_s T ε from
-injection counting (binomial, ≈ 1/√n_rec per field, summed) is 8–18 % (eleven fields; gb2, gb1, gb8, gb3, gb4, gb5 and
-gb6 add 1–21 recoveries per cell; gb9 adds 2–15 and gb10 1–19, which only lower it); the conservative N_s range moves the limits by < 2 %.
+injection counting (binomial, ≈ 1/√n_rec per field, independent fields added in quadrature) is 6–15 % over the twenty
+fields (recomputed with gb10; largest at t_E = 300 d, ρ = 0.1; eleven fields: 8–18 %); the conservative N_s range moves the limits by < 2 %.
 
 | t_E (d) | M (M☉, model) | rec. / 4,000 (ρ = 0.01 / 0.1) | max field share | Γ₉₅ per star per yr (ρ = 0.01 / 0.1) |
 |---|---|---|---|---|
@@ -1509,7 +1509,7 @@ gb6 add 1–21 recoveries per cell; gb9 adds 2–15 and gb10 1–19, which only 
 Nineteen fields (before gb10): 1.5 × 10⁻⁸–8.0 × 10⁻⁸; eighteen fields (before gb9): 1.5 × 10⁻⁸–8.6 × 10⁻⁸; seventeen fields (before gb6): 1.6 × 10⁻⁸–9.0 × 10⁻⁸; sixteen fields (before gb5): 1.7 × 10⁻⁸–9.8 × 10⁻⁸; fifteen fields (before gb4): 1.9 × 10⁻⁸–1.1 × 10⁻⁷; fourteen
 fields (before gb3): 2.1 × 10⁻⁸–1.2 × 10⁻⁷; thirteen fields (before gb8): 2.4 × 10⁻⁸–1.4 × 10⁻⁷; twelve fields
 (before gb1): 2.8 × 10⁻⁸–1.5 × 10⁻⁷; eleven fields (before gb2): 3.2 × 10⁻⁸–1.8 × 10⁻⁷. The largest field share is
-0.20 (gb9, t_E = 300 d, ρ = 0.01, resting on 8 recoveries). gb10 holds 6.4 % of the monitored stars and tightens the
+0.204 (gb9, t_E = 300 d, ρ = 0.01, resting on 8 recoveries). gb10 holds 6.4 % of the monitored stars and tightens the
 limits by 2–9 % (least at t_E = 300 d, where it has 1 recovery per cell). gb9 holds 11 % of the monitored stars and tightens the
 limits by 6–21 % (most at t_E = 300 d, ρ = 0.01). gb6 holds 2.4 % of the monitored stars and moves the limits by 0–5 %. gb5 holds 11 % of the monitored stars but 4–12 % of Σ N_s T ε per cell (lower
 recovery efficiency in the short-t_E and ρ = 0.1 cells), so the limits tighten by 4–13 %. Scope: an upper limit on the rate of W3-shaped events (flux vanishing between caustic spikes) per monitored
