@@ -308,3 +308,21 @@ Also high-pass versions (0.6″ median filter subtracted) to remove cluster-memb
   subtraction, and 4.2c is undetected. Both are explained by the model's μ and position systematics next to member
   34423: plausible changes move μ(4.1c) from 3.9 to 28.7, and CATS v4.1 gives 7.3.
 - **Result: the Abell 2744 screens are a null result.** Flags raised: 16. Surviving vetting: 0.
+
+## Arc orientations against the predicted shear (`arcs`, 2026-10-13, D-024 addendum)
+
+Hypothesis before running: background sources in the strong-shear region align with Bergamini+2023b's predicted
+stretch as in SMACS (D-024); an `anti` source (≥ 60° off at every tested z) that is a real, single, background
+galaxy would be a lens-model residual to vet. Defaults of D-024 (ASSUMPTIONS: e ≥ 0.5, σ_major ≥ 2 px, S/N ≥ 10,
+r ≤ 50″, g ≥ 0.2); inputs: the F200W pipeline catalogue (sha256 `9953c869…`) and DJA v7.2 zout (`43662686…`).
+Outputs: `results/arcs/abell2744-bergamini23/` (`derived`; predictions are `model_prediction`).
+- **Known cases:** 44 elongated (e ≥ 0.3) catalogued images: median offset 9°, 35 within 30°; all 16 with e ≥ 0.6
+  within 31°. The 5 beyond 60° (26.1c, 31b, 62.1b, 600.3a, 700.1c) were looked at: compact (σ_major ≤ 4 px) with
+  e 0.33–0.49, or near a critical curve (62.1b g = 1.3; 700.1c μ 71, a system the model already fails, D-036), or
+  the resolved spiral 600.3a.
+- **Background, strong shear:** 33 of 35 aligned (random 1/3: p = 5e-14), 0 anti. Shape-noise null (Gaussian
+  intrinsic ellipticity σ_ε = 0.26 per component, ASSUMPTION): 0.45 anti expected.
+- **No photo-z (30 sources):** 3 anti (2926, 7640, 2649), anti in 100 of 100 `bayes.dat` rows. F200W cutouts (looked
+  at): 7640 is a deblended knot in the arm of a spiral with DJA z_phot 0.54 (0.72″ away, low lensing efficiency);
+  2649 (S/N 48) and 2926 (S/N 24) are low-surface-brightness segments between neighbours. Ordinary.
+- **Result: null.** No anti-tangential background arc that the model fails to explain.

@@ -1,0 +1,53 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int32}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: pa_obs, datatype: float64}
+# - {name: ellipticity, datatype: float64}
+# - {name: semimajor_px, datatype: float64}
+# - {name: area_px, datatype: float64}
+# - {name: snr, datatype: float64}
+# - {name: is_extended, datatype: bool}
+# - {name: mag, datatype: float64}
+# - {name: z_phot, datatype: float64}
+# - {name: z160, datatype: float64}
+# - {name: z840, datatype: float64}
+# - {name: r_arcsec, datatype: float64}
+# - {name: pa_pred_z1, datatype: float64}
+# - {name: offset_z1, datatype: float64}
+# - {name: g_z1, datatype: float64}
+# - {name: mu_z1, datatype: float64}
+# - {name: pa_pred_z2, datatype: float64}
+# - {name: offset_z2, datatype: float64}
+# - {name: g_z2, datatype: float64}
+# - {name: mu_z2, datatype: float64}
+# - {name: pa_pred_z4, datatype: float64}
+# - {name: offset_z4, datatype: float64}
+# - {name: g_z4, datatype: float64}
+# - {name: mu_z4, datatype: float64}
+# - {name: offset_zphot, datatype: float64}
+# - {name: z_basis, datatype: string}
+# - {name: offset_min, datatype: float64}
+# - {name: offset_max, datatype: float64}
+# - {name: g_min, datatype: float64}
+# - {name: pa_pred_spread, datatype: float64}
+# - {name: orientation_class, datatype: string}
+# - {name: strong_shear, datatype: bool}
+# - {name: population, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: data/arcs/jw01176-o241_t012_nircam_clear-f200w_cat.ecsv against /home/user/jwst-anomaly-research/data/cache/external/7b0153ae0ee0_best_fit.par}
+# - {photoz_source: data/arcs/elgordo-grizli-v7.0-fix.eazypy.zout.fits}
+# - {model_sha256: 7b0153ae0ee02f057f6aaa6f46b1b698502e6fc427266ac9a09d241ddc63a472}
+# - {n_potentials: 265}
+# - {z_lens: 0.8703}
+# - reference_radec: [15.740788364269063, -49.27199644444444]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - z_grid: [1.0, 2.0, 4.0]
+# - assumptions: {aligned_deg: 30.0, anti_deg: 60.0, z_margin: 0.1}
+# schema: astropy-2.0
+label ra dec pa_obs ellipticity semimajor_px area_px snr is_extended mag z_phot z160 z840 r_arcsec pa_pred_z1 offset_z1 g_z1 mu_z1 pa_pred_z2 offset_z2 g_z2 mu_z2 pa_pred_z4 offset_z4 g_z4 mu_z4 offset_zphot z_basis offset_min offset_max g_min pa_pred_spread orientation_class strong_shear population
+742 15.739736029968554 -49.276536304636075 9.631902426220481 0.509944928852049 3.276620214172231 75.0 36.669437572422865 True 26.531943155914092 1.8778510093688965 1.5415091514587402 1.9475730657577515 16.529360395109638 70.4009608945638 60.76905846834332 0.05267744261454487 1.2932090521669355 70.4009608945638 60.76905846834332 0.40778402249417206 5.0397888802963084 70.4009608945638 60.76905846834332 0.9244991909372814 78.62850464646282 60.76905846834332 photo-z 60.76905846834332 60.76905846834332 0.2555570435855335 0.0 anti True background

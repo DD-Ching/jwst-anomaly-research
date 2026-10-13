@@ -553,6 +553,68 @@ def class_stats(rows: Table, aligned_deg: float) -> dict:
     return {"n": n, "aligned": a, "anti": b, "p_random": p0, "p_aligned_excess": _binom_p(a, n, p0)}
 
 
+def anti_probability(
+    g: float,
+    sigma_eps: float = 0.26,
+    min_ellipticity: float = 0.5,
+    anti_deg: float = 60.0,
+    n: int = 200_000,
+    seed: int = 1,
+) -> float:
+    """P(observed axis >= ``anti_deg`` from the shear | observed 1 - b/a >= ``min_ellipticity``).
+
+    Ordinary null for the ``anti`` class: Gaussian intrinsic complex ellipticity
+    (a - b)/(a + b) with ``sigma_eps`` per component (ASSUMPTION; no PSF, flexion or blending),
+    lensed by reduced shear ``g`` (Seitz & Schneider 1997; |g| > 1 inside the critical curve).
+    """
+    rng = np.random.default_rng(seed)
+    es = rng.normal(0.0, sigma_eps, n) + 1j * rng.normal(0.0, sigma_eps, n)
+    es = es[np.abs(es) < 0.95]
+    g = float(g)
+    eo = (es + g) / (1 + g * es) if abs(g) <= 1 else (1 + g * np.conj(es)) / (np.conj(es) + g)
+    e_obs = 2 * np.abs(eo) / (1 + np.abs(eo))  # 1 - b/a
+    angle = np.degrees(np.abs(np.angle(eo))) / 2
+    sel = e_obs >= min_ellipticity
+    return float(np.mean(angle[sel] >= anti_deg)) if sel.any() else float("nan")
+
+
+def anti_expected(rows: Table, sigma_eps: float, min_ellipticity: float, anti_deg: float) -> dict:
+    """Expected ``anti`` count from shape noise at each source's ``g_min``, and P(>= observed)."""
+    from scipy.stats import poisson
+
+    cache: dict[float, float] = {}
+    lam = 0.0
+    for g in np.asarray(rows["g_min"], float):
+        key = round(float(g), 2)
+        if key not in cache:
+            cache[key] = anti_probability(key, sigma_eps, min_ellipticity, anti_deg)
+        lam += cache[key]
+    k = int(np.sum(rows["orientation_class"] == "anti"))
+    return {
+        "n": len(rows),
+        "anti": k,
+        "expected": round(lam, 3),
+        "p_ge_observed": float(poisson.sf(k - 1, lam)) if len(rows) else float("nan"),
+    }
+
+
+def chain_anti_fraction(name: str, par: dict, rows: Table, n_samples: int, args) -> list[float]:
+    """Fraction of ``n_samples`` random ``bayes.dat`` rows in which each source stays ``anti``."""
+    bayes, _, _, reference = load_chain(name, par)
+    if not 0 < n_samples <= len(bayes):
+        raise SystemExit(f"error: --chain-samples must be 1..{len(bayes)} (chain rows)")
+    picks = np.random.default_rng(args.seed).choice(len(bayes), n_samples, replace=False)
+    hits = np.zeros(len(rows))
+    for row in picks:
+        m = lensmodel.LensModel.from_par(lensmodel.posterior_par(par, bayes, int(row), reference))
+        apply_frame_offset(name, m)
+        t = orientation_table(
+            m, rows, aligned_deg=args.aligned_deg, anti_deg=args.anti_deg, z_margin=args.z_margin
+        )
+        hits += np.asarray(t["orientation_class"] == "anti")
+    return [round(float(h) / n_samples, 3) for h in hits]
+
+
 def _write(table: Table, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     table.write(path, overwrite=True)
@@ -959,6 +1021,7 @@ def cmd_arcs(args) -> dict:
         "aligned_deg",
         "anti_deg",
         "z_margin",
+        "sigma_eps",
     )
     summary = {
         "model": args.model,
@@ -974,6 +1037,13 @@ def cmd_arcs(args) -> dict:
         "strong_shear_background": by_pop["background"],
         "strong_shear_by_population": by_pop,
         "strong_shear_all": class_stats(test, args.aligned_deg),
+        # background only: an unlensed member or foreground source is anti with P = 1/3
+        "anti_expected_shape_noise_background": anti_expected(
+            test[test["population"] == "background"],
+            args.sigma_eps,
+            args.min_ellipticity,
+            args.anti_deg,
+        ),
     }
     out = args.out / args.model
     _write(table, out / "arcs.ecsv")
@@ -982,7 +1052,16 @@ def cmd_arcs(args) -> dict:
     anti.sort("ellipticity", reverse=True)
     _write(anti, out / "arcs_anti.ecsv")
     summary["anti_candidates"] = [int(v) for v in anti["label"]]
-    (out / "arcs.json").write_text(json.dumps(summary, indent=1))
+    if args.chain_samples and len(anti):
+        summary["anti_chain_fraction"] = dict(
+            zip(
+                (str(int(v)) for v in anti["label"]),
+                chain_anti_fraction(args.model, par, anti, args.chain_samples, args),
+                strict=True,
+            )
+        )
+        summary["chain_samples"] = {"n": args.chain_samples, "seed": args.seed}
+    (out / "arcs.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary
 
 
@@ -1960,6 +2039,13 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("--anti-deg", type=float, default=60.0)
     a.add_argument("--z-margin", type=float, default=0.1)
     a.add_argument("--image-match-arcsec", type=float, default=0.5)
+    a.add_argument(
+        "--sigma-eps", type=float, default=0.26, help="intrinsic shape dispersion per component"
+    )
+    a.add_argument(
+        "--chain-samples", type=int, default=0, help="bayes.dat rows for the anti candidates"
+    )
+    a.add_argument("--seed", type=int, default=1, help="bayes.dat row draw")
     i = sub.add_parser("images", help="forward-predict every image of the catalogued systems")
     i.add_argument("--catalog", type=Path, required=True, help="JWST pipeline _cat.ecsv")
     i.add_argument("--photoz", type=Path, help="eazy zout FITS table (e.g. DJA)")

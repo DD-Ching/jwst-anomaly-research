@@ -1243,6 +1243,15 @@ clean (D-019 to D-021), so further clean-up has diminishing returns.
   `anti` tail.
 - Model uncertainty: only the best model is used. The MCMC samples would turn offsets into significances.
 
+**Addendum 2026-10-13 (`arcs` on Abell 2744 and El Gordo).** The port handles both potfile models (D-030), so the
+test ran unchanged; two outputs were added to `arcs`: a shape-noise expectation for `anti` background sources
+(`anti_probability`: Gaussian intrinsic ellipticity, σ_ε = 0.26 per component, ASSUMPTION; no PSF or blending) and
+`--chain-samples`, the fraction of `bayes.dat` rows in which each `anti` source stays anti.
+- Abell 2744 (Bergamini+2023b): background 33/35 aligned, 0 anti (0.45 expected). El Gordo (Caminha+2023): 10/12, 1
+  anti (0.17 expected; 742 anti in 55 % of chain rows, band-consistent shape). Catalogued images: 35/44 and 14/17
+  within 30°. No anti background arc unexplained; docs/fields/abell2744.md and elgordo.md.
+- Shapes are still single-band catalogue moments; the blend rejection and S/N ≥ 50 cut above remain open.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

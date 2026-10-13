@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: arc orientations vs predicted shear in Abell 2744 and El Gordo: no anti-tangential arc unexplained
+- **Hypothesis before running:** as in SMACS (D-024), background arcs align with the published models' stretch; a
+  real, single background source ≥ 60° off at every z would be a lens-model residual. Ordinary explanations: blends,
+  low-S/N shapes, unlensed members or foreground, near-critical direction flips, intrinsic shape.
+- `lens_consistency.py arcs` gains a shape-noise expectation for background `anti` sources (σ_ε = 0.26, ASSUMPTION)
+  and `--chain-samples` (anti fraction over `bayes.dat` rows) + tests.
+- **Known cases (validation):** catalogued images 35/44 (Abell 2744) and 14/17 (El Gordo) within 30°; every
+  e ≥ 0.6 image within 31°. The six beyond 60° are compact, low-e or near-critical (looked at).
+- **Result (derived):** background in strong shear 33/35 and 10/12 aligned; anti 0 (0.45 expected) and 1 (0.17).
+  El Gordo 742: band-consistent thin shape, 60.8° off, anti in 55 % of chain rows: marginal, ordinary. The three
+  Abell 2744 anti without photo-z are a z 0.54 spiral-arm knot and two low-S/N segments (cutouts looked at). Null.
+- **Next:** critical curves at z_s = 1, 2, 4 and arc curvature against them; or blend rejection + S/N ≥ 50 shapes
+  (D-024 "Revisit if") before running `arcs` on the HFF CATS map models.
+
 ## 2026-10-13: X2 S4: matter-consistent axial GW equations (Yang & Lan) replace the test-field proxy at one cell; η_max 1.52
 - **Input.** arXiv:2603.20594 (axial perturbations of SV under fluid and NED + scalar sources) and arXiv:2112.13198
   (phantom scalar + magnetic NED source). Neither was assessed before.

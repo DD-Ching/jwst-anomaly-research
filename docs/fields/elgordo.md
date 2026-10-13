@@ -182,3 +182,19 @@ features are F277W−F356W −7.3 and F356W−F410M +7.2.
   this is untested.
 - **#10 `f200w_1065`:** a clumpy, multi-knot source with three colour outliers of +5.6 to +5.9 and no
   counterpart within 1″.
+
+## Arc orientations against the predicted shear (`arcs`, 2026-10-13, D-024 addendum)
+
+Same hypothesis and defaults as Abell 2744's `arcs` section (ASSUMPTIONS of D-024), with Caminha+2023, the F200W
+pipeline catalogue (sha256 `47f60bdd…`) and the DJA v7.0 zout (`efd051e4…`, streamed out of the tarball).
+Outputs: `results/arcs/elgordo-caminha23/`.
+- **Known cases:** 17 elongated catalogued images: median offset 15°, 14 within 30°; all 5 with e ≥ 0.6 within
+  19°. The one beyond 60°, 17b (S/N 15, e 0.57), sits inside the critical curve (g = 2.8), where the predicted
+  direction flips; looked at.
+- **Background, strong shear:** 10 of 12 aligned (p = 5e-4), 1 anti; 0.17 expected from shape noise (σ_ε = 0.26,
+  ASSUMPTION; Poisson P(≥ 1) = 0.15).
+- **The anti source, 742** (15.739736, −49.276536; z_phot 1.88, 1.54–1.95; μ ≈ 5, g_min 0.26, r = 16.5″): a faint thin
+  N–S source in the cutout. Its axis agrees in F150W, F200W, F277W and F444W (PA 5–16°; e 0.46–0.58), so the shape is
+  real. Predicted stretch at PA ≈ 70°, offset 60.8° against the 60° threshold; anti in only 55 of 100 `bayes.dat`
+  rows (offset 58.6–62.8°, 16–84 %). A marginal, single source consistent with intrinsic shape. Ordinary.
+- **Result: null.**
