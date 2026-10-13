@@ -82,7 +82,7 @@ existing authorization. If none qualifies, record the gaps and stay idle.
 | Unit | State file | Branch / PR | Status |
 |---|---|---|---|
 | X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-s4b` (#181) | **closed 2026-10-13** (gates passed as written; 3.7 / 20 h; tool cross-checked; position comparison exploratory; the S2 flux-contrast gate observable untested by data; no candidate). Conditional results: no astrometric discriminant at 9 µas; a fragile flux-contrast one at a = 2.1 M; S3's Δχ² +23 to +37 needs the traced centroid (model-free only +6.8, a ≤ 3 M). Tracer angles and weights verified by second routes. Reopen only with the inputs in its Closure |
-| X2 SV-throat echoes vs published post-merger limits | `docs/state/units/X2.md` | `claude/x2-s4-matter` (#194) | S1–S3 done for one event (GW150914; phenomenological model P1–P4). S4: matter-consistent axial equations (Yang & Lan; NED + phantom) give η_max 1.52 at the 0.45 s cell, outside the proxy bracket (6.3 / 16 h). η_max 0.70–1.24 in the applicable a-range (a − 2M ≈ 2.2e-4 to 7.1e-4 M); η ~ 1 disfavoured under the scalar and EM proxies only, not proxy-independently. S1 check 4 (a − 2M = 1e-3) and S3 spacing (+4.1 %) fail the pre-written 1 % (reflection delay; timing sensitivity recorded). **Paused for owner review**; next if resumed: S2b multi-event (≤ 2 h). Missing input: polar SV perturbation equations, the source excitation η |
+| X2 SV-throat echoes vs published post-merger limits | `docs/state/units/X2.md` | `claude/x2-s4b-units` | S1–S3 done for one event (GW150914; phenomenological model P1–P4). S4: matter-consistent axial equations (Yang & Lan; NED + phantom) give η_max 1.52 at the 0.45 s cell, outside the proxy bracket; S4b confirmed the strain/flux conversion (7.3 / 16 h). η_max 0.70–1.24 in the applicable a-range (a − 2M ≈ 2.2e-4 to 7.1e-4 M); η ~ 1 disfavoured under the scalar and EM proxies only, not proxy-independently. S1 check 4 (a − 2M = 1e-3) and S3 spacing (+4.1 %) fail the pre-written 1 % (reflection delay; timing sensitivity recorded). **Paused for owner review**; next if resumed: S2b multi-event (≤ 2 h). Missing input: polar SV perturbation equations, the source excitation η |
 
 ## Weekly tally (hours of run time; **every** run appends one line, routine searches included)
 T1 needs every category, or the shares cannot be computed. A run that only works on a routine-search unit still
@@ -116,6 +116,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.2 (`arcs` on MACS1149 and MACS0416, cutouts of every anti) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01MAK8Jd, 18:08–18:20Z (#197) |
 | 2026-W42 | ≈ 0.25 (`arcs` on Abell 370; five-field shape-noise sensitivity) | — | — | 0.05 (claim, PR) | cloud routine 01MAK8Jd, 18:20–18:45Z (#198) |
 | 2026-W42 | ≈ 0.1 (`arcs` shape S/N cut on the stored five-field tables) | — | — | 0.1 (PR, CI) | cloud routine 01SirLB6, 21:18–21:40Z |
+| 2026-W42 | — | 0.6 (X2 S4b: strain/flux derivation, single-cell reruns) | 0.2 (strain-integral check, coupling-off diagnostic) | 0.2 (S4c literature, state files, PR) | interactive session 01AzKMDv |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

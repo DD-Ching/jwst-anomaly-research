@@ -78,3 +78,18 @@ def test_gw_peak_far_from_throat_near_a_2():
     # a - 2 = 3.6e-4: the tortoise distance from the throat to the peak is ~ 330 M (dt/4)
     x = an.gw_peak_x("af", 2.000358)
     assert 250.0 < x < 450.0
+
+
+def test_s4b_packet_derivative_and_budget():
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+    import x2_s4b_units as u
+
+    uu = np.linspace(0.0, 200.0, 20001)
+    assert np.max(np.abs(np.gradient(u.packet("g", uu), uu) - u.packet("gdot", uu))) < 1e-5
+    t = np.linspace(0.0, 100.0, 10001)
+    rec = np.zeros((2, 2, t.size))
+    rec[0, 0] = np.sin(t)  # energy 50 on the + side, GW channel, psi^2 weight
+    b = u._budget(rec, t, 100.0, "psi2")
+    want = (50.0 - np.sin(200.0) / 4) / 100.0  # int_0^100 sin^2 / 100
+    assert abs(b["plus_GW"] - want) < 1e-6 and b["EM_total"] == 0.0
+    assert abs(b["residual_trapped_or_not_arrived"] - (1 - want)) < 1e-6

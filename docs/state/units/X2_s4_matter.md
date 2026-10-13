@@ -229,3 +229,87 @@ second model.
   removed and V₂₂ unchanged. This separates barrier shape from channel coupling.
 - **Reruns:** only this cell, dx = 0.1 (convergence at this cell was shown in S4). The verified modes and solver are
   unchanged.
+
+### S4b results (derived; `scripts/x2_s4b_units.py`, `results/x2/s4b_units.json`; waveforms kept in the scratchpad only)
+**Correction to the pre-written item "consequences" (post hoc; found while closing the energy budget).**
+- The physical flux is ∝ ψ² **of the physical H₂ and H₁**. The question is which waveform is physical.
+- P2 takes the source *strain* to be the ringdown packet p. The physical H₂ input is then ∓ṗ:
+  - with u = x₀ − x − t, d/du = −d/dt;
+  - by linearity, the physical outputs are ∓ d/dt of the run outputs.
+- **Consequences:**
+  - The strain is the run output itself, so `hrss_ratio` stands.
+  - The physical energy flux is ∝ (d/dt run output)², so S4's ∫ψ̇² readout was the right one for this source.
+  - The ∫ψ² readout instead belongs to a source whose *H₂* is ringdown-shaped. That source's strain ∫p dt
+    carries a DC offset (memory). It is reported for comparison only.
+- The budgets decide between the two readings:
+  - **ψ̇² weighting:** the budget closes to 96.4 % (NED) and 98.9 % (coupling off) of the initial energy.
+  - **ψ² weighting:** only 81.9 % and 84.7 %. The low-frequency content of p is reflected and stays trapped.
+  - The smooth packet g has negligible DC and gives 96.5 % / 93.7 % in the two weightings.
+
+**Strain check (h = ∫H₂ dt, from t = 0, no detrending):**
+- Pulse h_rss agree to 0.5 % and 0.7 %, and the end value is 1e-10 of the peak. Both pass as written.
+- The L2 criterion **fails as written** (1.99): the integrated waveform is the negative of the reference, from the
+  d/du = −d/dt sign above.
+- With that sign (post hoc) the L2 difference is 1.3 % and 1.4 %, which passes.
+- The relation h ∝ ∫H₂ dt is therefore verified on the solver, with no integration constant and no low-frequency
+  drift.
+
+**Numbers** (one cell, a − 2M = 3.575e-4, dx = 0.1, t_end = 8820 M):
+
+| Quantity | S4 | S4b (strain-shaped source, used) | H₂-shaped source (comparison) |
+|---|---|---|---|
+| p₁, p₂ (strain h_rss ratio) | 0.122, 0.063 | 0.122, 0.063 (unchanged) | — |
+| η_max (PMW, pulses 1–2) | 1.52 | **1.52 (unchanged)** | — |
+| EM share of energy in the receiver-side pulse windows (pulse 1 / 2) | "67 % / 70 %" | **67 % / 70 %** (justification corrected) | 53 % / 56 % |
+| EM share of the **initial** packet energy, both sides, by t_end | not computed | **30.8 %** (our side 2.5 %, far side 28.3 %) | 22.0 % |
+| GW energy out: our side / far side | not computed | 1.2 % / 64.4 % | 2.4 % / 57.5 % |
+| Residual (trapped or not yet arrived) | — | 3.6 % | 18.1 % |
+
+- The receiver-side fraction (67–70 %) is a ratio within the echo windows at our observer. The initial-energy
+  fraction (31 %) is a budget over both universes. They answer different questions.
+- Most of the inward packet (w₀ = 0.53, above the V₂₂ barrier top at ω = 0.38) passes through the far barrier.
+
+**Diagnostic: coupling removed, V₂₂ unchanged** (same cell, initial data and readout; not a self-consistent model):
+- p₁ = 0.152, p₂ = 0.075, η_max = 1.24. The budget closes to 98.9 % (strain reading).
+- Time-domain η_max at this cell, same method throughout:
+
+  | Potential | η_max |
+  |---|---|
+  | s = 1 proxy | 0.79 |
+  | "rw" proxy | 1.13 |
+  | V₂₂ alone | 1.24 |
+  | NED (coupled) | 1.52 |
+
+- **Barrier shape** (V₂₂ against the "rw" proxy) raises η_max by about 10 %. **Channel coupling** raises it by a
+  further 23 %.
+- The earlier frequency-domain proxy bracket was 0.70–1.24. Its upper end ("rw", Lorentzian weight) happens to
+  equal the V₂₂-alone value here. The coupled NED value stays outside it.
+
+**Remaining caveats:**
+- The source is defined in free flight; near the throat (Σ ≈ 3M) H₂ is not the strain (the EM term is about 0.4).
+  This is the inherited P2/P4 approximation.
+- The equal-weight argument for the physical EM flux assumes the canonical (Killing) energy of the axial NED sector
+  is conserved and positive. That holds because L_F > 0 and the scalar decouples.
+
+## S4c: polar / radial stability literature (≤ 1 h; IDs and titles checked on arxiv.org)
+- **No paper derives polar (ℓ ≥ 2) or radial (ℓ = 0) perturbation equations for SV**, or for any black bounce, with
+  the phantom + magnetic NED source.
+  - Black-bounce perturbation work found is axial or test-field: 2603.20594, and 2608.20081 (Alencar et al., de
+    Sitter black bounces, axial).
+- **Closest radial equation:** Bronnikov et al. 2026, arXiv:2607.10718. It treats NED in scalar-tensor gravity
+  with a general L(ψ, F), magnetic charge and a possibly phantom scalar, and gives ℓ = 0 potentials.
+  - Its gauge δβ = 0 "causes certain problems when applied to configurations with extremum values of r (such as
+    wormhole throats) … irrelevant in the present study" (checked in the source).
+  - So it does not cover SV with a > 2M as written.
+- **Nearby evidence points to instability outside the axial sector** (suggestive, not shown for this source):
+  - phantom-scalar wormholes are unstable at ℓ = 0 (Bronnikov, Konoplya & Zhidenko 1205.2224; Gonzalez, Guzmán &
+    Sarbach 0806.0608; Cremona et al. 1911.13103);
+  - charged Ellis–Bronnikov wormholes are unstable, radially (2510.11406), in the axial sector (2507.02258) and in
+    the polar sector at ℓ = 2 (2607.18399).
+- **Executable gap.** The smallest well-posed next step is the radial ℓ = 0 equation for SV with phantom +
+  magnetic NED. Take 2607.10718's general system in its GR limit, re-derived in a throat-compatible gauge, as
+  1205.2224 and 1911.13103 do for phantom-only wormholes. Then solve for unstable modes on one a.
+  - It answers a concrete unknown: is the background used in S4 linearly unstable at ℓ = 0? If it is, echo
+    bounds on it are moot.
+  - The polar ℓ = 2 system (GW + EM + scalar coupled) is a larger derivation with no published template for
+    black bounces.
