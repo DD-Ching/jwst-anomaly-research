@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: (in progress) arc orientations vs predicted shear on the HFF CATS models (MACS1149, MACS0416)
+- Plan: `lens_consistency.py arcs` with CANUCS DR1 photo-z; known images first, then background `anti` sources.
+
 ## 2026-10-13: arc orientations vs predicted shear in Abell 2744 and El Gordo: no anti-tangential arc unexplained
 - **Hypothesis before running:** as in SMACS (D-024), background arcs align with the published models' stretch; a
   real, single background source ≥ 60° off at every z would be a lens-model residual. Ordinary explanations: blends,
