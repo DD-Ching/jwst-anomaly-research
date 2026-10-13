@@ -6,7 +6,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - `lens_consistency.py fluxratios --mu-samples N`: μ at N random chain rows (`chain_magnifications`, family
   redshifts included); each image's model error is half the 16–84 % range of its leave-one-out residual. `resid_z`
   adds the field's scatter floor `sigma_sys` (median |z| = 0.6745, a pair counted once); `flux_tension` = a
-  system's highest-|z| image with |z| > 3 (ASSUMPTION). Each chain row applies the test's |μ| ≤ 20 cut to its own μ.
+  system's highest-|z| image with |z| > 3 (ASSUMPTION); `mu_unstable` where > 16 % of rows exceed |μ| = 20 (none here).
   Tests: synthetic chain, injected μ spread, rows on a critical curve, floor recovery.
 - **Hypothesis before running:** chain μ errors are ≪ the 0.5–0.6 mag rms, so the scatter is photometric
   (halo light, faint counterparts) and the flags do not change. If instead the model error were ≳ 0.3 mag, the

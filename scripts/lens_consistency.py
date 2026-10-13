@@ -749,6 +749,8 @@ def cmd_posterior(args) -> dict:
     the best-fit row are followed through the samples (nearest extra within
     ``--follow-arcsec``). Everything is ``model_prediction``.
     """
+    if "bayes" not in MODELS[args.model]:  # before any download
+        raise SystemExit(f"error: {args.model} has no pinned bayes.dat")
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     bayes, best, best_diff, reference = load_chain(args.model, par)
@@ -1541,7 +1543,11 @@ def flux_ratio_table(
     scatter floor ``sigma_sys``, the extra error that makes the median |resid_z| 0.6745 (a
     normal's; a pair counts once; needs >= 3 such residuals, else every ``resid_z`` is NaN).
     ``flux_tension`` marks each system's image of largest |resid_z| when it exceeds
-    ``tension_sigma``: discrepant beyond the field's own scatter."""
+    ``tension_sigma``: discrepant beyond the field's own scatter. ``mu_unstable`` replaces it
+    where > 16 % of rows put the image beyond ``max_abs_mu`` (the chain cannot pin its μ).
+    Every chain row keeps the best fit's usable set, so the leave-one-out reference does not
+    change between rows. The floor is a median over all residuals (outliers included; images
+    of a system of three or more are correlated), so it is robust only to a few outliers."""
     z = lensmodel.image_redshifts(images, z_m_limit)
     ok_z = np.isfinite(z)
     mu = np.full(len(images), np.nan)
@@ -1586,28 +1592,35 @@ def flux_ratio_table(
     use_c = matched & ~bad & np.isfinite(c_obs) & (snr1 >= min_snr) & (snr2 >= min_snr)
     resid, resid_err, worst = _loo_residual(src, magerr, use_m, systems)
     model_err = np.full(len(images), np.nan)
+    mu_unstable = np.zeros(len(images), bool)
     if mu_samples is not None:
+        mu_samples = np.asarray(mu_samples, float)
+        if mu_samples.ndim != 2 or mu_samples.shape[1] != len(images):
+            raise ValueError(f"mu_samples must be (n_samples, {len(images)})")
         r_s = []
         for m in mu_samples:
             with np.errstate(divide="ignore", invalid="ignore"):
                 src_s = mag + 2.5 * np.log10(np.abs(m))
-            # each row applies the test's own cuts (|μ| ≤ max_abs_mu, finite) to its μ
-            use_s = use_m & np.isfinite(src_s) & (np.abs(m) <= max_abs_mu)
-            r_s.append(_loo_residual(src_s, magerr, use_s, systems)[0])
+            # the best fit's reference set in every row; only a row's μ = 0 / inf / NaN drops
+            r_s.append(_loo_residual(src_s, magerr, use_m & np.isfinite(src_s), systems)[0])
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)  # all-NaN columns (untested)
             lo, hi = np.nanpercentile(np.array(r_s), [16, 84], axis=0)
-        # an image no chain row can test keeps NaN: its resid_z is then untested
         model_err = np.where(np.isfinite(resid), 0.5 * (hi - lo), np.nan)
+        # the chain cannot pin μ when > 16 % of rows put the image beyond the |μ| cut
+        with np.errstate(invalid="ignore"):
+            beyond = ~(np.abs(mu_samples) <= max_abs_mu)
+        mu_unstable = np.isfinite(resid) & (beyond.mean(axis=0) > 0.16)
         stat_err = np.hypot(resid_err, model_err)
     else:
         stat_err = resid_err
     # a pair's two residuals are one measurement: count it once in the floor
-    once = np.isfinite(resid) & np.isfinite(stat_err)
+    once = np.isfinite(resid)
     for sys_id in dict.fromkeys(systems):
         ii = np.flatnonzero((systems == sys_id) & once)
         if ii.size == 2:
             once[ii[1]] = False
+    once &= np.isfinite(stat_err) & ~mu_unstable
     sigma_sys = _scatter_floor(resid[once], stat_err[once])
     with np.errstate(invalid="ignore"):
         resid_z = resid / np.hypot(stat_err, sigma_sys)
@@ -1652,6 +1665,7 @@ def flux_ratio_table(
     tension = np.full(len(images), "untested", dtype="U16")
     tension[np.isfinite(resid_z)] = "consistent"
     tension[worst_z & (np.abs(resid_z) > tension_sigma)] = "flux_tension"
+    tension[mu_unstable] = "mu_unstable"
     out["tension_class"] = tension
     ccls = np.full(len(images), "untested", dtype="U16")
     ccls[np.isfinite(c_resid)] = "consistent"
@@ -1731,6 +1745,8 @@ def cmd_fluxratios(args) -> dict:
     else:
         offset = tuple(args.offset_arcsec)
     mu_samples, chain = None, None
+    if args.mu_samples and "bayes" not in MODELS[args.model]:
+        raise SystemExit(f"error: {args.model} has no pinned bayes.dat")
     if args.mu_samples:
         mu_samples, chain = chain_magnifications(
             args.model, par, images, args.mu_samples, args.seed
@@ -1775,7 +1791,7 @@ def cmd_fluxratios(args) -> dict:
         },
         "tension_classes": {
             c: int(np.sum(table["tension_class"] == c))
-            for c in ("consistent", "flux_tension", "untested")
+            for c in ("consistent", "flux_tension", "mu_unstable", "untested")
         },
         "chain": chain,
         "resid_model_err_median": _r(np.median(model_err), 3) if model_err.size else None,

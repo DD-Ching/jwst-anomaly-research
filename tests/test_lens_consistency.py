@@ -577,12 +577,16 @@ def test_flux_ratio_table_model_error_and_tension():
     assert t["resid_model_err"][0] == pytest.approx(0.4 * 0.68, rel=0.02)  # 16-84 % of 3 values
     assert t["resid_model_err"][1] == pytest.approx(0.2 * 0.68, rel=0.02)  # via the median ref
     assert t.meta["n_mu_samples"] == 3
-    # a row that puts image 1.1 on a critical curve (inf) or beyond max_abs_mu drops it there
+    # rows that put image 1.1 on a critical curve (inf) or beyond max_abs_mu: the chain
+    # cannot pin its μ, so it leaves the tension test and the floor
     bad = samples.copy()
     bad[0, 0], bad[1, 0] = np.inf, 1e3
     t = lc.flux_ratio_table(model, images, {}, phot, mu_samples=bad)
     assert np.all(np.isfinite(t["resid_model_err"]))
-    assert t["resid_model_err"][0] == pytest.approx(0.0)  # only row 2 tests 1.1: no spread
+    # two residuals are left for the floor (< 3), so the others cannot be judged either
+    assert list(t["tension_class"]) == ["mu_unstable", "untested", "untested"]
+    with pytest.raises(ValueError, match="mu_samples"):
+        lc.flux_ratio_table(model, images, {}, phot, mu_samples=samples[:, :2])
     # A 1.5 mag deficit: |z| is large against tiny errors, so it is a tension, but the floor
     # from three images of one system absorbs most of it (only the worst image can be flagged)
     model, images, phot, _ = _flux_inputs(offsets_mag=(1.5, 0.0, 0.0))
