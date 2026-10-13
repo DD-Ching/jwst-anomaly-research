@@ -22,6 +22,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   repeated_deficit 47. Contact sheet inspected: box and eclipse dips, slow variables, noisy flat curves; caustic
   spikes only in the models. **Next:** `inject --procs 4 --chunk K/6` (6 chunks, ~18 min each), `merge-inject --n 6`,
   `limit`, `combine`, then docs/exotic_limits.md and the PR.
+- Run 4 (cloud, 02:08Z–, session 01BiV92m): fresh clone, so `merge-prescreen` and `merge-chunks --n 4` first
+  (the first `inject` calls failed in 2 s on the missing `prescreen_gb14.ecsv`; no output written). Injection chunks
+  (`inject --procs 4 --chunk K/6`, sequential, detached): 1/6 367 in 641 s, 0 errors, W3 333 → 48 flagged → 22
+  recovered, PSPL 0 / 34; 2/6 367 in 479 s, 0 errors, W3 333 → 28 → 17, PSPL 0 / 34.
+  3/6 367 in 497 s, 0 errors, W3 334 → 28 → 10, PSPL 0 / 33; 4/6 367 in 617 s, 0 errors, W3 334 → 41 → 23,
+  PSPL 0 / 33. Chunks 1–4 together: W3 1,334 → 145 flagged → 72 recovered; PSPL 0 / 134 flagged. Chunk 5 was
+  stopped at the 40-min mark (nothing written). **Next:** `merge-prescreen`, `merge-chunks --n 4` (fresh clone),
+  `inject --procs 4 --chunk 5/6` and `6/6`, `merge-inject --n 6`, `limit`, `combine`, docs/exotic_limits.md, PR ready.
 
 ## 2026-10-13: Trial tally covers every run (trial-2026-10-13.1)
 - Acceptance check of D-083:
