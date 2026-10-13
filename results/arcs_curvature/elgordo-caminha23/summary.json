@@ -1,0 +1,52 @@
+{
+ "model": "elgordo-caminha23",
+ "image": "jw01176-o241_t012_nircam_clear-f200w_i2d.fits",
+ "assumptions": {
+  "min_semimajor_px": 10.0,
+  "min_e": 0.5,
+  "size": 6.0,
+  "nsigma": 3.0,
+  "smooth_px": 1.0,
+  "radius_semimajor": 3.0,
+  "bkg_px": 61,
+  "min_sig": 3.0,
+  "min_length": 0.5
+ },
+ "n_selected": 4,
+ "n_testable": 2,
+ "median_abs_c_over_pred": 1.4,
+ "classes": {
+  "agree": 1,
+  "reverse": 2,
+  "flat": 1,
+  "no_arc": 0
+ },
+ "control_aligned": {
+  "agree": 1,
+  "reverse": 2,
+  "flat": 1,
+  "no_arc": 0
+ },
+ "reverse": [
+  {
+   "label": 2479,
+   "orientation_class": "aligned",
+   "g_min": 0.75,
+   "c_sig": 7.9,
+   "length": 1.37,
+   "cos_mass": -0.99,
+   "c_over_pred": 27.0,
+   "testable": false
+  },
+  {
+   "label": 2527,
+   "orientation_class": "aligned",
+   "g_min": 0.7,
+   "c_sig": 9.8,
+   "length": 3.46,
+   "cos_mass": -0.96,
+   "c_over_pred": 1.9,
+   "testable": true
+  }
+ ]
+}

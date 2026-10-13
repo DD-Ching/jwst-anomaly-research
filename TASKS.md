@@ -165,7 +165,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - an observational parity test (image orientation or resolved structure; not yet designed);
    - ~~`arcs` on Abell 2744 and El Gordo~~ — done (D-024 addendum 2026-10-13): null; background 33/35 and 10/12
      aligned, anti counts 0 and 1 against 0.45 and 0.17 from shape noise;
-   - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
+   - arc curvature: the circular-centre sign test is not a lens-model test (D-024 addendum 5); next a forward-modelled
+     curvature (ray-traced elliptical source) for arcs ≳ 3″, El Gordo 2527 first; critical curves at z_s = 1, 2, 4 still open;
    - shapes for the `arcs` test: S/N ≥ 50 done on the stored tables (`docs/fields/abell370.md`: 3 anti vs 1.33,
      P = 0.15, all intrinsic shapes); F444W vs F200W done (D-024 addendum 4: 81/83 aligned
      stay aligned, F444W anti 3 vs 1.30, same axes, no blend); left: blend rejection in F200W segmentation;

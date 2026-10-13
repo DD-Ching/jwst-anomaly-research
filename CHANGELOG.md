@@ -2,8 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-13: arc curvature vs model deflection (in progress)
-- Plan: curvature sign of strong-shear background arcs against the model deflection direction, five fields.
+## 2026-10-13: arc curvature against the models' mass direction: not a lens-model test at these arc lengths
+- **Hypothesis before computing:** a tangential arc bends around the mass (centre of curvature toward −α); a long,
+  single arc that bends away would be a lens-model residual. Ordinary: saddle points between clumps, radial arcs,
+  blends, intrinsically curved galaxies.
+- `scripts/arcs_curvature.py` (new; F200W i2d S3 cutouts via `cutouts.make_cutouts`, halo median filter, parabola in
+  the major-axis frame) on the stored `results/arcs/*/arcs.ecsv`; 43 long background arcs in strong shear.
+- **Result (derived, `results/arcs_curvature/`):** 11 agree, 7 reverse, 24 flat; the aligned control is 9 / 7, so
+  the sign carries no lensing signal. The circular-lens curvature c_pred = 1/(2r) is 0.011–0.024 arcsec⁻¹ against a
+  measured median |c| of 0.056: intrinsic bends, knots and blends dominate. 5 testable arcs (c_pred ≥ 3σ_c): 3
+  agree, 1 window-clipped (Abell 370 4613), El Gordo 2527 reverse in the bimodal merger, where c_pred does not apply.
+  Looked at all five contact sheets. Not a flag (D-024 addendum 5).
+- **Failed approach:** the circular-centre sign test; the formal σ_c from pixel residuals also understates the
+  scatter (spurious 3–7σ on faint 1″ blobs: Abell 370 4401, 4429).
+- **Next:** forward-model each arc (ray-trace an elliptical source at its source-plane position through the model,
+  fit the same parabola) for the arcs ≳ 3″, starting with El Gordo 2527; widen the window for Abell 370 4613.
 
 ## 2026-10-13: arc orientations in F444W vs F200W: the same axes, no new anti arc (five fields)
 - **Hypothesis before computing:** lensing is achromatic, so a lens-set axis agrees between F200W and F444W; a blend

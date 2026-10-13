@@ -118,6 +118,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.1 (`arcs` shape S/N cut on the stored five-field tables) | — | — | 0.1 (PR, CI) | cloud routine 01SirLB6, 21:18–21:40Z |
 | 2026-W42 | — | 0.6 (X2 S4b: strain/flux derivation, single-cell reruns) | 0.2 (strain-integral check, coupling-off diagnostic) | 0.2 (S4c literature, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.3 (`arcs_bands.py`: F444W vs F200W arc axes, five fields) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01VwkNGL, 22:08–22:45Z |
+| 2026-W42 | ≈ 0.35 (`arcs_curvature.py`: arc curvature vs −α, five fields) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01GW8SqA, 23:08–23:35Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
