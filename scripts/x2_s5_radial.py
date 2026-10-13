@@ -225,6 +225,10 @@ def dense_top(S, k=3):
             "lam2_re": float(w[i].real),
             "lam2_im": float(w[i].imag),
             "y_peak": float(abs(y[np.argmax(np.abs(v[:, i]))])),
+            # independent check (C / xx equation): physical modes pass it, spurious ones fail
+            "c_equation_residual": c_equation_residual(
+                np.concatenate([[0.0], v[:, i].real, [0.0]]), float(w[i].real), S
+            ),
         }
         for i in order
     ]

@@ -1,5 +1,5 @@
 {
- "label": "derived; radial l = 0 perturbations; SV + phantom scalar + magnetic NED (S4 source); one cell",
+ "label": "derived; radial l = 0; SV + phantom + magnetic NED (S4 source); one cell",
  "a_minus_2M": 0.0003575000492666014,
  "runs": {
   "EB_time": {
@@ -20,17 +20,20 @@
     {
      "lam2_re": 1.397109683015184,
      "lam2_im": 0.0,
-     "y_peak": 1.0000000000004405
+     "y_peak": 1.0000000000004405,
+     "c_equation_residual": 7.511167246392262e-05
     },
     {
      "lam2_re": -0.004957412462319802,
      "lam2_im": 0.0,
-     "y_peak": 15.900000000000652
+     "y_peak": 15.900000000000652,
+     "c_equation_residual": 1.0
     },
     {
      "lam2_re": -0.020841867630585945,
      "lam2_im": -0.025628939691807504,
-     "y_peak": 4.263256414560601e-13
+     "y_peak": 4.263256414560601e-13,
+     "c_equation_residual": 1.0
     }
    ]
   },
@@ -85,17 +88,20 @@
     {
      "lam2_re": 0.010223748695460234,
      "lam2_im": 0.0,
-     "y_peak": 315.0
+     "y_peak": 315.0,
+     "c_equation_residual": 0.0007838017871323876
     },
     {
      "lam2_re": 0.010221584737319959,
      "lam2_im": 0.0,
-     "y_peak": 315.0
+     "y_peak": 315.0,
+     "c_equation_residual": 0.0008456173801277861
     },
     {
      "lam2_re": 2.122957517912156e-05,
      "lam2_im": 0.0,
-     "y_peak": 0.0
+     "y_peak": 0.0,
+     "c_equation_residual": 0.9642766237048551
     }
    ]
   },
@@ -106,17 +112,20 @@
     {
      "lam2_re": 0.010216465932290843,
      "lam2_im": 0.0,
-     "y_peak": 315.0
+     "y_peak": 315.0,
+     "c_equation_residual": 0.0031219597551044686
     },
     {
      "lam2_re": 0.010208153283541542,
      "lam2_im": 0.0,
-     "y_peak": 315.0
+     "y_peak": 315.0,
+     "c_equation_residual": 0.003360482682354423
     },
     {
      "lam2_re": 1.4981008856326962e-06,
      "lam2_im": 0.0,
-     "y_peak": 0.0
+     "y_peak": 0.0,
+     "c_equation_residual": 0.9966683998444145
     }
    ]
   }

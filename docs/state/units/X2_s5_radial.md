@@ -24,7 +24,8 @@ a phantom scalar plus magnetic nonlinear electrodynamics (NED), i.e. Bronnikov &
 - Perturbed fields: α, γ, r and Φ.
 
 **Role of NED in the radial sector.**
-- F = q sinθ dθ∧dφ is fixed by the Bianchi identity, so NED carries no radial degree of freedom.
+- F = q sinθ dθ∧dφ is fixed by the Bianchi identity, so NED carries no radial degree of freedom. F_tx stays
+  zero at ℓ = 0, because the electric charge is zero and L_F ≠ 0.
 - Its stress is a fixed function of the *perturbed* areal radius: T^t_t = T^x_x = −U(r), and
   T^θ_θ = −U − rU′/2.
 - It therefore enters the perturbation equations through U′ and U″ evaluated on δr.
@@ -39,8 +40,8 @@ a phantom scalar plus magnetic nonlinear electrodynamics (NED), i.e. Bronnikov &
 - U = V = 0 on the Ellis–Bronnikov wormhole reproduces CPS's master equation χ̈ − χ″ − 3b²χ/r⁴ = 0 symbolically
   (residual 0).
 - On SV every coefficient is finite at the throat. The A″ coefficient there is f² ≈ 3.2e-8; there is no 1/r′.
-- The Hamiltonian constraint is implied identically by σ = 0 (residual ~1e-15). It is therefore not an
-  independent test.
+- The Hamiltonian constraint is implied identically by σ = 0: residual about 1e-15 in a scratch check, not
+  reproduced by the committed scripts. It is therefore not an independent test.
 
 ## Numerics (derived; `scripts/x2_s5_radial.py` → `results/x2/s5_radial.json`)
 **Formulation.** A evolves with its wave equation. C is rebuilt from σ = 0 at every stage, so the solution stays
@@ -49,7 +50,8 @@ uniform in the tortoise coordinate, with Dirichlet ends far from the mode.
 
 **Failed approaches** (recorded so they are not repeated):
 1. *Evolving C with its own equation.* This admits a pointwise, constraint-violating mode that grows at
-   √max(coefficient) ≈ 0.168 M⁻¹ (σ violated at O(1)).
+   √max(coefficient) ≈ 0.168 M⁻¹, with σ violated at O(1). This was a scratch run, not reproduced by the
+   committed scripts.
 2. *Single-sided shooting with the parity condition at the throat.* In the long, nearly potential-free cavity
    the inward-dominant branch hides the true condition. It found the right λ, but placed the mode at the throat
    with a kink, which is spurious.
@@ -71,14 +73,24 @@ uniform in the tortoise coordinate, with Dirichlet ends far from the mode.
 
 - **Convergence.** The rate converges in grid step, domain size and initial data. The C-equation residual
   falls about 4× per halving of dy, so it is converging to zero.
-- **Location.** The mode sits at r* ≈ ±315 M, i.e. areal radius R = 2.049M where f = 0.024. That is the
-  transition between the deep throat (f ≈ 1.8e-4) and the outer region, on each side of the throat. It is not
-  at the throat.
+- **Location.**
+  - The mode peaks at r* ≈ ±315 M: radial coordinate x = 0.444 M, areal radius R = 2.049M (2.4 % above a),
+    f = 0.024. It is close to the throat in proper terms. The tortoise coordinate pushes it out because of the
+    deep redshift there (f ≈ 1.8e-4 at the throat).
+  - The Ellis–Bronnikov mode likewise peaks at x = b.
+  - The local proper-time rate λ/√f = 0.65 M⁻¹ is close to Ellis–Bronnikov's 1.18/b ≈ 0.59 for b ≈ 2.
+  - So this reads as the **throat-scale phantom-scalar instability**, redshifted, not a new mechanism.
   - The two sides give an even/odd pair, split only by tunnelling.
-  - Growth rate in local proper time there: λ/√f = 0.65 M⁻¹.
-- **Unresolved.** A much slower positive eigenvalue sits at the throat in the dense spectra: λ² = 2.1e-5 at
-  dy = 0.5 and 1.5e-6 at dy = 1, not converged. It is at most λ ≈ 0.005 M⁻¹, 20× slower than the dominant
-  mode, so it does not change the answer.
+- **Seeding.** The ±315 seeds were chosen after the location was known (post hoc). The noise run and the ±200
+  run do not depend on that choice and give the same rate.
+- **Spurious eigenvalues.** The scheme uses only the A equation plus σ, so its spectrum also contains spurious
+  positive eigenvalues that fail the C (xx) equation. Every dense eigenvalue is now residual-checked (see
+  `runs.*dense*.top[].c_equation_residual`).
+  - The dominant pair passes: residual 8e-4 at dy = 0.5 and 3e-3 at dy = 1, falling with dy.
+  - The small throat eigenvalue (λ² = 2.1e-5 at dy = 0.5, 1.5e-6 at dy = 1, not converged) **fails**, with
+    residual 0.96 / 1.00. It is spurious, not a second mode.
+  - Review also found λ² = 1.2e-4 at Y = 600, dy = 0.25, with residual 0.88: spurious.
+  - Only eigenvalues that pass the check count as modes.
 
 ## Answer: growth time against the echo clock
 - Clock: the coordinate time t of the static background, i.e. the asymptotic observer's time (α → 1). That is
@@ -89,7 +101,7 @@ uniform in the tortoise coordinate, with Dirichlet ends far from the mode.
 |---|---|---|
 | e-folding time | 9.89 M = 3.35 ms | 1 |
 | first echo (after free flight) | 1312.8 M ≈ 0.445 s | 133 |
-| echo spacing | 1373.5 M ≈ 0.466 s | 139 |
+| echo spacing | 1373.5 M ≈ 0.465 s | 139 |
 | PMW start / end | 0.2 s / 1.2 s | 60 / 358 |
 
 **The radial mode grows about 140 times faster than the echo cycle.** Its e-folding time (3.4 ms) is shorter
@@ -101,7 +113,10 @@ than the ringdown damping time (about 4 ms).
 - Linear extrapolation only: unless ε ≲ e^{-133} ≈ 10⁻⁵⁸, the linear perturbation would reach order unity before
   the first echo. A merger is not expected to produce such a quiet initial state, but that is not shown here.
 
-**Decision (owner rule).** On this background the perturbation grows far within the relevant window, so the
+**Decision.** This applies the owner's qualitative rule ("if the perturbation can break the fixed-background
+approximation within the relevant window, stop expanding echo searches on this background"). No numerical
+threshold was written in advance; the margin (133 e-folds before the first echo) is far from any plausible one.
+On this background the perturbation grows far within the relevant window, so the
 fixed-background echo calculation is not self-consistent there. **No further echo-parameter search on this
 background.** The S2/S4 numbers remain as computed, under their stated assumptions.
 
