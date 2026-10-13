@@ -33,7 +33,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.6", "pre-commit>=4", "numba>=0.60"]
+dev = ["pytest>=8", "ruff>=0.6", "pre-commit>=4", "numba>=0.60", "sympy>=1.12"]  # sympy: X2 S5 radial derivation
 # Compiled hot loops (E1 GW-GW sky-map classes, S-2); every caller has a numpy fallback.
 fast = ["numba>=0.60"]
 # Byte-range reads of cloud-hosted FITS (s3://stpubdata) without full downloads.

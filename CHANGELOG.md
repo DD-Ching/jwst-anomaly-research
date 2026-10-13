@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: X2 S5: the S4 echo background is radially unstable (e-folding 9.9 M, 139 e-folds per echo spacing)
+- **Equations.** CPS framework (arXiv:1911.13103) in δΦ = 0 gauge: δr free, so the throat may move. Magnetic NED
+  enters as a fixed function of the perturbed areal radius, since F is fixed by the Bianchi identity.
+  - Background: Φ′² = 2a²/r⁴ (phantom), U = 6Ma²/(5r⁵), V = 4Ma²/(5r⁵).
+  - The Ellis–Bronnikov master equation is reproduced symbolically.
+- **Result.** At a − 2M = 3.575e-4: λ = 0.1011244 M⁻¹, i.e. 3.35 ms for GW150914.
+  - Converged in grid, domain and initial data; the independent C-equation residual is 8.5e-6 and falling.
+  - Ellis–Bronnikov reference 1.18199 (CPS 1.18207).
+  - The mode sits at R ≈ 2.05M on each side of the throat.
+  - The first echo is 133 e-folds, the spacing 139. Growth time is not collapse time.
+- **Decision.** Echo searches on this background stop (owner rule).
+- **Scope fix to S4b.** Both EM figures rest on the heuristic relative energy weight. Withdrawn: "instability
+  makes echo bounds moot"; the growth time must be compared with the window instead.
+- **Failed approaches.**
+  - Evolving C on its own admits a constraint-violating pointwise mode (0.168 M⁻¹).
+  - Single-sided shooting misplaced the mode at the throat.
+
 ## 2026-10-13: forward-modelled arc curvature: all 5 testable arcs bend as their models predict; El Gordo 2527 explained
 - **Hypothesis before computing:** El Gordo 2527's bend away from −α (D-024 addendum 5) is a saddle effect that
   the Caminha+23 model reproduces; if the model bends it the other way, it is a lens-model residual.

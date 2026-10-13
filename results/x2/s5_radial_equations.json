@@ -1,0 +1,37 @@
+{
+ "label": "derived; radial perturbations, GR + phantom scalar + magnetic NED, delta Phi = 0 gauge",
+ "sv_background": {
+  "Phi_prime_squared": "2*a**2/(a**2 + x**2)**2",
+  "U_of_r": "6*M*a**2/(5*r**5)",
+  "V_of_x": "-4*M*a**2*(2*M - sqrt(a**2 + x**2))/(5*(a**2 + x**2)**2*(-2*M*sqrt(a**2 + x**2) + a**2 + x**2))"
+ },
+ "ellis_bronnikov_residual": "0",
+ "coefficients": {
+  "Ctt": {
+   "C(t, x)": "U_1*al0_0**2*r0_0/2 + al0_0**2/r0_0**2",
+   "Derivative(C(t, x), x)": "-al0_0**2*r0_1/(ga0_0**2*r0_0) + al0_0*al0_1/ga0_0**2",
+   "A(t, x)": "-P0_1**2*al0_0**2/(2*ga0_0**2) + 3*al0_0**2*r0_1**2/(ga0_0**2*r0_0**2) - 2*al0_0**2*ga0_1*r0_1/(ga0_0**3*r0_0) + 2*P0_2*al0_0**2*r0_1/(P0_1*ga0_0**2*r0_0)",
+   "Derivative(A(t, x), x)": "al0_0**2*r0_1/(ga0_0**2*r0_0)"
+  },
+  "Att": {
+   "Derivative(A(t, x), (x, 2))": "al0_0**2/ga0_0**2",
+   "Derivative(C(t, x), (x, 2))": "-al0_0**2/ga0_0**2",
+   "C(t, x)": "U_1*al0_0**2*r0_0 + U_2*al0_0**2*r0_0**2/2 - al0_0**2/r0_0**2",
+   "A(t, x)": "3*P0_1**2*al0_0**2/(2*ga0_0**2) + 2*al0_0**2*r0_2/(ga0_0**2*r0_0) - 3*al0_0**2*r0_1**2/(ga0_0**2*r0_0**2) - 2*al0_0**2*ga0_1*r0_1/(ga0_0**3*r0_0) - 2*al0_0**2*ga0_2/ga0_0**3 + 4*al0_0**2*ga0_1**2/ga0_0**4 + 8*al0_0*al0_1*r0_1/(ga0_0**2*r0_0) - 4*al0_0*al0_1*ga0_1/ga0_0**3 + 2*al0_1**2/ga0_0**2 - 2*P0_2*al0_0**2*ga0_1/(P0_1*ga0_0**3) + 4*P0_2*al0_0*al0_1/(P0_1*ga0_0**2) + 2*P0_3*al0_0**2/(P0_1*ga0_0**2) - 2*P0_2**2*al0_0**2/(P0_1**2*ga0_0**2)",
+   "Derivative(C(t, x), x)": "al0_0**2*r0_1/(ga0_0**2*r0_0) + al0_0**2*ga0_1/ga0_0**3 - 4*al0_0*al0_1/ga0_0**2",
+   "Derivative(A(t, x), x)": "3*al0_0**2*r0_1/(ga0_0**2*r0_0) - 3*al0_0**2*ga0_1/ga0_0**3 + 3*al0_0*al0_1/ga0_0**2 + 2*P0_2*al0_0**2/(P0_1*ga0_0**2)"
+  },
+  "H": {
+   "Derivative(C(t, x), (x, 2))": "2/ga0_0**2",
+   "C(t, x)": "U_1*r0_0 + 2/r0_0**2",
+   "A(t, x)": "P0_1**2/ga0_0**2 - 4*r0_2/(ga0_0**2*r0_0) - 2*r0_1**2/(ga0_0**2*r0_0**2) + 4*ga0_1*r0_1/(ga0_0**3*r0_0)",
+   "Derivative(C(t, x), x)": "6*r0_1/(ga0_0**2*r0_0) - 2*ga0_1/ga0_0**3",
+   "Derivative(A(t, x), x)": "-2*r0_1/(ga0_0**2*r0_0)"
+  },
+  "sigma_tx": {
+   "Derivative(C(t, x), t, x)": "2/al0_0**2",
+   "Derivative(C(t, x), t)": "2*r0_1/(al0_0**2*r0_0) - 2*al0_1/al0_0**3",
+   "Derivative(A(t, x), t)": "-2*r0_1/(al0_0**2*r0_0)"
+  }
+ }
+}

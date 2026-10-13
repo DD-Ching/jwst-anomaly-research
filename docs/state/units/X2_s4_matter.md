@@ -271,6 +271,8 @@ second model.
 | GW energy out: our side / far side | not computed | 1.2 % / 64.4 % | 2.4 % / 57.5 % |
 | Residual (trapped or not yet arrived) | — | 3.6 % | 18.1 % |
 
+- Both EM figures depend on the relative GW/EM energy weight (heuristic equal-weight argument; not rigorously
+  established).
 - The receiver-side fraction (67–70 %) is a ratio within the echo windows at our observer. The initial-energy
   fraction (31 %) is a budget over both universes. They answer different questions.
 - Most of the inward packet (w₀ = 0.53, above the V₂₂ barrier top at ω = 0.38) passes through the far barrier.
@@ -317,7 +319,8 @@ second model.
 - **Executable gap.** The smallest well-posed next step is the radial ℓ = 0 equation for SV with phantom +
   magnetic NED. Take 2607.10718's general system in its GR limit, re-derived in a throat-compatible gauge, as
   1205.2224 and 1911.13103 do for phantom-only wormholes. Then solve for unstable modes on one a.
-  - It answers a concrete unknown: is the background used in S4 linearly unstable at ℓ = 0? If it is, echo
-    bounds on it are moot.
+  - It answers a concrete unknown: is the background used in S4 linearly unstable at ℓ = 0? If it is, the
+    e-folding time must be compared with the echo spacing and the observation window.
+  - Withdrawn (owner review): "if it is, echo bounds on it are moot".
   - The polar ℓ = 2 system (GW + EM + scalar coupled) is a larger derivation with no published template for
     black bounces.
