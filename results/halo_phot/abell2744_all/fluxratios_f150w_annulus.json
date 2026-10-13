@@ -1,0 +1,80 @@
+{
+ "model": "abell2744-bergamini23",
+ "photometry": "results/halo_phot/abell2744_all/halo_phot.json (f150w, annulus)",
+ "thresholds": {
+  "match_arcsec": 0.3,
+  "offset_arcsec": [
+   0.0,
+   0.0
+  ],
+  "min_snr": 10.0,
+  "max_abs_mu": 20.0,
+  "outlier_mag": 0.75,
+  "colour_tol": 0.3,
+  "colour": [
+   "f150w",
+   "f444w"
+  ],
+  "max_npix": 20000,
+  "z_margin": 0.15,
+  "photoz": null,
+  "tension_sigma": 3.0,
+  "unstable_frac": 0.16
+ },
+ "n_images": 149,
+ "n_matched": 2,
+ "n_blended": 0,
+ "n_large_segment": 0,
+ "n_photoz_excluded": 0,
+ "flux_classes": {
+  "consistent": 2,
+  "flux_outlier": 0,
+  "untested": 147
+ },
+ "colour_classes": {
+  "consistent": 2,
+  "colour_outlier": 0,
+  "untested": 147
+ },
+ "tension_classes": {
+  "consistent": 0,
+  "flux_tension": 0,
+  "mu_unstable": 0,
+  "untested": 149
+ },
+ "chain": {
+  "bayes_sha256": "bf6ae6702a021d185b70305a83d45f2fca7dacf2a60138f815f5d69ff7524c1b",
+  "n_chain_rows": 133690,
+  "best_row": 117869,
+  "best_row_max_diff": 0.0008850000000002467,
+  "n_samples": 100,
+  "seed": 1
+ },
+ "resid_model_err_median": 0.079,
+ "sigma_sys": null,
+ "injection_recovery": {
+  "n_targets": 0,
+  "n_pair_targets": 0,
+  "recovered_fraction": {
+   "1.0": null,
+   "1.5": null,
+   "2.0": null
+  },
+  "n_untested": {
+   "1.0": 0,
+   "1.5": 0,
+   "2.0": 0
+  }
+ },
+ "flux_resid_mag": {
+  "n_images": 2,
+  "median_abs": 0.105,
+  "rms": 0.105
+ },
+ "colour_resid_mag": {
+  "n_images": 2,
+  "median_abs": 0.052,
+  "rms": 0.052
+ },
+ "flagged": []
+}

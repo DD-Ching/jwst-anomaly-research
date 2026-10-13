@@ -1486,6 +1486,54 @@ def load_dja_photometry(
     return out
 
 
+def load_halo_photometry(
+    path: Path, images: Table, model_name: str, band: str, colour: tuple[str, str], route: str
+) -> Table:
+    """``scripts/halo_phot.py`` output as a ``fluxratios`` photometry table, one row per image
+    that ``halo_phot`` tested in ``band`` by ``route`` (its S/N, compactness and |μ| gates, >= 2
+    gated images in the system), placed at the image-list position (pass a zero offset).
+
+    ``mag_auto`` is ``-2.5 log10(flux)`` (instrumental: only differences within a band enter
+    the residuals; for compact images the aperture loss cancels, halo_phot module doc) and
+    ``magerr_auto`` its Pogson error. Colour bands carry the same route's fluxes where that band
+    was tested too. ``npix`` is 0: the segment-size cut does not apply to aperture fluxes."""
+    data = json.loads(Path(path).read_text())
+    if data.get("model") != model_name:
+        raise SystemExit(f"error: {path} is for {data.get('model')}, not {model_name}")
+    rows = {r["image_id"]: r for r in data["images"]}
+
+    def mags(b: str, r: dict) -> tuple[float, float]:
+        f, e, res = (r.get(f"{b}_{route}_{k}") for k in ("flux", "err", "resid"))
+        if res is None or f is None or e is None or not f > 0:  # None: NaN in the JSON
+            return np.nan, np.nan
+        return -2.5 * np.log10(f), 1.0857 * e / f
+
+    keep, cols = [], {"mag_auto": [], "magerr_auto": []}
+    for b in colour:
+        cols[f"{b}_mag"], cols[f"{b}_mag_err"] = [], []
+    for i, img in enumerate(images):
+        r = rows.get(str(img["image_id"]))
+        if r is None:
+            continue
+        m, e = mags(band, r)
+        if not np.isfinite(m):
+            continue
+        keep.append(i)
+        cols["mag_auto"].append(m)
+        cols["magerr_auto"].append(e)
+        for b in colour:
+            mb, eb = mags(b, r)
+            cols[f"{b}_mag"].append(mb)
+            cols[f"{b}_mag_err"].append(eb)
+    out = Table({k: np.asarray(v, float) for k, v in cols.items()})
+    out["ra"] = np.asarray(images["ra"], float)[keep]
+    out["dec"] = np.asarray(images["dec"], float)[keep]
+    out["dja_id"] = np.arange(len(keep))
+    out["npix"] = np.zeros(len(keep), int)
+    out.meta.update(source=f"{path} ({band}, {route})", provenance=data.get("provenance"))
+    return out
+
+
 def _loo_residual(
     values: np.ndarray, errors: np.ndarray, use: np.ndarray, systems: np.ndarray
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -1788,6 +1836,8 @@ def cmd_fluxratios(args) -> dict:
             f"error: {args.model}: fluxratios needs a Lenstool model with a usable multiple-image "
             "list (gated off by the image-plane rms gate of D-035 / D-044, or a map model)"
         )
+    if (args.photometry is None) == (args.halo_phot is None):
+        raise SystemExit("error: fluxratios takes exactly one of --photometry and --halo-phot")
     if args.mu_samples and "bayes" not in MODELS[args.model]:  # before any download
         raise SystemExit(f"error: {args.model} has no pinned bayes.dat")
     files = model_files(args.model)
@@ -1797,10 +1847,19 @@ def cmd_fluxratios(args) -> dict:
     colour = tuple(b.strip().lower() for b in args.colour.split(","))
     if len(colour) != 2:
         raise SystemExit("--colour takes two bands, e.g. f150w,f444w")
-    phot = load_dja_photometry(args.photometry, list(colour), args.aperture, args.photoz)
-    if args.offset_arcsec is None:  # default: the model's pinned frame offset (D-034)
-        offset = tuple(MODELS[args.model].get("frame_offset_arcsec", (0.0, 0.0)))
+    if args.halo_phot is not None:
+        if args.offset_arcsec is not None or args.photoz is not None:
+            raise SystemExit("error: --halo-phot rows sit on the image list; no offset or photo-z")
+        band = args.halo_band.lower()
+        phot = load_halo_photometry(
+            args.halo_phot, images, args.model, band, colour, args.halo_route
+        )
+        offset = (0.0, 0.0)
     else:
+        phot = load_dja_photometry(args.photometry, list(colour), args.aperture, args.photoz)
+    if args.halo_phot is None and args.offset_arcsec is None:  # the model's offset (D-034)
+        offset = tuple(MODELS[args.model].get("frame_offset_arcsec", (0.0, 0.0)))
+    elif args.halo_phot is None:
         offset = tuple(args.offset_arcsec)
     mu_samples, chain = None, None
     if args.mu_samples:
@@ -1827,7 +1886,7 @@ def cmd_fluxratios(args) -> dict:
     model_err = model_err[np.isfinite(model_err)]
     summary = {
         "model": args.model,
-        "photometry": str(args.photometry),
+        "photometry": str(args.photometry or phot.meta["source"]),
         "thresholds": table.meta["thresholds"],
         "n_images": len(table),
         "n_matched": int(np.sum(table["dja_id"] >= 0)),
@@ -1915,7 +1974,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     i.add_argument("--forced-search-arcsec", type=float, default=1.0)
     f = sub.add_parser("fluxratios", help="image flux ratios against model magnification ratios")
-    f.add_argument("--photometry", type=Path, required=True, help="DJA fix_phot FITS table")
+    f.add_argument("--photometry", type=Path, help="DJA fix_phot FITS table")
+    f.add_argument("--halo-phot", type=Path, help="halo_phot.py JSON in place of --photometry")
+    f.add_argument("--halo-band", default="f444w", help="--halo-phot band for the flux test")
+    f.add_argument("--halo-route", choices=("medfilt", "annulus"), default="medfilt")
     f.add_argument("--colour", default="f150w,f444w", help="two bands for the colour test")
     f.add_argument("--aperture", type=int, default=1, help="DJA aperture index (1 = 0.5 arcsec)")
     f.add_argument("--match-arcsec", type=float, default=0.3)
