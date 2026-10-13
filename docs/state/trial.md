@@ -100,6 +100,8 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | 0.3 (X1 S4b: image weights, second route) | 0.15 (orientation, claim, X1 closure, PR) | cloud routine 01QLViGu, 06:08–06:30Z |
 | 2026-W42 | ≈ 0.35 (Abell 2744 `fluxratios`, D-032 addendum) | — | — | 0.15 (orientation, claim, PR) | cloud routine 01EaLT96, 07:08–07:35Z |
 | 2026-W42 | ≈ 0.25 (`fluxratios --mu-samples`, Abell 2744 + El Gordo) | — | — | 0.15 (orientation, claim, PR) | cloud routine 01WdD16D, 08:09–08:45Z |
+| 2026-W42 | — | — | ≈ 0.3 (halo-subtracted photometry of Abell 2744 flux flags) | 0.15 (orientation, claim, PR) | cloud routine 01FwFCPF, 09:08–09:45Z |
+| 2026-W42 | — | — | ≈ 0.25 (halo_phot final review: injection through the chain, pool, errors) | 0.1 (takeover, PR) | cloud routine 0117Bja4, 10:08–10:45Z |
 | 2026-W42 | — | 1.2 (S0 screen after X1) | — | 0.5 (X1 scope wording, prompt 2026-10-13.1, rules 13.2) | interactive session 01AzKMDv |
 
 ## Outcome ledger (four columns only)

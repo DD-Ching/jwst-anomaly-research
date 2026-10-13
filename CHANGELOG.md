@@ -2,6 +2,50 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: Halo-subtracted photometry explains Abell 2744 602.1c's flux flag; 600.1 is untestable
+- New `scripts/halo_phot.py` → `results/halo_phot/abell2744/halo_phot.json`; `tests/test_halo_phot.py`. Compact
+  images on UNCOVER `jw02561-o001_t003` F150W/F444W `_i2d` stamps (S3 byte ranges, 6″, D-034 frame offset), two
+  routes: stamp minus a 1″ median filter, and a local-plane annulus (0.5–0.7″); r = 0.2″ aperture centred on the
+  filtered image's peak. Gates (ASSUMPTIONs, as D-032 / `exotic_screens`): concentration f(0.2″)/f(0.4″) ≥ 0.6 on
+  the unfiltered light, |μ| ≤ 20, S/N ≥ 10 with 1.5 × ERR ⊕ blank-aperture scatter. `flux_outlier` needs both routes
+  beyond 0.75 mag with one sign, on the system's worst image (as D-032); `one_route` and `untested` are never
+  flags. The blank apertures' median (leftover halo) is subtracted from each flux.
+- **Hypothesis before running:** the 600.1b and 602.1c flags (`mag_auto` −1.17 / −1.52 mag, D-032 addendum) are
+  BCG/ICL light. Halo-subtracted residuals below 0.75 mag confirm it; a residual > 0.75 mag in both routes would go
+  to `/vet-candidate`.
+- **Validation (simulated):** a Gaussian on a synthetic exponential halo is recovered to +3 % (median filter) / +10 %
+  (plane) when the halo's aperture light equals the source's; at 10× it leaves +0.3 mag, always brightening.
+- **Ring checks on the real stamps (8 apertures at 1″, same peak search):** blank apertures keep 0.8–11 % of
+  602.1c's flux (≤ 0.11 mag of leftover halo; ≤ 0.8 % off-halo on 602.1a/b); injected PSF-width Gaussians are
+  recovered at 95–100 % for the compact images. Off-halo control: 602.1a/b residuals −0.04 to +0.18 mag.
+- **Result (derived; LOO residual against 602.1a/b):** 602.1c F444W −0.27 (filter) / −0.32 (plane), statistical
+  ± 0.01 / 0.02 (ERR, blank scatter and the whole halo correction; D-032's σ_sys 0.32–0.36 mag is *not* included and
+  the class uses the fixed 0.75 mag threshold); was −1.52 in `mag_auto`. `consistent`. In F150W 602.1c fails the
+  concentration gate on the halo (0.57). The flag is halo light. **600.1 is untestable:** a resolved spiral on the
+  contact sheet, all four images fail the concentration gate except 600.1b, which then has no sibling; its
+  `mag_auto` flag stays explained only by the contact sheet (D-032 addendum). 602.1d: |μ| = 25. **No anomaly.**
+- **End-to-end injection (`--inject-mag`, real stamps; each image's own filtered light within 0.45″ scaled, so the
+  real profile and halo stay; whole chain re-run):** 602.1a/b are flagged at ±1 mag in both bands, and at +0.75 mag
+  in F444W (F150W stays `consistent`, at the threshold). 602.1c is flagged at −1 mag in both bands (brightening
+  also lifts it over the F150W concentration gate) but not at +1 mag: its −0.27 mag offset leaves +0.73. So the null
+  for 602.1 is: no image deviates by more than 0.75 mag from its siblings beyond the measured offsets, in F444W.
+  600.1 and 602.1d stay untested at every amplitude. A Gaussian subtracted at the catalogue position failed as a
+  dimming injection (every target left `untested`: it does not match the real profile).
+- **Failed approach:** concentration on the median-filtered image let the spiral's nuclei pass (0.63–0.81); the
+  filter strips extended light. It is now measured on the unfiltered light.
+- **Final review (takeover session 0117Bja4):** each stamp is filtered once for both routes and the blank
+  apertures, each injected ring stamp once; ring checks skip images the gates drop; all measurements, injections
+  included, run in one process pool (one BLAS thread per worker; base + three amplitudes 47 s on 4 cores, was
+  6.5 min); fluxes are divided by the recovery, and a route keeping < 50 % of an injected image is dropped; the
+  error adds the whole halo correction, since the ring 1″ out can misjudge the leftover halo at the cusp; injection
+  records keep the class before and after; `classify()` is tested; `--systems` is stripped and unknown ids fail.
+  Injection caveat: scaling the filtered light also scales the pixel noise and any neighbour within 0.45″. Kept on purpose: the fixed 0.75 mag threshold (as D-032) and
+  a NaN policy stricter than `lc.aperture_snr` (a masked pixel cannot be halo-filtered).
+- **Limits:** one system tested; one UNCOVER epoch and reduction. Stamps are read in sequence, then measured in
+  parallel. NaN pixels are filled with the stamp median before filtering (none here).
+- **Next:** run `halo_phot.py` over every compact image of Abell 2744, El Gordo and SMACS (SMACS 1.1, 6.x), then
+  fold the halo-subtracted fluxes into `fluxratios` as a photometry route so `--mu-samples` refits σ_sys.
+
 ## 2026-10-13: X1 closure scope corrected; S0 screen finds no qualifying unit; routine prompt 2026-10-13.1
 - Owner review. X1's closure separates three things:
   - the cross-checked tool, within its shared premises (point spot, primary + secondary images, bolometric g⁴,
