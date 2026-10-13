@@ -25,6 +25,7 @@ evidence for or against a wormhole at Sgr A*.
 
 from __future__ import annotations
 
+import functools
 import json
 import math
 import sys
@@ -49,7 +50,14 @@ STATIC_FRAC = np.linspace(0.0, 0.5, 6)
 STATIC_OFF_UAS = (0.0, 5.0, 10.0, 15.0, 20.0)
 STATIC_DIR = np.linspace(0.0, 2 * math.pi, 8, endpoint=False)
 PREC = {"loop_uas": 9.0, "ln_flux_contrast": 0.05}
+PEAK_PROMINENCE = 0.02  # ASSUMPTION: a flux peak needs prominence > 2 % of the mean flux
 N_PHASE = 72
+
+
+def ln_contrast(flux_norm: np.ndarray, fs: float) -> float:
+    """ln(F_max / F_min) of spot flux (normalised to mean 1) plus static light fraction fs."""
+    st = fs / (1.0 - fs)
+    return math.log((flux_norm.max() + st) / (flux_norm.min() + st))
 
 
 def observables(track: np.ndarray) -> np.ndarray:
@@ -65,11 +73,11 @@ def observables(track: np.ndarray) -> np.ndarray:
                 tot = f + s
                 cen = (f[:, None] * c + s * off) / tot[:, None]
                 loop = np.hypot(*(cen - cen.mean(0)).T).mean()
-                out.append((loop, math.log(tot.max() / tot.min())))
+                out.append((loop, ln_contrast(f, fs)))
     return np.array(out)
 
 
-def flux_peaks(flux: np.ndarray, rel: float = 0.02) -> int:
+def flux_peaks(flux: np.ndarray, rel: float = PEAK_PROMINENCE) -> int:
     """Local maxima of the periodic flux curve with prominence above rel x the mean flux."""
     n, m, count = len(flux), flux.mean(), 0
     for i in range(n):
@@ -80,51 +88,54 @@ def flux_peaks(flux: np.ndarray, rel: float = 0.02) -> int:
     return int(count)
 
 
-def track(a: float, re: float, side: str, eta: float) -> tuple[np.ndarray, int]:
+@functools.cache
+def track(a: float, re: float, side: str, eta: float, incl: float = INCL) -> tuple[np.ndarray, int]:
+    """Delayed track and the number of warnings (scipy round-off) raised while tracing it."""
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
-        tr = xt.spot_track(a, re, INCL, side, n_phase=N_PHASE, eta=eta, delays=True)
+        tr = xt.spot_track(a, re, incl, side, n_phase=N_PHASE, eta=eta, delays=True)
     return tr, len(caught)
-
-
-def ln_contrast(tr: np.ndarray, fs: float) -> float:
-    f = tr[:, 3] / tr[:, 3].mean()
-    st = fs / (1.0 - fs)
-    return math.log((f.max() + st) / (f.min() + st))
 
 
 def fragility(a: float) -> dict:
     """Sensitivity of a flux-contrast pass: static-fraction cap that closes the gap; inclination."""
-    trs = {}
+    orbits = []
     for p in PERIODS:
         rk = wf.kepler_radius(p, M_SUN)
-        trs[p] = (
-            [track(0.0, e ** (2.0 / 3.0) * rk, "near", e)[0] for e in ETAS],
-            track(a, rk, "far", 1.0)[0],
-        )
-    far_max = max(ln_contrast(f, 0.0) for _, f in trs.values())
+        if rk > a:
+            orbits.append((p, rk))
+
+    def norm(tr):
+        return tr[:, 3] / tr[:, 3].mean()
+
+    ords = [track(0.0, e ** (2.0 / 3.0) * rk, "near", e) for _, rk in orbits for e in ETAS]
+    fars = {p: track(a, rk, "far", 1.0) for p, rk in orbits}
+    far_c = {p: ln_contrast(norm(tr), 0.0) for p, (tr, _) in fars.items()}
+    p_max = max(far_c, key=far_c.get)
     closes = None
     for fs in np.arange(0.50, 0.95, 0.01):
-        o_min = min(ln_contrast(t, fs) for o, _ in trs.values() for t in o)
-        if o_min - far_max <= PREC["ln_flux_contrast"]:
+        o_min = min(ln_contrast(norm(tr), fs) for tr, _ in ords)
+        if o_min - far_c[p_max] <= PREC["ln_flux_contrast"]:
             closes = round(float(fs), 2)
             break
     incl = []
     rk = wf.kepler_radius(60.0, M_SUN)
+    fs_cap = float(STATIC_FRAC.max())
     for i in (135.0, 145.0, 155.0, 165.0):
-        far_c = ln_contrast(xt.spot_track(a, rk, i, "far", n_phase=N_PHASE, delays=True), 0.0)
-        ord_c = min(
-            ln_contrast(
-                xt.spot_track(
-                    0.0, e ** (2.0 / 3.0) * rk, i, "near", n_phase=N_PHASE, eta=e, delays=True
-                ),
-                float(STATIC_FRAC.max()),
-            )
-            for e in ETAS
+        far_tr, far_w = track(a, rk, "far", 1.0, i)
+        o = [track(0.0, e ** (2.0 / 3.0) * rk, "near", e, i) for e in ETAS]
+        incl.append(
+            {
+                "incl_deg": i,
+                "far_C_fs0": ln_contrast(norm(far_tr), 0.0),
+                "ordinary_min_C_at_fs_cap": min(ln_contrast(norm(tr), fs_cap) for tr, _ in o),
+                "warnings": far_w + sum(w for _, w in o),
+            }
         )
-        incl.append({"incl_deg": i, "far_C_fs0": far_c, "ordinary_min_C_fs05": ord_c})
     return {
-        "far_max_C": far_max,
+        "far_max_C": far_c[p_max],
+        "far_max_C_period_min": p_max,
+        "far_max_C_track_warnings": fars[p_max][1],
         "gap_closes_at_static_fraction": closes,
         "incl_P60": incl,
         "note": "a flux-contrast pass needs the orbital modulation separated from intrinsic flare"
@@ -178,10 +189,9 @@ def main() -> int:
         row["flux_peaks"] = {"ordinary": o_pk, "far": f_pk, "disjoint": not set(o_pk) & set(f_pk)}
         gate |= row["flux_peaks"]["disjoint"]
         row["gate_pass"] = bool(gate)
+        row["far_track_warnings"] = sum(f["warn"] for f in fa)
         if gate:
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                row["fragility"] = fragility(a)
+            row["fragility"] = fragility(a)
         rows.append(row)
 
     def summ(items):
@@ -210,6 +220,7 @@ def main() -> int:
             "incl_deg": INCL,
             "periods_min": PERIODS,
             "precision": PREC,
+            "peak_prominence": PEAK_PROMINENCE,
             "static_fraction": STATIC_FRAC.tolist(),
             "static_offset_uas": STATIC_OFF_UAS,
             "n_phase": N_PHASE,

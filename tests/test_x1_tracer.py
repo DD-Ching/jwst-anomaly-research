@@ -147,3 +147,8 @@ def test_s2_observables_without_static_light():
     assert obs[0] == pytest.approx((loop, math.log(tr[:, 3].max() / tr[:, 3].min())))
     # static light always dilutes the flux contrast
     assert obs[:, 1].max() == pytest.approx(obs[0, 1])
+
+
+def test_delays_reject_higher_order_images():
+    with pytest.raises(ValueError):
+        xt.spot_track(0.0, 9.0, 155.0, "near", n_phase=8, kmax=1, delays=True)

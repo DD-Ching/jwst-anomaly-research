@@ -13,6 +13,7 @@
    "loop_uas": 9.0,
    "ln_flux_contrast": 0.05
   },
+  "peak_prominence": 0.02,
   "static_fraction": [
    0.0,
    0.1,
@@ -73,29 +74,36 @@
     "disjoint": false
    },
    "gate_pass": true,
+   "far_track_warnings": 1,
    "fragility": {
     "far_max_C": 0.33233136582559925,
+    "far_max_C_period_min": 57.0,
+    "far_max_C_track_warnings": 0,
     "gap_closes_at_static_fraction": 0.56,
     "incl_P60": [
      {
       "incl_deg": 135.0,
       "far_C_fs0": 0.6889038398421621,
-      "ordinary_min_C_fs05": 0.7301733113971115
+      "ordinary_min_C_at_fs_cap": 0.7301733113971115,
+      "warnings": 0
      },
      {
       "incl_deg": 145.0,
       "far_C_fs0": 0.4879368231495405,
-      "ordinary_min_C_fs05": 0.5946550184262972
+      "ordinary_min_C_at_fs_cap": 0.5946550184262972,
+      "warnings": 0
      },
      {
       "incl_deg": 155.0,
       "far_C_fs0": 0.3229306671809796,
-      "ordinary_min_C_fs05": 0.4394484071367844
+      "ordinary_min_C_at_fs_cap": 0.4394484071367844,
+      "warnings": 0
      },
      {
       "incl_deg": 165.0,
       "far_C_fs0": 0.1831679422679408,
-      "ordinary_min_C_fs05": 0.2694648608066635
+      "ordinary_min_C_at_fs_cap": 0.2694648608066635,
+      "warnings": 0
      }
     ],
     "note": "a flux-contrast pass needs the orbital modulation separated from intrinsic flare evolution to the assumed 0.05 precision"
@@ -141,7 +149,8 @@
     ],
     "disjoint": false
    },
-   "gate_pass": false
+   "gate_pass": false,
+   "far_track_warnings": 6
   },
   {
    "a_M": 5.0,
@@ -183,7 +192,8 @@
     ],
     "disjoint": false
    },
-   "gate_pass": false
+   "gate_pass": false,
+   "far_track_warnings": 5
   },
   {
    "a_M": 7.0,
@@ -225,7 +235,8 @@
     ],
     "disjoint": false
    },
-   "gate_pass": false
+   "gate_pass": false,
+   "far_track_warnings": 5
   },
   {
    "a_M": 9.0,
@@ -266,7 +277,8 @@
     ],
     "disjoint": false
    },
-   "gate_pass": false
+   "gate_pass": false,
+   "far_track_warnings": 2
   }
  ],
  "ordinary_tracks": [

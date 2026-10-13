@@ -359,6 +359,8 @@ def spot_track(
     Observer direction o = (sin i, 0, cos i); orbit in the z = 0 plane (of the emitter's own sheet).
     Sky axes: x_sky along (cos i, 0, -sin i), y_sky along (0, 1, 0).
     """
+    if delays and kmax > 0:
+        raise ValueError("delays=True supports k = 0 images only (image classes keyed by side)")
     inc = math.radians(incl_deg)
     o = np.array([math.sin(inc), 0.0, math.cos(inc)])
     ex = np.array([math.cos(inc), 0.0, -math.sin(inc)])
@@ -409,12 +411,13 @@ def spot_track(
     sy = np.zeros(n_phase)
     sw = np.zeros(n_phase)
     for pts in per_image.values():
-        if len(pts) < n_phase:  # an image class missing at some phases cannot be interpolated
+        # k = 0 images exist at every phase; a few dropped ones (counted) are interpolated over
+        if len(pts) < n_phase // 2:
             raise RuntimeError(f"image class present at {len(pts)} of {n_phase} phases")
         arr = np.array(pts)
         t = np.unwrap(arr[:, 0])
-        if np.any(np.diff(t) <= 0):
-            raise RuntimeError("observed phase is not monotonic in emission phase")
+        if np.any(np.diff(t) <= 0) or t[-1] - t[0] >= 2 * math.pi:
+            raise RuntimeError("observed phase is not monotonic in emission phase over one orbit")
         t0 = t - 2 * math.pi * np.floor(t[0] / (2 * math.pi))
         tt = np.concatenate([t0 - 2 * math.pi, t0, t0 + 2 * math.pi])
         for acc, col in ((sx, 1), (sy, 2), (sw, 3)):
