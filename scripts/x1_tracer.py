@@ -16,7 +16,8 @@ Images of a point emitter at areal radius R_e and unit position n (observer dire
   Phi(b) = 2 pi - gamma + 2 pi k  (opposite side),  cos gamma = n . o.
 Point-source flux per image: g^4 * b |db/dPhi| / (|cos alpha_e| sin(gamma)), with alpha_e the
 emission angle to the radial direction (bolometric; g = redshift factor of a Keplerian emitter;
-Omega^2 = 1/R^3 holds exactly in the areal radius). Light-travel-time delays are not included.
+Omega^2 = 1/R^3 holds exactly in the areal radius). Light-travel-time delays are optional
+(spot_track(delays=True): each image is shifted to its observed phase).
 
 An independent second route (ODE in the affine parameter, r'' = -W'(r)/2 with W = b^2 f / R^2)
 gives the capture/transmission boundary and the far-side swept angle.
@@ -300,7 +301,7 @@ def _tables(a: float, re: float, side: str, b_max: float, n: int = N_GRID):
 
 
 def _images(a: float, re: float, side: str, gamma: float, tables, kmax: int = 0):
-    """Images (b, side_sign, dPhi/db) with Phi(b) = gamma + 2 pi k or 2 pi - gamma + 2 pi k.
+    """Images (b, side_sign, dPhi/db, branch) with Phi(b) = gamma + 2 pi k or 2 pi - gamma + 2 pi k.
 
     Returns (images, n_dropped); an image is dropped only if its finite difference leaves
     the branch.
@@ -332,7 +333,7 @@ def _images(a: float, re: float, side: str, gamma: float, tables, kmax: int = 0)
             if not (np.isfinite(hp) and np.isfinite(hm)):
                 dropped += 1
                 continue
-            out.append((bs, sgn, (hp - hm) / (2 * eps)))
+            out.append((bs, sgn, (hp - hm) / (2 * eps), br))
     return out, dropped
 
 
@@ -344,10 +345,16 @@ def spot_track(
     n_phase: int = 72,
     kmax: int = 0,
     primary_only: bool = False,
+    eta: float = 1.0,
+    delays: bool = False,
 ):
-    """Centroid track (M on the sky) and total flux of a Keplerian point spot over one orbit.
+    """Centroid track (M on the sky) and total flux of a point spot on a circular orbit.
 
-    Rows: (phase, x_sky, y_sky, flux, n_dropped_images).
+    Rows: (phase, x_sky, y_sky, flux, n_dropped_images). The angular velocity is eta times
+    Keplerian (eta < 1: sub-Keplerian). Without delays, phase is the emission phase of every image;
+    with delays=True each image is shifted to its observed phase (emission phase + Omega * light
+    travel time, relative across images) and the images are resampled on a common observed-phase
+    grid before they are summed (n_dropped_images is then the per-orbit total in the first row).
 
     Observer direction o = (sin i, 0, cos i); orbit in the z = 0 plane (of the emitter's own sheet).
     Sky axes: x_sky along (cos i, 0, -sin i), y_sky along (0, 1, 0).
@@ -356,12 +363,13 @@ def spot_track(
     o = np.array([math.sin(inc), 0.0, math.cos(inc)])
     ex = np.array([math.cos(inc), 0.0, -math.sin(inc)])
     ey = np.array([0.0, 1.0, 0.0])
-    omega = re**-1.5
-    ut_inv = math.sqrt(1.0 - 3.0 / re)  # 1/u^t, since f - R^2 Omega^2 = 1 - 3/R
+    omega = eta * re**-1.5
+    ut_inv = math.sqrt(1.0 - 2.0 / re - eta * eta / re)  # 1/u^t = sqrt(f - R^2 Omega^2)
     b_max = 3.0 * re if side == "near" else wf.b_crit(a) * (1 - 1e-9)
     tables = _tables(a, re, side, b_max)
-    rows = []
-    for ph in np.linspace(0.0, 2 * math.pi, n_phase, endpoint=False):
+    rows, per_image = [], {}
+    phases = np.linspace(0.0, 2 * math.pi, n_phase, endpoint=False)
+    for ph in phases:
         n = np.array([math.cos(ph), math.sin(ph), 0.0])
         cg = float(np.clip(n @ o, -1, 1))
         gamma = math.acos(cg)
@@ -370,7 +378,7 @@ def spot_track(
         e = proj / pn if pn > 1e-12 else ex
         cx = cy = ftot = 0.0
         images, dropped = _images(a, re, side, gamma, tables, 0 if primary_only else kmax)
-        for bs, sgn, dphidb in images:
+        for bs, sgn, dphidb, br in images:
             if primary_only and sgn < 0:
                 continue
             pos = sgn * bs * e  # 3-vector in the sky plane
@@ -383,12 +391,36 @@ def spot_track(
             cos_al = math.sqrt(max(_pot(1.0 / re, bs), 1e-12))
             mag = bs / (abs(dphidb) * cos_al * max(math.sin(gamma), 1e-9))
             w = g**4 * mag
+            if delays:
+                dt = time_to_emitter(bs, a, re, side)[br]
+                per_image.setdefault(sgn, []).append(
+                    (ph + omega * dt, w * float(pos @ ex), w * float(pos @ ey), w)
+                )
             cx += w * float(pos @ ex)
             cy += w * float(pos @ ey)
             ftot += w
         cx, cy = (cx / ftot, cy / ftot) if ftot else (np.nan, np.nan)
         rows.append((ph, cx, cy, ftot, dropped))
-    return np.array(rows)
+    if not delays:
+        return np.array(rows)
+    # Each image class (same-side / opposite-side) is one continuous curve in emission phase;
+    # resample its weighted position and weight periodically on the observed-phase grid.
+    sx = np.zeros(n_phase)
+    sy = np.zeros(n_phase)
+    sw = np.zeros(n_phase)
+    for pts in per_image.values():
+        if len(pts) < n_phase:  # an image class missing at some phases cannot be interpolated
+            raise RuntimeError(f"image class present at {len(pts)} of {n_phase} phases")
+        arr = np.array(pts)
+        t = np.unwrap(arr[:, 0])
+        if np.any(np.diff(t) <= 0):
+            raise RuntimeError("observed phase is not monotonic in emission phase")
+        t0 = t - 2 * math.pi * np.floor(t[0] / (2 * math.pi))
+        tt = np.concatenate([t0 - 2 * math.pi, t0, t0 + 2 * math.pi])
+        for acc, col in ((sx, 1), (sy, 2), (sw, 3)):
+            acc += np.interp(phases, tt, np.tile(arr[:, col], 3))
+    n_drop = int(sum(r[4] for r in rows))
+    return np.column_stack([phases, sx / sw, sy / sw, sw, np.r_[n_drop, np.zeros(n_phase - 1)]])
 
 
 def run_checks() -> dict:
