@@ -31,12 +31,13 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from scipy import optimize
+from scipy import integrate, optimize
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import wh_farside as wf  # noqa: E402
 import x1_s2  # noqa: E402
 import x1_s3  # noqa: E402
+import x1_tracer as xt  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "x1"
@@ -125,6 +126,61 @@ def disk_bound(d: dict, r: float, d_cap: float, fs_max: float = 0.5, seed: int =
     }
 
 
+def phi_far_hamilton(b: float, a: float, re: float, r0: float = 20.0) -> tuple[float, float]:
+    """Far-side swept angle from Hamilton's equations (p_r evolves), separate from the tracer.
+
+    H = (-1/f + f p_r^2 + b^2/A) / 2 with p_t = -1, p_phi = b, A = r^2 + a^2, f = 1 - 2/sqrt(A),
+    integrated (DOP853) from coordinate r0 through the throat to r = -sqrt(re^2 - a^2); the range
+    r0 -> infinity is added by its own quadrature in u = 1/r. Returns (phi, H at the end).
+    """
+
+    def rhs(_, y):
+        r, _phi, pr = y
+        aa = r * r + a * a
+        f = 1.0 - 2.0 / math.sqrt(aa)
+        fp = 2.0 * r / aa**1.5
+        return [f * pr, b / aa, -0.5 * (fp / f**2 + fp * pr * pr - 2.0 * r * b * b / aa**2)]
+
+    a0 = r0 * r0 + a * a
+    f0 = 1.0 - 2.0 / math.sqrt(a0)
+    r_t = -math.sqrt(re * re - a * a)
+
+    def reached(_, y):
+        return y[0] - r_t
+
+    reached.terminal, reached.direction = True, -1.0
+    pr0 = -math.sqrt((1.0 / f0 - b * b / a0) / f0)
+    sol = integrate.solve_ivp(
+        rhs, (0.0, 1e5), [r0, 0.0, pr0], method="DOP853", events=reached, rtol=1e-12, atol=1e-13
+    )
+    y = sol.y_events[0][0]
+    aa = y[0] ** 2 + a * a
+    f = 1.0 - 2.0 / math.sqrt(aa)
+
+    def tail(u):
+        r = 1.0 / u
+        ar = r * r + a * a
+        return b * r * r / (ar * math.sqrt(1.0 - b * b * (1.0 - 2.0 / math.sqrt(ar)) / ar))
+
+    t = integrate.quad(tail, 0.0, 1.0 / r0, epsabs=1e-13, epsrel=1e-12)[0]
+    return float(y[1] + t), float(0.5 * (-1.0 / f + f * y[2] ** 2 + b * b / aa))
+
+
+def hamilton_check(re: float = 9.0) -> dict:
+    """Tracer far-side swept angles vs phi_far_hamilton (S4 second route; tolerance 1e-8)."""
+    rows = []
+    for a in (2.1, 3.0, 5.0, 7.0):
+        for x in (0.3, 0.9, 0.999):
+            b = x * wf.b_crit(a)
+            ph, h = phi_far_hamilton(b, a, re)
+            ref = xt.phi_to_emitter(b, a, re, "far")[0]
+            rows.append(
+                {"a_M": a, "b_over_bc": x, "phi_hamilton": ph, "phi_tracer": ref, "H_end": h}
+            )
+    rel = max(abs(r["phi_hamilton"] / r["phi_tracer"] - 1.0) for r in rows)
+    return {"emitter_R_M": re, "max_rel_diff": rel, "pass_1e-8": bool(rel < 1e-8), "rays": rows}
+
+
 def main() -> int:
     d = x1_s3.load()
     s3 = json.loads((OUT / "s3_avg_fit.json").read_text())
@@ -182,6 +238,7 @@ def main() -> int:
             },
         },
         "rows": rows,
+        "second_route_swept_angle": hamilton_check(),
     }
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "s4_disk_bound.json").write_text(json.dumps(out, indent=1) + "\n")

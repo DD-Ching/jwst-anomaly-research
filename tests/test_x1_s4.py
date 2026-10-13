@@ -62,3 +62,15 @@ def test_static_light_offset_is_used():
     loose = x1_s4.disk_bound(_data(xy, flux=flux), r=1.0, d_cap=400.0)
     tight = x1_s4.disk_bound(_data(xy, flux=flux), r=1.0, d_cap=400.0, fs_max=0.0)
     assert loose["chi2_lb"] < 1e-4 < tight["chi2_lb"]
+
+
+@pytest.mark.filterwarnings("ignore::scipy.integrate.IntegrationWarning")
+@pytest.mark.parametrize("a,x", [(2.1, 0.9), (5.0, 0.999)])
+def test_hamilton_route_matches_tracer(a, x):
+    import wh_farside as wf
+    import x1_tracer as xt
+
+    b = x * wf.b_crit(a)
+    ph, h = x1_s4.phi_far_hamilton(b, a, 9.0)
+    assert ph == pytest.approx(xt.phi_to_emitter(b, a, 9.0, "far")[0], rel=1e-8)
+    assert abs(h) < 1e-9

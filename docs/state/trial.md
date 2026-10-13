@@ -66,7 +66,7 @@ needed. Unchanged CI, subscriptions, waiting for review and routine syncs are no
 ## Units
 | Unit | State file | Branch / PR | Status |
 |---|---|---|---|
-| X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-s4` (#180; S3 in #179) | authorized; F0, S1 done 2026-10-12; S2 done 2026-10-13 (formal pass, a = 2.1 M, flux contrast only; fragile); S3 done 2026-10-13 (exploratory); S4 disk bound 2026-10-13 (consistent; S3's Δχ² is model-dependent); next: second-integrator centroid check, then close |
+| X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-s4` (#180; S3 in #179) | authorized; F0, S1 done 2026-10-12; S2 done 2026-10-13 (formal pass, a = 2.1 M, flux contrast only; fragile); S3 done 2026-10-13 (exploratory); S4 disk bound 2026-10-13 (consistent; S3's Δχ² is model-dependent); swept angles confirmed by a second route; next: image-weight check, then close |
 | X2 | — | — | empty; filled only by an S0-passed direction that differs from X1 in mechanism, observable or data |
 
 ## Weekly tally (hours of run time; **every** run appends one line, routine searches included)

@@ -16,7 +16,7 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   (validated SV tracer, `scripts/x1_tracer.py`) and S2 (`scripts/x1_s2.py`: no astrometric discriminant; a fragile
   flux-contrast one for a = 2.1 M) and S3 (`scripts/x1_s3.py`: far side Δχ² +23 to +37 on one flare, exploratory)
   done; S4 (`scripts/x1_s4.py`: the model-free disk bound is consistent with S3, but S3's Δχ² needs the traced
-  centroid) done. Next: a second-integrator check of that centroid, then close X1. See the state file's "Next action".
+  centroid; a Hamilton second route confirms the swept angles) done. Next: an image-weight check, then close X1. See the state file's "Next action".
 - **X2:** empty until an S0-passed direction that differs from X1 qualifies.
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
