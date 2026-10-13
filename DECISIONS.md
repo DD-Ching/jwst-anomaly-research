@@ -1756,6 +1756,11 @@ by byte range instead. Revisit when the authors state the unit (then pin a cutou
 **Addendum 2 (2026-10-13).** The κ-matched scale reads as 0.02″ pixels scaled to z_ref = 3.02 (16–84 % 2.86–3.16)
 instead of the stated 6.2; `scripts/sunrise_zfit.py` uses s = 0.02″ × r(z)/r(z_ref) per source redshift (ASSUMPTION;
 docs/fields/sunrise.md). Rejected: fitting the scale per system (it absorbs the redshift).
+**Addendum 3 (2026-10-13).** All four RELICS v1 models (Glafic, Lenstool, WSLAP+, Zitrin LTM) are read per image by
+byte range (`scripts/sunrise_relics.py`, not pinned: no full download, so no checksums). Their |μ| reproduces the
+published z = 6.2 maps (median ratio 0.998–1.000), system 1 returns z = 5.8–6.3, and system 2 maps to one source at
+z ≈ 2.6–3.1 (source-plane rms 0.11–0.23″ against M5-G1's ≥ 0.62″). System 2's M5-G1 misfit is that model's, not an
+anomaly. Rejected: pinning the 100 MB maps per model (patches suffice; the Lenstool maps stay pinned for screens).
 
 ## D-034 Counter-image and radial-screen rules from El Gordo (2026-10-08)
 
