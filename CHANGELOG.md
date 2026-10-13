@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: (in progress) halo_phot over every compact image of Abell 2744, El Gordo and SMACS
+- Plan: run `scripts/halo_phot.py` on all systems of the three fields (two bands each), with end-to-end injections.
+
 ## 2026-10-13: Halo-subtracted photometry explains Abell 2744 602.1c's flux flag; 600.1 is untestable
 - New `scripts/halo_phot.py` → `results/halo_phot/abell2744/halo_phot.json`; `tests/test_halo_phot.py`. Compact
   images on UNCOVER `jw02561-o001_t003` F150W/F444W `_i2d` stamps (S3 byte ranges, 6″, D-034 frame offset), two
