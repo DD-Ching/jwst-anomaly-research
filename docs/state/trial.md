@@ -2,8 +2,8 @@
 
 **Goal:** let research-motivated high-risk units deepen across many runs and produce testable predictions,
 reliable methods or real candidates. PR count, test count and compute time are **not** progress measures.
-Every run reads this file during dispatch (research-cycle step 1). **Rules version: trial-2026-10-13.1** (adds the
-every-run tally to trial-2026-10-12.1). **Every run**, routine searches included, appends a tally line below. A run
+Every run reads this file during dispatch (research-cycle step 1). **Rules version: trial-2026-10-13.2** (13.1 added the
+every-run tally; 13.2 lets T1 outrank stale routine claims and fixes the 'ordinary model' wording). **Every run**, routine searches included, appends a tally line below. A run
 that works on a unit also records this rules version and its routine prompt version in the unit's session log; the
 prompt version comes from its own prompt text, or is "none" for an interactive session or an older prompt. CLAIM
 comments carrying `rules: trial-2026-10-12.1` remain valid.
@@ -19,8 +19,10 @@ comments carrying `rules: trial-2026-10-12.1` remain valid.
 | 10 % | Upkeep (owner reviews, CI, base merges, this index) |
 
 - A run reads the week's tally below.
-- When an authorized unit has an open stage with budget left and no blocker, and its category is under its share,
-  the run takes that unit before a routine-search unit.
+- When an authorized unit has an open stage with budget left, no blocker and no live claim, and its category is
+  under its share, the run takes that unit before a routine-search unit. This holds even when a stale
+  routine-search claim exists (trial-2026-10-13.2). Each run completes and saves one step of the unit's current
+  stage: a tool, theory or data step.
 - Unused shares are not filled with invented work.
 
 **T2. WIP counting** (replaces "all needs-human PRs block new work"):
@@ -63,11 +65,24 @@ next concrete action, and stop conditions.
 **T6. Notifications** go to the owner only for: a stage completed, an important result, a failure, or a decision
 needed. Unchanged CI, subscriptions, waiting for review and routine syncs are not reported.
 
+**T7. S0 screens for new units.** A screen takes ≤ 2 h of high-risk time and compares at most three
+directions. Each must differ from earlier units in mechanism, observable or data. For each, answer:
+1. the concrete unknown, and how it bears on channel existence, control or propagation;
+2. how the prediction differs from **explicit ordinary models over their plausible parameter ranges** (not
+   a proof that no ordinary explanation could exist);
+3. the minimum verification: which data, tools or derivations it needs, which already exist, and which fit in
+   the budget;
+4. which result continues the unit and which stops it.
+
+A direction does not need an existing anomaly, and "not computed yet" is not a failure. A new theory name alone
+is not a reason to pick one. If one qualifies, write its state file with stage budgets and start it under the
+existing authorization. If none qualifies, record the gaps and stay idle.
+
 ## Units
 | Unit | State file | Branch / PR | Status |
 |---|---|---|---|
-| X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-s4b` (#181) | **closed 2026-10-13** (all gates passed; 3.7 / 20 h). Conditional results: no astrometric discriminant at 9 µas; a fragile flux-contrast one at a = 2.1 M; S3's Δχ² +23 to +37 needs the traced centroid (model-free only +6.8, a ≤ 3 M). Tracer angles and weights verified by second routes. Reopen only with the inputs in its Closure |
-| X2 | — | — | empty (both slots free since X1 closed); filled only by an S0-passed direction that differs from X1 in mechanism, observable or data |
+| X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-s4b` (#181) | **closed 2026-10-13** (gates passed as written; 3.7 / 20 h; tool cross-checked; position comparison exploratory; the S2 flux-contrast gate observable untested by data; no candidate). Conditional results: no astrometric discriminant at 9 µas; a fragile flux-contrast one at a = 2.1 M; S3's Δχ² +23 to +37 needs the traced centroid (model-free only +6.8, a ≤ 3 M). Tracer angles and weights verified by second routes. Reopen only with the inputs in its Closure |
+| X2 | — | — | empty. S0 screen 2026-10-13 (`docs/state/units/S0-2026-10-13.md`): three directions (throat transmission/echoes, a far-side mass via S2, lensing arrival order); none qualifies; high-risk share idles until a listed reopen input or owner direction appears |
 
 ## Weekly tally (hours of run time; **every** run appends one line, routine searches included)
 T1 needs every category, or the shares cannot be computed. A run that only works on a routine-search unit still
@@ -87,6 +102,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.25 (`fluxratios --mu-samples`, Abell 2744 + El Gordo) | — | — | 0.15 (orientation, claim, PR) | cloud routine 01WdD16D, 08:09–08:45Z |
 | 2026-W42 | — | — | ≈ 0.3 (halo-subtracted photometry of Abell 2744 flux flags) | 0.15 (orientation, claim, PR) | cloud routine 01FwFCPF, 09:08–09:45Z |
 | 2026-W42 | — | — | ≈ 0.25 (halo_phot final review: injection through the chain, pool, errors) | 0.1 (takeover, PR) | cloud routine 0117Bja4, 10:08–10:45Z |
+| 2026-W42 | — | 1.2 (S0 screen after X1) | — | 0.5 (X1 scope wording, prompt 2026-10-13.1, rules 13.2) | interactive session 01AzKMDv |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

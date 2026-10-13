@@ -46,6 +46,26 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Next:** run `halo_phot.py` over every compact image of Abell 2744, El Gordo and SMACS (SMACS 1.1, 6.x), then
   fold the halo-subtracted fluxes into `fluxratios` as a photometry route so `--mu-samples` refits σ_sys.
 
+## 2026-10-13: X1 closure scope corrected; S0 screen finds no qualifying unit; routine prompt 2026-10-13.1
+- Owner review. X1's closure separates three things:
+  - the cross-checked tool, within its shared premises (point spot, primary + secondary images, bolometric g⁴,
+    common emission assumption);
+  - the exploratory, assumption-dependent position comparison;
+  - the S2 gate observable (flux contrast), which no data tested.
+  No candidate, no new-physics evidence. Gates and numbers are unchanged.
+- S0 screen (`docs/state/units/S0-2026-10-13.md`, about 1.2 h):
+  - throat transmission is already published, and mapping LVK echo results needs injections beyond the 20 h cap;
+  - a far-side mass is invisible to S2-like probes: monopole degenerate with M, quadrupole ≤ 1.1e-4, suppressed
+    ~1e-10 in the orbit;
+  - the lensing arrival order is settled by theorem and mimicked by substructure.
+  None qualifies; the high-risk share idles.
+- Rules trial-2026-10-13.2:
+  - T1 outranks a stale routine-search claim when an authorized unit has an open stage;
+  - T7 sets the S0 screen format;
+  - "ordinary physics cannot mimic" now means comparison with explicit ordinary models over plausible ranges.
+- Routine prompt 2026-10-13.1: one saveable unit step per run (tool, theory or data); the lens-only restriction
+  removed. **Repo updated; the routine's own prompt awaits the owner's paste.**
+
 ## 2026-10-13: `fluxratios` with `bayes.dat` μ errors: model statistics do not explain the flux scatter
 - `lens_consistency.py fluxratios --mu-samples N`: μ at N random chain rows (`chain_magnifications`, family
   redshifts included); each image's model error is half the 16–84 % range of its leave-one-out residual. `resid_z`
