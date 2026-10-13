@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: WHL0137 (Sunrise) against the Scofield+2025 JWST lens model (in progress)
+- Plan: pin the Scofield+2025 MrMARTIAN maps (Zenodo 15110933) as a `MapLensModel`, validate against their κ/μ maps,
+  then test image positions and HST-era RELICS predictions on the JWST image list (Table 3).
+
 ## 2026-10-13: halo fluxes in the fluxratios tension test: Abell 2744's one flag is A2744-QSO1, ordinary
 - **Hypothesis before running:** with halo-subtracted fluxes the floor drops from 0.36 mag to ≈ 0.15 mag, so the
   3σ tension test reaches ≈ 0.5 mag; a flag in both routes goes to vetting, and a null tightens the limit.
