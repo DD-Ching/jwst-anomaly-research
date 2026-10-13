@@ -63,8 +63,13 @@ def data_path() -> Path:
     if not p.exists():
         p.parent.mkdir(parents=True, exist_ok=True)
         with tempfile.NamedTemporaryFile(dir=p.parent, delete=False) as tmp:
-            with urllib.request.urlopen(m["url"], timeout=60) as r:
-                tmp.write(r.read())
+            try:
+                with urllib.request.urlopen(m["url"], timeout=60) as r:
+                    tmp.write(r.read())
+            except Exception:
+                tmp.close()
+                Path(tmp.name).unlink()
+                raise
         digest = file_sha256(tmp.name)
         if digest != m["sha256"]:
             Path(tmp.name).unlink()
