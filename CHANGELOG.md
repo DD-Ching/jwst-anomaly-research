@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: X2 S4b: physical strain and energy of the S4 readouts; η_max 1.52 stands; no polar/radial equations exist
+- **Conversion** (Yang & Lan definitions; Nagar–Rezzolla §6 as the Schwarzschild limit):
+  - H₂ is the Moncrief / Regge–Wheeler function, so the strain is ∫H₂ dt. The NED correction falls as Σ^{-3/2}.
+  - GW energy flux ∝ H₂². The physical EM flux has the same weight in the symmetrised form.
+- **Strain check on the solver.** The h_rss of ∫H₂ dt agrees to 0.5–0.7 % with no drift. The L2 criterion
+  failed as written because of the d/du = −d/dt sign; with the sign fixed (post hoc) and a trapezoid integral it is
+  0.75–1.1 %. This tests linearity and the integration only; the physical relation rests on the derivation.
+- **What stands.** For P2's strain-shaped ringdown source, the run output is the strain and the physical energy is
+  its ψ̇² measure. So S4's η_max = 1.52 and the receiver-side EM share of 67–70 % stand. The pre-written note had
+  said ψ²; it was reversed **post hoc**, on the basis of P2 (budgets cannot decide between the readings).
+- **New.** By t_end, 31 % of the initial energy has gone into EM (both universes); the budget closes to 96 %.
+- **Failed approach.** The ψ² reading (53–56 %) assumes an H₂-shaped source with a memory offset. Kept for
+  comparison only. Arguing from budget closure was also withdrawn, because both measures are conserved.
+- **Coupling-off diagnostic** (V₂₂ unchanged): η_max = 1.24. Barrier shape adds about 10 % over "rw" (1.13), and
+  coupling adds about 23 % more.
+- **S4c.** No polar (ℓ ≥ 2) or radial (ℓ = 0) equations exist for SV with phantom + magnetic NED. 2607.10718's
+  radial system uses a gauge that fails at throats. Nearby phantom and charged wormholes are unstable (ℓ = 0;
+  polar ℓ = 2).
+- **Next if resumed.** The radial ℓ = 0 stability of this background, in a throat-compatible gauge.
+
 ## 2026-10-13: arc orientations with a shape S/N cut: the five-field anti excess is not significant at S/N ≥ 50
 - **Hypothesis before computing:** if the anti excess (7 vs 2.6, five fields) is a lens-model residual, it survives a
   shape-quality cut; if it comes from noisy shapes near critical curves, it disappears at high S/N.

@@ -1228,3 +1228,10 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   (wormhole branch a = 2.13–10 M; a = 2.20: AF 0.308238 − 0.000266i, NED GR-led 0.246140 − 0.000111i).
 - Bronnikov & Walia, Phys. Rev. D 105, 044039 (2022), doi:10.1103/PhysRevD.105.044039, arXiv:2112.13198:
   SV sourced by a phantom scalar plus magnetic NED; L(F) for Schwarzschild-SV, Eq. L-fin.
+- Nagar & Rezzolla, CQG 22 R167 (2005), arXiv:gr-qc/0502064v5: odd-parity Moncrief function Q^(o), CPM function
+  Ψ^(o), ∂ₜΨ^(o) = −Q^(o) + source (Eq. Q_vs_Psi), h₊,× = −Ψ^(o)/r (§6.1), dE/dt ∝ |Ψ̇^(o)|² (Eq. power).
+- Polar / radial stability survey for S4c (titles checked on arxiv.org 2026-10-13): 2607.10718 (Bronnikov et al.,
+  NED in scalar-tensor gravity, ℓ = 0), 1205.2224 (Bronnikov, Konoplya & Zhidenko, PRD 86 024028), 0806.0608
+  (Gonzalez, Guzmán & Sarbach, CQG 26 015010), 1911.13103 (Cremona, Pizzocchero & Sarbach, PRD 101 104061),
+  2507.02258 (Wu, Wang & Miao), 2510.11406 and 2607.18399 (charged wormholes, radial and nonradial), 2608.20081
+  (Alencar et al., de Sitter black bounces, axial).

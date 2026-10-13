@@ -1,0 +1,150 @@
+{
+ "label": "derived; physical strain / flux of S4 readouts; one cell; NED + phantom, axial",
+ "design": "docs/state/units/X2_s4_matter.md, section S4b (written before computing)",
+ "a_minus_2M": 0.0003575000492666014,
+ "dx": 0.1,
+ "t_end_M": 8820.4,
+ "readings": {
+  "strain_source": "source strain = packet p; physical H2 = -d/dt(run output); strain = run output; physical flux ~ (d/dt run output)^2  [P2; used]",
+  "moncrief_source": "H2 itself = packet p; its strain int p dt carries a DC offset (memory); physical flux ~ (run output)^2  [reported for comparison only]"
+ },
+ "strain_check": {
+  "pulses": [
+   {
+    "hrss_B": 0.26526725362101167,
+    "hrss_int_C": 0.26384098036131914,
+    "rel_diff": -0.005376740778302969,
+    "rel_L2_as_written": 1.9946163017763037,
+    "rel_L2_sign_corrected": 0.007527566525958737
+   },
+   {
+    "hrss_B": 0.11621035506468994,
+    "hrss_int_C": 0.11533933799066391,
+    "rel_diff": -0.007495176084275412,
+    "rel_L2_as_written": 1.9924897258732532,
+    "rel_L2_sign_corrected": 0.010786254284719129
+   }
+  ],
+  "end_value_over_peak": 1.0013818792319865e-10,
+  "pass_as_written": false,
+  "pass_sign_corrected_post_hoc": true
+ },
+ "A_ned": {
+  "pulses": [
+   {
+    "hrss_ratio_strain": 0.12225620356041303,
+    "em_fraction_receiver_strain_source": 0.6709880984087883,
+    "em_fraction_receiver_moncrief_source": 0.5326709210022089
+   },
+   {
+    "hrss_ratio_strain": 0.06341842877843631,
+    "em_fraction_receiver_strain_source": 0.6986494059725008,
+    "em_fraction_receiver_moncrief_source": 0.5643350278041643
+   }
+  ],
+  "own_arrivals_after_free_flight_M": [
+   1312.7984887836913,
+   2686.303317891683
+  ],
+  "budget_vs_initial_energy": {
+   "strain_source": {
+    "plus_GW": 0.012171199860810264,
+    "plus_EM": 0.025443908118938697,
+    "minus_GW": 0.6441542173663077,
+    "minus_EM": 0.28258244086539713,
+    "EM_total": 0.30802634898433584,
+    "residual_trapped_or_not_arrived": 0.0356482337885462
+   },
+   "moncrief_source": {
+    "plus_GW": 0.023787325790178525,
+    "plus_EM": 0.028534282668879654,
+    "minus_GW": 0.5754278860072647,
+    "minus_EM": 0.19142839163085504,
+    "EM_total": 0.2199626742997347,
+    "residual_trapped_or_not_arrived": 0.1808221139028221
+   }
+  },
+  "pmw": {
+   "pulse_times_s": [
+    0.4448729825356674,
+    0.9103177519142025,
+    1.3757625212927376,
+    1.8412072906712726
+   ],
+   "pulses_in_PMW": [
+    1,
+    2
+   ],
+   "pulses_on_edge": [],
+   "F": 0.137726092000502,
+   "eta_max": 1.5247655469613888,
+   "applicable_timing": true
+  }
+ },
+ "D_coupling_off": {
+  "pulses": [
+   {
+    "hrss_ratio_strain": 0.15191081974002416
+   },
+   {
+    "hrss_ratio_strain": 0.07538412591257232
+   }
+  ],
+  "own_arrivals_after_free_flight_M": [
+   1314.7328525989399,
+   2692.925927016903
+  ],
+  "budget_vs_initial_energy": {
+   "strain_source": {
+    "plus_GW": 0.017782573594177245,
+    "plus_EM": 0.0,
+    "minus_GW": 0.9709235124276555,
+    "minus_EM": 0.0,
+    "EM_total": 0.0,
+    "residual_trapped_or_not_arrived": 0.011293913978167258
+   },
+   "moncrief_source": {
+    "plus_GW": 0.03551743484359523,
+    "plus_EM": 0.0,
+    "minus_GW": 0.8111079781963358,
+    "minus_EM": 0.0,
+    "EM_total": 0.0,
+    "residual_trapped_or_not_arrived": 0.1533745869600689
+   }
+  },
+  "pmw": {
+   "pulse_times_s": [
+    0.44552848770812997,
+    0.9125619804830778,
+    1.3795954732580256,
+    1.8466289660329733
+   ],
+   "pulses_in_PMW": [
+    1,
+    2
+   ],
+   "pulses_on_edge": [],
+   "F": 0.16958674356708625,
+   "eta_max": 1.2383043366648927,
+   "applicable_timing": true
+  }
+ },
+ "B_smooth_packet_budget": {
+  "strain_source": {
+   "plus_GW": 0.008636752134131396,
+   "plus_EM": 0.02974695401052641,
+   "minus_GW": 0.6327190992338875,
+   "minus_EM": 0.29403769787530687,
+   "EM_total": 0.3237846518858333,
+   "residual_trapped_or_not_arrived": 0.034859496746147856
+  },
+  "moncrief_source": {
+   "plus_GW": 0.013770543637673098,
+   "plus_EM": 0.03186458977072317,
+   "minus_GW": 0.6521036979843832,
+   "minus_EM": 0.23915102334362315,
+   "EM_total": 0.2710156131143463,
+   "residual_trapped_or_not_arrived": 0.06311014526359737
+  }
+ }
+}
