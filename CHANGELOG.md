@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: (in progress) `fluxratios` with `bayes.dat` magnification errors
+- Claim: propagate the Lenstool MCMC μ spread into the flux-ratio residuals (Abell 2744, El Gordo), then a χ² per
+  system in place of the fixed 0.75 mag threshold.
+
 ## 2026-10-13: Abell 2744 flux-ratio and colour test on DJA v7.2: no anomaly
 - `lens_consistency.py --model abell2744-bergamini23 fluxratios` on DJA v7.2 `fix_phot` + `eazypy.zout` (233.5 +
   63.6 MB, sha256 matched; downloaded to the cloud session disk and deleted after use; reason in D-032 addendum).
