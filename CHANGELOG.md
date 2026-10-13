@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-13: X2 S1–S3: SV-throat echo scattering tool and a GW150914 demonstration (phenomenological; no constraint at η ~ 1)
+## 2026-10-13: X2 S1–S3: SV-throat echo scattering tool and a GW150914 demonstration (phenomenological; η bounded to order unity)
 - Owner review fixed the comparison gate. The basis is Miani et al. Table II (95 % upper limit on the in-window
   h_rss, and the merger-ringdown h_rss), not Table I's 50 % detection-probability sensitivity. The model-to-strain
   link is stated as assumptions P1–P4: a test-field barrier as a GW proxy, a free source amplitude η, spectral
@@ -15,7 +15,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - S2, GW150914 (PMW 0.2–1.2 s), applicable cells only (Δt 0.32–0.58 s, a − 2M ≈ 2.2e-4 to 7.1e-4 M; flat weight
   only 0.45–0.58 s):
   - η_max = 0.70–0.73 (scalar), 0.77–0.80 (EM), 1.18–1.24 (RW-form) with the ringdown weight; 0.99–1.01 flat;
-  - no constraint at η ~ 1.
+  - between the frozen result classes: η ~ 1 is disfavoured under the scalar and EM proxies (EM with the
+    ringdown weight only), not under RW-form, so there is no proxy-independent statement.
 - S3 (time domain, double barrier): echo amplitudes match the frequency domain to 2.8 % and 4.5 % (pass); the
   pulse spacing is 4L + 4.1 % (**fails** 1 %; measured post hoc). Shifting S2's pulses by that delay (≈ 16 ms per
   round trip) removes only the Δt = 0.58 s cell; the η_max ranges are unchanged.

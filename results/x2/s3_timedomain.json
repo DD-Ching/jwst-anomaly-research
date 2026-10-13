@@ -64,5 +64,7 @@
   ],
   "packet_rms_width_M": 5.96295749854181
  },
- "pass_10pct": true
+ "amplitude_pass_10pct": true,
+ "spacing_pass_1pct": false,
+ "gate_pass": false
 }

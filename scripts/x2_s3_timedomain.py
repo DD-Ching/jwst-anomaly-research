@@ -119,7 +119,10 @@ def main() -> int:
     out = {"label": "derived; s = 1, l = 2 test field; numerical consistency check"}
     out["run_dx0.2"] = run(dx=0.2)
     out["run_dx0.1"] = run(dx=0.1)
-    out["pass_10pct"] = bool(max(out["run_dx0.1"]["relative_difference"]) <= 0.10)
+    fine = out["run_dx0.1"]
+    out["amplitude_pass_10pct"] = bool(max(fine["relative_difference"]) <= 0.10)
+    out["spacing_pass_1pct"] = bool(abs(fine["spacing_vs_4L_relative"]) <= 0.01)
+    out["gate_pass"] = out["amplitude_pass_10pct"] and out["spacing_pass_1pct"]
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "s3_timedomain.json").write_text(json.dumps(out, indent=1, default=float) + "\n")
     print(json.dumps(out, indent=1, default=float))
