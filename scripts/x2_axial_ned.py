@@ -100,7 +100,8 @@ def _grid_potentials(model, a, x):
     g = xs.Grid(a, ELL, 1, xmax=2500.0, h=0.01)
     ax = np.abs(x)
     inside = ax <= g.x[-1]
-    r = np.where(inside, np.interp(ax, g.x, g.r), ax)  # r ~ r* beyond 2500 M (log term < 0.3 %)
+    # r ~ r* beyond 2500 M (log term < 0.6 %; V ~ 1e-6 there)
+    r = np.where(inside, np.interp(ax, g.x, g.r), ax)
     return potentials(model, r, a)
 
 

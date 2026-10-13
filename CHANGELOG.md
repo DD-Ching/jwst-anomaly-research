@@ -15,8 +15,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - About two-thirds of the echo energy leaves in the EM channel.
   - η_max,NED = 1.52, against 0.79 (s = 1) and 1.13 ("rw") from the same code: outside the 0.70–1.24 proxy
     bracket.
-  - Timing is model-independent: spacing 4L + 3.1 to 3.6 %, first echo 4L − 18 to 23 M. Pulses fall at 0.445 s
-    and 0.910 s, inside the PMW.
+  - Timing agrees across the three models tested (one a): spacing 4L + 3.1 to 3.6 %, and a barrier delay of +27
+    to +32 M on the first echo. Pulses fall at 0.445 s and 0.910 s, inside the PMW.
 - **Failed approach.** A 60 M peak-search grid put every peak at the grid edge for a − 2M ≈ 1e-4 to 1e-3. It was
   fixed with a guard and a test before the comparison.
 - **Missing.** The polar sector (where the phantom scalar enters), η, spin and stability. X2 is paused for owner

@@ -53,7 +53,7 @@ Neither paper was assessed before (no hit in DECISIONS, SOURCES, CHANGELOG or th
   - The larger local eigenvalue of the NED matrix peaks at R ≈ 2.77M.
 
 **Doubts found (recorded, not resolved by the paper):**
-- **D1.** "V₁₂ ≠ V₂₁ makes the system non-Hermitian" (§5.4). Because V₁₂V₂₁ > 0, rescaling H₁ → H₁/√(4π)
+- **D1.** "V₁₂ ≠ V₂₁ makes the system non-Hermitian" (§5.4). Because V₁₂V₂₁ > 0, replacing H₁ by √(4π)·H₁
   makes the potential real and symmetric (off-diagonal √(4π)·V₁₂). The asymmetry is a normalisation artifact.
   Openness comes only from the boundaries. The equations themselves are unaffected. We evolve the symmetric form;
   its conserved flux fixes the relative channel normalisation.
@@ -140,9 +140,13 @@ second model.
 | "rw" proxy | 1332.0 | 1308.9 | 1373.4 | +3.1 % | 0.168 | 0.082 | 0.49 | — | 1.13 |
 
 - **Q1, timing.** It is set by the geometry, not by the matter model.
-  - All three models agree on the spacing to 2.5 M (0.2 %) and on the first echo to 7 M.
-  - In all of them the first echo arrives about 4L − 18 to 23 M after free flight, and the spacing is
-    4L + 41 to 48 M.
+  - The three models tested (not AF; one a) agree on the spacing to 2.5 M (0.2 %) and on the first echo to 7 M.
+  - Arrival is measured against free flight from the packet's start x₀ = x_peak − 25 M. That is a deviation
+    from the frozen "relative to the direct signal" (post hoc label): an inward packet has no direct signal.
+    - The first echo's geometric extra path is 2(x₀ + x_peak) = 4L − 50 M.
+    - The measured 4L − 18 to 23 M therefore means the barriers add **+27 to +32 M** of delay, not an early
+      arrival.
+    - The spacing is 4L + 41 to 48 M.
   - In seconds: pulses at 0.445 s and 0.910 s are inside the PMW, and pulse 3 at 1.376 s is outside. The S2
     applicability of this cell stands.
   - This is the full-phase measurement the owner asked for. 4L understates the spacing by 3–4 %, consistent with
@@ -150,7 +154,7 @@ second model.
     and it is quantified here.
 - **Q2, strength.**
   - In the NED model about two-thirds of the outgoing echo energy leaves in the EM channel. The GW pulses are
-    0.51× the s = 1 proxy and 0.73× the "rw" proxy.
+    0.51× / 0.55× the s = 1 proxy and 0.73× / 0.78× the "rw" proxy (pulse 1 / pulse 2).
   - η_max,NED = 1.52 lies **outside the proxy bracket 0.70–1.24**.
   - By the frozen reading, the test-field bracket was inadequate for the axial sector: single-channel proxies
     cannot lose GW energy to the matter field. With the matter-consistent axial equations, GW150914 gives no
