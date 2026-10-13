@@ -12,9 +12,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   Its axis is band-consistent (weighted moments F150W 150–158°, F200W 150–155°, F277W 163–168°, ±7–21°; prediction
   58°). Looked at (F150W–F356W cutouts): a faint ~1″ structure at PA ≈ 160° joining 1565 to neighbour 1562
   (z_ML 0.27), 1.2″ from a cluster member (z 0.36). Not a candidate yet: blend/tidal feature and the photo-z tail
-  (Z025 0.40) are open; CANUCS flags it `FLAG_DEBLEND`, and its 31-pixel segment touches the member's segment. The predicted counter-image (12″ NNW, μ ≈ +14) has no clear match (inconclusive at ~28.9 mag).
+  (Z025 0.40) are open; CANUCS flags it `FLAG_DEBLEND`, and its 31-pixel segment touches the member's segment, but
+  the axis is unchanged after a Sérsic model of the member is subtracted. The predicted counter-image (12″ NNW, μ ≈ +14) has no clear match (inconclusive at ~28.9 mag).
 - **Failed approach:** treating g_min ≥ 1 as "at a critical curve, direction flips" (addendum 3); 1565 was misfiled.
-- **Next:** `/vet-candidate` on 1565: shape after modelling out the member (e.g. a Sérsic fit of 922), P(z), counter-image depth.
+- **Next:** `/vet-candidate` on 1565: correlated-noise injections at its S/N, P(z), counter-image depth.
 
 ## 2026-10-13: arc orientations in Abell 370: a 4-vs-0.94 anti excess, all at critical curves or intrinsic shapes
 - `lens_consistency.py arcs` (unchanged) with the CANUCS DR1 model and photo-z. Known images: 53/59 within 30°; the

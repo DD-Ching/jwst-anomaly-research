@@ -154,8 +154,14 @@ and `derived`). CANUCS DR1 95 % ranges (Z025–Z975, `observed` catalogue values
   touches the member's segment 922 (375 px in the 2″ box) at its southern end; 1562 is a separate segment (20618).
   Its colours differ from the member's (F150W/F200W 0.47 vs 0.90; F277W/F200W 1.1 vs 0.84), so it is not member
   light alone. At z 2.94, [O III] 5007 Å falls in F200W and Hα in F277W, which fits its F200W/F277W excess
-  (`hypothesis`). Leading ordinary explanation: a deblended fragment whose shape is set by the cut against the
-  member's halo.
+  (`hypothesis`). A deblended fragment whose shape is set by the cut against the member's halo was the leading
+  ordinary explanation; the next item rules it out for the image moments.
+- **Member modelled out (`derived`):** a Sérsic + constant fit to the member on a 4.4″ stamp (n 0.9–1.1, r_eff
+  0.22–0.23″; 1565 and 1562 masked) leaves the axis unchanged: F150W 151–156°, F200W 150–155°, F277W 163–168°
+  (±7–12°). The member's smooth light does not set the axis; the deblending only affects the catalogue segment.
+- **Noise axis (`derived`):** the same 0.08″ window at 150 blank F277W positions within 15″ (no catalogue source within
+  1.2″) gives no preferred axis: 17 % within 15° of the mosaic row axis (153.4°), 14 % of the column axis, 17 %
+  expected. The F200W run timed out (not run). Correlated noise does not obviously set the F277W axis.
 - **Status: unvetted flag, not a candidate.** Ordinary explanations still open: a member tidal feature or a blend
   (the structure through 1562), a low-z photo-z solution (Z025 0.40; P(anti) 0.10 at z 0.6 and 0.24–0.33 below z ≈ 0.45), and an unmodelled
   local perturber (five models agree, so only a perturber none of them contains). Next: `/vet-candidate`.
