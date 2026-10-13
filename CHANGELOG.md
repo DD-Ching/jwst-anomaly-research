@@ -14,6 +14,36 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   4 retries near 00:44Z, so chunk 46 did not finish before the timeout. **Next:** `prescreen --procs 4 --chunks 46-50`,
   then merge-prescreen, fit (4 chunks; `.[dev,cloud,mulens]`), merge-chunks, vet, inject (6 chunks), limit, combine.
 
+## 2026-10-13: Trial tally covers every run (trial-2026-10-13.1)
+- Acceptance check of D-083:
+  - The cloud routine run of 23:10Z claimed X1 with `rules: trial-2026-10-12.1 prompt: none`. The routine's own
+    prompt text is not updated yet; the owner pastes it.
+  - That run passed S1 (#176) and opened S2 (#177).
+  - The 00:09Z run worked W3 gb14 and did not log hours, so T1 shares could not be computed.
+- Fix: every run appends a tally line, routine searches included; gb14's run back-filled.
+
+## 2026-10-12: X1 S1: Simpson–Visser ray tracer validated (gate passed)
+- New `scripts/x1_tracer.py` (quadrature in u = 1/R with regularised turning-point and throat endpoints, plus an
+  independent ODE route) and `tests/test_x1_tracer.py`; `scripts/wh_farside.py` and its tests copied from #172.
+- Checks (`results/x1/s1_checks.json`, derived): Schwarzschild deflection vs Darwin ≤ 4e-15; b_c(a) by ODE rays 4.8e-7;
+  swept angles (far side, and near side above b_c) quadrature vs ODE ≤ 8e-11. Numbers and limits: `docs/state/units/X1.md`.
+- Finding for S2: GRAVITY 2023 App. A's r_o = R + 1 M is the primary image (−0.05 M face-on in our tracer); the
+  all-light centroid is ~0.6 M smaller, so the ordinary model must be traced, not (R + 1) θ_g. Far-side spots at
+  R = 9 M give centroid radii ≈ 4–14 µas and 2.6–17 % of the near-side flux (a = 2.1–7 M).
+- Failed approaches: weighting images by b|db/dΦ|/sin γ alone (it omits 1/|cos α_e| and zeroes the image at the
+  fold where the ray is tangent at the emitter); a uniform b grid misses roots next to the fold (now refined).
+- **Next:** X1 S2 (state file "Next action").
+
+## 2026-10-12: Exploration trial adopted (D-083): split WIP counters, pending index, unit state files; X1 F0 done
+- The owner approved #174. New files: `docs/state/trial.md` (rules T1–T6, version trial-2026-10-12.1, weekly
+  tally, ledger), `docs/state/pending.md` (provisional conclusions of open needs-human PRs) and
+  `docs/state/units/X1.md`.
+- Changed: research-cycle step 1 (trial dispatch) and step 3 (two WIP counters), the CLAUDE.md WIP paragraph,
+  TASKS.md (trial section; S1 "done; do not redo") and `docs/cloud-routine-prompt.md` (prompt version 2026-10-12.1).
+- **The routine's own prompt text is not updated from a session.** The repository files above take effect on the
+  routine's next run, because it reads them on every run.
+- X1 F0 feasibility: see the unit file.
+
 ## 2026-10-12: W3 MOA-II gb10 (twentieth field): 0 survivors; combined limit over twenty fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. gb10 is a 220.9 GB tar, streamed (nothing stored) in 52 tracked

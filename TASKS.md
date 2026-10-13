@@ -8,6 +8,14 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 - **Cloud routine:** TXS 0506+056 SkyLLH benchmark on IceTracks-DR2 (done, D-080), E-NF1 on IceTracks-DR2 (short lags done, D-079; rest per Neutrino Frontier item 1), round 2,
   all scans.
 
+## Exploration trial (owner-approved 2026-10-12 → 2026-11-09; D-083)
+Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 10 % upkeep), units and ledger:
+`docs/state/trial.md`. Provisional conclusions of open needs-human PRs, and what is "done; do not redo":
+`docs/state/pending.md`.
+- **X1 far-side SV hot spots at Sgr A*** (authorized): state file `docs/state/units/X1.md`. F0 feasibility and S1
+  (validated SV tracer, `scripts/x1_tracer.py`) done; next is S2 (discriminant). Continue from the state file's "Next action".
+- **X2:** empty until an S0-passed direction that differs from X1 qualifies.
+
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
    separation. The five requested channels are null (family p = 0.27 on the re-pinned GBM snapshot). The
@@ -25,8 +33,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
    SL2S): null, max 2.49σ vs 5.78σ, detectable ×0.21 / ×5.6 (addendum 4). Paused: revisit with λ_int-free
    (spatially resolved JWST/KCWI) kinematics or new time-delay lenses.
 1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
-   mismatch). Next: CHIME/FRB Catalog 2 (CANFAR downloads reset by the proxy; try another route), TTE for short and
-   faint bursts, an s ≠ 1 chain, a generative pulse-model null.
+   mismatch). **Done on unmerged PRs (provisional; see `docs/state/pending.md`; do not redo):** the s ≠ 1 chain and
+   the full M2 re-screen (#167); TTE for short and faint bursts and the catalogue E_peak joint constraint (#169; the
+   S1 energy upgrade is paused). Remaining: CHIME/FRB Catalog 2 (CANFAR downloads reset by the proxy; try another
+   route), a generative pulse-model null.
 2. **S2 flat-kernel SN residuals** (D-070 + addendum): Pantheon+ × LS DR9 null (γ < 0.025), DES-SN5YR × LS DR9 null
    (γ < 0.019 mag per unit T/⟨T⟩, α = 2, one-sided 95 %, dilution- and chain-corrected); α = 1 is kernel-degenerate. The
    lensing positive control is only ~1.7σ (DES) / ~2σ combined. Next: a deeper galaxy column (DES Y3 Gold or LS DR10
