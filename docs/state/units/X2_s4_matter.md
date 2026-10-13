@@ -16,7 +16,7 @@ Neither paper was assessed before (no hit in DECISIONS, SOURCES, CHANGELOG or th
   - **(AF) anisotropic fluid.** δT_(1)(3) = δT_(2)(3) = 0 because the fluid's u and x vectors are kept
     unperturbed. That is a closure by assumption (no action; axial fluid degrees of freedom frozen). The result is
     one channel, V_AF = f μ²/Σ² + Σ (1/Σ)_{,r*r*}, with μ² = (ℓ−1)(ℓ+2).
-  - **(NED) nonlinear electrodynamics + scalar.** Action Eq. 7. The scalar decouples from the axial sector by
+  - **(NED) nonlinear electrodynamics + scalar.** Action in §2.2. The scalar decouples from the axial sector by
     parity. The axial sector is a closed two-channel system: H₂ (gravitational) coupled to H₁ (EM), with
     potentials V₁₁, V₁₂ = V₂₁/4π and V₂₂ = V_AF (Eq. 56). These depend only on G⁰₀ − G²₂, so the electric and
     magnetic sources give the same matrix.
@@ -118,3 +118,65 @@ second model.
     model, and P1 for the axial sector narrows to that single value.
   - If it lies outside, the proxy bracket was inadequate for this sector.
   - Either way the result remains conditional on P2–P4, η and the missing polar sector.
+
+## Stage 2 results (derived; `scripts/x2_axial_ned.py`, `tests/test_x2_axial_ned.py`, `results/x2/s4_axial_ned.json`)
+**Reproduction: passes.** Yang & Lan, a = 2.20M, ℓ = 2.
+- NED GR-led mode: 0.246142 − 0.000116i against the published 0.246140 − 0.000111i (Re 0.001 %; Im ratio 1.04).
+- Converged: dx = 0.1 and 0.05 agree to 3e-6 in Re ω and 4e-5 in Im ω.
+- Coupling-off (AF) control: 0.308249 − 0.000263i against 0.308238 − 0.000266i.
+- The matrix pencil also finds faster-decaying modes with larger amplitude in [350, 6000] M, for example
+  0.3117 − 0.0034i. The published mode is the long-lived one, as the paper's late-time Prony fit implies.
+- A first run used a 60 M peak-search grid. At a − 2M = 3.6e-4 the peak lies about 330 M from the throat, so
+  the echo windows were wrong. This was a code bug, fixed (guard and test) before the comparison below. The
+  reproduction was unaffected: the peak at a = 2.20 is 13.7 M out.
+
+**Comparison at GW150914's S2 cell** (a − 2M = 3.575e-4; dx = 0.1, converged against 0.2 within the frozen
+1 % / 2 M criteria):
+
+| Model | Own 4L (M) | First echo − free flight (M) | Spacing (M) | Spacing vs 4L | p₁ | p₂ | p₂/p₁ | GW-echo energy in EM channel | η_max (PMW) |
+|---|---|---|---|---|---|---|---|---|---|
+| NED magnetic + phantom (axial GW) | 1330.8 | 1312.8 | 1373.5 | +3.2 % | 0.122 | 0.063 | 0.52 | 67 % / 70 % (pulse 1 / 2) | **1.52** |
+| s = 1 proxy (EM) | 1327.9 | 1305.9 | 1375.9 | +3.6 % | 0.239 | 0.116 | 0.48 | — | 0.79 |
+| "rw" proxy | 1332.0 | 1308.9 | 1373.4 | +3.1 % | 0.168 | 0.082 | 0.49 | — | 1.13 |
+
+- **Q1, timing.** It is set by the geometry, not by the matter model.
+  - All three models agree on the spacing to 2.5 M (0.2 %) and on the first echo to 7 M.
+  - In all of them the first echo arrives about 4L − 18 to 23 M after free flight, and the spacing is
+    4L + 41 to 48 M.
+  - In seconds: pulses at 0.445 s and 0.910 s are inside the PMW, and pulse 3 at 1.376 s is outside. The S2
+    applicability of this cell stands.
+  - This is the full-phase measurement the owner asked for. 4L understates the spacing by 3–4 %, consistent with
+    S3's +4.1 % at a different a. S3's failed 1 % spacing gate remains a failure: the cause is the 4L reference,
+    and it is quantified here.
+- **Q2, strength.**
+  - In the NED model about two-thirds of the outgoing echo energy leaves in the EM channel. The GW pulses are
+    0.51× the s = 1 proxy and 0.73× the "rw" proxy.
+  - η_max,NED = 1.52 lies **outside the proxy bracket 0.70–1.24**.
+  - By the frozen reading, the test-field bracket was inadequate for the axial sector: single-channel proxies
+    cannot lose GW energy to the matter field. With the matter-consistent axial equations, GW150914 gives no
+    constraint at η ~ 1 for this cell.
+  - The EM fraction moves by 1.6 % (pulse 1) and 4 % (pulse 2) between dx = 0.2 and 0.1. It was not in the
+    frozen convergence list.
+- **Q3, decay.** p₂/p₁ is 0.52 (NED) against 0.48–0.49 (proxies). The per-round-trip loss is similar; the
+  difference is mainly in the first transmission.
+- **Weight check.** The same code gives s = 1: 0.79 and "rw": 1.13, against S2's frequency-domain 0.80 and 1.24.
+  Ringdown-packet weighting agrees with the Lorentzian weighting to 1.4 % (s = 1) and 9 % ("rw").
+
+**What this narrows, and what it does not.**
+- It **narrows** P1 for the axial sector only, in one matter model and at one a.
+  - The question was which barrier GWs obey. In the axial sector it is answered with a closed matter
+    perturbation, and the answer falls outside the earlier bracket because of GW→EM conversion.
+- It does **not** address:
+  - the polar sector (non-isospectral; the phantom scalar enters there);
+  - η (the packet amplitude is not η);
+  - spin, stability beyond linear axial modes, or the electric/fluid alternatives (AF is a different
+    closure; not compared);
+  - other a values or other events.
+- Not a statement about SV existence.
+
+**Next executable step (if the owner resumes X2).**
+- Same tool, AF (V₂₂ alone) at the same cell (≤ 0.3 h). This separates barrier-shape from EM-leakage effects.
+- The polar-sector equations for the NED + phantom source: a literature check first. None is in our record, and
+  Yang & Lan list polar modes as future work.
+- Parameters for a rerun: a − 2M = 3.575e-4 (Δt = 0.45 s at M_det = 68.8 M☉); packet w₀ = 0.5307, τ = 12.2 M,
+  started 25 M inside the GW peak; observer at r* = 1500; dx 0.2 / 0.1.
