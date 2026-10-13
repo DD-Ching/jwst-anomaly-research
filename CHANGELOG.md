@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: arc orientations with a shape S/N cut: the five-field anti excess is not significant at S/N ≥ 50
+- **Hypothesis before computing:** if the anti excess (7 vs 2.6, five fields) is a lens-model residual, it survives a
+  shape-quality cut; if it comes from noisy shapes near critical curves, it disappears at high S/N.
+- **Result (derived, stored `results/arcs/*/arcs.ecsv`):** pipeline isophotal S/N ≥ 50 leaves 3 anti vs 1.33 expected
+  (P = 0.15) of 91 background sources in strong shear, aligned fraction 0.92; all three are intrinsic shapes looked at
+  earlier. Abell 370 1565 and 1788 drop out at S/N 26.6 and 21.5. Null. Details: `docs/fields/abell370.md`.
+- **Next:** blend rejection and F150W vs F444W shapes need the catalogues again; critical-curve curvature.
+
 ## 2026-10-13: arc orientations in Abell 370: a 4-vs-0.94 anti excess, all at critical curves or intrinsic shapes
 - `lens_consistency.py arcs` (unchanged) with the CANUCS DR1 model and photo-z. Known images: 53/59 within 30°; the
   two beyond 60° are knots of the resolved spiral system 6.
