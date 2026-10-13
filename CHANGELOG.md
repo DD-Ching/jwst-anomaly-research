@@ -15,7 +15,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   then merge-prescreen, fit (4 chunks; `.[dev,cloud,mulens]`), merge-chunks, vet, inject (6 chunks), limit, combine.
 - Run 3 (cloud, 01:09–01:13Z, `prescreen --procs 4 --chunks 46-50`, `timeout 1500`): throughput back at 68–89 MB/s;
   chunks 46–50 tracked, 0 errors. **Pre-screen complete: 182,302 light curves, 2,066 shape passes, 109 not at a
-  shared epoch** (merge ran automatically). Fits started (`fit --procs 4 --chunk K/4`, sequential, detached).
+  shared epoch** (merge ran automatically). Fits (`fit --procs 4 --chunk K/4`, sequential, detached, 01:14–01:42Z):
+  **109 fits, 0 errors, 103 flags** (28/24/25/26 per chunk; 317–552 s each). `vet --procs 4` (01:42–01:45Z):
+  **0 of 103 survive** (`results/w3_moa/vetting_gb14.json`). Quiet χ²/dof 95th percentile 3.37; CDS XMatch worked
+  (Gaia DR3 RP for 55 / 109). Leading failures: exotic_in_domain 97, feature_bracketed 88, exotic_chi2_cap 78,
+  repeated_deficit 47. Contact sheet inspected: box and eclipse dips, slow variables, noisy flat curves; caustic
+  spikes only in the models. **Next:** `inject --procs 4 --chunk K/6` (6 chunks, ~18 min each), `merge-inject --n 6`,
+  `limit`, `combine`, then docs/exotic_limits.md and the PR.
 
 ## 2026-10-13: Trial tally covers every run (trial-2026-10-13.1)
 - Acceptance check of D-083:
