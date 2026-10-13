@@ -1,0 +1,624 @@
+{
+ "labels": "derived (our computation); data: processed numerical values (CDS J/A+A/618/L10 avg.dat); exploratory, no held-out flare",
+ "data": {
+  "url": "https://cdsarc.cds.unistra.fr/ftp/J/A+A/618/L10/avg.dat",
+  "sha256": "7d1729d345ea397d3c09223fcbc6777b9c675f614e66490c8c10c649f5deb05f",
+  "n_epochs": 10
+ },
+ "chi2_static_point": 68.96533018421766,
+ "p_static_point": 6.757456933746111e-08,
+ "dof_models": 13,
+ "min_delta_chi2_far_minus_best_ordinary_same_P": {
+  "2.1": 34.34426198087081,
+  "3.0": 35.65040061064539,
+  "5.0": 36.94837769912743,
+  "7.0": 28.449474721940092,
+  "9.0": 13.625773477283811
+ },
+ "note_error_scaling": "delta chi2 scales as 1/k^2 if all errors are underestimated by k",
+ "sensitivity_static_offset_P60": [
+  {
+   "static_offset_max_uas": 40.0,
+   "far_a2.1_chi2": 53.701627257496156,
+   "ordinary_chi2": 19.159719358243255,
+   "far_best_offset_uas": 0.0,
+   "far_best_fs": 0.0
+  },
+  {
+   "static_offset_max_uas": 60.0,
+   "far_a2.1_chi2": 53.534883461845034,
+   "ordinary_chi2": 19.159719358243255,
+   "far_best_offset_uas": 60.0,
+   "far_best_fs": 0.25
+  },
+  {
+   "static_offset_max_uas": 100.0,
+   "far_a2.1_chi2": 49.93626938776005,
+   "ordinary_chi2": 19.159719358243255,
+   "far_best_offset_uas": 100.0,
+   "far_best_fs": 0.5
+  }
+ ],
+ "fits": [
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.6,
+   "P_min": 57.0,
+   "R_M": 6.197925013529639,
+   "warnings": 0,
+   "chi2": 27.928192128678585,
+   "theta_deg": 115.0,
+   "phi0_deg": 115.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    4.7901131618990656,
+    -18.18041429501131
+   ],
+   "p_value": 0.009260812340277388
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.7,
+   "P_min": 57.0,
+   "R_M": 6.868746850765939,
+   "warnings": 0,
+   "chi2": 24.966567772685774,
+   "theta_deg": 90.0,
+   "phi0_deg": 135.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    6.06441881148937,
+    -20.570648213076954
+   ],
+   "p_value": 0.023318298590752143
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.8,
+   "P_min": 57.0,
+   "R_M": 7.50825144994275,
+   "warnings": 0,
+   "chi2": 22.475731988625828,
+   "theta_deg": 90.0,
+   "phi0_deg": 135.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    7.720317254871272,
+    -21.229023342318676
+   ],
+   "p_value": 0.04841497889894311
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.9,
+   "P_min": 57.0,
+   "R_M": 8.12157932057993,
+   "warnings": 0,
+   "chi2": 20.398202226941223,
+   "theta_deg": 90.0,
+   "phi0_deg": 135.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    9.25727585357968,
+    -21.826845589181666
+   ],
+   "p_value": 0.0857163158786625
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 1.0,
+   "P_min": 57.0,
+   "R_M": 8.712554022502806,
+   "warnings": 0,
+   "chi2": 18.617375324498774,
+   "theta_deg": 75.0,
+   "phi0_deg": 145.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    10.020564179379873,
+    -24.223942907601877
+   ],
+   "p_value": 0.1354531386651978
+  },
+  {
+   "model": "far",
+   "a_M": 2.1,
+   "eta": 1.0,
+   "P_min": 57.0,
+   "R_M": 8.712554022502806,
+   "warnings": 0,
+   "chi2": 53.31862800628785,
+   "theta_deg": 165.0,
+   "phi0_deg": 20.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -8.532666287169475,
+    -13.152859838697903
+   ],
+   "p_value": 7.952969519734203e-07
+  },
+  {
+   "model": "far",
+   "a_M": 3.0,
+   "eta": 1.0,
+   "P_min": 57.0,
+   "R_M": 8.712554022502806,
+   "warnings": 2,
+   "chi2": 54.711089036260645,
+   "theta_deg": 165.0,
+   "phi0_deg": 330.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -9.209855935085944,
+    -12.418169077111834
+   ],
+   "p_value": 4.541074796785066e-07
+  },
+  {
+   "model": "far",
+   "a_M": 5.0,
+   "eta": 1.0,
+   "P_min": 57.0,
+   "R_M": 8.712554022502806,
+   "warnings": 2,
+   "chi2": 55.5657530236262,
+   "theta_deg": 214.99999999999997,
+   "phi0_deg": 315.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -11.387763488926465,
+    -11.127543718955607
+   ],
+   "p_value": 3.21424499880775e-07
+  },
+  {
+   "model": "far",
+   "a_M": 7.0,
+   "eta": 1.0,
+   "P_min": 57.0,
+   "R_M": 8.712554022502806,
+   "warnings": 1,
+   "chi2": 47.066850046438866,
+   "theta_deg": 315.0,
+   "phi0_deg": 265.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -9.604463537938134,
+    -13.996861277270991
+   ],
+   "p_value": 9.41423259438234e-06
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.6,
+   "P_min": 60.0,
+   "R_M": 6.4135317253000235,
+   "warnings": 0,
+   "chi2": 28.142707520646542,
+   "theta_deg": 115.0,
+   "phi0_deg": 119.99999999999999,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    6.566077731865334,
+    -19.065725057984384
+   ],
+   "p_value": 0.008643953356576438
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.7,
+   "P_min": 60.0,
+   "R_M": 7.107689387057362,
+   "warnings": 0,
+   "chi2": 25.293569182675967,
+   "theta_deg": 90.0,
+   "phi0_deg": 140.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    8.02733896787823,
+    -21.703381777272543
+   ],
+   "p_value": 0.02111582136348815
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.8,
+   "P_min": 60.0,
+   "R_M": 7.769440380549943,
+   "warnings": 0,
+   "chi2": 22.861089304654143,
+   "theta_deg": 90.0,
+   "phi0_deg": 140.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    9.880603735350563,
+    -22.467766007673813
+   ],
+   "p_value": 0.043373807603276526
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.9,
+   "P_min": 60.0,
+   "R_M": 8.404104037782886,
+   "warnings": 0,
+   "chi2": 20.839109994133263,
+   "theta_deg": 90.0,
+   "phi0_deg": 140.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    11.608132896256585,
+    -23.167540136665195
+   ],
+   "p_value": 0.07617239511219148
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 1.0,
+   "P_min": 60.0,
+   "R_M": 9.015636928445208,
+   "warnings": 0,
+   "chi2": 19.159719358243255,
+   "theta_deg": 75.0,
+   "phi0_deg": 150.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    12.4516803620962,
+    -25.856186685724452
+   ],
+   "p_value": 0.11823419412482125
+  },
+  {
+   "model": "far",
+   "a_M": 2.1,
+   "eta": 1.0,
+   "P_min": 60.0,
+   "R_M": 9.015636928445208,
+   "warnings": 0,
+   "chi2": 53.701627257496156,
+   "theta_deg": 165.0,
+   "phi0_deg": 20.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -8.233695728737137,
+    -13.298991942841399
+   ],
+   "p_value": 6.819216446971762e-07
+  },
+  {
+   "model": "far",
+   "a_M": 3.0,
+   "eta": 1.0,
+   "P_min": 60.0,
+   "R_M": 9.015636928445208,
+   "warnings": 2,
+   "chi2": 55.04689706042694,
+   "theta_deg": 169.99999999999997,
+   "phi0_deg": 330.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -8.975599280969682,
+    -12.289637150463868
+   ],
+   "p_value": 3.9650902809173797e-07
+  },
+  {
+   "model": "far",
+   "a_M": 5.0,
+   "eta": 1.0,
+   "P_min": 60.0,
+   "R_M": 9.015636928445208,
+   "warnings": 1,
+   "chi2": 56.15971978347187,
+   "theta_deg": 220.0,
+   "phi0_deg": 315.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -11.311886087557802,
+    -11.08267662294384
+   ],
+   "p_value": 2.5262292935949214e-07
+  },
+  {
+   "model": "far",
+   "a_M": 7.0,
+   "eta": 1.0,
+   "P_min": 60.0,
+   "R_M": 9.015636928445208,
+   "warnings": 2,
+   "chi2": 48.58571310898661,
+   "theta_deg": 315.0,
+   "phi0_deg": 270.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -9.627867388602063,
+    -13.858083140146302
+   ],
+   "p_value": 5.202177821902772e-06
+  },
+  {
+   "model": "far",
+   "a_M": 9.0,
+   "eta": 1.0,
+   "P_min": 60.0,
+   "R_M": 9.015636928445208,
+   "warnings": 1,
+   "chi2": 32.785492835527066,
+   "theta_deg": 14.999999999999998,
+   "phi0_deg": 220.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    0.7678244135285843,
+    -19.859313854047954
+   ],
+   "p_value": 0.0018349419282034129
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.6,
+   "P_min": 63.0,
+   "R_M": 6.625573051706369,
+   "warnings": 0,
+   "chi2": 28.429566541101128,
+   "theta_deg": 115.0,
+   "phi0_deg": 124.99999999999999,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    8.276625045695807,
+    -19.752460783966182
+   ],
+   "p_value": 0.007879622709527058
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.7,
+   "P_min": 63.0,
+   "R_M": 7.342680644584111,
+   "warnings": 0,
+   "chi2": 25.669416676216073,
+   "theta_deg": 90.0,
+   "phi0_deg": 145.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    9.930860943230462,
+    -22.62142547092423
+   ],
+   "p_value": 0.018823461245482134
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.8,
+   "P_min": 63.0,
+   "R_M": 8.026310154379551,
+   "warnings": 0,
+   "chi2": 23.30719345639166,
+   "theta_deg": 90.0,
+   "phi0_deg": 145.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    11.971016287215479,
+    -23.471429226879465
+   ],
+   "p_value": 0.038134194655224884
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 0.9,
+   "P_min": 63.0,
+   "R_M": 8.681956778480922,
+   "warnings": 0,
+   "chi2": 21.35570993931379,
+   "theta_deg": 90.0,
+   "phi0_deg": 145.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    13.88015142226224,
+    -24.25414541680245
+   ],
+   "p_value": 0.06618453057276064
+  },
+  {
+   "model": "ordinary",
+   "a_M": 0.0,
+   "eta": 1.0,
+   "P_min": 63.0,
+   "R_M": 9.313707896920246,
+   "warnings": 0,
+   "chi2": 19.735513861743684,
+   "theta_deg": 75.0,
+   "phi0_deg": 155.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    14.818369947663204,
+    -27.220939789229924
+   ],
+   "p_value": 0.1020042303397316
+  },
+  {
+   "model": "far",
+   "a_M": 2.1,
+   "eta": 1.0,
+   "P_min": 63.0,
+   "R_M": 9.313707896920246,
+   "warnings": 1,
+   "chi2": 54.079775842614495,
+   "theta_deg": 165.0,
+   "phi0_deg": 20.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -7.963457000734213,
+    -13.425682037633951
+   ],
+   "p_value": 5.857024346096006e-07
+  },
+  {
+   "model": "far",
+   "a_M": 3.0,
+   "eta": 1.0,
+   "P_min": 63.0,
+   "R_M": 9.313707896920246,
+   "warnings": 2,
+   "chi2": 55.385914472389075,
+   "theta_deg": 165.0,
+   "phi0_deg": 335.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -8.683896745349822,
+    -12.704013465528742
+   ],
+   "p_value": 3.4570223840433853e-07
+  },
+  {
+   "model": "far",
+   "a_M": 5.0,
+   "eta": 1.0,
+   "P_min": 63.0,
+   "R_M": 9.313707896920246,
+   "warnings": 2,
+   "chi2": 56.71638265481606,
+   "theta_deg": 210.0,
+   "phi0_deg": 325.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -10.916418728771697,
+    -11.23873368722742
+   ],
+   "p_value": 2.0147178739536567e-07
+  },
+  {
+   "model": "far",
+   "a_M": 7.0,
+   "eta": 1.0,
+   "P_min": 63.0,
+   "R_M": 9.313707896920246,
+   "warnings": 2,
+   "chi2": 49.94308471284136,
+   "theta_deg": 315.0,
+   "phi0_deg": 275.0,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -9.681800789981112,
+    -13.625326984761925
+   ],
+   "p_value": 3.0492520221328817e-06
+  },
+  {
+   "model": "far",
+   "a_M": 9.0,
+   "eta": 1.0,
+   "P_min": 63.0,
+   "R_M": 9.313707896920246,
+   "warnings": 1,
+   "chi2": 37.26407357337596,
+   "theta_deg": 355.0,
+   "phi0_deg": 244.99999999999997,
+   "sense": -1.0,
+   "static_fraction": 0.0,
+   "static_offset_uas": 0.0,
+   "static_psi_deg": 0.0,
+   "centre_uas": [
+    -1.3753412254450077,
+    -18.39393818794191
+   ],
+   "p_value": 0.00037659446390026966
+  }
+ ]
+}
