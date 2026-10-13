@@ -28,12 +28,16 @@ from pathlib import Path
 import numpy as np
 from astropy.cosmology import FlatLambdaCDM
 from scipy.optimize import brentq
+from sunrise_scofield import system_of
 
 Z_LENS = 0.566
 Z_MAPS = 6.2  # the redshift the maps are said to be scaled to (kappa and mu maps agree)
 PIXEL = 0.02  # arcsec, the mosaic and map pixel scale
 COSMO = FlatLambdaCDM(H0=70.0, Om0=0.3)
 Z_GRID = np.round(np.arange(0.6, 20.0001, 0.02), 4)
+# ASSUMPTION: a system "fits" at z where its source-plane rms is <= LEVEL_FACTOR x the best rms of
+# system 1's constraint images (z = 6.2 is a test, not an input)
+LEVEL_FACTOR = 1.5
 
 
 def dratio(zs: float, zl: float = Z_LENS, cosmo=COSMO) -> float:
@@ -46,7 +50,10 @@ def dratio(zs: float, zl: float = Z_LENS, cosmo=COSMO) -> float:
 def zref_for_scale(s: float) -> float:
     """z_ref such that PIXEL * r(Z_MAPS) / r(z_ref) = s (s in arcsec per map unit)."""
     target = PIXEL * dratio(Z_MAPS) / s
-    return float(brentq(lambda z: dratio(z) - target, Z_LENS + 1e-3, 1e4))
+    lo, hi = Z_LENS + 1e-3, 1e4
+    if not dratio(lo) < target < dratio(hi):  # no source redshift gives this scale
+        return float("nan")
+    return float(brentq(lambda z: dratio(z) - target, lo, hi))
 
 
 def image_plane_rms(rows: list[dict], f: float, ref: set[str] | None = None) -> dict:
@@ -55,7 +62,9 @@ def image_plane_rms(rows: list[dict], f: float, ref: set[str] | None = None) -> 
     The source is the mean of the reference images' beta (all images if ref is empty or None);
     each offset is |A^-1 (beta_i - beta_mean)| with A = 1 - f * psi_raw (linear, so approximate
     near critical curves). rms is over the reference images only."""
-    use = [r for r in rows if ref and r["image"] in ref] or rows
+    use = [r for r in rows if r["image"] in ref] if ref else rows
+    if not use:
+        raise ValueError(f"no row matches the reference images {sorted(ref)}")
     bx = np.mean([r["x_arcsec"] - f * r["alpha_x"] for r in use])
     by = np.mean([r["y_arcsec"] - f * r["alpha_y"] for r in use])
     out = {}
@@ -81,8 +90,9 @@ def fit_redshift(rows, zref: float, ref=None, grid=Z_GRID) -> dict:
     z_best at the top of the grid means the rms still falls toward z -> infinity."""
     r_ref = dratio(zref)
     fs = [PIXEL * dratio(z) / r_ref for z in grid]
-    beta = [image_plane_rms(rows, f, ref)["rms_beta"] for f in fs]
-    theta = [image_plane_rms(rows, f, ref)["rms_theta"] for f in fs]
+    res = [image_plane_rms(rows, f, ref) for f in fs]
+    beta = [r["rms_beta"] for r in res]
+    theta = [r["rms_theta"] for r in res]
     k = int(np.argmin(beta))
     return {
         "z": [float(z) for z in grid],
@@ -114,35 +124,25 @@ def main(argv=None) -> int:
     s_med = float(np.median(list(per.values())))
     zref = zref_for_scale(s_med)
     s16, s84 = (float(v) for v in np.percentile(list(per.values()), [16, 84]))
-    s3 = PIXEL * dratio(Z_MAPS) / dratio(3.0)
+    f62 = PIXEL * dratio(Z_MAPS) / dratio(zref)  # the kappa-matched scale (z = 6.2)
 
     # 2. redshifts: system 1 (known case, constraint images) and system 2 (held out, z unknown)
-    sys1 = [r for r in rows if r["image"].startswith("1.")]
-    cons = {r["image"] for r in sys1 if r["constraint"]}
-    sys2 = [r for r in rows if r["image"].startswith("2")]
-    ref_rms = image_plane_rms(sys1, s3, cons)["rms_beta"]  # constraint level (system 1 at z = 6.2)
-    fits = {}
-    c1 = [r for r in sys1 if r["constraint"]]
-    for name, members, ref in (
-        ("1 (constraints)", [r for r in sys1 if r["constraint"]], cons),
-        (
-            "1.1 (constraints)",
-            [r for r in c1 if r["image"].startswith("1.1")],
-            None,
-        ),
-        ("1.2", [r for r in sys1 if r["image"].startswith("1.2")], None),
-        (
-            "1.7 (constraints)",
-            [r for r in c1 if r["image"].startswith("1.7")],
-            None,
-        ),
-        ("2", sys2, None),
-    ):
-        f = fit_redshift(members, 3.0, ref)
-        f["z_interval_beta_le_constraint_rms"] = interval(f, ref_rms)
-        f["z_interval_beta_le_2x_constraint_rms"] = interval(f, 2 * ref_rms)
-        fits[name] = f
-    at3 = image_plane_rms(sys1, s3, cons)
+    groups: dict[str, list[dict]] = {}
+    for r in rows:
+        groups.setdefault(system_of(r["image"]), []).append(r)
+    c1 = [r for r in rows if r["constraint"]]
+    sets = {
+        "1 (constraint images)": c1,
+        "1.1 (constraint images)": [r for r in c1 if system_of(r["image"]) == "1.1"],
+        "1.2 (all constraints)": groups["1.2"],
+        "1.7 (constraint images)": [r for r in c1 if system_of(r["image"]) == "1.7"],
+        "2 (held out)": groups["2"],
+    }
+    fits = {k: fit_redshift(v, zref) for k, v in sets.items()}
+    level = LEVEL_FACTOR * fits["1 (constraint images)"]["rms_beta_best"]
+    for v in fits.values():
+        v["z_interval_beta_le_level"] = interval(v, level)
+    at62 = image_plane_rms(c1, f62)
     result = {
         "provenance": "derived from model_prediction map values (Scofield+2025 M5-G1) "
         "at observed positions",
@@ -156,13 +156,13 @@ def main(argv=None) -> int:
             "scale_p16_p84": [s16, s84],
             "zref_median": zref,
             "zref_p16_p84": [zref_for_scale(s84), zref_for_scale(s16)],
-            "scale_if_zref_3": s3,
         },
-        "system1_at_zref3": {
-            "constraint_rms_theta": at3["rms_theta"],
-            "constraint_rms_beta": at3["rms_beta"],
-            "images": at3["images"],
+        "system1_constraints_at_z6.2": {
+            "rms_theta_linear": at62["rms_theta"],
+            "rms_beta": at62["rms_beta"],
+            "images": at62["images"],
         },
+        "level": {"factor_assumption": LEVEL_FACTOR, "rms_beta_arcsec": level},
         "zfit": {
             k: {kk: vv for kk, vv in v.items() if kk not in ("z", "rms_beta", "rms_theta")}
             for k, v in fits.items()
@@ -170,28 +170,18 @@ def main(argv=None) -> int:
         "zfit_curves": {
             k: {kk: v[kk][::10] for kk in ("z", "rms_beta", "rms_theta")} for k, v in fits.items()
         },
-        "scale_at_z_infinity": PIXEL * dratio(1e4) / dratio(3.0),
-        "reference_rms_level_arcsec": ref_rms,
+        "scale_at_z_infinity": PIXEL * dratio(1e4) / dratio(zref),
     }
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=1) + "\n")
-    print(
-        f"scale median {s_med:.5f} (16-84 {s16:.5f}-{s84:.5f}) -> z_ref {zref:.2f}; "
-        f"z_ref=3 gives {s3:.5f}"
-    )
-    print(
-        f"system 1 constraints at z_ref=3: rms theta {at3['rms_theta']:.3f} "
-        f"beta {at3['rms_beta']:.3f}"
-    )
-    for k, v in at3["images"].items():
-        print(f"  {k:5s} dbeta {v['dbeta_arcsec']:.3f} dtheta {v['dtheta_linear_arcsec']:.3f}")
+    print(f"scale median {s_med:.5f} (16-84 {s16:.5f}-{s84:.5f}) -> z_ref {zref:.3f}")
+    print(f"system 1 constraints at z = 6.2: rms beta {at62['rms_beta']:.3f}; level {level:.3f}")
     for k, v in fits.items():
+        edge = " (grid edge)" if v["at_grid_edge"] else ""
         print(
-            f"z fit {k}: best {v['z_best']:.2f}{' (grid edge)' if v['at_grid_edge'] else ''} "
-            f"beta rms {v['rms_beta_best']:.3f}; "
-            f"<= {ref_rms:.3f}: {v['z_interval_beta_le_constraint_rms']}; "
-            f"<= 2x: {v['z_interval_beta_le_2x_constraint_rms']}"
+            f"z fit {k}: best {v['z_best']:.2f}{edge} beta rms {v['rms_beta_best']:.3f}; "
+            f"<= level: {v['z_interval_beta_le_level']}"
         )
     return 0
 

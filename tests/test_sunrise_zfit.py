@@ -66,3 +66,15 @@ def test_interval_and_grid_edge():
     lo, hi = zf.interval(fit, 0.05)
     assert lo < 6.2 < hi
     assert zf.interval(fit, -1.0) is None
+
+
+def test_grid_edge_flag_when_the_true_redshift_is_beyond_the_grid():
+    fit = zf.fit_redshift(_sis_rows(6.2), 3.0, grid=np.arange(1.0, 4.0, 0.02))
+    assert fit["at_grid_edge"]
+    assert fit["z_best"] == pytest.approx(3.98)
+
+
+def test_unmatched_reference_set_raises_and_impossible_scale_is_nan():
+    with pytest.raises(ValueError):
+        zf.image_plane_rms(_sis_rows(3.0), zf.PIXEL, {"no-such-image"})
+    assert np.isnan(zf.zref_for_scale(0.01))
