@@ -1,0 +1,742 @@
+{
+ "design": "docs/state/units/X2_s2_design.md (frozen before this run)",
+ "observed": {
+  "source": "Miani et al. 2023 arXiv:2302.12158v2 Table II (GW150914)",
+  "h_MR": 1.6e-22,
+  "h_UL_95": 3.4e-23,
+  "ratio": 0.21,
+  "PMW_s": [
+   0.2,
+   1.2
+  ]
+ },
+ "remnant": {
+  "M_det_Msun": 68.8,
+  "chi": 0.69,
+  "f_220_Hz": 249.26808464372704,
+  "tau_220_s": 0.004143893452692965
+ },
+ "rows": [
+  {
+   "a_minus_2M": 0.0018048827622907382,
+   "dt_s": 0.20000000000000087,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.2863366641382645,
+    "eta_max": 0.7334024115703063,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "first_pulse_mean_f_Hz": 224.78718836810927,
+    "pulse_duration_scale_s": 0.00911661410339053,
+    "first_two_pulses_fraction_of_hrss2": 0.8338787639559884,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.24080533719856503,
+    "eta_max": 0.8720736942256253,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "first_pulse_mean_f_Hz": 218.98425855036356,
+    "pulse_duration_scale_s": 0.008416928898277854,
+    "first_two_pulses_fraction_of_hrss2": 0.7549756862463458,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0011563122102566936,
+   "dt_s": 0.2500000000000204,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.28105750722314293,
+    "eta_max": 0.7471780493423095,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "first_pulse_mean_f_Hz": 224.78807224970603,
+    "pulse_duration_scale_s": 0.009114698975699513,
+    "first_two_pulses_fraction_of_hrss2": 0.8657024605010953,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.23357797698081972,
+    "eta_max": 0.8990573628319598,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "first_pulse_mean_f_Hz": 218.98271037962294,
+    "pulse_duration_scale_s": 0.008414609703566184,
+    "first_two_pulses_fraction_of_hrss2": 0.802647616366921,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0008035247400011158,
+   "dt_s": 0.3000000000000286,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.27356889100093834,
+    "eta_max": 0.7676311412151015,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "first_pulse_mean_f_Hz": 224.78855312370996,
+    "pulse_duration_scale_s": 0.009113658135090153,
+    "first_two_pulses_fraction_of_hrss2": 0.913863139691743,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.223841307614041,
+    "eta_max": 0.9381646410058195,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "first_pulse_mean_f_Hz": 218.98186911344325,
+    "pulse_duration_scale_s": 0.008413349407828048,
+    "first_two_pulses_fraction_of_hrss2": 0.874128696985369,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0004523435533099196,
+   "dt_s": 0.4000000000000908,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.2615380754665305,
+    "eta_max": 0.8029423617398839,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 224.78903187074636,
+    "pulse_duration_scale_s": 0.009112622652701923,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.2092961904082153,
+    "eta_max": 1.003362744397841,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 218.98103227713864,
+    "pulse_duration_scale_s": 0.008412095701354387,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.0002896345305325454,
+   "dt_s": 0.5000000000000608,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.26154578289919606,
+    "eta_max": 0.8029187000156579,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 224.78925370475324,
+    "pulse_duration_scale_s": 0.009112143102934527,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.20930364546401786,
+    "eta_max": 1.0033270062470165,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 218.98064475888572,
+    "pulse_duration_scale_s": 0.008411515120353687,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00020119632751525174,
+   "dt_s": 0.5999999999998987,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.26154997149014253,
+    "eta_max": 0.8029058416774273,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 224.7893742848772,
+    "pulse_duration_scale_s": 0.009111882505980592,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.20930769691858,
+    "eta_max": 1.003307585395148,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 218.98043418217637,
+    "pulse_duration_scale_s": 0.008411199630331517,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00011321530778296562,
+   "dt_s": 0.8000000000002929,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.2360762949257888,
+    "eta_max": 0.8895429338469331,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 224.78949424573608,
+    "pulse_duration_scale_s": 0.009111623294996493,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.18204985151403735,
+    "eta_max": 1.1535301910631193,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 218.98022473204955,
+    "pulse_duration_scale_s": 0.00841088582418492,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 7.247383922193151e-05,
+   "dt_s": 1.0000000000010205,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.2360780808164658,
+    "eta_max": 0.8895362046053751,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 224.78954979739467,
+    "pulse_duration_scale_s": 0.00911150327496119,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.18205142221861684,
+    "eta_max": 1.15352023862698,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 218.98012775438633,
+    "pulse_duration_scale_s": 0.008410740527590912,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0018048827622907382,
+   "dt_s": 0.20000000000000087,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.31696687338662627,
+    "eta_max": 0.6625298024246482,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "first_pulse_mean_f_Hz": 232.67970531717845,
+    "pulse_duration_scale_s": 0.009286378821893084,
+    "first_two_pulses_fraction_of_hrss2": 0.8268449252368951,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.2448892840902547,
+    "eta_max": 0.8575303765541813,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "first_pulse_mean_f_Hz": 228.2935218307484,
+    "pulse_duration_scale_s": 0.008147505251852885,
+    "first_two_pulses_fraction_of_hrss2": 0.7547684709229826,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0011563122102566936,
+   "dt_s": 0.2500000000000204,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.3109021220327949,
+    "eta_max": 0.6754537364587321,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "first_pulse_mean_f_Hz": 232.6813770468189,
+    "pulse_duration_scale_s": 0.009284676280719963,
+    "first_two_pulses_fraction_of_hrss2": 0.8596113587368643,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.23752826131504953,
+    "eta_max": 0.8841053221934843,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "first_pulse_mean_f_Hz": 228.29375282418982,
+    "pulse_duration_scale_s": 0.008145467636661604,
+    "first_two_pulses_fraction_of_hrss2": 0.8024814602873196,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0008035247400011158,
+   "dt_s": 0.3000000000000286,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.3022570187546777,
+    "eta_max": 0.6947729480864208,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "first_pulse_mean_f_Hz": 232.6822862893785,
+    "pulse_duration_scale_s": 0.009283750925248553,
+    "first_two_pulses_fraction_of_hrss2": 0.9095987159052705,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.22761552542286298,
+    "eta_max": 0.9226084187792685,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "first_pulse_mean_f_Hz": 228.29387901604414,
+    "pulse_duration_scale_s": 0.008144360265416475,
+    "first_two_pulses_fraction_of_hrss2": 0.8740229862776885,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0004523435533099196,
+   "dt_s": 0.4000000000000908,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.2882887767725366,
+    "eta_max": 0.7284362657159302,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 232.68319133005437,
+    "pulse_duration_scale_s": 0.009282830297026848,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.2128108031318305,
+    "eta_max": 0.9867920091909559,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 228.29400501688184,
+    "pulse_duration_scale_s": 0.008143258617971626,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.0002896345305325454,
+   "dt_s": 0.5000000000000608,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.2882969002961022,
+    "eta_max": 0.7284157401079043,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 232.68361063175465,
+    "pulse_duration_scale_s": 0.009282403925930448,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.21281769406645548,
+    "eta_max": 0.9867600573400837,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 228.29406352685973,
+    "pulse_duration_scale_s": 0.008142748431499336,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00020119632751525174,
+   "dt_s": 0.5999999999998987,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.2883013150958301,
+    "eta_max": 0.7284045857723433,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 232.68383853159983,
+    "pulse_duration_scale_s": 0.009282172224035441,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.21282143900432035,
+    "eta_max": 0.9867426936989037,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 228.29409536312744,
+    "pulse_duration_scale_s": 0.008142471188338395,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00011321530778296562,
+   "dt_s": 0.8000000000002929,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.25862247781266995,
+    "eta_max": 0.8119943857011181,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 232.68406524953758,
+    "pulse_duration_scale_s": 0.00928194175216391,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.18508683395884004,
+    "eta_max": 1.1346025835997615,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 228.29412705930656,
+    "pulse_duration_scale_s": 0.00814219542074441,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 7.247383922193151e-05,
+   "dt_s": 1.0000000000010205,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.2586243069556325,
+    "eta_max": 0.8119886428000208,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 232.68417023472733,
+    "pulse_duration_scale_s": 0.009281835038153339,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.18508828537956018,
+    "eta_max": 1.1345936863013961,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 228.29414174502784,
+    "pulse_duration_scale_s": 0.008142067735114666,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0018048827622907382,
+   "dt_s": 0.20000000000000087,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.18657225640155645,
+    "eta_max": 1.125569278360553,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "first_pulse_mean_f_Hz": 187.92101351414266,
+    "pulse_duration_scale_s": 0.007745106642807606,
+    "first_two_pulses_fraction_of_hrss2": 0.8307736116814813,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.23891507870573245,
+    "eta_max": 0.878973404012952,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "first_pulse_mean_f_Hz": 179.81037599158464,
+    "pulse_duration_scale_s": 0.0085059290385728,
+    "first_two_pulses_fraction_of_hrss2": 0.7571000250466012,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0011563122102566936,
+   "dt_s": 0.2500000000000204,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.18297589794497496,
+    "eta_max": 1.1476921406509606,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "first_pulse_mean_f_Hz": 187.92289228250718,
+    "pulse_duration_scale_s": 0.00774369847965802,
+    "first_two_pulses_fraction_of_hrss2": 0.8639385429981714,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.23181729100723944,
+    "eta_max": 0.9058858340012346,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "first_pulse_mean_f_Hz": 179.80931500278973,
+    "pulse_duration_scale_s": 0.008504155674544982,
+    "first_two_pulses_fraction_of_hrss2": 0.8043446077353724,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0008035247400011158,
+   "dt_s": 0.3000000000000286,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.17796182896113977,
+    "eta_max": 1.1800283309397555,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "first_pulse_mean_f_Hz": 187.92391433967532,
+    "pulse_duration_scale_s": 0.007742933012147708,
+    "first_two_pulses_fraction_of_hrss2": 0.913414496247636,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.22224859127741298,
+    "eta_max": 0.9448878788971753,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "first_pulse_mean_f_Hz": 179.80873844161349,
+    "pulse_duration_scale_s": 0.008503191821016066,
+    "first_two_pulses_fraction_of_hrss2": 0.8751984940751713,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0004523435533099196,
+   "dt_s": 0.4000000000000908,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.1700928990252984,
+    "eta_max": 1.2346194415133467,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 187.92493181870188,
+    "pulse_duration_scale_s": 0.007742171377632797,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.20793019712903346,
+    "eta_max": 1.0099543159172888,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 179.80816489598132,
+    "pulse_duration_scale_s": 0.0085022328892827,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.0002896345305325454,
+   "dt_s": 0.5000000000000608,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.17009750202226548,
+    "eta_max": 1.2345860315603656,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 187.9254032613963,
+    "pulse_duration_scale_s": 0.007741818615383089,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.2079358004754892,
+    "eta_max": 1.0099271001904941,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 179.80789929298712,
+    "pulse_duration_scale_s": 0.00850178877818095,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00020119632751525174,
+   "dt_s": 0.5999999999998987,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.1701000036396374,
+    "eta_max": 1.2345678748184632,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 187.9256595145822,
+    "pulse_duration_scale_s": 0.007741626907527029,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.20793884569590734,
+    "eta_max": 1.0099123100217018,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "first_pulse_mean_f_Hz": 179.8077549634788,
+    "pulse_duration_scale_s": 0.00850154743552523,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00011321530778296562,
+   "dt_s": 0.8000000000002929,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.15401952221995394,
+    "eta_max": 1.363463520553588,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 187.9259144475296,
+    "pulse_duration_scale_s": 0.007741436212569073,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.1810368356919087,
+    "eta_max": 1.1599849234957975,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 179.80761140443406,
+    "pulse_duration_scale_s": 0.008501307373969556,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 7.247383922193151e-05,
+   "dt_s": 1.0000000000010205,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.15402060478670482,
+    "eta_max": 1.3634539371587207,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 187.92603250102937,
+    "pulse_duration_scale_s": 0.007741347914657799,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.18103801742567116,
+    "eta_max": 1.1599773516422855,
+    "pulses_in_PMW": [
+     1
+    ],
+    "first_pulse_mean_f_Hz": 179.80754493456803,
+    "pulse_duration_scale_s": 0.00850119621973227,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  }
+ ],
+ "label": "derived; limit on phenomenological model P1-P4, not on the SV geometry"
+}
