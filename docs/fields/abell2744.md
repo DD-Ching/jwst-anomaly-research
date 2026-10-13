@@ -81,8 +81,8 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
     Injection: 30 tested images made fainter are flagged in 17 / 27 / 60 / 93 % at 0.5 / 1 / 1.5 / 2 mag
     (flux and S/N scaled; 2 lost to S/N at 2 mag; 14 targets are pair members, not localised).
   - Halo-subtracted photometry (`scripts/halo_phot.py`, D-032 addendum; UNCOVER t003 F150W/F444W, 1″ median filter
-    and annulus plane): 602.1c −0.26 to −0.45 mag, 600.1b −0.43 to −0.51 mag (600.1 apertures measure the spiral's
-    nuclei). Both under 0.75 mag: the two halo flags are BCG/ICL light.
+    and annulus plane): 602.1c −0.26 to −0.33 mag, 600.1b −0.45 / −0.46 mag (600.1 apertures measure the spiral's
+    nuclei); leftover halo in blank apertures ≤ 0.11 mag. Both under 0.75 mag: the two halo flags are BCG/ICL light.
 
 ## Run
 

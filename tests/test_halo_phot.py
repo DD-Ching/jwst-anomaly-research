@@ -26,14 +26,14 @@ def _halo(xx, yy, x0=1.0, y0=-0.5, amp=5.0, rs=1.5):
     ("route", "amp", "rel"),
     [
         ("medfilt", 0.5, 0.05),  # halo light in the aperture ~ the source's: 3 % bias
-        ("annulus", 0.5, 0.10),  # a plane misses the cusp's curvature: 7 %
+        ("annulus", 0.5, 0.15),  # a plane misses the cusp's curvature: +10 %
         ("medfilt", 5.0, 0.40),  # halo ~10x the source: 0.3 mag residual bias, still << raw (12x)
     ],
 )
 def test_compact_source_on_halo_recovered(route, amp, rel):
     xx, yy = _grid()
     flux = 30.0
-    sci = _halo(xx, yy, amp=amp) + hp.gaussian(xx, yy, 0.0, 0.0, flux)
+    sci = _halo(xx, yy, amp=amp) + hp.gaussian(xx, yy, 0.0, 0.0, flux, 0.05)
     err = np.full(sci.shape, 0.01)
     f, e, conc = hp.measure(sci, err, xx, yy, route)
     assert f == pytest.approx(flux, rel=rel)
@@ -44,7 +44,7 @@ def test_compact_source_on_halo_recovered(route, amp, rel):
 
 def test_halo_alone_adds_flux_without_subtraction():
     xx, yy = _grid()
-    sci = _halo(xx, yy, amp=0.5) + hp.gaussian(xx, yy, 0.0, 0.0, 30.0)
+    sci = _halo(xx, yy, amp=0.5) + hp.gaussian(xx, yy, 0.0, 0.0, 30.0, 0.05)
     raw = float(np.sum(sci[np.hypot(xx, yy) <= hp.R_AP_ARCSEC]))
     assert raw > 1.5 * 30.0  # the halo is a real bias here, so the test above is not trivial
 
@@ -56,19 +56,39 @@ def test_resolved_source_fails_concentration():
     assert conc < hp.MIN_CONCENTRATION
 
 
-def test_inject_check_near_unity():
+@pytest.mark.parametrize("fwhm", [0.05, 0.145])
+def test_ring_checks(fwhm):
     xx, yy = _grid()
-    sci = _halo(xx, yy, amp=0.5) + hp.gaussian(xx, yy, 0.0, 0.0, 30.0)
+    sci = _halo(xx, yy, amp=0.5) + hp.gaussian(xx, yy, 0.0, 0.0, 30.0, fwhm)
     err = np.full(sci.shape, 0.01)
     for route in ("medfilt", "annulus"):
-        r = hp.inject_check(sci, err, xx, yy, 30.0, route)
-        assert r.shape == (8,)
-        assert np.all(np.abs(r - 1) < 0.05)
+        blank, rec = hp.ring_checks(sci, err, xx, yy, 30.0, route, fwhm)
+        assert blank.shape == rec.shape == (8,)
+        assert np.all(np.abs(rec - 1) < 0.1)
+        assert np.median(np.abs(blank)) < 0.1 * 30.0  # a mild halo is mostly removed on the ring
+
+
+def test_blank_apertures_see_a_strong_halo_residual():
+    xx, yy = _grid()
+    sci = _halo(xx, yy, amp=5.0, x0=0.3, y0=0.0)  # cusp next to the ring
+    blank, _ = hp.ring_checks(sci, np.full(sci.shape, 0.01), xx, yy, 30.0, "annulus", 0.05)
+    assert np.max(np.abs(blank)) > 0.5  # the check has power: it sees uncorrected halo light
+
+
+def test_recentre_ignores_halo_gradient():
+    xx, yy = _grid()
+    sci = _halo(xx, yy, amp=1.0, x0=0.6, y0=0.0) + hp.gaussian(xx, yy, -0.05, 0.0, 30.0, 0.05)
+    err = np.full(sci.shape, 0.01)
+    # both routes centre on the compact image (-0.05, 0), not up the halo gradient (+x)
+    for route in ("medfilt", "annulus"):
+        f = hp.measure(sci, err, xx, yy, route)[0]
+        f_true = hp.measure(sci, err, xx, yy, route, -0.05, 0.0, recentre=0.0)[0]
+        assert f == pytest.approx(f_true, rel=0.02)
 
 
 def test_nan_in_aperture_gives_nan():
     xx, yy = _grid()
-    sci = hp.gaussian(xx, yy, 0.0, 0.0, 30.0)
+    sci = hp.gaussian(xx, yy, 0.0, 0.0, 30.0, 0.05)
     sci[np.hypot(xx, yy) < 0.05] = np.nan
     f, e, c = hp.measure(sci, np.full(sci.shape, 0.01), xx, yy, "medfilt", recentre=0.0)
     assert np.isnan(f) and np.isnan(e) and np.isnan(c)

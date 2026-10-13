@@ -12,8 +12,10 @@ the smooth halo, by two routes:
 Only compact images take part: a resolved arc's aperture flux follows surface brightness, which
 lensing conserves (D-032). For two unresolved images in one band the aperture loss cancels in the
 ratio, so ``s = -2.5 log10(flux) + 2.5 log10 |mu|`` is a source magnitude up to a constant.
-Each stamp also gets an injection check: a Gaussian of the measured flux placed on a ring around the
-image and measured by the same route, so the halo-subtraction bias is known on the real background.
+Each stamp also gets ring checks on the real halo (:func:`ring_checks`): blank apertures measure the
+halo light a route leaves behind (and give the background error), and injected PSF-width Gaussians
+measure how much of a compact image the route removes. An image is a ``flux_outlier`` in a band only
+when both routes exceed ``OUTLIER_MAG`` with the same sign.
 
 Thresholds and filter scales are ASSUMPTIONs; outputs are derived (injections: simulated).
 """
@@ -38,9 +40,19 @@ FILTER_ARCSEC = (
 )
 R_AP_ARCSEC = 0.2  # aperture radius (ASSUMPTION)
 RECENTRE_ARCSEC = 0.15  # peak search radius around the catalogued position (ASSUMPTION)
-ANNULUS_ARCSEC = (0.4, 0.6)  # local-plane ring of the second route (ASSUMPTION)
-INJECT_RING_ARCSEC = 0.7  # injections sit this far from the image, on 8 position angles
-INJECT_FWHM_ARCSEC = 0.06  # Gaussian stand-in for a compact image (ASSUMPTION)
+ANNULUS_ARCSEC = (0.5, 0.7)  # local-plane ring of the second route, outside 2 r_ap (ASSUMPTION)
+CHECK_RING_ARCSEC = 1.0  # blank and injection apertures sit this far out, on 8 position angles
+# Gaussian stand-ins for a compact image: about the NIRCam PSF FWHM per band (ASSUMPTION)
+PSF_FWHM_ARCSEC = {
+    "f115w": 0.04,
+    "f150w": 0.05,
+    "f200w": 0.066,
+    "f277w": 0.092,
+    "f356w": 0.116,
+    "f410m": 0.137,
+    "f444w": 0.145,
+}
+MIN_SNR = 10.0  # on flux / (ERR ⊕ blank-aperture scatter), as D-032 (ASSUMPTION)
 MIN_CONCENTRATION = 0.6  # f(0.2")/f(0.4") below this: resolved, as exotic_screens (ASSUMPTION)
 MAX_ABS_MU = 20.0  # as D-032's flux test (ASSUMPTION)
 OUTLIER_MAG = 0.75  # as D-032's flux_outlier (ASSUMPTION)
@@ -67,25 +79,26 @@ def measure(
     r_ap: float = R_AP_ARCSEC,
     recentre: float = RECENTRE_ARCSEC,
     annulus: tuple[float, float] = ANNULUS_ARCSEC,
-) -> tuple[float, float]:
+) -> tuple[float, float, float]:
     """Halo-subtracted aperture flux, its error and the concentration f(r_ap) / f(2 r_ap) near
-    ``(cx, cy)`` (arcsec offsets, as ``xx``/``yy``). ``recentre = 0`` measures at ``(cx, cy)``.
+    ``(cx, cy)`` (arcsec offsets, as ``xx``/``yy``). ``recentre = 0`` measures at ``(cx, cy)``;
+    otherwise the aperture moves to the peak of the median-filtered image within ``recentre`` in
+    both routes, so a halo gradient cannot pull it. The error is the i2d ERR only; :func:`run`
+    adds the blank-aperture scatter.
 
     Returns NaNs when either aperture holds a non-finite pixel."""
     if pix_arcsec is None:
         pix_arcsec = float(np.hypot(xx[0, 1] - xx[0, 0], yy[0, 1] - yy[0, 0]))
     img = _fill_nan(sci)
-    if route == "medfilt":
-        size = int(round(filter_arcsec / pix_arcsec)) | 1
-        res = img - ndimage.median_filter(img, size=size, mode="reflect")
-    elif route == "annulus":
-        res = img
-    else:
+    if route not in ("medfilt", "annulus"):
         raise ValueError(f"unknown route {route!r}")
+    size = int(round(filter_arcsec / pix_arcsec)) | 1
+    filtered = img - ndimage.median_filter(img, size=size, mode="reflect")
+    res = filtered if route == "medfilt" else img
     px, py = cx, cy
     if recentre > 0:
         d = np.hypot(xx - cx, yy - cy)
-        near = np.where(d <= recentre, ndimage.uniform_filter(res, size=3), -np.inf)
+        near = np.where(d <= recentre, ndimage.uniform_filter(filtered, size=3), -np.inf)
         k = int(np.argmax(near))
         px, py = float(xx.flat[k]), float(yy.flat[k])
     r = np.hypot(xx - px, yy - py)
@@ -103,25 +116,34 @@ def measure(
     return flux, float(np.sqrt(np.sum(np.where(np.isfinite(e), e, 0.0) ** 2))), conc
 
 
-def gaussian(xx, yy, cx, cy, flux, fwhm=INJECT_FWHM_ARCSEC, pix_arcsec=None):
+def gaussian(xx, yy, cx, cy, flux, fwhm):
     """A unit-normalised (on the pixel grid) Gaussian of total ``flux`` at ``(cx, cy)``."""
     s = fwhm / 2.3548
     g = np.exp(-0.5 * ((xx - cx) ** 2 + (yy - cy) ** 2) / s**2)
     return flux * g / g.sum()
 
 
-def inject_check(sci, err, xx, yy, flux, route, n_angles=8, ring=INJECT_RING_ARCSEC):
-    """Recovered / injected flux for Gaussians on a ring around the image (measured minus the
-    same aperture without the injection, so the local scene cancels). Returns the ratios."""
-    out = []
+def ring_checks(sci, err, xx, yy, flux, route, fwhm, n_angles=8, ring=CHECK_RING_ARCSEC):
+    """Two checks on apertures placed on a ring around the image, on the real halo:
+
+    - ``blank``: the halo-subtracted flux of the empty apertures (no injection). Halo light the
+      route leaves behind shows up here; its median is the residual bias per aperture and its
+      spread (half the 16–84 % range) the background error. Neighbours can fall on the ring, so
+      only robust statistics are used.
+    - ``recovery``: (flux with a Gaussian of ``flux`` injected − ``blank``) / ``flux``: how much
+      of a compact image the route itself removes (the filter or ring eating its wings).
+
+    Returns ``(blank, recovery)`` arrays."""
+    blank, rec = [], []
     for t in np.arange(n_angles) * 2 * np.pi / n_angles:
         cx, cy = ring * np.cos(t), ring * np.sin(t)
-        base = measure(sci, err, xx, yy, route, cx, cy, recentre=0.0)[0]
-        f = measure(sci + gaussian(xx, yy, cx, cy, flux), err, xx, yy, route, cx, cy, recentre=0.0)[
-            0
-        ]
-        out.append((f - base) / flux)
-    return np.asarray(out, float)
+        b = measure(sci, err, xx, yy, route, cx, cy, recentre=0.0)[0]
+        f = measure(
+            sci + gaussian(xx, yy, cx, cy, flux, fwhm), err, xx, yy, route, cx, cy, recentre=0.0
+        )[0]
+        blank.append(b)
+        rec.append((f - b) / flux)
+    return np.asarray(blank, float), np.asarray(rec, float)
 
 
 def run(model_name: str, systems: list[str], bands: dict[str, str], half_arcsec: float = 3.0):
@@ -143,12 +165,19 @@ def run(model_name: str, systems: list[str], bands: dict[str, str], half_arcsec:
                 sci, err, xx, yy = stamp(float(r["ra"]), float(r["dec"]))
                 for route in ("medfilt", "annulus"):
                     f, e, c = measure(sci, err, xx, yy, route)
-                    row[f"{band}_{route}_flux"], row[f"{band}_{route}_err"] = f, e
                     row[f"{band}_{route}_conc"] = c
+                    blank_med, blank_sd, rec = np.nan, 0.0, np.nan
                     if np.isfinite(f) and f > 0:
-                        inj = inject_check(sci, err, xx, yy, f, route)
-                        row[f"{band}_{route}_inj_median"] = float(np.median(inj))
-                        row[f"{band}_{route}_inj_spread"] = float(np.ptp(inj))
+                        blank, inj = ring_checks(sci, err, xx, yy, f, route, PSF_FWHM_ARCSEC[band])
+                        blank = blank[np.isfinite(blank)]
+                        if blank.size:
+                            blank_med = float(np.median(blank))
+                            blank_sd = float(np.diff(np.percentile(blank, [16, 84]))[0] / 2)
+                        rec = float(np.nanmedian(inj))
+                    row[f"{band}_{route}_flux"] = f
+                    row[f"{band}_{route}_err"] = float(np.hypot(e, blank_sd))
+                    row[f"{band}_{route}_blank_frac"] = blank_med / f if f > 0 else np.nan
+                    row[f"{band}_{route}_recovery"] = rec
         finally:
             close()
     systems_arr = np.array([r["system"] for r in rows])
@@ -157,7 +186,7 @@ def run(model_name: str, systems: list[str], bands: dict[str, str], half_arcsec:
             f = np.array([r[f"{band}_{route}_flux"] for r in rows])
             e = np.array([r[f"{band}_{route}_err"] for r in rows])
             c = np.array([r[f"{band}_{route}_conc"] for r in rows])
-            ok = np.isfinite(f) & (f > 0) & (f / np.where(e > 0, e, np.inf) >= 10)
+            ok = np.isfinite(f) & (f > 0) & (f / np.where(e > 0, e, np.inf) >= MIN_SNR)
             ok &= (c >= MIN_CONCENTRATION) & (np.abs(mu) <= MAX_ABS_MU)
             src = np.where(
                 ok, -2.5 * np.log10(np.where(ok, f, 1.0)) + 2.5 * np.log10(np.abs(mu)), np.nan
@@ -166,6 +195,12 @@ def run(model_name: str, systems: list[str], bands: dict[str, str], half_arcsec:
             res, rerr, _ = lc._loo_residual(src, serr, ok, systems_arr)
             for row, a, b in zip(rows, res, rerr, strict=True):
                 row[f"{band}_{route}_resid"], row[f"{band}_{route}_resid_err"] = float(a), float(b)
+    for row in rows:  # an outlier in a band needs both routes beyond the threshold, same sign
+        for band in bands:
+            a, b = row[f"{band}_medfilt_resid"], row[f"{band}_annulus_resid"]
+            row[f"{band}_flux_outlier"] = bool(
+                abs(a) > OUTLIER_MAG and abs(b) > OUTLIER_MAG and np.sign(a) == np.sign(b)
+            )
     return rows
 
 
@@ -188,12 +223,12 @@ def main(argv=None) -> int:
             "r_ap_arcsec": R_AP_ARCSEC,
             "recentre_arcsec": RECENTRE_ARCSEC,
             "annulus_arcsec": list(ANNULUS_ARCSEC),
-            "inject_ring_arcsec": INJECT_RING_ARCSEC,
-            "inject_fwhm_arcsec": INJECT_FWHM_ARCSEC,
+            "check_ring_arcsec": CHECK_RING_ARCSEC,
+            "psf_fwhm_arcsec": PSF_FWHM_ARCSEC,
             "outlier_mag": OUTLIER_MAG,
             "min_concentration": MIN_CONCENTRATION,
             "max_abs_mu": MAX_ABS_MU,
-            "min_snr": 10,
+            "min_snr": MIN_SNR,
         },
         "images": clean,
     }
@@ -202,7 +237,11 @@ def main(argv=None) -> int:
     for r in clean:
         print(
             r["image_id"],
-            {k: v for k, v in r.items() if k.endswith(("resid", "inj_median", "_conc"))},
+            {
+                k: v
+                for k, v in r.items()
+                if k.endswith(("resid", "blank_frac", "recovery", "outlier"))
+            },
         )
     return 0
 
