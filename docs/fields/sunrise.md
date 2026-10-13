@@ -68,6 +68,35 @@ magnified source Earendel. Config `configs/sunrise.yaml` (sample `sunrise_nircam
   z = 6.2 is wrong in general): 2a and 2c sit 0.9–1.0″ from 2b, an ordinary redshift/model effect until z is known.
   **No position anomaly**, but only provisionally, while the unit question is open.
 
+## Deflection unit and source redshifts (2026-10-13; `scripts/sunrise_zfit.py`, offline)
+
+- **Unit (derived; reading, not confirmed by the authors):** the per-image scale from the published κ map, 0.02230″
+  per map unit (16–84 %: 0.02209–0.02258), equals 0.02″ × r(6.2)/r(z_ref) with r = D_ds/D_s at **z_ref = 3.02**
+  (16–84 %: 2.86–3.16; flat ΛCDM h = 0.7, Ω_m = 0.3 as the paper; Planck18 gives 3.03). So the deflection maps read
+  as 0.02″ mosaic pixels scaled to z ≈ 3, while the paper says all maps are scaled to z = 6.2 (Sect. VI). A pure
+  global factor cannot separate this reading from an odd unit; it is used here as an ASSUMPTION
+  (`results/sunrise/scofield25_zfit.json`).
+- **Known case (system 1, z = 6.2):** the source-plane rms of the constraint images, as a function of the source
+  redshift under that reading, is minimal at z = 5.1 (0.13″). With a fit level of 1.5× that minimum (0.19″;
+  ASSUMPTION, independent of z = 6.2), the accepted range is z = 4.2–6.5, so z = 6.2 is recovered; subsystems 1.1,
+  1.2 and 1.7 give the same (3.9–6.6). The best z is biased low by ~1: source-plane minimisation favours smaller
+  deflections. Synthetic SIS tests recover z exactly (`tests/test_sunrise_zfit.py`).
+- **System 2 (held out from M5-G1; derived):** the source-plane rms falls monotonically with z and is still
+  0.62″ at z = 20 (≈ 0.6″ as z → ∞), 3.2× the fit level; no redshift is accepted. Its formal minimum (0.22″) needs
+  a deflection ≈ 1.2× larger than any source redshift allows. **M5-G1 does not reproduce system 2 at any redshift.**
+- **Images (observed; epoch 1 F150W and F444W cutouts, looked at, not tracked):** system 2 is one long thin arc
+  running between two bright cluster galaxies, with three similar compact knots (2a–c) and a faint streak through
+  each; 2a and 2c sit 1–1.5″ from bright galaxies. The identification looks plausible, and the geometry points to
+  galaxy-scale perturbers.
+- **Ordinary explanation (published):** Scofield+2025 (Sect. V.3) report that every model including system 2 has an
+  unphysical mass distribution and lens-plane scatter ≈ 1″, while W22a needed system 2 to reproduce the arc's length.
+  M5-G1 has no constraint near system 2, and cluster members Q and R (near system 2; whether they are the two
+  galaxies beside the arc is not checked) get mass profiles only in models with system 2. The misfit is that known modelling tension, plausibly missing galaxy-scale
+  mass at Q and R. Not a new anomaly and not a candidate.
+- **Next:** test system 2 in the RELICS HST-era models (pinned, D-033), which used it as a constraint: if they
+  converge it with the arc, the tension is M5-G1's extrapolation; if no model converges both, the identification of
+  system 2 is the open question (owner-level: a published-model disagreement, not exotic).
+
 ## Earendel (reference case for time-domain lensing)
 
 - **Position:**

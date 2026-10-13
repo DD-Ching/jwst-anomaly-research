@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: Sunrise deflection maps read as 0.02″ pixels at z_ref ≈ 3; system 2 fits at no redshift (published tension)
+- **Hypothesis before running:** the empirical 0.0223″ per unit is 0.02″ × r(6.2)/r(z_ref) for a round z_ref; if
+  so, the z fit recovers system 1's z = 6.2 and gives system 2's redshift. A system 2 that fits at no z would be a
+  lens-model residual, to be checked against the published modelling first.
+- New `scripts/sunrise_zfit.py` (offline, from `results/sunrise/scofield25_positions.json`) + SIS tests.
+- **Unit (derived):** z_ref = 3.02 (16–84 % 2.86–3.16) from the κ match of all 15 images; the paper says the maps are
+  scaled to z = 6.2. Reading used as an ASSUMPTION (a global factor cannot be proven a convention).
+- **Known case:** system 1's source-plane rms is minimal at z = 5.1; with a level of 1.5× that minimum (ASSUMPTION)
+  z = 4.2–6.5 is accepted, so z = 6.2 is recovered (best z biased low by ~1).
+- **System 2:** source-plane rms ≥ 0.62″ for every z ≤ 20 (3.2× the level); no redshift reproduces it. Cutouts
+  (looked at): one thin arc between two bright cluster galaxies with three similar knots. Scofield+2025 already
+  report that models including system 2 are unphysical with ≈ 1″ scatter: a known tension, plausibly missing
+  galaxy-scale mass at members Q and R, not a new anomaly. Details: docs/fields/sunrise.md.
+- **Failed approach:** the linear image-plane rms |A⁻¹Δβ| diverges for system 1's near-critical images (3.3″ rms at
+  z = 6.2), so it cannot drive the z fit; it is reported only.
+- **Next:** system 2 in the RELICS HST-era models (D-033), which used it as a constraint.
+
 ## 2026-10-13: WHL0137 (Sunrise) image positions in the Scofield+2025 maps: unit check failed; provisional null
 - **Hypothesis before running:** the JWST images map to common sources in the published M5-G1 deflection maps to the
   published 0.06″ source-plane rms; a held-out image (1.1a, b, e; 1.7b; system 2) off by ≫ that would be a lens-model

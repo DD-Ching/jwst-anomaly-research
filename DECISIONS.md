@@ -1753,6 +1753,9 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 (11792², float64, 0.02″), and their deflection unit is undocumented (an empirical 0.0218–0.0223″ per unit reproduces
 the κ map and the constraint images; docs/fields/sunrise.md). `scripts/sunrise_scofield.py` reads per-image patches
 by byte range instead. Revisit when the authors state the unit (then pin a cutout as a map model).
+**Addendum 2 (2026-10-13).** The κ-matched scale reads as 0.02″ pixels scaled to z_ref = 3.02 (16–84 % 2.86–3.16)
+instead of the stated 6.2; `scripts/sunrise_zfit.py` uses s = 0.02″ × r(z)/r(z_ref) per source redshift (ASSUMPTION;
+docs/fields/sunrise.md). Rejected: fitting the scale per system (it absorbs the redshift).
 
 ## D-034 Counter-image and radial-screen rules from El Gordo (2026-10-08)
 
