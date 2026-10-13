@@ -1,0 +1,16 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: url, datatype: string}
+# - {name: file, datatype: string}
+# - {name: sha256, datatype: string}
+# - {name: size_bytes, datatype: int64}
+# - {name: retrieved_utc, datatype: string}
+# - {name: version, datatype: string}
+# - {name: used_by, datatype: string}
+# meta: !!omap
+# - {provenance: 'processed numerical values (GRAVITY Collaboration 2018, A&A 618, L10)'}
+# - {reason: 'X1 S3 astrometric fit of the 2018-07-22 flare; 870 B; deleted after use in cloud sessions'}
+# schema: astropy-2.0
+url file sha256 size_bytes retrieved_utc version used_by
+https://cdsarc.cds.unistra.fr/ftp/J/A+A/618/L10/avg.dat avg.dat 7d1729d345ea397d3c09223fcbc6777b9c675f614e66490c8c10c649f5deb05f 870 2026-10-13T03:22Z "CDS J/A+A/618/L10" scripts/x1_s3.py

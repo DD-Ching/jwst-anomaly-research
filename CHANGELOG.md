@@ -10,6 +10,18 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - The 00:09Z run worked W3 gb14 and did not log hours, so T1 shares could not be computed.
 - Fix: every run appends a tally line, routine searches included; gb14's run back-filled.
 
+## 2026-10-13: X1 S3: the 2018-07-22 GRAVITY flare disfavours the far-side spot under the premises (exploratory)
+- New `scripts/x1_s3.py` → `results/x1/s3_avg_fit.json`; `tests/test_x1_s3.py` (exact recovery of injected
+  tracks). Input: CDS J/A+A/618/L10 `avg.dat`.
+- Astrometric χ² on 20 values (grid then bounded Powell; far side also given η 0.6–1): ordinary 18.6–28.4 (best
+  p ≈ 0.14); far a = 2.1–7 M 45–57; a = 9 M 33–37. Δχ² far − ordinary: +23 to +37 (a ≤ 7), +14 (a = 9).
+- Static offsets beyond the pre-written 20 µas lower the far χ² slowly (not bracketed); Δχ² ≥ 26 up to 400 µas.
+- Input: `data/manifests/x1_gravity_flare.ecsv` (sha256 pinned). Downloaded to `$JWST_ANOMALY_DATA/raw/x1/`
+  and deleted after use in cloud sessions.
+- Same flare as #172, so this is not independent of the S0 bound. Flux contrast was not testable (one flare, half
+  an orbit). Details: `docs/state/units/X1.md`.
+- **Next:** X1 S4, a model-free disk-bound fit as an independent check.
+
 ## 2026-10-13: X1 S2: no astrometric far-side discriminant; a fragile flux-contrast one at a = 2.1 M (gate passed formally)
 - `scripts/x1_tracer.py`: `spot_track` takes sub-Keplerian η and light-travel delays per image. Validated: primary
   delay = Roemer 2R sin i to < 1 % at R = 400 M.
