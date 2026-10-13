@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: arc curvature vs model deflection (in progress)
+- Plan: curvature sign of strong-shear background arcs against the model deflection direction, five fields.
+
 ## 2026-10-13: arc orientations in F444W vs F200W: the same axes, no new anti arc (five fields)
 - **Hypothesis before computing:** lensing is achromatic, so a lens-set axis agrees between F200W and F444W; a blend
   of differently coloured objects need not. An F200W anti source that is aligned in F444W would be a blend; one that
