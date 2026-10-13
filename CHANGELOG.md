@@ -2,8 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-13: (in progress) arc orientations vs predicted shear on the HFF CATS models (MACS1149, MACS0416)
-- Plan: `lens_consistency.py arcs` with CANUCS DR1 photo-z; known images first, then background `anti` sources.
+## 2026-10-13: arc orientations vs predicted shear in MACS1149 and MACS0416: null
+- **Hypothesis before running:** background arcs align with the published models' stretch (as in SMACS, Abell 2744,
+  El Gordo); a real, single background galaxy ≥ 60° off at every z would be a lens-model residual. Ordinary
+  explanations: low-S/N or blended shapes, halo segments, members/foreground, near-critical direction flips.
+- `lens_consistency.py arcs`, unchanged, with CANUCS DR1 photo-z; F200W pipeline catalogues (manifest sha256s match).
+- **Known cases (MACS0416, CANUCS Lenstool):** 63/85 catalogued images within 30°, every e ≥ 0.6 image within 38°.
+  MACS1149 (CATS maps) has no image list in `arcs`; its background alignment is the control.
+- **Result (derived):** background in strong shear 20/24 (MACS1149) and 26/27 (MACS0416) aligned; anti 2 (0.61
+  expected) and 0 (0.43). Both MACS1149 anti looked at (10″ F200W cutouts, background-subtracted): 4236 is diffuse
+  light beside a bright galaxy (3.9σ centre peak despite catalogue S/N 112), 1703 sits on a critical curve. Null.
+- **Failed approach:** the first contact sheet drew PAs as if north-up; i2d frames are rotated, so lines must go
+  through the cutout WCS.
+- **Next:** MACS0717 and Abell 370 `arcs` (no DJA; CANUCS covers Abell 370), or blend rejection + S/N ≥ 50 shapes;
+  critical-curve curvature test.
 
 ## 2026-10-13: arc orientations vs predicted shear in Abell 2744 and El Gordo: no anti-tangential arc unexplained
 - **Hypothesis before running:** as in SMACS (D-024), background arcs align with the published models' stretch; a
