@@ -1,0 +1,141 @@
+{
+ "label": "derived; radial l = 0 perturbations; SV + phantom scalar + magnetic NED (S4 source); one cell",
+ "a_minus_2M": 0.0003575000492666014,
+ "runs": {
+  "EB_time": {
+   "Y": 40.0,
+   "dy": 0.05,
+   "T": 40.0,
+   "init": "gaussians at y = +-0.0",
+   "growth_last_half": 1.1819939364027092,
+   "growth_last_quarter": 1.1819939364027081,
+   "y_peak_end": 0.9999999999976694,
+   "x_peak_end": 0.9999999999976694,
+   "c_equation_residual": 7.511660542110644e-05
+  },
+  "EB_dense": {
+   "Y": 30.0,
+   "dy": 0.05,
+   "top": [
+    {
+     "lam2_re": 1.397109683015184,
+     "lam2_im": 0.0,
+     "y_peak": 1.0000000000004405
+    },
+    {
+     "lam2_re": -0.004957412462319802,
+     "lam2_im": 0.0,
+     "y_peak": 15.900000000000652
+    },
+    {
+     "lam2_re": -0.020841867630585945,
+     "lam2_im": -0.025628939691807504,
+     "y_peak": 4.263256414560601e-13
+    }
+   ]
+  },
+  "SV_time_dy0.1": {
+   "Y": 600.0,
+   "dy": 0.1,
+   "T": 300.0,
+   "init": "gaussians at y = +-315.0",
+   "growth_last_half": 0.10112375218685139,
+   "growth_last_quarter": 0.10112375215484813,
+   "y_peak_end": 314.9999999999352,
+   "x_peak_end": 0.44437422624161715,
+   "c_equation_residual": 3.388337991167473e-05
+  },
+  "SV_time_dy0.05": {
+   "Y": 600.0,
+   "dy": 0.05,
+   "T": 300.0,
+   "init": "gaussians at y = +-315.0",
+   "growth_last_half": 0.10112444157962944,
+   "growth_last_quarter": 0.10112444154195757,
+   "y_peak_end": 314.95000000025925,
+   "x_peak_end": 0.44317871672117504,
+   "c_equation_residual": 8.47233611781788e-06
+  },
+  "SV_time_from200": {
+   "Y": 600.0,
+   "dy": 0.1,
+   "T": 300.0,
+   "init": "gaussians at y = +-200.0",
+   "growth_last_half": 0.07569543737179003,
+   "growth_last_quarter": 0.10112378283262131,
+   "y_peak_end": 315.00000000020805,
+   "x_peak_end": 0.4443742262481623,
+   "c_equation_residual": 3.358038067725907e-05
+  },
+  "SV_time_noise": {
+   "Y": 600.0,
+   "dy": 0.1,
+   "T": 300.0,
+   "init": "noise",
+   "growth_last_half": 0.10112379507729094,
+   "growth_last_quarter": 0.10112379500579409,
+   "y_peak_end": 315.00000000020805,
+   "x_peak_end": 0.4443742262481623,
+   "c_equation_residual": 3.3636317659642725e-05
+  },
+  "SV_dense_Y1000_dy0.5": {
+   "Y": 1000.0,
+   "dy": 0.5,
+   "top": [
+    {
+     "lam2_re": 0.010223748695460234,
+     "lam2_im": 0.0,
+     "y_peak": 315.0
+    },
+    {
+     "lam2_re": 0.010221584737319959,
+     "lam2_im": 0.0,
+     "y_peak": 315.0
+    },
+    {
+     "lam2_re": 2.122957517912156e-05,
+     "lam2_im": 0.0,
+     "y_peak": 0.0
+    }
+   ]
+  },
+  "SV_dense_Y2000_dy1": {
+   "Y": 2000.0,
+   "dy": 1.0,
+   "top": [
+    {
+     "lam2_re": 0.010216465932290843,
+     "lam2_im": 0.0,
+     "y_peak": 315.0
+    },
+    {
+     "lam2_re": 0.010208153283541542,
+     "lam2_im": 0.0,
+     "y_peak": 315.0
+    },
+    {
+     "lam2_re": 1.4981008856326962e-06,
+     "lam2_im": 0.0,
+     "y_peak": 0.0
+    }
+   ]
+  }
+ },
+ "ellis_bronnikov_reference_growth": 1.182065490935802,
+ "growth_rate_per_M": 0.10112444154195757,
+ "e_folding_time_M": 9.888806155582968,
+ "e_folding_time_s_GW150914": 0.0033510570934821705,
+ "mode_location": {
+  "r_star_M": 314.95000000025925,
+  "areal_radius_M": 2.048862490007072,
+  "f_there": 0.023848594156703706,
+  "local_proper_rate_per_M": 0.6548242357174857
+ },
+ "clock": "coordinate time t of the static background = asymptotic observer time (alpha -> 1), the clock of S4's echo times",
+ "e_folds": {
+  "per_echo_spacing (S4: 1373.5 M)": 138.89490879872756,
+  "to_first_echo (S4: 1312.8 M after free flight)": 132.75601403435903,
+  "to_PMW_start_0.2s": 59.68265965656074,
+  "to_PMW_end_1.2s": 358.0959579393644
+ }
+}
