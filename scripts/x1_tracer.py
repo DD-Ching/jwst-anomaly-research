@@ -338,7 +338,10 @@ def _images(a: float, re: float, side: str, gamma: float, tables, kmax: int = 0)
 
 
 def image_mag(re: float, bs: float, dphidb: float, gamma: float) -> float:
-    """Point-source magnification of one image: screen area per emitter cross-section.
+    """Point-source weight of one image: screen area per unit source solid angle (emitter sphere).
+
+    This is R^2 times the screen area per emitter cross-section (checked in scripts/x1_s4b.py); the
+    constant cancels in centroids and flux ratios at fixed R, not in absolute fluxes across radii.
 
     Emission solid angle per observer solid angle: sin(al) dal / (sin(g) dg), al = angle of the
     photon to the radial direction at the emitter (static frame); cos(al) = sqrt(_pot(1/re, b)).

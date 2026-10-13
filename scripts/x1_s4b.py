@@ -8,7 +8,8 @@ This script reaches the same quantity by another route, which shares only the me
 - the magnification is 1 / |det J|, J the 2-D Jacobian (central differences on the screen) of the
   map from the screen position to the ray's perpendicular offset from the emitter, built in 3-D
   from the hit point m = cos(Phi) o + sin(Phi) s_hat on the emitter sphere (areal radius R) and
-  the ray direction there. This also tests the sin(gamma) and cos(al) factors.
+  the ray direction there. This also tests the sin(gamma) and |cos(al)| factors (|det J| does not
+  see the sign of cos(al)).
 image_mag is screen area per unit source solid angle on the emitter sphere; it is compared here per
 unit cross-section, i.e. divided by R^2 (constant at fixed R; cancels in centroids and flux ratios).
 
@@ -40,7 +41,7 @@ TOL_REL = 5e-3  # ASSUMPTION: pre-written tolerance (X1.md "S4b gate")
 R_EMIT, INCL, N_PHASE = 9.0, 155.0, 8
 R0 = 100.0  # coordinate radius where the integration starts; beyond it, a quadrature tail
 H_REL = (1e-4, 2e-4)  # screen step / b for the central differences (convergence pair)
-FOLD_FRAC = 0.02  # near side: step at most this fraction of the distance to the fold
+FOLD_FRAC = 0.02  # step at most this fraction of the distance to the fold (near) or b_c (far)
 CASES = (  # (a, side, gate)
     (2.1, "far", True),
     (5.0, "far", True),
@@ -124,14 +125,19 @@ def mag_jacobian(a, re, side, branch, s0, o, n, h_rel):
 
     def q(s):
         bb = float(np.linalg.norm(s))
-        ph = hit_hamilton(bb, a, re, side, branch)[0]
+        hit = hit_hamilton(bb, a, re, side, branch)
+        if hit is None:
+            raise RuntimeError(f"ray b = {bb} misses the emitter sphere ({side}, branch {branch})")
+        ph = hit[0]
         m = math.cos(ph) * o + math.sin(ph) * (s / bb)
         d = re * (m - n)
         return np.array([d @ p1, d @ p2])
 
-    h = h_rel * b0
-    if side == "near":  # stay on the branch: the near-side image curve folds at b_f
-        h = min(h, FOLD_FRAC * (xt._fold_b(a, re) - b0))
+    # stay on the branch: the near-side image curve folds at b_f, far-side rays need b < b_c
+    b_edge = xt._fold_b(a, re) if side == "near" else wf.b_crit(a)
+    h = min(h_rel * b0, FOLD_FRAC * (b_edge - b0))
+    if h <= 1e-9 * b0:
+        raise ValueError(f"image at b = {b0} lies too close to the branch edge {b_edge}")
     j = np.column_stack([(q(s0 + h * ax) - q(s0 - h * ax)) / (2 * h) for ax in (sh0, w)])
     return 1.0 / abs(np.linalg.det(j)), float(np.linalg.norm(m0 - n)), ca * ca + sa * sa - 1.0
 
@@ -155,10 +161,11 @@ def check_case(a: float, side: str) -> list[dict]:
             # sphere; per unit cross-section it is divided by R^2 (a constant at fixed R, so it
             # cancels in every centroid and flux ratio)
             mag_t = xt.image_mag(R_EMIT, bs, dphidb, gamma) / R_EMIT**2
-            mags = []
+            mags, null_err = [], 0.0
             for hr in H_REL:
-                mj, miss, null_err = mag_jacobian(a, R_EMIT, side, br, sgn * bs * e, o, n, hr)
+                mj, miss, ne = mag_jacobian(a, R_EMIT, side, br, sgn * bs * e, o, n, hr)
                 mags.append(mj)
+                null_err = max(null_err, abs(ne))
             rows.append(
                 {
                     "a_M": a,
@@ -182,7 +189,8 @@ def main() -> int:
     rows = []
     for a, side, _ in CASES:
         rows += check_case(a, side)
-    gate = [r for r in rows if r["side"] == "far" and r["a_M"] in (2.1, 5.0)]
+    gate_keys = {(a, side) for a, side, g in CASES if g}
+    gate = [r for r in rows if (r["a_M"], r["side"]) in gate_keys]
     summary = {}
     for a, side, g in CASES:
         sel = [r for r in rows if r["a_M"] == a and r["side"] == side]
@@ -191,6 +199,7 @@ def main() -> int:
             "max_abs_rel_diff": max(abs(r["rel_diff"]) for r in sel),
             "max_abs_step_change": max(abs(r["step_change_rel"]) for r in sel),
             "max_hit_miss": max(r["hit_miss"] for r in sel),
+            "max_null_err": max(r["null_err"] for r in sel),
             "gate_case": g,
         }
     out = {
@@ -200,6 +209,8 @@ def main() -> int:
         "incl_deg": INCL,
         "n_phase": N_PHASE,
         "tolerance_rel": TOL_REL,
+        "step_rel": H_REL,
+        "edge_step_frac": FOLD_FRAC,
         "gate_pass": bool(max(abs(r["rel_diff"]) for r in gate) <= TOL_REL),
         "summary": summary,
         "images": rows,
