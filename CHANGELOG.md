@@ -2,30 +2,33 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-13: Halo-subtracted photometry removes Abell 2744's halo-light flux flags
+## 2026-10-13: Halo-subtracted photometry explains Abell 2744 602.1c's flux flag; 600.1 is untestable
 - New `scripts/halo_phot.py` → `results/halo_phot/abell2744/halo_phot.json`; `tests/test_halo_phot.py`. Compact
-  images on UNCOVER `jw02561-o001_t003` F150W/F444W `_i2d` stamps (S3 byte ranges, 6″), two routes: stamp minus a
-  1″ median filter, and a local-plane annulus (0.5–0.7″); r = 0.2″ aperture centred on the filtered image's peak;
-  concentration f(0.2″)/f(0.4″) ≥ 0.6, |μ| ≤ 20, S/N ≥ 10 with ERR ⊕ blank-aperture scatter (ASSUMPTIONs, as D-032 /
-  `exotic_screens`). `flux_outlier` needs both routes beyond 0.75 mag with one sign.
+  images on UNCOVER `jw02561-o001_t003` F150W/F444W `_i2d` stamps (S3 byte ranges, 6″, D-034 frame offset), two
+  routes: stamp minus a 1″ median filter, and a local-plane annulus (0.5–0.7″); r = 0.2″ aperture centred on the
+  filtered image's peak. Gates (ASSUMPTIONs, as D-032 / `exotic_screens`): concentration f(0.2″)/f(0.4″) ≥ 0.6 on
+  the unfiltered light, |μ| ≤ 20, S/N ≥ 10 with 1.5 × ERR ⊕ blank-aperture scatter. `flux_outlier` needs both routes
+  beyond 0.75 mag with one sign; `one_route` and `untested` are never flags.
 - **Hypothesis before running:** the 600.1b and 602.1c flags (`mag_auto` −1.17 / −1.52 mag, D-032 addendum) are
-  BCG/ICL light. Halo-subtracted residuals below 0.75 mag confirm it; a residual that stays > 0.75 mag in both routes
-  and bands would go to `/vet-candidate`.
+  BCG/ICL light. Halo-subtracted residuals below 0.75 mag confirm it; a residual > 0.75 mag in both routes would go
+  to `/vet-candidate`.
 - **Validation (simulated):** a Gaussian on a synthetic exponential halo is recovered to +3 % (median filter) / +10 %
   (plane) when the halo's aperture light equals the source's; at 10× it leaves +0.3 mag, always brightening.
-- **Ring checks on the real stamps (8 apertures at 1″):** blank apertures keep 0.4–11 % of the image's flux on
-  600.1b / 602.1c (≤ 0.11 mag of leftover halo; 0.1–0.4 % off-halo on 602.1a/b); injected PSF-width Gaussians are
-  recovered at 97–100 %. Off-halo control: 602.1a/b residuals −0.05 to +0.19 mag in every band and route.
-- **Result (derived; LOO residual, band / route):** 602.1c −0.28 (F150W filter), −0.26 (F444W filter), −0.33 (F444W
-  plane), ± 0.05 at most; was −1.52. 600.1b −0.45 (F150W) / −0.46 (F444W, filter), against 600.1c only; was −1.17.
-  The plane route fails S/N 10 on 600.1b (both bands) and 602.1c (F150W) from blank-aperture scatter, as does 600.1a (arms on
-  the ring). All under 0.75 mag, no `flux_outlier`; the leftover sign is the one residual halo light gives. 600.1d
-  and 602.1d are untested (resolved on the halo; |μ| = 25). **The halo-light flags are explained; no anomaly.**
-- **Limits:** 600.1 is a resolved spiral (contact sheet): its 0.2″ apertures measure the nuclei, which pass the
-  concentration cut but are not totals. Two systems only; the UNCOVER tile is one epoch and one reduction. Stamps
-  and checks run in sequence (8 images × 2 bands, ~2 min); a field-wide run should pool them (scripts/CLAUDE.md).
-- **Next:** run `halo_phot.py` over every compact Abell 2744 / El Gordo / SMACS image (SMACS 1.1, 6.x), then fold the
-  halo-subtracted fluxes into `fluxratios` as an optional photometry route so `--mu-samples` refits σ_sys.
+- **Ring checks on the real stamps (8 apertures at 1″, same peak search):** blank apertures keep 0.8–11 % of
+  602.1c's flux (≤ 0.11 mag of leftover halo; ≤ 0.8 % off-halo on 602.1a/b); injected PSF-width Gaussians are
+  recovered at 95–100 % for the compact images. Off-halo control: 602.1a/b residuals −0.05 to +0.19 mag.
+- **Result (derived; LOO residual against 602.1a/b):** 602.1c F444W −0.26 (filter) / −0.33 (plane), ± 0.01; was
+  −1.52 in `mag_auto`. `consistent`. In F150W 602.1c fails the concentration gate on the halo (0.57). The flag is
+  halo light. **600.1 is untestable:** a resolved spiral on the contact sheet, all four images fail the
+  concentration gate except 600.1b, which then has no sibling; its `mag_auto` flag stays explained only by the
+  contact sheet (D-032 addendum). 602.1d: |μ| = 25. **No anomaly.**
+- **Failed approach:** concentration on the median-filtered image let the spiral's nuclei pass (0.63–0.81); the
+  filter strips extended light. It is now measured on the unfiltered light.
+- **Limits:** one system tested; one UNCOVER epoch and reduction. Stamps and checks run in sequence (8 images × 2
+  bands, ~2 min, ~17 full-stamp median filters per image and band); a field-wide run should pool them and filter
+  once per stamp (scripts/CLAUDE.md). NaN pixels are filled with the stamp median before filtering (none here).
+- **Next:** run `halo_phot.py` over every compact image of Abell 2744, El Gordo and SMACS (SMACS 1.1, 6.x), then
+  fold the halo-subtracted fluxes into `fluxratios` as a photometry route so `--mu-samples` refits σ_sys.
 
 ## 2026-10-13: `fluxratios` with `bayes.dat` μ errors: model statistics do not explain the flux scatter
 - `lens_consistency.py fluxratios --mu-samples N`: μ at N random chain rows (`chain_magnifications`, family

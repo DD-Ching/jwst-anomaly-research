@@ -14,8 +14,9 @@ lensing conserves (D-032). For two unresolved images in one band the aperture lo
 ratio, so ``s = -2.5 log10(flux) + 2.5 log10 |mu|`` is a source magnitude up to a constant.
 Each stamp also gets ring checks on the real halo (:func:`ring_checks`): blank apertures measure the
 halo light a route leaves behind (and give the background error), and injected PSF-width Gaussians
-measure how much of a compact image the route removes. An image is a ``flux_outlier`` in a band only
-when both routes exceed ``OUTLIER_MAG`` with the same sign.
+measure how much of a compact image the route removes. A band's ``flux_class`` is ``flux_outlier``
+only when both routes exceed ``OUTLIER_MAG`` with the same sign; ``one_route`` (one route passed its
+gates; reported, never flagged) and ``untested`` say that no two-route test ran.
 
 Thresholds and filter scales are ASSUMPTIONs; outputs are derived (injections: simulated).
 """
@@ -105,14 +106,15 @@ def measure(
     ap, big = r <= r_ap, r <= 2 * r_ap
     if not np.isfinite(sci[big]).all():
         return float("nan"), float("nan"), float("nan")
-    level = 0.0
-    if route == "annulus":
-        ring = (r >= annulus[0]) & (r <= annulus[1]) & np.isfinite(sci)
-        level = float(np.median(res[ring]))
-    flux = float(np.sum(res[ap]) - level * ap.sum())
-    f_big = float(np.sum(res[big]) - level * big.sum())
-    conc = flux / f_big if f_big > 0 else float("nan")
-    e = err[ap]
+    ring = (r >= annulus[0]) & (r <= annulus[1]) & np.isfinite(sci)
+    level = float(np.median(img[ring]))
+    flux = float(np.sum(res[ap]) - (level * ap.sum() if route == "annulus" else 0.0))
+    # concentration on the unfiltered light in both routes: the median filter strips a
+    # resolved source's extended light, which would let it pass as compact
+    f_small = float(np.sum(img[ap]) - level * ap.sum())
+    f_big = float(np.sum(img[big]) - level * big.sum())
+    conc = f_small / f_big if f_big > 0 else float("nan")
+    e = lc.ERR_SCALE * err[ap]  # ERR underestimates the noise (D-027 amendment)
     return flux, float(np.sqrt(np.sum(np.where(np.isfinite(e), e, 0.0) ** 2))), conc
 
 
@@ -137,20 +139,23 @@ def ring_checks(sci, err, xx, yy, flux, route, fwhm, n_angles=8, ring=CHECK_RING
     blank, rec = [], []
     for t in np.arange(n_angles) * 2 * np.pi / n_angles:
         cx, cy = ring * np.cos(t), ring * np.sin(t)
-        b = measure(sci, err, xx, yy, route, cx, cy, recentre=0.0)[0]
-        f = measure(
-            sci + gaussian(xx, yy, cx, cy, flux, fwhm), err, xx, yy, route, cx, cy, recentre=0.0
-        )[0]
+        # same peak search as the real measurement, so its positive bias shows up here too
+        b = measure(sci, err, xx, yy, route, cx, cy)[0]
+        f = measure(sci + gaussian(xx, yy, cx, cy, flux, fwhm), err, xx, yy, route, cx, cy)[0]
         blank.append(b)
         rec.append((f - b) / flux)
     return np.asarray(blank, float), np.asarray(rec, float)
 
 
 def run(model_name: str, systems: list[str], bands: dict[str, str], half_arcsec: float = 3.0):
-    files = lc.model_files(model_name)
-    par = lensmodel.parse_lenstool_par(files["best.par"])
-    model = lensmodel.LensModel.from_par(par)
-    images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    if not lc.has_image_list(model_name) or lc.is_map_model(model_name):
+        raise SystemExit(f"error: {model_name}: needs a Lenstool model with a usable image list")
+    missing = [b for b in bands if b not in PSF_FWHM_ARCSEC]
+    if missing:
+        raise SystemExit(f"error: no PSF width for {missing}; known: {sorted(PSF_FWHM_ARCSEC)}")
+    model, files, par = lc.load_model(model_name)
+    images, _ = lc.image_list(model_name, files, par)
+    lc.apply_frame_offset(model_name, model, images)  # into the JWST frame (D-034)
     images = images[np.isin(np.asarray(images["system"], str), systems)]
     z = lensmodel.image_redshifts(images, par["z_m_limit"])
     mu = np.asarray(model.evaluate(images["ra"], images["dec"], z)["magnification"], float)
@@ -198,9 +203,16 @@ def run(model_name: str, systems: list[str], bands: dict[str, str], half_arcsec:
     for row in rows:  # an outlier in a band needs both routes beyond the threshold, same sign
         for band in bands:
             a, b = row[f"{band}_medfilt_resid"], row[f"{band}_annulus_resid"]
-            row[f"{band}_flux_outlier"] = bool(
-                abs(a) > OUTLIER_MAG and abs(b) > OUTLIER_MAG and np.sign(a) == np.sign(b)
-            )
+            if np.isfinite(a) and np.isfinite(b):
+                row[f"{band}_flux_class"] = (
+                    "flux_outlier"
+                    if abs(a) > OUTLIER_MAG and abs(b) > OUTLIER_MAG and np.sign(a) == np.sign(b)
+                    else "consistent"
+                )
+            elif np.isfinite(a) or np.isfinite(b):  # one route only: reported, never flagged
+                row[f"{band}_flux_class"] = "one_route"
+            else:
+                row[f"{band}_flux_class"] = "untested"
     return rows
 
 
@@ -211,7 +223,7 @@ def main(argv=None) -> int:
     ap.add_argument("--band", action="append", required=True, help="BAND=i2d-uri (repeatable)")
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args(argv)
-    bands = dict(b.split("=", 1) for b in args.band)
+    bands = {k.strip().lower(): v for k, v in (b.split("=", 1) for b in args.band)}
     rows = run(args.model, args.systems.split(","), bands)
     clean = [{k: (lc._r(v, 3) if isinstance(v, float) else v) for k, v in r.items()} for r in rows]
     summary = {
@@ -240,7 +252,7 @@ def main(argv=None) -> int:
             {
                 k: v
                 for k, v in r.items()
-                if k.endswith(("resid", "blank_frac", "recovery", "outlier"))
+                if k.endswith(("resid", "blank_frac", "recovery", "class"))
             },
         )
     return 0

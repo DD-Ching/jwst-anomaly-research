@@ -1668,15 +1668,16 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 
 **Addendum 2026-10-13 (halo-subtracted photometry).**
 - `scripts/halo_phot.py` measures compact images on `_i2d` stamps after removing the smooth halo: a 1″ median filter
-  (main route) and a 0.5–0.7″ annulus plane (second route), r = 0.2″, concentration ≥ 0.6, an outlier only when
-  both routes agree (ASSUMPTIONs). Blank apertures on a 1″ ring measure leftover halo light and add their scatter
+  (main route) and a 0.5–0.7″ annulus plane (second route), r = 0.2″, concentration ≥ 0.6 on the unfiltered
+  light, an outlier only when both routes agree (ASSUMPTIONs). Blank apertures on a 1″ ring measure leftover halo light and add their scatter
   to the error; injected PSF-width Gaussians measure what a route removes from a compact image. Built
   from numpy/scipy and `lc.image_stamper`; photutils/SEP are not dependencies, and a two-line filter does not
   justify one.
-- Evidence (derived, Abell 2744, UNCOVER t003 F150W/F444W): 602.1c −0.26 to −0.33 mag (`mag_auto` −1.52), 600.1b
-  −0.45 / −0.46 (−1.17; nuclei of a resolved spiral); off-halo 602.1a/b within −0.05 to +0.19; leftover halo in
-  blank apertures ≤ 0.11 mag. Synthetic halo: +3 % / +10 % bias at halo ≈ source, +0.3 mag at 10×. The
-  halo-light flags are explained.
+- Evidence (derived, Abell 2744, UNCOVER t003 F150W/F444W): 602.1c F444W −0.26 / −0.33 mag (`mag_auto` −1.52),
+  `consistent`; off-halo 602.1a/b within −0.05 to +0.19; leftover halo in blank apertures ≤ 0.11 mag. 600.1 (a
+  resolved spiral) is untestable. Synthetic halo: +3 % / +10 % bias at halo ≈ source, +0.3 mag at 10×.
+- Alternative rejected: concentration on the median-filtered image. The filter strips a resolved source's
+  extended light, so the 600.1 spiral nuclei passed as compact.
 - Alternative rejected: DJA `_phot_apcorr.fits` (inspected: El Gordo header; 405 MB for Abell 2744). Its
   `<band>_tot_<k>` are aperture fluxes times a detection-image Kron/aperture correction, so the halo light that
   inflates `mag_auto` enters the correction too.
