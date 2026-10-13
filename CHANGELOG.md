@@ -8,7 +8,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   routes: stamp minus a 1″ median filter, and a local-plane annulus (0.5–0.7″); r = 0.2″ aperture centred on the
   filtered image's peak. Gates (ASSUMPTIONs, as D-032 / `exotic_screens`): concentration f(0.2″)/f(0.4″) ≥ 0.6 on
   the unfiltered light, |μ| ≤ 20, S/N ≥ 10 with 1.5 × ERR ⊕ blank-aperture scatter. `flux_outlier` needs both routes
-  beyond 0.75 mag with one sign; `one_route` and `untested` are never flags.
+  beyond 0.75 mag with one sign, on the system's worst image (as D-032); `one_route` and `untested` are never
+  flags. The blank apertures' median (leftover halo) is subtracted from each flux.
 - **Hypothesis before running:** the 600.1b and 602.1c flags (`mag_auto` −1.17 / −1.52 mag, D-032 addendum) are
   BCG/ICL light. Halo-subtracted residuals below 0.75 mag confirm it; a residual > 0.75 mag in both routes would go
   to `/vet-candidate`.
@@ -16,8 +17,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (plane) when the halo's aperture light equals the source's; at 10× it leaves +0.3 mag, always brightening.
 - **Ring checks on the real stamps (8 apertures at 1″, same peak search):** blank apertures keep 0.8–11 % of
   602.1c's flux (≤ 0.11 mag of leftover halo; ≤ 0.8 % off-halo on 602.1a/b); injected PSF-width Gaussians are
-  recovered at 95–100 % for the compact images. Off-halo control: 602.1a/b residuals −0.05 to +0.19 mag.
-- **Result (derived; LOO residual against 602.1a/b):** 602.1c F444W −0.26 (filter) / −0.33 (plane), ± 0.01; was
+  recovered at 95–100 % for the compact images. Off-halo control: 602.1a/b residuals −0.04 to +0.18 mag.
+- **Result (derived; LOO residual against 602.1a/b):** 602.1c F444W −0.26 (filter) / −0.31 (plane), ± 0.01, leftover halo subtracted; was
   −1.52 in `mag_auto`. `consistent`. In F150W 602.1c fails the concentration gate on the halo (0.57). The flag is
   halo light. **600.1 is untestable:** a resolved spiral on the contact sheet, all four images fail the
   concentration gate except 600.1b, which then has no sibling; its `mag_auto` flag stays explained only by the

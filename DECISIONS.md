@@ -1673,8 +1673,8 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   to the error; injected PSF-width Gaussians measure what a route removes from a compact image. Built
   from numpy/scipy and `lc.image_stamper`; photutils/SEP are not dependencies, and a two-line filter does not
   justify one.
-- Evidence (derived, Abell 2744, UNCOVER t003 F150W/F444W): 602.1c F444W −0.26 / −0.33 mag (`mag_auto` −1.52),
-  `consistent`; off-halo 602.1a/b within −0.05 to +0.19; leftover halo in blank apertures ≤ 0.11 mag. 600.1 (a
+- Evidence (derived, Abell 2744, UNCOVER t003 F150W/F444W): 602.1c F444W −0.26 / −0.31 mag (`mag_auto` −1.52),
+  `consistent`; off-halo 602.1a/b within −0.04 to +0.18; leftover halo in blank apertures (≤ 0.11 mag) is subtracted. 600.1 (a
   resolved spiral) is untestable. Synthetic halo: +3 % / +10 % bias at halo ≈ source, +0.3 mag at 10×.
 - Alternative rejected: concentration on the median-filtered image. The filter strips a resolved source's
   extended light, so the 600.1 spiral nuclei passed as compact.

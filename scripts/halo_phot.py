@@ -170,7 +170,7 @@ def run(model_name: str, systems: list[str], bands: dict[str, str], half_arcsec:
                 sci, err, xx, yy = stamp(float(r["ra"]), float(r["dec"]))
                 for route in ("medfilt", "annulus"):
                     f, e, c = measure(sci, err, xx, yy, route)
-                    row[f"{band}_{route}_conc"] = c
+                    row[f"{band}_conc"] = c  # the same unfiltered measure in both routes
                     blank_med, blank_sd, rec = np.nan, 0.0, np.nan
                     if np.isfinite(f) and f > 0:
                         blank, inj = ring_checks(sci, err, xx, yy, f, route, PSF_FWHM_ARCSEC[band])
@@ -179,7 +179,8 @@ def run(model_name: str, systems: list[str], bands: dict[str, str], half_arcsec:
                             blank_med = float(np.median(blank))
                             blank_sd = float(np.diff(np.percentile(blank, [16, 84]))[0] / 2)
                         rec = float(np.nanmedian(inj))
-                    row[f"{band}_{route}_flux"] = f
+                    # the leftover halo the blank apertures see is removed; its spread is an error
+                    row[f"{band}_{route}_flux"] = f - blank_med if np.isfinite(blank_med) else f
                     row[f"{band}_{route}_err"] = float(np.hypot(e, blank_sd))
                     row[f"{band}_{route}_blank_frac"] = blank_med / f if f > 0 else np.nan
                     row[f"{band}_{route}_recovery"] = rec
@@ -190,25 +191,26 @@ def run(model_name: str, systems: list[str], bands: dict[str, str], half_arcsec:
         for route in ("medfilt", "annulus"):
             f = np.array([r[f"{band}_{route}_flux"] for r in rows])
             e = np.array([r[f"{band}_{route}_err"] for r in rows])
-            c = np.array([r[f"{band}_{route}_conc"] for r in rows])
+            c = np.array([r[f"{band}_conc"] for r in rows])
             ok = np.isfinite(f) & (f > 0) & (f / np.where(e > 0, e, np.inf) >= MIN_SNR)
             ok &= (c >= MIN_CONCENTRATION) & (np.abs(mu) <= MAX_ABS_MU)
             src = np.where(
                 ok, -2.5 * np.log10(np.where(ok, f, 1.0)) + 2.5 * np.log10(np.abs(mu)), np.nan
             )
             serr = np.where(ok, 1.0857 * e / np.where(ok, f, 1.0), np.nan)
-            res, rerr, _ = lc._loo_residual(src, serr, ok, systems_arr)
-            for row, a, b in zip(rows, res, rerr, strict=True):
+            res, rerr, worst = lc._loo_residual(src, serr, ok, systems_arr)
+            for row, a, b, w in zip(rows, res, rerr, worst, strict=True):
                 row[f"{band}_{route}_resid"], row[f"{band}_{route}_resid_err"] = float(a), float(b)
+                row[f"{band}_{route}_worst"] = bool(w)
     for row in rows:  # an outlier in a band needs both routes beyond the threshold, same sign
         for band in bands:
             a, b = row[f"{band}_medfilt_resid"], row[f"{band}_annulus_resid"]
             if np.isfinite(a) and np.isfinite(b):
-                row[f"{band}_flux_class"] = (
-                    "flux_outlier"
-                    if abs(a) > OUTLIER_MAG and abs(b) > OUTLIER_MAG and np.sign(a) == np.sign(b)
-                    else "consistent"
-                )
+                # only a system's worst image (both of a pair), as D-032: one bad image shifts
+                # its siblings' references, which must not flag them too
+                worst = row[f"{band}_medfilt_worst"] and row[f"{band}_annulus_worst"]
+                big = abs(a) > OUTLIER_MAG and abs(b) > OUTLIER_MAG and np.sign(a) == np.sign(b)
+                row[f"{band}_flux_class"] = "flux_outlier" if big and worst else "consistent"
             elif np.isfinite(a) or np.isfinite(b):  # one route only: reported, never flagged
                 row[f"{band}_flux_class"] = "one_route"
             else:

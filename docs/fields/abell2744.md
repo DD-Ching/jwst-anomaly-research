@@ -81,7 +81,7 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
     Injection: 30 tested images made fainter are flagged in 17 / 27 / 60 / 93 % at 0.5 / 1 / 1.5 / 2 mag
     (flux and S/N scaled; 2 lost to S/N at 2 mag; 14 targets are pair members, not localised).
   - Halo-subtracted photometry (`scripts/halo_phot.py`, D-032 addendum; UNCOVER t003 F150W/F444W, 1″ median filter
-    and annulus plane): 602.1c F444W −0.26 / −0.33 mag against 602.1a/b, `consistent` (leftover halo ≤ 0.11 mag): its
+    and annulus plane): 602.1c F444W −0.26 / −0.31 mag against 602.1a/b, `consistent` (leftover halo ≤ 0.11 mag): its
     flag is BCG/ICL light. 600.1 is a resolved spiral and fails the concentration gate (untestable).
 
 ## Run
