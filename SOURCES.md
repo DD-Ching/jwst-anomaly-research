@@ -1201,3 +1201,11 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - ESO pipeline gravity-kit 1.9.7, https://ftp.eso.org/pub/dfs/pipelines/instruments/gravity/; raw data in programmes
   0101.B-0576(C,E), 105.20B2.004 and 109.22ZA.002 (ESO archive).
 - Gyoto, https://github.com/gyoto/Gyoto (GPL-3, tag 2.0.2); einsteinpy (MIT), https://github.com/einsteinpy/einsteinpy.
+
+## Trial unit X2 screen (accessed 2026-10-13; docs/state/units/S0-2026-10-13.md, X2.md)
+- GrayHawk-v2, Calzà, arXiv:2606.06339; https://github.com/marcocalza89/GrayHawk-v2 (commit 919126d; no licence file;
+  Mathematica). GrayHawk v1: arXiv:2502.04041.
+- Miani et al. 2023, "Constraints on the amplitude of gravitational wave echoes from black hole ring-down using
+  minimal assumptions", arXiv:2302.12158 (Table I: per-event h_rss at 50 % DP, FAP 5 %).
+- Lütfüoğlu 2026, arXiv:2606.08351 (black-bounce Hawking emission; not two-sided throat transmission).
+- Krasnikov, arXiv:1910.07839; Dai & Stojkovic, arXiv:1912.07793 (comment and reply on arXiv:1910.00429).
