@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: S0 addendum: X2 (SV-throat echoes vs published post-merger limits) authorized; B conditions stated
+- Owner follow-up review; `docs/state/units/S0-2026-10-13.md` addendum.
+- 2606.08351 is horizon (black-bounce) greybody, not two-sided throat transmission; that citation is withdrawn.
+- GrayHawk-v2: Mathematica only and no licence; its method and benchmark targets are reusable, its code is not.
+- No public wormhole echo code exists.
+- Minimal check (`scripts/x2_echo_delay.py`, tests; derived): the SV double-peak echo spacing grows as a power
+  law in 1 − 2M/a. Miani et al.'s 50–350 ms window corresponds to a − 2M ≈ 4.5e-4 to 2.2e-2 M (60 M☉), so their
+  published per-event h_rss thresholds can be mapped without new injections. Direction A therefore qualifies as
+  X2 (16 h; premises: non-rotating SV, test-field proxy).
+- B (Dai–Stojkovic vs Krasnikov): the ℓ = 0 part is exactly degenerate by Birkhoff in our vacuum region. A time
+  variation needs ℓ ≥ 1 transfer through the throat, which neither paper computes. B stays not qualified.
+
 ## 2026-10-13: halo_phot elongation gate: El Gordo 1c's flag was an arc; few images stay testable; no anomaly
 - **Hypothesis before running:** the El Gordo 1c flag (previous entry) is an arc knot that passed the concentration
   gate; an axis-ratio gate removes it and leaves star-like images. A flag surviving the gate would go to vetting.
