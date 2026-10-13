@@ -1252,6 +1252,14 @@ test ran unchanged; two outputs were added to `arcs`: a shape-noise expectation 
   within 30°. No anti background arc unexplained; docs/fields/abell2744.md and elgordo.md.
 - Shapes are still single-band catalogue moments; the blend rejection and S/N ≥ 50 cut above remain open.
 
+**Addendum 2 2026-10-13 (`arcs` on MACS1149 and MACS0416).** Unchanged code; CANUCS DR1 photo-z (zout columns as in
+docs/fields/macs1149.md). MACS1149 (CATS v4.1 maps): background 20/24 aligned, 2 anti (0.61 expected); both looked at
+and ordinary (4236 a diffuse segment beside a bright galaxy, 3.9σ centre peak after background removal; 1703 at a
+critical curve, g 8). MACS0416 (CANUCS Lenstool): catalogued images 63/85 within 30°; background 26/27 aligned, 0 anti
+(0.43 expected). Catalogue sources without a CANUCS match within 0.3″ are faint (median m ≈ 28) and near-random in
+orientation; they carry no information. Null in both fields. Lesson: a catalogue S/N does not certify a compact
+source near bright halos; look at a background-subtracted cutout before calling a shape real.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

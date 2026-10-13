@@ -1,0 +1,68 @@
+{
+ "model": "macs1149-cats",
+ "catalog": "data/cache/arcs/jw01208-o008_t004_nircam_clear-f200w_cat.ecsv",
+ "photoz": "data/cache/arcs/canucs_macs1149_zout.fits",
+ "assumptions": {
+  "min_ellipticity": 0.5,
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0,
+  "max_radius": 50.0,
+  "min_shear": 0.2,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "multiple_images": null,
+ "selected": 112,
+ "strong_shear_background": {
+  "n": 24,
+  "aligned": 20,
+  "anti": 2,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 6.633902471195827e-07
+ },
+ "strong_shear_by_population": {
+  "background": {
+   "n": 24,
+   "aligned": 20,
+   "anti": 2,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 6.633902471195827e-07
+  },
+  "member_or_foreground": {
+   "n": 9,
+   "aligned": 2,
+   "anti": 2,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.8569323781943808
+  },
+  "unknown": {
+   "n": 27,
+   "aligned": 8,
+   "anti": 3,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.7245372228545334
+  }
+ },
+ "strong_shear_all": {
+  "n": 60,
+  "aligned": 30,
+  "anti": 7,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 0.0055530232971604835
+ },
+ "anti_expected_shape_noise_background": {
+  "n": 24,
+  "anti": 2,
+  "expected": 0.612,
+  "p_ge_observed": 0.125733101048113
+ },
+ "anti_candidates": [
+  1985,
+  2588,
+  1901,
+  4236,
+  1703
+ ]
+}
