@@ -1650,6 +1650,17 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 - Failed approach: forced photometry on a single UNCOVER tile (2561 t003) does not settle faint Lyα counterparts;
   its sign disagreed with DJA for 42.1a/c.
 
+**Addendum 2026-10-13 (`bayes.dat` μ errors).**
+- `fluxratios --mu-samples N` propagates the published chain (D-045) into each residual; `resid_z` divides by
+  photometric ⊕ model errors ⊕ the field's scatter floor σ_sys (median |z| = 0.6745), and `flux_tension` flags a
+  system's worst image at |z| > 3 (ASSUMPTION). The fixed 0.75 mag `flux_outlier` stays for continuity.
+- Evidence (derived, 100 rows): model error median 0.04 mag (Abell 2744) and 0.07 mag (El Gordo), max 0.14 / 0.21;
+  σ_sys 0.24 / 0.53 mag. The chain explains little of the scatter; photometry dominates. Flags unchanged in Abell
+  2744 (4, all explained); El Gordo 18b/c fall to |z| 2.2. No anomaly.
+- Alternative rejected: a χ² with photometric and model errors only. SEP `magerr_auto` (≈ 0.02 mag) and the chain
+  errors leave a 0.24–0.53 mag floor, so it would flag most systems; the floor is fitted per field instead.
+- Revisit if: a pinned SMACS chain appears (6.3), or ICL-aware totals lower σ_sys (then the 3σ tension test tightens).
+
 ## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
 
 **Decision.**

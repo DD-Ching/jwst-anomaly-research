@@ -76,6 +76,8 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
     **No anomaly.**
   - 9a's counterpart is a z_phot 0.89 object (95 %: 0.73–0.99), not the z = 4.32 image. 9c's counterpart has
     z_phot 3.62.
+  - With `--mu-samples 100` (D-032 addendum 2026-10-13): model error median 0.07 mag (max 0.21, 11a/c); scatter floor
+    σ_sys 0.53 mag; 18b/18c fall to |z| 2.2, so no `flux_tension`.
 
 ## Counter-images and radial screen (2026-10-08, D-034)
 

@@ -564,6 +564,37 @@ def test_flux_ratio_table_consistent_and_injected_outlier():
     assert t["colour_resid"][1] == pytest.approx(0.5)
 
 
+def test_flux_ratio_table_model_error_and_tension():
+    model, images, phot, mu = _flux_inputs()
+    # without chain samples the model error is zero and the floor explains nothing extra
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    np.testing.assert_allclose(t["resid_model_err"], 0.0)
+    assert t.meta["n_mu_samples"] == 0 and list(t["tension_class"]) == ["consistent"] * 3
+    # chain samples scaling image 1.1's mu by 10**(+-0.4 / 2.5): its residual spreads by +-0.4 mag
+    f = 10 ** (np.array([-0.4, 0.0, 0.4]) / 2.5)
+    samples = np.array([mu * np.array([k, 1.0, 1.0]) for k in f])
+    t = lc.flux_ratio_table(model, images, {}, phot, mu_samples=samples)
+    assert t["resid_model_err"][0] == pytest.approx(0.4 * 0.68, rel=0.02)  # 16-84 % of 3 values
+    assert t["resid_model_err"][1] == pytest.approx(0.2 * 0.68, rel=0.02)  # via the median ref
+    assert t.meta["n_mu_samples"] == 3
+    # A 1.5 mag deficit: |z| is large against tiny errors, so it is a tension, but the floor
+    # from three images of one system absorbs most of it (only the worst image can be flagged)
+    model, images, phot, _ = _flux_inputs(offsets_mag=(1.5, 0.0, 0.0))
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert t.meta["sigma_sys"] > 0.5
+    assert list(t["tension_class"])[1:] == ["consistent", "consistent"]
+
+
+def test_scatter_floor():
+    rng = np.random.default_rng(0)
+    r = rng.normal(0, 0.5, 4000)
+    assert lc._scatter_floor(r, np.full(r.size, 0.1)) == pytest.approx(
+        np.sqrt(0.5**2 - 0.1**2), rel=0.05
+    )
+    assert lc._scatter_floor(r, np.full(r.size, 2.0)) == 0.0
+    assert np.isnan(lc._scatter_floor(r[:2], np.ones(2)))
+
+
 def test_flux_ratio_table_pair_residual_is_the_full_difference():
     model, images, phot, _ = _flux_inputs(offsets_mag=(1.0, 0.0, 0.0))
     t = lc.flux_ratio_table(model, images[:2], {}, phot)
@@ -699,6 +730,35 @@ def test_posterior_command_on_a_synthetic_chain(tmp_path, monkeypatch):
         del lc.MODELS["_post"]
     img = next(iter(summary["families"]["1"]["images"].values()))
     assert img["shared_fraction"] is None and img["dtheta_p16_50_84"] is None
+
+
+def test_chain_magnifications_on_a_synthetic_chain(tmp_path, monkeypatch):
+    par_path = tmp_path / "best.par"
+    par_path.write_text(_POST_PAR)
+    bayes_path = tmp_path / "bayes.dat"
+    bayes_path.write_text(_POST_BAYES)
+    par = lc.lensmodel.parse_lenstool_par(par_path)
+    images = Table(
+        {
+            "image_id": ["1.1", "1.2", "2.1"],
+            "system": ["1", "1", "2"],
+            "ra": RA0 + np.array([20.0, -25.0, 30.0]) / 3600,
+            "dec": DEC0 + np.array([5.0, 0.0, 30.0]) / 3600,
+            "z": [2.0, 2.0, -1.0],  # system 2 has no redshift
+        }
+    )
+    lc.MODELS["_post"] = {"sigpos": 0.5, "bayes": ("unused", "unused")}
+    monkeypatch.setattr(lc, "fetch_catalog", lambda url, sha: bayes_path)
+    try:
+        mu, info = lc.chain_magnifications("_post", par, images, 3, seed=0)
+    finally:
+        del lc.MODELS["_post"]
+    assert mu.shape == (3, 3) and info["best_row"] == 0 and info["n_samples"] == 3
+    assert np.all(np.isnan(mu[:, 2])) and np.all(np.isfinite(mu[:, :2]))
+    # rows 0, 1, 2 have sigma 900, 910, 890 km/s: each row gives a different magnification
+    assert len(np.unique(np.round(mu[:, 0], 6))) == 3
+    best = lc.lensmodel.LensModel.from_par(par).evaluate(images["ra"][:2], images["dec"][:2], 2.0)
+    assert np.any(np.isclose(mu[:, 0], best["magnification"][0]))  # row 0 is best.par
 
 
 @pytest.mark.network

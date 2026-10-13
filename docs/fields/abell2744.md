@@ -76,6 +76,8 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
     - 3.1b/3.1c colour (0.32, σ 0.02): 3.1b is a 0.5″ aperture on the μ ≈ −115 giant arc, which samples one part of
       a resolved source. 34.1c colour (0.59, σ 0.08): a 25.8 mag counterpart 0.22″ off, next to a second blob.
   - **No flux-ratio or colour anomaly.** Untested: 115 images (faint, unmatched in the core, |μ| > 20).
+  - With `--mu-samples 100` (D-032 addendum, `bayes.dat` μ errors): model error median 0.04 mag (max 0.14, 602.1c);
+    scatter floor σ_sys 0.24 mag. The four flux flags are the only `flux_tension`s (|z| 4.3–6.2), all explained above.
 
 ## Run
 
