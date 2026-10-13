@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: Abell 2744 flux-ratio and colour test on DJA v7.2 (in progress)
+- Plan: `lens_consistency.py --model abell2744-bergamini23 fluxratios` on the 233 MB DJA v7.2 catalogue (cloud:
+  downloaded to the session disk, deleted after use). Hypothesis: no image deviates beyond the D-032 thresholds.
+
 ## 2026-10-13: X1 S4b: the tracer's image weights pass an independent check; X1 closed
 - New `scripts/x1_s4b.py` → `results/x1/s4b_image_weights.json`; `tests/test_x1_s4b.py`; `x1_tracer.image_mag`
   extracted (no numeric change). Gate written in docs/state/units/X1.md before the run (commit 75bd7b7). Hours count
