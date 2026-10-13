@@ -135,4 +135,46 @@ Outputs: `results/arcs/abell370-canucs/`.
   apertures (#199, `docs/candidates/abell370-1565.md`). The cut is an ASSUMPTION; F444W shapes are not in the stored
   tables.
 - **Members/foreground:** 5 of 13 anti (P = 1/3 each if unlensed). **No CANUCS match (77):** 15 anti, near random.
-- **Result: null.** No anti-tangential arc that a critical-curve flip or an intrinsic shape does not explain.
+- **Result (superseded for 1565 by the scan below): null.** No anti-tangential arc that a critical-curve flip or an intrinsic shape does not explain.
+
+### Redshift scan of the anti sources (2026-10-13, D-024 addendum 4)
+The predicted axis turns by 90° only where κ crosses 1. `results/arcs/anti_flip_scan.json` gives κ, g, the lensing
+axis ratio q_lens and the shape-noise P(anti) at each source's z16/z/z84 in CANUCS and CATS (`model_prediction`
+and `derived`). CANUCS DR1 95 % ranges (Z025–Z975, `observed` catalogue values): 1565 0.40–3.47, 1788 0.98–5.88.
+- **1788:** κ = 1 at z 3.16 (CANUCS) / 2.95 (CATS); at its photo-z κ 1.04–1.06, q_lens 0.62–0.71, P(anti) 0.05–0.09.
+  A weak, model-sensitive radial prediction: explained.
+- **1565 (39.977168, −1.583366):** κ 0.81–0.82 (CANUCS) / 0.76–0.77 (CATS) at z 2.8–3.2, below 0.9 up to z = 8:
+  tangential at every redshift, predicted PA 58°, q_lens 0.02–0.14, P(anti) ≤ 2e-4. Weighted moments (Gaussian
+  σ 0.08–0.12″, local plane background; noise from ERR): F150W 150–158° (S/N 2–4), F200W 150–155° (±7–11°, S/N 8),
+  F277W 163–168° (±7°, S/N 10). In the F150W–F356W cutouts 1565 is a knot on a faint ~1″ structure at PA ≈ 160°
+  that reaches neighbour 1562 (0.73″ at PA 162°; CANUCS z_ML 0.27, 0.09–2.85); a cluster member (CANUCS z 0.36,
+  F200W 1.5 μJy) lies 1.2″ to the SE. The model's counter-image is 12″ NNW (39.979289, −1.580843; μ ≈ +14, so ≈
+  28.9 mag): CANUCS sources there at 0.52″ and 0.85″ have F200W 8 ± 5 and 21 ± 4 nJy and colours unlike 1565's
+  (F150W/F200W 0.47, F277W/F200W 1.1). Inconclusive.
+- **Three more published models** (HFF v4 κ/γ maps at one pixel, scaled by D_LS/D_S; SOURCES): Sharon κ 0.79–0.81,
+  GLAFIC 0.76–0.78, Keeton 0.75–0.77 at z 2.8–3.2 (≤ 0.87 at z = 8); q_lens 0.00–0.08. Shear axis PA 56° / 58° / 63°
+  if γ1 is along the map's pixel x axis (that convention reproduces CANUCS's 58°). All five models predict a strong
+  tangential stretch; model choice does not explain 1565.
+- **CANUCS deblending (`observed` catalogue and segmentation values):** 1565's CANUCS counterpart has
+  `FLAG_DEBLEND` = True. In the DR1 segmentation map (`…a370-clu-40mas_multi_v1_segmentation.fits.gz`, 1,239,107 B,
+  sha256 `9baa4407…`) its segment 25146 has 31 pixels of 0.04″ (0.36″ long), major axis PA 165°, axis ratio 0.46, and
+  touches the member's segment 922 (375 px in the 2″ box) at its southern end; 1562 is a separate segment (20618).
+  Its colours differ from the member's (F150W/F200W 0.47 vs 0.90; F277W/F200W 1.1 vs 0.84), so it is not member
+  light alone. At z 2.94, [O III] 5007 Å falls in F200W and Hα in F277W, which fits its F200W/F277W excess
+  (`hypothesis`). A deblended fragment whose shape is set by the cut against the member's halo was the leading
+  ordinary explanation; the next item rules it out for the image moments.
+- **Member modelled out (`derived`):** a Sérsic + constant fit to the member on a 4.4″ stamp (n 0.9–1.1, r_eff
+  0.22–0.23″; 1565 and 1562 masked) leaves the axis unchanged: F150W 151–156°, F200W 150–155°, F277W 163–168°
+  (±7–12°). The member's smooth light does not set the axis; the deblending only affects the catalogue segment.
+- **Noise axis (`derived`):** the same 0.08″ window at 150 blank F277W positions within 15″ (no catalogue source within
+  1.2″) gives no preferred axis: 17 % within 15° of the mosaic row axis (153.4°), 14 % of the column axis, 17 %
+  expected. The F200W run timed out (not run). Correlated noise does not obviously set the F277W axis.
+- **Status: unvetted flag, not a candidate.** Ordinary explanations still open: a member tidal feature or a blend
+  (the structure through 1562), a low-z photo-z solution (Z025 0.40; P(anti) 0.10 at z 0.6 and 0.24–0.33 below z ≈ 0.45), and an unmodelled
+  local perturber (five models agree, so only a perturber none of them contains). Next: `/vet-candidate`.
+- **Vetted 2026-10-13 (`docs/candidates/abell370-1565.md`): inconclusive, needs a redshift for 1565 itself.** The
+  z ≈ 2.9 photo-z rests on NIRCam F150W, which disagrees with NIRISS F150W (5.9 ± 1.8 vs 12.4 ± 1.9 nJy). MUSE-DEEP
+  (registered to JWST: +1.43″ in Dec) puts 1565 inside a ≥ 2″ z = 0.386 [O II] nebula (Lagattuta+2019 emitter
+  5964, 1.15″ S), with no excess of its own and no z 2.94 line. A cluster-redshift, unlensed knot is the
+  open ordinary alternative (`hypothesis`). 1565 also lies between system 44's merging images 44.1/44.2. Next:
+  NIRISS slitless spectra.

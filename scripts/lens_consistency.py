@@ -468,7 +468,9 @@ def orientation_table(
     Columns per grid redshift (``pa_pred_z1``, ``offset_z1``, ``g_z1``, ``mu_z1`` ...) are always
     written for reference. The class uses each source's own redshift range (z160, z_phot, z840)
     when its photo-z puts it behind the lens (``z_basis = "photo-z"``), else the grid
-    (``z_basis = "grid"``). ``g_min`` is the smallest reduced shear over the redshifts used.
+    (``z_basis = "grid"``). ``g_min`` is the smallest reduced shear over the redshifts used, and
+    ``kappa_min`` / ``kappa_max`` bound the convergence there: the predicted axis turns by 90 deg
+    only where kappa crosses 1, so a source with ``kappa_max < 1`` is tangential at any of them.
     """
     out = sources.copy(copy_data=True)
     x, y = model.to_frame(out["ra"], out["dec"])
@@ -478,11 +480,12 @@ def orientation_table(
         pred = model.evaluate(out["ra"], out["dec"], z, fields=fields)
         pa = np.asarray(pred["tangential_pa"], float)
         off = lensmodel.axis_offset_deg(out["pa_obs"], pa)
-        return pa, off, np.asarray(pred["reduced_shear"], float), np.asarray(pred["magnification"])
+        g, mu = np.asarray(pred["reduced_shear"], float), np.asarray(pred["magnification"])
+        return pa, off, g, mu, np.asarray(pred["kappa"], float)
 
     grid = []
     for z in z_grid:
-        pa, off, g, mu = predict(z)
+        pa, off, g, mu, k = predict(z)
         tag = f"z{z:g}"
         out[f"pa_pred_{tag}"], out[f"offset_{tag}"], out[f"g_{tag}"], out[f"mu_{tag}"] = (
             pa,
@@ -490,7 +493,7 @@ def orientation_table(
             g,
             mu,
         )
-        grid.append((pa, off, g))
+        grid.append((pa, off, g, k))
     n = len(out)
     use_pz = np.zeros(n, bool)
     if {"z_phot", "z160", "z840"} <= set(out.colnames):
@@ -498,8 +501,8 @@ def orientation_table(
         use_pz = np.isfinite(zs[0]) & (zs[0] > model.z_lens + z_margin)
         own = []
         for z in zs:
-            pa, off, g, _ = predict(np.where(use_pz, z, np.nan))
-            own.append((pa, off, g))
+            pa, off, g, _, k = predict(np.where(use_pz, z, np.nan))
+            own.append((pa, off, g, k))
         out["offset_zphot"] = np.where(use_pz, own[1][1], np.nan)
     else:
         own = grid
@@ -508,6 +511,7 @@ def orientation_table(
             np.where(use_pz, o[0], gr[0]),
             np.where(use_pz, o[1], gr[1]),
             np.where(use_pz, o[2], gr[2]),
+            np.where(use_pz, o[3], gr[3]),
         )
         for o, gr in zip(own, grid, strict=True)
     ]
@@ -516,6 +520,8 @@ def orientation_table(
     out["offset_min"] = offsets.min(axis=0)
     out["offset_max"] = offsets.max(axis=0)
     out["g_min"] = np.vstack([s[2] for s in sets]).min(axis=0)
+    kappas = np.vstack([s[3] for s in sets])
+    out["kappa_min"], out["kappa_max"] = kappas.min(axis=0), kappas.max(axis=0)
     spread = np.zeros(n)
     for a in range(len(sets)):
         for b in range(a + 1, len(sets)):

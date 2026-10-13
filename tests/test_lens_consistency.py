@@ -156,6 +156,9 @@ def test_orientation_uses_the_source_photoz():
     assert out["offset_z1"][0] > 85  # the grid would call it anti
     assert out["z_basis"][0] == "photo-z"
     assert out["orientation_class"][0] == "aligned"
+    assert out["kappa_max"][0] < 1  # tangential at every redshift used
+    full = lc.orientation_table(model, src[["label", "ra", "dec", "pa_obs"]])
+    assert full["kappa_min"][0] > 1  # radial at the grid z = 1, 2, 4
 
 
 def test_class_stats_null_follows_threshold():

@@ -10,6 +10,46 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   earlier. Abell 370 1565 and 1788 drop out at S/N 26.6 and 21.5. Null. Details: `docs/fields/abell370.md`.
 - **Next:** blend rejection and F150W vs F444W shapes need the catalogues again; critical-curve curvature.
 
+## 2026-10-13: Abell 370 1565: NIRISS route and forced photometry; parked as inconclusive
+- **Hypothesis before testing:** forced photometry on both instruments confirms or removes the z ≈ 2.9 colour; NIRISS
+  WFSS (program 1208) can show [O III]; a detector-row artefact would make the axis follow the mosaic rows.
+- **Results (observed/derived; `docs/candidates/abell370-1565.md`):** the level-3 WFSS `_c1d` products hold only the
+  100 brightest sources (nearest 5.1″), and the best-case [O III] (≈ 2.3e-18 cgs) is ≤ 4–5σ against the empirical
+  per-grism 1σ of ~5e-19 (5-pixel box, ASSUMPTION; contamination by member 603 not modelled). Forced r = 0.15″
+  photometry: NIRCam F150W 6.7 ± 3.5 vs NIRISS 7.0 ± 4.1 nJy (the catalogue's 2.5σ gap is not reproduced);
+  F150W/F200W 0.61 ± 0.38 / 0.78 ± 0.58, so 0.47 vs 1.0 is undecided. Axis 159–163° in NIRCam F150W/F200W and NIRISS
+  F150W; mosaic rows lie at 153–155°, but blank-sky noise axes show no row preference (14–21 % within 15° vs 16.7 %).
+  Looked at all six bands.
+- **Verdict:** inconclusive, parked; not a candidate. Reopen with a redshift for 1565. A grizli extraction is the
+  owner's call (several hours, best case 4–5σ).
+
+## 2026-10-13: Abell 370 1565 vetted: inconclusive; a z 0.386 nebula and a weak photo-z
+- `/vet-candidate` (`docs/candidates/abell370-1565.md`). **Hypothesis before testing:** 1565 is a z ≈ 2.9 image the
+  models get wrong. Ordinary alternatives: a cluster-redshift (unlensed) knot, a blend, or a local perturber.
+- **Results (observed/derived):** the z ≈ 2.9 colour uses NIRCam F150W 5.9 ± 1.8 nJy; NIRISS F150W gives 12.4 ± 1.9.
+  MUSE-DEEP (SODA cutout; registered on 53 sources, +1.43″ in Dec): 1565 sits in a ≥ 2″ z 0.3856 [O II] nebula
+  around the Lagattuta+2019 emitter 5964 (1.15″ S), with no excess over control apertures at the same distance and
+  no z 2.94 UV line (not constraining at ~28.7 mag). 1565 lies between system 44's merging pair 44.1/44.2 (z_mod
+  2.34). A local perturber would need Δκ ≳ 0.2; member 603 is a dwarf. Not a candidate (`triaged`).
+- **Failed approach:** extracting MUSE spectra at JWST positions without registration. The ESO cube is 1.43″ off,
+  and the first extraction put 28σ [O II] "on 1565"; registration moved it to 5964.
+- **Next:** CANUCS NIRISS slitless spectra at 1565 (z 0.386 He I/Paγ/Paβ vs z 2.94 [O II]/[O III] at 1.5–2.0 μm).
+
+## 2026-10-13: anti arcs at g_min ≥ 1: no redshift flip for Abell 370 1565; the addendum 3 rule corrected
+- `orientation_table` writes `kappa_min`/`kappa_max` over the redshifts used: the predicted axis turns by 90° only
+  where κ crosses 1, not at g = 1. Scan of all 7 anti background sources in five fields:
+  `results/arcs/anti_flip_scan.json` (both Abell 370 models).
+- **Result (derived):** 1788 (Abell 370) and 1703 (MACS1149) sit just past κ = 1 (κ 1.01–1.06; flip at z 3.0–3.2 and
+  4.0) with weak predicted distortion (q_lens 0.62–0.91, shape-noise P(anti) 0.05–0.25): explained. **1565** has κ 0.76–
+  0.82 at z 2.8–3.2 and < 0.9 to z = 8 in CANUCS, CATS, Sharon, GLAFIC and Keeton: tangential at any z, q_lens 0.02–0.14, P(anti) ≤ 2e-4.
+  Its axis is band-consistent (weighted moments F150W 150–158°, F200W 150–155°, F277W 163–168°, ±7–21°; prediction
+  58°). Looked at (F150W–F356W cutouts): a faint ~1″ structure at PA ≈ 160° joining 1565 to neighbour 1562
+  (z_ML 0.27), 1.2″ from a cluster member (z 0.36). Not a candidate yet: blend/tidal feature and the photo-z tail
+  (Z025 0.40) are open; CANUCS flags it `FLAG_DEBLEND`, and its 31-pixel segment touches the member's segment, but
+  the axis is unchanged after a Sérsic model of the member is subtracted. The predicted counter-image (12″ NNW, μ ≈ +14) has no clear match (inconclusive at ~28.9 mag).
+- **Failed approach:** treating g_min ≥ 1 as "at a critical curve, direction flips" (addendum 3); 1565 was misfiled.
+- **Next:** `/vet-candidate` on 1565: correlated-noise injections at its S/N, P(z), counter-image depth.
+
 ## 2026-10-13: arc orientations in Abell 370: a 4-vs-0.94 anti excess, all at critical curves or intrinsic shapes
 - `lens_consistency.py arcs` (unchanged) with the CANUCS DR1 model and photo-z. Known images: 53/59 within 30°; the
   two beyond 60° are knots of the resolved spiral system 6.
