@@ -128,4 +128,22 @@ Outputs: `results/arcs/abell370-canucs/`.
   MACS1149, MACS0416, Abell 370): 7 anti vs 2.6 (P = 0.017) with every source; 4 vs 2.13 (P = 0.17) for g_min < 1;
   4 vs 3.5–5.1 with σ_ε 0.30–0.35. The excess sits entirely at critical curves.
 - **Members/foreground:** 5 of 13 anti (P = 1/3 each if unlensed). **No CANUCS match (77):** 15 anti, near random.
-- **Result: null.** No anti-tangential arc that a critical-curve flip or an intrinsic shape does not explain.
+- **Result (superseded for 1565 by the scan below): null.** No anti-tangential arc that a critical-curve flip or an intrinsic shape does not explain.
+
+### Redshift scan of the anti sources (2026-10-13, D-024 addendum 4)
+The predicted axis turns by 90° only where κ crosses 1. `results/arcs/anti_flip_scan.json` gives κ, g, the lensing
+axis ratio q_lens and the shape-noise P(anti) at each source's z16/z/z84 in CANUCS and CATS (`model_prediction`
+and `derived`). CANUCS DR1 95 % ranges (Z025–Z975, `observed` catalogue values): 1565 0.40–3.47, 1788 0.98–5.88.
+- **1788:** κ = 1 at z 3.16 (CANUCS) / 2.95 (CATS); at its photo-z κ 1.04–1.06, q_lens 0.62–0.71, P(anti) 0.05–0.09.
+  A weak, model-sensitive radial prediction: explained.
+- **1565 (39.977168, −1.583366):** κ 0.81–0.82 (CANUCS) / 0.76–0.77 (CATS) at z 2.8–3.2, below 0.9 up to z = 8:
+  tangential at every redshift, predicted PA 58°, q_lens 0.02–0.14, P(anti) ≤ 2e-4. Weighted moments (Gaussian
+  σ 0.08–0.12″, local plane background; noise from ERR): F150W 150–158° (S/N 2–4), F200W 150–155° (±7–11°, S/N 8),
+  F277W 163–168° (±7°, S/N 10). In the F150W–F356W cutouts 1565 is a knot on a faint ~1″ structure at PA ≈ 160°
+  that reaches neighbour 1562 (0.73″ at PA 162°; CANUCS z_ML 0.27, 0.09–2.85); a cluster member (CANUCS z 0.36,
+  F200W 1.5 μJy) lies 1.2″ to the SE. The model's counter-image is 12″ NNW (39.979289, −1.580843; μ ≈ +14, so ≈
+  28.9 mag): CANUCS sources there at 0.52″ and 0.85″ have F200W 8 ± 5 and 21 ± 4 nJy and colours unlike 1565's
+  (F150W/F200W 0.47, F277W/F200W 1.1). Inconclusive.
+- **Status: unvetted flag, not a candidate.** Ordinary explanations still open: a member tidal feature or a blend
+  (the structure through 1562), a low-z photo-z solution (Z025 0.40; P(anti) 0.10 at z 0.6 and 0.24–0.33 below z ≈ 0.45), and an unmodelled
+  local perturber. Next: `/vet-candidate`.

@@ -1266,6 +1266,16 @@ resolved spiral image 6.1). Five fields combined: 7 anti vs 2.6 with every sourc
 Rule: the shape-noise null (`anti_expected`) is valid only away from critical curves; quote it for g_min < 1 and
 treat g_min ≥ 1 anti sources as direction flips to check against the curve position, not as shape-noise excess.
 
+**Addendum 4 2026-10-13 (redshift scan of the anti background sources).** Addendum 3's rule is wrong in part: in
+`evaluate` the predicted axis turns by 90° only where κ crosses 1 (the smaller-|eigenvalue| eigenvector), so g ≥ 1
+alone does not make a source a flip, and `anti_probability` (Seitz & Schneider) is valid at any g away from κ ≈ 1.
+`orientation_table` now writes `kappa_min`/`kappa_max` over the redshifts used; the shape-noise null is quoted for
+sources whose κ range stays clear of 1, and a source with κ near 1 is checked against κ(z) and a second model.
+Scan (`results/arcs/anti_flip_scan.json`): 1788 and MACS1149 1703 are κ ≈ 1.01–1.06 flips with weak predicted
+distortion (explained). Abell 370 1565 is not: κ 0.76–0.82, q_lens ≤ 0.14, P(anti) ≤ 2e-4 in both models,
+band-consistent axis; it is an unvetted flag (docs/fields/abell370.md), and the five-field g_min < 1 statement in
+addendum 3 stands for the other six.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

@@ -1,0 +1,375 @@
+{
+ "provenance": "derived",
+ "note": "kappa, reduced shear g and lensing axis ratio q_lens = |1-kappa-gamma|/|1-kappa+gamma| (or its inverse) at each anti background source; the predicted axis turns by 90 deg only where kappa crosses 1",
+ "sources": [
+  {
+   "field_table": "abell370-canucs",
+   "model": "abell370-canucs",
+   "label": 340,
+   "pa_obs": 110.8,
+   "ellipticity": 0.55,
+   "z16_z_z84": [
+    1.09,
+    1.11,
+    1.34
+   ],
+   "kappa_at_photoz": [
+    0.27,
+    0.273,
+    0.296
+   ],
+   "g_at_photoz": [
+    0.26,
+    0.27,
+    0.3
+   ],
+   "q_lens_at_photoz": [
+    0.58,
+    0.58,
+    0.54
+   ],
+   "kappa_eq_1_at_z": [],
+   "anti_probability_shape_noise": [
+    0.0398,
+    0.0361,
+    0.027
+   ]
+  },
+  {
+   "field_table": "abell370-canucs",
+   "model": "abell370-canucs",
+   "label": 1565,
+   "pa_obs": 156.9,
+   "ellipticity": 0.59,
+   "z16_z_z84": [
+    2.8,
+    2.94,
+    3.19
+   ],
+   "kappa_at_photoz": [
+    0.809,
+    0.814,
+    0.823
+   ],
+   "g_at_photoz": [
+    1.2,
+    1.25,
+    1.32
+   ],
+   "q_lens_at_photoz": [
+    0.09,
+    0.11,
+    0.14
+   ],
+   "kappa_eq_1_at_z": [],
+   "anti_probability_shape_noise": [
+    0.0001,
+    0.0001,
+    0.0002
+   ]
+  },
+  {
+   "field_table": "abell370-canucs",
+   "model": "abell370-canucs",
+   "label": 1788,
+   "pa_obs": 104.2,
+   "ellipticity": 0.53,
+   "z16_z_z84": [
+    4.42,
+    5.2,
+    5.29
+   ],
+   "kappa_at_photoz": [
+    1.037,
+    1.051,
+    1.052
+   ],
+   "g_at_photoz": [
+    5.88,
+    4.31,
+    4.21
+   ],
+   "q_lens_at_photoz": [
+    0.71,
+    0.62,
+    0.62
+   ],
+   "kappa_eq_1_at_z": [
+    3.16
+   ],
+   "anti_probability_shape_noise": [
+    0.0933,
+    0.0524,
+    0.0496
+   ]
+  },
+  {
+   "field_table": "abell370-canucs",
+   "model": "abell370-canucs",
+   "label": 4540,
+   "pa_obs": 100.0,
+   "ellipticity": 0.56,
+   "z16_z_z84": [
+    1.06,
+    1.06,
+    1.06
+   ],
+   "kappa_at_photoz": [
+    0.515,
+    0.515,
+    0.515
+   ],
+   "g_at_photoz": [
+    0.23,
+    0.23,
+    0.23
+   ],
+   "q_lens_at_photoz": [
+    0.63,
+    0.63,
+    0.63
+   ],
+   "kappa_eq_1_at_z": [],
+   "anti_probability_shape_noise": [
+    0.0535,
+    0.0535,
+    0.0535
+   ]
+  },
+  {
+   "field_table": "abell370-canucs",
+   "model": "abell370-cats",
+   "label": 340,
+   "pa_obs": 110.8,
+   "ellipticity": 0.55,
+   "z16_z_z84": [
+    1.09,
+    1.11,
+    1.34
+   ],
+   "kappa_at_photoz": [
+    0.227,
+    0.229,
+    0.248
+   ],
+   "g_at_photoz": [
+    0.23,
+    0.23,
+    0.26
+   ],
+   "q_lens_at_photoz": [
+    0.63,
+    0.62,
+    0.59
+   ],
+   "kappa_eq_1_at_z": [],
+   "anti_probability_shape_noise": [
+    0.0535,
+    0.0535,
+    0.0398
+   ]
+  },
+  {
+   "field_table": "abell370-canucs",
+   "model": "abell370-cats",
+   "label": 1565,
+   "pa_obs": 156.9,
+   "ellipticity": 0.59,
+   "z16_z_z84": [
+    2.8,
+    2.94,
+    3.19
+   ],
+   "kappa_at_photoz": [
+    0.758,
+    0.763,
+    0.771
+   ],
+   "g_at_photoz": [
+    1.01,
+    1.04,
+    1.09
+   ],
+   "q_lens_at_photoz": [
+    0.0,
+    0.02,
+    0.04
+   ],
+   "kappa_eq_1_at_z": [],
+   "anti_probability_shape_noise": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "field_table": "abell370-canucs",
+   "model": "abell370-cats",
+   "label": 1788,
+   "pa_obs": 104.2,
+   "ellipticity": 0.53,
+   "z16_z_z84": [
+    4.42,
+    5.2,
+    5.29
+   ],
+   "kappa_at_photoz": [
+    1.046,
+    1.06,
+    1.061
+   ],
+   "g_at_photoz": [
+    5.55,
+    4.3,
+    4.21
+   ],
+   "q_lens_at_photoz": [
+    0.69,
+    0.62,
+    0.62
+   ],
+   "kappa_eq_1_at_z": [
+    2.95
+   ],
+   "anti_probability_shape_noise": [
+    0.085,
+    0.0522,
+    0.0496
+   ]
+  },
+  {
+   "field_table": "abell370-canucs",
+   "model": "abell370-cats",
+   "label": 4540,
+   "pa_obs": 100.0,
+   "ellipticity": 0.56,
+   "z16_z_z84": [
+    1.06,
+    1.06,
+    1.06
+   ],
+   "kappa_at_photoz": [
+    0.456,
+    0.456,
+    0.456
+   ],
+   "g_at_photoz": [
+    0.18,
+    0.18,
+    0.18
+   ],
+   "q_lens_at_photoz": [
+    0.69,
+    0.69,
+    0.69
+   ],
+   "kappa_eq_1_at_z": [],
+   "anti_probability_shape_noise": [
+    0.0851,
+    0.0851,
+    0.0851
+   ]
+  },
+  {
+   "field_table": "macs1149-cats",
+   "model": "macs1149-cats",
+   "label": 1703,
+   "pa_obs": 82.4,
+   "ellipticity": 0.52,
+   "z16_z_z84": [
+    4.27,
+    4.43,
+    4.92
+   ],
+   "kappa_at_photoz": [
+    1.011,
+    1.016,
+    1.03
+   ],
+   "g_at_photoz": [
+    22.17,
+    15.0,
+    8.12
+   ],
+   "q_lens_at_photoz": [
+    0.91,
+    0.88,
+    0.78
+   ],
+   "kappa_eq_1_at_z": [
+    3.97
+   ],
+   "anti_probability_shape_noise": [
+    0.2509,
+    0.2166,
+    0.1401
+   ]
+  },
+  {
+   "field_table": "macs1149-cats",
+   "model": "macs1149-cats",
+   "label": 4236,
+   "pa_obs": 166.2,
+   "ellipticity": 0.53,
+   "z16_z_z84": [
+    1.17,
+    1.32,
+    1.39
+   ],
+   "kappa_at_photoz": [
+    0.498,
+    0.546,
+    0.564
+   ],
+   "g_at_photoz": [
+    0.34,
+    0.42,
+    0.45
+   ],
+   "q_lens_at_photoz": [
+    0.49,
+    0.41,
+    0.38
+   ],
+   "kappa_eq_1_at_z": [],
+   "anti_probability_shape_noise": [
+    0.0178,
+    0.0078,
+    0.0058
+   ]
+  },
+  {
+   "field_table": "elgordo-caminha23",
+   "model": "elgordo-caminha23",
+   "label": 742,
+   "pa_obs": 9.6,
+   "ellipticity": 0.51,
+   "z16_z_z84": [
+    1.54,
+    1.88,
+    1.95
+   ],
+   "kappa_at_photoz": [
+    0.396,
+    0.488,
+    0.502
+   ],
+   "g_at_photoz": [
+    0.26,
+    0.37,
+    0.39
+   ],
+   "q_lens_at_photoz": [
+    0.59,
+    0.46,
+    0.44
+   ],
+   "kappa_eq_1_at_z": [],
+   "anti_probability_shape_noise": [
+    0.0398,
+    0.013,
+    0.0107
+   ]
+  }
+ ]
+}

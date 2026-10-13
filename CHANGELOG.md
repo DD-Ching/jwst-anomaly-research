@@ -2,8 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-13: (in progress) g_min ≥ 1 anti arcs: redshift scan across the critical curve
-- Claim: cloud routine; plan: z scan of each g_min ≥ 1 anti source against its photo-z range and chain spread.
+## 2026-10-13: anti arcs at g_min ≥ 1: no redshift flip for Abell 370 1565; the addendum 3 rule corrected
+- `orientation_table` writes `kappa_min`/`kappa_max` over the redshifts used: the predicted axis turns by 90° only
+  where κ crosses 1, not at g = 1. Scan of all 7 anti background sources in five fields:
+  `results/arcs/anti_flip_scan.json` (both Abell 370 models).
+- **Result (derived):** 1788 (Abell 370) and 1703 (MACS1149) sit just past κ = 1 (κ 1.01–1.06; flip at z 3.0–3.2 and
+  4.0) with weak predicted distortion (q_lens 0.62–0.91, shape-noise P(anti) 0.05–0.25): explained. **1565** has κ 0.76–
+  0.82 at z 2.8–3.2 and < 0.9 to z = 8 in CANUCS and CATS: tangential at any z, q_lens 0.02–0.14, P(anti) ≤ 2e-4.
+  Its axis is band-consistent (weighted moments F150W 150–158°, F200W 150–155°, F277W 163–168°, ±7–21°; prediction
+  58°). Looked at (F150W–F356W cutouts): a faint ~1″ structure at PA ≈ 160° joining 1565 to neighbour 1562
+  (z_ML 0.27), 1.2″ from a cluster member (z 0.36). Not a candidate yet: blend/tidal feature and the photo-z tail
+  (Z025 0.40) are untested. The predicted counter-image (12″ NNW, μ ≈ +14) has no clear match (inconclusive at ~28.9 mag).
+- **Failed approach:** treating g_min ≥ 1 as "at a critical curve, direction flips" (addendum 3); 1565 was misfiled.
+- **Next:** `/vet-candidate` on 1565 (CANUCS segmentation and P(z), member tidal feature, counter-image depth).
 
 ## 2026-10-13: arc orientations in Abell 370: a 4-vs-0.94 anti excess, all at critical curves or intrinsic shapes
 - `lens_consistency.py arcs` (unchanged) with the CANUCS DR1 model and photo-z. Known images: 53/59 within 30°; the
