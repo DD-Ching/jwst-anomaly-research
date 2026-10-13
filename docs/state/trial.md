@@ -113,7 +113,8 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.2 (Sunrise system 2 in the four RELICS models) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01UitTtD, 16:09–16:35Z |
 | 2026-W42 | — | 0.5 (X2 S4: literature check, axial NED comparison) | 0.2 (reproduction of Yang–Lan QNMs) | 0.1 (state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.45 (`arcs` on Abell 2744 and El Gordo, shape-noise null, chain spread) | — | — | 0.1 (orientation, claim, PR) | cloud routine 0111axHH, 17:08–17:50Z |
-| 2026-W42 | ≈ 0.35 (`arcs` on MACS1149 and MACS0416, cutouts of every anti) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01MAK8Jd, 18:08–18:45Z |
+| 2026-W42 | ≈ 0.2 (`arcs` on MACS1149 and MACS0416, cutouts of every anti) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01MAK8Jd, 18:08–18:20Z (#197) |
+| 2026-W42 | ≈ 0.25 (`arcs` on Abell 370; five-field shape-noise sensitivity) | — | — | 0.05 (claim, PR) | cloud routine 01MAK8Jd, 18:20–18:45Z (#198) |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

@@ -106,3 +106,26 @@ diffraction spikes of bright Gaia stars. Surviving every ordinary test: **0**.
 - The null distribution of the default runs is inflated by the same spike segments (random max 7–14 lines), so
   the default-run p values for other centres are too high (conservative); the vetoed runs are the cleaner numbers.
 - CANUCS photo-z blends (3 of 68 matched images at z < 0.6) drop a few real arcs from the photo-z runs.
+
+## Arc orientations against the predicted shear (`arcs`, 2026-10-13, D-024 addendum 3)
+
+Hypothesis and thresholds as in `macs1149.md` (D-024 defaults, ASSUMPTIONS). Model: CANUCS DR1 Lenstool
+(`abell370-canucs`, frame offset as in `MODELS`). Inputs: F200W pipeline catalogue `jw01208-o002_t001` (sha256
+`f4774b39…`, manifest) and CANUCS DR1 photo-z (sha256 `f5622f28…`, SOURCES; zout columns as in `macs1149.md`).
+Outputs: `results/arcs/abell370-canucs/`.
+- **Known cases:** 59 elongated catalogued images: median offset 8°, 53 within 30°. The two beyond 60° are knots
+  6b.1 and 6b.3 (77°) of system 6 (z 1.0633), a resolved spiral.
+- **Background, strong shear:** 47 of 56 aligned (p = 8e-15), **4 anti, 0.94 expected (P(≥ 4) = 0.016)**. All four
+  looked at (6″ F200W cutouts):
+  - 1565 (z 2.94, g_min 1.2, μ(z = 2) 98) and 1788 (z 5.2, g_min 4.2; aligned at z = 2, 89° off across its photo-z
+    range): on critical curves, where the predicted direction flips and depends on z and on the exact curve
+    position. The shape-noise null does not model this.
+  - 4540 (m 20.7, z_spec 1.063, g 0.23) is catalogued image **6.1** (0.8″ from knot 6a.1): a resolved spiral whose
+    disk shape (e 0.56) exceeds the shear; the model fits its knot positions. 340 (m 25.3, z 1.11, g 0.26): a
+    compact source, e 0.55. Both are intrinsic shapes in weak shear.
+- **Sensitivity (derived; `anti_expected` on the stored tables):** without the g_min ≥ 1 sources, 2 anti vs 0.61
+  (P = 0.13); with σ_ε = 0.30 / 0.35, 0.98 / 1.44 expected. Over all five fields run so far (Abell 2744, El Gordo,
+  MACS1149, MACS0416, Abell 370): 7 anti vs 2.6 (P = 0.017) with every source; 4 vs 2.13 (P = 0.17) for g_min < 1;
+  4 vs 3.5–5.1 with σ_ε 0.30–0.35. The excess sits entirely at critical curves.
+- **Members/foreground:** 5 of 13 anti (P = 1/3 each if unlensed). **No CANUCS match (77):** 15 anti, near random.
+- **Result: null.** No anti-tangential arc that a critical-curve flip or an intrinsic shape does not explain.

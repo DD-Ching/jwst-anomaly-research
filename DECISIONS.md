@@ -1260,6 +1260,12 @@ critical curve, g 8). MACS0416 (CANUCS Lenstool): catalogued images 63/85 within
 orientation; they carry no information. Null in both fields. Lesson: a catalogue S/N does not certify a compact
 source near bright halos; look at a background-subtracted cutout before calling a shape real.
 
+**Addendum 3 2026-10-13 (`arcs` on Abell 370, CANUCS Lenstool).** Background 47/56 aligned, 4 anti vs 0.94 expected
+(P = 0.016). Two sit on critical curves (g_min 1.2 and 4.2), two are intrinsic shapes in weak shear (one is the
+resolved spiral image 6.1). Five fields combined: 7 anti vs 2.6 with every source, 4 vs 2.13 (P = 0.17) for g_min < 1.
+Rule: the shape-noise null (`anti_expected`) is valid only away from critical curves; quote it for g_min < 1 and
+treat g_min ≥ 1 anti sources as direction flips to check against the curve position, not as shape-noise excess.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

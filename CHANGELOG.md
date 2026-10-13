@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: arc orientations in Abell 370: a 4-vs-0.94 anti excess, all at critical curves or intrinsic shapes
+- `lens_consistency.py arcs` (unchanged) with the CANUCS DR1 model and photo-z. Known images: 53/59 within 30°; the
+  two beyond 60° are knots of the resolved spiral system 6.
+- **Result (derived):** background 47/56 aligned, 4 anti vs 0.94 (P = 0.016). Looked at: 1565 and 1788 on critical
+  curves (g_min 1.2, 4.2); 4540 is catalogued image 6.1 (resolved spiral, e 0.56, g 0.23); 340 compact, g 0.26.
+  Five fields: 4 anti vs 2.13 (P = 0.17) away from critical curves. Null; D-024 addendum 3 restricts the shape-noise
+  null to g_min < 1.
+- **Next:** for g_min ≥ 1 anti sources, test the flip against the curve position (z scan across the photo-z range,
+  chain spread where `bayes.dat` exists); MACS0717 (no photo-z) or blend rejection + S/N ≥ 50 shapes.
+
 ## 2026-10-13: arc orientations vs predicted shear in MACS1149 and MACS0416: null
 - **Hypothesis before running:** background arcs align with the published models' stretch (as in SMACS, Abell 2744,
   El Gordo); a real, single background galaxy ≥ 60° off at every z would be a lens-model residual. Ordinary
