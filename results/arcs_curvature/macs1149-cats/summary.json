@@ -1,0 +1,31 @@
+{
+ "model": "macs1149-cats",
+ "image": "jw01208-o008_t004_nircam_clear-f200w_i2d.fits",
+ "assumptions": {
+  "min_semimajor_px": 10.0,
+  "min_e": 0.5,
+  "size": 6.0,
+  "nsigma": 3.0,
+  "smooth_px": 1.0,
+  "radius_semimajor": 3.0,
+  "bkg_px": 61,
+  "min_sig": 3.0,
+  "min_length": 0.5
+ },
+ "n_selected": 5,
+ "n_testable": 0,
+ "median_abs_c_over_pred": 3.7,
+ "classes": {
+  "agree": 1,
+  "reverse": 0,
+  "flat": 3,
+  "no_arc": 1
+ },
+ "control_aligned": {
+  "agree": 1,
+  "reverse": 0,
+  "flat": 3,
+  "no_arc": 0
+ },
+ "reverse": []
+}

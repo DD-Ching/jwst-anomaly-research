@@ -1,0 +1,52 @@
+{
+ "model": "abell2744-bergamini23",
+ "image": "jw02561-o001_t003_nircam_clear-f200w_i2d.fits",
+ "assumptions": {
+  "min_semimajor_px": 10.0,
+  "min_e": 0.5,
+  "size": 6.0,
+  "nsigma": 3.0,
+  "smooth_px": 1.0,
+  "radius_semimajor": 3.0,
+  "bkg_px": 61,
+  "min_sig": 3.0,
+  "min_length": 0.5
+ },
+ "n_selected": 13,
+ "n_testable": 1,
+ "median_abs_c_over_pred": 2.8,
+ "classes": {
+  "agree": 4,
+  "reverse": 2,
+  "flat": 7,
+  "no_arc": 0
+ },
+ "control_aligned": {
+  "agree": 3,
+  "reverse": 2,
+  "flat": 7,
+  "no_arc": 0
+ },
+ "reverse": [
+  {
+   "label": 7394,
+   "orientation_class": "aligned",
+   "g_min": 0.47,
+   "c_sig": 6.7,
+   "length": 1.9,
+   "cos_mass": -0.21,
+   "c_over_pred": 6.5,
+   "testable": false
+  },
+  {
+   "label": 7642,
+   "orientation_class": "aligned",
+   "g_min": 0.52,
+   "c_sig": 4.3,
+   "length": 2.19,
+   "cos_mass": -0.22,
+   "c_over_pred": 1.9,
+   "testable": false
+  }
+ ]
+}

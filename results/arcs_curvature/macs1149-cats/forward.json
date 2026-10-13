@@ -1,0 +1,15 @@
+{
+ "model": "macs1149-cats",
+ "assumptions": {
+  "sigma_src": 0.1,
+  "size": 8.0,
+  "step": 0.03,
+  "frac": 0.1,
+  "z_default": 2.0,
+  "min_sig": 3.0
+ },
+ "n_curved": 1,
+ "n_model_testable": 0,
+ "consistent": 0,
+ "inconsistent": []
+}

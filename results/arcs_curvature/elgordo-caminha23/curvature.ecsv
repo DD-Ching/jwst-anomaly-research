@@ -1,0 +1,31 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int64}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: orientation_class, datatype: string}
+# - {name: g_min, datatype: float64}
+# - {name: semimajor_px, datatype: float64}
+# - {name: ellipticity, datatype: float64}
+# - {name: quality_flag, datatype: string}
+# - {name: n_pix, datatype: int64}
+# - {name: pa_arc, datatype: float64}
+# - {name: length, datatype: float64}
+# - {name: c, datatype: float64}
+# - {name: c_sig, datatype: float64}
+# - {name: c_pred, datatype: float64}
+# - {name: testable, datatype: bool}
+# - {name: cos_mass, datatype: float64}
+# - {name: curvature_class, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: jw01176-o241_t012_nircam_clear-f200w_i2d.fits pixels + data/arcs/jw01176-o241_t012_nircam_clear-f200w_cat.ecsv against /home/user/jwst-anomaly-research/data/cache/external/7b0153ae0ee0_best_fit.par}
+# - assumptions: {bkg_px: 61, min_e: 0.5, min_length: 0.5, min_semimajor_px: 10.0, min_sig: 3.0, nsigma: 3.0, radius_semimajor: 3.0, size: 6.0,
+#     smooth_px: 1.0}
+# schema: astropy-2.0
+label ra dec orientation_class g_min semimajor_px ellipticity quality_flag n_pix pa_arc length c c_sig c_pred testable cos_mass curvature_class
+2447 15.747982662313358 -49.27431950429134 aligned 0.7928833076273462 38.08721315475367 0.858653139985763 ok 3826 40.115733343970085 4.131978755825846 0.018741424357836944 9.812085920039669 0.026518475357517637 True 0.9998549277571628 agree
+2479 15.746318919887615 -49.26507731480592 aligned 0.7537164836655641 13.014354706843305 0.6905053466380855 ok 1930 162.8632466036658 1.369318182092695 -0.4806931244104509 7.864706697945312 0.017798116874610078 False -0.9900884396913727 reverse
+2527 15.74047439282709 -49.27764635454344 aligned 0.7006151085863677 24.143143448397694 0.769227127988881 ok 3042 71.9969751232916 3.4566670224068465 0.04572292775063698 9.839346760864474 0.02456635235559227 True -0.9601314320599753 reverse
+2749 15.730085496788622 -49.26335673085835 aligned 0.35825046865457266 13.456289833904382 0.5406425843929112 ok 1715 84.9755153767053 1.4881499489262562 -0.010635634887292075 0.39159416642881517 0.012502320813755493 False 0.6478018774760724 flat
