@@ -66,7 +66,7 @@ needed. Unchanged CI, subscriptions, waiting for review and routine syncs are no
 ## Units
 | Unit | State file | Branch / PR | Status |
 |---|---|---|---|
-| X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-farside` (draft PR opened by the first unit run) | authorized; F0 and S1 done 2026-10-12; next S2 |
+| X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-s3` (#179; S2 in #177) | authorized; F0, S1 done 2026-10-12; S2 done 2026-10-13 (formal pass, a = 2.1 M, flux contrast only; fragile); S3 done 2026-10-13 (exploratory); next S4 |
 | X2 | — | — | empty; filled only by an S0-passed direction that differs from X1 in mechanism, observable or data |
 
 ## Weekly tally (hours of run time; **every** run appends one line, routine searches included)
@@ -79,8 +79,10 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.6 (gb14 pre-screen chunks 17–45) | — | — | — | cloud routine, 00:09–00:46Z; back-filled from the gb14 handoff by an interactive session |
 | 2026-W42 | ≈ 0.6 (gb14 pre-screen 46–50, fits) | — | — | 0.1 (orientation, base merge) | cloud routine 01RHJ74R, 01:08–01:50Z |
 | 2026-W42 | ≈ 0.6 (gb14 injection chunks 1–4 of 6) | — | — | 0.1 (orientation, claim) | cloud routine 01BiV92m, 02:08–02:52Z |
+| 2026-W42 | — | 0.8 (X1 S2, S3) | — | 0.15 (orientation, takeover, PR) | cloud routine 01ELiBXy |
+| 2026-W42 | ≈ 0.55 (gb14 injections 5–6, re-vet, limit, combine) | — | — | 0.15 (orientation, base merge, PR) | cloud routine 01B15J5c, 04:08–04:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
 |---|---|---|---|
-| M2 stretch grid + free per-band scale (#167, provisional); W3 chain fixes (D-068) | Goal rounds 1–10 (#152–#166, provisional); far-side image bound vs GRAVITY summary (#172, provisional) | none (n0153 inconclusive, #61) | none of a candidate (SkyLLH D-080 is a benchmark reproduction) |
+| M2 stretch grid + free per-band scale (#167, provisional); W3 chain fixes (D-068) | Goal rounds 1–10 (#152–#166, provisional); far-side image bound vs GRAVITY summary (#172, provisional); X1 S2: no astrometric far-side discriminant at 9 µas, a fragile flux-contrast one for a = 2.1 M (#177); X1 S3: far side Δχ² +23 to +37 on the 2018-07-22 flare (a ≤ 7 M, exploratory, #179) | none (n0153 inconclusive, #61) | none of a candidate (SkyLLH D-080 is a benchmark reproduction) |
