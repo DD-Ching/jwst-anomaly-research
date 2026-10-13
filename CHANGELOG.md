@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: Trial tally covers every run (trial-2026-10-13.1)
+- Acceptance check of D-083:
+  - The cloud routine run of 23:10Z claimed X1 with `rules: trial-2026-10-12.1 prompt: none`. The routine's own
+    prompt text is not updated yet; the owner pastes it.
+  - That run passed S1 (#176) and opened S2 (#177).
+  - The 00:09Z run worked W3 gb14 and did not log hours, so T1 shares could not be computed.
+- Fix: every run appends a tally line, routine searches included; gb14's run back-filled.
+
 ## 2026-10-12: X1 S1: Simpson–Visser ray tracer validated (gate passed)
 - New `scripts/x1_tracer.py` (quadrature in u = 1/R with regularised turning-point and throat endpoints, plus an
   independent ODE route) and `tests/test_x1_tracer.py`; `scripts/wh_farside.py` and its tests copied from #172.
