@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: WHL0137 (Sunrise) image positions in the Scofield+2025 maps: unit check failed; provisional null
+- **Hypothesis before running:** the JWST images map to common sources in the published M5-G1 deflection maps to the
+  published 0.06″ source-plane rms; a held-out image (1.1a, b, e; 1.7b; system 2) off by ≫ that would be a lens-model
+  residual to vet. Checks first: κ and μ from the deflection against the published κ and μ maps.
+- New `scripts/sunrise_scofield.py` (byte-range patches; maps are 1.1 GB each) + offline SIS test.
+- **Failed validation:** the deflection unit is undocumented and is neither arcsec nor 0.02″ pixels; κ needs
+  0.0223″ per unit (ratio 44.3–45.2 across images), the source plane prefers 0.0218″. Not understood (D-033 addendum).
+- **Conditional result (derived):** at that scale, constraint rms 0.12–0.17″; held-out 1.1a/b/e and 1.7b within
+  0.07–0.24″ of their sources, like the constraints. System 2 offsets 0.9–1.0″ at an assumed z = 6.2 (its z is
+  unknown). No position anomaly, provisionally. Details: docs/fields/sunrise.md.
+- **Failed approach:** 8 concurrent range requests to Zenodo dropped some (no retry); fixed with back-off and 6 workers.
+  Zenodo serves ~180 KB/s and ~6 s per range request from the cloud proxy.
+- **Next:** settle the unit (Zenodo record or the authors' MrMARTIAN convention), then predict counter-images and
+  fit system 2's redshift; or test the RELICS HST-era models (pinned, D-033) on the JWST image list (held out).
+
 ## 2026-10-13: X2 S1–S3: SV-throat echo scattering tool and a GW150914 demonstration (phenomenological; η bounded to order unity)
 - Owner review fixed the comparison gate. The basis is Miani et al. Table II (95 % upper limit on the in-window
   h_rss, and the merger-ringdown h_rss), not Table I's 50 % detection-probability sensitivity. The model-to-strain
