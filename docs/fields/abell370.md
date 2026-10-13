@@ -148,6 +148,14 @@ and `derived`). CANUCS DR1 95 % ranges (Z025–Z975, `observed` catalogue values
   GLAFIC 0.76–0.78, Keeton 0.75–0.77 at z 2.8–3.2 (≤ 0.87 at z = 8); q_lens 0.00–0.08. Shear axis PA 56° / 58° / 63°
   if γ1 is along the map's pixel x axis (that convention reproduces CANUCS's 58°). All five models predict a strong
   tangential stretch; model choice does not explain 1565.
+- **CANUCS deblending (`observed` catalogue and segmentation values):** 1565's CANUCS counterpart has
+  `FLAG_DEBLEND` = True. In the DR1 segmentation map (`…a370-clu-40mas_multi_v1_segmentation.fits.gz`, 1,239,107 B,
+  sha256 `9baa4407…`) its segment 25146 has 31 pixels of 0.04″ (0.36″ long), major axis PA 165°, axis ratio 0.46, and
+  touches the member's segment 922 (375 px in the 2″ box) at its southern end; 1562 is a separate segment (20618).
+  Its colours differ from the member's (F150W/F200W 0.47 vs 0.90; F277W/F200W 1.1 vs 0.84), so it is not member
+  light alone. At z 2.94, [O III] 5007 Å falls in F200W and Hα in F277W, which fits its F200W/F277W excess
+  (`hypothesis`). Leading ordinary explanation: a deblended fragment whose shape is set by the cut against the
+  member's halo.
 - **Status: unvetted flag, not a candidate.** Ordinary explanations still open: a member tidal feature or a blend
   (the structure through 1562), a low-z photo-z solution (Z025 0.40; P(anti) 0.10 at z 0.6 and 0.24–0.33 below z ≈ 0.45), and an unmodelled
   local perturber (five models agree, so only a perturber none of them contains). Next: `/vet-candidate`.

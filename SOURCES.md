@@ -560,6 +560,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   (Abell 370 1565, D-024 addendum 4), accessed 2026-10-13, not hashed (single-pixel reads):
   `https://archive.stsci.edu/pub/hlsp/frontier/abell370/models/{sharon,glafic,keeton}/v4/hlsp_frontier_model_abell370_<model>_v4_{kappa,gamma1,gamma2}.fits`
   (kappa files 64,008,000 / 127,998,720 / 64,039,680 B; Last-Modified 2017-10-09 / 2017-11-18 / 2017-10-09).
+- CANUCS DR1 Abell 370 segmentation map, accessed 2026-10-13, deleted after use:
+  `https://archive.stsci.edu/hlsps/canucs/dr1/a370/clu/hlsp_canucs_jwst_nircam-niriss_a370-clu-40mas_multi_v1_segmentation.fits.gz`
+  (1,239,107 B, sha256 `9baa44074209a57635f165e96b6dc81c32ad434d73407c537cfa8d1bf9c0d63b`).
 - HFF MACS0717 second models, https://archive.stsci.edu/pub/hlsp/frontier/macs0717/models/<team>/<version>/. They
   were read by byte range (κ/γ) or solved in scratch code and then deleted (Sharon and Keeton deflection maps). Full
   sha256 values were streamed on 2026-10-08. The deflection-map prefixes match those recorded during the run.
