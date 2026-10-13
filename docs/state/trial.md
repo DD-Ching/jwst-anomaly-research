@@ -107,6 +107,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | ≈ 0.5 (halo_phot elongation gate, star calibration, three-field re-run) | 0.15 (orientation, claim, PR) | cloud routine 01Tan1i4, 12:10–12:58Z |
 | 2026-W42 | ≈ 0.35 (`fluxratios --halo-phot`, Abell 2744; A2744-QSO1 flag vetted) | — | — | 0.15 (orientation, claim, PR) | cloud routine 01LzuV9A, 13:09–13:45Z |
 | 2026-W42 | — | 1.4 (X2 S0 addendum: GrayHawk-v2, echo code, B critique, delay check) | — | 0.2 (state files, PR) | interactive session 01AzKMDv |
+| 2026-W42 | ≈ 0.45 (Sunrise image positions in the Scofield+2025 maps) | — | — | 0.15 (orientation, claim, PR) | cloud routine 01XzRkq7, 14:09–14:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

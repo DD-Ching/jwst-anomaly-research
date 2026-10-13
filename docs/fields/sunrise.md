@@ -50,6 +50,24 @@ magnified source Earendel. Config `configs/sunrise.yaml` (sample `sunrise_nircam
   - The paper points to https://cosmic-spring.github.io for products. The page fetched on 2026-10-07 (UTC) linked no
     lens-model files.
 
+## Image positions against the Scofield+2025 M5-G1 maps (2026-10-13; `scripts/sunrise_scofield.py`)
+
+- **Question:** do the JWST multiple images (Scofield+2025 Table 3, observed) map to common sources in the published
+  M5-G1 deflection maps, including the images M5-G1 did not fit (1.1a, b, e; 1.7b; system 2)?
+- **Access:** 7×7-pixel patches per image from the 1.1 GB maps by HTTP byte range (Zenodo, ~6 s per request);
+  `results/sunrise/scofield25_positions.json` keeps the raw map values (model_prediction).
+- **Validation failed as written:** the deflection maps are neither arcsec nor 0.02″ pixels. Their finite-difference
+  κ matches the published κ map only after a scale of 0.0223″ per map unit (1/44.8; the ratio varies 44.3–45.2
+  across images), and μ then matches the published magnification map away from critical curves (system 2: 6.1 vs 6.05,
+  7.0 vs 6.99, 8.9 vs 9.3) but not near them. The best source-plane scale is 0.0218″ (sign and axes as RELICS; the
+  other seven sign/axis conventions give ≥ 1.8″). The Zenodo README states no deflection unit. Not understood; the
+  scale is an empirical fit, not a convention (ASSUMPTION).
+- **Conditional result (derived, at 0.0218–0.0223″ per unit, z = 6.2):** constraint-image source-plane rms
+  0.12–0.17″ (published 0.06″; the definition of their rms is not checked). Held-out images lie as close to their
+  system's source as the constraints: 1.1a / b / e 0.07–0.24″, 1.7b 0.10–0.17″. System 2 (redshift unknown, so
+  z = 6.2 is wrong in general): 2a and 2c sit 0.9–1.0″ from 2b, an ordinary redshift/model effect until z is known.
+  **No position anomaly**, but only provisionally, while the unit question is open.
+
 ## Earendel (reference case for time-domain lensing)
 
 - **Position:**

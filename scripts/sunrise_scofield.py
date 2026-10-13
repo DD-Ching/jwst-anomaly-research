@@ -217,12 +217,16 @@ def main(argv=None) -> int:
         "source": "https://doi.org/10.5281/zenodo.15110933",
         "files_md5": {k: v[1] for k, v in FILES.items()},
         "access": "HTTP byte ranges, 7x7-pixel patches; md5 not verifiable (no full download)",
+        "unit_note": "alpha_*, beta_*, psi, kappa_fd, mu_fd and summary treat raw map units "
+        "as arcsec; "
+        "the deflection unit is undocumented (empirically 0.0218-0.0223 arcsec; "
+        "docs/fields/sunrise.md)",
         "rows": rows,
         "summary": summarise(rows),
     }
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(result, indent=1))
+    out.write_text(json.dumps(result, indent=1) + "\n")
     s = result["summary"]
     print(f"constraint source rms {s['constraint_source_rms_arcsec']:.3f} (published 0.06)")
     for r in rows:
