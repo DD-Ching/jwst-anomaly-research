@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: arc orientations in F444W vs F200W (in progress)
+- Plan: lensing is achromatic, so a lensing-set arc direction agrees between F200W and F444W; a blend or a
+  clumpy intrinsic shape need not. Re-class the five fields' strong-shear sources with F444W pipeline shapes.
+
 ## 2026-10-13: X2 S4b: physical strain and energy of the S4 readouts; η_max 1.52 stands; no polar/radial equations exist
 - **Conversion** (Yang & Lan definitions; Nagar–Rezzolla §6 as the Schwarzschild limit):
   - H₂ is the Moncrief / Regge–Wheeler function, so the strain is ∫H₂ dt. The NED correction falls as Σ^{-3/2}.
