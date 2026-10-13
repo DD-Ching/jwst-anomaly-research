@@ -80,6 +80,9 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
     scatter floor σ_sys 0.36 mag. The four flux flags are the only `flux_tension`s (|z| 6.2–8.5), all explained above.
     Injection: 30 tested images made fainter are flagged in 17 / 27 / 60 / 93 % at 0.5 / 1 / 1.5 / 2 mag
     (flux and S/N scaled; 2 lost to S/N at 2 mag; 14 targets are pair members, not localised).
+  - Halo-subtracted photometry (`scripts/halo_phot.py`, D-032 addendum; UNCOVER t003 F150W/F444W, 1″ median filter
+    and annulus plane): 602.1c −0.26 to −0.45 mag, 600.1b −0.43 to −0.51 mag (600.1 apertures measure the spiral's
+    nuclei). Both under 0.75 mag: the two halo flags are BCG/ICL light.
 
 ## Run
 

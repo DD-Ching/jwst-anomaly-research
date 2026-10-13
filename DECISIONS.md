@@ -1666,6 +1666,19 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   errors leave a 0.3–0.4 mag floor, so it would flag most systems; the floor is fitted per field instead.
 - Revisit if: a pinned SMACS chain appears (6.3), or ICL-aware totals lower σ_sys (then the 3σ tension test tightens).
 
+**Addendum 2026-10-13 (halo-subtracted photometry).**
+- `scripts/halo_phot.py` measures compact images on `_i2d` stamps after removing the smooth halo: a 1″ median filter
+  (main route) and a 0.4–0.6″ annulus plane (second route), r = 0.2″, concentration ≥ 0.6 (ASSUMPTIONs). Built
+  from numpy/scipy and `lc.image_stamper`; photutils/SEP are not dependencies, and a two-line filter does not
+  justify one.
+- Evidence (derived, Abell 2744, UNCOVER t003 F150W/F444W): 602.1c −0.26 to −0.45 mag (`mag_auto` −1.52), 600.1b
+  −0.43 to −0.51 (−1.17); off-halo 602.1a/b agree within 0.06 mag. Synthetic halo: +3 % / +7 % bias at halo ≈ source,
+  +0.3 mag at 10×. The halo-light flags are explained.
+- Alternative rejected: DJA `_phot_apcorr.fits` (inspected: El Gordo header; 405 MB for Abell 2744). Its
+  `<band>_tot_<k>` are aperture fluxes times a detection-image Kron/aperture correction, so the halo light that
+  inflates `mag_auto` enters the correction too.
+- Revisit if: a halo/ICL-modelled catalogue (e.g. bCG-subtracted UNCOVER/MegaScience) is published.
+
 ## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
 
 **Decision.**

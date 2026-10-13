@@ -2,8 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-13: (in progress) ICL-aware totals for halo images in `fluxratios`
-- Plan: local-background (ICL-subtracted) photometry for images on cluster-galaxy halos, then re-run `--mu-samples`.
+## 2026-10-13: Halo-subtracted photometry removes Abell 2744's halo-light flux flags
+- New `scripts/halo_phot.py` → `results/halo_phot/abell2744/halo_phot.json`; `tests/test_halo_phot.py`. Compact
+  images on UNCOVER `jw02561-o001_t003` F150W/F444W `_i2d` stamps (S3 byte ranges, 6″), two routes: stamp minus a
+  1″ median filter, and a local-plane annulus (0.4–0.6″); r = 0.2″ aperture; concentration f(0.2″)/f(0.4″) ≥ 0.6,
+  |μ| ≤ 20, S/N ≥ 10 (ASSUMPTIONs, as D-032 / `exotic_screens`).
+- **Hypothesis before running:** the 600.1b and 602.1c flags (`mag_auto` −1.17 / −1.52 mag, D-032 addendum) are
+  BCG/ICL light. Halo-subtracted residuals below 0.75 mag confirm it; a residual that stays > 0.75 mag in both routes
+  and bands would go to `/vet-candidate`.
+- **Validation (simulated):** a Gaussian on a synthetic exponential halo is recovered to +3 % (median filter) / +7 %
+  (plane) when the halo's aperture light equals the source's; at 10× it leaves +0.3 mag, always in the brightening
+  direction. Injections on the real stamps (0.7″ ring, 8 angles) recover 95.5–99.9 %. Known case: the off-halo
+  compact pair 602.1a/b agrees within 0.06 mag in both bands and routes.
+- **Result (derived; LOO residual, F150W / F444W, median-filter–plane range):** 602.1c −0.26 to −0.45 mag (was
+  −1.52); 600.1b −0.43 to −0.51 (was −1.17). Both under 0.75 mag; the leftover sign is the one residual halo light
+  gives. 600.1d and 602.1d are untested (resolved on the halo; |μ| = 25). **The halo-light flags are explained; no
+  anomaly.**
+- **Limits:** 600.1 is a resolved spiral (contact sheet): its 0.2″ apertures measure the nuclei, which pass the
+  concentration cut but are not totals. Two systems only; the UNCOVER tile is one epoch and one reduction.
+- **Next:** run `halo_phot.py` over every compact Abell 2744 / El Gordo / SMACS image (SMACS 1.1, 6.x), then fold the
+  halo-subtracted fluxes into `fluxratios` as an optional photometry route so `--mu-samples` refits σ_sys.
 
 ## 2026-10-13: `fluxratios` with `bayes.dat` μ errors: model statistics do not explain the flux scatter
 - `lens_consistency.py fluxratios --mu-samples N`: μ at N random chain rows (`chain_magnifications`, family
