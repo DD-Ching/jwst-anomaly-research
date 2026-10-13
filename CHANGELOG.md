@@ -5,17 +5,21 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-13: `fluxratios` with `bayes.dat` μ errors: model statistics do not explain the flux scatter
 - `lens_consistency.py fluxratios --mu-samples N`: μ at N random chain rows (`chain_magnifications`, family
   redshifts included); each image's model error is half the 16–84 % range of its leave-one-out residual. `resid_z`
-  adds the field's scatter floor `sigma_sys` (median |z| = 0.6745, a pair counted once); `flux_tension` = a
-  system's highest-|z| image with |z| > 3 (ASSUMPTION); `mu_unstable` where > 16 % of rows exceed |μ| = 20 (none here).
-  Tests: synthetic chain, injected μ spread, rows on a critical curve, floor recovery.
+  adds a scatter floor (median |z| = 0.6745, a pair counted once) fitted on the *other* systems, so an anomaly
+  cannot raise its own floor; `flux_tension` = a system's highest-|z| image with |z| > 3 (ASSUMPTION);
+  `mu_unstable` (whole system) where > 16 % of rows exceed |μ| = 20 (none here). `--inject-mag` measures recovery
+  by making each consistent image fainter in turn. Tests: synthetic chain, μ spread, critical-curve rows, floor.
 - **Hypothesis before running:** chain μ errors are ≪ the 0.5–0.6 mag rms, so the scatter is photometric
   (halo light, faint counterparts) and the flags do not change. If instead the model error were ≳ 0.3 mag, the
   fixed 0.75 mag threshold would be too strict near critical curves and the next step would be model systematics.
 - **Result (derived; 100 rows each, seed 1; DJA files sha256-matched, downloaded to the session disk and deleted):**
   model error median / max 0.04 / 0.14 mag (Abell 2744, 34 images) and 0.07 / 0.21 mag (El Gordo, 23); scatter
   floor σ_sys 0.36 and 0.32 mag. The `flux_tension`s are exactly the old `flux_outlier`s: Abell 2744 42.1a/c,
-  600.1b, 602.1c (|z| 3.1–4.2; halo light, Lyα counterpart) and El Gordo 18b/c (|z| 3.6; faint counterpart), all
+  600.1b, 602.1c (|z| 6.2–8.5; halo light, Lyα counterpart) and El Gordo 18b/c (|z| 4.6; faint counterpart), all
   explained on the contact sheets (D-032). **No anomaly; the hypothesis holds.**
+- **Injection-recovery (simulated, 30 / 21 target images):** an image made Δ mag fainter is flagged in 17 / 30 /
+  67 / 100 % (Abell 2744) and 24 / 29 / 76 / 100 % (El Gordo) of cases at Δ = 0.5 / 1 / 1.5 / 2 mag. So the test
+  finds a demagnified image (factor ≳ 4, Δ ≥ 1.5 mag) in most tested systems; Δ ≲ 1 mag hides in the scatter.
 - SMACS 6.3 cannot be rechecked this way: the Mahler+22 release pins no chain.
 - **Limits:** chain errors are statistical within one model; model-to-model differences are larger (D-044).
 - **Next:** photometry, not the model, limits this test: ICL-aware totals (DJA `_phot_apcorr`, local-background

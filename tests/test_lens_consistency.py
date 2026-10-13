@@ -569,7 +569,8 @@ def test_flux_ratio_table_model_error_and_tension():
     # without chain samples the model error is not computed
     t = lc.flux_ratio_table(model, images, {}, phot)
     assert np.all(np.isnan(t["resid_model_err"]))
-    assert t.meta["n_mu_samples"] == 0 and list(t["tension_class"]) == ["consistent"] * 3
+    assert t.meta["n_mu_samples"] == 0  # one system: no other system sets its floor
+    assert list(t["tension_class"]) == ["untested"] * 3
     # chain samples scaling image 1.1's mu by 10**(+-0.4 / 2.5): its residual spreads by +-0.4 mag
     f = 10 ** (np.array([-0.4, 0.0, 0.4]) / 2.5)
     samples = np.array([mu * np.array([k, 1.0, 1.0]) for k in f])
@@ -583,16 +584,33 @@ def test_flux_ratio_table_model_error_and_tension():
     bad[0, 0], bad[1, 0] = np.inf, 1e3
     t = lc.flux_ratio_table(model, images, {}, phot, mu_samples=bad)
     assert np.all(np.isfinite(t["resid_model_err"]))
-    # two residuals are left for the floor (< 3), so the others cannot be judged either
-    assert list(t["tension_class"]) == ["mu_unstable", "untested", "untested"]
+    # 1.1's μ is unpinned; its siblings share it in their references, so the system goes
+    assert list(t["tension_class"]) == ["mu_unstable"] * 3
     with pytest.raises(ValueError, match="mu_samples"):
         lc.flux_ratio_table(model, images, {}, phot, mu_samples=samples[:, :2])
-    # A 1.5 mag deficit: |z| is large against tiny errors, so it is a tension, but the floor
-    # from three images of one system absorbs most of it (only the worst image can be flagged)
+    # One system only: no other system sets its floor, so nothing can be judged
     model, images, phot, _ = _flux_inputs(offsets_mag=(1.5, 0.0, 0.0))
     t = lc.flux_ratio_table(model, images, {}, phot)
-    assert t.meta["sigma_sys"] > 0.5
-    assert list(t["tension_class"])[1:] == ["consistent", "consistent"]
+    assert list(t["tension_class"]) == ["untested"] * 3
+
+
+def test_flux_tension_uses_the_other_systems_floor(monkeypatch):
+    floors = []
+
+    def fake_floor(resid, err):
+        floors.append(resid.size)
+        return 0.1
+
+    monkeypatch.setattr(lc, "_scatter_floor", fake_floor)
+    model, images, phot, _ = _flux_inputs(offsets_mag=(1.5, 0.0, 0.0))
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    # the field floor sees system 1's 3 residuals; system 1's own floor sees none of them
+    assert floors == [3, 0]
+    assert list(t["tension_class"]) == ["flux_tension", "consistent", "consistent"]
+    model, images, phot, _ = _flux_inputs()
+    rec = lc.tension_recovery(model, images, {}, phot, [0.0, 2.0])
+    assert rec["n_targets"] == 3
+    assert rec["recovered_fraction"] == {"0.0": 0.0, "2.0": 1.0}
 
 
 def test_scatter_floor():

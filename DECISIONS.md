@@ -1652,12 +1652,15 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 
 **Addendum 2026-10-13 (`bayes.dat` μ errors).**
 - `fluxratios --mu-samples N` propagates the published chain (D-045) into each residual; `resid_z` divides by
-  photometric ⊕ model errors ⊕ the field's scatter floor σ_sys (median |z| = 0.6745), and `flux_tension` flags a
-  system's worst image at |z| > 3 (ASSUMPTION). The fixed 0.75 mag `flux_outlier` stays for continuity.
+  photometric ⊕ model errors ⊕ a scatter floor (median |z| = 0.6745) fitted on the other systems, and
+  `flux_tension` flags a system's highest-|z| image at |z| > 3 (ASSUMPTION). The fixed 0.75 mag `flux_outlier`
+  stays for continuity. `--inject-mag` calibrates it: 50 % recovery at ≈ 1.2–1.3 mag fainter, 100 % at 2 mag.
 - Evidence (derived, 100 rows): model error median 0.04 mag (Abell 2744) and 0.07 mag (El Gordo), max 0.14 / 0.21;
   σ_sys 0.36 / 0.32 mag (a pair counted once). The chain explains little of the scatter; photometry dominates. The
-  tension flags equal the old flux flags (Abell 2744: 4, |z| 3.1–4.2; El Gordo 18b/c, |z| 3.6), all explained. No
+  tension flags equal the old flux flags (Abell 2744: 4, |z| 6.2–8.5; El Gordo 18b/c, |z| 4.6), all explained. No
   anomaly.
+- Alternative rejected: a floor fitted on all systems. A single anomalous system raises it and hides itself (code
+  review; a 1.5 mag deficit in a three-image field was not flagged).
 - Alternative rejected: a χ² with photometric and model errors only. SEP `magerr_auto` (≈ 0.02 mag) and the chain
   errors leave a 0.3–0.4 mag floor, so it would flag most systems; the floor is fitted per field instead.
 - Revisit if: a pinned SMACS chain appears (6.3), or ICL-aware totals lower σ_sys (then the 3σ tension test tightens).
