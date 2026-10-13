@@ -64,7 +64,7 @@ MAX_ABS_MU = 20.0  # as D-032's flux test (ASSUMPTION)
 OUTLIER_MAG = 0.75  # as D-032's flux_outlier (ASSUMPTION)
 ROUTES = ("medfilt", "annulus")
 MIN_RECOVERY = 0.5  # a route keeping less of an injected compact image is dropped (ASSUMPTION)
-# Axis-ratio gate per band (ASSUMPTION): between the known thin arcs (El Gordo 1a-c: q 0.57-0.68)
+# Axis-ratio gate per band (ASSUMPTION): between the known thin arcs (El Gordo 1a-c: q 0.57-0.67)
 # and unsaturated Gaia DR3 stars (5th percentile 0.91 F150W / 0.94 F444W, 55 / 58 stars on the three
 # fields' i2d mosaics, `halo_phot_stars.py`), so mildly stretched compact images still take part.
 # Bands without a star calibration are refused.

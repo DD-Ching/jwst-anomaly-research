@@ -1687,6 +1687,13 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   (F150W / F444W); scatter 0.10–0.27 mag on the compact subset; one flag (El Gordo 1c), a thin arc that passed the
   concentration gate. Failed approach: f(0.2″)/f(0.4″) alone does not reject thin knotty arcs; an elongation gate
   is required before the halo fluxes replace `mag_auto` in `fluxratios`.
+- Elongation gate (2026-10-13; CHANGELOG): axis ratio q of the Gaussian-windowed (σ 0.15″) second moments of the
+  filtered light about an iterated centroid, q ≥ 0.80 in F150W and F444W (ASSUMPTION: between the El Gordo 1a–c
+  arcs, q 0.57–0.67, and Gaia stars, 5th percentile 0.91 / 0.94; `scripts/halo_phot_stars.py`,
+  `results/halo_phot/stars/`). Tested after the gate (F150W / F444W): Abell 2744 2 / 11, El Gordo 0 / 0, SMACS
+  0 / 2; no flag. Alternative rejected: moments about the peak pixel (a point source half a pixel off centre read
+  q 0.68 at 0.04″ pixels; caught in review). Revisit if: a band beyond F150W/F444W is needed (calibrate it on stars
+  first; `run` refuses uncalibrated bands).
 
 ## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
 
