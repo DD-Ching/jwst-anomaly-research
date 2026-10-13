@@ -2,7 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-13: (in progress) Sunrise deflection-map unit: test a z_ref = 3 normalization in 0.02″ pixels
+## 2026-10-13: Sunrise deflection maps read as 0.02″ pixels at z_ref ≈ 3; system 2 fits at no redshift (published tension)
+- **Hypothesis before running:** the empirical 0.0223″ per unit is 0.02″ × r(6.2)/r(z_ref) for a round z_ref; if
+  so, the z fit recovers system 1's z = 6.2 and gives system 2's redshift. A system 2 that fits at no z would be a
+  lens-model residual, to be checked against the published modelling first.
+- New `scripts/sunrise_zfit.py` (offline, from `results/sunrise/scofield25_positions.json`) + SIS tests.
+- **Unit (derived):** z_ref = 3.02 (16–84 % 2.86–3.17) from the κ match of all 15 images; the paper says the maps are
+  scaled to z = 6.2. Reading used as an ASSUMPTION (a global factor cannot be proven a convention).
+- **Known case:** system 1's source-plane rms is minimal at z = 5.0 and ≤ its z = 6.2 level for z = 4.2–6.2: biased
+  low by ~1 in z; z = 6.2 is recovered only at the interval edge.
+- **System 2:** source-plane rms ≥ 0.62″ for every z ≤ 20 (3.4× system 1's 0.18″); no redshift reproduces it.
+  Scofield+2025 already report that models including system 2 are unphysical with ≈ 1″ scatter: a known tension
+  between the arc and system 2, not a new anomaly. Details: docs/fields/sunrise.md.
+- **Next:** system 2 in the RELICS HST-era models (D-033), which used it as a constraint.
 
 ## 2026-10-13: WHL0137 (Sunrise) image positions in the Scofield+2025 maps: unit check failed; provisional null
 - **Hypothesis before running:** the JWST images map to common sources in the published M5-G1 deflection maps to the

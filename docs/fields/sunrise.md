@@ -68,6 +68,32 @@ magnified source Earendel. Config `configs/sunrise.yaml` (sample `sunrise_nircam
   z = 6.2 is wrong in general): 2a and 2c sit 0.9–1.0″ from 2b, an ordinary redshift/model effect until z is known.
   **No position anomaly**, but only provisionally, while the unit question is open.
 
+## Deflection unit and source redshifts (2026-10-13; `scripts/sunrise_zfit.py`, offline)
+
+- **Unit (derived; reading, not confirmed by the authors):** the per-image scale from the published κ map, 0.02230″
+  per map unit (16–84 %: 0.02209–0.02258), equals 0.02″ × r(6.2)/r(z_ref) with r = D_ds/D_s at **z_ref = 3.02**
+  (16–84 %: 2.86–3.17; flat ΛCDM h = 0.7, Ω_m = 0.3 as the paper; Planck18 gives 3.03). So the deflection maps read
+  as 0.02″ mosaic pixels scaled to z ≈ 3, while the paper says all maps are scaled to z = 6.2 (Sect. VI). A pure
+  global factor cannot separate this reading from an odd unit; it is used here as an ASSUMPTION
+  (`results/sunrise/scofield25_zfit.json`).
+- **Known case (system 1, z = 6.2):** the source-plane rms of the constraint images, as a function of the source
+  redshift under that reading, is minimal at z = 5.0 (0.13″) and stays ≤ the z = 6.2 level (0.18″) for
+  z = 4.2–6.2 (subsystems 1.1, 1.2, 1.7 alike). So the fit is biased low by ~1 in z (the minimum sits 1.5 % below
+  the κ-matched scale), and z = 6.2 is recovered only at the edge of the interval. Synthetic SIS tests recover z
+  exactly (`tests/test_sunrise_zfit.py`).
+- **System 2 (held out from M5-G1; derived):** the source-plane rms falls monotonically with z and is still
+  0.62″ at z = 20 (→ about 0.6″ as z → ∞), 3.4× the system 1 level, and never reaches 2× it. Its formal minimum
+  (0.22″) needs a deflection ≈ 1.2× larger than any source redshift allows. **M5-G1 does not reproduce system 2 at any
+  redshift.**
+- **Ordinary explanation (published):** Scofield+2025 (Sect. V.3) report that every model that includes system 2
+  has an unphysical mass distribution and lens-plane scatter ≈ 1″, while W22a needed system 2 to reproduce the
+  arc's length. M5-G1 has no constraint near system 2 (cluster members Q and R are used only with it). The misfit is
+  a known modelling tension between the arc and system 2 (or a wrong identification of system 2), not a new anomaly.
+  Not a candidate; no images were inspected for this step.
+- **Next:** test system 2 in the RELICS HST-era models (pinned, D-033), which used it as a constraint: if they
+  converge it with the arc, the tension is M5-G1's extrapolation; if no model converges both, the identification of
+  system 2 is the open question (owner-level: a published-model disagreement, not exotic).
+
 ## Earendel (reference case for time-domain lensing)
 
 - **Position:**
