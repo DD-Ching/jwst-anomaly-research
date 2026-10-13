@@ -1694,6 +1694,13 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   0 / 2; no flag. Alternative rejected: moments about the peak pixel (a point source half a pixel off centre read
   q 0.68 at 0.04″ pixels; caught in review). Revisit if: a band beyond F150W/F444W is needed (calibrate it on stars
   first; `run` refuses uncalibrated bands).
+- Halo fluxes into the tension test (2026-10-13; CHANGELOG): `fluxratios --halo-phot <json> --halo-band
+  --halo-route` takes `halo_phot`'s tested images per band and route (its gates, instrumental magnitudes at the
+  image-list positions) in place of DJA `mag_auto`, and keeps the chain μ errors, the leave-system-out floor and the
+  injections. Abell 2744 F444W floor 0.13–0.17 mag (was 0.36). One flagged system (A2744-QSO1 = system 53, 0.55–0.68 mag,
+  achromatic) is within published μ systematics (20–40 %, Furtak+2025) and AGN variability across 855 d / 7043 d
+  delays: ordinary. Alternative rejected: a separate tension script, which would duplicate the floor and chain code.
+  Revisit if: per-image μ systematics are modelled (then a floor from four systems stops understating them).
 
 ## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
 

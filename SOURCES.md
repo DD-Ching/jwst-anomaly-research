@@ -484,6 +484,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     - UNCOVER v2.0 maps, https://jwst-uncover.github.io/DR4.html#LensingMaps. Cite Furtak et al. arXiv:2212.04381,
       "UNCOVERing the extended strong lensing structures of Abell 2744 with the deepest JWST imaging", and Price
       et al. arXiv:2408.03920.
+    - Furtak et al. 2025, A&A 698, A227, doi:10.1051/0004-6361/202554110, arXiv:2502.07875v3 (accessed 2026-10-13):
+      A2744-QSO1 (z = 7.045), Table 1 image positions = Bergamini+23 system 53; UNCOVER v2 μ A/B/C 5.4/7.5/2.7,
+      delays B 855 d, C 7043 d after A; 20 % μ floor, systematics up to ~40 %.
     - Bergamini et al. arXiv:2303.10210: Lenstool files at https://www.fe.infn.it/astro/lensing/A2744_Bergamini23/.
       MCMC chain `bayes.dat` 70,069,007 B, sha256 `bf6ae670…` (accessed 2026-10-08; D-045).
       Accessed 2026-10-08: `best.par` sha256 `7245368f96ad9c7159eb9c8d0045030eda0804554312ee86d84f2e052025b9fb`,

@@ -827,3 +827,37 @@ def test_fluxratios_refuses_a_map_model():
     # map models have no Lenstool potentials to re-solve, so fluxratios refuses them
     with pytest.raises(SystemExit, match="usable multiple-image list"):
         lc.main(["--model", "macs1149-cats", "fluxratios", "--photometry", "unused.fits"])
+
+
+def test_load_halo_photometry_feeds_flux_ratio_table(tmp_path):
+    model, images, _, mu = _flux_inputs()
+    flux = 10 ** (-0.4 * (25.0 - 2.5 * np.log10(np.abs(mu))))
+    flux[0] *= 10 ** (-0.4 * 1.5)  # image 1.1 is 1.5 mag fainter than the model predicts
+
+    def row(i, tested):
+        r = {"image_id": images["image_id"][i], "system": "1", "mu": float(mu[i])}
+        for b in ("f150w", "f444w"):
+            for route in ("medfilt", "annulus"):
+                r[f"{b}_{route}_flux"] = float(flux[i])
+                r[f"{b}_{route}_err"] = float(flux[i]) / 50
+                r[f"{b}_{route}_resid"] = 0.0 if tested and b == "f444w" else None
+        return r
+
+    path = tmp_path / "halo_phot.json"
+    rows = [row(0, True), row(1, True), row(2, False)]  # 1.3 failed halo_phot's gates
+    path.write_text(json.dumps({"model": "m", "provenance": "derived", "images": rows}))
+    phot = lc.load_halo_photometry(path, images, "m", "f444w", ("f150w", "f444w"), "medfilt")
+    assert list(phot["dja_id"]) == [0, 1]
+    np.testing.assert_allclose(phot["magerr_auto"], 1.0857 / 50)
+    assert np.all(np.isnan(phot["f150w_mag"]))  # f150w was not tested: no colour
+    t = lc.flux_ratio_table(model, images, {}, phot)
+    assert list(t["dja_id"]) == [0, 1, -1]
+    np.testing.assert_allclose(t["resid_mag"][:2], [1.5, -1.5], atol=1e-6)
+    assert list(t["flux_class"]) == ["flux_outlier", "flux_outlier", "untested"]
+    with pytest.raises(SystemExit, match="is for m"):
+        lc.load_halo_photometry(path, images, "other", "f444w", ("f150w", "f444w"), "medfilt")
+
+
+def test_fluxratios_takes_one_photometry_source():
+    with pytest.raises(SystemExit, match="exactly one"):
+        lc.main(["--model", "abell2744-bergamini23", "fluxratios"])

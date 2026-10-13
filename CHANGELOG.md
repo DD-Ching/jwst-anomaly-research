@@ -2,7 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-13: (in progress) halo-subtracted F444W fluxes into the fluxratios tension test, Abell 2744
+## 2026-10-13: halo fluxes in the fluxratios tension test: Abell 2744's one flag is A2744-QSO1, ordinary
+- **Hypothesis before running:** with halo-subtracted fluxes the floor drops from 0.36 mag to ≈ 0.15 mag, so the
+  3σ tension test reaches ≈ 0.5 mag; a flag in both routes goes to vetting, and a null tightens the limit.
+- New `fluxratios --halo-phot` (D-032 addendum) → `results/halo_phot/abell2744_all/fluxratios_{band}_{route}.json`;
+  `--mu-samples 100`, `--inject-mag 1 1.5 2`.
+- **Result (derived):** F444W 15 / 11 images (medfilt / annulus), σ_sys 0.17 / 0.13 mag; F150W 5 / 2, no flag. System 53 is
+  the only `flux_tension` in either route: 53a, |z| 4.1 (medfilt), and the 53a/53c pair, |z| 4.9 (annulus; 53b fails
+  its S/N there). Injections (simulated) flagged at 1 / 1.5 / 2 mag fainter:
+  71 / 57 / 43 % and 89 / 89 / 33 % (losses to S/N grow with the deficit).
+- **Vetting (docs/fields/abell2744.md):** system 53 is A2744-QSO1, the triply imaged broad-line "little red dot"
+  (Furtak+2025). The offset of 0.55–0.68 mag is achromatic (F150W agrees) and two models agree on the prediction. It is
+  1–2σ under the published 20–40 % μ systematics, and the images sample the AGN 855 d and 7043 d apart. Ordinary;
+  not a candidate. Contact sheet looked at: 53a and 53c are isolated point-like sources, and 53b is 1.3″ from a bright member.
+- **Limitation:** a floor fitted on four other systems understates per-image cluster-model μ systematics, so
+  |z| > 3 is a screen. The halo test reaches only five Abell 2744 systems; El Gordo and SMACS have no star-like
+  image at S/N ≥ 10.
+- **Next:** the lensing-consistency flux-ratio line is exhausted on the current catalogues (no anomaly in three
+  fields). Move to the next ordinary lens check with reach: WHL0137 (Sunrise) map model or a fourth cluster with a
+  Lenstool chain, or surface-brightness conservation on arcs (D-032).
+
 
 ## 2026-10-13: halo_phot elongation gate: El Gordo 1c's flag was an arc; few images stay testable; no anomaly
 - **Hypothesis before running:** the El Gordo 1c flag (previous entry) is an arc knot that passed the concentration

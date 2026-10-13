@@ -105,6 +105,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.45 (halo_phot on all images of three fields; El Gordo 1c vetted) | — | — | 0.15 (orientation, claim, PR) | cloud routine 01CTJqMS, 11:08–11:50Z |
 | 2026-W42 | — | 1.2 (S0 screen after X1) | — | 0.5 (X1 scope wording, prompt 2026-10-13.1, rules 13.2) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | ≈ 0.5 (halo_phot elongation gate, star calibration, three-field re-run) | 0.15 (orientation, claim, PR) | cloud routine 01Tan1i4, 12:10–12:58Z |
+| 2026-W42 | ≈ 0.35 (`fluxratios --halo-phot`, Abell 2744; A2744-QSO1 flag vetted) | — | — | 0.15 (orientation, claim, PR) | cloud routine 01LzuV9A, 13:09–13:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

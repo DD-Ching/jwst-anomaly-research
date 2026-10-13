@@ -87,6 +87,22 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
   - All 149 images (2026-10-13, `results/halo_phot/abell2744_all/`): 18 (F150W) / 23 (F444W) tested, no flag,
     LOO scatter 0.10 / 0.15 mag (max 53a F444W −0.66); ±1 mag injections recovered 17/18, 19/23 (−1) and
     10/18, 10/23 (+1).
+  - Halo fluxes in the `fluxratios` tension test (2026-10-13; `fluxratios --halo-phot`, `--mu-samples 100`,
+    `results/halo_phot/abell2744_all/fluxratios_*.json`). F444W: 15 (medfilt) / 11 (annulus) images in 30, 7, 28,
+    53, 602.1; σ_sys 0.17 / 0.13 mag (was 0.36 with `mag_auto`); chain μ error median 0.05 mag. The only
+    `flux_tension` is system 53: **53a, |z| 4.1** (medfilt), and the 53a/53c pair, |z| 4.9 (annulus; 53b untested
+    there); 53a is 0.62–0.66 mag brighter than 53b/c predict. F150W: 5 / 2 images, no
+    flag. Fainter-by injections flagged at 1 / 1.5 / 2 mag: 71 / 57 / 43 % (medfilt), 89 / 89 / 33 % (annulus;
+    lost to S/N at 2 mag). **Vetting of 53 (ordinary, not a candidate):** system 53 is the triply imaged broad-line
+    "little red dot" A2744-QSO1, z_spec 7.045 (Furtak+2025 Table 1 positions within 0.02″). Observed F444W A/C 1.30
+    mag, B/A −0.23 mag; predicted A/C 0.66 (this model) / 0.75 (UNCOVER v2), B/A 0.45 / 0.36: offsets 0.55–0.68
+    mag. The offset is achromatic (F150W A/C 1.27 ± 0.34 mag), so not a red neighbour. Two independent models agree
+    with each other, but the published per-image μ systematics are 20–40 % (0.3–0.6 mag on a ratio), which makes it
+    1–2σ. In addition the images sample the AGN 855 d and 7043 d apart (observed), with BLR equivalent widths
+    varying by 18–22 % (Furtak+2025). 53b sits 1.3″ from a bright member (its μ depends on that halo). The
+    model-fitted z (7.48) instead of 7.045 changes the ratios by ≤ 0.03 mag. Limitation: a floor fitted on four other
+    systems (0.13–0.17 mag) is below published cluster-model μ systematics, so |z| > 3 here is a screen, not
+    significance.
 
 ## Run
 
