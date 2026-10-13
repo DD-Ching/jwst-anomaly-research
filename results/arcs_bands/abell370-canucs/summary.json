@@ -1,0 +1,73 @@
+{
+ "model": "abell370-canucs",
+ "second_band": "jw01208-o002_t001_nircam_clear-f444w_cat.ecsv",
+ "assumptions": {
+  "match_arcsec": 0.3,
+  "min_e444": 0.3,
+  "min_snr444": 10.0,
+  "null_e": 0.5,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "background_strong_shear": 56,
+ "usable_444": 25,
+ "no_match_444": 30,
+ "shared_444": 0,
+ "dpa_bands_median": 1.7,
+ "control_aligned_200": 23,
+ "control_stay_aligned_444": 23,
+ "control_anti_444": 0,
+ "classes_444": {
+  "n": 25,
+  "aligned": 23,
+  "anti": 2,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 1.4764744693338845e-09
+ },
+ "anti_expected_444": {
+  "n": 25,
+  "anti": 2,
+  "expected": 0.29,
+  "p_ge_observed": 0.034838830800295914
+ },
+ "anti_200": [
+  {
+   "label": 340,
+   "class_444": "anti",
+   "sep_nearest": 0.02,
+   "dpa_bands": 1.8,
+   "e_444": 0.4,
+   "snr_444": 54.0
+  },
+  {
+   "label": 1565,
+   "class_444": "no_match",
+   "sep_nearest": 1.22,
+   "dpa_bands": null,
+   "e_444": null,
+   "snr_444": null
+  },
+  {
+   "label": 1788,
+   "class_444": "no_match",
+   "sep_nearest": 1.93,
+   "dpa_bands": null,
+   "e_444": null,
+   "snr_444": null
+  },
+  {
+   "label": 4540,
+   "class_444": "anti",
+   "sep_nearest": 0.06,
+   "dpa_bands": 1.4,
+   "e_444": 0.5,
+   "snr_444": 1837.6
+  }
+ ],
+ "anti_444": [
+  340,
+  4540
+ ]
+}

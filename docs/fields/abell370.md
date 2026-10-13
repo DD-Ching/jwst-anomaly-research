@@ -135,4 +135,7 @@ Outputs: `results/arcs/abell370-canucs/`.
   apertures (#199, `docs/candidates/abell370-1565.md`). The cut is an ASSUMPTION; F444W shapes are not in the stored
   tables.
 - **Members/foreground:** 5 of 13 anti (P = 1/3 each if unlensed). **No CANUCS match (77):** 15 anti, near random.
+- **F444W shapes (derived, 2026-10-13, D-024 addendum 4, `scripts/arcs_bands.py`):** 25 of 56 usable; 23 of 23
+  aligned stay aligned; 2 anti vs 0.29 expected, both looked at below. 340 and 4540 are anti in F444W too (axis Δ 1.8° and 1.4°): single sources, intrinsic shapes.
+  1565 and 1788 have no F444W source within 1″ (nearest 1.2″ and 1.9″).
 - **Result: null.** No anti-tangential arc that a critical-curve flip or an intrinsic shape does not explain.

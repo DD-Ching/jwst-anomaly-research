@@ -167,7 +167,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      aligned, anti counts 0 and 1 against 0.45 and 0.17 from shape noise;
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: S/N ≥ 50 done on the stored tables (`docs/fields/abell370.md`: 3 anti vs 1.33,
-     P = 0.15, all intrinsic shapes); left: reject blends, compare F150W and F444W shapes;
+     P = 0.15, all intrinsic shapes); F444W vs F200W done (D-024 addendum 4: 81/83 aligned
+     stay aligned, F444W anti 3 vs 1.30, same axes, no blend); left: blend rejection in F200W segmentation;
    - exotic screens (D-031, D-034, D-036–D-038, D-040–D-043): SMACS, El Gordo, Sunrise (radial), Abell 2744,
      MACS1149, MACS0717, MACS0416, Abell 370 and Abell S1063 (radial) null. All six HFF clusters are screened. Next:
      - multi-plane checks are in the library (D-046, `LensModel.split_planes`); a `--plane NAME=Z[:SIGMA]` option for
