@@ -12,12 +12,10 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 10 % upkeep), units and ledger:
 `docs/state/trial.md`. Provisional conclusions of open needs-human PRs, and what is "done; do not redo":
 `docs/state/pending.md`.
-- **X1 far-side SV hot spots at Sgr A*** (authorized): state file `docs/state/units/X1.md`. F0 feasibility, S1
-  (validated SV tracer, `scripts/x1_tracer.py`) and S2 (`scripts/x1_s2.py`: no astrometric discriminant; a fragile
-  flux-contrast one for a = 2.1 M) and S3 (`scripts/x1_s3.py`: far side Δχ² +23 to +37 on one flare, exploratory)
-  done; S4 (`scripts/x1_s4.py`: the model-free disk bound is consistent with S3, but S3's Δχ² needs the traced
-  centroid; a Hamilton second route confirms the swept angles) done. Next: an image-weight check, then close X1. See the state file's "Next action".
-- **X2:** empty until an S0-passed direction that differs from X1 qualifies.
+- **X1 far-side SV hot spots at Sgr A*** closed 2026-10-13 (all gates passed, 3.7 / 20 h): conditional results and
+  the reopen inputs are in `docs/state/units/X1.md` "Closure". Tracer: `scripts/x1_tracer.py` (angles and image
+  weights verified by second routes, `scripts/x1_s4.py`, `scripts/x1_s4b.py`).
+- **X1, X2 slots:** empty until an S0-passed direction qualifies (X2 must differ from X1 in mechanism, observable or data).
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and

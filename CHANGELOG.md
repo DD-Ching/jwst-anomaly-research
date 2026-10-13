@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: X1 S4b: the tracer's image weights pass an independent check; X1 closed
+- New `scripts/x1_s4b.py` → `results/x1/s4b_image_weights.json`; `tests/test_x1_s4b.py`; `x1_tracer.image_mag`
+  extracted (no numeric change). Gate written in docs/state/units/X1.md before the run (commit 75bd7b7). Hours count
+  as verification under T1.
+- **Hypothesis before running:** the tracer's weight b / (|dΦ/db| cos α sin γ) is the point-source magnification.
+  If not, S2/S3 weights are wrong and S3 is not reported as a finding.
+- **Method:** the magnification by another route: 1/|det J| of the screen → perpendicular-offset map, built in 3-D
+  from Hamilton-integrated swept angles and the photon direction at the emitter (cos α from p_r).
+- **Result (derived):** far side a = 2.1 and 5 M (the gate): ≤ 5.0e-7 relative (tol 5e-3); a = 3, 7 M ≤ 4.9e-6; ordinary
+  a = 0 near side (primary and secondary) ≤ 3.4e-5, the largest at the fold. Weak-field control: magnification 1 to
+  1.5e-7. The tracer's weight is per unit source solid angle, i.e. R² × per unit cross-section. This constant cancels
+  at fixed R, so no S1–S4 number changes.
+- **X1 closed** (3.7 / 20 h). Conditional results and the reopen inputs: docs/state/units/X1.md "Closure". Both
+  trial slots are now empty; a new unit needs an S0-passed direction (T3).
+- **Next:** routine searches are under their weekly share (T1): the next W3 MOA-II field, per the `w3-survey` skill
+  and the newest W3 entry below.
+
 ## 2026-10-13: X1 S4: the model-free disk bound is consistent with S3, but S3's Δχ² rests on the traced centroid
 - New `scripts/x1_s4.py` → `results/x1/s4_disk_bound.json`; `tests/test_x1_s4.py`. Gate written in
   docs/state/units/X1.md before the run. The S4 hours count as verification under T1.

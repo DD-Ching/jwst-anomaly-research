@@ -337,6 +337,19 @@ def _images(a: float, re: float, side: str, gamma: float, tables, kmax: int = 0)
     return out, dropped
 
 
+def image_mag(re: float, bs: float, dphidb: float, gamma: float) -> float:
+    """Point-source weight of one image: screen area per unit source solid angle (emitter sphere).
+
+    This is R^2 times the screen area per emitter cross-section (checked in scripts/x1_s4b.py); the
+    constant cancels in centroids and flux ratios at fixed R, not in absolute fluxes across radii.
+
+    Emission solid angle per observer solid angle: sin(al) dal / (sin(g) dg), al = angle of the
+    photon to the radial direction at the emitter (static frame); cos(al) = sqrt(_pot(1/re, b)).
+    """
+    cos_al = math.sqrt(max(_pot(1.0 / re, bs), 1e-12))
+    return bs / (abs(dphidb) * cos_al * max(math.sin(gamma), 1e-9))
+
+
 def spot_track(
     a: float,
     re: float,
@@ -387,12 +400,7 @@ def spot_track(
             # photon axial angular momentum (about z) for E = 1, from the screen position
             lz = float(np.cross(pos, o)[2])
             g = ut_inv / (1.0 - omega * lz)
-            # emission solid angle per observer solid angle: sin(al) dal / (sin(g) dg), al = angle
-            # of the photon to the radial direction at the emitter (static frame);
-            # cos(al) = sqrt(_pot(1/re, b))
-            cos_al = math.sqrt(max(_pot(1.0 / re, bs), 1e-12))
-            mag = bs / (abs(dphidb) * cos_al * max(math.sin(gamma), 1e-9))
-            w = g**4 * mag
+            w = g**4 * image_mag(re, bs, dphidb, gamma)
             if delays:
                 dt = time_to_emitter(bs, a, re, side)[br]
                 per_image.setdefault(sgn, []).append(
