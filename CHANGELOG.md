@@ -2,6 +2,8 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: (in progress) halo_phot elongation gate, validated on PSF stars and known arcs; re-run of three fields
+
 ## 2026-10-13: halo_phot over every catalogued image of Abell 2744, El Gordo and SMACS: no anomaly
 - Ran `scripts/halo_phot.py` unchanged on all systems (149 / 56 / 60 images), F150W + F444W `_i2d` stamps by S3
   byte ranges (UNCOVER 2561 t003; PEARLS 1176 o241_t012; ERO 2736 o001_t001), end-to-end injections at ±1 mag →
