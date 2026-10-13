@@ -13,6 +13,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   tracked (0 errors, CPU 99 % until the last minutes). The archive throughput fell from ~65 MB/s to ~0–4 MB/s with
   4 retries near 00:44Z, so chunk 46 did not finish before the timeout. **Next:** `prescreen --procs 4 --chunks 46-50`,
   then merge-prescreen, fit (4 chunks; `.[dev,cloud,mulens]`), merge-chunks, vet, inject (6 chunks), limit, combine.
+- Run 3 (cloud, 01:09–01:13Z, `prescreen --procs 4 --chunks 46-50`, `timeout 1500`): throughput back at 68–89 MB/s;
+  chunks 46–50 tracked, 0 errors. **Pre-screen complete: 182,302 light curves, 2,066 shape passes, 109 not at a
+  shared epoch** (merge ran automatically). Fits started (`fit --procs 4 --chunk K/4`, sequential, detached).
 
 ## 2026-10-13: Trial tally covers every run (trial-2026-10-13.1)
 - Acceptance check of D-083:
