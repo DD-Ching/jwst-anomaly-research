@@ -2,6 +2,45 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: W3 MOA-II gb14 (twenty-first field): 0 survivors; combined limit over twenty-one fields
+- **Result:** 103 flags, 0 survive; combined Γ₉₅ ≈ 1.2 × 10⁻⁸–7.4 × 10⁻⁸ W3 events per star per year (was
+  1.4–7.8 × 10⁻⁸; gb14 tightens every cell by 5–10 %). Details: docs/exotic_limits.md "gb14" and the combined table.
+- Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
+  goes to `/vet-candidate` before injections. Plan: stream the tar in tracked pre-screen chunks across routine slots,
+  then fit, vet, inject (6 chunks), limit, combine.
+- Run 1 (cloud, 22:29–22:47Z, `prescreen --procs 4`, `timeout 1080`): chunks 1–16 of 50 tracked (0 errors, CPU 99 %;
+  streamed, nothing stored; 16 chunks in 18 min). Per-chunk `wall_time_s` rose 70 → 159 s within the run, the
+  overlapping-window artifact noted in TASKS.md.
+- Run 2 (cloud, 2026-10-13 00:09–00:46Z, two `prescreen --procs 4` calls, `timeout 1560` then `600`): chunks 17–45
+  tracked (0 errors, CPU 99 % until the last minutes). The archive throughput fell from ~65 MB/s to ~0–4 MB/s with
+  4 retries near 00:44Z, so chunk 46 did not finish before the timeout. **Next:** `prescreen --procs 4 --chunks 46-50`,
+  then merge-prescreen, fit (4 chunks; `.[dev,cloud,mulens]`), merge-chunks, vet, inject (6 chunks), limit, combine.
+- Run 3 (cloud, 01:09–01:13Z, `prescreen --procs 4 --chunks 46-50`, `timeout 1500`): throughput back at 68–89 MB/s;
+  chunks 46–50 tracked, 0 errors. **Pre-screen complete: 182,302 light curves, 2,066 shape passes, 109 not at a
+  shared epoch** (merge ran automatically). Fits (`fit --procs 4 --chunk K/4`, sequential, detached, 01:14–01:42Z):
+  **109 fits, 0 errors, 103 flags** (28/24/25/26 per chunk; 317–552 s each). `vet --procs 4` (01:42–01:45Z):
+  **0 of 103 survive** (`results/w3_moa/vetting_gb14.json`). Quiet χ²/dof 95th percentile 3.37; CDS XMatch worked
+  (Gaia DR3 RP for 55 / 109). Leading failures: exotic_in_domain 97, feature_bracketed 88, exotic_chi2_cap 78,
+  repeated_deficit 47. Contact sheet inspected: box and eclipse dips, slow variables, noisy flat curves; caustic
+  spikes only in the models. **Next:** `inject --procs 4 --chunk K/6` (6 chunks, ~18 min each), `merge-inject --n 6`,
+  `limit`, `combine`, then docs/exotic_limits.md and the PR.
+- Run 4 (cloud, 02:08Z–, session 01BiV92m): fresh clone, so `merge-prescreen` and `merge-chunks --n 4` first
+  (the first `inject` calls failed in 2 s on the missing `prescreen_gb14.ecsv`; no output written). Injection chunks
+  (`inject --procs 4 --chunk K/6`, sequential, detached): 1/6 367 in 641 s, 0 errors, W3 333 → 48 flagged → 22
+  recovered, PSPL 0 / 34; 2/6 367 in 479 s, 0 errors, W3 333 → 28 → 17, PSPL 0 / 34.
+  3/6 367 in 497 s, 0 errors, W3 334 → 28 → 10, PSPL 0 / 33; 4/6 367 in 617 s, 0 errors, W3 334 → 41 → 23,
+  PSPL 0 / 33. Chunks 1–4 together: W3 1,334 → 145 flagged → 72 recovered; PSPL 0 / 134 flagged. Chunk 5 was
+  stopped at the 40-min mark (nothing written). **Next:** `merge-prescreen`, `merge-chunks --n 4` (fresh clone),
+  `inject --procs 4 --chunk 5/6` and `6/6`, `merge-inject --n 6`, `limit`, `combine`, docs/exotic_limits.md, PR ready.
+- Run 5 (cloud, 04:10–04:45Z, session 01B15J5c): `merge-prescreen`, `merge-chunks --n 4`, injection chunks 5/6 (366 in
+  496 s, 0 errors, W3 333 → 31 flagged → 12 recovered, PSPL 0 / 33) and 6/6 (366 in 449 s, 0 errors, W3 333 → 30 → 13,
+  PSPL 0 / 33). All six: W3 2,000 → 206 flagged → 97 recovered (47 %); PSPL 0 / 200 flagged. `limit` first failed:
+  the tracked `results/w3_moa/vetting_gb14.json` is the summary, without the `chain` stamp `limit` checks, and the
+  full record lived only in run 3's `data/derived/`. Re-ran `vet --procs 4` (~3 min): 0 survivors, funnel identical
+  to run 3. Contact sheet re-inspected: same picture. gb14 limits 1.3 × 10⁻⁷–1.4 × 10⁻⁶ per cell; `combine` over 21
+  fields. MOA-II is now complete except gb13 (#145, owner). **Next (W3):** gb13 after the owner's decision; another
+  MOA-II-like field moves the combined limit by ≲ 10 %, so new W3 coverage should come from a new survey.
+
 ## 2026-10-13: Trial tally covers every run (trial-2026-10-13.1)
 - Acceptance check of D-083:
   - The cloud routine run of 23:10Z claimed X1 with `rules: trial-2026-10-12.1 prompt: none`. The routine's own

@@ -77,7 +77,10 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | 1.5 (X1 F0) | — | 1.0 (trial set-up) | set-up session, not a routine run |
 | 2026-W42 | — | 0.5 (X1 S1) | — | 0.2 (orientation, PR) | cloud routine 01CJcx3Y |
 | 2026-W42 | ≈ 0.6 (gb14 pre-screen chunks 17–45) | — | — | — | cloud routine, 00:09–00:46Z; back-filled from the gb14 handoff by an interactive session |
+| 2026-W42 | ≈ 0.6 (gb14 pre-screen 46–50, fits) | — | — | 0.1 (orientation, base merge) | cloud routine 01RHJ74R, 01:08–01:50Z |
+| 2026-W42 | ≈ 0.6 (gb14 injection chunks 1–4 of 6) | — | — | 0.1 (orientation, claim) | cloud routine 01BiV92m, 02:08–02:52Z |
 | 2026-W42 | — | 0.8 (X1 S2, S3) | — | 0.15 (orientation, takeover, PR) | cloud routine 01ELiBXy |
+| 2026-W42 | ≈ 0.55 (gb14 injections 5–6, re-vet, limit, combine) | — | — | 0.15 (orientation, base merge, PR) | cloud routine 01B15J5c, 04:08–04:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
