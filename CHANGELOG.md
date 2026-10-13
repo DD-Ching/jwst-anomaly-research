@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: X1 S4: the model-free disk bound is consistent with S3, but S3's Δχ² rests on the traced centroid
+- New `scripts/x1_s4.py` → `results/x1/s4_disk_bound.json`; `tests/test_x1_s4.py`. Gate written in
+  docs/state/units/X1.md before the run. The S4 hours count as verification under T1.
+- **Hypothesis before running:** if S3's far-side disfavour follows from b < b_c alone, a lower bound with each
+  epoch's centroid free in the b_c disk keeps Δχ² ≥ 9 (ASSUMPTION). If it does not, S3 depends on the tracer and
+  orbit model.
+- **Result (derived; same flare as S3 and #172, exploratory):** the convex SOCP bound is ≤ S3's far χ² for every
+  a and offset cap (consistent). The model-free Δχ² against S3's best ordinary fit (18.6) is +6.8 (a = 2.1, 3 M),
+  0.0 (5 M), −7.5 (7 M) and −12.9 (9 M). No a reaches 9. S3's +23 to +37 therefore needs the traced far-side
+  centroid (max 1.6–2.7 M, far inside b_c ≈ 5.2 M).
+- A second route for the far-side swept angle (Hamilton's equations, DOP853) matches the tracer to ≤ 3.3e-11 on 12
+  rays.
+- **Failed approach:** einsteinpy 0.4.0 FANTASY works in Schwarzschild (≤ 1.2e-6) but its fixed step is unstable
+  at the SV throat (H → 10⁴; Δφ not converged at step 0.0025).
+- **Next:** the far-side image-weight check (magnification by finite differences vs the tracer), then close X1.
+
 ## 2026-10-13: W3 MOA-II gb14 (twenty-first field): 0 survivors; combined limit over twenty-one fields
 - **Result:** 103 flags, 0 survive; combined Γ₉₅ ≈ 1.2 × 10⁻⁸–7.4 × 10⁻⁸ W3 events per star per year (was
   1.4–7.8 × 10⁻⁸; gb14 tightens every cell by 5–10 %). Details: docs/exotic_limits.md "gb14" and the combined table.
