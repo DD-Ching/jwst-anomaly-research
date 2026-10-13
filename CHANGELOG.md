@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: Abell 370 1565: NIRISS route and forced photometry; parked as inconclusive
+- **Hypothesis before testing:** forced photometry on both instruments confirms or removes the z ≈ 2.9 colour; NIRISS
+  WFSS (program 1208) can show [O III]; a detector-row artefact would make the axis follow the mosaic rows.
+- **Results (observed/derived; `docs/candidates/abell370-1565.md`):** the level-3 WFSS `_c1d` products hold only the
+  100 brightest sources (nearest 5.1″), and the best-case [O III] (≈ 2.3e-18 cgs) is ≤ 4–5σ against the empirical
+  per-grism 1σ of ~5e-19 (5-pixel box, ASSUMPTION; contamination by member 603 not modelled). Forced r = 0.15″
+  photometry: NIRCam F150W 6.7 ± 3.5 vs NIRISS 7.0 ± 4.1 nJy (the catalogue's 2.5σ gap is not reproduced);
+  F150W/F200W 0.61 ± 0.38 / 0.78 ± 0.58, so 0.47 vs 1.0 is undecided. Axis 159–163° in NIRCam F150W/F200W and NIRISS
+  F150W; mosaic rows lie at 153–155°, but blank-sky noise axes show no row preference (14–21 % within 15° vs 16.7 %).
+  Looked at all six bands.
+- **Verdict:** inconclusive, parked; not a candidate. Reopen with a redshift for 1565. A grizli extraction is the
+  owner's call (several hours, best case 4–5σ).
+
 ## 2026-10-13: Abell 370 1565 vetted: inconclusive; a z 0.386 nebula and a weak photo-z
 - `/vet-candidate` (`docs/candidates/abell370-1565.md`). **Hypothesis before testing:** 1565 is a z ≈ 2.9 image the
   models get wrong. Ordinary alternatives: a cluster-redshift (unlensed) knot, a blend, or a local perturber.

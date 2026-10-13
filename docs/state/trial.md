@@ -115,6 +115,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.45 (`arcs` on Abell 2744 and El Gordo, shape-noise null, chain spread) | — | — | 0.1 (orientation, claim, PR) | cloud routine 0111axHH, 17:08–17:50Z |
 | 2026-W42 | ≈ 0.2 (`arcs` on MACS1149 and MACS0416, cutouts of every anti) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01MAK8Jd, 18:08–18:20Z (#197) |
 | 2026-W42 | ≈ 0.25 (`arcs` on Abell 370; five-field shape-noise sensitivity) | — | — | 0.05 (claim, PR) | cloud routine 01MAK8Jd, 18:20–18:45Z (#198) |
+| 2026-W42 | — | — | ≈ 0.3 (Abell 370 1565: NIRISS WFSS check, forced photometry, row-axis test) | 0.1 (orientation, claim, PR) | cloud routine 01SirLB6, 21:08–21:30Z (#199) |
 | 2026-W42 | ≈ 0.25 (anti-arc κ(z) scan, Abell 370 1565 shapes and cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01Wew9zc, 19:08–19:45Z (#199) |
 | 2026-W42 | — | — | ≈ 0.25 (`/vet-candidate` Abell 370 1565: photometry, MUSE cube) | 0.05 (takeover, PR) | cloud routine 017EcLEb, 20:09–20:40Z (#199) |
 
