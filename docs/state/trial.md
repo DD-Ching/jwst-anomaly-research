@@ -82,7 +82,7 @@ existing authorization. If none qualifies, record the gaps and stay idle.
 | Unit | State file | Branch / PR | Status |
 |---|---|---|---|
 | X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-s4b` (#181) | **closed 2026-10-13** (gates passed as written; 3.7 / 20 h; tool cross-checked; position comparison exploratory; the S2 flux-contrast gate observable untested by data; no candidate). Conditional results: no astrometric discriminant at 9 µas; a fragile flux-contrast one at a = 2.1 M; S3's Δχ² +23 to +37 needs the traced centroid (model-free only +6.8, a ≤ 3 M). Tracer angles and weights verified by second routes. Reopen only with the inputs in its Closure |
-| X2 | — | — | empty. S0 screen 2026-10-13 (`docs/state/units/S0-2026-10-13.md`): three directions (throat transmission/echoes, a far-side mass via S2, lensing arrival order); none qualifies; high-risk share idles until a listed reopen input or owner direction appears |
+| X2 SV-throat echoes vs published post-merger limits | `docs/state/units/X2.md` | opened by its first S1 run (`[field: X2] ...`) | **authorized 2026-10-13** (S0 + addendum, 2.6 / 16 h); next S1 (barrier scattering tool). Premises: non-rotating SV, test-field proxy |
 
 ## Weekly tally (hours of run time; **every** run appends one line, routine searches included)
 T1 needs every category, or the shares cannot be computed. A run that only works on a routine-search unit still
@@ -106,6 +106,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | 1.2 (S0 screen after X1) | — | 0.5 (X1 scope wording, prompt 2026-10-13.1, rules 13.2) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | ≈ 0.5 (halo_phot elongation gate, star calibration, three-field re-run) | 0.15 (orientation, claim, PR) | cloud routine 01Tan1i4, 12:10–12:58Z |
 | 2026-W42 | ≈ 0.35 (`fluxratios --halo-phot`, Abell 2744; A2744-QSO1 flag vetted) | — | — | 0.15 (orientation, claim, PR) | cloud routine 01LzuV9A, 13:09–13:45Z |
+| 2026-W42 | — | 1.4 (X2 S0 addendum: GrayHawk-v2, echo code, B critique, delay check) | — | 0.2 (state files, PR) | interactive session 01AzKMDv |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

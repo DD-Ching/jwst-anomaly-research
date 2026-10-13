@@ -1,0 +1,89 @@
+{
+ "model": "symmetric Simpson-Visser, 2M < a < 3M, peaks at R = 3M on both sides",
+ "table": [
+  {
+   "a_minus_2M": 1e-07,
+   "dt_echo_M": 79475.46,
+   "small_eps_formula_M": 79476.71
+  },
+  {
+   "a_minus_2M": 1e-06,
+   "dt_echo_M": 25131.49,
+   "small_eps_formula_M": 25132.77
+  },
+  {
+   "a_minus_2M": 1e-05,
+   "dt_echo_M": 7946.42,
+   "small_eps_formula_M": 7947.75
+  },
+  {
+   "a_minus_2M": 0.0001,
+   "dt_echo_M": 2512.0,
+   "small_eps_formula_M": 2513.53
+  },
+  {
+   "a_minus_2M": 0.001,
+   "dt_echo_M": 793.42,
+   "small_eps_formula_M": 795.56
+  },
+  {
+   "a_minus_2M": 0.01,
+   "dt_echo_M": 249.69,
+   "small_eps_formula_M": 253.85
+  },
+  {
+   "a_minus_2M": 0.1,
+   "dt_echo_M": 76.45,
+   "small_eps_formula_M": 87.62
+  },
+  {
+   "a_minus_2M": 0.5,
+   "dt_echo_M": 27.3,
+   "small_eps_formula_M": 55.54
+  },
+  {
+   "a_minus_2M": 0.9,
+   "dt_echo_M": 9.66,
+   "small_eps_formula_M": 55.7
+  },
+  {
+   "a_minus_2M": 0.99,
+   "dt_echo_M": 2.95,
+   "small_eps_formula_M": 56.46
+  }
+ ],
+ "a_minus_2M_range_for_window_by_final_mass_Msun": {
+  "30.0": {
+   "0.05-0.35s": [
+    0.000112,
+    0.00547
+   ],
+   "0.2-1.2s": [
+    9.57e-06,
+    0.000344
+   ]
+  },
+  "60.0": {
+   "0.05-0.35s": [
+    0.000449,
+    0.0216
+   ],
+   "0.2-1.2s": [
+    3.83e-05,
+    0.00137
+   ]
+  },
+  "90.0": {
+   "0.05-0.35s": [
+    0.00101,
+    0.0477
+   ],
+   "0.2-1.2s": [
+    8.61e-05,
+    0.00308
+   ]
+  }
+ },
+ "window_source": "Miani et al. 2023, arXiv:2302.12158 Table I (post-merger windows)",
+ "label": "derived (model computation); premises in docs/state/units/X2.md"
+}

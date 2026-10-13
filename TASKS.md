@@ -15,8 +15,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
 - **X1 far-side SV hot spots at Sgr A*** closed 2026-10-13 (gates passed as written, 3.7 / 20 h; the tool is cross-checked, the position comparison is exploratory, the S2 flux-contrast observable is untested; no candidate): conditional results and
   the reopen inputs are in `docs/state/units/X1.md` "Closure". Tracer: `scripts/x1_tracer.py` (angles and image
   weights verified by second routes, `scripts/x1_s4.py`, `scripts/x1_s4b.py`).
-- **X1, X2 slots:** empty. The S0 screen of 2026-10-13 (`docs/state/units/S0-2026-10-13.md`) found no qualifying
-  direction; screen again when one of its reopen inputs or an owner direction appears.
+- **X2 SV-throat echoes vs published post-merger limits** (authorized 2026-10-13): state file
+  `docs/state/units/X2.md`; next S1 (barrier scattering tool). Continue from its "Next action".
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
