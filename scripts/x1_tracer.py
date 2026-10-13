@@ -16,7 +16,8 @@ Images of a point emitter at areal radius R_e and unit position n (observer dire
   Phi(b) = 2 pi - gamma + 2 pi k  (opposite side),  cos gamma = n . o.
 Point-source flux per image: g^4 * b |db/dPhi| / (|cos alpha_e| sin(gamma)), with alpha_e the
 emission angle to the radial direction (bolometric; g = redshift factor of a Keplerian emitter;
-Omega^2 = 1/R^3 holds exactly in the areal radius). Light-travel-time delays are not included.
+Omega^2 = 1/R^3 holds exactly in the areal radius). Light-travel-time delays are optional
+(spot_track(delays=True): each image is shifted to its observed phase).
 
 An independent second route (ODE in the affine parameter, r'' = -W'(r)/2 with W = b^2 f / R^2)
 gives the capture/transmission boundary and the far-side swept angle.
@@ -140,6 +141,70 @@ def phi_to_emitter(b: float, a: float, re: float, side: str) -> list[float]:
     return [pin + _phi_range(b, a, ue, ua)]
 
 
+def _dtdu_reg(u: float, b: float, a: float) -> float:
+    """dt/du - 1/u^2 - 2/u (finite at u = 0); dt/du = 1/(u^2 f sqrt(1 - a^2 u^2) sqrt(_pot))."""
+    if u < 1e-6:
+        return 4.0 + 0.5 * (a * a + b * b)
+    log_h = -math.log1p(-2.0 * u) - 0.5 * math.log1p(-a * a * u * u)
+    log_h -= 0.5 * math.log1p(-b * b * u * u * (1.0 - 2.0 * u))
+    return (math.expm1(log_h) - 2.0 * u) / (u * u)
+
+
+def _t_open(b: float, a: float, u1: float) -> float:
+    """Coordinate time from our infinity to u1 (no turn), up to a constant common to all rays."""
+    return (
+        integrate.quad(_dtdu_reg, 0.0, u1, args=(b, a), **QUAD)[0] - 1.0 / u1 + 2.0 * math.log(u1)
+    )
+
+
+def _t_turn(b: float, a: float, ut: float, u0: float) -> float:
+    """Coordinate time from u0 (> 0) to the turning point ut (u = ut (1 - s^2), regular in s)."""
+
+    def f(s):
+        u = ut * (1.0 - s * s)
+        q = b * b * ((u + ut) - 2.0 * (u * u + u * ut + ut * ut))
+        fu = 1.0 - 2.0 * u
+        return 2.0 * math.sqrt(ut) / (u * u * fu * math.sqrt(1.0 - a * a * u * u) * math.sqrt(q))
+
+    return integrate.quad(f, 0.0, math.sqrt(max(0.0, 1.0 - u0 / ut)), **QUAD)[0]
+
+
+def _t_throat(b: float, a: float, u0: float) -> float:
+    """Coordinate time from u0 (> 0) to the throat u = 1/a (u = (1 - s^2)/a, regular in s)."""
+    ua = 1.0 / a
+
+    def f(s):
+        u = ua * (1.0 - s * s)
+        return 2.0 * ua / (u * u * (1.0 - 2.0 * u) * math.sqrt(2.0 - s * s) * math.sqrt(_pot(u, b)))
+
+    return integrate.quad(f, 0.0, math.sqrt(max(0.0, 1.0 - u0 / ua)), **QUAD)[0]
+
+
+def time_to_emitter(b: float, a: float, re: float, side: str) -> list[float]:
+    """Light travel times from the emitter to the observer, branch by branch as in phi_to_emitter.
+
+    Relative values only: the divergent distance term is dropped identically for every ray.
+    """
+    ue = 1.0 / re
+    ut = turning_u(b, a)
+    if side == "near":
+        if ut is None:
+            return [_t_open(b, a, ue)]
+        if ut < ue:
+            return []
+        um = 0.5 * ue
+        t_half = _t_open(b, a, um)
+        to_turn = t_half + _t_turn(b, a, ut, um)
+        te = to_turn - _t_turn(b, a, ut, ue)
+        return [te, 2.0 * to_turn - te]
+    if ut is not None or a <= 2.0:
+        return []
+    ua = 1.0 / a
+    um = 0.5 * min(ue, ua)
+    to_throat = _t_open(b, a, um) + _t_throat(b, a, um)
+    return [to_throat + _t_throat(b, a, ue)]
+
+
 def b_crit_ode(a: float, r_start: float = R_START, tol: float = 1e-6) -> float:
     """Capture/transmission boundary from ODE rays: largest b whose ray reaches r < 0 (far side)."""
 
@@ -236,7 +301,7 @@ def _tables(a: float, re: float, side: str, b_max: float, n: int = N_GRID):
 
 
 def _images(a: float, re: float, side: str, gamma: float, tables, kmax: int = 0):
-    """Images (b, side_sign, dPhi/db) with Phi(b) = gamma + 2 pi k or 2 pi - gamma + 2 pi k.
+    """Images (b, side_sign, dPhi/db, branch) with Phi(b) = gamma + 2 pi k or 2 pi - gamma + 2 pi k.
 
     Returns (images, n_dropped); an image is dropped only if its finite difference leaves
     the branch.
@@ -268,7 +333,7 @@ def _images(a: float, re: float, side: str, gamma: float, tables, kmax: int = 0)
             if not (np.isfinite(hp) and np.isfinite(hm)):
                 dropped += 1
                 continue
-            out.append((bs, sgn, (hp - hm) / (2 * eps)))
+            out.append((bs, sgn, (hp - hm) / (2 * eps), br))
     return out, dropped
 
 
@@ -280,24 +345,33 @@ def spot_track(
     n_phase: int = 72,
     kmax: int = 0,
     primary_only: bool = False,
+    eta: float = 1.0,
+    delays: bool = False,
 ):
-    """Centroid track (M on the sky) and total flux of a Keplerian point spot over one orbit.
+    """Centroid track (M on the sky) and total flux of a point spot on a circular orbit.
 
-    Rows: (phase, x_sky, y_sky, flux, n_dropped_images).
+    Rows: (phase, x_sky, y_sky, flux, n_dropped_images). The angular velocity is eta times
+    Keplerian (eta < 1: sub-Keplerian). Without delays, phase is the emission phase of every image;
+    with delays=True each image is shifted to its observed phase (emission phase + Omega * light
+    travel time, relative across images) and the images are resampled on a common observed-phase
+    grid before they are summed (n_dropped_images is then the per-orbit total in the first row).
 
     Observer direction o = (sin i, 0, cos i); orbit in the z = 0 plane (of the emitter's own sheet).
     Sky axes: x_sky along (cos i, 0, -sin i), y_sky along (0, 1, 0).
     """
+    if delays and kmax > 0:
+        raise ValueError("delays=True supports k = 0 images only (image classes keyed by side)")
     inc = math.radians(incl_deg)
     o = np.array([math.sin(inc), 0.0, math.cos(inc)])
     ex = np.array([math.cos(inc), 0.0, -math.sin(inc)])
     ey = np.array([0.0, 1.0, 0.0])
-    omega = re**-1.5
-    ut_inv = math.sqrt(1.0 - 3.0 / re)  # 1/u^t, since f - R^2 Omega^2 = 1 - 3/R
+    omega = eta * re**-1.5
+    ut_inv = math.sqrt(1.0 - 2.0 / re - eta * eta / re)  # 1/u^t = sqrt(f - R^2 Omega^2)
     b_max = 3.0 * re if side == "near" else wf.b_crit(a) * (1 - 1e-9)
     tables = _tables(a, re, side, b_max)
-    rows = []
-    for ph in np.linspace(0.0, 2 * math.pi, n_phase, endpoint=False):
+    rows, per_image = [], {}
+    phases = np.linspace(0.0, 2 * math.pi, n_phase, endpoint=False)
+    for ph in phases:
         n = np.array([math.cos(ph), math.sin(ph), 0.0])
         cg = float(np.clip(n @ o, -1, 1))
         gamma = math.acos(cg)
@@ -306,7 +380,7 @@ def spot_track(
         e = proj / pn if pn > 1e-12 else ex
         cx = cy = ftot = 0.0
         images, dropped = _images(a, re, side, gamma, tables, 0 if primary_only else kmax)
-        for bs, sgn, dphidb in images:
+        for bs, sgn, dphidb, br in images:
             if primary_only and sgn < 0:
                 continue
             pos = sgn * bs * e  # 3-vector in the sky plane
@@ -319,12 +393,37 @@ def spot_track(
             cos_al = math.sqrt(max(_pot(1.0 / re, bs), 1e-12))
             mag = bs / (abs(dphidb) * cos_al * max(math.sin(gamma), 1e-9))
             w = g**4 * mag
+            if delays:
+                dt = time_to_emitter(bs, a, re, side)[br]
+                per_image.setdefault(sgn, []).append(
+                    (ph + omega * dt, w * float(pos @ ex), w * float(pos @ ey), w)
+                )
             cx += w * float(pos @ ex)
             cy += w * float(pos @ ey)
             ftot += w
         cx, cy = (cx / ftot, cy / ftot) if ftot else (np.nan, np.nan)
         rows.append((ph, cx, cy, ftot, dropped))
-    return np.array(rows)
+    if not delays:
+        return np.array(rows)
+    # Each image class (same-side / opposite-side) is one continuous curve in emission phase;
+    # resample its weighted position and weight periodically on the observed-phase grid.
+    sx = np.zeros(n_phase)
+    sy = np.zeros(n_phase)
+    sw = np.zeros(n_phase)
+    for pts in per_image.values():
+        # k = 0 images exist at every phase; a few dropped ones (counted) are interpolated over
+        if len(pts) < n_phase // 2:
+            raise RuntimeError(f"image class present at {len(pts)} of {n_phase} phases")
+        arr = np.array(pts)
+        t = np.unwrap(arr[:, 0])
+        if np.any(np.diff(t) <= 0) or t[-1] - t[0] >= 2 * math.pi:
+            raise RuntimeError("observed phase is not monotonic in emission phase over one orbit")
+        t0 = t - 2 * math.pi * np.floor(t[0] / (2 * math.pi))
+        tt = np.concatenate([t0 - 2 * math.pi, t0, t0 + 2 * math.pi])
+        for acc, col in ((sx, 1), (sy, 2), (sw, 3)):
+            acc += np.interp(phases, tt, np.tile(arr[:, col], 3))
+    n_drop = int(sum(r[4] for r in rows))
+    return np.column_stack([phases, sx / sw, sy / sw, sw, np.r_[n_drop, np.zeros(n_phase - 1)]])
 
 
 def run_checks() -> dict:
