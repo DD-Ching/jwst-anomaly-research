@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: (in progress) `arcs` orientation test on Abell 2744 and El Gordo
+- Plan: D-024's arc-orientation test, so far run only on SMACS, on the two other validated Lenstool models.
+
 ## 2026-10-13: X2 S4: matter-consistent axial GW equations (Yang & Lan) replace the test-field proxy at one cell; η_max 1.52
 - **Input.** arXiv:2603.20594 (axial perturbations of SV under fluid and NED + scalar sources) and arXiv:2112.13198
   (phantom scalar + magnetic NED source). Neither was assessed before.
