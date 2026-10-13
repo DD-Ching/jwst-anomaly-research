@@ -84,6 +84,9 @@ def read_header(session: requests.Session, key: str):
     from astropy.wcs import WCS
 
     raw = _get(session, RECORD.format(key), 0, HEADER_BYTES)
+    cards = [raw[k : k + 80] for k in range(0, HEADER_BYTES, 80)]
+    if not any(c.rstrip() == b"END" for c in cards):  # data must start at HEADER_BYTES
+        raise RuntimeError(f"{key}: header is longer than one FITS block")
     hdr = fits.Header.fromstring(raw.decode("ascii"))
     if (hdr["NAXIS1"], hdr["NAXIS2"], hdr["BITPIX"]) != (NAXIS, NAXIS, -64):
         raise RuntimeError(f"{key}: unexpected layout")
