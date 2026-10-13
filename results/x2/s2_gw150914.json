@@ -1,0 +1,898 @@
+{
+ "design": "docs/state/units/X2_s2_design.md (frozen before this run)",
+ "observed": {
+  "source": "Miani et al. 2023 arXiv:2302.12158v2 Table II (GW150914)",
+  "h_MR": 1.6e-22,
+  "h_UL_95": 3.4e-23,
+  "ratio": 0.21,
+  "PMW_s": [
+   0.2,
+   1.2
+  ]
+ },
+ "params_assumptions": {
+  "edge_margin_s": 0.015,
+  "f_validated_Hz": [
+   80.0,
+   400.0
+  ],
+  "min_frac_first_two": 0.9,
+  "max_duration_lower_bound_s": 0.1
+ },
+ "remnant": {
+  "M_det_Msun": 68.8,
+  "chi": 0.69,
+  "f_220_Hz": 249.26808464372704,
+  "tau_220_s": 0.004143893452692965
+ },
+ "rows": [
+  {
+   "a_minus_2M": 0.001492343753364711,
+   "dt_s": 0.21999999999997236,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.286352184750604,
+    "eta_max": 0.733362660329963,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 217.71748773319027,
+    "duration_lower_bound_s": 0.008274138279656267,
+    "first_two_pulses_fraction_of_hrss2": 0.8338829485953285,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.24082261407550598,
+    "eta_max": 0.872011130707841,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 210.11335921941821,
+    "duration_lower_bound_s": 0.008009343346305493,
+    "first_two_pulses_fraction_of_hrss2": 0.7549708596402674,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.00099164456905676,
+   "dt_s": 0.27000000000000657,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.2810656180944973,
+    "eta_max": 0.7471564875978381,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 218.61347599216805,
+    "duration_lower_bound_s": 0.008418267786093994,
+    "first_two_pulses_fraction_of_hrss2": 0.8657041860957381,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.2335866999327972,
+    "eta_max": 0.8990237888562016,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 211.31621597780736,
+    "duration_lower_bound_s": 0.008104698722265333,
+    "first_two_pulses_fraction_of_hrss2": 0.8026455949138729,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0007063657934494039,
+   "dt_s": 0.31999999999995515,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.27357361507734707,
+    "eta_max": 0.767617885740286,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 219.81333713195306,
+    "duration_lower_bound_s": 0.008599103959910941,
+    "first_two_pulses_fraction_of_hrss2": 0.9138637588260436,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.22384616725422557,
+    "eta_max": 0.9381442737033765,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 212.88824098834348,
+    "duration_lower_bound_s": 0.008215052629660475,
+    "first_two_pulses_fraction_of_hrss2": 0.8741279475131642,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0005285691270446868,
+   "dt_s": 0.36999999999995975,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.27358225832949284,
+    "eta_max": 0.767593634478605,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 219.81329055264104,
+    "duration_lower_bound_s": 0.008598564622227878,
+    "first_two_pulses_fraction_of_hrss2": 0.9138648921102956,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.22385505858324892,
+    "eta_max": 0.938107011425447,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 212.8873105999245,
+    "duration_lower_bound_s": 0.008214404562083949,
+    "first_two_pulses_fraction_of_hrss2": 0.8741265769548044,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0003575000492666014,
+   "dt_s": 0.44999999999999346,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.2615425683440848,
+    "eta_max": 0.8029285684910935,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 221.58759324852736,
+    "duration_lower_bound_s": 0.00883145923073161,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.20930053616351163,
+    "eta_max": 1.003341911345807,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 215.1328865140353,
+    "duration_lower_bound_s": 0.008335378337907436,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00026780232228640344,
+   "dt_s": 0.5199999999998807,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.26154681695539045,
+    "eta_max": 0.8029155255818605,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 221.58762345441312,
+    "duration_lower_bound_s": 0.008831188595833766,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.20930464566362608,
+    "eta_max": 1.0033222116698328,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 215.13251545894667,
+    "duration_lower_bound_s": 0.008335052148414413,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.0002152999387008414,
+   "dt_s": 0.5800000000000781,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.2615493035492248,
+    "eta_max": 0.802907892127027,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 221.58764114218087,
+    "duration_lower_bound_s": 0.008831030206434207,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.20930705084579035,
+    "eta_max": 1.003310682327277,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 215.13229829744125,
+    "duration_lower_bound_s": 0.00833486124876052,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00011321530778296562,
+   "dt_s": 0.8000000000002929,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.2360762949257888,
+    "eta_max": 0.8895429338469331,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 224.78949424573608,
+    "duration_lower_bound_s": 0.009111623294996493,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.18204985151403735,
+    "eta_max": 1.1535301910631193,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 218.98022473204955,
+    "duration_lower_bound_s": 0.00841088582418492,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 7.247383922193151e-05,
+   "dt_s": 1.0000000000010205,
+   "proxy": "1",
+   "ringdown_lorentzian": {
+    "F": 0.2360780808164658,
+    "eta_max": 0.8895362046053751,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 224.78954979739467,
+    "duration_lower_bound_s": 0.00911150327496119,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.18205142221861684,
+    "eta_max": 1.15352023862698,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 218.98012775438633,
+    "duration_lower_bound_s": 0.008410740527590912,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.001492343753364711,
+   "dt_s": 0.21999999999997236,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.31698357213221146,
+    "eta_max": 0.66249490024805,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 225.63926553606456,
+    "duration_lower_bound_s": 0.008437786906546648,
+    "first_two_pulses_fraction_of_hrss2": 0.8268474626491124,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.24490525778768796,
+    "eta_max": 0.8574744450037579,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 219.1196281005576,
+    "duration_lower_bound_s": 0.007748524359751415,
+    "first_two_pulses_fraction_of_hrss2": 0.7547640584712517,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.00099164456905676,
+   "dt_s": 0.27000000000000657,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.3109108183980413,
+    "eta_max": 0.6754348436056961,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 226.53837568562884,
+    "duration_lower_bound_s": 0.008588506293873806,
+    "first_two_pulses_fraction_of_hrss2": 0.8596123427948801,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.23753632609119157,
+    "eta_max": 0.8840753052624876,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 220.36596344965577,
+    "duration_lower_bound_s": 0.007841515388268312,
+    "first_two_pulses_fraction_of_hrss2": 0.802479611639276,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0007063657934494039,
+   "dt_s": 0.31999999999995515,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.3022620542994546,
+    "eta_max": 0.6947613734933149,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 227.74122333459414,
+    "duration_lower_bound_s": 0.008775878746641097,
+    "first_two_pulses_fraction_of_hrss2": 0.9095990338847104,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.22762001797662312,
+    "eta_max": 0.922590209186115,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 221.9932711530779,
+    "duration_lower_bound_s": 0.007949150798784539,
+    "first_two_pulses_fraction_of_hrss2": 0.8740223007012918,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0005285691270446868,
+   "dt_s": 0.36999999999995975,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.3022712676309938,
+    "eta_max": 0.6947401969292146,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 227.741432871212,
+    "duration_lower_bound_s": 0.008775403478245555,
+    "first_two_pulses_fraction_of_hrss2": 0.9095996160349391,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.22762823781200167,
+    "eta_max": 0.9225568937252818,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 221.99285865852642,
+    "duration_lower_bound_s": 0.00794858099686549,
+    "first_two_pulses_fraction_of_hrss2": 0.8740210469076339,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0003575000492666014,
+   "dt_s": 0.44999999999999346,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.2882935121771431,
+    "eta_max": 0.7284243006861862,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 229.51524749653495,
+    "duration_lower_bound_s": 0.009012330895842387,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.21281482002985944,
+    "eta_max": 0.9867733834069239,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 224.3159809982569,
+    "duration_lower_bound_s": 0.008066844721467648,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00026780232228640344,
+   "dt_s": 0.5199999999998807,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.28829799019261615,
+    "eta_max": 0.7284129863676673,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 229.51540010321895,
+    "duration_lower_bound_s": 0.009012091902205005,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.21281861859172255,
+    "eta_max": 0.9867557706634217,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 224.31586532905865,
+    "duration_lower_bound_s": 0.008066557961866732,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.0002152999387008414,
+   "dt_s": 0.5800000000000781,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.2883006110789285,
+    "eta_max": 0.7284063645030151,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 229.51548943052876,
+    "duration_lower_bound_s": 0.009011952029757297,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.21282084180860447,
+    "eta_max": 0.9867454625936433,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 224.31579764382872,
+    "duration_lower_bound_s": 0.008066390135960517,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00011321530778296562,
+   "dt_s": 0.8000000000002929,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.25862247781266995,
+    "eta_max": 0.8119943857011181,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 232.68406524953758,
+    "duration_lower_bound_s": 0.00928194175216391,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.18508683395884004,
+    "eta_max": 1.1346025835997615,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 228.29412705930656,
+    "duration_lower_bound_s": 0.00814219542074441,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 7.247383922193151e-05,
+   "dt_s": 1.0000000000010205,
+   "proxy": "0",
+   "ringdown_lorentzian": {
+    "F": 0.2586243069556325,
+    "eta_max": 0.8119886428000208,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 232.68417023472733,
+    "duration_lower_bound_s": 0.009281835038153339,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.18508828537956018,
+    "eta_max": 1.1345936863013961,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 228.29414174502784,
+    "duration_lower_bound_s": 0.008142067735114666,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.001492343753364711,
+   "dt_s": 0.21999999999997236,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.1865815879818021,
+    "eta_max": 1.1255129848100658,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 179.84281140208094,
+    "duration_lower_bound_s": 0.007234653901259471,
+    "first_two_pulses_fraction_of_hrss2": 0.8307769943298555,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.23892805114136748,
+    "eta_max": 0.8789256807512672,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 171.10501130727548,
+    "duration_lower_bound_s": 0.008126402438455619,
+    "first_two_pulses_fraction_of_hrss2": 0.7570963110357334,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.00099164456905676,
+   "dt_s": 0.27000000000000657,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.18298075848366743,
+    "eta_max": 1.147661654374136,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 180.8573802038478,
+    "duration_lower_bound_s": 0.0073298446868163844,
+    "first_two_pulses_fraction_of_hrss2": 0.8639400010602343,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.2318238423128354,
+    "eta_max": 0.9058602338089748,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 172.27981082382524,
+    "duration_lower_bound_s": 0.00821894536276908,
+    "first_two_pulses_fraction_of_hrss2": 0.8043430557878127,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0007063657934494039,
+   "dt_s": 0.31999999999995515,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.17796465147569648,
+    "eta_max": 1.180009615722358,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 182.21498248665284,
+    "duration_lower_bound_s": 0.007446524525298144,
+    "first_two_pulses_fraction_of_hrss2": 0.9134150545792942,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.22225224210843994,
+    "eta_max": 0.9448723576769952,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 173.81755612151946,
+    "duration_lower_bound_s": 0.008325145228870316,
+    "first_two_pulses_fraction_of_hrss2": 0.8751979204685509,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0005285691270446868,
+   "dt_s": 0.36999999999995975,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.17796981588309915,
+    "eta_max": 1.179975373677636,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 182.21519831488044,
+    "duration_lower_bound_s": 0.007446121290709484,
+    "first_two_pulses_fraction_of_hrss2": 0.9134160765730055,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.22225892195182956,
+    "eta_max": 0.9448439601696329,
+    "pulses_in_PMW": [
+     1,
+     2,
+     3
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 173.81688730048828,
+    "duration_lower_bound_s": 0.008324648496418896,
+    "first_two_pulses_fraction_of_hrss2": 0.8751968714358093,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 0.0003575000492666014,
+   "dt_s": 0.44999999999999346,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.17009558220491525,
+    "eta_max": 1.2345999659592077,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 184.22803399802905,
+    "duration_lower_bound_s": 0.007590393684302979,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.2079334634504003,
+    "eta_max": 1.0099384510569296,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 176.0189892458554,
+    "duration_lower_bound_s": 0.008439032991623005,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00026780232228640344,
+   "dt_s": 0.5199999999998807,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.170098119599786,
+    "eta_max": 1.234581549132329,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 184.2281973301316,
+    "duration_lower_bound_s": 0.007590192227139447,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.20793655225708174,
+    "eta_max": 1.0099234488622622,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 176.01872510033826,
+    "duration_lower_bound_s": 0.008438783167072703,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.0002152999387008414,
+   "dt_s": 0.5800000000000781,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.1700996047089035,
+    "eta_max": 1.234570770222419,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 184.2282929393925,
+    "duration_lower_bound_s": 0.0075900743205417,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   },
+   "flat_35_350Hz": {
+    "F": 0.20793836008068595,
+    "eta_max": 1.0099146685513634,
+    "pulses_in_PMW": [
+     1,
+     2
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 176.0185705065128,
+    "duration_lower_bound_s": 0.00843863695588006,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": true
+   }
+  },
+  {
+   "a_minus_2M": 0.00011321530778296562,
+   "dt_s": 0.8000000000002929,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.15401952221995394,
+    "eta_max": 1.363463520553588,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 187.9259144475296,
+    "duration_lower_bound_s": 0.007741436212569073,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.1810368356919087,
+    "eta_max": 1.1599849234957975,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 179.80761140443406,
+    "duration_lower_bound_s": 0.008501307373969556,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  },
+  {
+   "a_minus_2M": 7.247383922193151e-05,
+   "dt_s": 1.0000000000010205,
+   "proxy": "rw",
+   "ringdown_lorentzian": {
+    "F": 0.15402060478670482,
+    "eta_max": 1.3634539371587207,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 187.92603250102937,
+    "duration_lower_bound_s": 0.007741347914657799,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   },
+   "flat_35_350Hz": {
+    "F": 0.18103801742567116,
+    "eta_max": 1.1599773516422855,
+    "pulses_in_PMW": [
+     1
+    ],
+    "pulses_on_PMW_edge_excluded": [],
+    "echo_weighted_mean_f_Hz": 179.80754493456803,
+    "duration_lower_bound_s": 0.00850119621973227,
+    "first_two_pulses_fraction_of_hrss2": 1.0,
+    "applicable": false
+   }
+  }
+ ],
+ "label": "derived; limit on phenomenological model P1-P4, not on the SV geometry"
+}

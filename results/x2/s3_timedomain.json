@@ -1,0 +1,70 @@
+{
+ "label": "derived; s = 1, l = 2 test field; numerical consistency check",
+ "run_dx0.2": {
+  "a_minus_2M": 0.000451869679749084,
+  "dt_echo_M": 1181.0000000002567,
+  "packet": {
+   "w0": 0.5307,
+   "tau_M": 12.2
+  },
+  "grid": {
+   "dx": 0.2,
+   "dt": 0.1
+  },
+  "time_domain_pulse_hrss_ratio": [
+   0.23914733670930777,
+   0.11578800044358524
+  ],
+  "frequency_domain_prediction": [
+   0.24606882906767322,
+   0.12140274388094076
+  ],
+  "relative_difference": [
+   0.02812827770421067,
+   0.04624890062502929
+  ],
+  "pulse_spacing_M": 1229.3436520885903,
+  "spacing_vs_4L_relative": 0.040934506425337025,
+  "first_arrival_minus_direct_plus_4L_M": -20.515945370386817,
+  "pulse_rms_width_M": [
+   15.613138037221907,
+   20.529280517512394
+  ],
+  "packet_rms_width_M": 5.962957414149623
+ },
+ "run_dx0.1": {
+  "a_minus_2M": 0.000451869679749084,
+  "dt_echo_M": 1181.0000000002567,
+  "packet": {
+   "w0": 0.5307,
+   "tau_M": 12.2
+  },
+  "grid": {
+   "dx": 0.1,
+   "dt": 0.05
+  },
+  "time_domain_pulse_hrss_ratio": [
+   0.23924924266832234,
+   0.11588679060142609
+  ],
+  "frequency_domain_prediction": [
+   0.24606882906767322,
+   0.12140274388094076
+  ],
+  "relative_difference": [
+   0.027714141710632356,
+   0.045435161539051694
+  ],
+  "pulse_spacing_M": 1229.005819651637,
+  "spacing_vs_4L_relative": 0.040648450170508,
+  "first_arrival_minus_direct_plus_4L_M": -21.977863739950408,
+  "pulse_rms_width_M": [
+   15.68712578918737,
+   20.47741318338827
+  ],
+  "packet_rms_width_M": 5.96295749854181
+ },
+ "amplitude_pass_10pct": true,
+ "spacing_pass_1pct": false,
+ "gate_pass": false
+}

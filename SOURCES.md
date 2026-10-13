@@ -1214,3 +1214,10 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   minimal assumptions", arXiv:2302.12158 (Table I: per-event h_rss at 50 % DP, FAP 5 %).
 - Lütfüoğlu 2026, arXiv:2606.08351 (black-bounce Hawking emission; not two-sided throat transmission).
 - Krasnikov, arXiv:1910.07839; Dai & Stojkovic, arXiv:1912.07793 (comment and reply on arXiv:1910.00429).
+
+## Trial unit X2 S1–S3 (accessed 2026-10-13; docs/state/units/X2.md)
+- Miani et al., arXiv:2302.12158v2, Table II (95 % upper limits on echo h_rss and merger-ringdown h_rss), §III.5,
+  §IV.1, §IV.4.
+- Churilova & Stuchlík, arXiv:1911.11823, Eq. 6 (SV test-field potentials, s = 0, 1).
+- GWTC-1, arXiv:1811.12907 (GW150914 final mass 63.1 M☉, z = 0.09, χ_f = 0.69); Berti, Cardoso & Will,
+  arXiv:gr-qc/0512160 (Kerr QNM fits).

@@ -17,6 +17,27 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Next:** settle the unit (Zenodo record or the authors' MrMARTIAN convention), then predict counter-images and
   fit system 2's redshift; or test the RELICS HST-era models (pinned, D-033) on the JWST image list (held out).
 
+## 2026-10-13: X2 S1–S3: SV-throat echo scattering tool and a GW150914 demonstration (phenomenological; η bounded to order unity)
+- Owner review fixed the comparison gate. The basis is Miani et al. Table II (95 % upper limit on the in-window
+  h_rss, and the merger-ringdown h_rss), not Table I's 50 % detection-probability sensitivity. The model-to-strain
+  link is stated as assumptions P1–P4: a test-field barrier as a GW proxy, a free source amplitude η, spectral
+  weights and timing. Design frozen before computing (`docs/state/units/X2_s2_design.md`).
+- S1 (`scripts/x2_scatter.py`):
+  - peaks found from the actual potentials (s = 1 exactly at R = 3M; s = 0 at R ≈ 3.016M);
+  - flux to 4.3e-11; two routes agree to 1.4e-6; Schwarzschild 16πM² limit reproduced;
+  - resonance spacing vs 4L: passes 1 % at a − 2M = 1e-4, **fails** at 1e-3 (+1.7 / +3.1 %). Post hoc reading:
+    a constant 14–25 M reflection delay, the 4L approximation's bias (owner: not a code failure).
+- S2, GW150914 (PMW 0.2–1.2 s), applicable cells only (Δt 0.32–0.58 s, a − 2M ≈ 2.2e-4 to 7.1e-4 M; flat weight
+  only 0.45–0.58 s):
+  - η_max = 0.70–0.73 (scalar), 0.77–0.80 (EM), 1.18–1.24 (RW-form) with the ringdown weight; 0.99–1.01 flat;
+  - between the frozen result classes: η ~ 1 is disfavoured under the scalar and EM proxies (EM with the
+    ringdown weight only), not under RW-form, so there is no proxy-independent statement.
+- S3 (time domain, double barrier): echo amplitudes match the frequency domain to 2.8 % and 4.5 % (pass); the
+  pulse spacing is 4L + 4.1 % (**fails** 1 %; measured post hoc). Shifting S2's pulses by that delay (≈ 16 ms per
+  round trip) removes only the Δt = 0.58 s cell; the η_max ranges are unchanged.
+- Missing irreplaceable input: SV spin-2 perturbation equations with their matter source, and η. X2 paused for
+  owner review; next if resumed: the multi-event η_max map (≤ 2 h).
+
 ## 2026-10-13: halo fluxes in the fluxratios tension test: Abell 2744's one flag is A2744-QSO1, ordinary
 - **Hypothesis before running:** with halo-subtracted fluxes the floor drops from 0.36 mag to ≈ 0.15 mag, so the
   3σ tension test reaches ≈ 0.5 mag; a flag in both routes goes to vetting, and a null tightens the limit.
