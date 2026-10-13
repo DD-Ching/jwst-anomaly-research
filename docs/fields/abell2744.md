@@ -78,7 +78,8 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
   - **No flux-ratio or colour anomaly.** Untested: 115 images (faint, unmatched in the core, |μ| > 20).
   - With `--mu-samples 100` (D-032 addendum, `bayes.dat` μ errors): model error median 0.04 mag (max 0.14, 602.1c);
     scatter floor σ_sys 0.36 mag. The four flux flags are the only `flux_tension`s (|z| 6.2–8.5), all explained above.
-    Injection: 30 tested images made fainter are flagged in 17 / 27 / 60 / 93 % at 0.5 / 1 / 1.5 / 2 mag.
+    Injection: 30 tested images made fainter are flagged in 17 / 27 / 60 / 93 % at 0.5 / 1 / 1.5 / 2 mag
+    (flux and S/N scaled; 2 lost to S/N at 2 mag; 14 targets are pair members, not localised).
 
 ## Run
 

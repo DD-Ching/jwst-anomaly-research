@@ -612,7 +612,9 @@ def test_flux_tension_uses_the_other_systems_floor(monkeypatch):
     assert rec["n_targets"] == 3
     assert rec["recovered_fraction"] == {"0.0": 0.0, "1.5": 1.0}
     # 6 mag fainter: S/N 54 -> 0.2 < min_snr, so the image is untested, not recovered
-    assert lc.tension_recovery(model, images, {}, phot, [6.0])["recovered_fraction"] == {"6.0": 0.0}
+    rec = lc.tension_recovery(model, images, {}, phot, [6.0])
+    assert rec["recovered_fraction"] == {"6.0": 0.0} and rec["n_untested"] == {"6.0": 3}
+    assert rec["n_pair_targets"] == 0
 
 
 def test_scatter_floor():

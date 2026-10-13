@@ -8,7 +8,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   adds a scatter floor (median |z| = 0.6745, a pair counted once) fitted on the *other* systems, so an anomaly
   cannot raise its own floor; `flux_tension` = a system's highest-|z| image with |z| > 3 (ASSUMPTION);
   `mu_unstable` (whole system) where > 16 % of rows exceed |μ| = 20 (none here). `--inject-mag` measures recovery
-  by making each consistent image fainter in turn. Tests: synthetic chain, μ spread, critical-curve rows, floor.
+  by making each consistent image fainter in turn (flux and S/N scaled together). Tests: synthetic chain, μ spread, critical-curve rows, floor.
 - **Hypothesis before running:** chain μ errors are ≪ the 0.5–0.6 mag rms, so the scatter is photometric
   (halo light, faint counterparts) and the flags do not change. If instead the model error were ≳ 0.3 mag, the
   fixed 0.75 mag threshold would be too strict near critical curves and the next step would be model systematics.
@@ -20,7 +20,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Injection-recovery (simulated, 30 / 21 target images; flux and S/N scaled together, so a faint image can drop
   below S/N 10 and count as missed):** an image made Δ mag fainter is flagged in 17 / 27 / 60 / 93 % (Abell 2744)
   and 24 / 24 / 52 / 62 % (El Gordo) of cases at Δ = 0.5 / 1 / 1.5 / 2 mag. A demagnification by ≳ 4 (Δ ≥ 1.5)
-  is found in about half to most tested images; Δ ≲ 1 mag hides in the scatter. El Gordo loses images to S/N.
+  is found in about half to most tested images; Δ ≲ 1 mag hides in the scatter. S/N losses at Δ = 2: 2 / 30
+  (Abell 2744) and 8 / 21 (El Gordo). 14 / 30 and 18 / 21 targets are pair members, where a hit detects the system
+  but cannot say which image is faint.
 - SMACS 6.3 cannot be rechecked this way: the Mahler+22 release pins no chain.
 - **Limits:** chain errors are statistical within one model; model-to-model differences are larger (D-044).
 - **Next:** photometry, not the model, limits this test: ICL-aware totals (DJA `_phot_apcorr`, local-background

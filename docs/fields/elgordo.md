@@ -79,7 +79,7 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
   - With `--mu-samples 100` (D-032 addendum 2026-10-13): model error median 0.07 mag (max 0.21, 11a/c); scatter floor
     σ_sys 0.32 mag; the only `flux_tension` is 18b/18c (|z| 4.6), the faint-counterpart failure above. Injection:
     21 tested images made fainter are flagged in 24 / 24 / 52 / 62 % at 0.5 / 1 / 1.5 / 2 mag
-    (S/N losses).
+    (flux and S/N scaled; 8 lost to S/N at 2 mag; 18 targets are pair members, not localised).
 
 ## Counter-images and radial screen (2026-10-08, D-034)
 

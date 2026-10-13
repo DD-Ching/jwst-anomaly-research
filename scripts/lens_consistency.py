@@ -1726,9 +1726,18 @@ def tension_recovery(
     keep = np.isin(np.asarray(phot["dja_id"]), ids[ids >= 0])
     sub = phot[keep]  # only the matched rows: same matches, ~1000x faster
     targets = np.flatnonzero(np.asarray(base["tension_class"]) == "consistent")
-    out = {"n_targets": int(targets.size), "recovered_fraction": {}}
+    systems = np.asarray(base["system"]).astype(str)
+    tested = np.isfinite(np.asarray(base["resid_mag"], float))
+    # in a pair the two residuals mirror each other: a hit detects the system, not the image
+    n_pair = sum(int(np.sum(tested & (systems == systems[i]))) == 2 for i in targets)
+    out = {
+        "n_targets": int(targets.size),
+        "n_pair_targets": n_pair,
+        "recovered_fraction": {},
+        "n_untested": {},
+    }
     for d in deltas:
-        hits = 0
+        hits = lost = 0
         for i in targets:
             ph = sub.copy()
             k = np.asarray(ph["dja_id"]) == ids[i]
@@ -1736,7 +1745,9 @@ def tension_recovery(
             ph["magerr_auto"][k] *= 10 ** (0.4 * d)
             t = flux_ratio_table(model, images, z_m_limit, ph, **kw)
             hits += t["tension_class"][i] == "flux_tension"
+            lost += t["tension_class"][i] == "untested"  # e.g. fell below min_snr
         out["recovered_fraction"][str(d)] = round(hits / targets.size, 3) if targets.size else None
+        out["n_untested"][str(d)] = int(lost)
     return out
 
 
