@@ -83,6 +83,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.55 (gb14 injections 5–6, re-vet, limit, combine) | — | — | 0.15 (orientation, base merge, PR) | cloud routine 01B15J5c, 04:08–04:50Z |
 | 2026-W42 | — | — | 0.5 (X1 S4: model-free disk bound, einsteinpy check) | 0.15 (orientation, claim, PR) | cloud routine 01BSu1H7, 05:08–05:50Z; S4 is an independent check, so it counts as verification |
 | 2026-W42 | — | — | 0.3 (X1 S4b: image weights, second route) | 0.15 (orientation, claim, X1 closure, PR) | cloud routine 01QLViGu, 06:08–06:30Z |
+| 2026-W42 | ≈ 0.35 (Abell 2744 `fluxratios`, D-032 addendum) | — | — | 0.15 (orientation, claim, PR) | cloud routine 01EaLT96, 07:08–07:35Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

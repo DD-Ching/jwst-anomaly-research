@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: Abell 2744 flux-ratio and colour test on DJA v7.2: no anomaly
+- `lens_consistency.py --model abell2744-bergamini23 fluxratios` on DJA v7.2 `fix_phot` + `eazypy.zout` (233.5 +
+  63.6 MB, sha256 matched; downloaded to the cloud session disk and deleted after use; reason in D-032 addendum).
+- **Hypothesis before running:** no image deviates beyond the D-032 thresholds (0.75 mag flux, 0.3 mag colour;
+  ASSUMPTIONs) once instrument, blending and counterpart explanations are tested; a flag that survives the contact
+  sheet and a second photometry route would go to `/vet-candidate`.
+- **Result (derived):** frame offset negligible (−0.010″, −0.010″). 65 / 149 images matched; 34 flux-tested (median
+  |r| 0.17 mag, rms 0.60), 35 colour-tested (median 0.06, rms 0.28). 7 flags, all ordinary on the contact sheet:
+  BCG/ICL halo light (600.1b, 602.1c), a faint Lyα counterpart whose sign flips between DJA and forced i2d
+  photometry (42.1a/c), a resolved giant-arc aperture (3.1b/c colour) and a near-blend (34.1c). **No anomaly.**
+  Details: docs/fields/abell2744.md.
+- **Failed approach:** forced photometry on one UNCOVER tile (2561 t003) cannot settle continuum-faint Lyα images.
+- **Next:** an ICL-aware total (local-background Kron or the DJA `_phot_apcorr` columns) for images on cluster-galaxy
+  halos in all three fields; `bayes.dat` μ errors in `fluxratios` (then a χ² in place of fixed thresholds).
+
 ## 2026-10-13: X1 S4b: the tracer's image weights pass an independent check; X1 closed
 - New `scripts/x1_s4b.py` → `results/x1/s4b_image_weights.json`; `tests/test_x1_s4b.py`; `x1_tracer.image_mag`
   extracted (no numeric change). Gate written in docs/state/units/X1.md before the run (commit 75bd7b7). Hours count
