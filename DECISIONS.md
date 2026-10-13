@@ -1273,7 +1273,7 @@ alone does not make a source a flip, and `anti_probability` (Seitz & Schneider) 
 sources whose κ range stays clear of 1, and a source with κ near 1 is checked against κ(z) and a second model.
 Scan (`results/arcs/anti_flip_scan.json`): 1788 and MACS1149 1703 are κ ≈ 1.01–1.06 flips with weak predicted
 distortion (explained). Abell 370 1565 is not: κ 0.76–0.82, q_lens ≤ 0.14, P(anti) ≤ 2e-4 in both models,
-band-consistent axis; it is an unvetted flag (docs/fields/abell370.md), and the five-field g_min < 1 statement in
+band-consistent axis, and the Sharon, GLAFIC and Keeton v4 maps agree (κ 0.75–0.81, q_lens ≤ 0.08); it is an unvetted flag (docs/fields/abell370.md), and the five-field g_min < 1 statement in
 addendum 3 stands for the other six.
 
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)

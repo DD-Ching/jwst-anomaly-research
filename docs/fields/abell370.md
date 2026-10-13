@@ -144,6 +144,10 @@ and `derived`). CANUCS DR1 95 % ranges (Z025–Z975, `observed` catalogue values
   F200W 1.5 μJy) lies 1.2″ to the SE. The model's counter-image is 12″ NNW (39.979289, −1.580843; μ ≈ +14, so ≈
   28.9 mag): CANUCS sources there at 0.52″ and 0.85″ have F200W 8 ± 5 and 21 ± 4 nJy and colours unlike 1565's
   (F150W/F200W 0.47, F277W/F200W 1.1). Inconclusive.
+- **Three more published models** (HFF v4 κ/γ maps at one pixel, scaled by D_LS/D_S; SOURCES): Sharon κ 0.79–0.81,
+  GLAFIC 0.76–0.78, Keeton 0.75–0.77 at z 2.8–3.2 (≤ 0.87 at z = 8); q_lens 0.00–0.08. Shear axis PA 56° / 58° / 63°
+  if γ1 is along the map's pixel x axis (that convention reproduces CANUCS's 58°). All five models predict a strong
+  tangential stretch; model choice does not explain 1565.
 - **Status: unvetted flag, not a candidate.** Ordinary explanations still open: a member tidal feature or a blend
   (the structure through 1562), a low-z photo-z solution (Z025 0.40; P(anti) 0.10 at z 0.6 and 0.24–0.33 below z ≈ 0.45), and an unmodelled
-  local perturber. Next: `/vet-candidate`.
+  local perturber (five models agree, so only a perturber none of them contains). Next: `/vet-candidate`.

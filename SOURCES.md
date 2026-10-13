@@ -556,6 +556,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 
 - JWST program 6882 (VENUS, PI Fujimoto), observation 29 `jw06882-o029_t063`, 10 NIRCam bands, jwst 3.0.0, released
   2025-11-03. Manifests: `data/manifests/macs0717*.ecsv`.
+- HFF Abell 370 v4 κ/γ1/γ2 maps (D_LS/D_S = 1), Sharon, GLAFIC and Keeton, read by byte range at one pixel
+  (Abell 370 1565, D-024 addendum 4), accessed 2026-10-13, not hashed (single-pixel reads):
+  `https://archive.stsci.edu/pub/hlsp/frontier/abell370/models/{sharon,glafic,keeton}/v4/hlsp_frontier_model_abell370_<model>_v4_{kappa,gamma1,gamma2}.fits`
+  (kappa files 64,008,000 / 127,998,720 / 64,039,680 B; Last-Modified 2017-10-09 / 2017-11-18 / 2017-10-09).
 - HFF MACS0717 second models, https://archive.stsci.edu/pub/hlsp/frontier/macs0717/models/<team>/<version>/. They
   were read by byte range (κ/γ) or solved in scratch code and then deleted (Sharon and Keeton deflection maps). Full
   sha256 values were streamed on 2026-10-08. The deflection-map prefixes match those recorded during the run.
