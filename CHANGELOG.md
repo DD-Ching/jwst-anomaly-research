@@ -2,7 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-12: W3 MOA-II gb14 (twenty-first field), in progress
+## 2026-10-13: W3 MOA-II gb14 (twenty-first field): 0 survivors; combined limit over twenty-one fields
+- **Result:** 103 flags, 0 survive; combined Γ₉₅ ≈ 1.2 × 10⁻⁸–7.4 × 10⁻⁸ W3 events per star per year (was
+  1.4–7.8 × 10⁻⁸; gb14 tightens every cell by 5–10 %). Details: docs/exotic_limits.md "gb14" and the combined table.
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
   goes to `/vet-candidate` before injections. Plan: stream the tar in tracked pre-screen chunks across routine slots,
   then fit, vet, inject (6 chunks), limit, combine.
@@ -30,6 +32,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   PSPL 0 / 33. Chunks 1–4 together: W3 1,334 → 145 flagged → 72 recovered; PSPL 0 / 134 flagged. Chunk 5 was
   stopped at the 40-min mark (nothing written). **Next:** `merge-prescreen`, `merge-chunks --n 4` (fresh clone),
   `inject --procs 4 --chunk 5/6` and `6/6`, `merge-inject --n 6`, `limit`, `combine`, docs/exotic_limits.md, PR ready.
+- Run 5 (cloud, 04:10–04:45Z, session 01B15J5c): `merge-prescreen`, `merge-chunks --n 4`, injection chunks 5/6 (366 in
+  496 s, 0 errors, W3 333 → 31 flagged → 12 recovered, PSPL 0 / 33) and 6/6 (366 in 449 s, 0 errors, W3 333 → 30 → 13,
+  PSPL 0 / 33). All six: W3 2,000 → 206 flagged → 97 recovered (47 %); PSPL 0 / 200 flagged. `limit` first failed:
+  the tracked `results/w3_moa/vetting_gb14.json` is the summary, without the `chain` stamp `limit` checks, and the
+  full record lived only in run 3's `data/derived/`. Re-ran `vet --procs 4` (~3 min): 0 survivors, funnel identical
+  to run 3. Contact sheet re-inspected: same picture. gb14 limits 1.3 × 10⁻⁷–1.4 × 10⁻⁶ per cell; `combine` over 21
+  fields. MOA-II is now complete except gb13 (#145, owner). **Next (W3):** gb13 after the owner's decision; another
+  MOA-II-like field moves the combined limit by ≲ 10 %, so new W3 coverage should come from a new survey.
 
 ## 2026-10-13: Trial tally covers every run (trial-2026-10-13.1)
 - Acceptance check of D-083:
