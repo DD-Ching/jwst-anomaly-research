@@ -16,8 +16,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   at fixed R, so no S1–S4 number changes.
 - **X1 closed** (3.7 / 20 h). Conditional results and the reopen inputs: docs/state/units/X1.md "Closure". Both
   trial slots are now empty; a new unit needs an S0-passed direction (T3).
-- **Next:** routine searches are under their weekly share (T1): the next W3 MOA-II field, per the `w3-survey` skill
-  and the newest W3 entry below.
+- **Next:** routine searches are under their weekly share (T1). MOA-II has no field left except gb13 (waits on the
+  owner, #145), so the next routine W3 unit is TASKS.md "Now" W3 item: Gaia DR3 variables with epoch photometry
+  (first check by injection whether W3 survives the variability classifier; harness `scripts/w3_gaia.py`, D-061) or
+  KMTNet public seasons.
 
 ## 2026-10-13: X1 S4: the model-free disk bound is consistent with S3, but S3's Δχ² rests on the traced centroid
 - New `scripts/x1_s4.py` → `results/x1/s4_disk_bound.json`; `tests/test_x1_s4.py`. Gate written in
