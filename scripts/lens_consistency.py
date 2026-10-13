@@ -79,6 +79,13 @@ Two subcommands, both writing to ``outputs/lens_consistency/<model>/`` (ECSV plu
     unreliable). Ordinary explanations of an outlier: blending, segmentation, microlensing,
     substructure the model omits, time delay with variability. The model parity (sign of μ) is
     reported but not tested.
+    With ``--mu-samples N`` (models with a pinned ``bayes.dat``), μ is re-evaluated at N chain
+    rows; half the 16-84 % range of each image's residual is its model error. ``resid_z`` adds
+    a scatter floor (the extra error that makes the median |z| 0.6745) fitted on the *other*
+    systems (``sigma_sys`` in the summary is the all-system value, for reference only), and
+    ``flux_tension`` marks a system's highest-|z| image with |z| > ``--tension-sigma``;
+    ``mu_unstable`` marks systems whose μ the chain cannot pin. ``--inject-mag`` measures the
+    recovery of an image made fainter (flux and S/N scaled together).
 
 Every threshold here is an ASSUMPTION. Inputs: the pinned model files (downloaded and verified by
 sha256, ``SMACS0723_MAHLER22_ICLV2``), a level-3 ``_cat.ecsv`` and optionally a ``zout`` file.
@@ -687,6 +694,54 @@ def _pct(values, q=(16, 50, 84)) -> list[float] | None:
     return [round(float(x), 3) for x in np.percentile(v, q)] if len(v) else None
 
 
+def load_chain(name: str, par: dict) -> tuple[Table, int, float, int | dict[str, float]]:
+    """The model's pinned ``bayes.dat``, best.par's row in it, that row's largest parameter
+    difference, and the potfile reference for :func:`lensmodel.posterior_par` (D-045)."""
+    spec = MODELS[name]
+    if "bayes" not in spec:
+        raise SystemExit(f"error: {name} has no pinned bayes.dat")
+    bayes = lensmodel.read_lenstool_bayes(fetch_catalog(*spec["bayes"]))
+    best, best_diff = lensmodel.best_sample_index(par, bayes)
+    if "potfile_mag0" in spec:
+        reference = lensmodel.potfile_reference(par, spec["potfile_mag0"])
+    elif best_diff > 1e-3:
+        raise SystemExit(f"error: best.par is not a row of bayes.dat (max diff {best_diff:.3g})")
+    else:
+        reference = best
+    return bayes, best, best_diff, reference
+
+
+def chain_magnifications(
+    name: str, par: dict, images: Table, n_samples: int, seed: int = 1
+) -> tuple[np.ndarray, dict]:
+    """Signed μ of every catalogued image at ``n_samples`` random rows of the model's
+    ``bayes.dat`` (shape ``n_samples x len(images)``; NaN without a redshift), each row's
+    family redshifts included. ``model_prediction``; returns the array and a provenance dict."""
+    bayes, best, best_diff, reference = load_chain(name, par)
+    if not 0 < n_samples <= len(bayes):
+        raise SystemExit(f"error: --mu-samples must be 1..{len(bayes)} (chain rows)")
+    rows = np.random.default_rng(seed).choice(len(bayes), n_samples, replace=False)
+    mu = np.full((n_samples, len(images)), np.nan)
+    for k, row in enumerate(rows):
+        p = lensmodel.posterior_par(par, bayes, int(row), reference)
+        z = lensmodel.image_redshifts(images, p["z_m_limit"])
+        ok = np.isfinite(z)
+        if ok.any():
+            pred = lensmodel.LensModel.from_par(p).evaluate(
+                images["ra"][ok], images["dec"][ok], z[ok]
+            )
+            mu[k, ok] = np.asarray(pred["magnification"], float)
+    info = {
+        "bayes_sha256": bayes.meta["sha256"],
+        "n_chain_rows": len(bayes),
+        "best_row": best,
+        "best_row_max_diff": best_diff,
+        "n_samples": n_samples,
+        "seed": seed,
+    }
+    return mu, info
+
+
 def cmd_posterior(args) -> dict:
     """Image-plane predictions of selected families over the model's MCMC samples (D-045).
 
@@ -697,19 +752,11 @@ def cmd_posterior(args) -> dict:
     the best-fit row are followed through the samples (nearest extra within
     ``--follow-arcsec``). Everything is ``model_prediction``.
     """
-    spec = MODELS[args.model]
-    if "bayes" not in spec:
+    if "bayes" not in MODELS[args.model]:  # before any download
         raise SystemExit(f"error: {args.model} has no pinned bayes.dat")
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
-    bayes = lensmodel.read_lenstool_bayes(fetch_catalog(*spec["bayes"]))
-    best, best_diff = lensmodel.best_sample_index(par, bayes)
-    if "potfile_mag0" in spec:
-        reference = lensmodel.potfile_reference(par, spec["potfile_mag0"])
-    elif best_diff > 1e-3:
-        raise SystemExit(f"error: best.par is not a row of bayes.dat (max diff {best_diff:.3g})")
-    else:
-        reference = best
+    bayes, best, best_diff, reference = load_chain(args.model, par)
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
     systems = [lensmodel.system_key(x) for x in args.systems.split(",")]
     images = images[np.isin(np.asarray(images["system"]).astype(str), systems)]
@@ -1487,8 +1534,24 @@ def flux_ratio_table(
     colour_tol: float = 0.3,
     max_npix: int = 20000,
     z_margin: float = 0.15,
+    mu_samples: np.ndarray | None = None,
+    tension_sigma: float = 3.0,
+    unstable_frac: float = 0.16,
 ) -> Table:
-    """Per-image source-magnitude and colour residuals (see ``fluxratios``)."""
+    """Per-image source-magnitude and colour residuals (see ``fluxratios``).
+
+    With ``mu_samples`` (signed μ, one row per chain sample: :func:`chain_magnifications`), each
+    sample's leave-one-out residual is recomputed on the best fit's usable images; half its
+    16-84 % range is the model error ``resid_model_err`` (NaN without samples).
+    ``resid_z`` divides the residual by the photometric and model errors plus a scatter floor,
+    the extra error that makes the median |z| 0.6745 (a normal's; a pair counts once; >= 3
+    residuals, else NaN) over the *other* systems; ``meta["sigma_sys"]`` is the all-system floor.
+    ``flux_tension`` marks each system's image of largest |resid_z| when it exceeds
+    ``tension_sigma``: discrepant beyond the field's own scatter. ``mu_unstable`` replaces it
+    for a whole system when more than ``unstable_frac`` of the rows put one of its images
+    beyond ``max_abs_mu`` (the chain cannot pin that μ). Every chain row keeps the best fit's
+    usable set; a system with a non-finite μ in a row sits that row out. Images of a system
+    of three or more are correlated but each enters the floor's median."""
     z = lensmodel.image_redshifts(images, z_m_limit)
     ok_z = np.isfinite(z)
     mu = np.full(len(images), np.nan)
@@ -1532,6 +1595,58 @@ def flux_ratio_table(
     use_m = base & np.isfinite(src) & (snr_auto >= min_snr)
     use_c = matched & ~bad & np.isfinite(c_obs) & (snr1 >= min_snr) & (snr2 >= min_snr)
     resid, resid_err, worst = _loo_residual(src, magerr, use_m, systems)
+    model_err = np.full(len(images), np.nan)
+    mu_unstable = np.zeros(len(images), bool)
+    if mu_samples is not None:
+        mu_samples = np.asarray(mu_samples, float)
+        if mu_samples.ndim != 2 or mu_samples.shape[1] != len(images):
+            raise ValueError(f"mu_samples must be (n_samples, {len(images)})")
+        r_s = []
+        for m in mu_samples:
+            with np.errstate(divide="ignore", invalid="ignore"):
+                src_s = mag + 2.5 * np.log10(np.abs(m))
+            # the best fit's reference set in every row; a system with a usable image at
+            # μ = 0 / inf / NaN in this row sits the row out instead of changing its reference
+            r = _loo_residual(
+                np.nan_to_num(src_s, nan=0.0, posinf=0.0, neginf=0.0), magerr, use_m, systems
+            )[0]
+            r[np.isin(systems, systems[use_m & ~np.isfinite(src_s)])] = np.nan
+            r_s.append(r)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)  # all-NaN columns (untested)
+            lo, hi = np.nanpercentile(np.array(r_s), [16, 84], axis=0)
+        model_err = np.where(np.isfinite(resid), 0.5 * (hi - lo), np.nan)
+        # the chain cannot pin μ when > unstable_frac of rows put an image beyond the |μ| cut;
+        # its siblings share it in their references, so the whole system is unstable
+        with np.errstate(invalid="ignore"):
+            beyond = ~(np.abs(mu_samples) <= max_abs_mu)
+        bad_img = np.isfinite(resid) & (beyond.mean(axis=0) > unstable_frac)
+        mu_unstable = np.isfinite(resid) & np.isin(systems, systems[bad_img])
+        stat_err = np.hypot(resid_err, model_err)
+    else:
+        stat_err = resid_err
+    # a pair's two residuals are one measurement: count it once in the floor
+    once = np.isfinite(resid) & np.isfinite(stat_err) & ~mu_unstable
+    for sys_id in dict.fromkeys(systems):
+        ii = np.flatnonzero((systems == sys_id) & once)
+        if ii.size == 2:
+            once[ii[1]] = False
+    sigma_sys = _scatter_floor(resid[once], stat_err[once])
+    # each system is judged against the floor of the *other* systems, so an anomaly cannot
+    # raise the floor that judges it
+    floor = np.full(len(images), np.nan)
+    for sys_id in dict.fromkeys(systems):
+        k = systems == sys_id
+        if np.isfinite(resid[k]).any():
+            floor[k] = _scatter_floor(resid[once & ~k], stat_err[once & ~k])
+    with np.errstate(invalid="ignore"):
+        resid_z = resid / np.hypot(stat_err, floor)
+    worst_z = np.zeros(len(images), bool)  # each system's most significant |resid_z|
+    for sys_id in dict.fromkeys(systems):
+        ii = np.flatnonzero((systems == sys_id) & np.isfinite(resid_z))
+        if ii.size:
+            a = np.abs(resid_z[ii])
+            worst_z[ii[np.isclose(a, a.max())]] = True
     c_resid, c_resid_err, c_worst = _loo_residual(c_obs, c_err, use_c, systems)
     cname = f"{colour[0]}_{colour[1]}"
     out = Table(
@@ -1553,6 +1668,8 @@ def flux_ratio_table(
             "source_mag": src,
             "resid_mag": resid,
             "resid_err": resid_err,
+            "resid_model_err": model_err,
+            "resid_z": resid_z,
             f"colour_{cname}": c_obs,
             "colour_resid": c_resid,
             "colour_err": c_resid_err,
@@ -1562,6 +1679,11 @@ def flux_ratio_table(
     cls[np.isfinite(resid)] = "consistent"
     cls[worst & (np.abs(resid) > outlier_mag)] = "flux_outlier"
     out["flux_class"] = cls
+    tension = np.full(len(images), "untested", dtype="U16")
+    tension[np.isfinite(resid_z)] = "consistent"
+    tension[worst_z & (np.abs(resid_z) > tension_sigma)] = "flux_tension"
+    tension[mu_unstable] = "mu_unstable"
+    out["tension_class"] = tension
     ccls = np.full(len(images), "untested", dtype="U16")
     ccls[np.isfinite(c_resid)] = "consistent"
     ccls[c_worst & (np.abs(c_resid) > colour_tol)] = "colour_outlier"
@@ -1582,9 +1704,71 @@ def flux_ratio_table(
             "max_npix": max_npix,
             "z_margin": z_margin,
             "photoz": "z025-z975" if "z025" in phot.colnames else None,
+            "tension_sigma": tension_sigma,
+            "unstable_frac": unstable_frac,
         },
+        sigma_sys=_r(sigma_sys, 3),
+        n_mu_samples=0 if mu_samples is None else len(mu_samples),
     )
     return out
+
+
+def tension_recovery(
+    model, images: Table, z_m_limit: dict[str, float], phot: Table, deltas, **kw
+) -> dict:
+    """Injection-recovery of ``flux_tension``: each tension-consistent tested image in turn is
+    made ``delta`` mag fainter (a demagnified image): ``mag_auto`` + delta and ``magerr_auto``
+    x 10^(0.4 delta) (same noise, lower flux), so it can also fall below ``min_snr`` and count
+    as missed. The fraction of injections flagged on that image is the recovery at ``delta``.
+    ``kw`` goes to :func:`flux_ratio_table` (``mu_samples`` included). Simulated, not observed."""
+    base = flux_ratio_table(model, images, z_m_limit, phot, **kw)
+    ids = np.asarray(base["dja_id"])
+    keep = np.isin(np.asarray(phot["dja_id"]), ids[ids >= 0])
+    sub = phot[keep]  # only the matched rows: same matches, ~1000x faster
+    targets = np.flatnonzero(np.asarray(base["tension_class"]) == "consistent")
+    systems = np.asarray(base["system"]).astype(str)
+    tested = np.isfinite(np.asarray(base["resid_mag"], float))
+    # in a pair the two residuals mirror each other: a hit detects the system, not the image
+    n_pair = sum(int(np.sum(tested & (systems == systems[i]))) == 2 for i in targets)
+    out = {
+        "n_targets": int(targets.size),
+        "n_pair_targets": n_pair,
+        "recovered_fraction": {},
+        "n_untested": {},
+    }
+    for d in deltas:
+        hits = lost = 0
+        for i in targets:
+            ph = sub.copy()
+            k = np.asarray(ph["dja_id"]) == ids[i]
+            ph["mag_auto"][k] += d
+            ph["magerr_auto"][k] *= 10 ** (0.4 * d)
+            t = flux_ratio_table(model, images, z_m_limit, ph, **kw)
+            hits += t["tension_class"][i] == "flux_tension"
+            lost += t["tension_class"][i] == "untested"  # e.g. fell below min_snr
+        out["recovered_fraction"][str(d)] = round(hits / targets.size, 3) if targets.size else None
+        out["n_untested"][str(d)] = int(lost)
+    return out
+
+
+def _scatter_floor(resid: np.ndarray, err: np.ndarray, target: float = 0.6745) -> float:
+    """The extra error ``s`` with median |resid| / sqrt(err² + s²) = ``target`` (0 when the
+    errors already explain the scatter; NaN with fewer than 3 residuals)."""
+    ok = np.isfinite(resid) & np.isfinite(err)
+    r, e = np.abs(resid[ok]), err[ok]
+    if r.size < 3:
+        return np.nan
+
+    def med(s: float) -> float:
+        return float(np.median(r / np.hypot(e, s)))
+
+    if med(0.0) <= target:
+        return 0.0
+    lo, hi = 0.0, float(r.max()) / target * 2 + 1.0
+    for _ in range(60):  # med() decreases monotonically in s
+        mid = 0.5 * (lo + hi)
+        lo, hi = (mid, hi) if med(mid) > target else (lo, mid)
+    return 0.5 * (lo + hi)
 
 
 def _resid_stats(r: np.ndarray) -> dict:
@@ -1604,6 +1788,8 @@ def cmd_fluxratios(args) -> dict:
             f"error: {args.model}: fluxratios needs a Lenstool model with a usable multiple-image "
             "list (gated off by the image-plane rms gate of D-035 / D-044, or a map model)"
         )
+    if args.mu_samples and "bayes" not in MODELS[args.model]:  # before any download
+        raise SystemExit(f"error: {args.model} has no pinned bayes.dat")
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
@@ -1616,12 +1802,13 @@ def cmd_fluxratios(args) -> dict:
         offset = tuple(MODELS[args.model].get("frame_offset_arcsec", (0.0, 0.0)))
     else:
         offset = tuple(args.offset_arcsec)
-    table = flux_ratio_table(
-        model,
-        images,
-        par["z_m_limit"],
-        phot,
-        colour,
+    mu_samples, chain = None, None
+    if args.mu_samples:
+        mu_samples, chain = chain_magnifications(
+            args.model, par, images, args.mu_samples, args.seed
+        )
+    kw = dict(
+        colour=colour,
         match_arcsec=args.match_arcsec,
         offset_arcsec=offset,
         min_snr=args.min_snr,
@@ -1630,9 +1817,14 @@ def cmd_fluxratios(args) -> dict:
         colour_tol=args.colour_tol,
         max_npix=args.max_npix,
         z_margin=args.z_margin,
+        mu_samples=mu_samples,
+        tension_sigma=args.tension_sigma,
     )
+    table = flux_ratio_table(model, images, par["z_m_limit"], phot, **kw)
     out = args.out / args.model
     _write(table, out / "flux_ratios.ecsv")
+    model_err = np.asarray(table["resid_model_err"], float)
+    model_err = model_err[np.isfinite(model_err)]
     summary = {
         "model": args.model,
         "photometry": str(args.photometry),
@@ -1650,6 +1842,18 @@ def cmd_fluxratios(args) -> dict:
             c: int(np.sum(table["colour_class"] == c))
             for c in ("consistent", "colour_outlier", "untested")
         },
+        "tension_classes": {
+            c: int(np.sum(table["tension_class"] == c))
+            for c in ("consistent", "flux_tension", "mu_unstable", "untested")
+        },
+        "chain": chain,
+        "resid_model_err_median": _r(np.median(model_err), 3) if model_err.size else None,
+        "sigma_sys": table.meta["sigma_sys"],
+        "injection_recovery": (
+            tension_recovery(model, images, par["z_m_limit"], phot, args.inject_mag, **kw)
+            if args.inject_mag
+            else None
+        ),
         "flux_resid_mag": _resid_stats(np.asarray(table["resid_mag"], float)),
         "colour_resid_mag": _resid_stats(np.asarray(table["colour_resid"], float)),
         "flagged": [
@@ -1659,15 +1863,20 @@ def cmd_fluxratios(args) -> dict:
                 "colour_class": str(r["colour_class"]),
                 "mu": _r(r["magnification"]),
                 "resid_mag": _r(r["resid_mag"]),
+                "resid_model_err": _r(r["resid_model_err"]),
+                "resid_z": _r(r["resid_z"]),
+                "tension_class": str(r["tension_class"]),
                 "colour_resid": _r(r["colour_resid"]),
                 "photoz_excluded": bool(r["photoz_excluded"]),
                 "npix": int(r["npix"]),
             }
             for r in table
-            if r["flux_class"] == "flux_outlier" or r["colour_class"] == "colour_outlier"
+            if r["flux_class"] == "flux_outlier"
+            or r["colour_class"] == "colour_outlier"
+            or r["tension_class"] in ("flux_tension", "mu_unstable")
         ],
     }
-    (out / "fluxratios.json").write_text(json.dumps(summary, indent=1))
+    (out / "fluxratios.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary
 
 
@@ -1725,6 +1934,14 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--max-npix", type=int, default=20000, help="larger DJA segments are blends")
     f.add_argument("--photoz", type=Path, help="DJA eazy zout matching --photometry row by row")
     f.add_argument("--z-margin", type=float, default=0.15, help="photo-z margin, x (1 + z)")
+    f.add_argument(
+        "--mu-samples", type=int, default=0, help="bayes.dat rows for the model μ error (0: none)"
+    )
+    f.add_argument("--seed", type=int, default=1, help="bayes.dat row draw")
+    f.add_argument("--tension-sigma", type=float, default=3.0, help="flux_tension threshold")
+    f.add_argument(
+        "--inject-mag", type=float, nargs="*", help="fainter-by deltas for tension recovery"
+    )
     po = sub.add_parser("posterior", help="selected families over the MCMC samples (bayes.dat)")
     po.add_argument("--systems", required=True, help="comma-separated families, e.g. 3.2,34.1")
     po.add_argument("--samples", type=int, default=20, help="random chain rows besides the best")

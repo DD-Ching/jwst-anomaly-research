@@ -76,6 +76,10 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
     - 3.1b/3.1c colour (0.32, σ 0.02): 3.1b is a 0.5″ aperture on the μ ≈ −115 giant arc, which samples one part of
       a resolved source. 34.1c colour (0.59, σ 0.08): a 25.8 mag counterpart 0.22″ off, next to a second blob.
   - **No flux-ratio or colour anomaly.** Untested: 115 images (faint, unmatched in the core, |μ| > 20).
+  - With `--mu-samples 100` (D-032 addendum, `bayes.dat` μ errors): model error median 0.04 mag (max 0.14, 602.1c);
+    scatter floor σ_sys 0.36 mag. The four flux flags are the only `flux_tension`s (|z| 6.2–8.5), all explained above.
+    Injection: 30 tested images made fainter are flagged in 17 / 27 / 60 / 93 % at 0.5 / 1 / 1.5 / 2 mag
+    (flux and S/N scaled; 2 lost to S/N at 2 mag; 14 targets are pair members, not localised).
 
 ## Run
 
