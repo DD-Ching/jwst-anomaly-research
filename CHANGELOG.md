@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: (in progress) g_min ≥ 1 anti arcs: redshift scan across the critical curve
+- Claim: cloud routine; plan: z scan of each g_min ≥ 1 anti source against its photo-z range and chain spread.
+
 ## 2026-10-13: arc orientations in Abell 370: a 4-vs-0.94 anti excess, all at critical curves or intrinsic shapes
 - `lens_consistency.py arcs` (unchanged) with the CANUCS DR1 model and photo-z. Known images: 53/59 within 30°; the
   two beyond 60° are knots of the resolved spiral system 6.
