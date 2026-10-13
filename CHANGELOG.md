@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: (in progress) ICL-aware totals for halo images in `fluxratios`
+- Plan: local-background (ICL-subtracted) photometry for images on cluster-galaxy halos, then re-run `--mu-samples`.
+
 ## 2026-10-13: `fluxratios` with `bayes.dat` μ errors: model statistics do not explain the flux scatter
 - `lens_consistency.py fluxratios --mu-samples N`: μ at N random chain rows (`chain_magnifications`, family
   redshifts included); each image's model error is half the 16–84 % range of its leave-one-out residual. `resid_z`
