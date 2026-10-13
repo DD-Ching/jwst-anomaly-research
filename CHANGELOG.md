@@ -2,6 +2,8 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: (in progress) halo-subtracted F444W fluxes into the fluxratios tension test, Abell 2744
+
 ## 2026-10-13: halo_phot elongation gate: El Gordo 1c's flag was an arc; few images stay testable; no anomaly
 - **Hypothesis before running:** the El Gordo 1c flag (previous entry) is an arc knot that passed the concentration
   gate; an axis-ratio gate removes it and leaves star-like images. A flag surviving the gate would go to vetting.
