@@ -8,7 +8,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   then fit, vet, inject (6 chunks), limit, combine.
 - Run 1 (cloud, 22:29–22:47Z, `prescreen --procs 4`, `timeout 1080`): chunks 1–16 of 50 tracked (0 errors, CPU 99 %;
   streamed, nothing stored; 16 chunks in 18 min). Per-chunk `wall_time_s` rose 70 → 159 s within the run, the
-  overlapping-window artifact noted in TASKS.md. **Next:** `prescreen --procs 4 --chunks 17-50`.
+  overlapping-window artifact noted in TASKS.md.
+- Run 2 (cloud, 2026-10-13 00:09–00:46Z, two `prescreen --procs 4` calls, `timeout 1560` then `600`): chunks 17–45
+  tracked (0 errors, CPU 99 % until the last minutes). The archive throughput fell from ~65 MB/s to ~0–4 MB/s with
+  4 retries near 00:44Z, so chunk 46 did not finish before the timeout. **Next:** `prescreen --procs 4 --chunks 46-50`,
+  then merge-prescreen, fit (4 chunks; `.[dev,cloud,mulens]`), merge-chunks, vet, inject (6 chunks), limit, combine.
 
 ## 2026-10-12: W3 MOA-II gb10 (twentieth field): 0 survivors; combined limit over twenty fields
 - Hypothesis before running: 0 survivors under CHAIN_VERSION 2026-10-10.1; a survivor with caustic spikes in the data
