@@ -1749,6 +1749,11 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   `fluxratio`.
 - Map resolution limits the Hessian near critical curves (0.04″ pixels).
 
+**Addendum (2026-10-13, Scofield+2025 maps).** Not pinned as a `MapLensModel`: the four M5-G1 maps are 1.1 GB each
+(11792², float64, 0.02″), and their deflection unit is undocumented (an empirical 0.0218–0.0223″ per unit reproduces
+the κ map and the constraint images; docs/fields/sunrise.md). `scripts/sunrise_scofield.py` reads per-image patches
+by byte range instead. Revisit when the authors state the unit (then pin a cutout as a map model).
+
 ## D-034 Counter-image and radial-screen rules from El Gordo (2026-10-08)
 
 **Decision.** Four rules, each from an ordinary false flag in El Gordo (docs/fields/elgordo.md), so later fields skip
