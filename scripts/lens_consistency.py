@@ -81,8 +81,11 @@ Two subcommands, both writing to ``outputs/lens_consistency/<model>/`` (ECSV plu
     reported but not tested.
     With ``--mu-samples N`` (models with a pinned ``bayes.dat``), μ is re-evaluated at N chain
     rows; half the 16-84 % range of each image's residual is its model error. ``resid_z`` adds
-    the field's scatter floor ``sigma_sys`` (the extra error that makes the median |z| 0.6745),
-    and ``flux_tension`` marks a system's worst image with |z| > ``--tension-sigma``.
+    a scatter floor (the extra error that makes the median |z| 0.6745) fitted on the *other*
+    systems (``sigma_sys`` in the summary is the all-system value, for reference only), and
+    ``flux_tension`` marks a system's highest-|z| image with |z| > ``--tension-sigma``;
+    ``mu_unstable`` marks systems whose μ the chain cannot pin. ``--inject-mag`` measures the
+    recovery of an image made fainter (flux and S/N scaled together).
 
 Every threshold here is an ASSUMPTION. Inputs: the pinned model files (downloaded and verified by
 sha256, ``SMACS0723_MAHLER22_ICLV2``), a level-3 ``_cat.ecsv`` and optionally a ``zout`` file.
@@ -1538,8 +1541,8 @@ def flux_ratio_table(
     """Per-image source-magnitude and colour residuals (see ``fluxratios``).
 
     With ``mu_samples`` (signed μ, one row per chain sample: :func:`chain_magnifications`), each
-    sample's leave-one-out residual is recomputed under the same cuts applied to that sample's
-    μ; half its 16-84 % range is the model error ``resid_model_err`` (NaN without samples).
+    sample's leave-one-out residual is recomputed on the best fit's usable images; half its
+    16-84 % range is the model error ``resid_model_err`` (NaN without samples).
     ``resid_z`` divides the residual by the photometric and model errors plus a scatter floor,
     the extra error that makes the median |z| 0.6745 (a normal's; a pair counts once; >= 3
     residuals, else NaN) over the *other* systems; ``meta["sigma_sys"]`` is the all-system floor.
@@ -1623,12 +1626,11 @@ def flux_ratio_table(
     else:
         stat_err = resid_err
     # a pair's two residuals are one measurement: count it once in the floor
-    once = np.isfinite(resid)
+    once = np.isfinite(resid) & np.isfinite(stat_err) & ~mu_unstable
     for sys_id in dict.fromkeys(systems):
         ii = np.flatnonzero((systems == sys_id) & once)
         if ii.size == 2:
             once[ii[1]] = False
-    once &= np.isfinite(stat_err) & ~mu_unstable
     sigma_sys = _scatter_floor(resid[once], stat_err[once])
     # each system is judged against the floor of the *other* systems, so an anomaly cannot
     # raise the floor that judges it
@@ -1715,9 +1717,10 @@ def tension_recovery(
     model, images: Table, z_m_limit: dict[str, float], phot: Table, deltas, **kw
 ) -> dict:
     """Injection-recovery of ``flux_tension``: each tension-consistent tested image in turn is
-    made ``delta`` mag fainter (a demagnified image) in ``mag_auto``; the fraction of
-    injections flagged on that image is the recovery at ``delta``. ``kw`` goes to
-    :func:`flux_ratio_table` (``mu_samples`` included). Simulated, not observed."""
+    made ``delta`` mag fainter (a demagnified image): ``mag_auto`` + delta and ``magerr_auto``
+    x 10^(0.4 delta) (same noise, lower flux), so it can also fall below ``min_snr`` and count
+    as missed. The fraction of injections flagged on that image is the recovery at ``delta``.
+    ``kw`` goes to :func:`flux_ratio_table` (``mu_samples`` included). Simulated, not observed."""
     base = flux_ratio_table(model, images, z_m_limit, phot, **kw)
     ids = np.asarray(base["dja_id"])
     keep = np.isin(np.asarray(phot["dja_id"]), ids[ids >= 0])
@@ -1728,7 +1731,9 @@ def tension_recovery(
         hits = 0
         for i in targets:
             ph = sub.copy()
-            ph["mag_auto"][np.asarray(ph["dja_id"]) == ids[i]] += d
+            k = np.asarray(ph["dja_id"]) == ids[i]
+            ph["mag_auto"][k] += d
+            ph["magerr_auto"][k] *= 10 ** (0.4 * d)
             t = flux_ratio_table(model, images, z_m_limit, ph, **kw)
             hits += t["tension_class"][i] == "flux_tension"
         out["recovered_fraction"][str(d)] = round(hits / targets.size, 3) if targets.size else None
@@ -1857,7 +1862,7 @@ def cmd_fluxratios(args) -> dict:
             for r in table
             if r["flux_class"] == "flux_outlier"
             or r["colour_class"] == "colour_outlier"
-            or r["tension_class"] == "flux_tension"
+            or r["tension_class"] in ("flux_tension", "mu_unstable")
         ],
     }
     (out / "fluxratios.json").write_text(json.dumps(summary, indent=1) + "\n")

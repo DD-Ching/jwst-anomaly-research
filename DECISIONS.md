@@ -1654,7 +1654,8 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 - `fluxratios --mu-samples N` propagates the published chain (D-045) into each residual; `resid_z` divides by
   photometric ⊕ model errors ⊕ a scatter floor (median |z| = 0.6745) fitted on the other systems, and
   `flux_tension` flags a system's highest-|z| image at |z| > 3 (ASSUMPTION). The fixed 0.75 mag `flux_outlier`
-  stays for continuity. `--inject-mag` calibrates it: 50 % recovery at ≈ 1.2–1.3 mag fainter, 100 % at 2 mag.
+  stays for continuity. `--inject-mag` calibrates it (flux and S/N scaled): 52–60 % recovery at 1.5 mag fainter,
+  62–93 % at 2 mag.
 - Evidence (derived, 100 rows): model error median 0.04 mag (Abell 2744) and 0.07 mag (El Gordo), max 0.14 / 0.21;
   σ_sys 0.36 / 0.32 mag (a pair counted once). The chain explains little of the scatter; photometry dominates. The
   tension flags equal the old flux flags (Abell 2744: 4, |z| 6.2–8.5; El Gordo 18b/c, |z| 4.6), all explained. No

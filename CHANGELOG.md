@@ -17,9 +17,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   floor σ_sys 0.36 and 0.32 mag. The `flux_tension`s are exactly the old `flux_outlier`s: Abell 2744 42.1a/c,
   600.1b, 602.1c (|z| 6.2–8.5; halo light, Lyα counterpart) and El Gordo 18b/c (|z| 4.6; faint counterpart), all
   explained on the contact sheets (D-032). **No anomaly; the hypothesis holds.**
-- **Injection-recovery (simulated, 30 / 21 target images):** an image made Δ mag fainter is flagged in 17 / 30 /
-  67 / 100 % (Abell 2744) and 24 / 29 / 76 / 100 % (El Gordo) of cases at Δ = 0.5 / 1 / 1.5 / 2 mag. So the test
-  finds a demagnified image (factor ≳ 4, Δ ≥ 1.5 mag) in most tested systems; Δ ≲ 1 mag hides in the scatter.
+- **Injection-recovery (simulated, 30 / 21 target images; flux and S/N scaled together, so a faint image can drop
+  below S/N 10 and count as missed):** an image made Δ mag fainter is flagged in 17 / 27 / 60 / 93 % (Abell 2744)
+  and 24 / 24 / 52 / 62 % (El Gordo) of cases at Δ = 0.5 / 1 / 1.5 / 2 mag. A demagnification by ≳ 4 (Δ ≥ 1.5)
+  is found in about half to most tested images; Δ ≲ 1 mag hides in the scatter. El Gordo loses images to S/N.
 - SMACS 6.3 cannot be rechecked this way: the Mahler+22 release pins no chain.
 - **Limits:** chain errors are statistical within one model; model-to-model differences are larger (D-044).
 - **Next:** photometry, not the model, limits this test: ICL-aware totals (DJA `_phot_apcorr`, local-background

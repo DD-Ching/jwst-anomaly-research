@@ -569,8 +569,8 @@ def test_flux_ratio_table_model_error_and_tension():
     # without chain samples the model error is not computed
     t = lc.flux_ratio_table(model, images, {}, phot)
     assert np.all(np.isnan(t["resid_model_err"]))
-    assert t.meta["n_mu_samples"] == 0  # one system: no other system sets its floor
-    assert list(t["tension_class"]) == ["untested"] * 3
+    assert t.meta["n_mu_samples"] == 0
+    assert list(t["tension_class"]) == ["untested"] * 3  # one system: nothing sets its floor
     # chain samples scaling image 1.1's mu by 10**(+-0.4 / 2.5): its residual spreads by +-0.4 mag
     f = 10 ** (np.array([-0.4, 0.0, 0.4]) / 2.5)
     samples = np.array([mu * np.array([k, 1.0, 1.0]) for k in f])
@@ -608,9 +608,11 @@ def test_flux_tension_uses_the_other_systems_floor(monkeypatch):
     assert floors == [3, 0]
     assert list(t["tension_class"]) == ["flux_tension", "consistent", "consistent"]
     model, images, phot, _ = _flux_inputs()
-    rec = lc.tension_recovery(model, images, {}, phot, [0.0, 2.0])
+    rec = lc.tension_recovery(model, images, {}, phot, [0.0, 1.5])  # S/N 54 -> 14
     assert rec["n_targets"] == 3
-    assert rec["recovered_fraction"] == {"0.0": 0.0, "2.0": 1.0}
+    assert rec["recovered_fraction"] == {"0.0": 0.0, "1.5": 1.0}
+    # 6 mag fainter: S/N 54 -> 0.2 < min_snr, so the image is untested, not recovered
+    assert lc.tension_recovery(model, images, {}, phot, [6.0])["recovered_fraction"] == {"6.0": 0.0}
 
 
 def test_scatter_floor():
