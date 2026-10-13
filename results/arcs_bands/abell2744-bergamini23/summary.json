@@ -1,0 +1,34 @@
+{
+ "model": "abell2744-bergamini23",
+ "second_band": "jw02561-o001_t003_nircam_clear-f444w_cat.ecsv",
+ "assumptions": {
+  "match_arcsec": 0.3,
+  "min_e444": 0.3,
+  "min_snr444": 10.0,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "background_strong_shear": 35,
+ "usable_444": 31,
+ "dpa_bands_median": 2.4,
+ "control_aligned_200": 29,
+ "control_stay_aligned_444": 29,
+ "control_anti_444": 0,
+ "classes_444": {
+  "n": 31,
+  "aligned": 29,
+  "anti": 0,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 3.113295815505686e-12
+ },
+ "anti_expected_444": {
+  "n": 31,
+  "anti": 0,
+  "expected": 0.597,
+  "p_ge_observed": 1.0
+ },
+ "anti_200": [],
+ "anti_444": []
+}

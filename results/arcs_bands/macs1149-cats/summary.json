@@ -1,0 +1,49 @@
+{
+ "model": "macs1149-cats",
+ "second_band": "jw01208-o008_t004_nircam_clear-f444w_cat.ecsv",
+ "assumptions": {
+  "match_arcsec": 0.3,
+  "min_e444": 0.3,
+  "min_snr444": 10.0,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "background_strong_shear": 24,
+ "usable_444": 15,
+ "dpa_bands_median": 2.0,
+ "control_aligned_200": 15,
+ "control_stay_aligned_444": 14,
+ "control_anti_444": 0,
+ "classes_444": {
+  "n": 15,
+  "aligned": 14,
+  "anti": 0,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 2.160443300663945e-06
+ },
+ "anti_expected_444": {
+  "n": 15,
+  "anti": 0,
+  "expected": 0.409,
+  "p_ge_observed": 1.0
+ },
+ "anti_200": [
+  {
+   "label": 1703,
+   "class_444": "no_match",
+   "dpa_bands": null,
+   "e_444": null,
+   "snr_444": null
+  },
+  {
+   "label": 4236,
+   "class_444": "no_match",
+   "dpa_bands": null,
+   "e_444": null,
+   "snr_444": null
+  }
+ ],
+ "anti_444": []
+}

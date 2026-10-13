@@ -2,9 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-13: arc orientations in F444W vs F200W (in progress)
-- Plan: lensing is achromatic, so a lensing-set arc direction agrees between F200W and F444W; a blend or a
-  clumpy intrinsic shape need not. Re-class the five fields' strong-shear sources with F444W pipeline shapes.
+## 2026-10-13: arc orientations in F444W vs F200W: the same axes, no new anti arc (five fields)
+- **Hypothesis before computing:** lensing is achromatic, so a lens-set axis agrees between F200W and F444W; a blend
+  of differently coloured objects need not. An F200W anti source that is aligned in F444W would be a blend; one that
+  stays anti is a single source whose shape lensing does not explain.
+- `scripts/arcs_bands.py` (new; reuses `lens_consistency` `load_shapes`, `orientation_table`, `anti_expected`) on the
+  stored `results/arcs/*/arcs.ecsv` with the F444W pipeline catalogues of the same observations (manifest sha256s).
+- **Result (derived, `results/arcs_bands/`):** background, strong shear, 90 of 154 usable in F444W. Control: 81 of 83
+  F200W-aligned stay aligned, 0 turn anti; median axis difference 1.7–3.9°. F444W anti 3 vs 2.01 expected
+  (P = 0.33): Abell 370 340, 4540 and El Gordo 742, each one source with the same axis in both bands (looked at:
+  6″ F200W/F444W cutouts). 1565, 1788, 4236 and 1703 have no F444W source within 1″. Null (D-024 addendum 4).
+- **Limitation:** an intrinsic shape is achromatic too, so the band test is a blend veto, not a lensing test.
+- **Next:** critical-curve curvature against arcs; F444W shapes for the 64 unmatched sources need forced moments on
+  the i2d (S3 byte range), only if a new anti flag appears.
 
 ## 2026-10-13: X2 S4b: physical strain and energy of the S4 readouts; η_max 1.52 stands; no polar/radial equations exist
 - **Conversion** (Yang & Lan definitions; Nagar–Rezzolla §6 as the Schwarzschild limit):

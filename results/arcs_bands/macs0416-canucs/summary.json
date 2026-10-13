@@ -1,0 +1,34 @@
+{
+ "model": "macs0416-canucs",
+ "second_band": "jw01208-o004_t002_nircam_clear-f444w_cat.ecsv",
+ "assumptions": {
+  "match_arcsec": 0.3,
+  "min_e444": 0.3,
+  "min_snr444": 10.0,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "background_strong_shear": 27,
+ "usable_444": 9,
+ "dpa_bands_median": 3.9,
+ "control_aligned_200": 8,
+ "control_stay_aligned_444": 7,
+ "control_anti_444": 0,
+ "classes_444": {
+  "n": 9,
+  "aligned": 7,
+  "anti": 0,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 0.00828125793832241
+ },
+ "anti_expected_444": {
+  "n": 9,
+  "anti": 0,
+  "expected": 0.318,
+  "p_ge_observed": 1.0
+ },
+ "anti_200": [],
+ "anti_444": []
+}

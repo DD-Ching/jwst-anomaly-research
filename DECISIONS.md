@@ -1266,6 +1266,15 @@ resolved spiral image 6.1). Five fields combined: 7 anti vs 2.6 with every sourc
 Rule: the shape-noise null (`anti_expected`) is valid only away from critical curves; quote it for g_min < 1 and
 treat g_min ≥ 1 anti sources as direction flips to check against the curve position, not as shape-noise excess.
 
+**Addendum 4 2026-10-13 (second band, `scripts/arcs_bands.py`).** F444W pipeline shapes for the stored F200W `arcs`
+sources (nearest F444W source within 0.3″; usable if F444W e ≥ 0.3 and S/N ≥ 10, ASSUMPTIONS). Five fields,
+background in strong shear: 90 of 154 usable (the rest are m ≈ 27–28 sources without an F444W match). Control: 81 of
+83 F200W-aligned sources stay aligned, none turns anti; median band-to-band axis difference 1.7–3.9° per field.
+F444W anti: 3 vs 2.01 expected (P = 0.33): Abell 370 340 and 4540, El Gordo 742, the same axis in both bands
+(Δ ≤ 4.5°), single sources in both bands' cutouts. The other four F200W anti (Abell 370 1565, 1788; MACS1149 4236,
+1703) have no F444W source within 1″. Null. Rule: band agreement rules out colour blends but cannot separate an
+intrinsic shape from a lensing stretch (both achromatic); it is a blend veto, not a lensing test.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

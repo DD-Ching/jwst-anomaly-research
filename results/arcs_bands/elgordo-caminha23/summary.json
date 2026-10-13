@@ -1,0 +1,44 @@
+{
+ "model": "elgordo-caminha23",
+ "second_band": "jw01176-o241_t012_nircam_clear-f444w_cat.ecsv",
+ "assumptions": {
+  "match_arcsec": 0.3,
+  "min_e444": 0.3,
+  "min_snr444": 10.0,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "background_strong_shear": 12,
+ "usable_444": 10,
+ "dpa_bands_median": 2.7,
+ "control_aligned_200": 8,
+ "control_stay_aligned_444": 8,
+ "control_anti_444": 0,
+ "classes_444": {
+  "n": 10,
+  "aligned": 8,
+  "anti": 1,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 0.0034039526494944877
+ },
+ "anti_expected_444": {
+  "n": 10,
+  "anti": 1,
+  "expected": 0.232,
+  "p_ge_observed": 0.2069402048569429
+ },
+ "anti_200": [
+  {
+   "label": 742,
+   "class_444": "anti",
+   "dpa_bands": 4.5,
+   "e_444": 0.46,
+   "snr_444": 43.4
+  }
+ ],
+ "anti_444": [
+  742
+ ]
+}
