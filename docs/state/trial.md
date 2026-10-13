@@ -2,9 +2,11 @@
 
 **Goal:** let research-motivated high-risk units deepen across many runs and produce testable predictions,
 reliable methods or real candidates. PR count, test count and compute time are **not** progress measures.
-Every run reads this file during dispatch (research-cycle step 1). **Rules version: trial-2026-10-12.1.** A run
-that works on the trial records this version and its routine prompt version (from its own prompt text, or "none" for
-an interactive session) in the unit's session log.
+Every run reads this file during dispatch (research-cycle step 1). **Rules version: trial-2026-10-13.1** (adds the
+every-run tally to trial-2026-10-12.1). **Every run**, routine searches included, appends a tally line below. A run
+that works on a unit also records this rules version and its routine prompt version in the unit's session log; the
+prompt version comes from its own prompt text, or is "none" for an interactive session or an older prompt. CLAIM
+comments carrying `rules: trial-2026-10-12.1` remain valid.
 
 ## Rules
 **T1. Weekly split** (a trial setting, checked per ISO week, not per run). Shares are of run time:
@@ -67,11 +69,14 @@ needed. Unchanged CI, subscriptions, waiting for review and routine syncs are no
 | X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-farside` (draft PR opened by the first unit run) | authorized; F0 and S1 done 2026-10-12; next S2 |
 | X2 | — | — | empty; filled only by an S0-passed direction that differs from X1 in mechanism, observable or data |
 
-## Weekly tally (hours of run time; append one line per run that works on the trial)
+## Weekly tally (hours of run time; **every** run appends one line, routine searches included)
+T1 needs every category, or the shares cannot be computed. A run that only works on a routine-search unit still
+adds its line, with a note naming the unit.
 | ISO week | Routine search | High-risk | Verification | Upkeep | Note |
 |---|---|---|---|---|---|
 | 2026-W42 | — | 1.5 (X1 F0) | — | 1.0 (trial set-up) | set-up session, not a routine run |
 | 2026-W42 | — | 0.5 (X1 S1) | — | 0.2 (orientation, PR) | cloud routine 01CJcx3Y |
+| 2026-W42 | ≈ 0.6 (gb14 pre-screen chunks 17–45) | — | — | — | cloud routine, 00:09–00:46Z; back-filled from the gb14 handoff by an interactive session |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

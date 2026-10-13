@@ -95,7 +95,7 @@ Action.
   setup or long reviews. In cloud runs use the GitHub MCP tools (docs/operations.md §3) for the PR list and the
   draft. Label it `claimed` (local sessions: `local-wip`) with the REST labels call
   (`gh api -X POST repos/DD-Ching/jwst-anomaly-research/issues/<n>/labels -f "labels[]=claimed"`) and post one comment
-  "CLAIM <session> started <UTC> expected-end <UTC> unit: <scope> files: <paths> rules: trial-2026-10-12.1 prompt:
+  "CLAIM <session> started <UTC> expected-end <UTC> unit: <scope> files: <paths> rules: <Rules version in docs/state/trial.md> prompt:
   <PROMPT VERSION from your own prompt text, or none>". Heartbeat at least every 10
   minutes while working (a WIP push, or edit that comment with "heartbeat <UTC> status: <one line>"); before every
   push, `git fetch origin <branch>` and re-read the PR's comments, and on a collision push to `claude/<slug>-alt`
