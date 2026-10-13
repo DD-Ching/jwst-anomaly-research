@@ -10,6 +10,21 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - The 00:09Z run worked W3 gb14 and did not log hours, so T1 shares could not be computed.
 - Fix: every run appends a tally line, routine searches included; gb14's run back-filled.
 
+## 2026-10-13: X1 S2: no astrometric far-side discriminant; a fragile flux-contrast one at a = 2.1 M (gate passed formally)
+- `scripts/x1_tracer.py`: `spot_track` takes sub-Keplerian η and light-travel delays per image. Validated: primary
+  delay = Roemer 2R sin i to < 1 % at R = 400 M.
+- New `scripts/x1_s2.py` → `results/x1/s2_discriminant.json` (derived, conditional geometry). i = 155°, P = 60 ± 3 min.
+  Ordinary: a = 0, η 0.6–1. Far: a ∈ {2.1, 3, 5, 7, 9} M. Both get static light 0–0.5 at 0–20 µas.
+- Loop radius: far 2–27 µas vs ordinary 14.5–48 µas. The gaps are ≤ 0.92 × the 9 µas precision (ASSUMPTION), so
+  **astrometry does not discriminate.**
+- Flux contrast ln(F_max/F_min): far ≤ 0.33 at a = 2.1 vs ordinary ≥ 0.43, i.e. 1.98 × the assumed 0.05 precision;
+  0.43 × at a = 3; none above. Peak count: 1 everywhere.
+- The pass is fragile. It closes at static fraction 0.56, needs orbital modulation separated from intrinsic flare
+  evolution, and holds for a point spot only. Details and the frozen S3 prediction: `docs/state/units/X1.md`.
+- Design choice: L is measured about the track's own mean (free centre), because GRAVITY's centre is degenerate
+  with the orbit radius.
+- **Next:** X1 S3 on `avg.dat` against the frozen prediction, then S4 (independent check of the a = 2.1 contrast).
+
 ## 2026-10-12: X1 S1: Simpson–Visser ray tracer validated (gate passed)
 - New `scripts/x1_tracer.py` (quadrature in u = 1/R with regularised turning-point and throat endpoints, plus an
   independent ODE route) and `tests/test_x1_tracer.py`; `scripts/wh_farside.py` and its tests copied from #172.

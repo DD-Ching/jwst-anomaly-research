@@ -66,7 +66,7 @@ needed. Unchanged CI, subscriptions, waiting for review and routine syncs are no
 ## Units
 | Unit | State file | Branch / PR | Status |
 |---|---|---|---|
-| X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-farside` (draft PR opened by the first unit run) | authorized; F0 and S1 done 2026-10-12; next S2 |
+| X1 far-side SV hot spots (Sgr A*) | `docs/state/units/X1.md` | `claude/x1-s2` (#177) | authorized; F0, S1 done 2026-10-12; S2 done 2026-10-13 (formal pass, a = 2.1 M, flux contrast only; fragile); next S3 |
 | X2 | — | — | empty; filled only by an S0-passed direction that differs from X1 in mechanism, observable or data |
 
 ## Weekly tally (hours of run time; **every** run appends one line, routine searches included)
@@ -77,8 +77,9 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | 1.5 (X1 F0) | — | 1.0 (trial set-up) | set-up session, not a routine run |
 | 2026-W42 | — | 0.5 (X1 S1) | — | 0.2 (orientation, PR) | cloud routine 01CJcx3Y |
 | 2026-W42 | ≈ 0.6 (gb14 pre-screen chunks 17–45) | — | — | — | cloud routine, 00:09–00:46Z; back-filled from the gb14 handoff by an interactive session |
+| 2026-W42 | — | 0.5 (X1 S2) | — | 0.15 (orientation, takeover, PR) | cloud routine 01ELiBXy |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
 |---|---|---|---|
-| M2 stretch grid + free per-band scale (#167, provisional); W3 chain fixes (D-068) | Goal rounds 1–10 (#152–#166, provisional); far-side image bound vs GRAVITY summary (#172, provisional) | none (n0153 inconclusive, #61) | none of a candidate (SkyLLH D-080 is a benchmark reproduction) |
+| M2 stretch grid + free per-band scale (#167, provisional); W3 chain fixes (D-068) | Goal rounds 1–10 (#152–#166, provisional); far-side image bound vs GRAVITY summary (#172, provisional); X1 S2: no astrometric far-side discriminant at 9 µas, a fragile flux-contrast one for a = 2.1 M (#177) | none (n0153 inconclusive, #61) | none of a candidate (SkyLLH D-080 is a benchmark reproduction) |

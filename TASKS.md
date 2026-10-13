@@ -12,8 +12,9 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 10 % upkeep), units and ledger:
 `docs/state/trial.md`. Provisional conclusions of open needs-human PRs, and what is "done; do not redo":
 `docs/state/pending.md`.
-- **X1 far-side SV hot spots at Sgr A*** (authorized): state file `docs/state/units/X1.md`. F0 feasibility and S1
-  (validated SV tracer, `scripts/x1_tracer.py`) done; next is S2 (discriminant). Continue from the state file's "Next action".
+- **X1 far-side SV hot spots at Sgr A*** (authorized): state file `docs/state/units/X1.md`. F0 feasibility, S1
+  (validated SV tracer, `scripts/x1_tracer.py`) and S2 (`scripts/x1_s2.py`: no astrometric discriminant; a fragile
+  flux-contrast one for a = 2.1 M) done; next is S3 against the frozen prediction. Continue from the state file's "Next action".
 - **X2:** empty until an S0-passed direction that differs from X1 qualifies.
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
