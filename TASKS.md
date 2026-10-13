@@ -166,7 +166,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    - ~~`arcs` on Abell 2744 and El Gordo~~ — done (D-024 addendum 2026-10-13): null; background 33/35 and 10/12
      aligned, anti counts 0 and 1 against 0.45 and 0.17 from shape noise;
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
-   - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
+   - shapes for the `arcs` test: S/N ≥ 50 done on the stored tables (`docs/fields/abell370.md`: 3 anti vs 1.33,
+     P = 0.15, all intrinsic shapes); left: reject blends, compare F150W and F444W shapes;
    - **Abell 370 `1565`** (D-024 addendum 4; `docs/candidates/abell370-1565.md`): anti at κ ≈ 0.8 in five models;
      inconclusive and **parked**: inside a z 0.386 MUSE [O II] nebula; forced photometry (S/N 2–3 per band) cannot
      fix the F150W/F200W colour; the axis is not a detector-row artefact; NIRISS WFSS pipeline spectra skip it, and a

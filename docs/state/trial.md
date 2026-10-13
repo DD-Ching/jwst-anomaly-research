@@ -118,6 +118,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.25 (anti-arc κ(z) scan, Abell 370 1565 shapes and cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01Wew9zc, 19:08–19:45Z (#199) |
 | 2026-W42 | — | — | ≈ 0.25 (`/vet-candidate` Abell 370 1565: photometry, MUSE cube) | 0.05 (takeover, PR) | cloud routine 017EcLEb, 20:09–20:40Z (#199) |
 | 2026-W42 | — | — | ≈ 0.3 (Abell 370 1565: NIRISS WFSS check, forced photometry, row-axis test) | 0.1 (orientation, claim, PR) | cloud routine 01SirLB6, 21:08–21:30Z (#199) |
+| 2026-W42 | ≈ 0.1 (`arcs` shape S/N cut on the stored five-field tables) | — | — | 0.1 (PR, CI) | cloud routine 01SirLB6, 21:18–21:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
