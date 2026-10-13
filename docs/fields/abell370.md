@@ -132,6 +132,7 @@ Outputs: `results/arcs/abell370-canucs/`.
   1.33 expected (P(≥) 0.017 / 0.038 / 0.15); aligned 0.88 / 0.89 / 0.92 of 154 / 146 / 91. At S/N ≥ 50 the anti are
   MACS1149 4236, Abell 370 340 and 4540 (catalogued image 6.1), all intrinsic shapes in weak shear. 1565 (S/N 26.6)
   and 1788 (21.5) drop out. The isophotal S/N overstates shape quality: 1565 has S/N 2–3 per band in forced 0.15″
-  apertures (`docs/candidates/abell370-1565.md`). The cut is an ASSUMPTION; F444W shapes are not in the stored tables.
+  apertures (#199, `docs/candidates/abell370-1565.md`). The cut is an ASSUMPTION; F444W shapes are not in the stored
+  tables.
 - **Members/foreground:** 5 of 13 anti (P = 1/3 each if unlensed). **No CANUCS match (77):** 15 anti, near random.
 - **Result: null.** No anti-tangential arc that a critical-curve flip or an intrinsic shape does not explain.
