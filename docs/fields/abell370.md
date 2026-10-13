@@ -165,3 +165,9 @@ and `derived`). CANUCS DR1 95 % ranges (Z025–Z975, `observed` catalogue values
 - **Status: unvetted flag, not a candidate.** Ordinary explanations still open: a member tidal feature or a blend
   (the structure through 1562), a low-z photo-z solution (Z025 0.40; P(anti) 0.10 at z 0.6 and 0.24–0.33 below z ≈ 0.45), and an unmodelled
   local perturber (five models agree, so only a perturber none of them contains). Next: `/vet-candidate`.
+- **Vetted 2026-10-13 (`docs/candidates/abell370-1565.md`): inconclusive, needs a redshift for 1565 itself.** The
+  z ≈ 2.9 photo-z rests on NIRCam F150W, which disagrees with NIRISS F150W (5.9 ± 1.8 vs 12.4 ± 1.9 nJy). MUSE-DEEP
+  (registered to JWST: +1.43″ in Dec) puts 1565 inside a ≥ 2″ z = 0.386 [O II] nebula (Lagattuta+2019 emitter
+  5964, 1.15″ S), with no excess of its own and no z 2.94 line. A cluster-redshift, unlensed knot is the
+  open ordinary alternative (`hypothesis`). 1565 also lies between system 44's merging images 44.1/44.2. Next:
+  NIRISS slitless spectra.

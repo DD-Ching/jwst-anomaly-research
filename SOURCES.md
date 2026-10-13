@@ -563,6 +563,13 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - CANUCS DR1 Abell 370 segmentation map, accessed 2026-10-13, deleted after use:
   `https://archive.stsci.edu/hlsps/canucs/dr1/a370/clu/hlsp_canucs_jwst_nircam-niriss_a370-clu-40mas_multi_v1_segmentation.fits.gz`
   (1,239,107 B, sha256 `9baa44074209a57635f165e96b6dc81c32ad434d73407c537cfa8d1bf9c0d63b`).
+- Lagattuta et al. 2019, MNRAS 485, 3738 (2019MNRAS.485.3738L), Abell 370 MUSE redshift and multiple-image
+  catalogues, VizieR J/MNRAS/485/3738 (doi:10.26093/cds/vizier.74853738), cone queries 2026-10-13.
+- ESO MUSE-DEEP Abell 370 cube ADP.2017-06-06T13:13:38.674 (13.7 ks; 21 GB, not downloaded) via ESO SODA cutout
+  `https://dataportal.eso.org/dataPortal/soda/sync?ID=ivo://eso.org/ID?ADP.2017-06-06T13:13:38.674&CIRCLE=...`
+  (r = 2.5″, 20,111,040 B) and its white-light image ADP.2017-06-06T13:13:38.675 (3,049,920 B); ESO TAP
+  `https://archive.eso.org/tap_obs` (ivoa.ObsCore). Accessed 2026-10-13, deleted after use. Astrometry is offset
+  from JWST/CANUCS by +1.43″ in Dec (53 sources); register before extracting at JWST positions.
 - HFF MACS0717 second models, https://archive.stsci.edu/pub/hlsp/frontier/macs0717/models/<team>/<version>/. They
   were read by byte range (κ/γ) or solved in scratch code and then deleted (Sharon and Keeton deflection maps). Full
   sha256 values were streamed on 2026-10-08. The deflection-map prefixes match those recorded during the run.

@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: Abell 370 1565 vetted: inconclusive; a z 0.386 nebula and a weak photo-z
+- `/vet-candidate` (`docs/candidates/abell370-1565.md`). **Hypothesis before testing:** 1565 is a z ≈ 2.9 image the
+  models get wrong. Ordinary alternatives: a cluster-redshift (unlensed) knot, a blend, or a local perturber.
+- **Results (observed/derived):** the z ≈ 2.9 colour uses NIRCam F150W 5.9 ± 1.8 nJy; NIRISS F150W gives 12.4 ± 1.9.
+  MUSE-DEEP (SODA cutout; registered on 53 sources, +1.43″ in Dec): 1565 sits in a ≥ 2″ z 0.3856 [O II] nebula
+  around the Lagattuta+2019 emitter 5964 (1.15″ S), with no excess over control apertures at the same distance and
+  no z 2.94 UV line (not constraining at ~28.7 mag). 1565 lies between system 44's merging pair 44.1/44.2 (z_mod
+  2.34). A local perturber would need Δκ ≳ 0.2; member 603 is a dwarf. Not a candidate (`triaged`).
+- **Failed approach:** extracting MUSE spectra at JWST positions without registration. The ESO cube is 1.43″ off,
+  and the first extraction put 28σ [O II] "on 1565"; registration moved it to 5964.
+- **Next:** CANUCS NIRISS slitless spectra at 1565 (z 0.386 He I/Paγ/Paβ vs z 2.94 [O II]/[O III] at 1.5–2.0 μm).
+
 ## 2026-10-13: anti arcs at g_min ≥ 1: no redshift flip for Abell 370 1565; the addendum 3 rule corrected
 - `orientation_table` writes `kappa_min`/`kappa_max` over the redshifts used: the predicted axis turns by 90° only
   where κ crosses 1, not at g = 1. Scan of all 7 anti background sources in five fields:

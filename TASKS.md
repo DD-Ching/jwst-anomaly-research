@@ -167,10 +167,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      aligned, anti counts 0 and 1 against 0.45 and 0.17 from shape noise;
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
-   - **Abell 370 `1565`** (D-024 addendum 4): anti at κ ≈ 0.8 in both models (no redshift flips it), band-consistent
-     shape; open: a member tidal feature or blend with `1562` (one ~1″ faint structure), the photo-z low-z tail
-     (Z025 0.40). CANUCS `FLAG_DEBLEND`, segment touches the member's. Next: `/vet-candidate`; the axis survives a Sérsic
-     model of the member; next, injections of tangential sources at its S/N (correlated noise); P(z); a deeper look for the counter-image 12″ NNW (~28.9 mag);
+   - **Abell 370 `1565`** (D-024 addendum 4; `docs/candidates/abell370-1565.md`): anti at κ ≈ 0.8 in five models;
+     vetted as inconclusive: the z ≈ 2.9 photo-z conflicts with NIRISS F150W, and MUSE puts it inside a z 0.386
+     [O II] nebula (no redshift of its own). Next: CANUCS NIRISS slitless spectra at 1565 (z 0.386 vs 2.94 lines
+     at 1.5–2.0 μm); then a forced-aperture F150W check;
    - exotic screens (D-031, D-034, D-036–D-038, D-040–D-043): SMACS, El Gordo, Sunrise (radial), Abell 2744,
      MACS1149, MACS0717, MACS0416, Abell 370 and Abell S1063 (radial) null. All six HFF clusters are screened. Next:
      - multi-plane checks are in the library (D-046, `LensModel.split_planes`); a `--plane NAME=Z[:SIGMA]` option for
