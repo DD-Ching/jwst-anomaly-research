@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: (in progress) arc orientations vs predicted shear in Abell 370 (CANUCS model)
+- Plan: `lens_consistency.py arcs` with CANUCS DR1 photo-z; known images first, then background `anti` sources.
+
 ## 2026-10-13: arc orientations vs predicted shear in MACS1149 and MACS0416: null
 - **Hypothesis before running:** background arcs align with the published models' stretch (as in SMACS, Abell 2744,
   El Gordo); a real, single background galaxy ≥ 60° off at every z would be a lens-model residual. Ordinary
