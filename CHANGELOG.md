@@ -2,6 +2,31 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: halo_phot elongation gate: El Gordo 1c's flag was an arc; few images stay testable; no anomaly
+- **Hypothesis before running:** the El Gordo 1c flag (previous entry) is an arc knot that passed the concentration
+  gate; an axis-ratio gate removes it and leaves star-like images. A flag surviving the gate would go to vetting.
+- New `axis_ratio` in `scripts/halo_phot.py`: Gaussian-windowed (σ 0.15″) second moments of the median-filtered
+  light about an iterated centroid; gate q ≥ 0.80 in F150W and F444W (ASSUMPTION), other bands refused until
+  star-calibrated. `scripts/halo_phot_stars.py` → `results/halo_phot/stars/{field}.json` (Gaia DR3, pm or
+  parallax > 3σ, unsaturated core).
+- **Validation:** Gaia stars (observed positions, derived shapes; 55 F150W / 58 F444W counted, S/N ≥ 10):
+  q 5th / 50th percentile 0.91 / 0.95 and 0.94 / 0.97. Known thin arcs El Gordo 1a–c: q 0.57–0.67 in both bands.
+  602.1a/b/c (compact, Abell 2744): F150W 0.77 / 0.89 / 0.83, F444W 0.85 / 0.94 / 0.92. Synthetic: point sources
+  off a pixel centre q ≥ 0.9; white-noise point sources at S/N 10 q ≥ 0.90 (5th pct; noise reads round, so the gate
+  is lenient for faint images); a 5″ thin arc with a knot at f(0.2″)/f(0.4″) = 0.606 gives q 0.22.
+- **Re-run (derived; ±1 mag end-to-end injections simulated), tested F150W / F444W:** Abell 2744 2 / 11 (was 18 / 23),
+  El Gordo 0 / 0 (was 4 / 2), SMACS 0 / 2 (was 3 / 6). Of the images passing concentration and S/N, most are
+  elongated (Abell 2744 28 / 43 F150W). **No flag** in any field; El Gordo 1c is now `untested`. Abell 2744 F444W
+  (30, 7, 53, 602.1): MAD σ 0.17 mag, max |r| 0.66; injections recovered −1 mag 12 / 15, +1 mag 7 / 15.
+- **Failed approach (caught in /code-review):** moments about the peak pixel made a point source half a pixel off
+  centre read q 0.68 on a 0.04″ grid; the first star calibration (q 5th pct 0.80 / 0.85) carried that artefact.
+- **Consequence:** halo-subtracted flux ratios are testable only for ~4 Abell 2744 systems in F444W; El Gordo and
+  SMACS have no star-like multiple image with S/N ≥ 10. The earlier three-field "scatter 0.10–0.27 mag" was on a
+  sample that included arcs.
+- **Next:** feed the F444W halo fluxes of the tested Abell 2744 systems into `fluxratios` (`--mu-samples 100`) for a
+  tension test with the lower floor; for arcs, a surface-brightness-conserving test (D-032) is the right tool, not
+  aperture ratios.
+
 ## 2026-10-13: halo_phot over every catalogued image of Abell 2744, El Gordo and SMACS: no anomaly
 - Ran `scripts/halo_phot.py` unchanged on all systems (149 / 56 / 60 images), F150W + F444W `_i2d` stamps by S3
   byte ranges (UNCOVER 2561 t003; PEARLS 1176 o241_t012; ERO 2736 o001_t001), end-to-end injections at ±1 mag →

@@ -10,8 +10,11 @@ the smooth halo, by two routes:
 - ``annulus``: the same aperture minus the median of an ``annulus_arcsec`` ring (a local plane).
 
 Only compact images take part: a resolved arc's aperture flux follows surface brightness, which
-lensing conserves (D-032). For two unresolved images in one band the aperture loss cancels in the
-ratio, so ``s = -2.5 log10(flux) + 2.5 log10 |mu|`` is a source magnitude up to a constant.
+lensing conserves (D-032). Compact means concentrated (f(0.2")/f(0.4")) *and* round: a knot on a
+thin arc passes the concentration gate (light along a line grows ∝ r), so :func:`axis_ratio` must
+also be star-like (``MIN_AXIS_RATIO``, calibrated on Gaia stars per band). For two unresolved
+images in one band the aperture loss cancels in the ratio, so
+``s = -2.5 log10(flux) + 2.5 log10 |mu|`` is a source magnitude up to a constant.
 Each stamp also gets ring checks on the real halo (:func:`ring_checks`): blank apertures measure the
 halo light a route leaves behind (and give the background error), and injected PSF-width Gaussians
 measure how much of a compact image the route removes. A band's ``flux_class`` is ``flux_outlier``
@@ -61,6 +64,12 @@ MAX_ABS_MU = 20.0  # as D-032's flux test (ASSUMPTION)
 OUTLIER_MAG = 0.75  # as D-032's flux_outlier (ASSUMPTION)
 ROUTES = ("medfilt", "annulus")
 MIN_RECOVERY = 0.5  # a route keeping less of an injected compact image is dropped (ASSUMPTION)
+# Axis-ratio gate per band (ASSUMPTION): between the known thin arcs (El Gordo 1a-c: q 0.57-0.67)
+# and unsaturated Gaia DR3 stars (5th percentile 0.91 F150W / 0.94 F444W, 55 / 58 stars on the three
+# fields' i2d mosaics, `halo_phot_stars.py`), so mildly stretched compact images still take part.
+# Bands without a star calibration are refused.
+MIN_AXIS_RATIO = {"f150w": 0.80, "f444w": 0.80}
+WINDOW_SIGMA_ARCSEC = 0.15  # axis-ratio moments' Gaussian window, ~1-2.5 PSF FWHM (ASSUMPTION)
 INJECT_ARCSEC = 0.45  # --inject-mag scales the filtered light within this of the image (ASSUMPTION)
 
 
@@ -112,12 +121,7 @@ def measure(
     if filtered is None:
         filtered = halo_filtered(img, pix_arcsec, filter_arcsec)
     res = filtered if route == "medfilt" else img
-    px, py = cx, cy
-    if recentre > 0:
-        d = np.hypot(xx - cx, yy - cy)
-        near = np.where(d <= recentre, ndimage.uniform_filter(filtered, size=3), -np.inf)
-        k = int(np.argmax(near))
-        px, py = float(xx.flat[k]), float(yy.flat[k])
+    px, py = _peak(filtered, xx, yy, cx, cy, recentre)
     r = np.hypot(xx - px, yy - py)
     ap, big = r <= r_ap, r <= 2 * r_ap
     if not np.isfinite(sci[big]).all():
@@ -132,6 +136,39 @@ def measure(
     conc = f_small / f_big if f_big > 0 else float("nan")
     e = lc.ERR_SCALE * err[ap]  # ERR underestimates the noise (D-027 amendment)
     return flux, float(np.sqrt(np.sum(np.where(np.isfinite(e), e, 0.0) ** 2))), conc
+
+
+def _peak(filtered, xx, yy, cx=0.0, cy=0.0, recentre=RECENTRE_ARCSEC) -> tuple[float, float]:
+    """The brightest point of the (3-pixel smoothed) filtered stamp within ``recentre`` of
+    ``(cx, cy)``; ``(cx, cy)`` itself when ``recentre = 0``."""
+    if recentre <= 0:
+        return cx, cy
+    d = np.hypot(xx - cx, yy - cy)
+    near = np.where(d <= recentre, ndimage.uniform_filter(filtered, size=3), -np.inf)
+    k = int(np.argmax(near))
+    return float(xx.flat[k]), float(yy.flat[k])
+
+
+def axis_ratio(filtered, xx, yy, cx=0.0, cy=0.0, sigma_w=WINDOW_SIGMA_ARCSEC, n_iter=5) -> float:
+    """Minor/major axis ratio from the Gaussian-windowed second moments of the halo-filtered light
+    (negative pixels clipped) near ``(cx, cy)``. The window starts at the peak and moves to the
+    windowed centroid ``n_iter`` times, so a point source off a pixel centre is not made
+    elongated by the pixel grid. A point source gives ≈ 1; a thin arc that a bright knot lifts
+    over the concentration gate gives ≪ 1 (its light extends along the arc, inside the window).
+    Clipping makes residual noise a round positive weight, so faint sources read rounder."""
+    px, py = _peak(filtered, xx, yy, cx, cy)
+    light = np.clip(np.nan_to_num(filtered), 0, None)
+    for _ in range(n_iter + 1):
+        dx, dy = xx - px, yy - py
+        w = np.exp(-0.5 * (dx**2 + dy**2) / sigma_w**2) * light
+        if w.sum() <= 0:
+            return float("nan")
+        mx, my = float(np.sum(w * dx) / w.sum()), float(np.sum(w * dy) / w.sum())
+        px, py = px + mx, py + my
+    dx, dy = dx - mx, dy - my  # moments about the final centroid
+    mxx, myy, mxy = (float(np.sum(w * a) / w.sum()) for a in (dx * dx, dy * dy, dx * dy))
+    lam = np.linalg.eigvalsh([[mxx, mxy], [mxy, myy]])
+    return float(np.sqrt(max(lam[0], 0.0) / lam[1])) if lam[1] > 0 else float("nan")
 
 
 def gaussian(xx, yy, cx, cy, flux, fwhm):
@@ -186,12 +223,13 @@ def measure_image(sci, err, xx, yy, mu: float, band: str) -> dict:
     error adds, in quadrature, the blank scatter and the whole halo correction (ASSUMPTION: the
     ring 1″ out may misjudge the leftover halo at the image, where the cusp is steeper). A route
     that keeps less than ``MIN_RECOVERY`` of an injected image is dropped (NaN flux). Ring checks
-    are skipped for images the gates drop anyway (concentration, |μ|)."""
+    are skipped for images the gates drop anyway (concentration, axis ratio, |μ|)."""
     filt = halo_filtered(sci, _pix(xx, yy))
     meas = {route: measure(sci, err, xx, yy, route, filtered=filt) for route in ROUTES}
     conc = meas["medfilt"][2]  # the same unfiltered measure in both routes
-    out = {f"{band}_conc": conc}
-    gated = np.isfinite(conc) and conc >= MIN_CONCENTRATION and abs(mu) <= MAX_ABS_MU
+    q = axis_ratio(filt, xx, yy)
+    out = {f"{band}_conc": conc, f"{band}_axis_ratio": q}
+    gated = _compact(conc, q, band) and abs(mu) <= MAX_ABS_MU
     todo = {r: m[0] for r, m in meas.items() if gated and np.isfinite(m[0]) and m[0] > 0}
     checks = (
         ring_checks(sci, err, xx, yy, todo, PSF_FWHM_ARCSEC[band], filtered=filt) if todo else {}
@@ -215,6 +253,12 @@ def measure_image(sci, err, xx, yy, mu: float, band: str) -> dict:
         out[f"{band}_{route}_blank_frac"] = blank_med / f if f > 0 else np.nan
         out[f"{band}_{route}_recovery"] = rec
     return out
+
+
+def _compact(conc, q, band: str):
+    """The compactness gates: concentration and axis ratio (NaN fails both)."""
+    with np.errstate(invalid="ignore"):
+        return (np.asarray(conc) >= MIN_CONCENTRATION) & (np.asarray(q) >= MIN_AXIS_RATIO[band])
 
 
 def _init_worker() -> None:
@@ -246,8 +290,9 @@ def classify(rows: list[dict], bands) -> None:
             f = np.array([r[f"{band}_{route}_flux"] for r in rows], float)
             e = np.array([r[f"{band}_{route}_err"] for r in rows], float)
             c = np.array([r[f"{band}_conc"] for r in rows], float)
+            q = np.array([r[f"{band}_axis_ratio"] for r in rows], float)
             ok = np.isfinite(f) & (f > 0) & (f / np.where(e > 0, e, np.inf) >= MIN_SNR)
-            ok &= (c >= MIN_CONCENTRATION) & (np.abs(mu) <= MAX_ABS_MU)
+            ok &= _compact(c, q, band) & (np.abs(mu) <= MAX_ABS_MU)
             src = np.where(
                 ok, -2.5 * np.log10(np.where(ok, f, 1.0)) + 2.5 * np.log10(np.abs(mu)), np.nan
             )
@@ -287,9 +332,12 @@ def run(
     never testable and does not count as a miss). Returns ``(rows, injections)``."""
     if not lc.has_image_list(model_name) or lc.is_map_model(model_name):
         raise SystemExit(f"error: {model_name}: needs a Lenstool model with a usable image list")
-    missing = [b for b in bands if b not in PSF_FWHM_ARCSEC]
+    known = sorted(set(PSF_FWHM_ARCSEC) & set(MIN_AXIS_RATIO))
+    missing = [b for b in bands if b not in known]
     if missing:
-        raise SystemExit(f"error: no PSF width for {missing}; known: {sorted(PSF_FWHM_ARCSEC)}")
+        raise SystemExit(
+            f"error: no PSF width or star-calibrated axis-ratio gate for {missing}; known: {known}"
+        )
     model, files, par = lc.load_model(model_name)
     images, _ = lc.image_list(model_name, files, par)
     lc.apply_frame_offset(model_name, model, images)  # into the JWST frame (D-034)
@@ -384,6 +432,8 @@ def main(argv=None) -> int:
             "psf_fwhm_arcsec": PSF_FWHM_ARCSEC,
             "outlier_mag": OUTLIER_MAG,
             "min_concentration": MIN_CONCENTRATION,
+            "min_axis_ratio": MIN_AXIS_RATIO,
+            "window_sigma_arcsec": WINDOW_SIGMA_ARCSEC,
             "max_abs_mu": MAX_ABS_MU,
             "min_snr": MIN_SNR,
             "min_recovery": MIN_RECOVERY,
