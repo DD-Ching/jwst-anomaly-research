@@ -184,3 +184,48 @@ second model.
   Yang & Lan list polar modes as future work.
 - Parameters for a rerun: a − 2M = 3.575e-4 (Δt = 0.45 s at M_det = 68.8 M☉); packet w₀ = 0.5307, τ = 12.2 M,
   started 25 M inside the GW peak; observer at r* = 1500; dx 0.2 / 0.1.
+
+## S4b: physical strain and energy flux of the S4 readouts (owner request 2026-10-13; written before computing)
+**Derivation (Yang & Lan definitions, checked against Nagar & Rezzolla gr-qc/0502064v5 §6 in the Schwarzschild limit):**
+1. **H₂ is the Moncrief / Regge–Wheeler function, not the strain.**
+   - Yang & Lan Eq. 34: H₂ = sin³θ Σ f (q_{1,θ} − q_{2,r}) / C^{-3/2}_{ℓ+2}.
+   - In Regge–Wheeler gauge (q₂ = 0, so g_{rφ} = h₁ sinθ ∂_θY), q_{1,θ} = (h₁/Σ²) ∂_θ(∂_θY/sinθ).
+   - sin³θ ∂_θ(∂_θY/sinθ) = c_ℓ C^{-3/2}_{ℓ+2} (checked: c = 8, 40, 120 for ℓ = 2, 3, 4).
+   - Hence H₂ = c_ℓ f h₁/Σ. As a → 0 this is Nagar–Rezzolla's Q^(o) = (f/r) h₁ (their Eq. "mfop").
+2. **Strain needs one time integral.**
+   - Nagar–Rezzolla: h₊,× = −Ψ^(o)/r × angular factor (the CPM function), and ∂ₜΨ^(o) = −Q^(o) + (odd source)
+     (Eq. "Q_vs_Psi").
+   - In NED the corresponding equation is Yang & Lan's G13-SM. Using H₁'s definition and
+     dC^{-3/2}_{ℓ+2}/dθ = 3 sinθ C^{-1/2}_{ℓ+1}, it becomes
+     ∂ₜ(Σ⁴ Q₀₁ sin³θ) = −3 sinθ C^{-1/2}_{ℓ+1} [Σ H₂ + (κ² q √L_F / μ) H₁].
+   - With L_F = 3Ma²/(8π q² Σ), the EM term relative to the GW term is 2.45 Σ^{-3/2} in the symmetrised H₁ (a ≈ 2M,
+     μ = 2). That is 4e-5 at the observer (r* = 1500) and → 0 at infinity.
+   - So far from the source, h ∝ (1/r) ∫ H₂ dt, i.e. h̃ = H̃₂ / (−iω), as in Schwarzschild. Near the throat
+     (Σ ≈ 3M) the EM term is about 0.4 of the GW term, so H₂ is not the strain there.
+3. **Energy flux.**
+   - GW: Nagar–Rezzolla Eq. "power": dE/dt ∝ |Ψ̇^(o)|² = |Q^(o)|², i.e. ∝ H₂², not (∂ₜH₂)².
+   - EM: the physical (Killing) energy and the symmetrised form's flux Σᵢ|∂ₜψᵢ|² are both conserved by the same
+     scattering matrix. At fixed ω they can both be conserved while the channels mix only if their channel weights
+     are equal.
+   - Hence the physical flux is ∝ H₂² + H₁,sym² with the same constant. The symmetrised conserved quantity is the
+     physical energy up to a factor ω² per frequency, i.e. its time-domain flux is ∫ψ̇² rather than ∫ψ².
+
+**Consequences for the S4 readouts:**
+- `hrss_ratio` = √∫H₂²dt / √∫p²du. Propagation is linear and time-invariant, and integration commutes with it. So the
+  strain response to a source whose strain is p equals the H₂ response to an H₂ input p. The ratio is therefore the
+  strain h_rss ratio for a ringdown-shaped strain source, as P2 intends.
+  - No integration constant enters: the output is zero before arrival.
+  - At low frequency the source strain p carries a nonzero ∫p du, but h_rss = √∫p² is finite. The physical H₂ input
+    ṗ has zero mean (no memory).
+  - **Check (written before running):** a smooth packet g and its derivative ġ, same cell, NED, dx = 0.1. The time
+    integral of the ġ output (from t = 0, no detrending) must match the g output to ≤ 1 % in each pulse h_rss and
+    ≤ 2 % L2 over the pulse windows. The integrated waveform's end value must be ≤ 1 % of its peak.
+- `em_energy_fraction` used ∫(∂ₜψ)² dt. The physical flux uses ∫ψ² dt. It is recomputed from saved waveforms,
+  and two quantities are reported separately:
+  - (a) the receiver-side fraction: EM energy over GW + EM energy in each pulse window at the observer;
+  - (b) the budget relative to the initial packet energy E₀ = ∫p² du, at r* = +1500 and −1500 up to t_end
+    (5 round trips). The residual is energy still trapped or not yet arrived.
+- **Diagnostic (≤ 0.3 h, not a self-consistent model):** the same cell, initial data and readout with the coupling
+  removed and V₂₂ unchanged. This separates barrier shape from channel coupling.
+- **Reruns:** only this cell, dx = 0.1 (convergence at this cell was shown in S4). The verified modes and solver are
+  unchanged.
