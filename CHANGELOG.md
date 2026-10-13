@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: X2 S4: matter-consistent axial GW equations (Yang & Lan) replace the test-field proxy at one cell; η_max 1.52
+- **Input.** arXiv:2603.20594 (axial perturbations of SV under fluid and NED + scalar sources) and arXiv:2112.13198
+  (phantom scalar + magnetic NED source). Neither was assessed before.
+  - Checked: background Einstein tensor, closed-form potentials, the Regge–Wheeler limit, G⁰₀ − G²₂ = 3Ma²/Σ⁵ > 0
+    (no ghost EM channel), a regular throat and radiative ends.
+  - Doubts recorded: the "non-Hermitian" asymmetry is a normalisation artifact; the transition-region tables jump
+    between modes; the fluid closure is an assumption.
+- **Tool.** `scripts/x2_axial_ned.py`, a two-channel leapfrog. It reproduces the published a = 2.20M QNMs (NED
+  GR-led 0.246142 − 0.000116i against 0.246140 − 0.000111i; AF control 0.308249 − 0.000263i), converged.
+- **Comparison** at GW150914's cell a − 2M = 3.575e-4 (design frozen first, `docs/state/units/X2_s4_matter.md`):
+  - About two-thirds of the echo energy leaves in the EM channel.
+  - η_max,NED = 1.52, against 0.79 (s = 1) and 1.13 ("rw") from the same code: outside the 0.70–1.24 proxy
+    bracket.
+  - Timing agrees across the three models tested (one a): spacing 4L + 3.1 to 3.6 %, and a barrier delay of +27
+    to +32 M on the first echo. Pulses fall at 0.445 s and 0.910 s, inside the PMW.
+- **Failed approach.** A 60 M peak-search grid put every peak at the grid edge for a − 2M ≈ 1e-4 to 1e-3. It was
+  fixed with a guard and a test before the comparison.
+- **Missing.** The polar sector (where the phantom scalar enters), η, spin and stability. X2 is paused for owner
+  review. Next if resumed: AF at the same cell (≤ 0.3 h); then a literature check for the polar equations.
+
 ## 2026-10-13: Sunrise system 2 in the four RELICS HST-era models: one source at z ≈ 3; no anomaly
 - **Hypothesis before running:** system 2's misfit in M5-G1 (previous entry) is that model's; the RELICS v1 models
   should map 2a–c to one source at some z. If none did, the system 2 identification would be the open question.

@@ -1221,3 +1221,10 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - Churilova & Stuchlík, arXiv:1911.11823, Eq. 6 (SV test-field potentials, s = 0, 1).
 - GWTC-1, arXiv:1811.12907 (GW150914 final mass 63.1 M☉, z = 0.09, χ_f = 0.69); Berti, Cardoso & Will,
   arXiv:gr-qc/0512160 (Kerr QNM fits).
+
+## Trial unit X2 S4 (accessed 2026-10-13; docs/state/units/X2_s4_matter.md)
+- Yang & Lan, arXiv:2603.20594v1 (2026-03-21): axial gravitational perturbations of SV under anisotropic-fluid
+  and NED + scalar sources; master equations Eqs. 33, 38–39, potentials Eqs. 55–56; supplementary QNM tables
+  (wormhole branch a = 2.13–10 M; a = 2.20: AF 0.308238 − 0.000266i, NED GR-led 0.246140 − 0.000111i).
+- Bronnikov & Walia, Phys. Rev. D 105, 044039 (2022), doi:10.1103/PhysRevD.105.044039, arXiv:2112.13198:
+  SV sourced by a phantom scalar plus magnetic NED; L(F) for Schwarzschild-SV, Eq. L-fin.
