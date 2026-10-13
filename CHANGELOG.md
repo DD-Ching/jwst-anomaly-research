@@ -2,6 +2,8 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: (in progress) Sunrise deflection-map unit: test a z_ref = 3 normalization in 0.02″ pixels
+
 ## 2026-10-13: WHL0137 (Sunrise) image positions in the Scofield+2025 maps: unit check failed; provisional null
 - **Hypothesis before running:** the JWST images map to common sources in the published M5-G1 deflection maps to the
   published 0.06″ source-plane rms; a held-out image (1.1a, b, e; 1.7b; system 2) off by ≫ that would be a lens-model
