@@ -34,9 +34,18 @@ from jwst_anomaly.photometry import fetch_catalog
 _DIR = Path(__file__).resolve().parent
 _spec = importlib.util.spec_from_file_location("lens_consistency", _DIR / "lens_consistency.py")
 lc = importlib.util.module_from_spec(_spec)
-sys.modules.setdefault("lens_consistency", lc)
 _spec.loader.exec_module(lc)
 
+ASSUMPTIONS = (
+    "match_arcsec",
+    "min_e444",
+    "min_snr444",
+    "null_e",
+    "aligned_deg",
+    "anti_deg",
+    "z_margin",
+    "sigma_eps",
+)
 S3_HTTPS = "https://stpubdata.s3.amazonaws.com/"
 
 # F444W pipeline catalogue of the same observation as each stored F200W run, and its manifest.
@@ -50,7 +59,7 @@ FIELDS = {
 
 
 def manifest_sha(manifest: str, filename: str) -> str:
-    t = Table.read(paths.repo_root() / "data" / "manifests" / f"{manifest}.ecsv")
+    t = Table.read(paths.manifests_dir() / f"{manifest}.ecsv")
     rows = t[t["productFilename"] == filename]
     if len(rows) != 1:
         raise SystemExit(f"error: {filename} not once in {manifest}.ecsv")
@@ -63,12 +72,20 @@ def s3_url(filename: str) -> str:
 
 
 def match_second_band(stored: Table, shapes: Table, match_arcsec: float) -> Table:
-    """``stored`` rows with the nearest ``shapes`` axis, ellipticity and S/N as ``*_444``."""
+    """``stored`` rows with the nearest ``shapes`` axis, ellipticity and S/N as ``*_444``.
+
+    ``sep_nearest`` is kept for every row. An F444W source that is the nearest match of two or more
+    rows (a blend in the wider PSF) is flagged ``shared_444`` and gives none of them a shape.
+    """
     c1 = SkyCoord(stored["ra"], stored["dec"], unit="deg")
     c2 = SkyCoord(shapes["ra"], shapes["dec"], unit="deg")
     idx, sep, _ = c1.match_to_catalog_sky(c2)
-    ok = sep.to_value(u.arcsec) <= match_arcsec
+    near = sep.to_value(u.arcsec) <= match_arcsec
+    shared = near & (np.bincount(idx[near], minlength=len(shapes))[idx] > 1)
+    ok = near & ~shared
     out = stored.copy(copy_data=True)
+    out["sep_nearest"] = sep.to_value(u.arcsec)
+    out["shared_444"] = shared
     for col, src in (("pa_444", "pa_obs"), ("e_444", "ellipticity"), ("snr_444", "snr")):
         out[col] = np.where(ok, np.asarray(shapes[src], float)[idx], np.nan)
     out["sep_444"] = np.where(ok, sep.to_value(u.arcsec), np.nan)
@@ -90,18 +107,44 @@ def reclassify(model, rows: Table, args) -> Table:
     return out
 
 
+def usable_mask(t: Table, args) -> np.ndarray:
+    with np.errstate(invalid="ignore"):
+        return (
+            np.isfinite(np.asarray(t["pa_444"], float))
+            & (np.asarray(t["e_444"], float) >= args.min_e444)
+            & (np.asarray(t["snr_444"], float) >= args.min_snr444)
+        )
+
+
+def status_444(row, usable: bool) -> str:
+    if bool(row["shared_444"]):
+        return "shared"
+    if not np.isfinite(row["pa_444"]):
+        return "no_match"
+    return str(row["class_444"]) if usable else "unusable"
+
+
 def summarize(t: Table, args) -> dict:
+    """Second-band counts for background sources in strong shear.
+
+    The shape-noise null keeps the F200W selection threshold (``--null-e``, the ``arcs`` cut): the
+    F444W cut only removes noisy axes, and PSF dilution lowers e without turning the axis.
+    """
     test = t[t["strong_shear"] & (t["population"] == "background")]
-    usable = np.isfinite(test["pa_444"]) & (test["e_444"] >= args.min_e444)
-    usable &= test["snr_444"] >= args.min_snr444
+    usable = usable_mask(test, args)
     u_rows = test[usable]
     al = u_rows[u_rows["orientation_class"] == "aligned"]
-    anti_200 = test[test["orientation_class"] == "anti"]
+    is_anti = test["orientation_class"] == "anti"
+    anti_200, anti_ok = test[is_anti], usable[is_anti]
     sub = u_rows.copy()
     sub["orientation_class"] = sub["class_444"]
     return {
         "background_strong_shear": len(test),
         "usable_444": len(u_rows),
+        "no_match_444": int(
+            np.sum(~np.isfinite(np.asarray(test["pa_444"], float)) & ~test["shared_444"])
+        ),
+        "shared_444": int(np.sum(test["shared_444"])),
         "dpa_bands_median": round(float(np.median(u_rows["dpa_bands"])), 1)
         if len(u_rows)
         else None,
@@ -109,18 +152,19 @@ def summarize(t: Table, args) -> dict:
         "control_stay_aligned_444": int(np.sum(al["class_444"] == "aligned")),
         "control_anti_444": int(np.sum(al["class_444"] == "anti")),
         "classes_444": lc.class_stats(sub, args.aligned_deg),
-        "anti_expected_444": lc.anti_expected(sub, args.sigma_eps, args.min_e444, args.anti_deg),
+        "anti_expected_444": lc.anti_expected(sub, args.sigma_eps, args.null_e, args.anti_deg),
         "anti_200": [
             {
                 "label": int(r["label"]),
-                "class_444": str(r["class_444"]) if np.isfinite(r["pa_444"]) else "no_match",
+                "class_444": status_444(r, ok),
+                "sep_nearest": round(float(r["sep_nearest"]), 2),
                 "dpa_bands": None
                 if not np.isfinite(r["dpa_bands"])
                 else round(float(r["dpa_bands"]), 1),
                 "e_444": None if not np.isfinite(r["e_444"]) else round(float(r["e_444"]), 2),
                 "snr_444": None if not np.isfinite(r["snr_444"]) else round(float(r["snr_444"]), 1),
             }
-            for r in anti_200
+            for r, ok in zip(anti_200, anti_ok, strict=True)
         ],
         "anti_444": [int(v) for v in sub["label"][(sub["orientation_class"] == "anti")]],
     }
@@ -133,22 +177,16 @@ def run(args) -> dict:
     model, _, _ = lc.load_model(args.model)
     lc.apply_frame_offset(args.model, model)
     t = reclassify(model, match_second_band(stored, lc.load_shapes(cat), args.match_arcsec), args)
-    t.meta.update(provenance=schema.Provenance.DERIVED.value, second_band=filename)
+    t.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source=f"{stored.meta.get('source', 'arcs.ecsv')} + {filename} (F444W shapes)",
+        second_band=filename,
+        assumptions_444={k: getattr(args, k) for k in ASSUMPTIONS},
+    )
     summary = {
         "model": args.model,
         "second_band": filename,
-        "assumptions": {
-            k: getattr(args, k)
-            for k in (
-                "match_arcsec",
-                "min_e444",
-                "min_snr444",
-                "aligned_deg",
-                "anti_deg",
-                "z_margin",
-                "sigma_eps",
-            )
-        },
+        "assumptions": {k: getattr(args, k) for k in ASSUMPTIONS},
     } | summarize(t, args)
     out = args.out / args.model
     out.mkdir(parents=True, exist_ok=True)
@@ -169,6 +207,8 @@ def run(args) -> dict:
         "snr",
         "snr_444",
         "sep_444",
+        "sep_nearest",
+        "shared_444",
     ]
     t[cols].write(out / "bands.ecsv", overwrite=True)
     (out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
@@ -183,6 +223,7 @@ def main(argv=None) -> int:
     p.add_argument("--match-arcsec", type=float, default=0.3)
     p.add_argument("--min-e444", type=float, default=0.3)
     p.add_argument("--min-snr444", type=float, default=10.0)
+    p.add_argument("--null-e", type=float, default=0.5, help="e cut of the shape-noise null")
     p.add_argument("--aligned-deg", type=float, default=30.0)
     p.add_argument("--anti-deg", type=float, default=60.0)
     p.add_argument("--z-margin", type=float, default=0.1)

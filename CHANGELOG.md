@@ -8,12 +8,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   stays anti is a single source whose shape lensing does not explain.
 - `scripts/arcs_bands.py` (new; reuses `lens_consistency` `load_shapes`, `orientation_table`, `anti_expected`) on the
   stored `results/arcs/*/arcs.ecsv` with the F444W pipeline catalogues of the same observations (manifest sha256s).
-- **Result (derived, `results/arcs_bands/`):** background, strong shear, 90 of 154 usable in F444W. Control: 81 of 83
-  F200W-aligned stay aligned, 0 turn anti; median axis difference 1.7–3.9°. F444W anti 3 vs 2.01 expected
-  (P = 0.33): Abell 370 340, 4540 and El Gordo 742, each one source with the same axis in both bands (looked at:
+- **Result (derived, `results/arcs_bands/`):** background, strong shear, 90 of 154 usable in F444W (60 unmatched, 4 below e 0.3). Control: 81 of 83
+  F200W-aligned stay aligned, 0 turn anti; median axis difference 1.7–3.9°. F444W anti 3 vs 1.30 expected
+  (P = 0.14; null at the F200W e ≥ 0.5 cut): Abell 370 340, 4540 and El Gordo 742, each one source with the same axis in both bands (looked at:
   6″ F200W/F444W cutouts). 1565, 1788, 4236 and 1703 have no F444W source within 1″. Null (D-024 addendum 4).
 - **Limitation:** an intrinsic shape is achromatic too, so the band test is a blend veto, not a lensing test.
-- **Next:** critical-curve curvature against arcs; F444W shapes for the 64 unmatched sources need forced moments on
+- **Next:** critical-curve curvature against arcs; F444W shapes for the 60 unmatched sources need forced moments on
   the i2d (S3 byte range), only if a new anti flag appears.
 
 ## 2026-10-13: X2 S4b: physical strain and energy of the S4 readouts; η_max 1.52 stands; no polar/radial equations exist

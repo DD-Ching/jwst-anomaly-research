@@ -5,6 +5,7 @@
   "match_arcsec": 0.3,
   "min_e444": 0.3,
   "min_snr444": 10.0,
+  "null_e": 0.5,
   "aligned_deg": 30.0,
   "anti_deg": 60.0,
   "z_margin": 0.1,
@@ -12,6 +13,8 @@
  },
  "background_strong_shear": 12,
  "usable_444": 10,
+ "no_match_444": 2,
+ "shared_444": 0,
  "dpa_bands_median": 2.7,
  "control_aligned_200": 8,
  "control_stay_aligned_444": 8,
@@ -26,13 +29,14 @@
  "anti_expected_444": {
   "n": 10,
   "anti": 1,
-  "expected": 0.232,
-  "p_ge_observed": 0.2069402048569429
+  "expected": 0.151,
+  "p_ge_observed": 0.1402880843807511
  },
  "anti_200": [
   {
    "label": 742,
    "class_444": "anti",
+   "sep_nearest": 0.02,
    "dpa_bands": 4.5,
    "e_444": 0.46,
    "snr_444": 43.4

@@ -5,6 +5,7 @@
   "match_arcsec": 0.3,
   "min_e444": 0.3,
   "min_snr444": 10.0,
+  "null_e": 0.5,
   "aligned_deg": 30.0,
   "anti_deg": 60.0,
   "z_margin": 0.1,
@@ -12,6 +13,8 @@
  },
  "background_strong_shear": 35,
  "usable_444": 31,
+ "no_match_444": 3,
+ "shared_444": 0,
  "dpa_bands_median": 2.4,
  "control_aligned_200": 29,
  "control_stay_aligned_444": 29,
@@ -26,7 +29,7 @@
  "anti_expected_444": {
   "n": 31,
   "anti": 0,
-  "expected": 0.597,
+  "expected": 0.378,
   "p_ge_observed": 1.0
  },
  "anti_200": [],

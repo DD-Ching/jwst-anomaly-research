@@ -41,6 +41,23 @@ def test_match_second_band_radius_and_axis_offset():
     assert np.isclose(t["dpa_bands"][0], 15.0)  # axes wrap at 180 deg
     assert np.isclose(t["e_444"][0], 0.4)
     assert np.isnan(t["pa_444"][1])  # 2" away: no match
+    assert np.isclose(t["sep_nearest"][1], 2.0, atol=0.01)
+
+
+def test_match_second_band_flags_shared_match():
+    stored = Table({"ra": [10.0, 10.0 + 0.2 / 3600], "dec": [0.0, 0.0], "pa_obs": [0.0, 0.0]})
+    shapes = Table(
+        {
+            "ra": [10.0 + 0.1 / 3600],
+            "dec": [0.0],
+            "pa_obs": [0.0],
+            "ellipticity": [0.5],
+            "snr": [50.0],
+        }
+    )
+    t = ab.match_second_band(stored, shapes, match_arcsec=0.3)
+    assert list(t["shared_444"]) == [True, True]
+    assert np.all(np.isnan(t["pa_444"]))
 
 
 def test_summarize_counts_control_and_anti():
@@ -56,10 +73,12 @@ def test_summarize_counts_control_and_anti():
             "e_444": [0.5, 0.5, 0.5, np.nan],
             "snr_444": [50.0, 50.0, 50.0, np.nan],
             "g_min": [0.5, 0.5, 0.5, 0.5],
+            "shared_444": [False, False, False, False],
+            "sep_nearest": [0.1, 0.1, 0.1, 1.5],
         }
     )
     args = argparse.Namespace(
-        min_e444=0.3, min_snr444=10.0, aligned_deg=30.0, anti_deg=60.0, sigma_eps=0.26
+        min_e444=0.3, min_snr444=10.0, null_e=0.5, aligned_deg=30.0, anti_deg=60.0, sigma_eps=0.26
     )
     s = ab.summarize(t, args)
     assert s["usable_444"] == 3
