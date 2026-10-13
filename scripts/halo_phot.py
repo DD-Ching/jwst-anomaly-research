@@ -25,7 +25,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 import numpy as np
@@ -57,6 +59,9 @@ MIN_SNR = 10.0  # on flux / (ERR ⊕ blank-aperture scatter), as D-032 (ASSUMPTI
 MIN_CONCENTRATION = 0.6  # f(0.2")/f(0.4") below this: resolved, as exotic_screens (ASSUMPTION)
 MAX_ABS_MU = 20.0  # as D-032's flux test (ASSUMPTION)
 OUTLIER_MAG = 0.75  # as D-032's flux_outlier (ASSUMPTION)
+ROUTES = ("medfilt", "annulus")
+MIN_RECOVERY = 0.5  # a route keeping less of an injected compact image is dropped (ASSUMPTION)
+INJECT_ARCSEC = 0.45  # --inject-mag scales the filtered light within this of the image (ASSUMPTION)
 
 
 def _fill_nan(img: np.ndarray) -> np.ndarray:
@@ -65,6 +70,15 @@ def _fill_nan(img: np.ndarray) -> np.ndarray:
     if bad.any():
         out[bad] = np.nanmedian(out) if np.isfinite(out).any() else 0.0
     return out
+
+
+def halo_filtered(
+    sci: np.ndarray, pix_arcsec: float, filter_arcsec: float = FILTER_ARCSEC
+) -> np.ndarray:
+    """The stamp minus its ``filter_arcsec`` median filter (NaNs filled first)."""
+    img = _fill_nan(sci)
+    size = int(round(filter_arcsec / pix_arcsec)) | 1
+    return img - ndimage.median_filter(img, size=size, mode="reflect")
 
 
 def measure(
@@ -80,21 +94,23 @@ def measure(
     r_ap: float = R_AP_ARCSEC,
     recentre: float = RECENTRE_ARCSEC,
     annulus: tuple[float, float] = ANNULUS_ARCSEC,
+    filtered: np.ndarray | None = None,
 ) -> tuple[float, float, float]:
     """Halo-subtracted aperture flux, its error and the concentration f(r_ap) / f(2 r_ap) near
     ``(cx, cy)`` (arcsec offsets, as ``xx``/``yy``). ``recentre = 0`` measures at ``(cx, cy)``;
     otherwise the aperture moves to the peak of the median-filtered image within ``recentre`` in
-    both routes, so a halo gradient cannot pull it. The error is the i2d ERR only; :func:`run`
-    adds the blank-aperture scatter.
+    both routes, so a halo gradient cannot pull it. The error is the i2d ERR only;
+    :func:`measure_image` adds the ring-check terms and the recovery. ``filtered`` (from
+    :func:`halo_filtered`) skips recomputing the median filter for a stamp measured again.
 
     Returns NaNs when either aperture holds a non-finite pixel."""
     if pix_arcsec is None:
-        pix_arcsec = float(np.hypot(xx[0, 1] - xx[0, 0], yy[0, 1] - yy[0, 0]))
+        pix_arcsec = _pix(xx, yy)
     img = _fill_nan(sci)
-    if route not in ("medfilt", "annulus"):
+    if route not in ROUTES:
         raise ValueError(f"unknown route {route!r}")
-    size = int(round(filter_arcsec / pix_arcsec)) | 1
-    filtered = img - ndimage.median_filter(img, size=size, mode="reflect")
+    if filtered is None:
+        filtered = halo_filtered(img, pix_arcsec, filter_arcsec)
     res = filtered if route == "medfilt" else img
     px, py = cx, cy
     if recentre > 0:
@@ -125,73 +141,111 @@ def gaussian(xx, yy, cx, cy, flux, fwhm):
     return flux * g / g.sum()
 
 
-def ring_checks(sci, err, xx, yy, flux, route, fwhm, n_angles=8, ring=CHECK_RING_ARCSEC):
-    """Two checks on apertures placed on a ring around the image, on the real halo:
+def _pix(xx: np.ndarray, yy: np.ndarray) -> float:
+    """Pixel size (arcsec) of a stamp's offset grid."""
+    return float(np.hypot(xx[0, 1] - xx[0, 0], yy[0, 1] - yy[0, 0]))
+
+
+def ring_checks(sci, err, xx, yy, fluxes, fwhm, n_angles=8, ring=CHECK_RING_ARCSEC, filtered=None):
+    """Two checks on apertures placed on a ring around the image, on the real halo, for each
+    route in ``fluxes`` (route -> the image's measured flux):
 
     - ``blank``: the halo-subtracted flux of the empty apertures (no injection). Halo light the
       route leaves behind shows up here; its median is the residual bias per aperture and its
       spread (half the 16–84 % range) the background error. Neighbours can fall on the ring, so
-      only robust statistics are used.
-    - ``recovery``: (flux with a Gaussian of ``flux`` injected − ``blank``) / ``flux``: how much
-      of a compact image the route itself removes (the filter or ring eating its wings).
+      only robust statistics are used. The ring samples the halo 1″ out, not at the image, so
+      :func:`measure_image` also counts the whole correction as an error.
+    - ``recovery``: (flux with a Gaussian injected − ``blank``) / injected flux: how much of a
+      compact image the route itself removes (the filter or ring eating its wings). One Gaussian
+      (the routes' median flux) per angle serves both routes, so each injected stamp is filtered
+      once.
 
-    Returns ``(blank, recovery)`` arrays."""
-    blank, rec = [], []
+    ``filtered`` is the base stamp's :func:`halo_filtered`, if already computed.
+    Returns ``{route: (blank, recovery)}`` arrays."""
+    pix = _pix(xx, yy)
+    base = halo_filtered(sci, pix) if filtered is None else filtered
+    flux = float(np.median(list(fluxes.values())))
+    out = {route: ([], []) for route in fluxes}
     for t in np.arange(n_angles) * 2 * np.pi / n_angles:
         cx, cy = ring * np.cos(t), ring * np.sin(t)
-        # same peak search as the real measurement, so its positive bias shows up here too
-        b = measure(sci, err, xx, yy, route, cx, cy)[0]
-        f = measure(sci + gaussian(xx, yy, cx, cy, flux, fwhm), err, xx, yy, route, cx, cy)[0]
-        blank.append(b)
-        rec.append((f - b) / flux)
-    return np.asarray(blank, float), np.asarray(rec, float)
+        inj = sci + gaussian(xx, yy, cx, cy, flux, fwhm)
+        inj_filt = halo_filtered(inj, pix)
+        for route in fluxes:
+            # same peak search as the real measurement, so its positive bias shows up here too
+            b = measure(sci, err, xx, yy, route, cx, cy, filtered=base)[0]
+            f = measure(inj, err, xx, yy, route, cx, cy, filtered=inj_filt)[0]
+            out[route][0].append(b)
+            out[route][1].append((f - b) / flux)
+    return {k: (np.asarray(b, float), np.asarray(r, float)) for k, (b, r) in out.items()}
 
 
-def run(model_name: str, systems: list[str], bands: dict[str, str], half_arcsec: float = 3.0):
-    if not lc.has_image_list(model_name) or lc.is_map_model(model_name):
-        raise SystemExit(f"error: {model_name}: needs a Lenstool model with a usable image list")
-    missing = [b for b in bands if b not in PSF_FWHM_ARCSEC]
-    if missing:
-        raise SystemExit(f"error: no PSF width for {missing}; known: {sorted(PSF_FWHM_ARCSEC)}")
-    model, files, par = lc.load_model(model_name)
-    images, _ = lc.image_list(model_name, files, par)
-    lc.apply_frame_offset(model_name, model, images)  # into the JWST frame (D-034)
-    images = images[np.isin(np.asarray(images["system"], str), systems)]
-    z = lensmodel.image_redshifts(images, par["z_m_limit"])
-    mu = np.asarray(model.evaluate(images["ra"], images["dec"], z)["magnification"], float)
-    rows = [
-        {"image_id": str(r["image_id"]), "system": str(r["system"]), "mu": float(m)}
-        for r, m in zip(images, mu, strict=True)
-    ]
-    for band, uri in bands.items():
-        stamp, close = lc.image_stamper(uri, half_arcsec)
-        try:
-            for row, r in zip(rows, images, strict=True):
-                sci, err, xx, yy = stamp(float(r["ra"]), float(r["dec"]))
-                for route in ("medfilt", "annulus"):
-                    f, e, c = measure(sci, err, xx, yy, route)
-                    row[f"{band}_conc"] = c  # the same unfiltered measure in both routes
-                    blank_med, blank_sd, rec = np.nan, 0.0, np.nan
-                    if np.isfinite(f) and f > 0:
-                        blank, inj = ring_checks(sci, err, xx, yy, f, route, PSF_FWHM_ARCSEC[band])
-                        blank = blank[np.isfinite(blank)]
-                        if blank.size:
-                            blank_med = float(np.median(blank))
-                            blank_sd = float(np.diff(np.percentile(blank, [16, 84]))[0] / 2)
-                        rec = float(np.nanmedian(inj))
-                    # the leftover halo the blank apertures see is removed; its spread is an error
-                    row[f"{band}_{route}_flux"] = f - blank_med if np.isfinite(blank_med) else f
-                    row[f"{band}_{route}_err"] = float(np.hypot(e, blank_sd))
-                    row[f"{band}_{route}_blank_frac"] = blank_med / f if f > 0 else np.nan
-                    row[f"{band}_{route}_recovery"] = rec
-        finally:
-            close()
+def measure_image(sci, err, xx, yy, mu: float, band: str) -> dict:
+    """Both routes and their ring checks for one image in one band (a process-pool task).
+
+    The flux is corrected for the leftover halo (blank median) and divided by the recovery; the
+    error adds, in quadrature, the blank scatter and the whole halo correction (ASSUMPTION: the
+    ring 1″ out may misjudge the leftover halo at the image, where the cusp is steeper). A route
+    that keeps less than ``MIN_RECOVERY`` of an injected image is dropped (NaN flux). Ring checks
+    are skipped for images the gates drop anyway (concentration, |μ|)."""
+    filt = halo_filtered(sci, _pix(xx, yy))
+    meas = {route: measure(sci, err, xx, yy, route, filtered=filt) for route in ROUTES}
+    conc = meas["medfilt"][2]  # the same unfiltered measure in both routes
+    out = {f"{band}_conc": conc}
+    gated = np.isfinite(conc) and conc >= MIN_CONCENTRATION and abs(mu) <= MAX_ABS_MU
+    todo = {r: m[0] for r, m in meas.items() if gated and np.isfinite(m[0]) and m[0] > 0}
+    checks = (
+        ring_checks(sci, err, xx, yy, todo, PSF_FWHM_ARCSEC[band], filtered=filt) if todo else {}
+    )
+    for route, (f, e, _) in meas.items():
+        blank_med, blank_sd, rec = np.nan, 0.0, np.nan
+        if route in checks:
+            blank, inj = checks[route]
+            blank = blank[np.isfinite(blank)]
+            if blank.size:
+                blank_med = float(np.median(blank))
+                blank_sd = float(np.diff(np.percentile(blank, [16, 84]))[0] / 2)
+            rec = float(np.nanmedian(inj))
+        corr = f - blank_med if np.isfinite(blank_med) else f
+        scale = rec if np.isfinite(rec) else 1.0  # no check ran: the gates drop this image
+        bias = abs(blank_med) if np.isfinite(blank_med) else 0.0
+        if np.isfinite(rec) and rec < MIN_RECOVERY:
+            corr = np.nan  # the route removes too much of a compact image to be corrected
+        out[f"{band}_{route}_flux"] = corr / scale
+        out[f"{band}_{route}_err"] = float(np.sqrt(e**2 + blank_sd**2 + bias**2)) / scale
+        out[f"{band}_{route}_blank_frac"] = blank_med / f if f > 0 else np.nan
+        out[f"{band}_{route}_recovery"] = rec
+    return out
+
+
+def _init_worker() -> None:
+    """One BLAS/OpenMP thread per pool worker (scripts/CLAUDE.md), also on fork."""
+    os.environ["OMP_NUM_THREADS"] = "1"
+    try:
+        from threadpoolctl import threadpool_limits
+    except ImportError:  # optional; median_filter itself is single-threaded
+        return
+    threadpool_limits(1)
+
+
+def _scaled_image(stamp, inject_mag: float):
+    """``stamp`` with the image's own halo-subtracted light (the filtered stamp within
+    ``INJECT_ARCSEC``) scaled so its flux changes by ``inject_mag`` mag. The real profile and the
+    halo stay; the pixel noise and any neighbour inside the radius are scaled too."""
+    sci, err, xx, yy = stamp
+    near = np.hypot(xx, yy) <= INJECT_ARCSEC
+    image = np.where(near, halo_filtered(sci, _pix(xx, yy)), 0.0)
+    return sci + (10 ** (-0.4 * inject_mag) - 1) * image, err, xx, yy
+
+
+def classify(rows: list[dict], bands) -> None:
+    """Gates, leave-one-out residuals and ``flux_class`` per band, in place (see module doc)."""
     systems_arr = np.array([r["system"] for r in rows])
+    mu = np.array([r["mu"] for r in rows], float)
     for band in bands:
-        for route in ("medfilt", "annulus"):
-            f = np.array([r[f"{band}_{route}_flux"] for r in rows])
-            e = np.array([r[f"{band}_{route}_err"] for r in rows])
-            c = np.array([r[f"{band}_conc"] for r in rows])
+        for route in ROUTES:
+            f = np.array([r[f"{band}_{route}_flux"] for r in rows], float)
+            e = np.array([r[f"{band}_{route}_err"] for r in rows], float)
+            c = np.array([r[f"{band}_conc"] for r in rows], float)
             ok = np.isfinite(f) & (f > 0) & (f / np.where(e > 0, e, np.inf) >= MIN_SNR)
             ok &= (c >= MIN_CONCENTRATION) & (np.abs(mu) <= MAX_ABS_MU)
             src = np.where(
@@ -215,7 +269,85 @@ def run(model_name: str, systems: list[str], bands: dict[str, str], half_arcsec:
                 row[f"{band}_flux_class"] = "one_route"
             else:
                 row[f"{band}_flux_class"] = "untested"
-    return rows
+
+
+def run(
+    model_name: str,
+    systems: list[str],
+    bands: dict[str, str],
+    half_arcsec: float = 3.0,
+    inject_mags: tuple[float, ...] = (),
+    workers: int | None = None,
+):
+    """Measure and classify ``systems``' images. Each of ``inject_mags`` is an end-to-end
+    injection: each image in turn is changed by that many mag (negative: brighter) with
+    :func:`_scaled_image`, and the whole chain (both routes, ring checks, gates, residual, class)
+    re-runs for it; the others keep their base measurements. Each record holds the target's class
+    before and after, per band (``flux_outlier`` after = recovered; a target untested before was
+    never testable and does not count as a miss). Returns ``(rows, injections)``."""
+    if not lc.has_image_list(model_name) or lc.is_map_model(model_name):
+        raise SystemExit(f"error: {model_name}: needs a Lenstool model with a usable image list")
+    missing = [b for b in bands if b not in PSF_FWHM_ARCSEC]
+    if missing:
+        raise SystemExit(f"error: no PSF width for {missing}; known: {sorted(PSF_FWHM_ARCSEC)}")
+    model, files, par = lc.load_model(model_name)
+    images, _ = lc.image_list(model_name, files, par)
+    lc.apply_frame_offset(model_name, model, images)  # into the JWST frame (D-034)
+    known = set(np.asarray(images["system"], str))
+    unknown = [s for s in systems if s not in known]
+    if unknown:
+        raise SystemExit(f"error: {model_name}: no systems {unknown}")
+    images = images[np.isin(np.asarray(images["system"], str), systems)]
+    z = lensmodel.image_redshifts(images, par["z_m_limit"])
+    mu = np.asarray(model.evaluate(images["ra"], images["dec"], z)["magnification"], float)
+    rows = [
+        {"image_id": str(r["image_id"]), "system": str(r["system"]), "mu": float(m)}
+        for r, m in zip(images, mu, strict=True)
+    ]
+    stamps = {}
+    for band, uri in bands.items():
+        stamp, close = lc.image_stamper(uri, half_arcsec)
+        try:
+            stamps[band] = [stamp(float(r["ra"]), float(r["dec"])) for r in images]
+        finally:
+            close()
+    # CPU-bound: one process per core, one BLAS thread each (scripts/CLAUDE.md)
+    with ProcessPoolExecutor(
+        max_workers=workers or os.cpu_count(), initializer=_init_worker
+    ) as pool:
+        base_f = {
+            (band, k): pool.submit(measure_image, *st, mu[k], band)
+            for band, sts in stamps.items()
+            for k, st in enumerate(sts)
+        }
+        # every injection is independent: submit them all before waiting on any
+        inj_f = {
+            (dm, k, band): pool.submit(
+                measure_image, *_scaled_image(stamps[band][k], dm), mu[k], band
+            )
+            for dm in inject_mags
+            for k in range(len(rows))
+            for band in bands
+        }
+        for (_, k), fut in base_f.items():
+            rows[k].update(fut.result())
+        classify(rows, bands)
+        injections = []
+        for dm in inject_mags:
+            for k, target in enumerate(rows):
+                out = [dict(r) for r in rows]
+                for band in bands:
+                    out[k].update(inj_f[(dm, k, band)].result())
+                classify(out, bands)
+                injections.append(
+                    {
+                        "image_id": target["image_id"],
+                        "inject_mag": dm,
+                        "before": {b: target[f"{b}_flux_class"] for b in bands},
+                        "after": {b: out[k][f"{b}_flux_class"] for b in bands},
+                    }
+                )
+    return rows, injections
 
 
 def main(argv=None) -> int:
@@ -224,9 +356,20 @@ def main(argv=None) -> int:
     ap.add_argument("--systems", required=True, help="comma-separated system ids")
     ap.add_argument("--band", action="append", required=True, help="BAND=i2d-uri (repeatable)")
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument(
+        "--inject-mag",
+        type=float,
+        action="append",
+        default=[],
+        help="end-to-end injection per image, mag (repeatable; negative = brighter)",
+    )
+    ap.add_argument("--workers", type=int, default=None)
     args = ap.parse_args(argv)
     bands = {k.strip().lower(): v for k, v in (b.split("=", 1) for b in args.band)}
-    rows = run(args.model, args.systems.split(","), bands)
+    systems = [s.strip() for s in args.systems.split(",") if s.strip()]
+    rows, injections = run(
+        args.model, systems, bands, inject_mags=tuple(args.inject_mag), workers=args.workers
+    )
     clean = [{k: (lc._r(v, 3) if isinstance(v, float) else v) for k, v in r.items()} for r in rows]
     summary = {
         "model": args.model,
@@ -243,8 +386,11 @@ def main(argv=None) -> int:
             "min_concentration": MIN_CONCENTRATION,
             "max_abs_mu": MAX_ABS_MU,
             "min_snr": MIN_SNR,
+            "min_recovery": MIN_RECOVERY,
+            "inject_arcsec": INJECT_ARCSEC,
         },
         "images": clean,
+        "injections": injections,
     }
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "halo_phot.json").write_text(json.dumps(summary, indent=1) + "\n")
@@ -257,6 +403,8 @@ def main(argv=None) -> int:
                 if k.endswith(("resid", "blank_frac", "recovery", "class"))
             },
         )
+    for inj in injections:
+        print("inject", inj)
     return 0
 
 
