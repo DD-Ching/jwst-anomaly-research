@@ -9,13 +9,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   weights and timing. Design frozen before computing (`docs/state/units/X2_s2_design.md`).
 - S1 (`scripts/x2_scatter.py`):
   - peaks found from the actual potentials (s = 1 exactly at R = 3M; s = 0 at R ≈ 3.016M);
-  - flux to 4e-11; two routes agree to 1.4e-6; Schwarzschild 16πM² limit reproduced;
-  - the resonance-spacing time exceeds 4L by a constant 14–25 M (reflection phase), which is physics and not a
-    code failure.
-- S2, GW150914 (PMW 0.2–1.2 s): in the applicable range, Δt = 0.3–0.6 s, a − 2M ≈ 2e-4 to 8e-4 M:
-  - η_max = 0.70–0.80 (scalar, EM; ringdown weight), 1.18–1.24 (RW-form), ≈ 0.92–1.01 (flat weight);
+  - flux to 4.3e-11; two routes agree to 1.4e-6; Schwarzschild 16πM² limit reproduced;
+  - resonance spacing vs 4L: passes 1 % at a − 2M = 1e-4, **fails** at 1e-3 (+1.7 / +3.1 %). Post hoc reading:
+    a constant 14–25 M reflection delay, the 4L approximation's bias (owner: not a code failure).
+- S2, GW150914 (PMW 0.2–1.2 s), applicable cells only (Δt 0.32–0.58 s, a − 2M ≈ 2.2e-4 to 7.1e-4 M; flat weight
+  only 0.45–0.58 s):
+  - η_max = 0.70–0.73 (scalar), 0.77–0.80 (EM), 1.18–1.24 (RW-form) with the ringdown weight; 0.99–1.01 flat;
   - no constraint at η ~ 1.
-- S3: a time-domain double-barrier simulation matches the frequency-domain echo amplitudes to 2.8 % and 4.5 %.
+- S3 (time domain, double barrier): echo amplitudes match the frequency domain to 2.8 % and 4.5 % (pass); the
+  pulse spacing is 4L + 4.1 % (**fails** 1 %; measured post hoc). Shifting S2's pulses by that delay (≈ 16 ms per
+  round trip) removes only the Δt = 0.58 s cell; the η_max ranges are unchanged.
 - Missing irreplaceable input: SV spin-2 perturbation equations with their matter source, and η. X2 paused for
   owner review; next if resumed: the multi-event η_max map (≤ 2 h).
 

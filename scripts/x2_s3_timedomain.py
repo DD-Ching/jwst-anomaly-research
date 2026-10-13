@@ -9,7 +9,9 @@ with P the packet spectrum and R, T from scripts/x2_scatter.py.
 
   python scripts/x2_s3_timedomain.py   -> results/x2/s3_timedomain.json  (about a minute)
 
-Pass (written in docs/state/units/X2.md before the run): agreement within 10 % for pulses 1 and 2.
+Gate (docs/state/units/X2.md, written before the run): amplitudes within 10 % (pulses 1, 2) and
+pulse spacing within 1 % of the geometric dt = 4L. The spacing half was added after review
+(post hoc implementation of the pre-written criterion; it was not measured in the first run).
 """
 
 from __future__ import annotations
@@ -59,23 +61,35 @@ def run(a=None, s=1, dt_target_M=1181.0, w0=0.5307, tau=12.2, dx=0.2, cfl=0.5):
     nsteps = int(t_end / dt)
     rec = np.empty(nsteps)
     c2 = (dt / dx) ** 2
+    coef = 2.0 - 2.0 * c2 - dt * dt * V  # psi_next = coef psi + c2 (psi_l + psi_r) - psi_prev
+    nxt = np.zeros_like(psi)
     for n in range(nsteps):
-        lap = np.empty_like(psi)
-        lap[1:-1] = psi[2:] - 2 * psi[1:-1] + psi[:-2]
-        lap[0] = lap[-1] = 0.0
-        psi_next = 2 * psi - psi_prev + c2 * lap - dt * dt * V * psi
-        psi_prev, psi = psi, psi_next
+        np.multiply(coef[1:-1], psi[1:-1], out=nxt[1:-1])
+        nxt[1:-1] += c2 * (psi[2:] + psi[:-2])
+        nxt[1:-1] -= psi_prev[1:-1]
+        psi_prev, psi, nxt = psi, nxt, psi_prev
         rec[n] = psi[i_obs]
     t = (np.arange(nsteps) + 2) * dt
     # pulse windows: arrival of pulse k at the observer ~ t_k = k*dt_echo + (x_obs - x0) offset
     dte = xe.echo_delay(a)
     t_direct = x_obs - x0  # straight-out travel time (reference)
     ref_hrss = math.sqrt(np.trapezoid(p(np.arange(0, 40 * tau, dt)) ** 2, dx=dt))
-    pulses = []
+    pulses, t_arr, width = [], [], []
     for k in (1, 2):
         tc = t_direct + k * dte
         m = (t > tc - 0.45 * dte) & (t < tc + 0.45 * dte)
-        pulses.append(math.sqrt(np.trapezoid(rec[m] ** 2, t[m])) / ref_hrss)
+        e2 = rec[m] ** 2
+        pulses.append(math.sqrt(np.trapezoid(e2, t[m])) / ref_hrss)
+        tbar = float(np.trapezoid(t[m] * e2, t[m]) / np.trapezoid(e2, t[m]))  # energy centroid
+        t_arr.append(tbar)
+        width.append(
+            float(math.sqrt(np.trapezoid((t[m] - tbar) ** 2 * e2, t[m]) / np.trapezoid(e2, t[m])))
+        )
+    # the reference packet's own energy centroid and rms width
+    uu = np.arange(0, 40 * tau, dt)
+    pe = p(uu) ** 2
+    ref_c = float(np.trapezoid(uu * pe, uu) / np.trapezoid(pe, uu))
+    ref_w = float(math.sqrt(np.trapezoid((uu - ref_c) ** 2 * pe, uu) / np.trapezoid(pe, uu)))
     # frequency-domain prediction with the packet spectrum
     u = np.arange(0, 60 * tau, 0.05)
     P = np.fft.rfft(p(u))
@@ -93,6 +107,11 @@ def run(a=None, s=1, dt_target_M=1181.0, w0=0.5307, tau=12.2, dx=0.2, cfl=0.5):
         "time_domain_pulse_hrss_ratio": pulses,
         "frequency_domain_prediction": pred,
         "relative_difference": [abs(pulses[i] / pred[i] - 1) for i in range(2)],
+        "pulse_spacing_M": t_arr[1] - t_arr[0],
+        "spacing_vs_4L_relative": (t_arr[1] - t_arr[0]) / dte - 1,
+        "first_arrival_minus_direct_plus_4L_M": t_arr[0] - (t_direct + dte + ref_c),
+        "pulse_rms_width_M": width,
+        "packet_rms_width_M": ref_w,
     }
 
 

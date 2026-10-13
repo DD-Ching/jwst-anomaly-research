@@ -106,6 +106,8 @@ def _numerov_inward(V, h, w, psi_end):
 def single_barrier(grid: Grid, w):
     """|R|^2, |T|^2 (route A) for waves from the throat side, w an array."""
     w = np.atleast_1d(np.asarray(w, float))
+    if np.any(w * w <= max(grid.v0, grid.V[-1]) * 1.0001):
+        raise ValueError("w^2 must exceed V at the throat and at the outer grid edge")
     xe = grid.x[-1]
     k_out = np.sqrt(w * w - grid.V[-1])
     p_end = (np.exp(1j * k_out * xe), np.exp(1j * k_out * (xe - grid.h)))
@@ -194,8 +196,10 @@ def vpp_at_peak(grid: Grid, r_peak):
 
 def turning_round_trip(grid: Grid, w):
     """4 x_t, x_t = r* where V first reaches w^2 going out from the throat (classical cavity)."""
-    idx = int(np.argmax(grid.V >= w * w))
-    return 4.0 * grid.x[idx]
+    above = grid.V >= w * w
+    if not above.any():
+        raise ValueError("w^2 is above the barrier: no turning point")
+    return 4.0 * grid.x[int(np.argmax(above))]
 
 
 # --------------------------------------------------------------------------------------- checks
