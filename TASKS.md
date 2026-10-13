@@ -153,7 +153,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - a BCG/ICL-subtracted test for system 17;
      - reference fluxes for systems 11, 16 and 26;
    - flux ratios and colours: done for SMACS and El Gordo (D-032: no anomaly; most images untested). Left:
-     - Abell 2744 `fluxratios` (needs the 233 MB DJA catalogue, see below);
+     - ~~Abell 2744 `fluxratios`~~ — done (D-032 addendum 2026-10-13): 34 + 35 images tested, 7 flags, all ordinary;
+       an ICL-aware total (local background or ICL-subtracted) would remove the halo-light flags;
      - totals for arcs inside cluster-galaxy/ICL light (inspect DJA `_phot_apcorr.fits`);
      - `bayes.dat` μ errors, then recheck SMACS 6.3 (0.6–0.7 mag brighter than 6.1+6.2 predict);
      - an observational parity test (image orientation or resolved structure; not yet designed);

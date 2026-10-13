@@ -475,7 +475,8 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - **Abell 2744.**
   - Data: MAST 2561 `jw02561-o001_t003_nircam_clear-*` (jwst 3.0.0).
   - DJA v7.2: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/abell2744clu-grizli-v7.2-fix_phot.fits
-    (233,527,680 B; sha256 in `configs/abell2744.yaml`).
+    (233,527,680 B; sha256 in `configs/abell2744.yaml`; re-fetched 2026-10-13, sha256 matched, used for D-032's
+    Abell 2744 addendum).
   - DJA v7.2 eazy photo-z (no tarball for v7.2): https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/abell2744clu-grizli-v7.2-fix.eazypy.zout.fits
     (63,570,240 B, sha256 `436626861c7dbf370419a8787dd79140fad99c2ecbd268257941afe6d493991c`, Last-Modified 2023-12-12,
     accessed 2026-10-08).

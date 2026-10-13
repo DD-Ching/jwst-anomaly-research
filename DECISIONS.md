@@ -1639,6 +1639,17 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
 - A photometry with totals for arcs near cluster galaxies becomes available (BCG/ICL-subtracted; e.g. the DJA
   tarball's `_phot_apcorr.fits`, not yet inspected).
 - `bayes.dat` μ uncertainties are added. Then use a χ² instead of a fixed threshold, and recheck SMACS 6.
+**Addendum 2026-10-13 (Abell 2744).**
+- Run on DJA v7.2 (233.5 MB `fix_phot` + 63.6 MB `eazypy.zout`, sha256 as in `configs/abell2744.yaml` and
+  SOURCES.md). Reason for the > 200 MB download: the 2561 pipeline catalogues match only 20 / 149 images (core
+  deblending), and the test needs the DJA Kron totals; no smaller DJA product carries them. Cloud session:
+  downloaded to session disk, deleted after use.
+- Result: 34 images flux-tested, 35 colour-tested, 7 flags, all ordinary (docs/fields/abell2744.md). **No anomaly.**
+- New limitation: the 20,000 px segment cut misses BCG/ICL halo light for images in small segments on a halo
+  (600.1b, 602.1c). A local-background or ICL-subtracted total would remove this class (see "Revisit if").
+- Failed approach: forced photometry on a single UNCOVER tile (2561 t003) does not settle faint Lyα counterparts;
+  its sign disagreed with DJA for 42.1a/c.
+
 ## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
 
 **Decision.**

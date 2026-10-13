@@ -60,6 +60,22 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
   - The 2561 pipeline catalogs match only 20 of 149 images within 1″, because of deblending in the core. The test
     therefore needs the 233 MB DJA catalogue, which needs a DECISIONS entry.
   - **Result: not yet testable.**
+- **Flux ratios and colours (D-032 addendum 2026-10-13):** `lens_consistency.py --model abell2744-bergamini23
+  fluxratios --photometry <DJA v7.2 fix_phot> --photoz <DJA v7.2 eazypy.zout>` (no frame shift: the median DJA − image
+  list offset of 74 matches is −0.010″, −0.010″ ± 0.017″).
+  - 65 of 149 images have a DJA counterpart within 0.3″ (6 blended, 6 photo-z-excluded). 34 images are flux-tested
+    (leave-one-out median |r| 0.17 mag, rms 0.60) and 35 colour-tested (median 0.06, rms 0.28).
+  - Flagged (ASSUMPTION thresholds 0.75 mag / 0.3 mag), each explained on the F150W/F444W contact sheet:
+    - 600.1b (−1.17 mag) and 602.1c (−1.52 mag, colour −1.0): the images sit in BCG/ICL halo light, which `mag_auto`
+      adds; their segments (3,442 and 504 px) pass the 20,000 px cut, so the cut does not catch halo light here.
+    - 42.1a/42.1c (±1.53 mag, a pair): a MUSE Lyα system whose continuum is at the noise level in all five images.
+      DJA 0.5″ apertures make 42.1a brighter by 0.6–1.15 mag (six bands); forced 0.25″-radius photometry on the
+      2561 t003 i2d makes 42.1c the brighter one (−0.43 to +0.15 mag), with 42.1a at S/N 6–10 and 42.1e at S/N ≤ 0.3
+      (white-noise errors, an underestimate). The sign depends on the photometry route: a faint-counterpart
+      failure, as El Gordo 18b/18c.
+    - 3.1b/3.1c colour (0.32, σ 0.02): 3.1b is a 0.5″ aperture on the μ ≈ −115 giant arc, which samples one part of
+      a resolved source. 34.1c colour (0.59, σ 0.08): a 25.8 mag counterpart 0.22″ off, next to a second blob.
+  - **No flux-ratio or colour anomaly.** Untested: 115 images (faint, unmatched in the core, |μ| > 20).
 
 ## Run
 
