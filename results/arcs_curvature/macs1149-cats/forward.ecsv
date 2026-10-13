@@ -1,0 +1,20 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int64}
+# - {name: z_used, datatype: float64}
+# - {name: curvature_class, datatype: string}
+# - {name: testable, datatype: bool}
+# - {name: c_obs, datatype: float64}
+# - {name: c_model, datatype: float64}
+# - {name: length_model, datatype: float64}
+# - {name: model_sig, datatype: float64}
+# - {name: cos_mass_obs, datatype: float64}
+# - {name: cos_mass_model, datatype: float64}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: macs1149-cats ray-traced round source vs results/arcs_curvature/macs1149-cats}
+# - assumptions: {frac: 0.1, min_sig: 3.0, sigma_src: 0.1, size: 8.0, step: 0.03, z_default: 2.0}
+# schema: astropy-2.0
+label z_used curvature_class testable c_obs c_model length_model model_sig cos_mass_obs cos_mass_model
+4223 1.894 agree False -0.054085318146242185 -0.006571378839596462 5.642597832632565 0.46764326098037584 0.9999926559720957 0.9992997278700002

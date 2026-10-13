@@ -1,0 +1,25 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int64}
+# - {name: z_used, datatype: float64}
+# - {name: curvature_class, datatype: string}
+# - {name: testable, datatype: bool}
+# - {name: c_obs, datatype: float64}
+# - {name: c_model, datatype: float64}
+# - {name: length_model, datatype: float64}
+# - {name: model_sig, datatype: float64}
+# - {name: cos_mass_obs, datatype: float64}
+# - {name: cos_mass_model, datatype: float64}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: abell370-canucs ray-traced round source vs results/arcs_curvature/abell370-canucs}
+# - assumptions: {frac: 0.1, min_sig: 3.0, sigma_src: 0.1, size: 8.0, step: 0.03, z_default: 2.0}
+# schema: astropy-2.0
+label z_used curvature_class testable c_obs c_model length_model model_sig cos_mass_obs cos_mass_model
+3940 1.106839656829834 agree False 0.20165700216181587 -0.05965332778678793 0.7652787080993624 3.1311267102900677 0.818361489240975 0.9669214544524289
+4135 1.0454 agree False 0.05837363734194044 0.040017170820019564 0.7643689199005567 7.131308930573883 0.9693842241789167 0.9644667284553776
+4401 3.4922895431518555 reverse False -0.3529660434802522 0.009234055567861891 1.0769271798420519 0.16309398155178856 -0.9924877948189648 0.9812246429765756
+4429 3.2286720275878906 reverse False -0.162048723182492 0.002995646612423615 1.5935407551302108 0.06238240287349713 -0.999243506826853 0.9898557794212991
+4540 1.063 agree False 0.05366461142648748 0.015587790188121085 0.769784765866679 1.0777047357107328 0.2493473883400366 0.9988042373089029
+4614 2.8048999309539795 agree True 0.026797722293986654 0.0020200038730452973 2.4155231655461593 1.7614820367703297 0.9826224595049508 0.9942778097651789

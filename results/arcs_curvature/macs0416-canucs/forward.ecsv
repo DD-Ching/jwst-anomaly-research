@@ -1,0 +1,21 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int64}
+# - {name: z_used, datatype: float64}
+# - {name: curvature_class, datatype: string}
+# - {name: testable, datatype: bool}
+# - {name: c_obs, datatype: float64}
+# - {name: c_model, datatype: float64}
+# - {name: length_model, datatype: float64}
+# - {name: model_sig, datatype: float64}
+# - {name: cos_mass_obs, datatype: float64}
+# - {name: cos_mass_model, datatype: float64}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: macs0416-canucs ray-traced round source vs results/arcs_curvature/macs0416-canucs}
+# - assumptions: {frac: 0.1, min_sig: 3.0, sigma_src: 0.1, size: 8.0, step: 0.03, z_default: 2.0}
+# schema: astropy-2.0
+label z_used curvature_class testable c_obs c_model length_model model_sig cos_mass_obs cos_mass_model
+1107 3.2199 agree False -0.3542146423403416 -0.0682101540705239 0.9280515741796536 0.8973629765923584 0.8863753792358856 0.7071656029911586
+4739 2.325913667678833 reverse False -0.038417548139768984 0.006270423655109833 4.243248627990553 0.5043887686455854 -0.9738097214588697 0.9944096478712016
