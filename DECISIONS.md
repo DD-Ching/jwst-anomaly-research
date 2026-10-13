@@ -1683,6 +1683,10 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   `<band>_tot_<k>` are aperture fluxes times a detection-image Kron/aperture correction, so the halo light that
   inflates `mag_auto` enters the correction too.
 - Revisit if: a halo/ICL-modelled catalogue (e.g. bCG-subtracted UNCOVER/MegaScience) is published.
+- Three-field run (2026-10-13; CHANGELOG): Abell 2744 18 / 23, El Gordo 4 / 2, SMACS 3 / 6 images tested
+  (F150W / F444W); scatter 0.10–0.27 mag on the compact subset; one flag (El Gordo 1c), a thin arc that passed the
+  concentration gate. Failed approach: f(0.2″)/f(0.4″) alone does not reject thin knotty arcs; an elongation gate
+  is required before the halo fluxes replace `mag_auto` in `fluxratios`.
 
 ## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
 

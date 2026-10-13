@@ -80,6 +80,10 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
     σ_sys 0.32 mag; the only `flux_tension` is 18b/18c (|z| 4.6), the faint-counterpart failure above. Injection:
     21 tested images made fainter are flagged in 24 / 24 / 52 / 62 % at 0.5 / 1 / 1.5 / 2 mag
     (flux and S/N scaled; 8 lost to S/N at 2 mag; 18 targets are pair members, not localised).
+  - Halo-subtracted photometry (`scripts/halo_phot.py`, 2026-10-13, `results/halo_phot/elgordo/`): 4 (F150W) /
+    2 (F444W) images tested. The one flag, 1a/1c F150W ±0.97 mag (1c 0.85–1.2 mag below the chain's μ ratio, in
+    both bands), is a resolved arc: 1b and 1c are ~5″ thin tangential arcs on the stamps and the aperture sits on
+    a knot. **No anomaly**; the concentration gate needs an elongation test (D-032 addendum).
 
 ## Counter-images and radial screen (2026-10-08, D-034)
 

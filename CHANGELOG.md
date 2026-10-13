@@ -2,6 +2,34 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: halo_phot over every catalogued image of Abell 2744, El Gordo and SMACS: no anomaly
+- Ran `scripts/halo_phot.py` unchanged on all systems (149 / 56 / 60 images), F150W + F444W `_i2d` stamps by S3
+  byte ranges (UNCOVER 2561 t003; PEARLS 1176 o241_t012; ERO 2736 o001_t001), end-to-end injections at ±1 mag →
+  `results/halo_phot/{abell2744_all,elgordo,smacs0723}/halo_phot.json`. Wall time 10.0 / 4.3 / 3.8 min on 4 cores
+  (CPU ≈ 45–50 %: the stamps are read in sequence).
+- **Hypothesis before running:** halo subtraction lowers the flux-ratio scatter below `mag_auto`'s σ_sys
+  0.32–0.36 mag; a two-route flag on a system's worst image goes to vetting.
+- **Tested (both routes, ≥ 2 gated images in the system), F150W / F444W:** Abell 2744 18 / 23, El Gordo 4 / 2,
+  SMACS 3 / 6 images. Most images fail the concentration gate (resolved: 67 / 63 of 149 in Abell 2744) or S/N.
+- **Scatter (derived, MAD σ of medfilt LOO residuals):** Abell 2744 0.10 / 0.15 mag (max |r| 0.22 / 0.66, 53a
+  F444W), SMACS 0.13 / 0.27. On the compact subset this is 2–3× below the `mag_auto` floor (selection caveat: only
+  compact images enter).
+- **Injections (simulated, testable targets recovered as `flux_outlier`):** Abell 2744 −1 mag 17/18, 19/23;
+  +1 mag 10/18, 10/23. El Gordo and SMACS: −1 mag 2/4, 2/2 and 3/6, 4/6; +1 mag 0/6 and 1/12. A dimmed image mostly drops out
+  through the S/N or concentration gate (`untested`: 6/6, 9/12, 14/41 in Abell 2744), so the fainter-image limit is
+  weak outside Abell 2744.
+- **One flag, explained:** El Gordo 1a/1c F150W ±0.97 mag (both routes). Relative to 1a, 1c is 0.85–1.2 mag fainter
+  than the `bayes.dat` chain predicts (m1c − m1a predicted −1.19 to −1.54 at 95 %, μ(1c) 13–20; observed −0.34);
+  1b (S/N 5.9, gated out) agrees with 1a, and F444W shows the same ratio (achromatic). **Contact sheet:** 1b and
+  1c are ~5″ thin tangential arcs and the 0.2″ aperture sits on a knot, so their aperture flux follows surface
+  brightness, not μ. Ordinary (resolved arc). **No anomaly** in any of the three fields.
+- **Failed approach:** the concentration gate f(0.2″)/f(0.4″) ≥ 0.6 passes thin arcs with a bright knot (1c: 0.607),
+  because a line's light grows ∝ r. It needs an elongation gate (e.g. second moments, or f(0.2″)/f(1″) of the
+  filtered light, calibrated on PSF stars per band) before the fluxes feed `fluxratios`.
+- **Next:** add and validate that elongation gate (PSF stars, 602.1a/b, Abell 2744 7/30/6.1, El Gordo 1c as the
+  known arc), re-run the three fields, read stamps in parallel, then feed halo fluxes into `fluxratios`
+  (`--mu-samples 100`) for the tension test with the lower floor.
+
 ## 2026-10-13: Halo-subtracted photometry explains Abell 2744 602.1c's flux flag; 600.1 is untestable
 - New `scripts/halo_phot.py` → `results/halo_phot/abell2744/halo_phot.json`; `tests/test_halo_phot.py`. Compact
   images on UNCOVER `jw02561-o001_t003` F150W/F444W `_i2d` stamps (S3 byte ranges, 6″, D-034 frame offset), two

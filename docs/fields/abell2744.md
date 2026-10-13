@@ -84,6 +84,9 @@ is `model_prediction` or `derived`, and every threshold is an ASSUMPTION.
     and annulus plane): 602.1c F444W −0.27 / −0.32 mag against 602.1a/b, `consistent` (leftover halo ≤ 0.11 mag): its
     flag is BCG/ICL light. 600.1 is a resolved spiral and fails the concentration gate (untestable). Injected ±1 mag
     changes are flagged on 602.1a/b; on 602.1c only the brightening (its −0.27 offset absorbs a 1 mag dimming).
+  - All 149 images (2026-10-13, `results/halo_phot/abell2744_all/`): 18 (F150W) / 23 (F444W) tested, no flag,
+    LOO scatter 0.10 / 0.15 mag (max 53a F444W −0.66); ±1 mag injections recovered 17/18, 19/23 (−1) and
+    10/18, 10/23 (+1).
 
 ## Run
 
