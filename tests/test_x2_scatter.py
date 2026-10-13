@@ -22,7 +22,7 @@ def test_em_peak_is_photon_sphere_scalar_is_not():
 
 
 def test_rw_proxy_barrier_height_equals_schwarzschild_spin2():
-    # the proxy is the Schwarzschild l = 2 Regge-Wheeler form in R, so its peak is the same 0.151287 / M^2
+    # the proxy is the Schwarzschild l = 2 Regge-Wheeler form in R: same peak, 0.151287 / M^2
     _, _, v = xs.peak(2.0005, 2, "rw")
     assert abs(v - 0.151287) < 1e-5
 
