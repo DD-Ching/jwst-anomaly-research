@@ -178,6 +178,11 @@ Ranks 5 and 7 were screened (D-020).
   ApJ 955, 13, arXiv:[2210.01777](https://arxiv.org/abs/2210.01777)). The ranking recovers a known rare
   population here.
 
+## System 2 in the RELICS HST-era Lenstool v1 maps (2026-10-13; in progress)
+
+- Plan: map every Scofield+2025 Table 3 image (systems 1 and 2) through the pinned RELICS maps (D-033) by S3/HTTP
+  byte ranges; system 1 at z = 6.2 is the known case; scan system 2's redshift.
+
 ## Two-epoch search, o010 (2022-07-30) against o120 (2023-01-10) (D-027)
 
 The code is at this PR's head; outputs are under `outputs/transients_sunrise/` (not committed). Every number is
