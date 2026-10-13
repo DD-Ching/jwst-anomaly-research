@@ -22,6 +22,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Missing.** The polar sector (where the phantom scalar enters), η, spin and stability. X2 is paused for owner
   review. Next if resumed: AF at the same cell (≤ 0.3 h); then a literature check for the polar equations.
 
+## 2026-10-13: Sunrise system 2 in the four RELICS HST-era models: one source at z ≈ 3; no anomaly
+- **Hypothesis before running:** system 2's misfit in M5-G1 (previous entry) is that model's; the RELICS v1 models
+  should map 2a–c to one source at some z. If none did, the system 2 identification would be the open question.
+- New `scripts/sunrise_relics.py` (byte-range patches of all four RELICS models, ~15 s) + offline SIS tests.
+- **Validation:** |μ| from finite differences matches the published z = 6.2 maps (median 0.998–1.000 at 7–12
+  images per model); system 1 (known z = 6.2) returns z = 5.8–6.3 in every model.
+- **System 2 (derived):** best z = 2.6–3.1 in all four codes, source-plane rms 0.11–0.23″ (M5-G1 ≥ 0.62″), image-plane
+  offsets 0.05–0.88″. The published tension is M5-G1's; system 2 closed as ordinary. Details: docs/fields/sunrise.md.
+- Not checked: whether RELICS used system 2 as a constraint (if so, partly in-sample).
+- **Next:** Sunrise lens-model work is done to the published products' precision; return to TASKS.md "Now".
+
 ## 2026-10-13: Sunrise deflection maps read as 0.02″ pixels at z_ref ≈ 3; system 2 fits at no redshift (published tension)
 - **Hypothesis before running:** the empirical 0.0223″ per unit is 0.02″ × r(6.2)/r(z_ref) for a round z_ref; if
   so, the z fit recovers system 1's z = 6.2 and gives system 2's redshift. A system 2 that fits at no z would be a

@@ -178,6 +178,33 @@ Ranks 5 and 7 were screened (D-020).
   ApJ 955, 13, arXiv:[2210.01777](https://arxiv.org/abs/2210.01777)). The ranking recovers a known rare
   population here.
 
+## System 2 in the four RELICS HST-era models (2026-10-13; `scripts/sunrise_relics.py`)
+
+- **Hypothesis before running:** if system 2's misfit in M5-G1 is that model's missing galaxy-scale mass, the
+  RELICS v1 models (Glafic, Lenstool, WSLAP+, Zitrin LTM; maps in arcsec at D_LS/D_S = 1) map 2a–c to one source at
+  some z; if none does, the identification of system 2 is the open question.
+- **Access:** 7×7-pixel patches of the x/y deflection and z = 6.2 magnification maps per image by HTTP byte range
+  (MAST, all four models in ~15 s); `results/sunrise/relics_positions.json` (model_prediction map values, derived
+  summaries). All four grids are north-up, east-left (checked from the WCS).
+- **Validation (passes):** at the 7–12 images per model with |μ| < 100 (ASSUMPTION), |μ| from finite differences of
+  r(6.2)·α matches the published z = 6.2 map: median ratio 0.998–1.000, worst 0.954 (Glafic and WSLAP+ near
+  critical curves). The published maps hold |μ| (unsigned).
+- **Known case (system 1, z = 6.2):** the pooled source-plane rms of knots 1.1, 1.2 and 1.7 is minimal at z = 6.08
+  (Glafic), 6.32 (Lenstool), 6.14 (WSLAP+), 5.80 (LTM), with rms 0.04–0.10″; at the 1.5× level (ASSUMPTION, as in
+  `sunrise_zfit.py`) z = 4.8–8.2 is accepted. z = 6.2 is recovered by every model.
+- **System 2 (derived):** best z = 3.06 / 2.62 / 3.00 / 2.96 (Glafic / Lenstool / WSLAP+ / LTM), source-plane rms
+  0.20 / 0.23 / 0.11 / 0.14″ (M5-G1: ≥ 0.62″ at every z). Linear image-plane offsets at that z 0.05–0.51″ for
+  Glafic, Lenstool and WSLAP+, 0.43–0.88″ for LTM (|μ| 7–22, and 53–105 in LTM). Only LTM passes the 1.5× level
+  (z = 2.74–3.20); the others sit at 1.5–2.5× a level set by system 1's near-critical, strongly demagnified source
+  offsets, so the level is strict for system 2's |μ| ~ 10 images.
+- **Reading:** the four independent HST-era codes agree that 2a–c come from one source at z ≈ 2.6–3.1 with
+  sub-arcsecond image-plane offsets. System 2's misfit is specific to M5-G1 (no constraint near it), as the
+  published tension says. **No lens-model anomaly; system 2 is closed as ordinary.** The z ≈ 3 is a
+  model_prediction, not a measured redshift.
+- **Limits:** whether the RELICS v1 models used system 2 as a constraint is not checked here (if they did, this is
+  partly in-sample). Positions are JWST-frame; an HST/JWST frame offset is nearly common to the three images and
+  largely cancels in the source-plane rms (not measured).
+
 ## Two-epoch search, o010 (2022-07-30) against o120 (2023-01-10) (D-027)
 
 The code is at this PR's head; outputs are under `outputs/transients_sunrise/` (not committed). Every number is

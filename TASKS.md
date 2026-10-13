@@ -195,9 +195,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        `fluxratios` (Abell 2744 and El Gordo chains validated; El Gordo's chain uses σ² = a·b, D-045);
      - ~~El Gordo magnification-map check~~ — done (issue #68): `validate` reproduces the z=2 and z=4 maps (median
        ratio 1.00001, parity 100 % at |μ|<10), so El Gordo μ and parities are validated. Its chain is validated too (`forme -10`, D-045).
-   - Sunrise: Scofield+2025 image positions done provisionally (no anomaly; map deflection unit undocumented,
-     empirical 0.0218–0.0223″; D-033 addendum). Next: settle the unit, then counter-images and system 2's z; RELICS
-     models on the JWST image list.
+   - Sunrise: Scofield+2025 image positions done provisionally (no anomaly; deflection unit read as 0.02″ pixels at
+     z_ref ≈ 3, D-033 addenda 1–2). RELICS models on the JWST image list done (addendum 3): system 2 fits at
+     z ≈ 2.6–3.1 in all four, so its M5-G1 misfit is that model's. Next (low): counter-image predictions in the
+     RELICS models against the JWST mosaic.
    Field follow-ups (docs/fields/*.md):
    - vet Abell 2744 `5904`, `7987`, `4731`, `264`, `7298`;
    - vet El Gordo `2828` (a linear feature) and `1601`;
