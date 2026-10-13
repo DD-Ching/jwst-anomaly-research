@@ -24,6 +24,7 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 import numpy as np
+from scipy.integrate import cumulative_trapezoid
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -120,7 +121,8 @@ def analyse(res):
 
     # 1. strain check. Input g'(u), u = x0 - x - t, is -d/dt of input g, so int H2_C dt = -H2_B.
     hb = res["B"]["rec"][0, 0]
-    hc = np.cumsum(res["C"]["rec"][0, 0]) * dt  # from t = 0; the output is zero before arrival
+    # trapezoid rule from t = 0 (the output is zero before arrival; no detrending)
+    hc = cumulative_trapezoid(res["C"]["rec"][0, 0], dx=dt, initial=0.0)
     chk = []
     for lo, hi in win:
         m = (t > lo) & (t < hi)
@@ -181,22 +183,34 @@ def analyse(res):
             "moncrief_source": _budget(rec, t, e0m, "psi2"),
         }
 
-    s4 = json.loads((OUT / "s4_axial_ned.json").read_text())
-    ned = s4["comparison_gw150914_cell"]["ned"]["dx0.1"]
+    def own_timing(key):
+        """Energy-centroid arrivals of pulses 1-2 at the + observer (GW channel), after the
+        free-flight reference of S4's echo_run."""
+        g = res[key]["rec"][0, 0]
+        t_ref = windows(res[key])[0][0] + 0.45 * 4 * res[key]["x_pk"] - 4 * res[key]["x_pk"]
+        arr = []
+        for lo, hi in win:
+            m = (t > lo) & (t < hi)
+            e2 = g[m] ** 2
+            arr.append(float(np.trapezoid(t[m] * e2, t[m]) / np.trapezoid(e2, t[m])) - t_ref)
+        return arr
+
     for key, name in (("A", "A_ned"), ("D", "D_coupling_off")):
         rows = per_pulse(key)
-        fake = {
+        arr = own_timing(key)
+        run = {
             "pulses": [
-                {
-                    "hrss_ratio": rows[k]["hrss_ratio_strain"],
-                    "arrival_after_free_flight_M": ned["pulses"][k]["arrival_after_free_flight_M"],
-                }
+                {"hrss_ratio": rows[k]["hrss_ratio_strain"], "arrival_after_free_flight_M": arr[k]}
                 for k in (0, 1)
             ],
-            "spacing_M": ned["spacing_M"],
+            "spacing_M": arr[1] - arr[0],
         }
-        out[name] = {"pulses": rows, "budget_vs_initial_energy": budgets(key, "p")}
-        out[name]["pmw"] = an.pmw_eta_max(fake)
+        out[name] = {
+            "pulses": rows,
+            "own_arrivals_after_free_flight_M": arr,
+            "budget_vs_initial_energy": budgets(key, "p"),
+            "pmw": an.pmw_eta_max(run),
+        }
     out["B_smooth_packet_budget"] = budgets("B", "g")
     return out
 

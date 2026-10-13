@@ -231,7 +231,8 @@ second model.
   unchanged.
 
 ### S4b results (derived; `scripts/x2_s4b_units.py`, `results/x2/s4b_units.json`; waveforms kept in the scratchpad only)
-**Correction to the pre-written item "consequences" (post hoc; found while closing the energy budget).**
+**Correction to the pre-written item "consequences"** (post hoc; made after the budgets were seen; it keeps S4's
+67–70 % share).
 - The physical flux is ∝ ψ² **of the physical H₂ and H₁**. The question is which waveform is physical.
 - P2 takes the source *strain* to be the ringdown packet p. The physical H₂ input is then ∓ṗ:
   - with u = x₀ − x − t, d/du = −d/dt;
@@ -241,18 +242,23 @@ second model.
   - The physical energy flux is ∝ (d/dt run output)², so S4's ∫ψ̇² readout was the right one for this source.
   - The ∫ψ² readout instead belongs to a source whose *H₂* is ringdown-shaped. That source's strain ∫p dt
     carries a DC offset (memory). It is reported for comparison only.
-- The budgets decide between the two readings:
-  - **ψ̇² weighting:** the budget closes to 96.4 % (NED) and 98.9 % (coupling off) of the initial energy.
-  - **ψ² weighting:** only 81.9 % and 84.7 %. The low-frequency content of p is reflected and stays trapped.
-  - The smooth packet g has negligible DC and gives 96.5 % / 93.7 % in the two weightings.
+- **The choice rests on P2 alone.** The budgets cannot decide between the readings: the linear evolution conserves
+  both measures, since ∫ψ dt is itself a solution.
+  - Budget closures, for the record: ψ̇² 96.4 % (NED) and 98.9 % (coupling off); ψ² 81.9 % and 84.7 %; smooth
+    packet g 96.5 % / 93.7 %.
+  - The ψ² shortfall reflects the free-wave E₀ = ∫p² du. It omits the ½∫Vψ² term (the packet starts 25 M inside the
+    peak) and p's DC and low-frequency content, which leaves the cavity late.
+  - An earlier version of this record said the budgets decided between the readings; that was withdrawn after
+    review.
 
 **Strain check (h = ∫H₂ dt, from t = 0, no detrending):**
 - Pulse h_rss agree to 0.5 % and 0.7 %, and the end value is 1e-10 of the peak. Both pass as written.
 - The L2 criterion **fails as written** (1.99): the integrated waveform is the negative of the reference, from the
   d/du = −d/dt sign above.
-- With that sign (post hoc) the L2 difference is 1.3 % and 1.4 %, which passes.
-- The relation h ∝ ∫H₂ dt is therefore verified on the solver, with no integration constant and no low-frequency
-  drift.
+- With that sign (post hoc) and a trapezoid integral, the L2 difference is 0.75 % and 1.08 %, which passes. A
+  rectangle rule gave 1.3 % / 1.4 % (half-step bias), replaced after review.
+- **What this shows:** the solver is linear and time-invariant, the integral has no constant, and there is no
+  low-frequency drift. The *physical* relation h ∝ ∫H₂ dt is not tested by it; that rests on the derivation above.
 
 **Numbers** (one cell, a − 2M = 3.575e-4, dx = 0.1, t_end = 8820 M):
 
@@ -271,6 +277,8 @@ second model.
 
 **Diagnostic: coupling removed, V₂₂ unchanged** (same cell, initial data and readout; not a self-consistent model):
 - p₁ = 0.152, p₂ = 0.075, η_max = 1.24. The budget closes to 98.9 % (strain reading).
+- D's own arrivals are 1314.7 / 2692.9 M (spacing 1378.2 M), against NED's 1312.8 / 2686.3 M. Both pulses are in
+  the PMW. An earlier draft reused NED's timing for D; η_max is unchanged.
 - Time-domain η_max at this cell, same method throughout:
 
   | Potential | η_max |

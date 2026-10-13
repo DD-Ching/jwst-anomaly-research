@@ -12,20 +12,20 @@
   "pulses": [
    {
     "hrss_B": 0.26526725362101167,
-    "hrss_int_C": 0.26385575603894235,
-    "rel_diff": -0.005321039679047401,
-    "rel_L2_as_written": 1.9946466568511612,
-    "rel_L2_sign_corrected": 0.01253724542429864
+    "hrss_int_C": 0.26384098036131914,
+    "rel_diff": -0.005376740778302969,
+    "rel_L2_as_written": 1.9946163017763037,
+    "rel_L2_sign_corrected": 0.007527566525958737
    },
    {
     "hrss_B": 0.11621035506468994,
-    "hrss_int_C": 0.11534600046551781,
-    "rel_diff": -0.00743784492088484,
-    "rel_L2_as_written": 1.9925237240288836,
-    "rel_L2_sign_corrected": 0.014438579316011382
+    "hrss_int_C": 0.11533933799066391,
+    "rel_diff": -0.007495176084275412,
+    "rel_L2_as_written": 1.9924897258732532,
+    "rel_L2_sign_corrected": 0.010786254284719129
    }
   ],
-  "end_value_over_peak": 9.918283076153886e-11,
+  "end_value_over_peak": 1.0013818792319865e-10,
   "pass_as_written": false,
   "pass_sign_corrected_post_hoc": true
  },
@@ -41,6 +41,10 @@
     "em_fraction_receiver_strain_source": 0.6986494059725008,
     "em_fraction_receiver_moncrief_source": 0.5643350278041643
    }
+  ],
+  "own_arrivals_after_free_flight_M": [
+   1312.7984887836913,
+   2686.303317891683
   ],
   "budget_vs_initial_energy": {
    "strain_source": {
@@ -62,10 +66,10 @@
   },
   "pmw": {
    "pulse_times_s": [
-    0.4448729825322574,
-    0.9103177519107926,
-    1.3757625212893276,
-    1.841207290667863
+    0.4448729825356674,
+    0.9103177519142025,
+    1.3757625212927376,
+    1.8412072906712726
    ],
    "pulses_in_PMW": [
     1,
@@ -85,6 +89,10 @@
    {
     "hrss_ratio_strain": 0.07538412591257232
    }
+  ],
+  "own_arrivals_after_free_flight_M": [
+   1314.7328525989399,
+   2692.925927016903
   ],
   "budget_vs_initial_energy": {
    "strain_source": {
@@ -106,10 +114,10 @@
   },
   "pmw": {
    "pulse_times_s": [
-    0.4448729825322574,
-    0.9103177519107926,
-    1.3757625212893276,
-    1.841207290667863
+    0.44552848770812997,
+    0.9125619804830778,
+    1.3795954732580256,
+    1.8466289660329733
    ],
    "pulses_in_PMW": [
     1,

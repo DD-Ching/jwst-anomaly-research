@@ -7,13 +7,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - H₂ is the Moncrief / Regge–Wheeler function, so the strain is ∫H₂ dt. The NED correction falls as Σ^{-3/2}.
   - GW energy flux ∝ H₂². The physical EM flux has the same weight in the symmetrised form.
 - **Strain check on the solver.** The h_rss of ∫H₂ dt agrees to 0.5–0.7 % with no drift. The L2 criterion
-  failed as written because of the d/du = −d/dt sign; with the sign fixed (post hoc) it is 1.3–1.4 %.
+  failed as written because of the d/du = −d/dt sign; with the sign fixed (post hoc) and a trapezoid integral it is
+  0.75–1.1 %. This tests linearity and the integration only; the physical relation rests on the derivation.
 - **What stands.** For P2's strain-shaped ringdown source, the run output is the strain and the physical energy is
-  its ψ̇² measure. So S4's η_max = 1.52 and the receiver-side EM share of 67–70 % stand; the justification is
-  corrected.
+  its ψ̇² measure. So S4's η_max = 1.52 and the receiver-side EM share of 67–70 % stand. The pre-written note had
+  said ψ²; it was reversed **post hoc**, on the basis of P2 (budgets cannot decide between the readings).
 - **New.** By t_end, 31 % of the initial energy has gone into EM (both universes); the budget closes to 96 %.
-- **Failed approach.** The ψ² reading (53–56 %) assumes an H₂-shaped source with a memory offset. Its budget
-  closes to only 82 %. Kept for comparison only.
+- **Failed approach.** The ψ² reading (53–56 %) assumes an H₂-shaped source with a memory offset. Kept for
+  comparison only. Arguing from budget closure was also withdrawn, because both measures are conserved.
 - **Coupling-off diagnostic** (V₂₂ unchanged): η_max = 1.24. Barrier shape adds about 10 % over "rw" (1.13), and
   coupling adds about 23 % more.
 - **S4c.** No polar (ℓ ≥ 2) or radial (ℓ = 0) equations exist for SV with phantom + magnetic NED. 2607.10718's
