@@ -1,0 +1,91 @@
+{
+ "model": "abell2744-bergamini23",
+ "catalog": "data/arcs/jw02561-o001_t003_nircam_clear-f200w_cat.ecsv",
+ "photoz": "data/arcs/a2744_zout.fits",
+ "assumptions": {
+  "min_ellipticity": 0.5,
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0,
+  "max_radius": 50.0,
+  "min_shear": 0.2,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "multiple_images": {
+  "n_matched_elongated": 44,
+  "median_offset_deg": 9.26662258057111,
+  "n_within_30deg": 35,
+  "n_over_60deg": 5,
+  "e_ge_0.6": {
+   "n": 16,
+   "max_offset_deg": 31.16551445343802
+  },
+  "over_60deg": [
+   "26.1c",
+   "31b",
+   "62.1b",
+   "600.3a",
+   "700.1c"
+  ]
+ },
+ "selected": 94,
+ "strong_shear_background": {
+  "n": 35,
+  "aligned": 33,
+  "anti": 0,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 4.898909268442721e-14
+ },
+ "strong_shear_by_population": {
+  "background": {
+   "n": 35,
+   "aligned": 33,
+   "anti": 0,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 4.898909268442721e-14
+  },
+  "member_or_foreground": {
+   "n": 5,
+   "aligned": 2,
+   "anti": 2,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.5390946502057613
+  },
+  "unknown": {
+   "n": 30,
+   "aligned": 21,
+   "anti": 3,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 4.433035294013622e-05
+  }
+ },
+ "strong_shear_all": {
+  "n": 70,
+  "aligned": 56,
+  "anti": 5,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 1.4396070193744146e-15
+ },
+ "anti_expected_shape_noise_background": {
+  "n": 35,
+  "anti": 0,
+  "expected": 0.449,
+  "p_ge_observed": 1.0
+ },
+ "anti_candidates": [
+  2926,
+  7640,
+  2649
+ ],
+ "anti_chain_fraction": {
+  "2926": 1.0,
+  "7640": 1.0,
+  "2649": 1.0
+ },
+ "chain_samples": {
+  "n": 100,
+  "seed": 1
+ }
+}

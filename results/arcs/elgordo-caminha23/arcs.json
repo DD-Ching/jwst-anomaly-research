@@ -1,0 +1,83 @@
+{
+ "model": "elgordo-caminha23",
+ "catalog": "data/arcs/jw01176-o241_t012_nircam_clear-f200w_cat.ecsv",
+ "photoz": "data/arcs/elgordo-grizli-v7.0-fix.eazypy.zout.fits",
+ "assumptions": {
+  "min_ellipticity": 0.5,
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0,
+  "max_radius": 50.0,
+  "min_shear": 0.2,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "multiple_images": {
+  "n_matched_elongated": 17,
+  "median_offset_deg": 15.235542559551135,
+  "n_within_30deg": 14,
+  "n_over_60deg": 1,
+  "e_ge_0.6": {
+   "n": 5,
+   "max_offset_deg": 19.19891369499885
+  },
+  "over_60deg": [
+   "17b"
+  ]
+ },
+ "selected": 54,
+ "strong_shear_background": {
+  "n": 12,
+  "aligned": 10,
+  "anti": 1,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 0.0005438044862929279
+ },
+ "strong_shear_by_population": {
+  "background": {
+   "n": 12,
+   "aligned": 10,
+   "anti": 1,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.0005438044862929279
+  },
+  "member_or_foreground": {
+   "n": 3,
+   "aligned": 0,
+   "anti": 0,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 1.0
+  },
+  "unknown": {
+   "n": 0,
+   "aligned": 0,
+   "anti": 0,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": NaN
+  }
+ },
+ "strong_shear_all": {
+  "n": 15,
+  "aligned": 10,
+  "anti": 1,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 0.008504271440326429
+ },
+ "anti_expected_shape_noise_background": {
+  "n": 12,
+  "anti": 1,
+  "expected": 0.166,
+  "p_ge_observed": 0.15275043518023929
+ },
+ "anti_candidates": [
+  742
+ ],
+ "anti_chain_fraction": {
+  "742": 0.55
+ },
+ "chain_samples": {
+  "n": 100,
+  "seed": 1
+ }
+}

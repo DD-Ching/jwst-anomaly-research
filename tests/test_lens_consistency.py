@@ -861,3 +861,21 @@ def test_load_halo_photometry_feeds_flux_ratio_table(tmp_path):
 def test_fluxratios_takes_one_photometry_source():
     with pytest.raises(SystemExit, match="exactly one"):
         lc.main(["--model", "abell2744-bergamini23", "fluxratios"])
+
+
+def test_anti_probability_shape_noise_null():
+    # no shear: isotropic axes, so P(offset >= 60 deg) = 30/90
+    assert lc.anti_probability(0.0, n=400_000) == pytest.approx(1 / 3, abs=0.01)
+    # stronger shear aligns more sources: the anti tail shrinks monotonically
+    p = [lc.anti_probability(g) for g in (0.1, 0.3, 0.6)]
+    assert p[0] > p[1] > p[2] < 0.01
+    # the |g| > 1 branch joins the |g| <= 1 branch at the critical curve
+    assert lc.anti_probability(0.99) == pytest.approx(lc.anti_probability(1.01), abs=0.02)
+
+
+def test_anti_expected_counts_and_poisson_tail():
+    rows = Table({"g_min": [0.0, 0.0, 0.0], "orientation_class": ["anti", "aligned", "mixed"]})
+    out = lc.anti_expected(rows, sigma_eps=0.26, min_ellipticity=0.5, anti_deg=60.0)
+    assert out["n"] == 3 and out["anti"] == 1
+    assert out["expected"] == pytest.approx(1.0, abs=0.03)
+    assert 0.6 < out["p_ge_observed"] < 0.66  # 1 - exp(-1)

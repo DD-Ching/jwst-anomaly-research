@@ -163,6 +163,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - ~~`bayes.dat` μ errors~~ — done (D-032 addendum 2026-10-13, `--mu-samples`): model error 0.04–0.07 mag
        median against a 0.32–0.36 mag scatter floor; no new flag. SMACS 6.3 needs a chain (Mahler+22 pins none);
      - an observational parity test (image orientation or resolved structure; not yet designed);
+   - ~~`arcs` on Abell 2744 and El Gordo~~ — done (D-024 addendum 2026-10-13): null; background 33/35 and 10/12
+     aligned, anti counts 0 and 1 against 0.45 and 0.17 from shape noise;
    - critical curves at z_s = 1, 2, 4 and arc curvature against them (not yet produced);
    - shapes for the `arcs` test: reject blends, require S/N ≥ 50, compare F150W and F444W;
    - exotic screens (D-031, D-034, D-036–D-038, D-040–D-043): SMACS, El Gordo, Sunrise (radial), Abell 2744,

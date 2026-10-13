@@ -112,6 +112,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.4 (Sunrise deflection unit, system 2 redshift scan) | — | — | 0.15 (orientation, #192 base merge, claim, PR) | cloud routine 016ZY9Gt, 15:08–15:50Z |
 | 2026-W42 | ≈ 0.2 (Sunrise system 2 in the four RELICS models) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01UitTtD, 16:09–16:35Z |
 | 2026-W42 | — | 0.5 (X2 S4: literature check, axial NED comparison) | 0.2 (reproduction of Yang–Lan QNMs) | 0.1 (state files, PR) | interactive session 01AzKMDv |
+| 2026-W42 | ≈ 0.45 (`arcs` on Abell 2744 and El Gordo, shape-noise null, chain spread) | — | — | 0.1 (orientation, claim, PR) | cloud routine 0111axHH, 17:08–17:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
