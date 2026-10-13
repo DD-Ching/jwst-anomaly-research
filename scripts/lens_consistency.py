@@ -715,6 +715,8 @@ def chain_magnifications(
     ``bayes.dat`` (shape ``n_samples x len(images)``; NaN without a redshift), each row's
     family redshifts included. ``model_prediction``; returns the array and a provenance dict."""
     bayes, best, best_diff, reference = load_chain(name, par)
+    if not 0 < n_samples <= len(bayes):
+        raise SystemExit(f"error: --mu-samples must be 1..{len(bayes)} (chain rows)")
     rows = np.random.default_rng(seed).choice(len(bayes), n_samples, replace=False)
     mu = np.full((n_samples, len(images)), np.nan)
     for k, row in enumerate(rows):
@@ -1533,11 +1535,13 @@ def flux_ratio_table(
     """Per-image source-magnitude and colour residuals (see ``fluxratios``).
 
     With ``mu_samples`` (signed μ, one row per chain sample: :func:`chain_magnifications`), each
-    sample's leave-one-out residual is recomputed on the same usable images; half its 16-84 %
-    range is the model error ``resid_model_err``. ``resid_z`` divides the residual by the
-    photometric and model errors plus the field's scatter floor ``sigma_sys``, the extra error
-    that makes the median |resid_z| 0.6745 (a normal's). ``flux_tension`` marks each system's
-    worst image with |resid_z| > ``tension_sigma``: discrepant beyond the field's own scatter."""
+    sample's leave-one-out residual is recomputed under the same cuts applied to that sample's
+    μ; half its 16-84 % range is the model error ``resid_model_err`` (NaN without samples).
+    ``resid_z`` divides the residual by the photometric and model errors plus the field's
+    scatter floor ``sigma_sys``, the extra error that makes the median |resid_z| 0.6745 (a
+    normal's; a pair counts once; needs >= 3 such residuals, else every ``resid_z`` is NaN).
+    ``flux_tension`` marks each system's image of largest |resid_z| when it exceeds
+    ``tension_sigma``: discrepant beyond the field's own scatter."""
     z = lensmodel.image_redshifts(images, z_m_limit)
     ok_z = np.isfinite(z)
     mu = np.full(len(images), np.nan)
@@ -1581,23 +1585,38 @@ def flux_ratio_table(
     use_m = base & np.isfinite(src) & (snr_auto >= min_snr)
     use_c = matched & ~bad & np.isfinite(c_obs) & (snr1 >= min_snr) & (snr2 >= min_snr)
     resid, resid_err, worst = _loo_residual(src, magerr, use_m, systems)
-    model_err = np.zeros(len(images))
+    model_err = np.full(len(images), np.nan)
     if mu_samples is not None:
-        with np.errstate(divide="ignore", invalid="ignore"):
-            r_s = np.array(
-                [
-                    _loo_residual(mag + 2.5 * np.log10(np.abs(m)), magerr, use_m, systems)[0]
-                    for m in mu_samples
-                ]
-            )
+        r_s = []
+        for m in mu_samples:
+            with np.errstate(divide="ignore", invalid="ignore"):
+                src_s = mag + 2.5 * np.log10(np.abs(m))
+            # each row applies the test's own cuts (|μ| ≤ max_abs_mu, finite) to its μ
+            use_s = use_m & np.isfinite(src_s) & (np.abs(m) <= max_abs_mu)
+            r_s.append(_loo_residual(src_s, magerr, use_s, systems)[0])
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)  # all-NaN columns (untested)
-            lo, hi = np.nanpercentile(r_s, [16, 84], axis=0)
-        model_err = np.where(np.isfinite(resid), np.nan_to_num(0.5 * (hi - lo)), np.nan)
-    stat_err = np.hypot(resid_err, model_err)
-    sigma_sys = _scatter_floor(resid, stat_err)
+            lo, hi = np.nanpercentile(np.array(r_s), [16, 84], axis=0)
+        # an image no chain row can test keeps NaN: its resid_z is then untested
+        model_err = np.where(np.isfinite(resid), 0.5 * (hi - lo), np.nan)
+        stat_err = np.hypot(resid_err, model_err)
+    else:
+        stat_err = resid_err
+    # a pair's two residuals are one measurement: count it once in the floor
+    once = np.isfinite(resid) & np.isfinite(stat_err)
+    for sys_id in dict.fromkeys(systems):
+        ii = np.flatnonzero((systems == sys_id) & once)
+        if ii.size == 2:
+            once[ii[1]] = False
+    sigma_sys = _scatter_floor(resid[once], stat_err[once])
     with np.errstate(invalid="ignore"):
         resid_z = resid / np.hypot(stat_err, sigma_sys)
+    worst_z = np.zeros(len(images), bool)  # each system's most significant |resid_z|
+    for sys_id in dict.fromkeys(systems):
+        ii = np.flatnonzero((systems == sys_id) & np.isfinite(resid_z))
+        if ii.size:
+            a = np.abs(resid_z[ii])
+            worst_z[ii[np.isclose(a, a.max())]] = True
     c_resid, c_resid_err, c_worst = _loo_residual(c_obs, c_err, use_c, systems)
     cname = f"{colour[0]}_{colour[1]}"
     out = Table(
@@ -1632,7 +1651,7 @@ def flux_ratio_table(
     out["flux_class"] = cls
     tension = np.full(len(images), "untested", dtype="U16")
     tension[np.isfinite(resid_z)] = "consistent"
-    tension[worst & (np.abs(resid_z) > tension_sigma)] = "flux_tension"
+    tension[worst_z & (np.abs(resid_z) > tension_sigma)] = "flux_tension"
     out["tension_class"] = tension
     ccls = np.full(len(images), "untested", dtype="U16")
     ccls[np.isfinite(c_resid)] = "consistent"
@@ -1783,7 +1802,7 @@ def cmd_fluxratios(args) -> dict:
             or r["tension_class"] == "flux_tension"
         ],
     }
-    (out / "fluxratios.json").write_text(json.dumps(summary, indent=1))
+    (out / "fluxratios.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary
 
 

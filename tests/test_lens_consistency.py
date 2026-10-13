@@ -566,9 +566,9 @@ def test_flux_ratio_table_consistent_and_injected_outlier():
 
 def test_flux_ratio_table_model_error_and_tension():
     model, images, phot, mu = _flux_inputs()
-    # without chain samples the model error is zero and the floor explains nothing extra
+    # without chain samples the model error is not computed
     t = lc.flux_ratio_table(model, images, {}, phot)
-    np.testing.assert_allclose(t["resid_model_err"], 0.0)
+    assert np.all(np.isnan(t["resid_model_err"]))
     assert t.meta["n_mu_samples"] == 0 and list(t["tension_class"]) == ["consistent"] * 3
     # chain samples scaling image 1.1's mu by 10**(+-0.4 / 2.5): its residual spreads by +-0.4 mag
     f = 10 ** (np.array([-0.4, 0.0, 0.4]) / 2.5)
@@ -577,6 +577,12 @@ def test_flux_ratio_table_model_error_and_tension():
     assert t["resid_model_err"][0] == pytest.approx(0.4 * 0.68, rel=0.02)  # 16-84 % of 3 values
     assert t["resid_model_err"][1] == pytest.approx(0.2 * 0.68, rel=0.02)  # via the median ref
     assert t.meta["n_mu_samples"] == 3
+    # a row that puts image 1.1 on a critical curve (inf) or beyond max_abs_mu drops it there
+    bad = samples.copy()
+    bad[0, 0], bad[1, 0] = np.inf, 1e3
+    t = lc.flux_ratio_table(model, images, {}, phot, mu_samples=bad)
+    assert np.all(np.isfinite(t["resid_model_err"]))
+    assert t["resid_model_err"][0] == pytest.approx(0.0)  # only row 2 tests 1.1: no spread
     # A 1.5 mag deficit: |z| is large against tiny errors, so it is a tension, but the floor
     # from three images of one system absorbs most of it (only the worst image can be flagged)
     model, images, phot, _ = _flux_inputs(offsets_mag=(1.5, 0.0, 0.0))

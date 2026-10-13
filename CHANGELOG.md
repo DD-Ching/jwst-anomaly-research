@@ -5,16 +5,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-13: `fluxratios` with `bayes.dat` μ errors: model statistics do not explain the flux scatter
 - `lens_consistency.py fluxratios --mu-samples N`: μ at N random chain rows (`chain_magnifications`, family
   redshifts included); each image's model error is half the 16–84 % range of its leave-one-out residual. `resid_z`
-  adds the field's scatter floor `sigma_sys` (median |z| = 0.6745); `flux_tension` = worst image with |z| > 3
-  (ASSUMPTION). Tests: synthetic chain, injected μ spread, floor recovery.
+  adds the field's scatter floor `sigma_sys` (median |z| = 0.6745, a pair counted once); `flux_tension` = a
+  system's highest-|z| image with |z| > 3 (ASSUMPTION). Each chain row applies the test's |μ| ≤ 20 cut to its own μ.
+  Tests: synthetic chain, injected μ spread, rows on a critical curve, floor recovery.
 - **Hypothesis before running:** chain μ errors are ≪ the 0.5–0.6 mag rms, so the scatter is photometric
   (halo light, faint counterparts) and the flags do not change. If instead the model error were ≳ 0.3 mag, the
   fixed 0.75 mag threshold would be too strict near critical curves and the next step would be model systematics.
 - **Result (derived; 100 rows each, seed 1; DJA files sha256-matched, downloaded to the session disk and deleted):**
   model error median / max 0.04 / 0.14 mag (Abell 2744, 34 images) and 0.07 / 0.21 mag (El Gordo, 23); scatter
-  floor σ_sys 0.24 and 0.53 mag. Abell 2744: the four `flux_outlier`s (42.1a/c, 600.1b, 602.1c; |z| 4.3–6.2) are
-  the only `flux_tension`s, all already explained (halo light, Lyα counterpart). El Gordo: 18b/c drop to |z| 2.2;
-  no tension. **No anomaly; the hypothesis holds.**
+  floor σ_sys 0.36 and 0.32 mag. The `flux_tension`s are exactly the old `flux_outlier`s: Abell 2744 42.1a/c,
+  600.1b, 602.1c (|z| 3.1–4.2; halo light, Lyα counterpart) and El Gordo 18b/c (|z| 3.6; faint counterpart), all
+  explained on the contact sheets (D-032). **No anomaly; the hypothesis holds.**
 - SMACS 6.3 cannot be rechecked this way: the Mahler+22 release pins no chain.
 - **Limits:** chain errors are statistical within one model; model-to-model differences are larger (D-044).
 - **Next:** photometry, not the model, limits this test: ICL-aware totals (DJA `_phot_apcorr`, local-background
