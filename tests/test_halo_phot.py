@@ -102,13 +102,19 @@ def test_unknown_route():
         hp.measure(np.zeros(xx.shape), np.ones(xx.shape), xx, yy, "kron")
 
 
-def _rows(src_mags, mu=2.0, conc=0.7, err_frac=0.01, systems=None):
+@pytest.fixture(autouse=True)
+def _band_b(monkeypatch):
+    """The synthetic band "b" gets an axis-ratio threshold, as a star-calibrated band would."""
+    monkeypatch.setitem(hp.MIN_AXIS_RATIO, "b", 0.8)
+
+
+def _rows(src_mags, mu=2.0, conc=0.7, err_frac=0.01, systems=None, q=0.95):
     """Synthetic measured rows: one band, both routes, given source magnitudes."""
     systems = systems or ["1"] * len(src_mags)
     rows = []
     for i, (m, s) in enumerate(zip(src_mags, systems, strict=True)):
         f = 10 ** (-0.4 * (m - 2.5 * np.log10(mu)))
-        row = {"image_id": f"{s}.{i}", "system": s, "mu": mu, "b_conc": conc}
+        row = {"image_id": f"{s}.{i}", "system": s, "mu": mu, "b_conc": conc, "b_axis_ratio": q}
         for route in hp.ROUTES:
             row[f"b_{route}_flux"], row[f"b_{route}_err"] = f, err_frac * f
         rows.append(row)
@@ -131,6 +137,9 @@ def test_classify_needs_both_routes_and_gates():
     rows[2]["b_annulus_flux"] = float("nan")  # one route only
     hp.classify(rows, ["b"])
     assert rows[2]["b_flux_class"] == "one_route"
+    rows = _rows([20.0, 20.05, 21.0], q=0.6)  # elongated (a knot on an arc): no test
+    hp.classify(rows, ["b"])
+    assert {r["b_flux_class"] for r in rows} == {"untested"}
     rows = _rows([20.0, 21.0], conc=0.5)  # resolved: no test
     hp.classify(rows, ["b"])
     assert {r["b_flux_class"] for r in rows} == {"untested"}
@@ -162,3 +171,32 @@ def test_scaled_image_changes_flux_by_dm(dm):
     f0 = hp.measure(sci, err, xx, yy, "medfilt")[0]
     f1 = hp.measure(*hp._scaled_image((sci, err, xx, yy), dm)[:2], xx, yy, "medfilt")[0]
     assert -2.5 * np.log10(f1 / f0) == pytest.approx(dm, abs=0.05)
+
+
+@pytest.mark.parametrize("fwhm", [0.05, 0.145])
+@pytest.mark.parametrize("offset", [(0.0, 0.0), (0.5, 0.0), (0.25, 0.5)])
+def test_axis_ratio_point_source_is_round(fwhm, offset):
+    """Also off a pixel centre: moments about the peak pixel made such a source elongated."""
+    xx, yy = _grid()
+    x0, y0 = (o * PIX for o in offset)
+    sci = _halo(xx, yy, amp=0.5) + hp.gaussian(xx, yy, x0, y0, 30.0, fwhm)
+    f = hp.halo_filtered(sci, PIX)
+    assert hp.axis_ratio(f, xx, yy) > 0.9
+
+
+def test_axis_ratio_thin_arc_with_knot_is_elongated():
+    """El Gordo 1c's failure mode: a knot on a thin tangential arc passes the concentration gate."""
+    xx, yy = _grid()
+    arc = 0.3 * np.exp(-0.5 * (yy / 0.03) ** 2) * (np.abs(xx) <= 2.5)  # 5" long, unresolved width
+    sci = arc + hp.gaussian(xx, yy, 0.0, 0.0, 4.0, 0.05)
+    f = hp.halo_filtered(sci, PIX)
+    _, _, conc = hp.measure(sci, np.full(sci.shape, 0.01), xx, yy)
+    assert conc > hp.MIN_CONCENTRATION  # the old gate lets it through
+    assert hp.axis_ratio(f, xx, yy) < hp.MIN_AXIS_RATIO["f150w"]
+
+
+def test_run_refuses_band_without_star_calibration(monkeypatch):
+    monkeypatch.setattr(hp.lc, "has_image_list", lambda m: True)
+    monkeypatch.setattr(hp.lc, "is_map_model", lambda m: False)
+    with pytest.raises(SystemExit, match="axis-ratio"):
+        hp.run("any", ["1"], {"f200w": "unused"})
