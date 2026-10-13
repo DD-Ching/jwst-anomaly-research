@@ -11,7 +11,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   No candidate, no new-physics evidence. Gates and numbers are unchanged.
 - S0 screen (`docs/state/units/S0-2026-10-13.md`, about 1.2 h):
   - throat transmission is already published, and mapping LVK echo results needs injections beyond the 20 h cap;
-  - a far-side mass is invisible to S2-like probes: monopole degenerate with M, quadrupole ≤ 1e-4, suppressed
+  - a far-side mass is invisible to S2-like probes: monopole degenerate with M, quadrupole ≤ 1.1e-4, suppressed
     ~1e-10 in the orbit;
   - the lensing arrival order is settled by theorem and mimicked by substructure.
   None qualifies; the high-risk share idles.

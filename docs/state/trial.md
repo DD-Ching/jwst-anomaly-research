@@ -51,19 +51,6 @@ next concrete action, and stop conditions.
   if none qualifies, the slot stays empty.
 - Paused lines reopen only with a new method or input listed in `docs/state/pending.md` or the unit file.
 
-**T7. S0 screens for new units.** A screen takes ≤ 2 h of high-risk time and compares at most three
-directions. Each must differ from earlier units in mechanism, observable or data. For each, answer:
-1. the concrete unknown, and how it bears on channel existence, control or propagation;
-2. how the prediction differs from **explicit ordinary models over their plausible parameter ranges** (not
-   a proof that no ordinary explanation could exist);
-3. the minimum verification: which data, tools or derivations it needs, which already exist, and which fit in
-   the budget;
-4. which result continues the unit and which stops it.
-
-A direction does not need an existing anomaly, and "not computed yet" is not a failure. A new theory name alone
-is not a reason to pick one. If one qualifies, write its state file with stage budgets and start it under the
-existing authorization. If none qualifies, record the gaps and stay idle.
-
 **T4. Routine searches** (W3 MOA-II fields and similar): the "≥ 10 % change in a limit cell" figure is a
 **reference only**.
 - Judge a batch of fields on: cumulative limit gain, cost per field, new parameter-space coverage, and
@@ -77,6 +64,19 @@ existing authorization. If none qualifies, record the gaps and stay idle.
 
 **T6. Notifications** go to the owner only for: a stage completed, an important result, a failure, or a decision
 needed. Unchanged CI, subscriptions, waiting for review and routine syncs are not reported.
+
+**T7. S0 screens for new units.** A screen takes ≤ 2 h of high-risk time and compares at most three
+directions. Each must differ from earlier units in mechanism, observable or data. For each, answer:
+1. the concrete unknown, and how it bears on channel existence, control or propagation;
+2. how the prediction differs from **explicit ordinary models over their plausible parameter ranges** (not
+   a proof that no ordinary explanation could exist);
+3. the minimum verification: which data, tools or derivations it needs, which already exist, and which fit in
+   the budget;
+4. which result continues the unit and which stops it.
+
+A direction does not need an existing anomaly, and "not computed yet" is not a failure. A new theory name alone
+is not a reason to pick one. If one qualifies, write its state file with stage budgets and start it under the
+existing authorization. If none qualifies, record the gaps and stay idle.
 
 ## Units
 | Unit | State file | Branch / PR | Status |
