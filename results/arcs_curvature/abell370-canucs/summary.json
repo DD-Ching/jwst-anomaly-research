@@ -1,0 +1,52 @@
+{
+ "model": "abell370-canucs",
+ "image": "jw01208-o002_t001_nircam_clear-f200w_i2d.fits",
+ "assumptions": {
+  "min_semimajor_px": 10.0,
+  "min_e": 0.5,
+  "size": 6.0,
+  "nsigma": 3.0,
+  "smooth_px": 1.0,
+  "radius_semimajor": 3.0,
+  "bkg_px": 61,
+  "min_sig": 3.0,
+  "min_length": 0.5
+ },
+ "n_selected": 16,
+ "n_testable": 2,
+ "median_abs_c_over_pred": 5.5,
+ "classes": {
+  "agree": 4,
+  "reverse": 2,
+  "flat": 10,
+  "no_arc": 0
+ },
+ "control_aligned": {
+  "agree": 3,
+  "reverse": 2,
+  "flat": 10,
+  "no_arc": 0
+ },
+ "reverse": [
+  {
+   "label": 4401,
+   "orientation_class": "aligned",
+   "g_min": 2.14,
+   "c_sig": 6.2,
+   "length": 1.04,
+   "cos_mass": -0.99,
+   "c_over_pred": 14.0,
+   "testable": false
+  },
+  {
+   "label": 4429,
+   "orientation_class": "aligned",
+   "g_min": 0.68,
+   "c_sig": 3.4,
+   "length": 1.0,
+   "cos_mass": -1.0,
+   "c_over_pred": 15.1,
+   "testable": false
+  }
+ ]
+}

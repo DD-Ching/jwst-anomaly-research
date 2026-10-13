@@ -1,0 +1,33 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int64}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: orientation_class, datatype: string}
+# - {name: g_min, datatype: float64}
+# - {name: semimajor_px, datatype: float64}
+# - {name: ellipticity, datatype: float64}
+# - {name: quality_flag, datatype: string}
+# - {name: n_pix, datatype: int64}
+# - {name: pa_arc, datatype: float64}
+# - {name: length, datatype: float64}
+# - {name: c, datatype: float64}
+# - {name: c_sig, datatype: float64}
+# - {name: c_pred, datatype: float64}
+# - {name: testable, datatype: bool}
+# - {name: cos_mass, datatype: float64}
+# - {name: curvature_class, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: jw01208-o008_t004_nircam_clear-f200w_i2d.fits pixels + data/cache/arcs/jw01208-o008_t004_nircam_clear-f200w_cat.ecsv against
+#     macs1149-cats}
+# - assumptions: {bkg_px: 61, min_e: 0.5, min_length: 0.5, min_semimajor_px: 10.0, min_sig: 3.0, nsigma: 3.0, radius_semimajor: 3.0, size: 6.0,
+#     smooth_px: 1.0}
+# schema: astropy-2.0
+label ra dec orientation_class g_min semimajor_px ellipticity quality_flag n_pix pa_arc length c c_sig c_pred testable cos_mass curvature_class
+3787 177.39043934586851 22.393656354590263 aligned 0.2774047873479884 15.130535394269993 0.5123383649333377 ok 128 28.988098647312178 0.4705925598904418 -0.06025295077775172 0.24338778582669143 0.015291391129014526 False 0.24516783796291175 flat
+4113 177.40798493009143 22.403407360600635 aligned 0.3940950273101262 14.879901667056096 0.8161825496530226 ok 217 157.12517953484019 0.9508162267924644 0.08616951479579026 2.3113149241002797 0.014100902942931343 False 0.9973550899403809 flat
+4116 177.40120320036013 22.39383489347517 aligned 1.4129077065821658 12.284032003447876 0.6551986236989715 ok 807 70.22920652809607 1.076820484819115 -0.07661673982129534 1.7444388371019544 0.026599829560956526 False 0.9647935512352366 flat
+4223 177.40603273108997 22.392454415831093 aligned 0.9313973664070694 12.501613955837405 0.8275218128871361 ok 686 52.029730053150345 1.5825296177004389 -0.054085318146242185 3.8489082986156027 0.01529235534086524 False 0.9999926559720957 agree
+4236 177.40731711051203 22.39043764564559 anti 0.3447305576966069 13.713272268366127 0.5294065901439708 ok 0 nan nan nan nan 0.012252161393708431 False nan no_arc

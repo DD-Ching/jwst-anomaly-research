@@ -1,0 +1,33 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int64}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: orientation_class, datatype: string}
+# - {name: g_min, datatype: float64}
+# - {name: semimajor_px, datatype: float64}
+# - {name: ellipticity, datatype: float64}
+# - {name: quality_flag, datatype: string}
+# - {name: n_pix, datatype: int64}
+# - {name: pa_arc, datatype: float64}
+# - {name: length, datatype: float64}
+# - {name: c, datatype: float64}
+# - {name: c_sig, datatype: float64}
+# - {name: c_pred, datatype: float64}
+# - {name: testable, datatype: bool}
+# - {name: cos_mass, datatype: float64}
+# - {name: curvature_class, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: jw01208-o004_t002_nircam_clear-f200w_i2d.fits pixels + data/cache/arcs/jw01208-o004_t002_nircam_clear-f200w_cat.ecsv against
+#     /home/user/jwst-anomaly-research/data/cache/external/f3d9a8415044_hlsp_canucs_jwst-hst_multi_macs0416-lenstool-bestparam_multi_v1_model.txt}
+# - assumptions: {bkg_px: 61, min_e: 0.5, min_length: 0.5, min_semimajor_px: 10.0, min_sig: 3.0, nsigma: 3.0, radius_semimajor: 3.0, size: 6.0,
+#     smooth_px: 1.0}
+# schema: astropy-2.0
+label ra dec orientation_class g_min semimajor_px ellipticity quality_flag n_pix pa_arc length c c_sig c_pred testable cos_mass curvature_class
+1107 64.02764138505351 -24.07278283799626 aligned 0.33777516674962244 11.656954299847058 0.6043156697231138 ok 539 172.3835092040074 0.9603247423564825 -0.3542146423403416 4.659996889531805 0.012618933109573134 False 0.8863753792358856 agree
+4504 64.0453987814953 -24.072542167838055 aligned 0.30605258634806426 28.259914306843374 0.8426616725369875 ok 29 134.43254898209807 0.2493276638562268 -0.1998723348968369 0.18577152005763722 0.016791791240225333 False -0.4074928337091389 flat
+4668 64.04775447874805 -24.068999944852045 aligned 0.2418239609006167 12.766415425207283 0.6790416976697704 ok 1570 129.00995943555006 1.7613558126824898 -0.01403333955573316 0.93336650733972 0.01571780075195477 False -0.5325550642260614 flat
+4739 64.04519953175695 -24.061277617212127 aligned 1.0236543972522953 15.113122236658429 0.7358939780779126 ok 534 129.93611202841336 1.7398901605503811 -0.038417548139768984 3.0902823902193193 0.015589007632758743 False -0.9738097214588697 reverse
+4779 64.04226417696081 -24.058205893228163 aligned 0.3973943102046646 14.393742796955019 0.5279454752300743 ok 2205 112.1069544177503 1.9920617700254049 -0.02716529184163259 1.6379249678133176 0.013885103318075492 False -0.945722962913425 flat

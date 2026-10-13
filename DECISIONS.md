@@ -1276,6 +1276,19 @@ F444W anti: 3 vs 1.30 expected (P = 0.14; shape-noise null at the F200W cut e �
 1703) have no F444W source within 1″. Null. Rule: band agreement rules out colour blends but cannot separate an
 intrinsic shape from a lensing stretch (both achromatic); it is a blend veto, not a lensing test.
 
+**Addendum 5 2026-10-13 (arc curvature, `scripts/arcs_curvature.py`).** Curvature side of long background arcs
+(strong shear, semimajor ≥ 10 px, e ≥ 0.5; 43 sources, five fields) from a weighted parabola in the major-axis frame
+of the F200W i2d pixels (6″ S3 cutouts; 61 px median-filter halo removal; fit window 3 × semimajor; 3σ, 0.5″,
+|c|/σ_c ≥ 3: ASSUMPTIONS), against the model mass direction −α. Raw counts 11 agree, 7 reverse, 24 flat, 1 no arc;
+aligned control 9 / 7, so the raw sign is **not a lens-model test**. Reason: for a circular lens c_pred = 1/(2r) is
+0.011–0.024 arcsec⁻¹ (sagitta L²/8r ≈ 0.02″ for L = 2″ at r = 25″, under a pixel), while the measured |c| median is
+0.056 (4× c_pred): intrinsic bends, knots and blends dominate (looked at: contact sheets of all five fields). Only 5
+sources are testable (c_pred ≥ 3 σ_c, formal error; ASSUMPTION): 3 agree (Abell 370 4614, Abell 2744 7247, El Gordo
+2447), Abell 370 4613 flat (the window clips this 5″ arc), El Gordo 2527 reverse (|c| 1.9 c_pred, in the bimodal
+merger where the circular-centre c_pred does not hold). Not a flag. Rule: a curvature test needs a forward-modelled
+prediction (ray-trace an elliptical source at the arc's source position through the model and fit the same
+parabola) and is limited to arcs ≳ 3″; the circular-centre sign test is a failed approach.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.
