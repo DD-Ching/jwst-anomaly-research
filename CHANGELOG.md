@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-13: forward-modelled arc curvature: all 5 testable arcs bend as their models predict; El Gordo 2527 explained
+- **Hypothesis before computing:** El Gordo 2527's bend away from −α (D-024 addendum 5) is a saddle effect that
+  the Caminha+23 model reproduces; if the model bends it the other way, it is a lens-model residual.
+- `scripts/arcs_curvature_model.py` (new): a round 0.1″ source at the arc's source position, ray-traced through the
+  model, fitted with the same parabola; validated on an SIS in the tests.
+- **Result (model_prediction vs derived, `results/arcs_curvature/*/forward.*`):** 5 of 18 curved arcs have a
+  predicted bend ≥ 3σ; all 5 agree with their model, including El Gordo 2527 (model 12.8σ away from −α, as
+  observed). The other 13 are not testable (predicted bend < 3σ). Null (D-024 addendum 6).
+- **Next:** curvature is closed at this depth; critical curves at z_s = 1, 2, 4, or blend rejection in F200W
+  segmentation for the `arcs` test (TASKS Supporting 1).
+
 ## 2026-10-13: arc curvature against the models' mass direction: not a lens-model test at these arc lengths
 - **Hypothesis before computing:** a tangential arc bends around the mass (centre of curvature toward −α); a long,
   single arc that bends away would be a lens-model residual. Ordinary: saddle points between clumps, radial arcs,

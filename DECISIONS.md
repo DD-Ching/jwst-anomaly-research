@@ -1289,6 +1289,16 @@ merger where the circular-centre c_pred does not hold). Not a flag. Rule: a curv
 prediction (ray-trace an elliptical source at the arc's source position through the model and fit the same
 parabola) and is limited to arcs ≳ 3″; the circular-centre sign test is a failed approach.
 
+**Addendum 6 2026-10-13 (forward-modelled curvature, `scripts/arcs_curvature_model.py`).** Each model predicts the
+curvature side by ray-tracing a round Gaussian source (σ 0.1″, ASSUMPTION) at the source position of the arc's
+centre (photo-z) onto an 8″ grid and fitting the same parabola; checked on an SIS (side toward the lens, |c| = 1/2r).
+Of the 18 curved arcs, 5 have a predicted bend ≥ 3σ of the measured error (ASSUMPTION): all 5 bend the way their
+model says (Abell 370 3940, 4135; Abell 2744 7247; El Gordo 2447, 2527). **El Gordo 2527 is explained:** the
+Caminha+23 model itself bends it away from −α (predicted 12.8σ, cos −0.97 vs observed −0.96), the saddle case
+of addendum 5. The other 13 curved arcs have predicted bends < 3σ, so their measured bends are intrinsic and
+untestable. Null. Limitation: a round source gives short model images (0.8–5.6″); intrinsic source shape is not
+modelled.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

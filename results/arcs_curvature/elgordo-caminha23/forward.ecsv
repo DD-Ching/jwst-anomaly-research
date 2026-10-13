@@ -1,0 +1,22 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int64}
+# - {name: z_used, datatype: float64}
+# - {name: curvature_class, datatype: string}
+# - {name: testable, datatype: bool}
+# - {name: c_obs, datatype: float64}
+# - {name: c_model, datatype: float64}
+# - {name: length_model, datatype: float64}
+# - {name: model_sig, datatype: float64}
+# - {name: cos_mass_obs, datatype: float64}
+# - {name: cos_mass_model, datatype: float64}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: elgordo-caminha23 ray-traced round source vs results/arcs_curvature/elgordo-caminha23}
+# - assumptions: {frac: 0.1, min_sig: 3.0, sigma_src: 0.1, size: 8.0, step: 0.03, z_default: 2.0}
+# schema: astropy-2.0
+label z_used curvature_class testable c_obs c_model length_model model_sig cos_mass_obs cos_mass_model
+2447 2.0065536499023438 agree True 0.018741424357836944 0.010614384920343514 3.883453777163164 5.557168699572866 0.9998549277571628 0.9990628916119968
+2479 3.3626701831817627 reverse False -0.4806931244104509 0.18327300875449598 2.0652681911611395 2.9985626719164626 -0.9900884396913727 -0.4606123987544337
+2527 2.187598705291748 reverse True 0.04572292775063698 0.05954451717987954 3.514236052935116 12.8136840981913 -0.9601314320599753 -0.9706041245249755
