@@ -2,6 +2,32 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: counter-images of uncatalogued bright arcs: four fields null, one unvetted Abell 370 flag (3881)
+- **Hypothesis before computing:** every strongly sheared background arc that is not a catalogued image has the
+  counter-images its model predicts at its photo-z; a robust predicted image (z16 and z84 agree within 3″) of ≥ 10σ
+  with nothing detected would be a lens-model residual. Ordinary: photo-z error, knots of catalogued systems,
+  cluster galaxies/ICL, model extrapolation, extended-source flux scaling.
+- `scripts/arcs_counter.py` (new; `lensmodel.find_images`, the D-029 forced photometry, F200W i2d by S3 byte range)
+  on the stored `results/arcs/*/arcs.ecsv`. Positive control (`--control`, catalogued arcs, Abell 2744): 13 of 14
+  known counter-images not absent; the one `absent` (7247, a catalogued image detected at 86σ, flux ratio 0.27) shows
+  the isophotal-to-aperture prediction over-predicts bright extended arcs by up to ×4, so a flag needs best S/N < 5.
+- **Result (model_prediction vs derived, `results/arcs_counter/`):** Abell 2744 3 arcs / 7 counter-images, El Gordo
+  4 / 9, MACS0416 4 / 8, MACS1149 3 / 8: 0 flags. Abell 370 20 / 69: one robust flag, arc 3881 (z_phot 2.99, μ 6.5),
+  image at (−61.8, −17.5)″, μ 8.0, predicted 237σ, best 4.5σ. **Unvetted:** Abell 370 has no usable image list
+  (D-035), so knots of known systems are not excluded there, and the position is 64″ out, beyond the constraints.
+  Looked at: 3881 is a compact elongated galaxy; nothing at the flagged position in F150W/F200W/F444W; aperture-to-
+  aperture (arc 0.2″ flux × μ ratio 1.23) predicts 187 / 242 / 167σ in F200W / F277W / F444W, best < 5σ in each.
+  The model gives 3881 seven images at z 2.99; one lands on the known giant arc (a different source), so the
+  CANUCS z ≈ 3 critical region reaches 3881 and the flag rests on the model's outer extrapolation.
+- **Failed approach:** a 1″ exclusion radius. Abell 2744 arc 2528 lies 1.1″ from 26.1a; its photo-z 5.16 (z_spec
+  3.054) moved the predictions up to 8″ and made a 23σ `absent` (looked at: F115W–F444W cutouts). At z = 3.054 its
+  images land on 26.2b (0.6″) and 26.1c (1.5″). Exclusion is now 2″.
+- `recovered` among unknowns is weak: a random 5σ source within 1–3″ at 1/3–3× the flux is common in deep fields
+  (2528's z = 5.16 "counter-image" was recovered 4.7″ from 26.1c); only `absent` with no detection is informative.
+- **Next:** vet Abell 370 3881 (`/vet-candidate`): match it to the Lagattuta+19/CANUCS A370 image catalogue,
+  cutouts at the flagged position, `nearest_image` over the CANUCS 100 MCMC maps, and whether the position is
+  covered by constraints. Then `--control` on the other fields.
+
 ## 2026-10-13: X2 S5: the S4 echo background is radially unstable (e-folding 9.9 M, 139 e-folds per echo spacing)
 - **Equations.** CPS framework (arXiv:1911.13103) in δΦ = 0 gauge: δr free, so the throat may move. Magnetic NED
   enters as a fixed function of the perturbed areal radius, since F is fixed by the Bianchi identity.

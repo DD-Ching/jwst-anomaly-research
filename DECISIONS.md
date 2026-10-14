@@ -1522,6 +1522,15 @@ Field docs: `docs/fields/*.md`.
 - A reference flux is available for systems 11, 16 and 26 (DJA matched photometry, or a deeper image).
 - The test runs on the other clusters: El Gordo and Abell 2744 (issue #41) once their parser bugs are fixed.
 
+**Addendum 2026-10-14 (uncatalogued bright arcs, `scripts/arcs_counter.py`).** The counter-image test now also runs
+on background, strong-shear arcs of the stored `arcs` tables that lie > 2″ (ASSUMPTION) from every catalogued image:
+the arc is traced at z16 / z50 / z84 of its photo-z; a counter-image is robust when all three agree within 3″; the
+predicted flux is the arc's isophotal flux × |μ_c/μ_arc| with an encircled fraction of 0.5 (ASSUMPTION); a flag is a
+robust D-029 `absent` with best S/N < 5 (ASSUMPTION, from the Abell 2744 control: catalogued image 7247 is `absent`
+at 86σ by the 1/3 flux bound). Four fields null; Abell 370 3881 unvetted (CHANGELOG 2026-10-14). Rejected: a 1″
+exclusion (knots of system 26 with a wrong photo-z made a false `absent`). Revisit if: an Abell 370 image list
+passes D-035, or spectroscopic redshifts for the tested arcs.
+
 ## D-030 Exact image-plane χ² in `validate`; El Gordo and Abell 2744 models in the repository (2026-10-08)
 
 **Decision.**
