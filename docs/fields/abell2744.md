@@ -345,3 +345,33 @@ addendum 2026-10-14 (member-galaxy subtraction).
 it at μ 8.83, 0.93″ from Bergamini's position; nothing at ≥ 0.5× its expected flux (injections), the nearest peak is
 0.20–0.33× and bluer. The family-4 verdict (docs/candidates/abell2744-family4-c.md) stands. Details: CHANGELOG
 2026-10-14, DECISIONS.md D-041 addendum 2026-10-14.
+
+## D-041 cross-model rule on every forced-photometry row (2026-10-14)
+
+`scripts/a2744_uncover.py --crossmodel <Bergamini images_predicted.ecsv> --catalog <F200W cat> --forced-image <F277W
+i2d>` (`results/lens_consistency/abell2744-uncover2/crossmodel.{ecsv,json}`, `images_predicted_{bergamini23,uncover2}.ecsv`).
+Both models' extra images (predicted > 1.5″ from every catalogued image of the family) are force-photometered under
+the same D-034 rules with a 1″ halo filter (UNCOVER from the WLS family source). Each is matched to the other
+model's nearest *extra* image of the family: `both` ≤ 1.5″, `both_loose` ≤ 3.0″ (ASSUMPTIONs; 1.8× UNCOVER's rms,
+1.3× its largest own-list residual; not one-to-one). The distance to the other model's nearest image of a catalogued
+one is kept too, and an extra within 3″ of that is the other model's catalogued image, misplaced.
+
+| Model | Extra images | both / both_loose | recovered | confused | absent | undetectable | no_reference | inconsistent_ref | not forced |
+|---|---|---|---|---|---|---|---|---|---|
+| Bergamini+23 | 33 | 12 / 15 | 6 | 2 | 2 | 4 | 12 | 2 | 5 |
+| UNCOVER v2.0 | 45 | 14 / 17 | 4 | 3 | 2 | 4 | 8 | 8 | 16 |
+
+The Bergamini run reproduces the recorded classes (recovered 6, confused 2, absent 2 with the 1″ filter).
+
+**Unmet predictions (`absent`; none `ambiguous`).** Cutouts (F150W/F277W/F444W, 1″ high-pass) viewed for all four.
+- Bergamini 700.1 ×2 (μ −92, +10.3): **model-dependent** (D-041). UNCOVER's nearest 700.1 images are 3.56″ and 12.7″
+  away; already explained as a model-limited system (wrong fitted z, infall region).
+- UNCOVER 3.1 (μ −59.5, predicted 2877σ, ratio 0.006) and 34.1 (μ +28.2, 18σ, ratio 0.30): **fold pairs merged by
+  UNCOVER.** UNCOVER puts one predicted image on both 3.1a/b (and on 34.1a/b) and the remaining fold partner 2.5″
+  (5.2″) from the catalogued images. Bergamini predicts these images 2.0″ (2.7″) away, on the observed arc and on the
+  recovered 34.1 image. Same explanation as Bergamini's 34.1 in 2026-10-08: a misplaced critical curve, where the μ
+  scaling is invalid. Ordinary.
+
+**Both models agree, but untested (`no_reference` in both):** 3.2 (seen as 3.1c, 2026-10-08), 4.2c (vetted), 26.2,
+33.1 third, 62.1. No row is an unmet prediction of both models (`unmet_in_both_models` 0). **Result: null.** The
+D-041 rule removes both remaining Bergamini `absent` rows; no new flag.

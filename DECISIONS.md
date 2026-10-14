@@ -2247,6 +2247,18 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
   it is not model-dependent; its vetted explanation (member 34423 systematics) stands. CHANGELOG 2026-10-14.
 - **Revisit if** a UNCOVER release refits the 4.2c region, or a third model removes 4.2c.
 
+**Addendum 2026-10-14 (cross-model rule on every forced row).**
+- **Decision.** Both models' extra images are force-photometered under the same rules. Two extra images of one
+  family from the two models count as one when they are ≤ 1.5″ apart (`both`; 1.8× UNCOVER's rms) and as a loose
+  match ≤ 3.0″ (1.3× its largest own-list residual). Both radii are ASSUMPTIONs. An unmet extra image is
+  model-dependent unless the other model predicts an extra image within 3.0″. When the other model's image there is
+  a catalogued image (≤ 3.0″) or is recovered, the unmet image is that image misplaced (ordinary).
+- **Alternatives rejected.** 1.5″ alone: it calls three recovered Bergamini images (3.3, 28, 34.1) one-model
+  predictions, although UNCOVER predicts them 1.5–2.7″ away.
+- **Evidence.** Abell 2744: 4 `absent` rows. Two are Bergamini-only (700.1). Two are UNCOVER fold-pair merges (3.1,
+  34.1) that Bergamini places ≤ 2.7″ away on observed images. No row is unmet in both models. CHANGELOG 2026-10-14.
+- **Revisit if** a third Abell 2744 model is added, or a both-model `no_reference` row gets a reference flux.
+
 ## D-042 MACS0416 counter-image and flux-ratio screens: null; CANUCS Lenstool model as second model; two-plane check of foreground deflectors (2026-10-08)
 
 **Decision.** With the image list open (D-040), the MACS0416 `images` and `fluxratio` screens are a null result
