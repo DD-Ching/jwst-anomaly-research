@@ -1866,6 +1866,15 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   1.1b and 7b are elliptical, nearly mirror-symmetric sources with a core dipole residual in the predicted family.
   Revisit with: a PSF-commuting comparison (fit P ⊗ T(A) against T(P) ⊗ B with an empirical F200W PSF from mosaic
   stars, which is exact for an affine T) and a class only when Δχ² keeps its sign across two start densities.
+- PSF-commuting parity statistic (2026-10-14; CHANGELOG): **implemented and rejected as the fix; the tool is paused.**
+  P ⊗ T(A) fitted against K ⊗ B with K(d) ∝ P(M d) (exact for an affine map), P a Gaia DR3 star median stack
+  (pedestal-subtracted) on the F200W mosaic, PSF-consistent synthetics, class only when 16- and 24-angle starts agree. Validated on a toy
+  asymmetric PSF (χ² 1147 for 1185 px vs 34 483 plain). Abell 2744: acceptance 52 / 68 = 76 % after the review fixes (75 % before; plain 87 %);
+  1.1b and 7b stay flagged (600.3b `unstable`), so the unlensed PSF is not their cause; 8 new flags, attributed to noise
+  correlation from the convolutions (|Δχ²| ×4–8 against a fixed DCHI2_MIN) and non-affine arcs (2.4d). A χ²/n ≤ 2
+  gate removes 2 of 12. K is truncated at 0.6″ (exact only for singular values ≥ 0.83). Alternatives rejected: Gaussian or toy PSFs (the empirical stack is cheap: one VizieR cone,
+  12 byte-range stamps). Revisit if: a non-affine forward model through the published deflection field, or a
+  correlated-noise-calibrated threshold, becomes available.
 - MACS0416 halo fluxes (2026-10-14; CHANGELOG; `docs/fields/macs0416.md`): `halo_phot.py` + `fluxratios
   --halo-phot` with `macs0416-canucs` (unchanged code). 5 systems testable (F444W 11 images), max |r| 0.35 mag,
   σ_sys 0.25 / 0.26 mag (medfilt / annulus), no `flux_outlier`, `flux_tension` or colour outlier; 1 mag deficits

@@ -177,9 +177,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        anomaly; the halo-flux line is null in four clusters (MACS1149 needs a Lenstool par);
      - observational parity test: `scripts/parity_test.py` (affine fit of image pairs in both handedness families,
        synthetic power per pair; D-032 addenda 2026-10-14): acceptance test failed (87 % vs 95 %; 3 persistent
-       flags, all predicted-mirror compact cores; classes depend on the start set). Next: PSF-commuting fit
-       (P ⊗ T(A) vs T(P) ⊗ B, empirical F200W PSF) and a start-stability rule, then rerun the acceptance test;
-       only then El Gordo, MACS0416/MACS1149, SMACS;
+       flags, all predicted-mirror compact cores; classes depend on the start set). PSF-commuting fit with an
+       empirical F200W PSF and a start-stability rule done: worse (76 %, 10 flags), so the PSF is not the cause.
+       **Paused** (three acceptance failures). Reopen only with a forward model that is not affine over the fit
+       disc (source-plane reconstruction through the published deflection field) or a noise-correlation-calibrated
+       Δχ² threshold; no field run before acceptance passes;
    - ~~`arcs` on Abell 2744 and El Gordo~~ — done (D-024 addendum 2026-10-13): null; background 33/35 and 10/12
      aligned, anti counts 0 and 1 against 0.45 and 0.17 from shape noise;
    - ~~arc curvature~~ — done (D-024 addenda 5–6): forward-modelled curvature, 5 testable arcs all as predicted (El

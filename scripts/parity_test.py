@@ -19,6 +19,11 @@ or unresolved source gives about 0 for both). Classes: ``consistent`` / ``parity
 ``|mu| > MAX_ABS_MU`` (its parity is model-dependent; ASSUMPTION). Image positions are observed,
 ``mu`` and ``M_pred`` model_prediction, fitted maps and ``dchi2`` derived, synthetics simulated.
 
+Default statistic (``PsfPair``): PSF-commuting, ``P * T(A)`` against ``K * B`` with ``P`` an
+empirical PSF stacked from Gaia stars on the mosaic, plus a start-stability rule; ``--no-psf``
+gives the plain statistic above. Neither passed the Abell 2744 acceptance test (D-032 addenda
+2026-10-14: 87 % plain, 76 % PSF-commuting), so no class from this script is a lens-model result.
+
     OMP_NUM_THREADS=1 python scripts/parity_test.py --model abell2744-bergamini23 \
         --image s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f200w_i2d.fits
 """
@@ -33,7 +38,7 @@ from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
-from scipy import ndimage, optimize
+from scipy import ndimage, optimize, signal
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lens_consistency as lc  # noqa: E402
@@ -57,6 +62,15 @@ SEG_SNR = 2.0  # segmentation threshold on the 1-px-smoothed S/N map (ASSUMPTION
 SEG_GROW_PIX = 2  # dilation of each segment (wings below the threshold)
 PSF_SIGMA_ARCSEC = 0.028  # F200W PSF core, FWHM 0.066" / 2.355 (ASSUMPTION; other bands: scale it)
 MIN_SIZE_RATIO = 2.0  # major-axis sigma / PSF sigma; below it PSF-dominated (ASSUMPTION)
+N_ANGLES_ALT = 16  # second start density of the stability rule
+PSF_HALF_ARCSEC = 0.5  # empirical PSF stamp (ASSUMPTION; wings beyond it are dropped)
+KERNEL_HALF_ARCSEC = 0.6  # K = P(M d) truncation (ASSUMPTION; exact only if M's smaller singular
+# value >= PSF_HALF / KERNEL_HALF ~ 0.83); B's stamp must reach FIT_RADIUS + this
+PSF_MIN_SNR = 50.0  # star peak S/N for the PSF stack (ASSUMPTION)
+PSF_PEAK_TOL = (
+    0.3  # normalised peak off the median by more: rejected (saturation, blends; ASSUMPTION)
+)
+N_REFINE_PSF = 4  # PSF-commuting refinements per family
 
 
 def _rot(t: float) -> np.ndarray:
@@ -147,7 +161,16 @@ def mirror_starts(p: np.ndarray, h: int) -> list[np.ndarray]:
 
 
 def fit_family(
-    tmpl: Template, h: int, bx, by, b, bvar, m_pred: np.ndarray, seeds=(), exact=()
+    tmpl: Template,
+    h: int,
+    bx,
+    by,
+    b,
+    bvar,
+    m_pred: np.ndarray,
+    seeds=(),
+    exact=(),
+    n_angles: int = N_ANGLES,
 ) -> dict:
     """Best affine fit in handedness family ``h`` from a grid of rotation starts at the predicted
     scales, plus each seed parameter vector (e.g. the other family's best fit) with its second
@@ -157,7 +180,7 @@ def fit_family(
     l1, l2 = (float(np.clip(v, lo_s + 1e-3, hi_s - 1e-3)) for v in (l1, l2))
     lo = [-np.inf, -np.inf, lo_s, lo_s, -MAX_SHIFT_ARCSEC, -MAX_SHIFT_ARCSEC]
     hi = [np.inf, np.inf, hi_s, hi_s, MAX_SHIFT_ARCSEC, MAX_SHIFT_ARCSEC]
-    angles = np.arange(N_ANGLES) * np.pi / N_ANGLES
+    angles = np.arange(n_angles) * np.pi / n_angles
     starts = []
     for a1 in angles:  # cheap grid over both rotations, then refine the best few
         for a2 in angles:
@@ -193,28 +216,172 @@ def fit_family(
     return best
 
 
-def compare(tmpl: Template, bx, by, b, bvar, m_pred: np.ndarray, seeds=()) -> dict:
+def compare(
+    tmpl: Template, bx, by, b, bvar, m_pred: np.ndarray, seeds=(), n_angles: int = N_ANGLES
+) -> dict:
     """Fit both families, then refit each seeded by the other's best fit (and ``seeds``), so a
     local minimum in one family cannot fake a preference; ``dchi2 = chi2(wrong) - chi2(pred)``."""
     h_pred = 1 if np.linalg.det(m_pred) > 0 else -1
     m_alt = m_pred @ np.diag([1.0, -1.0])  # start the wrong family from a mirrored prediction
-    fp = fit_family(tmpl, h_pred, bx, by, b, bvar, m_pred, seeds)
-    fw = fit_family(tmpl, -h_pred, bx, by, b, bvar, m_alt, seeds)
+    kw = {"n_angles": n_angles}
+    fp = fit_family(tmpl, h_pred, bx, by, b, bvar, m_pred, seeds, **kw)
+    fw = fit_family(tmpl, -h_pred, bx, by, b, bvar, m_alt, seeds, **kw)
     fp2 = fit_family(
-        tmpl, h_pred, bx, by, b, bvar, m_pred, [fw["p"]], mirror_starts(fw["p"], -h_pred)
+        tmpl, h_pred, bx, by, b, bvar, m_pred, [fw["p"]], mirror_starts(fw["p"], -h_pred), **kw
     )
     fw2 = fit_family(
-        tmpl, -h_pred, bx, by, b, bvar, m_alt, [fp["p"]], mirror_starts(fp["p"], h_pred)
+        tmpl, -h_pred, bx, by, b, bvar, m_alt, [fp["p"]], mirror_starts(fp["p"], h_pred), **kw
     )
     fp = fp2 if fp2["chi2"] < fp["chi2"] else fp
     fw = fw2 if fw2["chi2"] < fw["chi2"] else fw
     return {"h_pred": h_pred, "pred": fp, "wrong": fw, "dchi2": fw["chi2"] - fp["chi2"]}
 
 
-def pair_test(tmpl: Template, bx, by, b, bvar, m_pred: np.ndarray, seed: int = 0) -> dict:
-    """Real comparison plus the two synthetic power checks."""
+class PsfPair:
+    """B's stamp and the PSF ``P`` for the PSF-commuting statistic. With ``A = P * S_A``,
+    ``B = P * S_B`` and ``S_B(x) = S_A(M x + s)``, resampling gives ``T(A) = K * S_B`` with
+    ``K(d) = |det M| P(M d)``, hence ``P * T(A) = K * B`` exactly for an affine map: the fit
+    compares those two, so neither side carries a PSF distorted by ``M`` (or mirrored). ``P`` is
+    in the mosaic's pixel orientation, as the stamps are. Bad and neighbour pixels of B are zeroed
+    before the convolution; the convolved variances ignore pixel covariance (ASSUMPTION: both
+    families are scored with the same approximation)."""
+
+    def __init__(self, sci, err, xx, yy, other, psf: np.ndarray):
+        r = FIT_RADIUS_ARCSEC + KERNEL_HALF_ARCSEC
+        ok = np.isfinite(sci) & np.isfinite(err) & (err > 0)
+        if other is not None:
+            ok &= ~other
+        rows = np.flatnonzero((np.abs(yy) <= r + 0.05).any(1) & (np.abs(xx) <= r + 0.05).any(1))
+        cols = np.flatnonzero((np.abs(yy) <= r + 0.05).any(0) & (np.abs(xx) <= r + 0.05).any(0))
+        sl = (slice(rows[0], rows[-1] + 1), slice(cols[0], cols[-1] + 1))
+        self.x, self.y = xx[sl], yy[sl]
+        okc = ok[sl]
+        self.ok = okc  # T(A) gets the same zeros before its convolution
+        self.b2 = np.where(okc, np.nan_to_num(sci[sl]), 0.0)
+        self.v2 = np.where(okc, np.nan_to_num(err[sl]) ** 2, 0.0)
+        self.fit = okc & (np.hypot(self.x, self.y) <= FIT_RADIUS_ARCSEC)
+        self.psf = psf / psf.sum()
+        ny, nx = self.x.shape
+        jj, ii = np.mgrid[0:ny, 0:nx]
+        a = np.column_stack([np.ones(ii.size), ii.ravel(), jj.ravel()])
+        cx = np.linalg.lstsq(a, self.x.ravel(), rcond=None)[0]
+        cy = np.linalg.lstsq(a, self.y.ravel(), rcond=None)[0]
+        self.jac = np.array([[cx[1], cx[2]], [cy[1], cy[2]]])  # pixel -> frame offsets
+        pix = float(np.sqrt(abs(np.linalg.det(self.jac))))
+        k = int(np.ceil(KERNEL_HALF_ARCSEC / pix))
+        kj, ki = np.mgrid[-k : k + 1, -k : k + 1].astype(float)
+        self.koff = self.jac @ np.vstack([ki.ravel(), kj.ravel()])
+        self.kshape = ki.shape
+        hp = psf.shape[0] // 2  # P sampled at frame offsets through the same pixel map
+        self.pinv = np.linalg.inv(self.jac)
+        self.pc = hp
+
+    def plain(self):
+        """``(bx, by, b, bvar)`` of the fit pixels, for the plain statistic."""
+        return self.x[self.fit], self.y[self.fit], self.b2[self.fit], self.v2[self.fit]
+
+    def with_b(self, b2) -> PsfPair:
+        out = PsfPair.__new__(PsfPair)
+        out.__dict__.update(self.__dict__)
+        out.b2 = b2
+        return out
+
+    def kernel(self, m: np.ndarray) -> np.ndarray:
+        """``K(d) ~ P(M d)``, normalised to unit sum (the flux scale is fitted)."""
+        ij = self.pinv @ (m @ self.koff) + self.pc
+        k = ndimage.map_coordinates(self.psf, ij[::-1], order=1, mode="constant", cval=0.0)
+        k = k.reshape(self.kshape)
+        return k / k.sum() if k.sum() > 0 else k
+
+    def model(self, tmpl: Template, p, h):
+        m, sh = affine(p, h)
+        d = m @ np.vstack([self.x.ravel(), self.y.ravel()])
+        val, var, inside = tmpl.sample(d[0] + sh[0], d[1] + sh[1])
+        u = np.where(self.ok, val.reshape(self.x.shape), 0.0)
+        vu = np.where(
+            self.ok & np.isfinite(var.reshape(self.x.shape)), var.reshape(self.x.shape), 0.0
+        )
+        c1 = signal.fftconvolve(u, self.psf, mode="same")[self.fit]
+        v1 = signal.fftconvolve(vu, self.psf**2, mode="same")[self.fit]
+        k = self.kernel(m)
+        data = signal.fftconvolve(self.b2, k, mode="same")[self.fit]
+        v2 = np.clip(signal.fftconvolve(self.v2, k**2, mode="same")[self.fit], 1e-30, None)
+        w = 1.0 / v2
+        a = np.column_stack([c1, np.ones_like(c1)]) * np.sqrt(w)[:, None]
+        f, c = np.linalg.lstsq(a, data * np.sqrt(w), rcond=None)[0]
+        sig2 = v2 + f * f * np.clip(v1, 0, None)
+        return f * c1 + c, sig2, inside.reshape(self.x.shape)[self.fit], data
+
+
+def _resid_psf(p, tmpl, pp: PsfPair, h):
+    pred, sig2, inside, data = pp.model(tmpl, p, h)
+    r = (data - pred) / np.sqrt(sig2)
+    r[~inside] = 10.0
+    return r
+
+
+def refine_psf(tmpl: Template, pp: PsfPair, h: int, starts) -> dict:
+    """Least-squares refinement of the PSF-commuting statistic from the best ``N_REFINE_PSF`` of
+    ``starts`` (plain-fit optima and mirror starts: the plain grid finds the basin)."""
+    lo_s, hi_s = np.log(SCALE_RANGE[0]), np.log(SCALE_RANGE[1])
+    lo = [-np.inf, -np.inf, lo_s, lo_s, -MAX_SHIFT_ARCSEC, -MAX_SHIFT_ARCSEC]
+    hi = [np.inf, np.inf, hi_s, hi_s, MAX_SHIFT_ARCSEC, MAX_SHIFT_ARCSEC]
+    scored = []
+    for p0 in starts:
+        p0 = np.array(p0, float).copy()
+        p0[2:4] = np.clip(p0[2:4], lo_s + 1e-3, hi_s - 1e-3)
+        p0[4:6] = np.clip(p0[4:6], -MAX_SHIFT_ARCSEC + 1e-6, MAX_SHIFT_ARCSEC - 1e-6)
+        r = _resid_psf(p0, tmpl, pp, h)
+        scored.append((float(r @ r), p0))
+    scored.sort(key=lambda t: t[0])
+    best = None
+    for _, p0 in scored[:N_REFINE_PSF]:
+        res = optimize.least_squares(
+            _resid_psf, p0, bounds=(lo, hi), args=(tmpl, pp, h), max_nfev=60
+        )
+        if best is None or 2 * res.cost < best["chi2"]:
+            best = {"chi2": float(2 * res.cost), "p": res.x}
+    return best
+
+
+def compare_psf(tmpl: Template, pp: PsfPair, plain: dict, m_pred: np.ndarray) -> float:
+    """PSF-commuting ``dchi2`` refined from a plain ``compare`` result and from the predicted map
+    (the plain optimum of a PSF-dominated core can sit far from the PSF-commuting one); each
+    family also starts from the other's starts reflected about every axis, so neither family is
+    favoured."""
+    h = plain["h_pred"]
+    p_pl, w_pl = plain["pred"]["p"], plain["wrong"]["p"]
+    p_md = np.array([*decompose(m_pred), 0.0, 0.0])
+    fp = refine_psf(tmpl, pp, h, [p_pl, p_md, *mirror_starts(w_pl, -h)])
+    fw = refine_psf(tmpl, pp, -h, [w_pl, *mirror_starts(p_pl, h), *mirror_starts(p_md, h)])
+    return fw["chi2"] - fp["chi2"]
+
+
+def _classify(d: float) -> str:
+    if d > DCHI2_MIN:
+        return "consistent"
+    if d < -DCHI2_MIN:
+        return "parity_residual"
+    return "undetermined"
+
+
+def pair_test(
+    tmpl: Template, bx, by, b, bvar, m_pred: np.ndarray, seed: int = 0, pp: PsfPair | None = None
+) -> dict:
+    """Real comparison plus the two synthetic power checks. With ``pp`` the statistic is the
+    PSF-commuting one (``bx, by, b, bvar`` are then taken from ``pp``), and the real comparison is
+    repeated at a second start density: a class is kept only when both agree (else
+    ``unstable``)."""
     rng = np.random.default_rng(seed)
+    if pp is not None:
+        bx, by, b, bvar = pp.plain()
     real = compare(tmpl, bx, by, b, bvar, m_pred)
+    d_alt = None
+    if pp is not None:
+        real["dchi2_plain"] = real["dchi2"]
+        real["dchi2"] = compare_psf(tmpl, pp, real, m_pred)
+        alt = compare(tmpl, bx, by, b, bvar, m_pred, n_angles=N_ANGLES_ALT)
+        d_alt = compare_psf(tmpl, pp, alt, m_pred)
     # The synthetics are drawn from a smoothed copy of A: drawn from A itself, they would carry A's
     # own noise pattern, which only the generating geometry reproduces (spurious power on a
     # symmetric source). Smoothing blurs real structure too, so the power estimate is conservative.
@@ -225,21 +392,37 @@ def pair_test(tmpl: Template, bx, by, b, bvar, m_pred: np.ndarray, seed: int = 0
     for key in ("pred", "wrong"):
         fit = real[key]
         h = real["h_pred"] if key == "pred" else -real["h_pred"]
-        model, sig2, _, _ = _model(smooth, fit["p"], h, bx, by, b, bvar)
-        sb = model + rng.normal(0.0, np.sqrt(sig2))
         seeds = [real["pred"]["p"], real["wrong"]["p"]]  # includes the generating parameters
-        syn[key] = compare(tmpl, bx, by, sb, bvar, m_pred, seeds)["dchi2"]
+        if pp is None:
+            model, sig2, _, _ = _model(smooth, fit["p"], h, bx, by, b, bvar)
+            sb = model + rng.normal(0.0, np.sqrt(sig2))
+            syn[key] = compare(tmpl, bx, by, sb, bvar, m_pred, seeds)["dchi2"]
+            continue
+        # PSF mode: a synthetic pair consistent with the PSF model. The smoothed A stands in for
+        # the intrinsic source S; A_syn = P * S and B_syn = f P * T(S), each with its own noise
+        m, sh = affine(fit["p"], h)
+        sd_a = np.sqrt(np.where(np.isfinite(tmpl.var), tmpl.var, 0.0))
+        a_syn = signal.fftconvolve(smooth.sci, pp.psf, mode="same")
+        stmpl = Template.__new__(Template)
+        stmpl.__dict__.update(tmpl.__dict__)
+        stmpl.sci = a_syn + rng.normal(0.0, 1.0, a_syn.shape) * sd_a
+        dd = m @ np.vstack([pp.x.ravel(), pp.y.ravel()])
+        val, _, _ = smooth.sample(dd[0] + sh[0], dd[1] + sh[1])
+        _, _, _, f = _model(smooth, fit["p"], h, bx, by, b, bvar)
+        sb2 = f * signal.fftconvolve(val.reshape(pp.x.shape), pp.psf, mode="same")
+        sb2 = np.where(pp.v2 > 0, sb2 + rng.normal(0.0, 1.0, pp.x.shape) * np.sqrt(pp.v2), 0.0)
+        spp = pp.with_b(sb2)
+        sres = compare(stmpl, *spp.plain(), m_pred, seeds)
+        syn[key] = compare_psf(stmpl, spp, sres, m_pred)
     testable = syn["pred"] > DCHI2_MIN and syn["wrong"] < -DCHI2_MIN
     d = real["dchi2"]
     if not testable:
         cls = "untestable"
-    elif d > DCHI2_MIN:
-        cls = "consistent"
-    elif d < -DCHI2_MIN:
-        cls = "parity_residual"
+    elif d_alt is not None and _classify(d_alt) != _classify(d):
+        cls = "unstable"
     else:
-        cls = "undetermined"
-    return {
+        cls = _classify(d)
+    out = {
         "class": cls,
         "dchi2": d,
         "dchi2_syn_pred": syn["pred"],
@@ -251,6 +434,10 @@ def pair_test(tmpl: Template, bx, by, b, bvar, m_pred: np.ndarray, seed: int = 0
         "m_fit_pred": real["pred"]["m"].round(3).tolist(),
         "m_pred": np.asarray(m_pred).round(3).tolist(),
     }
+    if pp is not None:
+        out["dchi2_plain"] = real["dchi2_plain"]
+        out["dchi2_alt"] = d_alt
+    return out
 
 
 def _fit_pixels(sci, err, xx, yy, other=None):
@@ -331,12 +518,80 @@ def read_stamps(
     return stamps
 
 
+def empirical_psf(image_uri: str, ra: float, dec: float, stars: list | None = None) -> dict:
+    """Median stack of Gaia DR3 stars (``halo_phot_stars.gaia_stars``: proper motion or parallax
+    > 3 sigma) on the mosaic, each recentred to its light-weighted centroid by cubic resampling and
+    normalised to unit flux within ``PSF_HALF_ARCSEC``. Kept: no masked pixel within 0.3", peak
+    S/N >= ``PSF_MIN_SNR``, no other segment within the stamp, normalised peak within
+    ``PSF_PEAK_TOL`` of the median (rejects flat-topped and blended stars). Gaia rows observed,
+    the stack derived. ``stars`` (earlier rows with ra, dec, gmag) skips the VizieR query.
+    Returns ``{"psf": 2-D list, "stars": [...], "n": int}``."""
+    import halo_phot_stars as hs
+
+    if stars is None:
+        g = [
+            {"RA_ICRS": r["RA_ICRS"], "DE_ICRS": r["DE_ICRS"], "Gmag": r["Gmag"]}
+            for r in hs.gaia_stars(ra, dec)
+        ]
+    else:
+        g = [{"RA_ICRS": r["ra"], "DE_ICRS": r["dec"], "Gmag": r["gmag"]} for r in stars]
+    stamp, close = lc.image_stamper(image_uri, PSF_HALF_ARCSEC + 0.2)
+    cut, rows = [], []
+    try:
+        for r in g:
+            sra, sdec = float(r["RA_ICRS"]), float(r["DE_ICRS"])
+            sci, err, xx, yy = stamp(sra, sdec)
+            if not np.isfinite(sci).any():
+                continue
+            core = np.hypot(xx, yy) <= 0.3
+            if not (np.isfinite(sci[core]).all() and (err[core] > 0).all()):
+                continue
+            if np.nanmax(sci[core] / err[core]) < PSF_MIN_SNR:
+                continue
+            own, other = segment(sci, err, xx, yy)
+            if other.any():
+                continue
+            w = np.clip(np.where(own, np.nan_to_num(sci), 0.0), 0, None)
+            jj, ii = np.indices(sci.shape)
+            cj, ci = (w * jj).sum() / w.sum(), (w * ii).sum() / w.sum()
+            c = (sci.shape[0] - 1) / 2
+            sh = ndimage.shift(np.nan_to_num(sci), (c - cj, c - ci), order=3, mode="nearest")
+            pix = float(np.hypot(xx[0, 1] - xx[0, 0], yy[0, 1] - yy[0, 0]))
+            k = int(np.ceil(PSF_HALF_ARCSEC / pix))
+            ic = int(round(c))
+            ring = np.hypot(xx, yy) > PSF_HALF_ARCSEC  # local pedestal (ICL), as the halo filter
+            sh = sh - np.median(sh[ring & np.isfinite(sci)])
+            sh = sh[ic - k : ic + k + 1, ic - k : ic + k + 1]
+            cut.append(sh / sh.sum())
+            rows.append({"ra": sra, "dec": sdec, "gmag": float(r["Gmag"])})
+    finally:
+        close()
+    if not cut:
+        raise RuntimeError("no Gaia star passed the PSF cuts")
+    peaks = np.array([c.max() for c in cut])
+    keep = np.abs(peaks / np.median(peaks) - 1) <= PSF_PEAK_TOL
+    if keep.sum() < 3:
+        raise RuntimeError(f"only {int(keep.sum())} stars kept for the PSF stack")
+    psf = np.median(np.array(cut)[keep], axis=0)
+    psf = np.clip(psf, 0, None)
+    psf /= psf.sum()
+    stars = [
+        dict(rw, peak=float(pk), kept=bool(kp))
+        for rw, pk, kp in zip(rows, peaks, keep, strict=True)
+    ]
+    return {"psf": psf.round(7).tolist(), "stars": stars, "n": int(keep.sum())}
+
+
 def _sxy(st):
     return st[0], st[2], st[3], st[5]
 
 
 def run(
-    model_name: str, image_uri: str, halo_filter: float = HALO_FILTER_ARCSEC, mask: bool = True
+    model_name: str,
+    image_uri: str,
+    halo_filter: float = HALO_FILTER_ARCSEC,
+    mask: bool = True,
+    psf: np.ndarray | None = None,
 ) -> list[dict]:
     model, files, par = lc.load_model(model_name)
     images, z_m_limit = lc.image_list(model_name, files, par)
@@ -391,14 +646,21 @@ def run(
                 tmpl = Template(sci_a, err_a, xa, ya)
                 bx, by, b, bvar = _fit_pixels(*stamps[kb][:4], stamps[kb][6])
                 m_pred = np.linalg.inv(jac[ka]) @ jac[kb]
-                jobs.append((len(rows), (tmpl, bx, by, b, bvar, m_pred)))
+                pp = None
+                if psf is not None:  # the halo filter removes smooth light only: it commutes
+                    # with P to first order (ASSUMPTION)
+                    pp = PsfPair(*stamps[kb][:4], stamps[kb][6], psf)
+                jobs.append((len(rows), (tmpl, bx, by, b, bvar, m_pred, 0, pp)))
+            if "class" in row:  # not fitted: final now
+                print(json.dumps(row), flush=True)
             rows.append(row)
     # CPU-bound fits: one process per core (run with OMP_NUM_THREADS=1; scripts/CLAUDE.md topology)
     with ProcessPoolExecutor(os.cpu_count() or 1) as ex:
         for (i, _), res in zip(jobs, ex.map(_pair_job, [a for _, a in jobs]), strict=True):
             rows[i].update(res)
-    for row in rows:
-        print(json.dumps({k: v for k, v in row.items() if not k.startswith("m_")}), flush=True)
+            print(
+                json.dumps({k: v for k, v in rows[i].items() if not k.startswith("m_")}), flush=True
+            )
     return rows
 
 
@@ -422,10 +684,39 @@ def main(argv=None) -> int:
         action="store_true",
         help="no segmentation mask and no resolution gate (the first, unvalidated version)",
     )
+    ap.add_argument(
+        "--no-psf",
+        action="store_true",
+        help="plain statistic (A resampled onto B, PSF ignored) without the stability rule",
+    )
     args = ap.parse_args(argv)
-    rows = run(args.model, args.image, args.halo_filter_arcsec, not args.no_mask)
-    out = args.out or paths.repo_root() / "results" / "parity" / f"{args.model}.json"
+    tag = "" if args.no_psf else "-psf"
+    out = args.out or paths.repo_root() / "results" / "parity" / f"{args.model}{tag}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
+    psf = None
+    psf_params = {
+        "psf_half_arcsec": PSF_HALF_ARCSEC,
+        "psf_min_snr": PSF_MIN_SNR,
+        "psf_peak_tol": PSF_PEAK_TOL,
+        "pedestal": "median beyond psf_half",
+    }
+    if not args.no_psf:
+        model, files, par = lc.load_model(args.model)
+        images, _ = lc.image_list(args.model, files, par)
+        ra, dec = round(float(np.mean(images["ra"])), 4), round(float(np.mean(images["dec"])), 4)
+        key = {"image": args.image, "ra": ra, "dec": dec, **psf_params}
+        cache = out.parent / f"psf-{Path(args.image).name.removesuffix('.fits')}.json"
+        old = json.loads(cache.read_text()) if cache.exists() else {}
+        if all(old.get(k) == v for k, v in key.items()):
+            psf = np.array(old["psf"])
+        else:
+            # Gaia rows from an earlier cache of the same image are reused (VizieR outages)
+            prev = old.get("stars") if old.get("image") == args.image else None
+            st = empirical_psf(args.image, ra, dec, prev)
+            cache.write_text(json.dumps({**key, **st}) + "\n")
+            psf = np.array(st["psf"])
+        print(f"PSF: {cache.name}", flush=True)
+    rows = run(args.model, args.image, args.halo_filter_arcsec, not args.no_mask, psf)
     counts: dict[str, int] = {}
     for r in rows:
         counts[r["class"]] = counts.get(r["class"], 0) + 1
@@ -442,6 +733,11 @@ def main(argv=None) -> int:
             "seg_snr": SEG_SNR,
             "min_size_ratio": MIN_SIZE_RATIO,
             "psf_sigma_arcsec": PSF_SIGMA_ARCSEC,
+            "psf_commuting": psf is not None,
+            "n_angles_alt": N_ANGLES_ALT,
+            "kernel_half_arcsec": KERNEL_HALF_ARCSEC,
+            "n_refine_psf": N_REFINE_PSF,
+            **psf_params,
         },
         "counts": counts,
         "rows": rows,
