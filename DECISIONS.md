@@ -1852,6 +1852,20 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   Revisit with: member + ICL models (`member_sub.py`-type) before fitting, a fit mask from the source's own
   segmentation, and an acceptance test of ≥ 95 % `consistent` or `untestable` on catalogued, non-near-critical pairs
   before any field run counts.
+- Parity acceptance test (2026-10-14; CHANGELOG): **failed; the tool stays unvalidated.** Added a per-stamp
+  segmentation (S/N > 2 after 1 px smoothing; neighbours zeroed in A and masked in B), a resolution gate (major-axis
+  second-moment σ ≥ 2 × the F200W PSF σ 0.028″, else `unresolved`), cross-family starts from 72 reflection axes,
+  denser starts (24 angles, 8 refinements) and a process pool (2.8 min for the field on 4 cores). Abell 2744: QSO1
+  and 42.1 become `unresolved`, 600.5a is cleared; of 56 fitted pairs, 27 `consistent`, 20 `untestable`,
+  6 `undetermined`, 3 `parity_residual` (1.1b, 7b, 600.3b); acceptance (consistent + untestable + unresolved) 59 / 68 =
+  87 % < 95 % (ASSUMPTION threshold). Two blockers: (1) **non-convergence**: between start sets two pairs swap
+  `consistent` ↔ `parity_residual` (600.4a Δχ² +32 030 → −52 264 → +3 329; 2.5d −111 → +183), so a class can depend on
+  the starts; (2) all 3 persistent flags are predicted-mirror pairs with compact, bright cores, which fits the
+  **unlensed PSF** (the free map mirrors A's PSF; B's is not mirrored). A toy asymmetric PSF lowered mirror-pair power
+  (Δχ² ≈ 780 → 440–580) but flipped none, so the PSF route is a hypothesis, not shown. Looked at the contact sheet:
+  1.1b and 7b are elliptical, nearly mirror-symmetric sources with a core dipole residual in the predicted family.
+  Revisit with: a PSF-commuting comparison (fit P ⊗ T(A) against T(P) ⊗ B with an empirical F200W PSF from mosaic
+  stars, which is exact for an affine T) and a class only when Δχ² keeps its sign across two start densities.
 
 ## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
 

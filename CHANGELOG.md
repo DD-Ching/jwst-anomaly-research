@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: parity acceptance test fails (87 % vs 95 %); fits not converged, PSF suspected
+- **Hypothesis before computing:** the 6 Abell 2744 parity flags (previous entry) come from neighbour light and
+  point-like sources; with a segmentation mask and a resolution gate, ≥ 95 % of catalogued non-near-critical pairs
+  (ASSUMPTION) are `consistent` or `untestable`. If not, the test is not used on any field.
+- New in `scripts/parity_test.py`: `segment` (own vs neighbour light per stamp), `size_ratio` and the `unresolved`
+  class, `mirror_starts` (72 reflection axes on the other family's best map), denser default starts, a process pool;
+  `--no-mask` keeps the first version. Test: `test_segment_separates_neighbour_and_size_ratio`.
+- **Result (derived; D-032 addendum): acceptance failed, 59 / 68 = 87 %.** 56 fitted pairs: 27 `consistent`,
+  20 `untestable`, 6 `undetermined`, 3 `parity_residual` (1.1b, 7b, 600.3b); QSO1 and 42.1 now `unresolved`
+  (`results/parity/abell2744-bergamini23.json`). Not candidates; no parity conclusion.
+- **Failed approaches:** (1) the original cross-seed scanned the mirror axis in 15° steps; on sharp cores this left
+  the predicted family Δχ² ~ 10³ worse (dipole residual at the core on the contact sheet). Reflection-axis starts
+  rescued 2.2c, but (2) classes still depend on the start set: 600.4a went from Δχ² +32 030 to −52 264 to +3 329,
+  2.5d from −111 to +183. (3) A toy asymmetric PSF (lobe + spike) reduced synthetic mirror-pair power but flipped no
+  pair, so it does not yet explain the 3 persistent flags. All 3 are predicted-mirror pairs with bright compact cores.
+- **Next:** a PSF-commuting fit, P ⊗ T(A) vs T(P) ⊗ B with an empirical F200W PSF stacked from mosaic stars (exact
+  for affine T), plus a stability rule (class only when Δχ² keeps its sign across two start densities); then rerun
+  this acceptance test. No field run before it passes.
 ## 2026-10-14: observational parity test built; validated on synthetics, fails on known Abell 2744 systems
 - **Hypothesis before computing:** the relative parity of two images of one source, sign(μ_A μ_B), is visible as
   mirror vs non-mirror morphology; a resolved pair preferring the non-predicted handedness, far from critical curves,

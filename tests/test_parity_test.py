@@ -67,3 +67,21 @@ def test_symmetric_source_untestable():
     m_true = np.diag([1.2, -0.9])  # mirror across an axis of the symmetric disc
     tmpl, bx, by, b, bvar = _pair(m_true, asym=False)
     assert pt.pair_test(tmpl, bx, by, b, bvar, m_true)["class"] == "untestable"
+
+
+def test_segment_separates_neighbour_and_size_ratio():
+    x, y = _grid(pt.TEMPLATE_HALF_ARCSEC)
+    rng = np.random.default_rng(3)
+    src = _galaxy(x, y)
+    neighbour = 80.0 * np.exp(-0.5 * ((x - 0.9) ** 2 + (y + 0.4) ** 2) / 0.08**2)
+    sci = src + neighbour + rng.normal(0, 1.0, x.shape)
+    own, other = pt.segment(sci, np.ones_like(sci), x, y)
+    assert own[np.hypot(x, y) < 0.05].all() and not own[np.hypot(x - 0.9, y + 0.4) < 0.05].any()
+    assert other[np.hypot(x - 0.9, y + 0.4) < 0.05].all()
+    assert not (own & other).any()
+    # the extended galaxy is resolved; a PSF-sized point source is not
+    assert pt.size_ratio(src, x, y, own) > pt.MIN_SIZE_RATIO
+    s = pt.PSF_SIGMA_ARCSEC
+    point = 200.0 * np.exp(-0.5 * (x**2 + y**2) / s**2)
+    own_p, _ = pt.segment(point + rng.normal(0, 1.0, x.shape), np.ones_like(x), x, y)
+    assert pt.size_ratio(point, x, y, own_p) < pt.MIN_SIZE_RATIO
