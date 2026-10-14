@@ -1,0 +1,10972 @@
+{
+ "provenance": "positions and mu: model_prediction (CATS v4.1, Sharon v4cor); 16.1/16.2 positions: observed; fluxes: derived",
+ "images": {
+  "f150w": "s3://stpubdata/jwst/public/jw01208/L3/t/o008/jw01208-o008_t004_nircam_clear-f150w_i2d.fits",
+  "f277w": "s3://stpubdata/jwst/public/jw01208/L3/t/o008/jw01208-o008_t004_nircam_clear-f277w_i2d.fits",
+  "f444w": "s3://stpubdata/jwst/public/jw01208/L3/t/o008/jw01208-o008_t004_nircam_clear-f444w_i2d.fits"
+ },
+ "assumptions": {
+  "far_arcsec": 3.0,
+  "search_arcsec": 0.7,
+  "pair_rms_max": 1.0,
+  "colour_tol_mag": 0.5,
+  "colour_min_snr": 3.0,
+  "halo_filter_arcsec": 1.0,
+  "source": "magnification-weighted least-squares source of 16.1/16.2",
+  "predicted_flux": "(f1 + f2) |mu_x| / (|mu_1| + |mu_2|), model mu of the assigned images"
+ },
+ "pair": {
+  "f150w": {
+   "16.1": {
+    "flux": 1.1301,
+    "snr": 7.7
+   },
+   "16.2": {
+    "flux": 1.3164,
+    "snr": 8.9
+   }
+  },
+  "f277w": {
+   "16.1": {
+    "flux": 0.2731,
+    "snr": 12.0
+   },
+   "16.2": {
+    "flux": 0.2878,
+    "snr": 12.5
+   }
+  },
+  "f444w": {
+   "16.1": {
+    "flux": 0.1748,
+    "snr": 5.9
+   },
+   "16.2": {
+    "flux": 0.1966,
+    "snr": 6.6
+   }
+  }
+ },
+ "pair_colours": [
+  -1.6,
+  -0.45
+ ],
+ "allowed_z": {
+  "cats": [
+   2.1,
+   2.15,
+   2.2,
+   2.3,
+   2.35,
+   2.4,
+   2.45,
+   2.5,
+   2.55,
+   2.6,
+   2.65,
+   2.7,
+   2.75,
+   2.8,
+   2.85,
+   2.9
+  ],
+  "sharon": [
+   2.5,
+   2.55,
+   2.6,
+   2.65,
+   2.7,
+   2.75,
+   2.8,
+   2.85,
+   2.9,
+   2.95,
+   3.0,
+   3.05,
+   3.1,
+   3.15,
+   3.2,
+   3.25,
+   3.3
+  ]
+ },
+ "colour_matches": [
+  {
+   "model": "cats",
+   "z": 2.0,
+   "radec": [
+    177.407974,
+    22.386245
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.9,
+    -0.3
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 2.55,
+   "radec": [
+    177.406919,
+    22.38561
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.82,
+    -0.03
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 2.6,
+   "radec": [
+    177.406852,
+    22.385574
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.77,
+    -0.11
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 2.65,
+   "radec": [
+    177.406788,
+    22.385541
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.94,
+    -0.16
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 3.6,
+   "radec": [
+    177.405951,
+    22.385142
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.57,
+    -0.22
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 3.65,
+   "radec": [
+    177.405919,
+    22.385128
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.65,
+    -0.2
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 3.7,
+   "radec": [
+    177.405888,
+    22.385114
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.67,
+    -0.07
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 4.95,
+   "radec": [
+    177.405296,
+    22.384866
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.42,
+    -0.49
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.0,
+   "radec": [
+    177.405278,
+    22.384859
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.61,
+    -0.3
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.05,
+   "radec": [
+    177.40526,
+    22.384852
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.52,
+    -0.16
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.1,
+   "radec": [
+    177.405242,
+    22.384845
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.43,
+    -0.21
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.15,
+   "radec": [
+    177.405224,
+    22.384838
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.34,
+    -0.3
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.2,
+   "radec": [
+    177.405207,
+    22.384831
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.3,
+    -0.31
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.25,
+   "radec": [
+    177.40519,
+    22.384824
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.49,
+    -0.22
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.3,
+   "radec": [
+    177.405173,
+    22.384818
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.52,
+    -0.13
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.35,
+   "radec": [
+    177.405156,
+    22.384812
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.41,
+    -0.26
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.4,
+   "radec": [
+    177.40514,
+    22.384805
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.53,
+    -0.05
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.45,
+   "radec": [
+    177.405123,
+    22.384799
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.52,
+    -0.12
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.5,
+   "radec": [
+    177.405108,
+    22.384793
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.5,
+    -0.17
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.55,
+   "radec": [
+    177.405092,
+    22.384787
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.43,
+    -0.21
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.6,
+   "radec": [
+    177.405076,
+    22.384781
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.35,
+    -0.25
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.65,
+   "radec": [
+    177.405061,
+    22.384776
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.28,
+    -0.32
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.7,
+   "radec": [
+    177.405046,
+    22.38477
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.5,
+    -0.19
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.75,
+   "radec": [
+    177.405031,
+    22.384765
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.45,
+    -0.15
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.8,
+   "radec": [
+    177.405016,
+    22.384759
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.44,
+    -0.18
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.85,
+   "radec": [
+    177.405002,
+    22.384754
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.33,
+    -0.28
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.9,
+   "radec": [
+    177.404987,
+    22.384748
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.38,
+    -0.32
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 5.95,
+   "radec": [
+    177.404973,
+    22.384743
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.21,
+    -0.34
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 6.0,
+   "radec": [
+    177.404959,
+    22.384738
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.21,
+    -0.41
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 2.1,
+   "radec": [
+    177.40813,
+    22.386231
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.92,
+    -0.3
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 2.45,
+   "radec": [
+    177.407096,
+    22.385501
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.75,
+    -0.3
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 2.5,
+   "radec": [
+    177.407015,
+    22.385453
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.88,
+    -0.22
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 2.55,
+   "radec": [
+    177.40694,
+    22.385409
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.78,
+    -0.16
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 2.6,
+   "radec": [
+    177.40687,
+    22.385369
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.77,
+    -0.3
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 2.65,
+   "radec": [
+    177.406805,
+    22.385332
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.78,
+    -0.23
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 3.15,
+   "radec": [
+    177.406337,
+    22.38504
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.63,
+    -0.37
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 3.2,
+   "radec": [
+    177.406294,
+    22.385019
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.64,
+    -0.3
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 3.25,
+   "radec": [
+    177.406252,
+    22.384999
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.61,
+    -0.13
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 3.3,
+   "radec": [
+    177.406212,
+    22.384981
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.57,
+    -0.36
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 3.35,
+   "radec": [
+    177.406173,
+    22.384962
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.66,
+    -0.29
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 3.4,
+   "radec": [
+    177.406136,
+    22.384945
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.59,
+    -0.27
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 3.45,
+   "radec": [
+    177.4061,
+    22.384928
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.34,
+    -0.26
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 3.5,
+   "radec": [
+    177.406065,
+    22.384912
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.28,
+    -0.22
+   ]
+  }
+ ],
+ "rows": [
+  {
+   "model": "cats",
+   "z": 2.0,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.55,
+   "mu_pair": [
+    -30.7,
+    25.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407974,
+      22.386245
+     ],
+     "mu": 11.2,
+     "sep_pair_arcsec": 7.71,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.5,
+      "fixed_snr": 2.1,
+      "best_snr": 10.7,
+      "best_offset": [
+       -0.1,
+       0.3
+      ],
+      "flux_over_pred": 3.06,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.5,
+      "fixed_snr": 4.9,
+      "best_snr": 11.6,
+      "best_offset": [
+       -0.2,
+       0.3
+      ],
+      "flux_over_pred": 2.2,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.7,
+      "fixed_snr": 2.2,
+      "best_snr": 6.8,
+      "best_offset": [
+       -0.1,
+       0.3
+      ],
+      "flux_over_pred": 2.59,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      0.3
+     ],
+     "best_colours": [
+      -1.9,
+      -0.3
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 2.05,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.21,
+   "mu_pair": [
+    -35.3,
+    31.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407822,
+      22.386146
+     ],
+     "mu": 9.3,
+     "sep_pair_arcsec": 8.33,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.5,
+      "fixed_snr": -1.1,
+      "best_snr": 3.3,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 1.34,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.5,
+      "fixed_snr": -0.4,
+      "best_snr": 5.3,
+      "best_offset": [
+       -0.5,
+       0.4
+      ],
+      "flux_over_pred": 1.44,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.9,
+      "fixed_snr": -0.3,
+      "best_snr": 2.9,
+      "best_offset": [
+       -0.5,
+       0.4
+      ],
+      "flux_over_pred": 1.54,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.5,
+      0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 2.1,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.94,
+   "mu_pair": [
+    -44.9,
+    42.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40769,
+      22.386063
+     ],
+     "mu": 8.2,
+     "sep_pair_arcsec": 8.85,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.6,
+      "fixed_snr": 1.0,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.4,
+       -0.2
+      ],
+      "flux_over_pred": 1.3,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.5,
+      "fixed_snr": -0.3,
+      "best_snr": 1.4,
+      "best_offset": [
+       0.1,
+       -0.5
+      ],
+      "flux_over_pred": 0.57,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.3,
+      "fixed_snr": 0.4,
+      "best_snr": 1.4,
+      "best_offset": [
+       0.4,
+       -0.3
+      ],
+      "flux_over_pred": 1.16,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.1,
+      -0.5
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.15,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.73,
+   "mu_pair": [
+    -66.2,
+    64.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407573,
+      22.385992
+     ],
+     "mu": 7.4,
+     "sep_pair_arcsec": 9.31,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.0,
+      "fixed_snr": -0.5,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 2.12,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.6,
+      "fixed_snr": 0.3,
+      "best_snr": 1.4,
+      "best_offset": [
+       -0.4,
+       -0.2
+      ],
+      "flux_over_pred": 0.87,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.8,
+      "fixed_snr": 1.2,
+      "best_snr": 1.3,
+      "best_offset": [
+       -0.1,
+       0.1
+      ],
+      "flux_over_pred": 1.76,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      -0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.2,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.61,
+   "mu_pair": [
+    -136.8,
+    131.1
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407467,
+      22.385929
+     ],
+     "mu": 6.9,
+     "sep_pair_arcsec": 9.73,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.4,
+      "fixed_snr": 0.8,
+      "best_snr": 1.0,
+      "best_offset": [
+       -0.0,
+       0.1
+      ],
+      "flux_over_pred": 2.34,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.7,
+      "fixed_snr": 0.1,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.0,
+       -0.7
+      ],
+      "flux_over_pred": 2.97,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.3,
+      "fixed_snr": 0.8,
+      "best_snr": 1.7,
+      "best_offset": [
+       -0.4,
+       0.2
+      ],
+      "flux_over_pred": 4.76,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      -0.7
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.25,
+   "n_images": 2,
+   "pair_rms_arcsec": 7.17,
+   "mu_pair": [
+    6.5,
+    -304.8
+   ],
+   "extras": [],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 2.3,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.35,
+   "mu_pair": [
+    -122.6,
+    121.1
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407284,
+      22.385823
+     ],
+     "mu": 6.2,
+     "sep_pair_arcsec": 10.44,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.4,
+      "fixed_snr": -0.7,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.1,
+       -0.4
+      ],
+      "flux_over_pred": 4.26,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.7,
+      "fixed_snr": 0.3,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": 3.12,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.3,
+      "fixed_snr": 0.1,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.3,
+       -0.1
+      ],
+      "flux_over_pred": 5.79,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.35,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.18,
+   "mu_pair": [
+    -72.4,
+    76.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407205,
+      22.385777
+     ],
+     "mu": 5.9,
+     "sep_pair_arcsec": 10.75,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.7,
+      "fixed_snr": -0.2,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.3,
+       -0.2
+      ],
+      "flux_over_pred": 3.04,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.1,
+      "fixed_snr": -0.2,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.1,
+       -0.4
+      ],
+      "flux_over_pred": 1.54,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.5,
+      "fixed_snr": 1.3,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.0,
+       0.1
+      ],
+      "flux_over_pred": 3.72,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.1,
+      -0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.4,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.03,
+   "mu_pair": [
+    -60.6,
+    60.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407131,
+      22.385732
+     ],
+     "mu": 5.7,
+     "sep_pair_arcsec": 11.04,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.8,
+      "fixed_snr": 0.5,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.6,
+       -0.0
+      ],
+      "flux_over_pred": 2.57,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.3,
+      "fixed_snr": 0.8,
+      "best_snr": 1.4,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 1.04,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.6,
+      "fixed_snr": 0.7,
+      "best_snr": 1.5,
+      "best_offset": [
+       -0.2,
+       0.3
+      ],
+      "flux_over_pred": 2.58,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.45,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.09,
+   "mu_pair": [
+    -65.0,
+    65.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407059,
+      22.385689
+     ],
+     "mu": 5.5,
+     "sep_pair_arcsec": 11.33,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.7,
+      "fixed_snr": -1.3,
+      "best_snr": 1.2,
+      "best_offset": [
+       -0.7,
+       -0.0
+      ],
+      "flux_over_pred": 1.64,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.2,
+      "fixed_snr": -0.3,
+      "best_snr": 1.4,
+      "best_offset": [
+       -0.3,
+       -0.0
+      ],
+      "flux_over_pred": 1.22,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.6,
+      "fixed_snr": 0.6,
+      "best_snr": 1.6,
+      "best_offset": [
+       -0.4,
+       0.4
+      ],
+      "flux_over_pred": 2.96,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      -0.0
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.5,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.22,
+   "mu_pair": [
+    -80.9,
+    86.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406988,
+      22.385648
+     ],
+     "mu": 5.4,
+     "sep_pair_arcsec": 11.6,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.6,
+      "fixed_snr": -1.3,
+      "best_snr": 2.9,
+      "best_offset": [
+       -0.0,
+       -0.7
+      ],
+      "flux_over_pred": 5.22,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.9,
+      "fixed_snr": -1.9,
+      "best_snr": 4.6,
+      "best_offset": [
+       -0.0,
+       -0.7
+      ],
+      "flux_over_pred": 5.17,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.4,
+      "fixed_snr": -0.1,
+      "best_snr": 3.2,
+      "best_offset": [
+       -0.0,
+       -0.7
+      ],
+      "flux_over_pred": 7.42,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      -0.7
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.55,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.4,
+   "mu_pair": [
+    -162.1,
+    153.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406919,
+      22.38561
+     ],
+     "mu": 5.2,
+     "sep_pair_arcsec": 11.87,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.3,
+      "fixed_snr": -1.3,
+      "best_snr": 4.6,
+      "best_offset": [
+       -0.0,
+       -0.7
+      ],
+      "flux_over_pred": 16.26,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.4,
+      "fixed_snr": -1.8,
+      "best_snr": 5.3,
+      "best_offset": [
+       -0.1,
+       -0.6
+      ],
+      "flux_over_pred": 11.61,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.2,
+      "fixed_snr": -0.5,
+      "best_snr": 4.0,
+      "best_offset": [
+       -0.2,
+       -0.6
+      ],
+      "flux_over_pred": 18.09,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      -0.6
+     ],
+     "best_colours": [
+      -1.82,
+      -0.03
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.6,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.52,
+   "mu_pair": [
+    -280.6,
+    863.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406852,
+      22.385574
+     ],
+     "mu": 5.1,
+     "sep_pair_arcsec": 12.12,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.1,
+      "fixed_snr": -1.7,
+      "best_snr": 4.7,
+      "best_offset": [
+       -0.3,
+       -0.5
+      ],
+      "flux_over_pred": 59.17,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.1,
+      "fixed_snr": 0.1,
+      "best_snr": 6.0,
+      "best_offset": [
+       -0.4,
+       -0.5
+      ],
+      "flux_over_pred": 48.65,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.1,
+      "fixed_snr": -1.6,
+      "best_snr": 3.9,
+      "best_offset": [
+       -0.4,
+       -0.5
+      ],
+      "flux_over_pred": 66.18,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      -0.5
+     ],
+     "best_colours": [
+      -1.77,
+      -0.11
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.65,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.57,
+   "mu_pair": [
+    -210.8,
+    340.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406788,
+      22.385541
+     ],
+     "mu": 5.0,
+     "sep_pair_arcsec": 12.37,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.2,
+      "fixed_snr": -0.8,
+      "best_snr": 4.7,
+      "best_offset": [
+       -0.5,
+       -0.4
+      ],
+      "flux_over_pred": 29.23,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.2,
+      "fixed_snr": 0.0,
+      "best_snr": 5.5,
+      "best_offset": [
+       -0.5,
+       -0.4
+      ],
+      "flux_over_pred": 21.27,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.1,
+      "fixed_snr": -0.0,
+      "best_snr": 3.6,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": 29.91,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.5,
+      -0.4
+     ],
+     "best_colours": [
+      -1.94,
+      -0.16
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.7,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.61,
+   "mu_pair": [
+    -104.7,
+    111.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406727,
+      22.38551
+     ],
+     "mu": 4.9,
+     "sep_pair_arcsec": 12.59,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.4,
+      "fixed_snr": 1.4,
+      "best_snr": 3.9,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": 9.91,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.6,
+      "fixed_snr": 1.6,
+      "best_snr": 3.8,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": 6.09,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.3,
+      "fixed_snr": 0.1,
+      "best_snr": 2.2,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": 7.27,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.75,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.68,
+   "mu_pair": [
+    -71.4,
+    77.1
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406669,
+      22.385481
+     ],
+     "mu": 4.8,
+     "sep_pair_arcsec": 12.81,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.6,
+      "fixed_snr": 0.6,
+      "best_snr": 1.7,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": 3.12,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.9,
+      "fixed_snr": 0.3,
+      "best_snr": 2.0,
+      "best_offset": [
+       0.1,
+       -0.6
+      ],
+      "flux_over_pred": 2.13,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.4,
+      "fixed_snr": 0.0,
+      "best_snr": 1.2,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 2.83,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.1,
+      -0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.8,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.77,
+   "mu_pair": [
+    -55.1,
+    58.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406613,
+      22.385454
+     ],
+     "mu": 4.8,
+     "sep_pair_arcsec": 13.02,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.7,
+      "fixed_snr": -0.2,
+      "best_snr": 1.6,
+      "best_offset": [
+       -0.4,
+       0.1
+      ],
+      "flux_over_pred": 2.14,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.2,
+      "fixed_snr": -1.1,
+      "best_snr": 2.7,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 2.31,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.6,
+      "fixed_snr": -0.1,
+      "best_snr": 1.3,
+      "best_offset": [
+       0.3,
+       0.5
+      ],
+      "flux_over_pred": 2.38,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.7,
+      -0.0
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.85,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.87,
+   "mu_pair": [
+    -45.2,
+    48.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40656,
+      22.385427
+     ],
+     "mu": 4.7,
+     "sep_pair_arcsec": 13.22,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.9,
+      "fixed_snr": -1.2,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.6,
+       0.2
+      ],
+      "flux_over_pred": 2.11,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.4,
+      "fixed_snr": -1.4,
+      "best_snr": 4.6,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 3.32,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.7,
+      "fixed_snr": -0.8,
+      "best_snr": 3.2,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 4.86,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.7,
+      -0.0
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.9,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.98,
+   "mu_pair": [
+    -38.6,
+    41.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406509,
+      22.385403
+     ],
+     "mu": 4.6,
+     "sep_pair_arcsec": 13.41,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.0,
+      "fixed_snr": -1.1,
+      "best_snr": 7.5,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 7.43,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.6,
+      "fixed_snr": -1.3,
+      "best_snr": 18.9,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 12.29,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.8,
+      "fixed_snr": -0.4,
+      "best_snr": 12.9,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 16.81,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.7,
+      -0.0
+     ],
+     "best_colours": [
+      -1.05,
+      -0.11
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "cats",
+   "z": 2.95,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.09,
+   "mu_pair": [
+    -33.9,
+    37.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40646,
+      22.385379
+     ],
+     "mu": 4.6,
+     "sep_pair_arcsec": 13.59,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.1,
+      "fixed_snr": -0.1,
+      "best_snr": 11.4,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 10.25,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.8,
+      "fixed_snr": -0.7,
+      "best_snr": 30.4,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 18.9,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.9,
+      "fixed_snr": -0.6,
+      "best_snr": 21.9,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 26.61,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.7,
+      -0.0
+     ],
+     "best_colours": [
+      -0.93,
+      -0.08
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.0,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.2,
+   "mu_pair": [
+    -30.3,
+    34.1
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406412,
+      22.385356
+     ],
+     "mu": 4.5,
+     "sep_pair_arcsec": 13.76,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.2,
+      "fixed_snr": -0.6,
+      "best_snr": 11.6,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 9.57,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.9,
+      "fixed_snr": -0.6,
+      "best_snr": 34.0,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 18.72,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.0,
+      "fixed_snr": -0.4,
+      "best_snr": 22.4,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 24.57,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      -0.0
+     ],
+     "best_colours": [
+      -0.87,
+      -0.15
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.05,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.31,
+   "mu_pair": [
+    -27.6,
+    31.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406367,
+      22.385334
+     ],
+     "mu": 4.5,
+     "sep_pair_arcsec": 13.93,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.3,
+      "fixed_snr": -2.0,
+      "best_snr": 12.1,
+      "best_offset": [
+       0.4,
+       0.1
+      ],
+      "flux_over_pred": 9.1,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.1,
+      "fixed_snr": -0.8,
+      "best_snr": 33.9,
+      "best_offset": [
+       0.4,
+       0.1
+      ],
+      "flux_over_pred": 17.63,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.0,
+      "fixed_snr": -0.5,
+      "best_snr": 22.5,
+      "best_offset": [
+       0.4,
+       0.1
+      ],
+      "flux_over_pred": 23.26,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.4,
+      0.1
+     ],
+     "best_colours": [
+      -0.88,
+      -0.15
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.1,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.42,
+   "mu_pair": [
+    -25.4,
+    29.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406323,
+      22.385313
+     ],
+     "mu": 4.5,
+     "sep_pair_arcsec": 14.09,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.4,
+      "fixed_snr": -1.6,
+      "best_snr": 11.8,
+      "best_offset": [
+       0.2,
+       0.2
+      ],
+      "flux_over_pred": 8.5,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.2,
+      "fixed_snr": 0.1,
+      "best_snr": 33.6,
+      "best_offset": [
+       0.3,
+       0.2
+      ],
+      "flux_over_pred": 16.41,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.1,
+      "fixed_snr": 0.7,
+      "best_snr": 22.2,
+      "best_offset": [
+       0.3,
+       0.2
+      ],
+      "flux_over_pred": 21.34,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      0.2
+     ],
+     "best_colours": [
+      -0.87,
+      -0.16
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.15,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.54,
+   "mu_pair": [
+    -23.6,
+    28.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40628,
+      22.385293
+     ],
+     "mu": 4.4,
+     "sep_pair_arcsec": 14.25,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.5,
+      "fixed_snr": -1.2,
+      "best_snr": 11.8,
+      "best_offset": [
+       0.1,
+       0.2
+      ],
+      "flux_over_pred": 7.94,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.3,
+      "fixed_snr": 4.6,
+      "best_snr": 32.6,
+      "best_offset": [
+       0.1,
+       0.3
+      ],
+      "flux_over_pred": 15.51,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.2,
+      "fixed_snr": 3.3,
+      "best_snr": 22.5,
+      "best_offset": [
+       0.1,
+       0.2
+      ],
+      "flux_over_pred": 20.25,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.1,
+      0.3
+     ],
+     "best_colours": [
+      -0.88,
+      -0.16
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.2,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.65,
+   "mu_pair": [
+    -22.1,
+    27.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406239,
+      22.385274
+     ],
+     "mu": 4.4,
+     "sep_pair_arcsec": 14.4,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.5,
+      "fixed_snr": -0.5,
+      "best_snr": 11.7,
+      "best_offset": [
+       -0.0,
+       0.3
+      ],
+      "flux_over_pred": 7.59,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.4,
+      "fixed_snr": 4.3,
+      "best_snr": 33.9,
+      "best_offset": [
+       -0.0,
+       0.3
+      ],
+      "flux_over_pred": 14.98,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.2,
+      "fixed_snr": 3.8,
+      "best_snr": 22.2,
+      "best_offset": [
+       -0.0,
+       0.3
+      ],
+      "flux_over_pred": 19.21,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      0.3
+     ],
+     "best_colours": [
+      -0.86,
+      -0.18
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.25,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.76,
+   "mu_pair": [
+    -20.8,
+    26.1
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406199,
+      22.385256
+     ],
+     "mu": 4.4,
+     "sep_pair_arcsec": 14.55,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.6,
+      "fixed_snr": -0.2,
+      "best_snr": 12.0,
+      "best_offset": [
+       -0.2,
+       0.4
+      ],
+      "flux_over_pred": 7.44,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.5,
+      "fixed_snr": 4.5,
+      "best_snr": 33.3,
+      "best_offset": [
+       -0.1,
+       0.4
+      ],
+      "flux_over_pred": 13.89,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.2,
+      "fixed_snr": 3.6,
+      "best_snr": 22.3,
+      "best_offset": [
+       -0.1,
+       0.4
+      ],
+      "flux_over_pred": 18.3,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      0.4
+     ],
+     "best_colours": [
+      -0.92,
+      -0.15
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.3,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.88,
+   "mu_pair": [
+    -19.7,
+    25.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406161,
+      22.385238
+     ],
+     "mu": 4.3,
+     "sep_pair_arcsec": 14.69,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.7,
+      "fixed_snr": 0.4,
+      "best_snr": 11.7,
+      "best_offset": [
+       -0.3,
+       0.5
+      ],
+      "flux_over_pred": 7.08,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.6,
+      "fixed_snr": 4.4,
+      "best_snr": 32.6,
+      "best_offset": [
+       -0.3,
+       0.5
+      ],
+      "flux_over_pred": 13.78,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.3,
+      "fixed_snr": 2.6,
+      "best_snr": 22.5,
+      "best_offset": [
+       -0.3,
+       0.4
+      ],
+      "flux_over_pred": 17.99,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.5
+     ],
+     "best_colours": [
+      -0.88,
+      -0.16
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.35,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.99,
+   "mu_pair": [
+    -18.8,
+    24.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406123,
+      22.38522
+     ],
+     "mu": 4.3,
+     "sep_pair_arcsec": 14.83,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.7,
+      "fixed_snr": 0.0,
+      "best_snr": 11.8,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 6.93,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.6,
+      "fixed_snr": 2.9,
+      "best_snr": 34.1,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 13.58,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.3,
+      "fixed_snr": 1.5,
+      "best_snr": 22.4,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 17.43,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
+     "best_colours": [
+      -0.87,
+      -0.18
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.4,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.1,
+   "mu_pair": [
+    -18.0,
+    24.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406087,
+      22.385204
+     ],
+     "mu": 4.3,
+     "sep_pair_arcsec": 14.96,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.8,
+      "fixed_snr": -0.2,
+      "best_snr": 9.5,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 5.45,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.6,
+      "fixed_snr": 0.5,
+      "best_snr": 30.1,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 11.69,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.4,
+      "fixed_snr": 0.5,
+      "best_snr": 19.1,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 14.76,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
+     "best_colours": [
+      -0.77,
+      -0.19
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.45,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.21,
+   "mu_pair": [
+    -17.2,
+    23.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406051,
+      22.385188
+     ],
+     "mu": 4.3,
+     "sep_pair_arcsec": 15.09,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.8,
+      "fixed_snr": -1.1,
+      "best_snr": 7.1,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 4.0,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.8,
+      "fixed_snr": 0.0,
+      "best_snr": 19.8,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 7.2,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.4,
+      "fixed_snr": -0.2,
+      "best_snr": 13.2,
+      "best_offset": [
+       -0.5,
+       0.4
+      ],
+      "flux_over_pred": 9.62,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
+     "best_colours": [
+      -0.96,
+      -0.21
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.5,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.33,
+   "mu_pair": [
+    -16.6,
+    23.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406017,
+      22.385172
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 15.21,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.8,
+      "fixed_snr": -1.1,
+      "best_snr": 6.1,
+      "best_offset": [
+       -0.4,
+       -0.1
+      ],
+      "flux_over_pred": 3.36,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.9,
+      "fixed_snr": 0.6,
+      "best_snr": 15.4,
+      "best_offset": [
+       -0.5,
+       0.4
+      ],
+      "flux_over_pred": 5.54,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.4,
+      "fixed_snr": -0.3,
+      "best_snr": 8.9,
+      "best_offset": [
+       -0.5,
+       0.4
+      ],
+      "flux_over_pred": 6.64,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.5,
+      0.4
+     ],
+     "best_colours": [
+      -0.79,
+      -0.25
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.55,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.45,
+   "mu_pair": [
+    -16.0,
+    23.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405983,
+      22.385157
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 15.34,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.9,
+      "fixed_snr": 0.0,
+      "best_snr": 6.0,
+      "best_offset": [
+       -0.5,
+       -0.1
+      ],
+      "flux_over_pred": 3.2,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.0,
+      "fixed_snr": -0.3,
+      "best_snr": 9.0,
+      "best_offset": [
+       -0.5,
+       0.4
+      ],
+      "flux_over_pred": 3.08,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.5,
+      "fixed_snr": 0.3,
+      "best_snr": 5.5,
+      "best_offset": [
+       -0.5,
+       -0.1
+      ],
+      "flux_over_pred": 3.75,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.5,
+      0.4
+     ],
+     "best_colours": [
+      -0.95,
+      -0.23
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.6,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.56,
+   "mu_pair": [
+    -15.5,
+    23.1
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405951,
+      22.385142
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 15.46,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.9,
+      "fixed_snr": 1.2,
+      "best_snr": 6.0,
+      "best_offset": [
+       -0.6,
+       -0.0
+      ],
+      "flux_over_pred": 3.14,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.1,
+      "fixed_snr": -1.1,
+      "best_snr": 9.2,
+      "best_offset": [
+       -0.6,
+       -0.1
+      ],
+      "flux_over_pred": 3.14,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.5,
+      "fixed_snr": -0.1,
+      "best_snr": 5.6,
+      "best_offset": [
+       -0.6,
+       -0.1
+      ],
+      "flux_over_pred": 3.87,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.6,
+      -0.1
+     ],
+     "best_colours": [
+      -1.57,
+      -0.22
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.65,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.67,
+   "mu_pair": [
+    -15.0,
+    22.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405919,
+      22.385128
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 15.57,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.9,
+      "fixed_snr": 1.0,
+      "best_snr": 5.8,
+      "best_offset": [
+       -0.7,
+       -0.0
+      ],
+      "flux_over_pred": 3.09,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.0,
+      "fixed_snr": -1.4,
+      "best_snr": 8.6,
+      "best_offset": [
+       -0.7,
+       -0.0
+      ],
+      "flux_over_pred": 2.94,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.5,
+      "fixed_snr": 0.1,
+      "best_snr": 5.4,
+      "best_offset": [
+       -0.7,
+       -0.0
+      ],
+      "flux_over_pred": 3.7,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.7,
+      -0.0
+     ],
+     "best_colours": [
+      -1.65,
+      -0.2
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.7,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.79,
+   "mu_pair": [
+    -14.5,
+    22.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405888,
+      22.385114
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 15.68,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.9,
+      "fixed_snr": 0.9,
+      "best_snr": 4.6,
+      "best_offset": [
+       -0.7,
+       -0.0
+      ],
+      "flux_over_pred": 2.39,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.0,
+      "fixed_snr": -1.5,
+      "best_snr": 6.6,
+      "best_offset": [
+       -0.7,
+       -0.0
+      ],
+      "flux_over_pred": 2.24,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.5,
+      "fixed_snr": -0.2,
+      "best_snr": 4.7,
+      "best_offset": [
+       -0.7,
+       -0.0
+      ],
+      "flux_over_pred": 3.18,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.7,
+      -0.0
+     ],
+     "best_colours": [
+      -1.67,
+      -0.07
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.75,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.91,
+   "mu_pair": [
+    -14.1,
+    22.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405858,
+      22.385101
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 15.79,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.9,
+      "fixed_snr": 0.8,
+      "best_snr": 2.0,
+      "best_offset": [
+       -0.7,
+       -0.0
+      ],
+      "flux_over_pred": 1.06,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.1,
+      "fixed_snr": -1.6,
+      "best_snr": 4.4,
+      "best_offset": [
+       -0.7,
+       -0.0
+      ],
+      "flux_over_pred": 1.41,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.5,
+      "fixed_snr": 0.3,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.7,
+       -0.0
+      ],
+      "flux_over_pred": 1.39,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.7,
+      -0.0
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.8,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.03,
+   "mu_pair": [
+    -13.8,
+    22.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405828,
+      22.385088
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 15.9,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.0,
+      "fixed_snr": 0.5,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.4,
+       0.5
+      ],
+      "flux_over_pred": 0.88,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.1,
+      "fixed_snr": -1.6,
+      "best_snr": 1.7,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": 0.55,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.6,
+      "fixed_snr": 0.3,
+      "best_snr": 1.0,
+      "best_offset": [
+       -0.1,
+       -0.2
+      ],
+      "flux_over_pred": 0.67,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.85,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.14,
+   "mu_pair": [
+    -13.4,
+    22.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405799,
+      22.385075
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 16.0,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.0,
+      "fixed_snr": -0.2,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.3,
+       0.5
+      ],
+      "flux_over_pred": 0.87,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.1,
+      "fixed_snr": -0.8,
+      "best_snr": 1.4,
+      "best_offset": [
+       -0.6,
+       -0.2
+      ],
+      "flux_over_pred": 0.46,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.6,
+      "fixed_snr": -0.4,
+      "best_snr": 1.0,
+      "best_offset": [
+       -0.0,
+       0.7
+      ],
+      "flux_over_pred": 0.69,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.6,
+      -0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.9,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.26,
+   "mu_pair": [
+    -13.1,
+    22.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405771,
+      22.385063
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 16.11,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.0,
+      "fixed_snr": -0.6,
+      "best_snr": 1.9,
+      "best_offset": [
+       0.3,
+       0.6
+      ],
+      "flux_over_pred": 0.95,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.2,
+      "fixed_snr": -0.7,
+      "best_snr": 1.3,
+      "best_offset": [
+       0.4,
+       -0.1
+      ],
+      "flux_over_pred": 0.39,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.6,
+      "fixed_snr": -0.6,
+      "best_snr": 1.1,
+      "best_offset": [
+       -0.3,
+       -0.1
+      ],
+      "flux_over_pred": 0.67,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.4,
+      -0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 3.95,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.38,
+   "mu_pair": [
+    -12.8,
+    21.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405744,
+      22.385051
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 16.21,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.1,
+      "fixed_snr": -1.2,
+      "best_snr": 1.9,
+      "best_offset": [
+       0.6,
+       -0.3
+      ],
+      "flux_over_pred": 0.94,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.2,
+      "fixed_snr": -0.0,
+      "best_snr": 1.2,
+      "best_offset": [
+       0.3,
+       -0.1
+      ],
+      "flux_over_pred": 0.37,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.6,
+      "fixed_snr": -0.1,
+      "best_snr": 0.9,
+      "best_offset": [
+       0.6,
+       -0.3
+      ],
+      "flux_over_pred": 0.59,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      -0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.0,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.49,
+   "mu_pair": [
+    -12.5,
+    21.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405717,
+      22.38504
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 16.3,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.2,
+      "fixed_snr": -1.6,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.5,
+       -0.3
+      ],
+      "flux_over_pred": 0.82,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.4,
+      "fixed_snr": 0.5,
+      "best_snr": 1.2,
+      "best_offset": [
+       -0.2,
+       0.5
+      ],
+      "flux_over_pred": 0.35,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.6,
+      "fixed_snr": -0.3,
+      "best_snr": 1.0,
+      "best_offset": [
+       -0.4,
+       -0.0
+      ],
+      "flux_over_pred": 0.63,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      0.5
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.05,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.61,
+   "mu_pair": [
+    -12.3,
+    20.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405691,
+      22.385028
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 16.4,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.2,
+      "fixed_snr": -1.8,
+      "best_snr": 2.0,
+      "best_offset": [
+       0.4,
+       -0.2
+      ],
+      "flux_over_pred": 0.92,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.4,
+      "fixed_snr": 0.7,
+      "best_snr": 1.3,
+      "best_offset": [
+       0.2,
+       0.1
+      ],
+      "flux_over_pred": 0.38,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.7,
+      "fixed_snr": -0.5,
+      "best_snr": 1.0,
+      "best_offset": [
+       -0.5,
+       -0.0
+      ],
+      "flux_over_pred": 0.59,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.2,
+      0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.1,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.72,
+   "mu_pair": [
+    -12.0,
+    20.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405665,
+      22.385018
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 16.49,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.2,
+      "fixed_snr": -1.3,
+      "best_snr": 1.9,
+      "best_offset": [
+       0.3,
+       -0.2
+      ],
+      "flux_over_pred": 0.86,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.5,
+      "fixed_snr": 1.0,
+      "best_snr": 1.2,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 0.34,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.7,
+      "fixed_snr": -0.5,
+      "best_snr": 1.0,
+      "best_offset": [
+       0.3,
+       -0.3
+      ],
+      "flux_over_pred": 0.57,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      -0.0
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.15,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.83,
+   "mu_pair": [
+    -11.8,
+    20.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40564,
+      22.385007
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 16.58,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.2,
+      "fixed_snr": 0.4,
+      "best_snr": 2.0,
+      "best_offset": [
+       0.2,
+       -0.1
+      ],
+      "flux_over_pred": 0.88,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.6,
+      "fixed_snr": 1.1,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.6,
+       0.2
+      ],
+      "flux_over_pred": 0.48,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.7,
+      "fixed_snr": -0.1,
+      "best_snr": 0.9,
+      "best_offset": [
+       0.3,
+       -0.2
+      ],
+      "flux_over_pred": 0.54,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.2,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.93,
+   "mu_pair": [
+    -11.6,
+    19.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405615,
+      22.384996
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 16.67,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.3,
+      "fixed_snr": 0.7,
+      "best_snr": 2.2,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 0.97,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.6,
+      "fixed_snr": 0.4,
+      "best_snr": 2.5,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 0.7,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.8,
+      "fixed_snr": 0.3,
+      "best_snr": 1.0,
+      "best_offset": [
+       0.6,
+       -0.2
+      ],
+      "flux_over_pred": 0.56,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.25,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.04,
+   "mu_pair": [
+    -11.4,
+    18.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405591,
+      22.384986
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 16.76,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.3,
+      "fixed_snr": 1.4,
+      "best_snr": 3.2,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 1.38,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.7,
+      "fixed_snr": 0.1,
+      "best_snr": 3.0,
+      "best_offset": [
+       0.6,
+       0.2
+      ],
+      "flux_over_pred": 0.83,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.8,
+      "fixed_snr": 0.7,
+      "best_snr": 1.1,
+      "best_offset": [
+       -0.0,
+       -0.7
+      ],
+      "flux_over_pred": 0.64,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.3,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.14,
+   "mu_pair": [
+    -11.2,
+    18.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405567,
+      22.384976
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 16.84,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.4,
+      "fixed_snr": 1.8,
+      "best_snr": 2.8,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 1.19,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.8,
+      "fixed_snr": 0.3,
+      "best_snr": 3.1,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 0.83,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.9,
+      "fixed_snr": 0.7,
+      "best_snr": 1.3,
+      "best_offset": [
+       0.6,
+       0.2
+      ],
+      "flux_over_pred": 0.7,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.5,
+      0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.35,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.23,
+   "mu_pair": [
+    -11.1,
+    17.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405544,
+      22.384966
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 16.93,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.5,
+      "fixed_snr": 1.4,
+      "best_snr": 3.5,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 1.45,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.0,
+      "fixed_snr": -0.0,
+      "best_snr": 3.1,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 0.82,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.9,
+      "fixed_snr": 0.4,
+      "best_snr": 1.1,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 0.58,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.5,
+      0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.4,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.33,
+   "mu_pair": [
+    -10.9,
+    17.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405521,
+      22.384957
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.01,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.5,
+      "fixed_snr": 0.8,
+      "best_snr": 3.1,
+      "best_offset": [
+       0.4,
+       0.4
+      ],
+      "flux_over_pred": 1.26,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.8,
+      "fixed_snr": 0.1,
+      "best_snr": 3.2,
+      "best_offset": [
+       0.4,
+       0.5
+      ],
+      "flux_over_pred": 0.84,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.9,
+      "fixed_snr": -0.0,
+      "best_snr": 1.2,
+      "best_offset": [
+       0.5,
+       0.1
+      ],
+      "flux_over_pred": 0.64,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.4,
+      0.5
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.45,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.42,
+   "mu_pair": [
+    -10.7,
+    16.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405499,
+      22.384948
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.09,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.6,
+      "fixed_snr": 0.6,
+      "best_snr": 3.1,
+      "best_offset": [
+       0.4,
+       0.5
+      ],
+      "flux_over_pred": 1.25,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.8,
+      "fixed_snr": 0.5,
+      "best_snr": 3.0,
+      "best_offset": [
+       0.3,
+       0.4
+      ],
+      "flux_over_pred": 0.79,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.9,
+      "fixed_snr": 0.2,
+      "best_snr": 1.2,
+      "best_offset": [
+       0.6,
+       0.2
+      ],
+      "flux_over_pred": 0.62,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.5,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.5,
+   "mu_pair": [
+    -10.6,
+    16.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405477,
+      22.384939
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.17,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.6,
+      "fixed_snr": 0.1,
+      "best_snr": 3.6,
+      "best_offset": [
+       0.3,
+       0.5
+      ],
+      "flux_over_pred": 1.41,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.9,
+      "fixed_snr": 0.3,
+      "best_snr": 3.2,
+      "best_offset": [
+       0.3,
+       0.5
+      ],
+      "flux_over_pred": 0.77,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.0,
+      "fixed_snr": 0.5,
+      "best_snr": 1.3,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 0.66,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      0.5
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.55,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.59,
+   "mu_pair": [
+    -10.4,
+    16.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405455,
+      22.38493
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.24,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.7,
+      "fixed_snr": 0.1,
+      "best_snr": 3.1,
+      "best_offset": [
+       0.2,
+       0.5
+      ],
+      "flux_over_pred": 1.17,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.8,
+      "fixed_snr": 0.1,
+      "best_snr": 3.2,
+      "best_offset": [
+       0.2,
+       0.6
+      ],
+      "flux_over_pred": 0.78,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.0,
+      "fixed_snr": 0.7,
+      "best_snr": 1.5,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 0.73,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.2,
+      0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.6,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.67,
+   "mu_pair": [
+    -10.3,
+    15.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405434,
+      22.384921
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.32,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.7,
+      "fixed_snr": -0.3,
+      "best_snr": 3.2,
+      "best_offset": [
+       0.1,
+       0.6
+      ],
+      "flux_over_pred": 1.19,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.0,
+      "fixed_snr": -0.2,
+      "best_snr": 3.2,
+      "best_offset": [
+       0.1,
+       0.6
+      ],
+      "flux_over_pred": 0.74,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.1,
+      "fixed_snr": 0.8,
+      "best_snr": 1.6,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 0.78,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.1,
+      0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.65,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.74,
+   "mu_pair": [
+    -10.2,
+    15.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405414,
+      22.384913
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.39,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.8,
+      "fixed_snr": 0.0,
+      "best_snr": 3.5,
+      "best_offset": [
+       0.1,
+       0.6
+      ],
+      "flux_over_pred": 1.3,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.4,
+      "fixed_snr": -0.5,
+      "best_snr": 3.4,
+      "best_offset": [
+       0.1,
+       0.6
+      ],
+      "flux_over_pred": 0.8,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.1,
+      "fixed_snr": 0.4,
+      "best_snr": 1.6,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 0.78,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.1,
+      0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.7,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.82,
+   "mu_pair": [
+    -10.1,
+    14.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405393,
+      22.384905
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.46,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.8,
+      "fixed_snr": 0.1,
+      "best_snr": 3.2,
+      "best_offset": [
+       -0.0,
+       0.6
+      ],
+      "flux_over_pred": 1.15,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.4,
+      "fixed_snr": -0.7,
+      "best_snr": 3.2,
+      "best_offset": [
+       -0.0,
+       0.7
+      ],
+      "flux_over_pred": 0.73,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.2,
+      "fixed_snr": -0.2,
+      "best_snr": 2.0,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 0.93,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      0.7
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.75,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.89,
+   "mu_pair": [
+    -9.9,
+    14.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405373,
+      22.384897
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.54,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.9,
+      "fixed_snr": 1.1,
+      "best_snr": 3.1,
+      "best_offset": [
+       -0.0,
+       0.6
+      ],
+      "flux_over_pred": 1.08,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.5,
+      "fixed_snr": -0.5,
+      "best_snr": 3.3,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 0.73,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.0,
+      "fixed_snr": -0.3,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.5,
+       -0.0
+      ],
+      "flux_over_pred": 0.82,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.8,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.96,
+   "mu_pair": [
+    -9.8,
+    14.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405353,
+      22.384889
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.61,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.9,
+      "fixed_snr": 1.0,
+      "best_snr": 2.9,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 0.99,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.8,
+      "fixed_snr": -0.3,
+      "best_snr": 2.8,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 0.63,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.2,
+      "fixed_snr": 0.1,
+      "best_snr": 1.6,
+      "best_offset": [
+       0.4,
+       0.1
+      ],
+      "flux_over_pred": 0.76,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.85,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.03,
+   "mu_pair": [
+    -9.7,
+    14.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405334,
+      22.384881
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.68,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.0,
+      "fixed_snr": 1.0,
+      "best_snr": 2.8,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 0.95,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.7,
+      "fixed_snr": 0.2,
+      "best_snr": 2.9,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 0.64,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.2,
+      "fixed_snr": 0.1,
+      "best_snr": 2.0,
+      "best_offset": [
+       0.4,
+       0.1
+      ],
+      "flux_over_pred": 0.88,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.9,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.09,
+   "mu_pair": [
+    -9.6,
+    13.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405315,
+      22.384873
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.74,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.0,
+      "fixed_snr": 1.5,
+      "best_snr": 2.9,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 0.98,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.8,
+      "fixed_snr": 0.1,
+      "best_snr": 3.4,
+      "best_offset": [
+       0.6,
+       0.2
+      ],
+      "flux_over_pred": 0.73,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.3,
+      "fixed_snr": 0.3,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.3,
+       0.1
+      ],
+      "flux_over_pred": 0.82,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 4.95,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.16,
+   "mu_pair": [
+    -9.5,
+    13.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405296,
+      22.384866
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.81,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.0,
+      "fixed_snr": 1.4,
+      "best_snr": 4.6,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 1.53,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.8,
+      "fixed_snr": 0.5,
+      "best_snr": 7.0,
+      "best_offset": [
+       0.6,
+       0.2
+      ],
+      "flux_over_pred": 1.53,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.3,
+      "fixed_snr": 0.4,
+      "best_snr": 3.5,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 1.5,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      0.2
+     ],
+     "best_colours": [
+      -1.42,
+      -0.49
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.0,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.22,
+   "mu_pair": [
+    -9.4,
+    13.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405278,
+      22.384859
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.87,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.1,
+      "fixed_snr": 1.1,
+      "best_snr": 6.1,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 1.96,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.8,
+      "fixed_snr": 0.3,
+      "best_snr": 9.1,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 1.94,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.4,
+      "fixed_snr": 0.5,
+      "best_snr": 5.2,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 2.22,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      0.3
+     ],
+     "best_colours": [
+      -1.61,
+      -0.3
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.05,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.28,
+   "mu_pair": [
+    -9.3,
+    13.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40526,
+      22.384852
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 17.94,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.2,
+      "fixed_snr": 0.4,
+      "best_snr": 6.4,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 2.06,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.9,
+      "fixed_snr": 0.5,
+      "best_snr": 10.7,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 2.22,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.4,
+      "fixed_snr": 0.4,
+      "best_snr": 6.9,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 2.88,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      0.3
+     ],
+     "best_colours": [
+      -1.52,
+      -0.16
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.1,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.34,
+   "mu_pair": [
+    -9.2,
+    12.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405242,
+      22.384845
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.0,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.2,
+      "fixed_snr": 0.3,
+      "best_snr": 6.3,
+      "best_offset": [
+       0.5,
+       0.3
+      ],
+      "flux_over_pred": 1.98,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.9,
+      "fixed_snr": 0.6,
+      "best_snr": 11.2,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 2.33,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.5,
+      "fixed_snr": 0.4,
+      "best_snr": 6.9,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 2.9,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      0.3
+     ],
+     "best_colours": [
+      -1.43,
+      -0.21
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.15,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.39,
+   "mu_pair": [
+    -9.2,
+    12.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405224,
+      22.384838
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.06,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.2,
+      "fixed_snr": 0.5,
+      "best_snr": 6.7,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 2.1,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.1,
+      "fixed_snr": 0.6,
+      "best_snr": 10.9,
+      "best_offset": [
+       0.5,
+       0.3
+      ],
+      "flux_over_pred": 2.28,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.4,
+      "fixed_snr": 0.2,
+      "best_snr": 6.8,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 2.74,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.5,
+      0.3
+     ],
+     "best_colours": [
+      -1.34,
+      -0.3
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.2,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.45,
+   "mu_pair": [
+    -9.1,
+    12.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405207,
+      22.384831
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.13,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.3,
+      "fixed_snr": 0.1,
+      "best_snr": 6.3,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 1.95,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.2,
+      "fixed_snr": 0.4,
+      "best_snr": 11.2,
+      "best_offset": [
+       0.5,
+       0.3
+      ],
+      "flux_over_pred": 2.17,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.6,
+      "fixed_snr": 0.4,
+      "best_snr": 7.4,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 2.99,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.5,
+      0.3
+     ],
+     "best_colours": [
+      -1.3,
+      -0.31
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.25,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.5,
+   "mu_pair": [
+    -9.0,
+    12.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40519,
+      22.384824
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.19,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.3,
+      "fixed_snr": 0.0,
+      "best_snr": 6.5,
+      "best_offset": [
+       0.4,
+       0.4
+      ],
+      "flux_over_pred": 2.0,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.2,
+      "fixed_snr": 0.4,
+      "best_snr": 11.1,
+      "best_offset": [
+       0.4,
+       0.4
+      ],
+      "flux_over_pred": 2.21,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.5,
+      "fixed_snr": -0.2,
+      "best_snr": 7.2,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 2.78,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.4,
+      0.4
+     ],
+     "best_colours": [
+      -1.49,
+      -0.22
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.3,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.55,
+   "mu_pair": [
+    -8.9,
+    12.1
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405173,
+      22.384818
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.25,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.4,
+      "fixed_snr": -0.3,
+      "best_snr": 6.5,
+      "best_offset": [
+       0.3,
+       0.4
+      ],
+      "flux_over_pred": 1.97,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.2,
+      "fixed_snr": 0.1,
+      "best_snr": 11.0,
+      "best_offset": [
+       0.4,
+       0.4
+      ],
+      "flux_over_pred": 2.08,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.6,
+      "fixed_snr": -1.0,
+      "best_snr": 7.1,
+      "best_offset": [
+       0.4,
+       0.4
+      ],
+      "flux_over_pred": 2.8,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.4,
+      0.4
+     ],
+     "best_colours": [
+      -1.52,
+      -0.13
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.35,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.6,
+   "mu_pair": [
+    -8.8,
+    11.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405156,
+      22.384812
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.31,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.4,
+      "fixed_snr": -0.6,
+      "best_snr": 6.6,
+      "best_offset": [
+       0.3,
+       0.5
+      ],
+      "flux_over_pred": 1.97,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.1,
+      "fixed_snr": -0.2,
+      "best_snr": 11.2,
+      "best_offset": [
+       0.3,
+       0.4
+      ],
+      "flux_over_pred": 2.15,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.6,
+      "fixed_snr": -1.4,
+      "best_snr": 7.0,
+      "best_offset": [
+       0.3,
+       0.5
+      ],
+      "flux_over_pred": 2.73,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      0.4
+     ],
+     "best_colours": [
+      -1.41,
+      -0.26
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.4,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.65,
+   "mu_pair": [
+    -8.8,
+    11.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40514,
+      22.384805
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.36,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.4,
+      "fixed_snr": -0.4,
+      "best_snr": 6.7,
+      "best_offset": [
+       0.2,
+       0.5
+      ],
+      "flux_over_pred": 1.96,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.4,
+      "fixed_snr": -0.7,
+      "best_snr": 10.7,
+      "best_offset": [
+       0.3,
+       0.5
+      ],
+      "flux_over_pred": 1.97,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.6,
+      "fixed_snr": -0.8,
+      "best_snr": 7.4,
+      "best_offset": [
+       0.3,
+       0.5
+      ],
+      "flux_over_pred": 2.84,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      0.5
+     ],
+     "best_colours": [
+      -1.53,
+      -0.05
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.45,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.69,
+   "mu_pair": [
+    -8.7,
+    11.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405123,
+      22.384799
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.42,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.5,
+      "fixed_snr": -0.4,
+      "best_snr": 6.5,
+      "best_offset": [
+       0.2,
+       0.5
+      ],
+      "flux_over_pred": 1.9,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.5,
+      "fixed_snr": -0.4,
+      "best_snr": 11.0,
+      "best_offset": [
+       0.2,
+       0.5
+      ],
+      "flux_over_pred": 2.04,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.8,
+      "fixed_snr": -0.5,
+      "best_snr": 7.4,
+      "best_offset": [
+       0.2,
+       0.5
+      ],
+      "flux_over_pred": 2.77,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.2,
+      0.5
+     ],
+     "best_colours": [
+      -1.52,
+      -0.12
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.5,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.74,
+   "mu_pair": [
+    -8.6,
+    11.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405108,
+      22.384793
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.48,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.5,
+      "fixed_snr": -0.3,
+      "best_snr": 6.5,
+      "best_offset": [
+       0.2,
+       0.5
+      ],
+      "flux_over_pred": 1.88,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.5,
+      "fixed_snr": -0.2,
+      "best_snr": 11.0,
+      "best_offset": [
+       0.2,
+       0.5
+      ],
+      "flux_over_pred": 2.06,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.7,
+      "fixed_snr": -0.3,
+      "best_snr": 7.1,
+      "best_offset": [
+       0.2,
+       0.5
+      ],
+      "flux_over_pred": 2.67,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.2,
+      0.5
+     ],
+     "best_colours": [
+      -1.5,
+      -0.17
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.55,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.78,
+   "mu_pair": [
+    -8.6,
+    11.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405092,
+      22.384787
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.53,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.5,
+      "fixed_snr": 0.1,
+      "best_snr": 6.4,
+      "best_offset": [
+       0.1,
+       0.6
+      ],
+      "flux_over_pred": 1.81,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.4,
+      "fixed_snr": -0.1,
+      "best_snr": 11.1,
+      "best_offset": [
+       0.1,
+       0.5
+      ],
+      "flux_over_pred": 2.06,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.8,
+      "fixed_snr": 0.0,
+      "best_snr": 7.2,
+      "best_offset": [
+       0.1,
+       0.6
+      ],
+      "flux_over_pred": 2.67,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.1,
+      0.5
+     ],
+     "best_colours": [
+      -1.43,
+      -0.21
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.6,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.83,
+   "mu_pair": [
+    -8.5,
+    11.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405076,
+      22.384781
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.59,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.6,
+      "fixed_snr": 0.7,
+      "best_snr": 6.5,
+      "best_offset": [
+       -0.0,
+       0.6
+      ],
+      "flux_over_pred": 1.87,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.8,
+      "fixed_snr": -0.0,
+      "best_snr": 11.1,
+      "best_offset": [
+       0.1,
+       0.5
+      ],
+      "flux_over_pred": 2.03,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.7,
+      "fixed_snr": -0.4,
+      "best_snr": 7.4,
+      "best_offset": [
+       0.1,
+       0.6
+      ],
+      "flux_over_pred": 2.69,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.1,
+      0.5
+     ],
+     "best_colours": [
+      -1.35,
+      -0.25
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.65,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.87,
+   "mu_pair": [
+    -8.5,
+    11.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405061,
+      22.384776
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.64,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.5,
+      "fixed_snr": 1.0,
+      "best_snr": 6.6,
+      "best_offset": [
+       -0.0,
+       0.6
+      ],
+      "flux_over_pred": 1.84,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.7,
+      "fixed_snr": 0.1,
+      "best_snr": 11.1,
+      "best_offset": [
+       -0.0,
+       0.5
+      ],
+      "flux_over_pred": 2.03,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.8,
+      "fixed_snr": -0.4,
+      "best_snr": 7.5,
+      "best_offset": [
+       -0.0,
+       0.6
+      ],
+      "flux_over_pred": 2.73,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      0.5
+     ],
+     "best_colours": [
+      -1.28,
+      -0.32
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.7,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.91,
+   "mu_pair": [
+    -8.4,
+    11.1
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405046,
+      22.38477
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.69,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.6,
+      "fixed_snr": 1.0,
+      "best_snr": 6.5,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 1.8,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.8,
+      "fixed_snr": -0.2,
+      "best_snr": 11.0,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 1.96,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.8,
+      "fixed_snr": -1.4,
+      "best_snr": 7.3,
+      "best_offset": [
+       -0.0,
+       0.6
+      ],
+      "flux_over_pred": 2.64,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      0.6
+     ],
+     "best_colours": [
+      -1.5,
+      -0.19
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.75,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.95,
+   "mu_pair": [
+    -8.3,
+    11.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405031,
+      22.384765
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.75,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.6,
+      "fixed_snr": 0.9,
+      "best_snr": 6.4,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 1.76,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.8,
+      "fixed_snr": -0.8,
+      "best_snr": 10.9,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 1.98,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.8,
+      "fixed_snr": -2.1,
+      "best_snr": 7.1,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 2.6,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      0.6
+     ],
+     "best_colours": [
+      -1.45,
+      -0.15
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.8,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.99,
+   "mu_pair": [
+    -8.3,
+    10.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405016,
+      22.384759
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.8,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.6,
+      "fixed_snr": 1.0,
+      "best_snr": 6.2,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 1.7,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.8,
+      "fixed_snr": -0.8,
+      "best_snr": 11.1,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 1.96,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.8,
+      "fixed_snr": -1.9,
+      "best_snr": 7.1,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 2.51,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      0.6
+     ],
+     "best_colours": [
+      -1.44,
+      -0.18
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.85,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.03,
+   "mu_pair": [
+    -8.2,
+    10.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405002,
+      22.384754
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.85,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.7,
+      "fixed_snr": 0.1,
+      "best_snr": 5.7,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 1.54,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.9,
+      "fixed_snr": -1.2,
+      "best_snr": 11.2,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 1.97,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.8,
+      "fixed_snr": -1.8,
+      "best_snr": 6.5,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 2.31,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      0.6
+     ],
+     "best_colours": [
+      -1.33,
+      -0.28
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.9,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.07,
+   "mu_pair": [
+    -8.2,
+    10.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.404987,
+      22.384748
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.9,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.7,
+      "fixed_snr": -0.2,
+      "best_snr": 5.5,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 1.48,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.8,
+      "fixed_snr": -1.5,
+      "best_snr": 10.6,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 1.8,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.8,
+      "fixed_snr": -1.7,
+      "best_snr": 6.0,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 2.08,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
+     "best_colours": [
+      -1.38,
+      -0.32
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 5.95,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.11,
+   "mu_pair": [
+    -8.1,
+    10.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.404973,
+      22.384743
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.95,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.7,
+      "fixed_snr": -0.5,
+      "best_snr": 5.0,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 1.34,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 6.0,
+      "fixed_snr": -2.0,
+      "best_snr": 10.8,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 1.91,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.9,
+      "fixed_snr": -0.6,
+      "best_snr": 6.1,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 2.11,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
+     "best_colours": [
+      -1.21,
+      -0.34
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "cats",
+   "z": 6.0,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.14,
+   "mu_pair": [
+    -8.1,
+    10.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.404959,
+      22.384738
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 19.0,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.8,
+      "fixed_snr": -0.6,
+      "best_snr": 4.6,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 1.22,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 6.1,
+      "fixed_snr": -1.6,
+      "best_snr": 10.2,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 1.74,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 3.0,
+      "fixed_snr": -0.2,
+      "best_snr": 5.4,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 1.8,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
+     "best_colours": [
+      -1.21,
+      -0.41
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 2.0,
+   "n_images": 1,
+   "pair_rms_arcsec": null,
+   "mu_pair": [
+    null,
+    null
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.409778,
+      22.387729
+     ],
+     "mu": 12.1,
+     "sep_pair_arcsec": 0.33,
+     "kind": "near",
+     "f150w": {
+      "pred_snr": null,
+      "fixed_snr": 2.9,
+      "best_snr": 12.3,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": null,
+      "forced_class": "no_reference"
+     },
+     "f277w": {
+      "pred_snr": null,
+      "fixed_snr": 5.2,
+      "best_snr": 22.0,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": null,
+      "forced_class": "no_reference"
+     },
+     "f444w": {
+      "pred_snr": null,
+      "fixed_snr": 2.7,
+      "best_snr": 7.5,
+      "best_offset": [
+       -0.3,
+       0.3
+      ],
+      "flux_over_pred": null,
+      "forced_class": "no_reference"
+     },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
+     "best_colours": [
+      -1.39,
+      -1.14
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 2.05,
+   "n_images": 1,
+   "pair_rms_arcsec": null,
+   "mu_pair": [
+    null,
+    null
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.409776,
+      22.387728
+     ],
+     "mu": 13.3,
+     "sep_pair_arcsec": 0.32,
+     "kind": "near",
+     "f150w": {
+      "pred_snr": null,
+      "fixed_snr": 2.9,
+      "best_snr": 12.1,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": null,
+      "forced_class": "no_reference"
+     },
+     "f277w": {
+      "pred_snr": null,
+      "fixed_snr": 5.0,
+      "best_snr": 22.2,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": null,
+      "forced_class": "no_reference"
+     },
+     "f444w": {
+      "pred_snr": null,
+      "fixed_snr": 2.7,
+      "best_snr": 7.4,
+      "best_offset": [
+       -0.3,
+       0.3
+      ],
+      "flux_over_pred": null,
+      "forced_class": "no_reference"
+     },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
+     "best_colours": [
+      -1.4,
+      -1.15
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 2.1,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.14,
+   "mu_pair": [
+    -54.4,
+    14.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40813,
+      22.386231
+     ],
+     "mu": 44.5,
+     "sep_pair_arcsec": 7.36,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 11.3,
+      "fixed_snr": -1.1,
+      "best_snr": 10.3,
+      "best_offset": [
+       0.4,
+       0.4
+      ],
+      "flux_over_pred": 0.93,
+      "forced_class": "recovered"
+     },
+     "f277w": {
+      "pred_snr": 17.8,
+      "fixed_snr": -0.2,
+      "best_snr": 11.1,
+      "best_offset": [
+       0.3,
+       0.4
+      ],
+      "flux_over_pred": 0.66,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 9.0,
+      "fixed_snr": -0.1,
+      "best_snr": 7.8,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 0.92,
+      "forced_class": "recovered"
+     },
+     "colour_offset": [
+      0.3,
+      0.4
+     ],
+     "best_colours": [
+      -1.92,
+      -0.3
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 2.15,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.18,
+   "mu_pair": [
+    -25.7,
+    16.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40782,
+      22.385991
+     ],
+     "mu": 14.7,
+     "sep_pair_arcsec": 8.7,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 6.0,
+      "fixed_snr": 1.3,
+      "best_snr": 2.3,
+      "best_offset": [
+       0.3,
+       0.2
+      ],
+      "flux_over_pred": 0.38,
+      "forced_class": "ambiguous"
+     },
+     "f277w": {
+      "pred_snr": 9.7,
+      "fixed_snr": 0.1,
+      "best_snr": 1.6,
+      "best_offset": [
+       -0.1,
+       -0.3
+      ],
+      "flux_over_pred": 0.17,
+      "forced_class": "ambiguous"
+     },
+     "f444w": {
+      "pred_snr": 4.9,
+      "fixed_snr": 1.4,
+      "best_snr": 1.7,
+      "best_offset": [
+       -0.4,
+       -0.5
+      ],
+      "flux_over_pred": 0.35,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      -0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 2.2,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.63,
+   "mu_pair": [
+    -23.3,
+    18.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407642,
+      22.385861
+     ],
+     "mu": 10.6,
+     "sep_pair_arcsec": 9.46,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 4.5,
+      "fixed_snr": -1.2,
+      "best_snr": 3.0,
+      "best_offset": [
+       -0.0,
+       -0.7
+      ],
+      "flux_over_pred": 0.7,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 7.0,
+      "fixed_snr": 0.4,
+      "best_snr": 3.8,
+      "best_offset": [
+       -0.0,
+       -0.7
+      ],
+      "flux_over_pred": 0.55,
+      "forced_class": "ambiguous"
+     },
+     "f444w": {
+      "pred_snr": 3.4,
+      "fixed_snr": -0.7,
+      "best_snr": 2.5,
+      "best_offset": [
+       -0.0,
+       -0.7
+      ],
+      "flux_over_pred": 0.72,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      -0.7
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 2.25,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.22,
+   "mu_pair": [
+    -23.7,
+    20.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407502,
+      22.385763
+     ],
+     "mu": 8.7,
+     "sep_pair_arcsec": 10.04,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.5,
+      "fixed_snr": -0.5,
+      "best_snr": 4.8,
+      "best_offset": [
+       -0.4,
+       -0.5
+      ],
+      "flux_over_pred": 1.42,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 5.4,
+      "fixed_snr": 0.8,
+      "best_snr": 5.3,
+      "best_offset": [
+       -0.3,
+       -0.5
+      ],
+      "flux_over_pred": 0.98,
+      "forced_class": "recovered"
+     },
+     "f444w": {
+      "pred_snr": 2.6,
+      "fixed_snr": -0.8,
+      "best_snr": 3.2,
+      "best_offset": [
+       -0.4,
+       -0.5
+      ],
+      "flux_over_pred": 1.23,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      -0.5
+     ],
+     "best_colours": [
+      -1.82,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 2.3,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.87,
+   "mu_pair": [
+    -25.5,
+    23.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407384,
+      22.385683
+     ],
+     "mu": 7.7,
+     "sep_pair_arcsec": 10.52,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.7,
+      "fixed_snr": 0.6,
+      "best_snr": 3.3,
+      "best_offset": [
+       -0.5,
+       -0.3
+      ],
+      "flux_over_pred": 1.18,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.3,
+      "fixed_snr": 0.5,
+      "best_snr": 5.0,
+      "best_offset": [
+       -0.6,
+       -0.3
+      ],
+      "flux_over_pred": 1.16,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.1,
+      "fixed_snr": -0.5,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.5,
+       -0.4
+      ],
+      "flux_over_pred": 0.99,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 2.35,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.56,
+   "mu_pair": [
+    -28.7,
+    27.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407279,
+      22.385614
+     ],
+     "mu": 7.0,
+     "sep_pair_arcsec": 10.95,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.1,
+      "fixed_snr": -0.5,
+      "best_snr": 2.4,
+      "best_offset": [
+       -0.1,
+       0.4
+      ],
+      "flux_over_pred": 1.11,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.5,
+      "fixed_snr": -0.9,
+      "best_snr": 2.5,
+      "best_offset": [
+       -0.0,
+       -0.6
+      ],
+      "flux_over_pred": 1.54,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.6,
+      "fixed_snr": -0.0,
+      "best_snr": 1.5,
+      "best_offset": [
+       0.3,
+       0.6
+      ],
+      "flux_over_pred": 0.93,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      -0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 2.4,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.3,
+   "mu_pair": [
+    -33.6,
+    33.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407184,
+      22.385554
+     ],
+     "mu": 6.5,
+     "sep_pair_arcsec": 11.33,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.7,
+      "fixed_snr": 0.2,
+      "best_snr": 2.3,
+      "best_offset": [
+       0.6,
+       -0.3
+      ],
+      "flux_over_pred": 1.35,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.7,
+      "fixed_snr": -0.5,
+      "best_snr": 4.0,
+      "best_offset": [
+       0.5,
+       -0.4
+      ],
+      "flux_over_pred": 1.5,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.3,
+      "fixed_snr": 0.9,
+      "best_snr": 2.1,
+      "best_offset": [
+       0.6,
+       -0.3
+      ],
+      "flux_over_pred": 1.64,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.5,
+      -0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 2.45,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.06,
+   "mu_pair": [
+    -41.4,
+    41.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407096,
+      22.385501
+     ],
+     "mu": 6.1,
+     "sep_pair_arcsec": 11.67,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.3,
+      "fixed_snr": 0.6,
+      "best_snr": 5.0,
+      "best_offset": [
+       0.5,
+       -0.3
+      ],
+      "flux_over_pred": 3.93,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.1,
+      "fixed_snr": -0.2,
+      "best_snr": 6.1,
+      "best_offset": [
+       0.4,
+       -0.3
+      ],
+      "flux_over_pred": 3.0,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.0,
+      "fixed_snr": -0.1,
+      "best_snr": 4.0,
+      "best_offset": [
+       0.4,
+       -0.2
+      ],
+      "flux_over_pred": 4.04,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.4,
+      -0.3
+     ],
+     "best_colours": [
+      -1.75,
+      -0.3
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 2.5,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.86,
+   "mu_pair": [
+    -54.7,
+    55.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.407015,
+      22.385453
+     ],
+     "mu": 5.9,
+     "sep_pair_arcsec": 11.99,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.9,
+      "fixed_snr": 2.4,
+      "best_snr": 4.9,
+      "best_offset": [
+       0.2,
+       -0.1
+      ],
+      "flux_over_pred": 5.36,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.4,
+      "fixed_snr": 3.8,
+      "best_snr": 6.0,
+      "best_offset": [
+       0.2,
+       -0.1
+      ],
+      "flux_over_pred": 4.12,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.7,
+      "fixed_snr": 2.4,
+      "best_snr": 3.6,
+      "best_offset": [
+       0.2,
+       -0.0
+      ],
+      "flux_over_pred": 4.96,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.2,
+      -0.1
+     ],
+     "best_colours": [
+      -1.88,
+      -0.22
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 2.55,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.7,
+   "mu_pair": [
+    -81.6,
+    82.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40694,
+      22.385409
+     ],
+     "mu": 5.6,
+     "sep_pair_arcsec": 12.28,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.6,
+      "fixed_snr": 4.4,
+      "best_snr": 4.6,
+      "best_offset": [
+       -0.0,
+       0.1
+      ],
+      "flux_over_pred": 7.72,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.9,
+      "fixed_snr": 5.2,
+      "best_snr": 5.9,
+      "best_offset": [
+       -0.1,
+       0.1
+      ],
+      "flux_over_pred": 6.33,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.5,
+      "fixed_snr": 3.5,
+      "best_snr": 3.8,
+      "best_offset": [
+       -0.1,
+       0.1
+      ],
+      "flux_over_pred": 8.23,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      0.1
+     ],
+     "best_colours": [
+      -1.78,
+      -0.16
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 2.6,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.6,
+   "mu_pair": [
+    -163.5,
+    163.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40687,
+      22.385369
+     ],
+     "mu": 5.5,
+     "sep_pair_arcsec": 12.55,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.3,
+      "fixed_snr": 1.1,
+      "best_snr": 4.9,
+      "best_offset": [
+       -0.2,
+       0.2
+      ],
+      "flux_over_pred": 17.04,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.5,
+      "fixed_snr": 2.0,
+      "best_snr": 6.4,
+      "best_offset": [
+       -0.3,
+       0.2
+      ],
+      "flux_over_pred": 13.95,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.2,
+      "fixed_snr": 1.1,
+      "best_snr": 3.7,
+      "best_offset": [
+       -0.3,
+       0.3
+      ],
+      "flux_over_pred": 16.57,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.2
+     ],
+     "best_colours": [
+      -1.77,
+      -0.3
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 2.65,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.58,
+   "mu_pair": [
+    -1140.3,
+    1029.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406805,
+      22.385332
+     ],
+     "mu": 5.3,
+     "sep_pair_arcsec": 12.8,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.0,
+      "fixed_snr": 0.3,
+      "best_snr": 4.9,
+      "best_offset": [
+       -0.4,
+       0.3
+      ],
+      "flux_over_pred": 115.52,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.1,
+      "fixed_snr": 0.1,
+      "best_snr": 6.0,
+      "best_offset": [
+       -0.5,
+       0.3
+      ],
+      "flux_over_pred": 88.71,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.0,
+      "fixed_snr": -0.3,
+      "best_snr": 3.8,
+      "best_offset": [
+       -0.5,
+       0.4
+      ],
+      "flux_over_pred": 117.0,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.5,
+      0.3
+     ],
+     "best_colours": [
+      -1.78,
+      -0.23
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 2.7,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.39,
+   "mu_pair": [
+    -174.5,
+    176.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406746,
+      22.385297
+     ],
+     "mu": 5.2,
+     "sep_pair_arcsec": 13.03,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.2,
+      "fixed_snr": -0.3,
+      "best_snr": 3.5,
+      "best_offset": [
+       -0.5,
+       0.4
+      ],
+      "flux_over_pred": 13.72,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.4,
+      "fixed_snr": -0.6,
+      "best_snr": 3.9,
+      "best_offset": [
+       -0.5,
+       0.4
+      ],
+      "flux_over_pred": 9.42,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.2,
+      "fixed_snr": -0.1,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.6,
+       0.3
+      ],
+      "flux_over_pred": 10.56,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.5,
+      0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 2.75,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.21,
+   "mu_pair": [
+    -95.5,
+    97.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406695,
+      22.385264
+     ],
+     "mu": 5.1,
+     "sep_pair_arcsec": 13.24,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.5,
+      "fixed_snr": 0.5,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.5,
+       0.1
+      ],
+      "flux_over_pred": 3.86,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.7,
+      "fixed_snr": 0.1,
+      "best_snr": 2.1,
+      "best_offset": [
+       0.2,
+       0.2
+      ],
+      "flux_over_pred": 2.87,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.4,
+      "fixed_snr": 0.3,
+      "best_snr": 1.7,
+      "best_offset": [
+       -0.5,
+       -0.0
+      ],
+      "flux_over_pred": 4.76,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.2,
+      0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 2.8,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.07,
+   "mu_pair": [
+    -75.0,
+    77.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40665,
+      22.385231
+     ],
+     "mu": 5.0,
+     "sep_pair_arcsec": 13.43,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.6,
+      "fixed_snr": 0.0,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.6,
+       -0.2
+      ],
+      "flux_over_pred": 2.93,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.9,
+      "fixed_snr": -0.2,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.0,
+       0.3
+      ],
+      "flux_over_pred": 2.35,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.4,
+      "fixed_snr": 0.0,
+      "best_snr": 1.5,
+      "best_offset": [
+       -0.6,
+       0.1
+      ],
+      "flux_over_pred": 3.39,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 2.85,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.05,
+   "mu_pair": [
+    -73.7,
+    76.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406609,
+      22.385198
+     ],
+     "mu": 4.9,
+     "sep_pair_arcsec": 13.61,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.6,
+      "fixed_snr": 0.0,
+      "best_snr": 1.6,
+      "best_offset": [
+       0.2,
+       0.4
+      ],
+      "flux_over_pred": 2.75,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.9,
+      "fixed_snr": 1.0,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.1,
+       0.5
+      ],
+      "flux_over_pred": 2.29,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.4,
+      "fixed_snr": -0.4,
+      "best_snr": 1.0,
+      "best_offset": [
+       -0.2,
+       0.4
+      ],
+      "flux_over_pred": 2.1,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      0.5
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 2.9,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.16,
+   "mu_pair": [
+    -88.3,
+    91.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406566,
+      22.385167
+     ],
+     "mu": 4.8,
+     "sep_pair_arcsec": 13.79,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.5,
+      "fixed_snr": -1.1,
+      "best_snr": 2.1,
+      "best_offset": [
+       0.1,
+       0.5
+      ],
+      "flux_over_pred": 4.46,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.7,
+      "fixed_snr": 0.3,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.2,
+       0.5
+      ],
+      "flux_over_pred": 2.45,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.4,
+      "fixed_snr": -0.1,
+      "best_snr": 0.9,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 2.47,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      0.5
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 2.95,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.31,
+   "mu_pair": [
+    -131.4,
+    134.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406521,
+      22.385137
+     ],
+     "mu": 4.8,
+     "sep_pair_arcsec": 13.97,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.3,
+      "fixed_snr": -0.5,
+      "best_snr": 1.6,
+      "best_offset": [
+       0.2,
+       0.1
+      ],
+      "flux_over_pred": 5.21,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.5,
+      "fixed_snr": 0.5,
+      "best_snr": 3.0,
+      "best_offset": [
+       -0.3,
+       -0.6
+      ],
+      "flux_over_pred": 6.23,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.2,
+      "fixed_snr": -0.4,
+      "best_snr": 0.7,
+      "best_offset": [
+       -0.0,
+       -0.7
+      ],
+      "flux_over_pred": 2.94,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      -0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 3.0,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.47,
+   "mu_pair": [
+    -289.6,
+    287.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406474,
+      22.385111
+     ],
+     "mu": 4.7,
+     "sep_pair_arcsec": 14.16,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.1,
+      "fixed_snr": 0.5,
+      "best_snr": 1.5,
+      "best_offset": [
+       -0.3,
+       -0.6
+      ],
+      "flux_over_pred": 10.72,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.2,
+      "fixed_snr": 0.1,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.4,
+       -0.5
+      ],
+      "flux_over_pred": 9.39,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.1,
+      "fixed_snr": -0.8,
+      "best_snr": 0.7,
+      "best_offset": [
+       0.2,
+       0.6
+      ],
+      "flux_over_pred": 6.52,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      -0.5
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 3.05,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.58,
+   "mu_pair": [
+    -737.7,
+    721.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406427,
+      22.385086
+     ],
+     "mu": 4.7,
+     "sep_pair_arcsec": 14.33,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.1,
+      "fixed_snr": -0.2,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.3,
+       -0.3
+      ],
+      "flux_over_pred": 30.46,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.1,
+      "fixed_snr": -1.5,
+      "best_snr": 3.1,
+      "best_offset": [
+       0.3,
+       -0.6
+      ],
+      "flux_over_pred": 35.06,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.0,
+      "fixed_snr": -0.7,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.3,
+       -0.6
+      ],
+      "flux_over_pred": 38.87,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      -0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 3.1,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.6,
+   "mu_pair": [
+    -196.8,
+    199.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406381,
+      22.385062
+     ],
+     "mu": 4.6,
+     "sep_pair_arcsec": 14.5,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.2,
+      "fixed_snr": 0.3,
+      "best_snr": 3.3,
+      "best_offset": [
+       0.3,
+       -0.6
+      ],
+      "flux_over_pred": 16.15,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.3,
+      "fixed_snr": -0.6,
+      "best_snr": 6.1,
+      "best_offset": [
+       0.3,
+       -0.6
+      ],
+      "flux_over_pred": 19.34,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.2,
+      "fixed_snr": -0.8,
+      "best_snr": 2.4,
+      "best_offset": [
+       0.2,
+       -0.6
+      ],
+      "flux_over_pred": 15.07,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      -0.6
+     ],
+     "best_colours": [
+      -1.4,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 3.15,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.65,
+   "mu_pair": [
+    -112.4,
+    116.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406337,
+      22.38504
+     ],
+     "mu": 4.6,
+     "sep_pair_arcsec": 14.67,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.3,
+      "fixed_snr": 1.2,
+      "best_snr": 5.7,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 16.64,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.5,
+      "fixed_snr": -0.5,
+      "best_snr": 8.5,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 16.14,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.3,
+      "fixed_snr": -1.2,
+      "best_snr": 4.6,
+      "best_offset": [
+       0.6,
+       0.3
+      ],
+      "flux_over_pred": 17.32,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      0.3
+     ],
+     "best_colours": [
+      -1.63,
+      -0.37
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 3.2,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.73,
+   "mu_pair": [
+    -79.8,
+    84.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406294,
+      22.385019
+     ],
+     "mu": 4.5,
+     "sep_pair_arcsec": 14.83,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.5,
+      "fixed_snr": 0.9,
+      "best_snr": 6.1,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 12.84,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 0.8,
+      "fixed_snr": -0.6,
+      "best_snr": 8.9,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 12.34,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.4,
+      "fixed_snr": -0.6,
+      "best_snr": 5.3,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 14.19,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.5,
+      0.4
+     ],
+     "best_colours": [
+      -1.64,
+      -0.3
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 3.25,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.82,
+   "mu_pair": [
+    -62.5,
+    67.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406252,
+      22.384999
+     ],
+     "mu": 4.5,
+     "sep_pair_arcsec": 14.98,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.6,
+      "fixed_snr": -0.4,
+      "best_snr": 6.2,
+      "best_offset": [
+       0.4,
+       0.5
+      ],
+      "flux_over_pred": 10.46,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.0,
+      "fixed_snr": -2.0,
+      "best_snr": 8.5,
+      "best_offset": [
+       0.4,
+       0.4
+      ],
+      "flux_over_pred": 9.14,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.5,
+      "fixed_snr": 0.2,
+      "best_snr": 5.6,
+      "best_offset": [
+       0.4,
+       0.4
+      ],
+      "flux_over_pred": 12.19,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.4,
+      0.4
+     ],
+     "best_colours": [
+      -1.61,
+      -0.13
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 3.3,
+   "n_images": 3,
+   "pair_rms_arcsec": 0.93,
+   "mu_pair": [
+    -51.9,
+    57.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406212,
+      22.384981
+     ],
+     "mu": 4.4,
+     "sep_pair_arcsec": 15.12,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.7,
+      "fixed_snr": -0.8,
+      "best_snr": 5.7,
+      "best_offset": [
+       0.2,
+       0.5
+      ],
+      "flux_over_pred": 7.93,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.2,
+      "fixed_snr": -1.6,
+      "best_snr": 8.7,
+      "best_offset": [
+       0.2,
+       0.5
+      ],
+      "flux_over_pred": 8.12,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.6,
+      "fixed_snr": -0.4,
+      "best_snr": 5.6,
+      "best_offset": [
+       0.3,
+       0.5
+      ],
+      "flux_over_pred": 10.4,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.2,
+      0.5
+     ],
+     "best_colours": [
+      -1.57,
+      -0.36
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "allowed"
+  },
+  {
+   "model": "sharon",
+   "z": 3.35,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.04,
+   "mu_pair": [
+    -44.7,
+    50.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406173,
+      22.384962
+     ],
+     "mu": 4.4,
+     "sep_pair_arcsec": 15.27,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.8,
+      "fixed_snr": -0.5,
+      "best_snr": 6.2,
+      "best_offset": [
+       0.1,
+       0.6
+      ],
+      "flux_over_pred": 7.74,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.3,
+      "fixed_snr": -1.2,
+      "best_snr": 8.9,
+      "best_offset": [
+       0.1,
+       0.6
+      ],
+      "flux_over_pred": 7.31,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.6,
+      "fixed_snr": -1.0,
+      "best_snr": 5.3,
+      "best_offset": [
+       0.1,
+       0.6
+      ],
+      "flux_over_pred": 8.45,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.1,
+      0.6
+     ],
+     "best_colours": [
+      -1.66,
+      -0.29
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.4,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.16,
+   "mu_pair": [
+    -39.4,
+    45.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406136,
+      22.384945
+     ],
+     "mu": 4.4,
+     "sep_pair_arcsec": 15.4,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 0.9,
+      "fixed_snr": 0.8,
+      "best_snr": 6.1,
+      "best_offset": [
+       -0.0,
+       0.7
+      ],
+      "flux_over_pred": 6.87,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.4,
+      "fixed_snr": -1.1,
+      "best_snr": 8.8,
+      "best_offset": [
+       -0.0,
+       0.6
+      ],
+      "flux_over_pred": 6.57,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.7,
+      "fixed_snr": -0.4,
+      "best_snr": 5.4,
+      "best_offset": [
+       -0.0,
+       0.6
+      ],
+      "flux_over_pred": 7.76,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      0.6
+     ],
+     "best_colours": [
+      -1.59,
+      -0.27
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.45,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.28,
+   "mu_pair": [
+    -35.5,
+    42.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.4061,
+      22.384928
+     ],
+     "mu": 4.4,
+     "sep_pair_arcsec": 15.53,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.0,
+      "fixed_snr": 0.7,
+      "best_snr": 4.9,
+      "best_offset": [
+       -0.0,
+       0.7
+      ],
+      "flux_over_pred": 4.99,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.5,
+      "fixed_snr": -0.4,
+      "best_snr": 8.2,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 5.57,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.8,
+      "fixed_snr": -1.0,
+      "best_snr": 5.0,
+      "best_offset": [
+       -0.1,
+       0.6
+      ],
+      "flux_over_pred": 6.6,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      0.6
+     ],
+     "best_colours": [
+      -1.34,
+      -0.26
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.5,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.4,
+   "mu_pair": [
+    -32.3,
+    39.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406065,
+      22.384912
+     ],
+     "mu": 4.3,
+     "sep_pair_arcsec": 15.66,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.1,
+      "fixed_snr": -0.0,
+      "best_snr": 3.6,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 3.42,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.7,
+      "fixed_snr": -0.4,
+      "best_snr": 7.4,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 4.59,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.8,
+      "fixed_snr": -1.1,
+      "best_snr": 4.6,
+      "best_offset": [
+       -0.2,
+       0.6
+      ],
+      "flux_over_pred": 5.68,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      0.6
+     ],
+     "best_colours": [
+      -1.28,
+      -0.22
+     ],
+     "colour_match": true
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.55,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.52,
+   "mu_pair": [
+    -29.8,
+    37.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.406031,
+      22.384897
+     ],
+     "mu": 4.3,
+     "sep_pair_arcsec": 15.78,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.1,
+      "fixed_snr": -1.5,
+      "best_snr": 2.4,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 2.13,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.8,
+      "fixed_snr": 0.7,
+      "best_snr": 5.6,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 3.24,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.9,
+      "fixed_snr": -1.2,
+      "best_snr": 3.6,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 4.16,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
+     "best_colours": [
+      null,
+      -0.18
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.6,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.65,
+   "mu_pair": [
+    -27.7,
+    35.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405998,
+      22.384882
+     ],
+     "mu": 4.3,
+     "sep_pair_arcsec": 15.9,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.2,
+      "fixed_snr": -2.0,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 1.82,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 1.9,
+      "fixed_snr": 1.2,
+      "best_snr": 4.4,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 2.39,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.9,
+      "fixed_snr": -1.1,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 2.35,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.65,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.77,
+   "mu_pair": [
+    -26.0,
+    34.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405965,
+      22.384867
+     ],
+     "mu": 4.3,
+     "sep_pair_arcsec": 16.02,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.2,
+      "fixed_snr": -0.8,
+      "best_snr": 1.5,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 1.2,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.0,
+      "fixed_snr": 1.7,
+      "best_snr": 3.2,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 1.65,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 0.9,
+      "fixed_snr": -0.1,
+      "best_snr": 0.8,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 0.86,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.7,
+   "n_images": 3,
+   "pair_rms_arcsec": 1.9,
+   "mu_pair": [
+    -24.5,
+    33.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405934,
+      22.384853
+     ],
+     "mu": 4.3,
+     "sep_pair_arcsec": 16.13,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.3,
+      "fixed_snr": -1.1,
+      "best_snr": 1.5,
+      "best_offset": [
+       -0.4,
+       -0.0
+      ],
+      "flux_over_pred": 1.15,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.1,
+      "fixed_snr": 1.1,
+      "best_snr": 2.3,
+      "best_offset": [
+       -0.3,
+       0.6
+      ],
+      "flux_over_pred": 1.14,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.0,
+      "fixed_snr": -0.2,
+      "best_snr": 1.1,
+      "best_offset": [
+       0.3,
+       0.6
+      ],
+      "flux_over_pred": 1.06,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.75,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.02,
+   "mu_pair": [
+    -23.2,
+    33.1
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405904,
+      22.38484
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 16.24,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.3,
+      "fixed_snr": 0.1,
+      "best_snr": 1.4,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 1.05,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.1,
+      "fixed_snr": 0.7,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 0.93,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.0,
+      "fixed_snr": 0.4,
+      "best_snr": 0.9,
+      "best_offset": [
+       0.5,
+       -0.1
+      ],
+      "flux_over_pred": 0.93,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.8,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.15,
+   "mu_pair": [
+    -22.1,
+    32.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405875,
+      22.384827
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 16.35,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.4,
+      "fixed_snr": 0.7,
+      "best_snr": 1.5,
+      "best_offset": [
+       -0.6,
+       0.1
+      ],
+      "flux_over_pred": 1.09,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.2,
+      "fixed_snr": 0.5,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 0.86,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.0,
+      "fixed_snr": 0.1,
+      "best_snr": 1.0,
+      "best_offset": [
+       0.5,
+       -0.3
+      ],
+      "flux_over_pred": 0.97,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.85,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.28,
+   "mu_pair": [
+    -21.1,
+    32.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405846,
+      22.384814
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 16.45,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.4,
+      "fixed_snr": 0.5,
+      "best_snr": 1.5,
+      "best_offset": [
+       0.5,
+       0.1
+      ],
+      "flux_over_pred": 1.07,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.2,
+      "fixed_snr": 0.2,
+      "best_snr": 1.5,
+      "best_offset": [
+       -0.4,
+       0.2
+      ],
+      "flux_over_pred": 0.69,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.0,
+      "fixed_snr": -0.1,
+      "best_snr": 1.1,
+      "best_offset": [
+       0.4,
+       -0.5
+      ],
+      "flux_over_pred": 1.1,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.9,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.42,
+   "mu_pair": [
+    -20.2,
+    32.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405818,
+      22.384802
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 16.55,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.4,
+      "fixed_snr": 0.4,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.6,
+       -0.3
+      ],
+      "flux_over_pred": 1.32,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.1,
+      "fixed_snr": 0.4,
+      "best_snr": 1.5,
+      "best_offset": [
+       -0.6,
+       0.2
+      ],
+      "flux_over_pred": 0.66,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.0,
+      "fixed_snr": 0.1,
+      "best_snr": 1.0,
+      "best_offset": [
+       0.3,
+       -0.2
+      ],
+      "flux_over_pred": 0.95,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.6,
+      0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 3.95,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.55,
+   "mu_pair": [
+    -19.4,
+    32.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405791,
+      22.38479
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 16.65,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.4,
+      "fixed_snr": 0.5,
+      "best_snr": 2.1,
+      "best_offset": [
+       0.5,
+       -0.4
+      ],
+      "flux_over_pred": 1.5,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.2,
+      "fixed_snr": 0.1,
+      "best_snr": 1.6,
+      "best_offset": [
+       -0.6,
+       0.3
+      ],
+      "flux_over_pred": 0.68,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.0,
+      "fixed_snr": -0.2,
+      "best_snr": 1.2,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 1.1,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.6,
+      0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.0,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.69,
+   "mu_pair": [
+    -18.7,
+    32.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405764,
+      22.384779
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 16.74,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.4,
+      "fixed_snr": 0.4,
+      "best_snr": 2.1,
+      "best_offset": [
+       0.4,
+       -0.3
+      ],
+      "flux_over_pred": 1.46,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.3,
+      "fixed_snr": 0.4,
+      "best_snr": 1.4,
+      "best_offset": [
+       -0.6,
+       0.2
+      ],
+      "flux_over_pred": 0.61,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.1,
+      "fixed_snr": 0.3,
+      "best_snr": 1.1,
+      "best_offset": [
+       0.1,
+       -0.1
+      ],
+      "flux_over_pred": 0.99,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.6,
+      0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.05,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.84,
+   "mu_pair": [
+    -18.1,
+    32.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405738,
+      22.384768
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 16.83,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.4,
+      "fixed_snr": 0.5,
+      "best_snr": 2.2,
+      "best_offset": [
+       0.4,
+       -0.4
+      ],
+      "flux_over_pred": 1.54,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.3,
+      "fixed_snr": -0.2,
+      "best_snr": 1.3,
+      "best_offset": [
+       -0.2,
+       0.2
+      ],
+      "flux_over_pred": 0.58,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.1,
+      "fixed_snr": 0.5,
+      "best_snr": 0.9,
+      "best_offset": [
+       0.1,
+       -0.3
+      ],
+      "flux_over_pred": 0.84,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.1,
+   "n_images": 3,
+   "pair_rms_arcsec": 2.98,
+   "mu_pair": [
+    -17.5,
+    32.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405713,
+      22.384757
+     ],
+     "mu": 4.2,
+     "sep_pair_arcsec": 16.92,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.5,
+      "fixed_snr": 0.8,
+      "best_snr": 2.0,
+      "best_offset": [
+       0.2,
+       -0.2
+      ],
+      "flux_over_pred": 1.36,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.4,
+      "fixed_snr": -0.5,
+      "best_snr": 1.5,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 0.68,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.1,
+      "fixed_snr": 0.5,
+      "best_snr": 1.1,
+      "best_offset": [
+       -0.0,
+       -0.3
+      ],
+      "flux_over_pred": 1.04,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.7,
+      -0.0
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.15,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.13,
+   "mu_pair": [
+    -17.0,
+    32.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405688,
+      22.384746
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.01,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.5,
+      "fixed_snr": 0.3,
+      "best_snr": 1.9,
+      "best_offset": [
+       0.2,
+       -0.3
+      ],
+      "flux_over_pred": 1.29,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.4,
+      "fixed_snr": -0.1,
+      "best_snr": 1.9,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 0.86,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.1,
+      "fixed_snr": 0.2,
+      "best_snr": 1.2,
+      "best_offset": [
+       -0.1,
+       -0.3
+      ],
+      "flux_over_pred": 1.1,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      -0.0
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.2,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.29,
+   "mu_pair": [
+    -16.5,
+    32.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405664,
+      22.384736
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.1,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.5,
+      "fixed_snr": 1.0,
+      "best_snr": 2.0,
+      "best_offset": [
+       0.1,
+       -0.2
+      ],
+      "flux_over_pred": 1.37,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.4,
+      "fixed_snr": 0.1,
+      "best_snr": 2.2,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 1.01,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.1,
+      "fixed_snr": -0.2,
+      "best_snr": 1.1,
+      "best_offset": [
+       0.3,
+       0.2
+      ],
+      "flux_over_pred": 0.98,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      -0.0
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.25,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.44,
+   "mu_pair": [
+    -16.1,
+    32.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40564,
+      22.384726
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.18,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.5,
+      "fixed_snr": 1.5,
+      "best_snr": 2.2,
+      "best_offset": [
+       -0.0,
+       -0.1
+      ],
+      "flux_over_pred": 1.49,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.4,
+      "fixed_snr": 0.4,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.5,
+       -0.0
+      ],
+      "flux_over_pred": 0.81,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.2,
+      "fixed_snr": -0.7,
+      "best_snr": 1.2,
+      "best_offset": [
+       0.2,
+       0.2
+      ],
+      "flux_over_pred": 1.04,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.5,
+      -0.0
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.3,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.6,
+   "mu_pair": [
+    -15.6,
+    32.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405617,
+      22.384717
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.26,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.5,
+      "fixed_snr": 1.6,
+      "best_snr": 2.2,
+      "best_offset": [
+       -0.0,
+       -0.2
+      ],
+      "flux_over_pred": 1.42,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.5,
+      "fixed_snr": 0.3,
+      "best_snr": 2.0,
+      "best_offset": [
+       0.4,
+       0.1
+      ],
+      "flux_over_pred": 0.8,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.2,
+      "fixed_snr": -0.4,
+      "best_snr": 1.0,
+      "best_offset": [
+       -0.4,
+       0.1
+      ],
+      "flux_over_pred": 0.9,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.4,
+      0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.35,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.75,
+   "mu_pair": [
+    -15.3,
+    31.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405595,
+      22.384707
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.34,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.6,
+      "fixed_snr": 0.8,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.2,
+       -0.0
+      ],
+      "flux_over_pred": 1.21,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.4,
+      "fixed_snr": 0.5,
+      "best_snr": 2.1,
+      "best_offset": [
+       0.3,
+       0.1
+      ],
+      "flux_over_pred": 0.89,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.2,
+      "fixed_snr": -1.0,
+      "best_snr": 1.1,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 0.93,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.4,
+   "n_images": 3,
+   "pair_rms_arcsec": 3.9,
+   "mu_pair": [
+    -14.9,
+    30.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405572,
+      22.384698
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.42,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.6,
+      "fixed_snr": 0.1,
+      "best_snr": 2.0,
+      "best_offset": [
+       -0.2,
+       -0.1
+      ],
+      "flux_over_pred": 1.23,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.4,
+      "fixed_snr": 0.7,
+      "best_snr": 1.9,
+      "best_offset": [
+       0.3,
+       0.1
+      ],
+      "flux_over_pred": 0.79,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.2,
+      "fixed_snr": -0.4,
+      "best_snr": 1.2,
+      "best_offset": [
+       -0.5,
+       -0.1
+      ],
+      "flux_over_pred": 0.97,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.45,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.05,
+   "mu_pair": [
+    -14.6,
+    29.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405551,
+      22.384689
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.5,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.7,
+      "fixed_snr": -0.5,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.3,
+       -0.0
+      ],
+      "flux_over_pred": 1.29,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.6,
+      "fixed_snr": 0.1,
+      "best_snr": 2.3,
+      "best_offset": [
+       0.2,
+       0.2
+      ],
+      "flux_over_pred": 0.94,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.2,
+      "fixed_snr": 0.1,
+      "best_snr": 1.3,
+      "best_offset": [
+       0.7,
+       -0.0
+      ],
+      "flux_over_pred": 1.0,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.2,
+      0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.5,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.19,
+   "mu_pair": [
+    -14.3,
+    27.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40553,
+      22.384681
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.57,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.7,
+      "fixed_snr": -0.5,
+      "best_snr": 2.0,
+      "best_offset": [
+       -0.4,
+       0.1
+      ],
+      "flux_over_pred": 1.17,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.6,
+      "fixed_snr": 0.4,
+      "best_snr": 2.0,
+      "best_offset": [
+       0.1,
+       0.2
+      ],
+      "flux_over_pred": 0.76,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.3,
+      "fixed_snr": -0.0,
+      "best_snr": 1.1,
+      "best_offset": [
+       0.6,
+       0.1
+      ],
+      "flux_over_pred": 0.84,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.1,
+      0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.55,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.33,
+   "mu_pair": [
+    -14.0,
+    26.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405509,
+      22.384672
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.65,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.8,
+      "fixed_snr": -0.5,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.4,
+       -0.0
+      ],
+      "flux_over_pred": 1.21,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.6,
+      "fixed_snr": 1.1,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.0,
+       0.2
+      ],
+      "flux_over_pred": 0.65,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.3,
+      "fixed_snr": 0.1,
+      "best_snr": 1.1,
+      "best_offset": [
+       -0.7,
+       -0.0
+      ],
+      "flux_over_pred": 0.81,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.6,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.45,
+   "mu_pair": [
+    -13.7,
+    25.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405489,
+      22.384664
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.72,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.8,
+      "fixed_snr": -0.6,
+      "best_snr": 2.3,
+      "best_offset": [
+       -0.5,
+       0.1
+      ],
+      "flux_over_pred": 1.25,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.8,
+      "fixed_snr": 1.0,
+      "best_snr": 2.0,
+      "best_offset": [
+       -0.0,
+       0.3
+      ],
+      "flux_over_pred": 0.74,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.3,
+      "fixed_snr": 0.7,
+      "best_snr": 1.3,
+      "best_offset": [
+       0.5,
+       0.1
+      ],
+      "flux_over_pred": 0.91,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.65,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.58,
+   "mu_pair": [
+    -13.4,
+    24.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405469,
+      22.384656
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.79,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.9,
+      "fixed_snr": -1.2,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.5,
+       -0.0
+      ],
+      "flux_over_pred": 1.1,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.8,
+      "fixed_snr": 0.4,
+      "best_snr": 2.0,
+      "best_offset": [
+       -0.1,
+       0.3
+      ],
+      "flux_over_pred": 0.68,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.4,
+      "fixed_snr": 0.6,
+      "best_snr": 1.0,
+      "best_offset": [
+       0.4,
+       0.2
+      ],
+      "flux_over_pred": 0.72,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.7,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.69,
+   "mu_pair": [
+    -13.2,
+    23.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405449,
+      22.384648
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.86,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 1.9,
+      "fixed_snr": -1.1,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.6,
+       0.2
+      ],
+      "flux_over_pred": 1.0,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 2.9,
+      "fixed_snr": 0.4,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.1,
+       0.3
+      ],
+      "flux_over_pred": 0.74,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.4,
+      "fixed_snr": 0.6,
+      "best_snr": 1.1,
+      "best_offset": [
+       0.4,
+       0.1
+      ],
+      "flux_over_pred": 0.76,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.75,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.81,
+   "mu_pair": [
+    -13.0,
+    22.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.40543,
+      22.38464
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.92,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.0,
+      "fixed_snr": -0.8,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.6,
+       0.1
+      ],
+      "flux_over_pred": 1.02,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.0,
+      "fixed_snr": -0.5,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.2,
+       0.3
+      ],
+      "flux_over_pred": 0.61,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.5,
+      "fixed_snr": -0.0,
+      "best_snr": 1.3,
+      "best_offset": [
+       0.2,
+       0.2
+      ],
+      "flux_over_pred": 0.84,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.8,
+   "n_images": 3,
+   "pair_rms_arcsec": 4.91,
+   "mu_pair": [
+    -12.8,
+    21.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405411,
+      22.384633
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 17.99,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.1,
+      "fixed_snr": -0.5,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.1,
+       0.3
+      ],
+      "flux_over_pred": 0.88,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.3,
+      "fixed_snr": -0.3,
+      "best_snr": 2.0,
+      "best_offset": [
+       -0.3,
+       0.4
+      ],
+      "flux_over_pred": 0.61,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.6,
+      "fixed_snr": -0.1,
+      "best_snr": 1.2,
+      "best_offset": [
+       0.2,
+       0.2
+      ],
+      "flux_over_pred": 0.74,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.85,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.01,
+   "mu_pair": [
+    -12.5,
+    21.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405393,
+      22.384626
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 18.06,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.1,
+      "fixed_snr": 0.3,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.6,
+       -0.0
+      ],
+      "flux_over_pred": 0.79,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.4,
+      "fixed_snr": -0.2,
+      "best_snr": 2.3,
+      "best_offset": [
+       -0.3,
+       0.4
+      ],
+      "flux_over_pred": 0.7,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.6,
+      "fixed_snr": -0.0,
+      "best_snr": 1.3,
+      "best_offset": [
+       0.1,
+       0.2
+      ],
+      "flux_over_pred": 0.78,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.9,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.11,
+   "mu_pair": [
+    -12.4,
+    20.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405375,
+      22.384619
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 18.12,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.2,
+      "fixed_snr": 0.3,
+      "best_snr": 2.0,
+      "best_offset": [
+       0.5,
+       0.1
+      ],
+      "flux_over_pred": 0.9,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.5,
+      "fixed_snr": 0.1,
+      "best_snr": 2.2,
+      "best_offset": [
+       -0.4,
+       0.4
+      ],
+      "flux_over_pred": 0.68,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.7,
+      "fixed_snr": -0.7,
+      "best_snr": 1.2,
+      "best_offset": [
+       -0.0,
+       0.3
+      ],
+      "flux_over_pred": 0.7,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 4.95,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.21,
+   "mu_pair": [
+    -12.2,
+    19.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405357,
+      22.384612
+     ],
+     "mu": 4.1,
+     "sep_pair_arcsec": 18.18,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.2,
+      "fixed_snr": 0.7,
+      "best_snr": 1.9,
+      "best_offset": [
+       0.4,
+       0.1
+      ],
+      "flux_over_pred": 0.83,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.6,
+      "fixed_snr": 0.2,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 0.59,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.7,
+      "fixed_snr": -1.1,
+      "best_snr": 1.3,
+      "best_offset": [
+       -0.0,
+       0.3
+      ],
+      "flux_over_pred": 0.72,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.0,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.3,
+   "mu_pair": [
+    -12.0,
+    19.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405339,
+      22.384605
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.24,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.3,
+      "fixed_snr": 1.2,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.4,
+       -0.0
+      ],
+      "flux_over_pred": 0.73,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.7,
+      "fixed_snr": -0.1,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.5,
+       0.4
+      ],
+      "flux_over_pred": 0.52,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.8,
+      "fixed_snr": -1.2,
+      "best_snr": 1.1,
+      "best_offset": [
+       -0.1,
+       0.3
+      ],
+      "flux_over_pred": 0.64,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.5,
+      0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.05,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.38,
+   "mu_pair": [
+    -11.8,
+    18.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405322,
+      22.384598
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.3,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.3,
+      "fixed_snr": 0.9,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.2,
+       0.4
+      ],
+      "flux_over_pred": 0.82,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.8,
+      "fixed_snr": -0.0,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.4,
+       -0.4
+      ],
+      "flux_over_pred": 0.52,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.8,
+      "fixed_snr": -1.0,
+      "best_snr": 1.2,
+      "best_offset": [
+       -0.1,
+       0.4
+      ],
+      "flux_over_pred": 0.63,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.4,
+      -0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.1,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.47,
+   "mu_pair": [
+    -11.7,
+    18.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405306,
+      22.384592
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.36,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.4,
+      "fixed_snr": 0.3,
+      "best_snr": 1.6,
+      "best_offset": [
+       0.3,
+       0.2
+      ],
+      "flux_over_pred": 0.69,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.8,
+      "fixed_snr": 0.2,
+      "best_snr": 1.9,
+      "best_offset": [
+       0.3,
+       -0.4
+      ],
+      "flux_over_pred": 0.56,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.9,
+      "fixed_snr": -1.1,
+      "best_snr": 1.2,
+      "best_offset": [
+       -0.2,
+       0.4
+      ],
+      "flux_over_pred": 0.64,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      -0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.15,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.55,
+   "mu_pair": [
+    -11.5,
+    18.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405289,
+      22.384585
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.42,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.4,
+      "fixed_snr": -0.6,
+      "best_snr": 2.0,
+      "best_offset": [
+       0.2,
+       0.2
+      ],
+      "flux_over_pred": 0.81,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.0,
+      "fixed_snr": -0.3,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.2,
+       -0.4
+      ],
+      "flux_over_pred": 0.51,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.9,
+      "fixed_snr": -0.6,
+      "best_snr": 1.1,
+      "best_offset": [
+       -0.2,
+       0.3
+      ],
+      "flux_over_pred": 0.58,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.2,
+      -0.4
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.2,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.63,
+   "mu_pair": [
+    -11.4,
+    17.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405273,
+      22.384579
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.48,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.5,
+      "fixed_snr": -0.3,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.1,
+       0.2
+      ],
+      "flux_over_pred": 0.72,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.9,
+      "fixed_snr": -0.4,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.3,
+       -0.3
+      ],
+      "flux_over_pred": 0.45,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.9,
+      "fixed_snr": -0.6,
+      "best_snr": 1.3,
+      "best_offset": [
+       -0.2,
+       0.4
+      ],
+      "flux_over_pred": 0.65,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.3,
+      -0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.25,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.71,
+   "mu_pair": [
+    -11.2,
+    17.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405257,
+      22.384573
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.53,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.5,
+      "fixed_snr": 0.1,
+      "best_snr": 1.9,
+      "best_offset": [
+       0.1,
+       0.1
+      ],
+      "flux_over_pred": 0.78,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.0,
+      "fixed_snr": -0.4,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.2,
+       -0.3
+      ],
+      "flux_over_pred": 0.47,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 1.9,
+      "fixed_snr": -0.9,
+      "best_snr": 1.1,
+      "best_offset": [
+       -0.4,
+       0.4
+      ],
+      "flux_over_pred": 0.59,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.2,
+      -0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.3,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.78,
+   "mu_pair": [
+    -11.1,
+    17.1
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405241,
+      22.384567
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.59,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.5,
+      "fixed_snr": -0.2,
+      "best_snr": 1.6,
+      "best_offset": [
+       0.1,
+       0.2
+      ],
+      "flux_over_pred": 0.63,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.0,
+      "fixed_snr": -0.2,
+      "best_snr": 1.9,
+      "best_offset": [
+       0.1,
+       -0.3
+      ],
+      "flux_over_pred": 0.51,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.0,
+      "fixed_snr": -0.7,
+      "best_snr": 1.2,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 0.62,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.1,
+      -0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.35,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.85,
+   "mu_pair": [
+    -11.0,
+    16.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405226,
+      22.384561
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.64,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.5,
+      "fixed_snr": 0.2,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.0,
+       0.3
+      ],
+      "flux_over_pred": 0.84,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.0,
+      "fixed_snr": 0.2,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.0,
+       -0.3
+      ],
+      "flux_over_pred": 0.48,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.0,
+      "fixed_snr": -0.3,
+      "best_snr": 1.2,
+      "best_offset": [
+       -0.4,
+       0.4
+      ],
+      "flux_over_pred": 0.59,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      -0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.4,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.92,
+   "mu_pair": [
+    -10.9,
+    16.6
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405211,
+      22.384555
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.69,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.5,
+      "fixed_snr": 0.2,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.1,
+       0.3
+      ],
+      "flux_over_pred": 0.7,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 3.9,
+      "fixed_snr": 0.3,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.0,
+       -0.3
+      ],
+      "flux_over_pred": 0.5,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.0,
+      "fixed_snr": -0.1,
+      "best_snr": 1.2,
+      "best_offset": [
+       -0.4,
+       0.5
+      ],
+      "flux_over_pred": 0.61,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      -0.3
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.45,
+   "n_images": 3,
+   "pair_rms_arcsec": 5.99,
+   "mu_pair": [
+    -10.7,
+    16.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405196,
+      22.38455
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.74,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.6,
+      "fixed_snr": 0.3,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.5,
+       0.4
+      ],
+      "flux_over_pred": 0.71,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.1,
+      "fixed_snr": -0.4,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.0,
+       -0.2
+      ],
+      "flux_over_pred": 0.47,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.1,
+      "fixed_snr": 0.0,
+      "best_snr": 1.1,
+      "best_offset": [
+       0.6,
+       -0.3
+      ],
+      "flux_over_pred": 0.54,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.0,
+      -0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.5,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.06,
+   "mu_pair": [
+    -10.6,
+    16.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405181,
+      22.384544
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.8,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.6,
+      "fixed_snr": 0.6,
+      "best_snr": 1.7,
+      "best_offset": [
+       -0.1,
+       0.3
+      ],
+      "flux_over_pred": 0.65,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.2,
+      "fixed_snr": -0.4,
+      "best_snr": 2.1,
+      "best_offset": [
+       -0.1,
+       -0.2
+      ],
+      "flux_over_pred": 0.52,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.1,
+      "fixed_snr": -0.2,
+      "best_snr": 1.1,
+      "best_offset": [
+       0.5,
+       -0.4
+      ],
+      "flux_over_pred": 0.56,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.1,
+      -0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.55,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.13,
+   "mu_pair": [
+    -10.5,
+    16.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405166,
+      22.384539
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.85,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.7,
+      "fixed_snr": 0.2,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.2,
+       0.4
+      ],
+      "flux_over_pred": 0.68,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.1,
+      "fixed_snr": -0.7,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.2,
+       -0.2
+      ],
+      "flux_over_pred": 0.47,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.1,
+      "fixed_snr": -0.3,
+      "best_snr": 1.3,
+      "best_offset": [
+       0.5,
+       0.2
+      ],
+      "flux_over_pred": 0.61,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      -0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.6,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.19,
+   "mu_pair": [
+    -10.4,
+    15.8
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405152,
+      22.384534
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.9,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.7,
+      "fixed_snr": -0.1,
+      "best_snr": 1.6,
+      "best_offset": [
+       0.4,
+       0.5
+      ],
+      "flux_over_pred": 0.58,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.3,
+      "fixed_snr": -0.2,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.2,
+       -0.2
+      ],
+      "flux_over_pred": 0.47,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.0,
+      "fixed_snr": -0.5,
+      "best_snr": 1.1,
+      "best_offset": [
+       0.6,
+       -0.3
+      ],
+      "flux_over_pred": 0.51,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      -0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.65,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.25,
+   "mu_pair": [
+    -10.3,
+    15.7
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405138,
+      22.384528
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.94,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.7,
+      "fixed_snr": 0.2,
+      "best_snr": 2.0,
+      "best_offset": [
+       -0.3,
+       0.4
+      ],
+      "flux_over_pred": 0.74,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.3,
+      "fixed_snr": -0.3,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.2,
+       -0.2
+      ],
+      "flux_over_pred": 0.45,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.1,
+      "fixed_snr": -0.9,
+      "best_snr": 1.3,
+      "best_offset": [
+       0.6,
+       -0.3
+      ],
+      "flux_over_pred": 0.65,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      -0.2
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.7,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.31,
+   "mu_pair": [
+    -10.2,
+    15.5
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405124,
+      22.384523
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 18.99,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.7,
+      "fixed_snr": 0.0,
+      "best_snr": 1.7,
+      "best_offset": [
+       -0.3,
+       0.4
+      ],
+      "flux_over_pred": 0.62,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.3,
+      "fixed_snr": 0.1,
+      "best_snr": 1.7,
+      "best_offset": [
+       -0.2,
+       -0.1
+      ],
+      "flux_over_pred": 0.4,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.1,
+      "fixed_snr": -0.8,
+      "best_snr": 1.4,
+      "best_offset": [
+       0.6,
+       -0.2
+      ],
+      "flux_over_pred": 0.67,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.2,
+      -0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.75,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.37,
+   "mu_pair": [
+    -10.1,
+    15.4
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405111,
+      22.384518
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 19.04,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.8,
+      "fixed_snr": 0.2,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.6,
+       -0.3
+      ],
+      "flux_over_pred": 0.62,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.4,
+      "fixed_snr": 0.4,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.3,
+       -0.1
+      ],
+      "flux_over_pred": 0.43,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.2,
+      "fixed_snr": -1.1,
+      "best_snr": 1.8,
+      "best_offset": [
+       0.6,
+       -0.2
+      ],
+      "flux_over_pred": 0.83,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.3,
+      -0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.8,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.43,
+   "mu_pair": [
+    -10.0,
+    15.3
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405097,
+      22.384513
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 19.08,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.8,
+      "fixed_snr": -0.1,
+      "best_snr": 2.8,
+      "best_offset": [
+       0.6,
+       -0.3
+      ],
+      "flux_over_pred": 1.0,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.5,
+      "fixed_snr": 1.0,
+      "best_snr": 2.0,
+      "best_offset": [
+       -0.4,
+       -0.1
+      ],
+      "flux_over_pred": 0.47,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.2,
+      "fixed_snr": -1.3,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.5,
+       -0.2
+      ],
+      "flux_over_pred": 0.8,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      -0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.85,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.49,
+   "mu_pair": [
+    -9.9,
+    15.2
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405084,
+      22.384508
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 19.13,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.8,
+      "fixed_snr": -0.5,
+      "best_snr": 2.4,
+      "best_offset": [
+       0.6,
+       -0.3
+      ],
+      "flux_over_pred": 0.85,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.3,
+      "fixed_snr": 1.1,
+      "best_snr": 1.9,
+      "best_offset": [
+       -0.4,
+       -0.1
+      ],
+      "flux_over_pred": 0.46,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.2,
+      "fixed_snr": -1.0,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.5,
+       -0.2
+      ],
+      "flux_over_pred": 0.81,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.4,
+      -0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.9,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.55,
+   "mu_pair": [
+    -9.9,
+    15.1
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405071,
+      22.384504
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 19.18,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.8,
+      "fixed_snr": -0.5,
+      "best_snr": 2.7,
+      "best_offset": [
+       0.5,
+       -0.3
+      ],
+      "flux_over_pred": 0.94,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.4,
+      "fixed_snr": 1.2,
+      "best_snr": 1.7,
+      "best_offset": [
+       -0.5,
+       -0.1
+      ],
+      "flux_over_pred": 0.4,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.2,
+      "fixed_snr": -0.8,
+      "best_snr": 1.6,
+      "best_offset": [
+       0.5,
+       -0.2
+      ],
+      "flux_over_pred": 0.77,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.5,
+      -0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 5.95,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.6,
+   "mu_pair": [
+    -9.8,
+    15.0
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405059,
+      22.384499
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 19.22,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 2.9,
+      "fixed_snr": -0.3,
+      "best_snr": 2.5,
+      "best_offset": [
+       0.5,
+       -0.3
+      ],
+      "flux_over_pred": 0.88,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.3,
+      "fixed_snr": 0.9,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.6,
+       -0.1
+      ],
+      "flux_over_pred": 0.39,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.2,
+      "fixed_snr": -0.6,
+      "best_snr": 1.4,
+      "best_offset": [
+       0.4,
+       -0.1
+      ],
+      "flux_over_pred": 0.64,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      0.6,
+      -0.1
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  },
+  {
+   "model": "sharon",
+   "z": 6.0,
+   "n_images": 3,
+   "pair_rms_arcsec": 6.66,
+   "mu_pair": [
+    -9.7,
+    14.9
+   ],
+   "extras": [
+    {
+     "radec": [
+      177.405046,
+      22.384495
+     ],
+     "mu": 4.0,
+     "sep_pair_arcsec": 19.26,
+     "kind": "far",
+     "f150w": {
+      "pred_snr": 3.0,
+      "fixed_snr": -0.8,
+      "best_snr": 2.3,
+      "best_offset": [
+       0.5,
+       -0.4
+      ],
+      "flux_over_pred": 0.81,
+      "forced_class": "undetectable"
+     },
+     "f277w": {
+      "pred_snr": 4.5,
+      "fixed_snr": 0.8,
+      "best_snr": 1.8,
+      "best_offset": [
+       -0.5,
+       -0.0
+      ],
+      "flux_over_pred": 0.43,
+      "forced_class": "undetectable"
+     },
+     "f444w": {
+      "pred_snr": 2.2,
+      "fixed_snr": -0.5,
+      "best_snr": 1.7,
+      "best_offset": [
+       0.4,
+       -0.2
+      ],
+      "flux_over_pred": 0.74,
+      "forced_class": "undetectable"
+     },
+     "colour_offset": [
+      -0.5,
+      -0.0
+     ],
+     "best_colours": [
+      null,
+      null
+     ],
+     "colour_match": false
+    }
+   ],
+   "verdict": "excluded: pair not reproduced"
+  }
+ ]
+}

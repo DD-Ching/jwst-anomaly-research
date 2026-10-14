@@ -220,7 +220,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - ~~MACS1149 `no_reference` rows~~ — done (D-037 addendum 2026-10-14, `m1149_refs.py`): 11 rows, 0 `absent`, none
        unmet in both models;
      - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1
-       photo-z; fix system 16's z (spectroscopic z, or forced photometry on its far-image track); evaluate the CANUCS
+       photo-z; ~~fix system 16's z~~ — done (D-037 addendum 2026-10-14: z ≈ 2.5–2.9 from the pair in both models; CANUCS
+       5106117 is a possible far image; a spectrum would settle both); evaluate the CANUCS
        lens models (see the CANUCS item above);
      - `bayes.dat` position spreads: not needed (D-045: 0.2–0.4″, inside the 1″ radius). UNCOVER v2.0 passes the
        gate (D-041 addendum 2026-10-14). The cross-model rule on every forced row is null (CHANGELOG 2026-10-14);

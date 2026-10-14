@@ -19,6 +19,24 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - Real-data hook: GW231123, the GWTC-4.0 lensing outlier, has been fitted only with positive lenses.
 - **Handoff:** X4 S1 (intrinsic-parameter degeneracy with an IMR waveform, ≤ 4 h) is proposed, not started.
 
+## 2026-10-14: MACS1149 system 16: z 2.5–2.9 from the pair; a possible far image (CANUCS 5106117)
+- **Hypothesis before computing:** system 16's far image is detectable along its redshift track and fixes z, or
+  no z keeps every predicted image consistent in both models. Ordinary: a faint far image, chance field sources.
+  Plan change if no z in 2–6 is allowed in both models.
+- New: `scripts/m1149_sys16.py` (CATS v4.1 and Sharon v4cor z scan, pair rms, forced photometry of every extra
+  image in three bands, colour matches at one offset) and unit tests; output
+  `results/lens_consistency/macs1149-cats/sys16_track.json`.
+- **Result** (D-037 addendum 2026-10-14, docs/fields/macs1149.md): the pair is reproduced at z 2.10–2.90 (CATS) and
+  2.50–3.30 (Sharon); joint 2.5–2.9, overlapping the CANUCS photo-z of 16.2. The far image is predicted ≤ 2.5σ
+  there (point-source μ). One colour-matched source near both models' far image at z ≈ 2.5–2.65, CANUCS 5106117
+  (z_phot 2.94, 2.49–3.16), is a possible third image; the three other matches have photo-z 1.23, 1.68 and 4.59.
+  Stamps looked at. **Null:** no system 16 image is unmet.
+- **Failed approach:** the far-image track as a redshift ruler; the point-source |μ| of the fold pair (≥ 39) makes
+  the predicted far image ≤ 2.5σ, so photometry did not constrain z. First-pass colours measured each band at its
+  own best offset (caught in review; now one F277W offset for all bands, which also found S1).
+- **Handoff:** MACS1149 system 16 is settled up to spectroscopy (16.1/16.2 or 5106117). Next field items in TASKS:
+  the Sunrise rel_weight plateau, duplicate merged sources (Abell 2744 `3999`/`7179`).
+
 ## 2026-10-14: MACS1149's 11 untested counter-images: none unmet in both models
 - **Hypothesis before computing:** one of the 11 CATS forced rows without a reference flux (systems 13, 14, nine SN
   Refsdal host knots) is a predicted image both models need and the data do not show. Ordinary: model copies of
