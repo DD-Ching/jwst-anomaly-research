@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: off-plane potentials in the Abell 2744 and El Gordo models (in progress)
+- Claimed by cloud routine 01FdC23M at 18:15Z: D-042 off-plane listing for `abell2744-bergamini23` and
+  `elgordo-caminha23`.
+
 ## 2026-10-14: MACS0416 CANUCS potentials with off-plane spectroscopic redshifts: no tension
 - **Hypothesis before computing:** a CANUCS potential whose galaxy has a z_spec off the cluster plane (D-042 rule)
   might carry an extra image, or the catalogued images might reject its true redshift. Ordinary: compiled z_spec
