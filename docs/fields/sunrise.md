@@ -205,6 +205,43 @@ Ranks 5 and 7 were screened (D-020).
   partly in-sample). Positions are JWST-frame; an HST/JWST frame offset is nearly common to the three images and
   largely cancels in the source-plane rms (not measured).
 
+## Counter-images in the four RELICS models (2026-10-14; `scripts/sunrise_counter.py`)
+
+- **Hypothesis before running:** every image the four RELICS v1 models agree on for systems 1 and 2 (knots 1.1,
+  1.2, 1.7 at z = 6.2; system 2 at each model's best z, 2.6–3.1, ±0.3) is either catalogued or below the F200W
+  depth. An `absent` image that all four models predict would be a lens-model residual worth vetting; one that only
+  some models predict is model-dependent (D-041).
+- **Method:** each model's deflection maps are read by byte range over a ±52″ box around (24.3555, −8.4570) and
+  solved with `find_images` (`MapLensModel`, 0.1″ grid). Predicted images > 2″ from every catalogued image of the
+  system are counter-images; |μ| ≥ 0.5 ones get D-029 forced photometry on F200W `jw02282-o010_t001` with a predicted
+  flux from the knot's catalogued images with |μ| < 50 (point-source scaling). D-041 rules: model copy within 1.75×
+  the knot's image-plane rms of a catalogued image the model misses; cross-model agreement within 3″.
+- **Known cases:** system 2's three images are re-predicted by all four models (image-plane rms 0.16–0.69″). System
+  1 is near-critical and the HST-era models miss some knots: 1.1 re-predicted 3–5 of 5, 1.2 1–3 of 3, 1.7 1–3 of 4
+  (rms 0.5–9.4″; WSLAP+ best). Flux-chain control (leave-one-out over catalogued images with |μ| < 50, 20 cases in
+  Glafic, Lenstool and WSLAP+): 18 `recovered`, 1 `undetectable`, 1 `absent` (WSLAP+ 1.1d, measured/predicted
+  0.32, just below the 1/3 bound). So near-critical arc knots can read `absent` at the ×3 level by flux scaling
+  alone (derived).
+- **Result (0 flags):**
+  - the Sunrise arc's counter-image across the cluster is predicted by every model (|μ| 1.6–3.7; LTM 5.3 with no
+    usable reference), but at positions up to ~19″ apart and predicted S/N ≤ 1.7: `undetectable` at this depth;
+  - Glafic's extra arc-end image of 1.1 (|μ| 39, predicted S/N 16, nothing above 4.4σ within 1″): `absent`, but
+    only Glafic and LTM predict an image there (2 of 4 models) and it lies 5.1″ from 1.1c, which Glafic does not
+    re-predict (the 1.75× copy radius is 4.3″; Glafic's extra 1.2 image, 2.6″ away, is classed a copy of 1.2c). It
+    is the model's displaced 1.1c, a model-dependent, untestable image; cutout looked at: empty sky with the arc
+    passing ~2″ away;
+  - system 2: Glafic, Lenstool and LTM predict 2–3 counter-images at |μ| 3.5–11 (predicted S/N 3–11), each
+    `undetectable` or `confused` with a brighter neighbour; WSLAP+ predicts one at |μ| 2.4 (S/N 3.3). No two models
+    agree on a position within 3″ except pairs of Glafic/Lenstool/LTM images;
+  - central images are demagnified (|μ| ≤ 0.54) or sit in the BCG light (LTM, |μ| 2.2, no reference).
+- **Reading:** no counter-image that the four models agree on is missing. The HST-era models are too uncertain near
+  the arc (image-plane rms up to 9″) to make the arc's extra images testable, and the arc's cross-cluster counter-image
+  is predicted below the noise (S/N ≤ 1.7). Contact sheet inspected (scratch, not tracked). Output:
+  `results/sunrise/counter_images.json` (model_prediction positions and μ; derived fluxes and classes).
+- **Limits:** F200W only; point-source flux scaling over-predicts extended images; the knots' |μ| < 50 references in
+  LTM do not exist (no flux test for LTM). A JWST-era model with all knots (Scofield+2025 M5-G1 once its deflection
+  unit is stated, D-033 addendum) would make the arc-end images testable.
+
 ## Two-epoch search, o010 (2022-07-30) against o120 (2023-01-10) (D-027)
 
 The code is at this PR's head; outputs are under `outputs/transients_sunrise/` (not committed). Every number is
