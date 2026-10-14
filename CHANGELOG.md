@@ -34,6 +34,20 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   failures). Reopen only with a non-affine forward model (source-plane reconstruction through the published
   deflection field) or a Δχ² threshold calibrated for correlated noise on PSF-consistent synthetics.
 
+## 2026-10-14: halo-subtracted flux ratios on MACS0416 (CANUCS model): five systems testable, no anomaly
+- **Hypothesis before running:** a fourth cluster extends the D-032 flux-ratio line; no compact image deviates by
+  > 0.75 mag (both routes) from the `macs0416-canucs` μ ratio, and `fluxratios --halo-phot` finds no 3σ tension.
+  A flag would go to `/vet-candidate`.
+- Unchanged code: `halo_phot.py` on all 303 images (111 systems; F150W + F444W, ±1 mag injections; 18 min on 4 cores,
+  dominated by serial S3 stamp reads), then `fluxratios --halo-phot` F444W, both routes
+  (`results/halo_phot/macs0416/`, `docs/fields/macs0416.md`).
+- **Result (derived): null.** 5 systems testable (D4, D13, D21, D98, C3; F444W 11 images, F150W 7), max |r| 0.35 mag;
+  `fluxratios` 14 / 11 images, σ_sys 0.25 / 0.26 mag, 0 `flux_tension`, 0 colour outliers. Injections (simulated):
+  1 / 2 mag deficits flagged in 50 / 29 % (medfilt) and 36 / 36 % (annulus). Cutouts looked at: compact sources.
+- **Limitation:** no bayes.dat for this model (no μ error per image); the q ≥ 0.80 gate uses the three-field star
+  calibration. ~96 % of images fail the compactness gates, as in the other fields.
+- **Next:** the halo-flux line is now null in four clusters; MACS1149 needs a Lenstool par (CATS is map-only for
+  `fluxratios`). For arcs, a surface-brightness-conserving test (D-032) is the remaining flux tool.
 ## 2026-10-14: parity acceptance test fails (87 % vs 95 %); fits not converged, PSF suspected
 - **Hypothesis before computing:** the 6 Abell 2744 parity flags (previous entry) come from neighbour light and
   point-like sources; with a segmentation mask and a resolution gate, ≥ 95 % of catalogued non-near-critical pairs

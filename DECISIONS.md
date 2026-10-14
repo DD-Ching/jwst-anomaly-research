@@ -1875,6 +1875,11 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   gate removes 2 of 12. K is truncated at 0.6″ (exact only for singular values ≥ 0.83). Alternatives rejected: Gaussian or toy PSFs (the empirical stack is cheap: one VizieR cone,
   12 byte-range stamps). Revisit if: a non-affine forward model through the published deflection field, or a
   correlated-noise-calibrated threshold, becomes available.
+- MACS0416 halo fluxes (2026-10-14; CHANGELOG; `docs/fields/macs0416.md`): `halo_phot.py` + `fluxratios
+  --halo-phot` with `macs0416-canucs` (unchanged code). 5 systems testable (F444W 11 images), max |r| 0.35 mag,
+  σ_sys 0.25 / 0.26 mag (medfilt / annulus), no `flux_outlier`, `flux_tension` or colour outlier; 1 mag deficits
+  recovered in 36–50 % of targets (simulated). No anomaly in a fourth cluster. Revisit if: a CANUCS MCMC chain is
+  pinned (per-image μ errors) or a star calibration on this mosaic moves the q gate.
 
 ## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
 

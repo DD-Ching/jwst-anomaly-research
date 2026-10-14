@@ -133,6 +133,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.5 (`parity_test.py`: observational parity, synthetics, Abell 2744 run; not validated on known systems) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01GMu4HZ, 06:08–06:50Z |
 | 2026-W42 | — | — | ≈ 0.3 (parity acceptance test: segmentation, resolution gate, start convergence; failed) | 0.15 (orientation, claim, PR) | cloud routine 01NCPwCw, 07:08–07:45Z |
 | 2026-W42 | — | — | ≈ 1.2 (PSF-commuting parity fit, empirical PSF, acceptance rerun; failed, tool paused) | 0.15 (orientation, claim, PR) | cloud routine 01VnLVRw, 08:09–09:45Z |
+| 2026-W42 | ≈ 0.4 (MACS0416 `halo_phot` + `fluxratios --halo-phot`, CANUCS model; cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 019kpPJS, 09:08–09:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
