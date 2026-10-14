@@ -214,6 +214,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; classify model copies of
        unpredicted catalogued images automatically (D-041);
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, MACS0717), Keeton v4 (MACS0717);
+     - ~~MACS1149 `no_reference` rows~~ — done (D-037 addendum 2026-10-14, `m1149_refs.py`): 11 rows, 0 `absent`, none
+       unmet in both models;
      - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1
        photo-z; fix system 16's z (spectroscopic z, or forced photometry on its far-image track); evaluate the CANUCS
        lens models (see the CANUCS item above);

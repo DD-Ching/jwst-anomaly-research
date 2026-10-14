@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: MACS1149's 11 untested counter-images: none unmet in both models
+- **Hypothesis before computing:** one of the 11 CATS forced rows without a reference flux (systems 13, 14, nine SN
+  Refsdal host knots) is a predicted image both models need and the data do not show. Ordinary: model copies of
+  catalogued images, resolved host light, images below the noise. Plan change if a gated row is `absent` and Sharon
+  v4cor predicts it too.
+- New: `scripts/m1149_refs.py` (sibling references without the |μ| cap in F150W/F277W/F444W; Sharon v4cor solved per
+  system, D-041 cross-model rule) and unit tests; tracked input and output in `results/lens_consistency/macs1149-cats/`.
+- **Result** (D-037 addendum 2026-10-14, docs/fields/macs1149.md): 0 `absent` in any band, gated or ungated. 13 is
+  CATS's misplaced 13.2; 1002 and 1222 are CATS-only extras; 1007 is both-model with μ 18.3 vs 0.1 (untestable); 14
+  is undetectable (2.4σ); six both-model rows lie in the resolved host images 1.2/1.3 (ungated `recovered` ratio
+  1.4–1.9, or untestable). Stamps looked at.
+  **Null:** no MACS1149 counter-image is unmet in both models.
+- **Failed approach (caught in review):** reading "Sharon's nearest image lies on a catalogued image" as "CATS
+  misplaced it" without checking that CATS reproduces that image; fixed by splitting Sharon's images first.
+- **Handoff:** no MACS1149 counter-image is unmet in both models (six rows untestable, no injection limit). Next field items in TASKS: system 16's far-image
+  track (fixes its z), the Sunrise rel_weight plateau, duplicate merged sources.
+
 ## 2026-10-14: X3 G2 prerequisite: astrometry mostly repeats the blend effect; narrow lens-shift gain
 - **Question before computing:** can Gaia epoch astrometry plus photometry tell a W3 negative-mass lens from an
   ordinary blended variable, with the same blend freedom in both? The criterion was committed first:
