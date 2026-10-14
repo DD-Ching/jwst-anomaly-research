@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: MACS1149 untested counter-images (in progress)
+- Plan: sibling reference fluxes and a Sharon v4cor cross-model check for the CATS `no_reference` forced rows.
+
 ## 2026-10-14: the El Gordo and Sunrise follow-up sources are ordinary
 - **Hypothesis before computing:** one of El Gordo `2828`/`1601` or Sunrise `1756`/`1907`/`1578` could be a lensed
   image with an unmet model prediction, or a source no ordinary class explains. Ordinary: spikes, persistence,
