@@ -1429,7 +1429,7 @@ def image_stamper(uri: str, half_arcsec: float = 1.5):
 
 
 HALO_INJECT_FWHM_ARCSEC = 0.07  # Gaussian stand-in for a compact image (~F200W PSF; ASSUMPTION)
-MIN_HALO_FILTER_ARCSEC = 3 * FORCED_R_AP  # a smaller filter eats the compact image itself
+MIN_HALO_FILTER_ARCSEC = round(3 * FORCED_R_AP, 6)  # a smaller filter eats the compact image itself
 
 
 def _median_subtract(sci: np.ndarray, xx: np.ndarray, yy: np.ndarray, filter_arcsec: float):

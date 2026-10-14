@@ -34,6 +34,25 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - shooting from l ≈ 200 loses the determinant to cancellation;
   - `pkill -f` with the script name in the same shell killed the shell (again).
 - **Handoff:** X2 at about 13.1 / 16 h, paused for the owner. No 4D, NED + SV or communication conclusion.
+## 2026-10-14: halo-filtered counter-images in Abell 2744, MACS1149 and MACS0416: no new absent image
+- **Hypothesis before computing:** as for SMACS system 17, rows that earlier `images` runs left `confused` or
+  marginal on BCG/ICL light may turn `absent` (a ≥ 10σ prediction unmet) once the halo is median-filtered.
+  Ordinary: member light the filter cannot remove, model copies and galaxy-scale caustics, fitted redshifts.
+- Runs (`lens_consistency.py images --forced-image <F277W i2d, S3> [--halo-filter-arcsec 1.0 | 0.6]`; Abell 2744 with
+  the D-029 catalogue and DJA photo-z, sha256 as `docs/fields/abell2744.md`; MACS1149/0416 with the F200W pipeline
+  catalogues, sha256 `7f964bf8…` / `00cb6e18…`, no photo-z, which the forced classes do not use). Unfiltered runs
+  reproduce the recorded classes (MACS1149 2/2/1, MACS0416 3/13/2/3; Abell 2744 3/3/2 with undetectable 4 vs 3, as the
+  solver now predicts 178 images, not 176).
+- **Result (derived): no new `absent` in any field.** Forced classes, unfiltered → 1.0″: Abell 2744 recovered 3 → 6,
+  confused 3 → 2, absent 2 → 2; MACS1149 recovered 2 → 2, confused 2 → 4, absent 1 → 1; MACS0416 recovered 3 → 3,
+  confused 13 → 11, absent 2 → 2. The `absent` rows are the explained ones (700.1 ×2, MACS1149 16, MACS0416 27 ×2).
+- Looked at raw and 1.0″-filtered 5″ cutouts of the 16 `confused` rows with predicted S/N ≥ 10: member cores
+  survive a 0.6–1.0″ filter (neighbour 4–900× the prediction). At the exact positions the filtered S/N is below the
+  prediction in 14 of 16, but all have recorded ordinary explanations, and next to bright cores the annulus is biased
+  (down to −8σ). **Not candidates.** Median filtering fixes smooth halos (SMACS 17), not member-buried images.
+- Fix: the filter floor `3 × FORCED_R_AP` was 0.6000000000000001 and refused `--halo-filter-arcsec 0.6` (test added).
+- **Next:** member subtraction (isophote/Sérsic models) in `forced_check` for member-buried rows; otherwise the
+  other Supporting 1 items (`--plane` option, orphan-pair injections).
 
 ## 2026-10-14: SMACS systems 11, 16, 26: no reference flux makes their counter-images testable
 - **Hypothesis before computing:** D-029 left systems 11, 16 and 26 `no_reference` (catalogued images at |μ| > 50

@@ -904,3 +904,4 @@ def test_halo_stamper_removes_a_halo_and_keeps_a_compact_image():
 def test_halo_stamper_rejects_a_filter_smaller_than_a_compact_image():
     with pytest.raises(ValueError):
         lc.halo_stamper(_stamp_factory([]), 0.2)
+    lc.halo_stamper(_stamp_factory([]), 0.6)  # the floor itself (3 x 0.2 is 0.6000000000000001)

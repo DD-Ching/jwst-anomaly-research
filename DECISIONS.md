@@ -1565,6 +1565,21 @@ below the pairs, so the systems are untestable at this depth (apart from Zitrin'
 violations. Stamps are not halo-filtered: these systems lie 20–36″ from the BCG. Revisit if: deeper imaging, or a
 spectroscopic redshift with a model that puts a counter-image of these systems at ≥ 10σ from a gated reference.
 
+**Addendum 2026-10-14 (`--halo-filter-arcsec` on Abell 2744, MACS1149 and MACS0416).** `images` re-run with the forced
+F277W stamps unfiltered and median-filtered at 1.0″ and 0.6″ (models `abell2744-bergamini23`, `macs1149-cats`,
+`macs0416-cats`). **No new `absent` in any field:** the only `absent` rows are the ones already explained (Abell 2744
+700.1 ×2, MACS1149 16, MACS0416 27 ×2), at the same S/N ratios. The filter makes four Abell 2744 references usable
+(3.3, 26.3, A200.1, B200.2: all `recovered`) and moves others to `inconsistent_reference` (MACS1149 1192, MACS0416
+122). **It does not decide the rows buried in cluster members:** member cores are compact against a 0.6–1.0″ filter,
+so 16 rows stay `confused` (neighbour 4–900× the prediction). Halo-filtered photometry at their exact positions
+(looked at, raw and filtered cutouts) is below the prediction in 14 of 16, but every one already has a recorded
+ordinary explanation (model copies, CATS-only galaxy-scale caustics, near-critical μ, the 22.1 position residual,
+MACS0416 51; MACS1149 13 is the model's copy of the unpredicted 13.2, 1.77″ away), and next to a bright core the
+annulus is biased (at-position S/N down to −8σ). Kept: median filtering for smooth BCG/ICL gradients (SMACS 17);
+member-buried images need galaxy-model subtraction (isophotes, as MACS0416 51), not a median filter. Also fixed: the
+filter floor `3 × FORCED_R_AP` evaluated to 0.6000000000000001 and refused 0.6″. Revisit if: a member-subtraction
+route (isophote or Sérsic models of the cluster members) exists for `forced_check`.
+
 ## D-030 Exact image-plane χ² in `validate`; El Gordo and Abell 2744 models in the repository (2026-10-08)
 
 **Decision.**

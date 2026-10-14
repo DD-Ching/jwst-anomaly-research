@@ -127,6 +127,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.25 (SMACS system 17 halo-subtracted counter-image) | — | ≈ 0.15 (system 17 vetting: z scan, RELICS models, literature) | 0.1 (orientation, claim, PR) | cloud routine 014mrZNP, 02:08–02:45Z |
 | 2026-W42 | ≈ 0.3 (SMACS systems 11, 16, 26: sibling references in three models, two bands; cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01LDvpj4, 03:07–03:40Z |
 | 2026-W42 | — | 1.8 (X2 S6a: 5D derivation, background, mode tracking) | 0.9 (static/merger gates, shooting cross-check, constraint residuals, convergence) | 0.6 (review and fixes, state files, PR) | interactive session 01AzKMDv |
+| 2026-W42 | ≈ 0.3 (`--halo-filter-arcsec` on Abell 2744, MACS1149, MACS0416; cutouts of 16 confused rows) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01WHQem9, 04:08–04:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
