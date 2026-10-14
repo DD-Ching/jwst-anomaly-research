@@ -1272,6 +1272,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   `scripts/x3_bulk.py` `FILES`. No `rejected_by_photometry` column (rebuilt from `g_transit_n_obs`).
 - Reference variables: `gaiadr3.vari_classifier_result` (ECL, YSO, LPV; score > 0.5) in the M31 and Orion fields;
   SIMBAD and Gaia DR3 (VizieR I/355/gaiadr3) via CDS XMatch for vetting.
+- Gaia DR4 content (accessed 2026-10-14): https://www.cosmos.esa.int/web/gaia/dr4 (`epoch_astrometry` for all
+  sources in the main astrometric processing; 66 months, 2014-07-25 to 2020-01-20); image of the week
+  https://www.cosmos.esa.int/web/gaia/iow_20260703 (2.8 billion sources, 142 billion detections).
 - Gaia DR4 release date, 2 December 2026: https://www.cosmos.esa.int/web/gaia/release. Epoch-photometry coverage is
   not yet stated on https://www.cosmos.esa.int/web/gaia/data-release-4.
 - PTA (S0 A):
