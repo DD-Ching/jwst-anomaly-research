@@ -150,6 +150,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | 0.3 (X3 G1: bulk-file route, sample counts) | 2.2 (X3 G1: full-pipeline calibration, references, selection bound, held-out run and vetting) | 0.3 (state files, review, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | 0.2 (X3 G2 prerequisite: DR4 content check) | 0.5 (X3 G2 prerequisite: photocentre model, identifiability cases) | 0.2 (G1 corrections, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.3 (`m1149_refs.py`: MACS1149 `no_reference` rows, sibling references, Sharon v4cor; stamps) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01CLbKJM, 22:08–22:55Z |
+| 2026-W42 | ≈ 0.3 (`m1149_sys16.py`: MACS1149 system 16 z scan in two models, far-image photometry; stamps) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01Pnu5BB, 23:08–23:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

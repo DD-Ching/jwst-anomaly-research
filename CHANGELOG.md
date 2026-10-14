@@ -2,8 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-15: MACS1149 system 16 far-image track (in progress)
-- Plan: forced photometry along the CATS / Sharon far-image track (z = 2–5) to fix system 16's redshift.
+## 2026-10-15: MACS1149 system 16: redshift 2.5–2.9 from the pair; far image below the noise
+- **Hypothesis before computing:** system 16's far image is detectable along its redshift track and fixes z, or
+  no z keeps every predicted image consistent in both models. Ordinary: a faint far image, chance field sources.
+  Plan change if no z in 2–6 is allowed in both models.
+- New: `scripts/m1149_sys16.py` (CATS v4.1 and Sharon v4cor z scan, pair rms, forced photometry of every extra
+  image in three bands, colour matches) and unit tests; output `results/lens_consistency/macs1149-cats/sys16_track.json`.
+- **Result** (D-037 addendum 2026-10-15, docs/fields/macs1149.md): pair reproduced at z 2.10–2.90 (CATS) and
+  2.50–3.30 (Sharon); joint 2.5–2.9, overlapping the CANUCS photo-z at 2.5–2.67. The far image is ≤ 2.5σ
+  predicted there (`undetectable`); colour-matched track sources lie only at excluded z. Stamps looked at.
+  **Null:** no system 16 image is unmet.
+- **Failed approach:** the far-image track as a redshift ruler; the pair's |μ| ≥ 39 makes the far image ≲ 10 % of
+  a pair that is itself only 6–12σ.
+- **Handoff:** MACS1149 counter-image line has no open row left except deeper data. Next field items in TASKS: the
+  Sunrise rel_weight plateau, duplicate merged sources (Abell 2744 `3999`/`7179`).
 
 ## 2026-10-14: MACS1149's 11 untested counter-images: none unmet in both models
 - **Hypothesis before computing:** one of the 11 CATS forced rows without a reference flux (systems 13, 14, nine SN
