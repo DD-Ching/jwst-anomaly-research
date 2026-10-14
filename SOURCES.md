@@ -1252,3 +1252,23 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - Kleihaus & Kunz, arXiv:1409.1503 (PRD 90, 121503); Chew, Kleihaus & Kunz, arXiv:1608.05253 (PRD 94, 104031).
 - Khoo et al., arXiv:2401.02898 (PRD 109, 084013); Blázquez-Salcedo et al., arXiv:2312.10754 (PRD 109, 064028);
   Azad et al., arXiv:2509.22118 (Universe 11, 325); arXiv:2603.12748; arXiv:2610.13206 (not refereed).
+
+## Trial unit X3 and S0-2026-10-14 (accessed 2026-10-14; docs/state/units/S0-2026-10-14.md, X3.md)
+- Gaia DR3 Andromeda Photometric Survey (GAPS): `gaiadr3.gaia_source.in_andromeda_survey` (1,257,319 sources, all
+  `has_epoch_photometry`). Gaia archive TAP https://gea.esac.esa.int/tap-server/tap. Epoch photometry via DataLink
+  https://gea.esac.esa.int/data-server/data (`DATA_STRUCTURE=DATAMODEL_STANDARD`; `INDIVIDUAL` returns HTTP 500
+  since at least 2026-10-14).
+- Gaia DR4 release date, 2 December 2026: https://www.cosmos.esa.int/web/gaia/release. Epoch-photometry coverage is
+  not yet stated on https://www.cosmos.esa.int/web/gaia/data-release-4.
+- PTA (S0 A):
+  - NANOGrav 15-yr new-physics search, arXiv:2306.16219 (Sec. 6.2, Table 3);
+  - Dror et al. arXiv:1901.04490;
+  - Lee et al. arXiv:2104.05717;
+  - Cherukupalli et al. arXiv:2607.03533;
+  - Foster et al. arXiv:2606.18329;
+  - Nakajima, Izumi & Asada arXiv:1404.2720 (negative time delay);
+  - NANOGrav 15-yr data, Zenodo 10.5281/zenodo.16051178 (v2.1.0, CC-BY-4.0, not downloaded).
+- FRB lensing (S0 B):
+  - arXiv:2204.06001, 2204.06014, 2109.09251, 2112.03721, 2206.14310, 2002.12533, 1605.00008;
+  - Yoo, Harada & Tsukamoto arXiv:1302.7170;
+  - Takahashi & Asada arXiv:1303.1301.

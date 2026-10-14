@@ -487,7 +487,7 @@ def write_manifest() -> Path:
         files[survey._lc_path(e)] = f"{gm.DATALINK}?" + urllib.parse.urlencode(
             {
                 "RETRIEVAL_TYPE": "EPOCH_PHOTOMETRY",
-                "DATA_STRUCTURE": "INDIVIDUAL",
+                "DATA_STRUCTURE": "DATAMODEL_STANDARD",
                 "FORMAT": "CSV",
                 "VALID_DATA": "false",
                 "ID": e,
@@ -505,7 +505,7 @@ def write_manifest() -> Path:
     tab.meta.update(
         provenance=schema.Provenance.OBSERVED.value,
         source=f"{gm.TAP_SYNC} ({gm.EVENTS_QUERY}; gaia_source positions) and {gm.DATALINK} "
-        f"EPOCH_PHOTOMETRY INDIVIDUAL CSV; {gm.REFERENCE}; method from {gm.PAPER_SRC} "
+        f"EPOCH_PHOTOMETRY DATAMODEL_STANDARD CSV; {gm.REFERENCE}; method from {gm.PAPER_SRC} "
         f"(sha256 {gm.PAPER_SHA})",
         retrieved=time.strftime("%Y-%m-%d", time.gmtime()),
         pipeline_version=jwst_anomaly.__version__,

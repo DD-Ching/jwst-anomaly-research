@@ -2,23 +2,65 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-14: (in progress) UNCOVER v2.0 as the second Abell 2744 model: validation gate fails so far
-- **Route:** the UNCOVER DR4 lens maps (v2.0, Furtak & Zitrin, 2024-08-07) download from Google Drive
-  (`drive.usercontent.google.com`, sha256-pinned in `scripts/a2744_uncover.py`; deflection x/y 75 + 71 MB gz,
-  4561² at 0.1″/pix; UNCOVER's own image table, 186 rows). The claim started as `bayes.dat` search radii and was
-  redirected: D-045 already measured the chain spread of the flagged images (0.2–0.4″, inside the 1″ radius).
-- **Known cases (own list, derived):** 148 of 181 traced images re-imaged; median offset 0.67″ (quoted lens-plane rms
-  0.60″), but 34.1 and 80.1 come back as single images (fold pairs, 22–32″) and 4.15 is not re-predicted. Without
-  those three families: rms 1.07″, p90 1.77″, so the gate (≤ 1.5 × 0.60″, ASSUMPTION) **fails**. Bergamini+23's list
-  through the same maps: rms 1.07″ without its four fold families (3.1, 34.1, 4.1, 700.1).
-- **Not yet a lens-model statement.** Suspects, in order: the mean back-traced source as the re-imaging source (the
-  Zitrin code optimises differently), solver grid step 0.25″ on 0.1″ maps, cosmology of the z scaling (ASSUMPTION
-  H0 70, Ωm 0.3). Multiplicity: 37 / 52 families get predicted images > 1.5″ from every catalogued one; most are
-  third images of catalogued doubles (|μ| 3–20) or central demagnified images (|μ| ≤ 0.6).
-- **Next:** fix the gate (grid step 0.1″, per-family best source instead of the mean, check the z scaling against
-  the published z = 2 magnification map), then the D-041 cross-model rule: counter-images both models predict
-  bright, forced photometry on F277W.
+## 2026-10-14: UNCOVER v2.0 passes as the second Abell 2744 model; it also predicts 4.2c, and the vetted verdict stands
+- **Route:** the UNCOVER DR4 lens maps (v2.0, Furtak & Zitrin, 2024-08-07) from Google Drive
+  (`drive.usercontent.google.com`, sha256-pinned in `scripts/a2744_uncover.py`; deflection x/y 75 + 71 MB gz, 4561² at
+  0.1″/pix, deleted after use) and UNCOVER's own image table (186 rows). The claim started as `bayes.dat` search
+  radii and was redirected: D-045 already measured the chain spread of the flagged images (0.2–0.4″).
+- **Validation gate (D-035 rule, ≤ 1.5 × the quoted 0.60″; ASSUMPTION): passes** with the magnification-weighted
+  least-squares source per family (`wls_source`): own list 148 images re-imaged, rms **0.86″**, median 0.63″,
+  p90 1.18″, max 2.31″, no family short of images. Bergamini+23's list through the same maps: rms 1.00″.
+- **Failed approaches:** the mean back-traced source (the `imageplane_residuals` default) gives rms 4.8″: it falls
+  outside the caustic for fold pairs, so 34.1 and 80.1 come back as single images 22–32″ away. The best single
+  image's source gives 1.01″. Solver grid 0.1″ instead of 0.25″ changes nothing (≤ 1e-6″). The source definition
+  was chosen after the mean failed (post hoc); WLS is the standard first-order image-plane χ² source.
+- **4.2c, D-041 second-model test [model_prediction; observed photometry]:** UNCOVER also predicts 4.2c, μ 8.83,
+  0.93″ from Bergamini's position. High-pass (1″) peak photometry within 1″ of it: F150W/F277W/F444W flux
+  0.36/0.22/0.23 × the μ-scaled 4.2b expectation, at the west end of an arc-like feature 0.44–0.52″ E, and 0.46 mag
+  bluer in F150W/F444W than 4.2b (cutouts viewed). Injections of 4.2b's knot at the prediction: recovered at 1× in
+  all bands and at 0.5× in F277W/F444W. So both models predict an image not seen at ≥ 0.5× its flux; it is not
+  model-dependent in the D-041 sense. The vetted verdict (docs/candidates/abell2744-family4-c.md: μ and position
+  systematics next to member 34423, shared by any scaling-relation model) stands: UNCOVER, like Bergamini, puts the
+  knots' c images 2.3″ apart against 0.45–0.49″ in a and b. Not a candidate.
+- **Handoff:** UNCOVER v2.0 is usable as Abell 2744's second model (`a2744_uncover.py`). Next: the full D-041
+  cross-model rule on every Bergamini forced-photometry row (32 / 50 families get extra predicted images, mostly
+  third images of catalogued doubles or central demagnified images). Other lens-model item: `--plane` for
+  `images/validate`.
 
+## 2026-10-14: S0 screen picks X3 (W3 in unselected Gaia epoch photometry); X3 G0 passes on dev; Gaia DataLink fix
+- **S0-2026-10-14** (`docs/state/units/S0-2026-10-14.md`; owner request to return to observational searches).
+  - **A, pulsar-timing Shapiro sign test: not qualified.** A negative-mass lens would advance pulses
+    (Δt = −(ε/c) ln b), so the sign of a timing bump is a real discriminator. But a NANOGrav-like array expects
+    ≤ 0.08 events even for an all-dark-matter population (`scripts/s0_pta_shapiro.py`).
+    - NANOGrav 15-yr searched positive amplitudes only, and not the dynamic Shapiro channel.
+    - The densities a PTA could reach are already excluded by microlensing.
+  - **B, FRB lensing by Ellis or negative-mass lenses: not qualified.** A single echo (Δt, R) cannot separate
+    exotic from ordinary lenses in geometric optics (1302.7170).
+  - **C qualifies as X3.** Gaia's Andromeda survey (GAPS) publishes G/BP/RP epoch photometry for all 1,257,319
+    sources around M31 with no variability selection [observed, TAP]. DR4 is scheduled for 2 Dec 2026.
+- **X3 G0** (`docs/state/units/X3.md`, `scripts/x3_gaps.py`, `results/x3/`). The dev split and the gates were
+  frozen before any data.
+  - **Screen v0 failed the false-alarm gate.** On 998 real dev light curves, 2.7 % flagged. 24 of 27 were
+    blend-type astrometry (no 5-parameter solution, RUWE > 1.4, multi-peak) and 3 were known ECL/RS variables.
+  - **Post-hoc v1 adds an astrometric-quality veto**, not the variability flag. It passed on a fresh dev sample
+    of 1,000:
+    - W3 efficiency **0.70** at t_E = 30–300 d (0.42 at 10 d);
+    - real flags **0.1 %**;
+    - PSPL→W3: 0;
+    - vetoed: 7.5 %.
+  - Simulated injections and dev data only. **No candidate, no held-out data touched.**
+- **Fix.** The Gaia DataLink service now answers `DATA_STRUCTURE=INDIVIDUAL` with HTTP 500, which broke D-061's
+  fetching. `gaia_mulens` now uses `DATAMODEL_STANDARD` (same CSV columns).
+  - The manifest URIs in `w3_gaia.py` are updated.
+  - The stored manifest updates on its next re-run.
+- **Failed approaches:**
+  - A single sync TAP dev list silently truncated at 50,000 rows in storage order.
+  - The `random_index` thinning and the async jobs time out: anonymous jobs are capped at 60 s.
+  - Fix: query per level-5 HEALPix `source_id` range.
+- **Handoff.**
+  - X3 next is G1: periodicity and achromaticity vetoes frozen on dev, then the single held-out GAPS screen. That
+    screen is about 0.96 M sources, so it needs the bulk epoch-photometry files, not DataLink.
+  - X3 used about 1.5 / 16 h.
 ## 2026-10-14: Sunrise counter-images in the four RELICS models: null (D-033 addendum 4)
 - **Tool:** `scripts/sunrise_counter.py` (byte-range deflection blocks → `MapLensModel` → `find_images`, D-029 forced
   photometry on F200W with an injection check, D-041 cross-model rule); `results/sunrise/counter_images.json`.

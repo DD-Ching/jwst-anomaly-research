@@ -21,6 +21,10 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   0.121 and 0.142). Writeup drafted (`docs/state/units/X2_s6a_summary.md`); next is a human expert review, the owner's
   call. Paused; no automatic follow-up.
 
+- **X3 W3 in unselected Gaia epoch photometry** (authorized 2026-10-14 by S0-2026-10-14): state file
+  `docs/state/units/X3.md`. G0 passed on dev (efficiency 0.70, false flags 0.1 % after an astrometric-quality
+  veto). Next: G1 vetoes, then the one held-out GAPS screen; DR4 (2 Dec 2026) is the decision-changing data.
+
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
    separation. The five requested channels are null (family p = 0.27 on the re-pinned GBM snapshot). The
@@ -206,11 +210,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1
        photo-z; fix system 16's z (spectroscopic z, or forced photometry on its far-image track); evaluate the CANUCS
        lens models (see the CANUCS item above);
-     - `bayes.dat` position spreads (`posterior`, D-045) as `forced_check` search radii; the UNCOVER v2.0 cross-check
-       for Abell 2744.
+     - `bayes.dat` position spreads: not needed (D-045: 0.2–0.4″, inside the 1″ radius). UNCOVER v2.0 passes the
+       gate (D-041 addendum 2026-10-14); next: the D-041 cross-model rule on every Bergamini forced-photometry row.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
-   - Abell 2744: UNCOVER v2.0 maps;
+   - Abell 2744: UNCOVER v2.0 maps (validated 2026-10-14, `scripts/a2744_uncover.py`);
    - **Done (D-030):** `validate --model elgordo-caminha23 | abell2744-bergamini23` reproduces Lenstool's χ²
      (82.53 vs 80.22; 146.64 vs 146.60). No image-position anomaly. Next:
      - `images --forced-image`: done for El Gordo (D-034) and Abell 2744 (D-036); 700.1 needs a finer z scan;

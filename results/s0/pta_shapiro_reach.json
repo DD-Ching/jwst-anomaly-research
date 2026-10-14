@@ -1,0 +1,178 @@
+{
+ "label": "derived (order of magnitude) under stated assumptions; not a measurement",
+ "assumptions": {
+  "timing_threshold_s": 3e-07,
+  "transverse_speed_m_s": 200000.0,
+  "span_yr": 15.0,
+  "path_length_pc": 1000.0,
+  "n_pulsars": 68,
+  "rho_dm_msun_pc3": 0.01,
+  "fit_absorption": 0.5
+ },
+ "point_mass_either_sign": [
+  {
+   "abs_mass_msun": 1e-06,
+   "b_max_au": 0.0,
+   "events_if_all_dm": 0.0,
+   "f_dm_for_3_events": null
+  },
+  {
+   "abs_mass_msun": 3.162277660168379e-06,
+   "b_max_au": 0.0,
+   "events_if_all_dm": 0.0,
+   "f_dm_for_3_events": null
+  },
+  {
+   "abs_mass_msun": 9.999999999999999e-06,
+   "b_max_au": 0.0,
+   "events_if_all_dm": 0.0,
+   "f_dm_for_3_events": null
+  },
+  {
+   "abs_mass_msun": 3.1622776601683795e-05,
+   "b_max_au": 0.0,
+   "events_if_all_dm": 0.0,
+   "f_dm_for_3_events": null
+  },
+  {
+   "abs_mass_msun": 0.0001,
+   "b_max_au": 0.0,
+   "events_if_all_dm": 0.0,
+   "f_dm_for_3_events": null
+  },
+  {
+   "abs_mass_msun": 0.00031622776601683794,
+   "b_max_au": 0.0,
+   "events_if_all_dm": 0.0,
+   "f_dm_for_3_events": null
+  },
+  {
+   "abs_mass_msun": 0.001,
+   "b_max_au": 0.0,
+   "events_if_all_dm": 0.0,
+   "f_dm_for_3_events": null
+  },
+  {
+   "abs_mass_msun": 0.0031622776601683794,
+   "b_max_au": 0.02072833742529398,
+   "events_if_all_dm": 0.00013258713227996515,
+   "f_dm_for_3_events": 22626.630114190357
+  },
+  {
+   "abs_mass_msun": 0.01,
+   "b_max_au": 15.004365517981897,
+   "events_if_all_dm": 0.03034970982068323,
+   "f_dm_for_3_events": 98.8477325722406
+  },
+  {
+   "abs_mass_msun": 0.03162277660168379,
+   "b_max_au": 130.15809565097854,
+   "events_if_all_dm": 0.08325457218930761,
+   "f_dm_for_3_events": 36.03405700264099
+  },
+  {
+   "abs_mass_msun": 0.1,
+   "b_max_au": 343.9226836245838,
+   "events_if_all_dm": 0.06956611151766101,
+   "f_dm_for_3_events": 43.12444571863671
+  },
+  {
+   "abs_mass_msun": 0.31622776601683794,
+   "b_max_au": 632.8877005347589,
+   "events_if_all_dm": 0.04048214941096508,
+   "f_dm_for_3_events": 74.10673701005149
+  },
+  {
+   "abs_mass_msun": 1.0,
+   "b_max_au": 632.8877005347589,
+   "events_if_all_dm": 0.01280157967178934,
+   "f_dm_for_3_events": 234.34607891485905
+  },
+  {
+   "abs_mass_msun": 3.1622776601683795,
+   "b_max_au": 632.8877005347589,
+   "events_if_all_dm": 0.0040482149410965085,
+   "f_dm_for_3_events": 741.0673701005148
+  },
+  {
+   "abs_mass_msun": 10.0,
+   "b_max_au": 632.8877005347589,
+   "events_if_all_dm": 0.001280157967178934,
+   "f_dm_for_3_events": 2343.4607891485903
+  },
+  {
+   "abs_mass_msun": 31.622776601683793,
+   "b_max_au": 632.8877005347589,
+   "events_if_all_dm": 0.00040482149410965085,
+   "f_dm_for_3_events": 7410.673701005148
+  },
+  {
+   "abs_mass_msun": 100.0,
+   "b_max_au": 632.8877005347589,
+   "events_if_all_dm": 0.00012801579671789341,
+   "f_dm_for_3_events": 23434.607891485903
+  }
+ ],
+ "ellis_n2": [
+  {
+   "throat_radius_km": 100.0,
+   "b_max_au": 0.0002915736353749544,
+   "n95_per_pc3_if_null": 5086699.6538639115
+  },
+  {
+   "throat_radius_km": 316.2277660168379,
+   "b_max_au": 0.0029080823232417916,
+   "n95_per_pc3_if_null": 510008.77735960396
+  },
+  {
+   "throat_radius_km": 1000.0,
+   "b_max_au": 0.029154779899483296,
+   "n95_per_pc3_if_null": 50871.5042696621
+  },
+  {
+   "throat_radius_km": 3162.2776601683795,
+   "b_max_au": 0.290782463766526,
+   "n95_per_pc3_if_null": 5100.539733126639
+  },
+  {
+   "throat_radius_km": 10000.0,
+   "b_max_au": 2.885240575366696,
+   "n95_per_pc3_if_null": 514.0463928035269
+  },
+  {
+   "throat_radius_km": 31622.776601683792,
+   "b_max_au": 26.629995321426016,
+   "n95_per_pc3_if_null": 55.6946215061596
+  },
+  {
+   "throat_radius_km": 100000.0,
+   "b_max_au": 160.05019755458437,
+   "n95_per_pc3_if_null": 9.266764632588488
+  },
+  {
+   "throat_radius_km": 316227.7660168379,
+   "b_max_au": 478.75890710635474,
+   "n95_per_pc3_if_null": 3.09790060951941
+  },
+  {
+   "throat_radius_km": 1000000.0,
+   "b_max_au": 632.8877005347589,
+   "n95_per_pc3_if_null": 2.3434607891485904
+  },
+  {
+   "throat_radius_km": 3162277.660168379,
+   "b_max_au": 632.8877005347589,
+   "n95_per_pc3_if_null": 2.3434607891485904
+  },
+  {
+   "throat_radius_km": 10000000.0,
+   "b_max_au": 632.8877005347589,
+   "n95_per_pc3_if_null": 2.3434607891485904
+  }
+ ],
+ "check_ellis_example": {
+  "a_km": 100000.0,
+  "b_au": 7.0,
+  "delay_us": 25.016619285452087
+ }
+}

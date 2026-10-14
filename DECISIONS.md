@@ -2236,6 +2236,17 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
 - A MACS0717 photo-z catalogue (DJA or a team release) appears: re-run `radial` with the background cut.
 - `forced_check` ties its match and search radii to the measured image-plane rms when that rms exceeds 1″.
 
+**Addendum 2026-10-14 (UNCOVER v2.0 as Abell 2744's second model).**
+- **Decision.** Tracing fold pairs from the mean back-traced source fails the image-list gate spuriously.
+  `a2744_uncover.py` uses the magnification-weighted least-squares source (`wls_source`, the first-order image-plane
+  χ² source). UNCOVER v2.0 then passes (rms 0.86″ vs 1.5 × 0.60″) and is Abell 2744's second model for this rule.
+- **Alternatives rejected.** The mean source (rms 4.8″: 34.1 and 80.1 traced outside the caustic); the best single
+  image's source (1.01″); a finer solver grid (no change). Changing `lensmodel.imageplane_residuals` itself would
+  shift every validated field's gate numbers; revisit if another map model fails the same way.
+- **Evidence.** 4.2c is predicted by both models (μ 8.7 / 8.8, 0.93″ apart) and not seen at ≥ 0.5× (injections), so
+  it is not model-dependent; its vetted explanation (member 34423 systematics) stands. CHANGELOG 2026-10-14.
+- **Revisit if** a UNCOVER release refits the 4.2c region, or a third model removes 4.2c.
+
 ## D-042 MACS0416 counter-image and flux-ratio screens: null; CANUCS Lenstool model as second model; two-plane check of foreground deflectors (2026-10-08)
 
 **Decision.** With the image list open (D-040), the MACS0416 `images` and `fluxratio` screens are a null result
@@ -4414,3 +4425,34 @@ Rules T1–T6 are in `docs/state/trial.md`, version trial-2026-10-12.1. First un
 **Revisit if.** The trial ends (2026-11-09) and the review of finished unknowns, method capability, candidates and
 verifications recommends continue, adjust or stop. Revisit earlier if the owner-review backlog keeps growing or a
 unit overruns its budget.
+
+## D-084 X3: W3 screen on unselected Gaia epoch photometry (GAPS dev → held-out → DR4); D-057 fitter plus an astrometric-quality veto (2026-10-14)
+
+**Decision.**
+- Test W3 (negative-mass inverted microlensing, D-047) on Gaia epoch photometry that was never selected by
+  variability: GAPS now, DR4 later.
+- Screen v1:
+  - the D-057 fitter flag, ΔBIC(N1neg − best of PSPL/PAR) < −10, with D-061's G-error rescaling;
+  - plus a veto of sources whose photometry depends on scan direction: no 5-parameter astrometric solution,
+    RUWE > 1.4, or `ipd_frac_multi_peak` > 10.
+- The DR3 variability flag is deliberately not used, because a real event would set it.
+- Gaia DataLink calls use `DATA_STRUCTURE=DATAMODEL_STANDARD`.
+
+**Alternatives rejected:**
+- the PTA Shapiro sign test and FRB exotic lensing (S0-2026-10-14 A, B);
+- `vari_microlensing` (D-061: the selection removes W3);
+- vetoing `phot_variable_flag = VARIABLE` (it would veto real events);
+- tuning ΔBIC instead of vetoing on independent astrometric quality: the false flags were blends, not marginal
+  fits;
+- DataLink for the 0.96 M held-out sources (about 13 days): use the bulk epoch-photometry files.
+
+**Evidence** (`derived` from `simulated` injections into `observed` light curves; dev only):
+- seed 2026: v0 efficiency 0.76 with real flags 0.027;
+- seed 4242 (fresh, v1): efficiency 0.70 (t_E = 30–300 d), real flags 0.001, PSPL→W3 0, vetoed 7.5 %;
+- tables in `results/x3/`.
+
+**Revisit if:**
+- DR4 epoch photometry does not cover unselected sources;
+- G1's periodicity or achromaticity vetoes cost more than half the efficiency;
+- the held-out false-flag rate exceeds the dev rate by more than 3×;
+- Gaia changes DataLink again.
