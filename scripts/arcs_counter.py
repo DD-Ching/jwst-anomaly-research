@@ -347,7 +347,7 @@ def run(args) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     if len(t):
         t.write(out / "counter.ecsv", overwrite=True)
-    (out / "counter.json").write_text(json.dumps(summary, indent=1))
+    (out / "counter.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary
 
 
