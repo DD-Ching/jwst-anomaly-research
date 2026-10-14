@@ -11,7 +11,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     what the authors' code did.
   - The printed H_ω′ (Eq. hop) is 2× the derived one; it does not enter the G system.
 - **Gates passed:**
-  - background: constraint ≤ 3.4e-7, Smarr ≈ 2e-7, digitised Fig. 1 within 0.1 %;
+  - background: constraint ≤ 3.4e-7, Smarr ≈ 2e-7, digitised Fig. 1 within its read-off precision (≤ 0.3 % relative);
   - units: 4πG = 1, from the extremal Myers–Perry point;
   - static mode −21.801758 (dense and shooting);
   - merger at J/A ∈ [0.100622, 0.100633], against 0.10063.
@@ -25,14 +25,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - Growth is about 2.3 A^{−1/3}, half the static rate.
   - J/A = 0.214 is a **candidate**: the shooting-radius check gives 4e-6 against a limit of 1e-6.
   - Exploratory tracking reached 0.40.
-  - Odd parity and the near-extremal limit are unresolved.
+  - Odd parity was screened only (no recurring unstable eigenvalue in 0.3 < |z| < 60); the near-extremal limit is
+    unresolved.
 - **Post-hoc method changes** (spectrum filter, shooting radius and stop rule, thresholds) are recorded with their
   before/after values. They were frozen before the verification run, not set in advance.
 - **Failed approaches:**
   - a two-box filter at the same grid step lets grid modes through;
   - shooting from l ≈ 200 loses the determinant to cancellation;
   - `pkill -f` with the script name in the same shell killed the shell (again).
-- **Handoff:** X2 at about 12.8 / 16 h, paused for the owner. No 4D, NED + SV or communication conclusion.
+- **Handoff:** X2 at about 13.1 / 16 h, paused for the owner. No 4D, NED + SV or communication conclusion.
 
 ## 2026-10-14: X2 S6 screen: rotation is not an established wormhole stabiliser; one checkable gap (5D complex modes)
 - **Sources read.** 2403.08387 (4D, second-order slow rotation) and 1309.2448 (5D, full rotation); 2510.11406 v1

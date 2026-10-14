@@ -16,7 +16,7 @@
   "g_l_eta": "-(2*w(l)*Derivative(T(l), l) - Derivative(Y(l), l))*h(l)*p(l)*exp(-2*a(l))*exp(q(l))/4",
   "T_prime": "I*Omega*Z(l)*p(l)*exp(-2*a(l) - q(l))",
   "shift_H1_minus_H3_plus_H2": "-2*I*Omega*T(l) - 2*Z(l)*Derivative(p(l), l)/p(l) - 3*Z(l)*Derivative(h(l), l)/h(l) + 2*Derivative(Z(l), l)",
-  "delta_H_phi": "Z * phi'",
+  "delta_H_phi": "Z * phi' (by hand, not computed)",
   "check_33_component": "0"
  },
  "G_system": {

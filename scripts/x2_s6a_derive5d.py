@@ -10,17 +10,20 @@ Angular part rewritten exactly in Hopf form (theta~ = 2 theta, chi = psi - phi, 
   = A h/4 (dtheta~^2 + sin^2 theta~ dchi^2) + B h/4 (deta + cos theta~ dchi - 2 W dt)^2,
 which uses s^2 dphi^2 + c^2 dpsi^2 = (s^2 dphi + c^2 dpsi)^2 + s^2 c^2 (dpsi - dphi)^2.
 
-Checks done here (each prints its residual; all must be 0):
-  1. background: every Ricci component except R_ll vanishes on Eqs. (eqa), (eqq), (omprime), (solp);
-     R_ll equals the paper's Eq. (Rll-expr);
-  2. gauge: a pure-gauge vector field shows that H1 - H3 + H2 can be set to zero, and the scalar
-     equation then forces it to a constant when H_phi = 0 (holds for complex Omega);
-  3. the G0, G1, G2 system (time dependence exp(i Omega t)) against the printed V_ij.
+Checks done here:
+  1. background (residuals printed, must be 0): every Ricci component except R_ll vanishes on
+     Eqs. (eqa), (eqq), (omprime), (solp); R_ll equals the paper's Eq. (Rll-expr);
+  2. gauge (expressions printed, not residuals): the shifts of the ansatz functions under a
+     pure-gauge vector field, including the shift of H1 - H3 + H2. The scalar-equation step (in the
+     gauge delta Phi = 0 it gives (Q (H1 - H3 + H2))' = 0) is worked by hand in
+     docs/state/units/X2_s6a_5d.md, not computed here; delta H_phi = Z phi' is likewise by hand;
+  3. the G0, G1, G2 system (time dependence exp(i Omega t)) against the printed V_ij (differences
+     printed).
 
 Writes results/x2/s6a_equations.json: the derived G-system matrix, H_omega', and the two constraint
 equations (R_tl in the corotating frame and R_ll) used later as independent residual checks.
 
-  python scripts/x2_s6a_derive5d.py   (about 5 minutes; symbolic)
+  python scripts/x2_s6a_derive5d.py   (about 2.5 minutes; symbolic)
 """
 
 from __future__ import annotations
@@ -188,7 +191,7 @@ def check_gauge():
         "g_l_eta": str(sp.factor(sp.simplify(Lg[1, 4] / E))),
         "T_prime": str(sp.simplify(Tp)),
         "shift_H1_minus_H3_plus_H2": str(shift),
-        "delta_H_phi": "Z * phi'",
+        "delta_H_phi": "Z * phi' (by hand, not computed)",
         "check_33_component": str(sp.simplify((Lg[3, 3] - d[3, 3]).subs(sol))),
     }
 

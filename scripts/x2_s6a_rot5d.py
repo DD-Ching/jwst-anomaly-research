@@ -12,8 +12,9 @@ exp(i Omega t): a mode grows iff Im Omega < 0, i.e. iff Omega^2 is not on [0, in
 Methods:
   * dense: finite differences in s (l = sinh s), even or odd parity at the throat, Dirichlet at
     s = S; all complex eigenpairs kept. A finite box turns the continuum into many spurious complex
-    pairs (the mass matrix B is a Jordan block), so an eigenvalue counts only if it reappears in a
-    second box and grid. Modes are followed in J by eigenvector overlap, not by eigenvalue order.
+    pairs (the mass matrix B is a Jordan block); a mode is accepted only through the checks in
+    CRITERIA (box, grid, constraints, shooting). Modes are followed in J by eigenvector overlap,
+    not by eigenvalue order.
   * independent residual: the corotating-frame R_tl and the R_ll equations (not used to build the
     G system) evaluated on the complex eigenvector.
   * independent cross-check: Evans-function shooting (decaying data at l = sinh S, integrated in to
@@ -55,6 +56,14 @@ PAPER_FIG5 = {
     ],
     "branch_zero": [(0.04957, -0.360), (0.07454, -1.212), (0.09054, -2.521), (0.09704, -3.663)],
 }
+# Fig. 1, a_-inf = 0: digitised curve read at our c_omega = 0.2, 0.5, 1, 2, 4; (J/A, M/A^(2/3)).
+PAPER_FIG1 = [
+    (0.0673, 0.1435),
+    (0.1420, 0.5862),
+    (0.2144, 1.1776),
+    (0.2853, 1.7935),
+    (0.3462, 2.2888),
+]
 
 
 def p_of(ell):
@@ -232,24 +241,10 @@ def eigpair_residual(K, lam, v):
     )
 
 
-def robust_unstable(V, sol, cw, area, boxes=((6.0, 600), (7.5, 900)), rmin=0.3, rmax=60, tol=2e-3):
-    """Unstable eigenvalues (scaled z = Omega^2 A^(2/3)) present in both boxes and grids."""
-    zs = []
-    for S, n in boxes:
-        ev, _, _, _ = spectrum(V, sol, cw, S, n)
-        zs.append(ev * area ** (2 / 3))
-    z0 = zs[0]
-    unstable = (z0.real < 0) | (np.abs(z0.imag) > 1e-6)
-    keep = [
-        z
-        for z in z0[unstable & (np.abs(z0) > rmin) & (np.abs(z0) < rmax)]
-        if np.min(np.abs(zs[1] - z)) < tol * max(1, abs(z))
-    ]
-    return np.sort_complex(np.array(keep))
-
-
 def constraint_residual(cons, sol, cw, lam, v, ell, S, parity=+1):
-    """Relative residual of R_tl (corotating frame) and R_ll on the mode, l <= sinh(S)/3."""
+    """Relative residual of R_tl (corotating frame) and R_ll on the mode, 0 <= l <= sinh(S)/3.
+
+    Normalised as max_l |sum of terms| / max_l sum |terms| (each equation separately)."""
     m = ell.size
     G = v.reshape(3, m)
     s = np.arcsinh(ell)
@@ -266,7 +261,7 @@ def constraint_residual(cons, sol, cw, lam, v, ell, S, parity=+1):
     Gp = Gs / ls
     Gpp = (Gss - lss / ls * Gs) / ls**2
     a, ap, q, qp = sol.sol(ell)
-    inner = (ell <= np.sinh(S) / 3) & (np.arange(m) > 1)
+    inner = ell <= np.sinh(S) / 3
     out = {}
     for name, terms in cons.items():
         vals = [t(ell, a, ap, q, qp, cw, lam, *G, *Gp, *Gpp) * np.ones(m) for t in terms]
@@ -395,8 +390,8 @@ def merger_point(V, n, lo=0.29, hi=0.33, iters=10, S=6.0):
         P = background_props(sol, cw)
         ev, _, _, _ = spectrum(V, sol, cw, S, n)
         z = ev * P["A"] ** (2 / 3)
-        z = z[z.real < -1]
-        return bool(np.any(np.abs(z.imag) > 1e-8)), P["J_over_A"]
+        z = np.sort_complex(z[z.real < -1])
+        return bool(np.any(np.abs(z.imag) > 1e-8)), P["J_over_A"], z
 
     for _ in range(iters):
         mid = (lo + hi) / 2
@@ -404,10 +399,14 @@ def merger_point(V, n, lo=0.29, hi=0.33, iters=10, S=6.0):
             hi = mid
         else:
             lo = mid
+    _, ja_lo, z_lo = complex_pair(lo)
+    _, ja_hi, z_hi = complex_pair(hi)
     return {
         "n": n,
         "c_omega_bracket": [lo, hi],
-        "J_over_A_bracket": [complex_pair(lo)[1], complex_pair(hi)[1]],
+        "J_over_A_bracket": [ja_lo, ja_hi],
+        "z_re_below_minus1_at_lo": [[z.real, z.imag] for z in z_lo],
+        "z_re_below_minus1_at_hi": [[z.real, z.imag] for z in z_hi],
     }
 
 
@@ -484,9 +483,9 @@ def verify_point(cw, start_z):
         "freq_A13": abs(root.real),
         "growth_over_freq": abs(root.imag) / abs(root.real) if root.real else None,
     }
-    # odd parity at the same point: any unstable eigenvalue present in two boxes?
+    # odd parity screen: unstable eigenvalues present in two boxes with different grid steps
     zz = []
-    for S, n in ((6.0, 480), (7.5, 600)):
+    for S, n in ((6.0, 480), (7.5, 900)):
         ev, _, _, _ = spectrum(V, sol, cw, S, n, parity=-1)
         zz.append(ev * a23)
     out["odd_parity_unstable"] = [
@@ -523,6 +522,31 @@ def static_gate():
     }
 
 
+def printed_v10_static(n=480, S=6.0):
+    """Static spectrum with the printed (typo) V10 = derived + 16 e^{2q-2a}/h, for the record."""
+    V, _ = load_equations()
+    derived = V["10"]
+    V["10"] = lambda ell, a, q, cw: (
+        derived(ell, a, q, cw) + 16 * np.exp(2 * q - 2 * a) / (ell**2 + 1)
+    )
+    sol = solve_background(0.0)
+    a23 = background_props(sol, 0.0)["A"] ** (2 / 3)
+    ev, _, _, _ = spectrum(V, sol, 0.0, S, n)
+    z = np.sort(ev.real[(ev.real < -1) & (np.abs(ev.imag) < 1e-8)] * a23)
+    return {"n": n, "S": S, "z_real_below_minus1": z.tolist()}
+
+
+def branch_vs_fig5(rows, paper):
+    """Tracked branch, linearly interpolated at the digitised J/A (inside the tracked range)."""
+    x = np.array([r["J_over_A"] for r in rows])
+    y = np.array([r["z"][0] for r in rows])
+    return [
+        {"J_over_A": ja, "paper_digitised": zp, "ours_linear_interp": float(np.interp(ja, x, y))}
+        for ja, zp in paper
+        if x[0] <= ja <= x[-1]
+    ]
+
+
 def main() -> int:
     t0 = time.time()
     rec = {
@@ -531,23 +555,36 @@ def main() -> int:
         "criteria": CRITERIA,
     }
     gates, prev = [], None
-    for cw in (0.0, 0.2, 0.5, 1.0, 2.0):
+    for cw in (0.0, 0.2, 0.5, 1.0, 2.0, 4.0):
         prev = solve_background(cw, guess=prev)
         gates.append(background_props(prev, cw))
     rec["background_gates"] = gates
+    rec["fig1_comparison"] = [
+        {"J_over_A": g["J_over_A"], "M_over_A23": g["M_over_A23"], "paper_digitised": m}
+        for g, (_, m) in zip(gates[1:], PAPER_FIG1, strict=True)
+    ]
     below = np.linspace(0.14, 0.30, 9)
-    above = np.linspace(0.33, 1.0, 12)
-    jobs_track = [(below, -18.7), (below, -0.33), (above, -5.5 + 2.2j)]
     reps = [(0.4, -4.1046 + 5.5275j), (0.5, -2.3186 + 7.4618j), (1.0, 2.4 + 8.5j)]
     with ProcessPoolExecutor(max_workers=4) as ex:
         f_static = ex.submit(static_gate)
-        f_track = [ex.submit(_track_job, j) for j in jobs_track]
+        f_v10 = ex.submit(printed_v10_static)
+        f_track = [ex.submit(_track_job, (below, z)) for z in (-18.7, -0.33)]
         f_merge = [ex.submit(_merger_job, n) for n in (480, 960)]
         f_rep = [ex.submit(_verify_job, r) for r in reps]
-        rec["static_mode"] = f_static.result()
-        rec["branch_static"], rec["branch_zero"], rec["pair"] = [f.result() for f in f_track]
         rec["merger"] = [f.result() for f in f_merge]
+        # the pair is tracked from the upper end of the merger bracket (no hand-chosen start)
+        m0 = rec["merger"][0]
+        start = max((complex(*z) for z in m0["z_re_below_minus1_at_hi"]), key=lambda z: z.imag)
+        above = np.concatenate([[m0["c_omega_bracket"][1]], np.linspace(0.33, 1.0, 12)])
+        f_pair = ex.submit(_track_job, (above, start))
+        rec["static_mode"] = f_static.result()
+        rec["printed_V10_static"] = f_v10.result()
+        rec["branch_static"], rec["branch_zero"] = [f.result() for f in f_track]
+        rec["pair"] = f_pair.result()
         rec["representative_points"] = [f.result() for f in f_rep]
+    rec["branch_vs_fig5"] = {
+        k: branch_vs_fig5(rec[k], PAPER_FIG5[k]) for k in ("branch_static", "branch_zero")
+    }
     rec["paper_fig5_digitised"] = PAPER_FIG5
     rec["runtime_s"] = time.time() - t0
     OUT.mkdir(parents=True, exist_ok=True)

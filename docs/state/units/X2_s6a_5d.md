@@ -16,9 +16,10 @@ Owner approval 2026-10-14.
 - The charged-wormhole paper (2510.11406) uses the opposite sign convention; it is not mixed in here.
 
 **H_φ = 0 for complex Ω.** Multiply the H_φ equation by the complex conjugate H̄_φ and integrate:
-[ξ H̄_φ H_φ′] = ∫(ξ|H_φ′|² − Ω² w|H_φ|²) dl, with ξ = p h^{3/2} > 0 and w = p²h^{3/2}e^{−2a−q} > 0.
+[ξ H̄_φ H_φ′] = ∫(ξ|H_φ′|² − Ω² ξw|H_φ|²) dl, with ξ = p h^{3/2} > 0 and ξw = p²h^{3/2}e^{−2a−q} > 0
+(w = p e^{−2a−q} as in the G system).
 - For modes decaying at both ends the boundary term is zero.
-- The imaginary part gives Im(Ω²)∫w|H_φ|² = 0, so H_φ = 0 for non-real Ω².
+- The imaginary part gives Im(Ω²)∫ξw|H_φ|² = 0, so H_φ = 0 for non-real Ω².
 - The real part gives H_φ = 0 for real Ω² < 0.
 - So the reduction to the gravitational sector holds for every unstable mode. Still to check: the gauge
   H₁ = H₃ − H₂ (step 1 below).
@@ -90,7 +91,7 @@ Y′ = 2ωT′ and T′ = iΩ p e^{−2a−q} Z.
 - The derived V_ij equal the printed ones except **V₁₀**: derived = printed − 16e^{2q−2a}/h, i.e.
   4(4e^{2a} − e^{2q}). This confirms the typo found a priori.
 - Numerically, the re-derived equations reproduce the paper's published static eigenvalue (−21.80, below),
-  while the printed V₁₀ gives −146. This supports reading the printed V₁₀ as a typesetting error. It does not
+  while the printed V₁₀ gives −146.16 (and −5.62); see `printed_V10_static` in `results/x2/s6a_rot5d.json`. This supports reading the printed V₁₀ as a typesetting error. It does not
   establish what the authors' own code implemented.
 - The printed Eq. (hop) for H_ω′ is twice the derived one.
   - The derived one comes from the linearised R_lη equation. It also agrees with perturbing the first integral
@@ -118,7 +119,7 @@ from the EPS vector file):
 | Static limit | a = q = 0 to machine precision |
 | Constraint: 8πG Q² = −h³p²R_ll constant in l | relative variation ≤ 3.4e-7 up to c_ω = 2 |
 | Smarr (2/3)M = 2ω₀J | relative residual ≈ 2e-7 |
-| Fig. 1 M/A^{2/3}(J/A), digitised, at J/A = 0.067 / 0.142 / 0.214 / 0.285 / 0.346 | 0.1431/0.1435, 0.5857/0.5862, 1.1772/1.1776, 1.7936/1.7935, 2.2878/2.2888 |
+| Fig. 1 M/A^{2/3}(J/A), digitised (`fig1_comparison`), at J/A = 0.067 / 0.142 / 0.214 / 0.285 / 0.346 | 0.1431/0.1435, 0.5857/0.5862, 1.1772/1.1776, 1.7936/1.7935, 2.2878/2.2888 |
 
 Digitised values come from the paper's gnuplot EPS paths, calibrated by the tick marks. They are data read
 from a figure, with about 0.2 % of the axis range as uncertainty.
@@ -169,7 +170,7 @@ extremal rotation.
 | Method | z |
 |---|---|
 | Dense Richardson | −21.801758 |
-| Shooting | −21.801758 (difference 2e-9 relative) |
+| Shooting | −21.801758 (difference 8e-9 relative) |
 | Paper Fig. 5 (digitised) | −21.80 |
 
 **Branches below the merger.** Both branches are followed by eigenvector overlap (≥ 0.998 per step).
@@ -178,8 +179,15 @@ extremal rotation.
   - zero-mode branch −0.363 / −1.219 / −2.518, against −0.360 / −1.212 / −2.521.
 - Differences are ≤ 0.011, within the figure's read-off precision.
 - The digitised point at 0.0970 lies beyond the last tracked point (0.0960) and is not compared.
+- Our values are linear interpolations between tracked points (`branch_vs_fig5` in the JSON).
+- These branches are reproduction gates. They were not held to `CRITERIA`: the R_ll residual on the zero-mode
+  branch reaches 5.6e-4 at J/A = 0.048, where that mode is still wide.
 
 **Merger.** The first non-real pair appears at J/A ∈ [0.100622, 0.100633].
+- At the lower end of the bracket (grid step ds) the spectrum has exactly two eigenvalues with Re z < −1,
+  both real: −5.930 and −5.674. These are the two branches.
+- At the upper end it has one conjugate pair, −5.8009 ± 0.0143i, at their midpoint. Nothing else has Re z < −1.
+- The same holds at ds/2.
 - The bracket is the same at grid steps ds and ds/2.
 - Against the paper's 0.10063, the deviation is ≤ 1e-4 relative. **The ±1 % gate is passed.**
 
@@ -209,22 +217,28 @@ scaled: z = Ω²A^{2/3}, growth rate |Im Ω|A^{1/3}, frequency |Re Ω|A^{1/3}.
 **The c_ω = 1.0 point.**
 - Its root moves by 4e-6 between the two shooting radii. That is more than the frozen limit, so the point stays a
   **candidate**.
-- A likely cause: the mode decays more slowly there (Re z > 0), so l = sinh 3.5 ≈ 16.5 is not far enough. This
-  is not tested; no further radius was run, by the scope decision.
+- The cause is **unexplained**. Slower decay does not account for it: the spatial decay rate Re κ is 0.79 there
+  against 1.16 at c_ω = 0.4, which predicts contamination of about 4e-12, far below the observed 4e-6.
+  No further radius was run, by the scope decision.
 - Every other check passes at this point.
 
 **Tracking between the points.**
-- From J/A = 0.104 to 0.214 (12 steps), the step-to-step eigenvector overlap is ≥ 0.992, while the next-best
+- The pair is tracked from the upper end of the merger bracket. No start value is chosen by hand.
+- The first step away from the exceptional point cannot separate the two conjugate members: overlap 0.9963
+  against 0.9962. That is expected, since a real-like vector overlaps both members equally.
+- From J/A = 0.104 to 0.214 (11 steps between 12 points), the overlap is ≥ 0.992 per step, while the next-best
   overlap is ≤ 0.96.
 - The R_tl and R_ll residuals stay ≤ 1.6e-5 at every step (grid step ds).
 - At the exceptional point the two real modes become one complex-conjugate pair. Which real branch becomes
   which member is not defined there, because conjugate members have equal overlap with a real vector.
 
-**Odd parity: unresolved.** The odd-parity screen at the three points used two boxes with the *same* grid step.
-- A dense, continuum-like sequence with Re z ≥ 2.7 and small Im z passes that filter.
-- It was not separated from grid artefacts (no constraint residuals, no second step). No odd-parity statement
-  is made.
-- No odd eigenvalue with Re z < 2.7 passed the filter.
+**Odd parity: screened only.**
+- At the three points, no odd-parity eigenvalue with 0.3 < |z| < 60 recurs (within 2e-3) in two boxes that
+  also have different grid steps: S = 6 with ds, and S = 7.5 with 2ds/3.
+- A first version of the screen used the same grid step in both boxes. It let through a continuum-like grid
+  sequence with Re z ≥ 2.7. Review caught this, and it was fixed before the final run.
+- This is a screen, not a proof of absence. Odd modes with |z| < 0.3, or modes failing the box/grid recurrence,
+  are not excluded, and no odd candidate was put through `CRITERIA`.
 
 **Exploratory, not verified.** A scratch scan with the earlier filter followed the pair to J/A = 0.40: z = 1.99 + 1.09i
 there, growth 0.37. Those points are candidates at most. The search was not extended toward the extremal
@@ -242,6 +256,6 @@ limit (J/A = 0.5).
 - **Not shown:**
   - stability or instability at J/A ≳ 0.21 (candidate at 0.214, exploratory to 0.40);
   - the near-extremal limit;
-  - odd parity and other sectors;
+  - odd parity (screened only) and other sectors;
   - 4D, other rotating wormholes, NED + SV;
   - anything about communication.
