@@ -2,6 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: X2 S6 screen: rotation is not an established wormhole stabiliser; one checkable gap (5D complex modes)
+- **Sources read.** 2403.08387 (4D, second-order slow rotation) and 1309.2448 (5D, full rotation); 2510.11406 v1
+  and v2 compared. Follow-ups via INSPIRE; no errata and no public rotating-wormhole code.
+- **Shown:**
+  - In 4D (perturbative), the main radial mode weakens (C = 0: ω_I = −1.182 + 16.358 J²). That static value
+    matches our S5 tool's 1.18199.
+  - A second mode grows from the zero mode, and the two branches cross near J/A ≈ 0.013. That they merge and
+    vanish is a conjecture.
+  - In 5D, the purely imaginary modes merge and vanish at (|J|/A)_cr = 0.10063, but only real Ω² was searched.
+- **Unsettled.** In the charged analogue the merged modes persist as a complex pair, with a growth rate that
+  goes to zero near extremality (2510.11406 v2). For rotation the authors draw only an analogy ("long, close to
+  extremal Kerr") and defer to a non-perturbative study.
+- "Only real Ω² was searched" in 1309.2448 is our inference from its method.
+- **Open:**
+  - 4D full-rotation radial M_z = 0 (no calculation exists);
+  - complex modes after the 5D merger;
+  - non-radial sectors (charged: polar ℓ = 2 instability, 2607.18399).
+- **Proposed S6a** (≤ 6 h, awaiting the owner): the complex spectrum of 5D equal-J rotating EB wormholes beyond
+  J_cr, as ODEs, with a reproduction gate at J_cr.
+- **S5 scope fix.** The wording is now "this background is radially unstable". ε ≲ 10⁻⁵⁸ is a linear-extrapolation
+  requirement, not a computed merger initial condition or collapse time.
+
 ## 2026-10-13: X2 S5: the S4 echo background is radially unstable (e-folding 9.9 M, 139 e-folds per echo spacing)
 - **Equations.** CPS framework (arXiv:1911.13103) in δΦ = 0 gauge: δr free, so the throat may move. Magnetic NED
   enters as a fixed function of the perturbed areal radius, since F is fixed by the Bianchi identity.
