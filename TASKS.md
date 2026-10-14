@@ -225,8 +225,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        ratio 1.00001, parity 100 % at |μ|<10), so El Gordo μ and parities are validated. Its chain is validated too (`forme -10`, D-045).
    - Sunrise: Scofield+2025 image positions done provisionally (no anomaly; deflection unit read as 0.02″ pixels at
      z_ref ≈ 3, D-033 addenda 1–2). RELICS models on the JWST image list done (addendum 3): system 2 fits at
-     z ≈ 2.6–3.1 in all four, so its M5-G1 misfit is that model's. Next (low): counter-image predictions in the
-     RELICS models against the JWST mosaic.
+     z ≈ 2.6–3.1 in all four, so its M5-G1 misfit is that model's. ~~Counter-images in the RELICS models~~ — done
+     (D-033 addendum 4, `sunrise_counter.py`): 0 flags; the arc's extra images are model-dependent, its counter-image
+     undetectable. Reopen with a JWST-era model that fits every knot.
    Field follow-ups (docs/fields/*.md):
    - vet Abell 2744 `5904`, `7987`, `4731`, `264`, `7298`;
    - vet El Gordo `2828` (a linear feature) and `1601`;

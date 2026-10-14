@@ -34,6 +34,18 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - X3 next is G1: periodicity and achromaticity vetoes frozen on dev, then the single held-out GAPS screen. That
     screen is about 0.96 M sources, so it needs the bulk epoch-photometry files, not DataLink.
   - X3 used about 1.5 / 16 h.
+## 2026-10-14: Sunrise counter-images in the four RELICS models: null (D-033 addendum 4)
+- **Tool:** `scripts/sunrise_counter.py` (byte-range deflection blocks → `MapLensModel` → `find_images`, D-029 forced
+  photometry on F200W with an injection check, D-041 cross-model rule); `results/sunrise/counter_images.json`.
+- **Known cases:** system 2 re-predicted by all four models (rms 0.16–0.69″); system 1 only partly (1–5 of each knot's
+  images). Leave-one-out control through the same chain: 16/20 `recovered`, 3 `confused`, 1 `undetectable`, 0 `absent`.
+- **Result:** 0 flags. Glafic's `absent` arc-end images of 1.1 and 1.2 (|μ| 39, 79; predicted 16σ, 25σ; injections
+  recovered) are predicted by 1–2 of 4 models and are its displaced 1.1c / 1.2c (5.1″, 3.3″; cutouts empty, arc ~2″
+  away). The arc's counter-image across the cluster is
+  predicted at S/N ≤ 1.7 in every model, at positions up to ~19″ apart. System 2 counter-images: `undetectable` or
+  `confused`. Details: docs/fields/sunrise.md.
+- **Handoff:** the Sunrise counter-image line is closed until a JWST-era model fits every knot. Remaining lens-model
+  items: `--plane` for `images/validate`; `bayes.dat` search radii; Abell 2744 UNCOVER cross-check.
 
 ## 2026-10-14: X2 S6a writeup corrections (documents only; no computation re-run)
 - **`X2_s6a_summary.md`, "Who did what".** Updated from the owner's cross-conversation record. It replaces the
