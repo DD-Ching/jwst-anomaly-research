@@ -41,5 +41,6 @@
  "mean_eff_te30_300": 0.7608115942028985,
  "gate": "one recorded screen revision allowed, re-gate on fresh dev",
  "gate_definition": "docs/state/units/X3.md G0 (frozen 2026-10-14 before data)",
+ "n_dropped_min_points_or_missing": 3,
  "screen": "v0"
 }

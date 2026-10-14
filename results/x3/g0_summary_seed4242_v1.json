@@ -42,5 +42,6 @@
  "gate": "continue to G1",
  "v1_vetoed_fraction": 0.07522567703109329,
  "gate_definition": "docs/state/units/X3.md G0 (frozen 2026-10-14 before data)",
+ "n_dropped_min_points_or_missing": 3,
  "screen": "v1"
 }

@@ -26,9 +26,6 @@ import importlib.util
 import json
 import sys
 import time
-import urllib.parse
-import urllib.request
-import xml.etree.ElementTree as ET
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -97,31 +94,6 @@ class GapsDev(gm.GaiaDR3Microlensing):
 
     def __init__(self):
         super().__init__(cache=raw_dir())
-
-
-TAP_ASYNC = "https://gea.esac.esa.int/tap-server/tap/async"
-
-
-def tap_async_csv(query: str, poll_s: float = 5.0, max_s: float = 1800.0) -> str:
-    """Asynchronous TAP job (sync jobs time out on GAPS-wide scans); returns the CSV result."""
-    body = urllib.parse.urlencode(
-        {"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "PHASE": "RUN", "QUERY": query}
-    ).encode()
-    with urllib.request.urlopen(TAP_ASYNC, data=body, timeout=120) as resp:  # noqa: S310
-        job = resp.geturl()
-    t1 = time.time()
-    while time.time() - t1 < max_s:
-        with urllib.request.urlopen(job + "/phase", timeout=60) as resp:  # noqa: S310
-            phase = resp.read().decode().strip()
-        if phase == "COMPLETED":
-            with urllib.request.urlopen(job + "/results/result", timeout=600) as resp:  # noqa: S310
-                return resp.read().decode()
-        if phase in ("ERROR", "ABORTED"):
-            with urllib.request.urlopen(job, timeout=60) as resp:  # noqa: S310
-                msg = ET.tostring(ET.fromstring(resp.read()), encoding="unicode")[-500:]
-            raise RuntimeError(f"TAP job {phase}: {msg}")
-        time.sleep(poll_s)
-    raise TimeoutError(f"TAP job {job} not finished after {max_s} s")
 
 
 def gaps_pixels() -> list[int]:
@@ -383,7 +355,12 @@ def main(argv=None) -> int:
         if a.screen == "v1":
             ids = sorted({str(e) for e in tab["event_id"]})
             veto = v1_veto(attrs(ids, f"seed{a.seed}"))
+            missing = [i for i in ids if i not in veto]
+            if missing:
+                raise RuntimeError(f"{len(missing)} sources lack attributes (stale attrs cache?)")
         s = summarise(tab, veto)
+        n_req = int(tab.meta.get("n_requested", a.n))
+        s["n_dropped_min_points_or_missing"] = n_req - s["n_real"]
         s["screen"] = a.screen
         name = f"g0_summary_seed{a.seed}_{a.screen}.json"
         (results_dir() / name).write_text(json.dumps(s, indent=1) + "\n")

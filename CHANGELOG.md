@@ -25,7 +25,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     - vetoed: 7.5 %.
   - Simulated injections and dev data only. **No candidate, no held-out data touched.**
 - **Fix.** The Gaia DataLink service now answers `DATA_STRUCTURE=INDIVIDUAL` with HTTP 500, which broke D-061's
-  harness. `gaia_mulens` now uses `DATAMODEL_STANDARD` (same CSV columns).
+  fetching. `gaia_mulens` now uses `DATAMODEL_STANDARD` (same CSV columns).
+  - The manifest URIs in `w3_gaia.py` are updated.
+  - The stored manifest updates on its next re-run.
 - **Failed approaches:**
   - A single sync TAP dev list silently truncated at 50,000 rows in storage order.
   - The `random_index` thinning and the async jobs time out: anonymous jobs are capped at 60 s.
