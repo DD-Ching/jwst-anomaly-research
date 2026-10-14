@@ -3,7 +3,24 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-14: (in progress) PSF-commuting parity fit with an empirical F200W PSF
-- Claim: cloud routine run on the parity acceptance test's "Next" (previous entry).
+- **Hypothesis before computing:** the 3 persistent Abell 2744 parity flags (1.1b, 7b, 600.3b; previous entry) come
+  from the unlensed PSF, which the free affine map distorts and mirrors in A but not in B. If a statistic that is
+  exact for an affine map under a PSF (P ⊗ T(A) = K ⊗ B, K(d) ∝ P(M d)) clears them and the acceptance reaches
+  ≥ 95 % (ASSUMPTION), the tool can run on other fields; if the flags persist, the PSF route is falsified.
+- New in `scripts/parity_test.py` (default; `--no-psf` keeps the plain statistic): `empirical_psf` (median stack of
+  12 Gaia DR3 stars on the UNCOVER F200W mosaic, recentred, 1 rejected by the peak rule; cached in
+  `results/parity/psf-jw02561-o001_t003_nircam_clear-f200w_i2d.json`; mirror asymmetry 8–15 % of the flux),
+  `PsfPair` (PSF-commuting statistic), `refine_psf` / `compare_psf` (refined from the plain optima, the predicted
+  map and both families' reflection starts), synthetics drawn as a PSF-consistent pair (A_syn = P ⊗ S,
+  B_syn = P ⊗ T(S), S = smoothed A), and the stability rule (class `unstable` unless 16- and 24-angle start
+  densities agree). Test `test_psf_commuting_statistic`: on a compact source seen through a toy asymmetric PSF,
+  χ² at the true map is 1147 for 1185 pixels with the new statistic against 34 483 with the plain one; handedness
+  recovered both ways and a wrong prediction flagged.
+- **Status at handoff:** the Abell 2744 rerun (`--out results/parity/abell2744-bergamini23-psf.json`) took > 35 min
+  on 4 cores (the plain run 2.8 min) and had not finished; rows now print as each pair completes. **Next:** rerun it
+  (budget ~45 min, or cut the cost: fewer mirror starts in `refine_psf`, N_REFINE_PSF 2), look at
+  the contact sheet of every flag (scratch script recipe: A, B, K ⊗ B and residuals in both families), then decide
+  acceptance.
 
 ## 2026-10-14: parity acceptance test fails (87 % vs 95 %); fits not converged, PSF suspected
 - **Hypothesis before computing:** the 6 Abell 2744 parity flags (previous entry) come from neighbour light and

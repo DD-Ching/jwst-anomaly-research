@@ -632,8 +632,9 @@ def run(
     with ProcessPoolExecutor(os.cpu_count() or 1) as ex:
         for (i, _), res in zip(jobs, ex.map(_pair_job, [a for _, a in jobs]), strict=True):
             rows[i].update(res)
-    for row in rows:
-        print(json.dumps({k: v for k, v in row.items() if not k.startswith("m_")}), flush=True)
+            print(
+                json.dumps({k: v for k, v in rows[i].items() if not k.startswith("m_")}), flush=True
+            )
     return rows
 
 
