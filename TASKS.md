@@ -235,7 +235,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      (D-033 addendum 4, `sunrise_counter.py`): 0 flags; the arc's extra images are model-dependent, its counter-image
      undetectable. Reopen with a JWST-era model that fits every knot.
    Field follow-ups (docs/fields/*.md):
-   - vet Abell 2744 `5904`, `7987`, `4731`, `264`, `7298`;
+   - ~~vet Abell 2744 `5904`, `7987`, `4731`, `264`, `7298`~~ — done (2026-10-14, `a2744_followups.py`): all ordinary
+     (two little red dots, a dusty galaxy with clumps, a z_spec-excluded candidate image, a faint galaxy). Optional:
+     relabel D-020's "star without host" reason as "point source without host (star or little red dot)";
    - vet El Gordo `2828` (a linear feature) and `1601`;
    - vet Sunrise `1756`, `1907`, `1578`;
    - Sunrise `1869` is a two-band detection on a star spike (D-014 spike mask);

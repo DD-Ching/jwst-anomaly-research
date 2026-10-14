@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: the five Abell 2744 follow-up sources are ordinary
+- **Hypothesis before computing:** one of the five unvetted M1 follow-ups (docs/fields/abell2744.md) could be a
+  lensed image no published model explains, or a configuration around an invisible deflector. Ordinary: known
+  compact populations (little red dots, brown dwarfs), clumpy dusty galaxies, rejected candidate images, noise.
+  Plan change if a source is a lensed image with an unmet model prediction, or `f277w_264` shows images of one SED.
+- New: `scripts/a2744_followups.py` (published-image match, Bergamini+23 magnification and counter-images per
+  photo-z percentile, `--knots` F200W-peak photometry in seven bands) and unit tests.
+- **Result** (details and references in docs/fields/abell2744.md "Follow-up sources"):
+  - 5904 and 7987 are catalogued little red dots (NED: z_spec 4.46; Kocevski et al. 2025 sample).
+  - 7298 is Furtak+23's candidate image c65.13 of system 65 (z 3.519), but its NIRSpec z_spec is 3.987: excluded.
+  - 264 (dusty star-forming galaxy, McKay et al. 2025): of the three F200W peaks, one is the red core
+    (F150W/F200W 0.05 ± 0.03 vs 0.36–0.45), and the two blue clumps sit on one side with no counter-image.
+  - 4731 is a faint compact galaxy at the noise level.
+  - Lens model: COUNTERSUMMARY
+- **Handoff:** the M1 Abell 2744 follow-up list is closed. Next field follow-ups in TASKS: El Gordo `2828`/`1601`,
+  Sunrise `1756`/`1907`/`1578`.
+
 ## 2026-10-14: off-plane potentials in the Abell 370 and SMACS 0723 models: null
 - **Hypothesis before computing:** a CANUCS (Abell 370) or Mahler+22 (SMACS 0723) potential with a MUSE z_spec off
   the cluster plane might, on its own plane, break the image fit or predict a robust extra image. Ordinary: real

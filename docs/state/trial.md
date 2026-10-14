@@ -145,6 +145,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.35 (`offplane_potentials.py`: MACS0416 CANUCS off-plane potentials, O5 σ scan, `images --plane`) | — | — | 0.1 (orientation, claim, PR) | cloud routine 014CmXZZ, 17:08–17:45Z |
 | 2026-W42 | ≈ 0.35 (off-plane potentials with MUSE z_spec: Abell 2744, El Gordo z 0.63 group σ scan, `images --plane`) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01FdC23M, 18:08–18:45Z |
 | 2026-W42 | ≈ 0.35 (off-plane potentials: Abell 370 MUSE vs CANUCS z_spec, 180 σ controls; SMACS frame offset, `images --plane`) | — | — | 0.1 (orientation, claim, PR) | cloud routine 0181RxsQ, 19:08–19:45Z |
+| 2026-W42 | — | — | ≈ 0.4 (vet five Abell 2744 follow-ups: published identities, Bergamini+23 counter-images, 264 knot colours; cutouts) | 0.1 (orientation, claim, PR) | cloud routine 0183gAYL, 20:08–20:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

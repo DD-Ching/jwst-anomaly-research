@@ -182,25 +182,35 @@ Top features are robust z per feature.
 
 uid prefix: `jw02561-o001_t003_nircam_`.
 
-## Notable for follow-up (unvetted)
+## Follow-up sources: vetted 2026-10-14 (all ordinary)
 
-(Vetting in progress 2026-10-14 on `claude/a2744-followups`.)
+`scripts/a2744_followups.py --knots` (outputs `results/a2744_followups/summary.json`; contact sheet looked at
+by eye: 4″ F150W/F200W/F444W cutouts from S3 byte ranges). Redshifts and classes are NED records (observed or
+published-derived, as each reference states). Every threshold is an ASSUMPTION in the script.
 
-- **`f200w_5904` (screened, originally #1).** It is point-like (DJA r50 2.08 px) with F150W−F444W +2.64,
-  outside the stellar colour box. D-020 removed it because it shows spikes and no host light.
-  - It matches SIMBAD UNCOVER DR2 46803 (type EmG, 0.06″) and NED [AJO2024] MSAID 45924 (0.17″).
-  - So the screening rule removed a catalogued compact source with non-stellar colours from rank 1. This
-    is D-020's "Revisit if" condition.
-- **`f200w_7987` (#5).** It is point-like (r50 2.03 px) with F444W 22.5, F115W−F150W +1.92 and F150W−F444W
-  +2.07. NED gives it type `*` ([PFF2025] UNCOVER 09447). Its colours keep it out of the star stratum.
-- **`f200w_4731` (#12).** A compact (r50 1.23 px), faint source (F200W 27.25, DJA) with no SIMBAD, NED or Gaia
-  counterpart within 1″. Its cutout weight is at the D-021 threshold.
-- **`f277w_264` (#13).** A clumpy, multi-knot source anchored on its F277W pipeline detection. F150W−F444W is +6.0 (F150W
-  29.4, F444W 23.4), and F150W−F200W is the most extreme feature in the top 20 (robust z +20). It matches NED
-  ABELL 2744:[BC2023] 02.
-- **`f200w_7298` (#6).** A faint, arc-like source with NED designation ABELL 2744:[FZW2023] c65.13CI (type G).
-  The pipeline does not flag it as lens-related (only SIMBAD types do that). Whether it is a multiple image in a
-  published lens model was not checked.
+| uid | Published identity (NED) | Lens model (Bergamini+23) | Verdict |
+|---|---|---|---|
+| `f200w_5904` | [AJO2024] MSAID 45924 (an UNCOVER NIRSpec target), z_spec 4.46 (NED quality "SUN"; ref 2026ApJ..1002...25I, Inayoshi et al., "The Emergence of Little Red Dots from Binary Massive Black Holes") | COUNTER5904 | known population: NED takes its redshift from a little-red-dot paper; point-like, red (F150W−F444W +2.64), spikes and no host, as little red dots are |
+| `f200w_7987` | [PFF2025] UNCOVER 09447, NED type `*`, z 3.25 (photometric; ref 2025ApJ...986..126K, Kocevski et al., "The Rise of Faint, Red Active Galactic Nuclei at z > 4: A Sample of Little Red Dots in the JWST Extragalactic Legacy Fields") | COUNTER7987 | known population: in Kocevski et al.'s little-red-dot sample (NED position reference). Point-like with spikes, 0.8″ from an unrelated galaxy |
+| `f200w_4731` | none within 1″ (SIMBAD, NED, Gaia; 2026-10-08) | COUNTER4731 | a faint compact galaxy at the noise level (seen in F150W/F200W, not in F444W); nothing to vet further |
+| `f277w_264` | ABELL 2744:[BC2023] 02, a faint dusty star-forming galaxy (position ref 2025ApJ...988..135M, McKay et al., "The Physical Properties and Morphologies of Faint Dusty Star-forming Galaxies Identified with JWST"); z_phot 4.05 ± 0.2 (2025ApJS..278...45F) | COUNTER264 | ordinary: see the knot test below |
+| `f200w_7298` | ABELL 2744:[FZW2023] c65.13CI, z_spec 3.987 (NED quality "SLS"; Price+2025, 2025ApJ...982...51P) | COUNTER7298 | not a multiple image: the designation is Furtak+23's candidate third image of system 65, whose UNCOVER v2.0 redshift is 3.5194 (spectroscopic); 3.987 ≠ 3.519 rules it out, as v2.0 itself dropped it. A singly imaged background galaxy |
+
+- None of the five lies within 5.7″ of a published multiple image (Bergamini+23 `arcs.dat`, UNCOVER v2.0).
+- **`f277w_264` knot test.** In F200W the source is four compact knots around a centre that is bright in
+  F277W–F444W and dark in F150W, which could look like a galaxy-scale lens. Lensing is achromatic, so images of
+  one source share colours. 0.08″-aperture fluxes of the three F200W peaks (stamp units, background-subtracted):
+  F150W/F200W = 0.36 ± 0.02 and 0.45 ± 0.03 for the two north-east knots, and 0.05 ± 0.03 for the third, which
+  is the F444W peak (F444W/F200W 3.7 vs 0.74–0.80). So the third knot is the red core itself, not an image;
+  the two blue knots lie on one side of it, 0.37–0.48″ away, with no counter-image on the other side. That is
+  not an image configuration of a lens at the core. The ordinary reading, UV-bright clumps on a dusty galaxy,
+  is the one McKay et al. give. Not a candidate (exploratory: one source, by-eye configuration argument).
+- **D-020 "Revisit if" (5904):** the no-host rule removed a little red dot as a "star without host light". Little
+  red dots are compact and hostless by definition, so D-020's reason label is wrong for them; the ranking outcome is
+  unchanged (a known population either way).
+
+Pre-vetting notes (2026-10-08, kept for the record): 5904 was screened from rank 1 by D-020 (spikes, no
+host); 7987 #5, 4731 #12, 264 #13 (F150W−F200W robust z +20), 7298 #6 (arc-like).
 
 ## Lens-model and exotic screens (2026-10-08)
 
