@@ -10,8 +10,8 @@ this script asks whether the predicted image survives the ordinary explanations:
   median, NIRCam photo-z 2.34), with halo-filtered forced photometry (best S/N within 1" and 2")
   of every image that is not a catalogued one, and the flux each catalogued sibling predicts
   (its halo-filtered peak flux / |mu| x |mu|);
-- ``relics``: the same source traced through two independent HST-era RELICS deflection maps
-  (Glafic v2, Zitrin LTM-Gauss v2): image count, magnification and distance to the ICLv2 images.
+- ``relics``: the same source and photometry through two independent HST-era RELICS deflection
+  maps (Glafic v2, Zitrin LTM-Gauss v2), plus each image's distance to the ICLv2 central pair.
 
 Thresholds are ASSUMPTIONs; image positions and magnifications are model_prediction, fluxes derived.
 """
@@ -59,76 +59,95 @@ def _r(v, nd=2):
     return None if v is None or not np.isfinite(v) else round(float(v), nd)
 
 
-def trace(model, grid, s17, z: float) -> tuple[float, object]:
-    """(source-plane spread of the catalogued images, all images of their mean source)."""
+def trace(model, grid, s17, z: float):
+    """``(spread, images, backtrace)``: the source-plane spread of the catalogued images, all
+    images of their mean source, and the back-trace table."""
     bt = lensmodel.backtrace_images(model, s17, {"17": z})
     bx, by = np.nanmean(bt["beta_x"]), np.nanmean(bt["beta_y"])
     spread = float(np.nanmax(np.hypot(bt["beta_x"] - bx, bt["beta_y"] - by)))
     return spread, lensmodel.find_images(model, grid, bx, by, z), bt
 
 
-def zscan(s17, stamp) -> list[dict]:
-    model, _, _ = lc.load_model(MODEL)
-    lc.apply_frame_offset(MODEL, model)
-    grid = lensmodel.DeflectionGrid.compute(model, 45.0, 0.25)
-    cat = np.array(model.to_frame(np.asarray(s17["ra"], float), np.asarray(s17["dec"], float))).T
-    ref = {}
-    for r in s17:  # halo-filtered peak flux within 0.4" of each catalogued image
+def reference_lum(s17, stamp) -> dict[str, float]:
+    """Halo-filtered peak flux within 0.4" of each catalogued image (divide by |mu| per model)."""
+    out = {}
+    for r in s17:
         img, err, xx, yy = stamp(float(r["ra"]), float(r["dec"]))
-        ref[str(r["image_id"])] = lc.peak_flux(img, err, xx, yy)[0]
-    out = []
-    for z in Z_SCAN:
-        spread, im, bt = trace(model, grid, s17, z)
-        lum = {
-            str(i): ref[str(i)] / abs(float(m))
-            for i, m in zip(bt["image_id"], bt["magnification"], strict=True)
-        }
-        rows = []
-        for r in im:
-            d = float(np.hypot(cat[:, 0] - r["x"], cat[:, 1] - r["y"]).min())
-            row = {"xy": [_r(r["x"]), _r(r["y"])], "mu": _r(r["magnification"]), "d_cat": _r(d)}
-            if d >= CAT_MATCH_ARCSEC:
-                img, err, xx, yy = stamp(float(r["ra"]), float(r["dec"]))
-                mu = abs(float(r["magnification"]))
-                for rad in (1.0, 2.0):
-                    snr, flux, dx, dy = lc.best_within(img, err, xx, yy, rad)
-                    row[f"best_{rad:.0f}arcsec"] = {
-                        "snr": _r(snr, 1),
-                        "flux": _r(flux),
-                        "offset": [_r(dx, 1), _r(dy, 1)],
-                    }
-                row["pred_flux_from"] = {k: _r(v * mu) for k, v in lum.items()}
-            rows.append(row)
-        out.append({"z": z, "source_spread_arcsec": _r(spread), "images": rows})
+        out[str(r["image_id"])] = lc.peak_flux(img, err, xx, yy)[0]
     return out
 
 
-def relics(s17, ref_xy: list) -> list[dict]:
-    centre = (float(np.mean(s17["ra"])), float(np.mean(s17["dec"])))
+def measure(model, grid, s17, stamp, ref: dict, z: float) -> dict:
+    """One model at one redshift: every image of system 17's mean source; images farther than
+    ``CAT_MATCH_ARCSEC`` from every catalogued one get halo-filtered forced photometry (best S/N
+    within 1" and 2") and the flux each catalogued sibling predicts (its flux / |mu| x |mu|)."""
+    spread, im, bt = trace(model, grid, s17, z)
+    lum = {
+        str(i): ref[str(i)] / abs(float(m))
+        for i, m in zip(bt["image_id"], bt["magnification"], strict=True)
+    }
     cat = SkyCoord(s17["ra"], s17["dec"], unit="deg")
-    ref = SkyCoord([p[0] for p in ref_xy], [p[1] for p in ref_xy], unit="deg")
+    rows = []
+    for r in im:
+        c = SkyCoord(float(r["ra"]), float(r["dec"]), unit="deg")
+        d = float(c.separation(cat).arcsec.min())
+        row = {
+            "radec": [round(float(r["ra"]), 7), round(float(r["dec"]), 7)],
+            "xy": [_r(r["x"]), _r(r["y"])],
+            "mu": _r(r["magnification"]),
+            "d_cat": _r(d),
+        }
+        if d >= CAT_MATCH_ARCSEC:
+            img, err, xx, yy = stamp(float(r["ra"]), float(r["dec"]))
+            mu = abs(float(r["magnification"]))
+            for rad in (1.0, 2.0):
+                snr, flux, dx, dy = lc.best_within(img, err, xx, yy, rad)
+                row[f"best_{rad:.0f}arcsec"] = {
+                    "snr": _r(snr, 1),
+                    "flux": _r(flux),
+                    "offset": [_r(dx, 1), _r(dy, 1)],
+                }
+            row["pred_flux_from"] = {k: _r(v * mu) for k, v in lum.items()}
+        rows.append(row)
+    return {"z": z, "source_spread_arcsec": _r(spread), "images": rows}
+
+
+def zscan(s17, stamp, ref: dict) -> list[dict]:
+    model, _, _ = lc.load_model(MODEL)
+    lc.apply_frame_offset(MODEL, model)
+    grid = lensmodel.DeflectionGrid.compute(model, 45.0, 0.25)
+    return [measure(model, grid, s17, stamp, ref, z) for z in Z_SCAN]
+
+
+def relics(s17, stamp, ref: dict, central: list, keep_maps: bool) -> list[dict]:
+    """The RELICS maps, shifted into the JWST frame by the ICLv2 offset (ASSUMPTION: the RELICS
+    maps share the HST frame of the Mahler+22 image list). The maps (118 MB) are deleted after
+    use unless ``keep_maps`` (cloud disk rule)."""
+    centre = (float(np.mean(s17["ra"])), float(np.mean(s17["dec"])))
+    dra, ddec = lc.MODELS[MODEL].get("frame_offset_arcsec", (0.0, 0.0))
+    ref_c = SkyCoord([p[0] for p in central], [p[1] for p in central], unit="deg")
     out = []
     for name, (sub, sha_x, sha_y) in RELICS.items():
         base = f"{RELICS_URL}{sub}hlsp_relics_model_model_smacs0723m73_{name}"
         px = fetch_catalog(f"{base}_x-arcsec-deflect.fits", sha_x)
         py = fetch_catalog(f"{base}_y-arcsec-deflect.fits", sha_y)
-        h0, om = RELICS_COSMO
-        model = lensmodel.MapLensModel.from_fits(
-            px, py, RELICS_Z_LENS, FlatLambdaCDM(H0=h0, Om0=om), source=name, centre=centre
-        )
+        try:
+            h0, om = RELICS_COSMO
+            model = lensmodel.MapLensModel.from_fits(
+                px, py, RELICS_Z_LENS, FlatLambdaCDM(H0=h0, Om0=om), source=name, centre=centre
+            )
+        finally:
+            if not keep_maps:
+                px.unlink(missing_ok=True)
+                py.unlink(missing_ok=True)
+        model.shift_frame(dra, ddec)
         grid = lensmodel.DeflectionGrid.compute(model, 40.0, 0.25)
         for z in Z_SCAN:
-            spread, im, _ = trace(model, grid, s17, z)
-            ic = SkyCoord(im["ra"], im["dec"], unit="deg")
-            rows = [
-                {
-                    "mu": _r(r["magnification"]),
-                    "d_cat": _r(c.separation(cat).arcsec.min()),
-                    "d_iclv2_central": [_r(v) for v in c.separation(ref).arcsec],
-                }
-                for r, c in zip(im, ic, strict=True)
-            ]
-            out.append({"model": name, "z": z, "source_spread_arcsec": _r(spread), "images": rows})
+            m = measure(model, grid, s17, stamp, ref, z)
+            for row in m["images"]:
+                c = SkyCoord(*row["radec"], unit="deg")
+                row["d_iclv2_central"] = [_r(v) for v in c.separation(ref_c).arcsec]
+            out.append({"model": name, **m})
     return out
 
 
@@ -136,35 +155,39 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=paths.repo_root() / "results" / "smacs_s17")
     ap.add_argument("--no-relics", action="store_true", help="skip the RELICS maps (118 MB)")
+    ap.add_argument("--keep-maps", action="store_true", help="keep the RELICS maps after use")
     args = ap.parse_args(argv)
     m0, files, par = lc.load_model(MODEL)
     images, _ = lc.image_list(MODEL, files, par)
     lc.apply_frame_offset(MODEL, m0, images)
     s17 = images[np.asarray(images["system"]).astype(str) == "17"]
     raw, close = lc.image_stamper(F200W, lc.MAX_SEARCH_ARCSEC + lc.FORCED_ANNULUS[1] + 0.2)
+    stamp = lc.halo_stamper(raw, FILTER_ARCSEC)
     try:
-        scan = zscan(s17, lc.halo_stamper(raw, FILTER_ARCSEC))
+        ref = reference_lum(s17, stamp)
+        scan = zscan(s17, stamp, ref)
+        best = next(s for s in scan if s["z"] == 2.048)
+        central = [
+            tuple(row["radec"]) for row in best["images"] if row["d_cat"] >= CAT_MATCH_ARCSEC
+        ]
+        rel = [] if args.no_relics else relics(s17, stamp, ref, central, args.keep_maps)
     finally:
         close()
-    best = next(s for s in scan if s["z"] == 2.048)
-    central = [
-        tuple(float(v) for v in m0.to_sky(*row["xy"]))
-        for row in best["images"]
-        if row["d_cat"] >= CAT_MATCH_ARCSEC
-    ]
     summary = {
         "model": MODEL,
         "image": F200W,
         "provenance": "positions and mu: model_prediction; fluxes: derived",
+        "reference_peak_flux": {k: _r(v, 3) for k, v in ref.items()},
         "assumptions": {
             "halo_filter_arcsec": FILTER_ARCSEC,
             "cat_match_arcsec": CAT_MATCH_ARCSEC,
             "z_scan": list(Z_SCAN),
             "relics_z_lens": RELICS_Z_LENS,
             "relics_cosmology": list(RELICS_COSMO),
+            "relics_frame": "shifted by the ICLv2 frame_offset_arcsec (same HST frame assumed)",
         },
         "iclv2_zscan": scan,
-        "relics": [] if args.no_relics else relics(s17, central),
+        "relics": rel,
     }
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "vet.json").write_text(json.dumps(summary, indent=1) + "\n")

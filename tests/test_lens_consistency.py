@@ -899,3 +899,8 @@ def test_halo_stamper_removes_a_halo_and_keeps_a_compact_image():
     assert 0.85 < rec < 1.0
     assert 0.85 < f_sub / f_raw < 1.0  # (the test source is wider than the injected PSF)
     assert np.isnan(lc.halo_recovery(hs, RA0, DEC0, float("nan")))
+
+
+def test_halo_stamper_rejects_a_filter_smaller_than_a_compact_image():
+    with pytest.raises(ValueError):
+        lc.halo_stamper(_stamp_factory([]), 0.2)

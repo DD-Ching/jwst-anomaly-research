@@ -17,9 +17,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   1.84–1.92; Pascale 1.72; photo-z 2.34; literature check by a subagent, arXiv:2207.07101 Table 2, 2207.07567,
   2207.07102). In ICLv2 the central pair merges at z ≈ 1.92 (μ −36 / +31, best 3.3σ) and is gone at z ≤ 1.84. RELICS
   Zitrin LTM v2 (best z ≈ 1.5, spread 0.37″) predicts no central pair; RELICS Glafic v2 (z ≈ 1.5, 0.33″) predicts one
-  0.9–1.5″ from ICLv2's, also undetected within 1″ (3.0σ, scratch measurement, not in `vet.json`). **Ordinary: a near-caustic prediction that depends on the
+  0.9–1.5″ from ICLv2's, with nothing of the predicted flux within 1″ (3.0σ, 0.73 against 2.1–4.7 from the siblings;
+  RELICS maps shifted by the ICLv2 frame offset, ASSUMPTION). **Ordinary: a near-caustic prediction that depends on the
   free redshift and the inner (BCG) mass profile. Not a candidate;** the absence is a constraint on those models.
 - **Failed approach:** the annulus-only background next to the BCG (D-029): the gradient made the 7.8σ "recovery".
+- Review fixes (`/code-review`): RELICS maps in the JWST frame, forced photometry at their images, maps deleted after
+  use, a filter floor (≥ 0.6″), one shared median-filter helper. Not changed: `halo_recovery` does not rescale the
+  prediction, because the reference passes the same filter (losses cancel for compact images; recovery 0.94–0.98 here).
 - **Next:** reference fluxes for systems 11, 16 and 26 (Supporting 1); `--halo-filter-arcsec` on the other fields'
   `images` runs near BCGs.
 
