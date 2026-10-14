@@ -1,0 +1,24 @@
+{
+ "n": 576,
+ "A1": 111,
+ "D1": 31,
+ "A1_by_tE": {
+  "10": [
+   70,
+   98
+  ],
+  "30": [
+   41,
+   205
+  ],
+  "100": [
+   0,
+   208
+  ],
+  "300": [
+   0,
+   65
+  ]
+ },
+ "label": "derived: post-hoc vetting rules A1/D1 applied to simulated W3 injections passing the frozen screen"
+}

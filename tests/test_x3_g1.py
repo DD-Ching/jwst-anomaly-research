@@ -117,3 +117,25 @@ def test_bulk_file_names_cover_level8_ranges():
     ranges = [xb.file_range(n) for n, _, _ in xb.FILES]
     assert all(b + 1 == c for (_, b), (c, _) in zip(ranges, ranges[1:], strict=False))
     assert "MOD(source_id, 10) <> 0" in xb.HELDOUT_QUERY
+
+
+def test_vetting_order_and_visits():
+    xv = _load("x3_vet")
+    assert xv.visits(np.array([10.0, 10.1, 10.2])) == 1
+    assert xv.visits(np.array([10.0, 10.1, 40.0])) == 2
+    base = {
+        "dip_visits": 3,
+        "spike_visits": 0,
+        "G": 16.0,
+        "neighbour_dG": 99.0,
+        "vari_class": "",
+        "simbad_var": False,
+        "fit_tE": 60.0,
+        "fit_u0": 0.5,
+    }
+    assert xv.verdict(base) == "unexplained under A-D"
+    assert xv.verdict({**base, "dip_visits": 1}) == "A1 single-visit"
+    assert xv.verdict({**base, "G": 12.0}) == "A2 bright"
+    assert xv.verdict({**base, "neighbour_dG": 1.0}) == "B1 neighbour"
+    assert xv.verdict({**base, "vari_class": "ECL"}) == "C1 known variable"
+    assert xv.verdict({**base, "fit_u0": 1.95}) == "D1 degenerate fit"

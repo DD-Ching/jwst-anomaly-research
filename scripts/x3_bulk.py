@@ -332,11 +332,74 @@ def screen_heldout(procs: int, files: list[str]) -> None:
         print(f"{name}: {stats} screened {len(rows)}")
 
 
+DR3_SPAN_YR = (57901.0 - 56863.0) / 365.25  # DR3 epoch data 2014-07-25 to 2017-05-28
+
+
+def heldout_summary() -> dict:
+    """Stage counts, exposure and flags of the held-out run, and the conditional rate limit."""
+    tabs = [Table.read(p) for p in sorted(x3.out_dir().glob("heldout_*.ecsv"))]
+    if len(tabs) != len(FILES):
+        raise RuntimeError(f"{len(tabs)} of {len(FILES)} files screened")
+    rows = {}
+    for t in tabs:
+        err = g1._strcol(t, "error")
+        for c in ("v1_vetoed", "pre", "fit_flag", "repeat", "final", "skipped_min_points"):
+            v = np.asarray(t[c], bool) if c in t.colnames else np.zeros(len(t), bool)
+            rows[c] = rows.get(c, 0) + int(v.sum())
+        rows["n"] = rows.get("n", 0) + len(t)
+        rows["errors"] = rows.get("errors", 0) + int(np.sum(err != ""))
+    exposed = rows["n"] - rows["skipped_min_points"] - rows["v1_vetoed"] - rows["errors"]
+    flags = []
+    for t in tabs:
+        m = np.asarray(t["fit_flag"], bool)
+        for r in t[m]:
+            flags.append(
+                {
+                    k: (str(r[k]) if k in ("event_id", "achrom") else r[k])
+                    for k in ("event_id", "dbic_N1neg", "repeat", "achrom", "final")
+                    if k in t.colnames
+                }
+            )
+    cal = json.loads((x3.results_dir() / "g1_summary.json").read_text())
+    sel = json.loads((x3.results_dir() / "g1_selection_bound.json").read_text())
+    k, n = cal["inject:W3_base"]["eff_te30_300"]
+    eff = k / n
+    retained = sel["retained_fraction_mean"]["1"]
+    n_final = rows["final"]
+    rec = {
+        "label": "observed held-out light curves; rates derived; NOT evidence for any lens",
+        "stage_counts": rows,
+        "exposed_sources": exposed,
+        "n_final_flags": n_final,
+        "fit_flags": [
+            {k_: (v if isinstance(v, str) else float(v)) for k_, v in f.items()} for f in flags
+        ],
+        "stop_rule_more_than_200": n_final > 200,
+    }
+    if n_final == 0:
+        exp_star_yr = exposed * DR3_SPAN_YR
+        rec["rate_limit_95"] = {
+            "per_star_per_yr_photocentre_stable": 3.0 / (exp_star_yr * eff),
+            "per_star_per_yr_blended_prior": 3.0 / (exp_star_yr * eff * retained),
+            "efficiency_te30_300": eff,
+            "retained_fraction_blended_prior": retained,
+            "span_yr": DR3_SPAN_YR,
+            "conditions": [
+                "t_E 30-300 d; injection priors u0 ~ U(0, 2), rho 0.01/0.1, f_s ~ U(0.5, 1)",
+                "photocentre-stable: events whose own photocentre motion leaves RUWE <= 1.4",
+                "blended prior: separations 10-1000 mas log-uniform (g1_selection_bound.json)",
+                "unbounded selection effects listed in g1_selection_bound.json not_bounded",
+            ],
+        }
+    (x3.results_dir() / "g1_heldout_summary.json").write_text(json.dumps(rec, indent=1) + "\n")
+    return rec
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    ap.add_argument("cmd", choices=("verify", "heldout-ids", "screen"))
+    ap.add_argument("cmd", choices=("verify", "heldout-ids", "screen", "summary"))
     ap.add_argument("--file", default=FILES[0][0])
     ap.add_argument("--procs", type=int, default=3)
     a = ap.parse_args(argv)
@@ -345,8 +408,10 @@ def main(argv=None) -> int:
     elif a.cmd == "heldout-ids":
         t = heldout_ids(19.0)
         print(f"{len(t)} held-out sources; {sum(x3.v1_veto(t).values())} v1-vetoed")
-    else:
+    elif a.cmd == "screen":
         screen_heldout(a.procs, [n for n, _, _ in FILES])
+    else:
+        print(json.dumps(heldout_summary(), indent=1))
     return 0
 
 

@@ -1,0 +1,16 @@
+{
+ "label": "derived 95 % upper limits; conditional (X3.md G1 sections 4, 7); not a detection",
+ "efficiency_te30_300_after_vetting": 0.27248322147651005,
+ "exposed_star_years": 1124717.4045174539,
+ "retained_fraction_blended_prior": 0.02732638888888889,
+ "n_events_0": {
+  "poisson_upper_95": 3.0,
+  "per_star_per_yr_photocentre_stable": 9.788994259826903e-06,
+  "per_star_per_yr_blended_prior": 0.00035822494877130217
+ },
+ "n_events_3": {
+  "poisson_upper_95": 7.75,
+  "per_star_per_yr_photocentre_stable": 2.52882351712195e-05,
+  "per_star_per_yr_blended_prior": 0.0009254144509925307
+ }
+}
