@@ -21,13 +21,20 @@ before.
 
 **2510.11406** (PLB 875, 140335).
 - Versions: v1 13 Oct 2025, titled "Charged wormholes can be long-lived"; v2 13 Mar 2026, retitled "Radial
-  perturbations of charged wormholes" and the "long-lived" sentence removed. v1 and v2 abstracts compared; v2 source read.
+  perturbations of charged wormholes". The abstract's "could be long-lived" was dropped, but the v2 body still
+  says the perturbations "can take a very long time to grow" near extremality. v1 and v2 abstracts compared;
+  v2 source read.
 - **Charged EB, closed-form background.** Two purely imaginary unstable modes merge at a critical charge. They
   then **continue as a complex pair**: equal imaginary parts, opposite real parts, still growing.
-- The instability disappears only in the extremal Reissner–Nordström limit. Near it, the growth rate falls as
-  (1 − M/r_T)^{3.1}.
-- By analogy the authors now conjecture **the same for rotation**: the merged modes persist as an oscillating
-  instability and fade only near extremality. This replaces the earlier "merge and disappear" picture.
+- The instability disappears only in the extremal Reissner–Nordström limit, and the growth rate falls steeply
+  toward it.
+  - The paper prints ω_I ∝ (1 − M/r_T)^{−3.1} for the *critical* (Λ = 0) modes. That contradicts the stated
+    decrease, so it is probably the fit to τ₀ (the figure inset).
+  - The supercritical complex pair follows "a similar" relation.
+- On rotation the authors only draw an analogy. The meeting branches "can only be confirmed by a
+  non-perturbative study in the future".
+- They suggest the instability time "can possibly be long, close to the extremal Kerr solution". That is a
+  long-lived but still unstable picture, not "merge and disappear".
 - 2607.18399 (charged, static) adds a **new non-radial polar ℓ = 2 instability**.
 
 **1309.2448** (5D, equal angular momenta, full rotation; source read, §V).
@@ -35,7 +42,9 @@ before.
 - Background and perturbations reduce to ODEs: three coupled G₀, G₁, G₂ with explicit potentials V_ij, after
   the gauge H₁ = H₃ − H₂ and H_φ = 0.
 - Two unstable modes merge at (|J|/A)_cr = 0.10063 for symmetric wormholes and 0.1381 for |a₋∞| = 1.
-- **Real Ω² only.** The authors solve with the auxiliary equation (Ω²)′ = 0 and real boundary conditions.
+- **Real Ω² only** (our inference from the method; the paper does not say so explicitly). The authors solve with
+  the auxiliary equation (Ω²)′ = 0 and the stated boundary conditions. The conclusion is itself conditional ("if no
+  new unstable modes of a different type appear").
   "Beyond J_cr we do not find any further unstable modes **within the type of modes investigated**". So a
   complex pair after the merger, the 2510.11406 behaviour, was not searched for.
 
@@ -85,12 +94,22 @@ The S5 tooling already covers the parts needed: dense spectra including complex 
 time evolution, and an independent-equation residual.
 
 **Steps and saveable stages:**
-1. Re-derive the reduction for complex Ω. For H_φ the argument becomes Im(Ω²)∫|H_φ|² = 0, so H_φ = 0 also holds
-   for complex unstable Ω. Check this, and check that the gauge H₁ = H₃ − H₂ stays consistent.
+1. Re-derive the reduction for complex Ω.
+   - Multiplying the H_φ equation by its complex conjugate gives
+     [ξ H̄_φ H_φ′] = ∫(ξ|H_φ′|² − Ω² w|H_φ|²), with w = p²h^{3/2}e^{−2a−q} > 0.
+   - The boundary term vanishes for modes that decay at both ends.
+   - The imaginary part is Im(Ω²)∫w|H_φ|² = 0, and Im(Ω²) = 2Ω_RΩ_I ≠ 0 for a complex unstable mode. So H_φ = 0
+     holds there too.
+   - The paper's integral has a typo in its limits (∫_{−∞}^{−∞}).
+   - The G system depends only on Ω², and V₀₁ ≠ V₁₀ (non-symmetric), so complex Ω² can occur and the problem is
+     well posed.
+   - Still to check: that the gauge H₁ = H₃ − H₂ stays consistent.
    - Saved: derivation and sympy check.
 2. Background ODE solver (scipy solve_bvp).
-   - Gate: reproduce published background quantities, and the static EB unstable mode, which S5's tool already
-     has (1.18199 at b = 1 in 4D; the 5D value comes from the paper's Fig. 5 scaling).
+   - Gate: the static limit matches the paper's closed-form D-dimensional static solution (Appendix A), and the
+     Smarr-like relation of symmetric rotating solutions holds to ≤ 1e-6.
+   - Reading the 5D static eigenvalue off Fig. 5 is not a numerical gate. The 4D 1.18199 does not test a 5D
+     solver.
    - Saved: background solutions on a J grid near and above J_cr.
 3. Real-mode gate: the two purely imaginary branches must merge at (|J|/A)_cr = 0.10063 ± 1 %.
    - This is a reproduction, used only to validate the tool.
@@ -112,9 +131,11 @@ time evolution, and an independent-equation residual.
 ## Plain answer
 - **Support:** in 4D slow rotation, one radial growth mode weakens, but a second appears and the two only cross.
   In 5D full rotation, the purely imaginary modes merge and vanish. Neither shows full stability.
-- **Since then, the evidence leans against rotation as a stabiliser.** The charged analogue (2510.11406 v2)
-  shows that merged modes can persist as an oscillating instability, and the same authors now conjecture this
-  for rotation.
+- **The question is unsettled.** The only analogue that follows the modes past the merger is the charged one
+  (2510.11406 v2). There, the instability persists as a complex pair whose growth rate goes to zero near
+  extremality.
+- For rotation, that suggests "long-lived but not stable" rather than "stabilised". The authors leave the
+  rotating case to a future non-perturbative study.
 - **Most important unknown:** whether complex unstable modes exist after the merger. This is checkable only in
   5D with ODEs.
 - **Worth a cross-session unit:** yes, one bounded unit (S6a above). It tests the single non-perturbative

@@ -11,9 +11,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - A second mode grows from the zero mode, and the two branches cross near J/A ≈ 0.013. That they merge and
     vanish is a conjecture.
   - In 5D, the purely imaginary modes merge and vanish at (|J|/A)_cr = 0.10063, but only real Ω² was searched.
-- **Against "merge and vanish".** In the charged analogue, the merged modes persist as a complex pair until
-  extremality (2510.11406 v2). The authors now conjecture the same for rotation; v1's "long-lived" title was
-  dropped.
+- **Unsettled.** In the charged analogue the merged modes persist as a complex pair, with a growth rate that
+  goes to zero near extremality (2510.11406 v2). For rotation the authors draw only an analogy ("long, close to
+  extremal Kerr") and defer to a non-perturbative study.
+- "Only real Ω² was searched" in 1309.2448 is our inference from its method.
 - **Open:**
   - 4D full-rotation radial M_z = 0 (no calculation exists);
   - complex modes after the 5D merger;
