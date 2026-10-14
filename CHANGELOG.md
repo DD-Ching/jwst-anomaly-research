@@ -2,6 +2,27 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: X3 G2 prerequisite: astrometry mostly repeats the blend effect; narrow lens-shift gain
+- **Question before computing:** can Gaia epoch astrometry plus photometry tell a W3 negative-mass lens from an
+  ordinary blended variable, with the same blend freedom in both? The criterion was committed first:
+  Δχ² ≥ 25 measurable, 9–25 marginal, < 9 not measurable.
+- **Analytic result (`docs/state/units/X3.md`, G2 prerequisite):** the blend-ratio photocentre shift (∝ 1/F along
+  a fixed line) is reproduced exactly by any one-variable blend (residual ~1e-24). Only the lens's own
+  image-centroid shift is new.
+- **Cases (`scripts/x3_g2_ident.py`, `results/x3/g2_ident.json`; simulated):**
+  - The image shift is measurable against that ordinary model for G ≲ 17, θ_E ≳ 3 mas and t_E ≈ 100 d. Base
+    case Δχ² 70; G 15: 486; G 19: 10; θ_E 1 mas: 8; t_E 30 or 300 d: 6–7.
+  - It adds sign-of-mass information only at G 15 or θ_E 10 mas (Δχ² 42, 67).
+  - Against two variable blended stars, astrometry alone adds nothing.
+- **DR4 (ESA DR4 content page):** epoch astrometry for all sources in the main astrometric processing. Whether
+  it carries AL coordinates, scan angles and uncertainties, and its faint-source coverage, are unknown.
+- **G1 corrections (owner):**
+  - the 196 flags were excluded by rules, not individually proven ordinary;
+  - the 92–99.6 % RUWE figure and the blended-prior limit are model estimates;
+  - the claim that DR4 astrometry would make the photocentre motion a signature is withdrawn.
+- **Handoff:** no DR4 development until ESA documents the epoch-astrometry content. If it fits (AL, scan angle,
+  σ for G ≲ 17), build a joint photometry + image-shift likelihood on dev injections against the ordinary model.
+
 ## 2026-10-14: X3 G1, W3 screen of held-out Gaia GAPS: 196 flags, no candidate, conditional limit
 - **Hypothesis before computing:** negative-mass lenses would show the W3 dip in unselected Gaia light curves.
   Ordinary: eclipsing binaries, dust dimmers, LPVs, single-scan photometry, crowding. Plan change if any flag
@@ -18,15 +39,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   0 / 1,995, dev real flags 0 / 1,995.
 - **Limits of the screen (measured):**
   - The colour test removes 39 % of W3 and 48 % of dust dips.
-  - Blended W3 events inflate their own RUWE, so 92–99.6 % would be vetoed by v1.
+  - Blended W3 events inflate their own RUWE, so an estimated 92–99.6 % would be vetoed by v1. This is a model
+    estimate under assumed blend and error priors, not a measured Gaia rate or a strict bound (owner correction).
 - **Held-out run (once):**
   - 395,764 exposed sources, 196 final flags.
-  - Vetting rules were post hoc, and every rule was costed on the dev injections. First failed rule: 124
+  - The flags were excluded by rules; no ordinary cause was proven for each flag individually (owner correction).
+    The rules were post hoc, and every rule was costed on the dev injections. First failed rule: 124
     single-visit, 8 bright, 29 neighbour, 27 known variables, 5 degenerate fits, 3 with no multi-visit dip.
   - **No candidate.**
   - Vetted efficiency 0.276 [0.253, 0.300].
   - Γ₉₅ < 9.7 × 10⁻⁶ per star per year for photocentre-stable W3 (t_E 30–300 d); 4.6 × 10⁻⁴ under the blended
-    prior.
+    prior (a model estimate with the same label as the RUWE estimate).
 - **Review fixes before merge:**
   - D2 coded and costed;
   - host rules costed;
