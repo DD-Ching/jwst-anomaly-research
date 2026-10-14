@@ -2,9 +2,30 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-14: (in progress) off-plane member potentials with spectroscopic redshifts, CANUCS and Abell 2744 models
-- Claimed by cloud routine; plan: list model potentials whose z_spec lies off the cluster plane (D-042 rule), re-run
-  `images --plane` for each, check for predicted extra images.
+## 2026-10-14: MACS0416 CANUCS potentials with off-plane spectroscopic redshifts: no tension
+- **Hypothesis before computing:** a CANUCS potential whose galaxy has a z_spec off the cluster plane (D-042 rule)
+  might carry an extra image, or the catalogued images might reject its true redshift. Ordinary: compiled z_spec
+  belonging to a blended lensed image or neighbour, single-plane fits absorbing a foreground galaxy, unrefitted
+  parameters. Plan change if a potential at its z_spec costs Δχ² ≫ 10 at every plausible σ, or predicts a robust
+  new extra image.
+- New: `scripts/offplane_potentials.py` (potential × CANUCS DR1 `Z_SPEC` within 0.5″; off-plane at |Δz|/(1+z_cl) >
+  0.02; photo-z agreement |Z_ML − z_spec|/(1+z_spec) ≤ 0.15; all ASSUMPTIONs) and a unit test.
+- **Result** (`validate`/`images --plane`, other parameters **not refitted**, so Δχ² is an upper bound; 303 images,
+  single plane χ² 330.81; details docs/fields/macs0416.md):
+  - 137 / 222 potentials have a z_spec; 12 are off-plane. 3 of them (4677 z 0.94, 8785 z 2.09, 3719 z 2.54 = MUSE
+    system 45 image) disagree with their photo-z (0.31–0.39): misassociated, kept at the cluster.
+  - 7 near-cluster interlopers (Δz/(1+z) 0.04–0.09, σ 40–68 km/s): χ² 330.98 (+0.17).
+  - **O5** (σ 136 km/s, z_spec 0.114 Shipley+18, Z_ML 0.071; 66″ south-west, lenses D16 and D17 directly): χ² 404
+    (fitted σ), 370 (150 km/s, best of 67–200), 443 (123, lensing-equivalent), 1255 (67, luminosity-rescaled).
+    The Δχ² ≈ +39 at 150 km/s is spread over D16/D17 (beside O5) and D14/D20/D62 (multi-plane deflection of
+    the rays). Only a refit can say how much survives; a ~12 % rise unrefitted is no tension.
+  - `images --plane O5=0.1137[:150]` (F277W catalogue, no forced photometry): predicted extras change only at
+    folds (|μ| 3–49) in D20, D25, D77, D115 within ≈1″ of catalogue sources; no robust new extra image. No
+    existing MACS0416 flag (systems 27, 45, 51, 55) depends on O5.
+  - **Null.** The 8757 explanation of system 51 (D-046 addendum) stays the only off-plane potential that matters.
+- **Handoff:** next lens-model item: the same listing for Abell 2744 (UNCOVER v2.0 members are photometric; use
+  UNCOVER/MUSE z_spec) and El Gordo (Caminha+23); a local refit (O5 σ, r_cut and the nearest halo) if a field's
+  off-plane potential carries a flagged image.
 
 ## 2026-10-14: `--plane NAME=Z[:SIGMA]` for `lens_consistency.py validate/images`; MACS0416 system 51 check
 - **Hypothesis before computing:** the D-046 explanation of MACS0416 system 51's missing fourth image (CANUCS

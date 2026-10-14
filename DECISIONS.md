@@ -2533,6 +2533,15 @@ fourth image, D-042/D-046) at z 0.268: σ 102 km/s (fitted) χ² 330.55; 70 km/s
 Most affected: CANUCS D52a–c (1.3″ from 8757), first images +0.28–0.45″ at 60 km/s (1.11–1.18″ → 1.46–1.56″). The two-plane
 σ ≤ 60 km/s solution that removes the fourth image (D-046) costs Δχ² ≤ +5.6 on the catalogued images: no tension.
 
+**Addendum 2026-10-14b (off-plane potentials, `scripts/offplane_potentials.py`).** Every potential of a Lenstool
+model is matched to the nearest CANUCS DR1 `Z_SPEC` source within 0.5″; off-plane at |Δz|/(1+z_cl) > 0.02; the
+z_spec is trusted only when `Z_ML` agrees within 0.15 (1+z) (ASSUMPTIONs: compiled z_spec, e.g. Shipley+18 or MUSE
+images, can belong to a blended lensed image). MACS0416 CANUCS: 12 / 222 off-plane, 3 rejected by photo-z
+(misassociated). Seven near-cluster interlopers cost Δχ² +0.17. O5 (σ 136, z 0.114) costs Δχ² +39 to +73 for σ
+136–175 km/s (best 150), +112 at the lensing-equivalent 123 and +924 at the luminosity-rescaled 67 km/s, unrefitted (`model_prediction`): a single-plane fit absorbs a
+foreground galaxy's multi-plane deflection, so an unrefitted Δχ² is only an upper bound and is no tension at ~12 %.
+Rejected: refitting the CANUCS model here (no Lenstool optimiser in the repo; not needed while no flag depends on O5).
+
 ## D-047 Exotic-lens predictions: wormhole and negative-mass signatures are searchable, warp signatures are not (2026-10-08)
 
 **Decision.** Phase 1 ("predictions first") gives the screens closed-form targets. docs/exotic_lensing.md has the

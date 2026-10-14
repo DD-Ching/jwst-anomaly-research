@@ -196,8 +196,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    - exotic screens (D-031, D-034, D-036–D-038, D-040–D-043): SMACS, El Gordo, Sunrise (radial), Abell 2744,
      MACS1149, MACS0717, MACS0416, Abell 370 and Abell S1063 (radial) null. All six HFF clusters are screened. Next:
      - multi-plane checks: `--plane NAME=Z[:SIGMA]` on `validate` / `images` done (D-046 addendum 2026-10-14; MACS0416
-       8757 at z 0.268 costs Δχ² ≤ +5.6, no tension). Next: list model potentials with z_spec away from the
-       cluster (MUSE/CANUCS spectra) and run `images --plane` where one sits near a predicted extra image;
+       8757 at z 0.268 costs Δχ² ≤ +5.6, no tension). MACS0416 CANUCS off-plane potentials done
+       (`offplane_potentials.py`, 2026-10-14: 12 / 222, null; O5 at z 0.114 costs Δχ² ≤ +39 unrefitted). Next: the same
+       for Abell 2744 (UNCOVER v2.0, Bergamini+23) and El Gordo, then `images --plane` where one sits near a flagged image;
      - orphan pairs (D-048, null): injection-recovery of simulated dark-lens pairs (limit per deg²); CANUCS segmentation
        maps for the same-galaxy test; blending model for pairs < 1″; re-run on Abell 2744 (UNCOVER), MACS0417, MACS1423;
        MACS1149 image list when CANUCS v2 is out;

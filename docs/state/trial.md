@@ -142,6 +142,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.4 (D-041 cross-model rule on every Abell 2744 forced row, UNCOVER v2.0; cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01DJ1D1o, 14:09–14:45Z |
 | 2026-W42 | ≈ 0.3 (Abell 2744 sibling reference fluxes for both-model extras, `a2744_xmodel_refs.py`) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01GcHRcx, 15:08–15:40Z |
 | 2026-W42 | ≈ 0.25 (`--plane` CLI; MACS0416 8757 two-plane χ² check) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01XYMGpL, 16:08–16:45Z |
+| 2026-W42 | ≈ 0.35 (`offplane_potentials.py`: MACS0416 CANUCS off-plane potentials, O5 σ scan, `images --plane`) | — | — | 0.1 (orientation, claim, PR) | cloud routine 014CmXZZ, 17:08–17:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
