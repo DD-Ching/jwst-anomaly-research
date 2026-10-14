@@ -21,6 +21,10 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   0.121 and 0.142). Writeup drafted (`docs/state/units/X2_s6a_summary.md`); next is a human expert review, the owner's
   call. Paused; no automatic follow-up.
 
+- **X3 W3 in unselected Gaia epoch photometry** (authorized 2026-10-14 by S0-2026-10-14): state file
+  `docs/state/units/X3.md`. G0 passed on dev (efficiency 0.70, false flags 0.1 % after an astrometric-quality
+  veto). Next: G1 vetoes, then the one held-out GAPS screen; DR4 (2 Dec 2026) is the decision-changing data.
+
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
    separation. The five requested channels are null (family p = 0.27 on the re-pinned GBM snapshot). The

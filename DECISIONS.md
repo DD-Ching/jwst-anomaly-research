@@ -4414,3 +4414,34 @@ Rules T1–T6 are in `docs/state/trial.md`, version trial-2026-10-12.1. First un
 **Revisit if.** The trial ends (2026-11-09) and the review of finished unknowns, method capability, candidates and
 verifications recommends continue, adjust or stop. Revisit earlier if the owner-review backlog keeps growing or a
 unit overruns its budget.
+
+## D-084 X3: W3 screen on unselected Gaia epoch photometry (GAPS dev → held-out → DR4); D-057 fitter plus an astrometric-quality veto (2026-10-14)
+
+**Decision.**
+- Test W3 (negative-mass inverted microlensing, D-047) on Gaia epoch photometry that was never selected by
+  variability: GAPS now, DR4 later.
+- Screen v1:
+  - the D-057 fitter flag, ΔBIC(N1neg − best of PSPL/PAR) < −10, with D-061's G-error rescaling;
+  - plus a veto of sources whose photometry depends on scan direction: no 5-parameter astrometric solution,
+    RUWE > 1.4, or `ipd_frac_multi_peak` > 10.
+- The DR3 variability flag is deliberately not used, because a real event would set it.
+- Gaia DataLink calls use `DATA_STRUCTURE=DATAMODEL_STANDARD`.
+
+**Alternatives rejected:**
+- the PTA Shapiro sign test and FRB exotic lensing (S0-2026-10-14 A, B);
+- `vari_microlensing` (D-061: the selection removes W3);
+- vetoing `phot_variable_flag = VARIABLE` (it would veto real events);
+- tuning ΔBIC instead of vetoing on independent astrometric quality: the false flags were blends, not marginal
+  fits;
+- DataLink for the 0.96 M held-out sources (about 13 days): use the bulk epoch-photometry files.
+
+**Evidence** (`derived` from `simulated` injections into `observed` light curves; dev only):
+- seed 2026: v0 efficiency 0.76 with real flags 0.027;
+- seed 4242 (fresh, v1): efficiency 0.70 (t_E = 30–300 d), real flags 0.001, PSPL→W3 0, vetoed 7.5 %;
+- tables in `results/x3/`.
+
+**Revisit if:**
+- DR4 epoch photometry does not cover unselected sources;
+- G1's periodicity or achromaticity vetoes cost more than half the efficiency;
+- the held-out false-flag rate exceeds the dev rate by more than 3×;
+- Gaia changes DataLink again.
