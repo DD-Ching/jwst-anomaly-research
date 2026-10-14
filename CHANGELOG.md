@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: (in progress) off-plane member potentials with spectroscopic redshifts, CANUCS and Abell 2744 models
+- Claimed by cloud routine; plan: list model potentials whose z_spec lies off the cluster plane (D-042 rule), re-run
+  `images --plane` for each, check for predicted extra images.
+
 ## 2026-10-14: `--plane NAME=Z[:SIGMA]` for `lens_consistency.py validate/images`; MACS0416 system 51 check
 - **Hypothesis before computing:** the D-046 explanation of MACS0416 system 51's missing fourth image (CANUCS
   potential 8757 is a z_spec 0.268 foreground galaxy; at its own redshift with σ ≤ 60 km/s the fourth image goes)
