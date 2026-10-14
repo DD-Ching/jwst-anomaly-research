@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: El Gordo and Sunrise follow-ups (in progress)
+- Plan: vet El Gordo `2828`, `1601` and Sunrise `1756`, `1907`, `1578` (TASKS "Field follow-ups").
+
 ## 2026-10-14: the five Abell 2744 follow-up sources are ordinary
 - **Hypothesis before computing:** one of the five unvetted M1 follow-ups (docs/fields/abell2744.md) could be a
   lensed image no published model explains, or a configuration around an invisible deflector. Ordinary: known
