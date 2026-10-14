@@ -12,33 +12,20 @@
  },
  "control": false,
  "n_background_strong_shear": 56,
- "n_catalogued_excluded": 0,
- "n_arcs_tested": 20,
+ "n_catalogued_excluded": 16,
+ "n_arcs_tested": 12,
  "skipped": {
-  "arc_mu": 7,
-  "no_counter": 29
+  "arc_mu": 3,
+  "no_counter": 25
  },
- "n_counter_images": 69,
- "n_robust": 44,
+ "n_counter_images": 43,
+ "n_robust": 20,
  "classes": {
-  "absent": 5,
-  "catalog": 42,
-  "confused": 5,
-  "recovered": 9,
-  "undetectable": 8
+  "absent": 1,
+  "catalog": 32,
+  "confused": 3,
+  "recovered": 2,
+  "undetectable": 5
  },
- "flags_robust_absent": [
-  {
-   "label": 3881,
-   "xy": [
-    -61.77,
-    -17.45
-   ],
-   "mu": 7.96,
-   "mu_arc": 6.47,
-   "mag_pred": 23.62,
-   "pred_snr": 237.2,
-   "best_snr": 4.5
-  }
- ]
+ "flags_robust_absent": []
 }

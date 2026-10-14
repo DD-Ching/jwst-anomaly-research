@@ -123,6 +123,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | 1.4 (X2 S5: radial equations with NED, growing-mode search) | 0.2 (Ellis–Bronnikov reference, convergence) | 0.1 (state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | 0.7 (X2 S6: rotation-stability literature and equation check) | — | 0.1 (S5 scope fix, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.5 (`arcs_counter.py`: counter-images of uncatalogued arcs, five fields, control) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01QyGL8z, 00:08–00:48Z |
+| 2026-W42 | — | — | ≈ 0.4 (vet Abell 370 3881: CATS system 7, second-model images; exclusion fix, five-field reruns and controls) | 0.15 (orientation, takeover, base merge, PR) | cloud routine 01AQVssd, 01:08–01:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

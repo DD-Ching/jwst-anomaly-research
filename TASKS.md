@@ -151,9 +151,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 ## Supporting (M3 lensing-violation search, D-023; serves the focus above)
 1. **Lens-model consistency on SMACS** (D-024: model validated; arc orientations give a null result). Next:
    - counter-images: done for the catalogued systems (D-029: 0 of 11 testable uncatalogued images absent). Left:
-     - ~~bright single arcs~~ — done for five fields (D-029 addendum 2026-10-14, `arcs_counter.py`): four null;
-       **next: vet Abell 370 3881** (robust `absent`, 237σ predicted; no A370 image list, so possibly a knot of a
-       known system); then `--control` on the other fields;
+     - ~~bright single arcs~~ — done for five fields (D-029 addendum 2026-10-14, `arcs_counter.py`): null; Abell 370
+       3881 was CATS system 7 with a wrong photo-z; controls on all fields;
      - a BCG/ICL-subtracted test for system 17;
      - reference fluxes for systems 11, 16 and 26;
    - flux ratios and colours: done for SMACS and El Gordo (D-032: no anomaly; most images untested). Left:

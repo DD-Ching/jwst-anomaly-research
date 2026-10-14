@@ -45,7 +45,7 @@ from pathlib import Path
 import numpy as np
 from astropy.coordinates import SkyCoord
 from astropy.io import fits
-from astropy.table import Table
+from astropy.table import Table, vstack
 
 from jwst_anomaly import lensmodel, paths, schema
 from jwst_anomaly.photometry import fetch_catalog
@@ -84,6 +84,24 @@ def catalogued_mask(arcs: Table, images: Table, radius: float) -> np.ndarray:
     ci = SkyCoord(images["ra"], images["dec"], unit="deg")
     _, sep, _ = ca.match_to_catalog_sky(ci)
     return sep.arcsec <= radius
+
+
+def known_images(name: str, files: dict, par) -> Table:
+    """Catalogued multiple images of the cluster in the JWST frame, for excluding arcs that are
+    knots of known systems: the model's own list even where D-035/D-044 gate it off for position
+    tests (identification needs only the observed positions), plus the HFF CATS list of the same
+    cluster when ``lens_consistency.MODELS`` has one. Abell 370 3881 is CATS image 7.5 (system 7,
+    z_spec 2.751) but matches no CANUCS image within 7", and its z_phot 2.99 moved the predicted
+    counter-image 2.6" off the detected image 7.4."""
+    names = [name] + [c for c in (f"{name.split('-')[0]}-cats",) if c != name and c in lc.MODELS]
+    parts = []
+    for n in names:
+        if "arcs.dat" not in lc.MODELS[n]["files"]:
+            continue
+        fs = files if n == name else {}
+        imgs, _ = lc.image_list(n, fs, par if n == name else None)
+        parts.append(lc.shift_images(n, imgs)["ra", "dec"])
+    return vstack(parts, metadata_conflicts="silent") if parts else Table({"ra": [], "dec": []})
 
 
 def counter_images(model, grid, ra: float, dec: float, z: float, self_arcsec: float) -> Table:
@@ -197,10 +215,8 @@ def chain_check(name: str, par: dict, flags: Table, n_samples: int, half: float 
 def run(args) -> dict:
     arcs = Table.read(args.arcs_dir / args.model / "arcs.ecsv")
     model, files, par = lc.load_model(args.model)
-    images = Table()
-    if lc.has_image_list(args.model):
-        images, _ = lc.image_list(args.model, files, par)
-    lc.apply_frame_offset(args.model, model, images if len(images) else None)  # images too
+    lc.apply_frame_offset(args.model, model)
+    images = known_images(args.model, files, par)
 
     bg = (arcs["population"] == "background") & np.asarray(arcs["strong_shear"], bool)
     bg &= np.isfinite(np.asarray(arcs["z_phot"], float)) & np.isfinite(

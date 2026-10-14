@@ -1527,9 +1527,13 @@ on background, strong-shear arcs of the stored `arcs` tables that lie > 2″ (AS
 the arc is traced at z16 / z50 / z84 of its photo-z; a counter-image is robust when all three agree within 3″; the
 predicted flux is the arc's isophotal flux × |μ_c/μ_arc| with an encircled fraction of 0.5 (ASSUMPTION); a flag is a
 robust D-029 `absent` with best S/N < 5 (ASSUMPTION, from the Abell 2744 control: catalogued image 7247 is `absent`
-at 86σ by the 1/3 flux bound). Four fields null; Abell 370 3881 unvetted (CHANGELOG 2026-10-14). Rejected: a 1″
-exclusion (knots of system 26 with a wrong photo-z made a false `absent`). Revisit if: an Abell 370 image list
-passes D-035, or spectroscopic redshifts for the tested arcs.
+at 86σ by the 1/3 flux bound). Arcs are excluded near the model's own image list even where D-035/D-044 gate it
+off for position tests, and near the HFF CATS list of the same cluster (identification needs only observed positions).
+Five fields null (CHANGELOG 2026-10-14); the one earlier flag, Abell 370 3881, is CATS image 7.5 of system 7 with a
+wrong photo-z. Rejected: a 1″ exclusion (knots of system 26 with a wrong photo-z made a false `absent`); the model's
+own list alone (CANUCS A370 has no image within 7″ of 3881). Both false flags were photo-z errors on known systems,
+so a flag needs a spectroscopic redshift or a wider independent-model image search before vetting. Revisit if: an
+Abell 370 image list passes D-035, or spectroscopic redshifts for the tested arcs.
 
 ## D-030 Exact image-plane χ² in `validate`; El Gordo and Abell 2744 models in the repository (2026-10-08)
 

@@ -70,3 +70,25 @@ def test_catalogued_mask_and_catalog_match():
 def test_mag_to_image_units():
     # AB 8.90 is ~1 Jy: 1e6 MJy/sr summed over 1e-12 sr pixels
     assert acn.mag_to_image_units(8.9, 1e-12) == pytest.approx(1e6, rel=1e-3)
+
+
+def test_known_images_adds_the_cats_list_even_when_gated_off(monkeypatch):
+    # abell370-canucs has a gated-off own list; the CATS list of the same cluster is added
+    lists = {"abell370-canucs": [10.0], "abell370-cats": [10.01]}
+    monkeypatch.setattr(
+        acn.lc,
+        "MODELS",
+        {
+            "abell370-canucs": {"files": {"arcs.dat": None}, "image_list_ok": False},
+            "abell370-cats": {"files": {"arcs.dat": None}},
+            "elgordo-caminha23": {"files": {}},
+        },
+    )
+    monkeypatch.setattr(
+        acn.lc, "image_list", lambda n, f, p: (Table({"ra": lists[n], "dec": [0.0]}), {})
+    )
+    monkeypatch.setattr(acn.lc, "shift_images", lambda n, t: t)
+    t = acn.known_images("abell370-canucs", {}, None)
+    assert sorted(t["ra"]) == [10.0, 10.01]
+    assert list(acn.known_images("abell370-cats", {}, None)["ra"]) == [10.01]
+    assert len(acn.known_images("elgordo-caminha23", {}, None)) == 0

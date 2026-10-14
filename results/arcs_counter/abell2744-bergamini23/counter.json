@@ -12,18 +12,18 @@
  },
  "control": false,
  "n_background_strong_shear": 35,
- "n_catalogued_excluded": 9,
- "n_arcs_tested": 3,
+ "n_catalogued_excluded": 10,
+ "n_arcs_tested": 2,
  "skipped": {
   "arc_mu": 1,
   "no_counter": 22
  },
- "n_counter_images": 7,
- "n_robust": 7,
+ "n_counter_images": 5,
+ "n_robust": 5,
  "classes": {
   "catalog": 1,
   "confused": 2,
-  "recovered": 4
+  "recovered": 2
  },
  "flags_robust_absent": []
 }
