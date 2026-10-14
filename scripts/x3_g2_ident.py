@@ -114,9 +114,7 @@ def lensed(ux: np.ndarray, uy: np.ndarray, rho: float, n: int = 300, seed: int =
     A = amp.mean(1)
     cx = (w * x).sum(1) / np.maximum(amp.sum(1), 1e-30)
     cy = (w * y).sum(1) / np.maximum(amp.sum(1), 1e-30)
-    sx = (x * amp).sum(1) / np.maximum(amp.sum(1), 1e-30)  # lensed-light-weighted source position
-    sy = (y * amp).sum(1) / np.maximum(amp.sum(1), 1e-30)
-    return A, cx - sx, cy - sy
+    return A, cx - ux, cy - uy  # shift relative to the source-disc centre
 
 
 # ----------------------------------------------------------------------------- Gaia-like data

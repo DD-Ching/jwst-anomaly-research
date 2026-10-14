@@ -4550,7 +4550,7 @@ unit overruns its budget.
 
 **Revisit if:**
 - DR4 epoch astrometry is documented. The blend-ratio photocentre shift is NOT a signature: it is exactly
-  degenerate with an ordinary blended variable. Only the lens image shift is new, measurable for G ≲ 17 and
-  θ_E ≳ 3 mas (X3.md, G2 prerequisite; addendum 2026-10-14 by owner correction);
+  degenerate with an ordinary blended variable. Only the lens image shift is new, measurable for G ≲ 17,
+  θ_E ≳ 3 mas and t_E ≈ 100 d, under the assumed per-transit σ (X3.md, G2 prerequisite; addendum 2026-10-14 by owner correction);
 - a joint G/BP/RP fit is built (it replaces the colour test);
 - Gaia changes the bulk-file layout.

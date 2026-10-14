@@ -10,9 +10,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   a fixed line) is reproduced exactly by any one-variable blend (residual ~1e-24). Only the lens's own
   image-centroid shift is new.
 - **Cases (`scripts/x3_g2_ident.py`, `results/x3/g2_ident.json`; simulated):**
-  - The image shift is measurable against that ordinary model for G ≲ 17, θ_E ≳ 3 mas and t_E ≈ 100 d. Base
+  - The image shift is measurable against that ordinary model for G ≲ 17, θ_E ≳ 3 mas and t_E ≈ 100 d, under the
+    assumed per-transit σ (doubling σ divides Δχ² by 4). Base
     case Δχ² 70; G 15: 486; G 19: 10; θ_E 1 mas: 8; t_E 30 or 300 d: 6–7.
-  - It adds sign-of-mass information only at G 15 or θ_E 10 mas (Δχ² 42, 67).
+  - It adds sign-of-mass information at most at G 15 or θ_E 10 mas (Δχ² ≤ 42, ≤ 67; upper bounds, because the
+    positive-mass comparison keeps W3's t₀, t_E and u₀).
   - Against two variable blended stars, astrometry alone adds nothing.
 - **DR4 (ESA DR4 content page):** epoch astrometry for all sources in the main astrometric processing. Whether
   it carries AL coordinates, scan angles and uncertainties, and its faint-source coverage, are unknown.
