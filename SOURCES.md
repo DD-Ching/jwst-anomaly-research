@@ -1247,6 +1247,8 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - Dzhunushaliev, Folomeev, Kleihaus, Kunz & Radu, arXiv:1309.2448 (PRD 88, 124028), §V (perturbation ODEs, J_cr).
   X2 S6a used the arXiv source (accessed 2026-10-14): Eqs. (lineel), (eqa), (eqq), (Rll-expr), (pertlineel), (hop),
   (eqv00)-(eqv22), and values digitised from the gnuplot EPS of Figs. 1 and 5 (`om_vs_Jn.eps`, `M_vs_Jn.eps`).
+  Citing literature: INSPIRE `refersto:recid:1253547` (47 records, 2026-10-14); erratum check via Crossref
+  (10.1103/PhysRevD.88.124028, no update records). Log in `docs/state/units/X2_s6a_prior_work.md`.
 - Kleihaus & Kunz, arXiv:1409.1503 (PRD 90, 121503); Chew, Kleihaus & Kunz, arXiv:1608.05253 (PRD 94, 104031).
 - Khoo et al., arXiv:2401.02898 (PRD 109, 084013); Blázquez-Salcedo et al., arXiv:2312.10754 (PRD 109, 064028);
   Azad et al., arXiv:2509.22118 (Universe 11, 325); arXiv:2603.12748; arXiv:2610.13206 (not refereed).
