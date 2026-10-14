@@ -137,6 +137,8 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.4 (MACS0416 `halo_phot` + `fluxratios --halo-phot`, CANUCS model; cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 019kpPJS, 09:08–09:45Z |
 | 2026-W42 | — | 1.4 (S0-2026-10-14 screen: PTA reach estimate, literature/data check; X3 G0 harness and gate runs) | 1.0 (X3 G0 positive controls and false-alarm calibration on two dev samples) | 0.3 (orientation, claim, DataLink fix, PR) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.35 (`sunrise_counter.py`: Sunrise counter-images in four RELICS models; control; cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01Dfw2ou, 11:08–11:45Z |
+| 2026-W42 | ≈ 0.35 (UNCOVER v2.0 maps: route, validation on both image lists; gate fails) | — | — | 0.15 (orientation, claim, PR) | cloud routine 01Mkg8y2, 12:09–12:55Z |
+| 2026-W42 | ≈ 0.45 (UNCOVER v2.0 gate fix; 4.2c second-model photometry and injections) | — | — | 0.1 (orientation, takeover, base merge, PR) | cloud routine 012BA5rZ, 13:08–13:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

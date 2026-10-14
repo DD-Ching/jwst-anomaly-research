@@ -2236,6 +2236,17 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
 - A MACS0717 photo-z catalogue (DJA or a team release) appears: re-run `radial` with the background cut.
 - `forced_check` ties its match and search radii to the measured image-plane rms when that rms exceeds 1″.
 
+**Addendum 2026-10-14 (UNCOVER v2.0 as Abell 2744's second model).**
+- **Decision.** Tracing fold pairs from the mean back-traced source fails the image-list gate spuriously.
+  `a2744_uncover.py` uses the magnification-weighted least-squares source (`wls_source`, the first-order image-plane
+  χ² source). UNCOVER v2.0 then passes (rms 0.84″ vs 1.5 × 0.60″, every traced image re-imaged) and is Abell 2744's second model for this rule.
+- **Alternatives rejected.** The mean source (rms 4.8″: 34.1 and 80.1 traced outside the caustic); the best single
+  image's source (1.01″); a finer solver grid (no change). Changing `lensmodel.imageplane_residuals` itself would
+  shift every validated field's gate numbers; revisit if another map model fails the same way.
+- **Evidence.** 4.2c is predicted by both models (μ 8.7 / 8.8, 0.93″ apart) and not seen at ≥ 0.5× (injections), so
+  it is not model-dependent; its vetted explanation (member 34423 systematics) stands. CHANGELOG 2026-10-14.
+- **Revisit if** a UNCOVER release refits the 4.2c region, or a third model removes 4.2c.
+
 ## D-042 MACS0416 counter-image and flux-ratio screens: null; CANUCS Lenstool model as second model; two-plane check of foreground deflectors (2026-10-08)
 
 **Decision.** With the image list open (D-040), the MACS0416 `images` and `fluxratio` screens are a null result

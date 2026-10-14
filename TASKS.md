@@ -210,11 +210,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - MACS1149: `macs1149-sharon` in `MODELS`; the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1
        photo-z; fix system 16's z (spectroscopic z, or forced photometry on its far-image track); evaluate the CANUCS
        lens models (see the CANUCS item above);
-     - `bayes.dat` position spreads (`posterior`, D-045) as `forced_check` search radii; the UNCOVER v2.0 cross-check
-       for Abell 2744.
+     - `bayes.dat` position spreads: not needed (D-045: 0.2–0.4″, inside the 1″ radius). UNCOVER v2.0 passes the
+       gate (D-041 addendum 2026-10-14); next: the D-041 cross-model rule on every Bergamini forced-photometry row.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
-   - Abell 2744: UNCOVER v2.0 maps;
+   - Abell 2744: UNCOVER v2.0 maps (validated 2026-10-14, `scripts/a2744_uncover.py`);
    - **Done (D-030):** `validate --model elgordo-caminha23 | abell2744-bergamini23` reproduces Lenstool's χ²
      (82.53 vs 80.22; 146.64 vs 146.60). No image-position anomaly. Next:
      - `images --forced-image`: done for El Gordo (D-034) and Abell 2744 (D-036); 700.1 needs a finer z scan;

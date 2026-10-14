@@ -2,6 +2,33 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: UNCOVER v2.0 passes as the second Abell 2744 model; it also predicts 4.2c, and the vetted verdict stands
+- **Route:** the UNCOVER DR4 lens maps (v2.0, Furtak & Zitrin, 2024-08-07) from Google Drive
+  (`drive.usercontent.google.com`, sha256-pinned in `scripts/a2744_uncover.py`; deflection x/y 75 + 71 MB gz, 4561² at
+  0.1″/pix, deleted after use) and UNCOVER's own image table (186 rows). The claim started as `bayes.dat` search
+  radii and was redirected: D-045 already measured the chain spread of the flagged images (0.2–0.4″).
+- **Validation gate (D-035 rule, ≤ 1.5 × the quoted 0.60″; ASSUMPTION): passes** with the magnification-weighted
+  least-squares source per family (`wls_source`): own list 181 / 181 traced images re-imaged (63 families), rms **0.84″**,
+  median 0.60″, p90 1.21″, max 2.31″, no family short of images; 28 images share their nearest predicted image with a
+  sibling (knot or fold pairs; their offsets are optimistic). Bergamini+23's list through the same maps: rms 1.00″.
+- **Failed approaches** (numbers from a first parse that split the 11 one-decimal-id systems, e.g. 83.1–83.3,
+  into single images; fixed after `/code-review`): the mean back-traced source (the `imageplane_residuals` default) gives rms 4.8″: it falls
+  outside the caustic for fold pairs, so 34.1 and 80.1 come back as single images 22–32″ away. The best single
+  image's source gives 1.01″. Solver grid 0.1″ instead of 0.25″ changes nothing (≤ 1e-6″). The source definition
+  was chosen after the mean failed (post hoc); WLS is the standard first-order image-plane χ² source.
+- **4.2c, D-041 second-model test [model_prediction; observed photometry]:** UNCOVER also predicts 4.2c, μ 8.83,
+  0.93″ from Bergamini's position. High-pass (1″) peak photometry within 1″ of it: F150W/F277W/F444W flux
+  0.33/0.20/0.24 × the μ-scaled 4.2b expectation, at the west end of an arc-like feature 0.43–0.52″ E, and 0.32 mag
+  bluer in F150W/F444W than 4.2b (cutouts viewed). Injections of 4.2b's knot at the prediction: recovered at 1× in
+  all bands and at 0.5× in F277W/F444W. So both models predict an image not seen at ≥ 0.5× its flux; it is not
+  model-dependent in the D-041 sense. The vetted verdict (docs/candidates/abell2744-family4-c.md: μ and position
+  systematics next to member 34423, shared by any scaling-relation model) stands: UNCOVER, like Bergamini, puts the
+  knots' c images 2.3″ apart against 0.45–0.49″ in a and b. Not a candidate.
+- **Handoff:** UNCOVER v2.0 is usable as Abell 2744's second model (`a2744_uncover.py`). Next: the full D-041
+  cross-model rule on every Bergamini forced-photometry row (37 / 63 UNCOVER families and 32 / 50 Bergamini families get extra predicted images, mostly
+  third images of catalogued doubles or central demagnified images). Other lens-model item: `--plane` for
+  `images/validate`.
+
 ## 2026-10-14: S0 screen picks X3 (W3 in unselected Gaia epoch photometry); X3 G0 passes on dev; Gaia DataLink fix
 - **S0-2026-10-14** (`docs/state/units/S0-2026-10-14.md`; owner request to return to observational searches).
   - **A, pulsar-timing Shapiro sign test: not qualified.** A negative-mass lens would advance pulses
