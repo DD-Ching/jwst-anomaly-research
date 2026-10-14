@@ -198,3 +198,25 @@ Outputs: `results/arcs/elgordo-caminha23/`.
   real. Predicted stretch at PA ≈ 70°, offset 60.8° against the 60° threshold; anti in only 55 of 100 `bayes.dat`
   rows (offset 58.6–62.8°, 16–84 %). A marginal, single source consistent with intrinsic shape. Ordinary.
 - **Result: null.**
+
+## Off-plane potentials (2026-10-14, D-046 addendum 2026-10-14c)
+
+`offplane_potentials.py --model elgordo-caminha23` (Caminha+23 MUSE catalogue, CDS J/A+A/678/A3 `catalog.dat`,
+quality 2/3/9 trusted; matched within 0.5″ in the model's HST/RELICS frame). Numbers are `model_prediction` with the
+other parameters **not refitted**; thresholds are ASSUMPTIONs.
+- 188 / 265 potentials have a z_spec; 20 are off-plane, all at z 0.6305–0.6355 (σ 62–235 km/s). They are the
+  foreground group of 20 ellipticals that Caminha+23 found and modelled on the cluster plane with the member
+  scaling (their model table: χ² 103 without the group, 80 with it, refitted). The listing recovers the group
+  exactly: a positive control.
+- `validate --plane <20 names>=0.6325[:σ]` (image-plane χ², 56 images; single plane 82.53):
+
+| σ (× fitted) | 0.01 (removed) | 0.822 (luminosity) | 0.913 (lensing-equivalent, z_s 3) | 1.00 | 1.10 | 1.25 | 1.40 |
+|---|---|---|---|---|---|---|---|
+| χ² | 312.9 | 127.8 | 110.5 | 100.3 | **98.2** | 129.8 | 246.3 |
+
+  Per-galaxy z_spec instead of the group mean: 100.2. At the best σ only 20c exceeds 3σ.
+- `images --plane …:σ×1.10` (F200W `jw01176-o241_t012` catalogue, no forced photometry): the extra images of systems
+  3, 4, 6, 12, 15, 16 and 19 persist within 0.7″. New: a system-17 extra (μ −1.9, F200W 29.2, below the 27.1 depth
+  proxy, undetectable) and a system-23 extra beside 23a (whose position the multi-plane model misses with 23a, 17a,
+  20c). System 7's extra goes. **No robust new extra image; no tension.** A multi-plane refit is not available
+  in the repository and is not needed while no flag depends on the group.

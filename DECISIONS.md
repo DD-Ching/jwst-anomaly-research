@@ -2542,6 +2542,19 @@ images, can belong to a blended lensed image). MACS0416 CANUCS: 12 / 222 off-pla
 foreground galaxy's multi-plane deflection, so an unrefitted Δχ² is only an upper bound and is no tension at ~12 %.
 Rejected: refitting the CANUCS model here (no Lenstool optimiser in the repo; not needed while no flag depends on O5).
 
+**Addendum 2026-10-14c (MUSE redshifts for Abell 2744 and El Gordo).** For models with a published MUSE redshift
+catalogue (`offplane_potentials.MUSE`: Richard+21 J/A+A/646/A83 for Abell 2744, Caminha+23 J/A+A/678/A3 for El
+Gordo) the z_spec is trusted by its quality flag (zconf ≥ 2; q_zsp 2/3/9), matched in the model's HST frame.
+Abell 2744 Bergamini+23: 72 / 180 potentials with z_spec, 0 off-plane. El Gordo Caminha+23: 188 / 265 with z_spec,
+20 off-plane, all at z 0.6305–0.6355: exactly the paper's foreground group of 20 ellipticals, which the authors
+modelled on the cluster plane with the member scaling (their Table: no-foreground χ² 103 vs reference 80, refitted).
+Group moved to z 0.6325, unrefitted (`model_prediction`): χ² 82.5 → 100.3 (fitted σ), 98.2 (σ × 1.10, best of
+0.82–1.40), 110.5 (× 0.913, lensing-equivalent at z_s 3), 127.8 (× 0.822, luminosity-rescaled); group removed
+(σ × 0.01) 312.9. Per-galaxy z_spec instead of the group mean: 100.2. `images --plane` (σ × 1.10): the extra
+predicted images of systems 3, 4, 6, 12, 15, 16, 19 persist within 0.7″; new are a system-17 extra (μ −1.9, F200W
+29.2, below the 27.1 depth proxy) and a system-23 one beside 23a; no robust new extra image. **No tension**; the
+foreground group is a known, modelled structure, so it is a positive control for the listing.
+
 ## D-047 Exotic-lens predictions: wormhole and negative-mass signatures are searchable, warp signatures are not (2026-10-08)
 
 **Decision.** Phase 1 ("predictions first") gives the screens closed-form targets. docs/exotic_lensing.md has the
