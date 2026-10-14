@@ -110,8 +110,11 @@ than the ringdown damping time (about 4 ms).
 **Growth time is not collapse time.**
 - The time to depart from the background depends on the initial radial-perturbation amplitude ε, as about
   τ·ln(1/ε), and on nonlinear evolution. Neither is computed here.
-- Linear extrapolation only: unless ε ≲ e^{-133} ≈ 10⁻⁵⁸, the linear perturbation would reach order unity before
-  the first echo. A merger is not expected to produce such a quiet initial state, but that is not shown here.
+- Linear extrapolation only. For the unstable mode to stay below order unity until the first echo, its initial
+  amplitude would have to satisfy ε ≲ e^{-133} ≈ 10⁻⁵⁸.
+  - This is a requirement derived from the linear growth rate over that interval.
+  - It is not a computed merger initial condition, and it is not a collapse time.
+  - Owner scope correction, 2026-10-14.
 
 **Decision.** This applies the owner's qualitative rule ("if the perturbation can break the fixed-background
 approximation within the relevant window, stop expanding echo searches on this background"). No numerical
@@ -122,7 +125,8 @@ background.** The S2/S4 numbers remain as computed, under their stated assumptio
 
 ## What this removed, and what is left
 - **Removed:** whether the S4 background (phantom + magnetic NED SV at a − 2M = 3.575e-4) is linearly radially
-  stable. It is not, with τ = 9.9 M.
+  stable. It is not, with τ = 9.9 M. Scope: this specified background at this point is radially unstable; no
+  statement about whether a throat can be "maintained" in general.
 - **Not shown:**
   - other values of a or other matter sources (the anisotropic fluid has no action and no radial dynamics of
     its own);

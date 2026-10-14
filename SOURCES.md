@@ -1235,3 +1235,13 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   (Gonzalez, Guzmán & Sarbach, CQG 26 015010), 1911.13103 (Cremona, Pizzocchero & Sarbach, PRD 101 104061),
   2507.02258 (Wu, Wang & Miao), 2510.11406 and 2607.18399 (charged wormholes, radial and nonradial), 2608.20081
   (Alencar et al., de Sitter black bounces, axial).
+
+## Trial unit X2 S6 rotation screen (accessed 2026-10-14; docs/state/units/X2_s6_rotation.md)
+- Azad, Blázquez-Salcedo, Khoo & Kunz: arXiv:2301.05243v2 (PLB 848, 138349, doi:10.1016/j.physletb.2023.138349);
+  arXiv:2403.08387v1 (PRD 109, 124051), Tables I-II, §V-VI.
+- Blázquez-Salcedo et al., arXiv:2510.11406 v1 (13 Oct 2025, "Charged wormholes can be long-lived") and v2
+  (13 Mar 2026; PLB 875, 140335).
+- Dzhunushaliev, Folomeev, Kleihaus, Kunz & Radu, arXiv:1309.2448 (PRD 88, 124028), §V (perturbation ODEs, J_cr).
+- Kleihaus & Kunz, arXiv:1409.1503 (PRD 90, 121503); Chew, Kleihaus & Kunz, arXiv:1608.05253 (PRD 94, 104031).
+- Khoo et al., arXiv:2401.02898 (PRD 109, 084013); Blázquez-Salcedo et al., arXiv:2312.10754 (PRD 109, 064028);
+  Azad et al., arXiv:2509.22118 (Universe 11, 325); arXiv:2603.12748; arXiv:2610.13206 (not refereed).

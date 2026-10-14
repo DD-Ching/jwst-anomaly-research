@@ -17,7 +17,7 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   weights verified by second routes, `scripts/x1_s4.py`, `scripts/x1_s4b.py`).
 - **X2 SV-throat echoes vs published post-merger limits** (authorized 2026-10-13): state file
   `docs/state/units/X2.md`; S1–S5 done. The S5 background is radially unstable, so there is no further echo search on it.
-  Paused for owner review.
+  S6 rotation screen done; S6a (5D complex modes) proposed. Paused for owner review.
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
