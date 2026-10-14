@@ -19,6 +19,7 @@
   "no_counter": 22
  },
  "n_counter_images": 5,
+ "n_near_arc_untested": 0,
  "n_robust": 5,
  "classes": {
   "catalog": 1,

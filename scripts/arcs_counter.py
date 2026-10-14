@@ -5,7 +5,9 @@ the sources are the strongly sheared background arcs of a stored ``arcs`` run th
 catalogued multiple image. Each arc's catalogue centre is traced to the source plane at its
 photo-z (z16, z50, z84 of the stored row) and ``lensmodel.find_images`` predicts every image.
 Images within ``--self-arcsec`` of the arc are the arc itself (a merging pair across a critical
-curve); the rest are counter-images (model_prediction). A counter-image's predicted total
+curve); the rest are counter-images (model_prediction). A counter-image whose search circle
+would come within ``--self-arcsec`` of the arc is not tested (``n_near_arc_untested``): the
+arc's own flux would count as its detection. A counter-image's predicted total
 flux is the arc's isophotal flux (observed) times |mu_c / mu_arc| (model).
 
 Each counter-image predicted at z50 with |mu| >= ``--min-mu`` is then checked (derived):
@@ -125,16 +127,27 @@ def nearest_offset(x: float, y: float, other: Table) -> float:
     return float(np.min(np.hypot(np.asarray(other["x"]) - x, np.asarray(other["y"]) - y)))
 
 
-def catalog_match(shapes: Table, ra: float, dec: float, radius: float, mag_max: float):
-    """Brightest catalogue source within ``radius`` arcsec, and whether it is bright enough."""
+def catalog_match(
+    shapes: Table, ra: float, dec: float, radius: float, mag_max: float, exclude: int = -1
+):
+    """Brightest catalogue source within ``radius`` arcsec other than label ``exclude`` (the arc
+    itself), and whether it is bright enough. NaN magnitudes never win."""
     c = SkyCoord(shapes["ra"], shapes["dec"], unit="deg")
     sep = c.separation(SkyCoord(ra, dec, unit="deg")).arcsec
-    near = sep <= radius
+    near = (sep <= radius) & (np.asarray(shapes["label"]) != exclude)
     if not near.any():
         return -1, np.nan, np.nan, False
-    mags = np.where(near, np.asarray(shapes["mag"], float), np.inf)
+    mags = np.asarray(shapes["mag"], float)
+    mags = np.where(near & np.isfinite(mags), mags, np.inf)
     k = int(np.argmin(mags))
+    if not np.isfinite(mags[k]):
+        return -1, np.nan, np.nan, False
     return int(shapes["label"][k]), float(mags[k]), float(sep[k]), bool(mags[k] <= mag_max)
+
+
+def _z(v) -> float:
+    """A stored redshift as float; masked or missing is NaN (not 0.0)."""
+    return float("nan") if np.ma.is_masked(v) else float(v)
 
 
 def mag_to_image_units(mag: float, pixar_sr: float) -> float:
@@ -226,7 +239,7 @@ def run(args) -> dict:
     sel = arcs[bg & (cat_img if args.control else ~cat_img)]
 
     xs, ys = model.to_frame(np.asarray(sel["ra"]), np.asarray(sel["dec"]))
-    half = float(np.max(np.hypot(xs, ys))) + 25.0 if len(sel) else 60.0
+    half = float(np.ceil(np.max(np.hypot(xs, ys)) + 25.0)) if len(sel) else 60.0
     grid = lensmodel.DeflectionGrid.cached(
         model, lc.grid_cache_path(model, half, args.step), half, args.step
     )
@@ -237,14 +250,14 @@ def run(args) -> dict:
     pix_sr = pixar_sr(uri)
     stamp, close = lc.image_stamper(uri, lc.MAX_SEARCH_ARCSEC + lc.FORCED_ANNULUS[1] + 0.1)
 
-    rows, skipped = [], {"arc_mu": 0, "no_counter": 0}
+    rows, skipped, near_arc = [], {"arc_mu": 0, "no_counter": 0}, 0
     z_lens = float(arcs.meta.get("z_lens", 0.3))
     try:
         for a in sel:
             zs = {
                 "z50": float(a["z_phot"]),
-                "z16": float(a["z160"]),
-                "z84": float(a["z840"]),
+                "z16": _z(a["z160"]),
+                "z84": _z(a["z840"]),
             }
             zs = {k: max(v, z_lens + 0.05) for k, v in zs.items() if np.isfinite(v)}
             preds = {
@@ -252,6 +265,7 @@ def run(args) -> dict:
                 for k, z in zs.items()
             }
             pred, mu_arc = preds["z50"]
+            ax0, ay0 = (float(v) for v in model.to_frame(a["ra"], a["dec"]))
             if not np.isfinite(mu_arc) or abs(mu_arc) > args.max_arc_mu:
                 skipped["arc_mu"] += 1
                 continue
@@ -263,11 +277,21 @@ def run(args) -> dict:
                 x, y = float(p["x"]), float(p["y"])
                 offs = [nearest_offset(x, y, preds[k][0]) for k in ("z16", "z84") if k in preds]
                 spread = max(offs) if offs else float("inf")
-                robust = bool(offs) and spread <= lc.MAX_SEARCH_ARCSEC
+                robust = len(offs) == 2 and spread <= lc.MAX_SEARCH_ARCSEC
                 radius = float(np.clip(spread, args.search_arcsec, lc.MAX_SEARCH_ARCSEC))
+                d_arc = float(np.hypot(x - ax0, y - ay0))
+                if d_arc - radius < args.self_arcsec:
+                    # the search circle would reach the arc, whose flux would count as a detection
+                    near_arc += 1
+                    continue
                 m_pred = float(a["mag"]) - 2.5 * np.log10(float(p["mu_ratio"]))
                 lab, m_near, sep_near, cat_ok = catalog_match(
-                    shapes, float(p["ra"]), float(p["dec"]), radius, m_pred + args.mag_slack
+                    shapes,
+                    float(p["ra"]),
+                    float(p["dec"]),
+                    radius,
+                    m_pred + args.mag_slack,
+                    exclude=int(a["label"]),
                 )
                 sci, err, xx, yy = stamp(float(p["ra"]), float(p["dec"]))
                 _, e0 = lc.aperture_snr(sci, err, xx, yy, 0.0, 0.0)
@@ -342,6 +366,7 @@ def run(args) -> dict:
         "n_arcs_tested": int(len(set(t["label"]))) if len(t) else 0,
         "skipped": skipped,
         "n_counter_images": len(t),
+        "n_near_arc_untested": near_arc,
         "n_robust": int(np.sum(t["robust"])) if len(t) else 0,
         "classes": classes,
         "flags_robust_absent": [
@@ -357,13 +382,16 @@ def run(args) -> dict:
             for r in flags
         ],
     }
-    if args.chain_samples and len(flags):
-        summary["chain"] = chain_check(args.model, par, flags, args.chain_samples)
     out = args.out / args.model / ("control" if args.control else "")
     out.mkdir(parents=True, exist_ok=True)
     if len(t):
         t.write(out / "counter.ecsv", overwrite=True)
+    else:
+        (out / "counter.ecsv").unlink(missing_ok=True)
     (out / "counter.json").write_text(json.dumps(summary, indent=1) + "\n")
+    if args.chain_samples and len(flags):  # after writing: a chain failure keeps the screen
+        summary["chain"] = chain_check(args.model, par, flags, args.chain_samples)
+        (out / "counter.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary
 
 

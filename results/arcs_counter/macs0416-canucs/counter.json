@@ -18,10 +18,11 @@
   "arc_mu": 2,
   "no_counter": 9
  },
- "n_counter_images": 8,
+ "n_counter_images": 7,
+ "n_near_arc_untested": 1,
  "n_robust": 2,
  "classes": {
-  "catalog": 7,
+  "catalog": 6,
   "confused": 1
  },
  "flags_robust_absent": []

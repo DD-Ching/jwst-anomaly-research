@@ -92,3 +92,20 @@ def test_known_images_adds_the_cats_list_even_when_gated_off(monkeypatch):
     assert sorted(t["ra"]) == [10.0, 10.01]
     assert list(acn.known_images("abell370-cats", {}, None)["ra"]) == [10.01]
     assert len(acn.known_images("elgordo-caminha23", {}, None)) == 0
+
+
+def test_catalog_match_skips_the_arc_and_nan_magnitudes():
+    shapes = Table(
+        {"label": [1, 2, 3], "ra": [10.0] * 3, "dec": [0.0] * 3, "mag": [22.0, np.nan, 24.0]}
+    )
+    assert acn.catalog_match(shapes, 10.0, 0.0, 1.0, 25.0)[0] == 1
+    lab, mag, _, ok = acn.catalog_match(shapes, 10.0, 0.0, 1.0, 25.0, exclude=1)
+    assert (lab, mag, ok) == (3, 24.0, True)
+    only_nan = shapes[[1]]
+    assert acn.catalog_match(only_nan, 10.0, 0.0, 1.0, 25.0)[0] == -1
+
+
+def test_masked_redshift_is_nan():
+    col = np.ma.masked_array([1.5, 0.0], mask=[False, True])
+    assert acn._z(col[0]) == 1.5
+    assert np.isnan(acn._z(col[1]))

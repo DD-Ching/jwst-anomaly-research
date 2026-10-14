@@ -19,6 +19,7 @@
   "no_counter": 7
  },
  "n_counter_images": 9,
+ "n_near_arc_untested": 0,
  "n_robust": 5,
  "classes": {
   "absent": 1,

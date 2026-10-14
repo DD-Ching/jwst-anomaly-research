@@ -18,11 +18,12 @@
   "arc_mu": 3,
   "no_counter": 25
  },
- "n_counter_images": 43,
- "n_robust": 20,
+ "n_counter_images": 42,
+ "n_near_arc_untested": 1,
+ "n_robust": 19,
  "classes": {
   "absent": 1,
-  "catalog": 32,
+  "catalog": 31,
   "confused": 3,
   "recovered": 2,
   "undetectable": 5
