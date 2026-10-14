@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: `--plane NAME=Z[:SIGMA]` for `lens_consistency.py validate/images`; MACS0416 system 51 check
+- **Hypothesis before computing:** the D-046 explanation of MACS0416 system 51's missing fourth image (CANUCS
+  potential 8757 is a z_spec 0.268 foreground galaxy; at its own redshift with σ ≤ 60 km/s the fourth image goes)
+  would fail if moving 8757 broke the fit to the CANUCS catalogued images. Plan change if Δχ² ≫ 10 or a nearby
+  system's images move by ≫ σ_pos.
+- New: `--plane` (D-046 addendum 2026-10-14): `split_planes` on the CLI, provenance under `multi_plane`, separate
+  output directory, no single-plane map comparisons for a multi-plane model. Unit tests for parsing, the move and
+  the output directory.
+- **Result (`model_prediction`, other parameters not refitted):** single plane χ² 330.81 over 303 images (Lenstool
+  344.30). 8757 at z 0.268: χ² 330.55 (fitted σ), 332.71 (70 km/s), 336.44 (60 km/s). CANUCS D52a–c, 1.3″ from
+  8757, absorb most of it (first images +0.28–0.45″ each at 60 km/s). **No tension**: the foreground explanation of the
+  system-51 fourth image stands.
+- **Handoff:** `images --plane` is wired but only exercised through unit tests (no field run yet). Next lens-model
+  item: other model potentials with spectroscopic redshifts away from the cluster (D-042 rule) across the CANUCS
+  and Abell 2744 models, then `images --plane` for any that predicts an extra image; or the next field's second
+  model (Sharon v4cor, MACS1149).
+
 ## 2026-10-14: Abell 2744 both-model extra images get sibling reference fluxes: none unmet
 - **Hypothesis before computing:** an extra image that Bergamini+23 and UNCOVER v2.0 both predict, left
   `no_reference` by the D-034 |μ| ≤ 50 cap and gates, would become a both-model unmet prediction if its siblings

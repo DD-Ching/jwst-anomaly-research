@@ -905,3 +905,65 @@ def test_halo_stamper_rejects_a_filter_smaller_than_a_compact_image():
     with pytest.raises(ValueError):
         lc.halo_stamper(_stamp_factory([]), 0.2)
     lc.halo_stamper(_stamp_factory([]), 0.6)  # the floor itself (3 x 0.2 is 0.6000000000000001)
+
+
+def test_parse_planes():
+    assert lc.parse_planes(["8757=0.268:70", "g2=1.1"]) == (
+        {"8757": 0.268, "g2": 1.1},
+        {"8757": 70.0},
+    )
+    assert lc.parse_planes(None) == ({}, {})
+    bad_specs = (["8757"], ["=0.3"], ["a=x"], ["a=0.3:"], ["a=0"], ["a=0.3:-5"], ["a=inf"])
+    for bad in (*bad_specs, ["a=nan"], ["a=0.3:1e999"], ["a=0.3", "a=0.4"]):
+        with pytest.raises(SystemExit):
+            lc.parse_planes(bad)
+
+
+def test_apply_planes_moves_a_potential(monkeypatch):
+    halo = _model()
+    gal = DPIE("gal", 5.0, 0.0, 0.0, 0.0, 1e-3, 5.0, 150.0, 0.39)
+    model = LensModel(
+        [*halo.components, gal], RA0, DEC0, halo.cosmology, source="synthetic", sha256="x" * 64
+    )
+    monkeypatch.setitem(lc.MODELS, "toy", {"files": {}})
+    same, info = lc.apply_planes("toy", model, None)
+    assert same is model and info is None
+    multi, info = lc.apply_planes("toy", model, ["gal=0.2:100"])
+    assert multi.z_planes == (0.2, 0.39)
+    assert info["planes"] == [
+        {
+            "potential": "gal",
+            "z_fitted": 0.39,
+            "z_lens": 0.2,
+            "v_disp_fitted": 150.0,
+            "v_disp": 100.0,
+        }
+    ]
+    assert info["model_sha256"] == multi.sha256 != model.sha256
+    with pytest.raises(SystemExit):
+        lc.apply_planes("toy", model, ["nope=0.2"])
+    monkeypatch.setitem(lc.MODELS, "toymap", {"files": {}, "kind": "maps"})
+    with pytest.raises(SystemExit):
+        lc.apply_planes("toymap", model, ["gal=0.2"])
+
+
+def test_out_dir_separates_plane_runs(tmp_path):
+    from argparse import Namespace
+
+    args = Namespace(out=tmp_path, model="m")
+    base = lc.out_dir(args)
+    a = lc.out_dir(args, {"model_sha256": "abcdef0123456789"})
+    assert base == tmp_path / "m" and a == base / "planes_abcdef0123"
+
+
+def test_validate_refuses_plane_on_a_map_model(monkeypatch):
+    from argparse import Namespace
+
+    monkeypatch.setitem(lc.MODELS, "toymap", {"files": {}, "kind": "maps"})
+
+    def no_io(*a, **k):
+        raise AssertionError("downloaded before refusing --plane")
+
+    monkeypatch.setattr(lc, "cmd_validate_maps", no_io)
+    with pytest.raises(SystemExit, match="map model"):
+        lc.cmd_validate(Namespace(model="toymap", plane=["g=0.2"]))

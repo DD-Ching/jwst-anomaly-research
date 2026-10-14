@@ -65,3 +65,9 @@ Inputs:
 - S3 byte ranges of `jw01208-o004_t002_nircam_clear-{f150w,f277w,f444w}_i2d.fits`.
 
 Queries and downloads are dated 2026-10-08. The contact sheets (`s51_sheet.png`, `s51_iso.png`) were inspected by eye.
+
+## Addendum 2026-10-14: cost of the two-plane solution on the CANUCS images
+`lens_consistency.py --model macs0416-canucs validate --plane 8757=0.268[:SIGMA]` (D-046 addendum 2026-10-14;
+`model_prediction`, other parameters not refitted): χ² over the 303 CANUCS images 330.81 (single plane) →
+330.55 / 332.71 / 336.44 at σ 102 (fitted) / 70 / 60 km/s. The σ ≤ 60 km/s solution that removes the fourth image
+costs Δχ² ≤ +5.6 (mostly CANUCS D52a–c, 1.3″ from 8757). The explanation stands.
