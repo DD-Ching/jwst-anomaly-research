@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: (in progress) `--plane NAME=Z[:SIGMA]` for `lens_consistency.py validate/images`
+- Plan: expose `LensModel.split_planes` (D-046) on the CLI, validate on MACS0416 system 51 (D-046 scratch result),
+  then test line-of-sight potentials at their own redshift on image-plane residuals.
+
 ## 2026-10-14: Abell 2744 both-model extra images get sibling reference fluxes: none unmet
 - **Hypothesis before computing:** an extra image that Bergamini+23 and UNCOVER v2.0 both predict, left
   `no_reference` by the D-034 |μ| ≤ 50 cap and gates, would become a both-model unmet prediction if its siblings
