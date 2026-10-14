@@ -10,6 +10,7 @@
   "search_arcsec": 0.7,
   "pair_rms_max": 1.0,
   "colour_tol_mag": 0.5,
+  "colour_min_snr": 3.0,
   "halo_filter_arcsec": 1.0,
   "source": "magnification-weighted least-squares source of 16.1/16.2",
   "predicted_flux": "(f1 + f2) |mu_x| / (|mu_1| + |mu_2|), model mu of the assigned images"
@@ -99,21 +100,47 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.96,
-    -0.27
+    -1.9,
+    -0.3
    ]
   },
   {
    "model": "cats",
-   "z": 3.55,
+   "z": 2.55,
    "radec": [
-    177.405983,
-    22.385157
+    177.406919,
+    22.38561
    ],
    "kind": "far",
    "best_colours": [
-    -1.64,
-    -0.23
+    -1.82,
+    -0.03
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 2.6,
+   "radec": [
+    177.406852,
+    22.385574
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.77,
+    -0.11
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 2.65,
+   "radec": [
+    177.406788,
+    22.385541
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.94,
+    -0.16
    ]
   },
   {
@@ -125,7 +152,7 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.6,
+    -1.57,
     -0.22
    ]
   },
@@ -140,6 +167,32 @@
    "best_colours": [
     -1.65,
     -0.2
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 3.7,
+   "radec": [
+    177.405888,
+    22.385114
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.67,
+    -0.07
+   ]
+  },
+  {
+   "model": "cats",
+   "z": 4.95,
+   "radec": [
+    177.405296,
+    22.384866
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.42,
+    -0.49
    ]
   },
   {
@@ -177,7 +230,7 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.42,
+    -1.43,
     -0.21
    ]
   },
@@ -190,8 +243,8 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.51,
-    -0.25
+    -1.34,
+    -0.3
    ]
   },
   {
@@ -203,8 +256,8 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.49,
-    -0.1
+    -1.3,
+    -0.31
    ]
   },
   {
@@ -217,7 +270,7 @@
    "kind": "far",
    "best_colours": [
     -1.49,
-    -0.2
+    -0.22
    ]
   },
   {
@@ -229,7 +282,7 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.54,
+    -1.52,
     -0.13
    ]
   },
@@ -242,8 +295,8 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.51,
-    -0.19
+    -1.41,
+    -0.26
    ]
   },
   {
@@ -255,7 +308,7 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.59,
+    -1.53,
     -0.05
    ]
   },
@@ -294,8 +347,8 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.46,
-    -0.16
+    -1.43,
+    -0.21
    ]
   },
   {
@@ -307,8 +360,8 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.51,
-    -0.14
+    -1.35,
+    -0.25
    ]
   },
   {
@@ -320,8 +373,8 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.49,
-    -0.13
+    -1.28,
+    -0.32
    ]
   },
   {
@@ -334,7 +387,7 @@
    "kind": "far",
    "best_colours": [
     -1.5,
-    -0.13
+    -0.19
    ]
   },
   {
@@ -346,7 +399,7 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.47,
+    -1.45,
     -0.15
    ]
   },
@@ -385,8 +438,8 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.39,
-    -0.29
+    -1.38,
+    -0.32
    ]
   },
   {
@@ -403,16 +456,16 @@
    ]
   },
   {
-   "model": "sharon",
-   "z": 2.05,
+   "model": "cats",
+   "z": 6.0,
    "radec": [
-    177.409776,
-    22.387728
+    177.404959,
+    22.384738
    ],
-   "kind": "near",
+   "kind": "far",
    "best_colours": [
-    -1.4,
-    -0.93
+    -1.21,
+    -0.41
    ]
   },
   {
@@ -424,8 +477,86 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.97,
-    -0.08
+    -1.92,
+    -0.3
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 2.45,
+   "radec": [
+    177.407096,
+    22.385501
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.75,
+    -0.3
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 2.5,
+   "radec": [
+    177.407015,
+    22.385453
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.88,
+    -0.22
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 2.55,
+   "radec": [
+    177.40694,
+    22.385409
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.78,
+    -0.16
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 2.6,
+   "radec": [
+    177.40687,
+    22.385369
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.77,
+    -0.3
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 2.65,
+   "radec": [
+    177.406805,
+    22.385332
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.78,
+    -0.23
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 3.15,
+   "radec": [
+    177.406337,
+    22.38504
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.63,
+    -0.37
    ]
   },
   {
@@ -450,7 +581,7 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.75,
+    -1.61,
     -0.13
    ]
   },
@@ -464,7 +595,7 @@
    "kind": "far",
    "best_colours": [
     -1.57,
-    -0.18
+    -0.36
    ]
   },
   {
@@ -489,8 +620,34 @@
    ],
    "kind": "far",
    "best_colours": [
-    -1.65,
+    -1.59,
     -0.27
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 3.45,
+   "radec": [
+    177.4061,
+    22.384928
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.34,
+    -0.26
+   ]
+  },
+  {
+   "model": "sharon",
+   "z": 3.5,
+   "radec": [
+    177.406065,
+    22.384912
+   ],
+   "kind": "far",
+   "best_colours": [
+    -1.28,
+    -0.22
    ]
   }
  ],
@@ -546,9 +703,13 @@
       "flux_over_pred": 2.59,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.2,
+      0.3
+     ],
      "best_colours": [
-      -1.96,
-      -0.27
+      -1.9,
+      -0.3
      ],
      "colour_match": true
     }
@@ -606,6 +767,10 @@
       "flux_over_pred": 1.54,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.5,
+      0.4
+     ],
      "best_colours": [
       null,
       null
@@ -666,6 +831,10 @@
       "flux_over_pred": 1.16,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.1,
+      -0.5
+     ],
      "best_colours": [
       null,
       null
@@ -726,6 +895,10 @@
       "flux_over_pred": 1.76,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      -0.2
+     ],
      "best_colours": [
       null,
       null
@@ -786,6 +959,10 @@
       "flux_over_pred": 4.76,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      -0.7
+     ],
      "best_colours": [
       null,
       null
@@ -858,6 +1035,10 @@
       "flux_over_pred": 5.79,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
      "best_colours": [
       null,
       null
@@ -918,6 +1099,10 @@
       "flux_over_pred": 3.72,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.1,
+      -0.4
+     ],
      "best_colours": [
       null,
       null
@@ -978,6 +1163,10 @@
       "flux_over_pred": 2.58,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.2,
+      0.6
+     ],
      "best_colours": [
       null,
       null
@@ -1038,6 +1227,10 @@
       "flux_over_pred": 2.96,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      -0.0
+     ],
      "best_colours": [
       null,
       null
@@ -1098,6 +1291,10 @@
       "flux_over_pred": 7.42,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      -0.7
+     ],
      "best_colours": [
       null,
       null
@@ -1158,11 +1355,15 @@
       "flux_over_pred": 18.09,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      null,
-      null
+     "colour_offset": [
+      -0.1,
+      -0.6
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.82,
+      -0.03
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "allowed"
@@ -1218,11 +1419,15 @@
       "flux_over_pred": 66.18,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      null,
-      null
+     "colour_offset": [
+      -0.4,
+      -0.5
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.77,
+      -0.11
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "allowed"
@@ -1275,14 +1480,18 @@
        -0.6,
        -0.3
       ],
-      "flux_over_pred": 29.92,
+      "flux_over_pred": 29.91,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      null,
-      null
+     "colour_offset": [
+      -0.5,
+      -0.4
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.94,
+      -0.16
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "allowed"
@@ -1324,7 +1533,7 @@
        -0.6,
        -0.3
       ],
-      "flux_over_pred": 6.1,
+      "flux_over_pred": 6.09,
       "forced_class": "undetectable"
      },
      "f444w": {
@@ -1338,6 +1547,10 @@
       "flux_over_pred": 7.27,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
      "best_colours": [
       null,
       null
@@ -1398,6 +1611,10 @@
       "flux_over_pred": 2.83,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.1,
+      -0.6
+     ],
      "best_colours": [
       null,
       null
@@ -1458,6 +1675,10 @@
       "flux_over_pred": 2.38,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.7,
+      -0.0
+     ],
      "best_colours": [
       null,
       null
@@ -1518,6 +1739,10 @@
       "flux_over_pred": 4.86,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.7,
+      -0.0
+     ],
      "best_colours": [
       null,
       null
@@ -1578,6 +1803,10 @@
       "flux_over_pred": 16.81,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.7,
+      -0.0
+     ],
      "best_colours": [
       -1.05,
       -0.11
@@ -1624,7 +1853,7 @@
        0.7,
        -0.0
       ],
-      "flux_over_pred": 18.91,
+      "flux_over_pred": 18.9,
       "forced_class": "undetectable"
      },
      "f444w": {
@@ -1635,9 +1864,13 @@
        0.7,
        -0.0
       ],
-      "flux_over_pred": 26.62,
+      "flux_over_pred": 26.61,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.7,
+      -0.0
+     ],
      "best_colours": [
       -0.93,
       -0.08
@@ -1695,9 +1928,13 @@
        0.6,
        -0.0
       ],
-      "flux_over_pred": 24.58,
+      "flux_over_pred": 24.57,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      -0.0
+     ],
      "best_colours": [
       -0.87,
       -0.15
@@ -1758,6 +1995,10 @@
       "flux_over_pred": 23.26,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.4,
+      0.1
+     ],
      "best_colours": [
       -0.88,
       -0.15
@@ -1804,7 +2045,7 @@
        0.3,
        0.2
       ],
-      "flux_over_pred": 16.42,
+      "flux_over_pred": 16.41,
       "forced_class": "undetectable"
      },
      "f444w": {
@@ -1818,8 +2059,12 @@
       "flux_over_pred": 21.34,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      0.2
+     ],
      "best_colours": [
-      -0.89,
+      -0.87,
       -0.16
      ],
      "colour_match": false
@@ -1878,8 +2123,12 @@
       "flux_over_pred": 20.25,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.1,
+      0.3
+     ],
      "best_colours": [
-      -0.87,
+      -0.88,
       -0.16
      ],
      "colour_match": false
@@ -1938,6 +2187,10 @@
       "flux_over_pred": 19.21,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      0.3
+     ],
      "best_colours": [
       -0.86,
       -0.18
@@ -1984,7 +2237,7 @@
        -0.1,
        0.4
       ],
-      "flux_over_pred": 13.9,
+      "flux_over_pred": 13.89,
       "forced_class": "undetectable"
      },
      "f444w": {
@@ -1998,6 +2251,10 @@
       "flux_over_pred": 18.3,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.1,
+      0.4
+     ],
      "best_colours": [
       -0.92,
       -0.15
@@ -2044,7 +2301,7 @@
        -0.3,
        0.5
       ],
-      "flux_over_pred": 13.79,
+      "flux_over_pred": 13.78,
       "forced_class": "undetectable"
      },
      "f444w": {
@@ -2058,6 +2315,10 @@
       "flux_over_pred": 17.99,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      0.5
+     ],
      "best_colours": [
       -0.88,
       -0.16
@@ -2118,6 +2379,10 @@
       "flux_over_pred": 17.43,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
      "best_colours": [
       -0.87,
       -0.18
@@ -2178,6 +2443,10 @@
       "flux_over_pred": 14.76,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
      "best_colours": [
       -0.77,
       -0.19
@@ -2238,9 +2507,13 @@
       "flux_over_pred": 9.62,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
      "best_colours": [
       -0.96,
-      -0.13
+      -0.21
      ],
      "colour_match": false
     }
@@ -2298,8 +2571,12 @@
       "flux_over_pred": 6.64,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.5,
+      0.4
+     ],
      "best_colours": [
-      -1.05,
+      -0.79,
       -0.25
      ],
      "colour_match": false
@@ -2358,11 +2635,15 @@
       "flux_over_pred": 3.75,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.5,
+      0.4
+     ],
      "best_colours": [
-      -1.64,
+      -0.95,
       -0.23
      ],
-     "colour_match": true
+     "colour_match": false
     }
    ],
    "verdict": "excluded: pair not reproduced"
@@ -2418,8 +2699,12 @@
       "flux_over_pred": 3.87,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.6,
+      -0.1
+     ],
      "best_colours": [
-      -1.6,
+      -1.57,
       -0.22
      ],
      "colour_match": true
@@ -2478,6 +2763,10 @@
       "flux_over_pred": 3.7,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.7,
+      -0.0
+     ],
      "best_colours": [
       -1.65,
       -0.2
@@ -2538,11 +2827,15 @@
       "flux_over_pred": 3.18,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      null,
-      null
+     "colour_offset": [
+      -0.7,
+      -0.0
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.67,
+      -0.07
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "excluded: pair not reproduced"
@@ -2598,6 +2891,10 @@
       "flux_over_pred": 1.39,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.7,
+      -0.0
+     ],
      "best_colours": [
       null,
       null
@@ -2658,6 +2955,10 @@
       "flux_over_pred": 0.67,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
      "best_colours": [
       null,
       null
@@ -2718,6 +3019,10 @@
       "flux_over_pred": 0.69,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.6,
+      -0.2
+     ],
      "best_colours": [
       null,
       null
@@ -2778,6 +3083,10 @@
       "flux_over_pred": 0.67,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.4,
+      -0.1
+     ],
      "best_colours": [
       null,
       null
@@ -2838,6 +3147,10 @@
       "flux_over_pred": 0.59,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      -0.1
+     ],
      "best_colours": [
       null,
       null
@@ -2898,6 +3211,10 @@
       "flux_over_pred": 0.63,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.2,
+      0.5
+     ],
      "best_colours": [
       null,
       null
@@ -2958,6 +3275,10 @@
       "flux_over_pred": 0.59,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.2,
+      0.1
+     ],
      "best_colours": [
       null,
       null
@@ -3018,6 +3339,10 @@
       "flux_over_pred": 0.57,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      -0.0
+     ],
      "best_colours": [
       null,
       null
@@ -3078,6 +3403,10 @@
       "flux_over_pred": 0.54,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      0.2
+     ],
      "best_colours": [
       null,
       null
@@ -3138,6 +3467,10 @@
       "flux_over_pred": 0.56,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      0.3
+     ],
      "best_colours": [
       null,
       null
@@ -3198,6 +3531,10 @@
       "flux_over_pred": 0.64,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      0.2
+     ],
      "best_colours": [
       null,
       null
@@ -3258,6 +3595,10 @@
       "flux_over_pred": 0.7,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.5,
+      0.4
+     ],
      "best_colours": [
       null,
       null
@@ -3318,6 +3659,10 @@
       "flux_over_pred": 0.58,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.5,
+      0.4
+     ],
      "best_colours": [
       null,
       null
@@ -3378,6 +3723,10 @@
       "flux_over_pred": 0.64,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.4,
+      0.5
+     ],
      "best_colours": [
       null,
       null
@@ -3438,6 +3787,10 @@
       "flux_over_pred": 0.62,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      0.4
+     ],
      "best_colours": [
       null,
       null
@@ -3498,6 +3851,10 @@
       "flux_over_pred": 0.66,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      0.5
+     ],
      "best_colours": [
       null,
       null
@@ -3558,6 +3915,10 @@
       "flux_over_pred": 0.73,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.2,
+      0.6
+     ],
      "best_colours": [
       null,
       null
@@ -3618,6 +3979,10 @@
       "flux_over_pred": 0.78,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.1,
+      0.6
+     ],
      "best_colours": [
       null,
       null
@@ -3678,6 +4043,10 @@
       "flux_over_pred": 0.78,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.1,
+      0.6
+     ],
      "best_colours": [
       null,
       null
@@ -3738,6 +4107,10 @@
       "flux_over_pred": 0.93,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      0.7
+     ],
      "best_colours": [
       null,
       null
@@ -3798,6 +4171,10 @@
       "flux_over_pred": 0.82,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.1,
+      0.6
+     ],
      "best_colours": [
       null,
       null
@@ -3858,6 +4235,10 @@
       "flux_over_pred": 0.76,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.1,
+      0.6
+     ],
      "best_colours": [
       null,
       null
@@ -3918,6 +4299,10 @@
       "flux_over_pred": 0.88,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
      "best_colours": [
       null,
       null
@@ -3978,6 +4363,10 @@
       "flux_over_pred": 0.82,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      0.2
+     ],
      "best_colours": [
       null,
       null
@@ -4038,11 +4427,15 @@
       "flux_over_pred": 1.5,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      null,
-      null
+     "colour_offset": [
+      0.6,
+      0.2
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.42,
+      -0.49
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "excluded: pair not reproduced"
@@ -4098,6 +4491,10 @@
       "flux_over_pred": 2.22,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      0.3
+     ],
      "best_colours": [
       -1.61,
       -0.3
@@ -4158,6 +4555,10 @@
       "flux_over_pred": 2.88,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      0.3
+     ],
      "best_colours": [
       -1.52,
       -0.16
@@ -4218,8 +4619,12 @@
       "flux_over_pred": 2.9,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      0.3
+     ],
      "best_colours": [
-      -1.42,
+      -1.43,
       -0.21
      ],
      "colour_match": true
@@ -4278,9 +4683,13 @@
       "flux_over_pred": 2.74,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.5,
+      0.3
+     ],
      "best_colours": [
-      -1.51,
-      -0.25
+      -1.34,
+      -0.3
      ],
      "colour_match": true
     }
@@ -4313,7 +4722,7 @@
        0.5,
        0.4
       ],
-      "flux_over_pred": 1.96,
+      "flux_over_pred": 1.95,
       "forced_class": "undetectable"
      },
      "f277w": {
@@ -4338,9 +4747,13 @@
       "flux_over_pred": 2.99,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.5,
+      0.3
+     ],
      "best_colours": [
-      -1.49,
-      -0.1
+      -1.3,
+      -0.31
      ],
      "colour_match": true
     }
@@ -4398,9 +4811,13 @@
       "flux_over_pred": 2.78,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.4,
+      0.4
+     ],
      "best_colours": [
       -1.49,
-      -0.2
+      -0.22
      ],
      "colour_match": true
     }
@@ -4458,8 +4875,12 @@
       "flux_over_pred": 2.8,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.4,
+      0.4
+     ],
      "best_colours": [
-      -1.54,
+      -1.52,
       -0.13
      ],
      "colour_match": true
@@ -4518,9 +4939,13 @@
       "flux_over_pred": 2.73,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      0.4
+     ],
      "best_colours": [
-      -1.51,
-      -0.19
+      -1.41,
+      -0.26
      ],
      "colour_match": true
     }
@@ -4578,8 +5003,12 @@
       "flux_over_pred": 2.84,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      0.5
+     ],
      "best_colours": [
-      -1.59,
+      -1.53,
       -0.05
      ],
      "colour_match": true
@@ -4624,7 +5053,7 @@
        0.2,
        0.5
       ],
-      "flux_over_pred": 2.05,
+      "flux_over_pred": 2.04,
       "forced_class": "recovered"
      },
      "f444w": {
@@ -4638,6 +5067,10 @@
       "flux_over_pred": 2.77,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.2,
+      0.5
+     ],
      "best_colours": [
       -1.52,
       -0.12
@@ -4698,6 +5131,10 @@
       "flux_over_pred": 2.67,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.2,
+      0.5
+     ],
      "best_colours": [
       -1.5,
       -0.17
@@ -4758,9 +5195,13 @@
       "flux_over_pred": 2.67,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.1,
+      0.5
+     ],
      "best_colours": [
-      -1.46,
-      -0.16
+      -1.43,
+      -0.21
      ],
      "colour_match": true
     }
@@ -4818,9 +5259,13 @@
       "flux_over_pred": 2.69,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.1,
+      0.5
+     ],
      "best_colours": [
-      -1.51,
-      -0.14
+      -1.35,
+      -0.25
      ],
      "colour_match": true
     }
@@ -4878,9 +5323,13 @@
       "flux_over_pred": 2.73,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      0.5
+     ],
      "best_colours": [
-      -1.49,
-      -0.13
+      -1.28,
+      -0.32
      ],
      "colour_match": true
     }
@@ -4938,9 +5387,13 @@
       "flux_over_pred": 2.64,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.1,
+      0.6
+     ],
      "best_colours": [
       -1.5,
-      -0.13
+      -0.19
      ],
      "colour_match": true
     }
@@ -4998,8 +5451,12 @@
       "flux_over_pred": 2.6,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.1,
+      0.6
+     ],
      "best_colours": [
-      -1.47,
+      -1.45,
       -0.15
      ],
      "colour_match": true
@@ -5055,9 +5512,13 @@
        -0.1,
        0.6
       ],
-      "flux_over_pred": 2.52,
+      "flux_over_pred": 2.51,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.1,
+      0.6
+     ],
      "best_colours": [
       -1.44,
       -0.18
@@ -5118,6 +5579,10 @@
       "flux_over_pred": 2.31,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.2,
+      0.6
+     ],
      "best_colours": [
       -1.33,
       -0.28
@@ -5178,9 +5643,13 @@
       "flux_over_pred": 2.08,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
      "best_colours": [
-      -1.39,
-      -0.29
+      -1.38,
+      -0.32
      ],
      "colour_match": true
     }
@@ -5238,6 +5707,10 @@
       "flux_over_pred": 2.11,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
      "best_colours": [
       -1.21,
       -0.34
@@ -5298,11 +5771,15 @@
       "flux_over_pred": 1.8,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
      "best_colours": [
-      null,
+      -1.21,
       -0.41
      ],
-     "colour_match": false
+     "colour_match": true
     }
    ],
    "verdict": "excluded: pair not reproduced"
@@ -5358,9 +5835,13 @@
       "flux_over_pred": null,
       "forced_class": "no_reference"
      },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
      "best_colours": [
       -1.39,
-      -0.96
+      -1.14
      ],
      "colour_match": false
     }
@@ -5418,11 +5899,15 @@
       "flux_over_pred": null,
       "forced_class": "no_reference"
      },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
      "best_colours": [
       -1.4,
-      -0.93
+      -1.15
      ],
-     "colour_match": true
+     "colour_match": false
     }
    ],
    "verdict": "excluded: pair not reproduced"
@@ -5478,9 +5963,13 @@
       "flux_over_pred": 0.92,
       "forced_class": "recovered"
      },
+     "colour_offset": [
+      0.3,
+      0.4
+     ],
      "best_colours": [
-      -1.97,
-      -0.08
+      -1.92,
+      -0.3
      ],
      "colour_match": true
     }
@@ -5538,6 +6027,10 @@
       "flux_over_pred": 0.35,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.1,
+      -0.3
+     ],
      "best_colours": [
       null,
       null
@@ -5598,6 +6091,10 @@
       "flux_over_pred": 0.72,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      -0.7
+     ],
      "best_colours": [
       null,
       null
@@ -5658,8 +6155,12 @@
       "flux_over_pred": 1.23,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      -0.5
+     ],
      "best_colours": [
-      null,
+      -1.82,
       null
      ],
      "colour_match": false
@@ -5718,6 +6219,10 @@
       "flux_over_pred": 0.99,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.6,
+      -0.3
+     ],
      "best_colours": [
       null,
       null
@@ -5778,6 +6283,10 @@
       "flux_over_pred": 0.93,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      -0.6
+     ],
      "best_colours": [
       null,
       null
@@ -5838,6 +6347,10 @@
       "flux_over_pred": 1.64,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.5,
+      -0.4
+     ],
      "best_colours": [
       null,
       null
@@ -5898,11 +6411,15 @@
       "flux_over_pred": 4.04,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      -1.89,
-      null
+     "colour_offset": [
+      0.4,
+      -0.3
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.75,
+      -0.3
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "excluded: pair not reproduced"
@@ -5958,11 +6475,15 @@
       "flux_over_pred": 4.96,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      null,
-      null
+     "colour_offset": [
+      0.2,
+      -0.1
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.88,
+      -0.22
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "allowed"
@@ -6018,11 +6539,15 @@
       "flux_over_pred": 8.23,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      null,
-      null
+     "colour_offset": [
+      -0.1,
+      0.1
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.78,
+      -0.16
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "allowed"
@@ -6064,7 +6589,7 @@
        -0.3,
        0.2
       ],
-      "flux_over_pred": 13.96,
+      "flux_over_pred": 13.95,
       "forced_class": "undetectable"
      },
      "f444w": {
@@ -6078,11 +6603,15 @@
       "flux_over_pred": 16.57,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      null,
-      null
+     "colour_offset": [
+      -0.3,
+      0.2
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.77,
+      -0.3
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "allowed"
@@ -6124,7 +6653,7 @@
        -0.5,
        0.3
       ],
-      "flux_over_pred": 88.72,
+      "flux_over_pred": 88.71,
       "forced_class": "undetectable"
      },
      "f444w": {
@@ -6138,11 +6667,15 @@
       "flux_over_pred": 117.0,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      null,
-      null
+     "colour_offset": [
+      -0.5,
+      0.3
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.78,
+      -0.23
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "allowed"
@@ -6198,6 +6731,10 @@
       "flux_over_pred": 10.56,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.5,
+      0.4
+     ],
      "best_colours": [
       null,
       null
@@ -6258,6 +6795,10 @@
       "flux_over_pred": 4.76,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.2,
+      0.2
+     ],
      "best_colours": [
       null,
       null
@@ -6315,9 +6856,13 @@
        -0.6,
        0.1
       ],
-      "flux_over_pred": 3.4,
+      "flux_over_pred": 3.39,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      0.3
+     ],
      "best_colours": [
       null,
       null
@@ -6378,6 +6923,10 @@
       "flux_over_pred": 2.1,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.1,
+      0.5
+     ],
      "best_colours": [
       null,
       null
@@ -6438,6 +6987,10 @@
       "flux_over_pred": 2.47,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.2,
+      0.5
+     ],
      "best_colours": [
       null,
       null
@@ -6498,6 +7051,10 @@
       "flux_over_pred": 2.94,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      -0.6
+     ],
      "best_colours": [
       null,
       null
@@ -6558,6 +7115,10 @@
       "flux_over_pred": 6.52,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      -0.5
+     ],
      "best_colours": [
       null,
       null
@@ -6618,6 +7179,10 @@
       "flux_over_pred": 38.87,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      -0.6
+     ],
      "best_colours": [
       null,
       null
@@ -6678,8 +7243,12 @@
       "flux_over_pred": 15.07,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      -0.6
+     ],
      "best_colours": [
-      null,
+      -1.4,
       null
      ],
      "colour_match": false
@@ -6738,11 +7307,15 @@
       "flux_over_pred": 17.32,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      0.3
+     ],
      "best_colours": [
       -1.63,
-      null
+      -0.37
      ],
-     "colour_match": false
+     "colour_match": true
     }
    ],
    "verdict": "allowed"
@@ -6798,6 +7371,10 @@
       "flux_over_pred": 14.19,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.5,
+      0.4
+     ],
      "best_colours": [
       -1.64,
       -0.3
@@ -6858,8 +7435,12 @@
       "flux_over_pred": 12.19,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.4,
+      0.4
+     ],
      "best_colours": [
-      -1.75,
+      -1.61,
       -0.13
      ],
      "colour_match": true
@@ -6918,9 +7499,13 @@
       "flux_over_pred": 10.4,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.2,
+      0.5
+     ],
      "best_colours": [
       -1.57,
-      -0.18
+      -0.36
      ],
      "colour_match": true
     }
@@ -6964,7 +7549,7 @@
        0.1,
        0.6
       ],
-      "flux_over_pred": 7.32,
+      "flux_over_pred": 7.31,
       "forced_class": "undetectable"
      },
      "f444w": {
@@ -6978,6 +7563,10 @@
       "flux_over_pred": 8.45,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.1,
+      0.6
+     ],
      "best_colours": [
       -1.66,
       -0.29
@@ -7038,8 +7627,12 @@
       "flux_over_pred": 7.76,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      0.6
+     ],
      "best_colours": [
-      -1.65,
+      -1.59,
       -0.27
      ],
      "colour_match": true
@@ -7098,11 +7691,15 @@
       "flux_over_pred": 6.6,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      null,
-      null
+     "colour_offset": [
+      -0.1,
+      0.6
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.34,
+      -0.26
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "excluded: pair not reproduced"
@@ -7158,11 +7755,15 @@
       "flux_over_pred": 5.68,
       "forced_class": "undetectable"
      },
-     "best_colours": [
-      null,
-      null
+     "colour_offset": [
+      -0.2,
+      0.6
      ],
-     "colour_match": false
+     "best_colours": [
+      -1.28,
+      -0.22
+     ],
+     "colour_match": true
     }
    ],
    "verdict": "excluded: pair not reproduced"
@@ -7218,9 +7819,13 @@
       "flux_over_pred": 4.16,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
      "best_colours": [
       null,
-      null
+      -0.18
      ],
      "colour_match": false
     }
@@ -7278,6 +7883,10 @@
       "flux_over_pred": 2.35,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
      "best_colours": [
       null,
       null
@@ -7338,6 +7947,10 @@
       "flux_over_pred": 0.86,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
      "best_colours": [
       null,
       null
@@ -7398,6 +8011,10 @@
       "flux_over_pred": 1.06,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      0.6
+     ],
      "best_colours": [
       null,
       null
@@ -7458,6 +8075,10 @@
       "flux_over_pred": 0.93,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
      "best_colours": [
       null,
       null
@@ -7518,6 +8139,10 @@
       "flux_over_pred": 0.97,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
      "best_colours": [
       null,
       null
@@ -7578,6 +8203,10 @@
       "flux_over_pred": 1.1,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      0.2
+     ],
      "best_colours": [
       null,
       null
@@ -7638,6 +8267,10 @@
       "flux_over_pred": 0.95,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.6,
+      0.2
+     ],
      "best_colours": [
       null,
       null
@@ -7698,6 +8331,10 @@
       "flux_over_pred": 1.1,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.6,
+      0.3
+     ],
      "best_colours": [
       null,
       null
@@ -7758,6 +8395,10 @@
       "flux_over_pred": 0.99,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.6,
+      0.2
+     ],
      "best_colours": [
       null,
       null
@@ -7818,6 +8459,10 @@
       "flux_over_pred": 0.84,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.2,
+      0.2
+     ],
      "best_colours": [
       null,
       null
@@ -7878,6 +8523,10 @@
       "flux_over_pred": 1.04,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.7,
+      -0.0
+     ],
      "best_colours": [
       null,
       null
@@ -7938,6 +8587,10 @@
       "flux_over_pred": 1.1,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      -0.0
+     ],
      "best_colours": [
       null,
       null
@@ -7998,6 +8651,10 @@
       "flux_over_pred": 0.98,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      -0.0
+     ],
      "best_colours": [
       null,
       null
@@ -8058,6 +8715,10 @@
       "flux_over_pred": 1.04,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.5,
+      -0.0
+     ],
      "best_colours": [
       null,
       null
@@ -8118,6 +8779,10 @@
       "flux_over_pred": 0.9,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.4,
+      0.1
+     ],
      "best_colours": [
       null,
       null
@@ -8178,6 +8843,10 @@
       "flux_over_pred": 0.93,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      0.1
+     ],
      "best_colours": [
       null,
       null
@@ -8238,6 +8907,10 @@
       "flux_over_pred": 0.97,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      0.1
+     ],
      "best_colours": [
       null,
       null
@@ -8298,6 +8971,10 @@
       "flux_over_pred": 1.0,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.2,
+      0.2
+     ],
      "best_colours": [
       null,
       null
@@ -8358,6 +9035,10 @@
       "flux_over_pred": 0.84,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.1,
+      0.2
+     ],
      "best_colours": [
       null,
       null
@@ -8418,6 +9099,10 @@
       "flux_over_pred": 0.81,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      0.2
+     ],
      "best_colours": [
       null,
       null
@@ -8478,6 +9163,10 @@
       "flux_over_pred": 0.91,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      0.3
+     ],
      "best_colours": [
       null,
       null
@@ -8538,6 +9227,10 @@
       "flux_over_pred": 0.72,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.1,
+      0.3
+     ],
      "best_colours": [
       null,
       null
@@ -8598,6 +9291,10 @@
       "flux_over_pred": 0.76,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.1,
+      0.3
+     ],
      "best_colours": [
       null,
       null
@@ -8658,6 +9355,10 @@
       "flux_over_pred": 0.84,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.2,
+      0.3
+     ],
      "best_colours": [
       null,
       null
@@ -8718,6 +9419,10 @@
       "flux_over_pred": 0.74,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      0.4
+     ],
      "best_colours": [
       null,
       null
@@ -8778,6 +9483,10 @@
       "flux_over_pred": 0.78,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      0.4
+     ],
      "best_colours": [
       null,
       null
@@ -8838,6 +9547,10 @@
       "flux_over_pred": 0.7,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      0.4
+     ],
      "best_colours": [
       null,
       null
@@ -8898,6 +9611,10 @@
       "flux_over_pred": 0.72,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      0.5
+     ],
      "best_colours": [
       null,
       null
@@ -8958,6 +9675,10 @@
       "flux_over_pred": 0.64,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.5,
+      0.4
+     ],
      "best_colours": [
       null,
       null
@@ -9018,6 +9739,10 @@
       "flux_over_pred": 0.63,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.4,
+      -0.4
+     ],
      "best_colours": [
       null,
       null
@@ -9078,6 +9803,10 @@
       "flux_over_pred": 0.64,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      -0.4
+     ],
      "best_colours": [
       null,
       null
@@ -9138,6 +9867,10 @@
       "flux_over_pred": 0.58,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.2,
+      -0.4
+     ],
      "best_colours": [
       null,
       null
@@ -9198,6 +9931,10 @@
       "flux_over_pred": 0.65,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.3,
+      -0.3
+     ],
      "best_colours": [
       null,
       null
@@ -9258,6 +9995,10 @@
       "flux_over_pred": 0.59,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.2,
+      -0.3
+     ],
      "best_colours": [
       null,
       null
@@ -9318,6 +10059,10 @@
       "flux_over_pred": 0.62,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.1,
+      -0.3
+     ],
      "best_colours": [
       null,
       null
@@ -9378,6 +10123,10 @@
       "flux_over_pred": 0.59,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      -0.3
+     ],
      "best_colours": [
       null,
       null
@@ -9438,6 +10187,10 @@
       "flux_over_pred": 0.61,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      -0.3
+     ],
      "best_colours": [
       null,
       null
@@ -9498,6 +10251,10 @@
       "flux_over_pred": 0.54,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.0,
+      -0.2
+     ],
      "best_colours": [
       null,
       null
@@ -9558,6 +10315,10 @@
       "flux_over_pred": 0.56,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.1,
+      -0.2
+     ],
      "best_colours": [
       null,
       null
@@ -9618,6 +10379,10 @@
       "flux_over_pred": 0.61,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.2,
+      -0.2
+     ],
      "best_colours": [
       null,
       null
@@ -9678,6 +10443,10 @@
       "flux_over_pred": 0.51,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.2,
+      -0.2
+     ],
      "best_colours": [
       null,
       null
@@ -9738,6 +10507,10 @@
       "flux_over_pred": 0.65,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.2,
+      -0.2
+     ],
      "best_colours": [
       null,
       null
@@ -9798,6 +10571,10 @@
       "flux_over_pred": 0.67,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.2,
+      -0.1
+     ],
      "best_colours": [
       null,
       null
@@ -9858,6 +10635,10 @@
       "flux_over_pred": 0.83,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.3,
+      -0.1
+     ],
      "best_colours": [
       null,
       null
@@ -9918,6 +10699,10 @@
       "flux_over_pred": 0.8,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      -0.1
+     ],
      "best_colours": [
       null,
       null
@@ -9978,6 +10763,10 @@
       "flux_over_pred": 0.81,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.4,
+      -0.1
+     ],
      "best_colours": [
       null,
       null
@@ -10038,6 +10827,10 @@
       "flux_over_pred": 0.77,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.5,
+      -0.1
+     ],
      "best_colours": [
       null,
       null
@@ -10098,6 +10891,10 @@
       "flux_over_pred": 0.64,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      0.6,
+      -0.1
+     ],
      "best_colours": [
       null,
       null
@@ -10158,6 +10955,10 @@
       "flux_over_pred": 0.74,
       "forced_class": "undetectable"
      },
+     "colour_offset": [
+      -0.5,
+      -0.0
+     ],
      "best_colours": [
       null,
       null

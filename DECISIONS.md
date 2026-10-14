@@ -2110,15 +2110,15 @@ CATS-fitted z = 4.419.
   or `undetectable`). Six rows stay untestable; no injection, so no limit. docs/fields/macs1149.md.
 - **Revisit if** a JWST-era MACS1149 model with knot-level constraints appears.
 
-**Addendum 2026-10-15 (system 16's redshift, `scripts/m1149_sys16.py`).**
+**Addendum 2026-10-14 (system 16's redshift, `scripts/m1149_sys16.py`).**
 - **Decision.** System 16's redshift is taken as z ≈ 2.5–2.9: the range where both CATS v4.1 (2.10–2.90) and Sharon
-  v4cor (2.50–3.30) reproduce 16.1/16.2 within 1.0″ (ASSUMPTION) with no `absent` predicted image. Its far image
-  cannot decide z: predicted ≤ 2.5σ there in F150W/F277W/F444W.
-- **Evidence.** z scan 2.0–6.0; CATS's fitted 4.419 gives pair rms 4.3″ (3.9″ in Sharon); CANUCS photo-z overlaps
-  at 2.5–2.67. Colour-matched sources on the track lie only at excluded z (chance field galaxies).
+  v4cor (2.50–3.30) reproduce 16.1/16.2 within 1.0″ (ASSUMPTION). The predicted-image photometry did not constrain z
+  (no extra image predicted ≥ 10σ). CANUCS 5106117 (z_phot 2.94, 2.49–3.16), 0.4–0.5″ from both models' far image at
+  z 2.45–2.65 with pair-like colours, is a possible third image, not a confirmed one.
+- **Evidence.** z scan 2.0–6.0; CATS's fitted 4.419 gives pair rms 4.3″ (3.9″ in Sharon); CANUCS photo-z of 16.2
+  overlaps at 2.5–2.67. The other colour-matched track sources have photo-z 1.23, 1.68 and 4.59 (chance).
   docs/fields/macs1149.md.
-- **Revisit if** a spectroscopic redshift for 16.1/16.2 appears, or deeper imaging reaches the far image (≲ 10 % of
-  the pair flux).
+- **Revisit if** a spectroscopic redshift for 16.1/16.2 or CANUCS 5106117 appears.
 
 ## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)
 

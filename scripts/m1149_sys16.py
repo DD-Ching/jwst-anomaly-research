@@ -9,16 +9,18 @@ for each model and z:
 - solves the images of the magnification-weighted least-squares source of 16.1/16.2
   (``m1149_refs.second_model_images``) and assigns the two predicted images nearest to 16.1 and
   16.2 (distinct; ``pair_rms_arcsec`` is their image-plane rms, an observed-vs-model check);
-- every other image is an "extra" (``far`` when more than ``FAR_ARCSEC`` from the pair);
+- every other image is an "extra" (``far`` when more than ``Params.far_arcsec`` from the pair);
 - predicts its flux from the measured pair flux, ``(f1 + f2) * |mu_x| / (|mu_1| + |mu_2|)``,
   with the model's |mu| of the two assigned images, and its S/N against the aperture error at
   the predicted position, in F150W, F277W and F444W on 1"-median-filtered stamps;
-- measures the fixed-position S/N and the best aperture within ``SEARCH_ARCSEC`` and applies
+- measures the fixed-position S/N and the best aperture within ``Params.search_arcsec`` and applies
   ``lens_consistency.forced_class``.
 
 A redshift is ``excluded`` for a model when an extra is ``absent`` in a band, or the pair is not
-reproduced (``pair_rms_arcsec`` > ``PAIR_RMS_MAX``). A best aperture on the track with S/N >= 5
-whose colours match the pair's is listed as a possible counter-image (``colour_matches``).
+reproduced (``pair_rms_arcsec`` > ``Params.pair_rms_max``). A track position whose F277W best
+aperture has S/N >= 5, with F150W and F444W measured at that same offset (S/N >=
+``Params.colour_min_snr``) and colours matching the pair's, is listed as a possible counter-image
+(``colour_matches``).
 
 Provenance: positions and mu ``model_prediction``; 16.1/16.2 positions ``observed``; fluxes
 ``derived`` from S3 byte-range stamps of CANUCS program 1208. Thresholds are ASSUMPTIONs.
@@ -31,6 +33,8 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import numpy as np
@@ -45,10 +49,20 @@ from jwst_anomaly import lensmodel  # noqa: E402
 
 SYSTEM = "16"
 Z_GRID = np.round(np.arange(2.0, 6.0001, 0.05), 3)  # source redshifts scanned
-FAR_ARCSEC = 3.0  # an extra this far from both pair images is the "far" image (ASSUMPTION)
-SEARCH_ARCSEC = 0.7  # best-aperture radius around a predicted extra: ~CATS rms 0.63" (ASSUMPTION)
-PAIR_RMS_MAX = 1.0  # pair image-plane rms above this: z does not reproduce 16.1/16.2 (ASSUMPTION)
-COLOUR_TOL_MAG = 0.5  # |colour - pair colour| for a colour match, per colour (ASSUMPTION)
+
+
+@dataclass(frozen=True)
+class Params:
+    """Thresholds (all ASSUMPTIONs)."""
+
+    far_arcsec: float = 3.0  # an extra this far from both pair images is the "far" image
+    search_arcsec: float = 0.7  # best-aperture radius around a predicted extra (~CATS rms 0.63")
+    pair_rms_max: float = 1.0  # pair image-plane rms above this: z does not reproduce 16.1/16.2
+    colour_tol_mag: float = 0.5  # |colour - pair colour| for a colour match, per colour
+    colour_min_snr: float = 3.0  # every band at the common offset needs this S/N for a colour
+
+
+P = Params()
 STAMP_HALF_ARCSEC = 2.0
 GRID_STEP = 0.25
 DEFAULT_OUT = mr.DEFAULT_OUT
@@ -57,7 +71,10 @@ _r = au._r
 
 def assign_pair(pred: Table, cat: Table) -> tuple[list[int], float]:
     """Indices of the predicted images assigned to the catalogued images (distinct, nearest
-    first by the cheaper of the two assignments) and their image-plane rms (arcsec)."""
+    first by the cheaper of the two assignments) and their image-plane rms (arcsec).
+    ``cat`` must hold exactly the two pair images."""
+    if len(cat) != 2:
+        raise ValueError(f"assign_pair needs 2 catalogued images, got {len(cat)}")
     if len(pred) < len(cat):
         return [], float("inf")
     d = np.array(
@@ -91,7 +108,7 @@ def colours(f: dict[str, float]) -> tuple[float, float]:
 
 
 def z_verdict(pair_rms: float, classes: list[str]) -> str:
-    if not pair_rms <= PAIR_RMS_MAX:
+    if not pair_rms <= P.pair_rms_max:
         return "excluded: pair not reproduced"
     if "absent" in classes:
         return "excluded: extra image absent"
@@ -111,18 +128,18 @@ def main(argv=None) -> dict:
     opened = {b: lc.image_stamper(mr.S3_I2D.format(b), STAMP_HALF_ARCSEC) for b in mr.BANDS}
     stamps = {b: lc.halo_stamper(o[0], au.HALO_FILTER_ARCSEC) for b, o in opened.items()}
     try:
-        pair = {}
+        pair, pair_flux = {}, {}
         for b, st in stamps.items():
-            sib = {}
+            sib, tot = {}, 0.0
             for c in cat:
                 img, err, xx, yy = st(float(c["ra"]), float(c["dec"]))
                 f, e = lc.peak_flux(img, err, xx, yy)
+                tot += f  # NaN propagates: no prediction in that band
                 sib[str(c["image_id"])] = {
                     "flux": _r(f, 4),
                     "snr": _r(f / e if e > 0 else np.nan, 1),
                 }
-            pair[b] = sib
-        pair_flux = {b: sum(v["flux"] for v in pair[b].values()) for b in mr.BANDS}
+            pair[b], pair_flux[b] = sib, tot
         pair_col = colours(pair_flux)
         rows = []
         for name, model in models.items():
@@ -153,17 +170,28 @@ def main(argv=None) -> dict:
                         "radec": [round(ra, 6), round(dec, 6)],
                         "mu": _r(mu_x, 1),
                         "sep_pair_arcsec": _r(sep),
-                        "kind": "far" if sep > FAR_ARCSEC else "near",
+                        "kind": "far" if sep > P.far_arcsec else "near",
                     }
-                    best_f = {}
-                    for b, st in stamps.items():
-                        img, err, xx, yy = st(ra, dec)
+                    with ThreadPoolExecutor(len(stamps)) as pool:  # one range reader per band
+                        cut = dict(
+                            zip(
+                                stamps,
+                                pool.map(lambda st, ra=ra, dec=dec: st(ra, dec), stamps.values()),
+                                strict=True,
+                            )
+                        )
+                    # colours at one offset: the F277W best aperture (as the pair's peak apertures)
+                    snr_c, _, cx, cy = lc.best_within(*cut["f277w"], P.search_arcsec)
+                    common = {}
+                    for b, (img, err, xx, yy) in cut.items():
                         f0, e0 = lc.aperture_snr(img, err, xx, yy, 0.0, 0.0)
-                        snr, flux, dx, dy = lc.best_within(img, err, xx, yy, SEARCH_ARCSEC)
+                        snr, flux, dx, dy = lc.best_within(img, err, xx, yy, P.search_arcsec)
                         pf = predicted_flux(pair_flux[b], mu_pair, mu_x)
                         psnr = pf / e0 if e0 > 0 else np.nan
                         ratio = flux / pf if pf > 0 else np.nan
-                        best_f[b] = flux if snr >= 5 else np.nan
+                        fc, ec = lc.aperture_snr(img, err, xx, yy, cx, cy)
+                        ok = snr_c >= 5 and ec > 0 and fc / ec >= P.colour_min_snr
+                        common[b] = fc if ok else np.nan
                         ex[b] = {
                             "pred_snr": _r(psnr, 1),
                             "fixed_snr": _r(f0 / e0 if e0 > 0 else np.nan, 1),
@@ -173,13 +201,15 @@ def main(argv=None) -> dict:
                             "forced_class": lc.forced_class(psnr, snr, ratio),
                         }
                     col = colours(
-                        {b: best_f[b] if np.isfinite(best_f[b]) else -1 for b in mr.BANDS}
+                        {b: common[b] if np.isfinite(common[b]) else -1 for b in mr.BANDS}
                     )
+                    ex["colour_offset"] = [_r(cx, 1), _r(cy, 1)]
                     ex["best_colours"] = [_r(c) for c in col]
                     ex["colour_match"] = bool(
                         all(np.isfinite(col))
                         and all(
-                            abs(a - p) <= COLOUR_TOL_MAG for a, p in zip(col, pair_col, strict=True)
+                            abs(a - p) <= P.colour_tol_mag
+                            for a, p in zip(col, pair_col, strict=True)
                         )
                     )
                     extras.append(ex)
@@ -204,10 +234,7 @@ def main(argv=None) -> dict:
         "positions: observed; fluxes: derived",
         "images": {b: mr.S3_I2D.format(b) for b in mr.BANDS},
         "assumptions": {
-            "far_arcsec": FAR_ARCSEC,
-            "search_arcsec": SEARCH_ARCSEC,
-            "pair_rms_max": PAIR_RMS_MAX,
-            "colour_tol_mag": COLOUR_TOL_MAG,
+            **asdict(P),
             "halo_filter_arcsec": au.HALO_FILTER_ARCSEC,
             "source": "magnification-weighted least-squares source of 16.1/16.2",
             "predicted_flux": "(f1 + f2) |mu_x| / (|mu_1| + |mu_2|), model mu of the assigned "

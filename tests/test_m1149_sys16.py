@@ -56,3 +56,8 @@ def test_z_verdict():
     assert s16.z_verdict(0.2, ["absent"]).startswith("excluded: extra")
     assert s16.z_verdict(2.0, ["recovered"]).startswith("excluded: pair")
     assert s16.z_verdict(float("inf"), []).startswith("excluded: pair")
+
+
+def test_assign_pair_needs_two_catalogued_images():
+    with pytest.raises(ValueError):
+        s16.assign_pair(_t([(0.0, 0.0)]), _t([(0.0, 0.0)]))
