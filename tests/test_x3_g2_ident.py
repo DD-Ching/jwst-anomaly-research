@@ -37,7 +37,7 @@ def test_negative_mass_images_reproduce_w3_magnification():
 def test_image_centroid_points_toward_lens_and_falls_as_one_over_u():
     u = np.array([5.0, 10.0, 20.0])
     _, dx, dy = gi.lensed(u, np.zeros_like(u), 1e-4, n=50)
-    assert np.all(dx < 0) and np.allclose(dy, 0.0, atol=1e-6)
+    assert np.all(dx < 0) and np.allclose(dy, 0.0, atol=1e-3)  # disc sampling: offsets ~ rho
     assert np.allclose(-dx * u, 1.0, rtol=0.1)
 
 
