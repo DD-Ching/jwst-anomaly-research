@@ -158,6 +158,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - ~~reference fluxes for systems 11, 16 and 26~~ — done (D-029 addendum 2026-10-14, `smacs_ref_fluxes.py`):
        counter-images ≤ 1–4σ in three models, except Zitrin's system 16 third image (18σ, recovered); the 10σ
        ICLv2 prediction for 26 rests on a neighbour-contaminated reference; no `absent`, not candidates;
+     - ~~`--halo-filter-arcsec` on the other fields~~ — done (D-029 addendum 2026-10-14): Abell 2744, MACS1149,
+       MACS0416 give no new `absent`; member-buried rows need member subtraction (isophote/Sérsic), not a median filter;
    - flux ratios and colours: done for SMACS and El Gordo (D-032: no anomaly; most images untested). Left:
      - ~~Abell 2744 `fluxratios`~~ — done (D-032 addendum 2026-10-13): 34 + 35 images tested, 7 flags, all ordinary;
        an ICL-aware total (local background or ICL-subtracted) would remove the halo-light flags;

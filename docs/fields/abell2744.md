@@ -326,3 +326,8 @@ Outputs: `results/arcs/abell2744-bergamini23/` (`derived`; predictions are `mode
   at): 7640 is a deblended knot in the arm of a spiral with DJA z_phot 0.54 (0.72″ away, low lensing efficiency);
   2649 (S/N 48) and 2926 (S/N 24) are low-surface-brightness segments between neighbours. Ordinary.
 - **Result: null.** No anti-tangential background arc that the model fails to explain.
+
+## Halo-filtered counter-images (2026-10-14)
+
+`images --halo-filter-arcsec 1.0 / 0.6` on the F277W forced stamps: no new `absent`; the `confused` rows on cluster
+members stay `confused` (member cores survive the median filter). Details: DECISIONS.md D-029 addendum 2026-10-14.
