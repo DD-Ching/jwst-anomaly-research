@@ -1272,6 +1272,15 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   `scripts/x3_bulk.py` `FILES`. No `rejected_by_photometry` column (rebuilt from `g_transit_n_obs`).
 - Reference variables: `gaiadr3.vari_classifier_result` (ECL, YSO, LPV; score > 0.5) in the M31 and Orion fields;
   SIMBAD and Gaia DR3 (VizieR I/355/gaiadr3) via CDS XMatch for vetting.
+- S0-2026-10-15 / X4 (accessed 2026-10-15):
+  - LVK lensing searches: O3 arXiv:2304.08393; GWTC-4.0 arXiv:2512.16347 (isolated point mass; outlier
+    GW231123_135430).
+  - GW231123 lensing follow-ups: arXiv:2512.17631, 2512.19118, 2607.21834, 2604.08179.
+  - Wave optics: Yoo, Harada & Tsukamoto arXiv:1302.7170 (Ellis wormhole, EM); GLoW arXiv:2409.04606 (licence not
+    checked); wolensing arXiv:2410.19804.
+  - aLIGO PSD fit attributed to Ajith, PRD 84, 084037 (2011), arXiv:1107.1267 (formula not checked in the body).
+  - VASCO: arXiv:2507.15896, 2604.04810.
+  - Quantum-processor wormhole: Jafferis et al., Nature 612, 51 (2022); PhilSci-Archive 22120 (arXiv:2301.03522).
 - Gaia DR4 content (accessed 2026-10-14): https://www.cosmos.esa.int/web/gaia/dr4 (`epoch_astrometry` for all
   sources in the main astrometric processing; 66 months, 2014-07-25 to 2020-01-20); image of the week
   https://www.cosmos.esa.int/web/gaia/iow_20260703 (2.8 billion sources, 142 billion detections).

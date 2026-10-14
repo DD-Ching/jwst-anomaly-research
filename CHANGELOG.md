@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: S0 screen after X3: GW wave-optics lensing by negative-mass objects qualifies (X4)
+- Three directions (`docs/state/units/S0-2026-10-15.md`):
+  - A, GW lensing by repulsive lenses: **qualifies**.
+  - B, VASCO vanishing sources: not qualified; no mechanism links it to the hypothesis.
+  - C, the quantum-processor wormhole: not qualified; it is a simulation of a toy model.
+- **Minimal step (A; derived and simulated, no strain):**
+  - Closed-form point-lens amplification factor for either sign, checked against the diffraction integral (1e-9)
+    and against the W3 magnification (< 3 %).
+  - A negative-mass lens is a low-pass filter on GWs.
+  - With intrinsic parameters fixed, it separates from the best positive point mass at ρ ≈ 2.5–16.5 for
+    M_Lz ≥ 300 M☉ and y ≤ 1 (4.5–46.5 at y = 1.5), but not for 30 M☉ lenses.
+  - Real-data hook: GW231123, the GWTC-4.0 lensing outlier, has been fitted only with positive lenses.
+- **Handoff:** X4 S1 (intrinsic-parameter degeneracy with an IMR waveform, ≤ 4 h) is proposed, not started.
+
 ## 2026-10-14: MACS1149's 11 untested counter-images: none unmet in both models
 - **Hypothesis before computing:** one of the 11 CATS forced rows without a reference flux (systems 13, 14, nine SN
   Refsdal host knots) is a predicted image both models need and the data do not show. Ordinary: model copies of

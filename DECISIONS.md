@@ -4564,3 +4564,25 @@ unit overruns its budget.
   θ_E ≳ 3 mas and t_E ≈ 100 d, under the assumed per-transit σ (X3.md, G2 prerequisite; addendum 2026-10-14 by owner correction);
 - a joint G/BP/RP fit is built (it replaces the colour test);
 - Gaia changes the bulk-file layout.
+
+## D-086 X4: wave-optics GW lensing by repulsive lenses (S0-2026-10-15); X3 paused (2026-10-15)
+
+**Decision.**
+- Open unit X4 (`docs/state/units/X4.md`). Its S1 tests whether a free choice of a binary's intrinsic parameters
+  absorbs a negative-mass lens's low-pass signature, before any strain analysis.
+- X3 pauses until the DR4 epoch-astrometry content is confirmed.
+
+**Alternatives rejected:**
+- VASCO vanishing sources (no link to the hypothesis);
+- the quantum-processor wormhole reanalysis (a simulation, not evidence);
+- going straight to strain-level PE on GW231123 before the degeneracy question is answered.
+
+**Evidence:**
+- S0 A: closed-form F_s(w, y), checked two ways.
+- Separable from a positive point mass at ρ ≈ 2.5–16.5 for M_Lz ≥ 300 M☉, y ≤ 1, with intrinsic parameters fixed
+  (`results/s0/gw_neglens.json`).
+- LVK searches use only positive lenses.
+
+**Revisit if:**
+- S1 shows the signature is absorbed by intrinsic parameters (stop X4);
+- LVK or others publish a repulsive-lens GW analysis (reuse it).
