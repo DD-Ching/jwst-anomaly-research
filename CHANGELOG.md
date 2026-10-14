@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: Sunrise counter-images in the four RELICS models (in progress)
+- Claim: predicted counter-images of systems 1 and 2 against the JWST mosaic.
+
 ## 2026-10-14: X2 S6a writeup corrections (documents only; no computation re-run)
 - **`X2_s6a_summary.md`, "Who did what".** Updated from the owner's cross-conversation record. It replaces the
   earlier "no recorded GPT output":
