@@ -173,7 +173,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        validated on PSF stars and known arcs, re-run, then feed it to `fluxratios` and `--mu-samples 100`;
      - ~~`bayes.dat` μ errors~~ — done (D-032 addendum 2026-10-13, `--mu-samples`): model error 0.04–0.07 mag
        median against a 0.32–0.36 mag scatter floor; no new flag. SMACS 6.3 needs a chain (Mahler+22 pins none);
-     - an observational parity test (image orientation or resolved structure; not yet designed);
+     - observational parity test: `scripts/parity_test.py` (affine fit of image pairs in both handedness families,
+       synthetic power per pair; D-032 addendum 2026-10-14): not validated on known Abell 2744 systems (6 of 41
+       flagged, incl. QSO1). Next: member + ICL subtraction and a segmentation fit mask, then the ≥ 95 % acceptance
+       test on catalogued pairs; only then El Gordo, MACS0416/MACS1149, SMACS;
    - ~~`arcs` on Abell 2744 and El Gordo~~ — done (D-024 addendum 2026-10-13): null; background 33/35 and 10/12
      aligned, anti counts 0 and 1 against 0.45 and 0.17 from shape noise;
    - ~~arc curvature~~ — done (D-024 addenda 5–6): forward-modelled curvature, 5 testable arcs all as predicted (El
