@@ -190,5 +190,171 @@
    "4.2b": 8.358443347812168
   },
   "reference": "4.2b"
+ },
+ "crossmodel": {
+  "xmodel_arcsec": 1.5,
+  "xmodel_loose_arcsec": 3.0,
+  "match_arcsec": 1.5,
+  "halo_filter_arcsec": 1.0,
+  "bergamini23": {
+   "extra": 33,
+   "both": 14,
+   "both_loose": 22,
+   "forced": {
+    "not_forced": {
+     "rows": 5,
+     "both": 2,
+     "both_loose": 2
+    },
+    "absent": {
+     "rows": 2,
+     "both": 0,
+     "both_loose": 0
+    },
+    "confused": {
+     "rows": 2,
+     "both": 1,
+     "both_loose": 2
+    },
+    "inconsistent_reference": {
+     "rows": 2,
+     "both": 0,
+     "both_loose": 1
+    },
+    "no_reference": {
+     "rows": 12,
+     "both": 6,
+     "both_loose": 9
+    },
+    "recovered": {
+     "rows": 6,
+     "both": 1,
+     "both_loose": 4
+    },
+    "undetectable": {
+     "rows": 4,
+     "both": 4,
+     "both_loose": 4
+    }
+   }
+  },
+  "uncover2": {
+   "extra": 45,
+   "both": 17,
+   "both_loose": 26,
+   "forced": {
+    "not_forced": {
+     "rows": 16,
+     "both": 6,
+     "both_loose": 8
+    },
+    "absent": {
+     "rows": 2,
+     "both": 0,
+     "both_loose": 2
+    },
+    "confused": {
+     "rows": 3,
+     "both": 0,
+     "both_loose": 1
+    },
+    "inconsistent_reference": {
+     "rows": 8,
+     "both": 1,
+     "both_loose": 2
+    },
+    "no_reference": {
+     "rows": 8,
+     "both": 6,
+     "both_loose": 8
+    },
+    "recovered": {
+     "rows": 4,
+     "both": 1,
+     "both_loose": 2
+    },
+    "undetectable": {
+     "rows": 4,
+     "both": 3,
+     "both_loose": 3
+    }
+   }
+  },
+  "unmet": [
+   {
+    "model": "bergamini23",
+    "system": "700.1",
+    "ra_dec": [
+     3.57519,
+     -30.35561
+    ],
+    "mu": -91.95,
+    "forced_class": "absent",
+    "pred_snr": 2988.2,
+    "flux_ratio": 0.01,
+    "other_sep_arcsec": 3.56,
+    "other_mu": 7.86,
+    "other_forced_class": "inconsistent_reference",
+    "d041": "model-dependent (D-041)"
+   },
+   {
+    "model": "bergamini23",
+    "system": "700.1",
+    "ra_dec": [
+     3.57883,
+     -30.3536
+    ],
+    "mu": 10.3,
+    "forced_class": "absent",
+    "pred_snr": 322.4,
+    "flux_ratio": 0.02,
+    "other_sep_arcsec": 12.74,
+    "other_mu": 8.03,
+    "other_forced_class": "inconsistent_reference",
+    "d041": "model-dependent (D-041)"
+   },
+   {
+    "model": "uncover2",
+    "system": "3.1",
+    "ra_dec": [
+     3.588,
+     -30.39385
+    ],
+    "mu": -59.52,
+    "forced_class": "absent",
+    "pred_snr": 2877.2,
+    "flux_ratio": 0.01,
+    "other_sep_arcsec": 2.04,
+    "other_mu": -41.17,
+    "other_forced_class": "",
+    "d041": "both models (loose tier)"
+   },
+   {
+    "model": "uncover2",
+    "system": "34.1",
+    "ra_dec": [
+     3.59186,
+     -30.41131
+    ],
+    "mu": 28.18,
+    "forced_class": "absent",
+    "pred_snr": 18.2,
+    "flux_ratio": 0.3,
+    "other_sep_arcsec": 2.74,
+    "other_mu": 44.98,
+    "other_forced_class": "recovered",
+    "d041": "both models (loose tier)"
+   }
+  ],
+  "bergamini23_images": {
+   "recovered": 6,
+   "confused": 2,
+   "absent": 2,
+   "undetectable": 4,
+   "ambiguous": 0,
+   "no_reference": 12,
+   "inconsistent_reference": 2,
+   "off_image": 0
+  }
  }
 }

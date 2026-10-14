@@ -28,8 +28,14 @@ unless ``--keep-maps``).
   1"-high-pass F150W/F277W/F444W peak fluxes (r = 0.2") at the UNCOVER 4.2c and at 4.2a/b, plus
   injections at 4.2c of the most magnified catalogued image's knot, scaled by the mu ratio.
 
+* **Cross-model rule on every forced row (D-041 addendum):** ``--crossmodel`` takes the
+  Bergamini+23 ``images_predicted.ecsv`` of ``lens_consistency.py images --forced-image
+  --halo-filter-arcsec 1.0``, force-photometers UNCOVER's own predicted images the same way
+  (``forced_images``), and lists every extra image of either model with the other model's
+  nearest prediction (``crossmodel``).
+
 Usage: python scripts/a2744_uncover.py [--out results/lens_consistency/abell2744-uncover2]
-       [--check-42c]
+       [--check-42c] [--crossmodel IMAGES_PREDICTED --catalog F200W_CAT --forced-image F277W_I2D]
 """
 
 from __future__ import annotations
@@ -199,6 +205,149 @@ def multiplicity(model, grid, bt: Table) -> Table:
     )
 
 
+# Predicted images of two models this close are one image (ASSUMPTION; 1.8x UNCOVER's 0.84" rms);
+# the loose tier is ~1.3x UNCOVER's largest own-list residual, 2.31" (ASSUMPTION).
+XMODEL_ARCSEC = 1.5
+XMODEL_LOOSE_ARCSEC = 3.0
+HALO_FILTER_ARCSEC = 1.0  # forced photometry on 1"-median-filtered stamps, as the Bergamini run
+
+
+def wls_backtrace(model, bt: Table) -> Table:
+    """``bt`` with every traced row's source replaced by its family's ``wls_source``, so that
+    ``lens_consistency.predict_counter_images`` (which takes the mean source) solves from it."""
+    out = bt.copy()
+    systems = np.asarray(bt["system"]).astype(str)
+    for fam in dict.fromkeys(systems):
+        sel = np.flatnonzero((systems == fam) & np.isfinite(bt["beta_x"]))
+        if len(sel) < 2:
+            continue
+        out["beta_x"][sel], out["beta_y"][sel] = family_source(model, bt[sel])
+    return out
+
+
+def forced_images(model, grid, bt: Table, catalog: Path, forced_image: str) -> Table:
+    """UNCOVER's predicted images of the image list, classified and force-photometered as
+    ``lens_consistency.py images --forced-image --halo-filter-arcsec 1.0`` does for Lenstool
+    models, but from each family's WLS source."""
+    wbt = wls_backtrace(model, bt)
+    shapes = lc.load_shapes(catalog)
+    table, unpredicted = lc.predict_counter_images(
+        model, grid, wbt, shapes, MATCH_ARCSEC, depth=lc.depth_mag(shapes)
+    )
+    stamp, close = lc.image_stamper(forced_image, lc.MAX_SEARCH_ARCSEC + lc.FORCED_ANNULUS[1] + 0.1)
+    try:
+        lc.forced_check(
+            table, wbt, lc.halo_stamper(stamp, HALO_FILTER_ARCSEC), unpredicted=unpredicted
+        )
+    finally:
+        close()
+    table.meta["unpredicted"] = unpredicted
+    return table
+
+
+def _sep_arcsec(ra, dec, ra0, dec0) -> np.ndarray:
+    """Small-angle separations (arcsec) of (ra, dec) arrays from one position."""
+    cos = np.cos(np.deg2rad(dec0))
+    return 3600.0 * np.hypot((np.asarray(ra, float) - ra0) * cos, np.asarray(dec, float) - dec0)
+
+
+def _col(t: Table, name: str, k: int, default):
+    if name not in t.colnames or np.ma.is_masked(t[name][k]):
+        return default
+    return type(default)(t[name][k])
+
+
+def crossmodel(tables: dict[str, Table]) -> Table:
+    """D-041 cross-model rule for two models' ``images`` tables of the same image list. One row
+    per extra image (``image_class`` != observed) of either model, with its own forced class and
+    the other model's nearest predicted image of the same family (separation, mu, classes).
+    ``both`` when within ``XMODEL_ARCSEC``, ``both_loose`` within ``XMODEL_LOOSE_ARCSEC``."""
+    (na, ta), (nb, tb) = tables.items()
+    rows = []
+    for name, own, other_name, other in ((na, ta, nb, tb), (nb, tb, na, ta)):
+        osys = np.asarray(other["system"]).astype(str)
+        for i in np.flatnonzero(np.asarray(own["image_class"]).astype(str) != "observed"):
+            r = own[i]
+            idx = np.flatnonzero(osys == str(r["system"]))
+            d = _sep_arcsec(other["ra"][idx], other["dec"][idx], float(r["ra"]), float(r["dec"]))
+            k = int(idx[np.argmin(d)]) if len(idx) else -1
+            rows.append(
+                {
+                    "model": name,
+                    "system": str(r["system"]),
+                    "ra": float(r["ra"]),
+                    "dec": float(r["dec"]),
+                    "magnification": float(r["magnification"]),
+                    "image_class": str(r["image_class"]),
+                    "forced_class": _col(own, "forced_class", i, ""),
+                    "pred_snr": _col(own, "pred_snr", i, np.nan),
+                    "flux_ratio": _col(own, "flux_ratio", i, np.nan),
+                    "other_model": other_name,
+                    "other_sep_arcsec": float(d.min()) if len(idx) else np.nan,
+                    "other_magnification": _col(other, "magnification", k, np.nan)
+                    if k >= 0
+                    else np.nan,
+                    "other_image_class": _col(other, "image_class", k, "") if k >= 0 else "",
+                    "other_forced_class": _col(other, "forced_class", k, "") if k >= 0 else "",
+                }
+            )
+    out = Table(rows=rows) if rows else Table()
+    if len(out):
+        sep = np.asarray(out["other_sep_arcsec"], float)
+        out["both"] = sep <= XMODEL_ARCSEC
+        out["both_loose"] = sep <= XMODEL_LOOSE_ARCSEC
+    return out
+
+
+def crossmodel_summary(xm: Table) -> dict:
+    """Per model: extra images, how many the other model also predicts (both tiers), the forced
+    classes, and every unmet prediction (``absent``/``ambiguous``) with its D-041 verdict."""
+    out = {
+        "xmodel_arcsec": XMODEL_ARCSEC,
+        "xmodel_loose_arcsec": XMODEL_LOOSE_ARCSEC,
+        "match_arcsec": MATCH_ARCSEC,
+        "halo_filter_arcsec": HALO_FILTER_ARCSEC,
+    }
+    if not len(xm):
+        return out
+    for m in dict.fromkeys(np.asarray(xm["model"]).astype(str)):
+        t = xm[xm["model"] == m]
+        fc = np.asarray(t["forced_class"]).astype(str)
+        out[m] = {
+            "extra": len(t),
+            "both": int(np.sum(t["both"])),
+            "both_loose": int(np.sum(t["both_loose"])),
+            "forced": {
+                c or "not_forced": {
+                    "rows": int(np.sum(fc == c)),
+                    "both": int(np.sum(t["both"][fc == c])),
+                    "both_loose": int(np.sum(t["both_loose"][fc == c])),
+                }
+                for c in sorted(set(fc))
+            },
+        }
+    unmet = xm[np.isin(np.asarray(xm["forced_class"]).astype(str), ["absent", "ambiguous"])]
+    out["unmet"] = [
+        {
+            "model": str(r["model"]),
+            "system": str(r["system"]),
+            "ra_dec": [round(float(r["ra"]), 5), round(float(r["dec"]), 5)],
+            "mu": round(float(r["magnification"]), 2),
+            "forced_class": str(r["forced_class"]),
+            "pred_snr": round(float(r["pred_snr"]), 1),
+            "flux_ratio": round(float(r["flux_ratio"]), 2),
+            "other_sep_arcsec": round(float(r["other_sep_arcsec"]), 2),
+            "other_mu": round(float(r["other_magnification"]), 2),
+            "other_forced_class": str(r["other_forced_class"]),
+            "d041": "both models"
+            if r["both"]
+            else ("both models (loose tier)" if r["both_loose"] else "model-dependent (D-041)"),
+        }
+        for r in unmet
+    ]
+    return out
+
+
 S3_I2D = "s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-{}_i2d.fits"
 BERG_42C = (3.57972, -30.40835)  # Bergamini+23 prediction of 4.2c (docs/fields/abell2744.md)
 HIGHPASS_ARCSEC = 1.0  # median-filter width removing BCG/ICL light (ASSUMPTION, as halo_phot)
@@ -338,6 +487,13 @@ def main(argv=None) -> dict:
     ap.add_argument("--out", type=Path, default=Path("results/lens_consistency/abell2744-uncover2"))
     ap.add_argument("--check-42c", action="store_true", help="4.2c photometry (S3 byte ranges)")
     ap.add_argument("--keep-maps", action="store_true", help="keep the cached deflection maps")
+    ap.add_argument(
+        "--crossmodel",
+        type=Path,
+        help="Bergamini+23 images_predicted.ecsv (lens_consistency images): D-041 cross-model rule",
+    )
+    ap.add_argument("--catalog", type=Path, help="F200W pipeline catalogue (with --crossmodel)")
+    ap.add_argument("--forced-image", help="F277W _i2d (path or s3://; with --crossmodel)")
     args = ap.parse_args(argv)
     args.out.mkdir(parents=True, exist_ok=True)
     files = {k: fetch_catalog(url, sha) for k, (url, sha) in UNCOVER_V2.items()}
@@ -367,6 +523,15 @@ def main(argv=None) -> dict:
     summary["bergamini23_list"], grid, bt = run(
         model, berg, par["z_m_limit"], "bergamini23", args.out
     )
+    if args.crossmodel:
+        if not (args.catalog and args.forced_image):
+            raise SystemExit("--crossmodel needs --catalog and --forced-image")
+        unc = forced_images(model, grid, bt, args.catalog, args.forced_image)
+        unc.write(args.out / "images_predicted_uncover2.ecsv", overwrite=True)
+        xm = crossmodel({"bergamini23": Table.read(args.crossmodel), "uncover2": unc})
+        xm.meta.update(provenance="model_prediction", source=args.crossmodel.name)
+        xm.write(args.out / "crossmodel.ecsv", overwrite=True)
+        summary["crossmodel"] = crossmodel_summary(xm)
     if args.check_42c:
         summary["check_42c"] = check_42c(model, grid, bt)
     if not args.keep_maps:  # cloud-disk rule: ~250 MB of maps, deleted after use
