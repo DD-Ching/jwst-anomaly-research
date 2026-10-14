@@ -153,7 +153,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    - counter-images: done for the catalogued systems (D-029: 0 of 11 testable uncatalogued images absent). Left:
      - ~~bright single arcs~~ — done for five fields (D-029 addendum 2026-10-14, `arcs_counter.py`): null; Abell 370
        3881 was CATS system 7 with a wrong photo-z; controls on all fields;
-     - a BCG/ICL-subtracted test for system 17;
+     - ~~a BCG/ICL-subtracted test for system 17~~ — done (D-029 addendum 2026-10-14): `absent` once the halo is
+       removed, explained by its fitted redshift (the pair is near a caustic; model-dependent); not a candidate;
      - reference fluxes for systems 11, 16 and 26;
    - flux ratios and colours: done for SMACS and El Gordo (D-032: no anomaly; most images untested). Left:
      - ~~Abell 2744 `fluxratios`~~ — done (D-032 addendum 2026-10-13): 34 + 35 images tested, 7 flags, all ordinary;

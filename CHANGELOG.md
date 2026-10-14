@@ -2,6 +2,31 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: SMACS system 17 near the BCG: halo-subtracted counter-image absent, explained by its free redshift
+- **Hypothesis before computing:** D-029's marginal recovery of system 17's μ −10.2 image (7.8σ, ratio 0.36) sits on
+  the BCG's light gradient; with the halo removed, either a compact image remains (recovered) or the 7.8σ was halo
+  light and a ≥ 10σ prediction is unmet. Ordinary: halo residuals, reference choice, model position error, the
+  fitted (not spectroscopic) redshift, model dependence of central images.
+- New: `lens_consistency.py images --halo-filter-arcsec` (median-filtered stamps, `halo_recovery` from ring
+  injections). Reproduced the D-029 run first (24.4σ / 7.8σ / 0.36; the μ 5.4 image `confused` by a cluster galaxy).
+  System 9's third image is now `no_reference` without the filter (the D-034 reference gates).
+- **Result (derived, `results/smacs_s17/`):** filter 1.0″: μ −10.2 image `absent`, predicted 35.7σ, best 3.6σ, flux
+  ratio 0.09, recovery 0.98; filter 0.6″: 25.5σ / 2.7σ. μ 5.4 image still `confused` (×81). Looked at the raw and
+  filtered F200W cutouts: nothing within 1″; within 2″ only an unrelated compact source (7.9σ, ratio 0.22).
+- **Vetted (`scripts/smacs_s17_vet.py`, model_prediction):** z is fitted (Mahler 2.12 +0.11/−0.09; Caminha
+  1.84–1.92; Pascale 1.72; photo-z 2.34; literature check by a subagent, arXiv:2207.07101 Table 2, 2207.07567,
+  2207.07102). In ICLv2 the central pair merges at z ≈ 1.92 (μ −36 / +31, best 3.3σ) and is gone at z ≤ 1.84. RELICS
+  Zitrin LTM v2 (best z ≈ 1.5, spread 0.37″) predicts no central pair; RELICS Glafic v2 (z ≈ 1.5, 0.33″) predicts one
+  0.9–1.5″ from ICLv2's, with nothing of the predicted flux within 1″ (3.0σ, 0.73 against 2.1–4.7 from the siblings;
+  RELICS maps shifted by the ICLv2 frame offset, ASSUMPTION). **Ordinary: a near-caustic prediction that depends on the
+  free redshift and the inner (BCG) mass profile. Not a candidate;** the absence is a constraint on those models.
+- **Failed approach:** the annulus-only background next to the BCG (D-029): the gradient made the 7.8σ "recovery".
+- Review fixes (`/code-review`): RELICS maps in the JWST frame, forced photometry at their images, maps deleted after
+  use, a filter floor (≥ 0.6″), one shared median-filter helper. Not changed: `halo_recovery` does not rescale the
+  prediction, because the reference passes the same filter (losses cancel for compact images; recovery 0.94–0.98 here).
+- **Next:** reference fluxes for systems 11, 16 and 26 (Supporting 1); `--halo-filter-arcsec` on the other fields'
+  `images` runs near BCGs.
+
 ## 2026-10-14: counter-images of uncatalogued bright arcs: five fields null (Abell 370 3881 is known system 7)
 - **Hypothesis before computing:** every strongly sheared background arc that is not a catalogued image has the
   counter-images its model predicts at its photo-z; a robust predicted image (z16 and z84 agree within 3″) of ≥ 10σ
