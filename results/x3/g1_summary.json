@@ -1,0 +1,286 @@
+{
+ "frozen_parameters": {
+  "PRE_N": 2,
+  "PRE_SIG": 3.0,
+  "REPEAT_N": 2,
+  "REPEAT_SIG": 3.0,
+  "INFO_N": 3,
+  "CHI2_P_MIN": 0.001,
+  "flag_dbic": -10.0
+ },
+ "dev:real": {
+  "n": 1995,
+  "n_errors": 0,
+  "stage_counts": {
+   "v1_vetoed": 137,
+   "pre": 7,
+   "fit_flag": 3,
+   "repeat": 1,
+   "final": 0
+  },
+  "final_pass": 0,
+  "final_rate": 0.0,
+  "final_rate_wilson95": [
+   0.0,
+   0.001921913172109286
+  ],
+  "final_by_colour": {
+   "consistent": 0,
+   "insufficient": 0
+  }
+ },
+ "inject:PSPL": {
+  "n": 1995,
+  "n_errors": 0,
+  "stage_counts": {
+   "v1_vetoed": 137,
+   "pre": 334,
+   "fit_flag": 1,
+   "repeat": 0,
+   "final": 0
+  },
+  "final_pass": 0,
+  "final_rate": 0.0,
+  "final_rate_wilson95": [
+   0.0,
+   0.001921913172109286
+  ],
+  "final_by_colour": {
+   "consistent": 0,
+   "insufficient": 0
+  }
+ },
+ "inject:W3_base": {
+  "n": 1995,
+  "n_errors": 0,
+  "stage_counts": {
+   "v1_vetoed": 137,
+   "pre": 1022,
+   "fit_flag": 938,
+   "repeat": 0,
+   "final": 576
+  },
+  "final_pass": 576,
+  "final_rate": 0.2887218045112782,
+  "final_rate_wilson95": [
+   0.2692569821123499,
+   0.3089987436039851
+  ],
+  "final_by_colour": {
+   "consistent": 483,
+   "insufficient": 93
+  },
+  "eff_by_tE": {
+   "10": [
+    98,
+    505
+   ],
+   "30": [
+    205,
+    505
+   ],
+   "100": [
+    208,
+    458
+   ],
+   "300": [
+    65,
+    527
+   ]
+  },
+  "eff_te30_300": [
+   478,
+   1490
+  ],
+  "eff_te30_300_wilson95": [
+   0.2975904259021371,
+   0.34494195504106323
+  ]
+ },
+ "inject:W3_floor": {
+  "n": 1995,
+  "n_errors": 0,
+  "stage_counts": {
+   "v1_vetoed": 137,
+   "pre": 901,
+   "fit_flag": 816,
+   "repeat": 0,
+   "final": 544
+  },
+  "final_pass": 544,
+  "final_rate": 0.27268170426065164,
+  "final_rate_wilson95": [
+   0.2535902269312501,
+   0.29264695364373905
+  ],
+  "final_by_colour": {
+   "consistent": 445,
+   "insufficient": 99
+  },
+  "eff_by_tE": {
+   "10": [
+    90,
+    505
+   ],
+   "30": [
+    196,
+    505
+   ],
+   "100": [
+    201,
+    458
+   ],
+   "300": [
+    57,
+    527
+   ]
+  },
+  "eff_te30_300": [
+   454,
+   1490
+  ],
+  "eff_te30_300_wilson95": [
+   0.28185351152645727,
+   0.3285469486026487
+  ]
+ },
+ "inject:W3_outlier": {
+  "n": 1995,
+  "n_errors": 0,
+  "stage_counts": {
+   "v1_vetoed": 137,
+   "pre": 821,
+   "fit_flag": 734,
+   "repeat": 0,
+   "final": 304
+  },
+  "final_pass": 304,
+  "final_rate": 0.1523809523809524,
+  "final_rate_wilson95": [
+   0.13727937346936067,
+   0.1688187185455344
+  ],
+  "final_by_colour": {
+   "consistent": 277,
+   "insufficient": 27
+  },
+  "eff_by_tE": {
+   "10": [
+    20,
+    505
+   ],
+   "30": [
+    105,
+    505
+   ],
+   "100": [
+    131,
+    458
+   ],
+   "300": [
+    48,
+    527
+   ]
+  },
+  "eff_te30_300": [
+   284,
+   1490
+  ],
+  "eff_te30_300_wilson95": [
+   0.17146557996442885,
+   0.21133377439817558
+  ]
+ },
+ "inject:dust": {
+  "n": 1995,
+  "n_errors": 0,
+  "stage_counts": {
+   "v1_vetoed": 137,
+   "pre": 1392,
+   "fit_flag": 851,
+   "repeat": 0,
+   "final": 444
+  },
+  "final_pass": 444,
+  "final_rate": 0.22255639097744362,
+  "final_rate_wilson95": [
+   0.2048461643491413,
+   0.24133306265914198
+  ],
+  "final_by_colour": {
+   "consistent": 329,
+   "insufficient": 115
+  }
+ },
+ "refs:ref_ECL": {
+  "n": 199,
+  "n_errors": 0,
+  "stage_counts": {
+   "v1_vetoed": 21,
+   "pre": 149,
+   "fit_flag": 104,
+   "repeat": 59,
+   "final": 10
+  },
+  "final_pass": 10,
+  "final_rate": 0.05025125628140704,
+  "final_rate_wilson95": [
+   0.027521096295421904,
+   0.09001692351905403
+  ],
+  "final_by_colour": {
+   "consistent": 1,
+   "insufficient": 9
+  }
+ },
+ "refs:ref_LPV": {
+  "n": 44,
+  "n_errors": 0,
+  "stage_counts": {
+   "v1_vetoed": 3,
+   "pre": 29,
+   "fit_flag": 14,
+   "repeat": 1,
+   "final": 2
+  },
+  "final_pass": 2,
+  "final_rate": 0.045454545454545456,
+  "final_rate_wilson95": [
+   0.012554846366981079,
+   0.15135271525303162
+  ],
+  "final_by_colour": {
+   "consistent": 2,
+   "insufficient": 0
+  }
+ },
+ "refs:ref_YSO": {
+  "n": 200,
+  "n_errors": 0,
+  "stage_counts": {
+   "v1_vetoed": 14,
+   "pre": 36,
+   "fit_flag": 23,
+   "repeat": 6,
+   "final": 0
+  },
+  "final_pass": 0,
+  "final_rate": 0.0,
+  "final_rate_wilson95": [
+   0.0,
+   0.018846005918320894
+  ],
+  "final_by_colour": {
+   "consistent": 0,
+   "insufficient": 0
+  }
+ },
+ "expected_heldout_flags": {
+  "n_heldout": 423598,
+  "point": 0.0,
+  "wilson95": [
+   0.0,
+   814.1185758791493
+  ]
+ }
+}

@@ -1,0 +1,48 @@
+{
+ "label": "derived bound from simulated injections into observed dev light curves",
+ "assumptions": {
+  "photocentre": "flux-weighted (upper bound on shift)",
+  "blend_separation_mas": [
+   10.0,
+   1000.0
+  ],
+  "separation_prior": "log-uniform",
+  "sigma_obs": "max(ra_error, dec_error) * sqrt(astrometric_n_good_obs_al / 2)",
+  "sigma_scales": [
+   0.5,
+   1.0,
+   2.0
+  ]
+ },
+ "n_injections_passing_final": 576,
+ "n_used": 576,
+ "retained_fraction_mean": {
+  "0.5": 0.0037500000000000003,
+  "1": 0.02732638888888889,
+  "2": 0.08395833333333333
+ },
+ "retained_by_separation": {
+  "0.5": {
+   "10-100": 0.00721153846153846,
+   "100-1000": 0.0
+  },
+  "1": {
+   "10-100": 0.05248397435897437,
+   "100-1000": 7.233796296296296e-05
+  },
+  "2": {
+   "10-100": 0.16072382478632477,
+   "100-1000": 0.0007957175925925927
+  }
+ },
+ "mean_G_shift_mag": {
+  "median": 0.07011072471642568,
+  "p95": 0.3617207531151519
+ },
+ "n_crossing_G19_cut": 13,
+ "not_bounded": [
+  "astrometric microlensing of the source image (centroid shift ~ theta_E)",
+  "on-board window allocation and dead time in crowded fields",
+  "DR3 photometric reprocessing beyond the floor/outlier scenarios"
+ ]
+}
