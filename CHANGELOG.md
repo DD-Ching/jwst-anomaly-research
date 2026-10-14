@@ -2,6 +2,8 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: (in progress) member-galaxy subtraction for member-buried counter-image rows
+
 ## 2026-10-14: X2 S6a: in 5D equal-J rotating Ellis wormholes the two unstable modes continue past their merger as an oscillating growing pair
 - **Equations re-derived** (sympy, 5D Ricci of 1309.2448 Eq. (pertlineel)).
   - The background equations and R_ll are reproduced exactly.
