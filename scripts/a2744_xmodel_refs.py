@@ -12,7 +12,9 @@ asks for 3.2, 26.2, 33.1 and 62.1 (and 4.2 for comparison), per model, without t
 - ``pred_snr_pair``: the same from the summed sibling flux over the summed |mu| (a fold pair's
   total magnification is less sensitive to where the critical curve falls than either image's);
 - the best aperture S/N within the system's forced search radius (``best_snr``), its flux over the
-  pair prediction and ``lens_consistency.forced_class`` of the two;
+  pair prediction and ``lens_consistency.forced_class`` of the two: ``forced_class`` only when every
+  sibling in the pair passes the gates (else ``no_reference``), ``ungated_class`` from all siblings
+  as a diagnostic, ``off_image`` when the target has no data;
 - ``need_mu_factor``: by how much the pair's summed |mu| would have to be overestimated before the
   pair predicts the target at the D-029 ``absent`` floor (10 sigma);
 - the nearest catalogued image of the same galaxy's other knots (``cat_sibling_knot``): an extra
@@ -47,7 +49,7 @@ SYSTEMS = ("3.2", "4.2", "26.2", "33.1", "62.1")
 MODELS = ("bergamini23", "uncover2")
 BANDS = ("f150w", "f277w", "f444w")
 ABSENT_SNR = 10.0  # D-029 floor for an absent image (ASSUMPTION)
-KNOT_MATCH_ARCSEC = 1.5  # an extra this close to another knot's catalogued image is that galaxy's
+KNOT_MATCH_ARCSEC = 1.5  # an extra this close to another knot's catalogued image lands on it
 DEFAULT_IN = Path("results/lens_consistency/abell2744-uncover2")
 
 
@@ -74,12 +76,7 @@ def predictions(sib: dict[str, tuple[float, float]], mu_t: float, e_t: float) ->
     return {"from": per, "pair": pair_flux / e_t, "pair_flux": pair_flux}
 
 
-def _r(v, nd: int = 2):
-    try:
-        v = float(v)
-    except (TypeError, ValueError):
-        return None
-    return round(v, nd) if np.isfinite(v) else None
+_r = au._r
 
 
 def sibling_fluxes(cat: Table, stamp) -> dict:
@@ -145,33 +142,52 @@ def knot_match(arcs: Table, system: str, ra: float, dec: float) -> tuple[str, fl
     return str(arcs["image_id"][sel[k]]), float(d[k])
 
 
+def classify(p: dict, sib: dict, e_t: float, snr: float, ratio: float) -> tuple[str, str]:
+    """(class, ungated class) of one target. ``class`` uses the pair prediction only when every
+    sibling in it passes the D-034 gates (a resolved or contaminated reference does not scale
+    with |mu|); ``ungated`` is the same verdict from all siblings, a diagnostic only."""
+    if not (np.isfinite(e_t) and e_t > 0):
+        return "off_image", "off_image"
+    ungated = lc.forced_class(p["pair"], snr, ratio) if np.isfinite(ratio) else "no_reference"
+    gated = bool(p["from"]) and all(sib[k]["gates_ok"] for k in p["from"])
+    return (ungated if gated else "no_reference"), ungated
+
+
 def measure(
-    pred: Table, xm: Table, model: str, arcs: Table, system: str, stamps: dict
+    pred: Table, xm: Table, model: str, arcs: Table, system: str, sibs: dict, stamps: dict
 ) -> list[dict]:
-    """One row per target extra image of ``system`` under one model."""
-    cat = arcs[np.asarray(arcs["system"]).astype(str) == system]
+    """One row per target extra image of ``system`` under one model; ``sibs`` holds each band's
+    ``sibling_fluxes`` of the system."""
     mus = sibling_mu(pred, system)
+    cat_ids = [str(i) for i in arcs["image_id"][np.asarray(arcs["system"]).astype(str) == system]]
+    has_unpred = any(
+        lensmodel.image_family(u) == system for u in (pred.meta.get("unpredicted") or [])
+    )
+    search = lc.system_search_radius(pred, system, 1.0, has_unpred)
     rows = []
     for t in targets(pred, xm, model, system):
         ra, dec, mu_t = float(t["ra"]), float(t["dec"]), float(t["magnification"])
-        search = float(t["search_arcsec"]) if np.isfinite(t["search_arcsec"]) else 1.0
         kid, ksep = knot_match(arcs, system, ra, dec)
         row = {
             "radec": [round(ra, 6), round(dec, 6)],
             "mu": _r(mu_t),
             "search_arcsec": _r(search),
             "sibling_mu": {k: _r(v, 1) for k, v in mus.items()},
-            "cat_sibling_knot": kid,
-            "cat_sibling_knot_sep_arcsec": _r(ksep),
+            # catalogued images this model does not match: the pair sum is then incomplete
+            "siblings_without_mu": [k for k in cat_ids if k not in mus],
+            "cat_sibling_knot": kid if ksep <= KNOT_MATCH_ARCSEC else "",
+            "nearest_other_knot": kid,
+            "nearest_other_knot_sep_arcsec": _r(ksep),
         }
         for band, stamp in stamps.items():
-            sib = sibling_fluxes(cat, stamp)
+            sib = sibs[band]
             img, err, xx, yy = stamp(ra, dec)
             _, e_t = lc.aperture_snr(img, err, xx, yy, 0.0, 0.0)
             p = predictions({k: (v["flux"], mus.get(k, np.nan)) for k, v in sib.items()}, mu_t, e_t)
             snr, flux, dx, dy = lc.best_within(img, err, xx, yy, search)
             ratio = flux / p["pair_flux"] if p["pair_flux"] > 0 else np.nan
             gated = [p["from"][k] for k in p["from"] if sib[k]["gates_ok"]]
+            fclass, ungated = classify(p, sib, e_t, snr, ratio)
             row[band] = {
                 "siblings": {
                     k: {"flux": _r(v["flux"], 4), "snr": _r(v["snr"], 1), "gates_ok": v["gates_ok"]}
@@ -184,9 +200,8 @@ def measure(
                 "best_snr": _r(snr, 1),
                 "best_offset": [_r(dx, 1), _r(dy, 1)],
                 "flux_over_pair_pred": _r(ratio),
-                "forced_class": lc.forced_class(p["pair"], snr, ratio)
-                if np.isfinite(ratio)
-                else "no_reference",
+                "forced_class": fclass,
+                "ungated_class": ungated,
             }
         rows.append(row)
     return rows
@@ -207,7 +222,11 @@ def main(argv=None) -> dict:
     opened = {b: lc.image_stamper(au.S3_I2D.format(b), half) for b in BANDS}
     stamps = {b: lc.halo_stamper(o[0], au.HALO_FILTER_ARCSEC) for b, o in opened.items()}
     try:
-        runs = {s: {m: measure(preds[m], xm, m, arcs, s, stamps) for m in MODELS} for s in SYSTEMS}
+        runs = {}
+        for s in SYSTEMS:
+            cat = arcs[np.asarray(arcs["system"]).astype(str) == s]
+            sibs = {b: sibling_fluxes(cat, st) for b, st in stamps.items()}
+            runs[s] = {m: measure(preds[m], xm, m, arcs, s, sibs, stamps) for m in MODELS}
     finally:
         for _, close in opened.values():
             close()
@@ -219,7 +238,9 @@ def main(argv=None) -> dict:
             "halo_filter_arcsec": au.HALO_FILTER_ARCSEC,
             "absent_snr": ABSENT_SNR,
             "knot_match_arcsec": KNOT_MATCH_ARCSEC,
-            "search": "each row's forced search radius (lens_consistency.system_search_radius)",
+            "search": "lens_consistency.system_search_radius of the system (base 1.0 arcsec)",
+            "class": "forced_class only when every pair sibling passes the D-034 gates, "
+            "else no_reference (ungated_class is a diagnostic)",
             "mu_cap": "none (D-034's |mu| <= 50 cap dropped on purpose)",
         },
         "runs": runs,

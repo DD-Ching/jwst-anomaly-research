@@ -378,10 +378,12 @@ D-041 rule removes both remaining Bergamini `absent` rows; no new flag.
 
 **Reference fluxes without the |μ| cap (2026-10-14, `scripts/a2744_xmodel_refs.py`,
 `results/lens_consistency/abell2744-uncover2/xmodel_refs.json`).** Siblings' 1″-halo-filtered peak fluxes scaled by
-|μ| (per sibling and as the fold pair's summed flux / summed |μ|), F150W/F277W/F444W, both models:
+|μ| (per sibling and as the fold pair's summed flux / summed |μ|), F150W/F277W/F444W, both models. Verdicts are
+`ungated_class` (from siblings that fail the D-034 gates; a diagnostic) unless stated:
 - 3.2: lands on catalogued 3.1c (0.55–0.75″); a source 5–8× the prediction is there (`confused`): seen.
 - 26.2: `recovered` in both (9–19σ, 1.6–2.5× the prediction), 0.37″ from 26.1c.
-- 33.1 third, 62.1: predicted at 0.1–0.7σ; the pairs' |μ| would need to be overestimated 15–84× to reach 10σ. Untestable.
-- 4.2c: `absent` in both, from references that fail the gates (resolved knots); vetted verdict stands.
+- 33.1 third, 62.1: predicted at 0.1–0.7σ (33.1 F277W/F444W also gated: `undetectable`); the pairs' |μ| would need to be overestimated
+  15–84× to reach 10σ. Untestable.
+- 4.2c: `absent` in both only ungated (references fail the gates: resolved knots); vetted verdict stands.
 
 Cutouts viewed. **Null.**

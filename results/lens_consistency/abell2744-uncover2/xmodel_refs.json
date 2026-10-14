@@ -9,7 +9,8 @@
   "halo_filter_arcsec": 1.0,
   "absent_snr": 10.0,
   "knot_match_arcsec": 1.5,
-  "search": "each row's forced search radius (lens_consistency.system_search_radius)",
+  "search": "lens_consistency.system_search_radius of the system (base 1.0 arcsec)",
+  "class": "forced_class only when every pair sibling passes the D-034 gates, else no_reference (ungated_class is a diagnostic)",
   "mu_cap": "none (D-034's |mu| <= 50 cap dropped on purpose)"
  },
  "runs": {
@@ -21,13 +22,15 @@
       -30.401646
      ],
      "mu": 3.43,
-     "search_arcsec": 1.0,
+     "search_arcsec": 1.29,
      "sibling_mu": {
       "3.2b": 50.3,
       "3.2a": 49.6
      },
+     "siblings_without_mu": [],
      "cat_sibling_knot": "3.1c",
-     "cat_sibling_knot_sep_arcsec": 0.55,
+     "nearest_other_knot": "3.1c",
+     "nearest_other_knot_sep_arcsec": 0.55,
      "f150w": {
       "siblings": {
        "3.2a": {
@@ -48,13 +51,14 @@
       "pred_snr_pair": 7.1,
       "pred_snr_gated_max": null,
       "need_mu_factor": 1.4,
-      "best_snr": 52.0,
+      "best_snr": 51.8,
       "best_offset": [
        0.1,
        -0.5
       ],
-      "flux_over_pair_pred": 7.85,
-      "forced_class": "confused"
+      "flux_over_pair_pred": 7.81,
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
      },
      "f277w": {
       "siblings": {
@@ -76,13 +80,14 @@
       "pred_snr_pair": 26.3,
       "pred_snr_gated_max": null,
       "need_mu_factor": 0.4,
-      "best_snr": 128.4,
+      "best_snr": 127.5,
       "best_offset": [
-       0.2,
+       0.1,
        -0.5
       ],
-      "flux_over_pair_pred": 6.44,
-      "forced_class": "confused"
+      "flux_over_pair_pred": 6.47,
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
      },
      "f444w": {
       "siblings": {
@@ -104,13 +109,14 @@
       "pred_snr_pair": 7.2,
       "pred_snr_gated_max": 7.4,
       "need_mu_factor": 1.4,
-      "best_snr": 48.8,
+      "best_snr": 48.0,
       "best_offset": [
        0.2,
        -0.5
       ],
-      "flux_over_pair_pred": 7.11,
-      "forced_class": "confused"
+      "flux_over_pair_pred": 7.21,
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
      }
     }
    ],
@@ -125,8 +131,12 @@
      "sibling_mu": {
       "3.2b": 40.0
      },
+     "siblings_without_mu": [
+      "3.2a"
+     ],
      "cat_sibling_knot": "3.1c",
-     "cat_sibling_knot_sep_arcsec": 0.75,
+     "nearest_other_knot": "3.1c",
+     "nearest_other_knot_sep_arcsec": 0.75,
      "f150w": {
       "siblings": {
        "3.2a": {
@@ -152,7 +162,8 @@
        0.5
       ],
       "flux_over_pair_pred": 5.72,
-      "forced_class": "confused"
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
      },
      "f277w": {
       "siblings": {
@@ -179,7 +190,8 @@
        0.5
       ],
       "flux_over_pair_pred": 4.82,
-      "forced_class": "confused"
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
      },
      "f444w": {
       "siblings": {
@@ -206,7 +218,8 @@
        0.5
       ],
       "flux_over_pair_pred": 5.51,
-      "forced_class": "confused"
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
      }
     }
    ]
@@ -224,8 +237,10 @@
       "4.2b": 7.3,
       "4.2a": 5.5
      },
-     "cat_sibling_knot": "4.1c",
-     "cat_sibling_knot_sep_arcsec": 3.01,
+     "siblings_without_mu": [],
+     "cat_sibling_knot": "",
+     "nearest_other_knot": "4.1c",
+     "nearest_other_knot_sep_arcsec": 3.01,
      "f150w": {
       "siblings": {
        "4.2a": {
@@ -252,7 +267,8 @@
        -0.4
       ],
       "flux_over_pair_pred": 0.1,
-      "forced_class": "absent"
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
      },
      "f277w": {
       "siblings": {
@@ -280,7 +296,8 @@
        -0.4
       ],
       "flux_over_pair_pred": 0.06,
-      "forced_class": "absent"
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
      },
      "f444w": {
       "siblings": {
@@ -308,7 +325,8 @@
        -0.4
       ],
       "flux_over_pair_pred": 0.08,
-      "forced_class": "absent"
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
      }
     }
    ],
@@ -324,8 +342,10 @@
       "4.2b": 8.4,
       "4.2a": 5.3
      },
-     "cat_sibling_knot": "4.1c",
-     "cat_sibling_knot_sep_arcsec": 2.1,
+     "siblings_without_mu": [],
+     "cat_sibling_knot": "",
+     "nearest_other_knot": "4.1c",
+     "nearest_other_knot_sep_arcsec": 2.1,
      "f150w": {
       "siblings": {
        "4.2a": {
@@ -352,7 +372,8 @@
        -0.0
       ],
       "flux_over_pair_pred": 0.27,
-      "forced_class": "absent"
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
      },
      "f277w": {
       "siblings": {
@@ -380,7 +401,8 @@
        -0.0
       ],
       "flux_over_pair_pred": 0.15,
-      "forced_class": "absent"
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
      },
      "f444w": {
       "siblings": {
@@ -408,7 +430,8 @@
        -0.0
       ],
       "flux_over_pair_pred": 0.19,
-      "forced_class": "absent"
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
      }
     }
    ]
@@ -426,8 +449,10 @@
       "26.2b": 11.0,
       "26.2a": 9.7
      },
+     "siblings_without_mu": [],
      "cat_sibling_knot": "26.1c",
-     "cat_sibling_knot_sep_arcsec": 0.37,
+     "nearest_other_knot": "26.1c",
+     "nearest_other_knot_sep_arcsec": 0.37,
      "f150w": {
       "siblings": {
        "26.2a": {
@@ -454,7 +479,8 @@
        -0.2
       ],
       "flux_over_pair_pred": 1.83,
-      "forced_class": "recovered"
+      "forced_class": "no_reference",
+      "ungated_class": "recovered"
      },
      "f277w": {
       "siblings": {
@@ -482,7 +508,8 @@
        -0.2
       ],
       "flux_over_pair_pred": 1.94,
-      "forced_class": "recovered"
+      "forced_class": "no_reference",
+      "ungated_class": "recovered"
      },
      "f444w": {
       "siblings": {
@@ -510,7 +537,8 @@
        -0.2
       ],
       "flux_over_pair_pred": 2.48,
-      "forced_class": "recovered"
+      "forced_class": "no_reference",
+      "ungated_class": "recovered"
      }
     }
    ],
@@ -521,12 +549,16 @@
       -30.403198
      ],
      "mu": 3.96,
-     "search_arcsec": 1.0,
+     "search_arcsec": 2.25,
      "sibling_mu": {
       "26.2b": 15.5
      },
+     "siblings_without_mu": [
+      "26.2a"
+     ],
      "cat_sibling_knot": "26.1c",
-     "cat_sibling_knot_sep_arcsec": 1.0,
+     "nearest_other_knot": "26.1c",
+     "nearest_other_knot_sep_arcsec": 1.0,
      "f150w": {
       "siblings": {
        "26.2a": {
@@ -546,13 +578,14 @@
       "pred_snr_pair": 7.3,
       "pred_snr_gated_max": null,
       "need_mu_factor": 1.4,
-      "best_snr": 11.2,
+      "best_snr": 12.6,
       "best_offset": [
        -0.0,
-       1.0
+       1.2
       ],
-      "flux_over_pair_pred": 1.62,
-      "forced_class": "recovered"
+      "flux_over_pair_pred": 1.76,
+      "forced_class": "no_reference",
+      "ungated_class": "recovered"
      },
      "f277w": {
       "siblings": {
@@ -573,13 +606,14 @@
       "pred_snr_pair": 10.0,
       "pred_snr_gated_max": null,
       "need_mu_factor": 1.0,
-      "best_snr": 16.0,
+      "best_snr": 18.5,
       "best_offset": [
        -0.0,
-       1.0
+       1.2
       ],
-      "flux_over_pair_pred": 1.61,
-      "forced_class": "recovered"
+      "flux_over_pair_pred": 1.92,
+      "forced_class": "no_reference",
+      "ungated_class": "recovered"
      },
      "f444w": {
       "siblings": {
@@ -600,13 +634,14 @@
       "pred_snr_pair": 4.1,
       "pred_snr_gated_max": null,
       "need_mu_factor": 2.4,
-      "best_snr": 9.4,
+      "best_snr": 12.8,
       "best_offset": [
-       -0.0,
-       1.0
+       0.1,
+       1.3
       ],
-      "flux_over_pair_pred": 2.36,
-      "forced_class": "undetectable"
+      "flux_over_pair_pred": 3.2,
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
      }
     }
    ]
@@ -624,8 +659,10 @@
       "33.1b": 85.7,
       "33.1a": 44.5
      },
+     "siblings_without_mu": [],
      "cat_sibling_knot": "",
-     "cat_sibling_knot_sep_arcsec": null,
+     "nearest_other_knot": "",
+     "nearest_other_knot_sep_arcsec": null,
      "f150w": {
       "siblings": {
        "33.1a": {
@@ -652,7 +689,8 @@
        0.6
       ],
       "flux_over_pair_pred": 147.63,
-      "forced_class": "undetectable"
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
      },
      "f277w": {
       "siblings": {
@@ -679,7 +717,8 @@
        0.6
       ],
       "flux_over_pair_pred": 216.84,
-      "forced_class": "undetectable"
+      "forced_class": "undetectable",
+      "ungated_class": "undetectable"
      },
      "f444w": {
       "siblings": {
@@ -707,7 +746,8 @@
        0.6
       ],
       "flux_over_pair_pred": 70.01,
-      "forced_class": "undetectable"
+      "forced_class": "undetectable",
+      "ungated_class": "undetectable"
      }
     }
    ],
@@ -723,8 +763,10 @@
       "33.1a": 216.1,
       "33.1b": 186.6
      },
+     "siblings_without_mu": [],
      "cat_sibling_knot": "",
-     "cat_sibling_knot_sep_arcsec": null,
+     "nearest_other_knot": "",
+     "nearest_other_knot_sep_arcsec": null,
      "f150w": {
       "siblings": {
        "33.1a": {
@@ -751,7 +793,8 @@
        -0.4
       ],
       "flux_over_pair_pred": 38.76,
-      "forced_class": "undetectable"
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
      },
      "f277w": {
       "siblings": {
@@ -778,7 +821,8 @@
        -0.3
       ],
       "flux_over_pair_pred": 30.72,
-      "forced_class": "undetectable"
+      "forced_class": "undetectable",
+      "ungated_class": "undetectable"
      },
      "f444w": {
       "siblings": {
@@ -806,7 +850,8 @@
        -0.3
       ],
       "flux_over_pair_pred": 26.25,
-      "forced_class": "undetectable"
+      "forced_class": "undetectable",
+      "ungated_class": "undetectable"
      }
     }
    ]
@@ -824,8 +869,10 @@
       "62.1a": 56.4,
       "62.1b": 50.5
      },
+     "siblings_without_mu": [],
      "cat_sibling_knot": "",
-     "cat_sibling_knot_sep_arcsec": null,
+     "nearest_other_knot": "",
+     "nearest_other_knot_sep_arcsec": null,
      "f150w": {
       "siblings": {
        "62.1a": {
@@ -852,7 +899,8 @@
        0.1
       ],
       "flux_over_pair_pred": 17.46,
-      "forced_class": "undetectable"
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
      },
      "f277w": {
       "siblings": {
@@ -880,7 +928,8 @@
        -0.4
       ],
       "flux_over_pair_pred": 27.69,
-      "forced_class": "undetectable"
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
      },
      "f444w": {
       "siblings": {
@@ -908,7 +957,8 @@
        -0.4
       ],
       "flux_over_pair_pred": 36.53,
-      "forced_class": "undetectable"
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
      }
     }
    ],
@@ -924,8 +974,10 @@
       "62.1b": 66.5,
       "62.1a": 65.6
      },
+     "siblings_without_mu": [],
      "cat_sibling_knot": "",
-     "cat_sibling_knot_sep_arcsec": null,
+     "nearest_other_knot": "",
+     "nearest_other_knot_sep_arcsec": null,
      "f150w": {
       "siblings": {
        "62.1a": {
@@ -952,7 +1004,8 @@
        -0.2
       ],
       "flux_over_pair_pred": 17.63,
-      "forced_class": "undetectable"
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
      },
      "f277w": {
       "siblings": {
@@ -980,7 +1033,8 @@
        -0.2
       ],
       "flux_over_pair_pred": 28.36,
-      "forced_class": "undetectable"
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
      },
      "f444w": {
       "siblings": {
@@ -1008,7 +1062,8 @@
        -0.2
       ],
       "flux_over_pair_pred": 34.23,
-      "forced_class": "undetectable"
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
      }
     }
    ]

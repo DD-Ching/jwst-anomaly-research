@@ -10,14 +10,20 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - New: `scripts/a2744_xmodel_refs.py` (smacs_ref_fluxes approach on the tracked cross-model tables; S3 byte-range
   F150W/F277W/F444W stamps with the 1″ halo filter; no lens maps). Targets are the `both_loose` `no_reference`
   rows. Each sibling's peak flux / |μ_sib| × |μ_target|, and the fold pair's summed flux / summed |μ| (`pred_snr_pair`).
+  `forced_class` only when every pair sibling passes the D-034 gates; otherwise `no_reference`, with the
+  all-sibling verdict kept as `ungated_class` (a diagnostic). Most siblings fail the gates (resolved knots), so the
+  verdicts below are ungated unless stated.
 - **Result [derived; positions and μ model_prediction]:**
   - 3.2: on catalogued 3.1c (0.55″ / 0.75″); 5–8× brighter than predicted (`confused`): the galaxy's third image, seen.
   - 26.2: `recovered` in both models (9–19σ, flux 1.6–2.5× the pair prediction), 0.37″ from 26.1c.
   - 33.1 third, 62.1: predicted at only 0.1–0.7σ in every band and model; the pair's |μ| (45–216) would have to be
-    overestimated 15–84× to reach 10σ. Not testable with these references.
-  - 4.2c: `absent` in both (pair 80–206σ, ratio 0.06–0.27), but every sibling fails the gates (resolved knots);
+    overestimated 15–84× to reach 10σ (33.1 F277W/F444W: `undetectable` also with gated references). Not testable.
+  - 4.2c: `absent` in both only ungated (pair 80–206σ, ratio 0.06–0.27); every sibling fails the gates (resolved knots);
     the injection test and the vetted verdict (docs/candidates/abell2744-family4-c.md) stand.
   - Cutouts viewed (all targets, three bands). **Null: no new flag.**
+- `/code-review` fixes: the system's widened search radius (the stored one is NaN on `no_reference` rows), gated
+  classes, `off_image`, the 1.5″ knot-match threshold applied, siblings a model leaves unmatched recorded (UNCOVER
+  3.2a, 26.2a: its pair sum is then one image), sibling photometry once per system and band.
 - **Handoff:** Abell 2744 counter-images are exhausted with two models. Next lens-model item: `--plane` for
   `images/validate`, or the next field's second model.
 

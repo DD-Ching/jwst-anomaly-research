@@ -82,3 +82,12 @@ def test_knot_match_skips_own_system():
     kid, sep = xr.knot_match(arcs, "3.2", 3.57667, -30.401646)
     assert kid == "3.1c" and 0.4 < sep < 0.7
     assert xr.knot_match(arcs[1:], "3.2", 3.57667, -30.401646)[0] == ""
+
+
+def test_classify_needs_gated_siblings():
+    p = xr.predictions({"a": (10.0, 5.0), "b": (10.0, 5.0)}, 5.0, 1.0)  # pair 10 sigma
+    ok = {"a": {"gates_ok": True}, "b": {"gates_ok": True}}
+    assert xr.classify(p, ok, 1.0, 1.0, 0.05) == ("absent", "absent")
+    half = {"a": {"gates_ok": True}, "b": {"gates_ok": False}}
+    assert xr.classify(p, half, 1.0, 1.0, 0.05) == ("no_reference", "absent")
+    assert xr.classify(p, ok, np.nan, 1.0, 0.05) == ("off_image", "off_image")
