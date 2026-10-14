@@ -1580,6 +1580,30 @@ member-buried images need galaxy-model subtraction (isophotes, as MACS0416 51), 
 filter floor `3 × FORCED_R_AP` evaluated to 0.6000000000000001 and refused 0.6″. Revisit if: a member-subtraction
 route (isophote or Sérsic models of the cluster members) exists for `forced_check`.
 
+**Addendum 2026-10-14 (member-galaxy subtraction, `scripts/member_sub.py`).** Re-measured every `confused`,
+`recovered` and `absent` forced row of the three fields (MACS1149 5, MACS0416 18, Abell 2744 8; F277W, same models and
+catalogues as the previous addendum) after fitting one elliptical Sérsic (astropy.modeling, not PSF-convolved) per
+catalogued neighbour brighter than the prediction, with the search disc masked except the neighbour cores. Each row
+gets an empirical noise (ring of residual apertures around the nearest neighbour), injections (recovery ~1 by
+construction while the disc is masked) and up to three control discs rotated about the neighbour, where no image is
+predicted. Synthetic tests: an image 1.2″ from a Sérsic member is recovered (ratio 1.03), an empty position is
+`absent`. **Result: no new `absent` that lacks an explanation.**
+- Testable: one row. MACS1149 system 2 (μ −16.5) is `absent` (best residual 0.30 × prediction within 2.25″, at
+  24σ_emp; the three control discs give 0.32 ×): the disc is empty after subtraction (looked at, with the prediction
+  injected for comparison). Already explained (D-036 vetting): CATS merges 2.2/2.3 and puts this image on empty sky;
+  Sharon puts it on the arc 2.6″ away. The margin to the 1/3 threshold is small, so this is not stronger evidence.
+- `untestable` 14 rows: member-model residuals in the control discs reach 0.6–660 × the prediction, or the calibrated
+  prediction is < 10σ_emp once the core residuals set the noise (MACS1149 21, 1192; MACS0416 15 ×2, 27, 34, 45, 51,
+  122 ×2, 132, 133; Abell 2744 8.1, 18.1, 22.1 in the first run). `blend` 4 rows (a core within 0.5″). `no_member`
+  12 rows: no catalogued neighbour brighter than the prediction within search + 0.5″ (the `confused` ones among them,
+  MACS0416 1, 27, 45, are confused by uncatalogued light or by sources counted only in the 0.2″ best-aperture search).
+- One recorded `recovered` row is doubtful: MACS1149 21's forced best aperture (2.1″ off) lies on a member 2.0″ away.
+Single unconvolved Sérsics leave core residuals as bright as the predictions, so this route decides almost nothing
+in these fields. Rejected for now: GALFIT/imfit/pysersic with PSF convolution and multi-component members (a new
+dependency and per-member tuning for ≤ 14 rows that all have recorded ordinary explanations). Revisit if: a PSF-
+convolved member model is needed elsewhere (then rerun `member_sub.py` on these rows), or a member-buried row lacks
+an ordinary explanation.
+
 ## D-030 Exact image-plane χ² in `validate`; El Gordo and Abell 2744 models in the repository (2026-10-08)
 
 **Decision.**

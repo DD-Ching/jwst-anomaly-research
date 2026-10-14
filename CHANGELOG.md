@@ -2,7 +2,27 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-14: (in progress) member-galaxy subtraction for member-buried counter-image rows
+## 2026-10-14: member-galaxy subtraction for member-buried counter-image rows: one testable row, already explained
+- **Hypothesis before computing:** the `confused` rows the median filter could not clear (D-029 addendum, previous
+  entry) become decidable once the bright neighbours are modelled; an `absent` among them without a recorded
+  explanation would be a lens-model residual. Ordinary: model position/topology errors near critical curves,
+  galaxy-scale caustics, member-model residuals, uncatalogued light.
+- New: `scripts/member_sub.py` (Sérsic per catalogued neighbour brighter than the prediction, search disc masked
+  except the cores, empirical ring noise, injections, control discs rotated about the neighbour) and
+  `tests/test_member_sub.py` (synthetic member + image: recovered at ratio 1.03, empty position `absent`, blend,
+  faint neighbour). Runs: `images --forced-image <F277W i2d, S3>` (no halo filter) then
+  `member_sub.py --table <images_predicted.ecsv> --catalog <F200W cat> --forced-image <F277W i2d> --classes
+  confused,recovered,absent` for `macs1149-cats`, `macs0416-cats`, `abell2744-bergamini23` (catalogue sha256 `9953c869…`;
+  no photo-z: the forced classes do not use it). Outputs: `results/member_sub/*.json`.
+- **Result (derived; D-029 addendum): no new unexplained `absent`.** Of 31 rows, 1 testable (MACS1149 system 2,
+  `absent`, 0.30 × prediction vs 0.32 × in the controls; explained by the CATS/Sharon topology disagreement; looked
+  at the residual with the prediction injected), the rest `untestable` (control residuals 0.6–660 × the prediction),
+  `blend` or `no_member`. MACS1149 21's forced `recovered` sits on a member: doubtful.
+- **Failed approach:** initialising Sérsic amplitude with the peak pixel (Sersic2D's amplitude is I(r_eff), ~100×
+  lower for n = 2.5) left 56× residuals on a synthetic member; fixed. First version masked only up to 0.3″ short of
+  the core (0.95″ of a 2.25″ search disc), and selected neighbours within 2.5″ only; both widened to the search disc.
+- **Next:** none on these rows unless a PSF-convolved member model is built for another reason (D-029 addendum);
+  other Supporting 1 items (`--plane` option, orphan-pair injections).
 
 ## 2026-10-14: X2 S6a: in 5D equal-J rotating Ellis wormholes the two unstable modes continue past their merger as an oscillating growing pair
 - **Equations re-derived** (sympy, 5D Ricci of 1309.2448 Eq. (pertlineel)).

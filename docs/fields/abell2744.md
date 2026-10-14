@@ -331,3 +331,9 @@ Outputs: `results/arcs/abell2744-bergamini23/` (`derived`; predictions are `mode
 
 `images --halo-filter-arcsec 1.0 / 0.6` on the F277W forced stamps: no new `absent`; the `confused` rows on cluster
 members stay `confused` (member cores survive the median filter). Details: DECISIONS.md D-029 addendum 2026-10-14.
+
+## Member-subtracted counter-images (2026-10-14)
+
+`scripts/member_sub.py` (Sérsic models of the bright neighbours, control discs) on the F277W forced rows: no new
+unexplained `absent`; member-model residuals leave the member-buried rows untestable. Details: DECISIONS.md D-029
+addendum 2026-10-14 (member-galaxy subtraction).
