@@ -184,6 +184,8 @@ uid prefix: `jw02561-o001_t003_nircam_`.
 
 ## Notable for follow-up (unvetted)
 
+(Vetting in progress 2026-10-14 on `claude/a2744-followups`.)
+
 - **`f200w_5904` (screened, originally #1).** It is point-like (DJA r50 2.08 px) with F150W−F444W +2.64,
   outside the stellar colour box. D-020 removed it because it shows spikes and no host light.
   - It matches SIMBAD UNCOVER DR2 46803 (type EmG, 0.06″) and NED [AJO2024] MSAID 45924 (0.17″).
