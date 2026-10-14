@@ -2,6 +2,8 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: (in progress) D-041 cross-model rule on every Abell 2744 Bergamini forced-photometry row with UNCOVER v2.0
+
 ## 2026-10-14: UNCOVER v2.0 passes as the second Abell 2744 model; it also predicts 4.2c, and the vetted verdict stands
 - **Route:** the UNCOVER DR4 lens maps (v2.0, Furtak & Zitrin, 2024-08-07) from Google Drive
   (`drive.usercontent.google.com`, sha256-pinned in `scripts/a2744_uncover.py`; deflection x/y 75 + 71 MB gz, 4561² at
