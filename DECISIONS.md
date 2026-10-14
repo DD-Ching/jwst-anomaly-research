@@ -2523,6 +2523,16 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - A multi-plane field run needs speed: interpolate per-plane deflection grids for the seeds.
 - A model needs more than dPIE potentials on the extra planes.
 
+**Addendum 2026-10-14 (`--plane NAME=Z[:SIGMA]` on `lens_consistency.py validate` and `images`).** Repeatable;
+applies `split_planes` to the pinned Lenstool model (map models refused). `validate` then skips the published
+single-plane κ and μ map comparisons and records the planes under `multi_plane`; outputs go to
+`<model>/planes_<hash>/`, so single-plane tables are never overwritten. Use (`model_prediction`, other parameters
+**not** refitted, so Δχ² is an upper bound on the cost): MACS0416 CANUCS, 303 images, σ_pos 0.49″. Single plane
+χ² 330.81 (Lenstool 344.30), rms 0.512″. Potential 8757 (the z_spec 0.268 foreground galaxy behind the system-51
+fourth image, D-042/D-046) at z 0.268: σ 102 km/s (fitted) χ² 330.55; 70 km/s 332.71; 60 km/s 336.44 (rms 0.516″).
+Most affected: CANUCS D52a–c (1.3″ from 8757), first images +0.28–0.45″ at 60 km/s (1.11–1.18″ → 1.46–1.56″). The two-plane
+σ ≤ 60 km/s solution that removes the fourth image (D-046) costs Δχ² ≤ +5.6 on the catalogued images: no tension.
+
 ## D-047 Exotic-lens predictions: wormhole and negative-mass signatures are searchable, warp signatures are not (2026-10-08)
 
 **Decision.** Phase 1 ("predictions first") gives the screens closed-form targets. docs/exotic_lensing.md has the

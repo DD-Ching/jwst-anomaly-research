@@ -141,6 +141,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.45 (UNCOVER v2.0 gate fix; 4.2c second-model photometry and injections) | — | — | 0.1 (orientation, takeover, base merge, PR) | cloud routine 012BA5rZ, 13:08–13:50Z |
 | 2026-W42 | ≈ 0.4 (D-041 cross-model rule on every Abell 2744 forced row, UNCOVER v2.0; cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01DJ1D1o, 14:09–14:45Z |
 | 2026-W42 | ≈ 0.3 (Abell 2744 sibling reference fluxes for both-model extras, `a2744_xmodel_refs.py`) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01GcHRcx, 15:08–15:40Z |
+| 2026-W42 | ≈ 0.25 (`--plane` CLI; MACS0416 8757 two-plane χ² check) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01XYMGpL, 16:08–16:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

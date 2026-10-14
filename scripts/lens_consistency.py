@@ -257,6 +257,71 @@ def load_model(name: str):
     return lensmodel.LensModel.from_par(par), files, par
 
 
+def parse_planes(specs) -> tuple[dict[str, float], dict[str, float]]:
+    """``--plane NAME=Z[:SIGMA]`` values -> ``split_planes`` arguments (D-046): potential
+    redshifts and, where given, replacement velocity dispersions (km/s)."""
+    z_lens: dict[str, float] = {}
+    v_disp: dict[str, float] = {}
+    for spec in specs or ():
+        name, sep, rest = spec.partition("=")
+        z, colon, sig = rest.partition(":")
+        if name in z_lens:
+            raise SystemExit(f"error: --plane {name} given twice")
+        try:
+            if not (name and sep and z) or (colon and not sig):
+                raise ValueError
+            z_lens[name] = float(z)
+            if sig:
+                v_disp[name] = float(sig)
+        except ValueError:
+            raise SystemExit(f"error: --plane {spec!r}: expected NAME=Z[:SIGMA]") from None
+        if not all(np.isfinite(v) and v > 0 for v in (z_lens[name], v_disp.get(name, 1.0))):
+            raise SystemExit(f"error: --plane {spec!r}: Z and SIGMA must be positive and finite")
+    return z_lens, v_disp
+
+
+def check_planes(name: str, specs) -> tuple[dict[str, float], dict[str, float]]:
+    """Parse ``--plane`` and refuse it for a map model, before any download."""
+    if specs and is_map_model(name):
+        raise SystemExit(f"error: --plane needs a Lenstool model; {name} is a map model")
+    return parse_planes(specs)
+
+
+def apply_planes(name: str, model, specs):
+    """``model`` with the ``--plane`` potentials on their own redshift planes (unchanged
+    without ``--plane``), and the planes as provenance (None without)."""
+    z_lens, v_disp = check_planes(name, specs)
+    if not specs:
+        return model, None
+    try:
+        multi = model.split_planes(z_lens, v_disp)
+    except ValueError as exc:
+        raise SystemExit(f"error: --plane: {exc}") from None
+    fitted = {c.name: (c.z_lens, c.v_disp) for c in model.components}
+    info = {
+        "planes": [
+            {
+                "potential": k,
+                "z_fitted": fitted[k][0],
+                "z_lens": v,
+                "v_disp_fitted": fitted[k][1],
+                "v_disp": v_disp.get(k, fitted[k][1]),
+            }
+            for k, v in z_lens.items()
+        ],
+        "z_planes": list(multi.z_planes),
+        "model_sha256": multi.sha256,
+    }
+    return multi, info
+
+
+def out_dir(args, planes: dict | None = None) -> Path:
+    """Output directory: per model, and per multi-plane model (``apply_planes`` provenance)
+    so a multi-plane run never overwrites the single-plane tables."""
+    out = args.out / args.model
+    return out / f"planes_{planes['model_sha256'][:10]}" if planes else out
+
+
 Z_GRID = (1.0, 2.0, 4.0)
 
 
@@ -702,19 +767,22 @@ def cmd_validate_maps(args) -> dict:
             }
         summary["image_plane"] = isum
         _write(ip, out / "imageplane.ecsv")
-    (out / "validate.json").write_text(json.dumps(summary, indent=1))
+    (out / "validate.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary
 
 
 def cmd_validate(args) -> dict:
+    check_planes(args.model, args.plane)
     if is_map_model(args.model):
         return cmd_validate_maps(args)
     files = model_files(args.model)
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
+    model, planes = apply_planes(args.model, model, args.plane)
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
     sigma = model_sigpos(args.model, files, images)
-    chi2_ref = chi2pos_from_par(files["best.par"])
+    # Lenstool's Chi2pos belongs to the single-plane fit: no reference for a multi-plane model
+    chi2_ref = chi2pos_from_par(files["best.par"]) if planes is None else None
     image_plane_opt = (
         "image plane optimization" in files["best.par"].read_text(encoding="latin-1").lower()
     )
@@ -730,23 +798,28 @@ def cmd_validate(args) -> dict:
         "model_sha256": model.sha256,
         "n_potentials": len(model.components),
         "image_plane_optimised": image_plane_opt,
+        # the published maps are single-plane: compared only without --plane
         "kappa_map": (
-            kappa_map_check(model, files["kappa_map"], step=args.step)
+            {"skipped": "multi-plane model"}
+            if planes is not None and "kappa_map" in files
+            else kappa_map_check(model, files["kappa_map"], step=args.step)
             if "kappa_map" in files
             else None
         ),
         "backtrace": bsum,
         "image_plane": isum,
     }
-    # published magnification maps (model frame, so no frame offset)
-    for z_s, (url, sha) in MODELS[args.model].get("mag_map_files", {}).items():
-        summary[f"magnification_z{z_s:g}"] = map_check(
-            model, fetch_catalog(url, sha), "mu", z_s, args.map_step
-        )
-    out = args.out / args.model
+    if planes is not None:
+        summary["multi_plane"] = planes
+    else:  # published magnification maps (model frame, so no frame offset)
+        for z_s, (url, sha) in MODELS[args.model].get("mag_map_files", {}).items():
+            summary[f"magnification_z{z_s:g}"] = map_check(
+                model, fetch_catalog(url, sha), "mu", z_s, args.map_step
+            )
+    out = out_dir(args, planes)
     _write(bt, out / "backtrace.ecsv")
     _write(ip, out / "imageplane.ecsv")
-    (out / "validate.json").write_text(json.dumps(summary, indent=1))
+    (out / "validate.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary
 
 
@@ -1496,7 +1569,9 @@ def cmd_images(args) -> dict:
             f"error: {args.model}: no usable multiple-image list (none published, or excluded by "
             "the image-plane rms gate of D-035)"
         )
+    check_planes(args.model, args.plane)
     model, files, par = load_model(args.model)
+    model, planes = apply_planes(args.model, model, args.plane)
     images, zml = image_list(args.model, files, par)
     dra, ddec = apply_frame_offset(args.model, model, images)  # into the JWST frame
     bt = lensmodel.backtrace_images(model, images, zml)
@@ -1537,7 +1612,7 @@ def cmd_images(args) -> dict:
         table.meta["forced"]["halo_filter_arcsec"] = args.halo_filter_arcsec
         table.meta["forced"]["image"] = args.forced_image
         table.meta["forced"]["frame_offset_arcsec"] = [dra, ddec]
-    out = args.out / args.model
+    out = out_dir(args, planes)
     _write(table, out / "images_predicted.ecsv")
     classes = (
         "observed",
@@ -1558,6 +1633,7 @@ def cmd_images(args) -> dict:
         "n_systems": len(set(table["system"])),
         "n_predicted": len(table),
         "classes": counts,
+        "multi_plane": planes,
         "unpredicted_catalogued_images": unpredicted,
         "forced": (
             {
@@ -2109,10 +2185,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--model", choices=sorted(MODELS), default="smacs0723-iclv2")
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "lens_consistency")
     sub = ap.add_subparsers(dest="cmd", required=True)
+    plane_help = "move a potential to redshift Z (and velocity dispersion SIGMA km/s; D-046)"
     v = sub.add_parser("validate", help="compare with the published kappa map and multiple images")
     v.add_argument("--step", type=int, default=5, help="kappa-map sub-grid step in pixels")
     v.add_argument("--map-step", type=int, default=37, help="published-map check sub-grid step, px")
     v.add_argument("--grid-step", type=float, default=0.25, help="solver grid step, arcsec")
+    v.add_argument("--plane", action="append", metavar="NAME=Z[:SIGMA]", help=plane_help)
     a = sub.add_parser("arcs", help="observed source orientation against the predicted shear")
     a.add_argument("--catalog", type=Path, required=True, help="JWST pipeline _cat.ecsv")
     a.add_argument("--photoz", type=Path, help="eazy zout FITS table (e.g. DJA)")
@@ -2141,6 +2219,7 @@ def main(argv: list[str] | None = None) -> int:
         "--half-width", type=float, help='solver grid half-width, arcsec (default: images + 20")'
     )
     i.add_argument("--step", type=float, default=0.1, help="solver grid step, arcsec")
+    i.add_argument("--plane", action="append", metavar="NAME=Z[:SIGMA]", help=plane_help)
     i.add_argument(
         "--forced-image", help="_i2d URI or path for forced photometry (S3 by byte range)"
     )
