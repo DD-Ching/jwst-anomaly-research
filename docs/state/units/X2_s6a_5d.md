@@ -133,7 +133,7 @@ not set in advance.
 | Item | Before (trial) | What the trial showed | After (frozen) |
 |---|---|---|---|
 | Spectrum filter | eigenvalue must recur in boxes S = 5 and 6 (l ≤ 74 / 202) at the same grid step | the box turns the continuum into many spurious complex pairs; same-step grid modes also recur; above J/A ≈ 0.36 the mode spreads beyond S = 5 and dropped out of the filter (a filter failure, not a disappearance) | different boxes **and** grid steps; tracking by eigenvector overlap; verification boxes S = 5 / 6 / 7.5 |
-| Shooting outer radius | S = 6 (l = 202), secant stop at relative step 1e-9 | did not converge at c_ω = 0.5. The determinant is smooth there, but it loses digits to cancellation at large S | S = 3.5 and 4.0 compared. The secant stops at stagnation and fails if the last relative step in Ω² is > 1e-6. At S = 3.0 / 3.5 / 4.0 / 4.5 the roots were −2.31965, −2.318702, −2.318702, −2.318709 (real part, scaled), with last steps 6e-10, 6e-10, 4e-10, 1.5e-7 |
+| Shooting outer radius | S = 6 (l = 202), secant stop at relative step 1e-9 | did not converge at c_ω = 0.5. The determinant is smooth there, but it loses digits to cancellation at large S | S = 3.5 and 4.0 compared. The secant stops at stagnation and fails if the *minimum* relative step in Ω² is > 1e-6 (the docs first said "last"; see "Shooting stop"). At S = 3.0 / 3.5 / 4.0 / 4.5 the roots were −2.31965, −2.318702, −2.318702, −2.318709 (real part, scaled), with minimum steps 6e-10, 6e-10, 4e-10, 1.5e-7 |
 | Thresholds in `CRITERIA` | none numeric | trial at c_ω = 0.5: Richardson-extrapolated dense and shooting agreed to about 1e-7 | grid ≤ 1e-5, box ≤ 1e-6, shooting radius ≤ 1e-6, eigenpair ≤ 1e-8, constraints ≤ 1e-4 and falling ≥ 3× per halving, localisation ≤ 1e-6 |
 | Representative points | — | chosen from the exploratory scan | c_ω = 0.4, 0.5, 1.0 (J/A ≈ 0.121, 0.142, 0.214) |
 | Merger test | complex pair among the filtered eigenvalues | — | non-real eigenvalue with Re z < −1 in the S = 6 spectrum, bisection at two grid steps (n = 480, 960) |
@@ -156,8 +156,9 @@ extremal rotation.
   not normalised and is not used as a residual.
   - As run on 2026-10-14, `Shooter.root` returned the iterate after the *smallest* step and that step's size. It
     accepted a root if that minimum was ≤ 1e-6. The docs said "last step", which did not match the code.
-  - Audit (2026-10-14, writeup round): `root` now records every step. Only the shooting was re-run
-    (`python scripts/x2_s6a_rot5d.py --shooting-only`), on the stored dense results.
+  - Audit (2026-10-14, writeup round): `root` now records every step. The shooting was re-run on the stored
+    dense results (`python scripts/x2_s6a_rot5d.py --shooting-only`). The static gate, whose dense spectra take
+    seconds, was recomputed whole; it came out identical.
   - At every representative point, both radii and the static mode, the iteration reached the 1e-9 tolerance:
     last step = minimum step, 2e-10 to 9e-10, after 10–27 iterations.
   - The roots are bit-identical to the earlier run. So the earlier "last_step" values were in fact last steps,

@@ -65,6 +65,8 @@ H₃ = 2G₀ + G₁.
 - The determinant of ξG′ at the throat (3×3, even parity) is solved by complex secant iteration.
 - S = 3.5 and 4.0 are compared. Iteration stops at a relative step < 1e-9, which was reached at every reported
   point.
+- Acceptance: the returned root is the iterate that followed the smallest relative step, and it is accepted if
+  that step is ≤ 1e-6. Every step is stored.
 
 **Tracking.** Modes are followed in c_ω by the eigenvector overlap |v_k* · v_prev| / (‖v_k‖ ‖v_prev‖).
 
@@ -89,8 +91,10 @@ Scaled eigenvalue z = Ω²A^{2/3}.
 | 0.5 | 0.142040 | 8.685558 | −2.3187017 + 7.4619833i | −2.3187015 + 7.4619831i | **verified** |
 | 1.0 | 0.214391 | 11.508893 | 2.4541671 + 8.5242290i | 2.4541674 + 8.5242295i | candidate (S = 3.5 vs 4.0: 4e-6) |
 
-**Merger.** J/A ∈ [0.100622, 0.100633] at both grid steps. The estimated exceptional point is 0.1006324 (ds)
-and 0.1006288 (ds/2). The paper gives 0.10063.
+**Merger.** J/A ∈ [0.100622, 0.100633] at both grid steps. The paper gives 0.10063.
+- Estimated exceptional point: 0.1006324 (ds) and 0.1006288 (ds/2) (`merger_ep_estimate`).
+- Method: the squared half-splitting is fitted linearly in c_ω between the bracket ends, then mapped linearly
+  to J/A.
 
 **Below the merger.** The tracked branches match the digitised Fig. 5 to ≤ 0.011 in z (`branch_vs_fig5`).
 
@@ -118,8 +122,8 @@ range).
   paper.
 
 **A short research article (brief report or letter): suitable in principle, after the steps below.**
-- The question is posed in print as a conjecture (2510.11406), and the answer here is direct. The method and the
-  checks are reproducible.
+- A related question is posed in print as a conjecture. 2510.11406 states it mainly for 4D rotation, so applying
+  it to 5D is our reading. The answer here is direct, and the method and the checks are reproducible.
 - As it stands, the result covers two points just past the merger. A referee would very likely ask for:
   - the full |J|/A range up to the extremal limit, including the candidate at 0.214 and what happens there;
   - the odd-parity sector;

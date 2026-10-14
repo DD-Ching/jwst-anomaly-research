@@ -17,7 +17,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - "First" is not used.
 - **Audits:**
   - `Shooter.root` returned the minimum step, not the last, while the docs said "last". The full step record was
-    added and only the shooting re-run. Every point reached 1e-9 (last = minimum), the roots are bit-identical,
+    added and the shooting re-run (the static gate was recomputed whole). Every point reached 1e-9 (last = minimum), the roots are bit-identical,
     and no status changed.
   - At the merger, the eigenvalues at the bracket ends differ between grids (pair ±0.014i against ±0.079i), as
     expected near an exceptional point. J_EP moves by 4e-6 in J/A. The representative points are unaffected.

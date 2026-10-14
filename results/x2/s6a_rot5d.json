@@ -1297,5 +1297,17 @@
   ]
  },
  "runtime_s": 1344.6358461380005,
- "shooting_rerun": "2026-10-14: shooting re-run with full step records (redo_shooting)"
+ "shooting_rerun": "2026-10-14: shooting re-run with full step records (redo_shooting); the static gate's dense spectra (n = 480, 960) were recomputed too",
+ "merger_ep_estimate": [
+  {
+   "n": 480,
+   "c_omega": 0.3177338957610858,
+   "J_over_A": 0.10063243133150712
+  },
+  {
+   "n": 960,
+   "c_omega": 0.3177197494718333,
+   "J_over_A": 0.10062875696385432
+  }
+ ]
 }

@@ -29,28 +29,36 @@ Linear perturbations in the same 5D model and sector were solved without restric
 1. **Equations.** The perturbation equations were re-derived symbolically from the metric.
    - They agree with the printed ones except one potential, V₁₀: the sign of its e^{2q} term.
    - The re-derived equations reproduce the published static eigenvalue (Ω²A^{2/3} = −21.80) and the merger
-     point ((|J|/A)_cr ≈ 0.10063). The printed V₁₀ does not reproduce them.
+     point ((|J|/A)_cr ≈ 0.10063).
+   - The printed V₁₀ does not reproduce the static eigenvalue: it gives −146.16. The merger was not computed
+     with it.
    - This supports reading the printed V₁₀ as a typesetting error. It says nothing about the authors' own code.
 2. **Two verified points.** At |J|/A = 0.1207 and 0.1420, just past the merger, the two modes continue as a
    complex-conjugate pair (time dependence e^{iΩt}, growth for Im Ω < 0).
 
-| \|J\|/A | Ω²A^{2/3} | Ω A^{1/3} (growing root) | growth / static growth |
+| \|J\|/A | Ω²A^{2/3} (and its conjugate) | Ω A^{1/3}, growing roots of the pair | growth / static growth |
 |---|---|---|---|
 | 0 (static) | −21.80176 | −4.66924i | 1 |
 | 0.1207 | −4.104519 + 5.527961i | ±1.179119 − 2.344107i | 0.50 |
 | 0.1420 | −2.318701 + 7.461983i | ±1.657594 − 2.250848i | 0.48 |
 
-   These are oscillating growing modes. **Each of the two points passed all six checks fixed before the
-   verification run:**
-   - grid convergence;
-   - box size;
-   - shooting outer radius;
-   - algebraic residual of the complex eigenpair;
-   - residuals of two linearised field equations not used to build the system, falling at second order;
-   - agreement of a finite-difference eigenvalue solver with an independent Evans-function shooting method
-     (≤ 1e-7 relative in Ω²).
-3. **The 5D reading.** Within the searched literature, the "stabilised beyond J_cr" reading of the 5D result does
-   not hold just past J_cr. There the instability continues in oscillating form, as conjectured in 2510.11406.
+   - "±" covers the conjugate pair: the root −1.179 − 2.344i belongs to the listed Ω², and +1.179 − 2.344i to
+     its conjugate.
+   - These are oscillating growing modes.
+   - **Each of the two points passed all six checks.** The checks were fixed before the verification run, but
+     after trial runs:
+     - eigenvector localised in the box (≤ 1e-6 of the norm beyond l = sinh(S)/3);
+     - box size;
+     - shooting outer radius;
+     - algebraic residual of the complex eigenpair;
+     - residuals of two linearised field equations not used to build the system, falling at second order;
+     - agreement of a finite-difference eigenvalue solver with an independent Evans-function shooting method
+       (≤ 1e-7 relative in Ω²).
+3. **The 5D reading.** Some papers in the searched literature read the 5D result as "stabilised beyond J_cr".
+   That reading does not hold just past J_cr in this sector, where the instability continues in oscillating form.
+   - This is consistent with the conjecture of 2510.11406.
+   - That conjecture is stated mainly for 4D rotation. Treating our result as its 5D counterpart is our
+     reading.
 
 ## What is not claimed
 - **Points not verified.** No statement for |J|/A > 0.142 as a verified result.
@@ -67,8 +75,8 @@ Linear perturbations in the same 5D model and sector were solved without restric
 ## Who did what
 | Contributor | Actual work |
 |---|---|
-| Repository owner (DD-Ching) | Chose and scoped the question; set the gates, the reading rules and the corrections during the run (no fitting to results, keep full complex vectors, no extension toward extremality, wording). Has not reviewed the physics as a domain expert |
-| Claude (Claude Code agents, this repository's sessions) | All derivation and numerical code, runs, documentation and state files. Review and literature search were also done by Claude subagents |
+| Repository owner (DD-Ching) | Chose and scoped the question; set the gate rules (reproduce the known modes, merger within ±1 %, residuals of the original equations, an independent method, freeze rules before the run), the reading rules and the corrections during the run (no fitting to results, keep full complex vectors, no extension toward extremality, wording). Has not reviewed the physics as a domain expert |
+| Claude (Claude Code agents, this repository's sessions) | All derivation and numerical code, runs, documentation and state files. Chose the numerical settings and thresholds of `CRITERIA` after trial runs. Review and literature search were also done by Claude subagents |
 | GPT | No GPT output is recorded in this repository or in this work's sessions. If the owner used GPT, e.g. to draft or check instructions, that has to be added by the owner |
 | Human domain experts | **None so far** |
 

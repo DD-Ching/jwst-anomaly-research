@@ -64,8 +64,9 @@ wormholes of arXiv:1309.2448, either of the following?
 ## Answers
 **Complex continuation past the merger: not found as a computed result.**
 - In the searched scope (arXiv- and INSPIRE-indexed literature up to 2026-10-14), no paper computes complex
-  unstable modes, or any instability past the merger, for these 5D wormholes. None re-analyses the perturbation
-  equations of 1309.2448.
+  unstable modes, or any instability past the merger, for these 5D wormholes.
+- No title or abstract examined indicates a re-analysis of 1309.2448's perturbation equations. Abstracts were
+  read for 12 of the 47 citers; the rest were screened by title.
 - The behaviour **has been conjectured in print**. 2510.11406 conjectures it by analogy with the charged case.
   There "rotating" refers mainly to 4D, but that paper cites the 5D merger as its motivation.
 - Several papers read 1309.2448 as showing stabilisation past J_cr: 2301.05243, 2403.08387 and the 2017

@@ -423,6 +423,18 @@ def merger_point(V, n, lo=0.29, hi=0.33, iters=10, S=6.0):
     }
 
 
+def exceptional_point_estimate(m):
+    """J/A of the exceptional point from one merger bracket: the squared half-splitting of the two
+    modes is fitted linearly in c_omega between the bracket ends, then mapped linearly to J/A."""
+    (lo, hi), (jl, jh) = m["c_omega_bracket"], m["J_over_A_bracket"]
+    zl = [complex(*z) for z in m["z_re_below_minus1_at_lo"]]
+    zh = [complex(*z) for z in m["z_re_below_minus1_at_hi"]]
+    d2l = (((zl[1] - zl[0]) / 2) ** 2).real
+    d2h = (((zh[1] - zh[0]) / 2) ** 2).real
+    c_ep = lo - d2l * (hi - lo) / (d2h - d2l)
+    return {"n": m["n"], "c_omega": c_ep, "J_over_A": jl + (jh - jl) * (c_ep - lo) / (hi - lo)}
+
+
 def _merger_job(n):
     V, _ = load_equations()
     return merger_point(V, n)
@@ -496,9 +508,6 @@ def verify_point(cw, start_z):
             ),
         }
     out["dense"] = dense
-
-    def zc(key):
-        return complex(*dense[key]["z"])
 
     out.update(shooting_and_checks(V, sol, cw, a23, dense))
     zs = complex(*out["shooting"]["S4.0"]["z"])
@@ -599,6 +608,7 @@ def main() -> int:
         f_merge = [ex.submit(_merger_job, n) for n in (480, 960)]
         f_rep = [ex.submit(_verify_job, r) for r in reps]
         rec["merger"] = [f.result() for f in f_merge]
+        rec["merger_ep_estimate"] = [exceptional_point_estimate(m) for m in rec["merger"]]
         # the pair is tracked from the upper end of the merger bracket (no hand-chosen start)
         m0 = rec["merger"][0]
         start = max((complex(*z) for z in m0["z_re_below_minus1_at_hi"]), key=lambda z: z.imag)
@@ -624,25 +634,31 @@ def main() -> int:
 
 
 def redo_shooting(path=OUT / "s6a_rot5d.json"):
-    """Re-run only the shooting (and the checks that use it) on the stored dense results."""
+    """Re-run the shooting (and the checks that use it) on the stored dense results; the static
+    gate is recomputed whole (its dense spectra take seconds)."""
     rec = json.loads(Path(path).read_text())
     V, _ = load_equations()
     for pt in rec["representative_points"]:
         cw = pt["c_omega"]
         sol = background_at(cw)
         a23 = background_props(sol, cw)["A"] ** (2 / 3)
-        pt["shooting_before_rerun"] = pt["shooting"]
+        pt.setdefault("shooting_before_rerun", pt["shooting"])
         pt.update(shooting_and_checks(V, sol, cw, a23, pt["dense"]))
         root = np.sqrt(complex(*pt["shooting"]["S4.0"]["z"]))
         pt["result"]["z"] = pt["shooting"]["S4.0"]["z"]
         pt["result"]["growth_A13"] = abs(root.imag)
         pt["result"]["freq_A13"] = abs(root.real)
+        pt["result"]["growth_over_freq"] = abs(root.imag) / abs(root.real) if root.real else None
     rec["static_mode"] = static_gate()
+    rec["merger_ep_estimate"] = [exceptional_point_estimate(m) for m in rec["merger"]]
     for key in ("branch_static", "branch_zero", "pair"):
         for row in rec[key]:
             if row["overlap_next_best"] != row["overlap_next_best"]:  # NaN from the first point
                 row["overlap_next_best"] = None
-    rec["shooting_rerun"] = "2026-10-14: shooting re-run with full step records (redo_shooting)"
+    rec["shooting_rerun"] = (
+        "2026-10-14: shooting re-run with full step records (redo_shooting); the static gate's"
+        " dense spectra (n = 480, 960) were recomputed too"
+    )
     Path(path).write_text(json.dumps(rec, indent=1, default=float, allow_nan=False) + "\n")
     for pt in rec["representative_points"]:
         sh = pt["shooting"]
