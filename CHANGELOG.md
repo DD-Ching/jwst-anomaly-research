@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: (in progress) `bayes.dat` position spreads as `forced_check` search radii
+- Claim: chain-derived search radii for predicted counter-images (Abell 2744, El Gordo); results follow.
+
 ## 2026-10-14: Sunrise counter-images in the four RELICS models: null (D-033 addendum 4)
 - **Tool:** `scripts/sunrise_counter.py` (byte-range deflection blocks → `MapLensModel` → `find_images`, D-029 forced
   photometry on F200W with an injection check, D-041 cross-model rule); `results/sunrise/counter_images.json`.
