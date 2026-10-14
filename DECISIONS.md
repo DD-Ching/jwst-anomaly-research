@@ -1839,6 +1839,19 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   achromatic) is within published μ systematics (20–40 %, Furtak+2025) and AGN variability across 855 d / 7043 d
   delays: ordinary. Alternative rejected: a separate tension script, which would duplicate the floor and chain code.
   Revisit if: per-image μ systematics are modelled (then a floor from four systems stops understating them).
+- Observational parity (2026-10-14; CHANGELOG; `scripts/parity_test.py`): image B's stamp fitted with image A's
+  resampled through a free affine map in both handedness families (det > 0 and det < 0); the model predicts
+  sign(μ_A μ_B). Per-pair power from synthetics drawn from a smoothed A (σ 2 px; drawn from A itself they share A's
+  noise pattern and fake power on a symmetric source). Validated on synthetic pairs (handedness recovered both
+  ways; symmetric source untestable). **Not validated on known systems:** on Abell 2744 (Bergamini+23, UNCOVER
+  F200W, 1″ median halo filter) 6 of 41 decided pairs are `parity_residual` (31 `consistent`), including
+  A2744-QSO1 (53a/b), a point source that carries no handedness, and system 1 (1.1a/b). Without the filter, 6 of 15
+  decided pairs were flagged; the cutouts show ICL / BCG gradients and non-affine arc structure inside the 0.6″ fit
+  disc. These flags are tool failures, not lens-model residuals; no parity conclusion is drawn.
+  Alternatives rejected: peak-S/N template choice without halo subtraction (picks images on the BCG halo).
+  Revisit with: member + ICL models (`member_sub.py`-type) before fitting, a fit mask from the source's own
+  segmentation, and an acceptance test of ≥ 95 % `consistent` or `untestable` on catalogued, non-near-critical pairs
+  before any field run counts.
 
 ## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
 

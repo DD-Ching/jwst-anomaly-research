@@ -2,6 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: observational parity test built; validated on synthetics, fails on known Abell 2744 systems
+- **Hypothesis before computing:** the relative parity of two images of one source, sign(μ_A μ_B), is visible as
+  mirror vs non-mirror morphology; a resolved pair preferring the non-predicted handedness, far from critical curves,
+  would be a lens-model residual. Ordinary: symmetric or unresolved sources, ICL/member light, PSF, non-affine
+  structure, near-critical images (model-dependent parity). Plan: `docs/plans/parity-test.md`.
+- New: `scripts/parity_test.py` (free affine fit of B by A in both handedness families; cross-seeded refits;
+  per-pair power from synthetics drawn from a smoothed A; 8 threaded S3 byte-range readers) and
+  `tests/test_parity_test.py` (handedness recovered both ways and flagged when the model is mirrored; symmetric
+  source `untestable`).
+- **Result (derived; D-032 addendum): the tool is not validated on real data.** Abell 2744 Bergamini+23, UNCOVER
+  F200W, 1″ halo filter: 116 pairs, 31 `consistent`, 6 `parity_residual`, 4 `undetermined`, 27 `untestable`,
+  37 `near_critical`, 6 `off_image`, 5 `faint` (`results/parity/abell2744-bergamini23.json`). The 6 flags include the point-source
+  quasar A2744-QSO1 (53a/b) and system 1: tool failures, not residuals; not candidates; no parity conclusion.
+- **Failed approaches:** (1) synthetics drawn from A itself share A's noise pattern and gave symmetric sources Δχ²
+  ≈ ±100–160 of fake power; fixed by drawing from A smoothed by 2 px. (2) a single optimisation per family stalled
+  in local minima (a symmetric source gave −30 in the wrong direction); fixed by grid starts plus cross-seeding.
+  (3) a template chosen by peak S/N without halo subtraction picks images on the BCG halo (1.1b, 2.7d: looked at the
+  cutouts); 6 of 15 decided pairs flagged. (4) 2.5″ stamps read row by row from S3 took minutes per image; 1.6″
+  stamps and 8 readers take ~1 s.
+- **Next:** before any field run counts, an acceptance test on catalogued non-near-critical pairs (≥ 95 %
+  `consistent` or `untestable`), with member + ICL models subtracted (`member_sub.py`-type) and a fit mask from the
+  source's own segmentation; then El Gordo, MACS0416/MACS1149, SMACS.
 ## 2026-10-14: member-galaxy subtraction for member-buried counter-image rows: one testable row, already explained
 - **Hypothesis before computing:** the `confused` rows the median filter could not clear (D-029 addendum, the halo-filter
   entry) become decidable once the bright neighbours are modelled; an `absent` among them without a recorded
