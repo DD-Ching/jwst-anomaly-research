@@ -37,3 +37,10 @@ def test_wls_source_minimises_image_plane_offsets():
 
     for d in rng.normal(scale=0.05, size=(20, 2)):
         assert cost(best) <= cost(best + d)
+
+
+def test_uncover_system_ids():
+    assert au.uncover_system("4.11") == "4.1"
+    assert au.uncover_system("80.63") == "80.6"
+    assert au.uncover_system("83.1") == "83"  # single-knot system, image 1
+    assert au.uncover_system(repr(float("83.3"))) == "83"

@@ -340,8 +340,8 @@ addendum 2026-10-14 (member-galaxy subtraction).
 
 ## UNCOVER v2.0 as the second model (2026-10-14)
 
-`scripts/a2744_uncover.py --check-42c` (`results/lens_consistency/abell2744-uncover2/`). Gate: own list rms 0.86″
-(quoted 0.60″, limit 0.90″) with the WLS family source; the mean source fails on fold pairs. 4.2c: UNCOVER predicts
+`scripts/a2744_uncover.py --check-42c` (`results/lens_consistency/abell2744-uncover2/`). Gate: own list rms 0.84″,
+181 / 181 traced images re-imaged (quoted 0.60″, limit 0.90″) with the WLS family source; the mean source fails on fold pairs. 4.2c: UNCOVER predicts
 it at μ 8.83, 0.93″ from Bergamini's position; nothing at ≥ 0.5× its expected flux (injections), the nearest peak is
-0.22–0.36× and bluer. The family-4 verdict (docs/candidates/abell2744-family4-c.md) stands. Details: CHANGELOG
+0.20–0.33× and bluer. The family-4 verdict (docs/candidates/abell2744-family4-c.md) stands. Details: CHANGELOG
 2026-10-14, DECISIONS.md D-041 addendum 2026-10-14.

@@ -20,8 +20,8 @@ best-fit deflection maps (0.1"/pix, D_LS/D_S = 1) before any counter-image test 
 Everything computed is ``model_prediction``; the image positions are ``observed``.
 
 Data: the maps are fetched once from the UNCOVER Google Drive release (sha256-pinned; 216 MB
-compressed in three files, ~250 MB on disk while the run lasts; delete them afterwards in cloud
-sessions).
+compressed in three files, ~250 MB on disk while the run lasts; the maps are deleted at the end
+unless ``--keep-maps``).
 
 * **4.2c (D-041 second-model test):** the Bergamini+23 ``absent`` flag 4.2c
   (docs/fields/abell2744.md). ``check_42c`` solves family 4.2 in the UNCOVER maps and measures
@@ -100,6 +100,7 @@ def imageplane(model, grid, bt: Table) -> Table:
     dtheta = np.full(len(bt), np.nan)
     mu = np.full(len(bt), np.nan)
     n_pred = np.zeros(len(bt), int)
+    shared = np.zeros(len(bt), bool)
     for fam in dict.fromkeys(systems):
         sel = np.flatnonzero((systems == fam) & np.isfinite(bt["beta_x"]))
         if len(sel) < 2:
@@ -116,6 +117,7 @@ def imageplane(model, grid, bt: Table) -> Table:
         k = np.argmin(d, axis=1)
         dtheta[sel] = d[np.arange(len(sel)), k]
         mu[sel] = np.asarray(pred["magnification"])[k]
+        shared[sel] = np.bincount(k, minlength=len(pred))[k] > 1
     return Table(
         {
             "image_id": bt["image_id"],
@@ -124,18 +126,27 @@ def imageplane(model, grid, bt: Table) -> Table:
             "dtheta_arcsec": dtheta,
             "magnification": mu,
             "n_predicted": n_pred,
+            "shared_match": shared,
         }
     )
+
+
+def uncover_system(image_id: str) -> str:
+    """Source of an UNCOVER image id: "S.KI" (two decimals) -> "S.K"; "S.I" (one decimal,
+    single-knot systems such as 83.1-83.3) -> "S". Ids are stored as floats, so "S.K0" cannot
+    occur (image numbers start at 1)."""
+    whole, frac = image_id.split(".")
+    return f"{whole}.{frac[0]}" if len(frac) == 2 else whole
 
 
 def uncover_images(path: Path) -> Table:
     """UNCOVER's multiple-image table as a ``load_lenstool_images``-like table."""
     t = Table.read(path)
-    ids = [f"{float(i):.2f}" for i in t["ID"]]
+    ids = [repr(float(i)) for i in t["ID"]]
     out = Table(
         {
             "image_id": ids,
-            "system": [i[:-1].rstrip(".") for i in ids],  # "1.11" -> source "1.1"
+            "system": [uncover_system(i) for i in ids],
             "ra": np.asarray(t["RA"], float),
             "dec": np.asarray(t["Dec"], float),
             "a": np.full(len(t), np.nan),
@@ -195,11 +206,8 @@ PEAK_RADIUS = {"ref": 0.4, "target": 1.0}  # peak search radius, arcsec (ASSUMPT
 INJECT_SCALES = (1.0, 0.5, 0.25)
 
 
-def _highpass(sci, xx):
-    from scipy.ndimage import median_filter
-
-    pix = abs(float(xx[0, 1] - xx[0, 0]))
-    return sci - median_filter(np.nan_to_num(sci), size=int(round(HIGHPASS_ARCSEC / pix)) | 1)
+def _highpass(sci, xx, yy):
+    return lc._median_subtract(sci, xx, yy, HIGHPASS_ARCSEC)
 
 
 def _peak_flux(hp, err, xx, yy, radius: float, r_ap: float = 0.2) -> dict:
@@ -207,18 +215,23 @@ def _peak_flux(hp, err, xx, yy, radius: float, r_ap: float = 0.2) -> dict:
     k = int(np.argmax(inner))
     cx, cy = float(xx.flat[k]), float(yy.flat[k])
     ap = np.hypot(xx - cx, yy - cy) <= r_ap
+    if not np.isfinite(inner).any():
+        return {"dx_west": np.nan, "dy_north": np.nan, "flux": np.nan, "snr": np.nan}
     f, e = float(np.nansum(hp[ap])), float(np.sqrt(np.nansum(err[ap] ** 2)))
-    return {"dx_west": cx, "dy_north": cy, "flux": f, "snr": f / e}
+    return {"dx_west": cx, "dy_north": cy, "flux": f, "snr": f / e if e > 0 else np.nan}
 
 
-def check_42c(model, bt: Table) -> dict:
+def check_42c(model, grid, bt: Table) -> dict:
     """UNCOVER's 4.2 solution, high-pass peak photometry at its 4.2c and at 4.2a/b, and
     injections of the most magnified catalogued image's knot (scaled by the mu ratio) at 4.2c."""
-    sel = bt[np.asarray(bt["system"]).astype(str) == "4.2"]
+    sel = bt[(np.asarray(bt["system"]).astype(str) == "4.2") & np.isfinite(bt["beta_x"])]
+    if len(sel) < 2:
+        return {"error": "family 4.2 has fewer than two traced images"}
     z = float(sel["z_used"][0])
-    # the grid must cover the whole cluster: 4.2c lies ~44" from 4.2a/b
-    grid = lensmodel.DeflectionGrid.compute(model, lc.grid_half_width(model, bt), 0.25)
+    # the grid covers the whole cluster (4.2c lies ~44" from 4.2a/b)
     pred = lensmodel.find_images(model, grid, *family_source(model, sel), z)
+    if len(pred) <= len(sel):
+        return {"error": f"no extra image predicted ({len(pred)} images)"}
     ox, oy = model.to_frame(np.asarray(sel["ra"], float), np.asarray(sel["dec"], float))
     d = np.hypot(pred["x"][:, None] - ox[None, :], pred["y"][:, None] - oy[None, :])
     k_new = int(np.argmax(d.min(axis=1)))  # the predicted image farthest from a and b
@@ -249,12 +262,14 @@ def check_42c(model, bt: Table) -> dict:
             res = {}
             for iid, (ra, dec) in pos.items():
                 sci, err, xx, yy = stamp(ra, dec)
-                res[iid] = _peak_flux(_highpass(sci, xx), err, xx, yy, PEAK_RADIUS["ref"])
+                res[iid] = _peak_flux(_highpass(sci, xx, yy), err, xx, yy, PEAK_RADIUS["ref"])
             sci, err, xx, yy = stamp(float(c["ra"]), float(c["dec"]))
-            res["4.2c_uncover"] = _peak_flux(_highpass(sci, xx), err, xx, yy, PEAK_RADIUS["target"])
+            res["4.2c_uncover"] = _peak_flux(
+                _highpass(sci, xx, yy), err, xx, yy, PEAK_RADIUS["target"]
+            )
             # injection: the reference image's positive high-pass knot (1.2" box) scaled to mu(c)
             rsci, _, rx, ry = stamp(*pos[ref_id])
-            rhp = _highpass(rsci, rx)
+            rhp = _highpass(rsci, rx, ry)
             j = np.unravel_index(
                 np.argmax(np.where(np.hypot(rx, ry) < PEAK_RADIUS["ref"], rhp, -np.inf)), rhp.shape
             )
@@ -267,7 +282,7 @@ def check_42c(model, bt: Table) -> dict:
                 im[ci - n : ci + n + 1, cj - n : cj + n + 1] += (
                     s * knot * abs(out["c_mu"] / mus[ref_id])
                 )
-                inj[str(s)] = _peak_flux(_highpass(im, xx), err, xx, yy, PEAK_RADIUS["target"])
+                inj[str(s)] = _peak_flux(_highpass(im, xx, yy), err, xx, yy, PEAK_RADIUS["target"])
             res["injections"] = inj
             res["expected_c_flux"] = res[ref_id]["flux"] * abs(out["c_mu"] / mus[ref_id])
             out["bands"][band] = res
@@ -277,7 +292,7 @@ def check_42c(model, bt: Table) -> dict:
     return out
 
 
-def run(model, images: Table, zml: dict, label: str, out: Path) -> dict:
+def run(model, images: Table, zml: dict, label: str, out: Path) -> tuple[dict, object, Table]:
     bt = lensmodel.backtrace_images(model, images, zml)
     traced = images[np.isfinite(bt["beta_x"])]
     half = lc.grid_half_width(model, traced)
@@ -286,32 +301,43 @@ def run(model, images: Table, zml: dict, label: str, out: Path) -> dict:
     d = np.asarray(ip["dtheta_arcsec"], float)
     ok = np.isfinite(d)
     mult = multiplicity(model, grid, bt)
+    fam = np.asarray(bt["system"]).astype(str)
+    traced = np.isfinite(bt["beta_x"])
+    multi = np.array([np.sum(traced & (fam == f)) >= 2 for f in fam])
     for t in (ip, mult):
         t.meta.update(provenance="model_prediction", source=f"abell2744-uncover2 vs {label}")
     ip.write(out / f"imageplane_{label}.ecsv", overwrite=True)
     mult.write(out / f"multiplicity_{label}.ecsv", overwrite=True)
-    return {
-        "image_list": label,
-        "n_images": len(images),
-        "n_traced": int(np.isfinite(bt["beta_x"]).sum()),
-        "n_reimaged": int(ok.sum()),
-        "rms_dtheta_arcsec": float(np.sqrt(np.mean(d[ok] ** 2))) if ok.any() else None,
-        "median_dtheta_arcsec": float(np.median(d[ok])) if ok.any() else None,
-        "p90_dtheta_arcsec": float(np.percentile(d[ok], 90)) if ok.any() else None,
-        "max_dtheta_arcsec": float(d[ok].max()) if ok.any() else None,
-        "n_over_2arcsec": int((d[ok] > 2.0).sum()),
-        "families": len(mult),
-        "families_with_extra": int((mult["n_extra"] > 0).sum()) if len(mult) else 0,
-        "families_short": int((mult["n_predicted"] < mult["n_catalogued"]).sum())
-        if len(mult)
-        else 0,
-    }
+    return (
+        {
+            "image_list": label,
+            "n_images": len(images),
+            "n_traced": int(np.isfinite(bt["beta_x"]).sum()),
+            "n_reimaged": int(ok.sum()),
+            # traced images of families with >= 2 traced images that got no prediction
+            "n_unsolved": int(((ip["n_predicted"] == 0) & np.isfinite(bt["beta_x"]) & multi).sum()),
+            "n_shared_match": int(np.asarray(ip["shared_match"]).sum()),
+            "rms_dtheta_arcsec": float(np.sqrt(np.mean(d[ok] ** 2))) if ok.any() else None,
+            "median_dtheta_arcsec": float(np.median(d[ok])) if ok.any() else None,
+            "p90_dtheta_arcsec": float(np.percentile(d[ok], 90)) if ok.any() else None,
+            "max_dtheta_arcsec": float(d[ok].max()) if ok.any() else None,
+            "n_over_2arcsec": int((d[ok] > 2.0).sum()),
+            "families": len(mult),
+            "families_with_extra": int((mult["n_extra"] > 0).sum()) if len(mult) else 0,
+            "families_short": int((mult["n_predicted"] < mult["n_catalogued"]).sum())
+            if len(mult)
+            else 0,
+        },
+        grid,
+        bt,
+    )
 
 
 def main(argv=None) -> dict:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--out", type=Path, default=Path("results/lens_consistency/abell2744-uncover2"))
     ap.add_argument("--check-42c", action="store_true", help="4.2c photometry (S3 byte ranges)")
+    ap.add_argument("--keep-maps", action="store_true", help="keep the cached deflection maps")
     args = ap.parse_args(argv)
     args.out.mkdir(parents=True, exist_ok=True)
     files = {k: fetch_catalog(url, sha) for k, (url, sha) in UNCOVER_V2.items()}
@@ -328,19 +354,24 @@ def main(argv=None) -> dict:
         "model_sha256": model.sha256,
         "quoted_rms_arcsec": QUOTED_RMS,
     }
-    own = run(model, uncover_images(files["images"]), {}, "uncover2", args.out)
+    own, _, _ = run(model, uncover_images(files["images"]), {}, "uncover2", args.out)
+    # every traced multi-image family must re-image; the rms of the rest is not enough
     own["gate_passes"] = bool(
         own["rms_dtheta_arcsec"] is not None
+        and own["n_unsolved"] == 0
         and own["rms_dtheta_arcsec"] <= lc.IMAGE_LIST_RMS_FACTOR * QUOTED_RMS
     )
     summary["own_list"] = own
     _, bfiles, par = lc.load_model("abell2744-bergamini23")
     berg = lensmodel.load_lenstool_images(bfiles["arcs.dat"])
-    summary["bergamini23_list"] = run(model, berg, par["z_m_limit"], "bergamini23", args.out)
+    summary["bergamini23_list"], grid, bt = run(
+        model, berg, par["z_m_limit"], "bergamini23", args.out
+    )
     if args.check_42c:
-        summary["check_42c"] = check_42c(
-            model, lensmodel.backtrace_images(model, berg, par["z_m_limit"])
-        )
+        summary["check_42c"] = check_42c(model, grid, bt)
+    if not args.keep_maps:  # cloud-disk rule: ~250 MB of maps, deleted after use
+        for key in ("alpha_x", "alpha_y"):
+            files[key].unlink(missing_ok=True)
     (args.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
     print(json.dumps(summary, indent=1))
     return summary
