@@ -1,6 +1,6 @@
 """X2 S6a: re-derive the linear perturbation equations of 5D equal-J rotating Ellis wormholes.
 
-Source: Dzhunushaliev, Folomeev, Kleihaus & Kunz, arXiv:1309.2448, Sec. V, Eq. (pertlineel).
+Source: Dzhunushaliev et al., arXiv:1309.2448 (PRD 88, 124028), Sec. V, Eq. (pertlineel).
 Field equations R_mu_nu = -8 pi G d_mu Phi d_nu Phi (massless phantom); only the l-derivative
 of the scalar is non-zero in the background, so with H_phi = 0 every linearised component is
 delta R_mu_nu = 0.
