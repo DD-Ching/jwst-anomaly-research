@@ -85,3 +85,52 @@ def test_segment_separates_neighbour_and_size_ratio():
     point = 200.0 * np.exp(-0.5 * (x**2 + y**2) / s**2)
     own_p, _ = pt.segment(point + rng.normal(0, 1.0, x.shape), np.ones_like(x), x, y)
     assert pt.size_ratio(point, x, y, own_p) < pt.MIN_SIZE_RATIO
+
+
+def _psf(x, y):
+    """Toy asymmetric PSF (core + offset lobe + one-sided spike): no mirror symmetry."""
+    p = np.exp(-0.5 * (x**2 + y**2) / 0.03**2)
+    p += 0.35 * np.exp(-0.5 * ((x - 0.06) ** 2 + (y - 0.03) ** 2) / 0.03**2)
+    p += 0.15 * np.exp(-0.5 * (((x + y) / 0.02) ** 2 + ((x - y - 0.12) / 0.08) ** 2))
+    return p / p.sum()
+
+
+def _psf_pair(m_true, noise=0.5, seed=4):
+    """A compact asymmetric source seen through the toy PSF in A and in B."""
+    from scipy import signal
+
+    rng = np.random.default_rng(seed)
+    px, py = _grid(pt.PSF_HALF_ARCSEC)
+    psf = _psf(px, py)
+    ax, ay = _grid(pt.TEMPLATE_HALF_ARCSEC)
+
+    def src(x, y):
+        return 400.0 * np.exp(-0.5 * (x**2 + (y / 0.5) ** 2) / 0.05**2) + 150.0 * np.exp(
+            -0.5 * ((x - 0.07) ** 2 + (y - 0.04) ** 2) / 0.02**2
+        )
+
+    a = signal.fftconvolve(src(ax, ay), psf, mode="same") + rng.normal(0, noise, ax.shape)
+    d = m_true @ np.vstack([ax.ravel(), ay.ravel()])
+    sb = src(d[0], d[1]).reshape(ax.shape) * abs(np.linalg.det(m_true))
+    b = signal.fftconvolve(sb, psf, mode="same") + rng.normal(0, noise, ax.shape)
+    err = np.full(a.shape, noise)
+    return pt.Template(a, err, ax, ay), pt.PsfPair(b, err, ax, ay, None, psf)
+
+
+@pytest.mark.parametrize("mirror", [False, True])
+def test_psf_commuting_statistic(mirror):
+    """The PSF-commuting fit recovers the handedness of a PSF-dominated compact source, and its
+    chi2 at the true map is near the number of fit pixels (the plain fit cannot reach that)."""
+    m_true = pt._rot(0.3) @ np.diag([1.5, -0.7 if mirror else 0.7]) @ pt._rot(-1.1)
+    tmpl, pp = _psf_pair(m_true)
+    res = pt.pair_test(tmpl, None, None, None, None, m_true, pp=pp)
+    assert res["class"] == "consistent", res
+    assert res["dchi2_alt"] > pt.DCHI2_MIN
+    n = int(pp.fit.sum())
+    plain = pt.compare(tmpl, *pp.plain(), m_true)
+    p_true = np.array([*pt.decompose(m_true), 0.0, 0.0])
+    fp = pt.refine_psf(tmpl, pp, plain["h_pred"], [p_true])
+    assert fp["chi2"] < 1.5 * n < plain["pred"]["chi2"], (fp["chi2"], n, plain["pred"]["chi2"])
+    if not mirror:  # a model predicting the opposite handedness is flagged
+        wrong = pt.pair_test(tmpl, None, None, None, None, m_true @ np.diag([1.0, -1.0]), pp=pp)
+        assert wrong["class"] == "parity_residual", wrong

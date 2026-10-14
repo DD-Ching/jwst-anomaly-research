@@ -17,6 +17,37 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - The Comment assessment is marked provisional, not an exclusion.
 - **Literature-search scope** is now stated wherever it is summarised: 47 citers screened by title, relevant
   abstracts and some full texts checked. The search itself was not re-done.
+## 2026-10-14: PSF-commuting parity fit makes the acceptance test worse (76 %); the PSF does not explain the flags; tool paused
+- **Hypothesis before computing:** the 3 persistent Abell 2744 parity flags (1.1b, 7b, 600.3b; previous entry) come
+  from the unlensed PSF, which the free affine map distorts and mirrors in A but not in B. If a statistic exact for
+  an affine map under a PSF (P ⊗ T(A) = K ⊗ B, K(d) ∝ P(M d)) clears them and the acceptance reaches ≥ 95 %
+  (ASSUMPTION), the tool can run on other fields; if the flags persist, the PSF route is falsified.
+- New in `scripts/parity_test.py` (default; `--no-psf` keeps the plain statistic): `empirical_psf` (median stack of
+  Gaia DR3 stars on the UNCOVER F200W mosaic, recentred, local pedestal subtracted, peak-rule rejection; cached in
+  `results/parity/psf-jw02561-o001_t003_nircam_clear-f200w_i2d.json`; mirror asymmetry 8–15 % of the flux),
+  `PsfPair` (the PSF-commuting statistic), `refine_psf` / `compare_psf` (refined from the plain optima, the
+  predicted map and reflection starts of both), PSF-consistent synthetic pairs (A_syn = P ⊗ S, B_syn = P ⊗ T(S),
+  S = smoothed A), and the stability rule (`unstable` unless 16- and 24-angle start densities agree). Test
+  `test_psf_commuting_statistic`: on a compact source through a toy asymmetric PSF, χ² at the true map is 1147 for
+  1185 pixels (plain statistic 34 483); handedness recovered both ways; a wrong prediction is flagged.
+- **Result (derived; D-032 addendum; `results/parity/abell2744-bergamini23-psf.json`, ~20 min on 4 cores): worse.**
+  First run 51 / 68 = 75 %. `/code-review` then found three defects (B's mask not applied to T(A) before its
+  convolution, no PSF pedestal subtraction, a cache keyed on the image only); fixed and rerun: 27 `consistent`,
+  13 `untestable`, 10 `parity_residual`, 6 `unstable`; acceptance (consistent + untestable + unresolved)
+  52 / 68 = 76 % (plain: 87 %). 1.1b and 7b stay flagged and 600.3b becomes `unstable`, so the unlensed PSF does
+  not explain them; 8 new flags (2.1a, 2.1b, 2.4d, 2.5c, 2.6d, 2.7c, 24b, 600.5b). Not candidates; no parity
+  conclusion. Known remaining limit: K = P(M d) is truncated at 0.6″, exact only when M's smaller singular value
+  ≥ 0.83.
+- **Looked at the contact sheet** (1.1b, 2.1a, 2.4d, 7b, 2.3b): 2.4d is a long knotty arc with striped residuals in
+  both families (the map is not affine over the 0.6″ disc); 7b keeps a core residual in the predicted family; 2.1a
+  is a faint diffuse image beside an arc. |Δχ²| grew ×4–8 on every pair: convolving both sides correlates the noise,
+  which the per-pixel χ² ignores, so the fixed DCHI2_MIN = 100 is effectively lower (ASSUMPTION: the main cause of
+  the new flags). A goodness-of-fit gate (min χ²/n ≤ 2, applied afterwards to the stored tables) removes only 2 of
+  first run's 12 flags and none of the plain run's 3. VizieR returned empty results for the Gaia cone during the
+  rerun, so the cached Gaia rows of the first run were reused (`empirical_psf(stars=...)`).
+- **Failed approach:** PSF commutation as the fix for the parity flags. **Next:** the tool is paused (three acceptance
+  failures). Reopen only with a non-affine forward model (source-plane reconstruction through the published
+  deflection field) or a Δχ² threshold calibrated for correlated noise on PSF-consistent synthetics.
 
 ## 2026-10-14: halo-subtracted flux ratios on MACS0416 (CANUCS model): five systems testable, no anomaly
 - **Hypothesis before running:** a fourth cluster extends the D-032 flux-ratio line; no compact image deviates by
