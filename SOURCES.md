@@ -1266,6 +1266,12 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   `has_epoch_photometry`). Gaia archive TAP https://gea.esac.esa.int/tap-server/tap. Epoch photometry via DataLink
   https://gea.esac.esa.int/data-server/data (`DATA_STRUCTURE=DATAMODEL_STANDARD`; `INDIVIDUAL` returns HTTP 500
   since at least 2026-10-14).
+- Gaia DR3 bulk epoch photometry (accessed 2026-10-14): https://cdn.gea.esac.esa.int/Gaia/gdr3/Photometry/epoch_photometry/
+  (listing via the S3 XML at https://gaia.eu-1.cdn77-storage.com/?prefix=Gaia/gdr3/Photometry/epoch_photometry/&delimiter=/;
+  `_MD5SUM.txt`). Files named by level-8 nested HEALPix range. The five covering GAPS and their MD5s are in
+  `scripts/x3_bulk.py` `FILES`. No `rejected_by_photometry` column (rebuilt from `g_transit_n_obs`).
+- Reference variables: `gaiadr3.vari_classifier_result` (ECL, YSO, LPV; score > 0.5) in the M31 and Orion fields;
+  SIMBAD and Gaia DR3 (VizieR I/355/gaiadr3) via CDS XMatch for vetting.
 - Gaia DR4 release date, 2 December 2026: https://www.cosmos.esa.int/web/gaia/release. Epoch-photometry coverage is
   not yet stated on https://www.cosmos.esa.int/web/gaia/data-release-4.
 - PTA (S0 A):

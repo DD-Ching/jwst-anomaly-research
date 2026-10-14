@@ -1,0 +1,20 @@
+{
+ "label": "derived 95 % upper limit; conditional (X3.md G1 sections 4, 7); not a detection",
+ "te_range_d": [
+  30.0,
+  300.0
+ ],
+ "efficiency_after_vetting": 0.2761355443403028,
+ "exposed_star_years": 1124717.4045174539,
+ "n_unexplained": 0,
+ "poisson_upper_95": 3.0,
+ "per_star_per_yr_photocentre_stable": 9.65951955698082e-06,
+ "retained_fraction_blended_prior": 0.02087866108786611,
+ "per_star_per_yr_blended_prior": 0.00046265033549467257,
+ "conditions": [
+  "injection priors: u0 ~ U(0, 2), rho 0.01/0.1, f_s ~ U(0.5, 1), t0 uniform in span",
+  "photocentre-stable: the event's own photocentre motion leaves RUWE <= 1.4",
+  "a real event that earns a DR3 variability class is not modelled (C1)",
+  "selection effects listed as not bounded in g1_selection_bound.json"
+ ]
+}

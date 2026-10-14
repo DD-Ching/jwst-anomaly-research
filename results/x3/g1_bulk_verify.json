@@ -1,0 +1,15 @@
+{
+ "file": "EpochPhotometry_040908-041937.csv.gz",
+ "n_cached_dev_in_file": 309,
+ "n_found_in_bulk": 309,
+ "n_identical": 309,
+ "differing": [],
+ "stream": {
+  "bytes": 938261666,
+  "rows": 191043,
+  "kept": 309,
+  "seconds": 42.7,
+  "md5_ok": true
+ },
+ "provenance": "observed (Gaia DR3 bulk vs DataLink epoch photometry, dev sources only)"
+}

@@ -1,0 +1,11 @@
+{
+ "scales": {
+  "BP": 2.6680564698064697,
+  "RP": 2.3821812555531268
+ },
+ "n_sources": {
+  "BP": 1831,
+  "RP": 1831
+ },
+ "provenance": "derived from observed dev light curves (quiet, not vetoed)"
+}
