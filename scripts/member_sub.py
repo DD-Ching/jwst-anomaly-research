@@ -60,7 +60,7 @@ SERSIC_REFF_ARCSEC = (0.02, 6.0)
 
 def neighbour_offsets(cat: Table, ra0: float, dec0: float) -> tuple[np.ndarray, ...]:
     """Catalogue offsets (West, North arcsec, as the stamp's ``xx``/``yy``) and shapes near a
-    position: ``(dx, dy, r_arcsec_guess, ellip, theta_rad)``."""
+    position: ``(dx, dy, ellip, theta_rad)``."""
     dx = -(np.asarray(cat["ra"], float) - ra0) * np.cos(np.radians(dec0)) * 3600.0
     dy = (np.asarray(cat["dec"], float) - dec0) * 3600.0
     ell = np.clip(np.nan_to_num(np.asarray(cat["ellipticity"], float)), 0.0, 0.8)

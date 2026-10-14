@@ -1,0 +1,172 @@
+{
+ "meta": {
+  "table": "<out>/abell2744-bergamini23/images_predicted.ecsv",
+  "catalog": "$JWST_ANOMALY_DATA/cache/mast/jw02561-o001_t003_nircam_clear-f200w/jw02561-o001_t003_nircam_clear-f200w_cat.ecsv",
+  "forced_image": "s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f277w_i2d.fits",
+  "provenance": "derived (residual photometry); model_prediction (positions, pred_flux); simulated (injection recovery)",
+  "assumptions": {
+   "NB_MARGIN_ARCSEC": 0.5,
+   "MAX_COMPONENTS": 4,
+   "CORE_CLEARANCE_ARCSEC": 0.3,
+   "STAMP_HALF_ARCSEC": 7.0,
+   "CONTROL_ANGLES": [
+    90.0,
+    180.0,
+    270.0
+   ],
+   "RING_N": 24,
+   "RING_EXCLUDE_ARCSEC": 0.6,
+   "MIN_RING": 8,
+   "INJECT_FWHM_ARCSEC": 0.1,
+   "MIN_RECOVERY": 0.5,
+   "MIN_PRED_SNR": 10.0,
+   "SERSIC_N": [
+    0.5,
+    8.0
+   ],
+   "SERSIC_REFF_ARCSEC": [
+    0.02,
+    6.0
+   ]
+  }
+ },
+ "rows": [
+  {
+   "n_components": 4,
+   "member_class": "untestable",
+   "d_core_arcsec": 0.799,
+   "mask_arcsec": 1.0,
+   "sigma_emp": 0.1498,
+   "n_ring": 18,
+   "recovery": 1.0,
+   "n_inject": 4,
+   "calib_pred_snr": 0.5079,
+   "resid_flux_at_position": -0.0326,
+   "best_resid_flux": 0.2508,
+   "best_dx": 0.25,
+   "best_dy": 0.8,
+   "control_best_fluxes": [
+    50.3416,
+    0.3917,
+    0.1627
+   ],
+   "system": "8.1",
+   "ra": 3.5765,
+   "dec": -30.4023,
+   "magnification": 3.33,
+   "pred_flux": 0.0761,
+   "pred_snr": 5.3,
+   "forced_class": "confused"
+  },
+  {
+   "n_components": 1,
+   "member_class": "untestable",
+   "d_core_arcsec": 0.802,
+   "mask_arcsec": 1.29,
+   "sigma_emp": 1.3235,
+   "n_ring": 18,
+   "recovery": 1.0,
+   "n_inject": 4,
+   "calib_pred_snr": 0.6702,
+   "resid_flux_at_position": 0.2297,
+   "best_resid_flux": 4.4975,
+   "best_dx": -0.4901,
+   "best_dy": -0.1901,
+   "control_best_fluxes": [
+    7.6542,
+    2.6327,
+    1.7633
+   ],
+   "system": "18.1",
+   "ra": 3.5886,
+   "dec": -30.3963,
+   "magnification": -3.87,
+   "pred_flux": 0.887,
+   "pred_snr": 27.8,
+   "forced_class": "confused"
+  },
+  {
+   "n_components": 2,
+   "member_class": "untestable",
+   "d_core_arcsec": 1.012,
+   "mask_arcsec": 2.25,
+   "sigma_emp": 0.0165,
+   "n_ring": 20,
+   "recovery": 1.0,
+   "n_inject": 4,
+   "calib_pred_snr": 26.7208,
+   "resid_flux_at_position": 0.0079,
+   "best_resid_flux": 0.533,
+   "best_dx": 0.6,
+   "best_dy": -2.15,
+   "control_best_fluxes": [
+    0.4079,
+    0.4112,
+    2.8022
+   ],
+   "system": "22.1",
+   "ra": 3.5874,
+   "dec": -30.4116,
+   "magnification": 5.41,
+   "pred_flux": 0.4409,
+   "pred_snr": 30.7,
+   "forced_class": "confused"
+  },
+  {
+   "n_components": 2,
+   "member_class": "blend",
+   "d_core_arcsec": 0.074,
+   "system": "26.2",
+   "ra": 3.6001,
+   "dec": -30.4028,
+   "magnification": 3.54,
+   "pred_flux": 0.1233,
+   "pred_snr": 8.4,
+   "forced_class": "recovered"
+  },
+  {
+   "n_components": 0,
+   "member_class": "no_member",
+   "system": "34.1",
+   "ra": 3.5927,
+   "dec": -30.4111,
+   "magnification": 44.98,
+   "pred_flux": 0.284,
+   "pred_snr": 19.9,
+   "forced_class": "recovered"
+  },
+  {
+   "n_components": 0,
+   "member_class": "no_member",
+   "system": "28",
+   "ra": 3.5872,
+   "dec": -30.4015,
+   "magnification": -4.23,
+   "pred_flux": 0.6769,
+   "pred_snr": 33.6,
+   "forced_class": "recovered"
+  },
+  {
+   "n_components": 0,
+   "member_class": "no_member",
+   "system": "700.1",
+   "ra": 3.5752,
+   "dec": -30.3556,
+   "magnification": -91.95,
+   "pred_flux": 69.7797,
+   "pred_snr": 3634.0,
+   "forced_class": "absent"
+  },
+  {
+   "n_components": 0,
+   "member_class": "no_member",
+   "system": "700.1",
+   "ra": 3.5788,
+   "dec": -30.3536,
+   "magnification": 10.3,
+   "pred_flux": 7.8148,
+   "pred_snr": 392.0,
+   "forced_class": "absent"
+  }
+ ]
+}

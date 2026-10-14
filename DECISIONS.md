@@ -1594,7 +1594,7 @@ predicted. Synthetic tests: an image 1.2″ from a Sérsic member is recovered (
   Sharon puts it on the arc 2.6″ away. The margin to the 1/3 threshold is small, so this is not stronger evidence.
 - `untestable` 14 rows: member-model residuals in the control discs reach 0.6–660 × the prediction, or the calibrated
   prediction is < 10σ_emp once the core residuals set the noise (MACS1149 21, 1192; MACS0416 15 ×2, 27, 34, 45, 51,
-  122 ×2, 132, 133; Abell 2744 8.1, 18.1, 22.1 in the first run). `blend` 4 rows (a core within 0.5″). `no_member`
+  122 ×2, 132, 133; Abell 2744 8.1, 18.1, 22.1). `blend` 4 rows (a core within 0.5″). `no_member`
   12 rows: no catalogued neighbour brighter than the prediction within search + 0.5″ (the `confused` ones among them,
   MACS0416 1, 27, 45, are confused by uncatalogued light or by sources counted only in the 0.2″ best-aperture search).
 - One recorded `recovered` row is doubtful: MACS1149 21's forced best aperture (2.1″ off) lies on a member 2.0″ away.
