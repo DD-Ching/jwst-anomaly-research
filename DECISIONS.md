@@ -1535,6 +1535,20 @@ own list alone (CANUCS A370 has no image within 7″ of 3881). Both false flags 
 so a flag needs a spectroscopic redshift or a wider independent-model image search before vetting. Revisit if: an
 Abell 370 image list passes D-035, or spectroscopic redshifts for the tested arcs.
 
+**Addendum 2026-10-14 (system 17 near the BCG, `--halo-filter-arcsec`, `scripts/smacs_s17_vet.py`).** `images` can
+subtract a median filter (1.0″, ASSUMPTION; `halo_phot`'s `medfilt` route) from every forced stamp, with injected
+compact images on a 1″ ring measuring what the filter keeps (`halo_recovery`, simulated). On SMACS F200W it turns
+system 17's μ −10.2 image from a marginal recovery (7.8σ on the BCG's light) into `absent` (predicted 35.7σ, best
+3.6σ, flux ratio 0.09, recovery 0.98; 0.6″ filter: 25.5σ / 2.7σ). Looked at: nothing within 1″. Every catalogued
+sibling predicts ≥ 5× the measured flux (2.4 / 3.0 / 5.4 against 0.48). **Not a lens-model violation:** system 17
+has no spectroscopic redshift (arcs.dat z = 0; model z 1.72 Pascale+22, 1.84–1.92 Caminha+22, 2.12 +0.11/−0.09
+Mahler+22, photo-z 2.34), and the central pair is a near-caustic prediction: in ICLv2 itself it merges at z ≈ 1.92
+(μ −36 / +31) and is gone at z ≤ 1.84; the RELICS Zitrin LTM model (its best z ≈ 1.5) predicts no central pair; RELICS
+Glafic (z ≈ 1.5) predicts one 0.9–1.5″ from ICLv2's, also undetected; no published model lists a central image.
+The absence constrains the inner mass profile (BCG) of the models that predict the pair. Rejected: the annulus-only
+background of the original run (the BCG gradient made the 7.8σ). Revisit if: a spectroscopic redshift for system 17,
+or a model with a fitted BCG profile that still predicts the pair at ≥ 10σ.
+
 ## D-030 Exact image-plane χ² in `validate`; El Gordo and Abell 2744 models in the repository (2026-10-08)
 
 **Decision.**

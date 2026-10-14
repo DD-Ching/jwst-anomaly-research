@@ -1419,6 +1419,63 @@ def image_stamper(uri: str, half_arcsec: float = 1.5):
     return stamp, close
 
 
+HALO_INJECT_FWHM_ARCSEC = 0.07  # Gaussian stand-in for a compact image (~F200W PSF; ASSUMPTION)
+
+
+def halo_stamper(stamp, filter_arcsec: float):
+    """``stamp`` whose SCI is minus its ``filter_arcsec`` median filter (D-029 revisit: removes a
+    BCG/ICL or cluster-galaxy halo; ``halo_phot``'s ``medfilt`` route). NaNs are filled with the
+    stamp median before filtering and restored after. Larger than a compact image (the 0.2"
+    aperture), smaller than a halo's scale; the filter size is an ASSUMPTION."""
+    from scipy import ndimage
+
+    def filtered(ra: float, dec: float):
+        sci, err, xx, yy = stamp(ra, dec)
+        bad = ~np.isfinite(sci)
+        if bad.all():
+            return sci, err, xx, yy
+        img = np.where(bad, np.nanmedian(sci), sci)
+        pix = float(np.hypot(xx[0, 1] - xx[0, 0], yy[0, 1] - yy[0, 0]))
+        size = int(round(filter_arcsec / pix)) | 1
+        out = img - ndimage.median_filter(img, size=size, mode="reflect")
+        out[bad] = np.nan
+        return out, err, xx, yy
+
+    filtered.raw = stamp  # unfiltered access for the injection check
+    filtered.filter_arcsec = filter_arcsec
+    return filtered
+
+
+def halo_recovery(hstamp, ra: float, dec: float, flux: float, n_angles: int = 8) -> float:
+    """Median fraction of an injected compact image of ``flux`` that the halo filter and the
+    forced aperture keep, from Gaussians on a 1" ring around (ra, dec) on the real stamp
+    (simulated). NaN when no ring position is usable."""
+    from scipy import ndimage
+
+    sci, err, xx, yy = hstamp.raw(ra, dec)
+    if not np.isfinite(sci).any() or not np.isfinite(flux) or flux <= 0:
+        return float("nan")
+    pix = float(np.hypot(xx[0, 1] - xx[0, 0], yy[0, 1] - yy[0, 0]))
+    size = int(round(hstamp.filter_arcsec / pix)) | 1
+    bad = ~np.isfinite(sci)
+    base = np.where(bad, np.nanmedian(sci), sci)
+    s = HALO_INJECT_FWHM_ARCSEC / 2.3548
+    fracs = []
+    for k in range(n_angles):
+        a = 2 * np.pi * k / n_angles
+        cx, cy = np.cos(a), np.sin(a)
+        g = np.exp(-((xx - cx) ** 2 + (yy - cy) ** 2) / (2 * s**2))
+        g *= flux / g.sum()
+        out = []
+        for img in (base, base + g):
+            f = img - ndimage.median_filter(img, size=size, mode="reflect")
+            f[bad] = np.nan
+            out.append(aperture_snr(f, err, xx, yy, cx, cy)[0])
+        if np.isfinite(out[0]) and np.isfinite(out[1]):
+            fracs.append((out[1] - out[0]) / flux)
+    return float(np.median(fracs)) if fracs else float("nan")
+
+
 def cmd_images(args) -> dict:
     if not has_image_list(args.model):
         raise SystemExit(
@@ -1450,10 +1507,20 @@ def cmd_images(args) -> dict:
             args.forced_image,
             max(args.forced_search_arcsec, MAX_SEARCH_ARCSEC) + FORCED_ANNULUS[1] + 0.1,
         )
+        if args.halo_filter_arcsec:
+            stamp = halo_stamper(stamp, args.halo_filter_arcsec)
         try:
             forced_check(table, bt, stamp, args.forced_search_arcsec, unpredicted=unpredicted)
+            if args.halo_filter_arcsec:
+                rec = np.full(len(table), np.nan)
+                for k, r in enumerate(table):
+                    if np.isfinite(r["pred_snr"]):
+                        e0 = aperture_snr(*stamp(float(r["ra"]), float(r["dec"])), 0.0, 0.0)[1]
+                        rec[k] = halo_recovery(stamp, r["ra"], r["dec"], r["pred_snr"] * e0)
+                table["halo_recovery"] = rec
         finally:
             close()
+        table.meta["forced"]["halo_filter_arcsec"] = args.halo_filter_arcsec
         table.meta["forced"]["image"] = args.forced_image
         table.meta["forced"]["frame_offset_arcsec"] = [dra, ddec]
     out = args.out / args.model
@@ -1505,6 +1572,11 @@ def cmd_images(args) -> dict:
                         "best_snr": round(float(r["best_snr"]), 1),
                         "flux_ratio": round(float(r["flux_ratio"]), 2),
                         "search_arcsec": round(float(r["search_arcsec"]), 2),
+                        "halo_recovery": (
+                            round(float(r["halo_recovery"]), 2)
+                            if "halo_recovery" in table.colnames and np.isfinite(r["halo_recovery"])
+                            else None
+                        ),
                         "best_offset_arcsec": [
                             round(float(r["best_dx"]), 1),
                             round(float(r["best_dy"]), 1),
@@ -2059,6 +2131,12 @@ def main(argv: list[str] | None = None) -> int:
         "--forced-image", help="_i2d URI or path for forced photometry (S3 by byte range)"
     )
     i.add_argument("--forced-search-arcsec", type=float, default=1.0)
+    i.add_argument(
+        "--halo-filter-arcsec",
+        type=float,
+        default=None,
+        help="subtract a median filter of this size from every forced stamp (BCG/ICL halos)",
+    )
     f = sub.add_parser("fluxratios", help="image flux ratios against model magnification ratios")
     f.add_argument("--photometry", type=Path, help="DJA fix_phot FITS table")
     f.add_argument("--halo-phot", type=Path, help="halo_phot.py JSON in place of --photometry")

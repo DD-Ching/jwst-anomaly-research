@@ -879,3 +879,23 @@ def test_anti_expected_counts_and_poisson_tail():
     assert out["n"] == 3 and out["anti"] == 1
     assert out["expected"] == pytest.approx(1.0, abs=0.03)
     assert 0.6 < out["p_ge_observed"] < 0.66  # 1 - exp(-1)
+
+
+def test_halo_stamper_removes_a_halo_and_keeps_a_compact_image():
+    compact = _stamp_factory([(RA0, DEC0, 1.0)])
+
+    def on_halo(ra, dec):  # the compact image on a steep, BCG-like halo gradient
+        img, err, xx, yy = compact(ra, dec)
+        halo = 0.05 * np.exp(-np.hypot(xx + 1.2, yy) / 0.8)
+        return img + halo, err, xx, yy
+
+    hs = lc.halo_stamper(on_halo, 1.0)
+    sci, err, xx, yy = hs(RA0, DEC0)
+    f_raw = lc.aperture_snr(*compact(RA0, DEC0), 0.0, 0.0)[0]
+    f_halo = lc.aperture_snr(*on_halo(RA0, DEC0), 0.0, 0.0)[0]
+    f_sub = lc.aperture_snr(sci, err, xx, yy, 0.0, 0.0)[0]
+    assert abs(f_halo - f_raw) > 0.05 * f_raw  # the annulus alone leaves halo light
+    rec = lc.halo_recovery(hs, RA0, DEC0, 1.0)  # the filter takes a few % of a compact image
+    assert 0.85 < rec < 1.0
+    assert 0.85 < f_sub / f_raw < 1.0  # (the test source is wider than the injected PSF)
+    assert np.isnan(lc.halo_recovery(hs, RA0, DEC0, float("nan")))
