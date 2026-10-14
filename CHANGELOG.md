@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: off-plane potentials in the Abell 370 and SMACS 0723 models (in progress)
+- Plan: `offplane_potentials.py` on `abell370-canucs` (CANUCS DR1 z_spec) and `smacs0723-iclv2` (Caminha+22 MUSE).
+
 ## 2026-10-14: off-plane potentials in the Abell 2744 and El Gordo models: El Gordo's z 0.63 group, no tension
 - **Hypothesis before computing:** a Bergamini+23 or Caminha+23 potential whose galaxy has a MUSE z_spec off the
   cluster plane might, on its own plane, predict a robust extra image or break the image fit. Ordinary: a known
