@@ -165,7 +165,8 @@ class GaiaDR3Microlensing:
         body = urllib.parse.urlencode(
             {
                 "RETRIEVAL_TYPE": "EPOCH_PHOTOMETRY",
-                "DATA_STRUCTURE": "INDIVIDUAL",
+                # "INDIVIDUAL" is deprecated: the server answers HTTP 500 (seen 2026-10-14)
+                "DATA_STRUCTURE": "DATAMODEL_STANDARD",
                 "FORMAT": "CSV",
                 "VALID_DATA": "false",
                 "ID": ",".join(ids),
