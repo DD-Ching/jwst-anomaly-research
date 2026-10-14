@@ -19,7 +19,7 @@ or unresolved source gives about 0 for both). Classes: ``consistent`` / ``parity
 ``|mu| > MAX_ABS_MU`` (its parity is model-dependent; ASSUMPTION). Image positions are observed,
 ``mu`` and ``M_pred`` model_prediction, fitted maps and ``dchi2`` derived, synthetics simulated.
 
-    python scripts/parity_test.py --model abell2744-bergamini23 \
+    OMP_NUM_THREADS=1 python scripts/parity_test.py --model abell2744-bergamini23 \
         --image s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f200w_i2d.fits
 """
 
@@ -27,8 +27,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
@@ -48,9 +49,14 @@ MAX_SHIFT_ARCSEC = 0.3  # catalogue positions vs light peaks
 DCHI2_MIN = 100.0  # family preference (ASSUMPTION; symmetric-source null spread ~ +-50, ~1200 px)
 MAX_ABS_MU = 10.0  # beyond it the parity is model-dependent (ASSUMPTION)
 MIN_PEAK_SNR = 10.0  # the template's peak pixel S/N
-N_ANGLES = 12  # start grid per rotation angle (0..180 deg)
-N_REFINE = 3  # grid starts refined by least squares
+N_ANGLES = 24  # start grid per rotation angle (0..180 deg)
+N_REFINE = 8  # grid starts refined by least squares
+N_MIRROR_AXES = 72  # reflection axes (2.5 deg steps) tried on the other family's best map
 SYN_SMOOTH_PIX = 2.0  # Gaussian sigma (pixels) of the template copy the synthetics use
+SEG_SNR = 2.0  # segmentation threshold on the 1-px-smoothed S/N map (ASSUMPTION)
+SEG_GROW_PIX = 2  # dilation of each segment (wings below the threshold)
+PSF_SIGMA_ARCSEC = 0.028  # F200W PSF core, FWHM 0.066" / 2.355 (ASSUMPTION; other bands: scale it)
+MIN_SIZE_RATIO = 2.0  # major-axis sigma / PSF sigma; below it PSF-dominated (ASSUMPTION)
 
 
 def _rot(t: float) -> np.ndarray:
@@ -127,10 +133,25 @@ def _resid(p, tmpl, h, bx, by, b, bvar):
     return r
 
 
-def fit_family(tmpl: Template, h: int, bx, by, b, bvar, m_pred: np.ndarray, seeds=()) -> dict:
+def mirror_starts(p: np.ndarray, h: int) -> list[np.ndarray]:
+    """Parameter vectors in family ``-h`` for the map of ``p`` composed with a reflection about
+    each of ``N_MIRROR_AXES`` axes through B's centre. A source mirror-symmetric about some axis
+    is fitted equally well by one of them, so the cross-family start is within half a step of a
+    tie; a coarse axis grid on a sharp, bright core leaves a large spurious preference."""
+    m, sh = affine(p, h)
+    out = []
+    for phi in np.arange(N_MIRROR_AXES) * np.pi / N_MIRROR_AXES:
+        refl = _rot(phi) @ np.diag([1.0, -1.0]) @ _rot(-phi)
+        out.append(np.array([*decompose(m @ refl), *sh]))
+    return out
+
+
+def fit_family(
+    tmpl: Template, h: int, bx, by, b, bvar, m_pred: np.ndarray, seeds=(), exact=()
+) -> dict:
     """Best affine fit in handedness family ``h`` from a grid of rotation starts at the predicted
     scales, plus each seed parameter vector (e.g. the other family's best fit) with its second
-    rotation scanned over the same grid (its mirror axis)."""
+    rotation scanned over the same grid (its mirror axis), plus each ``exact`` start as given."""
     t1, t2, l1, l2 = decompose(m_pred)
     lo_s, hi_s = np.log(SCALE_RANGE[0]), np.log(SCALE_RANGE[1])
     l1, l2 = (float(np.clip(v, lo_s + 1e-3, hi_s - 1e-3)) for v in (l1, l2))
@@ -151,6 +172,12 @@ def fit_family(tmpl: Template, h: int, bx, by, b, bvar, m_pred: np.ndarray, seed
             p0[4:6] = np.clip(p0[4:6], -MAX_SHIFT_ARCSEC + 1e-6, MAX_SHIFT_ARCSEC - 1e-6)
             r = _resid(p0, tmpl, h, bx, by, b, bvar)
             starts.append((float(r @ r), p0))
+    for p0 in exact:
+        p0 = np.array(p0, float).copy()
+        p0[2:4] = np.clip(p0[2:4], lo_s + 1e-3, hi_s - 1e-3)
+        p0[4:6] = np.clip(p0[4:6], -MAX_SHIFT_ARCSEC + 1e-6, MAX_SHIFT_ARCSEC - 1e-6)
+        r = _resid(p0, tmpl, h, bx, by, b, bvar)
+        starts.append((float(r @ r), p0))
     starts.sort(key=lambda t: t[0])
     best = None
     for _, p0 in starts[:N_REFINE]:
@@ -173,8 +200,12 @@ def compare(tmpl: Template, bx, by, b, bvar, m_pred: np.ndarray, seeds=()) -> di
     m_alt = m_pred @ np.diag([1.0, -1.0])  # start the wrong family from a mirrored prediction
     fp = fit_family(tmpl, h_pred, bx, by, b, bvar, m_pred, seeds)
     fw = fit_family(tmpl, -h_pred, bx, by, b, bvar, m_alt, seeds)
-    fp2 = fit_family(tmpl, h_pred, bx, by, b, bvar, m_pred, [fw["p"]])
-    fw2 = fit_family(tmpl, -h_pred, bx, by, b, bvar, m_alt, [fp["p"]])
+    fp2 = fit_family(
+        tmpl, h_pred, bx, by, b, bvar, m_pred, [fw["p"]], mirror_starts(fw["p"], -h_pred)
+    )
+    fw2 = fit_family(
+        tmpl, -h_pred, bx, by, b, bvar, m_alt, [fp["p"]], mirror_starts(fp["p"], h_pred)
+    )
     fp = fp2 if fp2["chi2"] < fp["chi2"] else fp
     fw = fw2 if fw2["chi2"] < fw["chi2"] else fw
     return {"h_pred": h_pred, "pred": fp, "wrong": fw, "dchi2": fw["chi2"] - fp["chi2"]}
@@ -222,14 +253,57 @@ def pair_test(tmpl: Template, bx, by, b, bvar, m_pred: np.ndarray, seed: int = 0
     }
 
 
-def _fit_pixels(sci, err, xx, yy):
+def _fit_pixels(sci, err, xx, yy, other=None):
     sel = (np.hypot(xx, yy) <= FIT_RADIUS_ARCSEC) & np.isfinite(sci) & np.isfinite(err) & (err > 0)
+    if other is not None:  # pixels of neighbouring sources are not B's light
+        sel &= ~other
     return xx[sel], yy[sel], sci[sel], err[sel] ** 2
 
 
-def read_stamps(image_uri: str, images, want: list[int], halo_filter: float = 0.0) -> dict:
-    """``{k: (sci, err, xx, yy, peak_snr)}`` for images ``want``, by ``N_READERS`` threads, each
-    with its own byte-range file handle (I/O-bound; one handle is not thread-safe)."""
+def segment(sci, err, xx, yy) -> tuple[np.ndarray, np.ndarray]:
+    """``(own, other)`` masks: the connected S/N > ``SEG_SNR`` component holding the brightest
+    pixel within 0.15" of the stamp centre (the source), and every other component, each grown by
+    ``SEG_GROW_PIX``; ``other`` excludes ``own``. Derived from the image alone (no catalogue
+    segmentation map, which would need the full mosaic)."""
+    ok = np.isfinite(sci) & np.isfinite(err) & (err > 0)
+    snr = np.where(ok, np.nan_to_num(sci) / np.where(ok, err, 1.0), 0.0)
+    det = ndimage.gaussian_filter(snr, 1.0) > SEG_SNR
+    lab, _ = ndimage.label(det)
+    core = (np.hypot(xx, yy) <= 0.15) & ok
+    own = np.zeros(sci.shape, bool)
+    if core.any():
+        cand = np.where(core & (lab > 0), snr, -np.inf)
+        if np.isfinite(cand).any():
+            own = lab == lab.flat[int(np.argmax(cand))]
+    grow = np.ones((2 * SEG_GROW_PIX + 1,) * 2, bool)
+    own = ndimage.binary_dilation(own, grow)
+    other = ndimage.binary_dilation((lab > 0) & ~own, grow) & ~own
+    return own, other
+
+
+def size_ratio(sci, xx, yy, own) -> float:
+    """Major-axis sigma of the source's light (flux-weighted second moments inside ``own``,
+    positive pixels only) over ``PSF_SIGMA_ARCSEC``; ~1 for a point source."""
+    w = np.where(own & np.isfinite(sci), np.clip(np.nan_to_num(sci), 0, None), 0.0)
+    if w.sum() <= 0:
+        return np.nan
+    mx, my = (w * xx).sum() / w.sum(), (w * yy).sum() / w.sum()
+    dx, dy = xx - mx, yy - my
+    cov = (
+        np.array(
+            [[(w * dx * dx).sum(), (w * dx * dy).sum()], [(w * dx * dy).sum(), (w * dy * dy).sum()]]
+        )
+        / w.sum()
+    )
+    return float(np.sqrt(np.linalg.eigvalsh(cov)[-1]) / PSF_SIGMA_ARCSEC)
+
+
+def read_stamps(
+    image_uri: str, images, want: list[int], halo_filter: float = 0.0, mask: bool = True
+) -> dict:
+    """``{k: (sci, err, xx, yy, peak_snr, own, other)}`` for images ``want`` (``own``/``other``
+    from ``segment`` when ``mask``, else None), by ``N_READERS`` threads, each with its own
+    byte-range file handle (I/O-bound; one handle is not thread-safe)."""
 
     def work(chunk):
         stamp, close = lc.image_stamper(image_uri, TEMPLATE_HALF_ARCSEC)
@@ -243,7 +317,8 @@ def read_stamps(image_uri: str, images, want: list[int], halo_filter: float = 0.
                     sci = lc._median_subtract(sci, xx, yy, halo_filter)
                 c = (np.hypot(xx, yy) <= 0.15) & np.isfinite(sci) & (err > 0)
                 snr = float(np.max(sci[c] / err[c])) if c.any() else np.nan
-                out[k] = (sci, err, xx, yy, snr)
+                own, other = segment(sci, err, xx, yy) if mask else (None, None)
+                out[k] = (sci, err, xx, yy, snr, own, other)
         finally:
             close()
         return out
@@ -256,7 +331,13 @@ def read_stamps(image_uri: str, images, want: list[int], halo_filter: float = 0.
     return stamps
 
 
-def run(model_name: str, image_uri: str, halo_filter: float = HALO_FILTER_ARCSEC) -> list[dict]:
+def _sxy(st):
+    return st[0], st[2], st[3], st[5]
+
+
+def run(
+    model_name: str, image_uri: str, halo_filter: float = HALO_FILTER_ARCSEC, mask: bool = True
+) -> list[dict]:
     model, files, par = lc.load_model(model_name)
     images, z_m_limit = lc.image_list(model_name, files, par)
     lc.apply_frame_offset(model_name, model, images)
@@ -273,8 +354,9 @@ def run(model_name: str, image_uri: str, halo_filter: float = HALO_FILTER_ARCSEC
     want = [
         k for k in range(len(images)) if usable[k] and (usable & (systems == systems[k])).sum() > 1
     ]
-    stamps = read_stamps(image_uri, images, want, halo_filter)
-    rows = []
+    stamps = read_stamps(image_uri, images, want, halo_filter, mask)
+    rows: list[dict] = []
+    jobs: list[tuple[int, tuple]] = []
     for s in sorted(set(systems)):
         members = list(np.flatnonzero(systems == s))
         if len(members) < 2:
@@ -298,14 +380,30 @@ def run(model_name: str, image_uri: str, halo_filter: float = HALO_FILTER_ARCSEC
                 row["class"] = "near_critical" if not usable[kb] else "off_image"
             elif stamps[ka][4] < MIN_PEAK_SNR:
                 row["class"] = "faint"
+            elif mask and not (row.setdefault("size_ratio_a", size_ratio(*_sxy(stamps[ka]))) > 0):
+                row["class"] = "no_segment"  # nothing detected at A's centre
+            elif mask and row["size_ratio_a"] < MIN_SIZE_RATIO:
+                row["class"] = "unresolved"  # the unlensed PSF would set the handedness
             else:
-                tmpl = Template(*stamps[ka][:4])
-                bx, by, b, bvar = _fit_pixels(*stamps[kb][:4])
+                sci_a, err_a, xa, ya, _, _, other_a = stamps[ka]
+                if mask:  # neighbours of A must not be mapped into B's disc
+                    sci_a = np.where(other_a, 0.0, sci_a)
+                tmpl = Template(sci_a, err_a, xa, ya)
+                bx, by, b, bvar = _fit_pixels(*stamps[kb][:4], stamps[kb][6])
                 m_pred = np.linalg.inv(jac[ka]) @ jac[kb]
-                row.update(pair_test(tmpl, bx, by, b, bvar, m_pred))
+                jobs.append((len(rows), (tmpl, bx, by, b, bvar, m_pred)))
             rows.append(row)
-            print(json.dumps({k: v for k, v in row.items() if not k.startswith("m_")}), flush=True)
+    # CPU-bound fits: one process per core (run with OMP_NUM_THREADS=1; scripts/CLAUDE.md topology)
+    with ProcessPoolExecutor(os.cpu_count() or 1) as ex:
+        for (i, _), res in zip(jobs, ex.map(_pair_job, [a for _, a in jobs]), strict=True):
+            rows[i].update(res)
+    for row in rows:
+        print(json.dumps({k: v for k, v in row.items() if not k.startswith("m_")}), flush=True)
     return rows
+
+
+def _pair_job(args) -> dict:
+    return pair_test(*args)
 
 
 def main(argv=None) -> int:
@@ -319,8 +417,13 @@ def main(argv=None) -> int:
         default=HALO_FILTER_ARCSEC,
         help="median-filter size subtracted from every stamp (0: none)",
     )
+    ap.add_argument(
+        "--no-mask",
+        action="store_true",
+        help="no segmentation mask and no resolution gate (the first, unvalidated version)",
+    )
     args = ap.parse_args(argv)
-    rows = run(args.model, args.image, args.halo_filter_arcsec)
+    rows = run(args.model, args.image, args.halo_filter_arcsec, not args.no_mask)
     out = args.out or paths.repo_root() / "results" / "parity" / f"{args.model}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     counts: dict[str, int] = {}
@@ -335,6 +438,10 @@ def main(argv=None) -> int:
             "min_peak_snr": MIN_PEAK_SNR,
             "fit_radius_arcsec": FIT_RADIUS_ARCSEC,
             "halo_filter_arcsec": args.halo_filter_arcsec,
+            "mask": not args.no_mask,
+            "seg_snr": SEG_SNR,
+            "min_size_ratio": MIN_SIZE_RATIO,
+            "psf_sigma_arcsec": PSF_SIGMA_ARCSEC,
         },
         "counts": counts,
         "rows": rows,
