@@ -139,3 +139,25 @@ Outputs: `results/arcs/abell370-canucs/`.
   aligned stay aligned; 2 anti vs 0.29 expected, both looked at below. 340 and 4540 are anti in F444W too (axis Δ 1.8° and 1.4°): single sources, intrinsic shapes.
   1565 and 1788 have no F444W source within 1″ (nearest 1.2″ and 1.9″).
 - **Result: null.** No anti-tangential arc that a critical-curve flip or an intrinsic shape does not explain.
+
+## Off-plane potentials in the CANUCS model (2026-10-14, D-046 addendum 2026-10-14d)
+
+`python scripts/offplane_potentials.py --model abell370-canucs` (Richard+21 MUSE, quality ≥ 2; `--field abell370`
+for the CANUCS DR1 z_spec), then `lens_consistency.py --model abell370-canucs validate --plane NAME=Z[:SIGMA]`.
+Other parameters not refitted (`model_prediction`). The CANUCS fit is source-plane optimised (Lenstool χ² 192.6), so
+the back-traced image-plane χ² (σ_pos 0.3″, 115 images) is a relative metric: 1003.0 on a single plane.
+
+| Potentials moved | z | σ (km/s) | χ² |
+|---|---|---|---|
+| 23 foreground (3, 17, 30, 35, 37, 38, 48, 53, 64, 67, 113, 132, 141, 145, 151, 152, 163, 184, 194, 242, 260, 269, 270) | 0.304–0.346 | fitted (34–171) | 985.3 |
+| 11 background (6, 14, 22, 40, 75, 76, 99, 134, 157, 173, 261) | 0.410–0.467 | fitted (40–92) | 1005.2 |
+| 273 (MUSE and SA25 z 2.80; photo-z 2.28) | 2.802 | fitted (58) | 1000.4 |
+| 180 (MUSE 0.4649; CANUCS/GLASS 0.38; photo-z 0.33) | 0.4649 | 100 / 125 / 154 (fitted) / 180 | 851.1 / 919.5 / 1048.7 / 1232.7 |
+| 180 on the cluster plane (control) | 0.375 | 100 / 125 | 839.3 / 896.3 |
+
+- The foreground set (MUSE z_spec, all quality ≥ 2) is a real structure at z ≈ 0.30–0.35 in front of the cluster;
+  placing it there improves the unrefitted fit slightly.
+- 180's redshift is disputed between the two catalogues; its plane move costs +12 to +46, the rest of its swing is
+  the σ change. 273 is a lensed source on a member (the ASSUMPTION's known failure mode); moving it is harmless.
+- `images` is gated off for this model (image-plane rms 2.3″, D-044), so extra images were not predicted.
+- **Null:** no off-plane potential breaks the image fit.

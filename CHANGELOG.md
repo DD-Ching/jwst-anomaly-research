@@ -2,6 +2,25 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: off-plane potentials in the Abell 370 and SMACS 0723 models: null
+- **Hypothesis before computing:** a CANUCS (Abell 370) or Mahler+22 (SMACS 0723) potential with a MUSE z_spec off
+  the cluster plane might, on its own plane, break the image fit or predict a robust extra image. Ordinary: real
+  foreground/background structures absorbed by a single-plane fit, z_spec of a lensed knot on a member, unrefitted
+  parameters. Plan change if Δχ² ≫ 10 % at every plausible σ, or a robust new extra image.
+- New: `offplane_potentials.MUSE` entries for Richard+21 `a370.dat` and Caminha+22 `muse.dat`, with an optional
+  per-catalogue `frame_offset_arcsec` (SMACS: Mahler+22's frame is 0.34″ from Caminha+22's; measured on 24 members,
+  MAD 0.009″); unit test.
+- **Result** (`model_prediction`, unrefitted; D-046 addendum d, docs/fields/abell370.md):
+  - Abell 370: 36 / 284 off-plane. 23 foreground potentials at z 0.30–0.35 lower χ² 1003.0 → 985.3; 11 background
+    at z 0.41–0.47 +2; 273 (a z 2.80 lensed source on a member) −3; 180 (z disputed: MUSE 0.465 vs GLASS 0.38) +12
+    to +46. `images` is gated off for this source-plane-fitted model.
+  - SMACS 0723: 2 / 149 off-plane: 610 is the BCG potential carrying a lensed source's z 0.94 (misassociated); 489
+    is a real z 0.746 background galaxy. χ² 31.18 → 31.33; `images --plane` unchanged (75 images, no class change).
+  - **Null.** The D-042 off-plane listing is now done for all five Lenstool models in the repo.
+- **Failed approach:** matching SMACS without the frame offset left only 0.31–0.48″ matches near the 0.5″ radius.
+- **Handoff:** next lens-model item from TASKS "Supporting"; a multi-plane refit only if a flag comes to depend on
+  an off-plane potential.
+
 ## 2026-10-14: off-plane potentials in the Abell 2744 and El Gordo models: El Gordo's z 0.63 group, no tension
 - **Hypothesis before computing:** a Bergamini+23 or Caminha+23 potential whose galaxy has a MUSE z_spec off the
   cluster plane might, on its own plane, predict a robust extra image or break the image fit. Ordinary: a known

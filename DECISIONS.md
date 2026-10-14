@@ -2555,6 +2555,23 @@ predicted images of systems 3, 4, 6, 12, 15, 16, 19 persist within 0.7″; new a
 29.2, below the 27.1 depth proxy) and a system-23 one beside 23a; no robust new extra image. **No tension**; the
 foreground group is a known, modelled structure, so it is a positive control for the listing.
 
+**Addendum 2026-10-14d (Abell 370 and SMACS 0723).** `MUSE` gains Richard+21 `a370.dat` for `abell370-canucs`
+(median 0.03″ to the CANUCS potentials, so no offset; CANUCS DR1 z_spec stays available with `--field abell370`) and
+Caminha+22 `muse.dat` for `smacs0723-iclv2`, with `frame_offset_arcsec` (−0.218, +0.262)″: Mahler+22's frame sits
+0.34″ from Caminha+22's positions (median over 24 members, MAD 0.009″); unshifted, the matches all lie at 0.31–0.48″.
+Results (`model_prediction`, unrefitted; details `docs/fields/abell370.md`, CHANGELOG 2026-10-14):
+- Abell 370 CANUCS: 257 / 284 with z_spec (MUSE), 36 off-plane. CANUCS DR1 z_spec gives 206 / 32 and agrees on
+  every common potential except 180 (MUSE 0.4649 vs GLASS 0.38; photo-z 0.33) and 61 (CANUCS 0.2845, MUSE member).
+  The model is source-plane optimised, so the back-traced image-plane χ² (σ_pos 0.3″, 115 images; 1003.0 single
+  plane) is a relative metric only. 23 foreground potentials at z 0.30–0.35 (σ up to 171 km/s): 985.3 (−18);
+  11 background ones at z 0.41–0.47: 1005.2 (+2); 273 at z 2.80 (a lensed source on a member, σ 58): 1000.4;
+  180 at z 0.4649: +46 at its fitted σ 154, +12 at σ 100 against the same σ on the plane (the σ change itself moves
+  χ² by −164). `images` is gated off for this model (D-044), so no extra-image test.
+- SMACS 0723 ICLv2: 24 / 149 with z_spec, 2 off-plane. 610 (σ 77) is the BCG potential; its z 0.9366 entry carries
+  Caminha+22's amplification 3.6, a lensed source on the BCG: misassociated, the ASSUMPTION's known failure.
+  489 (σ 102, F200W 18.4) is a z 0.746 background galaxy modelled as a member. Both moved: χ² 31.18 → 31.33;
+  `images --plane`: the same 75 images, no class change, largest shift 0.29″ (system 9, |μ| 20). **Null.**
+
 ## D-047 Exotic-lens predictions: wormhole and negative-mass signatures are searchable, warp signatures are not (2026-10-08)
 
 **Decision.** Phase 1 ("predictions first") gives the screens closed-form targets. docs/exotic_lensing.md has the

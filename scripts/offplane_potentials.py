@@ -13,15 +13,17 @@ Redshifts come from the field's CANUCS catalogue (``--field``; a z_spec is trust
 photo-z agrees), or, for models in ``MUSE``, from the authors' MUSE redshift catalogue on CDS
 (trusted by its quality flag; only trusted rows are matched). These are matched in the model
 frame: Caminha+23's positions are on the HST/RELICS frame of its model (ReadMe note 1), and
-Richard+21's Abell 2744 positions agree with Bergamini+23's members to a median 0.08" (measured
-2026-10-14). ASSUMPTION: a trusted z_spec within the radius is the potential's own; a MUSE entry
-for a lensed knot on a member would pass (none of the off-plane rows found so far is behind the
-cluster).
+Richard+21's Abell 2744 and Abell 370 positions agree with the models' members to a median 0.08"
+and 0.03" (measured 2026-10-14); Caminha+22's SMACS 0723 positions are moved by the measured
+offset to Mahler+22's frame (``frame_offset_arcsec``). ASSUMPTION: a trusted z_spec within the
+radius is the potential's own; a MUSE entry for a lensed knot on a member would pass, so every
+off-plane row behind the cluster is checked against its photometry before it is interpreted.
 
 Usage::
 
     python scripts/offplane_potentials.py --model macs0416-canucs --field macs0416
     python scripts/offplane_potentials.py --model abell2744-bergamini23
+    python scripts/offplane_potentials.py --model abell370-canucs [--field abell370]
 """
 
 from __future__ import annotations
@@ -79,10 +81,41 @@ MUSE = {
         "ok": {2, 3, 9},
         "ref": "Caminha+23 MUSE (J/A+A/678/A3)",
     },
+    # Richard+21's Abell 370 positions agree with the CANUCS potentials to a median 0.03"
+    # (measured 2026-10-14); the CANUCS DR1 z_spec compilation stays available with --field
+    "abell370-canucs": {
+        "url": f"{_CDS}/646/A83/a370.dat",
+        "sha256": "05f524e56ca072b414b3dd1b4134f23e35b1eb99e844dba2d3a5d3935c97d0e0",
+        "cols": {
+            "SOURCE": (1, 5),
+            "QUAL": (15, 15),
+            "RA": (17, 25),
+            "DEC": (27, 35),
+            "Z_SPEC": (37, 46),
+        },
+        "ok": {2, 3},
+        "ref": "Richard+21 MUSE (J/A+A/646/A83)",
+    },
+    "smacs0723-iclv2": {
+        "url": f"{_CDS}/666/L9/muse.dat",
+        "sha256": "81868f291a94da964b2a22252ea9fc1624f680d230ff3eedd79e95005277a113",
+        "cols": {
+            "SOURCE": (1, 2),
+            "RA": (4, 15),
+            "DEC": (17, 28),
+            "Z_SPEC": (30, 35),
+            "QUAL": (37, 37),
+        },
+        "ok": {2, 3, 9},
+        "ref": "Caminha+22 MUSE (J/A+A/666/L9)",
+        # (dRA cos dec, dDec) arcsec from Mahler+22's model frame to Caminha+22's positions:
+        # median over the 24 trusted members within 1", scatter (MAD) 0.009" (2026-10-14)
+        "frame_offset_arcsec": (-0.218, 0.262),
+    },
 }
 
 # CANUCS models without a MUSE entry: the field whose catalogue carries their redshifts
-MODEL_FIELD = {"macs0416-canucs": "macs0416", "abell370-canucs": "abell370"}
+MODEL_FIELD = {"macs0416-canucs": "macs0416"}
 
 
 def read_muse(path: Path, spec: dict) -> Table:
@@ -90,11 +123,17 @@ def read_muse(path: Path, spec: dict) -> Table:
     rows = [ln for ln in Path(path).read_text().splitlines() if ln.strip()]
     col = {k: [ln[a - 1 : b].strip() for ln in rows] for k, (a, b) in spec["cols"].items()}
     qual = np.array([int(q) for q in col["QUAL"]])
+    ra, dec = np.array(col["RA"], float), np.array(col["DEC"], float)
+    if "frame_offset_arcsec" in spec:  # catalogue frame -> model frame
+        dx, dy = spec["frame_offset_arcsec"]
+        sky = SkyCoord(ra * u.deg, dec * u.deg)
+        moved = sky.spherical_offsets_by(-dx * u.arcsec, -dy * u.arcsec)
+        ra, dec = moved.ra.deg, moved.dec.deg
     return Table(
         {
             "SOURCE": col["SOURCE"],
-            "RA": np.array(col["RA"], float),
-            "DEC": np.array(col["DEC"], float),
+            "RA": ra,
+            "DEC": dec,
             "Z_SPEC": np.array(col["Z_SPEC"], float),
             "REF_SPECZ": [spec["ref"]] * len(rows),
             "Z_OK": np.isin(qual, sorted(spec["ok"])),
