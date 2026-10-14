@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: (in progress) PSF-commuting parity fit with an empirical F200W PSF
+- Claim: cloud routine run on the parity acceptance test's "Next" (previous entry).
+
 ## 2026-10-14: parity acceptance test fails (87 % vs 95 %); fits not converged, PSF suspected
 - **Hypothesis before computing:** the 6 Abell 2744 parity flags (previous entry) come from neighbour light and
   point-like sources; with a segmentation mask and a resolution gate, ≥ 95 % of catalogued non-near-critical pairs
