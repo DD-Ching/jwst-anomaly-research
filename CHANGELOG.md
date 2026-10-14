@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: X2 S6a writeup corrections (documents only; no computation re-run)
+- **`X2_s6a_summary.md`, "Who did what".** Updated from the owner's cross-conversation record. It replaces the
+  earlier "no recorded GPT output":
+  - GPT read the paper, the code and the results. It helped with scope and verification design, and flagged three
+    issues: min vs last step, the merger-grid differences and NaN.
+  - The owner relayed these to Claude.
+  - GPT did not re-derive the equations or re-run the numerics.
+  - Still no domain-expert review.
+- **`X2_s6a_repro.md` §7.**
+  - The full rotation range, other sectors and time-domain evolution are now listed as possible strengthening,
+    not as presumed submission requirements.
+  - The claim stays limited to the two verified points. Sufficiency is for experts and editors to judge.
+  - The Comment assessment is marked provisional, not an exclusion.
+- **Literature-search scope** is now stated wherever it is summarised: 47 citers screened by title, relevant
+  abstracts and some full texts checked. The search itself was not re-done.
+
 ## 2026-10-14: halo-subtracted flux ratios on MACS0416 (CANUCS model): five systems testable, no anomaly
 - **Hypothesis before running:** a fourth cluster extends the D-032 flux-ratio line; no compact image deviates by
   > 0.75 mag (both routes) from the `macs0416-canucs` μ ratio, and `fluxratios --halo-phot` finds no 3σ tension.

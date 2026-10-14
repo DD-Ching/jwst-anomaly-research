@@ -114,24 +114,30 @@ The JSON files are strict JSON (no NaN; a check that does not apply is `null`). 
 `PAPER_FIG1` and `PAPER_FIG5` of the script, read from the paper's gnuplot EPS sources (about 0.2 % of the axis
 range).
 
-## 7. Suitability: research article or Comment? (assessment, not a decision)
-**A Comment on 1309.2448: poorly suited.**
-- The paper limits its claim to "the type of modes investigated", and its numbers are reproduced. So there is no
-  error in a published *result* to comment on.
-- The V₁₀ misprint does not change their numbers. It would fit an erratum by the authors, or a footnote in a new
-  paper.
+## 7. Article or Comment? (provisional assessment, not a decision)
+**The claim.** It is limited to the two verified parameter points (|J|/A = 0.121 and 0.142). Whether that is
+enough to publish, and which verifications are essential, is for domain experts and editors to judge. Nothing
+below is a requirement set by this repository.
 
-**A short research article (brief report or letter): suitable in principle, after the steps below.**
+**A Comment on 1309.2448: provisionally less suited.**
+- This is a provisional view, not an exclusion.
+- The paper limits its claim to "the type of modes investigated", and its numbers are reproduced here. So a
+  Comment would rest on its stabilisation reading and on the V₁₀ misprint rather than on an error in a published
+  result.
+- The misprint does not change the paper's numbers.
+- An expert or editor may weigh this differently.
+
+**A short research article (brief report or letter): possible in principle.**
 - A related question is posed in print as a conjecture. 2510.11406 states it mainly for 4D rotation, so applying
-  it to 5D is our reading. The answer here is direct, and the method and the checks are reproducible.
-- As it stands, the result covers two points just past the merger. A referee would very likely ask for:
-  - the full |J|/A range up to the extremal limit, including the candidate at 0.214 and what happens there;
-  - the odd-parity sector;
-  - an independent time-domain evolution;
-  - an expert check of the derivation.
-- The owner's scope decision did not extend the computation in this round.
+  it to 5D is our reading.
+- The answer here is direct for the two verified points, and the method and the checks are reproducible.
 
-**Before either: review by a human domain expert is needed.** Section 8 lists what is unchecked.
+**Possible directions for strengthening** (not presumed to be required for submission):
+- the |J|/A range beyond 0.142 up to the extremal limit, including the candidate at 0.214;
+- the odd-parity sector and other perturbation sectors;
+- an independent time-domain evolution.
+
+**First step in every case: review by a human domain expert.** Section 8 lists what is unchecked.
 
 ## 8. Not yet checked by a human professional
 - **Derivation:** the Hopf-coordinate rewrite, the linearisation, the gauge and H_φ argument, and the V₁₀ typo.
