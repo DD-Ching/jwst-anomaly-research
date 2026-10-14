@@ -1,0 +1,1072 @@
+{
+ "provenance": "positions and mu: model_prediction; catalogued positions: observed; fluxes: derived",
+ "images": {
+  "f150w": "s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f150w_i2d.fits",
+  "f277w": "s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f277w_i2d.fits",
+  "f444w": "s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f444w_i2d.fits"
+ },
+ "assumptions": {
+  "halo_filter_arcsec": 1.0,
+  "absent_snr": 10.0,
+  "knot_match_arcsec": 1.5,
+  "search": "lens_consistency.system_search_radius of the system (base 1.0 arcsec)",
+  "class": "forced_class only when every pair sibling passes the D-034 gates, else no_reference (ungated_class is a diagnostic)",
+  "mu_cap": "none (D-034's |mu| <= 50 cap dropped on purpose)"
+ },
+ "runs": {
+  "3.2": {
+   "bergamini23": [
+    {
+     "radec": [
+      3.57667,
+      -30.401646
+     ],
+     "mu": 3.43,
+     "search_arcsec": 1.29,
+     "sibling_mu": {
+      "3.2b": 50.3,
+      "3.2a": 49.6
+     },
+     "siblings_without_mu": [],
+     "cat_sibling_knot": "3.1c",
+     "nearest_other_knot": "3.1c",
+     "nearest_other_knot_sep_arcsec": 0.55,
+     "f150w": {
+      "siblings": {
+       "3.2a": {
+        "flux": 9.0008,
+        "snr": 107.6,
+        "gates_ok": false
+       },
+       "3.2b": {
+        "flux": 9.1718,
+        "snr": 117.4,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "3.2a": 7.1,
+       "3.2b": 7.2
+      },
+      "pred_snr_pair": 7.1,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 1.4,
+      "best_snr": 51.8,
+      "best_offset": [
+       0.1,
+       -0.5
+      ],
+      "flux_over_pair_pred": 7.81,
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
+     },
+     "f277w": {
+      "siblings": {
+       "3.2a": {
+        "flux": 5.7932,
+        "snr": 251.3,
+        "gates_ok": false
+       },
+       "3.2b": {
+        "flux": 5.9644,
+        "snr": 244.5,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "3.2a": 26.1,
+       "3.2b": 26.5
+      },
+      "pred_snr_pair": 26.3,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 0.4,
+      "best_snr": 127.5,
+      "best_offset": [
+       0.1,
+       -0.5
+      ],
+      "flux_over_pair_pred": 6.47,
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
+     },
+     "f444w": {
+      "siblings": {
+       "3.2a": {
+        "flux": 2.0617,
+        "snr": 99.3,
+        "gates_ok": true
+       },
+       "3.2b": {
+        "flux": 2.0053,
+        "snr": 96.3,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "3.2a": 7.4,
+       "3.2b": 7.1
+      },
+      "pred_snr_pair": 7.2,
+      "pred_snr_gated_max": 7.4,
+      "need_mu_factor": 1.4,
+      "best_snr": 48.0,
+      "best_offset": [
+       0.2,
+       -0.5
+      ],
+      "flux_over_pair_pred": 7.21,
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
+     }
+    }
+   ],
+   "uncover2": [
+    {
+     "radec": [
+      3.576803,
+      -30.401929
+     ],
+     "mu": 3.76,
+     "search_arcsec": 1.0,
+     "sibling_mu": {
+      "3.2b": 40.0
+     },
+     "siblings_without_mu": [
+      "3.2a"
+     ],
+     "cat_sibling_knot": "3.1c",
+     "nearest_other_knot": "3.1c",
+     "nearest_other_knot_sep_arcsec": 0.75,
+     "f150w": {
+      "siblings": {
+       "3.2a": {
+        "flux": 9.0008,
+        "snr": 107.6,
+        "gates_ok": false
+       },
+       "3.2b": {
+        "flux": 9.1718,
+        "snr": 117.4,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "3.2b": 10.2
+      },
+      "pred_snr_pair": 10.2,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 1.0,
+      "best_snr": 52.7,
+      "best_offset": [
+       0.6,
+       0.5
+      ],
+      "flux_over_pair_pred": 5.72,
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
+     },
+     "f277w": {
+      "siblings": {
+       "3.2a": {
+        "flux": 5.7932,
+        "snr": 251.3,
+        "gates_ok": false
+       },
+       "3.2b": {
+        "flux": 5.9644,
+        "snr": 244.5,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "3.2b": 37.8
+      },
+      "pred_snr_pair": 37.8,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 0.3,
+      "best_snr": 129.7,
+      "best_offset": [
+       0.6,
+       0.5
+      ],
+      "flux_over_pair_pred": 4.82,
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
+     },
+     "f444w": {
+      "siblings": {
+       "3.2a": {
+        "flux": 2.0617,
+        "snr": 99.3,
+        "gates_ok": true
+       },
+       "3.2b": {
+        "flux": 2.0053,
+        "snr": 96.3,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "3.2b": 10.1
+      },
+      "pred_snr_pair": 10.1,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 1.0,
+      "best_snr": 49.6,
+      "best_offset": [
+       0.6,
+       0.5
+      ],
+      "flux_over_pair_pred": 5.51,
+      "forced_class": "no_reference",
+      "ungated_class": "confused"
+     }
+    }
+   ]
+  },
+  "4.2": {
+   "bergamini23": [
+    {
+     "radec": [
+      3.579724,
+      -30.408355
+     ],
+     "mu": 8.71,
+     "search_arcsec": 1.0,
+     "sibling_mu": {
+      "4.2b": 7.3,
+      "4.2a": 5.5
+     },
+     "siblings_without_mu": [],
+     "cat_sibling_knot": "",
+     "nearest_other_knot": "4.1c",
+     "nearest_other_knot_sep_arcsec": 3.01,
+     "f150w": {
+      "siblings": {
+       "4.2a": {
+        "flux": 4.9978,
+        "snr": 61.4,
+        "gates_ok": false
+       },
+       "4.2b": {
+        "flux": 6.012,
+        "snr": 65.2,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "4.2a": 95.4,
+       "4.2b": 85.4
+      },
+      "pred_snr_pair": 89.7,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 0.1,
+      "best_snr": 8.8,
+      "best_offset": [
+       -0.9,
+       -0.4
+      ],
+      "flux_over_pair_pred": 0.1,
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
+     },
+     "f277w": {
+      "siblings": {
+       "4.2a": {
+        "flux": 2.2165,
+        "snr": 107.0,
+        "gates_ok": false
+       },
+       "4.2b": {
+        "flux": 2.4265,
+        "snr": 74.2,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "4.2a": 230.6,
+       "4.2b": 187.8
+      },
+      "pred_snr_pair": 206.1,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 0.0,
+      "best_snr": 11.0,
+      "best_offset": [
+       -0.9,
+       -0.4
+      ],
+      "flux_over_pair_pred": 0.06,
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
+     },
+     "f444w": {
+      "siblings": {
+       "4.2a": {
+        "flux": 1.9139,
+        "snr": 85.5,
+        "gates_ok": false
+       },
+       "4.2b": {
+        "flux": 2.1614,
+        "snr": 98.7,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "4.2a": 162.6,
+       "4.2b": 136.7
+      },
+      "pred_snr_pair": 147.7,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 0.1,
+      "best_snr": 11.5,
+      "best_offset": [
+       -0.9,
+       -0.4
+      ],
+      "flux_over_pair_pred": 0.08,
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
+     }
+    }
+   ],
+   "uncover2": [
+    {
+     "radec": [
+      3.579943,
+      -30.408522
+     ],
+     "mu": 8.83,
+     "search_arcsec": 1.0,
+     "sibling_mu": {
+      "4.2b": 8.4,
+      "4.2a": 5.3
+     },
+     "siblings_without_mu": [],
+     "cat_sibling_knot": "",
+     "nearest_other_knot": "4.1c",
+     "nearest_other_knot_sep_arcsec": 2.1,
+     "f150w": {
+      "siblings": {
+       "4.2a": {
+        "flux": 4.9978,
+        "snr": 61.4,
+        "gates_ok": false
+       },
+       "4.2b": {
+        "flux": 6.012,
+        "snr": 65.2,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "4.2a": 92.4,
+       "4.2b": 71.1
+      },
+      "pred_snr_pair": 79.4,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 0.1,
+      "best_snr": 21.2,
+      "best_offset": [
+       -0.5,
+       -0.0
+      ],
+      "flux_over_pair_pred": 0.27,
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
+     },
+     "f277w": {
+      "siblings": {
+       "4.2a": {
+        "flux": 2.2165,
+        "snr": 107.0,
+        "gates_ok": false
+       },
+       "4.2b": {
+        "flux": 2.4265,
+        "snr": 74.2,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "4.2a": 200.9,
+       "4.2b": 140.7
+      },
+      "pred_snr_pair": 164.2,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 0.1,
+      "best_snr": 26.1,
+      "best_offset": [
+       -0.4,
+       -0.0
+      ],
+      "flux_over_pair_pred": 0.15,
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
+     },
+     "f444w": {
+      "siblings": {
+       "4.2a": {
+        "flux": 1.9139,
+        "snr": 85.5,
+        "gates_ok": false
+       },
+       "4.2b": {
+        "flux": 2.1614,
+        "snr": 98.7,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "4.2a": 161.0,
+       "4.2b": 116.3
+      },
+      "pred_snr_pair": 133.7,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 0.1,
+      "best_snr": 25.0,
+      "best_offset": [
+       -0.4,
+       -0.0
+      ],
+      "flux_over_pair_pred": 0.19,
+      "forced_class": "no_reference",
+      "ungated_class": "absent"
+     }
+    }
+   ]
+  },
+  "26.2": {
+   "bergamini23": [
+    {
+     "radec": [
+      3.600058,
+      -30.402826
+     ],
+     "mu": 3.54,
+     "search_arcsec": 1.0,
+     "sibling_mu": {
+      "26.2b": 11.0,
+      "26.2a": 9.7
+     },
+     "siblings_without_mu": [],
+     "cat_sibling_knot": "26.1c",
+     "nearest_other_knot": "26.1c",
+     "nearest_other_knot_sep_arcsec": 0.37,
+     "f150w": {
+      "siblings": {
+       "26.2a": {
+        "flux": 0.9282,
+        "snr": 11.3,
+        "gates_ok": true
+       },
+       "26.2b": {
+        "flux": 2.2016,
+        "snr": 22.2,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "26.2a": 4.4,
+       "26.2b": 9.1
+      },
+      "pred_snr_pair": 6.9,
+      "pred_snr_gated_max": 4.4,
+      "need_mu_factor": 1.5,
+      "best_snr": 12.4,
+      "best_offset": [
+       -0.1,
+       -0.2
+      ],
+      "flux_over_pair_pred": 1.83,
+      "forced_class": "no_reference",
+      "ungated_class": "recovered"
+     },
+     "f277w": {
+      "siblings": {
+       "26.2a": {
+        "flux": 0.2877,
+        "snr": 15.1,
+        "gates_ok": false
+       },
+       "26.2b": {
+        "flux": 0.5566,
+        "snr": 32.5,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "26.2a": 7.2,
+       "26.2b": 12.2
+      },
+      "pred_snr_pair": 9.8,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 1.0,
+      "best_snr": 19.0,
+      "best_offset": [
+       -0.0,
+       -0.2
+      ],
+      "flux_over_pair_pred": 1.94,
+      "forced_class": "no_reference",
+      "ungated_class": "recovered"
+     },
+     "f444w": {
+      "siblings": {
+       "26.2a": {
+        "flux": 0.2867,
+        "snr": 14.1,
+        "gates_ok": false
+       },
+       "26.2b": {
+        "flux": 0.2813,
+        "snr": 13.8,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "26.2a": 5.8,
+       "26.2b": 5.0
+      },
+      "pred_snr_pair": 5.4,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 1.8,
+      "best_snr": 12.9,
+      "best_offset": [
+       -0.0,
+       -0.2
+      ],
+      "flux_over_pair_pred": 2.48,
+      "forced_class": "no_reference",
+      "ungated_class": "recovered"
+     }
+    }
+   ],
+   "uncover2": [
+    {
+     "radec": [
+      3.600069,
+      -30.403198
+     ],
+     "mu": 3.96,
+     "search_arcsec": 2.25,
+     "sibling_mu": {
+      "26.2b": 15.5
+     },
+     "siblings_without_mu": [
+      "26.2a"
+     ],
+     "cat_sibling_knot": "26.1c",
+     "nearest_other_knot": "26.1c",
+     "nearest_other_knot_sep_arcsec": 1.0,
+     "f150w": {
+      "siblings": {
+       "26.2a": {
+        "flux": 0.9282,
+        "snr": 11.3,
+        "gates_ok": true
+       },
+       "26.2b": {
+        "flux": 2.2016,
+        "snr": 22.2,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "26.2b": 7.3
+      },
+      "pred_snr_pair": 7.3,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 1.4,
+      "best_snr": 12.6,
+      "best_offset": [
+       -0.0,
+       1.2
+      ],
+      "flux_over_pair_pred": 1.76,
+      "forced_class": "no_reference",
+      "ungated_class": "recovered"
+     },
+     "f277w": {
+      "siblings": {
+       "26.2a": {
+        "flux": 0.2877,
+        "snr": 15.1,
+        "gates_ok": false
+       },
+       "26.2b": {
+        "flux": 0.5566,
+        "snr": 32.5,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "26.2b": 10.0
+      },
+      "pred_snr_pair": 10.0,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 1.0,
+      "best_snr": 18.5,
+      "best_offset": [
+       -0.0,
+       1.2
+      ],
+      "flux_over_pair_pred": 1.92,
+      "forced_class": "no_reference",
+      "ungated_class": "recovered"
+     },
+     "f444w": {
+      "siblings": {
+       "26.2a": {
+        "flux": 0.2867,
+        "snr": 14.1,
+        "gates_ok": false
+       },
+       "26.2b": {
+        "flux": 0.2813,
+        "snr": 13.8,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "26.2b": 4.1
+      },
+      "pred_snr_pair": 4.1,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 2.4,
+      "best_snr": 12.8,
+      "best_offset": [
+       0.1,
+       1.3
+      ],
+      "flux_over_pair_pred": 3.2,
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
+     }
+    }
+   ]
+  },
+  "33.1": {
+   "bergamini23": [
+    {
+     "radec": [
+      3.600557,
+      -30.395284
+     ],
+     "mu": 2.94,
+     "search_arcsec": 1.0,
+     "sibling_mu": {
+      "33.1b": 85.7,
+      "33.1a": 44.5
+     },
+     "siblings_without_mu": [],
+     "cat_sibling_knot": "",
+     "nearest_other_knot": "",
+     "nearest_other_knot_sep_arcsec": null,
+     "f150w": {
+      "siblings": {
+       "33.1a": {
+        "flux": 0.7411,
+        "snr": 9.3,
+        "gates_ok": false
+       },
+       "33.1b": {
+        "flux": 1.7691,
+        "snr": 23.0,
+        "gates_ok": true
+       }
+      },
+      "pred_snr_from": {
+       "33.1a": 0.6,
+       "33.1b": 0.7
+      },
+      "pred_snr_pair": 0.7,
+      "pred_snr_gated_max": 0.7,
+      "need_mu_factor": 15.1,
+      "best_snr": 80.6,
+      "best_offset": [
+       -0.8,
+       0.6
+      ],
+      "flux_over_pair_pred": 147.63,
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
+     },
+     "f277w": {
+      "siblings": {
+       "33.1a": {
+        "flux": -0.0729,
+        "snr": -3.8,
+        "gates_ok": false
+       },
+       "33.1b": {
+        "flux": 0.2682,
+        "snr": 15.2,
+        "gates_ok": true
+       }
+      },
+      "pred_snr_from": {
+       "33.1b": 0.6
+      },
+      "pred_snr_pair": 0.6,
+      "pred_snr_gated_max": 0.6,
+      "need_mu_factor": 17.8,
+      "best_snr": 82.6,
+      "best_offset": [
+       -0.8,
+       0.6
+      ],
+      "flux_over_pair_pred": 216.84,
+      "forced_class": "undetectable",
+      "ungated_class": "undetectable"
+     },
+     "f444w": {
+      "siblings": {
+       "33.1a": {
+        "flux": 0.2425,
+        "snr": 11.6,
+        "gates_ok": true
+       },
+       "33.1b": {
+        "flux": 0.4025,
+        "snr": 19.4,
+        "gates_ok": true
+       }
+      },
+      "pred_snr_from": {
+       "33.1a": 0.8,
+       "33.1b": 0.7
+      },
+      "pred_snr_pair": 0.7,
+      "pred_snr_gated_max": 0.8,
+      "need_mu_factor": 14.6,
+      "best_snr": 44.2,
+      "best_offset": [
+       -0.8,
+       0.6
+      ],
+      "flux_over_pair_pred": 70.01,
+      "forced_class": "undetectable",
+      "ungated_class": "undetectable"
+     }
+    }
+   ],
+   "uncover2": [
+    {
+     "radec": [
+      3.600152,
+      -30.395186
+     ],
+     "mu": 2.94,
+     "search_arcsec": 1.0,
+     "sibling_mu": {
+      "33.1a": 216.1,
+      "33.1b": 186.6
+     },
+     "siblings_without_mu": [],
+     "cat_sibling_knot": "",
+     "nearest_other_knot": "",
+     "nearest_other_knot_sep_arcsec": null,
+     "f150w": {
+      "siblings": {
+       "33.1a": {
+        "flux": 0.7411,
+        "snr": 9.3,
+        "gates_ok": false
+       },
+       "33.1b": {
+        "flux": 1.7691,
+        "snr": 23.0,
+        "gates_ok": true
+       }
+      },
+      "pred_snr_from": {
+       "33.1a": 0.1,
+       "33.1b": 0.3
+      },
+      "pred_snr_pair": 0.2,
+      "pred_snr_gated_max": 0.3,
+      "need_mu_factor": 45.7,
+      "best_snr": 8.6,
+      "best_offset": [
+       0.3,
+       -0.4
+      ],
+      "flux_over_pair_pred": 38.76,
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
+     },
+     "f277w": {
+      "siblings": {
+       "33.1a": {
+        "flux": -0.0729,
+        "snr": -3.8,
+        "gates_ok": false
+       },
+       "33.1b": {
+        "flux": 0.2682,
+        "snr": 15.2,
+        "gates_ok": true
+       }
+      },
+      "pred_snr_from": {
+       "33.1b": 0.3
+      },
+      "pred_snr_pair": 0.3,
+      "pred_snr_gated_max": 0.3,
+      "need_mu_factor": 39.9,
+      "best_snr": 8.2,
+      "best_offset": [
+       0.3,
+       -0.3
+      ],
+      "flux_over_pair_pred": 30.72,
+      "forced_class": "undetectable",
+      "ungated_class": "undetectable"
+     },
+     "f444w": {
+      "siblings": {
+       "33.1a": {
+        "flux": 0.2425,
+        "snr": 11.6,
+        "gates_ok": true
+       },
+       "33.1b": {
+        "flux": 0.4025,
+        "snr": 19.4,
+        "gates_ok": true
+       }
+      },
+      "pred_snr_from": {
+       "33.1a": 0.2,
+       "33.1b": 0.3
+      },
+      "pred_snr_pair": 0.2,
+      "pred_snr_gated_max": 0.3,
+      "need_mu_factor": 45.8,
+      "best_snr": 5.7,
+      "best_offset": [
+       0.3,
+       -0.3
+      ],
+      "flux_over_pair_pred": 26.25,
+      "forced_class": "undetectable",
+      "ungated_class": "undetectable"
+     }
+    }
+   ]
+  },
+  "62.1": {
+   "bergamini23": [
+    {
+     "radec": [
+      3.577331,
+      -30.406489
+     ],
+     "mu": 2.69,
+     "search_arcsec": 1.0,
+     "sibling_mu": {
+      "62.1a": 56.4,
+      "62.1b": 50.5
+     },
+     "siblings_without_mu": [],
+     "cat_sibling_knot": "",
+     "nearest_other_knot": "",
+     "nearest_other_knot_sep_arcsec": null,
+     "f150w": {
+      "siblings": {
+       "62.1a": {
+        "flux": 0.0811,
+        "snr": 1.1,
+        "gates_ok": false
+       },
+       "62.1b": {
+        "flux": 0.627,
+        "snr": 8.2,
+        "gates_ok": true
+       }
+      },
+      "pred_snr_from": {
+       "62.1a": 0.0,
+       "62.1b": 0.4
+      },
+      "pred_snr_pair": 0.2,
+      "pred_snr_gated_max": 0.4,
+      "need_mu_factor": 50.6,
+      "best_snr": 3.8,
+      "best_offset": [
+       -0.6,
+       0.1
+      ],
+      "flux_over_pair_pred": 17.46,
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
+     },
+     "f277w": {
+      "siblings": {
+       "62.1a": {
+        "flux": 0.0063,
+        "snr": 0.4,
+        "gates_ok": false
+       },
+       "62.1b": {
+        "flux": 0.1102,
+        "snr": 6.6,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "62.1a": 0.0,
+       "62.1b": 0.4
+      },
+      "pred_snr_pair": 0.2,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 49.5,
+      "best_snr": 5.5,
+      "best_offset": [
+       -0.9,
+       -0.4
+      ],
+      "flux_over_pair_pred": 27.69,
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
+     },
+     "f444w": {
+      "siblings": {
+       "62.1a": {
+        "flux": 0.0365,
+        "snr": 1.8,
+        "gates_ok": false
+       },
+       "62.1b": {
+        "flux": 0.0563,
+        "snr": 2.8,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "62.1a": 0.1,
+       "62.1b": 0.2
+      },
+      "pred_snr_pair": 0.1,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 79.7,
+      "best_snr": 4.6,
+      "best_offset": [
+       -0.9,
+       -0.4
+      ],
+      "flux_over_pair_pred": 36.53,
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
+     }
+    }
+   ],
+   "uncover2": [
+    {
+     "radec": [
+      3.577237,
+      -30.406408
+     ],
+     "mu": 3.13,
+     "search_arcsec": 1.0,
+     "sibling_mu": {
+      "62.1b": 66.5,
+      "62.1a": 65.6
+     },
+     "siblings_without_mu": [],
+     "cat_sibling_knot": "",
+     "nearest_other_knot": "",
+     "nearest_other_knot_sep_arcsec": null,
+     "f150w": {
+      "siblings": {
+       "62.1a": {
+        "flux": 0.0811,
+        "snr": 1.1,
+        "gates_ok": false
+       },
+       "62.1b": {
+        "flux": 0.627,
+        "snr": 8.2,
+        "gates_ok": true
+       }
+      },
+      "pred_snr_from": {
+       "62.1a": 0.0,
+       "62.1b": 0.3
+      },
+      "pred_snr_pair": 0.2,
+      "pred_snr_gated_max": 0.3,
+      "need_mu_factor": 53.7,
+      "best_snr": 3.6,
+      "best_offset": [
+       -0.9,
+       -0.2
+      ],
+      "flux_over_pair_pred": 17.63,
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
+     },
+     "f277w": {
+      "siblings": {
+       "62.1a": {
+        "flux": 0.0063,
+        "snr": 0.4,
+        "gates_ok": false
+       },
+       "62.1b": {
+        "flux": 0.1102,
+        "snr": 6.6,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "62.1a": 0.0,
+       "62.1b": 0.4
+      },
+      "pred_snr_pair": 0.2,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 53.3,
+      "best_snr": 5.4,
+      "best_offset": [
+       -0.8,
+       -0.2
+      ],
+      "flux_over_pair_pred": 28.36,
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
+     },
+     "f444w": {
+      "siblings": {
+       "62.1a": {
+        "flux": 0.0365,
+        "snr": 1.8,
+        "gates_ok": false
+       },
+       "62.1b": {
+        "flux": 0.0563,
+        "snr": 2.8,
+        "gates_ok": false
+       }
+      },
+      "pred_snr_from": {
+       "62.1a": 0.1,
+       "62.1b": 0.1
+      },
+      "pred_snr_pair": 0.1,
+      "pred_snr_gated_max": null,
+      "need_mu_factor": 83.5,
+      "best_snr": 4.2,
+      "best_offset": [
+       -0.8,
+       -0.2
+      ],
+      "flux_over_pair_pred": 34.23,
+      "forced_class": "no_reference",
+      "ungated_class": "undetectable"
+     }
+    }
+   ]
+  }
+ }
+}
