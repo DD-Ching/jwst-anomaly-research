@@ -6,6 +6,7 @@
    "ra": 3.58475,
    "dec": -30.343616,
    "mag_iso": 24.68,
+   "mag_f200w": 24.68,
    "is_extended": false,
    "nearest_bergamini23_image": {
     "id": "700.1a",
@@ -42,6 +43,7 @@
    "ra": 3.625123,
    "dec": -30.401411,
    "mag_iso": 23.35,
+   "mag_f200w": 23.35,
    "is_extended": false,
    "nearest_bergamini23_image": {
     "id": "34.1c",
@@ -78,6 +80,7 @@
    "ra": 3.573199,
    "dec": -30.356708,
    "mag_iso": 27.31,
+   "mag_f200w": 27.31,
    "is_extended": false,
    "nearest_bergamini23_image": {
     "id": "700.1c",
@@ -103,9 +106,9 @@
        "sep_from_source_arcsec": 6.14,
        "mu": -14.272,
        "pred_mag_f200w": 27.77,
-       "nearest_f200w": 4862,
        "nearest_f200w_arcsec": 0.33,
-       "nearest_f200w_mag": 27.03
+       "f200w_match": 4862,
+       "f200w_match_mag": 27.03
       },
       {
        "ra": 3.579728,
@@ -113,9 +116,9 @@
        "sep_from_source_arcsec": 26.16,
        "mu": 6.613,
        "pred_mag_f200w": 28.6,
-       "nearest_f200w": 8286,
        "nearest_f200w_arcsec": 0.81,
-       "nearest_f200w_mag": 26.49
+       "f200w_match": 8286,
+       "f200w_match_mag": 26.49
       },
       {
        "ra": 3.576934,
@@ -123,9 +126,9 @@
        "sep_from_source_arcsec": 17.98,
        "mu": -4.451,
        "pred_mag_f200w": 29.03,
-       "nearest_f200w": 5071,
        "nearest_f200w_arcsec": 3.6,
-       "nearest_f200w_mag": 28.32
+       "f200w_match": null,
+       "f200w_match_mag": null
       },
       {
        "ra": 3.580008,
@@ -133,9 +136,9 @@
        "sep_from_source_arcsec": 22.16,
        "mu": -3.173,
        "pred_mag_f200w": 29.4,
-       "nearest_f200w": 4975,
        "nearest_f200w_arcsec": 3.08,
-       "nearest_f200w_mag": 28.18
+       "f200w_match": null,
+       "f200w_match_mag": null
       }
      ]
     },
@@ -149,9 +152,9 @@
        "sep_from_source_arcsec": 6.06,
        "mu": -14.468,
        "pred_mag_f200w": 27.77,
-       "nearest_f200w": 4862,
        "nearest_f200w_arcsec": 0.41,
-       "nearest_f200w_mag": 27.03
+       "f200w_match": 4862,
+       "f200w_match_mag": 27.03
       },
       {
        "ra": 3.579759,
@@ -159,9 +162,9 @@
        "sep_from_source_arcsec": 26.26,
        "mu": 6.59,
        "pred_mag_f200w": 28.63,
-       "nearest_f200w": 8286,
        "nearest_f200w_arcsec": 0.76,
-       "nearest_f200w_mag": 26.49
+       "f200w_match": 8286,
+       "f200w_match_mag": 26.49
       },
       {
        "ra": 3.576937,
@@ -169,9 +172,9 @@
        "sep_from_source_arcsec": 18.04,
        "mu": -4.273,
        "pred_mag_f200w": 29.1,
-       "nearest_f200w": 5071,
        "nearest_f200w_arcsec": 3.59,
-       "nearest_f200w_mag": 28.32
+       "f200w_match": null,
+       "f200w_match_mag": null
       },
       {
        "ra": 3.580017,
@@ -179,9 +182,9 @@
        "sep_from_source_arcsec": 22.2,
        "mu": -3.17,
        "pred_mag_f200w": 29.42,
-       "nearest_f200w": 4975,
        "nearest_f200w_arcsec": 3.08,
-       "nearest_f200w_mag": 28.18
+       "f200w_match": null,
+       "f200w_match_mag": null
       }
      ]
     },
@@ -195,9 +198,9 @@
        "sep_from_source_arcsec": 6.1,
        "mu": -14.36,
        "pred_mag_f200w": 27.77,
-       "nearest_f200w": 4862,
        "nearest_f200w_arcsec": 0.37,
-       "nearest_f200w_mag": 27.03
+       "f200w_match": 4862,
+       "f200w_match_mag": 27.03
       },
       {
        "ra": 3.579742,
@@ -205,9 +208,9 @@
        "sep_from_source_arcsec": 26.21,
        "mu": 6.603,
        "pred_mag_f200w": 28.61,
-       "nearest_f200w": 8286,
        "nearest_f200w_arcsec": 0.79,
-       "nearest_f200w_mag": 26.49
+       "f200w_match": 8286,
+       "f200w_match_mag": 26.49
       },
       {
        "ra": 3.576935,
@@ -215,9 +218,9 @@
        "sep_from_source_arcsec": 18.01,
        "mu": -4.374,
        "pred_mag_f200w": 29.06,
-       "nearest_f200w": 5071,
        "nearest_f200w_arcsec": 3.6,
-       "nearest_f200w_mag": 28.32
+       "f200w_match": null,
+       "f200w_match_mag": null
       },
       {
        "ra": 3.580012,
@@ -225,9 +228,9 @@
        "sep_from_source_arcsec": 22.18,
        "mu": -3.171,
        "pred_mag_f200w": 29.41,
-       "nearest_f200w": 4975,
        "nearest_f200w_arcsec": 3.08,
-       "nearest_f200w_mag": 28.18
+       "f200w_match": null,
+       "f200w_match_mag": null
       }
      ]
     }
@@ -237,6 +240,7 @@
    "ra": 3.554067,
    "dec": -30.379869,
    "mag_iso": 27.73,
+   "mag_f200w": 27.73,
    "is_extended": false,
    "nearest_bergamini23_image": {
     "id": "301.1c",
@@ -273,6 +277,7 @@
    "ra": 3.575547,
    "dec": -30.424379,
    "mag_iso": 23.57,
+   "mag_f200w": 27.49,
    "is_extended": true,
    "nearest_bergamini23_image": {
     "id": "46.1c",

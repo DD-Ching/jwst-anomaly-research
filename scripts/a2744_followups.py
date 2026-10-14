@@ -71,7 +71,8 @@ def nearest(c: SkyCoord, t: Table, idcol: str) -> dict:
 def counter_images(model, grid, x, y, c, z, mag, cat, cat_coords):
     """Signed magnification of a source at model-frame ``(x, y)`` (sky ``c``) for redshift ``z``,
     and the other images of its traced source position (model_prediction), each with a predicted
-    magnitude and the nearest catalogue source."""
+    magnitude (from ``mag``, the source's F200W magnitude) and the nearest catalogue source, kept
+    as a match within ``MATCH_ARCSEC``."""
     lm = model.lens_map(np.array([x]), np.array([y]), np.array([z]))
     mu = 1.0 / float(lm["a11"][0] * lm["a22"][0] - lm["a12"][0] * lm["a21"][0])
     pred = lensmodel.find_images(model, grid, float(lm["beta_x"][0]), float(lm["beta_y"][0]), z)
@@ -82,6 +83,7 @@ def counter_images(model, grid, x, y, c, z, mag, cat, cat_coords):
             continue
         d = cp.separation(cat_coords).arcsec
         k = int(np.argmin(d))
+        hit = bool(d[k] <= MATCH_ARCSEC)
         cps.append(
             {
                 "ra": round(float(p["ra"]), 6),
@@ -91,9 +93,9 @@ def counter_images(model, grid, x, y, c, z, mag, cat, cat_coords):
                 "pred_mag_f200w": round(
                     mag - 2.5 * np.log10(abs(float(p["magnification"]) / mu)), 2
                 ),
-                "nearest_f200w": int(cat["label"][k]),
                 "nearest_f200w_arcsec": round(float(d[k]), 2),
-                "nearest_f200w_mag": round(float(cat["mag"][k]), 2),
+                "f200w_match": int(cat["label"][k]) if hit else None,
+                "f200w_match_mag": round(float(cat["mag"][k]), 2) if hit else None,
             }
         )
     return mu, cps
@@ -168,10 +170,14 @@ def main(argv=None) -> dict:
     }
     for (uid, r), x, y in zip(rows.items(), xs, ys, strict=True):
         c = SkyCoord(float(r["ra"]), float(r["dec"]), unit="deg")
+        # predicted counter-image magnitudes are F200W: the source's own F200W magnitude
+        d200 = c.separation(cat200).arcsec
+        mag200 = float(f200["mag"][np.argmin(d200)]) if d200.min() <= SELF_ARCSEC else np.nan
         rec = {
             "ra": round(float(r["ra"]), 6),
             "dec": round(float(r["dec"]), 6),
             "mag_iso": round(float(r["mag"]), 2),
+            "mag_f200w": None if not np.isfinite(mag200) else round(mag200, 2),
             "is_extended": bool(r["is_extended"]),
             "nearest_bergamini23_image": nearest(c, berg, "image_id"),
             "nearest_uncover2_image": nearest(c, unc, "image_id"),
@@ -185,7 +191,7 @@ def main(argv=None) -> dict:
                     {"z": None if not np.isfinite(z) else z, "note": "not behind the cluster"}
                 )
                 continue
-            mu, cps = counter_images(model, grid, x, y, c, z, float(r["mag"]), f200, cat200)
+            mu, cps = counter_images(model, grid, x, y, c, z, mag200, f200, cat200)
             rec["per_z"].append(
                 {"z": round(z, 3), "mu_source": round(mu, 3), "counter_images": cps}
             )

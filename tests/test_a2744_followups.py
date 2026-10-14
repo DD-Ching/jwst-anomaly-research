@@ -47,7 +47,8 @@ def test_counter_images_round_lens():
     assert bright[0]["mu"] < 0
     assert bright[0]["pred_mag_f200w"] > 24.0
     assert bright[0]["sep_from_source_arcsec"] > 1.5 * theta_e
-    assert bright[0]["nearest_f200w"] == 2
+    assert bright[0]["nearest_f200w_arcsec"] > af.MATCH_ARCSEC
+    assert bright[0]["f200w_match"] is None
     ra, dec = model.to_sky(np.array([55.0]), np.array([0.0]))
     c = SkyCoord(float(ra[0]), float(dec[0]), unit="deg")
     _, cps = af.counter_images(model, grid, 55.0, 0.0, c, 2.0, 24.0, cat, cc)
