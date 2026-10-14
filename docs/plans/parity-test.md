@@ -13,3 +13,7 @@ Plan (2026-10-14, cloud routine):
   catalogued pairs far from critical curves, where the model parity is reliable.
 - **Would change the plan:** a reliable pair (validated, |μ| < 10 for both images) preferring the
   non-predicted handedness at Δχ² above its own synthetic-null spread.
+
+Acceptance test (2026-10-14, cloud routine, claimed): subtract member + ICL light around each stamp, fit only
+inside the source's own segmentation footprint, and require ≥ 95 % `consistent` or `untestable` on catalogued
+non-near-critical Abell 2744 pairs before any field run counts. ASSUMPTION: 95 % threshold.
