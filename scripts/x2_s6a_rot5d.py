@@ -308,22 +308,35 @@ class Shooter:
         return np.linalg.det(rows)
 
     def root(self, z0, parity=+1, tol=1e-9, floor=1e-6, maxit=30):
-        """Secant iteration; returns (root, last relative step). The determinant loses digits to
-        cancellation for large S, so iteration stops at stagnation and fails only above `floor`."""
+        """Secant iteration in complex Omega^2.
+
+        Returns (root, info). The determinant loses digits to cancellation for large S, so the
+        iteration can stagnate instead of reaching `tol`. The returned root is the iterate that
+        followed the smallest relative step; acceptance (the rule applied since the verification
+        run) is min_step <= floor. info also records the last step and every step, so the
+        acceptance can be audited against a last-step rule."""
         x0, x1 = z0, z0 * (1 + 1e-4) + 1e-6
         f0, f1 = self.det(x0, parity), self.det(x1, parity)
-        best, step = x1, np.inf
+        best, steps = x1, []
         for _ in range(maxit):
             x2 = x1 - f1 * (x1 - x0) / (f1 - f0)
             st = abs(x2 - x1) / max(1, abs(x2))
-            if st < step:
-                best, step = x2, st
+            if not steps or st < min(steps):
+                best = x2
+            steps.append(st)
             if st < tol:
                 break
             x0, f0, x1, f1 = x1, f1, x2, self.det(x2, parity)
-        if step > floor:
-            raise RuntimeError(f"secant iteration did not converge (last step {step:.1e})")
-        return best, step
+        info = {
+            "min_step": min(steps),
+            "last_step": steps[-1],
+            "iterations": len(steps),
+            "reached_tol": bool(steps[-1] < tol),
+            "steps": [float(x) for x in steps],
+        }
+        if info["min_step"] > floor:
+            raise RuntimeError(f"secant iteration did not converge (min step {min(steps):.1e})")
+        return best, info
 
 
 # ---------------------------------------------------------------- tasks
@@ -355,7 +368,7 @@ def track(cws, start_z, S=6.0, n=480, V=None, cons=None):
         z = ev * P["A"] ** (2 / 3)
         if vprev is None:
             i = pick(z, start_z)
-            ov, ov2 = 1.0, float("nan")
+            ov, ov2 = 1.0, None  # first point: no previous vector to compare with
         else:
             o = np.abs(vr.conj().T @ vprev) / np.linalg.norm(vr, axis=0) / np.linalg.norm(vprev)
             i = int(np.argmax(o))
@@ -415,6 +428,51 @@ def _merger_job(n):
     return merger_point(V, n)
 
 
+def shooting_and_checks(V, sol, cw, a23, dense):
+    """Shooting at two radii and the CRITERIA checks, from the stored dense results."""
+
+    def zc(key):
+        return complex(*dense[key]["z"])
+
+    rich = zc("S6.0_n960") + (zc("S6.0_n960") - zc("S6.0_n480")) / 3
+    shoot = {}
+    for S in (3.5, 4.0):
+        r, info = Shooter(V, sol, cw, S=S).root(rich / a23)
+        shoot[f"S{S}"] = {"z": [(r * a23).real, (r * a23).imag], **info}
+    zs = complex(*shoot["S4.0"]["z"])
+    rel = lambda x, y: abs(x - y) / abs(y)  # noqa: E731
+    c_lo, c_hi = (
+        dense["S6.0_n480"]["constraint_residual"],
+        dense["S6.0_n960"]["constraint_residual"],
+    )
+    checks = {
+        "grid": rel(rich, zs),
+        "box": rel(zc("S7.5_n600"), zc("S6.0_n480")),
+        "shooting": rel(complex(*shoot["S3.5"]["z"]), zs),
+        "eigenpair": max(d["eigpair_residual"] for d in dense.values()),
+        "constraints": {
+            "max_at_n960": max(c_hi.values()),
+            "min_ratio_n480_over_n960": min(c_lo[k] / c_hi[k] for k in c_lo),
+        },
+        "localised": max(d["outer_norm_fraction"] for k, d in dense.items() if k != "S5.0_n400"),
+    }
+    passed = {
+        "grid": checks["grid"] <= 1e-5,
+        "box": checks["box"] <= 1e-6,
+        "shooting": checks["shooting"] <= 1e-6,
+        "eigenpair": checks["eigenpair"] <= 1e-8,
+        "constraints": checks["constraints"]["max_at_n960"] <= 1e-4
+        and checks["constraints"]["min_ratio_n480_over_n960"] >= 3,
+        "localised": checks["localised"] <= 1e-6,
+    }
+    return {
+        "shooting": shoot,
+        "checks": checks,
+        "passed": passed,
+        "status": "verified mode" if all(passed.values()) else "candidate",
+    }
+
+
 def verify_point(cw, start_z):
     """All checks of CRITERIA at one c_omega for the mode nearest start_z (scaled)."""
     V, cons = load_equations()
@@ -442,40 +500,8 @@ def verify_point(cw, start_z):
     def zc(key):
         return complex(*dense[key]["z"])
 
-    rich = zc("S6.0_n960") + (zc("S6.0_n960") - zc("S6.0_n480")) / 3
-    shoot = {}
-    for S in (3.5, 4.0):
-        r, step = Shooter(V, sol, cw, S=S).root(rich / a23)
-        shoot[f"S{S}"] = {"z": [(r * a23).real, (r * a23).imag], "last_step": step}
-    out["shooting"] = shoot
-    zs = complex(*shoot["S4.0"]["z"])
-    rel = lambda x, y: abs(x - y) / abs(y)  # noqa: E731
-    c_lo, c_hi = (
-        dense["S6.0_n480"]["constraint_residual"],
-        dense["S6.0_n960"]["constraint_residual"],
-    )
-    checks = {
-        "grid": rel(rich, zs),
-        "box": rel(zc("S7.5_n600"), zc("S6.0_n480")),
-        "shooting": rel(complex(*shoot["S3.5"]["z"]), zs),
-        "eigenpair": max(d["eigpair_residual"] for d in dense.values()),
-        "constraints": {
-            "max_at_n960": max(c_hi.values()),
-            "min_ratio_n480_over_n960": min(c_lo[k] / c_hi[k] for k in c_lo),
-        },
-        "localised": max(d["outer_norm_fraction"] for k, d in dense.items() if k != "S5.0_n400"),
-    }
-    passed = {
-        "grid": checks["grid"] <= 1e-5,
-        "box": checks["box"] <= 1e-6,
-        "shooting": checks["shooting"] <= 1e-6,
-        "eigenpair": checks["eigenpair"] <= 1e-8,
-        "constraints": checks["constraints"]["max_at_n960"] <= 1e-4
-        and checks["constraints"]["min_ratio_n480_over_n960"] >= 3,
-        "localised": checks["localised"] <= 1e-6,
-    }
-    out["checks"], out["passed"] = checks, passed
-    out["status"] = "verified mode" if all(passed.values()) else "candidate"
+    out.update(shooting_and_checks(V, sol, cw, a23, dense))
+    zs = complex(*out["shooting"]["S4.0"]["z"])
     root = np.sqrt(zs)
     out["result"] = {
         "z": [zs.real, zs.imag],
@@ -511,13 +537,14 @@ def static_gate():
     for n in (480, 960):
         ev, _, _, _ = spectrum(V, sol0, 0.0, 6.0, n)
         st.append(float(np.min(ev.real) * a23))
-    r, step = Shooter(V, sol0, 0.0, S=4.0).root(st[-1] / a23)
+    r, info = Shooter(V, sol0, 0.0, S=4.0).root(st[-1] / a23)
     return {
         "max_abs_a_q": float(np.max(np.abs(sol0.y[[0, 2]]))),
         "dense_n480_n960": st,
         "richardson": st[1] + (st[1] - st[0]) / 3,
         "shooting": (r * a23).real,
         "shooting_imag": (r * a23).imag,
+        "shooting_info": info,
         "paper_fig5_digitised": PAPER_FIG5["static"],
     }
 
@@ -588,12 +615,44 @@ def main() -> int:
     rec["paper_fig5_digitised"] = PAPER_FIG5
     rec["runtime_s"] = time.time() - t0
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "s6a_rot5d.json").write_text(json.dumps(rec, indent=1, default=float) + "\n")
+    text = json.dumps(rec, indent=1, default=float, allow_nan=False)
+    (OUT / "s6a_rot5d.json").write_text(text + "\n")
     for r in rec["representative_points"]:
         print(r["c_omega"], round(r["J_over_A"], 5), r["status"], r["result"], r["passed"])
     print("merger", rec["merger"], "static", rec["static_mode"])
     return 0
 
 
+def redo_shooting(path=OUT / "s6a_rot5d.json"):
+    """Re-run only the shooting (and the checks that use it) on the stored dense results."""
+    rec = json.loads(Path(path).read_text())
+    V, _ = load_equations()
+    for pt in rec["representative_points"]:
+        cw = pt["c_omega"]
+        sol = background_at(cw)
+        a23 = background_props(sol, cw)["A"] ** (2 / 3)
+        pt["shooting_before_rerun"] = pt["shooting"]
+        pt.update(shooting_and_checks(V, sol, cw, a23, pt["dense"]))
+        root = np.sqrt(complex(*pt["shooting"]["S4.0"]["z"]))
+        pt["result"]["z"] = pt["shooting"]["S4.0"]["z"]
+        pt["result"]["growth_A13"] = abs(root.imag)
+        pt["result"]["freq_A13"] = abs(root.real)
+    rec["static_mode"] = static_gate()
+    for key in ("branch_static", "branch_zero", "pair"):
+        for row in rec[key]:
+            if row["overlap_next_best"] != row["overlap_next_best"]:  # NaN from the first point
+                row["overlap_next_best"] = None
+    rec["shooting_rerun"] = "2026-10-14: shooting re-run with full step records (redo_shooting)"
+    Path(path).write_text(json.dumps(rec, indent=1, default=float, allow_nan=False) + "\n")
+    for pt in rec["representative_points"]:
+        sh = pt["shooting"]
+        print(
+            pt["c_omega"], pt["status"], {k: (v["min_step"], v["last_step"]) for k, v in sh.items()}
+        )
+    return 0
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    import sys
+
+    raise SystemExit(redo_shooting() if "--shooting-only" in sys.argv else main())

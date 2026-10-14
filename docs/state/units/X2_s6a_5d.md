@@ -151,9 +151,17 @@ extremal rotation.
   - box S = 6 → 7.5 at a fixed step;
   - grid step ds → ds/2 (before extrapolation);
   - shooting radius sinh 3.5 → sinh 4.0.
-- **Shooting stop.** The last relative secant step |Δ(Ω²)| / max(1, |Ω²|). It is a convergence measure of the
-  iteration, **not** a determinant residual and not an eigenvalue accuracy. The determinant itself is not
-  normalised and is not used as a residual.
+- **Shooting stop.** Relative secant steps |Δ(Ω²)| / max(1, |Ω²|). They measure convergence of the
+  iteration. They are **not** a determinant residual and not an eigenvalue accuracy. The determinant itself is
+  not normalised and is not used as a residual.
+  - As run on 2026-10-14, `Shooter.root` returned the iterate after the *smallest* step and that step's size. It
+    accepted a root if that minimum was ≤ 1e-6. The docs said "last step", which did not match the code.
+  - Audit (2026-10-14, writeup round): `root` now records every step. Only the shooting was re-run
+    (`python scripts/x2_s6a_rot5d.py --shooting-only`), on the stored dense results.
+  - At every representative point, both radii and the static mode, the iteration reached the 1e-9 tolerance:
+    last step = minimum step, 2e-10 to 9e-10, after 10–27 iterations.
+  - The roots are bit-identical to the earlier run. So the earlier "last_step" values were in fact last steps,
+    and no status changes. The previous records are kept as `shooting_before_rerun`.
 - **Eigenpair residual** (algebraic, of the discretised problem): ‖Kv − λv‖ / (‖Kv‖ + |λ|‖v‖), with the full
   complex λ and v. It shows that the linear algebra is solved, nothing about discretisation error.
 - **Constraint residual** (physics, un-reduced equations). The corotating-frame R_tl/Ω and R_ll linearised
@@ -190,6 +198,21 @@ extremal rotation.
 - The same holds at ds/2.
 - The bracket is the same at grid steps ds and ds/2.
 - Against the paper's 0.10063, the deviation is ≤ 1e-4 relative. **The ±1 % gate is passed.**
+- An identical bracket does **not** mean the nearby eigenvalues have converged. At the bracket ends they differ
+  between the two grids:
+
+  | Grid | Lower end (two real) | Upper end (pair) | Estimated J/A at the merger |
+  |---|---|---|---|
+  | ds | −5.9298, −5.6737 | −5.80092 ± 0.01427i | 0.1006324 |
+  | ds/2 | −5.9036, −5.6997 | −5.80081 ± 0.07885i | 0.1006288 |
+
+  - Near an exceptional point the half-splitting goes as √(J − J_EP), so a small grid shift of J_EP changes the
+    split a lot.
+  - J_EP is estimated by fitting the squared half-splitting linearly in c_ω across the bracket. It moves by
+    3.6e-6 in J/A (relative 4e-5) between the grids.
+  - The midpoint −5.8008/−5.8009 agrees to 2e-5.
+  - This does **not** affect the representative points. They lie 0.02–0.04 away in J/A, where eigenvalues change
+    by only 2–5e-5 under grid halving and the extrapolated values agree with shooting to ≤ 1e-7.
 
 ## Step 4: past the merger (main result)
 **Representative points.** All checks of `CRITERIA` were run on the mode tracked from the merger. Values are
@@ -259,3 +282,10 @@ limit (J/A = 0.5).
   - odd parity (screened only) and other sectors;
   - 4D, other rotating wormholes, NED + SV;
   - anything about communication.
+
+## Writeup-round corrections (2026-10-14)
+- **NaN.** The first point of each tracked branch has no previous vector, so "next-best overlap" does not apply.
+  It was written as NaN, which strict JSON readers reject. It is now `null`, and the writer uses
+  `allow_nan=False`. Both result files parse with a strict reader.
+- **Shooting record:** see "Shooting stop" above.
+- **Merger-grid differences:** see Step 3.

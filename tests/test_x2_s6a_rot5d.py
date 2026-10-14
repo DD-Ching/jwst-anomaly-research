@@ -64,6 +64,6 @@ def test_static_mode_and_rotating_pair():
     i = int(np.argmin(np.abs(z - (-2.319 + 7.462j))))
     assert abs(z[i] - (-2.319 + 7.462j)) < 0.02
     # independent Evans shooting finds the same complex root
-    r, step = s6a.Shooter(V, sol, 0.5, S=3.5).root(z[i] / area ** (2 / 3))
-    assert step < 1e-6
+    r, info = s6a.Shooter(V, sol, 0.5, S=3.5).root(z[i] / area ** (2 / 3))
+    assert info["min_step"] < 1e-6 and info["last_step"] < 1e-6
     assert abs(r * area ** (2 / 3) - (-2.3187 + 7.4620j)) < 1e-3
