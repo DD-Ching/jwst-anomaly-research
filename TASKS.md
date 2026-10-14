@@ -212,7 +212,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        lens models (see the CANUCS item above);
      - `bayes.dat` position spreads: not needed (D-045: 0.2–0.4″, inside the 1″ radius). UNCOVER v2.0 passes the
        gate (D-041 addendum 2026-10-14). The cross-model rule on every forced row is null (CHANGELOG 2026-10-14);
-       next: sibling reference fluxes for the six both-model `no_reference` extras (26.2, 33.1 third, 62.1, 64.1, 3.2, 4.2c).
+       next: sibling reference fluxes for the five both-model `no_reference` extras (26.2, 33.1 third, 62.1, 3.2, 4.2c).
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
    - Abell 2744: UNCOVER v2.0 maps (validated 2026-10-14, `scripts/a2744_uncover.py`);

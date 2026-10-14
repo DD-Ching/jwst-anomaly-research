@@ -349,16 +349,17 @@ it at μ 8.83, 0.93″ from Bergamini's position; nothing at ≥ 0.5× its expec
 ## D-041 cross-model rule on every forced-photometry row (2026-10-14)
 
 `scripts/a2744_uncover.py --crossmodel <Bergamini images_predicted.ecsv> --catalog <F200W cat> --forced-image <F277W
-i2d>` (`results/lens_consistency/abell2744-uncover2/crossmodel.ecsv`, `images_predicted_{bergamini23,uncover2}.ecsv`).
+i2d>` (`results/lens_consistency/abell2744-uncover2/crossmodel.{ecsv,json}`, `images_predicted_{bergamini23,uncover2}.ecsv`).
 Both models' extra images (predicted > 1.5″ from every catalogued image of the family) are force-photometered under
-the same D-034 rules with a 1″ halo filter (UNCOVER from the WLS family source), and each is matched to the other
-model's nearest predicted image of the family: `both` ≤ 1.5″, `both_loose` ≤ 3.0″ (ASSUMPTIONs; 1.8× UNCOVER's rms,
-1.3× its largest own-list residual).
+the same D-034 rules with a 1″ halo filter (UNCOVER from the WLS family source). Each is matched to the other
+model's nearest *extra* image of the family: `both` ≤ 1.5″, `both_loose` ≤ 3.0″ (ASSUMPTIONs; 1.8× UNCOVER's rms,
+1.3× its largest own-list residual; not one-to-one). The distance to the other model's nearest image of a catalogued
+one is kept too, and an extra within 3″ of that is the other model's catalogued image, misplaced.
 
 | Model | Extra images | both / both_loose | recovered | confused | absent | undetectable | no_reference | inconsistent_ref | not forced |
 |---|---|---|---|---|---|---|---|---|---|
-| Bergamini+23 | 33 | 14 / 22 | 6 | 2 | 2 | 4 | 12 | 2 | 5 |
-| UNCOVER v2.0 | 45 | 17 / 26 | 4 | 3 | 2 | 4 | 8 | 8 | 16 |
+| Bergamini+23 | 33 | 12 / 15 | 6 | 2 | 2 | 4 | 12 | 2 | 5 |
+| UNCOVER v2.0 | 45 | 14 / 17 | 4 | 3 | 2 | 4 | 8 | 8 | 16 |
 
 The Bergamini run reproduces the recorded classes (recovered 6, confused 2, absent 2 with the 1″ filter).
 
@@ -372,5 +373,5 @@ The Bergamini run reproduces the recorded classes (recovered 6, confused 2, abse
   scaling is invalid. Ordinary.
 
 **Both models agree, but untested (`no_reference` in both):** 3.2 (seen as 3.1c, 2026-10-08), 4.2c (vetted), 26.2,
-33.1 third, 62.1; 64.1 (UNCOVER: observed). No row is an unmet prediction of both models. **Result: null.** The
+33.1 third, 62.1. No row is an unmet prediction of both models (`unmet_in_both_models` 0). **Result: null.** The
 D-041 rule removes both remaining Bergamini `absent` rows; no new flag.

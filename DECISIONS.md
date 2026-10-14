@@ -2248,10 +2248,11 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
 - **Revisit if** a UNCOVER release refits the 4.2c region, or a third model removes 4.2c.
 
 **Addendum 2026-10-14 (cross-model rule on every forced row).**
-- **Decision.** Both models' extra images are force-photometered under the same rules. Two images of one family
-  from the two models count as one when they are ≤ 1.5″ apart (`both`; 1.8× UNCOVER's rms) and as a loose match
-  ≤ 3.0″ (1.3× its largest own-list residual). Both radii are ASSUMPTIONs. An unmet image is model-dependent unless
-  the other model predicts it within 3.0″.
+- **Decision.** Both models' extra images are force-photometered under the same rules. Two extra images of one
+  family from the two models count as one when they are ≤ 1.5″ apart (`both`; 1.8× UNCOVER's rms) and as a loose
+  match ≤ 3.0″ (1.3× its largest own-list residual). Both radii are ASSUMPTIONs. An unmet extra image is
+  model-dependent unless the other model predicts an extra image within 3.0″. When the other model's image there is
+  a catalogued image (≤ 3.0″) or is recovered, the unmet image is that image misplaced (ordinary).
 - **Alternatives rejected.** 1.5″ alone: it calls three recovered Bergamini images (3.3, 28, 34.1) one-model
   predictions, although UNCOVER predicts them 1.5–2.7″ away.
 - **Evidence.** Abell 2744: 4 `absent` rows. Two are Bergamini-only (700.1). Two are UNCOVER fold-pair merges (3.1,

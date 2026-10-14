@@ -7,20 +7,24 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   nothing there, would be a lens-model residual that no single model's systematics explain. Ordinary: one-model
   predictions (D-041), fold pairs straddling a misplaced critical curve, member-buried images, fitted redshifts.
 - New: `a2744_uncover.py --crossmodel --catalog --forced-image`. UNCOVER's extra images are force-photometered under
-  the same D-034 rules and 1″ halo filter as Bergamini's (`predict_counter_images` from the WLS source), and each
-  model's extras are matched to the other's within 1.5″ / 3.0″ (ASSUMPTIONs).
+  the same D-034 rules and 1″ halo filter as Bergamini's (`predict_counter_images` from the WLS source). Each
+  model's extras are matched to the other's extras within 1.5″ / 3.0″ (ASSUMPTIONs), and to its images of catalogued
+  ones (an extra within 3″ of those is that image, misplaced).
 - **Result (derived; positions and μ model_prediction):**
-  - Extras: Bergamini 33 (14 / 22 also predicted by UNCOVER at 1.5″ / 3″); UNCOVER 45 (17 / 26).
+  - Extras: Bergamini 33 (12 / 15 also predicted by UNCOVER at 1.5″ / 3″); UNCOVER 45 (14 / 17).
   - Bergamini's forced classes reproduce the recorded ones (recovered 6, confused 2, absent 2).
   - **Unmet:** 4 `absent`, 0 `ambiguous`.
     - Bergamini 700.1 ×2: model-dependent (UNCOVER's nearest images are 3.6″ and 12.7″ away).
     - UNCOVER 3.1 (μ −59.5) and 34.1 (μ 28): fold pairs UNCOVER merges into one image. Bergamini predicts the
       partner 2.0″ / 2.7″ away, on the observed arc and on the recovered 34.1 image.
   - Cutouts viewed. Nothing is unmet in both models. Null; details in `docs/fields/abell2744.md`.
+- `/code-review` fixes: verdicts now use what the other model predicts there (the first version labelled UNCOVER
+  3.1 and 34.1 "both models (loose tier)", contradicting this entry); matching only against the other model's
+  extras; NaN-free JSON; the Bergamini input must carry the same halo filter.
 - **Failed approach:** the first UNCOVER map download was truncated (sha256 mismatch on alpha_y); a retry passed.
   The sha pin caught it.
-- **Handoff:** six extra images are predicted by both models but untestable (`no_reference`): 3.2, 4.2c (vetted),
-  26.2, 33.1 third, 62.1 and 64.1. Next: sibling reference fluxes for them without the |μ| cap
+- **Handoff:** five extra images are predicted by both models but untestable (`no_reference`): 3.2, 4.2c (vetted),
+  26.2, 33.1 third and 62.1. Next: sibling reference fluxes for them without the |μ| cap
   (`smacs_ref_fluxes.py` approach). Other lens-model item: `--plane` for `images/validate`.
 
 ## 2026-10-14: UNCOVER v2.0 passes as the second Abell 2744 model; it also predicts 4.2c, and the vetted verdict stands

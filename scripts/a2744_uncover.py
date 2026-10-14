@@ -228,7 +228,7 @@ def wls_backtrace(model, bt: Table) -> Table:
 def forced_images(model, grid, bt: Table, catalog: Path, forced_image: str) -> Table:
     """UNCOVER's predicted images of the image list, classified and force-photometered as
     ``lens_consistency.py images --forced-image --halo-filter-arcsec 1.0`` does for Lenstool
-    models, but from each family's WLS source."""
+    models (without its ``halo_recovery`` column), but from each family's WLS source."""
     wbt = wls_backtrace(model, bt)
     shapes = lc.load_shapes(catalog)
     table, unpredicted = lc.predict_counter_images(
@@ -241,8 +241,19 @@ def forced_images(model, grid, bt: Table, catalog: Path, forced_image: str) -> T
         )
     finally:
         close()
+    table.meta["forced"].update(halo_filter_arcsec=HALO_FILTER_ARCSEC, image=forced_image)
     table.meta["unpredicted"] = unpredicted
     return table
+
+
+def check_forced_table(t: Table) -> None:
+    """Refuse an ``images`` table that was not force-photometered with the same halo filter."""
+    forced = t.meta.get("forced") or {}
+    if "forced_class" not in t.colnames or forced.get("halo_filter_arcsec") != HALO_FILTER_ARCSEC:
+        raise SystemExit(
+            f"--crossmodel needs an images run with --forced-image and --halo-filter-arcsec "
+            f"{HALO_FILTER_ARCSEC} (got halo filter {forced.get('halo_filter_arcsec')})"
+        )
 
 
 def _sep_arcsec(ra, dec, ra0, dec0) -> np.ndarray:
@@ -257,38 +268,55 @@ def _col(t: Table, name: str, k: int, default):
     return type(default)(t[name][k])
 
 
+def _nearest(t: Table, idx: np.ndarray, ra: float, dec: float) -> tuple[float, int]:
+    """Separation to, and row of, the nearest of rows ``idx`` of ``t`` (NaN, -1 if none)."""
+    if not len(idx):
+        return np.nan, -1
+    d = _sep_arcsec(t["ra"][idx], t["dec"][idx], ra, dec)
+    return float(d.min()), int(idx[np.argmin(d)])
+
+
 def crossmodel(tables: dict[str, Table]) -> Table:
     """D-041 cross-model rule for two models' ``images`` tables of the same image list. One row
-    per extra image (``image_class`` != observed) of either model, with its own forced class and
-    the other model's nearest predicted image of the same family (separation, mu, classes).
-    ``both`` when within ``XMODEL_ARCSEC``, ``both_loose`` within ``XMODEL_LOOSE_ARCSEC``."""
+    per extra image (``image_class`` != observed) of either model, with its own forced class, and
+    of the other model's predictions of the same family:
+
+    * the nearest *extra* image (``other_*``): ``both`` when within ``XMODEL_ARCSEC``,
+      ``both_loose`` within ``XMODEL_LOOSE_ARCSEC`` (not one-to-one: two extras may share one);
+    * the nearest image matched to a catalogued one (``other_observed_sep_arcsec``): an extra
+      within ``XMODEL_LOOSE_ARCSEC`` of it is the other model's catalogued image, misplaced.
+
+    ``other_image_class`` is "none" when the other model predicts no extra image of the family."""
     (na, ta), (nb, tb) = tables.items()
     rows = []
     for name, own, other_name, other in ((na, ta, nb, tb), (nb, tb, na, ta)):
         osys = np.asarray(other["system"]).astype(str)
+        oobs = np.asarray(other["image_class"]).astype(str) == "observed"
         for i in np.flatnonzero(np.asarray(own["image_class"]).astype(str) != "observed"):
             r = own[i]
-            idx = np.flatnonzero(osys == str(r["system"]))
-            d = _sep_arcsec(other["ra"][idx], other["dec"][idx], float(r["ra"]), float(r["dec"]))
-            k = int(idx[np.argmin(d)]) if len(idx) else -1
+            ra, dec = float(r["ra"]), float(r["dec"])
+            fam = osys == str(r["system"])
+            sep, k = _nearest(other, np.flatnonzero(fam & ~oobs), ra, dec)
+            sep_obs, _ = _nearest(other, np.flatnonzero(fam & oobs), ra, dec)
             rows.append(
                 {
                     "model": name,
                     "system": str(r["system"]),
-                    "ra": float(r["ra"]),
-                    "dec": float(r["dec"]),
+                    "ra": ra,
+                    "dec": dec,
                     "magnification": float(r["magnification"]),
                     "image_class": str(r["image_class"]),
                     "forced_class": _col(own, "forced_class", i, ""),
                     "pred_snr": _col(own, "pred_snr", i, np.nan),
                     "flux_ratio": _col(own, "flux_ratio", i, np.nan),
                     "other_model": other_name,
-                    "other_sep_arcsec": float(d.min()) if len(idx) else np.nan,
+                    "other_sep_arcsec": sep,
                     "other_magnification": _col(other, "magnification", k, np.nan)
                     if k >= 0
                     else np.nan,
-                    "other_image_class": _col(other, "image_class", k, "") if k >= 0 else "",
+                    "other_image_class": _col(other, "image_class", k, "") if k >= 0 else "none",
                     "other_forced_class": _col(other, "forced_class", k, "") if k >= 0 else "",
+                    "other_observed_sep_arcsec": sep_obs,
                 }
             )
     out = Table(rows=rows) if rows else Table()
@@ -299,25 +327,45 @@ def crossmodel(tables: dict[str, Table]) -> Table:
     return out
 
 
-def crossmodel_summary(xm: Table) -> dict:
-    """Per model: extra images, how many the other model also predicts (both tiers), the forced
-    classes, and every unmet prediction (``absent``/``ambiguous``) with its D-041 verdict."""
+def d041_verdict(r) -> str:
+    """D-041 reading of one ``crossmodel`` row."""
+    if float(r["other_observed_sep_arcsec"]) <= XMODEL_LOOSE_ARCSEC and not r["both"]:
+        return "the other model's catalogued image, misplaced (ordinary)"
+    if r["both_loose"]:
+        if str(r["other_forced_class"]) == "recovered":
+            return "the other model's image is recovered (position offset; ordinary)"
+        return "both models" if r["both"] else "both models (loose tier)"
+    return "model-dependent (D-041)"
+
+
+def _r(v: float, nd: int = 2):
+    v = float(v)
+    return round(v, nd) if np.isfinite(v) else None
+
+
+def crossmodel_summary(xm: Table, tables: dict[str, Table]) -> dict:
+    """Per model: forced classes of all its predicted images, its extra images, how many the
+    other model also predicts (both tiers), and every unmet prediction (``absent``/``ambiguous``)
+    with its ``d041_verdict``."""
     out = {
         "xmodel_arcsec": XMODEL_ARCSEC,
         "xmodel_loose_arcsec": XMODEL_LOOSE_ARCSEC,
         "match_arcsec": MATCH_ARCSEC,
         "halo_filter_arcsec": HALO_FILTER_ARCSEC,
     }
+    for m, t in tables.items():
+        fc = np.array([_col(t, "forced_class", k, "") for k in range(len(t))])
+        out[m] = {"forced_all": {c: int(np.sum(fc == c)) for c in sorted(set(fc) - {""})}}
     if not len(xm):
         return out
-    for m in dict.fromkeys(np.asarray(xm["model"]).astype(str)):
+    for m in tables:
         t = xm[xm["model"] == m]
         fc = np.asarray(t["forced_class"]).astype(str)
-        out[m] = {
-            "extra": len(t),
-            "both": int(np.sum(t["both"])),
-            "both_loose": int(np.sum(t["both_loose"])),
-            "forced": {
+        out[m].update(
+            extra=len(t),
+            both=int(np.sum(t["both"])),
+            both_loose=int(np.sum(t["both_loose"])),
+            extra_forced={
                 c or "not_forced": {
                     "rows": int(np.sum(fc == c)),
                     "both": int(np.sum(t["both"][fc == c])),
@@ -325,26 +373,26 @@ def crossmodel_summary(xm: Table) -> dict:
                 }
                 for c in sorted(set(fc))
             },
-        }
+        )
     unmet = xm[np.isin(np.asarray(xm["forced_class"]).astype(str), ["absent", "ambiguous"])]
     out["unmet"] = [
         {
             "model": str(r["model"]),
             "system": str(r["system"]),
             "ra_dec": [round(float(r["ra"]), 5), round(float(r["dec"]), 5)],
-            "mu": round(float(r["magnification"]), 2),
+            "mu": _r(r["magnification"]),
             "forced_class": str(r["forced_class"]),
-            "pred_snr": round(float(r["pred_snr"]), 1),
-            "flux_ratio": round(float(r["flux_ratio"]), 2),
-            "other_sep_arcsec": round(float(r["other_sep_arcsec"]), 2),
-            "other_mu": round(float(r["other_magnification"]), 2),
+            "pred_snr": _r(r["pred_snr"], 1),
+            "flux_ratio": _r(r["flux_ratio"]),
+            "other_sep_arcsec": _r(r["other_sep_arcsec"]),
+            "other_mu": _r(r["other_magnification"]),
             "other_forced_class": str(r["other_forced_class"]),
-            "d041": "both models"
-            if r["both"]
-            else ("both models (loose tier)" if r["both_loose"] else "model-dependent (D-041)"),
+            "other_observed_sep_arcsec": _r(r["other_observed_sep_arcsec"]),
+            "d041": d041_verdict(r),
         }
         for r in unmet
     ]
+    out["unmet_in_both_models"] = sum(u["d041"].startswith("both models") for u in out["unmet"])
     return out
 
 
@@ -526,12 +574,16 @@ def main(argv=None) -> dict:
     if args.crossmodel:
         if not (args.catalog and args.forced_image):
             raise SystemExit("--crossmodel needs --catalog and --forced-image")
+        berg_forced = Table.read(args.crossmodel)
+        check_forced_table(berg_forced)
         unc = forced_images(model, grid, bt, args.catalog, args.forced_image)
         unc.write(args.out / "images_predicted_uncover2.ecsv", overwrite=True)
-        xm = crossmodel({"bergamini23": Table.read(args.crossmodel), "uncover2": unc})
+        tables = {"bergamini23": berg_forced, "uncover2": unc}
+        xm = crossmodel(tables)
         xm.meta.update(provenance="model_prediction", source=args.crossmodel.name)
         xm.write(args.out / "crossmodel.ecsv", overwrite=True)
-        summary["crossmodel"] = crossmodel_summary(xm)
+        xsum = crossmodel_summary(xm, tables)
+        (args.out / "crossmodel.json").write_text(json.dumps(xsum, indent=1) + "\n")
     if args.check_42c:
         summary["check_42c"] = check_42c(model, grid, bt)
     if not args.keep_maps:  # cloud-disk rule: ~250 MB of maps, deleted after use

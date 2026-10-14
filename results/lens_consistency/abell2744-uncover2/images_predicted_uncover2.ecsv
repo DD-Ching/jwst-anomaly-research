@@ -44,6 +44,8 @@
 #     annulus_arcsec: [0.6, 1.0]
 #     err_scale: 1.5
 #     flux_ratio_range: [0.3333333333333333, 3.0]
+#     halo_filter_arcsec: 1.0
+#     image: s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f277w_i2d.fits
 #     max_peak_over_position: 2.0
 #     max_ref_mu: 50.0
 #     max_ref_spread: 3.0
