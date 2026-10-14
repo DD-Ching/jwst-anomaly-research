@@ -21,7 +21,7 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   0.121 and 0.142). Writeup drafted (`docs/state/units/X2_s6a_summary.md`); next is a human expert review, the owner's
   call. Paused; no automatic follow-up.
 
-- **X4 wave-optics GW lensing by negative-mass / Ellis objects** (authorized 2026-10-15 by S0-2026-10-15): state
+- **X4 wave-optics GW lensing by negative-mass objects** (authorized 2026-10-15 by S0-2026-10-15): state
   file `docs/state/units/X4.md`. Next: S1, the intrinsic-parameter degeneracy with an IMR waveform (≤ 4 h).
 - **X3 W3 in unselected Gaia epoch photometry** (paused 2026-10-15; reopen when the DR4 epoch-astrometry fields and
   precision are confirmed) (authorized 2026-10-14 by S0-2026-10-14): state file

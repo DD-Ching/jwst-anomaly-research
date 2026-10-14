@@ -4579,7 +4579,8 @@ unit overruns its budget.
 
 **Evidence:**
 - S0 A: closed-form F_s(w, y), checked two ways.
-- Separable from a positive point mass at ρ ≈ 2.5–16.5 for M_Lz ≥ 300 M☉, y ≤ 1, with intrinsic parameters fixed
+- Separable from a positive point mass at observed SNR ρ ≈ 3.1–16.5 for M_Lz ≥ 300 M☉, y ≤ 1, with intrinsic
+  parameters fixed; those cases are demagnified (≳ 100× less detectable volume)
   (`results/s0/gw_neglens.json`).
 - LVK searches use only positive lenses.
 

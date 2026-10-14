@@ -8,11 +8,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - B, VASCO vanishing sources: not qualified; no mechanism links it to the hypothesis.
   - C, the quantum-processor wormhole: not qualified; it is a simulation of a toy model.
 - **Minimal step (A; derived and simulated, no strain):**
-  - Closed-form point-lens amplification factor for either sign, checked against the diffraction integral (1e-9)
-    and against the W3 magnification (< 3 %).
+  - Closed-form point-lens amplification factor for either sign, checked against the diffraction integral
+    (≤ 3e-7 at the tested points) and against the W3 magnification (< 3 %).
   - A negative-mass lens is a low-pass filter on GWs.
-  - With intrinsic parameters fixed, it separates from the best positive point mass at ρ ≈ 2.5–16.5 for
-    M_Lz ≥ 300 M☉ and y ≤ 1 (4.5–46.5 at y = 1.5), but not for 30 M☉ lenses.
+  - With intrinsic parameters fixed, it separates from the best positive point mass at observed SNR
+    ρ ≈ 3.1–16.5 for M_Lz ≥ 300 M☉ and y ≤ 1 (4.8–46.5 at y = 1.5), but not for 30 M☉ lenses.
+  - The separable cases are demagnified, so their detectable volume falls by ≳ 100×.
+  - Review fixes: exact residual ρ²(1 − O²); the Ellis wormhole is a separate model; Kobrin, Schuster & Yao
+    cited for C; X4 gates sharpened.
   - Real-data hook: GW231123, the GWTC-4.0 lensing outlier, has been fitted only with positive lenses.
 - **Handoff:** X4 S1 (intrinsic-parameter degeneracy with an IMR waveform, ≤ 4 h) is proposed, not started.
 

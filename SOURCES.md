@@ -1280,7 +1280,8 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
     checked); wolensing arXiv:2410.19804.
   - aLIGO PSD fit attributed to Ajith, PRD 84, 084037 (2011), arXiv:1107.1267 (formula not checked in the body).
   - VASCO: arXiv:2507.15896, 2604.04810.
-  - Quantum-processor wormhole: Jafferis et al., Nature 612, 51 (2022); PhilSci-Archive 22120 (arXiv:2301.03522).
+  - Quantum-processor wormhole: Jafferis et al., Nature 612, 51 (2022); Kobrin, Schuster & Yao comment
+    arXiv:2302.07897; PhilSci-Archive 22120 (arXiv:2301.03522).
 - Gaia DR4 content (accessed 2026-10-14): https://www.cosmos.esa.int/web/gaia/dr4 (`epoch_astrometry` for all
   sources in the main astrometric processing; 66 months, 2014-07-25 to 2020-01-20); image of the week
   https://www.cosmos.esa.int/web/gaia/iow_20260703 (2.8 billion sources, 142 billion detections).

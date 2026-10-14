@@ -19,7 +19,8 @@ Distinguishability (noise-weighted overlap; amplitude, phase and arrival time fr
 parameters FIXED, so the mismatches are upper bounds on what a full parameter estimation would see):
   1 - O(h F_neg, h)            negative lens vs unlensed;
   min 1 - O(h F_neg, h F_pos)  negative lens vs the best point-mass lens on a (M_Lz, y) grid.
-Required SNR for Delta chi^2 = 2 rho^2 (1 - O) >= 9:  rho_req = sqrt(4.5 / (1 - O)).
+With amplitude free the best-fit residual is Delta chi^2 = rho^2 (1 - O^2), rho the observed
+(lensed) SNR; required SNR for Delta chi^2 >= 9: rho_req = 3 / sqrt(1 - O^2).
 
 ASSUMPTIONS: inspiral-only amplitude |h| ~ f^-7/6 from 20 Hz to f_ISCO = c^3 / (6^1.5 pi G M)
 (merger and ringdown omitted, so high-frequency power is underweighted); an aLIGO design PSD fit,
@@ -83,12 +84,22 @@ def overlap(a: np.ndarray, b: np.ndarray, weight: np.ndarray, pad: int = 16) -> 
     )
 
 
+def rho_req(mismatch: float) -> float:
+    """Observed SNR at which the best-fit residual reaches Delta chi^2 = 9.
+
+    With amplitude free, the residual of the best fit is rho^2 (1 - O^2), O = 1 - mismatch.
+    """
+    o = 1.0 - mismatch
+    return float(3.0 / np.sqrt(max(1.0 - o * o, 1e-24)))
+
+
 def main() -> int:
     out = {
         "label": "derived (closed-form wave optics) / simulated (fiducial inspiral); no data",
         "assumptions": __doc__.split("ASSUMPTIONS:")[1].split("python scripts")[0].strip(),
         "criterion": (
-            "rho_req = sqrt(4.5 / (1 - O)) for Delta chi^2 = 9; intrinsic parameters fixed"
+            "rho_req = 3 / sqrt(1 - O^2) for Delta chi^2 = rho^2 (1 - O^2) = 9; "
+            "rho = observed (lensed) SNR; intrinsic parameters fixed"
         ),
         "sources": {},
     }
@@ -121,9 +132,9 @@ def main() -> int:
                         ],
                         "abs_F_range": [float(gain.min()), float(gain.max())],
                         "mismatch_vs_unlensed": mm_unl,
-                        "rho_req_vs_unlensed": float(np.sqrt(4.5 / max(mm_unl, 1e-12))),
+                        "rho_req_vs_unlensed": rho_req(mm_unl),
                         "mismatch_vs_best_positive": best,
-                        "rho_req_vs_positive": float(np.sqrt(4.5 / max(best, 1e-12))),
+                        "rho_req_vs_positive": rho_req(best),
                         "best_positive": {"M_Lz": float(arg[0]), "y": float(arg[1])},
                     }
                 )
