@@ -19,6 +19,11 @@ or unresolved source gives about 0 for both). Classes: ``consistent`` / ``parity
 ``|mu| > MAX_ABS_MU`` (its parity is model-dependent; ASSUMPTION). Image positions are observed,
 ``mu`` and ``M_pred`` model_prediction, fitted maps and ``dchi2`` derived, synthetics simulated.
 
+Default statistic (``PsfPair``): PSF-commuting, ``P * T(A)`` against ``K * B`` with ``P`` an
+empirical PSF stacked from Gaia stars on the mosaic, plus a start-stability rule; ``--no-psf``
+gives the plain statistic above. Neither passed the Abell 2744 acceptance test (D-032 addenda
+2026-10-14: 87 % plain, 76 % PSF-commuting), so no class from this script is a lens-model result.
+
     OMP_NUM_THREADS=1 python scripts/parity_test.py --model abell2744-bergamini23 \
         --image s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f200w_i2d.fits
 """
@@ -58,10 +63,13 @@ SEG_GROW_PIX = 2  # dilation of each segment (wings below the threshold)
 PSF_SIGMA_ARCSEC = 0.028  # F200W PSF core, FWHM 0.066" / 2.355 (ASSUMPTION; other bands: scale it)
 MIN_SIZE_RATIO = 2.0  # major-axis sigma / PSF sigma; below it PSF-dominated (ASSUMPTION)
 N_ANGLES_ALT = 16  # second start density of the stability rule
-PSF_HALF_ARCSEC = 0.5  # empirical PSF stamp
-KERNEL_HALF_ARCSEC = 0.6  # T(P) truncation; B's stamp must reach FIT_RADIUS + this
-PSF_MIN_SNR = 50.0  # star peak S/N for the PSF stack
-PSF_PEAK_TOL = 0.3  # stars whose normalised peak is off the median by more (saturation, binaries)
+PSF_HALF_ARCSEC = 0.5  # empirical PSF stamp (ASSUMPTION; wings beyond it are dropped)
+KERNEL_HALF_ARCSEC = 0.6  # K = P(M d) truncation (ASSUMPTION; exact only if M's smaller singular
+# value >= PSF_HALF / KERNEL_HALF ~ 0.83); B's stamp must reach FIT_RADIUS + this
+PSF_MIN_SNR = 50.0  # star peak S/N for the PSF stack (ASSUMPTION)
+PSF_PEAK_TOL = (
+    0.3  # normalised peak off the median by more: rejected (saturation, blends; ASSUMPTION)
+)
 N_REFINE_PSF = 4  # PSF-commuting refinements per family
 
 
@@ -248,6 +256,7 @@ class PsfPair:
         sl = (slice(rows[0], rows[-1] + 1), slice(cols[0], cols[-1] + 1))
         self.x, self.y = xx[sl], yy[sl]
         okc = ok[sl]
+        self.ok = okc  # T(A) gets the same zeros before its convolution
         self.b2 = np.where(okc, np.nan_to_num(sci[sl]), 0.0)
         self.v2 = np.where(okc, np.nan_to_num(err[sl]) ** 2, 0.0)
         self.fit = okc & (np.hypot(self.x, self.y) <= FIT_RADIUS_ARCSEC)
@@ -288,8 +297,10 @@ class PsfPair:
         m, sh = affine(p, h)
         d = m @ np.vstack([self.x.ravel(), self.y.ravel()])
         val, var, inside = tmpl.sample(d[0] + sh[0], d[1] + sh[1])
-        u = val.reshape(self.x.shape)
-        vu = np.where(np.isfinite(var), var, 0.0).reshape(self.x.shape)
+        u = np.where(self.ok, val.reshape(self.x.shape), 0.0)
+        vu = np.where(
+            self.ok & np.isfinite(var.reshape(self.x.shape)), var.reshape(self.x.shape), 0.0
+        )
         c1 = signal.fftconvolve(u, self.psf, mode="same")[self.fit]
         v1 = signal.fftconvolve(vu, self.psf**2, mode="same")[self.fit]
         k = self.kernel(m)
@@ -507,16 +518,23 @@ def read_stamps(
     return stamps
 
 
-def empirical_psf(image_uri: str, ra: float, dec: float) -> dict:
+def empirical_psf(image_uri: str, ra: float, dec: float, stars: list | None = None) -> dict:
     """Median stack of Gaia DR3 stars (``halo_phot_stars.gaia_stars``: proper motion or parallax
     > 3 sigma) on the mosaic, each recentred to its light-weighted centroid by cubic resampling and
     normalised to unit flux within ``PSF_HALF_ARCSEC``. Kept: no masked pixel within 0.3", peak
     S/N >= ``PSF_MIN_SNR``, no other segment within the stamp, normalised peak within
     ``PSF_PEAK_TOL`` of the median (rejects flat-topped and blended stars). Gaia rows observed,
-    the stack derived. Returns ``{"psf": 2-D list, "stars": [...], "n": int}``."""
+    the stack derived. ``stars`` (earlier rows with ra, dec, gmag) skips the VizieR query.
+    Returns ``{"psf": 2-D list, "stars": [...], "n": int}``."""
     import halo_phot_stars as hs
 
-    g = hs.gaia_stars(ra, dec)
+    if stars is None:
+        g = [
+            {"RA_ICRS": r["RA_ICRS"], "DE_ICRS": r["DE_ICRS"], "Gmag": r["Gmag"]}
+            for r in hs.gaia_stars(ra, dec)
+        ]
+    else:
+        g = [{"RA_ICRS": r["ra"], "DE_ICRS": r["dec"], "Gmag": r["gmag"]} for r in stars]
     stamp, close = lc.image_stamper(image_uri, PSF_HALF_ARCSEC + 0.2)
     cut, rows = [], []
     try:
@@ -541,13 +559,19 @@ def empirical_psf(image_uri: str, ra: float, dec: float) -> dict:
             pix = float(np.hypot(xx[0, 1] - xx[0, 0], yy[0, 1] - yy[0, 0]))
             k = int(np.ceil(PSF_HALF_ARCSEC / pix))
             ic = int(round(c))
+            ring = np.hypot(xx, yy) > PSF_HALF_ARCSEC  # local pedestal (ICL), as the halo filter
+            sh = sh - np.median(sh[ring & np.isfinite(sci)])
             sh = sh[ic - k : ic + k + 1, ic - k : ic + k + 1]
             cut.append(sh / sh.sum())
             rows.append({"ra": sra, "dec": sdec, "gmag": float(r["Gmag"])})
     finally:
         close()
+    if not cut:
+        raise RuntimeError("no Gaia star passed the PSF cuts")
     peaks = np.array([c.max() for c in cut])
     keep = np.abs(peaks / np.median(peaks) - 1) <= PSF_PEAK_TOL
+    if keep.sum() < 3:
+        raise RuntimeError(f"only {int(keep.sum())} stars kept for the PSF stack")
     psf = np.median(np.array(cut)[keep], axis=0)
     psf = np.clip(psf, 0, None)
     psf /= psf.sum()
@@ -627,6 +651,8 @@ def run(
                     # with P to first order (ASSUMPTION)
                     pp = PsfPair(*stamps[kb][:4], stamps[kb][6], psf)
                 jobs.append((len(rows), (tmpl, bx, by, b, bvar, m_pred, 0, pp)))
+            if "class" in row:  # not fitted: final now
+                print(json.dumps(row), flush=True)
             rows.append(row)
     # CPU-bound fits: one process per core (run with OMP_NUM_THREADS=1; scripts/CLAUDE.md topology)
     with ProcessPoolExecutor(os.cpu_count() or 1) as ex:
@@ -664,19 +690,30 @@ def main(argv=None) -> int:
         help="plain statistic (A resampled onto B, PSF ignored) without the stability rule",
     )
     args = ap.parse_args(argv)
-    out = args.out or paths.repo_root() / "results" / "parity" / f"{args.model}.json"
+    tag = "" if args.no_psf else "-psf"
+    out = args.out or paths.repo_root() / "results" / "parity" / f"{args.model}{tag}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     psf = None
+    psf_params = {
+        "psf_half_arcsec": PSF_HALF_ARCSEC,
+        "psf_min_snr": PSF_MIN_SNR,
+        "psf_peak_tol": PSF_PEAK_TOL,
+        "pedestal": "median beyond psf_half",
+    }
     if not args.no_psf:
+        model, files, par = lc.load_model(args.model)
+        images, _ = lc.image_list(args.model, files, par)
+        ra, dec = round(float(np.mean(images["ra"])), 4), round(float(np.mean(images["dec"])), 4)
+        key = {"image": args.image, "ra": ra, "dec": dec, **psf_params}
         cache = out.parent / f"psf-{Path(args.image).name.removesuffix('.fits')}.json"
-        if cache.exists() and json.loads(cache.read_text()).get("image") == args.image:
-            psf = np.array(json.loads(cache.read_text())["psf"])
+        old = json.loads(cache.read_text()) if cache.exists() else {}
+        if all(old.get(k) == v for k, v in key.items()):
+            psf = np.array(old["psf"])
         else:
-            model, files, par = lc.load_model(args.model)
-            images, _ = lc.image_list(args.model, files, par)
-            ra, dec = float(np.mean(images["ra"])), float(np.mean(images["dec"]))
-            st = empirical_psf(args.image, ra, dec)
-            cache.write_text(json.dumps({"image": args.image, **st}) + "\n")
+            # Gaia rows from an earlier cache of the same image are reused (VizieR outages)
+            prev = old.get("stars") if old.get("image") == args.image else None
+            st = empirical_psf(args.image, ra, dec, prev)
+            cache.write_text(json.dumps({**key, **st}) + "\n")
             psf = np.array(st["psf"])
         print(f"PSF: {cache.name}", flush=True)
     rows = run(args.model, args.image, args.halo_filter_arcsec, not args.no_mask, psf)
@@ -698,6 +735,9 @@ def main(argv=None) -> int:
             "psf_sigma_arcsec": PSF_SIGMA_ARCSEC,
             "psf_commuting": psf is not None,
             "n_angles_alt": N_ANGLES_ALT,
+            "kernel_half_arcsec": KERNEL_HALF_ARCSEC,
+            "n_refine_psf": N_REFINE_PSF,
+            **psf_params,
         },
         "counts": counts,
         "rows": rows,
