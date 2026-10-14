@@ -2,6 +2,39 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: S0 screen picks X3 (W3 in unselected Gaia epoch photometry); X3 G0 passes on dev; Gaia DataLink fix
+- **S0-2026-10-14** (`docs/state/units/S0-2026-10-14.md`; owner request to return to observational searches).
+  - **A, pulsar-timing Shapiro sign test: not qualified.** A negative-mass lens would advance pulses
+    (Δt = −(ε/c) ln b), so the sign of a timing bump is a real discriminator. But a NANOGrav-like array expects
+    ≤ 0.08 events even for an all-dark-matter population (`scripts/s0_pta_shapiro.py`).
+    - NANOGrav 15-yr searched positive amplitudes only, and not the dynamic Shapiro channel.
+    - The densities a PTA could reach are already excluded by microlensing.
+  - **B, FRB lensing by Ellis or negative-mass lenses: not qualified.** A single echo (Δt, R) cannot separate
+    exotic from ordinary lenses in geometric optics (1302.7170).
+  - **C qualifies as X3.** Gaia's Andromeda survey (GAPS) publishes G/BP/RP epoch photometry for all 1,257,319
+    sources around M31 with no variability selection [observed, TAP]. DR4 is scheduled for 2 Dec 2026.
+- **X3 G0** (`docs/state/units/X3.md`, `scripts/x3_gaps.py`, `results/x3/`). The dev split and the gates were
+  frozen before any data.
+  - **Screen v0 failed the false-alarm gate.** On 998 real dev light curves, 2.7 % flagged. 24 of 27 were
+    blend-type astrometry (no 5-parameter solution, RUWE > 1.4, multi-peak) and 3 were known ECL/RS variables.
+  - **Post-hoc v1 adds an astrometric-quality veto**, not the variability flag. It passed on a fresh dev sample
+    of 1,000:
+    - W3 efficiency **0.70** at t_E = 30–300 d (0.42 at 10 d);
+    - real flags **0.1 %**;
+    - PSPL→W3: 0;
+    - vetoed: 7.5 %.
+  - Simulated injections and dev data only. **No candidate, no held-out data touched.**
+- **Fix.** The Gaia DataLink service now answers `DATA_STRUCTURE=INDIVIDUAL` with HTTP 500, which broke D-061's
+  harness. `gaia_mulens` now uses `DATAMODEL_STANDARD` (same CSV columns).
+- **Failed approaches:**
+  - A single sync TAP dev list silently truncated at 50,000 rows in storage order.
+  - The `random_index` thinning and the async jobs time out: anonymous jobs are capped at 60 s.
+  - Fix: query per level-5 HEALPix `source_id` range.
+- **Handoff.**
+  - X3 next is G1: periodicity and achromaticity vetoes frozen on dev, then the single held-out GAPS screen. That
+    screen is about 0.96 M sources, so it needs the bulk epoch-photometry files, not DataLink.
+  - X3 used about 1.5 / 16 h.
+
 ## 2026-10-14: X2 S6a writeup corrections (documents only; no computation re-run)
 - **`X2_s6a_summary.md`, "Who did what".** Updated from the owner's cross-conversation record. It replaces the
   earlier "no recorded GPT output":
