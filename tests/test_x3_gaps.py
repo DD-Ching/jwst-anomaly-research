@@ -44,6 +44,7 @@ def _tab(kind, flagged, te=np.nan, rho=np.nan):
     n = len(kind)
     return Table(
         {
+            "event_id": [str(i) for i in range(n)],
             "kind": kind,
             "flagged": flagged,
             "tE": np.full(n, te) if np.isscalar(te) else te,
@@ -65,3 +66,19 @@ def test_gate_verdicts():
     assert x3.summarise(vstack([real_ok, *good]))["gate"] == "continue to G1"
     assert x3.summarise(vstack([real_ok, *dead]))["gate"].startswith("stop")
     assert x3.summarise(vstack([real_bad, *good]))["gate"].startswith("one recorded")
+
+
+def test_v1_veto_counts_vetoed_injections_as_missed():
+    from astropy.table import vstack
+
+    real = _tab(["real"] * 100, [False] * 98 + [True] * 2)
+    real["event_id"] = [str(i) for i in range(100)]
+    w3 = [_tab(["W3"] * 10, [True] * 10, te, 0.1) for te in (10.0, 30.0, 100.0, 300.0)]
+    for t in w3:
+        t["event_id"] = [str(i) for i in range(10)]
+    tab = vstack([real, *w3])
+    veto = {str(i): i < 5 or i in (98, 99) for i in range(100)}  # vetoes both real flags
+    s = x3.summarise(tab, veto)
+    assert s["flag_fraction_real"] == 0.0
+    assert abs(s["mean_eff_te30_300"] - 0.5) < 1e-12  # half the injection bases vetoed
+    assert abs(s["v1_vetoed_fraction"] - 0.07) < 1e-12

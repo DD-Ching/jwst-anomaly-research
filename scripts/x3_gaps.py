@@ -158,10 +158,48 @@ def ids_table(gmax: float) -> Table:
     return t
 
 
-def subsample(gmax: float, n: int, seed: int) -> Table:
+USED_SEEDS = {2026: 1000}  # gate samples already drawn: a re-gate must not reuse their sources
+
+
+def subsample(gmax: float, n: int, seed: int, exclude: dict | None = None) -> Table:
     t = ids_table(gmax)
+    keep = np.ones(len(t), bool)
+    for s_, n_ in (exclude or {}).items():
+        rng_ = np.random.default_rng(s_)
+        keep[rng_.choice(len(t), size=min(n_, len(t)), replace=False)] = False
+    idx = np.flatnonzero(keep)
     rng = np.random.default_rng(seed)
-    return t[np.sort(rng.choice(len(t), size=min(n, len(t)), replace=False))]
+    return t[np.sort(rng.choice(idx, size=min(n, len(idx)), replace=False))]
+
+
+# Screen v1 (post hoc, designed on the seed-2026 gate sample; X3 G0 log): veto sources whose Gaia
+# photometry depends on scan direction because of blending, judged only by astrometric quality
+# (insensitive to a microlensing brightness change): no 5-parameter solution, RUWE > 1.4, or
+# ipd_frac_multi_peak > 10. phot_variable_flag is NOT used: a real event would set it.
+ATTR_QUERY = (
+    "SELECT source_id, ruwe, ipd_frac_multi_peak, phot_variable_flag FROM gaiadr3.gaia_source "
+    "WHERE source_id IN ({ids})"
+)
+
+
+def attrs(ids: list[str], tag: str) -> Table:
+    path = out_dir() / f"attrs_{tag}.csv"
+    if not path.exists():
+        lines, header = [], None
+        for k in range(0, len(ids), 500):
+            rows = gm._tap_csv(ATTR_QUERY.format(ids=",".join(ids[k : k + 500]))).strip()
+            rows = rows.splitlines()
+            header = rows[0]
+            lines.extend(rows[1:])
+        gm._write_atomic(path, ("\n".join([header, *lines]) + "\n").encode())
+    return Table.read(path, format="ascii.csv")
+
+
+def v1_veto(at: Table) -> dict[str, bool]:
+    ruwe = np.ma.filled(np.ma.asarray(at["ruwe"], float), np.nan)
+    ipd = np.ma.filled(np.ma.asarray(at["ipd_frac_multi_peak"], float), np.nan)
+    bad = np.isnan(ruwe) | (ruwe > 1.4) | (ipd > 10)
+    return {str(s): bool(b) for s, b in zip(at["source_id"], bad, strict=True)}
 
 
 def light_curve(survey: GapsDev, row) -> w3.LightCurve | None:
@@ -203,9 +241,9 @@ def _job(args):
     return row
 
 
-def run_g0(gmax: float, n: int, seed: int, procs: int) -> Path:
+def run_g0(gmax: float, n: int, seed: int, procs: int, exclude=None) -> Path:
     survey = GapsDev()
-    sample = subsample(gmax, n, seed)
+    sample = subsample(gmax, n, seed, exclude)
     rng = np.random.default_rng(seed + 1)
     jobs = []
     for row in sample:
@@ -267,10 +305,15 @@ def _col(tab: Table, name: str, fill):
     return np.asarray(c.filled(fill) if hasattr(c, "filled") else c)
 
 
-def summarise(tab: Table) -> dict:
+def summarise(tab: Table, veto: dict[str, bool] | None = None) -> dict:
+    """Gate quantities. With ``veto`` (screen v1), a vetoed source never flags: injections on it
+    count as missed and its real light curve as unflagged (denominators unchanged)."""
     tab = tab.copy()
     for name, fill in (("error", ""), ("flagged", False), ("kind", "")):
         tab[name] = _col(tab, name, fill)
+    if veto is not None:
+        vetoed = np.array([veto.get(str(e), True) for e in tab["event_id"]])
+        tab["flagged"] = tab["flagged"] & ~vetoed
     ok = tab["error"] == ""
     out = {"n_rows": int(len(tab)), "n_errors": int((~ok).sum())}
     real = ok & (tab["kind"] == "real")
@@ -304,6 +347,9 @@ def summarise(tab: Table) -> dict:
     else:
         verdict = "one recorded screen revision allowed, re-gate on fresh dev"
     out["gate"] = verdict
+    if veto is not None:
+        real_ids = {str(e) for e in tab["event_id"][tab["kind"] == "real"]}
+        out["v1_vetoed_fraction"] = float(np.mean([veto.get(i, True) for i in real_ids]))
     out["gate_definition"] = "docs/state/units/X3.md G0 (frozen 2026-10-14 before data)"
     return out
 
@@ -317,21 +363,30 @@ def main(argv=None) -> int:
     ap.add_argument("--n", type=int, default=1000)
     ap.add_argument("--seed", type=int, default=314)
     ap.add_argument("--procs", type=int, default=4)
+    ap.add_argument("--screen", choices=("v0", "v1"), default="v0")
+    ap.add_argument("--fresh", action="store_true", help="exclude sources of USED_SEEDS")
     a = ap.parse_args(argv)
     if a.cmd == "ids":
         t = ids_table(a.gmax)
         print(f"dev sources with G <= {a.gmax}: {len(t)}")
     elif a.cmd == "fetch":
-        ids = [str(s) for s in subsample(a.gmax, a.n, a.seed)["source_id"]]
+        ex = USED_SEEDS if a.fresh else None
+        ids = [str(s) for s in subsample(a.gmax, a.n, a.seed, ex)["source_id"]]
         t1 = time.time()
         n = GapsDev().prefetch(ids)
         print(f"fetched {n} new light curves of {len(ids)} in {time.time() - t1:.0f} s")
     elif a.cmd == "g0":
-        run_g0(a.gmax, a.n, a.seed, a.procs)
+        run_g0(a.gmax, a.n, a.seed, a.procs, USED_SEEDS if a.fresh else None)
     else:
         tab = Table.read(out_dir() / f"g0_seed{a.seed}.ecsv")
-        s = summarise(tab)
-        (results_dir() / f"g0_summary_seed{a.seed}.json").write_text(json.dumps(s, indent=1) + "\n")
+        veto = None
+        if a.screen == "v1":
+            ids = sorted({str(e) for e in tab["event_id"]})
+            veto = v1_veto(attrs(ids, f"seed{a.seed}"))
+        s = summarise(tab, veto)
+        s["screen"] = a.screen
+        name = f"g0_summary_seed{a.seed}_{a.screen}.json"
+        (results_dir() / name).write_text(json.dumps(s, indent=1) + "\n")
         print(json.dumps(s, indent=1))
     return 0
 
