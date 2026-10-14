@@ -1,0 +1,32 @@
+{
+ "model": "abell2744-uncover2",
+ "model_sha256": "156d073a1d046415c60b7c279b5394402ef2d57e26ea4a6794521262a38ae53e",
+ "quoted_rms_arcsec": 0.6,
+ "own_list": {
+  "image_list": "uncover2",
+  "n_images": 186,
+  "n_traced": 181,
+  "n_reimaged": 148,
+  "rms_dtheta_arcsec": 4.779136935382511,
+  "median_dtheta_arcsec": 0.6702425476557428,
+  "max_dtheta_arcsec": 32.164929714120824,
+  "n_over_2arcsec": 17,
+  "families": 52,
+  "families_with_extra": 37,
+  "families_short": 3,
+  "gate_passes": false
+ },
+ "bergamini23_list": {
+  "image_list": "bergamini23",
+  "n_images": 149,
+  "n_traced": 149,
+  "n_reimaged": 149,
+  "rms_dtheta_arcsec": 6.961611988143088,
+  "median_dtheta_arcsec": 0.6233741705225325,
+  "max_dtheta_arcsec": 48.67831230216309,
+  "n_over_2arcsec": 17,
+  "families": 50,
+  "families_with_extra": 32,
+  "families_short": 4
+ }
+}

@@ -2,8 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-14: (in progress) `bayes.dat` position spreads as `forced_check` search radii
-- Claim: chain-derived search radii for predicted counter-images (Abell 2744, El Gordo); results follow.
+## 2026-10-14: (in progress) UNCOVER v2.0 as the second Abell 2744 model: validation gate fails so far
+- **Route:** the UNCOVER DR4 lens maps (v2.0, Furtak & Zitrin, 2024-08-07) download from Google Drive
+  (`drive.usercontent.google.com`, sha256-pinned in `scripts/a2744_uncover.py`; deflection x/y 75 + 71 MB gz,
+  4561² at 0.1″/pix; UNCOVER's own image table, 186 rows). The claim started as `bayes.dat` search radii and was
+  redirected: D-045 already measured the chain spread of the flagged images (0.2–0.4″, inside the 1″ radius).
+- **Known cases (own list, derived):** 148 of 181 traced images re-imaged; median offset 0.67″ (quoted lens-plane rms
+  0.60″), but 34.1 and 80.1 come back as single images (fold pairs, 22–32″) and 4.15 is not re-predicted. Without
+  those three families: rms 1.07″, p90 1.77″, so the gate (≤ 1.5 × 0.60″, ASSUMPTION) **fails**. Bergamini+23's list
+  through the same maps: rms 1.07″ without its four fold families (3.1, 34.1, 4.1, 700.1).
+- **Not yet a lens-model statement.** Suspects, in order: the mean back-traced source as the re-imaging source (the
+  Zitrin code optimises differently), solver grid step 0.25″ on 0.1″ maps, cosmology of the z scaling (ASSUMPTION
+  H0 70, Ωm 0.3). Multiplicity: 37 / 52 families get predicted images > 1.5″ from every catalogued one; most are
+  third images of catalogued doubles (|μ| 3–20) or central demagnified images (|μ| ≤ 0.6).
+- **Next:** fix the gate (grid step 0.1″, per-family best source instead of the mean, check the z scaling against
+  the published z = 2 magnification map), then the D-041 cross-model rule: counter-images both models predict
+  bright, forced photometry on F277W.
 
 ## 2026-10-14: Sunrise counter-images in the four RELICS models: null (D-033 addendum 4)
 - **Tool:** `scripts/sunrise_counter.py` (byte-range deflection blocks → `MapLensModel` → `find_images`, D-029 forced

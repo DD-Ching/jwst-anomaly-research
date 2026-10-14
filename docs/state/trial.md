@@ -135,6 +135,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | ≈ 1.2 (PSF-commuting parity fit, empirical PSF, acceptance rerun; failed, tool paused) | 0.15 (orientation, claim, PR) | cloud routine 01VnLVRw, 08:09–09:45Z |
 | 2026-W42 | ≈ 0.4 (MACS0416 `halo_phot` + `fluxratios --halo-phot`, CANUCS model; cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 019kpPJS, 09:08–09:45Z |
 | 2026-W42 | ≈ 0.35 (`sunrise_counter.py`: Sunrise counter-images in four RELICS models; control; cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01Dfw2ou, 11:08–11:45Z |
+| 2026-W42 | ≈ 0.35 (UNCOVER v2.0 maps: route, validation on both image lists; gate fails) | — | — | 0.15 (orientation, claim, PR) | cloud routine 01Mkg8y2, 12:09–12:55Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
