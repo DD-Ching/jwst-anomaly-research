@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: (in progress) SMACS system 17 counter-images on a halo-subtracted F200W stamp (D-029 revisit)
+- Plan: re-measure system 17's two non-catalogued predicted images (μ −10.2 near the BCG, μ 5.4 against a cluster
+  galaxy) after removing the BCG/galaxy halo with `halo_phot` routes; flag only if a ≥ 10σ prediction stays < 1/3.
+
 ## 2026-10-14: counter-images of uncatalogued bright arcs: five fields null (Abell 370 3881 is known system 7)
 - **Hypothesis before computing:** every strongly sheared background arc that is not a catalogued image has the
   counter-images its model predicts at its photo-z; a robust predicted image (z16 and z84 agree within 3″) of ≥ 10σ
