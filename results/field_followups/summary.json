@@ -1,0 +1,2533 @@
+{
+ "provenance": "positions and photometry observed; magnitudes, shifts derived; magnifications and counter-images model_prediction; thresholds ASSUMPTIONs",
+ "sources": {
+  "elgordo:f200w_2828": {
+   "label": 2828,
+   "ra": 15.727503,
+   "dec": -49.252279,
+   "mag_f200w": 29.83,
+   "ci_50_30": 1.92,
+   "is_extended": false,
+   "iso_snr": 28.9,
+   "dja": {
+    "id": 2528,
+    "sep_arcsec": 0.09,
+    "bands": {
+     "f090w": {
+      "mag": 26.11,
+      "snr": 27.5
+     },
+     "f105w": {
+      "mag": 26.65,
+      "snr": 5.7
+     },
+     "f115w": {
+      "mag": 26.13,
+      "snr": 28.2
+     },
+     "f125w": {
+      "mag": 27.71,
+      "snr": 1.1
+     },
+     "f140w": {
+      "mag": 27.29,
+      "snr": 2.0
+     },
+     "f150w": {
+      "mag": 26.23,
+      "snr": 25.4
+     },
+     "f160w": {
+      "mag": 26.51,
+      "snr": 6.3
+     },
+     "f200w": {
+      "mag": 26.17,
+      "snr": 35.8
+     },
+     "f277w": {
+      "mag": 27.63,
+      "snr": 13.3
+     },
+     "f356w": {
+      "mag": 29.99,
+      "snr": 1.5
+     },
+     "f410m": {
+      "mag": 28.02,
+      "snr": 4.8
+     },
+     "f435w": {
+      "mag": 27.73,
+      "snr": 2.6
+     },
+     "f444w": {
+      "mag": 28.6,
+      "snr": 4.1
+     },
+     "f606w": {
+      "mag": 27.4,
+      "snr": 8.3
+     },
+     "f625w": {
+      "mag": null,
+      "snr": -1.0
+     },
+     "f775w": {
+      "mag": 28.91,
+      "snr": 0.9
+     },
+     "f814w": {
+      "mag": null,
+      "snr": -2.1
+     },
+     "f850lp": {
+      "mag": 30.77,
+      "snr": 0.1
+     }
+    }
+   },
+   "spike_sources": [
+    {
+     "axis": "row",
+     "label": 2766,
+     "aper50_abmag": 16.51,
+     "sep_arcsec": 6.0,
+     "offset_pix": 2.8
+    }
+   ],
+   "stamp_ab": {
+    "f115w": {
+     "mag": 26.85,
+     "snr": 13.2
+    },
+    "f150w": {
+     "mag": 26.7,
+     "snr": 15.6
+    },
+    "f200w": {
+     "mag": 26.71,
+     "snr": 20.7
+    },
+    "f277w": {
+     "mag": 27.79,
+     "snr": 11.1
+    },
+    "f444w": {
+     "mag": 28.09,
+     "snr": 6.4
+    }
+   },
+   "lens_caminha23": {
+    "r_model_arcsec": 77.5,
+    "per_z": [
+     {
+      "z": 1.0,
+      "mu_source": 1.32,
+      "counter_images": []
+     },
+     {
+      "z": 2.0,
+      "mu_source": 6.789,
+      "counter_images": []
+     },
+     {
+      "z": 3.0,
+      "mu_source": 97.711,
+      "counter_images": [
+       {
+        "ra": 15.727273,
+        "dec": -49.252435,
+        "sep_from_source_arcsec": 0.78,
+        "mu": -94.633,
+        "pred_mag_f200w": 29.86,
+        "nearest_f200w_arcsec": 0.49,
+        "f200w_match": 2829,
+        "f200w_match_mag": 27.7,
+        "near_source": true
+       },
+       {
+        "ra": 15.714472,
+        "dec": -49.257501,
+        "sep_from_source_arcsec": 35.93,
+        "mu": 3.933,
+        "pred_mag_f200w": 33.32,
+        "nearest_f200w_arcsec": 1.85,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false
+       }
+      ]
+     },
+     {
+      "z": 6.0,
+      "mu_source": -10.268,
+      "counter_images": [
+       {
+        "ra": 15.731081,
+        "dec": -49.249383,
+        "sep_from_source_arcsec": 13.39,
+        "mu": 16.307,
+        "pred_mag_f200w": 29.33,
+        "nearest_f200w_arcsec": 0.42,
+        "f200w_match": 1264,
+        "f200w_match_mag": 25.13,
+        "near_source": false
+       },
+       {
+        "ra": 15.707841,
+        "dec": -49.260735,
+        "sep_from_source_arcsec": 55.33,
+        "mu": 3.109,
+        "pred_mag_f200w": 31.13,
+        "nearest_f200w_arcsec": 2.8,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "elgordo:f200w_1601": {
+   "label": 1601,
+   "ra": 15.723399,
+   "dec": -49.250334,
+   "mag_f200w": 29.78,
+   "ci_50_30": 2.29,
+   "is_extended": true,
+   "iso_snr": 19.9,
+   "dja": {
+    "id": 2745,
+    "sep_arcsec": 0.05,
+    "bands": {
+     "f090w": {
+      "mag": 27.2,
+      "snr": 10.1
+     },
+     "f105w": {
+      "mag": 29.88,
+      "snr": 0.3
+     },
+     "f115w": {
+      "mag": 26.53,
+      "snr": 17.1
+     },
+     "f125w": {
+      "mag": 33.33,
+      "snr": 0.0
+     },
+     "f140w": {
+      "mag": null,
+      "snr": -1.0
+     },
+     "f150w": {
+      "mag": 27.21,
+      "snr": 10.3
+     },
+     "f160w": {
+      "mag": null,
+      "snr": -0.7
+     },
+     "f200w": {
+      "mag": 26.84,
+      "snr": 19.1
+     },
+     "f277w": {
+      "mag": 28.84,
+      "snr": 4.4
+     },
+     "f356w": {
+      "mag": 29.81,
+      "snr": 1.8
+     },
+     "f410m": {
+      "mag": null,
+      "snr": -2.0
+     },
+     "f435w": {
+      "mag": null,
+      "snr": -0.9
+     },
+     "f444w": {
+      "mag": 29.5,
+      "snr": 1.8
+     },
+     "f606w": {
+      "mag": null,
+      "snr": -0.6
+     },
+     "f625w": {
+      "mag": null,
+      "snr": -1.0
+     },
+     "f775w": {
+      "mag": 29.44,
+      "snr": 0.6
+     },
+     "f814w": {
+      "mag": null,
+      "snr": -1.4
+     },
+     "f850lp": {
+      "mag": 27.78,
+      "snr": 1.4
+     }
+    }
+   },
+   "spike_sources": [],
+   "stamp_ab": {
+    "f115w": {
+     "mag": 27.2,
+     "snr": 9.5
+    },
+    "f150w": {
+     "mag": 27.85,
+     "snr": 5.3
+    },
+    "f200w": {
+     "mag": 27.59,
+     "snr": 9.1
+    },
+    "f277w": {
+     "mag": 29.49,
+     "snr": 2.3
+    },
+    "f444w": {
+     "mag": null,
+     "snr": -0.9
+    }
+   },
+   "lens_caminha23": {
+    "r_model_arcsec": 88.0,
+    "per_z": [
+     {
+      "z": 1.0,
+      "mu_source": 1.471,
+      "counter_images": []
+     },
+     {
+      "z": 2.0,
+      "mu_source": -103.901,
+      "counter_images": [
+       {
+        "ra": 15.724837,
+        "dec": -49.249531,
+        "sep_from_source_arcsec": 4.45,
+        "mu": 9.423,
+        "pred_mag_f200w": 32.39,
+        "nearest_f200w_arcsec": 0.65,
+        "f200w_match": 1527,
+        "f200w_match_mag": 24.49,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 34.995,
+          "best_flux": 10.013,
+          "best_offset_arcsec": 0.64,
+          "pred_flux": 0.2,
+          "pred_snr": 0.782,
+          "flux_ratio": 50.116,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 71.2,
+          "best_flux": 16.184,
+          "best_offset_arcsec": 0.64,
+          "pred_flux": 0.142,
+          "pred_snr": 0.742,
+          "flux_ratio": 114.179,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       },
+       {
+        "ra": 15.717062,
+        "dec": -49.252884,
+        "sep_from_source_arcsec": 17.49,
+        "mu": 5.889,
+        "pred_mag_f200w": 32.9,
+        "nearest_f200w_arcsec": 1.84,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 5.015,
+          "best_flux": 1.273,
+          "best_offset_arcsec": 1.17,
+          "pred_flux": 0.125,
+          "pred_snr": 0.487,
+          "flux_ratio": 10.194,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 5.769,
+          "best_flux": 1.09,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 0.089,
+          "pred_snr": 0.497,
+          "flux_ratio": 12.304,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "z": 3.0,
+      "mu_source": -8.775,
+      "counter_images": [
+       {
+        "ra": 15.726936,
+        "dec": -49.248263,
+        "sep_from_source_arcsec": 11.16,
+        "mu": 7.721,
+        "pred_mag_f200w": 29.92,
+        "nearest_f200w_arcsec": 1.31,
+        "f200w_match": 1445,
+        "f200w_match_mag": 25.29,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 14.25,
+          "best_flux": 3.675,
+          "best_offset_arcsec": 1.334,
+          "pred_flux": 1.938,
+          "pred_snr": 7.601,
+          "flux_ratio": 1.896,
+          "class": "recovered",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 34.354,
+          "best_flux": 7.071,
+          "best_offset_arcsec": 1.334,
+          "pred_flux": 1.375,
+          "pred_snr": 6.912,
+          "flux_ratio": 5.142,
+          "class": "confused",
+          "inject_class": "confused"
+         }
+        }
+       },
+       {
+        "ra": 15.712206,
+        "dec": -49.255286,
+        "sep_from_source_arcsec": 31.77,
+        "mu": 3.845,
+        "pred_mag_f200w": 30.68,
+        "nearest_f200w_arcsec": 2.68,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 6.14,
+          "best_flux": 1.592,
+          "best_offset_arcsec": 0.447,
+          "pred_flux": 0.965,
+          "pred_snr": 3.774,
+          "flux_ratio": 1.65,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 7.943,
+          "best_flux": 1.515,
+          "best_offset_arcsec": 0.539,
+          "pred_flux": 0.685,
+          "pred_snr": 3.797,
+          "flux_ratio": 2.213,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "z": 6.0,
+      "mu_source": -6.276,
+      "counter_images": [
+       {
+        "ra": 15.729702,
+        "dec": -49.246852,
+        "sep_from_source_arcsec": 19.4,
+        "mu": 5.442,
+        "pred_mag_f200w": 29.93,
+        "nearest_f200w_arcsec": 2.56,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 3.434,
+          "best_flux": 0.886,
+          "best_offset_arcsec": 1.063,
+          "pred_flux": 1.91,
+          "pred_snr": 7.793,
+          "flux_ratio": 0.464,
+          "class": "ambiguous",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 8.358,
+          "best_flux": 1.535,
+          "best_offset_arcsec": 1.14,
+          "pred_flux": 1.355,
+          "pred_snr": 7.6,
+          "flux_ratio": 1.133,
+          "class": "recovered",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 15.706364,
+        "dec": -49.258685,
+        "sep_from_source_arcsec": 50.06,
+        "mu": 3.807,
+        "pred_mag_f200w": 30.32,
+        "nearest_f200w_arcsec": 2.79,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 6.343,
+          "best_flux": 2.374,
+          "best_offset_arcsec": 1.315,
+          "pred_flux": 1.336,
+          "pred_snr": 5.211,
+          "flux_ratio": 1.777,
+          "class": "recovered",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 4.3,
+          "best_flux": 1.016,
+          "best_offset_arcsec": 0.707,
+          "pred_flux": 0.948,
+          "pred_snr": 5.321,
+          "flux_ratio": 1.071,
+          "class": "ambiguous",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 15.722532,
+        "dec": -49.249542,
+        "sep_from_source_arcsec": 3.5,
+        "mu": -2.201,
+        "pred_mag_f200w": 30.92,
+        "nearest_f200w_arcsec": 0.77,
+        "f200w_match": 1617,
+        "f200w_match_mag": 20.21,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 362.741,
+          "best_flux": 268.921,
+          "best_offset_arcsec": 0.781,
+          "pred_flux": 0.773,
+          "pred_snr": 2.973,
+          "flux_ratio": 348.065,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 686.921,
+          "best_flux": 619.137,
+          "best_offset_arcsec": 0.781,
+          "pred_flux": 0.548,
+          "pred_snr": 2.675,
+          "flux_ratio": 1129.605,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       },
+       {
+        "ra": 15.722757,
+        "dec": -49.249676,
+        "sep_from_source_arcsec": 2.81,
+        "mu": 0.011,
+        "pred_mag_f200w": 36.7,
+        "nearest_f200w_arcsec": 0.09,
+        "f200w_match": 1617,
+        "f200w_match_mag": 20.21,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 364.453,
+          "best_flux": 270.306,
+          "best_offset_arcsec": 0.1,
+          "pred_flux": 0.004,
+          "pred_snr": 0.005,
+          "flux_ratio": 70003.63,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 692.131,
+          "best_flux": 627.769,
+          "best_offset_arcsec": 0.1,
+          "pred_flux": 0.003,
+          "pred_snr": 0.003,
+          "flux_ratio": 229174.807,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "forced_self": {
+    "f115w": {
+     "flux": 2.203058749437332,
+     "snr": 8.3
+    },
+    "f200w": {
+     "flux": 1.5628707706928253,
+     "snr": 8.0
+    }
+   }
+  },
+  "sunrise:f200w_1756": {
+   "label": 1756,
+   "ra": 24.348924,
+   "dec": -8.452301,
+   "mag_f200w": 24.68,
+   "ci_50_30": 1.49,
+   "is_extended": false,
+   "iso_snr": 202.8,
+   "dja": {
+    "id": null,
+    "nearest_sep_arcsec": 2.93,
+    "bands": {}
+   },
+   "spike_sources": [],
+   "stamp_ab": {
+    "f115w": {
+     "mag": 23.91,
+     "snr": 134.6
+    },
+    "f150w": {
+     "mag": 23.84,
+     "snr": 168.6
+    },
+    "f200w": {
+     "mag": 24.1,
+     "snr": 162.1
+    },
+    "f277w": {
+     "mag": 24.6,
+     "snr": 140.1
+    },
+    "f444w": {
+     "mag": 25.55,
+     "snr": 52.7
+    }
+   },
+   "lens_relics": {
+    "glafic": {
+     "1.0": 2.561,
+     "2.0": 11.746,
+     "3.0": -1037.091,
+     "6.0": -12.305
+    },
+    "lenstool": {
+     "1.0": 2.906,
+     "2.0": 30.671,
+     "3.0": -19.379,
+     "6.0": -7.809
+    },
+    "wslap": {
+     "1.0": 2.154,
+     "2.0": 8.511,
+     "3.0": 313.553,
+     "6.0": -8.853
+    },
+    "zitrin-ltm-gauss": {
+     "1.0": 2.567,
+     "2.0": 8.319,
+     "3.0": 19.249,
+     "6.0": -137.411
+    }
+   },
+   "counter_images_relics": {
+    "glafic": [
+     {
+      "z": 1.0,
+      "mu_source": 2.561,
+      "counter_images": []
+     },
+     {
+      "z": 2.0,
+      "mu_source": 11.746,
+      "counter_images": [
+       {
+        "ra": 24.352246,
+        "dec": -8.450331,
+        "sep_from_source_arcsec": 13.79,
+        "mu": -10.062,
+        "pred_mag_f200w": 24.85,
+        "nearest_f200w_arcsec": 2.89,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 222.499,
+          "best_flux": 142.546,
+          "best_offset_arcsec": 1.432,
+          "pred_flux": 35.287,
+          "pred_snr": 65.683,
+          "flux_ratio": 4.04,
+          "class": "confused",
+          "inject_class": "confused"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 191.335,
+          "best_flux": 77.991,
+          "best_offset_arcsec": 1.476,
+          "pred_flux": 29.905,
+          "pred_snr": 72.629,
+          "flux_ratio": 2.608,
+          "class": "recovered",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.36265,
+        "dec": -8.456273,
+        "sep_from_source_arcsec": 50.92,
+        "mu": 4.866,
+        "pred_mag_f200w": 25.64,
+        "nearest_f200w_arcsec": 0.74,
+        "f200w_match": 1019,
+        "f200w_match_mag": 20.55,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 346.311,
+          "best_flux": 274.082,
+          "best_offset_arcsec": 0.707,
+          "pred_flux": 17.065,
+          "pred_snr": 52.803,
+          "flux_ratio": 16.061,
+          "class": "confused",
+          "inject_class": "confused"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 620.775,
+          "best_flux": 541.925,
+          "best_offset_arcsec": 0.707,
+          "pred_flux": 14.462,
+          "pred_snr": 62.324,
+          "flux_ratio": 37.473,
+          "class": "confused",
+          "inject_class": "confused"
+         }
+        }
+       },
+       {
+        "ra": 24.350891,
+        "dec": -8.460972,
+        "sep_from_source_arcsec": 31.99,
+        "mu": -4.109,
+        "pred_mag_f200w": 25.82,
+        "nearest_f200w_arcsec": 1.31,
+        "f200w_match": 1787,
+        "f200w_match_mag": 19.31,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 287.613,
+          "best_flux": 209.042,
+          "best_offset_arcsec": 1.5,
+          "pred_flux": 14.41,
+          "pred_snr": 42.655,
+          "flux_ratio": 14.507,
+          "class": "confused",
+          "inject_class": "confused"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 511.488,
+          "best_flux": 373.876,
+          "best_offset_arcsec": 1.5,
+          "pred_flux": 12.212,
+          "pred_snr": 52.037,
+          "flux_ratio": 30.615,
+          "class": "confused",
+          "inject_class": "confused"
+         }
+        }
+       },
+       {
+        "ra": 24.353786,
+        "dec": -8.456357,
+        "sep_from_source_arcsec": 22.65,
+        "mu": 0.021,
+        "pred_mag_f200w": 31.54,
+        "nearest_f200w_arcsec": 5.7,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 122.176,
+          "best_flux": 190.837,
+          "best_offset_arcsec": 1.1,
+          "pred_flux": 0.074,
+          "pred_snr": 0.116,
+          "flux_ratio": 2591.286,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 225.052,
+          "best_flux": 389.576,
+          "best_offset_arcsec": 1.105,
+          "pred_flux": 0.062,
+          "pred_snr": 0.103,
+          "flux_ratio": 6241.925,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "z": 3.0,
+      "mu_source": -1037.105,
+      "counter_images": [
+       {
+        "ra": 24.347787,
+        "dec": -8.457871,
+        "sep_from_source_arcsec": 20.46,
+        "mu": -5.092,
+        "pred_mag_f200w": 30.45,
+        "nearest_f200w_arcsec": 1.64,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 101.23,
+          "best_flux": 78.938,
+          "best_offset_arcsec": 1.414,
+          "pred_flux": 0.202,
+          "pred_snr": 0.411,
+          "flux_ratio": 390.302,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 206.464,
+          "best_flux": 156.333,
+          "best_offset_arcsec": 1.414,
+          "pred_flux": 0.171,
+          "pred_snr": 0.486,
+          "flux_ratio": 912.098,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       },
+       {
+        "ra": 24.364626,
+        "dec": -8.457968,
+        "sep_from_source_arcsec": 59.52,
+        "mu": 2.854,
+        "pred_mag_f200w": 31.08,
+        "nearest_f200w_arcsec": 4.53,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 2.545,
+          "best_flux": 0.781,
+          "best_offset_arcsec": 1.414,
+          "pred_flux": 0.113,
+          "pred_snr": 0.382,
+          "flux_ratio": 6.893,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 4.374,
+          "best_flux": 0.912,
+          "best_offset_arcsec": 1.36,
+          "pred_flux": 0.096,
+          "pred_snr": 0.464,
+          "flux_ratio": 9.495,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       },
+       {
+        "ra": 24.353631,
+        "dec": -8.456293,
+        "sep_from_source_arcsec": 22.08,
+        "mu": 0.073,
+        "pred_mag_f200w": 35.06,
+        "nearest_f200w_arcsec": 5.68,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 97.305,
+          "best_flux": 137.431,
+          "best_offset_arcsec": 1.5,
+          "pred_flux": 0.003,
+          "pred_snr": 0.005,
+          "flux_ratio": 47398.863,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 181.645,
+          "best_flux": 277.54,
+          "best_offset_arcsec": 1.5,
+          "pred_flux": 0.002,
+          "pred_snr": 0.005,
+          "flux_ratio": 112948.617,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "z": 6.0,
+      "mu_source": -12.305,
+      "counter_images": [
+       {
+        "ra": 24.366431,
+        "dec": -8.459399,
+        "sep_from_source_arcsec": 67.37,
+        "mu": 2.541,
+        "pred_mag_f200w": 26.39,
+        "nearest_f200w_arcsec": 2.12,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 3.978,
+          "best_flux": 1.217,
+          "best_offset_arcsec": 0.825,
+          "pred_flux": 8.506,
+          "pred_snr": 27.416,
+          "flux_ratio": 0.143,
+          "class": "absent",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 4.198,
+          "best_flux": 0.884,
+          "best_offset_arcsec": 0.825,
+          "pred_flux": 7.209,
+          "pred_snr": 34.229,
+          "flux_ratio": 0.123,
+          "class": "absent",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.353424,
+        "dec": -8.456157,
+        "sep_from_source_arcsec": 21.2,
+        "mu": 0.128,
+        "pred_mag_f200w": 29.63,
+        "nearest_f200w_arcsec": 5.66,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 20.388,
+          "best_flux": 17.807,
+          "best_offset_arcsec": 1.5,
+          "pred_flux": 0.428,
+          "pred_snr": 0.843,
+          "flux_ratio": 41.557,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 39.407,
+          "best_flux": 35.548,
+          "best_offset_arcsec": 1.5,
+          "pred_flux": 0.363,
+          "pred_snr": 0.864,
+          "flux_ratio": 97.89,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     }
+    ],
+    "lenstool": [
+     {
+      "z": 1.0,
+      "mu_source": 2.906,
+      "counter_images": []
+     },
+     {
+      "z": 2.0,
+      "mu_source": 30.671,
+      "counter_images": [
+       {
+        "ra": 24.350401,
+        "dec": -8.451036,
+        "sep_from_source_arcsec": 6.96,
+        "mu": -12.926,
+        "pred_mag_f200w": 25.62,
+        "nearest_f200w_arcsec": 4.78,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 8.983,
+          "best_flux": 2.982,
+          "best_offset_arcsec": 0.922,
+          "pred_flux": 17.36,
+          "pred_snr": 52.155,
+          "flux_ratio": 0.172,
+          "class": "absent",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 11.002,
+          "best_flux": 2.676,
+          "best_offset_arcsec": 0.707,
+          "pred_flux": 14.712,
+          "pred_snr": 67.333,
+          "flux_ratio": 0.182,
+          "class": "absent",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.362804,
+        "dec": -8.456538,
+        "sep_from_source_arcsec": 51.72,
+        "mu": 5.308,
+        "pred_mag_f200w": 26.58,
+        "nearest_f200w_arcsec": 0.7,
+        "f200w_match": 1019,
+        "f200w_match_mag": 20.55,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 342.754,
+          "best_flux": 269.11,
+          "best_offset_arcsec": 0.728,
+          "pred_flux": 7.129,
+          "pred_snr": 23.41,
+          "flux_ratio": 37.749,
+          "class": "confused",
+          "inject_class": "confused"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 617.157,
+          "best_flux": 534.729,
+          "best_offset_arcsec": 0.728,
+          "pred_flux": 6.042,
+          "pred_snr": 26.487,
+          "flux_ratio": 88.509,
+          "class": "confused",
+          "inject_class": "confused"
+         }
+        }
+       },
+       {
+        "ra": 24.350638,
+        "dec": -8.461789,
+        "sep_from_source_arcsec": 34.7,
+        "mu": -4.254,
+        "pred_mag_f200w": 26.82,
+        "nearest_f200w_arcsec": 1.44,
+        "f200w_match": 1846,
+        "f200w_match_mag": 26.52,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 442.996,
+          "best_flux": 461.136,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 5.713,
+          "pred_snr": 17.224,
+          "flux_ratio": 80.713,
+          "class": "confused",
+          "inject_class": "confused"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 763.236,
+          "best_flux": 909.222,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 4.842,
+          "pred_snr": 22.298,
+          "flux_ratio": 187.783,
+          "class": "confused",
+          "inject_class": "confused"
+         }
+        }
+       },
+       {
+        "ra": 24.353867,
+        "dec": -8.45654,
+        "sep_from_source_arcsec": 23.3,
+        "mu": 0.533,
+        "pred_mag_f200w": 29.08,
+        "nearest_f200w_arcsec": 5.29,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 122.458,
+          "best_flux": 193.201,
+          "best_offset_arcsec": 1.0,
+          "pred_flux": 0.716,
+          "pred_snr": 1.097,
+          "flux_ratio": 269.894,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 224.27,
+          "best_flux": 385.725,
+          "best_offset_arcsec": 1.0,
+          "pred_flux": 0.607,
+          "pred_snr": 0.913,
+          "flux_ratio": 635.82,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "z": 3.0,
+      "mu_source": -19.379,
+      "counter_images": [
+       {
+        "ra": 24.364695,
+        "dec": -8.45861,
+        "sep_from_source_arcsec": 60.58,
+        "mu": 3.958,
+        "pred_mag_f200w": 26.4,
+        "nearest_f200w_arcsec": 2.26,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 4.14,
+          "best_flux": 1.312,
+          "best_offset_arcsec": 0.949,
+          "pred_flux": 8.413,
+          "pred_snr": 27.884,
+          "flux_ratio": 0.156,
+          "class": "absent",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 5.634,
+          "best_flux": 1.179,
+          "best_offset_arcsec": 0.721,
+          "pred_flux": 7.13,
+          "pred_snr": 33.251,
+          "flux_ratio": 0.165,
+          "class": "absent",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.353491,
+        "dec": -8.456248,
+        "sep_from_source_arcsec": 21.6,
+        "mu": 0.51,
+        "pred_mag_f200w": 28.63,
+        "nearest_f200w_arcsec": 5.66,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 33.74,
+          "best_flux": 35.333,
+          "best_offset_arcsec": 1.5,
+          "pred_flux": 1.084,
+          "pred_snr": 2.1,
+          "flux_ratio": 32.593,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 63.801,
+          "best_flux": 69.297,
+          "best_offset_arcsec": 1.5,
+          "pred_flux": 0.919,
+          "pred_snr": 2.068,
+          "flux_ratio": 75.428,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "z": 6.0,
+      "mu_source": -7.809,
+      "counter_images": [
+       {
+        "ra": 24.366413,
+        "dec": -8.460252,
+        "sep_from_source_arcsec": 68.54,
+        "mu": 3.403,
+        "pred_mag_f200w": 25.58,
+        "nearest_f200w_arcsec": 3.59,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 6.227,
+          "best_flux": 1.997,
+          "best_offset_arcsec": 0.2,
+          "pred_flux": 17.951,
+          "pred_snr": 58.272,
+          "flux_ratio": 0.111,
+          "class": "absent",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 13.957,
+          "best_flux": 2.986,
+          "best_offset_arcsec": 0.2,
+          "pred_flux": 15.213,
+          "pred_snr": 71.231,
+          "flux_ratio": 0.196,
+          "class": "absent",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.353142,
+        "dec": -8.455957,
+        "sep_from_source_arcsec": 19.97,
+        "mu": 0.484,
+        "pred_mag_f200w": 27.7,
+        "nearest_f200w_arcsec": 4.97,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 202.983,
+          "best_flux": 11179.782,
+          "best_offset_arcsec": 1.414,
+          "pred_flux": 2.553,
+          "pred_snr": 3.599,
+          "flux_ratio": 4378.907,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 30.509,
+          "best_flux": 19.97,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 2.164,
+          "pred_snr": 4.075,
+          "flux_ratio": 9.23,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     }
+    ],
+    "wslap": [
+     {
+      "z": 1.0,
+      "mu_source": 2.154,
+      "counter_images": []
+     },
+     {
+      "z": 2.0,
+      "mu_source": 8.511,
+      "counter_images": [
+       {
+        "ra": 24.358544,
+        "dec": -8.455846,
+        "sep_from_source_arcsec": 36.56,
+        "mu": -1.642,
+        "pred_mag_f200w": 26.47,
+        "nearest_f200w_arcsec": 2.05,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 60.87,
+          "best_flux": 38.987,
+          "best_offset_arcsec": 1.476,
+          "pred_flux": 7.947,
+          "pred_snr": 17.277,
+          "flux_ratio": 4.906,
+          "class": "confused",
+          "inject_class": "confused"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 132.232,
+          "best_flux": 78.614,
+          "best_offset_arcsec": 1.476,
+          "pred_flux": 6.735,
+          "pred_snr": 20.391,
+          "flux_ratio": 11.672,
+          "class": "confused",
+          "inject_class": "confused"
+         }
+        }
+       },
+       {
+        "ra": 24.359127,
+        "dec": -8.455591,
+        "sep_from_source_arcsec": 38.21,
+        "mu": -0.307,
+        "pred_mag_f200w": 28.29,
+        "nearest_f200w_arcsec": 0.23,
+        "f200w_match": 1152,
+        "f200w_match_mag": 18.61,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 396.083,
+          "best_flux": 728.386,
+          "best_offset_arcsec": 0.224,
+          "pred_flux": 1.486,
+          "pred_snr": 0.967,
+          "flux_ratio": 490.215,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 669.257,
+          "best_flux": 1450.359,
+          "best_offset_arcsec": 0.224,
+          "pred_flux": 1.259,
+          "pred_snr": 0.738,
+          "flux_ratio": 1151.79,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       },
+       {
+        "ra": 24.359072,
+        "dec": -8.455598,
+        "sep_from_source_arcsec": 38.04,
+        "mu": 0.108,
+        "pred_mag_f200w": 29.43,
+        "nearest_f200w_arcsec": 0.1,
+        "f200w_match": 1152,
+        "f200w_match_mag": 18.61,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 395.947,
+          "best_flux": 728.345,
+          "best_offset_arcsec": 0.1,
+          "pred_flux": 0.523,
+          "pred_snr": 0.29,
+          "flux_ratio": 1393.401,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 669.386,
+          "best_flux": 1450.677,
+          "best_offset_arcsec": 0.1,
+          "pred_flux": 0.443,
+          "pred_snr": 0.208,
+          "flux_ratio": 3274.789,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       },
+       {
+        "ra": 24.354021,
+        "dec": -8.456397,
+        "sep_from_source_arcsec": 23.38,
+        "mu": 0.046,
+        "pred_mag_f200w": 30.36,
+        "nearest_f200w_arcsec": 6.03,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 123.652,
+          "best_flux": 194.538,
+          "best_offset_arcsec": 0.316,
+          "pred_flux": 0.223,
+          "pred_snr": 0.157,
+          "flux_ratio": 873.794,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 224.545,
+          "best_flux": 390.086,
+          "best_offset_arcsec": 0.316,
+          "pred_flux": 0.189,
+          "pred_snr": 0.124,
+          "flux_ratio": 2067.471,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "z": 3.0,
+      "mu_source": 313.552,
+      "counter_images": [
+       {
+        "ra": 24.35183,
+        "dec": -8.4509,
+        "sep_from_source_arcsec": 11.51,
+        "mu": 56.522,
+        "pred_mag_f200w": 26.54,
+        "nearest_f200w_arcsec": 4.34,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 612.569,
+          "best_flux": 1039.483,
+          "best_offset_arcsec": 1.432,
+          "pred_flux": 7.425,
+          "pred_snr": 18.157,
+          "flux_ratio": 139.988,
+          "class": "confused",
+          "inject_class": "confused"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 788.45,
+          "best_flux": 1085.828,
+          "best_offset_arcsec": 1.456,
+          "pred_flux": 6.293,
+          "pred_snr": 20.366,
+          "flux_ratio": 172.548,
+          "class": "confused",
+          "inject_class": "confused"
+         }
+        }
+       },
+       {
+        "ra": 24.350744,
+        "dec": -8.451214,
+        "sep_from_source_arcsec": 7.57,
+        "mu": -49.232,
+        "pred_mag_f200w": 26.69,
+        "nearest_f200w_arcsec": 3.96,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 77.754,
+          "best_flux": 53.031,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 6.468,
+          "pred_snr": 14.121,
+          "flux_ratio": 8.199,
+          "class": "confused",
+          "inject_class": "confused"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 96.304,
+          "best_flux": 45.972,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 5.481,
+          "pred_snr": 17.668,
+          "flux_ratio": 8.387,
+          "class": "confused",
+          "inject_class": "confused"
+         }
+        }
+       },
+       {
+        "ra": 24.35549,
+        "dec": -8.451266,
+        "sep_from_source_arcsec": 23.67,
+        "mu": -24.071,
+        "pred_mag_f200w": 27.47,
+        "nearest_f200w_arcsec": 2.47,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 3.787,
+          "best_flux": 1.133,
+          "best_offset_arcsec": 1.36,
+          "pred_flux": 3.162,
+          "pred_snr": 10.749,
+          "flux_ratio": 0.358,
+          "class": "ambiguous",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 6.804,
+          "best_flux": 1.396,
+          "best_offset_arcsec": 1.4,
+          "pred_flux": 2.68,
+          "pred_snr": 13.321,
+          "flux_ratio": 0.521,
+          "class": "recovered",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.347583,
+        "dec": -8.454332,
+        "sep_from_source_arcsec": 8.73,
+        "mu": -9.977,
+        "pred_mag_f200w": 28.42,
+        "nearest_f200w_arcsec": 1.31,
+        "f200w_match": 1860,
+        "f200w_match_mag": 25.0,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 261.862,
+          "best_flux": 176.074,
+          "best_offset_arcsec": 1.432,
+          "pred_flux": 1.311,
+          "pred_snr": 4.066,
+          "flux_ratio": 134.334,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 479.539,
+          "best_flux": 319.838,
+          "best_offset_arcsec": 1.432,
+          "pred_flux": 1.111,
+          "pred_snr": 5.184,
+          "flux_ratio": 287.936,
+          "class": "confused",
+          "inject_class": "confused"
+         }
+        }
+       },
+       {
+        "ra": 24.357012,
+        "dec": -8.463705,
+        "sep_from_source_arcsec": 50.15,
+        "mu": 4.452,
+        "pred_mag_f200w": 29.3,
+        "nearest_f200w_arcsec": 2.95,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 3.522,
+          "best_flux": 1.614,
+          "best_offset_arcsec": 0.806,
+          "pred_flux": 0.585,
+          "pred_snr": 1.361,
+          "flux_ratio": 2.76,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 5.726,
+          "best_flux": 1.791,
+          "best_offset_arcsec": 1.063,
+          "pred_flux": 0.496,
+          "pred_snr": 1.577,
+          "flux_ratio": 3.613,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       },
+       {
+        "ra": 24.346925,
+        "dec": -8.457799,
+        "sep_from_source_arcsec": 21.03,
+        "mu": -0.472,
+        "pred_mag_f200w": 31.74,
+        "nearest_f200w_arcsec": 1.22,
+        "f200w_match": 1897,
+        "f200w_match_mag": 18.28,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 411.235,
+          "best_flux": 801.544,
+          "best_offset_arcsec": 1.17,
+          "pred_flux": 0.062,
+          "pred_snr": 0.108,
+          "flux_ratio": 12926.386,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 728.385,
+          "best_flux": 1646.549,
+          "best_offset_arcsec": 1.17,
+          "pred_flux": 0.053,
+          "pred_snr": 0.111,
+          "flux_ratio": 31332.709,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       },
+       {
+        "ra": 24.353884,
+        "dec": -8.456282,
+        "sep_from_source_arcsec": 22.75,
+        "mu": 0.065,
+        "pred_mag_f200w": 33.89,
+        "nearest_f200w_arcsec": 6.11,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 122.573,
+          "best_flux": 190.66,
+          "best_offset_arcsec": 0.854,
+          "pred_flux": 0.009,
+          "pred_snr": 0.009,
+          "flux_ratio": 22327.419,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 222.039,
+          "best_flux": 380.816,
+          "best_offset_arcsec": 0.762,
+          "pred_flux": 0.007,
+          "pred_snr": 0.007,
+          "flux_ratio": 52622.047,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       },
+       {
+        "ra": 24.347133,
+        "dec": -8.457859,
+        "sep_from_source_arcsec": 21.0,
+        "mu": 0.026,
+        "pred_mag_f200w": 34.9,
+        "nearest_f200w_arcsec": 0.46,
+        "f200w_match": 1897,
+        "f200w_match_mag": 18.28,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 413.899,
+          "best_flux": 812.575,
+          "best_offset_arcsec": 0.412,
+          "pred_flux": 0.003,
+          "pred_snr": 0.004,
+          "flux_ratio": 237893.122,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 727.211,
+          "best_flux": 1642.267,
+          "best_offset_arcsec": 0.412,
+          "pred_flux": 0.003,
+          "pred_snr": 0.003,
+          "flux_ratio": 567329.994,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "z": 6.0,
+      "mu_source": -8.853,
+      "counter_images": [
+       {
+        "ra": 24.358317,
+        "dec": -8.465126,
+        "sep_from_source_arcsec": 57.01,
+        "mu": 2.558,
+        "pred_mag_f200w": 26.03,
+        "nearest_f200w_arcsec": 2.11,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 2.618,
+          "best_flux": 0.852,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 11.902,
+          "pred_snr": 40.365,
+          "flux_ratio": 0.072,
+          "class": "absent",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 2.006,
+          "best_flux": 0.415,
+          "best_offset_arcsec": 0.762,
+          "pred_flux": 10.087,
+          "pred_snr": 48.232,
+          "flux_ratio": 0.041,
+          "class": "absent",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.360975,
+        "dec": -8.463331,
+        "sep_from_source_arcsec": 58.46,
+        "mu": -0.162,
+        "pred_mag_f200w": 29.03,
+        "nearest_f200w_arcsec": 0.64,
+        "f200w_match": 1170,
+        "f200w_match_mag": 17.08,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 754.186,
+          "best_flux": 1432.995,
+          "best_offset_arcsec": 0.854,
+          "pred_flux": 0.754,
+          "pred_snr": 1.306,
+          "flux_ratio": 1901.089,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 1257.901,
+          "best_flux": 3196.75,
+          "best_offset_arcsec": 0.854,
+          "pred_flux": 0.639,
+          "pred_snr": 1.189,
+          "flux_ratio": 5004.261,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       },
+       {
+        "ra": 24.353643,
+        "dec": -8.45612,
+        "sep_from_source_arcsec": 21.71,
+        "mu": 0.151,
+        "pred_mag_f200w": 29.1,
+        "nearest_f200w_arcsec": 6.27,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 81.215,
+          "best_flux": 106.618,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 0.703,
+          "pred_snr": 1.248,
+          "flux_ratio": 151.749,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 152.894,
+          "best_flux": 216.017,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 0.595,
+          "pred_snr": 1.197,
+          "flux_ratio": 362.792,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       },
+       {
+        "ra": 24.360722,
+        "dec": -8.463375,
+        "sep_from_source_arcsec": 57.91,
+        "mu": 0.006,
+        "pred_mag_f200w": 32.52,
+        "nearest_f200w_arcsec": 0.31,
+        "f200w_match": 1170,
+        "f200w_match_mag": 17.08,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 757.969,
+          "best_flux": 1445.727,
+          "best_offset_arcsec": 0.141,
+          "pred_flux": 0.028,
+          "pred_snr": 0.016,
+          "flux_ratio": 51785.473,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 1264.039,
+          "best_flux": 3221.778,
+          "best_offset_arcsec": 0.141,
+          "pred_flux": 0.024,
+          "pred_snr": 0.01,
+          "flux_ratio": 136172.86,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     }
+    ],
+    "zitrin-ltm-gauss": [
+     {
+      "z": 1.0,
+      "mu_source": 2.567,
+      "counter_images": []
+     },
+     {
+      "z": 2.0,
+      "mu_source": 8.319,
+      "counter_images": [
+       {
+        "ra": 24.357371,
+        "dec": -8.451674,
+        "sep_from_source_arcsec": 30.17,
+        "mu": 39.314,
+        "pred_mag_f200w": 22.99,
+        "nearest_f200w_arcsec": 2.21,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 5.726,
+          "best_flux": 1.734,
+          "best_offset_arcsec": 1.476,
+          "pred_flux": 194.668,
+          "pred_snr": 664.638,
+          "flux_ratio": 0.009,
+          "class": "absent",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 9.535,
+          "best_flux": 1.987,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 164.976,
+          "pred_snr": 817.447,
+          "flux_ratio": 0.012,
+          "class": "absent",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.355068,
+        "dec": -8.450888,
+        "sep_from_source_arcsec": 22.46,
+        "mu": -33.535,
+        "pred_mag_f200w": 23.17,
+        "nearest_f200w_arcsec": 1.92,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 46.011,
+          "best_flux": 15.784,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 166.052,
+          "pred_snr": 551.541,
+          "flux_ratio": 0.095,
+          "class": "absent",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 75.076,
+          "best_flux": 18.951,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 140.725,
+          "pred_snr": 664.327,
+          "flux_ratio": 0.135,
+          "class": "absent",
+          "inject_class": "recovered"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "z": 3.0,
+      "mu_source": 19.249,
+      "counter_images": [
+       {
+        "ra": 24.35091,
+        "dec": -8.451234,
+        "sep_from_source_arcsec": 8.05,
+        "mu": -17.519,
+        "pred_mag_f200w": 24.78,
+        "nearest_f200w_arcsec": 3.92,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 191.351,
+          "best_flux": 196.581,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 37.49,
+          "pred_snr": 77.428,
+          "flux_ratio": 5.244,
+          "class": "confused",
+          "inject_class": "confused"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 181.393,
+          "best_flux": 119.8,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 31.772,
+          "pred_snr": 99.933,
+          "flux_ratio": 3.771,
+          "class": "confused",
+          "inject_class": "confused"
+         }
+        }
+       },
+       {
+        "ra": 24.351651,
+        "dec": -8.461072,
+        "sep_from_source_arcsec": 33.04,
+        "mu": -15.284,
+        "pred_mag_f200w": 24.93,
+        "nearest_f200w_arcsec": 2.17,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 7.742,
+          "best_flux": 2.583,
+          "best_offset_arcsec": 0.922,
+          "pred_flux": 32.707,
+          "pred_snr": 100.798,
+          "flux_ratio": 0.079,
+          "class": "absent",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 9.623,
+          "best_flux": 2.168,
+          "best_offset_arcsec": 1.005,
+          "pred_flux": 27.719,
+          "pred_snr": 125.215,
+          "flux_ratio": 0.078,
+          "class": "absent",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.362425,
+        "dec": -8.455986,
+        "sep_from_source_arcsec": 49.87,
+        "mu": 6.125,
+        "pred_mag_f200w": 25.92,
+        "nearest_f200w_arcsec": 1.89,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 50.085,
+          "best_flux": 18.222,
+          "best_offset_arcsec": 1.476,
+          "pred_flux": 13.107,
+          "pred_snr": 43.87,
+          "flux_ratio": 1.39,
+          "class": "recovered",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 108.964,
+          "best_flux": 31.935,
+          "best_offset_arcsec": 1.476,
+          "pred_flux": 11.108,
+          "pred_snr": 52.892,
+          "flux_ratio": 2.875,
+          "class": "recovered",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.353197,
+        "dec": -8.457635,
+        "sep_from_source_arcsec": 24.5,
+        "mu": 5.042,
+        "pred_mag_f200w": 26.13,
+        "nearest_f200w_arcsec": 0.74,
+        "f200w_match": 1603,
+        "f200w_match_mag": 27.51,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 6.275,
+          "best_flux": 4.376,
+          "best_offset_arcsec": 1.118,
+          "pred_flux": 10.79,
+          "pred_snr": 17.213,
+          "flux_ratio": 0.406,
+          "class": "recovered",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 6.65,
+          "best_flux": 3.379,
+          "best_offset_arcsec": 1.14,
+          "pred_flux": 9.144,
+          "pred_snr": 18.889,
+          "flux_ratio": 0.369,
+          "class": "recovered",
+          "inject_class": "recovered"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "z": 6.0,
+      "mu_source": -137.411,
+      "counter_images": [
+       {
+        "ra": 24.348633,
+        "dec": -8.45252,
+        "sep_from_source_arcsec": 1.3,
+        "mu": 140.506,
+        "pred_mag_f200w": 24.66,
+        "nearest_f200w_arcsec": 1.3,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": true,
+        "forced": {
+         "f115w": {
+          "class": "near_source"
+         },
+         "f200w": {
+          "class": "near_source"
+         }
+        }
+       },
+       {
+        "ra": 24.346858,
+        "dec": -8.45855,
+        "sep_from_source_arcsec": 23.67,
+        "mu": -26.216,
+        "pred_mag_f200w": 26.48,
+        "nearest_f200w_arcsec": 1.64,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 37.126,
+          "best_flux": 21.209,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 7.859,
+          "pred_snr": 17.319,
+          "flux_ratio": 2.699,
+          "class": "recovered",
+          "inject_class": "recovered"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 41.422,
+          "best_flux": 15.343,
+          "best_offset_arcsec": 1.456,
+          "pred_flux": 6.66,
+          "pred_snr": 20.931,
+          "flux_ratio": 2.304,
+          "class": "recovered",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.364773,
+        "dec": -8.457854,
+        "sep_from_source_arcsec": 59.87,
+        "mu": 4.465,
+        "pred_mag_f200w": 28.4,
+        "nearest_f200w_arcsec": 3.89,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 3.777,
+          "best_flux": 1.161,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 1.338,
+          "pred_snr": 4.439,
+          "flux_ratio": 0.867,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 12.242,
+          "best_flux": 2.592,
+          "best_offset_arcsec": 1.487,
+          "pred_flux": 1.134,
+          "pred_snr": 5.495,
+          "flux_ratio": 2.285,
+          "class": "recovered",
+          "inject_class": "recovered"
+         }
+        }
+       },
+       {
+        "ra": 24.352732,
+        "dec": -8.456658,
+        "sep_from_source_arcsec": 20.73,
+        "mu": 2.086,
+        "pred_mag_f200w": 29.23,
+        "nearest_f200w_arcsec": 3.02,
+        "f200w_match": null,
+        "f200w_match_mag": null,
+        "near_source": false,
+        "forced": {
+         "f115w": {
+          "search_arcsec": 1.5,
+          "best_snr": 255.396,
+          "best_flux": 620.909,
+          "best_offset_arcsec": 0.632,
+          "pred_flux": 0.625,
+          "pred_snr": 0.686,
+          "flux_ratio": 992.928,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         },
+         "f200w": {
+          "search_arcsec": 1.5,
+          "best_snr": 447.806,
+          "best_flux": 1238.681,
+          "best_offset_arcsec": 0.632,
+          "pred_flux": 0.53,
+          "pred_snr": 0.639,
+          "flux_ratio": 2337.344,
+          "class": "undetectable",
+          "inject_class": "undetectable"
+         }
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "forced_self": {
+    "f115w": {
+     "flux": 41.1924569606781,
+     "snr": 98.2
+    },
+    "f200w": {
+     "flux": 34.90954639017582,
+     "snr": 119.7
+    }
+   },
+   "proper_motion": {
+    "n_ref": 58,
+    "frame_shift_mas": [
+     17.6,
+     -6.2
+    ],
+    "ref_scatter_mas": [
+     5.7,
+     4.8
+    ],
+    "shift_mas": [
+     4.9,
+     -4.7
+    ],
+    "shift_sigma": [
+     0.9,
+     -1.0
+    ],
+    "dt_yr": 0.449,
+    "pm_mas_per_yr": 15.1,
+    "pm_err_mas_per_yr": 16.6,
+    "pm_2sigma_upper_mas_per_yr": 48.3
+   }
+  },
+  "sunrise:f200w_1907": {
+   "label": 1907,
+   "ra": 24.352053,
+   "dec": -8.470702,
+   "mag_f200w": 28.75,
+   "ci_50_30": 2.28,
+   "is_extended": true,
+   "iso_snr": 115.2,
+   "dja": {
+    "id": 3538,
+    "sep_arcsec": 0.03,
+    "bands": {
+     "f090w": {
+      "mag": 29.89,
+      "snr": 0.9
+     },
+     "f105w": {
+      "mag": 27.79,
+      "snr": 1.6
+     },
+     "f110w": {
+      "mag": 27.29,
+      "snr": 12.5
+     },
+     "f115w": {
+      "mag": 27.28,
+      "snr": 10.0
+     },
+     "f125w": {
+      "mag": 26.47,
+      "snr": 3.1
+     },
+     "f140w": {
+      "mag": 26.6,
+      "snr": 3.2
+     },
+     "f150w": {
+      "mag": 26.07,
+      "snr": 30.4
+     },
+     "f160w": {
+      "mag": 26.33,
+      "snr": 6.0
+     },
+     "f200w": {
+      "mag": 24.83,
+      "snr": 86.3
+     },
+     "f210m": {
+      "mag": 24.76,
+      "snr": 48.5
+     },
+     "f277w": {
+      "mag": 24.03,
+      "snr": 234.9
+     },
+     "f300m": {
+      "mag": 23.85,
+      "snr": 133.6
+     },
+     "f356w": {
+      "mag": 23.59,
+      "snr": 312.4
+     },
+     "f410m": {
+      "mag": 23.25,
+      "snr": 207.8
+     },
+     "f435w": {
+      "mag": null,
+      "snr": -1.4
+     },
+     "f444w": {
+      "mag": 23.13,
+      "snr": 338.0
+     },
+     "f475w": {
+      "mag": null,
+      "snr": -0.7
+     },
+     "f606w": {
+      "mag": 28.83,
+      "snr": 1.3
+     },
+     "f814w": {
+      "mag": 29.13,
+      "snr": 1.6
+     }
+    }
+   },
+   "spike_sources": [],
+   "stamp_ab": {
+    "f115w": {
+     "mag": 27.38,
+     "snr": 6.5
+    },
+    "f150w": {
+     "mag": 26.19,
+     "snr": 23.7
+    },
+    "f200w": {
+     "mag": 24.91,
+     "snr": 84.4
+    },
+    "f277w": {
+     "mag": 24.03,
+     "snr": 208.8
+    },
+    "f444w": {
+     "mag": 23.16,
+     "snr": 341.3
+    }
+   },
+   "lens_relics": {
+    "glafic": {
+     "1.0": 1.57,
+     "2.0": 2.432,
+     "3.0": 2.955,
+     "6.0": 3.771
+    },
+    "lenstool": {
+     "1.0": 1.614,
+     "2.0": 2.612,
+     "3.0": 3.266,
+     "6.0": 4.363
+    },
+    "wslap": {
+     "1.0": 1.288,
+     "2.0": 1.59,
+     "3.0": 1.725,
+     "6.0": 1.888
+    },
+    "zitrin-ltm-gauss": {
+     "1.0": 1.886,
+     "2.0": 3.397,
+     "3.0": 4.389,
+     "6.0": 6.035
+    }
+   }
+  },
+  "sunrise:f200w_1578": {
+   "label": 1578,
+   "ra": 24.335206,
+   "dec": -8.40336,
+   "mag_f200w": 28.19,
+   "ci_50_30": 2.75,
+   "is_extended": true,
+   "iso_snr": 778.4,
+   "dja": {
+    "id": 9915,
+    "sep_arcsec": 0.04,
+    "bands": {
+     "f090w": {
+      "mag": 25.98,
+      "snr": 23.5
+     },
+     "f115w": {
+      "mag": 24.71,
+      "snr": 67.0
+     },
+     "f150w": {
+      "mag": 23.64,
+      "snr": 195.2
+     },
+     "f200w": {
+      "mag": 22.51,
+      "snr": 405.1
+     },
+     "f210m": {
+      "mag": 22.35,
+      "snr": 203.8
+     },
+     "f277w": {
+      "mag": 21.61,
+      "snr": 595.7
+     },
+     "f300m": {
+      "mag": 21.43,
+      "snr": 439.4
+     },
+     "f356w": {
+      "mag": 21.17,
+      "snr": 761.6
+     },
+     "f410m": {
+      "mag": 21.12,
+      "snr": 578.7
+     },
+     "f444w": {
+      "mag": 21.24,
+      "snr": 854.3
+     }
+    }
+   },
+   "spike_sources": [],
+   "stamp_ab": {
+    "f115w": {
+     "mag": 24.83,
+     "snr": 63.5
+    },
+    "f150w": {
+     "mag": 23.72,
+     "snr": 181.2
+    },
+    "f200w": {
+     "mag": 22.55,
+     "snr": 448.6
+    },
+    "f277w": {
+     "mag": 21.61,
+     "snr": 732.7
+    },
+    "f444w": {
+     "mag": 21.23,
+     "snr": 967.3
+    }
+   },
+   "lens_relics": {
+    "glafic": null,
+    "lenstool": null,
+    "wslap": null,
+    "zitrin-ltm-gauss": null
+   }
+  }
+ }
+}

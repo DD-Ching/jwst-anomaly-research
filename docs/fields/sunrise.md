@@ -313,3 +313,37 @@ Outputs under `outputs/t_sunrise_e13/` (not committed). Every number is `derived
   - **Why the search missed them:** the combination step needs the same kind in two bands, and in this pair only
     F150W and F444W overlap. `n0022` and `n0150` are blue and faint in F444W. That `n0022`/`n0150` did not appear in the o010/o120
     search (F090W and F115W) is not yet understood (footprint or depth proxy, or the S/N ≥ 10 cut).
+
+## Follow-up sources `1756`, `1907` and `1578`: vetted 2026-10-14 (ordinary)
+
+`scripts/field_followups.py --pm` (outputs `results/field_followups/summary.json`; five-band 6″ cutouts looked at by
+eye). Provenance labels and z_s grid as in docs/fields/elgordo.md's follow-up section; the lens model is the four
+RELICS v1 models (local deflection patches, and `sunrise_counter.load_model` maps over ±50″ for the counter-images).
+- **`f200w_1578` (#2):** an edge-on disk with a dust lane: the dark band is deepest in F115W/F150W and gone in
+  F444W, so the "red F200W−F277W" and the extreme concentration are dust and inclination. DJA 9915 (0.04″, F200W
+  22.5, F444W 21.2). It lies 3.2′ north of the core, outside every RELICS map. **Ordinary.**
+- **`f200w_1907` (#12):** a dusty, clumpy inclined disk; the "two-knot arc" is its spiral structure. DJA 3538
+  (0.03″): F115W 27.3, F150W 26.1, F200W 24.8, F444W 23.1 (red, dust or redshift). RELICS μ 1.3–6 at z 1–6: singly
+  imaged. **Ordinary.** (The run's "no catalogue counterpart" meant NED/SIMBAD; DJA has both 1578 and 1907.)
+- **`f200w_1756` (#13):**
+  - **On the sky, not persistence:** `persistence_check.py` on o010 and o120: detected in 46 of 48 `_cal`
+    exposures (42 clean, 0 suspect). Steady: median per-exposure flux in o120 within 1–4 % of o010 in F090W, F115W, F277W and F356W (164 d).
+  - **Point-like, stellar-like SED:** CI_50_30 1.49, below 98 % of the 320 sources at aper50 23–26. r = 0.25″ AB
+    (no aperture correction): F115W 23.9, F150W 23.8, F200W 24.1, F277W 24.6, F444W 25.6, falling to the red as a
+    star's Rayleigh–Jeans side does. Not in Gaia DR3 (too faint).
+  - **No proper motion detected:** the F115W centroid moved (4.9, −4.7) mas between epochs relative to 58 reference
+    sources (scatter 5.7, 4.8 mas): 15 ± 17 mas/yr, ≤ 48 mas/yr (2σ). This only excludes fast nearby stars.
+  - **The lens models say it is foreground:** it lies in the strong-lensing zone (μ 8–31 at z 2 in all four
+    models). As a background source at z ≥ 2, the models predict counter-images 7–68″ away. D-029 forced
+    photometry in F115W and F200W, scaled from its own 0.2″-aperture flux, with injection, at every one: 8
+    `absent` (injection `recovered`), the rest `undetectable`, `confused` or `recovered`. The `absent` ones come
+    from 2 of 4 models at z 2 (Lenstool, LTM) and z 3 (Lenstool, LTM), and 3 of 4 at z 6 (Glafic, Lenstool,
+    WSLAP+). So at every redshift tested, a background reading conflicts with at least two models, though never
+    all four (the D-041 cross-model rule). At z = 1 the models give μ 2.2–2.9 and no counter-image. A point-like,
+    stellar-SED source with no counter-images is therefore read as foreground, most likely a Galactic star
+    (hypothesis; no spectrum).
+  - **Catalogue effect:** DJA v7.5 has no object within 2.9″ of this 24.7 mag source. A vertical stripe passes
+    0.6″ east of it. It is not a spike of Gaia star `1817`, which is 442 px off that column, and no catalogue
+    source brighter than 21 mag (or saturated) lies on the column within 30″. The source of the stripe and the reason DJA misses
+    1756 are undetermined (probably masking).
+  - **Ordinary; not a candidate.**

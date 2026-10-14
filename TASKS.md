@@ -238,8 +238,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    - ~~vet Abell 2744 `5904`, `7987`, `4731`, `264`, `7298`~~ — done (2026-10-14, `a2744_followups.py`): all ordinary
      (two little red dots, a dusty galaxy with clumps, a z_spec-excluded candidate image, a faint galaxy). Optional:
      relabel D-020's "star without host" reason as "point source without host (star or little red dot)";
-   - vet El Gordo `2828` (a linear feature) and `1601`;
-   - vet Sunrise `1756`, `1907`, `1578`;
+   - ~~vet El Gordo `2828`, `1601` and Sunrise `1756`, `1907`, `1578`~~ — done (2026-10-14, `field_followups.py`):
+     all ordinary (a star's spike, a faint SW-bright galaxy with no `absent` counter-image, two dusty disks, a
+     foreground point source with no counter-images). Optional: why DJA v7.5 misses Sunrise 1756;
    - Sunrise `1869` is a two-band detection on a star spike (D-014 spike mask);
    - Sunrise has a rel_weight plateau at 0.45–0.55 (1,909 sources), so the D-011/D-021 0.5 cut splits it on noise;
    - duplicate merged sources (Abell 2744 `3999`/`7179`, 0.25″ apart);

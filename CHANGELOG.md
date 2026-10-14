@@ -2,8 +2,29 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-14: El Gordo and Sunrise follow-ups (in progress)
-- Plan: vet El Gordo `2828`, `1601` and Sunrise `1756`, `1907`, `1578` (TASKS "Field follow-ups").
+## 2026-10-14: the El Gordo and Sunrise follow-up sources are ordinary
+- **Hypothesis before computing:** one of El Gordo `2828`/`1601` or Sunrise `1756`/`1907`/`1578` could be a lensed
+  image with an unmet model prediction, or a source no ordinary class explains. Ordinary: spikes, persistence,
+  catalogue effects, dusty disks, stars, emission-line galaxies. Plan change if a counter-image is `absent` with
+  injection `recovered`, or a source survives every ordinary test.
+- New: `scripts/field_followups.py` (DJA matched photometry, spike geometry on the mosaic axes, five-band stamp
+  photometry, Caminha+23 counter-images with D-029 forced photometry, RELICS magnifications and counter-images,
+  two-epoch proper motion) and unit tests; `results/field_followups/summary.json`.
+- **Result** (details: docs/fields/elgordo.md, sunrise.md "Follow-up sources"):
+  - El Gordo 2828 is the horizontal diffraction spike of Gaia DR3 4931899405421624704 (G 15.9), on its mosaic
+    row 6.0″ away. An artefact.
+  - El Gordo 1601 is a real faint source whose SW bands are ~2 mag brighter than its LW bands (an emission-line
+    galaxy is a hypothesis). Its eight Caminha+23 counter-images at z 2–6 have no `absent` verdict.
+  - Sunrise 1578 is an edge-on dusty disk; 1907 is a dusty clumpy disk (μ ≤ 6, singly imaged).
+  - Sunrise 1756 is a point-like source on the sky in 46 / 48 exposures, steady over 164 d, with no detected
+    proper motion (≤ 48 mas/yr, 2σ) and a stellar-like SED. As a z ≥ 2 source, 2–3 of the 4 RELICS models at
+    each z predict counter-images that forced photometry with injection finds `absent`. So it is read as
+    foreground (likely a star). DJA misses it (undetermined; a stripe 0.6″ away is not star 1817's spike).
+  - **Null:** no unmet lens-model prediction, no candidate.
+- **Failed approach:** the DJA v7.0/v7.5 `eazypy.zout.fits` URLs return 403 (they ship only in tarballs), so the
+  lens checks scan z_s ∈ {1, 2, 3, 6} instead of using photo-z.
+- **Handoff:** the field follow-up lists of Abell 2744, El Gordo and Sunrise are closed. Next from TASKS
+  "Field follow-ups": Sunrise `1869` (spike), the rel_weight plateau, duplicate merged sources.
 
 ## 2026-10-14: the five Abell 2744 follow-up sources are ordinary
 - **Hypothesis before computing:** one of the five unvetted M1 follow-ups (docs/fields/abell2744.md) could be a
