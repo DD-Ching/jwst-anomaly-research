@@ -48,4 +48,40 @@ def test_match_potentials_flags_offplane_and_photoz():
     assert np.isnan(out["z_spec"][0]) and not out["offplane"][0]
     assert list(out["offplane"][1:]) == [True, True, False]
     assert list(out["photoz_agrees"][1:]) == [True, False, True]
+    assert list(out["z_trusted"]) == list(out["photoz_agrees"])
     assert abs(out["sep_arcsec"][1] - 0.1) < 1e-3
+
+
+def test_read_muse_and_quality_trust(tmp_path):
+    spec = op.MUSE["elgordo-caminha23"]
+    lines = [
+        "ACT0102-J010252.71-491524.29 15.7196248 -49.2567473 0.6320  3     1",
+        "ACT0102-J010257.38-491542.15 15.7390782 -49.2617090 0.6311  9     1",
+        "ACT0102-J010301.08-491559.58 15.7544997 -49.2665507 0.0000  4     1",
+    ]
+    path = tmp_path / "catalog.dat"
+    path.write_text("\n".join(lines) + "\n")
+    cat = op.read_muse(path, spec)
+    assert list(cat["Z_OK"]) == [True, True, False]
+    assert cat["SOURCE"][0] == "ACT0102-J010252.71-491524.29"
+    assert abs(cat["RA"][1] - 15.7390782) < 1e-9 and abs(cat["Z_SPEC"][0] - 0.632) < 1e-9
+
+    model = _model()
+    ra, dec = model.to_sky([10.0, 0.0], [0.0, 10.0])
+    cat = Table(
+        {
+            "SOURCE": ["a", "b"],
+            "RA": ra,
+            "DEC": dec,
+            "Z_SPEC": [0.2, 0.6],
+            "REF_SPECZ": ["m", "m"],
+            "Z_OK": [True, False],
+        }
+    )
+    out = op.match_potentials(model, cat, 0.4, 0.5, 0.02)
+    assert "photoz_agrees" not in out.colnames
+    # the untrusted row is never matched, so it cannot stand in for the potential's redshift
+    assert list(out["cat_id"]) == ["", "a", "", ""]
+    assert list(out["offplane"]) == [False, True, False, False]
+    assert list(out["z_trusted"]) == [False, True, False, False]
+    assert "photoz_tol" not in out.meta

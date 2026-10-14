@@ -387,3 +387,10 @@ D-041 rule removes both remaining Bergamini `absent` rows; no new flag.
 - 4.2c: `absent` in both only ungated (references fail the gates: resolved knots); vetted verdict stands.
 
 Cutouts viewed. **Null.**
+
+## Off-plane potentials (2026-10-14, D-046 addendum 2026-10-14c)
+
+`offplane_potentials.py --model abell2744-bergamini23` (Richard+21 MUSE catalogue, CDS J/A+A/646/A83 `a2744.dat`,
+zconf ≥ 2 trusted; within 0.5″ in the model frame, where the MUSE and member positions agree to a median 0.08″): 72 / 180 potentials have a z_spec and **none is off-plane**
+(|Δz|/(1+z) ≤ 0.02). Bergamini+23 selected members spectroscopically where MUSE covers them; the 108 without a
+MUSE z_spec lie outside the MUSE mosaic or have no secure redshift. UNCOVER v2.0 is a map model (no potentials).

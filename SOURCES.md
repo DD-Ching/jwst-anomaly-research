@@ -511,6 +511,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
       `bayes.dat` 1,666,720 B sha256 `2d3f7362…` (MCMC chain, D-045), `to_sample.par` (read for the potfile `mag0`).
       `fits/magnification_best_fit_z2.fits` and `_z4.fits` (4,003,200 B each; sha256 `2cfe1b62…`, `6eab61e2…`; signed μ,
       0.4″/px, model frame), pinned in `lensmodel.ELGORDO_CAMINHA23_MAG_MAPS` for `validate`.
+      `catalog.dat` (MUSE redshift catalogue, table 1; 26,532 B, sha256 `c4ddb6e2…`, accessed 2026-10-14), pinned in
+      `scripts/offplane_potentials.py` `MUSE`.
+    - Richard et al. 2021 (A&A 646, A83, arXiv:2009.09784), MUSE lensing-cluster redshift catalogues,
+      https://cdsarc.cds.unistra.fr/ftp/J/A+A/646/A83/: `a2744.dat` (284,372 B, sha256 `89d4615f…`, 506 rows, accessed
+      2026-10-14), pinned in `scripts/offplane_potentials.py` `MUSE`.
     - Lenstool source, https://git-cral.univ-lyon1.fr/lenstool/lenstool.git (v8.15.6, commit 09cf4cc4, accessed
       2026-10-08): `docs/sphinx/source/section_parfile/image.rst` ("forme"), `src/o_chi.c` (`chi2_img`, σ² = a·b for
       `forme -10`), `src/bayesapp.c` (bayes.dat ln(Lhood) and Chi2). Read for the D-045 amendment.

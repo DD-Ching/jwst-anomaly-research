@@ -2,9 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-14: off-plane potentials in the Abell 2744 and El Gordo models (in progress)
-- Claimed by cloud routine 01FdC23M at 18:15Z: D-042 off-plane listing for `abell2744-bergamini23` and
-  `elgordo-caminha23`.
+## 2026-10-14: off-plane potentials in the Abell 2744 and El Gordo models: El Gordo's z 0.63 group, no tension
+- **Hypothesis before computing:** a Bergamini+23 or Caminha+23 potential whose galaxy has a MUSE z_spec off the
+  cluster plane might, on its own plane, predict a robust extra image or break the image fit. Ordinary: a known
+  foreground structure absorbed by the single-plane fit, misassociated redshifts, unrefitted parameters. Plan
+  change if Δχ² ≫ 10 at every plausible σ or a robust new extra image appears.
+- New: `offplane_potentials.py` reads the authors' MUSE catalogues on CDS (Richard+21 for Abell 2744, Caminha+23
+  for El Gordo; quality-flag trust, model frame) when no `--field` is given; unit test.
+- **Result** (`model_prediction`, unrefitted; details docs/fields/elgordo.md, abell2744.md; D-046 addendum c):
+  - Abell 2744 Bergamini+23: 72 / 180 with z_spec, **0 off-plane**.
+  - El Gordo Caminha+23: 188 / 265 with z_spec, 20 off-plane, all at z 0.6305–0.6355: the paper's own
+    foreground group of 20 ellipticals (positive control). Moved to z 0.6325: χ² 82.5 → 98.2 at best σ (× 1.10;
+    100.3 fitted, 110.5 lensing-equivalent, 127.8 luminosity-rescaled; 312.9 removed). The paper's refitted
+    model without the group has χ² 103, so the unrefitted multi-plane cost is smaller than dropping the group.
+  - `images --plane`: the existing extras persist; one new system-17 extra at F200W 29.2 (undetectable). **Null.**
+- **Handoff:** the D-042 off-plane listing is now done for MACS0416, Abell 2744 and El Gordo. Remaining: Abell 370
+  CANUCS (CANUCS DR1 z_spec, `--field abell370`), SMACS 0723 (Caminha+22 MUSE, J/A+A/666/L9). A multi-plane refit
+  stays out of scope until a flag depends on an off-plane potential.
 
 ## 2026-10-14: MACS0416 CANUCS potentials with off-plane spectroscopic redshifts: no tension
 - **Hypothesis before computing:** a CANUCS potential whose galaxy has a z_spec off the cluster plane (D-042 rule)
