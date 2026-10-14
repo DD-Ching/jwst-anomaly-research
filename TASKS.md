@@ -23,7 +23,7 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
 
 - **X3 W3 in unselected Gaia epoch photometry** (authorized 2026-10-14 by S0-2026-10-14): state file
   `docs/state/units/X3.md`. G0 passed on dev. G1 done: held-out GAPS screened once (395,764 exposed sources),
-  196 flags, every one failing a costed ordinary rule, no candidate; conditional limit Γ₉₅ < 1 × 10⁻⁵ per star per year for
+  196 flags, every one failing a costed (post hoc) ordinary rule, no candidate; conditional limit Γ₉₅ < 1 × 10⁻⁵ per star per year for
   photocentre-stable events (blended events are mostly vetoed by RUWE). Next: G2 after DR4 (2 Dec 2026); first
   design the epoch-astrometry signature and a joint G/BP/RP fit on dev.
 
