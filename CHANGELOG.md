@@ -2,8 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-14: MACS1149 untested counter-images (in progress)
-- Plan: sibling reference fluxes and a Sharon v4cor cross-model check for the CATS `no_reference` forced rows.
+## 2026-10-14: MACS1149's 11 untested counter-images: none unmet in both models
+- **Hypothesis before computing:** one of the 11 CATS forced rows without a reference flux (systems 13, 14, nine SN
+  Refsdal host knots) is a predicted image both models need and the data do not show. Ordinary: model copies of
+  catalogued images, resolved host light, images below the noise. Plan change if a gated row is `absent` and Sharon
+  v4cor predicts it too.
+- New: `scripts/m1149_refs.py` (sibling references without the |μ| cap in F150W/F277W/F444W; Sharon v4cor solved per
+  system, D-041 cross-model rule) and unit tests; tracked input and output in `results/lens_consistency/macs1149-cats/`.
+- **Result** (D-037 addendum 2026-10-14, docs/fields/macs1149.md): 0 `absent` in any band, gated or ungated. Four
+  rows are catalogued images CATS misplaces (13 vs 13.2; 1002, 1222, 1007), one is undetectable (14, 2.4σ), six lie
+  in the resolved host images 1.2/1.3 (ungated `recovered` ratio 1.4–1.9, or untestable). Stamps looked at.
+  **Null:** no MACS1149 counter-image is unmet in both models.
+- **Handoff:** MACS1149's counter-image line is closed with two models. Next field items in TASKS: system 16's far-image
+  track (fixes its z), the Sunrise rel_weight plateau, duplicate merged sources.
 
 ## 2026-10-14: the El Gordo and Sunrise follow-up sources are ordinary
 - **Hypothesis before computing:** one of El Gordo `2828`/`1601` or Sunrise `1756`/`1907`/`1578` could be a lensed

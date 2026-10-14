@@ -2100,6 +2100,15 @@ CATS-fitted z = 4.419.
 - A spectroscopic z for system 16 is published (search the MUSE catalogues of Grillo+2016 and Treu+2016), or a source
   with 16.1's colour is found on the far-image track (z = 2.5–3.5 positions). Either would fix z.
 - `images` is re-run with CANUCS DR1 photo-z (counterpart redshifts). DJA v7 has no MACS1149 mosaic.
+
+**Addendum 2026-10-14 (the 11 `no_reference` rows).**
+- **Decision.** The CATS forced rows without a reference flux are tested with sibling references (no |μ| cap,
+  three bands) and Sharon v4cor solved per system (`scripts/m1149_refs.py`). They add no flag: 0 `absent`.
+- **Evidence.** 4 rows are catalogued images CATS misplaces (13 lies 1.8″ from 13.2, which CATS does not predict; 1002, 1222,
+  1007 sit 0.75–2.3″ from Sharon images on catalogued knots), 1 is undetectable (14, 2.4σ), 6 lie in the resolved
+  Refsdal host images 1.2/1.3 (ungated `recovered`, `confused` or `undetectable`). docs/fields/macs1149.md.
+- **Revisit if** a JWST-era MACS1149 model with knot-level constraints appears.
+
 ## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)
 
 **Decision.** MACS0416 system 26's 11″ image-plane residual (D-035) comes from `find_images`. With the default 0.25″

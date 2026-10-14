@@ -147,6 +147,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.35 (off-plane potentials: Abell 370 MUSE vs CANUCS z_spec, 180 σ controls; SMACS frame offset, `images --plane`) | — | — | 0.1 (orientation, claim, PR) | cloud routine 0181RxsQ, 19:08–19:45Z |
 | 2026-W42 | — | — | ≈ 0.4 (vet five Abell 2744 follow-ups: published identities, Bergamini+23 counter-images, 264 knot colours; cutouts) | 0.1 (orientation, claim, PR) | cloud routine 0183gAYL, 20:08–20:50Z |
 | 2026-W42 | — | — | ≈ 0.6 (vet El Gordo 2828/1601 and Sunrise 1756/1907/1578: spikes, DJA, persistence, proper motion, RELICS and Caminha+23 counter-images; cutouts) | 0.1 (orientation, claim, PR) | cloud routine 01EwxqDZ, 21:08–21:50Z |
+| 2026-W42 | ≈ 0.3 (`m1149_refs.py`: MACS1149 `no_reference` rows, sibling references, Sharon v4cor; stamps) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01CLbKJM, 22:08–22:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
