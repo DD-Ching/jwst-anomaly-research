@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: (in progress) SMACS systems 11, 16, 26: reference fluxes for their uncatalogued images
+- Claim: cloud routine; plan: test whether a model-robust reference flux exists for the D-029 `no_reference` images.
+
 ## 2026-10-14: SMACS system 17 near the BCG: halo-subtracted counter-image absent, explained by its free redshift
 - **Hypothesis before computing:** D-029's marginal recovery of system 17's μ −10.2 image (7.8σ, ratio 0.36) sits on
   the BCG's light gradient; with the halo removed, either a compact image remains (recovered) or the 7.8σ was halo
