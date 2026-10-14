@@ -15,9 +15,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - 264 (dusty star-forming galaxy, McKay et al. 2025): of the three F200W peaks, one is the red core
     (F150W/F200W 0.05 ± 0.03 vs 0.36–0.45), and the two blue clumps sit on one side with no counter-image.
   - 4731 is a faint compact galaxy at the noise level.
-  - Lens model: COUNTERSUMMARY
+  - Bergamini+23 (`model_prediction`): four are singly imaged (μ 1.6–6.2). 4731 has μ ≈ 22 near system 700.1 in
+    the model-limited infall region; its brightest predicted counter-image (F200W 27.8) has a 27.0 catalogue
+    source 0.37″ away and the other three are predicted at 28.6–29.4. **Null:** no unmet prediction, no candidate.
+- **Failed approach:** a 0.1″ solver grid over ±244″ did not finish in 15 min; 0.25″ over ±214″ took ~3 min.
 - **Handoff:** the M1 Abell 2744 follow-up list is closed. Next field follow-ups in TASKS: El Gordo `2828`/`1601`,
-  Sunrise `1756`/`1907`/`1578`.
+  Sunrise `1756`/`1907`/`1578`. Optional: 4731's counter-images in UNCOVER v2.0.
 
 ## 2026-10-14: off-plane potentials in the Abell 370 and SMACS 0723 models: null
 - **Hypothesis before computing:** a CANUCS (Abell 370) or Mahler+22 (SMACS 0723) potential with a MUSE z_spec off
