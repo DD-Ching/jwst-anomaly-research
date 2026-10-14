@@ -4542,11 +4542,15 @@ unit overruns its budget.
 **Evidence:**
 - Bulk = DataLink on 309 / 309 dev sources.
 - Dev calibration: W3 efficiency 0.32 (t_E 30–300 d), PSPL 0 / 1,995, real 0 / 1,995.
-- RUWE inflation would veto 92–99.6 % of blended W3 events.
-- Held-out: 395,764 exposed sources, 196 flags, no candidate; vetted efficiency 0.276.
+- RUWE inflation would veto an estimated 92–99.6 % of blended W3 events (model estimate under assumed blend and error
+  priors; not a measured or strict bound).
+- Held-out: 395,764 exposed sources, 196 flags excluded by rules (not each proven ordinary), no candidate;
+  vetted efficiency 0.276.
 - Γ₉₅ < 9.7 × 10⁻⁶ per star per year, photocentre-stable (`results/x3/g1_*`).
 
 **Revisit if:**
-- DR4 publishes epoch astrometry (then the photocentre shift becomes a signature, not a veto);
+- DR4 epoch astrometry is documented. The blend-ratio photocentre shift is NOT a signature: it is exactly
+  degenerate with an ordinary blended variable. Only the lens image shift is new, measurable for G ≲ 17,
+  θ_E ≳ 3 mas and t_E ≈ 100 d, under the assumed per-transit σ (X3.md, G2 prerequisite; addendum 2026-10-14 by owner correction);
 - a joint G/BP/RP fit is built (it replaces the colour test);
 - Gaia changes the bulk-file layout.

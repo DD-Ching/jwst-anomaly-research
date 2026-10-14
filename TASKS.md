@@ -24,8 +24,10 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
 - **X3 W3 in unselected Gaia epoch photometry** (authorized 2026-10-14 by S0-2026-10-14): state file
   `docs/state/units/X3.md`. G0 passed on dev. G1 done: held-out GAPS screened once (395,764 exposed sources),
   196 flags, every one failing a costed (post hoc) ordinary rule, no candidate; conditional limit Γ₉₅ < 1 × 10⁻⁵ per star per year for
-  photocentre-stable events (blended events are mostly vetoed by RUWE). Next: G2 after DR4 (2 Dec 2026); first
-  design the epoch-astrometry signature and a joint G/BP/RP fit on dev.
+  photocentre-stable events (blended events are mostly vetoed by RUWE, a model estimate). G2 prerequisite done:
+  astrometry mostly repeats the ordinary blend effect; only the lens image shift is new, measurable for G ≲ 17,
+  θ_E ≳ 3 mas and t_E ≈ 100 d (under the assumed per-transit σ). Next: wait for ESA's DR4 epoch-astrometry documentation (2 Dec 2026); develop only if it carries AL
+  coordinates, scan angles and σ for those sources.
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
