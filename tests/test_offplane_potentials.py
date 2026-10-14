@@ -85,3 +85,25 @@ def test_read_muse_and_quality_trust(tmp_path):
     assert list(out["offplane"]) == [False, True, False, False]
     assert list(out["z_trusted"]) == [False, True, False, False]
     assert "photoz_tol" not in out.meta
+
+
+def test_read_muse_frame_offset_and_new_specs(tmp_path):
+    spec = op.MUSE["smacs0723-iclv2"]
+    lines = [
+        "52 110.80913200 -73.46090280 0.7460 3 1  1.000   0.000   0.000",
+        " 1 110.82842940 -73.46025740 0.0000 4 1  1.000   0.000   0.000",
+    ]
+    path = tmp_path / "muse.dat"
+    path.write_text("\n".join(lines) + "\n")
+    cat = op.read_muse(path, spec)
+    assert list(cat["Z_OK"]) == [True, False] and list(cat["SOURCE"]) == ["52", "1"]
+    assert abs(cat["Z_SPEC"][0] - 0.746) < 1e-9
+    # positions are moved back by the catalogue's offset from the model frame
+    dx, dy = spec["frame_offset_arcsec"]
+    cos_d = np.cos(np.deg2rad(-73.4609028))
+    assert abs((cat["RA"][0] - 110.809132) * 3600 * cos_d + dx) < 1e-3
+    assert abs((cat["DEC"][0] + 73.4609028) * 3600 + dy) < 1e-3
+    # Abell 370 uses Richard+21's layout (same as Abell 2744) without an offset
+    a370 = op.MUSE["abell370-canucs"]
+    assert a370["cols"] == op.MUSE["abell2744-bergamini23"]["cols"]
+    assert "frame_offset_arcsec" not in a370

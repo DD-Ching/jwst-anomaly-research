@@ -197,8 +197,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      MACS1149, MACS0717, MACS0416, Abell 370 and Abell S1063 (radial) null. All six HFF clusters are screened. Next:
      - multi-plane checks: `--plane NAME=Z[:SIGMA]` on `validate` / `images` done (D-046 addendum 2026-10-14; MACS0416
        8757 at z 0.268 costs Δχ² ≤ +5.6, no tension). MACS0416 CANUCS off-plane potentials done
-       (`offplane_potentials.py`, 2026-10-14: 12 / 222, null; O5 at z 0.114 costs Δχ² +39 at its best σ 150 km/s, unrefitted, so an upper bound on the refitted cost). Next: the same
-       for Abell 2744 (UNCOVER v2.0, Bergamini+23) and El Gordo, then `images --plane` where one sits near a flagged image;
+       (`offplane_potentials.py`, 2026-10-14: 12 / 222, null; O5 at z 0.114 costs Δχ² +39 at its best σ 150 km/s, unrefitted, so an upper bound on the refitted cost). The same listing is
+       done for Abell 2744, El Gordo, Abell 370 and SMACS 0723 (D-046 addenda c–d): null in all five models. Next only if a
+       flag comes to depend on an off-plane potential: a local refit (no Lenstool optimiser in the repo yet);
      - orphan pairs (D-048, null): injection-recovery of simulated dark-lens pairs (limit per deg²); CANUCS segmentation
        maps for the same-galaxy test; blending model for pairs < 1″; re-run on Abell 2744 (UNCOVER), MACS0417, MACS1423;
        MACS1149 image list when CANUCS v2 is out;

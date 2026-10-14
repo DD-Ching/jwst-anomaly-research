@@ -313,7 +313,9 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - UNCOVER DR4: https://jwst-uncover.github.io/
 - Mahler+2022 SMACS 0723 lens model, release v2 (2022-12-27): https://github.com/guillaumemahler/SMACS0723-mahler2022
 - Noirot+2023 SMACS 0723 redshifts: https://niriss.github.io/smacs0723
-- Caminha+2022 SMACS 0723 model and MUSE redshifts, CDS catalogue J/A+A/666/L9 (file contents not verified): https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/666/L9
+- Caminha+2022 SMACS 0723 model and MUSE redshifts, CDS catalogue J/A+A/666/L9: https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/666/L9.
+  `muse.dat` (table A1, 78 rows, 4,914 B, sha256 `81868f29…`, accessed 2026-10-14) is pinned in
+  `scripts/offplane_potentials.py` `MUSE` for `smacs0723-iclv2`; the model files were not read.
 - RELICS SMACS 0723 lens-model files (`glafic/v2`, `lenstool/v1`, `zitrin-ltm-gauss/v2`): https://archive.stsci.edu/hlsps/relics/smacs0723m73/models/
   - Used 2026-10-14 (`scripts/smacs_s17_vet.py`): `glafic/v2` and `zitrin-ltm-gauss/v2` `{x,y}-arcsec-deflect.fits`, sha256 in the
     script (`lenstool/v1` lists no files); z_lens 0.39 and H0 70 / Ωm 0.3 assumed for the D_LS/D_S = 1 maps.
@@ -515,7 +517,8 @@ All of these were rejected for D-018; they are listed so later sessions do not s
       `scripts/offplane_potentials.py` `MUSE`.
     - Richard et al. 2021 (A&A 646, A83, arXiv:2009.09784), MUSE lensing-cluster redshift catalogues,
       https://cdsarc.cds.unistra.fr/ftp/J/A+A/646/A83/: `a2744.dat` (284,372 B, sha256 `89d4615f…`, 506 rows, accessed
-      2026-10-14), pinned in `scripts/offplane_potentials.py` `MUSE`.
+      2026-10-14), pinned in `scripts/offplane_potentials.py` `MUSE`; `a370.dat` (321,464 B, sha256 `05f524e5…`, 572
+      rows, accessed 2026-10-14), pinned there for `abell370-canucs`.
     - Lenstool source, https://git-cral.univ-lyon1.fr/lenstool/lenstool.git (v8.15.6, commit 09cf4cc4, accessed
       2026-10-08): `docs/sphinx/source/section_parfile/image.rst` ("forme"), `src/o_chi.c` (`chi2_img`, σ² = a·b for
       `forme -10`), `src/bayesapp.c` (bayes.dat ln(Lhood) and Chi2). Read for the D-045 amendment.
