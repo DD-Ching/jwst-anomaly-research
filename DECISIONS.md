@@ -1519,7 +1519,8 @@ Field docs: `docs/fields/*.md`.
 
 **Revisit if.**
 - A BCG/ICL model is subtracted. That allows a clean test near the BCG (system 17).
-- A reference flux is available for systems 11, 16 and 26 (DJA matched photometry, or a deeper image).
+- A reference flux is available for systems 11, 16 and 26 (DJA matched photometry, or a deeper image). Done for
+  F200W/F444W peak fluxes in three models (addendum 2026-10-14): untestable at this depth.
 - The test runs on the other clusters: El Gordo and Abell 2744 (issue #41) once their parser bugs are fixed.
 
 **Addendum 2026-10-14 (uncatalogued bright arcs, `scripts/arcs_counter.py`).** The counter-image test now also runs
@@ -1548,6 +1549,17 @@ Glafic (z ≈ 1.5) predicts one 0.9–1.5″ from ICLv2's, also undetected; no p
 The absence constrains the inner mass profile (BCG) of the models that predict the pair. Rejected: the annulus-only
 background of the original run (the BCG gradient made the 7.8σ). Revisit if: a spectroscopic redshift for system 17,
 or a model with a fitted BCG profile that still predicts the pair at ≥ 10σ.
+
+**Addendum 2026-10-14 (systems 11, 16 and 26, `scripts/smacs_ref_fluxes.py`).** Without the |μ| ≤ 50 cap, each
+catalogued sibling predicts the uncatalogued images (peak flux / |μ_sib| × |μ|, F200W and F444W) in ICLv2 and the two
+RELICS maps (each at the ICLv2-fitted z; ASSUMPTION). No prediction reaches 10σ from a sibling that passes the other
+D-034 gates: system 11's pair is undetected (≤ 3.7σ), system 16's counter-images are ≤ 0.6σ (ICLv2, Glafic) or a
+Zitrin third image 2.5″ from the pair that the search finds at 41σ (×2.4, on a bright arc's edge), and system 26's
+ICLv2 μ 26.6 image is 10.3σ / 10.7σ only from 26.2, whose peak is a neighbour's wing (2.3–3.2× the flux at its
+position); from 26.1 it is 3.3σ / 2.2σ, with 4.5σ / 2.9σ found. Glafic and Zitrin predict no counter-image of 26.
+**Kept:** the |μ| cap and the gates; the gate-free numbers show the counter-images of these merging pairs lie 6–60×
+below the pairs, so the systems are untestable at this depth, not violations. Revisit if: deeper imaging, or a
+spectroscopic redshift with a model that puts a counter-image of these systems at ≥ 10σ from a gated reference.
 
 ## D-030 Exact image-plane χ² in `validate`; El Gordo and Abell 2744 models in the repository (2026-10-08)
 

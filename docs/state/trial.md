@@ -125,6 +125,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.5 (`arcs_counter.py`: counter-images of uncatalogued arcs, five fields, control) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01QyGL8z, 00:08–00:48Z |
 | 2026-W42 | — | — | ≈ 0.4 (vet Abell 370 3881: CATS system 7, second-model images; exclusion fix, five-field reruns and controls) | 0.15 (orientation, takeover, base merge, PR) | cloud routine 01AQVssd, 01:08–01:50Z |
 | 2026-W42 | ≈ 0.25 (SMACS system 17 halo-subtracted counter-image) | — | ≈ 0.15 (system 17 vetting: z scan, RELICS models, literature) | 0.1 (orientation, claim, PR) | cloud routine 014mrZNP, 02:08–02:45Z |
+| 2026-W42 | ≈ 0.3 (SMACS systems 11, 16, 26: sibling references in three models, two bands; cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01LDvpj4, 03:07–03:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
