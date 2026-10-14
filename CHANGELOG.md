@@ -4,11 +4,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-14: Sunrise counter-images in the four RELICS models: null (D-033 addendum 4)
 - **Tool:** `scripts/sunrise_counter.py` (byte-range deflection blocks → `MapLensModel` → `find_images`, D-029 forced
-  photometry on F200W, D-041 copy and cross-model rules); `results/sunrise/counter_images.json`.
+  photometry on F200W with an injection check, D-041 copy and cross-model rules); `results/sunrise/counter_images.json`.
 - **Known cases:** system 2 re-predicted by all four models (rms 0.16–0.69″); system 1 only partly (1–5 of each knot's
-  images, rms 0.5–9.4″). Leave-one-out flux control 18/20 `recovered`, 1 `undetectable`, 1 `absent` (ratio 0.32).
-- **Result:** 0 flags. Glafic's `absent` arc-end image of 1.1 (|μ| 39, predicted 16σ) is predicted by 2 of 4 models
-  and is the model's displaced 1.1c (5.1″; cutout empty, arc ~2″ away). The arc's counter-image across the cluster is
+  images). Leave-one-out control through the same chain: 16/20 `recovered`, 3 `confused`, 1 `undetectable`, 0 `absent`.
+- **Result:** 0 flags. Glafic's `absent` arc-end images of 1.1 and 1.2 (|μ| 39, 79; predicted 16σ, 25σ; injections
+  recovered) are predicted by 1–2 of 4 models and are its displaced 1.1c / 1.2c (5.1″, 3.3″; cutouts empty, arc ~2″
+  away). The arc's counter-image across the cluster is
   predicted at S/N ≤ 1.7 in every model, at positions up to ~19″ apart. System 2 counter-images: `undetectable` or
   `confused`. Details: docs/fields/sunrise.md.
 - **Handoff:** the Sunrise counter-image line is closed until a JWST-era model fits every knot. Remaining lens-model

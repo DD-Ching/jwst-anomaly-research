@@ -25,8 +25,12 @@ Rules (D-041, thresholds are ASSUMPTIONs):
 * model copy: a counter-image within ``COPY_FACTOR`` x the knot's image-plane rms of a catalogued
   image the model does not re-predict is the model's displaced copy of it, not a missing image;
 * cross-model: ``n_models`` counts the models predicting a counter-image of the same knot within
-  ``--cross-arcsec``; an image predicted by only some models is model-dependent. A flag is an
-  ``absent`` counter-image that every model predicts.
+  ``--cross-arcsec`` (copies and demagnified images of other models do not count); an image
+  predicted by only some models is model-dependent;
+* injection: a compact image of the predicted flux is added at each tested position and the
+  verdict repeated (``inject_class``, simulated).
+A flag is an ``absent`` counter-image whose injection reads ``recovered`` and that every one of
+at least two models predicts. Positions without mosaic coverage are ``off_image``.
 
 Known cases: the catalogued images re-predicted within ``--self-arcsec``
 (``n_catalogued_recovered``) and, as the positive control of the flux chain, each catalogued
@@ -48,11 +52,11 @@ import numpy as np
 import requests
 from astropy.cosmology import FlatLambdaCDM
 from astropy.wcs import WCS
-from sunrise_relics import BASE, DTYPES, KEYS, MODELS, _get, read_header
-from sunrise_scofield import IMAGES, system_of
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lens_consistency as lc  # noqa: E402
+from sunrise_relics import BASE, DTYPES, KEYS, MODELS, _get, read_header  # noqa: E402
+from sunrise_scofield import IMAGES, system_of  # noqa: E402
 
 from jwst_anomaly import lensmodel  # noqa: E402
 
@@ -62,17 +66,25 @@ CENTRE = (24.3555, -8.4570)  # model-frame origin near the cluster core (RA, Dec
 F200W = "s3://stpubdata/jwst/public/jw02282/L3/t/o010/jw02282-o010_t001_nircam_clear-f200w_i2d.fits"
 CHUNK = 8 * 2**20  # bytes per range request
 COPY_FACTOR = 1.75  # model copy within this x the knot's image-plane rms (D-041; ASSUMPTION)
+INJECT_FWHM_ARCSEC = lc.HALO_INJECT_FWHM_ARCSEC  # compact injected image (~F200W PSF; ASSUMPTION)
 FLAG_CLASSES = ("absent",)
+NOT_INDEPENDENT = ("model_copy", "demagnified")  # not an independent prediction of an image
 
 
 def cross_model(results: list[dict], radius: float) -> None:
     """Add ``n_models``: how many models predict a counter-image of the same knot within
     ``radius`` of each counter-image (D-041: an image predicted by only some models is
-    model-dependent and untestable). Flags are ``absent`` images that every model predicts."""
+    model-dependent and untestable). Only other models' images that are neither copies nor
+    demagnified count. Flags are ``absent`` images, recovered when injected, that every one of
+    at least two models predicts."""
     pts = {
         (r["model"], c["knot"]): np.array(
-            [[q["ra"], q["dec"]] for q in r["counter_images"] if q["knot"] == c["knot"]]
-        )
+            [
+                [q["ra"], q["dec"]]
+                for q in r["counter_images"]
+                if q["knot"] == c["knot"] and q["class"] not in NOT_INDEPENDENT
+            ]
+        ).reshape(-1, 2)
         for r in results
         for c in r["counter_images"]
     }
@@ -87,11 +99,17 @@ def cross_model(results: list[dict], radius: float) -> None:
                 dy = (p[:, 1] - c["dec"]) * 3600.0
                 n += bool(np.hypot(dx, dy).min() <= radius)
             c["n_models"] = n
-            c["flag"] = c["class"] in FLAG_CLASSES and n == len(results)
+            c["flag"] = bool(
+                c["class"] in FLAG_CLASSES
+                and c.get("inject_class") == "recovered"
+                and len(results) >= 2
+                and n == len(results)
+            )
 
 
 def read_block(session, url: str, wcs_hdr, offset: int, rows: tuple[int, int]) -> np.ndarray:
-    """Full-width rows [rows[0], rows[1]) of one map, read as parallel byte ranges."""
+    """Full-width rows [rows[0], rows[1]) of one map, read as parallel byte ranges (the
+    columns are cut afterwards: a row segment per request would mean thousands of requests)."""
     nx, bpp = wcs_hdr["NAXIS1"], abs(wcs_hdr["BITPIX"]) // 8
     start, stop = offset + rows[0] * nx * bpp, offset + rows[1] * nx * bpp
     spans = [(s, min(s + CHUNK, stop)) for s in range(start, stop, CHUNK)]
@@ -103,10 +121,13 @@ def read_block(session, url: str, wcs_hdr, offset: int, rows: tuple[int, int]) -
 def load_model(name: str, half: float) -> lensmodel.MapLensModel:
     """The model's deflection maps over a (2 half + margin) box around ``CENTRE``."""
     session = requests.Session()
-    out = {}
+    out, grid_keys = {}, ("NAXIS1", "NAXIS2", "CRPIX1", "CRPIX2", "CRVAL1", "CRVAL2")
     for k in ("defx", "defy"):
         url = BASE.format(m=name, k=KEYS[k])
         hdr, off = read_header(session, url)
+        grid = tuple(hdr.get(c) for c in grid_keys)
+        if out.setdefault("grid", grid) != grid:
+            raise RuntimeError(f"{name}: defy grid differs from defx")
         wcs = WCS(hdr)
         pix = float(abs(wcs.pixel_scale_matrix[1, 1]) * 3600.0)
         ic, jc = (float(v) for v in wcs.world_to_pixel_values(*CENTRE))
@@ -115,7 +136,6 @@ def load_model(name: str, half: float) -> lensmodel.MapLensModel:
         j0, j1 = max(0, int(jc) - m), min(hdr["NAXIS2"], int(jc) + m + 1)
         out[k] = read_block(session, url, hdr, off, (j0, j1))[:, i0:i1]
         out["wcs"] = wcs[j0:j1, i0:i1]
-        out["box"] = (i0, i1, j0, j1, pix)
     return lensmodel.MapLensModel(
         out["defx"],
         out["defy"],
@@ -163,19 +183,48 @@ def system_xy(model, system: str) -> np.ndarray:
 def split_images(pred: dict, sys_xy: np.ndarray, self_arcsec: float):
     """(known, counter, recovered mask, image-plane rms) of one knot's predicted images.
 
-    Known images lie within ``self_arcsec`` of a catalogued image of the system, counter-images
-    do not. ``recovered`` marks the knot's catalogued images with a prediction within
-    ``self_arcsec``; the rms is that of each catalogued image's distance to its nearest
-    prediction (the model's image-plane rms for this knot, derived)."""
+    Known images lie within ``self_arcsec`` of a catalogued image of the system (any knot: the
+    knots are clumps of one galaxy, so another knot's image marks the same arc segment),
+    counter-images do not. ``recovered`` marks the knot's catalogued images with a prediction
+    within ``self_arcsec``; the rms is over those images' distances to their nearest prediction
+    (the model's image-plane rms for this knot, derived; NaN when none is re-predicted)."""
     imgs = pred["images"]
     xy = np.column_stack([imgs["x"], imgs["y"]])
     if not len(xy):
         n = len(pred["ref_xy"])
-        return imgs, imgs, np.zeros(n, bool), float("inf")
+        return imgs, imgs, np.zeros(n, bool), float("nan")
     d = np.hypot(*(xy[:, None, :] - sys_xy[None, :, :]).transpose(2, 0, 1))
     near = d.min(axis=1) <= self_arcsec
     dk = np.hypot(*(pred["ref_xy"][:, None, :] - xy[None, :, :]).transpose(2, 0, 1)).min(axis=1)
-    return imgs[near], imgs[~near], dk <= self_arcsec, float(np.sqrt(np.mean(dk**2)))
+    ok = dk <= self_arcsec
+    # rms over the re-predicted images only: a missed image must not widen its own copy radius
+    rms = float(np.sqrt(np.mean(dk[ok] ** 2))) if ok.any() else float("nan")
+    return imgs[near], imgs[~near], ok, rms
+
+
+def classify(stamp, ra: float, dec: float, pred: float, search: float) -> dict:
+    """D-029 forced photometry of one predicted image, and the same verdict with a compact
+    image of the predicted flux injected at the position (simulated; must read ``recovered``
+    for an ``absent`` verdict to count)."""
+    sci, err, xx, yy = stamp(ra, dec)
+    f0, e0 = lc.aperture_snr(sci, err, xx, yy, 0.0, 0.0)
+    if not np.isfinite(e0) or e0 <= 0:
+        return {"class": "off_image"}
+    snr, fbest, dx, dy = lc.best_within(sci, err, xx, yy, search)
+    out = {"search_arcsec": search, "best_snr": float(snr), "best_flux": float(fbest)}
+    out["best_offset_arcsec"] = float(np.hypot(dx, dy))
+    if not np.isfinite(pred) or pred <= 0:
+        out["class"] = "no_reference"
+        return out
+    pred_snr, ratio = pred / e0, fbest / pred
+    out |= {"pred_flux": pred, "pred_snr": pred_snr, "flux_ratio": ratio}
+    out["class"] = lc.forced_class(pred_snr, float(snr), ratio)
+    s = INJECT_FWHM_ARCSEC / 2.3548
+    g = np.exp(-(xx**2 + yy**2) / (2 * s**2))
+    g *= pred / g.sum()
+    isnr, ifl, _, _ = lc.best_within(sci + g, err, xx, yy, search)
+    out["inject_class"] = lc.forced_class(pred_snr, float(isnr), ifl / pred)
+    return out
 
 
 def match_spread(main_xy: np.ndarray, others: list[np.ndarray]) -> np.ndarray:
@@ -234,22 +283,13 @@ def run_model(name: str, args, zbest: dict, stamp) -> dict:
             for r in refs
             if abs(r["mu"]) < args.max_ref_mu and np.isfinite(r["flux"]) and r["flux"] > 0
         ]
-        for r in good:  # positive control: leave-one-out prediction of a catalogued image
+        for r in good:  # positive control: leave-one-out, through the counter-image chain
             rest = [q for q in good if q is not r]
             if not rest:
                 continue
             pred = float(np.median([q["flux"] * abs(r["mu"] / q["mu"]) for q in rest]))
-            ratio = r["flux"] / pred
-            controls.append(
-                {
-                    "image": r["image"],
-                    "mu": r["mu"],
-                    "pred_snr": pred / r["err"],
-                    "best_snr": r["flux"] / r["err"],
-                    "flux_ratio": ratio,
-                    "class": lc.forced_class(pred / r["err"], r["flux"] / r["err"], ratio),
-                }
-            )
+            v = classify(stamp, *IMAGES[r["image"]], pred, args.search_arcsec)
+            controls.append({"image": r["image"], "mu": r["mu"]} | v)
         for c, sp in zip(counter, spread, strict=True):
             mu_c = float(c["magnification"])
             row = {
@@ -268,7 +308,7 @@ def run_model(name: str, args, zbest: dict, stamp) -> dict:
             if len(unrecovered):
                 dcopy = float(np.hypot(*(unrecovered - [row["x"], row["y"]]).T).min())
                 row["copy_distance_arcsec"] = dcopy
-                if dcopy <= COPY_FACTOR * rms:
+                if np.isfinite(rms) and dcopy <= COPY_FACTOR * rms:
                     row["class"] = "model_copy"
                     rows.append(row)
                     continue
@@ -277,32 +317,12 @@ def run_model(name: str, args, zbest: dict, stamp) -> dict:
                 rows.append(row)
                 continue
             search = float(min(max(args.search_arcsec, sp), lc.MAX_SEARCH_ARCSEC))
-            sci, err, xx, yy = stamp(row["ra"], row["dec"])
-            f0, e0 = lc.aperture_snr(sci, err, xx, yy, 0.0, 0.0)
-            snr, fbest, dx, dy = lc.best_within(sci, err, xx, yy, search)
             pred = (
                 float(np.median([r["flux"] * abs(mu_c / r["mu"]) for r in good]))
                 if good
                 else float("nan")
             )
-            pred_snr = pred / e0 if np.isfinite(e0) and e0 > 0 else float("nan")
-            ratio = fbest / pred if np.isfinite(pred) and pred > 0 else float("nan")
-            row.update(
-                {
-                    "search_arcsec": search,
-                    "pred_flux": pred,
-                    "pred_snr": pred_snr,
-                    "best_snr": float(snr),
-                    "best_flux": float(fbest),
-                    "best_offset_arcsec": float(np.hypot(dx, dy)),
-                    "flux_ratio": ratio,
-                    "class": "no_reference"
-                    if not good
-                    else lc.forced_class(
-                        pred_snr, float(snr), ratio if np.isfinite(ratio) else 0.0
-                    ),
-                }
-            )
+            row.update(classify(stamp, row["ra"], row["dec"], pred, search))
             rows.append(row)
     return {"model": name, "checks": checks, "controls": controls, "counter_images": rows}
 
@@ -328,7 +348,17 @@ def main(argv=None) -> int:
     ap.add_argument("--image", default=F200W)
     args = ap.parse_args(argv)
     zbest = {s["model"]: s["sys2_best_z"] for s in json.loads(args.relics.read_text())["summary"]}
-    stamp, close = lc.image_stamper(args.image, lc.MAX_SEARCH_ARCSEC + lc.FORCED_ANNULUS[1] + 0.1)
+    raw_stamp, close = lc.image_stamper(
+        args.image, lc.MAX_SEARCH_ARCSEC + lc.FORCED_ANNULUS[1] + 0.1
+    )
+    cache: dict = {}
+
+    def stamp(ra: float, dec: float):  # catalogued images are measured once, not per model
+        key = (round(ra, 7), round(dec, 7))
+        if key not in cache:
+            cache[key] = raw_stamp(ra, dec)
+        return cache[key]
+
     try:
         results = [run_model(m, args, zbest, stamp) for m in args.models]
     finally:
@@ -336,7 +366,7 @@ def main(argv=None) -> int:
     cross_model(results, args.cross_arcsec)
     out = {
         "source": "RELICS v1 lens models, HLSP DOI 10.17909/T9SP45, accessed 2026-10-14",
-        "access": "HTTP byte ranges of the deflection maps over the solver box; nothing stored",
+        "access": "HTTP byte ranges of full-width map rows over the solver box; nothing stored",
         "positions": "Scofield+2025 Table 3 (observed, JWST frame)",
         "image": args.image,
         "provenance": (
@@ -372,6 +402,7 @@ def main(argv=None) -> int:
                 f"mu={c['mu']:.2f}",
                 c["class"],
                 f"n_models={c['n_models']}",
+                f"inject={c.get('inject_class', '-')}",
                 f"pred_snr={c.get('pred_snr', float('nan')):.1f}",
                 f"best_snr={c.get('best_snr', float('nan')):.1f}",
                 f"({c['ra']:.6f}, {c['dec']:.6f})",

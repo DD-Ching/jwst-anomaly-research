@@ -1,6 +1,6 @@
 {
  "source": "RELICS v1 lens models, HLSP DOI 10.17909/T9SP45, accessed 2026-10-14",
- "access": "HTTP byte ranges of the deflection maps over the solver box; nothing stored",
+ "access": "HTTP byte ranges of full-width map rows over the solver box; nothing stored",
  "positions": "Scofield+2025 Table 3 (observed, JWST frame)",
  "image": "s3://stpubdata/jwst/public/jw02282/L3/t/o010/jw02282-o010_t001_nircam_clear-f200w_i2d.fits",
  "provenance": "image positions and mu: model_prediction; fluxes and classes: derived; thresholds are ASSUMPTIONs",
@@ -31,7 +31,7 @@
      "unrecovered": [
       "1.1c"
      ],
-     "image_plane_rms_arcsec": 2.464212418570555,
+     "image_plane_rms_arcsec": 1.0636345431600966,
      "n_predicted": 5,
      "n_counter": 3,
      "source_scatter_arcsec": 0.09417134427407656
@@ -44,7 +44,7 @@
      "unrecovered": [
       "1.2c"
      ],
-     "image_plane_rms_arcsec": 1.9228100507741739,
+     "image_plane_rms_arcsec": 0.22295903552710652,
      "n_predicted": 5,
      "n_counter": 3,
      "source_scatter_arcsec": 0.09050322573155661
@@ -58,7 +58,7 @@
       "1.7b",
       "1.7c"
      ],
-     "image_plane_rms_arcsec": 2.018628068847809,
+     "image_plane_rms_arcsec": 0.2801509250012757,
      "n_predicted": 5,
      "n_counter": 2,
      "source_scatter_arcsec": 0.079981131607237
@@ -79,42 +79,67 @@
     {
      "image": "1.2a",
      "mu": 22.626663572328752,
+     "search_arcsec": 1.0,
+     "best_snr": 15.481495048227808,
+     "best_flux": 3.76351335644722,
+     "best_offset_arcsec": 0.9899494936611666,
+     "pred_flux": 0.9123627376513553,
      "pred_snr": 4.087574122733167,
-     "best_snr": 9.653365182850425,
-     "flux_ratio": 2.3616367295122416,
-     "class": "undetectable"
+     "flux_ratio": 4.12501870268773,
+     "class": "undetectable",
+     "inject_class": "undetectable"
     },
     {
      "image": "1.2b",
      "mu": -40.53831097518087,
+     "search_arcsec": 1.0,
+     "best_snr": 39.35974829428825,
+     "best_flux": 9.741979844868183,
+     "best_offset_arcsec": 0.9899494936611664,
+     "pred_flux": 3.860341846504155,
      "pred_snr": 17.4245740305829,
-     "best_snr": 7.378177097618933,
-     "flux_ratio": 0.42343514881161853,
-     "class": "recovered"
+     "flux_ratio": 2.52360548164674,
+     "class": "recovered",
+     "inject_class": "recovered"
     },
     {
      "image": "2a",
      "mu": 14.283866912383528,
+     "search_arcsec": 1.0,
+     "best_snr": 124.46430057673882,
+     "best_flux": 37.09278753399849,
+     "best_offset_arcsec": 0.9999999999999996,
+     "pred_flux": 3.0207063203904942,
      "pred_snr": 13.44464399746258,
-     "best_snr": 13.002409543235714,
-     "flux_ratio": 0.9671070164215335,
-     "class": "recovered"
+     "flux_ratio": 12.27950803545954,
+     "class": "confused",
+     "inject_class": "confused"
     },
     {
      "image": "2b",
      "mu": -16.642455898564354,
+     "search_arcsec": 1.0,
+     "best_snr": 19.814957939402678,
+     "best_flux": 6.782622396945953,
+     "best_offset_arcsec": 0.2236067977499792,
+     "pred_flux": 3.243076569795768,
      "pred_snr": 9.812357562481344,
-     "best_snr": 11.971095160032311,
-     "flux_ratio": 1.2200019295877622,
-     "class": "recovered"
+     "flux_ratio": 2.0914160523114282,
+     "class": "recovered",
+     "inject_class": "recovered"
     },
     {
      "image": "2c",
      "mu": 22.3874401212103,
+     "search_arcsec": 1.0,
+     "best_snr": 23.894956730587317,
+     "best_flux": 5.48312271386385,
+     "best_offset_arcsec": 0.1000000000000002,
+     "pred_flux": 4.950530359333328,
      "pred_snr": 21.967457414149845,
-     "best_snr": 18.39957681179664,
-     "flux_ratio": 0.8375833609193645,
-     "class": "recovered"
+     "flux_ratio": 1.1075828882710346,
+     "class": "recovered",
+     "inject_class": "recovered"
     }
    ],
    "counter_images": [
@@ -133,13 +158,14 @@
      ],
      "copy_distance_arcsec": 5.082955877594569,
      "search_arcsec": 1.0,
-     "pred_flux": 3.529510963557106,
-     "pred_snr": 16.27126289039492,
      "best_snr": 4.434256994161814,
      "best_flux": 0.9706537425518036,
      "best_offset_arcsec": 0.9486832980505138,
+     "pred_flux": 3.529510963557106,
+     "pred_snr": 16.27126289039492,
      "flux_ratio": 0.27501083084143785,
      "class": "absent",
+     "inject_class": "recovered",
      "n_models": 2,
      "flag": false
     },
@@ -158,13 +184,14 @@
      ],
      "copy_distance_arcsec": 60.07784041118109,
      "search_arcsec": 1.0,
-     "pred_flux": 0.22006069706278325,
-     "pred_snr": 1.0730804984832338,
      "best_snr": 54.73032831956003,
      "best_flux": 12.95470181107521,
      "best_offset_arcsec": 0.9999999999999994,
+     "pred_flux": 0.22006069706278325,
+     "pred_snr": 1.0730804984832338,
      "flux_ratio": 58.868766590243226,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 1,
      "flag": false
     },
@@ -183,7 +210,7 @@
      ],
      "copy_distance_arcsec": 41.37449099164571,
      "class": "demagnified",
-     "n_models": 4,
+     "n_models": 2,
      "flag": false
     },
     {
@@ -201,7 +228,15 @@
       "1.2b"
      ],
      "copy_distance_arcsec": 3.3154447682065507,
-     "class": "model_copy",
+     "search_arcsec": 1.0,
+     "best_snr": 2.4866149458982254,
+     "best_flux": 0.5295661091804504,
+     "best_offset_arcsec": 0.7999999999999996,
+     "pred_flux": 5.3209708778762295,
+     "pred_snr": 25.37521853831249,
+     "flux_ratio": 0.09952433894767289,
+     "class": "absent",
+     "inject_class": "recovered",
      "n_models": 1,
      "flag": false
     },
@@ -221,13 +256,14 @@
      ],
      "copy_distance_arcsec": 59.99618523724536,
      "search_arcsec": 1.0,
-     "pred_flux": 0.1665636987155361,
-     "pred_snr": 0.8218161305445869,
      "best_snr": 52.66088910064107,
      "best_flux": 12.560161471366882,
      "best_offset_arcsec": 0.9999999999999994,
+     "pred_flux": 0.1665636987155361,
+     "pred_snr": 0.8218161305445869,
      "flux_ratio": 75.40755619756985,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 1,
      "flag": false
     },
@@ -247,7 +283,7 @@
      ],
      "copy_distance_arcsec": 41.36862899275878,
      "class": "demagnified",
-     "n_models": 4,
+     "n_models": 2,
      "flag": false
     },
     {
@@ -265,13 +301,14 @@
      ],
      "copy_distance_arcsec": 59.59072753760601,
      "search_arcsec": 1.0,
-     "pred_flux": 0.18821860967445356,
-     "pred_snr": 0.9358678079338572,
      "best_snr": 53.01584803870548,
      "best_flux": 12.701957255601883,
      "best_offset_arcsec": 0.9999999999999994,
+     "pred_flux": 0.18821860967445356,
+     "pred_snr": 0.9358678079338572,
      "flux_ratio": 67.48512953937671,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 1,
      "flag": false
     },
@@ -290,7 +327,7 @@
      ],
      "copy_distance_arcsec": 41.13833640955705,
      "class": "demagnified",
-     "n_models": 4,
+     "n_models": 2,
      "flag": false
     },
     {
@@ -309,13 +346,14 @@
       "2c"
      ],
      "search_arcsec": 3.0,
-     "pred_flux": 2.2336617319985885,
-     "pred_snr": 10.58135043429056,
      "best_snr": 67.3348927712227,
      "best_flux": 17.839842095971107,
      "best_offset_arcsec": 2.3600847442411914,
+     "pred_flux": 2.2336617319985885,
+     "pred_snr": 10.58135043429056,
      "flux_ratio": 7.98681458360696,
      "class": "confused",
+     "inject_class": "confused",
      "n_models": 1,
      "flag": false
     },
@@ -335,13 +373,14 @@
       "2c"
      ],
      "search_arcsec": 2.0647655016873396,
-     "pred_flux": 0.8044916241613408,
-     "pred_snr": 3.7697977426822957,
      "best_snr": 323.6055742036139,
      "best_flux": 148.9197714328766,
      "best_offset_arcsec": 1.5734162659058506,
+     "pred_flux": 0.8044916241613408,
+     "pred_snr": 3.7697977426822957,
      "flux_ratio": 185.11040632414432,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 2,
      "flag": false
     },
@@ -361,13 +400,14 @@
       "2c"
      ],
      "search_arcsec": 1.839536608744976,
-     "pred_flux": 0.70511272308431,
-     "pred_snr": 3.3070399324532156,
      "best_snr": 25.263518328915673,
      "best_flux": 5.80798077583313,
      "best_offset_arcsec": 0.5290252478569882,
+     "pred_flux": 0.70511272308431,
+     "pred_snr": 3.3070399324532156,
      "flux_ratio": 8.236953590098066,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 2,
      "flag": false
     },
@@ -387,7 +427,7 @@
       "2c"
      ],
      "class": "demagnified",
-     "n_models": 3,
+     "n_models": 0,
      "flag": false
     }
    ]
@@ -403,7 +443,7 @@
      "unrecovered": [
       "1.1d"
      ],
-     "image_plane_rms_arcsec": 1.1035953320055696,
+     "image_plane_rms_arcsec": 0.7085382898158419,
      "n_predicted": 5,
      "n_counter": 2,
      "source_scatter_arcsec": 0.07900326283930635
@@ -417,7 +457,7 @@
       "1.2b",
       "1.2c"
      ],
-     "image_plane_rms_arcsec": 8.895532196926306,
+     "image_plane_rms_arcsec": 0.17955899990111227,
      "n_predicted": 3,
      "n_counter": 2,
      "source_scatter_arcsec": 0.11823566643143776
@@ -432,7 +472,7 @@
       "1.7c",
       "1.7d"
      ],
-     "image_plane_rms_arcsec": 9.435091836584432,
+     "image_plane_rms_arcsec": 0.24313692039741439,
      "n_predicted": 3,
      "n_counter": 2,
      "source_scatter_arcsec": 0.12046566712530925
@@ -453,26 +493,41 @@
     {
      "image": "2a",
      "mu": 12.77455642431284,
+     "search_arcsec": 1.0,
+     "best_snr": 124.46430057673882,
+     "best_flux": 37.09278753399849,
+     "best_offset_arcsec": 0.9999999999999996,
+     "pred_flux": 4.11258688760199,
      "pred_snr": 18.30441649994417,
-     "best_snr": 13.002409543235714,
-     "flux_ratio": 0.7103427494274603,
-     "class": "recovered"
+     "flux_ratio": 9.01933224701471,
+     "class": "confused",
+     "inject_class": "confused"
     },
     {
      "image": "2b",
      "mu": -11.558695620895627,
+     "search_arcsec": 1.0,
+     "best_snr": 19.814957939402678,
+     "best_flux": 6.782622396945953,
+     "best_offset_arcsec": 0.2236067977499792,
+     "pred_flux": 3.0645266703085454,
      "pred_snr": 9.272131200627648,
-     "best_snr": 11.971095160032311,
-     "flux_ratio": 1.2910834522296197,
-     "class": "recovered"
+     "flux_ratio": 2.2132691689914576,
+     "class": "recovered",
+     "inject_class": "recovered"
     },
     {
      "image": "2c",
      "mu": 13.749649482295537,
+     "search_arcsec": 1.0,
+     "best_snr": 23.894956730587317,
+     "best_flux": 5.48312271386385,
+     "best_offset_arcsec": 0.1000000000000002,
+     "pred_flux": 3.92543090707379,
      "pred_snr": 17.41868648896512,
-     "best_snr": 18.39957681179664,
-     "flux_ratio": 1.0563125309966928,
-     "class": "recovered"
+     "flux_ratio": 1.3968205895518462,
+     "class": "recovered",
+     "inject_class": "recovered"
     }
    ],
    "counter_images": [
@@ -491,13 +546,14 @@
      ],
      "copy_distance_arcsec": 63.756011929989754,
      "search_arcsec": 1.0,
-     "pred_flux": 0.3379604762030289,
-     "pred_snr": 1.6557182969651447,
      "best_snr": 44.98486506723215,
      "best_flux": 10.277101576328278,
      "best_offset_arcsec": 0.7071067811865472,
+     "pred_flux": 0.3379604762030289,
+     "pred_snr": 1.6557182969651447,
      "flux_ratio": 30.40918184218185,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 1,
      "flag": false
     },
@@ -516,7 +572,7 @@
      ],
      "copy_distance_arcsec": 41.13473764001974,
      "class": "demagnified",
-     "n_models": 4,
+     "n_models": 2,
      "flag": false
     },
     {
@@ -534,13 +590,14 @@
      ],
      "copy_distance_arcsec": 64.17082613692939,
      "search_arcsec": 1.0,
-     "pred_flux": 0.3515056658129284,
-     "pred_snr": 1.726438304958044,
      "best_snr": 44.30017409482698,
      "best_flux": 9.999961227178574,
      "best_offset_arcsec": 0.7211102550927977,
+     "pred_flux": 0.3515056658129284,
+     "pred_snr": 1.726438304958044,
      "flux_ratio": 28.448933259871154,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 1,
      "flag": false
     },
@@ -559,7 +616,7 @@
      ],
      "copy_distance_arcsec": 41.22405060778408,
      "class": "demagnified",
-     "n_models": 4,
+     "n_models": 2,
      "flag": false
     },
     {
@@ -577,13 +634,14 @@
      ],
      "copy_distance_arcsec": 64.27659231302503,
      "search_arcsec": 1.0,
-     "pred_flux": 0.2799808813614745,
-     "pred_snr": 1.3614584803095762,
      "best_snr": 45.595232693062705,
      "best_flux": 10.315616577863693,
      "best_offset_arcsec": 0.6403124237432846,
+     "pred_flux": 0.2799808813614745,
+     "pred_snr": 1.3614584803095762,
      "flux_ratio": 36.844003518031386,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 1,
      "flag": false
     },
@@ -602,7 +660,7 @@
      ],
      "copy_distance_arcsec": 41.20970390285486,
      "class": "demagnified",
-     "n_models": 4,
+     "n_models": 2,
      "flag": false
     },
     {
@@ -621,13 +679,14 @@
       "2c"
      ],
      "search_arcsec": 3.0,
-     "pred_flux": 2.370998217659844,
-     "pred_snr": 8.332050795491536,
      "best_snr": 495.7468633509225,
      "best_flux": 339.92615896463394,
      "best_offset_arcsec": 0.36055512754640295,
+     "pred_flux": 2.370998217659844,
+     "pred_snr": 8.332050795491536,
      "flux_ratio": 143.3683738911193,
      "class": "confused",
+     "inject_class": "confused",
      "n_models": 1,
      "flag": false
     },
@@ -647,13 +706,14 @@
       "2c"
      ],
      "search_arcsec": 3.0,
-     "pred_flux": 1.8660564166066955,
-     "pred_snr": 8.973130639175176,
      "best_snr": 216.86044676298442,
      "best_flux": 81.42338332533836,
      "best_offset_arcsec": 2.353720459187969,
+     "pred_flux": 1.8660564166066955,
+     "pred_snr": 8.973130639175176,
      "flux_ratio": 43.63393443023635,
      "class": "confused",
+     "inject_class": "confused",
      "n_models": 2,
      "flag": false
     },
@@ -673,13 +733,14 @@
       "2c"
      ],
      "search_arcsec": 3.0,
-     "pred_flux": 1.7444124079020333,
-     "pred_snr": 8.619729678681677,
      "best_snr": 328.632276749038,
      "best_flux": 152.55649310350418,
      "best_offset_arcsec": 2.4186773244895634,
+     "pred_flux": 1.7444124079020333,
+     "pred_snr": 8.619729678681677,
      "flux_ratio": 87.45437283777437,
      "class": "confused",
+     "inject_class": "confused",
      "n_models": 2,
      "flag": false
     }
@@ -718,7 +779,7 @@
      "unrecovered": [
       "1.7b"
      ],
-     "image_plane_rms_arcsec": 1.4391475937905884,
+     "image_plane_rms_arcsec": 0.38679248220198204,
      "n_predicted": 5,
      "n_counter": 2,
      "source_scatter_arcsec": 0.05644852014718304
@@ -739,98 +800,158 @@
     {
      "image": "1.1a",
      "mu": 30.425867874592157,
+     "search_arcsec": 1.0,
+     "best_snr": 17.665238754231797,
+     "best_flux": 4.35514360666275,
+     "best_offset_arcsec": 0.1000000000000002,
+     "pred_flux": 1.7373568245673867,
      "pred_snr": 7.184988272913816,
-     "best_snr": 15.21566617099602,
-     "flux_ratio": 2.117702297212717,
-     "class": "recovered"
+     "flux_ratio": 2.506764036655055,
+     "class": "recovered",
+     "inject_class": "confused"
     },
     {
      "image": "1.1c",
      "mu": 15.304052633502458,
+     "search_arcsec": 1.0,
+     "best_snr": 13.526128835976834,
+     "best_flux": 3.0298997312784195,
+     "best_offset_arcsec": 0.9433981132056598,
+     "pred_flux": 1.1738167063837348,
      "pred_snr": 5.275977693505396,
-     "best_snr": 5.621771649457239,
-     "flux_ratio": 1.0655412088602092,
-     "class": "recovered"
+     "flux_ratio": 2.5812375260979707,
+     "class": "recovered",
+     "inject_class": "recovered"
     },
     {
      "image": "1.1d",
      "mu": -37.91317077828556,
+     "search_arcsec": 1.0,
+     "best_snr": 6.743021648610927,
+     "best_flux": 1.4473024979233742,
+     "best_offset_arcsec": 0.14142135623730978,
+     "pred_flux": 3.841557570048055,
      "pred_snr": 18.009531351138715,
-     "best_snr": 5.772264830709588,
-     "flux_ratio": 0.32051166230622746,
-     "class": "absent"
+     "flux_ratio": 0.37674887634321447,
+     "class": "recovered",
+     "inject_class": "recovered"
     },
     {
      "image": "1.2a",
      "mu": 16.81434938472817,
+     "search_arcsec": 1.0,
+     "best_snr": 15.481495048227808,
+     "best_flux": 3.76351335644722,
+     "best_offset_arcsec": 0.9899494936611666,
+     "pred_flux": 1.535792374334183,
      "pred_snr": 6.880668080964793,
-     "best_snr": 9.653365182850425,
-     "flux_ratio": 1.4029691694555408,
-     "class": "recovered"
+     "flux_ratio": 2.4505352542063688,
+     "class": "recovered",
+     "inject_class": "recovered"
     },
     {
      "image": "1.2b",
      "mu": -34.81156697566057,
+     "search_arcsec": 1.0,
+     "best_snr": 39.35974829428825,
+     "best_flux": 9.741979844868183,
+     "best_offset_arcsec": 0.9899494936611664,
+     "pred_flux": 4.592782070361582,
      "pred_snr": 20.730617746669306,
-     "best_snr": 7.378177097618933,
-     "flux_ratio": 0.35590724732765633,
-     "class": "recovered"
+     "flux_ratio": 2.1211500340361704,
+     "class": "recovered",
+     "inject_class": "recovered"
     },
     {
      "image": "1.2c",
      "mu": 20.41762634396043,
+     "search_arcsec": 1.0,
+     "best_snr": 13.773920941511179,
+     "best_flux": 3.0846877992153168,
+     "best_offset_arcsec": 0.1414213562373094,
+     "pred_flux": 1.7875678825006704,
      "pred_snr": 7.947321876107826,
-     "best_snr": 12.319960651691831,
-     "flux_ratio": 1.5502028033782733,
-     "class": "recovered"
+     "flux_ratio": 1.725633935031365,
+     "class": "recovered",
+     "inject_class": "recovered"
     },
     {
      "image": "1.7a",
      "mu": 15.414498457122765,
+     "search_arcsec": 1.0,
+     "best_snr": 13.570003735307782,
+     "best_flux": 3.066224828362465,
+     "best_offset_arcsec": 0.20000000000000018,
+     "pred_flux": 1.2255949204679306,
      "pred_snr": 5.544513988725372,
-     "best_snr": 7.454842666016864,
-     "flux_ratio": 1.344543936795199,
-     "class": "recovered"
+     "flux_ratio": 2.5018256661767038,
+     "class": "recovered",
+     "inject_class": "confused"
     },
     {
      "image": "1.7c",
      "mu": 22.59841797057828,
+     "search_arcsec": 1.0,
+     "best_snr": 13.471833421810107,
+     "best_flux": 3.0201706141233444,
+     "best_offset_arcsec": 0.30000000000000016,
+     "pred_flux": 2.00560405923651,
      "pred_snr": 9.161155102313536,
-     "best_snr": 9.127385364917956,
-     "flux_ratio": 0.9963138122847573,
-     "class": "recovered"
+     "flux_ratio": 1.5058658264149396,
+     "class": "recovered",
+     "inject_class": "recovered"
     },
     {
      "image": "1.7d",
      "mu": -38.24148703039043,
+     "search_arcsec": 1.0,
+     "best_snr": 15.862128480462482,
+     "best_flux": 3.598439522087574,
+     "best_offset_arcsec": 0.1414213562373094,
+     "pred_flux": 3.7347833462216196,
      "pred_snr": 16.873932717980075,
-     "best_snr": 12.1973328787422,
-     "flux_ratio": 0.7228506289909105,
-     "class": "recovered"
+     "flux_ratio": 0.9634935118065199,
+     "class": "recovered",
+     "inject_class": "recovered"
     },
     {
      "image": "2a",
      "mu": 9.090195318761484,
+     "search_arcsec": 1.0,
+     "best_snr": 124.46430057673882,
+     "best_flux": 37.09278753399849,
+     "best_offset_arcsec": 0.9999999999999996,
+     "pred_flux": 4.53529272970849,
      "pred_snr": 20.18580745953764,
-     "best_snr": 13.002409543235714,
-     "flux_ratio": 0.644136211508952,
-     "class": "recovered"
+     "flux_ratio": 8.178697549338267,
+     "class": "confused",
+     "inject_class": "confused"
     },
     {
      "image": "2b",
      "mu": -6.57832070475181,
+     "search_arcsec": 1.0,
+     "best_snr": 19.814957939402678,
+     "best_flux": 6.782622396945953,
+     "best_offset_arcsec": 0.2236067977499792,
+     "pred_flux": 2.3608333544594435,
      "pred_snr": 7.1430139007933295,
-     "best_snr": 11.971095160032311,
-     "flux_ratio": 1.675916542553943,
-     "class": "recovered"
+     "flux_ratio": 2.872978045711727,
+     "class": "recovered",
+     "inject_class": "confused"
     },
     {
      "image": "2c",
      "mu": 10.460654267076839,
+     "search_arcsec": 1.0,
+     "best_snr": 23.894956730587317,
+     "best_flux": 5.48312271386385,
+     "best_offset_arcsec": 0.1000000000000002,
+     "pred_flux": 4.82669067323445,
      "pred_snr": 21.417931841515006,
-     "best_snr": 18.39957681179664,
-     "flux_ratio": 0.8590734599375369,
-     "class": "recovered"
+     "flux_ratio": 1.1360004369597427,
+     "class": "recovered",
+     "inject_class": "recovered"
     }
    ],
    "counter_images": [
@@ -850,13 +971,14 @@
       "1.1d"
      ],
      "search_arcsec": 1.0,
-     "pred_flux": 0.12951628310193264,
-     "pred_snr": 0.6412551301223813,
      "best_snr": 54.38105946649018,
      "best_flux": 13.153532832860947,
      "best_offset_arcsec": 0.9999999999999996,
+     "pred_flux": 0.12951628310193264,
+     "pred_snr": 0.6412551301223813,
      "flux_ratio": 101.55891226826498,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 1,
      "flag": false
     },
@@ -876,14 +998,15 @@
       "1.1d"
      ],
      "search_arcsec": 1.0,
-     "pred_flux": 0.04411825041779581,
-     "pred_snr": 0.09321303525895937,
      "best_snr": 4.786724269433709,
      "best_flux": 1.6803005933761597,
      "best_offset_arcsec": 0.5385164807134504,
+     "pred_flux": 0.04411825041779581,
+     "pred_snr": 0.09321303525895937,
      "flux_ratio": 38.08629257651575,
      "class": "undetectable",
-     "n_models": 4,
+     "inject_class": "undetectable",
+     "n_models": 2,
      "flag": false
     },
     {
@@ -902,13 +1025,14 @@
       "1.2c"
      ],
      "search_arcsec": 1.0,
-     "pred_flux": 0.20107428948081832,
-     "pred_snr": 1.0012509845879174,
      "best_snr": 49.222170404212406,
      "best_flux": 11.717455238103867,
      "best_offset_arcsec": 0.9999999999999996,
+     "pred_flux": 0.20107428948081832,
+     "pred_snr": 1.0012509845879174,
      "flux_ratio": 58.27425907289686,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 1,
      "flag": false
     },
@@ -928,14 +1052,15 @@
       "1.2c"
      ],
      "search_arcsec": 1.0,
-     "pred_flux": 0.06905424157583104,
-     "pred_snr": 0.14334067306031095,
      "best_snr": 4.765711439727474,
      "best_flux": 1.662149727344513,
      "best_offset_arcsec": 0.5385164807134504,
+     "pred_flux": 0.06905424157583104,
+     "pred_snr": 0.14334067306031095,
      "flux_ratio": 24.070204659611594,
      "class": "undetectable",
-     "n_models": 4,
+     "inject_class": "undetectable",
+     "n_models": 2,
      "flag": false
     },
     {
@@ -955,13 +1080,14 @@
      ],
      "copy_distance_arcsec": 48.39958528382869,
      "search_arcsec": 1.0,
-     "pred_flux": 0.1386634304616264,
-     "pred_snr": 0.6915857232902078,
      "best_snr": 46.6957683943375,
      "best_flux": 11.025244325399399,
      "best_offset_arcsec": 0.9055385138137411,
+     "pred_flux": 0.1386634304616264,
+     "pred_snr": 0.6915857232902078,
      "flux_ratio": 79.51082912556757,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 1,
      "flag": false
     },
@@ -982,14 +1108,15 @@
      ],
      "copy_distance_arcsec": 43.4286728119948,
      "search_arcsec": 1.0,
-     "pred_flux": 0.04818940708594533,
-     "pred_snr": 0.10262790622680615,
      "best_snr": 4.584394547740738,
      "best_flux": 1.937645435333252,
      "best_offset_arcsec": 0.3605551275463989,
+     "pred_flux": 0.04818940708594533,
+     "pred_snr": 0.10262790622680615,
      "flux_ratio": 40.20894948712443,
      "class": "undetectable",
-     "n_models": 4,
+     "inject_class": "undetectable",
+     "n_models": 2,
      "flag": false
     },
     {
@@ -1008,13 +1135,14 @@
       "2c"
      ],
      "search_arcsec": 1.0431336390020287,
-     "pred_flux": 0.938487513268932,
-     "pred_snr": 3.3372521846275847,
      "best_snr": 2.0326936987316233,
      "best_flux": 0.42732106149196625,
      "best_offset_arcsec": 0.9585546493667696,
+     "pred_flux": 0.938487513268932,
+     "pred_snr": 3.3372521846275847,
      "flux_ratio": 0.45532951206087446,
      "class": "undetectable",
+     "inject_class": "undetectable",
      "n_models": 1,
      "flag": false
     },
@@ -1034,7 +1162,7 @@
       "2c"
      ],
      "class": "demagnified",
-     "n_models": 3,
+     "n_models": 0,
      "flag": false
     }
    ]
@@ -1051,7 +1179,7 @@
       "1.1c",
       "1.1e"
      ],
-     "image_plane_rms_arcsec": 1.841111802563448,
+     "image_plane_rms_arcsec": 1.1114703375227981,
      "n_predicted": 7,
      "n_counter": 5,
      "source_scatter_arcsec": 0.07221402177165145
@@ -1064,7 +1192,7 @@
      "unrecovered": [
       "1.2c"
      ],
-     "image_plane_rms_arcsec": 1.8706777839030826,
+     "image_plane_rms_arcsec": 1.3854765719677764,
      "n_predicted": 7,
      "n_counter": 4,
      "source_scatter_arcsec": 0.12275998646670362
@@ -1079,7 +1207,7 @@
       "1.7b",
       "1.7c"
      ],
-     "image_plane_rms_arcsec": 2.131988804020216,
+     "image_plane_rms_arcsec": 0.5365021724992893,
      "n_predicted": 7,
      "n_counter": 5,
      "source_scatter_arcsec": 0.12123164505927977
@@ -1110,7 +1238,11 @@
      "z_spread_arcsec": 0.0,
      "references": [],
      "copy_distance_arcsec": 2.6244936027642405,
-     "class": "model_copy",
+     "search_arcsec": 1.0,
+     "best_snr": 2.510411887701424,
+     "best_flux": 0.5309333056211472,
+     "best_offset_arcsec": 0.8999999999999995,
+     "class": "no_reference",
      "n_models": 2,
      "flag": false
     },
@@ -1127,12 +1259,9 @@
      "references": [],
      "copy_distance_arcsec": 31.224337404519815,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 1.9502400950667989,
      "best_flux": 0.4116482064127922,
      "best_offset_arcsec": 0.5099019513592781,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1150,12 +1279,9 @@
      "references": [],
      "copy_distance_arcsec": 41.55633435480206,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 1257.21776245115,
      "best_flux": 3194.4066095352173,
      "best_offset_arcsec": 0.7071067811865472,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1173,12 +1299,9 @@
      "references": [],
      "copy_distance_arcsec": 52.17313047755162,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 5.1030656747047605,
      "best_flux": 1.0586000382900238,
      "best_offset_arcsec": 0.9999999999999998,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1196,14 +1319,11 @@
      "references": [],
      "copy_distance_arcsec": 41.68423223553801,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 12.942968768751644,
      "best_flux": 8.470880329608917,
      "best_offset_arcsec": 1.0,
-     "flux_ratio": NaN,
      "class": "no_reference",
-     "n_models": 4,
+     "n_models": 2,
      "flag": false
     },
     {
@@ -1219,12 +1339,9 @@
      "references": [],
      "copy_distance_arcsec": 32.15143373244053,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 1.8971338368577788,
      "best_flux": 0.3962493985891342,
      "best_offset_arcsec": 0.2999999999999998,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1242,12 +1359,9 @@
      "references": [],
      "copy_distance_arcsec": 42.234440307375515,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 1258.667613169505,
      "best_flux": 3198.818699836731,
      "best_offset_arcsec": 0.7071067811865472,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1265,12 +1379,9 @@
      "references": [],
      "copy_distance_arcsec": 54.37599544929466,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 5.38738228994042,
      "best_flux": 1.1135835498571396,
      "best_offset_arcsec": 0.9999999999999998,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1288,14 +1399,11 @@
      "references": [],
      "copy_distance_arcsec": 42.59021050566052,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 14.002687562478483,
      "best_flux": 9.036522626876831,
      "best_offset_arcsec": 0.9486832980505139,
-     "flux_ratio": NaN,
      "class": "no_reference",
-     "n_models": 4,
+     "n_models": 2,
      "flag": false
     },
     {
@@ -1310,7 +1418,11 @@
      "z_spread_arcsec": 0.0,
      "references": [],
      "copy_distance_arcsec": 2.137981173809134,
-     "class": "model_copy",
+     "search_arcsec": 1.0,
+     "best_snr": 6.805067403595649,
+     "best_flux": 1.516597107052803,
+     "best_offset_arcsec": 0.9999999999999998,
+     "class": "no_reference",
      "n_models": 1,
      "flag": false
     },
@@ -1327,12 +1439,9 @@
      "references": [],
      "copy_distance_arcsec": 32.84885365485674,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 1.9679893183942028,
      "best_flux": 0.41450584679841995,
      "best_offset_arcsec": 0.9486832980505133,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1350,12 +1459,9 @@
      "references": [],
      "copy_distance_arcsec": 42.180912103790796,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 1265.834903172756,
      "best_flux": 3227.154879450798,
      "best_offset_arcsec": 0.4242640687119285,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1373,12 +1479,9 @@
      "references": [],
      "copy_distance_arcsec": 51.55075906264228,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 5.202699177690361,
      "best_flux": 1.0602930635213852,
      "best_offset_arcsec": 0.9999999999999998,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1396,14 +1499,11 @@
      "references": [],
      "copy_distance_arcsec": 41.30756032456311,
      "search_arcsec": 1.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 13.44851269852456,
      "best_flux": 8.41890001296997,
      "best_offset_arcsec": 0.9486832980505139,
-     "flux_ratio": NaN,
      "class": "no_reference",
-     "n_models": 4,
+     "n_models": 2,
      "flag": false
     },
     {
@@ -1418,12 +1518,9 @@
      "z_spread_arcsec": 8.350423925972173,
      "references": [],
      "search_arcsec": 3.0,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 219.5670271248708,
      "best_flux": 83.26503713428974,
      "best_offset_arcsec": 2.570992026436493,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1440,12 +1537,9 @@
      "z_spread_arcsec": 2.8753950317448522,
      "references": [],
      "search_arcsec": 2.8753950317448522,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 717.2138885784373,
      "best_flux": 750.0439837276936,
      "best_offset_arcsec": 1.202617900779232,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1462,12 +1556,9 @@
      "z_spread_arcsec": 2.4476837664563944,
      "references": [],
      "search_arcsec": 2.4476837664563944,
-     "pred_flux": NaN,
-     "pred_snr": NaN,
      "best_snr": 261.5915736386806,
      "best_flux": 207.22650857269764,
      "best_offset_arcsec": 1.3467785331454352,
-     "flux_ratio": NaN,
      "class": "no_reference",
      "n_models": 1,
      "flag": false
@@ -1484,7 +1575,7 @@
      "z_spread_arcsec": 0.0181057612867655,
      "references": [],
      "class": "demagnified",
-     "n_models": 3,
+     "n_models": 0,
      "flag": false
     }
    ]

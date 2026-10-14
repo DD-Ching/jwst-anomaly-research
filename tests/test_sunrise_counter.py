@@ -64,14 +64,15 @@ def test_split_images_marks_unrecovered():
     known, counter, recovered, rms = sc.split_images(pred, pred["ref_xy"], 2.0)
     assert list(known["x"]) == [0.0] and list(counter["x"]) == [10.0]
     assert recovered.tolist() == [True, False]
-    assert np.isclose(rms, np.sqrt((0.1**2 + 4.0**2) / 2))
+    assert np.isclose(rms, 0.1)  # the missed image does not widen its own copy radius
 
 
 def _res(model: str, pts):
     return {
         "model": model,
         "counter_images": [
-            {"knot": "1.1", "ra": ra, "dec": dec, "class": cls} for ra, dec, cls in pts
+            {"knot": "1.1", "ra": ra, "dec": dec, "class": cls, "inject_class": "recovered"}
+            for ra, dec, cls in pts
         ],
     }
 
@@ -88,3 +89,36 @@ def test_cross_model_flags_only_images_every_model_predicts():
     assert [c["n_models"] for c in a] == [3, 1]
     assert [c["flag"] for c in a] == [True, False]
     assert not any(c["flag"] for r in results[1:] for c in r["counter_images"])
+
+
+def test_cross_model_ignores_copies_and_single_model_runs():
+    d = 1.0 / 3600.0
+    results = [
+        _res("a", [(10.0, 0.0, "absent")]),
+        _res("b", [(10.0 + 0.5 * d, 0.0, "model_copy")]),
+    ]
+    sc.cross_model(results, 3.0)
+    assert results[0]["counter_images"][0]["n_models"] == 1
+    assert not results[0]["counter_images"][0]["flag"]
+    alone = [_res("a", [(10.0, 0.0, "absent")])]
+    sc.cross_model(alone, 3.0)
+    assert not alone[0]["counter_images"][0]["flag"]
+
+
+def _noise_stamp(sigma=1.0, nan=False):
+    g = (np.arange(-60, 61)) * 0.03  # 0.03" pixels, +-1.8"
+    xx, yy = np.meshgrid(g, g)
+    rng = np.random.default_rng(1)
+    sci = rng.normal(0.0, sigma, xx.shape)
+    err = np.full(xx.shape, sigma / sc.lc.ERR_SCALE)
+    if nan:
+        sci[:] = np.nan
+    return lambda ra, dec: (sci, err, xx, yy)
+
+
+def test_classify_absent_and_injection_recovers():
+    v = sc.classify(_noise_stamp(), 0.0, 0.0, 200.0, 1.0)
+    assert v["class"] == "absent"
+    assert v["inject_class"] == "recovered"
+    assert sc.classify(_noise_stamp(nan=True), 0.0, 0.0, 200.0, 1.0)["class"] == "off_image"
+    assert sc.classify(_noise_stamp(), 0.0, 0.0, float("nan"), 1.0)["class"] == "no_reference"
