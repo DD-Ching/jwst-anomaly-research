@@ -70,14 +70,21 @@ Linear perturbations in the same 5D model and sector were solved without restric
 - **Beyond this model.** Nothing is transferred to 4D, to other rotating wormholes, or to other matter models.
   No astrophysical or observational implication is claimed.
 - **No priority claim.** No "first" claim is made. The literature search covers INSPIRE- and arXiv-indexed work
-  up to 2026-10-14 (`X2_s6a_prior_work.md`).
+  up to 2026-10-14 (`X2_s6a_prior_work.md`):
+  - all 47 citers of 1309.2448 screened by title;
+  - the relevant ones checked by abstract (12);
+  - some read in full text (2510.11406, 2301.05243, 2403.08387, 2603.12748).
+  - Not all 47 were read in full.
 
 ## Who did what
+The GPT row is the owner's cross-conversation record (supplied 2026-10-14). This repository holds no GPT output
+of its own.
+
 | Contributor | Actual work |
 |---|---|
-| Repository owner (DD-Ching) | Chose and scoped the question; set the gate rules (reproduce the known modes, merger within ±1 %, residuals of the original equations, an independent method, freeze rules before the run), the reading rules and the corrections during the run (no fitting to results, keep full complex vectors, no extension toward extremality, wording). Has not reviewed the physics as a domain expert |
-| Claude (Claude Code agents, this repository's sessions) | All derivation and numerical code, runs, documentation and state files. Chose the numerical settings and thresholds of `CRITERIA` after trial runs. Review and literature search were also done by Claude subagents |
-| GPT | No GPT output is recorded in this repository or in this work's sessions. If the owner used GPT, e.g. to draft or check instructions, that has to be added by the owner |
+| Repository owner (DD-Ching) | Chose and scoped the question; set the gate rules (reproduce the known modes, merger within ±1 %, residuals of the original equations, an independent method, freeze rules before the run), the reading rules and the corrections during the run (no fitting to results, keep full complex vectors, no extension toward extremality, wording). Passed GPT's comments on to Claude. Has not reviewed the physics as a domain expert |
+| Claude (Claude Code agents, this repository's sessions) | Main derivation, implementation, computation and documentation, including all code, runs and state files. Chose the numerical settings and thresholds of `CRITERIA` after trial runs. Review and literature search were also done by Claude subagents |
+| GPT (separate conversation; owner's record) | Read the original paper, the GitHub code and the results. Helped shape the research scope and the verification design. Pointed out three issues, which the owner relayed to Claude: minimum vs last step in `Shooter.root`, the grid differences near the merger point, and the NaN formatting. Did **not** independently re-derive the full equations or re-run the numerics |
 | Human domain experts | **None so far** |
 
 **Not yet checked by a human professional:**

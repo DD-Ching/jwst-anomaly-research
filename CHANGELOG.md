@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: X2 S6a writeup corrections (documents only; no computation re-run)
+- **`X2_s6a_summary.md`, "Who did what".** Updated from the owner's cross-conversation record. It replaces the
+  earlier "no recorded GPT output":
+  - GPT read the paper, the code and the results. It helped with scope and verification design, and flagged three
+    issues: min vs last step, the merger-grid differences and NaN.
+  - The owner relayed these to Claude.
+  - GPT did not re-derive the equations or re-run the numerics.
+  - Still no domain-expert review.
+- **`X2_s6a_repro.md` §7.**
+  - The full rotation range, other sectors and time-domain evolution are now listed as possible strengthening,
+    not as presumed submission requirements.
+  - The claim stays limited to the two verified points. Sufficiency is for experts and editors to judge.
+  - The Comment assessment is marked provisional, not an exclusion.
+- **Literature-search scope** is now stated wherever it is summarised: 47 citers screened by title, relevant
+  abstracts and some full texts checked. The search itself was not re-done.
 ## 2026-10-14: PSF-commuting parity fit makes the acceptance test worse (76 %); the PSF does not explain the flags; tool paused
 - **Hypothesis before computing:** the 3 persistent Abell 2744 parity flags (1.1b, 7b, 600.3b; previous entry) come
   from the unlensed PSF, which the free affine map distorts and mirrors in A but not in B. If a statistic exact for
