@@ -4517,3 +4517,36 @@ unit overruns its budget.
 - G1's periodicity or achromaticity vetoes cost more than half the efficiency;
 - the held-out false-flag rate exceeds the dev rate by more than 3×;
 - Gaia changes DataLink again.
+
+## D-085 X3 G1: frozen full W3 screen, Gaia bulk-file route, held-out GAPS run once (2026-10-14)
+
+**Decision.**
+- Screen, frozen before calibration (`scripts/x3_g1.py`): `MIN_POINTS` → v1 → pre-screen → v0 fit flag →
+  repeat-dip veto (no period search: a sparse-scan periodogram peak can be an alias) → common-magnification colour
+  test with per-band source and blend fluxes ("insufficient" never vetoes).
+- Held-out light curves come from the DR3 bulk epoch-photometry files, streamed (`scripts/x3_bulk.py`). The split
+  stays `MOD(source_id, 10) = 0`, which is 20 % of the sources.
+- Flags are vetted in batch by ordinary rules (`scripts/x3_vet.py`). The rules are post hoc, so every rule is also
+  applied to the dev W3 injections (event rules to the light curve, host rules to the host), and the efficiency
+  includes their losses. v1-vetoed hosts are left out of the efficiency, because the exposure excludes them.
+
+**Alternatives rejected:**
+- re-splitting to a true 10 % (leaks already-read sources);
+- DataLink for 423,598 sources;
+- a period-search veto;
+- requiring constant BP − RP (wrong for blended events);
+- tuning the colour test after seeing that it barely separates W3 from dust (the screen was frozen; the fix goes
+  to DR4);
+- vetting the 196 flags one by one with the JWST-oriented skill.
+
+**Evidence:**
+- Bulk = DataLink on 309 / 309 dev sources.
+- Dev calibration: W3 efficiency 0.32 (t_E 30–300 d), PSPL 0 / 1,995, real 0 / 1,995.
+- RUWE inflation would veto 92–99.6 % of blended W3 events.
+- Held-out: 395,764 exposed sources, 196 flags, no candidate; vetted efficiency 0.276.
+- Γ₉₅ < 9.7 × 10⁻⁶ per star per year, photocentre-stable (`results/x3/g1_*`).
+
+**Revisit if:**
+- DR4 publishes epoch astrometry (then the photocentre shift becomes a signature, not a veto);
+- a joint G/BP/RP fit is built (it replaces the colour test);
+- Gaia changes the bulk-file layout.

@@ -133,6 +133,35 @@ def ids_table(gmax: float) -> Table:
 USED_SEEDS = {2026: 1000}  # gate samples already drawn: a re-gate must not reuse their sources
 
 
+COUNT_QUERY = (
+    "SELECT MOD(source_id, 10) AS digit, COUNT(*) AS n FROM gaiadr3.gaia_source "
+    "WHERE source_id BETWEEN {lo} AND {hi} AND in_andromeda_survey = 'True' "
+    "AND phot_g_mean_mag <= {gmax} GROUP BY digit"
+)
+
+
+def sample_counts(gmax: float) -> dict:
+    """Catalogue counts of GAPS sources (G <= gmax) by last source_id digit: the true dev share."""
+    shift = 35 + 2 * (12 - HPX_LEVEL)
+    tot = np.zeros(10, int)
+    for p in gaps_pixels():
+        q = COUNT_QUERY.format(lo=p << shift, hi=((p + 1) << shift) - 1, gmax=gmax)
+        for line in gm._tap_csv(q).strip().splitlines()[1:]:
+            d, n = (int(x) for x in line.split(","))
+            tot[d] += n
+    n_all = int(tot.sum())
+    return {
+        "gmax": gmax,
+        "n_gaps": n_all,
+        "by_last_digit": tot.tolist(),
+        "n_dev": int(tot[0]),
+        "n_heldout": int(n_all - tot[0]),
+        "dev_share": float(tot[0] / n_all),
+        "query": COUNT_QUERY,
+        "provenance": "observed (Gaia archive TAP counts)",
+    }
+
+
 def subsample(gmax: float, n: int, seed: int, exclude: dict | None = None) -> Table:
     t = ids_table(gmax)
     keep = np.ones(len(t), bool)
@@ -330,7 +359,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    ap.add_argument("cmd", choices=("ids", "fetch", "g0", "summary"))
+    ap.add_argument("cmd", choices=("ids", "counts", "fetch", "g0", "summary"))
     ap.add_argument("--gmax", type=float, default=19.0)
     ap.add_argument("--n", type=int, default=1000)
     ap.add_argument("--seed", type=int, default=314)
@@ -341,6 +370,12 @@ def main(argv=None) -> int:
     if a.cmd == "ids":
         t = ids_table(a.gmax)
         print(f"dev sources with G <= {a.gmax}: {len(t)}")
+    elif a.cmd == "counts":
+        c = sample_counts(a.gmax)
+        (results_dir() / f"sample_counts_g{a.gmax:g}.json").write_text(
+            json.dumps(c, indent=1) + "\n"
+        )
+        print(json.dumps(c, indent=1))
     elif a.cmd == "fetch":
         ex = USED_SEEDS if a.fresh else None
         ids = [str(s) for s in subsample(a.gmax, a.n, a.seed, ex)["source_id"]]

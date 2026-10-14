@@ -1,0 +1,21 @@
+{
+ "gmax": 22.0,
+ "n_gaps": 1255819,
+ "by_last_digit": [
+  251957,
+  0,
+  250417,
+  0,
+  251763,
+  0,
+  250782,
+  0,
+  250900,
+  0
+ ],
+ "n_dev": 251957,
+ "n_heldout": 1003862,
+ "dev_share": 0.20063161968404683,
+ "query": "SELECT MOD(source_id, 10) AS digit, COUNT(*) AS n FROM gaiadr3.gaia_source WHERE source_id BETWEEN {lo} AND {hi} AND in_andromeda_survey = 'True' AND phot_g_mean_mag <= {gmax} GROUP BY digit",
+ "provenance": "observed (Gaia archive TAP counts)"
+}

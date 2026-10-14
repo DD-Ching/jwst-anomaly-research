@@ -2,6 +2,42 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: X3 G1, W3 screen of held-out Gaia GAPS: 196 flags, no candidate, conditional limit
+- **Hypothesis before computing:** negative-mass lenses would show the W3 dip in unselected Gaia light curves.
+  Ordinary: eclipsing binaries, dust dimmers, LPVs, single-scan photometry, crowding. Plan change if any flag
+  survives ordinary vetting with W3 morphology.
+- **Counts:** the dev split `MOD(source_id, 10) = 0` is 20 %, not 10 %, because GAPS ids are even. At G ≤ 19 the
+  held-out set is 423,598 sources. The split is kept as frozen.
+- **New scripts:**
+  - `x3_g1.py`: full screen with a repeat-dip veto (no period search) and a per-band blend colour test; ECL, YSO
+    and LPV references; selection bound.
+  - `x3_bulk.py`: streams the bulk epoch-photometry files; verified identical to DataLink on 309 dev sources.
+  - `x3_vet.py`: batch vetting.
+- **Continue conditions** were frozen before the injection and reference results were read; the dev real count and
+  the bulk check were already known. All were met. Results on dev: W3 efficiency 0.32 (t_E 30–300 d), PSPL
+  0 / 1,995, dev real flags 0 / 1,995.
+- **Limits of the screen (measured):**
+  - The colour test removes 39 % of W3 and 48 % of dust dips.
+  - Blended W3 events inflate their own RUWE, so 92–99.6 % would be vetoed by v1.
+- **Held-out run (once):**
+  - 395,764 exposed sources, 196 final flags.
+  - Vetting rules were post hoc, and every rule was costed on the dev injections. First failed rule: 124
+    single-visit, 8 bright, 29 neighbour, 27 known variables, 5 degenerate fits, 3 with no multi-visit dip.
+  - **No candidate.**
+  - Vetted efficiency 0.276 [0.253, 0.300].
+  - Γ₉₅ < 9.7 × 10⁻⁶ per star per year for photocentre-stable W3 (t_E 30–300 d); 4.6 × 10⁻⁴ under the blended
+    prior.
+- **Review fixes before merge:**
+  - D2 coded and costed;
+  - host rules costed;
+  - v1 no longer counted twice;
+  - t_E-matched retained fraction;
+  - SIMBAD otype match;
+  - id-keyed caches.
+- **Failed approach:** the global `vari_classifier_result` reference query timed out (HTTP 408); per-HEALPix
+  source_id ranges worked. The M31 field has too few dev YSOs, so Orion was used for them (different cadence).
+- **Handoff:** X3 G2 waits for DR4, and its design on dev (epoch astrometry, joint colour fit) comes first.
+
 ## 2026-10-14: the El Gordo and Sunrise follow-up sources are ordinary
 - **Hypothesis before computing:** one of El Gordo `2828`/`1601` or Sunrise `1756`/`1907`/`1578` could be a lensed
   image with an unmet model prediction, or a source no ordinary class explains. Ordinary: spikes, persistence,
