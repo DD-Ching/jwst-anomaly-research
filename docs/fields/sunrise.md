@@ -240,7 +240,8 @@ Ranks 5 and 7 were screened (D-020).
   the arc (each re-predicts only part of system 1's images) to make the arc's extra images testable, and the arc's
   cross-cluster counter-image is predicted below the noise (S/N ≤ 1.7). Contact sheet inspected (scratch, not tracked). Output:
   `results/sunrise/counter_images.json` (model_prediction positions and μ; derived fluxes and classes).
-- **Limits:** the injection tests the photometry, not the cross-model step (an image the models place > 3″
+- **Limits:** re-predicted counts match each catalogued image to its nearest prediction (not one-to-one), so they
+  are upper bounds; the 0 flags is not a rate limit (too few systems); the injection tests the photometry, not the cross-model step (an image the models place > 3″
   apart cannot be flagged); F200W only; point-source flux scaling over-predicts extended images; the knots' |μ| < 50 references in
   LTM do not exist (no flux test for LTM). A JWST-era model with all knots (Scofield+2025 M5-G1 once its deflection
   unit is stated, D-033 addendum) would make the arc-end images testable.

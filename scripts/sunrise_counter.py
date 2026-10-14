@@ -57,7 +57,7 @@ from astropy.wcs import WCS
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lens_consistency as lc  # noqa: E402
-from sunrise_relics import BASE, DTYPES, KEYS, MODELS, _get, read_header  # noqa: E402
+from sunrise_relics import BASE, DTYPES, KEYS, MODELS, _get, frame_check, read_header  # noqa: E402
 from sunrise_scofield import IMAGES, system_of  # noqa: E402
 
 from jwst_anomaly import lensmodel  # noqa: E402
@@ -67,6 +67,7 @@ COSMO = FlatLambdaCDM(H0=70.0, Om0=0.3)
 CENTRE = (24.3555, -8.4570)  # model-frame origin near the cluster core (RA, Dec; ASSUMPTION)
 F200W = "s3://stpubdata/jwst/public/jw02282/L3/t/o010/jw02282-o010_t001_nircam_clear-f200w_i2d.fits"
 CHUNK = 8 * 2**20  # bytes per range request
+MAP_THREADS, MODEL_THREADS = 4, 2  # <= 8 concurrent range requests to MAST (scripts/CLAUDE.md)
 INJECT_FWHM_ARCSEC = lc.HALO_INJECT_FWHM_ARCSEC  # compact injected image (~F200W PSF; ASSUMPTION)
 FLAG_CLASSES = ("absent",)
 NOT_INDEPENDENT = ("demagnified",)  # not counted as another model's prediction of an image
@@ -75,20 +76,14 @@ NOT_INDEPENDENT = ("demagnified",)  # not counted as another model's prediction 
 def cross_model(results: list[dict], radius: float) -> None:
     """Add ``n_models``: how many models predict a counter-image of the same knot within
     ``radius`` of each counter-image (D-041: an image predicted by only some models is
-    model-dependent and untestable). Only other models' images that are neither copies nor
-    demagnified count. Flags are ``absent`` images, recovered when injected, that every one of
-    at least two models predicts."""
-    pts = {
-        (r["model"], c["knot"]): np.array(
-            [
-                [q["ra"], q["dec"]]
-                for q in r["counter_images"]
-                if q["knot"] == c["knot"] and q["class"] not in NOT_INDEPENDENT
-            ]
-        ).reshape(-1, 2)
-        for r in results
-        for c in r["counter_images"]
-    }
+    model-dependent and untestable). Other models' demagnified images do not count. Flags are
+    ``absent`` images, recovered when injected, that every one of at least two models predicts."""
+    pts: dict = {}
+    for r in results:
+        for q in r["counter_images"]:
+            if q["class"] not in NOT_INDEPENDENT:
+                pts.setdefault((r["model"], q["knot"]), []).append([q["ra"], q["dec"]])
+    pts = {k: np.array(v) for k, v in pts.items()}
     for r in results:
         for c in r["counter_images"]:
             n = 0
@@ -114,7 +109,7 @@ def read_block(session, url: str, wcs_hdr, offset: int, rows: tuple[int, int]) -
     nx, bpp = wcs_hdr["NAXIS1"], abs(wcs_hdr["BITPIX"]) // 8
     start, stop = offset + rows[0] * nx * bpp, offset + rows[1] * nx * bpp
     spans = [(s, min(s + CHUNK, stop)) for s in range(start, stop, CHUNK)]
-    with ThreadPoolExecutor(8) as ex:
+    with ThreadPoolExecutor(MAP_THREADS) as ex:
         raw = b"".join(ex.map(lambda sp: _get(session, url, *sp), spans))
     return np.frombuffer(raw, DTYPES[wcs_hdr["BITPIX"]]).reshape(rows[1] - rows[0], nx)
 
@@ -132,7 +127,7 @@ def load_model(name: str, half: float) -> lensmodel.MapLensModel:
         if hdr.get("BSCALE", 1) != 1 or hdr.get("BZERO", 0) != 0:
             raise RuntimeError(f"{name}: scaled map pixels are not supported")
         wcs = WCS(hdr)
-        pix = float(abs(wcs.pixel_scale_matrix[1, 1]) * 3600.0)
+        pix = frame_check(wcs)  # north-up, east-left, square: checked before any data is read
         ic, jc = (float(v) for v in wcs.world_to_pixel_values(*CENTRE))
         m = int(np.ceil((half + 2.0) / pix))  # 2" margin for the finite differences
         i0, i1 = max(0, int(ic) - m), min(hdr["NAXIS1"], int(ic) + m + 1)
@@ -212,7 +207,7 @@ def classify(stamp, ra: float, dec: float, pred: float, search: float) -> dict:
     image of the predicted flux injected at the position (simulated; must read ``recovered``
     for an ``absent`` verdict to count)."""
     sci, err, xx, yy = stamp(ra, dec)
-    f0, e0 = lc.aperture_snr(sci, err, xx, yy, 0.0, 0.0)
+    _, e0 = lc.aperture_snr(sci, err, xx, yy, 0.0, 0.0)
     if not np.isfinite(e0) or e0 <= 0:
         return {"class": "off_image"}
     snr, fbest, dx, dy = lc.best_within(sci, err, xx, yy, search)
@@ -336,10 +331,21 @@ def run_model(name: str, model, args, zbest: dict, stamp) -> dict:
     }
 
 
+def _finite(o):
+    """NaN and inf as null, so the output is strict JSON."""
+    if isinstance(o, dict):
+        return {k: _finite(v) for k, v in o.items()}
+    if isinstance(o, list | tuple):
+        return [_finite(v) for v in o]
+    if isinstance(o, float) and not np.isfinite(o):
+        return None
+    return o
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=Path("results/sunrise/counter_images.json"))
-    ap.add_argument("--models", nargs="+", default=list(MODELS))
+    ap.add_argument("--models", nargs="+", default=list(MODELS), choices=MODELS)
     ap.add_argument("--half-width", type=float, default=50.0, help="solver box half-width, arcsec")
     ap.add_argument("--step", type=float, default=0.1, help="solver grid step, arcsec")
     ap.add_argument("--self-arcsec", type=float, default=2.0)
@@ -370,7 +376,7 @@ def main(argv=None) -> int:
 
     try:
         # fetch every model's maps concurrently (I/O), then solve one model at a time
-        with ThreadPoolExecutor(len(args.models)) as ex:
+        with ThreadPoolExecutor(MODEL_THREADS) as ex:
             models = list(ex.map(lambda m: load_model(m, args.half_width), args.models))
         results = [
             run_model(m, model, args, zbest, stamp)
@@ -405,7 +411,7 @@ def main(argv=None) -> int:
         "results": results,
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(json.dumps(out, indent=1) + "\n")
+    args.out.write_text(json.dumps(_finite(out), indent=1) + "\n")
     print("flags:", sum(c["flag"] for r in results for c in r["counter_images"]))
     for r in results:
         for c in r["checks"] + r["controls"]:
