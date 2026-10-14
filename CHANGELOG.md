@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: (in progress) halo-filtered counter-images near BCGs and members in the other fields
+- Plan: `lens_consistency.py images --halo-filter-arcsec` on the Abell 2744, MACS1149 and MACS0416 rows that D-029-style
+  forced photometry left `confused` on cluster-member or BCG light.
+
 ## 2026-10-14: SMACS systems 11, 16, 26: no reference flux makes their counter-images testable
 - **Hypothesis before computing:** D-029 left systems 11, 16 and 26 `no_reference` (catalogued images at |μ| > 50
   or S/N < 5). Dropping the |μ| cap, a catalogued sibling may still predict an uncatalogued image at ≥ 10σ; if
