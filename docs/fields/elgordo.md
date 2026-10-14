@@ -220,3 +220,23 @@ other parameters **not refitted**; thresholds are ASSUMPTIONs.
   proxy, undetectable) and a system-23 extra beside 23a (whose position the multi-plane model misses with 23a, 17a,
   20c). System 7's extra goes. **No robust new extra image; no tension.** A multi-plane refit is not available
   in the repository and is not needed while no flag depends on the group.
+
+## Follow-up sources `2828` and `1601`: vetted 2026-10-14 (ordinary)
+
+`scripts/field_followups.py --pm` (outputs `results/field_followups/summary.json`; five-band 6″ cutouts looked at by
+eye). Photometry is observed, magnitudes derived, magnifications and counter-images `model_prediction`
+(Caminha+23, frame offset applied, z_s ∈ {1, 2, 3, 6}: no photo-z, since the DJA v7.0 zout URL returns 403).
+Thresholds are ASSUMPTIONs in the script.
+- **`f200w_2828` (#17), the "linear feature":** the horizontal stripe crosses every band (F115W–F444W) at the same
+  place. It lies on the mosaic row of source `2766` (Δy = 2.8 px = 0.09″, 6.0″ away; aper50 16.5), which is Gaia DR3
+  4931899405421624704 (G 15.9, parallax 0.96 mas at 31σ): a star's horizontal diffraction spike. The diagonal
+  spikes of the same star cross the cutout too. DJA also lists the spike (id 2528, F200W 26.2 in a 0.5″
+  aperture). **Artefact**, not a source (a D-014 spike detection at aper50 29.8).
+- **`f200w_1601` (#3):** a real faint source, barely visible at the sheet's stretch. DJA 2745 (0.05″): F115W 26.5
+  (17σ), F150W 27.2, F200W 26.8 (19σ), F277W 28.8 (4σ), F356W/F444W < 2σ. The short-wavelength bands are ~2 mag
+  brighter than the long-wavelength ones, hence the −11.4σ F200W−F277W outlier. A continuum cannot do that; strong
+  emission lines in all three SW filters can (for example [O II], [O III] and Hα at z ≈ 2.05: a hypothesis, no
+  spectrum or photo-z). Caminha+23 (88″ from the model centre): μ 1.5 (z 1), −104 (z 2, near the critical curve),
+  −8.8 (z 3), −6.3 (z 6). D-029 forced photometry at all eight predicted counter-images in F115W and F200W, the
+  predicted flux scaled from 1601's own 0.2″-aperture flux: `recovered`, `confused`, `ambiguous` or
+  `undetectable`; **no `absent`** at any redshift. No unmet prediction, not a candidate.
