@@ -1616,7 +1616,7 @@ def cmd_images(args) -> dict:
             for r in flagged
         ],
     }
-    (out / "images.json").write_text(json.dumps(summary, indent=1))
+    (out / "images.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary
 
 
