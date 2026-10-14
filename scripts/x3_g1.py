@@ -596,6 +596,7 @@ def selection_bound(seed: int = 5, n_d: int = 50) -> dict:
     logd = rng.uniform(*np.log10(D_RANGE_MAS), size=n_d)
     d = 10.0**logd
     kept = {sc: [] for sc in SIGMA_SCALES}
+    tes = []
     kept_band = {sc: {"10-100": [], "100-1000": []} for sc in SIGMA_SCALES}
     dmean_g, over19 = [], 0
     n_used = 0
@@ -625,6 +626,7 @@ def selection_bound(seed: int = 5, n_d: int = 50) -> dict:
         dmean_g.append(dg)
         over19 += int(float(r["G_mean"]) <= 19.0 < float(r["G_mean"]) + dg)
         n_used += 1
+        tes.append(float(r["tE"]))
     rec = {
         "label": "derived bound from simulated injections into observed dev light curves",
         "assumptions": {
@@ -637,6 +639,11 @@ def selection_bound(seed: int = 5, n_d: int = 50) -> dict:
         "n_injections_passing_final": int(m.sum()),
         "n_used": n_used,
         "retained_fraction_mean": {f"{sc:g}": float(np.mean(v)) for sc, v in kept.items()},
+        # added after the held-out run (review of #228): the limit uses t_E = 30-300 d only
+        "retained_fraction_te30_300": {
+            f"{sc:g}": float(np.mean(np.array(v)[(np.array(tes) >= 30) & (np.array(tes) <= 300)]))
+            for sc, v in kept.items()
+        },
         "retained_by_separation": {
             f"{sc:g}": {k: float(np.mean(v)) for k, v in bd.items()} for sc, bd in kept_band.items()
         },

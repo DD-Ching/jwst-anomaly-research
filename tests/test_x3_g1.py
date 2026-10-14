@@ -133,9 +133,18 @@ def test_vetting_order_and_visits():
         "fit_tE": 60.0,
         "fit_u0": 0.5,
     }
-    assert xv.verdict(base) == "unexplained under A-D"
+    assert xv.verdict(base) == "unexplained"
     assert xv.verdict({**base, "dip_visits": 1}) == "A1 single-visit"
     assert xv.verdict({**base, "G": 12.0}) == "A2 bright"
     assert xv.verdict({**base, "neighbour_dG": 1.0}) == "B1 neighbour"
     assert xv.verdict({**base, "vari_class": "ECL"}) == "C1 known variable"
     assert xv.verdict({**base, "fit_u0": 1.95}) == "D1 degenerate fit"
+    assert xv.verdict({**base, "dip_visits": 1, "spike_visits": 2}) == "D2 no multi-visit dip"
+    # host rules come before D1/D2, after A1
+    assert xv.verdict({**base, "dip_visits": 0, "spike_visits": 2, "G": 12.0}) == "A2 bright"
+
+
+def test_simbad_variable_types_are_exact_otypes():
+    xv = _load("x3_vet")
+    assert {"EB*", "LP*", "V*", "RS*", "QSO"} <= xv.SIMBAD_VAR
+    assert not {"s*r", "s*y", "*", "**", "SB*", "AB*", "WD*", "C*"} & xv.SIMBAD_VAR

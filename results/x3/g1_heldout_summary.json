@@ -7658,5 +7658,6 @@
    "final": 1.0
   }
  ],
- "stop_rule_more_than_200": false
+ "stop_rule_more_than_200": false,
+ "rate_limit": "see g1_heldout_limit.json (x3_vet.py limit): includes vetting costs"
 }

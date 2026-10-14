@@ -360,11 +360,6 @@ def heldout_summary() -> dict:
                     if k in t.colnames
                 }
             )
-    cal = json.loads((x3.results_dir() / "g1_summary.json").read_text())
-    sel = json.loads((x3.results_dir() / "g1_selection_bound.json").read_text())
-    k, n = cal["inject:W3_base"]["eff_te30_300"]
-    eff = k / n
-    retained = sel["retained_fraction_mean"]["1"]
     n_final = rows["final"]
     rec = {
         "label": "observed held-out light curves; rates derived; NOT evidence for any lens",
@@ -376,21 +371,7 @@ def heldout_summary() -> dict:
         ],
         "stop_rule_more_than_200": n_final > 200,
     }
-    if n_final == 0:
-        exp_star_yr = exposed * DR3_SPAN_YR
-        rec["rate_limit_95"] = {
-            "per_star_per_yr_photocentre_stable": 3.0 / (exp_star_yr * eff),
-            "per_star_per_yr_blended_prior": 3.0 / (exp_star_yr * eff * retained),
-            "efficiency_te30_300": eff,
-            "retained_fraction_blended_prior": retained,
-            "span_yr": DR3_SPAN_YR,
-            "conditions": [
-                "t_E 30-300 d; injection priors u0 ~ U(0, 2), rho 0.01/0.1, f_s ~ U(0.5, 1)",
-                "photocentre-stable: events whose own photocentre motion leaves RUWE <= 1.4",
-                "blended prior: separations 10-1000 mas log-uniform (g1_selection_bound.json)",
-                "unbounded selection effects listed in g1_selection_bound.json not_bounded",
-            ],
-        }
+    rec["rate_limit"] = "see g1_heldout_limit.json (x3_vet.py limit): includes vetting costs"
     (x3.results_dir() / "g1_heldout_summary.json").write_text(json.dumps(rec, indent=1) + "\n")
     return rec
 

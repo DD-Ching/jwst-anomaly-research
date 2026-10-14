@@ -4526,8 +4526,9 @@ unit overruns its budget.
   test with per-band source and blend fluxes ("insufficient" never vetoes).
 - Held-out light curves come from the DR3 bulk epoch-photometry files, streamed (`scripts/x3_bulk.py`). The split
   stays `MOD(source_id, 10) = 0`, which is 20 % of the sources.
-- Flags are vetted in batch by ordinary tests (`scripts/x3_vet.py`). These tests are post hoc, so their cost on
-  W3 injections is subtracted from the efficiency.
+- Flags are vetted in batch by ordinary rules (`scripts/x3_vet.py`). The rules are post hoc, so every rule is also
+  applied to the dev W3 injections (event rules to the light curve, host rules to the host), and the efficiency
+  includes their losses. v1-vetoed hosts are left out of the efficiency, because the exposure excludes them.
 
 **Alternatives rejected:**
 - re-splitting to a true 10 % (leaks already-read sources);
@@ -4542,8 +4543,8 @@ unit overruns its budget.
 - Bulk = DataLink on 309 / 309 dev sources.
 - Dev calibration: W3 efficiency 0.32 (t_E 30–300 d), PSPL 0 / 1,995, real 0 / 1,995.
 - RUWE inflation would veto 92–99.6 % of blended W3 events.
-- Held-out: 395,764 exposed sources, 196 flags, no candidate.
-- Γ₉₅ < 9.8 × 10⁻⁶ per star per year, photocentre-stable (`results/x3/g1_*`).
+- Held-out: 395,764 exposed sources, 196 flags, no candidate; vetted efficiency 0.276.
+- Γ₉₅ < 9.7 × 10⁻⁶ per star per year, photocentre-stable (`results/x3/g1_*`).
 
 **Revisit if:**
 - DR4 publishes epoch astrometry (then the photocentre shift becomes a signature, not a veto);

@@ -1,0 +1,43 @@
+{
+ "label": "derived: simulated W3 injections into observed dev light curves; screen + vetting",
+ "denominator": "injections into hosts not vetoed by v1",
+ "found_by_tE": {
+  "10": [
+   27,
+   471
+  ],
+  "30": [
+   146,
+   471
+  ],
+  "300": [
+   48,
+   486
+  ],
+  "100": [
+   189,
+   430
+  ]
+ },
+ "te_range": [
+  30.0,
+  300.0
+ ],
+ "n": 1387,
+ "found": 383,
+ "efficiency": 0.2761355443403028,
+ "efficiency_wilson95": [
+  0.2532490310241852,
+  0.30025871565235934
+ ],
+ "lost_by_rule": {
+  "screen": 909,
+  "C1 known variable": 3,
+  "A1 single-visit": 41,
+  "D1 degenerate fit": 29,
+  "A2 bright": 8,
+  "D2 no multi-visit dip": 12,
+  "B1 neighbour": 2
+ },
+ "host_rule_rate": 0.06917293233082707
+}
