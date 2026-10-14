@@ -1519,8 +1519,51 @@ Field docs: `docs/fields/*.md`.
 
 **Revisit if.**
 - A BCG/ICL model is subtracted. That allows a clean test near the BCG (system 17).
-- A reference flux is available for systems 11, 16 and 26 (DJA matched photometry, or a deeper image).
+- A reference flux is available for systems 11, 16 and 26 (DJA matched photometry, or a deeper image). Done for
+  F200W/F444W peak fluxes in three models (addendum 2026-10-14): untestable at this depth.
 - The test runs on the other clusters: El Gordo and Abell 2744 (issue #41) once their parser bugs are fixed.
+
+**Addendum 2026-10-14 (uncatalogued bright arcs, `scripts/arcs_counter.py`).** The counter-image test now also runs
+on background, strong-shear arcs of the stored `arcs` tables that lie > 2″ (ASSUMPTION) from every catalogued image:
+the arc is traced at z16 / z50 / z84 of its photo-z; a counter-image is robust when all three agree within 3″; the
+predicted flux is the arc's isophotal flux × |μ_c/μ_arc| with an encircled fraction of 0.5 (ASSUMPTION); a flag is a
+robust D-029 `absent` with best S/N < 5 (ASSUMPTION, from the Abell 2744 control: catalogued image 7247 is `absent`
+at 86σ by the 1/3 flux bound). Arcs are excluded near the model's own image list even where D-035/D-044 gate it
+off for position tests, and near the HFF CATS list of the same cluster (identification needs only observed positions).
+Five fields null (CHANGELOG 2026-10-14); the one earlier flag, Abell 370 3881, is CATS image 7.5 of system 7 with a
+wrong photo-z. Rejected: a 1″ exclusion (knots of system 26 with a wrong photo-z made a false `absent`); the model's
+own list alone (CANUCS A370 has no image within 7″ of 3881). Both false flags were photo-z errors on known systems,
+so a flag needs a spectroscopic redshift or a wider independent-model image search before vetting. Revisit if: an
+Abell 370 image list passes D-035, or spectroscopic redshifts for the tested arcs.
+
+**Addendum 2026-10-14 (system 17 near the BCG, `--halo-filter-arcsec`, `scripts/smacs_s17_vet.py`).** `images` can
+subtract a median filter (1.0″, ASSUMPTION; `halo_phot`'s `medfilt` route) from every forced stamp, with injected
+compact images on a 1″ ring measuring what the filter keeps (`halo_recovery`, simulated). On SMACS F200W it turns
+system 17's μ −10.2 image from a marginal recovery (7.8σ on the BCG's light) into `absent` (predicted 35.7σ, best
+3.6σ, flux ratio 0.09, recovery 0.98; 0.6″ filter: 25.5σ / 2.7σ). Looked at: nothing within 1″. Every catalogued
+sibling predicts ≥ 5× the measured flux (2.4 / 3.0 / 5.4 against 0.48). **Not a lens-model violation:** system 17
+has no spectroscopic redshift (arcs.dat z = 0; model z 1.72 Pascale+22, 1.84–1.92 Caminha+22, 2.12 +0.11/−0.09
+Mahler+22, photo-z 2.34), and the central pair is a near-caustic prediction: in ICLv2 itself it merges at z ≈ 1.92
+(μ −36 / +31) and is gone at z ≤ 1.84; the RELICS Zitrin LTM model (its best z ≈ 1.5) predicts no central pair; RELICS
+Glafic (z ≈ 1.5) predicts one 0.9–1.5″ from ICLv2's, also undetected; no published model lists a central image.
+The absence constrains the inner mass profile (BCG) of the models that predict the pair. Rejected: the annulus-only
+background of the original run (the BCG gradient made the 7.8σ). Revisit if: a spectroscopic redshift for system 17,
+or a model with a fitted BCG profile that still predicts the pair at ≥ 10σ.
+
+**Addendum 2026-10-14 (systems 11, 16 and 26, `scripts/smacs_ref_fluxes.py`).** Without the |μ| ≤ 50 cap, each
+catalogued sibling predicts the uncatalogued images (peak flux / |μ_sib| × |μ|, F200W and F444W) in ICLv2 and the two
+RELICS maps (each at the ICLv2-fitted z; ASSUMPTION). No prediction reaches 10σ from a sibling that passes the other
+D-034 gates, except one that is recovered: system 11's pair is undetected (≤ 3.7σ); system 16's counter-images are
+≤ 0.6σ (ICLv2, Glafic), while Zitrin's third image 2.5″ from the pair (gated 18σ) is `recovered` by the search (41σ,
+×2.4, on a bright arc's edge, so the identification is uncertain) and its far image is 3.9σ; and system 26's
+ICLv2 μ 26.6 image is 10.3σ / 10.7σ only from 26.2, whose peak is a neighbour's wing (2.3–3.2× the flux at its
+position); from 26.1 it is 3.3σ / 2.2σ, with 4.5σ / 2.9σ found. Glafic and Zitrin give one image where 26.1/26.2 lie (the merging pair is not resolved by the 0.25″
+solver grid, so an image count of one there is a grid limit) and no distant counter-image, which the grid would find.
+16.1 and 16.2 share one 0.4″ peak (one knot), so their two references are not independent.
+**Kept:** the |μ| cap and the gates; the gate-free numbers show the counter-images of these merging pairs lie 6–60×
+below the pairs, so the systems are untestable at this depth (apart from Zitrin's recovered image), not
+violations. Stamps are not halo-filtered: these systems lie 20–36″ from the BCG. Revisit if: deeper imaging, or a
+spectroscopic redshift with a model that puts a counter-image of these systems at ≥ 10σ from a gated reference.
 
 ## D-030 Exact image-plane χ² in `validate`; El Gordo and Abell 2744 models in the repository (2026-10-08)
 

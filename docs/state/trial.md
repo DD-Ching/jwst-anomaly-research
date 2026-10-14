@@ -122,6 +122,10 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.2 (`arcs_curvature_model.py`: forward-modelled curvature, five fields) | — | — | 0.05 (PR) | cloud routine 01GW8SqA, 23:24–23:45Z |
 | 2026-W42 | — | 1.4 (X2 S5: radial equations with NED, growing-mode search) | 0.2 (Ellis–Bronnikov reference, convergence) | 0.1 (state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | 0.7 (X2 S6: rotation-stability literature and equation check) | — | 0.1 (S5 scope fix, state files, PR) | interactive session 01AzKMDv |
+| 2026-W42 | ≈ 0.5 (`arcs_counter.py`: counter-images of uncatalogued arcs, five fields, control) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01QyGL8z, 00:08–00:48Z |
+| 2026-W42 | — | — | ≈ 0.4 (vet Abell 370 3881: CATS system 7, second-model images; exclusion fix, five-field reruns and controls) | 0.15 (orientation, takeover, base merge, PR) | cloud routine 01AQVssd, 01:08–01:50Z |
+| 2026-W42 | ≈ 0.25 (SMACS system 17 halo-subtracted counter-image) | — | ≈ 0.15 (system 17 vetting: z scan, RELICS models, literature) | 0.1 (orientation, claim, PR) | cloud routine 014mrZNP, 02:08–02:45Z |
+| 2026-W42 | ≈ 0.3 (SMACS systems 11, 16, 26: sibling references in three models, two bands; cutouts) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01LDvpj4, 03:07–03:40Z |
 | 2026-W42 | — | 1.8 (X2 S6a: 5D derivation, background, mode tracking) | 0.9 (static/merger gates, shooting cross-check, constraint residuals, convergence) | 0.6 (review and fixes, state files, PR) | interactive session 01AzKMDv |
 
 ## Outcome ledger (four columns only)

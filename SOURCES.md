@@ -315,6 +315,9 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - Noirot+2023 SMACS 0723 redshifts: https://niriss.github.io/smacs0723
 - Caminha+2022 SMACS 0723 model and MUSE redshifts, CDS catalogue J/A+A/666/L9 (file contents not verified): https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/666/L9
 - RELICS SMACS 0723 lens-model files (`glafic/v2`, `lenstool/v1`, `zitrin-ltm-gauss/v2`): https://archive.stsci.edu/hlsps/relics/smacs0723m73/models/
+  - Used 2026-10-14 (`scripts/smacs_s17_vet.py`): `glafic/v2` and `zitrin-ltm-gauss/v2` `{x,y}-arcsec-deflect.fits`, sha256 in the
+    script (`lenstool/v1` lists no files); z_lens 0.39 and H0 70 / Ωm 0.3 assumed for the D_LS/D_S = 1 maps.
+  - arXiv:2207.07102 (Pascale+22) Table 1: system 17 model z 1.72, photo-z 2.34 (accessed 2026-10-14).
 - Hubble Frontier Fields lens models (same layout as RELICS): https://archive.stsci.edu/prepds/frontier/lensmodels/
 - Zoobot Euclid encoder (Apache-2.0): https://huggingface.co/mwalmsley/zoobot-encoder-euclid
 - Euclid Q1 strong-lens expert labels: https://huggingface.co/datasets/mwalmsley/euclid_strong_lens_expert_judges

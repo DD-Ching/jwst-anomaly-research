@@ -35,6 +35,106 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - `pkill -f` with the script name in the same shell killed the shell (again).
 - **Handoff:** X2 at about 13.1 / 16 h, paused for the owner. No 4D, NED + SV or communication conclusion.
 
+## 2026-10-14: SMACS systems 11, 16, 26: no reference flux makes their counter-images testable
+- **Hypothesis before computing:** D-029 left systems 11, 16 and 26 `no_reference` (catalogued images at |μ| > 50
+  or S/N < 5). Dropping the |μ| cap, a catalogued sibling may still predict an uncatalogued image at ≥ 10σ; if
+  nothing is there in F200W and F444W under more than one model, that is a lens-model residual. Ordinary: μ of
+  merging pairs near a critical curve is ill-determined, fitted redshifts, resolved or neighbour-contaminated
+  references, model dependence.
+- New: `scripts/smacs_ref_fluxes.py` (ICLv2 plus the RELICS Glafic v2 and Zitrin LTM v2 maps of
+  `smacs_s17_vet.py`, each system at its ICLv2-fitted z: 1.65, 1.10, 4.58), F200W and F444W by S3 byte range; per
+  predicted image the S/N each sibling predicts (all, and those passing the D-034 gates except the |μ| cap), the
+  μ-error factor needed for 10σ, and the best forced S/N within 1″.
+- **Result (`results/smacs_ref/ref_fluxes.json`; model_prediction vs derived): no testable image, so no `absent`.**
+  - System 11: both catalogued images are undetected (S/N ≤ 3.7 at the peak, ≤ 2.7 at the position, both bands); the
+    counter-image (μ 2.3–4.2 in the three models) is predicted at ≤ 1σ. Untestable at this depth.
+  - System 16: the catalogued pair is one merging knot (μ 110–340 in ICLv2/Glafic); its counter-image is predicted at
+    ≤ 0.6σ (a 17–28× μ error would be needed for 10σ). 16.1 and 16.2 share one 0.4″ peak, so they are one reference.
+    Zitrin (pair μ 10–13) predicts a third image 2.5″ from the pair at 18σ from a gated reference: the 1″ search
+    finds 41σ (×2.4, `recovered`) on the edge of a bright arc (looked at: the arc runs ~2″ N of the prediction, so
+    the identification is uncertain); its μ 1.9 image is predicted at 3.9σ.
+  - System 26: only ICLv2 predicts counter-images; Glafic and Zitrin give one image at the pair (μ 35 / 5.3; a
+    merging pair the 0.25″ solver grid does not split) and no distant counter-image. ICLv2's
+    μ 26.6 image is predicted at 10.3σ (F200W) / 10.7σ (F444W) only from 26.2, whose reference fails the gates: its
+    0.4″ peak is 2.3–3.2× the flux at the catalogued spot (looked at: the wing of a bright compact neighbour
+    1–2″ away; concentration 0.29–0.33). From 26.1 (diffuse, concentration 0.48–0.53) it is 3.3σ / 2.2σ, and the
+    sky there shows 4.5σ / 2.9σ within 1″ (as D-029's 4.6σ scratch run). Its μ ≤ 5.8 images: ≤ 2.3σ.
+- **Ordinary: the counter-images of these merging, high-μ pairs are 6–60× fainter than the pairs, below the
+  forced-photometry depth in every model, except Zitrin's system 16 third image, which is recovered. The one other
+  ≥ 10σ prediction (26, ICLv2) rests on a neighbour-contaminated reference and a single model. No `absent`; not
+  candidates.** This closes the D-029 `no_reference` systems at the current depth.
+- Review fixes (`/code-review`): wording for the recovered Zitrin image and the one-image RELICS pairs; NaN/zero μ
+  and non-finite photometry guards; 4-decimal fluxes in the JSON. Not changed (recorded): the D-034 gates are
+  restated, not shared with `forced_check`, and the RELICS loader duplicates `smacs_s17_vet.relics` (refactor
+  when either changes); no halo filter (the systems are 20–36″ from the BCG).
+- **Next:** `--halo-filter-arcsec` on the other fields' `images` runs near BCGs (Supporting 1).
+
+## 2026-10-14: SMACS system 17 near the BCG: halo-subtracted counter-image absent, explained by its free redshift
+- **Hypothesis before computing:** D-029's marginal recovery of system 17's μ −10.2 image (7.8σ, ratio 0.36) sits on
+  the BCG's light gradient; with the halo removed, either a compact image remains (recovered) or the 7.8σ was halo
+  light and a ≥ 10σ prediction is unmet. Ordinary: halo residuals, reference choice, model position error, the
+  fitted (not spectroscopic) redshift, model dependence of central images.
+- New: `lens_consistency.py images --halo-filter-arcsec` (median-filtered stamps, `halo_recovery` from ring
+  injections). Reproduced the D-029 run first (24.4σ / 7.8σ / 0.36; the μ 5.4 image `confused` by a cluster galaxy).
+  System 9's third image is now `no_reference` without the filter (the D-034 reference gates).
+- **Result (derived, `results/smacs_s17/`):** filter 1.0″: μ −10.2 image `absent`, predicted 35.7σ, best 3.6σ, flux
+  ratio 0.09, recovery 0.98; filter 0.6″: 25.5σ / 2.7σ. μ 5.4 image still `confused` (×81). Looked at the raw and
+  filtered F200W cutouts: nothing within 1″; within 2″ only an unrelated compact source (7.9σ, ratio 0.22).
+- **Vetted (`scripts/smacs_s17_vet.py`, model_prediction):** z is fitted (Mahler 2.12 +0.11/−0.09; Caminha
+  1.84–1.92; Pascale 1.72; photo-z 2.34; literature check by a subagent, arXiv:2207.07101 Table 2, 2207.07567,
+  2207.07102). In ICLv2 the central pair merges at z ≈ 1.92 (μ −36 / +31, best 3.3σ) and is gone at z ≤ 1.84. RELICS
+  Zitrin LTM v2 (best z ≈ 1.5, spread 0.37″) predicts no central pair; RELICS Glafic v2 (z ≈ 1.5, 0.33″) predicts one
+  0.9–1.5″ from ICLv2's, with nothing of the predicted flux within 1″ (3.0σ, 0.73 against 2.1–4.7 from the siblings;
+  RELICS maps shifted by the ICLv2 frame offset, ASSUMPTION). **Ordinary: a near-caustic prediction that depends on the
+  free redshift and the inner (BCG) mass profile. Not a candidate;** the absence is a constraint on those models.
+- **Failed approach:** the annulus-only background next to the BCG (D-029): the gradient made the 7.8σ "recovery".
+- Review fixes (`/code-review`): RELICS maps in the JWST frame, forced photometry at their images, maps deleted after
+  use, a filter floor (≥ 0.6″), one shared median-filter helper. Not changed: `halo_recovery` does not rescale the
+  prediction, because the reference passes the same filter (losses cancel for compact images; recovery 0.94–0.98 here).
+- **Next:** reference fluxes for systems 11, 16 and 26 (Supporting 1); `--halo-filter-arcsec` on the other fields'
+  `images` runs near BCGs.
+
+## 2026-10-14: counter-images of uncatalogued bright arcs: five fields null (Abell 370 3881 is known system 7)
+- **Hypothesis before computing:** every strongly sheared background arc that is not a catalogued image has the
+  counter-images its model predicts at its photo-z; a robust predicted image (z16 and z84 agree within 3″) of ≥ 10σ
+  with nothing detected would be a lens-model residual. Ordinary: photo-z error, knots of catalogued systems,
+  cluster galaxies/ICL, model extrapolation, extended-source flux scaling.
+- `scripts/arcs_counter.py` (new; `lensmodel.find_images`, the D-029 forced photometry, F200W i2d by S3 byte range)
+  on the stored `results/arcs/*/arcs.ecsv`. Positive control (`--control`, catalogued arcs, Abell 2744): 18 of 20
+  known counter-images not absent; of the two `absent`, 7247 ( a catalogued image detected at 86σ, flux ratio 0.27) shows
+  the isophotal-to-aperture prediction over-predicts bright extended arcs by up to ×4, so a flag needs best S/N < 5.
+- **Result (model_prediction vs derived, `results/arcs_counter/`), after the exclusion fix below:** Abell 2744 2 arcs /
+  5 counter-images, Abell 370 12 / 42, El Gordo 4 / 9, MACS0416 4 / 7, MACS1149 3 / 7: **0 flags in five fields**
+  (3 more images untested: their search circle would reach the arc).
+- **Abell 370 3881 vetted (was the one robust flag: predicted 237σ, best 4.5σ, 64″ out):** it is image 7.5 of system 7
+  (z_spec 2.751) in the HFF CATS v4 `arcs.txt` (0.0″); CANUCS lists no image within 7″ of it, and the A370 image list
+  is gated off (D-035, D-044), so the 2″ exclusion never ran. Catalogued 7.4 lies 2.5″ from the flagged position and is
+  detected (F200W source 2578, 24.05 mag against 23.6 predicted; looked at: compact and elongated like 3881). At
+  z_spec, CANUCS puts the image 1.6″ from 7.4; the CATS model predicts it 3.3–6.4″ from the flag at z 2.6–3.4. The
+  z_phot 2.99 (z16–z84 spread only 0.47″) shifted the prediction 2.6″, beyond the 1″ search. **Ordinary: photo-z
+  error on a catalogued system.** Not a candidate.
+- **Fix:** `known_images` excludes arcs near the model's own image list even where it is gated off for position tests,
+  plus the HFF CATS list of the same cluster. 16 Abell 370 arcs, and one more in Abell 2744, are now excluded.
+- **Controls (`--control`, catalogued arcs, all fields):** MACS0416 22 counter-images, 0 absent; MACS1149 8, one
+  `absent` that is not a flag; El Gordo none testable. Abell 2744 20, flags 2528 (the system 26 knot with z_phot
+  5.16 against z_spec 3.054, now in the control because it is within 2″ of 26.1a). Abell 370 8 arcs / 26, flags only 3881 (system 7 at z_phot 2.99,
+  as above).
+- **Review fixes (`/code-review`):** the arc no longer counts as its own counter-image's detection (catalogue match
+  excludes the arc's label; images whose search circle comes within 2″ of the arc are untested); NaN magnitudes never
+  win the catalogue match; `robust` needs both z16 and z84; masked redshifts are NaN; stale `counter.ecsv` is removed;
+  the chain check runs after the outputs are written. Not fixed (recorded): a fixed 2″ self radius for long arcs,
+  and `nearest_image` accepting any image within 4.2″ (only `--chain-samples`, not used here).
+- **Lesson:** "robust" (z16 and z84 agree) does not guard against a wrong photo-z: both false flags (2528, 3881) were
+  photo-z errors on known systems. A future flag needs a spectroscopic redshift or an independent-model image search
+  wider than the 1″ floor before vetting.
+- **Failed approach:** a 1″ exclusion radius. Abell 2744 arc 2528 lies 1.1″ from 26.1a; its photo-z 5.16 (z_spec
+  3.054) moved the predictions up to 8″ and made a 23σ `absent` (looked at: F115W–F444W cutouts). At z = 3.054 its
+  images land on 26.2b (0.6″) and 26.1c (1.5″). Exclusion is now 2″.
+- `recovered` among unknowns is weak: a random 5σ source within 1–3″ at 1/3–3× the flux is common in deep fields
+  (2528's z = 5.16 "counter-image" was recovered 4.7″ from 26.1c); only `absent` with no detection is informative.
+- **Next:** the counter-image test of uncatalogued arcs is closed at this depth (null). Remaining Supporting 1 items:
+  the BCG/ICL-subtracted test for system 17, reference fluxes for systems 11, 16 and 26.
+
 ## 2026-10-14: X2 S6 screen: rotation is not an established wormhole stabiliser; one checkable gap (5D complex modes)
 - **Sources read.** 2403.08387 (4D, second-order slow rotation) and 1309.2448 (5D, full rotation); 2510.11406 v1
   and v2 compared. Follow-ups via INSPIRE; no errata and no public rotating-wormhole code.

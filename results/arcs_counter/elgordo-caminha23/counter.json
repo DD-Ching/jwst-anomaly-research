@@ -1,0 +1,32 @@
+{
+ "model": "elgordo-caminha23",
+ "assumptions": {
+  "self_arcsec": 2.0,
+  "min_mu": 0.5,
+  "max_arc_mu": 30.0,
+  "match_cat_arcsec": 2.0,
+  "search_arcsec": 1.0,
+  "mag_slack": 1.19,
+  "ee": 0.5,
+  "max_best_snr": 5.0
+ },
+ "control": false,
+ "n_background_strong_shear": 12,
+ "n_catalogued_excluded": 1,
+ "n_arcs_tested": 4,
+ "skipped": {
+  "arc_mu": 0,
+  "no_counter": 7
+ },
+ "n_counter_images": 9,
+ "n_near_arc_untested": 0,
+ "n_robust": 5,
+ "classes": {
+  "absent": 1,
+  "catalog": 5,
+  "confused": 1,
+  "recovered": 1,
+  "undetectable": 1
+ },
+ "flags_robust_absent": []
+}
