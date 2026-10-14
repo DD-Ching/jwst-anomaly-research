@@ -295,7 +295,7 @@ def run(model_name: str, image_uri: str, halo_filter: float = HALO_FILTER_ARCSEC
                 "snr_b": stamps[kb][4] if kb in stamps else None,
             }
             if ka is None or kb not in stamps:
-                row["class"] = "near_critical" if not usable[kb] or ka is None else "off_image"
+                row["class"] = "near_critical" if not usable[kb] else "off_image"
             elif stamps[ka][4] < MIN_PEAK_SNR:
                 row["class"] = "faint"
             else:

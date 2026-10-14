@@ -13,7 +13,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   source `untestable`).
 - **Result (derived; D-032 addendum): the tool is not validated on real data.** Abell 2744 Bergamini+23, UNCOVER
   F200W, 1″ halo filter: 116 pairs, 31 `consistent`, 6 `parity_residual`, 4 `undetermined`, 27 `untestable`,
-  43 `near_critical`, 5 `faint` (`results/parity/abell2744-bergamini23.json`). The 6 flags include the point-source
+  37 `near_critical`, 6 `off_image`, 5 `faint` (`results/parity/abell2744-bergamini23.json`). The 6 flags include the point-source
   quasar A2744-QSO1 (53a/b) and system 1: tool failures, not residuals; not candidates; no parity conclusion.
 - **Failed approaches:** (1) synthetics drawn from A itself share A's noise pattern and gave symmetric sources Δχ²
   ≈ ±100–160 of fake power; fixed by drawing from A smoothed by 2 px. (2) a single optimisation per family stalled
