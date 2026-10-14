@@ -16,12 +16,12 @@
   "centre": [
    24.3555,
    -8.457
-  ],
-  "copy_factor": 1.75
+  ]
  },
  "results": [
   {
    "model": "glafic",
+   "grid_nan_fraction": 0.0,
    "checks": [
     {
      "knot": "1.1",
@@ -434,6 +434,7 @@
   },
   {
    "model": "lenstool",
+   "grid_nan_fraction": 0.0,
    "checks": [
     {
      "knot": "1.1",
@@ -748,6 +749,7 @@
   },
   {
    "model": "wslap",
+   "grid_nan_fraction": 0.0,
    "checks": [
     {
      "knot": "1.1",
@@ -1169,6 +1171,7 @@
   },
   {
    "model": "zitrin-ltm-gauss",
+   "grid_nan_fraction": 0.0,
    "checks": [
     {
      "knot": "1.1",

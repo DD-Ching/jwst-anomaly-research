@@ -215,9 +215,10 @@ Ranks 5 and 7 were screened (D-020).
   solved with `find_images` (`MapLensModel`, 0.1″ grid). Predicted images > 2″ from every catalogued image of the
   system are counter-images; |μ| ≥ 0.5 ones get D-029 forced photometry on F200W `jw02282-o010_t001` with a predicted
   flux from the knot's catalogued images with |μ| < 50 (point-source scaling), and again with a compact image of
-  that flux injected (simulated). D-041 rules: model copy within 1.75× the knot's image-plane rms (re-predicted
-  images only) of a catalogued image the model misses; cross-model agreement within 3″, copies and demagnified
-  images not counted. A flag needs `absent`, a recovered injection and all four models.
+  that flux injected (simulated). D-041 cross-model rule: agreement within 3″, other models' demagnified images
+  not counted. The D-041 copy rule is not applied as a class (with the re-predicted images' rms it cannot fire
+  beyond the 2″ known-image radius; with the misses included it widens itself); the distance to the nearest missed
+  catalogued image is recorded instead. A flag needs `absent`, a recovered injection and all four models.
 - **Known cases:** system 2's three images are re-predicted by all four models (image-plane rms 0.16–0.69″). System
   1 is near-critical and the HST-era models miss some knots: 1.1 re-predicted 3–5 of 5, 1.2 1–3 of 3, 1.7 1–3 of 4
   (WSLAP+ best). Control through the same chain (leave-one-out over catalogued images with |μ| < 50, 20 cases in
@@ -230,8 +231,7 @@ Ranks 5 and 7 were screened (D-020).
   - Glafic's extra arc-end images of 1.1 and 1.2 (|μ| 39 and 79, predicted S/N 16 and 25, nothing above 4.4σ
     within 1″; injections recovered): `absent`, but only Glafic (1.2) or Glafic and LTM (1.1) predict an image there.
     They lie 5.1″ and 3.3″ from 1.1c and 1.2c, which Glafic does not re-predict: the model's displaced c images,
-    model-dependent and untestable (no copy by the 1.75× rule, whose radius in Glafic is 0.4–1.9″ once the
-    missed images are excluded). Cutouts looked at: empty sky with the arc passing ~2″ away;
+    model-dependent and untestable. Cutouts looked at: empty sky with the arc passing ~2″ away;
   - system 2: Glafic, Lenstool and LTM predict 2–3 counter-images at |μ| 3.5–11 (predicted S/N 3–11), each
     `undetectable` or `confused` with a brighter neighbour; WSLAP+ predicts one at |μ| 2.4 (S/N 3.3). No two models
     agree on a position within 3″ except pairs of Glafic/Lenstool/LTM images;
@@ -240,7 +240,8 @@ Ranks 5 and 7 were screened (D-020).
   the arc (each re-predicts only part of system 1's images) to make the arc's extra images testable, and the arc's
   cross-cluster counter-image is predicted below the noise (S/N ≤ 1.7). Contact sheet inspected (scratch, not tracked). Output:
   `results/sunrise/counter_images.json` (model_prediction positions and μ; derived fluxes and classes).
-- **Limits:** F200W only; point-source flux scaling over-predicts extended images; the knots' |μ| < 50 references in
+- **Limits:** the injection tests the photometry, not the cross-model step (an image the models place > 3″
+  apart cannot be flagged); F200W only; point-source flux scaling over-predicts extended images; the knots' |μ| < 50 references in
   LTM do not exist (no flux test for LTM). A JWST-era model with all knots (Scofield+2025 M5-G1 once its deflection
   unit is stated, D-033 addendum) would make the arc-end images testable.
 

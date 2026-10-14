@@ -4,7 +4,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-14: Sunrise counter-images in the four RELICS models: null (D-033 addendum 4)
 - **Tool:** `scripts/sunrise_counter.py` (byte-range deflection blocks → `MapLensModel` → `find_images`, D-029 forced
-  photometry on F200W with an injection check, D-041 copy and cross-model rules); `results/sunrise/counter_images.json`.
+  photometry on F200W with an injection check, D-041 cross-model rule); `results/sunrise/counter_images.json`.
 - **Known cases:** system 2 re-predicted by all four models (rms 0.16–0.69″); system 1 only partly (1–5 of each knot's
   images). Leave-one-out control through the same chain: 16/20 `recovered`, 3 `confused`, 1 `undetectable`, 0 `absent`.
 - **Result:** 0 flags. Glafic's `absent` arc-end images of 1.1 and 1.2 (|μ| 39, 79; predicted 16σ, 25σ; injections

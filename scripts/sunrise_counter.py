@@ -22,10 +22,12 @@ same counter-image across the system's redshift range (system 2: best z +- ``--d
 ``lens_consistency.MAX_SEARCH_ARCSEC``.
 
 Rules (D-041, thresholds are ASSUMPTIONs):
-* model copy: a counter-image within ``COPY_FACTOR`` x the knot's image-plane rms of a catalogued
-  image the model does not re-predict is the model's displaced copy of it, not a missing image;
+* model copy: not applied as a class. With the rms of the re-predicted images it cannot fire
+  (every counter-image is > ``--self-arcsec`` away), and with the missed images included it
+  widens itself. Each counter-image records ``copy_distance_arcsec`` to the nearest catalogued
+  image of its knot that the model does not re-predict;
 * cross-model: ``n_models`` counts the models predicting a counter-image of the same knot within
-  ``--cross-arcsec`` (copies and demagnified images of other models do not count); an image
+  ``--cross-arcsec`` (demagnified images of other models do not count); an image
   predicted by only some models is model-dependent;
 * injection: a compact image of the predicted flux is added at each tested position and the
   verdict repeated (``inject_class``, simulated).
@@ -65,10 +67,9 @@ COSMO = FlatLambdaCDM(H0=70.0, Om0=0.3)
 CENTRE = (24.3555, -8.4570)  # model-frame origin near the cluster core (RA, Dec; ASSUMPTION)
 F200W = "s3://stpubdata/jwst/public/jw02282/L3/t/o010/jw02282-o010_t001_nircam_clear-f200w_i2d.fits"
 CHUNK = 8 * 2**20  # bytes per range request
-COPY_FACTOR = 1.75  # model copy within this x the knot's image-plane rms (D-041; ASSUMPTION)
 INJECT_FWHM_ARCSEC = lc.HALO_INJECT_FWHM_ARCSEC  # compact injected image (~F200W PSF; ASSUMPTION)
 FLAG_CLASSES = ("absent",)
-NOT_INDEPENDENT = ("model_copy", "demagnified")  # not an independent prediction of an image
+NOT_INDEPENDENT = ("demagnified",)  # not counted as another model's prediction of an image
 
 
 def cross_model(results: list[dict], radius: float) -> None:
@@ -128,6 +129,8 @@ def load_model(name: str, half: float) -> lensmodel.MapLensModel:
         grid = tuple(hdr.get(c) for c in grid_keys)
         if out.setdefault("grid", grid) != grid:
             raise RuntimeError(f"{name}: defy grid differs from defx")
+        if hdr.get("BSCALE", 1) != 1 or hdr.get("BZERO", 0) != 0:
+            raise RuntimeError(f"{name}: scaled map pixels are not supported")
         wcs = WCS(hdr)
         pix = float(abs(wcs.pixel_scale_matrix[1, 1]) * 3600.0)
         ic, jc = (float(v) for v in wcs.world_to_pixel_values(*CENTRE))
@@ -162,6 +165,8 @@ def predict(model, grid, knot: str, z: float) -> dict:
     ev = model.evaluate(ra, dec, z)
     bx = np.asarray(ev["x"] - ev["alpha_x"], float)
     by = np.asarray(ev["y"] - ev["alpha_y"], float)
+    if not (np.isfinite(bx).all() and np.isfinite(by).all()):
+        raise RuntimeError(f"knot {knot}: a catalogued image lies outside the loaded maps")
     imgs = lensmodel.find_images(model, grid, float(bx.mean()), float(by.mean()), z)
     return {
         "names": names,
@@ -197,7 +202,7 @@ def split_images(pred: dict, sys_xy: np.ndarray, self_arcsec: float):
     near = d.min(axis=1) <= self_arcsec
     dk = np.hypot(*(pred["ref_xy"][:, None, :] - xy[None, :, :]).transpose(2, 0, 1)).min(axis=1)
     ok = dk <= self_arcsec
-    # rms over the re-predicted images only: a missed image must not widen its own copy radius
+    # rms over the re-predicted images only (diagnostic; the misses are listed separately)
     rms = float(np.sqrt(np.mean(dk[ok] ** 2))) if ok.any() else float("nan")
     return imgs[near], imgs[~near], ok, rms
 
@@ -240,9 +245,10 @@ def match_spread(main_xy: np.ndarray, others: list[np.ndarray]) -> np.ndarray:
     return out
 
 
-def run_model(name: str, args, zbest: dict, stamp) -> dict:
-    model = load_model(name, args.half_width)
+def run_model(name: str, model, args, zbest: dict, stamp) -> dict:
     grid = lensmodel.DeflectionGrid.compute(model, args.half_width, args.step)
+    # solver nodes outside the loaded maps cannot hold images (reported, not hidden)
+    nan_frac = float(np.mean(~np.isfinite(grid.alpha_x)))
     sys_xy = {s: system_xy(model, s) for s in ("1", "2")}
     rows, checks, controls = [], [], []
     for knot in sorted(knots()):
@@ -253,6 +259,7 @@ def run_model(name: str, args, zbest: dict, stamp) -> dict:
         preds = [predict(model, grid, knot, z) for z in zs]
         main = preds[0]
         _, counter, recovered, rms = split_images(main, sys_xy[system], args.self_arcsec)
+        # match_spread pairs nearest counter-images across z (approximate; system 2 only)
         others = [split_images(p, sys_xy[system], args.self_arcsec)[1] for p in preds[1:]]
         unrecovered = main["ref_xy"][~recovered]
         cxy = np.column_stack([counter["x"], counter["y"]]) if len(counter) else np.zeros((0, 2))
@@ -304,14 +311,10 @@ def run_model(name: str, args, zbest: dict, stamp) -> dict:
                 "z_spread_arcsec": float(sp),
                 "references": [r["image"] for r in good],
             }
-            # D-041 model copy: near a catalogued image of this knot that the model misses
-            if len(unrecovered):
-                dcopy = float(np.hypot(*(unrecovered - [row["x"], row["y"]]).T).min())
-                row["copy_distance_arcsec"] = dcopy
-                if np.isfinite(rms) and dcopy <= COPY_FACTOR * rms:
-                    row["class"] = "model_copy"
-                    rows.append(row)
-                    continue
+            if len(unrecovered):  # distance to a catalogued image of this knot the model misses
+                row["copy_distance_arcsec"] = float(
+                    np.hypot(*(unrecovered - [row["x"], row["y"]]).T).min()
+                )
             if abs(mu_c) < args.min_mu:
                 row["class"] = "demagnified"
                 rows.append(row)
@@ -324,7 +327,13 @@ def run_model(name: str, args, zbest: dict, stamp) -> dict:
             )
             row.update(classify(stamp, row["ra"], row["dec"], pred, search))
             rows.append(row)
-    return {"model": name, "checks": checks, "controls": controls, "counter_images": rows}
+    return {
+        "model": name,
+        "grid_nan_fraction": nan_frac,
+        "checks": checks,
+        "controls": controls,
+        "counter_images": rows,
+    }
 
 
 def main(argv=None) -> int:
@@ -360,7 +369,13 @@ def main(argv=None) -> int:
         return cache[key]
 
     try:
-        results = [run_model(m, args, zbest, stamp) for m in args.models]
+        # fetch every model's maps concurrently (I/O), then solve one model at a time
+        with ThreadPoolExecutor(len(args.models)) as ex:
+            models = list(ex.map(lambda m: load_model(m, args.half_width), args.models))
+        results = [
+            run_model(m, model, args, zbest, stamp)
+            for m, model in zip(args.models, models, strict=True)
+        ]
     finally:
         close()
     cross_model(results, args.cross_arcsec)
@@ -386,7 +401,7 @@ def main(argv=None) -> int:
                 "dz",
             )
         }
-        | {"centre": CENTRE, "copy_factor": COPY_FACTOR},
+        | {"centre": CENTRE},
         "results": results,
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)

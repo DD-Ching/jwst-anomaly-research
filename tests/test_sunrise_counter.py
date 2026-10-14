@@ -91,11 +91,11 @@ def test_cross_model_flags_only_images_every_model_predicts():
     assert not any(c["flag"] for r in results[1:] for c in r["counter_images"])
 
 
-def test_cross_model_ignores_copies_and_single_model_runs():
+def test_cross_model_ignores_demagnified_and_single_model_runs():
     d = 1.0 / 3600.0
     results = [
         _res("a", [(10.0, 0.0, "absent")]),
-        _res("b", [(10.0 + 0.5 * d, 0.0, "model_copy")]),
+        _res("b", [(10.0 + 0.5 * d, 0.0, "demagnified")]),
     ]
     sc.cross_model(results, 3.0)
     assert results[0]["counter_images"][0]["n_models"] == 1
@@ -122,3 +122,13 @@ def test_classify_absent_and_injection_recovers():
     assert v["inject_class"] == "recovered"
     assert sc.classify(_noise_stamp(nan=True), 0.0, 0.0, 200.0, 1.0)["class"] == "off_image"
     assert sc.classify(_noise_stamp(), 0.0, 0.0, float("nan"), 1.0)["class"] == "no_reference"
+
+
+def test_read_block_returns_the_requested_rows(monkeypatch):
+    arr = np.arange(7 * 5, dtype=">f4").reshape(7, 5)
+    offset = 2880
+    blob = b"\0" * offset + arr.tobytes()
+    monkeypatch.setattr(sc, "_get", lambda session, url, a, b: blob[a:b])
+    monkeypatch.setattr(sc, "CHUNK", 12)  # several range requests, not aligned to rows
+    out = sc.read_block(None, "u", {"NAXIS1": 5, "BITPIX": -32}, offset, (2, 6))
+    assert np.array_equal(out, arr[2:6])
