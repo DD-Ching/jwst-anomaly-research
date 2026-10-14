@@ -1940,6 +1940,17 @@ byte range (`scripts/sunrise_relics.py`, not pinned: no full download, so no che
 published z = 6.2 maps (median ratio 0.998–1.000), system 1 returns z = 5.8–6.3, and system 2 maps to one source at
 z ≈ 2.6–3.1 (source-plane rms 0.11–0.23″ against M5-G1's ≥ 0.62″). System 2's M5-G1 misfit is that model's, not an
 anomaly. Rejected: pinning the 100 MB maps per model (patches suffice; the Lenstool maps stay pinned for screens).
+**Addendum 4 (2026-10-14, counter-images).** `scripts/sunrise_counter.py` reads each RELICS model's deflection maps
+over a ±52″ box by byte range (in memory, nothing stored), solves every image of systems 1 and 2 with `find_images`
+and applies D-029 forced photometry with an injection check and the D-041 cross-model rule. **0 flags:**
+no `absent` counter-image is predicted by all four models. Glafic's two `absent` arc-end images (1.1, 1.2; |μ| 39, 79;
+injections recovered) are predicted by 1–2 of 4 models and sit 3–5″ from the c images Glafic misses; the arc's
+cross-cluster counter-image is predicted at S/N ≤ 1.7. Control through the same chain: 16 of 20 catalogued images
+`recovered` leave-one-out, none `absent`. The D-041 copy rule is not applied as a class: with the re-predicted
+images' rms it cannot fire beyond the 2″ known-image radius, and with the misses included it widens itself; the
+distance to the nearest missed catalogued image is recorded instead. Rejected: a flag
+from one model's near-critical image (the HST-era models re-predict only part of each system-1 knot's images: 1 of 4 to 5 of 5).
+Revisit when a JWST-era model fits every knot (M5-G1 with a stated deflection unit).
 
 ## D-034 Counter-image and radial-screen rules from El Gordo (2026-10-08)
 
