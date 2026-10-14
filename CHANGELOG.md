@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: (in progress) Abell 2744 sibling reference fluxes for the five both-model extras
+- Claim: reference fluxes without the |mu| cap for 3.2, 4.2c, 26.2, 33.1 third and 62.1 (D-041 handoff).
+
 ## 2026-10-14: D-041 cross-model rule on every Abell 2744 forced-photometry row: no image unmet in both models
 - **Hypothesis before computing:** an extra image that both Bergamini+23 and UNCOVER v2.0 predict at ≥ 10σ, with
   nothing there, would be a lens-model residual that no single model's systematics explain. Ordinary: one-model
