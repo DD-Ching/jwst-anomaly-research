@@ -1,0 +1,73 @@
+{
+ "model": "macs0416-canucs",
+ "photometry": "results/halo_phot/macs0416/halo_phot.json (f444w, annulus)",
+ "thresholds": {
+  "match_arcsec": 0.3,
+  "offset_arcsec": [
+   0.0,
+   0.0
+  ],
+  "min_snr": 10.0,
+  "max_abs_mu": 20.0,
+  "outlier_mag": 0.75,
+  "colour_tol": 0.3,
+  "colour": [
+   "f150w",
+   "f444w"
+  ],
+  "max_npix": 20000,
+  "z_margin": 0.15,
+  "photoz": null,
+  "tension_sigma": 3.0,
+  "unstable_frac": 0.16
+ },
+ "n_images": 303,
+ "n_matched": 11,
+ "n_blended": 0,
+ "n_large_segment": 0,
+ "n_photoz_excluded": 0,
+ "flux_classes": {
+  "consistent": 11,
+  "flux_outlier": 0,
+  "untested": 292
+ },
+ "colour_classes": {
+  "consistent": 7,
+  "colour_outlier": 0,
+  "untested": 296
+ },
+ "tension_classes": {
+  "consistent": 11,
+  "flux_tension": 0,
+  "mu_unstable": 0,
+  "untested": 292
+ },
+ "chain": null,
+ "resid_model_err_median": null,
+ "sigma_sys": 0.26,
+ "injection_recovery": {
+  "n_targets": 11,
+  "n_pair_targets": 8,
+  "recovered_fraction": {
+   "1.0": 0.364,
+   "1.5": 0.636,
+   "2.0": 0.364
+  },
+  "n_untested": {
+   "1.0": 4,
+   "1.5": 4,
+   "2.0": 7
+  }
+ },
+ "flux_resid_mag": {
+  "n_images": 11,
+  "median_abs": 0.176,
+  "rms": 0.218
+ },
+ "colour_resid_mag": {
+  "n_images": 7,
+  "median_abs": 0.062,
+  "rms": 0.054
+ },
+ "flagged": []
+}
