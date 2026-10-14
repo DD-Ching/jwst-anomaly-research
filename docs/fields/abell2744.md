@@ -375,3 +375,13 @@ The Bergamini run reproduces the recorded classes (recovered 6, confused 2, abse
 **Both models agree, but untested (`no_reference` in both):** 3.2 (seen as 3.1c, 2026-10-08), 4.2c (vetted), 26.2,
 33.1 third, 62.1. No row is an unmet prediction of both models (`unmet_in_both_models` 0). **Result: null.** The
 D-041 rule removes both remaining Bergamini `absent` rows; no new flag.
+
+**Reference fluxes without the |μ| cap (2026-10-14, `scripts/a2744_xmodel_refs.py`,
+`results/lens_consistency/abell2744-uncover2/xmodel_refs.json`).** Siblings' 1″-halo-filtered peak fluxes scaled by
+|μ| (per sibling and as the fold pair's summed flux / summed |μ|), F150W/F277W/F444W, both models:
+- 3.2: lands on catalogued 3.1c (0.55–0.75″); a source 5–8× the prediction is there (`confused`): seen.
+- 26.2: `recovered` in both (9–19σ, 1.6–2.5× the prediction), 0.37″ from 26.1c.
+- 33.1 third, 62.1: predicted at 0.1–0.7σ; the pairs' |μ| would need to be overestimated 15–84× to reach 10σ. Untestable.
+- 4.2c: `absent` in both, from references that fail the gates (resolved knots); vetted verdict stands.
+
+Cutouts viewed. **Null.**
