@@ -16,17 +16,24 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - System 11: both catalogued images are undetected (S/N ≤ 3.7 at the peak, ≤ 2.7 at the position, both bands); the
     counter-image (μ 2.3–4.2 in the three models) is predicted at ≤ 1σ. Untestable at this depth.
   - System 16: the catalogued pair is one merging knot (μ 110–340 in ICLv2/Glafic); its counter-image is predicted at
-    ≤ 0.6σ (a 17–28× μ error would be needed for 10σ). Zitrin (pair μ 10–13) predicts a third image 2.5″ from the pair
-    at 18σ: the 1″ search finds 41σ (×2.4, within the recovery range) on the edge of a bright arc (looked at: the
-    arc runs ~2″ N of the prediction), so not absent; its μ 1.9 image is predicted at 3.9σ.
-  - System 26: only ICLv2 predicts counter-images; Glafic and Zitrin make 26.1/26.2 one arc (μ 35 / 5.3). ICLv2's
+    ≤ 0.6σ (a 17–28× μ error would be needed for 10σ). 16.1 and 16.2 share one 0.4″ peak, so they are one reference.
+    Zitrin (pair μ 10–13) predicts a third image 2.5″ from the pair at 18σ from a gated reference: the 1″ search
+    finds 41σ (×2.4, `recovered`) on the edge of a bright arc (looked at: the arc runs ~2″ N of the prediction, so
+    the identification is uncertain); its μ 1.9 image is predicted at 3.9σ.
+  - System 26: only ICLv2 predicts counter-images; Glafic and Zitrin give one image at the pair (μ 35 / 5.3; a
+    merging pair the 0.25″ solver grid does not split) and no distant counter-image. ICLv2's
     μ 26.6 image is predicted at 10.3σ (F200W) / 10.7σ (F444W) only from 26.2, whose reference fails the gates: its
     0.4″ peak is 2.3–3.2× the flux at the catalogued spot (looked at: the wing of a bright compact neighbour
     1–2″ away; concentration 0.29–0.33). From 26.1 (diffuse, concentration 0.48–0.53) it is 3.3σ / 2.2σ, and the
     sky there shows 4.5σ / 2.9σ within 1″ (as D-029's 4.6σ scratch run). Its μ ≤ 5.8 images: ≤ 2.3σ.
 - **Ordinary: the counter-images of these merging, high-μ pairs are 6–60× fainter than the pairs, below the
-  forced-photometry depth in every model; the one ≥ 10σ prediction rests on a neighbour-contaminated reference and
-  a single model. Not candidates.** This closes the D-029 `no_reference` systems at the current depth.
+  forced-photometry depth in every model, except Zitrin's system 16 third image, which is recovered. The one other
+  ≥ 10σ prediction (26, ICLv2) rests on a neighbour-contaminated reference and a single model. No `absent`; not
+  candidates.** This closes the D-029 `no_reference` systems at the current depth.
+- Review fixes (`/code-review`): wording for the recovered Zitrin image and the one-image RELICS pairs; NaN/zero μ
+  and non-finite photometry guards; 4-decimal fluxes in the JSON. Not changed (recorded): the D-034 gates are
+  restated, not shared with `forced_check`, and the RELICS loader duplicates `smacs_s17_vet.relics` (refactor
+  when either changes); no halo filter (the systems are 20–36″ from the BCG).
 - **Next:** `--halo-filter-arcsec` on the other fields' `images` runs near BCGs (Supporting 1).
 
 ## 2026-10-14: SMACS system 17 near the BCG: halo-subtracted counter-image absent, explained by its free redshift

@@ -61,7 +61,8 @@ def sibling_flux(cat, stamps) -> dict:
             f0, e0 = lc.aperture_snr(img, err, xx, yy, 0.0, 0.0)
             px, py = lc.peak_position(img, xx, yy)
             fb, _ = lc.aperture_snr(img, err, xx, yy, px, py, r_ap=0.4)
-            snr, snr0 = (f / e if e > 0 else np.nan), (f0 / e0 if e0 > 0 else np.nan)
+            finite = all(np.isfinite(v) for v in (f, e, f0, e0)) and e > 0 and e0 > 0
+            snr, snr0 = (f / e, f0 / e0) if finite else (np.nan, np.nan)
             conc = f / fb if np.isfinite(fb) and fb > 0 else np.nan
             out[band][str(r["image_id"])] = {
                 "flux": f,
@@ -71,7 +72,8 @@ def sibling_flux(cat, stamps) -> dict:
                 "conc": conc,
                 # the D-034 reference gates of lens_consistency.forced_check, without its |mu| cap
                 "gates_ok": bool(
-                    snr > 5
+                    finite
+                    and snr > 5
                     and snr0 > 5
                     and f <= lc.MAX_PEAK_OVER_POSITION * max(f0, 0)
                     and conc >= lc.MIN_REF_CONCENTRATION
@@ -109,7 +111,12 @@ def measure(model, grid, cat, z: float, sib: dict, stamps) -> dict:
                 pred = {
                     k: v["flux"] / mu_sib[k] * mu / e0
                     for k, v in sib[band].items()
-                    if np.isfinite(v["flux"]) and v["flux"] > 0 and e0 > 0
+                    if np.isfinite(v["flux"])
+                    and v["flux"] > 0
+                    and np.isfinite(e0)
+                    and e0 > 0
+                    and np.isfinite(mu_sib[k])
+                    and mu_sib[k] > 0
                 }
                 top = max(pred.values(), default=np.nan)
                 gated = [v for k, v in pred.items() if sib[band][k]["gates_ok"]]
@@ -194,7 +201,7 @@ def main(argv=None) -> int:
         "siblings": {
             s: {
                 b: {
-                    k: {q: x if isinstance(x, bool) else _r(x, 2) for q, x in v.items()}
+                    k: {q: x if isinstance(x, bool) else _r(x, 4) for q, x in v.items()}
                     for k, v in d.items()
                 }
                 for b, d in sb.items()
