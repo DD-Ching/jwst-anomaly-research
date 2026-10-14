@@ -1,0 +1,43 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int64}
+# - {name: arc_ra, datatype: float64}
+# - {name: arc_dec, datatype: float64}
+# - {name: arc_mag, datatype: float64}
+# - {name: z_phot, datatype: float64}
+# - {name: mu_arc, datatype: float64}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: x, datatype: float64}
+# - {name: y, datatype: float64}
+# - {name: mu, datatype: float64}
+# - {name: mag_pred, datatype: float64}
+# - {name: z_spread_arcsec, datatype: float64}
+# - {name: robust, datatype: bool}
+# - {name: search_arcsec, datatype: float64}
+# - {name: nearest_label, datatype: int64}
+# - {name: nearest_mag, datatype: float64}
+# - {name: nearest_sep_arcsec, datatype: float64}
+# - {name: pred_snr, datatype: float64}
+# - {name: best_snr, datatype: float64}
+# - {name: flux_ratio, datatype: float64}
+# - {name: counter_class, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {model: abell2744-bergamini23}
+# - {image: 's3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f200w_i2d.fits'}
+# - {catalog: jw02561-o001_t003_nircam_clear-f200w_cat.ecsv}
+# - assumptions: {ee: 0.5, mag_slack: 1.19, match_cat_arcsec: 2.0, max_arc_mu: 30.0, max_best_snr: 5.0, min_mu: 0.5, search_arcsec: 1.0,
+#     self_arcsec: 2.0}
+# - forced:
+#     annulus_arcsec: [0.6, 1.0]
+#     err_scale: 1.5
+#     r_ap_arcsec: 0.2
+# schema: astropy-2.0
+label arc_ra arc_dec arc_mag z_phot mu_arc ra dec x y mu mag_pred z_spread_arcsec robust search_arcsec nearest_label nearest_mag nearest_sep_arcsec pred_snr best_snr flux_ratio counter_class
+2551 3.581107492838047 -30.40017821027809 26.645490052681204 2.618131160736084 7.998913278138544 3.595993398406387 -30.394787026804934 -30.272315003938097 19.31030350224612 3.1759431251035157 27.648385732322954 0.05681106923968928 True 1.0 -1 nan nan 9.156744790558282 14.876763895169985 1.6693775190898876 recovered
+2551 3.581107492838047 -30.40017821027809 26.645490052681204 2.618131160736084 7.998913278138544 3.58248173805599 -30.398605391526196 11.681990410996884 5.564190505692752 -2.890280519909551 27.750717533948766 0.0077063033072036265 True 1.0 -1 nan nan 5.21849921782708 2002.8624610349598 2399.02257112165 confused
+2551 3.581107492838047 -30.40017821027809 26.645490052681204 2.618131160736084 7.998913278138544 3.5820567867951003 -30.398403244229662 13.001482947332011 6.29192077322263 -1.5685941502360117 28.41429104583149 0.004587790273594841 True 1.0 7202 18.364008257135904 0.6319976818928031 nan nan nan catalog
+7595 3.5915197741628493 -30.396232503779675 26.900924820482572 2.5395092964172363 6.63478514296229 3.577692976843843 -30.403900052619317 26.551306634425945 -13.496589429539185 4.206616401436993 27.39565970220968 0.3603137728797669 True 1.0 -1 nan nan 10.451726677614186 22.031460127777983 2.4847514442559686 recovered
+7595 3.5915197741628493 -30.396232503779675 26.900924820482572 2.5395092964172363 6.63478514296229 3.5882250550502883 -30.397086031457064 -6.151263906005106 11.033886754573402 -2.934050523385 27.786823009251364 0.09557016076010728 True 1.0 -1 nan nan 6.98820747822979 53.323259615200804 8.8820109952244 confused

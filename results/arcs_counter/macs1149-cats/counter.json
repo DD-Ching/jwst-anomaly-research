@@ -1,0 +1,29 @@
+{
+ "model": "macs1149-cats",
+ "assumptions": {
+  "self_arcsec": 2.0,
+  "min_mu": 0.5,
+  "max_arc_mu": 30.0,
+  "match_cat_arcsec": 2.0,
+  "search_arcsec": 1.0,
+  "mag_slack": 1.19,
+  "ee": 0.5,
+  "max_best_snr": 5.0
+ },
+ "control": false,
+ "n_background_strong_shear": 24,
+ "n_catalogued_excluded": 6,
+ "n_arcs_tested": 3,
+ "skipped": {
+  "arc_mu": 0,
+  "no_counter": 15
+ },
+ "n_counter_images": 7,
+ "n_near_arc_untested": 1,
+ "n_robust": 5,
+ "classes": {
+  "catalog": 5,
+  "undetectable": 2
+ },
+ "flags_robust_absent": []
+}

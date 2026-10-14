@@ -2,6 +2,47 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-14: counter-images of uncatalogued bright arcs: five fields null (Abell 370 3881 is known system 7)
+- **Hypothesis before computing:** every strongly sheared background arc that is not a catalogued image has the
+  counter-images its model predicts at its photo-z; a robust predicted image (z16 and z84 agree within 3″) of ≥ 10σ
+  with nothing detected would be a lens-model residual. Ordinary: photo-z error, knots of catalogued systems,
+  cluster galaxies/ICL, model extrapolation, extended-source flux scaling.
+- `scripts/arcs_counter.py` (new; `lensmodel.find_images`, the D-029 forced photometry, F200W i2d by S3 byte range)
+  on the stored `results/arcs/*/arcs.ecsv`. Positive control (`--control`, catalogued arcs, Abell 2744): 18 of 20
+  known counter-images not absent; of the two `absent`, 7247 ( a catalogued image detected at 86σ, flux ratio 0.27) shows
+  the isophotal-to-aperture prediction over-predicts bright extended arcs by up to ×4, so a flag needs best S/N < 5.
+- **Result (model_prediction vs derived, `results/arcs_counter/`), after the exclusion fix below:** Abell 2744 2 arcs /
+  5 counter-images, Abell 370 12 / 42, El Gordo 4 / 9, MACS0416 4 / 7, MACS1149 3 / 7: **0 flags in five fields**
+  (3 more images untested: their search circle would reach the arc).
+- **Abell 370 3881 vetted (was the one robust flag: predicted 237σ, best 4.5σ, 64″ out):** it is image 7.5 of system 7
+  (z_spec 2.751) in the HFF CATS v4 `arcs.txt` (0.0″); CANUCS lists no image within 7″ of it, and the A370 image list
+  is gated off (D-035, D-044), so the 2″ exclusion never ran. Catalogued 7.4 lies 2.5″ from the flagged position and is
+  detected (F200W source 2578, 24.05 mag against 23.6 predicted; looked at: compact and elongated like 3881). At
+  z_spec, CANUCS puts the image 1.6″ from 7.4; the CATS model predicts it 3.3–6.4″ from the flag at z 2.6–3.4. The
+  z_phot 2.99 (z16–z84 spread only 0.47″) shifted the prediction 2.6″, beyond the 1″ search. **Ordinary: photo-z
+  error on a catalogued system.** Not a candidate.
+- **Fix:** `known_images` excludes arcs near the model's own image list even where it is gated off for position tests,
+  plus the HFF CATS list of the same cluster. 16 Abell 370 arcs, and one more in Abell 2744, are now excluded.
+- **Controls (`--control`, catalogued arcs, all fields):** MACS0416 22 counter-images, 0 absent; MACS1149 8, one
+  `absent` that is not a flag; El Gordo none testable. Abell 2744 20, flags 2528 (the system 26 knot with z_phot
+  5.16 against z_spec 3.054, now in the control because it is within 2″ of 26.1a). Abell 370 8 arcs / 26, flags only 3881 (system 7 at z_phot 2.99,
+  as above).
+- **Review fixes (`/code-review`):** the arc no longer counts as its own counter-image's detection (catalogue match
+  excludes the arc's label; images whose search circle comes within 2″ of the arc are untested); NaN magnitudes never
+  win the catalogue match; `robust` needs both z16 and z84; masked redshifts are NaN; stale `counter.ecsv` is removed;
+  the chain check runs after the outputs are written. Not fixed (recorded): a fixed 2″ self radius for long arcs,
+  and `nearest_image` accepting any image within 4.2″ (only `--chain-samples`, not used here).
+- **Lesson:** "robust" (z16 and z84 agree) does not guard against a wrong photo-z: both false flags (2528, 3881) were
+  photo-z errors on known systems. A future flag needs a spectroscopic redshift or an independent-model image search
+  wider than the 1″ floor before vetting.
+- **Failed approach:** a 1″ exclusion radius. Abell 2744 arc 2528 lies 1.1″ from 26.1a; its photo-z 5.16 (z_spec
+  3.054) moved the predictions up to 8″ and made a 23σ `absent` (looked at: F115W–F444W cutouts). At z = 3.054 its
+  images land on 26.2b (0.6″) and 26.1c (1.5″). Exclusion is now 2″.
+- `recovered` among unknowns is weak: a random 5σ source within 1–3″ at 1/3–3× the flux is common in deep fields
+  (2528's z = 5.16 "counter-image" was recovered 4.7″ from 26.1c); only `absent` with no detection is informative.
+- **Next:** the counter-image test of uncatalogued arcs is closed at this depth (null). Remaining Supporting 1 items:
+  the BCG/ICL-subtracted test for system 17, reference fluxes for systems 11, 16 and 26.
+
 ## 2026-10-14: X2 S6 screen: rotation is not an established wormhole stabiliser; one checkable gap (5D complex modes)
 - **Sources read.** 2403.08387 (4D, second-order slow rotation) and 1309.2448 (5D, full rotation); 2510.11406 v1
   and v2 compared. Follow-ups via INSPIRE; no errata and no public rotating-wormhole code.
