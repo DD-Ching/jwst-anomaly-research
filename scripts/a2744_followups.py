@@ -50,8 +50,8 @@ ZOUT = (
 )
 SELF_ARCSEC = 0.3  # a predicted image this close to the source is the source itself (ASSUMPTION)
 MATCH_ARCSEC = 1.5  # counter-image search radius, as `lens_consistency images` (ASSUMPTION)
-GRID_STEP = 0.1  # solver grid step, arcsec (as `images`)
-GRID_MARGIN = 40.0  # grid half-width = farthest source from the model centre + this (ASSUMPTION)
+GRID_STEP = 0.25  # solver grid step, arcsec (as `validate`; the sources lie 93-204" out)
+GRID_MARGIN = 10.0  # grid half-width = farthest source from the model centre + this (ASSUMPTION)
 # f277w_264 knot test: F200W peaks of a 1-px-smoothed 2.4" stamp above its 98.5th percentile,
 # r = 0.08" apertures, background = stamp median beyond 0.9" (all ASSUMPTIONs)
 I2D = "s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-{}_i2d.fits"
