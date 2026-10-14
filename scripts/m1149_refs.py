@@ -14,9 +14,10 @@ This script tests them the way ``a2744_xmodel_refs.py`` tested Abell 2744's:
 - Sharon v4cor (HFF Lenstool deflection maps, the D-037 second model) solved for the same system:
   the source is the magnification-weighted least-squares source of the catalogued images
   (``a2744_uncover.family_source``) at the CATS system redshift, and the nearest Sharon image to the
-  CATS target is reported. D-041 rule: an unmet extra image is model-dependent unless the other
-  model predicts an extra image within ``XMODEL_LOOSE_ARCSEC``; when the other model's image there
-  is a catalogued image, the unmet image is that image misplaced.
+  Sharon images within ``au.MATCH_ARCSEC`` of a catalogued image are that image; the rest are
+  extra. D-041 rule: a CATS extra image is "both models" when a Sharon extra lies within
+  ``XMODEL_LOOSE_ARCSEC``; else "catalogued image misplaced by CATS" when Sharon's image of a
+  catalogued image that CATS does not reproduce lies there; else model-dependent.
 
 Inputs: the ``images_predicted.ecsv`` of a ``lens_consistency.py --model macs1149-cats images
 --forced-image <F277W i2d>`` run (``model_prediction``), the CATS ``arcs.txt`` positions
@@ -34,7 +35,6 @@ Usage: python scripts/m1149_refs.py --sharon-x <fits> --sharon-y <fits> [--pred 
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import sys
 from pathlib import Path
@@ -49,6 +49,7 @@ import a2744_xmodel_refs as xr  # noqa: E402
 import lens_consistency as lc  # noqa: E402
 
 from jwst_anomaly import lensmodel  # noqa: E402
+from jwst_anomaly.derived_store import sha256_file  # noqa: E402
 
 S3_I2D = "s3://stpubdata/jwst/public/jw01208/L3/t/o008/jw01208-o008_t004_nircam_clear-{}_i2d.fits"
 BANDS = ("f150w", "f277w", "f444w")
@@ -62,17 +63,9 @@ DEFAULT_OUT = Path("results/lens_consistency/macs1149-cats")
 _r = au._r
 
 
-def _sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(1 << 20), b""):
-            h.update(chunk)
-    return h.hexdigest()
-
-
 def sharon_model(x_path: Path, y_path: Path) -> lensmodel.MapLensModel:
     for k, p in (("x", x_path), ("y", y_path)):
-        if _sha256(p) != SHARON_SHA256[k]:
+        if sha256_file(p) != SHARON_SHA256[k]:
             raise ValueError(f"{p}: sha256 differs from the pinned Sharon v4cor {k} map")
     return lensmodel.MapLensModel.from_fits(
         x_path, y_path, SHARON_Z_LENS, FlatLambdaCDM(H0=70, Om0=0.3), source="macs1149-sharon-v4cor"
@@ -85,21 +78,34 @@ def second_model_images(model, grid, cat: Table, z: float) -> Table:
     m = model.lens_map(ox, oy, np.full(len(cat), z))
     jac = np.stack([np.stack([m["a11"], m["a12"]], -1), np.stack([m["a21"], m["a22"]], -1)], -2)
     beta = np.stack([np.asarray(m["beta_x"], float), np.asarray(m["beta_y"], float)], -1)
-    ok = np.all(np.isfinite(beta), axis=1)
+    ok = np.all(np.isfinite(beta), axis=1) & np.all(np.isfinite(jac), axis=(1, 2))
+    ok &= np.abs(np.linalg.det(np.where(np.isfinite(jac), jac, 0.0))) > 1e-6  # off critical curves
     if ok.sum() < 1:
         return Table(names=("ra", "dec", "magnification"))
     bx, by = au.wls_source(beta[ok], jac[ok])
     return lensmodel.find_images(model, grid, float(bx), float(by), z)
 
 
-def d041_verdict(sep_other: float, other_on_catalogued: bool) -> str:
-    """D-041 cross-model reading of one CATS extra image (``sep_other``: arcsec to the nearest
-    image of the second model; ``other_on_catalogued``: that image is a catalogued one)."""
-    if not np.isfinite(sep_other) or sep_other > XMODEL_LOOSE_ARCSEC:
-        return "model-dependent (CATS only)"
-    if other_on_catalogued:
+def split_second(sh: Table, cat: Table) -> np.ndarray:
+    """Catalogued image id each second-model image reproduces ("" for an extra image): the
+    nearest catalogued image within ``au.MATCH_ARCSEC``, as the ``images`` classes."""
+    ids = np.full(len(sh), "", dtype=object)
+    for k in range(len(sh)):
+        d = au._sep_arcsec(cat["ra"], cat["dec"], float(sh["ra"][k]), float(sh["dec"][k]))
+        if len(d) and float(np.min(d)) <= au.MATCH_ARCSEC:
+            ids[k] = str(cat["image_id"][int(np.argmin(d))])
+    return ids
+
+
+def d041_verdict(sep_extra: float, sep_obs: float, obs_predicted_by_cats: bool) -> str:
+    """D-041 cross-model reading of one CATS extra image. ``sep_extra``: arcsec to the second
+    model's nearest extra image; ``sep_obs``: to its nearest image of a catalogued one;
+    ``obs_predicted_by_cats``: CATS itself reproduces that catalogued image."""
+    if np.isfinite(sep_extra) and sep_extra <= XMODEL_LOOSE_ARCSEC:
+        return "both models"
+    if np.isfinite(sep_obs) and sep_obs <= XMODEL_LOOSE_ARCSEC and not obs_predicted_by_cats:
         return "catalogued image misplaced by CATS"
-    return "both models"
+    return "model-dependent (CATS only)"
 
 
 def main(argv=None) -> dict:
@@ -110,6 +116,8 @@ def main(argv=None) -> dict:
     ap.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = ap.parse_args(argv)
     pred = Table.read(args.pred)
+    if "forced_class" not in pred.colnames:
+        raise SystemExit(f"{args.pred}: not an images run with --forced-image")
     fc = np.array([au._col(pred, "forced_class", k, "") for k in range(len(pred))]).astype(str)
     tgt = pred[fc == "no_reference"]
     _, files, par = lc.load_model("macs1149-cats")
@@ -118,7 +126,7 @@ def main(argv=None) -> dict:
     sharon = sharon_model(args.sharon_x, args.sharon_y)
     systems = list(dict.fromkeys(str(s) for s in tgt["system"]))
     cats_all = arcs[np.isin(sysid, systems)]
-    half = lc.grid_half_width(sharon, cats_all) + 10.0
+    half = lc.grid_half_width(sharon, cats_all)
     grid = lensmodel.DeflectionGrid.compute(sharon, half, 0.25)
     halfst = lc.MAX_SEARCH_ARCSEC + lc.FORCED_ANNULUS[1] + 0.2
     opened = {b: lc.image_stamper(S3_I2D.format(b), halfst) for b in BANDS}
@@ -135,6 +143,7 @@ def main(argv=None) -> dict:
             )
             search = lc.system_search_radius(pred, s, 1.0, has_unpred)
             sh = second_model_images(sharon, grid, cat, z)
+            sh_ids = split_second(sh, cat)
             for t in tgt[np.asarray(tgt["system"]).astype(str) == s]:
                 ra, dec, mu_t = float(t["ra"]), float(t["dec"]), float(t["magnification"])
                 row = {
@@ -147,24 +156,24 @@ def main(argv=None) -> dict:
                     "sibling_mu_cats": {k: _r(v, 1) for k, v in mus.items()},
                     "catalogued": [str(i) for i in cat["image_id"]],
                 }
-                if len(sh):
-                    d = au._sep_arcsec(sh["ra"], sh["dec"], ra, dec)
-                    k = int(np.argmin(d))
-                    sra, sdec = float(sh["ra"][k]), float(sh["dec"][k])
-                    dc = au._sep_arcsec(cat["ra"], cat["dec"], sra, sdec)
-                    on_cat = bool(np.min(dc) <= XMODEL_LOOSE_ARCSEC)
-                    row["sharon"] = {
-                        "n_images": len(sh),
-                        "n_catalogued": len(cat),
-                        "nearest_sep_arcsec": _r(float(d[k])),
-                        "nearest_mu": _r(float(sh["magnification"][k])),
-                        "nearest_on_catalogued": str(cat["image_id"][int(np.argmin(dc))])
-                        if on_cat
-                        else "",
-                        "d041": d041_verdict(float(d[k]), on_cat),
-                    }
-                else:
-                    row["sharon"] = {"n_images": 0, "d041": d041_verdict(np.nan, False)}
+                d = au._sep_arcsec(sh["ra"], sh["dec"], ra, dec) if len(sh) else np.array([])
+                ext, obs = np.flatnonzero(sh_ids == ""), np.flatnonzero(sh_ids != "")
+                ke = int(ext[np.argmin(d[ext])]) if len(ext) else -1
+                ko = int(obs[np.argmin(d[obs])]) if len(obs) else -1
+                sep_e = float(d[ke]) if ke >= 0 else np.nan
+                sep_o = float(d[ko]) if ko >= 0 else np.nan
+                obs_id = str(sh_ids[ko]) if ko >= 0 else ""
+                row["sharon"] = {
+                    "n_images": len(sh),
+                    "n_extra": len(ext),
+                    "n_catalogued": len(cat),
+                    "nearest_extra_sep_arcsec": _r(sep_e),
+                    "nearest_extra_mu": _r(float(sh["magnification"][ke])) if ke >= 0 else None,
+                    "nearest_catalogued_sep_arcsec": _r(sep_o),
+                    "nearest_catalogued_id": obs_id,
+                    "nearest_catalogued_predicted_by_cats": obs_id in mus,
+                    "d041": d041_verdict(sep_e, sep_o, obs_id in mus),
+                }
                 for band, stamp in stamps.items():
                     sib = sibs[band]
                     img, err, xx, yy = stamp(ra, dec)
@@ -204,6 +213,7 @@ def main(argv=None) -> dict:
         "assumptions": {
             "halo_filter_arcsec": au.HALO_FILTER_ARCSEC,
             "xmodel_loose_arcsec": XMODEL_LOOSE_ARCSEC,
+            "match_arcsec": au.MATCH_ARCSEC,
             "sharon_z_lens": SHARON_Z_LENS,
             "sharon_source": "magnification-weighted least-squares source of the catalogued images",
             "class": "forced_class only when every sibling passes the D-034 gates, else "
@@ -224,7 +234,8 @@ if __name__ == "__main__":
             r["system"],
             r["radec"],
             r["mu_cats"],
-            r["sharon"].get("nearest_sep_arcsec"),
+            r["sharon"]["nearest_extra_sep_arcsec"],
+            r["sharon"]["nearest_catalogued_sep_arcsec"],
             r["sharon"]["d041"],
             *(
                 f"{b}:{r[b]['forced_class']}/{r[b]['ungated_class']} "

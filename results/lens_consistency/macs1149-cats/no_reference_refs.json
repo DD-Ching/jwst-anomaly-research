@@ -8,6 +8,7 @@
  "assumptions": {
   "halo_filter_arcsec": 1.0,
   "xmodel_loose_arcsec": 3.0,
+  "match_arcsec": 1.5,
   "sharon_z_lens": 0.542,
   "sharon_source": "magnification-weighted least-squares source of the catalogued images",
   "class": "forced_class only when every sibling passes the D-034 gates, else no_reference (ungated_class is a diagnostic)",
@@ -35,10 +36,13 @@
    ],
    "sharon": {
     "n_images": 3,
+    "n_extra": 0,
     "n_catalogued": 3,
-    "nearest_sep_arcsec": 1.52,
-    "nearest_mu": -8.41,
-    "nearest_on_catalogued": "13.2",
+    "nearest_extra_sep_arcsec": null,
+    "nearest_extra_mu": null,
+    "nearest_catalogued_sep_arcsec": 1.52,
+    "nearest_catalogued_id": "13.2",
+    "nearest_catalogued_predicted_by_cats": false,
     "d041": "catalogued image misplaced by CATS"
    },
    "f150w": {
@@ -167,10 +171,13 @@
    ],
    "sharon": {
     "n_images": 3,
+    "n_extra": 1,
     "n_catalogued": 2,
-    "nearest_sep_arcsec": 0.61,
-    "nearest_mu": 4.65,
-    "nearest_on_catalogued": "",
+    "nearest_extra_sep_arcsec": 0.61,
+    "nearest_extra_mu": 4.65,
+    "nearest_catalogued_sep_arcsec": 29.29,
+    "nearest_catalogued_id": "14.1",
+    "nearest_catalogued_predicted_by_cats": true,
     "d041": "both models"
    },
    "f150w": {
@@ -283,11 +290,14 @@
    ],
    "sharon": {
     "n_images": 3,
+    "n_extra": 0,
     "n_catalogued": 3,
-    "nearest_sep_arcsec": 2.31,
-    "nearest_mu": -3.04,
-    "nearest_on_catalogued": "1002.3",
-    "d041": "catalogued image misplaced by CATS"
+    "nearest_extra_sep_arcsec": null,
+    "nearest_extra_mu": null,
+    "nearest_catalogued_sep_arcsec": 2.31,
+    "nearest_catalogued_id": "1002.3",
+    "nearest_catalogued_predicted_by_cats": true,
+    "d041": "model-dependent (CATS only)"
    },
    "f150w": {
     "siblings": {
@@ -422,11 +432,14 @@
    ],
    "sharon": {
     "n_images": 5,
+    "n_extra": 1,
     "n_catalogued": 4,
-    "nearest_sep_arcsec": 0.75,
-    "nearest_mu": 0.1,
-    "nearest_on_catalogued": "1007.4",
-    "d041": "catalogued image misplaced by CATS"
+    "nearest_extra_sep_arcsec": 0.75,
+    "nearest_extra_mu": 0.1,
+    "nearest_catalogued_sep_arcsec": 2.03,
+    "nearest_catalogued_id": "1007.3",
+    "nearest_catalogued_predicted_by_cats": true,
+    "d041": "both models"
    },
    "f150w": {
     "siblings": {
@@ -578,10 +591,13 @@
    ],
    "sharon": {
     "n_images": 5,
+    "n_extra": 3,
     "n_catalogued": 2,
-    "nearest_sep_arcsec": 0.19,
-    "nearest_mu": 3.4,
-    "nearest_on_catalogued": "",
+    "nearest_extra_sep_arcsec": 0.19,
+    "nearest_extra_mu": 3.4,
+    "nearest_catalogued_sep_arcsec": 23.31,
+    "nearest_catalogued_id": "1009.1",
+    "nearest_catalogued_predicted_by_cats": true,
     "d041": "both models"
    },
    "f150w": {
@@ -692,10 +708,13 @@
    ],
    "sharon": {
     "n_images": 5,
+    "n_extra": 3,
     "n_catalogued": 2,
-    "nearest_sep_arcsec": 0.16,
-    "nearest_mu": 3.41,
-    "nearest_on_catalogued": "",
+    "nearest_extra_sep_arcsec": 0.16,
+    "nearest_extra_mu": 3.41,
+    "nearest_catalogued_sep_arcsec": 23.11,
+    "nearest_catalogued_id": "1010.1",
+    "nearest_catalogued_predicted_by_cats": true,
     "d041": "both models"
    },
    "f150w": {
@@ -806,10 +825,13 @@
    ],
    "sharon": {
     "n_images": 5,
+    "n_extra": 3,
     "n_catalogued": 2,
-    "nearest_sep_arcsec": 0.82,
-    "nearest_mu": -2.37,
-    "nearest_on_catalogued": "",
+    "nearest_extra_sep_arcsec": 0.82,
+    "nearest_extra_mu": -2.37,
+    "nearest_catalogued_sep_arcsec": 11.0,
+    "nearest_catalogued_id": "1020.2",
+    "nearest_catalogued_predicted_by_cats": true,
     "d041": "both models"
    },
    "f150w": {
@@ -920,10 +942,13 @@
    ],
    "sharon": {
     "n_images": 5,
+    "n_extra": 3,
     "n_catalogued": 2,
-    "nearest_sep_arcsec": 0.83,
-    "nearest_mu": -2.06,
-    "nearest_on_catalogued": "",
+    "nearest_extra_sep_arcsec": 0.83,
+    "nearest_extra_mu": -2.06,
+    "nearest_catalogued_sep_arcsec": 11.72,
+    "nearest_catalogued_id": "1211.2",
+    "nearest_catalogued_predicted_by_cats": true,
     "d041": "both models"
    },
    "f150w": {
@@ -1036,11 +1061,14 @@
    ],
    "sharon": {
     "n_images": 3,
+    "n_extra": 0,
     "n_catalogued": 3,
-    "nearest_sep_arcsec": 2.29,
-    "nearest_mu": -3.29,
-    "nearest_on_catalogued": "1222.3",
-    "d041": "catalogued image misplaced by CATS"
+    "nearest_extra_sep_arcsec": null,
+    "nearest_extra_mu": null,
+    "nearest_catalogued_sep_arcsec": 2.29,
+    "nearest_catalogued_id": "1222.3",
+    "nearest_catalogued_predicted_by_cats": true,
+    "d041": "model-dependent (CATS only)"
    },
    "f150w": {
     "siblings": {
@@ -1175,10 +1203,13 @@
    ],
    "sharon": {
     "n_images": 7,
+    "n_extra": 2,
     "n_catalogued": 4,
-    "nearest_sep_arcsec": 0.7,
-    "nearest_mu": -4.47,
-    "nearest_on_catalogued": "",
+    "nearest_extra_sep_arcsec": 0.7,
+    "nearest_extra_mu": -4.47,
+    "nearest_catalogued_sep_arcsec": 7.66,
+    "nearest_catalogued_id": "1999.1",
+    "nearest_catalogued_predicted_by_cats": true,
     "d041": "both models"
    },
    "f150w": {
@@ -1334,10 +1365,13 @@
    ],
    "sharon": {
     "n_images": 7,
+    "n_extra": 2,
     "n_catalogued": 4,
-    "nearest_sep_arcsec": 0.43,
-    "nearest_mu": 3.96,
-    "nearest_on_catalogued": "",
+    "nearest_extra_sep_arcsec": 0.43,
+    "nearest_extra_mu": 3.96,
+    "nearest_catalogued_sep_arcsec": 29.58,
+    "nearest_catalogued_id": "1999.1",
+    "nearest_catalogued_predicted_by_cats": true,
     "d041": "both models"
    },
    "f150w": {

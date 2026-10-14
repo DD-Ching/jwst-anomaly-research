@@ -2104,9 +2104,10 @@ CATS-fitted z = 4.419.
 **Addendum 2026-10-14 (the 11 `no_reference` rows).**
 - **Decision.** The CATS forced rows without a reference flux are tested with sibling references (no |μ| cap,
   three bands) and Sharon v4cor solved per system (`scripts/m1149_refs.py`). They add no flag: 0 `absent`.
-- **Evidence.** 4 rows are catalogued images CATS misplaces (13 lies 1.8″ from 13.2, which CATS does not predict; 1002, 1222,
-  1007 sit 0.75–2.3″ from Sharon images on catalogued knots), 1 is undetectable (14, 2.4σ), 6 lie in the resolved
-  Refsdal host images 1.2/1.3 (ungated `recovered`, `confused` or `undetectable`). docs/fields/macs1149.md.
+- **Evidence.** 13 is CATS's misplaced 13.2 (Sharon's image of it lies 1.5″ away; CATS does not reproduce 13.2);
+  1002 and 1222 are CATS-only extras; 1007 is predicted by both, with μ 18.3 vs 0.1 (untestable); 14 is
+  undetectable (2.4σ); six both-model rows lie in the resolved host images 1.2/1.3 (ungated `recovered`, `confused`
+  or `undetectable`). Six rows stay untestable; no injection, so no limit. docs/fields/macs1149.md.
 - **Revisit if** a JWST-era MACS1149 model with knot-level constraints appears.
 
 ## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)

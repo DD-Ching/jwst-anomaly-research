@@ -55,10 +55,19 @@ def test_second_model_images_recovers_the_sis_pair():
 
 
 def test_d041_verdict():
-    assert mr.d041_verdict(np.nan, False) == "model-dependent (CATS only)"
-    assert mr.d041_verdict(mr.XMODEL_LOOSE_ARCSEC + 0.1, True) == "model-dependent (CATS only)"
-    assert mr.d041_verdict(1.5, True) == "catalogued image misplaced by CATS"
-    assert mr.d041_verdict(0.2, False) == "both models"
+    far = mr.XMODEL_LOOSE_ARCSEC + 0.1
+    assert mr.d041_verdict(np.nan, np.nan, False) == "model-dependent (CATS only)"
+    assert mr.d041_verdict(0.2, 1.0, True) == "both models"
+    assert mr.d041_verdict(far, 1.5, False) == "catalogued image misplaced by CATS"
+    # CATS already reproduces that catalogued image: its extra is not that image misplaced
+    assert mr.d041_verdict(far, 1.5, True) == "model-dependent (CATS only)"
+    assert mr.d041_verdict(far, far, False) == "model-dependent (CATS only)"
+
+
+def test_split_second_marks_catalogued_and_extra():
+    cat = Table({"image_id": ["1.1", "1.2"], "ra": [10.0, 10.001], "dec": [0.0, 0.0]})
+    sh = Table({"ra": [10.0, 10.0011, 10.003], "dec": [0.0001, 0.0, 0.0]})
+    assert list(mr.split_second(sh, cat)) == ["1.1", "1.2", ""]
 
 
 def test_sharon_model_rejects_unpinned_maps(tmp_path):
