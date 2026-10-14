@@ -36,6 +36,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   own best offset (caught in review; now one F277W offset for all bands, which also found S1).
 - **Handoff:** MACS1149 system 16 is settled up to spectroscopy (16.1/16.2 or 5106117). Next field items in TASKS:
   the Sunrise rel_weight plateau, duplicate merged sources (Abell 2744 `3999`/`7179`).
+
 ## 2026-10-14: MACS1149's 11 untested counter-images: none unmet in both models
 - **Hypothesis before computing:** one of the 11 CATS forced rows without a reference flux (systems 13, 14, nine SN
   Refsdal host knots) is a predicted image both models need and the data do not show. Ordinary: model copies of
