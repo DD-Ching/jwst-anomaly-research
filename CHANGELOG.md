@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 arc difference imaging (in progress)
+- Plan: PSF-matched two-epoch difference images of the PEARLS o211/o212 mosaics around the arcs, validated on the
+  published Yan et al. 2023 arc transients before any unknown is trusted.
+
 ## 2026-10-15: MACS0416 grid, epoch 1 against epoch 3 (o211/o213): no new transient
 - **Hypothesis before computing:** a two-band change between 2022-10-07 and 2023-02-10 that the published search
   (Yan et al. 2023, F356W-led) did not report. Ordinary: as in the o211/o212 entry below. Plan change: any survivor
