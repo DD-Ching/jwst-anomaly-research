@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: (in progress) spike veto for transient_grid.py; Sunrise o010/o052 grid
+- Claimed by cloud routine 015ZRZf7; plan: diffraction-spike veto validated on the o010/o120 hits, then o010/o052.
+
 ## 2026-10-15: Sunrise two-epoch grid on every catalogued position: no transient (D-027 addendum)
 - **Hypothesis before computing:** a source in the o010/o120 overlap changed by ≥ 0.3 mag at ≥ 5σ in two bands, but
   the catalog stage and its two-band rule missed it (e.g. a blue transient seen only in F090W and F115W).
