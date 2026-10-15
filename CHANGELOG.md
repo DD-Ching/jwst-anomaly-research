@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 two-epoch grid (in progress)
+- Plan: `transient_grid.py` on MACS0416 multi-epoch NIRCam; validate on published PEARLS transients first.
+
 ## 2026-10-15: Sunrise two-epoch grid on every catalogued position: no transient (D-027 addendum)
 - **Hypothesis before computing:** a source in the o010/o120 overlap changed by ≥ 0.3 mag at ≥ 5σ in two bands, but
   the catalog stage and its two-band rule missed it (e.g. a blue transient seen only in F090W and F115W).
