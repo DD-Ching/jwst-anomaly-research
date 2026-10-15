@@ -19,6 +19,7 @@ Needs lalsuite (lalsimulation) in the running interpreter; it is not a project d
   python scripts/x4_s1_degeneracy.py validate     # tool checks (FF of matching models)
   python scripts/x4_s1_degeneracy.py run          # 36 cases -> results/x4/s1_cases.json
   python scripts/x4_s1_degeneracy.py robust       # re-fit passing cases: other starts, wider bounds
+  python scripts/x4_s1_degeneracy.py crosscheck   # 3 key cases fitted with IMRPhenomD templates
 """
 
 from __future__ import annotations
@@ -61,7 +62,9 @@ MC_FRAC = 0.30  # chirp-mass bound +-30 % (robustness: 60 %)
 Q_MAX, CHI_MAX = 8.0, 0.99
 P_GRID_M = np.logspace(0.0, 4.0, 10)
 P_GRID_Y = np.linspace(0.01, 5.0, 10)
-APPROX = "IMRPhenomXAS"
+APPROX = "IMRPhenomXAS"  # injections, and fits unless overridden
+FIT_APPROX = {"name": APPROX}  # set to another family for the crosscheck subcommand
+CROSSCHECK_CASES = ((30.0, 300.0, 1.0), (60.0, 1000.0, 1.5), (200.0, 300.0, 1.0))
 
 _FREQS = np.arange(0.0, F_HIGH + DF / 2, DF)
 _BAND = _FREQS >= F_LOW
@@ -99,7 +102,7 @@ def chirp(mtot: float, q: float) -> float:
     return (m1 * m2) ** 0.6 / (m1 + m2) ** 0.2
 
 
-def waveform(mc: float, q: float, c1: float, c2: float) -> np.ndarray:
+def waveform(mc: float, q: float, c1: float, c2: float, approx: str | None = None) -> np.ndarray:
     import lal
     import lalsimulation as ls
 
@@ -319,7 +322,7 @@ def run_case(args):
     n_geo0 = _CACHE.get("n_geometric", 0)
     rng = np.random.default_rng(seed)
     mc0 = chirp(mtot, Q_INJ)
-    h = waveform(mc0, Q_INJ, CHI_INJ, CHI_INJ)
+    h = waveform(mc0, Q_INJ, CHI_INJ, CHI_INJ, approx=APPROX)
     fneg = lens(m_lz, y, -1)
     target = h * fneg
     w = weight()
@@ -390,6 +393,16 @@ def main(argv=None) -> int:
             print(json.dumps(res, default=float)[-400:], flush=True)
         res["n_geometric_fallback"] = _CACHE.get("n_geometric", 0)
         (OUT / "s1_validation.json").write_text(json.dumps(res, indent=1, default=float) + "\n")
+    elif cmd == "crosscheck":
+        FIT_APPROX["name"] = "IMRPhenomD"
+        jobs = [(m, ml, y, 700 + i, MC_FRAC) for i, (m, ml, y) in enumerate(CROSSCHECK_CASES)]
+        with Pool(3) as pool:
+            rows = sorted(pool.map(run_case, jobs), key=lambda r: (r["M_total"], r["M_Lz"], r["y"]))
+        rec = {
+            "label": "simulated; injection IMRPhenomXAS, fits IMRPhenomD (waveform cross-check)",
+            "cases": rows,
+        }
+        (OUT / "s1_crosscheck.json").write_text(json.dumps(rec, indent=1, default=float) + "\n")
     elif cmd in ("run", "robust"):
         # exact lens factors shared by forked workers
         precompute(P_GRID_M, P_GRID_Y, +1)

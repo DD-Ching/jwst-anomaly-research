@@ -22,7 +22,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   call. Paused; no automatic follow-up.
 
 - **X4 wave-optics GW lensing by negative-mass objects** (authorized 2026-10-15 by S0-2026-10-15): state
-  file `docs/state/units/X4.md`. Next: S1, the intrinsic-parameter degeneracy with an IMR waveform (≤ 4 h).
+  file `docs/state/units/X4.md`. S1 done (simulated): free aligned-spin binaries and a positive point lens do not
+  absorb the negative-lens signature in 19 of 36 cases. Next: S2a pilot on GW231123 (≤ 3 h), on the owner's go.
 - **X3 W3 in unselected Gaia epoch photometry** (paused 2026-10-15; reopen when the DR4 epoch-astrometry fields and
   precision are confirmed) (authorized 2026-10-14 by S0-2026-10-14): state file
   `docs/state/units/X3.md`. G0 passed on dev. G1 done: held-out GAPS screened once (395,764 exposed sources),

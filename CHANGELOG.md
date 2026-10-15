@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: X4 S1: free binary parameters do not absorb a negative-mass lens's GW signature (simulated)
+- **Question:** with masses, spins, amplitude, time and phase free (IMRPhenomXAS, aLIGO design curve LIGO-P1200087),
+  can an unlensed binary or a positive point lens fit a binary lensed by a negative point mass? Configuration
+  and screening threshold were frozen first (`docs/state/units/X4.md`, S1).
+- **Tool:** validated (FF 0.9998–0.99995 for matching models; positive-lens optimiser floor 0.9963). Exact lens
+  factors with a tested geometric-optics fallback at very large w, cached on disk.
+- **Result (36 cases, all converged):**
+  - 19 pass the screen. For 30–60 M☉ binaries behind 100–1,000 M☉ lenses, and 200 M☉ behind 300–1,000 M☉, the best
+    ordinary fits reach only FF 0.61–0.98 (unlensed) and 0.73–0.99 (positive lens). Observed SNR needed:
+    4.4–20; intrinsic: 17–96.
+  - The 19 passes are robust to three new starts with ± 60 % chirp-mass bounds (FF moves ≤ 0.008) and to
+    IMRPhenomD templates (≤ 0.0002).
+  - 17 fail: 13 are too demagnified to be seen (intrinsic SNR ≥ 124); 4 are absorbed by a positive lens
+    (200 M☉ binary behind 100 M☉).
+- **Not covered:** precession, higher modes, eccentricity, other lens models (SIS, embedded, binary), a detector
+  network, real noise, priors and selection. Screening threshold only, not a detection threshold.
+- **Handoff:** S1 gate met. S2a pilot on GW231123 (≤ 3 h) is proposed; it waits for the owner.
+
 ## 2026-10-15: S0 screen after X3: GW wave-optics lensing by negative-mass objects qualifies (X4)
 - Three directions (`docs/state/units/S0-2026-10-15.md`):
   - A, GW lensing by repulsive lenses: **qualifies**.
