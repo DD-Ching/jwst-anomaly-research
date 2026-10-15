@@ -17,8 +17,8 @@
   "min_dipole_bands": 2
  },
  "counts": {
-  "edge": 4,
-  "pass": 1,
+  "edge": 3,
+  "pass": 2,
   "rosette": 3
  },
  "targets": [
@@ -320,7 +320,7 @@
    "id": "h036",
    "ra": 64.02435852646556,
    "dec": -24.06724001919721,
-   "verdict": "edge",
+   "verdict": "pass",
    "top_band": "F150W",
    "bands": {
     "F150W": {
@@ -414,5 +414,7 @@
     }
    }
   }
- ]
+ ],
+ "rejudged": true,
+ "dipole_measured": true
 }

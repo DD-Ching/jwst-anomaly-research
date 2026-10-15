@@ -1,0 +1,75 @@
+{
+ "provenance": "derived",
+ "method": "persistence_check.measure_pixel (r = 3 px aperture, ERR-based error) on o211/o212 NRCB3 _cal SCI at fixed detector pixels, read from s3://stpubdata/jwst/public/jw01176/jw01176211001 and jw01176212001; S/N = flux / err",
+ "t22h007": {
+  "position": [
+   64.049006296441,
+   -24.05965516877103
+  ],
+  "mosaic_s": {
+   "F150W": 6.23,
+   "F200W": 9.28,
+   "LW": "|S| <= 2.9, within 0.4 arcsec of the LW coverage edge"
+  },
+  "coverage_o212_sw": "one dither per filter: NRCB3 (1977, 1996), 52 px from the top and 71 px from the right detector edge",
+  "fixed_pixel_snr_o212_F150W_06101_d1_d4": [
+   2.6,
+   3.8,
+   3.2,
+   16.3
+  ],
+  "fixed_pixel_snr_o212_F200W_08101_d1_d4": [
+   8.8,
+   4.9,
+   2.8,
+   0.6
+  ],
+  "control_pixel_1900_1900_o212_F150W_F200W_max_abs_snr": 1.7,
+  "verdict": "detector-fixed signal on NRCB3 (1977, 1996): present in all four F150W dithers (four different sky positions) and decaying through the F200W dithers after the 16-sigma illumination in 06101 dither 4 (persistence); not on sky, not a candidate"
+ },
+ "t20h036": {
+  "position": [
+   64.02435852646556,
+   -24.06724001919721
+  ],
+  "mosaic_s": {
+   "F150W": -6.23,
+   "F200W": -5.14,
+   "LW": "|S| <= 2.1"
+  },
+  "o211_F150W_per_dither": {
+   "detector_xy": [
+    [
+     1827,
+     1416
+    ],
+    [
+     1819,
+     1611
+    ],
+    [
+     2015,
+     1618
+    ],
+    [
+     2022,
+     1423
+    ]
+   ],
+   "flux": [
+    0.072,
+    0.096,
+    0.589,
+    0.313
+   ],
+   "snr": [
+    0.57,
+    0.82,
+    4.78,
+    2.41
+   ]
+  },
+  "verdict": "o211 flux only in the two dithers within 30 px of the NRCB3 right edge; the interior dithers show none (an on-sky source of 0.59 would be ~4 sigma there); detector-edge artifact in o211, not a candidate"
+ },
+ "t10h081_t23h074": "sign-inconsistent across detected bands (h081: F150W -5.4, F277W -4.9, F356W +7.8, F444W +6.2; h074: F150W +5.4, F200W -5.3, F277W +8.4, F356W +3.7): PSF/registration residuals, not a single brightening or fading"
+}

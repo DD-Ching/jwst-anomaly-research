@@ -2,6 +2,34 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: `arc_diff_morph.py` review fixes; re-judged o211→o212 tiles: 4 new passes, all ordinary, still 0 candidates (#245)
+- **Hypothesis before measuring:** the open review findings (top-band-only extent, lobes and edge counted in bands
+  without the hit) can hide or invent vetoes; fixing them should change few verdicts. Plan change: any new pass not
+  explained by an ordinary cause goes to `/vet-candidate`.
+- **Fixes:** `classify` uses only detected bands (|S_hit| ≥ 3; the top band if none) for the edge, extent and rosette
+  tests, and takes the extent over all of them. The dipole ratio uses the opposite region's local peak (within
+  0.8″), not a far streak peak. Border targets become edges rather than being dropped, and NaN pixels are now
+  `not_covered`. Per-band products are cached and computed band by band (memory), and the thresholds now live in
+  `Params`. `--rejudge` re-classifies stored JSONs and refuses changed measurement thresholds. 7 new tests, each
+  failing on the old code.
+- **Re-judged 25 morph JSONs (stored per-band values; maps are gone):** Yan+2023 still 11 / 11 pass (o211/o212). Of
+  the 13 changed verdicts, 9 became extended (t+0−3 h064/h067 on the o212 trail, t+0+2 h050 and six t−2−3 rosettes). The
+  **4 new passes** are all ordinary (`results/transients/macs0416_arcdiff/vet_rejudge/`):
+  - t+2+2 h007 (SW +6.2/+9.3): one o212 SW dither, near an NRCB3 corner. The same detector pixel (1977, 1996) shows S/N
+    2.6, 3.8, 3.2 and 16.3 in the four o212 F150W dithers, which see four different sky positions. In F200W it then
+    decays 8.8 → 4.9 → 2.8 → 0.6. That is detector-fixed persistence; a control pixel stays below 1.7σ.
+  - t−2+0 h036 (SW −6.2/−5.1): the o211 F150W flux is only in the two dithers within 30 px of the NRCB3 right edge
+    (S/N 4.8 and 2.4); the interior dithers give 0.6 and 0.8. That is a detector-edge artifact.
+  - t+1+0 h081 and t−2−3 h074 change sign between detected bands (PSF and registration residuals).
+- **Limits of the re-judge:** stored `dipole_ratio` values keep the old definition (in-disk maximum), and 8 early files
+  have no dipole measurement; a fresh `--maps` run could add dipoles (fewer passes), never passes. t−2−3 keeps its
+  pre-fix extents.
+- **Failed approach:** `persistence_check.py` called with two directories after one `--cal-dir` (argparse error; repeat
+  the flag). The script also only tests exposures where S/N ≥ 5, so a fixed-pixel scan of every exposure decided
+  h007.
+- **Handoff:** #245 should now be mergeable. Next: injection-calibrate the morphology veto through the whole chain,
+  then o211→o213 over the 28 tiles (`--maps`, OMP=1).
+
 ## 2026-10-15: MACS0416 arc tiling o211→o212 (28 / 28 tiles): 0 candidates; residual-morphology triage `arc_diff_morph.py`
 - **Hypothesis before measuring:** outside the Warhol box, the adopted `arc_diff.py` settings (#242) leave few
   unflagged hits per 20″ tile, and those are point-like. Plan change: if outer tiles are dominated by a new artifact

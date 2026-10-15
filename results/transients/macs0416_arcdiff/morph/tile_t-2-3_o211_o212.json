@@ -18,9 +18,8 @@
  },
  "counts": {
   "edge": 22,
-  "extended": 28,
-  "pass": 3,
-  "rosette": 7
+  "extended": 34,
+  "pass": 4
  },
  "targets": [
   {
@@ -272,7 +271,7 @@
    "id": "h035",
    "ra": 64.02808519271191,
    "dec": -24.085672500016923,
-   "verdict": "rosette",
+   "verdict": "extended",
    "top_band": "F444W",
    "bands": {
     "F150W": {
@@ -764,7 +763,7 @@
    "id": "h074",
    "ra": 64.02740850976859,
    "dec": -24.086609628642417,
-   "verdict": "rosette",
+   "verdict": "pass",
    "top_band": "F277W",
    "bands": {
     "F150W": {
@@ -944,7 +943,7 @@
    "id": "h084",
    "ra": 64.02868315606294,
    "dec": -24.086172100092536,
-   "verdict": "rosette",
+   "verdict": "extended",
    "top_band": "F356W",
    "bands": {
     "F150W": {
@@ -993,7 +992,7 @@
    "id": "h085",
    "ra": 64.02794068833752,
    "dec": -24.0856652767447,
-   "verdict": "rosette",
+   "verdict": "extended",
    "top_band": "F444W",
    "bands": {
     "F150W": {
@@ -1189,7 +1188,7 @@
    "id": "h092",
    "ra": 64.02796052570095,
    "dec": -24.08606736306954,
-   "verdict": "rosette",
+   "verdict": "extended",
    "top_band": "F277W",
    "bands": {
     "F150W": {
@@ -1867,7 +1866,7 @@
    "id": "h113",
    "ra": 64.02852526219851,
    "dec": -24.085314965705813,
-   "verdict": "rosette",
+   "verdict": "extended",
    "top_band": "F444W",
    "bands": {
     "F150W": {
@@ -2668,7 +2667,7 @@
    "id": "h135",
    "ra": 64.02821358101804,
    "dec": -24.0860872448439,
-   "verdict": "rosette",
+   "verdict": "extended",
    "top_band": "F444W",
    "bands": {
     "F150W": {
@@ -2811,5 +2810,7 @@
     }
    }
   }
- ]
+ ],
+ "rejudged": true,
+ "dipole_measured": true
 }

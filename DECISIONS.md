@@ -1549,8 +1549,12 @@ morphology pass was looked at on contact sheets. The last open ones were vetted 
 - t+0−3 h064/h067 and t+1−2 h041 lie on one straight o212 trail, which is visible in all five bands.
 
 The extent test first rescaled the smoothed S as white noise (×2√π σ). S is a matched-filter output with correlated
-noise, so the "3σ" level sat at about 1σ. Fixed: the smoothed map is now normalised by its robust spread. The extent
-still uses only the top band, which lets a trail broken up in that band pass (open).
+noise, so the "3σ" level sat at about 1σ. Fixed: the smoothed map is now normalised by its robust spread. Review
+fixes (same PR): only detected bands (|S_hit| ≥ 3) enter the edge, extent and rosette tests, and the extent test now
+uses every detected band (it vetoes the h064/h067 trail by itself). The dipole ratio uses the opposite region's local
+peak (within 0.8″). Border targets are judged, not dropped. The 25 stored morph JSONs were re-judged
+(`--rejudge`) without new maps, giving 4 new passes. All 4 are ordinary: t+2+2 h007 is a detector-fixed NRCB3 pixel
+(persistence) and t−2+0 h036 a detector-edge artifact in o211; t+1+0 h081 and t−2−3 h074 change sign between bands.
 
 Result: **0 candidates over the o211→o212 arcs.** This is not a limit until the morphology veto is calibrated by
 injection. Rejected: a 1.0″ extent cut (it removes the published D21-S1/S2), and a dipole test on bands with

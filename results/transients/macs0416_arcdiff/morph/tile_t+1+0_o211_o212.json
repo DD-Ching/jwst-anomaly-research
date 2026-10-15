@@ -19,8 +19,7 @@
  "counts": {
   "dipole": 2,
   "edge": 2,
-  "pass": 2,
-  "rosette": 1
+  "pass": 3
  },
  "targets": [
   {
@@ -223,7 +222,7 @@
    "id": "h081",
    "ra": 64.0409507801306,
    "dec": -24.069743458103318,
-   "verdict": "rosette",
+   "verdict": "pass",
    "top_band": "F356W",
    "bands": {
     "F150W": {
@@ -366,5 +365,7 @@
     }
    }
   }
- ]
+ ],
+ "rejudged": true,
+ "dipole_measured": true
 }

@@ -18,8 +18,7 @@
  },
  "counts": {
   "edge": 6,
-  "extended": 19,
-  "pass": 2,
+  "extended": 21,
   "rosette": 3
  },
  "targets": [
@@ -1285,7 +1284,7 @@
    "id": "h064",
    "ra": 64.03849429279629,
    "dec": -24.0834301685028,
-   "verdict": "pass",
+   "verdict": "extended",
    "top_band": "F200W",
    "bands": {
     "F150W": {
@@ -1383,7 +1382,7 @@
    "id": "h067",
    "ra": 64.03869416392597,
    "dec": -24.083069147020343,
-   "verdict": "pass",
+   "verdict": "extended",
    "top_band": "F200W",
    "bands": {
     "F150W": {
@@ -1477,5 +1476,7 @@
     }
    }
   }
- ]
+ ],
+ "rejudged": true,
+ "dipole_measured": true
 }

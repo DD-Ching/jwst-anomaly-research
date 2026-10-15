@@ -11,12 +11,15 @@
   "lobe_arcsec": 0.8,
   "min_lobe_px": 4,
   "min_lobes": 4,
-  "min_rosette_bands": 2
+  "min_rosette_bands": 2,
+  "dipole_arcsec": 0.3,
+  "dipole_ratio": 0.5,
+  "min_dipole_bands": 2
  },
  "counts": {
   "edge": 5,
-  "pass": 4,
-  "rosette": 1
+  "extended": 1,
+  "pass": 4
  },
  "targets": [
   {
@@ -370,7 +373,7 @@
    "id": "h050",
    "ra": 64.0366744842562,
    "dec": -24.056922177501747,
-   "verdict": "rosette",
+   "verdict": "extended",
    "top_band": "F356W",
    "bands": {
     "F150W": {
@@ -410,5 +413,7 @@
     }
    }
   }
- ]
+ ],
+ "rejudged": true,
+ "dipole_measured": false
 }

@@ -17,8 +17,7 @@
   "min_dipole_bands": 2
  },
  "counts": {
-  "edge": 1,
-  "pass": 3
+  "pass": 4
  },
  "targets": [
   {
@@ -123,7 +122,7 @@
    "id": "h007",
    "ra": 64.049006296441,
    "dec": -24.05965516877103,
-   "verdict": "edge",
+   "verdict": "pass",
    "top_band": "F200W",
    "bands": {
     "F150W": {
@@ -217,5 +216,7 @@
     }
    }
   }
- ]
+ ],
+ "rejudged": true,
+ "dipole_measured": true
 }
