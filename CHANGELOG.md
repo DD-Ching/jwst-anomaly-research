@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 o211/o213 h108 vetting (in progress)
+- Plan: third-epoch (o214) cutouts and differences at h108; vet per /vet-candidate.
+
 ## 2026-10-15: MACS0416 arc differencing: fitted pixel kernels remove the arc ridges and the compact-core residual
 - **Hypothesis before computing:** the arc ridges left by #241 are a PSF-matching failure that a least-squares pixel
   kernel (Bramich 2008 style) removes without losing the published arc transients. Plan change: if recovery of the
