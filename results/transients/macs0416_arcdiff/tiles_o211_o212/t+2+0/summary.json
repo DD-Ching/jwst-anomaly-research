@@ -1,0 +1,228 @@
+{
+ "command": "arc_diff.py --band f150w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f150w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f150w_i2d.fits --band f200w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f200w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f200w_i2d.fits --band f277w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f277w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f277w_i2d.fits --band f356w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f356w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f356w_i2d.fits --band f444w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f444w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f444w_i2d.fits --ra 64.04865 --dec -24.06870 --half-arcsec 10 --known results/transients/macs0416_arcdiff/yan2023_arc_transients.csv --frame-offset 0.196 -0.055 --kernel-px 4 --kernel-stamps --procs 1 --out <scratchpad>/tiles/out/t+2+0 --maps <scratchpad>/tiles/maps/t+2+0.npz",
+ "box": {
+  "ra": 64.04865,
+  "dec": -24.0687,
+  "half_arcsec": 10.0
+ },
+ "thresholds_assumption": {
+  "min_sigma": 5.0,
+  "min_bands": 2,
+  "link_arcsec": 0.1,
+  "bg_arcsec": 0.6,
+  "tile_arcsec": 3.0,
+  "kernel_px": 4,
+  "kernel_stamps": true,
+  "match_arcsec": 0.15,
+  "core_arcsec": 0.8,
+  "core_pct": 99.9,
+  "psf_fwhm_arcsec": {
+   "F150W": 0.05,
+   "F200W": 0.066,
+   "F277W": 0.092,
+   "F356W": 0.116,
+   "F444W": 0.145
+  }
+ },
+ "bands": {
+  "F150W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f150w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f150w_i2d.fits",
+   "scale_arcsec": 0.031228290320561063,
+   "shift_px": [
+    -0.5180573117343497,
+    0.1658557282148881
+   ],
+   "blur_sigma_px": 2.04,
+   "kernel_sum": 0.9811723799515945,
+   "convolved_epoch": 1,
+   "flux_scale": 0.9811723799515945,
+   "noise_scale": 1.0304126676662446,
+   "n_detections": 50,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F200W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f200w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f200w_i2d.fits",
+   "scale_arcsec": 0.031229723334602156,
+   "shift_px": [
+    -0.6559732917900369,
+    0.2416668134160095
+   ],
+   "blur_sigma_px": 1.346,
+   "kernel_sum": 0.9735150170819322,
+   "convolved_epoch": 1,
+   "flux_scale": 0.9735150170819322,
+   "noise_scale": 1.1975899862214485,
+   "n_detections": 49,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F277W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f277w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f277w_i2d.fits",
+   "scale_arcsec": 0.06290931600491904,
+   "shift_px": [
+    -0.33826808372730505,
+    0.07322730445255841
+   ],
+   "blur_sigma_px": 0.776,
+   "kernel_sum": 0.9751073006617239,
+   "convolved_epoch": 1,
+   "flux_scale": 0.9751073006617239,
+   "noise_scale": 1.0,
+   "n_detections": 61,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F356W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f356w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f356w_i2d.fits",
+   "scale_arcsec": 0.0629089745392368,
+   "shift_px": [
+    -0.13812961198580803,
+    0.08315573948232677
+   ],
+   "blur_sigma_px": 0.783,
+   "kernel_sum": 0.9846684109502541,
+   "convolved_epoch": 1,
+   "flux_scale": 0.9846684109502541,
+   "noise_scale": 1.0890391692141972,
+   "n_detections": 44,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F444W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f444w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f444w_i2d.fits",
+   "scale_arcsec": 0.06291375188055767,
+   "shift_px": [
+    -0.17145115379940234,
+    0.0637968196508003
+   ],
+   "blur_sigma_px": 0.979,
+   "kernel_sum": 0.9771512942553515,
+   "convolved_epoch": 1,
+   "flux_scale": 0.9771512942553515,
+   "noise_scale": 1.1373140607334895,
+   "n_detections": 48,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  }
+ },
+ "n_hits": 42,
+ "n_hits_not_near_bright_core": 4,
+ "known": [
+  {
+   "name": "D21-W1",
+   "pair": "21",
+   "F150W": null,
+   "F200W": null,
+   "F277W": null,
+   "F356W": null,
+   "F444W": null,
+   "hit": null
+  },
+  {
+   "name": "D21-W2",
+   "pair": "21",
+   "F150W": null,
+   "F200W": null,
+   "F277W": null,
+   "F356W": null,
+   "F444W": null,
+   "hit": null
+  },
+  {
+   "name": "D21-W3",
+   "pair": "21",
+   "F150W": null,
+   "F200W": null,
+   "F277W": null,
+   "F356W": null,
+   "F444W": null,
+   "hit": null
+  },
+  {
+   "name": "Dc2-W4",
+   "pair": "c2",
+   "F150W": null,
+   "F200W": null,
+   "F277W": null,
+   "F356W": null,
+   "F444W": null,
+   "hit": null
+  },
+  {
+   "name": "D31-W5",
+   "pair": "31",
+   "F150W": null,
+   "F200W": null,
+   "F277W": null,
+   "F356W": null,
+   "F444W": null,
+   "hit": null
+  },
+  {
+   "name": "D31-W6",
+   "pair": "31",
+   "F150W": null,
+   "F200W": null,
+   "F277W": null,
+   "F356W": null,
+   "F444W": null,
+   "hit": null
+  },
+  {
+   "name": "D31-W7",
+   "pair": "31",
+   "F150W": null,
+   "F200W": null,
+   "F277W": null,
+   "F356W": null,
+   "F444W": null,
+   "hit": null
+  },
+  {
+   "name": "D21-S1",
+   "pair": "21",
+   "F150W": null,
+   "F200W": null,
+   "F277W": null,
+   "F356W": null,
+   "F444W": null,
+   "hit": null
+  },
+  {
+   "name": "D21-S2",
+   "pair": "21",
+   "F150W": null,
+   "F200W": null,
+   "F277W": null,
+   "F356W": null,
+   "F444W": null,
+   "hit": null
+  },
+  {
+   "name": "D23-S3",
+   "pair": "23",
+   "F150W": null,
+   "F200W": null,
+   "F277W": null,
+   "F356W": null,
+   "F444W": null,
+   "hit": null
+  },
+  {
+   "name": "D31-S4",
+   "pair": "31",
+   "F150W": null,
+   "F200W": null,
+   "F277W": null,
+   "F356W": null,
+   "F444W": null,
+   "hit": null
+  }
+ ]
+}
