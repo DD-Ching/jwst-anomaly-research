@@ -57,6 +57,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   **in t+1+2 the S at the 10 brightest compact peaks is > +3 for 9 / 10 in F150W and 10 / 10 in F200W (median +12,
   +9; t+2+0 F150W 7 / 7)**, so these three are a tile-wide SW core-matching residual, not single brightenings (derived). Not
   candidates (not formally vetted).
+- **`--maps` re-runs of t+0−1, t−1−1/−2/−3, t−2−3 (hits identical to the stored tables):** morphology with the dipole
+  verdict leaves 10 passes there (was 15; 5 are now dipoles); their contact sheets are not yet looked at.
 - **Failed approach:** none new; the tile cost varies a lot, so queue dense tiles first.
 - **Handoff:** **first `persistence_check.py` and `arc_diff_vet.py` (CANUCS o004 as third epoch) on t+2+2 h002 and h003**, then
   h063 (t+2+1); then o211→o213 over the tiles, then the
