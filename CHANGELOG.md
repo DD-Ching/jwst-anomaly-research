@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: Process: `merge=union` for CHANGELOG.md and trial.md; operations notes on background jobs
+- `.gitattributes`: `CHANGELOG.md` and `docs/state/trial.md` use `merge=union`.
+  - Checked locally with two test branches: both entries kept, no conflict markers, no duplicated lines.
+  - Limits: a blank separator line can be lost; both versions of a line edited on both sides are kept silently.
+    It applies to local `git merge` only; GitHub's web mergeability check may not use it.
+- `docs/operations.md` §11: the session's `pkill -f` / wait-loop self-matches, per-row result writing, and
+  background-wait timeouts, each with the fix used. No research content changed.
+
 ## 2026-10-15: Abell 2744 UNCOVER vs ALT F356W: grid misses PLATE-23a, `arc_diff` recovers it; 0 lensing candidates
 - **Hypothesis before measuring:** the single-band grid UNCOVER 2561 o001 (2022-11) vs ALT 3516 o002 (2023-11/12)
   recovers PLATE-23a (arXiv:2608.20781; F356W < 29.7 → ≈ 26.1 mag); every other hit is a spike, star core, persistence

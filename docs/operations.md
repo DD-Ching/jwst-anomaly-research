@@ -338,3 +338,32 @@ All these labels already exist in the repository. Agents create new `batch-<slug
 - In Git Bash, call `claude.exe`. The extensionless `claude` shim can be stale. In PowerShell, `claude` works.
 - The venv interpreter is `.venv/Scripts/python.exe`; in cloud and Linux it's `.venv/bin/python`.
 - The deny rules exist for both the Bash and PowerShell tools, because Claude may use either on Windows.
+
+## 11. Background jobs and waiting (incidents from 2026-10-15)
+Only what actually went wrong in cloud sessions, and the fix used.
+
+- **`pkill -f` / `pgrep -f` matched the calling shell.**
+  - `pkill -f x4_...` killed the session's own shell three times: exit code 144, and the command after it never
+    ran.
+  - Later, `pkill -f "[x]4_s1c_r1.py case"` still killed the shell. The bracket trick hid that string, but the
+    same command line also contained `scripts/x4_s1c_r1.py case …` (the relaunch), which matched.
+  - **Fix:** kill by PID:
+    `for p in $(ps aux | grep -v grep | grep "<pattern>" | awk '{print $2}'); do kill $p; done`.
+    Or use the `[x]` form and make sure no other string in the same command line matches the pattern. Do not
+    relaunch in the same command as the kill.
+- **A wait loop matched itself.**
+  - `until ! ps aux | grep -q "[p]regrid"; …` never ended: its own command line contained the log path
+    `…/s1c_pregrid.log`, and `[p]regrid` matched `pregrid` inside it. About 7 minutes were lost.
+  - **Fix:** wait on an output file or a log line, e.g. `until [ -f results/x.json ] || grep -q Traceback log`.
+    If a process pattern is needed, make sure no path or argument in the waiting command contains it.
+- **Results written only at the end.**
+  - A long run wrote its JSON only after the last job. When it had to be stopped for the budget, the finished
+    rows survived only as log lines.
+  - **Fix:** write the results file after every finished job (`imap_unordered` loop, rewrite the file each
+    time). A stop at the cap then keeps every finished row. Post-process (prune large arrays) afterwards and
+    say so in the record.
+- **Background waits timed out before the job ended.**
+  - Waiters started with `run_in_background` and a 590 s timeout were killed at the limit while the job kept
+    running, so they reported nothing.
+  - **Fix:** give a background waiter a timeout longer than the job's expected wall time (here 30–60 min), or
+    use a short foreground check of the log instead.

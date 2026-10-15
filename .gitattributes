@@ -3,3 +3,12 @@
 *.png binary
 *.jpg binary
 *.parquet binary
+
+# Append-only logs: on a local `git merge`, keep both sides' new lines instead of conflicting.
+# Verified 2026-10-15 with two test branches: both entries kept, no markers, no duplicated lines.
+# Limits:
+#  - both versions of a line edited on both sides are kept silently;
+#  - a blank separator line can be lost;
+#  - GitHub's web mergeability check may not use this.
+CHANGELOG.md merge=union
+docs/state/trial.md merge=union
