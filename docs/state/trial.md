@@ -153,6 +153,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.3 (`m1149_refs.py`: MACS1149 `no_reference` rows, sibling references, Sharon v4cor; stamps) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01CLbKJM, 22:08–22:55Z |
 | 2026-W42 | — | 1.5 (S0-2026-10-15: three directions; GW repulsive-lens closed form and distinguishability) | — | 0.2 (state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.3 (`m1149_sys16.py`: MACS1149 system 16 z scan in two models, far-image photometry; stamps) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01Pnu5BB, 23:08–23:45Z |
+| 2026-W42 | ≈ 0.3 (`transient_grid.py`: Sunrise o010/o120 forced-photometry grid on every catalogued position, injections; contact sheets) | — | — | 0.1 (orientation, PR) | cloud routine 01QaBwbk, 00:08–00:45Z |
 | 2026-W42 | — | 3.3 (X4 S1: IMR fitting tool, 36 cases, frozen refinement, wide-q and waveform cross-checks) | — | 0.3 (review fixes, state files, PR) | interactive session 01AzKMDv |
 
 ## Outcome ledger (four columns only)

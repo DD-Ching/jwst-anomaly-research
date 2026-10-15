@@ -1434,6 +1434,33 @@ Field docs: `docs/fields/*.md`.
 - **Failed approach:** candidates only from the catalog stage. Requiring the same kind in two bands drops
   transients seen in one band of the shared pair (blue sources in F150W/F444W).
 
+**Addendum (2026-10-15, forced-photometry grid on every catalogued position; Sunrise o010/o120).**
+- **`scripts/transient_grid.py`** measures every position of the union of both epochs' pipeline catalogs (all bands,
+  duplicates within 0.2″ merged) in every band pair, with `transient_forced.py`'s aperture, annulus, recentring and
+  zero point. The noise scale per band is the robust std over all measured positions (never below 1). A position is a
+  hit when ≥ 2 bands pass (|Δm| ≥ 0.3, or Δm undefined with positive flux in one epoch; calibrated |σ| ≥ 5) with
+  the same sign (ASSUMPTIONs); hits are grouped within 1.5″. Bands run in parallel processes. This
+  removes the catalog stage and its two-band candidate rule, so a change in one module (F090W + F115W) is found.
+- It reads whole local `_i2d.fits` mosaics (memory-mapped). A field-wide grid touches every row, so byte-range
+  cutouts would read more than the file. Download reason (cloud disk rule): 8 mosaics, 6.4 GB in total (SW 1.29 GB
+  each), streamed into the gitignored data root and deleted after the run.
+- **Evidence:** 6,401 positions, 2,462 measured in at least one band pair (2,331 in all four; the rest lie outside
+  the epoch-2 footprint or within ~1″ of an edge). Noise scales 1.48/1.36/1.47/1.43 (F090W/F115W/F277W/F356W), as
+  in the control calibration above. 66 hits in 36 groups: 34 are bright-star diffraction spikes, streaks or PSF
+  wings that move between epochs; `n0022` and `n0150` are the known persistence afterimages (D-039), recovered
+  without any catalog-stage input. **0 candidates.** Contact sheets looked at.
+- **Injection** (epoch 2 only, Gaussian FWHM 0.1″ at 500 random positions measured in all four bands, with the
+  real grid's zero point and scale; flux max(frac × epoch-1 aperture flux, 10 × median aperture error)): at the
+  nominal amplitude (positions where the fraction, not the floor, sets the flux) −0.75 mag is recovered at 100 %
+  (198/198) and −0.44 mag at 53 % (131 positions); over all 500 positions 78 % and 39 %. Recovery counts the
+  automatic thresholds only: the by-eye vetting and the catalog selection of positions are not emulated, so this is
+  an efficiency for catalogued positions before vetting.
+- **Failed approaches:** a first pass counted a difference of two negative fluxes (the background annulus
+  outshining the aperture inside an extended galaxy) as an appeared/disappeared source; one epoch now needs
+  positive flux. Caught by the injection test: recomputing the zero point on the injected positions; it
+  absorbs a brightening common to all of them (5 % recovery). Injections must use the real grid's zero point and
+  noise scale.
+
 **Revisit if.**
 - More than two epochs make light curves possible.
 - The search goes below catalog depth (image differencing or forced photometry on a grid).

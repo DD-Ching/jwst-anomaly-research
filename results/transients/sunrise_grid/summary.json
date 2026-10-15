@@ -1,0 +1,89 @@
+{
+  "n_positions": 6401,
+  "n_measured_any_band": 2462,
+  "n_measured_all_bands": 2331,
+  "n_hits": 66,
+  "n_hit_groups": 36,
+  "bands": {
+    "F090W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f090w_i2d.fits",
+      "e2": "jw02282-o120_t001_nircam_clear-f090w_i2d.fits",
+      "noise_scale": 1.477066953393073,
+      "zero_point_mag": 0.022975899507405743,
+      "n_measured": 2457,
+      "n_pass": 83,
+      "positions_per_s": 1559.3254642086497
+    },
+    "F115W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f115w_i2d.fits",
+      "e2": "jw02282-o120_t001_nircam_clear-f115w_i2d.fits",
+      "noise_scale": 1.3559380559943643,
+      "zero_point_mag": 0.022108194148288518,
+      "n_measured": 2456,
+      "n_pass": 96,
+      "positions_per_s": 1527.3420274340433
+    },
+    "F277W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f277w_i2d.fits",
+      "e2": "jw02282-o120_t001_nircam_clear-f277w_i2d.fits",
+      "noise_scale": 1.4661708836953715,
+      "zero_point_mag": -0.004635675039825191,
+      "n_measured": 2339,
+      "n_pass": 46,
+      "positions_per_s": 2144.281365476205
+    },
+    "F356W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f356w_i2d.fits",
+      "e2": "jw02282-o120_t001_nircam_clear-f356w_i2d.fits",
+      "noise_scale": 1.4301971313340416,
+      "zero_point_mag": 0.0001438053796326555,
+      "n_measured": 2340,
+      "n_pass": 30,
+      "positions_per_s": 2352.2078579401586
+    }
+  },
+  "injection": {
+    "floor_x_median_error": 10.0,
+    "fwhm_arcsec": 0.1,
+    "runs": [
+      {
+        "frac": 1.0,
+        "nominal_dmag": -0.752574989159953,
+        "n": 500,
+        "recovered_frac": 0.78,
+        "n_nominal": 198,
+        "recovered_frac_nominal": 1.0,
+        "per_band_pass_frac": {
+          "F090W": 0.542,
+          "F115W": 0.672,
+          "F277W": 0.752,
+          "F356W": 0.724
+        }
+      },
+      {
+        "frac": 0.5,
+        "nominal_dmag": -0.4402281476392031,
+        "n": 500,
+        "recovered_frac": 0.392,
+        "n_nominal": 131,
+        "recovered_frac_nominal": 0.5343511450381679,
+        "per_band_pass_frac": {
+          "F090W": 0.266,
+          "F115W": 0.45,
+          "F277W": 0.27,
+          "F356W": 0.36
+        }
+      }
+    ],
+    "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated"
+  },
+  "hit_group_verdicts_by_eye": {
+    "diffraction spike or streak that moves between epochs": 25,
+    "star wings/spikes": 8,
+    "n0150: detector persistence (D-039)": 1,
+    "n0022: detector persistence (D-039)": 1,
+    "star spike (epoch 2)": 1
+  },
+  "candidates": 0,
+  "command": "transient_grid.py --band F090W/F115W/F277W/F356W o010 o120 --catalog <8 pipeline _cat.ecsv, o010 then o120> --epoch2-catalogs 4 5 6 7 --inject 500 --inject-frac 1.0 0.5 --procs 4"
+}

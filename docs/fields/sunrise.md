@@ -277,6 +277,23 @@ The code is at this PR's head; outputs are under `outputs/transients_sunrise/` (
     −0.05 ± 0.08 (F277W) and −0.08 ± 0.07 (F356W), all within 1.5σ. The errors are ERR-based plus a 0.05 mag floor,
     before the 1.2–1.5× calibration. This is consistent with no change over 164 days.
 
+## Forced-photometry grid on every catalogued position, o010 against o120 (D-027 addendum 2026-10-15)
+
+`scripts/transient_grid.py`; tracked summary and hit table in `results/transients/sunrise_grid/`. Every number is
+`derived`; thresholds are ASSUMPTIONs.
+
+- Positions: the union of the eight pipeline catalogs (o010 and o120; F090W, F115W, F277W, F356W), 6,401 after
+  merging duplicates within 0.2″; 2,462 measured in at least one band pair, 2,331 in all four.
+- Hits (≥ 2 bands with the same sign, |Δm| ≥ 0.3, calibrated |σ| ≥ 5): 66 in 36 groups. By eye on six-panel
+  cutouts (F090W, F115W, F356W in both epochs): 25 diffraction spikes or streaks of bright stars that move between
+  the epochs (the PSF rotates about 180°), 9 star wings or spikes, and `n0150` and `n0022` (detector persistence,
+  D-039). A first pass also flagged an LW background-annulus effect inside an extended clumpy galaxy (24.362554,
+  −8.442792; negative flux in both epochs), now excluded by rule. **No transient.**
+- Injection at nominal amplitude: −0.75 mag point-source brightenings 100 % recovered (198/198), −0.44 mag 53 %;
+  before by-eye vetting.
+- A spike veto (`cutouts.spike_statistic` or the transient_combine Gaia mask) would remove most hits before
+  inspection; not built, since inspection took minutes here.
+
 ## Third epoch: o010 (2022-07-30) against VENUS o052 (2025-07-08), F150W and F444W (D-027)
 
 Outputs under `outputs/t_sunrise_e13/` (not committed). Every number is `derived`; thresholds are ASSUMPTIONs.
