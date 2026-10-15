@@ -4824,8 +4824,9 @@ then stays at ρ_req ≤ 30.
   longer unlensed runs.
 
 **Alternatives rejected:**
-- Bilby + dynesty: Bayesian inference, not max-match; about 10⁶ likelihood calls; phase marginalisation assumes a
-  dominant (2,2) mode. Kept for a later real-data stage.
+- Bilby + dynesty: not used this round, for task fit and cost. It does Bayesian inference, not max-match, at an
+  estimated (not measured) 10⁵–10⁶ likelihood calls. It can use XPHM with phase marginalisation turned off.
+  Kept for a later real-data stage. (Wording corrected in S1e.)
 - PyCBC: no max-match optimiser for this objective (its complex overlap would give the real part, but the search
   would still be ours); GPLv3. Only the polarisation-maximisation idea is reused, in closed form.
 - GLoW: it computes lens factors, which are already exact here.

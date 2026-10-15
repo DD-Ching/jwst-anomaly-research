@@ -213,8 +213,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Reuse:**
   - SciPy differential evolution is the reference search.
   - Polarisation and amplitude are maximised analytically, as in precessing searches; checked against a ψ scan.
-  - Bilby/dynesty was rejected: it is inference, not max-match, at about 10⁶ calls, and its phase
-    marginalisation assumes a (2,2) mode.
+  - Bilby/dynesty was not used: it does inference, not max-match, at an estimated (not measured) 10⁵–10⁶
+    calls. It can run XPHM with phase marginalisation turned off (wording corrected in S1e).
   - PyCBC has no max-match optimiser for this objective (and is GPLv3). GLoW computes lens factors, which we already
     have exactly.
 - **Result:** the tool fails the frozen rule (ε ≤ 5e-4 on both seeds).
