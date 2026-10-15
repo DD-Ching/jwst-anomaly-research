@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15 (in progress): Sunrise and SMACS two-epoch grids re-run under the MACS0416 defaults
+- Plan: `transient_grid.py` with `--recentre-in origin` and mixed-sign hits on Sunrise o010/o120, o010/o052 and
+  SMACS o001/VENUS o057; SN Atalanta (#237) is the known case.
+
 ## 2026-10-15: MACS0416 arc tiling o211→o213, 28 / 28 tiles: 27 morphology passes, all ordinary, 0 candidates
 - **Hypothesis before measuring:** o211→o213 shows the same artifact classes as o211→o212 (spikes, rosettes,
   persistence, the o211 SW compact-core deficit of #251), so its passes are either o211-epoch features already seen in
