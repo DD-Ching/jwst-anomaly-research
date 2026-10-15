@@ -163,8 +163,12 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.35 (`arc_diff.py`: MACS0416 o211/o212 arc differencing, validation on Yan+2023, three fix iterations; contact sheets) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01JZas31, 04:08–04:45Z |
 | 2026-W42 | ≈ 0.4 (`arc_diff.py` pixel kernels: five PSF-match variants on o211/o212 and o211/o213, validation on Yan+2023; contact sheets) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01VwokZ2, 05:08–05:50Z |
 | 2026-W42 | — | — | ≈ 0.4 (vet MACS0416 h108: five epoch pairs incl. CANUCS o004, `arc_diff_vet.py`, validation on Yan+2023; contact sheets) | 0.1 (orientation, claim, PR) | cloud routine 01VE5srt, 06:08–06:50Z |
+| 2026-W42 | ≈ 0.4 (MACS0416 arc tiling: 16 / 28 tiles o211/o212; contact sheets) | — | ≈ 0.15 (`arc_diff_morph.py` validation on Yan+2023) | 0.1 (orientation, claim, PR) | cloud routine 012PG6nH, 07:08–07:48Z |
+| 2026-W42 | ≈ 0.55 (MACS0416 arc tiling: remaining o211/o212 tiles with `--maps`; stalled by thread oversubscription, restarted) | — | — | 0.1 (orientation, claim) | cloud routine 016oUw9Y, 08:08–08:50Z |
 | 2026-W42 | ≈ 0.35 (Abell 2744 DD 2756 grid, pair choice, `i2d_region.py`; contact sheets) | — | ≈ 0.1 (persistence test, UNCOVER third-epoch stamps) | 0.1 (orientation, claim, PR) | cloud routine 01HeG8Gq, 09:09–09:45Z |
+| 2026-W42 | ≈ 0.45 (MACS0416 arc tiling: 9 more o211/o212 tiles; dipole verdict; core-peak check; contact sheets) | — | — | 0.15 (orientation, base merge, claim) | cloud routine 01QcfDQb, 10:09–10:50Z |
 | 2026-W42 | ≈ 0.2 (Abell 2744 UNCOVER o001 vs 2756 o002 grid; contact sheets) | — | ≈ 0.15 (persistence test on 5 visits, dipole aperture checks, g11 core check) | 0.1 (orientation, claim, PR) | cloud routine 01JkMNZG, 11:08–11:45Z |
+| 2026-W42 | — | — | ≈ 0.4 (MACS0416 t+2+2 h002/h003 persistence, h063 with CANUCS o004; `_cal` and difference contact sheets) | 0.15 (orientation, base merge, claim, PR) | cloud routine 01UyLcH7, 12:09–12:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

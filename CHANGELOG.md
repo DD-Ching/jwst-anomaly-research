@@ -2,6 +2,133 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: `arc_diff_morph.py` review fixes; re-judged o211→o212 tiles: 4 new passes, all ordinary, still 0 candidates (#245)
+- **Hypothesis before measuring:** the open review findings (top-band-only extent, lobes and edge counted in bands
+  without the hit) can hide or invent vetoes; fixing them should change few verdicts. Plan change: any new pass not
+  explained by an ordinary cause goes to `/vet-candidate`.
+- **Fixes:** `classify` uses only detected bands (|S_hit| ≥ 3; the top band if none) for the edge, extent and rosette
+  tests, and takes the extent over all of them. The dipole ratio uses the opposite region's local peak (within
+  0.8″), not a far streak peak. Border targets become edges rather than being dropped, and NaN pixels are now
+  `not_covered`. Per-band products are cached and computed band by band (memory), and the thresholds now live in
+  `Params`. `--rejudge` re-classifies stored JSONs and refuses changed measurement thresholds. 7 new tests, each
+  failing on the old code.
+- **Re-judged 25 morph JSONs (stored per-band values; maps are gone):** Yan+2023 still 11 / 11 pass (o211/o212). Of
+  the 13 changed verdicts, 9 became extended (t+0−3 h064/h067 on the o212 trail, t+0+2 h050 and six t−2−3 rosettes). The
+  **4 new passes** are all ordinary (`results/transients/macs0416_arcdiff/vet_rejudge/`):
+  - t+2+2 h007 (SW +6.2/+9.3): one o212 SW dither, near an NRCB3 corner. The same detector pixel (1977, 1996) shows S/N
+    2.6, 3.8, 3.2 and 16.3 in the four o212 F150W dithers, which see four different sky positions. In F200W it then
+    decays 8.8 → 4.9 → 2.8 → 0.6. That is detector-fixed persistence; a control pixel stays below 1.7σ.
+  - t−2+0 h036 (SW −6.2/−5.1): the o211 F150W flux is only in the two dithers within 30 px of the NRCB3 right edge
+    (S/N 4.8 and 2.4); the interior dithers give 0.6 and 0.8. That is a detector-edge artifact.
+  - t+1+0 h081 and t−2−3 h074 change sign between detected bands (PSF and registration residuals).
+- **Limits of the re-judge:** stored `dipole_ratio` values keep the old definition (in-disk maximum), and 8 early files
+  have no dipole measurement; a fresh `--maps` run could add dipoles (fewer passes), never passes. t−2−3 keeps its
+  pre-fix extents.
+- **Failed approach:** `persistence_check.py` called with two directories after one `--cal-dir` (argparse error; repeat
+  the flag). The script also only tests exposures where S/N ≥ 5, so a fixed-pixel scan of every exposure decided
+  h007.
+- **Handoff:** #245 should now be mergeable. Next: injection-calibrate the morphology veto through the whole chain,
+  then o211→o213 over the 28 tiles (`--maps`, OMP=1).
+
+## 2026-10-15: MACS0416 arc tiling o211→o212 (28 / 28 tiles): 0 candidates; residual-morphology triage `arc_diff_morph.py`
+- **Hypothesis before measuring:** outside the Warhol box, the adopted `arc_diff.py` settings (#242) leave few
+  unflagged hits per 20″ tile, and those are point-like. Plan change: if outer tiles are dominated by a new artifact
+  class, build and validate a veto for it before screening further.
+- **Tiles:** 28 boxes of 20″ (18″ step) holding the 106 CATS v4.1 multiple images outside the #242 box (shifted
+  +0.208″, −0.025″ to the JWST frame); list in `results/transients/macs0416_arcdiff/tiles_o211_o212/tiles.txt`.
+  o211→o212 done on 16 / 28 (first 10 with 30 injections per magnitude: 28.0 mag recovered 0.43–1.0 per band; the
+  rest without injections). 1,353 hits, **390 without the bright-core flag** (t-1-4 alone 199, t-2-3 60).
+- **Looked at t-2-3:** the unflagged hits are a diffraction spike of a bright star rotated between the epochs (a
+  negative diagonal streak in every band), PSF rosettes around compact sources below the bright-core level, and
+  residuals at the mosaic edge.
+- **New `scripts/arc_diff_morph.py`** (unit tests on synthetic maps): per hit, the length of the S region containing
+  it (S smoothed by σ = 2 px, ≥ 3σ), the number and signs of |S| ≥ 3 lobes within 0.8″, and the distance to missing
+  data. Verdicts edge (< 0.5″), extended (> 3.0″ in the top band), rosette (≥ 4 lobes, both signs, ≥ 2 bands)
+  (ASSUMPTIONs).
+- **Validation on known cases (derived):** at 1.0″ the extent test flagged two published o211/o212 transients
+  (D21-S1, D21-S2; 1.1–1.6″ on their arc), so the threshold was raised to 3.0″ (streaks measure 14–23″). At 3.0″:
+  all 11 Yan+2023 positions pass in o211/o212; in o211/o213 one (D21-S2, outside its discovery pair) is a rosette.
+  Not yet calibrated by injections through the chain (follow-up).
+- **Morphology on 9 tiles with maps:** t-2-3 60 → 3 pass; over t+0±, t-1±, t-2-3, 15 passes remain, unvetted and
+  not yet vetted. Looked at t-1-3's 7: low-S spots (mostly ≲ 6σ, two bands) on compact sources, in the BCG halo noise
+  or beside the mosaic edge; none is point-like in every band. JSON: `results/transients/macs0416_arcdiff/morph/`.
+- **Failed approach:** a 1.0″ extent cut (kills arc transients); rosette in the top band only (missed h074).
+- **Handoff:** finish o211→o212 on the 12 remaining tiles with `--maps`, run `arc_diff_morph.py` on every tile, look
+  at the passes (contact sheets), vet survivors with `arc_diff_vet.py` (CANUCS o004 as fourth epoch); calibrate the
+  morphology veto with injections; then o211→o213. t-1-4 (199 unflagged) needs a look first.
+- **Failed approach (run 016oUw9Y, 08:08–08:50Z):** two `arc_diff.py --procs 2` tile jobs in parallel without
+  `OMP_NUM_THREADS=1` pushed the load to about 15 on 4 cores, and no tile finished in 30 min. Always export
+  `OMP_NUM_THREADS=OPENBLAS_NUM_THREADS=1` (scripts/CLAUDE.md, parallel topology). The `--maps` files from the first
+  16 tiles were in an ephemeral scratchpad and are gone, so the morphology passes of t+0-1, t-1-1, t-1-2, t-1-3
+  and t-2-3 (15) need those tiles re-run with `--maps` before their contact sheets can be made.
+- **t+0+2 done (17 / 28; 456 s per tile at 2 jobs × `--procs 2`, OMP=1):** 51 hits, 10 without the bright-core flag; morphology
+  edge 5, rosette 1, pass 4. Contact sheet looked at: h015 and h033 are +/− dipoles on one compact elongated galaxy
+  core (registration/PSF residual), h028 a dipole on a compact core in SW only, h035 a weak SW-only spot on a knot of
+  a clumpy galaxy (nothing in LW). None is single-signed and point-like across bands; not candidates (not formally
+  vetted). Remaining o211→o212 tiles: t-2+0, t+1±, t+2± (11) plus `--maps` re-runs of the 7 map-less earlier
+  tiles and the 5 with passes (≈ 70 min at this throughput: one run's worth). Suggest adding a dipole test
+  (opposite-sign lobe within 2 × FWHM, about equal |S|) to `arc_diff_morph.py`; validate it on Yan+2023 first.
+- **Run 01QcfDQb (10:09–10:50Z): 28 / 28 tiles.** t−2+0, t+1±0/±1/+2/−2 and t+2−1/−2/+0/+1/+2 done (`--procs 1`, 4 jobs, OMP=1;
+  2–15 CPU-min per tile, so the 456 s figure was not a constant). 598 hits, 50 without the bright-core flag.
+- **`arc_diff_morph.py` dipole verdict (new):** a hit is a dipole when an opposite-sign region (|S| ≥ 3, ≥ 4 px)
+  within 0.3″ reaches ≥ 0.5 × |S_hit| in ≥ 2 bands (ASSUMPTIONs; unit tests). **Validation on Yan+2023 (Warhol box re-run with `--maps`):** the first version
+  flagged 3 / 11 (Dc2-W4, D31-W7, D21-S2) from bands where |S_hit| < 3, so a nearby noise lobe gave a large
+  ratio (failed approach); a band now counts only when |S_hit| ≥ 3, and 11 / 11 pass. Tile verdicts unchanged by
+  the fix. On the eleven tiles: dipole 11, rosette 8, edge 13, extended 3, **pass 15**.
+- **Contact sheets of the 15 passes looked at:** t−2+0 h029 is a positive core inside a negative ring on a bright compact source (PSF residual). **t+2+2 h002 (64.04865, −24.05870 tile; F150W +20.6, F200W +5.6)
+  and h003 (F150W +15.0, F200W +7.3) are compact positive spots on blank sky in o211 with nothing in LW (|S| ≤ 3.5):
+  unvetted, the open items of this unit.** SW-only epoch-2 spots without a source match the persistence class seen
+  in Abell 2744 (#246), but that is a hypothesis until `persistence_check.py` runs on them. t+2+2 h009 is +5.2 in
+  F277W and +5.8 in F444W but −1.3 in F356W (inconsistent). t+2+1 h063 t+2+1 h063 fades in SW (−6.0, −6.5; F200W dipole) on a knot beside a galaxy but rises in LW (+3.3, +2.6); t+2+0 h035 is an F150W dipole with nothing in F200W (+1.8) and F277W −1.9; h087, h098 (t+1±), h025 (t+1+2) and t+2−1 h009 change sign between
+  bands (e.g. F150W −7.1, F277W +6.6); h092 is a compact source with an F150W dipole; h100 is a weak SW-only
+  spot (+5.3) on a galaxy knot. t+1+2 h009, h014, h019 are positive SW residuals centred on compact galaxy cores:
+  **in t+1+2 the S at the 10 brightest compact peaks is > +3 for 9 / 10 in F150W and 10 / 10 in F200W (median +12,
+  +9; t+2+0 F150W 7 / 7)**, so these three are a tile-wide SW core-matching residual, not single brightenings (derived). Not
+  candidates (not formally vetted).
+- **`--maps` re-runs of t+0−1, t−1−1/−2/−3, t−2−3 (hits identical to the stored tables):** morphology with the dipole
+  verdict leaves 10 passes there (was 15; 5 are now dipoles); their contact sheets are not yet looked at.
+- **Failed approach:** none new; the tile cost varies a lot, so queue dense tiles first.
+- **Handoff:** **first `persistence_check.py` and `arc_diff_vet.py` (CANUCS o004 as third epoch) on t+2+2 h002 and h003**, then
+  h063 (t+2+1); then o211→o213 over the tiles, then the
+  `--maps` re-runs of t+0−1, t−1−1/−2/−3, t−2−3 for their contact sheets, and the Warhol box with `--maps` to
+  validate the dipole verdict on Yan+2023. Add a **core-population test** to `arc_diff_morph.py` (a hit's S
+  against the S distribution at the tile's compact-source peaks in that band) and validate it on Yan+2023 first.
+- **Run 01UyLcH7 (12:09–12:45Z): the open items vetted** (`results/transients/macs0416_arcdiff/vet_t22/`, derived):
+  - Hypothesis before measuring: t+2+2 h002/h003 are o212 afterimages. Ordinary alternative: a real short
+    transient, which should show in more than one dither. Plan change: an on-sky verdict sends it to `/vet-candidate`.
+  - `persistence_check.py` on 396 `_cal` exposures of o211 and o212: h002 and h003 → **persistence**. There is one
+    detection each in F150W and F200W, in dither 1 of 06101/08101 on NRCB3, after F115W 04101 exposures that put 28
+    saturated pixels there. h003 is the grid's g40 pixel (2033, 1926). The `_cal` contact sheet shows the saturated
+    core and the fading blob.
+  - With CANUCS o004 (`arc_diff_vet.py`): h002 and h003 are present only in o212. o212→c004 F150W gives S −20.1 / −14.7,
+    and o211→c004 gives |S| ≤ 1.9.
+  - h063, re-differenced in a box centred on it: F200W −6.7 ± 1.6 nJy (7 % of the knot), F150W −2.5 ± 2.0. The LW
+    change is arc-coherent. The sheet shows a −/+ pair 0.2″ apart in F200W only, which is a registration dipole.
+    Its S depends on the box (F150W −6.0 in tile t+2+1, −3.1 centred). Not a candidate.
+  - **Code review found a bug in the extent test (fixed):** `arc_diff_morph.py` rescaled the smoothed S map as if S
+    were white noise. S is a matched-filter output, so the rescaled noise was 2.1–3.7σ, and 18–42 % of pixels
+    passed the "3σ" streak level. The map is now normalised by its own robust spread, and a correlated-noise test
+    was added. Only "extended" verdicts can change. The four tiles with short extents or a uniform 20″ extent
+    (t+0−1, t+0−3, t+1−2, t−1−3) were re-run with `--maps`, and their morph JSONs were replaced:
+    - t+0−1 h031/h041: now rosettes;
+    - t+0−3 h064/h067 and t+1−2 h041: now pass, but the contact sheets put them on one straight positive trail that
+      crosses all five bands in o212 (a satellite or asteroid trail). They pass only because the top band, F200W,
+      shows the trail broken up;
+    - t−1−3 h016: now passes, SW-only (+5.6 / +6.0). `persistence_check.py` → **persistence**. It appears only in
+      dither 4 of each o212 filter, after dither 3 put a saturated star on those NRCB2 pixels, with weak LW too, as
+      in Abell 2744 g4;
+    - t+0−3's other 19 hits remain "extended" (a 19.9″ F150W trail);
+    - t−2−3's 28 "extended" verdicts come from the old code. That tile's diffraction spike was already confirmed by
+      eye.
+  - **o211→o212 over the MACS0416 arcs: 0 candidates.** This is not a limit: the morphology veto is not
+    injection-calibrated (D-027 addendum 2026-10-15f).
+  - **Failed approach:** the extent test uses only the top band, so a trail that is clean in F150W but broken up in
+    F200W passes. Next, take the extent over every band with |S_hit| ≥ 3, re-validated on Yan+2023.
+- **Handoff:** first fix the open code-review findings listed in #245's body (multi-band extent, the |S_hit| guard for
+  lobes and edge, the border case, per-band caching, `Params`), re-run t−2−3 morphology and re-validate on Yan+2023; then
+  o211→o213 over the 28 tiles (`--maps`, OMP=1, 4 jobs `--procs 1`), with `persistence_check.py` on
+  every single-epoch compact pass. Calibrate `arc_diff_morph.py` with injections through the whole chain. Add the core-population test.
+
 ## 2026-10-15: Abell 2744 two-epoch grid, UNCOVER o001 vs DD 2756 o002: 46 hit groups, all ordinary, 0 candidates
 - **Hypothesis before computing:** a catalogued position in the Abell 2744 core changed by ≥ 0.3 mag at ≥ 5σ in two
   bands between UNCOVER (2022-11-02/04) and DD 2756 o002 (2022-12-06). This pair's first epoch is independent of the

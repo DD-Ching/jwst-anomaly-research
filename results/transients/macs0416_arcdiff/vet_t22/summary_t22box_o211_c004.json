@@ -1,0 +1,148 @@
+{
+ "command": "arc_diff.py --band f150w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f150w_i2d.fits s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f150w_i2d.fits --band f200w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f200w_i2d.fits s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f200w_i2d.fits --band f277w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f277w_i2d.fits s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f277w_i2d.fits --band f356w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f356w_i2d.fits s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f356w_i2d.fits --band f444w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f444w_i2d.fits s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f444w_i2d.fits --ra 64.04865 --dec -24.05870 --half-arcsec 10 --known <scratchpad>/vet/known.csv --match-arcsec 0.2 --kernel-px 4 --kernel-stamps --procs 1 --out <scratchpad>/vet/o211_c004 --maps <scratchpad>/vet/o211_c004.npz",
+ "box": {
+  "ra": 64.04865,
+  "dec": -24.0587,
+  "half_arcsec": 10.0
+ },
+ "thresholds_assumption": {
+  "min_sigma": 5.0,
+  "min_bands": 2,
+  "link_arcsec": 0.1,
+  "bg_arcsec": 0.6,
+  "tile_arcsec": 3.0,
+  "kernel_px": 4,
+  "kernel_stamps": true,
+  "match_arcsec": 0.2,
+  "core_arcsec": 0.8,
+  "core_pct": 99.9,
+  "psf_fwhm_arcsec": {
+   "F150W": 0.05,
+   "F200W": 0.066,
+   "F277W": 0.092,
+   "F356W": 0.116,
+   "F444W": 0.145
+  }
+ },
+ "bands": {
+  "F150W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f150w_i2d.fits",
+   "e2": "jw01208-o004_t002_nircam_clear-f150w_i2d.fits",
+   "scale_arcsec": 0.031228290320561063,
+   "shift_px": [
+    -0.5782808556687158,
+    0.5461499898409212
+   ],
+   "blur_sigma_px": 2.04,
+   "kernel_sum": 0.9649719413906043,
+   "convolved_epoch": 1,
+   "flux_scale": 0.9649719413906043,
+   "noise_scale": 1.124031832076752,
+   "n_detections": 45,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F200W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f200w_i2d.fits",
+   "e2": "jw01208-o004_t002_nircam_clear-f200w_i2d.fits",
+   "scale_arcsec": 0.031229723334602156,
+   "shift_px": [
+    -0.8526088369962103,
+    1.0514062243063207
+   ],
+   "blur_sigma_px": 2.692,
+   "kernel_sum": 0.9820357364808909,
+   "convolved_epoch": 1,
+   "flux_scale": 0.9820357364808909,
+   "noise_scale": 1.2927894570306526,
+   "n_detections": 32,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F277W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f277w_i2d.fits",
+   "e2": "jw01208-o004_t002_nircam_clear-f277w_i2d.fits",
+   "scale_arcsec": 0.06290931600491904,
+   "shift_px": [
+    -0.21920802373430917,
+    0.06825708494981748
+   ],
+   "blur_sigma_px": 1.087,
+   "kernel_sum": 0.965945760513154,
+   "convolved_epoch": 1,
+   "flux_scale": 0.965945760513154,
+   "noise_scale": 1.0732905053214663,
+   "n_detections": 29,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F356W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f356w_i2d.fits",
+   "e2": "jw01208-o004_t002_nircam_clear-f356w_i2d.fits",
+   "scale_arcsec": 0.0629089745392368,
+   "shift_px": [
+    -0.19557535779094654,
+    0.013973045326430658
+   ],
+   "blur_sigma_px": 1.175,
+   "kernel_sum": 0.9543123907755073,
+   "convolved_epoch": 1,
+   "flux_scale": 0.9543123907755073,
+   "noise_scale": 1.168218691686823,
+   "n_detections": 11,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F444W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f444w_i2d.fits",
+   "e2": "jw01208-o004_t002_nircam_clear-f444w_i2d.fits",
+   "scale_arcsec": 0.06291375188055767,
+   "shift_px": [
+    -0.11722051734992331,
+    -0.0409005882754734
+   ],
+   "blur_sigma_px": 1.223,
+   "kernel_sum": 0.9495547471836011,
+   "convolved_epoch": 1,
+   "flux_scale": 0.9495547471836011,
+   "noise_scale": 1.1460895106484268,
+   "n_detections": 33,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  }
+ },
+ "n_hits": 21,
+ "n_hits_not_near_bright_core": 14,
+ "known": [
+  {
+   "name": "h002",
+   "pair": "21",
+   "F150W": -2.629652500152588,
+   "F200W": -2.4557597637176514,
+   "F277W": -2.21720027923584,
+   "F356W": -2.673710584640503,
+   "F444W": -2.536250591278076,
+   "hit": null
+  },
+  {
+   "name": "h003",
+   "pair": "21",
+   "F150W": -2.505906343460083,
+   "F200W": -2.764280319213867,
+   "F277W": -3.01997971534729,
+   "F356W": 2.838453531265259,
+   "F444W": 3.4128527641296387,
+   "hit": null
+  },
+  {
+   "name": "h063",
+   "pair": "21",
+   "F150W": -5.173942565917969,
+   "F200W": -1.827327847480774,
+   "F277W": -2.0058186054229736,
+   "F356W": -1.9915353059768677,
+   "F444W": null,
+   "hit": null
+  }
+ ]
+}

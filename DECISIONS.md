@@ -1533,6 +1533,33 @@ scales 1.22–1.44). Injections: −0.75 mag 94.6 %, −0.44 mag 82.6 %. Result:
   in the UNCOVER F115W mosaic. Compare bands from the same visit before reading a change as physical.
 - The o002 detector-fixed artifacts (o003/o002 g16/g17) reappear here as g32/g33 against an independent first epoch,
   so both runs classify them the same way.
+
+**Addendum 2026-10-15f (MACS0416 arc tiling, o211→o212; #245).** `arc_diff.py` (pixel kernels, unchanged) over 28
+tiles of 20″ holding the 106 CATS v4.1 multiple images outside the Warhol box. Unflagged hits are triaged by the new
+`scripts/arc_diff_morph.py` (edge < 0.5″, extended > 3.0″, rosette, dipole; ASSUMPTIONs). It is validated on the 11
+Yan+2023 positions (11 / 11 pass in o211/o212) but not yet calibrated by injections through the chain. Every
+morphology pass was looked at on contact sheets. The last open ones were vetted with `persistence_check.py` and
+`arc_diff_vet.py` against CANUCS o004:
+- t+2+2 h002/h003 are o212 NRCB3 persistence: one detection each, in the first dither after F115W exposures that
+  saturated those pixels. h003 sits on the same detector pixel as the grid's g40.
+- t+2+1 h063 is an F200W-only registration dipole on a 100 nJy knot (−6.7 ± 1.6 nJy; F150W −2.5 ± 2.0). The LW
+  change is arc-coherent, and its S depends on the tile box (F150W −6.0 in t+2+1, −3.1 centred).
+
+- t−1−3 h016 (a pass after the extent fix below) is o212 NRCB2 persistence: dither 4 only, after a saturated star in dither 3.
+- t+0−3 h064/h067 and t+1−2 h041 lie on one straight o212 trail, which is visible in all five bands.
+
+The extent test first rescaled the smoothed S as white noise (×2√π σ). S is a matched-filter output with correlated
+noise, so the "3σ" level sat at about 1σ. Fixed: the smoothed map is now normalised by its robust spread. Review
+fixes (same PR): only detected bands (|S_hit| ≥ 3) enter the edge, extent and rosette tests, and the extent test now
+uses every detected band (it vetoes the h064/h067 trail by itself). The dipole ratio uses the opposite region's local
+peak (within 0.8″). Border targets are judged, not dropped. The 25 stored morph JSONs were re-judged
+(`--rejudge`) without new maps, giving 4 new passes. All 4 are ordinary: t+2+2 h007 is a detector-fixed NRCB3 pixel
+(persistence) and t−2+0 h036 a detector-edge artifact in o211; t+1+0 h081 and t−2−3 h074 change sign between bands.
+
+Result: **0 candidates over the o211→o212 arcs.** This is not a limit until the morphology veto is calibrated by
+injection. Rejected: a 1.0″ extent cut (it removes the published D21-S1/S2), and a dipole test on bands with
+|S_hit| < 3 (it flagged 3 / 11 Yan+2023 positions). Revisit if injections show the veto removes more than 10 % of
+point transients.
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**
