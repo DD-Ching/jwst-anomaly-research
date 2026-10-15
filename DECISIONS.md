@@ -1483,6 +1483,9 @@ Field docs: `docs/fields/*.md`.
   every detection suspect in `persistence_check.py`), SN01. **0 new candidates.** Contact sheets looked at.
   Injections (as above): −0.75 mag 95 % (198/208 nominal), −0.44 mag 46 %. Data: 8 mosaics, 6.0 GB, streamed and
   deleted.
+- **o211/o213 (epoch 1 vs 3):** 104 hits in 50 groups: 47 spikes, wings or edges, 2 persistence, SN01; **0 new
+  candidates**; injection −0.75 mag 95 %, −0.44 mag 40 %. Neither epoch's catalogs have an entry within 3.2″ of the
+  Warhol arc, so its transients have no grid position (`results/transients/macs0416_grid_o213/`).
 - **Limit of the grid:** catalogued positions only, 0.15″ apertures; transients on arcs or hosts without their own
   catalog entry, and point sources fainter than ≈ 28 mag on bright arcs, are outside it. Image differencing on the
   arcs would close this.
