@@ -173,6 +173,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.3 (MACS0416 t−1−4 and 6 unrecorded tiles re-run with maps; contact sheets) | — | ≈ 0.2 (ring and sign_flip verdicts: injections at 27.5–29.5, Yan+2023 re-validation) | 0.1 (orientation, claim, PR) | cloud routine 0148wS49, 15:08–15:45Z |
 | 2026-W42 | — | — | ≈ 0.4 (MACS0416 9 open arc_diff passes vs c004/o213; 7 ordinary, h044/h030 open) | 0.1 (orientation, claim, PR) | cloud routine 019UYvw9, 16:08–16:45Z |
 | 2026-W42 | — | — | ≈ 0.4 (MACS0416 h044/h030 knot test, o211→o212 west box) | 0.1 (orientation, claim, PR) | cloud routine 01CGPk1D, 17:08–17:45Z |
+| 2026-W42 | — | — | ≈ 0.45 (MACS0416 h044/h030 knot test on o211→c004, o211→o213 and the o212→o213 control; `arc_diff_knots.py`) | 0.1 (orientation, claim, PR) | cloud routine 018oYfhm, 18:08–18:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
