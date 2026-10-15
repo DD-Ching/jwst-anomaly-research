@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 grid, epoch 1 against epoch 3 (o211/o213): no new transient
+- **Hypothesis before computing:** a two-band change between 2022-10-07 and 2023-02-10 that the published search
+  (Yan et al. 2023, F356W-led) did not report. Ordinary: as in the o211/o212 entry below. Plan change: any survivor
+  goes to `/vet-candidate`.
+- Same command and defaults as #238: 8,345 positions (197 merged after refinement), 3,470 measured in all four
+  bands, 104 hits in 50 groups: 47 bright-star spikes, wings or footprint edges, 2 SW-only persistence
+  afterimages (`persistence_check.py`: every detection suspect), SN01 (`on_sky`, 26 clean exposures; mixed sign).
+  **0 new candidates.** Injection −0.75 mag 95 %, −0.44 mag 40 %. Contact sheets looked at.
+  `results/transients/macs0416_grid_o213/`.
+- **Blind spot, larger here:** neither the o211 nor the o213 catalogs have an entry within 3.2″ of the Warhol arc,
+  so its five published transients (D21-W1/W2, D31-W5/W6/W7) have no grid position; in o211/o212 only the o212
+  catalogs supplied them. Arc transients need image differencing, not the catalog grid.
+- Data: o211 and o213 mosaics (6.4 GB) streamed and deleted.
+- **Handoff:** o212/o213 is the last PEARLS pair (expect the same limits); the higher-value step is PSF-matched
+  difference imaging of the Warhol and Spock arcs, validated on the 12 published arc transients.
+
 ## 2026-10-15: MACS0416 two-epoch grid, validated on published transients: two grid fixes, no new transient
 - **Hypothesis before computing:** the grid recovers the published PEARLS epoch-1→2 transients (Yan et al. 2023:
   6 caustic stars, SN01, SN02); any further two-band change in o211/o212 is a candidate. Ordinary: spikes,
