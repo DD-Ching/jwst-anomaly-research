@@ -1302,3 +1302,6 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   - arXiv:2204.06001, 2204.06014, 2109.09251, 2112.03721, 2206.14310, 2002.12533, 1605.00008;
   - Yoo, Harada & Tsukamoto arXiv:1302.7170;
   - Takahashi & Asada arXiv:1303.1301.
+- MACS0416 transients (accessed 2026-10-15): Yan et al. 2023, "JWST's PEARLS: Transients in the MACS J0416.1-2403
+  Field", ApJS 269, 43, DOI 10.3847/1538-4365/ad0298, arXiv:2307.07579 (v2 source, Tables 4–5; no VizieR table).
+  PEARLS NIRCam epochs: JWST program 1176 o211/o212/o213 (MAST), CANUCS 1208 o004.
