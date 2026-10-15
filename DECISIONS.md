@@ -4650,3 +4650,24 @@ unit overruns its budget.
 **Revisit if:**
 - S1 shows the signature is absorbed by intrinsic parameters (stop X4);
 - LVK or others publish a repulsive-lens GW analysis (reuse it).
+
+## D-087 X4 S1: the negative-lens GW signature survives free ordinary fits in simulation; S2a pilot proposed (2026-10-15)
+
+**Decision.**
+- Record S1's gate as met.
+- Propose the S2a pilot: a maximum-likelihood three-model comparison on GW231123 strain, with ≥ 50 off-source
+  injections. Do not start it without the owner, and freeze its gate before the strain is read.
+
+**Alternatives rejected:**
+- going straight to full Bayesian PE on GW231123 (cost, before the cheaper pilot calibrates the statistic);
+- using the S0 inspiral-only, fixed-intrinsic result alone (shown optimistic in principle; S1 now quantifies it).
+
+**Evidence** (simulated only; `results/x4/s1_*.json`):
+- 18 / 36 configurations keep 1 − FF² ≥ 9/ρ² at ρ ≤ 30 against free aligned-spin binaries (q ≤ 15) and a positive
+  point lens, using the best fit over all stages (the frozen 6-parameter refinement was under-converged at 80
+  evaluations). IMRPhenomD agrees within 0.0065. Bound-conditional: fits run to q = 15.
+- Extreme mass ratios absorb part of the signature.
+
+**Revisit if:**
+- precessing, higher-mode or embedded/binary-lens fits absorb the residual;
+- real noise or the detector network changes the picture (S2a).
