@@ -1,0 +1,3339 @@
+{
+ "label": "simulated; multi-start fits with restart convergence (S1b step B)",
+ "wall_s": 2497.1,
+ "U": [
+  {
+   "f": 0.24573553001615966,
+   "x": [
+    2.558109100573305,
+    14.999979386644071,
+    0.7354367055915572,
+    -0.6274309807418395
+   ],
+   "nfev": 1000,
+   "history": [
+    0.24644400029469582,
+    0.2461486348648676,
+    0.2458463149355935,
+    0.24579849980366764,
+    0.24573553001615966
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": false,
+   "FF_pad64": 0.7542644699838401,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "saved:s1_cases.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.2460004364949141,
+   "x": [
+    2.55815006808042,
+    14.999772515025974,
+    0.7208455469100872,
+    -0.20523083920319135
+   ],
+   "nfev": 550,
+   "history": [
+    0.24600411416064483,
+    0.2460004364949141
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7539995635050859,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "saved:s1_robust.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.2460004364949141,
+   "x": [
+    2.55815006808042,
+    14.999772515025974,
+    0.7208455469100872,
+    -0.20523083920319135
+   ],
+   "nfev": 550,
+   "history": [
+    0.24600411416064483,
+    0.2460004364949141
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7539995635050859,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "saved:s1_robust.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.2460004364949141,
+   "x": [
+    2.55815006808042,
+    14.999772515025974,
+    0.7208455469100872,
+    -0.20523083920319135
+   ],
+   "nfev": 550,
+   "history": [
+    0.24600411416064483,
+    0.2460004364949141
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7539995635050859,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "saved:s1_robust.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.2455973455672793,
+   "x": [
+    2.5573235699230272,
+    14.999365778702469,
+    0.745302730501685,
+    -0.9897786104829105
+   ],
+   "nfev": 850,
+   "history": [
+    0.2457693118543447,
+    0.2456162193735627,
+    0.24560112269170564,
+    0.2455973455672793
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7544026544327206,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "saved:s1_refine.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.24557961367586578,
+   "x": [
+    2.558708971133565,
+    14.999984661646078,
+    0.7490806661343146,
+    -0.9656703128462711
+   ],
+   "nfev": 700,
+   "history": [
+    0.24570960589146373,
+    0.24558687048861216,
+    0.24557961367586578
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7544203863241342,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "saved:s1_refine_wide.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.24556685739015105,
+   "x": [
+    2.55817555657216,
+    14.999986371597544,
+    0.7481645150085285,
+    -0.989991810939172
+   ],
+   "nfev": 550,
+   "history": [
+    0.24557371237772396,
+    0.24556685739015105
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7544331426098488,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "saved:s1_ubound.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.24563716819383796,
+   "x": [
+    2.5574107218266082,
+    14.982470253006195,
+    0.7455752513253904,
+    -0.9856877461914222
+   ],
+   "nfev": 850,
+   "history": [
+    0.2458678664565912,
+    0.24572988325854428,
+    0.24564455120109419,
+    0.24563716819383796
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.754362831806162,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random0",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.2455890247901179,
+   "x": [
+    2.557660956286203,
+    14.999996018522515,
+    0.7456134596889188,
+    -0.962135406110195
+   ],
+   "nfev": 850,
+   "history": [
+    0.2507714806423531,
+    0.24566583331547587,
+    0.24559524948873013,
+    0.2455890247901179
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7544109752098822,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random1",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.2455731359484492,
+   "x": [
+    2.5587290395770355,
+    14.999987462375586,
+    0.7499233533438632,
+    -0.9862891893724437
+   ],
+   "nfev": 1000,
+   "history": [
+    0.2475378841414736,
+    0.24644237638941247,
+    0.2456363807655313,
+    0.24557711201579213,
+    0.2455731359484492
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7544268640515508,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random2",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.24557447648059905,
+   "x": [
+    2.5588180849243463,
+    14.999999987929339,
+    0.7503497378184358,
+    -0.9899750449831073
+   ],
+   "nfev": 958,
+   "history": [
+    0.24623596458849217,
+    0.24597622269345987,
+    0.24559331864654466,
+    0.2455756122241528,
+    0.24557447648059905
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.754425523519401,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random3",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.24572774779653705,
+   "x": [
+    2.557784637453067,
+    14.999756667907338,
+    0.7356648838425792,
+    -0.6654791600870735
+   ],
+   "nfev": 850,
+   "history": [
+    0.2777628728494157,
+    0.2528577097156979,
+    0.2457376759074148,
+    0.24572774779653705
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.754272252203463,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random4",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.24562598916122136,
+   "x": [
+    2.557327091318797,
+    14.990550050963552,
+    0.7447832745365168,
+    -0.9707463144319625
+   ],
+   "nfev": 850,
+   "history": [
+    0.2674118620095004,
+    0.2456524925897191,
+    0.24562937766684356,
+    0.24562598916122136
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7543740108387786,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random5",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.24561518410437444,
+   "x": [
+    2.5575095478263767,
+    14.988343669451439,
+    0.7460755536064596,
+    -0.9897638180131538
+   ],
+   "nfev": 1000,
+   "history": [
+    0.2628525737123053,
+    0.24634581962735358,
+    0.24564437758114466,
+    0.245627308084454,
+    0.24561518410437444
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": false,
+   "FF_pad64": 0.7543848158956254,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random6",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.24682236131638424,
+   "x": [
+    2.559596963994304,
+    14.996084427443478,
+    0.6901908763551314,
+    0.8020350693166107
+   ],
+   "nfev": 1000,
+   "history": [
+    0.2803266729999234,
+    0.25324071645785773,
+    0.24684600790833489,
+    0.24682625761626387,
+    0.24682236131638424
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.75317773430178,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random7",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.24571031184287373,
+   "x": [
+    2.558478004692147,
+    14.999995169949742,
+    0.7377876774383364,
+    -0.6616427484560965
+   ],
+   "nfev": 850,
+   "history": [
+    0.2467482168516444,
+    0.24633104448368726,
+    0.24571095186025238,
+    0.24571031184287373
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7542896881571263,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random8",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.24557765548485866,
+   "x": [
+    2.5589123475503417,
+    14.9999794350381,
+    0.7506160150798169,
+    -0.989342366913518
+   ],
+   "nfev": 1000,
+   "history": [
+    0.2461606251165388,
+    0.24598910266088136,
+    0.24565896493623451,
+    0.2455864315845644,
+    0.24557765548485866
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7544223445151413,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random9",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.2455693062900528,
+   "x": [
+    2.5579857434121607,
+    14.999988539697057,
+    0.7476070816919183,
+    -0.9891408425386607
+   ],
+   "nfev": 850,
+   "history": [
+    0.24768944850908992,
+    0.24560824325605435,
+    0.24557249747726262,
+    0.2455693062900528
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.7544306937099472,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random10",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.24615691563262487,
+   "x": [
+    2.559014212918914,
+    14.999966164217469,
+    0.7151177669241987,
+    0.04342008446310025
+   ],
+   "nfev": 1000,
+   "history": [
+    0.2549122425775364,
+    0.2468760775355403,
+    0.24684745722954016,
+    0.24634121797113906,
+    0.24615691563262487
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": false,
+   "FF_pad64": 0.7538430843673751,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "random11",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.018737571542658316,
+   "x": [
+    3.2267730091631734,
+    2.6273040560381116,
+    0.2753820446711486,
+    0.29416462805506904
+   ],
+   "nfev": 337,
+   "history": [
+    0.018737571542658316,
+    0.018737571542658316
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812624284573417,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "saved:s1_cases.json",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.01882323413210496,
+   "x": [
+    3.2302797128672416,
+    2.4825244772733113,
+    0.20233380682707958,
+    0.5336092881050343
+   ],
+   "nfev": 431,
+   "history": [
+    0.01882323413210496,
+    0.01882323413210496
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.981176765867895,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "saved:s1_robust.json",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018730549109905792,
+   "x": [
+    3.223559065822685,
+    2.7801193443601955,
+    0.33570084858367333,
+    0.07563694633289542
+   ],
+   "nfev": 451,
+   "history": [
+    0.018730549109905792,
+    0.018730549109905792
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812694508900942,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "saved:s1_robust.json",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018765377459636357,
+   "x": [
+    3.228271154328274,
+    2.563729119575233,
+    0.24611028887548986,
+    0.3928696546890772
+   ],
+   "nfev": 693,
+   "history": [
+    0.01877761843488046,
+    0.01876675727099364,
+    0.018765377459636357
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812346225403636,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "saved:s1_robust.json",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018737571542658316,
+   "x": [
+    3.2267730091631734,
+    2.6273040560381116,
+    0.2753820446711486,
+    0.29416462805506904
+   ],
+   "nfev": 337,
+   "history": [
+    0.018737571542658316,
+    0.018737571542658316
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812624284573417,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "saved:s1_refine.json",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018737571542658316,
+   "x": [
+    3.2267730091631734,
+    2.6273040560381116,
+    0.2753820446711486,
+    0.29416462805506904
+   ],
+   "nfev": 337,
+   "history": [
+    0.018737571542658316,
+    0.018737571542658316
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812624284573417,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "saved:s1_refine_wide.json",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018730549109901573,
+   "x": [
+    3.2235591029593165,
+    2.780120075145665,
+    0.335700489847707,
+    0.07563921930465728
+   ],
+   "nfev": 458,
+   "history": [
+    0.018730549109901573,
+    0.018730549109901573
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812694508900984,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "saved:s1_ubound.json",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018744577038193544,
+   "x": [
+    3.2227068377076,
+    2.8255591513143035,
+    0.35048904130765623,
+    0.01893729699005696
+   ],
+   "nfev": 850,
+   "history": [
+    0.018798791194680975,
+    0.018762174267468623,
+    0.018744690606647296,
+    0.018744577038193544
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812554229618063,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random0",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018726299017713943,
+   "x": [
+    3.2239996030244846,
+    2.757914365208485,
+    0.32769540505676464,
+    0.10596379309387849
+   ],
+   "nfev": 850,
+   "history": [
+    0.021814357948470642,
+    0.018980420710610124,
+    0.018726360343716886,
+    0.018726299017713943
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812737009822861,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random1",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.04191456990391562,
+   "x": [
+    3.2320388547110817,
+    14.685731828195529,
+    0.7288419956233905,
+    -0.5002739020974634
+   ],
+   "nfev": 1000,
+   "history": [
+    0.6429166139331026,
+    0.42631750124138434,
+    0.04291414950654204,
+    0.04208905491096515,
+    0.04191456990391562
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": false,
+   "FF_pad64": 0.9580854300960844,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random2",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.01874458697117587,
+   "x": [
+    3.222739680311177,
+    2.826160748013431,
+    0.3498883678812944,
+    0.02208817970989263
+   ],
+   "nfev": 550,
+   "history": [
+    0.018754400271703053,
+    0.01874458697117587
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812554130288242,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random3",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.02115421808017015,
+   "x": [
+    3.23711808647075,
+    3.7582731088974066,
+    0.31571475693539075,
+    0.975903300602106
+   ],
+   "nfev": 1000,
+   "history": [
+    0.6459104916304712,
+    0.41970767261144415,
+    0.03423786816564267,
+    0.024973329291106183,
+    0.02115421808017015
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": false,
+   "FF_pad64": 0.9788508141071558,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random4",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.01873132220082796,
+   "x": [
+    3.223383751825345,
+    2.775221326131053,
+    0.3415172740384258,
+    0.04792271913315671
+   ],
+   "nfev": 550,
+   "history": [
+    0.01873667978137661,
+    0.01873132220082796
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.981268677799172,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random5",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.05729504063452984,
+   "x": [
+    3.2999593077900826,
+    14.999999398454129,
+    0.7730454259483026,
+    0.9899997541451979
+   ],
+   "nfev": 550,
+   "history": [
+    0.057304434208076516,
+    0.05729504063452984
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9427049593654702,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random6",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.022424044863883164,
+   "x": [
+    3.2263298264710913,
+    3.5720645599898972,
+    0.5911718367372942,
+    -0.9765709081724583
+   ],
+   "nfev": 1000,
+   "history": [
+    0.6507407906381074,
+    0.6438552552352577,
+    0.4156609312476498,
+    0.03979957614060492,
+    0.022424044863883164
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": false,
+   "FF_pad64": 0.97757635823793,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random7",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018736642137199833,
+   "x": [
+    3.223123682494549,
+    2.8027103016185073,
+    0.34315043477122853,
+    0.04712055764421515
+   ],
+   "nfev": 700,
+   "history": [
+    0.018756026566922657,
+    0.018739915615595848,
+    0.018736642137199833
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812633578628002,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random8",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018744576970393,
+   "x": [
+    3.222709532050317,
+    2.8255979561489624,
+    0.3504564189253545,
+    0.019120928014446474
+   ],
+   "nfev": 1000,
+   "history": [
+    0.032851365182785974,
+    0.019486418115150173,
+    0.018763342507029934,
+    0.018744580112023956,
+    0.018744576970393
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.981255423029607,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random9",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.0187371738967802,
+   "x": [
+    3.223016843521739,
+    2.7985163210373805,
+    0.3482309821981935,
+    0.02327432533238491
+   ],
+   "nfev": 1000,
+   "history": [
+    0.0339361818963525,
+    0.021407554177514276,
+    0.019053302349152923,
+    0.01875552247583545,
+    0.0187371738967802
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": false,
+   "FF_pad64": 0.9812628261032198,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random10",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.02241098136125319,
+   "x": [
+    3.2317179896510275,
+    4.339230623333693,
+    0.3608326424072916,
+    0.9558322673406474
+   ],
+   "nfev": 1000,
+   "history": [
+    0.16535842794264644,
+    0.04699208696152446,
+    0.039486365648610855,
+    0.02932071340230824,
+    0.02241098136125319
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": false,
+   "FF_pad64": 0.9775901220901038,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "random11",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.03298929359785119,
+   "x": [
+    3.5316459067958643,
+    14.999985151521233,
+    -0.13157456425317576,
+    0.9899957883604119
+   ],
+   "nfev": 1000,
+   "history": [
+    0.03307343173983601,
+    0.03305656876687224,
+    0.033016339849306076,
+    0.03299145166190731,
+    0.03298929359785119
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670107064021485,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "saved:s1_cases.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03298195965801276,
+   "x": [
+    3.528141800339637,
+    14.999996935233115,
+    -0.13560663081402174,
+    0.9899989843195366
+   ],
+   "nfev": 700,
+   "history": [
+    0.0332981888561964,
+    0.032982227040232015,
+    0.03298195965801276
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670180403419872,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "saved:s1_robust.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03298195965801276,
+   "x": [
+    3.528141800339637,
+    14.999996935233115,
+    -0.13560663081402174,
+    0.9899989843195366
+   ],
+   "nfev": 700,
+   "history": [
+    0.0332981888561964,
+    0.032982227040232015,
+    0.03298195965801276
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670180403419872,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "saved:s1_robust.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03298195965801276,
+   "x": [
+    3.528141800339637,
+    14.999996935233115,
+    -0.13560663081402174,
+    0.9899989843195366
+   ],
+   "nfev": 700,
+   "history": [
+    0.0332981888561964,
+    0.032982227040232015,
+    0.03298195965801276
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670180403419872,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "saved:s1_robust.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03298043181682364,
+   "x": [
+    3.526765216883681,
+    14.999999984396137,
+    -0.13749215850863164,
+    0.9899596182117898
+   ],
+   "nfev": 700,
+   "history": [
+    0.033535557151151085,
+    0.032987062960225466,
+    0.03298043181682364
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670195681831764,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "saved:s1_refine.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03298043181682364,
+   "x": [
+    3.526765216883681,
+    14.999999984396137,
+    -0.13749215850863164,
+    0.9899596182117898
+   ],
+   "nfev": 700,
+   "history": [
+    0.033535557151151085,
+    0.032987062960225466,
+    0.03298043181682364
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670195681831764,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "saved:s1_refine_wide.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03297994381386693,
+   "x": [
+    3.5262381332384827,
+    14.999992014909278,
+    -0.1385783720180399,
+    0.9899985607000743
+   ],
+   "nfev": 550,
+   "history": [
+    0.03297997644472561,
+    0.03297994381386693
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670200561861331,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "saved:s1_ubound.json",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03298036070609456,
+   "x": [
+    3.526745606771894,
+    14.999998637206,
+    -0.1375206799885767,
+    0.9899981500697179
+   ],
+   "nfev": 550,
+   "history": [
+    0.03298182918296633,
+    0.03298036070609456
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670196392939054,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random0",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03297990145345331,
+   "x": [
+    3.5258274900381332,
+    14.999972572590522,
+    -0.1393803636085355,
+    0.9899965347501507
+   ],
+   "nfev": 1000,
+   "history": [
+    0.03314922281015453,
+    0.033094650065801035,
+    0.03300325322677944,
+    0.03298139547262957,
+    0.03297990145345331
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670200985465468,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random1",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03298475041864424,
+   "x": [
+    3.5297409664316257,
+    14.999996160013641,
+    -0.13456534764535477,
+    0.9899990655773889
+   ],
+   "nfev": 700,
+   "history": [
+    0.03530620380527605,
+    0.032988085413794166,
+    0.03298475041864424
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670152495813558,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random2",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.032979887952654496,
+   "x": [
+    3.5257911464240372,
+    14.999998591612917,
+    -0.139513957239794,
+    0.9899999156142558
+   ],
+   "nfev": 700,
+   "history": [
+    0.03365845926908606,
+    0.0329801114298941,
+    0.032979887952654496
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670201120473455,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random3",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03297993466438176,
+   "x": [
+    3.5262259561074107,
+    14.999997332502412,
+    -0.13860095585094132,
+    0.989999984255546
+   ],
+   "nfev": 850,
+   "history": [
+    0.033344210182084666,
+    0.03301673265590421,
+    0.03297999336254942,
+    0.03297993466438176
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670200653356182,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random4",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03299798214113858,
+   "x": [
+    3.5338184232549734,
+    14.999999122484436,
+    -0.1284550333705755,
+    0.9894200160613842
+   ],
+   "nfev": 850,
+   "history": [
+    0.03691983847036717,
+    0.03310901065067917,
+    0.03300065275438557,
+    0.03299798214113858
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670026030601805,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random5",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03297990223835179,
+   "x": [
+    3.5260696185058484,
+    14.999963301969512,
+    -0.13895996010831302,
+    0.9899995960086252
+   ],
+   "nfev": 850,
+   "history": [
+    0.07789118668940664,
+    0.033030726098195906,
+    0.03298348905977122,
+    0.03297990223835179
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670200977616482,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random6",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03297989787959099,
+   "x": [
+    3.526114906280329,
+    14.999999244144183,
+    -0.13886136485734418,
+    0.9899998050805785
+   ],
+   "nfev": 1000,
+   "history": [
+    0.035051206761827935,
+    0.03308297799841953,
+    0.03302171936687803,
+    0.032979949834513245,
+    0.03297989787959099
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.967020102120409,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random7",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03298408272843367,
+   "x": [
+    3.5294160852304364,
+    14.999999250704244,
+    -0.13401422061987284,
+    0.989985834603144
+   ],
+   "nfev": 632,
+   "history": [
+    0.03354775010539757,
+    0.03298446289086332,
+    0.03298408272843367
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670159172715663,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random8",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03299427142910505,
+   "x": [
+    3.532459011828818,
+    14.999846070156345,
+    -0.12889588895685133,
+    0.9899924990408038
+   ],
+   "nfev": 850,
+   "history": [
+    0.034447839648203304,
+    0.0331252442910166,
+    0.032994802452269156,
+    0.03299427142910505
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670061020660641,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random9",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.032979972987217665,
+   "x": [
+    3.525778190379693,
+    14.999997015712601,
+    -0.1384991375559358,
+    0.9899971940580907
+   ],
+   "nfev": 850,
+   "history": [
+    0.0331326841335452,
+    0.032992874355951995,
+    0.032980863485830514,
+    0.032979972987217665
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670200270127824,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random10",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03298038991580032,
+   "x": [
+    3.5263068277462626,
+    14.998931123353913,
+    -0.1384604410767482,
+    0.9899992910508123
+   ],
+   "nfev": 550,
+   "history": [
+    0.03298311743156068,
+    0.03298038991580032
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9670196100841999,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "random11",
+   "q_max": 15.0,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "f": 0.008793089798433518,
+   "x": [
+    4.095355799066084,
+    4.018670684572547,
+    0.03782070969546195,
+    0.03557909483305539
+   ],
+   "nfev": 338,
+   "history": [
+    0.008793089798433518,
+    0.008793089798433518
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069102015665,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "saved:s1_cases.json",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793090117434899,
+   "x": [
+    4.095465309982213,
+    4.017987786716448,
+    0.037905449977684275,
+    0.03549382301963572
+   ],
+   "nfev": 700,
+   "history": [
+    0.009113879659165214,
+    0.00879312641978014,
+    0.008793090117434899
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069098825651,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random0",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793089798433962,
+   "x": [
+    4.095355654009931,
+    4.018671528606433,
+    0.03782063142995315,
+    0.035578868179896556
+   ],
+   "nfev": 534,
+   "history": [
+    0.008793089798433962,
+    0.008793089798433962
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069102015658,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random1",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793049614466364,
+   "x": [
+    4.096094340090312,
+    4.009019103928908,
+    0.03615633476405035,
+    0.04992178710162906
+   ],
+   "nfev": 550,
+   "history": [
+    0.008793049618808557,
+    0.008793049614466364
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069503855336,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random2",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.00879308359975095,
+   "x": [
+    4.097200031870528,
+    4.001636155927134,
+    0.03689662301619638,
+    0.04911601989956402
+   ],
+   "nfev": 700,
+   "history": [
+    0.009159259451390178,
+    0.008793417087784583,
+    0.00879308359975095
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.991206916400249,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random3",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793050189497498,
+   "x": [
+    4.096016070420626,
+    4.009502735207548,
+    0.03603388808847195,
+    0.050292841870690594
+   ],
+   "nfev": 700,
+   "history": [
+    0.010327303125673315,
+    0.008793907211453345,
+    0.008793050189497498
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069498105025,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random4",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793221927030692,
+   "x": [
+    4.093915558217899,
+    4.025413387884302,
+    0.034755981233190535,
+    0.04542261146501275
+   ],
+   "nfev": 550,
+   "history": [
+    0.00880243832777361,
+    0.008793221927030692
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912067780729693,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random5",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793089798438292,
+   "x": [
+    4.095355612280441,
+    4.018671457892376,
+    0.03782047881427147,
+    0.03557935017868977
+   ],
+   "nfev": 550,
+   "history": [
+    0.008793089798438292,
+    0.008793089798438292
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069102015617,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random6",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.00879309985625576,
+   "x": [
+    4.094775646961265,
+    4.0173121363327144,
+    0.03521672419920119,
+    0.050410175765293705
+   ],
+   "nfev": 850,
+   "history": [
+    0.18042951310136623,
+    0.014172157092555482,
+    0.008793245898594537,
+    0.00879309985625576
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069001437445,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random7",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793049799692088,
+   "x": [
+    4.0960468187961405,
+    4.009358060355989,
+    0.03612879129940902,
+    0.04992623746835871
+   ],
+   "nfev": 700,
+   "history": [
+    0.009937163957132955,
+    0.008793107855159743,
+    0.008793049799692088
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069502003079,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random8",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793049615395399,
+   "x": [
+    4.09608799680529,
+    4.009063336165012,
+    0.03615436166724935,
+    0.04991428070469462
+   ],
+   "nfev": 850,
+   "history": [
+    0.018948770540190507,
+    0.008911896863880608,
+    0.008793054032946945,
+    0.008793049615395399
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069503846046,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random9",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793051988502554,
+   "x": [
+    4.096371074143706,
+    4.007241131256091,
+    0.036493040234523086,
+    0.04893172523892386
+   ],
+   "nfev": 700,
+   "history": [
+    0.009131160309189035,
+    0.008794151295176356,
+    0.008793051988502554
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069480114974,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random10",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793049613809556,
+   "x": [
+    4.096090918115371,
+    4.009035715041573,
+    0.03615232805062092,
+    0.04992744020735987
+   ],
+   "nfev": 549,
+   "history": [
+    0.008793049613809556,
+    0.008793049613809556
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069503861907,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "random11",
+   "q_max": 15.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.19750982859630184,
+   "x": [
+    2.6264697963479837,
+    49.99996656190846,
+    0.899051789228982,
+    -0.3921517694952963
+   ],
+   "nfev": 1000,
+   "history": [
+    0.19989976681515043,
+    0.19757189321804813,
+    0.19752114930338183,
+    0.19751034992616767,
+    0.19750982859630184
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.8024901714036982,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_cases.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.19750964150448513,
+   "x": [
+    2.6264370020628127,
+    49.99995414023366,
+    0.8990122952302231,
+    -0.39226595698548333
+   ],
+   "nfev": 700,
+   "history": [
+    0.19846995115183874,
+    0.1975133960208083,
+    0.19750964150448513
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.802490358495515,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_robust.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.19750964150448513,
+   "x": [
+    2.6264370020628127,
+    49.99995414023366,
+    0.8990122952302231,
+    -0.39226595698548333
+   ],
+   "nfev": 700,
+   "history": [
+    0.19846995115183874,
+    0.1975133960208083,
+    0.19750964150448513
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.802490358495515,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_robust.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.19750964150448513,
+   "x": [
+    2.6264370020628127,
+    49.99995414023366,
+    0.8990122952302231,
+    -0.39226595698548333
+   ],
+   "nfev": 700,
+   "history": [
+    0.19846995115183874,
+    0.1975133960208083,
+    0.19750964150448513
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.802490358495515,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_robust.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.19750916761674453,
+   "x": [
+    2.626521790995006,
+    49.99998463725828,
+    0.8988595551190723,
+    -0.36669933996380755
+   ],
+   "nfev": 700,
+   "history": [
+    0.19774052844550094,
+    0.19751564935970845,
+    0.19750916761674453
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.8024908323832555,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_refine.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.19754081264459822,
+   "x": [
+    2.626145216532019,
+    49.95272291648567,
+    0.8987845770445722,
+    -0.4028618100303032
+   ],
+   "nfev": 850,
+   "history": [
+    0.20377521747506944,
+    0.1978209387143478,
+    0.197541785392647,
+    0.19754081264459822
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.8024591873554018,
+   "case": "R1",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_refine_wide.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "f": 0.018737571542658316,
+   "x": [
+    3.2267730091631734,
+    2.6273040560381116,
+    0.2753820446711486,
+    0.29416462805506904
+   ],
+   "nfev": 337,
+   "history": [
+    0.018737571542658316,
+    0.018737571542658316
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812624284573417,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_cases.json",
+   "q_max": 50.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.01882323413210496,
+   "x": [
+    3.2302797128672416,
+    2.4825244772733113,
+    0.20233380682707958,
+    0.5336092881050343
+   ],
+   "nfev": 431,
+   "history": [
+    0.01882323413210496,
+    0.01882323413210496
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.981176765867895,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_robust.json",
+   "q_max": 50.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018730549109905792,
+   "x": [
+    3.223559065822685,
+    2.7801193443601955,
+    0.33570084858367333,
+    0.07563694633289542
+   ],
+   "nfev": 451,
+   "history": [
+    0.018730549109905792,
+    0.018730549109905792
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812694508900942,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_robust.json",
+   "q_max": 50.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018765377459636357,
+   "x": [
+    3.228271154328274,
+    2.563729119575233,
+    0.24611028887548986,
+    0.3928696546890772
+   ],
+   "nfev": 693,
+   "history": [
+    0.01877761843488046,
+    0.01876675727099364,
+    0.018765377459636357
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812346225403636,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_robust.json",
+   "q_max": 50.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018737571542658316,
+   "x": [
+    3.2267730091631734,
+    2.6273040560381116,
+    0.2753820446711486,
+    0.29416462805506904
+   ],
+   "nfev": 337,
+   "history": [
+    0.018737571542658316,
+    0.018737571542658316
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812624284573417,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_refine.json",
+   "q_max": 50.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.018737571542658316,
+   "x": [
+    3.2267730091631734,
+    2.6273040560381116,
+    0.2753820446711486,
+    0.29416462805506904
+   ],
+   "nfev": 337,
+   "history": [
+    0.018737571542658316,
+    0.018737571542658316
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9812624284573417,
+   "case": "R2",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_refine_wide.json",
+   "q_max": 50.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.03287175379792484,
+   "x": [
+    3.525757118958646,
+    15.517702029977503,
+    -0.11960084996096271,
+    0.9873479140544374
+   ],
+   "nfev": 700,
+   "history": [
+    0.03404518303844095,
+    0.03287373262158544,
+    0.03287175379792484
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9671282462020755,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_cases.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03286802087930463,
+   "x": [
+    3.5257903580335075,
+    15.52859196097588,
+    -0.11883818593412587,
+    0.9899996430121059
+   ],
+   "nfev": 700,
+   "history": [
+    0.03319660590361306,
+    0.032869973091592675,
+    0.03286802087930463
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9671319791206954,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_robust.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03286802087930463,
+   "x": [
+    3.5257903580335075,
+    15.52859196097588,
+    -0.11883818593412587,
+    0.9899996430121059
+   ],
+   "nfev": 700,
+   "history": [
+    0.03319660590361306,
+    0.032869973091592675,
+    0.03286802087930463
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9671319791206954,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_robust.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03286802087930463,
+   "x": [
+    3.5257903580335075,
+    15.52859196097588,
+    -0.11883818593412587,
+    0.9899996430121059
+   ],
+   "nfev": 700,
+   "history": [
+    0.03319660590361306,
+    0.032869973091592675,
+    0.03286802087930463
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9671319791206954,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_robust.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03287567612803066,
+   "x": [
+    3.5257571179165375,
+    15.581665068163762,
+    -0.11684580579930837,
+    0.9818199187023131
+   ],
+   "nfev": 1000,
+   "history": [
+    0.033022696651777705,
+    0.032901530862438966,
+    0.03288910298578762,
+    0.03287622105248211,
+    0.03287567612803066
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9671243238719693,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_refine.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "f": 0.03287567612803066,
+   "x": [
+    3.5257571179165375,
+    15.581665068163762,
+    -0.11684580579930837,
+    0.9818199187023131
+   ],
+   "nfev": 1000,
+   "history": [
+    0.033022696651777705,
+    0.032901530862438966,
+    0.03288910298578762,
+    0.03287622105248211,
+    0.03287567612803066
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9671243238719693,
+   "case": "R3",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_refine_wide.json",
+   "q_max": 50.0,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "f": 0.008793089798433518,
+   "x": [
+    4.095355799066084,
+    4.018670684572547,
+    0.03782070969546195,
+    0.03557909483305539
+   ],
+   "nfev": 338,
+   "history": [
+    0.008793089798433518,
+    0.008793089798433518
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069102015665,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "diag50:saved:s1_cases.json",
+   "q_max": 50.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793341901590757,
+   "x": [
+    4.097208990531993,
+    3.9964412533807847,
+    0.03487514203360337,
+    0.06261137510100878
+   ],
+   "nfev": 700,
+   "history": [
+    0.009741486079783312,
+    0.008794148870155616,
+    0.008793341901590757
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912066580984095,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "diag50:random0",
+   "q_max": 50.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793050009692993,
+   "x": [
+    4.096160584862275,
+    4.008502916345352,
+    0.03612552935884747,
+    0.05022431410914999
+   ],
+   "nfev": 700,
+   "history": [
+    0.009114593636727175,
+    0.008793157881379798,
+    0.008793050009692993
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.991206949990307,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "diag50:random1",
+   "q_max": 50.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793049848486056,
+   "x": [
+    4.096035176664147,
+    4.00944587314468,
+    0.03616574607982911,
+    0.0496993279231492
+   ],
+   "nfev": 850,
+   "history": [
+    0.018378565101267785,
+    0.008805838213192363,
+    0.008793260473042408,
+    0.008793049848486056
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069501515139,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "diag50:random2",
+   "q_max": 50.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793049636555028,
+   "x": [
+    4.096103464280896,
+    4.008961479660381,
+    0.03614713199207871,
+    0.05001349826919421
+   ],
+   "nfev": 850,
+   "history": [
+    0.016313057461083136,
+    0.008962137888548938,
+    0.008793231608206442,
+    0.008793049636555028
+   ],
+   "messages": [
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069503634449,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "diag50:random3",
+   "q_max": 50.0,
+   "bounds_hit": []
+  },
+  {
+   "f": 0.008793050045619144,
+   "x": [
+    4.096094429121013,
+    4.00894079041576,
+    0.036041111059871594,
+    0.050512437621902925
+   ],
+   "nfev": 511,
+   "history": [
+    0.008793930127301897,
+    0.008793050045619144
+   ],
+   "messages": [
+    "Optimization terminated successfully.",
+    "Maximum number of function evaluations has been exceeded."
+   ],
+   "converged_restart": true,
+   "FF_pad64": 0.9912069499543809,
+   "case": "R4",
+   "model": "U",
+   "start_tag": "diag50:random4",
+   "q_max": 50.0,
+   "bounds_hit": []
+  }
+ ],
+ "P": [
+  {
+   "case": "R1",
+   "model": "P",
+   "start_tag": "saved:s1_refine_wide.json:P_6d",
+   "x": [
+    2.5475058211778334,
+    14.999999988813439,
+    0.6340355918168458,
+    0.9899999905435405,
+    7.8053807331936245,
+    0.09564685972108097
+   ],
+   "M_Lz": 2453.7695996590246,
+   "y": 0.09564685972108097,
+   "FF_pad64": 0.854500101137023,
+   "nfev": 2136,
+   "block_history": [
+    0.14597098719310586,
+    0.14557293777532387,
+    0.1455013369176018,
+    0.1454998988629772
+   ],
+   "polish_converged": true,
+   "block_converged": true,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "case": "R1",
+   "model": "P",
+   "start_tag": "saved:s1_cases.json:P",
+   "x": [
+    2.546764497888919,
+    14.999999970259926,
+    0.6312675091123578,
+    0.9899998978293492,
+    7.7997761435778425,
+    0.09640640391243553
+   ],
+   "M_Lz": 2440.055694344669,
+   "y": 0.09640640391243553,
+   "FF_pad64": 0.8545022355795099,
+   "nfev": 2343,
+   "block_history": [
+    0.14752614269821984,
+    0.14558718861970366,
+    0.14550034081028884,
+    0.14549777033923206
+   ],
+   "polish_converged": true,
+   "block_converged": true,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "case": "R1",
+   "model": "P",
+   "start_tag": "saved:s1_refine.json:P_6d",
+   "x": [
+    2.5475666764235076,
+    14.999999602069892,
+    0.6342224694842679,
+    0.989930295980455,
+    7.785613098133972,
+    0.09755762934548654
+   ],
+   "M_Lz": 2405.7406510269834,
+   "y": 0.09755762934548654,
+   "FF_pad64": 0.8544992736315561,
+   "nfev": 2380,
+   "block_history": [
+    0.14788390462418888,
+    0.14554808503591876,
+    0.14552023384348978,
+    0.1455008915779169
+   ],
+   "polish_converged": true,
+   "block_converged": false,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "case": "R1",
+   "model": "P",
+   "start_tag": "random0",
+   "x": [
+    2.546756288539083,
+    14.999999906786798,
+    0.6311911687235358,
+    0.9899853851938862,
+    7.795993406505278,
+    0.09680776177022016
+   ],
+   "M_Lz": 2430.843040719147,
+   "y": 0.09680776177022016,
+   "FF_pad64": 0.8545020643598225,
+   "nfev": 2380,
+   "block_history": [
+    0.14948188316747768,
+    0.1457456561895657,
+    0.1455013489757424,
+    0.14549794530478288
+   ],
+   "polish_converged": true,
+   "block_converged": true,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "case": "R1",
+   "model": "P",
+   "start_tag": "random2",
+   "x": [
+    2.5468506672660984,
+    14.999884372618325,
+    0.6315603408951302,
+    0.9898317845861975,
+    7.800222080055839,
+    0.09636282993050718
+   ],
+   "M_Lz": 2441.1440468371234,
+   "y": 0.09636282993050718,
+   "FF_pad64": 0.8545023724788195,
+   "nfev": 2530,
+   "block_history": [
+    0.16273028014429392,
+    0.14914982761463247,
+    0.14726656083028622,
+    0.1455018740702011
+   ],
+   "polish_converged": true,
+   "block_converged": false,
+   "bounds_hit": [
+    "q_max",
+    "chi"
+   ]
+  },
+  {
+   "case": "R2",
+   "model": "P",
+   "start_tag": "saved:s1_cases.json:P",
+   "x": [
+    3.2266379127846925,
+    2.6242871869951383,
+    0.08333321641039795,
+    0.9864827803397905,
+    4.017965636568409,
+    1.7936561243000226
+   ],
+   "M_Lz": 55.58790471914081,
+   "y": 1.7936561243000226,
+   "FF_pad64": 0.9888614156669794,
+   "nfev": 1715,
+   "block_history": [
+    0.011155579054144549,
+    0.011142299610446216,
+    0.011140956817212833
+   ],
+   "polish_converged": true,
+   "block_converged": true,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "case": "R2",
+   "model": "P",
+   "start_tag": "saved:s1_robust.json:P",
+   "x": [
+    3.2271880826240675,
+    2.8510223821102496,
+    0.13202266513380892,
+    0.9897625778707932,
+    4.05703041224058,
+    1.8003017063839084
+   ],
+   "M_Lz": 57.802406643399756,
+   "y": 1.8003017063839084,
+   "FF_pad64": 0.9887570528903489,
+   "nfev": 2230,
+   "block_history": [
+    0.01131361167256495,
+    0.011299627758624253,
+    0.011249085663571079,
+    0.011243166102180013
+   ],
+   "polish_converged": true,
+   "block_converged": true,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "case": "R2",
+   "model": "P",
+   "start_tag": "saved:s1_refine.json:P_6d",
+   "x": [
+    3.2266226460449094,
+    2.690278635223123,
+    0.09665575472965822,
+    0.9899999999834951,
+    4.038005484779239,
+    1.7909204000340213
+   ],
+   "M_Lz": 56.713114754874454,
+   "y": 1.7909204000340213,
+   "FF_pad64": 0.9888429844450437,
+   "nfev": 1737,
+   "block_history": [
+    0.011267030265309952,
+    0.011158342259563692,
+    0.011157015554956295
+   ],
+   "polish_converged": true,
+   "block_converged": true,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "case": "R2",
+   "model": "P",
+   "start_tag": "random0",
+   "x": [
+    3.226944781549441,
+    2.472231654583015,
+    0.04777318892170291,
+    0.9899984477599741,
+    3.971443249140065,
+    1.815763852533831
+   ],
+   "M_Lz": 53.061055927347475,
+   "y": 1.815763852533831,
+   "FF_pad64": 0.988866098842259,
+   "nfev": 2219,
+   "block_history": [
+    0.016480238076920006,
+    0.011616373377838052,
+    0.011152711212220057,
+    0.011133901157740933
+   ],
+   "polish_converged": true,
+   "block_converged": false,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "case": "R1",
+   "model": "P",
+   "start_tag": "random1",
+   "x": [
+    2.560581274182319,
+    14.999992234238979,
+    0.737240607921364,
+    -0.48734524559995435,
+    5.433198944093362,
+    3.5214774977572545
+   ],
+   "M_Lz": 228.8802507041902,
+   "y": 3.5214774977572545,
+   "FF_pad64": 0.7563028119208607,
+   "nfev": 1740,
+   "block_history": [
+    0.24384905818320302,
+    0.24370656824090775,
+    0.24369718807913932
+   ],
+   "polish_converged": true,
+   "block_converged": true,
+   "bounds_hit": [
+    "q_max"
+   ]
+  },
+  {
+   "case": "R2",
+   "model": "P",
+   "start_tag": "random2",
+   "x": [
+    3.226668956069279,
+    2.27088598261572,
+    -0.007475963720284588,
+    0.9898925529864009,
+    3.9360987950484883,
+    1.8108453973027425
+   ],
+   "M_Lz": 51.218397570340244,
+   "y": 1.8108453973027425,
+   "FF_pad64": 0.9887864591324721,
+   "nfev": 2530,
+   "block_history": [
+    0.011538294432380858,
+    0.011309489832666109,
+    0.011249389799451892,
+    0.011213540867527905
+   ],
+   "polish_converged": true,
+   "block_converged": false,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "case": "R3",
+   "model": "P",
+   "start_tag": "saved:s1_cases.json:P",
+   "x": [
+    3.527467684375683,
+    11.607650582647537,
+    -0.4026114246566741,
+    0.9802743633002922,
+    5.457044474990326,
+    1.1221858472265467
+   ],
+   "M_Lz": 234.40361384004032,
+   "y": 1.1221858472265467,
+   "FF_pad64": 0.990738014973022,
+   "nfev": 2080,
+   "block_history": [
+    0.011942092586430975,
+    0.010283367815959399,
+    0.009606699527532014,
+    0.009342015634252965
+   ],
+   "polish_converged": false,
+   "block_converged": false,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "case": "R3",
+   "model": "P",
+   "start_tag": "saved:s1_robust.json:P",
+   "x": [
+    3.5258184871359,
+    11.367950740165718,
+    -0.4164123125687258,
+    0.9588272138279943,
+    5.482926635101217,
+    1.0852382775590113
+   ],
+   "M_Lz": 240.5496793364204,
+   "y": 1.0852382775590113,
+   "FF_pad64": 0.9908195703450339,
+   "nfev": 2230,
+   "block_history": [
+    0.010108516007767743,
+    0.009354637012623401,
+    0.009213432730449944,
+    0.009180815928687913
+   ],
+   "polish_converged": true,
+   "block_converged": false,
+   "bounds_hit": []
+  },
+  {
+   "case": "R2",
+   "model": "P",
+   "start_tag": "random1",
+   "x": [
+    3.22816356787927,
+    2.5636873531955615,
+    0.24444629636812737,
+    0.3982986658972472,
+    5.7365605745812305,
+    4.999890984747026
+   ],
+   "M_Lz": 309.99636592293297,
+   "y": 4.999890984747026,
+   "FF_pad64": 0.980691595389118,
+   "nfev": 2530,
+   "block_history": [
+    0.019431694648256004,
+    0.019357056946060047,
+    0.019323253180779987,
+    0.019308404610882013
+   ],
+   "polish_converged": true,
+   "block_converged": false,
+   "bounds_hit": [
+    "y"
+   ]
+  },
+  {
+   "case": "R3",
+   "model": "P",
+   "start_tag": "saved:s1_refine.json:P",
+   "x": [
+    3.525910314781539,
+    11.305879638031266,
+    -0.4202737990993214,
+    0.9656351539401646,
+    5.481208263819429,
+    1.0860559112476447
+   ],
+   "M_Lz": 240.13668061979766,
+   "y": 1.0860559112476447,
+   "FF_pad64": 0.9908274795249407,
+   "nfev": 2230,
+   "block_history": [
+    0.009555542243164128,
+    0.0093000538295257,
+    0.009214241287961888,
+    0.00918409500280093
+   ],
+   "polish_converged": true,
+   "block_converged": false,
+   "bounds_hit": []
+  },
+  {
+   "case": "R3",
+   "model": "P",
+   "start_tag": "random0",
+   "x": [
+    3.5290033259560456,
+    11.314775145642265,
+    -0.4119117673716832,
+    0.977265274506951,
+    5.461959306603191,
+    1.108496076752259
+   ],
+   "M_Lz": 235.55850385172934,
+   "y": 1.108496076752259,
+   "FF_pad64": 0.9907972648504668,
+   "nfev": 2380,
+   "block_history": [
+    0.019255044684879485,
+    0.010881211044303285,
+    0.00966711865489489,
+    0.009341692066343388
+   ],
+   "polish_converged": true,
+   "block_converged": false,
+   "bounds_hit": []
+  },
+  {
+   "case": "R3",
+   "model": "P",
+   "start_tag": "random1",
+   "x": [
+    3.5258845323146843,
+    11.03432448815322,
+    -0.43660847729744356,
+    0.9505366096890461,
+    5.519315262745824,
+    1.0392648600523517
+   ],
+   "M_Lz": 249.4641612890064,
+   "y": 1.0392648600523517,
+   "FF_pad64": 0.9908200455915932,
+   "nfev": 2230,
+   "block_history": [
+    0.013717872314548574,
+    0.010020840439592837,
+    0.009423937965238327,
+    0.009251316740852666
+   ],
+   "polish_converged": true,
+   "block_converged": false,
+   "bounds_hit": []
+  },
+  {
+   "case": "R4",
+   "model": "P",
+   "start_tag": "saved:s1_cases.json:P",
+   "x": [
+    4.182612712381786,
+    3.0876387818897806,
+    0.18408774170067616,
+    -0.9878595030139018,
+    4.824087236160535,
+    1.5591281222591986
+   ],
+   "M_Lz": 124.4728022430314,
+   "y": 1.5591281222591986,
+   "FF_pad64": 0.9990026240493408,
+   "nfev": 2023,
+   "block_history": [
+    0.0011568176617573478,
+    0.001040073821176879,
+    0.0010083354311096748,
+    0.0010017241763967677
+   ],
+   "polish_converged": true,
+   "block_converged": true,
+   "bounds_hit": [
+    "chi"
+   ]
+  },
+  {
+   "case": "R3",
+   "model": "P",
+   "start_tag": "random2",
+   "x": [
+    3.5291319530268543,
+    14.999991409028553,
+    -0.13851425695963915,
+    0.9899985877142469,
+    4.5446113690648575,
+    4.999964310028702
+   ],
+   "M_Lz": 94.1238406643191,
+   "y": 4.999964310028702,
+   "FF_pad64": 0.9675105403315738,
+   "nfev": 1740,
+   "block_history": [
+    0.03583867253860373,
+    0.03249764488804274,
+    0.0324897172254216
+   ],
+   "polish_converged": true,
+   "block_converged": true,
+   "bounds_hit": [
+    "q_max",
+    "chi",
+    "y"
+   ]
+  },
+  {
+   "case": "R4",
+   "model": "P",
+   "start_tag": "random0",
+   "x": [
+    4.094671048957727,
+    4.021283406282057,
+    0.036774498798178915,
+    0.044176921681884695,
+    8.768684958275946,
+    4.9994069709444515
+   ],
+   "M_Lz": 6429.711563384258,
+   "y": 4.9994069709444515,
+   "FF_pad64": 0.9905411272078946,
+   "nfev": 1506,
+   "block_history": [
+    0.0096781253462217,
+    0.00945895796649876,
+    0.0094588730136278
+   ],
+   "polish_converged": true,
+   "block_converged": true,
+   "bounds_hit": [
+    "y"
+   ]
+  },
+  {
+   "case": "R4",
+   "model": "P",
+   "start_tag": "random2",
+   "x": [
+    4.1961676275548,
+    3.024915368681568,
+    0.1681011778838306,
+    -0.8236928033442021,
+    4.780420798596602,
+    1.6361641554986905
+   ],
+   "M_Lz": 119.15447953463162,
+   "y": 1.6361641554986905,
+   "FF_pad64": 0.9989561757287424,
+   "nfev": 2189,
+   "block_history": [
+    0.011000630286562285,
+    0.003976914586149571,
+    0.0021908705227570158,
+    0.0012282353693023884
+   ],
+   "polish_converged": true,
+   "block_converged": false,
+   "bounds_hit": []
+  },
+  {
+   "case": "R4",
+   "model": "P",
+   "start_tag": "random1",
+   "x": [
+    4.08847502171478,
+    4.029378234710544,
+    0.01910992722924785,
+    0.05554961905981248,
+    4.599915296439062,
+    4.999190465349838
+   ],
+   "M_Lz": 99.47588932301609,
+   "y": 4.999190465349838,
+   "FF_pad64": 0.9909471439527043,
+   "nfev": 1589,
+   "block_history": [
+    0.009713241868798406,
+    0.009059397197879626,
+    0.009054154529846259
+   ],
+   "polish_converged": true,
+   "block_converged": true,
+   "bounds_hit": [
+    "y"
+   ]
+  }
+ ]
+}
