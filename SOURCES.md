@@ -1275,6 +1275,13 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - X4 S1 tools (2026-10-15): lalsuite 7.7.1 / lalsimulation 6.2.1 from PyPI (GPL-2.0-or-later; used in a separate
   environment, not a project dependency); IMRPhenomXAS and IMRPhenomD; aLIGO design PSD
   `SimNoisePSDaLIGODesignSensitivityP1200087` (LIGO-P1200087).
+- X4 S1d reuse check (accessed 2026-10-15):
+  - SciPy 1.18.1 `optimize.differential_evolution` (BSD-3-Clause):
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html
+  - Bilby 2.8.2 (MIT), https://pypi.org/project/bilby/
+  - PyCBC 2.11.0 (GPLv3), https://pypi.org/project/pycbc/; its filter API, https://pycbc.org/pycbc/latest/html/pycbc.filter.html
+  - cma 4.5.0 (BSD-3-Clause), https://pypi.org/project/cma/ (not installed)
+  - The PyPI package "glow" is unrelated to GLoW.
 - S0-2026-10-15 / X4 (accessed 2026-10-15):
   - LVK lensing searches: O3 arXiv:2304.08393; GWTC-4.0 arXiv:2512.16347 (isolated point mass; outlier
     GW231123_135430).

@@ -1,0 +1,39 @@
+{
+ "snr_ratio_lensed_over_unlensed": 0.19338258649590495,
+ "validation": {
+  "V5": {
+   "model": "P",
+   "eps_per_seed": {
+    "11": 0.09080539780885366,
+    "12": 0.07438173189335961
+   },
+   "truth_mismatch": 2.220446049250313e-16
+  },
+  "V6": {
+   "model": "U",
+   "eps_per_seed": {
+    "11": 0.0007739173565536328,
+    "12": 5.175765901976881e-06
+   },
+   "truth_mismatch": 3.3306690738754696e-16
+  },
+  "V7": {
+   "model": "U",
+   "eps_per_seed": {
+    "11": 0.0009590249483386604,
+    "12": 0.0014942267425658295
+   },
+   "truth_mismatch": 0.0
+  },
+  "V9": {
+   "model": "P",
+   "eps_per_seed": {
+    "11": 0.00025363643446507655,
+    "12": 0.045293617174884226
+   },
+   "truth_mismatch": 0.0
+  }
+ },
+ "case": "not run: the tool failed its frozen validation rule",
+ "tool_pass": false
+}

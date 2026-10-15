@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: X4 S1d: the reference global search (SciPy DE) fails its injection checks; R1 stays undetermined (simulated)
+- **Question (owner):** does R1's negative-lens XPHM waveform keep a reliably identifiable difference, enough for a
+  real-data pilot? Reuse check and plan frozen first (`docs/state/units/X4.md`, S1d).
+- **Reuse:**
+  - SciPy differential evolution is the reference search.
+  - Polarisation and amplitude are maximised analytically, as in precessing searches; checked against a ψ scan.
+  - Bilby/dynesty was rejected: it is inference, not max-match, at about 10⁶ calls, and its phase
+    marginalisation assumes a (2,2) mode.
+  - PyCBC's match statistics maximise over phase. GLoW computes lens factors, which we already have exactly.
+- **Result:** the tool fails the frozen rule (ε ≤ 5e-4 on both seeds).
+  - Unlensed: ε 5e-6 – 1.5e-3, much better than S1c's 0.026, but every run hit its generation cap.
+  - Lensed: ε 0.045–0.091 in 3 of 4 runs. The lens-grid scan from unlensed intrinsics picks a weak lens, and the
+    node-repeat stop ends the search there.
+  - So the R1 case was not fitted. R1 stays **undetermined**; this is not evidence for or against the
+    negative-mass model.
+- **Handoff:** no pilot proposed; S2 not started. Remedy (owner's call, about 3.7 h): a joint lens + intrinsic DE
+  on the cached lens grid, and longer unlensed runs. About 1.3 h used; X4 has about 9.6 h left.
+
 ## 2026-10-15: X4 S1c: R1 keeps its residual against validated aligned-spin fits; undetermined with IMRPhenomXPHM (simulated)
 - **Question (owner):** does R1's large difference (30 M☉ behind a 300 M☉ negative lens, y 0.3) survive a validated
   ordinary fit and a more complete waveform? Plan frozen first (`docs/state/units/X4.md`, S1c). 2.0 h, the cap.
