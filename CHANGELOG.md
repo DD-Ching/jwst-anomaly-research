@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 arc differencing: PSF-matching kernel (in progress)
+- Plan: least-squares pixel kernel to remove arc ridges, re-validate on the five Yan+2023 Ep1→Ep2 transients, then o211/o213.
+
 ## 2026-10-15: X4 S1b: precessing, higher-mode binaries absorb the representative negative-lens residuals (simulated)
 - **Question (owner):** after the ordinary explanations get a fuller fitting chance, is there still a representative
   case worth taking to real data? Plan and criteria frozen first (`docs/state/units/X4.md`, S1b).
