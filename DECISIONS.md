@@ -1518,6 +1518,21 @@ spatially varying PSF (box > 1′) leaves ridges.
 footprint by byte-range rows (for a later UNCOVER pair). The grid is unchanged. The 30° roll makes rotated star
 spikes the main hit class. `persistence_check.py` flagged the five epoch-1 SW-only hits as persistence. It returned on_sky / inconclusive for two epoch-2 SW-only hits, which are one NRCB3 pixel seen in two dithers (by hand). The tool tests each sky position alone, so it misses a detector-fixed feature that falls on several positions. Revisit
 if a published Abell 2744 transient with coordinates becomes available for validation.
+
+**Addendum 2026-10-15e (Abell 2744, UNCOVER o001 vs jw02756 o002).** UNCOVER 2561 o001 (2022-11-02/04, PA 40.8°) cut to
+the o002 (2022-12-06, PA 59.5°) footprint with `i2d_region.py` (SW 373 MB, LW 90 MB per band, about 40 s each; the cut
+is clipped at UNCOVER's lower-left corner, so the overlap is partial). The grid is unchanged (4,182 positions, noise
+scales 1.22–1.44). Injections: −0.75 mag 94.6 %, −0.44 mag 82.6 %. Result: 46 hit groups, all ordinary, 0 candidates
+(`results/transients/a2744_grid_uncover/hit_verdicts.ecsv`). One bright star near (3.5996, −30.4291) produces 21 of the
+24 spike groups. Lessons:
+- A saturated star's persistence can show in SW **and** LW at one sky position: both channels see the same sky, so
+  colour does not separate it from a real source. g4 is detected in all six bands, but only in dither 4, on pixels
+  where the star's core sat in dither 3. `persistence_check.py` identifies it (10 of 10 detections suspect); use it on
+  every single-epoch compact hit, not only on SW-only hits.
+- A single-band change on a star (g11: F115W −0.82 mag, the other bands within 0.02 mag) came from a suppressed core
+  in the UNCOVER F115W mosaic. Compare bands from the same visit before reading a change as physical.
+- The o002 detector-fixed artifacts (o003/o002 g16/g17) reappear here as g32/g33 against an independent first epoch,
+  so both runs classify them the same way.
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**
@@ -4747,3 +4762,30 @@ unit overruns its budget.
 
 **Revisit if:** a precessing fitter passes the unlensed and lensed injection checks with agreeing starts, and R1
 then stays at ρ_req ≤ 30.
+
+## D-090 X4 S1d: SciPy differential evolution as the max-match reference; it fails validation, R1 stays undetermined (2026-10-15)
+
+**Decision.**
+- Use SciPy `differential_evolution` as the reference global search for XPHM max-match fits, with polarisation
+  and amplitude maximised analytically.
+- Do not fit R1 or propose a pilot while the tool fails its frozen injection checks.
+- Next step, only on the owner's go: a joint (lens + intrinsic) DE with the lens snapped to the cached grid, and
+  longer unlensed runs.
+
+**Alternatives rejected:**
+- Bilby + dynesty: Bayesian inference, not max-match; about 10⁶ likelihood calls; phase marginalisation assumes a
+  dominant (2,2) mode. Kept for a later real-data stage.
+- PyCBC: no max-match optimiser for this objective (its complex overlap would give the real part, but the search
+  would still be ours); GPLv3. Only the polarisation-maximisation idea is reused, in closed form.
+- GLoW: it computes lens factors, which are already exact here.
+- CMA-ES (`cma`): fallback if the joint DE fails.
+- Treating S1c's best XPHM value (ρ_req 9.2) as a bound.
+
+**Evidence** (simulated only; `results/x4/s1d_*.json`):
+- Unlensed ε 5e-6 – 1.5e-3, against 0.026 in S1c; every run stopped at the 200-generation cap.
+- Lensed ε 0.045–0.091 in 3 of 4 runs, from a weak-lens stall after the node-repeat stop; the polish also hit its
+  round cap while still improving.
+- The objective at the truth is ≤ 3.3e-16.
+
+**Revisit if:** the joint DE passes all four injections on both seeds (then fit R1), or fails them (then try
+CMA-ES once before any further tool work).

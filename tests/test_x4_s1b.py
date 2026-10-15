@@ -83,3 +83,26 @@ def test_s1c_domain_and_bounds():
     assert not e.in_domain([lmc, 16.0, 0.5, -0.5], "A")
     assert not e.in_domain([lmc, 3.0, 0.8, 0.0, 0.7, 0, 0, 0, 1.0, 0, 0], "D")
     assert e.bounds([lmc, 15.0, 0.99, 0.0], "A", (2441.0, 0.096)) == ["q_max", "chi"]
+
+
+def test_s1d_polarisation_max_equals_psi_scan(monkeypatch):
+    e = _load("x4_s1d_de")
+    n = e.b._FREQS.size
+    monkeypatch.setattr(e.b, "weight", lambda: e.b._BAND.astype(float))
+    rng = np.random.default_rng(5)
+    hp, hc, t = ((rng.normal(size=n) + 1j * rng.normal(size=n)) * e.b._BAND for _ in range(3))
+    t = t + 0.8 * (np.cos(0.6) * hp + np.sin(0.6) * hc)
+    scan = max(
+        e.m.ov(t, np.cos(2 * p) * hp + np.sin(2 * p) * hc, "D") for p in np.linspace(0, np.pi, 361)
+    )
+    val = e.stat(t, hp, hc)
+    assert val >= scan - 1e-12 and val - scan < 1e-3
+
+
+def test_s1d_spin_parametrisation_round_trip():
+    e = _load("x4_s1d_de")
+    x = np.array([np.log(e.MC0), 2.0, 0.5, 0.3, 1.0, 0.7, -0.4, 4.0, 1.1, 2.0])
+    assert np.allclose(e.from_cart(*e.to_cart(x)), x, atol=1e-12)
+    for lo_hi, v in zip(e.BOUNDS, x, strict=True):
+        assert lo_hi[0] <= v <= lo_hi[1]
+    assert e.bounds_hit(x) == []

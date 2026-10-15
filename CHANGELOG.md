@@ -66,6 +66,49 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   validate the dipole verdict on Yan+2023. Add a **core-population test** to `arc_diff_morph.py` (a hit's S
   against the S distribution at the tile's compact-source peaks in that band) and validate it on Yan+2023 first.
 
+## 2026-10-15: Abell 2744 two-epoch grid, UNCOVER o001 vs DD 2756 o002: 46 hit groups, all ordinary, 0 candidates
+- **Hypothesis before computing:** a catalogued position in the Abell 2744 core changed by ≥ 0.3 mag at ≥ 5σ in two
+  bands between UNCOVER (2022-11-02/04) and DD 2756 o002 (2022-12-06). This pair's first epoch is independent of the
+  o003/o002 run. Ordinary explanations: spikes (PA 40.8° vs 59.5°), persistence, registration, edges. Plan change: any
+  survivor goes to `/vet-candidate`.
+- `i2d_region.py` cut UNCOVER to the o002 footprint (SW 373 MB and LW 90 MB per band written; the SW sources are 5.2–7.7 GB each).
+  `transient_grid.py` was unchanged: 4,182 positions, noise scales 1.22–1.44. Injections: −0.75 mag 94.6 %,
+  −0.44 mag 82.6 %.
+- **46 hit groups, by contact sheets (6 bands × e1 / e2 resampled / difference):**
+  - 24 star spikes; 21 of them come from one bright star at (3.5996, −30.4291);
+  - 9 registration dipoles: the 0.5″ aperture changes by ≤ 0.06 mag in every band;
+  - 4 edges and 3 background;
+  - 3 persistence (`persistence_check.py`: g4, g7 on UNCOVER, g39 on o002; every detection suspect, none clean);
+  - 2 detector-fixed artifacts: the o003/o002 run's g16/g17, recovered;
+  - 1 processing artifact: g11, a star at F115W −0.82 mag only, from a suppressed core in the UNCOVER F115W mosaic.
+  - **0 candidates.** `results/transients/a2744_grid_uncover/`.
+- **Failed approach / lesson:** g4 looked like the best fading source: compact in all six UNCOVER bands and gone in
+  o002. Every one of its detections is in dither 4, on pixels where the bright star's saturated core sat in dither 3.
+  This is SW + LW persistence, so a multi-band detection does not rule out persistence. D-027 addendum 2026-10-15e.
+- Data: 6 o002 `_i2d` (4.6 GB) plus the UNCOVER cuts, streamed and deleted.
+- **Handoff:** the next Abell 2744 pair is UNCOVER F356W vs ALT 3516 F356W, single band (`--min-bands 1` plus
+  `persistence_check.py`), validated on PLATE-23a once its position is checked. Or move the grid to another cluster
+  with two NIRCam epochs.
+
+## 2026-10-15: X4 S1d: the reference global search (SciPy DE) fails its injection checks; R1 stays undetermined (simulated)
+- **Question (owner):** does R1's negative-lens XPHM waveform keep a reliably identifiable difference, enough for a
+  real-data pilot? Reuse check and plan frozen first (`docs/state/units/X4.md`, S1d).
+- **Reuse:**
+  - SciPy differential evolution is the reference search.
+  - Polarisation and amplitude are maximised analytically, as in precessing searches; checked against a ψ scan.
+  - Bilby/dynesty was rejected: it is inference, not max-match, at about 10⁶ calls, and its phase
+    marginalisation assumes a (2,2) mode.
+  - PyCBC has no max-match optimiser for this objective (and is GPLv3). GLoW computes lens factors, which we already
+    have exactly.
+- **Result:** the tool fails the frozen rule (ε ≤ 5e-4 on both seeds).
+  - Unlensed: ε 5e-6 – 1.5e-3, much better than S1c's 0.026, but every run hit its generation cap.
+  - Lensed: ε 0.045–0.091 in 3 of 4 runs. The lens-grid scan from unlensed intrinsics picks a weak lens, and the
+    node-repeat stop ends the search there.
+  - So the R1 case was not fitted. R1 stays **undetermined**; this is not evidence for or against the
+    negative-mass model.
+- **Handoff:** no pilot proposed; S2 not started. Remedy (owner's call, about 4–4.5 h): a joint lens + intrinsic DE
+  on the cached lens grid, and longer unlensed runs. About 1.3 h used; X4 has about 9.6 h left.
+
 ## 2026-10-15: Abell 2744 two-epoch grid (DD 2756 o003/o002): 22 hit groups, all ordinary, 0 candidates
 - **Hypothesis before computing:** a catalogued position in the Abell 2744 core changed by ≥ 0.3 mag at ≥ 5σ in two
   bands between 2022-10-20 and 2022-12-06 (47 d; e.g. the DD 2756 lensed SN or a caustic transient). Ordinary:
