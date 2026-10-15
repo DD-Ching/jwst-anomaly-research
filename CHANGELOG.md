@@ -27,7 +27,6 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** no real-data pilot proposed; S2 not started. Next (owner's call): a validated precessing fitter for
   R1.
 
-## 2026-10-15: X4 S1b: against precessing, higher-mode binaries the representative passing cases fall below the screening threshold (simulated)
 ## 2026-10-15: MACS0416 arc-difference hit h108 is an arc-segment residual; arc-coherence vetting test
 - **Hypothesis before measuring:** h108 (o211→o213, #242) is a point source on a faint thin arc that brightened. It
   would be one PSF-sized spot, with the same sign in every band, and additive over the epochs. A matching residual
@@ -89,7 +88,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** vet o211/o213 h108 (third epoch o214, cutouts per band); then tile the rest of MACS0416's arcs with
   the adopted settings.
 
-## 2026-10-15: X4 S1b: precessing, higher-mode binaries absorb the representative negative-lens residuals (simulated)
+## 2026-10-15: X4 S1b: against precessing, higher-mode binaries the representative passing cases fall below the screening threshold (simulated)
 - **Question (owner):** after the ordinary explanations get a fuller fitting chance, is there still a representative
   case worth taking to real data? Plan and criteria frozen first (`docs/state/units/X4.md`, S1b).
 - **S1 status corrected:** "18 pass" is a preliminary result of the searches run so far, not a proven optimum.
