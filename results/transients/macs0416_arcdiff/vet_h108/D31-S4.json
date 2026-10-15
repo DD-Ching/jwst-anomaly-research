@@ -1,0 +1,361 @@
+{
+ "provenance": "derived",
+ "position": {
+  "ra": 64.0384196,
+  "dec": -24.0697953
+ },
+ "thresholds_assumption": {
+  "peak_arcsec": 0.06,
+  "neighbour_arcsec": 1.0,
+  "min_sep_arcsec": 0.25,
+  "exclude_arcsec": 0.5,
+  "coherent_ratio": 0.5,
+  "coherent_frac": 0.5,
+  "aperture_radius_arcsec": {
+   "F090W": 0.08,
+   "F115W": 0.08,
+   "F150W": 0.08,
+   "F200W": 0.08,
+   "F277W": 0.12,
+   "F356W": 0.12,
+   "F410M": 0.15,
+   "F444W": 0.15
+  }
+ },
+ "pairs": {
+  "o211_o213": {
+   "bands": {
+    "F150W": {
+     "flux_njy": 1.5290862321853638,
+     "e1_aperture_njy": 162.0690460205078,
+     "sky_sigma_njy": 1.825032094144821,
+     "n_sky_pixels": 166564,
+     "arc_sigma_njy": 1.9984791263580322,
+     "arc_tail_fraction": 0.44966666666666666,
+     "n_arc_pixels": 258891,
+     "s_hit": -2.035674571990967,
+     "knots": [
+      {
+       "dist_arcsec": 0.297,
+       "s": -0.15
+      },
+      {
+       "dist_arcsec": 0.426,
+       "s": -2.05
+      },
+      {
+       "dist_arcsec": 0.436,
+       "s": -0.62
+      },
+      {
+       "dist_arcsec": 0.54,
+       "s": -1.32
+      },
+      {
+       "dist_arcsec": 0.589,
+       "s": -0.8
+      },
+      {
+       "dist_arcsec": 0.765,
+       "s": -13.42
+      },
+      {
+       "dist_arcsec": 0.782,
+       "s": -0.99
+      },
+      {
+       "dist_arcsec": 0.919,
+       "s": -2.57
+      },
+      {
+       "dist_arcsec": 0.975,
+       "s": -1.34
+      },
+      {
+       "dist_arcsec": 0.998,
+       "s": -0.76
+      }
+     ],
+     "coherent_fraction": 0.5
+    },
+    "F200W": {
+     "flux_njy": 5.146687984466553,
+     "e1_aperture_njy": 152.49908447265625,
+     "sky_sigma_njy": 1.6269054847240447,
+     "n_sky_pixels": 166466,
+     "arc_sigma_njy": 1.9613871205329894,
+     "arc_tail_fraction": 0.029,
+     "n_arc_pixels": 186577,
+     "s_hit": 4.190459251403809,
+     "knots": [
+      {
+       "dist_arcsec": 0.415,
+       "s": -2.42
+      },
+      {
+       "dist_arcsec": 0.416,
+       "s": 1.54
+      },
+      {
+       "dist_arcsec": 0.519,
+       "s": 1.32
+      },
+      {
+       "dist_arcsec": 0.613,
+       "s": -0.23
+      },
+      {
+       "dist_arcsec": 0.625,
+       "s": 0.39
+      },
+      {
+       "dist_arcsec": 0.752,
+       "s": -2.72
+      },
+      {
+       "dist_arcsec": 0.771,
+       "s": 1.43
+      },
+      {
+       "dist_arcsec": 0.909,
+       "s": 0.69
+      }
+     ],
+     "coherent_fraction": 0.0
+    },
+    "F277W": {
+     "flux_njy": 4.500114917755127,
+     "e1_aperture_njy": 182.29269409179688,
+     "sky_sigma_njy": 1.3327909296154976,
+     "n_sky_pixels": 39859,
+     "arc_sigma_njy": 1.759259124469757,
+     "arc_tail_fraction": 0.06166666666666667,
+     "n_arc_pixels": 40425,
+     "s_hit": 6.286735534667969,
+     "knots": [
+      {
+       "dist_arcsec": 0.42,
+       "s": 0.17
+      },
+      {
+       "dist_arcsec": 0.755,
+       "s": -0.23
+      }
+     ],
+     "coherent_fraction": 0.0
+    },
+    "F356W": {
+     "flux_njy": 7.688871383666992,
+     "e1_aperture_njy": 176.73870849609375,
+     "sky_sigma_njy": 1.2228724497199057,
+     "n_sky_pixels": 39740,
+     "arc_sigma_njy": 1.705837608218193,
+     "arc_tail_fraction": 0.025333333333333333,
+     "n_arc_pixels": 34414,
+     "s_hit": 4.9300456047058105,
+     "knots": [
+      {
+       "dist_arcsec": 0.395,
+       "s": -1.27
+      },
+      {
+       "dist_arcsec": 0.403,
+       "s": -0.56
+      },
+      {
+       "dist_arcsec": 0.792,
+       "s": -0.7
+      }
+     ],
+     "coherent_fraction": 0.0
+    },
+    "F444W": {
+     "flux_njy": 9.277769088745117,
+     "e1_aperture_njy": 600.8261108398438,
+     "sky_sigma_njy": 2.2311265325546263,
+     "n_sky_pixels": 39352,
+     "arc_sigma_njy": 2.546254818534851,
+     "arc_tail_fraction": 0.043,
+     "n_arc_pixels": 79799,
+     "s_hit": 4.21430778503418,
+     "knots": [
+      {
+       "dist_arcsec": 0.415,
+       "s": -0.89
+      }
+     ],
+     "coherent_fraction": 0.0
+    }
+   },
+   "top_band": "F277W",
+   "arc_coherent": false
+  },
+  "o211_o212": {
+   "bands": {
+    "F150W": {
+     "flux_njy": -0.8898908495903015,
+     "e1_aperture_njy": 162.0690460205078,
+     "sky_sigma_njy": 1.818273214817047,
+     "n_sky_pixels": 192427,
+     "arc_sigma_njy": 1.814335277724266,
+     "arc_tail_fraction": 0.6233333333333333,
+     "n_arc_pixels": 277527,
+     "s_hit": 1.8417984247207642,
+     "knots": [
+      {
+       "dist_arcsec": 0.297,
+       "s": -0.21
+      },
+      {
+       "dist_arcsec": 0.426,
+       "s": -1.25
+      },
+      {
+       "dist_arcsec": 0.436,
+       "s": -0.87
+      },
+      {
+       "dist_arcsec": 0.54,
+       "s": -0.1
+      },
+      {
+       "dist_arcsec": 0.589,
+       "s": -0.15
+      },
+      {
+       "dist_arcsec": 0.765,
+       "s": -13.23
+      },
+      {
+       "dist_arcsec": 0.782,
+       "s": 1.2
+      },
+      {
+       "dist_arcsec": 0.919,
+       "s": -2.9
+      },
+      {
+       "dist_arcsec": 0.975,
+       "s": -1.68
+      },
+      {
+       "dist_arcsec": 0.998,
+       "s": 0.56
+      }
+     ],
+     "coherent_fraction": 0.1
+    },
+    "F200W": {
+     "flux_njy": 1.595176100730896,
+     "e1_aperture_njy": 152.49908447265625,
+     "sky_sigma_njy": 1.5802916279554367,
+     "n_sky_pixels": 192440,
+     "arc_sigma_njy": 1.777721529507637,
+     "arc_tail_fraction": 0.37266666666666665,
+     "n_arc_pixels": 197624,
+     "s_hit": 2.0315370559692383,
+     "knots": [
+      {
+       "dist_arcsec": 0.415,
+       "s": -0.17
+      },
+      {
+       "dist_arcsec": 0.416,
+       "s": 1.37
+      },
+      {
+       "dist_arcsec": 0.519,
+       "s": 0.23
+      },
+      {
+       "dist_arcsec": 0.613,
+       "s": -0.79
+      },
+      {
+       "dist_arcsec": 0.625,
+       "s": 0.99
+      },
+      {
+       "dist_arcsec": 0.752,
+       "s": 0.55
+      },
+      {
+       "dist_arcsec": 0.771,
+       "s": 2.99
+      },
+      {
+       "dist_arcsec": 0.909,
+       "s": 0.62
+      }
+     ],
+     "coherent_fraction": 0.25
+    },
+    "F277W": {
+     "flux_njy": 1.9640735387802124,
+     "e1_aperture_njy": 182.29269409179688,
+     "sky_sigma_njy": 1.25842399238348,
+     "n_sky_pixels": 45700,
+     "arc_sigma_njy": 1.628882848405838,
+     "arc_tail_fraction": 0.267,
+     "n_arc_pixels": 42920,
+     "s_hit": 2.5914974212646484,
+     "knots": [
+      {
+       "dist_arcsec": 0.42,
+       "s": 6.91
+      },
+      {
+       "dist_arcsec": 0.755,
+       "s": 2.08
+      }
+     ],
+     "coherent_fraction": 1.0
+    },
+    "F356W": {
+     "flux_njy": 5.745004653930664,
+     "e1_aperture_njy": 176.73870849609375,
+     "sky_sigma_njy": 1.0687282197833061,
+     "n_sky_pixels": 45711,
+     "arc_sigma_njy": 1.5907597432136535,
+     "arc_tail_fraction": 0.044333333333333336,
+     "n_arc_pixels": 35395,
+     "s_hit": 3.8476951122283936,
+     "knots": [
+      {
+       "dist_arcsec": 0.395,
+       "s": 6.75
+      },
+      {
+       "dist_arcsec": 0.403,
+       "s": 0.96
+      },
+      {
+       "dist_arcsec": 0.792,
+       "s": 3.0
+      }
+     ],
+     "coherent_fraction": 0.6666666666666666
+    },
+    "F444W": {
+     "flux_njy": 4.159721851348877,
+     "e1_aperture_njy": 600.8261108398438,
+     "sky_sigma_njy": 2.106824446249008,
+     "n_sky_pixels": 44920,
+     "arc_sigma_njy": 2.3823174422264097,
+     "arc_tail_fraction": 0.119,
+     "n_arc_pixels": 86995,
+     "s_hit": 2.3515539169311523,
+     "knots": [
+      {
+       "dist_arcsec": 0.415,
+       "s": 5.18
+      }
+     ],
+     "coherent_fraction": 1.0
+    }
+   },
+   "top_band": "F356W",
+   "arc_coherent": true
+  }
+ }
+}
