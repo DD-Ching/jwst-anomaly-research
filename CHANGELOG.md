@@ -2,8 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-15: (in progress) spike veto for transient_grid.py; Sunrise o010/o052 grid
-- Claimed by cloud routine 015ZRZf7; plan: diffraction-spike veto validated on the o010/o120 hits, then o010/o052.
+## 2026-10-15: two-epoch grids on Sunrise o010/o052 and SMACS/VENUS: a lensed-transient pair in SMACS 0723
+- **Hypothesis before computing:** the catalog stage missed a two-band change in the Sunrise o010/o052 and SMACS
+  o001/VENUS o057 overlaps. Ordinary: spikes, stellar proper motion, persistence, moving objects, pipeline-version
+  differences. Plan change: any survivor goes to `/vet-candidate` and the owner.
+- New: `transient_grid.py --spike-veto` (bright-star zone flag; triage only) and unit tests;
+  `scripts/smacs_transient_pair.py`; `results/transients/{sunrise_grid_o052,smacs_grid}/` (D-027 addendum 2).
+- **Sunrise o010/o052:** 10 hit groups, all spikes or wings; **0 candidates** (−0.75 mag recovered 97 %).
+- **SMACS/VENUS:** 15 groups: 11 stellar proper motion, 1 spike, 2 follow-ups (`g00791` faded, `g02290`
+  brightened), and **a pair of point sources that appeared on either side of the system 5 arc** (3.2″ apart,
+  −3.3 to −4.7 mag, ≥ 14σ). Per exposure they are on sky and fixed over 1.6 h. ICLv2 maps them to one source point
+  at z 1.40–1.45 (the arc's z 1.425), opposite parities: most likely a lensed supernova in the arc galaxy (ordinary
+  astrophysics). Owner notified. Not yet checked: TNS, the VENUS team's reports, full `/vet-candidate`.
+- **Failed approach:** an angle-resolved spike veto (fixed angles to PA_V3); the o010/o120 spike hits scatter by
+  ±15–20° in angle, so the veto is a radius flag covering 44–66 % of positions, used only for triage.
+- Data: 8 `_i2d` mosaics (5.1 GB) streamed into the gitignored data root and deleted after the run.
+- **Handoff:** `/vet-candidate` on the SMACS pair (TNS and literature first, predicted third image and time delays,
+  colours vs SN templates); then `g00791` and `g02290`. Why the catalog stage missed the pair is open.
 
 ## 2026-10-15: Sunrise two-epoch grid on every catalogued position: no transient (D-027 addendum)
 - **Hypothesis before computing:** a source in the o010/o120 overlap changed by ≥ 0.3 mag at ≥ 5σ in two bands, but

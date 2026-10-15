@@ -263,8 +263,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      single-epoch candidate before vetting. Next: `/vet-candidate n0153` (on sky in all 8 dithers, F150W ×1.9 over
      2.9 yr; host, AGN colours, a pipeline-version check on neighbours);
    - ~~forced photometry on all catalogued sources~~ — done for Sunrise o010/o120 (D-027 addendum 2026-10-15,
-     `transient_grid.py`): 0 candidates; −0.75 mag recovered 100 %, −0.44 mag 53 %. Next: the same grid for Sunrise o010/o052 and
-     SMACS/VENUS (F150W, F444W), with a spike veto first;
+     `transient_grid.py`): 0 candidates; −0.75 mag recovered 100 %, −0.44 mag 53 %. Sunrise o010/o052: 0 candidates.
+     **SMACS/VENUS: a lensed-transient pair on the system 5 arc** (D-027 addendum 2, needs-human). Next:
+     `/vet-candidate` on it (TNS and VENUS reports first, third image, time delays), then `g00791` and `g02290`;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

@@ -1,0 +1,82 @@
+{
+  "n_positions": 4325,
+  "n_measured_any_band": 3841,
+  "n_measured_all_bands": 3670,
+  "n_hits": 17,
+  "n_hit_groups": 15,
+  "spike_veto": {
+    "n_stars": 21,
+    "mag_max": 19.5,
+    "r0_arcsec": 45.0,
+    "m0": 17.3,
+    "frac_measured_positions_in_zone": 0.6560791460557147,
+    "n_hit_groups_clean": 12,
+    "assumption": "radius law and limits tuned on the Sunrise o010/o120 spike groups"
+  },
+  "bands": {
+    "F150W": {
+      "e1": "jw02736-o001_t001_nircam_clear-f150w_i2d.fits",
+      "e2": "jw06882-o057_t057_nircam_clear-f150w_i2d.fits",
+      "noise_scale": 1.2480330327329983,
+      "zero_point_mag": -0.015237272668613168,
+      "n_measured": 3838,
+      "n_pass": 83,
+      "positions_per_s": 1074.313332314846
+    },
+    "F444W": {
+      "e1": "jw02736-o001_t001_nircam_clear-f444w_i2d.fits",
+      "e2": "jw06882-o057_t057_nircam_clear-f444w_i2d.fits",
+      "noise_scale": 1.3098093462238245,
+      "zero_point_mag": -0.008298220667788049,
+      "n_measured": 3673,
+      "n_pass": 45,
+      "positions_per_s": 1503.4193618755692
+    }
+  },
+  "injection": {
+    "floor_x_median_error": 10.0,
+    "fwhm_arcsec": 0.1,
+    "runs": [
+      {
+        "frac": 1.0,
+        "nominal_dmag": -0.752574989159953,
+        "n": 500,
+        "recovered_frac": 0.856,
+        "n_nominal": 284,
+        "recovered_frac_nominal": 0.9612676056338029,
+        "per_band_pass_frac": {
+          "F150W": 0.912,
+          "F444W": 0.922
+        }
+      },
+      {
+        "frac": 0.5,
+        "nominal_dmag": -0.4402281476392031,
+        "n": 500,
+        "recovered_frac": 0.538,
+        "n_nominal": 175,
+        "recovered_frac_nominal": 0.5942857142857143,
+        "per_band_pass_frac": {
+          "F150W": 0.754,
+          "F444W": 0.686
+        }
+      }
+    ],
+    "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated"
+  },
+  "hit_group_verdicts_by_eye": {
+    "star proper motion": 11,
+    "diffraction spike": 1,
+    "lensed pair A+B (candidate, needs-human)": 2,
+    "single-position change, follow-up": 2
+  },
+  "persistence_check": {
+    "o057, A": "24 exposures, 21 detected, 0 suspect, 19 clean: on_sky",
+    "o057, B": "18 exposures, 15 detected, 0 suspect, 15 clean: on_sky",
+    "A and B stay at fixed sky positions over MJD 61196.913-61196.981 (1.6 h) in F150W, F182M, F210M, F300M, F410M, F444W": "not a moving object",
+    "o001, g00791": "54 exposures, 52 detected, 50 clean: on_sky in 2022",
+    "o001, g02290": "54 exposures, 53 detected, 2 suspect, 49 clean: on_sky"
+  },
+  "candidates": 1,
+  "command": "transient_grid.py --band F150W/F444W o001 o057 --catalog <4 pipeline _cat.ecsv, o001 then o057> --epoch2-catalogs 2 3 --inject 500 --inject-frac 1.0 0.5 --spike-veto --procs 2"
+}

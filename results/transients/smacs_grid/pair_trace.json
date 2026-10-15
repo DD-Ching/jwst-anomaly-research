@@ -1,0 +1,261 @@
+{
+  "provenance": "model_prediction",
+  "source": "smacs0723-iclv2 (lens_consistency.load_model, frame offset applied)",
+  "pair_observed": {
+    "A": [
+      110.825136,
+      -73.452178
+    ],
+    "B": [
+      110.823747,
+      -73.452975
+    ]
+  },
+  "rows": [
+    {
+      "z": 1.0,
+      "source_sep_arcsec": 0.464,
+      "mu_observed_positions": [
+        9.0,
+        52.2
+      ],
+      "closest_predicted_arcsec": [
+        1.12,
+        2.08
+      ],
+      "other_images": [
+        {
+          "ra": 110.824657,
+          "dec": -73.452457,
+          "mu": 12.4
+        },
+        {
+          "ra": 110.822622,
+          "dec": -73.453763,
+          "mu": -9.8
+        },
+        {
+          "ra": 110.822154,
+          "dec": -73.458166,
+          "mu": 4.1
+        }
+      ]
+    },
+    {
+      "z": 1.2,
+      "source_sep_arcsec": 0.181,
+      "mu_observed_positions": [
+        15.3,
+        -43.1
+      ],
+      "closest_predicted_arcsec": [
+        0.64,
+        0.94
+      ],
+      "other_images": [
+        {
+          "ra": 110.824868,
+          "dec": -73.45234,
+          "mu": 20.4
+        },
+        {
+          "ra": 110.823335,
+          "dec": -73.45321,
+          "mu": -18.0
+        },
+        {
+          "ra": 110.821906,
+          "dec": -73.459458,
+          "mu": 3.4
+        }
+      ]
+    },
+    {
+      "z": 1.3,
+      "source_sep_arcsec": 0.073,
+      "mu_observed_positions": [
+        19.9,
+        -27.4
+      ],
+      "closest_predicted_arcsec": [
+        0.3,
+        0.33
+      ],
+      "other_images": [
+        {
+          "ra": 110.821874,
+          "dec": -73.45993,
+          "mu": 3.2
+        }
+      ]
+    },
+    {
+      "z": 1.4,
+      "source_sep_arcsec": 0.025,
+      "mu_observed_positions": [
+        26.0,
+        -21.5
+      ],
+      "closest_predicted_arcsec": [
+        0.1,
+        0.09
+      ],
+      "other_images": [
+        {
+          "ra": 110.821903,
+          "dec": -73.460324,
+          "mu": 3.1
+        }
+      ]
+    },
+    {
+      "z": 1.425,
+      "source_sep_arcsec": 0.044,
+      "mu_observed_positions": [
+        27.9,
+        -20.6
+      ],
+      "closest_predicted_arcsec": [
+        0.2,
+        0.16
+      ],
+      "other_images": [
+        {
+          "ra": 110.821914,
+          "dec": -73.46041,
+          "mu": 3.1
+        }
+      ]
+    },
+    {
+      "z": 1.45,
+      "source_sep_arcsec": 0.064,
+      "mu_observed_positions": [
+        30.0,
+        -19.8
+      ],
+      "closest_predicted_arcsec": [
+        0.31,
+        0.24
+      ],
+      "other_images": [
+        {
+          "ra": 110.821925,
+          "dec": -73.460492,
+          "mu": 3.1
+        }
+      ]
+    },
+    {
+      "z": 1.5,
+      "source_sep_arcsec": 0.102,
+      "mu_observed_positions": [
+        34.7,
+        -18.5
+      ],
+      "closest_predicted_arcsec": [
+        0.52,
+        0.36
+      ],
+      "other_images": [
+        {
+          "ra": 110.825378,
+          "dec": -73.452051,
+          "mu": 24.4
+        },
+        {
+          "ra": 110.821941,
+          "dec": -73.460644,
+          "mu": 3.0
+        }
+      ]
+    },
+    {
+      "z": 1.6,
+      "source_sep_arcsec": 0.171,
+      "mu_observed_positions": [
+        47.5,
+        -16.6
+      ],
+      "closest_predicted_arcsec": [
+        0.94,
+        0.54
+      ],
+      "other_images": [
+        {
+          "ra": 110.825559,
+          "dec": -73.451946,
+          "mu": 23.5
+        },
+        {
+          "ra": 110.823969,
+          "dec": -73.452838,
+          "mu": -22.6
+        },
+        {
+          "ra": 110.821953,
+          "dec": -73.46091,
+          "mu": 2.9
+        }
+      ]
+    },
+    {
+      "z": 2.0,
+      "source_sep_arcsec": 0.378,
+      "mu_observed_positions": [
+        1004.0,
+        -13.5
+      ],
+      "closest_predicted_arcsec": [
+        2.31,
+        0.89
+      ],
+      "other_images": [
+        {
+          "ra": 110.824122,
+          "dec": -73.452752,
+          "mu": -19.9
+        },
+        {
+          "ra": 110.826164,
+          "dec": -73.451585,
+          "mu": 19.5
+        },
+        {
+          "ra": 110.821853,
+          "dec": -73.461672,
+          "mu": 2.7
+        }
+      ]
+    },
+    {
+      "z": 3.0,
+      "source_sep_arcsec": 0.653,
+      "mu_observed_positions": [
+        -54.4,
+        -12.0
+      ],
+      "closest_predicted_arcsec": [
+        2.1,
+        1.1
+      ],
+      "other_images": [
+        {
+          "ra": 110.824218,
+          "dec": -73.452699,
+          "mu": -17.5
+        },
+        {
+          "ra": 110.827014,
+          "dec": -73.451058,
+          "mu": 14.9
+        },
+        {
+          "ra": 110.821521,
+          "dec": -73.46266,
+          "mu": 2.6
+        }
+      ]
+    }
+  ]
+}

@@ -113,3 +113,27 @@ def test_main_finds_the_brightened_source_and_recovers_injections(tmp_path):
     assert summary["n_hits"] == 1
     assert summary["n_hit_groups"] == 1
     assert summary["injection"]["runs"][0]["recovered_frac"] >= 0.9
+
+
+def test_spike_zone_radius_scales_with_star_brightness():
+    ra0, dec0 = 24.35, -8.45
+    d = np.array([10.0, 30.0, 50.0]) / 3600  # arcsec north of the star
+    ra, dec = np.full(3, ra0), dec0 + d
+    bright = tg.spike_zone(ra, dec, np.array([ra0]), np.array([dec0]), np.array([17.3]), 45.0, 17.3)
+    assert bright.tolist() == [True, True, False]
+    faint = tg.spike_zone(ra, dec, np.array([ra0]), np.array([dec0]), np.array([19.3]), 45.0, 17.3)
+    assert faint.tolist() == [True, False, False]  # R = 45 * 10**-0.4 = 17.9 arcsec
+
+
+def test_bright_point_sources_skips_extended_and_faint():
+    from astropy.coordinates import SkyCoord
+
+    cat = Table(
+        {
+            "sky_centroid": SkyCoord([24.30, 24.31, 24.32], [-8.4, -8.4, -8.4], unit="deg"),
+            "aper_total_abmag": [17.0, 17.0, 21.0],
+            "is_extended": [False, True, False],
+        }
+    )
+    ra, _, m = tg.bright_point_sources(cat, 19.5)
+    assert np.allclose(ra, [24.30]) and m.tolist() == [17.0]

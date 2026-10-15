@@ -1,0 +1,36 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: pos_id, datatype: string}
+# - {name: group, datatype: int64}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: origin, datatype: int64}
+# - {name: F150W_dmag, datatype: float64}
+# - {name: F150W_sigma, datatype: float64}
+# - {name: F150W_pass, datatype: int64}
+# - {name: F444W_dmag, datatype: float64}
+# - {name: F444W_sigma, datatype: float64}
+# - {name: F444W_pass, datatype: int64}
+# - {name: spike_zone, datatype: bool}
+# - {name: verdict, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: scripts/transient_grid.py --spike-veto on jw02282 o010 (jwst 2.0.1) vs jw06882 o052 (jwst 3.0.0) _i2d; verdict column added
+#     by eye from five-panel contact sheets}
+# - {thresholds_are: ASSUMPTION}
+# schema: astropy-2.0
+pos_id group ra dec origin F150W_dmag F150W_sigma F150W_pass F444W_dmag F444W_sigma F444W_pass spike_zone verdict
+g00936 0 24.352114863255856 -8.452102340128798 0 nan 22.47034675001732 1 nan 29.573680867290317 1 True "star 1596 (17.3 mag) core/wings"
+g01334 1 24.350947398419876 -8.448660704258591 0 nan -5.352341848862748 -1 nan -5.838159166867781 -1 True "diffraction spike of a star"
+g03273 2 24.35260662760235 -8.452196925312423 2 -1.5581911028157698 14.053942858767742 1 -6.215951788895334 14.169864981280963 1 True "star 1596 diffraction spikes"
+g03275 3 24.351294574076928 -8.450052190679033 2 nan 8.868258441459519 1 nan 8.59416466648079 1 True "diffraction spike crossing a galaxy"
+g03277 4 24.35226947672106 -8.452774499878032 2 -0.8543122334788384 9.46549270709275 1 -2.5011790175444233 14.257506188661097 1 True "star 1596 diffraction spike"
+g03280 5 24.35170386389822 -8.452477995236812 2 -2.200913328873547 16.0079327299998 1 -3.3618912718463796 15.705860893961496 1 True "star 1596 diffraction spikes"
+g03282 6 24.35001728144266 -8.450039660094562 2 -3.987958948646709 16.375800202777466 1 nan 5.744366278010168 1 True "diffraction spike crossing a source"
+g03703 7 24.352359070514495 -8.448852598399887 3 nan 20.148263436696453 1 nan 8.793489724695405 1 True "diffraction spike next to a compact source"
+g03707 2 24.35282831894954 -8.452344332783285 3 -2.4613420770182097 16.44407754275969 1 -2.767523059167567 14.514601195670835 1 True "star 1596 diffraction spikes"
+g03714 0 24.351797569177677 -8.452068446736755 3 -1.2058711368474582 12.478876832002632 1 -2.1855136710668943 14.219760144925182 1 True "star 1596 (17.3 mag) core/wings"
+g03715 5 24.35169763327001 -8.45268879468589 3 -2.8460087446537616 17.02520250914416 1 nan 16.913608910976272 1 True "star 1596 diffraction spikes"
+g03716 8 24.351525255971794 -8.454052256648197 3 nan 17.97287853751793 1 nan 7.829504270842163 1 True "diffraction spike crossing a galaxy"
+g03722 9 24.34829543969351 -8.456211784944752 3 -0.6646002840177219 6.6109289536356926 1 -0.9251515114470418 5.726609885126161 1 True "bright star core/wings"

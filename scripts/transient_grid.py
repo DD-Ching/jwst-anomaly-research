@@ -24,6 +24,13 @@ reports the fraction recovered as hits, overall and where the fraction (not the 
 flux. Injections are measured in a separate pass with the real grid's zero point and noise scale.
 Recovery counts the automatic thresholds only (no by-eye vetting).
 
+``--spike-veto`` flags (``spike_zone``) every position within ``R(m) = --spike-r0-arcsec ×
+10^(-0.2 (m - --spike-m0))`` of a catalogued point source (``is_extended`` false) brighter than
+``--spike-mag-max`` (``aper_total_abmag`` of the first catalog). The defaults enclose every
+diffraction-spike hit group of the Sunrise o010/o120 grid. Flagged hits are still written; only
+the count of unflagged groups (``n_hit_groups_clean``) leaves out the spike zone, and the summary
+reports the fraction of measured positions it covers (the area lost to the search).
+
     python scripts/transient_grid.py \\
         --band F277W e1_f277w_i2d.fits e2_f277w_i2d.fits --band F356W ... \\
         --catalog e1_f277w_cat.ecsv --catalog e2_f277w_cat.ecsv ... --epoch2-catalogs 1 \\
@@ -79,6 +86,38 @@ def union_positions(cats: list[Table], dedup_arcsec: float) -> Table:
     out["pos_id"] = [f"g{k:05d}" for k in range(len(out))]
     out.meta = {"provenance": "observed", "source": "union of pipeline catalogs"}
     return out
+
+
+def bright_point_sources(cat: Table, mag_max: float) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """RA, Dec and AB magnitude of the point sources (``is_extended`` false) brighter than
+    ``mag_max`` in one pipeline catalog (``aper_total_abmag``)."""
+    for col in ("is_extended", "aper_total_abmag"):
+        if col not in cat.colnames:
+            raise ValueError(f"spike veto needs the pipeline column {col!r}")
+    m = np.asarray(cat["aper_total_abmag"], float)
+    ok = np.isfinite(m) & (m < mag_max) & ~np.asarray(cat["is_extended"], bool)
+    sc = cat["sky_centroid"][ok]
+    return np.asarray(sc.ra.deg), np.asarray(sc.dec.deg), m[ok]
+
+
+def spike_zone(
+    ra: np.ndarray,
+    dec: np.ndarray,
+    star_ra: np.ndarray,
+    star_dec: np.ndarray,
+    star_mag: np.ndarray,
+    r0_arcsec: float,
+    m0: float,
+) -> np.ndarray:
+    """True where a position lies within ``r0 × 10^(-0.2 (m - m0))`` of any bright star."""
+    zone = np.zeros(len(ra), bool)
+    if not len(star_ra) or not len(ra):
+        return zone
+    c = SkyCoord(ra * u.deg, dec * u.deg)
+    for sra, sdec, m in zip(star_ra, star_dec, star_mag, strict=True):
+        r = r0_arcsec * 10 ** (-0.2 * (m - m0))
+        zone |= c.separation(SkyCoord(sra * u.deg, sdec * u.deg)).arcsec <= r
+    return zone
 
 
 @contextmanager
@@ -253,6 +292,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--inject-floor", type=float, default=10.0)
     ap.add_argument("--inject-fwhm-arcsec", type=float, default=0.1)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--spike-veto", action="store_true", help="flag bright-star spike zones")
+    ap.add_argument("--spike-mag-max", type=float, default=19.5)
+    ap.add_argument("--spike-r0-arcsec", type=float, default=45.0)
+    ap.add_argument("--spike-m0", type=float, default=17.3)
     ap.add_argument("--procs", type=int, default=min(os.cpu_count() or 1, 8))
     args = ap.parse_args(argv)
 
@@ -351,6 +394,27 @@ def main(argv: list[str] | None = None) -> int:
     pos["n_pass_bright"], pos["n_pass_faint"] = (s > 0).sum(1), (s < 0).sum(1)
     pos["hit"] = hits(s, args.min_bands)
     pos["group"] = group_hits(ra, dec, np.asarray(pos["hit"]), args.group_arcsec)
+    spike = {}
+    if args.spike_veto:
+        sra, sdec, smag = bright_point_sources(cats[0], args.spike_mag_max)
+        zone = spike_zone(ra, dec, sra, sdec, smag, args.spike_r0_arcsec, args.spike_m0)
+        pos["spike_zone"] = zone
+        grp = np.asarray(pos["group"])
+        clean = {int(g) for g in np.unique(grp[grp >= 0]) if not zone[grp == g].all()}
+        meas_any = np.any([np.isfinite(pos[f"{b}_flux1"] + pos[f"{b}_flux2"]) for b in bands], 0)
+        spike = {
+            "spike_veto": {
+                "n_stars": len(sra),
+                "mag_max": args.spike_mag_max,
+                "r0_arcsec": args.spike_r0_arcsec,
+                "m0": args.spike_m0,
+                "frac_measured_positions_in_zone": float(zone[meas_any].mean())
+                if meas_any.any()
+                else None,
+                "n_hit_groups_clean": len(clean),
+                "assumption": "radius law and limits tuned on the Sunrise o010/o120 spike groups",
+            }
+        }
     pos.meta.update(
         {
             "provenance": "derived",
@@ -370,6 +434,7 @@ def main(argv: list[str] | None = None) -> int:
         "n_measured_all_bands": int(np.all(measured, axis=0).sum()),
         "n_hits": int(pos["hit"].sum()),
         "n_hit_groups": int(pos["group"].max() + 1),
+        **spike,
         "bands": meta["bands"],
         "injection": {
             "floor_x_median_error": args.inject_floor,
