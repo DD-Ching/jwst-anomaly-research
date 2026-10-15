@@ -2,6 +2,30 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 arc-difference hit h108 is an arc-segment residual; arc-coherence vetting test
+- **Hypothesis before measuring:** h108 (o211→o213, #242) is a point source on a faint thin arc that brightened. It
+  would be one PSF-sized spot, with the same sign in every band, and additive over the epochs. A matching residual
+  would also appear on the neighbouring knots of the arc.
+- There is no jw01176 o214; the #242 handoff meant o213. **CANUCS jw01208 o004 (2023-01-11)** is an independent fourth
+  epoch between o212 (2022-12-29) and o213 (2023-02-10), covering h108 with 8 exposures. Five pairs differenced.
+- `scripts/arc_diff_vet.py` (new; unit tests on synthetic arcs): forced aperture fluxes in nJy with blank-sky and
+  **arc noise** (apertures of similar epoch-1 arc flux), S at the hit, and **arc coherence**: the fraction of
+  neighbouring knots (0.25–1.0″) with S of the same sign and ≥ 0.5 × |S_hit| (ASSUMPTIONs).
+- **Result (derived):** the fluxes are additive (F356W o211→o212 + o212→o213 = +5.6 vs +5.0 nJy direct); the largest
+  change is o211→c004, about 13 nJy (28.6 AB) in F277W–F444W. But the arc's knots follow h108 in 4 of 5 pairs, including both
+  pairs without o211: c004→o213 F356W knots −5.5, −5.3, −4.2 (h108 −3.7). In o212→o213, F277W rises (+4.2 to +6.6)
+  while F356W falls (−3.8 to −5.2). **Verdict: artifact (arc-segment PSF/background matching residual); not a
+  candidate.** Record: `docs/candidates/macs0416-arcdiff-o211-o213-h108.md`; JSON in
+  `results/transients/macs0416_arcdiff/vet_h108/`.
+- **Validation:** the Yan+2023 arc transients are never flagged arc-coherent in their discovery pair (0 / 9
+  testable); flags appear only in the other pair, where the transient is weak and the Warhol arc carries other
+  transients. Caveat: coherence can veto a weak transient on an arc with several real ones.
+- **Contact sheets looked at:** 1.5″ and 0.6″ stamps, five pairs × five bands.
+- **Failed approach:** the first per-band "max |S| within 0.2″" numbers (mixed signs) were misleading; S at the exact
+  position, and aperture fluxes against arc noise, are the measurements to use.
+- **Handoff:** tile the rest of MACS0416's arcs with `arc_diff.py` (adopted settings), add CANUCS o004 as a fourth
+  epoch, and run `arc_diff_vet.py` on every unflagged hit. A per-segment local kernel may remove the arc residual.
+
 ## 2026-10-15: MACS0416 arc differencing: fitted pixel kernels remove the arc ridges and the compact-core residual
 - **Hypothesis before computing:** the arc ridges left by #241 are a PSF-matching failure that a least-squares pixel
   kernel (Bramich 2008 style) removes without losing the published arc transients. Plan change: if recovery of the
