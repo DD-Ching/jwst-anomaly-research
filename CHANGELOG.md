@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: Sunrise two-epoch grid on every catalogued position: no transient (D-027 addendum)
+- **Hypothesis before computing:** a source in the o010/o120 overlap changed by ≥ 0.3 mag at ≥ 5σ in two bands, but
+  the catalog stage and its two-band rule missed it (e.g. a blue transient seen only in F090W and F115W).
+  Ordinary: spikes, persistence, moving objects, background structure. Plan change: any survivor goes to
+  `/vet-candidate`.
+- New: `scripts/transient_grid.py` (whole-mosaic forced photometry on the union of both epochs' catalogs, noise
+  scale from all positions, injections with the real zero point) and unit tests; `results/transients/sunrise_grid/`.
+- **Result:** 6,401 positions (2,331 measured in all four bands), 66 hits in 36 groups: 34 star spikes, streaks or
+  wings, and the known persistence afterimages `n0022` and `n0150` (recovered with no catalog-stage input).
+  **0 candidates.** Injection at nominal amplitude: −0.75 mag 100 % (198/198), −0.44 mag 53 % (before by-eye
+  vetting). Contact sheets looked at.
+- **Failed approaches:** a difference of two negative fluxes (annulus brighter than the aperture in an extended
+  galaxy) passed as appeared/disappeared; now one epoch needs positive flux. A zero point recomputed on the injected positions absorbed the injected brightening (5 %
+  recovery); fixed by using the real grid's zero point and scale.
+- Data: eight `_i2d` mosaics (6.4 GB) streamed into the gitignored data root and deleted after the run.
+- **Handoff:** the same grid for Sunrise o010/o052 and SMACS/VENUS (F150W, F444W), with a spike veto first.
+
 ## 2026-10-15: S0 screen after X3: GW wave-optics lensing by negative-mass objects qualifies (X4)
 - Three directions (`docs/state/units/S0-2026-10-15.md`):
   - A, GW lensing by repulsive lenses: **qualifies**.
