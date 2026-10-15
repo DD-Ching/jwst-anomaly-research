@@ -55,6 +55,13 @@ def _wcs(text: str) -> WCS:
         return WCS(fits.Header.fromstring(text))
 
 
+def robust_sigma(v: np.ndarray) -> float:
+    """1.4826 × MAD of the finite values of ``v``; 1.0 when it is not positive."""
+    v = v[np.isfinite(v)]
+    mad = 1.4826 * float(np.median(np.abs(v - np.median(v)))) if v.size else 0.0
+    return mad if mad > 0 else 1.0
+
+
 def component_extent(mask: np.ndarray, y: int, x: int) -> float:
     """√(12 λ_max) in pixels of the connected region of ``mask`` that contains (y, x); 0 if none."""
     if not mask[y, x]:
@@ -122,8 +129,10 @@ def morph_band(maps, band: str, ra: float, dec: float, a) -> dict | None:
     sm = ndimage.gaussian_filter(np.where(good, s, 0.0), a.smooth_px)
     norm = ndimage.gaussian_filter(good.astype(float), a.smooth_px)
     sm = np.where(norm > 0.5, sm / np.maximum(norm, 1e-9), 0.0)
-    # Smoothing lowers the noise of S by ≈ 1 / (2 √π σ) per pixel; rescale so the level is in σ.
-    sm *= 2.0 * np.sqrt(np.pi) * a.smooth_px if a.smooth_px > 0 else 1.0
+    # S is already a matched-filter output, so its noise is correlated and smoothing lowers it far
+    # less than white noise (1 / (2 √π σ)). Normalise by the smoothed map's own robust spread so the
+    # level is in σ of the smoothed map.
+    sm /= robust_sigma(sm[good])
     ext = component_extent(sgn * sm >= a.streak_level, py, px) * scale
     pad = np.pad(good, 1, constant_values=False)
     edge = float(ndimage.distance_transform_edt(pad)[py + 1, px + 1]) * scale
@@ -195,8 +204,9 @@ def main(argv: list[str] | None = None) -> None:
     rows = []
     with np.load(a.maps) as m:
         bands = sorted({k.rsplit("_", 1)[0] for k in m.files if k.endswith("_wcs")})
+        maps = {k: m[k] for k in m.files}  # decompress each array once, not once per target
         for name, ra, dec in targets:
-            res = {b: morph_band(m, b, ra, dec, a) for b in bands}
+            res = {b: morph_band(maps, b, ra, dec, a) for b in bands}
             res = {b: r for b, r in res.items() if r is not None}
             verdict, top = classify(res, a)
             row = {"id": name, "ra": ra, "dec": dec, "verdict": verdict, "top_band": top}

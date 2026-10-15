@@ -10,6 +10,7 @@ from pathlib import Path
 import numpy as np
 from astropy.table import Table
 from astropy.wcs import WCS
+from scipy import ndimage
 
 _DIR = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(_DIR))
@@ -37,11 +38,20 @@ def _blob(y: float, x: float, sigma: float = 1.5, amp: float = 1.0) -> np.ndarra
     return amp * np.exp(-((yy - y) ** 2 + (xx - x) ** 2) / (2 * sigma**2))
 
 
-def _run(tmp_path: Path, s: np.ndarray, name: str) -> dict:
+def _noise(rng: np.random.Generator, corr_px: float) -> np.ndarray:
+    """Unit-variance noise; corr_px > 0 mimics a matched-filter S map (correlated noise)."""
+    n = rng.normal(0, 1, (N, N))
+    if corr_px > 0:
+        n = ndimage.gaussian_filter(n, corr_px)
+        n /= n.std()
+    return n
+
+
+def _run(tmp_path: Path, s: np.ndarray, name: str, corr_px: float = 0.0) -> dict:
     rng = np.random.default_rng(0)
     maps = {}
     for b in BANDS:
-        sb = s + rng.normal(0, 1, (N, N))
+        sb = s + _noise(rng, corr_px)
         sb[np.isnan(s)] = np.nan
         maps |= {f"{b}_s": sb, f"{b}_wcs": np.array(_wcs_text())}
     npz = tmp_path / f"{name}.npz"
@@ -57,6 +67,13 @@ def _run(tmp_path: Path, s: np.ndarray, name: str) -> dict:
 
 def test_point_transient_passes(tmp_path):
     t = _run(tmp_path, _blob(N // 2, N // 2, amp=12.0), "pt")
+    assert t["verdict"] == "pass"
+    assert t["bands"]["F277W"]["extent_arcsec"] < 1.0
+
+
+def test_point_transient_passes_in_correlated_noise(tmp_path):
+    # Matched-filter S has correlated noise; a white-noise rescale let noise percolate into "extended".
+    t = _run(tmp_path, _blob(N // 2, N // 2, amp=12.0), "ptc", corr_px=1.5)
     assert t["verdict"] == "pass"
     assert t["bands"]["F277W"]["extent_arcsec"] < 1.0
 
