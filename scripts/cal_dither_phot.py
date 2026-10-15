@@ -41,7 +41,7 @@ from astropy.table import Table
 from astropy.wcs import WCS, FITSFixedWarning
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from arc_diff_knots import robust_z  # noqa: E402
+from arc_diff_knots import finite_or_none, robust_z  # noqa: E402
 from persistence_check import _open, _safe, header_info, list_cal  # noqa: E402
 from transient_forced import aperture_flux, recentre  # noqa: E402
 
@@ -57,9 +57,9 @@ MAX_OFFSET_PX = 6  # ASSUMPTION: level-2 WCS errors stay below ~0.2″ (SW) per 
 
 
 def epoch_of(name: str) -> str:
-    """``1176o211`` from ``jw01176211001_..._cal.fits`` (program, then observation number)."""
+    """``01176o211`` from ``jw01176211001_..._cal.fits`` (program, then observation number)."""
     m = re.match(r"jw(\d{5})(\d{3})\d{3}_", name.rsplit("/", 1)[-1])
-    return f"{int(m.group(1))}o{m.group(2)}" if m else "?"
+    return f"{m.group(1)}o{m.group(2)}" if m else "?"
 
 
 def exposure_offset(cut: dict, refs: list[str]) -> tuple[float, float, int]:
@@ -114,7 +114,8 @@ def measure(
     for uid, (sci, err, lx, ly, x0, y0) in cut.items():
         sx, sy = lx + dx, ly + dy
         cx, cy = recentre(sci, sx, sy, RECENTRE_PX)
-        # recentre returns the input on failure; a fallback position biases core apertures and
+        # recentre returns its input unchanged on every failure path (a converged centroid equals
+        # it to float precision only by accident); a fallback position biases core apertures and
         # centroids, so such a source gets no measurement on this exposure
         if (cx, cy) == (sx, sy) or np.hypot(cx - sx, cy - sy) > MAX_SHIFT_PX:
             continue
@@ -188,10 +189,8 @@ def centroid_shifts(tab: Table, targets: list[str], knots: list[str], epochs: li
                 xy = np.c_[q["ra"][m] * cosd * 3.6e6, q["dec"][m] * 3.6e6]
                 pos.setdefault(u, {})[e] = xy.mean(axis=0)
     out = {}
-    for a in epochs:
-        for b in epochs:
-            if a >= b:
-                continue
+    for i, a in enumerate(epochs):
+        for b in epochs[i + 1 :]:
             d = {u: pos[u][b] - pos[u][a] for u in pos if a in pos[u] and b in pos[u]}
             kd = np.array([d[k] for k in knots if k in d])
             if len(kd) < 5:
@@ -302,7 +301,10 @@ def main(argv: list[str] | None = None) -> int:
     tab.meta.update({"provenance": "derived", "radii_arcsec": args.radii_arcsec, "failed": failed})
     tab.write(args.out / "dither_phot.ecsv", overwrite=True)
 
-    epochs_all = sorted(set(tab["epoch"]))
+    # chronological, so every pair "a_b" reads earlier → later
+    epochs_all = sorted(
+        set(tab["epoch"]), key=lambda e: float(np.median(tab["mjd"][tab["epoch"] == e]))
+    )
     summary = {
         "provenance": "derived",
         "source": "level-2 _cal exposures: " + ", ".join(args.cal_dir),
@@ -334,10 +336,8 @@ def main(argv: list[str] | None = None) -> int:
             t = normalise(sub, uids, knot_ids, f"f{i}")
             ep = np.array([fe[f] for f in t["_files"]])
             rres: dict = {}
-            for a in epochs_all:
-                for b in epochs_all:
-                    if a >= b:
-                        continue
+            for j, a in enumerate(epochs_all):
+                for b in epochs_all[j + 1 :]:
                     ex = {u: epoch_excess(t[u], ep, a, b) for u in uids}
                     kref = np.array([ex[k][0] for k in knot_ids])
                     kmed, ksig, _ = robust_z(0, kref)
@@ -350,6 +350,11 @@ def main(argv: list[str] | None = None) -> int:
                                 "excess": ex[u][0],
                                 "err": ex[u][1],
                                 "z_vs_knots": robust_z(ex[u][0], kref)[2],
+                                # exposures with a measurement (recentring can fail)
+                                "n_measured": [
+                                    int(np.isfinite(t[u][ep == a]).sum()),
+                                    int(np.isfinite(t[u][ep == b]).sum()),
+                                ],
                             }
                             for u in targets
                         },
@@ -369,7 +374,9 @@ def main(argv: list[str] | None = None) -> int:
             bres[f"r{r:.2f}"] = rres
         bres["centroid_mas"] = centroid_shifts(sub, list(targets), knot_ids, epochs_all)
         summary["filters"][band] = bres
-    (args.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
+    (args.out / "summary.json").write_text(
+        json.dumps(finite_or_none(summary), indent=1, allow_nan=False) + "\n"
+    )
     print(
         json.dumps(
             {

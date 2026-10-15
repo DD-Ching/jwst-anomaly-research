@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from astropy.table import Table
 
 _DIR = Path(__file__).resolve().parents[1] / "scripts"
@@ -42,8 +43,8 @@ def _table(target_gain: float, seed: int = 1) -> tuple[Table, list[str]]:
 
 
 def test_epoch_of():
-    assert cdp.epoch_of("jw01176211001_02101_00001_nrcb1_cal.fits") == "1176o211"
-    assert cdp.epoch_of("s3://b/jw01208004001_x_cal.fits") == "1208o004"
+    assert cdp.epoch_of("jw01176211001_02101_00001_nrcb1_cal.fits") == "01176o211"
+    assert cdp.epoch_of("s3://b/jw01208004001_x_cal.fits") == "01208o004"
     assert cdp.epoch_of("other.fits") == "?"
 
 
@@ -52,9 +53,9 @@ def test_target_excess_recovered_and_knots_null():
     t = cdp.normalise(tab, ["tgt", *knots], knots, "f0")
     fe = dict(zip(tab["file"], tab["epoch"], strict=True))
     ep = np.array([fe[f] for f in t["_files"]])
-    ex, err = cdp.epoch_excess(t["tgt"], ep, "1176o211", "1176o212")
+    ex, err = cdp.epoch_excess(t["tgt"], ep, "01176o211", "01176o212")
     assert abs(ex - 0.05) < 0.005 and 0 < err < 0.01
-    kex = np.array([cdp.epoch_excess(t[k], ep, "1176o211", "1176o212")[0] for k in knots])
+    kex = np.array([cdp.epoch_excess(t[k], ep, "01176o211", "01176o212")[0] for k in knots])
     assert np.all(np.abs(kex) < 0.01)
     assert cdp.robust_z(ex, kex)[2] > 5
 
@@ -64,7 +65,7 @@ def test_no_excess_gives_small_z():
     t = cdp.normalise(tab, ["tgt", *knots], knots, "f0")
     fe = dict(zip(tab["file"], tab["epoch"], strict=True))
     ep = np.array([fe[f] for f in t["_files"]])
-    ex, _ = cdp.epoch_excess(t["tgt"], ep, "1176o211", "1176o212")
+    ex, _ = cdp.epoch_excess(t["tgt"], ep, "01176o211", "01176o212")
     assert abs(ex) < 0.01
 
 
@@ -90,3 +91,32 @@ def test_load_knots_range_exclusion_and_dedup(tmp_path):
     p.write_text(json.dumps(d))
     k = cdp.load_knots(p, {"t": (64.02, -24.00001)}, ["F150W", "F200W"])
     assert list(k.values()) == [(64.0, -24.0)]
+
+
+def test_target_knot_id_clash_is_refused(tmp_path):
+    p = tmp_path / "k.json"
+    p.write_text(
+        json.dumps({"bands": {"F150W": {"knots": [{"ra": 64.0, "dec": -24.0, "e1_njy": 200.0}]}}})
+    )
+    with pytest.raises(SystemExit):
+        cdp.main(
+            ["--target", "k00", "64.1", "-24.0", "--knots-json", str(p)]
+            + ["--cal-dir", str(tmp_path), "--out", str(tmp_path / "o")]
+        )
+
+
+def test_centroid_shift_of_target_against_knots():
+    rows = []
+    rng = np.random.default_rng(2)
+    for e in ("01176o211", "01176o212"):
+        for j in range(3):
+            for u in ["tgt", *[f"k{i:02d}" for i in range(8)]]:
+                shift = 10.0 if (u == "tgt" and e == "01176o212") else 0.0  # mas east
+                ra = 64.0 + (shift + rng.normal(0, 1.0)) / 3.6e6 / np.cos(np.radians(-24.0))
+                rows.append({"uid": u, "file": f"{e}_{j}", "epoch": e, "ra": ra, "dec": -24.0})
+    tab = Table(rows=rows)
+    out = cdp.centroid_shifts(
+        tab, ["tgt"], [f"k{i:02d}" for i in range(8)], ["01176o211", "01176o212"]
+    )
+    t = out["01176o211_01176o212"]["targets"]["tgt"]
+    assert abs(t["east_mas"] - 10) < 2 and t["z_east"] > 3

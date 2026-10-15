@@ -41,6 +41,17 @@ def robust_z(value: float, ref: np.ndarray) -> tuple[float, float, float]:
     return med, sig, (value - med) / sig if sig > 0 else float("nan")
 
 
+def finite_or_none(obj):
+    """Copy of a JSON-able structure with NaN and ±inf floats replaced by None (strict JSON)."""
+    if isinstance(obj, dict):
+        return {k: finite_or_none(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [finite_or_none(v) for v in obj]
+    if isinstance(obj, (float, np.floating)):
+        return float(obj) if np.isfinite(obj) else None
+    return obj
+
+
 def measure_band(maps, band: str, targets: list[tuple[str, float, float]], a) -> dict:
     w = _wcs(str(maps[f"{band}_wcs"]))
     scale = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600
@@ -137,7 +148,7 @@ def main(argv: list[str] | None = None) -> None:
         },
         "bands": bands,
     }
-    a.out.write_text(json.dumps(summary, indent=1) + "\n")
+    a.out.write_text(json.dumps(finite_or_none(summary), indent=1, allow_nan=False) + "\n")
     for b, r in bands.items():
         print(
             f"{b}: knots {r['n_knots']}, median frac comparable {r['median_frac_comparable']} "
@@ -147,8 +158,10 @@ def main(argv: list[str] | None = None) -> None:
             if "skipped" in t:
                 print(f"  {n}: {t['skipped']}")
                 continue
+            flag = " (aperture touches a NaN pixel: biased)" if t["aperture_has_nan"] else ""
             print(
-                f"  {n}: frac {t['frac']:+.4f} z {t['z_vs_knots']:+.2f} rank {t['rank_from_top']}"
+                f"  {n}: frac {t['frac']:+.4f} z {t['z_vs_knots']:+.2f} "
+                f"rank {t['rank_from_top']}{flag}"
             )
 
 

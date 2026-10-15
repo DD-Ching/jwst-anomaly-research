@@ -77,3 +77,31 @@ def test_robust_z_needs_five_references():
     assert np.isnan(adk.robust_z(1.0, np.array([0.0, 1.0]))[2])
     med, sig, z = adk.robust_z(3.0, np.array([0.0, 1.0, -1.0, 2.0, -2.0]))
     assert med == 0.0 and sig > 0 and z > 0
+
+
+def test_holed_knot_excluded_and_edge_target_recorded(tmp_path):
+    maps, ra, dec = _scene(tmp_path, 0.02, 0.0)
+    with np.load(maps) as m:
+        arrs = dict(m)
+    arrs["F150W_d"][15, 15] = np.nan  # inside the aperture of the corner knot at (15, 15)
+    np.savez(maps, **arrs)
+    out = tmp_path / "k.json"
+    ra_edge, dec_edge = (float(v) for v in _wcs().all_pix2world(0, 0, 0))
+    adk.main(
+        [str(maps), "--pair", "t", "--bands", "F150W", "--target", "x", str(ra), str(dec)]
+        + ["--target", "edge", str(ra_edge), str(dec_edge)]
+        + ["--min-njy", "50", "--max-njy", "1e9", "--out", str(out)]
+    )
+    r = json.loads(out.read_text())["bands"]["F150W"]
+    assert r["n_knots"] == 99
+    assert r["targets"]["edge"] == {"skipped": "outside the map interior"}
+    assert r["targets"]["x"]["aperture_has_nan"] is False
+
+
+def test_finite_or_none_gives_strict_json():
+    obj = {"a": float("nan"), "b": [1.0, np.float64("inf")], "c": "s"}
+    assert json.loads(json.dumps(adk.finite_or_none(obj), allow_nan=False)) == {
+        "a": None,
+        "b": [1.0, None],
+        "c": "s",
+    }

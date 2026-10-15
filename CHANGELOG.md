@@ -15,17 +15,19 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   ~1.2 px from the hit position, so recentring failed in some epochs): **failed approach, fixed**.
 - **Data (derived):** o211 (4 dithers, all NRCB1), o212 (4, NRCB2), o213 (4–6, NRCB4/B2), CANUCS o004 (3–7), F150W
   and F200W; `results/transients/macs0416_arcdiff/vet_sw/dither_h044_h030.json` (per-exposure `t` included; epochs
-  are labelled `<program>o<obs>`, e.g. `1176o211`, `1208o004`).
+  are labelled `<program>o<obs>`, e.g. `01176o211`, `01208o004`; pairs `a_b` are chronological, excess = b / a − 1;
+  `n_measured` gives the exposures behind each number: the F200W r 0.16″ o211→o212 value rests on 3 + 3).
 - **Result:** h044's o211 deficit is uniform across the o211 dithers (F200W r 0.16″: t = 0.93, 0.96, 0.93 vs
   1.00–1.05 in o212/o213/o004), so it is **not** a single-exposure or mosaic artifact. It is not consistent with
   added point flux: F200W +3.6 ± 2.8 % (r 0.08″, z 0.9), +9.0 ± 1.8 % (0.16″, z 3.1), +6.2 ± 2.2 % (0.24″, z 2.2) for
   o211→o212; F150W +3.7 % (0.08″, z 1.0) but −1.5 % and +1.7 % at 0.16/0.24″ (a hot source would be brighter in F150W;
   LW was already null). o212→o213 control ≈ 0 in both bands. Centroid: h044 moves 9 mas west from o211 to later
-  epochs in F200W (z −2.6), 4–5 mas in F150W (z −1.2), but also 12 mas north between o004 and o212 (z 2.5, no o211),
+  epochs in F200W (z −2.6), 4–5 mas in F150W (z −1.2), but also 12 mas south from o212 to o004 (z −2.5, no o211),
   so its centroid is less stable than the knots in general (compact core on a host gradient).
-- **/code-review fixes:** sources whose recentring fails are dropped per exposure (no fallback centroid or flux;
-  results unchanged); epochs carry the program; empty runs exit cleanly; target/knot id clash refused; one shared
-  NaN-safe `robust_z`. `arc_diff_knots.py`: knots whose aperture touches a NaN pixel are excluded and targets get an
+- **/code-review fixes (two passes):** sources whose recentring fails are dropped per exposure (no fallback centroid
+  or flux; every h044/h030 number quoted above is unchanged); epoch labels carry the zero-padded program and pairs
+  are ordered by time (the o004 pairs' keys and signs changed accordingly); per-target `n_measured`; NaN written as
+  null (strict JSON); empty runs exit cleanly; target/knot id clash refused; one shared NaN-safe `robust_z`. `arc_diff_knots.py`: knots whose aperture touches a NaN pixel are excluded and targets get an
   `aperture_has_nan` flag, a NaN target fraction has no rank, and skipped targets are recorded. The stored
   `knots_*.json` predate these two rules (their maps were deleted); their h044/h030 rows were finite.
 - **Reading:** h044 is **not a candidate (closed)**: a ≤ 3σ tail of the 17-knot distribution, picked as the most
