@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: (in progress) MACS0416 morphology veto: injection calibration through the whole chain
+- Claim: inject point sources into o212, run `arc_diff.py` + `arc_diff_morph.py`, measure the veto's false-veto rate.
+
 ## 2026-10-15: `arc_diff_morph.py` review fixes; re-judged o211→o212 tiles: 4 new passes, all ordinary, still 0 candidates (#245)
 - **Hypothesis before measuring:** the open review findings (top-band-only extent, lobes and edge counted in bands
   without the hit) can hide or invent vetoes; fixing them should change few verdicts. Plan change: any new pass not
