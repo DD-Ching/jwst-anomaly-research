@@ -107,12 +107,13 @@
   "candidates": 0,
   "vetting": {
     "n_groups": 22,
-    "persistence": 7,
+    "persistence": 5,
+    "detector_fixed_artifact": 2,
     "star_spike_or_wing": 12,
     "star_wing": 1,
     "background": 1,
     "edge": 1,
     "table": "hit_verdicts.ecsv"
   },
-  "validation_note": "no published Abell 2744 transient with coordinates in this window (the DD 2756 z=3.47 SN has no public position); recovery from injections only; the persistence test confirmed on 7 SW-only artifacts"
+  "validation_note": "no published Abell 2744 transient with coordinates in this window (the DD 2756 z=3.47 SN has no public position); recovery from injections only; persistence_check.py returned persistence for 5 epoch-1 SW-only hits; the 2 epoch-2 SW-only hits (g16/g17, tool: on_sky / inconclusive) are one detector pixel seen in two dithers, classified by hand"
 }

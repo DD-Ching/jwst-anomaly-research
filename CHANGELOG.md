@@ -11,13 +11,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   only F356W or F090W with earlier data. The DD 2756 visits have six shared bands over the core.
 - `transient_grid.py`, unchanged (6 bands, 3,431 positions, noise scales 1.18–1.34). Injections: −0.75 mag 99 %,
   −0.44 mag 89 %. **22 hit groups:** 12 star spikes/wings (the PA changes 30°→60°), 1 star wing (g13, 20.5 mag
-  point source, no proper motion beyond the 13/22 mas frame offset), 7 persistence, 1 galaxy-edge background, 1
+  point source, no proper motion beyond the 13/22 mas frame offset), 5 persistence, 2 detector-fixed artifact, 1 galaxy-edge background, 1
   mosaic edge. **0 candidates.**
   `results/transients/a2744_grid_2756/` (`hit_verdicts.ecsv`).
 - **Persistence:** g0/g3/g4/g6/g7 are diffuse SW-only blobs in epoch 1. They are absent in the simultaneous LW
   exposures, in epoch 2 and in UNCOVER 13 days later. `persistence_check.py` gives "persistence" for all five.
-  g16/g17 (epoch 2, SW only) are one NRCB3 pixel (~1855, 1976) seen in dithers 2 and 1. Its S/N decays through the
-  visit (F115W 64 → 34, F150W 11, F200W 5).
+  g16/g17 (epoch 2, SW only): the tool gives on_sky / inconclusive, but every detection of both sits on one NRCB3 pixel
+  (~1855, 1976), in dithers 2 and 1, with S/N decaying (F115W 64 → 34, F150W 11, F200W 5). That makes them a
+  detector-fixed feature at two sky positions (by hand). Gap: the tool checks each position alone.
 - **Contact sheets looked at:** six bands × (e1, e2 resampled onto e1, difference), 2″ stamps; UNCOVER F150W, F200W
   and F277W stamps at the eight artifact positions. First sheets without resampling were misleading: the 30° roll
   made stars look displaced.

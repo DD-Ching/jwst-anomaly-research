@@ -1516,7 +1516,7 @@ spatially varying PSF (box > 1′) leaves ridges.
 (Dec −30.43 to −30.55) misses the core, though MAST's centre coordinate suggests otherwise. Check mosaic corners, not
 `s_ra`/`s_dec`. UNCOVER o001 SW mosaics are 5.2–7.7 GB, so `scripts/i2d_region.py` cuts SCI/ERR to a reference
 footprint by byte-range rows (for a later UNCOVER pair). The grid is unchanged. The 30° roll makes rotated star
-spikes the main hit class. Persistence (`persistence_check.py`) explained every single-epoch SW-only hit. Revisit
+spikes the main hit class. `persistence_check.py` flagged the five epoch-1 SW-only hits as persistence. It returned on_sky / inconclusive for two epoch-2 SW-only hits, which are one NRCB3 pixel seen in two dithers (by hand). The tool tests each sky position alone, so it misses a detector-fixed feature that falls on several positions. Revisit
 if a published Abell 2744 transient with coordinates becomes available for validation.
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
