@@ -2,8 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-15: MACS0416 two-epoch grid (in progress)
-- Plan: `transient_grid.py` on MACS0416 multi-epoch NIRCam; validate on published PEARLS transients first.
+## 2026-10-15: MACS0416 two-epoch grid, validated on published transients: two grid fixes, no new transient
+- **Hypothesis before computing:** the grid recovers the published PEARLS epoch-1→2 transients (Yan et al. 2023:
+  6 caustic stars, SN01, SN02); any further two-band change in o211/o212 is a candidate. Ordinary: spikes,
+  persistence, SNe and caustic stars (the expected populations). Plan change if the known cases are missed.
+- **Validation failed first: 0 of 8 recovered.** Causes (D-027 addendum 2026-10-15): a 0.20″ frame offset of the
+  published positions; per-band recentring pulled SN01's LW apertures onto a neighbour; SN01 changed colour
+  (fades in F115W, brightens in F356W), which the same-sign rule rejects.
+- New: `transient_grid.py --recentre-in origin` (default; centroid once where the catalog saw the source) and
+  mixed-sign hits (column `mixed`), with unit tests. SN01 recovered; the new rules add only that row.
+- **Result:** 175 hits in 59 groups: 50 star spikes and wings, 6 edges, 2 persistence (`persistence_check.py`),
+  SN01. **0 new candidates.** Injection −0.75 mag 96 %, −0.44 mag 44 %. Contact sheets looked at.
+  `results/transients/macs0416_grid/`.
+- **Failed approach / limit:** the caustic stars (F356W 27.1–28.6 on arcs) are below the grid's depth (|σ| ≤ 3.3),
+  and SN02 has no catalog position of its own. The grid cannot test transients on arcs; image differencing can.
+- Data: 8 `_i2d` mosaics (6.0 GB) streamed and deleted.
+- **Handoff:** Ep1/Ep3 (o213) and Ep2/Ep3 with the same command; arc-region image differencing (PSF-matched) is
+  the step that would reach the caustic stars; re-run Sunrise/SMACS under the new defaults (cheap, ~10 s each,
+  needs the mosaics again).
 
 ## 2026-10-15: Sunrise two-epoch grid on every catalogued position: no transient (D-027 addendum)
 - **Hypothesis before computing:** a source in the o010/o120 overlap changed by ≥ 0.3 mag at ≥ 5σ in two bands, but

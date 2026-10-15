@@ -1,0 +1,108 @@
+{
+  "n_positions": 8322,
+  "n_measured_any_band": 3909,
+  "n_measured_all_bands": 3807,
+  "n_hits": 175,
+  "n_hit_groups": 59,
+  "n_hits_mixed": 1,
+  "recentre_in": "origin",
+  "same_sign": false,
+  "bands": {
+    "F115W": {
+      "e1": "jw01176-o211_t009_nircam_clear-f115w_i2d.fits",
+      "e2": "jw01176-o212_t009_nircam_clear-f115w_i2d.fits",
+      "noise_scale": 1.4190515508058081,
+      "zero_point_mag": 0.015382772255607136,
+      "n_measured": 3907,
+      "n_pass": 187,
+      "positions_per_s": 3903.4472793700415
+    },
+    "F150W": {
+      "e1": "jw01176-o211_t009_nircam_clear-f150w_i2d.fits",
+      "e2": "jw01176-o212_t009_nircam_clear-f150w_i2d.fits",
+      "noise_scale": 1.3289608247845113,
+      "zero_point_mag": 0.014118126468333346,
+      "n_measured": 3907,
+      "n_pass": 208,
+      "positions_per_s": 4143.958558868707
+    },
+    "F277W": {
+      "e1": "jw01176-o211_t009_nircam_clear-f277w_i2d.fits",
+      "e2": "jw01176-o212_t009_nircam_clear-f277w_i2d.fits",
+      "noise_scale": 1.5084728876411038,
+      "zero_point_mag": 0.009502700311075907,
+      "n_measured": 3816,
+      "n_pass": 93,
+      "positions_per_s": 5025.51166090229
+    },
+    "F356W": {
+      "e1": "jw01176-o211_t009_nircam_clear-f356w_i2d.fits",
+      "e2": "jw01176-o212_t009_nircam_clear-f356w_i2d.fits",
+      "noise_scale": 1.4662753843390814,
+      "zero_point_mag": -0.0007586853361316104,
+      "n_measured": 3810,
+      "n_pass": 82,
+      "positions_per_s": 5713.760339446401
+    }
+  },
+  "injection": {
+    "floor_x_median_error": 10.0,
+    "fwhm_arcsec": 0.1,
+    "runs": [
+      {
+        "frac": 1.0,
+        "nominal_dmag": -0.752574989159953,
+        "n": 500,
+        "recovered_frac": 0.662,
+        "n_nominal": 197,
+        "recovered_frac_nominal": 0.9593908629441624,
+        "per_band_pass_frac": {
+          "F115W": 0.56,
+          "F150W": 0.646,
+          "F277W": 0.566,
+          "F356W": 0.614
+        }
+      },
+      {
+        "frac": 0.5,
+        "nominal_dmag": -0.4402281476392031,
+        "n": 500,
+        "recovered_frac": 0.356,
+        "n_nominal": 126,
+        "recovered_frac_nominal": 0.4365079365079365,
+        "per_band_pass_frac": {
+          "F115W": 0.298,
+          "F150W": 0.45,
+          "F277W": 0.22,
+          "F356W": 0.272
+        }
+      }
+    ],
+    "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated"
+  },
+  "command": "transient_grid.py --band F115W/F150W/F277W/F356W jw01176 o211 (2022-10-07) o212 (2022-12-29) --catalog <8 pipeline _cat.ecsv, o211 then o212> --epoch2-catalogs 4 5 6 7 --inject 500 --inject-frac 1.0 0.5 --procs 4 (defaults: --recentre-in origin, mixed-sign hits allowed)",
+  "hit_group_verdicts_by_eye": {
+    "diffraction spike, streak or wing of a bright star (PA 293 -> 33 deg)": 50,
+    "mosaic footprint edge": 6,
+    "detector persistence (persistence_check.py, D-039): g39, g40": 2,
+    "SN01 = Yan et al. 2023 supernova (persistence_check on_sky; mixed sign: F115W fades, F277W/F356W brighten)": 1
+  },
+  "candidates": 0,
+  "validation_published_transients": {
+    "source": "Yan et al. 2023, ApJS 269, 43 (arXiv:2307.07579), Table 4/5; positions shifted by the measured frame offset",
+    "frame_offset_arcsec": {
+      "dra_cosdec": 0.196,
+      "ddec": -0.055,
+      "from": "Ep2-Ep1 F356W difference peaks of D21-W1, D21-W3, D21-S1, SN01 (derived)"
+    },
+    "n_ep1_to_ep2": 8,
+    "recovered_by_grid": [
+      "SN01"
+    ],
+    "missed": {
+      "D21-W1, D21-W2, D21-W3, D21-S1, D21-S2, D23-S3": "caustic-crossing stars at F356W 27.1-28.6 on arcs: forced 0.15 arcsec apertures at the corrected positions give |sigma| <= 3.3 (calibrated); below the 5 sigma threshold",
+      "SN02": "on its host nucleus; nearest grid position 0.34 arcsec away (no catalog entry of its own); at its corrected position F115W +5.3, F150W +6.2 sigma, so a position set problem, not depth"
+    },
+    "before_fixes": "0 of 8: per-band recentring in epoch 1 moved the LW apertures of SN01 onto a neighbour, and its F115W fade / LW brightening has mixed sign"
+  }
+}

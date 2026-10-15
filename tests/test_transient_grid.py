@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from astropy.io import fits
 from astropy.table import Table
 from astropy.wcs import WCS
@@ -60,6 +61,24 @@ def test_hits_needs_same_sign_in_min_bands():
     assert list(tg.hits(s, 2)) == [True, False, True, False]
 
 
+def test_hits_any_sign_counts_a_colour_change():
+    s = np.array([[1, -1, 0, 0], [1, 1, 0, 0], [1, 0, 0, 0]])
+    assert list(tg.hits(s, 2, any_sign=True)) == [True, True, False]
+    assert list(tg.hits(s, 2)) == [False, True, False]
+
+
+def test_catalog_bands_reads_whole_tokens():
+    names = [
+        "jw01176-o211_t009_nircam_clear-f115w_cat.ecsv",
+        "x/jw01176-o212_t009_nircam_clear-f356w_cat.ecsv",
+    ]
+    assert tg.catalog_bands(names, ["F115W", "F356W"]) == ["F115W", "F356W"]
+    # 'a' is inside 'cat' but not a token of it
+    assert tg.catalog_bands(["cat_a.ecsv"], ["A", "B"]) == ["A"]
+    with pytest.raises(SystemExit):
+        tg.catalog_bands(["cat.ecsv"], ["A", "B"])
+
+
 def test_band_pass_with_fixed_zero_point_keeps_a_common_brightening():
     rng = np.random.default_rng(1)
     f1 = rng.uniform(5, 10, 200)
@@ -99,11 +118,11 @@ def test_main_finds_the_brightened_source_and_recovers_injections(tmp_path):
         _image(p1, xy, flux, rng)
         _image(p2, xy, flux2, rng)
         args += ["--band", band, str(p1), str(p2)]
-    Table({"ra": ra, "dec": dec}).write(tmp_path / "cat.ecsv", format="ascii.ecsv")
+    Table({"ra": ra, "dec": dec}).write(tmp_path / "cat_a.ecsv", format="ascii.ecsv")
     out = tmp_path / "out"
     rc = tg.main(
         args
-        + ["--catalog", str(tmp_path / "cat.ecsv"), "--epoch2-catalogs", "--out", str(out)]
+        + ["--catalog", str(tmp_path / "cat_a.ecsv"), "--epoch2-catalogs", "--out", str(out)]
         + ["--inject", "40", "--inject-frac", "1.0", "--procs", "1"]
     )
     assert rc == 0
@@ -113,3 +132,45 @@ def test_main_finds_the_brightened_source_and_recovers_injections(tmp_path):
     assert summary["n_hits"] == 1
     assert summary["n_hit_groups"] == 1
     assert summary["injection"]["runs"][0]["recovered_frac"] >= 0.9
+
+
+def _colour_change_field(tmp_path, recentre_in):
+    """Source 20 fades in band A and appears in band B, where a bright neighbour sits 8 px away."""
+    tmp_path = tmp_path / recentre_in
+    tmp_path.mkdir()
+    rng = np.random.default_rng(3)
+    xy = _field(rng)
+    w = _wcs()
+    ra, dec = w.pixel_to_world_values(xy[:, 0], xy[:, 1])
+    flux = rng.uniform(2, 6, len(xy))
+    nb = xy[20] + (8.0, 0.0)
+    args = []
+    for band in ("A", "B"):
+        f1, f2 = flux.copy(), flux.copy()
+        if band == "A":
+            f1[20], f2[20] = 3.0, 1.0
+        else:
+            f1[20], f2[20] = 0.0, 3.0
+        pts = np.vstack([xy, nb]) if band == "B" else xy
+        p1, p2 = tmp_path / f"{band}1.fits", tmp_path / f"{band}2.fits"
+        _image(p1, pts, np.append(f1, 30.0) if band == "B" else f1, rng)
+        _image(p2, pts, np.append(f2, 30.0) if band == "B" else f2, rng)
+        args += ["--band", band, str(p1), str(p2)]
+    Table({"ra": ra, "dec": dec}).write(tmp_path / "cat_a.ecsv", format="ascii.ecsv")
+    out = tmp_path / "out"
+    tg.main(
+        args
+        + ["--catalog", str(tmp_path / "cat_a.ecsv"), "--epoch2-catalogs", "--out", str(out)]
+        + ["--recentre-in", recentre_in, "--procs", "1"]
+    )
+    return Table.read(out / "grid.ecsv")
+
+
+def test_origin_recentring_keeps_the_aperture_on_a_source_absent_in_one_band(tmp_path):
+    grid = _colour_change_field(tmp_path, "origin")
+    assert list(np.flatnonzero(grid["hit"])) == [20]
+    assert grid["mixed"][20]
+    assert grid["A_pass"][20] == -1 and grid["B_pass"][20] == 1
+    # per-band recentring follows the neighbour in band B, epoch 1, and loses the source
+    band = _colour_change_field(tmp_path, "band")
+    assert not band["hit"][20]
