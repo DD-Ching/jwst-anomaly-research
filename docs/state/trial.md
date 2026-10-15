@@ -168,6 +168,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.35 (Abell 2744 DD 2756 grid, pair choice, `i2d_region.py`; contact sheets) | — | ≈ 0.1 (persistence test, UNCOVER third-epoch stamps) | 0.1 (orientation, claim, PR) | cloud routine 01HeG8Gq, 09:09–09:45Z |
 | 2026-W42 | ≈ 0.45 (MACS0416 arc tiling: 9 more o211/o212 tiles; dipole verdict; core-peak check; contact sheets) | — | — | 0.15 (orientation, base merge, claim) | cloud routine 01QcfDQb, 10:09–10:50Z |
 | 2026-W42 | ≈ 0.2 (Abell 2744 UNCOVER o001 vs 2756 o002 grid; contact sheets) | — | ≈ 0.15 (persistence test on 5 visits, dipole aperture checks, g11 core check) | 0.1 (orientation, claim, PR) | cloud routine 01JkMNZG, 11:08–11:45Z |
+| 2026-W42 | — | — | ≈ 0.4 (MACS0416 t+2+2 h002/h003 persistence, h063 with CANUCS o004; `_cal` and difference contact sheets) | 0.15 (orientation, base merge, claim, PR) | cloud routine 01UyLcH7, 12:09–12:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
