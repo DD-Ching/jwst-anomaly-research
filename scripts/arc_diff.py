@@ -454,7 +454,7 @@ def grid_positions(
     """Up to ``n`` sky positions on pixels above the ``pct`` percentile of ``img`` (arcs and
     galaxies), at least ``min_sep`` arcsec apart and ``margin`` arcsec from the box border."""
     rng = np.random.default_rng(seed)
-    m = int(np.ceil(margin / scale))
+    m = max(int(np.ceil(margin / scale)), 1)  # ok[-0:] would clear the whole mask
     ok = np.nan_to_num(img) > np.nanpercentile(img, pct)
     ok[:m, :] = ok[-m:, :] = ok[:, :m] = ok[:, -m:] = False
     ys, xs = np.nonzero(ok)
