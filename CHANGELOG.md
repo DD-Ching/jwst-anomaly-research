@@ -2,6 +2,40 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 h044/h030 knot test on o211→c004 and the o212→o213 control: h030 ordinary, h044 open
+- **Hypothesis before measuring:** if the o211 SW core deficit explains h044/h030, both sit inside the
+  compact-knot distribution in o211→c004 (an independent program), and neither stands out in o212→o213 (no o211).
+  Plan change: a target that is the top knot in o211 pairs only stays open; one that also stands out without o211,
+  or sits inside the knots, is ordinary.
+- **New `scripts/arc_diff_knots.py` (tested offline):** the previous run's ad-hoc knot measurement as a script
+  (epoch-1 peaks, footprint 0.25″, `arc_diff_vet.py` apertures, targets ranked against knots of 150–500 nJy,
+  excluding knots within 0.2″ of the target; robust σ). **Validation:** the h044/h030 aperture fluxes of the
+  rerun boxes equal the stored `vet_t32h044.json` / `vet_t33h030.json` values (e.g. h044 o211→c004 F150W 15.42 /
+  281.7 nJy). Below 150 nJy, F150W picks up hundreds of noise peaks on extended light, so 150 nJy (the previous
+  run's floor) is kept (ASSUMPTION).
+- **o211→c004 (derived):** SW knot medians +1.7 % (F150W, n = 16) and +1.5 % (F200W, n = 11), LW +0.5 %: the
+  o211 SW deficit is confirmed against CANUCS. h044 is the top knot in both SW bands (F150W +5.5 %, z 2.7;
+  F200W +8.75 %, z 4.4); h030 is inside (z 1.6 / 1.3). LW ordinary for both.
+- **o212→o213 control (derived):** F200W knot median +0.1 % (the F200W deficit is o211-specific), but F150W
+  knots still give +1.3 % (+3.1 % for the two brightest), so part of the F150W offset is a general kernel-matching
+  systematic. h044 is ordinary (F150W z −0.3, F200W z −1.7). h030 is the top F150W knot here too (+4.4 %, z 4.5).
+- **o211→o213 (derived; finished at the end of the run):** SW knot medians +2.0 % / +1.8 %. h044 is the top knot
+  in both SW bands again (F150W +8.0 %, z 4.0; F200W +6.4 %, z 2.2). h030 is the top F150W knot (+6.7 %, z 3.1),
+  F200W z 1.8; its F150W excess tracks o213 (also in o212→o213), not o211.
+- **Looked at the cutouts** (`sheet_h044_h030_c004.png`): both residuals sit on compact cores and are
+  dipole-like (adjacent positive and negative lobes in F150W/F200W), the pattern of a core PSF or sub-pixel
+  registration mismatch, not an isolated point source.
+- **Reading:** h030 is **ordinary** (inside the knots against an independent program; its F150W excess appears
+  without o211; dipole residual). h044 stays **open and unvetted, not a candidate**: an o211-only SW excess of
+  about 5–7 % over the knot median (≈ 13–18 nJy F200W) on a compact core with a dipole-like residual. A hot point
+  source would also fit SW-only (Rayleigh–Jeans: F356W ≈ F150W / 5.6, within the LW noise) — an ordinary
+  lensed-star explanation is untested, not excluded. h044 is the top SW knot in all three o211 pairs and
+  ordinary in the control. Limits: one box; aperture ratios, not PSF fits; a 4-band `--kernel-stamps` box takes
+  7–22 min on 4 cores.
+- **Handoff:** (1) per-dither o211 `_cal` photometry of h044's
+  core against two nearby knots (a dither-dependent deficit is processing); (2) a sub-pixel-shift test: refit
+  h044's core with a free 0.01–0.03″ offset and see if the net flux excess survives; (3) HST pre-JWST epoch.
+
 ## 2026-10-15: MACS0416 h044/h030: o211 compact knots are systematically fainter in SW; explains about half of h044
 - **Hypothesis before measuring:** the o211-faint SW signature of h044/h030 is an o211-wide compact-core deficit
   (PSF or processing), so other compact knots in the same box show the same fractional residual. Plan change: if
