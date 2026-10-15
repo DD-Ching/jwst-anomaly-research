@@ -80,15 +80,23 @@ def coherence(s_hit: float, s_knots: list[float], ratio: float) -> float:
     return float(np.mean((np.sign(k) == np.sign(s_hit)) & (np.abs(k) >= ratio * abs(s_hit))))
 
 
-def vet_band(maps, band: str, ra: float, dec: float, a, rng: np.random.Generator) -> dict:
+def vet_band(maps, band: str, ra: float, dec: float, a, rng: np.random.Generator) -> dict | None:
+    """One band's measurements; None when the position is off the map or its S window is all NaN."""
     w = _wcs(str(maps[f"{band}_wcs"]))
     x0, y0 = (float(v) for v in w.all_world2pix(ra, dec, 0))
     scale = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600
     d, s, e1 = maps[f"{band}_d"], maps[f"{band}_s"], maps[f"{band}_e1img"]
+    yi, xi = int(round(y0)), int(round(x0))
+    r = max(1, int(round(a.peak_arcsec / scale)))
+    if not (r <= yi < d.shape[0] - r and r <= xi < d.shape[1] - r):
+        return None
+    win = s[yi - r : yi + r + 1, xi - r : xi + r + 1]
+    if not np.isfinite(win).any():
+        return None
+    s_hit = float(win.flat[np.nanargmax(np.abs(win))])
     r_ap = AP_RADIUS[band] / scale
     to_njy = scale**2 * SR_PER_ARCSEC2 * NJY_PER_MJY
     fd, fe = disk_sum(d, r_ap) * to_njy, disk_sum(e1, r_ap) * to_njy
-    yi, xi = int(round(y0)), int(round(x0))
     f0, e0 = float(fd[yi, xi]), float(fe[yi, xi])
     yy, xx = np.mgrid[: d.shape[0], : d.shape[1]]
     pad = int(np.ceil(r_ap)) + 3
@@ -106,10 +114,9 @@ def vet_band(maps, band: str, ra: float, dec: float, a, rng: np.random.Generator
         return sig, float(np.mean(np.abs(v) >= abs(f0))), int(mask.sum())
 
     sky_sig, _, n_sky = robust(inner & far & (e1 <= np.nanmedian(e1)))
-    arc_sig, arc_p, n_arc = robust(inner & far & (fe > 0.7 * e0) & (fe < 1.5 * e0))
-    r = max(1, int(round(a.peak_arcsec / scale)))
-    win = s[max(yi - r, 0) : yi + r + 1, max(xi - r, 0) : xi + r + 1]
-    s_hit = float(win.flat[np.nanargmax(np.abs(win))])
+    # Arc noise needs light at the hit; with e0 ≤ 0 (sky) it is undefined and reported as NaN.
+    similar = (fe > 0.7 * e0) & (fe < 1.5 * e0) if e0 > 0 else np.zeros_like(far)
+    arc_sig, arc_p, n_arc = robust(inner & far & similar)
     knots = neighbour_knots(
         e1,
         x0,
@@ -156,6 +163,10 @@ def main(argv: list[str] | None = None) -> None:
         with np.load(path) as m:
             bands = sorted({k.rsplit("_", 1)[0] for k in m.files if k.endswith("_wcs")})
             res = {b: vet_band(m, b, a.ra, a.dec, a, rng) for b in bands}
+        res = {b: r for b, r in res.items() if r is not None}
+        if not res:
+            print(pair.ljust(10), "position not covered")
+            continue
         top = max(res, key=lambda b: abs(res[b]["s_hit"]))
         cf = res[top]["coherent_fraction"]
         pairs[pair] = {

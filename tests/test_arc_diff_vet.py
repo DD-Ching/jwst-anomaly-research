@@ -81,3 +81,15 @@ def test_coherence_counts_same_sign_and_size():
     assert adv.coherence(6.0, [5.0, 3.5, -4.0, 1.0], 0.5) == 0.5
     assert np.isnan(adv.coherence(6.0, [], 0.5))
     assert adv.coherence(-4.0, [-3.0, -1.0], 0.5) == 0.5
+
+
+def test_position_off_the_map_or_all_nan_is_skipped(tmp_path):
+    rng = np.random.default_rng(2)
+    maps = _maps(_blob(N // 2, N // 2, amp=0.08), rng)
+    maps["F277W_s"][N // 2 - 3 : N // 2 + 4, N // 2 - 3 : N // 2 + 4] = np.nan
+    m = _write(tmp_path, "nan", maps)
+    out = tmp_path / "nan.json"
+    adv.main(["--maps", "p", str(m), "--ra", "64.0", "--dec", "-24.0", "--out", str(out)])
+    assert json.loads(out.read_text())["pairs"] == {}
+    adv.main(["--maps", "p", str(m), "--ra", "64.1", "--dec", "-24.0", "--out", str(out)])
+    assert json.loads(out.read_text())["pairs"] == {}
