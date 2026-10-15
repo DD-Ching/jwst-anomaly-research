@@ -228,3 +228,28 @@ def test_rejudge_reclassifies_stored_values(tmp_path):
     assert rep["changed"] == [{"id": "a", "old": "rosette", "new": "pass"}]
     d = json.loads(path.read_text())
     assert d["counts"] == {"pass": 1} and d["rejudged"] and d["dipole_measured"]
+
+
+def test_rosette_lobe_ratio_counts_only_strong_lobes():
+    # A bright star beside weak residual lobes of a neighbour is not a rosette under the ratio rule.
+    weak = _band(20.0, n_lobes=5, both=True)
+    weak["lobe_peaks"] = [20.0, 3.5, -3.2, 4.0, -3.8]
+    res = {"F277W": weak, "F356W": dict(weak)}
+    assert adm.classify(res, adm.Params(rosette_lobe_ratio=0.0))[0] == "rosette"
+    assert adm.classify(res, adm.Params(rosette_lobe_ratio=0.3))[0] == "pass"
+    strong = _band(8.0, n_lobes=4, both=True)
+    strong["lobe_peaks"] = [8.0, -7.0, 6.5, -5.0]
+    res = {"F277W": strong, "F356W": dict(strong)}
+    assert adm.classify(res, adm.Params(rosette_lobe_ratio=0.3))[0] == "rosette"
+    old = _band(8.0, n_lobes=4, both=True)  # outputs without lobe_peaks keep the original rule
+    assert adm.classify({"A": old, "B": dict(old)}, adm.Params(rosette_lobe_ratio=0.3))[0] == (
+        "rosette"
+    )
+
+
+def test_lobe_peaks_are_signed_region_peaks():
+    s = np.zeros((40, 40))
+    s[18:23, 18:23] = 9.0
+    s[10:13, 18:23] = -4.0
+    pk = sorted(adm.lobe_peaks(s, 20, 20, 12, 3.0, 4))
+    assert pk == [-4.0, 9.0]

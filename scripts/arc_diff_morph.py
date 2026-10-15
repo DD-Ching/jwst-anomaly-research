@@ -31,15 +31,18 @@ when ``edge_arcsec`` < ``--edge-arcsec`` in any detected band (a target within t
 of the map border is judged, not dropped); **extended** when ``extent_arcsec`` >
 ``--max-extent-arcsec`` in any detected band (spike streaks, also when broken up in the top band,
 and the smoothed lobes of bright rosettes); a **rosette** when ``n_lobes`` ≥ ``--min-lobes`` with
-both signs in at least ``--min-rosette-bands`` detected bands; a **dipole** when
-``dipole_ratio`` ≥ ``--dipole-ratio`` in at least ``--min-dipole-bands`` bands; otherwise it
-passes. ``--rejudge`` re-applies the verdict to the per-band values of an existing output JSON
-(no maps needed): measurement thresholds must match the file's; the stored values keep the
-definitions of the code that wrote them (``dipole_ratio`` absent in early files counts as 0;
+both signs in at least ``--min-rosette-bands`` detected bands (with ``--rosette-lobe-ratio`` > 0,
+only lobes whose peak reaches that fraction of |S_hit| count; default 0.3, 0 = original rule); a
+**dipole** when ``dipole_ratio`` ≥ ``--dipole-ratio`` in at least ``--min-dipole-bands`` bands;
+otherwise it passes. ``--rejudge`` re-applies the verdict to the per-band values of an existing
+output JSON (no maps needed): measurement thresholds must match the file's; the stored values keep
+the definitions of the code that wrote them (``dipole_ratio`` absent in early files counts as 0;
 bands dropped at a map border stay dropped). Every number is
 ``derived``; the thresholds are ASSUMPTIONs. Validation: every Yan+2023 arc-transient position in
 the 20″ Warhol box passes in o211/o212; one (D21-S2, outside its discovery pair) is a rosette in
-o211/o213.
+o211/o213. Injection calibration (``arc_diff.py --inject-grid``, 2026-10-15): of injected 27.5–28.0
+mag stars recovered as unflagged hits, 0.82 pass with the original rosette rule and 0.92 with the
+lobe ratio 0.3, which changes none of 244 real-hit verdicts on the same maps.
 """
 
 from __future__ import annotations
@@ -75,6 +78,7 @@ class Params:
     dipole_arcsec: float = 0.3
     dipole_ratio: float = 0.5
     min_dipole_bands: int = 2
+    rosette_lobe_ratio: float = 0.3
 
 
 def _wcs(text: str):
@@ -151,9 +155,20 @@ def lobes(
     s: np.ndarray, y: float, x: float, r_px: float, level: float, min_px: int, reg=None
 ) -> list[int]:
     """Signs (+1/-1) of the regions of |S| ≥ level with ≥ min_px pixels touching the disk r_px."""
+    return [int(np.sign(v)) for v in lobe_peaks(s, y, x, r_px, level, min_px, reg)]
+
+
+def lobe_peaks(
+    s: np.ndarray, y: float, x: float, r_px: float, level: float, min_px: int, reg=None
+) -> list[float]:
+    """Signed peak S of each region of |S| ≥ level with ≥ min_px pixels touching the disk r_px."""
     reg = reg or Regions(s, level)
     reg.check(level)
-    return [sign for sign in (1, -1) for _ in reg.near(sign, y, x, r_px, min_px)]
+    out = []
+    for sign in (1, -1):
+        peaks = reg.by_sign[sign][2]
+        out += [sign * float(peaks[k]) for k in reg.near(sign, y, x, r_px, min_px)]
+    return out
 
 
 def dipole_ratio(
@@ -224,9 +239,11 @@ def morph_band(bm: BandMaps, ra: float, dec: float, p: Params) -> dict | None:
     py, px = ya + k // win.shape[1], xa + k % win.shape[1]
     s_hit = float(s[py, px])
     mask, lab = bm.streak[1 if s_hit >= 0 else -1]
-    lb = lobes(s, py, px, p.lobe_arcsec / scale, p.level, p.min_lobe_px, bm.regions)
+    pk = lobe_peaks(s, py, px, p.lobe_arcsec / scale, p.level, p.min_lobe_px, bm.regions)
+    lb = [int(np.sign(v)) for v in pk]
     return {
         "s_hit": s_hit,
+        "lobe_peaks": [round(v, 2) for v in pk],
         "extent_arcsec": component_extent(mask, py, px, lab) * scale,
         "n_lobes": len(lb),
         "both_signs": bool(1 in lb and -1 in lb),
@@ -244,6 +261,15 @@ def morph_band(bm: BandMaps, ra: float, dec: float, p: Params) -> dict | None:
     }
 
 
+def _rosette_band(v: dict, p: Params) -> bool:
+    """≥ min_lobes lobes of both signs; with rosette_lobe_ratio > 0 only lobes whose peak reaches
+    that fraction of |S_hit| count (needs ``lobe_peaks``; older outputs use n_lobes)."""
+    if p.rosette_lobe_ratio <= 0 or "lobe_peaks" not in v:
+        return v["n_lobes"] >= p.min_lobes and v["both_signs"]
+    strong = [x for x in v["lobe_peaks"] if abs(x) >= p.rosette_lobe_ratio * abs(v["s_hit"])]
+    return len(strong) >= p.min_lobes and min(strong) < 0 < max(strong)
+
+
 def classify(res: dict[str, dict], p: Params) -> tuple[str, str | None]:
     """(verdict, top band); only bands with |S_hit| ≥ level (else the top band) take part."""
     if not res:
@@ -254,7 +280,7 @@ def classify(res: dict[str, dict], p: Params) -> tuple[str, str | None]:
         return "edge", top
     if max(v["extent_arcsec"] for v in det) > p.max_extent_arcsec:
         return "extended", top
-    n_ros = sum(v["n_lobes"] >= p.min_lobes and v["both_signs"] for v in det)
+    n_ros = sum(_rosette_band(v, p) for v in det)
     if n_ros >= p.min_rosette_bands:
         return "rosette", top
     # Outputs written before the dipole test have no dipole_ratio; they count as no dipole.

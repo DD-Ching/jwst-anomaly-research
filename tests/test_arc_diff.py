@@ -136,3 +136,82 @@ def test_kernel_match_with_stamps_keeps_a_transient_on_a_compact_source():
     m1, m2, _, _, _, _ = ad.kernel_match(e1n, e2n, v, v, 1.0, 4, stamps=True)
     d = m2 - m1
     assert d[100, 90] > 0.7 * tr[100, 90]
+
+
+def test_add_star_matches_gaussian_star_total_flux():
+    img = np.zeros((60, 60))
+    ad.add_star(img, 30.2, 29.7, 1.5, 100.0)
+    assert np.isclose(img.sum(), 100.0, rtol=1e-6)
+    ref = ad.gaussian_star(img.shape, 30.2, 29.7, 1.5, 100.0)
+    assert np.allclose(img, ref, rtol=0, atol=1e-5)
+
+
+def test_grid_positions_bright_separated_and_inside_margin():
+    from astropy.wcs import WCS
+
+    rng = np.random.default_rng(0)
+    img = _scene(rng, 200)
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = [64.0, -24.0]
+    w.wcs.crpix = [100, 100]
+    w.wcs.cdelt = [-0.04 / 3600, 0.04 / 3600]
+    pos = ad.grid_positions(img, w, 0.04, 30, 0.6, 0.8, 90.0, 1)
+    assert 5 <= len(pos) <= 30
+    xy = np.array([w.all_world2pix(ra, dec, 0) for ra, dec in pos])
+    thr = np.percentile(img, 90)
+    for x, y in xy:
+        assert 20 - 1 <= x <= 180 and 20 - 1 <= y <= 180
+        assert img[int(round(y)), int(round(x))] > thr * 0.5
+    d = np.hypot(*(xy[:, None, :] - xy[None, :, :]).transpose(2, 0, 1))
+    assert d[np.triu_indices(len(xy), 1)].min() * 0.04 >= 0.6 - 0.04
+
+
+def _i2d(path, sci, err, scale):
+    from astropy.io import fits
+    from astropy.wcs import WCS
+
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = [64.0, -24.0]
+    w.wcs.crpix = [sci.shape[1] / 2 + 0.5, sci.shape[0] / 2 + 0.5]
+    w.wcs.cdelt = [-scale / 3600, scale / 3600]
+    h = w.to_header()
+    h["PIXAR_SR"] = (scale / 206264.806) ** 2
+    fits.HDUList(
+        [
+            fits.PrimaryHDU(),
+            fits.ImageHDU(sci.astype(np.float32), h, name="SCI"),
+            fits.ImageHDU(err.astype(np.float32), h, name="ERR"),
+        ]
+    ).writeto(path)
+
+
+def test_inject_grid_runs_through_the_whole_chain(tmp_path):
+    rng = np.random.default_rng(5)
+    n, scale = 400, 0.063
+    args = []
+    for band in ("F277W", "F356W"):
+        sky = _scene(rng, n) * 0.05
+        paths = []
+        for ep in (1, 2):
+            p = tmp_path / f"{band}_{ep}.fits"
+            _i2d(p, sky + rng.normal(0, 0.002, (n, n)), np.full((n, n), 0.002), scale)
+            paths.append(str(p))
+        args += ["--band", band, *paths]
+    out = tmp_path / "out"
+    rc = ad.main(
+        args
+        + ["--ra", "64.0", "--dec", "-24.0", "--half-arcsec", "10", "--tile-arcsec", "0"]
+        + ["--inject-grid", "12", "--inject-grid-mags", "24.0", "--procs", "1"]
+        + ["--out", str(out), "--maps", str(tmp_path / "m.npz")]
+    )
+    assert rc == 0
+    import csv
+    import json
+
+    rows = list(csv.DictReader(open(out / "injected.csv")))
+    assert len(rows) >= 6
+    assert all(r["hit"] for r in rows)  # bright injections are all recovered as hits
+    summ = json.loads((out / "summary.json").read_text())
+    assert summ["inject_grid"]["n_hit"] == len(rows)
