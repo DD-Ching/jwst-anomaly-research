@@ -1,0 +1,69 @@
+{
+ "provenance": "derived (simulated point sources injected into real o212 maps, tile t-1-4)",
+ "pair": "PEARLS jw01176 o211 -> o212, t009 i2d, arc_diff.py --kernel-px 4 --kernel-stamps --inject-grid 40",
+ "assumptions": "Gaussian PSF stars, positions on pixels above the epoch-1 90th percentile, 1.5 arcsec apart; morph thresholds = Params defaults (ring and sign_flip rules of 2026-10-15)",
+ "per_mag": {
+  "27.5": {
+   "n": 20,
+   "hit": 20,
+   "hit_unflagged": 15,
+   "verdicts_of_unflagged": {
+    "pass": 10,
+    "rosette": 1,
+    "dipole": 2,
+    "sign_flip": 1,
+    "extended": 1
+   }
+  },
+  "28.0": {
+   "n": 20,
+   "hit": 19,
+   "hit_unflagged": 16,
+   "verdicts_of_unflagged": {
+    "ring": 1,
+    "pass": 10,
+    "rosette": 2,
+    "extended": 3
+   }
+  },
+  "29.0": {
+   "n": 20,
+   "hit": 20,
+   "hit_unflagged": 16,
+   "verdicts_of_unflagged": {
+    "rosette": 6,
+    "extended": 1,
+    "pass": 9
+   }
+  },
+  "29.5": {
+   "n": 20,
+   "hit": 12,
+   "hit_unflagged": 9,
+   "verdicts_of_unflagged": {
+    "rosette": 2,
+    "pass": 5,
+    "extended": 1,
+    "sign_flip": 1
+   }
+  }
+ },
+ "real_unflagged_hits": {
+  "with ring and sign_flip rules": {
+   "dipole": 1,
+   "edge": 36,
+   "extended": 92,
+   "pass": 20,
+   "ring": 23,
+   "rosette": 24,
+   "sign_flip": 3
+  },
+  "without (ring off, sign_flip_level 0)": {
+   "dipole": 1,
+   "edge": 36,
+   "extended": 92,
+   "pass": 46,
+   "rosette": 24
+  }
+ }
+}

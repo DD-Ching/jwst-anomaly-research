@@ -34,6 +34,11 @@ and the smoothed lobes of bright rosettes); a **rosette** when ``n_lobes`` ≥ `
 both signs in at least ``--min-rosette-bands`` detected bands (with ``--rosette-lobe-ratio`` > 0,
 only lobes whose peak reaches that fraction of |S_hit| count; default 0.3, 0 = original rule); a
 **dipole** when ``dipole_ratio`` ≥ ``--dipole-ratio`` in at least ``--min-dipole-bands`` bands;
+a **ring** when ``ring_fill`` ≥ ``--ring-fill-min`` in at least ``--min-ring-bands``
+detected bands (PSF-mismatch rings around galaxies, 2026-10-15 t−1−4; absent in older outputs = 0);
+a **sign_flip** when one band has S_hit ≥ ``--sign-flip-level`` and another ≤ −that level (0 = off;
+the SW and LW channels expose simultaneously, so a new or vanished point source changes all bands
+with one sign, while ~1″ PSF-mismatch rings around galaxies flip sign between SW and LW);
 otherwise it passes. ``--rejudge`` re-applies the verdict to the per-band values of an existing
 output JSON (no maps needed): measurement thresholds must match the file's; the stored values keep
 the definitions of the code that wrote them (``dipole_ratio`` absent in early files counts as 0;
@@ -79,6 +84,15 @@ class Params:
     dipole_ratio: float = 0.5
     min_dipole_bands: int = 2
     rosette_lobe_ratio: float = 0.3
+    sign_flip_level: float = 5.0
+    ring_search_arcsec: float = 1.2
+    ring_min_arcsec: float = 0.15
+    ring_width_arcsec: float = 0.1
+    ring_bins: int = 16
+    ring_exclude_arcsec: float = 0.3
+    ring_frac: float = 0.3
+    ring_fill_min: float = 0.5
+    min_ring_bands: int = 2
 
 
 def _wcs(text: str):
@@ -198,11 +212,49 @@ def dipole_ratio(
     return reg.local_peak(s, sign, k, y, x, peak_r) / abs(s_hit)
 
 
+def ring_fill(s: np.ndarray, e1: np.ndarray, y: int, x: int, scale: float, p: Params) -> float:
+    """Azimuthal fill of a residual ring through the hit around the brightest nearby epoch-1 source.
+
+    The centre is the peak of the epoch-1 image (smoothed by 1 px) within ``ring_search_arcsec`` of
+    the hit; 0 when it lies closer than ``ring_min_arcsec`` (the hit is on the core). In an annulus
+    of half-width ``ring_width_arcsec`` (at least 1 px) at the hit's distance d, pixels within
+    ``ring_exclude_arcsec`` of the hit are dropped (its own PSF), and the fill is the fraction of
+    ``ring_bins`` azimuth bins whose largest sign(S_hit) × S reaches max(level, ring_frac |S_hit|).
+    PSF-mismatch rings around galaxies fill most bins; a point source fills none.
+    """
+    s_hit = float(s[y, x])
+    r_px = int(np.ceil(p.ring_search_arcsec / scale)) + 2
+    y0, x0 = max(0, y - r_px), max(0, x - r_px)
+    win = (slice(y0, y + r_px + 1), slice(x0, x + r_px + 1))
+    e = ndimage.gaussian_filter(np.nan_to_num(e1[win]), 1.0)
+    yy, xx = np.mgrid[y0 : y0 + e.shape[0], x0 : x0 + e.shape[1]]
+    to_hit = np.hypot(yy - y, xx - x) * scale
+    k = int(np.argmax(np.where(to_hit <= p.ring_search_arcsec, e, -np.inf)))
+    cy, cx = yy.flat[k], xx.flat[k]
+    d = float(np.hypot(cy - y, cx - x)) * scale
+    if d < p.ring_min_arcsec:
+        return 0.0
+    v = np.sign(s_hit) * s[win]
+    r = np.hypot(yy - cy, xx - cx) * scale
+    ann = (np.abs(r - d) <= max(p.ring_width_arcsec, scale)) & np.isfinite(v)
+    ann &= to_hit > p.ring_exclude_arcsec
+    ang = np.arctan2(yy - cy, xx - cx)[ann]
+    b = ((ang + np.pi) / (2 * np.pi) * p.ring_bins).astype(int) % p.ring_bins
+    best = np.full(p.ring_bins, -np.inf)
+    np.maximum.at(best, b, v[ann])
+    have = np.isfinite(best)
+    if not have.any():
+        return 0.0
+    level = max(p.level, p.ring_frac * abs(s_hit))
+    return float((best[have] >= level).sum() / have.sum())
+
+
 class BandMaps:
     """Per-band products shared by every target: WCS, smoothed-S labels, edge distance, regions."""
 
-    def __init__(self, s: np.ndarray, wcs_text: str, p: Params):
+    def __init__(self, s: np.ndarray, wcs_text: str, p: Params, e1: np.ndarray | None = None):
         self.s = s
+        self.e1 = e1
         self.w = _wcs(wcs_text)
         self.scale = float(np.sqrt(abs(np.linalg.det(self.w.pixel_scale_matrix)))) * 3600
         good = np.isfinite(s)
@@ -241,7 +293,8 @@ def morph_band(bm: BandMaps, ra: float, dec: float, p: Params) -> dict | None:
     mask, lab = bm.streak[1 if s_hit >= 0 else -1]
     pk = lobe_peaks(s, py, px, p.lobe_arcsec / scale, p.level, p.min_lobe_px, bm.regions)
     lb = [int(np.sign(v)) for v in pk]
-    return {
+    ring = {} if bm.e1 is None else {"ring_fill": round(ring_fill(s, bm.e1, py, px, scale, p), 3)}
+    return ring | {
         "s_hit": s_hit,
         "lobe_peaks": [round(v, 2) for v in pk],
         "extent_arcsec": component_extent(mask, py, px, lab) * scale,
@@ -283,10 +336,17 @@ def classify(res: dict[str, dict], p: Params) -> tuple[str, str | None]:
     n_ros = sum(_rosette_band(v, p) for v in det)
     if n_ros >= p.min_rosette_bands:
         return "rosette", top
+    n_ring = sum(v.get("ring_fill", 0.0) >= p.ring_fill_min for v in det)
+    if n_ring >= p.min_ring_bands:
+        return "ring", top
     # Outputs written before the dipole test have no dipole_ratio; they count as no dipole.
     n_dip = sum(v.get("dipole_ratio", 0.0) >= p.dipole_ratio for v in res.values())
     if n_dip >= p.min_dipole_bands:
         return "dipole", top
+    if p.sign_flip_level > 0:
+        sh = [v["s_hit"] for v in res.values()]
+        if max(sh) >= p.sign_flip_level and min(sh) <= -p.sign_flip_level:
+            return "sign_flip", top
     return "pass", top
 
 
@@ -303,6 +363,12 @@ MEASURED = (
     "lobe_arcsec",
     "min_lobe_px",
     "dipole_arcsec",
+    "ring_search_arcsec",
+    "ring_min_arcsec",
+    "ring_width_arcsec",
+    "ring_bins",
+    "ring_exclude_arcsec",
+    "ring_frac",
 )
 
 
@@ -366,7 +432,8 @@ def main(argv: list[str] | None = None) -> None:
     with np.load(a.maps) as m:
         bands = sorted({k.rsplit("_", 1)[0] for k in m.files if k.endswith("_wcs")})
         for b in bands:  # one band's full-size products in memory at a time
-            bm = BandMaps(m[f"{b}_s"], str(m[f"{b}_wcs"]), p)
+            e1 = m[f"{b}_e1img"] if f"{b}_e1img" in m.files else None
+            bm = BandMaps(m[f"{b}_s"], str(m[f"{b}_wcs"]), p, e1)
             for r, (_, ra, dec) in zip(per, targets, strict=True):
                 if (v := morph_band(bm, ra, dec, p)) is not None:
                     r[b] = v

@@ -14,7 +14,17 @@
   "min_rosette_bands": 2,
   "dipole_arcsec": 0.3,
   "dipole_ratio": 0.5,
-  "min_dipole_bands": 2
+  "min_dipole_bands": 2,
+  "rosette_lobe_ratio": 0.3,
+  "sign_flip_level": 5.0,
+  "ring_search_arcsec": 1.2,
+  "ring_min_arcsec": 0.15,
+  "ring_width_arcsec": 0.1,
+  "ring_bins": 16,
+  "ring_exclude_arcsec": 0.3,
+  "ring_frac": 0.3,
+  "ring_fill_min": 0.5,
+  "min_ring_bands": 2
  },
  "counts": {
   "pass": 4
