@@ -1,0 +1,21 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: uid, datatype: string}
+# - {name: n_exposures, datatype: int64}
+# - {name: n_detected, datatype: int64}
+# - {name: n_suspect, datatype: int64}
+# - {name: n_clean, datatype: int64}
+# - {name: verdict, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: 'level-2 _cal exposures: s3://stpubdata/jwst/public/jw01176/jw01176211001, s3://stpubdata/jwst/public/jw01176/jw01176213001'}
+# - {ratio: 20.0}
+# - {min_snr: 5.0}
+# - {lookback_hours: 3.0}
+# - failed: []
+# schema: astropy-2.0
+uid n_exposures n_detected n_suspect n_clean verdict
+g0 48 4 4 0 persistence
+g43 56 7 7 0 persistence
+sn01 48 27 0 26 on_sky

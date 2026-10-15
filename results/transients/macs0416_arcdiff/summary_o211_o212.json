@@ -1,0 +1,228 @@
+{
+ "command": "arc_diff.py --band f150w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f150w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f150w_i2d.fits --band f200w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f200w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f200w_i2d.fits --band f277w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f277w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f277w_i2d.fits --band f356w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f356w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f356w_i2d.fits --band f444w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f444w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f444w_i2d.fits --ra 64.0377 --dec -24.0687 --half-arcsec 10 --known results/transients/macs0416_arcdiff/yan2023_arc_transients.csv --frame-offset 0.196 -0.055 --inject 100 --out /tmp/claude-0/-home-user-jwst-anomaly-research/c1325e3a-edb4-5f13-9e51-b6d2978cf679/scratchpad/run21f",
+ "box": {
+  "ra": 64.0377,
+  "dec": -24.0687,
+  "half_arcsec": 10.0
+ },
+ "thresholds_assumption": {
+  "min_sigma": 5.0,
+  "min_bands": 2,
+  "link_arcsec": 0.1,
+  "bg_arcsec": 0.6,
+  "tile_arcsec": 3.0,
+  "match_arcsec": 0.15,
+  "psf_fwhm_arcsec": {
+   "F150W": 0.05,
+   "F200W": 0.066,
+   "F277W": 0.092,
+   "F356W": 0.116,
+   "F444W": 0.145
+  }
+ },
+ "bands": {
+  "F150W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f150w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f150w_i2d.fits",
+   "scale_arcsec": 0.031228290320561063,
+   "shift_px": [
+    -0.6664672544403064,
+    0.3667265187059124
+   ],
+   "blur_sigma_px": 1.19,
+   "flux_scale": 0.9773399497292963,
+   "noise_scale": 1.0,
+   "n_detections": 109,
+   "injection_recovered": {
+    "27.50": 1.0,
+    "28.00": 1.0,
+    "28.50": 0.95
+   }
+  },
+  "F200W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f200w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f200w_i2d.fits",
+   "scale_arcsec": 0.031229723334602156,
+   "shift_px": [
+    -0.786233397401358,
+    0.26907975249268123
+   ],
+   "blur_sigma_px": 1.346,
+   "flux_scale": 0.9817513640349884,
+   "noise_scale": 1.0,
+   "n_detections": 164,
+   "injection_recovered": {
+    "27.50": 1.0,
+    "28.00": 0.99,
+    "28.50": 0.9
+   }
+  },
+  "F277W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f277w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f277w_i2d.fits",
+   "scale_arcsec": 0.06290931600491904,
+   "shift_px": [
+    -0.38354189555751267,
+    -0.05283547284523487
+   ],
+   "blur_sigma_px": 0.466,
+   "flux_scale": 0.9847329619685883,
+   "noise_scale": 1.0,
+   "n_detections": 159,
+   "injection_recovered": {
+    "27.50": 0.96,
+    "28.00": 0.89,
+    "28.50": 0.71
+   }
+  },
+  "F356W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f356w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f356w_i2d.fits",
+   "scale_arcsec": 0.0629089745392368,
+   "shift_px": [
+    -0.22252207064213486,
+    -0.003953063189484227
+   ],
+   "blur_sigma_px": 0.587,
+   "flux_scale": 0.9862737515695356,
+   "noise_scale": 1.0,
+   "n_detections": 130,
+   "injection_recovered": {
+    "27.50": 1.0,
+    "28.00": 0.95,
+    "28.50": 0.74
+   }
+  },
+  "F444W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f444w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f444w_i2d.fits",
+   "scale_arcsec": 0.06291375188055767,
+   "shift_px": [
+    -0.3000869566190537,
+    -0.08560386147286443
+   ],
+   "blur_sigma_px": 0.734,
+   "flux_scale": 0.9839683336378602,
+   "noise_scale": 1.0,
+   "n_detections": 98,
+   "injection_recovered": {
+    "27.50": 1.0,
+    "28.00": 0.94,
+    "28.50": 0.58
+   }
+  }
+ },
+ "n_hits": 149,
+ "known": [
+  {
+   "name": "D21-W1",
+   "pair": "21",
+   "F150W": 6.035693168640137,
+   "F200W": 13.220385551452637,
+   "F277W": 9.548069953918457,
+   "F356W": 10.49373722076416,
+   "F444W": 7.353405952453613,
+   "hit": "h053"
+  },
+  {
+   "name": "D21-W2",
+   "pair": "21",
+   "F150W": 4.838467121124268,
+   "F200W": 6.021417617797852,
+   "F277W": 4.200465679168701,
+   "F356W": 5.379833221435547,
+   "F444W": 3.5936386585235596,
+   "hit": "h143"
+  },
+  {
+   "name": "D21-W3",
+   "pair": "21",
+   "F150W": 2.4925615787506104,
+   "F200W": 4.059003829956055,
+   "F277W": 4.3045220375061035,
+   "F356W": 4.920054912567139,
+   "F444W": 3.119445323944092,
+   "hit": null
+  },
+  {
+   "name": "Dc2-W4",
+   "pair": "c2",
+   "F150W": 2.0308940410614014,
+   "F200W": -2.8381645679473877,
+   "F277W": -2.827601909637451,
+   "F356W": -3.526808977127075,
+   "F444W": -2.443821668624878,
+   "hit": null
+  },
+  {
+   "name": "D31-W5",
+   "pair": "31",
+   "F150W": 2.251415252685547,
+   "F200W": 4.059003829956055,
+   "F277W": 4.200465679168701,
+   "F356W": 4.920054912567139,
+   "F444W": 2.5906903743743896,
+   "hit": null
+  },
+  {
+   "name": "D31-W6",
+   "pair": "31",
+   "F150W": 1.9522677659988403,
+   "F200W": 3.0538201332092285,
+   "F277W": 3.9547460079193115,
+   "F356W": 3.787642478942871,
+   "F444W": 3.254521131515503,
+   "hit": null
+  },
+  {
+   "name": "D31-W7",
+   "pair": "31",
+   "F150W": 1.892657995223999,
+   "F200W": -2.8381645679473877,
+   "F277W": -2.827601909637451,
+   "F356W": -3.317744493484497,
+   "F444W": -2.443821668624878,
+   "hit": null
+  },
+  {
+   "name": "D21-S1",
+   "pair": "21",
+   "F150W": 2.9626030921936035,
+   "F200W": 6.467799663543701,
+   "F277W": 7.225985050201416,
+   "F356W": 9.049904823303223,
+   "F444W": 7.593111038208008,
+   "hit": "h104"
+  },
+  {
+   "name": "D21-S2",
+   "pair": "21",
+   "F150W": 4.108282089233398,
+   "F200W": 6.996665000915527,
+   "F277W": 6.264135360717773,
+   "F356W": 7.204813003540039,
+   "F444W": 4.370777606964111,
+   "hit": "h133"
+  },
+  {
+   "name": "D23-S3",
+   "pair": "23",
+   "F150W": 3.405048131942749,
+   "F200W": 5.170205116271973,
+   "F277W": -2.7203972339630127,
+   "F356W": 3.8124241828918457,
+   "F444W": 3.042267084121704,
+   "hit": null
+  },
+  {
+   "name": "D31-S4",
+   "pair": "31",
+   "F150W": 3.0999796390533447,
+   "F200W": 5.169637203216553,
+   "F277W": 3.567321300506592,
+   "F356W": 6.795071125030518,
+   "F444W": 5.2369608879089355,
+   "hit": "h140"
+  }
+ ]
+}

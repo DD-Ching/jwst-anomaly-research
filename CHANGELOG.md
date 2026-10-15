@@ -19,6 +19,62 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   evaluation caps.
 - **Handoff:** no real-data pilot proposed; S2 not started. Open: R1-type cases need a P optimiser that passes its
   injection test, then XPHM (owner's call). Not covered: one target orientation, real noise, priors, other lenses.
+## 2026-10-15: MACS0416 arc difference imaging (o211/o212): tool validated on compact arc transients; arc ridges remain
+- **Hypothesis before computing:** two-epoch difference images reach the caustic-crossing stars on the Warhol and
+  Spock arcs that the catalog grid cannot (D-027 addendum). Ordinary: misregistration, PSF and zero-point differences,
+  star spikes, persistence; known transients (Yan et al. 2023). Plan change: if the published arc transients are not
+  recovered, fix the tool before any search.
+- New `scripts/arc_diff.py`: S3 byte-range box (both epochs, SCI + ERR), resample, global + tiled registration
+  (3″), Gaussian blur of the sharper epoch and a flux scale fitted on the brightest 10 % of pixels, 0.6″ median
+  background, matched-filter S ≥ 5 in ≥ 2 bands (ASSUMPTIONs). Unit tests on synthetic images.
+- **Validation (20″ box, F150W/F200W/F277W/F356W/F444W):** 4 of 5 published Ep1→Ep2 arc transients are hits
+  (D21-W1 13σ, W2 6σ, S1 9σ, S2 7σ); W3 peaks at 4.9σ. Injected point sources on bright pixels: 28.0 mag 0.89–1.0,
+  28.5 mag 0.58–0.95 (LW lowest). Flux scale epoch 2/epoch 1 = 0.977–0.986 in every band (derived).
+  `results/transients/macs0416_arcdiff/summary_o211_o212.json`.
+- **Failed approaches (contact sheets looked at, three iterations):** global shift + global-rms blur left dipole and
+  positive ridges along every thin arc (blurring an epoch also lowers its noise, so the global rms over-blurs);
+  tiled registration alone did not remove them; scoring the blur on bright pixels cleaned the Warhol region in LW,
+  but the Spock arc and the arc near (64.0369, −24.0664) still show a positive ridge in F200W and F356W.
+  D31-S4 at 6.8σ in this Ep1→Ep2 difference sits on that ridge, so it is not a detection.
+- **No search result:** 149 hits, unvetted, mostly arc ridges and bright-star residuals. No candidate claimed.
+- Data: ten 20″ boxes streamed by byte range (no mosaic stored).
+- **Handoff:** fix the arc ridge (fitted PSF-matching kernel, e.g. a pixel kernel by least squares on stars, or a
+  local flux scale along arcs), re-validate on the five Ep1→Ep2 transients, then o211/o213 (W5–W7, S4).
+
+## 2026-10-15: MACS0416 grid, epoch 1 against epoch 3 (o211/o213): no new transient
+- **Hypothesis before computing:** a two-band change between 2022-10-07 and 2023-02-10 that the published search
+  (Yan et al. 2023, F356W-led) did not report. Ordinary: as in the o211/o212 entry below. Plan change: any survivor
+  goes to `/vet-candidate`.
+- Same command and defaults as #238: 8,345 positions (197 merged after refinement), 3,470 measured in all four
+  bands, 104 hits in 50 groups: 47 bright-star spikes, wings or footprint edges, 2 SW-only persistence
+  afterimages (`persistence_check.py`: every detection suspect), SN01 (`on_sky`, 26 clean exposures; mixed sign).
+  **0 new candidates.** Injection −0.75 mag 95 %, −0.44 mag 40 %. Contact sheets looked at.
+  `results/transients/macs0416_grid_o213/`.
+- **Blind spot, larger here:** neither the o211 nor the o213 catalogs have an entry within 3.2″ of the Warhol arc,
+  so its five published transients (D21-W1/W2, D31-W5/W6/W7) have no grid position; in o211/o212 only the o212
+  catalogs supplied them. Arc transients need image differencing, not the catalog grid.
+- Data: o211 and o213 mosaics (6.4 GB) streamed and deleted.
+- **Handoff:** o212/o213 is the last PEARLS pair (expect the same limits); the higher-value step is PSF-matched
+  difference imaging of the Warhol and Spock arcs, validated on the 12 published arc transients.
+
+## 2026-10-15: MACS0416 two-epoch grid, validated on published transients: two grid fixes, no new transient
+- **Hypothesis before computing:** the grid recovers the published PEARLS epoch-1→2 transients (Yan et al. 2023:
+  6 caustic stars, SN01, SN02); any further two-band change in o211/o212 is a candidate. Ordinary: spikes,
+  persistence, SNe and caustic stars (the expected populations). Plan change if the known cases are missed.
+- **Validation failed first: 0 of 8 recovered.** Causes (D-027 addendum 2026-10-15): a 0.20″ frame offset of the
+  published positions; per-band recentring pulled SN01's LW apertures onto a neighbour; SN01 changed colour
+  (fades in F115W, brightens in F356W), which the same-sign rule rejects.
+- New: `transient_grid.py --recentre-in origin` (default; centroid once where the catalog saw the source) and
+  mixed-sign hits (column `mixed`), `--catalog-bands`, re-merge after refinement, with unit tests. SN01 recovered; the new rules add only that row.
+- **Result:** 174 hits in 59 groups: 50 star spikes and wings, 6 edges, 2 persistence (`persistence_check.py`),
+  SN01. **0 new candidates.** Injection −0.75 mag 95 %, −0.44 mag 46 %. Contact sheets looked at.
+  `results/transients/macs0416_grid/`.
+- **Failed approach / limit:** the caustic stars (F356W 27.1–28.6 on arcs) are below the grid's depth (|σ| ≤ 3.3),
+  and SN02 has no catalog position of its own. The grid cannot test transients on arcs; image differencing can.
+- Data: 8 `_i2d` mosaics (6.0 GB) streamed and deleted.
+- **Handoff:** Ep1/Ep3 (o213) and Ep2/Ep3 with the same command; arc-region image differencing (PSF-matched) is
+  the step that would reach the caustic stars; re-run Sunrise/SMACS under the new defaults (cheap, ~10 s each,
+  needs the mosaics again).
 
 ## 2026-10-15: X4 S1: free aligned-spin binaries mostly do not absorb a negative-mass lens's GW signature (simulated)
 - **Question:** with masses, spins, amplitude, time and phase free (IMRPhenomXAS, aLIGO design curve LIGO-P1200087),

@@ -1461,10 +1461,47 @@ Field docs: `docs/fields/*.md`.
   absorbs a brightening common to all of them (5 % recovery). Injections must use the real grid's zero point and
   noise scale.
 
+**Addendum (2026-10-15, MACS0416 PEARLS o211/o212; grid validated on published transients).**
+- **Decision:** `transient_grid.py` now centroids each position once, in the image of the catalog it came from,
+  and measures every band there (`--recentre-in origin`, the default). A hit also counts bands that pass with
+  opposite signs (column `mixed`; `--same-sign` keeps the old rule). Both are ASSUMPTIONs.
+- **Why (validation on known cases, all `derived`):** the 8 transients Yan et al. 2023 report between PEARLS
+  epochs 1 and 2 (ApJS 269, 43; 6 caustic-crossing stars, SN01, SN02) were all missed by the original grid.
+  - Their positions sit ≈ 0.20″ from the pipeline frame (offset (+0.196″ RA cos δ, −0.055″ Dec), measured from
+    the F356W difference peaks of D21-W1, D21-W3, D21-S1 and SN01).
+  - SN01 has a catalog position 0.03″ from it. Per-band recentring in epoch 1, where SN01 is absent in the LW
+    bands, moved those apertures onto a neighbour. Its colour also changed (F115W −7.5σ fainter, F356W +6.4σ
+    brighter), which the same-sign rule rejects. With both changes it is a hit (and `on_sky` in D-039's test, 31
+    clean exposures). The new rules add 1 hit row on this field (SN01) and change no other; positions that
+    centroid onto one peak are merged again after refinement.
+  - The six caustic stars (F356W 27.1–28.6 on arcs) give |σ| ≤ 3.3 in 0.15″ apertures even at the corrected
+    positions: below the grid's depth. SN02 is detectable at its position (F150W +6.2σ) but has no catalog
+    entry (nearest position 0.34″, on the host nucleus): a position-set blind spot, as for SN Atalanta (#237).
+- **Field result:** 8,322 catalog positions (8,110 after merging 212 that centroid onto one peak), 3,675 measured in
+  F115W/F150W/F277W/F356W, 174 hits in 59 groups: 50
+  bright-star spikes, streaks or wings (PA 293° → 33°), 6 footprint edges, 2 persistence afterimages (SW only:
+  every detection suspect in `persistence_check.py`), SN01. **0 new candidates.** Contact sheets looked at.
+  Injections (as above): −0.75 mag 95 % (198/208 nominal), −0.44 mag 46 %. Data: 8 mosaics, 6.0 GB, streamed and
+  deleted.
+- **o211/o213 (epoch 1 vs 3):** 104 hits in 50 groups: 47 spikes, wings or edges, 2 persistence, SN01; **0 new
+  candidates**; injection −0.75 mag 95 %, −0.44 mag 40 %. Neither epoch's catalogs have an entry within 3.2″ of the
+  Warhol arc, so its transients have no grid position (`results/transients/macs0416_grid_o213/`).
+- **Limit of the grid:** catalogued positions only, 0.15″ apertures; transients on arcs or hosts without their own
+  catalog entry, and point sources fainter than ≈ 28 mag on bright arcs, are outside it. Image differencing on the
+  arcs would close this.
+
 **Revisit if.**
 - More than two epochs make light curves possible.
 - The search goes below catalog depth (image differencing or forced photometry on a grid).
 
+
+**Addendum 2026-10-15b (arc difference imaging).** `scripts/arc_diff.py` differences byte-range boxes of two
+level-3 mosaics (resample, global + 3″ tiled registration, Gaussian blur and flux scale fitted on the brightest
+10 % of pixels, matched filter). On MACS0416 o211/o212 it recovers 4 of 5 published Ep1→Ep2 arc transients
+(Yan et al. 2023) but leaves positive ridges along thin bright arcs, so it is not yet a search. Rejected: a blur
+chosen by the global rms (it over-blurs, because blurring also lowers the noise); a single global shift. Reused:
+astropy, scipy.ndimage, fsspec/s3fs. Not adopted yet: a fitted pixel-kernel PSF match (HOTPANTS/SFFT-style);
+revisit if the Gaussian+scale approach cannot remove the arc ridge.
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**

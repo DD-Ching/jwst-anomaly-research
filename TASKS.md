@@ -268,6 +268,14 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    - ~~forced photometry on all catalogued sources~~ — done for Sunrise o010/o120 (D-027 addendum 2026-10-15,
      `transient_grid.py`): 0 candidates; −0.75 mag recovered 100 %, −0.44 mag 53 %. Next: the same grid for Sunrise o010/o052 and
      SMACS/VENUS (F150W, F444W), with a spike veto first;
+   - ~~MACS0416 grid, validated on Yan et al. 2023~~ — done for PEARLS o211/o212 (D-027 addendum 2026-10-15,
+     MACS0416): 0 new; fixes `--recentre-in origin` and mixed-sign hits (SN01 recovered; caustic stars below depth).
+     o211/o213 also null (no grid position on the Warhol arc). Arc differencing (`arc_diff.py`, D-027 addendum
+     2026-10-15b): o211/o212 recovers 4 of 5 published Ep1→Ep2 arc transients (W1, W2, S1, S2; W3 4.9σ), but thin
+     bright arcs still leave a positive ridge (149 unvetted hits, mostly ridges and star residuals): not yet a search.
+     Next: fix the arc ridge (PSF kernel fit instead of a Gaussian blur, or a local flux scale), then re-validate
+     and run o211/o213 (W5–W7, S4);
+     re-run Sunrise/SMACS under the new defaults;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps
