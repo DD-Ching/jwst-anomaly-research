@@ -1572,6 +1572,18 @@ no ratio (rosettes alone remove 40 / 326 = 0.12 of unflagged injected hits). Old
 on `--rejudge`. Not covered: ring residuals (t−1−4, 40 real passes, all on rings, not candidates); 7 tiles of the
 o211→o212 run have no morph record. Revisit if: injections with real (WebbPSF) PSFs, or a new artifact class.
 
+**Addendum 2026-10-15h (MACS0416 ring and sign-flip verdicts; #250).** t−1−4 re-run with maps: 46 unflagged passes,
+almost all on ~0.3–1.2″ PSF-mismatch rings around epoch-1 galaxies. **Decision:** two new `arc_diff_morph.py`
+verdicts (thresholds ASSUMPTIONs in `Params`): **ring** = azimuthal fill ≥ 0.5 (16 bins, bin max ≥ max(3, 0.3
+|S_hit|), hit's own 0.3″ excluded) of the annulus through the hit around the brightest epoch-1 pixel within 1.2″,
+in ≥ 2 detected bands; **sign_flip** = one band S_hit ≥ +5 and another ≤ −5 (SW and LW expose simultaneously, so a
+new or vanished point source changes every band one way). t−1−4: 46 → 20 passes (ring 23, sign_flip 3). Injections
+in t−1−4 (whole chain, 27.5–29.5 AB, 56 unflagged hits): ring removes 1, sign_flip 2. Yan+2023: 11 / 11 pass
+(o211/o212), o211/o213 unchanged (10 pass, D21-S2 rosette). Rejected: sign level 3 (vetoes Yan+2023 D21-S1, F200W
+−3.2 against LW +7); ring in ≥ 1 band (3 / 21 bright injected passes lost). Cost: a colour-evolving transient
+present in both epochs, or one sitting on a galaxy's ring residual, is vetoed. Old JSONs have no `ring_fill` (= 0).
+Revisit if: a transient with a published SED change between epochs is vetoed, or tiles with good PSF matching.
+
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**

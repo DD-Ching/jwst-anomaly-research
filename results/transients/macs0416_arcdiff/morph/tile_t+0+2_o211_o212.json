@@ -14,12 +14,23 @@
   "min_rosette_bands": 2,
   "dipole_arcsec": 0.3,
   "dipole_ratio": 0.5,
-  "min_dipole_bands": 2
+  "min_dipole_bands": 2,
+  "rosette_lobe_ratio": 0.3,
+  "sign_flip_level": 5.0,
+  "ring_search_arcsec": 1.2,
+  "ring_min_arcsec": 0.15,
+  "ring_width_arcsec": 0.1,
+  "ring_bins": 16,
+  "ring_exclude_arcsec": 0.3,
+  "ring_frac": 0.3,
+  "ring_fill_min": 0.5,
+  "min_ring_bands": 2
  },
  "counts": {
   "edge": 5,
   "extended": 1,
-  "pass": 4
+  "pass": 2,
+  "sign_flip": 2
  },
  "targets": [
   {
@@ -225,7 +236,7 @@
    "id": "h033",
    "ra": 64.03828226054054,
    "dec": -24.056350720418504,
-   "verdict": "pass",
+   "verdict": "sign_flip",
    "top_band": "F356W",
    "bands": {
     "F150W": {
@@ -269,7 +280,7 @@
    "id": "h035",
    "ra": 64.03664451619233,
    "dec": -24.05932874194389,
-   "verdict": "pass",
+   "verdict": "sign_flip",
    "top_band": "F150W",
    "bands": {
     "F150W": {

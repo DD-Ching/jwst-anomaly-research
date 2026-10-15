@@ -2,6 +2,30 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 `arc_diff_morph.py` ring and sign_flip verdicts; all 28 o211→o212 tiles have morph records
+- **Hypothesis before measuring:** t−1−4's passes are PSF-mismatch rings around galaxies; a ring test (and a
+  SW/LW sign test) removes most of them while losing < 0.1 of injected point sources and none of Yan+2023. Plan
+  change: if either rule vetoes a Yan+2023 transient or > 0.1 of injections, drop or loosen it.
+- **t−1−4 re-run with maps (derived):** 46 unflagged passes without the new rules. Ring (fill ≥ 0.5 in ≥ 2 detected
+  bands) and sign_flip (±5) leave 20; injections in the same tile (`--inject-grid 40` at 27.5/28.0 and at 29.0/29.5,
+  simulated): of 56 unflagged recovered stars, ring removes 1 and sign_flip 2. Chain pass fraction in this
+  artifact-heavy tile: 10 / 20, 10 / 20, 9 / 20, 5 / 20 at 27.5, 28.0, 29.0, 29.5 mag (rosettes take 8 of the 25
+  faint unflagged). `results/transients/macs0416_arcdiff/inject_morph/summary_t-1-4_ring.json`.
+- **Validation:** Yan+2023 11 / 11 pass on fresh o211/o212 Warhol maps; o211/o213 unchanged (D21-S2 rosette). A sign
+  level of 3 was rejected: it vetoes D21-S1 (F200W −3.2, LW +7). Rejudge of the stored tiles: 10 former passes,
+  already judged ordinary by eye (#245), become sign_flip (h081 and h074 among them); none else changes.
+- **Looked at t−1−4's 20 remaining passes (contact sheet):** rings centred on a neighbour or cut by the window,
+  streaks (h143, h253, h310) and three compact single-sign LW residuals on epoch-1 compact cores (h124, h159,
+  h246); the last three are unvetted (likely core PSF mismatch; tile-wide SW rings around every compact source).
+- **The 6 tiles without morph records** (t−3−3, t−3−2, t−3−1, t−2−2, t−2−1, t−1+0) re-run with maps: 6 passes, all
+  SW-dominant with weak or no LW: t−3−3 h028/h030, t−3−2 h044 (SW +11.7/+11.3, LW < 2.2) and h051 (on a SW
+  streak), t−2−2 h035 (F200W −3.0 against F150W +8.2), t−1+0 h104 (S/N 5.9). **Unvetted, not candidates**; sheet
+  `results/transients/macs0416_arcdiff/morph/unrecorded_tiles_passes.png`.
+- **Limits:** Gaussian injection PSFs; the ring centre is the brightest epoch-1 pixel within 1.2″, so rings around
+  a fainter neighbour escape the test; stored JSONs of the 21 earlier tiles have no `ring_fill`.
+- **Handoff:** next, vet the 6 SW-dominant passes (persistence on `_cal` frames first, then o213 / CANUCS o004 with
+  `arc_diff_vet.py`) and h124/h159/h246; then o211→o213 over the 28 tiles.
+
 ## 2026-10-15: MACS0416 morphology veto calibrated by whole-chain injections; rosette rule now needs strong lobes
 - **Hypothesis before measuring:** point transients on arcs and galaxies pass `arc_diff_morph.py` (≥ 0.9 of the
   recovered, unflagged ones) unless they sit in an artifact-dominated area. Plan change: if a veto removes more than

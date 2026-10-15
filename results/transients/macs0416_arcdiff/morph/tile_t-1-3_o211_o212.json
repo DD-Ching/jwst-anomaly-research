@@ -14,13 +14,24 @@
   "min_rosette_bands": 2,
   "dipole_arcsec": 0.3,
   "dipole_ratio": 0.5,
-  "min_dipole_bands": 2
+  "min_dipole_bands": 2,
+  "rosette_lobe_ratio": 0.3,
+  "sign_flip_level": 5.0,
+  "ring_search_arcsec": 1.2,
+  "ring_min_arcsec": 0.15,
+  "ring_width_arcsec": 0.1,
+  "ring_bins": 16,
+  "ring_exclude_arcsec": 0.3,
+  "ring_frac": 0.3,
+  "ring_fill_min": 0.5,
+  "min_ring_bands": 2
  },
  "counts": {
   "dipole": 2,
   "edge": 4,
-  "pass": 6,
-  "rosette": 1
+  "pass": 3,
+  "rosette": 1,
+  "sign_flip": 3
  },
  "targets": [
   {
@@ -125,7 +136,7 @@
    "id": "h008",
    "ra": 64.02963908773086,
    "dec": -24.085252467012396,
-   "verdict": "pass",
+   "verdict": "sign_flip",
    "top_band": "F150W",
    "bands": {
     "F150W": {
@@ -256,7 +267,7 @@
    "id": "h011",
    "ra": 64.0327206912757,
    "dec": -24.081602527808826,
-   "verdict": "pass",
+   "verdict": "sign_flip",
    "top_band": "F150W",
    "bands": {
     "F150W": {
@@ -485,7 +496,7 @@
    "id": "h017",
    "ra": 64.02906876027924,
    "dec": -24.08508807151646,
-   "verdict": "pass",
+   "verdict": "sign_flip",
    "top_band": "F150W",
    "bands": {
     "F150W": {

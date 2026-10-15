@@ -253,3 +253,45 @@ def test_lobe_peaks_are_signed_region_peaks():
     s[10:13, 18:23] = -4.0
     pk = sorted(adm.lobe_peaks(s, 20, 20, 12, 3.0, 4))
     assert pk == [-4.0, 9.0]
+
+
+def test_strong_opposite_signs_between_bands_are_a_sign_flip():
+    # PSF-mismatch rings flip sign between SW and LW; a new point source changes every band one way.
+    res = {"F150W": _band(-6.0), "F200W": _band(-4.0), "F356W": _band(7.0)}
+    assert adm.classify(res, adm.Params())[0] == "sign_flip"
+    assert adm.classify(res, adm.Params(sign_flip_level=0.0))[0] == "pass"
+    # Yan+2023 D21-S1 in o211/o212: a weak opposite-sign band (-3.2) does not veto it.
+    res = {"F200W": _band(-3.2), "F277W": _band(6.9), "F356W": _band(6.7)}
+    assert adm.classify(res, adm.Params())[0] == "pass"
+
+
+def _ring_maps(with_ring: bool):
+    """Epoch-1 galaxy at the centre; S has a point source 0.6″ east and optionally a full ring."""
+    yy, xx = np.mgrid[:101, :101]
+    e1 = 100.0 * np.exp(-(np.hypot(yy - 50, xx - 50) ** 2) / 8.0)
+    s = np.zeros((101, 101))
+    r = np.hypot(yy - 50, xx - 50)
+    if with_ring:
+        s += 6.0 * np.exp(-((r - 20.0) ** 2) / 2.0)
+    s += 8.0 * np.exp(-((yy - 50) ** 2 + (xx - 70) ** 2) / 4.0)
+    return s, e1
+
+
+def test_ring_fill_separates_a_galaxy_ring_from_a_point_source():
+    p = adm.Params()
+    s, e1 = _ring_maps(with_ring=True)
+    assert adm.ring_fill(s, e1, 50, 70, 0.03, p) == 1.0
+    s, e1 = _ring_maps(with_ring=False)
+    assert adm.ring_fill(s, e1, 50, 70, 0.03, p) == 0.0
+    # A hit on the epoch-1 core is not judged as a ring.
+    assert adm.ring_fill(s, e1, 50, 51, 0.03, p) == 0.0
+
+
+def test_ring_needs_min_ring_bands_detected_bands():
+    p = adm.Params()
+    ring = _band(8.0)
+    ring["ring_fill"] = 0.8
+    assert adm.classify({"F277W": ring, "F356W": dict(ring)}, p)[0] == "ring"
+    assert adm.classify({"F277W": ring, "F356W": _band(8.0)}, p)[0] == "pass"
+    undetected = dict(ring, s_hit=2.0)  # a band without the hit cannot add a ring vote
+    assert adm.classify({"F277W": ring, "F356W": undetected}, p)[0] == "pass"
