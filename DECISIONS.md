@@ -4864,3 +4864,19 @@ CMA-ES once before any further tool work).
 
 **Revisit if:** the P search passes all four runs with a larger budget (then fit R1), or the owner authorises the
 outcome-1-only U fit.
+
+## D-092 X4 S1f: gate revision for constructive ordinary counter-examples; none found for R1 (2026-10-15)
+
+**Decision (owner, 2026-10-15).**
+- An exactly verified ordinary solution with ρ_req > 30 makes a case fail the screen without proof that the whole
+  search tool is reliable.
+- The absence of such a solution supports no claim; the case stays undetermined.
+- For R1, the validated unlensed search found none (best FF 0.9135, ρ_req 7.4). R1 stays undetermined, with no
+  pilot.
+
+**Alternatives rejected:** treating the failure to find a counter-example as evidence that R1 is identifiable.
+
+**Evidence** (simulated; `results/x4/s1f_*.json`): seeds 21–23 give 0.8923, 0.8923 and 0.9135. The independent
+rebuild agrees to 1.2e-7. The best ordinary fit of any kind is 0.945 (S1c, lensed).
+
+**Revisit if:** a validated positive-lens search exists, or the owner authorises a new R1 question.

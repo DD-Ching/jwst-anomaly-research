@@ -334,6 +334,21 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `persistence_check.py`), validated on PLATE-23a once its position is checked. Or move the grid to another cluster
   with two NIRCam epochs.
 
+## 2026-10-15: X4 S1f: the validated unlensed search finds no ordinary solution that makes R1 fail the screen; R1 stays undetermined (simulated)
+- **Gate revision (owner, recorded before running):**
+  - An exactly verified ordinary solution with ρ_req > 30 would settle R1 without proving the whole tool
+    reliable.
+  - Not finding one supports nothing.
+- **Check:** the S1e unlensed procedure (validated on V6 and V7), seeds 21–23, on the S1c family-D R1 target, with
+  the saved solutions re-scored.
+  - Best FF 0.91351, at q 2.65 with a nearly anti-aligned |χ1| = 0.99 primary, viewed edge-on.
+  - An independent explicit-ψ rebuild at pad 64 and pad 256 agrees to 1.2e-7.
+  - ρ_req 7.4 against the 30 needed (the screen needs FF > 0.994987); intrinsic SNR needed 38 (≤ 100 holds).
+  - The best ordinary fit of any kind is still 0.945 (lensed, S1c).
+- **Result:** no counter-example, so R1 stays undetermined. No pilot proposed; S2 not started.
+  - Missing: a validated positive-lens search, and a consistent unlensed optimum (seeds give 0.892 and 0.914).
+  - 0.6 h used; X4 has about 7.2 h left.
+
 ## 2026-10-15: X4 S1e: joint lens + intrinsic search makes the unlensed fits reliable; one lensed check still fails, so R1 stays undetermined (simulated)
 - **Question (owner):** with a joint search, does the tool pass its injection checks, and what is R1's verdict?
   Diagnostics and plan frozen first (`docs/state/units/X4.md`, S1e).
