@@ -33,6 +33,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `OMP_NUM_THREADS=OPENBLAS_NUM_THREADS=1` (scripts/CLAUDE.md, parallel topology). The `--maps` files from the first
   16 tiles were in an ephemeral scratchpad and are gone, so the morphology passes of t+0-1, t-1-1, t-1-2, t-1-3
   and t-2-3 (15) need those tiles re-run with `--maps` before their contact sheets can be made.
+- **t+0+2 done (17 / 28; 456 s per tile at 2 jobs × `--procs 2`, OMP=1):** 51 hits, 10 without the bright-core flag; morphology
+  edge 5, rosette 1, pass 4. Contact sheet looked at: h015 and h033 are +/− dipoles on one compact elongated galaxy
+  core (registration/PSF residual), h028 a dipole on a compact core in SW only, h035 a weak SW-only spot on a knot of
+  a clumpy galaxy (nothing in LW). None is single-signed and point-like across bands; not candidates (not formally
+  vetted). Remaining o211→o212 tiles: t-2+0, t+1±, t+2± (11) plus `--maps` re-runs of the 7 map-less earlier
+  tiles and the 5 with passes (≈ 70 min at this throughput: one run's worth). Suggest adding a dipole test
+  (opposite-sign lobe within 2 × FWHM, about equal |S|) to `arc_diff_morph.py`; validate it on Yan+2023 first.
 
 ## 2026-10-15: MACS0416 arc-difference hit h108 is an arc-segment residual; arc-coherence vetting test
 - **Hypothesis before measuring:** h108 (o211→o213, #242) is a point source on a faint thin arc that brightened. It
