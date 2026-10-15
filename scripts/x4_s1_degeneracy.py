@@ -21,6 +21,8 @@ Needs lalsuite (lalsimulation) in the running interpreter; it is not a project d
   python scripts/x4_s1_degeneracy.py validate     # tool checks (FF of matching models)
   python scripts/x4_s1_degeneracy.py run          # 36 cases -> results/x4/s1_cases.json
   python scripts/x4_s1_degeneracy.py refine       # passing cases: frozen 6-parameter P refinement
+  python scripts/x4_s1_degeneracy.py refine_wide  # the same with mass ratio up to 15 (U and P)
+  python scripts/x4_s1_degeneracy.py ubound       # U alone, q <= 15 and chirp mass +-60 %
   python scripts/x4_s1_degeneracy.py robust       # re-fit passing cases: other starts, wider bounds
   python scripts/x4_s1_degeneracy.py crosscheck   # 3 key cases fitted with IMRPhenomD templates
 """
@@ -63,6 +65,7 @@ LENS_M = (100.0, 300.0, 1000.0, 3000.0)
 LENS_Y = (0.3, 1.0, 1.5)
 MC_FRAC = 0.30  # chirp-mass bound +-30 % (robustness: 60 %)
 Q_MAX, CHI_MAX = 8.0, 0.99
+BOUNDS = {"q_max": Q_MAX}  # widened to 15 by the ubound check only
 P_GRID_M = np.logspace(0.0, 4.0, 10)
 P_GRID_Y = np.linspace(0.01, 5.0, 10)
 APPROX = "IMRPhenomXAS"  # injections, and fits unless overridden
@@ -227,7 +230,7 @@ def _intrinsic_obj(x, target, lensf, mc0, frac):
     mc = np.exp(lmc)
     if not (
         abs(mc / mc0 - 1) <= frac
-        and 1.0 <= q <= Q_MAX
+        and 1.0 <= q <= BOUNDS["q_max"]
         and abs(c1) <= CHI_MAX
         and abs(c2) <= CHI_MAX
     ):
@@ -399,6 +402,19 @@ def refine_case(args):
     }
 
 
+def _ubound_job(c):
+    """U re-fit with widened bounds (set in the parent before the fork)."""
+    mc0 = chirp(c["M_total"], Q_INJ)
+    h = waveform(mc0, Q_INJ, CHI_INJ, CHI_INJ, approx=APPROX)
+    target = h * lens(c["M_Lz"], c["y"], -1)
+    u = fit_unlensed(target, mc0, np.random.default_rng(1500), frac=0.60, n_random=4)
+    return {
+        "case": [c["M_total"], c["M_Lz"], c["y"]],
+        "U_wide": u,
+        "rho_req_U": rho_req(u["mismatch"]),
+    }
+
+
 def rho_req(mm: float) -> float:
     o = 1.0 - mm
     return float(3.0 / np.sqrt(max(1.0 - o * o, 1e-24)))
@@ -486,7 +502,9 @@ def main(argv=None) -> int:
             print(json.dumps(res, default=float)[-400:], flush=True)
         res["n_geometric_fallback"] = _CACHE.get("n_geometric", 0)
         (OUT / "s1_validation.json").write_text(json.dumps(res, indent=1, default=float) + "\n")
-    elif cmd == "refine":
+    elif cmd in ("refine", "refine_wide"):
+        if cmd == "refine_wide":  # U and P mass ratio up to 15 (U fits pile up at q = 8)
+            BOUNDS["q_max"] = 15.0
         prev = json.loads((OUT / "s1_cases.json").read_text())["cases"]
         jobs = [
             (c["M_total"], c["M_Lz"], c["y"], c["U"]["params"], c["P"])
@@ -510,7 +528,25 @@ def main(argv=None) -> int:
             "wall_s": round(time.time() - t0, 1),
             "cases": rows,
         }
-        (OUT / "s1_refine.json").write_text(json.dumps(rec, indent=1, default=float) + "\n")
+        rec["q_max"] = BOUNDS["q_max"]
+        name = "s1_refine.json" if cmd == "refine" else "s1_refine_wide.json"
+        (OUT / name).write_text(json.dumps(rec, indent=1, default=float) + "\n")
+    elif cmd == "ubound":
+        # Many U fits end at q = 8: re-fit U on passing cases with q <= 15, chirp mass +-60 %.
+        BOUNDS["q_max"] = 15.0
+        OVERLAP_PAD["pad"] = 16
+        prev = json.loads((OUT / "s1_refine.json").read_text())["cases"]
+
+        with Pool(4) as pool:
+            rows = pool.map(_ubound_job, prev)
+        (OUT / "s1_ubound.json").write_text(
+            json.dumps(
+                {"label": "simulated; U re-fit with q <= 15, Mc +-60 %", "cases": rows},
+                indent=1,
+                default=float,
+            )
+            + "\n"
+        )
     elif cmd == "crosscheck":
         FIT_APPROX["name"] = "IMRPhenomD"
         jobs = [(m, ml, y, 700 + i, MC_FRAC) for i, (m, ml, y) in enumerate(CROSSCHECK_CASES)]
