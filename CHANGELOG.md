@@ -13,11 +13,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     absorbed by a positive lens (200 M☉ binary behind 100 M☉, or behind 300 M☉ at y = 1.5).
   - The frozen 6-parameter positive-lens refinement keeps all 19.
   - With mass ratio up to 15, 18 of 19 pass, for 30–60 M☉ binaries behind 100–1,000 M☉ lenses and 200 M☉ behind
-    300–1,000 M☉. Best ordinary FF 0.63–0.98 (unlensed) and 0.75–0.99 (positive lens); observed SNR needed 4.5–20,
-    intrinsic 20–95.
+    300–1,000 M☉, using the best fit over all stages. Best ordinary FF 0.63–0.98 (unlensed) and 0.75–0.99
+    (positive lens); observed SNR needed 4.5–20, intrinsic 20–95. The result is bound-conditional: fits run to
+    q = 15.
   - Extreme mass ratios absorb part of the signature (fits run to q = 15), so higher modes and precession are
     needed next.
-  - IMRPhenomD fits agree within 0.006.
+  - IMRPhenomD fits agree within 0.0065.
 - **Review fixes:**
   - The first IMRPhenomD cross-check had silently used IMRPhenomXAS; it was rerun.
   - The frozen refinement was run.

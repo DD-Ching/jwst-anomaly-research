@@ -4611,7 +4611,8 @@ unit overruns its budget.
 
 **Evidence** (simulated only; `results/x4/s1_*.json`):
 - 18 / 36 configurations keep 1 − FF² ≥ 9/ρ² at ρ ≤ 30 against free aligned-spin binaries (q ≤ 15) and a positive
-  point lens. This is after the frozen 6-parameter refinement; IMRPhenomD agrees within 0.006.
+  point lens, using the best fit over all stages (the frozen 6-parameter refinement was under-converged at 80
+  evaluations). IMRPhenomD agrees within 0.0065. Bound-conditional: fits run to q = 15.
 - Extreme mass ratios absorb part of the signature.
 
 **Revisit if:**

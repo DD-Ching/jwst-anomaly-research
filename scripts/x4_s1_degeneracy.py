@@ -23,6 +23,7 @@ Needs lalsuite (lalsimulation) in the running interpreter; it is not a project d
   python scripts/x4_s1_degeneracy.py refine       # passing cases: frozen 6-parameter P refinement
   python scripts/x4_s1_degeneracy.py refine_wide  # the same with mass ratio up to 15 (U and P)
   python scripts/x4_s1_degeneracy.py ubound       # U alone, q <= 15 and chirp mass +-60 %
+  python scripts/x4_s1_degeneracy.py summary      # best ordinary fit per case over all stages
   python scripts/x4_s1_degeneracy.py robust       # re-fit passing cases: other starts, wider bounds
   python scripts/x4_s1_degeneracy.py crosscheck   # 3 key cases fitted with IMRPhenomD templates
 """
@@ -71,7 +72,7 @@ P_GRID_Y = np.linspace(0.01, 5.0, 10)
 APPROX = "IMRPhenomXAS"  # injections, and fits unless overridden
 FIT_APPROX = {"name": APPROX}
 # overlap time-lag resolution: pad 4 in the main run (0.24 ms lags), pad 16 in the refine stage
-OVERLAP_PAD = {"pad": 4}  # set to another family for the crosscheck subcommand
+OVERLAP_PAD = {"pad": 4}
 CROSSCHECK_CASES = ((30.0, 300.0, 1.0), (60.0, 1000.0, 1.5), (200.0, 300.0, 1.0))
 
 _FREQS = np.arange(0.0, F_HIGH + DF / 2, DF)
@@ -547,6 +548,56 @@ def main(argv=None) -> int:
             )
             + "\n"
         )
+    elif cmd == "summary":
+        # Best ordinary fit per passing case over every stage on disk (no new fitting). Fits made
+        # with q <= 8 stay valid under q <= 15, so the q <= 15 column takes the best of all.
+        def ff(c, m):
+            return 1.0 - c[m]["mismatch"]
+
+        def load(name):
+            return json.loads((OUT / name).read_text())["cases"]
+
+        def key(c):
+            return (c["M_total"], c["M_Lz"], c["y"])
+
+        q8 = {}
+        for name in ("s1_cases.json", "s1_robust.json", "s1_refine.json"):
+            for c in load(name):
+                b = q8.setdefault(
+                    key(c), {"U": 0.0, "P": 0.0, "ratio": c["snr_ratio_lensed_over_unlensed"]}
+                )
+                b["U"], b["P"] = max(b["U"], ff(c, "U")), max(b["P"], ff(c, "P"))
+        q15 = {k: dict(v) for k, v in q8.items()}
+        for c in load("s1_refine_wide.json"):
+            b = q15[key(c)]
+            b["U"], b["P"] = max(b["U"], ff(c, "U")), max(b["P"], ff(c, "P"))
+        for c in load("s1_ubound.json"):
+            b = q15[tuple(c["case"])]
+            b["U"] = max(b["U"], 1.0 - c["U_wide"]["mismatch"])
+        passing = {key(c) for c in load("s1_refine.json")}
+        out = {
+            "label": "derived: best ordinary FF over all S1 stages (q <= 8 and q <= 15)",
+            "cases": [],
+        }
+        for k in sorted(passing):
+            row = {"case": list(k)}
+            for tag, d in (("q8", q8[k]), ("q15", q15[k])):
+                worst = max(rho_req(1 - d["U"]), rho_req(1 - d["P"]))
+                row[tag] = {
+                    "FF_U": d["U"],
+                    "FF_P": d["P"],
+                    "rho_req": worst,
+                    "intrinsic_snr_needed": worst / d["ratio"],
+                    "passes_screen": bool(worst <= 30.0 and worst <= 100.0 * d["ratio"]),
+                }
+            out["cases"].append(row)
+        (OUT / "s1_summary.json").write_text(json.dumps(out, indent=1, default=float) + "\n")
+        for r in out["cases"]:
+            print(
+                r["case"],
+                {t: round(r[t]["rho_req"], 1) for t in ("q8", "q15")},
+                {t: r[t]["passes_screen"] for t in ("q8", "q15")},
+            )
     elif cmd == "crosscheck":
         FIT_APPROX["name"] = "IMRPhenomD"
         jobs = [(m, ml, y, 700 + i, MC_FRAC) for i, (m, ml, y) in enumerate(CROSSCHECK_CASES)]
