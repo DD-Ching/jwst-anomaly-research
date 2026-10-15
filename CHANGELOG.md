@@ -2,6 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: X4 S1b: precessing, higher-mode binaries absorb the representative negative-lens residuals (simulated)
+- **Question (owner):** after the ordinary explanations get a fuller fitting chance, is there still a representative
+  case worth taking to real data? Plan and criteria frozen first (`docs/state/units/X4.md`, S1b).
+- **S1 status corrected:** "18 pass" is a preliminary result of the searches run so far, not a proven optimum.
+- **Numerical stage** (4 exploratory cases chosen from S1; multi-start Nelder–Mead with restart convergence;
+  fit-error injections):
+  - R2 and R3 keep a residual against aligned-spin dominant-mode models. Strictly, they are undetermined: the
+    best P block descent was not converged (review finding). Step D was run on them anyway, as a disclosed
+    deviation.
+  - R1 (the large-difference case) is undetermined: the positive-lens fit fails its own injection test
+    (ε 0.13).
+  - The R4 control is absorbed.
+- **IMRPhenomXPHM** (target and templates; no free overall phase): R2 (ρ_req 30.8) and R3 (35.8) are absorbed.
+  - R2 through an edge-on inclination (higher modes); R3 through in-plane spins at inclination 49–84°. q stays
+    1.2–1.7.
+  - R3 was already absorbed in the frozen run (31.4).
+  - R2 passed the frozen run (28.9) and is absorbed only after post-hoc extra starts. More search can only absorb
+    more.
+- **Post-hoc, labelled:** convergence continuations and 8 extra R2 starts, after the frozen runs hit their
+  evaluation caps.
+- **Handoff:** no real-data pilot proposed; S2 not started. Open: R1-type cases need a P optimiser that passes its
+  injection test, then XPHM (owner's call). Not covered: one target orientation, real noise, priors, other lenses.
 ## 2026-10-15: MACS0416 arc difference imaging (o211/o212): tool validated on compact arc transients; arc ridges remain
 - **Hypothesis before computing:** two-epoch difference images reach the caustic-crossing stars on the Warhol and
   Spock arcs that the catalog grid cannot (D-027 addendum). Ordinary: misregistration, PSF and zero-point differences,
