@@ -25,7 +25,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Follow-ups (same record):** `g00791` is a compact source seen only in the 2022 ERO (F150W 0.154 → 0.006 μJy),
   most likely an unreported supernova (not in TNS). `g02290` is a galaxy nucleus brighter by ×2.3 (F150W) and ×1.8
   (F444W), most likely AGN variability; inconclusive without a third epoch. Neither is a candidate.
-- **Handoff:** why the catalog stage missed the pair; a Fermat-potential time delay for the ICLv2 third image only if
+- **Why the catalog stage missed it:** the pair is a separate source only in the 2026 F150W catalog; in F444W it is
+  merged into bright cluster-member segments (2026) or the BCG/ICL (2022), so the two-band coincidence rule
+  dropped it. The grid stage has no segmentation dependence.
+- **Handoff:** a Fermat-potential time delay for the ICLv2 third image only if
   the VENUS team does not publish one; `g00791`'s host redshift and counter-images (low priority).
 
 ## 2026-10-15: Sunrise two-epoch grid on every catalogued position: no transient (D-027 addendum)

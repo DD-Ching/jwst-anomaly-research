@@ -267,7 +267,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      SMACS/VENUS: a lensed-transient pair on the system 5 arc, vetted as the known VENUS lensed SN Atalanta
      (`docs/candidates/smacs0723-sys5-transient-pair.md`; not a candidate; its ICLv2 third image needs a time delay,
      not computed); follow-ups `g00791` (likely an unreported 2022 SN) and `g02290` (likely AGN) are not candidates.
-     Next: why the catalog stage missed the pair;
+     The catalog stage missed it because F444W segmentation merged it into cluster members (D-027 addendum 2);
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

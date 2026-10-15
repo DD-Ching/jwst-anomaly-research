@@ -1482,7 +1482,7 @@ Field docs: `docs/fields/*.md`.
   parities + and −, μ ≈ 26–30 and −20–22), the arc's catalogued redshift. The ordinary reading is a
   lensed supernova (or other transient) in the arc galaxy; the model predicts a third image of μ ≈ 3 about 28″
   south, at (110.82190, −73.46032), not detected; time delays are not computed. The catalog stage (evidence above) missed the
-  pair (DECISIONS evidence above); the cause is not yet known. Two single-position changes are follow-ups: `g00791`
+  pair (DECISIONS evidence above) (cause below). Two single-position changes are follow-ups: `g00791`
   (a compact source on a galaxy in 2022, on sky in 50 clean exposures, gone in 2026) and `g02290` (a galaxy nucleus
   0.9 mag brighter in both bands).
 - **Vetting of the pair (2026-10-15, `docs/candidates/smacs0723-sys5-transient-pair.md`): SN Atalanta**, a VENUS
@@ -1492,6 +1492,9 @@ Field docs: `docs/fields/*.md`.
   TNS before any lens-model work: that check took minutes here. Follow-ups: `g00791` (seen only in the 2022 ERO;
   most likely an unreported supernova) and `g02290` (nucleus ×2.3 brighter in F150W; most likely AGN variability,
   inconclusive) are ordinary classes, not candidates.
+- **Why the catalog stage missed the pair:** the pair is a separate source only in the 2026 F150W catalog (labels 642, 667 at 0.00″; 2022 nearest 0.48″ and 0.86″, beyond the 0.3″ match radius). Neither F444W catalog has it: in 2026 it sits inside two bright segments (labels 1379, 1381; centroids 1.7″ away); in 2022 the nearest entry is the BCG/ICL segment (3.3″, 156,794 pixels). The two-band coincidence rule of the catalog stage therefore
+  cannot see a transient that F444W segmentation merges into a cluster member or the ICL. Near cluster cores, the
+  grid stage (forced photometry, no segmentation) is the one to trust.
 
 **Revisit if.**
 - More than two epochs make light curves possible.

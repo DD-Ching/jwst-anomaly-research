@@ -27,8 +27,10 @@
   time delay is not computed (`lensmodel` has no Fermat potential), and at μ ≈ 3 it would be ~2.4 mag fainter than
   B, near the o057 depth. Without the delay this is untested, not unmet. The VENUS / DD 12774 team's time-delay
   analysis will settle it.
-- Why the catalog stage missed the pair (DECISIONS D-027 addendum 2) is still open; it is a pipeline question, not
-  a property of the source.
+- **Why the catalog stage missed the pair** (resolved, `observed` catalog rows; the pipeline `_cat.ecsv` of both
+  epochs): the pair is a separate source only in the 2026 F150W catalog (labels 642, 667 at 0.00″; 2022 nearest 0.48″ and 0.86″, beyond the 0.3″ match radius). Neither F444W catalog has it: in 2026 it sits inside two bright segments (labels 1379, 1381; centroids 1.7″ away); in 2022 the nearest entry is the BCG/ICL segment (3.3″, 156,794 pixels). The D-027 stage needs the same kind of candidate in both bands, so the F444W deblending
+  removed the pair. The grid stage (forced photometry at the union of catalogued positions) does not depend on
+  segmentation and found it.
 
 ### Regenerate
 ```
