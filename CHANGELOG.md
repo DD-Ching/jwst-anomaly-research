@@ -2,6 +2,43 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 arc differencing: fitted pixel kernels remove the arc ridges and the compact-core residual
+- **Hypothesis before computing:** the arc ridges left by #241 are a PSF-matching failure that a least-squares pixel
+  kernel (Bramich 2008 style) removes without losing the published arc transients. Plan change: if recovery of the
+  Yan+2023 transients drops, the kernel is not adopted.
+- `scripts/arc_diff.py`: `--kernel-px 4` (9 × 9 kernel + constant, fitted on the whole box, 4σ clipping),
+  `--kernel-stamps` (second kernel for compact-source stamps, 97th-percentile peaks, leave one stamp out),
+  `near_bright_core` flag (0.8″, 99.9th percentile; ASSUMPTIONs). Unit tests on synthetic scenes.
+- **Results (20″ box, five bands; derived):**
+
+  | PSF match | Ep1→Ep2 published hits | Ep1→Ep3 (pair 31) | compact-peak residual, SW | unflagged hits o212 / o213 |
+  |---|---|---|---|---|
+  | Gaussian + scale (#241) | 4 / 5 | — | +20–43 % | — |
+  | whole-box kernel | 4 / 5 | 3 / 4 | +11–28 % | 30 / 28 |
+  | stamp-only kernel | 1 / 5 | 2 / 4 | ≈ 1 % | 2 / 9 |
+  | stamps ∪ arc pixels, one kernel | 2 / 5 | 2 / 4 | +2–10 % | 2 / 9 |
+  | **whole-box + stamp kernels (adopted, after review fixes)** | **4 / 5** | **2 / 4** | **≤ 3 %** | **4 / 8** |
+
+  Adopted run: injections on bright pixels 28.0 mag 0.79–1.0, 28.5 mag 0.38–0.96 (F444W lowest); the bright-core
+  flag costs about 30 % of them (recovered and unflagged in that band: 0.64–0.73 at 27.5–28.0 mag). Missed: D21-W3,
+  D31-W5 (≤ 4.8σ in every band) and, after the review fixes, D31-S4 (it was a hit before them). D23-S3 is a hit in
+  o211/o213 (negative). D21-W1 is negative in o211/o213 (brighter in epoch 1 than in epoch 3; observed).
+  `results/transients/macs0416_arcdiff/summary_o211_o21{2,3}_kernel.json`, `hits_*_kernel.ecsv`.
+- **Contact sheets looked at:** the whole-box kernel removes the Warhol and Spock arc ridges in every band; the
+  residual it leaves is positive cores of compact sources in F150W/F200W (stars, knots, galaxy cores), which a
+  stamp kernel fixes. All 4 unflagged o211/o212 hits are published transients. Of the 3 unexplained o211/o213
+  hits, 2 are a rosette wing (h080) and the box edge (h109); **h108** (64.03682, −24.06626; F200W/F277W, 5.7σ) sits
+  on the arc noted in #241 with no visible point source. **Unvetted; not a candidate.**
+- **Failed approaches:** a stamp-only kernel (it fits cores but not the arc light, and loses the arc transients);
+  one kernel on stamps ∪ arc pixels (a compromise worse on both); leave-one-stamp-out alone changed nothing for
+  the published transients (they are not in stamps), so self-absorption was not the cause.
+- Review fixes (code-review): leave-one-out fits with too few rows fall back to the whole-box kernel; stamp
+  pixels are never differenced with a kernel trained on themselves; the final clip is refitted; stamp-region
+  variances use the stamp kernel.
+- **Not covered:** PSF rotation rosettes around bright stars (flagged, not removed); only one 20″ box.
+- **Handoff:** vet o211/o213 h108 (third epoch o214, cutouts per band); then tile the rest of MACS0416's arcs with
+  the adopted settings.
+
 ## 2026-10-15: X4 S1b: precessing, higher-mode binaries absorb the representative negative-lens residuals (simulated)
 - **Question (owner):** after the ordinary explanations get a fuller fitting chance, is there still a representative
   case worth taking to real data? Plan and criteria frozen first (`docs/state/units/X4.md`, S1b).
