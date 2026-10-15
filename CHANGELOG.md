@@ -28,6 +28,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** finish o211→o212 on the 12 remaining tiles with `--maps`, run `arc_diff_morph.py` on every tile, look
   at the passes (contact sheets), vet survivors with `arc_diff_vet.py` (CANUCS o004 as fourth epoch); calibrate the
   morphology veto with injections; then o211→o213. t-1-4 (199 unflagged) needs a look first.
+- **Failed approach (run 016oUw9Y, 08:08–08:50Z):** two `arc_diff.py --procs 2` tile jobs in parallel without
+  `OMP_NUM_THREADS=1` pushed the load to about 15 on 4 cores, and no tile finished in 30 min. Always export
+  `OMP_NUM_THREADS=OPENBLAS_NUM_THREADS=1` (scripts/CLAUDE.md, parallel topology). The `--maps` files from the first
+  16 tiles were in an ephemeral scratchpad and are gone, so the morphology passes of t+0-1, t-1-1, t-1-2, t-1-3
+  and t-2-3 (15) need those tiles re-run with `--maps` before their contact sheets can be made.
 
 ## 2026-10-15: MACS0416 arc-difference hit h108 is an arc-segment residual; arc-coherence vetting test
 - **Hypothesis before measuring:** h108 (o211→o213, #242) is a point source on a faint thin arc that brightened. It
