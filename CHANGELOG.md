@@ -2,6 +2,35 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: two-epoch grids on Sunrise o010/o052 and SMACS/VENUS: a lensed-transient pair in SMACS 0723
+- **Hypothesis before computing:** the catalog stage missed a two-band change in the Sunrise o010/o052 and SMACS
+  o001/VENUS o057 overlaps. Ordinary: spikes, stellar proper motion, persistence, moving objects, pipeline-version
+  differences. Plan change: any survivor goes to `/vet-candidate` and the owner.
+- New: `transient_grid.py --spike-veto` (bright-star zone flag; triage only) and unit tests;
+  `scripts/smacs_transient_pair.py`; `results/transients/{sunrise_grid_o052,smacs_grid}/` (D-027 addendum 2).
+- **Sunrise o010/o052:** 10 hit groups, all spikes or wings; **0 candidates** (−0.75 mag recovered 97 %).
+- **SMACS/VENUS:** 15 groups: 11 stellar proper motion, 1 spike, 2 follow-ups (`g00791` faded, `g02290`
+  brightened), and **a pair of point sources that appeared on either side of the system 5 arc** (3.2″ apart,
+  −3.3 to −4.7 mag, ≥ 14σ). Per exposure they are on sky and fixed over 1.6 h. ICLv2 maps them to one source point
+  at z 1.40–1.45 (the arc's z 1.425), opposite parities: most likely a lensed supernova in the arc galaxy (ordinary
+  astrophysics). Owner notified. Not yet checked: TNS, the VENUS team's reports, full `/vet-candidate`.
+- **Failed approach:** an angle-resolved spike veto (fixed angles to PA_V3); the o010/o120 spike hits scatter by
+  ±15–20° in angle, so the veto is a radius flag covering 44–66 % of positions, used only for triage.
+- Data: 8 `_i2d` mosaics (5.1 GB) streamed into the gitignored data root and deleted after the run.
+- **Vetted (`docs/candidates/smacs0723-sys5-transient-pair.md`): the pair is SN Atalanta**, a VENUS lensed SN
+  (z 1.48, Fujimoto et al. arXiv:2609.30440). JWST DD 12774 and HST 18297 target `SMACS0723-GLSN-1` 0.03″ from
+  image B. `scripts/smacs_transient_epochs.py`: absent in 2022 and in GO-4043 (2024-05-11), bright on 2026-06-05,
+  F150W 3–4× fainter on 2026-07-06 (DD 12774). TNS lists nothing at the position (AT 2024jfz is 9.3″ away).
+  **Not a candidate**; ordinary astrophysics. The ICLv2 third image (μ ≈ 3) is untested until a time delay exists.
+- **Follow-ups (same record):** `g00791` is a compact source seen only in the 2022 ERO (F150W 0.154 → 0.006 μJy),
+  most likely an unreported supernova (not in TNS). `g02290` is a galaxy nucleus brighter by ×2.3 (F150W) and ×1.8
+  (F444W), most likely AGN variability; inconclusive without a third epoch. Neither is a candidate.
+- **Why the catalog stage missed it:** the pair is a separate source only in the 2026 F150W catalog; in F444W it is
+  merged into bright cluster-member segments (2026) or the BCG/ICL (2022), so the two-band coincidence rule
+  dropped it. The grid stage has no segmentation dependence.
+- **Handoff:** a Fermat-potential time delay for the ICLv2 third image only if
+  the VENUS team does not publish one; `g00791`'s host redshift and counter-images (low priority).
+
 ## 2026-10-15: Sunrise two-epoch grid on every catalogued position: no transient (D-027 addendum)
 - **Hypothesis before computing:** a source in the o010/o120 overlap changed by ≥ 0.3 mag at ≥ 5σ in two bands, but
   the catalog stage and its two-band rule missed it (e.g. a blue transient seen only in F090W and F115W).

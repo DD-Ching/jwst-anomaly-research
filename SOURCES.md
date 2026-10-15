@@ -1299,3 +1299,12 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   - arXiv:2204.06001, 2204.06014, 2109.09251, 2112.03721, 2206.14310, 2002.12533, 1605.00008;
   - Yoo, Harada & Tsukamoto arXiv:1302.7170;
   - Takahashi & Asada arXiv:1303.1301.
+
+## SMACS 0723 transient pair vetting (accessed 2026-10-15; docs/candidates/smacs0723-sys5-transient-pair.md)
+- Fujimoto et al., "SN Helios: A Multiply Imaged Type II Supernova ...", arXiv:2609.30440v1 (lists SN Atalanta,
+  z = 1.48, DD 12774).
+- JWST DD 12774 and HST GO/DD 18297, "Taking aim at Precision Cosmology with SN Atalanta" (PI Agrawal):
+  https://www.stsci.edu/jwst-program-info/program/?program=12774,
+  https://www.stsci.edu/hst-program-info/program/?program=18297; MAST target `SMACS0723-GLSN-1`.
+- JWST GO 4043 (PI Witten) NIRCam mosaics, `jw04043-o001_t001_nircam_clear-{f115w,f444w}_i2d.fits` (S3 byte-range).
+- TNS AT 2024jfz (Reynolds & Brammer, AstroNote 2024-136): https://www.wis-tns.org/object/2024jfz.

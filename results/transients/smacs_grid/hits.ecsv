@@ -1,0 +1,40 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: pos_id, datatype: string}
+# - {name: group, datatype: int64}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: origin, datatype: int64}
+# - {name: F150W_dmag, datatype: float64}
+# - {name: F150W_sigma, datatype: float64}
+# - {name: F150W_pass, datatype: int64}
+# - {name: F444W_dmag, datatype: float64}
+# - {name: F444W_sigma, datatype: float64}
+# - {name: F444W_pass, datatype: int64}
+# - {name: spike_zone, datatype: bool}
+# - {name: verdict, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: scripts/transient_grid.py --spike-veto on jw02736 o001 (2022-06-07) vs jw06882 o057 (2026-06-05) _i2d; verdict column by
+#     eye from same-frame difference stamps and persistence_check.py}
+# - {thresholds_are: ASSUMPTION}
+# schema: astropy-2.0
+pos_id group ra dec origin F150W_dmag F150W_sigma F150W_pass F444W_dmag F444W_sigma F444W_pass spike_zone verdict
+g00612 0 110.7825196314748 -73.44885292305311 0 nan -13.203970582405272 -1 0.5001234335771372 -5.798865634906685 -1 False "star proper motion (dipole in the difference image)"
+g00791 1 110.77244255420928 -73.45362116646766 0 3.5394370623557436 -14.745963601449144 -1 1.8312445278680736 -10.020732772193218 -1 False "FOLLOW-UP: compact source on a galaxy in 2022 (on sky in 50 clean exposures), gone in 2026; not vetted"
+g01201 2 110.77432679665972 -73.460085563598 0 2.4121738268992337 -15.510442925631368 -1 1.689083240429197 -13.07732553753383 -1 False "star proper motion (dipole in the difference image)"
+g02172 3 110.70140112225545 -73.49052783869577 0 -1.334844253243008 12.284126325727774 1 -1.6393882037397716 12.904344587371142 1 False "star proper motion (dipole in the difference image)"
+g02269 4 110.87969867196922 -73.45612794898796 0 0.7628629758455395 -7.7539154261768255 -1 0.498840593350649 -5.876417925385296 -1 True "star proper motion (dipole in the difference image)"
+g02290 5 110.67077151227245 -73.49794918967633 0 -0.9015169304463092 9.706650637150135 1 -0.6739579153861536 7.442774498880019 1 False "FOLLOW-UP: compact galaxy nucleus brighter by ~0.9 mag in both bands; not vetted"
+g02737 6 110.85079036765049 -73.4727525608322 0 3.548345918439133 -16.730732234304078 -1 2.133519344705098 -14.24934667238991 -1 False "star proper motion (dipole in the difference image)"
+g02932 7 110.84789795071241 -73.47336241764545 0 nan -7.660567815144655 -1 nan -9.686965497990895 -1 False "diffraction spike of a bright star"
+g03035 8 110.70044234046553 -73.46437652352309 1 1.395596195184295 -12.527407699023252 -1 0.6794668380390155 -7.555561711376229 -1 True "star proper motion (dipole in the difference image)"
+g03415 9 110.82513559316475 -73.4521782271193 2 -3.325259157013014 14.968287096465403 1 -3.6271764054798576 14.515286689738627 1 False "CANDIDATE: appeared point source, image A of a lensed pair (system 5 arc); on sky in 19 clean exposures"
+g03423 10 110.82374695365053 -73.45297504035867 2 -4.129969681442568 15.075458398912186 1 -4.741760277281436 15.061675470441452 1 True "CANDIDATE: appeared point source, image B of a lensed pair (system 5 arc); on sky in 15 clean exposures"
+g03713 0 110.78335630905639 -73.44873643677114 2 -0.5432033507278763 6.845334410420706 1 -0.8579883287493486 9.053195539337656 1 False "star proper motion (dipole in the difference image)"
+g03786 11 110.82792578245038 -73.44857534487204 2 -1.0600953818528234 10.739230094971429 1 -1.195029846630773 10.793193684512785 1 False "star proper motion (dipole in the difference image)"
+g04091 12 110.85140222528304 -73.47233745296302 2 -0.9408878137498046 9.76112351927853 1 -0.9726460326397436 9.320087189857407 1 False "star proper motion (dipole in the difference image)"
+g04317 13 110.84779323080838 -73.47278525467556 3 -2.0276934763520496 9.692461615161132 1 -4.606299130693258 12.294431388081225 1 False "star proper motion (dipole in the difference image)"
+g04318 13 110.8492293057023 -73.472748803879 3 -2.9315488174446003 15.640642593077622 1 nan 16.15862782688878 1 False "star proper motion (dipole in the difference image)"
+g04319 14 110.85008844850825 -73.47312779393347 3 -0.48297922813243077 5.967086804106595 1 -1.4922266193747815 10.770610029483677 1 False "star proper motion (dipole in the difference image)"

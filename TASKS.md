@@ -263,8 +263,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      single-epoch candidate before vetting. Next: `/vet-candidate n0153` (on sky in all 8 dithers, F150W ×1.9 over
      2.9 yr; host, AGN colours, a pipeline-version check on neighbours);
    - ~~forced photometry on all catalogued sources~~ — done for Sunrise o010/o120 (D-027 addendum 2026-10-15,
-     `transient_grid.py`): 0 candidates; −0.75 mag recovered 100 %, −0.44 mag 53 %. Next: the same grid for Sunrise o010/o052 and
-     SMACS/VENUS (F150W, F444W), with a spike veto first;
+     `transient_grid.py`): 0 candidates; −0.75 mag recovered 100 %, −0.44 mag 53 %. Sunrise o010/o052: 0 candidates.
+     SMACS/VENUS: a lensed-transient pair on the system 5 arc, vetted as the known VENUS lensed SN Atalanta
+     (`docs/candidates/smacs0723-sys5-transient-pair.md`; not a candidate; its ICLv2 third image needs a time delay,
+     not computed); follow-ups `g00791` (likely an unreported 2022 SN) and `g02290` (likely AGN) are not candidates.
+     The catalog stage missed it because F444W segmentation merged it into cluster members (D-027 addendum 2);
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

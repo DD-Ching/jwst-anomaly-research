@@ -1,0 +1,78 @@
+{
+  "n_positions": 3730,
+  "n_measured_any_band": 3299,
+  "n_measured_all_bands": 3063,
+  "n_hits": 13,
+  "n_hit_groups": 10,
+  "spike_veto": {
+    "n_stars": 7,
+    "mag_max": 19.5,
+    "r0_arcsec": 45.0,
+    "m0": 17.3,
+    "frac_measured_positions_in_zone": 0.511670203091846,
+    "n_hit_groups_clean": 0,
+    "assumption": "radius law and limits tuned on the Sunrise o010/o120 spike groups"
+  },
+  "bands": {
+    "F150W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f150w_i2d.fits",
+      "e2": "jw06882-o052_t052_nircam_clear-f150w_i2d.fits",
+      "noise_scale": 1.1656536349412336,
+      "zero_point_mag": 0.0152754369573747,
+      "n_measured": 3299,
+      "n_pass": 108,
+      "positions_per_s": 1097.6324029635553
+    },
+    "F444W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f444w_i2d.fits",
+      "e2": "jw06882-o052_t052_nircam_clear-f444w_i2d.fits",
+      "noise_scale": 1.2987877024682655,
+      "zero_point_mag": 0.00037892965848899604,
+      "n_measured": 3063,
+      "n_pass": 28,
+      "positions_per_s": 1708.1436332974124
+    }
+  },
+  "injection": {
+    "floor_x_median_error": 10.0,
+    "fwhm_arcsec": 0.1,
+    "runs": [
+      {
+        "frac": 1.0,
+        "nominal_dmag": -0.752574989159953,
+        "n": 500,
+        "recovered_frac": 0.882,
+        "n_nominal": 289,
+        "recovered_frac_nominal": 0.9653979238754326,
+        "per_band_pass_frac": {
+          "F150W": 0.938,
+          "F444W": 0.92
+        }
+      },
+      {
+        "frac": 0.5,
+        "nominal_dmag": -0.4402281476392031,
+        "n": 500,
+        "recovered_frac": 0.592,
+        "n_nominal": 195,
+        "recovered_frac_nominal": 0.5846153846153846,
+        "per_band_pass_frac": {
+          "F150W": 0.814,
+          "F444W": 0.674
+        }
+      }
+    ],
+    "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated"
+  },
+  "hit_group_verdicts_by_eye": {
+    "diffraction spike of a bright star": 8,
+    "bright-star core or wings": 2
+  },
+  "candidates": 0,
+  "known_sources": {
+    "n0153 (catalog-stage brightening, #61)": "F150W -0.63 mag 5.75 sigma, F444W -0.51 mag 2.95 sigma: one band passes, not a hit",
+    "n0022 (persistence in o010, D-039)": "F150W -13.1 sigma, undefined in F444W: one band",
+    "n0150 (persistence, D-039)": "F150W -9.2 sigma, F444W 1.2 sigma; in the spike zone"
+  },
+  "command": "transient_grid.py --band F150W/F444W o010 o052 --catalog <4 pipeline _cat.ecsv, o010 then o052> --epoch2-catalogs 2 3 --inject 500 --inject-frac 1.0 0.5 --spike-veto --procs 2"
+}

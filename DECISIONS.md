@@ -1461,6 +1461,41 @@ Field docs: `docs/fields/*.md`.
   absorbs a brightening common to all of them (5 % recovery). Injections must use the real grid's zero point and
   noise scale.
 
+**Addendum 2 (2026-10-15, spike flag; Sunrise o010/o052 and SMACS/VENUS grids).**
+- **`--spike-veto`** flags (`spike_zone`) positions within R = 45″ × 10^(−0.2 (m − 17.3)) of a catalogued point
+  source brighter than 19.5 mag (ASSUMPTIONs, tuned on the 34 Sunrise o010/o120 spike/wing groups: all 34 flagged,
+  `n0022` not, `n0150` flagged as it is that star's afterimage). The zone holds 44–66 % of the measured positions, so it
+  is a triage flag, never a removal: every hit is still looked at. An angle-resolved veto (spikes at fixed angles to
+  PA_V3) was tried on the o010/o120 groups and dropped; their angles scatter by ±15–20° about the 60° pattern.
+- **Sunrise o010 vs VENUS o052 (F150W, F444W; 2.9 yr):** 3,730 positions (3,063 measured in both bands), scales
+  1.17/1.30; 13 hits in 10 groups, all bright-star spikes or wings (all in the zone). **0 candidates.** Injection
+  −0.75 mag 97 % (289 nominal), −0.44 mag 58 %. `n0153` is −0.63 mag at 5.8σ in F150W and only 3.0σ in F444W, so the
+  two-band rule does not count it (it is vetted on #61).
+- **SMACS ERO o001 (2022-06-07) vs VENUS o057 (2026-06-05):** 4,325 positions (3,670 in both bands), scales
+  1.25/1.31; 17 hits in 15 groups. Injection −0.75 mag 96 %, −0.44 mag 59 %. By eye on same-frame difference stamps:
+  11 groups are stellar proper motion (dipoles), 1 a spike. **A lensed-transient pair:** `g03415`/`g03423` are
+  point sources 3.2″ apart on either side of the system 5 arc (z 1.425). They are absent in 2022 (F150W 25.3 and
+  25.1 mag in the 2026 pipeline catalog; Δm −3.3/−4.1 in F150W, −3.6/−4.7 in F444W, ≥ 14σ). Per exposure
+  (`persistence_check.py`): on sky in 19 and 15 clean exposures, none suspect, at fixed positions over 1.6 h
+  in six filters (not persistence, not a moving object). Mahler+22 ICLv2 (`scripts/smacs_transient_pair.py`)
+  maps both to one source point at z 1.40–1.45 (separation 0.025–0.064″, images reproduced within 0.1–0.3″,
+  parities + and −, μ ≈ 26–30 and −20–22), the arc's catalogued redshift. The ordinary reading is a
+  lensed supernova (or other transient) in the arc galaxy; the model predicts a third image of μ ≈ 3 about 28″
+  south, at (110.82190, −73.46032), not detected; time delays are not computed. The catalog stage (evidence above) missed the
+  pair (DECISIONS evidence above) (cause below). Two single-position changes are follow-ups: `g00791`
+  (a compact source on a galaxy in 2022, on sky in 50 clean exposures, gone in 2026) and `g02290` (a galaxy nucleus
+  0.9 mag brighter in both bands).
+- **Vetting of the pair (2026-10-15, `docs/candidates/smacs0723-sys5-transient-pair.md`): SN Atalanta**, a VENUS
+  lensed supernova (z 1.48, arXiv:2609.30440; JWST DD 12774 / HST 18297 target `SMACS0723-GLSN-1` 0.03″ from image
+  B). Absent on 2022-06-07 and 2024-05-11 (GO-4043), fading by 3–4× in F150W from 2026-06-05 to 2026-07-06. Ordinary;
+  not a candidate. A new-transient hit in a VENUS field is checked against MAST target names (DD/ToO programs) and
+  TNS before any lens-model work: that check took minutes here. Follow-ups: `g00791` (seen only in the 2022 ERO;
+  most likely an unreported supernova) and `g02290` (nucleus ×2.3 brighter in F150W; most likely AGN variability,
+  inconclusive) are ordinary classes, not candidates.
+- **Why the catalog stage missed the pair:** the pair is a separate source only in the 2026 F150W catalog (labels 642, 667 at 0.00″; 2022 nearest 0.48″ and 0.86″, beyond the 0.3″ match radius). Neither F444W catalog has it: in 2026 it sits inside two bright segments (labels 1379, 1381; centroids 1.7″ away); in 2022 the nearest entry is the BCG/ICL segment (3.3″, 156,794 pixels). The two-band coincidence rule of the catalog stage therefore
+  cannot see a transient that F444W segmentation merges into a cluster member or the ICL. Near cluster cores, the
+  grid stage (forced photometry, no segmentation) is the one to trust.
+
 **Revisit if.**
 - More than two epochs make light curves possible.
 - The search goes below catalog depth (image differencing or forced photometry on a grid).
