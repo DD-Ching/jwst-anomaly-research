@@ -40,6 +40,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   vetted). Remaining o211→o212 tiles: t-2+0, t+1±, t+2± (11) plus `--maps` re-runs of the 7 map-less earlier
   tiles and the 5 with passes (≈ 70 min at this throughput: one run's worth). Suggest adding a dipole test
   (opposite-sign lobe within 2 × FWHM, about equal |S|) to `arc_diff_morph.py`; validate it on Yan+2023 first.
+
 ## 2026-10-15: Abell 2744 two-epoch grid (DD 2756 o003/o002): 22 hit groups, all ordinary, 0 candidates
 - **Hypothesis before computing:** a catalogued position in the Abell 2744 core changed by ≥ 0.3 mag at ≥ 5σ in two
   bands between 2022-10-20 and 2022-12-06 (47 d; e.g. the DD 2756 lensed SN or a caustic transient). Ordinary:
