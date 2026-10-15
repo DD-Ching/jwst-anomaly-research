@@ -51,3 +51,35 @@ def test_overlap_real_has_no_free_phase(monkeypatch):
     assert abs(d.overlap_real(h, 2.5 * h) - 1.0) < 1e-9
     # a 90 degree rotation is only partly absorbed (through the time shift), unlike |corr|
     assert d.overlap_real(h * 1j, h) < 0.9 < c.b.overlap(h * 1j, h)
+
+
+def test_s1c_fast_fft_length_never_coarser():
+    e = _load("x4_s1c_r1")
+    for pad in (32, 64):
+        assert e._nfft(pad) >= pad * e.b._FREQS.size
+
+
+def test_s1c_grid_scan_matches_pointwise_overlap(monkeypatch):
+    e = _load("x4_s1c_r1")
+    n = e.b._FREQS.size
+    monkeypatch.setattr(e.b, "weight", lambda: e.b._BAND.astype(float))
+    rng = np.random.default_rng(1)
+    f = np.exp(1j * rng.uniform(0, 1, (3, n))) * rng.uniform(0.5, 2, (3, n))
+    monkeypatch.setitem(e._G, "F", f)
+    monkeypatch.setitem(e._G, "F2", np.abs(f) ** 2)
+    monkeypatch.setitem(e._G, "nodes", [(1.0, 0.1), (2.0, 0.2), (3.0, 0.3)])
+    t = (rng.normal(size=n) + 1j * rng.normal(size=n)) * e.b._BAND
+    h = (rng.normal(size=n) + 1j * rng.normal(size=n)) * e.b._BAND
+    for fam in ("A", "D"):
+        m = e.grid_scan(t, h, fam)
+        for k in range(3):
+            assert abs(m[k] - e.ov(t, h * f[k], fam)) < 1e-12
+
+
+def test_s1c_domain_and_bounds():
+    e = _load("x4_s1c_r1")
+    lmc = np.log(e.MC0)
+    assert e.in_domain([lmc, 3.0, 0.5, -0.5], "A")
+    assert not e.in_domain([lmc, 16.0, 0.5, -0.5], "A")
+    assert not e.in_domain([lmc, 3.0, 0.8, 0.0, 0.7, 0, 0, 0, 1.0, 0, 0], "D")
+    assert e.bounds([lmc, 15.0, 0.99, 0.0], "A", (2441.0, 0.096)) == ["q_max", "chi"]
