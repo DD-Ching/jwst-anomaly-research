@@ -22,7 +22,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   all 11 Yan+2023 positions pass in o211/o212; in o211/o213 one (D21-S2, outside its discovery pair) is a rosette.
   Not yet calibrated by injections through the chain (follow-up).
 - **Morphology on 9 tiles with maps:** t-2-3 60 → 3 pass; over t+0±, t-1±, t-2-3, 15 passes remain, unvetted and
-  not yet looked at. JSON: `results/transients/macs0416_arcdiff/morph/`.
+  not yet vetted. Looked at t-1-3's 7: low-S spots (mostly ≲ 6σ, two bands) on compact sources, in the BCG halo noise
+  or beside the mosaic edge; none is point-like in every band. JSON: `results/transients/macs0416_arcdiff/morph/`.
 - **Failed approach:** a 1.0″ extent cut (kills arc transients); rosette in the top band only (missed h074).
 - **Handoff:** finish o211→o212 on the 12 remaining tiles with `--maps`, run `arc_diff_morph.py` on every tile, look
   at the passes (contact sheets), vet survivors with `arc_diff_vet.py` (CANUCS o004 as fourth epoch); calibrate the
