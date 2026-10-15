@@ -40,14 +40,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   vetted). Remaining o211→o212 tiles: t-2+0, t+1±, t+2± (11) plus `--maps` re-runs of the 7 map-less earlier
   tiles and the 5 with passes (≈ 70 min at this throughput: one run's worth). Suggest adding a dipole test
   (opposite-sign lobe within 2 × FWHM, about equal |S|) to `arc_diff_morph.py`; validate it on Yan+2023 first.
-- **Run 01QcfDQb (10:09–10:50Z): 27 / 28 tiles.** t+1±0/±1/+2/−2 and t+2−1/−2/+0/+1/+2 done (`--procs 1`, 4 jobs, OMP=1;
-  2–15 CPU-min per tile, so the 456 s figure was not a constant). 559 hits, 42 without the bright-core flag.
+- **Run 01QcfDQb (10:09–10:50Z): 28 / 28 tiles.** t−2+0, t+1±0/±1/+2/−2 and t+2−1/−2/+0/+1/+2 done (`--procs 1`, 4 jobs, OMP=1;
+  2–15 CPU-min per tile, so the 456 s figure was not a constant). 598 hits, 50 without the bright-core flag.
 - **`arc_diff_morph.py` dipole verdict (new):** a hit is a dipole when an opposite-sign region (|S| ≥ 3, ≥ 4 px)
   within 0.3″ reaches ≥ 0.5 × |S_hit| in ≥ 2 bands (ASSUMPTIONs; unit tests). **Validation on Yan+2023 (Warhol box re-run with `--maps`):** the first version
   flagged 3 / 11 (Dc2-W4, D31-W7, D21-S2) from bands where |S_hit| < 3, so a nearby noise lobe gave a large
   ratio (failed approach); a band now counts only when |S_hit| ≥ 3, and 11 / 11 pass. Tile verdicts unchanged by
-  the fix. On the ten tiles: dipole 11, rosette 5, edge 9, extended 3, **pass 14**.
-- **Contact sheets of the 14 passes looked at:** **t+2+2 h002 (64.04865, −24.05870 tile; F150W +20.6, F200W +5.6)
+  the fix. On the eleven tiles: dipole 11, rosette 8, edge 13, extended 3, **pass 15**.
+- **Contact sheets of the 15 passes looked at:** t−2+0 h029 is a positive core inside a negative ring on a bright compact source (PSF residual). **t+2+2 h002 (64.04865, −24.05870 tile; F150W +20.6, F200W +5.6)
   and h003 (F150W +15.0, F200W +7.3) are compact positive spots on blank sky in o211 with nothing in LW (|S| ≤ 3.5):
   unvetted, the open items of this unit.** SW-only epoch-2 spots without a source match the persistence class seen
   in Abell 2744 (#246), but that is a hypothesis until `persistence_check.py` runs on them. t+2+2 h009 is +5.2 in
@@ -59,7 +59,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   candidates (not formally vetted).
 - **Failed approach:** none new; the tile cost varies a lot, so queue dense tiles first.
 - **Handoff:** **first `persistence_check.py` and `arc_diff_vet.py` (CANUCS o004 as third epoch) on t+2+2 h002 and h003**, then
-  h063 (t+2+1); the remaining tile t−2+0 (> 30 CPU-min), then the
+  h063 (t+2+1); then o211→o213 over the tiles, then the
   `--maps` re-runs of t+0−1, t−1−1/−2/−3, t−2−3 for their contact sheets, and the Warhol box with `--maps` to
   validate the dipole verdict on Yan+2023. Add a **core-population test** to `arc_diff_morph.py` (a hit's S
   against the S distribution at the tile's compact-source peaks in that band) and validate it on Yan+2023 first.
