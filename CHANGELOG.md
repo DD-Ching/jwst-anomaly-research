@@ -2,9 +2,29 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-15 (in progress): Sunrise and SMACS two-epoch grids re-run under the MACS0416 defaults
-- Plan: `transient_grid.py` with `--recentre-in origin` and mixed-sign hits on Sunrise o010/o120, o010/o052 and
-  SMACS o001/VENUS o057; SN Atalanta (#237) is the known case.
+## 2026-10-15: Sunrise and SMACS two-epoch grids re-run under the MACS0416 defaults: 0 candidates
+- **Hypothesis before measuring:** the first Sunrise o010/o120 run and the #237 runs (Sunrise o010/o052,
+  SMACS o001/VENUS o057) used per-band recentring and the same-sign rule, which missed MACS0416 SN01 (#238). Under
+  `--recentre-in origin` and mixed-sign hits, a colour-changing or neighbour-confused transient could appear.
+  Known case: SN Atalanta (#237) must be recovered. Plan change: any new row that is not a star, spike or
+  persistence goes to `/vet-candidate`.
+- **Run (derived):** `transient_grid.py`, same bands, catalogs and injections as before; outputs
+  `results/transients/{sunrise_grid_v2,sunrise_grid_o052_v2,smacs_grid_v2}/`.
+  - SMACS/VENUS: 16 groups; all 15 earlier groups re-found, SN Atalanta A/B at −3.3/−4.7 mag, ≥ 14σ in both bands;
+    2 new rows (g04188, g04192): bright-star proper-motion dipoles. Injection −0.75 mag 97 %, −0.44 mag 58 %.
+  - Sunrise o010/o052: 10 groups; 9 of 10 earlier groups re-found (the lost one was a spike on a galaxy); new
+    g03622 lies on a bright star's diffraction spike that moves between epochs. Injection 98 % / 68 %.
+  - Sunrise o010/o120: 38 groups; all 36 earlier groups re-found; new g00650 (star spike) and g02509 (streak),
+    both moving with the roll angle. Injection 99 % / 58 %.
+- **Contact sheets looked at** for every new row. **0 candidates.** One mixed-sign row in total (SMACS g00612, a
+  proper-motion star).
+- **Failed approach:** my first contact sheets cut each epoch in its own pixel frame; Sunrise o010 and o120 differ
+  in roll, so the difference stamps showed a false 2″ shift. Resampling epoch 2 onto epoch 1's WCS fixed it (the
+  catalogs agree to ≤ 0.02″ in every field region).
+- Data: 16 `_i2d` mosaics (≈ 9 GB) and their catalogs streamed from MAST, deleted after each run; `grid.ecsv`
+  (> 1 MB) not committed.
+- **Handoff:** the grid line is null under both rule sets in four clusters. Next per TASKS.md: Abell 2744 UNCOVER
+  vs ALT F356W with PLATE-23a as the known case, or arc differencing on the Sunrise arc.
 
 ## 2026-10-15: MACS0416 arc tiling o211→o213, 28 / 28 tiles: 27 morphology passes, all ordinary, 0 candidates
 - **Hypothesis before measuring:** o211→o213 shows the same artifact classes as o211→o212 (spikes, rosettes,

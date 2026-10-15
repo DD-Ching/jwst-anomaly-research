@@ -1,0 +1,70 @@
+{
+  "n_positions": 3654,
+  "n_merged_after_refinement": 76,
+  "n_measured_any_band": 3262,
+  "n_measured_all_bands": 3043,
+  "n_hits": 13,
+  "n_hit_groups": 10,
+  "n_hits_mixed": 0,
+  "recentre_in": "origin",
+  "same_sign": false,
+  "bands": {
+    "F150W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f150w_i2d.fits",
+      "e2": "jw06882-o052_t052_nircam_clear-f150w_i2d.fits",
+      "noise_scale": 1.169624113793103,
+      "zero_point_mag": 0.015861767653227984,
+      "n_measured": 3262,
+      "n_pass": 110,
+      "positions_per_s": 1692.4966090200578
+    },
+    "F444W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f444w_i2d.fits",
+      "e2": "jw06882-o052_t052_nircam_clear-f444w_i2d.fits",
+      "noise_scale": 1.2354727369361294,
+      "zero_point_mag": 0.014100914877895297,
+      "n_measured": 3043,
+      "n_pass": 25,
+      "positions_per_s": 2041.7571226351226
+    }
+  },
+  "injection": {
+    "floor_x_median_error": 10.0,
+    "fwhm_arcsec": 0.1,
+    "runs": [
+      {
+        "frac": 1.0,
+        "nominal_dmag": -0.752574989159953,
+        "n": 500,
+        "recovered_frac": 0.908,
+        "n_nominal": 297,
+        "recovered_frac_nominal": 0.9831649831649831,
+        "per_band_pass_frac": {
+          "F150W": 0.948,
+          "F444W": 0.954
+        }
+      },
+      {
+        "frac": 0.5,
+        "nominal_dmag": -0.4402281476392031,
+        "n": 500,
+        "recovered_frac": 0.622,
+        "n_nominal": 197,
+        "recovered_frac_nominal": 0.6802030456852792,
+        "per_band_pass_frac": {
+          "F150W": 0.802,
+          "F444W": 0.748
+        }
+      }
+    ],
+    "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated; injections sit at the measured (recentred or refined) position, so recentring is not tested; a brightening injected in every band is recovered alike under the same-sign and mixed-sign rules"
+  },
+  "command": "transient_grid.py --band F150W/F444W jw02282 o010 jw06882 o052 --catalog <4 pipeline _cat.ecsv, o010 then o052> --epoch2-catalogs 2 3 --inject 500 --inject-frac 1.0 0.5 --procs 2 (defaults: --recentre-in origin, mixed-sign hits allowed)",
+  "hit_group_verdicts_by_eye": {
+    "star 1596 core, wings or diffraction spikes": 5,
+    "diffraction spike crossing or next to a source": 4,
+    "bright star core/wings": 1
+  },
+  "candidates": 0,
+  "comparison_with_previous_run": "9 of the 10 hit groups of the #237 run recovered; old g3 (spike on a galaxy) no longer passes; new g03622 lies on a bright star's vertical diffraction spike that moves between epochs"
+}

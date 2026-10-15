@@ -1,0 +1,93 @@
+{
+  "n_positions": 6239,
+  "n_merged_after_refinement": 162,
+  "n_measured_any_band": 2391,
+  "n_measured_all_bands": 2280,
+  "n_hits": 70,
+  "n_hit_groups": 38,
+  "n_hits_mixed": 0,
+  "recentre_in": "origin",
+  "same_sign": false,
+  "bands": {
+    "F090W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f090w_i2d.fits",
+      "e2": "jw02282-o120_t001_nircam_clear-f090w_i2d.fits",
+      "noise_scale": 1.4365482782059398,
+      "zero_point_mag": 0.019880948187891812,
+      "n_measured": 2389,
+      "n_pass": 84,
+      "positions_per_s": 4478.908565432766
+    },
+    "F115W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f115w_i2d.fits",
+      "e2": "jw02282-o120_t001_nircam_clear-f115w_i2d.fits",
+      "noise_scale": 1.3278244021862369,
+      "zero_point_mag": 0.01980914942397223,
+      "n_measured": 2389,
+      "n_pass": 97,
+      "positions_per_s": 4442.191294389134
+    },
+    "F277W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f277w_i2d.fits",
+      "e2": "jw02282-o120_t001_nircam_clear-f277w_i2d.fits",
+      "noise_scale": 1.4290959571789663,
+      "zero_point_mag": 0.0047620910214703355,
+      "n_measured": 2285,
+      "n_pass": 48,
+      "positions_per_s": 6020.158474114977
+    },
+    "F356W": {
+      "e1": "jw02282-o010_t001_nircam_clear-f356w_i2d.fits",
+      "e2": "jw02282-o120_t001_nircam_clear-f356w_i2d.fits",
+      "noise_scale": 1.454689902890582,
+      "zero_point_mag": 0.013216596992803765,
+      "n_measured": 2285,
+      "n_pass": 30,
+      "positions_per_s": 7063.080679209045
+    }
+  },
+  "injection": {
+    "floor_x_median_error": 10.0,
+    "fwhm_arcsec": 0.1,
+    "runs": [
+      {
+        "frac": 1.0,
+        "nominal_dmag": -0.752574989159953,
+        "n": 500,
+        "recovered_frac": 0.814,
+        "n_nominal": 198,
+        "recovered_frac_nominal": 0.98989898989899,
+        "per_band_pass_frac": {
+          "F090W": 0.534,
+          "F115W": 0.676,
+          "F277W": 0.788,
+          "F356W": 0.756
+        }
+      },
+      {
+        "frac": 0.5,
+        "nominal_dmag": -0.4402281476392031,
+        "n": 500,
+        "recovered_frac": 0.418,
+        "n_nominal": 127,
+        "recovered_frac_nominal": 0.5826771653543307,
+        "per_band_pass_frac": {
+          "F090W": 0.29,
+          "F115W": 0.458,
+          "F277W": 0.332,
+          "F356W": 0.32
+        }
+      }
+    ],
+    "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated; injections sit at the measured (recentred or refined) position, so recentring is not tested; a brightening injected in every band is recovered alike under the same-sign and mixed-sign rules"
+  },
+  "command": "transient_grid.py --band F090W/F115W/F277W/F356W jw02282 o010 o120 --catalog <8 pipeline _cat.ecsv, o010 then o120> --epoch2-catalogs 4 5 6 7 --inject 500 --inject-frac 1.0 0.5 --procs 4 (defaults: --recentre-in origin, mixed-sign hits allowed)",
+  "hit_group_verdicts_by_eye": {
+    "diffraction spike or streak that moves between epochs": 27,
+    "star wings/spikes": 9,
+    "n0150: detector persistence (D-039)": 1,
+    "n0022: detector persistence (D-039)": 1
+  },
+  "candidates": 0,
+  "comparison_with_previous_run": "all 36 hit groups of the first run (results/transients/sunrise_grid, --recentre-in band, same-sign) recovered; 2 new groups (g00650 on a star spike, g02509 on a streak), both moving with the roll angle"
+}
