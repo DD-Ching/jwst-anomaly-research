@@ -379,7 +379,28 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `persistence_check.py`), validated on PLATE-23a once its position is checked. Or move the grid to another cluster
   with two NIRCam epochs.
 
-## 2026-10-15: S0-2026-10-15b Kapitza screen: an ordinary high-frequency drive can act on a wormhole throat only through its averaged stress, at about 10⁵² W or under an unproven confinement (derived, toy)
+## 2026-10-15: S0-2026-10-15b re-check: the proposed static radiation-fluid background does not exist; two over-strong claims withdrawn (derived)
+- **Question (owner, ≤ 1 h):** is the proposed next background self-consistent, and is a solver worth building?
+- **Background obstacle** (sympy-verified):
+  - A static perfect fluid in −N²dt² + dl² + r²dΩ² obeys p′ = −(ρ + p)N′/N. With p = ρ/3 that gives ρ = C/N⁴.
+  - With N finite and non-zero at both asymptotic ends (no horizon), ρ → 0 forces ρ ≡ 0.
+  - It cannot be truncated either: without a surface layer, p must be continuous.
+  - So no Ellis + static isotropic radiation background exists, and no solver will be built. This holds only for
+    this closure (not for directed, injected or anisotropic radiation).
+- **Withdrawn:**
+  - The general spherical no-go: Birkhoff needs a vacuum gap, and Ellis's phantom scalar has monopole waves.
+  - The claim that a first-order drive must be non-perturbative. h/Ω² is the mode's relative jitter, not
+    necessarily the background's. Whether the background stays perturbative is undetermined until h is derived
+    from a source, so a direct drive is not excluded.
+- **Restated:**
+  - The thin-shell toy is the static stability of already-trapped radiation, comparing different exotic-matter
+    theories: the EoS intercept moves with f.
+  - The 35–130 % and 10⁵² W figures are model estimates only.
+  - "Not found" describes four queries only.
+- **Paused:** a stability calculation is proposed only with a specified radiation distribution, stress tensor,
+  boundary conditions, confinement or supply mechanism, and a fixed matter theory.
+
+## 2026-10-15: S0-2026-10-15b Kapitza screen (partly superseded by the re-check above): an ordinary high-frequency drive can act on a wormhole throat only through its averaged stress, at about 10⁵² W or under an unproven confinement (derived, toy)
 - **Question (owner):** can Kapitza-style dynamic stabilisation, driven by an explicit source, suppress known
   wormhole instabilities? Record: `docs/state/units/S0-2026-10-15b.md`. ≤ 2 h; X4/R1 paused.
 - **Literature** (checked in the bodies):

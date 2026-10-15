@@ -15,6 +15,9 @@ Components:
   so sigma_r ~ a^-3.
 The throat a0 is fixed. The radiation share is f = sigma_r0/|sigma0|; the exotic part absorbs
 the rest, sigma_x0 = sigma0 - sigma_r0 (more negative). Stable iff V''(a0) > 0.
+Note: p_x0 = p0 - sigma_r0/2 also changes with f (the exotic EoS intercept), so rows compare
+different exotic-matter theories in equilibrium, not one fixed theory with energy added
+(re-check 2026-10-15).
 
 ASSUMPTIONS (new hypotheses, not derived here): the radiation stays confined to the shell
 (no leakage); its average obeys a 2D radiation EoS; the exotic EoS is linear near a0.

@@ -4906,3 +4906,12 @@ rebuild agrees to 1.2e-7. The best ordinary fit of any kind is 0.945 (S1c, lense
 
 **Revisit if:** a field-supported calculation shows stabilisation at a small radiation fraction, or a mechanism
 confining radiation at a throat is found.
+
+**Addendum (2026-10-15, re-check):**
+- The decisive next calculation named above is **cancelled**: the Ellis + static isotropic radiation-fluid
+  background does not exist. ρ = C/N⁴ forces ρ ≡ 0 for asymptotic flatness, and there is no surface layer to
+  truncate it.
+- Two supporting claims are withdrawn: the general spherical no-go (it needs a vacuum gap), and "first-order drive
+  is non-perturbative".
+- A stability calculation will be proposed only with a fully specified radiation closure and a fixed matter
+  theory.
