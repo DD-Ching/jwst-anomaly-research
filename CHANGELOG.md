@@ -349,8 +349,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     and satisfies the NEC.
   - A first-order drive would need a stiffness modulation of about 20/a², 6–7 times the Ellis potential depth.
 - **Toy (exact thin-shell junction conditions):**
-  - Confined 2D radiation can stabilise the throat when the exotic EoS slope is < ½. It needs radiation energy
-    0.35–1.3 × |σ₀| and raises the exotic negative energy by 35–130 %.
+  - Confined 2D radiation can stabilise the throat when the exotic EoS slope is < ½. For throats a₀ ≥ 4M it needs
+    radiation energy 0.35–1.3 × |σ₀| and raises the exotic negative energy by 35–130 %; a₀ = 2.5M needs more.
   - It destabilises for slopes > ½.
   - Unconfined, it needs about 2–8 × 10⁵² W whatever the throat size.
 - **Not done:** the field-supported (Ellis + radiation fluid) eigenvalue, about 3–4 h, which decides the sign for

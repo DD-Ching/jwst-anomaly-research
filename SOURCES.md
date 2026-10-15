@@ -1276,9 +1276,10 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   environment, not a project dependency); IMRPhenomXAS and IMRPhenomD; aLIGO design PSD
   `SimNoisePSDaLIGODesignSensitivityP1200087` (LIGO-P1200087).
 - S0-2026-10-15b Kapitza screen (accessed 2026-10-15; read in the body, versions as listed):
-  - Bukov, D'Alessio & Polkovnikov, arXiv:1407.4803v6 (Adv. Phys. 64, 139, 2015), §5, Eqs. 92–106.
-  - Krondorfer et al., arXiv:2507.02736v2 (Am. J. Phys. 94, 647, 2026), Eqs. 12–39.
-  - Berenguer et al., "Floquet SYK wormholes", arXiv:2404.08394v3 (JHEP 06 (2024) 106).
+  - Bukov, D'Alessio & Polkovnikov, arXiv:1407.4803v6, §5, Eqs. 92–106.
+  - Krondorfer et al., arXiv:2507.02736v2, Eqs. 12–39.
+  - Berenguer et al., "Floquet SYK wormholes", arXiv:2404.08394v3.
+  - Journal references were not checked.
   - Gonzalez, Guzman & Sarbach, arXiv:0806.0608v2, Table I (Ellis unstable time 0.846 r_throat).
   - Azad et al., arXiv:2301.05243v2, Table 1; arXiv:2403.08387v1; Kleihaus & Kunz, arXiv:1409.1503v1.
   - Dzhunushaliev et al., arXiv:1309.2448v1; Friedman, Schleich & Witt, gr-qc/9305017v2, Theorem 1.
