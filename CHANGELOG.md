@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: (in progress) MACS0416 arc tiling with arc_diff.py and arc_diff_vet.py
+- Claim: tile the remaining MACS0416 arcs (o211/o212, o211/o213), add CANUCS o004, vet unflagged hits.
+
 ## 2026-10-15: MACS0416 arc-difference hit h108 is an arc-segment residual; arc-coherence vetting test
 - **Hypothesis before measuring:** h108 (o211→o213, #242) is a point source on a faint thin arc that brightened. It
   would be one PSF-sized spot, with the same sign in every band, and additive over the epochs. A matching residual
