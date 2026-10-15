@@ -7,8 +7,10 @@ For each of 36 injections (negative point lens x IMRPhenomXAS binary) the best f
 is found for two ordinary models, with amplitude, arrival time and phase maximised analytically:
   U  unlensed binary, free (chirp mass, mass ratio, chi1z, chi2z);
   P  positive point-mass lens x binary, the same intrinsics plus (M_Lz, y): a 10 x 10 lens grid with
-     intrinsic Nelder-Mead at every node, then a 5 x 5 refinement grid around the best node.
-Lens factors are exact (S0 closed form, mpmath) on every frequency; no geometric-optics shortcut.
+     intrinsic Nelder-Mead at every node, then a 5 x 5 grid around the best node (main run); the
+     frozen 6-parameter Nelder-Mead from the best three nodes runs in the ``refine`` stage.
+Lens factors use the S0 closed form (mpmath) on every frequency, with a geometric-optics fallback
+only where mpmath's 1F1 does not converge (very large w).
 
 Screening threshold for the next stage (NOT a detection threshold or a calibrated false-alarm rate):
 rho_req = 3 / sqrt(1 - FF^2) for the observed (lensed) SNR; pass if rho_req <= 30 against both U
@@ -18,6 +20,7 @@ Needs lalsuite (lalsimulation) in the running interpreter; it is not a project d
 
   python scripts/x4_s1_degeneracy.py validate     # tool checks (FF of matching models)
   python scripts/x4_s1_degeneracy.py run          # 36 cases -> results/x4/s1_cases.json
+  python scripts/x4_s1_degeneracy.py refine       # passing cases: frozen 6-parameter P refinement
   python scripts/x4_s1_degeneracy.py robust       # re-fit passing cases: other starts, wider bounds
   python scripts/x4_s1_degeneracy.py crosscheck   # 3 key cases fitted with IMRPhenomD templates
 """
@@ -63,7 +66,9 @@ Q_MAX, CHI_MAX = 8.0, 0.99
 P_GRID_M = np.logspace(0.0, 4.0, 10)
 P_GRID_Y = np.linspace(0.01, 5.0, 10)
 APPROX = "IMRPhenomXAS"  # injections, and fits unless overridden
-FIT_APPROX = {"name": APPROX}  # set to another family for the crosscheck subcommand
+FIT_APPROX = {"name": APPROX}
+# overlap time-lag resolution: pad 4 in the main run (0.24 ms lags), pad 16 in the refine stage
+OVERLAP_PAD = {"pad": 4}  # set to another family for the crosscheck subcommand
 CROSSCHECK_CASES = ((30.0, 300.0, 1.0), (60.0, 1000.0, 1.5), (200.0, 300.0, 1.0))
 
 _FREQS = np.arange(0.0, F_HIGH + DF / 2, DF)
@@ -127,7 +132,7 @@ def waveform(mc: float, q: float, c1: float, c2: float, approx: str | None = Non
         F_HIGH,
         F_LOW,
         lal.CreateDict(),
-        ls.GetApproximantFromString(APPROX),
+        ls.GetApproximantFromString(approx or FIT_APPROX["name"]),
     )
     h = np.zeros(_FREQS.size, complex)
     n = min(hp.data.length, _FREQS.size)
@@ -158,6 +163,12 @@ def amp_geometric(w: float, y: float, s: int) -> complex:
 
 
 def amp(w: float, y: float, s: int) -> complex:
+    # Far in the geometric regime (w > 300 and w y^2 > 6000) mpmath's 1F1 is slow or fails, and
+    # geometric optics agrees with the exact form to <= 1e-4 there (checked 2026-10-15); use it.
+    # Only the refine stage reaches this region; main-run arrays were computed before this rule.
+    if w > 300.0 and w * y * y > 6000.0:
+        _CACHE["n_geometric"] = _CACHE.get("n_geometric", 0) + 1
+        return amp_geometric(w, y, s)
     try:
         return gl.amp_factor(w, y, s)
     except Exception:  # noqa: BLE001  (mpmath NoConvergence at very large w)
@@ -197,11 +208,11 @@ def lens(m_lz: float, y: float, s: int) -> np.ndarray:
     return out
 
 
-def overlap(a: np.ndarray, b: np.ndarray, pad: int = 4) -> float:
+def overlap(a: np.ndarray, b: np.ndarray, pad: int | None = None) -> float:
     """max over time and phase of the normalised inner product (amplitude free)."""
     w = weight()
     prod = a * np.conj(b) * w
-    n = pad * prod.size
+    n = (pad or OVERLAP_PAD["pad"]) * prod.size
     corr = np.fft.ifft(prod, n) * n
     na = np.sum(np.abs(a) ** 2 * w)
     nb = np.sum(np.abs(b) ** 2 * w)
@@ -306,6 +317,88 @@ def fit_positive(target, mc0, start, frac=MC_FRAC, grid_m=P_GRID_M, grid_y=P_GRI
     }
 
 
+def lens_exact(m_lz: float, y: float, s: int) -> np.ndarray:
+    """Exact lens factor at an arbitrary (M_Lz, y), not cached on disk (continuous refinement)."""
+    out = np.ones(_FREQS.size, complex)
+    idx = np.where(_BAND)[0]
+    out[idx] = [amp(gl.W_PER_MSUN_HZ * m_lz * _FREQS[i], y, s) for i in idx]
+    return out
+
+
+def _p6_obj(x, target, mc0, frac, memo):
+    lmc, q, c1, c2, lml, y = x
+    if not (0.0 <= lml <= np.log(1e4) and 0.01 <= y <= 5.0):
+        return 1.0
+    key = (round(lml, 7), round(y, 7))
+    if key not in memo:
+        memo.clear()  # one lens array at a time keeps memory flat
+        memo[key] = lens_exact(np.exp(lml), y, +1)
+    return _intrinsic_obj([lmc, q, c1, c2], target, memo[key], mc0, frac)
+
+
+def refine_positive(target, mc0, nodes, frac=MC_FRAC, maxfev=80):
+    """Frozen S1 refinement: Nelder-Mead over all six parameters from the best three grid nodes."""
+    best = (1.0, None)
+    for _mm, m, y, x in nodes[:3]:
+        s0 = np.array([*x, np.log(m), y], float)
+        steps = np.array([0.03, 0.3, 0.2, 0.2, 0.2, 0.1])
+        simplex = np.vstack([s0] + [s0 + np.eye(6)[i] * steps[i] for i in range(6)])
+        r = minimize(
+            _p6_obj,
+            s0,
+            args=(target, mc0, frac, {}),
+            method="Nelder-Mead",
+            options={"maxfev": maxfev, "xatol": 1e-4, "fatol": 1e-7, "initial_simplex": simplex},
+        )
+        if r.fun < best[0]:
+            best = (float(r.fun), [float(v) for v in r.x])
+    return {
+        "mismatch": best[0],
+        "M_Lz": float(np.exp(best[1][4])),
+        "y": best[1][5],
+        "params": best[1][:4],
+    }
+
+
+def refine_case(args):
+    """Refine stage for one case: pad-16 overlaps, U polish, frozen 6-parameter P refinement."""
+    mtot, m_lz, y, prev_u, prev_p = args
+    t1 = time.time()
+    OVERLAP_PAD["pad"] = 16
+    mc0 = chirp(mtot, Q_INJ)
+    h = waveform(mc0, Q_INJ, CHI_INJ, CHI_INJ, approx=APPROX)
+    target = h * lens(m_lz, y, -1)
+    w = weight()
+    ratio = float(np.sqrt(np.sum(np.abs(target) ** 2 * w) / np.sum(np.abs(h) ** 2 * w)))
+    mm_u, xu = fit_intrinsic(target, None, mc0, [prev_u], MC_FRAC)
+    p_grid = fit_positive(target, mc0, xu)  # grid nodes recomputed at pad 16
+    p6 = refine_positive(target, mc0, p_grid["grid_best"])
+    p_best = (
+        p6
+        if p6["mismatch"] < p_grid["mismatch"]
+        else {k: v for k, v in p_grid.items() if k != "grid_best"}
+    )
+    ru, rp = rho_req(mm_u), rho_req(p_best["mismatch"])
+    worst = max(ru, rp)
+    return {
+        "M_total": mtot,
+        "M_Lz": m_lz,
+        "y": y,
+        "snr_ratio_lensed_over_unlensed": ratio,
+        "U": {"mismatch": mm_u, "params": xu},
+        "P_grid_pad16": {k: v for k, v in p_grid.items() if k != "grid_best"},
+        "P_6d": p6,
+        "P": p_best,
+        "rho_req_U": ru,
+        "rho_req_P": rp,
+        "rho_req": worst,
+        "intrinsic_snr_needed": worst / ratio,
+        "passes_screen": bool(worst <= 30.0 and worst <= 100.0 * ratio),
+        "seconds": round(time.time() - t1, 1),
+        "stage1": {"U": prev_u, "P": prev_p},
+    }
+
+
 def rho_req(mm: float) -> float:
     o = 1.0 - mm
     return float(3.0 / np.sqrt(max(1.0 - o * o, 1e-24)))
@@ -393,6 +486,31 @@ def main(argv=None) -> int:
             print(json.dumps(res, default=float)[-400:], flush=True)
         res["n_geometric_fallback"] = _CACHE.get("n_geometric", 0)
         (OUT / "s1_validation.json").write_text(json.dumps(res, indent=1, default=float) + "\n")
+    elif cmd == "refine":
+        prev = json.loads((OUT / "s1_cases.json").read_text())["cases"]
+        jobs = [
+            (c["M_total"], c["M_Lz"], c["y"], c["U"]["params"], c["P"])
+            for c in prev
+            if c["passes_screen"]
+        ]
+        with Pool(4) as pool:
+            rows = []
+            for r in pool.imap_unordered(refine_case, jobs):
+                rows.append(r)
+                print(
+                    f"M={r['M_total']:.0f} ML={r['M_Lz']:.0f} y={r['y']}"
+                    f" FF_U={1 - r['U']['mismatch']:.5f}"
+                    f" FF_P={1 - r['P']['mismatch']:.5f} rho_req={r['rho_req']:.1f}"
+                    f" pass={r['passes_screen']} ({r['seconds']} s)",
+                    flush=True,
+                )
+        rows.sort(key=lambda r: (r["M_total"], r["M_Lz"], r["y"]))
+        rec = {
+            "label": "simulated; refine stage (frozen 6-parameter P refinement, pad-16 overlaps)",
+            "wall_s": round(time.time() - t0, 1),
+            "cases": rows,
+        }
+        (OUT / "s1_refine.json").write_text(json.dumps(rec, indent=1, default=float) + "\n")
     elif cmd == "crosscheck":
         FIT_APPROX["name"] = "IMRPhenomD"
         jobs = [(m, ml, y, 700 + i, MC_FRAC) for i, (m, ml, y) in enumerate(CROSSCHECK_CASES)]
