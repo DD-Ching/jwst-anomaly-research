@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: Abell 2744 two-epoch grid, UNCOVER o001 vs DD 2756 o002 (in progress)
+- Plan: `transient_grid.py` on UNCOVER (2022-11-02) cut to the DD 2756 o002 (2022-12-06) footprint with
+  `i2d_region.py`; hits vetted as in the o003/o002 run.
+
 ## 2026-10-15: X4 S1d: the reference global search (SciPy DE) fails its injection checks; R1 stays undetermined (simulated)
 - **Question (owner):** does R1's negative-lens XPHM waveform keep a reliably identifiable difference, enough for a
   real-data pilot? Reuse check and plan frozen first (`docs/state/units/X4.md`, S1d).
