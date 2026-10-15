@@ -12,6 +12,7 @@ SHAs are as of 2026-10-12 23:00 UTC; base merges by other sessions move them wit
 | PR | Head | Scope of the provisional conclusion | Open questions | Reopen only if |
 |---|---|---|---|---|
 | #61 vet n0153 | 706caa0 | Sunrise n0153: a real nuclear brightening, inconclusive without a third epoch | Third-epoch imaging | A new JWST epoch of the field is public |
+| #237 two-epoch grids | (head moves) | Sunrise o010/o052 null; SMACS/VENUS pair on the system 5 arc vetted as the known lensed SN Atalanta (not a candidate) | Owner review | **Done; do not redo:** the pair's TNS/MAST/literature vetting and four-epoch photometry |
 | #145 W3 gb13 | d14a48b | One chain survivor, explained by red noise; not a candidate | Owner decision on the red-noise explanation | — (field result; gb13 is not to be re-run) |
 | #150 coordinator writer | 8ed4a29 | Proposal D-081: one coordinating writer for CHANGELOG/TASKS/exotic_limits | Owner decision | — |
 | #152–#166 goal rounds 1–10 | see PRs | Communication-channel feasibility: published traversable constructions give no shortcut (r1); v-causal bounds (r2–3); beyond-Horndeski wormhole stability fails (r4); Krasnikov tube needs Planck-thin walls (r5–7); Einstein–æther 1-bit channel not practical in the computed case (r8); c13 ≠ 0 instantaneous response is model-internal (r9); no latency route found externally (r10) | Owner review of each round; NIST 2015 no-signalling check undetermined (r10) | A new mechanism or input named in the round's own "reopen" list |

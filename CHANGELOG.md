@@ -17,8 +17,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Failed approach:** an angle-resolved spike veto (fixed angles to PA_V3); the o010/o120 spike hits scatter by
   ±15–20° in angle, so the veto is a radius flag covering 44–66 % of positions, used only for triage.
 - Data: 8 `_i2d` mosaics (5.1 GB) streamed into the gitignored data root and deleted after the run.
-- **Handoff:** `/vet-candidate` on the SMACS pair (TNS and literature first, predicted third image and time delays,
-  colours vs SN templates); then `g00791` and `g02290`. Why the catalog stage missed the pair is open.
+- **Vetted (`docs/candidates/smacs0723-sys5-transient-pair.md`): the pair is SN Atalanta**, a VENUS lensed SN
+  (z 1.48, Fujimoto et al. arXiv:2609.30440). JWST DD 12774 and HST 18297 target `SMACS0723-GLSN-1` 0.03″ from
+  image B. `scripts/smacs_transient_epochs.py`: absent in 2022 and in GO-4043 (2024-05-11), bright on 2026-06-05,
+  F150W 3–4× fainter on 2026-07-06 (DD 12774). TNS lists nothing at the position (AT 2024jfz is 9.3″ away).
+  **Not a candidate**; ordinary astrophysics. The ICLv2 third image (μ ≈ 3) is untested until a time delay exists.
+- **Handoff:** `g00791` and `g02290`; why the catalog stage missed the pair; a Fermat-potential time delay for the
+  third image only if the VENUS team does not publish one.
 
 ## 2026-10-15: Sunrise two-epoch grid on every catalogued position: no transient (D-027 addendum)
 - **Hypothesis before computing:** a source in the o010/o120 overlap changed by ≥ 0.3 mag at ≥ 5σ in two bands, but

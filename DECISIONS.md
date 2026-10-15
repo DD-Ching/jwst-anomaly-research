@@ -1485,6 +1485,11 @@ Field docs: `docs/fields/*.md`.
   pair (DECISIONS evidence above); the cause is not yet known. Two single-position changes are follow-ups: `g00791`
   (a compact source on a galaxy in 2022, on sky in 50 clean exposures, gone in 2026) and `g02290` (a galaxy nucleus
   0.9 mag brighter in both bands).
+- **Vetting of the pair (2026-10-15, `docs/candidates/smacs0723-sys5-transient-pair.md`): SN Atalanta**, a VENUS
+  lensed supernova (z 1.48, arXiv:2609.30440; JWST DD 12774 / HST 18297 target `SMACS0723-GLSN-1` 0.03″ from image
+  B). Absent on 2022-06-07 and 2024-05-11 (GO-4043), fading by 3–4× in F150W from 2026-06-05 to 2026-07-06. Ordinary;
+  not a candidate. A new-transient hit in a VENUS field is checked against MAST target names (DD/ToO programs) and
+  TNS before any lens-model work: that check took minutes here.
 
 **Revisit if.**
 - More than two epochs make light curves possible.
