@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 arc tiling o211→o213 (in progress)
+- Claim: `arc_diff.py --maps` over the 28 tiles for o211→o213, then `arc_diff_morph.py`; handoff to follow.
+
 ## 2026-10-15: MACS0416 h044 per-dither `_cal` photometry: o211 deficit in every dither but not band-consistent; not a candidate (closed)
 - **Hypothesis before measuring (from the previous handoff):** a deficit in some o211 exposures only is processing
   (resampling, outlier rejection); added point-source flux on the sky shows in every o211 exposure, in both SW bands
