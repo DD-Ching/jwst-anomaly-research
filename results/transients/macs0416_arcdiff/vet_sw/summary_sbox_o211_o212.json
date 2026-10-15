@@ -1,0 +1,122 @@
+{
+ "command": "arc_diff.py --band f150w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f150w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f150w_i2d.fits --band f200w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f200w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f200w_i2d.fits --band f277w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f277w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f277w_i2d.fits --band f356w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f356w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f356w_i2d.fits --band f444w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f444w_i2d.fits s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f444w_i2d.fits --ra 64.0326 --dec -24.0889 --half-arcsec 10 --match-arcsec 0.2 --kernel-px 4 --kernel-stamps --procs 1 --out /tmp/claude-0/-home-user-jwst-anomaly-research/40e65f0c-0d2d-5a5d-ba34-eecea57a144e/scratchpad/vet/s_o211_o212 --maps /tmp/claude-0/-home-user-jwst-anomaly-research/40e65f0c-0d2d-5a5d-ba34-eecea57a144e/scratchpad/vet/s_o211_o212.npz",
+ "box": {
+  "ra": 64.0326,
+  "dec": -24.0889,
+  "half_arcsec": 10.0
+ },
+ "thresholds_assumption": {
+  "min_sigma": 5.0,
+  "min_bands": 2,
+  "link_arcsec": 0.1,
+  "bg_arcsec": 0.6,
+  "tile_arcsec": 3.0,
+  "kernel_px": 4,
+  "kernel_stamps": true,
+  "match_arcsec": 0.2,
+  "core_arcsec": 0.8,
+  "core_pct": 99.9,
+  "psf_fwhm_arcsec": {
+   "F150W": 0.05,
+   "F200W": 0.066,
+   "F277W": 0.092,
+   "F356W": 0.116,
+   "F444W": 0.145
+  }
+ },
+ "bands": {
+  "F150W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f150w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f150w_i2d.fits",
+   "scale_arcsec": 0.031228290320561063,
+   "shift_px": [
+    -0.3495112449936522,
+    0.3187219269527542
+   ],
+   "blur_sigma_px": 1.7,
+   "kernel_sum": 0.8248677680839115,
+   "convolved_epoch": 1,
+   "flux_scale": 0.8248677680839115,
+   "noise_scale": 1.0939465774155956,
+   "n_detections": 577,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F200W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f200w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f200w_i2d.fits",
+   "scale_arcsec": 0.031229723334602156,
+   "shift_px": [
+    -0.475921695507467,
+    0.33018510323436145
+   ],
+   "blur_sigma_px": 1.571,
+   "kernel_sum": 0.8557738606481157,
+   "convolved_epoch": 1,
+   "flux_scale": 0.8557738606481157,
+   "noise_scale": 1.2992619486036472,
+   "n_detections": 267,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F277W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f277w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f277w_i2d.fits",
+   "scale_arcsec": 0.06290931600491904,
+   "shift_px": [
+    -0.2808629318267997,
+    0.23069146350791014
+   ],
+   "blur_sigma_px": 0.466,
+   "kernel_sum": 0.9455731301367819,
+   "convolved_epoch": 1,
+   "flux_scale": 0.9455731301367819,
+   "noise_scale": 1.0896068499227234,
+   "n_detections": 210,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F356W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f356w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f356w_i2d.fits",
+   "scale_arcsec": 0.0629089745392368,
+   "shift_px": [
+    -0.18148710192827652,
+    0.14542577673903814
+   ],
+   "blur_sigma_px": -0.587,
+   "kernel_sum": 0.6462989580174006,
+   "convolved_epoch": 2,
+   "flux_scale": 1.5472715646449744,
+   "noise_scale": 1.2049525011462492,
+   "n_detections": 282,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  },
+  "F444W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f444w_i2d.fits",
+   "e2": "jw01176-o212_t009_nircam_clear-f444w_i2d.fits",
+   "scale_arcsec": 0.06291375188055767,
+   "shift_px": [
+    -0.30062945765124327,
+    0.09019858451773967
+   ],
+   "blur_sigma_px": 0.734,
+   "kernel_sum": 0.945037614429032,
+   "convolved_epoch": 1,
+   "flux_scale": 0.945037614429032,
+   "noise_scale": 1.3434561017216118,
+   "n_detections": 222,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  }
+ },
+ "n_hits": 225,
+ "n_hits_not_near_bright_core": 143,
+ "known": [],
+ "inject_grid": {
+  "n": 0,
+  "n_hit": 0,
+  "n_hit_not_near_bright_core": 0
+ }
+}

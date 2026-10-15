@@ -2,6 +2,133 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 h044 per-dither `_cal` photometry: o211 deficit in every dither but not band-consistent; not a candidate (closed)
+- **Hypothesis before measuring (from the previous handoff):** a deficit in some o211 exposures only is processing
+  (resampling, outlier rejection); added point-source flux on the sky shows in every o211 exposure, in both SW bands
+  at the i2d level (+4–7 % over the knots), and does not shrink with aperture radius. Plan change: if neither holds,
+  h044 closes as not a candidate.
+- **New `scripts/cal_dither_phot.py` (offline tests):** for every level-2 `_cal` exposure covering the target and the
+  knots (`knots_o211_c004.json`, 150–1000 nJy, 17 knots): per-exposure knot offset (level-2 WCS lacks tweakreg; found
+  ≤ 0.5 px here), recentred aperture fluxes at 0.08/0.16/0.24″, a per-exposure knot normalisation (leave-one-out for
+  knots), epoch excess ranked against the knots, and sky-centroid shifts relative to the knots. A first version
+  without the offset step and with a 1.5 px recentring limit gave a spurious +27 % o211 excess (h044's core sits
+  ~1.2 px from the hit position, so recentring failed in some epochs): **failed approach, fixed**.
+- **Data (derived):** o211 (4 dithers, all NRCB1), o212 (4, NRCB2), o213 (4–6, NRCB4/B2), CANUCS o004 (3–7), F150W
+  and F200W; `results/transients/macs0416_arcdiff/vet_sw/dither_h044_h030.json` (per-exposure `t` included; epochs
+  are labelled `<program>o<obs>`, e.g. `01176o211`, `01208o004`; pairs `a_b` are chronological, excess = b / a − 1;
+  `n_measured` gives the exposures behind each number: the F200W r 0.16″ o211→o212 value rests on 3 + 3).
+- **Result:** h044's o211 deficit is the same in every measured o211 dither (F200W r 0.16″: t = 0.93, 0.96, 0.93;
+  the 4th dither's aperture has a masked (DO_NOT_USE or NaN) pixel; vs 1.00–1.05 in o212/o213/o004), so it is **not** a
+  single-exposure or mosaic artifact. It is not consistent with
+  added point flux: F200W +3.6 ± 2.8 % (r 0.08″, z 0.9), +9.0 ± 1.8 % (0.16″, z 3.1), +6.2 ± 2.2 % (0.24″, z 2.2) for
+  o211→o212; F150W +3.7 % (0.08″, z 1.0) but −1.5 % and +1.7 % at 0.16/0.24″ (a hot source would be brighter in F150W;
+  LW was already null; the F150W 0.16/0.24″ and F200W 0.24″ values rest on 3 + 2 exposures, so their errors are
+  rough). o212→o213 control ≈ 0 in both bands. Centroid: h044 moves 9 mas west from o211 to later
+  epochs in F200W (z −2.6), 4–5 mas in F150W (z −1.2), but also 12 mas south from o212 to o004 (z −2.5, no o211),
+  so its centroid is less stable than the knots in general (compact core on a host gradient).
+- **/code-review fixes (two passes):** sources whose recentring fails are dropped per exposure (no fallback centroid
+  or flux; every h044/h030 number quoted above is unchanged); epoch labels carry the zero-padded program and pairs
+  are ordered by time (the o004 pairs' keys and signs changed accordingly); per-target `n_measured`; NaN written as
+  null (strict JSON); empty runs exit cleanly; target/knot id clash refused; one shared NaN-safe `robust_z`. `arc_diff_knots.py`: knots whose aperture touches a NaN pixel are excluded and targets get an
+  `aperture_has_nan` flag, a NaN target fraction has no rank, and skipped targets are recorded. The stored
+  `knots_*.json` predate these two rules (their maps were deleted); their h044/h030 rows were finite.
+- **Reading:** h044 is **not a candidate (closed)**: a ≤ 3σ tail of the 17-knot distribution, picked as the most
+  extreme of the o211→o212 hits over 28 tiles, with an aperture- and band-inconsistent excess. Untestable ordinary
+  remainder: every o211 exposure is on NRCB1 and no later one is, so detector-dependent PSF is degenerate with epoch
+  here. h030 stays ordinary (F150W excess follows o213, not o211). **All 9 open o211→o212 passes are now closed.**
+- **Handoff:** next, o211→o213 arc tiling over the 28 tiles (`arc_diff.py --maps`, then `arc_diff_morph.py`), with
+  `cal_dither_phot.py` as the per-dither check for SW-only survivors; HST pre-JWST epoch for h044 only if the
+  owner wants it.
+
+## 2026-10-15: MACS0416 h044/h030 knot test on o211→c004 and the o212→o213 control: h030 ordinary, h044 open
+- **Hypothesis before measuring:** if the o211 SW core deficit explains h044/h030, both sit inside the
+  compact-knot distribution in o211→c004 (an independent program), and neither stands out in o212→o213 (no o211).
+  Plan change: a target that is the top knot in o211 pairs only stays open; one that also stands out without o211,
+  or sits inside the knots, is ordinary.
+- **New `scripts/arc_diff_knots.py` (tested offline):** the previous run's ad-hoc knot measurement as a script
+  (epoch-1 peaks, footprint 0.25″, `arc_diff_vet.py` apertures, targets ranked against knots of 150–500 nJy,
+  excluding knots within 0.2″ of the target; robust σ). **Validation:** the h044/h030 aperture fluxes of the
+  rerun boxes equal the stored `vet_t32h044.json` / `vet_t33h030.json` values (e.g. h044 o211→c004 F150W 15.42 /
+  281.7 nJy). Below 150 nJy, F150W picks up hundreds of noise peaks on extended light, so 150 nJy (the previous
+  run's floor) is kept (ASSUMPTION).
+- **o211→c004 (derived):** SW knot medians +1.7 % (F150W, n = 16) and +1.5 % (F200W, n = 11), LW +0.5 %: the
+  o211 SW deficit is confirmed against CANUCS. h044 is the top knot in both SW bands (F150W +5.5 %, z 2.7;
+  F200W +8.75 %, z 4.4); h030 is inside (z 1.6 / 1.3). LW ordinary for both.
+- **o212→o213 control (derived):** F200W knot median +0.1 % (the F200W deficit is o211-specific), but F150W
+  knots still give +1.3 % (+3.1 % for the two brightest), so part of the F150W offset is a general kernel-matching
+  systematic. h044 is ordinary (F150W z −0.3, F200W z −1.7). h030 is the top F150W knot here too (+4.4 %, z 4.5).
+- **o211→o213 (derived; finished at the end of the run):** SW knot medians +2.0 % / +1.8 %. h044 is the top knot
+  in both SW bands again (F150W +8.0 %, z 4.0; F200W +6.4 %, z 2.2). h030 is the top F150W knot (+6.7 %, z 3.1),
+  F200W z 1.8; its F150W excess tracks o213 (also in o212→o213), not o211.
+- **Looked at the cutouts** (`sheet_h044_h030_c004.png`): both residuals sit on compact cores and are
+  dipole-like (adjacent positive and negative lobes in F150W/F200W), the pattern of a core PSF or sub-pixel
+  registration mismatch, not an isolated point source.
+- **Reading:** h030 is **ordinary** (inside the knots against an independent program; its F150W excess appears
+  without o211; dipole residual). h044 stays **open and unvetted, not a candidate**: an o211-only SW excess of
+  about 5–7 % over the knot median (≈ 13–18 nJy F200W) on a compact core with a dipole-like residual. A hot point
+  source would also fit SW-only (Rayleigh–Jeans: F356W ≈ F150W / 5.6, within the LW noise) — an ordinary
+  lensed-star explanation is untested, not excluded. h044 is the top SW knot in all three o211 pairs and
+  ordinary in the control. Limits: one box; aperture ratios, not PSF fits; a 4-band `--kernel-stamps` box takes
+  7–22 min on 4 cores.
+- **Handoff:** (1) per-dither o211 `_cal` photometry of h044's
+  core against two nearby knots (a dither-dependent deficit is processing); (2) a sub-pixel-shift test: refit
+  h044's core with a free 0.01–0.03″ offset and see if the net flux excess survives; (3) HST pre-JWST epoch.
+
+## 2026-10-15: MACS0416 h044/h030: o211 compact knots are systematically fainter in SW; explains about half of h044
+- **Hypothesis before measuring:** the o211-faint SW signature of h044/h030 is an o211-wide compact-core deficit
+  (PSF or processing), so other compact knots in the same box show the same fractional residual. Plan change: if
+  h044/h030 lie inside the knot distribution, they are ordinary; if they are clear outliers, go to per-dither tests.
+- **Method (derived):** `arc_diff.py --maps` on the west box (64.0225 −24.0815, ±10″) for o211→o212 (F150W, F200W,
+  F277W, F356W; `--kernel-px 4 --kernel-stamps`); difference / epoch-1 flux in the `arc_diff_vet.py` apertures at
+  every epoch-1 local peak (0.25″ footprint) above 100 nJy. Table and plot:
+  `results/transients/macs0416_arcdiff/vet_sw/knots_o211_o212.json`, `knots_frac_o211_o212.png`.
+- **Result:** bright compact knots are fainter in o211 in SW only. Knots with an epoch-1 aperture flux ≥ 500 nJy
+  give +1.3 to +3.6 % (F150W, up to 30.8σ) and +0.4 to +2.4 % (F200W); 150–500 nJy knots have a median of +1.8 %
+  (F150W, n = 18) and +1.5 % (F200W, n = 13). LW knots scatter around 0. At the hit positions h044 is +6.4 % / +6.6 %
+  (F150W / F200W) and +4.4 % / +5.4 % on its own epoch-1 peak 0.05″ away; h030 is +3.4 % / +4.8 %. The largest other
+  knots are +3.6 % / +2.8 %. Only the F200W values stand out (h044 and h030 are the two largest, about 2.5 robust σ
+  above the knot median).
+- **Reading:** an ordinary o211 SW core deficit (cause not identified: PSF, focus or the kernel fit led by extended
+  light) accounts for roughly half of h044's signal and most of h030's. The excess (≈ 2–3 %, 7–9 nJy) is **open and
+  unvetted; not a candidate.** Limits: one epoch pair (the o211→o213 run was stopped for CPU time), one box, the
+  ratio is of a 0.08″ aperture, not of a PSF-fitted flux.
+- **Handoff:** (1) the same knot test on o211→c004 and o211→o213 (is the deficit o211-specific?) and on o212→o213 as a
+  control; (2) per-dither o211 `_cal` differences registered to the i2d; (3) HST Frontier Fields pre-JWST epoch.
+  CPU note: two `--kernel-stamps` runs at once on 4 cores took > 20 min each (load 15); run them one at a time.
+
+## 2026-10-15: MACS0416 o211→o212 morph passes vetted: 7 ordinary; h044 and h030 are an open SW signature (unvetted)
+- **Hypothesis before measuring:** the 6 SW-dominant passes (t−3−3 h028/h030, t−3−2 h044/h051, t−2−2 h035, t−1+0
+  h104) are o212 afterimages or matching residuals, and t−1−4 h124/h159/h246 are o212 LW core-PSF mismatches. A real
+  point transient would keep its sign and flux against independent epochs. Plan change: a hit that keeps a ≥ 4σ
+  forced flux in pairs without o212 goes to `/vet-candidate`.
+- **Method (derived):** `arc_diff.py --maps` in three boxes (west 64.0225 −24.0815, south 64.0326 −24.0889, north
+  64.033681 −24.069529) for o211→o212, o212→c004, o211→c004, o212→o213, o211→o213 (CANUCS o004 does not cover h028);
+  `arc_diff_vet.py` on each hit. JSONs, box summaries and the west-box sheet: `results/transients/macs0416_arcdiff/vet_sw/`.
+- **Ordinary (not candidates):**
+  - h124, h159, h246 (t−1−4): an **o212-only LW dip** (F277W/F356W −8 to −19 nJy in o211→o212, +7 to +14 in
+    o212→c004 and o212→o213, ≤ 4 nJy in o211→o213) on three separate compact cores at once: an o212 LW matching
+    artifact; h246 is arc-coherent in three pairs.
+  - h051: a c004-only F200W deficit (−11.5 ± 3.8 in both pairs with c004; o211→o212 +2.6 ± 2.6); its o211→o212 S sits
+    on a SW streak (sheet).
+  - h035: forced fluxes ≤ 1.7σ against arc noise in every pair; c004/o213 pairs show rings around the core.
+  - h104: ≤ 2.2σ in o211→o212 in the re-centred box (S +3.4 / +4.1); o212→o213 arc-coherent.
+  - h028: o211→o212 F150W +3.6 ± 1.5 only; o212→o213 rings around the compact source.
+- **Open, unvetted (not candidates):** **h044** (64.022499, −24.081711) and **h030** (64.023039, −24.081869), 1.9″ apart:
+  o211 is fainter than **all three** later epochs in F150W and F200W with no LW change and no arc coherence.
+  h044: o211→o212 +18.0 ± 3.9 / +17.2 ± 3.2 nJy, o211→c004 +15.4 ± 6.1 / +22.6 ± 3.4, o211→o213 +22.5 ± 5.1 /
+  +16.6 ± 3.7; o212→c004 and o212→o213 within 1.7σ of 0. h030: o211→o213 +14.7 ± 3.2 / +8.8 ± 2.1, same pattern.
+  The sheet shows sharp positive spots in every pair starting at o211, and sharp pixel-scale dipoles across the
+  o211 SW stamps. Leading ordinary explanation (hypothesis): an o211-side SW deficit (detector or processing),
+  shared by both. Alternative: a rise between 2022-10-07 and 2022-12-29 that then stays flat for 43 d.
+- **Failed approach:** comparing per-exposure `_cal` aperture fluxes (`persistence_check.py` output) between o211
+  and o212 on galaxies gives the opposite sign to the mosaic for h044/h035/h051; archive `_cal` WCS lack the level-3
+  alignment, so the aperture lands on different parts of the galaxy. `persistence_check.py` returns `on_sky` for all
+  nine because the host galaxy is detected in every exposure; it cannot test persistence on a galaxy.
+- **Handoff:** vet h044/h030 first: per-dither o211 `_cal` differences in a box registered to the i2d (is the deficit
+  in every o211 dither, one detector, or one exposure?), HST Frontier Fields F160W/F814W as a pre-JWST epoch, and
+  whether other compact knots within 10″ show the same o211 offset. Then `/vet-candidate` if it survives.
+
+
 ## 2026-10-15: MACS0416 `arc_diff_morph.py` ring and sign_flip verdicts; all 28 o211→o212 tiles have morph records
 - **Hypothesis before measuring:** t−1−4's passes are PSF-mismatch rings around galaxies; a ring test (and a
   SW/LW sign test) removes most of them while losing < 0.1 of injected point sources and none of Yan+2023. Plan
