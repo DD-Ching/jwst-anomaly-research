@@ -280,9 +280,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      (arc coherence in 4 / 5 pairs incl. CANUCS o004; `arc_diff_vet.py`), not a candidate. Arc tiling o211→o212 (28 tiles,
      addendum 2026-10-15f): 0 candidates on the 21 tiles with morph records (persistence, dipoles, core residuals;
      `arc_diff_morph.py`). Morphology veto injection-calibrated (addendum 2026-10-15g): 0.92 of unflagged injected
-     hits pass with the strong-lobe rosette rule. Next: a ring-residual rule (t−1−4's 40 ring passes), look at
-     t−3−3 and the 5 other tiles without morph records, then o211→o213 tiles and CANUCS o004 with `arc_diff_vet.py`
-     on every pass;
+     hits pass with the strong-lobe rosette rule. Ring and sign_flip verdicts (addendum 2026-10-15h): t−1−4
+     46 → 20 passes; all 28 tiles now have morph records. Next: vet the 6 SW-dominant passes of the formerly
+     unrecorded tiles (t−3−3 h028/h030, t−3−2 h044/h051, t−2−2 h035, t−1+0 h104: `persistence_check.py`, o213 and
+     CANUCS o004 with `arc_diff_vet.py`) and t−1−4's compact LW core residuals h124/h159/h246; then o211→o213 tiles;
      re-run Sunrise/SMACS under the new defaults;
    - ~~Abell 2744 grid~~ — done for DD 2756 o003/o002 (D-027 addendum 2026-10-15d): 22 groups, all ordinary (spikes
      under a 30° roll, persistence, a detector-fixed pixel, edges), 0 candidates. UNCOVER o001 vs 2756 o002 (D-027 addendum
