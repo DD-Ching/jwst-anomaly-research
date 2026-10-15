@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: Abell 2744 two-epoch grid (in progress)
+- Plan: `transient_grid.py` on Abell 2744 UNCOVER (2561) vs a later NIRCam epoch in the same bands; injections; contact sheets; any survivor to `/vet-candidate`.
+
 ## 2026-10-15: X4 S1c: R1 keeps its residual against validated aligned-spin fits; undetermined with IMRPhenomXPHM (simulated)
 - **Question (owner):** does R1's large difference (30 M☉ behind a 300 M☉ negative lens, y 0.3) survive a validated
   ordinary fit and a more complete waveform? Plan frozen first (`docs/state/units/X4.md`, S1c). 2.0 h, the cap.
