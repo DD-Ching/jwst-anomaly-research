@@ -366,14 +366,38 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `persistence_check.py`), validated on PLATE-23a once its position is checked. Or move the grid to another cluster
   with two NIRCam epochs.
 
+## 2026-10-15: X4 S1e: joint lens + intrinsic search makes the unlensed fits reliable; one lensed check still fails, so R1 stays undetermined (simulated)
+- **Question (owner):** with a joint search, does the tool pass its injection checks, and what is R1's verdict?
+  Diagnostics and plan frozen first (`docs/state/units/X4.md`, S1e).
+- **Record corrections:**
+  - Bilby can run XPHM with phase marginalisation turned off. It was not used for task fit and cost; the
+    10⁵–10⁶-call figure is an estimate.
+  - "No existing tool" is narrowed to "no ready-to-use complete pipeline found in this round's check".
+- **Diagnostics** (truth used only here):
+  - The formal parameter path scores every truth at ≤ 3e-16.
+  - The cached lens grid alone leaves ε 9e-4 – 1.3e-3 even with the true intrinsics, so it can only locate the
+    region.
+  - Exact continuous refinement from there reaches 6e-6.
+- **Validation** (exact lens, pad 64):
+  - U: ε ≤ 2.1e-6 on both seeds of V6 and V7.
+  - P: V5 2.4e-5 / 3.7e-5; V9 1.5e-4 and **1.5e-3**. The failing seed's DE was still improving at its
+    400-generation cap, and its refinement was still gaining at its 10-round cap.
+  - The tool fails the frozen rule, so **R1 was not fitted** and stays undetermined. No physics conclusion.
+- **Handoff:**
+  - Minimal failing case: `scripts/x4_s1e_joint.py one V9 11`.
+  - Continuing likely needs about 1,000–1,500 P generations (an estimate: about 4–5 h on 4 cores, at least about
+    2.5–4 h on any number of cores without a code change) or advice on a precession parametrisation.
+  - Owner's option: an R1 U fit testing outcome 1 only (about 0.5 h).
+  - No pilot proposed; S2 not started. 1.8 h used; X4 has about 7.8 h left.
+
 ## 2026-10-15: X4 S1d: the reference global search (SciPy DE) fails its injection checks; R1 stays undetermined (simulated)
 - **Question (owner):** does R1's negative-lens XPHM waveform keep a reliably identifiable difference, enough for a
   real-data pilot? Reuse check and plan frozen first (`docs/state/units/X4.md`, S1d).
 - **Reuse:**
   - SciPy differential evolution is the reference search.
   - Polarisation and amplitude are maximised analytically, as in precessing searches; checked against a ψ scan.
-  - Bilby/dynesty was rejected: it is inference, not max-match, at about 10⁶ calls, and its phase
-    marginalisation assumes a (2,2) mode.
+  - Bilby/dynesty was not used: it does inference, not max-match, at an estimated (not measured) 10⁵–10⁶
+    calls. It can run XPHM with phase marginalisation turned off (wording corrected in S1e).
   - PyCBC has no max-match optimiser for this objective (and is GPLv3). GLoW computes lens factors, which we already
     have exactly.
 - **Result:** the tool fails the frozen rule (ε ≤ 5e-4 on both seeds).

@@ -106,3 +106,14 @@ def test_s1d_spin_parametrisation_round_trip():
     for lo_hi, v in zip(e.BOUNDS, x, strict=True):
         assert lo_hi[0] <= v <= lo_hi[1]
     assert e.bounds_hit(x) == []
+
+
+def test_s1e_lens_snap_hits_every_grid_node():
+    j = _load("x4_s1e_joint")
+    k = 0
+    for mlz in j.m.GRID_M:
+        for y in j.m.GRID_Y:
+            assert j.node_index(np.log(mlz), np.log(y)) == k
+            k += 1
+    assert j.node_index(-5.0, -20.0) == 0
+    assert j.node_index(50.0, 50.0) == k - 1
