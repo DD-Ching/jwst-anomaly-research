@@ -149,8 +149,8 @@ def shift(img: np.ndarray, dy: float, dx: float) -> np.ndarray:
     return out
 
 
-def local_shift(a: np.ndarray, b: np.ndarray, tile: int) -> np.ndarray:
-    """``b`` warped onto ``a`` by a smooth shift field from tiles of ``tile`` pixels.
+def local_shift(a: np.ndarray, b: np.ndarray, tile: int, *others: np.ndarray) -> list[np.ndarray]:
+    """``b`` (and ``others``, e.g. its variance) warped onto ``a`` by a smooth tiled shift field.
 
     A single global shift leaves a positive/negative ridge along every thin arc (sub-pixel
     distortion differences between the epochs' mosaics; first MACS0416 run, 2026-10-15). Shifts
@@ -161,7 +161,7 @@ def local_shift(a: np.ndarray, b: np.ndarray, tile: int) -> np.ndarray:
     cy = np.arange(tile // 2, ny - tile // 2 + 1, step)
     cx = np.arange(tile // 2, nx - tile // 2 + 1, step)
     if cy.size < 2 or cx.size < 2:
-        return b
+        return [b, *others]
     dyg = np.zeros((cy.size, cx.size))
     dxg = np.zeros_like(dyg)
     for i, y in enumerate(cy):
@@ -176,14 +176,17 @@ def local_shift(a: np.ndarray, b: np.ndarray, tile: int) -> np.ndarray:
     gyy, gxx = np.meshgrid(gy, gx, indexing="ij")
     fy = ndimage.map_coordinates(dyg, [gyy, gxx], order=1, mode="nearest")
     fx = ndimage.map_coordinates(dxg, [gyy, gxx], order=1, mode="nearest")
-    good = np.isfinite(b)
-    out = ndimage.map_coordinates(
-        np.where(good, b, 0.0), [yy - fy, xx - fx], order=3, mode="constant", cval=np.nan
-    )
-    ok = ndimage.map_coordinates(
-        good.astype(float), [yy - fy, xx - fx], order=1, mode="constant", cval=0.0
-    )
-    out[ok < 0.999] = np.nan
+    out = []
+    for img in (b, *others):
+        good = np.isfinite(img)
+        w = ndimage.map_coordinates(
+            np.where(good, img, 0.0), [yy - fy, xx - fx], order=3, mode="constant", cval=np.nan
+        )
+        ok = ndimage.map_coordinates(
+            good.astype(float), [yy - fy, xx - fx], order=1, mode="constant", cval=0.0
+        )
+        w[ok < 0.999] = np.nan
+        out.append(w)
     return out
 
 
@@ -299,7 +302,7 @@ def band_diff(job: dict) -> dict:
     v2 = shift(v2, dy, dx)
     if job["tile_arcsec"] > 0:
         tile = int(round(job["tile_arcsec"] / b1["scale"]))
-        s2 = local_shift(b1["sci"], s2, tile)
+        s2, v2 = local_shift(b1["sci"], s2, tile, v2)
     sig_psf = PSF_FWHM[job["band"]] / 2.3548 / b1["scale"]
     grid = np.round(np.linspace(-3.0, 3.0, 25) * sig_psf, 3)
     blur, kscale, m1, m2 = psf_match(b1["sci"], s2, grid)

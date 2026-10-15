@@ -84,6 +84,7 @@ def test_local_shift_removes_a_varying_offset():
     w = np.clip((np.arange(192) - 64) / 64.0, 0, 1)[None, :]
     b = (1 - w) * left + w * right
     glob = ad.shift(b, *ad.register(a, b))
-    loc = ad.local_shift(a, glob, 48)
+    loc, loc2 = ad.local_shift(a, glob, 48, glob)
+    assert np.allclose(loc, loc2, equal_nan=True)
     inner = (slice(20, -20), slice(20, -20))
     assert ad._robust_std((loc - a)[inner]) < 0.6 * ad._robust_std((glob - a)[inner])
