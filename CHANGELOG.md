@@ -14,10 +14,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - The XPHM unlensed check fails (ε 0.026 > 0.0125). The XPHM lensed check passes from one start only.
 - **Result:**
   - Aligned-spin, dominant-mode templates: the residual is kept, ρ_req 5.8 (observed SNR), intrinsic SNR 30. It is
-    bound-conditional (q 15, |χ| 0.99). The best mimic is a strong positive lens (2,400 M☉, y 0.1).
+    bound-conditional (q 15, |χ| 0.99) and provisional: the frozen saved-solution starts were cut for budget. The best mimic is a strong positive lens (2,400 M☉, y 0.1).
   - IMRPhenomXPHM: **undetermined**. The best ordinary fit found is FF 0.945 (ρ_req 9.2), from precession with
     near-maximal spins plus a positive lens (1,400 M☉, y 0.22). The starts disagree and the fits did not converge.
-- **Disclosed:** family-A saved starts were cut for budget, and two XPHM saved-start fits were stopped at the cap.
+- **Disclosed:**
+  - family-A saved starts were cut for budget;
+  - family D used only 4 of the 25 saved starts, and two of those fits were stopped at the cap;
+  - the results file was post-processed after the stop (label, grid maps);
+  - the convergence flag excludes the intrinsic restart status.
 - **Wording tightened:** "absorbed" means only ρ_req > 30; the difference is smaller, not gone. It says nothing
   about the 16 untested S1 cases.
 - **Handoff:** no real-data pilot proposed; S2 not started. Next (owner's call): a validated precessing fitter for
@@ -39,8 +43,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - R2 through an edge-on inclination (higher modes); R3 through in-plane spins at inclination 49–84°. q stays
     1.2–1.7.
   - R3 was already absorbed in the frozen run (31.4).
-  - R2 passed the frozen run (28.9) and is absorbed only after post-hoc extra starts. More search can only absorb
-    more.
+  - R2 passed the frozen run (28.9) and is absorbed only after post-hoc extra starts. More search can only raise
+    ρ_req.
 - **Post-hoc, labelled:** convergence continuations and 8 extra R2 starts, after the frozen runs hit their
   evaluation caps.
 - **Handoff:** no real-data pilot proposed; S2 not started. Open: R1-type cases need a P optimiser that passes its

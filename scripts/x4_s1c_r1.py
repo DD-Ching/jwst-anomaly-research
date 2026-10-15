@@ -205,6 +205,8 @@ def fit(t, fam, model, start, lens0=None):
                 break
             node_prev = k
         _G["last_map"] = m
+        if lensp is None:  # no cycle improved on f = 1 (not reached in the recorded runs)
+            lensp = g["nodes"][k]
         lml, y = float(np.log(lensp[0])), float(lensp[1])
         pconv = False
         for rnd in range(3):

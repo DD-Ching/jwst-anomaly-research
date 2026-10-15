@@ -4692,7 +4692,8 @@ unit overruns its budget.
   that passes its own injection test, then XPHM. That step needs the owner's go-ahead.
 
 **Alternatives rejected:**
-- proposing S2a on GW231123 anyway (no simulated case survives the fuller ordinary fit);
+- proposing S2a on GW231123 anyway (neither R2 nor R3 passes the screening threshold after the fuller ordinary fit; the
+  other cases were not re-tested);
 - declaring the GW route degenerate (R1-type cases are undetermined, not absorbed);
 - lowering the screening threshold after seeing R2's ρ_req 30.8 against 30 (not allowed).
 
@@ -4724,7 +4725,8 @@ unit overruns its budget.
 
 **Evidence** (simulated only; `results/x4/s1c_*.json`):
 - Aligned-spin validation passes, including S1b's failed injection (ε 3.5e-6 ≤ 0.0145). P reaches FF 0.8545 from
-  all 8 generic starts (ρ_req 5.8), at q 15 and |χ| 0.99.
+  all 8 generic starts (ρ_req 5.8), at q 15 and |χ| 0.99. The result is provisional: the frozen saved-solution
+  starts were cut for budget, although those solutions themselves score 0.8545.
 - XPHM: unlensed validation ε 0.026 > 0.0125. The lensed fits do not agree across starts (0.9454 against 0.9441).
 
 **Revisit if:** a precessing fitter passes the unlensed and lensed injection checks with agreeing starts, and R1
