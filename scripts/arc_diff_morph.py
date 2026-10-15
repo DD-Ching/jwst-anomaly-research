@@ -18,7 +18,8 @@ significance map S of an ``arc_diff.py --maps`` file:
 - ``n_lobes``, ``both_signs``: connected regions of |S| ≥ ``--level`` (at least ``--min-lobe-px``
   pixels) within ``--lobe-arcsec`` of the hit, and whether both signs occur among them;
 - ``dipole_ratio``: the largest |S| of an opposite-sign region (|S| ≥ ``--level``, at least
-  ``--min-lobe-px`` pixels) within ``--dipole-arcsec`` of the hit, over |S_hit| (0 if none). A
+  ``--min-lobe-px`` pixels) within ``--dipole-arcsec`` of the hit, over |S_hit| (0 if none, or if
+  |S_hit| < ``--level``). A
   registration or PSF residual on a compact core leaves a +/− pair of similar strength; a
   brightening leaves one sign;
 - ``edge_arcsec``: the distance to the nearest pixel without data (mosaic edge or a gap), or to the
@@ -85,7 +86,9 @@ def lobes(s: np.ndarray, y: float, x: float, r_px: float, level: float, min_px: 
 def dipole_ratio(s: np.ndarray, y: int, x: int, r_px: float, level: float, min_px: int) -> float:
     """Largest |S| of opposite-sign regions (|S| ≥ level, ≥ min_px px) within r_px, over |S_hit|."""
     s_hit = float(s[y, x])
-    if not np.isfinite(s_hit) or s_hit == 0:
+    # A band where the hit itself is below the level would turn any nearby noise lobe into a large
+    # ratio (3 of 11 Yan+2023 transients were flagged that way), so it never counts.
+    if not np.isfinite(s_hit) or abs(s_hit) < level:
         return 0.0
     opp = np.nan_to_num(-np.sign(s_hit) * s)
     lab, n = ndimage.label(opp >= level, structure=np.ones((3, 3)))

@@ -40,20 +40,26 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   vetted). Remaining o211→o212 tiles: t-2+0, t+1±, t+2± (11) plus `--maps` re-runs of the 7 map-less earlier
   tiles and the 5 with passes (≈ 70 min at this throughput: one run's worth). Suggest adding a dipole test
   (opposite-sign lobe within 2 × FWHM, about equal |S|) to `arc_diff_morph.py`; validate it on Yan+2023 first.
-- **Run 01QcfDQb (10:09–10:50Z): 26 / 28 tiles.** t+1±0/±1/+2/−2 and t+2−1/−2/+0/+1 done (`--procs 1`, 4 jobs, OMP=1;
-  2–15 CPU-min per tile, so the 456 s figure was not a constant). 549 hits, 38 without the bright-core flag.
+- **Run 01QcfDQb (10:09–10:50Z): 27 / 28 tiles.** t+1±0/±1/+2/−2 and t+2−1/−2/+0/+1/+2 done (`--procs 1`, 4 jobs, OMP=1;
+  2–15 CPU-min per tile, so the 456 s figure was not a constant). 559 hits, 42 without the bright-core flag.
 - **`arc_diff_morph.py` dipole verdict (new):** a hit is a dipole when an opposite-sign region (|S| ≥ 3, ≥ 4 px)
-  within 0.3″ reaches ≥ 0.5 × |S_hit| in ≥ 2 bands (ASSUMPTIONs; unit tests: core dipole flagged, brightening beside
-  a weak negative lobe passes). Not yet validated on the Yan+2023 positions (the Warhol-box `--maps` re-run did
-  not finish in this run). On the nine tiles: dipole 11, rosette 5, edge 8, extended 3, **pass 11**.
-- **Contact sheets of the 11 passes looked at:** t+2+1 h063 fades in SW (−6.0, −6.5; F200W dipole) on a knot beside a galaxy but rises in LW (+3.3, +2.6); t+2+0 h035 is an F150W dipole with nothing in F200W (+1.8) and F277W −1.9; h087, h098 (t+1±), h025 (t+1+2) and t+2−1 h009 change sign between
+  within 0.3″ reaches ≥ 0.5 × |S_hit| in ≥ 2 bands (ASSUMPTIONs; unit tests). **Validation on Yan+2023 (Warhol box re-run with `--maps`):** the first version
+  flagged 3 / 11 (Dc2-W4, D31-W7, D21-S2) from bands where |S_hit| < 3, so a nearby noise lobe gave a large
+  ratio (failed approach); a band now counts only when |S_hit| ≥ 3, and 11 / 11 pass. Tile verdicts unchanged by
+  the fix. On the ten tiles: dipole 11, rosette 5, edge 9, extended 3, **pass 14**.
+- **Contact sheets of the 14 passes looked at:** **t+2+2 h002 (64.04865, −24.05870 tile; F150W +20.6, F200W +5.6)
+  and h003 (F150W +15.0, F200W +7.3) are compact positive spots on blank sky in o211 with nothing in LW (|S| ≤ 3.5):
+  unvetted, the open items of this unit.** SW-only epoch-2 spots without a source match the persistence class seen
+  in Abell 2744 (#246), but that is a hypothesis until `persistence_check.py` runs on them. t+2+2 h009 is +5.2 in
+  F277W and +5.8 in F444W but −1.3 in F356W (inconsistent). t+2+1 h063 t+2+1 h063 fades in SW (−6.0, −6.5; F200W dipole) on a knot beside a galaxy but rises in LW (+3.3, +2.6); t+2+0 h035 is an F150W dipole with nothing in F200W (+1.8) and F277W −1.9; h087, h098 (t+1±), h025 (t+1+2) and t+2−1 h009 change sign between
   bands (e.g. F150W −7.1, F277W +6.6); h092 is a compact source with an F150W dipole; h100 is a weak SW-only
   spot (+5.3) on a galaxy knot. t+1+2 h009, h014, h019 are positive SW residuals centred on compact galaxy cores:
   **in t+1+2 the S at the 10 brightest compact peaks is > +3 for 9 / 10 in F150W and 10 / 10 in F200W (median +12,
   +9; t+2+0 F150W 7 / 7)**, so these three are a tile-wide SW core-matching residual, not single brightenings (derived). Not
   candidates (not formally vetted).
 - **Failed approach:** none new; the tile cost varies a lot, so queue dense tiles first.
-- **Handoff:** remaining o211→o212 tiles t−2+0 and t+2+2 (t−2+0 alone > 30 CPU-min); h063 is the least clear pass, so give it `arc_diff_vet.py` with CANUCS o004 first, then the
+- **Handoff:** **first `persistence_check.py` and `arc_diff_vet.py` (CANUCS o004 as third epoch) on t+2+2 h002 and h003**, then
+  h063 (t+2+1); the remaining tile t−2+0 (> 30 CPU-min), then the
   `--maps` re-runs of t+0−1, t−1−1/−2/−3, t−2−3 for their contact sheets, and the Warhol box with `--maps` to
   validate the dipole verdict on Yan+2023. Add a **core-population test** to `arc_diff_morph.py` (a hit's S
   against the S distribution at the tile's compact-source peaks in that band) and validate it on Yan+2023 first.

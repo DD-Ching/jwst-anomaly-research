@@ -90,7 +90,7 @@
      "extent_arcsec": 0.7130885691143181,
      "n_lobes": 10,
      "both_signs": true,
-     "dipole_ratio": 2.781023709126161,
+     "dipole_ratio": 0.0,
      "edge_arcsec": 0.3122972333460231
     },
     "F277W": {
@@ -253,7 +253,7 @@
      "extent_arcsec": 0.0,
      "n_lobes": 2,
      "both_signs": false,
-     "dipole_ratio": 2.2107847203232054,
+     "dipole_ratio": 0.0,
      "edge_arcsec": 4.151992319589629
     },
     "F444W": {

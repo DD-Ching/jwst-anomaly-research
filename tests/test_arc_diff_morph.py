@@ -96,6 +96,16 @@ def test_brightening_beside_a_weak_negative_lobe_passes(tmp_path):
     assert t["bands"]["F277W"]["dipole_ratio"] < 0.5
 
 
+def test_dipole_ratio_ignores_a_hit_below_the_level():
+    s = np.zeros((21, 21))
+    s[10, 10] = 2.0
+    s[10, 12:15] = -5.0
+    s[11, 12:15] = -5.0
+    assert adm.dipole_ratio(s, 10, 10, 4.0, 3.0, 4) == 0.0
+    s[10, 10] = 6.0
+    assert adm.dipole_ratio(s, 10, 10, 4.0, 3.0, 4) > 0.5
+
+
 def test_hit_next_to_missing_data_is_edge(tmp_path):
     s = _blob(N // 2, N // 2, amp=12.0)
     s[:, N // 2 + 4 :] = np.nan

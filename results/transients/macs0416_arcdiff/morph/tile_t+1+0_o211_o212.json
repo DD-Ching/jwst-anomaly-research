@@ -206,7 +206,7 @@
      "extent_arcsec": 0.7071245813448439,
      "n_lobes": 1,
      "both_signs": false,
-     "dipole_ratio": 1.3529819959108667,
+     "dipole_ratio": 0.0,
      "edge_arcsec": 0.3145448726961841
     },
     "F444W": {
