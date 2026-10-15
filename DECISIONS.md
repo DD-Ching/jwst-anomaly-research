@@ -1494,6 +1494,14 @@ Field docs: `docs/fields/*.md`.
 - More than two epochs make light curves possible.
 - The search goes below catalog depth (image differencing or forced photometry on a grid).
 
+
+**Addendum 2026-10-15b (arc difference imaging).** `scripts/arc_diff.py` differences byte-range boxes of two
+level-3 mosaics (resample, global + 3″ tiled registration, Gaussian blur and flux scale fitted on the brightest
+10 % of pixels, matched filter). On MACS0416 o211/o212 it recovers 4 of 5 published Ep1→Ep2 arc transients
+(Yan et al. 2023) but leaves positive ridges along thin bright arcs, so it is not yet a search. Rejected: a blur
+chosen by the global rms (it over-blurs, because blurring also lowers the noise); a single global shift. Reused:
+astropy, scipy.ndimage, fsspec/s3fs. Not adopted yet: a fitted pixel-kernel PSF match (HOTPANTS/SFFT-style);
+revisit if the Gaussian+scale approach cannot remove the arc ridge.
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**

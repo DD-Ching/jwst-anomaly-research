@@ -208,19 +208,23 @@ def _robust_std(x: np.ndarray) -> float:
 def psf_match(
     e1: np.ndarray, e2: np.ndarray, grid: np.ndarray
 ) -> tuple[float, float, np.ndarray, np.ndarray]:
-    """Blur the sharper epoch (and rescale epoch 2) so the robust rms of ``e2 - e1`` is smallest.
+    """Blur the sharper epoch (and rescale epoch 2) to minimise ``e2 - e1`` on bright pixels.
 
     ``grid`` holds signed blur sigmas in pixels: > 0 blurs epoch 1, < 0 blurs epoch 2. Returns the
     chosen signed sigma, the flux scale k (epoch 2 is divided by it) and the two matched images.
     A Gaussian kernel only matches the PSF core width; rotated spikes of bright stars stay in the
     difference (vetted by eye).
     """
+    # Score on bright pixels only: over the whole box, blurring an epoch also lowers its noise,
+    # so the global rms prefers over-blurring and leaves a ridge along every arc (2026-10-15).
+    ok = np.isfinite(e1)
+    bright = ok & (np.where(ok, e1, -np.inf) > np.percentile(e1[ok], 90.0))
     best = (np.inf, 0.0, 1.0)
     for s in grid:
         a = _blur(e1, s) if s > 0 else e1
         b = _blur(e2, -s) if s < 0 else e2
         k = flux_scale(a, b)
-        rms = _robust_std(b / k - a)
+        rms = _robust_std((b / k - a)[bright])
         if rms < best[0]:
             best = (rms, float(s), k)
     _, s, k = best
@@ -297,7 +301,7 @@ def band_diff(job: dict) -> dict:
         tile = int(round(job["tile_arcsec"] / b1["scale"]))
         s2 = local_shift(b1["sci"], s2, tile)
     sig_psf = PSF_FWHM[job["band"]] / 2.3548 / b1["scale"]
-    grid = np.round(np.linspace(-1.5, 1.5, 13) * sig_psf, 3)
+    grid = np.round(np.linspace(-3.0, 3.0, 25) * sig_psf, 3)
     blur, kscale, m1, m2 = psf_match(b1["sci"], s2, grid)
     var = b1["err"] ** 2 + np.clip(v2, 0.0, None) / kscale**2
     bg_px = int(np.ceil(job["bg_arcsec"] / b1["scale"])) | 1

@@ -2,9 +2,27 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-15: MACS0416 arc difference imaging (in progress)
-- Plan: PSF-matched two-epoch difference images of the PEARLS o211/o212 mosaics around the arcs, validated on the
-  published Yan et al. 2023 arc transients before any unknown is trusted.
+## 2026-10-15: MACS0416 arc difference imaging (o211/o212): tool validated on compact arc transients; arc ridges remain
+- **Hypothesis before computing:** two-epoch difference images reach the caustic-crossing stars on the Warhol and
+  Spock arcs that the catalog grid cannot (D-027 addendum). Ordinary: misregistration, PSF and zero-point differences,
+  star spikes, persistence; known transients (Yan et al. 2023). Plan change: if the published arc transients are not
+  recovered, fix the tool before any search.
+- New `scripts/arc_diff.py`: S3 byte-range box (both epochs, SCI + ERR), resample, global + tiled registration
+  (3″), Gaussian blur of the sharper epoch and a flux scale fitted on the brightest 10 % of pixels, 0.6″ median
+  background, matched-filter S ≥ 5 in ≥ 2 bands (ASSUMPTIONs). Unit tests on synthetic images.
+- **Validation (20″ box, F150W/F200W/F277W/F356W/F444W):** 4 of 5 published Ep1→Ep2 arc transients are hits
+  (D21-W1 13σ, W2 6σ, S1 9σ, S2 7σ); W3 peaks at 4.9σ. Injected point sources on bright pixels: 28.0 mag 0.89–1.0,
+  28.5 mag 0.58–0.95 (LW lowest). Flux scale epoch 2/epoch 1 = 0.977–0.986 in every band (derived).
+  `results/transients/macs0416_arcdiff/summary_o211_o212.json`.
+- **Failed approaches (contact sheets looked at, three iterations):** global shift + global-rms blur left dipole and
+  positive ridges along every thin arc (blurring an epoch also lowers its noise, so the global rms over-blurs);
+  tiled registration alone did not remove them; scoring the blur on bright pixels cleaned the Warhol region in LW,
+  but the Spock arc and the arc near (64.0369, −24.0664) still show a positive ridge in F200W and F356W.
+  D31-S4 at 6.8σ in this Ep1→Ep2 difference sits on that ridge, so it is not a detection.
+- **No search result:** 149 hits, unvetted, mostly arc ridges and bright-star residuals. No candidate claimed.
+- Data: ten 20″ boxes streamed by byte range (no mosaic stored).
+- **Handoff:** fix the arc ridge (fitted PSF-matching kernel, e.g. a pixel kernel by least squares on stars, or a
+  local flux scale along arcs), re-validate on the five Ep1→Ep2 transients, then o211/o213 (W5–W7, S4).
 
 ## 2026-10-15: MACS0416 grid, epoch 1 against epoch 3 (o211/o213): no new transient
 - **Hypothesis before computing:** a two-band change between 2022-10-07 and 2023-02-10 that the published search
