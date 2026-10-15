@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-15: MACS0416 arc tiling o211→o213, 23 / 28 tiles: 23 morphology passes, all ordinary so far, 0 candidates (in progress)
+## 2026-10-15: MACS0416 arc tiling o211→o213, 28 / 28 tiles: 27 morphology passes, all ordinary, 0 candidates
 - **Hypothesis before measuring:** o211→o213 shows the same artifact classes as o211→o212 (spikes, rosettes,
   persistence, the o211 SW compact-core deficit of #251), so its passes are either o211-epoch features already seen in
   o211→o212 or o213 detector effects. Plan change: a pass with no o212 counterpart that is on the sky, in ≥ 2 bands
@@ -30,9 +30,22 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     o212 hit, the same class as the o211 SW deficit; not separately vetted.
 - **Reading:** no candidate in 23 / 28 tiles. The o211 SW compact-core deficit dominates the remaining passes, as in
   o211→o212; detector-dependent PSF stays degenerate with epoch (o211 is all NRCB1).
-- **Handoff:** tiles t+1+2, t+2−2, t+2+0, t+2+1, t+2+2 (no `tiles_o211_o213/` directory yet)
-  with `--maps`, then `arc_diff_morph.py` and contact sheets; `cal_dither_phot.py` on h014 (and on any non-SW-core
-  pass); then mark the draft PR ready. The `--maps` files of this run were in an ephemeral scratchpad.
+- **Last 5 tiles (t+1+2, t+2−2, t+2+0, t+2+1, t+2+2; same command and defaults):** 160 hits, 21 without the
+  bright-core flag; extended 0, edge 7, rosette 4, sign_flip 3, dipole 3, **pass 4** (sheet `vet_o213/sheet_passes_d.png`):
+  t+1+2 h006 and t+2−2 h011 coincide (≤ 0.03″) with o211→o212 hits (h009, h014): o211-epoch SW-core features;
+  t+2−2 h019: adjacent +/− pair on a compact core, SW only, LW null: same class; t+2+2 h002 (F150W −35σ, F200W −7σ,
+  LW null; a point source in the o211 F150W image only): **persistence** (`persistence_check.py`, 64 `_cal`
+  exposures: one detection, in o211 NRCB4 dither 4, and dither 3 had put 26 saturated pixels on that pixel; the other
+  o211 F150W dither has the position on the array edge; o212/o213 flat; `vet_o213/persistence_*_h002.ecsv`).
+- **h014 closed:** `cal_dither_phot.py` (16 knots within 14″, `knots_o211_o213.json`; `vet_o213/dither_h014.json`):
+  o211→o213 excess in the r 0.08″ core aperture (3 + 3 exposures) F150W +3.0 ± 4.0 %, F200W −8.6 ± 8.4 %; no
+  band-consistent brightening. The r 0.16/0.24″ values rest on 2 o213 exposures (masked pixels) with errors of
+  ±11–80 % and opposite signs between epoch pairs, so their large `z_vs_knots` (knot scatter only) is not evidence.
+  Not a candidate.
+- **Totals, 28 tiles (derived):** 1,593 hits, 351 without the bright-core flag; extended 164, edge 73, rosette 63,
+  sign_flip 15, dipole 8, ring 1, pass 27; every pass looked at; **0 candidates**. Limitation: the o211 SW
+  compact-core class is not separately vetted (detector-dependent PSF stays degenerate with epoch).
+- **Handoff:** o211→o213 tiling closed. Next per TASKS.md: re-run Sunrise/SMACS under the new `arc_diff` defaults.
 
 ## 2026-10-15: MACS0416 h044 per-dither `_cal` photometry: o211 deficit in every dither but not band-consistent; not a candidate (closed)
 - **Hypothesis before measuring (from the previous handoff):** a deficit in some o211 exposures only is processing
