@@ -11,6 +11,8 @@ alternated with intrinsic restarts). Final scores: exact lens, pad 64.
 
   python scripts/x4_s1e_joint.py validate   # -> results/x4/s1e_validate.json
   python scripts/x4_s1e_joint.py case       # -> results/x4/s1e_case.json
+  python scripts/x4_s1e_joint.py case_u     # -> results/x4/s1f_case_u.json (S1f)
+  python scripts/x4_s1e_joint.py verify_u   # -> results/x4/s1f_verify.json (S1f)
   python scripts/x4_s1e_joint.py one V9 11  # one validation fit (S1e's minimal failing case)
 """
 
@@ -214,6 +216,86 @@ def saved_best():
     return out
 
 
+FF_SCREEN = float(np.sqrt(1.0 - 9.0 / 900.0))  # rho_req > 30  <=>  FF > 0.994987
+
+
+def explicit_psi(t, hp, hc, pad=64):
+    """psi of the analytic polarisation maximum at its best lag (amplitude > 0 by construction)."""
+    import scipy.fft as sf
+
+    w = b.weight()
+    n = sf.next_fast_len(pad * t.size)
+    vp = (sf.ifft(t * np.conj(hp) * w, n) * n).real
+    vc = (sf.ifft(t * np.conj(hc) * w, n) * n).real
+    g = np.array(
+        [
+            [np.sum(np.abs(hp) ** 2 * w), np.sum((hp * np.conj(hc)).real * w)],
+            [np.sum((hp * np.conj(hc)).real * w), np.sum(np.abs(hc) ** 2 * w)],
+        ]
+    )
+    gi = np.linalg.inv(g)
+    q = gi[0, 0] * vp * vp + 2 * gi[0, 1] * vp * vc + gi[1, 1] * vc * vc
+    k = int(np.argmax(q))
+    a, c = gi @ np.array([vp[k], vc[k]])
+    return 0.5 * float(np.arctan2(c, a))
+
+
+def verify_u():
+    """Best unlensed R1 solution (fits, saved): legality, independent rebuild, two lag steps."""
+    rec = json.loads((b.OUT / "s1f_case_u.json").read_text())
+    cands = [(r["FF_pad64"], r["x"], f"seed{r['seed']}") for r in rec["rows"]]
+    cands += [
+        (z["FF_pad64"], z["x"], f"saved:{z['start']}")
+        for z in rec["saved_rescored"]
+        if z["model"] == "U"
+    ]
+    ff, x, label = max(cands, key=lambda c: c[0])
+    x = np.asarray(x)
+    h, t = m.target("D")
+    mc, q, s1, s2, inc, phi = e.to_cart(x)
+    hp, hc = e.hpc(mc, q, s1, s2, inc, phi)
+    psi = explicit_psi(t, hp, hc)
+    hh = np.cos(2 * psi) * hp + np.sin(2 * psi) * hc
+    scores = {
+        "stat_pad32": e.stat(t, hp, hc, 32),
+        "stat_pad64": e.stat(t, hp, hc, 64),
+        "stat_pad256": e.stat(t, hp, hc, 256),
+        "explicit_psi_ov_pad64": m.ov(t, hh, "D", pad=64),
+        "explicit_psi_ov_pad256": m.ov(t, hh, "D", pad=256),
+    }
+    spread = max(scores.values()) - min(scores.values())
+    ff_cons = min(scores.values())
+    w = b.weight()
+    ratio = float(np.sqrt(np.sum(np.abs(t) ** 2 * w) / np.sum(np.abs(h) ** 2 * w)))
+    rho = b.rho_req(1.0 - ff_cons)
+    out = {
+        "best_label": label,
+        "x_box": [float(v) for v in x],
+        "physical": {
+            "mc": mc,
+            "q": q,
+            "chi1": list(s1),
+            "chi2": list(s2),
+            "inc": inc,
+            "phi": phi,
+            "psi": psi,
+        },
+        "in_box": all(lo <= v <= hi for v, (lo, hi) in zip(x, e.BOUNDS, strict=True)),
+        "chi_mags": [float(np.linalg.norm(s1)), float(np.linalg.norm(s2))],
+        "scores": scores,
+        "score_spread": spread,
+        "FF_conservative": ff_cons,
+        "FF_screen": FF_SCREEN,
+        "fails_screen_with_margin": bool(ff_cons - spread > FF_SCREEN),
+        "rho_req_observed": rho,
+        "snr_ratio": ratio,
+        "intrinsic_snr_needed": rho / ratio,
+        "intrinsic_le_100": rho / ratio <= 100.0,
+    }
+    (b.OUT / "s1f_verify.json").write_text(json.dumps(out, indent=1, default=float) + "\n")
+    return out
+
+
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else argv
     if argv and argv[0] == "validate":
@@ -223,6 +305,19 @@ def main(argv=None) -> int:
     elif argv and argv[0] == "one":  # minimal reproduction of one validation fit, e.g. one V9 11
         r = _valid_job((argv[1], int(argv[2])))
         print(json.dumps({k: r[k] for k in ("name", "seed", "eps_final", "lens", "bounds")}))
+    elif argv and argv[0] == "verify_u":
+        print(json.dumps(verify_u(), indent=1, default=float))
+    elif argv and argv[0] == "case_u":  # S1f: R1 against the validated unlensed search only
+        saved = saved_best()
+        best = max((z for z in saved if z["model"] == "U"), key=lambda z: z["FF_pad64"])
+        jobs = [("U", s, np.asarray(best["x"])) for s in (21, 22, 23)]
+        run(
+            jobs,
+            _case_job,
+            "s1f_case_u.json",
+            "simulated; S1f R1 unlensed fits (S1e U procedure)",
+            {"saved_rescored": saved},
+        )
     elif argv and argv[0] == "case":
         saved = saved_best()
         x0 = {}
