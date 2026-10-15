@@ -32,7 +32,7 @@ of the map border is judged, not dropped); **extended** when ``extent_arcsec`` >
 ``--max-extent-arcsec`` in any detected band (spike streaks, also when broken up in the top band,
 and the smoothed lobes of bright rosettes); a **rosette** when ``n_lobes`` ≥ ``--min-lobes`` with
 both signs in at least ``--min-rosette-bands`` detected bands (with ``--rosette-lobe-ratio`` > 0,
-only lobes whose peak reaches that fraction of |S_hit| count; 0 keeps the original rule); a
+only lobes whose peak reaches that fraction of |S_hit| count; default 0.3, 0 = original rule); a
 **dipole** when ``dipole_ratio`` ≥ ``--dipole-ratio`` in at least ``--min-dipole-bands`` bands;
 otherwise it passes. ``--rejudge`` re-applies the verdict to the per-band values of an existing
 output JSON (no maps needed): measurement thresholds must match the file's; the stored values keep
@@ -40,7 +40,9 @@ the definitions of the code that wrote them (``dipole_ratio`` absent in early fi
 bands dropped at a map border stay dropped). Every number is
 ``derived``; the thresholds are ASSUMPTIONs. Validation: every Yan+2023 arc-transient position in
 the 20″ Warhol box passes in o211/o212; one (D21-S2, outside its discovery pair) is a rosette in
-o211/o213.
+o211/o213. Injection calibration (``arc_diff.py --inject-grid``, 2026-10-15): of injected 27.5–28.0
+mag stars recovered as unflagged hits, 0.82 pass with the original rosette rule and 0.92 with the
+lobe ratio 0.3, which changes none of 244 real-hit verdicts on the same maps.
 """
 
 from __future__ import annotations
@@ -76,7 +78,7 @@ class Params:
     dipole_arcsec: float = 0.3
     dipole_ratio: float = 0.5
     min_dipole_bands: int = 2
-    rosette_lobe_ratio: float = 0.0
+    rosette_lobe_ratio: float = 0.3
 
 
 def _wcs(text: str):

@@ -1560,6 +1560,18 @@ Result: **0 candidates over the o211→o212 arcs.** This is not a limit until th
 injection. Rejected: a 1.0″ extent cut (it removes the published D21-S1/S2), and a dipole test on bands with
 |S_hit| < 3 (it flagged 3 / 11 Yan+2023 positions). Revisit if injections show the veto removes more than 10 % of
 point transients.
+
+**Addendum 2026-10-15g (MACS0416 morphology veto, injection calibration; #249).** `arc_diff.py --inject-grid`
+puts Gaussian stars (27.5 / 28.0 AB) at common sky positions on bright epoch-1 pixels into epoch 2 before detection,
+so `arc_diff_morph.py` is calibrated through the whole chain. o211→o212, 11 tiles (incl. the Warhol box), 403 stars: 402 hits, 326
+unflagged; the original rosette rule passes 0.82 of them (maps kept: 207 / 251). The vetoing lobes exist without the
+star (no-injection control of t−1−3): neighbouring residuals within 0.8″, mostly LW. **Decision:** a rosette counts
+only lobes with peak ≥ 0.3 |S_hit| (`rosette_lobe_ratio`, ASSUMPTION): pass 0.92 (231 / 251), none of 244 real-hit
+verdicts on the same maps changes, Yan+2023 11 / 11 pass. Rejected: ratio 0.5 (4 real rosettes change, +2 % only);
+no ratio (rosettes alone remove 40 / 326 = 0.12 of unflagged injected hits). Old JSONs without `lobe_peaks` keep the old rule
+on `--rejudge`. Not covered: ring residuals (t−1−4, 40 real passes, all on rings, not candidates); 7 tiles of the
+o211→o212 run have no morph record. Revisit if: injections with real (WebbPSF) PSFs, or a new artifact class.
+
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**

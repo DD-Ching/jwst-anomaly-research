@@ -2,8 +2,35 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-15: (in progress) MACS0416 morphology veto: injection calibration through the whole chain
-- Claim: inject point sources into o212, run `arc_diff.py` + `arc_diff_morph.py`, measure the veto's false-veto rate.
+## 2026-10-15: MACS0416 morphology veto calibrated by whole-chain injections; rosette rule now needs strong lobes
+- **Hypothesis before measuring:** point transients on arcs and galaxies pass `arc_diff_morph.py` (≥ 0.9 of the
+  recovered, unflagged ones) unless they sit in an artifact-dominated area. Plan change: if a veto removes more than
+  0.1 of them, find which rule and fix it before quoting a limit.
+- **New `arc_diff.py --inject-grid N`:** N Gaussian stars (27.5 and 28.0 AB in turn) at common sky positions on
+  pixels above the epoch-1 90th percentile, 1.5″ apart, added to epoch 2 of every band before detection; the hits,
+  maps and `injected.csv` carry them, so `arc_diff_morph.py --known injected.csv` tests the whole chain.
+- **o211→o212, 11 tiles incl. the Warhol box (403 stars; simulated in real maps, derived):** 402 recovered as hits;
+  326 without the bright-core flag. With the original rosette rule, 0.82 of those pass morphology (maps kept: 207 /
+  251); the losses are rosettes 40, extended 10, dipole 3, edge 1. A no-injection control of t−1−3 shows the
+  vetoing lobes are there without the star (lobe count = control + 1): neighbouring galaxy and BCG residuals within
+  0.8″ in LW, not the star's own kernel ringing.
+- **Fix:** a rosette counts only lobes whose peak is ≥ 0.3 |S_hit| (`--rosette-lobe-ratio`, default 0.3; the per-band
+  `lobe_peaks` are now stored). Pass fraction 0.82 → 0.92 (231 / 251); it changes **none of 244 real-hit verdicts**
+  on the same maps (0.5 would change 4). Yan+2023: 11 / 11 still pass (plain o211/o212 Warhol maps). Chain
+  efficiency (hit, unflagged, morph pass) at 27.5 / 28.0 mag: 120 / 152 = 0.79 and 111 / 150 = 0.74 (maps kept).
+  Summary: `results/transients/macs0416_arcdiff/inject_morph/summary_o211_o212.json`; ring sheet
+  `t-1-4_real_passes_rings.png` there.
+- **Looked at the remaining vetoed injections (contact sheet):** inside bright-star rosettes, on t−1−4's horizontal
+  streaks and its ring residuals, on a compact core with its own −14σ SW residual. A veto there is the stated cost.
+- **Gap found in the #245 record:** 7 of 28 o211→o212 tiles have no morph JSON (t−1−4, t−3−3, t−3−2, t−3−1, t−2−2,
+  t−2−1, t−1+0). On the injection runs' maps, t−1−4 has 40 real morph passes: all sit on ~1″ ring residuals
+  (opposite signs in SW and LW, or SW-only fading), an artifact class the rules do not cover; **not candidates**.
+  t−3−3 has 2 passes, not yet looked at. So "28 / 28 tiles, 0 candidates" holds only for the 21 tiles with morph
+  records until these are looked at.
+- **Limits:** Gaussian PSFs (no spikes, so no self-rosette); only 11 tiles; two magnitudes; maps for 3 early tiles
+  were deleted, so their ratio-0.3 pass rate is not measured.
+- **Handoff:** next, a ring-residual rule (or a SW/LW sign-consistency rule) validated on t−1−4 and Yan+2023; then
+  look at t−3−3 and the other 5 unrecorded tiles; then o211→o213 over the 28 tiles with `--maps` and the new default.
 
 ## 2026-10-15: `arc_diff_morph.py` review fixes; re-judged o211→o212 tiles: 4 new passes, all ordinary, still 0 candidates (#245)
 - **Hypothesis before measuring:** the open review findings (top-band-only extent, lobes and edge counted in bands

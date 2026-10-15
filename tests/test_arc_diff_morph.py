@@ -235,7 +235,7 @@ def test_rosette_lobe_ratio_counts_only_strong_lobes():
     weak = _band(20.0, n_lobes=5, both=True)
     weak["lobe_peaks"] = [20.0, 3.5, -3.2, 4.0, -3.8]
     res = {"F277W": weak, "F356W": dict(weak)}
-    assert adm.classify(res, adm.Params())[0] == "rosette"
+    assert adm.classify(res, adm.Params(rosette_lobe_ratio=0.0))[0] == "rosette"
     assert adm.classify(res, adm.Params(rosette_lobe_ratio=0.3))[0] == "pass"
     strong = _band(8.0, n_lobes=4, both=True)
     strong["lobe_peaks"] = [8.0, -7.0, 6.5, -5.0]
