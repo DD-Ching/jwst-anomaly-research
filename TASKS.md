@@ -27,7 +27,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   threshold (ρ_req > 30). S1c done (R1): residual kept against validated aligned-spin fits (ρ_req 5.8,
   bound-conditional, provisional); undetermined with XPHM (the precessing fitter fails its check; best ρ_req 9.2). S1d done: the reference
   global search (SciPy DE) fails its injection checks (lensed procedure flawed, unlensed budget-limited), so R1
-  stays undetermined. No pilot proposed. Open, on the owner's go: a joint lens + intrinsic DE (about 4–4.5 h).
+  stays undetermined. S1e done: the joint search makes U reliable; P passes 3/4 runs, so the tool still fails
+  and R1 stays undetermined. No pilot proposed. Open, on the owner's go: more P budget (about 3.5–4.5 h on 4
+  cores) or precession-parametrisation advice; or an R1 U fit testing outcome 1 only (about 0.5 h).
 - **X3 W3 in unselected Gaia epoch photometry** (paused 2026-10-15; reopen when the DR4 epoch-astrometry fields and
   precision are confirmed) (authorized 2026-10-14 by S0-2026-10-14): state file
   `docs/state/units/X3.md`. G0 passed on dev. G1 done: held-out GAPS screened once (395,764 exposed sources),

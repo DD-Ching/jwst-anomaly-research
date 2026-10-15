@@ -11,6 +11,7 @@ alternated with intrinsic restarts). Final scores: exact lens, pad 64.
 
   python scripts/x4_s1e_joint.py validate   # -> results/x4/s1e_validate.json
   python scripts/x4_s1e_joint.py case       # -> results/x4/s1e_case.json
+  python scripts/x4_s1e_joint.py one V9 11  # one validation fit (S1e's minimal failing case)
 """
 
 from __future__ import annotations
@@ -219,6 +220,9 @@ def main(argv=None) -> int:
         # P jobs first (longer), so the two waves balance on 4 cores
         jobs = [(n, s) for n in ("V5", "V9", "V6", "V7") for s in (11, 12)]
         run(jobs, _valid_job, "s1e_validate.json", "simulated; S1e tool validation (joint DE)")
+    elif argv and argv[0] == "one":  # minimal reproduction of one validation fit, e.g. one V9 11
+        r = _valid_job((argv[1], int(argv[2])))
+        print(json.dumps({k: r[k] for k in ("name", "seed", "eps_final", "lens", "bounds")}))
     elif argv and argv[0] == "case":
         saved = saved_best()
         x0 = {}
