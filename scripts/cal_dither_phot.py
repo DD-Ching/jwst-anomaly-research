@@ -41,6 +41,7 @@ from astropy.table import Table
 from astropy.wcs import WCS, FITSFixedWarning
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from arc_diff_knots import robust_z  # noqa: E402
 from persistence_check import _open, _safe, header_info, list_cal  # noqa: E402
 from transient_forced import aperture_flux, recentre  # noqa: E402
 
@@ -56,9 +57,9 @@ MAX_OFFSET_PX = 6  # ASSUMPTION: level-2 WCS errors stay below ~0.2″ (SW) per 
 
 
 def epoch_of(name: str) -> str:
-    """``o211`` from ``jw01176211001_..._cal.fits`` (program 5 digits, observation 3 digits)."""
-    m = re.match(r"jw\d{5}(\d{3})\d{3}_", name.rsplit("/", 1)[-1])
-    return f"o{m.group(1)}" if m else "?"
+    """``1176o211`` from ``jw01176211001_..._cal.fits`` (program, then observation number)."""
+    m = re.match(r"jw(\d{5})(\d{3})\d{3}_", name.rsplit("/", 1)[-1])
+    return f"{int(m.group(1))}o{m.group(2)}" if m else "?"
 
 
 def exposure_offset(cut: dict, refs: list[str]) -> tuple[float, float, int]:
@@ -113,8 +114,10 @@ def measure(
     for uid, (sci, err, lx, ly, x0, y0) in cut.items():
         sx, sy = lx + dx, ly + dy
         cx, cy = recentre(sci, sx, sy, RECENTRE_PX)
-        if np.hypot(cx - sx, cy - sy) > MAX_SHIFT_PX:
-            cx, cy = sx, sy
+        # recentre returns the input on failure; a fallback position biases core apertures and
+        # centroids, so such a source gets no measurement on this exposure
+        if (cx, cy) == (sx, sy) or np.hypot(cx - sx, cy - sy) > MAX_SHIFT_PX:
+            continue
         # sky centroid in the knots' frame: remove the exposure offset before the WCS
         ra, dec = (float(v) for v in wcs.all_pix2world(cx + x0 - dx, cy + y0 - dy, 0))
         row = {
@@ -215,15 +218,6 @@ def centroid_shifts(tab: Table, targets: list[str], knots: list[str], epochs: li
     return out
 
 
-def robust_z(value: float, ref: np.ndarray) -> tuple[float, float, float]:
-    ref = ref[np.isfinite(ref)]
-    if len(ref) < 5:
-        return float("nan"), float("nan"), float("nan")
-    med = float(np.median(ref))
-    sig = 1.4826 * float(np.median(np.abs(ref - med)))
-    return med, sig, (value - med) / sig if sig > 0 else float("nan")
-
-
 def load_knots(path: Path, targets: dict[str, tuple[float, float]], bands: list[str]):
     """Knot positions (union over ``bands``) in the flux range, away from every target."""
     d = json.loads(path.read_text())
@@ -260,6 +254,8 @@ def main(argv: list[str] | None = None) -> int:
 
     targets = {u: (float(r), float(d)) for u, r, d in args.target}
     knots = load_knots(args.knots_json, targets, args.filters)
+    if clash := set(targets) & set(knots):
+        ap.error(f"target names clash with knot ids: {sorted(clash)}")
     positions = {**targets, **knots}
     files = [f for d in args.cal_dir for f in list_cal(d)]
     failed: list[str] = []
@@ -298,6 +294,9 @@ def main(argv: list[str] | None = None) -> int:
                     **m,
                 }
             )
+    if not rows:
+        print(json.dumps({"error": "no measurements", "failed": failed}, indent=1))
+        return 1
     tab = Table(rows=rows)
     args.out.mkdir(parents=True, exist_ok=True)
     tab.meta.update({"provenance": "derived", "radii_arcsec": args.radii_arcsec, "failed": failed})
@@ -330,9 +329,9 @@ def main(argv: list[str] | None = None) -> int:
         bres: dict = {
             "n_exposures": {e: len(set(sub["file"][sub["epoch"] == e])) for e in epochs_all}
         }
+        fe = dict(zip(sub["file"], sub["epoch"], strict=True))
         for i, r in enumerate(args.radii_arcsec):
             t = normalise(sub, uids, knot_ids, f"f{i}")
-            fe = {f: e for f, e in zip(sub["file"], sub["epoch"], strict=True)}
             ep = np.array([fe[f] for f in t["_files"]])
             rres: dict = {}
             for a in epochs_all:
@@ -341,9 +340,10 @@ def main(argv: list[str] | None = None) -> int:
                         continue
                     ex = {u: epoch_excess(t[u], ep, a, b) for u in uids}
                     kref = np.array([ex[k][0] for k in knot_ids])
+                    kmed, ksig, _ = robust_z(0, kref)
                     rres[f"{a}_{b}"] = {
-                        "knot_median": robust_z(0, kref)[0],
-                        "knot_robust_sigma": robust_z(0, kref)[1],
+                        "knot_median": kmed,
+                        "knot_robust_sigma": ksig,
                         "n_knots": int(np.isfinite(kref).sum()),
                         "targets": {
                             u: {
@@ -369,7 +369,7 @@ def main(argv: list[str] | None = None) -> int:
             bres[f"r{r:.2f}"] = rres
         bres["centroid_mas"] = centroid_shifts(sub, list(targets), knot_ids, epochs_all)
         summary["filters"][band] = bres
-    (args.out / "summary.json").write_text(json.dumps(summary, indent=1))
+    (args.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
     print(
         json.dumps(
             {

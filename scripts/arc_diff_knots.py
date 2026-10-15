@@ -31,7 +31,9 @@ def knot_peaks(e1: np.ndarray, size: int, pad: int) -> list[tuple[int, int]]:
 
 
 def robust_z(value: float, ref: np.ndarray) -> tuple[float, float, float]:
-    """(median, robust σ, z of ``value``) of the reference sample; NaN when it has < 5 entries."""
+    """(median, robust σ, z of ``value``) of the finite reference values; NaN when < 5 remain."""
+    ref = np.asarray(ref, dtype=float)
+    ref = ref[np.isfinite(ref)]
     if len(ref) < 5:
         return float("nan"), float("nan"), float("nan")
     med = float(np.median(ref))
@@ -46,11 +48,13 @@ def measure_band(maps, band: str, targets: list[tuple[str, float, float]], a) ->
     r_ap = AP_RADIUS[band] / scale
     to_njy = scale**2 * SR_PER_ARCSEC2 * NJY_PER_MJY
     fd, fe = disk_sum(d, r_ap) * to_njy, disk_sum(e1, r_ap) * to_njy
+    # disk_sum counts NaN as 0, so an aperture touching a masked pixel is biased: flag it
+    holed = disk_sum((~(np.isfinite(d) & np.isfinite(e1))).astype(float), r_ap) > 0
     pad = int(np.ceil(r_ap)) + 3
     size = 2 * int(round(a.footprint_arcsec / scale)) + 1
     knots, kpix = [], []
     for y, x in knot_peaks(e1, size, pad):
-        if fe[y, x] >= a.min_njy and np.isfinite(d[y, x]):
+        if fe[y, x] >= a.min_njy and not holed[y, x]:
             kpix.append((y, x))
             ra, dec = (float(v) for v in w.all_pix2world(x, y, 0))
             knots.append(
@@ -79,6 +83,7 @@ def measure_band(maps, band: str, targets: list[tuple[str, float, float]], a) ->
         x0, y0 = (float(v) for v in w.all_world2pix(ra, dec, 0))
         yi, xi = int(round(y0)), int(round(x0))
         if not (pad <= yi < d.shape[0] - pad and pad <= xi < d.shape[1] - pad):
+            out["targets"][name] = {"skipped": "outside the map interior"}
             continue
         f, f1 = float(fd[yi, xi]), float(fe[yi, xi])
         tf = f / f1 if f1 > 0 else float("nan")
@@ -94,7 +99,8 @@ def measure_band(maps, band: str, targets: list[tuple[str, float, float]], a) ->
             "knot_robust_sigma": round(sig, 4),
             "z_vs_knots": round(z, 2),
             "n_reference": int(len(ref)),
-            "rank_from_top": int(np.sum(ref >= tf)) + 1,
+            "rank_from_top": int(np.sum(ref >= tf)) + 1 if np.isfinite(tf) else None,
+            "aperture_has_nan": bool(holed[yi, xi]),
         }
     return out
 
@@ -138,6 +144,9 @@ def main(argv: list[str] | None = None) -> None:
             f"(n={r['n_comparable']}), bright {r['median_frac_bright']} (n={r['n_bright']})"
         )
         for n, t in r["targets"].items():
+            if "skipped" in t:
+                print(f"  {n}: {t['skipped']}")
+                continue
             print(
                 f"  {n}: frac {t['frac']:+.4f} z {t['z_vs_knots']:+.2f} rank {t['rank_from_top']}"
             )

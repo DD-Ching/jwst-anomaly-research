@@ -14,7 +14,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   without the offset step and with a 1.5 px recentring limit gave a spurious +27 % o211 excess (h044's core sits
   ~1.2 px from the hit position, so recentring failed in some epochs): **failed approach, fixed**.
 - **Data (derived):** o211 (4 dithers, all NRCB1), o212 (4, NRCB2), o213 (4–6, NRCB4/B2), CANUCS o004 (3–7), F150W
-  and F200W; `results/transients/macs0416_arcdiff/vet_sw/dither_h044_h030.json` (per-exposure `t` included).
+  and F200W; `results/transients/macs0416_arcdiff/vet_sw/dither_h044_h030.json` (per-exposure `t` included; epochs
+  are labelled `<program>o<obs>`, e.g. `1176o211`, `1208o004`).
 - **Result:** h044's o211 deficit is uniform across the o211 dithers (F200W r 0.16″: t = 0.93, 0.96, 0.93 vs
   1.00–1.05 in o212/o213/o004), so it is **not** a single-exposure or mosaic artifact. It is not consistent with
   added point flux: F200W +3.6 ± 2.8 % (r 0.08″, z 0.9), +9.0 ± 1.8 % (0.16″, z 3.1), +6.2 ± 2.2 % (0.24″, z 2.2) for
@@ -22,6 +23,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   LW was already null). o212→o213 control ≈ 0 in both bands. Centroid: h044 moves 9 mas west from o211 to later
   epochs in F200W (z −2.6), 4–5 mas in F150W (z −1.2), but also 12 mas north between o004 and o212 (z 2.5, no o211),
   so its centroid is less stable than the knots in general (compact core on a host gradient).
+- **/code-review fixes:** sources whose recentring fails are dropped per exposure (no fallback centroid or flux;
+  results unchanged); epochs carry the program; empty runs exit cleanly; target/knot id clash refused; one shared
+  NaN-safe `robust_z`. `arc_diff_knots.py`: knots whose aperture touches a NaN pixel are excluded and targets get an
+  `aperture_has_nan` flag, a NaN target fraction has no rank, and skipped targets are recorded. The stored
+  `knots_*.json` predate these two rules (their maps were deleted); their h044/h030 rows were finite.
 - **Reading:** h044 is **not a candidate (closed)**: a ≤ 3σ tail of the 17-knot distribution, picked as the most
   extreme of the o211→o212 hits over 28 tiles, with an aperture- and band-inconsistent excess. Untestable ordinary
   remainder: every o211 exposure is on NRCB1 and no later one is, so detector-dependent PSF is degenerate with epoch

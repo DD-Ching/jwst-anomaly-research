@@ -42,8 +42,8 @@ def _table(target_gain: float, seed: int = 1) -> tuple[Table, list[str]]:
 
 
 def test_epoch_of():
-    assert cdp.epoch_of("jw01176211001_02101_00001_nrcb1_cal.fits") == "o211"
-    assert cdp.epoch_of("s3://b/jw01208004001_x_cal.fits") == "o004"
+    assert cdp.epoch_of("jw01176211001_02101_00001_nrcb1_cal.fits") == "1176o211"
+    assert cdp.epoch_of("s3://b/jw01208004001_x_cal.fits") == "1208o004"
     assert cdp.epoch_of("other.fits") == "?"
 
 
@@ -52,9 +52,9 @@ def test_target_excess_recovered_and_knots_null():
     t = cdp.normalise(tab, ["tgt", *knots], knots, "f0")
     fe = dict(zip(tab["file"], tab["epoch"], strict=True))
     ep = np.array([fe[f] for f in t["_files"]])
-    ex, err = cdp.epoch_excess(t["tgt"], ep, "o211", "o212")
+    ex, err = cdp.epoch_excess(t["tgt"], ep, "1176o211", "1176o212")
     assert abs(ex - 0.05) < 0.005 and 0 < err < 0.01
-    kex = np.array([cdp.epoch_excess(t[k], ep, "o211", "o212")[0] for k in knots])
+    kex = np.array([cdp.epoch_excess(t[k], ep, "1176o211", "1176o212")[0] for k in knots])
     assert np.all(np.abs(kex) < 0.01)
     assert cdp.robust_z(ex, kex)[2] > 5
 
@@ -64,8 +64,13 @@ def test_no_excess_gives_small_z():
     t = cdp.normalise(tab, ["tgt", *knots], knots, "f0")
     fe = dict(zip(tab["file"], tab["epoch"], strict=True))
     ep = np.array([fe[f] for f in t["_files"]])
-    ex, _ = cdp.epoch_excess(t["tgt"], ep, "o211", "o212")
+    ex, _ = cdp.epoch_excess(t["tgt"], ep, "1176o211", "1176o212")
     assert abs(ex) < 0.01
+
+
+def test_robust_z_ignores_nan():
+    med, sig, z = cdp.robust_z(1.0, np.array([0.0, 0.1, -0.1, 0.05, -0.05, np.nan]))
+    assert np.isfinite(med) and sig > 0 and z > 5
 
 
 def test_load_knots_range_exclusion_and_dedup(tmp_path):
