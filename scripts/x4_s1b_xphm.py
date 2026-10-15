@@ -260,7 +260,7 @@ def main(argv=None) -> int:
     rng = np.random.default_rng(31)
     fits = json.loads((b.OUT / "s1b_fits.json").read_text())
     jobs = []
-    # only the cases that passed the numerical stage, plus the absorbed control (X4.md S1b, frozen order)
+    # cases that passed the numerical stage, plus the absorbed control (X4.md S1b, frozen order)
     for case in D_CASES:
         for s in starts(case, True, rng):
             jobs.append((case, "UA", s, None))
