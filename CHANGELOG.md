@@ -2,6 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 h044/h030: o211 compact knots are systematically fainter in SW; explains about half of h044
+- **Hypothesis before measuring:** the o211-faint SW signature of h044/h030 is an o211-wide compact-core deficit
+  (PSF or processing), so other compact knots in the same box show the same fractional residual. Plan change: if
+  h044/h030 lie inside the knot distribution, they are ordinary; if they are clear outliers, go to per-dither tests.
+- **Method (derived):** `arc_diff.py --maps` on the west box (64.0225 −24.0815, ±10″) for o211→o212 (F150W, F200W,
+  F277W, F356W; `--kernel-px 4 --kernel-stamps`); difference / epoch-1 flux in the `arc_diff_vet.py` apertures at
+  every epoch-1 local peak (0.25″ footprint) above 100 nJy. Table and plot:
+  `results/transients/macs0416_arcdiff/vet_sw/knots_o211_o212.json`, `knots_frac_o211_o212.png`.
+- **Result:** bright compact knots are fainter in o211 in SW only. Knots with an epoch-1 aperture flux ≥ 500 nJy
+  give +1.3 to +3.6 % (F150W, up to 30.8σ) and +0.4 to +2.4 % (F200W); 150–500 nJy knots have a median of +1.8 %
+  (F150W, n = 18) and +1.5 % (F200W, n = 13). LW knots scatter around 0. At the hit positions h044 is +6.4 % / +6.6 %
+  (F150W / F200W) and +4.4 % / +5.4 % on its own epoch-1 peak 0.05″ away; h030 is +3.4 % / +4.8 %. The largest other
+  knots are +3.6 % / +2.8 %. Only the F200W values stand out (h044 and h030 are the two largest, about 2.5 robust σ
+  above the knot median).
+- **Reading:** an ordinary o211 SW core deficit (cause not identified: PSF, focus or the kernel fit led by extended
+  light) accounts for roughly half of h044's signal and most of h030's. The excess (≈ 2–3 %, 7–9 nJy) is **open and
+  unvetted; not a candidate.** Limits: one epoch pair (the o211→o213 run was stopped for CPU time), one box, the
+  ratio is of a 0.08″ aperture, not of a PSF-fitted flux.
+- **Handoff:** (1) the same knot test on o211→c004 and o211→o213 (is the deficit o211-specific?) and on o212→o213 as a
+  control; (2) per-dither o211 `_cal` differences registered to the i2d; (3) HST Frontier Fields pre-JWST epoch.
+  CPU note: two `--kernel-stamps` runs at once on 4 cores took > 20 min each (load 15); run them one at a time.
+
 ## 2026-10-15: MACS0416 o211→o212 morph passes vetted: 7 ordinary; h044 and h030 are an open SW signature (unvetted)
 - **Hypothesis before measuring:** the 6 SW-dominant passes (t−3−3 h028/h030, t−3−2 h044/h051, t−2−2 h035, t−1+0
   h104) are o212 afterimages or matching residuals, and t−1−4 h124/h159/h246 are o212 LW core-PSF mismatches. A real
