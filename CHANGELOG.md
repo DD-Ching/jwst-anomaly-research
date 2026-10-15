@@ -2,8 +2,31 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-15: (in progress) MACS0416 arc tiling with arc_diff.py and arc_diff_vet.py
-- Claim: tile the remaining MACS0416 arcs (o211/o212, o211/o213), add CANUCS o004, vet unflagged hits.
+## 2026-10-15: (in progress, draft #245) MACS0416 arc tiling; residual-morphology vetting `arc_diff_morph.py`
+- **Hypothesis before measuring:** outside the Warhol box, the adopted `arc_diff.py` settings (#242) leave few
+  unflagged hits per 20″ tile, and those are point-like. Plan change: if outer tiles are dominated by a new artifact
+  class, build and validate a veto for it before screening further.
+- **Tiles:** 28 boxes of 20″ (18″ step) holding the 106 CATS v4.1 multiple images outside the #242 box (shifted
+  +0.208″, −0.025″ to the JWST frame); list in `results/transients/macs0416_arcdiff/tiles_o211_o212/tiles.txt`.
+  o211→o212 done on 16 / 28 (first 10 with 30 injections per magnitude: 28.0 mag recovered 0.43–1.0 per band; the
+  rest without injections). 1,353 hits, **390 without the bright-core flag** (t-1-4 alone 199, t-2-3 60).
+- **Looked at t-2-3:** the unflagged hits are a diffraction spike of a bright star rotated between the epochs (a
+  negative diagonal streak in every band), PSF rosettes around compact sources below the bright-core level, and
+  residuals at the mosaic edge.
+- **New `scripts/arc_diff_morph.py`** (unit tests on synthetic maps): per hit, the length of the S region containing
+  it (S smoothed by σ = 2 px, ≥ 3σ), the number and signs of |S| ≥ 3 lobes within 0.8″, and the distance to missing
+  data. Verdicts edge (< 0.5″), extended (> 3.0″ in the top band), rosette (≥ 4 lobes, both signs, ≥ 2 bands)
+  (ASSUMPTIONs).
+- **Validation on known cases (derived):** at 1.0″ the extent test flagged two published o211/o212 transients
+  (D21-S1, D21-S2; 1.1–1.6″ on their arc), so the threshold was raised to 3.0″ (streaks measure 14–23″). At 3.0″:
+  all 11 Yan+2023 positions pass in o211/o212; in o211/o213 one (D21-S2, outside its discovery pair) is a rosette.
+  Not yet calibrated by injections through the chain (follow-up).
+- **Morphology on 9 tiles with maps:** t-2-3 60 → 3 pass; over t+0±, t-1±, t-2-3, 15 passes remain, unvetted and
+  not yet looked at. JSON: `results/transients/macs0416_arcdiff/morph/`.
+- **Failed approach:** a 1.0″ extent cut (kills arc transients); rosette in the top band only (missed h074).
+- **Handoff:** finish o211→o212 on the 12 remaining tiles with `--maps`, run `arc_diff_morph.py` on every tile, look
+  at the passes (contact sheets), vet survivors with `arc_diff_vet.py` (CANUCS o004 as fourth epoch); calibrate the
+  morphology veto with injections; then o211→o213. t-1-4 (199 unflagged) needs a look first.
 
 ## 2026-10-15: MACS0416 arc-difference hit h108 is an arc-segment residual; arc-coherence vetting test
 - **Hypothesis before measuring:** h108 (o211→o213, #242) is a point source on a faint thin arc that brightened. It

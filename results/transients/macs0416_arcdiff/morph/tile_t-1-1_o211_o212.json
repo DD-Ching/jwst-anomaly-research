@@ -1,0 +1,65 @@
+{
+ "provenance": "derived",
+ "maps": "t-1-1.npz",
+ "thresholds_assumption": {
+  "peak_arcsec": 0.06,
+  "level": 3.0,
+  "smooth_px": 2.0,
+  "streak_level": 3.0,
+  "max_extent_arcsec": 3.0,
+  "edge_arcsec": 0.5,
+  "lobe_arcsec": 0.8,
+  "min_lobe_px": 4,
+  "min_lobes": 4,
+  "min_rosette_bands": 2
+ },
+ "counts": {
+  "pass": 1
+ },
+ "targets": [
+  {
+   "id": "h029",
+   "ra": 64.02984485000172,
+   "dec": -24.072626696917002,
+   "verdict": "pass",
+   "top_band": "F150W",
+   "bands": {
+    "F150W": {
+     "s_hit": -8.15245246887207,
+     "extent_arcsec": 0.26402749083155425,
+     "n_lobes": 2,
+     "both_signs": true,
+     "edge_arcsec": 1.1554467418607521
+    },
+    "F200W": {
+     "s_hit": -2.789872646331787,
+     "extent_arcsec": 0.635089835637119,
+     "n_lobes": 1,
+     "both_signs": false,
+     "edge_arcsec": 1.2491889333840924
+    },
+    "F277W": {
+     "s_hit": 2.3292078971862793,
+     "extent_arcsec": 0.0,
+     "n_lobes": 0,
+     "both_signs": false,
+     "edge_arcsec": 1.1323676880885198
+    },
+    "F356W": {
+     "s_hit": 1.0183851718902588,
+     "extent_arcsec": 0.0,
+     "n_lobes": 0,
+     "both_signs": false,
+     "edge_arcsec": 1.1323615417062627
+    },
+    "F444W": {
+     "s_hit": -5.194668769836426,
+     "extent_arcsec": 0.9307486236678172,
+     "n_lobes": 2,
+     "both_signs": true,
+     "edge_arcsec": 1.006620030088935
+    }
+   }
+  }
+ ]
+}
