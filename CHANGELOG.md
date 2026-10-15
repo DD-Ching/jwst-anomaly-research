@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: Abell 2744 UNCOVER vs ALT F356W grid (in progress)
+- Plan: verify the PLATE-23a position (arXiv:2608.20781), then run `transient_grid.py` UNCOVER o001 vs ALT F356W.
+
 ## 2026-10-15: Sunrise and SMACS two-epoch grids re-run under the MACS0416 defaults: 0 candidates
 - **Hypothesis before measuring:** the first Sunrise o010/o120 run and the #237 runs (Sunrise o010/o052,
   SMACS o001/VENUS o057) used per-band recentring and the same-sign rule, which missed MACS0416 SN01 (#238). Under
