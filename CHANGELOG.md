@@ -17,11 +17,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   and F200W; `results/transients/macs0416_arcdiff/vet_sw/dither_h044_h030.json` (per-exposure `t` included; epochs
   are labelled `<program>o<obs>`, e.g. `01176o211`, `01208o004`; pairs `a_b` are chronological, excess = b / a − 1;
   `n_measured` gives the exposures behind each number: the F200W r 0.16″ o211→o212 value rests on 3 + 3).
-- **Result:** h044's o211 deficit is uniform across the o211 dithers (F200W r 0.16″: t = 0.93, 0.96, 0.93 vs
-  1.00–1.05 in o212/o213/o004), so it is **not** a single-exposure or mosaic artifact. It is not consistent with
+- **Result:** h044's o211 deficit is the same in every measured o211 dither (F200W r 0.16″: t = 0.93, 0.96, 0.93;
+  the 4th dither's aperture has a masked (DO_NOT_USE or NaN) pixel; vs 1.00–1.05 in o212/o213/o004), so it is **not** a
+  single-exposure or mosaic artifact. It is not consistent with
   added point flux: F200W +3.6 ± 2.8 % (r 0.08″, z 0.9), +9.0 ± 1.8 % (0.16″, z 3.1), +6.2 ± 2.2 % (0.24″, z 2.2) for
   o211→o212; F150W +3.7 % (0.08″, z 1.0) but −1.5 % and +1.7 % at 0.16/0.24″ (a hot source would be brighter in F150W;
-  LW was already null). o212→o213 control ≈ 0 in both bands. Centroid: h044 moves 9 mas west from o211 to later
+  LW was already null; the F150W 0.16/0.24″ and F200W 0.24″ values rest on 3 + 2 exposures, so their errors are
+  rough). o212→o213 control ≈ 0 in both bands. Centroid: h044 moves 9 mas west from o211 to later
   epochs in F200W (z −2.6), 4–5 mas in F150W (z −1.2), but also 12 mas south from o212 to o004 (z −2.5, no o211),
   so its centroid is less stable than the knots in general (compact core on a host gradient).
 - **/code-review fixes (two passes):** sources whose recentring fails are dropped per exposure (no fallback centroid

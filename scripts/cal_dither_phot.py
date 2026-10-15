@@ -302,9 +302,11 @@ def main(argv: list[str] | None = None) -> int:
     tab.write(args.out / "dither_phot.ecsv", overwrite=True)
 
     # chronological, so every pair "a_b" reads earlier → later
-    epochs_all = sorted(
-        set(tab["epoch"]), key=lambda e: float(np.median(tab["mjd"][tab["epoch"] == e]))
-    )
+    start = {e: float(np.nanmedian(tab["mjd"][tab["epoch"] == e])) for e in set(tab["epoch"])}
+    if not all(np.isfinite(v) for v in start.values()):
+        print(json.dumps({"error": "an epoch has no finite EXPSTART", "epochs": start}))
+        return 1
+    epochs_all = sorted(start, key=start.get)
     summary = {
         "provenance": "derived",
         "source": "level-2 _cal exposures: " + ", ".join(args.cal_dir),
@@ -350,7 +352,8 @@ def main(argv: list[str] | None = None) -> int:
                                 "excess": ex[u][0],
                                 "err": ex[u][1],
                                 "z_vs_knots": robust_z(ex[u][0], kref)[2],
-                                # exposures with a measurement (recentring can fail)
+                                # exposures with a finite t: recentring can fail, an aperture can
+                                # touch a DO_NOT_USE pixel, or < 3 knots are measured there
                                 "n_measured": [
                                     int(np.isfinite(t[u][ep == a]).sum()),
                                     int(np.isfinite(t[u][ep == b]).sum()),
