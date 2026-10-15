@@ -11,6 +11,7 @@ alternated with intrinsic restarts). Final scores: exact lens, pad 64.
 
   python scripts/x4_s1e_joint.py validate   # -> results/x4/s1e_validate.json
   python scripts/x4_s1e_joint.py case       # -> results/x4/s1e_case.json
+  python scripts/x4_s1e_joint.py case_u     # -> results/x4/s1f_case_u.json (S1f)
   python scripts/x4_s1e_joint.py one V9 11  # one validation fit (S1e's minimal failing case)
 """
 
@@ -223,6 +224,17 @@ def main(argv=None) -> int:
     elif argv and argv[0] == "one":  # minimal reproduction of one validation fit, e.g. one V9 11
         r = _valid_job((argv[1], int(argv[2])))
         print(json.dumps({k: r[k] for k in ("name", "seed", "eps_final", "lens", "bounds")}))
+    elif argv and argv[0] == "case_u":  # S1f: R1 against the validated unlensed search only
+        saved = saved_best()
+        best = max((z for z in saved if z["model"] == "U"), key=lambda z: z["FF_pad64"])
+        jobs = [("U", s, np.asarray(best["x"])) for s in (21, 22, 23)]
+        run(
+            jobs,
+            _case_job,
+            "s1f_case_u.json",
+            "simulated; S1f R1 unlensed fits (S1e U procedure)",
+            {"saved_rescored": saved},
+        )
     elif argv and argv[0] == "case":
         saved = saved_best()
         x0 = {}
