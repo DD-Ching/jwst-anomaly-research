@@ -72,7 +72,7 @@ def test_point_transient_passes(tmp_path):
 
 
 def test_point_transient_passes_in_correlated_noise(tmp_path):
-    # Matched-filter S has correlated noise; a white-noise rescale let noise percolate into "extended".
+    # Matched-filter S has correlated noise; a white-noise rescale let it percolate into "extended".
     t = _run(tmp_path, _blob(N // 2, N // 2, amp=12.0), "ptc", corr_px=1.5)
     assert t["verdict"] == "pass"
     assert t["bands"]["F277W"]["extent_arcsec"] < 1.0
