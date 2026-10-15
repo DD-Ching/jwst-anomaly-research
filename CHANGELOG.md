@@ -389,8 +389,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     this closure (not for directed, injected or anisotropic radiation).
 - **Withdrawn:**
   - The general spherical no-go: Birkhoff needs a vacuum gap, and Ellis's phantom scalar has monopole waves.
-  - The claim that a first-order drive must be non-perturbative: h/Ω² ≈ √2γ/Ω is small in the Kapitza regime.
-    A direct drive is not excluded until h is derived from a source.
+  - The claim that a first-order drive must be non-perturbative. h/Ω² is the mode's relative jitter, not
+    necessarily the background's. Whether the background stays perturbative is undetermined until h is derived
+    from a source, so a direct drive is not excluded.
 - **Restated:**
   - The thin-shell toy is the static stability of already-trapped radiation, comparing different exotic-matter
     theories: the EoS intercept moves with f.
@@ -399,7 +400,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Paused:** a stability calculation is proposed only with a specified radiation distribution, stress tensor,
   boundary conditions, confinement or supply mechanism, and a fixed matter theory.
 
-## 2026-10-15: S0-2026-10-15b Kapitza screen: an ordinary high-frequency drive can act on a wormhole throat only through its averaged stress, at about 10⁵² W or under an unproven confinement (derived, toy)
+## 2026-10-15: S0-2026-10-15b Kapitza screen (partly superseded by the re-check above): an ordinary high-frequency drive can act on a wormhole throat only through its averaged stress, at about 10⁵² W or under an unproven confinement (derived, toy)
 - **Question (owner):** can Kapitza-style dynamic stabilisation, driven by an explicit source, suppress known
   wormhole instabilities? Record: `docs/state/units/S0-2026-10-15b.md`. ≤ 2 h; X4/R1 paused.
 - **Literature** (checked in the bodies):
