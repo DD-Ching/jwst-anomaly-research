@@ -80,6 +80,22 @@ def test_alternating_lobes_are_a_rosette(tmp_path):
     assert t["bands"]["F356W"]["n_lobes"] >= 4 and t["bands"]["F356W"]["both_signs"]
 
 
+def test_core_dipole_is_flagged(tmp_path):
+    c = N // 2
+    s = _blob(c, c, amp=12.0) + _blob(c, c + 3, amp=-10.0)
+    t = _run(tmp_path, s, "dipole")
+    assert t["verdict"] == "dipole"
+    assert t["bands"]["F277W"]["dipole_ratio"] > 0.5
+
+
+def test_brightening_beside_a_weak_negative_lobe_passes(tmp_path):
+    c = N // 2
+    s = _blob(c, c, amp=12.0) + _blob(c, c + 3, amp=-4.0)
+    t = _run(tmp_path, s, "weakdip")
+    assert t["verdict"] == "pass"
+    assert t["bands"]["F277W"]["dipole_ratio"] < 0.5
+
+
 def test_hit_next_to_missing_data_is_edge(tmp_path):
     s = _blob(N // 2, N // 2, amp=12.0)
     s[:, N // 2 + 4 :] = np.nan

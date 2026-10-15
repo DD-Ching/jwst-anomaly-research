@@ -17,15 +17,21 @@ significance map S of an ``arc_diff.py --maps`` file:
   (the full length of a uniform line);
 - ``n_lobes``, ``both_signs``: connected regions of |S| ≥ ``--level`` (at least ``--min-lobe-px``
   pixels) within ``--lobe-arcsec`` of the hit, and whether both signs occur among them;
+- ``dipole_ratio``: the largest |S| of an opposite-sign region (|S| ≥ ``--level``, at least
+  ``--min-lobe-px`` pixels) within ``--dipole-arcsec`` of the hit, over |S_hit| (0 if none). A
+  registration or PSF residual on a compact core leaves a +/− pair of similar strength; a
+  brightening leaves one sign;
 - ``edge_arcsec``: the distance to the nearest pixel without data (mosaic edge or a gap), or to the
   map border.
 
 A hit is at the **edge** when ``edge_arcsec`` < ``--edge-arcsec`` in any band; **extended** when
 ``extent_arcsec`` > ``--max-extent-arcsec`` in the band of the largest |S_hit| (spike streaks, and
 the smoothed lobes of bright rosettes); a **rosette** when ``n_lobes`` ≥ ``--min-lobes`` with both
-signs in at least ``--min-rosette-bands`` bands; otherwise it passes. Every number is ``derived``;
-the thresholds are ASSUMPTIONs. Validation: every Yan+2023 arc-transient position in the 20″
-Warhol box passes in o211/o212; one (D21-S2, outside its discovery pair) is a rosette in o211/o213.
+signs in at least ``--min-rosette-bands`` bands; a **dipole** when ``dipole_ratio`` ≥
+``--dipole-ratio`` in at least ``--min-dipole-bands`` bands; otherwise it passes. Every number is
+``derived``; the thresholds are ASSUMPTIONs. Validation: every Yan+2023 arc-transient position in
+the 20″ Warhol box passes in o211/o212; one (D21-S2, outside its discovery pair) is a rosette in
+o211/o213.
 """
 
 from __future__ import annotations
@@ -76,6 +82,22 @@ def lobes(s: np.ndarray, y: float, x: float, r_px: float, level: float, min_px: 
     return out
 
 
+def dipole_ratio(s: np.ndarray, y: int, x: int, r_px: float, level: float, min_px: int) -> float:
+    """Largest |S| of opposite-sign regions (|S| ≥ level, ≥ min_px px) within r_px, over |S_hit|."""
+    s_hit = float(s[y, x])
+    if not np.isfinite(s_hit) or s_hit == 0:
+        return 0.0
+    opp = np.nan_to_num(-np.sign(s_hit) * s)
+    lab, n = ndimage.label(opp >= level, structure=np.ones((3, 3)))
+    if not n:
+        return 0.0
+    sizes = np.bincount(lab.ravel())
+    yy, xx = np.mgrid[: s.shape[0], : s.shape[1]]
+    near = (np.hypot(yy - y, xx - x) <= r_px) & (lab > 0)
+    near &= sizes[lab] >= min_px
+    return float(opp[near].max() / abs(s_hit)) if near.any() else 0.0
+
+
 def morph_band(maps, band: str, ra: float, dec: float, a) -> dict | None:
     """One band's morphology at (ra, dec); None when off the map or the S window is all NaN."""
     w = _wcs(str(maps[f"{band}_wcs"]))
@@ -103,11 +125,13 @@ def morph_band(maps, band: str, ra: float, dec: float, a) -> dict | None:
     pad = np.pad(good, 1, constant_values=False)
     edge = float(ndimage.distance_transform_edt(pad)[py + 1, px + 1]) * scale
     lb = lobes(s, py, px, a.lobe_arcsec / scale, a.level, a.min_lobe_px)
+    dip = dipole_ratio(s, py, px, a.dipole_arcsec / scale, a.level, a.min_lobe_px)
     return {
         "s_hit": s_hit,
         "extent_arcsec": ext,
         "n_lobes": len(lb),
         "both_signs": bool(1 in lb and -1 in lb),
+        "dipole_ratio": dip,
         "edge_arcsec": edge,
     }
 
@@ -125,6 +149,9 @@ def classify(res: dict[str, dict], a) -> tuple[str, str | None]:
     n_ros = sum(v["n_lobes"] >= a.min_lobes and v["both_signs"] for v in res.values())
     if n_ros >= a.min_rosette_bands:
         return "rosette", top
+    n_dip = sum(v["dipole_ratio"] >= a.dipole_ratio for v in res.values())
+    if n_dip >= a.min_dipole_bands:
+        return "dipole", top
     return "pass", top
 
 
@@ -146,6 +173,9 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--min-lobe-px", type=int, default=4)
     ap.add_argument("--min-lobes", type=int, default=4)
     ap.add_argument("--min-rosette-bands", type=int, default=2)
+    ap.add_argument("--dipole-arcsec", type=float, default=0.3)
+    ap.add_argument("--dipole-ratio", type=float, default=0.5)
+    ap.add_argument("--min-dipole-bands", type=int, default=2)
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args(argv)
     if a.hits:
@@ -185,6 +215,9 @@ def main(argv: list[str] | None = None) -> None:
                 "min_lobe_px",
                 "min_lobes",
                 "min_rosette_bands",
+                "dipole_arcsec",
+                "dipole_ratio",
+                "min_dipole_bands",
             )
         },
         "counts": counts,
