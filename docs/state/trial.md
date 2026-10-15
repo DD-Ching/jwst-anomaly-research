@@ -182,6 +182,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.6 (MACS0416 o211→o213 arc tiling, 23 / 28 tiles, morphology, contact sheets, persistence) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01G17H3Y, 20:08–20:50Z |
 | 2026-W42 | ≈ 0.35 (MACS0416 o211→o213 last 5 tiles, h002 persistence, h014 per-dither photometry) | — | — | 0.1 (orientation, claim, review, PR) | cloud routine 01JkQLMW, 21:08–21:40Z |
 | 2026-W42 | ≈ 0.25 (Sunrise o010/o120, o010/o052 and SMACS/VENUS grids re-run under origin recentring and mixed-sign hits; contact sheets) | — | — | 0.1 (orientation, claim, PR) | cloud routine 018nALFM, 22:08–22:35Z |
+| 2026-W42 | ≈ 0.3 (Abell 2744 UNCOVER vs ALT F356W grid, PLATE-23a check, ALT o001 control, contact sheets) | — | ≈ 0.1 (g1/g2 multi-band and centroid checks) | 0.1 (orientation, claim, PR) | cloud routine 01LF3BFs, 23:08–23:35Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

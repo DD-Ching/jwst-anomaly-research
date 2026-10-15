@@ -1591,6 +1591,22 @@ recovered; 0 candidates (CHANGELOG 2026-10-15). **Decision:** the new defaults s
 earlier Sunrise/SMACS nulls hold under both rule sets. Contact sheets across epochs with different roll must
 resample one epoch onto the other's WCS. Revisit if: a transient is found only under one rule set.
 
+**Addendum 2026-10-15j (Abell 2744, UNCOVER o001 vs ALT 3516 o002, F356W only).** Single-band grid (`--min-bands 1`),
+UNCOVER cut to the ALT footprint with `i2d_region.py`, 6,440 positions, noise scale 1.36; injections −0.75 mag 95.6 %,
+−0.44 mag 50 %. Known case: PLATE-23a (Pang et al. 2026, a SN IIP candidate) at RA 3.552756°, Dec −30.400340°;
+the paper prints degrees in sexagesimal form ("03h33m09.92s" = 3°33′09.92″), checked against its search centre and
+the images. **The catalog grid misses it:** neither pipeline catalog has an entry for it (it is blended into its
+20.95 mag host 2.2″ away), so no aperture is placed there. `arc_diff.py` on a 24″ box recovers it at +50σ, 0.06″
+from the published position, the strongest hit in the box. **Result:** 45 hit groups; 43 ordinary (spikes and star
+cores under an 18° roll, o002-only artifact blocks absent in ALT o001 a week later, UNCOVER F356W-only blocks absent
+in the same visit's F277W/F410M/F444W, UNCOVER streaks, dipoles, an edge). Two real changes, both outside the
+multiple-image region (≥ 45″ from any Bergamini+23 image), so neither is a lensing anomaly: g2 (3.613638,
+−30.416380) is a stationary transient seen in all seven UNCOVER bands (12–43 nJy) and gone in both ALT visits;
+g1 (3.562169, −30.400185) is a compact source that brightened by 0.55 mag in F356W in both ALT visits. 0 lensing
+candidates. **Decision:** a catalog-driven grid is blind to transients blended into a catalogued host; every
+field grid needs a difference-image pass (`arc_diff.py` tiles, `--min-bands 1` for single-band pairs) before it is
+quoted as a null for SNe on hosts. Revisit if: a field-wide difference-image tool replaces the grid.
+
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**
