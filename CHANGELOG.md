@@ -2,7 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-15: X4 S1b: precessing, higher-mode binaries absorb the representative negative-lens residuals (simulated)
+## 2026-10-15: X4 S1c: R1 keeps its residual against validated aligned-spin fits; undetermined with IMRPhenomXPHM (simulated)
+- **Question (owner):** does R1's large difference (30 M☉ behind a 300 M☉ negative lens, y 0.3) survive a validated
+  ordinary fit and a more complete waveform? Plan frozen first (`docs/state/units/X4.md`, S1c). 2.0 h, the cap.
+- **Tool:**
+  - One fitter serves validation and the case fit: Nelder–Mead restarted to convergence, plus a frozen 1,271-node
+    lens-grid scan.
+  - The FFT length is the next fast length (FF change ≤ 1.6e-7, 5.6× faster). A batched-FFT grid scan was measured
+    slower and not used.
+  - S1b's failed injection is now recovered (ε 3.5e-6); every aligned-spin check passes.
+  - The XPHM unlensed check fails (ε 0.026 > 0.0125). The XPHM lensed check passes from one start only.
+- **Result:**
+  - Aligned-spin, dominant-mode templates: the residual is kept, ρ_req 5.8 (observed SNR), intrinsic SNR 30. It is
+    bound-conditional (q 15, |χ| 0.99). The best mimic is a strong positive lens (2,400 M☉, y 0.1).
+  - IMRPhenomXPHM: **undetermined**. The best ordinary fit found is FF 0.945 (ρ_req 9.2), from precession with
+    near-maximal spins plus a positive lens (1,400 M☉, y 0.22). The starts disagree and the fits did not converge.
+- **Disclosed:** family-A saved starts were cut for budget, and two XPHM saved-start fits were stopped at the cap.
+- **Wording tightened:** "absorbed" means only ρ_req > 30; the difference is smaller, not gone. It says nothing
+  about the 16 untested S1 cases.
+- **Handoff:** no real-data pilot proposed; S2 not started. Next (owner's call): a validated precessing fitter for
+  R1.
+
+## 2026-10-15: X4 S1b: against precessing, higher-mode binaries the representative passing cases fall below the screening threshold (simulated)
 - **Question (owner):** after the ordinary explanations get a fuller fitting chance, is there still a representative
   case worth taking to real data? Plan and criteria frozen first (`docs/state/units/X4.md`, S1b).
 - **S1 status corrected:** "18 pass" is a preliminary result of the searches run so far, not a proven optimum.
@@ -14,7 +35,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - R1 (the large-difference case) is undetermined: the positive-lens fit fails its own injection test
     (ε 0.13).
   - The R4 control is absorbed.
-- **IMRPhenomXPHM** (target and templates; no free overall phase): R2 (ρ_req 30.8) and R3 (35.8) are absorbed.
+- **IMRPhenomXPHM** (target and templates; no free overall phase): R2 (ρ_req 30.8) and R3 (35.8) are absorbed, which here means only ρ_req > 30: the difference is smaller, not gone.
   - R2 through an edge-on inclination (higher modes); R3 through in-plane spins at inclination 49–84°. q stays
     1.2–1.7.
   - R3 was already absorbed in the frozen run (31.4).

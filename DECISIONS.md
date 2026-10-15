@@ -4683,7 +4683,7 @@ unit overruns its budget.
 - precessing, higher-mode or embedded/binary-lens fits absorb the residual;
 - real noise or the detector network changes the picture (S2a).
 
-## D-088 X4 S1b: precessing, higher-mode fits absorb the representative residuals; no real-data pilot (2026-10-15)
+## D-088 X4 S1b: with precessing, higher-mode fits the representative passing cases fall below the screening threshold; no real-data pilot (2026-10-15)
 
 **Decision.**
 - Do not propose the S2a pilot. D-087's "Revisit if" condition (precessing or higher-mode fits absorb the
@@ -4708,3 +4708,24 @@ unit overruns its budget.
 **Revisit if:**
 - a validated P optimiser plus XPHM leaves an R1-type residual at ρ_req ≤ 30;
 - priors on inclination and precession are added (a likelihood screen ignores them).
+
+## D-089 X4 S1c: R1 is kept only against aligned-spin templates; undetermined with XPHM; still no pilot (2026-10-15)
+
+**Decision.**
+- Do not propose a real-data pilot. R1 meets outcome 2 (residual kept, validated) only for aligned-spin,
+  dominant-mode templates. With IMRPhenomXPHM it is undetermined.
+- Keep the shared fitter (`scripts/x4_s1c_r1.py`) for any later X4 fit. Validation and case fits must use the
+  same code.
+
+**Alternatives rejected:**
+- treating the aligned-spin result as enough for a pilot (S1b showed precession and higher modes change verdicts);
+- treating the best XPHM search value (ρ_req 9.2) as a bound (validation failed, no convergence);
+- extending past the 2 h cap.
+
+**Evidence** (simulated only; `results/x4/s1c_*.json`):
+- Aligned-spin validation passes, including S1b's failed injection (ε 3.5e-6 ≤ 0.0145). P reaches FF 0.8545 from
+  all 8 generic starts (ρ_req 5.8), at q 15 and |χ| 0.99.
+- XPHM: unlensed validation ε 0.026 > 0.0125. The lensed fits do not agree across starts (0.9454 against 0.9441).
+
+**Revisit if:** a precessing fitter passes the unlensed and lensed injection checks with agreeing starts, and R1
+then stays at ρ_req ≤ 30.
