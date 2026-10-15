@@ -40,6 +40,23 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   vetted). Remaining o211→o212 tiles: t-2+0, t+1±, t+2± (11) plus `--maps` re-runs of the 7 map-less earlier
   tiles and the 5 with passes (≈ 70 min at this throughput: one run's worth). Suggest adding a dipole test
   (opposite-sign lobe within 2 × FWHM, about equal |S|) to `arc_diff_morph.py`; validate it on Yan+2023 first.
+- **Run 01QcfDQb (10:09–10:50Z): 23 / 28 tiles.** t+1±0/±1/+2/−2 and t+2−1 done (`--procs 1`, 4 jobs, OMP=1;
+  2–15 CPU-min per tile, so the 456 s figure was not a constant). 406 hits, 29 without the bright-core flag.
+- **`arc_diff_morph.py` dipole verdict (new):** a hit is a dipole when an opposite-sign region (|S| ≥ 3, ≥ 4 px)
+  within 0.3″ reaches ≥ 0.5 × |S_hit| in ≥ 2 bands (ASSUMPTIONs; unit tests: core dipole flagged, brightening beside
+  a weak negative lobe passes). Not yet validated on the Yan+2023 positions (the Warhol-box `--maps` re-run did
+  not finish in this run). On the six tiles: dipole 7, rosette 4, edge 6, extended 3, **pass 9**.
+- **Contact sheets of the 9 passes looked at:** h087, h098 (t+1±), h025 (t+1+2) and t+2−1 h009 change sign between
+  bands (e.g. F150W −7.1, F277W +6.6); h092 is a compact source with an F150W dipole; h100 is a weak SW-only
+  spot (+5.3) on a galaxy knot. t+1+2 h009, h014, h019 are positive SW residuals centred on compact galaxy cores:
+  **in t+1+2 the S at the 10 brightest compact peaks is > +3 for 9 / 10 in F150W and 10 / 10 in F200W (median +12,
+  +9)**, so these three are a tile-wide SW core-matching residual, not single brightenings (derived). Not
+  candidates (not formally vetted).
+- **Failed approach:** none new; the tile cost varies a lot, so queue dense tiles first.
+- **Handoff:** remaining o211→o212 tiles t−2+0, t+2±0, t+2+1, t+2+2, t+2−2 (t−2+0 alone > 15 CPU-min), then the
+  `--maps` re-runs of t+0−1, t−1−1/−2/−3, t−2−3 for their contact sheets, and the Warhol box with `--maps` to
+  validate the dipole verdict on Yan+2023. Add a **core-population test** to `arc_diff_morph.py` (a hit's S
+  against the S distribution at the tile's compact-source peaks in that band) and validate it on Yan+2023 first.
 
 ## 2026-10-15: Abell 2744 two-epoch grid (DD 2756 o003/o002): 22 hit groups, all ordinary, 0 candidates
 - **Hypothesis before computing:** a catalogued position in the Abell 2744 core changed by ≥ 0.3 mag at ≥ 5σ in two
