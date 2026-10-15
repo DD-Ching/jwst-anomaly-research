@@ -1518,6 +1518,21 @@ spatially varying PSF (box > 1′) leaves ridges.
 footprint by byte-range rows (for a later UNCOVER pair). The grid is unchanged. The 30° roll makes rotated star
 spikes the main hit class. `persistence_check.py` flagged the five epoch-1 SW-only hits as persistence. It returned on_sky / inconclusive for two epoch-2 SW-only hits, which are one NRCB3 pixel seen in two dithers (by hand). The tool tests each sky position alone, so it misses a detector-fixed feature that falls on several positions. Revisit
 if a published Abell 2744 transient with coordinates becomes available for validation.
+
+**Addendum 2026-10-15e (Abell 2744, UNCOVER o001 vs jw02756 o002).** UNCOVER 2561 o001 (2022-11-02/04, PA 40.8°) cut to
+the o002 (2022-12-06, PA 59.5°) footprint with `i2d_region.py` (SW 373 MB, LW 90 MB per band, about 40 s each; the cut
+is clipped at UNCOVER's lower-left corner, so the overlap is partial). The grid is unchanged (4,182 positions, noise
+scales 1.22–1.44). Injections: −0.75 mag 94.6 %, −0.44 mag 82.6 %. Result: 46 hit groups, all ordinary, 0 candidates
+(`results/transients/a2744_grid_uncover/hit_verdicts.ecsv`). One bright star near (3.5996, −30.4291) produces 21 of the
+24 spike groups. Lessons:
+- A saturated star's persistence can show in SW **and** LW at one sky position: both channels see the same sky, so
+  colour does not separate it from a real source. g4 is detected in all six bands, but only in dither 4, on pixels
+  where the star's core sat in dither 3. `persistence_check.py` identifies it (10 of 10 detections suspect); use it on
+  every single-epoch compact hit, not only on SW-only hits.
+- A single-band change on a star (g11: F115W −0.82 mag, the other bands within 0.02 mag) came from a suppressed core
+  in the UNCOVER F115W mosaic. Compare bands from the same visit before reading a change as physical.
+- The o002 detector-fixed artifacts (o003/o002 g16/g17) reappear here as g32/g33 against an independent first epoch,
+  so both runs classify them the same way.
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**

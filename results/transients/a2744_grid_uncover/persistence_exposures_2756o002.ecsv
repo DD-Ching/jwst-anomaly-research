@@ -1,0 +1,36 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: uid, datatype: string}
+# - {name: file, datatype: string}
+# - {name: detector, datatype: string}
+# - {name: filter, datatype: string}
+# - {name: mjd, datatype: float64}
+# - {name: x, datatype: float64}
+# - {name: y, datatype: float64}
+# - {name: flux, datatype: float64}
+# - {name: snr, datatype: float64}
+# - {name: n_prior, datatype: int64}
+# - {name: n_prior_failed, datatype: int64}
+# - {name: prior_file, datatype: string}
+# - {name: prior_flux, datatype: float64}
+# - {name: prior_sat, datatype: int64}
+# - {name: suspect, datatype: bool}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: 'level-2 _cal exposures: s3://stpubdata/jwst/public/jw02756/jw02756002001'}
+# - {ratio: 20.0}
+# - {min_snr: 5.0}
+# - {lookback_hours: 3.0}
+# - failed: []
+# schema: astropy-2.0
+uid file detector filter mjd x y flux snr n_prior n_prior_failed prior_file prior_flux prior_sat suspect
+g39 jw02756002001_02101_00002_nrcb4_cal.fits NRCB4 F115W 59919.38865987268 33.119152495389656 144.49505494637822 -0.28554682433605194 -1.8174302945535012 0 0 "" nan 0 False
+g39 jw02756002001_02101_00003_nrcb4_cal.fits NRCB4 F115W 59919.39574356481 223.05216741088557 151.05115354007162 -0.13743017613887787 -0.7997688792775506 0 0 "" nan 0 False
+g39 jw02756002001_02101_00003_nrcblong_cal.fits NRCBLONG F444W 59919.39574356481 76.56275060276423 55.58023634549951 nan nan 0 0 "" nan 0 False
+g39 jw02756002001_02103_00002_nrcb4_cal.fits NRCB4 F150W 59919.41910576389 33.138813214197114 144.45920944733354 1.3404020965099335 8.998472997168026 4 0 jw02756002001_02101_00003_nrcb4_cal.fits 488.2543978691101 0 True
+g39 jw02756002001_02103_00003_nrcb4_cal.fits NRCB4 F150W 59919.42618872685 223.05923628486718 151.02367431215626 -0.2217533439397812 -1.677623350808397 0 0 "" nan 0 False
+g39 jw02756002001_02103_00003_nrcblong_cal.fits NRCBLONG F356W 59919.426189467595 76.53349174472476 55.18520166237012 nan nan 0 0 "" nan 0 False
+g39 jw02756002001_02105_00002_nrcb4_cal.fits NRCB4 F200W 59919.449551666665 32.00874496078207 142.80323131728048 2.286257825791836 16.689292904911888 9 0 jw02756002001_02103_00003_nrcb4_cal.fits 914.0251208543777 0 True
+g39 jw02756002001_02105_00003_nrcb4_cal.fits NRCB4 F200W 59919.45663461806 221.93285795299516 149.35853618661474 0.11897509545087814 1.075418196422445 0 0 "" nan 0 False
+g39 jw02756002001_02105_00003_nrcblong_cal.fits NRCBLONG F277W 59919.45663461806 76.47487256410666 55.189537038458354 nan nan 0 0 "" nan 0 False
