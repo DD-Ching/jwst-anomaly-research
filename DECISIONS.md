@@ -4858,7 +4858,7 @@ CMA-ES once before any further tool work).
 - Treating the grid as exact: its floor is ε 9e-4 – 1.3e-3.
 
 **Evidence** (simulated only; `results/x4/s1e_validate.json`):
-- U: ε ≤ 2.2e-6 on all four runs.
+- U: ε ≤ 2.1e-6 on all four runs.
 - P: three runs at ε 2.4e-5 – 1.5e-4; V9 seed 11 at 1.5e-3, with its DE and its refinement both still improving
   at their caps.
 
