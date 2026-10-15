@@ -157,6 +157,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | 3.3 (X4 S1: IMR fitting tool, 36 cases, frozen refinement, wide-q and waveform cross-checks) | — | 0.3 (review fixes, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.2 (MACS0416 o211/o212 grid; contact sheets) | — | ≈ 0.2 (validation on Yan+2023 transients, grid fixes, persistence test) | 0.1 (orientation, claim, PR) | cloud routine 01AGqJkf, 03:08–03:45Z |
 | 2026-W42 | ≈ 0.1 (MACS0416 o211/o213 grid; contact sheets, persistence test) | — | — | 0.05 (PR) | cloud routine 01AGqJkf, 03:30–03:45Z |
+| 2026-W42 | ≈ 0.35 (`arc_diff.py`: MACS0416 o211/o212 arc differencing, validation on Yan+2023, three fix iterations; contact sheets) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01JZas31, 04:08–04:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
