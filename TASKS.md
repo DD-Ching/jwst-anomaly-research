@@ -283,7 +283,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      hits pass with the strong-lobe rosette rule. Ring and sign_flip verdicts (addendum 2026-10-15h): t−1−4
      46 → 20 passes; all 28 tiles now have morph records. The 9 open passes (6 SW-dominant + t−1−4 h124/h159/h246)
      are vetted: all not candidates (h044 last, by per-dither `_cal` photometry, `cal_dither_phot.py`; CHANGELOG
-     2026-10-15). Next: o211→o213 tiles;
+     2026-10-15). o211→o213 tiles: 23 / 28 done, 23 passes all ordinary or SW-core class, h014 open (CHANGELOG
+     2026-10-15); next: the remaining tiles and h014's per-dither photometry;
      re-run Sunrise/SMACS under the new defaults;
    - ~~Abell 2744 grid~~ — done for DD 2756 o003/o002 (D-027 addendum 2026-10-15d): 22 groups, all ordinary (spikes
      under a 30° roll, persistence, a detector-fixed pixel, edges), 0 candidates. UNCOVER o001 vs 2756 o002 (D-027 addendum

@@ -175,6 +175,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | ≈ 0.4 (MACS0416 h044/h030 knot test, o211→o212 west box) | 0.1 (orientation, claim, PR) | cloud routine 01CGPk1D, 17:08–17:45Z |
 | 2026-W42 | — | — | ≈ 0.45 (MACS0416 h044/h030 knot test on o211→c004, o211→o213 and the o212→o213 control; `arc_diff_knots.py`) | 0.1 (orientation, claim, PR) | cloud routine 018oYfhm, 18:08–18:50Z |
 | 2026-W42 | — | — | ≈ 0.4 (MACS0416 h044/h030 per-dither `_cal` photometry and centroids, o211/o212/o213/c004; `cal_dither_phot.py`) | 0.15 (orientation, claim, review, PR) | cloud routine 01GzDwPS, 19:08–19:50Z |
+| 2026-W42 | ≈ 0.6 (MACS0416 o211→o213 arc tiling, 23 / 28 tiles, morphology, contact sheets, persistence) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01G17H3Y, 20:08–20:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
