@@ -4752,15 +4752,16 @@ then stays at ρ_req ≤ 30.
 **Alternatives rejected:**
 - Bilby + dynesty: Bayesian inference, not max-match; about 10⁶ likelihood calls; phase marginalisation assumes a
   dominant (2,2) mode. Kept for a later real-data stage.
-- PyCBC match and inference: its statistics maximise over phase, which changes the problem; GPLv3. Only the
-  polarisation-maximisation idea is reused, in closed form.
+- PyCBC: no max-match optimiser for this objective (its complex overlap would give the real part, but the search
+  would still be ours); GPLv3. Only the polarisation-maximisation idea is reused, in closed form.
 - GLoW: it computes lens factors, which are already exact here.
 - CMA-ES (`cma`): fallback if the joint DE fails.
 - Treating S1c's best XPHM value (ρ_req 9.2) as a bound.
 
 **Evidence** (simulated only; `results/x4/s1d_*.json`):
 - Unlensed ε 5e-6 – 1.5e-3, against 0.026 in S1c; every run stopped at the 200-generation cap.
-- Lensed ε 0.045–0.091 in 3 of 4 runs, from a weak-lens stall after the node-repeat stop.
+- Lensed ε 0.045–0.091 in 3 of 4 runs, from a weak-lens stall after the node-repeat stop; the polish also hit its
+  round cap while still improving.
 - The objective at the truth is ≤ 3.3e-16.
 
 **Revisit if:** the joint DE passes all four injections on both seeds (then fit R1), or fails them (then try
