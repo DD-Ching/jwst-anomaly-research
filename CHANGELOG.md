@@ -96,7 +96,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     injection-calibrated (D-027 addendum 2026-10-15f).
   - **Failed approach:** the extent test uses only the top band, so a trail that is clean in F150W but broken up in
     F200W passes. Next, take the extent over every band with |S_hit| ≥ 3, re-validated on Yan+2023.
-- **Handoff:** o211→o213 over the 28 tiles (`--maps`, OMP=1, 4 jobs `--procs 1`), with `persistence_check.py` on
+- **Handoff:** first fix the open code-review findings listed in #245's body (multi-band extent, the |S_hit| guard for
+  lobes and edge, the border case, per-band caching, `Params`), re-run t−2−3 morphology and re-validate on Yan+2023; then
+  o211→o213 over the 28 tiles (`--maps`, OMP=1, 4 jobs `--procs 1`), with `persistence_check.py` on
   every single-epoch compact pass. Calibrate `arc_diff_morph.py` with injections through the whole chain. Add the core-population test.
 
 ## 2026-10-15: Abell 2744 two-epoch grid, UNCOVER o001 vs DD 2756 o002: 46 hit groups, all ordinary, 0 candidates
