@@ -1,18 +1,20 @@
-"""X4 S1b step D: precessing, higher-mode ordinary templates (IMRPhenomXPHM) on the representative cases.
+"""X4 S1b step D: precessing, higher-mode ordinary templates (IMRPhenomXPHM), representative cases.
 
-Unit file: docs/state/units/X4.md (S1b; frozen before computing). `simulated` / `derived`; no data. Needs lalsuite.
+Unit file: docs/state/units/X4.md (S1b; frozen before computing). `simulated` / `derived`; no data.
+Needs lalsuite.
 
-Target: IMRPhenomXPHM (q 1.5, aligned spins 0.2, inclination 60 deg, reference phase 0), detector response
-h_plus (polarisation angle 0), multiplied by the negative-lens factor F_neg.
+Target: IMRPhenomXPHM (q 1.5, aligned spins 0.2, inclination 60 deg, reference phase 0), detector
+response h_plus (polarisation angle 0), multiplied by the negative-lens factor F_neg.
 
-Ordinary templates: IMRPhenomXPHM with chirp mass, q <= 15, both spin vectors (Cartesian, |chi| <= 0.99),
-inclination, reference phase and polarisation angle psi (h = cos 2psi h_plus + sin 2psi h_cross); arrival time
-and amplitude maximised; NO free overall phase (the real part of the correlation is maximised, because with
-higher modes a constant phase rotation is not a physical change).
+Ordinary templates: IMRPhenomXPHM with chirp mass, q <= 15, both spin vectors (Cartesian,
+|chi| <= 0.99), inclination, reference phase and polarisation angle psi
+(h = cos 2psi h_plus + sin 2psi h_cross); arrival time and amplitude maximised; NO free overall
+phase (the real part of the correlation is maximised, because with higher modes a constant phase
+rotation is not a physical change).
   UA  aligned spins only (higher modes, no precession);
   UP  full precessing spins;
-  PP  UP x positive point lens: waveform fitted with the lens fixed at step B's best lens, then the lens polished
-      with the waveform fixed; two alternations.
+  PP  UP x positive point lens: waveform fitted with the lens fixed at step B's best lens, then the
+      lens polished with the waveform fixed; two alternations.
 
   python scripts/x4_s1b_xphm.py            # -> results/x4/s1b_xphm.json
 """

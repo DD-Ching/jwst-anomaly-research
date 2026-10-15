@@ -1,12 +1,12 @@
 """X4 S1b: optimisation and waveform-model checks on four representative S1 cases.
 
-Unit file: docs/state/units/X4.md (S1b; cases, steps and verdict rules frozen there before computing).
-Everything here is `simulated` or `derived`; no strain data is used. Needs lalsuite.
+Unit file: docs/state/units/X4.md (S1b; cases, steps and verdict rules frozen there before
+computing). Everything here is `simulated` or `derived`; no strain data is used. Needs lalsuite.
 
   python scripts/x4_s1b_checks.py rescore    # step A: re-score every saved S1 best fit at pad 64
-  python scripts/x4_s1b_checks.py fit        # step B: multi-start fits with restart-based convergence
+  python scripts/x4_s1b_checks.py fit        # step B: multi-start fits, restart convergence
   python scripts/x4_s1b_checks.py validate   # step C: fit-error check on injected ordinary signals
-  python scripts/x4_s1b_checks.py xphm       # step D: precessing higher-mode templates (IMRPhenomXPHM)
+  python scripts/x4_s1b_checks.py xphm       # step D: IMRPhenomXPHM templates
 """
 
 from __future__ import annotations
@@ -119,9 +119,9 @@ def _rescore_job(args):
     }
 
 
-# ----------------------------------------------------------------------------- optimiser with restarts
+# ------------------------------------------------------------------- optimiser with restarts
 def nm_restart(fun, x0, steps, maxfev=400, max_restarts=4, restart_fev=150):
-    """Nelder-Mead, then restarts from the end point with a fresh simplex until a restart improves < TOL."""
+    """Nelder-Mead, then restarts from the end point (fresh simplex) until one improves < TOL."""
     x0 = np.asarray(x0, float)
     history, nfev, messages = [], 0, []
 
@@ -294,7 +294,7 @@ def u_starts(case, rng):
 
 def p_starts(case, rng):
     saved = [s for s in saved_solutions(case) if s[0] == "P"]
-    # best three saved (by S1 FF are not comparable across pads: rescore later); keep distinct lenses
+    # saved P solutions with distinct lenses (S1 FFs are not comparable across pads)
     seen, starts = set(), []
     for s in saved:
         key = (round(s[3][0], 1), round(s[3][1], 2))
