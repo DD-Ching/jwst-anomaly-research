@@ -1,0 +1,61 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: group, datatype: int64}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: verdict, datatype: string}
+# - {name: evidence, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: 'contact sheets (e2 resampled onto e1), persistence_check.py on UNCOVER 2561 o001 visits 1-4 and 2756 o002, 0.5 arcsec aperture
+#     checks on dipoles'}
+# - {by: cloud routine 2026-10-15}
+# schema: astropy-2.0
+group ra dec verdict evidence
+0 3.597724 -30.431602 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+1 3.600886 -30.432121 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+2 3.599081 -30.428881 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+3 3.602775 -30.429989 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+4 3.602557 -30.429343 persistence "persistence_check.py on jw02561001003: detected only in dither 4 of each F115W/F150W/F200W (NRCA1) and F277W/F356W/F410M/F444W (NRCALONG) sequence, 10 of 10 detections on pixels where the bright star's saturated core sat in dither 3 (13-56 saturated pixels); absent in dither 6; none clean; absent in 2756 o002"
+5 3.599712 -30.427183 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg); a faint galaxy under the epoch-2 spike"
+6 3.583994 -30.414396 edge "epoch-2 mosaic edge crosses the aperture"
+7 3.608084 -30.384673 persistence "persistence_check.py on jw02561001004: 15 of 15 detections suspect, none clean; SW only in UNCOVER; absent in 2756 o002"
+8 3.598673 -30.430671 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+9 3.599319 -30.429388 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+10 3.610297 -30.395512 registration_dipole "compact star or galaxy core: +/- dipole in the difference only (registration/PSF); 0.5 arcsec aperture at the peak changes by <= 0.06 mag in every band (by hand)"
+11 3.580496 -30.385904 processing_artifact "star; UNCOVER F115W core suppressed (peak 47 vs 291 MJy/sr in UNCOVER F150W, 270 in 2756 F115W): F115W -0.82 mag only, F150W-F444W within 0.02 mag, not physical for a star (by hand)"
+12 3.602191 -30.373349 registration_dipole "compact star or galaxy core: +/- dipole in the difference only (registration/PSF); 0.5 arcsec aperture at the peak changes by <= 0.06 mag in every band (by hand)"
+13 3.599383 -30.428168 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+14 3.598681 -30.428558 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+15 3.598165 -30.42919 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+16 3.599322 -30.430042 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+17 3.600592 -30.428798 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+18 3.58628 -30.400567 background "wing of a bright cluster galaxy; no compact residual in the difference"
+19 3.585194 -30.394884 registration_dipole "compact star or galaxy core: +/- dipole in the difference only (registration/PSF); 0.5 arcsec aperture at the peak changes by <= 0.06 mag in every band (by hand)"
+20 3.591685 -30.407916 registration_dipole "compact star or galaxy core: +/- dipole in the difference only (registration/PSF); 0.5 arcsec aperture at the peak changes by <= 0.06 mag in every band (by hand)"
+21 3.591003 -30.402438 registration_dipole "compact star or galaxy core: +/- dipole in the difference only (registration/PSF); 0.5 arcsec aperture at the peak changes by <= 0.06 mag in every band (by hand)"
+22 3.588872 -30.395987 registration_dipole "compact star or galaxy core: +/- dipole in the difference only (registration/PSF); 0.5 arcsec aperture at the peak changes by <= 0.06 mag in every band (by hand)"
+23 3.598861 -30.42691 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg); epoch-2 LW mosaic edge"
+24 3.600153 -30.430136 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+25 3.584985 -30.403516 registration_dipole "compact star or galaxy core: +/- dipole in the difference only (registration/PSF); 0.5 arcsec aperture at the peak changes by <= 0.06 mag in every band (by hand)"
+26 3.599868 -30.431499 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+27 3.573562 -30.386052 registration_dipole "compact star or galaxy core: +/- dipole in the difference only (registration/PSF); 0.5 arcsec aperture at the peak changes by <= 0.06 mag in every band (by hand)"
+28 3.602013 -30.428427 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+29 3.590396 -30.40288 star_spike_or_wing "diffraction spike of a bright star; spikes rotate with the PA change (UNCOVER 40.8 vs 2756 o002 59.5 deg)"
+30 3.590261 -30.402398 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+31 3.610172 -30.39489 star_spike_or_wing "diffraction spike of a bright star; spikes rotate with the PA change (UNCOVER 40.8 vs 2756 o002 59.5 deg) (LW spike of the star 3 arcsec away)"
+32 3.613825 -30.387192 detector_fixed_artifact "same positions as groups 16/17 of the 2756 o003/o002 run (one NRCB3 pixel in o002 seen in two dithers); SW only in 2756 o002, absent in UNCOVER"
+33 3.615534 -30.386404 detector_fixed_artifact "same positions as groups 16/17 of the 2756 o003/o002 run (one NRCB3 pixel in o002 seen in two dithers); SW only in 2756 o002, absent in UNCOVER"
+34 3.597494 -30.43068 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+35 3.597114 -30.428098 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg); epoch-2 LW mosaic edge"
+36 3.574412 -30.383069 edge "epoch-2 mosaic edge crosses the aperture"
+37 3.589632 -30.39986 star_spike_or_wing "star wing and low-level LW background banding; no compact residual"
+38 3.604683 -30.40036 background "wing of a bright galaxy; no compact residual in the difference"
+39 3.58819 -30.418289 persistence "persistence_check.py on jw02756002001: 2 of 2 detections suspect, none clean; F150W/F200W only in 2756 o002; absent in UNCOVER"
+40 3.605269 -30.384832 registration_dipole "compact star or galaxy core: +/- dipole in the difference only (registration/PSF); 0.5 arcsec aperture at the peak changes by <= 0.06 mag in every band (by hand)"
+41 3.588872 -30.419375 edge "epoch-2 mosaic edge crosses the aperture"
+42 3.608116 -30.409684 edge "epoch-2 LW mosaic edge crosses the position; SW dipole of a compact source (same as group 21 of the 2756 o003/o002 run)"
+43 3.593069 -30.384601 background "edge of a bright galaxy, different sky subtraction (same position as group 14 of the 2756 o003/o002 run)"
+44 3.598788 -30.430037 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"
+45 3.601587 -30.428657 star_spike_or_wing "diffraction spike of the bright star at (3.5996, -30.4291) crosses the aperture in one epoch; spikes rotate with the PA change (40.8 vs 59.5 deg)"

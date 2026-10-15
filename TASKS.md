@@ -281,7 +281,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      MACS0416 arcs with CANUCS o004 as a fourth epoch, `arc_diff_vet.py` on every unflagged hit;
      re-run Sunrise/SMACS under the new defaults;
    - ~~Abell 2744 grid~~ — done for DD 2756 o003/o002 (D-027 addendum 2026-10-15d): 22 groups, all ordinary (spikes
-     under a 30° roll, persistence, a detector-fixed pixel, edges), 0 candidates. Next: UNCOVER o001 vs 2756 o002 (`i2d_region.py` cut);
+     under a 30° roll, persistence, a detector-fixed pixel, edges), 0 candidates. UNCOVER o001 vs 2756 o002 (D-027 addendum
+     2026-10-15e): 46 groups, all ordinary (24 spikes, 9 registration dipoles, 3 persistence incl. one in all six bands),
+     0 candidates. Next:
      UNCOVER vs ALT F356W single-band with PLATE-23a (arXiv:2608.20781) as the known case once its position is checked;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
