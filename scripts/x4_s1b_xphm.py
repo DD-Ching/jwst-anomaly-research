@@ -47,6 +47,7 @@ def _load(name: str):
 c = _load("x4_s1b_checks")
 b = c.b
 INC_TARGET = np.pi / 3
+D_CASES = ("R2", "R3", "R4")  # R1 is undetermined after step C (P fit-error check failed)
 PAD = 32
 CHI_MAX, Q_MAX, MC_FRAC = 0.99, 15.0, 0.60
 
@@ -259,7 +260,8 @@ def main(argv=None) -> int:
     rng = np.random.default_rng(31)
     fits = json.loads((b.OUT / "s1b_fits.json").read_text())
     jobs = []
-    for case in c.CASES:
+    # only the cases that passed the numerical stage, plus the absorbed control (X4.md S1b, frozen order)
+    for case in D_CASES:
         for s in starts(case, True, rng):
             jobs.append((case, "UA", s, None))
         for s in starts(case, False, rng):
@@ -268,7 +270,7 @@ def main(argv=None) -> int:
         for s in starts(case, False, rng)[:2]:
             jobs.append((case, "PP", s, (pb["M_Lz"], pb["y"])))
     # tool sanity: an unlensed XPHM target must be recovered (FF ~ 1) from a perturbed start
-    for case in ("R1", "R3"):
+    for case in ("R2", "R3"):
         mc0 = b.chirp(c.CASES[case][0], b.Q_INJ)
         jobs.append(
             (
