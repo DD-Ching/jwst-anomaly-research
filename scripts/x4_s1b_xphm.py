@@ -17,6 +17,19 @@ rotation is not a physical change).
       lens polished with the waveform fixed; two alternations.
 
   python scripts/x4_s1b_xphm.py            # -> results/x4/s1b_xphm.json
+  python scripts/x4_s1b_xphm.py continue   # -> results/x4/s1b_xphm_continue.json
+  python scripts/x4_s1b_xphm.py r2more     # -> results/x4/s1b_xphm_r2more.json
+
+`continue` (POST-HOC, added after seeing step D: every UP/PP run stopped at its evaluation cap,
+so the frozen convergence condition was not met): restart Nelder-Mead from the best UP and PP
+solutions of each case (spins projected inside |chi| <= 0.98, q <= 14.9) until a restart improves
+1 - FF by < 1e-5, at most MAX_CONT restarts; PP alternates this with a lens polish. Thresholds are
+unchanged.
+
+`r2more` (POST-HOC, after `continue`: R2's best solutions did not agree across starts, the frozen
+multi-start condition): 8 new random precessing starts for R2 (in-plane spins up to 0.6, any
+inclination), each continued as above; then PP continuations from the two best of them with the best
+step-D lens.
 """
 
 from __future__ import annotations
@@ -256,7 +269,174 @@ def job(args):
     }
 
 
+MAX_CONT = 8
+
+
+def project(x):
+    """Move a start inside the template domain (step D's R3 U-best start had |chi| > 0.99)."""
+    x = np.array(x, float)
+    x[1] = min(max(x[1], 1.0), 14.9)
+    for sl in (slice(2, 5), slice(5, 8)):
+        n = np.linalg.norm(x[sl])
+        if n > 0.98:
+            x[sl] *= 0.98 / n
+    x[8] = min(max(x[8], 0.0), np.pi)
+    return x
+
+
+def cont_job(args):
+    case, model, x0, lensp = args
+    t1 = time.time()
+    mc0, _, tgt = target(case)
+    x, hist, nfev, conv = project(x0), [], 0, False
+    lf = b.lens_exact(*lensp, +1) if model == "PP" else None
+    f = obj(x, tgt, mc0, False, lf)
+    hist.append(f)
+    for _ in range(MAX_CONT):
+        f1, x1, _, n1, _ = nm(
+            lambda z, lf=lf: obj(z, tgt, mc0, False, lf), x, P_STEPS, maxfev=400, restarts=0
+        )
+        nfev += n1
+        improve = f - f1
+        if f1 < f:
+            f, x = f1, np.asarray(x1)
+        if model == "PP":
+            lml, y = np.log(lensp[0]), lensp[1]
+
+            def lobj(v, x=x):
+                if not (0.0 <= v[0] <= np.log(1e4) and 0.01 <= v[1] <= 5.0):
+                    return 1.0
+                return obj(x, tgt, mc0, False, b.lens_exact(np.exp(v[0]), v[1], +1))
+
+            r = minimize(
+                lobj,
+                [lml, y],
+                method="Nelder-Mead",
+                options={
+                    "maxfev": 40,
+                    "xatol": 1e-4,
+                    "fatol": 1e-7,
+                    "initial_simplex": [[lml, y], [lml + 0.05, y], [lml, y + 0.03]],
+                },
+            )
+            nfev += r.nfev
+            if r.fun < f:
+                improve += f - float(r.fun)
+                f, lensp = float(r.fun), (float(np.exp(r.x[0])), float(r.x[1]))
+                lf = b.lens_exact(*lensp, +1)
+        hist.append(f)
+        if improve < c.TOL:
+            conv = True
+            break
+    mc, q, s1, s2, inc, phi, psi = unpack(x, False)
+    return {
+        "case": case,
+        "model": model,
+        "FF": 1.0 - f,
+        "rho_req": b.rho_req(f),
+        "x": [float(v) for v in x],
+        "lens": lensp,
+        "q": float(q),
+        "chi1": [float(v) for v in s1],
+        "chi2": [float(v) for v in s2],
+        "inclination": float(inc),
+        "nfev": int(nfev),
+        "history": hist,
+        "converged_restart": bool(conv),
+        "seconds": round(time.time() - t1, 1),
+    }
+
+
+def main_continue() -> int:
+    prev = json.loads((b.OUT / "s1b_xphm.json").read_text())["rows"]
+    jobs = []
+    for case in D_CASES:
+        for model in ("UP", "PP"):
+            rows = sorted(
+                (r for r in prev if r["case"] == case and r["model"] == model),
+                key=lambda r: -r["FF"],
+            )
+            for r in rows[:2]:  # the two best solutions per model, as independent continuations
+                jobs.append((case, model, r["x"], tuple(r["lens"]) if model == "PP" else None))
+    t0 = time.time()
+    with Pool(4) as pool:
+        rows = []
+        for r in pool.imap_unordered(cont_job, jobs):
+            rows.append(r)
+            print(
+                r["case"],
+                r["model"],
+                round(r["FF"], 5),
+                "rho",
+                round(r["rho_req"], 1),
+                "conv",
+                r["converged_restart"],
+                f"({r['seconds']} s)",
+                flush=True,
+            )
+    rec = {
+        "label": "simulated; POST-HOC convergence continuation of S1b step D (module docstring)",
+        "wall_s": round(time.time() - t0, 1),
+        "rows": rows,
+    }
+    (b.OUT / "s1b_xphm_continue.json").write_text(json.dumps(rec, indent=1, default=float) + "\n")
+    return 0
+
+
+def main_r2more() -> int:
+    rng = np.random.default_rng(97)
+    mc0 = b.chirp(c.CASES["R2"][0], b.Q_INJ)
+    ups = []
+    for _ in range(8):
+        ups.append(
+            [
+                np.log(mc0 * rng.uniform(0.8, 1.2)),
+                rng.uniform(1, 6),
+                *rng.uniform(-0.6, 0.6, 2),
+                rng.uniform(-0.5, 0.5),
+                *rng.uniform(-0.6, 0.6, 2),
+                rng.uniform(-0.5, 0.5),
+                rng.uniform(0.1, 3.0),
+                rng.uniform(0, 2 * np.pi),
+                rng.uniform(0, np.pi),
+            ]
+        )
+    prev = json.loads((b.OUT / "s1b_xphm_continue.json").read_text())["rows"]
+    lensp = tuple(
+        max((r for r in prev if r["case"] == "R2" and r["model"] == "PP"), key=lambda r: r["FF"])[
+            "lens"
+        ]
+    )
+    t0 = time.time()
+    with Pool(4) as pool:
+        rows = list(pool.map(cont_job, [("R2", "UP", x, None) for x in ups]))
+        top = sorted(rows, key=lambda r: -r["FF"])[:2]
+        rows += list(pool.map(cont_job, [("R2", "PP", r["x"], lensp) for r in top]))
+    for r in rows:
+        print(
+            r["model"],
+            round(r["FF"], 5),
+            "rho",
+            round(r["rho_req"], 1),
+            "conv",
+            r["converged_restart"],
+            flush=True,
+        )
+    rec = {
+        "label": "simulated; POST-HOC extra starts for R2 (module docstring)",
+        "wall_s": round(time.time() - t0, 1),
+        "rows": rows,
+    }
+    (b.OUT / "s1b_xphm_r2more.json").write_text(json.dumps(rec, indent=1, default=float) + "\n")
+    return 0
+
+
 def main(argv=None) -> int:
+    argv = sys.argv[1:] if argv is None else argv
+    if argv and argv[0] == "continue":
+        return main_continue()
+    if argv and argv[0] == "r2more":
+        return main_r2more()
     rng = np.random.default_rng(31)
     fits = json.loads((b.OUT / "s1b_fits.json").read_text())
     jobs = []

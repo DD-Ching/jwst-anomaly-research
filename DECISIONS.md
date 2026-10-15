@@ -4645,3 +4645,27 @@ unit overruns its budget.
 **Revisit if:**
 - precessing, higher-mode or embedded/binary-lens fits absorb the residual;
 - real noise or the detector network changes the picture (S2a).
+
+## D-088 X4 S1b: precessing, higher-mode fits absorb the representative residuals; no real-data pilot (2026-10-15)
+
+**Decision.**
+- Do not propose the S2a pilot. D-087's "Revisit if" condition (precessing or higher-mode fits absorb the
+  residual) is met for the two passing representative cases that could be checked.
+- Keep X4 open only for R1-type (strongly demagnified, low-mass) cases. They first need a positive-lens optimiser
+  that passes its own injection test, then XPHM. That step needs the owner's go-ahead.
+
+**Alternatives rejected:**
+- proposing S2a on GW231123 anyway (no simulated case survives the fuller ordinary fit);
+- declaring the GW route degenerate (R1-type cases are undetermined, not absorbed);
+- lowering the screening threshold after seeing R2's ρ_req 30.8 against 30 (not allowed).
+
+**Evidence** (simulated only; `results/x4/s1b_*.json`):
+- Numerical stage: R2 and R3 persist against aligned-spin models (fit errors ≤ 0.1 × mismatch); R1's P fit error is
+  0.13.
+- IMRPhenomXPHM: best ordinary FF 0.99523 (R2) and 0.99647 (R3), so ρ_req 30.8 and 35.8, above 30. The fits use
+  an edge-on inclination and in-plane spins at q 1.2–1.7. The convergence continuations and extra R2 starts were
+  added post hoc and are labelled as such.
+
+**Revisit if:**
+- a validated P optimiser plus XPHM leaves an R1-type residual at ρ_req ≤ 30;
+- priors on inclination and precession are added (a likelihood screen ignores them).

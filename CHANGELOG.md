@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: X4 S1b: precessing, higher-mode binaries absorb the representative negative-lens residuals (simulated)
+- **Question (owner):** after the ordinary explanations get a fuller fitting chance, is there still a representative
+  case worth taking to real data? Plan and criteria frozen first (`docs/state/units/X4.md`, S1b).
+- **S1 status corrected:** "18 pass" is a preliminary result of the searches run so far, not a proven optimum.
+- **Numerical stage** (4 exploratory cases chosen from S1; multi-start Nelder–Mead with restart convergence;
+  fit-error injections):
+  - R2 and R3 keep their residual against aligned-spin dominant-mode models (bound-conditional).
+  - R1 (the large-difference case) is undetermined: the positive-lens fit fails its own injection test
+    (ε 0.13).
+  - The R4 control is absorbed.
+- **IMRPhenomXPHM** (target and templates; no free overall phase): R2 (ρ_req 30.8) and R3 (35.8) are absorbed,
+  mainly by an edge-on inclination (higher modes) and in-plane spins. q stays 1.2–1.7. The margins are small, but
+  further search can only absorb more.
+- **Post-hoc, labelled:** convergence continuations and 8 extra R2 starts, after the frozen runs hit their
+  evaluation caps.
+- **Handoff:** no real-data pilot proposed; S2 not started. Open: R1-type cases need a P optimiser that passes its
+  injection test, then XPHM (owner's call). Not covered: one target orientation, real noise, priors, other lenses.
+
 ## 2026-10-15: X4 S1: free aligned-spin binaries mostly do not absorb a negative-mass lens's GW signature (simulated)
 - **Question:** with masses, spins, amplitude, time and phase free (IMRPhenomXAS, aLIGO design curve LIGO-P1200087),
   can an unlensed binary or a positive point lens fit a binary lensed by a negative point mass? Configuration
