@@ -2,6 +2,32 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: X4 S1: free aligned-spin binaries mostly do not absorb a negative-mass lens's GW signature (simulated)
+- **Question:** with masses, spins, amplitude, time and phase free (IMRPhenomXAS, aLIGO design curve LIGO-P1200087),
+  can an unlensed binary or a positive point lens fit a binary lensed by a negative point mass? Configuration
+  and screening threshold were frozen first (`docs/state/units/X4.md`, S1).
+- **Tool:** validated (FF 0.9998–0.99995 for matching models; positive-lens optimiser floor 0.9963). Exact lens
+  factors with a tested geometric-optics fallback at very large w, cached on disk.
+- **Result (36 cases, all converged):**
+  - Main run: 19 pass the screen. 17 fail: 13 are too demagnified to be seen (intrinsic SNR ≥ 124), and 4 are
+    absorbed by a positive lens (200 M☉ binary behind 100 M☉, or behind 300 M☉ at y = 1.5).
+  - The frozen 6-parameter positive-lens refinement keeps all 19.
+  - With mass ratio up to 15, 18 of 19 pass, for 30–60 M☉ binaries behind 100–1,000 M☉ lenses and 200 M☉ behind
+    300–1,000 M☉, using the best fit over all stages. Best ordinary FF 0.63–0.98 (unlensed) and 0.75–0.99
+    (positive lens); observed SNR needed 4.5–20, intrinsic 20–95. The result is bound-conditional: fits run to
+    q = 15.
+  - Extreme mass ratios absorb part of the signature (fits run to q = 15), so higher modes and precession are
+    needed next.
+  - IMRPhenomD fits agree within 0.0065.
+- **Review fixes:**
+  - The first IMRPhenomD cross-check had silently used IMRPhenomXAS; it was rerun.
+  - The frozen refinement was run.
+  - Bounds and time-resolution effects are disclosed.
+- **Not covered:** precession, higher modes, eccentricity, other lens models (SIS, embedded, binary), a detector
+  network, real noise, priors and selection. Screening threshold only, not a detection threshold.
+- **Handoff:** S1 gate met, conditionally (aligned spins, dominant mode). The S2a pilot on GW231123 (≤ 3 h, after a
+  higher-mode and precessing check) is proposed; it waits for the owner.
+
 ## 2026-10-15: Sunrise two-epoch grid on every catalogued position: no transient (D-027 addendum)
 - **Hypothesis before computing:** a source in the o010/o120 overlap changed by ≥ 0.3 mag at ≥ 5σ in two bands, but
   the catalog stage and its two-band rule missed it (e.g. a blue transient seen only in F090W and F115W).

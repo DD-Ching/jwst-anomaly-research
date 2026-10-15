@@ -1272,6 +1272,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   `scripts/x3_bulk.py` `FILES`. No `rejected_by_photometry` column (rebuilt from `g_transit_n_obs`).
 - Reference variables: `gaiadr3.vari_classifier_result` (ECL, YSO, LPV; score > 0.5) in the M31 and Orion fields;
   SIMBAD and Gaia DR3 (VizieR I/355/gaiadr3) via CDS XMatch for vetting.
+- X4 S1 tools (2026-10-15): lalsuite 7.7.1 / lalsimulation 6.2.1 from PyPI (GPL-2.0-or-later; used in a separate
+  environment, not a project dependency); IMRPhenomXAS and IMRPhenomD; aLIGO design PSD
+  `SimNoisePSDaLIGODesignSensitivityP1200087` (LIGO-P1200087).
 - S0-2026-10-15 / X4 (accessed 2026-10-15):
   - LVK lensing searches: O3 arXiv:2304.08393; GWTC-4.0 arXiv:2512.16347 (isolated point mass; outlier
     GW231123_135430).
