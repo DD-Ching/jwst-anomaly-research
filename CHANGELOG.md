@@ -334,6 +334,30 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `persistence_check.py`), validated on PLATE-23a once its position is checked. Or move the grid to another cluster
   with two NIRCam epochs.
 
+## 2026-10-15: S0-2026-10-15b Kapitza screen: an ordinary high-frequency drive can act on a wormhole throat only through its averaged stress, at about 10⁵² W or under an unproven confinement (derived, toy)
+- **Question (owner):** can Kapitza-style dynamic stabilisation, driven by an explicit source, suppress known
+  wormhole instabilities? Record: `docs/state/units/S0-2026-10-15b.md`. ≤ 2 h; X4/R1 paused.
+- **Literature** (checked in the bodies):
+  - Kapitza criterion h > √2 γΩ (1407.4803 §5; 2507.02736).
+  - Floquet SYK (2404.08394) is a boundary-coupled AdS₂ model whose drive heats and closes the wormhole; it does
+    not transfer to 4D.
+  - Ellis radial mode β ≈ 1.18 c/r (0806.0608 Table I).
+  - No prior paper stabilises a wormhole by driving or applies Isaacson averaging to one.
+- **Derived:**
+  - Spherical external drives cannot reach the l = 0 throat mode (shell theorem; 4D only).
+  - Non-spherical fast drives act at second order, through the Isaacson / Brill–Hartle stress, which is positive
+    and satisfies the NEC.
+  - A first-order drive would need a stiffness modulation of about 20/a², 6–7 times the Ellis potential depth.
+- **Toy (exact thin-shell junction conditions):**
+  - Confined 2D radiation can stabilise the throat when the exotic EoS slope is < ½. It needs radiation energy
+    0.35–1.3 × |σ₀| and raises the exotic negative energy by 35–130 %.
+  - It destabilises for slopes > ½.
+  - Unconfined, it needs about 2–8 × 10⁵² W whatever the throat size.
+- **Not done:** the field-supported (Ellis + radiation fluid) eigenvalue, about 3–4 h, which decides the sign for
+  an explicit Lagrangian; S6a's 5D pair.
+- **Verdict:** pause. A concrete shaker exists, but it needs more exotic matter plus 10⁵² W or a hypothetical
+  confinement, and it does not make a communication channel.
+
 ## 2026-10-15: X4 S1f: the validated unlensed search finds no ordinary solution that makes R1 fail the screen; R1 stays undetermined (simulated)
 - **Gate revision (owner, recorded before running):**
   - An exactly verified ordinary solution with ρ_req > 30 would settle R1 without proving the whole tool

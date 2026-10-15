@@ -160,6 +160,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | 1.0 (X4 S1d: reuse check, DE fitter, frozen validation) | — | 0.3 (plan, state files, review, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | 1.4 (X4 S1e: diagnostics, joint DE, frozen validation) | — | 0.4 (record corrections, plan, state files, review, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | 0.45 (X4 S1f: unlensed R1 fits, independent verification) | — | 0.15 (gate record, state files, PR) | interactive session 01AzKMDv |
+| 2026-W42 | — | 0.5 (S0-2026-10-15b Kapitza screen: literature check, derivation, thin-shell toy) | — | 0.2 (record, PR) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.2 (MACS0416 o211/o212 grid; contact sheets) | — | ≈ 0.2 (validation on Yan+2023 transients, grid fixes, persistence test) | 0.1 (orientation, claim, PR) | cloud routine 01AGqJkf, 03:08–03:45Z |
 | 2026-W42 | ≈ 0.1 (MACS0416 o211/o213 grid; contact sheets, persistence test) | — | — | 0.05 (PR) | cloud routine 01AGqJkf, 03:30–03:45Z |
 | 2026-W42 | ≈ 0.35 (`arc_diff.py`: MACS0416 o211/o212 arc differencing, validation on Yan+2023, three fix iterations; contact sheets) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01JZas31, 04:08–04:45Z |
