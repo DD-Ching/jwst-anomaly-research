@@ -6,7 +6,8 @@ DD 12774 and HST 18297 ("SMACS0723-GLSN-1", SN Atalanta). This measures both pos
 public NIRCam epochs (2022 ERO, 2024 GO-4043, 2026 VENUS, 2026 DD 12774) by S3 byte-range cutouts:
 background-subtracted flux in an r = 0.15" aperture with a 0.4-0.7" annulus, no aperture correction,
 so the numbers compare epochs, not total fluxes. Flux and the noise estimate are ``observed`` /
-``derived``; the stamps go to the outputs directory (``smacs_transient_epochs.png``, untracked).
+``derived``; stamps go to ``<outputs>/smacs_transient_epochs/<out stem>.png`` (untracked).
+``--position NAME=RA,DEC`` (repeatable) measures other positions instead of the pair.
 
     python scripts/smacs_transient_epochs.py --out results/transients/smacs_grid/pair_epochs.json
 """
@@ -67,12 +68,25 @@ def aperture_flux(sci: np.ndarray, x0: float, y0: float, pix_arcsec: float) -> t
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument(
+        "--position",
+        action="append",
+        metavar="NAME=RA,DEC",
+        help="measure these positions (degrees) instead of the pair; repeatable",
+    )
     args = ap.parse_args(argv)
+    pos = PAIR
+    if args.position:
+        pos = {}
+        for item in args.position:
+            name, radec = item.split("=", 1)
+            ra, dec = (float(v) for v in radec.split(","))
+            pos[name] = (ra, dec)
     targets = Table(
         {
-            "source_uid": list(PAIR),
-            "ra": [v[0] for v in PAIR.values()],
-            "dec": [v[1] for v in PAIR.values()],
+            "source_uid": list(pos),
+            "ra": [v[0] for v in pos.values()],
+            "dec": [v[1] for v in pos.values()],
         }
     )
     cut_dir = paths.outputs_dir() / "smacs_transient_epochs"
@@ -84,11 +98,14 @@ def main(argv: list[str] | None = None) -> int:
                 uri, targets, size_arcsec=2.0, out_dir=cut_dir, storage_options={"anon": True}
             )
             for r in ct:
+                if not r["path"]:  # off this mosaic
+                    print(date, band, r["source_uid"], "outside")
+                    continue
                 with fits.open(r["path"]) as h:
                     hdu = h["SCI"] if "SCI" in h else h[0]
                     sci = np.asarray(hdu.data, dtype=float)
                     w = WCS(hdu.header)
-                x0, y0 = w.world_to_pixel_values(*PAIR[r["source_uid"]])
+                x0, y0 = w.world_to_pixel_values(*pos[r["source_uid"]])
                 pix = float(
                     np.mean([abs(q.to_value("arcsec")) for q in w.proj_plane_pixel_scales()])
                 )
@@ -113,7 +130,7 @@ def main(argv: list[str] | None = None) -> int:
             "annulus_arcsec": [R_IN, R_OUT],
             "aperture_correction": None,
         },
-        "pair": PAIR,
+        "positions": pos,
         "rows": rows,
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -124,10 +141,17 @@ def main(argv: list[str] | None = None) -> int:
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
 
-        n = len(stamps) // 2
-        fig, axes = plt.subplots(2, n, figsize=(2 * n, 4.4))
-        for i, (title, sci, x0, y0) in enumerate(stamps):
-            a = axes[i % 2, i // 2]
+        names = list(pos)
+        per = {nm: [st for st in stamps if st[0].endswith(f" {nm}")] for nm in names}
+        n = max(1, max(len(v) for v in per.values()))
+        fig, axes = plt.subplots(len(names), n, figsize=(2 * n, 2.2 * len(names)), squeeze=False)
+        for a in axes.flat:
+            a.axis("off")
+        for i, j, (title, sci, x0, y0) in (
+            (i, j, st) for i, nm in enumerate(names) for j, st in enumerate(per[nm])
+        ):
+            a = axes[i, j]
+            a.axis("on")
             lo, hi = np.nanpercentile(sci, [5, 99.5])
             a.imshow(sci, origin="lower", vmin=lo, vmax=hi, cmap="gray")
             a.plot(x0, y0, "r+", ms=6)
@@ -135,8 +159,9 @@ def main(argv: list[str] | None = None) -> int:
             a.set_yticks([])
             a.set_title(title, fontsize=6)
         fig.tight_layout()
-        fig.savefig(cut_dir / "smacs_transient_epochs.png", dpi=120)
-        print(cut_dir / "smacs_transient_epochs.png")
+        png = cut_dir / f"{args.out.stem}.png"
+        fig.savefig(png, dpi=120)
+        print(png)
     except ImportError:
         pass
     return 0

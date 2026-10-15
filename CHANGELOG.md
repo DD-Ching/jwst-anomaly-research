@@ -22,8 +22,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   image B. `scripts/smacs_transient_epochs.py`: absent in 2022 and in GO-4043 (2024-05-11), bright on 2026-06-05,
   F150W 3–4× fainter on 2026-07-06 (DD 12774). TNS lists nothing at the position (AT 2024jfz is 9.3″ away).
   **Not a candidate**; ordinary astrophysics. The ICLv2 third image (μ ≈ 3) is untested until a time delay exists.
-- **Handoff:** `g00791` and `g02290`; why the catalog stage missed the pair; a Fermat-potential time delay for the
-  third image only if the VENUS team does not publish one.
+- **Follow-ups (same record):** `g00791` is a compact source seen only in the 2022 ERO (F150W 0.154 → 0.006 μJy),
+  most likely an unreported supernova (not in TNS). `g02290` is a galaxy nucleus brighter by ×2.3 (F150W) and ×1.8
+  (F444W), most likely AGN variability; inconclusive without a third epoch. Neither is a candidate.
+- **Handoff:** why the catalog stage missed the pair; a Fermat-potential time delay for the ICLv2 third image only if
+  the VENUS team does not publish one; `g00791`'s host redshift and counter-images (low priority).
 
 ## 2026-10-15: Sunrise two-epoch grid on every catalogued position: no transient (D-027 addendum)
 - **Hypothesis before computing:** a source in the o010/o120 overlap changed by ≥ 0.3 mag at ≥ 5σ in two bands, but

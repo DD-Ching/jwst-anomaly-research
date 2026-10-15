@@ -35,3 +35,14 @@
 python scripts/smacs_transient_epochs.py --out results/transients/smacs_grid/pair_epochs.json
 python scripts/smacs_transient_pair.py --out results/transients/smacs_grid/pair_trace.json
 ```
+
+## Follow-ups `g00791` and `g02290` (2026-10-15, same session)
+
+Same script: `python scripts/smacs_transient_epochs.py --out results/transients/smacs_grid/followup_epochs.json
+--position g00791=110.772443,-73.453621 --position g02290=110.670772,-73.497949`. Neither position is on the GO-4043
+mosaics; `g02290` is also off the DD 12774 mosaics. Stamps looked at.
+
+| Source | Light curve (r = 0.15″, μJy; observed) | Counterparts | Verdict |
+|---|---|---|---|
+| `g00791` | F150W 0.154 (2022-06-07) → 0.006 (2026-06-05) → 0.009 (2026-07-06); F444W 0.081 → 0.012 → 0.006 | TNS: none within 30″. SIMBAD: none within 3″. NED: nearest a galaxy at 1.9″ (NDA2023 00711, z 1.883, flag S1L) | A compact source on the outskirts of a galaxy, seen only in the 2022 ERO (on sky in 50 clean exposures, PR #237). Most likely an unreported supernova in the ERO epoch (`hypothesis`; no spectrum, one epoch). Ordinary class; not a candidate. Its host's redshift and any lensed counter-image are not checked |
+| `g02290` | F150W 0.451 → 1.052 (×2.3); F444W 0.193 → 0.345 (×1.8); 2022 and 2026-06-05 only | TNS: none within 30″. Nearest SIMBAD/NED entry, F150DA-005 (photo-z 3.01), is 2.3″ away and is a different source | A brightened compact galaxy nucleus. Most likely AGN variability, otherwise a nuclear transient (`hypothesis`). Inconclusive without a third epoch; not a candidate |

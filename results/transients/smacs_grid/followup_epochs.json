@@ -1,0 +1,113 @@
+{
+  "provenance": "observed (level-3 mosaic fluxes); err is a derived MAD estimate",
+  "aperture": {
+    "r_ap_arcsec": 0.15,
+    "annulus_arcsec": [
+      0.4,
+      0.7
+    ],
+    "aperture_correction": null
+  },
+  "positions": {
+    "g00791": [
+      110.772443,
+      -73.453621
+    ],
+    "g02290": [
+      110.670772,
+      -73.497949
+    ]
+  },
+  "rows": [
+    {
+      "date": "2022-06-07",
+      "program": "2736 ERO",
+      "band": "F150W",
+      "image": "g00791",
+      "flux_ujy_r015": 0.1541,
+      "err_ujy": 0.0015,
+      "quality_flag": "ok"
+    },
+    {
+      "date": "2022-06-07",
+      "program": "2736 ERO",
+      "band": "F150W",
+      "image": "g02290",
+      "flux_ujy_r015": 0.4505,
+      "err_ujy": 0.0011,
+      "quality_flag": "ok"
+    },
+    {
+      "date": "2022-06-07",
+      "program": "2736 ERO",
+      "band": "F444W",
+      "image": "g00791",
+      "flux_ujy_r015": 0.0807,
+      "err_ujy": 0.0024,
+      "quality_flag": "ok"
+    },
+    {
+      "date": "2022-06-07",
+      "program": "2736 ERO",
+      "band": "F444W",
+      "image": "g02290",
+      "flux_ujy_r015": 0.1934,
+      "err_ujy": 0.001,
+      "quality_flag": "ok"
+    },
+    {
+      "date": "2026-06-05",
+      "program": "6882 VENUS",
+      "band": "F150W",
+      "image": "g00791",
+      "flux_ujy_r015": 0.0059,
+      "err_ujy": 0.0028,
+      "quality_flag": "ok"
+    },
+    {
+      "date": "2026-06-05",
+      "program": "6882 VENUS",
+      "band": "F150W",
+      "image": "g02290",
+      "flux_ujy_r015": 1.052,
+      "err_ujy": 0.0033,
+      "quality_flag": "ok"
+    },
+    {
+      "date": "2026-06-05",
+      "program": "6882 VENUS",
+      "band": "F444W",
+      "image": "g00791",
+      "flux_ujy_r015": 0.0124,
+      "err_ujy": 0.0038,
+      "quality_flag": "ok"
+    },
+    {
+      "date": "2026-06-05",
+      "program": "6882 VENUS",
+      "band": "F444W",
+      "image": "g02290",
+      "flux_ujy_r015": 0.3451,
+      "err_ujy": 0.0028,
+      "quality_flag": "ok"
+    },
+    {
+      "date": "2026-07-06",
+      "program": "12774 DD",
+      "band": "F150W",
+      "image": "g00791",
+      "flux_ujy_r015": 0.0089,
+      "err_ujy": 0.0047,
+      "quality_flag": "ok"
+    },
+    {
+      "date": "2026-07-06",
+      "program": "12774 DD",
+      "band": "F444W",
+      "image": "g00791",
+      "flux_ujy_r015": 0.0061,
+      "err_ujy": 0.0047,
+      "quality_flag": "ok"
+    }
+  ]
+}
