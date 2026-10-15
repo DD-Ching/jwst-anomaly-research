@@ -18,7 +18,11 @@ maximum of |S| ≥ ``--min-sigma`` in one band; a **hit** is a group of detectio
 ``--link-arcsec`` in ≥ ``--min-bands`` bands (either sign). ``--inject`` adds Gaussian point
 sources of given AB magnitudes in epoch 2 on pixels brighter than the box's 90th percentile in
 epoch 1 (the arcs and bright galaxies) and reports the recovered fraction through the same chain.
-Every number is ``derived``; thresholds are ASSUMPTIONs.
+``--inject-grid N`` instead adds N stars (``--inject-grid-mags`` in turn) at common sky positions
+on those pixels, ``--inject-grid-sep`` apart, to epoch 2 of every band before detection; hits, maps
+and the per-star match (``injected.csv``) then carry them, so later stages (``arc_diff_morph.py
+--known injected.csv``) are calibrated through the whole chain. Its outputs are injection runs,
+never a screen. Every number is ``derived``; thresholds are ASSUMPTIONs.
 
 Validation targets (``--known``): a CSV with name, ra, dec, shifted by ``--frame-offset`` (published
 frame → pipeline frame) and matched to hits within ``--match-arcsec``.
@@ -431,6 +435,45 @@ def mag_to_mjysr(mag: float, pixar_sr: float) -> float:
     return jy / 1e6 / pixar_sr
 
 
+def add_star(
+    img: np.ndarray, y: float, x: float, sigma: float, flux: float, kern=None, pad: int = 0
+) -> None:
+    """Add a Gaussian point source (optionally convolved with ``kern``) to ``img`` in place."""
+    w = int(np.ceil(4 * sigma)) + pad + (kern.shape[0] // 2 if kern is not None else 0) + 2
+    yi, xi = int(round(y)), int(round(x))
+    sl = (slice(max(yi - w, 0), yi + w + 1), slice(max(xi - w, 0), xi + w + 1))
+    star = gaussian_star(img[sl].shape, y - sl[0].start, x - sl[1].start, sigma, flux)
+    if kern is not None:
+        star = ndimage.convolve(star, kern, mode="constant")
+    img[sl] += star
+
+
+def grid_positions(
+    img: np.ndarray, w: WCS, scale: float, n: int, min_sep: float, margin: float, pct: float, seed
+) -> list[tuple[float, float]]:
+    """Up to ``n`` sky positions on pixels above the ``pct`` percentile of ``img`` (arcs and
+    galaxies), at least ``min_sep`` arcsec apart and ``margin`` arcsec from the box border."""
+    rng = np.random.default_rng(seed)
+    m = int(np.ceil(margin / scale))
+    ok = np.nan_to_num(img) > np.nanpercentile(img, pct)
+    ok[:m, :] = ok[-m:, :] = ok[:, :m] = ok[:, -m:] = False
+    ys, xs = np.nonzero(ok)
+    chosen: list[tuple[float, float]] = []
+    for i in rng.permutation(ys.size):
+        y, x = ys[i] + rng.uniform(-0.5, 0.5), xs[i] + rng.uniform(-0.5, 0.5)
+        if all(np.hypot(y - cy, x - cx) * scale >= min_sep for cy, cx in chosen):
+            chosen.append((y, x))
+            if len(chosen) == n:
+                break
+    return [tuple(float(v) for v in w.all_pix2world(x, y, 0)) for y, x in chosen]
+
+
+def grid_job(uri, ra, dec, half, n, min_sep, margin, seed) -> list[tuple[float, float]]:
+    """``grid_positions`` on the epoch-1 box of ``uri`` (bright = above the 90th percentile)."""
+    b = read_box(uri, ra, dec, half)
+    return grid_positions(b["sci"], b["wcs"], b["scale"], n, min_sep, margin, 90.0, seed)
+
+
 def band_diff(job: dict) -> dict:
     """Read, align, match and difference one band; detections, maps and injections."""
     os.environ.setdefault("OMP_NUM_THREADS", "1")
@@ -464,6 +507,23 @@ def band_diff(job: dict) -> dict:
         conv2 = conv_epoch == 2
     bg_px = int(np.ceil(job["bg_arcsec"] / b1["scale"])) | 1
     sep = max(int(round(2 * sig_psf)), 1)
+
+    # Whole-chain injection grid: stars at common sky positions in every band, added to epoch 2
+    # before detection, so hits, maps and any later stage (arc_diff_morph.py) see them.
+    if job.get("inj_sky"):
+        m2 = m2.copy()
+        sig_m2 = sig_psf if (kern is not None or blur >= 0) else float(np.hypot(sig_psf, -blur))
+        for ra, dec, mag in job["inj_sky"]:
+            x, y = (float(v) for v in b1["wcs"].all_world2pix(ra, dec, 0))
+            if 0 <= y < shape[0] and 0 <= x < shape[1]:
+                add_star(
+                    m2,
+                    y,
+                    x,
+                    sig_m2,
+                    mag_to_mjysr(mag, b1["pixar_sr"]),
+                    kern if (kern is not None and conv2) else None,
+                )
 
     def detect(e2img: np.ndarray, scale: float | None = None):
         sraw, d = significance(e2img - m1, var, sig_psf, bg_px)
@@ -568,6 +628,34 @@ def group(dets: list[dict], link_arcsec: float) -> list[list[dict]]:
     return list(groups.values())
 
 
+def match_targets(targets: list[dict], res: list[dict], hits: list[dict], r_arcsec: float):
+    """Per target: the signed S of largest |S| within ``r_arcsec`` in each band, and the nearest
+    hit within ``r_arcsec`` (its id, or None)."""
+    out = []
+    for k in targets:
+        entry = {kk: k[kk] for kk in k if kk not in ("ra", "dec")}
+        for r in res:
+            w = _wcs(fits.Header.fromstring(r["wcs"]))
+            x, y = w.all_world2pix(k["ra"], k["dec"], 0)
+            xi, yi = int(round(float(x))), int(round(float(y)))
+            rr = int(np.ceil(r_arcsec / r["scale_arcsec"]))
+            s = r["s"]
+            win = s[max(yi - rr, 0) : yi + rr + 1, max(xi - rr, 0) : xi + rr + 1]
+            v = win[np.isfinite(win)]
+            entry[r["band"]] = float(v[np.argmax(np.abs(v))]) if v.size else None
+        best = None
+        for h in hits:
+            sep = (
+                np.hypot((h["ra"] - k["ra"]) * np.cos(np.radians(k["dec"])), h["dec"] - k["dec"])
+                * 3600
+            )
+            if sep <= r_arcsec and (best is None or sep < best[1]):
+                best = (h["hit_id"], sep)
+        entry["hit"] = best[0] if best else None
+        out.append(entry)
+    return out
+
+
 def load_known(path: Path, offset: tuple[float, float]) -> list[dict]:
     rows = []
     with open(path, newline="") as f:
@@ -604,6 +692,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--match-arcsec", type=float, default=0.15)
     ap.add_argument("--inject", type=int, default=0)
     ap.add_argument("--inject-mags", type=float, nargs="+", default=[27.5, 28.0, 28.5])
+    ap.add_argument(
+        "--inject-grid",
+        type=int,
+        default=0,
+        help="N stars at common sky positions in every band, through the whole chain",
+    )
+    ap.add_argument("--inject-grid-mags", type=float, nargs="+", default=[27.5, 28.0])
+    ap.add_argument("--inject-grid-sep", type=float, default=1.5, help="arcsec between stars")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--procs", type=int, default=min(os.cpu_count() or 1, 4))
     ap.add_argument("--out", type=Path, required=True)
@@ -628,10 +724,30 @@ def main(argv: list[str] | None = None) -> int:
             "inject": a.inject,
             "inject_mags": a.inject_mags,
             "seed": a.seed + i,
+            "inj_sky": [],
         }
         for i, (b, e1, e2) in enumerate(a.band)
     ]
+    inj_sky: list[tuple[float, float, float]] = []
     with ProcessPoolExecutor(max_workers=a.procs) as ex:
+        if a.inject_grid:
+            # Read in a worker: a remote read in the parent leaves an event loop that forked
+            # workers inherit.
+            pos = ex.submit(
+                grid_job,
+                a.band[0][1],
+                a.ra,
+                a.dec,
+                a.half_arcsec,
+                a.inject_grid,
+                a.inject_grid_sep,
+                a.bg_arcsec + 0.5,
+                a.seed,
+            ).result()
+            mags = a.inject_grid_mags
+            inj_sky = [(ra, dec, mags[i % len(mags)]) for i, (ra, dec) in enumerate(pos)]
+            for j in jobs:
+                j["inj_sky"] = inj_sky
         res = list(ex.map(band_diff, jobs))
     a.out.mkdir(parents=True, exist_ok=True)
     dets = [d for r in res for d in r["detections"]]
@@ -678,29 +794,37 @@ def main(argv: list[str] | None = None) -> int:
         h["hit_id"] = f"h{i:03d}"
     known_out = []
     if a.known:
-        for k in load_known(a.known, tuple(a.frame_offset)):
-            entry = {"name": k["name"], "pair": k.get("pair", "")}
-            for r in res:
-                w = _wcs(fits.Header.fromstring(r["wcs"]))
-                x, y = w.all_world2pix(k["ra"], k["dec"], 0)
-                xi, yi = int(round(float(x))), int(round(float(y)))
-                rr = int(np.ceil(a.match_arcsec / r["scale_arcsec"]))
-                s = r["s"]
-                win = s[max(yi - rr, 0) : yi + rr + 1, max(xi - rr, 0) : xi + rr + 1]
-                v = win[np.isfinite(win)]
-                entry[r["band"]] = float(v[np.argmax(np.abs(v))]) if v.size else None
-            best = None
-            for h in hits:
-                sep = (
-                    np.hypot(
-                        (h["ra"] - k["ra"]) * np.cos(np.radians(k["dec"])), h["dec"] - k["dec"]
-                    )
-                    * 3600
-                )
-                if sep <= a.match_arcsec and (best is None or sep < best[1]):
-                    best = (h["hit_id"], sep)
-            entry["hit"] = best[0] if best else None
-            known_out.append(entry)
+        known_out = match_targets(
+            [
+                {"name": k["name"], "pair": k.get("pair", ""), "ra": k["ra"], "dec": k["dec"]}
+                for k in load_known(a.known, tuple(a.frame_offset))
+            ],
+            res,
+            hits,
+            a.match_arcsec,
+        )
+    injected = []
+    if inj_sky:
+        flagged = {h["hit_id"] for h in hits if h["near_bright_core"]}
+        injected = match_targets(
+            [
+                {"name": f"inj{i:03d}", "ra": ra, "dec": dec, "mag": mag}
+                for i, (ra, dec, mag) in enumerate(inj_sky)
+            ],
+            res,
+            hits,
+            a.match_arcsec,
+        )
+        for e, (ra, dec, _) in zip(injected, inj_sky, strict=True):
+            e["near_bright_core"] = e["hit"] in flagged
+            e["ra"], e["dec"] = ra, dec
+        with open(a.out / "injected.csv", "w", newline="") as f:
+            wr = csv.DictWriter(
+                f, fieldnames=["name", "ra", "dec", "mag", "hit", "near_bright_core"]
+            )
+            wr.writeheader()
+            for e in injected:
+                wr.writerow({k: e[k] for k in wr.fieldnames})
     tab = Table(rows=hits, names=list(hits[0].keys())) if hits else Table()
     tab.meta = {"provenance": "derived", "thresholds": "ASSUMPTION: see summary.json"}
     tab.write(a.out / "hits.ecsv", overwrite=True)
@@ -751,11 +875,22 @@ def main(argv: list[str] | None = None) -> int:
         "n_hits": len(hits),
         "n_hits_not_near_bright_core": sum(not h["near_bright_core"] for h in hits),
         "known": known_out,
+        "inject_grid": {
+            "n": len(injected),
+            "n_hit": sum(e["hit"] is not None for e in injected),
+            "n_hit_not_near_bright_core": sum(
+                e["hit"] is not None and not e["near_bright_core"] for e in injected
+            ),
+        },
     }
     (a.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
     print(
         json.dumps(
-            {k: summary[k] for k in ("n_hits", "n_hits_not_near_bright_core", "known")}, indent=1
+            {
+                k: summary[k]
+                for k in ("n_hits", "n_hits_not_near_bright_core", "known", "inject_grid")
+            },
+            indent=1,
         )
     )
     print(json.dumps(summary["bands"], indent=1))
