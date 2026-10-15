@@ -2,6 +2,8 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: (in progress) vet the 6 SW-dominant MACS0416 o211→o212 passes and h124/h159/h246
+
 ## 2026-10-15: MACS0416 `arc_diff_morph.py` ring and sign_flip verdicts; all 28 o211→o212 tiles have morph records
 - **Hypothesis before measuring:** t−1−4's passes are PSF-mismatch rings around galaxies; a ring test (and a
   SW/LW sign test) removes most of them while losing < 0.1 of injected point sources and none of Yan+2023. Plan
