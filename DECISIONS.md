@@ -4697,11 +4697,13 @@ unit overruns its budget.
 - lowering the screening threshold after seeing R2's ρ_req 30.8 against 30 (not allowed).
 
 **Evidence** (simulated only; `results/x4/s1b_*.json`):
-- Numerical stage: R2 and R3 persist against aligned-spin models (fit errors ≤ 0.1 × mismatch); R1's P fit error is
-  0.13.
-- IMRPhenomXPHM: best ordinary FF 0.99523 (R2) and 0.99647 (R3), so ρ_req 30.8 and 35.8, above 30. The fits use
-  an edge-on inclination and in-plane spins at q 1.2–1.7. The convergence continuations and extra R2 starts were
-  added post hoc and are labelled as such.
+- Numerical stage: R2 and R3 keep a residual against aligned-spin models (fit errors ≤ 0.1 × mismatch). Strictly,
+  they are undetermined, because the best P block descent was not converged. R1's P fit error is 0.13.
+- IMRPhenomXPHM: best ordinary FF 0.99523 (R2) and 0.99647 (R3), so ρ_req 30.8 and 35.8, above 30. R2 is fitted
+  through an edge-on inclination, R3 through in-plane spins, both at q 1.2–1.7.
+- The convergence continuations and extra R2 starts were added post hoc and are labelled as such.
+- R3 was already absorbed in the frozen run (ρ_req 31.4). R2 passed the frozen run (28.9) and is absorbed only
+  after the post-hoc starts.
 
 **Revisit if:**
 - a validated P optimiser plus XPHM leaves an R1-type residual at ρ_req ≤ 30;

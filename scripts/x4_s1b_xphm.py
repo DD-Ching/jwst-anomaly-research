@@ -30,6 +30,10 @@ unchanged.
 multi-start condition): 8 new random precessing starts for R2 (in-plane spins up to 0.6, any
 inclination), each continued as above; then PP continuations from the two best of them with the best
 step-D lens.
+
+Known limit of the frozen run (kept as run): `starts()` does not project its starts into the
+domain, so R3's step-B U-best start (|chi| at the bound, plus in-plane spin) returned FF 0 in UP and
+PP. `job`'s `converged_restart` for PP reflects only the last waveform fit, not the lens polish.
 """
 
 from __future__ import annotations
