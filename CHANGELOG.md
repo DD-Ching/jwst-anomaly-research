@@ -2,6 +2,34 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: MACS0416 h044 per-dither `_cal` photometry: o211 deficit in every dither but not band-consistent; not a candidate (closed)
+- **Hypothesis before measuring (from the previous handoff):** a deficit in some o211 exposures only is processing
+  (resampling, outlier rejection); added point-source flux on the sky shows in every o211 exposure, in both SW bands
+  at the i2d level (+4–7 % over the knots), and does not shrink with aperture radius. Plan change: if neither holds,
+  h044 closes as not a candidate.
+- **New `scripts/cal_dither_phot.py` (offline tests):** for every level-2 `_cal` exposure covering the target and the
+  knots (`knots_o211_c004.json`, 150–1000 nJy, 17 knots): per-exposure knot offset (level-2 WCS lacks tweakreg; found
+  ≤ 0.5 px here), recentred aperture fluxes at 0.08/0.16/0.24″, a per-exposure knot normalisation (leave-one-out for
+  knots), epoch excess ranked against the knots, and sky-centroid shifts relative to the knots. A first version
+  without the offset step and with a 1.5 px recentring limit gave a spurious +27 % o211 excess (h044's core sits
+  ~1.2 px from the hit position, so recentring failed in some epochs): **failed approach, fixed**.
+- **Data (derived):** o211 (4 dithers, all NRCB1), o212 (4, NRCB2), o213 (4–6, NRCB4/B2), CANUCS o004 (3–7), F150W
+  and F200W; `results/transients/macs0416_arcdiff/vet_sw/dither_h044_h030.json` (per-exposure `t` included).
+- **Result:** h044's o211 deficit is uniform across the o211 dithers (F200W r 0.16″: t = 0.93, 0.96, 0.93 vs
+  1.00–1.05 in o212/o213/o004), so it is **not** a single-exposure or mosaic artifact. It is not consistent with
+  added point flux: F200W +3.6 ± 2.8 % (r 0.08″, z 0.9), +9.0 ± 1.8 % (0.16″, z 3.1), +6.2 ± 2.2 % (0.24″, z 2.2) for
+  o211→o212; F150W +3.7 % (0.08″, z 1.0) but −1.5 % and +1.7 % at 0.16/0.24″ (a hot source would be brighter in F150W;
+  LW was already null). o212→o213 control ≈ 0 in both bands. Centroid: h044 moves 9 mas west from o211 to later
+  epochs in F200W (z −2.6), 4–5 mas in F150W (z −1.2), but also 12 mas north between o004 and o212 (z 2.5, no o211),
+  so its centroid is less stable than the knots in general (compact core on a host gradient).
+- **Reading:** h044 is **not a candidate (closed)**: a ≤ 3σ tail of the 17-knot distribution, picked as the most
+  extreme of the o211→o212 hits over 28 tiles, with an aperture- and band-inconsistent excess. Untestable ordinary
+  remainder: every o211 exposure is on NRCB1 and no later one is, so detector-dependent PSF is degenerate with epoch
+  here. h030 stays ordinary (F150W excess follows o213, not o211). **All 9 open o211→o212 passes are now closed.**
+- **Handoff:** next, o211→o213 arc tiling over the 28 tiles (`arc_diff.py --maps`, then `arc_diff_morph.py`), with
+  `cal_dither_phot.py` as the per-dither check for SW-only survivors; HST pre-JWST epoch for h044 only if the
+  owner wants it.
+
 ## 2026-10-15: MACS0416 h044/h030 knot test on o211→c004 and the o212→o213 control: h030 ordinary, h044 open
 - **Hypothesis before measuring:** if the o211 SW core deficit explains h044/h030, both sit inside the
   compact-knot distribution in o211→c004 (an independent program), and neither stands out in o212→o213 (no o211).
