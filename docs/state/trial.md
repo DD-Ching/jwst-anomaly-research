@@ -162,6 +162,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.35 (`arc_diff.py`: MACS0416 o211/o212 arc differencing, validation on Yan+2023, three fix iterations; contact sheets) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01JZas31, 04:08–04:45Z |
 | 2026-W42 | ≈ 0.4 (`arc_diff.py` pixel kernels: five PSF-match variants on o211/o212 and o211/o213, validation on Yan+2023; contact sheets) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01VwokZ2, 05:08–05:50Z |
 | 2026-W42 | — | — | ≈ 0.4 (vet MACS0416 h108: five epoch pairs incl. CANUCS o004, `arc_diff_vet.py`, validation on Yan+2023; contact sheets) | 0.1 (orientation, claim, PR) | cloud routine 01VE5srt, 06:08–06:50Z |
+| 2026-W42 | ≈ 0.35 (Abell 2744 DD 2756 grid, pair choice, `i2d_region.py`; contact sheets) | — | ≈ 0.1 (persistence test, UNCOVER third-epoch stamps) | 0.1 (orientation, claim, PR) | cloud routine 01HeG8Gq, 09:09–09:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
