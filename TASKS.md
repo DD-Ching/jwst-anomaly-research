@@ -22,7 +22,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   call. Paused; no automatic follow-up.
 
 - **S0-2026-10-15b Kapitza dynamic stabilisation** (owner screen 2026-10-15): `docs/state/units/S0-2026-10-15b.md`.
-  Paused. Open on the owner's go: the Ellis–Bronnikov + radiation-fluid l = 0 eigenvalue (about 3–4 h).
+  Paused. The proposed Ellis + static radiation-fluid background does not exist (re-check), so no solver. A follow-up
+  needs a specified radiation closure (distribution, stress tensor, boundaries, confinement or supply, fixed
+  matter theory).
 - **X4 wave-optics GW lensing by negative-mass objects** (authorized 2026-10-15 by S0-2026-10-15): state
   file `docs/state/units/X4.md`. S1 done (simulated; 18 / 36 preliminary passes against aligned-spin models).
   S1b done: against precessing, higher-mode binaries (IMRPhenomXPHM), R2 and R3 no longer pass the screening

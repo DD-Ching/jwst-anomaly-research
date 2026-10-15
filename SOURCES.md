@@ -1285,8 +1285,8 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   - Dzhunushaliev et al., arXiv:1309.2448v1; Friedman, Schleich & Witt, gr-qc/9305017v2, Theorem 1.
   - Poisson & Visser, gr-qc/9506083 (thin-shell stability; used for the toy model).
   - Not re-read this round: Isaacson 1968 (Phys. Rev. 166, 1263/1272); MTW §35.15; Brill & Hartle 1964.
-  - Searched and not found: dynamic or periodic stabilisation of a wormhole or a gravitational instability;
-    Isaacson averaging applied to wormholes.
+  - Within four web queries only (dynamic/Kapitza/Floquet stabilisation of wormholes; Isaacson or Brill–Hartle
+    averaging applied to wormholes), no paper was found. This does not mean none exists.
 - X4 S1d reuse check (accessed 2026-10-15):
   - SciPy 1.18.1 `optimize.differential_evolution` (BSD-3-Clause):
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html
