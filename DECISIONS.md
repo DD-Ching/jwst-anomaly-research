@@ -1510,6 +1510,14 @@ kernel for compact-source stamps (`--kernel-px 4 --kernel-stamps`). On MACS0416 
 kernel for the whole box (compact cores +11–28 % in SW); a stamp-only kernel (loses arc transients); one kernel on
 stamps ∪ arc pixels. HOTPANTS/SFFT not adopted: the in-script fit passes the validation; revisit if a field with a
 spatially varying PSF (box > 1′) leaves ridges.
+
+**Addendum 2026-10-15d (Abell 2744, jw02756 o003/o002).** The first Abell 2744 pair is the DD 2756 visits (2022-10-20,
+2022-12-06; six bands, jwst 2.0.1 for both, PA 30° vs 60°). UNCOVER 2561 o006 (2024-07) was rejected: its footprint
+(Dec −30.43 to −30.55) misses the core, though MAST's centre coordinate suggests otherwise. Check mosaic corners, not
+`s_ra`/`s_dec`. UNCOVER o001 SW mosaics are 5.2–7.7 GB, so `scripts/i2d_region.py` cuts SCI/ERR to a reference
+footprint by byte-range rows (for a later UNCOVER pair). The grid is unchanged. The 30° roll makes rotated star
+spikes the main hit class. `persistence_check.py` flagged the five epoch-1 SW-only hits as persistence. It returned on_sky / inconclusive for two epoch-2 SW-only hits, which are one NRCB3 pixel seen in two dithers (by hand). The tool tests each sky position alone, so it misses a detector-fixed feature that falls on several positions. Revisit
+if a published Abell 2744 transient with coordinates becomes available for validation.
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**
@@ -4691,7 +4699,7 @@ unit overruns its budget.
 - precessing, higher-mode or embedded/binary-lens fits absorb the residual;
 - real noise or the detector network changes the picture (S2a).
 
-## D-088 X4 S1b: precessing, higher-mode fits absorb the representative residuals; no real-data pilot (2026-10-15)
+## D-088 X4 S1b: with precessing, higher-mode fits the representative passing cases fall below the screening threshold; no real-data pilot (2026-10-15)
 
 **Decision.**
 - Do not propose the S2a pilot. D-087's "Revisit if" condition (precessing or higher-mode fits absorb the
@@ -4700,7 +4708,8 @@ unit overruns its budget.
   that passes its own injection test, then XPHM. That step needs the owner's go-ahead.
 
 **Alternatives rejected:**
-- proposing S2a on GW231123 anyway (no simulated case survives the fuller ordinary fit);
+- proposing S2a on GW231123 anyway (neither R2 nor R3 passes the screening threshold after the fuller ordinary fit; the
+  other cases were not re-tested);
 - declaring the GW route degenerate (R1-type cases are undetermined, not absorbed);
 - lowering the screening threshold after seeing R2's ρ_req 30.8 against 30 (not allowed).
 
@@ -4716,3 +4725,25 @@ unit overruns its budget.
 **Revisit if:**
 - a validated P optimiser plus XPHM leaves an R1-type residual at ρ_req ≤ 30;
 - priors on inclination and precession are added (a likelihood screen ignores them).
+
+## D-089 X4 S1c: R1 is kept only against aligned-spin templates; undetermined with XPHM; still no pilot (2026-10-15)
+
+**Decision.**
+- Do not propose a real-data pilot. R1 meets outcome 2 (residual kept, validated) only for aligned-spin,
+  dominant-mode templates. With IMRPhenomXPHM it is undetermined.
+- Keep the shared fitter (`scripts/x4_s1c_r1.py`) for any later X4 fit. Validation and case fits must use the
+  same code.
+
+**Alternatives rejected:**
+- treating the aligned-spin result as enough for a pilot (S1b showed precession and higher modes change verdicts);
+- treating the best XPHM search value (ρ_req 9.2) as a bound (validation failed, no convergence);
+- extending past the 2 h cap.
+
+**Evidence** (simulated only; `results/x4/s1c_*.json`):
+- Aligned-spin validation passes, including S1b's failed injection (ε 3.5e-6 ≤ 0.0145). P reaches FF 0.8545 from
+  all 8 generic starts (ρ_req 5.8), at q 15 and |χ| 0.99. The result is provisional: the frozen saved-solution
+  starts were cut for budget, although those solutions themselves score 0.8545.
+- XPHM: unlensed validation ε 0.026 > 0.0125. The lensed fits do not agree across starts (0.9454 against 0.9441).
+
+**Revisit if:** a precessing fitter passes the unlensed and lensed injection checks with agreeing starts, and R1
+then stays at ρ_req ≤ 30.
