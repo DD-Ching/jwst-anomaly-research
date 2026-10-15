@@ -14,8 +14,9 @@ Noise: per band, the robust std of the flux-difference significance over all mea
 is the noise scale (most sources do not vary; never below 1). A band **passes** when the
 calibrated |significance| ≥ ``--min-sigma`` and |Δm| ≥ ``--min-dmag`` (or Δm is undefined and the
 other epoch has positive flux: a source absent in one epoch). A position is a **hit** when
-≥ ``--min-bands`` bands pass with the same sign; hits are grouped within ``--group-arcsec``. Bands
-run in parallel processes (``--procs``). Every number is ``derived``; thresholds are ASSUMPTIONs.
+≥ ``--min-bands`` bands pass (with either sign by default: see Recentring below); hits are
+grouped within ``--group-arcsec``. Bands run in parallel processes (``--procs``). Every number
+is ``derived``; thresholds are ASSUMPTIONs.
 
 Recentring (``--recentre-in origin``, the default): each position is centroided once, within
 ``--recentre-arcsec``, in the image of the catalog it came from (that catalog's band and epoch;
@@ -66,6 +67,17 @@ from transient_forced import aperture_flux, compare, recentre, robust_std  # noq
 MIN_SCALE_N = 100  # ASSUMPTION: positions needed per band for a stable noise scale
 
 
+def first_of_groups(ra: np.ndarray, dec: np.ndarray, link_arcsec: float) -> np.ndarray:
+    """Mask keeping the first row of any pair closer than ``link_arcsec``."""
+    keep = np.ones(len(ra), bool)
+    c = SkyCoord(ra * u.deg, dec * u.deg)
+    i1, i2, _, _ = c.search_around_sky(c, link_arcsec * u.arcsec)
+    for a, b in zip(i1, i2, strict=True):
+        if a < b and keep[a]:
+            keep[b] = False
+    return keep
+
+
 def union_positions(cats: list[Table], dedup_arcsec: float) -> Table:
     """RA/Dec of the union of pipeline catalogs, keeping the first of any group closer than
     ``dedup_arcsec``. ``origin`` is the index of the catalog a position came from."""
@@ -78,13 +90,7 @@ def union_positions(cats: list[Table], dedup_arcsec: float) -> Table:
         ok = np.isfinite(ra) & np.isfinite(dec)
         rows.append(Table({"ra": ra[ok], "dec": dec[ok], "origin": np.full(ok.sum(), k)}))
     t = vstack(rows)
-    keep = np.ones(len(t), bool)
-    c = SkyCoord(t["ra"] * u.deg, t["dec"] * u.deg)
-    i1, i2, _, _ = c.search_around_sky(c, dedup_arcsec * u.arcsec)
-    for a, b in zip(i1, i2, strict=True):
-        if a < b and keep[a]:
-            keep[b] = False
-    out = t[keep]
+    out = t[first_of_groups(np.asarray(t["ra"]), np.asarray(t["dec"]), dedup_arcsec)]
     out["pos_id"] = [f"g{k:05d}" for k in range(len(out))]
     out.meta = {"provenance": "observed", "source": "union of pipeline catalogs"}
     return out
@@ -130,19 +136,21 @@ def measure_band(
     dec: np.ndarray,
     from_e2: np.ndarray,
     r_arcsec: float,
-    recentre_arcsec: float,
+    recentre_arcsec: float | None,
     inject_flux: np.ndarray | None = None,
     inject_sigma_arcsec: float = 0.05,
 ) -> dict[str, np.ndarray]:
     """Aperture flux and error in both epochs at each position (recentred in the epoch the
-    position came from, then measured at the same sky position in both). ``inject_flux``
+    position came from, then measured at the same sky position in both; ``recentre_arcsec``
+    None: measured at the given positions, already refined by ``refine_positions``). ``inject_flux``
     (per position, NaN = none) adds a Gaussian at the recentred position in epoch 2."""
     n = len(ra)
     f = {k: np.full(n, np.nan) for k in ("f1", "e1", "f2", "e2")}
     (s1, er1, w1, sc1), (s2, er2, w2, sc2) = img1, img2
     r1, r2 = r_arcsec / sc1, r_arcsec / sc2
-    half1 = int(np.ceil(4.0 * r1)) + int(np.ceil(3 * recentre_arcsec / sc1)) + 2
-    half2 = int(np.ceil(4.0 * r2)) + int(np.ceil(3 * recentre_arcsec / sc2)) + 2
+    rca = recentre_arcsec or 0.0
+    half1 = int(np.ceil(4.0 * r1)) + int(np.ceil(3 * rca / sc1)) + 2
+    half2 = int(np.ceil(4.0 * r2)) + int(np.ceil(3 * rca / sc2)) + 2
     x1, y1 = w1.world_to_pixel_values(ra, dec)
     x2, y2 = w2.world_to_pixel_values(ra, dec)
     for k in range(n):
@@ -153,13 +161,14 @@ def measure_band(
         ea = _stamp(er1, x1[k], y1[k], half1)[0]
         eb = _stamp(er2, x2[k], y2[k], half2)[0]
         (sa, xa0, ya0), (sb, xb0, yb0) = a, b
-        rc = max(1, int(np.ceil(recentre_arcsec / (sc2 if from_e2[k] else sc1))))
-        if recentre_arcsec <= 0:
+        if recentre_arcsec is None:  # positions already refined (--recentre-in origin)
             rra, rdec = ra[k], dec[k]
         elif from_e2[k]:
+            rc = max(1, int(np.ceil(recentre_arcsec / sc2)))
             cx, cy = recentre(sb, x2[k] - xb0, y2[k] - yb0, rc)
             rra, rdec = w2.pixel_to_world_values(cx + xb0, cy + yb0)
         else:
+            rc = max(1, int(np.ceil(recentre_arcsec / sc1)))
             cx, cy = recentre(sa, x1[k] - xa0, y1[k] - ya0, rc)
             rra, rdec = w1.pixel_to_world_values(cx + xa0, cy + ya0)
         pa = np.array(w1.world_to_pixel_values(rra, rdec)) - (xa0, ya0)
@@ -253,7 +262,7 @@ def hits(signs: np.ndarray, min_bands: int, any_sign: bool = False) -> np.ndarra
     or, with ``any_sign``, with either sign (a source whose colour changed, e.g. a supernova that
     fades in the blue and brightens in the red)."""
     same = ((signs > 0).sum(axis=1) >= min_bands) | ((signs < 0).sum(axis=1) >= min_bands)
-    return same | ((signs != 0).sum(axis=1) >= min_bands) if any_sign else same
+    return (signs != 0).sum(axis=1) >= min_bands if any_sign else same
 
 
 def group_hits(ra: np.ndarray, dec: np.ndarray, hit: np.ndarray, link_arcsec: float) -> np.ndarray:
@@ -300,6 +309,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--radius-arcsec", type=float, default=0.15)
     ap.add_argument("--recentre-arcsec", type=float, default=0.15)
     ap.add_argument(
+        "--catalog-bands",
+        nargs="+",
+        help="band of each --catalog, in order (default: read from the file names)",
+    )
+    ap.add_argument(
         "--recentre-in",
         choices=["origin", "band"],
         default="origin",
@@ -337,7 +351,9 @@ def main(argv: list[str] | None = None) -> int:
     pmap = pool.map if pool is not None else map  # bands are independent
     try:
         if args.recentre_in == "origin" and rc > 0:
-            cat_band = catalog_bands(args.catalog, bands)
+            cat_band = args.catalog_bands or catalog_bands(args.catalog, bands)
+            if len(cat_band) != len(args.catalog) or not set(cat_band) <= set(bands):
+                raise SystemExit("--catalog-bands needs one measured --band name per --catalog")
             paths = {b: (p1, p2) for b, p1, p2 in args.band}
             origin = np.asarray(pos["origin"])
             rjobs = []
@@ -351,7 +367,11 @@ def main(argv: list[str] | None = None) -> int:
                 ra[idx], dec[idx] = rra, rdec
             pos["ra_cat"], pos["dec_cat"] = pos["ra"], pos["dec"]
             pos["ra"], pos["dec"] = ra, dec
-            rc = 0.0  # every band measures at the refined position
+            # two catalog entries can centroid onto one peak: merge them again
+            keep = first_of_groups(ra, dec, args.dedup_arcsec)
+            pos, ra, dec, from_e2 = pos[keep], ra[keep], dec[keep], from_e2[keep]
+            meta["n_merged_after_refinement"] = int((~keep).sum())
+            rc = None  # every band measures at the refined position
         jobs = [(b, p1, p2, ra, dec, from_e2, r, rc, None, 0.0) for b, p1, p2 in args.band]
         done = {b: (m, dt) for b, m, dt in pmap(_band_job, jobs)}
         for band, p1, p2 in args.band:
@@ -454,6 +474,7 @@ def main(argv: list[str] | None = None) -> int:
     measured = [np.isfinite(pos[f"{b}_flux1"] + pos[f"{b}_flux2"]) for b in bands]
     summary = {
         "n_positions": len(pos),
+        "n_merged_after_refinement": meta.get("n_merged_after_refinement", 0),
         "n_measured_any_band": int(np.any(measured, axis=0).sum()),
         "n_measured_all_bands": int(np.all(measured, axis=0).sum()),
         "n_hits": int(pos["hit"].sum()),
@@ -466,7 +487,10 @@ def main(argv: list[str] | None = None) -> int:
             "floor_x_median_error": args.inject_floor,
             "fwhm_arcsec": args.inject_fwhm_arcsec,
             "runs": injections,
-            "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated",
+            "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated; "
+            "injections sit at the measured (recentred or refined) position, so recentring is not "
+            "tested; a brightening injected in every band is recovered alike under the same-sign "
+            "and mixed-sign rules",
         },
     }
     (args.out / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")

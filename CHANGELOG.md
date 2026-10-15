@@ -10,9 +10,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   published positions; per-band recentring pulled SN01's LW apertures onto a neighbour; SN01 changed colour
   (fades in F115W, brightens in F356W), which the same-sign rule rejects.
 - New: `transient_grid.py --recentre-in origin` (default; centroid once where the catalog saw the source) and
-  mixed-sign hits (column `mixed`), with unit tests. SN01 recovered; the new rules add only that row.
-- **Result:** 175 hits in 59 groups: 50 star spikes and wings, 6 edges, 2 persistence (`persistence_check.py`),
-  SN01. **0 new candidates.** Injection −0.75 mag 96 %, −0.44 mag 44 %. Contact sheets looked at.
+  mixed-sign hits (column `mixed`), `--catalog-bands`, re-merge after refinement, with unit tests. SN01 recovered; the new rules add only that row.
+- **Result:** 174 hits in 59 groups: 50 star spikes and wings, 6 edges, 2 persistence (`persistence_check.py`),
+  SN01. **0 new candidates.** Injection −0.75 mag 95 %, −0.44 mag 46 %. Contact sheets looked at.
   `results/transients/macs0416_grid/`.
 - **Failed approach / limit:** the caustic stars (F356W 27.1–28.6 on arcs) are below the grid's depth (|σ| ≤ 3.3),
   and SN02 has no catalog position of its own. The grid cannot test transients on arcs; image differencing can.

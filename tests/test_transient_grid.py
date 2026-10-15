@@ -174,3 +174,8 @@ def test_origin_recentring_keeps_the_aperture_on_a_source_absent_in_one_band(tmp
     # per-band recentring follows the neighbour in band B, epoch 1, and loses the source
     band = _colour_change_field(tmp_path, "band")
     assert not band["hit"][20]
+
+
+def test_first_of_groups_keeps_one_per_close_pair():
+    ra = np.array([24.0, 24.0 + 0.1 / 3600, 24.0 + 1 / 3600])
+    assert list(tg.first_of_groups(ra, np.full(3, -8.0), 0.2)) == [True, False, True]
