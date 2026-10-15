@@ -4747,3 +4747,30 @@ unit overruns its budget.
 
 **Revisit if:** a precessing fitter passes the unlensed and lensed injection checks with agreeing starts, and R1
 then stays at ρ_req ≤ 30.
+
+## D-090 X4 S1d: SciPy differential evolution as the max-match reference; it fails validation, R1 stays undetermined (2026-10-15)
+
+**Decision.**
+- Use SciPy `differential_evolution` as the reference global search for XPHM max-match fits, with polarisation
+  and amplitude maximised analytically.
+- Do not fit R1 or propose a pilot while the tool fails its frozen injection checks.
+- Next step, only on the owner's go: a joint (lens + intrinsic) DE with the lens snapped to the cached grid, and
+  longer unlensed runs.
+
+**Alternatives rejected:**
+- Bilby + dynesty: Bayesian inference, not max-match; about 10⁶ likelihood calls; phase marginalisation assumes a
+  dominant (2,2) mode. Kept for a later real-data stage.
+- PyCBC: no max-match optimiser for this objective (its complex overlap would give the real part, but the search
+  would still be ours); GPLv3. Only the polarisation-maximisation idea is reused, in closed form.
+- GLoW: it computes lens factors, which are already exact here.
+- CMA-ES (`cma`): fallback if the joint DE fails.
+- Treating S1c's best XPHM value (ρ_req 9.2) as a bound.
+
+**Evidence** (simulated only; `results/x4/s1d_*.json`):
+- Unlensed ε 5e-6 – 1.5e-3, against 0.026 in S1c; every run stopped at the 200-generation cap.
+- Lensed ε 0.045–0.091 in 3 of 4 runs, from a weak-lens stall after the node-repeat stop; the polish also hit its
+  round cap while still improving.
+- The objective at the truth is ≤ 3.3e-16.
+
+**Revisit if:** the joint DE passes all four injections on both seeds (then fit R1), or fails them (then try
+CMA-ES once before any further tool work).
