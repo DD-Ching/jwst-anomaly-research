@@ -2,7 +2,38 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-15: (in progress) vet the 6 SW-dominant MACS0416 o211→o212 passes and h124/h159/h246
+## 2026-10-15: MACS0416 o211→o212 morph passes vetted: 7 ordinary; h044 and h030 are an open SW signature (unvetted)
+- **Hypothesis before measuring:** the 6 SW-dominant passes (t−3−3 h028/h030, t−3−2 h044/h051, t−2−2 h035, t−1+0
+  h104) are o212 afterimages or matching residuals, and t−1−4 h124/h159/h246 are o212 LW core-PSF mismatches. A real
+  point transient would keep its sign and flux against independent epochs. Plan change: a hit that keeps a ≥ 4σ
+  forced flux in pairs without o212 goes to `/vet-candidate`.
+- **Method (derived):** `arc_diff.py --maps` in three boxes (west 64.0225 −24.0815, south 64.0326 −24.0889, north
+  64.033681 −24.069529) for o211→o212, o212→c004, o211→c004, o212→o213, o211→o213 (CANUCS o004 does not cover h028);
+  `arc_diff_vet.py` on each hit. JSONs, box summaries and the west-box sheet: `results/transients/macs0416_arcdiff/vet_sw/`.
+- **Ordinary (not candidates):**
+  - h124, h159, h246 (t−1−4): an **o212-only LW dip** (F277W/F356W −8 to −19 nJy in o211→o212, +7 to +14 in
+    o212→c004 and o212→o213, ≤ 4 nJy in o211→o213) on three separate compact cores at once: an o212 LW matching
+    artifact; h246 is arc-coherent in three pairs.
+  - h051: a c004-only F200W deficit (−11.5 ± 3.8 in both pairs with c004; o211→o212 +2.6 ± 2.6); its o211→o212 S sits
+    on a SW streak (sheet).
+  - h035: forced fluxes ≤ 1.7σ against arc noise in every pair; c004/o213 pairs show rings around the core.
+  - h104: ≤ 2.2σ in o211→o212 in the re-centred box (S +3.4 / +4.1); o212→o213 arc-coherent.
+  - h028: o211→o212 F150W +3.6 ± 1.5 only; o212→o213 rings around the compact source.
+- **Open, unvetted (not candidates):** **h044** (64.022499, −24.081711) and **h030** (64.023039, −24.081869), 1.9″ apart:
+  o211 is fainter than **all three** later epochs in F150W and F200W with no LW change and no arc coherence.
+  h044: o211→o212 +18.0 ± 3.9 / +17.2 ± 3.2 nJy, o211→c004 +15.4 ± 6.1 / +22.6 ± 3.4, o211→o213 +22.5 ± 5.1 /
+  +16.6 ± 3.7; o212→c004 and o212→o213 within 1.7σ of 0. h030: o211→o213 +14.7 ± 3.2 / +8.8 ± 2.1, same pattern.
+  The sheet shows sharp positive spots in every pair starting at o211, and sharp pixel-scale dipoles across the
+  o211 SW stamps. Leading ordinary explanation (hypothesis): an o211-side SW deficit (detector or processing),
+  shared by both. Alternative: a rise between 2022-10-07 and 2022-12-29 that then stays flat for 43 d.
+- **Failed approach:** comparing per-exposure `_cal` aperture fluxes (`persistence_check.py` output) between o211
+  and o212 on galaxies gives the opposite sign to the mosaic for h044/h035/h051; archive `_cal` WCS lack the level-3
+  alignment, so the aperture lands on different parts of the galaxy. `persistence_check.py` returns `on_sky` for all
+  nine because the host galaxy is detected in every exposure; it cannot test persistence on a galaxy.
+- **Handoff:** vet h044/h030 first: per-dither o211 `_cal` differences in a box registered to the i2d (is the deficit
+  in every o211 dither, one detector, or one exposure?), HST Frontier Fields F160W/F814W as a pre-JWST epoch, and
+  whether other compact knots within 10″ show the same o211 offset. Then `/vet-candidate` if it survives.
+
 
 ## 2026-10-15: MACS0416 `arc_diff_morph.py` ring and sign_flip verdicts; all 28 o211→o212 tiles have morph records
 - **Hypothesis before measuring:** t−1−4's passes are PSF-mismatch rings around galaxies; a ring test (and a
