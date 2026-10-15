@@ -4824,8 +4824,9 @@ then stays at ρ_req ≤ 30.
   longer unlensed runs.
 
 **Alternatives rejected:**
-- Bilby + dynesty: Bayesian inference, not max-match; about 10⁶ likelihood calls; phase marginalisation assumes a
-  dominant (2,2) mode. Kept for a later real-data stage.
+- Bilby + dynesty: not used this round, for task fit and cost. It does Bayesian inference, not max-match, at an
+  estimated (not measured) 10⁵–10⁶ likelihood calls. It can use XPHM with phase marginalisation turned off.
+  Kept for a later real-data stage. (Wording corrected in S1e.)
 - PyCBC: no max-match optimiser for this objective (its complex overlap would give the real part, but the search
   would still be ours); GPLv3. Only the polarisation-maximisation idea is reused, in closed form.
 - GLoW: it computes lens factors, which are already exact here.
@@ -4840,3 +4841,26 @@ then stays at ρ_req ≤ 30.
 
 **Revisit if:** the joint DE passes all four injections on both seeds (then fit R1), or fails them (then try
 CMA-ES once before any further tool work).
+
+## D-091 X4 S1e: joint lens + intrinsic DE as the P search; one lensed check fails, R1 not fitted (2026-10-15)
+
+**Decision.**
+- Keep the joint 12-parameter DE (lens snapped to the cached grid) with exact continuous refinement as the P
+  search, and the 600-generation DE as the U search.
+- Do not fit R1 or propose a pilot while one validation run fails the frozen rule.
+- Any continuation is the owner's call: more P budget, expert advice on a precession parametrisation, or an R1 U
+  fit testing outcome 1 only.
+
+**Alternatives rejected:**
+- Running R1 anyway: the frozen plan put R1 after a full pass.
+- Dropping or re-seeding the failing run, or loosening the 5e-4 rule.
+- Adding CMA-ES this round (the owner excluded it).
+- Treating the grid as exact: its floor is ε 9e-4 – 1.3e-3.
+
+**Evidence** (simulated only; `results/x4/s1e_validate.json`):
+- U: ε ≤ 2.1e-6 on all four runs.
+- P: three runs at ε 2.4e-5 – 1.5e-4; V9 seed 11 at 1.5e-3, with its DE and its refinement both still improving
+  at their caps.
+
+**Revisit if:** the P search passes all four runs with a larger budget (then fit R1), or the owner authorises the
+outcome-1-only U fit.
