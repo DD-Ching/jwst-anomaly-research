@@ -21,6 +21,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   0.121 and 0.142). Writeup drafted (`docs/state/units/X2_s6a_summary.md`); next is a human expert review, the owner's
   call. Paused; no automatic follow-up.
 
+- **S0-2026-10-15b Kapitza dynamic stabilisation** (owner screen 2026-10-15): `docs/state/units/S0-2026-10-15b.md`.
+  Paused. Open on the owner's go: the Ellis–Bronnikov + radiation-fluid l = 0 eigenvalue (about 3–4 h).
 - **X4 wave-optics GW lensing by negative-mass objects** (authorized 2026-10-15 by S0-2026-10-15): state
   file `docs/state/units/X4.md`. S1 done (simulated; 18 / 36 preliminary passes against aligned-spin models).
   S1b done: against precessing, higher-mode binaries (IMRPhenomXPHM), R2 and R3 no longer pass the screening

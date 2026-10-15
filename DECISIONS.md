@@ -4880,3 +4880,29 @@ outcome-1-only U fit.
 rebuild agrees to 1.2e-7. The best ordinary fit of any kind is 0.945 (S1c, lensed).
 
 **Revisit if:** a validated positive-lens search exists, or the owner authorises a new R1 question.
+
+## D-093 S0-2026-10-15b: Kapitza dynamic stabilisation of wormholes paused as a low-priority open item (2026-10-15)
+
+**Decision.**
+- Do not open a follow-up unit. Record that the only ordinary-matter "pivot shaker" found, an external high-frequency
+  EM/GW radiation bath, acts through its averaged (Isaacson / Brill–Hartle) stress.
+- In an exact thin-shell toy it can stabilise the radial mode, but only with radiation energy of the order of the
+  exotic energy. For throats a₀ ≥ 4M
+  that raises the exotic negative energy by 35–130 %, and it needs about 10⁵² W or a hypothetical
+  confinement.
+- The decisive next calculation, about 3–4 h: Ellis–Bronnikov plus a radiation fluid, the l = 0 eigenvalue. It
+  waits for the owner.
+
+**Alternatives rejected:**
+- J → J(t), or an arbitrary sinusoidal term in the mode equation: no physical source.
+- The internal phantom-field oscillation: it is still exotic, with no external control.
+- Transferring the coupled-SYK Floquet results (2404.08394) to 4D.
+
+**Evidence:**
+- [lit] the Kapitza criterion; the Ellis growth rate 1.18 c/r; topological censorship (FSW).
+- [der] the shell-theorem no-go for spherical external drives; the reduction to averaged stress; the first-order
+  drive needing about 6–7 times the potential depth.
+- [num] `results/s0/kapitza_shell.json`.
+
+**Revisit if:** a field-supported calculation shows stabilisation at a small radiation fraction, or a mechanism
+confining radiation at a throat is found.
