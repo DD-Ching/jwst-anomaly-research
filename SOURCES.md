@@ -1305,3 +1305,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - MACS0416 transients (accessed 2026-10-15): Yan et al. 2023, "JWST's PEARLS: Transients in the MACS J0416.1-2403
   Field", ApJS 269, 43, DOI 10.3847/1538-4365/ad0298, arXiv:2307.07579 (v2 source, Tables 4–5; no VizieR table).
   PEARLS NIRCam epochs: JWST program 1176 o211/o212/o213 (MAST), CANUCS 1208 o004.
+- Abell 2744 two-epoch grid (accessed 2026-10-15): JWST DD program 2756 (PI W. Chen) NIRCam `jw02756-o003_t001`
+  (2022-10-20) and `jw02756-o002_t001` (2022-12-06), level-3 `_i2d`/`_cat.ecsv` and level-2 `_cal` from
+  `s3://stpubdata/jwst/public/jw02756/` (jwst 2.0.1, CRDS jwst_1535.pmap); UNCOVER `jw02561-o001_t003` byte-range
+  stamps. Proposal: https://www.stsci.edu/jwst-program-info/download/jwst/pdf/2756/ (z = 3.47 SN, no public position).
+  Lead not yet verified here: Pang et al. 2026, arXiv:2608.20781 (PLATE-23a, a SN IIP candidate in Abell 2744, absent
+  2022-11, bright 2023; the printed RA "03h33m" looks like a typo for 00h14m; check before use).
