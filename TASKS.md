@@ -292,7 +292,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      are vetted: all not candidates (h044 last, by per-dither `_cal` photometry, `cal_dither_phot.py`; CHANGELOG
      2026-10-15). o211→o213 tiles: 28 / 28 done, 27 passes looked at, all ordinary (o211-epoch SW-core class,
      spikes, persistence incl. h002, PSF residuals); h014 closed by per-dither photometry; 0 candidates (CHANGELOG
-     2026-10-15). Next: re-run Sunrise/SMACS under the new defaults;
+     2026-10-15). Sunrise o010/o120, o010/o052 and SMACS/VENUS grids re-run under the origin-recentring and
+     mixed-sign defaults (D-027 addendum 2026-10-15i): every earlier group but one spike re-found, 5 new rows all
+     stars or spikes, SN Atalanta recovered, 0 candidates;
    - ~~Abell 2744 grid~~ — done for DD 2756 o003/o002 (D-027 addendum 2026-10-15d): 22 groups, all ordinary (spikes
      under a 30° roll, persistence, a detector-fixed pixel, edges), 0 candidates. UNCOVER o001 vs 2756 o002 (D-027 addendum
      2026-10-15e): 46 groups, all ordinary (24 spikes, 9 registration dipoles, 3 persistence incl. one in all six bands),

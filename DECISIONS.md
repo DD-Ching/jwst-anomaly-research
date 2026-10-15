@@ -1584,6 +1584,13 @@ in t−1−4 (whole chain, 27.5–29.5 AB, 56 unflagged hits): ring removes 1, s
 present in both epochs, or one sitting on a galaxy's ring residual, is vetoed. Old JSONs have no `ring_fill` (= 0).
 Revisit if: a transient with a published SED change between epochs is vetoed, or tiles with good PSF matching.
 
+**Addendum 2026-10-15i (Sunrise and SMACS grids under the MACS0416 defaults).** The three grids run with per-band
+recentring and the same-sign rule were re-run with `--recentre-in origin` and mixed-sign hits. **Result:** every
+earlier hit group but one spike re-found; 5 new rows, all bright-star dipoles, spikes or streaks; SN Atalanta
+recovered; 0 candidates (CHANGELOG 2026-10-15). **Decision:** the new defaults stand for all grid runs; the
+earlier Sunrise/SMACS nulls hold under both rule sets. Contact sheets across epochs with different roll must
+resample one epoch onto the other's WCS. Revisit if: a transient is found only under one rule set.
+
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**

@@ -1,0 +1,72 @@
+{
+  "n_positions": 4249,
+  "n_merged_after_refinement": 76,
+  "n_measured_any_band": 3799,
+  "n_measured_all_bands": 3607,
+  "n_hits": 20,
+  "n_hit_groups": 16,
+  "n_hits_mixed": 1,
+  "recentre_in": "origin",
+  "same_sign": false,
+  "bands": {
+    "F150W": {
+      "e1": "jw02736-o001_t001_nircam_clear-f150w_i2d.fits",
+      "e2": "jw06882-o057_t057_nircam_clear-f150w_i2d.fits",
+      "noise_scale": 1.2491133044811822,
+      "zero_point_mag": -0.015036914894173636,
+      "n_measured": 3796,
+      "n_pass": 92,
+      "positions_per_s": 2090.954485768536
+    },
+    "F444W": {
+      "e1": "jw02736-o001_t001_nircam_clear-f444w_i2d.fits",
+      "e2": "jw06882-o057_t057_nircam_clear-f444w_i2d.fits",
+      "noise_scale": 1.330665586537666,
+      "zero_point_mag": 0.0016247742752373978,
+      "n_measured": 3610,
+      "n_pass": 50,
+      "positions_per_s": 3010.4078919192466
+    }
+  },
+  "injection": {
+    "floor_x_median_error": 10.0,
+    "fwhm_arcsec": 0.1,
+    "runs": [
+      {
+        "frac": 1.0,
+        "nominal_dmag": -0.752574989159953,
+        "n": 500,
+        "recovered_frac": 0.874,
+        "n_nominal": 299,
+        "recovered_frac_nominal": 0.9732441471571907,
+        "per_band_pass_frac": {
+          "F150W": 0.922,
+          "F444W": 0.928
+        }
+      },
+      {
+        "frac": 0.5,
+        "nominal_dmag": -0.4402281476392031,
+        "n": 500,
+        "recovered_frac": 0.512,
+        "n_nominal": 196,
+        "recovered_frac_nominal": 0.5816326530612245,
+        "per_band_pass_frac": {
+          "F150W": 0.734,
+          "F444W": 0.664
+        }
+      }
+    ],
+    "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated; injections sit at the measured (recentred or refined) position, so recentring is not tested; a brightening injected in every band is recovered alike under the same-sign and mixed-sign rules"
+  },
+  "command": "transient_grid.py --band F150W/F444W jw02736 o001 (2022-06-07) jw06882 o057 (2026-06-05) --catalog <4 pipeline _cat.ecsv, o001 then o057> --epoch2-catalogs 2 3 --inject 500 --inject-frac 1.0 0.5 --procs 2 (defaults: --recentre-in origin, mixed-sign hits allowed)",
+  "hit_group_verdicts_by_eye": {
+    "star proper motion or bright-star PSF residual (dipole in the difference image)": 11,
+    "diffraction spike of a bright star": 1,
+    "SN Atalanta image A or B (known lensed SN on the system 5 arc; vetted on #237)": 2,
+    "g00791: compact source in 2022 only (follow-up on #237; most likely an unreported SN)": 1,
+    "g02290: galaxy nucleus brightened in both bands (follow-up on #237; most likely AGN)": 1
+  },
+  "candidates": 0,
+  "comparison_with_previous_run": "all 15 hit groups of the #237 run (--recentre-in band, same-sign) recovered; 2 new rows (g04188, g04192), both bright-star dipoles; g00612 now a mixed-sign row"
+}
