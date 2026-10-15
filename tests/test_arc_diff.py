@@ -88,3 +88,50 @@ def test_local_shift_removes_a_varying_offset():
     assert np.allclose(loc, loc2, equal_nan=True)
     inner = (slice(20, -20), slice(20, -20))
     assert ad._robust_std((loc - a)[inner]) < 0.6 * ad._robust_std((glob - a)[inner])
+
+
+def test_kernel_match_removes_psf_and_scale_difference_but_keeps_a_transient():
+    rng = np.random.default_rng(5)
+    n = 160
+    e1 = _scene(rng, n)
+    # epoch 2: broader, shifted by a fraction of a pixel, 3 % brighter, plus a transient
+    e2 = 1.03 * ad.shift(ad._blur(e1, 1.2), 0.3, -0.2)
+    e2 += ad.gaussian_star((n, n), 81.0, 77.0, 1.6, 40.0)
+    e1n = e1 + rng.normal(0, 0.01, (n, n))
+    e2n = e2 + rng.normal(0, 0.01, (n, n))
+    v = np.full((n, n), 0.01**2)
+    m1, m2, var, k, scale = ad.kernel_match(e1n, e2n, v, v, 1.0, 4)
+    assert abs(scale - 1.03) < 0.02
+    d = m2 - m1
+    inner = (slice(10, -10), slice(10, -10))
+    assert ad._robust_std(d[inner]) < 3 * 0.01 * np.sqrt(2)
+    assert d[81, 77] > 0.5 * ad.gaussian_star((n, n), 81.0, 77.0, 1.6, 40.0)[81, 77]
+    assert np.all(var > 0)
+
+
+def test_compact_stamps_cover_point_sources_and_skip_masked_cores():
+    rng = np.random.default_rng(6)
+    n = 160
+    img = rng.normal(0, 0.01, (n, n))
+    img += ad.gaussian_star((n, n), 40.0, 40.0, 1.2, 30.0)
+    img += ad.gaussian_star((n, n), 120.0, 100.0, 1.2, 30.0)
+    img[118:123, 98:103] = np.nan  # saturated core
+    st = ad.compact_stamps(img, 4)
+    assert st[40, 40] and not st[120, 100]
+
+
+def test_kernel_match_with_stamps_keeps_a_transient_on_a_compact_source():
+    rng = np.random.default_rng(7)
+    n = 192
+    e1 = _scene(rng, n)
+    e2 = ad._blur(e1, 1.0)
+    y, x = 100.0, 90.0
+    e1 += ad.gaussian_star((n, n), y, x, 1.5, 60.0)  # a compact host in both epochs
+    e2 += ad.gaussian_star((n, n), y, x, np.hypot(1.5, 1.0), 60.0)
+    tr = ad.gaussian_star((n, n), y, x, np.hypot(1.5, 1.0), 30.0)  # it brightens by 50 %
+    e1n = e1 + rng.normal(0, 0.01, (n, n))
+    e2n = e2 + tr + rng.normal(0, 0.01, (n, n))
+    v = np.full((n, n), 0.01**2)
+    m1, m2, _, _, _ = ad.kernel_match(e1n, e2n, v, v, 1.0, 4, stamps=True)
+    d = m2 - m1
+    assert d[100, 90] > 0.7 * tr[100, 90]

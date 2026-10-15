@@ -7,6 +7,10 @@ rows, one range read per extension), resamples epoch 2 onto epoch 1's pixel grid
 two by FFT cross-correlation, matches the PSF width with a one-parameter Gaussian blur of the
 sharper epoch (the blur that minimises the robust rms of the difference), removes the smooth
 residual of the difference with a median filter, and forms a matched-filter significance map.
+``--kernel-px N`` replaces the Gaussian with a least-squares pixel kernel fitted on the box
+(``kernel_fit``); ``--kernel-stamps`` adds a second kernel for compact-source stamps, fitted
+leaving each stamp out (``kernel_match``). Hits within ``--core-arcsec`` of a pixel above the
+``--core-pct`` percentile of epoch 1 are flagged ``near_bright_core`` (PSF-rotation rosettes).
 
 Noise: the matched-filter significance uses the pipeline ERR of both epochs; its robust std over
 the box is the noise scale (never below 1), as in ``transient_grid.py``. A **detection** is a local
@@ -234,6 +238,130 @@ def psf_match(
     return s, k, (_blur(e1, s) if s > 0 else e1), (_blur(e2, -s) if s < 0 else e2) / k
 
 
+def kernel_fit(
+    ref: np.ndarray,
+    tgt: np.ndarray,
+    var: np.ndarray,
+    half: int,
+    clip: float = 4.0,
+    n_iter: int = 3,
+    max_pix: int = 200_000,
+    seed: int = 0,
+    mask: np.ndarray | None = None,
+) -> tuple[np.ndarray, float]:
+    """Least-squares pixel kernel K (plus a constant) with ``K * ref ≈ tgt`` (Bramich 2008 style).
+
+    Each kernel pixel is a free parameter, so K absorbs the PSF difference (core and wings),
+    sub-pixel shifts and the flux scale at once. Fitted on the box itself with weights 1 / var;
+    pixels with |residual| > ``clip`` σ are dropped and the fit repeated (transients, saturated
+    cores, spikes). At most ``max_pix`` pixels enter the fit (a random subset), which keeps the
+    ~(2·half+1)² parameters many thousand times over-determined, so a point transient barely
+    moves K. ``mask`` (optional) restricts the fit to those pixels (e.g. compact-source stamps).
+    Returns K of shape (2·half+1, 2·half+1) and the clipped χ² per fitted pixel; the constant is
+    discarded (the median filter of the difference removes it).
+    """
+    n = 2 * half + 1
+    good = np.isfinite(ref) & np.isfinite(tgt) & np.isfinite(var) & (var > 0)
+    good[:half, :] = good[-half:, :] = good[:, :half] = good[:, -half:] = False
+    if mask is not None:
+        good &= mask
+    r0 = np.where(np.isfinite(ref), ref, 0.0)
+    # every pixel of the kernel footprint must be finite in ref
+    fin = ndimage.minimum_filter(np.isfinite(ref).astype(np.uint8), size=n) > 0
+    ys, xs = np.nonzero(good & fin)
+    if ys.size > max_pix:
+        pick = np.random.default_rng(seed).choice(ys.size, max_pix, replace=False)
+        ys, xs = ys[pick], xs[pick]
+    offs = [(dy, dx) for dy in range(-half, half + 1) for dx in range(-half, half + 1)]
+    # convolution: (K * ref)[y, x] = sum K[i, j] ref[y - (i - half), x - (j - half)]
+    x_mat = np.empty((ys.size, len(offs) + 1))
+    for c, (dy, dx) in enumerate(offs):
+        x_mat[:, c] = r0[ys - dy, xs - dx]
+    x_mat[:, -1] = 1.0
+    t = tgt[ys, xs]
+    w = 1.0 / np.sqrt(var[ys, xs])
+    keep = np.ones(ys.size, bool)
+    coef = np.zeros(len(offs) + 1)
+    for _ in range(n_iter):
+        coef, *_ = np.linalg.lstsq(x_mat[keep] * w[keep, None], t[keep] * w[keep], rcond=None)
+        z = (x_mat @ coef - t) * w
+        sd = _robust_std(z[keep])
+        new = np.abs(z) < clip * max(sd, 1e-12)
+        if np.array_equal(new, keep):
+            break
+        keep = new
+    k = np.zeros((n, n))
+    for c, (dy, dx) in enumerate(offs):
+        k[dy + half, dx + half] = coef[c]
+    return k, float(np.mean(z[keep] ** 2))
+
+
+def compact_stamps(img: np.ndarray, half: int, pct: float = 97.0, radius: int = 6) -> np.ndarray:
+    """Pixels within ``radius`` of local maxima of the background-subtracted image above ``pct``.
+
+    Compact sources (stars, knots, galaxy cores) carry the PSF core that a whole-box fit
+    under-weights; saturated or masked cores (non-finite within the stamp) are left out.
+    """
+    fin = np.isfinite(img)
+    c = np.where(fin, img, 0.0)
+    c = c - ndimage.median_filter(c, size=8 * half + 1)
+    mx = (c == ndimage.maximum_filter(c, size=2 * half + 1)) & (c > np.percentile(c[fin], pct))
+    disk = np.hypot(*np.mgrid[-radius : radius + 1, -radius : radius + 1]) <= radius
+    stamps = ndimage.binary_dilation(mx, structure=disk)
+    bad = ndimage.binary_dilation(~fin, structure=disk)
+    return stamps & ~bad
+
+
+def kernel_match(
+    e1: np.ndarray,
+    e2: np.ndarray,
+    v1: np.ndarray,
+    v2: np.ndarray,
+    blur: float,
+    half: int,
+    stamps: bool = False,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, float]:
+    """Convolve the sharper epoch (sign of the Gaussian ``blur``) with a fitted pixel kernel.
+
+    The kernel is fitted on the whole box. With ``stamps``, pixels around compact sources are
+    convolved with a second kernel fitted on the other compact-source stamps. Variances use the
+    whole-box kernel. Returns matched epoch 1, matched epoch 2, the difference variance, the
+    whole-box kernel and the flux scale (epoch 2 / epoch 1).
+    """
+    var = v1 + v2
+    conv1 = blur >= 0
+    ref, tgt = (e1, e2) if conv1 else (e2, e1)
+    vref, vtgt = (v1, v2) if conv1 else (v2, v1)
+    k, _ = kernel_fit(ref, tgt, var, half)
+    filled = np.where(np.isfinite(ref), ref, 0.0)
+    m = ndimage.convolve(filled, k, mode="constant")
+    if stamps:
+        # No single kernel fits both: the whole-box kernel leaves +10-30 % peak residuals on
+        # compact sources in SW, a stamp-only kernel leaves the arc light (2026-10-15). Compact
+        # stamps therefore get their own kernel, fitted leaving the stamp itself out, because a
+        # transient on a compact source would otherwise train the kernel that subtracts it.
+        stamp = compact_stamps(e1, half) & compact_stamps(e2, half)
+        lab, nlab = ndimage.label(stamp)
+        grown = ndimage.grey_dilation(lab, size=2 * half + 1)
+        for i in range(1, nlab + 1):
+            ki, _ = kernel_fit(ref, tgt, var, half, mask=stamp & (lab != i))
+            sel = grown == i
+            if not sel.any():  # swallowed by a neighbour's footprint
+                continue
+            ys, xs = np.nonzero(sel)
+            y0, y1 = max(ys.min() - half, 0), ys.max() + half + 1
+            x0, x1 = max(xs.min() - half, 0), xs.max() + half + 1
+            sub = ndimage.convolve(filled[y0:y1, x0:x1], ki, mode="constant")
+            m[y0:y1, x0:x1][sel[y0:y1, x0:x1]] = sub[sel[y0:y1, x0:x1]]
+    m[~np.isfinite(ref)] = np.nan
+    vm = ndimage.convolve(np.where(np.isfinite(vref), vref, 0.0), k**2, mode="constant")
+    var = vm + vtgt
+    ksum = float(k.sum())
+    if conv1:
+        return m, e2, var, k, ksum
+    return e1, m, var, k, 1.0 / ksum
+
+
 def flux_scale(a: np.ndarray, b: np.ndarray) -> float:
     """Robust ratio b / a on the brightest 10 % of pixels (calibration or pipeline differences).
 
@@ -307,6 +435,19 @@ def band_diff(job: dict) -> dict:
     grid = np.round(np.linspace(-3.0, 3.0, 25) * sig_psf, 3)
     blur, kscale, m1, m2 = psf_match(b1["sci"], s2, grid)
     var = b1["err"] ** 2 + np.clip(v2, 0.0, None) / kscale**2
+    kern = None
+    conv2 = blur < 0
+    if job["kernel_px"] > 0:
+        m1, m2, var, kern, kscale = kernel_match(
+            b1["sci"],
+            s2,
+            b1["err"] ** 2,
+            np.clip(v2, 0.0, None),
+            blur,
+            job["kernel_px"],
+            job["kernel_stamps"],
+        )
+        conv2 = m2 is not s2
     bg_px = int(np.ceil(job["bg_arcsec"] / b1["scale"])) | 1
     sep = max(int(round(2 * sig_psf)), 1)
 
@@ -329,6 +470,8 @@ def band_diff(job: dict) -> dict:
         "scale_arcsec": b1["scale"],
         "shift_px": [dy, dx],
         "blur_sigma_px": blur,
+        "kernel_sum": None if kern is None else float(kern.sum()),
+        "convolved_epoch": 2 if conv2 else 1,
         "flux_scale": kscale,
         "noise_scale": noise_scale,
         "detections": det,
@@ -359,9 +502,11 @@ def band_diff(job: dict) -> dict:
                     m2[sl].shape,
                     y - sl[0].start,
                     x - sl[1].start,
-                    sig_m2,
+                    sig_psf if kern is not None else sig_m2,
                     mag_to_mjysr(mag, b1["pixar_sr"]),
                 )
+                if kern is not None and conv2:  # epoch 2 is the convolved side
+                    star = ndimage.convolve(star, kern, mode="constant")
                 si, _ = significance(m2[sl] + star - m1[sl], var[sl], sig_psf, bg_px)
                 si = si / noise_scale
                 r = sep + 1
@@ -418,7 +563,15 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--half-arcsec", type=float, default=12.0)
     ap.add_argument("--bg-arcsec", type=float, default=0.6, help="median filter of the difference")
     ap.add_argument("--tile-arcsec", type=float, default=3.0, help="local registration; 0 = off")
+    ap.add_argument(
+        "--kernel-px", type=int, default=0, help="half-width of a fitted pixel kernel; 0 = Gaussian"
+    )
+    ap.add_argument(
+        "--kernel-stamps", action="store_true", help="fit the kernel on compact-source stamps"
+    )
     ap.add_argument("--min-sigma", type=float, default=5.0)
+    ap.add_argument("--core-arcsec", type=float, default=0.8, help="bright-core flag radius")
+    ap.add_argument("--core-pct", type=float, default=99.9, help="bright-core flag level")
     ap.add_argument("--min-bands", type=int, default=2)
     ap.add_argument("--link-arcsec", type=float, default=0.1)
     ap.add_argument("--known", type=Path)
@@ -442,6 +595,8 @@ def main(argv: list[str] | None = None) -> int:
             "half": a.half_arcsec,
             "bg_arcsec": a.bg_arcsec,
             "tile_arcsec": a.tile_arcsec,
+            "kernel_px": a.kernel_px,
+            "kernel_stamps": a.kernel_stamps,
             "min_sigma": a.min_sigma,
             "inject": a.inject,
             "inject_mags": a.inject_mags,
@@ -471,6 +626,20 @@ def main(argv: list[str] | None = None) -> int:
                 "sign": "mixed" if len(signs) > 1 else ("+" if signs == {1.0} else "-"),
             }
         )
+    # Bright-core flag (ASSUMPTION: radius and level): PSF rotation between epochs leaves rosettes
+    # around stars and compact galaxy cores that no single kernel removes (2026-10-15).
+    for h in hits:
+        h["near_bright_core"] = False
+        for r in res:
+            w = _wcs(fits.Header.fromstring(r["wcs"]))
+            img = r["e1img"]
+            x, y = w.all_world2pix(h["ra"], h["dec"], 0)
+            rr = int(np.ceil(a.core_arcsec / r["scale_arcsec"]))
+            xi, yi = int(round(float(x))), int(round(float(y)))
+            win = img[max(yi - rr, 0) : yi + rr + 1, max(xi - rr, 0) : xi + rr + 1]
+            if np.nanmax(win, initial=-np.inf) >= np.nanpercentile(img, a.core_pct):
+                h["near_bright_core"] = True
+                break
     hits.sort(key=lambda h: -h["max_abs_sigma"])
     for i, h in enumerate(hits):
         h["hit_id"] = f"h{i:03d}"
@@ -517,7 +686,11 @@ def main(argv: list[str] | None = None) -> int:
             "link_arcsec": a.link_arcsec,
             "bg_arcsec": a.bg_arcsec,
             "tile_arcsec": a.tile_arcsec,
+            "kernel_px": a.kernel_px,
+            "kernel_stamps": a.kernel_stamps,
             "match_arcsec": a.match_arcsec,
+            "core_arcsec": a.core_arcsec,
+            "core_pct": a.core_pct,
             "psf_fwhm_arcsec": {r["band"]: PSF_FWHM[r["band"]] for r in res},
         },
         "bands": {
@@ -529,6 +702,8 @@ def main(argv: list[str] | None = None) -> int:
                     "scale_arcsec",
                     "shift_px",
                     "blur_sigma_px",
+                    "kernel_sum",
+                    "convolved_epoch",
                     "flux_scale",
                     "noise_scale",
                 )
@@ -537,10 +712,15 @@ def main(argv: list[str] | None = None) -> int:
             for r in res
         },
         "n_hits": len(hits),
+        "n_hits_not_near_bright_core": sum(not h["near_bright_core"] for h in hits),
         "known": known_out,
     }
     (a.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
-    print(json.dumps({k: summary[k] for k in ("n_hits", "known")}, indent=1))
+    print(
+        json.dumps(
+            {k: summary[k] for k in ("n_hits", "n_hits_not_near_bright_core", "known")}, indent=1
+        )
+    )
     print(json.dumps(summary["bands"], indent=1))
     return 0
 
