@@ -1,0 +1,28 @@
+{
+  "n_positions": 8605,
+  "n_merged_after_refinement": 63,
+  "n_measured_any_band": 7620,
+  "n_measured_all_bands": 7620,
+  "n_hits": 30,
+  "n_hit_groups": 30,
+  "n_hits_mixed": 0,
+  "recentre_in": "origin",
+  "same_sign": false,
+  "bands": {
+    "F356W": {
+      "e1": "jw03516-o002_t001_nircam_clear-f356w_i2d.fits",
+      "e2": "jw03516-o001_t001_nircam_clear-f356w_i2d.fits",
+      "noise_scale": 1.2281003296670439,
+      "zero_point_mag": -0.008030788882945273,
+      "n_measured": 7620,
+      "n_pass": 30,
+      "positions_per_s": 3968.1585367184225
+    }
+  },
+  "injection": {
+    "floor_x_median_error": 10.0,
+    "fwhm_arcsec": 0.1,
+    "runs": [],
+    "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated; injections sit at the measured (recentred or refined) position, so recentring is not tested; a brightening injected in every band is recovered alike under the same-sign and mixed-sign rules"
+  }
+}

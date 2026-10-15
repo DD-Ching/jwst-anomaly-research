@@ -299,7 +299,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      under a 30° roll, persistence, a detector-fixed pixel, edges), 0 candidates. UNCOVER o001 vs 2756 o002 (D-027 addendum
      2026-10-15e): 46 groups, all ordinary (24 spikes, 9 registration dipoles, 3 persistence incl. one in all six bands),
      0 candidates. Next:
-     UNCOVER vs ALT F356W single-band with PLATE-23a (arXiv:2608.20781) as the known case once its position is checked;
+     ~~UNCOVER vs ALT F356W single-band~~ — done (D-027 addendum 2026-10-15j): the catalog grid misses PLATE-23a
+     (blended into its host), `arc_diff.py` recovers it; 45 groups, 43 ordinary, 2 real changes outside the
+     multiple-image region (g2 faded transient, g1 +0.55 mag variable), 0 lensing candidates. Next: an `arc_diff.py`
+     tiling of the UNCOVER∩ALT footprint (`--min-bands 1`) to close the host-blend blind spot; vet g1 with later epochs;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

@@ -1328,5 +1328,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   (2022-10-20) and `jw02756-o002_t001` (2022-12-06), level-3 `_i2d`/`_cat.ecsv` and level-2 `_cal` from
   `s3://stpubdata/jwst/public/jw02756/` (jwst 2.0.1, CRDS jwst_1535.pmap); UNCOVER `jw02561-o001_t003` byte-range
   stamps. Proposal: https://www.stsci.edu/jwst-program-info/download/jwst/pdf/2756/ (z = 3.47 SN, no public position).
-  Lead not yet verified here: Pang et al. 2026, arXiv:2608.20781 (PLATE-23a, a SN IIP candidate in Abell 2744, absent
-  2022-11, bright 2023; the printed RA "03h33m" looks like a typo for 00h14m; check before use).
+  Pang et al. 2026, arXiv:2608.20781 v1 (submitted 2026-08-21; LaTeX source accessed 2026-10-15): PLATE-23a, a SN IIP
+  candidate in Abell 2744. The printed "03h33m09.9216s, −30d24m01.2229s" is degrees in sexagesimal form:
+  RA 3.552756°, Dec −30.400340° (verified on the ALT and UNCOVER F356W images, 2026-10-15).
+- ALT (All the Little Things, JWST GO 3516; Naidu et al. arXiv:2410.01874) NIRCam direct imaging
+  `jw03516-o001_t001` (2023-12-06/10) and `jw03516-o002_t001` (2023-11-27/12-05), `clear-f356w` `_i2d`/`_cat.ecsv` from
+  `s3://stpubdata/jwst/public/jw03516/L3/t/` (jwst 3.0.0, CRDS jwst_1584.pmap; accessed 2026-10-15).

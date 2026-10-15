@@ -1,0 +1,63 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: group, datatype: int64}
+# - {name: pos_id, datatype: string}
+# - {name: ra, datatype: float64, format: .6f}
+# - {name: dec, datatype: float64, format: .6f}
+# - {name: F356W_dmag, datatype: float64, format: .2f}
+# - {name: F356W_sigma, datatype: float64, format: .2f}
+# - {name: alt_o001_sigma, datatype: float64, format: .2f}
+# - {name: o002_to_o001_sigma, datatype: float64, format: .2f}
+# - {name: verdict, datatype: string}
+# - {name: evidence, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: transient_grid.py UNCOVER 2561 o001 F356W vs ALT 3516 o002 F356W; contact sheets looked at; verdicts by hand}
+# schema: astropy-2.0
+group pos_id ra dec F356W_dmag F356W_sigma alt_o001_sigma o002_to_o001_sigma verdict evidence
+0 g00656 3.59771099163254 -30.43401844378387 nan -15.559805498410231 -15.147830178479333 0.7237353085774298 uncover_artifact "UNCOVER F356W-only compact block; nothing in UNCOVER F277W, F410M or F444W from the same visit (|peak-bg| <= 0.02 MJy/sr against 1.8-4.4): F356W exposure artifact"
+1 g01027 3.5621692584545253 -30.4001853778303 -0.6917077299644789 5.911850350126749 4.523516174418872 -1.8961415699191697 open_variable "compact faint source brighter in both ALT visits: r0.4 arcsec 67+-2 -> 111+-5 / 112+-6 nJy (UNCOVER, ALT o002, o001); aperture-independent; 45 arcsec from the nearest Bergamini+23 multiple image; ordinary variable (AGN) or transient on a faint host; not vetted"
+2 g02072 3.613637954290938 -30.416379595389593 nan -5.923586643723322 -5.782279851661031 -0.7587234949302786 real_transient_faded "on sky in all seven UNCOVER bands 2022-11-02/07 (12-43 nJy in r0.25, centroids agree <= 0.03 arcsec across bands taken hours-days apart: not a moving object), absent in ALT o002 and o001 (F356W -4+-3, -3+-3 nJy); 59 arcsec from the nearest multiple image (single-image region); ordinary transient (SN-like), class not determined"
+3 g02614 3.5422948909613807 -30.351202981344443 nan -15.16669947024388 -14.897615074465078 -1.8550985656369292 uncover_artifact "UNCOVER F356W-only compact block; nothing in UNCOVER F277W, F410M or F444W from the same visit (|peak-bg| <= 0.02 MJy/sr against 1.8-4.4): F356W exposure artifact"
+4 g02623 3.568652221816369 -30.371061430985336 -2.840665818280846 12.671298818314906 -2.0764502952449546 -13.914814941234873 edge_or_no_data "ALT o002 no-data region; difference shows a chip-edge stripe"
+5 g04594 3.5974244446397483 -30.347226412727576 nan -13.880895017846113 -13.51702824980234 nan uncover_artifact "UNCOVER F356W-only compact block; nothing in UNCOVER F277W, F410M or F444W from the same visit (|peak-bg| <= 0.02 MJy/sr against 1.8-4.4): F356W exposure artifact"
+6 g05051 3.5992958350702566 -30.430076176162355 nan -6.093759572050463 -5.921236974416546 -0.1400061826736554 star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+7 g08284 3.599012343510438 -30.429104864958497 nan 14.728093241691 nan nan star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+8 g05110 3.58060184661922 -30.414408537896957 4.425407061838586 -9.978697806176735 -9.94850742660582 nan star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+9 g05111 3.5815871597789135 -30.415189421207966 nan -10.022900468983176 -9.266299492876469 0.04356811083180687 star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+10 g05113 3.5810796334685535 -30.413912965962233 nan -10.258512222710854 -11.399852248963056 -1.3023610048349212 star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+11 g05122 3.5689293394823287 -30.404921548327994 3.034342993369332 -10.980993382091363 -10.698754853385179 -0.23572154865406972 star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+12 g05123 3.5699200930643213 -30.405703265507867 nan -11.995230182493342 -11.534181321988873 0.7084008856556618 star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+13 g08237 3.569633579193239 -30.40468554571424 nan 19.458685327021506 19.634949663045553 3.726322854939623 star_core "saturated or bright star core: PSF/registration residual in the difference (contact sheet)"
+14 g05302 3.5909743579009574 -30.402427423289684 3.1680702341094014 -14.548330178627156 -16.963583038699692 -9.827577104853543 star_core "saturated or bright star core: PSF/registration residual in the difference (contact sheet)"
+15 g05316 3.587489587605082 -30.3929679282594 -0.6093281258811083 5.233738749336256 3.086424863615418 -2.2941755082262754 registration_dipole "galaxy core +/- residual in the difference (contact sheet); -0.61 mag at 5.2 sigma"
+16 g05509 3.610221952012716 -30.416407217085503 nan -11.452919183559017 -10.64004986836158 1.3831823250442967 star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+17 g05834 3.5560059864176776 -30.36380750165766 nan -6.069182814383323 -1.5377491802743644 0.9378818933904651 star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+18 g05871 3.5435151707182966 -30.351583946901695 2.0975825485723743 -8.25306649964469 -7.185387261431222 nan star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+19 g05874 3.543044983494905 -30.350422295496713 nan -6.391851247192857 -6.28637629005405 0.42858921038771375 star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+20 g08561 3.610900714198247 -30.396079934115573 nan -10.998575614304599 -7.078560545072315 4.129743851980869 star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+21 g06181 3.559837456804005 -30.345199315497428 nan -6.325924175580773 -5.9666588490266514 nan star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+22 g08637 3.62158653305956 -30.38494290062832 nan 11.67152808364613 nan nan star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+23 g06271 3.62196300567747 -30.384582292977885 nan -13.020054729215953 -13.798940328945847 -1.8308000148084476 star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+24 g06721 3.5559964431631883 -30.408483520415466 -7.935247999588865 15.208946293687134 nan nan alt_o002_artifact "ALT o002-only compact block of saturated-looking pixels; absent in ALT o001 one week later (o002->o001 fade, or only background at the o001 position): single-visit artifact"
+25 g06890 3.5935701749959836 -30.43540968595763 nan 15.78569156988603 nan nan alt_o002_artifact "ALT o002-only compact block of saturated-looking pixels; absent in ALT o001 one week later (o002->o001 fade, or only background at the o001 position): single-visit artifact"
+26 g07022 3.575750928336819 -30.397275156542715 -7.897198602360907 14.959427714067713 nan nan alt_o002_artifact "ALT o002-only compact block of saturated-looking pixels; absent in ALT o001 one week later (o002->o001 fade, or only background at the o001 position): single-visit artifact"
+27 g07319 3.5669097866890036 -30.363707831456626 1.0600777929768208 -9.387598359437069 -8.621200446694925 1.2740268959746537 streak "UNCOVER epoch-1 satellite/streak crossing the aperture (contact sheet)"
+28 g07382 3.5712681513193405 -30.36457478244895 1.039832345047129 -8.775053643240732 -8.628302863991106 -0.1971860077067232 streak "UNCOVER epoch-1 satellite/streak crossing the aperture (contact sheet)"
+29 g07391 3.5746997130559186 -30.368515294754406 0.5535422069704471 -5.345691593769757 -4.502971088357273 0.749147859951434 streak "UNCOVER epoch-1 satellite/streak crossing the aperture (contact sheet)"
+30 g07409 3.591257059552139 -30.388547101687465 nan 14.364298070887061 -0.35569905487289366 -15.96428397937838 alt_o002_artifact "ALT o002-only compact block of saturated-looking pixels; absent in ALT o001 one week later (o002->o001 fade, or only background at the o001 position): single-visit artifact"
+31 g07672 3.6048883436305315 -30.38623281225915 nan 15.580552201324883 nan nan alt_o002_artifact "ALT o002-only compact block of saturated-looking pixels; absent in ALT o001 one week later (o002->o001 fade, or only background at the o001 position): single-visit artifact"
+32 g07818 3.6277387730985566 -30.401388478401834 -5.154721317888688 13.025267900491352 nan nan alt_o002_artifact "ALT o002-only compact block of saturated-looking pixels; absent in ALT o001 one week later (o002->o001 fade, or only background at the o001 position): single-visit artifact"
+33 g07838 3.572854527773401 -30.328201637199175 -6.624856531691481 14.592330112557542 -0.3340934091870208 -16.263818631866314 alt_o002_artifact "ALT o002-only compact block of saturated-looking pixels; absent in ALT o001 one week later (o002->o001 fade, or only background at the o001 position): single-visit artifact"
+34 g08186 3.568555183610961 -30.368608142727087 nan 16.470040609265133 12.621050872560305 -9.545366171779367 star_spike_or_wing "bright-star diffraction spike or PSF wing; spikes rotate with the PA change (UNCOVER 40.8 deg vs ALT o002 56.1 deg V3)"
+35 g08187 3.568070130995456 -30.367293824707122 -1.2979513990877287 11.067542021109047 12.963417937890807 3.44542829774162 star_core "saturated or bright star core: PSF/registration residual in the difference (contact sheet); ALT-only snowball-like blocks beside it"
+36 g08188 3.5685349690668176 -30.367672502076555 -2.3967101480578528 14.042988531371368 14.059815901549666 2.6866133826014704 star_core "saturated or bright star core: PSF/registration residual in the difference (contact sheet); ALT-only snowball-like blocks beside it"
+37 g08263 3.581737742311739 -30.414707369982835 nan 17.253838290487575 17.887458209875447 5.167801215255862 star_core "saturated or bright star core: PSF/registration residual in the difference (contact sheet)"
+38 g08285 3.5998290065991116 -30.428768636938482 -2.9812957191122154 13.5553043470047 nan nan star_core "saturated or bright star core: PSF/registration residual in the difference (contact sheet)"
+39 g08353 3.585192589248224 -30.394817945263593 0.7561124462145398 -7.24204138883296 -0.5925178937980092 7.346166013641558 registration_dipole "compact core +/- dipole; already registration_dipole in the UNCOVER vs DD 2756 run"
+40 g08452 3.6110151137068893 -30.417147802545493 -3.568089169173099 8.03595788369454 nan nan star_core "saturated or bright star core: PSF/registration residual in the difference (contact sheet)"
+41 g08453 3.6109097237970933 -30.415892154952267 -2.680918405236053 10.05908094674391 nan nan star_core "saturated or bright star core: PSF/registration residual in the difference (contact sheet)"
+42 g08496 3.594307726327579 -30.38753246108871 -10.984366100364795 15.87293433362988 -0.7559522346855949 -17.641214791787924 alt_o002_artifact "ALT o002-only compact block of saturated-looking pixels; absent in ALT o001 one week later (o002->o001 fade, or only background at the o001 position): single-visit artifact (-11 mag; o002->o001 -17.6 sigma)"
+43 g08568 3.6165488914961426 -30.40220490307349 -3.849477701355023 6.208665995966866 -0.23952616685012998 -5.511859531770276 alt_o002_artifact "ALT o002-only compact block of saturated-looking pixels; absent in ALT o001 one week later (o002->o001 fade, or only background at the o001 position): single-visit artifact (o002->o001 -5.5 sigma)"
+44 g08636 3.622250055159281 -30.38583900957537 -2.684082192087353 10.837978778305457 11.05216283951363 7.469869217383264 star_core "saturated or bright star core: PSF/registration residual in the difference (contact sheet)"

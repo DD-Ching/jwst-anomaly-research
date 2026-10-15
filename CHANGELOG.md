@@ -2,6 +2,32 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-15: Abell 2744 UNCOVER vs ALT F356W: grid misses PLATE-23a, `arc_diff` recovers it; 0 lensing candidates
+- **Hypothesis before measuring:** the single-band grid UNCOVER 2561 o001 (2022-11) vs ALT 3516 o002 (2023-11/12)
+  recovers PLATE-23a (arXiv:2608.20781; F356W < 29.7 → ≈ 26.1 mag); every other hit is a spike, star core, persistence
+  or a single-visit artifact. Plan change: a missed known case means the grid has a blind spot that must be named.
+- **PLATE-23a position checked:** the printed "03h33m09.92s" is degrees (3.552756°, −30.400340°); a point source
+  appears there in ALT and is absent in UNCOVER.
+- **Run (derived):** `transient_grid.py --min-bands 1 --inject 500 --inject-frac 1.0 0.5`; UNCOVER cut with
+  `i2d_region.py` (207 MB, 16 s). 6,440 positions, 45 hit groups; injections −0.75 mag 95.6 %, −0.44 mag 50 %.
+  Outputs `results/transients/a2744_grid_alt/` (`grid.ecsv` > 1 MB not committed). Control grids: UNCOVER vs ALT o001
+  and ALT o002 vs o001 (9 days; subdirectories).
+- **Failed approach / limitation:** the grid **misses PLATE-23a**: no catalog entry (blended into its host 2.2″ away).
+  `arc_diff.py --min-bands 1` on a 24″ box finds it at +50σ, 0.06″ off (`arcdiff_plate23a/`).
+- **Vetting (contact sheets looked at, all 45):** 16 spikes/wings, 9 star cores, 2 dipoles, 3 UNCOVER streaks, 1 edge;
+  9 ALT o002-only pixel blocks, all absent in ALT o001 a week later; 3 UNCOVER F356W-only blocks, absent in the same
+  visit's F277W/F410M/F444W. Two real changes, both ≥ 45″ from any Bergamini+23 multiple image (not lensing anomalies):
+  - **g2** (3.613638, −30.416380): on sky in all 7 UNCOVER bands (12–43 nJy, r 0.25″), band centroids agree ≤ 0.03″
+    across exposures hours to days apart (not a moving object), gone in both ALT visits (F356W −4 ± 3 nJy): a faded
+    transient, SN-like, class not determined; not in the PLATE paper (its catalog is in prep). The GLASS 1324,
+    DD 2756 and UNCOVER o002/o003/o006 F356W mosaics do not cover g1 or g2; SAPPHIRES 6434 F356W mosaics were not
+    read (WCS conversion failed in the byte-range script) and MegaScience was not checked.
+  - **g1** (3.562169, −30.400185): compact, F356W r 0.4″ 67 ± 2 → 111 ± 5 / 112 ± 6 nJy (+0.55 mag) in both ALT visits;
+    variable AGN or a transient on a faint host; not vetted.
+- **0 lensing candidates.** Data (≈ 1.8 GB of mosaics) streamed and deleted after the run.
+- **Handoff:** next, a difference-image pass over the whole UNCOVER∩ALT footprint (`arc_diff.py` tiles,
+  `--min-bands 1`) to close the host-blend blind spot; vet g1 with SAPPHIRES 2024–25 F444W/F200W if they cover it.
+
 ## 2026-10-15: Sunrise and SMACS two-epoch grids re-run under the MACS0416 defaults: 0 candidates
 - **Hypothesis before measuring:** the first Sunrise o010/o120 run and the #237 runs (Sunrise o010/o052,
   SMACS o001/VENUS o057) used per-band recentring and the same-sign rule, which missed MACS0416 SN01 (#238). Under
