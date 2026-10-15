@@ -1,0 +1,36 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: group, datatype: int64}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: verdict, datatype: string}
+# - {name: evidence, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: 'contact sheets (e2 resampled onto e1), persistence_check.py on both visits, UNCOVER 2561 o001 byte-range stamps'}
+# - {by: cloud routine 2026-10-15}
+# schema: astropy-2.0
+group ra dec verdict evidence
+0 3.637981 -30.428061 persistence "persistence_check.py on jw02756003001: every detection suspect, none clean; SW-only in epoch 1 (absent in the simultaneous LW exposures, in epoch 2 and in UNCOVER 2561 o001 13 days later)"
+1 3.591313 -30.402517 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+2 3.592636 -30.391336 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+3 3.636964 -30.429467 persistence "persistence_check.py on jw02756003001: every detection suspect, none clean; SW-only in epoch 1 (absent in the simultaneous LW exposures, in epoch 2 and in UNCOVER 2561 o001 13 days later)"
+4 3.621547 -30.420437 persistence "persistence_check.py on jw02756003001: every detection suspect, none clean; SW-only in epoch 1 (absent in the simultaneous LW exposures, in epoch 2 and in UNCOVER 2561 o001 13 days later)"
+5 3.619179 -30.419305 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+6 3.62421 -30.41991 persistence "persistence_check.py on jw02756003001: every detection suspect, none clean; SW-only in epoch 1 (absent in the simultaneous LW exposures, in epoch 2 and in UNCOVER 2561 o001 13 days later)"
+7 3.593508 -30.403183 persistence "persistence_check.py on jw02756003001: every detection suspect, none clean; SW-only in epoch 1 (absent in the simultaneous LW exposures, in epoch 2 and in UNCOVER 2561 o001 13 days later)"
+8 3.605237 -30.400435 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+9 3.648103 -30.439301 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+10 3.648492 -30.438727 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+11 3.6284 -30.415393 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+12 3.629172 -30.415391 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+13 3.605266 -30.384839 star_wing "faint F444W-only epoch-1 catalogue entry 0.45 arcsec from a 20.5 mag point source; the star moves only by the frame offset (13, 22 mas); on_sky in both visits"
+14 3.593064 -30.384611 background "edge of a bright galaxy; no residual in the resampled difference stamps (different sky subtraction)"
+15 3.590251 -30.402513 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+16 3.613825 -30.387192 detector_fixed_artifact "SW-only in epoch 2; persistence_check.py on jw02756002001 gives on_sky (2 clean of 21 exposures); every detection of g16 and g17 sits on the same NRCB3 pixel (~1855, 1976), g17 in dither 1 and g16 in dither 2, S/N decaying 64 -> 34 (F115W), 11 (F150W), 5 (F200W): a detector-fixed feature at two sky positions 6 arcsec apart, not a sky source (by hand; the tool compares only one position at a time)"
+17 3.615534 -30.386404 detector_fixed_artifact "SW-only in epoch 2; persistence_check.py on jw02756002001 gives inconclusive (1 suspect, 1 clean); every detection of g16 and g17 sits on the same NRCB3 pixel (~1855, 1976), g17 in dither 1 and g16 in dither 2, S/N decaying 64 -> 34 (F115W), 11 (F150W), 5 (F200W): a detector-fixed feature at two sky positions 6 arcsec apart, not a sky source (by hand; the tool compares only one position at a time)"
+18 3.580416 -30.385608 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+19 3.591019 -30.402156 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+20 3.628799 -30.415049 star_spike_or_wing "bright star within the aperture box; spikes rotate with the 30 deg PA change (29.99 vs 59.99 deg)"
+21 3.608116 -30.409684 edge "epoch-2 LW mosaic edge crosses the position; SW dipole of a compact source"

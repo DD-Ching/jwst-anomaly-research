@@ -1510,6 +1510,14 @@ kernel for compact-source stamps (`--kernel-px 4 --kernel-stamps`). On MACS0416 
 kernel for the whole box (compact cores +11–28 % in SW); a stamp-only kernel (loses arc transients); one kernel on
 stamps ∪ arc pixels. HOTPANTS/SFFT not adopted: the in-script fit passes the validation; revisit if a field with a
 spatially varying PSF (box > 1′) leaves ridges.
+
+**Addendum 2026-10-15d (Abell 2744, jw02756 o003/o002).** The first Abell 2744 pair is the DD 2756 visits (2022-10-20,
+2022-12-06; six bands, jwst 2.0.1 for both, PA 30° vs 60°). UNCOVER 2561 o006 (2024-07) was rejected: its footprint
+(Dec −30.43 to −30.55) misses the core, though MAST's centre coordinate suggests otherwise. Check mosaic corners, not
+`s_ra`/`s_dec`. UNCOVER o001 SW mosaics are 5.2–7.7 GB, so `scripts/i2d_region.py` cuts SCI/ERR to a reference
+footprint by byte-range rows (for a later UNCOVER pair). The grid is unchanged. The 30° roll makes rotated star
+spikes the main hit class. `persistence_check.py` flagged the five epoch-1 SW-only hits as persistence. It returned on_sky / inconclusive for two epoch-2 SW-only hits, which are one NRCB3 pixel seen in two dithers (by hand). The tool tests each sky position alone, so it misses a detector-fixed feature that falls on several positions. Revisit
+if a published Abell 2744 transient with coordinates becomes available for validation.
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**

@@ -21,6 +21,34 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** no pilot proposed; S2 not started. Remedy (owner's call, about 4–4.5 h): a joint lens + intrinsic DE
   on the cached lens grid, and longer unlensed runs. About 1.3 h used; X4 has about 9.6 h left.
 
+## 2026-10-15: Abell 2744 two-epoch grid (DD 2756 o003/o002): 22 hit groups, all ordinary, 0 candidates
+- **Hypothesis before computing:** a catalogued position in the Abell 2744 core changed by ≥ 0.3 mag at ≥ 5σ in two
+  bands between 2022-10-20 and 2022-12-06 (47 d; e.g. the DD 2756 lensed SN or a caustic transient). Ordinary:
+  spikes, persistence, proper motion, edges, background. Plan change: any survivor goes to `/vet-candidate`.
+- **Pair choice (failed approach first):** UNCOVER o001 (2022-11) vs o006 (2024-07) looked ideal by MAST centre
+  coordinates, but o006's mosaic covers Dec −30.43 to −30.55 and misses the core. The ALT and MegaScience epochs share
+  only F356W or F090W with earlier data. The DD 2756 visits have six shared bands over the core.
+- `transient_grid.py`, unchanged (6 bands, 3,431 positions, noise scales 1.18–1.34). Injections: −0.75 mag 99 %,
+  −0.44 mag 89 %. **22 hit groups:** 12 star spikes/wings (the PA changes 30°→60°), 1 star wing (g13, 20.5 mag
+  point source, no proper motion beyond the 13/22 mas frame offset), 5 persistence, 2 detector-fixed artifact, 1 galaxy-edge background, 1
+  mosaic edge. **0 candidates.**
+  `results/transients/a2744_grid_2756/` (`hit_verdicts.ecsv`).
+- **Persistence:** g0/g3/g4/g6/g7 are diffuse SW-only blobs in epoch 1. They are absent in the simultaneous LW
+  exposures, in epoch 2 and in UNCOVER 13 days later. `persistence_check.py` gives "persistence" for all five.
+  g16/g17 (epoch 2, SW only): the tool gives on_sky / inconclusive, but every detection of both sits on one NRCB3 pixel
+  (~1855, 1976), in dithers 2 and 1, with S/N decaying (F115W 64 → 34, F150W 11, F200W 5). That makes them a
+  detector-fixed feature at two sky positions (by hand). Gap: the tool checks each position alone.
+- **Contact sheets looked at:** six bands × (e1, e2 resampled onto e1, difference), 2″ stamps; UNCOVER F150W, F200W
+  and F277W stamps at the eight artifact positions. First sheets without resampling were misleading: the 30° roll
+  made stars look displaced.
+- **Validation limit:** there is no published Abell 2744 transient with coordinates in this window (the DD 2756 SN
+  has no public position), so recovery rests on injections and on the grid's MACS0416 validation (D-027 addendum).
+- New: `scripts/i2d_region.py` (byte-range SCI/ERR cut of a huge mosaic to another mosaic's footprint; unit tests),
+  for an UNCOVER pair. Data: 12 `_i2d` (9.6 GB) streamed and deleted.
+- **Handoff:** UNCOVER o001 (2022-11-02) vs DD 2756 o002 (2022-12-06), with `i2d_region.py` cutting UNCOVER SW to
+  the 2756 footprint. UNCOVER F356W vs ALT 3516 F356W (2023-11/12) is single-band, so it needs `--min-bands 1` plus
+  the persistence test; PLATE-23a (Pang+2026) would validate it once its position is checked.
+
 ## 2026-10-15: X4 S1c: R1 keeps its residual against validated aligned-spin fits; undetermined with IMRPhenomXPHM (simulated)
 - **Question (owner):** does R1's large difference (30 M☉ behind a 300 M☉ negative lens, y 0.3) survive a validated
   ordinary fit and a more complete waveform? Plan frozen first (`docs/state/units/X4.md`, S1c). 2.0 h, the cap.

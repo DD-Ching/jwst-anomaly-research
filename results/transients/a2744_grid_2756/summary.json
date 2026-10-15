@@ -1,0 +1,119 @@
+{
+  "n_positions": 6129,
+  "n_merged_after_refinement": 155,
+  "n_measured_any_band": 3431,
+  "n_measured_all_bands": 3274,
+  "n_hits": 29,
+  "n_hit_groups": 22,
+  "n_hits_mixed": 2,
+  "recentre_in": "origin",
+  "same_sign": false,
+  "bands": {
+    "F115W": {
+      "e1": "jw02756-o003_t001_nircam_clear-f115w_i2d.fits",
+      "e2": "jw02756-o002_t001_nircam_clear-f115w_i2d.fits",
+      "noise_scale": 1.3445548342084261,
+      "zero_point_mag": 0.007983269249256603,
+      "n_measured": 3418,
+      "n_pass": 31,
+      "positions_per_s": 1665.2474935206644
+    },
+    "F150W": {
+      "e1": "jw02756-o003_t001_nircam_clear-f150w_i2d.fits",
+      "e2": "jw02756-o002_t001_nircam_clear-f150w_i2d.fits",
+      "noise_scale": 1.2254708710105187,
+      "zero_point_mag": 0.013386332538718373,
+      "n_measured": 3420,
+      "n_pass": 33,
+      "positions_per_s": 2117.8620976538496
+    },
+    "F200W": {
+      "e1": "jw02756-o003_t001_nircam_clear-f200w_i2d.fits",
+      "e2": "jw02756-o002_t001_nircam_clear-f200w_i2d.fits",
+      "noise_scale": 1.1983176607372636,
+      "zero_point_mag": 0.021311350949978915,
+      "n_measured": 3415,
+      "n_pass": 47,
+      "positions_per_s": 1565.501759106739
+    },
+    "F277W": {
+      "e1": "jw02756-o003_t001_nircam_clear-f277w_i2d.fits",
+      "e2": "jw02756-o002_t001_nircam_clear-f277w_i2d.fits",
+      "noise_scale": 1.315226473043469,
+      "zero_point_mag": 0.014821294178711725,
+      "n_measured": 3277,
+      "n_pass": 23,
+      "positions_per_s": 2447.295284928321
+    },
+    "F356W": {
+      "e1": "jw02756-o003_t001_nircam_clear-f356w_i2d.fits",
+      "e2": "jw02756-o002_t001_nircam_clear-f356w_i2d.fits",
+      "noise_scale": 1.2481336678833042,
+      "zero_point_mag": 0.016089184776168386,
+      "n_measured": 3275,
+      "n_pass": 21,
+      "positions_per_s": 2108.170364492139
+    },
+    "F444W": {
+      "e1": "jw02756-o003_t001_nircam_clear-f444w_i2d.fits",
+      "e2": "jw02756-o002_t001_nircam_clear-f444w_i2d.fits",
+      "noise_scale": 1.1789449234792635,
+      "zero_point_mag": 0.0129347833304478,
+      "n_measured": 3276,
+      "n_pass": 13,
+      "positions_per_s": 2558.6683672193517
+    }
+  },
+  "injection": {
+    "floor_x_median_error": 10.0,
+    "fwhm_arcsec": 0.1,
+    "runs": [
+      {
+        "frac": 1.0,
+        "nominal_dmag": -0.752574989159953,
+        "n": 500,
+        "recovered_frac": 0.99,
+        "n_nominal": 145,
+        "recovered_frac_nominal": 1.0,
+        "per_band_pass_frac": {
+          "F115W": 0.624,
+          "F150W": 0.768,
+          "F200W": 0.81,
+          "F277W": 0.816,
+          "F356W": 0.854,
+          "F444W": 0.902
+        }
+      },
+      {
+        "frac": 0.5,
+        "nominal_dmag": -0.4402281476392031,
+        "n": 500,
+        "recovered_frac": 0.894,
+        "n_nominal": 89,
+        "recovered_frac_nominal": 0.9662921348314607,
+        "per_band_pass_frac": {
+          "F115W": 0.43,
+          "F150W": 0.578,
+          "F200W": 0.656,
+          "F277W": 0.596,
+          "F356W": 0.678,
+          "F444W": 0.784
+        }
+      }
+    ],
+    "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated; injections sit at the measured (recentred or refined) position, so recentring is not tested; a brightening injected in every band is recovered alike under the same-sign and mixed-sign rules"
+  },
+  "command": "transient_grid.py --band F115W/F150W/F200W/F277W/F356W/F444W jw02756 o003 (2022-10-20) o002 (2022-12-06) --catalog <12 pipeline _cat.ecsv, o003 then o002> --epoch2-catalogs 6 7 8 9 10 11 --inject 500 --inject-frac 1.0 0.5 --procs 4 (defaults: --recentre-in origin, mixed-sign hits allowed)",
+  "candidates": 0,
+  "vetting": {
+    "n_groups": 22,
+    "persistence": 5,
+    "detector_fixed_artifact": 2,
+    "star_spike_or_wing": 12,
+    "star_wing": 1,
+    "background": 1,
+    "edge": 1,
+    "table": "hit_verdicts.ecsv"
+  },
+  "validation_note": "no published Abell 2744 transient with coordinates in this window (the DD 2756 z=3.47 SN has no public position); recovery from injections only; persistence_check.py returned persistence for 5 epoch-1 SW-only hits; the 2 epoch-2 SW-only hits (g16/g17, tool: on_sky / inconclusive) are one detector pixel seen in two dithers, classified by hand"
+}
