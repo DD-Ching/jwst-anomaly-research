@@ -100,7 +100,8 @@ def test_kernel_match_removes_psf_and_scale_difference_but_keeps_a_transient():
     e1n = e1 + rng.normal(0, 0.01, (n, n))
     e2n = e2 + rng.normal(0, 0.01, (n, n))
     v = np.full((n, n), 0.01**2)
-    m1, m2, var, k, scale = ad.kernel_match(e1n, e2n, v, v, 1.0, 4)
+    m1, m2, var, k, scale, conv = ad.kernel_match(e1n, e2n, v, v, 1.0, 4)
+    assert conv == 1
     assert abs(scale - 1.03) < 0.02
     d = m2 - m1
     inner = (slice(10, -10), slice(10, -10))
@@ -132,6 +133,6 @@ def test_kernel_match_with_stamps_keeps_a_transient_on_a_compact_source():
     e1n = e1 + rng.normal(0, 0.01, (n, n))
     e2n = e2 + tr + rng.normal(0, 0.01, (n, n))
     v = np.full((n, n), 0.01**2)
-    m1, m2, _, _, _ = ad.kernel_match(e1n, e2n, v, v, 1.0, 4, stamps=True)
+    m1, m2, _, _, _, _ = ad.kernel_match(e1n, e2n, v, v, 1.0, 4, stamps=True)
     d = m2 - m1
     assert d[100, 90] > 0.7 * tr[100, 90]

@@ -1505,8 +1505,8 @@ revisit if the Gaussian+scale approach cannot remove the arc ridge.
 
 **Addendum 2026-10-15c (pixel kernels).** The revisit condition held, so `arc_diff.py` now fits a 9 × 9 least-squares
 pixel kernel on the box (Bramich 2008 style; numpy lstsq, no new dependency) plus a second, leave-one-stamp-out
-kernel for compact-source stamps (`--kernel-px 4 --kernel-stamps`). On MACS0416 it keeps 4 / 5 (Ep1→Ep2) and 3 / 4
-(Ep1→Ep3) published arc transients and cuts unflagged hits to the published ones plus 5 (o213). Rejected: one
+kernel for compact-source stamps (`--kernel-px 4 --kernel-stamps`). On MACS0416 it keeps 4 / 5 (Ep1→Ep2) and 2 / 4
+(Ep1→Ep3) published arc transients and cuts unflagged hits to the published ones plus 3 (o213). Rejected: one
 kernel for the whole box (compact cores +11–28 % in SW); a stamp-only kernel (loses arc transients); one kernel on
 stamps ∪ arc pixels. HOTPANTS/SFFT not adopted: the in-script fit passes the validation; revisit if a field with a
 spatially varying PSF (box > 1′) leaves ridges.

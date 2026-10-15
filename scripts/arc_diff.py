@@ -260,6 +260,8 @@ def kernel_fit(
     Returns K of shape (2·half+1, 2·half+1) and the clipped χ² per fitted pixel; the constant is
     discarded (the median filter of the difference removes it).
     """
+    if half < 1:
+        raise ValueError("kernel half-width must be >= 1")
     n = 2 * half + 1
     good = np.isfinite(ref) & np.isfinite(tgt) & np.isfinite(var) & (var > 0)
     good[:half, :] = good[-half:, :] = good[:, :half] = good[:, -half:] = False
@@ -280,11 +282,14 @@ def kernel_fit(
     x_mat[:, -1] = 1.0
     t = tgt[ys, xs]
     w = 1.0 / np.sqrt(var[ys, xs])
+    if ys.size < 10 * (len(offs) + 1):
+        raise ValueError(f"too few pixels ({ys.size}) for a {n}x{n} kernel")
     keep = np.ones(ys.size, bool)
-    coef = np.zeros(len(offs) + 1)
-    for _ in range(n_iter):
+    for it in range(max(n_iter, 1)):
         coef, *_ = np.linalg.lstsq(x_mat[keep] * w[keep, None], t[keep] * w[keep], rcond=None)
         z = (x_mat @ coef - t) * w
+        if it == n_iter - 1:  # the returned kernel is the fit on the final mask
+            break
         sd = _robust_std(z[keep])
         new = np.abs(z) < clip * max(sd, 1e-12)
         if np.array_equal(new, keep):
@@ -320,13 +325,14 @@ def kernel_match(
     blur: float,
     half: int,
     stamps: bool = False,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, float]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, float, int]:
     """Convolve the sharper epoch (sign of the Gaussian ``blur``) with a fitted pixel kernel.
 
     The kernel is fitted on the whole box. With ``stamps``, pixels around compact sources are
-    convolved with a second kernel fitted on the other compact-source stamps. Variances use the
-    whole-box kernel. Returns matched epoch 1, matched epoch 2, the difference variance, the
-    whole-box kernel and the flux scale (epoch 2 / epoch 1).
+    convolved with a second kernel fitted on the other compact-source stamps. Variances follow
+    the stamp kernels inside their stamps. Returns matched epoch 1, matched epoch 2, the
+    difference variance, the whole-box kernel, the flux scale (epoch 2 / epoch 1) and the
+    convolved epoch (1 or 2).
     """
     var = v1 + v2
     conv1 = blur >= 0
@@ -334,7 +340,9 @@ def kernel_match(
     vref, vtgt = (v1, v2) if conv1 else (v2, v1)
     k, _ = kernel_fit(ref, tgt, var, half)
     filled = np.where(np.isfinite(ref), ref, 0.0)
+    vfill = np.where(np.isfinite(vref), vref, 0.0)
     m = ndimage.convolve(filled, k, mode="constant")
+    vm = ndimage.convolve(vfill, k**2, mode="constant")
     if stamps:
         # No single kernel fits both: the whole-box kernel leaves +10-30 % peak residuals on
         # compact sources in SW, a stamp-only kernel leaves the arc light (2026-10-15). Compact
@@ -342,24 +350,30 @@ def kernel_match(
         # transient on a compact source would otherwise train the kernel that subtracts it.
         stamp = compact_stamps(e1, half) & compact_stamps(e2, half)
         lab, nlab = ndimage.label(stamp)
-        grown = ndimage.grey_dilation(lab, size=2 * half + 1)
+        # a stamp's own pixels always belong to it; the grown rim goes to the highest label
+        owner = np.where(lab > 0, lab, ndimage.grey_dilation(lab, size=2 * half + 1))
         for i in range(1, nlab + 1):
-            ki, _ = kernel_fit(ref, tgt, var, half, mask=stamp & (lab != i))
-            sel = grown == i
-            if not sel.any():  # swallowed by a neighbour's footprint
+            sel = owner == i
+            if not sel.any():
+                continue
+            try:
+                ki, _ = kernel_fit(ref, tgt, var, half, mask=stamp & (lab != i))
+            except ValueError:  # too few other stamps: keep the whole-box kernel here
                 continue
             ys, xs = np.nonzero(sel)
             y0, y1 = max(ys.min() - half, 0), ys.max() + half + 1
             x0, x1 = max(xs.min() - half, 0), xs.max() + half + 1
-            sub = ndimage.convolve(filled[y0:y1, x0:x1], ki, mode="constant")
-            m[y0:y1, x0:x1][sel[y0:y1, x0:x1]] = sub[sel[y0:y1, x0:x1]]
+            win = sel[y0:y1, x0:x1]
+            m[y0:y1, x0:x1][win] = ndimage.convolve(filled[y0:y1, x0:x1], ki, mode="constant")[win]
+            vm[y0:y1, x0:x1][win] = ndimage.convolve(vfill[y0:y1, x0:x1], ki**2, mode="constant")[
+                win
+            ]
     m[~np.isfinite(ref)] = np.nan
-    vm = ndimage.convolve(np.where(np.isfinite(vref), vref, 0.0), k**2, mode="constant")
     var = vm + vtgt
     ksum = float(k.sum())
     if conv1:
-        return m, e2, var, k, ksum
-    return e1, m, var, k, 1.0 / ksum
+        return m, e2, var, k, ksum, 1
+    return e1, m, var, k, 1.0 / ksum, 2
 
 
 def flux_scale(a: np.ndarray, b: np.ndarray) -> float:
@@ -438,7 +452,7 @@ def band_diff(job: dict) -> dict:
     kern = None
     conv2 = blur < 0
     if job["kernel_px"] > 0:
-        m1, m2, var, kern, kscale = kernel_match(
+        m1, m2, var, kern, kscale, conv_epoch = kernel_match(
             b1["sci"],
             s2,
             b1["err"] ** 2,
@@ -447,7 +461,7 @@ def band_diff(job: dict) -> dict:
             job["kernel_px"],
             job["kernel_stamps"],
         )
-        conv2 = m2 is not s2
+        conv2 = conv_epoch == 2
     bg_px = int(np.ceil(job["bg_arcsec"] / b1["scale"])) | 1
     sep = max(int(round(2 * sig_psf)), 1)
 
@@ -487,10 +501,14 @@ def band_diff(job: dict) -> dict:
     bright[:edge, :] = bright[-edge:, :] = bright[:, :edge] = bright[:, -edge:] = False
     ys, xs = np.nonzero(bright)
     inj = {}
+    inj_unflagged = {}
+    core_thr = np.nanpercentile(b1["sci"], job["core_pct"])
+    core_r = int(np.ceil(job["core_arcsec"] / b1["scale"]))
     if job["inject"] and ys.size:
         sig_m2 = sig_psf if blur >= 0 else float(np.hypot(sig_psf, -blur))
         for mag in job["inject_mags"]:
             found = 0
+            found_unflagged = 0
             for _ in range(job["inject"]):
                 i = rng.integers(ys.size)
                 y, x = ys[i] + rng.uniform(-0.5, 0.5), xs[i] + rng.uniform(-0.5, 0.5)
@@ -514,8 +532,15 @@ def band_diff(job: dict) -> dict:
                 win = si[max(cy - r, 0) : cy + r + 1, max(cx - r, 0) : cx + r + 1]
                 if np.nanmax(win, initial=-np.inf) >= job["min_sigma"]:
                     found += 1
+                    core = b1["sci"][
+                        max(yi - core_r, 0) : yi + core_r + 1, max(xi - core_r, 0) : xi + core_r + 1
+                    ]
+                    if not np.nanmax(core, initial=-np.inf) >= core_thr:
+                        found_unflagged += 1
             inj[f"{mag:.2f}"] = found / job["inject"]
+            inj_unflagged[f"{mag:.2f}"] = found_unflagged / job["inject"]
     out["injection"] = inj
+    out["injection_unflagged"] = inj_unflagged
     return out
 
 
@@ -597,6 +622,8 @@ def main(argv: list[str] | None = None) -> int:
             "tile_arcsec": a.tile_arcsec,
             "kernel_px": a.kernel_px,
             "kernel_stamps": a.kernel_stamps,
+            "core_arcsec": a.core_arcsec,
+            "core_pct": a.core_pct,
             "min_sigma": a.min_sigma,
             "inject": a.inject,
             "inject_mags": a.inject_mags,
@@ -628,16 +655,22 @@ def main(argv: list[str] | None = None) -> int:
         )
     # Bright-core flag (ASSUMPTION: radius and level): PSF rotation between epochs leaves rosettes
     # around stars and compact galaxy cores that no single kernel removes (2026-10-15).
+    core_ref = [
+        (
+            _wcs(fits.Header.fromstring(r["wcs"])),
+            r["e1img"],
+            np.nanpercentile(r["e1img"], a.core_pct),
+            int(np.ceil(a.core_arcsec / r["scale_arcsec"])),
+        )
+        for r in res
+    ]
     for h in hits:
         h["near_bright_core"] = False
-        for r in res:
-            w = _wcs(fits.Header.fromstring(r["wcs"]))
-            img = r["e1img"]
+        for w, img, thr, rr in core_ref:
             x, y = w.all_world2pix(h["ra"], h["dec"], 0)
-            rr = int(np.ceil(a.core_arcsec / r["scale_arcsec"]))
             xi, yi = int(round(float(x))), int(round(float(y)))
             win = img[max(yi - rr, 0) : yi + rr + 1, max(xi - rr, 0) : xi + rr + 1]
-            if np.nanmax(win, initial=-np.inf) >= np.nanpercentile(img, a.core_pct):
+            if np.nanmax(win, initial=-np.inf) >= thr:
                 h["near_bright_core"] = True
                 break
     hits.sort(key=lambda h: -h["max_abs_sigma"])
@@ -708,7 +741,11 @@ def main(argv: list[str] | None = None) -> int:
                     "noise_scale",
                 )
             }
-            | {"n_detections": len(r["detections"]), "injection_recovered": r["injection"]}
+            | {
+                "n_detections": len(r["detections"]),
+                "injection_recovered": r["injection"],
+                "injection_recovered_not_near_core_this_band": r["injection_unflagged"],
+            }
             for r in res
         },
         "n_hits": len(hits),

@@ -273,8 +273,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      o211/o213 also null (no grid position on the Warhol arc). Arc differencing (`arc_diff.py`, D-027 addendum
      2026-10-15b): o211/o212 recovers 4 of 5 published Ep1→Ep2 arc transients (W1, W2, S1, S2; W3 4.9σ), but thin
      bright arcs still leave a positive ridge. Fixed with pixel kernels (addendum 2026-10-15c, `--kernel-px 4
-     --kernel-stamps`): 4/5 Ep1→Ep2 and 3/4 Ep1→Ep3 published transients; unflagged hits = the published ones
-     (o212) plus 5 (o213: 4 rosette wings/edge, h112 unvetted). Next: vet o213 h112 (third epoch o214), then tile
+     --kernel-stamps`): 4/5 Ep1→Ep2 and 2/4 Ep1→Ep3 published transients; unflagged hits = the published ones
+     (o212) plus 3 (o213: a rosette wing, the box edge, h108 unvetted). Next: vet o213 h108 (third epoch o214), then tile
      the rest of the MACS0416 arcs;
      re-run Sunrise/SMACS under the new defaults;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
