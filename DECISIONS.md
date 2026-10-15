@@ -4609,8 +4609,10 @@ unit overruns its budget.
 - going straight to full Bayesian PE on GW231123 (cost, before the cheaper pilot calibrates the statistic);
 - using the S0 inspiral-only, fixed-intrinsic result alone (shown optimistic in principle; S1 now quantifies it).
 
-**Evidence:** 19 / 36 configurations keep 1 − FF² ≥ 9/ρ² at ρ ≤ 30 against free aligned-spin binaries and a
-positive point lens; robust to restarts, wider bounds and IMRPhenomD (`results/x4/s1_*.json`). Simulated only.
+**Evidence** (simulated only; `results/x4/s1_*.json`):
+- 18 / 36 configurations keep 1 − FF² ≥ 9/ρ² at ρ ≤ 30 against free aligned-spin binaries (q ≤ 15) and a positive
+  point lens. This is after the frozen 6-parameter refinement; IMRPhenomD agrees within 0.006.
+- Extreme mass ratios absorb part of the signature.
 
 **Revisit if:**
 - precessing, higher-mode or embedded/binary-lens fits absorb the residual;
