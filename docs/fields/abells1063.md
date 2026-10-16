@@ -73,3 +73,36 @@ S1063 with the CATS v4.1 map model; nothing for `/vet-candidate`.
 - Gaia-seeded veto (`--spike-stars`, 11 Gaia DR3 stars G < 17 within 4′; D-043): the result is unchanged. 26 segments
   dropped, 51 `anti`, max 4 lines, p 0.435; with photo-z max 3, p 0.95. No saturated or off-mosaic star adds segments
   here.
+
+## Arc orientations against the predicted shear (`arcs`, 2026-10-16; draft PR #273)
+Plan, result and per-item classification: `results/arcs/abells1063-cats/` (`PLAN.md`, `RESULT.md`). Inputs: F200W
+pipeline catalogue `jw03293-o001_t001` (manifest) and the DJA v7.5 zout above. D-024 defaults (ASSUMPTIONs).
+- **Background, strong shear:** 20 of 24 aligned; **4 anti vs 0.524 expected (P(≥ 4) = 0.0021)**. F444W: 18 / 18
+  usable aligned stay aligned; none of the 4 anti has an F444W catalogue source within 0.3″.
+- All 4 anti are faint (m 27.43–28.18; 17 / 17 brighter sources aligned). The same split on the five earlier fields
+  does not show this faint-end excess (post hoc, `faint.json` per field).
+- They stay anti in GLAFIC, Sharon and Keeton v4 (each aligns 20 / 20 controls) and, for 3 of 4, after ICL
+  removal.
+- 2004 sits at κ ≈ 0.95–1.00 (degenerate predicted axis): explained. 1557 is in weak shear and looks like a blend.
+- **1316 and 2184 are open and unvetted, not candidates** (next: MUSE redshifts, a deblend for 2184, shape-noise
+  injections at m 27.5).
+- Vetting (`vetting/RESULT.md`): measurement-noise injections give P_anti 0 / 60 for both at their observed
+  elongation (gate passed); the independent HST axes are also anti at S/N ≈ 1. 1316 looks like two knots by eye
+  (blend untested). Still open, not candidates.
+- Vetting steps 2–3: 2184 is compatible with the measurement-noise model tested at its core flux (post hoc). 1316 and 1557 deblend into
+  same-colour clump pairs whose separation is the anti axis (1557: gate at its own flux passed; a third same-colour
+  point on the axis, post hoc). A randomly oriented clump pair is anti with probability 0.08–0.14 at their shears
+  (model, `vetting/clumps_1557.json`), which the catalogue shape-noise null does not model. Open, not candidates.
+- Step 4–5 and the owner-corrected summary (2026-10-16, `vetting/RESULT.md`):
+  - The clump-aware P(≥ 4) = 0.026 is exploratory. It depends on a simplified ordinary model: the clump fraction is
+    uncertain (0.093 at its upper value), and 2004's κ ≈ 1 degeneracy is not modelled.
+  - Ordinary morphology, noise and lens-model error are not excluded in general; the four models' errors are not
+    independent.
+  - 1316 and 1557 are pending vetting.
+  - The spectra examined did not confirm a redshift. After the review fixes, 1316 has one peak above the
+    threshold, at 6000.3 Å (S/N 6.72). The pre-registered checks classify it as not significant: the emission
+    rises away from the target, and offset apertures show it more strongly.
+  - The MUSE SODA-cutout limits are sensitivity estimates over usable channels only. At the present resolution and S/N, MUSE cannot reliably separate the 0.15–0.21″
+    clumps.
+  - Ordinary explanations are not excluded. The pause is a resource decision (owner, 2026-10-16).
+  - 1316 and 1557 stay pending-vetting flags with insufficient data.

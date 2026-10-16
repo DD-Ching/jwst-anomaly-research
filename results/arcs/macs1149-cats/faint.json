@@ -1,0 +1,47 @@
+{
+ "model": "macs1149-cats",
+ "label": "post hoc sensitivity check (derived)",
+ "rows": "strong-shear background rows of arcs.ecsv",
+ "mag_cut": 27.0,
+ "rank_test": {
+  "n": 24,
+  "anti": 2,
+  "k_faintest": 19,
+  "p": 0.6195652173913043,
+  "n_dropped": 0
+ },
+ "anti_mags": [
+  24.6,
+  28.12
+ ],
+ "bright": {
+  "classes": {
+   "n": 17,
+   "aligned": 15,
+   "anti": 1,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 4.483500613205821e-06
+  },
+  "anti_expected": {
+   "n": 17,
+   "anti": 1,
+   "expected": 0.331,
+   "p_ge_observed": 0.28180464957276513
+  }
+ },
+ "faint": {
+  "classes": {
+   "n": 7,
+   "aligned": 5,
+   "anti": 1,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.045267489711934145
+  },
+  "anti_expected": {
+   "n": 7,
+   "anti": 1,
+   "expected": 0.281,
+   "p_ge_observed": 0.24465339068673703
+  }
+ }
+}

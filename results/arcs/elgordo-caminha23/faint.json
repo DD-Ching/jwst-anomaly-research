@@ -1,0 +1,46 @@
+{
+ "model": "elgordo-caminha23",
+ "label": "post hoc sensitivity check (derived)",
+ "rows": "strong-shear background rows of arcs.ecsv",
+ "mag_cut": 27.0,
+ "rank_test": {
+  "n": 12,
+  "anti": 1,
+  "k_faintest": 4,
+  "p": 0.3333333333333333,
+  "n_dropped": 0
+ },
+ "anti_mags": [
+  26.53
+ ],
+ "bright": {
+  "classes": {
+   "n": 10,
+   "aligned": 8,
+   "anti": 1,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.0034039526494944877
+  },
+  "anti_expected": {
+   "n": 10,
+   "anti": 1,
+   "expected": 0.145,
+   "p_ge_observed": 0.13511737865424595
+  }
+ },
+ "faint": {
+  "classes": {
+   "n": 2,
+   "aligned": 2,
+   "anti": 0,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.1111111111111111
+  },
+  "anti_expected": {
+   "n": 2,
+   "anti": 0,
+   "expected": 0.021,
+   "p_ge_observed": 1.0
+  }
+ }
+}

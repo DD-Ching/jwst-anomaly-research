@@ -1,0 +1,210 @@
+{
+ "label": "feasibility check (derived); expected fluxes model_prediction",
+ "plan": "PLAN_spectra.md; fixes PLAN_fixes.md",
+ "assumptions": {
+  "boxcar_channels": 6,
+  "snr_det": 5.0,
+  "cut_arcsec": 2.4
+ },
+ "f090w_isophotal_ab": {
+  "1316": 28.86,
+  "1557": 28.69
+ },
+ "results": [
+  {
+   "target": 1557,
+   "cube": "ADP.2017-03-28T12:46:01.331",
+   "fwhm_arcsec": 1.081,
+   "exptime_s": 15885.3,
+   "cutout_bytes": 17098560,
+   "r_ap_arcsec": 0.54,
+   "n_spaxels": 24,
+   "noise_rescale": 1.52,
+   "frac_invalid_channels": 0.0,
+   "frac_sky_channels": 0.1738,
+   "lines": {
+    "OII": {
+     "window_A": [
+      8463,
+      9059
+     ],
+     "in_range": true,
+     "frac_not_usable": 0.593,
+     "max_snr_clean": 2.31,
+     "max_snr_lambda_A": 9022.5,
+     "above_threshold": false,
+     "limit_5sigma_cgs_median": 1.34e-18,
+     "expected_flux_cgs": {
+      "EW_rest_30": 3.34e-19,
+      "EW_rest_100": 1.11e-18,
+      "EW_rest_300": 3.34e-18
+     }
+    }
+   },
+   "whole_range": {
+    "window_A": [
+     4750,
+     9350
+    ],
+    "in_range": true,
+    "frac_not_usable": 0.366,
+    "max_snr_clean": 3.04,
+    "max_snr_lambda_A": 5040.0,
+    "above_threshold": false,
+    "limit_5sigma_cgs_median": 1.51e-18
+   }
+  },
+  {
+   "target": 1316,
+   "cube": "ADP.2017-03-23T15:58:03.937",
+   "fwhm_arcsec": 1.447,
+   "exptime_s": 7877.1,
+   "cutout_bytes": 17078400,
+   "r_ap_arcsec": 0.72,
+   "n_spaxels": 41,
+   "noise_rescale": 1.73,
+   "frac_invalid_channels": 0.0,
+   "frac_sky_channels": 0.1959,
+   "lines": {
+    "CIII]": {
+     "window_A": [
+      5478,
+      6413
+     ],
+     "in_range": true,
+     "frac_not_usable": 0.257,
+     "max_snr_clean": 6.72,
+     "max_snr_lambda_A": 6000.3,
+     "above_threshold": true,
+     "limit_5sigma_cgs_median": 3.37e-18,
+     "expected_flux_cgs": {
+      "EW_rest_30": 8.22e-19,
+      "EW_rest_100": 2.74e-18,
+      "EW_rest_300": 8.22e-18
+     }
+    },
+    "CIV": {
+     "window_A": [
+      4750,
+      5205
+     ],
+     "in_range": true,
+     "frac_not_usable": 0.049,
+     "max_snr_clean": 2.21,
+     "max_snr_lambda_A": 5125.3,
+     "above_threshold": false,
+     "limit_5sigma_cgs_median": 3.89e-18,
+     "expected_flux_cgs": {
+      "EW_rest_30": 1.25e-18,
+      "EW_rest_100": 4.16e-18,
+      "EW_rest_300": 1.25e-17
+     }
+    }
+   },
+   "whole_range": {
+    "window_A": [
+     4750,
+     9350
+    ],
+    "in_range": true,
+    "frac_not_usable": 0.416,
+    "max_snr_clean": 6.72,
+    "max_snr_lambda_A": 6000.3,
+    "above_threshold": true,
+    "limit_5sigma_cgs_median": 3.12e-18
+   }
+  }
+ ],
+ "peak_6000_1316": {
+  "lambda_A": 6000.28,
+  "snr_after_fixes": 6.72,
+  "noise_rescale_after_fixes": 1.73,
+  "narrowband_channels_A": [
+   5996.5,
+   6002.8
+  ],
+  "narrowband_peak_offset_arcsec": 2.79,
+  "narrowband_peak_sky_pa_deg": 223.8,
+  "narrowband_peak_at_valid_map_edge": true,
+  "r_ap_arcsec": 0.72,
+  "offset_apertures": [
+   {
+    "pixel_angle_deg": 0,
+    "sky_pa_deg": 270.0,
+    "n_spaxels": 41,
+    "snr_at_peak": 22.863406385299136,
+    "usable_at_peak": true,
+    "chance_positions_in_window": 4,
+    "chance_runs_in_window": 1,
+    "chance_runs_excluding_feature": 0,
+    "usable_positions_in_window": 566
+   },
+   {
+    "pixel_angle_deg": 60,
+    "sky_pa_deg": 330.0,
+    "n_spaxels": 42,
+    "snr_at_peak": 3.258809682756354,
+    "usable_at_peak": true,
+    "chance_positions_in_window": 0,
+    "chance_runs_in_window": 0,
+    "chance_runs_excluding_feature": 0,
+    "usable_positions_in_window": 547
+   },
+   {
+    "pixel_angle_deg": 120,
+    "sky_pa_deg": 30.0,
+    "n_spaxels": 42,
+    "snr_at_peak": 2.5966927055390645,
+    "usable_at_peak": true,
+    "chance_positions_in_window": 0,
+    "chance_runs_in_window": 0,
+    "chance_runs_excluding_feature": 0,
+    "usable_positions_in_window": 555
+   },
+   {
+    "pixel_angle_deg": 180,
+    "sky_pa_deg": 90.0,
+    "n_spaxels": 41,
+    "snr_at_peak": 0.5846435114105146,
+    "usable_at_peak": true,
+    "chance_positions_in_window": 0,
+    "chance_runs_in_window": 0,
+    "chance_runs_excluding_feature": 0,
+    "usable_positions_in_window": 563
+   },
+   {
+    "pixel_angle_deg": 240,
+    "sky_pa_deg": 150.0,
+    "n_spaxels": 41,
+    "snr_at_peak": 8.901943545570212,
+    "usable_at_peak": true,
+    "chance_positions_in_window": 3,
+    "chance_runs_in_window": 2,
+    "chance_runs_excluding_feature": 0,
+    "usable_positions_in_window": 569
+   },
+   {
+    "pixel_angle_deg": 300,
+    "sky_pa_deg": 210.0,
+    "n_spaxels": 42,
+    "snr_at_peak": null,
+    "usable_at_peak": false,
+    "chance_positions_in_window": 4,
+    "chance_runs_in_window": 2,
+    "chance_runs_excluding_feature": 0,
+    "usable_positions_in_window": 565
+   }
+  ],
+  "expected_chance_positions_per_window_search": 1.8333333333333333,
+  "expected_chance_runs_per_window_search_deviation": 0.8333333333333334,
+  "expected_chance_runs_excluding_feature_deviation": 0.0,
+  "checks": {
+   "valid_and_unmasked": true,
+   "snr_ge_threshold": true,
+   "narrowband_peak_within_r_ap": false,
+   "no_offset_aperture_ge_3": false,
+   "expected_chance_positions_lt_0p05": false
+  },
+  "class": "not significant under the calibration"
+ }
+}

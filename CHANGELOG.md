@@ -2,6 +2,106 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: `arcs` on Abell S1063: 4 background anti vs 0.52 expected; 2004 at κ ≈ 1, 2184 compatible with the tested noise model; 1316, 1557 pending vetting; public spectra cannot settle them (#273)
+- **New field for the arc-orientation test** (D-024 defaults; plan committed first): CATS v4.1 maps, GLIMPSE F200W,
+  DJA v7.5 photo-z. Strong-shear background: 20 / 24 aligned, **4 anti vs 0.524 (P 0.0021)**.
+- **Ordinary tests (new scripts):**
+  - `arcs_bands.py` gains S1063: F444W controls 18 / 18; the anti have no F444W match;
+  - `arcs_faint.py` (post hoc): all anti at m ≥ 27.4, but other fields' faint ends do not show it;
+  - `arcs_bgsub_shapes.py`: ICL-subtracted moments, controls 18 / 20, 3 of 4 stay anti;
+  - `arcs_second_models.py`: GLAFIC / Sharon / Keeton v4 κ, γ by byte range, controls 20 / 20, all 4 stay anti.
+- **Per item:**
+  - 2004 explained (κ ≈ 1);
+  - 1557 likely an intrinsic shape or blend in weak shear;
+  - **1316 and 2184 open, unvetted, not candidates**.
+- **Deviation:** no known-image check (map model; as MACS1149).
+- **Data:** the 75 MB DJA photo-z tarball was streamed to the scratchpad; the F200W catalogue sits in the gitignored
+  cache; the team maps were read by byte range.
+- **Vetting, second run (`vetting/`, plan first):** `scripts/arcs_vet_noise.py` injects aligned Gaussians with each
+  row's flux, size and ellipticity at 60 empty positions per row and re-measures them. The gate passed (min 0.9667).
+  1316 and 2184 both have **P_anti 0 / 60** → not noise-explicable. Sample: 3 observed vs 0.017 expected.
+  - Post hoc: at injected e = 0.2 the targets keep P_anti ≤ 2 / 60 (their own gate 60 / 60), but the all-row gate
+    fails on large galaxies. At e = 0 the test cannot exclude a near-round source.
+  - Independent HST axes (HFF-DeepSpace SExtractor) are also anti for both, at S/N ≈ 1.
+  - Cutouts looked at: 1316 shows two knots along its axis (blend untested); 2184 is a blob 2″ from the giant arc.
+  - All-VizieR query within 1.5″: no spectroscopic redshift (not stored).
+- **Vetting, step 2 (`vetting/PLAN_deblend.md` + addendum first; `scripts/arcs_vet_deblend.py`):**
+  - 1316 (frozen): two knots 0.208″ apart (ΔBIC 134, gate 20 / 20), the separation is the anti axis (78.5°), knot
+    colours consistent (p 0.146) → clump pair, stays open. Post hoc: at its fitted flux (⅓ of the catalogue flux)
+    the gate gives 0.75 < 0.8, so the two-knot call is not validated there.
+  - 2184 (frozen): arc-fragment test invalid (control fails without an error floor). Post hoc 10 % floor: control
+    passes, 2184's SED differs from the giant arc (p ≤ 9 × 10⁻⁶).
+  - **Failed assumption found:** step 1 injected catalogue fluxes, but the 0.3″ cores are −0.47 to +3.09 mag
+    fainter (1316 +1.24, 2184 +2.49). Re-run with each row's core flux (`--flux core`): gate passes; **1316 0 / 60,
+    2184 7 / 60 (noise-explicable)**; sample 3 vs 0.333 expected, P 0.00039 (excess remains; 1316 and 1557 at 0).
+- **Handoff:** 2184 explained by measurement noise at core flux (post hoc), not a candidate. 1316 open, unvetted,
+  not a candidate. Next: 1557 through the same tests; a redshift for 1316 (MUSE or a second photo-z code); use
+  `--flux core` on the other `arcs` fields (`vetting/RESULT.md` "Next").
+- **Vetting, step 3 (`vetting/PLAN_1557.md` first; `arcs_vet_deblend.py --target 1557`):** 1557 is `two-knot`
+  (ΔBIC 227, 0.147″), and this time the gate ran at the source's own flux and separation and passed (0.85 / 0.95);
+  separation 75° from the prediction, knot colours consistent (p 0.019) → **clump pair, stays open**.
+  - Post hoc (`scripts/arcs_vet_clumps.py`): a PSF-sized third point 0.29″ away on the same axis, inside the same
+    catalogue segment, same colour (p ≥ 0.0069).
+  - Post hoc model: a randomly oriented point pair is anti with probability 0.144 / 0.137 at g 0.43 / 0.45 and
+    0.084–0.113 at g 1.6–1.9; the shape-noise null behind P 0.0021 / 0.00039 does not model clump pairs.
+- **Handoff:** both remaining anti rows are clump pairs; the excess is measured against a null without clumps.
+  Next: a clump-pair census of the 24 strong-shear rows with the same frozen rule (plan first; exploratory), then
+  the expected anti count with clump rows. MUSE redshifts need a download decision (owner).
+- **Vetting, step 4 (`vetting/PLAN_census.md` first; `scripts/arcs_vet_census.py`; exploratory):** the step-3
+  deblend with an own-flux gate on all 24 strong-shear rows: gate passed 21, `two-knot` 5 (1061, 1316, 1452, 1557,
+  2449; f̂ 0.238). Two-knot rows get the clump-orientation anti probability: expected anti 0.52 → 1.24, P(≥ 4)
+  0.00082 → **0.026** → frozen outcome **excess remains under the clump-aware null**. P ≥ 0.05 only for k = 3 / 2 or
+  f at its 95 % upper end (0.093).
+- **Handoff:** 1316 and 1557 open, unvetted, not candidates. Next: z_spec from the ESO MUSE cube (needs the owner's
+  download decision), else a second photo-z code or the same census on another field's anti rows.
+- **Owner-corrected summary (2026-10-16; records kept):**
+  - P 0.026 is exploratory and depends on a simplified ordinary model: the clump fraction is uncertain (0.093 at
+    f = 0.472), and 2004's κ ≈ 1 degeneracy is not modelled.
+  - Ordinary morphology, noise and model error are not excluded in general; the models' errors are not fully
+    independent.
+  - 2184 is compatible with the tested noise model.
+- **Step 5, spectroscopy feasibility (`vetting/PLAN_spectra.md` first; `scripts/arcs_vet_spectra.py`):**
+  - No catalogued redshift within 2.4″ (all-VizieR 6″ cone). Richard+2021 does not cover AS1063.
+  - ESO MUSE cubes are 5.7–5.8 GB each, but SODA cutouts are 12–17 MB.
+  - Lines, after the review fixes (below):
+    - 1557: no usable position reaches the threshold.
+    - 1316: one does, at 6000.3 Å, and it is classified as not significant (below).
+    - Positions that are not usable: 37–42 % of the range and 59 % of 1557's [O II] window.
+  - The median 5σ limits (1.34 × 10⁻¹⁸ for [O II] of 1557, 4.4 h; 3.37 × 10⁻¹⁸ for C III] of 1316, 2.2 h, 1.45″)
+    are sensitivity estimates. They depend on the line width, channel noise, continuum and aperture assumptions,
+    and they do not exclude a line anywhere in the window. They correspond to rest EW of order 240 Å / 250 Å.
+  - At the present resolution (≥ 0.62″) and S/N, MUSE cannot reliably separate the 0.15–0.21″ clumps.
+  - The result is undetermined. Implementation deviation: the sky flag was replaced before use.
+- **Conclusion:** the spectra examined did not confirm a redshift; ordinary explanations are not excluded; the
+  pause is a resource decision.
+- **Owner decision 2026-10-16:**
+  - Wait for 116.28VK.001.
+  - 1316 and 1557 stay as pending-vetting flags with insufficient data.
+  - No stacking, no whole-cube download, no new spectroscopy tool unit.
+  - Reassess only for a reliable target redshift, a usable 1-D spectrum or materially better data; the arrival of
+    data is not an automatic download or re-run.
+  - Other authorized searches continue.
+- **Final code review → fixes and a limited re-run (owner-approved; `vetting/PLAN_fixes.md` first):**
+  - Fixes: usable-channel noise rescale; per-channel validity; deblend flux start and bound from the positive
+    pixels; census null drops the rows the count drops. Each has a unit test (`tests/test_arcs_vet_fixes.py`).
+  - Re-run used the same two MUSE cutouts and the same JWST stamps. Before-fix outputs are kept as
+    `*_before_fixes.*`, with the diff in `fixes_diff.json`.
+  - **Changed:**
+    - 1316 rescale 2.44 → 1.73; C III] limit 4.75 → 3.37 × 10⁻¹⁸; C IV 5.51 → 3.89 × 10⁻¹⁸;
+    - the 6000.3 Å peak S/N 4.77 → 6.72;
+    - census P(≥ 2) without 2184 0.359 → 0.354;
+    - injection-gate recalls (1316 post hoc 0.75 → 0.95 two-knot, still failing on the single side at 0.75; 1557
+      0.90 / 0.95 → 1.00).
+  - **Unchanged:** every class, the 21 / 24 census gates (the flux bound did not cause the 1404 / 2004 / 2184 gate
+    failures), P(≥ 4) 0.026, P(≥ 3) 0.116, and `clumps_1557.json`.
+  - **6000 Å peak (pre-registered checks):** valid and above threshold, but:
+    - the narrow-band peak is 2.79″ away (sky PA 224°, at the edge of the valid map);
+    - the 1.5″ W offset aperture is stronger (S/N 22.9);
+    - the planned chance metric gives 1.83 per window search.
+    - → **not significant under the calibration** (frozen class), i.e. not a line of 1316; no redshift.
+    - Deviation, reported only: excluding the feature itself, no chance peak this strong elsewhere in the window,
+      so the feature is real emission centred off 1316.
+    - Decision to wait: unchanged.
 ## 2026-10-16: `arcs` on RXJ2129 with the DJA v7.0 catalogue: no result again (controls 64 % and 67 %)
 - **Why:** the RXJ2129 handoff (below): 12 strong-shear rows were too few. Plan frozen first
   (`results/arcs/rxj2129-dja/PLAN.md`, `ea2feb6`); `scripts/arcs_rxj2129_dja.py` converts the DJA SEP catalogue

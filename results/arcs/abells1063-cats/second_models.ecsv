@@ -1,0 +1,69 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int32}
+# - {name: mag, datatype: float64}
+# - {name: orientation_class, datatype: string}
+# - {name: pa_obs, datatype: float64}
+# - {name: glafic_v4_off_z2, datatype: float64}
+# - {name: glafic_v4_kappa_z2, datatype: float64}
+# - {name: glafic_v4_g_z2, datatype: float64}
+# - {name: glafic_v4_off_zphot, datatype: float64}
+# - {name: glafic_v4_kappa_zphot, datatype: float64}
+# - {name: glafic_v4_g_zphot, datatype: float64}
+# - {name: glafic_v4_class, datatype: string}
+# - {name: sharon_v4_off_z2, datatype: float64}
+# - {name: sharon_v4_kappa_z2, datatype: float64}
+# - {name: sharon_v4_g_z2, datatype: float64}
+# - {name: sharon_v4_off_zphot, datatype: float64}
+# - {name: sharon_v4_kappa_zphot, datatype: float64}
+# - {name: sharon_v4_g_zphot, datatype: float64}
+# - {name: sharon_v4_class, datatype: string}
+# - {name: keeton_v4_off_z2, datatype: float64}
+# - {name: keeton_v4_kappa_z2, datatype: float64}
+# - {name: keeton_v4_g_z2, datatype: float64}
+# - {name: keeton_v4_off_zphot, datatype: float64}
+# - {name: keeton_v4_kappa_zphot, datatype: float64}
+# - {name: keeton_v4_g_zphot, datatype: float64}
+# - {name: keeton_v4_class, datatype: string}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: abells1063-cats arcs.ecsv + HFF team maps}
+# - {photoz_source: /tmp/claude-0/s1063pz/abells1063-grizli-v7.5-fix.eazypy.zout.fits}
+# - {model_sha256: 789a3ed207cc990b2efdf6b7de0991087eabe6fa59124e0e36a863da2e555cae}
+# - {z_lens: 0.348}
+# - reference_radec: [342.18322, -44.530889]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - maps:
+#     interpolation: bilinear; Hessian from centred finite differences
+#     pixel_arcsec: 0.200133422281521
+#     shape: [1500, 1500]
+# - z_grid: [1.0, 2.0, 4.0]
+# - assumptions: {aligned_deg: 30.0, anti_deg: 60.0, z_margin: 0.1}
+# schema: astropy-2.0
+label mag orientation_class pa_obs glafic_v4_off_z2 glafic_v4_kappa_z2 glafic_v4_g_z2 glafic_v4_off_zphot glafic_v4_kappa_zphot glafic_v4_g_zphot glafic_v4_class sharon_v4_off_z2 sharon_v4_kappa_z2 sharon_v4_g_z2 sharon_v4_off_zphot sharon_v4_kappa_zphot sharon_v4_g_zphot sharon_v4_class keeton_v4_off_z2 keeton_v4_kappa_z2 keeton_v4_g_z2 keeton_v4_off_zphot keeton_v4_kappa_zphot keeton_v4_g_zphot keeton_v4_class
+645 25.065789089017116 aligned 148.8316848242407 6.2 0.576 1.01 6.2 0.466 0.65 aligned 5.8 0.614 1.13 5.8 0.498 0.7 aligned 5.9 0.568 1.02 5.9 0.46 0.66 aligned
+850 25.162057976884917 aligned 166.4135341789319 3.2 0.528 0.72 3.2 0.563 0.83 aligned 1.7 0.513 0.68 1.7 0.547 0.78 aligned 3.0 0.516 0.7 3.0 0.55 0.8 aligned
+857 22.82490422766505 aligned 113.54926536126658 1.9 0.668 0.88 1.9 0.546 0.53 aligned 0.3 0.67 0.95 0.3 0.548 0.56 aligned 1.7 0.68 0.88 1.7 0.556 0.52 aligned
+1004 26.354169899123242 aligned 98.96172817841256 9.3 0.683 0.72 9.3 0.629 0.56 aligned 5.6 0.672 0.67 5.6 0.619 0.53 aligned 10.7 0.685 0.69 10.7 0.631 0.54 aligned
+1061 27.4972417088941 aligned 84.9194269970796 3.2 0.507 0.3 3.2 0.529 0.32 aligned 10.1 0.469 0.29 10.1 0.49 0.32 aligned 4.0 0.508 0.3 4.0 0.53 0.32 aligned
+1316 27.54788688852583 anti 79.47248260462862 84.3 0.778 1.38 84.3 0.798 1.56 anti 84.3 0.808 1.61 84.3 0.829 1.86 anti 82.9 0.8 1.48 82.9 0.822 1.7 anti
+1404 27.70893198772781 aligned 2.6021038380652612 11.8 0.715 0.82 11.8 0.833 1.63 aligned 9.9 0.733 0.86 9.9 0.854 1.82 aligned 13.0 0.734 0.87 13.0 0.855 1.87 aligned
+1452 24.10163513013802 aligned 24.057486326996923 18.5 0.453 0.34 18.5 0.445 0.33 aligned 11.1 0.428 0.35 11.1 0.42 0.34 aligned 16.6 0.45 0.35 16.6 0.442 0.34 aligned
+1557 28.182181932104214 anti 100.16282286907182 78.7 0.743 0.61 78.7 0.671 0.43 anti 80.6 0.738 0.62 80.6 0.666 0.44 anti 78.4 0.761 0.65 78.4 0.687 0.45 anti
+1759 26.59506730671159 aligned 24.012095412910924 24.0 0.406 0.25 24.0 0.345 0.2 aligned 15.0 0.392 0.28 15.0 0.333 0.22 aligned 19.8 0.392 0.28 19.8 0.333 0.22 aligned
+1994 24.791398163920274 aligned 171.00384784599348 16.1 0.751 1.76 16.1 0.754 1.79 aligned 14.6 0.772 1.79 14.6 0.776 1.82 aligned 14.9 0.77 1.83 14.9 0.773 1.86 aligned
+2004 27.604370752657978 anti 48.62547041262388 80.2 0.903 5.71 80.2 0.954 12.69 anti 79.5 0.943 9.18 79.5 0.995 120.94 anti 80.1 0.944 9.33 80.1 0.997 165.88 anti
+2167 26.61864602835574 aligned 131.83479456085482 9.0 0.863 3.89 9.0 0.931 8.34 aligned 9.8 0.916 6.15 9.8 0.989 48.44 aligned 8.8 0.902 5.25 8.8 0.973 20.44 aligned
+2184 27.43189234343675 anti 80.37181851662899 70.7 0.723 1.63 70.7 0.709 1.52 anti 70.6 0.751 1.62 70.6 0.736 1.5 anti 72.0 0.736 1.66 72.0 0.721 1.54 anti
+2211 25.393689808197927 aligned 88.16796551612845 2.2 0.459 0.25 2.2 0.4 0.19 aligned 8.0 0.443 0.24 8.0 0.386 0.19 aligned 0.5 0.457 0.29 0.5 0.399 0.22 aligned
+2215 27.380386784086774 aligned 145.88710533586536 7.7 0.825 2.85 7.7 0.864 3.86 aligned 7.3 0.876 3.92 7.3 0.919 6.23 aligned 8.3 0.857 3.43 8.3 0.898 5.05 aligned
+2322 25.780249750339635 aligned 95.84135248766205 1.5 0.455 0.29 1.5 0.386 0.22 aligned 4.9 0.433 0.28 4.9 0.368 0.21 aligned 0.3 0.454 0.32 0.3 0.385 0.24 aligned
+2397 22.267704003334728 aligned 131.96921847081046 19.0 0.569 0.61 19.0 0.498 0.46 aligned 21.5 0.573 0.59 21.5 0.501 0.44 aligned 20.5 0.551 0.61 20.5 0.482 0.46 aligned
+2449 26.768567747096014 aligned 85.09689724715571 24.1 0.514 0.47 24.1 0.459 0.38 aligned 20.4 0.505 0.44 20.4 0.451 0.36 aligned 22.5 0.499 0.48 22.5 0.446 0.39 aligned
+3400 24.376557135689595 aligned 119.40259612905007 8.9 0.511 0.57 8.9 0.536 0.63 aligned 11.6 0.505 0.54 11.6 0.529 0.6 aligned 9.4 0.513 0.57 9.4 0.538 0.62 aligned
+3406 24.40104194815727 aligned 123.025353694284 7.8 0.659 1.36 7.8 0.692 1.57 aligned 7.6 0.689 1.43 7.6 0.722 1.68 aligned 7.8 0.661 1.39 7.8 0.693 1.61 aligned
+3551 26.85039459539341 aligned 160.51565612285248 2.8 0.69 1.22 2.8 0.727 1.46 aligned 2.7 0.703 1.3 2.7 0.741 1.58 aligned 3.2 0.7 1.31 3.2 0.739 1.58 aligned
+3763 24.76703449664345 aligned 146.0445973698385 23.3 0.587 0.52 23.3 0.584 0.51 aligned 29.5 0.577 0.48 29.5 0.574 0.47 aligned 26.7 0.588 0.54 26.7 0.586 0.54 aligned
+3816 21.919649678083026 aligned 151.14803621261183 1.8 0.714 1.53 1.8 0.634 1.06 aligned 3.0 0.734 1.5 3.0 0.652 1.02 aligned 3.4 0.728 1.55 3.4 0.646 1.06 aligned

@@ -55,6 +55,7 @@ FIELDS = {
     "macs0416-canucs": ("macs0416", "jw01208-o004_t002_nircam_clear-f444w_cat.ecsv"),
     "macs1149-cats": ("macs1149", "jw01208-o008_t004_nircam_clear-f444w_cat.ecsv"),
     "abell370-canucs": ("abell370", "jw01208-o002_t001_nircam_clear-f444w_cat.ecsv"),
+    "abells1063-cats": ("abells1063", "jw03293-o001_t001_nircam_clear-f444w_cat.ecsv"),
 }
 
 

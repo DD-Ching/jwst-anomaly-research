@@ -1,0 +1,44 @@
+{
+ "model": "macs0416-canucs",
+ "label": "post hoc sensitivity check (derived)",
+ "rows": "strong-shear background rows of arcs.ecsv",
+ "mag_cut": 27.0,
+ "rank_test": {
+  "n": 27,
+  "anti": 0,
+  "k_faintest": 0,
+  "p": 1.0,
+  "n_dropped": 0
+ },
+ "anti_mags": [],
+ "bright": {
+  "classes": {
+   "n": 15,
+   "aligned": 14,
+   "anti": 0,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 2.160443300663945e-06
+  },
+  "anti_expected": {
+   "n": 15,
+   "anti": 0,
+   "expected": 0.309,
+   "p_ge_observed": 1.0
+  }
+ },
+ "faint": {
+  "classes": {
+   "n": 12,
+   "aligned": 12,
+   "anti": 0,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 1.8816764231589195e-06
+  },
+  "anti_expected": {
+   "n": 12,
+   "anti": 0,
+   "expected": 0.122,
+   "p_ge_observed": 1.0
+  }
+ }
+}

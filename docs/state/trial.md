@@ -197,11 +197,16 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.8 (Sunrise arc `arc_diff`: o052 pair, sheet; o120 pair stopped) | — | — | 0.2 (orientation, claim, PR) | cloud routine 01FjRPtm, 06:08–07:25Z |
 | 2026-W42 | — | 0.4 (Abell 2744 orphan-pair dark-deflector screen: frozen rules, alignment, injections, top-15 sheet) | — | 0.1 (orientation, claim, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | — | 0.3 (process: "Before writing results" rules; orphan vetting paused) | interactive session 01AzKMDv |
+| 2026-W42 | ≈ 0.15 (`arcs` on Abell S1063) | — | ≈ 0.2 (S1063 anti: F444W, faint split, ICL-subtracted shapes, three team models; sheets looked at) | 0.1 (orientation, claim) | cloud routine 01P8KV8A, 07:08–07:35Z |
+| 2026-W42 | — | — | ≈ 0.3 (S1063 1316 / 2184: measurement-noise injections, HST axes, cutouts) | — | cloud routine trig01PNAm, 08:12–08:45Z |
 | 2026-W42 | — | — | 0.6 (Abell 2744 orphan per-pair vetting: E2 controls, VizieR E5/E6, #7 check, classification) | 0.1 (state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.3 (SMACS 0723 `arc_diff`: two pairs, Atalanta control, h061 re-box, h000 light curve; sheets looked at) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01De8CTn, 09:08–09:40Z |
 | 2026-W42 | ≈ 0.3 (Sunrise arc_diff o010→o120 LW: frozen rules, run, morphology, distances, sheet) | — | — | 0.1 (claim, state files, PR) | interactive session 01AzKMDv |
+| 2026-W42 | — | — | ≈ 0.4 (S1063 1557 deblend with own-flux gate, third-component and clump-orientation checks; sheet looked at) | 0.1 (orientation, takeover, merge, PR) | cloud routine trig01PNAm-1210, 12:10–12:50Z |
+| 2026-W42 | — | — | ≈ 0.3 (S1063 clump-pair census of 24 strong-shear rows: plan, own-flux gates, clump-aware sample test; sheet looked at) | 0.1 (orientation, takeover, PR) | cloud routine trig01PNAm-1316, 13:17–13:45Z |
 | 2026-W42 | — | — | ≈ 0.4 (full-chain known-case check: arc mask, SMACS / MACS0416 / Sunrise known cases, SMACS in-mask injections; mask figures looked at) | 0.1 (claim, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | ≈ 0.4 (review-list chain: position as label, known cases, whole-box injections, burden on 5 stored pairs, sheets looked at) | 0.1 (claim, state files, PR) | interactive session 01AzKMDv |
+| 2026-W42 | — | — | ≈ 0.6 (S1063 1316/1557 public-spectroscopy feasibility: VizieR, ESO ObsCore, SODA cutouts, wording corrections) | 0.1 (PR) | interactive session 01P8KV8A |
 | 2026-W42 | — | — | ≈ 0.3 (no-injection control at vetoed SMACS injection positions; sheet looked at) | 0.1 (orientation, claim, state files, PR) | cloud routine 01LuctU7, 14:08–14:40Z |
 | 2026-W42 | ≈ 0.4 (`arcs` on MACS0417: RELICS v1 and CANUCS v1 maps, cutouts looked at) | — | — | 0.1 (orientation, claim, PR) | cloud routine 012exdqt, 16:08–16:45Z |
 | 2026-W42 | ≈ 0.15 (`arcs` on MACS0647, CLASH maps, two epochs; no result) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01KYMo38, 17:08–17:25Z |

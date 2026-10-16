@@ -1,0 +1,49 @@
+{
+ "model": "abell370-canucs",
+ "label": "post hoc sensitivity check (derived)",
+ "rows": "strong-shear background rows of arcs.ecsv",
+ "mag_cut": 27.0,
+ "rank_test": {
+  "n": 56,
+  "anti": 4,
+  "k_faintest": 55,
+  "p": 0.9285714285714286,
+  "n_dropped": 0
+ },
+ "anti_mags": [
+  20.74,
+  25.26,
+  27.43,
+  27.8
+ ],
+ "bright": {
+  "classes": {
+   "n": 39,
+   "aligned": 34,
+   "anti": 2,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 4.889852019715913e-12
+  },
+  "anti_expected": {
+   "n": 39,
+   "anti": 2,
+   "expected": 0.513,
+   "p_ge_observed": 0.09404015703971265
+  }
+ },
+ "faint": {
+  "classes": {
+   "n": 17,
+   "aligned": 13,
+   "anti": 2,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.00034148168141928073
+  },
+  "anti_expected": {
+   "n": 17,
+   "anti": 2,
+   "expected": 0.431,
+   "p_ge_observed": 0.06999092974888836
+  }
+ }
+}

@@ -1,0 +1,865 @@
+{
+ "label": "before/after of the PLAN_fixes.md re-run (derived); relative changes \u2264 1e-6 are ignored (no absolute tolerance)",
+ "files": {
+  "spectra.json": {
+   "n_changed": 120,
+   "n_total": 170,
+   "changed": {
+    "/peak_6000_1316/checks/expected_chance_positions_lt_0p05": {
+     "before": null,
+     "after": false
+    },
+    "/peak_6000_1316/checks/narrowband_peak_within_r_ap": {
+     "before": null,
+     "after": false
+    },
+    "/peak_6000_1316/checks/no_offset_aperture_ge_3": {
+     "before": null,
+     "after": false
+    },
+    "/peak_6000_1316/checks/snr_ge_threshold": {
+     "before": null,
+     "after": true
+    },
+    "/peak_6000_1316/checks/valid_and_unmasked": {
+     "before": null,
+     "after": true
+    },
+    "/peak_6000_1316/class": {
+     "before": null,
+     "after": "not significant under the calibration"
+    },
+    "/peak_6000_1316/expected_chance_positions_per_window_search": {
+     "before": null,
+     "after": 1.8333333333333333
+    },
+    "/peak_6000_1316/expected_chance_runs_excluding_feature_deviation": {
+     "before": null,
+     "after": 0.0
+    },
+    "/peak_6000_1316/expected_chance_runs_per_window_search_deviation": {
+     "before": null,
+     "after": 0.8333333333333334
+    },
+    "/peak_6000_1316/lambda_A": {
+     "before": null,
+     "after": 6000.28
+    },
+    "/peak_6000_1316/narrowband_channels_A[0]": {
+     "before": null,
+     "after": 5996.5
+    },
+    "/peak_6000_1316/narrowband_channels_A[1]": {
+     "before": null,
+     "after": 6002.8
+    },
+    "/peak_6000_1316/narrowband_peak_at_valid_map_edge": {
+     "before": null,
+     "after": true
+    },
+    "/peak_6000_1316/narrowband_peak_offset_arcsec": {
+     "before": null,
+     "after": 2.79
+    },
+    "/peak_6000_1316/narrowband_peak_sky_pa_deg": {
+     "before": null,
+     "after": 223.8
+    },
+    "/peak_6000_1316/noise_rescale_after_fixes": {
+     "before": null,
+     "after": 1.73
+    },
+    "/peak_6000_1316/offset_apertures[0]/chance_positions_in_window": {
+     "before": null,
+     "after": 4
+    },
+    "/peak_6000_1316/offset_apertures[0]/chance_runs_excluding_feature": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[0]/chance_runs_in_window": {
+     "before": null,
+     "after": 1
+    },
+    "/peak_6000_1316/offset_apertures[0]/n_spaxels": {
+     "before": null,
+     "after": 41
+    },
+    "/peak_6000_1316/offset_apertures[0]/pixel_angle_deg": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[0]/sky_pa_deg": {
+     "before": null,
+     "after": 270.0
+    },
+    "/peak_6000_1316/offset_apertures[0]/snr_at_peak": {
+     "before": null,
+     "after": 22.863406385299136
+    },
+    "/peak_6000_1316/offset_apertures[0]/usable_at_peak": {
+     "before": null,
+     "after": true
+    },
+    "/peak_6000_1316/offset_apertures[0]/usable_positions_in_window": {
+     "before": null,
+     "after": 566
+    },
+    "/peak_6000_1316/offset_apertures[1]/chance_positions_in_window": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[1]/chance_runs_excluding_feature": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[1]/chance_runs_in_window": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[1]/n_spaxels": {
+     "before": null,
+     "after": 42
+    },
+    "/peak_6000_1316/offset_apertures[1]/pixel_angle_deg": {
+     "before": null,
+     "after": 60
+    },
+    "/peak_6000_1316/offset_apertures[1]/sky_pa_deg": {
+     "before": null,
+     "after": 330.0
+    },
+    "/peak_6000_1316/offset_apertures[1]/snr_at_peak": {
+     "before": null,
+     "after": 3.258809682756354
+    },
+    "/peak_6000_1316/offset_apertures[1]/usable_at_peak": {
+     "before": null,
+     "after": true
+    },
+    "/peak_6000_1316/offset_apertures[1]/usable_positions_in_window": {
+     "before": null,
+     "after": 547
+    },
+    "/peak_6000_1316/offset_apertures[2]/chance_positions_in_window": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[2]/chance_runs_excluding_feature": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[2]/chance_runs_in_window": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[2]/n_spaxels": {
+     "before": null,
+     "after": 42
+    },
+    "/peak_6000_1316/offset_apertures[2]/pixel_angle_deg": {
+     "before": null,
+     "after": 120
+    },
+    "/peak_6000_1316/offset_apertures[2]/sky_pa_deg": {
+     "before": null,
+     "after": 30.0
+    },
+    "/peak_6000_1316/offset_apertures[2]/snr_at_peak": {
+     "before": null,
+     "after": 2.5966927055390645
+    },
+    "/peak_6000_1316/offset_apertures[2]/usable_at_peak": {
+     "before": null,
+     "after": true
+    },
+    "/peak_6000_1316/offset_apertures[2]/usable_positions_in_window": {
+     "before": null,
+     "after": 555
+    },
+    "/peak_6000_1316/offset_apertures[3]/chance_positions_in_window": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[3]/chance_runs_excluding_feature": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[3]/chance_runs_in_window": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[3]/n_spaxels": {
+     "before": null,
+     "after": 41
+    },
+    "/peak_6000_1316/offset_apertures[3]/pixel_angle_deg": {
+     "before": null,
+     "after": 180
+    },
+    "/peak_6000_1316/offset_apertures[3]/sky_pa_deg": {
+     "before": null,
+     "after": 90.0
+    },
+    "/peak_6000_1316/offset_apertures[3]/snr_at_peak": {
+     "before": null,
+     "after": 0.5846435114105146
+    },
+    "/peak_6000_1316/offset_apertures[3]/usable_at_peak": {
+     "before": null,
+     "after": true
+    },
+    "/peak_6000_1316/offset_apertures[3]/usable_positions_in_window": {
+     "before": null,
+     "after": 563
+    },
+    "/peak_6000_1316/offset_apertures[4]/chance_positions_in_window": {
+     "before": null,
+     "after": 3
+    },
+    "/peak_6000_1316/offset_apertures[4]/chance_runs_excluding_feature": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[4]/chance_runs_in_window": {
+     "before": null,
+     "after": 2
+    },
+    "/peak_6000_1316/offset_apertures[4]/n_spaxels": {
+     "before": null,
+     "after": 41
+    },
+    "/peak_6000_1316/offset_apertures[4]/pixel_angle_deg": {
+     "before": null,
+     "after": 240
+    },
+    "/peak_6000_1316/offset_apertures[4]/sky_pa_deg": {
+     "before": null,
+     "after": 150.0
+    },
+    "/peak_6000_1316/offset_apertures[4]/snr_at_peak": {
+     "before": null,
+     "after": 8.901943545570212
+    },
+    "/peak_6000_1316/offset_apertures[4]/usable_at_peak": {
+     "before": null,
+     "after": true
+    },
+    "/peak_6000_1316/offset_apertures[4]/usable_positions_in_window": {
+     "before": null,
+     "after": 569
+    },
+    "/peak_6000_1316/offset_apertures[5]/chance_positions_in_window": {
+     "before": null,
+     "after": 4
+    },
+    "/peak_6000_1316/offset_apertures[5]/chance_runs_excluding_feature": {
+     "before": null,
+     "after": 0
+    },
+    "/peak_6000_1316/offset_apertures[5]/chance_runs_in_window": {
+     "before": null,
+     "after": 2
+    },
+    "/peak_6000_1316/offset_apertures[5]/n_spaxels": {
+     "before": null,
+     "after": 42
+    },
+    "/peak_6000_1316/offset_apertures[5]/pixel_angle_deg": {
+     "before": null,
+     "after": 300
+    },
+    "/peak_6000_1316/offset_apertures[5]/sky_pa_deg": {
+     "before": null,
+     "after": 210.0
+    },
+    "/peak_6000_1316/offset_apertures[5]/usable_at_peak": {
+     "before": null,
+     "after": false
+    },
+    "/peak_6000_1316/offset_apertures[5]/usable_positions_in_window": {
+     "before": null,
+     "after": 565
+    },
+    "/peak_6000_1316/r_ap_arcsec": {
+     "before": null,
+     "after": 0.72
+    },
+    "/peak_6000_1316/snr_after_fixes": {
+     "before": null,
+     "after": 6.72
+    },
+    "/plan": {
+     "before": "PLAN_spectra.md",
+     "after": "PLAN_spectra.md; fixes PLAN_fixes.md"
+    },
+    "/results[0]/frac_invalid_channels": {
+     "before": null,
+     "after": 0.0
+    },
+    "/results[0]/frac_sky_channels": {
+     "before": null,
+     "after": 0.1738
+    },
+    "/results[0]/lines/OII/above_threshold": {
+     "before": null,
+     "after": false
+    },
+    "/results[0]/lines/OII/detected": {
+     "before": false,
+     "after": null
+    },
+    "/results[0]/lines/OII/frac_not_usable": {
+     "before": null,
+     "after": 0.593
+    },
+    "/results[0]/lines/OII/frac_sky_flagged": {
+     "before": 0.593,
+     "after": null
+    },
+    "/results[0]/lines/OII/limit_5sigma_cgs_median": {
+     "before": 1.33e-18,
+     "after": 1.34e-18
+    },
+    "/results[0]/lines/OII/max_snr_clean": {
+     "before": 2.33,
+     "after": 2.31
+    },
+    "/results[0]/noise_rescale": {
+     "before": 1.51,
+     "after": 1.52
+    },
+    "/results[0]/whole_range/above_threshold": {
+     "before": null,
+     "after": false
+    },
+    "/results[0]/whole_range/detected": {
+     "before": false,
+     "after": null
+    },
+    "/results[0]/whole_range/frac_not_usable": {
+     "before": null,
+     "after": 0.366
+    },
+    "/results[0]/whole_range/frac_sky_flagged": {
+     "before": 0.36,
+     "after": null
+    },
+    "/results[0]/whole_range/max_snr_clean": {
+     "before": 3.06,
+     "after": 3.04
+    },
+    "/results[1]/frac_invalid_channels": {
+     "before": null,
+     "after": 0.0
+    },
+    "/results[1]/frac_sky_channels": {
+     "before": null,
+     "after": 0.1959
+    },
+    "/results[1]/lines/CIII]/above_threshold": {
+     "before": null,
+     "after": true
+    },
+    "/results[1]/lines/CIII]/detected": {
+     "before": false,
+     "after": null
+    },
+    "/results[1]/lines/CIII]/frac_not_usable": {
+     "before": null,
+     "after": 0.257
+    },
+    "/results[1]/lines/CIII]/frac_sky_flagged": {
+     "before": 0.257,
+     "after": null
+    },
+    "/results[1]/lines/CIII]/limit_5sigma_cgs_median": {
+     "before": 4.75e-18,
+     "after": 3.37e-18
+    },
+    "/results[1]/lines/CIII]/max_snr_clean": {
+     "before": 4.77,
+     "after": 6.72
+    },
+    "/results[1]/lines/CIV/above_threshold": {
+     "before": null,
+     "after": false
+    },
+    "/results[1]/lines/CIV/detected": {
+     "before": false,
+     "after": null
+    },
+    "/results[1]/lines/CIV/frac_not_usable": {
+     "before": null,
+     "after": 0.049
+    },
+    "/results[1]/lines/CIV/frac_sky_flagged": {
+     "before": 0.019,
+     "after": null
+    },
+    "/results[1]/lines/CIV/limit_5sigma_cgs_median": {
+     "before": 5.51e-18,
+     "after": 3.89e-18
+    },
+    "/results[1]/lines/CIV/max_snr_clean": {
+     "before": 1.89,
+     "after": 2.21
+    },
+    "/results[1]/lines/CIV/max_snr_lambda_A": {
+     "before": 4757.8,
+     "after": 5125.3
+    },
+    "/results[1]/noise_rescale": {
+     "before": 2.44,
+     "after": 1.73
+    },
+    "/results[1]/whole_range/above_threshold": {
+     "before": null,
+     "after": true
+    },
+    "/results[1]/whole_range/detected": {
+     "before": false,
+     "after": null
+    },
+    "/results[1]/whole_range/frac_not_usable": {
+     "before": null,
+     "after": 0.416
+    },
+    "/results[1]/whole_range/frac_sky_flagged": {
+     "before": 0.411,
+     "after": null
+    },
+    "/results[1]/whole_range/limit_5sigma_cgs_median": {
+     "before": 4.42e-18,
+     "after": 3.12e-18
+    },
+    "/results[1]/whole_range/max_snr_clean": {
+     "before": 4.77,
+     "after": 6.72
+    },
+    "/results[2]/cube": {
+     "before": "ADP.2025-11-20T15:47:55.061",
+     "after": null
+    },
+    "/results[2]/cutout_bytes": {
+     "before": 12312000,
+     "after": null
+    },
+    "/results[2]/finite_fraction": {
+     "before": 0.0,
+     "after": null
+    },
+    "/results[2]/n_spaxels": {
+     "before": 11,
+     "after": null
+    },
+    "/results[2]/no_data": {
+     "before": true,
+     "after": null
+    },
+    "/results[2]/target": {
+     "before": 1316,
+     "after": null
+    },
+    "/results[3]/cube": {
+     "before": "ADP.2025-11-20T15:47:55.061",
+     "after": null
+    },
+    "/results[3]/cutout_bytes": {
+     "before": 17311680,
+     "after": null
+    },
+    "/results[3]/finite_fraction": {
+     "before": 0.0,
+     "after": null
+    },
+    "/results[3]/n_spaxels": {
+     "before": 12,
+     "after": null
+    },
+    "/results[3]/no_data": {
+     "before": true,
+     "after": null
+    },
+    "/results[3]/target": {
+     "before": 1557,
+     "after": null
+    }
+   }
+  },
+  "deblend.json": {
+   "n_changed": 5,
+   "n_total": 162,
+   "changed": {
+    "/1316/gate_fitted_post_hoc/frac_two_called_two_knot": {
+     "before": 0.75,
+     "after": 0.95
+    },
+    "/1316/gate_fitted_post_hoc/single_classes/single": {
+     "before": 12,
+     "after": 11
+    },
+    "/1316/gate_fitted_post_hoc/single_classes/undecided": {
+     "before": 3,
+     "after": 4
+    },
+    "/1316/gate_fitted_post_hoc/two_classes/single": {
+     "before": 5,
+     "after": 1
+    },
+    "/1316/gate_fitted_post_hoc/two_classes/two-knot": {
+     "before": 15,
+     "after": 19
+    }
+   }
+  },
+  "deblend_1557.json": {
+   "n_changed": 14,
+   "n_total": 81,
+   "changed": {
+    "/1557/fitted_flux_image_units/m2": {
+     "before": 0.7600756240611876,
+     "after": 0.7600699088081326
+    },
+    "/1557/gate/frac_two_called_two_knot": {
+     "before": 0.9,
+     "after": 1.0
+    },
+    "/1557/gate/two_classes/single": {
+     "before": 2,
+     "after": null
+    },
+    "/1557/gate/two_classes/two-knot": {
+     "before": 18,
+     "after": 20
+    },
+    "/1557/gate_fitted/frac_two_called_two_knot": {
+     "before": 0.95,
+     "after": 1.0
+    },
+    "/1557/gate_fitted/two_classes/single": {
+     "before": 1,
+     "after": null
+    },
+    "/1557/gate_fitted/two_classes/two-knot": {
+     "before": 19,
+     "after": 20
+    },
+    "/1557/observed/m2[2]": {
+     "before": 0.5450898311084758,
+     "after": 0.5450862592800267
+    },
+    "/1557/observed/m2[3]": {
+     "before": 2.8060746126676324,
+     "after": 2.8060480744542464
+    },
+    "/1557/observed/m2[6]": {
+     "before": 0.21498579295271183,
+     "after": 0.21498364952810586
+    },
+    "/1557/observed/m2[7]": {
+     "before": 1.0070249344095825,
+     "after": 1.00701892371769
+    },
+    "/1557/observed/sep_px": {
+     "before": 4.705694831812196,
+     "after": 4.70563497486179
+    },
+    "/1557/observed/snr2": {
+     "before": 14.056106986306606,
+     "after": 14.055990662930236
+    },
+    "/1557/ratio_p": {
+     "before": 0.019309175407500195,
+     "after": 0.019309916474277662
+    }
+   }
+  },
+  "clumps_1557.json": {
+   "n_changed": 0,
+   "n_total": 44,
+   "changed": {}
+  },
+  "census.json": {
+   "n_changed": 46,
+   "n_total": 443,
+   "changed": {
+    "/rows/1004/pa_sep": {
+     "before": 97.6472106791317,
+     "after": 97.6474002780252
+    },
+    "/rows/1004/sep_arcsec": {
+     "before": 0.25138183232581346,
+     "after": 0.2513821143675939
+    },
+    "/rows/1004/snr2": {
+     "before": 35.59589525018476,
+     "after": 35.59582110335093
+    },
+    "/rows/1404/pa_sep": {
+     "before": 175.7659778863382,
+     "after": 175.76622598313008
+    },
+    "/rows/1404/sep_arcsec": {
+     "before": 0.2710629341462496,
+     "after": 0.27106242777391387
+    },
+    "/rows/1404/snr1": {
+     "before": 8.923618240186991,
+     "after": 8.923400293492877
+    },
+    "/rows/1404/snr2": {
+     "before": 10.56604243463961,
+     "after": 10.566150685150681
+    },
+    "/rows/1557/gate/frac_two_called_two_knot": {
+     "before": 0.95,
+     "after": 1.0
+    },
+    "/rows/1557/gate/two_classes/single": {
+     "before": 1,
+     "after": null
+    },
+    "/rows/1557/gate/two_classes/two-knot": {
+     "before": 19,
+     "after": 20
+    },
+    "/rows/1557/pa_sep": {
+     "before": 103.41097705743482,
+     "after": 103.41153607403835
+    },
+    "/rows/1557/sep_arcsec": {
+     "before": 0.14694235667252303,
+     "after": 0.14694048754975364
+    },
+    "/rows/1557/snr2": {
+     "before": 14.056106986306606,
+     "after": 14.055990662930236
+    },
+    "/rows/2004/dbic": {
+     "before": -1.3721032507432938,
+     "after": -1.3720818515795372
+    },
+    "/rows/2004/gate/frac_two_called_two_knot": {
+     "before": 0.2,
+     "after": 0.35
+    },
+    "/rows/2004/gate/single_classes/single": {
+     "before": 10,
+     "after": 8
+    },
+    "/rows/2004/gate/single_classes/undecided": {
+     "before": 3,
+     "after": 5
+    },
+    "/rows/2004/gate/two_classes/single": {
+     "before": 7,
+     "after": 4
+    },
+    "/rows/2004/gate/two_classes/two-knot": {
+     "before": 4,
+     "after": 7
+    },
+    "/rows/2004/m1_q": {
+     "before": 0.2894067625166889,
+     "after": 0.28951340992278934
+    },
+    "/rows/2004/m1_sigma_arcsec": {
+     "before": 0.17066153713448518,
+     "after": 0.17061567848169495
+    },
+    "/rows/2004/pa_sep": {
+     "before": 57.806050974338,
+     "after": 57.806941603366795
+    },
+    "/rows/2004/sep_arcsec": {
+     "before": 0.20851156134765556,
+     "after": 0.20850780252546436
+    },
+    "/rows/2004/snr1": {
+     "before": 4.1988411107965655,
+     "after": 2.965016186574292
+    },
+    "/rows/2004/snr2": {
+     "before": 2.965096684125737,
+     "after": 4.198888054399562
+    },
+    "/rows/2184/gate/frac_two_called_two_knot": {
+     "before": 0.5,
+     "after": 0.55
+    },
+    "/rows/2184/gate/single_classes/single": {
+     "before": 9,
+     "after": 8
+    },
+    "/rows/2184/gate/single_classes/undecided": {
+     "before": 6,
+     "after": 7
+    },
+    "/rows/2184/gate/two_classes/single": {
+     "before": 7,
+     "after": 2
+    },
+    "/rows/2184/gate/two_classes/two-knot": {
+     "before": 10,
+     "after": 11
+    },
+    "/rows/2184/gate/two_classes/undecided": {
+     "before": 3,
+     "after": 7
+    },
+    "/rows/2184/pa_sep": {
+     "before": 85.58974098613,
+     "after": 85.58992165841356
+    },
+    "/rows/2184/sep_arcsec": {
+     "before": 0.18687065435906217,
+     "after": 0.1868723971032812
+    },
+    "/rows/2184/snr1": {
+     "before": 3.400898044459221,
+     "after": 3.400906674546218
+    },
+    "/rows/2184/snr2": {
+     "before": 6.554911934821544,
+     "after": 6.555077823589319
+    },
+    "/rows/2215/pa_sep": {
+     "before": 145.51584563745084,
+     "after": 145.51627892373557
+    },
+    "/rows/2215/sep_arcsec": {
+     "before": 0.2885636492275527,
+     "after": 0.2885666338700092
+    },
+    "/rows/2215/snr1": {
+     "before": 13.727402432946313,
+     "after": 13.727380647636753
+    },
+    "/sample/k_counts/k2_core_flux": {
+     "before": null,
+     "after": 2
+    },
+    "/sample/k_counts/k3_bgsub": {
+     "before": null,
+     "after": 3
+    },
+    "/sample/k_counts/k4_screen": {
+     "before": null,
+     "after": 4
+    },
+    "/sample/p_ge_k_clump_aware/k2_core_flux": {
+     "before": 0.3585412600648934,
+     "after": 0.35376013557347824
+    },
+    "/sample/p_ge_k_mixture_f_hat/k2_core_flux": {
+     "before": 0.3229322824834345,
+     "after": 0.31815871681254476
+    },
+    "/sample/p_ge_k_mixture_f_upper/k2_core_flux": {
+     "before": 0.5435189969109318,
+     "after": 0.5359012702968828
+    },
+    "/sample/p_ge_k_shape_noise_only_check/k2_core_flux": {
+     "before": 0.08851225403795307,
+     "after": 0.08845374600010543
+    },
+    "/sample/rows_dropped_from_count_and_null/k2_core_flux[0]": {
+     "before": null,
+     "after": "2184"
+    }
+   }
+  },
+  "census.ecsv": {
+   "rows_changed": {
+    "2004": {
+     "dbic": [
+      -1.3721032507432938,
+      -1.3720818515795372
+     ],
+     "snr_min": [
+      2.965096684125737,
+      2.965016186574292
+     ],
+     "sep_arcsec": [
+      0.20851156134765556,
+      0.20850780252546436
+     ],
+     "gate_two_ok": [
+      0.2,
+      0.35
+     ]
+    },
+    "1004": {
+     "snr_min": [
+      35.59589525018476,
+      35.59582110335093
+     ],
+     "sep_arcsec": [
+      0.25138183232581346,
+      0.2513821143675939
+     ]
+    },
+    "1404": {
+     "snr_min": [
+      8.923618240186991,
+      8.923400293492877
+     ],
+     "sep_arcsec": [
+      0.2710629341462496,
+      0.27106242777391387
+     ]
+    },
+    "1557": {
+     "snr_min": [
+      14.056106986306606,
+      14.055990662930236
+     ],
+     "sep_arcsec": [
+      0.14694235667252303,
+      0.14694048754975364
+     ],
+     "gate_two_ok": [
+      0.95,
+      1.0
+     ]
+    },
+    "2184": {
+     "snr_min": [
+      3.400898044459221,
+      3.400906674546218
+     ],
+     "sep_arcsec": [
+      0.18687065435906217,
+      0.1868723971032812
+     ],
+     "gate_two_ok": [
+      0.5,
+      0.55
+     ]
+    },
+    "2215": {
+     "snr_min": [
+      13.727402432946313,
+      13.727380647636753
+     ],
+     "sep_arcsec": [
+      0.2885636492275527,
+      0.2885666338700092
+     ]
+    }
+   }
+  }
+ },
+ "max_relative_change_observed_fits": {
+  "deblend_1557": 1.3e-05,
+  "census.ecsv (dbic, snr_min, sep_arcsec)": 2.7e-05,
+  "census.json rows (fitted parameters, excluding gates and swapped snr1/snr2)": {
+   "value": 0.00037,
+   "at": "/rows/2004/m1_q"
+  }
+ },
+ "m2_component_order_swapped": [
+  "2004"
+ ]
+}

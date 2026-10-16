@@ -1,0 +1,94 @@
+{
+ "label": "post hoc (not in PLAN_1557.md); fits derived, fractions model_prediction",
+ "1557_third_component": {
+  "third_sigma_arcsec": 0.032,
+  "third_sep_from_knot1_knot2_arcsec": [
+   0.294,
+   0.44
+  ],
+  "pa_knot1_to_third": 111.7,
+  "sed_ujy_knot1_knot2_third": {
+   "f090w": [
+    [
+     0.0096,
+     0.0006
+    ],
+    [
+     0.0026,
+     0.0002
+    ],
+    [
+     0.0072,
+     0.0002
+    ]
+   ],
+   "f115w": [
+    [
+     0.0117,
+     0.0006
+    ],
+    [
+     0.0041,
+     0.0002
+    ],
+    [
+     0.0091,
+     0.0002
+    ]
+   ],
+   "f150w": [
+    [
+     0.0146,
+     0.0006
+    ],
+    [
+     0.005,
+     0.0002
+    ],
+    [
+     0.0102,
+     0.0002
+    ]
+   ],
+   "f200w": [
+    [
+     0.0133,
+     0.0005
+    ],
+    [
+     0.005,
+     0.0002
+    ],
+    [
+     0.0109,
+     0.0002
+    ]
+   ]
+  },
+  "third_vs_knot1": {
+   "p": 0.08075203708878836,
+   "n_bands": 4,
+   "class": "SED-consistent"
+  },
+  "third_vs_knot2": {
+   "p": 0.006860679435141722,
+   "n_bands": 4,
+   "class": "SED-consistent"
+  },
+  "knot1_vs_knot2_with_third": {
+   "p": 0.035158461787131265,
+   "n_bands": 4,
+   "class": "SED-consistent"
+  }
+ },
+ "clump_anti_fraction": {
+  "assumptions": "isotropic point-pair separations; reduced shear along the predicted axis; \u03ba < 1",
+  "g": {
+   "0.43": 0.144,
+   "0.45": 0.1372,
+   "1.5": 0.0732,
+   "1.6": 0.0843,
+   "1.9": 0.1129
+  }
+ }
+}

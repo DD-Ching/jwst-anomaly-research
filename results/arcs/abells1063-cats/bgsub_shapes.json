@@ -1,0 +1,68 @@
+{
+ "model": "abells1063-cats",
+ "image": "s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f200w_i2d.fits",
+ "label": "ordinary-explanation test (derived); predictions model_prediction",
+ "assumptions": {
+  "filter_arcsec": 1.0,
+  "weight_px": 3.0,
+  "peak_px": 3,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "pred_z": 2.0
+ },
+ "centre_radec": [
+  342.18322,
+  -44.530889
+ ],
+ "control_aligned_z2": {
+  "n": 20,
+  "stay_aligned": 18,
+  "median_dpa_pipeline_bgsub": 3.73
+ },
+ "anti": [
+  {
+   "label": 1316,
+   "class_obs_z2": "anti",
+   "class_bgsub": "anti",
+   "pa_obs": 79.47,
+   "pa_bgsub": 93.1,
+   "e_bgsub": 0.36,
+   "offset_pred_bgsub": 70.4,
+   "dpa_radial_obs": 10.12,
+   "dpa_radial_bgsub": 3.51
+  },
+  {
+   "label": 1557,
+   "class_obs_z2": "anti",
+   "class_bgsub": "anti",
+   "pa_obs": 100.16,
+   "pa_bgsub": 100.57,
+   "e_bgsub": 0.25,
+   "offset_pred_bgsub": 78.04,
+   "dpa_radial_obs": 14.74,
+   "dpa_radial_bgsub": 14.33
+  },
+  {
+   "label": 2004,
+   "class_obs_z2": "anti",
+   "class_bgsub": "mixed",
+   "pa_obs": 48.63,
+   "pa_bgsub": 27.43,
+   "e_bgsub": null,
+   "offset_pred_bgsub": 59.57,
+   "dpa_radial_obs": 14.4,
+   "dpa_radial_bgsub": 35.6
+  },
+  {
+   "label": 2184,
+   "class_obs_z2": "anti",
+   "class_bgsub": "anti",
+   "pa_obs": 80.37,
+   "pa_bgsub": 87.79,
+   "e_bgsub": 0.22,
+   "offset_pred_bgsub": 63.54,
+   "dpa_radial_obs": 12.75,
+   "dpa_radial_bgsub": 20.17
+  }
+ ]
+}

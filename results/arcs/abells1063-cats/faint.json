@@ -1,0 +1,49 @@
+{
+ "model": "abells1063-cats",
+ "label": "post hoc sensitivity check (derived)",
+ "rows": "strong-shear background rows of arcs.ecsv",
+ "mag_cut": 27.0,
+ "rank_test": {
+  "n": 24,
+  "anti": 4,
+  "k_faintest": 6,
+  "p": 0.001411631846414455,
+  "n_dropped": 0
+ },
+ "anti_mags": [
+  27.43,
+  27.55,
+  27.6,
+  28.18
+ ],
+ "bright": {
+  "classes": {
+   "n": 17,
+   "aligned": 17,
+   "anti": 0,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 7.743524375139585e-09
+  },
+  "anti_expected": {
+   "n": 17,
+   "anti": 0,
+   "expected": 0.308,
+   "p_ge_observed": 1.0
+  }
+ },
+ "faint": {
+  "classes": {
+   "n": 7,
+   "aligned": 3,
+   "anti": 4,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.42935528120713307
+  },
+  "anti_expected": {
+   "n": 7,
+   "anti": 4,
+   "expected": 0.217,
+   "p_ge_observed": 7.723631374138157e-05
+  }
+ }
+}
