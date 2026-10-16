@@ -229,7 +229,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        2026-10-16, `results/orphan_pairs/abell2744/`): null (P 0.16 / 0.11 under (e) / (f)); efficiencies as in the
        deep fields; no 0.3–3″ positive control; per-pair vetting done (CHANGELOG 2026-10-16,
        `results/orphan_pairs/abell2744/vetting/RESULT.md`): 4 ordinary (1 visual), 7 insufficient (#2, #3, #7, #9, #10,
-       #11, #13: E2 not validatable, no public spectra), 0 anomalies; deciding data: spectra of both members. Left:
+       #11, #13: E2 not validatable, no public spectra), 0 anomalies; deciding data: spectra of both members (a
+       redshift difference would argue against one lensed source; equal redshifts alone would not confirm lensing). Not
+       pursued now: a resource decision (owner, 2026-10-16), not an exclusion. Left:
        MACS0417, MACS1423 cluster pointings (need published image lists);
        MACS1149 image list when CANUCS v2 is out;
      - CANUCS models pinned (D-044: `macs0416-canucs`, `abell370-canucs`); next, the 100 MCMC sample maps for μ spreads;
@@ -322,9 +324,14 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      0.3″ offset; `hit_lightcurve.py --offsets` applies it; h182 stays closed. Registration does not explain the
      on-arc F356W spread. ALT o002 has its own 0.013″ shift (UNCOVER→ALT pairs not re-measured). No further veto
      rules on these four tiles (owner, 2026-10-16); further work goes to new epochs or untested regions;
-   - **Sunrise arc `arc_diff`** (D-027 addendum 2026-10-16): o010 → o052 done, 0 candidates on the arc's images
-     (injection recovery 0.86 / 0.83 at 27.5 AB per band). Next: o010 → o120 (F090W F115W F277W F356W) alone with `--procs 4`, `OMP_NUM_THREADS=1`
-     (≈ 45 min without finishing two SW bands at `--procs 2`; not stored); then SMACS 0723 and El Gordo arcs;
+   - **Sunrise arc `arc_diff`** (D-027 addendum 2026-10-16): o010 → o052 and o010 → o120 (LW only; the SW bands did
+     not finish in two attempts, timings not stored) done, 0 candidates on the arc's images (injection recovery
+     ≥ 0.83 at 27.5 AB per band; `results/transients/sunrise_arcdiff/RESULT.md`). Next: El Gordo arcs;
+   - **SMACS 0723 arc `arc_diff`** (D-027 addendum 2026-10-16, system 5 box): ERO → VENUS done, Atalanta recovered,
+     no candidate (frozen 1″ rule fails the known case; post hoc 2″ + forced photometry); GO-4043 → DD 12774
+     fails its control (Atalanta F115W S ≈ 2.4); h061 undetermined (near-star spike systematics; reopen on a PSF
+     model of the star). Next: the rest of the SMACS arcs (more boxes);
+     whether AT 2024jfz (1.8″ from image 6.1) has model counter-images;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

@@ -1,0 +1,99 @@
+{
+ "command": "arc_diff.py --band f115w s3://stpubdata/jwst/public/jw04043/L3/t/o001/jw04043-o001_t001_nircam_clear-f115w_i2d.fits s3://stpubdata/jwst/public/jw12774/L3/t/o002/jw12774-o002_t032_nircam_clear-f115w_i2d.fits --band f444w s3://stpubdata/jwst/public/jw04043/L3/t/o001/jw04043-o001_t001_nircam_clear-f444w_i2d.fits s3://stpubdata/jwst/public/jw12774/L3/t/o002/jw12774-o002_t032_nircam_clear-f444w_i2d.fits --ra 110.824442 --dec -73.452577 --half-arcsec 12 --kernel-px 4 --kernel-stamps --inject 100 --min-bands 2 --known results/transients/smacs_arcdiff/known_controls.csv --procs 4 --out results/transients/smacs_arcdiff/o4043_o12774 --maps <scratchpad>/m2.npz",
+ "box": {
+  "ra": 110.824442,
+  "dec": -73.452577,
+  "half_arcsec": 12.0
+ },
+ "thresholds_assumption": {
+  "min_sigma": 5.0,
+  "min_bands": 2,
+  "link_arcsec": 0.1,
+  "bg_arcsec": 0.6,
+  "tile_arcsec": 3.0,
+  "kernel_px": 4,
+  "kernel_stamps": true,
+  "match_arcsec": 0.15,
+  "core_arcsec": 0.8,
+  "core_pct": 99.9,
+  "psf_fwhm_arcsec": {
+   "F115W": 0.04,
+   "F444W": 0.145
+  }
+ },
+ "bands": {
+  "F115W": {
+   "e1": "jw04043-o001_t001_nircam_clear-f115w_i2d.fits",
+   "e2": "jw12774-o002_t032_nircam_clear-f115w_i2d.fits",
+   "scale_arcsec": 0.031226868216666325,
+   "shift_px": [
+    0.2189370880924185,
+    -0.44648019109724785
+   ],
+   "blur_sigma_px": -1.632,
+   "kernel_sum": 0.9800565595105609,
+   "convolved_epoch": 2,
+   "flux_scale": 1.0203492750453085,
+   "noise_scale": 1.0,
+   "n_detections": 514,
+   "injection_recovered": {
+    "27.50": 0.26,
+    "28.00": 0.11,
+    "28.50": 0.05
+   },
+   "injection_recovered_not_near_core_this_band": {
+    "27.50": 0.19,
+    "28.00": 0.05,
+    "28.50": 0.01
+   }
+  },
+  "F444W": {
+   "e1": "jw04043-o001_t001_nircam_clear-f444w_i2d.fits",
+   "e2": "jw12774-o002_t032_nircam_clear-f444w_i2d.fits",
+   "scale_arcsec": 0.06291083584576368,
+   "shift_px": [
+    -0.3018795501396842,
+    -0.34095912417782104
+   ],
+   "blur_sigma_px": -1.958,
+   "kernel_sum": 0.9689059796100238,
+   "convolved_epoch": 2,
+   "flux_scale": 1.0320918861523503,
+   "noise_scale": 2.2531213391396143,
+   "n_detections": 106,
+   "injection_recovered": {
+    "27.50": 0.34,
+    "28.00": 0.1,
+    "28.50": 0.06
+   },
+   "injection_recovered_not_near_core_this_band": {
+    "27.50": 0.31,
+    "28.00": 0.1,
+    "28.50": 0.05
+   }
+  }
+ },
+ "n_hits": 38,
+ "n_hits_not_near_bright_core": 23,
+ "known": [
+  {
+   "name": "Atalanta_A",
+   "pair": "",
+   "F115W": 2.4745004177093506,
+   "F444W": 15.411026954650879,
+   "hit": null
+  },
+  {
+   "name": "Atalanta_B",
+   "pair": "",
+   "F115W": 2.3567962646484375,
+   "F444W": 18.996124267578125,
+   "hit": null
+  }
+ ],
+ "inject_grid": {
+  "n": 0,
+  "n_hit": 0,
+  "n_hit_not_near_bright_core": 0
+ }
+}

@@ -37,6 +37,49 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** 2184 explained by measurement noise at core flux (post hoc), not a candidate. 1316 open, unvetted,
   not a candidate. Next: 1557 through the same tests; a redshift for 1316 (MUSE or a second photo-z code); use
   `--flux core` on the other `arcs` fields (`vetting/RESULT.md` "Next").
+## 2026-10-16: SMACS 0723 arc difference imaging: Atalanta recovered, no candidate; h061 undetermined (near-star spikes); the 2024 → 2026-07 pair fails its control
+- **Why:** the Sunrise handoff names SMACS next; a catalog grid misses transients blended into arcs (D-027 addendum
+  2026-10-15j). Plan before the run: `results/transients/smacs_arcdiff/PLAN.md` (24″ box on the system 5 arc, SN
+  Atalanta as the known-case control, frozen "on an image" rule = `classify` in new `scripts/smacs_arcdiff_images.py`).
+- **ERO o001 → VENUS o057 (F150W + F444W, derived):** Atalanta A, B recovered (S +49.5 to +58.2, both morph passes);
+  injections 0.82 / 0.76 at 27.5 AB per band. 73 hits, 0 `vet` under the frozen 1″ rule, **but that radius
+  fails the known case** (Atalanta is 1.59–1.69″ from its catalogued images; found in review). Post hoc 2.0″:
+  h063 (pass, 1.37″ from 6.1) shows no ≥ 2σ change in multi-epoch forced photometry (F150W −16.0 ± 10.4 nJy).
+  **h061 open:** on image 12.1 (box-edge veto; S depends on the box), flat 2022 → 2026-06, but F444W +35.6 ± 3.4 nJy
+  in the 2024 GO-4043 mosaic, where a stripe crosses it by eye (spike geometry not computed). No candidate so far.
+- **GO-4043 → DD 12774 (F115W + F444W; added, not in the PLAN):** Atalanta not a hit (F115W S ≈ 2.4; forced F115W
+  13.7 ± 16.7 nJy; band depth and SN colour not separated), injections 0.26 / 0.34 at 27.5 AB: no null from this pair. Its one pass, h000, is a point
+  source only in the 2024 mosaics (F115W 2688 nJy in 2024 vs 49 ± 17 nJy in 2026-07; F090W–F444W 7–49 nJy in every other epoch; `hit_lightcurve.py`), 0.081″
+  from TNS AT 2024jfz: known transient, not a candidate.
+- **h061 follow-up (PLAN addendum 1, frozen before the run):** new `scripts/stripe_phot.py` subtracts the 2024
+  stripe's across-profile (PA 65.5°) in every F444W mosaic; 2024 stays 2.39σ above the other epochs →
+  `undetermined` under the frozen rule. Its injection check turned out tautological (the source never enters
+  its own profile; stated in RESULT). Post hoc: h061 is 4.70″ from a bright star whose spikes rotate per visit;
+  4 / 17 compact controls within 7″ of it reach |z| ≥ h061's 14.2 in the same pair (0 / 42 beyond, but they fade
+  where h061 brightens), and 7 / 34 positions along the same 2024 spike reach |Δ| ≥ its 35.6 nJy. **Not
+  distinguishable from bright-star spike systematics with these tests; not a candidate.** Reopen on a PSF model
+  of the star (spikes) or a counter-image change (RESULT.md).
+- **Run time:** each 24″ two-band `arc_diff` run took ≈ 1 min at `--procs 4` with `OMP_NUM_THREADS=1` (not stored).
+- **Handoff:** more SMACS boxes (systems 1–4, 6–18); a counter-image check for AT 2024jfz (1.8″ from image 6.1);
+  El Gordo arcs (Sunrise o010 → o120 done, #274).
+## 2026-10-16: Sunrise arc difference imaging, o010 → o120 (F277W + F356W): 0 candidates on the arc
+- **Rules:** fixed before the run in `results/transients/sunrise_arcdiff/PLAN.md` addenda 1–2:
+  - settings as for o052;
+  - a band counts if its recovery at 27.5 AB is ≥ 0.8;
+  - "on the arc" means within 1.0″ of a Scofield+2025 image;
+  - a candidate must pass morphology, be on the arc and appear in ≥ 2 bands.
+- **Deviation:** the four-band run gave no output in 90 min, so long-wavelength only. Short-wavelength-only changes
+  are not covered.
+- **Result (derived; `o010_o120/`):**
+  - injection recovery at 27.5 AB is 1.00 (F277W) and 0.97 (F356W);
+  - 12 hits: 10 rosette, 1 dipole, 1 edge, 0 morphology passes; all ≥ 3.87″ from every catalogued arc image;
+  - looked at on the sheet: point-spread-function rotation residuals, a disk and the map edge; the Earendel control
+    is clean.
+  - **0 candidates.**
+- **Also:** the TASKS line for the 7 undecided Abell 2744 orphan pairs now states the owner's scope. A redshift
+  difference argues against lensing, equal redshifts would not confirm it, and not pursuing them now is a resource
+  decision.
+
 ## 2026-10-16: Sunrise arc difference imaging, o010 → VENUS o052: 0 candidates on the arc; o120 pair still to run
 - **Why:** the Sunrise catalog grids are null, but a catalog grid misses transients blended into an arc (PLATE-23a,
   D-027 addendum 2026-10-15j); `arc_diff.py` had never run on the Sunrise arc. Plan before the run:
