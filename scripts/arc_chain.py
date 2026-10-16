@@ -10,6 +10,9 @@ the plan.
 Subcommands:
 - ``known``: per known signal, the stage reached (hit, morph pass, in mask).
 - ``inject``: for an ``--inject-grid`` run, injected stars inside the mask that survive each stage.
+- ``review`` (owner decision 2026-10-16, ``results/transients/review_list/PLAN.md``): position is a
+  label, not a stage; every unflagged morph ``pass`` is listed with position labels and a priority.
+- ``inject-review``: whole-box injection efficiency of that chain, by mask and arc-level stratum.
 
     python scripts/arc_chain.py known --maps m.npz --hits hits.ecsv --morph morph.json \\
         --known known.csv --field smacs --out chain.json
@@ -218,6 +221,129 @@ def inject_chain(runs, field) -> dict:
     return {"masks": masks, "n_runs": len(runs), "per_mag": per}
 
 
+OLD_RULE_ARCSEC = 1.0  # frozen position rule of #274 / #275, now only a label
+PRIORITY_B_ARCSEC = 2.0  # review-list priority B (results/transients/review_list/PLAN.md)
+
+
+def _truthy(v) -> bool:
+    return str(v) in ("True", "true", "1")
+
+
+def _labels(mask, w, scale, snr, edge, ira, idec, ra, dec) -> dict:
+    """Position labels of one sky position (review-list PLAN.md); they never veto."""
+    p = _pixel(mask.shape, w, ra, dec)
+    near = float(_sep(ira, idec, ra, dec).min())
+    inm = bool(p is not None and mask[p[1], p[0]])
+    return {
+        "in_mask": inm,
+        "mask_distance_arcsec": round(float(edge[p[1], p[0]]), 2) if p else None,
+        "arc_level_sigma": round(float(snr[p[1], p[0]]), 2) if p else None,
+        "nearest_image_arcsec": round(near, 2),
+        "old_rule": bool(near <= OLD_RULE_ARCSEC),
+        "priority": "A" if inm else ("B" if near <= PRIORITY_B_ARCSEC else "C"),
+    }
+
+
+def review_list(maps, hits, morph, field, known=None, offset=(0.0, 0.0)) -> dict:
+    """Every unflagged morph ``pass`` hit, with position labels; position is not a stage."""
+    from scipy import ndimage
+
+    mask, w, band, scale, snr = load_mask(maps, field, with_snr=True)
+    edge = ndimage.distance_transform_edt(~mask) * scale
+    ira, idec = image_positions(field)
+    h = Table.read(hits)
+    verdict = {t["id"]: t["verdict"] for t in json.loads(Path(morph).read_text())["targets"]}
+    ks = []
+    if known:
+        from arc_diff import load_known
+
+        ks = load_known(known, tuple(offset))
+    rows, n_unflagged = [], 0
+    for r in h:
+        if _truthy(r["near_bright_core"]):
+            continue
+        n_unflagged += 1
+        hid = str(r["hit_id"])
+        if hid not in verdict:
+            raise ValueError(f"{hid} has no morphology verdict; run arc_diff_morph.py on all hits")
+        if verdict[hid] != "pass":
+            continue
+        ra, dec = float(r["ra"]), float(r["dec"])
+        names = [
+            k["name"] for k in ks if _sep(float(k["ra"]), float(k["dec"]), ra, dec) <= MATCH_ARCSEC
+        ]
+        rows.append(
+            {
+                "id": hid,
+                "ra": ra,
+                "dec": dec,
+                "bands": str(r["bands"]) if "bands" in h.colnames else None,
+                "max_abs_sigma": float(r["max_abs_sigma"])
+                if "max_abs_sigma" in h.colnames
+                else None,
+                "known": names[0] if names else None,
+                **_labels(mask, w, scale, snr, edge, ira, idec, ra, dec),
+            }
+        )
+    rows.sort(key=lambda x: (x["priority"], -(x["max_abs_sigma"] or 0)))
+    return {
+        "mask_band": band,
+        "mask_area_frac": float(mask.mean()),
+        "n_hits": len(h),
+        "n_unflagged": n_unflagged,
+        "n_review": len(rows),
+        "n_added": sum(not x["old_rule"] for x in rows),
+        "by_priority": {k: sum(x["priority"] == k for x in rows) for k in "ABC"},
+        "review": rows,
+    }
+
+
+def inject_review(runs, field) -> dict:
+    """Whole-box efficiency of the review-list chain (hit, unflagged, morph pass), by stratum."""
+    per: dict[str, dict] = {}
+    masks = []
+    for maps, injected, morph in runs:
+        mask, w, band, scale, snr = load_mask(maps, field, with_snr=True)
+        masks.append({"maps": Path(maps).name, "band": band, "area_frac": float(mask.mean())})
+        verdict = {t["id"]: t["verdict"] for t in json.loads(Path(morph).read_text())["targets"]}
+        with open(injected, newline="") as f:
+            for r in csv.DictReader(f):
+                p = _pixel(mask.shape, w, float(r["ra"]), float(r["dec"]))
+                if p is None:
+                    raise ValueError(
+                        f"{r['name']} lies off the maps; every injected star must count"
+                    )
+                if r["hit"] and r["hit"] not in verdict:
+                    raise ValueError(f"{r['hit']} has no morphology verdict; run --all-hits")
+                inm = bool(mask[p[1], p[0]])
+                level = "level_ge3" if snr[p[1], p[0]] >= THRESH_SIGMA else "level_lt3"
+                ok_hit = bool(r["hit"])
+                ok = (
+                    ok_hit
+                    and not _truthy(r["near_bright_core"])
+                    and verdict.get(r["hit"]) == "pass"
+                )
+                for stratum in ("all", "in_mask" if inm else "out_mask", level):
+                    c = per.setdefault(r["mag"], {}).setdefault(
+                        stratum, {"n": 0, "hit": 0, "review": 0, "hit_outcomes": {}}
+                    )
+                    c["n"] += 1
+                    c["hit"] += ok_hit
+                    c["review"] += ok
+                    if ok_hit:  # where a recovered star is lost: bright-core flag or morph verdict
+                        o = (
+                            "near_bright_core"
+                            if _truthy(r["near_bright_core"])
+                            else verdict.get(r["hit"])
+                        )
+                        c["hit_outcomes"][str(o)] = c["hit_outcomes"].get(str(o), 0) + 1
+    for strata in per.values():
+        for c in strata.values():
+            c["eff_hit"] = round(c["hit"] / c["n"], 3) if c["n"] else None
+            c["eff_review"] = round(c["review"] / c["n"], 3) if c["n"] else None
+    return {"masks": masks, "n_runs": len(runs), "per_mag": per}
+
+
 def mask_figure(maps, field, known, offset, out) -> None:
     """Mask-band epoch-1 image, mask contour, catalogued images (+) and known signals (o)."""
     import matplotlib
@@ -249,18 +375,19 @@ def mask_figure(maps, field, known, offset, out) -> None:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("known", "inject"):
+    for name in ("known", "inject", "review", "inject-review"):
         p = sub.add_parser(name)
-        nargs = "+" if name == "inject" else None
+        nargs = "+" if name.startswith("inject") else None
         p.add_argument("--maps", type=Path, required=True, nargs=nargs)
         p.add_argument("--morph", type=Path, required=True, nargs=nargs)
         p.add_argument("--field", choices=("smacs", "macs0416", "sunrise"), required=True)
         p.add_argument("--out", type=Path, required=True)
-        if name == "known":
+        if name in ("known", "review"):
             p.add_argument("--hits", type=Path, required=True)
-            p.add_argument("--known", type=Path, required=True)
+            p.add_argument("--known", type=Path, required=name == "known")
             p.add_argument("--frame-offset", type=float, nargs=2, default=[0.0, 0.0])
-            p.add_argument("--figure", type=Path, help="also draw the mask figure (PNG)")
+            if name == "known":
+                p.add_argument("--figure", type=Path, help="also draw the mask figure (PNG)")
         else:
             p.add_argument("--injected", type=Path, required=True, nargs="+")
     a = ap.parse_args(argv)
@@ -268,13 +395,18 @@ def main(argv: list[str] | None = None) -> int:
         res = known_chain(a.maps, a.hits, a.morph, a.known, a.field, a.frame_offset)
         if a.figure:
             mask_figure(a.maps, a.field, a.known, a.frame_offset, a.figure)
+    elif a.cmd == "review":
+        res = review_list(a.maps, a.hits, a.morph, a.field, a.known, a.frame_offset)
     else:
         if not len(a.maps) == len(a.injected) == len(a.morph):
             ap.error("--maps, --injected and --morph need one entry per run")
-        res = inject_chain(list(zip(a.maps, a.injected, a.morph, strict=True)), a.field)
+        runs = list(zip(a.maps, a.injected, a.morph, strict=True))
+        res = inject_chain(runs, a.field) if a.cmd == "inject" else inject_review(runs, a.field)
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(res, indent=1) + "\n")
-    print(json.dumps({k: v for k, v in res.items() if k != "hits_in_mask"}, indent=1))
+    print(
+        json.dumps({k: v for k, v in res.items() if k not in ("hits_in_mask", "review")}, indent=1)
+    )
     return 0
 
 

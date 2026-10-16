@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Arc difference imaging with position as a label: known cases kept, review burden small, injection efficiency fails (0.34 < 0.50)
+- **Why:** owner decision of 2026-10-16: position becomes a label and review priority, not a veto, and every other
+  criterion stays. Plan and acceptance rules were written before any new count:
+  `results/transients/review_list/PLAN.md`. Code: `scripts/arc_chain.py review`, `inject-review`.
+- **Result (derived; `results/transients/review_list/RESULT.md`):**
+  - **R1 (development controls, not independent):** 6 / 6 are on the review list (Atalanta A/B; Yan+2023 D21-W1,
+    W2, S1, S2).
+  - **B1 (burden):** 4, 1, 0 and 1 added entries on SMACS ERO → VENUS, Sunrise o052, Sunrise o120 and the MACS0416
+    Warhol box. Of the 6 added entries, 3 are known real transients, 1 was vetted with no ≥ 2σ change, and 2 are
+    artifacts by eye (h039 SMACS, h005 Sunrise o052; not vetted by photometry).
+  - **R2 fails:** SMACS whole-box efficiency (hit, unflagged, morph pass) is 0.34 at 27.5 AB (0.50 in the mask, 0.25
+    outside it). Off the arcs, morphology vetoes most of the recovered stars (8 rosette, 5 dipole, 3 extended of 29).
+- **Decision per plan:** no new box was searched. The review lists and the failing case are saved. The two by-eye
+  entries remain open.
+- **Handoff:** a cheap check would show whether the off-arc vetoes come from neighbouring sources (the MACS0416 pattern of
+  2026-10-15): a no-injection control at the vetoed stars' positions. Any change to the morphology rules needs the
+  owner's go (owner, 2026-10-16: no further veto tuning without a decision).
+
 ## 2026-10-16: Full-chain known-case check of arc difference imaging: MACS0416 4 / 4 pass, SN Atalanta fails at the position stage
 - **Why:** the owner asked that known real signals pass the whole chain (detection, morphology, position, multi-band)
   before more arcs are searched. Plan before any run: `results/transients/arc_chain/PLAN.md`. Post-hoc arc mask

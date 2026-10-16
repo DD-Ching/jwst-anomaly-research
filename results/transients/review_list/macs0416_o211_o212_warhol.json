@@ -1,0 +1,71 @@
+{
+ "mask_band": "F444W",
+ "mask_area_frac": 0.06699030080286161,
+ "n_hits": 145,
+ "n_unflagged": 4,
+ "n_review": 4,
+ "n_added": 1,
+ "by_priority": {
+  "A": 4,
+  "B": 0,
+  "C": 0
+ },
+ "review": [
+  {
+   "id": "h061",
+   "ra": 64.03701303443019,
+   "dec": -24.067263495413403,
+   "bands": "F200W,F277W,F356W,F444W",
+   "max_abs_sigma": 11.623887125899257,
+   "known": "D21-W1",
+   "in_mask": true,
+   "mask_distance_arcsec": 0.0,
+   "arc_level_sigma": 3.82,
+   "nearest_image_arcsec": 0.19,
+   "old_rule": true,
+   "priority": "A"
+  },
+  {
+   "id": "h129",
+   "ra": 64.03852105456922,
+   "dec": -24.069861472340488,
+   "bands": "F277W,F356W,F444W",
+   "max_abs_sigma": 6.912291792872896,
+   "known": "D21-S1",
+   "in_mask": true,
+   "mask_distance_arcsec": 0.0,
+   "arc_level_sigma": 15.31,
+   "nearest_image_arcsec": 0.64,
+   "old_rule": true,
+   "priority": "A"
+  },
+  {
+   "id": "h137",
+   "ra": 64.03681141441561,
+   "dec": -24.067266012870686,
+   "bands": "F150W,F200W,F356W",
+   "max_abs_sigma": 6.072412652059974,
+   "known": "D21-W2",
+   "in_mask": true,
+   "mask_distance_arcsec": 0.0,
+   "arc_level_sigma": 14.53,
+   "nearest_image_arcsec": 0.4,
+   "old_rule": true,
+   "priority": "A"
+  },
+  {
+   "id": "h138",
+   "ra": 64.03897160780983,
+   "dec": -24.070187681648736,
+   "bands": "F277W,F356W",
+   "max_abs_sigma": 6.0552229244312485,
+   "known": "D21-S2",
+   "in_mask": true,
+   "mask_distance_arcsec": 0.0,
+   "arc_level_sigma": 12.31,
+   "nearest_image_arcsec": 1.37,
+   "old_rule": false,
+   "priority": "A"
+  }
+ ]
+}
