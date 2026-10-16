@@ -107,3 +107,15 @@ from 22:14Z.
     - h043 (F444W −4.1σ, on a bright galaxy; its rotation dipole is confirmed in F150W only).
     - h024 and h031 have no ≥ 3σ change in any band.
   - (Corrected before any control was measured: the first wording left out h043.)
+
+## Addendum 2 (2026-10-16T22:42Z, before the bright-source controls are measured)
+- **On-spike controls** (`spike/onspike_controls.json`):
+  - h049: 6 / 8 controls fade at ≥ 2σ in F444W → `explained by the spike shift`.
+  - h043: 1 / 8 → `undetermined`.
+  - Grid used: 10 equal steps over 2.0–5.0″, the first 8 that are not within 0.3″ of the entry.
+- **Bright-source control for h043 (rule fixed now):**
+  - Pick controls with `hit_lightcurve_controls.py pick`: epoch-1 F444W mosaic, the same box centre with
+    `--half-arcsec 16`, `--flux-range 300 1300` nJy (h043: 655 nJy), `--n 60`, seed 1.
+  - Measure them with `hit_lightcurve.py`, then run `compare` on the F444W pair (o241 → o051).
+  - h043 is `explained by program-to-program photometric scatter` if its control tail fraction is ≥ 0.05.
+    Otherwise it stays `open` and goes to `/vet-candidate`.
