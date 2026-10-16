@@ -36,7 +36,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   cores) or precession-parametrisation advice; or an R1 U fit testing outcome 1 only (about 0.5 h). S1f done: that U fit finds no counter-example (best FF 0.9135,
   ρ_req 7.4); R1 stays undetermined.
 - **X3 W3 in unselected Gaia epoch photometry** (paused 2026-10-15; reopen when the DR4 epoch-astrometry fields and
-  precision are confirmed) (authorized 2026-10-14 by S0-2026-10-14): state file
+  precision are confirmed. 2026-10-16 check: fields confirmed in the draft data model, precision not yet
+  published; waiting for the DR4 release documentation) (authorized 2026-10-14 by S0-2026-10-14): state file
   `docs/state/units/X3.md`. G0 passed on dev. G1 done: held-out GAPS screened once (395,764 exposed sources),
   196 flags, every one failing a costed (post hoc) ordinary rule, no candidate; conditional limit Γ₉₅ < 1 × 10⁻⁵ per star per year for
   photocentre-stable events (blended events are mostly vetoed by RUWE, a model estimate). G2 prerequisite done:

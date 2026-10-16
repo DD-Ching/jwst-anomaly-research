@@ -1304,6 +1304,15 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   - VASCO: arXiv:2507.15896, 2604.04810.
   - Quantum-processor wormhole: Jafferis et al., Nature 612, 51 (2022); Kobrin, Schuster & Yao comment
     arXiv:2302.07897; PhilSci-Archive 22120 (arXiv:2301.03522).
+- X3 DR4 reopen check (accessed 2026-10-16):
+  - https://www.cosmos.esa.int/web/gaia/dr4 ("Last update: 14 September 2026"; `epoch_astrometry`
+    129,625,750,708 rows).
+  - Draft data model:
+    https://anonftp.cosmos.esa.int/pub/GAIA_PUBLIC_DATA/Gaia_DR4/dr4-prerelease/gaia-dr4-prerelease-draft-data-model_2026-06-26.zip
+    (last-modified 2026-06-26; PDF dated 2026-06-16; SHA-256 d807eae98acbeec0a0af2ce6a5d7d352298df6f270a1f13207cc8d1becf42c66).
+    §3.1, §6.2 and §8.2 were read.
+  - https://www.cosmos.esa.int/web/gaia/dr4-prerelease (no page date).
+  - https://www.cosmos.esa.int/web/gaia/iow_20260703 (published 2026-07-03).
 - Gaia DR4 content (accessed 2026-10-14): https://www.cosmos.esa.int/web/gaia/dr4 (`epoch_astrometry` for all
   sources in the main astrometric processing; 66 months, 2014-07-25 to 2020-01-20); image of the week
   https://www.cosmos.esa.int/web/gaia/iow_20260703 (2.8 billion sources, 142 billion detections).
