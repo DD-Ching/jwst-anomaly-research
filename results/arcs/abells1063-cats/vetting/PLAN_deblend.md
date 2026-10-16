@@ -42,3 +42,15 @@ as in `arcs_bgsub_shapes.py`. Labels: pixels observed, fits and colours derived,
 1316 closed as a blend and 2184 not a fragment → the S1063 sample has two survivors fewer or one, and the next step
 is 2184's redshift (MUSE) or a second photo-z; both ordinary explanations excluded or undecided → the targets stay
 open and the next step is a second photo-z code and the ESO MUSE cube.
+
+## Addendum (2026-10-16, after the deblend run, before this run): noise injections at measured core flux
+- **Why (post hoc trigger):** `deblend.json` shows the catalogue `mag` is 1.24 mag (1316) and 2.49 mag (2184)
+  brighter than the flux within 0.3″ (annulus 0.6–1.0″ background), while the injected Gaussians put nearly all their
+  flux inside 0.3″. Step 1 (`noise_injections.json`) therefore injected copies brighter in the core than the real
+  sources.
+- **Run:** `arcs_vet_noise.py --flux core` — every one of the 24 rows is injected with its own measured 0.3″ core
+  flux (same measurement as above, on the F200W cutout); everything else as step 1 (gate, `noise_class`,
+  `excess_p`, unchanged functions). Rows with core flux ≤ 0 are dropped and listed.
+- **What changes the plan:** sample `excess explained by measurement noise` → the S1063 anti excess is closed as a
+  measurement-noise effect of catalogue photometry and the same core-flux injection becomes the default on the other
+  `arcs` fields; `excess remains` → 1316 (and any target still `not noise-explicable`) goes to a redshift / MUSE test.
