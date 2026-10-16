@@ -205,6 +205,8 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | ≈ 0.3 (no-injection control at vetoed SMACS injection positions; sheet looked at) | 0.1 (orientation, claim, state files, PR) | cloud routine 01LuctU7, 14:08–14:40Z |
 | 2026-W42 | ≈ 0.4 (`arcs` on MACS0417: RELICS v1 and CANUCS v1 maps, cutouts looked at) | — | — | 0.1 (orientation, claim, PR) | cloud routine 012exdqt, 16:08–16:45Z |
 | 2026-W42 | ≈ 0.15 (`arcs` on MACS0647, CLASH maps, two epochs; no result) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01KYMo38, 17:08–17:25Z |
+| 2026-W42 | ≈ 0.2 (`arcs` on MACS1423, CANUCS DR1 maps; cutouts looked at) | — | ≈ 0.2 (MACS1423 anti: ICL-subtracted shapes, measurement-noise injections) | 0.1 (orientation, claim, PR) | cloud routine 01Brfkw8, 18:08–18:45Z |
+| 2026-W42 | — | — | 0.3 (MACS1423 `arcs` vetting step 2: clump-pair census, P 0.259, explained; #282) | 0.1 (orientation, claim, state files) | cloud routine 01HysHAx, 19:08–19:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

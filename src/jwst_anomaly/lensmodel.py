@@ -264,6 +264,24 @@ MACS0417_CANUCS_MAPS: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: CANUCS DR1 Lenstool maps of MACS J1423.8+2404 (Desprez, preliminary v1: 5 spectroscopic
+#: multiple-image systems; readme ``macs1423-lenstool-readme``; accessed 2026-10-16): best fit,
+#: 100 mas, 500 arcsec, D_LS/D_S = 1, deflection in arcsec; 87-89 MB each (gzip).
+MACS1423_CANUCS_MAPS: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _CANUCS_MAP.format("macs1423", "dpl1"),
+        "352723b70c1de5b926df2c468c3820feb18cdd0cfef41e43d96cc7abff94916b",
+    ),
+    "alpha_y": (
+        _CANUCS_MAP.format("macs1423", "dpl2"),
+        "437790da80116546f0a78814091aa9db4ce9d4f4a9156d3a84d613bb05b22430",
+    ),
+    "kappa_map": (
+        _CANUCS_MAP.format("macs1423", "kappa"),
+        "8d03a4cd065e93f81aa8e43414fd32da107b12bead0c77468f081ffb482776d7",
+    ),
+}
+
 #: CLASH Zitrin v2 maps of MACS J0647.7+7015 (Zitrin et al. 2009, MNRAS 396, 1985; 2013, ApJ 762,
 #: L30; HLSP of CLASH, Postman et al. 2012; readme last updated 2015-02; accessed 2026-10-16):
 #: PIEMD + eNFW ("nfw") and LTM-Gauss ("ltm-gauss") best fits, deflection in arcsec at

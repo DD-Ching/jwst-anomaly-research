@@ -171,6 +171,13 @@ MODELS = {
         "z_lens": 0.443,
         "cosmology": (70.0, 0.3),
     },
+    # z_lens 0.545 (CLASH cluster list, Postman et al. 2012)
+    "macs1423-canucs-maps": {
+        "files": lensmodel.MACS1423_CANUCS_MAPS,
+        "kind": "maps",
+        "z_lens": 0.545,
+        "cosmology": (70.0, 0.3),
+    },
     "macs0647-clash-nfw": {
         "files": lensmodel.MACS0647_CLASH_NFW,
         "kind": "maps",
