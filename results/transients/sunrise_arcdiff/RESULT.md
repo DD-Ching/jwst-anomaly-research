@@ -33,8 +33,29 @@ Sheets: `scripts/arc_diff_sheet.py` (epoch-1 image and S at ±10, 2″ stamps), 
   photometry (recentred) gave Δm = +0.05 mag in F150W, 0.3σ calibrated (docs/fields/sunrise.md). The −5.2 is not
   explained here.
 
-## o010 → o120 (2023-01-10, jwst 2.0.1), F090W F115W F277W F356W
-Not finished (not stored: the run was stopped with no output). With `--procs 2` beside the o052 run, it ran for
-≈ 45 min without finishing its first two SW bands. Next: run it alone with `--procs 4` and `OMP_NUM_THREADS=1`. This
-pair has the same pipeline version in both epochs and a ~180° PSF rotation (docs/fields/sunrise.md), so rosettes
-around compact sources are expected.
+## o010 → o120 (2023-01-10, jwst 2.0.1), F277W + F356W (2026-10-16 run)
+- **Rules.** They were fixed before the run (PLAN.md addenda 1–2).
+- **Deviation:** a four-band attempt gave no output in 90 min, so this pair was run with the long-wavelength (LW)
+  bands only. One worker held ~98 % CPU throughout, most likely on a short-wavelength (SW) band; the timing is not
+  stored. SW-only changes on this pair are not covered. Files: `o010_o120/` (`summary.json`, `hits.ecsv`,
+  `morph.json`, `image_distances.json`, `sheet.jpg`).
+- **Run.** Command in `summary.json`, with every other setting as for o052.
+  - Shifts: −0.29 / −0.30 px in x.
+  - Flux scales: 1.013 / 1.010.
+  - Noise scales: 1.03 / 1.14.
+- **Validation (`injection_recovered`).**
+  - F277W: 1.00 / 0.96 / 0.72 at 27.5 / 28.0 / 28.5 AB.
+  - F356W: 0.97 / 0.95 / 0.74.
+  - Both bands pass the ≥ 0.8 rule at 27.5 AB.
+- **Hits.** There are 12 (`hits.ecsv`). `arc_diff_morph.py --all-hits` gives 10 rosette, 1 dipole, 1 edge and
+  **0 pass**.
+- **Distances.** All 12 lie 3.87″ or more from every Scofield+2025 image (`image_distances.json`). Under the frozen
+  rule (≤ 1.0″), none is on the arc.
+- **Looked at (`sheet.jpg`).** The rosettes are the expected ~180° PSF-rotation residuals around compact sources (h001,
+  h007–h011) and along one edge-on disk (h003–h006). h000 is a compact-core dipole, and h002 sits on the map edge.
+  - Earendel's control row has S = +2.2 (F277W) and +1.5 (F356W), with no compact residual on the stamp.
+- **Outcome.** Under the frozen rules there are 0 candidates on the arc's images in this pair.
+  - This covers changes brighter than about 27.5 AB in F277W and F356W, at the injection-recovery level above. It is
+    not a hard completeness limit and says nothing about SW-only changes.
+  - The run was exploratory: the field was examined before (catalogue grid, #257), but this pair was not differenced
+    on the arc before.

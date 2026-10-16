@@ -1,0 +1,79 @@
+{
+ "provenance": "derived",
+ "source": "scripts/sunrise_scofield.py IMAGES (Scofield+2025 Table 3, JWST frame)",
+ "method": "angular distance to the nearest catalogued multiple image; on the arc = within 1.0 arcsec (PLAN addendum, frozen before the run)",
+ "rows": [
+  {
+   "id": "h000",
+   "verdict": "dipole",
+   "nearest_image": "1.7a",
+   "dist_arcsec": 4.03
+  },
+  {
+   "id": "h001",
+   "verdict": "rosette",
+   "nearest_image": "1.1b",
+   "dist_arcsec": 3.92
+  },
+  {
+   "id": "h002",
+   "verdict": "edge",
+   "nearest_image": "2c",
+   "dist_arcsec": 8.61
+  },
+  {
+   "id": "h003",
+   "verdict": "rosette",
+   "nearest_image": "1.2b",
+   "dist_arcsec": 4.65
+  },
+  {
+   "id": "h004",
+   "verdict": "rosette",
+   "nearest_image": "1.7d",
+   "dist_arcsec": 5.07
+  },
+  {
+   "id": "h005",
+   "verdict": "rosette",
+   "nearest_image": "1.2b",
+   "dist_arcsec": 4.47
+  },
+  {
+   "id": "h006",
+   "verdict": "rosette",
+   "nearest_image": "1.2b",
+   "dist_arcsec": 4.18
+  },
+  {
+   "id": "h007",
+   "verdict": "rosette",
+   "nearest_image": "1.7b",
+   "dist_arcsec": 7.49
+  },
+  {
+   "id": "h008",
+   "verdict": "rosette",
+   "nearest_image": "1.7a",
+   "dist_arcsec": 4.9
+  },
+  {
+   "id": "h009",
+   "verdict": "rosette",
+   "nearest_image": "1.7a",
+   "dist_arcsec": 3.87
+  },
+  {
+   "id": "h010",
+   "verdict": "rosette",
+   "nearest_image": "1.7b",
+   "dist_arcsec": 7.34
+  },
+  {
+   "id": "h011",
+   "verdict": "rosette",
+   "nearest_image": "1.7a",
+   "dist_arcsec": 4.74
+  }
+ ]
+}
