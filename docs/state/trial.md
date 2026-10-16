@@ -185,6 +185,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.3 (Abell 2744 UNCOVER vs ALT F356W grid, PLATE-23a check, ALT o001 control, contact sheets) | — | ≈ 0.1 (g1/g2 multi-band and centroid checks) | 0.1 (orientation, claim, PR) | cloud routine 01LF3BFs, 23:08–23:35Z |
 | 2026-W42 | — | — | — | 0.3 (process: merge=union check, operations notes, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | — | 0.1 (X3 DR4 reopen check: official DR4 documents only) | interactive session 01AzKMDv |
+| 2026-W42 | ≈ 0.7 (Abell 2744 UNCOVER vs ALT F356W `arc_diff` tiling, 33 tiles, population and ALT o001 tests, 76 survivors looked at) | — | — | 0.1 (orientation, claim) | cloud routine 01A8yfJB, 00:08–01:05Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

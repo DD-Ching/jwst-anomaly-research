@@ -2,13 +2,42 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-16: (in progress) Abell 2744 UNCOVER vs ALT F356W `arc_diff` tiling over the overlap footprint
+## 2026-10-16: (in progress) Abell 2744 UNCOVER vs ALT F356W `arc_diff` tiling: PLATE-23a, g1, g2 recovered; 6 priority hits unvetted
 - **Hypothesis before measuring:** difference imaging of the whole UNCOVER o001 (2022-11) ∩ ALT 3516 o002 (2023-11/12)
   F356W overlap recovers PLATE-23a and the grid's real changes g1 and g2, and every other morphology pass is a
   star/spike residual, an ALT single-visit artifact, a mosaic-edge effect or a registration residual on a core.
-  Decision rule (ASSUMPTION, written before the run): a real UNCOVER→ALT change must show the same sign at
-  |S| ≥ 3 in UNCOVER→ALT o001 (9 days after o002) and |S| < 3 in ALT o002→o001; a pass meeting this, on sky and not on
-  a star, ≤ 5″ from a Bergamini+23 multiple image or critical-curve region, goes to `/vet-candidate`.
+  Decision rule (ASSUMPTION, written before the run): same sign at |S| ≥ 3 in UNCOVER→ALT o001 (9 days after o002)
+  **and** |S| < 3 in ALT o002→o001.
+- **Run (derived):** `arc_diff.py --band F356W <UNCOVER t003> <ALT o002> --half-arcsec 30 --min-bands 1 --kernel-px 4
+  --kernel-stamps --maps` on 34 tiles of 60″ (`arcdiff_tiles/tiles.txt`; S3 byte ranges, nothing stored), 4 jobs,
+  ≈ 4 CPU-min per tile. 33 tiles ran; t−2+3 (footprint corner) crashed on an empty array (no common data; not
+  investigated). `arc_diff_morph.py --min-rosette-bands 1 --min-dipole-bands 1 --min-ring-bands 1` (single band):
+  9,196 hits, 3,665 without the bright-core flag; extended 1,275, rosette 1,149, edge 443, dipole 116, ring 15,
+  **pass 667** (`arcdiff_tiles/passes.ecsv`).
+- **Population test (derived, post hoc):** S of each pass against S at all compact epoch-1 peaks of similar brightness
+  in its tile. Compact sources show a systematic UNCOVER→ALT deficit (peer median S down to −6.7): the MACS0416
+  compact-core class again (PSF difference between programs). **Failed cut:** |z| ≥ 5 drops g1 (z +4.7) and g2
+  (z −3.1); the cut used is |z| ≥ 3 (or no peers), calibrated on those two and PLATE-23a (z +29): 196 survive.
+- **Failed approach:** the pre-written rule rejects **PLATE-23a** (ALT o002→o001 S −7.2: the SN fades in 9 days) and
+  g1 (+5.4). Revised rule: same sign, |S| ≥ 3 in UNCOVER→ALT o001 only (small 10″ `arc_diff` boxes per pass):
+  **76 pass** (`arcdiff_tiles/survivors.ecsv`, sheets `sheet_survivors_{a..d}.png`: epoch-1 image and S).
+- **Looked at, all 76 (by eye, not vetted):** 20 spikes/edges, 16 compact-core residuals, 7 UNCOVER pixel artifacts
+  (bad-pixel blocks visible in the UNCOVER image), the 3 known changes, 24 faint compact fades or brightenings
+  (mostly isolated faint sources, ±5–9σ; transient or variable population not separated), and **6 priority hits**:
+  - t−1+0 h182 (3.552148, −30.376850): +8σ point on a bright arc, 4.6″ from Bergamini+23 image 301.1;
+    UNCOVER→ALT o001 +7.3;
+  - t−1+0 h123 (3.552406, −30.373976) and h287 (3.554220, −30.372327): −10σ / −6σ on compact knots of an arc,
+    6.9″ / 5.7″ from 301.1; o001 −7.8 / −4.2 (knots fainter in both ALT visits);
+  - t−1+0 h294 (3.550096, −30.378202): +6σ blob on blank sky 7.1″ from 301.1; o001 +3.2, o002→o001 −5.7;
+  - t+0−1 h003 (3.577785, −30.394141): +48σ new compact source 19″ from image 64.1; o001 +41.5, o002→o001 −15.9
+    (fading between the ALT visits; SN-like). Not in the grid's 45 groups (a host blend, like PLATE-23a);
+  - t+1+1 h011 (3.592116, −30.366745): +14σ, growing (o001 +40, o002→o001 +30); variable source 51″ from images.
+- **0 candidates so far; nothing vetted.** Limitations: single band (ALT has F356W only here), the population and
+  ALT o001 rules are post hoc, no injection through this chain yet, and the 24 faint open hits are not classified.
+- **Handoff (next run, same PR):** vet the 6 priority hits: UNCOVER multi-band forced photometry (F277W/F410M/F444W,
+  same visit) to reject single-band artifacts; persistence and `_cal` per-dither checks; known-transient lists
+  (PLATE paper, TNS); for the 301.1 cluster, whether the knot fades are a PSF/arc-matching residual (`arc_diff_vet.py`
+  arc coherence). Then an `--inject-grid` run on 2–3 tiles for completeness.
 
 ## 2026-10-16: X3 reopen check: DR4 epoch-astrometry fields confirmed (draft data model), precision not yet published; X3 stays paused
 - Documents only (≤ 30 min; no Gaia data read; no X3 computation). Record: `docs/state/units/X3.md`, "DR4 reopen
