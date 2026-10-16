@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: (in progress) Abell 2744 h182: arc-pixel control set
+- Plan: calibrate h182's 2022→2023 red-band brightening against random apertures on the same arcs (not compact peaks) in the same mosaics.
+
 ## 2026-10-16: Abell 2744 UNCOVER vs ALT F356W `arc_diff` tiling and multi-epoch vetting of 6 priority hits: one SN-like transient, one variable, 0 lensing candidates
 - **Hypothesis before measuring:** difference imaging of the whole UNCOVER o001 (2022-11) ∩ ALT 3516 o002 (2023-11/12)
   F356W overlap recovers PLATE-23a and the grid's real changes g1 and g2, and every other morphology pass is a
