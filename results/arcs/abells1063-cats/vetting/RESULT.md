@@ -23,9 +23,12 @@
   - **No reliable redshift:** the spectra examined did not confirm a redshift for 1316 or 1557.
   - **Peaks above the threshold:** one exists. 1316 has a boxcar S/N 6.72 peak at 6000.3 Å after the fixes. The
     pre-registered checks classify it as **not significant under the calibration**:
-    - the narrow-band emission rises away from the target, toward the SW and off the cutout;
-    - offset apertures 1.5″ away show the same feature more strongly (S/N 22.9 and 8.9);
-    - peaks this strong are expected 0.83 times per window search.
+    - the narrow-band peak lies 2.79″ from the target (sky PA 224°, at the edge of the valid map);
+    - the offset aperture 1.5″ W shows the same feature more strongly (S/N 22.9), and the one at PA 150° shows
+      S/N 8.9;
+    - the planned chance metric (positions at or above 6.72 in the offset apertures) gives 1.83 per window search.
+  - Deviation: excluding the feature's own channels, the offset apertures have no chance run at that level. So
+    the 6000 Å feature looks like real emission in the field, not a noise fluctuation, but it is centred off 1316.
   - It is not a line of 1316, and no redshift is derived from it.
   - Ordinary explanations are not excluded. Pausing further spectroscopy is a resource decision (owner,
     2026-10-16), not a scientific result.
@@ -350,7 +353,8 @@ Data: the two MUSE SODA cutouts used before, and the same JWST 8″ stamps re-re
 **Fixes:**
 1. The spectra noise rescale uses usable channels only.
 2. Channels with any invalid aperture spaxel are excluded.
-3. `fit_models` takes its flux start and bound from the positive pixels when the filtered sum is ≤ 0.
+3. `fit_models` takes its flux start from the positive-pixel sum when the filtered sum is ≤ 0 or below 10 % of
+   it, and its bound from the larger of the two (the 10 % clause was added after the final review).
 4. Census counts that drop a row drop it from the null as well.
 
 All four have unit tests (`tests/test_arcs_vet_fixes.py`).
@@ -361,14 +365,15 @@ All four have unit tests (`tests/test_arcs_vet_fixes.py`).
   - 1316 C III] median limit 4.75 → 3.37 × 10⁻¹⁸; C IV 5.51 → 3.89 × 10⁻¹⁸. 1557 [O II] 1.33 → 1.34 × 10⁻¹⁸.
   - The 1316 peak at 6000.3 Å went from S/N 4.77 to 6.72.
 - **Deblend (fix 3):**
-  - Observed fits changed by < 1e-5 relative; no observed class changed.
+  - Observed-fit quantities changed by ≤ 3e-5 relative (`fixes_diff.json` `max_relative_change_observed_fits`); no
+    observed class changed.
   - Injection gates:
     - 1316 post hoc own-flux gate: two-knot recall 0.75 → 0.95, single side unchanged at 0.75, so it still
       fails (< 0.8). The two-knot call for 1316 is still not validated at its own flux.
     - 1557 gates: two-knot recall 0.90 → 1.00 (catalogue flux) and 0.95 → 1.00 (fitted flux); still passed.
 - **Census:**
   - Classes and gate outcomes are unchanged (21 passed, 5 two-knot, f̂ 0.238). The gate still fails for 1404, 2004
-    and 2184 (2004 two-knot recall 0.20 → 0.30; 2184 0.50 → 0.55), so **the flux bound was not the cause of those
+    and 2184 (2004 two-knot recall 0.20 → 0.35; 2184 0.50 → 0.55), so **the flux bound was not the cause of those
     gate failures**, contrary to the earlier guess.
   - P(≥ 4) = 0.026 and P(≥ 3) = 0.116 are unchanged.
   - With 2184 removed from both the count and the null, P(≥ 2) = 0.354 (was 0.359 with 2184 kept in the null);
@@ -380,18 +385,35 @@ All four have unit tests (`tests/test_arcs_vet_fixes.py`).
 |---|---|---|
 | Valid and not sky-masked | yes | yes |
 | S/N ≥ 5 after the fixes | 6.72 | yes |
-| Narrow-band (5996.5–6002.8 Å) peak within 0.72″ of the target | 2.93″, at PA ≈ 227° at the cutout edge; emission rises toward the SW off the cutout | no |
-| No offset aperture (1.5″, 6 positions) with S/N ≥ 3 at the same channels | S/N 22.9 (1.5″ W) and 8.9; one aperture not usable there | no |
-| Expected chance peaks ≥ 6.72 per window search < 0.05 (offset apertures, usable positions) | 0.83 | no |
+| Narrow-band (5996.5–6002.8 Å) peak within 0.72″ of the target (NaN-aware smoothing) | 2.79″ at sky PA 223.8°, on the edge of the valid map (`narrowband_peak_at_valid_map_edge`) | no |
+| No offset aperture (1.5″, 6 positions) with S/N ≥ 3 at the same channels | S/N 22.9 at sky PA 270° (W) and 8.9 at PA 150°; the one at PA 210° is not usable there | no |
+| Expected chance positions ≥ 6.72 per window search < 0.05 (offset apertures, usable positions; planned metric) | 1.83 | no |
 
-- **Class (frozen rule): not significant under the calibration.** The feature is stronger 1.5″ away and grows
-  away from the target, so the target aperture sits on the wing of nearby emission.
+- **Deviation (reported, not used for the class):**
+  - The planned chance metric counts the tested feature itself in the offset apertures that contain it.
+    Counting separate runs gives 0.83, and excluding ±12 channels around the feature gives 0, i.e. no chance
+    peak this strong elsewhere in the window.
+  - So the 6000 Å signal is not a noise fluctuation. It is real emission in the field.
+- **Class (frozen rule): not significant as a line of 1316.** The emission is stronger 1.5″ W and peaks
+  2.79″ away, so the target aperture sits on the wing of nearby emission. A contribution from 1316 itself at the
+  same wavelength is not excluded.
 - Possible origin (not tested, not stored): earlier VizieR rows 5.3–5.6″ from 1316 list a z ≈ 0.611 galaxy, whose
   [O II] would fall near 6004 Å.
 - **Evidence level:** not a line of 1316. No redshift is derived from it, and it is not evidence for unusual
   lensing.
 - **Effect on the decision:** none. The decision to wait for 116.28VK.001 stands. There is still no reliable
   redshift, and the only threshold-crossing peak is explained as neighbouring emission at the level tested.
+
+**Other changes after the final review (2026-10-16):**
+- `window_result`'s `detected` is renamed `above_threshold`: a position above the threshold is not a detected
+  line until the peak checks pass.
+- `peak_check` runs only on cutouts with data.
+- Direction values are stored as sky PAs (`sky_pa_deg`, `narrowband_peak_sky_pa_deg`).
+- Census counts come from the screen and bgsub sets, and every null uses `p_tail`.
+- `fixes_diff.json` uses a relative tolerance only.
+- **Deviation:** the 116.28VK single-OB cube ADP.2025-11-20T15:47:55.061 was not re-requested, per the owner's
+  limit of two cutouts. Its earlier `no_data` records are kept in `spectra_before_fixes.json` and
+  `muse_coverage.ecsv`.
 
 **Not changed (cleanup, no effect on numbers):** duplicated helpers (`axis_class`, the empty-position injection
 loop), census thresholds hard-coded at the `arcs.json` values, and tests of two scripts living in

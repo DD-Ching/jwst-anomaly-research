@@ -172,14 +172,15 @@ def window_result(m: dict, lo: float, hi: float) -> dict:
     clean = sel & m["usable"]
     k = np.flatnonzero(clean)
     best = int(k[np.argmax(m["snr"][k])]) if len(k) else None
-    det = best is not None and m["snr"][best] >= SNR_DET
+    above = best is not None and m["snr"][best] >= SNR_DET
     return {
         "window_A": [round(lo), round(hi)],
         "in_range": True,
         "frac_not_usable": round(1 - clean.sum() / sel.sum(), 3),
         "max_snr_clean": round(float(m["snr"][best]), 2) if best is not None else None,
         "max_snr_lambda_A": round(float(m["lam"][best]), 1) if best is not None else None,
-        "detected": bool(det),
+        # a position above the threshold is not a detected line until the peak checks pass
+        "above_threshold": bool(above),
         "limit_5sigma_cgs_median": float(f"{SNR_DET * np.nanmedian(m['sigma_flux'][clean]):.3g}")
         if clean.any()
         else None,
@@ -213,6 +214,7 @@ def peak_check(path: Path, ra: float, dec: float, fwhm: float, lam0: float, wind
     tgt, _ = spec_at(0.0, 0.0)
     k = int(np.argmin(np.abs(lam - lam0)))
     win = (lam >= window[0]) & (lam <= window[1])
+    far = np.abs(np.arange(lam.size) - k) > 2 * BOX  # positions not touching the tested feature
     snr_k = float(tgt["snr"][k]) if np.isfinite(tgt["snr"][k]) else None
     # narrow band: the boxcar channels at k minus the side-band mean
     lo, hi = k - BOX // 2, k + BOX - BOX // 2
@@ -220,29 +222,64 @@ def peak_check(path: Path, ra: float, dec: float, fwhm: float, lam0: float, wind
     nb = np.nansum(data[lo:hi], axis=0) - BOX * np.nanmean(data[side], axis=0)
     from scipy.ndimage import gaussian_filter
 
-    sm = gaussian_filter(np.nan_to_num(nb), fwhm / 2.355 / pix)
-    jy, ix = np.unravel_index(np.argmax(sm), sm.shape)
+    ok = np.isfinite(nb)
+    sg = fwhm / 2.355 / pix
+    num = gaussian_filter(np.where(ok, nb, 0.0), sg, mode="constant")
+    den = gaussian_filter(ok.astype(float), sg, mode="constant")
+    with np.errstate(invalid="ignore", divide="ignore"):
+        sm = np.where(ok & (den > 0.5), num / den, np.nan)
+    jy, ix = np.unravel_index(np.nanargmax(sm), sm.shape)
     d_peak = float(np.hypot(ix - x0, jy - y0) * pix)
+    tsky = cel.pixel_to_world(x0, y0)
+    pa_peak = float(tsky.position_angle(cel.pixel_to_world(ix, jy)).deg % 360)
+    at_edge = bool(
+        min(ix, jy, sm.shape[1] - 1 - ix, sm.shape[0] - 1 - jy) <= 1
+        or not np.isfinite(sm[max(jy - 2, 0) : jy + 3, max(ix - 2, 0) : ix + 3]).all()
+    )
     offs = []
     for ang in range(0, 360, 60):
         dx, dy = 1.5 * np.cos(np.radians(ang)), 1.5 * np.sin(np.radians(ang))
         sp, n = spec_at(dx, dy)
+        osky = cel.pixel_to_world(x0 + dx / pix, y0 + dy / pix)
         offs.append(
             {
-                "pa_deg": ang,
+                "pixel_angle_deg": ang,
+                "sky_pa_deg": round(float(tsky.position_angle(osky).deg % 360), 1),
                 "n_spaxels": n,
                 "snr_at_peak": float(sp["snr"][k]) if np.isfinite(sp["snr"][k]) else None,
                 "usable_at_peak": bool(sp["usable"][k]),
+                "chance_positions_in_window": (
+                    int(
+                        np.sum(
+                            sp["usable"][win]
+                            & (np.nan_to_num(sp["snr"][win], nan=-np.inf) >= snr_k)
+                        )
+                    )
+                    if snr_k is not None
+                    else None
+                ),
                 "chance_runs_in_window": (
                     exceedance_runs(sp["snr"][win], sp["usable"][win], snr_k)
+                    if snr_k is not None
+                    else None
+                ),
+                "chance_runs_excluding_feature": (
+                    exceedance_runs(sp["snr"][win & far], sp["usable"][win & far], snr_k)
                     if snr_k is not None
                     else None
                 ),
                 "usable_positions_in_window": int(np.sum(sp["usable"][win])),
             }
         )
-    runs = [o["chance_runs_in_window"] for o in offs if o["chance_runs_in_window"] is not None]
-    expected = float(np.mean(runs)) if runs else None
+
+    def mean_of(key):
+        v = [o[key] for o in offs if o[key] is not None]
+        return float(np.mean(v)) if v else None
+
+    # plan: positions reaching the peak S/N; runs and feature-excluded runs are extra (deviation)
+    expected = mean_of("chance_positions_in_window")
+    expected_runs = mean_of("chance_runs_in_window")
+    expected_runs_far = mean_of("chance_runs_excluding_feature")
     import matplotlib
 
     matplotlib.use("Agg")
@@ -273,7 +310,7 @@ def peak_check(path: Path, ra: float, dec: float, fwhm: float, lam0: float, wind
         "no_offset_aperture_ge_3": all(
             (o["snr_at_peak"] is None) or (o["snr_at_peak"] < 3) for o in offs
         ),
-        "expected_chance_peaks_lt_0p05": bool(expected is not None and expected < 0.05),
+        "expected_chance_positions_lt_0p05": bool(expected is not None and expected < 0.05),
     }
     return {
         "lambda_A": round(float(lam[k]), 2),
@@ -281,9 +318,13 @@ def peak_check(path: Path, ra: float, dec: float, fwhm: float, lam0: float, wind
         "noise_rescale_after_fixes": round(tgt["resc"], 2),
         "narrowband_channels_A": [round(float(lam[lo]), 1), round(float(lam[hi - 1]), 1)],
         "narrowband_peak_offset_arcsec": round(d_peak, 2),
+        "narrowband_peak_sky_pa_deg": round(pa_peak, 1),
+        "narrowband_peak_at_valid_map_edge": at_edge,
         "r_ap_arcsec": round(r_ap, 2),
         "offset_apertures": offs,
-        "expected_chance_peaks_per_window_search": expected,
+        "expected_chance_positions_per_window_search": expected,
+        "expected_chance_runs_per_window_search_deviation": expected_runs,
+        "expected_chance_runs_excluding_feature_deviation": expected_runs_far,
         "checks": checks,
         "class": "line to be checked"
         if all(checks.values())
@@ -307,11 +348,12 @@ def run(cut_arcsec: float, keep_dir: Path | None = None) -> dict:
                     f"{SODA}?ID=ivo://eso.org/ID?{dp}&CIRCLE={ra}%20{dec}%20{cut_arcsec / 3600:.5f}"
                 )
                 p = (keep_dir or Path(tmp)) / f"{dp}_{t}.fits"
-                with urllib.request.urlopen(url, timeout=300) as r, open(p, "wb") as fh:
-                    fh.write(r.read())
+                if not (keep_dir and p.exists()):  # reuse a kept cutout (same SODA request)
+                    with urllib.request.urlopen(url, timeout=300) as r, open(p, "wb") as fh:
+                        fh.write(r.read())
                 size = p.stat().st_size
                 m = measure(p, ra, dec, fwhm)
-                if t == 1316:
+                if t == 1316 and not m["no_data"]:
                     peak = peak_check(
                         p,
                         ra,

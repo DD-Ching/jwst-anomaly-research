@@ -110,13 +110,14 @@ def _gauss(xx, yy, x0, y0, flux, sig, q=1.0, th=0.0):
 def flux_scale(D) -> tuple[float, float]:
     """Start flux and upper bound for the fits (PLAN_fixes.md fix 3).
 
-    The start is the filtered aperture sum when positive, else the sum of the positive pixels; the
-    bound is 10 × the larger of the two. (Before the fix both came from the sum floored at
-    1e-6, which pinned faint sources whose filtered sum is ≤ 0.)
+    The start is the filtered aperture sum when it is at least 10 % of the sum of the positive
+    pixels, else the positive-pixel sum; the bound is 10 × the larger of the two. (Before the fix
+    both came from the sum floored at 1e-6, which pinned faint sources whose filtered sum is
+    ≤ 0 or near 0.)
     """
     D = np.asarray(D, float)
     s, s_pos = float(np.sum(D)), float(np.sum(np.clip(D, 0.0, None)))
-    start = s if s > 0 else max(s_pos, 1e-6)
+    start = s if s >= 0.1 * s_pos and s > 0 else max(s_pos, 1e-6)
     return start, 10.0 * max(s, s_pos, 1e-6)
 
 

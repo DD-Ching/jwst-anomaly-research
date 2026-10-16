@@ -94,10 +94,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
       0.90 / 0.95 → 1.00).
   - **Unchanged:** every class, the 21 / 24 census gates (the flux bound did not cause the 1404 / 2004 / 2184 gate
     failures), P(≥ 4) 0.026, P(≥ 3) 0.116, and `clumps_1557.json`.
-  - **6000 Å peak (pre-registered checks):** valid and above threshold, but the narrow-band emission rises away from
-    the target (SW, off the cutout), 1.5″ offset apertures are stronger (S/N 22.9, 8.9), and 0.83 chance peaks are
-    expected per window search.
-    - → **not significant under the calibration**; not a line of 1316, no redshift.
+  - **6000 Å peak (pre-registered checks):** valid and above threshold, but:
+    - the narrow-band peak is 2.79″ away (sky PA 224°, at the edge of the valid map);
+    - the 1.5″ W offset aperture is stronger (S/N 22.9);
+    - the planned chance metric gives 1.83 per window search.
+    - → **not significant as a line of 1316**; no redshift.
+    - Deviation, reported only: excluding the feature itself, no chance peak this strong elsewhere in the window,
+      so the feature is real emission centred off 1316.
     - Decision to wait: unchanged.
 ## 2026-10-16: Arc difference imaging with position as a label: known cases kept, review burden small, injection efficiency fails (0.34 < 0.50)
 - **Why:** owner decision of 2026-10-16: position becomes a label and review priority, not a veto, and every other

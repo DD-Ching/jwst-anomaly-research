@@ -77,6 +77,9 @@ def test_flux_scale_for_negative_filtered_sum():
     assert start > 0.5 and up >= 10 * start
     s, s_pos = vd.flux_scale(np.array([1.0, 2.0, -0.5]))
     assert s == 2.5 and s_pos == 30.0
+    tiny = np.r_[np.full(45, -0.0222222), [0.1, 0.2, 0.3, 0.2, 0.1]]  # sum ≈ +1e-6, bump 0.9
+    start, _ = vd.flux_scale(tiny)
+    assert start > 0.5  # a near-zero positive sum does not set a pinned start
 
 
 def test_fit_not_pinned_for_faint_source_with_negative_sum():

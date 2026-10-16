@@ -34,8 +34,8 @@ def test_window_result_detects_and_respects_sky_flag():
         "sigma_flux": np.full_like(lam, 1e-19),
     }
     r = avs.window_result(m, 8700, 8900)
-    assert r["detected"] and abs(r["max_snr_lambda_A"] - 8800) < 1.5
+    assert r["above_threshold"] and abs(r["max_snr_lambda_A"] - 8800) < 1.5
     assert np.isclose(r["limit_5sigma_cgs_median"], 5e-19)
     m["usable"] = np.abs(lam - 8800) >= 5
-    assert not avs.window_result(m, 8700, 8900)["detected"]
+    assert not avs.window_result(m, 8700, 8900)["above_threshold"]
     assert avs.window_result(m, 9400, 9500)["in_range"] is False

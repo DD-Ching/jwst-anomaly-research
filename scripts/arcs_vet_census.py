@@ -179,8 +179,13 @@ def main(argv=None) -> int:
         return p_tail(pr, labels, k, drop) if len(passed) >= 12 else float("nan")
 
     mix = {f: {lab: f * p_cp[lab] + (1 - f) * p_sn[lab] for lab in labels} for f in (f_hat, f_up)}
-    k_counts = {"k4_screen": 4, "k3_bgsub": 3, "k2_core_flux": 2}
-    drops = {"k2_core_flux": ("2184",)}  # 2184 noise-explicable at core flux (step 2)
+    # 2184: noise-explicable at core flux (step 2); counts and nulls are derived from the same sets
+    drops = {"k2_core_flux": tuple(sorted({"2184"} & bgsub_anti))}
+    k_counts = {
+        "k4_screen": len(screen_anti),
+        "k3_bgsub": len(bgsub_anti),
+        "k2_core_flux": len(bgsub_anti - set(drops["k2_core_flux"])),
+    }
     p_primary = tail(p_row, 4)
     sample = {
         "n_rows": len(labels),
@@ -198,9 +203,9 @@ def main(argv=None) -> int:
             n: tail(mix[f_up], k, drops.get(n, ())) for n, k in k_counts.items()
         },
         "p_ge_k_shape_noise_only_check": {
-            n: vn.excess_p([p_sn[lab] for lab in labels if lab not in drops.get(n, ())], k)
-            for n, k in k_counts.items()
+            n: p_tail(p_sn, labels, k, drops.get(n, ())) for n, k in k_counts.items()
         },
+        "k_counts": k_counts,
         "rows_dropped_from_count_and_null": {n: list(v) for n, v in drops.items()},
         "two_knot_among_screen_aligned": sum(
             res[lab]["class"] == "two-knot" and res[lab]["gate"]["passed"]

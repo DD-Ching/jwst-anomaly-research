@@ -38,6 +38,11 @@
    "k3_bgsub": 0.010755814679796772,
    "k2_core_flux": 0.08845374600010543
   },
+  "k_counts": {
+   "k4_screen": 4,
+   "k3_bgsub": 3,
+   "k2_core_flux": 2
+  },
   "rows_dropped_from_count_and_null": {
    "k2_core_flux": [
     "2184"
@@ -326,29 +331,29 @@
    }
   },
   "2004": {
-   "dbic": -1.372108076373138,
-   "snr1": 4.198896732711229,
-   "snr2": 2.9651306774940265,
-   "sep_arcsec": 0.20851213811537808,
-   "pa_sep": 57.806792992055975,
-   "m1_sigma_arcsec": 0.17065761133870172,
-   "m1_q": 0.28936468154802336,
+   "dbic": -1.3720818515795372,
+   "snr1": 2.965016186574292,
+   "snr2": 4.198888054399562,
+   "sep_arcsec": 0.20850780252546436,
+   "pa_sep": 57.806941603366795,
+   "m1_sigma_arcsec": 0.17061567848169495,
+   "m1_q": 0.28951340992278934,
    "class": "undecided",
    "gate_sep_arcsec": 0.21,
    "gate": {
     "n_single": 20,
     "n_two": 20,
     "frac_single_not_two_knot": 0.65,
-    "frac_two_called_two_knot": 0.3,
+    "frac_two_called_two_knot": 0.35,
     "single_classes": {
      "single": 8,
      "two-knot": 7,
      "undecided": 5
     },
     "two_classes": {
-     "single": 2,
-     "two-knot": 6,
-     "undecided": 12
+     "single": 4,
+     "two-knot": 7,
+     "undecided": 9
     },
     "passed": false
    }
