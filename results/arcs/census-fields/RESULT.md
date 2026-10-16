@@ -41,6 +41,8 @@ No row fell outside its mosaic. Every field has ≥ 12 gate-passed rows.
 - Same point-pair ASSUMPTIONs as the S1063 census (isotropic separations, point clumps, ≤ 0.4″ pairs).
 - The five fields differ from S1063 in depth, filter set of the catalogues, lens models and photo-z sources; the
   pooled f̂ assumes one clump rate for all of them.
+- Injection seeds are seed + row index within each field (as frozen), so rows at the same index in different fields
+  share a random stream on different images (code review; not re-run).
 - 2004 (κ ≈ 1) is still counted in k = 4 with the mixture probability.
 
 ## Status

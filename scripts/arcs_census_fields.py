@@ -70,12 +70,14 @@ def strong_background(t: Table) -> Table:
 
 
 def mixture_p(p_cp, p_sn, f: float, k: int) -> float:
-    """P(≥ k anti) when each row is a clump pair with probability f (PLAN_census.md mixture)."""
+    """P(≥ k anti) when each row is a clump pair with probability f (S1063 census mixture)."""
     p = f * np.asarray(p_cp, float) + (1.0 - f) * np.asarray(p_sn, float)
     return census.vn.excess_p(p, k)
 
 
 def plan_outcome(p_pooled: float) -> str:
+    if not np.isfinite(p_pooled):
+        return "undetermined (no gate-passed rows)"
     if p_pooled >= 0.05:
         return "S1063 excess explained by clump pairs at the five-field rate (exploratory)"
     return "S1063 excess remains at the five-field clump rate (exploratory)"

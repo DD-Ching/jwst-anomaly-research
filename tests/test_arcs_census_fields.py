@@ -42,6 +42,7 @@ def test_mixture_limits():
 def test_plan_outcome_threshold():
     assert acf.plan_outcome(0.05).startswith("S1063 excess explained")
     assert acf.plan_outcome(0.0499).startswith("S1063 excess remains")
+    assert acf.plan_outcome(float("nan")).startswith("undetermined")
 
 
 def test_summarize_counts_only_gate_passed():
