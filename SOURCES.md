@@ -606,6 +606,19 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - CANUCS DR1 (DOI 10.17909/18nv-np70) MACS0416 cluster-field photometry and EAzY photo-z:
   https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/clu/hlsp_canucs_jwst-hst_multi_macs0416-clu_multi_v1_photometry-cat.fits.gz,
   31,693,111 B, sha256 `339107a5c5041621d7bed4ecc8b4a51b5148a6913d4e513c3a5e783363f11bff`.
+- MACS0417 (`arcs`, accessed 2026-10-16; `results/arcs/macs0417-relics/`):
+  - JWST 1208 F200W pipeline catalogue `jw01208-o006_t003_nircam_clear-f200w_cat.ecsv` (MAST
+    `mast:JWST/product/...`), 5,030,481 B, sha256 `e55dffb990a8e8124e37658933a47952a77b357b36dc5c8f523a5b487d423c24`;
+  - CANUCS DR1 cluster photometry and EAzY photo-z
+    https://archive.stsci.edu/hlsps/canucs/dr1/macs0417/clu/hlsp_canucs_jwst-hst_multi_macs0417-clu_multi_v1_photometry-cat.fits.gz,
+    Last-Modified 2025-04-29, 27,820,129 B, sha256 `ca6b48aa6404444d2e0b8965a35376ff032917071ea64cbf6306d06ee57d90dd`;
+  - CANUCS DR1 Lenstool maps (Desprez, preliminary v1; readme
+    `hlsp_canucs_jwst-hst_multi_macs0417-lenstool-readme_multi_v1_model.txt`): `dpl1`, `dpl2`, `kappa`
+    `-dlsds1-best-100mas` under https://archive.stsci.edu/hlsps/canucs/dr1/macs0417/model/ (sha256 in
+    `lensmodel.MACS0417_CANUCS_MAPS`; Last-Modified 2025-04-26);
+  - RELICS Lenstool v1 maps (Mahler et al. 2019, MNRAS 485, 3954; DOI 10.17909/T9SP45)
+    https://archive.stsci.edu/hlsps/relics/macs0417m11/models/lenstool/v1/ (sha256 in
+    `lensmodel.MACS0417_RELICS_LENSTOOL`). GLAFIC v2/v3 and Lenstool v2 also exist there (not used).
 - CANUCS DR1 MACS0416 Lenstool model (Rihtarsic et al. 2025, A&A, doi:10.1051/0004-6361/202451117), files under
   https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/model/:
   - `hlsp_canucs_jwst-hst_multi_macs0416-lenstool-bestparam_multi_v1_model.txt` 70,753 B

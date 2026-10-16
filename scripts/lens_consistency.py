@@ -158,6 +158,19 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {6.2: "mag_z6.2"},
     },
+    "macs0417-relics-lenstool": {
+        "files": lensmodel.MACS0417_RELICS_LENSTOOL,
+        "kind": "maps",
+        "z_lens": 0.443,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
+    "macs0417-canucs-maps": {
+        "files": lensmodel.MACS0417_CANUCS_MAPS,
+        "kind": "maps",
+        "z_lens": 0.443,
+        "cosmology": (70.0, 0.3),
+    },
 }
 
 # HFF CATS map models (D-035): "<cluster>-cats". The image list is used only where our
