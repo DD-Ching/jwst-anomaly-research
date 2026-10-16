@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-16: `arcs` on Abell S1063: 4 background anti vs 0.52 expected; 2 explained or likely ordinary, 2 open (draft #273)
+## 2026-10-16: `arcs` on Abell S1063: 4 background anti vs 0.52 expected; 2 explained or likely ordinary; after vetting 1316 open (draft #273)
 - **New field for the arc-orientation test** (D-024 defaults; plan committed first): CATS v4.1 maps, GLIMPSE F200W,
   DJA v7.5 photo-z. Strong-shear background: 20 / 24 aligned, **4 anti vs 0.524 (P 0.0021)**.
 - **Ordinary tests (new scripts):**
@@ -25,8 +25,18 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - Independent HST axes (HFF-DeepSpace SExtractor) are also anti for both, at S/N ≈ 1.
   - Cutouts looked at: 1316 shows two knots along its axis (blend untested); 2184 is a blob 2″ from the giant arc.
   - All-VizieR query within 1.5″: no spectroscopic redshift (not stored).
-- **Handoff:** both stay open and unvetted, not candidates. Next: deblend 1316's knots, and a MUSE or second-code
-  redshift for 2184 (`vetting/RESULT.md` "Next").
+- **Vetting, step 2 (`vetting/PLAN_deblend.md` + addendum first; `scripts/arcs_vet_deblend.py`):**
+  - 1316 (frozen): two knots 0.208″ apart (ΔBIC 134, gate 20 / 20), the separation is the anti axis (78.5°), knot
+    colours consistent (p 0.146) → clump pair, stays open. Post hoc: at its fitted flux (⅓ of the catalogue flux)
+    the gate gives 0.75 < 0.8, so the two-knot call is not validated there.
+  - 2184 (frozen): arc-fragment test invalid (control fails without an error floor). Post hoc 10 % floor: control
+    passes, 2184's SED differs from the giant arc (p ≤ 9 × 10⁻⁶).
+  - **Failed assumption found:** step 1 injected catalogue fluxes, but the 0.3″ cores are −0.47 to +3.09 mag
+    fainter (1316 +1.24, 2184 +2.49). Re-run with each row's core flux (`--flux core`): gate passes; **1316 0 / 60,
+    2184 7 / 60 (noise-explicable)**; sample 3 vs 0.333 expected, P 0.00039 (excess remains; 1316 and 1557 at 0).
+- **Handoff:** 2184 explained by measurement noise at core flux (post hoc), not a candidate. 1316 open, unvetted,
+  not a candidate. Next: 1557 through the same tests; a redshift for 1316 (MUSE or a second photo-z code); use
+  `--flux core` on the other `arcs` fields (`vetting/RESULT.md` "Next").
 ## 2026-10-16: Sunrise arc difference imaging, o010 → VENUS o052: 0 candidates on the arc; o120 pair still to run
 - **Why:** the Sunrise catalog grids are null, but a catalog grid misses transients blended into an arc (PLATE-23a,
   D-027 addendum 2026-10-15j); `arc_diff.py` had never run on the Sunrise arc. Plan before the run:

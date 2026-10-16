@@ -84,8 +84,8 @@ Plan: `PLAN_deblend.md` (before the run) and its addendum (after the deblend run
   the separation of two knots with consistent colours (frozen), but the two-knot call is not validated at its own
   flux (post hoc gate 0.75). A clump pair of one source is a leading ordinary reading that the data here do not
   confirm or exclude.
-- **Sample:** the anti excess on S1063 remains at core flux (1316 and 1557 at P_anti 0). 1557 had not been vetted
-  individually.
+- **Sample:** the anti excess on S1063 remains at core flux (1316 and 1557 at P_anti 0). 1557 (earlier reading:
+  likely an intrinsic shape or blend in weak shear) has no injection test of its own.
 
 ## Next
 - 1557: the same step-2 tests (it is a bgsub anti row with P_anti 0 at core flux).
