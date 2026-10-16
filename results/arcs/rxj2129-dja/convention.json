@@ -1,0 +1,8 @@
+{
+ "n_matched": 68,
+ "median_abs_dpa_deg": 2.8,
+ "fraction_within_20deg": 0.971,
+ "median_abs_dpa_alternative_90_minus_theta_deg": 49.41,
+ "passes": true,
+ "pipeline_px_arcsec": 0.03074
+}
