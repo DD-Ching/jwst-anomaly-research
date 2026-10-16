@@ -59,3 +59,47 @@ Owner request 2026-10-16: finish the per-pair check that #269's frozen escalatio
   - E2 equal surface brightness and E3 equal colours, both measured (not undetermined);
   - an E4 deflector limit fainter than the SIS-scaled magnitude by ≥ 3 mag.
   Even then it is only a candidate for `/vet-candidate` and independent data.
+
+## Addendum 2026-10-16 06:55 UTC (owner request; **deviation**: added before any control was measured)
+**E2 validation on known equal-surface-brightness pairs.**
+- **Controls.** Every CATS v4.1 multiple-image pair of one system with separation ≤ 4″ and a known redshift
+  (z > 0). There are 11, all listed by `lens_consistency.image_list('abell2744-cats')`:
+  - 39.1/39.2, 37.1/37.2, 33.1/33.2, 4.4/4.5;
+  - 62.1/62.2, 40.1/40.2, 8.1/8.2, 3.1/3.2;
+  - 61.1/61.2, 10.1/10.2, 134.1/134.2.
+- **Measurement.** They are measured with the same `orphan_vet.measure_pair` and the same seed.
+- **Validity rule** (function `e2_valid` in `orphan_vet.py`, unit-tested). Take the controls where both members are
+  resolved and E2 is measured. E2 is valid only if **all** of these hold:
+  - n ≥ 3;
+  - |median sb_z| ≤ 1.0;
+  - robust std (1.4826 × MAD) of sb_z ≤ 1.5;
+  - at most 10 % of the controls have |sb_z| > 3.
+
+  Otherwise E2 is "undetermined" for every pair. It then neither supports nor excludes anything.
+- **Caveat.** Published images near critical curves are often extended or merging arcs. A failed validation means
+  E2 is unusable here; it does not show that lensing changes surface brightness.
+
+**Classification as a function** (`classify` in `orphan_vet.py`, unit-tested; the plan's rules written as conditions).
+- **ordinary**: any of
+  - E1 bridge z ≥ 3;
+  - E2 valid and |sb_z| > 3;
+  - E3 p < 0.01;
+  - E5 Δz > 0.01 (1 + z) between two public spectroscopic redshifts;
+  - an E6 artifact flag (set only from #269's recorded sheet findings);
+  - E6 ≥ 2 same-z third sources within 1.5″ **and** (E1 z ≥ 3 **or** (E2 valid **and** |sb_z| > 3)).
+
+  This last condition is already covered by the E1 and E2 terms, so a group alone never decides.
+- **insufficient data**: not ordinary, **and** any of:
+  - E2 not valid;
+  - either member unresolved;
+  - either member detected in fewer than 3 bands.
+- **anomaly worth independent checking**: not ordinary, **and** all of:
+  - E2 valid and |sb_z| ≤ 3;
+  - E3 p ≥ 0.01;
+  - E4 3σ deflector limit ≥ 3 mag fainter than the SIS-scaled magnitude.
+- **insufficient data (fallback)**: anything that falls under none of the three.
+
+**E5/E6 inputs.** VizieR cone searches of 1.5″ around each member in J/ApJ/982/51 (Price+25 spectra),
+J/ApJS/270/12 (Wang+24 SPS redshifts) and J/ApJS/270/7 (UNCOVER DR3 photometry).
+- A same-z neighbour is a J/ApJS/270/12 source within 1.5″ of the pair midpoint, other than the members (> 0.2″ from
+  each), whose redshift lies within 0.15 (1 + z) of the pair's mean DJA photo-z.
