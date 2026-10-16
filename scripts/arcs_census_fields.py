@@ -20,6 +20,7 @@ import argparse
 import importlib.util
 import json
 import re
+import sys
 import tempfile
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
@@ -43,6 +44,7 @@ K_S1063 = 4  # the S1063 screen anti count (census "k4_screen")
 def _load_module(name: str, file: str):
     spec = importlib.util.spec_from_file_location(name, Path(__file__).resolve().parent / file)
     mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod  # pool workers pickle its functions by module name
     spec.loader.exec_module(mod)
     return mod
 
