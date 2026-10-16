@@ -21,6 +21,10 @@ classes, counts and P values `derived`. All thresholds are the D-024 defaults (A
 - Anti rows (`summary.json` `anti_background`): 1818 (m 28.46, z_phot 3.11, g_min 1.03), 2197 (m 28.34, z 3.42,
   g 0.27), 2322 (m 28.08, z 3.42, g 0.27), 4234 (m 24.19, z 1.01, g 0.20).
 
+## Vetting
+Step 1 (ICL-subtracted shapes, measurement noise): `vetting/RESULT.md`. 1818 becomes `mixed`; the other three
+stay anti and are not noise-explicable; post hoc P(≥ 3) 0.071 vs shape noise.
+
 ## Looked at (F200W 5″ cutouts with observed and predicted axes, 4 anti + 4 random aligned controls; not stored)
 - 1818: not visible at the sheet's stretch, on the BCG's intracluster light next to a long thin arc;
 - 2197: one knot of a clumpy chain whose overall axis roughly follows the prediction (a fragment candidate);

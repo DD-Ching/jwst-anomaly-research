@@ -1,0 +1,31 @@
+{
+ "label": "post hoc (derived); not part of the frozen plan",
+ "screen_anti": [
+  1818,
+  2197,
+  2322,
+  4234
+ ],
+ "screen_anti_class_bgsub": {
+  "1818": "mixed",
+  "2197": "anti",
+  "2322": "anti",
+  "4234": "anti"
+ },
+ "screen_anti_staying_anti_bgsub": [
+  2197,
+  2322,
+  4234
+ ],
+ "shape_noise_expected_screen": 0.949,
+ "p_ge_staying_vs_shape_noise": 0.0712,
+ "row_1758": {
+  "class_bgsub_z2": "anti",
+  "orientation_class_screen": "aligned",
+  "z_phot": 6.38,
+  "g_min": 10.03,
+  "offset_zphot_deg": 5.0,
+  "offset_z2_deg": 85.0
+ },
+ "note": "bgsub_shapes and the noise sample count classify against the z_s = 2 prediction only (S1063 design)"
+}

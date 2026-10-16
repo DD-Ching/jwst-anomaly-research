@@ -2,9 +2,27 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-16: (in progress) JWST-era lens models for a further S1063 replication field
-- Plan: find a public JWST-era κ/γ (or deflection) model for one DJA photo-z cluster field with F200W
-  (RXJ2129, MRG0138, RXCJ0600, rj0018p1626, MACS1423), then run `arcs` under a frozen plan.
+## 2026-10-16: `arcs` on MACS1423 (CANUCS DR1 maps): the frozen rule says the S1063 anti excess replicates at screen level; after ICL subtraction it is marginal (post hoc P 0.071)
+- **Why:** the MACS0647 handoff said MACS1423 lacked a public model; CANUCS DR1 has a JWST-era Lenstool model for it
+  (Desprez, preliminary v1, 5 spectroscopic systems). New entry `macs1423-canucs-maps` (`validate`: κ reproduced to
+  3.0 × 10⁻⁵). Plan and `outcome()` committed before the run: `results/arcs/macs1423-canucs/PLAN.md`,
+  `scripts/arcs_macs1423.py`.
+- **Screen (derived; `results/arcs/macs1423-canucs/RESULT.md`, `summary.json`):** control 44 / 55 aligned (80 %);
+  **anti 4 vs 0.949, P 0.016 → frozen outcome "replicates"** (screen level). Cutouts looked at: 1818 on the BCG's
+  ICL, 2197 one knot of a clumpy chain, 2322 a tiny faint blob, 4234 a bright galaxy at the g_min threshold.
+- **Vetting step 1 (plan first; #273's scripts at `43fbbbd`, unchanged; `vetting/RESULT.md`):** ICL subtraction
+  keeps 2197, 2322, 4234 anti and moves 1818 to `mixed` (controls 40 / 43); measurement-noise injections (gate
+  100 %) give P_anti ≤ 0.017 per row → frozen outcome "excess remains" vs measurement noise. **Deviation, post hoc
+  (`vetting/posthoc.json`):** the scripts classify at z_s = 2 only, so the frozen count includes 1758 (aligned at its
+  z_phot 6.38); the 3 screen anti that stay anti vs the shape-noise expectation give P(≥ 3) 0.071.
+- **Reading:** not a candidate. Two independent fields with JWST-era models now give one non-replication (MACS0417,
+  P 0.195) and one screen-level replication that becomes marginal after ICL subtraction. The `arcs` shape-noise null
+  covers intrinsic shapes only; clumpy fragments (2197 by eye) are the next ordinary test.
+- **Found for later (`SOURCES.md`):** RXJ2129 has six JWST-updated models (Dhanasingham et al. 2026, Zenodo 4.3 GB
+  zip, range-readable); MRG0138 and RXCJ0600 have JWST-era models without public maps.
+- **Handoff:** next, the S1063 clump-pair census (`arcs_vet_census.py`, #273) on the MACS1423 strong-shear rows with
+  the anti classification at each row's photo-z, then RXJ2129 as a third independent field (plan first; check the
+  GLAFIC ZS = 3 header).
 
 ## 2026-10-16: `arcs` on MACS0647 as a second independent test of the S1063 anti excess: no result (both controls fail)
 - **Why:** after MACS0417 (#280), the next field with JWST F200W, a DJA photo-z catalogue and public lens models.
