@@ -3,7 +3,12 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-16: (in progress) Abell 2744 UNCOVER vs ALT F356W `arc_diff` tiling over the overlap footprint
-- Claim: close the grid's host-blend blind spot (PLATE-23a) by difference imaging the UNCOVER∩ALT overlap.
+- **Hypothesis before measuring:** difference imaging of the whole UNCOVER o001 (2022-11) ∩ ALT 3516 o002 (2023-11/12)
+  F356W overlap recovers PLATE-23a and the grid's real changes g1 and g2, and every other morphology pass is a
+  star/spike residual, an ALT single-visit artifact, a mosaic-edge effect or a registration residual on a core.
+  Decision rule (ASSUMPTION, written before the run): a real UNCOVER→ALT change must show the same sign at
+  |S| ≥ 3 in UNCOVER→ALT o001 (9 days after o002) and |S| < 3 in ALT o002→o001; a pass meeting this, on sky and not on
+  a star, ≤ 5″ from a Bergamini+23 multiple image or critical-curve region, goes to `/vet-candidate`.
 
 ## 2026-10-16: X3 reopen check: DR4 epoch-astrometry fields confirmed (draft data model), precision not yet published; X3 stays paused
 - Documents only (≤ 30 min; no Gaia data read; no X3 computation). Record: `docs/state/units/X3.md`, "DR4 reopen
