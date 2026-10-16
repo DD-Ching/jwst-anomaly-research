@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-16: (in progress) Abell 2744 UNCOVER vs ALT F356W `arc_diff` tiling: PLATE-23a, g1, g2 recovered; 6 priority hits unvetted
+## 2026-10-16: Abell 2744 UNCOVER vs ALT F356W `arc_diff` tiling and multi-epoch vetting of 6 priority hits: one SN-like transient, one variable, 0 lensing candidates
 - **Hypothesis before measuring:** difference imaging of the whole UNCOVER o001 (2022-11) ∩ ALT 3516 o002 (2023-11/12)
   F356W overlap recovers PLATE-23a and the grid's real changes g1 and g2, and every other morphology pass is a
   star/spike residual, an ALT single-visit artifact, a mosaic-edge effect or a registration residual on a core.
@@ -32,12 +32,39 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - t+0−1 h003 (3.577785, −30.394141): +48σ new compact source 19″ from image 64.1; o001 +41.5, o002→o001 −15.9
     (fading between the ALT visits; SN-like). Not in the grid's 45 groups (a host blend, like PLATE-23a);
   - t+1+1 h011 (3.592116, −30.366745): +14σ, growing (o001 +40, o002→o001 +30); variable source 51″ from images.
-- **0 candidates so far; nothing vetted.** Limitations: single band (ALT has F356W only here), the population and
-  ALT o001 rules are post hoc, no injection through this chain yet, and the 24 faint open hits are not classified.
-- **Handoff (next run, same PR):** vet the 6 priority hits: UNCOVER multi-band forced photometry (F277W/F410M/F444W,
-  same visit) to reject single-band artifacts; persistence and `_cal` per-dither checks; known-transient lists
-  (PLATE paper, TNS); for the 301.1 cluster, whether the knot fades are a PSF/arc-matching residual (`arc_diff_vet.py`
-  arc coherence). Then an `--inject-grid` run on 2–3 tiles for completeness.
+- **Vetting of the 6 priority hits (derived; `scripts/hit_lightcurve.py`, new):** forced photometry (r 0.15″, annulus
+  0.35–0.6″, error = robust spread of 300 random apertures in the same box) at each fixed position in **every** public
+  NIRCam level-3 mosaic covering it (MAST query; 46–64 mosaics, 2022-10 to 2024-10: DD 2756, UNCOVER, PEARLS 1176,
+  MegaScience 4111, 3538, 2883, ALT, SAPPHIRES 6434; S3 byte ranges, nothing stored). Outputs and stamp sheets
+  (looked at, all 6): `arcdiff_tiles/vet/`. Controls: 53 compact peaks (20–150 nJy) within 16″ of the 301.1 hits
+  measured in the same mosaics (`vet/ctrl301/`, `scripts/hit_lightcurve_controls.py`); each hit's epoch-pair z is
+  calibrated by the controls' median and robust std (`vet/ctrl301/control_z.ecsv`).
+  - **h003: SN-like transient (ordinary).** Host flat at ≈ 25–35 nJy (2022-10 → 2023-11-06, 6 programs); a point source
+    appears by 2023-11-20 (MegaScience: F090W 307 ± 3, F182M 187 ± 5, F360M 79 ± 3, F460M 61 ± 8 nJy; blue), rose
+    ≥ 170 nJy in F182M within ≤ 10 days, fades through ALT (F090W 216 → 144 nJy in 9 days) and is gone by 2024-10
+    (F090W 34 ± 4). Seen in ≥ 15 bands and 3 programs: not an artifact. 19″ from image 64.1; not a lensing anomaly.
+    Known-transient lists (TNS, the PLATE catalog in prep) not checked.
+  - **h011: variable compact source (ordinary; AGN-like).** ±10–20 % changes on 9–13-day scales in 2022 and 2023
+    (F277W 171 → 136, F356W 147 → 124 → 171 → 185, F360M 198 → 166 nJy), no rise-and-fall. 51″ from any image.
+  - **h294: single-visit artifact.** Only ALT o002 F356W (17 ± 3 nJy); nothing in the same visit's F070W/F090W, in ALT
+    o001 nine days later, or in any of 44 other mosaics.
+  - **h287: consistent with arc systematics.** Calibrated |z| ≤ 3.3 both ways; shows the size of on-arc excursions
+    (|z_cal| up to 3.3) that compact controls do not capture.
+  - **h123: marginal fade.** Red bands 25–40 % fainter after 2022-11 (F444W z_cal −3.0 in 2023-07, −3.3 / −2.5 in
+    2024-10), blue bands unchanged; within the on-arc excursion size of h287. Not significant.
+  - **h182: inconclusive brightening, ordinary explanations open.** Arc knot 4.5″ from 301.1b; red bands 20–45 %
+    brighter in 2023 than in 2022-11 (z_cal +4.9 ALT o002, +3.7 ALT o001, +3.0 F444W / +2.8 F410M PEARLS 2023-07),
+    −2.6 between the two ALT visits, back to the 2022 level in 2024-10 (SAPPHIRES F444W/F200W z_cal ≤ 1.3); no
+    visible new point source in the stamps. Bergamini+23 gives μ 71 (z 3) to −359 (z 4) here (system 301 z 5.29;
+    model_prediction): near a critical curve, so microlensing of a compact knot is the leading ordinary
+    explanation, with the on-arc photometry systematic (h287) as the other. Microlensing changes one image only, so
+    the lens model makes no counter-image prediction to test. Not a candidate.
+- **0 lensing candidates.** Limitations: controls are compact peaks, not arc pixels (on-arc systematics are larger);
+  the pair choice and calibration are post hoc; one control (c08, > 20″ from the hits) got no mosaics under `--query-only` and is absent; no injection through the tiling chain; the 24 faint open hits of the
+  tiling are not classified; program-dependent PSFs not modelled.
+- **Handoff:** h182 is the only open item (low priority): an arc-pixel control set (`arc_diff_vet.py` arc noise) on the
+  same mosaics would decide whether +45 % exceeds on-arc systematics; a TNS check for h003. Then the `--inject-grid`
+  completeness run on 2–3 tiles.
 
 ## 2026-10-16: X3 reopen check: DR4 epoch-astrometry fields confirmed (draft data model), precision not yet published; X3 stays paused
 - Documents only (≤ 30 min; no Gaia data read; no X3 computation). Record: `docs/state/units/X3.md`, "DR4 reopen
