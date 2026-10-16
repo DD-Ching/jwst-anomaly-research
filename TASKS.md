@@ -217,8 +217,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      not replicate. ~~MACS0647~~ — done (2026-10-16, `results/arcs/macs0647-clash/RESULT.md`): both CLASH Zitrin
      models fail the control (67 %, 50 %), no result. ~~MACS1423~~ — done (2026-10-16,
      `results/arcs/macs1423-canucs/`): CANUCS DR1 maps, screen anti 4 vs 0.95 (P 0.016), but the clump-pair census
-     gives P 0.259 (exploratory): not replicated under the clump-aware null. Next: RXJ2129 (JWST-updated models,
-     SOURCES.md), plan first;
+     gives P 0.259 (exploratory): not replicated under the clump-aware null. ~~RXJ2129~~ — done (2026-10-16,
+     `results/arcs/rxj2129/RESULT.md`): Lenstool and GLAFIC JWST-updated maps both fail the control (8 / 12),
+     no result. Next, optional: RXJ2129 on the deeper DJA catalogue (new plan; shape source changes);
    - ~~arc curvature~~ — done (D-024 addenda 5–6): forward-modelled curvature, 5 testable arcs all as predicted (El
      Gordo 2527 explained by its model); critical curves at z_s = 1, 2, 4 still open;
    - shapes for the `arcs` test: S/N ≥ 50 done on the stored tables (`docs/fields/abell370.md`: 3 anti vs 1.33,

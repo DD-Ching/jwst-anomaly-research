@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: `arcs` on RXJ2129: no result (both JWST-updated models fail the control, 8 / 12 aligned)
+- **Why:** the MACS1423 handoff (below): RXJ2129 as the next independent field for the S1063 anti-excess
+  replication question. Plan frozen first (`results/arcs/rxj2129/PLAN.md`, `bbe0306`); script
+  `scripts/arcs_rxj2129.py` reads the Lenstool (primary) and GLAFIC (second) maps out of the 4.30 GB Zenodo zip by
+  HTTP range requests and reuses `arcs_macs0647.outcome` unchanged.
+- **Result (derived; `results/arcs/rxj2129/RESULT.md`, `summary.json`):** both maps pass `validate` (median κ
+  relative difference 2.9 × 10⁻⁵ and 1.2 × 10⁻⁵); 12 strong-shear background rows, 8 aligned (67 %) under both
+  models, so both controls fail: **frozen outcome "no result"**. Post hoc: Lenstool anti 2 vs 0.22 shape-noise
+  expectation, GLAFIC anti 1 vs 0.176; these carry no weight under the rule. Cutouts looked at (not stored).
+- **Failed approach:** the MAST download API returned "internal error" for the program 2767 catalogue; the public
+  S3 bucket served it. A range read of the Zenodo zip dropped once on a TLS EOF; the script now retries each block.
+- **Handoff:** the S1063 replication tally is MACS0417 no, MACS0647 no result, MACS1423 explained, RXJ2129 no
+  result (12 strong-shear rows on a 2,061 s catalogue). A deeper RXJ2129 catalogue (DJA `rxj2129-grizli-v7.0-ir.cat`,
+  all NIRCam bands) would add rows but changes the shape source, so it needs its own plan. PA conventions of the
+  deblend `pa_sep` vs catalogue `pa_obs` stay unchecked.
+
 ## 2026-10-16: `arcs` on MACS1423, vetting step 2: the clump-pair census explains the anti count (P 0.259, exploratory)
 - **Why:** the step-1 handoff (below): the S1063 clump-pair census on the MACS1423 rows, anti classes at each
   row's photo-z. Plan frozen first: `results/arcs/macs1423-canucs/vetting/PLAN_census.md`; script

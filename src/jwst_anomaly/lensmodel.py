@@ -282,6 +282,44 @@ MACS1423_CANUCS_MAPS: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: JWST-updated maps of RX J2129.7+0005 (Dhanasingham et al. 2026, arXiv:2604.11882; Zenodo record
+#: 21460864, one 4.30 GB zip; accessed 2026-10-16). Members are read by HTTP range requests
+#: (``<zip url>#<member>``, staged by ``scripts/arcs_rxj2129.py``). Lenstool: arcsec deflections at
+#: D_LS/D_S = 1 (file names, README), 0.030" pixels. GLAFIC: arcsec deflections normalised at
+#: z_s = 3 (header ZS), 0.05" pixels; used as published.
+_RXJ2129_ZIP = (
+    "https://zenodo.org/api/records/21460864/files/RXJ2129+0005_Models.zip/content"
+    "#RXJ2129+0005_Models/{0}"
+)
+RXJ2129_LENSTOOL_MAPS: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _RXJ2129_ZIP.format("LENSTOOL/alphaX_DLSDS1.fits"),
+        "ab72967a2e141f4650b1dfb3a9ccd01845cd0b49d7972bcc127c2b1f5faf53b6",
+    ),
+    "alpha_y": (
+        _RXJ2129_ZIP.format("LENSTOOL/alphaY_DLSDS1.fits"),
+        "2538ef5f15b7eae2cd2095590779e3e94fa81b10e2f5f9e681935a27688bc498",
+    ),
+    "kappa_map": (
+        _RXJ2129_ZIP.format("LENSTOOL/kappa_DLSDS1.fits"),
+        "1a0d2c9302a3e6b822e0b3330a1f57704daa34395a798dcaaed15261f5a702ba",
+    ),
+}
+RXJ2129_GLAFIC_MAPS: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _RXJ2129_ZIP.format("GLAFIC/jwst_model_rxj2129_glafic_x-arcsec-deflect.fits"),
+        "bf477c970c51c577ba3351a52418ccf4c7024c6dad604ba106ced6400df93493",
+    ),
+    "alpha_y": (
+        _RXJ2129_ZIP.format("GLAFIC/jwst_model_rxj2129_glafic_y-arcsec-deflect.fits"),
+        "121de21b9b7e7916c424b72f1912270be06b054f73cd3e56aab2be25af33abbf",
+    ),
+    "kappa_map": (
+        _RXJ2129_ZIP.format("GLAFIC/jwst_model_rxj2129_glafic_kappa.fits"),
+        "1f6deaee2cb5ccb211b04bdb290de169e9863b72e8d5d8343768cce8f0d1bb4f",
+    ),
+}
+
 #: CLASH Zitrin v2 maps of MACS J0647.7+7015 (Zitrin et al. 2009, MNRAS 396, 1985; 2013, ApJ 762,
 #: L30; HLSP of CLASH, Postman et al. 2012; readme last updated 2015-02; accessed 2026-10-16):
 #: PIEMD + eNFW ("nfw") and LTM-Gauss ("ltm-gauss") best fits, deflection in arcsec at

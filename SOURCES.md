@@ -646,7 +646,12 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - RXJ2129: six models updated with JWST NIRCam (Dhanasingham et al. 2026, arXiv:2604.11882; GLAFIC, Chen2020,
     HoliGRALE, WSLAP+, Zitrin-Analytic, Lenstool), Zenodo record 21460864, one 4.30 GB zip
     https://zenodo.org/api/records/21460864/files/RXJ2129+0005_Models.zip/content (range requests work; README
-    says D_LS/D_S = 1, but the GLAFIC κ header has ZS = 3: check before use);
+    says D_LS/D_S = 1, but the GLAFIC κ header has ZS = 3: check before use). Used 2026-10-16 for `arcs`: Lenstool
+    `alphaX/alphaY/kappa_DLSDS1` and GLAFIC `x/y-arcsec-deflect`, `kappa` (sha256 in `lensmodel.RXJ2129_*_MAPS`),
+    with JWST 2767 F200W catalogue `jw02767-o002_t001_nircam_clear-f200w_cat.ecsv`
+    (https://stpubdata.s3.amazonaws.com/jwst/public/jw02767/L3/t/o002/, sha256 `2ed1a2c7666734483974e568e1c3b332eea223ea487b4cd279dd89b4e9261f53`)
+    and DJA v7.0 https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/rxj2129-grizli-v7.0-fix.photoz.tar.gz (member
+    `…eazypy.zout.fits`, sha256 `651c0b24f09bafa27c36a2285f081d42884be3c6dcbbb1708014339afa726217`);
   - MRG0138 (Ertl et al. 2025, arXiv:2503.09694; Suyu et al. 2025, arXiv:2509.12319), RXCJ0600 (Furtak et al.
     2024, arXiv:2404.03286): JWST-era models without public maps; rj0018p1626: no JWST-era model found (RELICS
     HST-era maps only).
