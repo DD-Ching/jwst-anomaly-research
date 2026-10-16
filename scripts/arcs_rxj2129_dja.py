@@ -135,17 +135,17 @@ def posthoc(out: Path) -> dict:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--posthoc-only", action="store_true", help="re-write posthoc.json only")
-    ap.add_argument("--dja", type=Path, required=True)
-    ap.add_argument("--pipeline", type=Path, required=True)
-    ap.add_argument("--photoz", type=Path, required=True)
+    ap.add_argument("--dja", type=Path)
+    ap.add_argument("--pipeline", type=Path)
+    ap.add_argument("--photoz", type=Path)
     ap.add_argument("--out", type=Path, default=OUT)
-    ap.add_argument(
-        "--work", type=Path, required=True, help="scratch dir for the converted catalogue"
-    )
+    ap.add_argument("--work", type=Path, help="scratch dir for the converted catalogue")
     args = ap.parse_args(argv)
     if args.posthoc_only:
         (args.out / "posthoc.json").write_text(json.dumps(posthoc(args.out), indent=1) + "\n")
         return 0
+    if None in (args.dja, args.pipeline, args.photoz, args.work):
+        ap.error("--dja, --pipeline, --photoz and --work are required for a run")
     pipe = Table.read(args.pipeline)
     px = pipeline_px_arcsec(pipe)
     conv = to_pipeline(Table.read(args.dja), px)

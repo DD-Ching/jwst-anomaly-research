@@ -46,7 +46,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     cuts = make_cutouts(I2D, targets, size_arcsec=3.0, out_dir=args.work)
     fig, axs = plt.subplots(2, 7, figsize=(21, 6.5))
-    for ax, r, cr in zip(axs.flat, rows, cuts, strict=False):
+    for ax, r, cr in zip(axs.flat[: len(rows)], rows, cuts, strict=True):
         ax.set_axis_off()
         if not cr["path"]:
             continue
