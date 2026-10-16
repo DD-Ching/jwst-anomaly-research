@@ -1,0 +1,14 @@
+{
+ "mask_band": "F444W",
+ "mask_area_frac": 0.20548916415000443,
+ "n_hits": 38,
+ "n_unflagged": 23,
+ "n_review": 0,
+ "n_added": 0,
+ "by_priority": {
+  "A": 0,
+  "B": 0,
+  "C": 0
+ },
+ "review": []
+}

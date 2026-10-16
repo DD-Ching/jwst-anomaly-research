@@ -1,0 +1,29 @@
+{
+ "mask_band": "F444W",
+ "mask_area_frac": 0.02605512342438765,
+ "n_hits": 9,
+ "n_unflagged": 3,
+ "n_review": 1,
+ "n_added": 1,
+ "by_priority": {
+  "A": 0,
+  "B": 0,
+  "C": 1
+ },
+ "review": [
+  {
+   "id": "h005",
+   "ra": 24.343419760998067,
+   "dec": -8.464193062031098,
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 19.031769189886464,
+   "known": null,
+   "in_mask": false,
+   "mask_distance_arcsec": 9.76,
+   "arc_level_sigma": 159.22,
+   "nearest_image_arcsec": 10.46,
+   "old_rule": false,
+   "priority": "C"
+  }
+ ]
+}

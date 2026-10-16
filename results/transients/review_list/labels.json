@@ -1,0 +1,14 @@
+{
+ "provenance": "labels of the review entries from existing records and the review sheets (by-eye labels are judgements, not rule outputs)",
+ "entries": [
+  {"pair": "smacs_o001_o057", "id": "h021", "label": "known real", "note": "SN Atalanta A (ordinary lensed supernova)", "evidence": "results/transients/smacs_arcdiff/RESULT.md; sheet_smacs_o001_o057.png"},
+  {"pair": "smacs_o001_o057", "id": "h024", "label": "known real", "note": "SN Atalanta B (ordinary lensed supernova)", "evidence": "results/transients/smacs_arcdiff/RESULT.md; sheet_smacs_o001_o057.png"},
+  {"pair": "smacs_o001_o057", "id": "h063", "label": "vetted, no change measured", "note": "F444W-only negative/positive pair on a compact source, nothing in F150W; multi-epoch forced photometry shows no >= 2 sigma change", "evidence": "results/transients/smacs_arcdiff/o001_o057/vet/lightcurves.ecsv; sheet_smacs_o001_o057.png"},
+  {"pair": "smacs_o001_o057", "id": "h039", "label": "artifact by eye", "note": "F150W positive/negative pair across a compact galaxy core (registration-dipole pattern), nothing in F444W; not vetted by photometry", "evidence": "sheet_smacs_o001_o057.png; results/transients/smacs_arcdiff/RESULT.md"},
+  {"pair": "sunrise_o010_o052", "id": "h005", "label": "artifact by eye", "note": "F444W negative/positive pair on a compact galaxy core, 0.50-0.78 arcsec from the map edge; not vetted by photometry", "evidence": "sheet_sunrise_o010_o052.png; results/transients/sunrise_arcdiff/RESULT.md"},
+  {"pair": "macs0416_o211_o212_warhol", "id": "h061", "label": "known real", "note": "Yan+2023 D21-W1", "evidence": "results/transients/macs0416_arcdiff/yan2023_arc_transients.csv"},
+  {"pair": "macs0416_o211_o212_warhol", "id": "h137", "label": "known real", "note": "Yan+2023 D21-W2", "evidence": "same"},
+  {"pair": "macs0416_o211_o212_warhol", "id": "h129", "label": "known real", "note": "Yan+2023 D21-S1", "evidence": "same"},
+  {"pair": "macs0416_o211_o212_warhol", "id": "h138", "label": "known real", "note": "Yan+2023 D21-S2", "evidence": "same"}
+ ]
+}

@@ -164,3 +164,81 @@ def test_inject_chain_counts_and_pools(tmp_path, monkeypatch):
     c = ac.inject_chain([run, run], "smacs")["per_mag"]["27.5"]
     assert (c["n_in_mask"], c["hit"], c["chain"], c["chain_unflagged"]) == (8, 6, 4, 2)
     assert c["eff_chain"] == 0.5 and c["eff_chain_unflagged"] == 0.25
+
+
+def test_review_list_keeps_off_arc_passes_and_labels_them(tmp_path, monkeypatch):
+    import json
+
+    from astropy.table import Table
+
+    w = _wcs()
+    _fake_mask(monkeypatch, w)  # one catalogued image at the box centre (pixel 50, 50)
+    pos = [
+        (50, 50, False, "pass"),
+        (10, 10, False, "pass"),
+        (52, 52, True, "pass"),
+        (45, 45, False, "edge"),
+    ]
+    sky = [_sky(w, x, y) for x, y, _, _ in pos]
+    Table(
+        {
+            "hit_id": ["h1", "h2", "h3", "h4"],
+            "ra": [s[0] for s in sky],
+            "dec": [s[1] for s in sky],
+            "near_bright_core": [p[2] for p in pos],
+            "max_abs_sigma": [6.0, 9.0, 7.0, 8.0],
+        }
+    ).write(tmp_path / "hits.ecsv")
+    (tmp_path / "morph.json").write_text(
+        json.dumps({"targets": [{"id": f"h{i + 1}", "verdict": p[3]} for i, p in enumerate(pos)]})
+    )
+    (tmp_path / "known.csv").write_text(f"name,ra,dec\nK,{sky[0][0]!r},{sky[0][1]!r}\n")
+    res = ac.review_list(
+        tmp_path / "m.npz",
+        tmp_path / "hits.ecsv",
+        tmp_path / "morph.json",
+        "smacs",
+        tmp_path / "known.csv",
+    )
+    by = {r["id"]: r for r in res["review"]}
+    assert set(by) == {"h1", "h2"}  # h3 flagged near a bright core, h4 not a morph pass
+    assert by["h1"]["priority"] == "A" and by["h1"]["old_rule"] and by["h1"]["known"] == "K"
+    # 1.70" from the image: outside the old 1" rule, priority B, still listed
+    assert by["h2"]["priority"] == "B" and not by["h2"]["old_rule"] and not by["h2"]["in_mask"]
+    assert (
+        res["n_added"] == 1
+        and res["n_unflagged"] == 3
+        and res["by_priority"] == {"A": 1, "B": 1, "C": 0}
+    )
+
+
+def test_inject_review_counts_every_position(tmp_path, monkeypatch):
+    import json
+
+    w = _wcs()
+    _fake_mask(monkeypatch, w)
+    (tmp_path / "morph.json").write_text(
+        json.dumps({"targets": [{"id": "h1", "verdict": "pass"}, {"id": "h2", "verdict": "pass"}]})
+    )
+    rows = [
+        (50, 50, "h1", "False"),
+        (10, 10, "h2", "False"),
+        (12, 12, "", "False"),
+        (55, 55, "h2", "True"),
+    ]
+    lines = ["name,ra,dec,mag,hit,near_bright_core"]
+    for i, (x, y, hit, core) in enumerate(rows):
+        ra, dec = _sky(w, x, y)
+        lines.append(f"inj{i},{ra!r},{dec!r},27.5,{hit},{core}")
+    (tmp_path / "inj.csv").write_text("\n".join(lines) + "\n")
+    res = ac.inject_review(
+        [(tmp_path / "m.npz", tmp_path / "inj.csv", tmp_path / "morph.json")], "smacs"
+    )
+    c = res["per_mag"]["27.5"]
+    assert (c["all"]["n"], c["all"]["hit"], c["all"]["review"]) == (4, 3, 2)
+    assert (c["in_mask"]["n"], c["in_mask"]["review"]) == (
+        2,
+        1,
+    )  # the flagged in-mask star is not reviewed
+    assert (c["out_mask"]["n"], c["out_mask"]["review"]) == (2, 1)
+    assert c["level_ge3"]["n"] == 2 and c["level_lt3"]["n"] == 2
