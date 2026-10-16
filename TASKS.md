@@ -332,6 +332,13 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      fails its control (Atalanta F115W S ≈ 2.4); h061 undetermined (near-star spike systematics; reopen on a PSF
      model of the star). Next: the rest of the SMACS arcs (more boxes);
      whether AT 2024jfz (1.8″ from image 6.1) has model counter-images;
+   - **Full-chain known-case check** (2026-10-16, `results/transients/arc_chain/RESULT.md`):
+     - MACS0416 Yan+2023: 4 / 4 pass detection, morphology and the arc mask;
+     - SMACS Atalanta fails the position stage under both the 1″ rule and the mask;
+     - SMACS in-mask full-chain efficiency: 0.50 at 27.5 AB, 0.31 at 28.0 AB.
+
+     **Before new arc data, the owner decides:** position as a label rather than a veto, or keep the mask and accept
+     the Atalanta blind spot. No tool work without a go.
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps
