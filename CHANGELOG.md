@@ -63,12 +63,22 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Step 5, spectroscopy feasibility (`vetting/PLAN_spectra.md` first; `scripts/arcs_vet_spectra.py`):**
   - No catalogued redshift within 2.4″ (all-VizieR 6″ cone). Richard+2021 does not cover AS1063.
   - ESO MUSE cubes are 5.7–5.8 GB each, but SODA cutouts are 12–17 MB.
-  - No line in the deepest public cubes. The 5σ limits are 1.3 × 10⁻¹⁸ for [O II] of 1557 (4.4 h) and 4.8 × 10⁻¹⁸
-    for C III] of 1316 (2.2 h, 1.45″). They exclude only rest EW ≳ 240 Å / ≳ 350 Å emitters.
-  - MUSE seeing (≥ 0.62″) cannot resolve the 0.15–0.21″ clumps.
+  - In the deepest public cubes, among channels with valid data that pass the sky-line mask, no line reaches the
+    threshold used. The sky mask covers 36–41 % of the range and 59 % of 1557's [O II] window.
+  - The median 5σ limits (1.3 × 10⁻¹⁸ for [O II] of 1557, 4.4 h; 4.8 × 10⁻¹⁸ for C III] of 1316, 2.2 h, 1.45″) are
+    sensitivity estimates. They depend on the line width, channel noise, continuum and aperture assumptions, and
+    they do not exclude a line anywhere in the window. They correspond to rest EW of order 240 Å / 350 Å.
+  - At the present resolution (≥ 0.62″) and S/N, MUSE cannot reliably separate the 0.15–0.21″ clumps.
   - The result is undetermined. Implementation deviation: the sky flag was replaced before use.
-- **Handoff:** owner decision in #273: stack the public 116.28VK single-OB cutouts (~0.3 GB in pieces, 1–2 h,
-  [O II] of 1557 only), or wait for that program's remaining OBs (public 2026-11 to 2027-03).
+- **Conclusion:** the spectra examined did not confirm a redshift; ordinary explanations are not excluded; the
+  pause is a resource decision.
+- **Owner decision 2026-10-16:**
+  - Wait for 116.28VK.001.
+  - 1316 and 1557 stay as pending-vetting flags with insufficient data.
+  - No stacking, no whole-cube download, no new spectroscopy tool unit.
+  - Reassess only for a reliable target redshift, a usable 1-D spectrum or materially better data; the arrival of
+    data is not an automatic download or re-run.
+  - Other authorized searches continue.
 ## 2026-10-16: Arc difference imaging with position as a label: known cases kept, review burden small, injection efficiency fails (0.34 < 0.50)
 - **Why:** owner decision of 2026-10-16: position becomes a label and review priority, not a veto, and every other
   criterion stays. Plan and acceptance rules were written before any new count:

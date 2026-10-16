@@ -29,3 +29,7 @@ noise is rescaled by the robust (MAD) S/N spread of the whole spectrum if that e
   removed; the clump-orientation and shape explanations stay open. It does not support exotic lensing.
 - No line → undetermined. It supports nothing, neither ordinary nor exotic.
 - MUSE seeing (0.6–1.5″) cannot separate the 0.15–0.21″ clumps; no per-clump redshift is attempted.
+
+**Wording note (2026-10-16, owner; added after the run, the plan above is kept as written):** "not lensed" in the
+first outcome is too broad. A redshift confirming a position in front of the cluster only means that the
+orientation test for background sources of this cluster does not apply to that row.

@@ -19,8 +19,14 @@
   - **2004:** at κ ≈ 0.95–1.00 in all three team models, where the predicted axis is degenerate.
   - **2184:** compatible with the measurement-noise model tested (core-flux injections, P_anti 7 / 60; post hoc).
   - **1316, 1557:** **pending vetting** (clump pairs along the anti axis). Not anomaly candidates.
-- **Spectroscopy (step 5, below):** current public data cannot provide a redshift for either target except for an
-  extreme emission-line source.
+- **Spectroscopy (step 5, below):** the spectra examined did not confirm a redshift. Ordinary explanations are not
+  excluded. Pausing further spectroscopy is a resource decision (owner, 2026-10-16), not a scientific result.
+- **Owner decision 2026-10-16:**
+  - 1316 and 1557 stay as pending-vetting flags with insufficient data.
+  - No stacking of single-OB cutouts, no whole-cube download, no new spectroscopy tool unit.
+  - Other authorized searches continue.
+  - Reopen only for a reliable target redshift, a usable 1-D spectrum, or materially better data. The arrival of
+    data does not trigger an automatic download or re-run; it triggers an assessment.
 
 ## Step records
 
@@ -249,7 +255,11 @@ Plan: `PLAN_spectra.md` (committed before measuring, d443354). Script: `scripts/
   - 1557: 095.A combined 4.41 h + 116.28VK 4.14 h ≈ 8.6 h.
 
 ## 3. Measured line limits (`spectra.json`; aperture radius 0.5 × FWHM)
-| Target | Cube | Window | Detection | 5σ limit (aperture, 7.5 Å) | Expected total flux, rest EW 30 / 100 / 300 Å |
+Wording corrected 2026-10-16 (owner): every limit and equivalent width below is a **sensitivity estimate**. It
+depends on the assumed line width (one 7.5 Å boxcar), on the per-channel noise (STAT rescaled by the MAD spread),
+on the continuum (the F090W isophotal magnitude) and on the aperture (0.5 × FWHM, with an assumed point-source
+enclosed fraction).
+| Target | Cube | Window | Detection | median 5σ limit over unflagged channels (aperture, 7.5 Å) | Expected total flux, rest EW 30 / 100 / 300 Å |
 |---|---|---|---|---|---|
 | 1557 | 095.A combined | [O II], 8463–9059 Å (59 % of channels on sky lines) | none (max S/N 2.3) | 1.33 × 10⁻¹⁸ | 0.33 / 1.1 / 3.3 × 10⁻¹⁸ |
 | 1316 | 60.A combined | C III], 5478–6413 Å | none (max S/N 4.8) | 4.75 × 10⁻¹⁸ | 0.82 / 2.7 / 8.2 × 10⁻¹⁸ |
@@ -259,11 +269,20 @@ Plan: `PLAN_spectra.md` (committed before measuring, d443354). Script: `scripts/
   `3eecb26c…`, which matches the manifest.
 - **Aperture loss (ASSUMPTION, not stored):** a point source puts about half its flux into a 0.5 × FWHM aperture
   (Gaussian PSF), so the effective total-flux limits are about twice those in the table.
-- **What the limits exclude** (from the table values and the ×2 aperture assumption; not stored):
-  - 1557: only an [O II] emitter with rest EW ≳ 200–250 Å on the 41 % of the window free of sky lines.
-  - 1316: only a C III] emitter with rest EW ≳ 350 Å. Typical C III] EWs are a few Å to ~20 Å.
-- **Whole-range check:** no line at S/N ≥ 5 anywhere in 4750–9350 Å for either target, so there is no hint of a
-  wrong photo-z (e.g. a low-z Hα or [O III] line). The test is only sensitive to bright lines.
+- **Scale of the sensitivity** (from the table values and the ×2 aperture assumption; not stored):
+  - The median limits correspond to rest EW of order 200–250 Å for [O II] in 1557 and of order 350 Å for C III]
+    in 1316. Typical C III] EWs are a few Å to ~20 Å.
+  - A median limit does not exclude a line anywhere in its redshift window. The per-channel limit varies with sky
+    residuals, and the flagged channels are not covered at all.
+- **Whole-range check:** among channels with valid data that pass the sky-line mask, no line reaches the threshold
+  used (6-channel boxcar S/N ≥ 5 after the MAD rescaling). Not covered:
+  - the sky-masked channels: 36 % of 4750–9350 Å for 1557 and 41 % for 1316 (`spectra.json`
+    `whole_range.frac_sky_flagged`), including 59 % of the [O II] window of 1557;
+  - wavelengths outside 4750–9350 Å;
+  - lines broader than the boxcar, or fainter than the per-channel threshold;
+  - flux outside the 0.5 × FWHM aperture;
+  - 1557 in the 60.A cube and both targets in the public 116.28VK OBs, which were not used (`muse_coverage.ecsv`).
+  So the check gives no hint of a wrong photo-z, but it cannot exclude one.
 - **Deviation from the plan (implementation, made before any result was used):**
   - The planned sky-annulus flag failed: it sat on cluster light around 1316, and it missed the 5577 Å sky line
     next to 1557.
@@ -273,25 +292,41 @@ Plan: `PLAN_spectra.md` (committed before measuring, d443354). Script: `scripts/
 ## 4. Can MUSE separate the clumps?
 - No. The clump separations are 0.147″ (1557) and 0.208″ (1316). The best public MUSE seeing is 0.62–0.68″ FWHM
   and the deep combined cubes have 1.08–1.45″, so the clumps are 3–10 times smaller than the PSF.
-- MUSE can give at most one integrated redshift per source; it cannot say whether the two clumps share a redshift.
+- At the present resolution and S/N, MUSE cannot reliably separate the two clumps' spectra, so these data cannot
+  test whether the clumps share a redshift. (A blended spectrum can in principle contain lines at more than one
+  redshift; that would need far more S/N than these targets give.)
 
 ## 5. What each outcome would mean (stated in the plan)
-- **Line at z ≤ 0.4 (a member or foreground):** the source is not lensed and its orientation is random. This
-  supports an ordinary explanation.
+- **Line confirming a position in front of the cluster (z < 0.348):** the orientation test, which treats the row
+  as a background source of this cluster, would not apply to it. This would remove the row from the anti count;
+  it is an ordinary explanation of that row's flag. A line at about the cluster redshift would mark a member,
+  which the background cut also excludes.
 - **Line inside the photo-z window:** only the photo-z-failure explanation is removed. The clump-orientation and
   shape explanations stay open. It is not support for unusual lensing.
-- **No line (the current result):** undetermined. It supports neither reading. Equal redshifts for the clumps could
-  not be measured with MUSE in any case.
+- **No line (the current result):** undetermined. It supports neither reading. These data could not measure
+  whether the clumps share a redshift in any case.
 
 ## 6. Options and cost
+- Options as assessed before the owner chose (b) on 2026-10-16; (a), (c) and (d) are not being pursued.
 - **(a) Stack the public single-OB cutouts with valid data.** These are the 6 + 1 extra OBs for 1316 and the 6
   116.28VK OBs for 1557, on top of the combined cubes used here. Each cutout is about 15 MB, so the
   transfer is about 0.2–0.4 GB in pieces under 200 MB. The work is about 1–2 h: per-OB sky residuals, astrometric
-  alignment, variance-weighted sum. The noise gain is about √(8.6 / 4.4) ≈ 1.4 for 1557 and √(6.7 / 2.2) ≈ 1.75 for 1316,
-  somewhat more with the better seeing of the 116.28VK OBs. That reaches rest EW ≳ 130–170 Å for [O II] in 1557
-  and ≳ 150–200 Å for C III] in 1316 (estimates, not stored). This is still far above typical C III] (≲ 20 Å), so
+  alignment, variance-weighted sum. The noise gain would be about √(8.6 / 4.4) ≈ 1.4 for 1557 and √(6.7 / 2.2) ≈ 1.75 for
+  1316 if the noise scales with exposure time (a sensitivity estimate; it ignores sky residuals and OB-to-OB
+  systematics, and seeing could change it either way). That corresponds to rest EW of order 130–170 Å for [O II]
+  in 1557 and 150–200 Å for C III] in 1316 (median-limit estimates, not stored). This is still far above typical C III] (≲ 20 Å), so
   it does not help 1316.
 - **(b) Wait for 116.28VK.001.** Its remaining OBs become public between 2026-11 and 2027-03, and a combined
   product or a published redshift catalogue may follow. This costs nothing.
 - **(c) Whole-cube downloads (5.7–5.8 GB each).** They add nothing over the SODA cutouts for this question.
 - **(d) Not spectroscopic:** a second photo-z code tests only the photo-z explanation, not the anti axis.
+
+## Step 5 status (2026-10-16, closed by owner decision)
+- **Conclusion:** the spectra examined did not confirm a redshift; ordinary explanations are not excluded; the pause
+  is a resource decision.
+- **Kept for a later reassessment:** product IDs and coverage (`muse_coverage.ecsv`), the cutout method (ESO SODA
+  sync, `scripts/arcs_vet_spectra.py`), and the current limits (`spectra.json`).
+- **Reassess, without automatic download or re-run, when one of these appears:**
+  - a reliable redshift for either target;
+  - a usable 1-D spectrum;
+  - materially better data, e.g. the full 116.28VK.001 data set or a published redshift catalogue from it.

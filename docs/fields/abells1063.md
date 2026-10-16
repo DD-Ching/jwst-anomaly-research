@@ -99,5 +99,8 @@ pipeline catalogue `jw03293-o001_t001` (manifest) and the DJA v7.5 zout above. D
   - Ordinary morphology, noise and lens-model error are not excluded in general; the four models' errors are not
     independent.
   - 1316 and 1557 are pending vetting.
-  - Public spectroscopy gives no redshift. The MUSE SODA-cutout limits exclude only extreme emitters, and MUSE
-    cannot resolve the 0.15–0.21″ clumps.
+  - The spectra examined did not confirm a redshift. The MUSE SODA-cutout limits are sensitivity estimates over
+    unmasked channels only. At the present resolution and S/N, MUSE cannot reliably separate the 0.15–0.21″
+    clumps.
+  - Ordinary explanations are not excluded. The pause is a resource decision (owner, 2026-10-16).
+  - 1316 and 1557 stay pending-vetting flags with insufficient data.

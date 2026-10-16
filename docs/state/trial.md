@@ -206,6 +206,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | ≈ 0.3 (S1063 clump-pair census of 24 strong-shear rows: plan, own-flux gates, clump-aware sample test; sheet looked at) | 0.1 (orientation, takeover, PR) | cloud routine trig01PNAm-1316, 13:17–13:45Z |
 | 2026-W42 | — | — | ≈ 0.4 (full-chain known-case check: arc mask, SMACS / MACS0416 / Sunrise known cases, SMACS in-mask injections; mask figures looked at) | 0.1 (claim, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | ≈ 0.4 (review-list chain: position as label, known cases, whole-box injections, burden on 5 stored pairs, sheets looked at) | 0.1 (claim, state files, PR) | interactive session 01AzKMDv |
+| 2026-W42 | — | — | ≈ 0.6 (S1063 1316/1557 public-spectroscopy feasibility: VizieR, ESO ObsCore, SODA cutouts, wording corrections) | 0.1 (PR) | interactive session 01P8KV8A |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
