@@ -11,8 +11,12 @@ injected stars surviving each stage, per magnitude. Injected stars brighten epoc
 means S > 0. Every number is ``derived`` from simulated stars in real maps; the thresholds are
 ASSUMPTIONs.
 
+``--extended`` adds the alternative stage of ``arc_diff_extended.py``: the peer cut only for hits
+at a compact epoch-1 peak, the local-annulus cut |z_ann| ≥ ``--ext-min-z`` otherwise (stages
+``peers_ext`` and ``confirm_ext``).
+
 Usage: ``arc_diff_inject_chain.py --inject DIR --maps DIR --ref-passes passes.ecsv
---tiles t-1+0 ...``
+--tiles t-1+0 ... [--extended]``
 """
 
 from __future__ import annotations
@@ -36,7 +40,10 @@ _DIR = Path(__file__).resolve().parent
 _spec = importlib.util.spec_from_file_location("arc_diff_peers", _DIR / "arc_diff_peers.py")
 adp = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(adp)
-STAGES = ("n", "hit", "unflagged", "morph", "peers", "confirm")
+_spec = importlib.util.spec_from_file_location("arc_diff_extended", _DIR / "arc_diff_extended.py")
+ade = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(ade)
+STAGES = ("n", "hit", "unflagged", "morph", "peers", "confirm", "peers_ext", "confirm_ext")
 
 
 def confirm_value(s: np.ndarray, w: WCS, ra: float, dec: float, half_px: int = 2) -> float:
@@ -73,26 +80,34 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--confirm-sigma", type=float, default=3.0)
     ap.add_argument("--band", default="F356W")
     ap.add_argument("--procs", type=int, default=os.cpu_count() or 1)
+    ap.add_argument("--extended", action="store_true", help="add the arc_diff_extended.py stage")
+    ap.add_argument("--ext-min-z", type=float, default=ade.DEFAULTS["min_z"])
+    ap.add_argument("--skip-stages", action="store_true", help="reuse existing morph/peers outputs")
     a = ap.parse_args(argv)
     py = sys.executable
     out = {
         "provenance": "derived (simulated stars in real maps)",
-        "thresholds_assumption": {"confirm_sigma": a.confirm_sigma, "peer_min_z": 3.0},
+        "thresholds_assumption": {"confirm_sigma": a.confirm_sigma, "peer_min_z": 3.0}
+        | ({"extended": ade.DEFAULTS | {"min_z": a.ext_min_z}} if a.extended else {}),
         "tiles": {},
     }
     total: dict[str, dict[str, int]] = {}
     with ThreadPoolExecutor(max_workers=a.procs) as ex:
-        futs = [
-            ex.submit(
-                run_stages,
-                py,
-                t,
-                a.inject / f"{t}_{a.pair}",
-                a.maps / f"{t}_{a.pair}.npz",
-                a.ref_passes,
-            )
-            for t in a.tiles
-        ]
+        futs = (
+            []
+            if a.skip_stages
+            else [
+                ex.submit(
+                    run_stages,
+                    py,
+                    t,
+                    a.inject / f"{t}_{a.pair}",
+                    a.maps / f"{t}_{a.pair}.npz",
+                    a.ref_passes,
+                )
+                for t in a.tiles
+            ]
+        )
         for f in futs:
             f.result()
     for t in a.tiles:
@@ -101,6 +116,10 @@ def main(argv: list[str] | None = None) -> None:
         peers = d / "peers.ecsv"
         verdict = {x["id"]: x["verdict"] for x in json.loads(morph.read_text())["targets"]}
         pt = {r["hit"]: r for r in Table.read(peers)}
+        ext = {}
+        if a.extended:
+            et = ade.run(a.maps / f"{t}_{a.pair}.npz", Table.read(d / "hits.ecsv"), a.band, "hit")
+            ext = {r["hit"]: dict(zip(et.colnames, r, strict=True)) for r in et}
         with np.load(a.maps / f"{t}_{a.confirm}.npz") as m:
             s1 = m[f"{a.band}_s"]
             w1 = WCS(fits.Header.fromstring(str(m[f"{a.band}_wcs"])))
@@ -120,11 +139,18 @@ def main(argv: list[str] | None = None) -> None:
                     continue
                 c["morph"] += 1
                 c["z_stored"].append(float(pt[h]["z_stored"]))
-                if not bool(pt[h]["stored_pass"]):
-                    continue
-                c["peers"] += 1
-                if confirm_value(s1, w1, float(r["ra"]), float(r["dec"])) >= a.confirm_sigma:
-                    c["confirm"] += 1
+                confirmed = (
+                    confirm_value(s1, w1, float(r["ra"]), float(r["dec"])) >= a.confirm_sigma
+                )
+                if bool(pt[h]["stored_pass"]):
+                    c["peers"] += 1
+                    c["confirm"] += confirmed
+                if a.extended:
+                    e = ext[h]
+                    stored = bool(pt[h]["stored_pass"])
+                    ok = stored if e["compact"] else ade.ext_pass(e, a.ext_min_z)
+                    c["peers_ext"] += ok
+                    c["confirm_ext"] += ok and confirmed
         out["tiles"][t] = per
         for mag, c in per.items():
             tot = total.setdefault(mag, {k: 0 for k in STAGES})
@@ -132,6 +158,8 @@ def main(argv: list[str] | None = None) -> None:
                 tot[k] += c[k]
     for c in total.values():
         c["eff_chain"] = round(c["confirm"] / c["n"], 3) if c["n"] else None
+        if a.extended:
+            c["eff_chain_ext"] = round(c["confirm_ext"] / c["n"], 3) if c["n"] else None
     out["total"] = total
     text = json.dumps(out, indent=1) + "\n"
     (a.inject / "summary.json").write_text(text)
