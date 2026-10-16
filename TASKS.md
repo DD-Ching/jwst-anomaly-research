@@ -324,9 +324,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      0.3″ offset; `hit_lightcurve.py --offsets` applies it; h182 stays closed. Registration does not explain the
      on-arc F356W spread. ALT o002 has its own 0.013″ shift (UNCOVER→ALT pairs not re-measured). No further veto
      rules on these four tiles (owner, 2026-10-16); further work goes to new epochs or untested regions;
-   - **Sunrise arc `arc_diff`** (D-027 addendum 2026-10-16): o010 → o052 done, 0 candidates on the arc's images
-     (injection recovery 0.86 / 0.83 at 27.5 AB per band). Next: o010 → o120 (F090W F115W F277W F356W) alone with `--procs 4`, `OMP_NUM_THREADS=1`
-     (≈ 45 min without finishing two SW bands at `--procs 2`; not stored); then SMACS 0723 and El Gordo arcs;
+   - **Sunrise arc `arc_diff`** (D-027 addendum 2026-10-16): o010 → o052 and o010 → o120 (LW only; the SW bands did
+     not finish in two attempts, timings not stored) done, 0 candidates on the arc's images (injection recovery
+     ≥ 0.83 at 27.5 AB per band; `results/transients/sunrise_arcdiff/RESULT.md`). Next: SMACS 0723 and El Gordo arcs;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps
