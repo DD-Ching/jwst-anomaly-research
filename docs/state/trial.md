@@ -194,6 +194,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.3 (Abell 2744 `arc_diff` stripe/spike/offset-core vetoes: injections, real passes, sheets; not adopted) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01KUpQtW, 05:08–05:35Z |
 | 2026-W42 | — | — | ≈ 0.3 (PEARLS 1176 o221 registration vs UNCOVER: catalogue offsets, held-out check, image WCS check, h182 re-calibration) | 0.1 (plan, claim, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | — | 0.7 (S6a archival brief, PDF, README entry) | interactive session 01AzKMDv |
+| 2026-W42 | ≈ 0.8 (Sunrise arc `arc_diff`: o052 pair, sheet; o120 pair stopped) | — | — | 0.2 (orientation, claim, PR) | cloud routine 01FjRPtm, 06:08–07:25Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

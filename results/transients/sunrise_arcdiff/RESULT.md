@@ -24,4 +24,7 @@ Sheets: `scripts/arc_diff_sheet.py` (epoch-1 image and S at ±10, 2″ stamps), 
   −5.2. Not followed up here.
 
 ## o010 → o120 (2023-01-10, jwst 2.0.1), F090W F115W F277W F356W
-Pending (see the PR handoff).
+Not finished. With `--procs 2` next to the o052 run, the first two SW bands had not finished after 45 CPU-min
+each, and the run was stopped at the end of the session (no output). Next: run it alone with `--procs 4`
+(command in `PLAN.md`'s box and bands; `OMP_NUM_THREADS=1`). This pair has the same pipeline version in both
+epochs and a ~180° PSF rotation (docs/fields/sunrise.md), so rosettes around compact sources are expected.

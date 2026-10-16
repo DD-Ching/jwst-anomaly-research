@@ -1607,6 +1607,13 @@ candidates. **Decision:** a catalog-driven grid is blind to transients blended i
 field grid needs a difference-image pass (`arc_diff.py` tiles, `--min-bands 1` for single-band pairs) before it is
 quoted as a null for SNe on hosts. Revisit if: a field-wide difference-image tool replaces the grid.
 
+**Addendum 2026-10-16 (Sunrise arc, o010 → VENUS o052).** `arc_diff.py --kernel-px 4 --kernel-stamps` on a 24″ box
+around Earendel (the whole arc), F150W + F444W (jwst 2.0.1 vs 3.0.0, 2.9 yr). Injections on bright pixels: 0.86 / 0.83
+at 27.5 AB, 0.14 / 0.28 at 28.0. 9 hits; `arc_diff_morph.py` passes 4, all off the arc by eye (bright-core residuals,
+an edge-on disk, an F444W border dipole): **0 candidates; no flux change on the Sunrise arc above ≈ 27.5 AB**
+(per-band injection depth, before the morphology step). Earendel is not a hit (S −5.2 / −1.5). The o010 → o120 pair is
+still to run (`results/transients/sunrise_arcdiff/RESULT.md`). New `scripts/arc_diff_sheet.py` makes the hit sheets.
+
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**
