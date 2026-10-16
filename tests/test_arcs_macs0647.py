@@ -61,3 +61,14 @@ def test_match_class_by_label_and_position():
 def test_validate_guard():
     assert am.validate_passes({"kappa_map": {"median_rel_diff": 2e-5}})
     assert not am.validate_passes({"kappa_map": {"median_rel_diff": 0.02}})
+
+
+def test_relative_keeps_non_paths_and_strips_repo():
+    inside = str(am.REPO / "data" / "cache" / "x.fits")
+    got = am._relative({"map": inside, "model": "macs0647-clash-nfw", "n": 3, "l": [inside]})
+    assert got == {
+        "map": "data/cache/x.fits",
+        "model": "macs0647-clash-nfw",
+        "n": 3,
+        "l": ["data/cache/x.fits"],
+    }

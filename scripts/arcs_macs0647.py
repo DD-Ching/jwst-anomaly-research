@@ -83,10 +83,23 @@ def validate_passes(summary: dict) -> bool:
     return float(summary["kappa_map"]["median_rel_diff"]) <= VALIDATE_MAX_REL_DIFF
 
 
+def _relative(value):
+    """``value`` with every absolute path under the repository made repo-relative."""
+    if isinstance(value, dict):
+        return {k: _relative(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_relative(v) for v in value]
+    if isinstance(value, str) and value and Path(value).is_absolute():
+        try:
+            return Path(value).resolve().relative_to(REPO).as_posix()
+        except (ValueError, OSError):
+            return value
+    return value
+
+
 def _relative_paths(path: Path) -> None:
     """Store repository-relative paths in a written JSON file (no session paths in git)."""
-    text = path.read_text().replace(str(REPO) + "/", "")
-    path.write_text(text)
+    path.write_text(json.dumps(_relative(json.loads(path.read_text())), indent=1) + "\n")
 
 
 def _arcs(model: str, out: Path, catalog: Path, photoz: Path) -> dict:
