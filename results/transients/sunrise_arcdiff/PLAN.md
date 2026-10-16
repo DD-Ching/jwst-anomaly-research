@@ -37,3 +37,13 @@ against microlensing rates, not a lensing-model anomaly. A clean null gives a de
   brightening near the critical curve is ordinary until those are excluded.
 - **Status of the data.** o010 was used in the o052 difference; o120 was used only in the catalogue grid (#257). This
   run is the first arc difference of this pair, but the field has been examined, so it is not a blind sample.
+
+## Addendum 2 2026-10-16 10:25 UTC (**deviation**, written before any o120 output existed)
+- **What happened.** The four-band o010 → o120 run (`--procs 4`, `OMP_NUM_THREADS=1`) gave no output in 90 min. One
+  worker held ~98 % CPU throughout, most likely on a short-wavelength (SW) band. This is the second unfinished SW
+  attempt on this pair (the first is in RESULT.md); it was stopped, and the timing is not stored.
+- **What changes.** The pair is run with **F277W + F356W only**, with every other setting unchanged.
+  - `--min-bands 2` therefore requires both long-wavelength (LW) bands.
+  - The validation, on-arc and candidate rules of addendum 1 are unchanged.
+- **What is lost.** SW-only (blue) changes on this pair are not covered.
+- **Not done.** No change to `arc_diff.py`: tool work is out of scope (owner, 2026-10-16).

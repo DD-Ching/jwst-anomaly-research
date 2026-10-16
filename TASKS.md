@@ -229,7 +229,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        2026-10-16, `results/orphan_pairs/abell2744/`): null (P 0.16 / 0.11 under (e) / (f)); efficiencies as in the
        deep fields; no 0.3–3″ positive control; per-pair vetting done (CHANGELOG 2026-10-16,
        `results/orphan_pairs/abell2744/vetting/RESULT.md`): 4 ordinary (1 visual), 7 insufficient (#2, #3, #7, #9, #10,
-       #11, #13: E2 not validatable, no public spectra), 0 anomalies; deciding data: spectra of both members. Left:
+       #11, #13: E2 not validatable, no public spectra), 0 anomalies; deciding data: spectra of both members (a
+       redshift difference would argue against one lensed source; equal redshifts alone would not confirm lensing). Not
+       pursued now: a resource decision (owner, 2026-10-16), not an exclusion. Left:
        MACS0417, MACS1423 cluster pointings (need published image lists);
        MACS1149 image list when CANUCS v2 is out;
      - CANUCS models pinned (D-044: `macs0416-canucs`, `abell370-canucs`); next, the 100 MCMC sample maps for μ spreads;
