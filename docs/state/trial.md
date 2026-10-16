@@ -208,6 +208,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | ≈ 0.4 (review-list chain: position as label, known cases, whole-box injections, burden on 5 stored pairs, sheets looked at) | 0.1 (claim, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | ≈ 0.6 (S1063 1316/1557 public-spectroscopy feasibility: VizieR, ESO ObsCore, SODA cutouts, wording corrections) | 0.1 (PR) | interactive session 01P8KV8A |
 | 2026-W42 | — | — | ≈ 0.45 (clump-pair census on five arcs fields, S1063 null re-evaluated; sheet looked at) | 0.1 (orientation, claim, PR) | cloud routine 012w6ULj, 15:09–15:50Z |
+| 2026-W42 | — | — | ≈ 0.3 (no-injection control at vetoed SMACS injection positions; sheet looked at) | 0.1 (orientation, claim, state files, PR) | cloud routine 01LuctU7, 14:08–14:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
