@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: No-injection control at vetoed SMACS injections: mixed; vetoed and passed positions both sit on pre-existing negative structure
+- **Why:** handoff of the review-list unit: off the arc mask, morphology vetoes most recovered SMACS injections; was
+  that pre-existing residuals (H1) or the injection itself (H2)? Plan before measuring:
+  `results/transients/veto_control/PLAN.md`; code `scripts/arc_veto_control.py` (unit-tested). No rule changed.
+- **Result (derived; `results/transients/veto_control/RESULT.md`, `compare.json`):** off the mask (where all
+  vetoes are), on the re-run no-injection map, 19 / 19 rosette or dipole positions and 15 / 19 passed ones carry a
+  negative region (|S| ≥ 3) touching 0.8″. Frozen rule: **mixed** (neither H1 nor H2 as defined). Post hoc: for 11
+  of the 19 vetoed (8 of 19 passed) that region is under the position itself. By eye (sheet looked at): vetoed stars
+  mostly sit on compact ± core residuals, spike stripes or a bright neighbour's residual field.
+- **Deviations:** the whole-box row (H1) is diluted by in-mask passes and not used; the re-run `hits.ecsv` matches
+  the stored one to 5 × 10⁻¹² in σ (not stored), not byte for byte.
+- **Handoff:** next, if wanted: location-aware lobes (outside the region under the star) on injected and
+  no-injection maps. Any morphology-rule change needs the owner's go.
+
 ## 2026-10-16: Arc difference imaging with position as a label: known cases kept, review burden small, injection efficiency fails (0.34 < 0.50)
 - **Why:** owner decision of 2026-10-16: position becomes a label and review priority, not a veto, and every other
   criterion stays. Plan and acceptance rules were written before any new count:

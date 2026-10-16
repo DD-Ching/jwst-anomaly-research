@@ -202,6 +202,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.3 (Sunrise arc_diff o010→o120 LW: frozen rules, run, morphology, distances, sheet) | — | — | 0.1 (claim, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | ≈ 0.4 (full-chain known-case check: arc mask, SMACS / MACS0416 / Sunrise known cases, SMACS in-mask injections; mask figures looked at) | 0.1 (claim, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | ≈ 0.4 (review-list chain: position as label, known cases, whole-box injections, burden on 5 stored pairs, sheets looked at) | 0.1 (claim, state files, PR) | interactive session 01AzKMDv |
+| 2026-W42 | — | — | ≈ 0.3 (no-injection control at vetoed SMACS injection positions; sheet looked at) | 0.1 (orientation, claim, state files, PR) | cloud routine 01LuctU7, 14:08–14:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
