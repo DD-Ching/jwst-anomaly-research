@@ -1,0 +1,14 @@
+{
+ "model": "rxj2129-lenstool-maps",
+ "model_sha256": "f5861958e876f2017a026c8dccdfbca382cf61205134170804d77a967643655b",
+ "kappa_map": {
+  "map": "data/cache/external/1a0d2c9302a3_kappa_DLSDS1.fits",
+  "quantity": "kappa",
+  "z_s": null,
+  "n_points": 18215,
+  "median_rel_diff": 2.8923683088042938e-05,
+  "p95_rel_diff": 0.0001476315606407791,
+  "median_ratio": 1.0000002972461755,
+  "parity_agree": null
+ }
+}

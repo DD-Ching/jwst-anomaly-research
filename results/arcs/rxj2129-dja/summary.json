@@ -1,0 +1,49 @@
+{
+ "plan": "results/arcs/rxj2129-dja/PLAN.md",
+ "inputs": {
+  "catalog": "rxj2129-dja-v7.0-as-pipeline_cat.ecsv",
+  "catalog_sha256": "6b6af4fd1b9a9e5e3d2f0579bffb9d1e650492ec71bc7cc717c10c2610a12fff",
+  "photoz": "rxj2129-grizli-v7.0-fix.eazypy.zout.fits",
+  "photoz_sha256": "651c0b24f09bafa27c36a2285f081d42884be3c6dcbbb1708014339afa726217",
+  "dja_catalog": "rxj2129-grizli-v7.0-fix_phot_apcorr.fits",
+  "dja_catalog_sha256": "6278025d2743cc498dc9bae48e15514ac18ae0a483790ddf8a833af8ac66a7fe",
+  "pipeline_catalog_sha256": "2ed1a2c7666734483974e568e1c3b332eea223ea487b4cd279dd89b4e9261f53"
+ },
+ "runs": {
+  "rxj2129-lenstool-maps": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 89,
+    "aligned": 57,
+    "anti": 10,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 3.135434917727073e-09
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 89,
+    "anti": 10,
+    "expected": 1.513,
+    "p_ge_observed": 4.4111359112824935e-06
+   }
+  },
+  "rxj2129-glafic-maps": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 89,
+    "aligned": 60,
+    "anti": 10,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 5.406586935459028e-11
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 89,
+    "anti": 10,
+    "expected": 1.304,
+    "p_ge_observed": 1.202768711417197e-06
+   }
+  }
+ },
+ "deciding_model": null,
+ "outcome": "no result",
+ "p_ge_observed": null
+}

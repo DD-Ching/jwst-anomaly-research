@@ -1,0 +1,27 @@
+{
+ "note": "post hoc diagnostic (not in the plan); does not change the outcome",
+ "rxj2129-lenstool-maps": {
+  "z_phot>15": {
+   "n": 17,
+   "aligned": 7,
+   "anti": 5
+  },
+  "z_phot<=15": {
+   "n": 72,
+   "aligned": 50,
+   "anti": 5
+  }
+ },
+ "rxj2129-glafic-maps": {
+  "z_phot>15": {
+   "n": 17,
+   "aligned": 7,
+   "anti": 5
+  },
+  "z_phot<=15": {
+   "n": 72,
+   "aligned": 53,
+   "anti": 5
+  }
+ }
+}

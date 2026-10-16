@@ -102,6 +102,24 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     - Deviation, reported only: excluding the feature itself, no chance peak this strong elsewhere in the window,
       so the feature is real emission centred off 1316.
     - Decision to wait: unchanged.
+## 2026-10-16: `arcs` on RXJ2129 with the DJA v7.0 catalogue: no result again (controls 64 % and 67 %)
+- **Why:** the RXJ2129 handoff (below): 12 strong-shear rows were too few. Plan frozen first
+  (`results/arcs/rxj2129-dja/PLAN.md`, `ea2feb6`); `scripts/arcs_rxj2129_dja.py` converts the DJA SEP catalogue
+  (`ir` detection image) to the pipeline columns and reuses `arcs_rxj2129.main` and its outcome rule unchanged.
+  Same field and models, so a re-test, not an independent field.
+- **Tool check (derived; `convention.json`):** PA = θ_image + 90° matches the pipeline `sky_orientation` on 68
+  matched rows (median |ΔPA| 2.8°, gate ≤ 10°). The contact-sheet axes are now drawn through the WCS.
+- **Result (`RESULT.md`, `summary.json`):** 89 strong-shear background rows; aligned 57 (Lenstool) and 60 (GLAFIC),
+  both under 70 %: **frozen outcome "no result"**. Post hoc (`posthoc.json`): 17 rows have z_phot > 15 (eazy grid
+  edge) and hold 5 of the 10 anti; the F200W sheet (looked at, stored) shows most anti rows without a clear F200W
+  counterpart or on linear structures. Deviation: `mag` is `mag_auto` (the planned `flux_iso` formula was in
+  detection-image units); it enters no class.
+- **Found for later:** `arcs` treats z_phot at the eazy grid edge (> 15) as background. No stored anti row on main
+  is affected (all `arcs.ecsv` checked, not stored); a z_phot validity cut would need its own plan.
+- **Handoff:** both public RXJ2129 catalogues used so far give "no result". The S1063 tally
+  stays: MACS0417 no, MACS0647 no result, MACS1423 explained, RXJ2129 no result. Next field options need public
+  maps and F200W (MRG0138, RXCJ0600 lack public maps; SOURCES.md).
+
 ## 2026-10-16: `arcs` on RXJ2129: no result (both JWST-updated models fail the control, 8 / 12 aligned)
 - **Why:** the MACS1423 handoff (below): RXJ2129 as the next independent field for the S1063 anti-excess
   replication question. Plan frozen first (`results/arcs/rxj2129/PLAN.md`, `bbe0306`); script
