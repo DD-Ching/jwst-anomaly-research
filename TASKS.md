@@ -214,7 +214,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      aligned, anti counts 0 and 1 against 0.45 and 0.17 from shape noise;
    - ~~`arcs` on MACS0417~~ — done (2026-10-16, `results/arcs/macs0417-relics/RESULT.md`): RELICS v1 fails the
      control (64 % aligned); CANUCS v1 maps 37 / 49 aligned, anti 3 vs 1.52 (P 0.195): the S1063 anti excess does
-     not replicate. Left: MACS1423 (no public model found yet);
+     not replicate. ~~MACS0647~~ — done (2026-10-16, `results/arcs/macs0647-clash/RESULT.md`): both CLASH Zitrin
+     models fail the control (67 %, 50 %), no result. Left: MACS1423 (no public model found yet); any field
+     with a JWST-era model, F200W and photo-z;
    - ~~arc curvature~~ — done (D-024 addenda 5–6): forward-modelled curvature, 5 testable arcs all as predicted (El
      Gordo 2527 explained by its model); critical curves at z_s = 1, 2, 4 still open;
    - shapes for the `arcs` test: S/N ≥ 50 done on the stored tables (`docs/fields/abell370.md`: 3 anti vs 1.33,

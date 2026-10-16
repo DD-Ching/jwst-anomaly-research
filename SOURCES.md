@@ -619,6 +619,18 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - RELICS Lenstool v1 maps (Mahler et al. 2019, MNRAS 485, 3954; DOI 10.17909/T9SP45)
     https://archive.stsci.edu/hlsps/relics/macs0417m11/models/lenstool/v1/ (sha256 in
     `lensmodel.MACS0417_RELICS_LENSTOOL`). GLAFIC v2/v3 and Lenstool v2 also exist there (not used).
+- MACS0647 (`arcs`, accessed 2026-10-16; `results/arcs/macs0647-clash/`):
+  - JWST 1433 (PI Coe) F200W pipeline catalogues (MAST `mast:JWST/product/...`):
+    `jw01433-o010_t001_nircam_clear-f200w_cat.ecsv` 2,144,120 B, sha256
+    `473e32d23c3fbc857e89d6b48196130d77670be2b9df2b4dfae5df82e71e7a7e`;
+    `jw01433-o020_t001_nircam_clear-f200w_cat.ecsv` 2,761,197 B, sha256
+    `29f74c91cf8984b3f44118073e183ef0bce9262addf7637ffed6dfbf0b642663`;
+  - DJA v7.0 https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/macs0647-grizli-v7.0-fix.photoz.tar.gz
+    (Last-Modified 2023-07-17, 41,494,640 B, sha256 `d56246b571ccfc78a54338a7ab16009fa8b73b2cdbcfefba4a2617c0058cdf0c`),
+    member `macs0647-grizli-v7.0-fix.eazypy.zout.fits` (7,956 rows) extracted while streaming;
+  - CLASH Zitrin v2 maps (Zitrin et al. 2009, MNRAS 396, 1985; 2013, ApJ 762, L30; CLASH, Postman et al. 2012,
+    ApJS 199, 25): https://archive.stsci.edu/missions/hlsp/clash/macs0647/models/zitrin/{nfw,ltm-gauss}/v2/
+    (sha256 in `lensmodel.MACS0647_CLASH_NFW`, `MACS0647_CLASH_LTM`; readme 2015-02, z_lens 0.591).
 - CANUCS DR1 MACS0416 Lenstool model (Rihtarsic et al. 2025, A&A, doi:10.1051/0004-6361/202451117), files under
   https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/model/:
   - `hlsp_canucs_jwst-hst_multi_macs0416-lenstool-bestparam_multi_v1_model.txt` 70,753 B
