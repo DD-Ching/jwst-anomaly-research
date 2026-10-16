@@ -175,8 +175,12 @@ def run(args) -> dict:
             rows = list(ex.map(_row, jobs))
     out = Table(rows=[[r[k] for k in _COLS] for r in rows], names=_COLS)
     out["mag"] = [float(t["mag"][t["label"] == r][0]) for r in out["label"]]
-    out["p_anti"] = out["anti"] / np.maximum(out["n_valid"], 1)
-    out["frac_aligned_bright"] = out["aligned_bright"] / np.maximum(out["n_valid"], 1)
+    out["p_anti"] = np.where(
+        out["n_valid"] > 0, out["anti"] / np.maximum(out["n_valid"], 1), np.nan
+    )
+    out["frac_aligned_bright"] = np.where(
+        out["n_valid"] > 0, out["aligned_bright"] / np.maximum(out["n_valid"], 1), np.nan
+    )
     out["class_bgsub"] = [bg_class.get(int(v), "missing") for v in out["label"]]
     out.meta.update(
         provenance="derived", source=f"{args.model} arcs.ecsv + {args.image}", assumptions=a
