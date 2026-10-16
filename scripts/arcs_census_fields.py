@@ -169,8 +169,8 @@ def contact_sheet(t: Table, png: Path) -> None:
         v = np.nanpercentile(st, [5, 99.5])
         ax.imshow(st, origin="lower", cmap="gray", vmin=v[0], vmax=v[1])
         ax.set_title(
-            f'{r["field"].split("-")[0]} {r["label"]}\n{r["screen_class"]} sep {r["sep_arcsec"]:.2f}"'
-            f"{'' if r['gate_passed'] else ' gate-fail'}",
+            f"{r['field'].split('-')[0]} {r['label']}\n{r['screen_class']} "
+            f'sep {r["sep_arcsec"]:.2f}"{"" if r["gate_passed"] else " gate-fail"}',
             fontsize=7,
         )
     fig.suptitle('two-knot rows, F200W 1.2" stamps, 1"-filtered (north not up)', fontsize=8)
