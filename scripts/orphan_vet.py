@@ -165,7 +165,8 @@ def measure_pair(row, prefix: str, rng: np.random.Generator) -> dict:
                 < STACK_PIX_TOL
             ):
                 # same grid: both members fall on the same pixel coordinates (fix after review:
-                # the first run compared scales to 1e-6 and stacked F277W only)
+                # the first run summed F356W unaligned under an absolute 1e-6 scale check and
+                # labelled the stack F277W)
                 lw_stack = lw_stack + img
                 lw_bands.append(b)
     out["lw_stack_bands"] = lw_bands
@@ -442,7 +443,18 @@ def _cone(cat: str, ra: float, dec: float) -> list[dict]:
             rc = SkyCoord(float(row["RAJ2000"]) * u.deg, float(row["DEJ2000"]) * u.deg)
             d = {"sep_arcsec": float(rc.separation(c).arcsec), "ra": float(rc.ra.deg)}
             d["dec"] = float(rc.dec.deg)
-            for k in ("zsp", "z50", "z16", "z84", "zph", "Seq", "f356w", "e_f356w"):
+            for k in (
+                "zsp",
+                "zspec",
+                "q_zspec",
+                "z50",
+                "z16",
+                "z84",
+                "zph",
+                "Seq",
+                "f356w",
+                "e_f356w",
+            ):
                 if k in tb.colnames and not np.ma.is_masked(row[k]):
                     d[k] = float(row[k])
             rows.append(d)
@@ -491,7 +503,7 @@ def classify_run(out: Path, pairs: Path, ranks: list[int]) -> dict:
             if da > 0.2 and db > 0.2 and z is not None and abs(z - zp) <= SAMEZ_DZ * (1 + zp):
                 nb += 1
         spec = [
-            min(rec[tag][VIZIER_SPEC], key=lambda x: x["sep_arcsec"]).get("zsp")
+            min(rec[tag][VIZIER_SPEC], key=lambda x: x["sep_arcsec"]).get("zspec")
             if rec[tag][VIZIER_SPEC]
             else None
             for tag in "ab"

@@ -27,6 +27,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Separate from the #269 population null and its ~0.3–1 % per-deflector efficiency:** nothing here is a candidate.
 - **Handoff:** the deciding data are spectra of both members. The no-new-data route needs a validated PSF-matched
   morphology tool. Neither is in this unit.
+
 ## 2026-10-16: Process: "Before writing results" rules in scripts/CLAUDE.md
 - **Why:** reviews of #262, #266 and #269 each found 8–12 problems, mostly of three kinds:
   - frozen rules applied loosely;

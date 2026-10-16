@@ -25,15 +25,16 @@
 4. **E4** is now a stored conservative upper bound: flux + 3σ in a 0.2″ aperture at the brightest strip point,
    converted to AB magnitude in the code. The aperture includes the members' PSF wings, so it is an upper bound on any
    deflector light, not a non-detection limit.
-5. **E4 scaling.** E4 is compared with the D-048 F160W Faber–Jackson scaling. A real galaxy at z ≈ 0.3 is brighter
-   in F277W than in F160W, so the margin is conservative.
+5. **E4 scaling.** E4 is compared with the D-048 F160W Faber–Jackson scaling, applied unchanged to the F277W-based
+   upper bound. ASSUMPTION: the F160W–F277W colour of such a galaxy is of order ±0.3 mag (not stored). That is
+   negligible against the ≥ 6.8 mag margin.
 
 ## E2 validation (11 CATS pairs ≤ 4″ apart with known z; `e2_validation.json`)
 - **Failures.** The tool fails on these controls in three ways:
   - **detection:** in every control, at least one member reaches 3σ in at most 1 band (0 bands in 10 of the 11);
-  - **E1:** for 7 of them the random-strip placement fails (n_random 0–3), because 2.5–4″ strips do not fit in the
-    10″ box;
-  - **E3:** no control has a band with both fluxes usable.
+  - **E1:** for 7 of them the random-strip placement fails (n_random 0–3), because 2.5–4″ strips (control separations,
+    not stored) do not fit in the 10″ box;
+  - **E3:** at most 1 usable band per control (1 for 8.1/8.2, 0 for the rest), where E3 needs ≥ 3.
 
   The controls lie on bright cluster and ICL light, and several catalogue positions sit off the visible arc in F277W
   (`stamps_lw_controls.png`).
