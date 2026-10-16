@@ -1,93 +1,111 @@
 # PEARLS 1176 registration check on Abell 2744: result (2026-10-16)
 
-The plan and its rules are in `PLAN.md`, committed at 04:55 UTC before any measurement. Every number below is derived.
+- **Plan and rules:** `PLAN.md`, committed at 04:55 UTC before any measurement. Every number below is derived.
+- **Revision after review.** The first version of this record applied rule 1 more loosely than written and let the F115W clip collapse to one source. Both are fixed here; the changes are listed in §5.
 
 ## 1. Catalogue registration (`scripts/reg_offsets.py`)
-1176 o221 t010 against UNCOVER 2561 o001 t003. Controls are compact, isolated, AB 21–25.5 sources inside both
-footprints, split by crc32 parity into a calibration set A and a held-out set B.
+1176 o221 t010 was compared with UNCOVER 2561 o001 t003 in every shared band.
+- **Controls:** compact, isolated sources at AB 21–25.5, inside both footprints.
+- **Split:** calibration set A and held-out set B, by crc32 parity.
+- **Model choice:** rule 1 picks the global shift M0 or the affine model M1, per axis as written.
 
-| band | controls | M0 shift ΔRA cosδ, ΔDec (″) | B median after M0 (″) | B robust RMS (″) |
-|---|---|---|---|---|
-| F115W | 17 | +0.025, +0.004 | −0.000, −0.006 | 0.003, 0.007 |
-| F150W | 35 | +0.022, −0.003 | +0.007, −0.001 | 0.009, 0.008 |
-| F200W | 159 | +0.026, −0.016 | −0.000, +0.001 | 0.012, 0.007 |
-| F277W | 70 | +0.022, −0.007 | −0.002, −0.002 | 0.012, 0.012 |
-| F356W | 228 | +0.025, −0.012 | −0.000, +0.002 | 0.008, 0.009 |
-| F410M | 297 | +0.018, −0.010 | +0.003, +0.000 | 0.012, 0.010 |
-| F444W | 323 | +0.027, −0.013 | −0.002, −0.001 | 0.006, 0.008 |
+| band | controls | model (rule 1) | shift at h182, ΔRA cosδ, ΔDec (″) | B median after model (″) | B robust RMS (″) |
+|---|---|---|---|---|---|
+| F115W | 17 | M0 | +0.025, +0.006 | −0.000, −0.008 | 0.003, 0.007 |
+| F150W | 35 | M1 (Dec RMS −40 %, slope 4.6σ) | +0.024, −0.005 | +0.004, +0.003 | 0.008, 0.005 |
+| F200W | 159 | M1 (Dec RMS −23 %, 8.5σ) | +0.026, −0.014 | +0.002, +0.002 | 0.011, 0.006 |
+| F277W | 70 | M1 (RMS −47 %, −45 %; 4.8σ) | +0.025, −0.006 | −0.001, +0.000 | 0.007, 0.006 |
+| F356W | 228 | M0 | +0.025, −0.012 | −0.000, +0.002 | 0.008, 0.009 |
+| F410M | 297 | M0 | +0.018, −0.010 | +0.003, +0.000 | 0.012, 0.010 |
+| F444W | 323 | M0 | +0.027, −0.013 | −0.002, −0.001 | 0.006, 0.008 |
 
-**Baseline pair.** ALT 3516 o002 against UNCOVER in F356W (883 controls): shift +0.013, −0.001; B RMS 0.009, 0.011.
+**Baseline pair.** ALT 3516 o002 against UNCOVER in F356W, 883 controls.
+- It is offset by **+0.013″ in RA** and −0.001″ in Dec.
+- The plan assumed this pair had no offset. That assumption is wrong. The pair is still a valid noise reference, because its B RMS (0.009″, 0.011″) is measured after M0.
 
-**Pre-written rules:**
-- **Rule 1 (position dependence).** M1 does not lower B's robust RMS by ≥ 20 % on both axes in any band where it matters: F356W x 17 %, y worse. **M0, a global shift, is used.** The M1 slopes reach 3–5σ in F356W Dec, but their size is ≤ 0.005″ per arcmin.
-- **Rule 2 (pass).** Every band passes: |B median| ≤ 0.010″, and B RMS ≤ 1.5 × baseline (0.013″ and 0.016″).
-  - F115W and F150W rest on only 10 and 17 held-out controls.
-- **Rule 3 (one shift for all bands).** The band shifts agree within 0.02″ (spread 0.009″ in RA, 0.020″ in Dec).
-  - Per-band shifts are used in `offsets_1176.json`.
-  - F090W has no UNCOVER counterpart, so it takes the median of the other bands.
+**The rules as written:**
+- **Rule 1 (M1 or M0).** M1 is chosen in F150W, F200W and F277W. Its slopes are small, at most 0.007″ per arcmin. Across the 32″ h182 control box that changes the shift by ≤ 0.004″.
+- **Rule 2 (pass).** Every band passes: |B median| ≤ 0.010″, and B RMS ≤ 1.5 × baseline (0.013″, 0.016″).
+  - F115W rests on 7 calibration sources (5 kept by the clip) and 10 held-out sources, so it is a weak measurement.
+- **Rule 3 (one shift for all bands).** The M0 shifts spread by 0.010″ in RA and 0.020″ in Dec. The Dec spread sits at
+  the 0.02″ limit, so per-band shifts are used.
+  - F090W has no UNCOVER counterpart, so it takes the median of the measured bands.
+  - The evaluated shifts are in `offsets_1176.json`, with their sources in `offsets_1176_source.json`.
 
-**Conclusion.** 1176 o221 sits about **0.027″ (≈ 0.7 pixel at 0.04″) east-south-east** of UNCOVER. It is a global shift, with no
-sign of a ≈ 0.3″ offset anywhere.
-- No matched control is off by more than 0.11″.
-- Within 30″ and 60″ of h182, the local medians equal the global shift.
+**Conclusion.** 1176 o221 sits about **0.027″ east-south-east** of UNCOVER.
+- That is ≈ 0.4 pixel at the 0.063″ pixel scale of the long-wavelength (LW) mosaics, and ≈ 0.9 pixel at 0.031″ in the short-wavelength (SW) bands.
+- Residual variation with position is small (≤ 0.007″ per arcmin) but significant in three bands.
+- Local medians within 30″ of h182 differ from the global shift by up to about 0.01″.
+- No matched control is off by more than 0.11″. **Nothing comes near 0.3″.**
 
-## 2. Image check of the tool's WCS (`scripts/reg_imgcheck.py`; added after §1, not in the plan's main route)
-`hit_lightcurve.py` uses the FITS header WCS (`read_box`), not the gwcs behind the catalogues. So centroids were
-measured at the control positions in an 80″ box around h182, in F356W.
+## 2. Image check of the tool's WCS (`scripts/reg_imgcheck.py`)
+This check was added after §1; it is not in the plan's main route. `hit_lightcurve.py` uses the FITS header WCS
+(`read_box`), not the gwcs that the catalogues use. So centroids were measured at the control positions in an 80″
+box around h182, in F356W.
 
 | mosaic | controls | image − catalogue, median (″) | max (″) |
 |---|---|---|---|
 | 1176 | 27 | −0.0005, −0.0024 | 0.076 |
 | 2561 | 22 | −0.0013, −0.0074 | 0.059 |
 
-The tool's WCS therefore agrees with the catalogues. **The ≈ 0.3″ offset that #263 saw by eye on the cutouts of
-control c63 is not a registration offset of 1176 o221.**
-- That c63 came from #263's first, unsaved random draw, so it could not be re-examined.
-- Its cause remains unexplained. Possibilities are PSF and morphology differences on galaxy outskirts, or the stamp
-  cross, which sits at the rounded pixel; that rounding is ≤ 0.02″.
+The tool's WCS agrees with the catalogues to ≤ 0.008″. **The ≈ 0.3″ offset that #263 saw by eye on control c63's
+cutouts is not a registration offset of 1176 o221.**
+- That c63 came from #263's first random draw, which was not saved, so it could not be re-examined.
+- The cause is unexplained.
 
-## 3. Effect on the photometry that uses 1176 (`--offsets` in `hit_lightcurve.py`)
-h182 and its 78 arc controls of #263 were measured in the 8 mosaics of 1176 o221.
+## 3. Effect on photometry that uses 1176 (`hit_lightcurve.py --offsets`)
+h182 and its 78 arc controls from #263 were re-measured in the 8 mosaics of 1176 o221.
 
-**Reproduction.** The uncorrected re-run reproduces #263's stored 1176 fluxes exactly: 632 / 632 rows, maximum
+**Reproduction.** The uncorrected re-run reproduces #263's stored 1176 fluxes exactly: 632 of 632 rows, maximum
 difference 0.0 nJy.
 
-**Corrected minus uncorrected,** in units of the empirical error:
+**Corrected minus uncorrected**, in units of the empirical error:
 
-| band | median | median of the absolute value | max |
+| bands | median | median of the absolute value | max |
 |---|---|---|---|
-| F200W | +0.9 | 2.5 | 8.6 |
-| F277W | +0.7 | 2.4 | 23 |
-| F356W | +1.0 | 3.0 | 29 |
-| F444W | +2.0 | 2.7 | 12 |
-| F090W–F150W and F410M | — | 1.1–1.6 | — |
+| F200W, F277W, F356W, F444W | +0.8 to +2.0 | 2.3–3.0 | 9–29 |
+| F090W–F150W, F410M | — | 1.0–1.6 | — |
 
-A 0.7-pixel shift therefore moves on-arc aperture fluxes by several σ. Steep extended light is sensitive to
-registration, as #263 suspected.
+So a shift of under a pixel moves on-arc aperture fluxes by several σ, as #263 suspected.
 
-**Recalibrated h182 pairs (`control_z_corrected.ecsv`).** Pairs not involving 1176 are unchanged.
+**h182 pairs, recalibrated** (`control_z_corrected.ecsv`). Pairs without 1176 are unchanged.
 
-| pair (UNCOVER → 1176 unless noted) | z_cal | control robust std |
+| pair (UNCOVER → 1176 unless noted) | z_cal | control spread |
 |---|---|---|
 | F356W | +0.7 → −0.5 | 3.15 → 3.61 |
 | F444W | +1.6 → +1.0 | 3.84 → 3.65 |
 | F410M | +1.4 → +1.2 | 2.72 → 1.99 |
-| F277W | +0.9 → +0.2 | 3.50 → 3.34 |
-| F200W | +0.4 → +0.1 | 3.13 → 2.06 |
-| F150W | −0.2 → −0.3 | 2.49 → 2.31 |
-| 1176 → 6434, F444W | −1.0 → −0.3 | — |
+| F277W | +0.9 → +0.1 | 3.50 → 3.23 |
+| F200W | +0.4 → +0.3 | 3.13 → 1.99 |
+| F150W | −0.2 → −0.4 | 2.49 → 2.29 |
+| 1176 → 6434, F444W (only the 1176 side corrected) | −1.0 → −0.3 | — |
 
 **What this changes:**
-- **h182.** It stays closed under #263's rule; no pair reaches 3. h182 and its controls had been looked at before
-  this check, so this result is **exploratory** and not a blind test.
-- **Control spread.** The correction narrows the spread in F200W and F410M by about 30 %, and in F150W, F277W and
-  F444W by less than 10 %. It does not narrow it in F356W. Registration is therefore **not** the main remaining
-  on-arc systematic in F356W.
-- **Other work.** #261, #264 and #265 used UNCOVER and ALT only, so they are not affected.
+- **h182** stays closed under #263's rule; no pair reaches 3. This is **exploratory**: h182 and these controls had
+  already been looked at, so it is not a blind test.
+- **Control spread** falls by 27–36 % in F200W and F410M, and by 5–8 % in F150W, F277W and F444W.
+  - In F356W it **rises** by 15 %, so registration does not explain the F356W on-arc spread.
+- **Earlier work is possibly affected** at a smaller level. #261, #264 and #265 used UNCOVER → ALT pairs, and ALT o002
+  carries its own uncorrected +0.013″ shift (about half the 1176 shift).
+  - That includes h182's largest z_cal, +2.3 in F356W UNCOVER → ALT o002.
+  - Those pairs were not re-measured.
 
 ## 4. Limits
-- One 1176 visit (o221 t010) and one reference (UNCOVER o001 t003) were checked; other 1176 visits are unmeasured.
-- The catalogue footprint is approximated by the convex hull of each catalogue.
-- Catalogue centroids carry each mosaic's own source-detection noise.
-- The image check covers F356W in one 80″ box only.
-- No threshold of #261–#265 was changed.
+- **Coverage.** One 1176 visit (o221 t010) and one reference (UNCOVER o001 t003) were checked; other 1176 visits are
+  unmeasured.
+- **Method.** Footprints are approximated by the convex hull of each catalogue, and catalogue centroids include each
+  mosaic's own detection noise.
+- **Image check.** It covers F356W only, in one 80″ box.
+- **M1 and F115W.** M1 is evaluated at h182, which is valid within the control box. F115W is weak.
+- **Thresholds.** No threshold of #261–#265 was changed.
+
+## 5. Changes after review (post hoc, labelled)
+- **Rule 1 now applied per axis, as written.** This changes F150W, F200W and F277W from M0 to M1. Their shifts at h182
+  move by ≤ 0.003″, apart from F277W RA, which moves +0.003″, from +0.022″ to +0.025″.
+- **Clip floor.** The clip now keeps at least max(5, ½ of A) sources (`MIN_USED`). Before, F115W's M0 had collapsed to
+  1 source.
+- **Corrections.**
+  - The pixel scale is now 0.063″ (LW), not 0.04″.
+  - The local-shift wording is now "within about 0.01″", not "equal".
+  - The "not affected" claim is replaced by "possibly affected", because of ALT's own offset.
+- **Re-runs.** The photometry and z_cal were re-run with the rule-chosen offsets; the numbers above are from that run.

@@ -33,6 +33,7 @@ ISOLATION_ARCSEC = 1.0  # ASSUMPTION: no other catalogue source this close
 MATCH_ARCSEC = 0.6  # ASSUMPTION: nearest-neighbour match radius
 EDGE_ARCSEC = 3.0  # ASSUMPTION: distance from the catalogue footprint (convex hull) edge
 CLIP = 3.0
+MIN_USED = 5  # ASSUMPTION: fewest sources a clipped fit may keep (post hoc fix, review of #266)
 MAD = 1.4826
 
 
@@ -144,25 +145,37 @@ def robust_rms(v: np.ndarray) -> float:
 
 
 def fit(tab: Table, model: str) -> dict:
-    """Clipped least-squares fit of (dx, dy) on set A; returns parameters and their errors."""
+    """Clipped least-squares fit of (dx, dy) on set A; returns parameters and their errors.
+
+    The clip never keeps fewer than ``max(MIN_USED, half of A)`` sources (a MAD clip on a few
+    sources can otherwise shrink to one point); with fewer than ``MIN_USED`` sources in A the band
+    is marked ``measured = False``.
+    """
     a = tab[tab["set"] == "A"]
     x, y, dx, dy = (np.asarray(a[k], float) for k in ("x", "y", "dx", "dy"))
     design = np.ones((len(a), 1)) if model == "M0" else np.c_[np.ones(len(a)), x / 60.0, y / 60.0]
-    use = np.ones(len(a), bool)
-    for _ in range(10):
+    floor = max(MIN_USED, int(np.ceil(0.5 * len(a))))
+
+    def solve(use: np.ndarray):
         px, *_ = np.linalg.lstsq(design[use], dx[use], rcond=None)
         py, *_ = np.linalg.lstsq(design[use], dy[use], rcond=None)
         rx, ry = dx - design @ px, dy - design @ py
-        sx, sy = robust_rms(rx[use]), robust_rms(ry[use])
+        return px, py, rx, ry, robust_rms(rx[use]), robust_rms(ry[use])
+
+    use = np.ones(len(a), bool)
+    for _ in range(10):
+        px, py, rx, ry, sx, sy = solve(use)
         new = (np.abs(rx - np.median(rx[use])) <= CLIP * sx) & (
             np.abs(ry - np.median(ry[use])) <= CLIP * sy
         )
-        if np.array_equal(new, use):
+        if np.array_equal(new, use) or new.sum() < floor:
             break
         use = new
-    cov = np.linalg.inv(design[use].T @ design[use])
+    px, py, rx, ry, sx, sy = solve(use)  # final parameters and scatter from the same sample
+    cov = np.linalg.pinv(design[use].T @ design[use])
     return {
         "model": model,
+        "measured": bool(len(a) >= MIN_USED and use.sum() >= design.shape[1] + 2),
         "px": px.tolist(),
         "py": py.tolist(),
         "ex": (np.sqrt(np.diag(cov)) * sx).tolist(),
@@ -174,8 +187,31 @@ def fit(tab: Table, model: str) -> dict:
     }
 
 
+def choose(res: dict) -> str:
+    """PLAN.md rule 1, applied per axis: M1 if on either axis it lowers B's robust RMS by ≥ 20 %
+    against M0 and one of that axis's slopes is ≥ 3σ; otherwise M0."""
+    m0, m1 = res["M0"], res["M1"]
+    for k, (p, e) in enumerate((("px", "ex"), ("py", "ey"))):
+        gain = 1.0 - m1["B"]["rms"][k] / m0["B"]["rms"][k] if m0["B"]["rms"][k] > 0 else 0.0
+        sig = max(
+            abs(m1["fit"][p][i]) / m1["fit"][e][i] if m1["fit"][e][i] > 0 else 0.0 for i in (1, 2)
+        )
+        if gain >= 0.20 and sig >= 3.0:
+            return "M1"
+    return "M0"
+
+
+def shift_at(res: dict, model: str, x: float, y: float) -> tuple[float, float]:
+    """The chosen model's (ΔRA cosδ, ΔDec) at tangent-plane (x, y) arcsec."""
+    f = res[model]["fit"]
+    if model == "M0":
+        return f["px"][0], f["py"][0]
+    v = np.array([1.0, x / 60.0, y / 60.0])
+    return float(v @ np.array(f["px"])), float(v @ np.array(f["py"]))
+
+
 def score(tab: Table, f: dict) -> dict:
-    """Residuals of the held-out set B after subtracting the model (clipped at 3σ for the stats)."""
+    """Residuals of the held-out set B after subtracting the model (robust median and MAD)."""
     b = tab[tab["set"] == "B"]
     x, y = np.asarray(b["x"], float), np.asarray(b["y"], float)
     design = (
@@ -197,21 +233,68 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--ref", required=True, help="label:reference catalogue path with {b}")
     ap.add_argument("--bands", nargs="+", required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument(
+        "--from-controls",
+        action="store_true",
+        help="refit the control tables already in --out instead of reading the catalogues",
+    )
+    ap.add_argument(
+        "--offsets-at",
+        nargs=2,
+        type=float,
+        metavar=("RA", "DEC"),
+        help="also write offsets_<label>.json: the rule-chosen model evaluated at this position",
+    )
+    ap.add_argument("--obs-id", help="obs_id template with {b}, the keys of offsets_<label>.json")
+    ap.add_argument("--extra-bands", nargs="*", default=[], help="bands without a reference")
     args = ap.parse_args(argv)
     lab, path = args.pair.split(":", 1)
     rlab, rpath = args.ref.split(":", 1)
     args.out.mkdir(parents=True, exist_ok=True)
     summary = {}
     for b in args.bands:
-        tab = controls(read_cat(path.format(b=b)), read_cat(rpath.format(b=b)))
-        tab.write(args.out / f"controls_{lab}_vs_{rlab}_{b}.ecsv", overwrite=True)
+        ctl = args.out / f"controls_{lab}_vs_{rlab}_{b}.ecsv"
+        if args.from_controls:
+            tab = Table.read(ctl)
+        else:
+            tab = controls(read_cat(path.format(b=b)), read_cat(rpath.format(b=b)))
+            tab.write(ctl, overwrite=True)
         res = {}
         for m in ("M0", "M1"):
             f = fit(tab, m)
             res[m] = {"fit": f, "B": score(tab, f)}
-        summary[b] = {"n_controls": len(tab), **res}
-        print(b, json.dumps(summary[b]["M0"]["B"]), "M1 B rms", summary[b]["M1"]["B"]["rms"])
-        (args.out / f"summary_{lab}_vs_{rlab}.json").write_text(json.dumps(summary, indent=1))
+        res["chosen"] = choose(res)
+        res["measured"] = res[res["chosen"]]["fit"]["measured"]
+        summary[b] = {
+            "n_controls": len(tab),
+            "ra0": tab.meta["ra0"],
+            "dec0": tab.meta["dec0"],
+            **res,
+        }
+        print(
+            b,
+            res["chosen"],
+            "measured" if res["measured"] else "NOT measured",
+            json.dumps(res[res["chosen"]]["B"]),
+        )
+    (args.out / f"summary_{lab}_vs_{rlab}.json").write_text(json.dumps(summary, indent=1) + "\n")
+    if args.offsets_at:
+        ra, dec = args.offsets_at
+        shifts, source = {}, {}
+        for b, r in summary.items():
+            if r["measured"]:
+                x, y = tangent(np.array(ra), np.array(dec), r["ra0"], r["dec0"])
+                shifts[b] = shift_at(r, r["chosen"], float(x), float(y))
+                source[b] = f"{r['chosen']} at ({ra}, {dec})"
+        med = tuple(float(np.median([v[k] for v in shifts.values()])) for k in (0, 1))
+        for b in [*args.bands, *args.extra_bands]:
+            if b not in shifts:
+                shifts[b], source[b] = med, "median of the measured bands (no own measurement)"
+        out = {args.obs_id.format(b=b): list(v) for b, v in shifts.items()}
+        (args.out / f"offsets_{lab}.json").write_text(json.dumps(out, indent=1) + "\n")
+        (args.out / f"offsets_{lab}_source.json").write_text(json.dumps(source, indent=1) + "\n")
+        for b in shifts:
+            print(b, [round(v, 4) for v in shifts[b]], source[b])
 
 
 if __name__ == "__main__":

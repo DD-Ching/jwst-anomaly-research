@@ -70,3 +70,39 @@ def test_controls_drop_extended_bright_and_crowded():
     tab = ro.controls(_cat(ra, dec, mag, ext), _cat(ra, dec, mag, ext))
     # 0/1 are a crowded pair, 2 is too bright, 3 is extended, the ring is too faint: only 4 stays
     assert len(tab) == 1 and abs(tab["ra"][0] - 3.515) < 1e-9
+
+
+def _tab(dx, dy, x=None, y=None):
+    n = len(dx)
+    t = Table()
+    t["x"] = np.zeros(n) if x is None else x
+    t["y"] = np.zeros(n) if y is None else y
+    t["dx"], t["dy"] = dx, dy
+    t["set"] = ["A"] * n
+    return t
+
+
+def test_clip_keeps_at_least_half_and_flags_small_samples():
+    rng = np.random.default_rng(1)
+    # a few sources with heavy-tailed scatter: an unguarded MAD clip collapses toward one point
+    dx = 0.02 + rng.standard_t(1, 7) * 0.01
+    f = ro.fit(_tab(dx, dx), "M0")
+    assert f["n_used"] >= 5 and f["measured"]
+    f3 = ro.fit(_tab(dx[:3], dx[:3]), "M0")
+    assert not f3["measured"]
+
+
+def test_rule_one_picks_affine_only_when_it_helps_and_is_significant():
+    rng = np.random.default_rng(2)
+    n = 400
+    x, y = rng.uniform(-90, 90, n), rng.uniform(-90, 90, n)
+    sets = np.where(np.arange(n) % 2 == 0, "A", "B")
+    for slope, want in ((0.02, "M1"), (0.0, "M0")):
+        t = _tab(0.025 + slope * x / 60 + rng.normal(0, 0.005, n), rng.normal(0, 0.005, n), x, y)
+        t["set"] = sets
+        res = {m: {"fit": ro.fit(t, m)} for m in ("M0", "M1")}
+        for m in res:
+            res[m]["B"] = ro.score(t, res[m]["fit"])
+        assert ro.choose(res) == want
+        sx, _ = ro.shift_at(res, want, 60.0, 0.0)
+        assert abs(sx - (0.025 + slope)) < 0.003
