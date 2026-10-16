@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Orphan-pair dark-deflector screen on Abell 2744: null, but low completeness in the crowded field
+- **Plan before the run** (`results/orphan_pairs/abell2744/PLAN.md`, committed first): the D-048/D-055 rules
+  unchanged. An excess needs P < 0.05 under both null (e) and null (f). It is the first run of this statistic on this
+  field, which is exploratory, not blind.
+- **Tool change:** `orphan_pairs.py` gains `FIELDS["abell2744"]` (DJA v7.2-fix phot and zout, already pinned; the zout
+  is a plain file). `inject_pairs.py --fields abell2744` is allowed.
+- **Checks:**
+  - alignment 0.02″ against the published images;
+  - **no positive control** (0 `published` pairs at 0.3–3″);
+  - injections show low completeness: crowding classes most matched lensed pairs `visible_lens` or `same_galaxy`,
+    and only ~10 % of lensed sources pass selection;
+  - artifacts in the top 15: a mosaic edge (#12), a star spike (#1), one off-footprint (#8).
+- **Result (derived):** 9,385 sources, 174 SED-matched close pairs, 51 orphans against 43.8 / 42.4 expected; P 0.16 /
+  0.11. **Null.**
+- **Top orphans:** 11 of the top 15 meet the frozen escalation rule but are unvetted. They are consistent with chance;
+  none is a candidate.
+- **Data:** the 233.5 MB phot file was downloaded to the cloud scratchpad and deleted after use.
+- **Handoff:** a per-pair `/vet-candidate` of those 11 is the remaining ordinary check, at low priority given the null
+  count. MACS0417 and MACS1423 cluster pointings need published image lists.
+
 ## 2026-10-16: PEARLS 1176 o221 vs UNCOVER registration on Abell 2744: a 0.027″ shift, no 0.3″ offset; h182 stays closed
 - **Plan before measuring** (`results/transients/a2744_grid_alt/reg1176/PLAN.md`, committed first):
   - controls from the official level-3 catalogues (compact, isolated, AB 21–25.5), with a held-out half B by crc32 parity;

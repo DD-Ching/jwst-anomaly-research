@@ -1,0 +1,886 @@
+{
+ "field": "abell2744",
+ "area_arcmin2": 49.5875,
+ "d_blend_arcsec": 0.2935304470032371,
+ "r_psf_arcsec": 0.3497155780262757,
+ "n_selected": 9385,
+ "z_lens": 0.308,
+ "runs": {
+  "point:0.15": {
+   "lens": "point",
+   "theta_e": 0.15,
+   "per_source": {
+    "n": 400,
+    "recovered": 1,
+    "two_rows": 400,
+    "both_selected": 50,
+    "matched": 50,
+    "classes": {
+     "": 350,
+     "orphan": 1,
+     "same_galaxy": 49
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 33,
+      "recovered": 1
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 33,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 52,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 80,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 137,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 65,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 0,
+    "efficiency": 0.0,
+    "mean_lensed_sources": 0.1345,
+    "frac_with_images": 0.127
+   }
+  },
+  "point:0.3": {
+   "lens": "point",
+   "theta_e": 0.3,
+   "per_source": {
+    "n": 400,
+    "recovered": 17,
+    "two_rows": 400,
+    "both_selected": 45,
+    "matched": 45,
+    "classes": {
+     "": 355,
+     "orphan": 17,
+     "same_galaxy": 28
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 34,
+      "recovered": 9
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 28,
+      "recovered": 2
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 66,
+      "recovered": 4
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 86,
+      "recovered": 2
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 119,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 67,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 6,
+    "efficiency": 0.003,
+    "mean_lensed_sources": 0.552,
+    "frac_with_images": 0.414
+   }
+  },
+  "point:0.7": {
+   "lens": "point",
+   "theta_e": 0.7,
+   "per_source": {
+    "n": 400,
+    "recovered": 3,
+    "two_rows": 400,
+    "both_selected": 27,
+    "matched": 27,
+    "classes": {
+     "": 373,
+     "orphan": 3,
+     "same_galaxy": 7,
+     "visible_lens": 17
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 29,
+      "recovered": 2
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 33,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 58,
+      "recovered": 1
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 78,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 144,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 58,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 19,
+    "efficiency": 0.0095,
+    "mean_lensed_sources": 3.012,
+    "frac_with_images": 0.9015
+   }
+  },
+  "point:1.5": {
+   "lens": "point",
+   "theta_e": 1.5,
+   "per_source": {
+    "n": 400,
+    "recovered": 0,
+    "two_rows": 400,
+    "both_selected": 45,
+    "matched": 0,
+    "classes": {
+     "": 400
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 32,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 24,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 66,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 94,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 130,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 54,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 0,
+    "efficiency": 0.0,
+    "mean_lensed_sources": 13.579,
+    "frac_with_images": 0.998
+   }
+  },
+  "W2:0.15": {
+   "lens": "W2",
+   "theta_e": 0.15,
+   "per_source": {
+    "n": 400,
+    "recovered": 0,
+    "two_rows": 400,
+    "both_selected": 48,
+    "matched": 48,
+    "classes": {
+     "": 352,
+     "same_galaxy": 48
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 30,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 30,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 58,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 88,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 133,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 61,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 0,
+    "efficiency": 0.0,
+    "mean_lensed_sources": 0.1345,
+    "frac_with_images": 0.124
+   }
+  },
+  "W2:0.3": {
+   "lens": "W2",
+   "theta_e": 0.3,
+   "per_source": {
+    "n": 400,
+    "recovered": 12,
+    "two_rows": 400,
+    "both_selected": 43,
+    "matched": 43,
+    "classes": {
+     "": 357,
+     "orphan": 12,
+     "same_galaxy": 29,
+     "visible_lens": 2
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 30,
+      "recovered": 6
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 33,
+      "recovered": 2
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 58,
+      "recovered": 1
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 87,
+      "recovered": 1
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 131,
+      "recovered": 2
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 61,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 14,
+    "efficiency": 0.007,
+    "mean_lensed_sources": 0.5395,
+    "frac_with_images": 0.407
+   }
+  },
+  "W2:0.7": {
+   "lens": "W2",
+   "theta_e": 0.7,
+   "per_source": {
+    "n": 400,
+    "recovered": 3,
+    "two_rows": 400,
+    "both_selected": 38,
+    "matched": 38,
+    "classes": {
+     "": 362,
+     "orphan": 3,
+     "same_galaxy": 8,
+     "visible_lens": 27
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 20,
+      "recovered": 2
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 39,
+      "recovered": 1
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 56,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 83,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 136,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 66,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 15,
+    "efficiency": 0.0075,
+    "mean_lensed_sources": 2.954,
+    "frac_with_images": 0.9015
+   }
+  },
+  "W2:1.5": {
+   "lens": "W2",
+   "theta_e": 1.5,
+   "per_source": {
+    "n": 400,
+    "recovered": 0,
+    "two_rows": 400,
+    "both_selected": 37,
+    "matched": 0,
+    "classes": {
+     "": 400
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 29,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 37,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 60,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 78,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 138,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 58,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 0,
+    "efficiency": 0.0,
+    "mean_lensed_sources": 13.6455,
+    "frac_with_images": 0.9965
+   }
+  },
+  "W1:0.15": {
+   "lens": "W1",
+   "theta_e": 0.15,
+   "per_source": {
+    "n": 400,
+    "recovered": 0,
+    "two_rows": 265,
+    "both_selected": 4,
+    "matched": 4,
+    "classes": {
+     "": 396,
+     "same_galaxy": 4
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 40,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 31,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 62,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 96,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 114,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 57,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 1,
+    "efficiency": 0.0005,
+    "mean_lensed_sources": 0.169,
+    "frac_with_images": 0.1565
+   }
+  },
+  "W1:0.3": {
+   "lens": "W1",
+   "theta_e": 0.3,
+   "per_source": {
+    "n": 400,
+    "recovered": 2,
+    "two_rows": 360,
+    "both_selected": 16,
+    "matched": 16,
+    "classes": {
+     "": 384,
+     "orphan": 2,
+     "same_galaxy": 14
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 31,
+      "recovered": 2
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 30,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 54,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 90,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 140,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 55,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 2,
+    "efficiency": 0.001,
+    "mean_lensed_sources": 0.692,
+    "frac_with_images": 0.4955
+   }
+  },
+  "W1:0.7": {
+   "lens": "W1",
+   "theta_e": 0.7,
+   "per_source": {
+    "n": 400,
+    "recovered": 3,
+    "two_rows": 393,
+    "both_selected": 11,
+    "matched": 11,
+    "classes": {
+     "": 389,
+     "orphan": 3,
+     "same_galaxy": 7,
+     "visible_lens": 1
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 18,
+      "recovered": 2
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 30,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 67,
+      "recovered": 1
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 100,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 119,
+      "recovered": 0
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 66,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 51,
+    "efficiency": 0.0255,
+    "mean_lensed_sources": 3.9815,
+    "frac_with_images": 0.9535
+   }
+  },
+  "W1:1.5": {
+   "lens": "W1",
+   "theta_e": 1.5,
+   "per_source": {
+    "n": 400,
+    "recovered": 18,
+    "two_rows": 400,
+    "both_selected": 40,
+    "matched": 38,
+    "classes": {
+     "": 362,
+     "orphan": 18,
+     "same_galaxy": 11,
+     "visible_lens": 9
+    },
+    "by_mag": [
+     {
+      "mag": [
+       null,
+       24.0
+      ],
+      "n": 32,
+      "recovered": 8
+     },
+     {
+      "mag": [
+       24.0,
+       25.0
+      ],
+      "n": 30,
+      "recovered": 1
+     },
+     {
+      "mag": [
+       25.0,
+       26.0
+      ],
+      "n": 69,
+      "recovered": 4
+     },
+     {
+      "mag": [
+       26.0,
+       27.0
+      ],
+      "n": 91,
+      "recovered": 4
+     },
+     {
+      "mag": [
+       27.0,
+       28.0
+      ],
+      "n": 117,
+      "recovered": 1
+     },
+     {
+      "mag": [
+       28.0,
+       null
+      ],
+      "n": 61,
+      "recovered": 0
+     }
+    ]
+   },
+   "per_lens": {
+    "n_lens": 2000,
+    "n_recovered": 303,
+    "efficiency": 0.1515,
+    "mean_lensed_sources": 18.4585,
+    "frac_with_images": 1.0
+   }
+  }
+ },
+ "wall_s": 204.4742293357849
+}

@@ -58,6 +58,8 @@ LENSES = {
 THETA_E = (0.15, 0.3, 0.7, 1.5)  # arcsec (pair separations ~2 theta_E inside 0.3-3")
 DEEP = ("macs0416-ncf", "macs1149-ncf", "abell370-ncf", "macs0417-ncf", "macs1423-ncf")
 DEEP += ("goodsn-dja",)
+# cluster fields run with the same painting; the cluster lens does not magnify the injected images
+CLUSTER = ("abell2744",)
 N_LENS = 2000  # random-position lenses per field, type and theta_E (per-deflector efficiency)
 N_SOURCE = 400  # lensed catalogue rows per field, type and theta_E (per-source efficiency)
 BLEND_PERCENTILE = 2.0  # d_blend: this percentile of nearest-neighbour separations (ASSUMPTION)
@@ -452,7 +454,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     # deep fields only: combine converts theta_E to mass at Z_LENS_REF, which a cluster field
     # (its own lens redshift) would silently misreport
-    ap.add_argument("--fields", nargs="+", default=list(DEEP), choices=sorted(DEEP))
+    ap.add_argument("--fields", nargs="+", default=list(DEEP), choices=sorted(DEEP + CLUSTER))
     ap.add_argument("--lenses", nargs="+", default=list(LENSES), choices=list(LENSES))
     ap.add_argument("--theta-e", nargs="+", type=float, default=list(THETA_E))
     ap.add_argument("--n-lens", type=int, default=N_LENS)

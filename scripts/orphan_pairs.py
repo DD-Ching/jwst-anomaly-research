@@ -156,6 +156,28 @@ FIELDS = {
 # (the observation covering each pair is chosen from its MAST footprint).
 _NCF = "https://archive.stsci.edu/hlsps/canucs/dr1/{c}/ncf/hlsp_canucs_jwst-hst_multi_{c}-ncf_multi_v1_photometry-cat.fits.gz"
 _DJA = "https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/"
+# Abell 2744 (UNCOVER + archival, DJA grizli v7.2-fix; pins as configs/abell2744.yaml and
+# a2744_followups.ZOUT). The phot file is 233.5 MB (> 200 MB; reason in configs/abell2744.yaml).
+# The zout is a plain file (``photoz`` without ``member``). Published images: CATS v4.1 plus the
+# Bergamini+23 list; no frame offset is applied (only used to mark pairs within 1" of an image).
+FIELDS["abell2744"] = {
+    "format": "dja",
+    "catalogue": (
+        _DJA + "abell2744clu-grizli-v7.2-fix_phot.fits",
+        "5a9ed7bc3f5f8d41486f2475f3bedb3baa2a0068b1eab6db62fdcea216633084",
+    ),
+    "max_bytes": 240_000_000,
+    "photoz": {
+        "url": _DJA + "abell2744clu-grizli-v7.2-fix.eazypy.zout.fits",
+        "sha256": "436626861c7dbf370419a8787dd79140fad99c2ecbd268257941afe6d493991c",
+    },
+    "z_cluster": 0.308,
+    "cats": "abell2744-cats",
+    "image_lists": [],
+    "image_models": ["abell2744-bergamini23"],
+    "i2d": "jw02561-o001_t003",
+}
+
 DEEP_FIELDS = {
     # CANUCS NIRCam flanking fields: same catalogue format as the cluster fields, ~3-6' from
     # the cluster cores; the catalogue MU (CANUCS lens model) is 1.00-1.4 there.
@@ -1193,9 +1215,11 @@ def load_catalogue(field: str) -> Table:
     if spec.get("format", "canucs") == "canucs":
         return canucs_standard(Table.read(path))
     zcols = ["id", "z_spec", "z_ml", "z025", "z160", "z840"]
-    zout = Table.read(fetch_tar_member(spec["photoz"]))[zcols]
+    pz = spec["photoz"]
+    zpath = fetch_tar_member(pz) if "member" in pz else fetch_catalog(pz["url"], pz["sha256"])
+    zout = Table.read(zpath)[zcols]
     std = dja_standard(Table.read(path), zout)
-    std.meta["source"] += f" ({Path(url).name}; {spec['photoz']['member']})"
+    std.meta["source"] += f" ({Path(url).name}; {pz.get('member', Path(pz['url']).name)})"
     return std
 
 
