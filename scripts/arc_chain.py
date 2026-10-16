@@ -62,6 +62,10 @@ def image_positions(field: str) -> tuple[np.ndarray, np.ndarray]:
     elif field == "macs0416":
         t, _ = lc.image_list("macs0416-canucs", {}, None)
         lc.shift_images("macs0416-canucs", t)
+    elif field == "elgordo":
+        _, files, par = lc.load_model("elgordo-caminha23")
+        t, _ = lc.image_list("elgordo-caminha23", files, par)
+        lc.shift_images("elgordo-caminha23", t)
     else:
         raise ValueError(field)
     return np.asarray(t["ra"], float), np.asarray(t["dec"], float)
@@ -380,7 +384,9 @@ def main(argv: list[str] | None = None) -> int:
         nargs = "+" if name.startswith("inject") else None
         p.add_argument("--maps", type=Path, required=True, nargs=nargs)
         p.add_argument("--morph", type=Path, required=True, nargs=nargs)
-        p.add_argument("--field", choices=("smacs", "macs0416", "sunrise"), required=True)
+        p.add_argument(
+            "--field", choices=("smacs", "macs0416", "sunrise", "elgordo"), required=True
+        )
         p.add_argument("--out", type=Path, required=True)
         if name in ("known", "review"):
             p.add_argument("--hits", type=Path, required=True)

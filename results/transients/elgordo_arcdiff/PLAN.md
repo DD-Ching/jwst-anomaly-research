@@ -102,5 +102,8 @@ from 22:14Z.
   - The entry is `explained by the spike shift` if ≥ 4 of the 8 controls show a change of the same sign as the
     entry, at ≥ 2σ, in the band where the entry's change is largest (F444W for h049). Otherwise it is
     `undetermined`, and an `undetermined` entry is treated as `open` for the vetting step.
-  - Applied to every entry whose own forced-photometry change is ≥ 3σ in any band; only h049 qualifies (F444W
-    −3.6σ). h024, h031 and h043 have no ≥ 3σ change in a band where they are not on a confirmed rotation dipole.
+  - Applied to every entry whose own forced-photometry change is ≥ 3σ in any band:
+    - h049 (F444W −3.6σ);
+    - h043 (F444W −4.1σ, on a bright galaxy; its rotation dipole is confirmed in F150W only).
+    - h024 and h031 have no ≥ 3σ change in any band.
+  - (Corrected before any control was measured: the first wording left out h043.)
