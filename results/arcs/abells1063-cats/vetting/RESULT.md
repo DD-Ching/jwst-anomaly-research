@@ -93,3 +93,50 @@ Plan: `PLAN_deblend.md` (before the run) and its addendum (after the deblend run
   whose gate passes at the source's own flux.
 - Use `--flux core` as the default injected flux for the other `arcs` fields (catalogue fluxes can be up to ≈ 3 mag
   brighter than the core).
+
+# Step 3 (2026-10-16): deblend 1557
+
+Plan: `PLAN_1557.md` (before the run; the gate that counts is the one at the source's own fitted flux and observed
+separation). Script: `scripts/arcs_vet_deblend.py --target 1557` → `deblend_1557.json`, `deblend_1557.png`. Post hoc
+checks: `scripts/arcs_vet_clumps.py` → `clumps_1557.json`. Labels as above.
+
+## 1557 (frozen rule)
+- Two round knots beat one elliptical Gaussian: ΔBIC 227.4, knot S/N 15.0 and 14.1, separation 0.147″ → `two-knot`.
+- Gate at the fitted fluxes and the observed separation (0.15″): 0.85 single, 0.95 pair → **passed**. The
+  catalogue-flux gate (reported, not used): 0.95 / 0.90. The fitted F200W flux (0.76–0.77 image units) is close to
+  the catalogue flux (0.85), unlike 1316.
+- The separation axis is 75.2° from the z_s = 2 prediction (one-component axis 77.6°): the anti axis is the knot
+  separation.
+- Knot flux ratio across F090W–F200W: χ² p = 0.0193 (4 bands) → `consistent SED` (threshold 0.003).
+- **Frozen outcome: clump pair; stays open.**
+
+## Post hoc (not in the plan; `clumps_1557.json`)
+- Looked at (`deblend_1557.png`): besides the fitted body and compact knot, a PSF-sized point (σ 0.032″) sits 0.294″
+  from the body, at PA 111.7° from it, i.e. along the same axis; it is inside 1557's catalogue segment (the nearest
+  other F200W catalogue source is 2.39″ away; catalogue `a750a902…`, not stored). The 0.4″ two-component fit does
+  not model it.
+- Three-component forced fluxes: the point is `SED-consistent` with the body (p 0.081) and with the compact knot
+  (p 0.0069); body vs knot p 0.035. With ERR-only errors (the 2184 control showed these can be too small) all three
+  share one colour within the frozen threshold. Reading: one clumpy (chain) source or a same-colour group whose
+  catalogue axis is the chain direction; the data here do not tell which.
+- **Clump-orientation model** (model_prediction; ASSUMPTIONs: isotropic point-pair separations, point clumps, κ < 1):
+  a separation vector lensed by reduced shear g lands ≥ 60° from the shear axis with probability 0.144 / 0.137
+  (g 0.43 / 0.45, 1557), 0.084–0.113 (g 1.6–1.9, 1316), 0.073 (g 1.5). The catalogue shape-noise null
+  (`../arcs.json`) draws from the elongation distribution of all sources and does not model clump pairs, whose
+  intrinsic "elongation" is maximal. Under this model each of the two clump-pair rows is anti with probability 0.08–0.14;
+  how many of the 24 strong-shear rows are clump pairs is not measured, so no sample probability is computed.
+
+## Status after step 3
+- **1557: open, unvetted, not a candidate.** Frozen: clump pair. Post hoc: a three-component same-colour chain along
+  the anti axis.
+- **1316: unchanged** (open; clump pair, two-knot call not validated at its flux).
+- **Sample:** both remaining anti rows have axes set by clump separations; the step-2 `excess remains` (P 0.00039) is
+  computed against a null that does not model clumps. The ordinary reading "intrinsic clump orientation" is not
+  excluded; it is not tested either until the clump-pair fraction among the aligned rows is measured.
+
+## Next
+- Run the frozen `deblend_class` (with the own-flux gate) on all 24 strong-shear background rows, and re-compute the
+  anti expectation with clump-pair rows given the clump-orientation probability (a plan first: the sample test is
+  then post hoc, so label it exploratory).
+- Redshifts for 1316 and 1557: no catalogued z_spec (VizieR, step 1); the ESO MUSE cube of the field (size not
+  checked) needs a download decision under the 200 MB rule.

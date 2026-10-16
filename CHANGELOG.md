@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-16: `arcs` on Abell S1063: 4 background anti vs 0.52 expected; 2 explained or likely ordinary; after vetting 1316 open (draft #273)
+## 2026-10-16: `arcs` on Abell S1063: 4 background anti vs 0.52 expected; 2004, 2184 explained; 1316, 1557 open as clump pairs (#273)
 - **New field for the arc-orientation test** (D-024 defaults; plan committed first): CATS v4.1 maps, GLIMPSE F200W,
   DJA v7.5 photo-z. Strong-shear background: 20 / 24 aligned, **4 anti vs 0.524 (P 0.0021)**.
 - **Ordinary tests (new scripts):**
@@ -37,6 +37,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** 2184 explained by measurement noise at core flux (post hoc), not a candidate. 1316 open, unvetted,
   not a candidate. Next: 1557 through the same tests; a redshift for 1316 (MUSE or a second photo-z code); use
   `--flux core` on the other `arcs` fields (`vetting/RESULT.md` "Next").
+- **Vetting, step 3 (`vetting/PLAN_1557.md` first; `arcs_vet_deblend.py --target 1557`):** 1557 is `two-knot`
+  (ΔBIC 227, 0.147″), and this time the gate ran at the source's own flux and separation and passed (0.85 / 0.95);
+  separation 75° from the prediction, knot colours consistent (p 0.019) → **clump pair, stays open**.
+  - Post hoc (`scripts/arcs_vet_clumps.py`): a PSF-sized third point 0.29″ away on the same axis, inside the same
+    catalogue segment, same colour (p ≥ 0.0069).
+  - Post hoc model: a randomly oriented point pair is anti with probability 0.144 / 0.137 at g 0.43 / 0.45 and
+    0.084–0.113 at g 1.6–1.9; the shape-noise null behind P 0.0021 / 0.00039 does not model clump pairs.
+- **Handoff:** both remaining anti rows are clump pairs; the excess is measured against a null without clumps.
+  Next: a clump-pair census of the 24 strong-shear rows with the same frozen rule (plan first; exploratory), then
+  the expected anti count with clump rows. MUSE redshifts need a download decision (owner).
 ## 2026-10-16: SMACS 0723 arc difference imaging: Atalanta recovered, no candidate; h061 undetermined (near-star spikes); the 2024 → 2026-07 pair fails its control
 - **Why:** the Sunrise handoff names SMACS next; a catalog grid misses transients blended into arcs (D-027 addendum
   2026-10-15j). Plan before the run: `results/transients/smacs_arcdiff/PLAN.md` (24″ box on the system 5 arc, SN

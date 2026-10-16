@@ -89,3 +89,7 @@ pipeline catalogue `jw03293-o001_t001` (manifest) and the DJA v7.5 zout above. D
 - Vetting (`vetting/RESULT.md`): measurement-noise injections give P_anti 0 / 60 for both at their observed
   elongation (gate passed); the independent HST axes are also anti at S/N ≈ 1. 1316 looks like two knots by eye
   (blend untested). Still open, not candidates.
+- Vetting steps 2–3: 2184 explained by measurement noise at its core flux (post hoc). 1316 and 1557 deblend into
+  same-colour clump pairs whose separation is the anti axis (1557: gate at its own flux passed; a third same-colour
+  point on the axis, post hoc). A randomly oriented clump pair is anti with probability 0.08–0.14 at their shears
+  (model, `vetting/clumps_1557.json`), which the catalogue shape-noise null does not model. Open, not candidates.

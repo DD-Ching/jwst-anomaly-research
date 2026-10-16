@@ -1,2 +1,3 @@
-# Status: vetting step 2 done; 2184 explained by measurement noise at core flux, 1316 open, 1557 unvetted (2026-10-16)
-See `vetting/RESULT.md` "Step 2" and "Next". Draft PR #273 (trial rule T2: unvetted hits stay on the draft claim PR).
+# Status: vetting step 3 done; 1316 and 1557 open as clump pairs, 2184 and 2004 explained (2026-10-16)
+See `vetting/RESULT.md` "Step 3" and "Next". PR #273 (needs-human: MUSE download decision; next step without it is
+the clump-pair census of the 24 strong-shear rows).
