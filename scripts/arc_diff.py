@@ -34,6 +34,7 @@ import argparse
 import csv
 import json
 import os
+import time
 import warnings
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
@@ -477,8 +478,21 @@ def grid_job(uri, ra, dec, half, n, min_sep, margin, seed) -> list[tuple[float, 
 def band_diff(job: dict) -> dict:
     """Read, align, match and difference one band; detections, maps and injections."""
     os.environ.setdefault("OMP_NUM_THREADS", "1")
+    t0 = time.perf_counter()
     b1 = read_box(job["e1"], job["ra"], job["dec"], job["half"])
     b2 = read_box(job["e2"], job["ra"], job["dec"], job["half"] + 1.0)
+    t_read = time.perf_counter() - t0
+    # Pre-matching injections (``--inject-pre``): sources added to the raw boxes of each epoch,
+    # on that epoch's own grid and flux scale, before resampling, registration and matching.
+    for ra, dec, mag1, mag2 in job.get("inj_pre") or []:
+        for b, mag in ((b1, mag1), (b2, mag2)):
+            if mag is None:
+                continue
+            x, y = (float(v) for v in b["wcs"].all_world2pix(ra, dec, 0))
+            if 0 <= y < b["sci"].shape[0] and 0 <= x < b["sci"].shape[1]:
+                sig = PSF_FWHM[job["band"]] / 2.3548 / b["scale"]
+                add_star(b["sci"], y, x, sig, mag_to_mjysr(mag, b["pixar_sr"]))
+    t1 = time.perf_counter()
     shape = b1["sci"].shape
     s2 = resample(b2["sci"], b2["wcs"], b1["wcs"], shape)
     v2 = resample(b2["err"] ** 2, b2["wcs"], b1["wcs"], shape)
@@ -507,6 +521,7 @@ def band_diff(job: dict) -> dict:
         conv2 = conv_epoch == 2
     bg_px = int(np.ceil(job["bg_arcsec"] / b1["scale"])) | 1
     sep = max(int(round(2 * sig_psf)), 1)
+    t_match = time.perf_counter() - t1
 
     # Whole-chain injection grid: stars at common sky positions in every band, added to epoch 2
     # before detection, so hits, maps and any later stage (arc_diff_morph.py) see them.
@@ -530,6 +545,7 @@ def band_diff(job: dict) -> dict:
         sc = scale if scale is not None else max(_robust_std(sraw), 1.0)
         return sraw / sc, d, sc
 
+    t2 = time.perf_counter()
     s, d, noise_scale = detect(m2)
     det = []
     for y, x, v in peaks(s, job["min_sigma"], sep):
@@ -554,6 +570,8 @@ def band_diff(job: dict) -> dict:
         "e1img": b1["sci"].astype(np.float32),
         "wcs": b1["wcs"].to_header_string(relax=True),
     }
+    t_detect = time.perf_counter() - t2
+    t3 = time.perf_counter()
     # Injections: epoch 2 only, on bright pixels (arcs); same chain, same noise scale.
     rng = np.random.default_rng(job["seed"])
     bright = np.nan_to_num(b1["sci"]) > np.nanpercentile(b1["sci"], 90)
@@ -601,6 +619,12 @@ def band_diff(job: dict) -> dict:
             inj_unflagged[f"{mag:.2f}"] = found_unflagged / job["inject"]
     out["injection"] = inj
     out["injection_unflagged"] = inj_unflagged
+    out["timing_s"] = {
+        "read": round(t_read, 2),
+        "resample_register_match": round(t_match, 2),
+        "detect": round(t_detect, 2),
+        "post_injections": round(time.perf_counter() - t3, 2),
+    }
     return out
 
 
@@ -700,11 +724,25 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--inject-grid-mags", type=float, nargs="+", default=[27.5, 28.0])
     ap.add_argument("--inject-grid-sep", type=float, default=1.5, help="arcsec between stars")
+    ap.add_argument(
+        "--inject-pre",
+        type=Path,
+        help="CSV name,ra,dec,mag1,mag2: sources added to both raw epochs before matching",
+    )
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--procs", type=int, default=min(os.cpu_count() or 1, 4))
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--maps", type=Path, help="S, difference and epoch-1 maps (.npz; untracked)")
     a = ap.parse_args(argv)
+    t_start = time.perf_counter()
+    pre_rows = list(csv.DictReader(open(a.inject_pre))) if a.inject_pre else []
+
+    def _mag(v):
+        return float(v) if v not in (None, "") else None
+
+    inj_pre = [
+        (float(r["ra"]), float(r["dec"]), _mag(r["mag1"]), _mag(r["mag2"])) for r in pre_rows
+    ]
 
     jobs = [
         {
@@ -725,6 +763,7 @@ def main(argv: list[str] | None = None) -> int:
             "inject_mags": a.inject_mags,
             "seed": a.seed + i,
             "inj_sky": [],
+            "inj_pre": inj_pre,
         }
         for i, (b, e1, e2) in enumerate(a.band)
     ]
@@ -825,6 +864,28 @@ def main(argv: list[str] | None = None) -> int:
             wr.writeheader()
             for e in injected:
                 wr.writerow({k: e[k] for k in wr.fieldnames})
+    if pre_rows:
+        flagged = {h["hit_id"] for h in hits if h["near_bright_core"]}
+        hit_sign = {h["hit_id"]: h["sign"] for h in hits}
+        pre = match_targets(
+            [{"name": r["name"], "ra": float(r["ra"]), "dec": float(r["dec"])} for r in pre_rows],
+            res,
+            hits,
+            a.match_arcsec,
+        )
+        fields = list(pre_rows[0].keys()) + ["hit", "hit_sign", "near_bright_core"]
+        fields += [r["band"] for r in res]
+        with open(a.out / "injected_pre.csv", "w", newline="") as f:
+            wr = csv.DictWriter(f, fieldnames=fields)
+            wr.writeheader()
+            for row, e in zip(pre_rows, pre, strict=True):
+                out = dict(row)
+                out["hit"] = e["hit"] or ""
+                out["hit_sign"] = hit_sign.get(e["hit"], "")
+                out["near_bright_core"] = e["hit"] in flagged
+                for r in res:
+                    out[r["band"]] = e[r["band"]]
+                wr.writerow(out)
     tab = Table(rows=hits, names=list(hits[0].keys())) if hits else Table()
     tab.meta = {"provenance": "derived", "thresholds": "ASSUMPTION: see summary.json"}
     tab.write(a.out / "hits.ecsv", overwrite=True)
@@ -869,12 +930,15 @@ def main(argv: list[str] | None = None) -> int:
                 "n_detections": len(r["detections"]),
                 "injection_recovered": r["injection"],
                 "injection_recovered_not_near_core_this_band": r["injection_unflagged"],
+                "timing_s": r["timing_s"],
             }
             for r in res
         },
         "n_hits": len(hits),
         "n_hits_not_near_bright_core": sum(not h["near_bright_core"] for h in hits),
         "known": known_out,
+        "inject_pre": {"n": len(pre_rows), "csv": str(a.inject_pre) if a.inject_pre else None},
+        "wall_s": round(time.perf_counter() - t_start, 1),
         "inject_grid": {
             "n": len(injected),
             "n_hit": sum(e["hit"] is not None for e in injected),
