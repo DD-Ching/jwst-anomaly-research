@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Clump-pair census on five other `arcs` fields: pooled two-knot rate 0.27; the S1063 anti excess stays at P 0.031 (exploratory)
+- **Why:** the S1063 clump-aware null (#273) used a clump rate from that field alone (0.24, upper 0.47). Plan before
+  the run: `results/arcs/census-fields/PLAN.md`; code `scripts/arcs_census_fields.py` (S1063 census code unchanged,
+  outcome rule unit-tested). Depends on #273.
+- **Result (derived; `results/arcs/census-fields/RESULT.md`, `census_fields.json`):** 154 strong-shear background
+  rows in Abell 2744, Abell 370, El Gordo, MACS0416, MACS1149; 117 pass the own-flux gate; 32 `two-knot` → pooled
+  f̂ 0.274 (95 % upper 0.364; per field 0.17–0.37). S1063 P(≥ 4 anti) 0.031 at f̂, 0.054 at the upper. **Frozen
+  outcome: excess remains at the five-field clump rate (exploratory).**
+- **Looked at** (`two_knot.png`): several `two-knot` rows are a knot plus a neighbouring streak or object, which
+  can only raise f̂. Post hoc: none of the 4 gate-passed screen-anti rows in the five fields is `two-knot`.
+- **Handoff:** 1316 and 1557 remain open, unvetted, not candidates. Next: an independent field for the anti excess
+  itself (a deep F200W mosaic with a public model and photo-z), or spectroscopy if the owner changes the MUSE call.
+
 ## 2026-10-16: `arcs` on Abell S1063: 4 background anti vs 0.52 expected; 2004 at κ ≈ 1, 2184 compatible with the tested noise model; 1316, 1557 pending vetting; public spectra cannot settle them (#273)
 - **New field for the arc-orientation test** (D-024 defaults; plan committed first): CATS v4.1 maps, GLIMPSE F200W,
   DJA v7.5 photo-z. Strong-shear background: 20 / 24 aligned, **4 anti vs 0.524 (P 0.0021)**.
