@@ -1,0 +1,14 @@
+{
+ "provenance": "derived",
+ "h000": [
+  110.83411267801681,
+  -73.45173415397286
+ ],
+ "tns_AT2024jfz": {
+  "ra": 110.83416,
+  "dec": -73.451752,
+  "source": "TNS cone search of 2026-10-15 recorded in docs/candidates/smacs0723-sys5-transient-pair.md on PR #237 (observed); not re-queried here"
+ },
+ "sep_arcsec": 0.081,
+ "lightcurve": "vet/lightcurves.ecsv (hit_lightcurve.py, every covering public mosaic)"
+}

@@ -1,0 +1,9 @@
+{
+  "what": "2024 GO-4043 minus 2022 ERO F444W raw aperture flux along the stripe, 0.4-2.0 arcsec",
+  "n": 34,
+  "median_njy": 5.029675925980566,
+  "robust_std_njy": 5.372110595405921,
+  "max_abs_njy": 66.65112926077505,
+  "frac_abs_ge_h061": 0.20588235294117646,
+  "h061_delta_njy": 35.65012663483753
+}
