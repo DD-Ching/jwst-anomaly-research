@@ -322,22 +322,117 @@ def sheet(results: list[dict], path: Path) -> None:
     plt.close(fig)
 
 
+CONTROL_PAIRS = (  # PLAN addendum: CATS v4.1 pairs <= 4" apart with known z (fixed before measuring)
+    ("39.1", "39.2"),
+    ("37.1", "37.2"),
+    ("33.1", "33.2"),
+    ("4.4", "4.5"),
+    ("62.1", "62.2"),
+    ("40.1", "40.2"),
+    ("8.1", "8.2"),
+    ("3.1", "3.2"),
+    ("61.1", "61.2"),
+    ("10.1", "10.2"),
+    ("134.1", "134.2"),
+)
+
+
+def e2_valid(sb_z: list[float]) -> dict:
+    """PLAN addendum: E2 is usable only if the known equal-SB controls behave (all conditions)."""
+    z = np.asarray([v for v in sb_z if v is not None and np.isfinite(v)], float)
+    n = len(z)
+    if n < 3:
+        return {"valid": False, "n": n, "reason": "fewer than 3 measured controls"}
+    med = float(np.median(z))
+    rsd = float(1.4826 * np.median(np.abs(z - med)))
+    tail = float(np.mean(np.abs(z) > 3))
+    ok = abs(med) <= 1.0 and rsd <= 1.5 and tail <= 0.10
+    return {"valid": bool(ok), "n": n, "median": med, "robust_std": rsd, "frac_abs_gt3": tail}
+
+
+def classify(m: dict, e2_ok: bool, artifact: bool, dz_spec_ok: bool | None, sis_mag: float) -> dict:
+    """PLAN addendum classification. ``m``: one measurements.json entry; ``dz_spec_ok`` False when
+    two public spectroscopic redshifts differ by > 0.01 (1 + z), None when unavailable;
+    ``sis_mag``: SIS-scaled deflector magnitude. Returns the class and the conditions that fired."""
+    e1 = m["E1"]["z"] >= 3
+    sbz = m["E2"].get("sb_z")
+    e2_mis = bool(e2_ok and sbz is not None and abs(sbz) > 3)
+    e3p = m["E3"].get("p")
+    e3_mis = e3p is not None and e3p < 0.01
+    e5_mis = dz_spec_ok is False
+    fired = [
+        k
+        for k, v in (
+            ("E1_bridge", e1),
+            ("E2_sb_mismatch", e2_mis),
+            ("E3_colour_mismatch", e3_mis),
+            ("E5_specz_mismatch", e5_mis),
+            ("E6_artifact", artifact),
+        )
+        if v
+    ]
+    if fired:
+        return {"class": "ordinary", "why": fired}
+    res = m["E2"]["a"]["resolved"] and m["E2"]["b"]["resolved"]
+    det = min(m["E6_detected_bands"].values()) >= 3
+    lacking = [
+        k
+        for k, v in (("E2_not_valid", not e2_ok), ("unresolved", not res), ("detection", not det))
+        if v
+    ]
+    if lacking:
+        return {"class": "insufficient", "why": lacking}
+    defl_ok = m["E4"].get("mag_limit_3sig", -np.inf) >= sis_mag + 3
+    if sbz is not None and abs(sbz) <= 3 and e3p is not None and e3p >= 0.01 and defl_ok:
+        return {"class": "anomaly", "why": ["E2_equal_sb", "E3_equal_colour", "E4_dark"]}
+    return {"class": "insufficient", "why": ["fallback"]}
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--pairs", type=Path, required=True)
-    ap.add_argument("--ranks", type=int, nargs="+", required=True)
+    ap.add_argument("--pairs", type=Path)
+    ap.add_argument("--ranks", type=int, nargs="+")
+    ap.add_argument(
+        "--controls",
+        help="measure CONTROL_PAIRS of this lens_consistency image list instead (e.g. abell2744-cats)",
+    )
     ap.add_argument("--i2d", required=True, help="level-3 product prefix, e.g. jw02561-o001_t003")
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args(argv)
-    t = Table.read(args.pairs)
-    rows = [r for r in t if int(r["rank"]) in args.ranks]
+    if args.controls:
+        import lens_consistency as lc
+
+        il, _ = lc.image_list(args.controls, {}, None)
+        lc.shift_images(args.controls, il)
+        pos = {
+            str(i): (float(r), float(d))
+            for i, r, d in zip(il["image_id"], il["ra"], il["dec"], strict=True)
+        }
+        rows = [
+            {
+                "rank": k + 1,
+                "ra_a": pos[a][0],
+                "dec_a": pos[a][1],
+                "ra_b": pos[b][0],
+                "dec_b": pos[b][1],
+                "pair": f"{a}/{b}",
+            }
+            for k, (a, b) in enumerate(CONTROL_PAIRS)
+        ]
+    else:
+        t = Table.read(args.pairs)
+        rows = [r for r in t if int(r["rank"]) in args.ranks]
     rng = np.random.default_rng(args.seed)
     results = [measure_pair(r, args.i2d, rng) for r in rows]
     args.out.mkdir(parents=True, exist_ok=True)
-    sheet(results, args.out / "stamps_lw.png")
+    for r, row in zip(results, rows, strict=True):
+        if isinstance(row, dict) and "pair" in row:
+            r["pair"] = row["pair"]
+    name = "controls" if args.controls else "measurements"
+    sheet(results, args.out / f"stamps_lw{'_controls' if args.controls else ''}.png")
     clean = [{k: v for k, v in r.items() if not k.startswith("_")} for r in results]
-    (args.out / "measurements.json").write_text(json.dumps(clean, indent=1, default=float) + "\n")
+    (args.out / f"{name}.json").write_text(json.dumps(clean, indent=1, default=float) + "\n")
     for r in clean:
         e2 = r["E2"]
         print(

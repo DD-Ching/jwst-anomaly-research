@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Abell 2744 orphans: per-pair vetting of the 11 escalated pairs: 5 ordinary, 6 insufficient data, 0 anomalies
+- **Plan:** `results/orphan_pairs/abell2744/vetting/PLAN.md`, written before measuring, plus a 06:55 UTC addendum
+  committed before the controls were run. It adds E2 validation on published images (a deviation) and states
+  `classify` / `e2_valid` as unit-tested functions. Tool: `scripts/orphan_vet.py`, using UNCOVER boxes read by S3
+  byte range; nothing large was downloaded.
+- **E2 validation** on 11 CATS pairs ≤ 4″ apart: no control member reaches 3σ in 3 bands with this tool, and 1 of 8
+  measured sb_z is > 3 (rule ≤ 10 %). So E2 is not valid, and surface brightness supports or excludes nothing.
+- **E5/E6 (VizieR):**
+  - no public spectroscopic redshift lies within 1.5″ of any member (Price+25; Wang+24 `zsp`);
+  - same-z neighbours within 1.5″ (Wang+24) number 0–3 per pair.
+- **#7, member a:** UNCOVER DR3 detects it 0.006″ from our aperture (F356W S/N 22). It is below 3σ only in our
+  conservative aperture photometry.
+- **Classes** (`classification.json`), with no threshold changed:
+  - ordinary: #1 (#269 sheet artifact), and #3, #5, #6 and #14 (LW bridge 3.2–6.1σ);
+  - insufficient: #2, #7, #9, #10, #11 and #13 (E2 not valid; #7 also on detection);
+  - anomaly: none.
+- **Separate from the #269 population null and its ~0.3–1 % per-deflector efficiency:** nothing here is a candidate.
+- **Handoff:** the deciding data for the 6 undecided pairs are spectra of both members. The no-new-data route would
+  need a validated PSF-matched morphology tool. Neither is in this unit.
+
 ## 2026-10-16: Process: "Before writing results" rules in scripts/CLAUDE.md
 - **Why:** reviews of #262, #266 and #269 each found 8–12 problems, mostly of three kinds:
   - frozen rules applied loosely;

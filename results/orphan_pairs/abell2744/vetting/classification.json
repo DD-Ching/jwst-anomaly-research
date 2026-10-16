@@ -1,0 +1,501 @@
+{
+ "e2_valid": false,
+ "classification": {
+  "1": {
+   "class": "ordinary",
+   "why": [
+    "E6_artifact"
+   ],
+   "E1_z": 0.7603643094513551,
+   "E2_sb_z": -1.6476119748223876,
+   "E3_p": 0.6887882893694037,
+   "E4_mag_limit_3sig": 27.99265717239353,
+   "sis_sigma": 180.68541102467063,
+   "sis_mag_F160W_scaling": 18.983494171094115,
+   "E5_specz": "none in J/ApJ/982/51 or J/ApJS/270/12 (zsp empty)",
+   "E6_samez_neighbours_1p5": 1,
+   "E6_detected_bands": {
+    "a": 7,
+    "b": 7
+   },
+   "resolved": [
+    true,
+    true
+   ],
+   "E6_artifact_from_269": true,
+   "wang24_within_1p5_of_midpoint": [
+    [
+     1.24,
+     1.75,
+     1.062992
+    ],
+    [
+     1.2,
+     0.02,
+     0.788985
+    ],
+    [
+     0.02,
+     1.16,
+     1.051601
+    ],
+    [
+     1.6,
+     0.6,
+     4.338732
+    ]
+   ]
+  },
+  "2": {
+   "class": "insufficient",
+   "why": [
+    "E2_not_valid"
+   ],
+   "E1_z": 1.555340872160123,
+   "E2_sb_z": -2.128736623229595,
+   "E3_p": 0.6961315422834917,
+   "E4_mag_limit_3sig": 28.94235855065808,
+   "sis_sigma": 133.233699866139,
+   "sis_mag_F160W_scaling": 20.306584167946177,
+   "E5_specz": "none in J/ApJ/982/51 or J/ApJS/270/12 (zsp empty)",
+   "E6_samez_neighbours_1p5": 3,
+   "E6_detected_bands": {
+    "a": 7,
+    "b": 7
+   },
+   "resolved": [
+    true,
+    true
+   ],
+   "E6_artifact_from_269": false,
+   "wang24_within_1p5_of_midpoint": [
+    [
+     0.01,
+     0.56,
+     0.671934
+    ],
+    [
+     1.2,
+     1.61,
+     0.95738
+    ],
+    [
+     0.57,
+     0.01,
+     0.794415
+    ],
+    [
+     0.91,
+     0.66,
+     0.940065
+    ],
+    [
+     1.57,
+     1.27,
+     0.765954
+    ]
+   ]
+  },
+  "3": {
+   "class": "ordinary",
+   "why": [
+    "E1_bridge"
+   ],
+   "E1_z": 3.151427869979433,
+   "E2_sb_z": 1.9300289059303364,
+   "E3_p": 0.16364612206363197,
+   "E4_mag_limit_3sig": 28.71847178708573,
+   "sis_sigma": 113.44419608261752,
+   "sis_mag_F160W_scaling": 21.004902232496494,
+   "E5_specz": "none in J/ApJ/982/51 or J/ApJS/270/12 (zsp empty)",
+   "E6_samez_neighbours_1p5": 0,
+   "E6_detected_bands": {
+    "a": 7,
+    "b": 7
+   },
+   "resolved": [
+    true,
+    true
+   ],
+   "E6_artifact_from_269": false,
+   "wang24_within_1p5_of_midpoint": [
+    [
+     0.01,
+     0.63,
+     6.025649
+    ],
+    [
+     0.63,
+     0.01,
+     6.107861
+    ]
+   ]
+  },
+  "5": {
+   "class": "ordinary",
+   "why": [
+    "E1_bridge"
+   ],
+   "E1_z": 4.724436015240149,
+   "E2_sb_z": -4.923531050696683,
+   "E3_p": 0.10576268154252935,
+   "E4_mag_limit_3sig": 28.373011686379005,
+   "sis_sigma": 177.40469791168826,
+   "sis_mag_F160W_scaling": 19.06307388761444,
+   "E5_specz": "none in J/ApJ/982/51 or J/ApJS/270/12 (zsp empty)",
+   "E6_samez_neighbours_1p5": 2,
+   "E6_detected_bands": {
+    "a": 7,
+    "b": 7
+   },
+   "resolved": [
+    true,
+    true
+   ],
+   "E6_artifact_from_269": false,
+   "wang24_within_1p5_of_midpoint": [
+    [
+     0.91,
+     1.55,
+     0.671934
+    ],
+    [
+     1.37,
+     0.77,
+     0.95738
+    ],
+    [
+     0.66,
+     1.7,
+     0.794415
+    ],
+    [
+     0.01,
+     1.19,
+     0.940065
+    ],
+    [
+     1.17,
+     0.0,
+     0.877025
+    ],
+    [
+     0.66,
+     1.27,
+     0.765954
+    ]
+   ]
+  },
+  "6": {
+   "class": "ordinary",
+   "why": [
+    "E1_bridge"
+   ],
+   "E1_z": 4.048005333398307,
+   "E2_sb_z": -0.8680788857630918,
+   "E3_p": 0.9353845085696676,
+   "E4_mag_limit_3sig": 28.628418814091148,
+   "sis_sigma": 144.0360336808614,
+   "sis_mag_F160W_scaling": 19.968013514031703,
+   "E5_specz": "none in J/ApJ/982/51 or J/ApJS/270/12 (zsp empty)",
+   "E6_samez_neighbours_1p5": 3,
+   "E6_detected_bands": {
+    "a": 7,
+    "b": 7
+   },
+   "resolved": [
+    true,
+    true
+   ],
+   "E6_artifact_from_269": false,
+   "wang24_within_1p5_of_midpoint": [
+    [
+     0.81,
+     1.35,
+     0.855382
+    ],
+    [
+     1.23,
+     1.55,
+     0.671934
+    ],
+    [
+     0.01,
+     0.77,
+     0.95738
+    ],
+    [
+     1.38,
+     1.19,
+     0.940065
+    ],
+    [
+     0.76,
+     0.0,
+     0.877025
+    ],
+    [
+     1.46,
+     1.1,
+     1.463942
+    ],
+    [
+     1.77,
+     1.27,
+     0.765954
+    ]
+   ]
+  },
+  "7": {
+   "class": "insufficient",
+   "why": [
+    "E2_not_valid",
+    "detection"
+   ],
+   "E1_z": 1.272400643208359,
+   "E2_sb_z": -3.194793935619779,
+   "E3_p": 0.9994343157653969,
+   "E4_mag_limit_3sig": 25.83095315415973,
+   "sis_sigma": 190.29341960407143,
+   "sis_mag_F160W_scaling": 18.758487345727342,
+   "E5_specz": "none in J/ApJ/982/51 or J/ApJS/270/12 (zsp empty)",
+   "E6_samez_neighbours_1p5": 0,
+   "E6_detected_bands": {
+    "a": 0,
+    "b": 7
+   },
+   "resolved": [
+    true,
+    true
+   ],
+   "E6_artifact_from_269": false,
+   "wang24_within_1p5_of_midpoint": [
+    [
+     0.01,
+     1.29,
+     0.956453
+    ],
+    [
+     1.29,
+     0.01,
+     0.952402
+    ],
+    [
+     0.96,
+     1.91,
+     0.274726
+    ],
+    [
+     1.27,
+     1.89,
+     0.386572
+    ]
+   ]
+  },
+  "9": {
+   "class": "insufficient",
+   "why": [
+    "E2_not_valid"
+   ],
+   "E1_z": 1.783675125389462,
+   "E2_sb_z": -12.472796582328321,
+   "E3_p": 0.993624063743519,
+   "E4_mag_limit_3sig": 27.725184558797125,
+   "sis_sigma": 204.67449856338806,
+   "sis_mag_F160W_scaling": 18.442087700281288,
+   "E5_specz": "none in J/ApJ/982/51 or J/ApJS/270/12 (zsp empty)",
+   "E6_samez_neighbours_1p5": 0,
+   "E6_detected_bands": {
+    "a": 7,
+    "b": 7
+   },
+   "resolved": [
+    true,
+    true
+   ],
+   "E6_artifact_from_269": false,
+   "wang24_within_1p5_of_midpoint": [
+    [
+     0.04,
+     1.48,
+     0.880142
+    ],
+    [
+     1.53,
+     0.02,
+     0.824229
+    ]
+   ]
+  },
+  "10": {
+   "class": "insufficient",
+   "why": [
+    "E2_not_valid"
+   ],
+   "E1_z": 0.32344636363812007,
+   "E2_sb_z": -2.0057464676742423,
+   "E3_p": 0.9800605710911592,
+   "E4_mag_limit_3sig": 28.0432529941761,
+   "sis_sigma": 202.7666318907226,
+   "sis_mag_F160W_scaling": 18.48276017844684,
+   "E5_specz": "none in J/ApJ/982/51 or J/ApJS/270/12 (zsp empty)",
+   "E6_samez_neighbours_1p5": 0,
+   "E6_detected_bands": {
+    "a": 6,
+    "b": 6
+   },
+   "resolved": [
+    true,
+    true
+   ],
+   "E6_artifact_from_269": false,
+   "wang24_within_1p5_of_midpoint": [
+    [
+     0.57,
+     2.1,
+     0.763972
+    ],
+    [
+     0.0,
+     1.55,
+     1.343973
+    ],
+    [
+     0.88,
+     1.4,
+     0.285385
+    ],
+    [
+     1.55,
+     0.01,
+     1.250211
+    ],
+    [
+     2.23,
+     0.68,
+     0.392062
+    ]
+   ]
+  },
+  "11": {
+   "class": "insufficient",
+   "why": [
+    "E2_not_valid"
+   ],
+   "E1_z": 2.865548046166546,
+   "E2_sb_z": 2.9454328555402682,
+   "E3_p": 0.8493712706850041,
+   "E4_mag_limit_3sig": 28.09161263346577,
+   "sis_sigma": 207.4228925815061,
+   "sis_mag_F160W_scaling": 18.384158187534428,
+   "E5_specz": "none in J/ApJ/982/51 or J/ApJS/270/12 (zsp empty)",
+   "E6_samez_neighbours_1p5": 0,
+   "E6_detected_bands": {
+    "a": 7,
+    "b": 7
+   },
+   "resolved": [
+    true,
+    true
+   ],
+   "E6_artifact_from_269": false,
+   "wang24_within_1p5_of_midpoint": [
+    [
+     0.01,
+     1.81,
+     1.410289
+    ],
+    [
+     1.83,
+     0.01,
+     1.693503
+    ]
+   ]
+  },
+  "13": {
+   "class": "insufficient",
+   "why": [
+    "E2_not_valid"
+   ],
+   "E1_z": 0.03308798619962719,
+   "E2_sb_z": 0.20032367180916605,
+   "E3_p": 0.9965221422954389,
+   "E4_mag_limit_3sig": 27.933329339335792,
+   "sis_sigma": 167.71180708396463,
+   "sis_mag_F160W_scaling": 19.307088666420654,
+   "E5_specz": "none in J/ApJ/982/51 or J/ApJS/270/12 (zsp empty)",
+   "E6_samez_neighbours_1p5": 1,
+   "E6_detected_bands": {
+    "a": 6,
+    "b": 6
+   },
+   "resolved": [
+    true,
+    true
+   ],
+   "E6_artifact_from_269": false,
+   "wang24_within_1p5_of_midpoint": [
+    [
+     1.55,
+     1.45,
+     0.262924
+    ],
+    [
+     1.21,
+     0.05,
+     1.526685
+    ],
+    [
+     0.02,
+     1.27,
+     1.400418
+    ],
+    [
+     1.67,
+     0.6,
+     2.09394
+    ],
+    [
+     1.96,
+     0.89,
+     1.451958
+    ]
+   ]
+  },
+  "14": {
+   "class": "ordinary",
+   "why": [
+    "E1_bridge"
+   ],
+   "E1_z": 6.138048734033516,
+   "E2_sb_z": 3.965776855120661,
+   "E3_p": 0.04685288541142406,
+   "E4_mag_limit_3sig": 27.79812456997293,
+   "sis_sigma": 154.79675554840975,
+   "sis_mag_F160W_scaling": 19.655106512253518,
+   "E5_specz": "none in J/ApJ/982/51 or J/ApJS/270/12 (zsp empty)",
+   "E6_samez_neighbours_1p5": 0,
+   "E6_detected_bands": {
+    "a": 7,
+    "b": 7
+   },
+   "resolved": [
+    true,
+    true
+   ],
+   "E6_artifact_from_269": false,
+   "wang24_within_1p5_of_midpoint": [
+    [
+     0.01,
+     1.01,
+     1.392949
+    ],
+    [
+     1.02,
+     0.01,
+     1.318028
+    ]
+   ]
+  }
+ }
+}
