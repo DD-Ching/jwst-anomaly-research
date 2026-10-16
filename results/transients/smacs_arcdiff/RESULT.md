@@ -71,7 +71,8 @@ Mahler+22 ICLv2 image → vet). Sheets were looked at before writing this.
   stripe through h061 in the 2024 GO-4043 F444W mosaic is at PA 65.5° E of N (`summary.json`); after subtracting
   its across-stripe profile in every F444W mosaic, 2024 is 64.3 ± 5.0 nJy versus 43.8 ± 10.7 (2022),
   51.7 ± 11.8 (2026-06) and 33.3 ± 14.0 (2026-07) (`stripe_phot.ecsv`); z = 2.39 (`excess_z`) → **`undetermined`**
-  (2 ≤ z < 3).
+  (2 ≤ z < 3). Only the 2024 stripe angle is removed; the other epochs' own spikes (other angles, on the sheet)
+  stay in their fluxes, which biases the comparison mean by an amount not measured.
 - **The injection check is weak** (found after the run): recovered / alone = 1.000 by construction, because the
   profile excludes |along| < 0.8″, so a source never enters its own model; it tests only that, not the stripe
   removal (`summary.json` `injection.note`).

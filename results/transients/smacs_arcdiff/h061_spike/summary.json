@@ -36,7 +36,7 @@
     "recovered_over_alone_median": 1.0000000000000115,
     "note": "the profile excludes |along| < 0.8 arcsec, so the source never enters its own model and this ratio tests only that; stripe removal is tested by stripe_control",
     "stripe_control": {
-      "what": "post hoc: the 40 on-stripe positions without injection, raw and corrected",
+      "what": "post hoc: the 40 on-stripe positions, no injection, raw and corr",
       "raw_median_njy": 5.222285924003337,
       "raw_robust_std_njy": 7.388780424562919,
       "corr_median_njy": -15.047868227369015,

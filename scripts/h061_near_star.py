@@ -1,4 +1,10 @@
-"""Post hoc (SMACS 0723 arc_diff RESULT.md): h061's F444W z vs controls by distance to the star."""
+"""Post hoc (SMACS 0723 arc_diff RESULT.md): h061's F444W z vs controls by distance to the star.
+
+One-off post hoc analysis for h061 (hard-coded positions, obs_ids and the sibling ``h061_spike``
+directory); writes ``near_star.json`` and ``along_line.json`` into the given directory.
+
+    python scripts/h061_near_star.py results/transients/smacs_arcdiff/h061_ctrl
+"""
 
 import json
 import sys
@@ -55,7 +61,6 @@ with open(f"{D}/near_star.json", "w") as fh:
     fh.write(json.dumps(out, indent=2) + "\n")
 print(json.dumps(out, indent=1))
 
-# usage: python scripts/h061_near_star.py results/transients/smacs_arcdiff/h061_ctrl
 
 # along the 2024 stripe line (stripe_phot.py line_profile.ecsv): 2024 - 2022 F444W at 0.4-2.0 arcsec
 lp = Table.read(f"{D}/../h061_spike/line_profile.ecsv")

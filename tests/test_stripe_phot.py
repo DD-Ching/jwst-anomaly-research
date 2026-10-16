@@ -13,6 +13,8 @@ def test_classify_excess():
     assert classify_excess(50.0, 2.0, [42.0], [2.0], 1.0) == "undetermined"
     assert classify_excess(41.0, 3.0, [40.0], [3.0], 0.5) == "invalid"
     assert classify_excess(41.0, 3.0, [], [], 1.0) == "invalid"
+    assert classify_excess(float("nan"), 3.0, [40.0], [3.0], 1.0) == "invalid"
+    assert classify_excess(41.0, 3.0, [40.0], [float("nan")], 1.0) == "invalid"
 
 
 def test_stripe_found_and_removed():

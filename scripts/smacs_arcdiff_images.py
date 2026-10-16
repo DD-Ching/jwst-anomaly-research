@@ -97,7 +97,8 @@ def main(argv=None) -> int:
         "rule": f'PLAN.md (frozen): known <= {KNOWN_MATCH_ARCSEC}"; '
         f'vet = pass and <= {ON_IMAGE_ARCSEC}"',
         "controls_recovered": {
-            k["name"]: bool(c <= KNOWN_MATCH_ARCSEC)
+            # rounded like the rows, so both outputs judge the same stored value
+            k["name"]: bool(round(float(c), 3) <= KNOWN_MATCH_ARCSEC)
             for k, c in zip(known, _control_dists(tc, kc), strict=True)
         },
         "rows": out,

@@ -18,9 +18,15 @@ one visit whose roll puts a spike there. This script models such a stripe and re
    with the random-aperture error of the corrected box.
 
 Static light (the host, the arc) is subtracted the same way in every epoch, so epochs are
-compared **within** a band, as in ``hit_lightcurve.py``. ``--inject`` validates the correction
-in the reference mosaic: Gaussian point sources of known flux on the stripe, measured with and
-without the source; the recovered fraction is compared with the same Gaussian measured alone.
+compared **within** a band, as in ``hit_lightcurve.py``. ``--inject`` puts Gaussian point sources
+of known flux on the stripe in the reference mosaic, measured with and without the source, and
+compares the recovered flux with the same Gaussian measured alone. Because the profile excludes
+|along| < ``ALONG_RANGE[0]``, a source never enters its own model and this ratio is 1 by
+construction: it checks only that, not the stripe removal (found after the h061 run; the frozen
+rule kept the gate). ``stripe_control`` (the same positions without injection) and
+``line_profile.ecsv`` are the post hoc checks of the removal. Only the reference mosaic's stripe
+angle is removed: other mosaics' own spikes at other angles stay in their fluxes.
+Mosaic reads are not retried; an unreadable mosaic is skipped and reported on stderr.
 Every number is ``derived``; the radii, ranges and steps are ASSUMPTIONs.
 
     python scripts/stripe_phot.py --pos h061 110.82204720838848 -73.44918269902084 \\
@@ -210,6 +216,8 @@ def classify_excess(
     if not (0.7 <= inj_ratio <= 1.3) or not other_flux:
         return "invalid"
     z = excess_z(ref_flux, ref_err, other_flux, other_err)
+    if not np.isfinite(z):  # a NaN flux or error (edge, empty profile) gives no verdict
+        return "invalid"
     if z < 2.0:
         return "explained"
     return "open" if z >= 3.0 else "undetermined"
@@ -234,6 +242,8 @@ def main(argv: list[str] | None = None) -> int:
             boxes[str(p["obs_id"])] = (p, read_box(str(p["uri"]), ra, dec, BOX_HALF_ARCSEC))
         except Exception as exc:  # outside the mosaic or unreadable: recorded, not fatal
             print(f"skip {p['obs_id']}: {str(exc)[:100]}", file=sys.stderr)
+    if a.ref_obs not in boxes:
+        raise SystemExit(f"reference mosaic {a.ref_obs} not covering or unreadable; no result")
     ref_p, ref = boxes[a.ref_obs]
     e, n = sky_offsets(ref["wcs"], ref["sci"].shape, ra, dec)
     pa, score = stripe_angle(ref["sci"], e, n, ref["scale"])
@@ -292,8 +302,8 @@ def main(argv: list[str] | None = None) -> int:
             alone.append(
                 phot(g, e1, n1, ref["scale"], ra1, dec1, ref["wcs"], r_as=a.radius_arcsec) * to_njy
             )
-            # post hoc control: the same position without injection, raw and corrected
-            c0, e1, n1, _ = corrected(ref, ra1, dec1, pa)
+            # post hoc control: the same position without injection, raw and corrected (the
+            # corrected value is fs[0]); its profile pixels can include the tested position itself
             ctrl_raw.append(
                 phot(ref["sci"], e1, n1, ref["scale"], ra1, dec1, ref["wcs"], r_as=a.radius_arcsec)
                 * to_njy
@@ -314,7 +324,7 @@ def main(argv: list[str] | None = None) -> int:
             " model and this ratio tests only that; stripe removal is tested by stripe_control",
         }
         stripe_control = {
-            "what": "post hoc: the 40 on-stripe positions without injection, raw and corrected",
+            "what": f"post hoc: the {a.inject} on-stripe positions, no injection, raw and corr",
             "raw_median_njy": float(np.nanmedian(ctrl_raw)),
             "raw_robust_std_njy": float(
                 1.4826 * np.nanmedian(np.abs(ctrl_raw - np.nanmedian(ctrl_raw)))
