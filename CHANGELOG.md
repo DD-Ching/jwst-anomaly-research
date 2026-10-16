@@ -2,6 +2,34 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Orphan-pair dark-deflector screen on Abell 2744: null under the frozen rule; 11 top orphans unvetted
+- **Plan before the run** (`results/orphan_pairs/abell2744/PLAN.md`, committed first): the D-048/D-055 rules
+  unchanged. An excess needs P < 0.05 under both null (e) and null (f). It is the first run of this statistic on this
+  field, which is exploratory, not blind.
+- **Tool change:** `orphan_pairs.py` gains `FIELDS["abell2744"]` (DJA v7.2-fix phot and zout, already pinned; the zout
+  is a plain file). `inject_pairs.py --fields abell2744` is allowed.
+- **Checks:**
+  - alignment 0.02″ against the published images;
+  - **no positive control** (0 `published` pairs at 0.3–3″);
+  - injection efficiencies match the deep fields within noise (point 0.30 % / 0.95 % per deflector at θ_E 0.3″ /
+    0.7″; W1 15 % at 1.5″), so completeness is low here as everywhere; the cluster magnification of the injected
+    images is not modelled, and the pooled `limits.json` is not valid for a cluster field;
+  - artifacts in the top 15: a mosaic edge (#12), a star spike (#1), one off-footprint (#8).
+- **Result (derived):** 9,385 sources, 174 SED-matched close pairs, 51 orphans against 43.8 / 42.4 expected; P 0.16 /
+  0.11. **Null under the frozen rule.** The excess over null (a) persists under the redshift nulls (c) and (d) (P 0.016 /
+  0.021) and disappears under the conditioned nulls (e) and (f).
+- **Top orphans:** 11 of the top 15 meet the frozen escalation rule. They are unvetted and not candidates until
+  vetted; the count test cannot classify individual pairs.
+  - The per-pair `/vet-candidate` step is postponed (a deviation from the plan).
+  - A first sheet pass with the D-051 categories finds 5 companions or group members, 2 possible knots, 1
+    artefact-affected pair and 3 featureless faint pairs.
+- **Data:** the 233.5 MB phot file was downloaded to the cloud scratchpad and deleted after use.
+- **Code fixes after review:**
+  - `inject_pairs.py` refuses to pool cluster fields into `limits.json`;
+  - `orphan_pairs.lens_check` no longer falls back to the placeholder DJA `mu` outside the CATS maps.
+- **Handoff:** the open ordinary check is `/vet-candidate` on the 3 featureless pairs (#9, #11, #13) and the 2 possible
+  knots (#2, #3). MACS0417 and MACS1423 cluster pointings need published image lists.
+
 ## 2026-10-16: Abell 2744 `arc_diff` stripe, spike and offset-core vetoes on the annulus cut: they remove what they target, but other artifacts pass; not adopted
 - **Hypothesis before measuring (#265 handoff):** the 31 extra real passes of the v2 annulus cut are detector
   stripes, spike fragments, compact-core residuals offset from their peak and faint compact fades; vetoes aimed at

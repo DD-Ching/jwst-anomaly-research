@@ -225,7 +225,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        done for Abell 2744, El Gordo, Abell 370 and SMACS 0723 (D-046 addenda c–d): null in all five models. Next only if a
        flag comes to depend on an off-plane potential: a local refit (no Lenstool optimiser in the repo yet);
      - orphan pairs (D-048, null): injection-recovery of simulated dark-lens pairs (limit per deg²); CANUCS segmentation
-       maps for the same-galaxy test; blending model for pairs < 1″; re-run on Abell 2744 (UNCOVER), MACS0417, MACS1423;
+       maps for the same-galaxy test; blending model for pairs < 1″; ~~re-run on Abell 2744~~ — done (D-048 addendum
+       2026-10-16, `results/orphan_pairs/abell2744/`): null (P 0.16 / 0.11 under (e) / (f)); efficiencies as in the
+       deep fields; no 0.3–3″ positive control; `/vet-candidate` postponed for #9, #11, #13 (featureless) and #2, #3
+       (possible knots). Left:
+       MACS0417, MACS1423 cluster pointings (need published image lists);
        MACS1149 image list when CANUCS v2 is out;
      - CANUCS models pinned (D-044: `macs0416-canucs`, `abell370-canucs`); next, the 100 MCMC sample maps for μ spreads;
      - `radial`: low-weight veto (relative WHT < 0.5) or aper50 S/N floor; pass `--spike-stars` (Gaia, D-043) on every
@@ -311,12 +315,12 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      tiling done (CHANGELOG 2026-10-16: 76 survivors, 6 vetted, 0 lensing candidates; h182 closed). Whole-chain
      injections (CHANGELOG 2026-10-16, `arc_diff_inject_chain.py`): efficiency 0.64 at 27.5 mag, 0.19 at 28.0; the
      peer cut drops half the 28-mag stars on smooth light. A local-annulus cut (#265) and that cut plus
-     line-coherence and offset-core vetoes (CHANGELOG 2026-10-16) both fail their pre-written sheet rule: not
-     adopted; the tiling limit stays ≳ 36 nJy. PEARLS 1176 o221 registration (CHANGELOG 2026-10-16,
-     `reg1176/RESULT.md`): a 0.027″ shift against UNCOVER (small affine terms in 3 bands), no 0.3″ offset;
-     `hit_lightcurve.py --offsets` applies it; h182 stays closed. Registration does not explain the on-arc F356W
-     spread. ALT o002 has its own 0.013″ shift (UNCOVER→ALT pairs not re-measured). Next, only if worth it: a
-     bright-residual-neighbourhood veto and a coverage-edge veto (the artifacts left), re-calibrated on `inject/`;
+     line-coherence and offset-core vetoes (#268) both fail their pre-written sheet rule: not adopted; the tiling
+     limit stays ≳ 36 nJy (at 0.64 efficiency on 4 tiles; not a hard completeness limit). PEARLS 1176 o221
+     registration (#266, `reg1176/RESULT.md`): a 0.027″ shift against UNCOVER (small affine terms in 3 bands), no
+     0.3″ offset; `hit_lightcurve.py --offsets` applies it; h182 stays closed. Registration does not explain the
+     on-arc F356W spread. ALT o002 has its own 0.013″ shift (UNCOVER→ALT pairs not re-measured). No further veto
+     rules on these four tiles (owner, 2026-10-16); further work goes to new epochs or untested regions;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

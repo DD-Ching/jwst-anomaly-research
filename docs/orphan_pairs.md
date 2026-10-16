@@ -380,3 +380,13 @@ As in the clusters, a luminous galaxy of that mass would be many magnitudes abov
 - **Failed approach (recorded so it is not repeated).** The DJA Kron apertures (`2.5 × kron_radius × a_image`)
   are ~3× the CANUCS ones. With them, the same_galaxy rule classed every injected GOODS-N pair under 1.5″ as one
   galaxy: 0 of 2000 point lenses at θ_E = 0.3″ were recovered.
+
+## Abell 2744 (2026-10-16)
+The D-048 rules were run unchanged on DJA v7.2-fix. **The result is null:** 51 orphans against 43.8 / 42.4 expected
+under nulls (e) / (f).
+- There is no positive control.
+- Injection efficiencies match the deep fields within noise.
+- 11 top orphans meet the escalation rule. They are unvetted; a sheet pass leaves 3 featureless pairs and 2 possible
+  knots for `/vet-candidate`.
+
+Details are in `results/orphan_pairs/abell2744/RESULT.md` and the D-048 addendum.
