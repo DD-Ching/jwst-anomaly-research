@@ -173,8 +173,13 @@ def measure(job: dict) -> list[dict]:
     rng = np.random.default_rng(zlib.crc32(str(prod["obs_id"]).encode()))
     err = empirical_error(box["sci"], r_px, ann, rng) * to_njy
     out = []
+    # registration correction (``--offsets``): a source at (ra, dec) of the reference appears at
+    # (ra, dec) + (dx, dy) in this mosaic, so it is measured there
+    dx_as, dy_as = job.get("offset", (0.0, 0.0))
     for name, ra, dec in g:
-        x, y = (float(v) for v in box["wcs"].all_world2pix(ra, dec, 0))
+        ra_m = ra + dx_as / 3600.0 / np.cos(np.radians(dec))
+        dec_m = dec + dy_as / 3600.0
+        x, y = (float(v) for v in box["wcs"].all_world2pix(ra_m, dec_m, 0))
         f = aperture_photometry(box["sci"], x, y, r_px, ann) * to_njy
         h = int(np.ceil(1.2 / scale))
         xi, yi = int(round(x)), int(round(y))
@@ -258,20 +263,35 @@ def main(argv: list[str] | None = None) -> int:
         metavar="NAME",
         help="query coverage only at these positions (others, e.g. controls, share the mosaics)",
     )
+    ap.add_argument(
+        "--offsets",
+        type=Path,
+        help="JSON {obs_id: [dRA cos(dec), dDec] arcsec}: measured mosaic-minus-reference "
+        "registration shifts (e.g. from reg_offsets.py); listed mosaics are measured there",
+    )
+    ap.add_argument(
+        "--only-program",
+        action="append",
+        help="measure only mosaics of these programs (e.g. 01176)",
+    )
     ap.add_argument("--threads", type=int, default=12)
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args(argv)
+    offsets = json.loads(args.offsets.read_text()) if args.offsets else {}
     positions = [(n, float(r), float(d)) for n, r, d in args.pos]
     args.out.mkdir(parents=True, exist_ok=True)
     jobs = []
     for g in groups(positions):
         prods = covering_products(g, set(args.query_only or []))
+        if args.only_program and len(prods):
+            prods = prods[np.isin(prods["program"], args.only_program)]
         print(f"group {[p[0] for p in g]}: {len(prods)} mosaics", flush=True)
         jobs += [
             {
                 "group": g,
                 "prod": dict(zip(prods.colnames, r, strict=True)),
                 "radius": args.radius_arcsec,
+                "offset": tuple(offsets.get(str(r["obs_id"]), (0.0, 0.0))),
             }
             for r in prods
         ]

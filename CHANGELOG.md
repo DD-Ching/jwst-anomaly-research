@@ -42,7 +42,46 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Consequence:** #261's "0 lensing candidates" still holds only at ≳ 36 nJy (#264); no new candidate.
 - **Handoff:** what is left are bright-residual neighbourhoods (|S| ≫ 5 within ~1.5″) and coverage edges. A third
   version would need both vetoes and a new sheet check; each round has cost ~0.5 h for ×1.8 at 28 mag, so moving
-  on (PEARLS 1176 registration, #266) is the better use of time unless a fainter limit becomes decisive.
+  on from this tiling (the 1176 registration is done, #266) is the better use of time unless a fainter limit
+  becomes decisive.
+## 2026-10-16: PEARLS 1176 o221 vs UNCOVER registration on Abell 2744: a 0.027″ shift, no 0.3″ offset; h182 stays closed
+- **Plan before measuring** (`results/transients/a2744_grid_alt/reg1176/PLAN.md`, committed first):
+  - controls from the official level-3 catalogues (compact, isolated, AB 21–25.5), with a held-out half B by crc32 parity;
+  - rule 1: M1 (affine) instead of M0 (shift) if it cuts B's RMS by ≥ 20 % with slopes ≥ 3σ;
+  - rule 2: a band passes if |B median| ≤ 0.010″ and B RMS ≤ 1.5 × the ALT-vs-UNCOVER baseline.
+- **Result (derived; `reg_offsets.py`, `reg1176/RESULT.md`).** In all 7 shared bands, 1176 sits +0.018…+0.027″ in RA
+  cosδ and +0.006…−0.014″ in Dec from UNCOVER at h182.
+  - Rule 1 picks M1 in F150W, F200W and F277W (slopes ≤ 0.007″/arcmin) and M0 elsewhere.
+  - Every band passes rule 2. F115W is weak: 7 calibration sources and 10 held-out.
+  - No control is off by > 0.11″. Near h182 the local shifts are within about 0.01″ of the global one.
+  - The ALT baseline has its own +0.013″ RA offset; the plan had assumed none.
+- **Image check** (`reg_imgcheck.py`, F356W, 80″ box): the FITS-header WCS used by `hit_lightcurve.py` agrees with
+  the catalogue centroids to ≤ 0.008″ (median). **#263's by-eye "≈ 0.3″ offset" on c63 is not a 1176 registration
+  offset.** The cause is unexplained; that control came from an unsaved first draw.
+- **Re-measurement** (`hit_lightcurve.py --offsets`, `--only-program`):
+  - **Reproduction:** the uncorrected rerun reproduces #263's 632 1176 fluxes exactly.
+  - **Size:** the shift (≈ 0.4 px LW, ≈ 0.9 px SW) moves on-arc fluxes by a median of 1–3σ.
+  - **h182:** z_cal in the 1176 pairs is now −0.5…+1.2, so it **stays closed**. This is exploratory: h182 and its
+    controls had been seen before.
+  - **Control spread:** it falls 27–36 % in F200W and F410M but rises 15 % in F356W, so registration does not explain
+    the F356W on-arc spread.
+- **Possibly affected at a smaller level:** the UNCOVER→ALT pairs of #261, #263–#265, through ALT's own uncorrected
+  0.013″ shift. They were not re-measured.
+- **Review fixes (post hoc, labelled in RESULT §5):**
+  - rule 1 is now applied per axis as written;
+  - a clip floor stops a fit from collapsing to one source (F115W had);
+  - the pixel scale is corrected.
+  No threshold changed; no new candidate.
+
+## 2026-10-16: X2 S6a archival brief (Markdown + PDF) and README results entry; S6a stays paused
+- **Added:** `docs/results/s6a_5d_rotating_wormhole_modes.md` and `.pdf` (3 A4 pages), a short brief of the S6a
+  result built only from `X2_s6a_summary.md`, `X2_s6a_repro.md` and `X2_s6a_prior_work.md`; links pinned to a57b824
+  (S6a files unchanged on main 3a80e18). No computation re-run, no new physics.
+- **PDF route:** pandoc `--mathml --section-divs` to standalone HTML with embedded A4 CSS, printed with the Playwright
+  Chromium (`--headless --print-to-pdf --no-pdf-header-footer`); pages checked as images, links checked (HTTP 200).
+- **README:** new "Research results" section with the one S6a entry (scope, PDF, brief, reproduction package; no
+  human expert review yet).
+- **Handoff:** S6a remains paused; the next step is still a human expert review, the owner's call.
 
 ## 2026-10-16: Abell 2744 `arc_diff`: a local-annulus cut for hits on extended light doubles 28-mag efficiency but lets artifacts through; not adopted
 - **Hypothesis before measuring (#264 handoff):** the peer cut vetoes faint point brightenings on smooth light because

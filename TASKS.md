@@ -19,7 +19,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   `docs/state/units/X2.md`; S1–S5 done. The S5 background is radially unstable, so there is no further echo search on it.
   S6 rotation screen done. S6a done: the 5D merged modes continue as an oscillating growing pair (verified at J/A
   0.121 and 0.142). Writeup drafted (`docs/state/units/X2_s6a_summary.md`); next is a human expert review, the owner's
-  call. Paused; no automatic follow-up.
+  call. Paused; no automatic follow-up. Archival brief:
+  `docs/results/s6a_5d_rotating_wormhole_modes.md` (+ .pdf).
 
 - **S0-2026-10-16 message-and-reply window in unstable wormholes** (owner check 2026-10-16):
   `docs/state/units/S0-2026-10-16.md`. Stopped. The literature already shows test-ray passages and a possible round trip within a window of
@@ -311,8 +312,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      injections (CHANGELOG 2026-10-16, `arc_diff_inject_chain.py`): efficiency 0.64 at 27.5 mag, 0.19 at 28.0; the
      peer cut drops half the 28-mag stars on smooth light. A local-annulus cut (#265) and that cut plus
      line-coherence and offset-core vetoes (CHANGELOG 2026-10-16) both fail their pre-written sheet rule: not
-     adopted; the tiling limit stays ≳ 36 nJy. Next, only if worth it: a bright-residual-neighbourhood veto and a
-     coverage-edge veto (the artifacts left), re-calibrated on `inject/`; else move on;
+     adopted; the tiling limit stays ≳ 36 nJy. PEARLS 1176 o221 registration (CHANGELOG 2026-10-16,
+     `reg1176/RESULT.md`): a 0.027″ shift against UNCOVER (small affine terms in 3 bands), no 0.3″ offset;
+     `hit_lightcurve.py --offsets` applies it; h182 stays closed. Registration does not explain the on-arc F356W
+     spread. ALT o002 has its own 0.013″ shift (UNCOVER→ALT pairs not re-measured). Next, only if worth it: a
+     bright-residual-neighbourhood veto and a coverage-edge veto (the artifacts left), re-calibrated on `inject/`;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

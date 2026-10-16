@@ -127,3 +127,24 @@ def test_pick_arc_matches_knots_on_extended_light(monkeypatch):
     assert np.all(np.hypot(xy[:, 0] - 110, xy[:, 1] - 100) * scale >= 0.6)  # not the hit
     d = np.hypot(*(xy[:, None, :] - xy[None, :, :]).transpose(2, 0, 1)) * scale
     assert np.all(d[np.triu_indices(len(xy), 1)] >= 0.6)
+
+
+def test_measure_applies_registration_offset(monkeypatch):
+    from astropy.wcs import WCS
+
+    n, scale = 120, 0.04
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crpix = [n / 2 + 1, n / 2 + 1]
+    w.wcs.crval = [10.0, -30.0]
+    w.wcs.cdelt = [-scale / 3600, scale / 3600]
+    # the source sits 0.3" east of the reference position in this mosaic (shifted by 7.5 px in -x)
+    img = _gauss(n, 60 - 7.5, 60, 1.5, 100.0)
+    box = {"sci": img, "scale": scale, "wcs": w, "pixar_sr": 1e-15}
+    monkeypatch.setattr(hl, "read_box", lambda *a, **k: box)
+    ra, dec = (float(v) for v in w.all_pix2world(60, 60, 0))
+    prod = {"uri": "x", "obs_id": "o", "band": "F356W", "mjd": 1.0, "program": "p"}
+    job = {"group": [("s", ra, dec)], "prod": prod, "radius": 0.15}
+    raw = hl.measure(job)[0]["flux_njy"]
+    fixed = hl.measure({**job, "offset": (0.3, 0.0)})[0]["flux_njy"]
+    assert fixed > 0.9 * 100.0 and raw < 0.1 * fixed
