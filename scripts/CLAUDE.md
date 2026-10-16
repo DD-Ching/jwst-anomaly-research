@@ -30,3 +30,20 @@ Root CLAUDE.md applies. Per-search recipes and their failed-approach rules are d
 - Log per batch: items/s, CPU %, MB/s. If CPU < 70 % or the network idles, fix the pipeline before scaling.
 - Pool workers must receive module-level settings through an initializer (spawned workers on Windows inherit none).
 - Wait on a log line or an output file, never `pgrep -f` / `pkill -f` (they match the waiting shell itself).
+
+## Before writing results (owner rule 2026-10-16)
+- **Frozen rules are computable conditions.**
+  - State whether a rule applies per axis, per band, per item or combined, and spell out every "and" / "or".
+  - Where a rule can be a function, write it and its unit test before the run, and let the function decide the
+    outcome, not a reading by eye.
+- **Every number has a committed source.**
+  - Each number in RESULT.md, CHANGELOG, DECISIONS and TASKS must be found in a committed JSON or ECSV file.
+  - A number computed only in the session is labelled "not stored".
+  - A range covers only the items actually classified, not every item in the table.
+- **Narrow wording.** Before committing, check each of these and replace it with the narrowest statement the data
+  support: "null", "not affected", "consistent with chance", "equals", "low completeness", and any causal reading
+  (e.g. "because of crowding").
+  - Every causal reading cites a checkable number.
+- **Deviations are labelled.** Anything that departs from the frozen plan (postponed, replaced, added) is marked
+  "post hoc" or "deviation" in RESULT and in the PR body.
+- **Lint before committing.** Run `ruff format`, then `ruff check --fix`, then `ruff check`.

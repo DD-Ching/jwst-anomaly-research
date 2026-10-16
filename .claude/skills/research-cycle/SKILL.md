@@ -194,6 +194,7 @@ Keep them terse; link instead of repeating. Batch workers leave TASKS.md and CHA
 
 ## 8. Commit, push, PR
 
+- Apply scripts/CLAUDE.md 'Before writing results' before requesting review.
 - Make coherent, descriptive commits. Check that no file is over 1 MB and that there is no data and no secret.
 - `git push -u origin claude/<slug>`, then
   `gh pr create --base main --label agent [--label needs-human] --title "..." --body "..."`. If a draft claim PR
