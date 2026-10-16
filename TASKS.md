@@ -329,8 +329,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      ≥ 0.83 at 27.5 AB per band; `results/transients/sunrise_arcdiff/RESULT.md`). Next: El Gordo arcs;
    - **SMACS 0723 arc `arc_diff`** (D-027 addendum 2026-10-16, system 5 box): ERO → VENUS done, Atalanta recovered,
      no candidate (frozen 1″ rule fails the known case; post hoc 2″ + forced photometry); GO-4043 → DD 12774
-     fails its control (Atalanta F115W S ≈ 2.4). Next: close h061 (2024 F444W excess on image 12.1 under a
-     stripe; spike geometry or per-dither photometry); then the rest of the SMACS arcs (more boxes);
+     fails its control (Atalanta F115W S ≈ 2.4); h061 undetermined (near-star spike systematics; reopen on a PSF
+     model of the star). Next: the rest of the SMACS arcs (more boxes);
      whether AT 2024jfz (1.8″ from image 6.1) has model counter-images;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 

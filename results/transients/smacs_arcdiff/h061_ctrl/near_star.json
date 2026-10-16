@@ -1,0 +1,45 @@
+{
+  "star_radec": [
+    110.82627304494622,
+    -73.44867513014545
+  ],
+  "star_how": "maximum of the 3-px Gaussian-smoothed 2022 ERO F444W box (12 arcsec)",
+  "pairs": {
+    "jw02736-o001_t001_nircam_clear-f444w -> jw04043-o001_t001_nircam_clear-f444w": {
+      "h061_z": 14.168170308675283,
+      "h061_star_sep_arcsec": 4.703135229752831,
+      "near_le7": {
+        "n": 17,
+        "median_z": -10.188754535623396,
+        "robust_std_z": 11.191088652460214,
+        "frac_abs_z_ge_h061": 0.23529411764705882,
+        "max_abs_z": 25.975817814219553
+      },
+      "far_gt7": {
+        "n": 42,
+        "median_z": -2.4398486216620547,
+        "robust_std_z": 2.3025853612801024,
+        "frac_abs_z_ge_h061": 0.0,
+        "max_abs_z": 9.092745281634887
+      }
+    },
+    "jw02736-o001_t001_nircam_clear-f444w -> jw06882-o057_t057_nircam_clear-f444w": {
+      "h061_z": 2.1144391192363177,
+      "h061_star_sep_arcsec": 4.703135229752831,
+      "near_le7": {
+        "n": 17,
+        "median_z": -1.1123244058162367,
+        "robust_std_z": 2.5973125136012887,
+        "frac_abs_z_ge_h061": 0.47058823529411764,
+        "max_abs_z": 8.072940550260647
+      },
+      "far_gt7": {
+        "n": 42,
+        "median_z": -1.3459588079997928,
+        "robust_std_z": 1.1545381784241846,
+        "frac_abs_z_ge_h061": 0.2619047619047619,
+        "max_abs_z": 4.031275260834652
+      }
+    }
+  }
+}

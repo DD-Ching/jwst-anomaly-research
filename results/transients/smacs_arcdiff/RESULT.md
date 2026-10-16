@@ -48,7 +48,7 @@ Mahler+22 ICLv2 image → vet). Sheets were looked at before writing this.
   sheet; the spike geometry is **not computed**, so **h061 stays open (unvetted)**.
 - **Outcome:** beyond SN Atalanta, the one morph pass within 2.0″ of a catalogued image (h063) shows no ≥ 2σ
   forced-photometry change; h061 (not a pass) is open because of its 2024 F444W excess (above). No candidate so
-  far; not closed while h061 is open. Not a limit below the injection
+  far; h061 is undetermined (follow-up section below). Not a limit below the injection
   depth above.
 
 ## Pair 2: GO-4043 o001 (2024-05-11) → DD 12774 o002 (2026-07-06), F115W + F444W (`o4043_o12774/`)
@@ -66,6 +66,33 @@ Mahler+22 ICLv2 image → vet). Sheets were looked at before writing this.
   not re-queried). **Known transient, not a candidate.** Not checked: whether it is multiply imaged (counter-images
   in the lens model). Under the post hoc 2.0″ radius it is the one pass in this pair (1.81″ from 6.1).
 
+## h061 follow-up (PLAN.md addendum 1, 2026-10-16): undetermined, not a candidate
+- **Frozen test** (`h061_spike/`, `scripts/stripe_phot.py`, rule = unit-tested `classify_excess`): the strongest
+  stripe through h061 in the 2024 GO-4043 F444W mosaic is at PA 65.5° E of N (`summary.json`); after subtracting
+  its across-stripe profile in every F444W mosaic, 2024 is 64.3 ± 5.0 nJy versus 43.8 ± 10.7 (2022),
+  51.7 ± 11.8 (2026-06) and 33.3 ± 14.0 (2026-07) (`stripe_phot.ecsv`); z = 2.39 (`excess_z`) → **`undetermined`**
+  (2 ≤ z < 3).
+- **The injection check is weak** (found after the run): recovered / alone = 1.000 by construction, because the
+  profile excludes |along| < 0.8″, so a source never enters its own model; it tests only that, not the stripe
+  removal (`summary.json` `injection.note`).
+- **Post hoc, the sheet** (`h061_spike/sheet.png`, looked at): h061 lies 4.70″ from a bright star
+  (`h061_ctrl/near_star.json`) whose diffraction spikes cross the box at a different angle in each visit; in 2024
+  one spike crosses h061.
+- **Post hoc, calibrated controls** (`h061_ctrl/`, `hit_lightcurve_controls.py pick` + `compare`, 60 compact
+  sources from the 2022 F444W box): 2022 → 2024 F444W z_cal 5.04, control tail fraction 0.033
+  (`control_z.ecsv`; one of the two controls that extreme, c57, is h061's own knot). Split by distance to the star
+  (`near_star.json`, c57 excluded): within 7″, 4 of 17 controls (0.24) have |z| ≥ h061's 14.2 (median z −10.2,
+  max |z| 26.0); beyond 7″, 0 of 42 (max |z| 9.1). The near-star controls mostly fade (negative z) while h061
+  brightens, so the sign is not matched; only the size is.
+- **Post hoc, along the 2024 spike line** (`h061_spike/line_profile.ecsv`, `h061_ctrl/along_line.json`):
+  2024 − 2022 raw flux at 0.4–2.0″ from h061 has median +5.0 nJy, robust std 5.4, but 7 of 34 positions (0.21)
+  reach |Δ| ≥ h061's 35.6 nJy (max 66.7): the stripe is not uniform along its length at that level.
+- **Same visit, other bands:** F090W 2022 → 2024 z_cal 0.19 (`control_z.ecsv`); F115W has no 2022 epoch.
+- **Outcome:** h061 is **undetermined** under the frozen rule. Post hoc, its F444W change is matched in size by
+  sources near the same star and by positions along the same 2024 spike, so it is not distinguishable from
+  bright-star spike systematics with these tests; **not a candidate**. Reopen if a model of the star's 2024 F444W
+  PSF (spikes included) leaves a residual at h061, or if image 12.1's counter-images show a change.
+
 ## Regenerate
 Commands are in `o001_o057/summary.json`, `o4043_o12774/summary.json` and `h061_box/summary.json`; then
 `arc_diff_morph.py --hits … --maps … [--all-hits] --out …`, `smacs_arcdiff_images.py MORPH --known
@@ -73,4 +100,8 @@ known_controls.csv --out …`, `arc_diff_sheet.py MAPS MORPH OUT [RA,DEC …]` a
 `hit_lightcurve.py --pos h000 110.83411267801681 -73.45173415397286 --pos Atalanta_B 110.823747 -73.452975
 --query-only h000 --out o4043_o12774/vet` (and `--pos h063 … --pos h061 … --pos Atalanta_A …
 --query-only h063 --query-only h061 --out o001_o057/vet`). The maps (`--maps`, written to the session scratchpad,
-shown as `<scratchpad>` in the stored commands) are not stored.
+shown as `<scratchpad>` in the stored commands) are not stored. h061 follow-up: the command in
+`h061_spike/summary.json`; `hit_lightcurve_controls.py pick --uri <2022 ERO F444W i2d> --ra 110.82204720838848
+--dec -73.44918269902084 --n 60` (`h061_ctrl/pick.txt`), `hit_lightcurve.py --pos h061 … <pick.txt positions>
+--query-only h061 --out h061_ctrl`, `compare` (pairs in `control_z.ecsv`), then `scripts/h061_near_star.py
+h061_ctrl`. Only the stamps of h061 and the four near-star controls with the largest |z| are kept.

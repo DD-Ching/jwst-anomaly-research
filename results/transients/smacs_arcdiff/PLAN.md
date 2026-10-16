@@ -18,3 +18,17 @@ spikes, pipeline-version differences, registration dipoles, caustic microlensing
 
 **What changes the plan.** A non-Atalanta hit passing the morphology step within 1″ of a catalogued Mahler+22 image
 (ASSUMPTION, post-hoc-free rule fixed here) gets `/vet-candidate`. A clean null gives a depth limit on the arc.
+
+## Addendum 1 (2026-10-16T11:12Z, before the run): h061 stripe test
+- **Hypothesis to test:** h061's 2024 GO-4043 F444W excess (+35.6 ± 3.4 nJy over 2022) is a straight stripe
+  (diffraction spike) crossing the 0.15″ aperture but only part of the annulus. Ordinary alternatives if it
+  survives: a real brightening of image 12.1 (it would then need a counterpart in its counter-images 12.2/12.3),
+  or another processing artifact.
+- **Method:** `scripts/stripe_phot.py`: stripe PA found in the 2024 F444W mosaic, the same sky-fixed profile
+  subtraction applied to every covering mosaic, the same aperture/annulus as `hit_lightcurve.py`.
+- **Validation first:** 40 Gaussian injections of 35 nJy on the stripe 0.8–2.0″ from h061 in the reference mosaic.
+- **Frozen rule** = `classify_excess` (unit-tested): `invalid` unless the injection median recovered / alone is in
+  [0.7, 1.3]; else z = (2024 corrected F444W − inverse-variance mean of the other corrected F444W epochs) /
+  combined error; `explained` z < 2, `open` z ≥ 3, `undetermined` otherwise (ASSUMPTIONs). Applied to F444W only
+  (the band of the excess); F090W/F115W reported, not classified.
+- **What changes the plan:** `open` → `/vet-candidate h061` and a counter-image check; `explained` → h061 closed.
