@@ -39,7 +39,7 @@
 # meta: !!omap
 # - {provenance: derived}
 # - {source: data/cache/macs1423/jw01208-o010_t005_nircam_clear-f200w_cat.ecsv against macs1423-canucs-maps}
-# - {photoz_source: /home/user/jwst-anomaly-research/data/cache/macs1423/macs1423-clu_zout.fits}
+# - {photoz_source: data/cache/macs1423/macs1423-clu_zout.fits}
 # - {model_sha256: d01e5a06b8e9f8faf45a1f857f6de85e4e8e0bccf1e07c9be5b1d8386b07ae6d}
 # - {z_lens: 0.545}
 # - reference_radec: [215.949485, 24.078455000000005]
