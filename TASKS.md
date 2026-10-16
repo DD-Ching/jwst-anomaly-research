@@ -307,6 +307,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      (blended into its host), `arc_diff.py` recovers it; 45 groups, 43 ordinary, 2 real changes outside the
      multiple-image region (g2 faded transient, g1 +0.55 mag variable), 0 lensing candidates. Next: an `arc_diff.py`
      tiling of the UNCOVER∩ALT footprint (`--min-bands 1`) to close the host-blend blind spot; vet g1 with later epochs;
+     tiling done (CHANGELOG 2026-10-16: 76 survivors, 6 vetted, 0 lensing candidates; h182 closed). Whole-chain
+     injections (CHANGELOG 2026-10-16, `arc_diff_inject_chain.py`): efficiency 0.64 at 27.5 mag, 0.19 at 28.0; the
+     peer cut drops half the 28-mag stars on smooth light. Next: a peer test for non-compact positions (local S
+     scatter), re-calibrated on `inject/`, then re-screen the 471 peer-vetoed passes;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

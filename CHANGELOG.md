@@ -2,9 +2,41 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-16: Abell 2744 UNCOVER vs ALT `arc_diff` chain completeness by whole-chain injections (in progress)
-- Plan: `arc_diff.py --inject-grid` on 3 arc tiles (t−1+0, t+0+0, t+0−1), UNCOVER→ALT o002 and →o001 with the same
-  stars, through morphology, the peer-population cut and the o001 rule.
+## 2026-10-16: Abell 2744 UNCOVER vs ALT `arc_diff` chain completeness: the peer cut halves 28-mag efficiency
+- **Question:** what fraction of point brightenings on arcs and galaxy light survives the #261 tiling chain (hit,
+  not `near_bright_core`, morphology, peer-population |z| ≥ 3, same-sign S ≥ 3 in UNCOVER→ALT o001)? No decision
+  rule was written beforehand; this is a calibration run, and it changes the plan only if one stage dominates the losses.
+- **Run (simulated stars in real maps, derived):** `arc_diff.py --inject-grid 40` (27.5 / 28.0 AB = 36 / 23 nJy, on
+  pixels above the epoch-1 90th percentile, 1.5″ apart) on 4 tiles (t−1+0, t+0+0, t+0−1, t+1−1), UNCOVER→ALT o002
+  and →o001 with the same stars (same epoch 1 and seed), tiling settings of #261; ≈ 2 min per run, 4 in parallel.
+  New `scripts/arc_diff_inject_chain.py` runs morphology and peers and counts each stage
+  (`results/transients/a2744_grid_alt/arcdiff_tiles/inject/summary.json`).
+- **Result (80 stars per magnitude):**
+
+  | mag | hit | unflagged | morph pass | peer pass | o001 confirm | chain efficiency |
+  |---|---|---|---|---|---|---|
+  | 27.5 | 77 | 65 | 54 | 51 | 51 | **0.64** |
+  | 28.0 | 63 | 47 | 31 | 15 | 15 | **0.19** |
+
+  The o001 confirmation costs nothing. Morphology removes 11 / 65 and 16 / 47 unflagged stars. The peer cut removes
+  3 / 54 at 27.5 but **16 / 31 at 28.0**: it is the main avoidable loss for faint changes.
+- **Looked at (contact sheet `inject/vetoed_28mag.png`, every vetoed unflagged 28-mag star):** the peer-vetoed stars
+  are clean isolated positive points on smooth galaxy outskirts and ICL (z_stored 1.2–2.9). The peer MAD of their
+  brightness bin (2–7, set by compact sources) is too wide for them. Morphology vetoes are a neighbour's rosette
+  within 0.8″ (13), a mosaic edge (4) or an extended residual (3), as the morphology calibration on MACS0416 found.
+- **Failed approach:** `scripts/arc_diff_peers.py` first rebuilt the uncommitted #261 peer step from its description
+  (local maxima of epoch 1 within ±0.1 dex). It does not reproduce the stored `passes.ecsv` values (cut agreement 0.35–0.54,
+  median |Δz| 1.2–2.6, 2–23× more peers), so the chain uses `z_stored`: S against the stored peer median and
+  MAD of the 3 stored passes of the same tile nearest in `log_peak`.
+- **Consequence for #261 (no new candidate claimed):** its "0 lensing candidates" holds at ≳ 36 nJy (0.64
+  efficiency) on these tiles, not at 23 nJy (0.19). Of its 667 morphology passes, 471 fell to the peer cut; |z| ≥ 2
+  would keep 307 (+111), and 26 / 31 of the 28-mag stars.
+- **Limits:** Gaussian stars (no spikes); 4 of 33 tiles; one band (F356W) as in the tiling; `z_stored` borrows the
+  peer statistics of real passes, not of the star's own position; the o001 check reads the tile map, not the
+  10″ boxes of #261.
+- **Handoff:** replace the peer cut for hits on smooth extended light (e.g. use peers only when the epoch-1 position is
+  a compact peak, and otherwise the local S scatter in an annulus), re-calibrate on these injections, then re-screen
+  the 471 peer-vetoed passes. Measure the PEARLS 1176 registration offset (from #263) before any on-arc photometry.
 
 ## 2026-10-16: Abell 2744 h182 against arc-pixel controls: within on-arc systematics; closed, not a candidate
 - **Hypothesis before measuring:** h182's 2022→2023 red-band brightening (+45 % F356W; compact-control z_cal +4.9,
