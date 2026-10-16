@@ -5,6 +5,9 @@ Reuses #273's ``arcs_vet_census.py`` unchanged at commit ``43fbbbd``, extracted 
 
     mkdir -p S && for f in arcs_vet_census arcs_vet_deblend arcs_vet_clumps arcs_vet_noise \\
         arcs_bgsub_shapes lens_consistency; do git show 43fbbbd:scripts/$f.py > S/$f.py; done
+
+If ``43fbbbd`` is not in the clone (its branch merged or deleted), ``git fetch origin
+pull/273/head`` brings it back: GitHub keeps every pull request's head ref.
     python scripts/arcs_macs1423_census.py --s1063-scripts S [--workers 4]
 
 Only the image and the anti sets (photo-z basis) differ from the S1063 run. Output:
@@ -30,6 +33,7 @@ from astropy.table import Table
 
 from jwst_anomaly import cutouts, paths
 
+MODEL = "macs1423-canucs-maps"  # fixed: outputs go to <arcs-dir>/vetting
 IMAGE = "s3://stpubdata/jwst/public/jw01208/L3/t/o010/jw01208-o010_t005_nircam_clear-f200w_i2d.fits"
 MIN_GATE_PASS_FRAC = 0.5  # ASSUMPTION (PLAN_census.md: below it the census is undetermined here)
 
@@ -67,7 +71,6 @@ def final_outcome(census_outcome: str, n_passed: int, n_rows: int) -> str:
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--s1063-scripts", type=Path, required=True)
-    p.add_argument("--model", default="macs1423-canucs-maps")
     p.add_argument(
         "--arcs-dir", type=Path, default=paths.repo_root() / "results" / "arcs" / "macs1423-canucs"
     )
@@ -79,7 +82,7 @@ def main(argv=None) -> int:
     p.add_argument("--cut-dir", type=Path, default=None, help="reuse cutouts (else a temp dir)")
     a = p.parse_args(argv)
     vc = load_census(a.s1063_scripts.resolve())
-    d = a.arcs_dir / a.model
+    d = a.arcs_dir / MODEL
     rows = Table.read(d / "bgsub_shapes.ecsv")
     full = Table.read(d / "arcs.ecsv")
     gmin = {str(r["label"]): float(r["g_min"]) for r in full}

@@ -45,16 +45,18 @@ injections simulated; P values model_prediction). Exploratory (the census idea i
 
 ## Results
 - **Deblend and gate:** cutout pixel scale 0.0312″. 45 / 55 rows pass the own-flux gate (≥ 50 %, so the
-  image-level check of the plan passes); 13 of the 45 are `two-knot` (f̂ 0.289, 95 % upper 0.443); 11 of those
-  13 are screen-aligned rows. All 55: 39 `single`, 13 `two-knot`, 3 `undecided`.
+  image-level check of the plan passes); 13 of the 45 are `two-knot` (f̂ 0.289, 95 % upper 0.443); by screen class
+  they are 9 aligned, 2 mixed, 2 anti (`census.ecsv`; the json key `two_knot_among_screen_aligned` = 11 counts every
+  non-anti row, as in #273). All 55: 39 `single`, 13 `two-knot`, 3 `undecided`.
 - **Screen anti rows:** 2197 `two-knot` (ΔBIC 151, separation 0.28″, knot S/N 8.4 / 6.7, gate passed); 2322
   `two-knot` (ΔBIC 150, 0.16″, S/N 10.5 / 17.5, gate passed); 4234 `single` (ΔBIC −2460, gate passed); 1818
   `single` but gate failed (pair injections recovered 20 %), so it gets the mixture probability.
 - **Sample test (frozen outcome):** expected anti 2.608 under the clump-aware null (0.946 under shape noise only).
   **Primary k = 4: P(≥ 4) = 0.259 → `anti excess explained by clump orientation (exploratory)`.** Secondary k = 3
-  (screen anti still anti after ICL subtraction): P 0.494. Sensitivity: mixture with f̂ 0.301 / 0.533, with the 95 %
+  (screen anti still anti after ICL subtraction): P 0.494. **Deviation:** the "still anti" part uses `class_bgsub`,
+  which is classified at z_s = 2 only (as `posthoc.json`); it was not recomputed at each row's photo-z. Sensitivity: mixture with f̂ 0.301 / 0.533, with the 95 %
   upper f 0.526 / 0.739 (k = 4 / 3). Shape-noise-only check: 0.0126 / 0.0648.
-- **Looked at (`census_anti.png`, F200W, 2″ × 2″, 1″-median-subtracted; made with an ad hoc snippet, not stored):**
+- **Looked at (`census_anti.png`, F200W, 2″ × 2″, 1″-median-subtracted; `scripts/arcs_macs1423_census_sheet.py`):**
   2197 two compact knots at the end of a faint chain; 2322 two touching compact knots; 4234 one bright elongated
   galaxy with a faint tail; 1818 barely visible next to the BCG halo.
 
