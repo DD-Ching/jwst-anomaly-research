@@ -18,6 +18,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 from astropy.io import fits  # noqa: E402
 from astropy.wcs import WCS  # noqa: E402
+from astropy.wcs.utils import proj_plane_pixel_scales  # noqa: E402
 
 
 def main(argv: list[str]) -> None:
@@ -34,7 +35,7 @@ def main(argv: list[str]) -> None:
         for j, b in enumerate(bands):
             w = WCS(fits.Header.fromstring(str(z[b + "_wcs"])))
             x, y = w.world_to_pixel_values(ra, dec)
-            h = int(round(1.0 / (abs(w.pixel_scale_matrix[1, 1]) * 3600)))
+            h = int(round(1.0 / (proj_plane_pixel_scales(w)[1] * 3600)))
             ax[i, 2 * j].set_title(f"{hid} {verdict} {b} e1", fontsize=7)
             ax[i, 2 * j + 1].set_title(f"S (±10) {b}", fontsize=7)
             for a in ax[i, 2 * j : 2 * j + 2]:
