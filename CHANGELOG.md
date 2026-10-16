@@ -8,10 +8,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `scripts/arcs_macs0647.py` (`outcome()`, unit-tested). New model entries `macs0647-clash-nfw` (primary) and
   `macs0647-clash-ltm` (CLASH Zitrin v2 maps; `validate` reproduces κ and z = 2 μ to ≤ 3 × 10⁻⁵).
 - **Result (derived; `results/arcs/macs0647-clash/RESULT.md`, `summary.json`):** JWST 1433 epoch 1 F200W: PIEMD + eNFW
-  10 / 15 background rows aligned (67 %), LTM-Gauss 7 / 14 (50 %): **both controls fail → no result**. Secondary
-  (not deciding): epoch 2 with the primary model 13 / 18 aligned, anti 2 vs 0.425 (P 0.068).
-- **Reading:** all three HST-era map models tried in the two replication fields failed the alignment control; the
-  one JWST-era model passed. The S1063 excess stays a single-field exploratory result (one non-replication, one
+  10 / 15 background rows aligned (67 %), LTM-Gauss 7 / 14 (50 %): **both controls fail → no result**. Post hoc:
+  the primary failure is one row from the threshold and passes under one of four 0.3″ frame shifts (10 / 14; anti
+  stays 2); epoch 2 (deviation, not deciding) gives 13 / 18 aligned, anti 2 vs 0.425 (P 0.068).
+- **Reading:** all three HST-era map models tried in the two replication fields failed the alignment control (one
+  marginally); the one JWST-era model passed. The S1063 excess stays a single-field exploratory result (one non-replication, one
   field that cannot test it).
 - **Data:** CLASH maps (70.6 MB each) cached and deleted after the run; the DJA photo-z tarball was streamed.
 - **Handoff:** a further replication needs a JWST-era model on a field with F200W and photo-z. The remaining DJA

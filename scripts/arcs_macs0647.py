@@ -24,12 +24,16 @@ from astropy.table import Table
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lens_consistency as lc  # noqa: E402
+from epoch_compare import mutual_matches  # noqa: E402
 
 PRIMARY = "macs0647-clash-nfw"
 SECOND = "macs0647-clash-ltm"
 CONTROL_MIN_ALIGNED = 0.70  # ASSUMPTION (as for MACS0417): background aligned fraction
 P_REPLICATE = 0.05  # ASSUMPTION: shape-noise Poisson P(>= n_anti) below this replicates
 MATCH_ARCSEC = 0.3  # ASSUMPTION: epoch-2 match radius
+VALIDATE_MAX_REL_DIFF = 1e-3  # ASSUMPTION: kappa from the deflections must reproduce the map
+OFFSET_ARCSEC = 0.3  # ASSUMPTION (post hoc): frame-offset sensitivity step, cf. D-034's 0.1-0.3"
+REPO = Path(__file__).resolve().parents[1]
 OUT = Path(__file__).resolve().parents[1] / "results" / "arcs" / "macs0647-clash"
 
 
@@ -58,29 +62,106 @@ def outcome(primary: dict, second: dict) -> dict:
 
 
 def match_class(rows: Table, other: Table, radius_arcsec: float | None) -> list[str]:
-    """Class of each row in ``other``: by label (``radius_arcsec`` None, same catalogue) or by
-    nearest position within ``radius_arcsec``; 'not selected' where there is no match."""
-    out = []
+    """Class in ``other`` of each row of ``rows``: by label (``radius_arcsec`` None, same
+    catalogue) or by mutual nearest neighbour within ``radius_arcsec``; 'not selected' where
+    there is no match."""
     if radius_arcsec is None:
         lookup = {int(r["label"]): str(r["orientation_class"]) for r in other}
         return [lookup.get(int(v), "not selected") for v in rows["label"]]
-    if not len(other):
-        return ["not selected"] * len(rows)
+    out = ["not selected"] * len(rows)
+    if not len(other) or not len(rows):
+        return out
     c = SkyCoord(rows["ra"], rows["dec"], unit="deg")
     co = SkyCoord(other["ra"], other["dec"], unit="deg")
-    idx, sep, _ = c.match_to_catalog_sky(co)
-    for i, s in zip(idx, sep.arcsec, strict=True):
-        out.append(str(other["orientation_class"][i]) if s <= radius_arcsec else "not selected")
+    for i, j in zip(*mutual_matches(c, co, radius_arcsec), strict=True):
+        out[i] = str(other["orientation_class"][j])
     return out
 
 
-def _run(model: str, out: Path, catalog: Path, photoz: Path) -> dict:
-    lc.main(["--model", model, "--out", str(out), "validate"])
+def validate_passes(summary: dict) -> bool:
+    """Whether ``validate``'s kappa check reproduces the published map (median rel. diff.)."""
+    return float(summary["kappa_map"]["median_rel_diff"]) <= VALIDATE_MAX_REL_DIFF
+
+
+def _relative_paths(path: Path) -> None:
+    """Store repository-relative paths in a written JSON file (no session paths in git)."""
+    text = path.read_text().replace(str(REPO) + "/", "")
+    path.write_text(text)
+
+
+def _arcs(model: str, out: Path, catalog: Path, photoz: Path) -> dict:
     lc.main(
         ["--model", model, "--out", str(out), "arcs", "--catalog", str(catalog)]
         + ["--photoz", str(photoz)]
     )
+    _relative_paths(out / model / "arcs.json")
     return json.loads((out / model / "arcs.json").read_text())
+
+
+def _run(model: str, out: Path, catalog: Path, photoz: Path) -> dict:
+    lc.main(["--model", model, "--out", str(out), "validate"])
+    _relative_paths(out / model / "validate.json")
+    if not validate_passes(json.loads((out / model / "validate.json").read_text())):
+        raise SystemExit(f"{model}: validate fails; no arcs run")
+    return _arcs(model, out, catalog, photoz)
+
+
+def _background_by_gmin(t: Table) -> dict:
+    b = t[t["strong_shear"] & (t["population"] == "background")]
+    d = {}
+    for name, sel in (("g_min<1", b["g_min"] < 1), ("g_min>=1", b["g_min"] >= 1)):
+        x = b[sel]
+        d[name] = {
+            "n": len(x),
+            "aligned": int((x["orientation_class"] == "aligned").sum()),
+            "anti": int((x["orientation_class"] == "anti").sum()),
+        }
+    return d
+
+
+def posthoc(args) -> dict:
+    """Post-hoc diagnostics (not in the plan; they never change the frozen outcome): background
+    classes by g_min, the epoch-1 anti rows' nearest epoch-2 rows, and the background alignment
+    with the model frame shifted by +-0.3" along RA and Dec."""
+    out: dict = {
+        "note": "post hoc diagnostic (not in the plan); does not change the frozen outcome"
+    }
+    for ep in ("epoch1", "epoch2"):
+        for m in (PRIMARY, SECOND):
+            out[f"{ep}/{m}"] = _background_by_gmin(Table.read(args.out / ep / m / "arcs.ecsv"))
+    a = Table.read(args.out / "epoch1" / PRIMARY / "arcs.ecsv")
+    b = Table.read(args.out / "epoch2" / PRIMARY / "arcs.ecsv")
+    anti = a[
+        a["strong_shear"] & (a["population"] == "background") & (a["orientation_class"] == "anti")
+    ]
+    cb = SkyCoord(b["ra"], b["dec"], unit="deg")
+    nearest = {}
+    for r in anti:
+        sep = SkyCoord(r["ra"], r["dec"], unit="deg").separation(cb).arcsec
+        j = int(np.argmin(sep))
+        nearest[str(int(r["label"]))] = {
+            "g_min": round(float(r["g_min"]), 3),
+            "mag": round(float(r["mag"]), 2),
+            "epoch2_label": int(b["label"][j]),
+            "sep_arcsec": round(float(sep[j]), 3),
+            "epoch2_class": str(b["orientation_class"][j]),
+        }
+    out["epoch1_primary_anti_nearest_epoch2_row"] = nearest
+    shifts = {}
+    for m in (PRIMARY, SECOND):
+        for dra, ddec in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            off = (dra * OFFSET_ARCSEC, ddec * OFFSET_ARCSEC)
+            lc.MODELS[m]["frame_offset_arcsec"] = off
+            try:
+                tmp = args.out / "offset_scratch"
+                r = _arcs(m, tmp, args.epoch1, args.photoz)["strong_shear_background"]
+            finally:
+                lc.MODELS[m].pop("frame_offset_arcsec", None)
+            shifts[f"{m} {off[0]:+.1f},{off[1]:+.1f}"] = {
+                k: r[k] for k in ("n", "aligned", "anti")
+            } | {"aligned_fraction": round(r["aligned"] / r["n"], 3) if r["n"] else None}
+    out["frame_offset_sensitivity_epoch1"] = shifts
+    return out
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -89,13 +170,15 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--epoch2", type=Path, required=True)
     ap.add_argument("--photoz", type=Path, required=True)
     ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--posthoc", action="store_true", help="only the post-hoc diagnostics")
     args = ap.parse_args(argv)
+    if args.posthoc:
+        (args.out / "posthoc.json").write_text(json.dumps(posthoc(args), indent=1) + "\n")
+        return 0
 
     runs = {m: _run(m, args.out / "epoch1", args.epoch1, args.photoz) for m in (PRIMARY, SECOND)}
-    lc.main(
-        ["--model", PRIMARY, "--out", str(args.out / "epoch2"), "arcs"]
-        + ["--catalog", str(args.epoch2), "--photoz", str(args.photoz)]
-    )
+    for m in (PRIMARY, SECOND):
+        _arcs(m, args.out / "epoch2", args.epoch2, args.photoz)
     res = outcome(runs[PRIMARY], runs[SECOND])
     summary = {
         "plan": "results/arcs/macs0647-clash/PLAN.md",
@@ -124,7 +207,7 @@ def main(argv: list[str] | None = None) -> int:
             & (t["orientation_class"] == "anti")
         ]
         other = Table.read(args.out / "epoch1" / other_model / "arcs.ecsv")
-        ep2 = Table.read(args.out / "epoch2" / PRIMARY / "arcs.ecsv")
+        ep2 = Table.read(args.out / "epoch2" / dec / "arcs.ecsv")
         summary["anti_background"] = [
             {
                 "label": int(r["label"]),
@@ -135,7 +218,7 @@ def main(argv: list[str] | None = None) -> int:
                 "z_phot": round(float(r["z_phot"]), 2),
                 "ellipticity": round(float(r["ellipticity"]), 3),
                 "class_other_model": c_other,
-                "class_epoch2_primary": c_ep2,
+                "class_epoch2": c_ep2,
             }
             for r, c_other, c_ep2 in zip(
                 anti,
@@ -144,9 +227,6 @@ def main(argv: list[str] | None = None) -> int:
                 strict=True,
             )
         ]
-        summary["epoch2_note"] = (
-            "epoch-2 classes use the primary model regardless of the deciding run"
-        )
     (args.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
     print(json.dumps({k: summary[k] for k in ("outcome", "deciding_model", "p_ge_observed")}))
     return 0

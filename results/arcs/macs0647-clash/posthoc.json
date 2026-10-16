@@ -1,0 +1,117 @@
+{
+ "note": "post hoc diagnostic (not in the plan); does not change the frozen outcome",
+ "epoch1/macs0647-clash-nfw": {
+  "g_min<1": {
+   "n": 13,
+   "aligned": 10,
+   "anti": 1
+  },
+  "g_min>=1": {
+   "n": 2,
+   "aligned": 0,
+   "anti": 1
+  }
+ },
+ "epoch1/macs0647-clash-ltm": {
+  "g_min<1": {
+   "n": 12,
+   "aligned": 7,
+   "anti": 0
+  },
+  "g_min>=1": {
+   "n": 2,
+   "aligned": 0,
+   "anti": 0
+  }
+ },
+ "epoch2/macs0647-clash-nfw": {
+  "g_min<1": {
+   "n": 13,
+   "aligned": 9,
+   "anti": 1
+  },
+  "g_min>=1": {
+   "n": 5,
+   "aligned": 4,
+   "anti": 1
+  }
+ },
+ "epoch2/macs0647-clash-ltm": {
+  "g_min<1": {
+   "n": 12,
+   "aligned": 6,
+   "anti": 0
+  },
+  "g_min>=1": {
+   "n": 6,
+   "aligned": 5,
+   "anti": 1
+  }
+ },
+ "epoch1_primary_anti_nearest_epoch2_row": {
+  "705": {
+   "g_min": 6.874,
+   "mag": 25.38,
+   "epoch2_label": 1202,
+   "sep_arcsec": 2.243,
+   "epoch2_class": "mixed"
+  },
+  "753": {
+   "g_min": 0.44,
+   "mag": 26.32,
+   "epoch2_label": 872,
+   "sep_arcsec": 0.053,
+   "epoch2_class": "anti"
+  }
+ },
+ "frame_offset_sensitivity_epoch1": {
+  "macs0647-clash-nfw +0.3,+0.0": {
+   "n": 15,
+   "aligned": 10,
+   "anti": 2,
+   "aligned_fraction": 0.667
+  },
+  "macs0647-clash-nfw -0.3,+0.0": {
+   "n": 15,
+   "aligned": 10,
+   "anti": 2,
+   "aligned_fraction": 0.667
+  },
+  "macs0647-clash-nfw +0.0,+0.3": {
+   "n": 15,
+   "aligned": 10,
+   "anti": 2,
+   "aligned_fraction": 0.667
+  },
+  "macs0647-clash-nfw +0.0,-0.3": {
+   "n": 14,
+   "aligned": 10,
+   "anti": 2,
+   "aligned_fraction": 0.714
+  },
+  "macs0647-clash-ltm +0.3,+0.0": {
+   "n": 14,
+   "aligned": 6,
+   "anti": 0,
+   "aligned_fraction": 0.429
+  },
+  "macs0647-clash-ltm -0.3,+0.0": {
+   "n": 13,
+   "aligned": 6,
+   "anti": 0,
+   "aligned_fraction": 0.462
+  },
+  "macs0647-clash-ltm +0.0,+0.3": {
+   "n": 14,
+   "aligned": 6,
+   "anti": 1,
+   "aligned_fraction": 0.429
+  },
+  "macs0647-clash-ltm +0.0,-0.3": {
+   "n": 14,
+   "aligned": 7,
+   "anti": 0,
+   "aligned_fraction": 0.5
+  }
+ }
+}

@@ -56,3 +56,8 @@ def test_match_class_by_label_and_position():
     assert am.match_class(rows, other, None) == ["not selected", "aligned"]
     assert am.match_class(rows, other, 0.3) == ["aligned", "not selected"]
     assert am.match_class(rows, other[:0], 0.3) == ["not selected", "not selected"]
+
+
+def test_validate_guard():
+    assert am.validate_passes({"kappa_map": {"median_rel_diff": 2e-5}})
+    assert not am.validate_passes({"kappa_map": {"median_rel_diff": 0.02}})

@@ -47,5 +47,5 @@ row gets an F200W cutout looked at by eye.
 clump-pair census) before any reading; non-replication leaves the S1063 excess a single-field exploratory result
 with two failed replications.
 
-**Data:** the maps are 70.6 MB each (uncompressed FITS); 14 files are cached in the gitignored data root and
-deleted after the run. Nothing over 200 MB per file.
+**Data:** the maps are 70.6 MB each (uncompressed FITS); 12 maps and 2 readmes are cached in the gitignored data
+root and deleted after the run. Nothing over 200 MB per file.

@@ -2,7 +2,7 @@
  "model": "macs0647-clash-ltm",
  "model_sha256": "07fa67c98aec9efb7f511f4a1108ba4fd748c56531d5d387db92360a1e9fc29d",
  "kappa_map": {
-  "map": "/home/user/jwst-anomaly-research/data/cache/external/b7b06f544f6c_hlsp_clash_model_macs0647_zitrin-ltm-gauss_v2_kappa.fits",
+  "map": "data/cache/external/b7b06f544f6c_hlsp_clash_model_macs0647_zitrin-ltm-gauss_v2_kappa.fits",
   "quantity": "kappa",
   "z_s": null,
   "n_points": 12292,
@@ -12,7 +12,7 @@
   "parity_agree": null
  },
  "magnification_z2": {
-  "map": "/home/user/jwst-anomaly-research/data/cache/external/0e21c4d05b63_hlsp_clash_model_macs0647_zitrin-ltm-gauss_v2_z02-magnif.fits",
+  "map": "data/cache/external/0e21c4d05b63_hlsp_clash_model_macs0647_zitrin-ltm-gauss_v2_z02-magnif.fits",
   "quantity": "mu",
   "z_s": 2.0,
   "n_points": 12318,
