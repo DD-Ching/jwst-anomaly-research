@@ -199,6 +199,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | — | 0.3 (process: "Before writing results" rules; orphan vetting paused) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | 0.6 (Abell 2744 orphan per-pair vetting: E2 controls, VizieR E5/E6, #7 check, classification) | 0.1 (state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.3 (SMACS 0723 `arc_diff`: two pairs, Atalanta control, h061 re-box, h000 light curve; sheets looked at) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01De8CTn, 09:08–09:40Z |
+| 2026-W42 | ≈ 0.3 (Sunrise arc_diff o010→o120 LW: frozen rules, run, morphology, distances, sheet) | — | — | 0.1 (claim, state files, PR) | interactive session 01AzKMDv |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

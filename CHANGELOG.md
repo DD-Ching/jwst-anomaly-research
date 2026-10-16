@@ -19,6 +19,23 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Run time:** each 24″ two-band `arc_diff` run took ≈ 1 min at `--procs 4` with `OMP_NUM_THREADS=1` (not stored).
 - **Handoff:** first close h061 (spike geometry of the 2024 GO-4043 F444W stripe: roll angle and the source star; or per-dither `cal_dither_phot.py`); then more SMACS boxes (systems 1–4, 6–18); a counter-image check for AT 2024jfz (1.8″ from image 6.1);
   the Sunrise o010 → o120 pair is on #274; El Gordo arcs.
+## 2026-10-16: Sunrise arc difference imaging, o010 → o120 (F277W + F356W): 0 candidates on the arc
+- **Rules:** fixed before the run in `results/transients/sunrise_arcdiff/PLAN.md` addenda 1–2:
+  - settings as for o052;
+  - a band counts if its recovery at 27.5 AB is ≥ 0.8;
+  - "on the arc" means within 1.0″ of a Scofield+2025 image;
+  - a candidate must pass morphology, be on the arc and appear in ≥ 2 bands.
+- **Deviation:** the four-band run gave no output in 90 min, so long-wavelength only. Short-wavelength-only changes
+  are not covered.
+- **Result (derived; `o010_o120/`):**
+  - injection recovery at 27.5 AB is 1.00 (F277W) and 0.97 (F356W);
+  - 12 hits: 10 rosette, 1 dipole, 1 edge, 0 morphology passes; all ≥ 3.87″ from every catalogued arc image;
+  - looked at on the sheet: point-spread-function rotation residuals, a disk and the map edge; the Earendel control
+    is clean.
+  - **0 candidates.**
+- **Also:** the TASKS line for the 7 undecided Abell 2744 orphan pairs now states the owner's scope. A redshift
+  difference argues against lensing, equal redshifts would not confirm it, and not pursuing them now is a resource
+  decision.
 
 ## 2026-10-16: Sunrise arc difference imaging, o010 → VENUS o052: 0 candidates on the arc; o120 pair still to run
 - **Why:** the Sunrise catalog grids are null, but a catalog grid misses transients blended into an arc (PLATE-23a,
