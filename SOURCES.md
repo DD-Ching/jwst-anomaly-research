@@ -631,6 +631,25 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - CLASH Zitrin v2 maps (Zitrin et al. 2009, MNRAS 396, 1985; 2013, ApJ 762, L30; CLASH, Postman et al. 2012,
     ApJS 199, 25): https://archive.stsci.edu/missions/hlsp/clash/macs0647/models/zitrin/{nfw,ltm-gauss}/v2/
     (sha256 in `lensmodel.MACS0647_CLASH_NFW`, `MACS0647_CLASH_LTM`; readme 2015-02, z_lens 0.591).
+- MACS1423 (`arcs`, accessed 2026-10-16; `results/arcs/macs1423-canucs/`):
+  - JWST 1208 F200W pipeline catalogue `jw01208-o010_t005_nircam_clear-f200w_cat.ecsv` (MAST
+    `mast:JWST/product/...`), 4,987,129 B, sha256 `1a968574d0f206c72a74554c1b3cbbf71e9a5219a70a553a1458e80dd4d5bfa3`;
+    its `_i2d.fits` read by S3 byte ranges (`s3://stpubdata/jwst/public/jw01208/L3/t/o010/`);
+  - CANUCS DR1 cluster photometry and EAzY photo-z
+    https://archive.stsci.edu/hlsps/canucs/dr1/macs1423/clu/hlsp_canucs_jwst-hst_multi_macs1423-clu_multi_v1_photometry-cat.fits.gz,
+    25,278,098 B, sha256 `c257d8dff95319f4eea981cc838269c04aff0a79bac603c7ed64100deac622b0`;
+  - CANUCS DR1 Lenstool maps (Desprez, preliminary v1, 5 spectroscopic systems; readme
+    `hlsp_canucs_jwst-hst_multi_macs1423-lenstool-readme_multi_v1_model.txt`): `dpl1`, `dpl2`, `kappa`
+    `-dlsds1-best-100mas` under https://archive.stsci.edu/hlsps/canucs/dr1/macs1423/model/ (sha256 in
+    `lensmodel.MACS1423_CANUCS_MAPS`).
+- JWST-era lens maps for other DJA photo-z fields (checked 2026-10-16, not used yet):
+  - RXJ2129: six models updated with JWST NIRCam (Dhanasingham et al. 2026, arXiv:2604.11882; GLAFIC, Chen2020,
+    HoliGRALE, WSLAP+, Zitrin-Analytic, Lenstool), Zenodo record 21460864, one 4.30 GB zip
+    https://zenodo.org/api/records/21460864/files/RXJ2129+0005_Models.zip/content (range requests work; README
+    says D_LS/D_S = 1, but the GLAFIC κ header has ZS = 3: check before use);
+  - MRG0138 (Ertl et al. 2025, arXiv:2503.09694; Suyu et al. 2025, arXiv:2509.12319), RXCJ0600 (Furtak et al.
+    2024, arXiv:2404.03286): JWST-era models without public maps; rj0018p1626: no JWST-era model found (RELICS
+    HST-era maps only).
 - CANUCS DR1 MACS0416 Lenstool model (Rihtarsic et al. 2025, A&A, doi:10.1051/0004-6361/202451117), files under
   https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/model/:
   - `hlsp_canucs_jwst-hst_multi_macs0416-lenstool-bestparam_multi_v1_model.txt` 70,753 B
