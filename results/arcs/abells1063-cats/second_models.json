@@ -1,0 +1,64 @@
+{
+ "model": "abells1063-cats",
+ "label": "model_prediction (other teams' published maps); observed axes from arcs.ecsv",
+ "assumptions": {
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0
+ },
+ "teams": {
+  "glafic/v4": {
+   "urls": {
+    "kappa": "https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/glafic/v4/hlsp_frontier_model_abells1063_glafic_v4_kappa.fits",
+    "gamma1": "https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/glafic/v4/hlsp_frontier_model_abells1063_glafic_v4_gamma1.fits",
+    "gamma2": "https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/glafic/v4/hlsp_frontier_model_abells1063_glafic_v4_gamma2.fits"
+   },
+   "control_aligned": {
+    "n": 20,
+    "aligned": 20,
+    "anti": 0
+   },
+   "stored_anti": {
+    "1316": "anti",
+    "1557": "anti",
+    "2004": "anti",
+    "2184": "anti"
+   }
+  },
+  "sharon/v4": {
+   "urls": {
+    "kappa": "https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/sharon/v4/hlsp_frontier_model_abells1063_sharon_v4_kappa.fits",
+    "gamma1": "https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/sharon/v4/hlsp_frontier_model_abells1063_sharon_v4_gamma1.fits",
+    "gamma2": "https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/sharon/v4/hlsp_frontier_model_abells1063_sharon_v4_gamma2.fits"
+   },
+   "control_aligned": {
+    "n": 20,
+    "aligned": 20,
+    "anti": 0
+   },
+   "stored_anti": {
+    "1316": "anti",
+    "1557": "anti",
+    "2004": "anti",
+    "2184": "anti"
+   }
+  },
+  "keeton/v4": {
+   "urls": {
+    "kappa": "https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/keeton/v4/hlsp_frontier_model_abells1063_keeton_v4_kappa.fits",
+    "gamma1": "https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/keeton/v4/hlsp_frontier_model_abells1063_keeton_v4_gamma1.fits",
+    "gamma2": "https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/keeton/v4/hlsp_frontier_model_abells1063_keeton_v4_gamma2.fits"
+   },
+   "control_aligned": {
+    "n": 20,
+    "aligned": 20,
+    "anti": 0
+   },
+   "stored_anti": {
+    "1316": "anti",
+    "1557": "anti",
+    "2004": "anti",
+    "2184": "anti"
+   }
+  }
+ }
+}

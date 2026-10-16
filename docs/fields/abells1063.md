@@ -73,3 +73,16 @@ S1063 with the CATS v4.1 map model; nothing for `/vet-candidate`.
 - Gaia-seeded veto (`--spike-stars`, 11 Gaia DR3 stars G < 17 within 4′; D-043): the result is unchanged. 26 segments
   dropped, 51 `anti`, max 4 lines, p 0.435; with photo-z max 3, p 0.95. No saturated or off-mosaic star adds segments
   here.
+
+## Arc orientations against the predicted shear (`arcs`, 2026-10-16; draft PR #273)
+Plan, result and per-item classification: `results/arcs/abells1063-cats/` (`PLAN.md`, `RESULT.md`). Inputs: F200W
+pipeline catalogue `jw03293-o001_t001` (manifest) and the DJA v7.5 zout above. D-024 defaults (ASSUMPTIONs).
+- **Background, strong shear:** 20 of 24 aligned; **4 anti vs 0.524 expected (P(≥ 4) = 0.0021)**. F444W: 18 / 18
+  usable aligned stay aligned; none of the 4 anti has an F444W catalogue source within 0.3″.
+- All 4 anti are faint (m 27.43–28.18; 17 / 17 brighter sources aligned). The same split on the five earlier fields
+  does not show this faint-end excess (post hoc, `faint.json` per field).
+- They stay anti in GLAFIC, Sharon and Keeton v4 (each aligns 20 / 20 controls) and, for 3 of 4, after ICL
+  removal.
+- 2004 sits at κ ≈ 0.95–1.00 (degenerate predicted axis): explained. 1557 is in weak shear and looks like a blend.
+- **1316 and 2184 are open and unvetted, not candidates** (next: MUSE redshifts, a deblend for 2184, shape-noise
+  injections at m 27.5).

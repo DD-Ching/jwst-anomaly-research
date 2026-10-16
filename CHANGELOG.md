@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: `arcs` on Abell S1063: 4 background anti vs 0.52 expected; 2 explained or likely ordinary, 2 open (draft #273)
+- **New field for the arc-orientation test** (D-024 defaults; plan committed first): CATS v4.1 maps, GLIMPSE F200W,
+  DJA v7.5 photo-z. Strong-shear background: 20 / 24 aligned, **4 anti vs 0.524 (P 0.0021)**.
+- **Ordinary tests (new scripts):**
+  - `arcs_bands.py` gains S1063: F444W controls 18 / 18; the anti have no F444W match;
+  - `arcs_faint.py` (post hoc): all anti at m ≥ 27.4, but other fields' faint ends do not show it;
+  - `arcs_bgsub_shapes.py`: ICL-subtracted moments, controls 18 / 20, 3 of 4 stay anti;
+  - `arcs_second_models.py`: GLAFIC / Sharon / Keeton v4 κ, γ by byte range, controls 20 / 20, all 4 stay anti.
+- **Per item:**
+  - 2004 explained (κ ≈ 1);
+  - 1557 likely an intrinsic shape or blend in weak shear;
+  - **1316 and 2184 open, unvetted, not candidates**.
+- **Deviation:** no known-image check (map model; as MACS1149).
+- **Data:** the 75 MB DJA photo-z tarball was streamed to the scratchpad; the F200W catalogue sits in the gitignored
+  cache; the team maps were read by byte range.
+- **Handoff:** `/vet-candidate` on 1316 and 2184 (`results/arcs/abells1063-cats/RESULT.md` "Next").
+
 ## 2026-10-16: Process: "Before writing results" rules in scripts/CLAUDE.md
 - **Why:** reviews of #262, #266 and #269 each found 8–12 problems, mostly of three kinds:
   - frozen rules applied loosely;

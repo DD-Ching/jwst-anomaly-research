@@ -1352,3 +1352,8 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - ALT (All the Little Things, JWST GO 3516; Naidu et al. arXiv:2410.01874) NIRCam direct imaging
   `jw03516-o001_t001` (2023-12-06/10) and `jw03516-o002_t001` (2023-11-27/12-05), `clear-f356w` `_i2d`/`_cat.ecsv` from
   `s3://stpubdata/jwst/public/jw03516/L3/t/` (jwst 3.0.0, CRDS jwst_1584.pmap; accessed 2026-10-15).
+
+## HFF Abell S1063 second models (accessed 2026-10-16; `scripts/arcs_second_models.py`)
+- GLAFIC v4, Sharon v4, Keeton v4 `hlsp_frontier_model_abells1063_<team>_v4_{kappa,gamma1,gamma2}.fits` under
+  https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/<team>/v4/ (each map ~105.8 MB; GLAFIC kappa
+  105,756,480 B). Read by HTTP byte ranges at 24 positions only; no whole-file sha256 (not downloaded).
