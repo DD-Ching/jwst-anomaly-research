@@ -2,6 +2,37 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: El Gordo arc difference imaging, PEARLS 2022 → VENUS 2026 (one-box pilot): nothing open (#286)
+- **Scope (owner):**
+  - one box and one epoch pair;
+  - the #277 recovery ≥ 0.50 rule is waived for this pilot only (the failure record stands; no wider scan);
+  - exploratory, not blind.
+- **Plan first** (`results/transients/elgordo_arcdiff/PLAN.md`):
+  - 24″ box at (15.7300, −49.2530) with 11 Caminha+2023 images;
+  - F150W + F444W, jwst 3.0.0 in both epochs;
+  - the #275 / #277 settings, unchanged.
+  - `arc_chain.py` gains an `elgordo` image list.
+- **Sensitivity:**
+  - full-chain brightenings 23 / 27 = 0.85 at 26.0 AB (control gate ≥ 0.80 passed), 0.78 at 27.5, 0.54 at 28.0;
+  - fadings not calibrated;
+  - bright-core hits (32 / 50) not reviewed.
+- **Screen:** 50 hits, 5 morph `pass`, 4 review entries (all fadings, all in the arc mask).
+- **Vetting:**
+  - All four lie 2.6–3.9″ from one bright point source, on its diffraction spikes; PA_V3 differs by 0.84°, so the
+    spikes move about 0.05″. Tool: `scripts/elgordo_spike_check.py`.
+  - h024 and h031: no forced-photometry change ≥ 2σ.
+  - h049: on-spike controls 6 / 8 fade alike → spike shift.
+  - h043: F150W spike rotation dipole. Its F444W −4.6 % is within the program-to-program scatter of 20 bright
+    compact controls (control median z −9.8; tail fraction 0.45).
+- **Result:** no real change without an ordinary or instrumental explanation; nothing to `/vet-candidate`; no SN or
+  variable found. No exclusion or abundance limit.
+- **Deviations** (all labelled in PLAN / RESULT):
+  - the spike source fix;
+  - the control box widened from 16″ to 30″ (17 < 20 controls);
+  - the addendum wording corrected before measuring.
+- **Flagged, not re-run:** the MACS1423 census (#282) and #279 used the pre-fix `fit_models`. TASKS says not to
+  cite them until they are re-run.
+
 ## 2026-10-16: `arcs` on Abell S1063: 4 background anti vs 0.52 expected; 2004 at κ ≈ 1, 2184 compatible with the tested noise model; 1316, 1557 pending vetting; public spectra cannot settle them (#273)
 - **New field for the arc-orientation test** (D-024 defaults; plan committed first): CATS v4.1 maps, GLIMPSE F200W,
   DJA v7.5 photo-z. Strong-shear background: 20 / 24 aligned, **4 anti vs 0.524 (P 0.0021)**.

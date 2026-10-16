@@ -1420,3 +1420,6 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - GLIMPSE 3293 o001 F090W and F115W pipeline catalogues (`jw03293-o001_t001_nircam_clear-{f090w,f115w}_cat.ecsv`;
   sha256 `3eecb26c…`, `3775f1f9…`, which match `data/manifests/abells1063.ecsv`), read 2026-10-16 for continuum
   magnitudes.
+- JWST VENUS (program 6882) observation 51 at El Gordo, 2026-08-05: `jw06882-o051_t051_nircam_clear-{f150w,f444w}_i2d.fits`
+  and `_cat.ecsv` (jwst 3.0.0, CRDS jwst_1584.pmap), public level 3, read by S3 byte range on 2026-10-16 with PEARLS
+  `jw01176-o241_t012_nircam_clear-{f150w,f444w}` (`results/transients/elgordo_arcdiff/`).

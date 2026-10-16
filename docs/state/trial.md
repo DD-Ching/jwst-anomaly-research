@@ -214,6 +214,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | 0.3 (MACS1423 `arcs` vetting step 2: clump-pair census, P 0.259, explained; #282) | 0.1 (orientation, claim, state files) | cloud routine 01HysHAx, 19:08–19:40Z |
 | 2026-W42 | ≈ 0.3 (`arcs` on RXJ2129, Lenstool and GLAFIC maps by zip range reads; no result) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01Lvrs8W, 20:08–20:40Z |
 | 2026-W42 | ≈ 0.35 (`arcs` on RXJ2129 with the DJA catalogue: PA convention gate, run, sheet; no result) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01ExftNC, 21:08–21:45Z |
+| 2026-W42 | ≈ 1.0 (El Gordo arc_diff one-box pilot: screen, full-chain injections, 4 entries vetted) | — | ≈ 0.4 (spike, on-spike and bright-source controls) | 0.2 (orientation, claim, state files) | interactive session 01P8KV8A |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
