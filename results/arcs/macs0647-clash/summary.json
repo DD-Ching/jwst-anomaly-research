@@ -1,0 +1,45 @@
+{
+ "plan": "results/arcs/macs0647-clash/PLAN.md",
+ "inputs": {
+  "epoch1": "jw01433-o010_t001_nircam_clear-f200w_cat.ecsv",
+  "epoch2": "jw01433-o020_t001_nircam_clear-f200w_cat.ecsv",
+  "photoz": "macs0647-grizli-v7.0-fix.eazypy.zout.fits"
+ },
+ "runs": {
+  "macs0647-clash-nfw": {
+   "strong_shear_background": {
+    "n": 15,
+    "aligned": 10,
+    "anti": 2,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 0.008504271440326429
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 15,
+    "anti": 2,
+    "expected": 0.646,
+    "p_ge_observed": 0.13742201847790933
+   },
+   "control_passes": false
+  },
+  "macs0647-clash-ltm": {
+   "strong_shear_background": {
+    "n": 14,
+    "aligned": 7,
+    "anti": 0,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 0.14946218551698748
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 14,
+    "anti": 0,
+    "expected": 0.23,
+    "p_ge_observed": 1.0
+   },
+   "control_passes": false
+  }
+ },
+ "deciding_model": null,
+ "outcome": "no result",
+ "p_ge_observed": null
+}

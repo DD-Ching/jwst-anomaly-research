@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: `arcs` on MACS0647 as a second independent test of the S1063 anti excess: no result (both controls fail)
+- **Why:** after MACS0417 (#280), the next field with JWST F200W, a DJA photo-z catalogue and public lens models.
+  Plan and outcome rule frozen and committed before the run: `results/arcs/macs0647-clash/PLAN.md`,
+  `scripts/arcs_macs0647.py` (`outcome()`, unit-tested). New model entries `macs0647-clash-nfw` (primary) and
+  `macs0647-clash-ltm` (CLASH Zitrin v2 maps; `validate` reproduces κ and z = 2 μ to ≤ 3 × 10⁻⁵).
+- **Result (derived; `results/arcs/macs0647-clash/RESULT.md`, `summary.json`):** JWST 1433 epoch 1 F200W: PIEMD + eNFW
+  10 / 15 background rows aligned (67 %), LTM-Gauss 7 / 14 (50 %): **both controls fail → no result**. Post hoc:
+  the primary failure is one row from the threshold and passes under one of four 0.3″ frame shifts (10 / 14; anti
+  stays 2); epoch 2 (deviation, not deciding) gives 13 / 18 aligned, anti 2 vs 0.425 (P 0.068).
+- **Reading:** all three HST-era map models tried in the two replication fields failed the alignment control (one
+  marginally); the one JWST-era model passed. The S1063 excess stays a single-field exploratory result (one non-replication, one
+  field that cannot test it).
+- **Data:** CLASH maps (70.6 MB each) cached and deleted after the run; the DJA photo-z tarball was streamed.
+- **Handoff:** a further replication needs a JWST-era model on a field with F200W and photo-z. The remaining DJA
+  photo-z cluster fields (RXJ2129, MRG0138, RXCJ0600, rj0018p1626) have no JWST-era model pinned here (not searched
+  further in this run); MACS1423 (CANUCS photo-z) still lacks a public model.
+
 ## 2026-10-16: `arcs` on MACS0417 as an independent test of the S1063 anti excess: does not replicate
 - **Why:** the S1063 anti excess (#273, #279) was found post hoc in one field. Plan before any run:
   `results/arcs/macs0417-relics/PLAN.md` (D-024 rules unchanged, control ≥ 70 % aligned, replication if P < 0.05).
