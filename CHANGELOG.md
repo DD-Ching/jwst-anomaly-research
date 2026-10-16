@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Abell 2744 UNCOVER vs ALT `arc_diff` chain completeness by whole-chain injections (in progress)
+- Plan: `arc_diff.py --inject-grid` on 3 arc tiles (t−1+0, t+0+0, t+0−1), UNCOVER→ALT o002 and →o001 with the same
+  stars, through morphology, the peer-population cut and the o001 rule.
+
 ## 2026-10-16: Abell 2744 h182 against arc-pixel controls: within on-arc systematics; closed, not a candidate
 - **Hypothesis before measuring:** h182's 2022→2023 red-band brightening (+45 % F356W; compact-control z_cal +4.9,
   #261) is a PSF/registration effect on steep extended light that compact-peak controls do not sample. Decision rule
