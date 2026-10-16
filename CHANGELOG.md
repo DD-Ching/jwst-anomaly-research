@@ -33,6 +33,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - the addendum wording corrected before measuring.
 - **Flagged, not re-run:** the MACS1423 census (#282) and #279 used the pre-fix `fit_models`. TASKS says not to
   cite them until they are re-run.
+## 2026-10-16: `arcs` PA convention: the deblend knot axis `pa_sep` and the catalogue `pa_obs` agree (median 3.0°)
+- **Why:** the MACS1423 and RXJ2129 handoffs (below) list the `pa_sep` vs `pa_obs` convention as unchecked. Plan
+  frozen first (`results/arcs/pa-convention/PLAN.md`); `scripts/arcs_pa_convention.py` reads the stored S1063 and
+  MACS1423 census outputs, no download.
+- **Result (derived; `RESULT.md`, `summary.json`):** 18 gate-passed `two-knot` rows: median offset 3.0° (identity)
+  vs 35.2° (mirrored) and 87.0° (rotated 90°) → **frozen outcome `convention agrees`**. Secondary set (66 rows,
+  ellipticity ≥ 0.2): 2.5° / 46.1° / 87.5°. The S1063 1316 (78.5°) and 1557 (75.2°) knot-axis readings stand.
+- **Post hoc:** MACS1423 2197 (screen anti) has its knot pair 6.6° from the prediction but its catalogue axis
+  74.7° from it, so its anti class does not come from the fitted pair; #282's census null does not use `pa_sep`.
+- **Handoff:** the convention item is closed for S1063 and MACS1423. Not checked on the five fields of #279 (that
+  branch's census JSON). The z_phot > 15 grid-edge item (RXJ2129 entry) is still open and needs its own plan.
 
 ## 2026-10-16: `arcs` on Abell S1063: 4 background anti vs 0.52 expected; 2004 at κ ≈ 1, 2184 compatible with the tested noise model; 1316, 1557 pending vetting; public spectra cannot settle them (#273)
 - **New field for the arc-orientation test** (D-024 defaults; plan committed first): CATS v4.1 maps, GLIMPSE F200W,
