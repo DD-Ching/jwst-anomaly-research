@@ -6,9 +6,10 @@ compared with the S of its brightness peers. For each hit: ``log_peak`` = log10 
 epoch-1 pixel within ``--peak-arcsec``; peers = local maxima of epoch 1 (``--peak-box`` px window,
 positive, ≥ ``--edge-px`` from the border and from pixels without data) whose log10 value lies
 within ``--dex`` of it, excluding peers within ``--self-arcsec`` of the hit; each peer's S is the
-signed extreme of S within ``--peak-arcsec`` of it (as for the hit); ``z_peers`` = (S_hit − median)
-/ MAD (unscaled, as in ``passes.ecsv`` of 2026-10-16). The cut used in the tiling: |z_peers| ≥
-``--min-z`` or fewer than ``--min-peers`` peers (no peers = no test).
+signed extreme of S within ``--peak-arcsec`` of it (peers whose window touches a pixel without S
+are dropped); ``z_peers`` = (S_hit − median) / MAD (unscaled, as in ``passes.ecsv`` of
+2026-10-16). The cut used in the tiling: |z_peers| ≥ ``--min-z`` or fewer than ``--min-peers``
+peers (no peers = no test).
 
 The 2026-10-16 tiling computed its peers in an uncommitted step. This reconstruction does **not**
 reproduce it (``--compare`` on t−1+0 and t+0+0: cut agreement 0.35–0.54, median |Δz| 1.2–2.6, 2–23×
@@ -80,8 +81,8 @@ def peer_table(
     scale = float(proj_plane_pixel_scales(w)[0] * 3600.0)
     py, px, plog = peaks(e1, peak_box, edge_px)
     rr = max(int(np.ceil(peak_arcsec / scale)), 0)
-    # Each peer's S: the signed extreme of S within peak_arcsec of the peak (as for the hit).
-    # A window touching a pixel without S gives nan (dropped below), not S = 0.
+    # Each peer's S: the signed extreme of S within peak_arcsec of the peak. Unlike the hit's own
+    # S (which skips pixels without S), a peer window touching such a pixel is dropped (nan).
     gap = ndimage.maximum_filter((~np.isfinite(s)).astype(np.uint8), size=2 * rr + 1) > 0
     sa = np.nan_to_num(s)
     hi = ndimage.maximum_filter(sa, size=2 * rr + 1)
