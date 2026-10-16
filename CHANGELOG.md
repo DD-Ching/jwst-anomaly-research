@@ -47,6 +47,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** both remaining anti rows are clump pairs; the excess is measured against a null without clumps.
   Next: a clump-pair census of the 24 strong-shear rows with the same frozen rule (plan first; exploratory), then
   the expected anti count with clump rows. MUSE redshifts need a download decision (owner).
+- **Vetting, step 4 (`vetting/PLAN_census.md` first; `scripts/arcs_vet_census.py`; exploratory):** the step-3
+  deblend with an own-flux gate on all 24 strong-shear rows: gate passed 21, `two-knot` 5 (1061, 1316, 1452, 1557,
+  2449; f̂ 0.238). Two-knot rows get the clump-orientation anti probability: expected anti 0.52 → 1.24, P(≥ 4)
+  0.00082 → **0.026** → frozen outcome **excess remains under the clump-aware null**. P ≥ 0.05 only for k = 3 / 2 or
+  f at its 95 % upper end (0.093).
+- **Handoff:** 1316 and 1557 open, unvetted, not candidates. Next: z_spec from the ESO MUSE cube (needs the owner's
+  download decision), else a second photo-z code or the same census on another field's anti rows.
 ## 2026-10-16: SMACS 0723 arc difference imaging: Atalanta recovered, no candidate; h061 undetermined (near-star spikes); the 2024 → 2026-07 pair fails its control
 - **Why:** the Sunrise handoff names SMACS next; a catalog grid misses transients blended into arcs (D-027 addendum
   2026-10-15j). Plan before the run: `results/transients/smacs_arcdiff/PLAN.md` (24″ box on the system 5 arc, SN

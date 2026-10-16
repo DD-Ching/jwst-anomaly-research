@@ -203,6 +203,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.3 (SMACS 0723 `arc_diff`: two pairs, Atalanta control, h061 re-box, h000 light curve; sheets looked at) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01De8CTn, 09:08–09:40Z |
 | 2026-W42 | ≈ 0.3 (Sunrise arc_diff o010→o120 LW: frozen rules, run, morphology, distances, sheet) | — | — | 0.1 (claim, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | ≈ 0.4 (S1063 1557 deblend with own-flux gate, third-component and clump-orientation checks; sheet looked at) | 0.1 (orientation, takeover, merge, PR) | cloud routine trig01PNAm-1210, 12:10–12:50Z |
+| 2026-W42 | — | — | ≈ 0.3 (S1063 clump-pair census of 24 strong-shear rows: plan, own-flux gates, clump-aware sample test; sheet looked at) | 0.1 (orientation, takeover, PR) | cloud routine trig01PNAm-1316, 13:17–13:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

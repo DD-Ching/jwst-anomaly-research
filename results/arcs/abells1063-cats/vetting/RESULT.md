@@ -140,3 +140,50 @@ checks: `scripts/arcs_vet_clumps.py` → `clumps_1557.json`. Labels as above.
   then post hoc, so label it exploratory).
 - Redshifts for 1316 and 1557: no catalogued z_spec (VizieR, step 1); the ESO MUSE cube of the field (size not
   checked) needs a download decision under the 200 MB rule.
+
+# Step 4 (2026-10-16): clump-pair census of the 24 strong-shear background rows (exploratory)
+
+Plan: `PLAN_census.md` (committed before the run, 02d9133). Script: `scripts/arcs_vet_census.py` →
+`census.json`, `census.ecsv`. The sample test is post hoc (the clump idea came from looking at 1316 and 1557), so
+the result is **exploratory**. Labels: pixels observed; classes derived; injections simulations; P_cp, P_sn
+model_prediction.
+
+## Census (frozen rule, own-flux gate per row)
+- Gate passed for 21 / 24 rows; failed for 1404, 2004 and 2184 (the faint, low-S/N rows; `census.ecsv`
+  `gate_single_ok`, `gate_two_ok`).
+- `two-knot` among the 21: **5** (1061, 1316, 1452, 1557, 2449) → f̂ = 0.238, 95 % upper 0.472. Three of the five
+  are screen-aligned, two are the screen-anti 1316 and 1557.
+- Looked at (F200W 1.2″ 1″-filtered stamps of all 24, figure not stored): 1061 and 1557 are two compact knots;
+  1452 and 2449 are knots inside or beside a larger body. The large aligned galaxies (1994, 3551, 3763, 3816) are
+  clumpy chains along their axis but are `single` at the 0.4″ fit radius: the census measures pairs at ≲ 0.4″ only.
+
+## Sample test (frozen outcome)
+| Null (`census.json` "sample") | expected anti | P(≥ 4), screen count | P(≥ 3), bgsub | P(≥ 2), 2184 removed |
+|---|---|---|---|---|
+| Shape noise only (Poisson-binomial check) | 0.521 | 0.00082 | 0.011 | 0.089 |
+| **Clump-aware, per row (primary)** | 1.243 | **0.026** | 0.116 | 0.359 |
+| Mixture, f̂ = 0.238 | — | 0.023 | 0.102 | 0.323 |
+| Mixture, f = 0.472 (95 % upper) | — | 0.093 | 0.259 | 0.544 |
+
+- **Frozen outcome: `excess remains under the clump-aware null`** (primary P 0.026 < 0.05).
+- Reading (narrow): letting clump pairs point anywhere raises the expected anti count from 0.52 to 1.24 and the
+  primary P from 0.00082 to 0.026. P ≥ 0.05 holds for the secondary counts (k = 3, k = 2) and for the primary at the
+  upper end of f; those are not the frozen outcome.
+- The k = 4 count includes 2004, explained by κ ≈ 1 (step 1), which no null here models. Its row probability in the
+  table is the gate-failed mixture (0.191), not a κ ≈ 1 model.
+- The screen quoted P 0.0021 with a Poisson approximation; the Poisson-binomial over the same rows gives 0.00082
+  (`p_ge_k_shape_noise_only_check`). The comparison above uses the Poisson-binomial throughout.
+
+## Limits
+- Point-pair model (ASSUMPTIONs as step 3): isotropic separations, point clumps, κ < 1 formula also used for
+  g > 1 rows (2004, 2167, 2215 have g_min 3–10).
+- Pairs wider than 0.4″ and chains of ≥ 3 clumps are not counted as pairs; 1557's third point (step 3) is not modelled.
+- f̂ comes from 21 rows of one field.
+
+## Status after step 4
+- **1316, 1557: open, unvetted, not candidates.** The clump-aware null reduces but does not remove the anti excess
+  at the screen count (P 0.026, exploratory).
+- **Next (per plan):** a spectroscopic redshift for 1316 and 1557. No catalogued z_spec exists (VizieR, step 1);
+  the ESO MUSE cube of the field needs a download decision under the 200 MB rule (owner). Without it: a second
+  photo-z code, or the same census on another `arcs` field with an anti excess, to test whether clumps explain it
+  there.
