@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: (in progress) Abell 2744 `arc_diff` peer cut for hits on smooth extended light
+- Plan: replace the peer cut where the epoch-1 position is not a compact peak with a local annulus S-scatter cut; re-calibrate on the #264 injections; re-screen the 471 peer-vetoed passes.
+
 ## 2026-10-16: Abell 2744 UNCOVER vs ALT `arc_diff` chain completeness: the peer cut halves 28-mag efficiency
 - **Question:** what fraction of point brightenings on arcs and galaxy light survives the #261 tiling chain (hit,
   not `near_bright_core`, morphology, peer-population |z| ≥ 3, same-sign S ≥ 3 in UNCOVER→ALT o001)? No decision
