@@ -209,9 +209,10 @@ def aperture(sub, err, wcs, ra, dec, r_arcsec, px):
     return float(np.nansum(sub[m]) * k), float(np.sqrt(np.nansum(err[m] ** 2)) * k)
 
 
-def gate(sci, err, xt, yt, px, r_px, sizes, n_inject, rng) -> dict:
+def gate(sci, err, xt, yt, px, r_px, sizes, n_inject, rng, sep_arcsec=0.16) -> dict:
     """Injections at empty positions 1.5–3.5″ away; ``sizes`` gives (flux, σ, q) for ``single``
-    and (flux1, σ1, flux2, σ2) for ``two`` (knots 0.16″ apart, random axis), image units / px."""
+    and (flux1, σ1, flux2, σ2) for ``two`` (knots ``sep_arcsec`` apart, random axis), image
+    units / px."""
     filt = int(round(1.0 / px)) | 1
     half = filt // 2 + int(np.ceil(r_px)) + 6
     res = {"single": [], "two": []}
@@ -238,7 +239,7 @@ def gate(sci, err, xt, yt, px, r_px, sizes, n_inject, rng) -> dict:
         if kind == "single":
             stamp = _gauss(xx, yy, half, half, *sizes["single"], th)
         else:
-            d = 0.5 * 0.16 / px
+            d = 0.5 * sep_arcsec / px
             f1, s1, f2, s2 = sizes["two"]
             c, sn = np.cos(th), np.sin(th)
             stamp = _gauss(xx, yy, half + d * c, half + d * sn, f1, s1) + _gauss(
@@ -264,7 +265,9 @@ def gate(sci, err, xt, yt, px, r_px, sizes, n_inject, rng) -> dict:
 
 
 # ---- 1316 -----------------------------------------------------------------------------------
-def run_1316(paths_by_band, row, a, rng) -> dict:
+def run_1316(paths_by_band, row, a, rng, gate_sep_observed=False) -> dict:
+    """Deblend one target (1316 in step 2; 1557 in step 3 with ``gate_sep_observed``: the fitted
+    gate uses the observed knot separation and is the one that counts, PLAN_1557.md)."""
     sci, sub, err, wcs, px = load(paths_by_band["f200w"])
     xt, yt = wcs.world_to_pixel_values(row["ra"], row["dec"])
     r_px = a.fit_arcsec / px
@@ -310,7 +313,16 @@ def run_1316(paths_by_band, row, a, rng) -> dict:
     }
     out["fitted_flux_image_units"] = {"m1": m1[2], "m2": p[2] + p[6]}
     sizes_fit = {"single": (m1[2], m1[3], m1[4]), "two": (p[2], p[3], p[6], p[7])}
-    out["gate_fitted_post_hoc"] = gate(sci, err, xt, yt, px, r_px, sizes_fit, a.n_inject, rng)
+    if gate_sep_observed:
+        sep_g = round(sep_arcsec, 2)
+        out["gate_fitted"] = gate(
+            sci, err, xt, yt, px, r_px, sizes_fit, a.n_inject, rng, sep_arcsec=sep_g
+        )
+        out["gate_fitted"]["sep_arcsec"] = sep_g
+        valid = out["gate_fitted"]["passed"]
+    else:
+        out["gate_fitted_post_hoc"] = gate(sci, err, xt, yt, px, r_px, sizes_fit, a.n_inject, rng)
+        valid = out["gate"]["passed"]
 
     # knot SEDs (fixed positions and σ from F200W) in the SW bands
     knots_sky = [wcs.pixel_to_world(p[0], p[1]), wcs.pixel_to_world(p[4], p[5])]
@@ -337,7 +349,7 @@ def run_1316(paths_by_band, row, a, rng) -> dict:
         if not np.isfinite(pr)
         else ("consistent SED" if pr >= 0.003 else "different SED")
     )
-    if not out["gate"]["passed"]:
+    if not valid:
         outcome = "test invalid (gate failed)"
     elif cls != "two-knot":
         outcome = "blend not supported; stays open"
@@ -457,6 +469,45 @@ def figure(cut, o1316, o2184, path):
     fig.savefig(path, dpi=110)
 
 
+def _single_target(a, d, cut, row, rng) -> int:
+    uid = str(row["label"])
+    o = run_1316(cut[uid], row, a, rng, gate_sep_observed=True)
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(1, len(SW), figsize=(3.2 * len(SW), 3.4))
+    for k, bnd in enumerate(SW):
+        _, sub, _, wcs, px = load(cut[uid][bnd])
+        x, y = wcs.world_to_pixel_values(row["ra"], row["dec"])
+        h = int(0.6 / px)
+        xi, yi = int(round(float(x))), int(round(float(y)))
+        im = sub[yi - h : yi + h + 1, xi - h : xi + h + 1]
+        lo, hi = np.nanpercentile(im, [5, 99.5])
+        ax[k].imshow(im, origin="lower", cmap="gray", vmin=lo, vmax=hi)
+        if bnd == "f200w":
+            for kx, ky in o["_knots_pix_f200w"]:
+                ax[k].plot(kx - xi + h, ky - yi + h, "r+", ms=12)
+        ax[k].set_title(f"{uid} {bnd.upper()}, 1.2″, 1″-filtered")
+    fig.tight_layout()
+    fig.savefig(d / "vetting" / f"deblend_{uid}.png", dpi=110)
+    out = {
+        "plan": f"PLAN_{uid}.md",
+        "label": "ordinary-explanation test (derived); pixels observed; injections simulations",
+        "assumptions": {
+            k: getattr(a, k) for k in ("fit_arcsec", "knot_sigma_arcsec", "n_inject", "seed")
+        }
+        | {"filter_arcsec": 1.0, "images": URI.format(b="<band>")},
+        uid: {k: v for k, v in o.items() if not k.startswith("_")},
+    }
+    (d / "vetting" / f"deblend_{uid}.json").write_text(
+        json.dumps(out, indent=1, default=float) + "\n"
+    )
+    print(json.dumps(out, indent=1, default=float))
+    return 0
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--model", default="abells1063-cats")
@@ -467,10 +518,14 @@ def main(argv=None) -> int:
     p.add_argument("--n-inject", type=int, default=20)
     p.add_argument("--seed", type=int, default=20261016)
     p.add_argument("--cut-dir", type=Path, default=None, help="reuse cutouts (else a temp dir)")
+    p.add_argument(
+        "--target", default=None, help="deblend only this label (step 3: 1557, PLAN_1557.md)"
+    )
     a = p.parse_args(argv)
     d = a.arcs_dir / a.model
     t = Table.read(d / "arcs_anti.ecsv")
-    rows = {str(r["label"]): r for r in t if str(r["label"]) in ("1316", "2184")}
+    labels = (a.target,) if a.target else ("1316", "2184")
+    rows = {str(r["label"]): r for r in t if str(r["label"]) in labels}
     tg = Table(
         {
             "source_uid": list(rows),
@@ -488,6 +543,8 @@ def main(argv=None) -> int:
             for uid, pth in zip(c["source_uid"], c["path"], strict=True):
                 cut[str(uid)][b] = str(pth)
         rng = np.random.default_rng(a.seed)
+        if a.target:
+            return _single_target(a, d, cut, rows[a.target], rng)
         o1 = run_1316(cut["1316"], rows["1316"], a, rng)
         o2 = run_2184(cut["2184"], rows["2184"], a)
         figure(cut, o1, o2, d / "vetting" / "deblend.png")
