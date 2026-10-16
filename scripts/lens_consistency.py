@@ -178,6 +178,19 @@ MODELS = {
         "z_lens": 0.545,
         "cosmology": (70.0, 0.3),
     },
+    # z_lens 0.234 (CLASH cluster list, Postman et al. 2012); GLAFIC normalised at z_s 3 (header)
+    "rxj2129-lenstool-maps": {
+        "files": lensmodel.RXJ2129_LENSTOOL_MAPS,
+        "kind": "maps",
+        "z_lens": 0.234,
+        "cosmology": (70.0, 0.3),
+    },
+    "rxj2129-glafic-maps": {
+        "files": lensmodel.RXJ2129_GLAFIC_MAPS,
+        "kind": "maps",
+        "z_lens": 0.234,
+        "cosmology": (70.0, 0.3),
+    },
     "macs0647-clash-nfw": {
         "files": lensmodel.MACS0647_CLASH_NFW,
         "kind": "maps",

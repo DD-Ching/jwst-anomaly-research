@@ -1,0 +1,59 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int32}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: pa_obs, datatype: float64}
+# - {name: ellipticity, datatype: float64}
+# - {name: semimajor_px, datatype: float64}
+# - {name: area_px, datatype: float64}
+# - {name: snr, datatype: float64}
+# - {name: is_extended, datatype: bool}
+# - {name: mag, datatype: float64}
+# - {name: z_phot, datatype: float64}
+# - {name: z160, datatype: float64}
+# - {name: z840, datatype: float64}
+# - {name: r_arcsec, datatype: float64}
+# - {name: pa_pred_z1, datatype: float64}
+# - {name: offset_z1, datatype: float64}
+# - {name: g_z1, datatype: float64}
+# - {name: mu_z1, datatype: float64}
+# - {name: pa_pred_z2, datatype: float64}
+# - {name: offset_z2, datatype: float64}
+# - {name: g_z2, datatype: float64}
+# - {name: mu_z2, datatype: float64}
+# - {name: pa_pred_z4, datatype: float64}
+# - {name: offset_z4, datatype: float64}
+# - {name: g_z4, datatype: float64}
+# - {name: mu_z4, datatype: float64}
+# - {name: offset_zphot, datatype: float64}
+# - {name: z_basis, datatype: string}
+# - {name: offset_min, datatype: float64}
+# - {name: offset_max, datatype: float64}
+# - {name: g_min, datatype: float64}
+# - {name: pa_pred_spread, datatype: float64}
+# - {name: orientation_class, datatype: string}
+# - {name: strong_shear, datatype: bool}
+# - {name: population, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: data/cache/rxj2129/mast/jw02767-o002_t001_nircam_clear-f200w_cat.ecsv against rxj2129-glafic-maps}
+# - {photoz_source: data/cache/rxj2129/rxj2129-grizli-v7.0-fix.eazypy.zout.fits}
+# - {model_sha256: 16ce7045a9387e953d340f83ac083963e66a9bd4af05c469b7be8ecfc61dde87}
+# - {z_lens: 0.234}
+# - reference_radec: [322.416483844453, 0.08922665555554943]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - maps:
+#     interpolation: bilinear; Hessian from centred finite differences
+#     pixel_arcsec: 0.05000000000000004
+#     shape: [2400, 2400]
+# - z_grid: [1.0, 2.0, 4.0]
+# - assumptions: {aligned_deg: 30.0, anti_deg: 60.0, z_margin: 0.1}
+# schema: astropy-2.0
+label ra dec pa_obs ellipticity semimajor_px area_px snr is_extended mag z_phot z160 z840 r_arcsec pa_pred_z1 offset_z1 g_z1 mu_z1 pa_pred_z2 offset_z2 g_z2 mu_z2 pa_pred_z4 offset_z4 g_z4 mu_z4 offset_zphot z_basis offset_min offset_max g_min pa_pred_spread orientation_class strong_shear population
+447 322.40749348806577 0.08184479291373449 54.27599101426085 0.6639117709285466 9.15089889147099 415.0 151.39844517455717 True 23.76363500613685 2.8714442253112793 2.8162944316864014 3.0526528358459473 41.877487697526206 149.4705967632018 84.80539425105906 0.2887478622934666 2.723840136466494 149.4705967632018 84.80539425105906 0.3613198399811431 3.426032647608939 149.4705967632018 84.80539425105906 0.4019029440772178 3.8961762406149236 84.80539425105906 photo-z 84.80539425105906 84.80539425105906 0.3843865234770158 0.0 anti True background
+479 322.4081392314937 0.08808372950173377 106.8358437550809 0.5889627002277256 2.260076102196753 27.0 15.934175581212727 True 27.3116431825905 nan nan nan 30.321036391923258 169.67452600724482 62.83868225216392 0.46775915438199905 3.8325943493037093 169.67452600724482 62.83868225216392 0.5996506549033513 5.854091303868251 169.67452600724482 62.83868225216392 0.6762600711596769 7.788455000559129 nan grid 62.83868225216392 62.83868225216392 0.46775915438199905 0.0 anti True unknown
+815 322.42175260617194 0.08934382068471453 50.30547431377482 0.5469239803150954 3.917465303694139 74.0 36.69774525566319 True 26.165562487731563 0.2203875333070755 0.163187637925148 3.318380832672119 18.972208483157633 168.2148697019436 62.090604611831225 0.5739586132594778 5.604883387111182 168.2148697019436 62.090604611831225 0.7616543090102618 12.010309846389678 168.2148697019436 62.090604611831225 0.8768612080482225 25.6351239120184 nan grid 62.090604611831225 62.090604611831225 0.5739586132594778 0.0 anti True unknown
+441 322.4069145871325 0.08425280597174083 36.67758356850649 0.5299099021673593 3.2530044446258137 49.0 34.276313480369616 True 26.570340358119985 0.33105534315109253 0.12410028278827667 0.37652498483657837 38.82490150428498 150.76496741282412 65.91261615568237 0.4520035463184425 3.6830692607669797 150.76496741282412 65.91261615568237 0.5777175976568671 5.475029234835918 150.76496741282412 65.91261615568237 0.6503938077673671 7.102446140478512 nan grid 65.91261615568237 65.91261615568237 0.4520035463184425 0.0 anti True unknown

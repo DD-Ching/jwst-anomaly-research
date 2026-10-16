@@ -1,4 +1,4 @@
-# Plan: `arcs` on RX J2129.7+0005 (frozen before any `arcs` count; committed 2026-10-16 ~20:15Z)
+# Plan: `arcs` on RX J2129.7+0005 (frozen before any `arcs` count; committed 2026-10-16 20:13Z, `bbe0306`; the run started 20:21Z)
 
 **Why.** The Abell S1063 background anti excess (4 vs 0.52; P 0.031 clump-aware, #273, #279) was found post hoc in
 one field. MACS0417 (#280) did not replicate it; MACS0647 (#281) gave no result; MACS1423 (#282) replicated at screen
