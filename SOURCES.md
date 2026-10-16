@@ -1357,3 +1357,5 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - GLAFIC v4, Sharon v4, Keeton v4 `hlsp_frontier_model_abells1063_<team>_v4_{kappa,gamma1,gamma2}.fits` under
   https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/<team>/v4/ (each map ~105.8 MB; GLAFIC kappa
   105,756,480 B). Read by HTTP byte ranges at 24 positions only; no whole-file sha256 (not downloaded).
+- Chan et al. 2020, ApJ 888, 35 — redshifts of lensed systems toward RXC J2248.7−4431 (Abell S1063), VizieR
+  `J/ApJ/888/35` table1 (121 rows), queried 2026-10-16 for the `arcs` anti positions.

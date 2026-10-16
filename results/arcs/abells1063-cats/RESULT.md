@@ -36,7 +36,13 @@ re-measured offsets are in `bgsub_shapes.ecsv`).
   failure (a member or foreground source is unlensed), a fragment of nearby extended light (2184 next to the giant
   arc), noise in the shapes of m ≈ 27.5 sources (the shape-noise null models intrinsic shapes only).
 
+## Catalogued images and redshifts (2026-10-16, not stored; VizieR `J/ApJ/888/35`, Chan+2020, 121 rows)
+- No catalogued multiple image within 2″ of any of the 4 anti, and no z_spec for them. Nearest: 2184 is 2.7″ from
+  image 1.1 (z_spec 1.229, the giant-arc system); 1316 is 6.7″ from 6.2 (z_spec 1.428); 2004 is 4.7″ from 47.2; 1557
+  is 5.9″ from 21.4.
+
 ## Next (for the next run)
-`/vet-candidate` on 1316 and 2184: MUSE redshifts (Karman+2015 / Caminha+2016 RXC J2248 catalogues), a deblend
+`/vet-candidate` on 1316 and 2184: MUSE redshifts beyond Chan+2020's image list (Karman+2015 / Caminha+2016
+full catalogues, if public), a deblend
 against the giant arc for 2184, and an injection of round faint sources at their positions (shape noise at m 27.5
 on the local ICL) to calibrate how often noise alone gives an anti axis.
