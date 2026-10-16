@@ -180,12 +180,11 @@ def main(argv=None) -> int:
 
     mix = {f: {lab: f * p_cp[lab] + (1 - f) * p_sn[lab] for lab in labels} for f in (f_hat, f_up)}
     # 2184: noise-explicable at core flux (step 2); counts and nulls are derived from the same sets
-    drops = {"k2_core_flux": tuple(sorted({"2184"} & bgsub_anti))}
-    k_counts = {
-        "k4_screen": len(screen_anti),
-        "k3_bgsub": len(bgsub_anti),
-        "k2_core_flux": len(bgsub_anti - set(drops["k2_core_flux"])),
-    }
+    k_counts = {"k4_screen": len(screen_anti), "k3_bgsub": len(bgsub_anti)}
+    drops = {}
+    if "2184" in bgsub_anti:  # the core-flux count exists only when the step-2 exclusion applies
+        drops["k2_core_flux"] = ("2184",)
+        k_counts["k2_core_flux"] = len(bgsub_anti - {"2184"})
     p_primary = tail(p_row, 4)
     sample = {
         "n_rows": len(labels),

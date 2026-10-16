@@ -236,10 +236,11 @@ def peak_check(path: Path, ra: float, dec: float, fwhm: float, lam0: float, wind
         min(ix, jy, sm.shape[1] - 1 - ix, sm.shape[0] - 1 - jy) <= 1
         or not np.isfinite(sm[max(jy - 2, 0) : jy + 3, max(ix - 2, 0) : ix + 3]).all()
     )
-    offs = []
+    offs, off_snr = [], []
     for ang in range(0, 360, 60):
         dx, dy = 1.5 * np.cos(np.radians(ang)), 1.5 * np.sin(np.radians(ang))
         sp, n = spec_at(dx, dy)
+        off_snr.append(sp["snr"])
         osky = cel.pixel_to_world(x0 + dx / pix, y0 + dy / pix)
         offs.append(
             {
@@ -264,7 +265,7 @@ def peak_check(path: Path, ra: float, dec: float, fwhm: float, lam0: float, wind
                     else None
                 ),
                 "chance_runs_excluding_feature": (
-                    exceedance_runs(sp["snr"][win & far], sp["usable"][win & far], snr_k)
+                    exceedance_runs(sp["snr"][win], (sp["usable"] & far)[win], snr_k)
                     if snr_k is not None
                     else None
                 ),
@@ -292,9 +293,8 @@ def peak_check(path: Path, ra: float, dec: float, fwhm: float, lam0: float, wind
     ax[0].set_title(f"narrow band {lam[lo]:.0f}-{lam[hi - 1]:.0f} Å (smoothed)", fontsize=8)
     sel = (lam > lam0 - 150) & (lam < lam0 + 150)
     ax[1].plot(lam[sel], tgt["snr"][sel], "k-", lw=0.8, label="target")
-    for ang in range(0, 360, 60):
-        sp, _ = spec_at(1.5 * np.cos(np.radians(ang)), 1.5 * np.sin(np.radians(ang)))
-        ax[1].plot(lam[sel], sp["snr"][sel], lw=0.4, alpha=0.6)
+    for osnr in off_snr:
+        ax[1].plot(lam[sel], osnr[sel], lw=0.4, alpha=0.6)
     ax[1].axvline(lam0, color="r", lw=0.5)
     ax[1].axhline(SNR_DET, color="grey", lw=0.5, ls="--")
     ax[1].set_xlabel("Å")
@@ -308,7 +308,8 @@ def peak_check(path: Path, ra: float, dec: float, fwhm: float, lam0: float, wind
         "snr_ge_threshold": bool(snr_k is not None and snr_k >= SNR_DET),
         "narrowband_peak_within_r_ap": bool(d_peak <= r_ap),
         "no_offset_aperture_ge_3": all(
-            (o["snr_at_peak"] is None) or (o["snr_at_peak"] < 3) for o in offs
+            (not o["usable_at_peak"]) or (o["snr_at_peak"] is None) or (o["snr_at_peak"] < 3)
+            for o in offs
         ),
         "expected_chance_positions_lt_0p05": bool(expected is not None and expected < 0.05),
     }
@@ -347,10 +348,12 @@ def run(cut_arcsec: float, keep_dir: Path | None = None) -> dict:
                 url = (
                     f"{SODA}?ID=ivo://eso.org/ID?{dp}&CIRCLE={ra}%20{dec}%20{cut_arcsec / 3600:.5f}"
                 )
-                p = (keep_dir or Path(tmp)) / f"{dp}_{t}.fits"
+                p = (keep_dir or Path(tmp)) / f"{dp}_{t}_r{cut_arcsec:.2f}.fits"
                 if not (keep_dir and p.exists()):  # reuse a kept cutout (same SODA request)
-                    with urllib.request.urlopen(url, timeout=300) as r, open(p, "wb") as fh:
+                    part = p.with_suffix(".part")
+                    with urllib.request.urlopen(url, timeout=300) as r, open(part, "wb") as fh:
                         fh.write(r.read())
+                    part.rename(p)
                 size = p.stat().st_size
                 m = measure(p, ra, dec, fwhm)
                 if t == 1316 and not m["no_data"]:

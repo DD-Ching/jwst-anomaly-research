@@ -365,8 +365,11 @@ All four have unit tests (`tests/test_arcs_vet_fixes.py`).
   - 1316 C III] median limit 4.75 → 3.37 × 10⁻¹⁸; C IV 5.51 → 3.89 × 10⁻¹⁸. 1557 [O II] 1.33 → 1.34 × 10⁻¹⁸.
   - The 1316 peak at 6000.3 Å went from S/N 4.77 to 6.72.
 - **Deblend (fix 3):**
-  - Observed-fit quantities changed by ≤ 3e-5 relative (`fixes_diff.json` `max_relative_change_observed_fits`); no
-    observed class changed.
+  - Fitted parameters changed by ≤ 3.7e-4 relative (largest: row 2004, `m1_q`; `fixes_diff.json`
+    `max_relative_change_observed_fits`).
+  - Row 2004's two M2 components swapped order (S/N 4.20 / 2.97 → 2.97 / 4.20; same pair,
+    `m2_component_order_swapped`).
+  - No observed class changed.
   - Injection gates:
     - 1316 post hoc own-flux gate: two-knot recall 0.75 → 0.95, single side unchanged at 0.75, so it still
       fails (< 0.8). The two-knot call for 1316 is still not validated at its own flux.
@@ -394,7 +397,8 @@ All four have unit tests (`tests/test_arcs_vet_fixes.py`).
     Counting separate runs gives 0.83, and excluding ±12 channels around the feature gives 0, i.e. no chance
     peak this strong elsewhere in the window.
   - So the 6000 Å signal is not a noise fluctuation. It is real emission in the field.
-- **Class (frozen rule): not significant as a line of 1316.** The emission is stronger 1.5″ W and peaks
+- **Class (frozen rule): not significant under the calibration** (`peak_6000_1316.class`), i.e. not
+  significant as a line of 1316. The emission is stronger 1.5″ W and peaks
   2.79″ away, so the target aperture sits on the wing of nearby emission. A contribution from 1316 itself at the
   same wavelength is not excluded.
 - Possible origin (not tested, not stored): earlier VizieR rows 5.3–5.6″ from 1316 list a z ≈ 0.611 galaxy, whose
@@ -411,6 +415,11 @@ All four have unit tests (`tests/test_arcs_vet_fixes.py`).
 - Direction values are stored as sky PAs (`sky_pa_deg`, `narrowband_peak_sky_pa_deg`).
 - Census counts come from the screen and bgsub sets, and every null uses `p_tail`.
 - `fixes_diff.json` uses a relative tolerance only.
+- Kept cutouts are named by radius and written atomically.
+- The chance-run count that excludes the feature keeps the two window segments separate.
+- Offset apertures that are unusable at the peak are ignored by the S/N ≥ 3 check.
+- The census core-flux count exists only when 2184 is bgsub anti.
+- Re-running the spectra after these changes reproduced `spectra.json` exactly.
 - **Deviation:** the 116.28VK single-OB cube ADP.2025-11-20T15:47:55.061 was not re-requested, per the owner's
   limit of two cutouts. Its earlier `no_data` records are kept in `spectra_before_fixes.json` and
   `muse_coverage.ecsv`.

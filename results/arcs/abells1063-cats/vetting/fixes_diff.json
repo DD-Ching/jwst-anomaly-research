@@ -853,6 +853,13 @@
  },
  "max_relative_change_observed_fits": {
   "deblend_1557": 1.3e-05,
-  "census.ecsv (dbic, snr_min, sep_arcsec)": 2.7e-05
- }
+  "census.ecsv (dbic, snr_min, sep_arcsec)": 2.7e-05,
+  "census.json rows (fitted parameters, excluding gates and swapped snr1/snr2)": {
+   "value": 0.00037,
+   "at": "/rows/2004/m1_q"
+  }
+ },
+ "m2_component_order_swapped": [
+  "2004"
+ ]
 }

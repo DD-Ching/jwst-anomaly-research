@@ -98,7 +98,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     - the narrow-band peak is 2.79″ away (sky PA 224°, at the edge of the valid map);
     - the 1.5″ W offset aperture is stronger (S/N 22.9);
     - the planned chance metric gives 1.83 per window search.
-    - → **not significant as a line of 1316**; no redshift.
+    - → **not significant under the calibration** (frozen class), i.e. not a line of 1316; no redshift.
     - Deviation, reported only: excluding the feature itself, no chance peak this strong elsewhere in the window,
       so the feature is real emission centred off 1316.
     - Decision to wait: unchanged.
