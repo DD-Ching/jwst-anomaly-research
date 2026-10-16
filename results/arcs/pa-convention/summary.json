@@ -1,0 +1,63 @@
+{
+  "plan": "results/arcs/pa-convention/PLAN.md",
+  "label": "derived",
+  "assumptions": {
+    "max_median_deg": 20.0,
+    "min_margin_deg": 15.0,
+    "min_rows": 8,
+    "secondary_min_ellipticity": 0.2
+  },
+  "primary": {
+    "n": 18,
+    "medians": {
+      "identity": 2.9993198788983833,
+      "mirrored": 35.233127833832214,
+      "rotated90": 87.00068012110162
+    },
+    "per_field": {
+      "abells1063-cats": {
+        "n": 5,
+        "medians": {
+          "identity": 1.288204360996133,
+          "mirrored": 15.535998025271454,
+          "rotated90": 88.71179563900388
+        }
+      },
+      "macs1423-canucs": {
+        "n": 13,
+        "medians": {
+          "identity": 3.9449881359919026,
+          "mirrored": 36.70524336367342,
+          "rotated90": 86.0550118640081
+        }
+      }
+    }
+  },
+  "secondary": {
+    "n": 66,
+    "medians": {
+      "identity": 2.45308217232877,
+      "mirrored": 46.09111114759432,
+      "rotated90": 87.54691782767125
+    },
+    "per_field": {
+      "abells1063-cats": {
+        "n": 21,
+        "medians": {
+          "identity": 2.352195331971302,
+          "mirrored": 42.11446202175159,
+          "rotated90": 87.6478046680287
+        }
+      },
+      "macs1423-canucs": {
+        "n": 45,
+        "medians": {
+          "identity": 2.49624390326278,
+          "mirrored": 46.445299204656465,
+          "rotated90": 87.50375609673722
+        }
+      }
+    }
+  },
+  "outcome": "convention agrees"
+}
