@@ -367,5 +367,6 @@ RELICS v1 models (local deflection patches, and `sunrise_counter.load_model` map
 
 ## Arc difference imaging, o010 → VENUS o052 (D-027 addendum 2026-10-16)
 `arc_diff.py` on a 24″ box around Earendel: 9 hits, 4 morphology passes, all off the arc (bright-core residuals, an
-edge-on disk, a compact-core dipole at the box border; all ≥ 4.0″ from every Scofield+2025 image); 0 candidates; injection depth ≈ 27.5 AB per band on bright pixels. Earendel is not
+edge-on disk, a compact-core dipole at the box border; all ≥ 3.98″ from every Scofield+2025 image); 0 candidates on the arc's images; injection recovery
+0.86 / 0.83 at 27.5 AB per band on bright pixels. Earendel is not
 a hit. Details: `results/transients/sunrise_arcdiff/RESULT.md`. The o010 → o120 pair is still to run.

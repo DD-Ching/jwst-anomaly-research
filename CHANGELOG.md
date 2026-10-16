@@ -6,16 +6,91 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Why:** the Sunrise catalog grids are null, but a catalog grid misses transients blended into an arc (PLATE-23a,
   D-027 addendum 2026-10-15j); `arc_diff.py` had never run on the Sunrise arc. Plan before the run:
   `results/transients/sunrise_arcdiff/PLAN.md`.
-- **Run (derived):** 24″ box on Earendel (whole arc), `--kernel-px 4 --kernel-stamps --inject 100`, F150W + F444W
+- **Run (derived):** 24″ box on Earendel (holds the arc's catalogued images), `--kernel-px 4 --kernel-stamps --inject 100`, F150W + F444W
   (jwst 2.0.1 vs 3.0.0); injections on bright pixels recovered 0.86 / 0.83 at 27.5 AB, 0.14 / 0.28 at 28.0.
 - **Result:** 9 hits; `arc_diff_morph.py` passes 4. On the sheet (`o010_o052/sheet.jpg`, new
   `scripts/arc_diff_sheet.py`) all 4 are off the arc: bright-core residuals (h001, h002), an edge-on disk (h007), a
-  compact-core dipole at the box border (h005); all hits ≥ 4.0″ from every Scofield+2025 multiple image. **0 candidates.** Earendel is not a hit (S −5.2 F150W, −1.5 F444W; stamp clean).
-- **Failed approach:** two `--kernel-stamps` runs without `OMP_NUM_THREADS=1` made no progress in 20 min (known,
-  CHANGELOG 2026-10-15; now restated in RESULT.md). The o120 run at `--procs 2` did not finish its first two SW bands
-  in 45 CPU-min and was stopped.
+  compact-core dipole at the box border (h005); all hits ≥ 3.98″ from every Scofield+2025 multiple image (post hoc rule). **0 candidates on the
+  arc's images.** Earendel is not a hit (S −5.2 F150W, −1.5 F444W; stamp clean).
+- **Failed approach (times not stored):** two `--kernel-stamps` runs without `OMP_NUM_THREADS=1` gave no output in
+  ≈ 20 min (known, CHANGELOG 2026-10-15). The o120 run at `--procs 2` did not finish its first two SW bands in
+  ≈ 45 min and was stopped.
+- **Deviations:** `--inject 100` instead of the PLAN's `--inject-grid`; o120 postponed; "on the arc" defined post hoc
+  (RESULT.md).
 - **Handoff:** run o010 → o120 alone with `--procs 4` (the next highest-value step on this arc); then the SMACS 0723
   and El Gordo arcs.
+
+## 2026-10-16: Abell 2744 orphans: per-pair vetting of the 11 escalated pairs: 4 ordinary, 7 insufficient data, 0 anomalies
+- **Plan and timing:** `results/orphan_pairs/abell2744/vetting/PLAN.md` was written before measuring. Its addendum
+  (E2 controls, `classify` / `e2_valid` as unit-tested functions) came after the first orphan measurements, so it is
+  post hoc for the orphans.
+- **Tool:** `scripts/orphan_vet.py` reads UNCOVER boxes by S3 byte range, and `--classify` runs and stores every
+  VizieR query. Nothing large was downloaded.
+- **Fixes after review:**
+  - the "LW stack" had summed a misaligned band; stacking now requires member pixel positions to agree to ≤ 0.1 px,
+    which leaves F277W only, plus F444W for #7 and #10;
+  - E4 is now a stored flux + 3σ upper bound;
+  - #3's E1 strip excess fell from 3.2σ to 1.2σ.
+- **E2 validation** on 11 CATS pairs ≤ 4″ apart: in every control one member reaches 3σ in at most 1 band; 1 of 7 measured
+  |sb_z| > 3 (rule ≤ 10 %). So E2 is not valid and supports or excludes nothing.
+- **E5/E6:**
+  - no public spectroscopic redshift lies within 1.5″ of any member (Price+25, Wang+24 `zsp`);
+  - same-z neighbours number 0–3 per pair.
+- **#7, member a:** UNCOVER DR3 detects it 0.006″ from our aperture. It is below 3σ only in our conservative
+  photometry.
+- **Classes** (`classification.json`):
+  - ordinary: #1 (visual artifact flag), and #5, #6 and #14 (E1 strip excess 3.3–4.8σ);
+  - insufficient: #2, #3, #7, #9, #10, #11 and #13;
+  - anomaly: none.
+- **Separate from the #269 population null and its ~0.3–1 % per-deflector efficiency:** nothing here is a candidate.
+- **Handoff:** the deciding data are spectra of both members. The no-new-data route needs a validated PSF-matched
+  morphology tool. Neither is in this unit.
+
+## 2026-10-16: Process: "Before writing results" rules in scripts/CLAUDE.md
+- **Why:** reviews of #262, #266 and #269 each found 8–12 problems, mostly of three kinds:
+  - frozen rules applied loosely;
+  - numbers not traceable to a committed file;
+  - overclaiming wording.
+- **Change:** `scripts/CLAUDE.md` gains a short section with five rules:
+  - computable frozen rules, with functions and tests where possible;
+  - every number traceable to a committed JSON/ECSV, or labelled "not stored", and ranges cover only the items
+    classified;
+  - narrowest wording for null / not affected / consistent with chance / equals / low completeness and for any causal
+    reading;
+  - deviations labelled;
+  - ruff format and fix before ruff check.
+- `.claude/skills/research-cycle/SKILL.md` step 8 points to the new section.
+- No tool, result or threshold changed.
+- **Open:** the Abell 2744 orphan vetting (#271) is paused unfinished; its state is in
+  `results/orphan_pairs/abell2744/vetting/STATUS.md` on its branch.
+
+## 2026-10-16: Orphan-pair dark-deflector screen on Abell 2744: null under the frozen rule; 11 top orphans unvetted
+- **Plan before the run** (`results/orphan_pairs/abell2744/PLAN.md`, committed first): the D-048/D-055 rules
+  unchanged. An excess needs P < 0.05 under both null (e) and null (f). It is the first run of this statistic on this
+  field, which is exploratory, not blind.
+- **Tool change:** `orphan_pairs.py` gains `FIELDS["abell2744"]` (DJA v7.2-fix phot and zout, already pinned; the zout
+  is a plain file). `inject_pairs.py --fields abell2744` is allowed.
+- **Checks:**
+  - alignment 0.02″ against the published images;
+  - **no positive control** (0 `published` pairs at 0.3–3″);
+  - injection efficiencies match the deep fields within noise (point 0.30 % / 0.95 % per deflector at θ_E 0.3″ /
+    0.7″; W1 15 % at 1.5″), so completeness is low here as everywhere; the cluster magnification of the injected
+    images is not modelled, and the pooled `limits.json` is not valid for a cluster field;
+  - artifacts in the top 15: a mosaic edge (#12), a star spike (#1), one off-footprint (#8).
+- **Result (derived):** 9,385 sources, 174 SED-matched close pairs, 51 orphans against 43.8 / 42.4 expected; P 0.16 /
+  0.11. **Null under the frozen rule.** The excess over null (a) persists under the redshift nulls (c) and (d) (P 0.016 /
+  0.021) and disappears under the conditioned nulls (e) and (f).
+- **Top orphans:** 11 of the top 15 meet the frozen escalation rule. They are unvetted and not candidates until
+  vetted; the count test cannot classify individual pairs.
+  - The per-pair `/vet-candidate` step is postponed (a deviation from the plan).
+  - A first sheet pass with the D-051 categories finds 5 companions or group members, 2 possible knots, 1
+    artefact-affected pair and 3 featureless faint pairs.
+- **Data:** the 233.5 MB phot file was downloaded to the cloud scratchpad and deleted after use.
+- **Code fixes after review:**
+  - `inject_pairs.py` refuses to pool cluster fields into `limits.json`;
+  - `orphan_pairs.lens_check` no longer falls back to the placeholder DJA `mu` outside the CATS maps.
+- **Handoff:** the open ordinary check is `/vet-candidate` on the 3 featureless pairs (#9, #11, #13) and the 2 possible
+  knots (#2, #3). MACS0417 and MACS1423 cluster pointings need published image lists.
 
 ## 2026-10-16: Abell 2744 `arc_diff` stripe, spike and offset-core vetoes on the annulus cut: they remove what they target, but other artifacts pass; not adopted
 - **Hypothesis before measuring (#265 handoff):** the 31 extra real passes of the v2 annulus cut are detector

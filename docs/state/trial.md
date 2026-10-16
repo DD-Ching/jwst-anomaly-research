@@ -195,6 +195,9 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | ≈ 0.3 (PEARLS 1176 o221 registration vs UNCOVER: catalogue offsets, held-out check, image WCS check, h182 re-calibration) | 0.1 (plan, claim, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | — | 0.7 (S6a archival brief, PDF, README entry) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.8 (Sunrise arc `arc_diff`: o052 pair, sheet; o120 pair stopped) | — | — | 0.2 (orientation, claim, PR) | cloud routine 01FjRPtm, 06:08–07:25Z |
+| 2026-W42 | — | 0.4 (Abell 2744 orphan-pair dark-deflector screen: frozen rules, alignment, injections, top-15 sheet) | — | 0.1 (orientation, claim, state files, PR) | interactive session 01AzKMDv |
+| 2026-W42 | — | — | — | 0.3 (process: "Before writing results" rules; orphan vetting paused) | interactive session 01AzKMDv |
+| 2026-W42 | — | — | 0.6 (Abell 2744 orphan per-pair vetting: E2 controls, VizieR E5/E6, #7 check, classification) | 0.1 (state files, PR) | interactive session 01AzKMDv |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

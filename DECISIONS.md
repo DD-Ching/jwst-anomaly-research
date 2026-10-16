@@ -1608,10 +1608,10 @@ field grid needs a difference-image pass (`arc_diff.py` tiles, `--min-bands 1` f
 quoted as a null for SNe on hosts. Revisit if: a field-wide difference-image tool replaces the grid.
 
 **Addendum 2026-10-16 (Sunrise arc, o010 → VENUS o052).** `arc_diff.py --kernel-px 4 --kernel-stamps` on a 24″ box
-around Earendel (the whole arc), F150W + F444W (jwst 2.0.1 vs 3.0.0, 2.9 yr). Injections on bright pixels: 0.86 / 0.83
+around Earendel (holds the arc's catalogued images), F150W + F444W (jwst 2.0.1 vs 3.0.0, 2.9 yr). Injections on bright pixels: 0.86 / 0.83
 at 27.5 AB, 0.14 / 0.28 at 28.0. 9 hits; `arc_diff_morph.py` passes 4, all off the arc by eye (bright-core residuals,
-an edge-on disk, a compact-core dipole at the box border; all ≥ 4.0″ from every Scofield+2025 multiple image): **0 candidates; no flux change on the Sunrise arc above ≈ 27.5 AB**
-(per-band injection depth, before the morphology step). Earendel is not a hit (S −5.2 / −1.5). The o010 → o120 pair is
+an edge-on disk, a compact-core dipole at the box border; all ≥ 3.98″ from every Scofield+2025 multiple image, a post hoc rule): **0 candidates on the arc's
+images** (injection recovery 0.86 / 0.83 at 27.5 AB is per band, before the morphology step; not a whole-box limit). Earendel is not a hit (S −5.2 / −1.5). The o010 → o120 pair is
 still to run (`results/transients/sunrise_arcdiff/RESULT.md`). New `scripts/arc_diff_sheet.py` makes the hit sheets.
 
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
@@ -2677,6 +2677,23 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
 - Injection-recovery turns the count null into a limit (TASKS).
 - CANUCS segmentation maps replace the same-galaxy rule, or deeper / core photometry is used.
 - CANUCS v2 releases the MACS1149 image list, or spectroscopy targets an orphan pair.
+
+**Addendum 2026-10-16 (Abell 2744).**
+- **Run.** Same rules, frozen in `results/orphan_pairs/abell2744/PLAN.md` before the run, on DJA v7.2-fix (66,172
+  rows, 9,385 kept). Published images come from CATS v4.1 and Bergamini+23; alignment is 0.02″.
+- **Result: null.** 51 orphans observed against 43.8 / 42.4 expected under nulls (e) / (f); P = 0.16 / 0.11.
+- **No positive control.** No SED-matched pair lies near a published image.
+- **Injections** (`inject_pairs.py --fields abell2744`, efficiencies only): per-deflector efficiencies match the
+  deep fields within noise (point 0.30 % / 0.95 % at 0.3″ / 0.7″). Completeness is low here as in every field. The
+  cluster magnification of injected images is not modelled, and no pooled limit is written for a cluster field.
+- **Nulls.** The excess over null (a) persists under (c) and (d) (P 0.016 / 0.021) and disappears under (e) and (f).
+- **Escalation.** 11 of the top 15 orphans meet the frozen escalation rule. They are unvetted (step postponed) and
+  not candidates until vetted. A sheet pass finds 5 companions or group members, 2 possible knots, 1
+  artefact-affected pair and 3 featureless faint pairs. Details are in `RESULT.md`.
+- **Per-pair vetting (2026-10-16, `vetting/RESULT.md`).**
+  - Classes: 4 ordinary (#5, #6, #14 by E1 strip excess; #1 by a visual artifact flag), 7 insufficient data (#2, #3,
+    #7, #9, #10, #11, #13), 0 anomalies.
+  - E2 surface brightness could not be validated on published images, and no public spectra exist at any member.
 
 ## D-046 Multi-plane lens models: `LensModel.split_planes` and `MultiPlaneLensModel` (2026-10-08)
 

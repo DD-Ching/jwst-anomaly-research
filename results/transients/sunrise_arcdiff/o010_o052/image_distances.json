@@ -1,0 +1,62 @@
+{
+ "provenance": "derived",
+ "source": "scripts/sunrise_scofield.py IMAGES (Scofield+2025 Table 3, JWST frame)",
+ "method": "angular distance from each morph.json target to the nearest catalogued multiple image (post hoc rule)",
+ "rows": [
+  {
+   "id": "h000",
+   "verdict": "dipole",
+   "nearest_image": "2c",
+   "dist_arcsec": 9.41
+  },
+  {
+   "id": "h001",
+   "verdict": "pass",
+   "nearest_image": "1.7a",
+   "dist_arcsec": 4.03
+  },
+  {
+   "id": "h002",
+   "verdict": "pass",
+   "nearest_image": "1.1d",
+   "dist_arcsec": 13.71
+  },
+  {
+   "id": "h003",
+   "verdict": "sign_flip",
+   "nearest_image": "1.1b",
+   "dist_arcsec": 3.98
+  },
+  {
+   "id": "h004",
+   "verdict": "sign_flip",
+   "nearest_image": "1.7c",
+   "dist_arcsec": 6.95
+  },
+  {
+   "id": "h005",
+   "verdict": "pass",
+   "nearest_image": "1.7a",
+   "dist_arcsec": 10.46
+  },
+  {
+   "id": "h006",
+   "verdict": "edge",
+   "nearest_image": "1.2a",
+   "dist_arcsec": 11.51
+  },
+  {
+   "id": "h007",
+   "verdict": "pass",
+   "nearest_image": "1.7d",
+   "dist_arcsec": 5.03
+  },
+  {
+   "id": "h008",
+   "verdict": "dipole",
+   "nearest_image": "1.1a",
+   "dist_arcsec": 11.05
+  }
+ ],
+ "min_dist_arcsec": 3.98
+}

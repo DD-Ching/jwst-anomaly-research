@@ -156,6 +156,28 @@ FIELDS = {
 # (the observation covering each pair is chosen from its MAST footprint).
 _NCF = "https://archive.stsci.edu/hlsps/canucs/dr1/{c}/ncf/hlsp_canucs_jwst-hst_multi_{c}-ncf_multi_v1_photometry-cat.fits.gz"
 _DJA = "https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/"
+# Abell 2744 (UNCOVER + archival, DJA grizli v7.2-fix; pins as configs/abell2744.yaml and
+# a2744_followups.ZOUT). The phot file is 233.5 MB (> 200 MB; reason in configs/abell2744.yaml).
+# The zout is a plain file (``photoz`` without ``member``). Published images: CATS v4.1 plus the
+# Bergamini+23 list; no frame offset is applied (only used to mark pairs within 1" of an image).
+FIELDS["abell2744"] = {
+    "format": "dja",
+    "catalogue": (
+        _DJA + "abell2744clu-grizli-v7.2-fix_phot.fits",
+        "5a9ed7bc3f5f8d41486f2475f3bedb3baa2a0068b1eab6db62fdcea216633084",
+    ),
+    "max_bytes": 240_000_000,
+    "photoz": {
+        "url": _DJA + "abell2744clu-grizli-v7.2-fix.eazypy.zout.fits",
+        "sha256": "436626861c7dbf370419a8787dd79140fad99c2ecbd268257941afe6d493991c",
+    },
+    "z_cluster": 0.308,
+    "cats": "abell2744-cats",
+    "image_lists": [],
+    "image_models": ["abell2744-bergamini23"],
+    "i2d": "jw02561-o001_t003",
+}
+
 DEEP_FIELDS = {
     # CANUCS NIRCam flanking fields: same catalogue format as the cluster fields, ~3-6' from
     # the cluster cores; the catalogue MU (CANUCS lens model) is 1.00-1.4 there.
@@ -902,12 +924,18 @@ def rank_orphans(pairs: Table) -> Table:
 # ------------------------------------------------------------------------------- follow-up
 
 
-def lens_check(top: Table, model_name: str | None, z_cluster: float) -> Table:
+def lens_check(
+    top: Table, model_name: str | None, z_cluster: float, catalogue_mu: bool = True
+) -> Table:
     """CATS map magnification (signed) at both members at their photo-z (model_prediction).
 
     ``model_name`` None (deep fields): no lens model is needed; the catalogue magnification
     (CANUCS ``MU``, ~1 in the flanking fields; 1 for DJA) is the only lensing at the pair, so
-    ``cluster_explains`` is ``|mu_cat| > MAX_ORDINARY_MU``."""
+    ``cluster_explains`` is ``|mu_cat| > MAX_ORDINARY_MU``.
+
+    ``catalogue_mu`` False (DJA cluster catalogues, whose ``mu`` is a placeholder 1): pairs
+    outside the CATS maps keep ``cluster_explains`` False but ``model_covered`` False, with no
+    catalogue fallback."""
     if model_name is None:
         return _no_model_check(top, z_cluster)
     import lens_consistency as lc
@@ -925,20 +953,25 @@ def lens_check(top: Table, model_name: str | None, z_cluster: float) -> Table:
     known = np.isfinite(mu_a) & np.isfinite(mu_b)  # NaN: outside the model's maps
     top["parity_flip"] = known & (np.sign(mu_a) != np.sign(mu_b))
     big = np.fmax(np.abs(mu_a), np.abs(mu_b))
-    # outside the CATS maps: fall back to the CANUCS catalogue |mu| (its own lens model)
-    canucs = np.fmax(
-        np.abs(np.asarray(top["mu_cat_a"], float)), np.abs(np.asarray(top["mu_cat_b"], float))
-    )
-    big = np.where(np.isfinite(big), big, canucs)
+    # outside the CATS maps: fall back to the CANUCS catalogue |mu| (its own lens model); a DJA
+    # catalogue has no such model, so those pairs stay unknown (model_covered False)
+    if catalogue_mu:
+        canucs = np.fmax(
+            np.abs(np.asarray(top["mu_cat_a"], float)), np.abs(np.asarray(top["mu_cat_b"], float))
+        )
+        big = np.where(np.isfinite(big), big, canucs)
     top["model_covered"] = known
-    top["cluster_explains"] = top["parity_flip"] | (big > MAX_ORDINARY_MU)
+    with np.errstate(invalid="ignore"):
+        top["cluster_explains"] = top["parity_flip"] | (
+            np.nan_to_num(big, nan=0.0) > MAX_ORDINARY_MU
+        )
     dl = dark_lens_numbers(top["sep"], z_cluster, zs)
     for c in dl.colnames:
         top[c] = dl[c]
     top.meta["source"] = (
         f"{top.meta.get('source', 'CANUCS DR1 photometry catalogue')}; magnifications from "
-        f"{model.source} (frame offset {offset[0]:+.3f}, {offset[1]:+.3f} arcsec) and the "
-        "CANUCS catalogue MU"
+        f"{model.source} (frame offset {offset[0]:+.3f}, {offset[1]:+.3f} arcsec)"
+        + (" and the CANUCS catalogue MU" if catalogue_mu else "; no catalogue fallback")
     )
     top.meta["model_prediction_columns"] = [
         "mu_cats_a",
@@ -1193,9 +1226,11 @@ def load_catalogue(field: str) -> Table:
     if spec.get("format", "canucs") == "canucs":
         return canucs_standard(Table.read(path))
     zcols = ["id", "z_spec", "z_ml", "z025", "z160", "z840"]
-    zout = Table.read(fetch_tar_member(spec["photoz"]))[zcols]
+    pz = spec["photoz"]
+    zpath = fetch_tar_member(pz) if "member" in pz else fetch_catalog(pz["url"], pz["sha256"])
+    zout = Table.read(zpath)[zcols]
     std = dja_standard(Table.read(path), zout)
-    std.meta["source"] += f" ({Path(url).name}; {spec['photoz']['member']})"
+    std.meta["source"] += f" ({Path(url).name}; {pz.get('member', Path(pz['url']).name)})"
     return std
 
 
@@ -1294,7 +1329,7 @@ def main(argv: list[str] | None = None) -> int:
     pairs.write(out / "matched_pairs.ecsv", overwrite=True)
     top = rank_orphans(pairs)[: args.top]
     if len(top):
-        top = lens_check(top, spec["cats"], z_lens)
+        top = lens_check(top, spec["cats"], z_lens, spec.get("format", "canucs") == "canucs")
         if args.cutouts:
             summary["contact_sheet"] = str(
                 cutouts_and_sheet(top, args.field, out, f"{args.field} orphan pairs (unvetted)")
