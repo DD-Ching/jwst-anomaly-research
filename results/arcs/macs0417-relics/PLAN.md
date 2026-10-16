@@ -31,3 +31,13 @@ alignment fraction.
 **Inputs:** JWST program 1208 (CANUCS) MACS0417 cluster-pointing F200W pipeline catalogue (MAST level 3), CANUCS
 DR1 `macs0417-clu` photometry with EAzY photo-z, RELICS Lenstool v1 maps (HLSP DOI 10.17909/T9SP45). Byte ranges
 or small files only; nothing over 200 MB.
+
+## Addendum A (2026-10-16 16:28Z, after run 1, before run 2)
+- **Run 1 (RELICS Lenstool v1) failed the control:** 39 / 61 strong-shear background rows aligned (64 % < 70 %).
+  Per the rule above, no anti count from run 1 is interpreted.
+- **Run 2, chosen after run 1's control failure (a deviation; stated here before running it):** the same catalogue,
+  photo-z, rules, control and outcome rule with the CANUCS DR1 MACS0417 Lenstool maps (Desprez, preliminary v1,
+  constrained by 30 spectroscopic multiple-image systems; best fit, 100 mas, D_LS/D_S = 1; z_lens 0.443). The
+  model is JWST-era and was not used to choose anything in run 1. If its control also fails, the field gives no
+  result. Its anti count is reported against the same frozen rule; because the model choice followed a failed
+  control, any replication is labelled exploratory.
