@@ -324,7 +324,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      rules on these four tiles (owner, 2026-10-16); further work goes to new epochs or untested regions;
    - **Sunrise arc `arc_diff`** (D-027 addendum 2026-10-16): o010 → o052 done, 0 candidates on the arc's images
      (injection recovery 0.86 / 0.83 at 27.5 AB per band). Next: o010 → o120 (F090W F115W F277W F356W) alone with `--procs 4`, `OMP_NUM_THREADS=1`
-     (≈ 45 min without finishing two SW bands at `--procs 2`; not stored); then SMACS 0723 and El Gordo arcs;
+     (≈ 45 min without finishing two SW bands at `--procs 2`; not stored); then El Gordo arcs;
+   - **SMACS 0723 arc `arc_diff`** (D-027 addendum 2026-10-16, system 5 box): ERO → VENUS done, Atalanta recovered,
+     0 to vet; GO-4043 → DD 12774 fails its control (shallow F115W). Next: the rest of the SMACS arcs (more boxes);
+     whether AT 2024jfz (1.8″ from image 6.1) has model counter-images;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

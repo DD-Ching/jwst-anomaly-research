@@ -1614,6 +1614,16 @@ an edge-on disk, a compact-core dipole at the box border; all ≥ 3.98″ from e
 images** (injection recovery 0.86 / 0.83 at 27.5 AB is per band, before the morphology step; not a whole-box limit). Earendel is not a hit (S −5.2 / −1.5). The o010 → o120 pair is
 still to run (`results/transients/sunrise_arcdiff/RESULT.md`). New `scripts/arc_diff_sheet.py` makes the hit sheets.
 
+**Addendum 2026-10-16 (SMACS 0723 system 5 arc).** Same settings on a 24″ box between SN Atalanta's images. ERO o001 →
+VENUS o057 (F150W + F444W): **Atalanta A and B recovered** as morphology passes (S +49 to +58), the known-case
+validation; injections 0.82 / 0.76 at 27.5 AB per band. 73 hits; under the frozen rule (`classify` in
+`scripts/smacs_arcdiff_images.py`: morph pass and ≤ 1″ from a Mahler+22 image) **0 to vet** beyond Atalanta; the
+one hit on an image (h061, 12.1) is a compact-knot dipole in a re-centred box. GO-4043 → DD 12774 (F115W + F444W)
+**fails its control** (Atalanta F115W S ≈ 2.4; injections 0.26 / 0.34 at 27.5), so it gives no null; its one pass is
+AT 2024jfz (0.08″), a one-epoch point source in 2024. `results/transients/smacs_arcdiff/RESULT.md`. **Decision:** a
+field's arc pass needs a known-transient (or injected) control that fires under `--min-bands 2`; a pair whose
+shallower band misses it is reported as untrusted, not as a null.
+
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**

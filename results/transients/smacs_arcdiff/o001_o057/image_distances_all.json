@@ -1,0 +1,664 @@
+{
+ "provenance": "derived",
+ "source": "smacs0723-iclv2 arcs.dat (Mahler+22 ICLv2) with its JWST frame offset; known_controls.csv",
+ "rule": "PLAN.md (frozen): known <= 0.15\"; vet = pass and <= 1.0\"",
+ "rows": [
+  {
+   "id": "h000",
+   "verdict": "dipole",
+   "nearest_image": "13.1",
+   "dist_arcsec": 2.74,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.238,
+   "class": "vetoed"
+  },
+  {
+   "id": "h001",
+   "verdict": "dipole",
+   "nearest_image": "13.1",
+   "dist_arcsec": 2.62,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.117,
+   "class": "vetoed"
+  },
+  {
+   "id": "h002",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 4.09,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.133,
+   "class": "vetoed"
+  },
+  {
+   "id": "h003",
+   "verdict": "dipole",
+   "nearest_image": "18.1",
+   "dist_arcsec": 3.12,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 8.009,
+   "class": "vetoed"
+  },
+  {
+   "id": "h004",
+   "verdict": "rosette",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.0,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.113,
+   "class": "vetoed"
+  },
+  {
+   "id": "h005",
+   "verdict": "dipole",
+   "nearest_image": "18.1",
+   "dist_arcsec": 3.15,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 7.894,
+   "class": "vetoed"
+  },
+  {
+   "id": "h006",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 4.22,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.061,
+   "class": "vetoed"
+  },
+  {
+   "id": "h007",
+   "verdict": "edge",
+   "nearest_image": "12.2",
+   "dist_arcsec": 3.48,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 10.592,
+   "class": "vetoed"
+  },
+  {
+   "id": "h008",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.9,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.014,
+   "class": "vetoed"
+  },
+  {
+   "id": "h009",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.49,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.02,
+   "class": "vetoed"
+  },
+  {
+   "id": "h010",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 4.11,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.797,
+   "class": "vetoed"
+  },
+  {
+   "id": "h011",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.15,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.356,
+   "class": "vetoed"
+  },
+  {
+   "id": "h012",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.81,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.258,
+   "class": "vetoed"
+  },
+  {
+   "id": "h013",
+   "verdict": "edge",
+   "nearest_image": "12.1",
+   "dist_arcsec": 4.0,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.319,
+   "class": "vetoed"
+  },
+  {
+   "id": "h014",
+   "verdict": "edge",
+   "nearest_image": "12.1",
+   "dist_arcsec": 4.08,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.815,
+   "class": "vetoed"
+  },
+  {
+   "id": "h015",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.94,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.42,
+   "class": "vetoed"
+  },
+  {
+   "id": "h016",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.39,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.918,
+   "class": "vetoed"
+  },
+  {
+   "id": "h017",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.96,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.505,
+   "class": "vetoed"
+  },
+  {
+   "id": "h018",
+   "verdict": "edge",
+   "nearest_image": "21.2",
+   "dist_arcsec": 4.65,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 12.11,
+   "class": "vetoed"
+  },
+  {
+   "id": "h019",
+   "verdict": "pass",
+   "nearest_image": "17.2",
+   "dist_arcsec": 4.91,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 9.874,
+   "class": "off_image"
+  },
+  {
+   "id": "h020",
+   "verdict": "dipole",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.7,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 14.172,
+   "class": "vetoed"
+  },
+  {
+   "id": "h021",
+   "verdict": "pass",
+   "nearest_image": "5.1",
+   "dist_arcsec": 1.69,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 0.025,
+   "class": "known"
+  },
+  {
+   "id": "h022",
+   "verdict": "dipole",
+   "nearest_image": "6.2",
+   "dist_arcsec": 1.21,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 11.196,
+   "class": "vetoed"
+  },
+  {
+   "id": "h023",
+   "verdict": "rosette",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.52,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.97,
+   "class": "vetoed"
+  },
+  {
+   "id": "h024",
+   "verdict": "pass",
+   "nearest_image": "5.2",
+   "dist_arcsec": 1.59,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 0.005,
+   "class": "known"
+  },
+  {
+   "id": "h025",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 4.3,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.519,
+   "class": "vetoed"
+  },
+  {
+   "id": "h026",
+   "verdict": "dipole",
+   "nearest_image": "16.2",
+   "dist_arcsec": 3.42,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 6.758,
+   "class": "vetoed"
+  },
+  {
+   "id": "h027",
+   "verdict": "extended",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.53,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.035,
+   "class": "vetoed"
+  },
+  {
+   "id": "h028",
+   "verdict": "rosette",
+   "nearest_image": "13.1",
+   "dist_arcsec": 2.44,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.765,
+   "class": "vetoed"
+  },
+  {
+   "id": "h029",
+   "verdict": "rosette",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.24,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 11.778,
+   "class": "vetoed"
+  },
+  {
+   "id": "h030",
+   "verdict": "edge",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.77,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.856,
+   "class": "vetoed"
+  },
+  {
+   "id": "h031",
+   "verdict": "rosette",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.36,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.349,
+   "class": "vetoed"
+  },
+  {
+   "id": "h032",
+   "verdict": "dipole",
+   "nearest_image": "6.2",
+   "dist_arcsec": 2.59,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 14.253,
+   "class": "vetoed"
+  },
+  {
+   "id": "h033",
+   "verdict": "rosette",
+   "nearest_image": "13.1",
+   "dist_arcsec": 3.86,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.77,
+   "class": "vetoed"
+  },
+  {
+   "id": "h034",
+   "verdict": "extended",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.18,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.462,
+   "class": "vetoed"
+  },
+  {
+   "id": "h035",
+   "verdict": "extended",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.05,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 11.595,
+   "class": "vetoed"
+  },
+  {
+   "id": "h036",
+   "verdict": "rosette",
+   "nearest_image": "18.2",
+   "dist_arcsec": 2.87,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 8.166,
+   "class": "vetoed"
+  },
+  {
+   "id": "h037",
+   "verdict": "rosette",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.72,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.365,
+   "class": "vetoed"
+  },
+  {
+   "id": "h038",
+   "verdict": "extended",
+   "nearest_image": "12.1",
+   "dist_arcsec": 2.86,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 11.825,
+   "class": "vetoed"
+  },
+  {
+   "id": "h039",
+   "verdict": "pass",
+   "nearest_image": "18.1",
+   "dist_arcsec": 3.71,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 7.543,
+   "class": "off_image"
+  },
+  {
+   "id": "h040",
+   "verdict": "extended",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.67,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 11.586,
+   "class": "vetoed"
+  },
+  {
+   "id": "h041",
+   "verdict": "edge",
+   "nearest_image": "19.2",
+   "dist_arcsec": 4.36,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 11.84,
+   "class": "vetoed"
+  },
+  {
+   "id": "h042",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 4.29,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.805,
+   "class": "vetoed"
+  },
+  {
+   "id": "h043",
+   "verdict": "rosette",
+   "nearest_image": "13.1",
+   "dist_arcsec": 2.82,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.561,
+   "class": "vetoed"
+  },
+  {
+   "id": "h044",
+   "verdict": "edge",
+   "nearest_image": "12.1",
+   "dist_arcsec": 4.59,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.657,
+   "class": "vetoed"
+  },
+  {
+   "id": "h045",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 1.96,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.171,
+   "class": "vetoed"
+  },
+  {
+   "id": "h046",
+   "verdict": "rosette",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.42,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.59,
+   "class": "vetoed"
+  },
+  {
+   "id": "h047",
+   "verdict": "extended",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.14,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 10.706,
+   "class": "vetoed"
+  },
+  {
+   "id": "h048",
+   "verdict": "rosette",
+   "nearest_image": "18.2",
+   "dist_arcsec": 3.63,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 8.169,
+   "class": "vetoed"
+  },
+  {
+   "id": "h049",
+   "verdict": "extended",
+   "nearest_image": "13.1",
+   "dist_arcsec": 2.58,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 11.641,
+   "class": "vetoed"
+  },
+  {
+   "id": "h050",
+   "verdict": "rosette",
+   "nearest_image": "13.1",
+   "dist_arcsec": 2.45,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.397,
+   "class": "vetoed"
+  },
+  {
+   "id": "h051",
+   "verdict": "extended",
+   "nearest_image": "13.1",
+   "dist_arcsec": 2.6,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.304,
+   "class": "vetoed"
+  },
+  {
+   "id": "h052",
+   "verdict": "edge",
+   "nearest_image": "6.2",
+   "dist_arcsec": 3.89,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 16.251,
+   "class": "vetoed"
+  },
+  {
+   "id": "h053",
+   "verdict": "edge",
+   "nearest_image": "3.1",
+   "dist_arcsec": 2.63,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 14.018,
+   "class": "vetoed"
+  },
+  {
+   "id": "h054",
+   "verdict": "dipole",
+   "nearest_image": "18.1",
+   "dist_arcsec": 2.29,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 8.414,
+   "class": "vetoed"
+  },
+  {
+   "id": "h055",
+   "verdict": "rosette",
+   "nearest_image": "13.1",
+   "dist_arcsec": 2.16,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.501,
+   "class": "vetoed"
+  },
+  {
+   "id": "h056",
+   "verdict": "extended",
+   "nearest_image": "12.1",
+   "dist_arcsec": 2.53,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.021,
+   "class": "vetoed"
+  },
+  {
+   "id": "h057",
+   "verdict": "dipole",
+   "nearest_image": "19.1",
+   "dist_arcsec": 5.08,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 9.659,
+   "class": "vetoed"
+  },
+  {
+   "id": "h058",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 2.59,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.65,
+   "class": "vetoed"
+  },
+  {
+   "id": "h059",
+   "verdict": "dipole",
+   "nearest_image": "18.1",
+   "dist_arcsec": 2.18,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 8.261,
+   "class": "vetoed"
+  },
+  {
+   "id": "h060",
+   "verdict": "extended",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.85,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 10.751,
+   "class": "vetoed"
+  },
+  {
+   "id": "h061",
+   "verdict": "edge",
+   "nearest_image": "12.1",
+   "dist_arcsec": 0.15,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 11.239,
+   "class": "vetoed"
+  },
+  {
+   "id": "h062",
+   "verdict": "rosette",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.01,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 11.247,
+   "class": "vetoed"
+  },
+  {
+   "id": "h063",
+   "verdict": "pass",
+   "nearest_image": "6.1",
+   "dist_arcsec": 1.37,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 9.713,
+   "class": "off_image"
+  },
+  {
+   "id": "h064",
+   "verdict": "edge",
+   "nearest_image": "12.1",
+   "dist_arcsec": 2.17,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 12.36,
+   "class": "vetoed"
+  },
+  {
+   "id": "h065",
+   "verdict": "edge",
+   "nearest_image": "3.1",
+   "dist_arcsec": 2.28,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.683,
+   "class": "vetoed"
+  },
+  {
+   "id": "h066",
+   "verdict": "extended",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.23,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 10.302,
+   "class": "vetoed"
+  },
+  {
+   "id": "h067",
+   "verdict": "edge",
+   "nearest_image": "19.2",
+   "dist_arcsec": 4.51,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 11.859,
+   "class": "vetoed"
+  },
+  {
+   "id": "h068",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 1.66,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.113,
+   "class": "vetoed"
+  },
+  {
+   "id": "h069",
+   "verdict": "edge",
+   "nearest_image": "13.1",
+   "dist_arcsec": 1.78,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 13.315,
+   "class": "vetoed"
+  },
+  {
+   "id": "h070",
+   "verdict": "rosette",
+   "nearest_image": "12.1",
+   "dist_arcsec": 3.17,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 9.854,
+   "class": "vetoed"
+  },
+  {
+   "id": "h071",
+   "verdict": "sign_flip",
+   "nearest_image": "13.1",
+   "dist_arcsec": 1.96,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 10.651,
+   "class": "vetoed"
+  },
+  {
+   "id": "h072",
+   "verdict": "extended",
+   "nearest_image": "18.1",
+   "dist_arcsec": 1.37,
+   "nearest_known": "Atalanta_A",
+   "known_dist_arcsec": 5.226,
+   "class": "vetoed"
+  }
+ ]
+}
