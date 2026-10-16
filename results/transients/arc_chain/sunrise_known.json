@@ -1,0 +1,20 @@
+{
+ "mask_band": "F356W",
+ "mask_area_frac": 0.02923872955709017,
+ "mask_area_ok": true,
+ "known": [
+  {
+   "name": "Earendel",
+   "hit": null,
+   "near_bright_core": null,
+   "morph": null,
+   "in_mask": true,
+   "mask_distance_arcsec": 0.0,
+   "nearest_image_arcsec": 0.0,
+   "arc_level_sigma": 8.26,
+   "full_chain": false
+  }
+ ],
+ "hits_in_mask": [],
+ "n_hits": 12
+}

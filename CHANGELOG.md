@@ -2,6 +2,29 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Full-chain known-case check of arc difference imaging: MACS0416 4 / 4 pass, SN Atalanta fails at the position stage
+- **Why:** the owner asked that known real signals pass the whole chain (detection, morphology, position, multi-band)
+  before more arcs are searched. Plan before any run: `results/transients/arc_chain/PLAN.md`. Post-hoc arc mask
+  (image-based, frozen parameters) in new `scripts/arc_chain.py`, unit-tested.
+- **Result (derived; `results/transients/arc_chain/RESULT.md`):**
+  - **MACS0416 Yan+2023.** The 4 transients detected in o211 → o212 pass every stage; 3 of them are non-trivial
+    tests of the mask, since D21-W1 is 0.19″ from a catalogued image. D21-S2 sits 1.43″ from its
+    catalogued image, so a 1″ rule would have dropped it.
+  - **SMACS Atalanta A/B.** Detected and morph `pass`, but outside the mask (0.76–0.86″) as well as outside 1″. The
+    host light at those positions is below the mask threshold (0.30–1.78 σ).
+  - **SMACS full-chain injection efficiency inside the mask:** 0.50 at 27.5 AB and 0.31 at 28.0 AB (3 seeds). The
+    pre-morphology per-band figures were 0.82 / 0.76 (SMACS) and 1.00 / 0.97 (Sunrise).
+- **Failed approach / plan error:** Earendel was listed as an independent mask check, but it is catalogued image 1.1e
+  and seeds its own component.
+- **Limits:**
+  - the mask misses transients on host light outside the dilated, seeded components, by construction;
+  - SMACS in-mask samples are small (26 and 29 stars);
+  - there is no masked full-chain efficiency for MACS0416 or Sunrise.
+- **Handoff:** owner decision before the next new arc data. The frozen rule counts the chain as validated on its
+  independent cases, but a known real transient (Atalanta) still fails. Not started; it needs the owner's go:
+  - report every morph `pass` regardless of position, with position as a label rather than a veto;
+  - a host-segmentation position rule (tool work, so the owner decides).
+
 ## 2026-10-16: SMACS 0723 arc difference imaging: Atalanta recovered, no candidate; h061 undetermined (near-star spikes); the 2024 → 2026-07 pair fails its control
 - **Why:** the Sunrise handoff names SMACS next; a catalog grid misses transients blended into arcs (D-027 addendum
   2026-10-15j). Plan before the run: `results/transients/smacs_arcdiff/PLAN.md` (24″ box on the system 5 arc, SN
