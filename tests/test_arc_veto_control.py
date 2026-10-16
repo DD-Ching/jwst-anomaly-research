@@ -52,6 +52,13 @@ def test_injected_hits_and_compare(tmp_path):
     assert s["outcome"] == "H1"
     assert s["post_hoc_neg_ratio_vetoed"] == [0.5]
     assert s["post_hoc_neg_ratio_passed"] == [0.0]
+    assert s["post_hoc_vetoed_centre_negative"] == 0
+    assert s["post_hoc_vetoed_lobe_without_negative_centre"] == 1
+
+
+def test_centre_negative():
+    assert avc.centre_negative({"a": {"s_hit": -3.0}, "b": {"s_hit": 9.0}})
+    assert not avc.centre_negative({"a": {"s_hit": -2.0}, "b": {}})
 
 
 def test_negative_ratio():

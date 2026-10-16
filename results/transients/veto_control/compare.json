@@ -8,6 +8,10 @@
    "frac_vetoed": 1.0,
    "frac_passed": 0.64,
    "outcome": "H1",
+   "post_hoc_vetoed_centre_negative": 6,
+   "post_hoc_passed_centre_negative": 10,
+   "post_hoc_vetoed_lobe_without_negative_centre": 7,
+   "post_hoc_passed_lobe_without_negative_centre": 6,
    "post_hoc_neg_ratio_vetoed": [
     0.497,
     0.902,
@@ -57,6 +61,10 @@
    "frac_vetoed": 1.0,
    "frac_passed": 0.75,
    "outcome": "mixed",
+   "post_hoc_vetoed_centre_negative": 6,
+   "post_hoc_passed_centre_negative": 6,
+   "post_hoc_vetoed_lobe_without_negative_centre": 7,
+   "post_hoc_passed_lobe_without_negative_centre": 3,
    "post_hoc_neg_ratio_vetoed": [
     0.497,
     0.902,
@@ -93,6 +101,10 @@
    "frac_vetoed": null,
    "frac_passed": 0.538,
    "outcome": "undetermined",
+   "post_hoc_vetoed_centre_negative": 0,
+   "post_hoc_passed_centre_negative": 4,
+   "post_hoc_vetoed_lobe_without_negative_centre": 0,
+   "post_hoc_passed_lobe_without_negative_centre": 3,
    "post_hoc_neg_ratio_vetoed": [],
    "post_hoc_neg_ratio_passed": [
     0.0,
@@ -116,6 +128,10 @@
    "frac_vetoed": 1.0,
    "frac_passed": 0.438,
    "outcome": "H1",
+   "post_hoc_vetoed_centre_negative": 5,
+   "post_hoc_passed_centre_negative": 3,
+   "post_hoc_vetoed_lobe_without_negative_centre": 1,
+   "post_hoc_passed_lobe_without_negative_centre": 5,
    "post_hoc_neg_ratio_vetoed": [
     1.001,
     1.005,
@@ -149,6 +165,10 @@
    "frac_vetoed": 1.0,
    "frac_passed": 0.857,
    "outcome": "mixed",
+   "post_hoc_vetoed_centre_negative": 5,
+   "post_hoc_passed_centre_negative": 2,
+   "post_hoc_vetoed_lobe_without_negative_centre": 1,
+   "post_hoc_passed_lobe_without_negative_centre": 4,
    "post_hoc_neg_ratio_vetoed": [
     1.001,
     1.005,
@@ -173,6 +193,10 @@
    "frac_vetoed": null,
    "frac_passed": 0.111,
    "outcome": "undetermined",
+   "post_hoc_vetoed_centre_negative": 0,
+   "post_hoc_passed_centre_negative": 1,
+   "post_hoc_vetoed_lobe_without_negative_centre": 0,
+   "post_hoc_passed_lobe_without_negative_centre": 1,
    "post_hoc_neg_ratio_vetoed": [],
    "post_hoc_neg_ratio_passed": [
     0.0,
@@ -192,6 +216,10 @@
    "frac_vetoed": 1.0,
    "frac_passed": 0.561,
    "outcome": "H1",
+   "post_hoc_vetoed_centre_negative": 11,
+   "post_hoc_passed_centre_negative": 13,
+   "post_hoc_vetoed_lobe_without_negative_centre": 8,
+   "post_hoc_passed_lobe_without_negative_centre": 11,
    "post_hoc_neg_ratio_vetoed": [
     0.497,
     0.902,
@@ -263,6 +291,10 @@
    "frac_vetoed": 1.0,
    "frac_passed": 0.789,
    "outcome": "mixed",
+   "post_hoc_vetoed_centre_negative": 11,
+   "post_hoc_passed_centre_negative": 8,
+   "post_hoc_vetoed_lobe_without_negative_centre": 8,
+   "post_hoc_passed_lobe_without_negative_centre": 7,
    "post_hoc_neg_ratio_vetoed": [
     0.497,
     0.902,
@@ -312,6 +344,10 @@
    "frac_vetoed": null,
    "frac_passed": 0.364,
    "outcome": "undetermined",
+   "post_hoc_vetoed_centre_negative": 0,
+   "post_hoc_passed_centre_negative": 5,
+   "post_hoc_vetoed_lobe_without_negative_centre": 0,
+   "post_hoc_passed_lobe_without_negative_centre": 4,
    "post_hoc_neg_ratio_vetoed": [],
    "post_hoc_neg_ratio_passed": [
     0.0,
@@ -349,6 +385,7 @@
    "s_hit": 10.353381156921387,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.4,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -367,6 +404,7 @@
    "s_hit": 9.050324440002441,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -383,6 +421,7 @@
    "s_hit": 29.040115356445312,
    "control_verdict": "extended",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 6.308,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -431,6 +470,7 @@
    "s_hit": 11.490591049194336,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -447,6 +487,7 @@
    "s_hit": 9.788678169250488,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.005,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -470,6 +511,7 @@
    "s_hit": 14.278584480285645,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 2.219,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -510,6 +552,7 @@
    "s_hit": 10.308802604675293,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -526,6 +569,7 @@
    "s_hit": 11.886391639709473,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.497,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -556,6 +600,7 @@
    "s_hit": 8.391913414001465,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 6.525,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -580,6 +625,7 @@
    "s_hit": 7.939973831176758,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -598,6 +644,7 @@
    "s_hit": 7.473632335662842,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.533,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -616,6 +663,7 @@
    "s_hit": 13.616047859191895,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 0.582,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -647,6 +695,7 @@
    "s_hit": 8.048397064208984,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -663,6 +712,7 @@
    "s_hit": 7.359248161315918,
    "control_verdict": "extended",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 3.422,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -692,6 +742,7 @@
    "s_hit": 7.118041038513184,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 27.959,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -722,6 +773,7 @@
    "s_hit": 8.018725395202637,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -740,6 +792,7 @@
    "s_hit": 41.731197357177734,
    "control_verdict": "dipole",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.212,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -764,6 +817,7 @@
    "s_hit": 11.260174751281738,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.316,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -783,6 +837,7 @@
    "s_hit": 11.136533737182617,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 0.974,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -807,6 +862,7 @@
    "s_hit": 7.743152618408203,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.409,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -839,6 +895,7 @@
    "s_hit": 11.921897888183594,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 15.366,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -886,6 +943,7 @@
    "s_hit": 11.198140144348145,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -902,6 +960,7 @@
    "s_hit": 12.785948753356934,
    "control_verdict": "dipole",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.329,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -924,6 +983,7 @@
    "s_hit": 8.476426124572754,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -940,6 +1000,7 @@
    "s_hit": 7.281054973602295,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 2.866,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -963,6 +1024,7 @@
    "s_hit": 8.5396146774292,
    "control_verdict": "edge",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -981,6 +1043,7 @@
    "s_hit": 6.592524528503418,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -997,6 +1060,7 @@
    "s_hit": 8.861546516418457,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 2.382,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1024,6 +1088,7 @@
    "s_hit": 6.633603096008301,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 30.0,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1053,6 +1118,7 @@
    "s_hit": 10.044118881225586,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -1069,6 +1135,7 @@
    "s_hit": 13.131343841552734,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 1.589,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1089,6 +1156,7 @@
    "s_hit": 57.540130615234375,
    "control_verdict": "dipole",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 0.903,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1120,6 +1188,7 @@
    "s_hit": 9.889397621154785,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 0.51,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1144,6 +1213,7 @@
    "s_hit": 11.22686767578125,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 0.326,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -1162,6 +1232,7 @@
    "s_hit": 50.30040740966797,
    "control_verdict": "dipole",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.005,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1186,6 +1257,7 @@
    "s_hit": 6.403336048126221,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.867,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1206,6 +1278,7 @@
    "s_hit": 7.244755268096924,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.506,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1237,6 +1310,7 @@
    "s_hit": 14.28468132019043,
    "control_verdict": "dipole",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.189,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1259,6 +1333,7 @@
    "s_hit": 8.883662223815918,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 0.499,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -1277,6 +1352,7 @@
    "s_hit": 6.574160099029541,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1293,6 +1369,7 @@
    "s_hit": 10.606677055358887,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.39,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -1311,6 +1388,7 @@
    "s_hit": 9.933234214782715,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -1329,6 +1407,7 @@
    "s_hit": 8.083768844604492,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 2.582,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1349,6 +1428,7 @@
    "s_hit": 5.6143574714660645,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.989,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1369,6 +1449,7 @@
    "s_hit": 12.440655708312988,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.107,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1393,6 +1474,7 @@
    "s_hit": 10.953516960144043,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -1409,6 +1491,7 @@
    "s_hit": 5.838013648986816,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -1425,6 +1508,7 @@
    "s_hit": 18.822675704956055,
    "control_verdict": "extended",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 2.663,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1477,6 +1561,7 @@
    "s_hit": 7.584943771362305,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 0.664,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1501,6 +1586,7 @@
    "s_hit": 11.539167404174805,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 5.441,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1527,6 +1613,7 @@
    "s_hit": 6.848334789276123,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1543,6 +1630,7 @@
    "s_hit": 50.493995666503906,
    "control_verdict": "dipole",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 1.001,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1567,6 +1655,7 @@
    "s_hit": 10.777111053466797,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 5.825,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1595,6 +1684,7 @@
    "s_hit": 8.663107872009277,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 0.511,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -1613,6 +1703,7 @@
    "s_hit": 7.617227554321289,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -1629,6 +1720,7 @@
    "s_hit": 10.906501770019531,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 1.0,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1658,6 +1750,7 @@
    "s_hit": 11.97547435760498,
    "control_verdict": "dipole",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.207,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1681,6 +1774,7 @@
    "s_hit": 6.837437629699707,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -1697,6 +1791,7 @@
    "s_hit": 8.826557159423828,
    "control_verdict": "extended",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 2.853,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1727,6 +1822,7 @@
    "s_hit": 57.57686996459961,
    "control_verdict": "dipole",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 0.902,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1758,6 +1854,7 @@
    "s_hit": 8.428119659423828,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 8.826,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1806,6 +1903,7 @@
    "s_hit": 6.236734867095947,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": false,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1824,6 +1922,7 @@
    "s_hit": 6.57954216003418,
    "control_verdict": "extended",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.204,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1850,6 +1949,7 @@
    "s_hit": 12.96169662475586,
    "control_verdict": "dipole",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.311,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1872,6 +1972,7 @@
    "s_hit": 6.9330596923828125,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 1.419,
    "in_mask": false,
    "noinj_lobe_peaks": {
@@ -1895,6 +1996,7 @@
    "s_hit": 8.478330612182617,
    "control_verdict": "pass",
    "noinj_negative_lobe": false,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 0.0,
    "in_mask": true,
    "noinj_lobe_peaks": {
@@ -1913,6 +2015,7 @@
    "s_hit": 10.468371391296387,
    "control_verdict": "pass",
    "noinj_negative_lobe": true,
+   "noinj_centre_negative_post_hoc": true,
    "noinj_neg_ratio_post_hoc": 0.35,
    "in_mask": true,
    "noinj_lobe_peaks": {
