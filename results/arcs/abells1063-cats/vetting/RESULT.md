@@ -68,7 +68,7 @@ Plan: `PLAN_deblend.md` (before the run) and its addendum (after the deblend run
   excluded.
 
 ## Core-flux noise injections (addendum)
-- Catalogue `mag` minus the 0.3″ core magnitude: 1.24 mag (1316), 2.49 mag (2184), from −0.47 to 3.09 mag over
+- The 0.3″ core magnitude minus the catalogue `mag`: 1.24 mag (1316), 2.49 mag (2184), from −0.47 to 3.09 mag over
   the 24 rows (`noise_injections_core.ecsv`, `mag` vs `mag_injected`). Step 1 injected every row at its catalogue
   flux.
 - Gate passed (min 0.9667, 24 rows, none dropped).
