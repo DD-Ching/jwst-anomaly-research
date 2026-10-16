@@ -264,6 +264,53 @@ MACS0417_CANUCS_MAPS: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: CLASH Zitrin v2 maps of MACS J0647.7+7015 (Zitrin et al. 2009, MNRAS 396, 1985; 2013, ApJ 762,
+#: L30; HLSP of CLASH, Postman et al. 2012; readme last updated 2015-02; accessed 2026-10-16):
+#: PIEMD + eNFW ("nfw") and LTM-Gauss ("ltm-gauss") best fits, deflection in arcsec at
+#: D_LS/D_S = 1, 0.065" pixels, z_lens 0.591 (readme). kappa, gamma1 and gamma2 from the deflection
+#: gradients reproduce the published maps; the LTM-Gauss x-deflection carries a constant offset
+#: (about -47"), which enters no derivative.
+_CLASH_M0647 = (
+    "https://archive.stsci.edu/missions/hlsp/clash/macs0647/models/zitrin/{0}/v2/"
+    "hlsp_clash_model_macs0647_zitrin-{0}_v2_{1}.fits"
+)
+MACS0647_CLASH_NFW: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _CLASH_M0647.format("nfw", "x-arcsec-deflect"),
+        "5f1c7a789f762ce60623c96f65d378c51b0d405bf1ceaf3eda0be70d42583a96",
+    ),
+    "alpha_y": (
+        _CLASH_M0647.format("nfw", "y-arcsec-deflect"),
+        "f9097ae3d605acf919f953d5b4669a90f723cebc4c909f8927b5051dd61e797e",
+    ),
+    "kappa_map": (
+        _CLASH_M0647.format("nfw", "kappa"),
+        "a54d1bae8d73b5f037e10b30b538bbb60091e7a8ddbbb646d48d53b7227d9444",
+    ),
+    "mag_z2": (
+        _CLASH_M0647.format("nfw", "z02-magnif"),
+        "253aaf31359e0909a494d146a8e6221717fa35cf91b1db1793b37a93e5ad2994",
+    ),
+}
+MACS0647_CLASH_LTM: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _CLASH_M0647.format("ltm-gauss", "x-arcsec-deflect"),
+        "dba09e9c112ce58eaa9df0364cef4d64b543289d4b30ba069caa7134996a6aa6",
+    ),
+    "alpha_y": (
+        _CLASH_M0647.format("ltm-gauss", "y-arcsec-deflect"),
+        "2f2e0654d36d7c96e73984d193aea3d5bf324a7606129211488429e1ebbe7c2c",
+    ),
+    "kappa_map": (
+        _CLASH_M0647.format("ltm-gauss", "kappa"),
+        "b7b06f544f6cc39abdf8caeb2da7e674d31a8f614eb4da93adc86c5be11ac2f6",
+    ),
+    "mag_z2": (
+        _CLASH_M0647.format("ltm-gauss", "z02-magnif"),
+        "0e21c4d05b632d83d48c1494ceaa500f8c217d6f14bfbb55838b95302d61d86c",
+    ),
+}
+
 #: HFF CATS Lenstool models (Jauzac, Richard, Mahler et al.; HLSP
 #: https://archive.stsci.edu/prepds/frontier/lensmodels/, accessed 2026-10-08): deflection maps
 #: (arcsec, D_LS/D_S = 1), κ, z = 2 magnification and the multiple-image list. cluster ->
