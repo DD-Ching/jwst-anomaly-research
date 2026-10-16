@@ -232,13 +232,13 @@ def _truthy(v) -> bool:
 def _labels(mask, w, scale, snr, edge, ira, idec, ra, dec) -> dict:
     """Position labels of one sky position (review-list PLAN.md); they never veto."""
     p = _pixel(mask.shape, w, ra, dec)
-    near = round(float(_sep(ira, idec, ra, dec).min()), 2)
+    near = float(_sep(ira, idec, ra, dec).min())
     inm = bool(p is not None and mask[p[1], p[0]])
     return {
         "in_mask": inm,
         "mask_distance_arcsec": round(float(edge[p[1], p[0]]), 2) if p else None,
         "arc_level_sigma": round(float(snr[p[1], p[0]]), 2) if p else None,
-        "nearest_image_arcsec": near,
+        "nearest_image_arcsec": round(near, 2),
         "old_rule": bool(near <= OLD_RULE_ARCSEC),
         "priority": "A" if inm else ("B" if near <= PRIORITY_B_ARCSEC else "C"),
     }
@@ -310,7 +310,11 @@ def inject_review(runs, field) -> dict:
             for r in csv.DictReader(f):
                 p = _pixel(mask.shape, w, float(r["ra"]), float(r["dec"]))
                 if p is None:
-                    continue
+                    raise ValueError(
+                        f"{r['name']} lies off the maps; every injected star must count"
+                    )
+                if r["hit"] and r["hit"] not in verdict:
+                    raise ValueError(f"{r['hit']} has no morphology verdict; run --all-hits")
                 inm = bool(mask[p[1], p[0]])
                 level = "level_ge3" if snr[p[1], p[0]] >= THRESH_SIGMA else "level_lt3"
                 ok_hit = bool(r["hit"])

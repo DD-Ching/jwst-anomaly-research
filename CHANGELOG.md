@@ -10,7 +10,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - **R1 (development controls, not independent):** 6 / 6 are on the review list (Atalanta A/B; Yan+2023 D21-W1,
     W2, S1, S2).
   - **B1 (burden):** 4, 1, 0 and 1 added entries on SMACS ERO → VENUS, Sunrise o052, Sunrise o120 and the MACS0416
-    Warhol box. Of the 6 added entries, 3 are known real transients, 1 was vetted with no change measured, and 2 are
+    Warhol box. Of the 6 added entries, 3 are known real transients, 1 was vetted with no ≥ 2σ change, and 2 are
     artifacts by eye (h039 SMACS, h005 Sunrise o052; not vetted by photometry).
   - **R2 fails:** SMACS whole-box efficiency (hit, unflagged, morph pass) is 0.34 at 27.5 AB (0.50 in the mask, 0.25
     outside it). Off the arcs, morphology vetoes most of the recovered stars (8 rosette, 5 dipole, 3 extended of 29).

@@ -345,7 +345,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 
      **No new arc box until the off-arc efficiency is understood.** Options for the owner:
      - a no-injection control of the vetoed positions;
-     - accept 0.34 and state it per box.
+     - accept 0.34 and state it per box. This would loosen the frozen R2 threshold, so it needs an owner decision and
+       a new plan.
 
      Open, unvetted by photometry: SMACS h039 and Sunrise o052 h005 (both artifacts by eye).
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).

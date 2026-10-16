@@ -2,8 +2,9 @@
 
 Plan: `PLAN.md`, committed at 12:32Z before any new count. Code: `scripts/arc_chain.py review` and `inject-review`,
 unit-tested in `tests/test_arc_chain.py`. All numbers are `derived` and come from the JSON files named next to them.
-The detection and morphology inputs are re-runs with `--maps` of the stored commands; their hits and morphology are
-identical to the stored ones.
+The detection inputs are re-runs with `--maps` of the stored commands. Their `hits.ecsv` files were byte-identical to
+the stored ones (checked with `cmp`; the check itself is not stored). The SMACS and MACS0416 all-hits morphology is
+also byte-identical to #276's `runs/*/morph.json`.
 
 ## Outcome against the frozen acceptance rules
 | Rule | Threshold | Measured | Status |
@@ -70,13 +71,16 @@ In total, 6 entries are added across the four acceptance pairs. These pass count
 | Pair | Entry | Label | Basis |
 |---|---|---|---|
 | SMACS | h021, h024 | known real: SN Atalanta (an ordinary lensed supernova) | published, #275 |
-| SMACS | h063 | vetted, no change measured | F444W-only ± pair; forced photometry shows no ≥ 2σ change (#275) |
-| SMACS | h039 | artifact by eye | F150W ± pair across a compact core; not vetted by photometry |
-| Sunrise o052 | h005 | artifact by eye | F444W ± pair on a galaxy core near the map edge; not vetted by photometry |
+| SMACS | h063 | vetted, no ≥ 2σ change | negative in both bands (S −6.0 / −10.8) with an F444W lobe; forced photometry under #275's post hoc 2.0″ review: F150W −16.0 ± 10.4 nJy |
+| SMACS | h039 | artifact by eye | ± pairs across a compact core in both bands (F150W −24.0 / +147.6 lobe; F444W −5.3 / +15.2); not vetted by photometry |
+| Sunrise o052 | h005 | artifact by eye | negative on a galaxy core in both bands (−10.0 / −19.0), +19.9 F444W lobe, near the map edge; not vetted by photometry |
 | MACS0416 | h061, h137, h129, h138 | known real: Yan+2023 transients | published |
 
-- **Added entries.** Of the 6 added entries, 3 are known real (Atalanta A and B, D21-S2). The other 3 are a
-  no-change vetting and two by-eye artifact calls. The two by-eye calls are judgements, not rule outputs.
+- **Added entries.** Of the 6 added entries, 3 are known real (Atalanta A and B, D21-S2). The other 3 are:
+  - one vetting with no ≥ 2σ change (h063);
+  - two by-eye artifact calls (h039, h005), which are judgements, not rule outputs.
+- **Label deviation.** The label "vetted, no ≥ 2σ change" is not in the PLAN's label set. It replaces "vetted
+  ordinary" because the vetting found no significant change rather than an ordinary cause.
 - **What these labels mean.** The real entries are ordinary transients. None of the entries is a wormhole or exotic
   candidate.
 - **Open items.** h039 and h005 have not been vetted by photometry, so their review is not closed.
