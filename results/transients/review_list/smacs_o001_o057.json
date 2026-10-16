@@ -1,0 +1,71 @@
+{
+ "mask_band": "F444W",
+ "mask_area_frac": 0.12015215864856943,
+ "n_hits": 73,
+ "n_unflagged": 27,
+ "n_review": 4,
+ "n_added": 4,
+ "by_priority": {
+  "A": 0,
+  "B": 3,
+  "C": 1
+ },
+ "review": [
+  {
+   "id": "h021",
+   "ra": 110.8251583427861,
+   "dec": -73.45218057594752,
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 58.19826235571341,
+   "known": "Atalanta_A",
+   "in_mask": false,
+   "mask_distance_arcsec": 0.86,
+   "arc_level_sigma": 1.78,
+   "nearest_image_arcsec": 1.69,
+   "old_rule": false,
+   "priority": "B"
+  },
+  {
+   "id": "h024",
+   "ra": 110.82374517739608,
+   "dec": -73.45297641244142,
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 54.25363226224202,
+   "known": "Atalanta_B",
+   "in_mask": false,
+   "mask_distance_arcsec": 0.76,
+   "arc_level_sigma": 0.3,
+   "nearest_image_arcsec": 1.59,
+   "old_rule": false,
+   "priority": "B"
+  },
+  {
+   "id": "h063",
+   "ra": 110.83456339317148,
+   "dec": -73.45191373824498,
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 10.84801081191518,
+   "known": null,
+   "in_mask": false,
+   "mask_distance_arcsec": 0.8,
+   "arc_level_sigma": 14.9,
+   "nearest_image_arcsec": 1.37,
+   "old_rule": false,
+   "priority": "B"
+  },
+  {
+   "id": "h039",
+   "ra": 110.82473563055481,
+   "dec": -73.45008594629712,
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 24.015158084542776,
+   "known": null,
+   "in_mask": false,
+   "mask_distance_arcsec": 3.09,
+   "arc_level_sigma": 64.9,
+   "nearest_image_arcsec": 3.71,
+   "old_rule": false,
+   "priority": "C"
+  }
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "mask_band": "F356W",
+ "mask_area_frac": 0.02923872955709017,
+ "n_hits": 12,
+ "n_unflagged": 1,
+ "n_review": 0,
+ "n_added": 0,
+ "by_priority": {
+  "A": 0,
+  "B": 0,
+  "C": 0
+ },
+ "review": []
+}

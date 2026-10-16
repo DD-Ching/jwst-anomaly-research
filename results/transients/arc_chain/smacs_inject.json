@@ -1,0 +1,42 @@
+{
+ "masks": [
+  {
+   "maps": "smacs_inj.npz",
+   "band": "F444W",
+   "area_frac": 0.12015215864856943
+  },
+  {
+   "maps": "smacs_inj1.npz",
+   "band": "F444W",
+   "area_frac": 0.12015215864856943
+  },
+  {
+   "maps": "smacs_inj2.npz",
+   "band": "F444W",
+   "area_frac": 0.12015215864856943
+  }
+ ],
+ "n_runs": 3,
+ "per_mag": {
+  "27.5": {
+   "n_in_mask": 26,
+   "hit": 15,
+   "morph_pass": 13,
+   "chain": 13,
+   "chain_unflagged": 13,
+   "eff_hit": 0.577,
+   "eff_chain": 0.5,
+   "eff_chain_unflagged": 0.5
+  },
+  "28.0": {
+   "n_in_mask": 29,
+   "hit": 9,
+   "morph_pass": 9,
+   "chain": 9,
+   "chain_unflagged": 9,
+   "eff_hit": 0.31,
+   "eff_chain": 0.31,
+   "eff_chain_unflagged": 0.31
+  }
+ }
+}

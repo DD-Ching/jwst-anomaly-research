@@ -332,6 +332,23 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      fails its control (Atalanta F115W S ≈ 2.4); h061 undetermined (near-star spike systematics; reopen on a PSF
      model of the star). Next: the rest of the SMACS arcs (more boxes);
      whether AT 2024jfz (1.8″ from image 6.1) has model counter-images;
+   - **Full-chain known-case check** (2026-10-16, `results/transients/arc_chain/RESULT.md`):
+     - MACS0416 Yan+2023: 4 / 4 pass detection, morphology and the arc mask;
+     - SMACS Atalanta fails the position stage under both the 1″ rule and the mask;
+     - SMACS in-mask full-chain efficiency: 0.50 at 27.5 AB, 0.31 at 28.0 AB.
+
+     Owner chose position as a label (2026-10-16).
+   - **Review-list chain** (2026-10-16, `results/transients/review_list/RESULT.md`):
+     - known cases 6 / 6 on the list; burden ≤ 4 added entries per box;
+     - SMACS whole-box injection efficiency 0.34 at 27.5 AB, below the frozen 0.50 (outside the mask 0.25, lost to
+       rosette and dipole vetoes).
+
+     **No new arc box until the off-arc efficiency is understood.** Options for the owner:
+     - a no-injection control of the vetoed positions;
+     - accept 0.34 and state it per box. This would loosen the frozen R2 threshold, so it needs an owner decision and
+       a new plan.
+
+     Open, unvetted by photometry: SMACS h039 and Sunrise o052 h005 (both artifacts by eye).
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps

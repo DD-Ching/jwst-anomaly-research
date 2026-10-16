@@ -1,0 +1,37 @@
+{
+ "mask_band": "F444W",
+ "mask_area_frac": 0.12015215864856943,
+ "mask_area_ok": true,
+ "known": [
+  {
+   "name": "Atalanta_A",
+   "hit": "h021",
+   "near_bright_core": false,
+   "morph": "pass",
+   "in_mask": false,
+   "mask_distance_arcsec": 0.86,
+   "nearest_image_arcsec": 1.66,
+   "arc_level_sigma": 1.78,
+   "full_chain": false
+  },
+  {
+   "name": "Atalanta_B",
+   "hit": "h024",
+   "near_bright_core": false,
+   "morph": "pass",
+   "in_mask": false,
+   "mask_distance_arcsec": 0.76,
+   "nearest_image_arcsec": 1.59,
+   "arc_level_sigma": 0.3,
+   "full_chain": false
+  }
+ ],
+ "hits_in_mask": [
+  {
+   "id": "h061",
+   "verdict": "edge",
+   "near_bright_core": false
+  }
+ ],
+ "n_hits": 73
+}
