@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: (in progress) JWST-era lens models for a further S1063 replication field
+- Plan: find a public JWST-era κ/γ (or deflection) model for one DJA photo-z cluster field with F200W
+  (RXJ2129, MRG0138, RXCJ0600, rj0018p1626, MACS1423), then run `arcs` under a frozen plan.
+
 ## 2026-10-16: `arcs` on MACS0647 as a second independent test of the S1063 anti excess: no result (both controls fail)
 - **Why:** after MACS0417 (#280), the next field with JWST F200W, a DJA photo-z catalogue and public lens models.
   Plan and outcome rule frozen and committed before the run: `results/arcs/macs0647-clash/PLAN.md`,
