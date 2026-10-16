@@ -88,3 +88,19 @@ from 22:14Z.
 - **Separately:**
   - MACS1423 (#282, merged) and #279 used the pre-fix `fit_models`. They are flagged for a re-check in the state
     files. They are not re-run here and not used for any conclusion.
+
+## Addendum 1 (2026-10-16T22:35Z, after the review list, before the on-spike controls are measured)
+- **Found in review:**
+  - All 4 review entries lie within 2.6–3.9″ of the box's brightest point source, along its diffraction spikes
+    (`spike/spike.json`).
+  - PA_V3 differs by 0.84° between the epochs (headers), so a spike moves sideways by about 0.05″ at 3.5″.
+  - The frozen dipole test of `scripts/elgordo_spike_check.py` (±1.5 px across the spike) passes only for h043.
+- **On-spike control (rule fixed now):**
+  - Take 8 positions on the same spike as the entry: the entry's angle from the source, distances 2.0–5.0″ in
+    equal steps, skipping any within 0.3″ of the entry.
+  - Measure them with `hit_lightcurve.py` like the entry (same aperture, conservative errors).
+  - The entry is `explained by the spike shift` if ≥ 4 of the 8 controls show a change of the same sign as the
+    entry, at ≥ 2σ, in the band where the entry's change is largest (F444W for h049). Otherwise it is
+    `undetermined`, and an `undetermined` entry is treated as `open` for the vetting step.
+  - Applied to every entry whose own forced-photometry change is ≥ 3σ in any band; only h049 qualifies (F444W
+    −3.6σ). h024, h031 and h043 have no ≥ 3σ change in a band where they are not on a confirmed rotation dipole.

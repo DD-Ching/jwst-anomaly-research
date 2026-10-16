@@ -1,4 +1,4 @@
-"""Spike-rotation check for El Gordo ``arc_diff`` review entries (vetting; El Gordo pilot, 2026-10-16).
+"""Spike-rotation check for El Gordo ``arc_diff`` review entries (vetting; pilot, 2026-10-16).
 
 For each review entry, the direction from the box's brightest point source (the spike source) to
 the entry is compared with the source's spike directions in the mosaic pixel frame. If the entry
@@ -12,8 +12,10 @@ Rules (ASSUMPTIONs, fixed before this script was run on the entries):
 - ``rotation_dipole``: on that spike, the S values sampled ±1.5 px across the spike have opposite
   signs and each |S| ≥ 2, in at least one band.
 
-Output: ``spike.json`` (derived). The spike directions are measured from the epoch-1 image itself:
-the angles of the 8 brightest rays of the source between 1″ and 3″ (azimuthal profile maxima).
+Output: ``spike.json`` (derived). The spike source is the brightest F444W pixel, located in
+both bands (implementation fix after the first run, which picked a different source per band).
+The spike directions are measured from the epoch-1 image itself: the angles of the 8 brightest
+rays of the source between 1″ and 3″ (azimuthal profile maxima).
 """
 
 from __future__ import annotations
@@ -78,10 +80,20 @@ def main(argv=None) -> int:
     m = np.load(a.maps, allow_pickle=True)
     entries = json.loads(a.review.read_text())["review"]
     out = {"dpa_deg": a.dpa, "bands": {}, "entries": {}}
+    # one spike source for both bands: the brightest F444W pixel (fix: per-band maxima picked
+    # different sources, the F150W one being the h006 star)
+    w4 = WCS(fits.Header.fromstring(str(m["F444W_wcs"])))
+    j4, i4 = np.unravel_index(np.nanargmax(m["F444W_e1img"]), m["F444W_e1img"].shape)
+    src_sky = w4.pixel_to_world(i4, j4)
     for b in ("F150W", "F444W"):
         w = WCS(fits.Header.fromstring(str(m[b + "_wcs"])))
         img, S = m[b + "_e1img"], m[b + "_s"]
-        y0, x0 = np.unravel_index(np.nanargmax(img), img.shape)
+        xs, ys = w.world_to_pixel(src_sky)
+        r = 3
+        xi, yi = int(round(float(xs))), int(round(float(ys)))
+        sub = img[yi - r : yi + r + 1, xi - r : xi + r + 1]
+        dj, di = np.unravel_index(np.nanargmax(sub), sub.shape)
+        y0, x0 = yi - r + dj, xi - r + di  # local peak of the same source in this band
         px = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600
         spikes = ray_angles(img, float(x0), float(y0), (1.0 / px, 3.0 / px))
         src = w.pixel_to_world(x0, y0)
@@ -106,7 +118,7 @@ def main(argv=None) -> int:
                 v = across(S, float(x), float(y), ang)
                 r[b]["S_across_spike"] = [round(t, 2) for t in v]
                 r[b]["rotation_dipole"] = bool(v[0] * v[1] < 0 and min(map(abs, v)) >= 2)
-    for k, r in out["entries"].items():
+    for r in out["entries"].values():
         r["on_spike_any_band"] = any(r[b]["on_spike"] for b in ("F150W", "F444W"))
         r["rotation_dipole_any_band"] = any(
             r[b].get("rotation_dipole", False) for b in ("F150W", "F444W")

@@ -1,0 +1,141 @@
+{
+ "dpa_deg": 0.842,
+ "bands": {
+  "F150W": {
+   "source_radec": [
+    15.727225,
+    -49.253918
+   ],
+   "spike_angles_pixel_deg": [
+    0.5,
+    30.5,
+    89.5,
+    149.5,
+    180.5,
+    210.5,
+    272.5,
+    331.5
+   ]
+  },
+  "F444W": {
+   "source_radec": [
+    15.727222,
+    -49.253939
+   ],
+   "spike_angles_pixel_deg": [
+    0.5,
+    30.5,
+    121.5,
+    149.5,
+    180.5,
+    209.5,
+    270.5,
+    330.5
+   ]
+  }
+ },
+ "entries": {
+  "h024": {
+   "F150W": {
+    "angle_from_source_deg": 147.8,
+    "dist_arcsec": 2.98,
+    "nearest_spike_offset_deg": 1.7,
+    "on_spike": true,
+    "expected_shift_arcsec": 0.044,
+    "S_across_spike": [
+     -16.28,
+     -11.97
+    ],
+    "rotation_dipole": false
+   },
+   "F444W": {
+    "angle_from_source_deg": 148.1,
+    "dist_arcsec": 3.05,
+    "nearest_spike_offset_deg": 1.4,
+    "on_spike": true,
+    "expected_shift_arcsec": 0.045,
+    "S_across_spike": [
+     -6.3,
+     -9.78
+    ],
+    "rotation_dipole": false
+   },
+   "on_spike_any_band": true,
+   "rotation_dipole_any_band": false
+  },
+  "h031": {
+   "F150W": {
+    "angle_from_source_deg": 121.8,
+    "dist_arcsec": 2.64,
+    "nearest_spike_offset_deg": 27.7,
+    "on_spike": false,
+    "expected_shift_arcsec": 0.039
+   },
+   "F444W": {
+    "angle_from_source_deg": 122.7,
+    "dist_arcsec": 2.68,
+    "nearest_spike_offset_deg": 1.2,
+    "on_spike": true,
+    "expected_shift_arcsec": 0.039,
+    "S_across_spike": [
+     -3.44,
+     -1.87
+    ],
+    "rotation_dipole": false
+   },
+   "on_spike_any_band": true,
+   "rotation_dipole_any_band": false
+  },
+  "h043": {
+   "F150W": {
+    "angle_from_source_deg": 272.0,
+    "dist_arcsec": 3.85,
+    "nearest_spike_offset_deg": 0.5,
+    "on_spike": true,
+    "expected_shift_arcsec": 0.057,
+    "S_across_spike": [
+     -7.1,
+     5.02
+    ],
+    "rotation_dipole": true
+   },
+   "F444W": {
+    "angle_from_source_deg": 270.4,
+    "dist_arcsec": 3.85,
+    "nearest_spike_offset_deg": 0.1,
+    "on_spike": true,
+    "expected_shift_arcsec": 0.057,
+    "S_across_spike": [
+     -4.32,
+     -0.0
+    ],
+    "rotation_dipole": false
+   },
+   "on_spike_any_band": true,
+   "rotation_dipole_any_band": true
+  },
+  "h049": {
+   "F150W": {
+    "angle_from_source_deg": 179.0,
+    "dist_arcsec": 3.47,
+    "nearest_spike_offset_deg": 1.5,
+    "on_spike": true,
+    "expected_shift_arcsec": 0.051,
+    "S_across_spike": [
+     -0.58,
+     -3.97
+    ],
+    "rotation_dipole": false
+   },
+   "F444W": {
+    "angle_from_source_deg": 178.5,
+    "dist_arcsec": 3.55,
+    "nearest_spike_offset_deg": 2.0,
+    "on_spike": false,
+    "expected_shift_arcsec": 0.052
+   },
+   "on_spike_any_band": true,
+   "rotation_dipole_any_band": false
+  }
+ }
+}
