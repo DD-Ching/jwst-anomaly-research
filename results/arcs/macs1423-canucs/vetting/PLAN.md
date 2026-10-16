@@ -5,7 +5,9 @@ Written and committed before either script runs. Parent: `../RESULT.md` (frozen 
 - **Code:** the unmodified S1063 vetting scripts of #273 at commit `43fbbbd` (`scripts/arcs_bgsub_shapes.py`,
   `scripts/arcs_vet_noise.py`), run with `--model macs1423-canucs-maps --arcs-dir results/arcs/macs1423-canucs`
   on `s3://stpubdata/jwst/public/jw01208/L3/t/o010/jw01208-o010_t005_nircam_clear-f200w_i2d.fits` (byte ranges).
-  Every parameter is that script's default (S1063 values), except `--targets 1818 2197 2322 4234`.
+  The two files are copied unchanged next to this branch's `scripts/` (which holds the model entry; #273's
+  `lens_consistency.py` predates it). Every parameter is the script's default (S1063 values), except
+  `--targets 1818 2197 2322 4234`.
 - **Hypothesis to falsify (ordinary):** the anti rows have true axes aligned with the prediction, and their anti
   axes come from ICL gradients (bgsub step) or photon/ICL noise in the shape measurement (noise step).
 - **Frozen rules (the scripts' own functions, unit-tested on #273):**
