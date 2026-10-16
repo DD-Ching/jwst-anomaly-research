@@ -1,0 +1,19 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: img_sep, datatype: float64}
+# - {name: img, datatype: string}
+# - {name: tile, datatype: string}
+# - {name: hit, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: s_hit, datatype: float64}
+# - {name: grid_group, datatype: string}
+# - {name: grid_verdict, datatype: string}
+# schema: astropy-2.0
+img_sep img tile hit ra dec s_hit grid_group grid_verdict
+43.044738466755994 600.3:observed t-3+0 h044 3.5265582649603178 -30.37759098721352 -6.202521800994873 "" ""
+78.5736031596053 600.5:observed t-3+2 h003 3.5246967191907905 -30.3527969465606 12.10038948059082 "" ""
+83.09823271141934 600.5:observed t-3+2 h004 3.5298608421452298 -30.347781041279166 9.235309600830078 "" ""
+79.37720154543557 600.5:observed t-3+2 h006 3.5261351176384763 -30.351305776589335 7.170345783233643 "" ""
+79.53970079583382 600.5:observed t-3+2 h007 3.526049390601551 -30.351310532323136 6.10429573059082 "" ""

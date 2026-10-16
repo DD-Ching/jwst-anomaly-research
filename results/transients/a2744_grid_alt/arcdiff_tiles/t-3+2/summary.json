@@ -1,0 +1,57 @@
+{
+ "command": "arc_diff.py --band F356W s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f356w_i2d.fits s3://stpubdata/jwst/public/jw03516/L3/t/o002/jw03516-o002_t001_nircam_clear-f356w_i2d.fits --ra 3.518542 --dec -30.346667 --half-arcsec 30 --min-bands 1 --kernel-px 4 --kernel-stamps --known /tmp/claude-0/-home-user-jwst-anomaly-research/04580c83-94d4-5ab6-af44-740e6656cc89/scratchpad/known.csv --procs 1 --out results/transients/a2744_grid_alt/arcdiff_tiles/t-3+2 --maps /tmp/claude-0/-home-user-jwst-anomaly-research/04580c83-94d4-5ab6-af44-740e6656cc89/scratchpad/maps/t-3+2.npz",
+ "box": {
+  "ra": 3.518542,
+  "dec": -30.346667,
+  "half_arcsec": 30.0
+ },
+ "thresholds_assumption": {
+  "min_sigma": 5.0,
+  "min_bands": 1,
+  "link_arcsec": 0.1,
+  "bg_arcsec": 0.6,
+  "tile_arcsec": 3.0,
+  "kernel_px": 4,
+  "kernel_stamps": true,
+  "match_arcsec": 0.15,
+  "core_arcsec": 0.8,
+  "core_pct": 99.9,
+  "psf_fwhm_arcsec": {
+   "F356W": 0.116
+  }
+ },
+ "bands": {
+  "F356W": {
+   "e1": "jw02561-o001_t003_nircam_clear-f356w_i2d.fits",
+   "e2": "jw03516-o002_t001_nircam_clear-f356w_i2d.fits",
+   "scale_arcsec": 0.06290167870832328,
+   "shift_px": [
+    -0.13707007623509598,
+    -0.04370400450643171
+   ],
+   "blur_sigma_px": 0.783,
+   "kernel_sum": 0.9413730244717041,
+   "convolved_epoch": 1,
+   "flux_scale": 0.9413730244717041,
+   "noise_scale": 1.0613923429134047,
+   "n_detections": 11,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {}
+  }
+ },
+ "n_hits": 11,
+ "n_hits_not_near_bright_core": 5,
+ "known": [
+  {
+   "name": "PLATE-23a",
+   "pair": "",
+   "F356W": null,
+   "hit": null
+  }
+ ],
+ "inject_grid": {
+  "n": 0,
+  "n_hit": 0,
+  "n_hit_not_near_bright_core": 0
+ }
+}
