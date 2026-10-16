@@ -34,3 +34,37 @@ values).
 - The noise injections are Gaussian profiles with the row's catalogue ellipticity; they do not test clumpy
   morphology.
 - Not a candidate: unvetted rows stay on the draft PR (trial rule T2).
+
+# Step 2: clump-pair census of the 55 strong-shear background rows (2026-10-16)
+
+Plan: `PLAN_census.md` (committed before the run, `1c58b28`). Code: `scripts/arcs_macs1423_census.py` calling
+#273's `arcs_vet_census.py` unchanged at `43fbbbd`. **Deviation (no rule change):** the first launch stopped on an
+import because #273's deblend module also loads `arcs_bgsub_shapes.py`; that file (also at `43fbbbd`) was added to
+the plan's file list and the script's docstring, and the census was run once after that. Outputs: `census.json`, `census.ecsv` (derived;
+injections simulated; P values model_prediction). Exploratory (the census idea is post hoc on S1063).
+
+## Results
+- **Deblend and gate:** cutout pixel scale 0.0312″. 45 / 55 rows pass the own-flux gate (≥ 50 %, so the
+  image-level check of the plan passes); 13 of the 45 are `two-knot` (f̂ 0.289, 95 % upper 0.443); 11 of those
+  13 are screen-aligned rows. All 55: 39 `single`, 13 `two-knot`, 3 `undecided`.
+- **Screen anti rows:** 2197 `two-knot` (ΔBIC 151, separation 0.28″, knot S/N 8.4 / 6.7, gate passed); 2322
+  `two-knot` (ΔBIC 150, 0.16″, S/N 10.5 / 17.5, gate passed); 4234 `single` (ΔBIC −2460, gate passed); 1818
+  `single` but gate failed (pair injections recovered 20 %), so it gets the mixture probability.
+- **Sample test (frozen outcome):** expected anti 2.608 under the clump-aware null (0.946 under shape noise only).
+  **Primary k = 4: P(≥ 4) = 0.259 → `anti excess explained by clump orientation (exploratory)`.** Secondary k = 3
+  (screen anti still anti after ICL subtraction): P 0.494. Sensitivity: mixture with f̂ 0.301 / 0.533, with the 95 %
+  upper f 0.526 / 0.739 (k = 4 / 3). Shape-noise-only check: 0.0126 / 0.0648.
+- **Looked at (`census_anti.png`, F200W, 2″ × 2″, 1″-median-subtracted; made with an ad hoc snippet, not stored):**
+  2197 two compact knots at the end of a faint chain; 2322 two touching compact knots; 4234 one bright elongated
+  galaxy with a faint tail; 1818 barely visible next to the BCG halo.
+
+## Reading
+- Under the S1063 clump-aware null, the MACS1423 anti count is not an excess. The two z_phot 3.42 rows are both
+  two-knot sources whose catalogue axis carries little shear information; 4234 (single, m 24.2, at the g_min
+  threshold) stays anti with P_sn 0.069 on its own; 1818 is not testable by the deblend here.
+- With MACS0417 (P 0.195), two independent fields with JWST-era models now give no replication of the S1063 anti
+  excess under their pre-registered or clump-aware nulls; MACS0647 gave no result. The S1063 excess itself has
+  P 0.031 under the same clump-aware null (#273) and stays a single-field, exploratory result.
+- Not tested here: the PA conventions of the deblend's `pa_sep` and the catalogue `pa_obs` were not cross-checked,
+  so this step does not say whether the knot axes of 2197 and 2322 follow the prediction.
+- Not a candidate.

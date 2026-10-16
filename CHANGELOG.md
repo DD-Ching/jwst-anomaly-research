@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: `arcs` on MACS1423, vetting step 2: the clump-pair census explains the anti count (P 0.259, exploratory)
+- **Why:** the step-1 handoff (below): the S1063 clump-pair census on the MACS1423 rows, anti classes at each
+  row's photo-z. Plan frozen first: `results/arcs/macs1423-canucs/vetting/PLAN_census.md`; script
+  `scripts/arcs_macs1423_census.py` reuses #273's census functions unchanged (`43fbbbd`).
+- **Result (derived; `vetting/RESULT.md` step 2, `census.json`):** 45 / 55 rows pass the deblend gate; 13 two-knot
+  (f̂ 0.289). 2197 and 2322 are two-knot, 4234 single, 1818 gate-failed. Expected anti 2.608 (clump-aware) vs 0.946
+  (shape noise); **P(≥ 4) 0.259 → "anti excess explained by clump orientation (exploratory)"**; k = 3: P 0.494.
+  Cutouts looked at (`census_anti.png`).
+- **Reading:** two independent fields with JWST-era models (MACS0417, MACS1423) do not replicate the S1063 anti
+  excess under their nulls; S1063 stays a single-field exploratory result (P 0.031 clump-aware, #273). Not a candidate.
+- **Handoff:** the replication question needs a field where S1063-like anti rows survive the clump-aware null; the
+  next independent field is RXJ2129 (six JWST-updated models, Dhanasingham et al. 2026; plan first). PA conventions
+  of the deblend `pa_sep` vs catalogue `pa_obs` are unchecked.
+
 ## 2026-10-16: `arcs` on MACS1423 (CANUCS DR1 maps): the frozen rule says the S1063 anti excess replicates at screen level; after ICL subtraction it is marginal (post hoc P 0.071)
 - **Why:** the MACS0647 handoff said MACS1423 lacked a public model; CANUCS DR1 has a JWST-era Lenstool model for it
   (Desprez, preliminary v1, 5 spectroscopic systems). New entry `macs1423-canucs-maps` (`validate`: κ reproduced to
@@ -20,8 +34,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   covers intrinsic shapes only; clumpy fragments (2197 by eye) are the next ordinary test.
 - **Found for later (`SOURCES.md`):** RXJ2129 has six JWST-updated models (Dhanasingham et al. 2026, Zenodo 4.3 GB
   zip, range-readable); MRG0138 and RXCJ0600 have JWST-era models without public maps.
-- **Handoff:** next, the S1063 clump-pair census (`arcs_vet_census.py`, #273) on the MACS1423 strong-shear rows with
-  the anti classification at each row's photo-z, then RXJ2129 as a third independent field (plan first; check the
+- **Handoff:** done in the entry above (clump-pair census); then RXJ2129 as a third independent field (plan first; check the
   GLAFIC ZS = 3 header).
 
 ## 2026-10-16: `arcs` on MACS0647 as a second independent test of the S1063 anti excess: no result (both controls fail)

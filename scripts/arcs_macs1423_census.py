@@ -4,7 +4,7 @@ Frozen plan: ``results/arcs/macs1423-canucs/vetting/PLAN_census.md`` (written be
 Reuses #273's ``arcs_vet_census.py`` unchanged at commit ``43fbbbd``, extracted to a directory:
 
     mkdir -p S && for f in arcs_vet_census arcs_vet_deblend arcs_vet_clumps arcs_vet_noise \\
-        lens_consistency; do git show 43fbbbd:scripts/$f.py > S/$f.py; done
+        arcs_bgsub_shapes lens_consistency; do git show 43fbbbd:scripts/$f.py > S/$f.py; done
     python scripts/arcs_macs1423_census.py --s1063-scripts S [--workers 4]
 
 Only the image and the anti sets (photo-z basis) differ from the S1063 run. Output:

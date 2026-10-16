@@ -5,7 +5,7 @@ subtraction; 1818 becomes `mixed`). Model of the test: the S1063 census, `result
 PLAN_census.md` on #273, whose primary test gave P 0.031 there.
 
 - **Code:** `scripts/arcs_macs1423_census.py`. It imports #273's `arcs_vet_census.py` (and through it
-  `arcs_vet_deblend.py`, `arcs_vet_clumps.py`, `arcs_vet_noise.py`, `lens_consistency.py`) **unchanged at commit
+  `arcs_vet_deblend.py`, `arcs_vet_clumps.py`, `arcs_vet_noise.py`, `arcs_bgsub_shapes.py`, `lens_consistency.py`) **unchanged at commit
   `43fbbbd`**, extracted to a directory given by `--s1063-scripts`, and reuses its frozen functions
   `deblend_row`, `row_p_anti`, `clopper_pearson_upper` and `outcome`. Only the image and the anti sets differ.
 - **Image:** `s3://stpubdata/jwst/public/jw01208/L3/t/o010/jw01208-o010_t005_nircam_clear-f200w_i2d.fits` (the
