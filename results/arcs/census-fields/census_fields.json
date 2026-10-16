@@ -9,10 +9,10 @@
  "per_field": {
   "abell2744-bergamini23": {
    "n_rows": 35,
-   "n_gate_passed": 33,
-   "n_two_knot_gate_passed": 8,
-   "f_two_knot": 0.24242424242424243,
-   "f_two_knot_95_upper": 0.4225893177117019,
+   "n_gate_passed": 34,
+   "n_two_knot_gate_passed": 9,
+   "f_two_knot": 0.2647058823529412,
+   "f_two_knot_95_upper": 0.44361536830510667,
    "interpretable_alone": true,
    "n_outside": 0,
    "image": "s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f200w_i2d.fits"
@@ -60,15 +60,15 @@
  },
  "pooled_five_fields": {
   "n_rows": 154,
-  "n_gate_passed": 117,
-  "n_two_knot_gate_passed": 32,
-  "f_two_knot": 0.27350427350427353,
-  "f_two_knot_95_upper": 0.36363593456958637,
+  "n_gate_passed": 118,
+  "n_two_knot_gate_passed": 33,
+  "f_two_knot": 0.2796610169491525,
+  "f_two_knot_95_upper": 0.36975425087340263,
   "interpretable_alone": true
  },
  "s1063_p_ge_4_anti": {
-  "pooled_f_hat": 0.030578949764279596,
-  "pooled_f_upper": 0.05444309548445575
+  "pooled_f_hat": 0.03195953620933981,
+  "pooled_f_upper": 0.056348926781896354
  },
  "outcome": "S1063 excess remains at the five-field clump rate (exploratory)"
 }

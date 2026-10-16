@@ -4,24 +4,33 @@ Plan: `PLAN.md` (committed before the run, 468f018). Script: `scripts/arcs_censu
 unchanged; outcome rule `plan_outcome`, unit-tested) → `census_fields.{json,ecsv}`, `two_knot.png`. Labels: pixels
 observed; classes derived; injections simulations; f̂ and P model_prediction. Depends on #273 (S1063 census).
 
+## Re-run with the fixed census code (2026-10-16, cloud routine 01GeKWTR)
+The first run (055621d) used the pre-fix `arcs_vet_deblend.fit_models` (start flux and bound from the filtered sum,
+which pinned faint sources). The tables below are the re-run with #273's final code on main (`flux_scale`), plan,
+seeds and rules unchanged; cutouts re-fetched. Three rows changed, all from pinned fits (old knot S/N ~1e-10):
+Abell 2744 3332 `single` gate-failed → `two-knot` gate-passed; MACS0416 1414 and 2144 `single` → `undecided`, both
+still gate-failed. Pooled f̂ 0.274 → 0.280, S1063 P 0.031 → 0.032; the frozen outcome is unchanged. Looked at: 3332
+is a faint low-surface-brightness source near the mosaic edge, not a clear pair by eye (it raises f̂, as the rows
+noted below).
+
 ## Census (frozen rule, own-flux gate per row; `census_fields.json` "per_field")
 | Field | rows | gate passed | `two-knot` | f̂ | 95 % upper |
 |---|---|---|---|---|---|
-| Abell 2744 | 35 | 33 | 8 | 0.242 | 0.423 |
+| Abell 2744 | 35 | 34 | 9 | 0.265 | 0.444 |
 | Abell 370 | 56 | 34 | 9 | 0.265 | 0.444 |
 | El Gordo | 12 | 12 | 2 | 0.167 | 0.484 |
 | MACS0416 | 27 | 19 | 7 | 0.368 | 0.616 |
 | MACS1149 | 24 | 19 | 6 | 0.316 | 0.566 |
-| **Pooled** | 154 | 117 | 32 | **0.274** | **0.364** |
+| **Pooled** | 154 | 118 | 33 | **0.280** | **0.370** |
 | S1063 (#273, for comparison) | 24 | 21 | 5 | 0.238 | 0.472 |
 
 No row fell outside its mosaic. Every field has ≥ 12 gate-passed rows.
 
 ## S1063 under the five-field rate (frozen outcome; `census_fields.json` "s1063_p_ge_4_anti")
 - Mixture null with the S1063 per-row p_cp, p_sn (`abells1063-cats/vetting/census.ecsv`): P(≥ 4 anti) =
-  **0.031** at the pooled f̂ and 0.054 at its 95 % upper.
-- **Frozen outcome: "S1063 excess remains at the five-field clump rate (exploratory)"** (0.031 < 0.05).
-- Reading (narrow): an independent clump rate (0.27) is close to S1063's own (0.24), so it does not remove the
+  **0.032** at the pooled f̂ and 0.056 at its 95 % upper.
+- **Frozen outcome: "S1063 excess remains at the five-field clump rate (exploratory)"** (0.032 < 0.05).
+- Reading (narrow): an independent clump rate (0.28) is close to S1063's own (0.24), so it does not remove the
   excess; at the pooled upper (0.36) P is just above 0.05. The S1063-only upper (0.47) gave 0.093 (#273); the pooled
   rate narrows that range.
 
