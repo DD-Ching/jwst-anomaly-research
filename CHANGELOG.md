@@ -63,11 +63,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Step 5, spectroscopy feasibility (`vetting/PLAN_spectra.md` first; `scripts/arcs_vet_spectra.py`):**
   - No catalogued redshift within 2.4″ (all-VizieR 6″ cone). Richard+2021 does not cover AS1063.
   - ESO MUSE cubes are 5.7–5.8 GB each, but SODA cutouts are 12–17 MB.
-  - In the deepest public cubes, among channels with valid data that pass the sky-line mask, no line reaches the
-    threshold used. The sky mask covers 36–41 % of the range and 59 % of 1557's [O II] window.
-  - The median 5σ limits (1.3 × 10⁻¹⁸ for [O II] of 1557, 4.4 h; 4.8 × 10⁻¹⁸ for C III] of 1316, 2.2 h, 1.45″) are
-    sensitivity estimates. They depend on the line width, channel noise, continuum and aperture assumptions, and
-    they do not exclude a line anywhere in the window. They correspond to rest EW of order 240 Å / 350 Å.
+  - Lines, after the review fixes (below):
+    - 1557: no usable position reaches the threshold.
+    - 1316: one does, at 6000.3 Å, and it is classified as not significant (below).
+    - Positions that are not usable: 37–42 % of the range and 59 % of 1557's [O II] window.
+  - The median 5σ limits (1.34 × 10⁻¹⁸ for [O II] of 1557, 4.4 h; 3.37 × 10⁻¹⁸ for C III] of 1316, 2.2 h, 1.45″)
+    are sensitivity estimates. They depend on the line width, channel noise, continuum and aperture assumptions,
+    and they do not exclude a line anywhere in the window. They correspond to rest EW of order 240 Å / 250 Å.
   - At the present resolution (≥ 0.62″) and S/N, MUSE cannot reliably separate the 0.15–0.21″ clumps.
   - The result is undetermined. Implementation deviation: the sky flag was replaced before use.
 - **Conclusion:** the spectra examined did not confirm a redshift; ordinary explanations are not excluded; the
@@ -79,14 +81,24 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - Reassess only for a reliable target redshift, a usable 1-D spectrum or materially better data; the arrival of
     data is not an automatic download or re-run.
   - Other authorized searches continue.
-- **Final code review:** four output-affecting issues are recorded, not re-run (`vetting/RESULT.md` "Known
-  issues"):
-  - the spectra noise rescale includes sky-masked channels; 1316 has a clean-channel peak of S/N 4.77 at 6000 Å in
-    its C III] window, which is not a detection but is the first item at any reassessment;
-  - partly valid channels;
-  - the deblend flux bound for faint rows;
-  - the census k = 2 sample mismatch.
-  Robustness fixes that leave the outputs unchanged were applied.
+- **Final code review → fixes and a limited re-run (owner-approved; `vetting/PLAN_fixes.md` first):**
+  - Fixes: usable-channel noise rescale; per-channel validity; deblend flux start and bound from the positive
+    pixels; census null drops the rows the count drops. Each has a unit test (`tests/test_arcs_vet_fixes.py`).
+  - Re-run used the same two MUSE cutouts and the same JWST stamps. Before-fix outputs are kept as
+    `*_before_fixes.*`, with the diff in `fixes_diff.json`.
+  - **Changed:**
+    - 1316 rescale 2.44 → 1.73; C III] limit 4.75 → 3.37 × 10⁻¹⁸; C IV 5.51 → 3.89 × 10⁻¹⁸;
+    - the 6000.3 Å peak S/N 4.77 → 6.72;
+    - census P(≥ 2) without 2184 0.359 → 0.354;
+    - injection-gate recalls (1316 post hoc 0.75 → 0.95 two-knot, still failing on the single side at 0.75; 1557
+      0.90 / 0.95 → 1.00).
+  - **Unchanged:** every class, the 21 / 24 census gates (the flux bound did not cause the 1404 / 2004 / 2184 gate
+    failures), P(≥ 4) 0.026, P(≥ 3) 0.116, and `clumps_1557.json`.
+  - **6000 Å peak (pre-registered checks):** valid and above threshold, but the narrow-band emission rises away from
+    the target (SW, off the cutout), 1.5″ offset apertures are stronger (S/N 22.9, 8.9), and 0.83 chance peaks are
+    expected per window search.
+    - → **not significant under the calibration**; not a line of 1316, no redshift.
+    - Decision to wait: unchanged.
 ## 2026-10-16: Arc difference imaging with position as a label: known cases kept, review burden small, injection efficiency fails (0.34 < 0.50)
 - **Why:** owner decision of 2026-10-16: position becomes a label and review priority, not a veto, and every other
   criterion stays. Plan and acceptance rules were written before any new count:

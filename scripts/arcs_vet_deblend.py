@@ -107,13 +107,26 @@ def _gauss(xx, yy, x0, y0, flux, sig, q=1.0, th=0.0):
     return flux / (2 * np.pi * sig * sb) * np.exp(-0.5 * ((uu / sig) ** 2 + (vv / sb) ** 2))
 
 
+def flux_scale(D) -> tuple[float, float]:
+    """Start flux and upper bound for the fits (PLAN_fixes.md fix 3).
+
+    The start is the filtered aperture sum when positive, else the sum of the positive pixels; the
+    bound is 10 × the larger of the two. (Before the fix both came from the sum floored at
+    1e-6, which pinned faint sources whose filtered sum is ≤ 0.)
+    """
+    D = np.asarray(D, float)
+    s, s_pos = float(np.sum(D)), float(np.sum(np.clip(D, 0.0, None)))
+    start = s if s > 0 else max(s_pos, 1e-6)
+    return start, 10.0 * max(s, s_pos, 1e-6)
+
+
 def fit_models(img, err, x0, y0, r_px):
     """Fit M1 and M2 within ``r_px`` of (x0, y0); returns dict with ΔBIC, knots, S/N."""
     yy, xx = np.indices(img.shape, dtype=float)
     m = ((xx - x0) ** 2 + (yy - y0) ** 2 <= r_px**2) & np.isfinite(img) & (err > 0)
     X, Y, D, E = xx[m], yy[m], img[m], err[m]
     n = D.size
-    f0 = max(float(D.sum()), 1e-6)
+    f0, f_up = flux_scale(D)
 
     def r1(p):
         return (_gauss(X, Y, p[0], p[1], p[2], p[3], p[4], p[5]) - D) / E
@@ -123,7 +136,7 @@ def fit_models(img, err, x0, y0, r_px):
         s = least_squares(
             r1,
             [x0, y0, f0, 2.0, 0.6, th],
-            bounds=([x0 - 4, y0 - 4, 0, 0.5, 0.1, -10], [x0 + 4, y0 + 4, 10 * f0, 8, 1, 10]),
+            bounds=([x0 - 4, y0 - 4, 0, 0.5, 0.1, -10], [x0 + 4, y0 + 4, f_up, 8, 1, 10]),
         )
         if best1 is None or s.cost < best1.cost:
             best1 = s
@@ -141,7 +154,7 @@ def fit_models(img, err, x0, y0, r_px):
                 [x0 + dx, y0 + dy, f0 / 2, 1.2, x0 - dx, y0 - dy, f0 / 2, 1.2],
                 bounds=(
                     [x0 - 6, y0 - 6, 0, 0.5, x0 - 6, y0 - 6, 0, 0.5],
-                    [x0 + 6, y0 + 6, 10 * f0, 5, x0 + 6, y0 + 6, 10 * f0, 5],
+                    [x0 + 6, y0 + 6, f_up, 5, x0 + 6, y0 + 6, f_up, 5],
                 ),
             )
             if best2 is None or s.cost < best2.cost:
