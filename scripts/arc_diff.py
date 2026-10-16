@@ -150,6 +150,28 @@ def register(a: np.ndarray, b: np.ndarray, max_shift: float = 3.0) -> tuple[floa
     return float(dy), float(dx)
 
 
+def register_median(
+    a: np.ndarray, b: np.ndarray, tile: int, max_shift: float = 3.0
+) -> tuple[float, float, int]:
+    """Global (dy, dx) as the median of ``register`` over non-overlapping ``tile``-px tiles.
+
+    The whole-box correlation can be pulled to its window edge by a few tiles holding a bright
+    saturated star and its spikes (El Gordo F150W, 2026-10-17: (1.71, -3.00) px against a tile
+    median of (0.70, -0.57) px); the median follows the majority. Falls back to the whole-box
+    value when fewer than 4 tiles fit. Returns dy, dx and the number of tiles.
+    """
+    ny, nx = a.shape
+    offs = [
+        register(a[y : y + tile, x : x + tile], b[y : y + tile, x : x + tile], max_shift)
+        for y in range(0, ny - tile + 1, tile)
+        for x in range(0, nx - tile + 1, tile)
+    ]
+    if len(offs) < 4:
+        return (*register(a, b, max_shift), 0)
+    dy, dx = np.median(np.array(offs), axis=0)
+    return float(dy), float(dx), len(offs)
+
+
 def shift(img: np.ndarray, dy: float, dx: float) -> np.ndarray:
     good = np.isfinite(img)
     out = ndimage.shift(np.where(good, img, 0.0), (dy, dx), order=3, mode="constant", cval=np.nan)
@@ -449,6 +471,87 @@ def add_star(
     img[sl] += star
 
 
+def empirical_psfs(
+    b1: dict, b2: dict, fwhm_arcsec: float, half_arcsec: float, n: int = 5, min_snr: float = 50.0
+) -> tuple[np.ndarray, np.ndarray, list[tuple[float, float, float]]]:
+    """Per-epoch empirical point-source stamps (sum 1) from the same point-like sources.
+
+    Sources are chosen on epoch 1 only: background-subtracted local maxima with peak / ERR ≥
+    ``min_snr``, no brighter maximum within the stamp, finite stamps in both epochs, ranked by
+    core concentration (peak / sum within ±r, r = max(3, 2 FWHM) px). Concentrations above that of
+    the band-FWHM Gaussian (hot pixels, cosmic rays) are dropped; the ``n`` most concentrated are
+    kept. Each epoch's stamps are cut at the same sky positions on that epoch's grid, recentred on
+    their own centroid, normalised and median-stacked. ASSUMPTION: these sources are stars or
+    unresolved knots and carry each epoch's PSF; wings beyond the stamp are truncated.
+    """
+
+    def bgsub(b):
+        fin = np.isfinite(b["sci"])
+        c = np.where(fin, b["sci"], 0.0)
+        k = int(round(4 * fwhm_arcsec / b["scale"])) * 2 + 1
+        return c - ndimage.median_filter(c, size=max(k, 9)), fin
+
+    c1, f1 = bgsub(b1)
+    c2, f2 = bgsub(b2)
+    h1 = int(round(half_arcsec / b1["scale"]))
+    r = max(3, int(round(2 * fwhm_arcsec / b1["scale"])))
+    g = gaussian_star((2 * r + 1, 2 * r + 1), r, r, fwhm_arcsec / 2.3548 / b1["scale"], 1.0)
+    conc_max = float(g.max())
+    mx = c1 == ndimage.maximum_filter(c1, size=2 * h1 + 1)
+    snr = c1 / np.where(b1["err"] > 0, b1["err"], np.inf)
+    cand = []
+    for y, x in zip(*np.nonzero(mx & (snr >= min_snr) & f1), strict=True):
+        if not (h1 <= y < c1.shape[0] - h1 and h1 <= x < c1.shape[1] - h1):
+            continue
+        if not f1[y - h1 : y + h1 + 1, x - h1 : x + h1 + 1].all():
+            continue
+        conc = float(c1[y, x] / c1[y - r : y + r + 1, x - r : x + r + 1].sum())
+        if conc <= conc_max:
+            ra, dec = b1["wcs"].all_pix2world(x, y, 0)
+            cand.append((-conc, float(ra), float(dec)))
+    cand.sort()
+
+    def stamp(c, fin, b, ra, dec):
+        x, y = (float(v) for v in b["wcs"].all_world2pix(ra, dec, 0))
+        h = int(round(half_arcsec / b["scale"]))
+        yi, xi = int(round(y)), int(round(x))
+        if not (h <= yi < c.shape[0] - h and h <= xi < c.shape[1] - h):
+            return None
+        sl = (slice(yi - h, yi + h + 1), slice(xi - h, xi + h + 1))
+        if not fin[sl].all():
+            return None
+        st = c[sl]
+        cy, cx = ndimage.center_of_mass(np.clip(st, 0.0, None))
+        st = ndimage.shift(st, (h - cy, h - cx), order=3, mode="constant")
+        return st / st.sum()
+
+    s1, s2, used = [], [], []
+    for nc, ra, dec in cand:
+        a, b = stamp(c1, f1, b1, ra, dec), stamp(c2, f2, b2, ra, dec)
+        if a is not None and b is not None:
+            s1.append(a)
+            s2.append(b)
+            used.append((ra, dec, round(-nc, 4)))
+        if len(used) == n:
+            break
+    if not used:
+        raise ValueError("no compact sources for the empirical PSF")
+    p1, p2 = np.median(s1, axis=0), np.median(s2, axis=0)
+    return p1 / p1.sum(), p2 / p2.sum(), used
+
+
+def add_stamp(img: np.ndarray, y: float, x: float, psf: np.ndarray, flux: float) -> None:
+    """Add ``flux`` × ``psf`` (sum 1, centred) to ``img`` at sub-pixel (y, x), in place."""
+    h = psf.shape[0] // 2
+    yi, xi = int(round(y)), int(round(x))
+    st = flux * ndimage.shift(psf, (y - yi, x - xi), order=3, mode="constant")
+    y0, x0 = yi - h, xi - h
+    ys, xs = max(y0, 0), max(x0, 0)
+    ye, xe = min(y0 + psf.shape[0], img.shape[0]), min(x0 + psf.shape[1], img.shape[1])
+    if ye > ys and xe > xs:
+        img[ys:ye, xs:xe] += st[ys - y0 : ye - y0, xs - x0 : xe - x0]
+
+
 def grid_positions(
     img: np.ndarray, w: WCS, scale: float, n: int, min_sep: float, margin: float, pct: float, seed
 ) -> list[tuple[float, float]]:
@@ -484,19 +587,43 @@ def band_diff(job: dict) -> dict:
     t_read = time.perf_counter() - t0
     # Pre-matching injections (``--inject-pre``): sources added to the raw boxes of each epoch,
     # on that epoch's own grid and flux scale, before resampling, registration and matching.
+    # With ``inj_pre_psf == "empirical"`` each epoch gets its own empirical PSF (chosen before
+    # any injection), so an unchanged source has each epoch's real shape.
+    psfs, psf_info = None, None
+    if job.get("inj_pre") and job.get("inj_pre_psf") == "empirical":
+        fw = PSF_FWHM[job["band"]]
+        box = job["inj_pre_psf_box"]
+        q1 = read_box(job["e1"], job["ra"], job["dec"], box)
+        q2 = read_box(job["e2"], job["ra"], job["dec"], box + 1.0)
+        p1, p2, used = empirical_psfs(q1, q2, fw, job["inj_pre_psf_half"])
+        psfs = {1: p1, 2: p2}
+        psf_info = {
+            "sources_ra_dec_conc": used,
+            "half_arcsec": job["inj_pre_psf_half"],
+            "box_half_arcsec": box,
+            "peak_frac": [round(float(p1.max()), 4), round(float(p2.max()), 4)],
+        }
     for ra, dec, mag1, mag2 in job.get("inj_pre") or []:
-        for b, mag in ((b1, mag1), (b2, mag2)):
+        for ep, b, mag in ((1, b1, mag1), (2, b2, mag2)):
             if mag is None:
                 continue
             x, y = (float(v) for v in b["wcs"].all_world2pix(ra, dec, 0))
             if 0 <= y < b["sci"].shape[0] and 0 <= x < b["sci"].shape[1]:
-                sig = PSF_FWHM[job["band"]] / 2.3548 / b["scale"]
-                add_star(b["sci"], y, x, sig, mag_to_mjysr(mag, b["pixar_sr"]))
+                flux = mag_to_mjysr(mag, b["pixar_sr"])
+                if psfs is not None:
+                    add_stamp(b["sci"], y, x, psfs[ep], flux)
+                else:
+                    sig = PSF_FWHM[job["band"]] / 2.3548 / b["scale"]
+                    add_star(b["sci"], y, x, sig, flux)
     t1 = time.perf_counter()
+    t_pre = t1 - t0 - t_read
     shape = b1["sci"].shape
     s2 = resample(b2["sci"], b2["wcs"], b1["wcs"], shape)
     v2 = resample(b2["err"] ** 2, b2["wcs"], b1["wcs"], shape)
-    dy, dx = register(b1["sci"], s2)
+    if job.get("reg_tile_arcsec", 0) > 0:
+        dy, dx, _ = register_median(b1["sci"], s2, int(round(job["reg_tile_arcsec"] / b1["scale"])))
+    else:
+        dy, dx = register(b1["sci"], s2)
     s2 = shift(s2, dy, dx)
     v2 = shift(v2, dy, dx)
     if job["tile_arcsec"] > 0:
@@ -619,8 +746,10 @@ def band_diff(job: dict) -> dict:
             inj_unflagged[f"{mag:.2f}"] = found_unflagged / job["inject"]
     out["injection"] = inj
     out["injection_unflagged"] = inj_unflagged
+    out["inject_pre_psf"] = psf_info
     out["timing_s"] = {
         "read": round(t_read, 2),
+        "pre_injections": round(t_pre, 2),
         "resample_register_match": round(t_match, 2),
         "detect": round(t_detect, 2),
         "post_injections": round(time.perf_counter() - t3, 2),
@@ -701,6 +830,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--bg-arcsec", type=float, default=0.6, help="median filter of the difference")
     ap.add_argument("--tile-arcsec", type=float, default=3.0, help="local registration; 0 = off")
     ap.add_argument(
+        "--reg-tile-arcsec",
+        type=float,
+        default=0.0,
+        help="global shift = median over tiles of this size (0 = whole-box correlation)",
+    )
+    ap.add_argument(
         "--kernel-px", type=int, default=0, help="half-width of a fitted pixel kernel; 0 = Gaussian"
     )
     ap.add_argument(
@@ -728,6 +863,18 @@ def main(argv: list[str] | None = None) -> int:
         "--inject-pre",
         type=Path,
         help="CSV name,ra,dec,mag1,mag2: sources added to both raw epochs before matching",
+    )
+    ap.add_argument(
+        "--inject-pre-psf",
+        choices=("gauss", "empirical"),
+        default="gauss",
+        help="shape of --inject-pre sources: band-FWHM Gaussian, or per-epoch empirical PSF",
+    )
+    ap.add_argument(
+        "--inject-pre-psf-half", type=float, default=0.6, help="stamp half-size (arcsec)"
+    )
+    ap.add_argument(
+        "--inject-pre-psf-box", type=float, default=40.0, help="PSF-star box half-size (arcsec)"
     )
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--procs", type=int, default=min(os.cpu_count() or 1, 4))
@@ -764,6 +911,10 @@ def main(argv: list[str] | None = None) -> int:
             "seed": a.seed + i,
             "inj_sky": [],
             "inj_pre": inj_pre,
+            "inj_pre_psf": a.inject_pre_psf,
+            "inj_pre_psf_half": a.inject_pre_psf_half,
+            "inj_pre_psf_box": a.inject_pre_psf_box,
+            "reg_tile_arcsec": a.reg_tile_arcsec,
         }
         for i, (b, e1, e2) in enumerate(a.band)
     ]
@@ -904,6 +1055,8 @@ def main(argv: list[str] | None = None) -> int:
             "link_arcsec": a.link_arcsec,
             "bg_arcsec": a.bg_arcsec,
             "tile_arcsec": a.tile_arcsec,
+            "reg_tile_arcsec": a.reg_tile_arcsec,
+            "inject_pre_psf": a.inject_pre_psf,
             "kernel_px": a.kernel_px,
             "kernel_stamps": a.kernel_stamps,
             "match_arcsec": a.match_arcsec,
@@ -931,6 +1084,7 @@ def main(argv: list[str] | None = None) -> int:
                 "injection_recovered": r["injection"],
                 "injection_recovered_not_near_core_this_band": r["injection_unflagged"],
                 "timing_s": r["timing_s"],
+                "inject_pre_psf": r.get("inject_pre_psf"),
             }
             for r in res
         },

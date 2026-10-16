@@ -81,3 +81,36 @@ do not test whether registration or matching erase or create a signal. Historica
   - Spot-check 3 rejected (non-pass or flagged) hits per box on the sheet.
 - **Outcome:** an entry with no ordinary or instrumental explanation goes to `/vet-candidate`, and the owner is
   told. Zero entries gives no exclusion of wormholes or of their abundance.
+
+## Addendum 3 (2026-10-16T23:55Z, after the development seeds, before any held-out run)
+Development runs are stored in `dev/` (`<variant>_s10`, `<variant>_s11`, `<variant>_eval.json`).
+
+- **Diagnosis (dev seeds 10 + 11, plan settings):**
+  - Unchanged-class false hits are 12 / 40 (`dev/dev_eval.json`); 26.0 AB unchanged sources give F150W S of about +40
+    to +97.
+  - The F150W whole-box registration is (1.71, −3.00) px, pinned at the ±3 px window edge. This value is the same
+    without any injection (#286 `o241_o051/summary.json`).
+  - On 16 non-overlapping 6″ tiles the WCS-resampled epoch 2 needs a median of (0.70, −0.57) px, consistent with the
+    ≤ 0.02″ catalogue offsets (`reg6882/`). A few tiles near the saturated star pull the whole-box peak.
+  - The local tile shift is capped at 2 px. After it, several tiles stay 1–2 px off in x (session diagnostic, not
+    stored).
+  - Earlier injections were made after this step and could not see it.
+- **Diagnostic that is not the fix:**
+  - Per-epoch empirical PSF injections alone (`dev/fix_*`) leave false hits at 12 / 40.
+- **The one fix (chain change):**
+  - New `arc_diff.py --reg-tile-arcsec 6`: the global shift is the median of per-tile registrations over
+    non-overlapping 6″ tiles.
+  - It is the default for this unit, and from here on for every box in section 6. Default 0 keeps historical runs
+    reproducible.
+  - On dev: false hits 8 / 40 with Gaussian injections (`dev/reg_eval.json`) and 4 / 40 with empirical PSFs
+    (`dev/regE_eval.json`); vanish 26.0 AB review with sign 12 / 14 for both.
+- **Injection-model deviation (post hoc, chosen after seeing the dev results):**
+  - Primary model: per-epoch empirical PSF (`--inject-pre-psf empirical`). The 5 most concentrated isolated sources
+    with S/N ≥ 50 are chosen on epoch 1 in a 40″-half box, cut at the same sky positions in both epochs and
+    median-stacked per epoch. This implements the owner's "per-epoch point-source shape"; the §1 band-FWHM Gaussian
+    is identical in both epochs.
+  - Because the choice was made after the Gaussian variant failed the dev false-hit rule, the held-out seeds are run
+    with **both** models and both are reported. The pass rule is applied to the empirical model.
+  - The Gaussian result is reported beside it, and its failure, if it fails, is stated.
+- **Consequence for section 6:** the chain changed, so box 1 (#286) is re-screened with `--reg-tile-arcsec 6`.
+- **Unchanged:** thresholds, the pass rule, the samples and the held-out seeds.
