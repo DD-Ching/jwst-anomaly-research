@@ -4,7 +4,7 @@ Box: 24″ × 24″ centred between SN Atalanta's images A and B, (110.824442, �
 system 5 arc (PLAN.md, written before the run). `arc_diff.py --kernel-px 4 --kernel-stamps --inject 100
 --min-bands 2`, `OMP_NUM_THREADS=1`, `--procs 4` (full commands in each `summary.json`). Every number is `derived`
 unless labelled; thresholds are ASSUMPTIONs. The frozen "on an image" rule is the tested function
-`classify` in `scripts/smacs_arcdiff_images.py` (known control ≤ 0.15″; else morph `pass` and ≤ 1.0″ from a
+`classify` (rows also carry `posthoc_2arcsec`, and each file `controls_recovered`) in `scripts/smacs_arcdiff_images.py` (known control ≤ 0.15″; else morph `pass` and ≤ 1.0″ from a
 Mahler+22 ICLv2 image → vet). Sheets were looked at before writing this.
 
 ## Deviations from PLAN.md
@@ -41,11 +41,14 @@ Mahler+22 ICLv2 image → vet). Sheets were looked at before writing this.
   there depends on the box (kernel and registration fit); it is not a hit in the re-centred box. The nearest hit
   there, h032 (0.164″ away, just outside the 0.15″ match radius; 0.27″ from 12.1), is a `dipole` (ratio 1.38
   F150W, 0.91 F444W). Forced photometry at h061 (`o001_o057/vet/lightcurves.ecsv`): 2022 → 2026-06 F150W
-  87.2 ± 4.6 → 83.1 ± 9.4 nJy (−0.4σ), F444W 40.4 ± 2.6 → 49.8 ± 4.6 (+1.8σ); no change ≥ 2σ. F444W in 2024
-  (GO-4043) is 76.0 ± 2.2 nJy; that epoch's pair-2 hits h018 (0.51″ away) and h020 (0.91″) are diffraction-spike
-  stripes on the sheet, a possible cause that is not tested here.
-- **Outcome:** beyond SN Atalanta, no morph pass within 2.0″ of a catalogued image shows a ≥ 2σ forced-photometry
-  change (h063; h061 is not a pass), so no candidate in this box for this pair. Not a limit below the injection
+  87.2 ± 4.6 → 83.1 ± 9.4 nJy (−0.4σ), F444W 40.4 ± 2.6 → 49.8 ± 4.6 (+1.8σ): no change ≥ 2σ **in this pair**.
+  But F444W in 2024 (GO-4043) is 76.0 ± 2.2 nJy, +35.6 ± 3.4 over 2022 (≈ 10σ; F115W 59.0 ± 3.4 in 2024 vs
+  41.4 ± 18.6 in 2026-07). By eye a diagonal stripe crosses the aperture in the 2024 F444W stamp
+  (`vet/stamps_h061.png`), and that epoch's pair-2 hits h018 (0.51″ away) and h020 (0.91″) are stripes on the
+  sheet; the spike geometry is **not computed**, so **h061 stays open (unvetted)**.
+- **Outcome:** beyond SN Atalanta, the one morph pass within 2.0″ of a catalogued image (h063) shows no ≥ 2σ
+  forced-photometry change; h061 (not a pass) is open because of its 2024 F444W excess (above). No candidate so
+  far; not closed while h061 is open. Not a limit below the injection
   depth above.
 
 ## Pair 2: GO-4043 o001 (2024-05-11) → DD 12774 o002 (2026-07-06), F115W + F444W (`o4043_o12774/`)

@@ -1619,7 +1619,8 @@ VENUS o057 (F150W + F444W): **Atalanta A and B recovered** as morphology passes 
 validation; injections 0.82 / 0.76 at 27.5 AB per band. 73 hits; under the frozen rule (`classify` in
 `scripts/smacs_arcdiff_images.py`: morph pass and ≤ 1″ from a Mahler+22 image) 0 to vet beyond Atalanta, **but the
 1″ radius fails the known case** (Atalanta lies 1.59–1.69″ from its catalogued images). Post hoc at 2.0″: the one
-extra pass (h063) and h061 (on 12.1, box-edge veto) show no ≥ 2σ change in multi-epoch forced photometry. GO-4043 → DD 12774 (F115W + F444W)
+extra pass (h063) shows no ≥ 2σ change in multi-epoch forced photometry; h061 (on 12.1, box-edge veto) is flat
+2022 → 2026-06 but +35.6 ± 3.4 nJy in 2024 F444W, under a stripe by eye: open, spike geometry untested. GO-4043 → DD 12774 (F115W + F444W)
 **fails its control** (Atalanta not a hit: F115W S ≈ 2.4; injections 0.26 / 0.34 at 27.5), so it gives no null; its one pass is
 AT 2024jfz (0.08″), a one-epoch point source in 2024. `results/transients/smacs_arcdiff/RESULT.md`. **Decision:** a
 field's arc pass needs a known-transient (or injected) control that fires under `--min-bands 2`; a pair whose

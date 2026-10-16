@@ -6,7 +6,8 @@ from smacs_arcdiff_images import classify  # noqa: E402
 
 
 def test_known_wins_over_verdict():
-    assert classify("dipole", 5.0, 0.05) == "known"
+    assert classify("dipole", 5.0, 0.05) == "known_not_pass"
+    assert classify("pass", 5.0, 0.05) == "known"
     assert classify("pass", 0.2, 0.15) == "known"
 
 

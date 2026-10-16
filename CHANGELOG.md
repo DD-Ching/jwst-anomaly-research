@@ -9,14 +9,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **ERO o001 → VENUS o057 (F150W + F444W, derived):** Atalanta A, B recovered (S +49.5 to +58.2, both morph passes);
   injections 0.82 / 0.76 at 27.5 AB per band. 73 hits, 0 `vet` under the frozen 1″ rule, **but that radius
   fails the known case** (Atalanta is 1.59–1.69″ from its catalogued images; found in review). Post hoc 2.0″:
-  h063 (pass, 1.37″ from 6.1) and h061 (on 12.1, box-edge veto; its S depends on the box) show no ≥ 2σ change in
-  multi-epoch forced photometry (h063 F150W −16.0 ± 10.4 nJy, 1.5σ). No candidate.
+  h063 (pass, 1.37″ from 6.1) shows no ≥ 2σ change in multi-epoch forced photometry (F150W −16.0 ± 10.4 nJy).
+  **h061 open:** on image 12.1 (box-edge veto; S depends on the box), flat 2022 → 2026-06, but F444W +35.6 ± 3.4 nJy
+  in the 2024 GO-4043 mosaic, where a stripe crosses it by eye (spike geometry not computed). No candidate so far.
 - **GO-4043 → DD 12774 (F115W + F444W; added, not in the PLAN):** Atalanta not a hit (F115W S ≈ 2.4; forced F115W
   13.7 ± 16.7 nJy; band depth and SN colour not separated), injections 0.26 / 0.34 at 27.5 AB: no null from this pair. Its one pass, h000, is a point
   source only in the 2024 mosaics (F115W 2688 nJy in 2024 vs 49 ± 17 nJy in 2026-07; F090W–F444W 7–49 nJy in every other epoch; `hit_lightcurve.py`), 0.081″
   from TNS AT 2024jfz: known transient, not a candidate.
 - **Run time:** each 24″ two-band `arc_diff` run took ≈ 1 min at `--procs 4` with `OMP_NUM_THREADS=1` (not stored).
-- **Handoff:** more SMACS boxes (systems 1–4, 6–18); a counter-image check for AT 2024jfz (1.8″ from image 6.1);
+- **Handoff:** first close h061 (spike geometry of the 2024 GO-4043 F444W stripe: roll angle and the source star; or per-dither `cal_dither_phot.py`); then more SMACS boxes (systems 1–4, 6–18); a counter-image check for AT 2024jfz (1.8″ from image 6.1);
   the Sunrise o010 → o120 pair is on #274; El Gordo arcs.
 
 ## 2026-10-16: Sunrise arc difference imaging, o010 → VENUS o052: 0 candidates on the arc; o120 pair still to run
