@@ -27,6 +27,49 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - All-VizieR query within 1.5″: no spectroscopic redshift (not stored).
 - **Handoff:** both stay open and unvetted, not candidates. Next: deblend 1316's knots, and a MUSE or second-code
   redshift for 2184 (`vetting/RESULT.md` "Next").
+## 2026-10-16: Sunrise arc difference imaging, o010 → VENUS o052: 0 candidates on the arc; o120 pair still to run
+- **Why:** the Sunrise catalog grids are null, but a catalog grid misses transients blended into an arc (PLATE-23a,
+  D-027 addendum 2026-10-15j); `arc_diff.py` had never run on the Sunrise arc. Plan before the run:
+  `results/transients/sunrise_arcdiff/PLAN.md`.
+- **Run (derived):** 24″ box on Earendel (holds the arc's catalogued images), `--kernel-px 4 --kernel-stamps --inject 100`, F150W + F444W
+  (jwst 2.0.1 vs 3.0.0); injections on bright pixels recovered 0.86 / 0.83 at 27.5 AB, 0.14 / 0.28 at 28.0.
+- **Result:** 9 hits; `arc_diff_morph.py` passes 4. On the sheet (`o010_o052/sheet.jpg`, new
+  `scripts/arc_diff_sheet.py`) all 4 are off the arc: bright-core residuals (h001, h002), an edge-on disk (h007), a
+  compact-core dipole at the box border (h005); all hits ≥ 3.98″ from every Scofield+2025 multiple image (post hoc rule). **0 candidates on the
+  arc's images.** Earendel is not a hit (S −5.2 F150W, −1.5 F444W; stamp clean).
+- **Failed approach (times not stored):** two `--kernel-stamps` runs without `OMP_NUM_THREADS=1` gave no output in
+  ≈ 20 min (known, CHANGELOG 2026-10-15). The o120 run at `--procs 2` did not finish its first two SW bands in
+  ≈ 45 min and was stopped.
+- **Deviations:** `--inject 100` instead of the PLAN's `--inject-grid`; o120 postponed; "on the arc" defined post hoc
+  (RESULT.md).
+- **Handoff:** run o010 → o120 alone with `--procs 4` (the next highest-value step on this arc); then the SMACS 0723
+  and El Gordo arcs.
+
+## 2026-10-16: Abell 2744 orphans: per-pair vetting of the 11 escalated pairs: 4 ordinary, 7 insufficient data, 0 anomalies
+- **Plan and timing:** `results/orphan_pairs/abell2744/vetting/PLAN.md` was written before measuring. Its addendum
+  (E2 controls, `classify` / `e2_valid` as unit-tested functions) came after the first orphan measurements, so it is
+  post hoc for the orphans.
+- **Tool:** `scripts/orphan_vet.py` reads UNCOVER boxes by S3 byte range, and `--classify` runs and stores every
+  VizieR query. Nothing large was downloaded.
+- **Fixes after review:**
+  - the "LW stack" had summed a misaligned band; stacking now requires member pixel positions to agree to ≤ 0.1 px,
+    which leaves F277W only, plus F444W for #7 and #10;
+  - E4 is now a stored flux + 3σ upper bound;
+  - #3's E1 strip excess fell from 3.2σ to 1.2σ.
+- **E2 validation** on 11 CATS pairs ≤ 4″ apart: in every control one member reaches 3σ in at most 1 band; 1 of 7 measured
+  |sb_z| > 3 (rule ≤ 10 %). So E2 is not valid and supports or excludes nothing.
+- **E5/E6:**
+  - no public spectroscopic redshift lies within 1.5″ of any member (Price+25, Wang+24 `zsp`);
+  - same-z neighbours number 0–3 per pair.
+- **#7, member a:** UNCOVER DR3 detects it 0.006″ from our aperture. It is below 3σ only in our conservative
+  photometry.
+- **Classes** (`classification.json`):
+  - ordinary: #1 (visual artifact flag), and #5, #6 and #14 (E1 strip excess 3.3–4.8σ);
+  - insufficient: #2, #3, #7, #9, #10, #11 and #13;
+  - anomaly: none.
+- **Separate from the #269 population null and its ~0.3–1 % per-deflector efficiency:** nothing here is a candidate.
+- **Handoff:** the deciding data are spectra of both members. The no-new-data route needs a validated PSF-matched
+  morphology tool. Neither is in this unit.
 
 ## 2026-10-16: Process: "Before writing results" rules in scripts/CLAUDE.md
 - **Why:** reviews of #262, #266 and #269 each found 8–12 problems, mostly of three kinds:
