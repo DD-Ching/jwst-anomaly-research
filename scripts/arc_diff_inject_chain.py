@@ -19,9 +19,12 @@ from __future__ import annotations
 
 import argparse
 import csv
+import importlib.util
 import json
+import os
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
@@ -30,16 +33,33 @@ from astropy.table import Table
 from astropy.wcs import WCS
 
 _DIR = Path(__file__).resolve().parent
+_spec = importlib.util.spec_from_file_location("arc_diff_peers", _DIR / "arc_diff_peers.py")
+adp = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(adp)
 STAGES = ("n", "hit", "unflagged", "morph", "peers", "confirm")
 
 
 def confirm_value(s: np.ndarray, w: WCS, ra: float, dec: float, half_px: int = 2) -> float:
     """Signed extreme of S in a (2 half_px + 1)² box at the position (nan outside the map)."""
     x, y = (int(round(float(v))) for v in w.all_world2pix(ra, dec, 0))
-    win = s[max(y - half_px, 0) : y + half_px + 1, max(x - half_px, 0) : x + half_px + 1]
-    if not win.size or not np.isfinite(win).any():
-        return float("nan")
-    return float(win.flat[np.nanargmax(np.abs(np.nan_to_num(win)))])
+    return adp.signed_extreme(adp.window(s, y, x, half_px))
+
+
+def run_stages(py: str, t: str, d: Path, m2: Path, ref_passes: Path) -> None:
+    """Morphology and peers for one tile (subprocesses; tiles run concurrently)."""
+    subprocess.run(
+        [py, str(_DIR / "arc_diff_morph.py"), "--hits", str(d / "hits.ecsv"), "--maps", str(m2)]
+        + ["--min-rosette-bands", "1", "--min-dipole-bands", "1", "--min-ring-bands", "1"]
+        + ["--out", str(d / "morph.json")],
+        check=True,
+    )
+    # --all-hits: the chain applies near_bright_core itself, from injected.csv.
+    subprocess.run(
+        [py, str(_DIR / "arc_diff_peers.py"), "--maps", str(m2), "--hits", str(d / "hits.ecsv")]
+        + ["--all-hits", "--tile", t, "--ref-passes", str(ref_passes)]
+        + ["--out", str(d / "peers.ecsv")],
+        check=True,
+    )
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -52,6 +72,7 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--confirm", default="o001", help="confirming pair suffix")
     ap.add_argument("--confirm-sigma", type=float, default=3.0)
     ap.add_argument("--band", default="F356W")
+    ap.add_argument("--procs", type=int, default=os.cpu_count() or 1)
     a = ap.parse_args(argv)
     py = sys.executable
     out = {
@@ -60,22 +81,24 @@ def main(argv: list[str] | None = None) -> None:
         "tiles": {},
     }
     total: dict[str, dict[str, int]] = {}
+    with ThreadPoolExecutor(max_workers=a.procs) as ex:
+        futs = [
+            ex.submit(
+                run_stages,
+                py,
+                t,
+                a.inject / f"{t}_{a.pair}",
+                a.maps / f"{t}_{a.pair}.npz",
+                a.ref_passes,
+            )
+            for t in a.tiles
+        ]
+        for f in futs:
+            f.result()
     for t in a.tiles:
         d = a.inject / f"{t}_{a.pair}"
-        m2 = a.maps / f"{t}_{a.pair}.npz"
         morph = d / "morph.json"
-        subprocess.run(
-            [py, str(_DIR / "arc_diff_morph.py"), "--hits", str(d / "hits.ecsv"), "--maps", str(m2)]
-            + ["--min-rosette-bands", "1", "--min-dipole-bands", "1", "--min-ring-bands", "1"]
-            + ["--out", str(morph)],
-            check=True,
-        )
         peers = d / "peers.ecsv"
-        subprocess.run(
-            [py, str(_DIR / "arc_diff_peers.py"), "--maps", str(m2), "--hits", str(d / "hits.ecsv")]
-            + ["--tile", t, "--ref-passes", str(a.ref_passes), "--out", str(peers)],
-            check=True,
-        )
         verdict = {x["id"]: x["verdict"] for x in json.loads(morph.read_text())["targets"]}
         pt = {r["hit"]: r for r in Table.read(peers)}
         with np.load(a.maps / f"{t}_{a.confirm}.npz") as m:
@@ -96,7 +119,7 @@ def main(argv: list[str] | None = None) -> None:
                 if verdict.get(h) != "pass":
                     continue
                 c["morph"] += 1
-                c["z_stored"].append(round(float(pt[h]["z_stored"]), 1))
+                c["z_stored"].append(float(pt[h]["z_stored"]))
                 if not bool(pt[h]["stored_pass"]):
                     continue
                 c["peers"] += 1

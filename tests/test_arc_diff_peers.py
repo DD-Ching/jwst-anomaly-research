@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from astropy.table import Table
 from astropy.wcs import WCS
 
@@ -88,3 +89,27 @@ def test_stored_z_uses_nearest_tile_rows():
     out = adp.stored_z(t, ref, "a", k=1)
     assert out["z_stored"][0] == 4.0 and out["stored_pass"][0]
     assert out["z_stored"][1] == -1.0 and not out["stored_pass"][1]
+
+
+def test_stored_z_unknown_tile_raises():
+    t = Table(rows=[{"hit": "h0", "s_hit": 8.0, "log_peak": -1.0}])
+    ref = Table(rows=[{"tile": "a", "log_peak": -1.0, "peer_med_s": 0.0, "peer_mad_s": 2.0}])
+
+    with pytest.raises(ValueError):
+        adp.stored_z(t, ref, "zz")
+
+
+def test_window_outside_is_empty_and_extreme_skips_nan():
+    a = np.arange(25.0).reshape(5, 5)
+    assert adp.window(a, -10, 2, 2).size == 0
+    assert adp.window(a, 0, 0, 1).shape == (2, 2)
+    w = np.array([[np.nan, 0.0], [-2.0, 1.0]])
+    assert adp.signed_extreme(w) == -2.0
+    assert np.isnan(adp.signed_extreme(np.full((2, 2), np.nan)))
+
+
+def test_peaks_edge_px_zero_still_finds_peaks():
+    e1 = np.full((40, 40), 1e-3)
+    e1[20, 20] = 1.0
+    y, x, _ = adp.peaks(e1, 3, 0)
+    assert (20, 20) in set(zip(y.tolist(), x.tolist(), strict=True))

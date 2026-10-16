@@ -34,8 +34,24 @@ from astropy.wcs.utils import proj_plane_pixel_scales
 from scipy import ndimage
 
 
+def window(a: np.ndarray, y: int, x: int, r: int) -> np.ndarray:
+    """(2r + 1)² window clipped to the array (empty when the centre lies outside it)."""
+    if not (0 <= y < a.shape[0] and 0 <= x < a.shape[1]):
+        return a[:0, :0]
+    return a[max(y - r, 0) : y + r + 1, max(x - r, 0) : x + r + 1]
+
+
+def signed_extreme(win: np.ndarray) -> float:
+    """The finite value of largest |value| (nan if none)."""
+    ok = np.isfinite(win)
+    if not ok.any():
+        return float("nan")
+    return float(win.flat[int(np.argmax(np.where(ok, np.abs(win), -1.0)))])
+
+
 def peaks(e1: np.ndarray, box: int, edge_px: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Local maxima of the epoch-1 image: (y, x, log10 value)."""
+    edge_px = max(int(edge_px), 1)
     img = np.where(np.isfinite(e1), e1, -np.inf)
     mx = ndimage.maximum_filter(img, size=box, mode="constant", cval=-np.inf)
     bad = ~np.isfinite(e1)
@@ -65,19 +81,20 @@ def peer_table(
     py, px, plog = peaks(e1, peak_box, edge_px)
     rr = max(int(np.ceil(peak_arcsec / scale)), 0)
     # Each peer's S: the signed extreme of S within peak_arcsec of the peak (as for the hit).
+    # A window touching a pixel without S gives nan (dropped below), not S = 0.
+    gap = ndimage.maximum_filter((~np.isfinite(s)).astype(np.uint8), size=2 * rr + 1) > 0
     sa = np.nan_to_num(s)
     hi = ndimage.maximum_filter(sa, size=2 * rr + 1)
     lo = ndimage.minimum_filter(sa, size=2 * rr + 1)
-    ext = np.where(np.abs(hi) >= np.abs(lo), hi, lo)
+    ext = np.where(gap, np.nan, np.where(np.abs(hi) >= np.abs(lo), hi, lo))
     ps = ext[py, px]
     rows = []
     for h in hits:
         x, y = (float(v) for v in w.all_world2pix(h["ra"], h["dec"], 0))
         xi, yi = int(round(x)), int(round(y))
-        win = e1[max(yi - rr, 0) : yi + rr + 1, max(xi - rr, 0) : xi + rr + 1]
+        win = window(e1, yi, xi, rr)
         lp = float(np.log10(np.nanmax(win))) if np.nanmax(win, initial=-np.inf) > 0 else np.nan
-        swin = s[max(yi - rr, 0) : yi + rr + 1, max(xi - rr, 0) : xi + rr + 1]
-        s_hit = float(swin.flat[np.nanargmax(np.abs(swin))]) if np.isfinite(swin).any() else np.nan
+        s_hit = signed_extreme(window(s, yi, xi, rr))
         sel = (np.abs(plog - lp) <= dex) & (np.hypot(px - x, py - y) * scale > self_arcsec)
         vals = ps[sel]
         vals = vals[np.isfinite(vals)]
@@ -109,10 +126,16 @@ def peer_table(
 
 
 def stored_z(t: Table, ref: Table, tile: str, k: int = 3, min_z: float = 3.0) -> Table:
-    """Add ``z_stored`` / ``stored_pass``: S against the stored peer statistics of ``ref``."""
+    """Add ``z_stored`` / ``stored_pass``: S against the stored peer statistics of ``ref``.
+
+    A tile without usable stored rows is an error (it would pass every hit silently); a hit without
+    ``log_peak`` (no positive epoch-1 pixel) gets nan and passes (no test), as in the tiling.
+    """
     ref = ref[(ref["tile"] == tile) & np.isfinite(ref["peer_mad_s"]) & (ref["peer_mad_s"] > 0)]
+    if not len(ref):
+        raise ValueError(f"no stored peer statistics for tile {tile!r}")
     z = np.full(len(t), np.nan)
-    if len(ref):
+    if len(t):
         for i, r in enumerate(t):
             if not np.isfinite(r["log_peak"]):
                 continue
@@ -163,6 +186,8 @@ def main(argv: list[str] | None = None) -> None:
         min_peers=a.min_peers,
     )
     if a.ref_passes:
+        if not a.tile:
+            ap.error("--ref-passes needs --tile")
         t = stored_z(t, Table.read(a.ref_passes), a.tile, a.ref_k, a.min_z)
     if a.compare:
         ref = Table.read(a.compare)

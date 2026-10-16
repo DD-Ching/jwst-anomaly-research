@@ -30,7 +30,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   MAD of the 3 stored passes of the same tile nearest in `log_peak`.
 - **Consequence for #261 (no new candidate claimed):** its "0 lensing candidates" holds at ≳ 36 nJy (0.64
   efficiency) on these tiles, not at 23 nJy (0.19). Of its 667 morphology passes, 471 fell to the peer cut; |z| ≥ 2
-  would keep 307 (+111), and 26 / 31 of the 28-mag stars.
+  would keep 307 (+111), and 24 / 31 of the 28-mag stars.
 - **Limits:** Gaussian stars (no spikes); 4 of 33 tiles; one band (F356W) as in the tiling; `z_stored` borrows the
   peer statistics of real passes, not of the star's own position; the o001 check reads the tile map, not the
   10″ boxes of #261.
