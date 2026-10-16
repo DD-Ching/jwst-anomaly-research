@@ -3,8 +3,18 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-16: Abell 2744 `arc_diff` stripe, spike and offset-core vetoes on top of the annulus cut (in progress)
-- Claimed by a cloud routine at 05:15Z; plan: add the three vetoes named in the previous handoff, re-calibrate on
-  the #264/#265 injections and the 4 real tiles under a decision rule written before the run.
+- **Hypothesis before measuring (#265 handoff):** the 31 extra real passes of the v2 annulus cut are detector
+  stripes, spike fragments, compact-core residuals offset from their peak and faint compact fades; vetoes aimed at
+  the first three keep the injected point brightenings on smooth light.
+- **Vetoes (written before the run; ASSUMPTIONs), applied only to hits the v2 cut calls extended:**
+  - *line coherence* (stripes and spikes are lines in S): for position angles 0–175° in 5° steps, the signed median
+    of S along each half-line from 0.25″ to 1.0″ from the hit; the hit is vetoed if, at some angle, **both**
+    half-line medians have the hit's sign and the smaller is ≥ 0.25 |S_hit| and ≥ 1;
+  - *offset core*: an epoch-1 local maximum 0.15–0.45″ from the hit with contrast ≥ 20 annulus σ sends the hit back
+    to the peer cut (as a compact hit).
+- **Decision rule (written before the run):** adopt if the 28-mag chain efficiency is ≥ 0.30 with 27.5 mag ≥ 0.60,
+  real peer-stage passes on the 4 tiles are ≤ 1.5 × the old 31 (≤ 46), **and** the sheet of newly passing real
+  hits shows at most 2 recognisable stripes, spikes or core residuals.
 
 ## 2026-10-16: Abell 2744 `arc_diff`: a local-annulus cut for hits on extended light doubles 28-mag efficiency but lets artifacts through; not adopted
 - **Hypothesis before measuring (#264 handoff):** the peer cut vetoes faint point brightenings on smooth light because
