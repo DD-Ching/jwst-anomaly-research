@@ -1,0 +1,74 @@
+{
+ "model": "macs0417-relics-lenstool",
+ "catalog": "<scratch>/cat_f200w.ecsv",
+ "photoz": "<scratch>/canucs_macs0417_zout.fits",
+ "assumptions": {
+  "min_ellipticity": 0.5,
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0,
+  "max_radius": 50.0,
+  "min_shear": 0.2,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "multiple_images": null,
+ "selected": 136,
+ "strong_shear_background": {
+  "n": 61,
+  "aligned": 39,
+  "anti": 8,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 9.98000914455784e-07
+ },
+ "strong_shear_by_population": {
+  "background": {
+   "n": 61,
+   "aligned": 39,
+   "anti": 8,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 9.98000914455784e-07
+  },
+  "member_or_foreground": {
+   "n": 8,
+   "aligned": 2,
+   "anti": 1,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.8049077884468829
+  },
+  "unknown": {
+   "n": 37,
+   "aligned": 10,
+   "anti": 3,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.8383963633910292
+  }
+ },
+ "strong_shear_all": {
+  "n": 106,
+  "aligned": 51,
+  "anti": 12,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 0.001140140286309581
+ },
+ "anti_expected_shape_noise_background": {
+  "n": 61,
+  "anti": 8,
+  "expected": 1.416,
+  "p_ge_observed": 0.00011502271199834304
+ },
+ "anti_candidates": [
+  1448,
+  2414,
+  3836,
+  4071,
+  2089,
+  1910,
+  3893,
+  2344,
+  2206,
+  3907,
+  796
+ ]
+}

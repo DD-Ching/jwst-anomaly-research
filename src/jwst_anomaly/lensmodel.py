@@ -216,6 +216,54 @@ WHL0137_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: RELICS Lenstool v1 maps of MACS J0417.5-1154 (Mahler et al. 2019, MNRAS 485, 3954; HLSP DOI
+#: 10.17909/T9SP45, accessed 2026-10-16), deflection in arcsec at D_LS/D_S = 1. Lens redshift 0.443.
+_RELICS_MACS0417 = (
+    "https://archive.stsci.edu/hlsps/relics/macs0417m11/models/lenstool/v1/"
+    "hlsp_relics_model_model_macs0417m11_lenstool_v1"
+)
+MACS0417_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_MACS0417}_x-arcsec-deflect.fits",
+        "545fc07e26444770e42da178b288b22e2eba943cab01e8b15c1c2cd84a2c8cd9",
+    ),
+    "alpha_y": (
+        f"{_RELICS_MACS0417}_y-arcsec-deflect.fits",
+        "aa95407bb364d73f2be894b1054549b53e37dba0f23969359ecde25aa0cd2d19",
+    ),
+    "kappa_map": (
+        f"{_RELICS_MACS0417}_kappa.fits",
+        "2ddbde81eb11acb0352384ca53f0fa731d9e3ebb5f26a3fe37d85d222eee6718",
+    ),
+    "mag_z2": (
+        f"{_RELICS_MACS0417}_z02-magnif.fits",
+        "3bd002c1dfadb949ccb160427672cf36d13e6492905013bacf6e7854330c9b06",
+    ),
+}
+
+#: CANUCS DR1 Lenstool maps of MACS J0417.5-1154 (Desprez, preliminary v1: 30 spectroscopic
+#: multiple-image systems; readme ``macs0417-lenstool-readme``; accessed 2026-10-16): best fit,
+#: 100 mas, 500 arcsec, D_LS/D_S = 1, deflection in arcsec (``dpl1`` x, ``dpl2`` y); 85-89 MB
+#: each (gzip).
+_CANUCS_MAP = (
+    "https://archive.stsci.edu/hlsps/canucs/dr1/{0}/model/"
+    "hlsp_canucs_jwst-hst_multi_{0}-{1}-dlsds1-best-100mas_multi_v1_model.fits.gz"
+)
+MACS0417_CANUCS_MAPS: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _CANUCS_MAP.format("macs0417", "dpl1"),
+        "38ea865a033e075f357c0f560a8df923eddfd65e2013f230db9b7194dc90f7fa",
+    ),
+    "alpha_y": (
+        _CANUCS_MAP.format("macs0417", "dpl2"),
+        "bec99986c802b07da137d4e22b0dcc7bc39c6618f799967802cbb3533ffb7212",
+    ),
+    "kappa_map": (
+        _CANUCS_MAP.format("macs0417", "kappa"),
+        "37e614cfdac117089f0f2a54a7dc672f47bee2ccbf4bc12877604483e6545a2c",
+    ),
+}
+
 #: HFF CATS Lenstool models (Jauzac, Richard, Mahler et al.; HLSP
 #: https://archive.stsci.edu/prepds/frontier/lensmodels/, accessed 2026-10-08): deflection maps
 #: (arcsec, D_LS/D_S = 1), κ, z = 2 magnification and the multiple-image list. cluster ->

@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: `arcs` on MACS0417 as an independent test of the S1063 anti excess: does not replicate
+- **Why:** the S1063 anti excess (#273, #279) was found post hoc in one field. Plan before any run:
+  `results/arcs/macs0417-relics/PLAN.md` (D-024 rules unchanged, control ≥ 70 % aligned, replication if P < 0.05).
+- **New model entries:** `macs0417-relics-lenstool` (RELICS v1 maps; reproduce the published κ and z = 2 μ to
+  ~2 × 10⁻⁵) and `macs0417-canucs-maps` (CANUCS DR1 preliminary maps; κ from the deflections matches to 3 × 10⁻⁵).
+- **Result (derived; `results/arcs/macs0417-relics/RESULT.md`):**
+  - run 1, RELICS v1 (HST-era): control fails, 39 / 61 aligned (64 %); its 8 anti are not interpreted;
+  - run 2, CANUCS v1 (chosen after run 1 failed, addendum A written before running it): 37 / 49 aligned,
+    **anti 3 vs 1.52 expected, P 0.195 → does not replicate**. Cutouts looked at: a low-surface-brightness smudge,
+    a compact knot, a source on a detector stripe.
+- **Reading:** the S1063 excess stays a single-field, exploratory result. An HST-era model can fail the alignment
+  control in a JWST-depth catalogue (most run 1 misalignment at g_min ≥ 1).
+- **Data:** three CANUCS maps (85–89 MB each) were cached in the session and deleted after the run.
+- **Handoff:** no further `arcs` field is queued for the S1063 question; MACS1423 has CANUCS photo-z but no public
+  model was found in this run.
+
 ## 2026-10-16: No-injection control at vetoed SMACS injections: mixed; vetoed and passed positions both sit on pre-existing negative structure
 - **Why:** handoff of the review-list unit: off the arc mask, morphology vetoes most recovered SMACS injections; was
   that pre-existing residuals (H1) or the injection itself (H2)? Plan before measuring:

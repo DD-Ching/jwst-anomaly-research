@@ -1,0 +1,70 @@
+{
+ "model": "macs0417-canucs-maps",
+ "catalog": "<scratch>/cat_f200w.ecsv",
+ "photoz": "<scratch>/canucs_macs0417_zout.fits",
+ "assumptions": {
+  "min_ellipticity": 0.5,
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0,
+  "max_radius": 50.0,
+  "min_shear": 0.2,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "multiple_images": null,
+ "selected": 136,
+ "strong_shear_background": {
+  "n": 49,
+  "aligned": 37,
+  "anti": 3,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 1.8686928734088397e-09
+ },
+ "strong_shear_by_population": {
+  "background": {
+   "n": 49,
+   "aligned": 37,
+   "anti": 3,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 1.8686928734088397e-09
+  },
+  "member_or_foreground": {
+   "n": 6,
+   "aligned": 3,
+   "anti": 2,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.31961591220850477
+  },
+  "unknown": {
+   "n": 31,
+   "aligned": 13,
+   "anti": 4,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.20271923012830806
+  }
+ },
+ "strong_shear_all": {
+  "n": 86,
+  "aligned": 53,
+  "anti": 9,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 7.427972932421046e-08
+ },
+ "anti_expected_shape_noise_background": {
+  "n": 49,
+  "anti": 3,
+  "expected": 1.516,
+  "p_ge_observed": 0.19517661813291273
+ },
+ "anti_candidates": [
+  4071,
+  1993,
+  1910,
+  4204,
+  1797,
+  2079,
+  2341
+ ]
+}

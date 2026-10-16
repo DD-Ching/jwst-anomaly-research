@@ -32,7 +32,7 @@ alignment fraction.
 DR1 `macs0417-clu` photometry with EAzY photo-z, RELICS Lenstool v1 maps (HLSP DOI 10.17909/T9SP45). Byte ranges
 or small files only; nothing over 200 MB.
 
-## Addendum A (2026-10-16 16:28Z, after run 1, before run 2)
+## Addendum A (2026-10-16 16:16Z, after run 1, before run 2)
 - **Run 1 (RELICS Lenstool v1) failed the control:** 39 / 61 strong-shear background rows aligned (64 % < 70 %).
   Per the rule above, no anti count from run 1 is interpreted.
 - **Run 2, chosen after run 1's control failure (a deviation; stated here before running it):** the same catalogue,
