@@ -43,3 +43,11 @@ def test_noiseless_injection_recovers_axis(theta_deg):
     t, e = vn.measure(stamp, 33, 3, 3.0)
     assert vn.abs_.axis_offset(t, theta_deg) < 2.0
     assert 0.0 < e < 0.5
+
+
+def test_core_mag():
+    sci = np.zeros((101, 101))
+    sci[50, 50] = 2.0  # image units; to_img = 1 → 2 Jy
+    m = vn.core_mag(sci + 0.5, 50, 50, 0.03, 1.0)
+    assert m == pytest.approx(-2.5 * np.log10(2.0 / 3631.0))
+    assert np.isnan(vn.core_mag(-sci, 50, 50, 0.03, 1.0))

@@ -41,3 +41,55 @@ from 2184; not stored), fragment of the giant arc (2184).
 ## Next
 Deblend 1316 into its two knots and measure each knot's colour and axis; a spectroscopic redshift for 2184 (MUSE
 cube of the field, if public through the ESO archive) or a photo-z from a second code.
+
+# Step 2 (2026-10-16): deblend 1316, arc-fragment test for 2184, core-flux noise injections
+
+Plan: `PLAN_deblend.md` (before the run) and its addendum (after the deblend run, before the core-flux run). Script:
+`scripts/arcs_vet_deblend.py` → `deblend.json`, `deblend.png`; `scripts/arcs_vet_noise.py --flux core` →
+`noise_injections_core.{json,ecsv}`. Labels as above; core fluxes `derived`.
+
+## 1316 (frozen rule)
+- Two round knots beat one elliptical Gaussian: ΔBIC 134.2, knot S/N 12.8 and 10.6, separation 0.208″ →
+  `two-knot`. The frozen gate passed (20 / 20 of each injected kind classified correctly).
+- The separation axis is 78.5° from the z_s = 2 prediction (the one-component axis 74.6°): the anti axis is the
+  knot separation.
+- Knot flux ratio across F090W–F200W: χ² p = 0.146 → `consistent SED`. **Frozen outcome: clump pair; stays open.**
+- **Post hoc (deviation):** the fitted F200W flux (0.52 image units, two knots) is a third of the catalogue flux the
+  frozen gate injected (1.52). At the fitted fluxes and sizes the gate gives 0.75 / 0.75 (`gate_fitted_post_hoc`),
+  below 0.8, so at the source's own flux the `two-knot` call is not validated (5 of 20 single injections were
+  called `two-knot`). The observed ΔBIC (134) is not compared with those injections' ΔBIC (not stored).
+
+## 2184 (frozen rule)
+- Control failed: the two arc-ridge points (1.60″ and 1.93″ from 2184; `deblend.png`) are `SED-different` at
+  S/N ≈ 1000 with ERR-only errors (p = 0). **Frozen outcome: test invalid.**
+- **Post hoc (deviation):** with a 10 % per-band floor (the plan's own 0.1 mag PSF ASSUMPTION) the control passes
+  (p 0.999) and 2184 differs from both arc points (p 8.8 × 10⁻⁶ and 2.7 × 10⁻⁶): 2184's SED peaks at F150W and falls
+  to F444W, the arc's is flat (`deblend.png`). Under that post hoc rule a fragment of the z 1.2282 giant arc is
+  excluded.
+
+## Core-flux noise injections (addendum)
+- Catalogue `mag` minus the 0.3″ core magnitude: 1.24 mag (1316), 2.49 mag (2184), from −0.47 to 3.09 mag over
+  the 24 rows (`noise_injections_core.ecsv`, `mag` vs `mag_injected`). Step 1 injected every row at its catalogue
+  flux.
+- Gate passed (min 0.9667, 24 rows, none dropped).
+- **1316: P_anti 0 / 60 → `not noise-explicable`. 2184: P_anti 7 / 60 (0.117) → `noise-explicable`.**
+- Sample: 3 bgsub anti rows (1316, 1557, 2184), 0.333 expected; P(≥ 3) = 0.00039 → `excess remains`.
+- Exploratory runs with one offset for all rows (`noise_injections_magoff1.24`, `_magoff2.49`; not in the plan,
+  superseded by the per-row core run): 1316 P_anti 0 and 0.133; 2184 0 and 0.117.
+
+## Status after step 2
+- **2184: explained by measurement noise at its measured core flux** (post hoc core-flux injections). A fragment of
+  the giant arc is excluded under a post hoc rule. Not a candidate.
+- **1316: open, unvetted, not a candidate.** Not explained by measurement noise at core flux (0 / 60). Its axis is
+  the separation of two knots with consistent colours (frozen), but the two-knot call is not validated at its own
+  flux (post hoc gate 0.75). A clump pair of one source is a leading ordinary reading that the data here do not
+  confirm or exclude.
+- **Sample:** the anti excess on S1063 remains at core flux (1316 and 1557 at P_anti 0). 1557 had not been vetted
+  individually.
+
+## Next
+- 1557: the same step-2 tests (it is a bgsub anti row with P_anti 0 at core flux).
+- 1316: a redshift (MUSE cube through the ESO archive) or a second photo-z code; a PSF-convolved two-component fit
+  whose gate passes at the source's own flux.
+- Use `--flux core` as the default injected flux for the other `arcs` fields (catalogue fluxes can be up to ≈ 3 mag
+  brighter than the core).

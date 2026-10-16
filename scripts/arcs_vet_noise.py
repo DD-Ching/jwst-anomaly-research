@@ -77,6 +77,15 @@ def gaussian_stamp(shape, x0, y0, total, sig_major, ellip, theta_rad) -> np.ndar
     return total / (2 * np.pi * sa * sb) * np.exp(-0.5 * ((u / sa) ** 2 + (v / sb) ** 2))
 
 
+def core_mag(sci, xt, yt, px, to_img, r_core=0.3, ann=(0.6, 1.0)) -> float:
+    """AB magnitude within ``r_core`` arcsec after an annulus-median background; NaN if ≤ 0."""
+    yy, xx = np.indices(sci.shape, dtype=float)
+    rr = np.hypot(xx - xt, yy - yt) * px
+    bkg = np.nanmedian(sci[(rr >= ann[0]) & (rr <= ann[1])])
+    f = float(np.nansum(sci[rr <= r_core] - bkg)) / to_img
+    return -2.5 * np.log10(f / 3631.0) if f > 0 else float("nan")
+
+
 def measure(box: np.ndarray, filt_px: int, peak_px: int, weight_px: float):
     """Pixel-frame axis (deg) and ellipticity at the box centre, as ``arcs_bgsub_shapes``."""
     sub = box - median_filter(np.nan_to_num(box), size=filt_px)
@@ -100,8 +109,15 @@ def _row(job):
     xt, yt = wcs.world_to_pixel_values(row["ra"], row["dec"])
     rng = np.random.default_rng(a["seed"] + int(row["label"]))
     out = {"label": int(row["label"]), "n_valid": 0, "anti": 0, "aligned_bright": 0, "drawn": 0}
+    m_inj = (
+        core_mag(sci, xt, yt, px, to_img) if a["flux"] == "core" else row["mag"] + a["mag_offset"]
+    )
+    out["mag_injected"] = m_inj
+    if not np.isfinite(m_inj):
+        out["n_inject_max"] = 0
     offs, offs_b = [], []
-    while out["n_valid"] < a["n_inject"] and out["drawn"] < 20 * a["n_inject"]:
+    n_max = out.pop("n_inject_max", a["n_inject"])
+    while out["n_valid"] < n_max and out["drawn"] < 20 * a["n_inject"]:
         out["drawn"] += 1
         r = np.sqrt(rng.uniform(a["r_in"] ** 2, a["r_out"] ** 2)) / px
         phi = rng.uniform(0, 2 * np.pi)
@@ -122,7 +138,7 @@ def _row(job):
         x2, y2 = wcs.world_to_pixel(step)
         theta = np.arctan2(float(y2) - y, float(x2) - x)
         res = []
-        for m in (row["mag"], a["bright_mag"]):
+        for m in (m_inj, a["bright_mag"]):
             tot = 3631.0 * 10 ** (-0.4 * m) * to_img
             ell = row["ellipticity"] if a["ellip"] is None else a["ellip"]
             stamp = gaussian_stamp(box.shape, half, half, tot, row["semimajor_px"], ell, theta)
@@ -158,6 +174,8 @@ def run(args) -> dict:
             "r_in",
             "r_out",
             "bright_mag",
+            "mag_offset",
+            "flux",
             "seed",
             "ellip",
         )
@@ -188,9 +206,10 @@ def run(args) -> dict:
     vd = d / "vetting"
     vd.mkdir(exist_ok=True)
     out.write(vd / f"noise_injections{args.tag}.ecsv", overwrite=True)
-    gate = gate_ok(out["frac_aligned_bright"])
-    n_obs = int(np.sum(out["class_bgsub"] == "anti"))
-    p_ex = excess_p(out["p_anti"], n_obs)
+    kept = np.isfinite(out["p_anti"])
+    gate = gate_ok(out["frac_aligned_bright"][kept])
+    n_obs = int(np.sum(out["class_bgsub"][kept] == "anti"))
+    p_ex = excess_p(out["p_anti"][kept], n_obs)
     targets = {}
     for lab in args.targets:
         sel = out["label"] == lab
@@ -209,13 +228,14 @@ def run(args) -> dict:
         "assumptions": a,
         "gate": {
             "ok": gate,
-            "min_frac_aligned_bright": round(float(np.min(out["frac_aligned_bright"])), 4),
+            "min_frac_aligned_bright": round(float(np.min(out["frac_aligned_bright"][kept])), 4),
             "rows": len(out),
         },
         "targets": targets,
         "sample": {
             "n_obs_anti_bgsub": n_obs,
-            "expected_anti_measurement_noise": round(float(np.sum(out["p_anti"])), 3),
+            "expected_anti_measurement_noise": round(float(np.sum(out["p_anti"][kept])), 3),
+            "rows_dropped": [int(v) for v in out["label"][~kept]],
             "p_ge_n_obs": round(p_ex, 5),
             "class": excess_class(p_ex) if gate else "invalid (gate failed)",
         },
@@ -224,7 +244,16 @@ def run(args) -> dict:
     return summary
 
 
-_COLS = ("label", "n_valid", "drawn", "anti", "aligned", "aligned_bright", "median_offset")
+_COLS = (
+    "label",
+    "n_valid",
+    "drawn",
+    "anti",
+    "aligned",
+    "aligned_bright",
+    "median_offset",
+    "mag_injected",
+)
 
 
 def main(argv=None) -> int:
@@ -240,6 +269,15 @@ def main(argv=None) -> int:
     p.add_argument("--r-in", type=float, default=1.5, help="annulus inner radius, arcsec")
     p.add_argument("--r-out", type=float, default=6.0, help="annulus outer radius, arcsec")
     p.add_argument("--bright-mag", type=float, default=24.0, help="gate magnitude")
+    p.add_argument(
+        "--flux",
+        choices=("catalogue", "core"),
+        default="catalogue",
+        help="injected flux: catalogue mag (+ offset) or the measured 0.3″ core flux (post hoc)",
+    )
+    p.add_argument(
+        "--mag-offset", type=float, default=0.0, help="added to each row's magnitude (post hoc)"
+    )
     p.add_argument("--seed", type=int, default=20261016)
     p.add_argument("--procs", type=int, default=4)
     p.add_argument(
