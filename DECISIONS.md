@@ -2684,7 +2684,8 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
   not candidates until vetted. A sheet pass finds 5 companions or group members, 2 possible knots, 1
   artefact-affected pair and 3 featureless faint pairs. Details are in `RESULT.md`.
 - **Per-pair vetting (2026-10-16, `vetting/RESULT.md`).**
-  - Classes: 5 ordinary (#1, #3, #5, #6, #14), 6 insufficient data (#2, #7, #9, #10, #11, #13), 0 anomalies.
+  - Classes: 4 ordinary (#5, #6, #14 by E1 strip excess; #1 by a visual artifact flag), 7 insufficient data (#2, #3,
+    #7, #9, #10, #11, #13), 0 anomalies.
   - E2 surface brightness could not be validated on published images, and no public spectra exist at any member.
 
 ## D-046 Multi-plane lens models: `LensModel.split_planes` and `MultiPlaneLensModel` (2026-10-08)

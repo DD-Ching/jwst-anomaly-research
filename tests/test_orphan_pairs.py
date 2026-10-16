@@ -375,6 +375,9 @@ def test_orphan_vet_e2_valid_rule():
     assert not ov.e2_valid([0.1, 0.2])["valid"]  # n < 3
     assert not ov.e2_valid([2.0, 2.5, 1.8, 2.2])["valid"]  # median off
     assert not ov.e2_valid([-4.0, 4.0, -3.5, 3.5, 0.0])["valid"]  # too wide
+    assert not ov.e2_valid([-2.0, 2.0, -1.8, 1.8, 0.0, 1.5, -1.5, 0.5, -0.5, 1.0, -1.0])[
+        "valid"
+    ]  # std only
 
 
 def test_orphan_vet_classify_rules():

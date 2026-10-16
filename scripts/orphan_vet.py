@@ -54,6 +54,8 @@ R_MOM = 0.3  # second-moment radius (plan)
 N_RANDOM = 40  # random strip placements (plan)
 N_MC = 50  # Monte Carlo sky patches for E2 errors
 RESOLVED_FRAC = 0.5  # deconvolved FWHM below this x PSF FWHM: unresolved (plan)
+STACK_SCALE_TOL = 1e-4  # relative pixel-scale agreement for stacking LW bands (ASSUMPTION)
+STACK_PIX_TOL = 0.1  # member pixel positions must agree to this (pixels) across stacked bands
 SKY_PATCH_MAX = 4.0  # an MC sky patch is source-free when |pixel| < this x sky std (ASSUMPTION)
 S3 = "s3://stpubdata/jwst/public/jw{p}/L3/t/o{o}/{prefix}_nircam_clear-{b}_i2d.fits"
 
@@ -124,7 +126,7 @@ def measure_pair(row, prefix: str, rng: np.random.Generator) -> dict:
         ):
             boxes[b] = box
     out = {"rank": int(row["rank"]), "bands": {}}
-    lw_stack, lw_ok = None, True
+    lw_stack, lw_bands = None, []
     for b in BANDS:
         box = boxes[b]
         sci, w, sc = box["sci"], box["wcs"], box["scale"]
@@ -153,13 +155,20 @@ def measure_pair(row, prefix: str, rng: np.random.Generator) -> dict:
         }
         if b in LW:
             if lw_stack is None:
-                lw_stack, _lw_wcs, lw_scale = img.copy(), w, sc
+                lw_stack, lw_scale = img.copy(), sc
                 lw_xy = (xa, ya, xb, yb)
-            elif img.shape == lw_stack.shape and abs(sc - lw_scale) < 1e-6:
+                lw_bands.append(b)
+            elif (
+                img.shape == lw_stack.shape
+                and abs(sc / lw_scale - 1) < STACK_SCALE_TOL
+                and max(abs(u - v) for u, v in zip((xa, ya, xb, yb), lw_xy, strict=True))
+                < STACK_PIX_TOL
+            ):
+                # same grid: both members fall on the same pixel coordinates (fix after review:
+                # the first run compared scales to 1e-6 and stacked F277W only)
                 lw_stack = lw_stack + img
-            else:
-                lw_ok = False
-    out["lw_stack_bands"] = list(LW) if lw_ok else ["f277w"]
+                lw_bands.append(b)
+    out["lw_stack_bands"] = lw_bands
     xa, ya, xb, yb = lw_xy
     sc = lw_scale
     img = lw_stack
@@ -204,7 +213,18 @@ def measure_pair(row, prefix: str, rng: np.random.Generator) -> dict:
             rs.append(ap_sum(img, x, y, rd))
     rs = np.array([v for v in rs if np.isfinite(v)])
     ed = float(1.4826 * np.median(np.abs(rs - np.median(rs))))
-    out["E4"] = {"flux_stack": fd, "err_stack": ed, "x": xd, "y": yd}
+    # upper bound on light at the brightest strip point (it includes member wings, so it is
+    # conservative): flux + 3 sigma, as the mean per stacked band, in AB mag
+    pix_njy = (sc / 206264.806) ** 2 * 1e15
+    ub_njy = (max(fd, 0.0) + 3 * ed) / len(lw_bands) * pix_njy
+    out["E4"] = {
+        "flux_stack": fd,
+        "err_stack": ed,
+        "x": xd,
+        "y": yd,
+        "upper_njy": ub_njy,
+        "mag_limit_3sig": float(31.4 - 2.5 * np.log10(ub_njy)),
+    }
     # E2 sizes on the LW stack (PSF: mean LW FWHM in quadrature)
     psf_fwhm = float(np.mean([PSF_FWHM[b] for b in out["lw_stack_bands"]]))
     psf_s2 = (psf_fwhm / 2.3548 / sc) ** 2
@@ -238,7 +258,7 @@ def measure_pair(row, prefix: str, rng: np.random.Generator) -> dict:
             "sigma2_sd": float(np.std(mc_s2)) if len(mc_s2) > 3 else float("nan"),
             "psf_sigma2_px": psf_s2,
             "fwhm_deconv_arcsec": fwhm_dec,
-            "resolved": bool(fwhm_dec >= RESOLVED_FRAC * psf_fwhm),
+            "resolved": bool(np.isfinite(s2) and fwhm_dec >= RESOLVED_FRAC * psf_fwhm),
         }
     out["E2"] = res
     if res["a"]["resolved"] and res["b"]["resolved"]:
@@ -389,6 +409,122 @@ def classify(m: dict, e2_ok: bool, artifact: bool, dz_spec_ok: bool | None, sis_
     return {"class": "insufficient", "why": ["fallback"]}
 
 
+VIZIER_SPEC = "J/ApJ/982/51"  # Price+25 UNCOVER spectroscopic redshifts
+VIZIER_SPS = "J/ApJS/270/12"  # Wang+24 SPS redshifts (z50, zsp)
+VIZIER_DR3 = "J/ApJS/270/7"  # Weaver+24 UNCOVER DR3 photometry (fluxes in 10 nJy)
+CONE_ARCSEC = 1.5
+SAMEZ_DZ = 0.15  # same-z neighbour: |z50 - z_pair| <= this x (1 + z_pair) (plan addendum)
+ARTIFACT_RANKS = (1,)  # #269 RESULT.md sheet pass: #1 artefact-affected (visual flag)
+
+
+def _cone(cat: str, ra: float, dec: float) -> list[dict]:
+    """Rows of a VizieR catalogue within CONE_ARCSEC (an empty list when none)."""
+    import astropy.units as u
+    from astropy.coordinates import SkyCoord
+    from astroquery.vizier import Vizier
+
+    c = SkyCoord(ra * u.deg, dec * u.deg)
+    import time
+
+    for attempt in range(4):  # VizieR resets connections now and then
+        try:
+            res = Vizier(columns=["**"], row_limit=-1).query_region(
+                c, radius=CONE_ARCSEC * u.arcsec, catalog=[cat]
+            )
+            break
+        except Exception:
+            if attempt == 3:
+                raise
+            time.sleep(2 ** (attempt + 1))
+    rows = []
+    for tb in res:
+        for row in tb:
+            rc = SkyCoord(float(row["RAJ2000"]) * u.deg, float(row["DEJ2000"]) * u.deg)
+            d = {"sep_arcsec": float(rc.separation(c).arcsec), "ra": float(rc.ra.deg)}
+            d["dec"] = float(rc.dec.deg)
+            for k in ("zsp", "z50", "z16", "z84", "zph", "Seq", "f356w", "e_f356w"):
+                if k in tb.colnames and not np.ma.is_masked(row[k]):
+                    d[k] = float(row[k])
+            rows.append(d)
+    return rows
+
+
+def classify_run(out: Path, pairs: Path, ranks: list[int]) -> dict:
+    """Plan addendum: E2 validity from the controls, E5/E6 cone searches, E4 vs SIS, classes.
+
+    Reads ``measurements.json`` and ``controls.json`` in ``out``; writes ``e2_validation.json``,
+    ``vizier.json`` and ``classification.json`` there (every query result stored, empty or not)."""
+    meas = {m["rank"]: m for m in json.loads((out / "measurements.json").read_text())}
+    ctrl = json.loads((out / "controls.json").read_text())
+    sbz = [
+        c["E2"].get("sb_z") for c in ctrl if c["E2"]["a"]["resolved"] and c["E2"]["b"]["resolved"]
+    ]
+    val = e2_valid(sbz)
+    val["control_min_detected_bands"] = [min(c["E6_detected_bands"].values()) for c in ctrl]
+    val["control_e1_n_random"] = [c["E1"]["n_random"] for c in ctrl]
+    val["control_e3_n_bands"] = [c["E3"]["n_bands"] for c in ctrl]
+    val["sb_z"] = sbz
+    (out / "e2_validation.json").write_text(json.dumps(val, indent=1, default=float) + "\n")
+    t = Table.read(pairs)
+    viz, cls = {}, {}
+    for r in t:
+        k = int(r["rank"])
+        if k not in ranks:
+            continue
+        rec = {}
+        for tag in "ab":
+            ra, dec = float(r[f"ra_{tag}"]), float(r[f"dec_{tag}"])
+            rec[tag] = {c: _cone(c, ra, dec) for c in (VIZIER_SPEC, VIZIER_SPS, VIZIER_DR3)}
+        mra, mdec = 0.5 * (r["ra_a"] + r["ra_b"]), 0.5 * (r["dec_a"] + r["dec_b"])
+        rec["midpoint"] = {VIZIER_SPS: _cone(VIZIER_SPS, float(mra), float(mdec))}
+        viz[k] = rec
+        zp = 0.5 * (float(r["z_a"]) + float(r["z_b"]))
+        nb = 0
+        for row in rec["midpoint"][VIZIER_SPS]:
+            da = 3600 * np.hypot(
+                (row["ra"] - r["ra_a"]) * np.cos(np.radians(dec)), row["dec"] - r["dec_a"]
+            )
+            db = 3600 * np.hypot(
+                (row["ra"] - r["ra_b"]) * np.cos(np.radians(dec)), row["dec"] - r["dec_b"]
+            )
+            z = row.get("z50")
+            if da > 0.2 and db > 0.2 and z is not None and abs(z - zp) <= SAMEZ_DZ * (1 + zp):
+                nb += 1
+        spec = [
+            min(rec[tag][VIZIER_SPEC], key=lambda x: x["sep_arcsec"]).get("zsp")
+            if rec[tag][VIZIER_SPEC]
+            else None
+            for tag in "ab"
+        ]
+        if spec[0] is not None and spec[1] is not None:
+            dz_ok = abs(spec[0] - spec[1]) <= 0.01 * (1 + 0.5 * (spec[0] + spec[1]))
+        else:
+            dz_ok = None
+        sis = float(r["sis_sigma"])
+        sis_mag = float(19.0 - 10.0 * np.log10(sis / 180.0))  # D-048 F160W FJ scaling
+        m = meas[k]
+        c = classify(m, val["valid"], k in ARTIFACT_RANKS, dz_ok, sis_mag)
+        cls[k] = {
+            **c,
+            "E1_z": m["E1"]["z"],
+            "E1_n_random": m["E1"]["n_random"],
+            "E2_sb_z": m["E2"].get("sb_z"),
+            "E3_p": m["E3"].get("p"),
+            "E4_mag_upper": m["E4"]["mag_limit_3sig"],
+            "sis_sigma": sis,
+            "sis_mag_F160W_scaling": sis_mag,
+            "E5_specz": spec,
+            "E6_samez_neighbours": nb,
+            "E6_detected_bands": m["E6_detected_bands"],
+            "lw_stack_bands": m["lw_stack_bands"],
+            "artifact_flag_visual_269": k in ARTIFACT_RANKS,
+        }
+    (out / "vizier.json").write_text(json.dumps(viz, indent=1) + "\n")
+    summary = {"e2_valid": val["valid"], "classification": cls}
+    (out / "classification.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
+    return summary
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--pairs", type=Path)
@@ -397,10 +533,20 @@ def main(argv: list[str] | None = None) -> int:
         "--controls",
         help="measure CONTROL_PAIRS of this lens_consistency image list (e.g. abell2744-cats)",
     )
-    ap.add_argument("--i2d", required=True, help="level-3 product prefix, e.g. jw02561-o001_t003")
+    ap.add_argument(
+        "--classify",
+        action="store_true",
+        help="classify from measurements.json and controls.json in --out (no image reads)",
+    )
+    ap.add_argument("--i2d", help="level-3 product prefix, e.g. jw02561-o001_t003")
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args(argv)
+    if args.classify:
+        summary = classify_run(args.out, args.pairs, args.ranks)
+        for k, v in summary["classification"].items():
+            print(k, v["class"], v["why"])
+        return 0
     if args.controls:
         import lens_consistency as lc
 

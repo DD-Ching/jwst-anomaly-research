@@ -60,7 +60,7 @@ Owner request 2026-10-16: finish the per-pair check that #269's frozen escalatio
   - an E4 deflector limit fainter than the SIS-scaled magnitude by ≥ 3 mag.
   Even then it is only a candidate for `/vet-candidate` and independent data.
 
-## Addendum 2026-10-16 06:55 UTC (owner request; **deviation**: added before any control was measured)
+## Addendum 2026-10-16 (committed 06:53 UTC; owner request; **deviation**: written after the orphan measurements of 06:38 were committed, before the controls were measured; post hoc for the orphans)
 **E2 validation on known equal-surface-brightness pairs.**
 - **Controls.** Every CATS v4.1 multiple-image pair of one system with separation ≤ 4″ and a known redshift
   (z > 0). There are 11, all listed by `lens_consistency.image_list('abell2744-cats')`:
