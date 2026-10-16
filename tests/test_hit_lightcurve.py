@@ -94,3 +94,36 @@ def test_compare_controls_by_name_pattern_and_per_pair_stats():
     t = hc.compare(lc, "e1", "e2")
     assert list(t["name"]) == ["cand1"]
     assert t["n_controls"][0] == 30 and t["ctrl_rsd"][0] > 0
+
+
+def test_annulus_median_level_and_edges():
+    img = np.full((40, 40), 2.0)
+    assert hc.annulus_median(img, 20, 20, (3.0, 5.0)) == 2.0
+    assert np.isnan(hc.annulus_median(img, 2, 20, (3.0, 5.0)))
+
+
+def test_pick_arc_matches_knots_on_extended_light(monkeypatch):
+    import arc_diff
+    from astropy.wcs import WCS
+
+    n, scale = 200, 0.05  # pixels, arcsec / pixel
+    img = np.zeros((n, n))
+    img[90:110, :] = 1.0  # a flat "arc" band; the rest of the box is blank sky
+    for x in range(20, 190, 30):  # equal knots on the band; x = 110 is the hit
+        img += _gauss(n, x, 100, 1.5, 40.0)
+    img += _gauss(n, 50, 30, 1.5, 40.0)  # same knot on blank sky: annulus level does not match
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crpix = [n / 2 + 1, n / 2 + 1]
+    w.wcs.crval = [10.0, -30.0]
+    w.wcs.cdelt = [-scale / 3600, scale / 3600]
+    box = {"sci": img, "scale": scale, "wcs": w, "pixar_sr": 1.0}
+    monkeypatch.setattr(arc_diff, "read_box", lambda *a, **k: box)
+    ra, dec = (float(v) for v in w.all_pix2world(110, 100, 0))
+    pts = hc.pick_arc("x", ra, dec, 5.0, 1.5, 0.05, 0.6, 50, 0.15, 1)
+    xy = np.array([w.all_world2pix(r, d, 0) for r, d in pts])
+    assert len(pts) >= 4
+    assert np.all(np.abs(xy[:, 1] - 100) < 3)  # only knots on the band
+    assert np.all(np.hypot(xy[:, 0] - 110, xy[:, 1] - 100) * scale >= 0.6)  # not the hit
+    d = np.hypot(*(xy[:, None, :] - xy[None, :, :]).transpose(2, 0, 1)) * scale
+    assert np.all(d[np.triu_indices(len(xy), 1)] >= 0.6)

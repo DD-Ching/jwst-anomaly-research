@@ -2,8 +2,35 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-16: (in progress) Abell 2744 h182: arc-pixel control set
-- Plan: calibrate h182's 2022→2023 red-band brightening against random apertures on the same arcs (not compact peaks) in the same mosaics.
+## 2026-10-16: Abell 2744 h182 against arc-pixel controls: within on-arc systematics; closed, not a candidate
+- **Hypothesis before measuring:** h182's 2022→2023 red-band brightening (+45 % F356W; compact-control z_cal +4.9,
+  #261) is a PSF/registration effect on steep extended light that compact-peak controls do not sample. Decision rule
+  (ASSUMPTION, written before the run): h182 stays open only if |z_cal| ≥ 3 against arc-matched controls in ≥ 2
+  independent program pairs; otherwise it closes as on-arc systematics.
+- **Tool (new):** `hit_lightcurve_controls.py pick-arc`: grid positions (0.2″ step) whose 0.15″ aperture flux **and**
+  annulus median both lie within ×1.5 of the hit's own (UNCOVER F356W), ≥ 0.6″ apart and from the hit. Unit-tested
+  on a synthetic band with knots (only on-band knots are picked).
+- **Run (derived):** 80 picks in a 32″ square box centred on h182 (corners ≤ 22.6″); 78 measured in the same 64
+  mosaics as h182 (2 fell in a separate position group without a coverage query, as c08 in #261). Positions and map:
+  `vet/ctrl182arc/positions.txt`, `controls_map.png` (looked at: knots on the 301 arcs, including two on h182's own
+  arc, and many on the steep outskirts of compact cluster members). 5,056 measurements, 0 skipped. Command in the
+  script docstring.
+- **Result (derived; `vet/ctrl182arc/control_z.ecsv`):** control robust std 1.6–3.8 per pair (the compact controls'
+  spread was smaller). h182 z_cal: F356W UNCOVER→ALT o002 **+2.3** (9 % of controls as extreme), →ALT o001 +1.4,
+  ALT o002→o001 −1.4, UNCOVER→PEARLS +0.7; F444W UNCOVER→PEARLS +1.6, →SAPPHIRES +0.3; F410M +1.4, F277W +0.9,
+  F200W +0.4, F150W −0.2. No pair reaches 3: **closed under the pre-written rule; not a candidate.** The rule's
+  "independent" pairs share the UNCOVER epoch; with no pair at 3 the outcome does not depend on that.
+- **Pick variance:** a first run, before a review fix aligned the annulus edge with `aperture_photometry`, drew a
+  different random 80 (47 shared): F356W UNCOVER→ALT o002 z_cal +2.8 (6 % tail), every other pair ≤ 1.6. Same verdict.
+- **Looked at:** tail controls in that first run changed as much as h182 (c63 +8.7σ raw, c18 +7.9σ, c12 −9.3σ). c63's
+  stamps show a galaxy-outskirt position, and its PEARLS 1176 cutouts are offset by ≈ 0.3″ against the cross
+  relative to the other programs: a mosaic registration difference, which moves flux on steep gradients.
+- **Sensitivity:** with this control spread a real change on h182's knot needs raw z ≈ 11 (≈ +31 nJy, +56 %) in
+  F356W UNCOVER→ALT o002 to reach z_cal 3.
+- **Blocked:** TNS for h003 (www.wis-tns.org answers 403 from its own load balancer, not the proxy); h003 stays an
+  ordinary SN-like transient with that check undone.
+- **Handoff:** the `--inject-grid` completeness run on 2–3 Abell 2744 arc tiles is next; the PEARLS 1176
+  registration offset should be measured (one shift per mosaic) before any further on-arc photometry with 1176.
 
 ## 2026-10-16: Abell 2744 UNCOVER vs ALT F356W `arc_diff` tiling and multi-epoch vetting of 6 priority hits: one SN-like transient, one variable, 0 lensing candidates
 - **Hypothesis before measuring:** difference imaging of the whole UNCOVER o001 (2022-11) ∩ ALT 3516 o002 (2023-11/12)
