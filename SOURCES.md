@@ -1287,6 +1287,15 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   - Not re-read this round: Isaacson 1968 (Phys. Rev. 166, 1263/1272); MTW §35.15; Brill & Hartle 1964.
   - Within four web queries only (dynamic/Kapitza/Floquet stabilisation of wormholes; Isaacson or Brill–Hartle
     averaging applied to wormholes), no paper was found. This does not mean none exists.
+- S0-2026-10-16 unstable-wormhole message window (accessed 2026-10-16; body read unless noted):
+  - Shinkai & Hayward, arXiv:gr-qc/0205041v2, PRD 66, 044005 (2002), doi:10.1103/PhysRevD.66.044005.
+  - Shinkai, `wh_dual` program page https://www.oit.ac.jp/labs/is/system/shinkai/his/programs/wh_dual.html
+    (archive `whdual_020430.tar.Z`, page updated 2007-04-19; no licence stated; archive not downloaded).
+  - González, Guzmán & Sarbach, arXiv:0806.1370v2, CQG 26, 015011 (2009); with arXiv:0806.0608v2 (listed above).
+  - Doroshkevich, Hansen, Novikov & Shatskiy, arXiv:0812.0702v2, IJMPD 18, 1665 (2009), doi:10.1142/S0218271809015230.
+  - Calhoun, Fay & Kain, arXiv:2210.04905v2, PRD 106, 104054 (2022).
+  - Xu, Chew & Yeom, arXiv:2503.07610v1 (2025).
+  - Abstract only: Shirokov, arXiv:2604.00071v1; Koyama & Hayward, gr-qc/0406113; Hayward & Koyama, gr-qc/0406080.
 - X4 S1d reuse check (accessed 2026-10-15):
   - SciPy 1.18.1 `optimize.differential_evolution` (BSD-3-Clause):
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html

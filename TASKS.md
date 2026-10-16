@@ -21,6 +21,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   0.121 and 0.142). Writeup drafted (`docs/state/units/X2_s6a_summary.md`); next is a human expert review, the owner's
   call. Paused; no automatic follow-up.
 
+- **S0-2026-10-16 message-and-reply window in unstable wormholes** (owner check 2026-10-16):
+  `docs/state/units/S0-2026-10-16.md`. Stopped. The literature already shows test-ray round trips within about r_throat/c
+  in two-universe Ellis models; maintenance needs active phantom injection. No new unit; reopen conditions are in §7.
 - **S0-2026-10-15b Kapitza dynamic stabilisation** (owner screen 2026-10-15): `docs/state/units/S0-2026-10-15b.md`.
   Paused. The proposed Ellis + static radiation-fluid background does not exist (re-check), so no solver. A follow-up
   needs a specified radiation closure (distribution, stress tensor, boundaries, confinement or supply, fixed
