@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Sunrise arc difference imaging, o010 → VENUS o052: 0 candidates on the arc; o120 pair still to run
+- **Why:** the Sunrise catalog grids are null, but a catalog grid misses transients blended into an arc (PLATE-23a,
+  D-027 addendum 2026-10-15j); `arc_diff.py` had never run on the Sunrise arc. Plan before the run:
+  `results/transients/sunrise_arcdiff/PLAN.md`.
+- **Run (derived):** 24″ box on Earendel (holds the arc's catalogued images), `--kernel-px 4 --kernel-stamps --inject 100`, F150W + F444W
+  (jwst 2.0.1 vs 3.0.0); injections on bright pixels recovered 0.86 / 0.83 at 27.5 AB, 0.14 / 0.28 at 28.0.
+- **Result:** 9 hits; `arc_diff_morph.py` passes 4. On the sheet (`o010_o052/sheet.jpg`, new
+  `scripts/arc_diff_sheet.py`) all 4 are off the arc: bright-core residuals (h001, h002), an edge-on disk (h007), a
+  compact-core dipole at the box border (h005); all hits ≥ 3.98″ from every Scofield+2025 multiple image (post hoc rule). **0 candidates on the
+  arc's images.** Earendel is not a hit (S −5.2 F150W, −1.5 F444W; stamp clean).
+- **Failed approach (times not stored):** two `--kernel-stamps` runs without `OMP_NUM_THREADS=1` gave no output in
+  ≈ 20 min (known, CHANGELOG 2026-10-15). The o120 run at `--procs 2` did not finish its first two SW bands in
+  ≈ 45 min and was stopped.
+- **Deviations:** `--inject 100` instead of the PLAN's `--inject-grid`; o120 postponed; "on the arc" defined post hoc
+  (RESULT.md).
+- **Handoff:** run o010 → o120 alone with `--procs 4` (the next highest-value step on this arc); then the SMACS 0723
+  and El Gordo arcs.
+
 ## 2026-10-16: Abell 2744 orphans: per-pair vetting of the 11 escalated pairs: 4 ordinary, 7 insufficient data, 0 anomalies
 - **Plan and timing:** `results/orphan_pairs/abell2744/vetting/PLAN.md` was written before measuring. Its addendum
   (E2 controls, `classify` / `e2_valid` as unit-tested functions) came after the first orphan measurements, so it is
