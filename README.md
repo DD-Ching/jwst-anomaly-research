@@ -9,6 +9,16 @@ signatures.
 > interpretations are hypotheses of last resort, considered only after artifacts and known populations
 > have been ruled out ([methodology](docs/methodology.md)).
 
+## Research results
+
+- **X2 S6a, 5D rotating Ellis wormholes (theoretical linear-stability result, not an observation).** In the 5D
+  equal-angular-momentum rotating Ellis wormholes of arXiv:1309.2448 (symmetric case, that paper's perturbation
+  ansatz, even parity), the two unstable modes that merge at |J|/A ≈ 0.10063 continue as an oscillating, growing
+  complex-conjugate pair at the two verified points |J|/A = 0.1207 and 0.1420. Brief:
+  [PDF](docs/results/s6a_5d_rotating_wormhole_modes.pdf) · [web summary](docs/results/s6a_5d_rotating_wormhole_modes.md) ·
+  [reproduction package](docs/state/units/X2_s6a_repro.md). Version 2026-10-16, based on commit a57b824.
+  No human domain expert has reviewed it.
+
 **Status:** M0 bootstrap is complete. The M1 catalog-level slice runs end to end on real data; first
 results and limitations are in [CHANGELOG.md](CHANGELOG.md). See [TASKS.md](TASKS.md) and [ROADMAP.md](ROADMAP.md).
 
