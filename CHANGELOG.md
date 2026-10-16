@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: (in progress) Abell 2744 UNCOVER vs ALT F356W `arc_diff` tiling over the overlap footprint
+- Claim: close the grid's host-blend blind spot (PLATE-23a) by difference imaging the UNCOVER∩ALT overlap.
+
 ## 2026-10-16: X3 reopen check: DR4 epoch-astrometry fields confirmed (draft data model), precision not yet published; X3 stays paused
 - Documents only (≤ 30 min; no Gaia data read; no X3 computation). Record: `docs/state/units/X3.md`, "DR4 reopen
   check".
