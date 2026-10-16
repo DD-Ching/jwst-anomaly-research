@@ -79,6 +79,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - Reassess only for a reliable target redshift, a usable 1-D spectrum or materially better data; the arrival of
     data is not an automatic download or re-run.
   - Other authorized searches continue.
+- **Final code review:** four output-affecting issues are recorded, not re-run (`vetting/RESULT.md` "Known
+  issues"):
+  - the spectra noise rescale includes sky-masked channels; 1316 has a clean-channel peak of S/N 4.77 at 6000 Å in
+    its C III] window, which is not a detection but is the first item at any reassessment;
+  - partly valid channels;
+  - the deblend flux bound for faint rows;
+  - the census k = 2 sample mismatch.
+  Robustness fixes that leave the outputs unchanged were applied.
 ## 2026-10-16: Arc difference imaging with position as a label: known cases kept, review burden small, injection efficiency fails (0.34 < 0.50)
 - **Why:** owner decision of 2026-10-16: position becomes a label and review priority, not a veto, and every other
   criterion stays. Plan and acceptance rules were written before any new count:

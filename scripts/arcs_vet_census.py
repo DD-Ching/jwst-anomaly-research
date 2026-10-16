@@ -16,10 +16,13 @@ injections simulations, probabilities model_prediction).
 
 from __future__ import annotations
 
+import os
+
+os.environ.setdefault("OMP_NUM_THREADS", "1")  # pool workers: no BLAS oversubscription
+
 import argparse
 import importlib.util
 import json
-import os
 import sys
 import tempfile
 from concurrent.futures import ProcessPoolExecutor
@@ -137,6 +140,9 @@ def main(argv=None) -> int:
             extensions=["ERR", "WHT"],
         )
         path = {str(u): str(pth) for u, pth in zip(c["source_uid"], c["path"], strict=True)}
+        outside = sorted(lab for lab, pth in path.items() if not pth)
+        if outside:
+            raise SystemExit(f"error: rows outside the F200W image: {outside}")
         with ProcessPoolExecutor(max_workers=a.workers) as ex:
             futs = {
                 lab: ex.submit(

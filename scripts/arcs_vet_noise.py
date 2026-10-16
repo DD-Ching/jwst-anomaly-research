@@ -18,6 +18,10 @@ Output: ``results/arcs/<model>/vetting/noise_injections.ecsv`` and ``noise_injec
 
 from __future__ import annotations
 
+import os
+
+os.environ.setdefault("OMP_NUM_THREADS", "1")  # pool workers: no BLAS oversubscription
+
 import argparse
 import importlib.util
 import json
@@ -228,7 +232,9 @@ def run(args) -> dict:
         "assumptions": a,
         "gate": {
             "ok": gate,
-            "min_frac_aligned_bright": round(float(np.min(out["frac_aligned_bright"][kept])), 4),
+            "min_frac_aligned_bright": (
+                round(float(np.min(out["frac_aligned_bright"][kept])), 4) if kept.any() else None
+            ),
             "rows": len(out),
         },
         "targets": targets,

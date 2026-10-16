@@ -49,7 +49,7 @@ def third(cut: dict, m2: list) -> dict:
     r = np.hypot(xx - cx, yy - cy) * px
     sm = gaussian_filter(np.nan_to_num(sub), 1.0)
     j, i = np.unravel_index(np.argmax(np.where((r > 0.25) & (r < 0.6), sm, -np.inf)), sm.shape)
-    m = np.hypot(xx - i, yy - j) <= 4
+    m = (np.hypot(xx - i, yy - j) <= 4) & np.isfinite(sub) & np.isfinite(err) & (err > 0)
     p3 = least_squares(
         lambda p: (vd._gauss(xx[m], yy[m], *p) - sub[m]) / err[m],
         [i, j, float(np.clip(sm[j, i] * 10, 1e-6, 999.0)), 1.0],

@@ -330,3 +330,30 @@ enclosed fraction).
   - a reliable redshift for either target;
   - a usable 1-D spectrum;
   - materially better data, e.g. the full 116.28VK.001 data set or a published redshift catalogue from it.
+
+## Known issues from the final code review (2026-10-16; not re-run, by owner decision)
+The committed outputs were produced by the code as reviewed. Fixing the four issues below would change outputs, so
+they are recorded here instead of being re-run:
+- **Spectra noise rescale (`arcs_vet_spectra.py`):** the MAD rescale of S/N uses every channel, including the
+  sky-masked ones (rescale 1.51 for 1557, 2.44 for 1316, `spectra.json` `noise_rescale`). The S/N values in
+  clean channels may therefore be too low and the limits too loose.
+  - **1316's highest clean-channel peak is S/N 4.77 at 6000.3 Å**, inside the C III] window (z ≈ 2.14, within
+    its photo-z range). With a clean-channel rescale it could reach the threshold.
+  - It is **not a detection**. It is the first thing to check at any reassessment.
+- **Partly valid channels (`arcs_vet_spectra.py`):** the aperture sum uses `nansum` without a per-channel
+  completeness check, so channels where only some spaxels are valid get a biased flux and too little variance.
+  No such channel was found to drive a result here, but it was not checked.
+- **Deblend flux bound for faint rows (`arcs_vet_deblend.py`, used by the census):** the fitted flux is bounded by
+  10 × the median-filtered aperture sum. For faint rows whose sum is ≤ 0, the fit is pinned near zero. This may
+  be why the own-flux gate failed for 1404, 2004 and 2184 in the census, and it may affect the classes of other
+  faint rows.
+- **Census `k2_core_flux` (`arcs_vet_census.py`):** the count drops 2184 but the null keeps its row probability, so
+  "P(≥ 2) = 0.359, 2184 removed" compares two different samples. Read it as the P of ≥ 2 anti among all 24 rows,
+  not as a test with 2184 excluded.
+- **Fixed in code without changing outputs:**
+  - finite-error mask in `arcs_vet_clumps.py`;
+  - an off-image check in `arcs_vet_census.py`;
+  - an empty-gate guard in `arcs_vet_noise.py`;
+  - `OMP_NUM_THREADS=1` for the process pools.
+- **Not changed (cleanup):** duplicated helpers (`axis_class`, the empty-position injection loop), census thresholds
+  hard-coded at the `arcs.json` values, and tests of two scripts living in `tests/test_arcs_faint.py`.
