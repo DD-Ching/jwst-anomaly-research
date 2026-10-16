@@ -27,6 +27,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Failed approach:** the first runs of this cycle used 4 `arc_diff.py` processes without `OMP_NUM_THREADS=1`; load
   15 on 4 cores, none finished in 16 CPU-min each; with one thread each a run takes ≈ 1.5 min (scripts/CLAUDE.md
   rule, now confirmed for `arc_diff.py`).
+- **Limit of the comparison:** the real "old" verdict is rebuilt as |z_peers| ≥ 3 or no peers from `passes.ecsv`;
+  over all 667 passes this keeps 185, not the 196 #261 reports (the injections use the stored `stored_pass`).
 - **Consequence:** #261's "0 lensing candidates" still holds only at ≳ 36 nJy (#264). Outputs:
   `arcdiff_tiles/extended/` (`inject_summary.json`, `real_passes_4tiles.ecsv`, the sheet).
 - **Handoff:** a replacement needs explicit stripe and spike vetoes (row/column-coherent S; position along a bright

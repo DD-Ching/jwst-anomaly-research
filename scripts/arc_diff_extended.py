@@ -114,7 +114,10 @@ def measure(
 
 
 def ext_pass(row: dict, min_z: float = DEFAULTS["min_z"]) -> bool:
-    """Annulus cut for an extended hit (no test when the annulus has too few pixels)."""
+    """Annulus cut for an extended hit (no test when the annulus has too few pixels; a hit
+    without a finite S near it fails)."""
+    if not np.isfinite(row["s_hit"]):
+        return False
     z = row["z_ann"]
     return bool(not np.isfinite(z) or abs(z) >= min_z)
 

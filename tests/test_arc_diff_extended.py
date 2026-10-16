@@ -47,5 +47,9 @@ def test_other_hits_are_masked_and_too_few_pixels_is_no_test():
     rows = ade.measure(s, e1, np.array([[30, 30], [30, 38]], float), scale_arcsec=0.063)
     assert rows[0]["n_ann"] > 0
     assert rows[0]["z_ann"] > 3.0
-    (edge,) = ade.measure(s, e1, np.array([[0, 0]], float), scale_arcsec=0.063, min_ann_px=10**6)
-    assert not np.isfinite(edge["z_ann"]) and ade.ext_pass(edge)
+    s_nan = s.copy()
+    s_nan[:6, :6] = np.nan
+    (edge,) = ade.measure(s_nan, e1, np.array([[1, 1]], float), scale_arcsec=0.063)
+    assert not np.isfinite(edge["s_hit"]) and not ade.ext_pass(edge)
+    (few,) = ade.measure(s, e1, np.array([[30, 30]], float), scale_arcsec=0.063, min_ann_px=10**6)
+    assert not np.isfinite(few["z_ann"]) and ade.ext_pass(few)
