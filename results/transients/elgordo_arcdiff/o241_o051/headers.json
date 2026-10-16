@@ -1,0 +1,36 @@
+{
+ "mosaics": {
+  "jw01176-o241_t012_nircam_clear-f150w_i2d.fits": {
+   "PA_V3": 276.2523797812374,
+   "CAL_VER": "3.0.0",
+   "CRDS_CTX": "jwst_1584.pmap",
+   "DATE-BEG": "2022-07-29T20:40:30.946"
+  },
+  "jw01176-o241_t012_nircam_clear-f444w_i2d.fits": {
+   "PA_V3": 276.2519636834707,
+   "CAL_VER": "3.0.0",
+   "CRDS_CTX": "jwst_1584.pmap",
+   "DATE-BEG": "2022-07-29T18:59:35.357"
+  },
+  "jw06882-o051_t051_nircam_clear-f150w_i2d.fits": {
+   "PA_V3": 277.0944250931823,
+   "CAL_VER": "3.0.0",
+   "CRDS_CTX": "jwst_1584.pmap",
+   "DATE-BEG": "2026-08-05T01:45:25.374"
+  },
+  "jw06882-o051_t051_nircam_clear-f444w_i2d.fits": {
+   "PA_V3": 277.0944250931823,
+   "CAL_VER": "3.0.0",
+   "CRDS_CTX": "jwst_1584.pmap",
+   "DATE-BEG": "2026-08-05T01:45:25.374"
+  }
+ },
+ "maps_finite_fraction": {
+  "F150W_s": 0.9761,
+  "F150W_d": 0.9918,
+  "F150W_e1img": 1.0,
+  "F444W_s": 0.9588,
+  "F444W_d": 0.9899,
+  "F444W_e1img": 1.0
+ }
+}

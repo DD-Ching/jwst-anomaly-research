@@ -244,7 +244,8 @@ Thresholds are ASSUMPTIONs in the script.
 ## Two-epoch arc difference imaging (2026-10-16, one-box pilot; `results/transients/elgordo_arcdiff/`)
 - Pair: PEARLS 1176 o241 (2022-07-29) → VENUS 6882 o051 (2026-08-05), F150W + F444W, in a 24″ box at
   (15.7300, −49.2530).
-- 4 review entries. All lie on the diffraction spikes of one bright point source (15.72722, −49.25394), whose spikes
-  moved by about 0.05″ (PA_V3 0.84° apart), or within program-to-program photometric scatter. Nothing is open.
+- 4 review entries. Three lie on the diffraction spikes of one bright point source (15.72722, −49.25394), whose
+  spikes moved by about 0.05″ (PA_V3 0.84° apart). The F444W change of the bright one (h043) is within the
+  program-to-program photometric scatter, and the fourth (h031) shows no forced-photometry change. Nothing is open.
 - Bright compact sources show a median F444W z of −9.8 between these programs in 0.15″ apertures. Single-aperture
   fadings of bright sources here must be calibrated against that.

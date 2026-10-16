@@ -18,11 +18,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - bright-core hits (32 / 50) not reviewed.
 - **Screen:** 50 hits, 5 morph `pass`, 4 review entries (all fadings, all in the arc mask).
 - **Vetting:**
-  - All four lie 2.6–3.9″ from one bright point source, on its diffraction spikes; PA_V3 differs by 0.84°, so the
+  - All four lie 2.6–3.9″ from one bright point source, and three are on its diffraction spikes; PA_V3 differs by
+    0.84°, so the
     spikes move about 0.05″. Tool: `scripts/elgordo_spike_check.py`.
   - h024 and h031: no forced-photometry change ≥ 2σ.
   - h049: on-spike controls 6 / 8 fade alike → spike shift.
-  - h043: F150W spike rotation dipole. Its F444W −4.6 % is within the program-to-program scatter of 20 bright
+  - h043: no significant F150W change. Its F444W −4.6 % is within the program-to-program scatter of 20 bright
     compact controls (control median z −9.8; tail fraction 0.45).
 - **Result:** no real change without an ordinary or instrumental explanation; nothing to `/vet-candidate`; no SN or
   variable found. No exclusion or abundance limit.

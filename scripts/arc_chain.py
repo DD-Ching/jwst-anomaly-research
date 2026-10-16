@@ -63,8 +63,7 @@ def image_positions(field: str) -> tuple[np.ndarray, np.ndarray]:
         t, _ = lc.image_list("macs0416-canucs", {}, None)
         lc.shift_images("macs0416-canucs", t)
     elif field == "elgordo":
-        _, files, par = lc.load_model("elgordo-caminha23")
-        t, _ = lc.image_list("elgordo-caminha23", files, par)
+        t, _ = lc.image_list("elgordo-caminha23", {}, None)
         lc.shift_images("elgordo-caminha23", t)
     else:
         raise ValueError(field)

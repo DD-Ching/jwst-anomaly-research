@@ -1,12 +1,25 @@
 {
  "dpa_deg": 0.842,
+ "spikes_pixel_deg": [
+  0.5,
+  30.5,
+  89.5,
+  149.5,
+  180.5,
+  209.5,
+  210.5,
+  270.5,
+  272.5,
+  330.5,
+  331.5
+ ],
  "bands": {
   "F150W": {
    "source_radec": [
     15.727225,
     -49.253918
    ],
-   "spike_angles_pixel_deg": [
+   "ray_angles_pixel_deg": [
     0.5,
     30.5,
     89.5,
@@ -22,7 +35,7 @@
     15.727222,
     -49.253939
    ],
-   "spike_angles_pixel_deg": [
+   "ray_angles_pixel_deg": [
     0.5,
     30.5,
     121.5,
@@ -43,8 +56,8 @@
     "on_spike": true,
     "expected_shift_arcsec": 0.044,
     "S_across_spike": [
-     -16.28,
-     -11.97
+     -11.29,
+     -0.27
     ],
     "rotation_dipole": false
    },
@@ -55,8 +68,8 @@
     "on_spike": true,
     "expected_shift_arcsec": 0.045,
     "S_across_spike": [
-     -6.3,
-     -9.78
+     -11.05,
+     -5.0
     ],
     "rotation_dipole": false
    },
@@ -74,16 +87,11 @@
    "F444W": {
     "angle_from_source_deg": 122.7,
     "dist_arcsec": 2.68,
-    "nearest_spike_offset_deg": 1.2,
-    "on_spike": true,
-    "expected_shift_arcsec": 0.039,
-    "S_across_spike": [
-     -3.44,
-     -1.87
-    ],
-    "rotation_dipole": false
+    "nearest_spike_offset_deg": 26.8,
+    "on_spike": false,
+    "expected_shift_arcsec": 0.039
    },
-   "on_spike_any_band": true,
+   "on_spike_any_band": false,
    "rotation_dipole_any_band": false
   },
   "h043": {
@@ -94,10 +102,10 @@
     "on_spike": true,
     "expected_shift_arcsec": 0.057,
     "S_across_spike": [
-     -7.1,
-     5.02
+     -1.79,
+     -2.99
     ],
-    "rotation_dipole": true
+    "rotation_dipole": false
    },
    "F444W": {
     "angle_from_source_deg": 270.4,
@@ -112,7 +120,7 @@
     "rotation_dipole": false
    },
    "on_spike_any_band": true,
-   "rotation_dipole_any_band": true
+   "rotation_dipole_any_band": false
   },
   "h049": {
    "F150W": {
@@ -122,8 +130,8 @@
     "on_spike": true,
     "expected_shift_arcsec": 0.051,
     "S_across_spike": [
-     -0.58,
-     -3.97
+     -3.97,
+     0.88
     ],
     "rotation_dipole": false
    },

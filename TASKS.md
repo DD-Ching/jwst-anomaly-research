@@ -339,8 +339,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      ≥ 0.83 at 27.5 AB per band; `results/transients/sunrise_arcdiff/RESULT.md`). ~~El Gordo arcs~~ — one-box
      exploratory pilot done (2026-10-16, `results/transients/elgordo_arcdiff/RESULT.md`): PEARLS o241 → VENUS o051,
      F150W + F444W; full-chain brightening efficiency 0.85 / 0.78 / 0.54 at 26.0 / 27.5 / 28.0 AB, fadings not
-     calibrated; 4 review entries, all on one bright source's diffraction spikes (PA_V3 0.84° apart) or within
-     program-to-program scatter; nothing open. Not extended (owner: pilot only);
+     calibrated; 4 review entries, explained by one bright source's diffraction spikes (PA_V3 0.84° apart),
+     program-to-program scatter or no forced-photometry change; nothing open. Not extended (owner: pilot only);
    - **SMACS 0723 arc `arc_diff`** (D-027 addendum 2026-10-16, system 5 box): ERO → VENUS done, Atalanta recovered,
      no candidate (frozen 1″ rule fails the known case; post hoc 2″ + forced photometry); GO-4043 → DD 12774
      fails its control (Atalanta F115W S ≈ 2.4); h061 undetermined (near-star spike systematics; reopen on a PSF
