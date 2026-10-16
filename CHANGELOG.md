@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: S0 check: message-and-reply window in an unstable wormhole: literature already answers it; stop, no new unit
+- Literature and code check only (≤ 2 h; no solver, no evolution). Record: `docs/state/units/S0-2026-10-16.md`.
+  The S0-2026-10-15b radiation-fluid eigenvalue computation is cancelled (owner accepted #256).
+- Published (Ellis + ghost scalar, two separate universes): self-gravitating ordinary pulses cross, then collapse
+  the throat (Shinkai–Hayward 2002; Doroshkevich et al. 2009; Calhoun–Fay–Kain 2022). Test light rays return
+  (CFK22 Fig. 3) or make a round trip (a possible path, González–Guzmán–Sarbach 2009 Fig. 4) before the black hole forms. The window is
+  of order r_throat/c (e-folding 0.846 r_throat/c) and grows only logarithmically for weaker perturbations.
+- Every published scheme for longer traversability uses fine-tuned **active phantom injection** (SH02 §III D; Xu–Chew–Yeom 2025), and is only
+  temporary. No paper computes a finite-energy reply, receiver redshift, message capacity or a same-exterior geometry,
+  so no delay advantage over a 20–100 ly path can be stated.
+- Code: Shinkai's `wh_dual` is public (2002, page updated 2007) but has **no licence**; not downloaded. The other codes are not stated as public.
+- Verdict: stop. The remaining computable gap (a two-leg self-gravitating exchange with redshift) would not change the
+  feasibility judgement. Reopen conditions are in the record.
+
 ## 2026-10-16: X3 reopen check: DR4 epoch-astrometry fields confirmed (draft data model), precision not yet published; X3 stays paused
 - Documents only (≤ 30 min; no Gaia data read; no X3 computation). Record: `docs/state/units/X3.md`, "DR4 reopen
   check".
