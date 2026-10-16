@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Clump-pair census on five other `arcs` fields: pooled two-knot rate 0.28; the S1063 anti excess stays at P 0.032 (exploratory)
+- **Why:** the S1063 clump-aware null (#273) used a clump rate from that field alone (0.24, upper 0.47). Plan before
+  the run: `results/arcs/census-fields/PLAN.md`; code `scripts/arcs_census_fields.py` (S1063 census code unchanged,
+  outcome rule unit-tested). Depends on #273.
+- **Result (derived; `results/arcs/census-fields/RESULT.md`, `census_fields.json`):** 154 strong-shear background
+  rows in Abell 2744, Abell 370, El Gordo, MACS0416, MACS1149; 118 pass the own-flux gate; 33 `two-knot` → pooled
+  f̂ 0.280 (95 % upper 0.370; per field 0.17–0.37). S1063 P(≥ 4 anti) 0.032 at f̂, 0.056 at the upper. **Frozen
+  outcome: excess remains at the five-field clump rate (exploratory).**
+- **Re-run with the fixed `fit_models`** (#273 final code; the first run used the pre-fix version): 3 rows changed,
+  all formerly pinned fits (Abell 2744 3332 → gate-passed `two-knot`; MACS0416 1414, 2144 → `undecided`, still
+  gate-failed); first-run values 117 / 32 / 0.274 / P 0.031. Outcome unchanged; these numbers may now be cited.
+- **Looked at** (`two_knot.png`): several `two-knot` rows are a knot plus a neighbouring streak or object, which
+  can only raise f̂. Post hoc: none of the 4 gate-passed screen-anti rows in the five fields is `two-knot`.
+- **Handoff:** 1316 and 1557 remain open, unvetted, not candidates. Next: an independent field for the anti excess
+  itself (a deep F200W mosaic with a public model and photo-z), or spectroscopy if the owner changes the MUSE call.
 ## 2026-10-16: El Gordo arc difference imaging, PEARLS 2022 → VENUS 2026 (one-box pilot): nothing open (#286)
 - **Scope (owner):**
   - one box and one epoch pair;
@@ -106,6 +121,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Step 5, spectroscopy feasibility (`vetting/PLAN_spectra.md` first; `scripts/arcs_vet_spectra.py`):**
   - No catalogued redshift within 2.4″ (all-VizieR 6″ cone). Richard+2021 does not cover AS1063.
   - ESO MUSE cubes are 5.7–5.8 GB each, but SODA cutouts are 12–17 MB.
+  - In the deepest public cubes, among channels with valid data that pass the sky-line mask, no line reaches the
+    threshold used. The sky mask covers 36–41 % of the range and 59 % of 1557's [O II] window.
+  - The median 5σ limits (1.3 × 10⁻¹⁸ for [O II] of 1557, 4.4 h; 4.8 × 10⁻¹⁸ for C III] of 1316, 2.2 h, 1.45″) are
+    sensitivity estimates. They depend on the line width, channel noise, continuum and aperture assumptions, and
+    they do not exclude a line anywhere in the window. They correspond to rest EW of order 240 Å / 350 Å.
   - Lines, after the review fixes (below):
     - 1557: no usable position reaches the threshold.
     - 1316: one does, at 6000.3 Å, and it is classified as not significant (below).
@@ -124,6 +144,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - Reassess only for a reliable target redshift, a usable 1-D spectrum or materially better data; the arrival of
     data is not an automatic download or re-run.
   - Other authorized searches continue.
+- **Final code review:** four output-affecting issues are recorded, not re-run (`vetting/RESULT.md` "Known
+  issues"):
+  - the spectra noise rescale includes sky-masked channels; 1316 has a clean-channel peak of S/N 4.77 at 6000 Å in
+    its C III] window, which is not a detection but is the first item at any reassessment;
+  - partly valid channels;
+  - the deblend flux bound for faint rows;
+  - the census k = 2 sample mismatch.
+  Robustness fixes that leave the outputs unchanged were applied.
 - **Final code review → fixes and a limited re-run (owner-approved; `vetting/PLAN_fixes.md` first):**
   - Fixes: usable-channel noise rescale; per-channel validity; deblend flux start and bound from the positive
     pixels; census null drops the rows the count drops. Each has a unit test (`tests/test_arcs_vet_fixes.py`).

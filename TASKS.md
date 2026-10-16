@@ -219,7 +219,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      `results/arcs/macs1423-canucs/`): CANUCS DR1 maps, screen anti 4 vs 0.95 (P 0.016), but the clump-pair census
      gives P 0.259 (exploratory): not replicated under the clump-aware null. **Needs a re-check before reuse:** the
      census used the pre-fix `arcs_vet_deblend.fit_models` (fixed in #273: flux start/bound, census null/count);
-     the same applies to #279 (open). Do not cite these census numbers until re-run. ~~RXJ2129~~ — done (2026-10-16,
+     #279 was re-run with the fixed code (2026-10-16: f̂ 0.280, S1063 P 0.032, outcome unchanged); the MACS1423 re-run is
+     claimed on #287. Do not cite the MACS1423 census numbers until #287 lands. ~~RXJ2129~~ — done (2026-10-16,
      `results/arcs/rxj2129/RESULT.md`): Lenstool and GLAFIC JWST-updated maps both fail the control (8 / 12),
      no result. Next, optional: RXJ2129 on the deeper DJA catalogue (new plan; shape source changes);
    - ~~arc curvature~~ — done (D-024 addenda 5–6): forward-modelled curvature, 5 testable arcs all as predicted (El

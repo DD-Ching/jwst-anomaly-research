@@ -1,0 +1,74 @@
+{
+ "plan": "PLAN.md",
+ "label": "exploratory; fits derived, injections simulated, f and P model_prediction",
+ "assumptions": {
+  "fit_arcsec": 0.4,
+  "n_inject": 20,
+  "seed": 20261016
+ },
+ "per_field": {
+  "abell2744-bergamini23": {
+   "n_rows": 35,
+   "n_gate_passed": 34,
+   "n_two_knot_gate_passed": 9,
+   "f_two_knot": 0.2647058823529412,
+   "f_two_knot_95_upper": 0.44361536830510667,
+   "interpretable_alone": true,
+   "n_outside": 0,
+   "image": "s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f200w_i2d.fits"
+  },
+  "abell370-canucs": {
+   "n_rows": 56,
+   "n_gate_passed": 34,
+   "n_two_knot_gate_passed": 9,
+   "f_two_knot": 0.2647058823529412,
+   "f_two_knot_95_upper": 0.44361536830510667,
+   "interpretable_alone": true,
+   "n_outside": 0,
+   "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o002/jw01208-o002_t001_nircam_clear-f200w_i2d.fits"
+  },
+  "elgordo-caminha23": {
+   "n_rows": 12,
+   "n_gate_passed": 12,
+   "n_two_knot_gate_passed": 2,
+   "f_two_knot": 0.16666666666666666,
+   "f_two_knot_95_upper": 0.48413774868596704,
+   "interpretable_alone": true,
+   "n_outside": 0,
+   "image": "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f200w_i2d.fits"
+  },
+  "macs0416-canucs": {
+   "n_rows": 27,
+   "n_gate_passed": 19,
+   "n_two_knot_gate_passed": 7,
+   "f_two_knot": 0.3684210526315789,
+   "f_two_knot_95_upper": 0.6164220766855947,
+   "interpretable_alone": true,
+   "n_outside": 0,
+   "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f200w_i2d.fits"
+  },
+  "macs1149-cats": {
+   "n_rows": 24,
+   "n_gate_passed": 19,
+   "n_two_knot_gate_passed": 6,
+   "f_two_knot": 0.3157894736842105,
+   "f_two_knot_95_upper": 0.5655015688461509,
+   "interpretable_alone": true,
+   "n_outside": 0,
+   "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o008/jw01208-o008_t004_nircam_clear-f200w_i2d.fits"
+  }
+ },
+ "pooled_five_fields": {
+  "n_rows": 154,
+  "n_gate_passed": 118,
+  "n_two_knot_gate_passed": 33,
+  "f_two_knot": 0.2796610169491525,
+  "f_two_knot_95_upper": 0.36975425087340263,
+  "interpretable_alone": true
+ },
+ "s1063_p_ge_4_anti": {
+  "pooled_f_hat": 0.03195953620933981,
+  "pooled_f_upper": 0.056348926781896354
+ },
+ "outcome": "S1063 excess remains at the five-field clump rate (exploratory)"
+}
