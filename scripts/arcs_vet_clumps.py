@@ -52,7 +52,7 @@ def third(cut: dict, m2: list) -> dict:
     m = np.hypot(xx - i, yy - j) <= 4
     p3 = least_squares(
         lambda p: (vd._gauss(xx[m], yy[m], *p) - sub[m]) / err[m],
-        [i, j, sub[j, i] * 10, 1.0],
+        [i, j, float(np.clip(sm[j, i] * 10, 1e-6, 999.0)), 1.0],
         bounds=([i - 3, j - 3, 0, 0.5], [i + 3, j + 3, 1e3, 4]),
     ).x
     knots = [(m2[0], m2[1], m2[3]), (m2[4], m2[5], m2[7]), (p3[0], p3[1], p3[3])]
