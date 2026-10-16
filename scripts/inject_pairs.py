@@ -127,7 +127,7 @@ def poisson_signal_ul(n_obs: int, background: float, cl: float = 0.95) -> float:
 
 
 class Field:
-    """A deep-field catalogue prepared for injections."""
+    """A field catalogue prepared for injections (CLUSTER fields: efficiencies only)."""
 
     def __init__(self, name: str, std: Table | None = None, z_lens: float | None = None):
         self.name = name
@@ -452,8 +452,9 @@ def combine(results: list[dict], orphans: dict[str, tuple[int, float]]) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    # deep fields only: combine converts theta_E to mass at Z_LENS_REF, which a cluster field
-    # (its own lens redshift) would silently misreport
+    # combine converts theta_E to mass at Z_LENS_REF and pools fields into one surface-density
+    # limit: deep fields only. Cluster fields (CLUSTER) run alone and write only their own
+    # <out>/<field>/injection_summary.json (efficiencies), never limits.json.
     ap.add_argument("--fields", nargs="+", default=list(DEEP), choices=sorted(DEEP + CLUSTER))
     ap.add_argument("--lenses", nargs="+", default=list(LENSES), choices=list(LENSES))
     ap.add_argument("--theta-e", nargs="+", type=float, default=list(THETA_E))
@@ -474,6 +475,14 @@ def main(argv: list[str] | None = None) -> int:
         "parallel processes)",
     )
     args = ap.parse_args(argv)
+    cluster = [f for f in args.fields if f in CLUSTER]
+    if cluster and (len(cluster) != len(args.fields) or args.combine_only):
+        raise SystemExit("error: cluster fields run alone and are never combined into limits.json")
+    if cluster:
+        for f in cluster:
+            run_field(f, args)
+        print(f"per-field efficiencies only (no limits.json): {args.out}/<field>/")
+        return 0
     if args.combine_only:
         results = [
             json.loads((args.out / f / "injection_summary.json").read_text()) for f in args.fields

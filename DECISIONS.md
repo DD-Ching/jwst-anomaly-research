@@ -2676,13 +2676,13 @@ Caminha+2023 (1.7 MB, 10,000 rows); kept apart from the model file sets so `vali
   rows, 9,385 kept). Published images come from CATS v4.1 and Bergamini+23; alignment is 0.02″.
 - **Result: null.** 51 orphans observed against 43.8 / 42.4 expected under nulls (e) / (f); P = 0.16 / 0.11.
 - **No positive control.** No SED-matched pair lies near a published image.
-- **Injections** (`inject_pairs.py --fields abell2744`; no cluster magnification of the injected images):
-  - few lensed sources are selected;
-  - only 3–17 of 27–45 selected, matched pairs are classed `orphan` at θ_E 0.3–0.7″, because the crowded field
-    classes them `visible_lens` or `same_galaxy`.
-  - So the null has low power here, and the deep-field limits do not transfer.
-- **Escalation.** 11 of the top 15 orphans meet the frozen escalation rule; they are unvetted and statistically
-  consistent with chance. Details are in `RESULT.md`.
+- **Injections** (`inject_pairs.py --fields abell2744`, efficiencies only): per-deflector efficiencies match the
+  deep fields within noise (point 0.30 % / 0.95 % at 0.3″ / 0.7″). Completeness is low here as in every field. The
+  cluster magnification of injected images is not modelled, and no pooled limit is written for a cluster field.
+- **Nulls.** The excess over null (a) persists under (c) and (d) (P 0.016 / 0.021) and disappears under (e) and (f).
+- **Escalation.** 11 of the top 15 orphans meet the frozen escalation rule. They are unvetted (step postponed) and
+  not candidates until vetted. A sheet pass finds 5 companions or group members, 2 possible knots, 1
+  artefact-affected pair and 3 featureless faint pairs. Details are in `RESULT.md`.
 
 ## D-046 Multi-plane lens models: `LensModel.split_planes` and `MultiPlaneLensModel` (2026-10-08)
 

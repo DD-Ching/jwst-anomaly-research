@@ -226,8 +226,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        flag comes to depend on an off-plane potential: a local refit (no Lenstool optimiser in the repo yet);
      - orphan pairs (D-048, null): injection-recovery of simulated dark-lens pairs (limit per deg²); CANUCS segmentation
        maps for the same-galaxy test; blending model for pairs < 1″; ~~re-run on Abell 2744~~ — done (D-048 addendum
-       2026-10-16, `results/orphan_pairs/abell2744/`): null (P 0.16 / 0.11 under (e) / (f)), but low completeness in the
-       crowded field and no 0.3–3″ positive control; 11 top orphans meet the frozen escalation rule, unvetted. Left:
+       2026-10-16, `results/orphan_pairs/abell2744/`): null (P 0.16 / 0.11 under (e) / (f)); efficiencies as in the
+       deep fields; no 0.3–3″ positive control; `/vet-candidate` postponed for #9, #11, #13 (featureless) and #2, #3
+       (possible knots). Left:
        MACS0417, MACS1423 cluster pointings (need published image lists);
        MACS1149 image list when CANUCS v2 is out;
      - CANUCS models pinned (D-044: `macs0416-canucs`, `abell370-canucs`); next, the 100 MCMC sample maps for μ spreads;

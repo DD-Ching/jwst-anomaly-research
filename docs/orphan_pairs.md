@@ -385,7 +385,8 @@ As in the clusters, a luminous galaxy of that mass would be many magnitudes abov
 The D-048 rules were run unchanged on DJA v7.2-fix. **The result is null:** 51 orphans against 43.8 / 42.4 expected
 under nulls (e) / (f).
 - There is no positive control.
-- Completeness is low: crowding classes injected lensed pairs as `visible_lens` or `same_galaxy`.
-- 11 top orphans meet the escalation rule; they are unvetted.
+- Injection efficiencies match the deep fields within noise.
+- 11 top orphans meet the escalation rule. They are unvetted; a sheet pass leaves 3 featureless pairs and 2 possible
+  knots for `/vet-candidate`.
 
 Details are in `results/orphan_pairs/abell2744/RESULT.md` and the D-048 addendum.
