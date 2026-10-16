@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Process: "Before writing results" rules in scripts/CLAUDE.md
+- **Why:** reviews of #262, #266 and #269 each found 8–12 problems, mostly of three kinds:
+  - frozen rules applied loosely;
+  - numbers not traceable to a committed file;
+  - overclaiming wording.
+- **Change:** `scripts/CLAUDE.md` gains a short section with five rules:
+  - computable frozen rules, with functions and tests where possible;
+  - every number traceable to a committed JSON/ECSV, or labelled "not stored", and ranges cover only the items
+    classified;
+  - narrowest wording for null / not affected / consistent with chance / equals / low completeness and for any causal
+    reading;
+  - deviations labelled;
+  - ruff format and fix before ruff check.
+- `.claude/skills/research-cycle/SKILL.md` step 8 points to the new section.
+- No tool, result or threshold changed.
+- **Open:** the Abell 2744 orphan vetting (#271) is paused unfinished; its state is in
+  `results/orphan_pairs/abell2744/vetting/STATUS.md` on its branch.
+
 ## 2026-10-16: Orphan-pair dark-deflector screen on Abell 2744: null under the frozen rule; 11 top orphans unvetted
 - **Plan before the run** (`results/orphan_pairs/abell2744/PLAN.md`, committed first): the D-048/D-055 rules
   unchanged. An excess needs P < 0.05 under both null (e) and null (f). It is the first run of this statistic on this
