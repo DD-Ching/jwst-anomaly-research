@@ -30,6 +30,48 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** the open ordinary check is `/vet-candidate` on the 3 featureless pairs (#9, #11, #13) and the 2 possible
   knots (#2, #3). MACS0417 and MACS1423 cluster pointings need published image lists.
 
+## 2026-10-16: Abell 2744 `arc_diff` stripe, spike and offset-core vetoes on the annulus cut: they remove what they target, but other artifacts pass; not adopted
+- **Hypothesis before measuring (#265 handoff):** the 31 extra real passes of the v2 annulus cut are detector
+  stripes, spike fragments, compact-core residuals offset from their peak and faint compact fades; vetoes aimed at
+  the first three keep the injected point brightenings on smooth light.
+- **Vetoes (written before the run; ASSUMPTIONs), applied only to hits the v2 cut calls extended:**
+  - *line coherence* (stripes and spikes are lines in S): for position angles 0–175° in 5° steps, the signed median
+    of S along each half-line from 0.25″ to 1.0″ from the hit; the hit is vetoed if, at some angle, **both**
+    half-line medians have the hit's sign and the smaller is ≥ 0.25 |S_hit| and ≥ 1;
+  - *offset core*: an epoch-1 local maximum 0.15–0.45″ from the hit with contrast ≥ 20 annulus σ sends the hit back
+    to the peer cut (as a compact hit).
+- **Decision rule (written before the run):** adopt if the 28-mag chain efficiency is ≥ 0.30 with 27.5 mag ≥ 0.60,
+  real peer-stage passes on the 4 tiles are ≤ 1.5 × the old 31 (≤ 46), **and** the sheet of newly passing real
+  hits shows at most 2 recognisable stripes, spikes or core residuals.
+- **Tool (derived):** `scripts/arc_diff_extended.py` (`line_coherence`, `ext_pass_vetoed`, columns `line_frac`,
+  `line_theta`, `core_off_contrast`); `arc_diff_inject_chain.py --extended --vetoes` (stages `peers_veto` /
+  `confirm_veto`); `arc_diff_extended_eval.py` adds a `veto` column. Unit-tested on a synthetic stripe, an isolated
+  point and an offset core.
+- **Run:** the 8 injection maps and the 4 real-tile maps re-made with the committed `arc_diff.py` commands (12 runs,
+  4 at a time with `OMP_NUM_THREADS=1`, ≈ 6 min; S3 byte ranges, maps in the scratchpad only). Stage counts up to
+  `peers` reproduce #264 exactly.
+- **Result (simulated stars in real maps; real passes `derived`):**
+
+  | version | 27.5 mag | 28.0 mag | real peer-stage passes (o001-confirmed) |
+  |---|---|---|---|
+  | peer cut (#261) | 0.637 | 0.188 | 31 (16) |
+  | annulus v2 (#265) | 0.675 | 0.375 | 62 (45) |
+  | **annulus v2 + vetoes** | **0.650** | **0.338** | **46 (31)** |
+
+  The efficiency and count parts of the rule pass (46 is exactly the 1.5 × limit).
+- **Looked at both sheets** (`extended/sheet_vetoes_removed.png`, `sheet_vetoes_newly_passing.png`):
+  - the 12 hits the vetoes remove from v2 are all artifacts: 4 detector stripes (h270, h299, h331, h412), a spike
+    (h321), 2 bright-star spike fans (h612, h638) and 5 compact-core residuals (h312, h344, h562, h607, h657);
+  - the 19 that still pass and the peer cut vetoed include **≥ 4 recognisable artifacts**: residuals in a bright
+    star's halo (h292, h317), mosaic-edge structure (h303, h564; h559 next to a vertical stripe) and h183, the edge-on
+    galaxy dipole whose offset-core contrast is just under 20. The rest are faint fades (S −5 to −7) on galaxy
+    outskirts; no positive point brightening on an arc.
+  - **Sheet rule fails → not adopted.** The vetoes stay in the code (off by default) for a later version.
+- **Consequence:** #261's "0 lensing candidates" still holds only at ≳ 36 nJy (#264); no new candidate.
+- **Handoff:** what is left are bright-residual neighbourhoods (|S| ≫ 5 within ~1.5″) and coverage edges. A third
+  version would need both vetoes and a new sheet check; each round has cost ~0.5 h for ×1.8 at 28 mag, so moving
+  on from this tiling (the 1176 registration is done, #266) is the better use of time unless a fainter limit
+  becomes decisive.
 ## 2026-10-16: PEARLS 1176 o221 vs UNCOVER registration on Abell 2744: a 0.027″ shift, no 0.3″ offset; h182 stays closed
 - **Plan before measuring** (`results/transients/a2744_grid_alt/reg1176/PLAN.md`, committed first):
   - controls from the official level-3 catalogues (compact, isolated, AB 21–25.5), with a held-out half B by crc32 parity;

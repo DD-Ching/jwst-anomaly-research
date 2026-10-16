@@ -48,6 +48,7 @@ def main(scratch: Path) -> None:
             row = dict(zip(e.colnames, x, strict=True))
             old = bool(abs(r["z_peers"]) >= 3 or r["n_peers"] < 1)
             new = old if row["compact"] else ade.ext_pass(row)
+            veto = ade.ext_pass_vetoed(row, old)
             c = ch.confirm_value(s1, w1, r["ra"], r["dec"])
             dra = (inj[:, 0] - r["ra"]) * np.cos(np.radians(r["dec"]))
             dmin = float(np.min(np.hypot(dra, inj[:, 1] - r["dec"]))) * 3600
@@ -62,8 +63,13 @@ def main(scratch: Path) -> None:
                     "compact": row["compact"],
                     "contrast": row["contrast"],
                     "z_ann": row["z_ann"],
+                    "core_off_contrast": row["core_off_contrast"],
+                    "line_frac": row["line_frac"],
+                    "line_med": row["line_med"],
+                    "line_theta": row["line_theta"],
                     "old": old,
                     "new": new,
+                    "veto": veto,
                     "conf_s": c,
                     "conf": bool(np.sign(c) == np.sign(r["s_hit"]) and abs(c) >= 3),
                     "inj_near": dmin < 0.5,
@@ -73,11 +79,13 @@ def main(scratch: Path) -> None:
     tab.meta = {"provenance": "derived", "thresholds": "ASSUMPTION: see arc_diff_extended.py"}
     tab.write(scratch / "real_eval.ecsv", overwrite=True)
     use = ~tab["inj_near"]
-    for k in ("old", "new"):
+    for k in ("old", "new", "veto"):
         sel = tab[k] & use
         print(k, "peer-stage", int(sel.sum()), "confirmed", int((sel & tab["conf"]).sum()))
     added = tab["new"] & ~tab["old"] & use
     print("n", len(tab), "compact", int(tab["compact"].sum()), "newly passing", int(added.sum()))
+    added_v = tab["veto"] & ~tab["old"] & use
+    print("newly passing with vetoes", int(added_v.sum()), list(tab["tile", "hit"][added_v]))
 
 
 if __name__ == "__main__":
