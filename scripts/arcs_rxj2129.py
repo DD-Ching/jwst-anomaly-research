@@ -75,12 +75,16 @@ class _RangeFile(io.RawIOBase):
         for attempt in range(RETRIES):
             try:
                 with urllib.request.urlopen(req, timeout=120) as r:  # noqa: S310
-                    data = r.read()
+                    if r.status != 206:  # a 200 would stream the whole archive
+                        raise ValueError(f"{self.url}: range request answered {r.status}")
+                    data = r.read(len(buf) + 1)
                 break
             except OSError:  # URLError and dropped TLS connections; retried, never skipped
                 if attempt == RETRIES - 1:
                     raise
                 time.sleep(2**attempt)
+        if not 0 < len(data) <= len(buf):
+            raise ValueError(f"{self.url}: range read returned {len(data)} bytes for {len(buf)}")
         buf[: len(data)] = data
         self.pos += len(data)
         return len(data)
@@ -160,10 +164,9 @@ def main(argv: list[str] | None = None) -> int:
             & (t["population"] == "background")
             & (t["orientation_class"] == "anti")
         ]
-        other_path = args.out / other / "arcs.ecsv"
         other_cls = (
-            match_class(anti, Table.read(other_path), None)
-            if other_path.exists()
+            match_class(anti, Table.read(args.out / other / "arcs.ecsv"), None)
+            if runs[other]["validate_passes"]
             else ["no run"] * len(anti)
         )
         summary["anti_background"] = [
