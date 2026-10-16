@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: X3 reopen check: DR4 epoch-astrometry fields confirmed (draft data model), precision not yet published; X3 stays paused
+- Documents only (≤ 30 min; no Gaia data read; no X3 computation). Record: `docs/state/units/X3.md`, "DR4 reopen
+  check".
+- The official draft DR4 data model (2026-06-26) defines `centroid_pos_al`, `scan_pos_angle` and
+  `centroid_pos_error_al` per CCD transit in `epoch_astrometry`, for all sources in the main astrometric
+  processing.
+- No official page or document read gives per-transit AL precision against G. The data model is still a draft.
+- Verdict: partially confirmed. Waiting for the DR4 release documentation.
+
 ## 2026-10-15: Process: `merge=union` for CHANGELOG.md and trial.md; operations notes on background jobs
 - `.gitattributes`: `CHANGELOG.md` and `docs/state/trial.md` use `merge=union`.
   - Checked locally with two test branches: both entries kept, no conflict markers, no duplicated lines.
