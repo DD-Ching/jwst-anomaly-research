@@ -9,8 +9,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Run (derived):** 24″ box on Earendel (whole arc), `--kernel-px 4 --kernel-stamps --inject 100`, F150W + F444W
   (jwst 2.0.1 vs 3.0.0); injections on bright pixels recovered 0.86 / 0.83 at 27.5 AB, 0.14 / 0.28 at 28.0.
 - **Result:** 9 hits; `arc_diff_morph.py` passes 4. On the sheet (`o010_o052/sheet.jpg`, new
-  `scripts/arc_diff_sheet.py`) all 4 are off the arc: bright-core residuals (h001, h002), an edge-on disk (h007), an
-  F444W border dipole (h005). **0 candidates.** Earendel is not a hit (S −5.2 F150W, −1.5 F444W; stamp clean).
+  `scripts/arc_diff_sheet.py`) all 4 are off the arc: bright-core residuals (h001, h002), an edge-on disk (h007), a
+  compact-core dipole at the box border (h005); all hits ≥ 4.0″ from every Scofield+2025 multiple image. **0 candidates.** Earendel is not a hit (S −5.2 F150W, −1.5 F444W; stamp clean).
 - **Failed approach:** two `--kernel-stamps` runs without `OMP_NUM_THREADS=1` made no progress in 20 min (known,
   CHANGELOG 2026-10-15; now restated in RESULT.md). The o120 run at `--procs 2` did not finish its first two SW bands
   in 45 CPU-min and was stopped.

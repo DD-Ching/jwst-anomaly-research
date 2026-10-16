@@ -15,9 +15,12 @@ Sheets: `scripts/arc_diff_sheet.py` (epoch-1 image and S at ±10, 2″ stamps), 
 - **The 4 passes, by eye** (`o010_o052/sheet.jpg`):
   - h001, h002: mixed-sign residuals on the cores of a compact galaxy and a bright face-on galaxy (PSF/kernel
     residuals of bright cores, `near_bright_core`);
-  - h005: F444W-only dipole next to a galaxy near the F444W map border; nothing in F150W;
+  - h005: negative residual on a compact galaxy's core in both bands (S −10 F150W, −19 F444W), 0.5–0.8″ from the
+    box border; in F444W an equal positive lobe sits beside it (dipole ratio 1.05; 0.36 in F150W, so the two-band
+    dipole rule does not fire): a registration/PSF residual of a compact core at the box edge;
   - h007: elongated residual along an edge-on disk (PSF mismatch along the disk).
-  - None lies on the Sunrise arc. **0 candidates.**
+  - All 9 hits are ≥ 4.0″ from every Scofield+2025 multiple image (`scripts/sunrise_scofield.py` IMAGES; nearest:
+    h001 and h003 at 4.0″), so none lies on the Sunrise arc's catalogued images. **0 candidates.**
 - **Earendel (control, not a hit):** S = −5.2 (F150W), −1.5 (F444W) at the reference position; the 2-band rule
   does not fire and the stamp shows no compact residual at ±10. The forced photometry (recentred, docs/fields/sunrise.md)
   gave Δm +0.05 ± 0.16 in F150W; the unrecentred 0.15″ offset and the 2.0.1 → 3.0.0 change are the likely cause of the
