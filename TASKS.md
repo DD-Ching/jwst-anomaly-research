@@ -310,11 +310,13 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      tiling of the UNCOVER∩ALT footprint (`--min-bands 1`) to close the host-blend blind spot; vet g1 with later epochs;
      tiling done (CHANGELOG 2026-10-16: 76 survivors, 6 vetted, 0 lensing candidates; h182 closed). Whole-chain
      injections (CHANGELOG 2026-10-16, `arc_diff_inject_chain.py`): efficiency 0.64 at 27.5 mag, 0.19 at 28.0; the
-     peer cut drops half the 28-mag stars on smooth light. A local-annulus replacement (#265) admits artifacts; not
-     adopted. PEARLS 1176 o221 registration (CHANGELOG 2026-10-16, `reg1176/RESULT.md`): a 0.027″ shift against UNCOVER
-     (small affine terms in 3 bands), no 0.3″ offset; `hit_lightcurve.py --offsets` applies it; h182 stays closed.
-     Registration does not explain the on-arc F356W spread. ALT o002 has its own 0.013″ shift (UNCOVER→ALT pairs not
-     re-measured). Open: stripe/spike vetoes before any new extended-light cut (#265 handoff);
+     peer cut drops half the 28-mag stars on smooth light. A local-annulus cut (#265) and that cut plus
+     line-coherence and offset-core vetoes (CHANGELOG 2026-10-16) both fail their pre-written sheet rule: not
+     adopted; the tiling limit stays ≳ 36 nJy. PEARLS 1176 o221 registration (CHANGELOG 2026-10-16,
+     `reg1176/RESULT.md`): a 0.027″ shift against UNCOVER (small affine terms in 3 bands), no 0.3″ offset;
+     `hit_lightcurve.py --offsets` applies it; h182 stays closed. Registration does not explain the on-arc F356W
+     spread. ALT o002 has its own 0.013″ shift (UNCOVER→ALT pairs not re-measured). Next, only if worth it: a
+     bright-residual-neighbourhood veto and a coverage-edge veto (the artifacts left), re-calibrated on `inject/`;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps
