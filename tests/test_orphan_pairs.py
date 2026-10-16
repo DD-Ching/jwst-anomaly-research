@@ -344,3 +344,52 @@ def test_conditioned_null_without_reference_is_undefined():
     with pytest.warns(UserWarning, match="no z-overlapping"):
         out = op.conditioned_null(np.array([1]), m, np.array([1]), ref, {"orphan": 1})
     assert np.isnan(out["expected_by_class"]["orphan"])
+
+
+def _vet():
+    import importlib.util
+    import sys
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parents[1] / "scripts" / "orphan_vet.py"
+    spec = importlib.util.spec_from_file_location("orphan_vet", path)
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["orphan_vet"] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _meas(e1=0.0, sbz=0.0, p=0.5, res=True, det=7, mag=30.0):
+    return {
+        "E1": {"z": e1},
+        "E2": {"a": {"resolved": res}, "b": {"resolved": True}, "sb_z": sbz},
+        "E3": {"p": p},
+        "E4": {"mag_limit_3sig": mag},
+        "E6_detected_bands": {"a": det, "b": 7},
+    }
+
+
+def test_orphan_vet_e2_valid_rule():
+    ov = _vet()
+    assert ov.e2_valid([0.1, -0.5, 0.4, 0.2])["valid"]
+    assert not ov.e2_valid([0.1, 0.2])["valid"]  # n < 3
+    assert not ov.e2_valid([2.0, 2.5, 1.8, 2.2])["valid"]  # median off
+    assert not ov.e2_valid([-4.0, 4.0, -3.5, 3.5, 0.0])["valid"]  # too wide
+    assert not ov.e2_valid([-2.0, 2.0, -1.8, 1.8, 0.0, 1.5, -1.5, 0.5, -0.5, 1.0, -1.0])[
+        "valid"
+    ]  # std only
+
+
+def test_orphan_vet_classify_rules():
+    ov = _vet()
+    assert ov.classify(_meas(e1=3.5), True, False, None, 20)["class"] == "ordinary"
+    assert ov.classify(_meas(sbz=4.0), True, False, None, 20)["class"] == "ordinary"
+    # an E2 mismatch does not count when E2 is not validated
+    assert ov.classify(_meas(sbz=4.0), False, False, None, 20)["class"] == "insufficient"
+    assert ov.classify(_meas(p=0.001), False, False, None, 20)["class"] == "ordinary"
+    assert ov.classify(_meas(), False, True, None, 20)["class"] == "ordinary"
+    assert ov.classify(_meas(), True, False, False, 20)["class"] == "ordinary"
+    assert ov.classify(_meas(res=False), True, False, None, 20)["class"] == "insufficient"
+    assert ov.classify(_meas(det=2), True, False, None, 20)["class"] == "insufficient"
+    assert ov.classify(_meas(mag=30), True, False, None, 20)["class"] == "anomaly"
+    assert ov.classify(_meas(mag=22), True, False, None, 20)["class"] == "insufficient"
