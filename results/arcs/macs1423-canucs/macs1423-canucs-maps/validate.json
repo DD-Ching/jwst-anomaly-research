@@ -1,0 +1,14 @@
+{
+ "model": "macs1423-canucs-maps",
+ "model_sha256": "d01e5a06b8e9f8faf45a1f857f6de85e4e8e0bccf1e07c9be5b1d8386b07ae6d",
+ "kappa_map": {
+  "map": "data/cache/external/8d03a4cd065e_hlsp_canucs_jwst-hst_multi_macs1423-kappa-dlsds1-best-100mas_multi_v1_model.fits.gz",
+  "quantity": "kappa",
+  "z_s": null,
+  "n_points": 10792,
+  "median_rel_diff": 3.007062036098298e-05,
+  "p95_rel_diff": 0.00012752865809834997,
+  "median_ratio": 1.0000010747532602,
+  "parity_agree": null
+ }
+}

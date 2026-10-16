@@ -216,6 +216,157 @@ WHL0137_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: RELICS Lenstool v1 maps of MACS J0417.5-1154 (Mahler et al. 2019, MNRAS 485, 3954; HLSP DOI
+#: 10.17909/T9SP45, accessed 2026-10-16), deflection in arcsec at D_LS/D_S = 1. Lens redshift 0.443.
+_RELICS_MACS0417 = (
+    "https://archive.stsci.edu/hlsps/relics/macs0417m11/models/lenstool/v1/"
+    "hlsp_relics_model_model_macs0417m11_lenstool_v1"
+)
+MACS0417_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_MACS0417}_x-arcsec-deflect.fits",
+        "545fc07e26444770e42da178b288b22e2eba943cab01e8b15c1c2cd84a2c8cd9",
+    ),
+    "alpha_y": (
+        f"{_RELICS_MACS0417}_y-arcsec-deflect.fits",
+        "aa95407bb364d73f2be894b1054549b53e37dba0f23969359ecde25aa0cd2d19",
+    ),
+    "kappa_map": (
+        f"{_RELICS_MACS0417}_kappa.fits",
+        "2ddbde81eb11acb0352384ca53f0fa731d9e3ebb5f26a3fe37d85d222eee6718",
+    ),
+    "mag_z2": (
+        f"{_RELICS_MACS0417}_z02-magnif.fits",
+        "3bd002c1dfadb949ccb160427672cf36d13e6492905013bacf6e7854330c9b06",
+    ),
+}
+
+#: CANUCS DR1 Lenstool maps of MACS J0417.5-1154 (Desprez, preliminary v1: 30 spectroscopic
+#: multiple-image systems; readme ``macs0417-lenstool-readme``; accessed 2026-10-16): best fit,
+#: 100 mas, 500 arcsec, D_LS/D_S = 1, deflection in arcsec (``dpl1`` x, ``dpl2`` y); 85-89 MB
+#: each (gzip).
+_CANUCS_MAP = (
+    "https://archive.stsci.edu/hlsps/canucs/dr1/{0}/model/"
+    "hlsp_canucs_jwst-hst_multi_{0}-{1}-dlsds1-best-100mas_multi_v1_model.fits.gz"
+)
+MACS0417_CANUCS_MAPS: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _CANUCS_MAP.format("macs0417", "dpl1"),
+        "38ea865a033e075f357c0f560a8df923eddfd65e2013f230db9b7194dc90f7fa",
+    ),
+    "alpha_y": (
+        _CANUCS_MAP.format("macs0417", "dpl2"),
+        "bec99986c802b07da137d4e22b0dcc7bc39c6618f799967802cbb3533ffb7212",
+    ),
+    "kappa_map": (
+        _CANUCS_MAP.format("macs0417", "kappa"),
+        "37e614cfdac117089f0f2a54a7dc672f47bee2ccbf4bc12877604483e6545a2c",
+    ),
+}
+
+#: CANUCS DR1 Lenstool maps of MACS J1423.8+2404 (Desprez, preliminary v1: 5 spectroscopic
+#: multiple-image systems; readme ``macs1423-lenstool-readme``; accessed 2026-10-16): best fit,
+#: 100 mas, 500 arcsec, D_LS/D_S = 1, deflection in arcsec; 87-89 MB each (gzip).
+MACS1423_CANUCS_MAPS: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _CANUCS_MAP.format("macs1423", "dpl1"),
+        "352723b70c1de5b926df2c468c3820feb18cdd0cfef41e43d96cc7abff94916b",
+    ),
+    "alpha_y": (
+        _CANUCS_MAP.format("macs1423", "dpl2"),
+        "437790da80116546f0a78814091aa9db4ce9d4f4a9156d3a84d613bb05b22430",
+    ),
+    "kappa_map": (
+        _CANUCS_MAP.format("macs1423", "kappa"),
+        "8d03a4cd065e93f81aa8e43414fd32da107b12bead0c77468f081ffb482776d7",
+    ),
+}
+
+#: JWST-updated maps of RX J2129.7+0005 (Dhanasingham et al. 2026, arXiv:2604.11882; Zenodo record
+#: 21460864, one 4.30 GB zip; accessed 2026-10-16). Members are read by HTTP range requests
+#: (``<zip url>#<member>``, staged by ``scripts/arcs_rxj2129.py``). Lenstool: arcsec deflections at
+#: D_LS/D_S = 1 (file names, README), 0.030" pixels. GLAFIC: arcsec deflections normalised at
+#: z_s = 3 (header ZS), 0.05" pixels; used as published.
+_RXJ2129_ZIP = (
+    "https://zenodo.org/api/records/21460864/files/RXJ2129+0005_Models.zip/content"
+    "#RXJ2129+0005_Models/{0}"
+)
+RXJ2129_LENSTOOL_MAPS: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _RXJ2129_ZIP.format("LENSTOOL/alphaX_DLSDS1.fits"),
+        "ab72967a2e141f4650b1dfb3a9ccd01845cd0b49d7972bcc127c2b1f5faf53b6",
+    ),
+    "alpha_y": (
+        _RXJ2129_ZIP.format("LENSTOOL/alphaY_DLSDS1.fits"),
+        "2538ef5f15b7eae2cd2095590779e3e94fa81b10e2f5f9e681935a27688bc498",
+    ),
+    "kappa_map": (
+        _RXJ2129_ZIP.format("LENSTOOL/kappa_DLSDS1.fits"),
+        "1a0d2c9302a3e6b822e0b3330a1f57704daa34395a798dcaaed15261f5a702ba",
+    ),
+}
+RXJ2129_GLAFIC_MAPS: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _RXJ2129_ZIP.format("GLAFIC/jwst_model_rxj2129_glafic_x-arcsec-deflect.fits"),
+        "bf477c970c51c577ba3351a52418ccf4c7024c6dad604ba106ced6400df93493",
+    ),
+    "alpha_y": (
+        _RXJ2129_ZIP.format("GLAFIC/jwst_model_rxj2129_glafic_y-arcsec-deflect.fits"),
+        "121de21b9b7e7916c424b72f1912270be06b054f73cd3e56aab2be25af33abbf",
+    ),
+    "kappa_map": (
+        _RXJ2129_ZIP.format("GLAFIC/jwst_model_rxj2129_glafic_kappa.fits"),
+        "1f6deaee2cb5ccb211b04bdb290de169e9863b72e8d5d8343768cce8f0d1bb4f",
+    ),
+}
+
+#: CLASH Zitrin v2 maps of MACS J0647.7+7015 (Zitrin et al. 2009, MNRAS 396, 1985; 2013, ApJ 762,
+#: L30; HLSP of CLASH, Postman et al. 2012; readme last updated 2015-02; accessed 2026-10-16):
+#: PIEMD + eNFW ("nfw") and LTM-Gauss ("ltm-gauss") best fits, deflection in arcsec at
+#: D_LS/D_S = 1, 0.065" pixels, z_lens 0.591 (readme). kappa, gamma1 and gamma2 from the deflection
+#: gradients reproduce the published maps; the LTM-Gauss x-deflection carries a constant offset
+#: (about -47"), which enters no derivative.
+_CLASH_M0647 = (
+    "https://archive.stsci.edu/missions/hlsp/clash/macs0647/models/zitrin/{0}/v2/"
+    "hlsp_clash_model_macs0647_zitrin-{0}_v2_{1}.fits"
+)
+MACS0647_CLASH_NFW: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _CLASH_M0647.format("nfw", "x-arcsec-deflect"),
+        "5f1c7a789f762ce60623c96f65d378c51b0d405bf1ceaf3eda0be70d42583a96",
+    ),
+    "alpha_y": (
+        _CLASH_M0647.format("nfw", "y-arcsec-deflect"),
+        "f9097ae3d605acf919f953d5b4669a90f723cebc4c909f8927b5051dd61e797e",
+    ),
+    "kappa_map": (
+        _CLASH_M0647.format("nfw", "kappa"),
+        "a54d1bae8d73b5f037e10b30b538bbb60091e7a8ddbbb646d48d53b7227d9444",
+    ),
+    "mag_z2": (
+        _CLASH_M0647.format("nfw", "z02-magnif"),
+        "253aaf31359e0909a494d146a8e6221717fa35cf91b1db1793b37a93e5ad2994",
+    ),
+}
+MACS0647_CLASH_LTM: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _CLASH_M0647.format("ltm-gauss", "x-arcsec-deflect"),
+        "dba09e9c112ce58eaa9df0364cef4d64b543289d4b30ba069caa7134996a6aa6",
+    ),
+    "alpha_y": (
+        _CLASH_M0647.format("ltm-gauss", "y-arcsec-deflect"),
+        "2f2e0654d36d7c96e73984d193aea3d5bf324a7606129211488429e1ebbe7c2c",
+    ),
+    "kappa_map": (
+        _CLASH_M0647.format("ltm-gauss", "kappa"),
+        "b7b06f544f6cc39abdf8caeb2da7e674d31a8f614eb4da93adc86c5be11ac2f6",
+    ),
+    "mag_z2": (
+        _CLASH_M0647.format("ltm-gauss", "z02-magnif"),
+        "0e21c4d05b632d83d48c1494ceaa500f8c217d6f14bfbb55838b95302d61d86c",
+    ),
+}
+
 #: HFF CATS Lenstool models (Jauzac, Richard, Mahler et al.; HLSP
 #: https://archive.stsci.edu/prepds/frontier/lensmodels/, accessed 2026-10-08): deflection maps
 #: (arcsec, D_LS/D_S = 1), κ, z = 2 magnification and the multiple-image list. cluster ->

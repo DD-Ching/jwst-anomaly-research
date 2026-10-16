@@ -212,6 +212,14 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        Δχ² threshold; no field run before acceptance passes;
    - ~~`arcs` on Abell 2744 and El Gordo~~ — done (D-024 addendum 2026-10-13): null; background 33/35 and 10/12
      aligned, anti counts 0 and 1 against 0.45 and 0.17 from shape noise;
+   - ~~`arcs` on MACS0417~~ — done (2026-10-16, `results/arcs/macs0417-relics/RESULT.md`): RELICS v1 fails the
+     control (64 % aligned); CANUCS v1 maps 37 / 49 aligned, anti 3 vs 1.52 (P 0.195): the S1063 anti excess does
+     not replicate. ~~MACS0647~~ — done (2026-10-16, `results/arcs/macs0647-clash/RESULT.md`): both CLASH Zitrin
+     models fail the control (67 %, 50 %), no result. ~~MACS1423~~ — done (2026-10-16,
+     `results/arcs/macs1423-canucs/`): CANUCS DR1 maps, screen anti 4 vs 0.95 (P 0.016), but the clump-pair census
+     gives P 0.259 (exploratory): not replicated under the clump-aware null. ~~RXJ2129~~ — done (2026-10-16,
+     `results/arcs/rxj2129/RESULT.md`): Lenstool and GLAFIC JWST-updated maps both fail the control (8 / 12),
+     no result. Next, optional: RXJ2129 on the deeper DJA catalogue (new plan; shape source changes);
    - ~~arc curvature~~ — done (D-024 addenda 5–6): forward-modelled curvature, 5 testable arcs all as predicted (El
      Gordo 2527 explained by its model); critical curves at z_s = 1, 2, 4 still open;
    - shapes for the `arcs` test: S/N ≥ 50 done on the stored tables (`docs/fields/abell370.md`: 3 anti vs 1.33,

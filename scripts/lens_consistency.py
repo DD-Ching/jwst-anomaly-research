@@ -158,6 +158,53 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {6.2: "mag_z6.2"},
     },
+    "macs0417-relics-lenstool": {
+        "files": lensmodel.MACS0417_RELICS_LENSTOOL,
+        "kind": "maps",
+        "z_lens": 0.443,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
+    "macs0417-canucs-maps": {
+        "files": lensmodel.MACS0417_CANUCS_MAPS,
+        "kind": "maps",
+        "z_lens": 0.443,
+        "cosmology": (70.0, 0.3),
+    },
+    # z_lens 0.545 (CLASH cluster list, Postman et al. 2012)
+    "macs1423-canucs-maps": {
+        "files": lensmodel.MACS1423_CANUCS_MAPS,
+        "kind": "maps",
+        "z_lens": 0.545,
+        "cosmology": (70.0, 0.3),
+    },
+    # z_lens 0.234 (CLASH cluster list, Postman et al. 2012); GLAFIC normalised at z_s 3 (header)
+    "rxj2129-lenstool-maps": {
+        "files": lensmodel.RXJ2129_LENSTOOL_MAPS,
+        "kind": "maps",
+        "z_lens": 0.234,
+        "cosmology": (70.0, 0.3),
+    },
+    "rxj2129-glafic-maps": {
+        "files": lensmodel.RXJ2129_GLAFIC_MAPS,
+        "kind": "maps",
+        "z_lens": 0.234,
+        "cosmology": (70.0, 0.3),
+    },
+    "macs0647-clash-nfw": {
+        "files": lensmodel.MACS0647_CLASH_NFW,
+        "kind": "maps",
+        "z_lens": 0.591,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
+    "macs0647-clash-ltm": {
+        "files": lensmodel.MACS0647_CLASH_LTM,
+        "kind": "maps",
+        "z_lens": 0.591,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
 }
 
 # HFF CATS map models (D-035): "<cluster>-cats". The image list is used only where our
