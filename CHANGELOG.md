@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: PEARLS 1176 o221 vs UNCOVER registration on Abell 2744: global 0.027″ shift, no 0.3″ offset; h182 stays closed
+- **Plan before measuring** (`results/transients/a2744_grid_alt/reg1176/PLAN.md`, committed first): controls from the
+  official level-3 catalogues (compact, isolated, AB 21–25.5); held-out half B by crc32 parity; a global shift (M0)
+  unless an affine model (M1) cuts B's RMS by ≥ 20 %. A band passes if |B median| ≤ 0.010″ and B RMS ≤ 1.5 × the
+  ALT-vs-UNCOVER baseline.
+- **Result (derived; `reg_offsets.py`, `reg1176/RESULT.md`):** 1176 sits +0.018…+0.027″ in RA cosδ and
+  +0.004…−0.016″ in Dec from UNCOVER in all 7 shared bands. M0 is chosen, and every band passes; F115W and F150W rest on
+  only 10 and 17 held-out controls. No control is off by > 0.11″, and the local shift near h182 equals the global one.
+- **Image check** (`reg_imgcheck.py`, F356W, 80″ box): the FITS-header WCS used by `hit_lightcurve.py` agrees with the
+  catalogue centroids to ≤ 0.007″ (median). **#263's by-eye "≈ 0.3″ offset" on c63 is not a 1176 registration
+  offset.** Its cause is unexplained, and that first-draw control was not saved.
+- **Re-measurement** (`hit_lightcurve.py --offsets`, `--only-program`):
+  - The uncorrected rerun reproduces #263's 632 1176 fluxes exactly.
+  - The 0.7-px correction moves on-arc fluxes by a median of 1–3σ.
+  - h182 z_cal in the 1176 pairs moves to −0.5…+1.2, so it **stays closed** (exploratory: h182 and its controls were
+    seen before).
+  - Control spread falls by about 30 % in F200W and F410M, but not in F356W: registration is not the main remaining
+    on-arc systematic there.
+- **Not affected:** #261, #264 and #265 (UNCOVER/ALT only). No threshold changed; no new candidate.
+
 ## 2026-10-16: Abell 2744 `arc_diff`: a local-annulus cut for hits on extended light doubles 28-mag efficiency but lets artifacts through; not adopted
 - **Hypothesis before measuring (#264 handoff):** the peer cut vetoes faint point brightenings on smooth light because
   its brightness-bin spread is set by compact sources; a cut that keeps the peer test only at compact epoch-1 peaks

@@ -309,8 +309,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      tiling of the UNCOVER∩ALT footprint (`--min-bands 1`) to close the host-blend blind spot; vet g1 with later epochs;
      tiling done (CHANGELOG 2026-10-16: 76 survivors, 6 vetted, 0 lensing candidates; h182 closed). Whole-chain
      injections (CHANGELOG 2026-10-16, `arc_diff_inject_chain.py`): efficiency 0.64 at 27.5 mag, 0.19 at 28.0; the
-     peer cut drops half the 28-mag stars on smooth light. Next: a peer test for non-compact positions (local S
-     scatter), re-calibrated on `inject/`, then re-screen the 471 peer-vetoed passes;
+     peer cut drops half the 28-mag stars on smooth light. A local-annulus replacement (#265) admits artifacts; not
+     adopted. PEARLS 1176 o221 registration (CHANGELOG 2026-10-16, `reg1176/RESULT.md`): a global 0.027″ shift against
+     UNCOVER, no 0.3″ offset; `hit_lightcurve.py --offsets` applies it; h182 stays closed. Registration is not the main
+     on-arc F356W systematic. Open: stripe/spike vetoes before any new extended-light cut (#265 handoff);
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps
