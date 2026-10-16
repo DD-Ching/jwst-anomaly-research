@@ -119,3 +119,6 @@ from 22:14Z.
   - Measure them with `hit_lightcurve.py`, then run `compare` on the F444W pair (o241 → o051).
   - h043 is `explained by program-to-program photometric scatter` if its control tail fraction is ≥ 0.05.
     Otherwise it stays `open` and goes to `/vet-candidate`.
+- **Deviation (2026-10-16T22:45Z, before any control z was seen):** the 16″ pick gave 18 positions, 17 measured,
+  and `compare` needs ≥ 20 (`MIN_CONTROLS`), so the rule could not run. The only change is `--half-arcsec 30`
+  (same flux range, `--n 60`, seed 1). The tail-fraction rule is unchanged.
