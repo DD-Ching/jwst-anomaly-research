@@ -1,4 +1,4 @@
-# Plan: `arcs` on MACS J1423.8+2404 (written before any `arcs` count, 2026-10-16 18:25Z)
+# Plan: `arcs` on MACS J1423.8+2404 (written before any `arcs` count; committed 2026-10-16 18:13Z, the run started 18:13:10–18:14Z)
 
 **Why.** The Abell S1063 background anti excess (4 vs 0.52; P 0.031 clump-aware, #273, #279) was found post hoc in
 one field. MACS0417 (#280; CANUCS v1 maps) did not replicate it (anti 3 vs 1.52, P 0.195); MACS0647 (#281) gave no

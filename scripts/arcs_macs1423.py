@@ -15,11 +15,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-import tempfile
 from pathlib import Path
 
 import numpy as np
 from astropy.table import Table
+
+from jwst_anomaly import paths
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from arcs_macs0647 import P_REPLICATE, _background_by_gmin, _run, control_passes  # noqa: E402
@@ -47,10 +48,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--photometry", type=Path, required=True)
     ap.add_argument("--out", type=Path, default=OUT)
     args = ap.parse_args(argv)
-    with tempfile.TemporaryDirectory() as tmp:
-        zout = Path(tmp) / "macs1423-clu_zout.fits"
-        canucs_zout(args.photometry).write(zout)
-        run = _run(MODEL, args.out, args.catalog, zout)
+    zout = paths.cache_dir() / "macs1423" / "macs1423-clu_zout.fits"  # gitignored
+    zout.parent.mkdir(parents=True, exist_ok=True)
+    canucs_zout(args.photometry).write(zout, overwrite=True)
+    run = _run(MODEL, args.out, args.catalog, zout)
     t = Table.read(args.out / MODEL / "arcs.ecsv")
     anti = t[
         t["strong_shear"] & (t["population"] == "background") & (t["orientation_class"] == "anti")

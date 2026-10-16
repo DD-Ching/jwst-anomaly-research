@@ -1,0 +1,74 @@
+{
+ "plan": "results/arcs/macs1423-canucs/PLAN.md",
+ "inputs": {
+  "catalog": "jw01208-o010_t005_nircam_clear-f200w_cat.ecsv",
+  "photometry": "hlsp_canucs_jwst-hst_multi_macs1423-clu_multi_v1_photometry-cat.fits.gz"
+ },
+ "model": "macs1423-canucs-maps",
+ "strong_shear_background": {
+  "n": 55,
+  "aligned": 44,
+  "anti": 4,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 1.5970050204406926e-12
+ },
+ "anti_expected_shape_noise_background": {
+  "n": 55,
+  "anti": 4,
+  "expected": 0.949,
+  "p_ge_observed": 0.016012984161680344
+ },
+ "control_passes": true,
+ "background_by_gmin": {
+  "g_min<1": {
+   "n": 48,
+   "aligned": 38,
+   "anti": 3
+  },
+  "g_min>=1": {
+   "n": 7,
+   "aligned": 6,
+   "anti": 1
+  }
+ },
+ "outcome": "replicates",
+ "p_ge_observed": 0.016012984161680344,
+ "anti_background": [
+  {
+   "label": 1818,
+   "ra": 215.948328,
+   "dec": 24.071355,
+   "mag": 28.46,
+   "g_min": 1.028,
+   "z_phot": 3.11,
+   "ellipticity": 0.549
+  },
+  {
+   "label": 2197,
+   "ra": 215.94082,
+   "dec": 24.086118,
+   "mag": 28.34,
+   "g_min": 0.274,
+   "z_phot": 3.42,
+   "ellipticity": 0.533
+  },
+  {
+   "label": 2322,
+   "ra": 215.939033,
+   "dec": 24.086461,
+   "mag": 28.08,
+   "g_min": 0.268,
+   "z_phot": 3.42,
+   "ellipticity": 0.58
+  },
+  {
+   "label": 4234,
+   "ra": 215.94023,
+   "dec": 24.068841,
+   "mag": 24.19,
+   "g_min": 0.202,
+   "z_phot": 1.01,
+   "ellipticity": 0.664
+  }
+ ]
+}
