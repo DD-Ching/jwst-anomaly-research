@@ -2,6 +2,69 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Abell 2744 UNCOVER vs ALT F356W `arc_diff` tiling and multi-epoch vetting of 6 priority hits: one SN-like transient, one variable, 0 lensing candidates
+- **Hypothesis before measuring:** difference imaging of the whole UNCOVER o001 (2022-11) ∩ ALT 3516 o002 (2023-11/12)
+  F356W overlap recovers PLATE-23a and the grid's real changes g1 and g2, and every other morphology pass is a
+  star/spike residual, an ALT single-visit artifact, a mosaic-edge effect or a registration residual on a core.
+  Decision rule (ASSUMPTION, written before the run): same sign at |S| ≥ 3 in UNCOVER→ALT o001 (9 days after o002)
+  **and** |S| < 3 in ALT o002→o001.
+- **Run (derived):** `arc_diff.py --band F356W <UNCOVER t003> <ALT o002> --half-arcsec 30 --min-bands 1 --kernel-px 4
+  --kernel-stamps --maps` on 34 tiles of 60″ (`arcdiff_tiles/tiles.txt`; S3 byte ranges, nothing stored), 4 jobs,
+  ≈ 4 CPU-min per tile. 33 tiles ran; t−2+3 (footprint corner) crashed on an empty array (no common data; not
+  investigated). `arc_diff_morph.py --min-rosette-bands 1 --min-dipole-bands 1 --min-ring-bands 1` (single band):
+  9,196 hits, 3,665 without the bright-core flag; extended 1,275, rosette 1,149, edge 443, dipole 116, ring 15,
+  **pass 667** (`arcdiff_tiles/passes.ecsv`).
+- **Population test (derived, post hoc):** S of each pass against S at all compact epoch-1 peaks of similar brightness
+  in its tile. Compact sources show a systematic UNCOVER→ALT deficit (peer median S down to −6.7): the MACS0416
+  compact-core class again (PSF difference between programs). **Failed cut:** |z| ≥ 5 drops g1 (z +4.7) and g2
+  (z −3.1); the cut used is |z| ≥ 3 (or no peers), calibrated on those two and PLATE-23a (z +29): 196 survive.
+- **Failed approach:** the pre-written rule rejects **PLATE-23a** (ALT o002→o001 S −7.2: the SN fades in 9 days) and
+  g1 (+5.4). Revised rule: same sign, |S| ≥ 3 in UNCOVER→ALT o001 only (small 10″ `arc_diff` boxes per pass):
+  **76 pass** (`arcdiff_tiles/survivors.ecsv`, sheets `sheet_survivors_{a..d}.png`: epoch-1 image and S).
+- **Looked at, all 76 (by eye, not vetted):** 20 spikes/edges, 16 compact-core residuals, 7 UNCOVER pixel artifacts
+  (bad-pixel blocks visible in the UNCOVER image), the 3 known changes, 24 faint compact fades or brightenings
+  (mostly isolated faint sources, ±5–9σ; transient or variable population not separated), and **6 priority hits**:
+  - t−1+0 h182 (3.552148, −30.376850): +8σ point on a bright arc, 4.6″ from Bergamini+23 image 301.1;
+    UNCOVER→ALT o001 +7.3;
+  - t−1+0 h123 (3.552406, −30.373976) and h287 (3.554220, −30.372327): −10σ / −6σ on compact knots of an arc,
+    6.9″ / 5.7″ from 301.1; o001 −7.8 / −4.2 (knots fainter in both ALT visits);
+  - t−1+0 h294 (3.550096, −30.378202): +6σ blob on blank sky 7.1″ from 301.1; o001 +3.2, o002→o001 −5.7;
+  - t+0−1 h003 (3.577785, −30.394141): +48σ new compact source 19″ from image 64.1; o001 +41.5, o002→o001 −15.9
+    (fading between the ALT visits; SN-like). Not in the grid's 45 groups (a host blend, like PLATE-23a);
+  - t+1+1 h011 (3.592116, −30.366745): +14σ, growing (o001 +40, o002→o001 +30); variable source 51″ from images.
+- **Vetting of the 6 priority hits (derived; `scripts/hit_lightcurve.py`, new):** forced photometry (r 0.15″, annulus
+  0.35–0.6″, error = robust spread of 300 random apertures in the same box) at each fixed position in **every** public
+  NIRCam level-3 mosaic covering it (MAST query; 46–64 mosaics, 2022-10 to 2024-10: DD 2756, UNCOVER, PEARLS 1176,
+  MegaScience 4111, 3538, 2883, ALT, SAPPHIRES 6434; S3 byte ranges, nothing stored). Outputs and stamp sheets
+  (looked at, all 6): `arcdiff_tiles/vet/`. Controls: 53 compact peaks (20–150 nJy) within 16″ of the 301.1 hits
+  measured in the same mosaics (`vet/ctrl301/`, `scripts/hit_lightcurve_controls.py`); each hit's epoch-pair z is
+  calibrated by the controls' median and robust std (`vet/ctrl301/control_z.ecsv`).
+  - **h003: SN-like transient (ordinary).** Host flat at ≈ 25–35 nJy (2022-10 → 2023-11-06, 6 programs); a point source
+    appears by 2023-11-20 (MegaScience: F090W 307 ± 3, F182M 187 ± 5, F360M 79 ± 3, F460M 61 ± 8 nJy; blue), rose
+    ≥ 170 nJy in F182M within ≤ 10 days, fades through ALT (F090W 216 → 144 nJy in 9 days) and is gone by 2024-10
+    (F090W 34 ± 4). Seen in ≥ 15 bands and 3 programs: not an artifact. 19″ from image 64.1; not a lensing anomaly.
+    Known-transient lists (TNS, the PLATE catalog in prep) not checked.
+  - **h011: variable compact source (ordinary; AGN-like).** ±10–20 % changes on 9–13-day scales in 2022 and 2023
+    (F277W 171 → 136, F356W 147 → 124 → 171 → 185, F360M 198 → 166 nJy), no rise-and-fall. 51″ from any image.
+  - **h294: single-visit artifact.** Only ALT o002 F356W (17 ± 3 nJy); nothing in the same visit's F070W/F090W, in ALT
+    o001 nine days later, or in any of 44 other mosaics.
+  - **h287: consistent with arc systematics.** Calibrated |z| ≤ 3.3 both ways; shows the size of on-arc excursions
+    (|z_cal| up to 3.3) that compact controls do not capture.
+  - **h123: marginal fade.** Red bands 25–40 % fainter after 2022-11 (F444W z_cal −3.0 in 2023-07, −3.3 / −2.5 in
+    2024-10), blue bands unchanged; within the on-arc excursion size of h287. Not significant.
+  - **h182: inconclusive brightening, ordinary explanations open.** Arc knot 4.5″ from 301.1b; red bands 20–45 %
+    brighter in 2023 than in 2022-11 (z_cal +4.9 ALT o002, +3.7 ALT o001, +3.0 F444W / +2.8 F410M PEARLS 2023-07),
+    −2.6 between the two ALT visits, back to the 2022 level in 2024-10 (SAPPHIRES F444W/F200W z_cal ≤ 1.3); no
+    visible new point source in the stamps. Bergamini+23 gives μ 71 (z 3) to −359 (z 4) here (system 301 z 5.29;
+    model_prediction): near a critical curve, so microlensing of a compact knot is the leading ordinary
+    explanation, with the on-arc photometry systematic (h287) as the other. Microlensing changes one image only, so
+    the lens model makes no counter-image prediction to test. Not a candidate.
+- **0 lensing candidates.** Limitations: controls are compact peaks, not arc pixels (on-arc systematics are larger);
+  the pair choice and calibration are post hoc; one control (c08, > 20″ from the hits) got no mosaics under `--query-only` and is absent; no injection through the tiling chain; the 24 faint open hits of the
+  tiling are not classified; program-dependent PSFs not modelled.
+- **Handoff:** h182 is the only open item (low priority): an arc-pixel control set (`arc_diff_vet.py` arc noise) on the
+  same mosaics would decide whether +45 % exceeds on-arc systematics; a TNS check for h003. Then the `--inject-grid`
+  completeness run on 2–3 tiles.
 ## 2026-10-16: S0 check: message-and-reply window in an unstable wormhole: literature already answers it; stop, no new unit
 - Literature and code check only (≤ 2 h; no solver, no evolution). Record: `docs/state/units/S0-2026-10-16.md`.
   The S0-2026-10-15b radiation-fluid eigenvalue computation is cancelled (owner accepted #256).

@@ -1,0 +1,1827 @@
+{
+ "provenance": "derived",
+ "maps": "t+2-3.npz",
+ "thresholds_assumption": {
+  "peak_arcsec": 0.06,
+  "level": 3.0,
+  "smooth_px": 2.0,
+  "streak_level": 3.0,
+  "max_extent_arcsec": 3.0,
+  "edge_arcsec": 0.5,
+  "lobe_arcsec": 0.8,
+  "min_lobe_px": 4,
+  "min_lobes": 4,
+  "min_rosette_bands": 1,
+  "dipole_arcsec": 0.3,
+  "dipole_ratio": 0.5,
+  "min_dipole_bands": 1,
+  "rosette_lobe_ratio": 0.3,
+  "sign_flip_level": 5.0,
+  "ring_search_arcsec": 1.2,
+  "ring_min_arcsec": 0.15,
+  "ring_width_arcsec": 0.1,
+  "ring_bins": 16,
+  "ring_exclude_arcsec": 0.3,
+  "ring_frac": 0.3,
+  "ring_fill_min": 0.5,
+  "min_ring_bands": 1
+ },
+ "counts": {
+  "edge": 82,
+  "pass": 1
+ },
+ "targets": [
+  {
+   "id": "h003",
+   "ra": 3.6098427350901567,
+   "dec": -30.423163035924574,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 10.879800796508789,
+     "lobe_peaks": [
+      10.88,
+      6.44
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h004",
+   "ra": 3.6096021119505646,
+   "dec": -30.423399389122828,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 10.542972564697266,
+     "lobe_peaks": [
+      10.88
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h005",
+   "ra": 3.609709055712021,
+   "dec": -30.423294343311458,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 10.485922813415527,
+     "lobe_peaks": [
+      10.88
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h006",
+   "ra": 3.6099095746443366,
+   "dec": -30.423097382179982,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.143,
+     "s_hit": 10.355525016784668,
+     "lobe_peaks": [
+      10.88,
+      6.44
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h007",
+   "ra": 3.609508535970454,
+   "dec": -30.42349130413619,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 10.343273162841797,
+     "lobe_peaks": [
+      10.88
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h008",
+   "ra": 3.609414959814127,
+   "dec": -30.423583219082744,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.2,
+     "s_hit": 10.296000480651855,
+     "lobe_peaks": [
+      9.23,
+      10.88,
+      -5.48
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 3,
+     "both_signs": true,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h009",
+   "ra": 3.610257138876666,
+   "dec": -30.422755982158773,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 10.253827095031738,
+     "lobe_peaks": [
+      10.25,
+      5.33
+     ],
+     "extent_arcsec": 1.9225703442960982,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h010",
+   "ra": 3.61040418455072,
+   "dec": -30.422611543410827,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.167,
+     "s_hit": 9.788418769836426,
+     "lobe_peaks": [
+      10.25,
+      5.33,
+      9.3
+     ],
+     "extent_arcsec": 1.9225703442960982,
+     "n_lobes": 3,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h012",
+   "ra": 3.6105894732849655,
+   "dec": -30.422403054031186,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 9.304274559020996,
+     "lobe_peaks": [
+      10.25,
+      5.33,
+      9.3
+     ],
+     "extent_arcsec": 0.0,
+     "n_lobes": 3,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h013",
+   "ra": 3.609323242861742,
+   "dec": -30.423699791987268,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.167,
+     "s_hit": 9.232612609863281,
+     "lobe_peaks": [
+      9.23,
+      10.88,
+      -5.48
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 3,
+     "both_signs": true,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h014",
+   "ra": 3.606080273177256,
+   "dec": -30.426964484212576,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 9.164941787719727,
+     "lobe_peaks": [
+      9.16,
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h015",
+   "ra": 3.609775895446042,
+   "dec": -30.423228689635046,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.429,
+     "s_hit": 9.09555721282959,
+     "lobe_peaks": [
+      10.88
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h016",
+   "ra": 3.6101501962949034,
+   "dec": -30.422861028417287,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 8.553977012634277,
+     "lobe_peaks": [
+      6.44,
+      10.25
+     ],
+     "extent_arcsec": 1.9225703442960982,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h017",
+   "ra": 3.6078144877826888,
+   "dec": -30.42520820958136,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.25,
+     "s_hit": 8.517818450927734,
+     "lobe_peaks": [
+      8.52
+     ],
+     "extent_arcsec": 4.176543747702625,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h018",
+   "ra": 3.6047986960561684,
+   "dec": -30.428249650729054,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 8.477967262268066,
+     "lobe_peaks": [
+      8.48
+     ],
+     "extent_arcsec": 2.0831147523642297,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h019",
+   "ra": 3.6106696795119757,
+   "dec": -30.422324269076665,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 8.439217567443848,
+     "lobe_peaks": [
+      9.3
+     ],
+     "extent_arcsec": 0.0,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h020",
+   "ra": 3.6092296663310752,
+   "dec": -30.423791706801516,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.167,
+     "s_hit": 8.424386024475098,
+     "lobe_peaks": [
+      9.23,
+      10.88,
+      -5.48
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 3,
+     "both_signs": true,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h021",
+   "ra": 3.607587223225877,
+   "dec": -30.425431428540584,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.4,
+     "s_hit": 8.400498390197754,
+     "lobe_peaks": [
+      8.52
+     ],
+     "extent_arcsec": 4.176543747702625,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h022",
+   "ra": 3.6054786669391956,
+   "dec": -30.42755534910478,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.3,
+     "s_hit": 8.2236909866333,
+     "lobe_peaks": [
+      9.16
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h023",
+   "ra": 3.608694939917742,
+   "dec": -30.424316933029615,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.111,
+     "s_hit": 8.135822296142578,
+     "lobe_peaks": [
+      7.41,
+      4.02,
+      9.23
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 3,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h024",
+   "ra": 3.6063858993017934,
+   "dec": -30.42663782746902,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.143,
+     "s_hit": 8.019752502441406,
+     "lobe_peaks": [
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h025",
+   "ra": 3.608882094816996,
+   "dec": -30.424133104097947,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.2,
+     "s_hit": 7.919938564300537,
+     "lobe_peaks": [
+      9.23,
+      6.93
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h026",
+   "ra": 3.6091227215087787,
+   "dec": -30.423896752221665,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 7.851688861846924,
+     "lobe_peaks": [
+      9.23
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h027",
+   "ra": 3.604105346017045,
+   "dec": -30.42895707898308,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 7.801200866699219,
+     "lobe_peaks": [
+      88.89,
+      8.48
+     ],
+     "extent_arcsec": 3.1132829437064684,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h028",
+   "ra": 3.609176193948702,
+   "dec": -30.423844229522494,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.2,
+     "s_hit": 7.7521491050720215,
+     "lobe_peaks": [
+      9.23,
+      -5.48
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 2,
+     "both_signs": true,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h029",
+   "ra": 3.6067602259925864,
+   "dec": -30.4262701759349,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 7.738309383392334,
+     "lobe_peaks": [
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h030",
+   "ra": 3.606506218902773,
+   "dec": -30.426519653878266,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 7.709166526794434,
+     "lobe_peaks": [
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h031",
+   "ra": 3.607640697332768,
+   "dec": -30.42537890646801,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.4,
+     "s_hit": 7.696860313415527,
+     "lobe_peaks": [
+      8.52
+     ],
+     "extent_arcsec": 4.176543747702625,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h032",
+   "ra": 3.6049724965871457,
+   "dec": -30.428078957613,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 7.671276092529297,
+     "lobe_peaks": [
+      8.48
+     ],
+     "extent_arcsec": 2.0831147523642297,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h033",
+   "ra": 3.610497758843999,
+   "dec": -30.422519627758096,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.5,
+     "s_hit": 7.6662397384643555,
+     "lobe_peaks": [
+      10.25,
+      5.33,
+      9.3
+     ],
+     "extent_arcsec": 1.9225703442960982,
+     "n_lobes": 3,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h034",
+   "ra": 3.608975672002266,
+   "dec": -30.42404118953188,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.333,
+     "s_hit": 7.63469934463501,
+     "lobe_peaks": [
+      9.23
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h035",
+   "ra": 3.6053316065287926,
+   "dec": -30.42769978232485,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.167,
+     "s_hit": 7.618059158325195,
+     "lobe_peaks": [
+      9.16
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h036",
+   "ra": 3.6066265382124323,
+   "dec": -30.426401480177006,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.143,
+     "s_hit": 7.552738189697266,
+     "lobe_peaks": [
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h037",
+   "ra": 3.6055455124364237,
+   "dec": -30.427489697586527,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.333,
+     "s_hit": 7.53697395324707,
+     "lobe_peaks": [
+      9.16
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h038",
+   "ra": 3.607359957629611,
+   "dec": -30.425654647105624,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.25,
+     "s_hit": 7.498896598815918,
+     "lobe_peaks": [
+      6.57,
+      8.52
+     ],
+     "extent_arcsec": 4.176543747702625,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h039",
+   "ra": 3.6064661124014803,
+   "dec": -30.426559045087455,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.2,
+     "s_hit": 7.492310523986816,
+     "lobe_peaks": [
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h040",
+   "ra": 3.607707539885438,
+   "dec": -30.425313253846586,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.375,
+     "s_hit": 7.489941120147705,
+     "lobe_peaks": [
+      8.52
+     ],
+     "extent_arcsec": 4.176543747702625,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h041",
+   "ra": 3.607520380511342,
+   "dec": -30.425497081100634,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.375,
+     "s_hit": 7.482323169708252,
+     "lobe_peaks": [
+      8.52
+     ],
+     "extent_arcsec": 4.176543747702625,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h042",
+   "ra": 3.608801885660778,
+   "dec": -30.424211887958535,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.375,
+     "s_hit": 7.440882682800293,
+     "lobe_peaks": [
+      4.02,
+      9.23,
+      6.93
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 3,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h043",
+   "ra": 3.6070008630905175,
+   "dec": -30.426033827955358,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.222,
+     "s_hit": 7.436795234680176,
+     "lobe_peaks": [
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h044",
+   "ra": 3.6084409428554807,
+   "dec": -30.424566414723675,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.111,
+     "s_hit": 7.405130863189697,
+     "lobe_peaks": [
+      7.41,
+      4.02
+     ],
+     "extent_arcsec": 1.3081526776180683,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h045",
+   "ra": 3.608148698478018,
+   "dec": -30.424879945690027,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.1,
+     "s_hit": 7.349600315093994,
+     "lobe_peaks": [
+      8.52,
+      7.41
+     ],
+     "extent_arcsec": 4.176543747702625,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h046",
+   "ra": 3.6059866904630247,
+   "dec": -30.427056396710608,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.143,
+     "s_hit": 7.320472240447998,
+     "lobe_peaks": [
+      9.16,
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h047",
+   "ra": 3.6058262625428874,
+   "dec": -30.42721396083739,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 7.319927215576172,
+     "lobe_peaks": [
+      9.16
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h048",
+   "ra": 3.6059332145471936,
+   "dec": -30.427108918108026,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.167,
+     "s_hit": 7.242702484130859,
+     "lobe_peaks": [
+      9.16
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h049",
+   "ra": 3.605625726914423,
+   "dec": -30.42741091571963,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.286,
+     "s_hit": 7.224279880523682,
+     "lobe_peaks": [
+      9.16
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h050",
+   "ra": 3.605224653229706,
+   "dec": -30.427804824563026,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.167,
+     "s_hit": 7.220114707946777,
+     "lobe_peaks": [
+      9.16
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h051",
+   "ra": 3.6082938913312335,
+   "dec": -30.42471085126888,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.1,
+     "s_hit": 7.203770637512207,
+     "lobe_peaks": [
+      8.52,
+      7.41
+     ],
+     "extent_arcsec": 1.3081526776180683,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h052",
+   "ra": 3.609042512740992,
+   "dec": -30.423975536229513,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.25,
+     "s_hit": 7.138701915740967,
+     "lobe_peaks": [
+      9.23
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h053",
+   "ra": 3.6052781299080103,
+   "dec": -30.42775230345484,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.25,
+     "s_hit": 7.132052421569824,
+     "lobe_peaks": [
+      9.16
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h054",
+   "ra": 3.605371713956611,
+   "dec": -30.427660391463025,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.5,
+     "s_hit": 7.11707878112793,
+     "lobe_peaks": [
+      9.16
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h055",
+   "ra": 3.6068404384880375,
+   "dec": -30.426191393324146,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.222,
+     "s_hit": 7.083015441894531,
+     "lobe_peaks": [
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h056",
+   "ra": 3.6062923171884957,
+   "dec": -30.42672974018542,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 7.022522449493408,
+     "lobe_peaks": [
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h057",
+   "ra": 3.6040251290414393,
+   "dec": -30.42903585991875,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.984696388244629,
+     "lobe_peaks": [
+      88.89
+     ],
+     "extent_arcsec": 3.1132829437064684,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h058",
+   "ra": 3.6086325245788196,
+   "dec": -30.424060428498223,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.932683944702148,
+     "lobe_peaks": [
+      9.23,
+      6.93,
+      -5.44
+     ],
+     "extent_arcsec": 0.7398528919484059,
+     "n_lobes": 3,
+     "both_signs": true,
+     "dipole_ratio": 0.7843561256249788,
+     "edge_arcsec": 0.4403117509582677
+    }
+   }
+  },
+  {
+   "id": "h059",
+   "ra": 3.608507784313531,
+   "dec": -30.42450076169402,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.816646099090576,
+     "lobe_peaks": [
+      7.41,
+      4.02
+     ],
+     "extent_arcsec": 1.3081526776180683,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h060",
+   "ra": 3.6031980706633395,
+   "dec": -30.42987458481857,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.772738933563232,
+     "lobe_peaks": [
+      6.77,
+      9.69
+     ],
+     "extent_arcsec": 0.35161939063111186,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h061",
+   "ra": 3.6038914337943684,
+   "dec": -30.42916716136902,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.745294570922852,
+     "lobe_peaks": [
+      88.89
+     ],
+     "extent_arcsec": 3.1132829437064684,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h062",
+   "ra": 3.606693382147461,
+   "dec": -30.426335828072997,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.734762668609619,
+     "lobe_peaks": [
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h063",
+   "ra": 3.6082155403473237,
+   "dec": -30.424814292809458,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.687403678894043,
+     "lobe_peaks": [
+      8.52,
+      7.41
+     ],
+     "extent_arcsec": 4.176543747702625,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h064",
+   "ra": 3.6079348038919727,
+   "dec": -30.42509003467868,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.664860725402832,
+     "lobe_peaks": [
+      8.52
+     ],
+     "extent_arcsec": 4.176543747702625,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h065",
+   "ra": 3.6039315424062397,
+   "dec": -30.429127770948256,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.570026874542236,
+     "lobe_peaks": [
+      88.89
+     ],
+     "extent_arcsec": 3.1132829437064684,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h066",
+   "ra": 3.6071995342299537,
+   "dec": -30.425812212914185,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.2,
+     "s_hit": 6.569397449493408,
+     "lobe_peaks": [
+      8.02,
+      6.57,
+      8.52
+     ],
+     "extent_arcsec": 0.39782514673284375,
+     "n_lobes": 3,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h067",
+   "ra": 3.606225472713965,
+   "dec": -30.42679539208479,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.4616594314575195,
+     "lobe_peaks": [
+      9.16,
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h068",
+   "ra": 3.610001290330542,
+   "dec": -30.422980808864864,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.091,
+     "s_hit": 6.441058158874512,
+     "lobe_peaks": [
+      10.88,
+      6.44,
+      10.25
+     ],
+     "extent_arcsec": 6.303482217429731,
+     "n_lobes": 3,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h069",
+   "ra": 3.6042639213791405,
+   "dec": -30.428774858870323,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.335443019866943,
+     "lobe_peaks": [
+      88.89,
+      8.48
+     ],
+     "extent_arcsec": 0.3999382118264567,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h070",
+   "ra": 3.6049190195654295,
+   "dec": -30.428131478596352,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.375,
+     "s_hit": 6.319112300872803,
+     "lobe_peaks": [
+      8.48
+     ],
+     "extent_arcsec": 2.0831147523642297,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h071",
+   "ra": 3.60863473750156,
+   "dec": -30.42389934966896,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.288599967956543,
+     "lobe_peaks": [
+      6.93,
+      -5.44
+     ],
+     "extent_arcsec": 0.7398528919484059,
+     "n_lobes": 2,
+     "both_signs": true,
+     "dipole_ratio": 0.8646905744930108,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h072",
+   "ra": 3.6044109849889927,
+   "dec": -30.428630426849157,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.125,
+     "s_hit": 6.269465446472168,
+     "lobe_peaks": [
+      8.48
+     ],
+     "extent_arcsec": 0.34452668333491454,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h073",
+   "ra": 3.604571417521589,
+   "dec": -30.42847286445592,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.167,
+     "s_hit": 6.190176486968994,
+     "lobe_peaks": [
+      8.48
+     ],
+     "extent_arcsec": 0.0,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h074",
+   "ra": 3.6072530087540584,
+   "dec": -30.42575969099983,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.2,
+     "s_hit": 6.091514587402344,
+     "lobe_peaks": [
+      8.02,
+      6.57,
+      8.52
+     ],
+     "extent_arcsec": 0.39782514673284375,
+     "n_lobes": 3,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h075",
+   "ra": 3.6045179400682636,
+   "dec": -30.42852538527548,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 6.064472675323486,
+     "lobe_peaks": [
+      8.48
+     ],
+     "extent_arcsec": 0.0,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h076",
+   "ra": 3.608028382886669,
+   "dec": -30.424998120789112,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 5.946326732635498,
+     "lobe_peaks": [
+      8.52
+     ],
+     "extent_arcsec": 4.176543747702625,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h077",
+   "ra": 3.6061586281495104,
+   "dec": -30.426861043950044,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.143,
+     "s_hit": 5.910918235778809,
+     "lobe_peaks": [
+      9.16,
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h078",
+   "ra": 3.606559694187474,
+   "dec": -30.426467132246902,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 5.886695384979248,
+     "lobe_peaks": [
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h079",
+   "ra": 3.606907282135334,
+   "dec": -30.42612574111102,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.143,
+     "s_hit": 5.760392665863037,
+     "lobe_peaks": [
+      8.02
+     ],
+     "extent_arcsec": 9.227323974717597,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h080",
+   "ra": 3.6050660812366804,
+   "dec": -30.427987045839608,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.154,
+     "s_hit": 5.677094459533691,
+     "lobe_peaks": [
+      8.48,
+      9.16
+     ],
+     "extent_arcsec": 0.0,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h081",
+   "ra": 3.6073227793707265,
+   "dec": -30.425161486062716,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 5.505421161651611,
+     "lobe_peaks": [],
+     "extent_arcsec": 0.0,
+     "n_lobes": 0,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h082",
+   "ra": 3.609189914702189,
+   "dec": -30.42364536197872,
+   "verdict": "pass",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": -5.48215389251709,
+     "lobe_peaks": [
+      9.23,
+      10.88,
+      -5.48
+     ],
+     "extent_arcsec": 0.39453550762448525,
+     "n_lobes": 3,
+     "both_signs": true,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.5032134296665917
+    }
+   }
+  },
+  {
+   "id": "h083",
+   "ra": 3.604691741581134,
+   "dec": -30.428354692531993,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 5.442228317260742,
+     "lobe_peaks": [
+      8.48
+     ],
+     "extent_arcsec": 2.0831147523642297,
+     "n_lobes": 1,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h084",
+   "ra": 3.6085812647398927,
+   "dec": -30.42395187214763,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": -5.437693119049072,
+     "lobe_peaks": [
+      6.93,
+      -5.44
+     ],
+     "extent_arcsec": 0.0,
+     "n_lobes": 2,
+     "both_signs": true,
+     "dipole_ratio": 1.2749310770068827,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  },
+  {
+   "id": "h085",
+   "ra": 3.610354783122872,
+   "dec": -30.42252764576018,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 5.333429336547852,
+     "lobe_peaks": [
+      10.25,
+      5.33,
+      9.3
+     ],
+     "extent_arcsec": 1.9225703442960982,
+     "n_lobes": 3,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.08895640712534669
+    }
+   }
+  },
+  {
+   "id": "h086",
+   "ra": 3.6050909612821265,
+   "dec": -30.427936127237917,
+   "verdict": "edge",
+   "top_band": "F356W",
+   "bands": {
+    "F356W": {
+     "ring_fill": 0.0,
+     "s_hit": 5.058618068695068,
+     "lobe_peaks": [
+      8.48,
+      9.16
+     ],
+     "extent_arcsec": 0.0,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 0.06290167870832396
+    }
+   }
+  }
+ ]
+}

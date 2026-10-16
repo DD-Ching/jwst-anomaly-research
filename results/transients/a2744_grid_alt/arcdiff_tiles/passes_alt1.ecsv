@@ -1,0 +1,21 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: tile, datatype: string}
+# - {name: hit, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: s_hit, datatype: float64}
+# - {name: grid_group, datatype: string}
+# - {name: grid_verdict, datatype: string}
+# - {name: s_u_alt1, datatype: string, subtype: json}
+# - {name: hit_u_alt1, datatype: string}
+# - {name: s_alt2_alt1, datatype: string, subtype: json}
+# - {name: hit_alt2_alt1, datatype: string}
+# schema: astropy-2.0
+tile hit ra dec s_hit grid_group grid_verdict s_u_alt1 hit_u_alt1 s_alt2_alt1 hit_alt2_alt1
+t-3+0 h044 3.5265582649603178 -30.37759098721352 -6.202521800994873 "" "" null None null None
+t-3+2 h003 3.5246967191907905 -30.3527969465606 12.10038948059082 "" "" -20.351655960083008 h000 12.391490936279297 h003
+t-3+2 h004 3.5298608421452298 -30.347781041279166 9.235309600830078 "" "" -9.659006118774414 h004 -4.199660778045654 None
+t-3+2 h006 3.5261351176384763 -30.351305776589335 7.170345783233643 "" "" -11.278029441833496 h000 9.273896217346191 h003
+t-3+2 h007 3.526049390601551 -30.351310532323136 6.10429573059082 "" "" -10.974096298217773 h001 9.598312377929688 h002
