@@ -7,7 +7,8 @@
   "n": 35,
   "anti": 0,
   "k_faintest": 0,
-  "p": 1.0
+  "p": 1.0,
+  "n_dropped": 0
  },
  "anti_mags": [],
  "bright": {

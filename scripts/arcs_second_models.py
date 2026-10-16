@@ -8,7 +8,8 @@ given with ``--team`` (``<team>/<version>`` under the HFF HLSP tree, e.g. ``glaf
 D_ls/D_s at the row's photo-z (and at z_s = 2); the stretching axis is the shear axis where
 κ < 1 and the perpendicular where κ > 1
 (as ``lensmodel``), and the pixel-frame angle is turned into a sky PA through the map WCS.
-Classes use the stored ``--aligned-deg`` / ``--anti-deg``. Known-case check: rows the stored model
+Classes use the thresholds stored in ``arcs.json``; rows without a background photo-z use
+z_s = 2 only. Known-case check: rows the stored model
 calls ``aligned`` must be aligned in each team model (that model's calibration, including its
 γ sign convention).
 
@@ -32,7 +33,7 @@ from astropy.io import fits
 from astropy.table import Table
 from astropy.wcs import WCS
 
-from jwst_anomaly import paths
+from jwst_anomaly import lensmodel, paths
 
 _spec = importlib.util.spec_from_file_location(
     "lens_consistency", Path(__file__).resolve().parent / "lens_consistency.py"
@@ -43,9 +44,21 @@ _spec.loader.exec_module(lc)
 HFF = "https://archive.stsci.edu/pub/hlsp/frontier"
 
 
-def axis_offset(a, b) -> np.ndarray:
-    """Smallest angle between two axes (deg, 0-90)."""
-    return np.abs((np.asarray(a, float) - np.asarray(b, float) + 90.0) % 180.0 - 90.0)
+axis_offset = lensmodel.axis_offset_deg
+
+
+def axis_class(off, aligned_deg: float, anti_deg: float) -> np.ndarray:
+    """``aligned`` (≤ aligned_deg), ``anti`` (≥ anti_deg) or ``mixed`` (also for NaN offsets)."""
+    off = np.asarray(off, float)
+    return np.where(off <= aligned_deg, "aligned", np.where(off >= anti_deg, "anti", "mixed"))
+
+
+def combine_classes(c_z2, c_zphot, use_zphot, inside) -> np.ndarray:
+    """Team class: z2 and photo-z classes must agree; photo-z ignored where ``use_zphot`` is
+    False (no usable background photo-z); ``off_map`` outside the team map."""
+    c_zphot = np.where(use_zphot, c_zphot, c_z2)
+    both = np.where(c_z2 == c_zphot, c_z2, "mixed")
+    return np.where(inside, both, "off_map")
 
 
 def stretch_angle_px(kappa, g1, g2) -> np.ndarray:
@@ -73,10 +86,13 @@ def team_predictions(t: Table, field: str, team: str, z_cols: dict, scale) -> di
     name, ver = team.split("/")
     stem = f"{HFF}/{field}/models/{name}/{ver}/hlsp_frontier_model_{field}_{name}_{ver}"
     ra, dec = np.asarray(t["ra"], float), np.asarray(t["dec"], float)
-    v, urls = {}, {}
+    v, urls, grids = {}, {}, []
     for q in ("kappa", "gamma1", "gamma2"):
         urls[q] = f"{stem}_{q}.fits"
         v[q], wcs, inside = read_pixels(urls[q], ra, dec)
+        grids.append((wcs.to_header_string(), tuple(inside)))
+    if len(set(grids)) != 1:
+        raise SystemExit(f"error: {team} kappa/gamma maps differ in WCS or footprint")
     x, y = wcs.world_to_pixel_values(ra, dec)
     out = {"urls": urls, "inside": inside}
     for key, z in z_cols.items():
@@ -97,12 +113,18 @@ def run(args) -> dict:
     d = args.arcs_dir / args.model
     t = Table.read(d / "arcs.ecsv")
     t = t[np.asarray(t["strong_shear"], bool) & (t["population"] == "background")]
+    stored = json.loads((d / "arcs.json").read_text())["assumptions"]
+    if any(lc.MODELS[args.model].get("frame_offset_arcsec", (0.0, 0.0))):
+        # team maps are in the HFF frame; positions here are JWST-frame (D-034, D-040)
+        raise SystemExit("error: models with a frame_offset_arcsec are not supported yet")
     model, _, _ = lc.load_model(args.model)
-    z_cols = {"z2": np.full(len(t), 2.0), "zphot": np.asarray(t["z_phot"], float)}
+    zp = np.asarray(t["z_phot"], float)
+    use_zphot = np.isfinite(zp) & (zp > model.z_lens + stored["z_margin"])
+    z_cols = {"z2": np.full(len(t), 2.0), "zphot": np.where(use_zphot, zp, 2.0)}
     summary = {
         "model": args.model,
         "label": "model_prediction (other teams' published maps); observed axes from arcs.ecsv",
-        "assumptions": {"aligned_deg": args.aligned_deg, "anti_deg": args.anti_deg},
+        "assumptions": {k: stored[k] for k in ("aligned_deg", "anti_deg", "z_margin")},
         "teams": {},
     }
     out = t["label", "mag", "orientation_class", "pa_obs"]
@@ -117,17 +139,8 @@ def run(args) -> dict:
             out[f"{col}_off_{key}"] = np.round(off, 1)
             out[f"{col}_kappa_{key}"] = np.round(pred[key]["kappa"], 3)
             out[f"{col}_g_{key}"] = np.round(pred[key]["g"], 2)
-            cls[key] = np.where(
-                off <= args.aligned_deg,
-                "aligned",
-                np.where(off >= args.anti_deg, "anti", "mixed"),
-            )
-        both = np.where(
-            (cls["z2"] == "anti") & (cls["zphot"] == "anti"),
-            "anti",
-            np.where((cls["z2"] == "aligned") & (cls["zphot"] == "aligned"), "aligned", "mixed"),
-        )
-        both = np.where(pred["inside"], both, "off_map")
+            cls[key] = axis_class(off, stored["aligned_deg"], stored["anti_deg"])
+        both = combine_classes(cls["z2"], cls["zphot"], use_zphot, pred["inside"])
         out[f"{col}_class"] = both
         summary["teams"][team] = {
             "urls": pred["urls"],
@@ -152,8 +165,6 @@ def main(argv=None) -> int:
     p.add_argument("--field", required=True, help="HFF field name, e.g. abells1063")
     p.add_argument("--team", action="append", required=True, help="<team>/<version>")
     p.add_argument("--arcs-dir", type=Path, default=paths.repo_root() / "results" / "arcs")
-    p.add_argument("--aligned-deg", type=float, default=30.0)
-    p.add_argument("--anti-deg", type=float, default=60.0)
     args = p.parse_args(argv)
     print(json.dumps(run(args), indent=1))
     return 0

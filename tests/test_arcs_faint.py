@@ -58,3 +58,22 @@ def test_weighted_axis_on_gradient():
     img = np.exp(-0.5 * (u**2 / 9.0 + v**2 / 1.0))
     theta, e = abs_.weighted_axis(img, 20.0, 20.0, 3.0)
     assert abs(theta - 30.0) < 1.0 and 0.2 < e < 0.7
+
+
+def test_faint_rank_p_drops_nan_mag():
+    r = af.faint_rank_p([20.0, float("nan"), 28.0], [False, True, True])
+    assert r["n"] == 2 and r["n_dropped"] == 1 and r["k_faintest"] == 1
+
+
+def test_axis_class_and_combine():
+    import numpy as np
+
+    c = asm.axis_class(np.array([10.0, 45.0, 70.0, np.nan]), 30.0, 60.0)
+    assert list(c) == ["aligned", "mixed", "anti", "mixed"]
+    both = asm.combine_classes(
+        np.array(["anti", "anti", "aligned", "anti"]),
+        np.array(["anti", "aligned", "mixed", "anti"]),
+        np.array([True, True, False, True]),
+        np.array([True, True, True, False]),
+    )
+    assert list(both) == ["anti", "mixed", "aligned", "off_map"]

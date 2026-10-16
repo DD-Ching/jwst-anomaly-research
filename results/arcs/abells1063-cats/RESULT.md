@@ -17,7 +17,7 @@ defaults (ASSUMPTIONs). Labels: shapes `observed`; classes and tests `derived`; 
 | F444W axis (`results/arcs_bands/abells1063-cats/summary.json`) | 18 / 18 usable aligned stay aligned | none of the 4 has an F444W catalogue source within 0.3″ (nearest 2.1–4.2″): untestable |
 | Magnitude (`faint.json`, **post hoc**) | m < 27: 17 / 17 aligned, 0 anti (0.308 expected) | all 4 at m 27.43–28.18; P = 0.0014 that 4 random rows all fall among the 6 faintest |
 | Same split, five earlier fields (`results/arcs/<model>/faint.json`, **post hoc**) | — | m ≥ 27 anti there: 0 / 6, 0 / 2, 0 / 12, 1 / 7, 2 / 17 (Abell 2744, El Gordo, MACS0416, MACS1149, Abell 370). The faint end elsewhere does not show S1063's 4 / 7, so faintness alone does not explain it |
-| ICL gradient: axis re-measured after a 1″ median-filter subtraction (`bgsub_shapes.json`) | 18 / 20 aligned stay aligned (median axis change 3.7°) | 1316, 1557, 2184 stay anti (e 0.25–0.36); 2004 becomes mixed (moment ellipticity undefined) |
+| ICL gradient: axis re-measured after a 1″ median-filter subtraction (`bgsub_shapes.json`) | 18 / 20 rows aligned with the z_s = 2 prediction stay aligned (median axis change 3.73°) | 1316, 1557, 2184 stay anti (e 0.25–0.36); 2004 becomes mixed (moment ellipticity undefined) |
 | Model error: GLAFIC v4, Sharon v4, Keeton v4 κ/γ maps (`second_models.json`) | 20 / 20 aligned in each model | all 4 anti in all three models |
 | κ at photo-z, three team models (`second_models.ecsv`; the CATS values were computed in the session, not stored) | — | 2004: κ 0.95–1.00 (at or near κ = 1, where a few-percent κ or z error turns the predicted axis by 90°); 1316 κ 0.80–0.83, g 1.6–1.9; 2184 κ 0.71–0.74, g 1.5; 1557 κ 0.67–0.69, g 0.43–0.45 |
 

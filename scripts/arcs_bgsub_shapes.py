@@ -10,8 +10,9 @@ Gaussian-weighted second moments (``--weight-px`` σ, centred on the brightest p
 ``--peak-px`` of the catalogue position) give the axis. ASSUMPTIONs: the filter size, weight and
 peak radius.
 
-Known-case check first: rows the pipeline axis calls ``aligned`` must stay aligned with the
-re-measured axis (the method's own calibration). Each row also gets its offset from the radial
+Known-case check first: rows whose pipeline axis is ``aligned`` with the z_s = 2 prediction must
+stay aligned with the re-measured axis against the same prediction (the method's own calibration;
+thresholds from ``arcs.json``). Each row also gets its offset from the radial
 direction to the model centre. Output: ``results/arcs/<model>/bgsub_shapes.ecsv`` and
 ``bgsub_shapes.json`` (derived; pixels are observed, predictions model_prediction).
 
@@ -35,7 +36,7 @@ from astropy.table import Table
 from astropy.wcs import WCS
 from scipy.ndimage import median_filter
 
-from jwst_anomaly import cutouts, paths
+from jwst_anomaly import cutouts, lensmodel, paths
 
 _spec = importlib.util.spec_from_file_location(
     "lens_consistency", Path(__file__).resolve().parent / "lens_consistency.py"
@@ -44,9 +45,13 @@ lc = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(lc)
 
 
-def axis_offset(a: np.ndarray, b: np.ndarray) -> np.ndarray:
-    """Smallest angle between two axes (deg, 0-90)."""
-    return np.abs((np.asarray(a, float) - np.asarray(b, float) + 90.0) % 180.0 - 90.0)
+axis_offset = lensmodel.axis_offset_deg
+
+
+def axis_class(off, aligned_deg: float, anti_deg: float) -> np.ndarray:
+    """``aligned`` (≤ aligned_deg), ``anti`` (≥ anti_deg) or ``mixed`` (also for NaN offsets)."""
+    off = np.asarray(off, float)
+    return np.where(off <= aligned_deg, "aligned", np.where(off >= anti_deg, "anti", "mixed"))
 
 
 def weighted_axis(img: np.ndarray, x0: float, y0: float, sigma_px: float) -> tuple[float, float]:
@@ -80,9 +85,12 @@ def stamp_pa(path: str, ra: float, dec: float, args) -> tuple[float, float]:
     x, y = wcs.world_to_pixel_values(ra, dec)
     r = args.peak_px
     xi, yi = int(round(float(x))), int(round(float(y)))
-    box = sub[yi - r : yi + r + 1, xi - r : xi + r + 1]
+    x_lo, y_lo = max(xi - r, 0), max(yi - r, 0)
+    box = sub[y_lo : yi + r + 1, x_lo : xi + r + 1]
+    if box.size == 0 or not np.isfinite(box).any():
+        return float("nan"), float("nan")
     j, i = np.unravel_index(np.nanargmax(box), box.shape)
-    x0, y0 = xi - r + i, yi - r + j
+    x0, y0 = x_lo + i, y_lo + j
     theta, e = weighted_axis(sub, x0, y0, args.weight_px)
     # pixel-frame angle -> sky PA through the WCS (one step along the axis)
     t = np.radians(theta)
@@ -95,6 +103,7 @@ def run(args) -> dict:
     d = args.arcs_dir / args.model
     t = Table.read(d / "arcs.ecsv")
     t = t[np.asarray(t["strong_shear"], bool) & (t["population"] == "background")]
+    stored = json.loads((d / "arcs.json").read_text())["assumptions"]
     model, _, _ = lc.load_model(args.model)
     lc.apply_frame_offset(args.model, model)
     ra0, dec0 = model.to_sky(np.array([0.0]), np.array([0.0]))
@@ -102,25 +111,28 @@ def run(args) -> dict:
     tg = Table({"source_uid": [str(v) for v in t["label"]], "ra": t["ra"], "dec": t["dec"]})
     with tempfile.TemporaryDirectory() as tmp:
         cut = cutouts.make_cutouts(args.image, tg, size_arcsec=args.size_arcsec, out_dir=Path(tmp))
-        res = [stamp_pa(p, r["ra"], r["dec"], args) for p, r in zip(cut["path"], t, strict=True)]
+        res = [
+            stamp_pa(p, r["ra"], r["dec"], args) if p else (float("nan"), float("nan"))
+            for p, r in zip(cut["path"], t, strict=True)
+        ]
     t["pa_bgsub"] = [v[0] for v in res]
     t["e_bgsub"] = [v[1] for v in res]
     pa_rad = centre.position_angle(SkyCoord(t["ra"], t["dec"], unit="deg")).deg % 180.0
     t["dpa_radial_obs"] = axis_offset(t["pa_obs"], pa_rad)
     t["dpa_radial_bgsub"] = axis_offset(t["pa_bgsub"], pa_rad)
     t["dpa_pipeline_bgsub"] = axis_offset(t["pa_obs"], t["pa_bgsub"])
+    # both axes against the same z_s = 2 prediction, so the control isolates the measurement
+    lim = (stored["aligned_deg"], stored["anti_deg"])
+    t["class_obs_z2"] = axis_class(axis_offset(t["pa_obs"], t["pa_pred_z2"]), *lim)
     t["offset_pred_bgsub"] = axis_offset(t["pa_bgsub"], t["pa_pred_z2"])
-    t["class_bgsub"] = np.where(
-        t["offset_pred_bgsub"] <= args.aligned_deg,
-        "aligned",
-        np.where(t["offset_pred_bgsub"] >= args.anti_deg, "anti", "mixed"),
-    )
+    t["class_bgsub"] = axis_class(t["offset_pred_bgsub"], *lim)
     keep = [
         "label",
         "ra",
         "dec",
         "mag",
         "orientation_class",
+        "class_obs_z2",
         "pa_obs",
         "pa_bgsub",
         "e_bgsub",
@@ -138,30 +150,40 @@ def run(args) -> dict:
         assumptions={k: getattr(args, k) for k in ("filter_arcsec", "weight_px", "peak_px")},
     )
     out.write(d / "bgsub_shapes.ecsv", overwrite=True)
-    ctrl = out[out["orientation_class"] == "aligned"]
+    ctrl = out[out["class_obs_z2"] == "aligned"]
     anti = out[out["orientation_class"] == "anti"]
+
+    def num(v):
+        v = float(v)
+        return round(v, 2) if np.isfinite(v) else None
+
     summary = {
         "model": args.model,
         "image": args.image,
         "label": "ordinary-explanation test (derived); predictions model_prediction",
         "assumptions": out.meta["assumptions"]
-        | {"aligned_deg": args.aligned_deg, "anti_deg": args.anti_deg, "pred_z": 2.0},
+        | {"aligned_deg": lim[0], "anti_deg": lim[1], "pred_z": 2.0},
         "centre_radec": [round(float(ra0[0]), 6), round(float(dec0[0]), 6)],
-        "control_aligned": {
+        "control_aligned_z2": {
             "n": len(ctrl),
             "stay_aligned": int(np.sum(ctrl["class_bgsub"] == "aligned")),
-            "median_dpa_pipeline_bgsub": round(float(np.median(ctrl["dpa_pipeline_bgsub"])), 1),
+            "median_dpa_pipeline_bgsub": num(np.median(ctrl["dpa_pipeline_bgsub"]))
+            if len(ctrl)
+            else None,
         },
         "anti": [
             {
-                k: (round(float(r[k]), 2) if k != "class_bgsub" else str(r[k]))
+                "label": int(r["label"]),
+                "class_obs_z2": str(r["class_obs_z2"]),
+                "class_bgsub": str(r["class_bgsub"]),
+            }
+            | {
+                k: num(r[k])
                 for k in (
-                    "label",
                     "pa_obs",
                     "pa_bgsub",
                     "e_bgsub",
                     "offset_pred_bgsub",
-                    "class_bgsub",
                     "dpa_radial_obs",
                     "dpa_radial_bgsub",
                 )
@@ -182,8 +204,6 @@ def main(argv=None) -> int:
     p.add_argument("--filter-arcsec", type=float, default=1.0, help="ASSUMPTION")
     p.add_argument("--weight-px", type=float, default=3.0, help="ASSUMPTION")
     p.add_argument("--peak-px", type=int, default=3, help="ASSUMPTION")
-    p.add_argument("--aligned-deg", type=float, default=30.0)
-    p.add_argument("--anti-deg", type=float, default=60.0)
     args = p.parse_args(argv)
     print(json.dumps(run(args), indent=1))
     return 0

@@ -38,14 +38,20 @@ _spec.loader.exec_module(lc)
 
 
 def faint_rank_p(mag: np.ndarray, is_anti: np.ndarray) -> dict:
-    """P that ``n_anti`` random rows all fall among the ``k`` faintest, ``k`` as observed."""
-    order = np.argsort(-np.asarray(mag, float))  # faintest first
-    anti_sorted = np.asarray(is_anti, bool)[order]
+    """P that ``n_anti`` random rows all fall among the ``k`` faintest, ``k`` as observed.
+
+    Rows without a finite magnitude are dropped (``n_dropped``).
+    """
+    mag, is_anti = np.asarray(mag, float), np.asarray(is_anti, bool)
+    ok = np.isfinite(mag)
+    order = np.argsort(-mag[ok])  # faintest first
+    anti_sorted = is_anti[ok][order]
     n, a = len(anti_sorted), int(anti_sorted.sum())
     if a == 0:
-        return {"n": n, "anti": 0, "k_faintest": 0, "p": 1.0}
+        return {"n": n, "anti": 0, "k_faintest": 0, "p": 1.0, "n_dropped": int((~ok).sum())}
     k = int(np.flatnonzero(anti_sorted).max()) + 1
-    return {"n": n, "anti": a, "k_faintest": k, "p": comb(k, a) / comb(n, a)}
+    p = comb(k, a) / comb(n, a)
+    return {"n": n, "anti": a, "k_faintest": k, "p": p, "n_dropped": int((~ok).sum())}
 
 
 def run(args) -> dict:

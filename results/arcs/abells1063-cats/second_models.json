@@ -3,7 +3,8 @@
  "label": "model_prediction (other teams' published maps); observed axes from arcs.ecsv",
  "assumptions": {
   "aligned_deg": 30.0,
-  "anti_deg": 60.0
+  "anti_deg": 60.0,
+  "z_margin": 0.1
  },
  "teams": {
   "glafic/v4": {
