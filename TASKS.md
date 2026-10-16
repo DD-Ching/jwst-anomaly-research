@@ -19,7 +19,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   `docs/state/units/X2.md`; S1–S5 done. The S5 background is radially unstable, so there is no further echo search on it.
   S6 rotation screen done. S6a done: the 5D merged modes continue as an oscillating growing pair (verified at J/A
   0.121 and 0.142). Writeup drafted (`docs/state/units/X2_s6a_summary.md`); next is a human expert review, the owner's
-  call. Paused; no automatic follow-up.
+  call. Paused; no automatic follow-up. Archival brief:
+  `docs/results/s6a_5d_rotating_wormhole_modes.md` (+ .pdf).
 
 - **S0-2026-10-16 message-and-reply window in unstable wormholes** (owner check 2026-10-16):
   `docs/state/units/S0-2026-10-16.md`. Stopped. The literature already shows test-ray passages and a possible round trip within a window of

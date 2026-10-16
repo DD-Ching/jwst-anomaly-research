@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: X2 S6a archival brief (Markdown + PDF) and README results entry; S6a stays paused
+- **Added:** `docs/results/s6a_5d_rotating_wormhole_modes.md` and `.pdf` (3 A4 pages), a short brief of the S6a
+  result built only from `X2_s6a_summary.md`, `X2_s6a_repro.md` and `X2_s6a_prior_work.md`; links pinned to a57b824
+  (S6a files unchanged on main 3a80e18). No computation re-run, no new physics.
+- **PDF route:** pandoc `--mathml --section-divs` to standalone HTML with embedded A4 CSS, printed with the Playwright
+  Chromium (`--headless --print-to-pdf --no-pdf-header-footer`); pages checked as images, links checked (HTTP 200).
+- **README:** new "Research results" section with the one S6a entry (scope, PDF, brief, reproduction package; no
+  human expert review yet).
+- **Handoff:** S6a remains paused; the next step is still a human expert review, the owner's call.
+
 ## 2026-10-16: Abell 2744 `arc_diff`: a local-annulus cut for hits on extended light doubles 28-mag efficiency but lets artifacts through; not adopted
 - **Hypothesis before measuring (#264 handoff):** the peer cut vetoes faint point brightenings on smooth light because
   its brightness-bin spread is set by compact sources; a cut that keeps the peer test only at compact epoch-1 peaks
