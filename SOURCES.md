@@ -562,6 +562,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   The member `abells1063-grizli-v7.5-fix.eazypy.zout.fits` has sha256
   `03bc4c289982dc50a4540305b8858b279aca7c7cdb64c809d69a855e631b6428` (12,597 rows).
 - Gaia DR3 (VizieR I/355/gaiadr3): positions and G magnitudes of the spike-seeding stars.
+- VizieR `J/MNRAS/506/928` ("Stellar mass-size relation for low M* galaxies"; table `a1063clu`, HFF-DeepSpace
+  SExtractor shapes), accessed 2026-10-16: HST axes of S1063 `arcs` rows 1316 and 2184
+  (`results/arcs/abells1063-cats/vetting/hst_shapes.json`).
 
 ### MACS0717 field run (accessed 2026-10-08; D-041)
 

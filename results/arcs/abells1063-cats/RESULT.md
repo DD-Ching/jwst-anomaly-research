@@ -42,6 +42,9 @@ re-measured offsets are in `bgsub_shapes.ecsv`).
   is 5.9″ from 21.4.
 
 ## Next (for the next run)
+Done 2026-10-16 (`vetting/RESULT.md`): the noise injections (both not noise-explicable) and a VizieR redshift
+search (none). Still open from the list below: MUSE redshifts, the deblend.
+
 `/vet-candidate` on 1316 and 2184: MUSE redshifts beyond Chan+2020's image list (Karman+2015 / Caminha+2016
 full catalogues, if public), a deblend
 against the giant arc for 2184, and an injection of round faint sources at their positions (shape noise at m 27.5

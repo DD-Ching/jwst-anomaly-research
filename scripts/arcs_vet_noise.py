@@ -124,9 +124,8 @@ def _row(job):
         res = []
         for m in (row["mag"], a["bright_mag"]):
             tot = 3631.0 * 10 ** (-0.4 * m) * to_img
-            stamp = gaussian_stamp(
-                box.shape, half, half, tot, row["semimajor_px"], row["ellipticity"], theta
-            )
+            ell = row["ellipticity"] if a["ellip"] is None else a["ellip"]
+            stamp = gaussian_stamp(box.shape, half, half, tot, row["semimajor_px"], ell, theta)
             t_pix, e = measure(box + stamp, filt, a["peak_px"], a["weight_px"])
             res.append((t_pix, e))
         if not all(np.isfinite(v[0]) for v in res):
@@ -160,6 +159,7 @@ def run(args) -> dict:
             "r_out",
             "bright_mag",
             "seed",
+            "ellip",
         )
     } | {"aligned_deg": stored["aligned_deg"], "anti_deg": stored["anti_deg"]}
     tg = Table({"source_uid": [str(v) for v in t["label"]], "ra": t["ra"], "dec": t["dec"]})
@@ -183,7 +183,7 @@ def run(args) -> dict:
     )
     vd = d / "vetting"
     vd.mkdir(exist_ok=True)
-    out.write(vd / "noise_injections.ecsv", overwrite=True)
+    out.write(vd / f"noise_injections{args.tag}.ecsv", overwrite=True)
     gate = gate_ok(out["frac_aligned_bright"])
     n_obs = int(np.sum(out["class_bgsub"] == "anti"))
     p_ex = excess_p(out["p_anti"], n_obs)
@@ -216,7 +216,7 @@ def run(args) -> dict:
             "class": excess_class(p_ex) if gate else "invalid (gate failed)",
         },
     }
-    (vd / "noise_injections.json").write_text(json.dumps(summary, indent=1) + "\n")
+    (vd / f"noise_injections{args.tag}.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary
 
 
@@ -238,6 +238,10 @@ def main(argv=None) -> int:
     p.add_argument("--bright-mag", type=float, default=24.0, help="gate magnitude")
     p.add_argument("--seed", type=int, default=20261016)
     p.add_argument("--procs", type=int, default=4)
+    p.add_argument(
+        "--ellip", type=float, default=None, help="injected ellipticity (default: row's)"
+    )
+    p.add_argument("--tag", default="", help="output file suffix")
     args = p.parse_args(argv)
     print(json.dumps(run(args), indent=1))
     return 0

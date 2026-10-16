@@ -1,0 +1,39 @@
+{
+ "label": "post hoc vetting datum (observed HST shapes from a published catalogue; offsets derived; predictions model_prediction)",
+ "query": "astroquery Vizier.query_region(r=0.5 arcsec, catalog='J/MNRAS/506/928/a1063clu'), accessed 2026-10-16",
+ "convention": "HFF mosaics north-up east-left; SExtractor theta CCW from +x (west), so PA = (90 + theta) mod 180 (ASSUMPTION: mosaic orientation)",
+ "aligned_deg": 30.0,
+ "anti_deg": 60.0,
+ "rows": [
+  {
+   "label": 1316,
+   "id_hff": 3605,
+   "sep_arcsec": 0.044,
+   "theta_hst": -40.63999938964844,
+   "ell_hst": 0.4309999942779541,
+   "mag_hst": 28.24,
+   "e_mag_hst": 1.07,
+   "sex_flags": 0,
+   "pa_hst": 49.36,
+   "pa_pred_z2": 163.49,
+   "offset_hst_pred": 65.87,
+   "offset_hst_jwst": 30.11,
+   "class_hst": "anti"
+  },
+  {
+   "label": 2184,
+   "id_hff": 4450,
+   "sep_arcsec": 0.057,
+   "theta_hst": -24.739999771118164,
+   "ell_hst": 0.24400000274181366,
+   "mag_hst": 28.58,
+   "e_mag_hst": 1.26,
+   "sex_flags": 0,
+   "pa_hst": 65.26,
+   "pa_pred_z2": 151.33,
+   "offset_hst_pred": 86.07,
+   "offset_hst_jwst": 15.11,
+   "class_hst": "anti"
+  }
+ ]
+}

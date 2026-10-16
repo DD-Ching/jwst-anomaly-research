@@ -1,0 +1,41 @@
+{
+ "model": "abells1063-cats",
+ "image": "s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f200w_i2d.fits",
+ "label": "vetting test (derived); injected sources are simulations; predictions model_prediction",
+ "assumptions": {
+  "filter_arcsec": 1.0,
+  "weight_px": 3.0,
+  "peak_px": 3,
+  "n_inject": 60,
+  "r_in": 1.5,
+  "r_out": 6.0,
+  "bright_mag": 24.0,
+  "seed": 20261016,
+  "ellip": 0.2,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0
+ },
+ "gate": {
+  "ok": false,
+  "min_frac_aligned_bright": 0.45,
+  "rows": 24
+ },
+ "targets": {
+  "1316": {
+   "p_anti": 0.0333,
+   "n_valid": 60,
+   "class": "invalid (gate failed)"
+  },
+  "2184": {
+   "p_anti": 0.0167,
+   "n_valid": 60,
+   "class": "invalid (gate failed)"
+  }
+ },
+ "sample": {
+  "n_obs_anti_bgsub": 3,
+  "expected_anti_measurement_noise": 0.583,
+  "p_ge_n_obs": 0.01727,
+  "class": "invalid (gate failed)"
+ }
+}

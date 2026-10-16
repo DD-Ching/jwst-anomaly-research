@@ -86,3 +86,6 @@ pipeline catalogue `jw03293-o001_t001` (manifest) and the DJA v7.5 zout above. D
 - 2004 sits at κ ≈ 0.95–1.00 (degenerate predicted axis): explained. 1557 is in weak shear and looks like a blend.
 - **1316 and 2184 are open and unvetted, not candidates** (next: MUSE redshifts, a deblend for 2184, shape-noise
   injections at m 27.5).
+- Vetting (`vetting/RESULT.md`): measurement-noise injections give P_anti 0 / 60 for both at their observed
+  elongation (gate passed); the independent HST axes are also anti at S/N ≈ 1. 1316 looks like two knots by eye
+  (blend untested). Still open, not candidates.

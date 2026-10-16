@@ -197,6 +197,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | 0.4 (Abell 2744 orphan-pair dark-deflector screen: frozen rules, alignment, injections, top-15 sheet) | — | 0.1 (orientation, claim, state files, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | — | 0.3 (process: "Before writing results" rules; orphan vetting paused) | interactive session 01AzKMDv |
 | 2026-W42 | ≈ 0.15 (`arcs` on Abell S1063) | — | ≈ 0.2 (S1063 anti: F444W, faint split, ICL-subtracted shapes, three team models; sheets looked at) | 0.1 (orientation, claim) | cloud routine 01P8KV8A, 07:08–07:35Z |
+| 2026-W42 | — | — | ≈ 0.3 (S1063 1316 / 2184: measurement-noise injections, HST axes, cutouts) | — | cloud routine trig01PNAm, 08:12–08:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

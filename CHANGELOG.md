@@ -17,7 +17,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Deviation:** no known-image check (map model; as MACS1149).
 - **Data:** the 75 MB DJA photo-z tarball was streamed to the scratchpad; the F200W catalogue sits in the gitignored
   cache; the team maps were read by byte range.
-- **Handoff:** `/vet-candidate` on 1316 and 2184 (`results/arcs/abells1063-cats/RESULT.md` "Next").
+- **Vetting, second run (`vetting/`, plan first):** `scripts/arcs_vet_noise.py` injects aligned Gaussians with each
+  row's flux, size and ellipticity at 60 empty positions per row and re-measures them. The gate passed (min 0.9667).
+  1316 and 2184 both have **P_anti 0 / 60** → not noise-explicable. Sample: 3 observed vs 0.017 expected.
+  - Post hoc: at injected e = 0.2 the targets keep P_anti ≤ 2 / 60 (their own gate 60 / 60), but the all-row gate
+    fails on large galaxies. At e = 0 the test cannot exclude a near-round source.
+  - Independent HST axes (HFF-DeepSpace SExtractor) are also anti for both, at S/N ≈ 1.
+  - Cutouts looked at: 1316 shows two knots along its axis (blend untested); 2184 is a blob 2″ from the giant arc.
+  - All-VizieR query within 1.5″: no spectroscopic redshift (not stored).
+- **Handoff:** both stay open and unvetted, not candidates. Next: deblend 1316's knots, and a MUSE or second-code
+  redshift for 2184 (`vetting/RESULT.md` "Next").
 
 ## 2026-10-16: Process: "Before writing results" rules in scripts/CLAUDE.md
 - **Why:** reviews of #262, #266 and #269 each found 8–12 problems, mostly of three kinds:
