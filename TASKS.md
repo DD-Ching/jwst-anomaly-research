@@ -326,7 +326,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      (injection recovery 0.86 / 0.83 at 27.5 AB per band). Next: o010 → o120 (F090W F115W F277W F356W) alone with `--procs 4`, `OMP_NUM_THREADS=1`
      (≈ 45 min without finishing two SW bands at `--procs 2`; not stored); then El Gordo arcs;
    - **SMACS 0723 arc `arc_diff`** (D-027 addendum 2026-10-16, system 5 box): ERO → VENUS done, Atalanta recovered,
-     0 to vet; GO-4043 → DD 12774 fails its control (shallow F115W). Next: the rest of the SMACS arcs (more boxes);
+     no candidate (frozen 1″ rule fails the known case; post hoc 2″ + forced photometry); GO-4043 → DD 12774
+     fails its control (Atalanta F115W S ≈ 2.4). Next: the rest of the SMACS arcs (more boxes);
      whether AT 2024jfz (1.8″ from image 6.1) has model counter-images;
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 

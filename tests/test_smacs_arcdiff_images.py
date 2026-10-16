@@ -1,11 +1,8 @@
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-smacs_arcdiff_images = pytest.importorskip("smacs_arcdiff_images")
-classify = smacs_arcdiff_images.classify
+from smacs_arcdiff_images import classify  # noqa: E402
 
 
 def test_known_wins_over_verdict():

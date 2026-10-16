@@ -24,9 +24,8 @@ from astropy.coordinates import SkyCoord
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lens_consistency as lc  # noqa: E402
-import smacs_s17_vet as s17v  # noqa: E402
 
-MODEL = s17v.MODEL
+MODEL = "smacs0723-iclv2"  # Mahler+22 ICLv2, as smacs_s17_vet.MODEL
 ON_IMAGE_ARCSEC = 1.0  # ASSUMPTION, frozen in PLAN.md before the run
 KNOWN_MATCH_ARCSEC = 0.15  # ASSUMPTION: arc_diff's --match-arcsec default
 
@@ -56,12 +55,14 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     morph = json.loads(a.morph.read_text())
     rows = morph["targets"]
-    m0, files, par = lc.load_model(MODEL)
-    images, _ = lc.image_list(MODEL, files, par)
-    lc.apply_frame_offset(MODEL, m0, images)
+    images = lc.shift_images(
+        MODEL, lc.image_list(MODEL, lc.model_files(MODEL, ("arcs.dat",)), None)[0]
+    )
     img = SkyCoord(np.asarray(images["ra"], float), np.asarray(images["dec"], float), unit="deg")
     with open(a.known, newline="") as f:
         known = list(csv.DictReader(f))
+    if not rows or not known:
+        raise SystemExit("no morph targets or no known controls: nothing to classify")
     kc = SkyCoord([float(k["ra"]) for k in known], [float(k["dec"]) for k in known], unit="deg")
     tc = SkyCoord([float(r["ra"]) for r in rows], [float(r["dec"]) for r in rows], unit="deg")
     ii, di = nearest(tc, img)
