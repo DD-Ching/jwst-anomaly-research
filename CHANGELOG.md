@@ -2,8 +2,37 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-16: (in progress) Abell 2744 `arc_diff` peer cut for hits on smooth extended light
-- Plan: replace the peer cut where the epoch-1 position is not a compact peak with a local annulus S-scatter cut; re-calibrate on the #264 injections; re-screen the 471 peer-vetoed passes.
+## 2026-10-16: Abell 2744 `arc_diff`: a local-annulus cut for hits on extended light doubles 28-mag efficiency but lets artifacts through; not adopted
+- **Hypothesis before measuring (#264 handoff):** the peer cut vetoes faint point brightenings on smooth light because
+  its brightness-bin spread is set by compact sources; a cut that keeps the peer test only at compact epoch-1 peaks
+  and otherwise tests S against the local S scatter recovers them without new false passes. Decision rule
+  (ASSUMPTION, written before the run): adopt if the 28-mag chain efficiency rises to ≥ 0.30 with 27.5 mag ≥ 0.60
+  **and** real morphology passes surviving the peer stage on the same 4 tiles at most double.
+- **Tool (new, derived):** `scripts/arc_diff_extended.py` (compact = epoch-1 local maximum within 0.15″ standing out
+  from the 0.3–0.9″ annulus; otherwise z_ann = (S_hit − annulus median S) / annulus robust σ, other hits masked,
+  cut |z_ann| ≥ 3); `arc_diff_inject_chain.py --extended` counts it as stages `peers_ext` / `confirm_ext`;
+  `scripts/arc_diff_extended_eval.py` applies it to the real passes. Unit-tested on synthetic maps.
+- **Run:** the 8 #264 injection runs and the 4 real tiles re-made with `arc_diff.py` (commands in the committed
+  `summary.json` files; S3 byte ranges, maps in the scratchpad only). The injected stars and hits reproduce #264 exactly.
+- **v1 (pre-written; compact = peak ≥ 2 × annulus median):** 28 mag 0.19 → **0.39**, 27.5 mag 0.64 → 0.68; real
+  peer-stage passes 31 → **89** (×2.9) → rule fails. Looked at the 58 added passes: mostly fades on isolated faint
+  compact sources. The ratio test fails because the mosaics are not background-subtracted (sky pedestal: median
+  epoch-1 contrast of real passes 1.26), so faint compact sources counted as extended.
+- **v2 (post hoc fix; compact = peak ≥ 5 annulus σ above the annulus median):** 28 mag **0.375**, 27.5 mag 0.675; real
+  31 → **62** (×2.0, on the rule's edge; o001-confirmed 16 → 45). Looked at all 31 added passes
+  (`arcdiff_tiles/extended/sheet_newly_passing.png`): detector stripes (h270, h299, h331, h412), spike fragments (h183,
+  h321, h638), faint compact fades, knots on galaxies, and 7 positive hits that are all compact-core residuals of
+  bright galaxies (the hit is > 0.15″ from the peak, so no compactness is measured). **None is a point brightening on
+  an arc. Not adopted:** v2 is post hoc and the sheet shows that the peer cut was also doing artifact rejection.
+- **Failed approach:** the first runs of this cycle used 4 `arc_diff.py` processes without `OMP_NUM_THREADS=1`; load
+  15 on 4 cores, none finished in 16 CPU-min each; with one thread each a run takes ≈ 1.5 min (scripts/CLAUDE.md
+  rule, now confirmed for `arc_diff.py`).
+- **Consequence:** #261's "0 lensing candidates" still holds only at ≳ 36 nJy (#264). Outputs:
+  `arcdiff_tiles/extended/` (`inject_summary.json`, `real_passes_4tiles.ecsv`, the sheet).
+- **Handoff:** a replacement needs explicit stripe and spike vetoes (row/column-coherent S; position along a bright
+  star's spike angles) and a compactness rule for hits offset from their source's peak before the annulus cut;
+  re-calibrate on these injections and re-check the sheet. Alternatively accept 36 nJy as the tiling's limit and move
+  on: the PEARLS 1176 registration offset (#263) is still unmeasured.
 
 ## 2026-10-16: Abell 2744 UNCOVER vs ALT `arc_diff` chain completeness: the peer cut halves 28-mag efficiency
 - **Question:** what fraction of point brightenings on arcs and galaxy light survives the #261 tiling chain (hit,

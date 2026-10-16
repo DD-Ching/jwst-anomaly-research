@@ -118,8 +118,10 @@ def main(argv: list[str] | None = None) -> None:
         pt = {r["hit"]: r for r in Table.read(peers)}
         ext = {}
         if a.extended:
-            et = ade.run(a.maps / f"{t}_{a.pair}.npz", Table.read(d / "hits.ecsv"), a.band, "hit")
-            ext = {r["hit"]: dict(zip(et.colnames, r, strict=True)) for r in et}
+            et = ade.run(
+                a.maps / f"{t}_{a.pair}.npz", Table.read(d / "hits.ecsv"), a.band, "hit_id"
+            )
+            ext = {r["hit_id"]: dict(zip(et.colnames, r, strict=True)) for r in et}
         with np.load(a.maps / f"{t}_{a.confirm}.npz") as m:
             s1 = m[f"{a.band}_s"]
             w1 = WCS(fits.Header.fromstring(str(m[f"{a.band}_wcs"])))

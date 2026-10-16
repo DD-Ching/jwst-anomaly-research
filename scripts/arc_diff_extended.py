@@ -6,7 +6,9 @@ clean point brightenings on smooth galaxy outskirts and ICL: the peer spread of 
 bin is set by compact sources. This module splits hits by their epoch-1 position:
 
 - **compact**: epoch 1 has a local maximum within ``--peak-arcsec`` of the hit whose value is at
-  least ``--min-contrast`` × the median of epoch 1 in the annulus ``--ann-in``–``--ann-out``;
+  least ``--min-contrast`` × (1.4826 MAD) above the median of epoch 1 in the annulus
+  ``--ann-in``–``--ann-out`` (the mosaics are not background-subtracted, so a ratio to the
+  annulus median fails; first version, 2026-10-16);
   the peer cut stays;
 - **extended**: otherwise. ``z_ann`` = (S_hit − median S in the annulus) / (1.4826 MAD of S in
   the annulus), where S_hit is the signed extreme of S within ``--peak-arcsec`` of the hit; S
@@ -37,7 +39,7 @@ DEFAULTS = {
     "peak_arcsec": 0.15,
     "ann_in": 0.3,
     "ann_out": 0.9,
-    "min_contrast": 2.0,
+    "min_contrast": 5.0,
     "min_z": 3.0,
     "min_ann_px": 30,
 }
@@ -91,9 +93,12 @@ def measure(
         e_core = ew[c_ & lw & np.isfinite(ew)]
         if e_ann.size and e_core.size:
             med = float(np.median(e_ann))
+            mad = 1.4826 * float(np.median(np.abs(e_ann - med)))
             pk = float(e_core.max())
-            r["contrast"] = pk / med if med > 0 else np.inf
-            r["compact"] = bool(pk > 0 and (med <= 0 or pk >= min_contrast * med))
+            # Peak height above the local level in units of the annulus scatter: the mosaics are
+            # not background-subtracted, so a ratio to the annulus median fails on faint sources.
+            r["contrast"] = (pk - med) / mad if mad > 0 else np.inf
+            r["compact"] = bool(pk > med and r["contrast"] >= min_contrast)
         sc = sw[c_ & np.isfinite(sw)]
         if sc.size:
             r["s_hit"] = float(sc.flat[int(np.argmax(np.abs(sc)))])

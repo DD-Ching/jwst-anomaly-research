@@ -190,6 +190,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | 0.4 (S0-2026-10-16: unstable-wormhole message window, literature and code check) | — | 0.1 (record, PR) | interactive session 01AzKMDv |
 | 2026-W42 | — | — | ≈ 0.25 (Abell 2744 h182 arc-pixel controls: `pick-arc`, 78 controls in 64 mosaics; stamps looked at) | 0.1 (orientation, claim, PR) | cloud routine 01VqBbgX, 02:08–02:40Z |
 | 2026-W42 | — | — | ≈ 0.4 (Abell 2744 `arc_diff` whole-chain injections, 4 tiles × 2 pairs; peer-step reconstruction; vetoed-star sheet looked at) | 0.1 (orientation, claim, PR) | cloud routine 01CgfDzc, 03:07–03:35Z |
+| 2026-W42 | ≈ 0.4 (Abell 2744 `arc_diff` extended-light cut: injections, real passes, sheets; not adopted) | — | — | 0.1 (orientation, claim, PR) | cloud routine 012QTtJg, 04:08–04:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
