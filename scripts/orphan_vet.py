@@ -322,7 +322,8 @@ def sheet(results: list[dict], path: Path) -> None:
     plt.close(fig)
 
 
-CONTROL_PAIRS = (  # PLAN addendum: CATS v4.1 pairs <= 4" apart with known z (fixed before measuring)
+# PLAN addendum: CATS v4.1 pairs <= 4" apart with known z (fixed before measuring)
+CONTROL_PAIRS = (
     ("39.1", "39.2"),
     ("37.1", "37.2"),
     ("33.1", "33.2"),
@@ -394,7 +395,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--ranks", type=int, nargs="+")
     ap.add_argument(
         "--controls",
-        help="measure CONTROL_PAIRS of this lens_consistency image list instead (e.g. abell2744-cats)",
+        help="measure CONTROL_PAIRS of this lens_consistency image list (e.g. abell2744-cats)",
     )
     ap.add_argument("--i2d", required=True, help="level-3 product prefix, e.g. jw02561-o001_t003")
     ap.add_argument("--seed", type=int, default=1)
