@@ -1,0 +1,46 @@
+{
+ "plan": "results/arcs/rxj2129/PLAN.md",
+ "inputs": {
+  "catalog": "jw02767-o002_t001_nircam_clear-f200w_cat.ecsv",
+  "catalog_sha256": "2ed1a2c7666734483974e568e1c3b332eea223ea487b4cd279dd89b4e9261f53",
+  "photoz": "rxj2129-grizli-v7.0-fix.eazypy.zout.fits",
+  "photoz_sha256": "651c0b24f09bafa27c36a2285f081d42884be3c6dcbbb1708014339afa726217"
+ },
+ "runs": {
+  "rxj2129-lenstool-maps": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 12,
+    "aligned": 8,
+    "anti": 2,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 0.01875843226247128
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 12,
+    "anti": 2,
+    "expected": 0.22,
+    "p_ge_observed": 0.02087795651913736
+   }
+  },
+  "rxj2129-glafic-maps": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 12,
+    "aligned": 8,
+    "anti": 1,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 0.01875843226247128
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 12,
+    "anti": 1,
+    "expected": 0.176,
+    "p_ge_observed": 0.1617194940654056
+   }
+  }
+ },
+ "deciding_model": null,
+ "outcome": "no result",
+ "p_ge_observed": null
+}

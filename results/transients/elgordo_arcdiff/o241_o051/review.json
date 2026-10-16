@@ -1,0 +1,71 @@
+{
+ "mask_band": "F444W",
+ "mask_area_frac": 0.16671325048231292,
+ "n_hits": 50,
+ "n_unflagged": 18,
+ "n_review": 4,
+ "n_added": 2,
+ "by_priority": {
+  "A": 4,
+  "B": 0,
+  "C": 0
+ },
+ "review": [
+  {
+   "id": "h024",
+   "ra": 15.726656684908402,
+   "dec": -49.253178095970384,
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 18.279671267700326,
+   "known": null,
+   "in_mask": true,
+   "mask_distance_arcsec": 0.0,
+   "arc_level_sigma": 86.01,
+   "nearest_image_arcsec": 1.36,
+   "old_rule": false,
+   "priority": "A"
+  },
+  {
+   "id": "h031",
+   "ra": 15.726333880751893,
+   "dec": -49.253474078575515,
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 13.932178567908037,
+   "known": null,
+   "in_mask": true,
+   "mask_distance_arcsec": 0.0,
+   "arc_level_sigma": 21.88,
+   "nearest_image_arcsec": 0.06,
+   "old_rule": true,
+   "priority": "A"
+  },
+  {
+   "id": "h043",
+   "ra": 15.72885147485538,
+   "dec": -49.25405945580096,
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 8.003547372510818,
+   "known": null,
+   "in_mask": true,
+   "mask_distance_arcsec": 0.0,
+   "arc_level_sigma": 182.53,
+   "nearest_image_arcsec": 0.68,
+   "old_rule": true,
+   "priority": "A"
+  },
+  {
+   "id": "h049",
+   "ra": 15.727341162286024,
+   "dec": -49.25295638225822,
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 5.235250550567581,
+   "known": null,
+   "in_mask": true,
+   "mask_distance_arcsec": 0.0,
+   "arc_level_sigma": 10.48,
+   "nearest_image_arcsec": 3.07,
+   "old_rule": false,
+   "priority": "A"
+  }
+ ]
+}

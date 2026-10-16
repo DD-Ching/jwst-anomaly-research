@@ -62,6 +62,12 @@ def row_p_anti(cls: str, gate_passed: bool, p_cp: float, p_sn: float, f_hat: flo
     return p_cp if cls == "two-knot" else p_sn
 
 
+def p_tail(probs: dict, labels: list, k: int, drop: tuple = ()) -> float:
+    """Poisson-binomial P(≥ k) over ``labels``; a row removed from the count is also removed from
+    the null (PLAN_fixes.md fix 4)."""
+    return vn.excess_p([probs[lab] for lab in labels if lab not in drop], k)
+
+
 def clopper_pearson_upper(k: int, n: int, cl: float = 0.95) -> float:
     return 1.0 if k >= n else float(stats.beta.ppf(1 - (1 - cl) / 2, k + 1, n - k))
 
@@ -169,11 +175,16 @@ def main(argv=None) -> int:
         for lab in labels
     }
 
-    def tail(pr: dict, k: int) -> float:
-        return vn.excess_p([pr[lab] for lab in labels], k) if len(passed) >= 12 else float("nan")
+    def tail(pr: dict, k: int, drop: tuple[str, ...] = ()) -> float:
+        return p_tail(pr, labels, k, drop) if len(passed) >= 12 else float("nan")
 
     mix = {f: {lab: f * p_cp[lab] + (1 - f) * p_sn[lab] for lab in labels} for f in (f_hat, f_up)}
-    k_counts = {"k4_screen": 4, "k3_bgsub": 3, "k2_core_flux": 2}
+    # 2184: noise-explicable at core flux (step 2); counts and nulls are derived from the same sets
+    k_counts = {"k4_screen": len(screen_anti), "k3_bgsub": len(bgsub_anti)}
+    drops = {}
+    if "2184" in bgsub_anti:  # the core-flux count exists only when the step-2 exclusion applies
+        drops["k2_core_flux"] = ("2184",)
+        k_counts["k2_core_flux"] = len(bgsub_anti - {"2184"})
     p_primary = tail(p_row, 4)
     sample = {
         "n_rows": len(labels),
@@ -183,12 +194,18 @@ def main(argv=None) -> int:
         "f_two_knot_95_upper": round(f_up, 3),
         "expected_anti_shape_noise_only": round(sum(p_sn.values()), 3),
         "expected_anti_clump_aware": round(sum(p_row.values()), 3),
-        "p_ge_k_clump_aware": {n: tail(p_row, k) for n, k in k_counts.items()},
-        "p_ge_k_mixture_f_hat": {n: tail(mix[f_hat], k) for n, k in k_counts.items()},
-        "p_ge_k_mixture_f_upper": {n: tail(mix[f_up], k) for n, k in k_counts.items()},
-        "p_ge_k_shape_noise_only_check": {
-            n: vn.excess_p(list(p_sn.values()), k) for n, k in k_counts.items()
+        "p_ge_k_clump_aware": {n: tail(p_row, k, drops.get(n, ())) for n, k in k_counts.items()},
+        "p_ge_k_mixture_f_hat": {
+            n: tail(mix[f_hat], k, drops.get(n, ())) for n, k in k_counts.items()
         },
+        "p_ge_k_mixture_f_upper": {
+            n: tail(mix[f_up], k, drops.get(n, ())) for n, k in k_counts.items()
+        },
+        "p_ge_k_shape_noise_only_check": {
+            n: p_tail(p_sn, labels, k, drops.get(n, ())) for n, k in k_counts.items()
+        },
+        "k_counts": k_counts,
+        "rows_dropped_from_count_and_null": {n: list(v) for n, v in drops.items()},
         "two_knot_among_screen_aligned": sum(
             res[lab]["class"] == "two-knot" and res[lab]["gate"]["passed"]
             for lab in labels

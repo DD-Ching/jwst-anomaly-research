@@ -609,6 +609,55 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - CANUCS DR1 (DOI 10.17909/18nv-np70) MACS0416 cluster-field photometry and EAzY photo-z:
   https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/clu/hlsp_canucs_jwst-hst_multi_macs0416-clu_multi_v1_photometry-cat.fits.gz,
   31,693,111 B, sha256 `339107a5c5041621d7bed4ecc8b4a51b5148a6913d4e513c3a5e783363f11bff`.
+- MACS0417 (`arcs`, accessed 2026-10-16; `results/arcs/macs0417-relics/`):
+  - JWST 1208 F200W pipeline catalogue `jw01208-o006_t003_nircam_clear-f200w_cat.ecsv` (MAST
+    `mast:JWST/product/...`), 5,030,481 B, sha256 `e55dffb990a8e8124e37658933a47952a77b357b36dc5c8f523a5b487d423c24`;
+  - CANUCS DR1 cluster photometry and EAzY photo-z
+    https://archive.stsci.edu/hlsps/canucs/dr1/macs0417/clu/hlsp_canucs_jwst-hst_multi_macs0417-clu_multi_v1_photometry-cat.fits.gz,
+    Last-Modified 2025-04-29, 27,820,129 B, sha256 `ca6b48aa6404444d2e0b8965a35376ff032917071ea64cbf6306d06ee57d90dd`;
+  - CANUCS DR1 Lenstool maps (Desprez, preliminary v1; readme
+    `hlsp_canucs_jwst-hst_multi_macs0417-lenstool-readme_multi_v1_model.txt`): `dpl1`, `dpl2`, `kappa`
+    `-dlsds1-best-100mas` under https://archive.stsci.edu/hlsps/canucs/dr1/macs0417/model/ (sha256 in
+    `lensmodel.MACS0417_CANUCS_MAPS`; Last-Modified 2025-04-26);
+  - RELICS Lenstool v1 maps (Mahler et al. 2019, MNRAS 485, 3954; DOI 10.17909/T9SP45)
+    https://archive.stsci.edu/hlsps/relics/macs0417m11/models/lenstool/v1/ (sha256 in
+    `lensmodel.MACS0417_RELICS_LENSTOOL`). GLAFIC v2/v3 and Lenstool v2 also exist there (not used).
+- MACS0647 (`arcs`, accessed 2026-10-16; `results/arcs/macs0647-clash/`):
+  - JWST 1433 (PI Coe) F200W pipeline catalogues (MAST `mast:JWST/product/...`):
+    `jw01433-o010_t001_nircam_clear-f200w_cat.ecsv` 2,144,120 B, sha256
+    `473e32d23c3fbc857e89d6b48196130d77670be2b9df2b4dfae5df82e71e7a7e`;
+    `jw01433-o020_t001_nircam_clear-f200w_cat.ecsv` 2,761,197 B, sha256
+    `29f74c91cf8984b3f44118073e183ef0bce9262addf7637ffed6dfbf0b642663`;
+  - DJA v7.0 https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/macs0647-grizli-v7.0-fix.photoz.tar.gz
+    (Last-Modified 2023-07-17, 41,494,640 B, sha256 `d56246b571ccfc78a54338a7ab16009fa8b73b2cdbcfefba4a2617c0058cdf0c`),
+    member `macs0647-grizli-v7.0-fix.eazypy.zout.fits` (7,956 rows) extracted while streaming;
+  - CLASH Zitrin v2 maps (Zitrin et al. 2009, MNRAS 396, 1985; 2013, ApJ 762, L30; CLASH, Postman et al. 2012,
+    ApJS 199, 25): https://archive.stsci.edu/missions/hlsp/clash/macs0647/models/zitrin/{nfw,ltm-gauss}/v2/
+    (sha256 in `lensmodel.MACS0647_CLASH_NFW`, `MACS0647_CLASH_LTM`; readme 2015-02, z_lens 0.591).
+- MACS1423 (`arcs`, accessed 2026-10-16; `results/arcs/macs1423-canucs/`):
+  - JWST 1208 F200W pipeline catalogue `jw01208-o010_t005_nircam_clear-f200w_cat.ecsv` (MAST
+    `mast:JWST/product/...`), 4,987,129 B, sha256 `1a968574d0f206c72a74554c1b3cbbf71e9a5219a70a553a1458e80dd4d5bfa3`;
+    its `_i2d.fits` read by S3 byte ranges (`s3://stpubdata/jwst/public/jw01208/L3/t/o010/`);
+  - CANUCS DR1 cluster photometry and EAzY photo-z
+    https://archive.stsci.edu/hlsps/canucs/dr1/macs1423/clu/hlsp_canucs_jwst-hst_multi_macs1423-clu_multi_v1_photometry-cat.fits.gz,
+    25,278,098 B, sha256 `c257d8dff95319f4eea981cc838269c04aff0a79bac603c7ed64100deac622b0`;
+  - CANUCS DR1 Lenstool maps (Desprez, preliminary v1, 5 spectroscopic systems; readme
+    `hlsp_canucs_jwst-hst_multi_macs1423-lenstool-readme_multi_v1_model.txt`): `dpl1`, `dpl2`, `kappa`
+    `-dlsds1-best-100mas` under https://archive.stsci.edu/hlsps/canucs/dr1/macs1423/model/ (sha256 in
+    `lensmodel.MACS1423_CANUCS_MAPS`).
+- JWST-era lens maps for other DJA photo-z fields (checked 2026-10-16, not used yet):
+  - RXJ2129: six models updated with JWST NIRCam (Dhanasingham et al. 2026, arXiv:2604.11882; GLAFIC, Chen2020,
+    HoliGRALE, WSLAP+, Zitrin-Analytic, Lenstool), Zenodo record 21460864, one 4.30 GB zip
+    https://zenodo.org/api/records/21460864/files/RXJ2129+0005_Models.zip/content (range requests work; README
+    says D_LS/D_S = 1, but the GLAFIC κ header has ZS = 3: check before use). Used 2026-10-16 for `arcs`: Lenstool
+    `alphaX/alphaY/kappa_DLSDS1` and GLAFIC `x/y-arcsec-deflect`, `kappa` (sha256 in `lensmodel.RXJ2129_*_MAPS`),
+    with JWST 2767 F200W catalogue `jw02767-o002_t001_nircam_clear-f200w_cat.ecsv`
+    (https://stpubdata.s3.amazonaws.com/jwst/public/jw02767/L3/t/o002/, sha256 `2ed1a2c7666734483974e568e1c3b332eea223ea487b4cd279dd89b4e9261f53`)
+    and DJA v7.0 https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/rxj2129-grizli-v7.0-fix.photoz.tar.gz (member
+    `…eazypy.zout.fits`, sha256 `651c0b24f09bafa27c36a2285f081d42884be3c6dcbbb1708014339afa726217`);
+  - MRG0138 (Ertl et al. 2025, arXiv:2503.09694; Suyu et al. 2025, arXiv:2509.12319), RXCJ0600 (Furtak et al.
+    2024, arXiv:2404.03286): JWST-era models without public maps; rj0018p1626: no JWST-era model found (RELICS
+    HST-era maps only).
 - CANUCS DR1 MACS0416 Lenstool model (Rihtarsic et al. 2025, A&A, doi:10.1051/0004-6361/202451117), files under
   https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/model/:
   - `hlsp_canucs_jwst-hst_multi_macs0416-lenstool-bestparam_multi_v1_model.txt` 70,753 B
@@ -1371,3 +1420,6 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - GLIMPSE 3293 o001 F090W and F115W pipeline catalogues (`jw03293-o001_t001_nircam_clear-{f090w,f115w}_cat.ecsv`;
   sha256 `3eecb26c…`, `3775f1f9…`, which match `data/manifests/abells1063.ecsv`), read 2026-10-16 for continuum
   magnitudes.
+- JWST VENUS (program 6882) observation 51 at El Gordo, 2026-08-05: `jw06882-o051_t051_nircam_clear-{f150w,f444w}_i2d.fits`
+  and `_cat.ecsv` (jwst 3.0.0, CRDS jwst_1584.pmap), public level 3, read by S3 byte range on 2026-10-16 with PEARLS
+  `jw01176-o241_t012_nircam_clear-{f150w,f444w}` (`results/transients/elgordo_arcdiff/`).

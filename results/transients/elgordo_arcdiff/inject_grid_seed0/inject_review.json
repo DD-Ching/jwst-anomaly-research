@@ -1,0 +1,185 @@
+{
+ "masks": [
+  {
+   "maps": "inj0_maps.npz",
+   "band": "F444W",
+   "area_frac": 0.16671325048231292
+  }
+ ],
+ "n_runs": 1,
+ "per_mag": {
+  "26.0": {
+   "all": {
+    "n": 27,
+    "hit": 25,
+    "review": 23,
+    "hit_outcomes": {
+     "near_bright_core": 2,
+     "pass": 23
+    },
+    "eff_hit": 0.926,
+    "eff_review": 0.852
+   },
+   "in_mask": {
+    "n": 13,
+    "hit": 12,
+    "review": 10,
+    "hit_outcomes": {
+     "near_bright_core": 2,
+     "pass": 10
+    },
+    "eff_hit": 0.923,
+    "eff_review": 0.769
+   },
+   "level_ge3": {
+    "n": 18,
+    "hit": 16,
+    "review": 14,
+    "hit_outcomes": {
+     "near_bright_core": 2,
+     "pass": 14
+    },
+    "eff_hit": 0.889,
+    "eff_review": 0.778
+   },
+   "out_mask": {
+    "n": 14,
+    "hit": 13,
+    "review": 13,
+    "hit_outcomes": {
+     "pass": 13
+    },
+    "eff_hit": 0.929,
+    "eff_review": 0.929
+   },
+   "level_lt3": {
+    "n": 9,
+    "hit": 9,
+    "review": 9,
+    "hit_outcomes": {
+     "pass": 9
+    },
+    "eff_hit": 1.0,
+    "eff_review": 1.0
+   }
+  },
+  "27.5": {
+   "all": {
+    "n": 27,
+    "hit": 26,
+    "review": 21,
+    "hit_outcomes": {
+     "dipole": 2,
+     "pass": 21,
+     "near_bright_core": 2,
+     "rosette": 1
+    },
+    "eff_hit": 0.963,
+    "eff_review": 0.778
+   },
+   "out_mask": {
+    "n": 17,
+    "hit": 16,
+    "review": 13,
+    "hit_outcomes": {
+     "dipole": 2,
+     "near_bright_core": 1,
+     "pass": 13
+    },
+    "eff_hit": 0.941,
+    "eff_review": 0.765
+   },
+   "level_ge3": {
+    "n": 18,
+    "hit": 17,
+    "review": 13,
+    "hit_outcomes": {
+     "dipole": 2,
+     "pass": 13,
+     "near_bright_core": 2
+    },
+    "eff_hit": 0.944,
+    "eff_review": 0.722
+   },
+   "in_mask": {
+    "n": 10,
+    "hit": 10,
+    "review": 8,
+    "hit_outcomes": {
+     "pass": 8,
+     "rosette": 1,
+     "near_bright_core": 1
+    },
+    "eff_hit": 1.0,
+    "eff_review": 0.8
+   },
+   "level_lt3": {
+    "n": 9,
+    "hit": 9,
+    "review": 8,
+    "hit_outcomes": {
+     "pass": 8,
+     "rosette": 1
+    },
+    "eff_hit": 1.0,
+    "eff_review": 0.889
+   }
+  },
+  "28.0": {
+   "all": {
+    "n": 26,
+    "hit": 16,
+    "review": 14,
+    "hit_outcomes": {
+     "pass": 14,
+     "rosette": 2
+    },
+    "eff_hit": 0.615,
+    "eff_review": 0.538
+   },
+   "out_mask": {
+    "n": 18,
+    "hit": 12,
+    "review": 11,
+    "hit_outcomes": {
+     "pass": 11,
+     "rosette": 1
+    },
+    "eff_hit": 0.667,
+    "eff_review": 0.611
+   },
+   "level_lt3": {
+    "n": 13,
+    "hit": 10,
+    "review": 10,
+    "hit_outcomes": {
+     "pass": 10
+    },
+    "eff_hit": 0.769,
+    "eff_review": 0.769
+   },
+   "in_mask": {
+    "n": 8,
+    "hit": 4,
+    "review": 3,
+    "hit_outcomes": {
+     "pass": 3,
+     "rosette": 1
+    },
+    "eff_hit": 0.5,
+    "eff_review": 0.375
+   },
+   "level_ge3": {
+    "n": 13,
+    "hit": 6,
+    "review": 4,
+    "hit_outcomes": {
+     "pass": 4,
+     "rosette": 2
+    },
+    "eff_hit": 0.462,
+    "eff_review": 0.308
+   }
+  }
+ }
+}

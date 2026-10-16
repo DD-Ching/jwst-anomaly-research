@@ -1,0 +1,130 @@
+{
+ "label": "feasibility check (derived); expected fluxes model_prediction",
+ "plan": "PLAN_spectra.md",
+ "assumptions": {
+  "boxcar_channels": 6,
+  "snr_det": 5.0,
+  "cut_arcsec": 2.4
+ },
+ "f090w_isophotal_ab": {
+  "1316": 28.86,
+  "1557": 28.69
+ },
+ "results": [
+  {
+   "target": 1557,
+   "cube": "ADP.2017-03-28T12:46:01.331",
+   "fwhm_arcsec": 1.081,
+   "exptime_s": 15885.3,
+   "cutout_bytes": 17098560,
+   "r_ap_arcsec": 0.54,
+   "n_spaxels": 24,
+   "noise_rescale": 1.51,
+   "lines": {
+    "OII": {
+     "window_A": [
+      8463,
+      9059
+     ],
+     "in_range": true,
+     "frac_sky_flagged": 0.593,
+     "max_snr_clean": 2.33,
+     "max_snr_lambda_A": 9022.5,
+     "detected": false,
+     "limit_5sigma_cgs_median": 1.33e-18,
+     "expected_flux_cgs": {
+      "EW_rest_30": 3.34e-19,
+      "EW_rest_100": 1.11e-18,
+      "EW_rest_300": 3.34e-18
+     }
+    }
+   },
+   "whole_range": {
+    "window_A": [
+     4750,
+     9350
+    ],
+    "in_range": true,
+    "frac_sky_flagged": 0.36,
+    "max_snr_clean": 3.06,
+    "max_snr_lambda_A": 5040.0,
+    "detected": false,
+    "limit_5sigma_cgs_median": 1.51e-18
+   }
+  },
+  {
+   "target": 1316,
+   "cube": "ADP.2017-03-23T15:58:03.937",
+   "fwhm_arcsec": 1.447,
+   "exptime_s": 7877.1,
+   "cutout_bytes": 17078400,
+   "r_ap_arcsec": 0.72,
+   "n_spaxels": 41,
+   "noise_rescale": 2.44,
+   "lines": {
+    "CIII]": {
+     "window_A": [
+      5478,
+      6413
+     ],
+     "in_range": true,
+     "frac_sky_flagged": 0.257,
+     "max_snr_clean": 4.77,
+     "max_snr_lambda_A": 6000.3,
+     "detected": false,
+     "limit_5sigma_cgs_median": 4.75e-18,
+     "expected_flux_cgs": {
+      "EW_rest_30": 8.22e-19,
+      "EW_rest_100": 2.74e-18,
+      "EW_rest_300": 8.22e-18
+     }
+    },
+    "CIV": {
+     "window_A": [
+      4750,
+      5205
+     ],
+     "in_range": true,
+     "frac_sky_flagged": 0.019,
+     "max_snr_clean": 1.89,
+     "max_snr_lambda_A": 4757.8,
+     "detected": false,
+     "limit_5sigma_cgs_median": 5.51e-18,
+     "expected_flux_cgs": {
+      "EW_rest_30": 1.25e-18,
+      "EW_rest_100": 4.16e-18,
+      "EW_rest_300": 1.25e-17
+     }
+    }
+   },
+   "whole_range": {
+    "window_A": [
+     4750,
+     9350
+    ],
+    "in_range": true,
+    "frac_sky_flagged": 0.411,
+    "max_snr_clean": 4.77,
+    "max_snr_lambda_A": 6000.3,
+    "detected": false,
+    "limit_5sigma_cgs_median": 4.42e-18
+   }
+  },
+  {
+   "target": 1316,
+   "cube": "ADP.2025-11-20T15:47:55.061",
+   "cutout_bytes": 12312000,
+   "no_data": true,
+   "finite_fraction": 0.0,
+   "n_spaxels": 11
+  },
+  {
+   "target": 1557,
+   "cube": "ADP.2025-11-20T15:47:55.061",
+   "cutout_bytes": 17311680,
+   "no_data": true,
+   "finite_fraction": 0.0,
+   "n_spaxels": 12
+  }
+ ]
+}

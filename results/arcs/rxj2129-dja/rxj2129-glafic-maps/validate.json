@@ -1,0 +1,14 @@
+{
+ "model": "rxj2129-glafic-maps",
+ "model_sha256": "16ce7045a9387e953d340f83ac083963e66a9bd4af05c469b7be8ecfc61dde87",
+ "kappa_map": {
+  "map": "data/cache/external/1f6deaee2cb5_jwst_model_rxj2129_glafic_kappa.fits",
+  "quantity": "kappa",
+  "z_s": null,
+  "n_points": 4224,
+  "median_rel_diff": 1.2379889851281386e-05,
+  "p95_rel_diff": 6.227142242297098e-05,
+  "median_ratio": 1.000001351689856,
+  "parity_agree": null
+ }
+}

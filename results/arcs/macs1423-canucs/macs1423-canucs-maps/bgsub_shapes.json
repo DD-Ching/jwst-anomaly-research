@@ -1,0 +1,68 @@
+{
+ "model": "macs1423-canucs-maps",
+ "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o010/jw01208-o010_t005_nircam_clear-f200w_i2d.fits",
+ "label": "ordinary-explanation test (derived); predictions model_prediction",
+ "assumptions": {
+  "filter_arcsec": 1.0,
+  "weight_px": 3.0,
+  "peak_px": 3,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "pred_z": 2.0
+ },
+ "centre_radec": [
+  215.949485,
+  24.078455
+ ],
+ "control_aligned_z2": {
+  "n": 43,
+  "stay_aligned": 40,
+  "median_dpa_pipeline_bgsub": 4.32
+ },
+ "anti": [
+  {
+   "label": 1818,
+   "class_obs_z2": "anti",
+   "class_bgsub": "mixed",
+   "pa_obs": 174.79,
+   "pa_bgsub": 157.01,
+   "e_bgsub": null,
+   "offset_pred_bgsub": 53.97,
+   "dpa_radial_obs": 13.68,
+   "dpa_radial_bgsub": 31.45
+  },
+  {
+   "label": 2197,
+   "class_obs_z2": "anti",
+   "class_bgsub": "anti",
+   "pa_obs": 116.73,
+   "pa_bgsub": 112.23,
+   "e_bgsub": 0.3,
+   "offset_pred_bgsub": 70.19,
+   "dpa_radial_obs": 17.36,
+   "dpa_radial_bgsub": 21.86
+  },
+  {
+   "label": 2322,
+   "class_obs_z2": "anti",
+   "class_bgsub": "anti",
+   "pa_obs": 149.33,
+   "pa_bgsub": 141.73,
+   "e_bgsub": 0.38,
+   "offset_pred_bgsub": 77.65,
+   "dpa_radial_obs": 19.33,
+   "dpa_radial_bgsub": 11.73
+  },
+  {
+   "label": 4234,
+   "class_obs_z2": "anti",
+   "class_bgsub": "anti",
+   "pa_obs": 54.39,
+   "pa_bgsub": 59.61,
+   "e_bgsub": 0.22,
+   "offset_pred_bgsub": 70.96,
+   "dpa_radial_obs": 13.08,
+   "dpa_radial_bgsub": 18.3
+  }
+ ]
+}

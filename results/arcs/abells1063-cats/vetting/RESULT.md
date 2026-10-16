@@ -19,8 +19,19 @@
   - **2004:** at κ ≈ 0.95–1.00 in all three team models, where the predicted axis is degenerate.
   - **2184:** compatible with the measurement-noise model tested (core-flux injections, P_anti 7 / 60; post hoc).
   - **1316, 1557:** **pending vetting** (clump pairs along the anti axis). Not anomaly candidates.
-- **Spectroscopy (step 5, below):** the spectra examined did not confirm a redshift. Ordinary explanations are not
-  excluded. Pausing further spectroscopy is a resource decision (owner, 2026-10-16), not a scientific result.
+- **Spectroscopy (step 5, below; numbers after the review fixes of 2026-10-16):**
+  - **No reliable redshift:** the spectra examined did not confirm a redshift for 1316 or 1557.
+  - **Peaks above the threshold:** one exists. 1316 has a boxcar S/N 6.72 peak at 6000.3 Å after the fixes. The
+    pre-registered checks classify it as **not significant under the calibration**:
+    - the narrow-band peak lies 2.79″ from the target (sky PA 224°, at the edge of the valid map);
+    - the offset aperture 1.5″ W shows the same feature more strongly (S/N 22.9), and the one at PA 150° shows
+      S/N 8.9;
+    - the planned chance metric (positions at or above 6.72 in the offset apertures) gives 1.83 per window search.
+  - Deviation: excluding the feature's own channels, the offset apertures have no chance run at that level. So
+    the 6000 Å feature looks like real emission in the field, not a noise fluctuation, but it is centred off 1316.
+  - It is not a line of 1316, and no redshift is derived from it.
+  - Ordinary explanations are not excluded. Pausing further spectroscopy is a resource decision (owner,
+    2026-10-16), not a scientific result.
 - **Owner decision 2026-10-16:**
   - 1316 and 1557 stay as pending-vetting flags with insufficient data.
   - No stacking of single-OB cutouts, no whole-cube download, no new spectroscopy tool unit.
@@ -190,12 +201,12 @@ model_prediction.
   clumpy chains along their axis but are `single` at the 0.4″ fit radius: the census measures pairs at ≲ 0.4″ only.
 
 ## Sample test (frozen outcome)
-| Null (`census.json` "sample") | expected anti | P(≥ 4), screen count | P(≥ 3), bgsub | P(≥ 2), 2184 removed |
+| Null (`census.json` "sample") | expected anti | P(≥ 4), screen count | P(≥ 3), bgsub | P(≥ 2), 2184 removed from count and null (after fix 4; [before]) |
 |---|---|---|---|---|
-| Shape noise only (Poisson-binomial check) | 0.521 | 0.00082 | 0.011 | 0.089 |
-| **Clump-aware, per row (primary)** | 1.243 | **0.026** | 0.116 | 0.359 |
-| Mixture, f̂ = 0.238 | — | 0.023 | 0.102 | 0.323 |
-| Mixture, f = 0.472 (95 % upper) | — | 0.093 | 0.259 | 0.544 |
+| Shape noise only (Poisson-binomial check) | 0.521 | 0.00082 | 0.011 | 0.0885 [0.0885] |
+| **Clump-aware, per row (primary)** | 1.243 | **0.026** | 0.116 | 0.354 [0.359] |
+| Mixture, f̂ = 0.238 | — | 0.023 | 0.102 | 0.318 [0.323] |
+| Mixture, f = 0.472 (95 % upper) | — | 0.093 | 0.259 | 0.536 [0.544] |
 
 - **Frozen outcome: `excess remains under the clump-aware null`** (primary P 0.026 < 0.05).
 - Reading (narrow): letting clump pairs point anywhere raises the expected anti count from 0.52 to 1.24 and the
@@ -254,30 +265,34 @@ Plan: `PLAN_spectra.md` (committed before measuring, d443354). Script: `scripts/
   - 1316: 60.A combined 2.19 h + one more 60.A OB 0.75 h + 116.28VK 3.79 h ≈ 6.7 h;
   - 1557: 095.A combined 4.41 h + 116.28VK 4.14 h ≈ 8.6 h.
 
-## 3. Measured line limits (`spectra.json`; aperture radius 0.5 × FWHM)
+## 3. Measured line limits (`spectra.json`; aperture radius 0.5 × FWHM; values after the 2026-10-16 fixes, before-fix values in brackets)
 Wording corrected 2026-10-16 (owner): every limit and equivalent width below is a **sensitivity estimate**. It
 depends on the assumed line width (one 7.5 Å boxcar), on the per-channel noise (STAT rescaled by the MAD spread),
 on the continuum (the F090W isophotal magnitude) and on the aperture (0.5 × FWHM, with an assumed point-source
 enclosed fraction).
-| Target | Cube | Window | Detection | median 5σ limit over unflagged channels (aperture, 7.5 Å) | Expected total flux, rest EW 30 / 100 / 300 Å |
+| Target | Cube | Window | Detection | median 5σ limit over usable channels (aperture, 7.5 Å) | Expected total flux, rest EW 30 / 100 / 300 Å |
 |---|---|---|---|---|---|
-| 1557 | 095.A combined | [O II], 8463–9059 Å (59 % of channels on sky lines) | none (max S/N 2.3) | 1.33 × 10⁻¹⁸ | 0.33 / 1.1 / 3.3 × 10⁻¹⁸ |
-| 1316 | 60.A combined | C III], 5478–6413 Å | none (max S/N 4.8) | 4.75 × 10⁻¹⁸ | 0.82 / 2.7 / 8.2 × 10⁻¹⁸ |
-| 1316 | 60.A combined | C IV, 4750–5205 Å | none | 5.51 × 10⁻¹⁸ | 1.25 / 4.2 / 12.5 × 10⁻¹⁸ |
+| 1557 | 095.A combined | [O II], 8463–9059 Å (59 % not usable) | none (max S/N 2.31) [2.33] | 1.34 × 10⁻¹⁸ [1.33] | 0.33 / 1.1 / 3.3 × 10⁻¹⁸ |
+| 1316 | 60.A combined | C III], 5478–6413 Å (26 % not usable) | peak S/N 6.72 at 6000.3 Å [4.77]; not significant under the calibration (below) | 3.37 × 10⁻¹⁸ [4.75] | 0.82 / 2.7 / 8.2 × 10⁻¹⁸ |
+| 1316 | 60.A combined | C IV, 4750–5205 Å (5 % not usable) | none (max S/N 2.21) | 3.89 × 10⁻¹⁸ [5.51] | 1.25 / 4.2 / 12.5 × 10⁻¹⁸ |
 
 - **Expected fluxes:** continuum from F090W isophotal AB 28.69 (1557) and 28.86 (1316); pipeline catalogue, sha256
   `3eecb26c…`, which matches the manifest.
 - **Aperture loss (ASSUMPTION, not stored):** a point source puts about half its flux into a 0.5 × FWHM aperture
   (Gaussian PSF), so the effective total-flux limits are about twice those in the table.
 - **Scale of the sensitivity** (from the table values and the ×2 aperture assumption; not stored):
-  - The median limits correspond to rest EW of order 200–250 Å for [O II] in 1557 and of order 350 Å for C III]
-    in 1316. Typical C III] EWs are a few Å to ~20 Å.
+  - The median limits correspond to rest EW of order 240 Å for [O II] in 1557 and of order 250 Å for C III] in
+    1316 (was ~350 Å before the fixes). Typical C III] EWs are a few Å to ~20 Å.
   - A median limit does not exclude a line anywhere in its redshift window. The per-channel limit varies with sky
     residuals, and the flagged channels are not covered at all.
-- **Whole-range check:** among channels with valid data that pass the sky-line mask, no line reaches the threshold
-  used (6-channel boxcar S/N ≥ 5 after the MAD rescaling). Not covered:
-  - the sky-masked channels: 36 % of 4750–9350 Å for 1557 and 41 % for 1316 (`spectra.json`
-    `whole_range.frac_sky_flagged`), including 59 % of the [O II] window of 1557;
+- **Whole-range check (after the fixes):**
+  - 1557: among usable channels (valid data, outside the sky-line mask), no position reaches the threshold used
+    (6-channel boxcar S/N ≥ 5 after the usable-channel MAD rescale); the maximum is 3.04.
+  - 1316: the only position at or above it is the 6000.3 Å peak, classified below as not significant.
+  - Not covered:
+  - the positions that are not usable: 36.6 % of 4750–9350 Å for 1557 and 41.6 % for 1316 (`spectra.json`
+    `whole_range.frac_not_usable`; no invalid channels, 17–20 % sky-line channels), including 59 % of the [O II]
+    window of 1557;
   - wavelengths outside 4750–9350 Å;
   - lines broader than the boxcar, or fainter than the per-channel threshold;
   - flux outside the 0.5 × FWHM aperture;
@@ -331,29 +346,84 @@ enclosed fraction).
   - a usable 1-D spectrum;
   - materially better data, e.g. the full 116.28VK.001 data set or a published redshift catalogue from it.
 
-## Known issues from the final code review (2026-10-16; not re-run, by owner decision)
-The committed outputs were produced by the code as reviewed. Fixing the four issues below would change outputs, so
-they are recorded here instead of being re-run:
-- **Spectra noise rescale (`arcs_vet_spectra.py`):** the MAD rescale of S/N uses every channel, including the
-  sky-masked ones (rescale 1.51 for 1557, 2.44 for 1316, `spectra.json` `noise_rescale`). The S/N values in
-  clean channels may therefore be too low and the limits too loose.
-  - **1316's highest clean-channel peak is S/N 4.77 at 6000.3 Å**, inside the C III] window (z ≈ 2.14, within
-    its photo-z range). With a clean-channel rescale it could reach the threshold.
-  - It is **not a detection**. It is the first thing to check at any reassessment.
-- **Partly valid channels (`arcs_vet_spectra.py`):** the aperture sum uses `nansum` without a per-channel
-  completeness check, so channels where only some spaxels are valid get a biased flux and too little variance.
-  No such channel was found to drive a result here, but it was not checked.
-- **Deblend flux bound for faint rows (`arcs_vet_deblend.py`, used by the census):** the fitted flux is bounded by
-  10 × the median-filtered aperture sum. For faint rows whose sum is ≤ 0, the fit is pinned near zero. This may
-  be why the own-flux gate failed for 1404, 2004 and 2184 in the census, and it may affect the classes of other
-  faint rows.
-- **Census `k2_core_flux` (`arcs_vet_census.py`):** the count drops 2184 but the null keeps its row probability, so
-  "P(≥ 2) = 0.359, 2184 removed" compares two different samples. Read it as the P of ≥ 2 anti among all 24 rows,
-  not as a test with 2184 excluded.
-- **Fixed in code without changing outputs:**
-  - finite-error mask in `arcs_vet_clumps.py`;
-  - an off-image check in `arcs_vet_census.py`;
-  - an empty-gate guard in `arcs_vet_noise.py`;
-  - `OMP_NUM_THREADS=1` for the process pools.
-- **Not changed (cleanup):** duplicated helpers (`axis_class`, the empty-position injection loop), census thresholds
-  hard-coded at the `arcs.json` values, and tests of two scripts living in `tests/test_arcs_faint.py`.
+## Review fixes and re-run (2026-10-16; plan `PLAN_fixes.md`, committed before the re-run)
+Before-fix outputs: `*_before_fixes.*`. Every changed number: `fixes_diff.json` (relative changes < 1e-6 ignored).
+Data: the two MUSE SODA cutouts used before, and the same JWST 8″ stamps re-read by byte range. No other data.
+
+**Fixes:**
+1. The spectra noise rescale uses usable channels only.
+2. Channels with any invalid aperture spaxel are excluded.
+3. `fit_models` takes its flux start from the positive-pixel sum when the filtered sum is ≤ 0 or below 10 % of
+   it, and its bound from the larger of the two (the 10 % clause was added after the final review).
+4. Census counts that drop a row drop it from the null as well.
+
+All four have unit tests (`tests/test_arcs_vet_fixes.py`).
+
+**What changed:**
+- **Spectra:**
+  - Noise rescale 2.44 → 1.73 (1316) and 1.51 → 1.52 (1557). No invalid channels were found in either aperture.
+  - 1316 C III] median limit 4.75 → 3.37 × 10⁻¹⁸; C IV 5.51 → 3.89 × 10⁻¹⁸. 1557 [O II] 1.33 → 1.34 × 10⁻¹⁸.
+  - The 1316 peak at 6000.3 Å went from S/N 4.77 to 6.72.
+- **Deblend (fix 3):**
+  - Fitted parameters changed by ≤ 3.7e-4 relative (largest: row 2004, `m1_q`; `fixes_diff.json`
+    `max_relative_change_observed_fits`).
+  - Row 2004's two M2 components swapped order (S/N 4.20 / 2.97 → 2.97 / 4.20; same pair,
+    `m2_component_order_swapped`).
+  - No observed class changed.
+  - Injection gates:
+    - 1316 post hoc own-flux gate: two-knot recall 0.75 → 0.95, single side unchanged at 0.75, so it still
+      fails (< 0.8). The two-knot call for 1316 is still not validated at its own flux.
+    - 1557 gates: two-knot recall 0.90 → 1.00 (catalogue flux) and 0.95 → 1.00 (fitted flux); still passed.
+- **Census:**
+  - Classes and gate outcomes are unchanged (21 passed, 5 two-knot, f̂ 0.238). The gate still fails for 1404, 2004
+    and 2184 (2004 two-knot recall 0.20 → 0.35; 2184 0.50 → 0.55), so **the flux bound was not the cause of those
+    gate failures**, contrary to the earlier guess.
+  - P(≥ 4) = 0.026 and P(≥ 3) = 0.116 are unchanged.
+  - With 2184 removed from both the count and the null, P(≥ 2) = 0.354 (was 0.359 with 2184 kept in the null);
+    mixtures 0.318 / 0.536; shape-noise only 0.0885.
+- **Clumps (`clumps_1557.json`):** unchanged.
+
+**6000 Å check for 1316 (`spectra.json` `peak_6000_1316`, `peak_6000.png`; rules from `PLAN_fixes.md`):**
+| Check | Result | Pass |
+|---|---|---|
+| Valid and not sky-masked | yes | yes |
+| S/N ≥ 5 after the fixes | 6.72 | yes |
+| Narrow-band (5996.5–6002.8 Å) peak within 0.72″ of the target (NaN-aware smoothing) | 2.79″ at sky PA 223.8°, on the edge of the valid map (`narrowband_peak_at_valid_map_edge`) | no |
+| No offset aperture (1.5″, 6 positions) with S/N ≥ 3 at the same channels | S/N 22.9 at sky PA 270° (W) and 8.9 at PA 150°; the one at PA 210° is not usable there | no |
+| Expected chance positions ≥ 6.72 per window search < 0.05 (offset apertures, usable positions; planned metric) | 1.83 | no |
+
+- **Deviation (reported, not used for the class):**
+  - The planned chance metric counts the tested feature itself in the offset apertures that contain it.
+    Counting separate runs gives 0.83, and excluding ±12 channels around the feature gives 0, i.e. no chance
+    peak this strong elsewhere in the window.
+  - So the 6000 Å signal is not a noise fluctuation. It is real emission in the field.
+- **Class (frozen rule): not significant under the calibration** (`peak_6000_1316.class`), i.e. not
+  significant as a line of 1316. The emission is stronger 1.5″ W and peaks
+  2.79″ away, so the target aperture sits on the wing of nearby emission. A contribution from 1316 itself at the
+  same wavelength is not excluded.
+- Possible origin (not tested, not stored): earlier VizieR rows 5.3–5.6″ from 1316 list a z ≈ 0.611 galaxy, whose
+  [O II] would fall near 6004 Å.
+- **Evidence level:** not a line of 1316. No redshift is derived from it, and it is not evidence for unusual
+  lensing.
+- **Effect on the decision:** none. The decision to wait for 116.28VK.001 stands. There is still no reliable
+  redshift, and the only threshold-crossing peak is explained as neighbouring emission at the level tested.
+
+**Other changes after the final review (2026-10-16):**
+- `window_result`'s `detected` is renamed `above_threshold`: a position above the threshold is not a detected
+  line until the peak checks pass.
+- `peak_check` runs only on cutouts with data.
+- Direction values are stored as sky PAs (`sky_pa_deg`, `narrowband_peak_sky_pa_deg`).
+- Census counts come from the screen and bgsub sets, and every null uses `p_tail`.
+- `fixes_diff.json` uses a relative tolerance only.
+- Kept cutouts are named by radius and written atomically.
+- The chance-run count that excludes the feature keeps the two window segments separate.
+- Offset apertures that are unusable at the peak are ignored by the S/N ≥ 3 check.
+- The census core-flux count exists only when 2184 is bgsub anti.
+- Re-running the spectra after these changes reproduced `spectra.json` exactly.
+- **Deviation:** the 116.28VK single-OB cube ADP.2025-11-20T15:47:55.061 was not re-requested, per the owner's
+  limit of two cutouts. Its earlier `no_data` records are kept in `spectra_before_fixes.json` and
+  `muse_coverage.ecsv`.
+
+**Not changed (cleanup, no effect on numbers):** duplicated helpers (`axis_class`, the empty-position injection
+loop), census thresholds hard-coded at the `arcs.json` values, and tests of two scripts living in
+`tests/test_arcs_faint.py`.
