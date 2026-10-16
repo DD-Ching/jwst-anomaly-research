@@ -13,7 +13,8 @@ ASSUMPTIONs.
 
 ``--extended`` adds the alternative stage of ``arc_diff_extended.py``: the peer cut only for hits
 at a compact epoch-1 peak, the local-annulus cut |z_ann| ≥ ``--ext-min-z`` otherwise (stages
-``peers_ext`` and ``confirm_ext``).
+``peers_ext`` and ``confirm_ext``). ``--vetoes`` (with ``--extended``) adds its second version with
+the line-coherence and offset-core vetoes (stages ``peers_veto`` and ``confirm_veto``).
 
 Usage: ``arc_diff_inject_chain.py --inject DIR --maps DIR --ref-passes passes.ecsv
 --tiles t-1+0 ... [--extended]``
@@ -43,7 +44,18 @@ _spec.loader.exec_module(adp)
 _spec = importlib.util.spec_from_file_location("arc_diff_extended", _DIR / "arc_diff_extended.py")
 ade = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(ade)
-STAGES = ("n", "hit", "unflagged", "morph", "peers", "confirm", "peers_ext", "confirm_ext")
+STAGES = (
+    "n",
+    "hit",
+    "unflagged",
+    "morph",
+    "peers",
+    "confirm",
+    "peers_ext",
+    "confirm_ext",
+    "peers_veto",
+    "confirm_veto",
+)
 
 
 def confirm_value(s: np.ndarray, w: WCS, ra: float, dec: float, half_px: int = 2) -> float:
@@ -82,13 +94,15 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--procs", type=int, default=os.cpu_count() or 1)
     ap.add_argument("--extended", action="store_true", help="add the arc_diff_extended.py stage")
     ap.add_argument("--ext-min-z", type=float, default=ade.DEFAULTS["min_z"])
+    ap.add_argument("--vetoes", action="store_true", help="with --extended: add the vetoed version")
     ap.add_argument("--skip-stages", action="store_true", help="reuse existing morph/peers outputs")
     a = ap.parse_args(argv)
     py = sys.executable
     out = {
         "provenance": "derived (simulated stars in real maps)",
         "thresholds_assumption": {"confirm_sigma": a.confirm_sigma, "peer_min_z": 3.0}
-        | ({"extended": ade.DEFAULTS | {"min_z": a.ext_min_z}} if a.extended else {}),
+        | ({"extended": ade.DEFAULTS | {"min_z": a.ext_min_z}} if a.extended else {})
+        | ({"vetoes": ade.VETO} if a.extended and a.vetoes else {}),
         "tiles": {},
     }
     total: dict[str, dict[str, int]] = {}
@@ -153,6 +167,10 @@ def main(argv: list[str] | None = None) -> None:
                     ok = stored if e["compact"] else ade.ext_pass(e, a.ext_min_z)
                     c["peers_ext"] += ok
                     c["confirm_ext"] += ok and confirmed
+                    if a.vetoes:
+                        okv = ade.ext_pass_vetoed(e, stored, a.ext_min_z)
+                        c["peers_veto"] += okv
+                        c["confirm_veto"] += okv and confirmed
         out["tiles"][t] = per
         for mag, c in per.items():
             tot = total.setdefault(mag, {k: 0 for k in STAGES})
@@ -162,6 +180,8 @@ def main(argv: list[str] | None = None) -> None:
         c["eff_chain"] = round(c["confirm"] / c["n"], 3) if c["n"] else None
         if a.extended:
             c["eff_chain_ext"] = round(c["confirm_ext"] / c["n"], 3) if c["n"] else None
+        if a.extended and a.vetoes:
+            c["eff_chain_veto"] = round(c["confirm_veto"] / c["n"], 3) if c["n"] else None
     out["total"] = total
     text = json.dumps(out, indent=1) + "\n"
     (a.inject / "summary.json").write_text(text)

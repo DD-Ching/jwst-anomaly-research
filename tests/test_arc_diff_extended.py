@@ -53,3 +53,34 @@ def test_other_hits_are_masked_and_too_few_pixels_is_no_test():
     assert not np.isfinite(edge["s_hit"]) and not ade.ext_pass(edge)
     (few,) = ade.measure(s, e1, np.array([[30, 30]], float), scale_arcsec=0.063, min_ann_px=10**6)
     assert not np.isfinite(few["z_ann"]) and ade.ext_pass(few)
+
+
+def test_line_coherence_vetoes_stripes_not_points():
+    rng = np.random.default_rng(3)
+    shape = (80, 80)
+    e1 = _gauss(shape, 40, 40, 30.0, 1.0)
+    s = rng.normal(0.0, 1.0, shape)
+    s[40, 40] = 6.0  # isolated point brightening
+    stripe = s.copy()
+    stripe[20, :] += 3.0  # a row stripe through a second hit
+    stripe[19, :] += 1.5
+    stripe[21, :] += 1.5
+    stripe[20, 30] = 6.0
+    point, on_stripe = ade.measure(stripe, e1, np.array([[40, 40], [20, 30]], float), 0.063)
+    assert ade.ext_pass(point) and ade.ext_pass_vetoed(point, stored_pass=False)
+    assert on_stripe["line_frac"] >= 0.25 and abs(on_stripe["line_theta"] - 0.0) < 10
+    assert not ade.ext_pass_vetoed(on_stripe, stored_pass=True)
+
+
+def test_offset_core_returns_to_peer_verdict():
+    rng = np.random.default_rng(4)
+    shape = (80, 80)
+    e1 = _gauss(shape, 40, 40, 20.0, 1.0) + rng.normal(0.0, 0.01, shape)
+    e1 += _gauss(shape, 40, 45, 1.0, 5.0)  # bright compact core 5 px (0.32") from the hit
+    s = rng.normal(0.0, 1.0, shape)
+    s[40, 40] = 6.0
+    (row,) = ade.measure(s, e1, np.array([[40, 40]], float), 0.063)
+    assert not row["compact"] and row["core_off_contrast"] >= 20
+    assert ade.ext_pass(row)
+    assert not ade.ext_pass_vetoed(row, stored_pass=False)
+    assert ade.ext_pass_vetoed(row, stored_pass=True)
