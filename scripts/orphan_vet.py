@@ -118,7 +118,9 @@ def measure_pair(row, prefix: str, rng: np.random.Generator) -> dict:
     boxes = {}
     with ThreadPoolExecutor(7) as pool:
         for b, box in zip(
-            BANDS, pool.map(lambda b: read_box(uri(prefix, b), ra, dec, HALF_BOX), BANDS)
+            BANDS,
+            pool.map(lambda b: read_box(uri(prefix, b), ra, dec, HALF_BOX), BANDS),
+            strict=False,
         ):
             boxes[b] = box
     out = {"rank": int(row["rank"]), "bands": {}}
@@ -151,7 +153,7 @@ def measure_pair(row, prefix: str, rng: np.random.Generator) -> dict:
         }
         if b in LW:
             if lw_stack is None:
-                lw_stack, lw_wcs, lw_scale = img.copy(), w, sc
+                lw_stack, _lw_wcs, lw_scale = img.copy(), w, sc
                 lw_xy = (xa, ya, xb, yb)
             elif img.shape == lw_stack.shape and abs(sc - lw_scale) < 1e-6:
                 lw_stack = lw_stack + img
@@ -258,7 +260,7 @@ def measure_pair(row, prefix: str, rng: np.random.Generator) -> dict:
     rb = [(v["fa"], v["fb"], v["err"]) for v in out["bands"].values()]
     rb = [t for t in rb if np.isfinite(t[0]) and np.isfinite(t[1]) and t[1] > 3 * t[2]]
     if len(rb) >= 3:
-        fa, fb, e = (np.array(x) for x in zip(*rb))
+        fa, fb, e = (np.array(x) for x in zip(*rb, strict=False))
         r = fa / fb
         er = np.abs(r) * np.hypot(e / np.abs(fa).clip(1e-9), e / fb)
         wmean = np.sum(r / er**2) / np.sum(1 / er**2)
@@ -340,11 +342,13 @@ def main(argv: list[str] | None = None) -> int:
         e2 = r["E2"]
         print(
             r["rank"],
-            "E1 z %.1f" % r["E1"]["z"],
+            "E1 z {:.1f}".format(r["E1"]["z"]),
             "E2 res",
             e2["a"]["resolved"],
             e2["b"]["resolved"],
-            "fwhm %.3f %.3f" % (e2["a"]["fwhm_deconv_arcsec"], e2["b"]["fwhm_deconv_arcsec"]),
+            "fwhm {:.3f} {:.3f}".format(
+                e2["a"]["fwhm_deconv_arcsec"], e2["b"]["fwhm_deconv_arcsec"]
+            ),
             "sb_z",
             round(e2.get("sb_z", float("nan")), 2),
             "E3 p",
