@@ -89,7 +89,15 @@ pipeline catalogue `jw03293-o001_t001` (manifest) and the DJA v7.5 zout above. D
 - Vetting (`vetting/RESULT.md`): measurement-noise injections give P_anti 0 / 60 for both at their observed
   elongation (gate passed); the independent HST axes are also anti at S/N ≈ 1. 1316 looks like two knots by eye
   (blend untested). Still open, not candidates.
-- Vetting steps 2–3: 2184 explained by measurement noise at its core flux (post hoc). 1316 and 1557 deblend into
+- Vetting steps 2–3: 2184 is compatible with the measurement-noise model tested at its core flux (post hoc). 1316 and 1557 deblend into
   same-colour clump pairs whose separation is the anti axis (1557: gate at its own flux passed; a third same-colour
   point on the axis, post hoc). A randomly oriented clump pair is anti with probability 0.08–0.14 at their shears
   (model, `vetting/clumps_1557.json`), which the catalogue shape-noise null does not model. Open, not candidates.
+- Step 4–5 and the owner-corrected summary (2026-10-16, `vetting/RESULT.md`):
+  - The clump-aware P(≥ 4) = 0.026 is exploratory. It depends on a simplified ordinary model: the clump fraction is
+    uncertain (0.093 at its upper value), and 2004's κ ≈ 1 degeneracy is not modelled.
+  - Ordinary morphology, noise and lens-model error are not excluded in general; the four models' errors are not
+    independent.
+  - 1316 and 1557 are pending vetting.
+  - Public spectroscopy gives no redshift. The MUSE SODA-cutout limits exclude only extreme emitters, and MUSE
+    cannot resolve the 0.15–0.21″ clumps.

@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-16: `arcs` on Abell S1063: 4 background anti vs 0.52 expected; 2004, 2184 explained; 1316, 1557 open as clump pairs (#273)
+## 2026-10-16: `arcs` on Abell S1063: 4 background anti vs 0.52 expected; 2004 at κ ≈ 1, 2184 compatible with the tested noise model; 1316, 1557 pending vetting; public spectra cannot settle them (#273)
 - **New field for the arc-orientation test** (D-024 defaults; plan committed first): CATS v4.1 maps, GLIMPSE F200W,
   DJA v7.5 photo-z. Strong-shear background: 20 / 24 aligned, **4 anti vs 0.524 (P 0.0021)**.
 - **Ordinary tests (new scripts):**
@@ -54,6 +54,21 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   f at its 95 % upper end (0.093).
 - **Handoff:** 1316 and 1557 open, unvetted, not candidates. Next: z_spec from the ESO MUSE cube (needs the owner's
   download decision), else a second photo-z code or the same census on another field's anti rows.
+- **Owner-corrected summary (2026-10-16; records kept):**
+  - P 0.026 is exploratory and depends on a simplified ordinary model: the clump fraction is uncertain (0.093 at
+    f = 0.472), and 2004's κ ≈ 1 degeneracy is not modelled.
+  - Ordinary morphology, noise and model error are not excluded in general; the models' errors are not fully
+    independent.
+  - 2184 is compatible with the tested noise model.
+- **Step 5, spectroscopy feasibility (`vetting/PLAN_spectra.md` first; `scripts/arcs_vet_spectra.py`):**
+  - No catalogued redshift within 2.4″ (all-VizieR 6″ cone). Richard+2021 does not cover AS1063.
+  - ESO MUSE cubes are 5.7–5.8 GB each, but SODA cutouts are 12–17 MB.
+  - No line in the deepest public cubes. The 5σ limits are 1.3 × 10⁻¹⁸ for [O II] of 1557 (4.4 h) and 4.8 × 10⁻¹⁸
+    for C III] of 1316 (2.2 h, 1.45″). They exclude only rest EW ≳ 240 Å / ≳ 350 Å emitters.
+  - MUSE seeing (≥ 0.62″) cannot resolve the 0.15–0.21″ clumps.
+  - The result is undetermined. Implementation deviation: the sky flag was replaced before use.
+- **Handoff:** owner decision in #273: stack the public 116.28VK single-OB cutouts (~0.3 GB in pieces, 1–2 h,
+  [O II] of 1557 only), or wait for that program's remaining OBs (public 2026-11 to 2027-03).
 ## 2026-10-16: Arc difference imaging with position as a label: known cases kept, review burden small, injection efficiency fails (0.34 < 0.50)
 - **Why:** owner decision of 2026-10-16: position becomes a label and review priority, not a veto, and every other
   criterion stays. Plan and acceptance rules were written before any new count:

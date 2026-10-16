@@ -1,4 +1,30 @@
-# Vetting 1316 and 2184 (Abell S1063 `arcs` anti): result (2026-10-16)
+# Vetting of the Abell S1063 `arcs` anti rows (2026-10-16)
+
+## Summary (owner-corrected wording, 2026-10-16; the step records below are kept unchanged)
+- **Sample statistic:** 4 background anti rows vs 0.52 expected from intrinsic shape noise (screen, P 0.0021;
+  Poisson-binomial 0.00082). Under the step-4 clump-aware null, P(≥ 4) = 0.026. This number is an **exploratory
+  result that depends on a simplified ordinary model**:
+  - the clump-pair fraction is uncertain (f̂ 0.238 from 21 rows; the mixture null at its 95 % upper value f = 0.472 gives P = 0.093);
+  - point clumps with isotropic separations are assumed, and the κ < 1 formula is also used for g > 1 rows;
+  - 2004's κ ≈ 1 degeneracy of the predicted axis is not in the model; it is counted as anti with a generic row
+    probability (0.191). Counting only the other three anti rows (1316, 1557, 2184), P(≥ 3) = 0.116
+    (`census.json` `k3_bgsub`, which still includes 2004's row probability).
+  The clump idea came from looking at 1316 and 1557, so the test is post hoc.
+- **What is not excluded:**
+  - The tests did not exclude ordinary morphology (clumps, blends, intrinsic shapes), measurement noise or lens-model
+    error in general. They only showed that the specific models tested do not reproduce the anti axes.
+  - GLAFIC, Sharon, Keeton and CATS agree, but their errors are not fully independent: they share the same image
+    constraints and similar parametrisations.
+- **Per row:**
+  - **2004:** at κ ≈ 0.95–1.00 in all three team models, where the predicted axis is degenerate.
+  - **2184:** compatible with the measurement-noise model tested (core-flux injections, P_anti 7 / 60; post hoc).
+  - **1316, 1557:** **pending vetting** (clump pairs along the anti axis). Not anomaly candidates.
+- **Spectroscopy (step 5, below):** current public data cannot provide a redshift for either target except for an
+  extreme emission-line source.
+
+## Step records
+
+## Vetting 1316 and 2184 (Abell S1063 `arcs` anti): result (2026-10-16)
 
 Plan: `PLAN.md` (committed before the run of `scripts/arcs_vet_noise.py`). Labels: injected sources are
 simulations; re-measured axes and rates `derived`; predicted axes `model_prediction`; HST shapes `observed`.
@@ -187,3 +213,85 @@ model_prediction.
   the ESO MUSE cube of the field needs a download decision under the 200 MB rule (owner). Without it: a second
   photo-z code, or the same census on another `arcs` field with an anti excess, to test whether clumps explain it
   there.
+
+# Step 5 (2026-10-16): can public spectroscopy settle 1316 and 1557? (owner request; feasibility only)
+
+Plan: `PLAN_spectra.md` (committed before measuring, d443354). Script: `scripts/arcs_vet_spectra.py` →
+`spectra.json`. Labels: cube pixels observed; limits derived; expected fluxes model_prediction.
+
+## 1. Catalogued redshifts and 1-D spectra
+- No published redshift lies within 2.4″ of either target. This was checked with an all-VizieR cone of 6″ around
+  1316 and 1557, and each table with a redshift column was inspected (not stored). The step-1 queries (Chan+2020,
+  1.5″ all-VizieR for 1316 and 2184) found none either.
+- The nearest rows are 2.5–2.7″ away and are other objects, e.g. cluster-member photo-z rows in
+  `J/MNRAS/470/95` and `J/ApJ/848/37`. Their distances agree with the owner's earlier check of the CLASH-VLT
+  November 2021 AS1063 table (5.67″ and 3.47″, not re-downloaded here).
+- Richard+2021 (`J/A+A/646/A83`, MUSE atlas of 12 clusters) does not include AS1063.
+- No public extracted 1-D spectrum for either target was found.
+- **Conclusion:** no existing redshift or spectrum can be used.
+
+## 2. MUSE cubes in the ESO archive (ObsCore query 2026-10-16; `access_estsize`, `s_resolution` = PSF FWHM)
+| Product | Program | Exposure | FWHM | Size | Covers |
+|---|---|---|---|---|---|
+| ADP.2017-03-28T12:46:01.331 (combined) | 095.A-0653 | 4.41 h | 1.08″ | 5.78 GB | 1557 |
+| ADP.2017-03-23T15:58:03.937 (combined) | 60.A-9345 | 2.19 h | 1.45″ | 5.73 GB | 1316 (listed for 1557 too, but no data there) |
+| single-OB cubes, public, with data at the target | 116.28VK.001 | 6 OBs, 3.79 h (1316); 6 OBs, 4.14 h (1557) | 0.62–1.65″ | 5.1–5.2 GB each | `muse_coverage.ecsv` |
+| single-OB cubes, proprietary until 2026-11 to 2027-03 | 116.28VK.001 | 7.6 h (1316), 10.7 h (1557), nominal | — | ~5.2 GB each | — |
+
+- Whole cubes are 25–30 times the 200 MB rule; none was downloaded.
+- ESO's SODA service returns spatial cutouts: a 2.4″-radius cutout over all wavelengths is 12–17 MB. This route was
+  used below.
+- ObsCore footprints are not reliable at the cube edges. Every public cube listed as covering a target was checked
+  with a 0.5″ SODA cutout (`muse_coverage.ecsv`). For 1316, 11 of 16 have data; for 1557, 13 of 26 have data.
+  Examples without data: ADP.2025-11-20T15:47:55.061 (both targets) and the 60.A combined cube at 1557.
+- Public depth with data at the target (sums from `muse_coverage.ecsv`, not stored):
+  - 1316: 60.A combined 2.19 h + one more 60.A OB 0.75 h + 116.28VK 3.79 h ≈ 6.7 h;
+  - 1557: 095.A combined 4.41 h + 116.28VK 4.14 h ≈ 8.6 h.
+
+## 3. Measured line limits (`spectra.json`; aperture radius 0.5 × FWHM)
+| Target | Cube | Window | Detection | 5σ limit (aperture, 7.5 Å) | Expected total flux, rest EW 30 / 100 / 300 Å |
+|---|---|---|---|---|---|
+| 1557 | 095.A combined | [O II], 8463–9059 Å (59 % of channels on sky lines) | none (max S/N 2.3) | 1.33 × 10⁻¹⁸ | 0.33 / 1.1 / 3.3 × 10⁻¹⁸ |
+| 1316 | 60.A combined | C III], 5478–6413 Å | none (max S/N 4.8) | 4.75 × 10⁻¹⁸ | 0.82 / 2.7 / 8.2 × 10⁻¹⁸ |
+| 1316 | 60.A combined | C IV, 4750–5205 Å | none | 5.51 × 10⁻¹⁸ | 1.25 / 4.2 / 12.5 × 10⁻¹⁸ |
+
+- **Expected fluxes:** continuum from F090W isophotal AB 28.69 (1557) and 28.86 (1316); pipeline catalogue, sha256
+  `3eecb26c…`, which matches the manifest.
+- **Aperture loss (ASSUMPTION, not stored):** a point source puts about half its flux into a 0.5 × FWHM aperture
+  (Gaussian PSF), so the effective total-flux limits are about twice those in the table.
+- **What the limits exclude** (from the table values and the ×2 aperture assumption; not stored):
+  - 1557: only an [O II] emitter with rest EW ≳ 200–250 Å on the 41 % of the window free of sky lines.
+  - 1316: only a C III] emitter with rest EW ≳ 350 Å. Typical C III] EWs are a few Å to ~20 Å.
+- **Whole-range check:** no line at S/N ≥ 5 anywhere in 4750–9350 Å for either target, so there is no hint of a
+  wrong photo-z (e.g. a low-z Hα or [O III] line). The test is only sensitive to bright lines.
+- **Deviation from the plan (implementation, made before any result was used):**
+  - The planned sky-annulus flag failed: it sat on cluster light around 1316, and it missed the 5577 Å sky line
+    next to 1557.
+  - It was replaced by continuum subtraction (101-channel running median) and a variance-based sky-line flag.
+  - The first-run output was overwritten.
+
+## 4. Can MUSE separate the clumps?
+- No. The clump separations are 0.147″ (1557) and 0.208″ (1316). The best public MUSE seeing is 0.62–0.68″ FWHM
+  and the deep combined cubes have 1.08–1.45″, so the clumps are 3–10 times smaller than the PSF.
+- MUSE can give at most one integrated redshift per source; it cannot say whether the two clumps share a redshift.
+
+## 5. What each outcome would mean (stated in the plan)
+- **Line at z ≤ 0.4 (a member or foreground):** the source is not lensed and its orientation is random. This
+  supports an ordinary explanation.
+- **Line inside the photo-z window:** only the photo-z-failure explanation is removed. The clump-orientation and
+  shape explanations stay open. It is not support for unusual lensing.
+- **No line (the current result):** undetermined. It supports neither reading. Equal redshifts for the clumps could
+  not be measured with MUSE in any case.
+
+## 6. Options and cost
+- **(a) Stack the public single-OB cutouts with valid data.** These are the 6 + 1 extra OBs for 1316 and the 6
+  116.28VK OBs for 1557, on top of the combined cubes used here. Each cutout is about 15 MB, so the
+  transfer is about 0.2–0.4 GB in pieces under 200 MB. The work is about 1–2 h: per-OB sky residuals, astrometric
+  alignment, variance-weighted sum. The noise gain is about √(8.6 / 4.4) ≈ 1.4 for 1557 and √(6.7 / 2.2) ≈ 1.75 for 1316,
+  somewhat more with the better seeing of the 116.28VK OBs. That reaches rest EW ≳ 130–170 Å for [O II] in 1557
+  and ≳ 150–200 Å for C III] in 1316 (estimates, not stored). This is still far above typical C III] (≲ 20 Å), so
+  it does not help 1316.
+- **(b) Wait for 116.28VK.001.** Its remaining OBs become public between 2026-11 and 2027-03, and a combined
+  product or a published redshift catalogue may follow. This costs nothing.
+- **(c) Whole-cube downloads (5.7–5.8 GB each).** They add nothing over the SODA cutouts for this question.
+- **(d) Not spectroscopic:** a second photo-z code tests only the photo-z explanation, not the anti axis.
