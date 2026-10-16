@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-16: Abell 2744 `arc_diff` stripe, spike and offset-core vetoes on top of the annulus cut (in progress)
+- Claimed by a cloud routine at 05:15Z; plan: add the three vetoes named in the previous handoff, re-calibrate on
+  the #264/#265 injections and the 4 real tiles under a decision rule written before the run.
+
 ## 2026-10-16: Abell 2744 `arc_diff`: a local-annulus cut for hits on extended light doubles 28-mag efficiency but lets artifacts through; not adopted
 - **Hypothesis before measuring (#264 handoff):** the peer cut vetoes faint point brightenings on smooth light because
   its brightness-bin spread is set by compact sources; a cut that keeps the peer test only at compact epoch-1 peaks
