@@ -161,5 +161,7 @@
    }
   }
  },
- "previous_attempt": "speedup_v1.json: earlier cache (pickled WCS, not exact) and pre-addendum-4 injection geometry; superseded"
+ "previous_attempt": "speedup_v1.json: earlier cache (pickled WCS, not exact) and pre-addendum-4 injection geometry; superseded",
+ "cache_size_mb_box1_pair": 25,
+ "cache_size_note": "du -sm of the cache directory after the cold run (box 1, F150W + F444W, both injection models)"
 }

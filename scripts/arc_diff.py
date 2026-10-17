@@ -130,17 +130,21 @@ def read_box(uri: str, ra: float, dec: float, half_arcsec: float) -> dict:
     return box_from_raw(read_box_raw(uri, ra, dec, half_arcsec))
 
 
+CACHE_VERSION = "2026-10-17.1"  # bump when a cached function's output changes
+
+
 def cached(cache_dir: str | None, fn, *args):
     """``fn(*args)``, stored as a pickle under ``cache_dir`` keyed by ``fn``'s name and ``args``.
 
     For raw-data products only (archive boxes, empirical PSFs, the injection-free registration):
     nothing that depends on injected sources may go through this cache. Every argument of ``fn``
     is part of the key, so a changed setting never serves a stale entry. Each call returns a fresh
-    copy; a WCS is never pickled (``read_box_raw`` keeps the header text instead).
+    copy; a WCS is never pickled (``read_box_raw`` keeps the header text instead). Code changes
+    to a cached function need a ``CACHE_VERSION`` bump.
     """
     if not cache_dir:
         return fn(*args)
-    h = hashlib.sha1(repr((fn.__name__, *args)).encode()).hexdigest()[:20]
+    h = hashlib.sha1(repr((CACHE_VERSION, fn.__name__, *args)).encode()).hexdigest()[:20]
     path = Path(cache_dir) / f"{fn.__name__}_{h}.pkl"
     if path.exists():
         return pickle.loads(path.read_bytes())
@@ -206,11 +210,13 @@ def register_median(
 
     The whole-box correlation can be pulled to its window edge by a few tiles holding a bright
     saturated star and its spikes (El Gordo F150W, 2026-10-17: (1.71, -3.00) px against a tile
-    median of (0.70, -0.57) px); the median follows the majority. Falls back to the whole-box
+    median of (0.64, -0.52) px); the median follows the majority. Falls back to the whole-box
     value when fewer than 4 usable tiles remain (tiles < 90 % finite in either image, or pinned at
     the window edge, are dropped). Returns dy, dx and the number of tiles used.
     """
     ny, nx = a.shape
+    if tile < 8:
+        return (*register(a, b, max_shift), 0)
     offs = []
     for y in range(0, ny - tile + 1, tile):
         for x in range(0, nx - tile + 1, tile):
@@ -643,10 +649,17 @@ def global_shift(a: np.ndarray, b: np.ndarray, scale: float, reg_tile_arcsec: fl
     return (*register(a, b), 0)
 
 
-def pair_shift(e1: str, e2: str, ra: float, dec: float, half: float, reg_tile_arcsec: float):
-    """Global registration (dy, dx) of the injection-free boxes, as the chain measures it."""
-    b1 = read_box(e1, ra, dec, half)
-    b2 = read_box(e2, ra, dec, half + 1.0)
+def pair_shift(
+    e1: str, e2: str, ra: float, dec: float, half: float, reg_tile_arcsec: float, cache_dir=None
+):
+    """Global registration (dy, dx) of the injection-free boxes, as the chain measures it.
+
+    Known limitation (final review 2026-10-17): the chain re-measures the registration with the
+    injected sources present, which moves it by 0.02-0.15 px (F150W) from this value
+    (``results/transients/fade_calib/inject_shift_residual.json``), so injected sources keep that
+    small misregistration."""
+    b1 = box_from_raw(cached(cache_dir, read_box_raw, e1, ra, dec, half))
+    b2 = box_from_raw(cached(cache_dir, read_box_raw, e2, ra, dec, half + 1.0))
     s2 = resample(b2["sci"], b2["wcs"], b1["wcs"], b1["sci"].shape)
     dy, dx, _ = global_shift(b1["sci"], s2, b1["scale"], reg_tile_arcsec)
     return dy, dx
@@ -698,6 +711,7 @@ def band_diff(job: dict) -> dict:
             job["dec"],
             job["half"],
             job.get("reg_tile_arcsec", 0.0),
+            cd,
         )
     if job.get("inj_pre") and job.get("inj_pre_psf") == "empirical":
         fw = PSF_FWHM[job["band"]]
@@ -1008,7 +1022,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--maps", type=Path, help="S, difference and epoch-1 maps (.npz; untracked)")
     a = ap.parse_args(argv)
     t_start = time.perf_counter()
-    pre_rows = list(csv.DictReader(open(a.inject_pre))) if a.inject_pre else []
+    pre_rows = []
+    if a.inject_pre:
+        with open(a.inject_pre, newline="") as f:
+            pre_rows = list(csv.DictReader(f))
 
     def _mag(v):
         return float(v) if v not in (None, "") else None

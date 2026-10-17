@@ -236,7 +236,7 @@ def main(argv=None) -> int:
                     b = read_box(u, r, d, a.half_arcsec)
                     full = (2 * math.ceil(a.half_arcsec / b["scale"]) + 1) ** 2
                     fin.append(round(float(np.isfinite(b["sci"]).sum()) / full, 4))
-                except ValueError:
+                except (ValueError, OSError):  # outside the mosaic, or a failed read
                     fin.append(0.0)
             row = {"ra": round(r, 6), "dec": round(d, 6), "n_images": n, "finite": fin}
             checked.append(row)

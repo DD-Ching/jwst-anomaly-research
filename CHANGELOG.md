@@ -23,7 +23,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - vanish 26.0 AB on the review list with the sign: 14 / 14 [0.93, 1.00];
   - unchanged false hits: 1 / 40 (empirical PSF) and 4 / 40 (Gaussian, exactly at the 0.10 limit); passes §4;
   - corrected dev seeds: 6 / 40.
-  - Partial fades at 27.5 AB are mostly undetected: 4–6 / 14.
+  - Partial fades at 27.5 AB: detected 5 / 14 (empirical) and 8 / 14 (Gaussian); on the review list 4 / 14 and
+    6 / 14.
+  - Known limitation: injected sources keep a 0.02–0.15 px F150W misregistration
+    (`inject_shift_residual.json`); not corrected, no rerun.
   - These are small-sample figures for one box, and an injected-source false-hit fraction is not a real-sky
     false-alarm rate.
 - **Batch:**

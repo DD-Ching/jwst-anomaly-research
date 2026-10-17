@@ -1,0 +1,245 @@
+{
+ "label": "derived; global registration with injections (applied) vs the injection-free shift used to place epoch-2 injections (pre); diff = residual misregistration of every injected source (final review finding, not corrected, no rerun per owner 2026-10-17)",
+ "runs": {
+  "batch/b2_inj/summary.json": {
+   "F150W": {
+    "pre": [
+     0.542,
+     -0.613
+    ],
+    "applied": [
+     0.562,
+     -0.653
+    ],
+    "diff_px": 0.045
+   },
+   "F444W": {
+    "pre": [
+     0.092,
+     -0.179
+    ],
+    "applied": [
+     0.108,
+     -0.168
+    ],
+    "diff_px": 0.019
+   }
+  },
+  "batch/b3_inj/summary.json": {
+   "F150W": {
+    "pre": [
+     0.746,
+     -0.34
+    ],
+    "applied": [
+     0.804,
+     -0.356
+    ],
+    "diff_px": 0.06
+   },
+   "F444W": {
+    "pre": [
+     0.144,
+     -0.141
+    ],
+    "applied": [
+     0.137,
+     -0.137
+    ],
+    "diff_px": 0.008
+   }
+  },
+  "dev2/v2E_s10/summary.json": {
+   "F150W": {
+    "pre": [
+     0.643,
+     -0.522
+    ],
+    "applied": [
+     0.549,
+     -0.515
+    ],
+    "diff_px": 0.094
+   },
+   "F444W": {
+    "pre": [
+     0.111,
+     -0.184
+    ],
+    "applied": [
+     0.118,
+     -0.161
+    ],
+    "diff_px": 0.024
+   }
+  },
+  "dev2/v2E_s11/summary.json": {
+   "F150W": {
+    "pre": [
+     0.643,
+     -0.522
+    ],
+    "applied": [
+     0.521,
+     -0.526
+    ],
+    "diff_px": 0.123
+   },
+   "F444W": {
+    "pre": [
+     0.111,
+     -0.184
+    ],
+    "applied": [
+     0.111,
+     -0.184
+    ],
+    "diff_px": 0.001
+   }
+  },
+  "dev2/v2G_s10/summary.json": {
+   "F150W": {
+    "pre": [
+     0.643,
+     -0.522
+    ],
+    "applied": [
+     0.597,
+     -0.533
+    ],
+    "diff_px": 0.048
+   },
+   "F444W": {
+    "pre": [
+     0.111,
+     -0.184
+    ],
+    "applied": [
+     0.114,
+     -0.159
+    ],
+    "diff_px": 0.025
+   }
+  },
+  "dev2/v2G_s11/summary.json": {
+   "F150W": {
+    "pre": [
+     0.643,
+     -0.522
+    ],
+    "applied": [
+     0.664,
+     -0.56
+    ],
+    "diff_px": 0.043
+   },
+   "F444W": {
+    "pre": [
+     0.111,
+     -0.184
+    ],
+    "applied": [
+     0.108,
+     -0.184
+    ],
+    "diff_px": 0.003
+   }
+  },
+  "heldout2/h2E_s30/summary.json": {
+   "F150W": {
+    "pre": [
+     0.643,
+     -0.522
+    ],
+    "applied": [
+     0.565,
+     -0.397
+    ],
+    "diff_px": 0.147
+   },
+   "F444W": {
+    "pre": [
+     0.111,
+     -0.184
+    ],
+    "applied": [
+     0.124,
+     -0.157
+    ],
+    "diff_px": 0.03
+   }
+  },
+  "heldout2/h2E_s31/summary.json": {
+   "F150W": {
+    "pre": [
+     0.643,
+     -0.522
+    ],
+    "applied": [
+     0.544,
+     -0.527
+    ],
+    "diff_px": 0.099
+   },
+   "F444W": {
+    "pre": [
+     0.111,
+     -0.184
+    ],
+    "applied": [
+     0.128,
+     -0.167
+    ],
+    "diff_px": 0.024
+   }
+  },
+  "heldout2/h2G_s30/summary.json": {
+   "F150W": {
+    "pre": [
+     0.643,
+     -0.522
+    ],
+    "applied": [
+     0.608,
+     -0.499
+    ],
+    "diff_px": 0.042
+   },
+   "F444W": {
+    "pre": [
+     0.111,
+     -0.184
+    ],
+    "applied": [
+     0.126,
+     -0.162
+    ],
+    "diff_px": 0.027
+   }
+  },
+  "heldout2/h2G_s31/summary.json": {
+   "F150W": {
+    "pre": [
+     0.643,
+     -0.522
+    ],
+    "applied": [
+     0.657,
+     -0.503
+    ],
+    "diff_px": 0.024
+   },
+   "F444W": {
+    "pre": [
+     0.111,
+     -0.184
+    ],
+    "applied": [
+     0.122,
+     -0.172
+    ],
+    "diff_px": 0.017
+   }
+  }
+ }
+}

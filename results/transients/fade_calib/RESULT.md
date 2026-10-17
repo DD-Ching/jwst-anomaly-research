@@ -25,6 +25,13 @@ runs they govern (35748f4, d9399f6, d0c1ea3). Owner instruction 2026-10-16; budg
   - The unchanged-source false-hit fraction counts residuals of injected steady point sources on galaxy and arc
     pixels. It is **not** the false-alarm rate of a real-sky search, which depends on real residuals (cores, spikes,
     edges) and is handled by the morphology and vetting stages.
+- **Known limitation (final review, not corrected, no rerun per the owner's 2026-10-17 instruction):**
+  - With injections present, the chain's own registration moves away from the injection-free shift used to place
+    epoch-2 sources, by 0.02–0.15 px in F150W and ≤ 0.03 px in F444W (`inject_shift_residual.json`). The
+    addendum-4 error was 0.9 px.
+  - Injected sources therefore keep a small misregistration. This can add false hits for unchanged sources and
+    lower fade recovery slightly.
+  - The injection-free screens of B1–B3 are not affected.
 - **The margin is small.** The corrected dev rerun (seeds 10 + 11) gives 6 / 40 = 0.15 for both models. Over
   all four corrected seeds, false hits are 7 / 80 (empirical) and 10 / 80 (Gaussian).
 - **Batch search (B1–B3):** 0 review entries in B2 and B3. B1's single entry is the already-vetted #286 h024
@@ -138,7 +145,7 @@ runs they govern (35748f4, d9399f6, d0c1ea3). Owner instruction 2026-10-16; budg
   - It comes from not re-reading the 80″ PSF boxes and the analysis boxes, so it applies to repeated injection runs
     on the same box.
   - Measured once, on one box with one seed; treat it as this box's figure.
-  - First use costs 25 MB of local scratch per box pair, deleted after use. A reprocessed archive file needs a
+  - The cache takes 25 MB of local scratch per box pair (`speedup.json`), deleted after use. A reprocessed archive file needs a
     cleared cache (the key is URI + box).
   - **B2 and B3 do not gain:** their F150W matching takes 1,466 s and 1,948 s against 71 s in box 1, and the cache
     saves under 4 % there.
@@ -188,7 +195,9 @@ runs they govern (35748f4, d9399f6, d0c1ea3). Owner instruction 2026-10-16; budg
     - h000, h002 and h003: ridge or dipole residuals of elongated galaxies at the box edge;
     - h001: a compact-core residual;
     - h004: an edge-on galaxy ridge;
-    - h005: an F444W-only dipole with nothing in F150W, so not a sky-fixed point change.
+    - h005: a two-band hit with mixed sign. F444W is a ± dipole (S −14.6 / +11.1); F150W has only a marginal
+      +5.5 peak and no compact feature on the sheet (S extremes within 0.3″, session check, not stored). A dipole
+      is a residual, not a point-like fade.
   - All 8 rejections are consistent with their verdicts. None is a missed point-like fade.
 - **Pending signals:** none. Box 1's only entry is the #286 h024 position, already vetted.
 - **Zero entries is not an exclusion.** Fades, simulations and passing CI are not evidence of new physics.
