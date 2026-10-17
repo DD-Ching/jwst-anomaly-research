@@ -42,6 +42,19 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Pending (not done here):**
   - the SMACS ERO → VENUS whole-box shift (2.11, −1.82) px, unchecked;
   - the kernel-stamp cost.
+## 2026-10-17: `arcs` on WHL0137 (Sunrise), RELICS maps: the S1063 anti excess does not replicate (1 vs 0.15, P 0.14)
+- **Why:** the S1063 replication tally needs fields never used to tune `arcs`; WHL0137 has an F200W catalogue, DJA
+  v7.5 photo-z and RELICS maps (the HEAD probe of DJA v7 names found only Sunrise, SMACS, MRG0138 and RXCJ0600 among
+  untested clusters; the last two lack public maps). Plan frozen first (`results/arcs/whl0137-relics/PLAN.md`).
+- **New:** `whl0137-relics-glafic` model (sha256-pinned RELICS v1 maps); `arcs_rxj2129.decide` factored out of its
+  `main` and reused by `scripts/arcs_whl0137.py`; `scripts/arcs_whl0137_sheet.py`.
+- **Result (derived; `RESULT.md`):** Lenstool 13 / 18 aligned (control passes, 72 %), anti 1 vs 0.150, P 0.139;
+  GLAFIC 14 / 19, anti 1 vs 0.232 → **frozen outcome "does not replicate"**. The anti (2194, m 24.4, g 0.24) is an
+  edge-on-looking disc with the same axis in F200W and F444W (sheet looked at): intrinsic shape; not a candidate.
+- **Handoff:** S1063 replication tally: MACS0417 no, MACS0647 no result, MACS1423 explained, RXJ2129 no result,
+  WHL0137 no. No untested public field with maps + F200W + DJA photo-z is left in the probe list (SOURCES.md);
+  S1063 stays a single-field exploratory result.
+
 ## 2026-10-17: MACS1423 clump-pair census re-run with the fixed #273 code: unchanged (P 0.259); citable (#287)
 - **Why:** the 2026-10-16 flag (below): #282 ran the census with the pre-fix `arcs_vet_deblend.fit_models`. Plan
   first: `results/arcs/macs1423-canucs/vetting/PLAN_census_rerun.md` (only the code changes).

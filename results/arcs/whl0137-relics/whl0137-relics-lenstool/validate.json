@@ -1,0 +1,24 @@
+{
+ "model": "whl0137-relics-lenstool",
+ "model_sha256": "7f1002c9604104b7478b5ac50ff1289360a688a3468465d2821dbdc8f4fd233d",
+ "kappa_map": {
+  "map": "data/cache/external/cce65a0723cd_hlsp_relics_model_model_whl0137m08_lenstool_v1_kappa.fits",
+  "quantity": "kappa",
+  "z_s": null,
+  "n_points": 17991,
+  "median_rel_diff": 3.545173283515998e-05,
+  "p95_rel_diff": 0.0001379523522799343,
+  "median_ratio": 1.0000014293705044,
+  "parity_agree": null
+ },
+ "magnification_z6.2": {
+  "map": "data/cache/external/3598be3c0caa_hlsp_relics_model_model_whl0137m08_lenstool_v1_z06p2-magnif.fits",
+  "quantity": "mu",
+  "z_s": 6.2,
+  "n_points": 17133,
+  "median_rel_diff": 2.0241225783464622e-05,
+  "p95_rel_diff": 6.921909800129194e-05,
+  "median_ratio": 1.000000628425462,
+  "parity_agree": null
+ }
+}

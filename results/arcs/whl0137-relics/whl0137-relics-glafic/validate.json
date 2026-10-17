@@ -1,0 +1,24 @@
+{
+ "model": "whl0137-relics-glafic",
+ "model_sha256": "3862cc23eafaf14d8c305ead63ed497d1d631b5bdec3d165a55905ac5ac2844b",
+ "kappa_map": {
+  "map": "data/cache/external/797de8b900f7_hlsp_relics_model_model_whl0137m08_glafic_v1_kappa.fits",
+  "quantity": "kappa",
+  "z_s": null,
+  "n_points": 993,
+  "median_rel_diff": 4.34133296287292e-06,
+  "p95_rel_diff": 1.748084034445614e-05,
+  "median_ratio": 1.0,
+  "parity_agree": null
+ },
+ "magnification_z2": {
+  "map": "data/cache/external/458e1ca45c82_hlsp_relics_model_model_whl0137m08_glafic_v1_z02-magnif.fits",
+  "quantity": "mu",
+  "z_s": 2.0,
+  "n_points": 914,
+  "median_rel_diff": 6.521566622454041e-06,
+  "p95_rel_diff": 0.0003240553446206486,
+  "median_ratio": 0.9999997487951369,
+  "parity_agree": null
+ }
+}
