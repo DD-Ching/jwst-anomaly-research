@@ -1,0 +1,14 @@
+{
+ "label": "derived from public RELICS lens models (glafic v3, lenstool v2; MAST HLSP, maps scaled to D_LS/D_S = 1) and forced photometry; 2026-10-17; exploratory",
+ "assumptions": {"z_lens": "0.443 (Mahler et al. 2019)", "z_source": "0.8718 (system 1, SIMBAD/NED)", "cosmology": "flat LCDM H0 70, Om 0.3", "D_LS/D_S": 0.4299},
+ "h002_position": "on image 1.1 of system 1 (0.26 arcsec from [MSF2019] 1c.1); model magnification 5.27 (glafic) and 5.22 (lenstool)",
+ "predicted_counter_images": "both models: images at 7.3-7.6 arcsec (matching catalogued 1c.2 within ~0.1-0.3 arcsec), at 8.9-9.3 arcsec (near catalogued 1b.4), and at 25.4-25.5 arcsec (matching 1c.3 within 0.2 arcsec); predicted_images.json",
+ "position_uncertainty": "model-to-model differences up to ~0.4 arcsec; the transient's exact counterpart position within the knot is not determined by a galaxy-scale model",
+ "magnifications": "counter-images |mu| 1.9-3.0 (glafic and lenstool at 7.3-7.6 arcsec); the lenstool 8.9 arcsec image has mu -59.8 (near a critical curve, not reliable)",
+ "time_delays_vs_h002_days": {"glafic_v3_best": {"7.3": 826.4, "7.6": 751.1, "9.3": 1025.5, "25.4": -4814.8}, "glafic_10_realizations_range": {"7.5-7.9": [649.1, 817.0], "9.3": [1067.9, 1183.2], "25.2-26.0": [-5258.6, -4504.5]}, "lenstool": "not available (no potential map)"},
+ "observations_at_counter_images": "1208 (2022-10-13) and VENUS (2025-10-06), F150W and F444W at all predicted positions (counter_image_lightcurves.ecsv); no new point source on the stamps at 7.3 and 25.4 arcsec; the 9.3 arcsec position is on a bright cluster-galaxy halo gradient",
+ "expected_signal": "if visible, about 570 nJy x (|mu| 2-3 / 5.2), i.e. roughly 200-330 nJy in F150W at the 7.5 arcsec images, far above the forced-photometry errors (5-12 nJy)",
+ "interpretation": "not testable with current epochs: the 7.5 arcsec images lag by about 650-830 days, so in 2025-10 they show image 1.1's state of about 2023-07 to 2023-12, when no data exist on image 1.1; a non-detection now is uninformative. The 25 arcsec image leads by about 12-14 years (about 2011-2014), before JWST",
+ "minimal_next_step": "a NIRCam (or deep HST/WFC3-IR) epoch covering 1c.2 at about 2027-07 to 2028-01 (VENUS epoch 60954 + 650-830 d), or an archival HST epoch of 1c.3 from about 2011-2014 if one exists (not checked)",
+ "not_done": "no lens model fitted or rebuilt; lenstool delays unavailable; archival HST of the 25 arcsec image not checked"
+}

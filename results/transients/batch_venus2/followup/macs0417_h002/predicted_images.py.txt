@@ -1,0 +1,47 @@
+import json, sys, numpy as np, warnings
+from astropy.io import fits
+from astropy.wcs import WCS
+from astropy.cosmology import FlatLambdaCDM
+import astropy.units as u, astropy.constants as const
+from scipy import ndimage
+warnings.filterwarnings('ignore')
+D = sys.argv[1]
+RA, DEC = 64.39640738001187, -11.90704044211364      # MJ0417.5-1154_2:h002
+ZL, ZS = 0.443, 0.8718                               # ASSUMPTION z_l (Mahler+2019); z_s system 1 (SIMBAD/NED)
+cos = FlatLambdaCDM(H0=70, Om0=0.3)                  # ASSUMPTION
+Dl, Ds, Dls = cos.angular_diameter_distance(ZL), cos.angular_diameter_distance(ZS), cos.angular_diameter_distance_z1z2(ZL, ZS)
+f = float(Dls / Ds)
+tfac = ((1 + ZL) * Dl * Ds / (const.c * Dls) * (u.arcsec.to(u.rad))**2).to(u.day).value  # days per arcsec^2
+out = {'f_Dls_Ds': round(f, 4), 'days_per_arcsec2': round(tfac, 2), 'models': {}}
+for name, pre, psi in (('glafic_v3', 'glafic_v3', True), ('lenstool_v2', 'lenstool_v2', False)):
+    g = lambda q: fits.getdata(f'{D}/hlsp_relics_model_model_macs0417m11_{pre}_{q}.fits').astype(float)
+    h = fits.getheader(f'{D}/hlsp_relics_model_model_macs0417m11_{pre}_kappa.fits')
+    w = WCS(h); ax, ay = g('x-arcsec-deflect') * f, g('y-arcsec-deflect') * f
+    kap, gam = g('kappa') * f, g('gamma') * f
+    ny, nx = ax.shape; sc = abs(h.get('CDELT1', h.get('CD1_1'))) * 3600
+    yy, xx = np.mgrid[0:ny, 0:nx]
+    # image-plane offsets in arcsec (x toward +RA = -pixel x for CDELT1<0)
+    x0, y0 = (float(v) for v in w.world_to_pixel_values(RA, DEC))
+    tx, ty = -(xx - x0) * sc * np.sign(-h.get('CDELT1', h.get('CD1_1'))) * -1, (yy - y0) * sc
+    tx = (xx - x0) * sc; ty = (yy - y0) * sc     # pixel-axis arcsec; deflections are along the same axes
+    bx, by = tx - ax, ty - ay
+    i0, j0 = int(round(y0)), int(round(x0))
+    b0x = float(ndimage.map_coordinates(bx, [[y0], [x0]], order=1)[0]); b0y = float(ndimage.map_coordinates(by, [[y0], [x0]], order=1)[0])
+    dd = np.hypot(bx - b0x, by - b0y)
+    mins = (ndimage.minimum_filter(dd, size=7) == dd) & (dd < 0.5)
+    mu = 1 / ((1 - kap)**2 - gam**2)
+    phi = 0.5 * ((tx - bx)**2 + (ty - by)**2) - (g('psi') * f if psi else 0)
+    phi0 = float(ndimage.map_coordinates(phi, [[y0], [x0]], order=1)[0]) if psi else None
+    mu0 = float(ndimage.map_coordinates(mu, [[y0], [x0]], order=1)[0])
+    imgs = []
+    for j, i in zip(*np.nonzero(mins)):
+        r, d = (float(v) for v in w.pixel_to_world_values(i, j))
+        sep = float(np.hypot((i - x0), (j - y0)) * sc)
+        rec = {'ra': round(r, 6), 'dec': round(d, 6), 'sep_from_h002_arcsec': round(sep, 2), 'source_plane_miss_arcsec': round(float(dd[j, i]), 3), 'mu': round(float(mu[j, i]), 2)}
+        if psi: rec['delay_days_vs_h002'] = round((float(phi[j, i]) - phi0) * tfac, 1)
+        imgs.append(rec)
+    imgs.sort(key=lambda r: r['sep_from_h002_arcsec'])
+    out['models'][name] = {'pixel_arcsec': round(sc, 4), 'mu_at_h002': round(mu0, 2), 'images': imgs}
+    print(name, 'mu0', round(mu0, 2)); [print(' ', r) for r in imgs]
+print('f', f, 'days/arcsec2', tfac)
+json.dump(out, open(sys.argv[2], 'w'), indent=1)
