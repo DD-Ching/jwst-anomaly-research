@@ -67,7 +67,7 @@ def _wcs(header: fits.Header) -> WCS:
         return WCS(header)
 
 
-def read_box(uri: str, ra: float, dec: float, half_arcsec: float) -> dict:
+def read_box_raw(uri: str, ra: float, dec: float, half_arcsec: float) -> dict:
     """SCI, ERR, WCS (of the box), pixel scale and PIXAR_SR of a box of a level-3 mosaic.
 
     Remote URIs (``s3://``, ``https://``) are opened with fsspec; the rows of the box are read in
@@ -100,21 +100,48 @@ def read_box(uri: str, ra: float, dec: float, half_arcsec: float) -> dict:
             pixar = float(hdr.get("PIXAR_SR", (scale / 206264.806) ** 2))
     finally:
         fobj.close()
-    sub = wcs.deepcopy()
-    sub.wcs.crpix = sub.wcs.crpix - np.array([x0, y0])
-    return {"sci": out["SCI"], "err": out["ERR"], "wcs": sub, "scale": scale, "pixar_sr": pixar}
+    return {
+        "sci": out["SCI"],
+        "err": out["ERR"],
+        "header": hdr.tostring(),
+        "x0": x0,
+        "y0": y0,
+        "scale": scale,
+        "pixar_sr": pixar,
+    }
 
 
-def cached(cache_dir: str | None, tag: str, key: tuple, fn, *args):
-    """``fn(*args)``, stored as a pickle under ``cache_dir`` keyed by ``tag`` and ``key``.
+def box_from_raw(raw: dict) -> dict:
+    """``read_box`` output from ``read_box_raw`` output (the WCS is rebuilt from the header text,
+    so a cached raw box gives exactly the same WCS as a fresh read)."""
+    sub = _wcs(fits.Header.fromstring(raw["header"]))
+    sub.wcs.crpix = sub.wcs.crpix - np.array([raw["x0"], raw["y0"]])
+    return {
+        "sci": raw["sci"],
+        "err": raw["err"],
+        "wcs": sub,
+        "scale": raw["scale"],
+        "pixar_sr": raw["pixar_sr"],
+    }
 
-    For raw-data products only (boxes read from the archive, empirical PSFs): nothing that depends
-    on injected sources may go through this cache. Each call returns a fresh copy.
+
+def read_box(uri: str, ra: float, dec: float, half_arcsec: float) -> dict:
+    """SCI, ERR, WCS (of the box), pixel scale and PIXAR_SR of a box of a level-3 mosaic."""
+    return box_from_raw(read_box_raw(uri, ra, dec, half_arcsec))
+
+
+def cached(cache_dir: str | None, fn, *args):
+    """``fn(*args)``, stored as a pickle under ``cache_dir`` keyed by ``fn``'s name and ``args``.
+
+    For raw-data products only (archive boxes, empirical PSFs, the injection-free registration):
+    nothing that depends on injected sources may go through this cache. Every argument of ``fn``
+    is part of the key, so a changed setting never serves a stale entry. Each call returns a fresh
+    copy; a WCS is never pickled (``read_box_raw`` keeps the header text instead).
     """
     if not cache_dir:
         return fn(*args)
-    h = hashlib.sha1(repr((tag, *key)).encode()).hexdigest()[:20]
-    path = Path(cache_dir) / f"{tag}_{h}.pkl"
+    h = hashlib.sha1(repr((fn.__name__, *args)).encode()).hexdigest()[:20]
+    path = Path(cache_dir) / f"{fn.__name__}_{h}.pkl"
     if path.exists():
         return pickle.loads(path.read_bytes())
     out = fn(*args)
@@ -180,14 +207,19 @@ def register_median(
     The whole-box correlation can be pulled to its window edge by a few tiles holding a bright
     saturated star and its spikes (El Gordo F150W, 2026-10-17: (1.71, -3.00) px against a tile
     median of (0.70, -0.57) px); the median follows the majority. Falls back to the whole-box
-    value when fewer than 4 tiles fit. Returns dy, dx and the number of tiles.
+    value when fewer than 4 usable tiles remain (tiles < 90 % finite in either image, or pinned at
+    the window edge, are dropped). Returns dy, dx and the number of tiles used.
     """
     ny, nx = a.shape
-    offs = [
-        register(a[y : y + tile, x : x + tile], b[y : y + tile, x : x + tile], max_shift)
-        for y in range(0, ny - tile + 1, tile)
-        for x in range(0, nx - tile + 1, tile)
-    ]
+    offs = []
+    for y in range(0, ny - tile + 1, tile):
+        for x in range(0, nx - tile + 1, tile):
+            ta, tb = a[y : y + tile, x : x + tile], b[y : y + tile, x : x + tile]
+            if np.isfinite(ta).mean() < 0.9 or np.isfinite(tb).mean() < 0.9:
+                continue  # chip gaps, footprint edges: an empty correlation peaks at a corner
+            d = register(ta, tb, max_shift)
+            if max(abs(d[0]), abs(d[1])) < np.ceil(max_shift) - 1e-6:
+                offs.append(d)  # tiles pinned at the window edge carry no position
     if len(offs) < 4:
         return (*register(a, b, max_shift), 0)
     dy, dx = np.median(np.array(offs), axis=0)
@@ -600,48 +632,89 @@ def grid_job(uri, ra, dec, half, n, min_sep, margin, seed) -> list[tuple[float, 
     return grid_positions(b["sci"], b["wcs"], b["scale"], n, min_sep, margin, 90.0, seed)
 
 
+PSF_N = 5  # ASSUMPTION: empirical PSF stack size (PLAN addendum 3)
+PSF_MIN_SNR = 50.0
+
+
+def global_shift(a: np.ndarray, b: np.ndarray, scale: float, reg_tile_arcsec: float):
+    """The chain's global registration: tile median (``--reg-tile-arcsec`` > 0) or whole box."""
+    if reg_tile_arcsec > 0:
+        return register_median(a, b, int(round(reg_tile_arcsec / scale)))
+    return (*register(a, b), 0)
+
+
+def pair_shift(e1: str, e2: str, ra: float, dec: float, half: float, reg_tile_arcsec: float):
+    """Global registration (dy, dx) of the injection-free boxes, as the chain measures it."""
+    b1 = read_box(e1, ra, dec, half)
+    b2 = read_box(e2, ra, dec, half + 1.0)
+    s2 = resample(b2["sci"], b2["wcs"], b1["wcs"], b1["sci"].shape)
+    dy, dx, _ = global_shift(b1["sci"], s2, b1["scale"], reg_tile_arcsec)
+    return dy, dx
+
+
+def pair_psfs(e1, e2, ra, dec, box, half, fwhm, n, min_snr):
+    """Per-epoch empirical PSFs from ``box``-half boxes of the two mosaics (``empirical_psfs``)."""
+    q1 = read_box(e1, ra, dec, box)
+    q2 = read_box(e2, ra, dec, box + 1.0)
+    return empirical_psfs(q1, q2, fwhm, half, n=n, min_snr=min_snr)
+
+
+def epoch2_pixel(w1: WCS, w2: WCS, ra: float, dec: float, dy: float, dx: float):
+    """(y, x) in epoch 2 of a sky-fixed source at (ra, dec), given the chain's registration.
+
+    Real sources sit at epoch-1 pixel p - (dy, dx) in WCS-resampled epoch 2 (``shift`` then moves
+    them by +(dy, dx) onto p), so the source is placed at the sky position of that pixel.
+    """
+    x1, y1 = (float(v) for v in w1.all_world2pix(ra, dec, 0))
+    ra2, dec2 = w1.all_pix2world(x1 - dx, y1 - dy, 0)
+    x2, y2 = (float(v) for v in w2.all_world2pix(ra2, dec2, 0))
+    return y2, x2
+
+
 def band_diff(job: dict) -> dict:
     """Read, align, match and difference one band; detections, maps and injections."""
     os.environ.setdefault("OMP_NUM_THREADS", "1")
     t0 = time.perf_counter()
     cd = job.get("cache_dir")
-    b1 = cached(
-        cd,
-        "box",
-        (job["e1"], job["ra"], job["dec"], job["half"]),
-        read_box,
-        job["e1"],
-        job["ra"],
-        job["dec"],
-        job["half"],
-    )
-    b2 = cached(
-        cd,
-        "box",
-        (job["e2"], job["ra"], job["dec"], job["half"] + 1.0),
-        read_box,
-        job["e2"],
-        job["ra"],
-        job["dec"],
-        job["half"] + 1.0,
-    )
+    b1 = box_from_raw(cached(cd, read_box_raw, job["e1"], job["ra"], job["dec"], job["half"]))
+    b2 = box_from_raw(cached(cd, read_box_raw, job["e2"], job["ra"], job["dec"], job["half"] + 1.0))
     t_read = time.perf_counter() - t0
     # Pre-matching injections (``--inject-pre``): sources added to the raw boxes of each epoch,
     # on that epoch's own grid and flux scale, before resampling, registration and matching.
     # With ``inj_pre_psf == "empirical"`` each epoch gets its own empirical PSF (chosen before
     # any injection), so an unchanged source has each epoch's real shape.
-    psfs, psf_info = None, None
+    psfs, psf_info, pre_shift = None, None, None
+    if job.get("inj_pre"):
+        # Where a real sky-fixed source lands in epoch 2: the chain shifts resampled epoch 2 by
+        # the registration (dy, dx), so a source at epoch-1 pixel p sits at p - (dy, dx) there.
+        # Placing it at the WCS position instead would leave every injection misregistered by
+        # (dy, dx) after the shift. The shift is measured on the injection-free boxes.
+        pre_shift = cached(
+            cd,
+            pair_shift,
+            job["e1"],
+            job["e2"],
+            job["ra"],
+            job["dec"],
+            job["half"],
+            job.get("reg_tile_arcsec", 0.0),
+        )
     if job.get("inj_pre") and job.get("inj_pre_psf") == "empirical":
         fw = PSF_FWHM[job["band"]]
         box = job["inj_pre_psf_box"]
-
-        def _psf():
-            q1 = read_box(job["e1"], job["ra"], job["dec"], box)
-            q2 = read_box(job["e2"], job["ra"], job["dec"], box + 1.0)
-            return empirical_psfs(q1, q2, fw, job["inj_pre_psf_half"])
-
-        key = (job["e1"], job["e2"], job["ra"], job["dec"], box, job["inj_pre_psf_half"], fw)
-        p1, p2, used = cached(cd, "psf", key, _psf)
+        p1, p2, used = cached(
+            cd,
+            pair_psfs,
+            job["e1"],
+            job["e2"],
+            job["ra"],
+            job["dec"],
+            box,
+            job["inj_pre_psf_half"],
+            fw,
+            PSF_N,
+            PSF_MIN_SNR,
+        )
         psfs = {1: p1, 2: p2}
         psf_info = {
             "sources_ra_dec_conc": used,
@@ -653,7 +726,10 @@ def band_diff(job: dict) -> dict:
         for ep, b, mag in ((1, b1, mag1), (2, b2, mag2)):
             if mag is None:
                 continue
-            x, y = (float(v) for v in b["wcs"].all_world2pix(ra, dec, 0))
+            if ep == 1:
+                x, y = (float(v) for v in b1["wcs"].all_world2pix(ra, dec, 0))
+            else:
+                y, x = epoch2_pixel(b1["wcs"], b2["wcs"], ra, dec, *pre_shift)
             if 0 <= y < b["sci"].shape[0] and 0 <= x < b["sci"].shape[1]:
                 flux = mag_to_mjysr(mag, b["pixar_sr"])
                 if psfs is not None:
@@ -666,10 +742,7 @@ def band_diff(job: dict) -> dict:
     shape = b1["sci"].shape
     s2 = resample(b2["sci"], b2["wcs"], b1["wcs"], shape)
     v2 = resample(b2["err"] ** 2, b2["wcs"], b1["wcs"], shape)
-    if job.get("reg_tile_arcsec", 0) > 0:
-        dy, dx, _ = register_median(b1["sci"], s2, int(round(job["reg_tile_arcsec"] / b1["scale"])))
-    else:
-        dy, dx = register(b1["sci"], s2)
+    dy, dx, n_reg_tiles = global_shift(b1["sci"], s2, b1["scale"], job.get("reg_tile_arcsec", 0.0))
     s2 = shift(s2, dy, dx)
     v2 = shift(v2, dy, dx)
     if job["tile_arcsec"] > 0:
@@ -793,6 +866,8 @@ def band_diff(job: dict) -> dict:
     out["injection"] = inj
     out["injection_unflagged"] = inj_unflagged
     out["inject_pre_psf"] = psf_info
+    out["inject_pre_shift_px"] = list(pre_shift) if pre_shift is not None else None
+    out["reg_tiles_used"] = n_reg_tiles
     out["timing_s"] = {
         "read": round(t_read, 2),
         "pre_injections": round(t_pre, 2),
@@ -1137,6 +1212,8 @@ def main(argv: list[str] | None = None) -> int:
                 "injection_recovered_not_near_core_this_band": r["injection_unflagged"],
                 "timing_s": r["timing_s"],
                 "inject_pre_psf": r.get("inject_pre_psf"),
+                "inject_pre_shift_px": r.get("inject_pre_shift_px"),
+                "reg_tiles_used": r.get("reg_tiles_used"),
             }
             for r in res
         },

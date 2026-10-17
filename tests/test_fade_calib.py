@@ -91,7 +91,7 @@ def test_register_median_ignores_minority_tiles():
     a = ndimage_gauss(rng.normal(size=(128, 128)))
     b = np.roll(a, (1, -1), axis=(0, 1)).copy()
     # one tile (of 16) dominated by a bright feature shifted differently
-    b[:32, :32] = np.roll(a[:32, :32], (0, 3), axis=(0, 1)) * 50
+    b[:32, :32] = np.roll(a[:32, :32], (0, 2), axis=(0, 1)) * 50
     a2 = a.copy()
     a2[:32, :32] *= 50
     dy, dx, n = ad.register_median(a2, b, 32)
@@ -144,12 +144,57 @@ def test_cached_returns_fresh_copies(tmp_path):
     ad = _ad()
     calls = []
 
-    def f(n):
+    def boxfn(n):
         calls.append(n)
         return {"sci": np.zeros(n)}
 
-    a = ad.cached(str(tmp_path), "box", ("u", 1), f, 3)
+    a = ad.cached(str(tmp_path), boxfn, 3)
     a["sci"] += 1  # an injection on the returned copy must not reach the cache
-    b = ad.cached(str(tmp_path), "box", ("u", 1), f, 3)
+    b = ad.cached(str(tmp_path), boxfn, 3)
     assert calls == [3] and b["sci"].sum() == 0
-    assert ad.cached(None, "box", ("u", 1), f, 2)["sci"].size == 2
+    assert ad.cached(str(tmp_path), boxfn, 4)["sci"].size == 4  # every argument is in the key
+    assert ad.cached(None, boxfn, 2)["sci"].size == 2
+
+
+def test_register_median_drops_empty_tiles():
+    ad = _ad()
+    rng = np.random.default_rng(3)
+    a = ndimage_gauss(rng.normal(size=(128, 128)))
+    b = np.roll(a, (1, -1), axis=(0, 1)).copy()
+    b[:, :64] = np.nan  # half the box outside epoch 2's footprint
+    dy, dx, n = ad.register_median(a, b, 32)
+    assert n == 8
+    assert abs(dy + 1) < 0.3 and abs(dx - 1) < 0.3
+
+
+def _tan(crpix, crval=(15.73, -49.253), rot=0.0):
+    from astropy.wcs import WCS
+
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = list(crval)
+    w.wcs.crpix = list(crpix)
+    c, s = np.cos(np.radians(rot)), np.sin(np.radians(rot))
+    d = 0.03 / 3600
+    w.wcs.cd = np.array([[-d * c, d * s], [d * s, d * c]])
+    return w
+
+
+def test_epoch2_pixel_follows_registration():
+    ad = _ad()
+    w1 = _tan((100.0, 100.0))
+    w2 = _tan((110.0, 95.0), rot=0.84)
+    ra, dec = w1.all_pix2world(60.0, 70.0, 0)
+    y2, x2 = ad.epoch2_pixel(w1, w2, float(ra), float(dec), 0.0, 0.0)
+    xr, yr = w2.all_world2pix(ra, dec, 0)
+    assert np.allclose([y2, x2], [yr, xr], atol=1e-6)  # zero shift = WCS position
+    y2, x2 = ad.epoch2_pixel(w1, w1, float(ra), float(dec), 0.7, -0.57)
+    assert np.allclose([y2, x2], [70.0 - 0.7, 60.0 + 0.57], atol=1e-6)
+    # after the chain's shift by +(dy, dx), the epoch-2 source sits back on the epoch-1 pixel
+    img = np.zeros((140, 140))
+    ad.add_star(img, y2, x2, 1.2, 1.0)
+    moved = ad.shift(img, 0.7, -0.57)
+    yy, xx = np.mgrid[0:140, 0:140]
+    m = np.nan_to_num(moved)
+    assert abs((m * yy).sum() / m.sum() - 70.0) < 0.05
+    assert abs((m * xx).sum() / m.sum() - 60.0) < 0.05

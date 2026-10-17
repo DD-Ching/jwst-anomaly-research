@@ -114,3 +114,32 @@ Development runs are stored in `dev/` (`<variant>_s10`, `<variant>_s11`, `<varia
   - The Gaussian result is reported beside it, and its failure, if it fails, is stated.
 - **Consequence for section 6:** the chain changed, so box 1 (#286) is re-screened with `--reg-tile-arcsec 6`.
 - **Unchanged:** thresholds, the pass rule, the samples and the held-out seeds.
+
+## Addendum 4 (2026-10-17T00:25Z, after `/code-review` of the held-out run, before any further run)
+- **Review finding (correctness):**
+  - `--inject-pre` placed each epoch's source at the WCS position of (ra, dec).
+  - The chain then shifts WCS-resampled epoch 2 by the measured registration (F150W ≈ (0.70, −0.57) px), so every
+    injected epoch-2 source ended up displaced by that shift. Real sources are brought into line by the same shift.
+  - An "unchanged" injection was therefore a 0.9 px dipole. The held-out result of seeds 20 + 21 and every dev
+    variant measured that injection artifact, not the chain.
+  - Those results stay in `heldout/` and `dev/` and are reported as **invalid injection geometry**. They are not
+    used for the pass rule.
+- **Corrections (none changes a threshold, the samples or the pass rule):**
+  1. Epoch-2 sources are placed where a real sky-fixed source lands (`epoch2_pixel`). The chain's global
+     registration is measured once on the injection-free boxes (`pair_shift`, same method as the chain).
+     - Local tile shifts (≤ 2 px cap; El Gordo residual median ≈ 0.2 px) are not emulated.
+  2. `register_median` drops tiles < 90 % finite in either image or pinned at the window edge. This is a review
+     robustness patch of the addendum 3 fix, not a new fix. If it changes box 1's shift, box 1 is re-screened.
+  3. The cache no longer pickles a WCS; it keeps the header text, so a cached box is exact. Every function argument
+     is in the cache key.
+- **New held-out seeds 30 and 31** (`sample_s30.csv`, `sample_s31.csv`, written now, never run).
+  - Seeds 20 and 21 were seen, so they are no longer held out.
+  - Dev seeds 10 + 11 are re-run first for diagnosis only. **Nothing is changed after the dev rerun, whatever it
+    shows.**
+  - Then 30 + 31 run once with both injection models. The pass rule (§4) is applied to the empirical model; the
+    Gaussian is reported beside it.
+- **Kept (review point noted):**
+  - `near_bright_core` and the morphology epoch-1 map include the injected epoch-1 sources. A real fading source is
+    also in epoch 1, so this is realistic for one source.
+  - The density effect of about 60 injected epoch-1 sources on the 99.9th-percentile threshold is a stated
+    limitation. Per-stage counts are reported.
