@@ -8,8 +8,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **New:** `scripts/w1_psf_smooth.py` (five pre-listed variants); STPSF data streamed (not stored).
 - **Result (`results/w1_psf_smooth/RESULT.md`):** the unsmoothed variant reproduces #301. Smoothing cuts the real-
   component excess by 0.016–0.023 (stars 623, 7644) and 0.06–0.07 (star 8291), but S3 (all three stars within 0.05
-  per component) fails in every variant: star 7644 stays at −0.048 to −0.051, and star 8291's imaginary
-  component stays 0.10 off (orientation, which isotropic smoothing cannot change). W1 limits unchanged.
+  per component) fails in every variant: star 8291's imaginary component stays 0.10 off in all of them (orientation, which
+  isotropic smoothing cannot change); star 7644 passes only with the added 0.010″ jitter (−0.048). W1 limits unchanged.
 - **Failed approach:** a smoothed STPSF model as the per-source χ_PSF forward model.
 - **Handoff:** next W1 floor step, if any, is PSF-weighted pixel moments (reuse-check GalSim HSM first); otherwise
   accept the 4.21 floor and spend W1 time on new fields.

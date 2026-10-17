@@ -23,7 +23,8 @@ Smoothing widths and the S3 tolerance are ASSUMPTIONs.
 | kernel+box+jit5 | 0.91 | −0.032, +0.008 | −0.051, −0.000 | −0.012, +0.105 | fail |
 | kernel+box+jit10 | 0.95 | −0.034, +0.008 | −0.048, −0.003 | −0.012, +0.105 | fail |
 
-(Δ = star − model, pixel frame.) S3 fails for every variant. The smoothing lowers the over-prediction of the real
+(Δ = star − model, pixel frame.) S3 fails for every variant. Per star (`s3_star`): 623 passes in every smoothed
+variant; 7644 passes only in kernel+box+jit10 (−0.048); 8291 fails in all, so it alone decides the jit10 outcome. The smoothing lowers the over-prediction of the real
 component (the axis both share) by 0.016–0.023 for stars 623 and 7644 and by 0.06–0.07 for star 8291. Star 8291's
 imaginary component stays 0.10 off in every variant: its orientation differs from the model's (15.5° vs ≈ 179°,
 `results/w1_stpsf`), and an isotropic smoothing cannot rotate χ.
