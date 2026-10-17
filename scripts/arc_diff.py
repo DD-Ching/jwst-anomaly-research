@@ -388,6 +388,113 @@ def kernel_fit(
     return k, float(np.mean(z[keep] ** 2))
 
 
+def kernel_fit_stamps(
+    ref: np.ndarray,
+    tgt: np.ndarray,
+    var: np.ndarray,
+    half: int,
+    stamp: np.ndarray,
+    lab: np.ndarray,
+    nlab: int,
+    clip: float = 4.0,
+    n_iter: int = 3,
+    max_pix: int = 200_000,
+    seed: int = 0,
+    timing: dict | None = None,
+) -> dict[int, np.ndarray]:
+    """``kernel_fit(ref, tgt, var, half, mask=stamp & (lab != i))`` for every stamp i, sharing work.
+
+    Same algorithm per fit: the rows of stamp i never enter fit i, each fit clips its own rows
+    (``clip`` σ, ``n_iter`` iterations, rows may be re-admitted) and returns its own kernel. What
+    is shared is the design: the weighted rows of all stamp pixels and their Gram matrix are built
+    once, and each iteration's normal equations are the full Gram minus stamp i's rows and the
+    fit's clipped rows (summed directly when fewer than half the rows are kept). The 82x82 system
+    is solved with column equilibration (Cholesky, ``lstsq`` fallback) instead of an SVD of the
+    tall matrix (PLAN ``results/transients/kernel_loo``). Fits over ``max_pix`` rows fall back to
+    ``kernel_fit`` (its random subsample depends on the row list); fits with too few rows are
+    left out of the result, as ``kernel_fit`` raises for them. Returns {label: kernel}.
+    """
+    import scipy.linalg
+
+    t0 = time.perf_counter()
+    n = 2 * half + 1
+    good = np.isfinite(ref) & np.isfinite(tgt) & np.isfinite(var) & (var > 0)
+    good[:half, :] = good[-half:, :] = good[:, :half] = good[:, -half:] = False
+    fin = ndimage.minimum_filter(np.isfinite(ref).astype(np.uint8), size=n) > 0
+    ys, xs = np.nonzero(good & fin & stamp)
+    r0 = np.where(np.isfinite(ref), ref, 0.0)
+    offs = [(dy, dx) for dy in range(-half, half + 1) for dx in range(-half, half + 1)]
+    npar = len(offs) + 1
+    w = 1.0 / np.sqrt(var[ys, xs])
+    a = np.empty((ys.size, npar))
+    for c, (dy, dx) in enumerate(offs):
+        a[:, c] = r0[ys - dy, xs - dx]
+    a[:, -1] = 1.0
+    a *= w[:, None]
+    tw = tgt[ys, xs] * w
+    gram = a.T @ a
+    rhs = a.T @ tw
+    row_lab = lab[ys, xs]
+    order = np.argsort(row_lab, kind="stable")
+    bounds = np.searchsorted(row_lab[order], np.arange(1, nlab + 2))
+    t_build = time.perf_counter() - t0
+
+    def solve(g, r):
+        d = 1.0 / np.sqrt(np.where(np.diag(g) > 0, np.diag(g), 1.0))
+        gs = g * d[:, None] * d[None, :]
+        try:
+            y = scipy.linalg.solve(gs, r * d, assume_a="pos", check_finite=False)
+        except (np.linalg.LinAlgError, scipy.linalg.LinAlgError):
+            y = np.linalg.lstsq(gs, r * d, rcond=None)[0]
+        return y * d
+
+    out: dict[int, np.ndarray] = {}
+    for i in range(1, nlab + 1):
+        own = order[bounds[i - 1] : bounds[i]]
+        n_fit = ys.size - own.size
+        if n_fit > max_pix:
+            try:
+                out[i], _ = kernel_fit(
+                    ref, tgt, var, half, clip, n_iter, max_pix, seed, mask=stamp & (lab != i)
+                )
+            except ValueError:
+                pass
+            continue
+        if n_fit < 10 * npar:
+            continue
+        in_fit = np.ones(ys.size, bool)
+        in_fit[own] = False
+        g_fit = gram - a[own].T @ a[own]
+        r_fit = rhs - a[own].T @ tw[own]
+        keep = in_fit.copy()
+        for it in range(max(n_iter, 1)):
+            drop = np.nonzero(in_fit & ~keep)[0]
+            if drop.size == 0:
+                coef = solve(g_fit, r_fit)
+            elif keep.sum() >= n_fit / 2:
+                ad_ = a[drop]
+                coef = solve(g_fit - ad_.T @ ad_, r_fit - ad_.T @ tw[drop])
+            else:
+                ak = a[keep]
+                coef = solve(ak.T @ ak, ak.T @ tw[keep])
+            z = a @ coef - tw
+            if it == n_iter - 1:
+                break
+            sd = _robust_std(z[keep])
+            new = in_fit & (np.abs(z) < clip * max(sd, 1e-12))
+            if np.array_equal(new, keep):
+                break
+            keep = new
+        k = np.zeros((n, n))
+        for c, (dy, dx) in enumerate(offs):
+            k[dy + half, dx + half] = coef[c]
+        out[i] = k
+    if timing is not None:
+        timing["stamp_design_build"] = round(t_build, 3)
+        timing["stamp_rows"] = int(ys.size)
+    return out
+
+
 def compact_stamps(img: np.ndarray, half: int, pct: float = 97.0, radius: int = 6) -> np.ndarray:
     """Pixels within ``radius`` of local maxima of the background-subtracted image above ``pct``.
 
@@ -412,6 +519,8 @@ def kernel_match(
     blur: float,
     half: int,
     stamps: bool = False,
+    stamp_fit: str = "refit",
+    timing: dict | None = None,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, float, int]:
     """Convolve the sharper epoch (sign of the Gaussian ``blur``) with a fitted pixel kernel.
 
@@ -419,7 +528,8 @@ def kernel_match(
     convolved with a second kernel fitted on the other compact-source stamps. Variances follow
     the stamp kernels inside their stamps. Returns matched epoch 1, matched epoch 2, the
     difference variance, the whole-box kernel, the flux scale (epoch 2 / epoch 1) and the
-    convolved epoch (1 or 2).
+    convolved epoch (1 or 2). ``stamp_fit``: ``refit`` calls ``kernel_fit`` per stamp;
+    ``shared`` computes the same leave-one-out fits with ``kernel_fit_stamps``.
     """
     var = v1 + v2
     conv1 = blur >= 0
@@ -439,14 +549,25 @@ def kernel_match(
         lab, nlab = ndimage.label(stamp)
         # a stamp's own pixels always belong to it; the grown rim goes to the highest label
         owner = np.where(lab > 0, lab, ndimage.grey_dilation(lab, size=2 * half + 1))
+        t_st = time.perf_counter()
+        shared = (
+            kernel_fit_stamps(ref, tgt, var, half, stamp, lab, nlab, timing=timing)
+            if stamp_fit == "shared"
+            else None
+        )
         for i in range(1, nlab + 1):
             sel = owner == i
             if not sel.any():
                 continue
-            try:
-                ki, _ = kernel_fit(ref, tgt, var, half, mask=stamp & (lab != i))
-            except ValueError:  # too few other stamps: keep the whole-box kernel here
-                continue
+            if shared is not None:
+                if i not in shared:  # too few other stamps: keep the whole-box kernel here
+                    continue
+                ki = shared[i]
+            else:
+                try:
+                    ki, _ = kernel_fit(ref, tgt, var, half, mask=stamp & (lab != i))
+                except ValueError:  # too few other stamps: keep the whole-box kernel here
+                    continue
             ys, xs = np.nonzero(sel)
             y0, y1 = max(ys.min() - half, 0), ys.max() + half + 1
             x0, x1 = max(xs.min() - half, 0), xs.max() + half + 1
@@ -455,6 +576,9 @@ def kernel_match(
             vm[y0:y1, x0:x1][win] = ndimage.convolve(vfill[y0:y1, x0:x1], ki**2, mode="constant")[
                 win
             ]
+        if timing is not None:
+            timing["kernel_stamps"] = round(time.perf_counter() - t_st, 3)
+            timing["n_stamps"] = int(nlab)
     m[~np.isfinite(ref)] = np.nan
     var = vm + vtgt
     ksum = float(k.sum())
@@ -768,6 +892,7 @@ def band_diff(job: dict) -> dict:
     var = b1["err"] ** 2 + np.clip(v2, 0.0, None) / kscale**2
     kern = None
     conv2 = blur < 0
+    ktiming: dict = {}
     if job["kernel_px"] > 0:
         m1, m2, var, kern, kscale, conv_epoch = kernel_match(
             b1["sci"],
@@ -777,6 +902,8 @@ def band_diff(job: dict) -> dict:
             blur,
             job["kernel_px"],
             job["kernel_stamps"],
+            stamp_fit=job.get("kernel_stamp_fit", "refit"),
+            timing=ktiming,
         )
         conv2 = conv_epoch == 2
     bg_px = int(np.ceil(job["bg_arcsec"] / b1["scale"])) | 1
@@ -888,6 +1015,7 @@ def band_diff(job: dict) -> dict:
         "resample_register_match": round(t_match, 2),
         "detect": round(t_detect, 2),
         "post_injections": round(time.perf_counter() - t3, 2),
+        **ktiming,
     }
     return out
 
@@ -976,6 +1104,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--kernel-stamps", action="store_true", help="fit the kernel on compact-source stamps"
     )
+    ap.add_argument(
+        "--kernel-stamp-fit",
+        choices=("refit", "shared"),
+        default="refit",
+        help="per-stamp leave-one-out kernels: refit each (original) or shared design (same fits)",
+    )
     ap.add_argument("--min-sigma", type=float, default=5.0)
     ap.add_argument("--core-arcsec", type=float, default=0.8, help="bright-core flag radius")
     ap.add_argument("--core-pct", type=float, default=99.9, help="bright-core flag level")
@@ -1046,6 +1180,7 @@ def main(argv: list[str] | None = None) -> int:
             "tile_arcsec": a.tile_arcsec,
             "kernel_px": a.kernel_px,
             "kernel_stamps": a.kernel_stamps,
+            "kernel_stamp_fit": a.kernel_stamp_fit,
             "core_arcsec": a.core_arcsec,
             "core_pct": a.core_pct,
             "min_sigma": a.min_sigma,
@@ -1203,6 +1338,7 @@ def main(argv: list[str] | None = None) -> int:
             "inject_pre_psf": a.inject_pre_psf,
             "kernel_px": a.kernel_px,
             "kernel_stamps": a.kernel_stamps,
+            "kernel_stamp_fit": a.kernel_stamp_fit,
             "match_arcsec": a.match_arcsec,
             "core_arcsec": a.core_arcsec,
             "core_pct": a.core_pct,
