@@ -199,17 +199,18 @@ def cov_shape(cov) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     return np.sqrt(w[:, 1]), 1.0 - np.sqrt(np.maximum(w[:, 0], 0.0) / w[:, 1]), pa
 
 
-def lensed_cov(a, b, pa_deg, dx, dy, lam_r, lam_t, psf_sigma: float) -> np.ndarray:
+def lensed_cov(a, b, pa_deg, dx, dy, lam_r, lam_t, psf_sigma: float, psf_chi=0j) -> np.ndarray:
     """Image second moments (px^2, East/North) of sources (sigmas ``a``, ``b``, ``pa_deg``).
 
     ``dx``, ``dy``: image offsets from the lens (East, North); ``lam_r``, ``lam_t``: signed Jacobian
-    eigenvalues at the image. The PSF (isotropic, ``psf_sigma`` px) is removed from the source
-    moments, the intrinsic ellipse mapped by A^-1, and the PSF added back (ASSUMPTION: Gaussian
-    moments, isolated lens)."""
+    eigenvalues at the image. The PSF (``es.psf_moments``: isotropic with ``psf_sigma`` px by
+    default, or with distortion ``psf_chi``) is removed from the source moments, the intrinsic
+    ellipse mapped by A^-1, and the PSF added back (ASSUMPTION: Gaussian moments, isolated lens)."""
     cov = _ellipse_cov(a, b, pa_deg)
-    eye = np.eye(2)
+    pee, pnn, pen = es.psf_moments(psf_sigma, psf_chi)
+    pcov = np.array([[pee, pen], [pen, pnn]], float)  # the PSF moments (σ² I when isotropic)
     floor = (0.05 * psf_sigma) ** 2
-    w, vec = np.linalg.eigh(cov - psf_sigma**2 * eye)
+    w, vec = np.linalg.eigh(cov - pcov)
     cov_int = vec @ (np.maximum(w, floor)[..., None] * np.swapaxes(vec, -1, -2))
     r = np.stack([np.asarray(dx, float), np.asarray(dy, float)], axis=-1)
     r = r / np.linalg.norm(r, axis=-1, keepdims=True)
@@ -217,7 +218,7 @@ def lensed_cov(a, b, pa_deg, dx, dy, lam_r, lam_t, psf_sigma: float) -> np.ndarr
     inv = (1.0 / np.asarray(lam_r, float))[:, None, None] * r[:, :, None] * r[:, None, :] + (
         1.0 / np.asarray(lam_t, float)
     )[:, None, None] * t[:, :, None] * t[:, None, :]
-    return inv @ cov_int @ np.swapaxes(inv, -1, -2) + psf_sigma**2 * eye
+    return inv @ cov_int @ np.swapaxes(inv, -1, -2) + pcov
 
 
 def lensed_shapes(a, b, pa_deg, dx, dy, lam_r, lam_t, psf_sigma: float):
@@ -270,6 +271,7 @@ def paint_lens(
     first_label: int,
     pixel_scale: float,
     snr_floor: float = SNR_DETECT,
+    psf_chi=0j,
 ) -> tuple[np.ndarray, Table, dict]:
     """Paint one W1 lens at model-frame (``x_l``, ``y_l``) into ``shapes`` (``simulated`` rows).
 
@@ -311,7 +313,7 @@ def paint_lens(
     b = a * (1.0 - np.asarray(shapes["ellipticity"], float)[k])
     pa_src = np.asarray(shapes["pa_obs"], float)[k]
     dxi, dyi = np.asarray(img["dx"], float), np.asarray(img["dy"], float)
-    cov = lensed_cov(a, b, pa_src, dxi, dyi, lam_r, lam_t, psf_sigma)
+    cov = lensed_cov(a, b, pa_src, dxi, dyi, lam_r, lam_t, psf_sigma, psf_chi)
     mu = np.abs(np.asarray(img["mu"], float))
     area_src = np.asarray(shapes["area_px"], float)[k]
     # blended pairs: one row at the flux-weighted centroid with the combined second moments
