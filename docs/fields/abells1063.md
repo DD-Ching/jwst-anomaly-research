@@ -106,3 +106,8 @@ pipeline catalogue `jw03293-o001_t001` (manifest) and the DJA v7.5 zout above. D
     clumps.
   - Ordinary explanations are not excluded. The pause is a resource decision (owner, 2026-10-16).
   - 1316 and 1557 stay pending-vetting flags with insufficient data.
+
+## W1 shear screen (D-053, 2026-10-17)
+`results/w1_shear_s1063/RESULT.md`: F200W catalogue, DJA v7.5 photo-z, Gaia veto. R = 0.472 ± 0.034; S_max 3.61
+(p_rot 0.07), max |S_×| 3.33: **null**. Injections 0 / 0 / 17 / 69 / 91 of 200 (2 × 10¹⁰ → 2 × 10¹³ M☉); the field
+joins the W1 shear limits (docs/exotic_limits.md, five fields).

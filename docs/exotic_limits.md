@@ -222,7 +222,8 @@ with a catalogue aperture-mass map instead of converging arcs.
   resolved, cluster model |g| < 0.5 and κ < 1 at the row's photo-z.
 - **Cluster shear.** The measured ε follows the model's reduced shear with a responsivity R ≈ 0.45, not 1
   (isophotal, unweighted moments). R is fitted per field, Re(ε e^{-i arg g}) against |g| through the origin:
-  Abell 2744 0.451 ± 0.018, MACS0416 0.483 ± 0.034, MACS1149 0.476 ± 0.039, Abell 370 0.414 ± 0.023. The screen
+  Abell 2744 0.451 ± 0.018, MACS0416 0.483 ± 0.034, MACS1149 0.476 ± 0.039, Abell 370 0.414 ± 0.023, Abell S1063
+  0.472 ± 0.034. The screen
   removes R g; the residual along g is then −0.009 ± 0.007 (MACS0416) and +0.006 ± 0.004 (Abell 2744). Removing the
   full g would leave −(1 − R) g, a radial pattern with the W1 sign.
 - **Statistic.** S = −Σ Q e_t / √(Σ Q² |e|² / 2) (Schneider 1996) on a 1″ grid, aperture R_ap = 10″, Schirmer et al.
@@ -255,34 +256,41 @@ with a catalogue aperture-mass map instead of converging arcs.
 | MACS0416 | 102 | 1,777 | 0.08 | 3.79 (0.050) | 3.87 (0.04) / 4.04 (0.02) | no |
 | MACS1149 | 77 | 1,399 | 0.06 | 3.40 (0.19) | 3.76 (0.015) / 3.45 (0.16) | no |
 | Abell 370 | 178 | 2,191 | 0.10 | 3.48 (0.20) | 3.37 (0.31) / 3.46 (0.21) | yes, by 0.02 |
+| Abell S1063 (2026-10-17) | 80 | 1,440 | 0.07 | 3.61 (0.07) | 3.33 (0.29) / 3.03 (0.82) | yes, by 0.28 |
 
 No field has an E-mode peak with p_rot < 0.05 that also beats its B-mode extremes: **null**. Abell 370's maximum
-(39.99604, −1.56754, near the screened edge) passes E > B but not the rotation null.
+(39.99604, −1.56754, near the screened edge) passes E > B but not the rotation null. Abell S1063 (added 2026-10-17;
+CATS v4.1, DJA v7.5 photo-z, Gaia spike veto; `results/w1_shear_s1063/`): its maximum (342.19413, −44.53478) also
+beats B but not the rotation null (p 0.07); both top peaks' apertures are crossed by long linear streaks in F200W
+(`sheet_top_peaks.png`, looked at), the spike-type mimic the veto targets.
 
 ### Recovery efficiency (`derived` from `simulated`; recovered / 200)
 
-| \|M\| (M☉) | θ_E(z_s = 2) | Abell 2744 | MACS0416 | MACS1149 | Abell 370 | radial, all 8 fields (D-049) |
-|---|---|---|---|---|---|---|
-| 2 × 10¹⁰ | 0.27–0.36″ | 0 | 0 | 0 | 0 | 0 / 1600 |
-| 2 × 10¹¹ | 0.85–1.14″ | 0 | 0 | 0 | 1 | 0 / 1600 |
-| 2 × 10¹² | 2.7–3.6″ | 14 | 7 | 3 | 9 | 8 / 1600 |
-| 8 × 10¹² | 5.4–7.2″ | 72 | 50 | 30 | 45 | 84 / 1600 |
-| 2 × 10¹³ | 8.5–11.4″ | 146 | 112 | 74 | 73 | 156 / 1600 |
+| \|M\| (M☉) | θ_E(z_s = 2) | Abell 2744 | MACS0416 | MACS1149 | Abell 370 | Abell S1063 | radial, all 8 fields (D-049) |
+|---|---|---|---|---|---|---|---|
+| 2 × 10¹⁰ | 0.27–0.36″ | 0 | 0 | 0 | 0 | 0 | 0 / 1600 |
+| 2 × 10¹¹ | 0.85–1.14″ | 0 | 0 | 0 | 1 | 0 | 0 / 1600 |
+| 2 × 10¹² | 2.7–3.6″ | 14 | 7 | 3 | 9 | 17 | 8 / 1600 |
+| 8 × 10¹² | 5.4–7.2″ | 72 | 50 | 30 | 45 | 69 | 84 / 1600 |
+| 2 × 10¹³ | 8.5–11.4″ | 146 | 112 | 74 | 73 | 91 | 156 / 1600 |
 
 MACS1149 is lowest (fewest sources per arcsec²). Before the spike veto, with the rotation null alone, the four
 fields recovered 66, 309 and 486 of 800 at the top three masses (biased high by the spike systematics).
 
-### Upper limits (95 %, zero detections; `derived`; four photo-z fields, 30.2 arcmin²)
+### Upper limits (95 %, zero detections; `derived`; five photo-z fields, 35.8 arcmin²)
+
+Abell S1063 added 2026-10-17 (`results/w1_shear_s1063/combined_5fields.json`; the four earlier fields re-run in the
+same session reproduce their recoveries and limits exactly). Four-field values (30.2 arcmin²) in brackets.
 
 | \|M\| (M☉) | Σ ε_f A_f (deg²) | Σ(W1) < (deg⁻²) | border-corrected | radial headline (D-049) |
 |---|---|---|---|---|
 | 2 × 10¹⁰ | 0 | no limit | — | no limit |
 | 2 × 10¹¹ | 8.5 × 10⁻⁶ | 3.5 × 10⁵ (one recovery) | 4.0 × 10⁵ | no limit |
-| 2 × 10¹² | 3.9 × 10⁻⁴ | 7.7 × 10³ | 8.4 × 10³ | 6.1 × 10⁴ |
-| 8 × 10¹² | 2.2 × 10⁻³ | 1.3 × 10³ | 1.5 × 10³ | 7.0 × 10³ |
-| 2 × 10¹³ | 4.6 × 10⁻³ | 6.5 × 10² | 7.1 × 10² | 4.0 × 10³ |
+| 2 × 10¹² | 5.2 × 10⁻⁴ | 5.8 × 10³ (7.7 × 10³) | 6.3 × 10³ (8.4 × 10³) | 6.1 × 10⁴ |
+| 8 × 10¹² | 2.8 × 10⁻³ | 1.1 × 10³ (1.3 × 10³) | 1.2 × 10³ (1.5 × 10³) | 7.0 × 10³ |
+| 2 × 10¹³ | 5.3 × 10⁻³ | 5.7 × 10² (6.5 × 10²) | 6.2 × 10² (7.1 × 10²) | 4.0 × 10³ |
 
-**Reading.** The shear screen gives limits 5–8× stronger than `radial` from 20 % less area, but is equally blind
+**Reading.** The shear screen gives limits 6–11× stronger than `radial` from slightly less area (five fields; four gave 5–8× from 20 % less), but is equally blind
 at ≤ 2 × 10¹¹ M☉ (θ_E ≲ 1″): there the umbra and images cover too few sources per aperture (S/N ≈ 1–2, as D-050
 expected). The best limit is about 5× weaker than Takahashi & Asada's ~120 deg⁻² (radial section). Below 10¹² M☉
 the orphan-pair limits (D-051) remain the only ones.

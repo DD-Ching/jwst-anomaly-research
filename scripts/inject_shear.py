@@ -57,6 +57,23 @@ SHEAR_DEFAULTS = es.shear_defaults()
 # fields with photo-z whose inputs are public without tarballs (DJA v7.4/v7.0 tarballs 404 on
 # 2026-10-08, so SMACS and El Gordo have no photo-z here and stay out of the headline)
 DEFAULT_FIELDS = ("abell2744", "macs0416", "macs1149", "abell370")
+# Shear-only inputs that differ from the radial screen's FIELDS entry. The shear screen needs
+# photo-z (cluster shear at each row's z), so Abell S1063 uses the DJA v7.5 zout here
+# (docs/fields/abells1063.md), with the Gaia spike veto (D-043).
+SHEAR_FIELD_OVERRIDES = {
+    "abells1063": {
+        "photoz": (
+            "eazy",
+            "cache/dja/photoz-abells1063-v7.5/abells1063-grizli-v7.5-fix.eazypy.zout.fits",
+        ),
+        "spike_stars": True,
+        "centre": (342.1832, -44.5309),
+    },
+}
+
+
+def field_spec(name: str) -> dict:
+    return {**ir.FIELDS[name], **SHEAR_FIELD_OVERRIDES.get(name, {})}
 
 
 def injected_ellipticity(e_src, raw_img, raw_src, r: float) -> np.ndarray:
@@ -182,7 +199,7 @@ def run_field(name: str, args) -> dict:
     t0 = time.time()
     out = args.out / name
     out.mkdir(parents=True, exist_ok=True)
-    model, shapes, extra, cat, photoz = ir.load_field(name, out)
+    model, shapes, extra, cat, photoz = ir.load_field(name, out, field_spec(name))
     sargs = SimpleNamespace(**SHEAR_DEFAULTS)
     for k in ("aperture_arcsec", "filter", "r_min_arcsec"):
         setattr(sargs, k, getattr(args, k))
@@ -306,7 +323,7 @@ def main(argv: list[str] | None = None) -> int:
         summaries = [json.loads((args.out / f / "summary.json").read_text()) for f in args.fields]
     else:
         summaries = [run_field(f, args) for f in args.fields]
-    combined = ir.combine(summaries, args.mass)
+    combined = ir.combine(summaries, args.mass, {f: field_spec(f) for f in args.fields})
 
     def setting(s):  # grid half-width and star table are per field; everything else must agree
         a = json.loads(json.dumps(s["assumptions"]))

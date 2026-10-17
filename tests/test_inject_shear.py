@@ -48,6 +48,29 @@ def test_shear_defaults_come_from_the_screen():
     )
 
 
+def test_shear_field_spec_overrides_only_the_shear_inputs():
+    spec = ish.field_spec("abells1063")
+    assert spec["photoz"][0] == "eazy" and spec["spike_stars"] and len(spec["centre"]) == 2
+    assert spec["catalog"] == ish.ir.FIELDS["abells1063"]["catalog"]
+    assert ish.ir.FIELDS["abells1063"]["photoz"] is None  # the radial entry is unchanged
+    assert ish.field_spec("macs0416") == ish.ir.FIELDS["macs0416"]
+
+
+def test_combine_checks_photoz_against_the_given_specs(capsys):
+    eff = {"2e+12": {"efficiency": 0.1, "theta_e_zs2_arcsec": 3.0}}
+    summ = {
+        "field": "abells1063",
+        "photoz": "zout.fits",
+        "screened_area_deg2": 1e-3,
+        "efficiency": eff,
+    }
+    out = ish.ir.combine([summ], [2e12], {"abells1063": ish.field_spec("abells1063")})
+    assert out["fields"] == ["abells1063"]
+    assert "differs from FIELDS" not in capsys.readouterr().out
+    ish.ir.combine([summ], [2e12])  # against the radial FIELDS entry (no photo-z) it warns
+    assert "differs from FIELDS" in capsys.readouterr().out
+
+
 def test_injected_ellipticity_keeps_r_of_the_measured_change_only():
     e_src = np.array([0.1 + 0.05j, np.nan])
     raw_src = np.array([0.3 + 0.0j, np.nan])  # measured, cluster shear included

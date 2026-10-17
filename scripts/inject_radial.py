@@ -580,8 +580,8 @@ def pixel_scale_arcsec(cat_path: Path) -> float:
     return float(sep / np.hypot(x[i] - x[j], y[i] - y[j]))
 
 
-def load_field(name: str, out: Path):
-    spec = FIELDS[name]
+def load_field(name: str, out: Path, spec: dict | None = None):
+    spec = FIELDS[name] if spec is None else spec
     root = paths.data_root()
     model, _, _ = lc.load_model(spec["model"])
     lc.apply_frame_offset(spec["model"], model)
@@ -724,13 +724,15 @@ def _limits(summaries: list[dict], masses) -> dict:
     return limits
 
 
-def combine(summaries: list[dict], masses) -> dict:
+def combine(summaries: list[dict], masses, specs: dict | None = None) -> dict:
     """Headline limits use only fields with photo-z. Without photo-z every non-star row counts as
     lensable (at z_s = 2), so cluster members and foreground galaxies get painted as W1 images and
-    the efficiency is biased high; those fields enter only the separate, optimistic set."""
+    the efficiency is biased high; those fields enter only the separate, optimistic set.
+    ``specs`` replaces :data:`FIELDS` in the photo-z consistency check (screens with own inputs)."""
+    specs = FIELDS if specs is None else specs
     pz = [s for s in summaries if s.get("photoz")]  # as the field was actually run
     for s in summaries:
-        if bool(s.get("photoz")) != (FIELDS[s["field"]]["photoz"] is not None):
+        if bool(s.get("photoz")) != (specs[s["field"]]["photoz"] is not None):
             print(
                 f"warning: {s['field']}: summary photo-z differs from FIELDS; re-run it", flush=True
             )

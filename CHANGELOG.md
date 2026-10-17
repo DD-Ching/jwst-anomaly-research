@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 shear screen on Abell S1063: null; five-field W1 limits 5.8 × 10³ / 1.1 × 10³ / 5.7 × 10² deg⁻²
+- **Why:** TASKS "JWST focus" 1 (W1): S1063 has a pinned model and DJA photo-z but had only the radial screen. Plan
+  first (`results/w1_shear_s1063/PLAN.md`).
+- **Result (derived; `RESULT.md`):** R 0.472 ± 0.034; S_max 3.61 (p_rot 0.07) > max |S_×| 3.33, but fails p < 0.05:
+  **null** under D-053. Both top-peak apertures are crossed by long straight streaks in F200W (sheet looked at).
+- **Injections:** 0 / 0 / 17 / 69 / 91 of 200. The four earlier fields re-run here reproduce their counts and limits
+  exactly. Five fields (35.8 arcmin²): Σ(W1) < 5.8 × 10³ / 1.1 × 10³ / 5.7 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² /
+  2 × 10¹³ M☉ (was 7.7 × 10³ / 1.3 × 10³ / 6.5 × 10²).
+- **Code:** `inject_shear.SHEAR_FIELD_OVERRIDES` (S1063 photo-z and Gaia veto for the shear run only);
+  `inject_radial.load_field(spec=)` and `combine(specs=)` so the photo-z check uses the shear inputs. Tests added.
+- **Handoff:** next W1 gains: a streak veto (long linear features beyond the Gaia spike veto) to lower the E/B floor;
+  MACS0717 when photo-z exists; SMACS/El Gordo photo-z (404).
+
 ## 2026-10-17: `arc_diff` per-stamp kernel fits share one design (D-094): B2 run ×14 (screen), same results (#291)
 - **Diagnosis:** each of B2's 1,076 F150W stamps rebuilt an ~86,800 × 82 design and ran 3 SVD least-squares on it
   (≈1.4 s per stamp).
