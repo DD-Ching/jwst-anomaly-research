@@ -1,0 +1,41 @@
+# Batch-1 post-review checks (#296), unchanged except paths: argv[1]=scratch maps dir, argv[2]=review dir
+import json, math, itertools, sys, numpy as np
+from astropy.io import fits
+from astropy.wcs import WCS
+from astropy.wcs.utils import proj_plane_pixel_scales
+from astropy.table import Table
+SP, R = sys.argv[1], sys.argv[2]
+rev=json.load(open(R+'/review.json'))['reviewed']
+lc=Table.read(R+'/lightcurves.ecsv')
+out={"label":"derived; post-review checks of the reviewed entries (owner rule: sky-fixed, spike, other mosaics)","entries":{}}
+for e in rev:
+    k=f"{e['box_id']}:{e['hit_id']}"; rec={}
+    z=np.load(f"{SP}/{e['box_id']}/screen/maps.npz",allow_pickle=True)
+    peaks={}
+    for b in ('F150W','F444W'):
+        w=WCS(fits.Header.fromstring(str(z[b+'_wcs'])))
+        x,y=w.world_to_pixel_values(e['ra'],e['dec']); xi,yi=int(round(float(x))),int(round(float(y)))
+        s=z[b+'_s']; r=8
+        win=s[yi-r:yi+r+1,xi-r:xi+r+1]; iy,ix=np.unravel_index(np.nanargmax(np.abs(win)),win.shape)
+        ra,dec=w.pixel_to_world_values(xi-r+ix,yi-r+iy)
+        peaks[b]=(float(ra),float(dec),float(win[iy,ix]))
+        img=z[b+'_e1img']
+        sc=float(np.mean(proj_plane_pixel_scales(w)))*3600
+        rr=int(5/sc); sub=img[max(yi-rr,0):yi+rr+1,max(xi-rr,0):xi+rr+1]
+        rec[f"{b}_max_e1_within_5arcsec_over_box_p999"]=round(float(np.nanmax(sub)/np.nanpercentile(img,99.9)),2)
+    c=math.cos(math.radians(e['dec']))
+    a,b2=peaks['F150W'],peaks['F444W']
+    rec['S_peak_offset_F150W_F444W_arcsec']=round(math.hypot((a[0]-b2[0])*c*3600,(a[1]-b2[1])*3600),3)
+    rec['S_peak']={b:round(v[2],1) for b,v in peaks.items()}
+    m=lc[lc['name']==k.replace(':','__')]
+    best={}
+    for band in sorted(set(m['band'])):
+        mm=m[(m['band']==band)&np.isfinite(m['flux_njy'])]
+        for r1,r2 in itertools.combinations(mm,2):
+            zz=(r2['flux_njy']-r1['flux_njy'])/math.hypot(r1['err_njy'],r2['err_njy'])
+            if band not in best or abs(zz)>abs(best[band][0]): best[band]=(round(float(zz),2),str(r1['program']),str(r2['program']))
+    rec['max_pairwise_z_by_band_all_mosaics']=best
+    rec['n_mosaics']=len(m)
+    out['entries'][k]=rec
+    print(k,rec['S_peak_offset_F150W_F444W_arcsec'],rec['S_peak'],{b:v[0] for b,v in best.items()},{kk:v for kk,v in rec.items() if 'max_e1' in kk})
+json.dump(out,open(R+'/post_review_checks.json','w'),indent=1); open(R+'/post_review_checks.json','a').write('\n')

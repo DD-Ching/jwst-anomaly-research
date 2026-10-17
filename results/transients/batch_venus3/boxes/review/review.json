@@ -1,0 +1,293 @@
+{
+ "label": "derived; PLAN \u00a75 classes",
+ "reviewed": [
+  {
+   "box_id": "SJ0723.3-7327_1",
+   "box_status": "passed",
+   "hit_id": "h007",
+   "ra": 110.830282683988,
+   "dec": -73.46033819913781,
+   "sign": "mixed",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 23.131873192626912,
+   "rank": 1,
+   "edge": false,
+   "z": {
+    "F150W": -1.02,
+    "F444W": -1.11
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     132.4,
+     2.8,
+     119.0,
+     12.8
+    ],
+    "F444W": [
+     93.0,
+     1.9,
+     87.6,
+     4.5
+    ]
+   },
+   "sheet": "compact source with a red/blue dipole residual in F150W (compact-core class)",
+   "class": "no significant change"
+  },
+  {
+   "box_id": "MJ0416.1-2403_1",
+   "box_status": "passed",
+   "hit_id": "h004",
+   "ra": 64.04815469365727,
+   "dec": -24.07494044005699,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 13.952902248887863,
+   "rank": 2,
+   "edge": false,
+   "z": {
+    "F150W": 0.64,
+    "F444W": 2.69
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     67.6,
+     3.8,
+     74.7,
+     10.4
+    ],
+    "F444W": [
+     36.0,
+     2.4,
+     49.8,
+     4.5
+    ]
+   },
+   "sheet": "positive S at the core of an elongated galaxy in both bands",
+   "class": "no significant change"
+  },
+  {
+   "box_id": "MJ0416.1-2403_1",
+   "box_status": "passed",
+   "hit_id": "h005",
+   "ra": 64.04317462557195,
+   "dec": -24.073775078547513,
+   "sign": "mixed",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 7.1804971424364625,
+   "rank": 3,
+   "edge": false,
+   "z": {
+    "F150W": 0.05,
+    "F444W": -0.46
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     86.5,
+     3.8,
+     87.1,
+     10.4
+    ],
+    "F444W": [
+     39.7,
+     2.4,
+     37.3,
+     4.5
+    ]
+   },
+   "sheet": "compact faint source with a weak core residual",
+   "class": "no significant change"
+  },
+  {
+   "box_id": "MJ0416.1-2403_2",
+   "box_status": "undeterminable",
+   "hit_id": "h001",
+   "ra": 64.03112214460862,
+   "dec": -24.07891640679638,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 18.292682384201267,
+   "rank": 4,
+   "edge": false,
+   "z": {
+    "F150W": 1.43,
+    "F444W": 1.21
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     344.2,
+     7.1,
+     362.5,
+     10.7
+    ],
+    "F444W": [
+     476.7,
+     4.5,
+     485.8,
+     6.1
+    ]
+   },
+   "sheet": "dipole residual beside a compact bright galaxy, offset from its centre",
+   "class": "no significant change"
+  },
+  {
+   "box_id": "SJ0723.3-7327_2",
+   "box_status": "undeterminable",
+   "hit_id": "h011",
+   "ra": 110.84293785284451,
+   "dec": -73.45457238587763,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 15.722553237360433,
+   "rank": 5,
+   "edge": false,
+   "z": {
+    "F150W": 0.77,
+    "F444W": -3.68
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     617.1,
+     6.6,
+     628.4,
+     13.1
+    ],
+    "F444W": [
+     728.5,
+     3.6,
+     700.4,
+     6.7
+    ]
+   },
+   "sheet": "dipole along a bright elongated arc (steep-structure residual)",
+   "class": "undetermined"
+  },
+  {
+   "box_id": "A370_2",
+   "box_status": "undeterminable",
+   "hit_id": "h003",
+   "ra": 39.966687405392946,
+   "dec": -1.5830194828916722,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 11.098263132122371,
+   "rank": 6,
+   "edge": false,
+   "z": {
+    "F150W": -1.65,
+    "F444W": -5.36
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     622.8,
+     4.7,
+     604.3,
+     10.2
+    ],
+    "F444W": [
+     255.4,
+     3.3,
+     219.4,
+     5.9
+    ]
+   },
+   "sheet": "bright compact point source present in all programmes; small core residual",
+   "class": "real change"
+  },
+  {
+   "box_id": "PLCKG165+67.0_2",
+   "box_status": "undeterminable",
+   "hit_id": "h002",
+   "ra": 171.81146251341164,
+   "dec": 42.47784988918558,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 10.101745014530453,
+   "rank": 7,
+   "edge": false,
+   "z": {
+    "F150W": -2.95,
+    "F444W": -1.96
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     177.1,
+     5.1,
+     151.0,
+     7.2
+    ],
+    "F444W": [
+     173.3,
+     2.1,
+     165.9,
+     3.2
+    ]
+   },
+   "sheet": "residual at the core of a compact elongated galaxy",
+   "class": "no significant change"
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h002",
+   "ra": 342.18934381949657,
+   "dec": -44.53095325067861,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 6.586243014058893,
+   "rank": 8,
+   "edge": false,
+   "z": {
+    "F150W": -1.39,
+    "F444W": -1.32
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     61.4,
+     1.4,
+     51.9,
+     6.7
+    ],
+    "F444W": [
+     24.3,
+     0.9,
+     19.8,
+     3.3
+    ]
+   },
+   "sheet": "compact source with a weak core residual",
+   "class": "no significant change"
+  },
+  {
+   "box_id": "A370_2",
+   "box_status": "undeterminable",
+   "hit_id": "h010",
+   "ra": 39.970466450565894,
+   "dec": -1.585252758434272,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 5.727775602800006,
+   "rank": 9,
+   "edge": false,
+   "z": {
+    "F150W": -0.06,
+    "F444W": -3.03
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     23.1,
+     4.7,
+     22.4,
+     10.2
+    ],
+    "F444W": [
+     32.3,
+     3.3,
+     12.0,
+     5.9
+    ]
+   },
+   "sheet": "F444W residual on the steep edge of a bright galaxy; no point source on the sheet",
+   "class": "real change"
+  }
+ ]
+}

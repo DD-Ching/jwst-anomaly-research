@@ -1,0 +1,123 @@
+{
+ "label": "derived; full rule of the #296 post-review checks applied by function (#304): artifact stays; real change needs S-peak offset <= 0.1 arcsec (post hoc ASSUMPTION of #304); no significant change needs |z| < 3 in every band over all covering mosaics; else undetermined",
+ "sky_fixed_arcsec": 0.1,
+ "entries": [
+  {
+   "name": "B3-SJ0723.3-7327-box1-h007 (110.830283, -73.460338)",
+   "key": "SJ0723.3-7327_1:h007",
+   "rank": 1,
+   "box_status": "passed",
+   "coded": "no significant change",
+   "final": "no significant change",
+   "z_search": {
+    "F150W": -1.02,
+    "F444W": -1.11
+   },
+   "offset_arcsec": 0.053
+  },
+  {
+   "name": "B3-MJ0416.1-2403-box1-h004 (64.048155, -24.074940)",
+   "key": "MJ0416.1-2403_1:h004",
+   "rank": 2,
+   "box_status": "passed",
+   "coded": "no significant change",
+   "final": "undetermined (>= 3 sigma in other mosaics: F150W,F182M,F200W,F277W,F356W,F444W)",
+   "z_search": {
+    "F150W": 0.64,
+    "F444W": 2.69
+   },
+   "offset_arcsec": 0.036
+  },
+  {
+   "name": "B3-MJ0416.1-2403-box1-h005 (64.043175, -24.073775)",
+   "key": "MJ0416.1-2403_1:h005",
+   "rank": 3,
+   "box_status": "passed",
+   "coded": "no significant change",
+   "final": "no significant change",
+   "z_search": {
+    "F150W": 0.05,
+    "F444W": -0.46
+   },
+   "offset_arcsec": 0.024
+  },
+  {
+   "name": "B3-MJ0416.1-2403-box2-h001 (64.031122, -24.078916)",
+   "key": "MJ0416.1-2403_2:h001",
+   "rank": 4,
+   "box_status": "undeterminable",
+   "coded": "no significant change",
+   "final": "undetermined (>= 3 sigma in other mosaics: F090W,F115W,F150W,F182M,F200W,F210M,F300M,F335M,F356W,F360M,F410M,F444W,F460M,F480M)",
+   "z_search": {
+    "F150W": 1.43,
+    "F444W": 1.21
+   },
+   "offset_arcsec": 0.049
+  },
+  {
+   "name": "B3-SJ0723.3-7327-box2-h011 (110.842938, -73.454572)",
+   "key": "SJ0723.3-7327_2:h011",
+   "rank": 5,
+   "box_status": "undeterminable",
+   "coded": "undetermined",
+   "final": "undetermined",
+   "z_search": {
+    "F150W": 0.77,
+    "F444W": -3.68
+   },
+   "offset_arcsec": 0.04
+  },
+  {
+   "name": "B3-A370-box2-h003 (39.966687, -1.583019)",
+   "key": "A370_2:h003",
+   "rank": 6,
+   "box_status": "undeterminable",
+   "coded": "real change",
+   "final": "real change",
+   "z_search": {
+    "F150W": -1.65,
+    "F444W": -5.36
+   },
+   "offset_arcsec": 0.015
+  },
+  {
+   "name": "B3-PLCKG165+67.0-box2-h002 (171.811463, +42.477850)",
+   "key": "PLCKG165+67.0_2:h002",
+   "rank": 7,
+   "box_status": "undeterminable",
+   "coded": "no significant change",
+   "final": "undetermined (>= 3 sigma in other mosaics: F150W,F200W,F277W,F356W,F444W)",
+   "z_search": {
+    "F150W": -2.95,
+    "F444W": -1.96
+   },
+   "offset_arcsec": 0.028
+  },
+  {
+   "name": "B3-AS1063-box1-h002 (342.189344, -44.530953)",
+   "key": "AS1063_1:h002",
+   "rank": 8,
+   "box_status": "undeterminable",
+   "coded": "no significant change",
+   "final": "no significant change",
+   "z_search": {
+    "F150W": -1.39,
+    "F444W": -1.32
+   },
+   "offset_arcsec": 0.039
+  },
+  {
+   "name": "B3-A370-box2-h010 (39.970466, -1.585253)",
+   "key": "A370_2:h010",
+   "rank": 9,
+   "box_status": "undeterminable",
+   "coded": "real change",
+   "final": "real change",
+   "z_search": {
+    "F150W": -0.06,
+    "F444W": -3.03
+   },
+   "offset_arcsec": 0.027
+  }
+ ]
+}
