@@ -26,7 +26,6 @@ from __future__ import annotations
 import argparse
 import os
 import sys
-import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -152,12 +151,6 @@ def catalog_source(rel: str, pins: dict[str, str]) -> dict:
     return {"url": S3.format(prog=prog, obs=o, name=name), "sha256": pins.get(name)}
 
 
-def content_length(url: str) -> int:
-    req = urllib.request.Request(url, method="HEAD")
-    with urllib.request.urlopen(req, timeout=60) as r:  # noqa: S310
-        return int(r.headers.get("Content-Length") or 0)
-
-
 def stage(target: Path, src: dict) -> dict:
     """Fetch ``src`` to ``target`` (verified where a sha256 is recorded); returns a log row."""
     pinned = src["member_sha256"] if "member" in src else src["sha256"]
@@ -169,7 +162,6 @@ def stage(target: Path, src: dict) -> dict:
         return row
     target.parent.mkdir(parents=True, exist_ok=True)
     try:
-        row["bytes"] = content_length(src["url"])
         if "member" in src:
             spec = {
                 **src,
@@ -182,6 +174,7 @@ def stage(target: Path, src: dict) -> dict:
             sha = pinned or _Unpinned()
             got = fetch_catalog(src["url"], sha, cache_dir=target.parent, max_bytes=MAX_BYTES)
         os.replace(got, target)
+        row["bytes"] = target.stat().st_size  # the kept file (a tar member: the member only)
     except Exception as exc:  # noqa: BLE001 - report and continue with the other files
         row.update(status=f"FAILED: {type(exc).__name__}: {exc}")
         return row

@@ -177,11 +177,12 @@ class ShearInjector:
         shapes = shapes.copy(copy_data=False)  # the caller's table gets no `_src` column
         self.model, self.shapes, self.args, self.psf = model, shapes, args, psf_sigma
         # streak(ra, dec) -> bool: rows the field's streak mask vetoes (results/w1_streak_veto);
-        # the caller drops real rows, painted images are vetoed here
+        # shear_screen blanks real rows on streaks, painted images on streaks are vetoed here
         self.streak = streak
         on = None
         if streak is not None:
             on = streak(np.asarray(shapes["ra"], float), np.asarray(shapes["dec"], float))
+        self.n_streak = None if on is None else int(on.sum())
         self.base = es.shear_screen(model, shapes, args, psf_sigma, extra, on)
         if not np.isfinite(self.base["s"]).any():
             raise ValueError("no grid centre has enough shear sources")
@@ -303,12 +304,9 @@ def run_field(name: str, args) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     spec = field_spec(name)
     model, shapes, extra, cat, photoz = ir.load_field(name, out, spec)
-    streak, n_streak = None, None
+    streak = None
     if getattr(args, "streak_masks", None) is not None:
         streak = streak_veto(args.streak_masks, name)
-        n_streak = int(
-            streak(np.asarray(shapes["ra"], float), np.asarray(shapes["dec"], float)).sum()
-        )
     sargs = SimpleNamespace(**SHEAR_DEFAULTS)
     for k in ("aperture_arcsec", "filter", "r_min_arcsec", "min_coverage"):
         setattr(sargs, k, getattr(args, k))
@@ -373,7 +371,7 @@ def run_field(name: str, args) -> dict:
         "screen": inj.base["counts"]
         | {
             "psf_sigma_px": psf,
-            "n_streak_vetoed": n_streak,
+            "n_streak_vetoed": inj.n_streak,
             "n_centres_valid": int(finite.sum()),
             "s_max": s_max,
             "s_max_xy": [float(inj.base["gx"][iy, ix]), float(inj.base["gy"][iy, ix])],

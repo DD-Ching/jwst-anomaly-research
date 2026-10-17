@@ -14,6 +14,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Failed approaches:** zeroing > 5σ pixels before the trail finder removes bright streaks (PLAN addendum A).
   Dropping vetoed rows before the screen changed the spike veto too, and S1063 then passed spuriously at p_rot
   0.045. Code review found it; the run was superseded.
+- **Second review (final diff):** fixes that change no number (deterministic mask files, veto checks, a
+  veto-path test); traced items in RESULT "Second code-review".
 - **Handoff:** W1 next: faint parallel streaks (S1063 S_max aperture) are missed: a lower findsat threshold,
   calibrated through injections; fewer false trails on MACS0647; the open review items in RESULT.
 

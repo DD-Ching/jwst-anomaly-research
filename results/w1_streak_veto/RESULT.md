@@ -47,7 +47,21 @@ not separated.
   has no recorded hash, its member does).
 - The mask FITS files are not tracked (`*.fits.gz` is gitignored): re-make them with
   `scripts/w1_streak_mask.py --fields <field> --out results/w1_streak_veto/masks`; each veto-run summary records the
-  mask's sha256 and pixel count (`assumptions.streak_mask`) to check against.
+  mask's sha256 and pixel count (`assumptions.streak_mask`). The committed runs used masks written with a gzip
+  timestamp, so their file sha256 does not reproduce byte for byte: check a re-made mask by `mask_pixels`. Masks
+  written now carry no timestamp, and summaries also record `data_sha256` (shape + pixel bytes).
+
+## Second code-review (final diff, 2026-10-17)
+Fixed without changing any number above: deterministic mask files and a pixel hash; `shear_screen` checks the
+veto's dtype and length; `OMP_NUM_THREADS=1` for the trail-finder pool; no HEAD request before staging (the byte
+count comes from the kept file); a stale comment; a test of the veto path (blanked rows, background, painted images).
+Traced, no change:
+- Aperture coverage and the injection footprint still count vetoed rows. Injected images that land on a trail are
+  vetoed and count as not recovered, so the efficiency, and through it the limit, already pays for the vetoed area;
+  only the `min_coverage` cut on grid centres is slightly generous next to trails.
+- PSF width and responsivity R are estimated before the veto, over every row (frozen in PLAN, so the spike veto is
+  unchanged). The injections use the same R, so recovery is self-consistent; an R measured without streak rows is
+  untested.
 
 ## Open code-review findings (not fixed; no effect on the numbers above)
 - The veto distance is measured from the nearest mask-pixel centre, so it is exact only to about half a mask

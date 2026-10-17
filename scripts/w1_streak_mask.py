@@ -15,7 +15,9 @@ the mask. Pixels ``observed``; masks ``derived``; every number here is an ASSUMP
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
+import io
 import json
 import os
 import sys
@@ -23,11 +25,14 @@ import time
 import warnings
 from pathlib import Path
 
-import numpy as np
-from astropy.io import fits
-from astropy.wcs import WCS
-from astropy.wcs.utils import proj_plane_pixel_scales
-from scipy import ndimage
+# TrailFinder runs a process pool sized to the cores: one BLAS thread each (scripts/CLAUDE.md)
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+
+import numpy as np  # noqa: E402
+from astropy.io import fits  # noqa: E402
+from astropy.wcs import WCS  # noqa: E402
+from astropy.wcs.utils import proj_plane_pixel_scales  # noqa: E402
+from scipy import ndimage  # noqa: E402
 
 BLOCK = 4  # block median of native pixels (ASSUMPTION)
 REBIN = 2  # further mean rebin before the trail finder (ASSUMPTION)
@@ -112,7 +117,11 @@ def find_trails(z: np.ndarray, processes: int = 4):
 
 
 def write_mask(path: Path, mask: np.ndarray, wcs: WCS) -> None:
-    fits.PrimaryHDU(mask.astype(np.uint8), header=wcs.to_header()).writeto(path, overwrite=True)
+    """Gzipped FITS with a zero gzip timestamp, so an identical mask gives an identical file."""
+    buf = io.BytesIO()
+    fits.PrimaryHDU(mask.astype(np.uint8), header=wcs.to_header()).writeto(buf)
+    with open(path, "wb") as f, gzip.GzipFile(filename="", fileobj=f, mode="wb", mtime=0) as g:
+        g.write(buf.getvalue())
 
 
 def read_mask(path: Path) -> tuple[np.ndarray, WCS]:
@@ -147,11 +156,15 @@ def veto_rows(ra, dec, mask: np.ndarray, wcs: WCS, veto_arcsec: float = VETO_ARC
 
 
 def mask_identity(path: Path) -> dict:
-    """sha256 and masked-pixel count of a mask file (recorded in each veto-run summary)."""
+    """sha256 of the file and of the mask pixels (shape + uint8 bytes), and the masked-pixel
+    count, recorded in each veto-run summary. Files written before 2026-10-17T14:30Z carry a gzip
+    timestamp, so only ``data_sha256`` and ``mask_pixels`` reproduce for them."""
     mask, _ = read_mask(path)
+    data = hashlib.sha256(str(mask.shape).encode() + mask.astype(np.uint8).tobytes())
     return {
         "file": path.name,
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        "data_sha256": data.hexdigest(),
         "mask_pixels": int(mask.sum()),
     }
 

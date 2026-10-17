@@ -100,3 +100,19 @@ def test_evaluate_reads_k1_k2(tmp_path):
     )
     res = wsm.evaluate(tmp_path, new, hit)
     assert res["K1"] and res["K2"] and res["adopted"]
+
+
+def test_rewriting_an_identical_mask_gives_the_same_file(tmp_path):
+    import time
+
+    mask = np.zeros((10, 10), bool)
+    mask[3, :] = True
+    a, b = tmp_path / "a_streak_mask.fits.gz", tmp_path / "b_streak_mask.fits.gz"
+    wsm.write_mask(a, mask, _wcs())
+    time.sleep(1.1)  # a gzip timestamp would differ by now
+    wsm.write_mask(b, mask, _wcs())
+    ia, ib = wsm.mask_identity(a), wsm.mask_identity(b)
+    assert ia["sha256"] == ib["sha256"] and ia["data_sha256"] == ib["data_sha256"]
+    back, _ = wsm.read_mask(a)
+    np.testing.assert_array_equal(back, mask)
+    assert ia["mask_pixels"] == 10

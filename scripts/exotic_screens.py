@@ -877,6 +877,9 @@ def shear_screen(
     correctable = counts.pop("correctable")
     eps = counts.pop("eps")
     if veto is not None:  # used rows before the veto and the vetoed share of them
+        veto = np.asarray(veto)
+        if veto.dtype != bool or veto.shape != (len(shapes),):
+            raise ValueError(f"veto must be a bool array of {len(shapes)} rows")
         counts["n_used_before_veto"] = int(np.isfinite(e).sum())
         counts["n_veto_used"] = int((veto & np.isfinite(e)).sum())
         e = np.where(veto, np.nan + 0j, e)
