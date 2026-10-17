@@ -1,0 +1,50 @@
+{
+ "model": "whl0137-relics-lenstool",
+ "catalog": "data/cache/mast/jw02282-o010_t001_nircam_clear-f200w/jw02282-o010_t001_nircam_clear-f200w_cat.ecsv",
+ "photoz": "data/cache/dja/photoz-sunrise-v7.5/sunrise-grizli-v7.5-fix.eazypy.zout.fits",
+ "spike_stars": {
+  "path": "<scratch>/inj/whl0137/whl0137_gaia_stars.ecsv",
+  "n": 9,
+  "sha256": "6bb730892d3591b4dc0a1fdbd84d32198d22b86e4b7e3849ddf468ddfbeba61d"
+ },
+ "seed": 1,
+ "psf_sigma_px": 1.276100932538259,
+ "n_rows": 2598,
+ "n_spike_segments": 42,
+ "n_lensable": 1763,
+ "n_lensable_after_spike_veto": 1734,
+ "n_snr": 1713,
+ "n_resolved": 1340,
+ "n_weak_shear": 340,
+ "responsivity": 0.53333099873345,
+ "responsivity_err": 0.056714695729395186,
+ "n_centres_valid": 10662,
+ "area_arcsec2": 10662.0,
+ "s_max": 2.7537139491981426,
+ "p_random_max": 0.72,
+ "s_cross_plus_max": 3.0199715693746376,
+ "p_random_cross_plus": 0.215,
+ "s_cross_minus_max": 3.179683726877659,
+ "p_random_cross_minus": 0.03,
+ "b_max": 3.179683726877659,
+ "passes_eb_rule": false,
+ "null_max_p50_p95": [
+  2.8419292716935507,
+  3.15601387100058
+ ],
+ "n_peaks_above_null_median": 0,
+ "peaks": [],
+ "assumptions": {
+  "aperture_arcsec": 10.0,
+  "filter": "schirmer",
+  "r_min_arcsec": 1.0,
+  "min_sources": 5,
+  "min_snr": 10.0,
+  "max_g": 0.5,
+  "responsivity": null,
+  "max_radius": 100.0,
+  "grid_arcsec": 1.0,
+  "n_random": 200,
+  "min_coverage": 0.0
+ }
+}

@@ -268,38 +268,45 @@ beats B but not the rotation null (p 0.07); both top peaks' apertures are crosse
 SMACS 0723 (ICLv2, DJA v7.4) and El Gordo (Caminha+23, DJA v7.0), both with the Gaia veto, added 2026-10-17
 (`results/w1_shear_smacs_elgordo/`): neither maximum reaches its rotation-null median. Per-arcsec² densities of
 these two are not stored (—).
+MACS0417, MACS1423 (CANUCS DR1 maps and photo-z) and WHL0137 (RELICS Lenstool v1, DJA v7.5), with the Gaia veto,
+added 2026-10-17 (`results/w1_shear_more/`): MACS0417 and WHL0137 do not pass (maxima at mosaic edges). MACS1423
+passes the rule (S_max 3.88, p_rot 0.01, B max 3.64) but a frozen test removes it: the 19 sources on a vertical
+detector stripe through the aperture carry the signal (S 3.88 → 0.14 without them; `vet_macs1423.json`). Not a
+candidate.
 
 ### Recovery efficiency (`derived` from `simulated`; recovered / 200)
 
-| \|M\| (M☉) | θ_E(z_s = 2) | Abell 2744 | MACS0416 | MACS1149 | Abell 370 | Abell S1063 | SMACS 0723 | El Gordo | radial, all 8 fields (D-049) |
-|---|---|---|---|---|---|---|---|---|---|
-| 2 × 10¹⁰ | 0.27–0.36″ | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 / 1600 |
-| 2 × 10¹¹ | 0.85–1.14″ | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 / 1600 |
-| 2 × 10¹² | 2.7–3.6″ | 14 | 7 | 3 | 9 | 17 | 11 | 0 | 8 / 1600 |
-| 8 × 10¹² | 5.4–7.2″ | 72 | 50 | 30 | 45 | 69 | 62 | 14 | 84 / 1600 |
-| 2 × 10¹³ | 8.5–11.4″ | 146 | 112 | 74 | 73 | 91 | 106 | 48 | 156 / 1600 |
+| \|M\| (M☉) | θ_E(z_s = 2), first seven | Abell 2744 | MACS0416 | MACS1149 | Abell 370 | Abell S1063 | SMACS 0723 | El Gordo | MACS0417 | MACS1423 | WHL0137 | radial, all 8 fields (D-049) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2 × 10¹⁰ | 0.27–0.36″ | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 / 1600 |
+| 2 × 10¹¹ | 0.85–1.14″ | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 / 1600 |
+| 2 × 10¹² | 2.7–3.6″ | 14 | 7 | 3 | 9 | 17 | 11 | 0 | 5 | 9 | 1 | 8 / 1600 |
+| 8 × 10¹² | 5.4–7.2″ | 72 | 50 | 30 | 45 | 69 | 62 | 14 | 51 | 72 | 12 | 84 / 1600 |
+| 2 × 10¹³ | 8.5–11.4″ | 146 | 112 | 74 | 73 | 91 | 106 | 48 | 101 | 140 | 44 | 156 / 1600 |
 
 El Gordo is lowest (cause not measured), then MACS1149 (fewest sources per arcsec² of the first five).
 Before the spike veto, with the rotation null alone, the four fields recovered 66, 309 and 486 of 800 at the top three masses (biased high by the spike systematics).
 
-### Upper limits (95 %, zero detections; `derived`; seven photo-z fields, 43.7 arcmin²)
+### Upper limits (95 %, zero detections; `derived`; nine photo-z fields, 55.1 arcmin²)
 
-SMACS 0723 and El Gordo added 2026-10-17 (`results/w1_shear_smacs_elgordo/combined_7fields.json`; the five earlier
-fields from their committed summaries; an Abell 2744 re-run reproduces its summary exactly). Five-field values
-(35.8 arcmin², `results/w1_shear_s1063/combined_5fields.json`) in brackets.
+MACS0417 and WHL0137 added 2026-10-17 (`results/w1_shear_more/combined_9fields.json`; the seven earlier fields from
+their committed summaries, which `--combine-only` reproduces exactly). MACS1423 is left out of the headline (its
+hit is explained only by a test not yet run through injections, and its R 0.60 lies above the other fields');
+with it, ten fields give 4.3 × 10³ / 7.0 × 10² / 3.5 × 10² (`combined_10fields.json`). Seven-field values
+(43.7 arcmin², `results/w1_shear_smacs_elgordo/combined_7fields.json`) in brackets.
 
 | \|M\| (M☉) | Σ ε_f A_f (deg²) | Σ(W1) < (deg⁻²) | border-corrected | radial headline (D-049) |
 |---|---|---|---|---|
 | 2 × 10¹⁰ | 0 | no limit | — | no limit |
 | 2 × 10¹¹ | 8.5 × 10⁻⁶ | 3.5 × 10⁵ (one recovery) | 3.9 × 10⁵ | no limit |
-| 2 × 10¹² | 5.7 × 10⁻⁴ | 5.3 × 10³ (5.8 × 10³) | 5.8 × 10³ (6.3 × 10³) | 6.1 × 10⁴ |
-| 8 × 10¹² | 3.1 × 10⁻³ | 9.6 × 10² (1.1 × 10³) | 1.05 × 10³ (1.2 × 10³) | 7.0 × 10³ |
-| 2 × 10¹³ | 6.0 × 10⁻³ | 5.0 × 10² (5.7 × 10²) | 5.4 × 10² (6.2 × 10²) | 4.0 × 10³ |
+| 2 × 10¹² | 6.2 × 10⁻⁴ | 4.9 × 10³ (5.3 × 10³) | 5.3 × 10³ (5.8 × 10³) | 6.1 × 10⁴ |
+| 8 × 10¹² | 3.7 × 10⁻³ | 8.2 × 10² (9.6 × 10²) | 9.0 × 10² (1.05 × 10³) | 7.0 × 10³ |
+| 2 × 10¹³ | 7.3 × 10⁻³ | 4.1 × 10² (5.0 × 10²) | 4.6 × 10² (5.4 × 10²) | 4.0 × 10³ |
 
-**Reading.** The shear screen gives limits 7–12× stronger than the `radial` headline (seven fields; ratios from
-the table, not stored; five fields gave 6–11×), but is equally blind
+**Reading.** The shear screen gives limits 8–13× stronger than the `radial` headline (nine fields; ratios from
+the table, not stored; seven fields gave 7–12×), but is equally blind
 at ≤ 2 × 10¹¹ M☉ (θ_E ≲ 1″): there the umbra and images cover too few sources per aperture (S/N ≈ 1–2, as D-050
-expected). The best limit is about 4× weaker than Takahashi & Asada's ~120 deg⁻² (radial section). Below 10¹² M☉
+expected). The best limit is about 3.4× weaker than Takahashi & Asada's ~120 deg⁻² (radial section). Below 10¹² M☉
 the orphan-pair limits (D-051) remain the only ones.
 
 ### Caveats

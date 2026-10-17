@@ -231,6 +231,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.35 (W1 STPSF model PSF vs stars and the Abell 2744 floor: plan, PSF grid, area-matched stars, screens; PSF figure looked at) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01TXkzEW, 08:08–08:40Z |
 | 2026-W42 | ≈ 0.2 (W1 smoothed STPSF vs star χ: plan, five variants, S3 fails) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01VZp3Mr, 09:08–09:30Z |
 | 2026-W42 | ≈ 0.4 (W1 shear on SMACS 0723 + El Gordo: plan, screens, injections, A2744 reproduction, sheet looked at) | — | — | 0.15 (orientation, claim, state files, PR) | cloud routine fb53b841, 10:08–10:55Z |
+| 2026-W42 | ≈ 0.3 (W1 shear on MACS0417, MACS1423, WHL0137: plan, screens, injections, ten-field combination; sheets looked at) | — | ≈ 0.1 (MACS1423 hit: frozen streak/star test) | 0.1 (orientation, claim, state files, PR) | cloud routine 01Td5iwv, 11:08–11:35Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
