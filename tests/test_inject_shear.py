@@ -161,3 +161,25 @@ def test_setting_reads_missing_options_as_legacy_values():
     assert ish.setting(old) == ish.setting(new)
     cut = {"assumptions": {"screen": {**new["assumptions"]["screen"], "min_coverage": 0.5}}}
     assert ish.setting(old) != ish.setting(cut)
+
+
+def test_streak_veto_blanks_rows_and_painted_images():
+    model, shapes, args = _field()
+    ra0 = float(np.median(shapes["ra"]))
+
+    def streak(ra, dec):  # a north-south "trail" through the field centre
+        return np.abs(np.asarray(ra) - ra0) * 3600.0 * np.cos(np.radians(-30.0)) < 4.0
+
+    on = streak(shapes["ra"], shapes["dec"])
+    assert 20 < on.sum() < len(shapes) // 2
+    plain = ish.ShearInjector(model, shapes, args, psf_sigma=1.0)
+    inj = ish.ShearInjector(model, shapes, args, psf_sigma=1.0, streak=streak)
+    c = inj.base["counts"]
+    assert inj.n_streak == int(on.sum())
+    n_used = int(np.isfinite(inj.base["e"]).sum())
+    assert c["n_veto_used"] > 0 and n_used == c["n_used_before_veto"] - c["n_veto_used"]
+    assert not np.isfinite(inj.base["e"][on]).any()  # vetoed rows leave the statistic
+    assert not inj.background[on].any()  # and are never lensed
+    np.testing.assert_array_equal(inj.background[~on], plain.background[~on])
+    with pytest.raises(ValueError, match="bool array"):
+        ish.es.shear_screen(model, shapes, args, 1.0, None, on.astype(int))

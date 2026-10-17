@@ -161,7 +161,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 ## JWST focus (D-047 screens; continues under the direction above)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
    - W1: the shear screen (D-053, `exotic_screens.py shear`, `inject_shear.py`) is built; nine fields null (Abell S1063,
-     SMACS 0723 and El Gordo added 2026-10-17; MACS0417, WHL0137, RXJ2129 and MACS0647 too, MACS1423 explained hit); eleven-field limits 4.5 × 10³ / 7.6 × 10² / 3.8 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² /
+     SMACS 0723 and El Gordo added 2026-10-17; MACS0417, WHL0137, RXJ2129 and MACS0647 too, MACS1423 explained hit, back in under the streak veto); twelve-field limits with the streak veto 4.4 × 10³ / 7.2 × 10² / 3.5 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² /
      2 × 10¹³ M☉, still blind at ≤ 2 × 10¹¹ M☉. Next:
      lower the B-mode floor (Abell 2744 max S_× 4.21 at (88, −42), full coverage: ~~PSF anisotropy from stars~~ done
      2026-10-17, not adopted (`results/w1_psf/RESULT.md`: 3 stars, too few for a map; a constant χ_PSF lowers the
@@ -172,7 +172,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      rejection (2026-10-17 diagnostic, `results/w1_floor/RESULT.md`: no streak there; 44 sources near bright
      galaxies carry it, above the rotation null; a bright-neighbour veto is not floor-specific); ~~drop edge apertures with < 50 % coverage~~ done 2026-10-17, not adopted: limits move ≤ 1.6 %,
      `results/w1_edge_cut/RESULT.md`); ~~add SMACS 0723 and El Gordo~~ done 2026-10-17, null
-     (`results/w1_shear_smacs_elgordo/RESULT.md`); ~~MACS0417, MACS1423, WHL0137~~ done 2026-10-17 (`results/w1_shear_more/RESULT.md`: MACS1423 hit carried by sources on an image stripe; nine-field limits 4.9 × 10³ / 8.2 × 10² / 4.1 × 10² deg⁻²); ~~RXJ2129 and MACS0647~~ done 2026-10-17, null (`results/w1_shear_rxj_m0647/RESULT.md`; MACS0647 R 0.23, nearly blind, top centres on streaks); MACS0717 with photo-z (none in DJA v7 on 2026-10-17); a calibrated streak veto (S1063 top peaks, the MACS1423 hit and the MACS0647 top centres sit on linear streaks; run through injections, then the ten-field limit); stack S around `radial` and orphan-pair
+     (`results/w1_shear_smacs_elgordo/RESULT.md`); ~~MACS0417, MACS1423, WHL0137~~ done 2026-10-17 (`results/w1_shear_more/RESULT.md`: MACS1423 hit carried by sources on an image stripe; nine-field limits 4.9 × 10³ / 8.2 × 10² / 4.1 × 10² deg⁻²); ~~RXJ2129 and MACS0647~~ done 2026-10-17, null (`results/w1_shear_rxj_m0647/RESULT.md`; MACS0647 R 0.23, nearly blind, top centres on streaks); MACS0717 with photo-z (none in DJA v7 on 2026-10-17); ~~a calibrated streak veto~~ done 2026-10-17, adopted (`results/w1_streak_veto/RESULT.md`: MACS1423 back in, no field passes; twelve-field limits 4.4 × 10³ / 7.2 × 10² / 3.5 × 10² deg⁻²; next: faint parallel streaks such as the S1063 peak's, fewer false trails on MACS0647); stack S around `radial` and orphan-pair
      centres; other lens redshifts → volume density vs Takahashi & Asada;
    - W2 / dark deflectors (D-048 clusters, D-051 deep fields: null, limits; D-055: the flanking-field orphan
      excess was a null (e) artefact, no excess under the fixed (e) or the companion-aware (f); D-048 clusters re-run, null): segmentation-map

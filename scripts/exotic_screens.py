@@ -851,8 +851,17 @@ def shear_defaults() -> dict:
     return vars(ap.parse_args([]))
 
 
-def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | None = None) -> dict:
-    """Run the shear screen; returns the map, null and peaks (all ``derived``)."""
+def shear_screen(
+    model,
+    shapes: Table,
+    args,
+    psf_sigma: float,
+    extra: Table | None = None,
+    veto: np.ndarray | None = None,
+) -> dict:
+    """Run the shear screen; returns the map, null and peaks (all ``derived``). ``veto`` (bool
+    per row, e.g. the W1 streak mask) removes rows from the statistic after the spike veto, PSF
+    and responsivity have been estimated from the whole table."""
     e, counts = shear_sources(
         model,
         shapes,
@@ -867,6 +876,13 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | No
     spike = counts.pop("spike")
     correctable = counts.pop("correctable")
     eps = counts.pop("eps")
+    if veto is not None:  # used rows before the veto and the vetoed share of them
+        veto = np.asarray(veto)
+        if veto.dtype != bool or veto.shape != (len(shapes),):
+            raise ValueError(f"veto must be a bool array of {len(shapes)} rows")
+        counts["n_used_before_veto"] = int(np.isfinite(e).sum())
+        counts["n_veto_used"] = int((veto & np.isfinite(e)).sum())
+        e = np.where(veto, np.nan + 0j, e)
     use = np.isfinite(e)
     x, y = model.to_frame(np.asarray(shapes["ra"])[use], np.asarray(shapes["dec"])[use])
     gx, gy = radial_grid(args.max_radius, args.grid_arcsec)

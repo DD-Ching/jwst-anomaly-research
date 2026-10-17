@@ -1,0 +1,31 @@
+{
+ "field": "elgordo",
+ "i2d": "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f200w_i2d.fits",
+ "binned_shape": [
+  572,
+  1259
+ ],
+ "pixel_scale_arcsec": 0.24983615689000874,
+ "n_trails_status2": 0,
+ "n_candidates_all_status": 79,
+ "trails": [],
+ "mask_pixels": 0,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "wall_time_s": {
+  "read": 8.0,
+  "total": 27.3
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}

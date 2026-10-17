@@ -1,0 +1,17 @@
+{
+ "hit_radec": [
+  215.93974895503368,
+  24.064566111111116
+ ],
+ "mask_covers_hit": true,
+ "macs1423_with_veto": {
+  "s_max": 3.4143918608285224,
+  "p_random_max": 0.22,
+  "b_max": 3.6359871130798878,
+  "passes_eb_rule": false
+ },
+ "K1": true,
+ "K2": true,
+ "adopted": true,
+ "rule": "results/w1_streak_veto/PLAN.md (K1, K2, adoption rule)"
+}

@@ -1,0 +1,44 @@
+{
+ "field": "abells1063",
+ "i2d": "s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f200w_i2d.fits",
+ "binned_shape": [
+  596,
+  1261
+ ],
+ "pixel_scale_arcsec": 0.24981196091023813,
+ "n_trails_status2": 3,
+ "n_candidates_all_status": 86,
+ "trails": [
+  {
+   "theta_deg": 59.152086123219824,
+   "rho_px": -459.14385665472673
+  },
+  {
+   "theta_deg": 59.04020182765021,
+   "rho_px": 236.6634229867675
+  },
+  {
+   "theta_deg": 119.004248195851,
+   "rho_px": 532.9029303858101
+  }
+ ],
+ "mask_pixels": 22391,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "wall_time_s": {
+  "read": 7.0,
+  "total": 31.4
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}

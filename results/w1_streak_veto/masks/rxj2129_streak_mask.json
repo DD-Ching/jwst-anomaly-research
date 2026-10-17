@@ -1,0 +1,36 @@
+{
+ "field": "rxj2129",
+ "i2d": "s3://stpubdata/jwst/public/jw02767/L3/t/o002/jw02767-o002_t001_nircam_clear-f200w_i2d.fits",
+ "binned_shape": [
+  565,
+  567
+ ],
+ "pixel_scale_arcsec": 0.24595252261315026,
+ "n_trails_status2": 1,
+ "n_candidates_all_status": 48,
+ "trails": [
+  {
+   "theta_deg": 60.47704111358711,
+   "rho_px": 298.6104569407339
+  }
+ ],
+ "mask_pixels": 2389,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "wall_time_s": {
+  "read": 4.9,
+  "total": 10.0
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}

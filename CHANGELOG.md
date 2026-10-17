@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 calibrated streak veto (STScI findsat_mrt masks, through injections): adopted; twelve-field limits 4.4e3 / 7.2e2 / 3.5e2 deg⁻²
+- **Why:** handoff of `results/w1_shear_rxj_m0647/RESULT.md`: a streak veto run through injections (S1063, MACS1423,
+  MACS0647 peaks on streaks); the post hoc V1 test could not be used for a limit.
+- **New:** `scripts/w1_streak_mask.py` (streams the F200W SCI, `acstools.findsat_mrt` persistent trails),
+  `inject_shear.py --streak-masks` (`shear_screen` gets a `veto` row flag), `scripts/w1_stage_inputs.py` (stages
+  the twelve fields' inputs), extra `streaks` in pyproject.
+- **Result (`results/w1_streak_veto/RESULT.md`):** K1 and K2 hold, so the veto is adopted. With it, MACS1423 gives S_max 3.41 and p_rot 0.22
+  and no longer passes. No field passes. MACS0647 loses 25 % of its used rows (named). Twelve fields, 70.5 arcmin²:
+  Σ(W1) < 4.4 × 10³ / 7.2 × 10² / 3.5 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉.
+- **Failed approaches:** zeroing > 5σ pixels before the trail finder removes bright streaks (PLAN addendum A).
+  Dropping vetoed rows before the screen changed the spike veto too, and S1063 then passed spuriously at p_rot
+  0.045. Code review found it; the run was superseded.
+- **Second review (final diff):** fixes that change no number (deterministic mask files, veto checks, a
+  veto-path test); traced items in RESULT "Second code-review".
+- **Handoff:** W1 next: faint parallel streaks (S1063 S_max aperture) are missed: a lower findsat threshold,
+  calibrated through injections; fewer false trails on MACS0647; the open review items in RESULT.
 ## 2026-10-17: Batch-2 follow-up: AS1063 h002 edge, MS0451 h011 detector-fixed, MACS0417 h002 counter-images not testable yet (#308)
 - **AS1063 1 h002:** artifact (edge, 12.54″ from the box centre); no significant change in any mosaic either.
 - **MS0451 1 h011:** artifact. The signal sits on one NRCALONG pixel in all 18 exposures of visits 1–2 (S/N 9–28),

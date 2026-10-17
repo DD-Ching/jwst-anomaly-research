@@ -1,0 +1,36 @@
+{
+ "field": "whl0137",
+ "i2d": "s3://stpubdata/jwst/public/jw02282/L3/t/o010/jw02282-o010_t001_nircam_clear-f200w_i2d.fits",
+ "binned_shape": [
+  572,
+  1259
+ ],
+ "pixel_scale_arcsec": 0.24984811650166625,
+ "n_trails_status2": 1,
+ "n_candidates_all_status": 84,
+ "trails": [
+  {
+   "theta_deg": 178.36361976567852,
+   "rho_px": -266.32027757347214
+  }
+ ],
+ "mask_pixels": 19439,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "wall_time_s": {
+  "read": 10.3,
+  "total": 29.8
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}

@@ -52,6 +52,7 @@ def _load(name: str):
 
 ir = _load("inject_radial")
 es = ir.es
+wsm = _load("w1_streak_mask")
 
 SHEAR_DEFAULTS = es.shear_defaults()
 # fields with public photo-z (SMACS and El Gordo added 2026-10-17: their DJA tarballs answer again)
@@ -164,10 +165,25 @@ def injected_ellipticity(e_src, raw_img, raw_src, r: float) -> np.ndarray:
 class ShearInjector:
     """The shear screen on one field: real ellipticities cached, recovery checked near the lens."""
 
-    def __init__(self, model, shapes: Table, args, psf_sigma: float, extra: Table | None = None):
+    def __init__(
+        self,
+        model,
+        shapes: Table,
+        args,
+        psf_sigma: float,
+        extra: Table | None = None,
+        streak=None,
+    ):
         shapes = shapes.copy(copy_data=False)  # the caller's table gets no `_src` column
         self.model, self.shapes, self.args, self.psf = model, shapes, args, psf_sigma
-        self.base = es.shear_screen(model, shapes, args, psf_sigma, extra)
+        # streak(ra, dec) -> bool: rows the field's streak mask vetoes (results/w1_streak_veto);
+        # shear_screen blanks real rows on streaks, painted images on streaks are vetoed here
+        self.streak = streak
+        on = None
+        if streak is not None:
+            on = streak(np.asarray(shapes["ra"], float), np.asarray(shapes["dec"], float))
+        self.n_streak = None if on is None else int(on.sum())
+        self.base = es.shear_screen(model, shapes, args, psf_sigma, extra, on)
         if not np.isfinite(self.base["s"]).any():
             raise ValueError("no grid centre has enough shear sources")
         self.e = self.base["e"]
@@ -189,6 +205,7 @@ class ShearInjector:
             & ~self.base["spike"]
             & self.base["correctable"]
             & np.isfinite(self.eps)
+            & (True if on is None else ~on)  # streak rows are not galaxies to lens
         )
         shapes["_src"] = np.arange(len(shapes))  # carried into painted rows by paint_lens
         self.next_label = int(np.max(shapes["label"])) + 1
@@ -245,8 +262,13 @@ class ShearInjector:
                 psf_chi=getattr(a, "psf_chi", 0j),
             )
             src = np.asarray(img["_src"], int)
+            on_streak = (
+                np.zeros(len(img), bool)
+                if self.streak is None
+                else self.streak(np.asarray(img["ra"], float), np.asarray(img["dec"], float))
+            )
             e_img = np.where(
-                np.isfinite(e_img) & ~self.spike_veto(img),
+                np.isfinite(e_img) & ~self.spike_veto(img) & ~on_streak,
                 injected_ellipticity(self.e_all[src], c["eps"], self.eps[src], self.r),
                 np.nan + 0j,
             )
@@ -282,6 +304,9 @@ def run_field(name: str, args) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     spec = field_spec(name)
     model, shapes, extra, cat, photoz = ir.load_field(name, out, spec)
+    streak = None
+    if getattr(args, "streak_masks", None) is not None:
+        streak = streak_veto(args.streak_masks, name)
     sargs = SimpleNamespace(**SHEAR_DEFAULTS)
     for k in ("aperture_arcsec", "filter", "r_min_arcsec", "min_coverage"):
         setattr(sargs, k, getattr(args, k))
@@ -289,7 +314,7 @@ def run_field(name: str, args) -> dict:
     sargs.recover_tol = args.recover_tol
     sargs.psf_chi = complex(*getattr(args, "psf_chi", (0.0, 0.0)))
     psf = es.psf_sigma_px(shapes)
-    inj = ShearInjector(model, shapes, sargs, psf, extra)
+    inj = ShearInjector(model, shapes, sargs, psf, extra, streak)
     t_base = time.time() - t0
     scale = ir.pixel_scale_arcsec(cat)
     fx, fy, area = ir.screened_footprint(inj.xs, inj.ys, sargs.max_radius)
@@ -346,6 +371,7 @@ def run_field(name: str, args) -> dict:
         "screen": inj.base["counts"]
         | {
             "psf_sigma_px": psf,
+            "n_streak_vetoed": inj.n_streak,
             "n_centres_valid": int(finite.sum()),
             "s_max": s_max,
             "s_max_xy": [float(inj.base["gx"][iy, ix]), float(inj.base["gy"][iy, ix])],
@@ -371,6 +397,16 @@ def run_field(name: str, args) -> dict:
             "seed": args.seed,
             "n_inject": args.n_inject,
             "spike_stars": len(extra) if extra is not None else None,
+            **(
+                {}
+                if streak is None
+                else {
+                    "streak_veto": {"veto_arcsec": wsm.VETO_ARCSEC, "masks": "w1_streak_mask.py"},
+                    "streak_mask": wsm.mask_identity(
+                        args.streak_masks / f"{name}_streak_mask.fits.gz"
+                    ),
+                }
+            ),
             "screen": SHEAR_DEFAULTS
             | {
                 k: getattr(sargs, k)
@@ -384,12 +420,22 @@ def run_field(name: str, args) -> dict:
     return summary
 
 
+def streak_veto(mask_dir: Path, name: str):
+    """``(ra, dec) -> bool`` for the field's streak mask (``w1_streak_mask.py``)."""
+    path = mask_dir / f"{name}_streak_mask.fits.gz"
+    if not path.exists():
+        raise FileNotFoundError(f"no streak mask for {name}: {path}")
+    mask, wcs = wsm.read_mask(path)
+    return wsm.veto_function(mask, wcs)
+
+
 def setting(summary: dict) -> dict:
     """A summary's screen settings that must agree across combined fields: the grid half-width and
     star table are per field; options missing from older summaries take their legacy value."""
     a = json.loads(json.dumps(summary["assumptions"]))
     a["screen"].pop("max_radius", None)
     a.pop("spike_stars", None)
+    a.pop("streak_mask", None)  # per field
     a["screen"] = {**LEGACY_SCREEN_OPTIONS, **a["screen"]}
     return a
 
@@ -419,6 +465,13 @@ def main(argv: list[str] | None = None) -> int:
         metavar=("CHI1", "CHI2"),
         help="constant PSF distortion for the shape deconvolution (default isotropic; "
         "scripts/w1_psf_floor.py)",
+    )
+    ap.add_argument(
+        "--streak-masks",
+        type=Path,
+        default=None,
+        help="directory of <field>_streak_mask.fits.gz (scripts/w1_streak_mask.py): drop shape "
+        "rows and painted images on streaks (results/w1_streak_veto/PLAN.md)",
     )
     ap.add_argument("--seed", type=int, default=50)
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "inject_shear")

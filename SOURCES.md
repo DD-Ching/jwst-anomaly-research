@@ -1448,3 +1448,7 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   not run.
 - MAST CAOM query (astroquery, 2026-10-17): VENUS 6882 NIRCam F150W level-3 targets and other programs within ±0.05°
   (`venus_pairs.json`).
+- acstools 3.8.2 `findsat_mrt.TrailFinder` (STScI; BSD-3-Clause; https://github.com/spacetelescope/acstools,
+  accessed 2026-10-17): median-Radon-transform satellite-trail finder, Stark et al. 2022, ACS ISR 2022-8
+  (https://ui.adsabs.harvard.edu/abs/2022acs..rept....8S/abstract). Used with scikit-image 0.26.0 and photutils 3.1.1
+  for the W1 streak masks (`scripts/w1_streak_mask.py`, `results/w1_streak_veto/`).
