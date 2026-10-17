@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 model PSF (STPSF) vs the star χ_PSF and Abell 2744's B-mode floor: axis close, size level-dependent; not adopted
+- **Why:** TASKS "JWST focus" 1 (W1), `results/w1_psf` "Next". Rules S1/S2 frozen in `results/w1_stpsf/PLAN.md`.
+- **New:** `scripts/w1_stpsf_floor.py` (`psf`, `stars`, `screen`); STPSF data streamed (88 MB, not stored).
+- **Result (`results/w1_stpsf/RESULT.md`):** model χ at sky PA 125.4–128.3° (stars 133°). Pixel-frame
+  orientations: 2 of 3 stars within 1.2° of the model, one 16.7° off. The faint isophotes follow the horizontal
+  spike pair (figure looked at). S1 (deviation: grid median) is consistent at 2 of 6 isophote levels (|χ| 0.18–0.21);
+  model |χ| ranges 0.008–0.209 over the levels and is not monotonic. Area-matched stars (post hoc): model |χ|
+  exceeds each star's by 0.05–0.07. S2 with a constant χ per level (deviation): b_max 3.57–3.97; the two passing
+  levels cost 11–12 % of the sources, and at 3e-4 the E-mode maximum exceeds the null's 95th percentile. Not
+  carried to injections: a constant correction would over-correct fainter sources. W1 limits unchanged.
+- **Failed approach:** a constant PSF χ from the model (level-dependent, over-predicts the stars).
+- **Handoff:** next W1 floor step is a per-source forward model (source ⊗ drizzled STPSF PSF at the catalogue
+  isophote, validated on the three stars first) or PSF-weighted moments.
+
 ## 2026-10-17: h002 identity follow-up and h003 limited re-check (#300)
 - **h002:** real fade; an ordinary transient is reasonable; identity and type not confirmed. No reported transient
   matched in queried sources; TNS not queried (403). SN H0pe images 24.9–37.9″ away; NS_0481 (3.77″) is a separate
