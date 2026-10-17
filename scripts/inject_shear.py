@@ -398,7 +398,12 @@ def run_field(name: str, args) -> dict:
             **(
                 {}
                 if streak is None
-                else {"streak_veto": {"veto_arcsec": wsm.VETO_ARCSEC, "masks": "w1_streak_mask.py"}}
+                else {
+                    "streak_veto": {"veto_arcsec": wsm.VETO_ARCSEC, "masks": "w1_streak_mask.py"},
+                    "streak_mask": wsm.mask_identity(
+                        args.streak_masks / f"{name}_streak_mask.fits.gz"
+                    ),
+                }
             ),
             "screen": SHEAR_DEFAULTS
             | {
@@ -419,7 +424,7 @@ def streak_veto(mask_dir: Path, name: str):
     if not path.exists():
         raise FileNotFoundError(f"no streak mask for {name}: {path}")
     mask, wcs = wsm.read_mask(path)
-    return lambda ra, dec: wsm.veto_rows(ra, dec, mask, wcs)
+    return wsm.veto_function(mask, wcs)
 
 
 def setting(summary: dict) -> dict:
@@ -428,6 +433,7 @@ def setting(summary: dict) -> dict:
     a = json.loads(json.dumps(summary["assumptions"]))
     a["screen"].pop("max_radius", None)
     a.pop("spike_stars", None)
+    a.pop("streak_mask", None)  # per field
     a["screen"] = {**LEGACY_SCREEN_OPTIONS, **a["screen"]}
     return a
 

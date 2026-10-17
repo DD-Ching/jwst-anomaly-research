@@ -14,7 +14,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   its aperture holds faint parallel streaks the mask misses. To vetting; not a candidate. Headline eleven fields
   (S1063 out, MACS1423 in, 62.5 arcmin²): Σ(W1) < 5.3 × 10³ / 8.0 × 10² / 3.9 × 10² deg⁻².
 - **Failed approach:** zeroing > 5σ pixels before the trail finder removes bright streaks (MACS0647; PLAN addendum A).
-- **Handoff:** W1 next: vet the S1063 peak (a diagonal-streak version of the V1 test, frozen before computing, or a
+- **Handoff:** PR left open: fix the review findings in RESULT "Open code-review findings" (spike-veto coupling first), re-run, then merge. W1 next: vet the S1063 peak (a diagonal-streak version of the V1 test, frozen before computing, or a
   lower findsat threshold calibrated through injections); more rotation draws for peaks near p_rot 0.05.
 
 ## 2026-10-17: W1 shear screen on RXJ2129 and MACS0647: null; eleven-field limits 4.5e3 / 7.6e2 / 3.8e2 deg⁻²

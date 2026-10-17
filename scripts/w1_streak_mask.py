@@ -15,9 +15,12 @@ the mask. Pixels ``observed``; masks ``derived``; every number here is an ASSUMP
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
 import sys
 import time
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -47,12 +50,9 @@ def block_median(a: np.ndarray, b: int) -> np.ndarray:
     """``b`` × ``b`` block median; zero (off-mosaic fill) and NaN are ignored."""
     ny, nx = (a.shape[0] // b) * b, (a.shape[1] // b) * b
     a = np.where(a[:ny, :nx] == 0, np.nan, a[:ny, :nx].astype(np.float32))
-    with np.errstate(all="ignore"):
-        import warnings
-
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", RuntimeWarning)
-            return np.nanmedian(a.reshape(ny // b, b, nx // b, b), axis=(1, 3))
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)  # all-NaN (off-mosaic) blocks
+        return np.nanmedian(a.reshape(ny // b, b, nx // b, b), axis=(1, 3))
 
 
 def normalise(d: np.ndarray) -> np.ndarray:
@@ -120,19 +120,40 @@ def read_mask(path: Path) -> tuple[np.ndarray, WCS]:
         return np.asarray(h[0].data, bool), WCS(h[0].header)
 
 
-def veto_rows(ra, dec, mask: np.ndarray, wcs: WCS, veto_arcsec: float = VETO_ARCSEC) -> np.ndarray:
-    """True within ``veto_arcsec`` of a masked pixel (positions off the mask image: False)."""
-    ra, dec = np.atleast_1d(np.asarray(ra, float)), np.atleast_1d(np.asarray(dec, float))
-    if not mask.any():
-        return np.zeros(len(ra), bool)
+def veto_function(mask: np.ndarray, wcs: WCS, veto_arcsec: float = VETO_ARCSEC):
+    """``(ra, dec) -> bool``: True within ``veto_arcsec`` of a masked pixel, measured from the
+    nearest mask-pixel centre (so the tolerance is exact only to about half a mask pixel, 0.18″
+    at 0.25″ pixels); positions off the mask image are False. The distance map is built once."""
     scale = proj_plane_pixel_scales(wcs)[0] * 3600.0
-    dist = ndimage.distance_transform_edt(~mask) * scale
-    x, y = wcs.world_to_pixel_values(ra, dec)
-    ix, iy = np.round(np.asarray(x)).astype(int), np.round(np.asarray(y)).astype(int)
-    inside = (ix >= 0) & (iy >= 0) & (ix < mask.shape[1]) & (iy < mask.shape[0])
-    out = np.zeros(len(ra), bool)
-    out[inside] = dist[iy[inside], ix[inside]] <= veto_arcsec
-    return out
+    dist = ndimage.distance_transform_edt(~mask) * scale if mask.any() else None
+
+    def veto(ra, dec) -> np.ndarray:
+        ra, dec = np.atleast_1d(np.asarray(ra, float)), np.atleast_1d(np.asarray(dec, float))
+        out = np.zeros(len(ra), bool)
+        if dist is None:
+            return out
+        x, y = wcs.world_to_pixel_values(ra, dec)
+        ix, iy = np.round(np.asarray(x)).astype(int), np.round(np.asarray(y)).astype(int)
+        inside = (ix >= 0) & (iy >= 0) & (ix < mask.shape[1]) & (iy < mask.shape[0])
+        out[inside] = dist[iy[inside], ix[inside]] <= veto_arcsec
+        return out
+
+    return veto
+
+
+def veto_rows(ra, dec, mask: np.ndarray, wcs: WCS, veto_arcsec: float = VETO_ARCSEC) -> np.ndarray:
+    """One-off form of :func:`veto_function`."""
+    return veto_function(mask, wcs, veto_arcsec)(ra, dec)
+
+
+def mask_identity(path: Path) -> dict:
+    """sha256 and masked-pixel count of a mask file (recorded in each veto-run summary)."""
+    mask, _ = read_mask(path)
+    return {
+        "file": path.name,
+        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        "mask_pixels": int(mask.sum()),
+    }
 
 
 def known_case(mask_covers_hit: bool, macs1423_passes_with_veto: bool) -> dict:
@@ -145,7 +166,10 @@ def adopt(k: dict) -> bool:
     return bool(k["K1"] and k["K2"])
 
 
-HIT_SUMMARY = "results/w1_shear_more/inject_summary_macs1423.json"  # the 2026-10-17 D-053 hit
+# the 2026-10-17 D-053 hit
+HIT_SUMMARY = (
+    Path(__file__).resolve().parents[1] / "results/w1_shear_more/inject_summary_macs1423.json"
+)
 
 
 def evaluate(mask_dir: Path, veto_summary: Path, hit_summary: Path) -> dict:
@@ -176,7 +200,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--fields", nargs="+", default=[], choices=ish.FIELD_NAMES)
     ap.add_argument("--out", type=Path, required=True)
-    ap.add_argument("--processes", type=int, default=4)
+    ap.add_argument("--processes", type=int, default=os.cpu_count() or 1)
     ap.add_argument("--png", action="store_true", help="also write a contact sheet per field")
     ap.add_argument(
         "--evaluate",
@@ -187,7 +211,9 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     args.out.mkdir(parents=True, exist_ok=True)
     if args.evaluate is not None:
-        res = evaluate(args.out, args.evaluate, Path(HIT_SUMMARY))
+        if args.fields:
+            ap.error("--evaluate makes no masks; run --fields separately")
+        res = evaluate(args.out, args.evaluate, HIT_SUMMARY)
         (args.out / "adoption.json").write_text(json.dumps(res, indent=1) + "\n")
         print(json.dumps(res))
         return 0

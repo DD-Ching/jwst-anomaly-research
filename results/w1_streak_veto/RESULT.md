@@ -62,3 +62,16 @@ is left out of the headline and goes to vetting (next run). It is not a candidat
 - The mask FITS files are not tracked (`*.fits.gz` is gitignored): re-make them with
   `scripts/w1_streak_mask.py --fields <field> --out results/w1_streak_veto/masks` (about 30–60 s per field) and
   check `mask_pixels` against the committed JSON before `inject_shear.py --streak-masks`.
+
+## Open code-review findings (not fixed in this run; they need re-runs)
+- **Spike-veto coupling:** streak rows are dropped before `shear_screen`, so the catalogue spike-segment veto and
+  `psf_sigma_px` are estimated from the reduced table. Some of the S_max / b_max / p_rot changes above may come
+  from a changed spike veto, not from the streak rows. Next run: apply the streak veto as a row flag after the spike
+  estimate, then re-run the twelve fields.
+- The used-row share for the 20 % rule is not computed: the summaries need n_used without and with the veto.
+- The veto distance is measured from the nearest mask-pixel centre, so it is exact only to about half a mask
+  pixel (≈ 0.18″) (documented in `veto_function`).
+- `w1_stage_inputs.py` fetches the files without a recorded sha256 through a sentinel that compares equal to any
+  hash. The fetch helpers should get an explicit no-verify path instead.
+- `w1_streak_mask.py` streams each mosaic one strip at a time, with no concurrent range reads and no
+  download/compute overlap (scripts/CLAUDE.md parallel topology).
