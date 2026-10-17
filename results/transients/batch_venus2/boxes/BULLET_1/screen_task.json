@@ -1,0 +1,14 @@
+{
+ "box_id": "BULLET_1",
+ "kind": "screen",
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 66.0,
+  "peak_rss_mb": 878.8
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.4,
+  "peak_rss_mb": 133.7
+ }
+}
