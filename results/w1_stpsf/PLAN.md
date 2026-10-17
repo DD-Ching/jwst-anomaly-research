@@ -24,3 +24,8 @@ Written before any model PSF was computed (frozen at this commit; deviations get
   its peak, so a per-source model χ was not built this cycle.
 - **Added (post hoc):** each star's model χ at the level whose segment area matches its catalogue
   `isophotal_area` (`w1_stpsf_floor.py stars`), to test the model where the catalogue fixes the level.
+- **Deviation (statistic):** S1 compares the median over the 24 grid PSFs (each rotated to the sky first), not
+  over the screened sources.
+- **Changed after code review:** stamps 6″ → 10″ (faint isophotes could reach the 6″ edge; at 10″ none does), and
+  the median is taken after rotating to the sky. Before this, S1 failed at all six levels; at 10″ with the
+  sky-frame median it passes at two. Both runs used the same rules.

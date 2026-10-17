@@ -5,11 +5,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-17: W1 model PSF (STPSF) vs the star χ_PSF and Abell 2744's B-mode floor: same axis, size not fixed; not adopted
 - **Why:** TASKS "JWST focus" 1 (W1), `results/w1_psf` "Next". Rules S1/S2 frozen in `results/w1_stpsf/PLAN.md`.
 - **New:** `scripts/w1_stpsf_floor.py` (`psf`, `stars`, `screen`); STPSF data streamed (88 MB, not stored).
-- **Result (`results/w1_stpsf/RESULT.md`):** model χ axis at sky PA 124.6–129.4° (stars 133°; catalogue
-  orientations match the model's pixel-x elongation: the faint isophotes follow the horizontal spike pair, figure
-  looked at). S1 fails at all six isophote levels (model |χ| 0.016–0.234, not monotonic). Area-matched (post hoc):
-  model |χ| exceeds each star's by 0.05–0.09. S2 with a constant χ per level (deviation): b_max 3.49–3.98; only
-  |χ| ≈ 0.23 levels pass (14 % source loss, E-mode max at the null's 95th percentile): not adopted. W1 limits unchanged.
+- **Result (`results/w1_stpsf/RESULT.md`):** model χ at sky PA 125.4–128.3° (stars 133°). Pixel-frame
+  orientations: 2 of 3 stars within 1.2° of the model, one 16.7° off. The faint isophotes follow the horizontal
+  spike pair (figure looked at). S1 (deviation: grid median) is consistent at 2 of 6 isophote levels (|χ| 0.18–0.21);
+  model |χ| ranges 0.008–0.209 over the levels and is not monotonic. Area-matched stars (post hoc): model |χ|
+  exceeds each star's by 0.05–0.07. S2 with a constant χ per level (deviation): b_max 3.57–3.97; the two passing
+  levels cost 11–12 % of the sources, and at 3e-4 the E-mode maximum exceeds the null's 95th percentile. Not
+  carried to injections: a constant correction would over-correct fainter sources. W1 limits unchanged.
 - **Failed approach:** a constant PSF χ from the model (level-dependent, over-predicts the stars).
 - **Handoff:** next W1 floor step is a per-source forward model (source ⊗ drizzled STPSF PSF at the catalogue
   isophote, validated on the three stars first) or PSF-weighted moments.

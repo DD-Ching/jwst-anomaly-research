@@ -30,3 +30,38 @@ def test_s1_consistent_per_component():
     assert w.s1_consistent(complex(0.03, -0.11))
     assert not w.s1_consistent(complex(-0.015, -0.10))  # imag differs by 0.056
     assert not w.s1_consistent(complex(0.04, -0.156))  # real differs by 0.055
+
+
+def test_isophotal_chi_area_flags_edge():
+    y, x = np.mgrid[-10:11, -10:11].astype(float)
+    im = np.exp(-0.5 * (x**2 + y**2) / 16.0)
+    _, area, edge = w.isophotal_chi_area(im, 1e-6)
+    assert edge and area == im.size
+    _, _, edge = w.isophotal_chi_area(im, 0.5)
+    assert not edge
+
+
+def _row(area, chi):
+    n = len(w.LEVELS_FINE)
+    return {
+        "fine_area_px": [area * 2.0 ** (k / 4) for k in range(n)],
+        "fine_chi_pix": [[chi * (1 + k / n), 0.0] for k in range(n)],
+        "fine_edge": [k > n - 3 for k in range(n)],
+        "chi_pix": [[chi, 0.0]] * len(w.LEVELS),
+        "edge": [False] * len(w.LEVELS),
+    }
+
+
+def test_area_matched_chi_picks_closest_area():
+    m = w.area_matched_chi([_row(100.0, 0.1), _row(100.0, 0.2)], 200.0)  # k = 4 matches 200
+    k = 4
+    n = len(w.LEVELS_FINE)
+    assert np.isclose(m["level_median"], w.LEVELS_FINE[k])
+    assert np.isclose(m["chi_pix_median"][0], 0.15 * (1 + k / n))
+    assert m["n_edge"] == 0
+
+
+def test_summarize_rotates_before_median():
+    s = w.summarize([_row(100.0, 0.1), _row(100.0, 0.2)])["levels"][0]
+    assert np.isclose(s["abs_chi_median"], 0.15)
+    assert np.isclose(s["pa_sky_deg"], 130.8, atol=0.1)

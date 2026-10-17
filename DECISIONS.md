@@ -2952,7 +2952,7 @@ Results (`model_prediction`, unrefitted; details `docs/fields/abell370.md`, CHAN
   lists; a local p-value per centre and a field-maximum p-value.
 - **Adoption.** Benchmark with `scripts/inject_radial.py`; adopt only if it beats `radial`'s D-049 efficiencies.
 - **Expectation (`derived`, rough).** γ_t ≈ (θ_E/θ)², so at θ_E = 1″ γ_t ≈ 0.11 at 3″; with about
-  0.05–0.09 lensable rows per arcsec² (D-049) and σ_e ≈ 0.3, S/N ≈ 1–2 in a 5″ aperture. Gains are expected
+  0.05–0.07 lensable rows per arcsec² (D-049) and σ_e ≈ 0.3, S/N ≈ 1–2 in a 5″ aperture. Gains are expected
   mainly at θ_E ≥ 2–3″; the injections decide.
 
 **Alternatives rejected.**
@@ -5022,11 +5022,11 @@ confining radiation at a throat is found.
 
 ## D-096 W1 PSF anisotropy: STPSF used as a diagnostic model; no PSF correction adopted (2026-10-17)
 - **Decision:** STPSF 2.2.0 (data 2.2.0, streamed) models NIRCam F200W PSFs for the W1 floor tests; no constant
-  PSF-χ correction is adopted for the shear screen, because the model's isophotal |χ| depends on the isophote level
-  and over-predicts the three Abell 2744 stars by 0.05–0.09, while its axis matches theirs.
+  PSF-χ correction is adopted for the shear screen. The model's isophotal |χ| depends on the isophote level and
+  over-predicts the three Abell 2744 stars by 0.05–0.07; its axis is close to theirs (2 of 3 within 1.2°).
 - **Alternatives rejected:**
-  - a constant model χ chosen by isophote level: only the |χ| ≈ 0.23 levels pass the 3.79 rule, chosen after the
-    fact and too large for the stars;
+  - a constant model χ per isophote level: only the two levels with |χ| 0.18–0.21 pass the 3.79 rule. That
+    level fits the stars, not the fainter sources, and adds E-mode power;
   - a star-based map (D-entry of #298 / `results/w1_psf`: 3 stars).
 - **Evidence:** `results/w1_stpsf/RESULT.md`. D-018's rejection of STPSF for spike templates is unchanged.
 - **Revisit if:** a per-source forward model (galaxy ⊗ drizzled STPSF PSF, catalogue isophote) reproduces the
