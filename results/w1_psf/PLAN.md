@@ -33,3 +33,15 @@ PSF distortion χ★ = (a² − b²)/(a² + b²) e^{2i PA} per star (observed mo
 ## Outputs
 `results/w1_psf/psf_abell2744.json` (stars, χ★, R1 inputs, b_max and S_× at (88, −42) with and without the
 correction, rotation-null summary), `RESULT.md`. All `derived`; thresholds ASSUMPTIONs.
+
+## Addendum (written after the R1/R2 outcome, before any injection result; deviation from "frozen at this commit")
+R1 failed (3 PSF stars) and R2 passed for the constant correction, so injections run on Abell 2744 only, isotropic
+(`--psf-chi 0 0`, reproduces the committed run) and with the constant χ_PSF (`--psf-chi` = the stars' median),
+same seed (50), 200 lenses per mass, `inject_shear.py` defaults otherwise.
+- **R3 adoption (computable; `w1_psf_floor.r3_adopt`):** the correction is adopted for Abell 2744 only if the
+  five-field 95 % limit, recombined with the committed summaries of the other four fields
+  (`results/w1_shear_s1063/rerun_4fields`, `inject_summary_abells1063.json`), is lower (strictly) at **each** of
+  2 × 10¹², 8 × 10¹² and 2 × 10¹³ M☉ than the committed limit (`combined_5fields.json`), as in
+  `results/w1_edge_cut/PLAN.md`. Otherwise it is not adopted and limits stay as committed.
+- The real field's E-mode result must stay null under the correction (S_max below the rotation null's 95th
+  percentile); if not, the correction's peaks are vetted before anything else.

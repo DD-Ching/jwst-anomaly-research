@@ -67,3 +67,12 @@ def test_idw_map_and_star_selection():
     )
     gaia = Table({"ra": [10.0, 10.001, 10.002], "dec": [0.0, 0.0, 0.0], "mag": [20.5, 19.0, 20.0]})
     assert list(w1p.select_stars(shapes, gaia)) == [0]  # row 1 too bright, row 2 low S/N
+
+
+def test_r3_rule():
+    old = {m: {"upper_limit_deg2": 10.0} for m in w1p.R3_MASSES}
+    lower = {m: {"upper_limit_deg2": 9.0} for m in w1p.R3_MASSES}
+    assert w1p.r3_adopt(lower, old)
+    mixed = dict(lower, **{"2e+13": {"upper_limit_deg2": 10.0}})
+    assert not w1p.r3_adopt(mixed, old)
+    assert not w1p.r3_adopt(dict(lower, **{"8e+12": {"upper_limit_deg2": None}}), old)

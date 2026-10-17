@@ -162,7 +162,14 @@ class ShearInjector:
         n_img_used = 0
         if len(img):
             e_img, c = es.shear_sources(
-                self.model, img, self.psf, a.min_snr, a.max_g, self.r, spike_veto=False
+                self.model,
+                img,
+                self.psf,
+                a.min_snr,
+                a.max_g,
+                self.r,
+                spike_veto=False,
+                psf_chi=getattr(a, "psf_chi", 0j),
             )
             src = np.asarray(img["_src"], int)
             e_img = np.where(
@@ -207,6 +214,7 @@ def run_field(name: str, args) -> dict:
         setattr(sargs, k, getattr(args, k))
     sargs.max_radius = spec["max_radius"]
     sargs.recover_tol = args.recover_tol
+    sargs.psf_chi = complex(*getattr(args, "psf_chi", (0.0, 0.0)))
     psf = es.psf_sigma_px(shapes)
     inj = ShearInjector(model, shapes, sargs, psf, extra)
     t_base = time.time() - t0
@@ -295,7 +303,8 @@ def run_field(name: str, args) -> dict:
                 k: getattr(sargs, k)
                 for k in ("aperture_arcsec", "filter", "r_min_arcsec", "min_coverage")
             }
-            | {"max_radius": sargs.max_radius},
+            | {"max_radius": sargs.max_radius}
+            | {"psf_chi": [sargs.psf_chi.real, sargs.psf_chi.imag]},
         },
     }
     (out / "summary.json").write_text(json.dumps(es.json_safe(summary), indent=1) + "\n")
@@ -318,6 +327,15 @@ def main(argv: list[str] | None = None) -> int:
         type=float,
         default=SHEAR_DEFAULTS["min_coverage"],
         help="drop grid centres with less of their aperture inside the footprint (D-053 cut)",
+    )
+    ap.add_argument(
+        "--psf-chi",
+        type=float,
+        nargs=2,
+        default=(0.0, 0.0),
+        metavar=("CHI1", "CHI2"),
+        help="constant PSF distortion for the shape deconvolution (default isotropic; "
+        "scripts/w1_psf_floor.py)",
     )
     ap.add_argument("--seed", type=int, default=50)
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "inject_shear")

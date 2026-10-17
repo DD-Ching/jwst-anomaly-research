@@ -56,6 +56,20 @@ def r2_adopt(b_max: float) -> bool:
     return bool(np.isfinite(b_max) and b_max <= R2_MAX_BMAX)
 
 
+R3_MASSES = ("2e+12", "8e+12", "2e+13")
+
+
+def r3_adopt(new_limits: dict, old_limits: dict, masses=R3_MASSES) -> bool:
+    """R3: adopt only if the recombined 95 % limit is strictly lower at every mass in ``masses``
+    (``limits_95`` dicts of ``inject_radial.combine``); a missing or infinite limit fails."""
+    for m in masses:
+        a = new_limits.get(m, {}).get("upper_limit_deg2")
+        b = old_limits.get(m, {}).get("upper_limit_deg2")
+        if a is None or b is None or not (np.isfinite(a) and a < b):
+            return False
+    return True
+
+
 def idw_map(xs, ys, chi_s, x, y, k: int = MAP_K) -> np.ndarray:
     """Inverse-distance mean of the ``k`` nearest stars' χ at each (x, y)."""
     from scipy.spatial import cKDTree
