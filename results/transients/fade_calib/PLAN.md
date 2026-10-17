@@ -143,3 +143,21 @@ Development runs are stored in `dev/` (`<variant>_s10`, `<variant>_s11`, `<varia
     also in epoch 1, so this is realistic for one source.
   - The density effect of about 60 injected epoch-1 sources on the 99.9th-percentile threshold is a stated
     limitation. Per-stage counts are reported.
+
+## Addendum 5 (2026-10-17T00:30Z, after the held-out pass, before any difference of the new boxes)
+- **Held-out seeds 30 + 31** (`heldout2/`) pass §4 under the addendum-4 injection geometry:
+  - empirical PSF: unchanged false hits 1 / 40, vanish 26.0 AB 14 / 14;
+  - Gaussian: 4 / 40 (exactly at the 0.10 limit), 14 / 14.
+  - Section 6 therefore runs.
+- **Box 1** is re-screened with the final chain (`box1_v2/compare_286.json`). Its one review entry is at the #286
+  h024 position, already vetted.
+- **Boxes 2 and 3** come from `fade_calib.py boxes` (`boxes.json`), using the image list and coverage only:
+  - B2 (15.717097, −49.262488), 8 images; B3 (15.731568, −49.270822), 7 images;
+  - all four mosaics 100 % finite.
+- **Per box:**
+  - one screen (no injections) with the final chain;
+  - one pre-matching injection run with the empirical PSF: B2 seed 40, B3 seed 41 (`sample_b2_s40.csv`,
+    `sample_b3_s41.csv`), counted with `fade_calib.py eval`, no pass rule;
+  - review cap 15;
+  - spot-check 3 rejected hits per box on the sheet (the first 3 by hit id among unflagged non-`pass` hits);
+  - vetting of review entries as #286.

@@ -28,6 +28,8 @@ import math
 import sys
 from pathlib import Path
 
+import numpy as np
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 CLASSES = ("unchanged", "appear", "partial", "vanish")
@@ -164,6 +166,29 @@ def pass_rule(summary: dict, mag: str = "26.00") -> dict:
     }
 
 
+def rank_boxes(ra, dec, half, step, exclude, min_images):
+    """Candidate box centres on a ``step``-arcsec grid over the image list, ranked by the number of
+    catalogued images inside (descending), dropping boxes that overlap ``exclude`` boxes
+    (list of (ra, dec)) or hold fewer than ``min_images``. Coverage only; no image data used."""
+    ra, dec = np.asarray(ra, float), np.asarray(dec, float)
+    d0 = float(np.median(dec))
+    cosd = math.cos(math.radians(d0))
+    x, y = (ra - ra.mean()) * cosd * 3600, (dec - d0) * 3600
+    gx = np.arange(x.min(), x.max() + step, step)
+    gy = np.arange(y.min(), y.max() + step, step)
+    ex = [((r - ra.mean()) * cosd * 3600, (dd - d0) * 3600) for r, dd in exclude]
+    out = []
+    for cy in gy:
+        for cx in gx:
+            if any(abs(cx - a) < 2 * half and abs(cy - b) < 2 * half for a, b in ex):
+                continue
+            n = int(((abs(x - cx) <= half) & (abs(y - cy) <= half)).sum())
+            if n >= min_images:
+                out.append((n, float(ra.mean() + cx / 3600 / cosd), float(d0 + cy / 3600)))
+    out.sort(key=lambda t: -t[0])
+    return out
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -181,7 +206,53 @@ def main(argv=None) -> int:
     e = sub.add_parser("eval")
     e.add_argument("--run", nargs=2, action="append", required=True, metavar=("DIR", "MORPH"))
     e.add_argument("--out", type=Path, required=True)
+    bx = sub.add_parser("boxes", help="choose extra boxes from coverage only (PLAN §6)")
+    bx.add_argument("--field", default="elgordo")
+    bx.add_argument("--uri", nargs="+", required=True, help="every i2d that must cover the box")
+    bx.add_argument("--exclude", type=float, nargs=2, action="append", default=[])
+    bx.add_argument("--half-arcsec", type=float, default=12.0)
+    bx.add_argument("--step", type=float, default=2.0)
+    bx.add_argument("--min-images", type=int, default=5)
+    bx.add_argument("--min-finite", type=float, default=0.95)
+    bx.add_argument("--n", type=int, default=2)
+    bx.add_argument("--out", type=Path, required=True)
     a = p.parse_args(argv)
+    if a.cmd == "boxes":
+        from arc_chain import image_positions
+        from arc_diff import read_box
+
+        ra, dec = image_positions(a.field)
+        chosen, checked = [], []
+        for n, r, d in rank_boxes(ra, dec, a.half_arcsec, a.step, a.exclude, a.min_images):
+            if any(
+                abs((r - c["ra"]) * math.cos(math.radians(d)) * 3600) < 2 * a.half_arcsec
+                and abs((d - c["dec"]) * 3600) < 2 * a.half_arcsec
+                for c in chosen
+            ):
+                continue
+            fin = []
+            for u in a.uri:
+                try:
+                    b = read_box(u, r, d, a.half_arcsec)
+                    full = (2 * math.ceil(a.half_arcsec / b["scale"]) + 1) ** 2
+                    fin.append(round(float(np.isfinite(b["sci"]).sum()) / full, 4))
+                except ValueError:
+                    fin.append(0.0)
+            row = {"ra": round(r, 6), "dec": round(d, 6), "n_images": n, "finite": fin}
+            checked.append(row)
+            if min(fin) >= a.min_finite:
+                chosen.append(row)
+            if len(chosen) == a.n:
+                break
+        out = {
+            "label": "derived; chosen from image lists and coverage only, before any difference",
+            "rule": vars(a) | {"out": str(a.out)},
+            "chosen": chosen,
+            "checked": checked,
+        }
+        a.out.write_text(json.dumps(out, indent=1) + "\n")
+        print(json.dumps(chosen))
+        return 0
     if a.cmd == "make":
         from arc_diff import grid_job
 
