@@ -65,6 +65,8 @@ DEFAULT_FIELDS = (
     "elgordo",
     "macs0417",
     "whl0137",
+    "rxj2129",
+    "macs0647",
 )  # macs1423 is screened but not combined by default: results/w1_shear_more/RESULT.md
 # Screen options added after summaries were first committed, with the value those runs used
 # (before the option existed). A summary without the key is read with this value.
@@ -113,6 +115,30 @@ SHEAR_FIELD_OVERRIDES = {
         "max_radius": 100.0,
         "spike_stars": True,
         "centre": (24.354, -8.4563),
+    },
+    # 2026-10-17 (results/w1_shear_rxj_m0647/PLAN.md): the primary models and DJA v7.0 photo-z of
+    # the `arcs` runs; MACS0647 uses epoch 1 (program 1433 o010)
+    "rxj2129": {
+        "model": "rxj2129-lenstool-maps",
+        "catalog": ir._MAST.format("jw02767-o002_t001_nircam_clear-f200w"),
+        "photoz": (
+            "eazy",
+            "cache/dja/photoz-rxj2129-v7.0/rxj2129-grizli-v7.0-fix.eazypy.zout.fits",
+        ),
+        "max_radius": 100.0,
+        "spike_stars": True,
+        "centre": (322.416503, 0.089236),
+    },
+    "macs0647": {
+        "model": "macs0647-clash-nfw",
+        "catalog": ir._MAST.format("jw01433-o010_t001_nircam_clear-f200w"),
+        "photoz": (
+            "eazy",
+            "cache/dja/photoz-macs0647-v7.0/macs0647-grizli-v7.0-fix.eazypy.zout.fits",
+        ),
+        "max_radius": 100.0,
+        "spike_stars": True,
+        "centre": (101.959458, 70.248611),
     },
 }
 FIELD_NAMES = sorted(set(ir.FIELDS) | set(SHEAR_FIELD_OVERRIDES))

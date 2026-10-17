@@ -1,0 +1,78 @@
+{
+ "model": "macs0647-clash-nfw",
+ "catalog": "data/cache/mast/jw01433-o010_t001_nircam_clear-f200w/jw01433-o010_t001_nircam_clear-f200w_cat.ecsv",
+ "photoz": "data/cache/dja/photoz-macs0647-v7.0/macs0647-grizli-v7.0-fix.eazypy.zout.fits",
+ "spike_stars": {
+  "path": "<scratch>/inj/macs0647/macs0647_gaia_stars.ecsv",
+  "n": 28,
+  "sha256": "fe17421810973b65c7e2b8745d9c3a5e1ce0e2cc7e10603d9a6a5abaa54613d8"
+ },
+ "seed": 1,
+ "psf_sigma_px": 1.2087403315176497,
+ "n_rows": 1975,
+ "n_spike_segments": 102,
+ "n_lensable": 1333,
+ "n_lensable_after_spike_veto": 1239,
+ "n_snr": 1236,
+ "n_resolved": 1039,
+ "n_weak_shear": 620,
+ "responsivity": 0.23095943499486596,
+ "responsivity_err": 0.06968285341354699,
+ "n_centres_valid": 10126,
+ "area_arcsec2": 10126.0,
+ "s_max": 2.9650150887217523,
+ "p_random_max": 0.325,
+ "s_cross_plus_max": 3.029482459038025,
+ "p_random_cross_plus": 0.21,
+ "s_cross_minus_max": 2.9596131060872515,
+ "p_random_cross_minus": 0.33,
+ "b_max": 3.029482459038025,
+ "passes_eb_rule": false,
+ "null_max_p50_p95": [
+  2.88336198286344,
+  3.283461165554346
+ ],
+ "n_peaks_above_null_median": 3,
+ "peaks": [
+  {
+   "x": 1.0,
+   "y": -21.0,
+   "ra": 101.95863632520592,
+   "dec": 70.24277777666667,
+   "s": 2.9650150887217523,
+   "s_cross": -0.002903810908730041,
+   "p_random": 0.325
+  },
+  {
+   "x": 2.0,
+   "y": -20.0,
+   "ra": 101.95781435041185,
+   "dec": 70.24305555444444,
+   "s": 2.9384936811907485,
+   "s_cross": 0.5061278860868227,
+   "p_random": 0.375
+  },
+  {
+   "x": -25.0,
+   "y": -38.0,
+   "ra": 101.98000766985182,
+   "dec": 70.23805555444444,
+   "s": 2.9020738988671435,
+   "s_cross": 0.26080315657061837,
+   "p_random": 0.45
+  }
+ ],
+ "assumptions": {
+  "aperture_arcsec": 10.0,
+  "filter": "schirmer",
+  "r_min_arcsec": 1.0,
+  "min_sources": 5,
+  "min_snr": 10.0,
+  "max_g": 0.5,
+  "responsivity": null,
+  "max_radius": 100.0,
+  "grid_arcsec": 1.0,
+  "n_random": 200,
+  "min_coverage": 0.0
+ }
+}

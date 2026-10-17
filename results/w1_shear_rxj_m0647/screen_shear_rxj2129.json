@@ -1,0 +1,69 @@
+{
+ "model": "rxj2129-lenstool-maps",
+ "catalog": "data/cache/mast/jw02767-o002_t001_nircam_clear-f200w/jw02767-o002_t001_nircam_clear-f200w_cat.ecsv",
+ "photoz": "data/cache/dja/photoz-rxj2129-v7.0/rxj2129-grizli-v7.0-fix.eazypy.zout.fits",
+ "spike_stars": {
+  "path": "<scratch>/inj/rxj2129/rxj2129_gaia_stars.ecsv",
+  "n": 25,
+  "sha256": "b1d3bd63264c241ee4794d6eebb75707e3c2b60dab237acb5bac896ba14d9c3c"
+ },
+ "seed": 1,
+ "psf_sigma_px": 1.3003939662830721,
+ "n_rows": 929,
+ "n_spike_segments": 31,
+ "n_lensable": 736,
+ "n_lensable_after_spike_veto": 708,
+ "n_snr": 703,
+ "n_resolved": 534,
+ "n_weak_shear": 289,
+ "responsivity": 0.5514765683418044,
+ "responsivity_err": 0.07561633997786897,
+ "n_centres_valid": 9016,
+ "area_arcsec2": 9016.0,
+ "s_max": 2.906721634856039,
+ "p_random_max": 0.375,
+ "s_cross_plus_max": 3.0020514289327167,
+ "p_random_cross_plus": 0.245,
+ "s_cross_minus_max": 2.900224324601418,
+ "p_random_cross_minus": 0.405,
+ "b_max": 3.0020514289327167,
+ "passes_eb_rule": false,
+ "null_max_p50_p95": [
+  2.85695714101407,
+  3.2420421775982766
+ ],
+ "n_peaks_above_null_median": 2,
+ "peaks": [
+  {
+   "x": 49.0,
+   "y": -4.0,
+   "ra": 322.4028918723807,
+   "dec": 0.08812488888888854,
+   "s": 2.906721634856039,
+   "s_cross": -0.9310972514928751,
+   "p_random": 0.375
+  },
+  {
+   "x": 55.0,
+   "y": 37.0,
+   "ra": 322.4012252036926,
+   "dec": 0.09951377777777742,
+   "s": 2.884853570380018,
+   "s_cross": 0.18843763119534473,
+   "p_random": 0.425
+  }
+ ],
+ "assumptions": {
+  "aperture_arcsec": 10.0,
+  "filter": "schirmer",
+  "r_min_arcsec": 1.0,
+  "min_sources": 5,
+  "min_snr": 10.0,
+  "max_g": 0.5,
+  "responsivity": null,
+  "max_radius": 100.0,
+  "grid_arcsec": 1.0,
+  "n_random": 200,
+  "min_coverage": 0.0
+ }
+}
