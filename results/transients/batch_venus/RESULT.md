@@ -88,6 +88,38 @@ injected sources are simulations. An ordinary fading is not wormhole evidence; z
   - The frozen rule sent it to `/vet-candidate`, and the vetting found an ordinary explanation (a known population,
     as a hypothesis).
   - It is a fading recovered by the search, as the calibration says the search can. It is not wormhole evidence.
+### Revision 2026-10-17 (follow-up, `followup/`; the text above is kept as first written)
+- **h002 status: real fade; an ordinary transient is a reasonable explanation; its identity and type are not
+  confirmed** (`followup/h002_identity_followup.json`).
+  - **Reported transient:** no match found in the sources that could be queried (Frye et al. 2024 full text, NED,
+    SIMBAD, Gaia, web search). TNS could not be queried (HTTP 403 twice), so "no TNS record" is not established.
+  - **SN H0pe:** the three published image positions (Frye et al. 2024 Table 2) are 24.9″, 31.9″ and 37.9″ away; the
+    lens model's image-position RMS is 0.65″. This replaces "about 32″ ... per-image coordinates not found" above.
+    Lens-model positions of any further image were not checked.
+  - **NS_0481** (3.77″, spectroscopic z = 1.3236 from a DDT 4446 MSA filler slit) is a separate galaxy; the spectrum
+    is not of the transient, and a host relation is not established.
+  - **Appearance:** HST WFC3/IR F160W in 2016 (GO-14223) gives 4.8 ± 9.5 nJy (3σ < 33 nJy, 0.2″, no aperture
+    correction; `followup/h002_hst2016.json`) against F150W 240 ± 7 nJy in 2023: it appeared after 2016.
+  - **"Fading in the blue bands" narrowed:** over 23.8 d only F090W declines significantly (271 → 173 nJy, z −4.0);
+    F150W (z −1.7) and F200W (z −1.3) are consistent with constant.
+  - **Missing for a type:** a spectrum of the transient, a host and redshift, a classification report, and light-curve
+    sampling (two detected epochs, no rise or peak). "Supernova-like" stays a hypothesis.
+  - Identity unknown does not mean first discovery, and this is not an exotic candidate.
+- **h003 status: the cross-programme differences are explained by between-mosaic photometric scatter of matched arc
+  pixels (one pre-fixed control test); the specific mechanism is not isolated** (`followup/h003_recheck.json`).
+  - The large differences are same band, same fixed sky position and same 0.15″ aperture; they occur inside
+    programme 1176 (o211 → o213, F356W 359.8 → 308.3 nJy) as well as between programmes, and the mosaics differ in
+    orientation.
+  - 31 arc-pixel controls (`pick-arc`, parameters fixed in `followup/PLAN.md` before the run) on the decisive pair
+    F356W 1176 o211 → 1208 o004: calibrated z −0.76, control tail fraction 0.39 (rule: ≥ 0.05 ⇒ explained). The other
+    four pairs give tail fractions 0.26–0.52.
+  - The raw z differs from #296 (−17.7 vs −9.1) because the random-aperture error is measured in a larger box when
+    controls are grouped; the fluxes are identical.
+  - This changes h003 from "undetermined" to "explained by measurement scatter" under the fixed rule; the owner's
+    instruction expected "undetermined" unless a concrete check supported a processing effect (flagged in the PR).
+- **Review queue vs open science questions:** the review queue is empty (5 of 5 reviewed, 0 pending). Detailed review
+  finished does not mean every object is explained: h002's identity and physical type remain open. No evidence for
+  special physics was found; that does not mean every ordinary explanation was proven.
 - **Not reviewed (by design):** 108 hits that are near bright cores or fail morphology. They are saved in each
   box's `screen/hits.ecsv` and `morph_all.json`, not deleted.
 
@@ -123,7 +155,7 @@ injected sources are simulations. An ordinary fading is not wormhole evidence; z
 ## Pending
 - Identify h002 in TNS (403 on 2026-10-17). Literature: Frye et al. 2024 reports only SN H0pe; NS_0481's z is
   spectroscopic (NIRSpec) and 3.77″ away (host not determined).
-- h003 (MACS0416 box 2) stays undetermined: it needs a PSF-matched multi-programme check on the arc.
+- h003 (MACS0416 box 2) stays undetermined: it needs a PSF-matched multi-programme check on the arc. *Superseded 2026-10-17: explained by matched arc-pixel scatter (see Revision).*
 - Boxes not searched in this batch: the undeterminable 8, which need a decision on whether to re-calibrate with more
   injections, and pairs beyond the cap.
 - No follow-on batch is started.

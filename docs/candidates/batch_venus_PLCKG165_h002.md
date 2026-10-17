@@ -36,6 +36,17 @@
   - TNS identity (not reachable 2026-10-17); no literature report found (Frye et al. 2024 only lists SN H0pe).
   - The host: none catalogued at the position; NS_0481 (3.77″) is a weak association.
 
+## Revision 2026-10-17 (identity follow-up; the record above is kept)
+- **Status: real fade; an ordinary transient is a reasonable explanation; identity and physical type not confirmed.**
+- Reported transient: none matched in the sources that could be queried; TNS could not be queried (HTTP 403 ×2).
+- SN H0pe images: 24.9″, 31.9″, 37.9″ (Frye et al. 2024 Table 2; now stored in
+  `results/transients/batch_venus/followup/h002_identity_followup.json`); further lens-model images not checked.
+- NS_0481: separate galaxy at 3.77″; its z = 1.3236 is the galaxy's own NIRSpec redshift; not shown to be the host.
+- HST F160W 2016: 4.8 ± 9.5 nJy (3σ < 33 nJy), so the source appeared after 2016 (`followup/h002_hst2016.json`).
+- The 23.8-day decline is significant only in F090W (z −4.0; F150W −1.7, F200W −1.3).
+- Missing for a type: transient spectrum, host and redshift, classification report, better light-curve sampling.
+- Identity unknown ≠ first discovery; not an exotic candidate.
+
 ## Regenerate
 - `scripts/batch_review.py` (sheets, `hit_lightcurve.py` forced photometry); `post_review_checks.json`
   (session script, stored output).
