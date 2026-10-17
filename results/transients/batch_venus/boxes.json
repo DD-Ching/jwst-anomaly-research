@@ -1,0 +1,1494 @@
+{
+ "label": "observed metadata + derived box choice (no difference images used)",
+ "rule": {
+  "pairs": "results/transients/sfft_trial/venus_pairs.json",
+  "exclude": [
+   [
+    15.73,
+    -49.253
+   ],
+   [
+    15.717097,
+    -49.262488
+   ],
+   [
+    15.731568,
+    -49.270822
+   ],
+   [
+    24.346822,
+    -8.464511
+   ],
+   [
+    110.824442,
+    -73.452577
+   ]
+  ],
+  "max_boxes": 20,
+  "per_pair": 2,
+  "min_finite": 0.95,
+  "out": "results/transients/batch_venus/boxes.json"
+ },
+ "pairs_considered": [
+  {
+   "target": "A1689",
+   "pair": null
+  },
+  {
+   "target": "A370",
+   "pair": [
+    "jw01208-o002_t001_nircam",
+    "jw06882-o053_t053_nircam"
+   ]
+  },
+  {
+   "target": "AS1063",
+   "pair": [
+    "jw03293-o001_t001_nircam",
+    "jw06882-o059_t059_nircam"
+   ]
+  },
+  {
+   "target": "BULLET",
+   "pair": [
+    "jw04598-o001_t001_nircam",
+    "jw06882-o049_t025_nircam"
+   ]
+  },
+  {
+   "target": "El-Gordo",
+   "pair": [
+    "jw01176-o241_t012_nircam",
+    "jw06882-o051_t051_nircam"
+   ]
+  },
+  {
+   "target": "MACSJ0308+2645",
+   "pair": null
+  },
+  {
+   "target": "MACSJ1423+2404",
+   "pair": [
+    "jw01208-o010_t005_nircam",
+    "jw06882-o047_t037_nircam"
+   ]
+  },
+  {
+   "target": "MJ0416.1-2403",
+   "pair": [
+    "jw01176-o212_t009_nircam",
+    "jw06882-o054_t054_nircam"
+   ]
+  },
+  {
+   "target": "MJ0417.5-1154",
+   "pair": [
+    "jw01208-o006_t003_nircam",
+    "jw06882-o055_t055_nircam"
+   ]
+  },
+  {
+   "target": "MJ1149.5+2223",
+   "pair": [
+    "jw01176-o231_t011_nircam",
+    "jw06882-o058_t058_nircam"
+   ]
+  },
+  {
+   "target": "MS0451-0305",
+   "pair": [
+    "jw05058-o005_t001_nircam",
+    "jw06882-o022_t022_nircam"
+   ]
+  },
+  {
+   "target": "PLCKG165+67.0",
+   "pair": [
+    "jw01176-o251_t013_nircam",
+    "jw06882-o050_t061_nircam"
+   ]
+  },
+  {
+   "target": "RXCJ0018+1626",
+   "pair": [
+    "jw12782-o001_t003_nircam",
+    "jw06882-o001_t001_nircam"
+   ]
+  },
+  {
+   "target": "RXCJ0600-2007",
+   "pair": null
+  },
+  {
+   "target": "RXJ2129+0005",
+   "pair": [
+    "jw02767-o002_t001_nircam",
+    "jw06882-o046_t045_nircam"
+   ]
+  },
+  {
+   "target": "SJ0615-5746",
+   "pair": [
+    "jw04212-o001_t001_nircam",
+    "jw06882-o056_t056_nircam"
+   ]
+  },
+  {
+   "target": "SJ0723.3-7327",
+   "pair": [
+    "jw02736-o001_t001_nircam",
+    "jw06882-o057_t057_nircam"
+   ]
+  },
+  {
+   "target": "WJ013719-08284",
+   "pair": [
+    "jw02282-o010_t001_nircam",
+    "jw06882-o052_t052_nircam"
+   ]
+  }
+ ],
+ "chosen": [
+  {
+   "box_id": "A370_1",
+   "target": "A370",
+   "ra": 39.9754,
+   "dec": -1.576,
+   "pair_rank": 0,
+   "dist_from_centre_boxes": 0.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 0.9999,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01208-o002_t001_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o002/jw01208-o002_t001_nircam_clear-f150w_i2d.fits",
+     "mjd": 59942.25836600694,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2022-12-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01208-o002_t001_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o002/jw01208-o002_t001_nircam_clear-f444w_i2d.fits",
+     "mjd": 59942.44017018518,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2022-12-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o053_t053_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o053/jw06882-o053_t053_nircam_clear-f150w_i2d.fits",
+     "mjd": 61049.08108267361,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-09",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o053_t053_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o053/jw06882-o053_t053_nircam_clear-f444w_i2d.fits",
+     "mjd": 61049.08108267361,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-09",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "A370_2",
+   "target": "A370",
+   "ra": 39.968731,
+   "dec": -1.576,
+   "pair_rank": 0,
+   "dist_from_centre_boxes": 1.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01208-o002_t001_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o002/jw01208-o002_t001_nircam_clear-f150w_i2d.fits",
+     "mjd": 59942.25836600694,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2022-12-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01208-o002_t001_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o002/jw01208-o002_t001_nircam_clear-f444w_i2d.fits",
+     "mjd": 59942.44017018518,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2022-12-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o053_t053_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o053/jw06882-o053_t053_nircam_clear-f150w_i2d.fits",
+     "mjd": 61049.08108267361,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-09",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o053_t053_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o053/jw06882-o053_t053_nircam_clear-f444w_i2d.fits",
+     "mjd": 61049.08108267361,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-09",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "AS1063_1",
+   "target": "AS1063",
+   "ra": 342.1816,
+   "dec": -44.5308,
+   "pair_rank": 1,
+   "dist_from_centre_boxes": 0.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 0.9999,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw03293-o001_t001_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f150w_i2d.fits",
+     "mjd": 60580.31238459491,
+     "exptime": 80396.92799999994,
+     "header": {
+      "DATE-OBS": "2024-09-27",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw03293-o001_t001_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f444w_i2d.fits",
+     "mjd": 60575.69003609954,
+     "exptime": 140694.6239999995,
+     "header": {
+      "DATE-OBS": "2024-09-22",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o059_t059_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o059/jw06882-o059_t059_nircam_clear-f150w_i2d.fits",
+     "mjd": 60940.51054064815,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2025-09-22",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o059_t059_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o059/jw06882-o059_t059_nircam_clear-f444w_i2d.fits",
+     "mjd": 60940.51054064815,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2025-09-22",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "AS1063_2",
+   "target": "AS1063",
+   "ra": 342.172248,
+   "dec": -44.5308,
+   "pair_rank": 1,
+   "dist_from_centre_boxes": 1.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw03293-o001_t001_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f150w_i2d.fits",
+     "mjd": 60580.31238459491,
+     "exptime": 80396.92799999994,
+     "header": {
+      "DATE-OBS": "2024-09-27",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw03293-o001_t001_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f444w_i2d.fits",
+     "mjd": 60575.69003609954,
+     "exptime": 140694.6239999995,
+     "header": {
+      "DATE-OBS": "2024-09-22",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o059_t059_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o059/jw06882-o059_t059_nircam_clear-f150w_i2d.fits",
+     "mjd": 60940.51054064815,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2025-09-22",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o059_t059_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o059/jw06882-o059_t059_nircam_clear-f444w_i2d.fits",
+     "mjd": 60940.51054064815,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2025-09-22",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "BULLET_1",
+   "target": "BULLET",
+   "ra": 104.656,
+   "dec": -55.9548,
+   "pair_rank": 2,
+   "dist_from_centre_boxes": 0.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw04598-o001_t001_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw04598/L3/t/o001/jw04598-o001_t001_nircam_clear-f150w_i2d.fits",
+     "mjd": 60695.21808680556,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2025-01-20",
+      "CAL_VER": "2.0.1",
+      "CRDS_CTX": "jwst_1535.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw04598-o001_t001_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw04598/L3/t/o001/jw04598-o001_t001_nircam_clear-f444w_i2d.fits",
+     "mjd": 60695.40237700231,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2025-01-20",
+      "CAL_VER": "2.0.1",
+      "CRDS_CTX": "jwst_1535.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o049_t025_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o049/jw06882-o049_t025_nircam_clear-f150w_i2d.fits",
+     "mjd": 61061.76862524306,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-21",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o049_t025_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o049/jw06882-o049_t025_nircam_clear-f444w_i2d.fits",
+     "mjd": 61061.76862598379,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-21",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "BULLET_2",
+   "target": "BULLET",
+   "ra": 104.644092,
+   "dec": -55.9548,
+   "pair_rank": 2,
+   "dist_from_centre_boxes": 1.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw04598-o001_t001_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw04598/L3/t/o001/jw04598-o001_t001_nircam_clear-f150w_i2d.fits",
+     "mjd": 60695.21808680556,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2025-01-20",
+      "CAL_VER": "2.0.1",
+      "CRDS_CTX": "jwst_1535.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw04598-o001_t001_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw04598/L3/t/o001/jw04598-o001_t001_nircam_clear-f444w_i2d.fits",
+     "mjd": 60695.40237700231,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2025-01-20",
+      "CAL_VER": "2.0.1",
+      "CRDS_CTX": "jwst_1535.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o049_t025_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o049/jw06882-o049_t025_nircam_clear-f150w_i2d.fits",
+     "mjd": 61061.76862524306,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-21",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o049_t025_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o049/jw06882-o049_t025_nircam_clear-f444w_i2d.fits",
+     "mjd": 61061.76862598379,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-21",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "El-Gordo_1",
+   "target": "El-Gordo",
+   "ra": 15.7312,
+   "dec": -49.2615,
+   "pair_rank": 3,
+   "dist_from_centre_boxes": 0.0,
+   "finite": {
+    "e1_F150W": 0.9999,
+    "e1_F444W": 1.0,
+    "e2_F150W": 0.9999,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01176-o241_t012_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f150w_i2d.fits",
+     "mjd": 59789.861469282405,
+     "exptime": 1889.672,
+     "header": {
+      "DATE-OBS": "2022-07-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01176-o241_t012_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f444w_i2d.fits",
+     "mjd": 59789.79138144676,
+     "exptime": 2490.932,
+     "header": {
+      "DATE-OBS": "2022-07-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o051_t051_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f150w_i2d.fits",
+     "mjd": 61257.07321034723,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-08-05",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o051_t051_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f444w_i2d.fits",
+     "mjd": 61257.07321034723,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-08-05",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "El-Gordo_2",
+   "target": "El-Gordo",
+   "ra": 15.741415,
+   "dec": -49.2615,
+   "pair_rank": 3,
+   "dist_from_centre_boxes": 1.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01176-o241_t012_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f150w_i2d.fits",
+     "mjd": 59789.861469282405,
+     "exptime": 1889.672,
+     "header": {
+      "DATE-OBS": "2022-07-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01176-o241_t012_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f444w_i2d.fits",
+     "mjd": 59789.79138144676,
+     "exptime": 2490.932,
+     "header": {
+      "DATE-OBS": "2022-07-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o051_t051_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f150w_i2d.fits",
+     "mjd": 61257.07321034723,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-08-05",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o051_t051_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f444w_i2d.fits",
+     "mjd": 61257.07321034723,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-08-05",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "MACSJ1423+2404_1",
+   "target": "MACSJ1423+2404",
+   "ra": 215.9491,
+   "dec": 24.0777,
+   "pair_rank": 4,
+   "dist_from_centre_boxes": 0.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 0.9999,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01208-o010_t005_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o010/jw01208-o010_t005_nircam_clear-f150w_i2d.fits",
+     "mjd": 60001.51884670139,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2023-02-26",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01208-o010_t005_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o010/jw01208-o010_t005_nircam_clear-f444w_i2d.fits",
+     "mjd": 60001.69766875,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2023-02-26",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o047_t037_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o047/jw06882-o047_t037_nircam_clear-f150w_i2d.fits",
+     "mjd": 61104.71268056713,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-03-05",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o047_t037_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o047/jw06882-o047_t037_nircam_clear-f444w_i2d.fits",
+     "mjd": 61104.71268056713,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-03-05",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "MACSJ1423+2404_2",
+   "target": "MACSJ1423+2404",
+   "ra": 215.941798,
+   "dec": 24.0777,
+   "pair_rank": 4,
+   "dist_from_centre_boxes": 1.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01208-o010_t005_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o010/jw01208-o010_t005_nircam_clear-f150w_i2d.fits",
+     "mjd": 60001.51884670139,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2023-02-26",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01208-o010_t005_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o010/jw01208-o010_t005_nircam_clear-f444w_i2d.fits",
+     "mjd": 60001.69766875,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2023-02-26",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o047_t037_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o047/jw06882-o047_t037_nircam_clear-f150w_i2d.fits",
+     "mjd": 61104.71268056713,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-03-05",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o047_t037_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o047/jw06882-o047_t037_nircam_clear-f444w_i2d.fits",
+     "mjd": 61104.71268056713,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-03-05",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "MJ0416.1-2403_1",
+   "target": "MJ0416.1-2403",
+   "ra": 64.039,
+   "dec": -24.0724,
+   "pair_rank": 5,
+   "dist_from_centre_boxes": 0.0,
+   "finite": {
+    "e1_F150W": 0.9999,
+    "e1_F444W": 1.0,
+    "e2_F150W": 0.9999,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01176-o212_t009_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f150w_i2d.fits",
+     "mjd": 59942.74739810185,
+     "exptime": 2920.4,
+     "header": {
+      "DATE-OBS": "2022-12-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01176-o212_t009_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f444w_i2d.fits",
+     "mjd": 59942.64674171296,
+     "exptime": 3779.344,
+     "header": {
+      "DATE-OBS": "2022-12-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o054_t054_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o054/jw06882-o054_t054_nircam_clear-f150w_i2d.fits",
+     "mjd": 61050.15567407407,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-10",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o054_t054_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o054/jw06882-o054_t054_nircam_clear-f444w_i2d.fits",
+     "mjd": 61050.15567407407,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-10",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "MJ0416.1-2403_2",
+   "target": "MJ0416.1-2403",
+   "ra": 64.031698,
+   "dec": -24.0724,
+   "pair_rank": 5,
+   "dist_from_centre_boxes": 1.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01176-o212_t009_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f150w_i2d.fits",
+     "mjd": 59942.74739810185,
+     "exptime": 2920.4,
+     "header": {
+      "DATE-OBS": "2022-12-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01176-o212_t009_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o212/jw01176-o212_t009_nircam_clear-f444w_i2d.fits",
+     "mjd": 59942.64674171296,
+     "exptime": 3779.344,
+     "header": {
+      "DATE-OBS": "2022-12-29",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o054_t054_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o054/jw06882-o054_t054_nircam_clear-f150w_i2d.fits",
+     "mjd": 61050.15567407407,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-10",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o054_t054_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o054/jw06882-o054_t054_nircam_clear-f444w_i2d.fits",
+     "mjd": 61050.15567407407,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-01-10",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "MJ0417.5-1154_1",
+   "target": "MJ0417.5-1154",
+   "ra": 64.3965,
+   "dec": -11.9107,
+   "pair_rank": 6,
+   "dist_from_centre_boxes": 0.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 0.9999,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01208-o006_t003_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o006/jw01208-o006_t003_nircam_clear-f150w_i2d.fits",
+     "mjd": 59865.58371880787,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2022-10-13",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01208-o006_t003_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o006/jw01208-o006_t003_nircam_clear-f444w_i2d.fits",
+     "mjd": 59865.76266530093,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2022-10-13",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o055_t055_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o055/jw06882-o055_t055_nircam_clear-f150w_i2d.fits",
+     "mjd": 60954.24937010417,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2025-10-06",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o055_t055_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o055/jw06882-o055_t055_nircam_clear-f444w_i2d.fits",
+     "mjd": 60954.24937010417,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2025-10-06",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "MJ0417.5-1154_2",
+   "target": "MJ0417.5-1154",
+   "ra": 64.389687,
+   "dec": -11.9107,
+   "pair_rank": 6,
+   "dist_from_centre_boxes": 1.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01208-o006_t003_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o006/jw01208-o006_t003_nircam_clear-f150w_i2d.fits",
+     "mjd": 59865.58371880787,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2022-10-13",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01208-o006_t003_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01208/L3/t/o006/jw01208-o006_t003_nircam_clear-f444w_i2d.fits",
+     "mjd": 59865.76266530093,
+     "exptime": 6399.116000000001,
+     "header": {
+      "DATE-OBS": "2022-10-13",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o055_t055_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o055/jw06882-o055_t055_nircam_clear-f150w_i2d.fits",
+     "mjd": 60954.24937010417,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2025-10-06",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o055_t055_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o055/jw06882-o055_t055_nircam_clear-f444w_i2d.fits",
+     "mjd": 60954.24937010417,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2025-10-06",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "MJ1149.5+2223_1",
+   "target": "MJ1149.5+2223",
+   "ra": 177.3994,
+   "dec": 22.3983,
+   "pair_rank": 7,
+   "dist_from_centre_boxes": 0.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 0.9999,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01176-o231_t011_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o231/jw01176-o231_t011_nircam_clear-f150w_i2d.fits",
+     "mjd": 60333.959556180555,
+     "exptime": 2490.932,
+     "header": {
+      "DATE-OBS": "2024-01-24",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01176-o231_t011_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o231/jw01176-o231_t011_nircam_clear-f444w_i2d.fits",
+     "mjd": 60333.86759758102,
+     "exptime": 3349.872,
+     "header": {
+      "DATE-OBS": "2024-01-24",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o058_t058_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o058/jw06882-o058_t058_nircam_clear-f150w_i2d.fits",
+     "mjd": 61190.42575820602,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-05-30",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o058_t058_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o058/jw06882-o058_t058_nircam_clear-f444w_i2d.fits",
+     "mjd": 61190.42575820602,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-05-30",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "MJ1149.5+2223_2",
+   "target": "MJ1149.5+2223",
+   "ra": 177.392189,
+   "dec": 22.3983,
+   "pair_rank": 7,
+   "dist_from_centre_boxes": 1.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01176-o231_t011_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o231/jw01176-o231_t011_nircam_clear-f150w_i2d.fits",
+     "mjd": 60333.959556180555,
+     "exptime": 2490.932,
+     "header": {
+      "DATE-OBS": "2024-01-24",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01176-o231_t011_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o231/jw01176-o231_t011_nircam_clear-f444w_i2d.fits",
+     "mjd": 60333.86759758102,
+     "exptime": 3349.872,
+     "header": {
+      "DATE-OBS": "2024-01-24",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o058_t058_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o058/jw06882-o058_t058_nircam_clear-f150w_i2d.fits",
+     "mjd": 61190.42575820602,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-05-30",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o058_t058_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o058/jw06882-o058_t058_nircam_clear-f444w_i2d.fits",
+     "mjd": 61190.42575820602,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-05-30",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "MS0451-0305_1",
+   "target": "MS0451-0305",
+   "ra": 73.5463,
+   "dec": -3.0149,
+   "pair_rank": 8,
+   "dist_from_centre_boxes": 0.0,
+   "finite": {
+    "e1_F150W": 0.961,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw05058-o005_t001_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw05058/L3/t/o005/jw05058-o005_t001_nircam_clear-f150w_i2d.fits",
+     "mjd": 60713.276583136576,
+     "exptime": 3156.609,
+     "header": {
+      "DATE-OBS": "2025-02-07",
+      "CAL_VER": "2.0.1",
+      "CRDS_CTX": "jwst_1535.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw05058-o005_t001_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw05058/L3/t/o005/jw05058-o005_t001_nircam_clear-f444w_i2d.fits",
+     "mjd": 60713.31933197917,
+     "exptime": 3156.609,
+     "header": {
+      "DATE-OBS": "2025-02-07",
+      "CAL_VER": "2.0.1",
+      "CRDS_CTX": "jwst_1535.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o022_t022_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o022/jw06882-o022_t022_nircam_clear-f150w_i2d.fits",
+     "mjd": 60930.13942295139,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2025-09-12",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o022_t022_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o022/jw06882-o022_t022_nircam_clear-f444w_i2d.fits",
+     "mjd": 60930.11307806713,
+     "exptime": 1674.936,
+     "header": {
+      "DATE-OBS": "2025-09-12",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "MS0451-0305_2",
+   "target": "MS0451-0305",
+   "ra": 73.539624,
+   "dec": -3.0149,
+   "pair_rank": 8,
+   "dist_from_centre_boxes": 1.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw05058-o005_t001_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw05058/L3/t/o005/jw05058-o005_t001_nircam_clear-f150w_i2d.fits",
+     "mjd": 60713.276583136576,
+     "exptime": 3156.609,
+     "header": {
+      "DATE-OBS": "2025-02-07",
+      "CAL_VER": "2.0.1",
+      "CRDS_CTX": "jwst_1535.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw05058-o005_t001_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw05058/L3/t/o005/jw05058-o005_t001_nircam_clear-f444w_i2d.fits",
+     "mjd": 60713.31933197917,
+     "exptime": 3156.609,
+     "header": {
+      "DATE-OBS": "2025-02-07",
+      "CAL_VER": "2.0.1",
+      "CRDS_CTX": "jwst_1535.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o022_t022_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o022/jw06882-o022_t022_nircam_clear-f150w_i2d.fits",
+     "mjd": 60930.13942295139,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2025-09-12",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o022_t022_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o022/jw06882-o022_t022_nircam_clear-f444w_i2d.fits",
+     "mjd": 60930.11307806713,
+     "exptime": 1674.936,
+     "header": {
+      "DATE-OBS": "2025-09-12",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "PLCKG165+67.0_1",
+   "target": "PLCKG165+67.0",
+   "ra": 171.8181,
+   "dec": 42.4831,
+   "pair_rank": 9,
+   "dist_from_centre_boxes": 0.0,
+   "finite": {
+    "e1_F150W": 0.9999,
+    "e1_F444W": 1.0,
+    "e2_F150W": 0.9999,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01176-o251_t013_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o251/jw01176-o251_t013_nircam_clear-f150w_i2d.fits",
+     "mjd": 60033.25358793981,
+     "exptime": 1889.672,
+     "header": {
+      "DATE-OBS": "2023-03-30",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01176-o251_t013_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o251/jw01176-o251_t013_nircam_clear-f444w_i2d.fits",
+     "mjd": 60033.18350083334,
+     "exptime": 2490.932,
+     "header": {
+      "DATE-OBS": "2023-03-30",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o050_t061_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o050/jw06882-o050_t061_nircam_clear-f150w_i2d.fits",
+     "mjd": 61125.3399446412,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-03-26",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o050_t061_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o050/jw06882-o050_t061_nircam_clear-f444w_i2d.fits",
+     "mjd": 61125.33994538194,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-03-26",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  },
+  {
+   "box_id": "PLCKG165+67.0_2",
+   "target": "PLCKG165+67.0",
+   "ra": 171.80906,
+   "dec": 42.4831,
+   "pair_rank": 9,
+   "dist_from_centre_boxes": 1.0,
+   "finite": {
+    "e1_F150W": 1.0,
+    "e1_F444W": 1.0,
+    "e2_F150W": 1.0,
+    "e2_F444W": 1.0
+   },
+   "e1": {
+    "F150W": {
+     "obs_id": "jw01176-o251_t013_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o251/jw01176-o251_t013_nircam_clear-f150w_i2d.fits",
+     "mjd": 60033.25358793981,
+     "exptime": 1889.672,
+     "header": {
+      "DATE-OBS": "2023-03-30",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw01176-o251_t013_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw01176/L3/t/o251/jw01176-o251_t013_nircam_clear-f444w_i2d.fits",
+     "mjd": 60033.18350083334,
+     "exptime": 2490.932,
+     "header": {
+      "DATE-OBS": "2023-03-30",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   },
+   "e2": {
+    "F150W": {
+     "obs_id": "jw06882-o050_t061_nircam_clear-f150w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o050/jw06882-o050_t061_nircam_clear-f150w_i2d.fits",
+     "mjd": 61125.3399446412,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-03-26",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    },
+    "F444W": {
+     "obs_id": "jw06882-o050_t061_nircam_clear-f444w",
+     "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o050/jw06882-o050_t061_nircam_clear-f444w_i2d.fits",
+     "mjd": 61125.33994538194,
+     "exptime": 1245.464,
+     "header": {
+      "DATE-OBS": "2026-03-26",
+      "CAL_VER": "3.0.0",
+      "CRDS_CTX": "jwst_1584.pmap",
+      "PA_V3": null
+     }
+    }
+   }
+  }
+ ],
+ "rejected": [
+  {
+   "target": "El-Gordo",
+   "ra": 15.720984572252448,
+   "dec": -49.2615,
+   "why": "overlaps searched box"
+  },
+  {
+   "target": "El-Gordo",
+   "ra": 15.7312,
+   "dec": -49.268166666666666,
+   "why": "overlaps searched box"
+  },
+  {
+   "target": "El-Gordo",
+   "ra": 15.7312,
+   "dec": -49.25483333333333,
+   "why": "overlaps searched box"
+  }
+ ],
+ "effective_area_arcmin2": 3.2
+}
