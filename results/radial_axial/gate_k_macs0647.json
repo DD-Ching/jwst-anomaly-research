@@ -1,0 +1,59 @@
+{
+ "field": "macs0647",
+ "model": "macs0647-clash-nfw",
+ "max_lines": 6,
+ "p_random_max": 0.075,
+ "axial_min": 0.9,
+ "gate_k_pass": false,
+ "post_hoc_axis_tol_deg": 10.0,
+ "post_hoc_line_tol_arcsec": 0.5,
+ "peaks": [
+  {
+   "x": 2.5,
+   "y": -18.5,
+   "n_lines": 6,
+   "p_random": 0.075,
+   "axial_a": 0.7309080371288648,
+   "axial": false,
+   "labels": [
+    741,
+    754,
+    789,
+    793,
+    806,
+    842
+   ],
+   "azimuth_deg": [
+    -112.6,
+    -115.2,
+    -122.3,
+    -132.1,
+    98.4,
+    -71.1
+   ],
+   "post_hoc_n_axes": 3,
+   "post_hoc_max_on_one_line": 5
+  },
+  {
+   "x": -4.0,
+   "y": -37.5,
+   "n_lines": 3,
+   "p_random": 1.0,
+   "axial_a": 0.8086854933995463,
+   "axial": false,
+   "labels": [
+    712,
+    741,
+    754
+   ],
+   "azimuth_deg": [
+    -67.7,
+    74.1,
+    73.3
+   ],
+   "post_hoc_n_axes": 2,
+   "post_hoc_max_on_one_line": 2
+  }
+ ],
+ "provenance": "derived (shapes observed; azimuths and A derived; thresholds ASSUMPTION)"
+}

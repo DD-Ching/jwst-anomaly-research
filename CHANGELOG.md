@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: Radial (W1) centre-level axial rule for streaks: gate K failed, not adopted
+- **Why:** handoff of `results/radial_streak`: an arc-level mask veto thins the null and misses the faint MACS0647
+  streak; a centre-level rule applied alike to data and null avoids the thinning.
+- **Rule tested (frozen in `results/radial_axial/PLAN.md`):** axial concentration A = |mean exp(2iφ)| of the
+  contributing arcs' azimuths about the centre; A ≥ 0.9 → the centre does not count.
+- **Result (`results/radial_axial/RESULT.md`):** MACS0647's 6-line centre (reproduced, p 0.075) has A = 0.731, so
+  gate K fails and the rule is not adopted (injections not run). Sheet looked at: five of six arcs sit on the faint
+  streak, but the grid centre lies up to 1″ off it, so their azimuths spread over ≈ 20°, and one arc is off it.
+- **Failed approach:** azimuth-about-the-grid-point as a streak test. Post hoc: 5 of 6 contributors lie within 0.5″
+  of one line. **Handoff:** a collinearity rule needs a new frozen plan, a different known streak (or injected
+  streaks) as its gate, and W1 injections; `radial` conclusions unchanged.
+
 ## 2026-10-17: VENUS batch 3: 20 new boxes, 10 calibrated; two rule-level changes in a failed A370 box, neither confirmed (#311)
 - **Coverage:** 20 new 24″ boxes in 10 fields, ranked to prefer extra public epochs at similar depth (owner
   instruction); 10 passed calibration (1.6 arcmin²), 10 failed (2 false hits, 8 vanish recovery); 0 timed out.
