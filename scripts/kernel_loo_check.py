@@ -101,8 +101,7 @@ def main(argv=None) -> int:
     # condition number of the weighted stamp design (all stamps)
     ys, xs = ad._fit_rows(ref, tgt, var, half, stamp)
     r0 = np.where(np.isfinite(ref), ref, 0.0)
-    cols = [r0[ys - dy, xs - dx] for dy in range(-half, half + 1) for dx in range(-half, half + 1)]
-    des = np.column_stack([*cols, np.ones(ys.size)]) / np.sqrt(var[ys, xs])[:, None]
+    des = ad._design(r0, ys, xs, half) / np.sqrt(var[ys, xs])[:, None]
     out = {
         "label": "derived; kernel-level comparison, same inputs (PLAN §3 test 1, tol 1e-6)",
         "band": a.band.upper(),

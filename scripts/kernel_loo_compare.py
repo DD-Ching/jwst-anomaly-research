@@ -42,8 +42,11 @@ def _review(h, v) -> set:
 def maps_diff(a: Path, b: Path) -> dict:
     za, zb = np.load(a / "maps.npz", allow_pickle=True), np.load(b / "maps.npz", allow_pickle=True)
     out = {}
-    for k in sorted(za.keys()):
+    for k in sorted(set(za.keys()) | set(zb.keys())):
         if not (k.endswith("_s") or k.endswith("_d")):
+            continue
+        if k not in za or k not in zb or za[k].shape != zb[k].shape:
+            out[k] = {"max_abs_diff": None, "finite_mismatch_px": -1, "note": "missing or shape"}
             continue
         x, y = za[k], zb[k]
         ok = np.isfinite(x) & np.isfinite(y)
@@ -105,8 +108,10 @@ def hits_diff(a: Path, b: Path) -> dict:
         if diff:
             changed.append({"id": [str(ra_["hit_id"]), str(rb_["hit_id"])], **diff})
         sa = band_s_at(a, float(ra_["ra"]), float(ra_["dec"]))
-        if any(v is not None and BORDER[0] <= abs(v) <= BORDER[1] for v in sa.values()):
-            sb = band_s_at(b, float(rb_["ra"]), float(rb_["dec"]))
+        sb = band_s_at(b, float(rb_["ra"]), float(rb_["dec"]))
+        if any(
+            v is not None and BORDER[0] <= abs(v) <= BORDER[1] for v in [*sa.values(), *sb.values()]
+        ):
             border.append({"id": str(ra_["hit_id"]), "band_s": [sa, sb]})
     ds = [
         abs(float(ma[k]["max_abs_sigma"]) - float(mb[k]["max_abs_sigma"]))
@@ -117,7 +122,7 @@ def hits_diff(a: Path, b: Path) -> dict:
         "only_a": only_a,
         "only_b": only_b,
         "changed": changed,
-        "border_hits_a": border,
+        "border_hits": border,
         "max_abs_d_maxsigma": max(ds) if ds else None,
         "review": [sorted(_review(ha, va)), sorted(_review(hb, vb))],
     }
@@ -125,8 +130,11 @@ def hits_diff(a: Path, b: Path) -> dict:
 
 def inj_diff(a: Path, b: Path) -> dict:
     va, vb = _verdicts(a), _verdicts(b)
-    ra = list(csv.DictReader(open(a / "injected_pre.csv")))
-    rb = list(csv.DictReader(open(b / "injected_pre.csv")))
+    with (
+        open(a / "injected_pre.csv", newline="") as fa,
+        open(b / "injected_pre.csv", newline="") as fb,
+    ):
+        ra, rb = list(csv.DictReader(fa)), list(csv.DictReader(fb))
 
     def stage(r, v):
         hit = r["hit"] or None

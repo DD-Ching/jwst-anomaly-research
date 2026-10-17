@@ -336,6 +336,19 @@ def _fit_rows(ref, tgt, var, half: int, mask=None) -> tuple[np.ndarray, np.ndarr
     return np.nonzero(good & fin)
 
 
+def _design(r0: np.ndarray, ys: np.ndarray, xs: np.ndarray, half: int) -> np.ndarray:
+    """Kernel-fit design rows: ``r0`` shifted by every kernel offset, plus a constant column.
+
+    Convolution: (K * ref)[y, x] = sum K[i, j] ref[y - (i - half), x - (j - half)]; column c is
+    kernel pixel (c // n, c % n) with n = 2·half + 1."""
+    offs = [(dy, dx) for dy in range(-half, half + 1) for dx in range(-half, half + 1)]
+    x_mat = np.empty((ys.size, len(offs) + 1))
+    for c, (dy, dx) in enumerate(offs):
+        x_mat[:, c] = r0[ys - dy, xs - dx]
+    x_mat[:, -1] = 1.0
+    return x_mat
+
+
 def kernel_fit(
     ref: np.ndarray,
     tgt: np.ndarray,
@@ -366,15 +379,10 @@ def kernel_fit(
     if ys.size > max_pix:
         pick = np.random.default_rng(seed).choice(ys.size, max_pix, replace=False)
         ys, xs = ys[pick], xs[pick]
-    offs = [(dy, dx) for dy in range(-half, half + 1) for dx in range(-half, half + 1)]
-    # convolution: (K * ref)[y, x] = sum K[i, j] ref[y - (i - half), x - (j - half)]
-    x_mat = np.empty((ys.size, len(offs) + 1))
-    for c, (dy, dx) in enumerate(offs):
-        x_mat[:, c] = r0[ys - dy, xs - dx]
-    x_mat[:, -1] = 1.0
+    x_mat = _design(r0, ys, xs, half)
     t = tgt[ys, xs]
     w = 1.0 / np.sqrt(var[ys, xs])
-    if ys.size < 10 * (len(offs) + 1):
+    if ys.size < 10 * x_mat.shape[1]:
         raise ValueError(f"too few pixels ({ys.size}) for a {n}x{n} kernel")
     keep = np.ones(ys.size, bool)
     for it in range(max(n_iter, 1)):
@@ -387,10 +395,7 @@ def kernel_fit(
         if np.array_equal(new, keep):
             break
         keep = new
-    k = np.zeros((n, n))
-    for c, (dy, dx) in enumerate(offs):
-        k[dy + half, dx + half] = coef[c]
-    return k, float(np.mean(z[keep] ** 2))
+    return coef[:-1].reshape(n, n), float(np.mean(z[keep] ** 2))
 
 
 def kernel_fit_stamps(
@@ -452,12 +457,8 @@ def kernel_fit_stamps(
             refit(i)
         return out
     r0 = np.where(np.isfinite(ref), ref, 0.0)
-    offs = [(dy, dx) for dy in range(-half, half + 1) for dx in range(-half, half + 1)]
     w = 1.0 / np.sqrt(var[ys, xs])
-    a = np.empty((ys.size, npar))
-    for c, (dy, dx) in enumerate(offs):
-        a[:, c] = r0[ys - dy, xs - dx]
-    a[:, -1] = 1.0
+    a = _design(r0, ys, xs, half)
     a *= w[:, None]
     tw = tgt[ys, xs] * w
     gram = a.T @ a
@@ -475,19 +476,34 @@ def kernel_fit_stamps(
             y = np.linalg.lstsq(gs, r * d, rcond=None)[0]
         return y * d
 
+    def refine(g, coef, keep):
+        """Iterative refinement with the exact residual of the kept rows; stops when the
+        step is below 1e-12 of the solution. Returns the solution and whether it converged."""
+        for _ in range(4):
+            step = solve(g, a.T @ np.where(keep, tw - a @ coef, 0.0))
+            coef = coef + step
+            if np.linalg.norm(step) <= 1e-12 * np.linalg.norm(coef):
+                return coef, True
+        return coef, False
+
     def fit_kept(keep, drop):
-        if row_tr[drop].sum() > 0.5 * tr_all:
+        direct = row_tr[drop].sum() > 0.5 * tr_all
+        if direct:
             ak = a[keep]
             g, r = ak.T @ ak, ak.T @ tw[keep]
         else:
             ad_ = a[drop]
             g, r = gram - ad_.T @ ad_, rhs - ad_.T @ tw[drop]
-        coef = solve(g, r)
-        for _ in range(2):  # iterative refinement with the exact residual of the kept rows
-            res = np.where(keep, tw - a @ coef, 0.0)
-            coef = coef + solve(g, a.T @ res)
+        coef, ok = refine(g, solve(g, r), keep)
+        if not ok and not direct:  # downdate too inaccurate: sum the kept rows directly
+            ak = a[keep]
+            g = ak.T @ ak
+            coef, ok = refine(g, solve(g, ak.T @ tw[keep]), keep)
+        if not ok:
+            stats["unconverged"] += 1
         return coef
 
+    stats = {"unconverged": 0}
     for i in range(1, nlab + 1):
         own = order[bounds[i - 1] : bounds[i]]
         n_fit = ys.size - own.size
@@ -509,15 +525,13 @@ def kernel_fit_stamps(
             if np.array_equal(new, keep):
                 break
             keep = new
-        k = np.zeros((n, n))
-        for c, (dy, dx) in enumerate(offs):
-            k[dy + half, dx + half] = coef[c]
-        out[i] = k
+        out[i] = coef[:-1].reshape(n, n)
         if chi2 is not None:
             chi2[i] = float(np.mean(z[keep] ** 2))
     if timing is not None:
         timing["stamp_design_build"] = round(t_build, 3)
         timing["stamp_rows"] = int(ys.size)
+        timing["stamp_unconverged"] = stats["unconverged"]
     return out
 
 
@@ -560,6 +574,8 @@ def kernel_match(
     convolved epoch (1 or 2). ``stamp_fit``: ``refit`` calls ``kernel_fit`` per stamp;
     ``shared`` computes the same leave-one-out fits with ``kernel_fit_stamps``.
     """
+    if stamp_fit not in ("shared", "refit"):
+        raise ValueError(f"stamp_fit must be 'shared' or 'refit', not {stamp_fit!r}")
     var = v1 + v2
     conv1 = blur >= 0
     ref, tgt = (e1, e2) if conv1 else (e2, e1)
@@ -606,7 +622,7 @@ def kernel_match(
                 win
             ]
         if timing is not None:
-            timing["kernel_stamps"] = round(time.perf_counter() - t_st, 3)
+            timing["kernel_stamps_s"] = round(time.perf_counter() - t_st, 3)
             timing["n_stamps"] = int(nlab)
     m[~np.isfinite(ref)] = np.nan
     var = vm + vtgt
@@ -1044,7 +1060,10 @@ def band_diff(job: dict) -> dict:
         "resample_register_match": round(t_match, 2),
         "detect": round(t_detect, 2),
         "post_injections": round(time.perf_counter() - t3, 2),
-        **ktiming,
+        **{k: v for k, v in ktiming.items() if k.endswith("_s") or k == "stamp_design_build"},
+    }
+    out["kernel_stats"] = {
+        k: v for k, v in ktiming.items() if not (k.endswith("_s") or k == "stamp_design_build")
     }
     return out
 
@@ -1394,6 +1413,7 @@ def main(argv: list[str] | None = None) -> int:
                 "injection_recovered": r["injection"],
                 "injection_recovered_not_near_core_this_band": r["injection_unflagged"],
                 "timing_s": r["timing_s"],
+                "kernel_stats": r.get("kernel_stats"),
                 "inject_pre_psf": r.get("inject_pre_psf"),
                 "inject_pre_shift_px": r.get("inject_pre_shift_px"),
                 "reg_tiles_used": r.get("reg_tiles_used"),
