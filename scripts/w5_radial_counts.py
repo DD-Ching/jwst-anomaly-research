@@ -120,6 +120,8 @@ def field_counts(name: str, out: Path, n_draws: int, rng, radii=RADII, near: flo
         for j, (a, b) in enumerate(centres[in_fp]):
             pos = control_positions(np.hypot(a, b), centres, tree, rad, n_draws, rng)
             ok = np.isfinite(pos[:, 0])
+            if not ok.any():  # a NaN control sum would read as p_low = 0 in combine
+                raise ValueError(f"{name}: no control position for centre {j} at R = {rad}")
             cnt = np.full(n_draws, np.nan)
             cnt[ok] = [len(v) for v in tree.query_ball_point(pos[ok], rad)]
             ctrl[j] = np.where(ok, cnt, np.nanmean(cnt))  # exhausted annulus: mean (rare)
