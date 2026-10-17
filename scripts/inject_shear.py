@@ -179,8 +179,9 @@ class ShearInjector:
         gx, gy = self.base["gx"], self.base["gy"]
         near = np.hypot(gx - x_l, gy - y_l) <= a.recover_tol
         cx, cy = gx[near], gy[near]
+        valid = None if self.base["valid"] is None else self.base["valid"][near]
         ap = es.ApertureMass(
-            x, y, cx, cy, a.aperture_arcsec, a.filter, a.r_min_arcsec, a.min_sources
+            x, y, cx, cy, a.aperture_arcsec, a.filter, a.r_min_arcsec, a.min_sources, valid
         )
         s, _ = ap.snr(e)
         best = float(np.nanmax(s)) if np.isfinite(s).any() else float("nan")
@@ -202,7 +203,7 @@ def run_field(name: str, args) -> dict:
     spec = field_spec(name)
     model, shapes, extra, cat, photoz = ir.load_field(name, out, spec)
     sargs = SimpleNamespace(**SHEAR_DEFAULTS)
-    for k in ("aperture_arcsec", "filter", "r_min_arcsec"):
+    for k in ("aperture_arcsec", "filter", "r_min_arcsec", "min_coverage"):
         setattr(sargs, k, getattr(args, k))
     sargs.max_radius = spec["max_radius"]
     sargs.recover_tol = args.recover_tol
@@ -290,7 +291,10 @@ def run_field(name: str, args) -> dict:
             "n_inject": args.n_inject,
             "spike_stars": len(extra) if extra is not None else None,
             "screen": SHEAR_DEFAULTS
-            | {k: getattr(sargs, k) for k in ("aperture_arcsec", "filter", "r_min_arcsec")}
+            | {
+                k: getattr(sargs, k)
+                for k in ("aperture_arcsec", "filter", "r_min_arcsec", "min_coverage")
+            }
             | {"max_radius": sargs.max_radius},
         },
     }
@@ -309,6 +313,12 @@ def main(argv: list[str] | None = None) -> int:
         "--filter", default=SHEAR_DEFAULTS["filter"], choices=("pointmass", "schirmer", "tophat")
     )
     ap.add_argument("--r-min-arcsec", type=float, default=SHEAR_DEFAULTS["r_min_arcsec"])
+    ap.add_argument(
+        "--min-coverage",
+        type=float,
+        default=SHEAR_DEFAULTS["min_coverage"],
+        help="drop grid centres with less of their aperture inside the footprint (D-053 cut)",
+    )
     ap.add_argument("--seed", type=int, default=50)
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "inject_shear")
     ap.add_argument(
