@@ -45,3 +45,15 @@ In the D-053 injections the median best-position S of a 2 × 10¹² M☉ W1 lens
 against 0.94–1.06 at 2 × 10¹⁰ M☉ (`results/w1_streak_veto/inject_summary_{abells1063,macs0417}.json`). If every
 valid centre held such a lens, the stack would sit well above the null 95th percentile (0.45); this comparison
 uses a peak statistic and is not a limit. A limit needs injections at the centres through this stack.
+
+## Addendum (2026-10-17, later run): second lens model for MACS0417 (`model2/`)
+Cluster-model-error test from "Ordinary explanations" above, MACS0417 only (the other fields have one registered
+model). Centres and arc exclusion stay with the `radial` model (CANUCS maps); only the cluster-shear removal changes
+(`--shear-model`, vet step 1 applied in both runs).
+- CANUCS maps (`model2/macs0417-canucs-maps/summary.json`): 2247 sources, 14 valid centres, mean S 0.50, p 0.061.
+- RELICS Lenstool (`model2/macs0417-relics-lenstool/summary.json`): 718 sources (smaller usable area), 7 valid
+  centres, mean S −0.12, p 0.61.
+- On the 7 centres valid under both (`model2/common_centres.json`): mean S −0.18 (CANUCS) vs −0.12 (RELICS),
+  largest per-centre change 0.30. On these centres the model swap barely moves S, so model error in the shear
+  removal does not drive S there; the MACS0417 excess sits in the 7 centres outside the RELICS area, which this test
+  cannot reach. Exploratory; not a candidate.

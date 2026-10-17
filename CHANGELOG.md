@@ -2,6 +2,13 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 stack at `radial` centres, second model for MACS0417: S unchanged where both models cover
+- `scripts/w1_stack_radial.py --shear-model` (centres and arc exclusion fixed, only the cluster-shear removal swaps).
+- RELICS Lenstool vs CANUCS maps on the 7 MACS0417 centres valid under both: mean S −0.12 vs −0.18, largest change
+  0.30 (`results/w1_stack_radial/model2/common_centres.json`). The MACS0417 excess (CANUCS, 14 centres, p 0.061) sits
+  in the 7 centres outside the RELICS area. **Handoff:** injections at the centres through the stack for a limit;
+  the cluster-model-error explanation stays open only outside the RELICS area.
+
 ## 2026-10-17: W1 shear stacked at the `radial` centres: excess mostly circular; residual p 0.027 (exploratory note)
 - **Why:** the `radial` centres (arc-orientation signature) had never been checked against the W1 shear statistic of
   other sources (TASKS JWST focus: "stack S around `radial` ... centres").

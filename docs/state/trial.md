@@ -237,7 +237,8 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.3 (radial screen on the five W1 shear-only fields: plan, S1063 reproduction, runs, sheet looked at) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 015p2WtK, 15:08–15:45Z |
 | 2026-W42 | ≈ 0.3 (radial screen with the W1 streak veto: plan, mask regeneration, gate K, twelve-field diagnostic; sheet looked at) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01CgPQ37, 16:08–16:50Z |
 | 2026-W42 | ≈ 0.2 (radial centre-level axial rule: plan, MACS0647 reproduction, gate K failed, post-hoc collinearity; sheet looked at) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01Mk3R1x, 17:08–17:30Z |
-| 2026-W42 | ≈ 0.2 (W1 shear stacked at radial centres: plan, four fields, two post hoc vet steps) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 0129VzsK, 18:08–18:40Z |
+| 2026-W42 | ≈ 0.2 (W1 shear stacked at radial centres: plan, four fields, two post hoc vet steps) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 0129VzsK, 18:08–18:28Z |
+| 2026-W42 | ≈ 0.1 (W1 radial-centre stack with a second MACS0417 model) | — | — | 0.05 (state files, PR) | cloud routine 0129VzsK, 18:28–18:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
