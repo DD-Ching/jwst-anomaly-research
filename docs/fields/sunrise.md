@@ -370,3 +370,8 @@ RELICS v1 models (local deflection patches, and `sunrise_counter.load_model` map
 edge-on disk, a compact-core dipole at the box border; all ≥ 3.98″ from every Scofield+2025 image); 0 candidates on the arc's images; injection recovery
 0.86 / 0.83 at 27.5 AB per band on bright pixels. Earendel is not
 a hit. Details: `results/transients/sunrise_arcdiff/RESULT.md`. The o010 → o120 pair is still to run.
+
+## Arc orientations against the predicted shear (`arcs`, 2026-10-17)
+RELICS Lenstool (primary) and GLAFIC maps, o010 F200W catalogue, DJA v7.5 photo-z, D-024 defaults: 13 / 18 strong-shear
+background rows aligned (control passes), anti 1 vs 0.15 expected (P 0.14): the S1063 anti excess does not replicate.
+The anti (2194) is an edge-on-looking disc in weak shear. Details: `results/arcs/whl0137-relics/RESULT.md`.

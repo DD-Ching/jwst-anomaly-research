@@ -1,0 +1,70 @@
+{
+ "plan": "results/arcs/whl0137-relics/PLAN.md",
+ "inputs": {
+  "catalog": "jw02282-o010_t001_nircam_clear-f200w_cat.ecsv",
+  "catalog_sha256": "b06930655e770a6addf0c566b2b2399d039bbbb6be49ff9c1757b4183e4889df",
+  "photoz": "sunrise-grizli-v7.5-fix.eazypy.zout.fits",
+  "photoz_sha256": "672d4bdf31926209633c1a7feeb436bab3e5b08e847a079521820f3409f548e0"
+ },
+ "runs": {
+  "whl0137-relics-lenstool": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 18,
+    "aligned": 13,
+    "anti": 1,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 0.0008525955889751611
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 18,
+    "anti": 1,
+    "expected": 0.15,
+    "p_ge_observed": 0.13931555931760378
+   }
+  },
+  "whl0137-relics-glafic": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 19,
+    "aligned": 14,
+    "anti": 1,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 0.0003807981358466562
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 19,
+    "anti": 1,
+    "expected": 0.232,
+    "p_ge_observed": 0.20722033865915412
+   }
+  }
+ },
+ "deciding_model": "whl0137-relics-lenstool",
+ "outcome": "does not replicate",
+ "p_ge_observed": 0.13931555931760378,
+ "background_by_gmin": {
+  "g_min<1": {
+   "n": 14,
+   "aligned": 9,
+   "anti": 1
+  },
+  "g_min>=1": {
+   "n": 4,
+   "aligned": 4,
+   "anti": 0
+  }
+ },
+ "anti_background": [
+  {
+   "label": 2194,
+   "ra": 24.341443,
+   "dec": -8.454896,
+   "mag": 24.36,
+   "g_min": 0.236,
+   "z_phot": 1.17,
+   "ellipticity": 0.795,
+   "class_whl0137-relics-glafic": "anti"
+  }
+ ]
+}
