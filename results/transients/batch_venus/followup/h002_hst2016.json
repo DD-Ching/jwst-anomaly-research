@@ -1,0 +1,9 @@
+{
+ "label": "derived; HST WFC3/IR F160W GO-14223 icv715010_drz (MJD 57538, 2016-05-30) forced 0.2arcsec aperture at h002, annulus 0.6-1.0arcsec, random-aperture error (200 positions); no aperture correction",
+ "bunit": "ELECTRONS/S",
+ "photfnu": 1.5325676125e-07,
+ "pixscale_arcsec": 0.1283,
+ "flux_njy": 4.8,
+ "err_njy": 9.5,
+ "snr": 0.51
+}
