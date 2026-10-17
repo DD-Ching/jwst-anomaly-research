@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: Radial (W1) centre-level axial rule for streaks: gate K failed, not adopted
+- **Why:** handoff of `results/radial_streak`: an arc-level mask veto thins the null and misses the faint MACS0647
+  streak; a centre-level rule applied alike to data and null avoids the thinning.
+- **Rule tested (frozen in `results/radial_axial/PLAN.md`):** axial concentration A = |mean exp(2iφ)| of the
+  contributing arcs' azimuths about the centre; A ≥ 0.9 → the centre does not count.
+- **Result (`results/radial_axial/RESULT.md`):** MACS0647's 6-line centre (reproduced, p 0.075) has A = 0.731, so
+  gate K fails and the rule is not adopted (injections not run). Sheet looked at: five of six arcs sit on the faint
+  streak, but the grid centre lies up to 1″ off it, so their azimuths spread over ≈ 20°, and one arc is off it.
+- **Failed approach:** azimuth-about-the-grid-point as a streak test. Post hoc: 5 of 6 contributors lie within 0.5″
+  of one line. **Handoff:** a collinearity rule needs a new frozen plan, a different known streak (or injected
+  streaks) as its gate, and W1 injections; `radial` conclusions unchanged.
+
 ## 2026-10-17: Radial (W1) screen with the W1 streak veto: gate failed, not adopted
 - **Why:** handoff of the radial_more run: MACS0647's strongest `radial` centre is built from streak segments.
 - **New:** `radial_more.py --streak-masks` (`exotic_screens.drop_streak_arcs`: candidate arcs within 1″ of a

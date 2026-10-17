@@ -284,3 +284,21 @@ def test_shear_responsivity_recovers_a_diluted_shear():
     assert abs(r - 0.5) < 3 * err and err < 0.05
     with pytest.raises(ValueError):  # too few rows: refuse rather than assume R = 1
         es.shear_responsivity(eps[:5], g[:5])
+
+
+def _radial_pa(x, y, x0=0.0, y0=0.0):
+    """PA (deg E of N, x West) of a line from (x, y) through (x0, y0)."""
+    return np.rad2deg(np.arctan2(-(x0 - np.asarray(x)), y0 - np.asarray(y))) % 180.0
+
+
+def test_axial_concentration_separates_a_streak_from_a_radial_pattern():
+    # five segments of one streak through the centre (both sides) vs five arcs at spread azimuths
+    xs = np.array([-6.0, -3.0, 2.0, 4.0, 7.0])
+    n, a = es.axial_concentration(xs, 0.5 * xs, _radial_pa(xs, 0.5 * xs), 0.0, 0.0, 1.0, 15.0)
+    assert n == 5 and a > 0.99
+    phi = np.deg2rad([0.0, 72.0, 144.0, 216.0, 288.0])
+    x, y = 5 * np.cos(phi), 5 * np.sin(phi)
+    n, a = es.axial_concentration(x, y, _radial_pa(x, y), 0.0, 0.0, 1.0, 15.0)
+    assert n == 5 and a < 0.1
+    n, a = es.axial_concentration(x, y, (_radial_pa(x, y) + 90.0) % 180.0, 0.0, 0.0, 1.0, 15.0)
+    assert n == 0 and np.isnan(a)

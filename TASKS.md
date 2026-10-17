@@ -261,7 +261,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        ~~W1 streak masks as a veto~~ tried 2026-10-17, not adopted: the masks miss the faint MACS0647 streak, and
        a partial veto thins the null so the centre drops to p 0.03 (`results/radial_streak/RESULT.md`; the twelve-field
        diagnostic changes no flag in the control-passing fields). A streak veto for `radial` needs a faint-streak
-       detector checked on that streak, plus its own injections);
+       detector checked on that streak, plus its own injections; ~~centre-level axial concentration~~ tried
+       2026-10-17, gate K failed (A 0.73 < 0.9, `results/radial_axial/RESULT.md`); next a collinearity rule with a
+       new known streak as its gate);
      - re-run MACS0717 radial when a photo-z catalogue exists;
      - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; classify model copies of
        unpredicted catalogued images automatically (D-041);
