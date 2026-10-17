@@ -1,0 +1,45 @@
+{
+ "label": "derived; S statistics by region (PLAN \u00a73.3)",
+ "hits": 2,
+ "unflagged": 0,
+ "F150W": {
+  "all": {
+   "n_px": 581963,
+   "robust_std": 0.9999999403953552,
+   "max_abs": 169.50218200683594,
+   "frac_abs_gt5": 0.000886654306201597
+  },
+  "bright_cores": {
+   "n_px": 32504,
+   "robust_std": 1.061140537261963,
+   "max_abs": 63.64599609375,
+   "frac_abs_gt5": 0.01307531380753138
+  },
+  "compact_stamps": {
+   "n_px": 180052,
+   "robust_std": 1.0299359560012817,
+   "max_abs": 63.64599609375,
+   "frac_abs_gt5": 0.0023437673560971276
+  }
+ },
+ "F444W": {
+  "all": {
+   "n_px": 140623,
+   "robust_std": 0.9999999403953552,
+   "max_abs": 13.51623249053955,
+   "frac_abs_gt5": 0.00044800637164617453
+  },
+  "bright_cores": {
+   "n_px": 5960,
+   "robust_std": 1.2803421020507812,
+   "max_abs": 13.51623249053955,
+   "frac_abs_gt5": 0.005369127516778523
+  },
+  "compact_stamps": {
+   "n_px": 4016,
+   "robust_std": 1.0068262815475464,
+   "max_abs": 13.51623249053955,
+   "frac_abs_gt5": 0.006723107569721116
+  }
+ }
+}

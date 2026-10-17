@@ -1,0 +1,392 @@
+{
+ "label": "observed metadata (MAST CAOM query, 2026-10-17); VENUS 6882 NIRCam F150W level-3 targets and other public NIRCam F150W level-3 programs within +-0.05 deg (box, not footprint overlap; coverage not checked)",
+ "n_venus_targets": 56,
+ "n_with_earlier_or_other_epoch": 18,
+ "targets": [
+  {
+   "target": "A1689",
+   "ra": 197.8784,
+   "dec": -1.3374,
+   "other_programs_F150W_L3": [
+    "1840",
+    "5782"
+   ]
+  },
+  {
+   "target": "A209",
+   "ra": 22.9692,
+   "dec": -13.6106,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "A2537",
+   "ra": 347.0925,
+   "dec": -2.1923,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "A2813",
+   "ra": 10.8546,
+   "dec": -20.6208,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "A3192",
+   "ra": 59.7212,
+   "dec": -29.9291,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "A370",
+   "ra": 39.9754,
+   "dec": -1.576,
+   "other_programs_F150W_L3": [
+    "1208",
+    "5324",
+    "5890"
+   ]
+  },
+  {
+   "target": "A383",
+   "ra": 42.0142,
+   "dec": -3.5291,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "A521",
+   "ra": 73.5288,
+   "dec": -10.2236,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "A68",
+   "ra": 9.2787,
+   "dec": 9.1569,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "AS1063",
+   "ra": 342.1816,
+   "dec": -44.5308,
+   "other_programs_F150W_L3": [
+    "1840",
+    "3293"
+   ]
+  },
+  {
+   "target": "AS295",
+   "ra": 41.3792,
+   "dec": -53.0403,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "BULLET",
+   "ra": 104.656,
+   "dec": -55.9548,
+   "other_programs_F150W_L3": [
+    "4598"
+   ]
+  },
+  {
+   "target": "CLJ0152-1357",
+   "ra": 28.1788,
+   "dec": -13.9586,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "El-Gordo",
+   "ra": 15.7312,
+   "dec": -49.2615,
+   "other_programs_F150W_L3": [
+    "1176"
+   ]
+  },
+  {
+   "target": "MACSJ0025-1222",
+   "ra": 6.3763,
+   "dec": -12.38,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ0035-2015",
+   "ra": 8.8595,
+   "dec": -20.2626,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ0159-0849",
+   "ra": 29.9558,
+   "dec": -8.8333,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ0257-2209",
+   "ra": 44.4221,
+   "dec": -22.154,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ0257-2325",
+   "ra": 44.2866,
+   "dec": -23.435,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ0308+2645",
+   "ra": 47.2333,
+   "dec": 26.7605,
+   "other_programs_F150W_L3": [
+    "5293"
+   ]
+  },
+  {
+   "target": "MACSJ0329-0211",
+   "ra": 52.4237,
+   "dec": -2.1966,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ0429-0253",
+   "ra": 67.4004,
+   "dec": -2.8856,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ0451+0006",
+   "ra": 72.9775,
+   "dec": 0.1053,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ0553-3342",
+   "ra": 88.3543,
+   "dec": -33.7086,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ0717+3745",
+   "ra": 109.3832,
+   "dec": 37.751,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ0940+0744",
+   "ra": 145.2237,
+   "dec": 7.7404,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ1115+0129",
+   "ra": 168.9671,
+   "dec": 1.4991,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ1206-0847",
+   "ra": 181.5513,
+   "dec": -8.8007,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ1311-0310",
+   "ra": 197.7571,
+   "dec": -3.1776,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ1423+2404",
+   "ra": 215.9491,
+   "dec": 24.0777,
+   "other_programs_F150W_L3": [
+    "1208"
+   ]
+  },
+  {
+   "target": "MACSJ1931-2635",
+   "ra": 292.9571,
+   "dec": -26.5761,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ2129-0741",
+   "ra": 322.3592,
+   "dec": -7.6906,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MACSJ2214-1359",
+   "ra": 333.7387,
+   "dec": -14.0029,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "MJ0416.1-2403",
+   "ra": 64.039,
+   "dec": -24.0724,
+   "other_programs_F150W_L3": [
+    "1176",
+    "1208",
+    "5890"
+   ]
+  },
+  {
+   "target": "MJ0417.5-1154",
+   "ra": 64.3965,
+   "dec": -11.9107,
+   "other_programs_F150W_L3": [
+    "1208"
+   ]
+  },
+  {
+   "target": "MJ1149.5+2223",
+   "ra": 177.3994,
+   "dec": 22.3983,
+   "other_programs_F150W_L3": [
+    "1176",
+    "1199",
+    "1208",
+    "5890"
+   ]
+  },
+  {
+   "target": "MS0451-0305",
+   "ra": 73.5463,
+   "dec": -3.0149,
+   "other_programs_F150W_L3": [
+    "5058"
+   ]
+  },
+  {
+   "target": "MS2137-2353",
+   "ra": 325.0632,
+   "dec": -23.6613,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "PLCKG004-19.5",
+   "ra": 289.2688,
+   "dec": -33.5246,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "PLCKG165+67.0",
+   "ra": 171.8181,
+   "dec": 42.4831,
+   "other_programs_F150W_L3": [
+    "1176",
+    "4446",
+    "4744"
+   ]
+  },
+  {
+   "target": "PLCKG171-40.7",
+   "ra": 48.2371,
+   "dec": 8.372,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "PLCKG287+32.9",
+   "ra": 177.7117,
+   "dec": -28.0812,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "RXCJ0018+1626",
+   "ra": 4.6375,
+   "dec": 16.4353,
+   "other_programs_F150W_L3": [
+    "12782"
+   ]
+  },
+  {
+   "target": "RXCJ0032+1808",
+   "ra": 8.0473,
+   "dec": 18.1285,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "RXCJ0232-4420",
+   "ra": 38.0754,
+   "dec": -44.3458,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "RXCJ0600-2007",
+   "ra": 90.0604,
+   "dec": -20.1084,
+   "other_programs_F150W_L3": [
+    "1567",
+    "6796"
+   ]
+  },
+  {
+   "target": "RXCJ0911+1746",
+   "ra": 137.7975,
+   "dec": 17.776,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "RXCJ2211-0350",
+   "ra": 332.9413,
+   "dec": -3.8291,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "RXJ1532+3021",
+   "ra": 233.2241,
+   "dec": 30.3496,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "RXJ2129+0005",
+   "ra": 322.4092,
+   "dec": 0.0945,
+   "other_programs_F150W_L3": [
+    "2767"
+   ]
+  },
+  {
+   "target": "SJ0615-5746",
+   "ra": 93.968,
+   "dec": -57.78,
+   "other_programs_F150W_L3": [
+    "4212"
+   ]
+  },
+  {
+   "target": "SJ0723.3-7327",
+   "ra": 110.8275,
+   "dec": -73.4547,
+   "other_programs_F150W_L3": [
+    "12774",
+    "2736"
+   ]
+  },
+  {
+   "target": "SMACSJ2031-4036",
+   "ra": 307.972,
+   "dec": -40.6252,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "SMACSJ2131-4019",
+   "ra": 322.77,
+   "dec": -40.3226,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "SPTJ2325-41",
+   "ra": 351.2997,
+   "dec": -41.2014,
+   "other_programs_F150W_L3": []
+  },
+  {
+   "target": "WJ013719-08284",
+   "ra": 24.3542,
+   "dec": -8.4569,
+   "other_programs_F150W_L3": [
+    "2282"
+   ]
+  }
+ ]
+}

@@ -82,6 +82,7 @@ def regions(argv) -> int:
 
     from astropy.table import Table
     from astropy.wcs import WCS
+    from astropy.wcs.utils import proj_plane_pixel_scales
 
     p = argparse.ArgumentParser()
     p.add_argument("regions")
@@ -97,7 +98,7 @@ def regions(argv) -> int:
     for b in sorted({k.split("_")[0] for k in z.keys()}):
         s, e1 = z[b + "_s"], z[b + "_e1img"]
         w = WCS(fits.Header.fromstring(str(z[b + "_wcs"])))
-        scale = float(np.mean(np.abs(np.diag(w.pixel_scale_matrix)))) * 3600
+        scale = float(np.mean(proj_plane_pixel_scales(w))) * 3600
         fin = np.isfinite(e1)
         thr = np.nanpercentile(e1, 99.9)
         rc = int(np.ceil(0.8 / scale))

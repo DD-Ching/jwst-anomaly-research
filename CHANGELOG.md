@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: SFFT vs `arc_diff` (bounded tool comparison): keep `arc_diff` (D-095, #293)
+- **The JWST B-spline SFFT** (Hu & Wang 2024) is GPU-only in sfft 1.7.3, so it was not tested. SFFT's automatic
+  masking needs SExtractor, so it was not tested either.
+- **Ordinary SFFT** (CPU, unmasked) replaced only `kernel_match` on B1 + B2 with the same pre-matching injections.
+  - fades on the review list: 30/120 vs 85/120;
+  - brightenings: 27/60 vs 39/60;
+  - unchanged false hits: 11/60 vs 1/60;
+  - ×1.36 faster, with 2.2 GB vs ≤ 1.5 GB peak memory.
+  - The B1 F150W fit is off: photometric ratio 0.895, S scatter ×6.6. B1 has a saturated star.
+  - **Verdict under the fixed rule:** keep `arc_diff`.
+- **Batch denominator:**
+  - 56 VENUS targets, 18 with another public NIRCam F150W epoch, about 31 pairs (an upper bound: F444W and overlap
+    not checked);
+  - about 1 min per box on 4 cores;
+  - about 0.3–1 review entries per box.
+
 ## 2026-10-17: `arc_diff` per-stamp kernel fits share one design (D-094): B2 run ×14 (screen), same results (#291)
 - **Diagnosis:** each of B2's 1,076 F150W stamps rebuilt an ~86,800 × 82 design and ran 3 SVD least-squares on it
   (≈1.4 s per stamp).

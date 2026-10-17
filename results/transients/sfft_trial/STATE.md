@@ -10,5 +10,9 @@ small boxes and the existing injection settings are reused; comparison rules are
 Prior repository state: DECISIONS addendum 2026-10-15c ("HOTPANTS/SFFT not adopted ... revisit if a field with a
 spatially varying PSF (box > 1′) leaves ridges"); no earlier SFFT evaluation.
 
+## Status
+Done: integration check (paper method GPU-only), comparison (keep `arc_diff`, D-095), VENUS pair denominator.
+Results: `RESULT.md`.
+
 ## Next action
-Check SFFT (repository, licence, backends, dependencies) and arXiv:2309.09143 (which method and code).
+`/code-review`, PR ready, CI, merge under the merge policy. No further SFFT work.
