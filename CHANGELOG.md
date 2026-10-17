@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 shear screen aperture-coverage cut (c = 0.5): not adopted; limits move ≤ 1.6 %
+- **Why:** TASKS "JWST focus" 1 (W1): "drop edge apertures with < 50 % coverage" to lower the B-mode floor. Plan
+  and computable rules first (`results/w1_edge_cut/PLAN.md`, `scripts/w1_edge_cut.py decide`).
+- **New:** `exotic_screens.aperture_coverage`, `--min-coverage` on `shear` and `inject_shear.py` (default 0,
+  unchanged behaviour); `ApertureMass(valid=)` blanks centres in the map, the rotation null and injection trials.
+- **Result (derived; `RESULT.md`):** c = 0 reproduces the committed recoveries in all five fields. At c = 0.5 only
+  MACS0416's b_max moves (4.04 → 4.01); Abell 2744's 4.21 floor sits at full coverage. Five-field limits
+  5,765 → 5,672 / 1,082 → 1,088 / 567 → 570 deg⁻² (2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉): the frozen adoption rule
+  (lower at each mass) fails. Real fields stay null. **Failed approach:** edge apertures do not set the floor.
+- **Handoff:** the floor is elsewhere; next W1 gains are a PSF-anisotropy model from stars, blend rejection or a
+  streak veto, tested against Abell 2744's 4.21 centre (88, −42) first.
+
 ## 2026-10-17: SFFT vs `arc_diff` (bounded tool comparison): keep `arc_diff` (D-095, #293)
 - **The JWST B-spline SFFT** (Hu & Wang 2024) is GPU-only in sfft 1.7.3, so it was not tested. SFFT's automatic
   masking needs SExtractor, so it was not tested either.

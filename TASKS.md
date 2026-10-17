@@ -163,8 +163,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    - W1: the shear screen (D-053, `exotic_screens.py shear`, `inject_shear.py`) is built; five fields null (Abell S1063
      added 2026-10-17); limits 5.8 × 10³ / 1.1 × 10³ / 5.7 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, still
      blind at ≤ 2 × 10¹¹ M☉. Next:
-     lower the B-mode floor (Abell 2744 max S_× 4.21: PSF-anisotropy model from stars, blend rejection, drop edge
-     apertures with < 50 % coverage); add SMACS 0723 and El Gordo when DJA photo-z is reachable (tarballs 404
+     lower the B-mode floor (Abell 2744 max S_× 4.21 at (88, −42), full coverage: PSF-anisotropy model from stars, blend
+     rejection; ~~drop edge apertures with < 50 % coverage~~ done 2026-10-17, not adopted: limits move ≤ 1.6 %,
+     `results/w1_edge_cut/RESULT.md`); add SMACS 0723 and El Gordo when DJA photo-z is reachable (tarballs 404
      2026-10-08) and MACS0717 with photo-z; a streak veto (S1063 top peaks sit on long linear streaks); stack S around `radial` and orphan-pair
      centres; other lens redshifts → volume density vs Takahashi & Asada;
    - W2 / dark deflectors (D-048 clusters, D-051 deep fields: null, limits; D-055: the flanking-field orphan
