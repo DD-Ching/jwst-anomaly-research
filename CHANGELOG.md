@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: MACS1423 clump-pair census re-run with the fixed #273 code: unchanged (P 0.259); citable (#287)
+- **Why:** the 2026-10-16 flag (below): #282 ran the census with the pre-fix `arcs_vet_deblend.fit_models`. Plan
+  first: `results/arcs/macs1423-canucs/vetting/PLAN_census_rerun.md` (only the code changes).
+- **Result (derived; `RESULT.md` "Step 2 re-run"):** every sample number unchanged (45 / 55 gate-passed, f̂ 0.289,
+  expected anti 2.608, P(≥ 4) 0.259, P(≥ 3) 0.494); outcome `explained by clump orientation (exploratory)`. Only
+  1818 changes, `single` → `undecided` (old fit pinned at S/N 3 × 10⁻¹¹); its gate still fails, so P does not move.
+  No `gate_passed` flips. A second run gave identical output; sheet regenerated and looked at.
+- **Handoff:** the MACS1423 census may be cited. #279 (five-field census) has its own re-run, awaiting the owner.
+
 ## 2026-10-16: El Gordo arc difference imaging, PEARLS 2022 → VENUS 2026 (one-box pilot): nothing open (#286)
 - **Scope (owner):**
   - one box and one epoch pair;

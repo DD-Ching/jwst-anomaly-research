@@ -216,6 +216,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.35 (`arcs` on RXJ2129 with the DJA catalogue: PA convention gate, run, sheet; no result) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01ExftNC, 21:08–21:45Z |
 | 2026-W42 | ≈ 1.0 (El Gordo arc_diff one-box pilot: screen, full-chain injections, 4 entries vetted) | — | ≈ 0.4 (spike, on-spike and bright-source controls) | 0.2 (orientation, claim, state files) | interactive session 01P8KV8A |
 | 2026-W42 | — | — | ≈ 0.15 (`arcs` PA convention check: pa_sep vs pa_obs on stored census rows) | 0.1 (orientation, claim, PR) | cloud routine 01UdRNer, 22:08–22:35Z |
+| 2026-W42 | — | — | ≈ 0.25 (MACS1423 clump-pair census re-run with the fixed #273 code; sheet looked at) | 0.1 (orientation, takeover, PR) | cloud routine 01WSfhqY, 00:08–00:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
