@@ -5019,3 +5019,15 @@ confining radiation at a throat is found.
   - a GPU is available, then test the B-spline method on the same B1/B2 injections;
   - SExtractor is installed for a masking-mode test;
   - a box larger than 1′ shows spatially varying PSF ridges (DECISIONS addendum 2026-10-15c).
+
+## D-096 W1 PSF anisotropy: STPSF used as a diagnostic model; no PSF correction adopted (2026-10-17)
+- **Decision:** STPSF 2.2.0 (data 2.2.0, streamed) models NIRCam F200W PSFs for the W1 floor tests; no constant
+  PSF-χ correction is adopted for the shear screen, because the model's isophotal |χ| depends on the isophote level
+  and over-predicts the three Abell 2744 stars by 0.05–0.09, while its axis matches theirs.
+- **Alternatives rejected:**
+  - a constant model χ chosen by isophote level: only the |χ| ≈ 0.23 levels pass the 3.79 rule, chosen after the
+    fact and too large for the stars;
+  - a star-based map (D-entry of #298 / `results/w1_psf`: 3 stars).
+- **Evidence:** `results/w1_stpsf/RESULT.md`. D-018's rejection of STPSF for spike templates is unchanged.
+- **Revisit if:** a per-source forward model (galaxy ⊗ drizzled STPSF PSF, catalogue isophote) reproduces the
+  three stars' χ, or the screen moves to PSF-weighted moments.

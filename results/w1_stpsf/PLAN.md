@@ -17,3 +17,10 @@ Written before any model PSF was computed (frozen at this commit; deviations get
   |χ_model − χ★| ≤ 0.05 per component.
 - **S2 adoption:** the per-source model χ correction is carried to injections only if b_max ≤ 3.79 (as R2 of
   `results/w1_psf/PLAN.md`).
+
+## Addendum (deviations, written after the first S1/S2 numbers; labelled in RESULT.md)
+- **Deviation (replaced):** S2 ran with each isophote level's median model χ as a constant correction, not a
+  per-source χ: the catalogue does not record each source's detector/dither mix or its isophote level relative to
+  its peak, so a per-source model χ was not built this cycle.
+- **Added (post hoc):** each star's model χ at the level whose segment area matches its catalogue
+  `isophotal_area` (`w1_stpsf_floor.py stars`), to test the model where the catalogue fixes the level.
