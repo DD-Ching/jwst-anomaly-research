@@ -1,0 +1,161 @@
+{
+ "label": "derived (model_prediction); summary of recheck_delays.json by summary.py.txt: converged images only (source-plane residual <= 1e-4 arcsec), order-1 interpolation; realisation ranges are sample ranges of map000-map009, not confidence intervals",
+ "new": {
+  "7.5": {
+   "best_fit_days": [
+    748.0
+   ],
+   "realisations_n": 10,
+   "realisations_sample_range_days": [
+    708.1,
+    777.7
+   ],
+   "order3_max_abs_diff_days": 2.5
+  },
+  "9.3": {
+   "best_fit_days": [
+    1021.5
+   ],
+   "realisations_n": 10,
+   "realisations_sample_range_days": [
+    1056.3,
+    1136.3
+   ],
+   "order3_max_abs_diff_days": 2.9
+  },
+  "25": {
+   "best_fit_days": [
+    -4824.2
+   ],
+   "realisations_n": 10,
+   "realisations_sample_range_days": [
+    -5318.7,
+    -4515.9
+   ],
+   "order3_max_abs_diff_days": 3.6
+  }
+ },
+ "old_308": {
+  "7.5": {
+   "best_fit_days": [
+    826.4,
+    751.1
+   ],
+   "realisations_sample_range_days": [
+    649.1,
+    817.0
+   ]
+  },
+  "9.3": {
+   "best_fit_days": [
+    1025.5
+   ],
+   "realisations_sample_range_days": [
+    1067.9,
+    1183.2
+   ]
+  },
+  "25": {
+   "best_fit_days": [
+    -4814.8
+   ],
+   "realisations_sample_range_days": [
+    -5258.6,
+    -4504.5
+   ]
+  }
+ },
+ "dropped_nonconverged_grid_candidates": [
+  {
+   "model": "best",
+   "grid_sep_arcsec": 7.34,
+   "old_delay_days": 826.4,
+   "root_residual_arcsec": 0.0638
+  },
+  {
+   "model": "map000",
+   "grid_sep_arcsec": 7.561,
+   "old_delay_days": 817.9,
+   "root_residual_arcsec": 0.34
+  },
+  {
+   "model": "map001",
+   "grid_sep_arcsec": 7.561,
+   "old_delay_days": 764.7,
+   "root_residual_arcsec": 0.204
+  },
+  {
+   "model": "map002",
+   "grid_sep_arcsec": 7.561,
+   "old_delay_days": 718.8,
+   "root_residual_arcsec": 0.174
+  },
+  {
+   "model": "map003",
+   "grid_sep_arcsec": 7.561,
+   "old_delay_days": 725.5,
+   "root_residual_arcsec": 0.273
+  },
+  {
+   "model": "map004",
+   "grid_sep_arcsec": 7.561,
+   "old_delay_days": 706.7,
+   "root_residual_arcsec": 0.263
+  },
+  {
+   "model": "map005",
+   "grid_sep_arcsec": 7.561,
+   "old_delay_days": 753.5,
+   "root_residual_arcsec": 0.29
+  },
+  {
+   "model": "map006",
+   "grid_sep_arcsec": 7.561,
+   "old_delay_days": 760.7,
+   "root_residual_arcsec": 0.394
+  },
+  {
+   "model": "map007",
+   "grid_sep_arcsec": 7.607,
+   "old_delay_days": 650.0,
+   "root_residual_arcsec": 0.35
+  },
+  {
+   "model": "map008",
+   "grid_sep_arcsec": 7.561,
+   "old_delay_days": 732.2,
+   "root_residual_arcsec": 0.327
+  },
+  {
+   "model": "map009",
+   "grid_sep_arcsec": 7.561,
+   "old_delay_days": 701.3,
+   "root_residual_arcsec": 0.362
+  }
+ ],
+ "converged_7.5_sep_to_catalogued_1c.2_arcsec": {
+  "best": 0.87,
+  "map000": 1.07,
+  "map001": 0.85,
+  "map002": 0.82,
+  "map003": 0.97,
+  "map004": 0.97,
+  "map005": 0.96,
+  "map006": 1.1,
+  "map007": 1.08,
+  "map008": 1.04,
+  "map009": 1.1
+ },
+ "self_delay_days_all_models": 0.0,
+ "dates": {
+  "counter_image_7.5_arrival_of_VENUS_state": [
+   "2027-09-14",
+   "2027-11-22"
+  ],
+  "image_1.1_state_seen_by_7.5_in_VENUS": [
+   "2023-08-20",
+   "2023-10-28"
+  ]
+ },
+ "venus_mjd": 60954.0
+}

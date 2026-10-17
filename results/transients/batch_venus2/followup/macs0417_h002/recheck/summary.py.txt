@@ -1,0 +1,40 @@
+# Summary of recheck_delays.json -> summary.json (converged images only, order 1; order-3 max differences; dates).
+# Usage: python summary.py <recheck dir>
+import json, sys
+from astropy.coordinates import SkyCoord
+from astropy.time import Time
+O = sys.argv[1]
+d = json.load(open(O + '/recheck_delays.json'))
+cat = json.load(open(O + '/../catalogued_images.json'))['images']
+c2 = SkyCoord(*cat['[MSF2019] 1c.2'][:2], unit='deg')
+groups, o3, dropped, sep2 = {'7.5': [], '9.3': [], '25': []}, {'7.5': [], '9.3': [], '25': []}, [], []
+for tag, m in d['models'].items():
+    for o, g in (('order1', groups), ('order3', o3)):
+        for r in m[o]['images']:
+            if r['root_sep_arcsec'] < 1:
+                continue
+            if r['root_source_residual_arcsec'] > 1e-4:
+                if o == 'order1':
+                    dropped.append((tag, r['grid_sep_arcsec'], r['old_delay_days'], r['root_source_residual_arcsec']))
+                continue
+            k = '7.5' if r['root_sep_arcsec'] < 8.5 else ('9.3' if r['root_sep_arcsec'] < 15 else '25')
+            g[k].append((tag, r['new_delay_days']))
+            if o == 'order1' and k == '7.5':
+                sep2.append((tag, round(SkyCoord(r['root_ra'], r['root_dec'], unit='deg').separation(c2).arcsec, 2)))
+summ = {}
+for k in groups:
+    best = [v for t, v in groups[k] if t == 'best']; real = [v for t, v in groups[k] if t != 'best']
+    summ[k] = {'best_fit_days': best, 'realisations_n': len(real), 'realisations_sample_range_days': [min(real), max(real)],
+               'order3_max_abs_diff_days': round(max(abs(a[1] - b[1]) for a, b in zip(groups[k], o3[k])), 1)}
+V = 60954.0
+lo, hi = summ['7.5']['realisations_sample_range_days']
+dates = {'counter_image_7.5_arrival_of_VENUS_state': [Time(V + lo, format='mjd').iso[:10], Time(V + hi, format='mjd').iso[:10]],
+         'image_1.1_state_seen_by_7.5_in_VENUS': [Time(V - hi, format='mjd').iso[:10], Time(V - lo, format='mjd').iso[:10]]}
+old = {'7.5': {'best_fit_days': [826.4, 751.1], 'realisations_sample_range_days': [649.1, 817.0]},
+       '9.3': {'best_fit_days': [1025.5], 'realisations_sample_range_days': [1067.9, 1183.2]},
+       '25': {'best_fit_days': [-4814.8], 'realisations_sample_range_days': [-5258.6, -4504.5]}}
+out = {'label': 'derived (model_prediction); summary of recheck_delays.json by summary.py.txt: converged images only (source-plane residual <= 1e-4 arcsec), order-1 interpolation; realisation ranges are sample ranges of map000-map009, not confidence intervals',
+       'new': summ, 'old_308': old,
+       'dropped_nonconverged_grid_candidates': [{'model': a, 'grid_sep_arcsec': b, 'old_delay_days': c, 'root_residual_arcsec': e} for a, b, c, e in dropped],
+       'converged_7.5_sep_to_catalogued_1c.2_arcsec': dict(sep2), 'self_delay_days_all_models': 0.0, 'dates': dates, 'venus_mjd': V}
+json.dump(out, open(O + '/summary.json', 'w'), indent=1); open(O + '/summary.json', 'a').write('\n')

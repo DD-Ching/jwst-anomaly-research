@@ -49,6 +49,9 @@ exotic candidate.
   25.4–25.5″ (matching catalogued 1c.2, 1b.4, 1c.3); glafic delays +649 to +817 d at 7.5″, −4,505 to −5,259 d at 25″.
   No new point source there in VENUS 2025-10, which is uninformative given the delays. Testable with an epoch of 1c.2
   at about 2027-07 to 2028-01 (`results/transients/batch_venus2/followup/macs0417_h002/result.json`).
+- Re-check 2026-10-17 (`.../macs0417_h002/recheck/RESULT.md`): with a fixed source position the 7.6″ image lags by
+  748 d (best fit; 708–778 d over 10 realisations, a sample range); next useful epoch 2027-09-14 to 2027-11-22; the
+  conclusion (not testable with current epochs) is unchanged.
 
 ## Not explained / open
 - None of the three is "unexplained": each has an ordinary transient hypothesis that the data do not contradict.

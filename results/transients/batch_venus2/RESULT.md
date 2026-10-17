@@ -72,7 +72,7 @@ simulations. An ordinary transient is not wormhole evidence; zero entries is not
 - MS0451 1 h011: undetermined → **artifact**: a signal fixed on one NRCALONG detector pixel in all 18 exposures of
   visits 1–2, absent at the sky position in dithers that put it elsewhere.
 - MACS0417 2 h002: still a real change; the counter-image test is feasible with public RELICS models but not testable
-  with current epochs (counter-images lag by ≈ 650–830 d).
+  with current epochs (counter-images lag by ≈ 650–830 d; re-checked 2026-10-17: 708–778 d sample range of 10 realisations, best fit 748 d, `followup/macs0417_h002/recheck/RESULT.md`).
 - Final classes now: 3 real changes, 2 undetermined (A370 1 h005, PLCK G165 1 h003), 5 artifacts, 1 no significant
   change; 11 of 11 review entries reviewed.
 

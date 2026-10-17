@@ -2,6 +2,13 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: MACS0417 h002 delays re-checked with a fixed source position (#309)
+- #308 evaluated the Fermat potential with each pixel's own β; fixed β0 plus root-refined images gives 748 d (best fit)
+  and 708–778 d (10-realisation sample range) for the 7.6″ counter-image (#308: 650–830 d, partly from a non-image grid
+  candidate). Self-delay 0; order-1 vs order-3 interpolation within 3.6 d.
+- Conclusion unchanged: not testable with current epochs; next useful epoch 2027-09-14 to 2027-11-22
+  (`results/transients/batch_venus2/followup/macs0417_h002/recheck/RESULT.md`).
+
 ## 2026-10-17: W1 calibrated streak veto (STScI findsat_mrt masks, through injections): adopted; twelve-field limits 4.4e3 / 7.2e2 / 3.5e2 deg⁻²
 - **Why:** handoff of `results/w1_shear_rxj_m0647/RESULT.md`: a streak veto run through injections (S1063, MACS1423,
   MACS0647 peaks on streaks); the post hoc V1 test could not be used for a limit.
