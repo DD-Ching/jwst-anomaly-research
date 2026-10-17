@@ -1,9 +1,12 @@
 {
  "label": "derived; per-exposure check of MS0451-0305_1:h011 in the 5058 level-2 _cal LW exposures (2026-10-17); rule fixed in ../PLAN.md before the check",
- "position": [73.548773, -3.020842],
+ "position": [
+  73.548773,
+  -3.020842
+ ],
  "exposures": "5 visits (MJD 60699, 60703, 60707, 60710, 60713) x F277W/F356W/F444W x 3 dithers; the position falls on NRCALONG in all 45 (per_exposure_sky_position.json)",
  "wcs": "cal-header SIP WCS corrected per exposure by the median offset of 12 compact mosaic sources (offsets <= 0.26 px)",
- "at_sky_position": "visits 1-2: S/N 9-25 in dither 1 of every filter (detector pixel ~(586, 954)), |S/N| < 1.6 in dithers 2-3 (detector ~(583, 1049) and ~(678, 1053), about 6 arcsec away); visits 3-5: |S/N| < 2.2 in all",
+ "at_sky_position": "visits 1-2: S/N 8.7-24.7 in dither 1 of every filter (detector pixel ~(586, 954)), |S/N| < 1.6 in dithers 2-3 (detector ~(583, 1049) and ~(678, 1053), about 6 and 8.5 arcsec away); visits 3-5: |S/N| < 2.2 in all",
  "at_detector_pixel": "visits 1-2: S/N 9-28 at detector pixel (586.45, 953.85) in all 18 exposures, including dithers 2-3 where it sees a different sky position; fluxes 68-103 nJy, no strong decay (per_exposure_detector_pixel.json)",
  "rule_outcome": "consistent with a detector effect: >= 3 sigma only on one detector pixel, absent at the sky position in dithers elsewhere",
  "class": "artifact (detector-fixed signal on one NRCALONG pixel, visits 1-2 only)",

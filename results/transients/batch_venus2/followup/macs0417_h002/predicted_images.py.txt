@@ -7,7 +7,7 @@ from scipy import ndimage
 warnings.filterwarnings('ignore')
 D = sys.argv[1]
 RA, DEC = 64.39640738001187, -11.90704044211364      # MJ0417.5-1154_2:h002
-ZL, ZS = 0.443, 0.8718                               # ASSUMPTION z_l (Mahler+2019); z_s system 1 (SIMBAD/NED)
+ZL, ZS = 0.443, 0.8718                               # ASSUMPTION z_l (source not re-checked); z_s system 1 (SIMBAD/NED)
 cos = FlatLambdaCDM(H0=70, Om0=0.3)                  # ASSUMPTION
 Dl, Ds, Dls = cos.angular_diameter_distance(ZL), cos.angular_diameter_distance(ZS), cos.angular_diameter_distance_z1z2(ZL, ZS)
 f = float(Dls / Ds)

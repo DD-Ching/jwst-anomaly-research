@@ -1,7 +1,7 @@
 {
  "label": "derived from public RELICS lens models (glafic v3, lenstool v2; MAST HLSP, maps scaled to D_LS/D_S = 1) and forced photometry; 2026-10-17; exploratory",
  "assumptions": {
-  "z_lens": "0.443 (Mahler et al. 2019)",
+  "z_lens": "0.443 (ASSUMPTION: commonly used cluster redshift; the source paper was not re-checked)",
   "z_source": "0.8718 (system 1, SIMBAD/NED)",
   "cosmology": "flat LCDM H0 70, Om 0.3",
   "D_LS/D_S": 0.4299

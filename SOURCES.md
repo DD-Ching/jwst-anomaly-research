@@ -320,6 +320,12 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   - Used 2026-10-14 (`scripts/smacs_s17_vet.py`): `glafic/v2` and `zitrin-ltm-gauss/v2` `{x,y}-arcsec-deflect.fits`, sha256 in the
     script (`lenstool/v1` lists no files); z_lens 0.39 and H0 70 / Ωm 0.3 assumed for the D_LS/D_S = 1 maps.
   - arXiv:2207.07102 (Pascale+22) Table 1: system 17 model z 1.72, photo-z 2.34 (accessed 2026-10-14).
+- RELICS MACS J0417 lens models (`glafic/v3` incl. `range/` realisations, `lenstool/v2`; maps scaled to D_LS/D_S = 1;
+  readme `hlsp_relics_hst_multi_lens-models_multi_v3_readme.pdf`): https://archive.stsci.edu/hlsps/relics/macs0417m11/models/
+  (accessed 2026-10-17; used by `results/transients/batch_venus2/followup/macs0417_h002`).
+- Mahler et al. 2019 (RELICS MACS J0417 lenstool model, system 1 images): arXiv:1810.13439 (identifier from a literature
+  search 2026-10-17; journal reference and the paper's cluster redshift not re-checked).
+- Meena et al. 2026, "Caught in Swallowtails" (MS 0451.6−0305), arXiv:2601.10097 (abstract read 2026-10-17).
 - Hubble Frontier Fields lens models (same layout as RELICS): https://archive.stsci.edu/prepds/frontier/lensmodels/
 - Zoobot Euclid encoder (Apache-2.0): https://huggingface.co/mwalmsley/zoobot-encoder-euclid
 - Euclid Q1 strong-lens expert labels: https://huggingface.co/datasets/mwalmsley/euclid_strong_lens_expert_judges
