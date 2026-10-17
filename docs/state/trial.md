@@ -239,7 +239,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.2 (radial centre-level axial rule: plan, MACS0647 reproduction, gate K failed, post-hoc collinearity; sheet looked at) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01Mk3R1x, 17:08–17:30Z |
 | 2026-W42 | ≈ 0.2 (W1 shear stacked at radial centres: plan, four fields, two post hoc vet steps) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 0129VzsK, 18:08–18:28Z |
 | 2026-W42 | ≈ 0.1 (W1 radial-centre stack with a second MACS0417 model) | — | — | 0.05 (state files, PR) | cloud routine 0129VzsK, 18:28–18:45Z |
-| 2026-W42 | ≈ 0.3 (W1 injections at the `radial` centres through the stack; frozen rule degenerate, post hoc noise-aware limit) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01VzSwtX, 19:08–19:40Z |
+| 2026-W42 | ≈ 0.3 (W1 injections at the `radial` centres through the stack; frozen rule degenerate, post hoc noise-aware limit) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01VzSwtX, 19:08–19:28Z |
 | 2026-W42 | ≈ 0.1 (W1 stack injections: mass points 5 × 10¹¹ and 1 × 10¹² M☉) | — | — | 0.05 (plan, state files, PR) | cloud routine 01VzSwtX, 19:28–19:40Z |
 
 ## Outcome ledger (four columns only)

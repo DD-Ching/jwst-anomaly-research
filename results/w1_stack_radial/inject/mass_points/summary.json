@@ -1,6 +1,6 @@
 {
  "provenance": "derived (injected shapes simulated)",
- "plan": "results/w1_stack_radial/inject/PLAN.md",
+ "plan": "results/w1_stack_radial/inject/PLAN_mass.md (follow-up of PLAN.md; field set by hand after the run)",
  "seed": 316,
  "assumptions": {
   "exclude_level": 0.95,
