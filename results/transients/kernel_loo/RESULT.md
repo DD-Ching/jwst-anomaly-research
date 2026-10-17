@@ -47,7 +47,7 @@ records the post-review changes (deviations). Owner instruction 2026-10-17; budg
 | Run | Whole run | Matching step | Per-stamp kernels | Preparation | Peak memory |
 |---|---|---|---|---|---|
 | screen, refit → shared | 1,508 → 106 s (**×14**) | 1,492 → 89–90 s (×17) | 1,456 → 52–53 s (×28) | 0.38 s | 860 → 860–861 MB |
-| injection run, refit → shared | 1,341 → 157–176 s (**×8–9**) | 1,242 → 77–78 s (×16) | 1,206 → 41–42 s (×29–30) | 0.22–0.26 s | 1,467 → 1,438–1,465 MB |
+| injection run, refit → shared | 1,341 → 157–176 s (**×8–9**) | 1,242 → 77–78 s (×16) | 1,206 → 40–42 s (×29–30) | 0.22–0.26 s | 1,467 → 1,438–1,465 MB |
 
 - **Load (deviation from PLAN §5, addendum 2):**
   - Refit and the final shared code were timed in different batches, each of 4 processes on 4 cores.
