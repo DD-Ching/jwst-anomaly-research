@@ -49,3 +49,28 @@ def test_touching_boxes_do_not_overlap():
     step = bp.BOX / 3600 / c
     assert bp.overlaps(a370[0] + step / 2, a370[1], [a370])  # half a box: real overlap
     assert bp.overlaps(*a370, [a370])
+
+
+def test_run_timeout_kills_and_flags(tmp_path):
+    import sys as _sys
+
+    slow = [_sys.executable, "-c", "import time; time.sleep(30)"]
+    r = bru._run(slow, tmp_path / "slow.log", timeout=1.0)
+    assert r["rc"] != 0 and r.get("timed_out") is True and r["wall_s"] < 10
+    fast = [_sys.executable, "-c", "pass"]
+    r = bru._run(fast, tmp_path / "fast.log", timeout=30.0)
+    assert r["rc"] == 0 and "timed_out" not in r
+
+
+def test_too_late():
+    assert not bru.too_late(100.0, None)
+    assert not bru.too_late(100.0, 200.0)
+    assert bru.too_late(300.0, 200.0)
+
+
+def test_rank_key_prefers_extra_epochs_within_depth_tier():
+    a = bp.rank_key(1245.0, 0, 0, 0.0)
+    b = bp.rank_key(1300.0, 3, 5, 1.0)  # same factor-2 depth tier, more extra epochs
+    c = bp.rank_key(2600.0, 0, 9, 1.4)  # deeper tier wins over extra epochs
+    assert sorted([a, b, c]) == [c, b, a]
+    assert bp.rank_key(1245.0, 2, 1, 0.0) < bp.rank_key(1245.0, 2, 1, 1.0)

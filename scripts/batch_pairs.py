@@ -101,6 +101,22 @@ def list_obs(pid: str, ra: float, dec: float) -> dict:
     return {k: v for k, v in groups.items() if {"F150W", "F444W"} <= set(v)}
 
 
+def extra_epochs(p: dict, ra: float, dec: float) -> int:
+    """Public F150W visits (other than the pair's two) whose footprint contains the box centre."""
+    used = {p["e1"][0], p["e2"][0]}
+    return sum(
+        1
+        for k, v in p.get("groups", {}).items()
+        if k not in used and inside(v["F150W"]["polys"], ra, dec)
+    )
+
+
+def rank_key(depth: float, extra: int, rank: int, dist: float) -> tuple:
+    """``--prefer-extra-epochs`` order: depth tier (factor-2 bins of the shallower F150W exposure,
+    deeper first), then more extra epochs, then pair rank and distance from the centre."""
+    return (-math.floor(math.log2(depth)), -extra, rank, dist)
+
+
 def header_info(u: str) -> dict:
     import fsspec
     from astropy.io import fits
@@ -120,6 +136,11 @@ def main(argv=None) -> int:
     ap.add_argument("--max-boxes", type=int, default=20)
     ap.add_argument("--per-pair", type=int, default=2)
     ap.add_argument("--min-finite", type=float, default=0.95)
+    ap.add_argument(
+        "--prefer-extra-epochs",
+        action="store_true",
+        help="among boxes of similar depth, prefer those with more extra public F150W epochs",
+    )
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args(argv)
     from arc_diff import read_box
@@ -130,14 +151,16 @@ def main(argv=None) -> int:
         if not tg["other_programs_F150W_L3"]:
             continue
         ra, dec = tg["ra"], tg["dec"]
+        venus_all = list_obs("6882", ra, dec)
         venus = {
-            k: v
-            for k, v in list_obs("6882", ra, dec).items()
-            if all(inside(v[b]["polys"], ra, dec) for b in v)
+            k: v for k, v in venus_all.items() if all(inside(v[b]["polys"], ra, dec) for b in v)
         }
+        groups = dict(venus_all)  # every F150W+F444W visit of the listed programmes (extra epochs)
         best = None
         for pid in tg["other_programs_F150W_L3"]:
-            for k, v in list_obs(pid, ra, dec).items():
+            obs = list_obs(pid, ra, dec)
+            groups.update(obs)
+            for k, v in obs.items():
                 if not all(inside(v[b]["polys"], ra, dec) for b in v):
                     continue
                 for vk, vv in venus.items():
@@ -158,13 +181,11 @@ def main(argv=None) -> int:
             {"target": tg["target"], "pair": [best["e1"][0], best["e2"][0]] if best else None}
         )
         if best:
+            best["groups"] = groups
             pairs.append(best)
     pairs.sort(key=lambda p: -p["depth"])
-    chosen, rejected = [], []
+    seq = []  # (rank, pair, distance, ra, dec, extra epochs) in visiting order
     for rank, p in enumerate(pairs):
-        if len(chosen) >= a.max_boxes:
-            break
-        e1, e2 = p["e1"][1], p["e2"][1]
         c = math.cos(math.radians(p["dec"]))
         grid = []
         for ix in (-1, 0, 1):
@@ -172,73 +193,82 @@ def main(argv=None) -> int:
                 bra, bdec = p["ra"] + ix * BOX / 3600 / c, p["dec"] + iy * BOX / 3600
                 grid.append((math.hypot(ix, iy), bra, bdec))
         grid.sort()
-        n_pair = 0
         for dist, bra, bdec in grid:
-            if n_pair >= a.per_pair or len(chosen) >= a.max_boxes:
-                break
-            if overlaps(bra, bdec, a.exclude):
-                rejected.append(
-                    {"target": p["target"], "ra": bra, "dec": bdec, "why": "overlaps searched box"}
-                )
-                continue
-            pts = box_points(bra, bdec)
-            if not all(
-                inside(e[b]["polys"], x, y)
-                for e in (e1, e2)
-                for b in ("F150W", "F444W")
-                for x, y in pts
-            ):
-                rejected.append(
-                    {
-                        "target": p["target"],
-                        "ra": bra,
-                        "dec": bdec,
-                        "why": "not inside all footprints",
-                    }
-                )
-                continue
-            fin = {}
-            for e, tag in ((e1, "e1"), (e2, "e2")):
-                for b in ("F150W", "F444W"):
-                    try:
-                        bx = read_box(e[b]["uri"], bra, bdec, BOX / 2)
-                        full = (2 * math.ceil(BOX / 2 / bx["scale"]) + 1) ** 2
-                        fin[f"{tag}_{b}"] = round(float(np.isfinite(bx["sci"]).sum()) / full, 4)
-                    except (ValueError, OSError) as err:
-                        fin[f"{tag}_{b}"] = 0.0
-                        fin[f"{tag}_{b}_error"] = str(err)[:120]
-            if min(v for k, v in fin.items() if not k.endswith("error")) < a.min_finite:
-                rejected.append(
-                    {
-                        "target": p["target"],
-                        "ra": bra,
-                        "dec": bdec,
-                        "why": "finite fraction",
-                        "finite": fin,
-                    }
-                )
-                continue
-            k_in = sum(x["target"] == p["target"] for x in chosen) + 1
-            chosen.append(
+            seq.append((rank, p, dist, bra, bdec, extra_epochs(p, bra, bdec)))
+    if a.prefer_extra_epochs:
+        seq.sort(key=lambda t: rank_key(t[1]["depth"], t[5], t[0], t[2]))
+    chosen, rejected = [], []
+    n_pair: dict = {}
+    for rank, p, dist, bra, bdec, extra in seq:
+        if len(chosen) >= a.max_boxes:
+            break
+        if n_pair.get(rank, 0) >= a.per_pair:
+            continue
+        e1, e2 = p["e1"][1], p["e2"][1]
+        if overlaps(bra, bdec, a.exclude):
+            rejected.append(
+                {"target": p["target"], "ra": bra, "dec": bdec, "why": "overlaps searched box"}
+            )
+            continue
+        pts = box_points(bra, bdec)
+        if not all(
+            inside(e[b]["polys"], x, y)
+            for e in (e1, e2)
+            for b in ("F150W", "F444W")
+            for x, y in pts
+        ):
+            rejected.append(
                 {
-                    "box_id": f"{p['target']}_{k_in}",
                     "target": p["target"],
-                    "ra": round(bra, 6),
-                    "dec": round(bdec, 6),
-                    "pair_rank": rank,
-                    "dist_from_centre_boxes": round(dist, 3),  # in box widths
-                    "finite": fin,
-                    "e1": {
-                        b: {k: e1[b][k] for k in ("obs_id", "uri", "mjd", "exptime")}
-                        for b in ("F150W", "F444W")
-                    },
-                    "e2": {
-                        b: {k: e2[b][k] for k in ("obs_id", "uri", "mjd", "exptime")}
-                        for b in ("F150W", "F444W")
-                    },
+                    "ra": bra,
+                    "dec": bdec,
+                    "why": "not inside all footprints",
                 }
             )
-            n_pair += 1
+            continue
+        fin = {}
+        for e, tag in ((e1, "e1"), (e2, "e2")):
+            for b in ("F150W", "F444W"):
+                try:
+                    bx = read_box(e[b]["uri"], bra, bdec, BOX / 2)
+                    full = (2 * math.ceil(BOX / 2 / bx["scale"]) + 1) ** 2
+                    fin[f"{tag}_{b}"] = round(float(np.isfinite(bx["sci"]).sum()) / full, 4)
+                except (ValueError, OSError) as err:
+                    fin[f"{tag}_{b}"] = 0.0
+                    fin[f"{tag}_{b}_error"] = str(err)[:120]
+        if min(v for k, v in fin.items() if not k.endswith("error")) < a.min_finite:
+            rejected.append(
+                {
+                    "target": p["target"],
+                    "ra": bra,
+                    "dec": bdec,
+                    "why": "finite fraction",
+                    "finite": fin,
+                }
+            )
+            continue
+        k_in = sum(x["target"] == p["target"] for x in chosen) + 1
+        chosen.append(
+            {
+                "box_id": f"{p['target']}_{k_in}",
+                "target": p["target"],
+                "ra": round(bra, 6),
+                "dec": round(bdec, 6),
+                "pair_rank": rank,
+                "dist_from_centre_boxes": round(dist, 3),  # in box widths
+                "extra_f150w_epochs": extra,
+                "finite": fin,
+                "e1": {
+                    b: {k: e1[b][k] for k in ("obs_id", "uri", "mjd", "exptime")}
+                    for b in ("F150W", "F444W")
+                },
+                "e2": {
+                    b: {k: e2[b][k] for k in ("obs_id", "uri", "mjd", "exptime")}
+                    for b in ("F150W", "F444W")
+                },
+            }
+        )
+        n_pair[rank] = n_pair.get(rank, 0) + 1
     for bx in chosen:
         for tag in ("e1", "e2"):
             for b in ("F150W", "F444W"):
