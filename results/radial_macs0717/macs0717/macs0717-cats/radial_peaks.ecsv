@@ -1,0 +1,31 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: x, datatype: float64}
+# - {name: y, datatype: float64}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: n_lines, datatype: int64}
+# - {name: nearest_label, datatype: int64}
+# - {name: nearest_sep_arcsec, datatype: float64}
+# - {name: nearest_snr, datatype: float64}
+# - {name: dark_centre, datatype: bool}
+# - {name: p_random, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: /home/user/jwst-anomaly-research/data/cache/mast/jw06882-o029_t063_nircam_clear-f200w/jw06882-o029_t063_nircam_clear-f200w_cat.ecsv}
+# - {model_sha256: 1c9b912a0a0dd57f73961dd4ed61b11f4220d93362de34ec591daeaa4d2ba498}
+# - {z_lens: 0.545}
+# - reference_radec: [109.3982, 37.745778]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - maps:
+#     interpolation: bilinear; Hessian from centred finite differences
+#     pixel_arcsec: 0.8008008008007995
+#     shape: [1000, 1000]
+# schema: astropy-2.0
+x y ra dec n_lines nearest_label nearest_sep_arcsec nearest_snr dark_centre p_random
+-10.5 -30.5 109.4018885528404 37.73730577777778 5 764 0.5024141260899856 13.801197523052927 False 0.69
+-23.5 -24.0 109.40645533254755 37.739111333333334 4 3591 0.7911645194387467 1697.978347764311 False 1.0
+-8.0 -20.0 109.40101032597363 37.74022244444445 4 832 0.7386823301708489 18.378342369198293 False 1.0
+-10.5 -7.0 109.4018885528404 37.743833555555554 3 803 1.1447435563109034 37.978704376378516 True 1.0

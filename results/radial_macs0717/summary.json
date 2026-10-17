@@ -1,0 +1,19 @@
+{
+ "macs0717": {
+  "field": "macs0717",
+  "model": "macs0717-cats",
+  "n_elongated": 411,
+  "n_spike_segments_dropped": 64,
+  "n_not_background_dropped": 77,
+  "n_anti": 42,
+  "n_anti_not_model_radial": 37,
+  "n_peaks": 4,
+  "n_dark_centre_peaks": 1,
+  "random_peaks_mean": 11.955,
+  "random_peaks_p95": 21.0,
+  "max_lines": 5,
+  "p_random_max": 0.69,
+  "n_spike_stars": 34,
+  "flags": []
+ }
+}
