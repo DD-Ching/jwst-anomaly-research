@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 shear on MACS0717 with ASTRODEEP-FF photo-z: D-053 rule not passed, nearly blind; headline unchanged
+- **Why:** MACS0717 was the one screened HFF cluster without W1 (no DJA photo-z). HFF-DeepSpace downloads return
+  HTTP 401; ASTRODEEP-FF (Di Criscienzo+17, VizieR J/A+A/607/A30) is public: `scripts/astrodeep_zout.py` → zout.
+- Plan frozen first (`results/w1_shear_macs0717/PLAN.md`); same code, seeds and streak veto as D-097.
+- **Result (`results/w1_shear_macs0717/RESULT.md`):** S_max 3.14, p_rot 0.28, below max |S_×| 3.28: D-053 rule not
+  passed. R = 0.23; recoveries 0 / 0 / 0 / 7 / 9 of 200. 83 % of the shape rows lack photo-z (not stored), so MACS0717 stays out
+  of the headline (twelve fields, D-097); counted anyway, limits move ≤ 1.5 %. S_max sheet looked at.
+- **Failed approach:** HFF-DeepSpace v3.9 tarballs (cosmos.phy.tufts.edu) need credentials (401, 2026-10-17).
+- **Handoff:** W1 field additions are at diminishing returns (T4); the low-R fields (MACS0717, MACS0647) would need
+  a member-aware responsivity calibration (hypothesis: members without photo-z dilute R; untested). Open
+  bookkeeping (none changes the null): `inject_radial.combine` admits any field with a photo-z file, so MACS0717's
+  exclusion is prose only; a photo-z coverage threshold there is a frozen-rule change and needs its own plan. The
+  62 spectroscopic rows with `relFlag` 0 are kept (possible blends; keep or drop is open). The zout pin is a
+  column-value hash (`astrodeep_zout.content_sha256`), so an astropy upgrade does not reject identical content.
+
 ## 2026-10-17: W5 counts at the `radial` centres: no deficit; the deficit test has no power at JWST depth
 - `scripts/w5_radial_counts.py`; plan frozen first (`results/w5_radial_counts/PLAN.md`, `RESULT.md`). 30 centres,
   four fields, radial arcs removed: Q = N_obs / control 1.91 / 1.76 / 1.70 at 3″ / 6″ / 9″, deficit p ≥ 0.9995 (null).

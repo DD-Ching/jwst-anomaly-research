@@ -141,6 +141,14 @@ SHEAR_FIELD_OVERRIDES = {
         "spike_stars": True,
         "centre": (101.959458, 70.248611),
     },
+    # 2026-10-17 (results/w1_shear_macs0717/PLAN.md): DJA has no MACS0717 photo-z; HST-based
+    # ASTRODEEP-FF redshifts (scripts/astrodeep_zout.py) over the HFF WFC3 footprint
+    "macs0717": {
+        "photoz": ("eazy", "cache/external/astrodeep/m0717clu_zout.fits"),
+        "max_radius": 100.0,
+        "spike_stars": True,
+        "centre": (109.3864, 37.7550),  # VENUS o029 pointing (configs/macs0717.yaml)
+    },
 }
 FIELD_NAMES = sorted(set(ir.FIELDS) | set(SHEAR_FIELD_OVERRIDES))
 
