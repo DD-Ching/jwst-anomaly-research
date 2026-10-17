@@ -198,14 +198,61 @@ def run(name: str, stars_path: Path, work: Path) -> dict:
     return out
 
 
+def plot_maps(name: str, chi, stars_path: Path, work: Path, png: Path) -> None:
+    """S_× maps with the isotropic and the constant-χ deconvolution, PSF stars as sticks."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from astropy.table import Table
+
+    spec = ish.field_spec(name)
+    model, shapes, extra, _, _ = ish.ir.load_field(name, work / name, spec)
+    sargs = SimpleNamespace(**ish.SHEAR_DEFAULTS)
+    sargs.max_radius = spec["max_radius"]
+    psf = es.psf_sigma_px(shapes)
+    rows = select_stars(shapes, Table.read(stars_path))
+    xa, ya = model.to_frame(np.asarray(shapes["ra"]), np.asarray(shapes["dec"]))
+    a = np.asarray(shapes["semimajor_px"], float)
+    cs = moments_chi(a, a * (1 - np.asarray(shapes["ellipticity"], float)), shapes["pa_obs"])[rows]
+    fig, axs = plt.subplots(1, 2, figsize=(10, 4.8), constrained_layout=True)
+    for ax, c, title in zip(
+        axs, (0j, chi), ("isotropic PSF", "constant star chi_PSF"), strict=True
+    ):
+        sargs.psf_chi = c
+        res = es.shear_screen(model, shapes, sargs, psf, extra)
+        m = res["s_cross"]
+        r = sargs.max_radius
+        im = ax.imshow(m, origin="lower", extent=(r, -r, -r, r), cmap="RdBu_r", vmin=-4.5, vmax=4.5)
+        ax.contour(res["gx"], res["gy"], np.abs(m), levels=[3.79], colors="k", linewidths=0.6)
+        ax.plot(*FLOOR_CENTRE, "k+", ms=12)
+        for x, y, cc in zip(xa[rows], ya[rows], cs, strict=True):
+            ang = np.angle(cc) / 2  # PA east of north; frame x points West, y North
+            ln = 60 * abs(cc)
+            ax.plot(
+                [x + ln * np.sin(ang), x - ln * np.sin(ang)],
+                [y - ln * np.cos(ang), y + ln * np.cos(ang)],
+                "m-",
+                lw=2,
+            )
+        ax.set_title(f"{name} S_x, {title}: max |S_x| {np.nanmax(np.abs(m)):.2f}")
+        ax.set_xlabel("x (arcsec, West)")
+        ax.set_ylabel("y (arcsec, North)")
+    fig.colorbar(im, ax=axs, shrink=0.8, label="S_x")
+    fig.savefig(png, dpi=80)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--field", default="abell2744")
     ap.add_argument("--stars", type=Path, required=True, help="gaia_stars.py ECSV (G < 21)")
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--png", type=Path, help="also write the S_x map figure here")
     a = ap.parse_args(argv)
     res = run(a.field, a.stars, a.work)
+    if a.png:
+        plot_maps(a.field, complex(*res["chi_psf_median"]), a.stars, a.work, a.png)
     a.out.write_text(json.dumps(es.json_safe(res), indent=1) + "\n")
     print(json.dumps({k: res[k] for k in ("chi_psf_median", "r1")}, indent=1))
     for s in res["screens"]:

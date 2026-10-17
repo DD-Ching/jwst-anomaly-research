@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 PSF anisotropy from stars vs Abell 2744's B-mode floor: floor drops to 3.66, limits do not; not adopted
+- **Why:** TASKS "JWST focus" 1 (W1), `results/w1_floor` "Next". Frozen rules R1/R2 (R3 added before injection
+  results; deviation labelled) in `results/w1_psf/PLAN.md`.
+- **New:** `psf_chi` in `exotic_screens.intrinsic_ellipticity` / `shear_sources` / `shear_screen` (default
+  isotropic, unchanged), `inject_shear.py --psf-chi`, `scripts/w1_psf_floor.py`.
+- **Result (derived; `results/w1_psf/RESULT.md`):** 3 PSF stars (Gaia-matched), median χ_PSF with |χ| 0.157 at PA ≈ 133°.
+  R1 (star map at the 10″ scale) fails: median nearest star 92″. Constant correction: b_max 4.21 → 3.66 at
+  (88, −42), below the null's 95th percentile 3.84; E-mode still null (3.49). Injections: 0/0/14/72/146 →
+  0/0/15/50/97 of 200; five-field limits 5,765 → 5,593 / 1,082 → 1,240 / 567 → 666 deg⁻²: R3 fails, not adopted.
+- **Failed approach:** a constant star-based PSF deconvolution; it removes injected signal (median S 4.96 → 3.85
+  at 2 × 10¹³ M☉) faster than it lowers the floor.
+- **Handoff:** next W1 floor step is a model PSF per detector (STPSF; reuse-check first), after finding which part
+  of the correction removes injected images.
+
 ## 2026-10-17: W1 B-mode floor diagnostic on Abell 2744: no streak; carried by many sources near bright galaxies
 - **Why:** TASKS "JWST focus" 1 (W1): find what sets the highest floor (Abell 2744 max |S_×| 4.21 at (88, −42)).
   Claimed as a streak veto; the sheet showed no streak, so it became a diagnostic (deviation; nothing adopted).

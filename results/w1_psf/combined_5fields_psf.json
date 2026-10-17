@@ -1,0 +1,131 @@
+{
+ "provenance": "derived",
+ "note": "abell2744 replaced; other four fields from committed summaries",
+ "isotropic": {
+  "fields": [
+   "abell2744",
+   "macs0416",
+   "macs1149",
+   "abell370",
+   "abells1063"
+  ],
+  "total_area_deg2": 0.009957484567901236,
+  "limits_95": {
+   "2e+10": {
+    "mass_msun": 20000000000.0,
+    "theta_e_zs2_arcsec_range": [
+     0.2701088999698401,
+     0.3590043547320144
+    ],
+    "effective_area_deg2": 0.0,
+    "upper_limit_deg2": null,
+    "upper_limit_border_corrected_deg2": null
+   },
+   "2e+11": {
+    "mass_msun": 200000000000.0,
+    "theta_e_zs2_arcsec_range": [
+     0.8541593401872808,
+     1.1352714508722133
+    ],
+    "effective_area_deg2": 8.500771604938272e-06,
+    "upper_limit_deg2": 352438.59489879274,
+    "upper_limit_border_corrected_deg2": 394648.97939033475
+   },
+   "2e+12": {
+    "mass_msun": 2000000000000.0,
+    "theta_e_zs2_arcsec_range": [
+     2.701088999698401,
+     3.590043547320144
+    ],
+    "effective_area_deg2": 0.0005196570216049383,
+    "upper_limit_deg2": 5765.34112970702,
+    "upper_limit_border_corrected_deg2": 6344.365737372967
+   },
+   "8e+12": {
+    "mass_msun": 8000000000000.0,
+    "theta_e_zs2_arcsec_range": [
+     5.402177999396802,
+     7.180087094640288
+    ],
+    "effective_area_deg2": 0.002767921296296296,
+    "upper_limit_deg2": 1082.4007185496537,
+    "upper_limit_border_corrected_deg2": 1189.9477299194912
+   },
+   "2e+13": {
+    "mass_msun": 20000000000000.0,
+    "theta_e_zs2_arcsec_range": [
+     8.541593401872806,
+     11.352714508722134
+    ],
+    "effective_area_deg2": 0.005284411265432098,
+    "upper_limit_deg2": 566.9505739642733,
+    "upper_limit_border_corrected_deg2": 621.0244276172205
+   }
+  },
+  "provenance": "derived"
+ },
+ "psf_chi_constant": {
+  "fields": [
+   "abell2744",
+   "macs0416",
+   "macs1149",
+   "abell370",
+   "abells1063"
+  ],
+  "total_area_deg2": 0.009957484567901236,
+  "limits_95": {
+   "2e+10": {
+    "mass_msun": 20000000000.0,
+    "theta_e_zs2_arcsec_range": [
+     0.2701088999698401,
+     0.3590043547320144
+    ],
+    "effective_area_deg2": 0.0,
+    "upper_limit_deg2": null,
+    "upper_limit_border_corrected_deg2": null
+   },
+   "2e+11": {
+    "mass_msun": 200000000000.0,
+    "theta_e_zs2_arcsec_range": [
+     0.8541593401872808,
+     1.1352714508722133
+    ],
+    "effective_area_deg2": 8.500771604938272e-06,
+    "upper_limit_deg2": 352438.59489879274,
+    "upper_limit_border_corrected_deg2": 394648.97939033475
+   },
+   "2e+12": {
+    "mass_msun": 2000000000000.0,
+    "theta_e_zs2_arcsec_range": [
+     2.701088999698401,
+     3.590043547320144
+    ],
+    "effective_area_deg2": 0.0005356369598765432,
+    "upper_limit_deg2": 5593.340684874576,
+    "upper_limit_border_corrected_deg2": 6146.613203983218
+   },
+   "8e+12": {
+    "mass_msun": 8000000000000.0,
+    "theta_e_zs2_arcsec_range": [
+     5.402177999396802,
+     7.180087094640288
+    ],
+    "effective_area_deg2": 0.0024163626543209876,
+    "upper_limit_deg2": 1239.8801126323044,
+    "upper_limit_border_corrected_deg2": 1372.0998560037117
+   },
+   "2e+13": {
+    "mass_msun": 20000000000000.0,
+    "theta_e_zs2_arcsec_range": [
+     8.541593401872806,
+     11.352714508722134
+    ],
+    "effective_area_deg2": 0.004501394290123457,
+    "upper_limit_deg2": 665.5715555896861,
+    "upper_limit_border_corrected_deg2": 734.3431815444211
+   }
+  },
+  "provenance": "derived"
+ },
+ "r3_adopt": false
+}
