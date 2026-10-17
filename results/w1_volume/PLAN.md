@@ -36,3 +36,13 @@ Mpc⁻³ and h³ Mpc⁻³ (h = 0.6766). Compare with 10⁻⁴ h³ Mpc⁻³ as a 
   neglected. The screen itself is unchanged (it measures the same rows with the same cluster shear removed).
 - Rows without photo-z are lensable at z_s = 2 for every Z ≤ 1.5 (as in the cluster-z runs).
 - The comparison with Takahashi & Asada treats their |M| > 10¹² M☉ bound as applying at each of our masses.
+
+## Addendum A (2026-10-17 23:25Z, after the first gate attempt, before any grid run)
+- **Gate Z first attempt failed as written** (`gate_attempt1.json`: 11 / 77 / 148 vs 14 / 72 / 146). Cause found:
+  `inject_shear` spawns one seed per entry of `--mass`, and the stored run used all five masses, so a three-mass
+  run draws different lens positions. Not an input difference. The gate is re-run with all five masses
+  (`--mass 2e10 2e11 2e12 8e12 2e13`) and must give 0 / 0 / 14 / 72 / 146.
+- **Deviation:** RXJ2129 is left out of the grid: its MAST catalogue `jw02767-o002_t001` F200W now returns HTTP 404
+  from the S3 bucket and the MAST download API (2026-10-17). Eleven fields.
+- **Deviation (cost):** the grid uses 100 lenses per field, mass and Z (not 200), and only the three masses, so it
+  fits this run; the binomial errors are larger and stated.
