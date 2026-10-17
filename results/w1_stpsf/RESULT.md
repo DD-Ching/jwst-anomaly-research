@@ -12,7 +12,8 @@ isophote levels are ASSUMPTIONs.
   PA 130.8°; ASSUMPTION: detector and mosaic pixel axes agree). In the pixel frame, the stars' catalogue
   `orientation` is 175.8° / 179.8° / 15.5°; the area-matched model gives 176.9° / 0.6° / 178.8°
   (`stars_check.json`). Two stars agree within 1.2°; the third is 16.7° off. In `model_psf_isophotes.png` (looked
-  at) the faint isophotes follow the horizontal spike pair.
+  at) the faint isophotes follow the horizontal spike pair. The figure was drawn in the session from the first run's 6″ PSFs (NRCA1, NRCB3, NRCA3 centres); the
+  plotting code is not in the script.
 - **S1 (per component ≤ 0.05; deviation: median over the 24 grid PSFs, not over the screened sources):**
   consistent at 2 of 6 levels (3e-2: |χ| 0.183; 3e-4: |χ| 0.209). It fails at 1e-1 (0.008), 1e-2 (0.077),
   3e-3 (0.107) and 1e-3 (0.091). Model |χ| is not monotonic in the level. No segment touches the stamp edge at any
