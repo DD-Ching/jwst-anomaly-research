@@ -52,9 +52,9 @@
     4.105782883398107,
     8.187220068712803
    ],
-   "effective_area_deg2": 0.0041975266203703706,
-   "upper_limit_deg2": 713.7536628024164,
-   "upper_limit_border_corrected_deg2": 799.6111459796517
+   "effective_area_deg2": 0.00420609413580247,
+   "upper_limit_deg2": 712.2997972151667,
+   "upper_limit_border_corrected_deg2": 798.0302080359953
   },
   "2e+13": {
    "mass_msun": 20000000000000.0,

@@ -6,7 +6,9 @@ For each field (``inject_shear.field_spec``) this fetches, into the paths ``load
   (``stpubdata``), pinned by the sha256 in ``data/manifests/*.ecsv`` or, for catalogues not in a
   manifest, the value recorded in SOURCES.md / ``results/arcs/*/summary.json``;
 - the photo-z file ``spec["photoz"][1]``: a DJA eazy zout (a plain file, or one member streamed
-  out of a ``.photoz.tar.gz`` that is never stored) or a CANUCS DR1 photometry catalogue.
+  out of a ``.photoz.tar.gz`` that is never stored), a CANUCS DR1 photometry catalogue, or
+  (MACS0717) a zout that ``astrodeep_zout.py`` writes from a live VizieR query, checked against
+  the sha256 of the written file (a different astropy or VizieR serialisation fails the check).
 
 Downloads reuse ``photometry.fetch_catalog`` and ``orphan_pairs.fetch_tar_member`` (verified,
 ``.part`` files removed on failure); the verified file is then moved to the expected name. Files
@@ -110,7 +112,7 @@ PHOTOZ = {
 # No DJA photo-z for MACS0717 (2026-10-17): ASTRODEEP-FF from VizieR, written by astrodeep_zout.py
 PHOTOZ["m0717clu_zout.fits"] = {
     "astrodeep": "m0717",
-    "sha256": "26fe3fdd9dd0a3579e97e08c0121bc48cefb4bb5e02d5787f1cde341df143fa7",
+    "sha256": "b072ff2e81f744cf4d9116a96654bfc3cfaa5aaaf1dfee8054f3489899108a2e",
 }
 for _f, _sha in (
     ("macs0417", "ca6b48aa6404444d2e0b8965a35376ff032917071ea64cbf6306d06ee57d90dd"),

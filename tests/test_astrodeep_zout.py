@@ -18,6 +18,7 @@ def test_to_zout_joins_and_converts():
             "zbest": [2.0, 1.0, 0.05],
             "e_zbest": [0.0, 0.1, 0.1],
             "relFlag": [1.0, 1.0, 0.0],
+            "f_zbest": [0.0, 0.0, 0.0],
         }
     )
     out = az.to_zout(pos, z)
@@ -31,14 +32,32 @@ def test_to_zout_joins_and_converts():
     assert out.meta["provenance"] == "derived"
 
 
-def test_floor_at_zero():
+def test_z160_floor():
     pos = Table({"ID": [1], "RAJ2000": [0.0], "DEJ2000": [0.0]})
-    z = Table({"ID": [1], "zbest": [0.1], "e_zbest": [1.0], "relFlag": [1.0]})
+    z = Table({"ID": [1], "zbest": [0.1], "e_zbest": [1.0], "relFlag": [1.0], "f_zbest": [0.0]})
     assert az.to_zout(pos, z)["z160"][0] == az.Z_FLOOR
+
+
+def test_spectroscopic_rows_kept_whatever_relflag():
+    pos = Table({"ID": [1, 2], "RAJ2000": [0.0, 0.1], "DEJ2000": [0.0, 0.1]})
+    z = Table(
+        {
+            "ID": [1, 2],
+            "zbest": [0.55, 1.2],
+            "e_zbest": [np.nan, 0.2],
+            "relFlag": [0.0, 0.0],
+            "f_zbest": [1.0, 0.0],
+        }
+    )
+    out = az.to_zout(pos, z)
+    assert list(out["id"]) == [1]
+    assert out["z160"][0] == out["z840"][0] == 0.55
 
 
 @pytest.mark.network
 def test_fetch_m0717_live():
     pos, z = az.fetch("m0717")
     assert len(pos) == len(z) == 4082
-    assert len(az.to_zout(pos, z)) == 2866
+    assert (
+        len(az.to_zout(pos, z)) == 2928
+    )  # relFlag 1 (2,866) plus 62 spectroscopic rows with relFlag 0

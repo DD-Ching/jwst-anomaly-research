@@ -9,8 +9,9 @@ The zout columns ``load_field`` reads are
 - ``z160``, ``z840`` = ``zbest`` -/+ 1.483 SIQR (Gaussian 16/84 % points; ASSUMPTION); z160 is
   floored at ``Z_FLOOR`` (> 0, so ``attach_photoz`` keeps it and the row counts as possibly
   foreground);
-- rows with ``relFlag`` != 1 (the catalogue's robustness flag; ASSUMPTION) or no zbest are
-  dropped, so the nearest-neighbour match cannot land on them and hide a usable row.
+- rows with ``relFlag`` != 1 (the catalogue's photo-z robustness flag; ASSUMPTION) and no
+  spectroscopic z, or with no zbest, are dropped, so the nearest-neighbour match cannot land on
+  them and hide a usable row (it may then reach a neighbour within 0.3 arcsec instead).
 
     python scripts/astrodeep_zout.py --field m0717 \\
         --out <data root>/cache/external/astrodeep/m0717clu_zout.fits
@@ -43,11 +44,14 @@ def fetch(field: str) -> tuple[Table, Table]:
 
 def to_zout(pos: Table, z: Table) -> Table:
     """Join positions and redshifts on ``ID`` and convert to zout columns (``derived``)."""
-    t = join(pos["ID", "RAJ2000", "DEJ2000"], z["ID", "zbest", "e_zbest", "relFlag"], keys="ID")
+    cols = ["ID", "zbest", "e_zbest", "relFlag", "f_zbest"]
+    t = join(pos["ID", "RAJ2000", "DEJ2000"], z[cols], keys="ID")
     zb = np.ma.filled(np.ma.asarray(t["zbest"], float), np.nan)
     siqr = np.ma.filled(np.ma.asarray(t["e_zbest"], float), np.nan)
     rel = np.ma.filled(np.ma.asarray(t["relFlag"], float), 0.0)
-    good = np.isfinite(zb) & (zb > 0) & np.isfinite(siqr) & (rel == 1)
+    spec = np.ma.filled(np.ma.asarray(t["f_zbest"], float), 0.0) == 1
+    siqr = np.where(spec, 0.0, siqr)  # a spectroscopic z has no range
+    good = np.isfinite(zb) & (zb > 0) & np.isfinite(siqr) & ((rel == 1) | spec)
     t, zb, half = t[good], zb[good], SIQR_TO_SIGMA * siqr[good]
     out = Table(
         {
@@ -69,8 +73,11 @@ def write(field: str, path: Path) -> str:
     out = to_zout(pos, z)
     path.parent.mkdir(parents=True, exist_ok=True)
     part = path.with_name(path.name + ".part")
-    out.write(part, format="fits", overwrite=True)
-    os.replace(part, path)
+    try:
+        out.write(part, format="fits", overwrite=True)
+        os.replace(part, path)
+    finally:
+        part.unlink(missing_ok=True)
     print(f"{field}: {len(pos)} positions, {len(z)} redshifts, {len(out)} usable rows")
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
