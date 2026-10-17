@@ -42,3 +42,17 @@ mass). The contact sheet of each mask over its downsampled mosaic is looked at b
 
 **What changes the plan.** A field with more than 20 % of used rows vetoed (ASSUMPTION) is still combined but
 named in RESULT. A field whose mosaic cannot be streamed is left out of the veto run and named.
+
+## Addendum A (2026-10-17, before any screen or injection run; after looking at the first two masks)
+The mask rule above (step 2: zero pixels > 5σ and a 3-pixel dilation) was run on MACS1423 and MACS0647 only. On
+MACS1423 its one persistent trail is the stripe through the hit. On MACS0647 it misses the two bright diagonal
+streaks that are obvious on the sheet: they are above 5σ, so the source mask removed them. It flagged a mosaic-gap
+edge instead. **Revised step 2** (all ASSUMPTIONs): (image − median) / (1.4826 × MAD) **clipped to ±10σ** (no source
+zeroing; the median Radon transform is robust to compact sources), pixels outside the footprint **eroded by 12
+block pixels (1.5″)** set to 0, then the 2 × 2 mean rebin. Tried variants: ±10σ with a 3-pixel erosion (MACS0647
+mosaic-gap edges become trails); ±10σ with a 12-pixel erosion (adopted). Under the revised rule (session values,
+not stored): MACS1423 3 persistent trails (the stripe twice and a spike of the bright star at the top-left), 4.7 %
+of the footprint masked; MACS0647 9 trails covering both bright streaks plus false trails along the mosaic gap and
+the bright halo, 18.4 % masked. The MACS0647 S_max centre lies about 1.2″ from the masked streak, outside the 1″
+veto; the second, fainter crossing streak through it is not found. False trails cost sources only; the injections
+measure that cost. K1, K2 and the adoption rule are unchanged; every mask is re-made with the revised step 2.
