@@ -270,9 +270,9 @@ SMACS 0723 (ICLv2, DJA v7.4) and El Gordo (Caminha+23, DJA v7.0), both with the 
 these two are not stored (—).
 MACS0417, MACS1423 (CANUCS DR1 maps and photo-z) and WHL0137 (RELICS Lenstool v1, DJA v7.5), with the Gaia veto,
 added 2026-10-17 (`results/w1_shear_more/`): MACS0417 and WHL0137 do not pass (maxima at mosaic edges). MACS1423
-passes the rule (S_max 3.88, p_rot 0.01, B max 3.64) but a frozen test removes it: the 19 sources on a vertical
-detector stripe through the aperture carry the signal (S 3.88 → 0.14 without them; `vet_macs1423.json`). Not a
-candidate.
+passes the rule (S_max 3.88, p_rot 0.01, B max 3.64), but a post hoc test frozen before computing removes it: the
+15 sources on a vertical image stripe through the aperture carry the signal (S 3.88 → −0.07 without them;
+`vet_macs1423.json`; stripe origin not determined). Not a candidate.
 
 ### Recovery efficiency (`derived` from `simulated`; recovered / 200)
 

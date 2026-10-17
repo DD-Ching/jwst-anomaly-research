@@ -21,27 +21,31 @@ unchanged). Commands: `exotic_screens.py --model <model> shear ... --max-radius 
 | WHL0137 | 340 | 0.533 ± 0.057 | 2.75 (0.72) | 3.02 (0.215) / 3.18 (0.03) | not passed |
 
 - Known-case check: R is positive and well above zero in all three (the cluster shear is seen). MACS1423's 0.604 lies
-  above the 0.41–0.49 of the seven earlier fields; PLAN's "far outside" was not a computable condition. MACS1423 is
-  therefore left out of the headline limits (below) and shown only as an alternative.
+  above the 0.41–0.49 of the seven earlier fields; PLAN's "far outside" was not a computable condition.
+  **Deviation:** MACS1423 is left out of the headline limits (below; the plan said null fields replace the
+  seven-field limits) and shown only as an alternative, because of this R and because its hit is removed only by a
+  test not run through injections.
 - WHL0137 keeps 340 of 1,340 resolved rows after the |g| < 0.5 and κ < 1 cuts; the cause was not measured.
 - Sheets looked at (F200W 30″; `sheet_macs1423_smax.png`, `sheet_macs0417_whl0137_smax.png`): the MACS0417 and
   WHL0137 maxima sit at a mosaic edge (WHL0137's aperture is about half off the image). By eye, not measured.
 
 ## MACS1423 hit: vetting (addendum A, `scripts/w1_peak_vet.py`, `vet_macs1423.json`)
 The sheet shows a vertical stripe through the aperture centre and an m = 18.2 source (not a Gaia G < 17 star)
-8.9″ from the peak with diffraction spikes. Frozen test: V1 removes the 19 used sources within 1″ of the
-stripe columns (64 columns, about 2″ wide, found by the 5-MAD column-median rule); V2 removes the 5 used sources within
+8.9″ from the peak with diffraction spikes. **Post hoc** test (designed after seeing the sheet, frozen before computing): V1 removes the 15 used sources
+within 1″ of the stripe columns (61 columns, 442–502, about 1.9″ wide, found by the 5-MAD column-median rule;
+zero-valued fill is ignored and a zero MAD flags nothing, guards added after code review); V2 removes the 5 used sources within
 15″ of the bright source whose axis points at it (±15°).
 
 | Removed | S at the peak | p_rot (same 200 null draws) |
 |---|---|---|
 | none | 3.88 | 0.01 |
-| V1 (stripe) | 0.14 | 1.0 |
+| V1 (stripe) | −0.07 | 1.0 |
 | V2 (star) | 3.90 | 0.01 |
 | V1 ∪ V2 | 0.14 | 1.0 |
 
-**Frozen outcome: explained by streak/spike contamination (screen-level).** The 19 sources on the stripe carry
-the whole signal; the star's spikes carry none. Not a candidate; nothing for `/vet-candidate`. This is the second
+**Frozen outcome: explained by streak/spike contamination (screen-level).** The 15 sources on the stripe carry
+the signal (S 3.88 → −0.07 without them); the star's spikes do not (3.88 → 3.90). The stripe's origin (detector
+artefact, trail, scattered light or mosaic seam) was not determined. Not a candidate; nothing for `/vet-candidate`. This is the second
 field (after Abell S1063) where a linear streak mimics the W1 sign.
 
 ## Injections (`inject_summary_*.json`; recovered / 200)
@@ -66,5 +70,6 @@ field (after Abell S1063) where a linear streak mimics the W1 sign.
 - Same caveats as D-053 (catalogue isophotal moments, no PSF-anisotropy model, one B map per field).
 - The CANUCS maps are preliminary (MACS1423: 5 spectroscopic systems); no frame offset to the JWST catalogue was
   measured for any of the three models.
-- The streak test is a screen-level vetting step designed after seeing the sheet (its rule was frozen before
-  computing); it was not run through injections.
+- The streak test is a post hoc, screen-level vetting step (its rule was frozen before computing); it was not run
+  through injections. A first version compared column medians with the median of column medians instead of the
+  frozen "cutout median" (19 sources, S 0.14 without them, same outcome); the committed JSON uses the frozen rule.

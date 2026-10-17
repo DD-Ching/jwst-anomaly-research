@@ -28,6 +28,16 @@ def test_axis_points_at_wraps_mod_180():
     assert pv.axis_points_at(np.array([190.0]), 10.0).tolist() == [True]
 
 
+def test_stripe_columns_ignores_fill_and_zero_mad():
+    img = np.zeros((50, 40))
+    assert len(pv.stripe_columns(img)) == 0
+    rng = np.random.default_rng(2)
+    img = rng.normal(5, 1, (300, 80))
+    img[:, 60:] = 0.0  # off-mosaic fill
+    img[:, 20:23] += 4.0
+    assert list(pv.stripe_columns(img)) == [20, 21, 22]
+
+
 def test_outcome_rule():
     assert pv.outcome(0.1, 1.0, 3.6).startswith("explained")
     assert pv.outcome(3.7, 0.06, 3.6).startswith("explained")

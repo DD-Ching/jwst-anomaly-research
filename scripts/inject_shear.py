@@ -64,9 +64,8 @@ DEFAULT_FIELDS = (
     "smacs0723",
     "elgordo",
     "macs0417",
-    "macs1423",
     "whl0137",
-)
+)  # macs1423 is screened but not combined by default: results/w1_shear_more/RESULT.md
 # Screen options added after summaries were first committed, with the value those runs used
 # (before the option existed). A summary without the key is read with this value.
 LEGACY_SCREEN_OPTIONS = {"psf_chi": [0.0, 0.0], "min_coverage": 0.0}

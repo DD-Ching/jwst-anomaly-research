@@ -20,12 +20,13 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
+from astropy.coordinates import SkyCoord
 from astropy.io import fits
 from astropy.table import Table
 from astropy.wcs import WCS
 from astropy.wcs.utils import proj_plane_pixel_scales
 
-from jwst_anomaly import cutouts
+from jwst_anomaly import cutouts, lensmodel
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import inject_shear as ish  # noqa: E402
@@ -42,18 +43,23 @@ P_RULE = 0.05  # the D-053 p_rot threshold
 
 
 def stripe_columns(img: np.ndarray, nmad: float = STRIPE_NMAD) -> np.ndarray:
-    """Indices of columns whose median deviates from the median of column medians by more than
-    ``nmad`` times their MAD (scaled to σ)."""
-    med = np.nanmedian(img, axis=0)
-    c = np.nanmedian(med)
-    mad = 1.4826 * np.nanmedian(np.abs(med - c))
-    return np.flatnonzero(np.abs(med - c) > nmad * mad)
+    """Indices of columns whose median deviates from the cutout median by more than ``nmad``
+    times the MAD of the column medians (scaled to σ). Off-mosaic fill (zero or NaN) is ignored;
+    with a zero MAD no column is flagged."""
+    img = np.where(img == 0.0, np.nan, np.asarray(img, float))
+    with np.errstate(all="ignore"):
+        med = np.nanmedian(img, axis=0)
+    c = np.nanmedian(img)
+    ok = np.isfinite(med)
+    mad = 1.4826 * np.nanmedian(np.abs(med[ok] - np.nanmedian(med[ok]))) if ok.any() else 0.0
+    if not mad > 0:
+        return np.zeros(0, int)
+    return np.flatnonzero(ok & (np.abs(med - c) > nmad * mad))
 
 
 def axis_points_at(pa_deg, pa_to_star_deg, tol: float = STAR_PA_TOL) -> np.ndarray:
     """True where an axis (deg, mod 180) is within ``tol`` of the direction to the star."""
-    d = np.abs(np.mod(np.asarray(pa_deg) - np.asarray(pa_to_star_deg) + 90.0, 180.0) - 90.0)
-    return d <= tol
+    return lensmodel.axis_offset_deg(pa_deg, pa_to_star_deg) <= tol
 
 
 def outcome(s_clean: float, p_clean: float, b_max: float) -> str:
@@ -64,27 +70,32 @@ def outcome(s_clean: float, p_clean: float, b_max: float) -> str:
     return "not explained: to /vet-candidate"
 
 
-def _sky_pa(ra0, dec0, ra1, dec1) -> np.ndarray:
-    """Position angle (deg E of N) from (ra0, dec0) to (ra1, dec1), small-angle."""
-    de = (np.asarray(ra1) - ra0) * np.cos(np.deg2rad(dec0))
-    dn = np.asarray(dec1) - dec0
-    return np.mod(np.rad2deg(np.arctan2(de, dn)), 180.0)
-
-
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--field", required=True, choices=ish.FIELD_NAMES)
     ap.add_argument("--summary", type=Path, required=True)
     ap.add_argument("--i2d", required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument(
+        "--cache",
+        type=Path,
+        default=None,
+        help="inject_shear.py output dir of this field (reuses its photo-z and Gaia files)",
+    )
     args = ap.parse_args(argv)
-    summ = json.loads(args.summary.read_text())["screen"]
+    full = json.loads(args.summary.read_text())
+    if full["field"] != args.field:
+        raise SystemExit(f"summary is for {full['field']}, not {args.field}")
+    summ = full["screen"]
     ra_pk, dec_pk = summ["s_max_radec"]
     spec = ish.field_spec(args.field)
     with tempfile.TemporaryDirectory() as tmp:
-        model, shapes, extra, _, _ = ir.load_field(args.field, Path(tmp), spec)
-        sargs = SimpleNamespace(**ish.SHEAR_DEFAULTS)
-        sargs.max_radius = spec["max_radius"]
+        cache = args.cache or Path(tmp)
+        model, shapes, extra, _, _ = ir.load_field(args.field, cache, spec)
+        # the settings the summary's screen ran with (legacy defaults for older summaries)
+        screen = {**ish.LEGACY_SCREEN_OPTIONS, **full["assumptions"]["screen"]}
+        sargs = SimpleNamespace(**{**ish.SHEAR_DEFAULTS, **screen})
+        sargs.psf_chi = complex(*screen["psf_chi"])
         res = es.shear_screen(model, shapes, sargs, ir.psf_sigma_px(shapes), extra)
         tg = Table({"source_uid": ["peak"], "ra": [ra_pk], "dec": [dec_pk]})
         cut = cutouts.make_cutouts(
@@ -104,7 +115,7 @@ def main(argv: list[str] | None = None) -> int:
     cols = stripe_columns(img)
     px_scale = proj_plane_pixel_scales(w)[0] * 3600.0
     sx, sy = w.world_to_pixel_values(ra, dec)
-    inside = (sy > -0.5) & (sy < img.shape[0] - 0.5)
+    inside = (sy > -0.5) & (sy < img.shape[0] - 0.5) & (sx > -0.5) & (sx < img.shape[1] - 0.5)
     if len(cols):
         dist = np.min(np.abs(sx[:, None] - cols[None, :]), axis=1) * px_scale
     else:
@@ -114,15 +125,19 @@ def main(argv: list[str] | None = None) -> int:
     sep_pk = np.hypot((ra - ra_pk) * np.cos(np.deg2rad(dec_pk)), dec - dec_pk) * 3600.0
     mag = np.asarray(shapes["mag"], float)
     near = np.flatnonzero((sep_pk <= STAR_SEARCH) & np.isfinite(mag))
-    star = int(near[np.argmin(mag[near])])
-    sep_star = np.hypot((ra - ra[star]) * np.cos(np.deg2rad(dec[star])), dec - dec[star]) * 3600.0
-    pa_to = _sky_pa(ra, dec, ra[star], dec[star])
-    v2 = (
-        use
-        & (sep_star <= STAR_RADIUS)
-        & (np.arange(len(ra)) != star)
-        & axis_points_at(np.asarray(shapes["pa_obs"], float), pa_to)
-    )
+    v2 = np.zeros(len(ra), bool)
+    star = None
+    if len(near):  # no catalogue source near the peak: V2 removes nothing
+        star = int(near[np.argmin(mag[near])])
+        src = SkyCoord(ra, dec, unit="deg")
+        sep_star = src.separation(src[star]).arcsec
+        pa_to = np.mod(src.position_angle(src[star]).deg, 180.0)
+        v2 = (
+            use
+            & (sep_star <= STAR_RADIUS)
+            & (np.arange(len(ra)) != star)
+            & axis_points_at(np.asarray(shapes["pa_obs"], float), pa_to)
+        )
     # S at the peak centre, with and without the vetoed rows
     x, y = res["xy"]
     cx, cy = model.to_frame(np.array([ra_pk]), np.array([dec_pk]))
@@ -151,8 +166,10 @@ def main(argv: list[str] | None = None) -> int:
         "pixel_scale_arcsec": px_scale,
         "n_v1": int(v1.sum()),
         "n_v2": int(v2.sum()),
-        "star": {"ra": float(ra[star]), "dec": float(dec[star]), "mag": float(mag[star])},
-        "star_sep_from_peak_arcsec": float(sep_pk[star]),
+        "star": None
+        if star is None
+        else {"ra": float(ra[star]), "dec": float(dec[star]), "mag": float(mag[star])},
+        "star_sep_from_peak_arcsec": None if star is None else float(sep_pk[star]),
         "s_at_peak": rows,
         "outcome": outcome(rows["no_v1_v2"]["s"], rows["no_v1_v2"]["p_rot"], b_max),
         "provenance": {"shapes": "observed", "s_p": "derived", "thresholds": "assumption"},
