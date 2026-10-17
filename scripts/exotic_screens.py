@@ -586,19 +586,21 @@ def aperture_filter(x, kind: str, x_min: float) -> np.ndarray:
     return np.where((x >= x_min) & (x <= 1.0), q, 0.0)
 
 
-def intrinsic_ellipticity(a, b, pa_deg, psf_sigma: float) -> np.ndarray:
+def intrinsic_ellipticity(a, b, pa_deg, psf_sigma: float, psf_chi=0j) -> np.ndarray:
     """Complex ellipticity ε = |ε| exp(2i PA) (PA east of north) of PSF-deconvolved second moments.
 
-    ``a``, ``b``: semimajor and semiminor sigmas (px) of the observed moments; an isotropic
-    Gaussian PSF of ``psf_sigma`` px is subtracted (ASSUMPTION, as in ``inject_radial``). Rows whose
-    deconvolved moments are not positive definite (unresolved) are NaN. |ε| = (1 - q)/(1 + q)
-    estimates the reduced shear of a randomly oriented source."""
+    ``a``, ``b``: semimajor and semiminor sigmas (px) of the observed moments; a Gaussian PSF of
+    trace 2 ``psf_sigma``² px² is subtracted, isotropic by default (ASSUMPTION, as in
+    ``inject_radial``) or with distortion ``psf_chi`` (complex, scalar or per row; same convention
+    as the χ below). Rows whose deconvolved moments are not positive definite (unresolved) are
+    NaN. |ε| = (1 - q)/(1 + q) estimates the reduced shear of a randomly oriented source."""
     pa = np.deg2rad(np.asarray(pa_deg, float))
     a2, b2 = np.asarray(a, float) ** 2, np.asarray(b, float) ** 2
     s, c = np.sin(pa), np.cos(pa)
-    qee = a2 * s * s + b2 * c * c - psf_sigma**2
-    qnn = a2 * c * c + b2 * s * s - psf_sigma**2
-    qen = (a2 - b2) * s * c
+    pchi = np.asarray(psf_chi, complex)
+    qee = a2 * s * s + b2 * c * c - psf_sigma**2 * (1.0 - pchi.real)
+    qnn = a2 * c * c + b2 * s * s - psf_sigma**2 * (1.0 + pchi.real)
+    qen = (a2 - b2) * s * c - psf_sigma**2 * pchi.imag
     tr, det = qee + qnn, qee * qnn - qen * qen
     with np.errstate(invalid="ignore", divide="ignore"):
         chi = ((qnn - qee) + 2j * qen) / tr
@@ -650,6 +652,7 @@ def shear_sources(
     responsivity: float | None = None,
     extra: Table | None = None,
     spike_veto: bool = True,
+    psf_chi=0j,
 ) -> tuple[np.ndarray, dict]:
     """Rows usable by the shear screen and their cluster-corrected ellipticities.
 
@@ -661,11 +664,12 @@ def shear_sources(
     ``extra`` stars; D-043) are dropped: spikes point radially at their star, the W1 sign.
     ``counts["e_all"]`` holds the corrected ε of every resolved row with κ < 1, |g| < 1, |R g| < 1
     (cuts on S/N, ``max_g`` and lensability not applied), ``counts["correctable"]`` that mask and
-    ``counts["eps"]`` the uncorrected ε, for injected sources."""
+    ``counts["eps"]`` the uncorrected ε, for injected sources. ``psf_chi``: PSF distortion passed to
+    :func:`intrinsic_ellipticity` (default isotropic)."""
     snr = np.asarray(shapes["snr"], float)
     a = np.asarray(shapes["semimajor_px"], float)
     b = a * (1.0 - np.asarray(shapes["ellipticity"], float))
-    eps = intrinsic_ellipticity(a, b, shapes["pa_obs"], psf_sigma)
+    eps = intrinsic_ellipticity(a, b, shapes["pa_obs"], psf_sigma, psf_chi)
     z = np.full(len(shapes), 2.0)
     if "z_phot" in shapes.colnames:
         zp = np.asarray(shapes["z_phot"], float)
@@ -848,6 +852,7 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | No
         args.max_g,
         getattr(args, "responsivity", None),
         extra,
+        psf_chi=getattr(args, "psf_chi", 0j),
     )
     e_all = counts.pop("e_all")
     spike = counts.pop("spike")
