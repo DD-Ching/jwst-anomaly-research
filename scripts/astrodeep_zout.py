@@ -1,14 +1,16 @@
-"""ASTRODEEP Frontier Fields photo-z (Di Criscienzo+2017, VizieR J/A+A/607/A30) as an eazy-style zout.
+"""ASTRODEEP Frontier Fields photo-z (Di Criscienzo+2017, J/A+A/607/A30) as an eazy-style zout.
 
 MACS0717 has no DJA photo-z (v7 index, 2026-10-17), so the W1 shear screen takes the HST-based
-ASTRODEEP-FF redshifts: positions from table ``m0717cla``, ``zbest`` / ``e_zbest`` (semi-interquartile
-range, SIQR) from ``m0717clz``, joined on ``ID``. The zout columns ``load_field`` reads are
+ASTRODEEP-FF redshifts: positions from table ``m0717cla``, ``zbest`` / ``e_zbest``
+(semi-interquartile range, SIQR) from ``m0717clz``, joined on ``ID``.
+The zout columns ``load_field`` reads are
 
 - ``z_phot`` = ``zbest`` (a spectroscopic z where ``f_zbest`` = 1, as published);
 - ``z160``, ``z840`` = ``zbest`` -/+ 1.483 SIQR (Gaussian 16/84 % points; ASSUMPTION), floored at 0;
 - NaN for rows with ``relFlag`` != 1 (the catalogue's robustness flag; ASSUMPTION).
 
-    python scripts/astrodeep_zout.py --field m0717 --out <data root>/cache/external/astrodeep/m0717clu_zout.fits
+    python scripts/astrodeep_zout.py --field m0717 \\
+        --out <data root>/cache/external/astrodeep/m0717clu_zout.fits
 """
 
 from __future__ import annotations
@@ -69,7 +71,9 @@ def main(argv=None) -> int:
         b"".join(np.ascontiguousarray(out[c]).tobytes() for c in out.colnames)
     ).hexdigest()
     n_ok = int(np.isfinite(out["z_phot"]).sum())
-    print(f"{args.field}: {len(pos)} positions, {len(z)} redshifts, {len(out)} joined, {n_ok} usable")
+    print(
+        f"{args.field}: {len(pos)} positions, {len(z)} redshifts, {len(out)} joined, {n_ok} usable"
+    )
     print(f"data_sha256 (column bytes) {sha}")
     return 0
 
