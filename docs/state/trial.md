@@ -226,6 +226,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.3 (W1 shear screen on Abell S1063, injections, five-field re-combination; peak sheet looked at) | — | — | 0.1 (orientation, claim, PR) | cloud routine 018YnfpM, 04:08–04:40Z |
 | 2026-W42 | ≈ 0.3 (W1 shear aperture-coverage cut: plan, code, five-field c = 0 / 0.5 injections; not adopted) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01H2i3uj, 05:07–05:35Z |
 | 2026-W42 | ≈ 0.5 (VENUS batch: 20 boxes, per-box calibration, 5 reviews) | — | — | ≈ 0.3 (#293 wording fixes, plan, box selection, state files, PR) | interactive session 01P8KV8A, 06:01–07:00Z (#296) |
+| 2026-W42 | ≈ 0.4 (W1 Abell 2744 B-mode floor diagnostic: sheet looked at, contributors, rotation null, bright-neighbour screen) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01QRPt8P, 06:08–06:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
