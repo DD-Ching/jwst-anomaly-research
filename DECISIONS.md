@@ -3195,6 +3195,12 @@ veto): null (S_max 3.61, p_rot 0.07; max |S_×| 3.33). Shear-only inputs live in
 so the radial FIELDS entry (no photo-z, D-049 headline) stays as it was. Five-field limits 5.8 × 10³ / 1.1 × 10³ /
 5.7 × 10² deg⁻²; the four earlier fields reproduce exactly. Evidence: `results/w1_shear_s1063/RESULT.md`.
 
+**Addendum 2026-10-17 (aperture-coverage cut not adopted).** Dropping grid centres whose aperture annulus is
+< 50 % inside the catalogue footprint (`--min-coverage 0.5`, default 0) was tested on the five fields under a
+frozen rule (adopt only if the combined limit is lower at each of 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉): it fails
+(5,765 → 5,672 / 1,082 → 1,088 / 567 → 570 deg⁻²); only MACS0416's b_max moves, and Abell 2744's 4.21 floor is at
+full coverage. Revisit if a future field's floor sits at an edge centre. Evidence: `results/w1_edge_cut/RESULT.md`.
+
 ## D-054 Survey-agnostic exotic signatures; MulensModel for ordinary microlensing fits; OGLE-IV Mróz samples first for W3 (2026-10-08)
 
 **Context.** Owner direction (2026-10-08): find observational evidence of traversable wormholes / negative-mass

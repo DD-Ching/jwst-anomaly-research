@@ -544,6 +544,9 @@ def cmd_radial(args) -> dict:
 # ------------------------------------------------------------------------------------ shear (D-050)
 
 SHEAR_MAX_G = 0.5  # rows where the cluster's reduced shear exceeds this are masked (ASSUMPTION)
+# a lattice point is in the catalogue footprint with a row within this (arcsec; ASSUMPTION, equal
+# to inject_radial.FOOTPRINT_RADIUS)
+FOOTPRINT_RADIUS = 4.0
 SCHIRMER_XC = 0.15  # Schirmer et al. (2007) filter core / aperture radius (ASSUMPTION)
 
 
@@ -707,9 +710,12 @@ class ApertureMass:
     For centre c, S_c = -Σ Q e_t / sqrt(Σ Q² |e|² / 2): the S/N of *negative* tangential shear
     (radial alignment), which a W1 lens (ε < 0) produces; S_× uses the cross component. Sums run
     over sources with ``r_min`` <= θ <= ``radius`` and centres with fewer than ``min_n`` sources are
-    NaN. Positions are model-frame arcsec (x West, y North); ellipticities are |e| exp(2i PA)."""
+    NaN, as are centres with ``valid`` False. Positions are model-frame arcsec (x West, y North);
+    ellipticities are |e| exp(2i PA)."""
 
-    def __init__(self, x, y, cx, cy, radius: float, kind: str, r_min: float, min_n: int = 5):
+    def __init__(
+        self, x, y, cx, cy, radius: float, kind: str, r_min: float, min_n: int = 5, valid=None
+    ):
         from scipy.sparse import csr_matrix
         from scipy.spatial import cKDTree
 
@@ -732,6 +738,9 @@ class ApertureMass:
         self.w = csr_matrix((q * np.exp(-2j * phi), (rows, cols)), shape=shape)
         self.w2 = csr_matrix((q * q, (rows, cols)), shape=shape)
         self.n = np.bincount(rows, minlength=self.n_centres)
+        self.bad = self.n < min_n
+        if valid is not None:  # e.g. the coverage cut: invalid centres are NaN like sparse ones
+            self.bad |= ~np.ravel(np.asarray(valid, bool))
 
     def snr(self, e: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """(S, S_×) per centre for ellipticities ``e`` (one column per realisation allowed)."""
@@ -740,7 +749,7 @@ class ApertureMass:
         noise = np.sqrt(self.w2 @ (np.abs(e) ** 2) / 2.0)
         with np.errstate(invalid="ignore", divide="ignore"):
             s, sx = proj.real / noise, -proj.imag / noise
-        bad = (self.n < self.min_n) if e.ndim == 1 else (self.n < self.min_n)[:, None]
+        bad = self.bad if e.ndim == 1 else self.bad[:, None]
         return np.where(bad, np.nan, s), np.where(bad, np.nan, sx)
 
     def null_max(self, e: np.ndarray, n_draws: int, rng, chunk: int = 50) -> np.ndarray:
@@ -753,6 +762,38 @@ class ApertureMass:
             s, _ = self.snr(e[:, None] * rot)
             out.append(np.nanmax(s, axis=0))
         return np.concatenate(out) if out else np.array([])
+
+
+def aperture_coverage(
+    xs, ys, gx, gy, radius: float, r_min: float, fp_radius: float = FOOTPRINT_RADIUS
+) -> np.ndarray:
+    """Fraction of each grid centre's aperture annulus (``r_min`` <= r <= ``radius``) inside the
+    catalogue footprint (``derived``), on a lattice with the grid's own spacing: a lattice point
+    is in the footprint when a catalogue row (``xs``, ``ys``) lies within ``fp_radius``, the
+    footprint definition of the injection limits (``inject_radial.screened_footprint``).
+    ``gx``, ``gy`` are the regular grid of :func:`radial_grid`; returns an array of its shape."""
+    from scipy.signal import fftconvolve
+    from scipy.spatial import cKDTree
+
+    gx, gy = np.asarray(gx, float), np.asarray(gy, float)
+    step = float(gx[0, 1] - gx[0, 0]) if gx.shape[1] > 1 else 1.0
+    k = int(np.ceil(radius / step))
+    off = np.arange(-k, k + 1) * step
+    ox, oy = np.meshgrid(off, off)
+    rr = np.hypot(ox, oy)
+    kernel = ((rr >= r_min) & (rr <= radius)).astype(float)
+    lx = np.concatenate([gx[0, 0] + off[:k], gx[0], gx[0, -1] - off[:k][::-1]])
+    ly = np.concatenate([gy[0, 0] + off[:k], gy[:, 0], gy[-1, 0] - off[:k][::-1]])
+    lxx, lyy = np.meshgrid(lx, ly)
+    if len(xs):
+        d, _ = cKDTree(np.c_[np.asarray(xs, float), np.asarray(ys, float)]).query(
+            np.c_[lxx.ravel(), lyy.ravel()]
+        )
+        fp = (d <= fp_radius).reshape(lxx.shape).astype(float)
+    else:
+        fp = np.zeros(lxx.shape)
+    cov = fftconvolve(fp, kernel[::-1, ::-1], mode="valid") / kernel.sum()
+    return np.clip(np.round(cov, 12), 0.0, 1.0)
 
 
 def psf_sigma_px(shapes: Table) -> float:
@@ -780,6 +821,13 @@ def add_shear_options(s: argparse.ArgumentParser) -> None:
     s.add_argument("--max-radius", type=float, default=60.0, help="grid half-width (arcsec)")
     s.add_argument("--grid-arcsec", type=float, default=1.0)
     s.add_argument("--n-random", type=int, default=200)
+    s.add_argument(
+        "--min-coverage",
+        type=float,
+        default=0.0,
+        help="drop grid centres whose aperture annulus is less than this fraction inside the "
+        "catalogue footprint (0: keep all)",
+    )
     s.add_argument("--seed", type=int, default=1)
 
 
@@ -808,8 +856,22 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | No
     use = np.isfinite(e)
     x, y = model.to_frame(np.asarray(shapes["ra"])[use], np.asarray(shapes["dec"])[use])
     gx, gy = radial_grid(args.max_radius, args.grid_arcsec)
+    min_cov = getattr(args, "min_coverage", 0.0)
+    coverage = None
+    if min_cov > 0:
+        xa, ya = model.to_frame(np.asarray(shapes["ra"]), np.asarray(shapes["dec"]))
+        coverage = aperture_coverage(xa, ya, gx, gy, args.aperture_arcsec, args.r_min_arcsec)
+    valid = None if coverage is None else coverage >= min_cov
     ap = ApertureMass(
-        x, y, gx, gy, args.aperture_arcsec, args.filter, args.r_min_arcsec, args.min_sources
+        x,
+        y,
+        gx,
+        gy,
+        args.aperture_arcsec,
+        args.filter,
+        args.r_min_arcsec,
+        args.min_sources,
+        valid,
     )
     s, sx = ap.snr(e[use])
     null = ap.null_max(e[use], args.n_random, np.random.default_rng(args.seed))
@@ -827,6 +889,8 @@ def shear_screen(model, shapes: Table, args, psf_sigma: float, extra: Table | No
         "eps": eps,
         "use": use,
         "ap": ap,
+        "coverage": coverage,
+        "valid": valid,
         "xy": (x, y),
     }
 
@@ -935,6 +999,7 @@ def cmd_shear(args) -> dict:
                 "max_radius",
                 "grid_arcsec",
                 "n_random",
+                "min_coverage",
             )
         },
     }

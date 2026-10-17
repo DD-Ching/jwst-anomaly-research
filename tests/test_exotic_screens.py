@@ -249,6 +249,32 @@ def test_aperture_mass_null_rarely_reaches_a_strong_radial_ring():
     assert np.mean(null >= s[iy, ix]) < 0.05
 
 
+def test_aperture_coverage_full_inside_half_at_a_straight_edge():
+    # catalogue rows fill x <= 0 densely (1" lattice); the footprint reaches 4" beyond them
+    g = np.arange(-40.0, 0.5, 1.0)
+    xs, ys = (a.ravel() for a in np.meshgrid(g, np.arange(-40.0, 40.5, 1.0)))
+    gx, gy = es.radial_grid(20.0, 1.0)
+    cov = es.aperture_coverage(xs, ys, gx, gy, 10.0, 1.0)
+    assert cov.shape == gx.shape
+    at = lambda x, y: cov[int(round(y + 20)), int(round(x + 20))]  # noqa: E731
+    assert at(-15.0, 0.0) == 1.0  # aperture wholly inside
+    assert abs(at(4.0, 0.0) - 0.5) < 0.06  # centre on the footprint edge: about half
+    assert at(16.0, 0.0) == 0.0  # 12" beyond the edge, wider than R + 4"
+    assert np.all(np.diff(cov[20]) <= 1e-12)  # coverage falls monotonically across the edge
+
+
+def test_aperture_mass_valid_mask_blanks_centres_in_map_and_null():
+    x, y, e = _ring(12, 3.0, radial=True)
+    ap = es.ApertureMass(x, y, [0.0, 0.5], [0.0, 0.0], 6.0, "pointmass", 1.0, valid=[False, True])
+    s, sx = ap.snr(e)
+    assert np.isnan(s[0]) and np.isnan(sx[0]) and np.isfinite(s[1])
+    null = ap.null_max(e, 20, np.random.default_rng(0))
+    s_all, _ = es.ApertureMass(x, y, [0.5], [0.0], 6.0, "pointmass", 1.0).snr(
+        e[:, None] * np.exp(1j * np.random.default_rng(0).uniform(0, 2 * np.pi, (len(e), 20)))
+    )
+    np.testing.assert_allclose(null, s_all[0])  # the null maximum skips the invalid centre
+
+
 def test_shear_responsivity_recovers_a_diluted_shear():
     rng = np.random.default_rng(3)
     n = 4000

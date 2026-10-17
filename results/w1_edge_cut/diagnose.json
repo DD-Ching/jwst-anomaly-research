@@ -1,0 +1,106 @@
+{
+ "min_coverage_tested": 0.5,
+ "provenance": "derived",
+ "fields": {
+  "abell2744": {
+   "n_centres_valid": 46586,
+   "s_max": {
+    "value": 3.388448611620318,
+    "xy": [
+     107.0,
+     -8.0
+    ],
+    "coverage": 0.996835443038
+   },
+   "abs_s_cross_max": {
+    "value": 4.205639790776325,
+    "xy": [
+     88.0,
+     -42.0
+    ],
+    "coverage": 1.0
+   },
+   "frac_valid_below_cut": 0.018761001159146525
+  },
+  "macs0416": {
+   "n_centres_valid": 22919,
+   "s_max": {
+    "value": 3.7930137201471417,
+    "xy": [
+     -84.0,
+     15.0
+    ],
+    "coverage": 0.496835443038
+   },
+   "abs_s_cross_max": {
+    "value": 4.035907918378301,
+    "xy": [
+     -81.0,
+     19.0
+    ],
+    "coverage": 0.46835443038
+   },
+   "frac_valid_below_cut": 0.05388542257515598
+  },
+  "macs1149": {
+   "n_centres_valid": 22388,
+   "s_max": {
+    "value": 3.401518970715832,
+    "xy": [
+     -75.0,
+     9.0
+    ],
+    "coverage": 0.996835443038
+   },
+   "abs_s_cross_max": {
+    "value": 3.761375098828257,
+    "xy": [
+     34.0,
+     -44.0
+    ],
+    "coverage": 1.0
+   },
+   "frac_valid_below_cut": 0.035867428979810614
+  },
+  "abell370": {
+   "n_centres_valid": 20982,
+   "s_max": {
+    "value": 3.4786726252882225,
+    "xy": [
+     -89.0,
+     53.0
+    ],
+    "coverage": 0.591772151899
+   },
+   "abs_s_cross_max": {
+    "value": 3.461247419369539,
+    "xy": [
+     65.0,
+     18.0
+    ],
+    "coverage": 0.509493670886
+   },
+   "frac_valid_below_cut": 0.06224382804308455
+  },
+  "abells1063": {
+   "n_centres_valid": 17584,
+   "s_max": {
+    "value": 3.609523272566242,
+    "xy": [
+     -28.0,
+     -14.0
+    ],
+    "coverage": 1.0
+   },
+   "abs_s_cross_max": {
+    "value": 3.3255427111224387,
+    "xy": [
+     90.0,
+     -25.0
+    ],
+    "coverage": 0.677215189873
+   },
+   "frac_valid_below_cut": 0.08775022747952685
+  }
+ }
+}
