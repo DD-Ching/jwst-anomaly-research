@@ -314,6 +314,12 @@ at ≤ 2 × 10¹¹ M☉ (θ_E ≲ 1″): there the umbra and images cover too fe
 expected). The best limit is about 3.2× weaker than Takahashi & Asada's ~120 deg⁻² (radial section). Below 10¹² M☉
 the orphan-pair limits (D-051) remain the only ones.
 
+### Volume density over lens redshift (`derived`; `results/w1_volume/RESULT.md`)
+W1 lenses injected at Z = 0.1, 0.3, 0.6, 1.0, 1.5 (eleven fields, RXJ2129 out; 100 per cell; single-plane
+ASSUMPTION), ε integrated over Planck18 comoving volume: n₉₅ < 6.5 × 10⁻³ / 8.5 × 10⁻⁴ / 3.65 × 10⁻⁴ h³ Mpc⁻³ at
+2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, 65× / 8.5× / 3.6× weaker than Takahashi & Asada's 10⁻⁴ (this replaces the
+hand-spread ~3.2× above, which held at the cluster redshift only).
+
 ### Caveats
 - Isophotal catalogue moments, not a weak-lensing shape pipeline: no PSF anisotropy model, no noise-bias or
   selection calibration beyond the fitted R. The remaining B-mode tails are the price.

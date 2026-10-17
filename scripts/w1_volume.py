@@ -1,6 +1,6 @@
 """W1 shear null as a comoving volume density limit over lens redshift (results/w1_volume/PLAN.md).
 
-Reads ``<runs>/z<Z>/<field>/summary.json`` written by ``inject_shear.py --lens-z Z --out <runs>/z<Z>``
+Reads ``<runs>/z<Z>/<field>/summary.json`` from ``inject_shear.py --lens-z Z --out <runs>/z<Z>``
 and, per mass, integrates the efficiency over the comoving volume behind each field's screened area:
 
     V_eff = sum_f A_f int eps_f(z) dV_c/(dz dOmega) dz,    n_95 = -ln(0.05) / V_eff
@@ -10,7 +10,7 @@ Zero detections (the screen is null in every field). Efficiencies ``derived`` fr
 injections; the limit is ``derived``; the comparison value (Takahashi & Asada 2013) is a published
 limit.
 
-    python scripts/w1_volume.py --runs OUT --fields abell2744 ... --out results/w1_volume/limits.json
+    python scripts/w1_volume.py --runs OUT --fields abell2744 ... --out limits.json
 """
 
 from __future__ import annotations
@@ -85,9 +85,13 @@ def main(argv: list[str] | None = None) -> int:
     }
     for m in masses:
         eff = [[summ[(z, f)]["efficiency"][m]["efficiency"] for z in args.z] for f in args.fields]
-        n_rec = [[summ[(z, f)]["efficiency"][m]["n_recovered"] for z in args.z] for f in args.fields]
+        n_rec = [
+            [summ[(z, f)]["efficiency"][m]["n_recovered"] for z in args.z] for f in args.fields
+        ]
         out["masses"][m] = limit(v_eff_mpc3(args.z, eff, area)) | {
-            "n_recovered_by_z": dict(zip([f"{z:g}" for z in args.z], np.sum(n_rec, 0).tolist())),
+            "n_recovered_by_z": dict(
+                zip([f"{z:g}" for z in args.z], np.sum(n_rec, 0).tolist(), strict=True)
+            ),
             "n_inject_per_field_and_z": summ[(args.z[0], args.fields[0])]["efficiency"][m][
                 "n_inject"
             ],

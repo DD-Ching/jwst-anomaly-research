@@ -245,6 +245,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.25 (W1 shear on MACS0717: ASTRODEEP-FF photo-z adapter, streak mask, screen, injections, S_max sheet) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01HW32mP, 21:08–21:35Z |
 | 2026-W42 | — | — | — | 0.3 (#319 review follow-ups: column-value hash pin, masked-flag tests, handoff) | cloud routine, 22:08–22:30Z |
 | 2026-W42 | ≈ 0.1 (radial screen on MACS0717 with ASTRODEEP-FF photo-z: plan, run, sheet) | — | — | 0.05 (claim, state files, PR) | cloud routine, 22:27–22:45Z |
+| 2026-W42 | ≈ 0.45 (W1 volume density over lens redshift: plan, `--lens-z`, gate Z, 55-job grid, volume integral) | — | — | 0.1 (orientation, claim, staging, state files, PR) | cloud routine 01MxAyxM, 23:08–23:55Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
