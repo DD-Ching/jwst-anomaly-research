@@ -50,7 +50,8 @@ def stack_null(
 
 
 def radial_arc_rows(model, shapes, spec: dict, extra) -> np.ndarray:
-    """Bool per shape row: the ``radial`` screen's selected arcs (``exotic_screens.radial_candidates``
+    """Bool per shape row: the ``radial`` screen's selected arcs
+    (``exotic_screens.radial_candidates``
     with the ``radial_more`` settings), matched by catalogue label."""
     rargs = argparse.Namespace(**es.radial_defaults())
     rargs.max_radius = spec["max_radius"]
@@ -59,7 +60,7 @@ def radial_arc_rows(model, shapes, spec: dict, extra) -> np.ndarray:
 
 
 def near_rows(model, shapes, rows: np.ndarray, radius: float) -> np.ndarray:
-    """Bool per shape row: within ``radius`` arcsec of any row in ``rows`` (rows themselves included)."""
+    """Bool per shape row: within ``radius`` arcsec of any row in ``rows`` (``rows`` included)."""
     from scipy.spatial import cKDTree
 
     x, y = model.to_frame(np.asarray(shapes["ra"]), np.asarray(shapes["dec"]))
@@ -70,7 +71,7 @@ def near_rows(model, shapes, rows: np.ndarray, radius: float) -> np.ndarray:
 
 
 def neighbour_alignment(model, shapes, arcs: np.ndarray, nb: np.ndarray) -> dict:
-    """Mean cos 2(PA_neighbour - PA_nearest arc) over used neighbour rows (1: parallel, 0: random)."""
+    """Mean cos 2(PA_neighbour - PA_nearest arc) over used neighbour rows (1 parallel, 0 random)."""
     from scipy.spatial import cKDTree
 
     if not (arcs.any() and nb.any()):
