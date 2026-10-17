@@ -1,0 +1,29 @@
+import json, sys, numpy as np, fsspec, warnings
+from concurrent.futures import ThreadPoolExecutor
+from astropy.io import fits
+sys.path.insert(0, 'scripts')
+from hit_lightcurve import aperture_photometry, ANNULUS
+warnings.filterwarnings('ignore')
+DX, DY, R, SC = 586.45, 953.85, 0.15, 0.0629   # detector pixel of the dither-1 signal (perexp2.json)
+files = [f for f in json.load(open(sys.argv[1])) if 'nrcalong' in f and f.split('_')[0] in ('jw05058001001', 'jw05058002001')]
+def one(fn):
+    fs, path = fsspec.core.url_to_fs(f"s3://stpubdata/jwst/public/jw05058/{fn.split('_')[0]}/{fn}", anon=True)
+    with fs.open(path, 'rb', block_size=2**18) as fh, fits.open(fh, lazy_load_hdus=True) as h:
+        sh = h['SCI'].header; k = sh['PIXAR_SR'] * 1e15
+        H = 100; x0, y0 = int(DX) - H, int(DY) - H
+        sci = h['SCI'].section[y0:y0+2*H+1, x0:x0+2*H+1].astype(float)
+        dq = int(h['DQ'].section[int(round(DY)), int(round(DX))])
+        clean = np.where(np.isfinite(sci), sci, np.nanmedian(sci))
+        ap = (ANNULUS[0]/SC, ANNULUS[1]/SC)
+        f = aperture_photometry(clean, DX-x0, DY-y0, R/SC, ap) * k
+        rng = np.random.default_rng(0); rnd = []
+        for _ in range(400):
+            xx, yy = rng.uniform(20, 2*H-20, 2)
+            if np.hypot(xx-(DX-x0), yy-(DY-y0))*SC < 0.6: continue
+            rnd.append(aperture_photometry(clean, xx, yy, R/SC, ap) * k)
+        e = 1.4826*np.median(np.abs(np.array(rnd)-np.median(rnd)))
+        return {'file': fn, 'filter': h[0].header['FILTER'], 'flux_njy_at_detector_pixel': round(float(f), 2), 'err_njy': round(float(e), 2), 'snr': round(float(f/e), 2), 'dq': dq}
+with ThreadPoolExecutor(8) as ex: out = list(ex.map(one, files))
+out.sort(key=lambda r: r['file'])
+json.dump({'detector_pixel': [DX, DY], 'detector': 'NRCALONG', 'exposures': out}, open(sys.argv[2], 'w'), indent=1)
+for r in out: print(r['file'][8:30], r['filter'], r['flux_njy_at_detector_pixel'], r['err_njy'], r['snr'], r['dq'])

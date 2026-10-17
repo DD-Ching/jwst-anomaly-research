@@ -1,0 +1,153 @@
+{
+ "detector_pixel": [
+  586.45,
+  953.85
+ ],
+ "detector": "NRCALONG",
+ "exposures": [
+  {
+   "file": "jw05058001001_03101_00001_nrcalong_cal.fits",
+   "filter": "F277W",
+   "flux_njy_at_detector_pixel": 90.37,
+   "err_njy": 3.62,
+   "snr": 24.93,
+   "dq": 0
+  },
+  {
+   "file": "jw05058001001_03101_00002_nrcalong_cal.fits",
+   "filter": "F277W",
+   "flux_njy_at_detector_pixel": 89.18,
+   "err_njy": 4.22,
+   "snr": 21.15,
+   "dq": 0
+  },
+  {
+   "file": "jw05058001001_03101_00003_nrcalong_cal.fits",
+   "filter": "F277W",
+   "flux_njy_at_detector_pixel": 103.0,
+   "err_njy": 3.93,
+   "snr": 26.23,
+   "dq": 0
+  },
+  {
+   "file": "jw05058001001_05101_00001_nrcalong_cal.fits",
+   "filter": "F356W",
+   "flux_njy_at_detector_pixel": 72.8,
+   "err_njy": 3.11,
+   "snr": 23.4,
+   "dq": 0
+  },
+  {
+   "file": "jw05058001001_05101_00002_nrcalong_cal.fits",
+   "filter": "F356W",
+   "flux_njy_at_detector_pixel": 83.17,
+   "err_njy": 3.4,
+   "snr": 24.49,
+   "dq": 0
+  },
+  {
+   "file": "jw05058001001_05101_00003_nrcalong_cal.fits",
+   "filter": "F356W",
+   "flux_njy_at_detector_pixel": 90.43,
+   "err_njy": 3.64,
+   "snr": 24.86,
+   "dq": 0
+  },
+  {
+   "file": "jw05058001001_07101_00001_nrcalong_cal.fits",
+   "filter": "F444W",
+   "flux_njy_at_detector_pixel": 68.56,
+   "err_njy": 7.39,
+   "snr": 9.28,
+   "dq": 0
+  },
+  {
+   "file": "jw05058001001_07101_00002_nrcalong_cal.fits",
+   "filter": "F444W",
+   "flux_njy_at_detector_pixel": 80.39,
+   "err_njy": 4.44,
+   "snr": 18.09,
+   "dq": 0
+  },
+  {
+   "file": "jw05058001001_07101_00003_nrcalong_cal.fits",
+   "filter": "F444W",
+   "flux_njy_at_detector_pixel": 73.73,
+   "err_njy": 4.28,
+   "snr": 17.22,
+   "dq": 0
+  },
+  {
+   "file": "jw05058002001_03101_00001_nrcalong_cal.fits",
+   "filter": "F277W",
+   "flux_njy_at_detector_pixel": 98.3,
+   "err_njy": 4.01,
+   "snr": 24.49,
+   "dq": 0
+  },
+  {
+   "file": "jw05058002001_03101_00002_nrcalong_cal.fits",
+   "filter": "F277W",
+   "flux_njy_at_detector_pixel": 93.43,
+   "err_njy": 3.42,
+   "snr": 27.35,
+   "dq": 0
+  },
+  {
+   "file": "jw05058002001_03101_00003_nrcalong_cal.fits",
+   "filter": "F277W",
+   "flux_njy_at_detector_pixel": 101.19,
+   "err_njy": 3.83,
+   "snr": 26.42,
+   "dq": 4
+  },
+  {
+   "file": "jw05058002001_05101_00001_nrcalong_cal.fits",
+   "filter": "F356W",
+   "flux_njy_at_detector_pixel": 95.27,
+   "err_njy": 3.38,
+   "snr": 28.19,
+   "dq": 0
+  },
+  {
+   "file": "jw05058002001_05101_00002_nrcalong_cal.fits",
+   "filter": "F356W",
+   "flux_njy_at_detector_pixel": 75.1,
+   "err_njy": 3.58,
+   "snr": 20.95,
+   "dq": 0
+  },
+  {
+   "file": "jw05058002001_05101_00003_nrcalong_cal.fits",
+   "filter": "F356W",
+   "flux_njy_at_detector_pixel": 84.05,
+   "err_njy": 3.43,
+   "snr": 24.51,
+   "dq": 0
+  },
+  {
+   "file": "jw05058002001_07101_00001_nrcalong_cal.fits",
+   "filter": "F444W",
+   "flux_njy_at_detector_pixel": 75.58,
+   "err_njy": 4.08,
+   "snr": 18.5,
+   "dq": 4
+  },
+  {
+   "file": "jw05058002001_07101_00002_nrcalong_cal.fits",
+   "filter": "F444W",
+   "flux_njy_at_detector_pixel": 72.39,
+   "err_njy": 4.17,
+   "snr": 17.34,
+   "dq": 0
+  },
+  {
+   "file": "jw05058002001_07101_00003_nrcalong_cal.fits",
+   "filter": "F444W",
+   "flux_njy_at_detector_pixel": 71.9,
+   "err_njy": 4.76,
+   "snr": 15.09,
+   "dq": 0
+  }
+ ]
+}
