@@ -18,7 +18,8 @@ supports only a trial choice.
 - **Not tested either:** SFFT with its own source masking (the Easy/Auto packets need the SExtractor binary).
 - **What was tested:** ordinary SFFT (`Customized_Packet`, polynomial kernel, Numpy CPU) without source masking. It
   replaced only the kernel-matching step of an otherwise identical chain.
-- **Conclusion:** the difference is modest on this small sample (2 boxes, 180 injected sources), and it shows no gain
+- **Conclusion:** the difference is modest on this small sample (2 boxes; 180 injected changes, 60 each of
+  appear, partial and vanish, plus 60 unchanged controls), and it shows no gain
   worth a switch. Keep the #291 tool; no second tool port.
 
 ## Integration (≤ 30 min gate)
@@ -42,7 +43,10 @@ Review list with the correct sign, B1 / B2 (`runs/*_eval.json`):
 | unchanged: any hit | 1/40 | 5/40 | 0/20 | 0/20 |
 
 - **Totals (`summary.json`):**
-  - fades 92/120 (`arc_diff`) vs 83/120 (SFFT): vanish 51/51 in both, partial 41/60 vs 32/60;
+  - fades 92/120 (`arc_diff`) vs 83/120 (SFFT): vanish 51/60 in both, partial 41/60 vs 32/60;
+  - the equal vanish totals are not the same sources: one vanishing source reaches the review list only with
+    `arc_diff` (b1_s30 pre019), one only with SFFT (b1_s31 pre007), and one is hit only by SFFT (b1_s30 pre011)
+    (`summary.json`);
   - brightenings 45/60 vs 42/60;
   - unchanged false hits 1/60 vs 5/60, all of SFFT's in B1;
   - screen review entries 1 vs 0.
@@ -98,8 +102,16 @@ Review list with the correct sign, B1 / B2 (`runs/*_eval.json`):
   - SMACS 4 (1 done).
   - Other fields need their image lists.
 - **Cost per box** (#291 chain, 1 core; `runs/arc_*/rss.json`): screen 1–2 min plus one injection run 2–3 min, so about
-  4 min per core, or about 1 min per box on 4 cores, plus range reads.
+  4 min per core for one box. Four boxes in parallel on 4 cores give a throughput of about 1 box per minute; one
+  box still takes about 4 min. Range reads come on top.
 - **Review burden:**
   - B1–B3 gave 1, 0, 0 review entries per box (`fade_calib/` and `kernel_loo/`). MACS0416 tiling gave about 0.3 per
     tile (TASKS: 9 open passes in 28 tiles).
   - Expect about 0.3–1 entry per box. Each takes about 10–20 min to vet (an estimate, not stored).
+
+## Corrections (2026-10-17, owner; wording only, no re-run)
+- Vanish recovery was printed as 51/51; per magnitude it is 51/60 for each tool (`runs/*_eval.json`).
+- The sample is 180 injected changes (60 appear, 60 partial, 60 vanish) plus 60 unchanged controls, not "180 injected
+  sources".
+- Equal vanish totals do not mean the same sources were recovered (see the per-source list).
+- "About 1 min per box" was a parallel-throughput estimate; one box takes about 4 min on one core.

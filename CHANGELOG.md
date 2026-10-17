@@ -20,7 +20,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Ordinary SFFT** (CPU, unmasked) replaced only `kernel_match` on B1 + B2 with the same pre-matching injections.
   - After two rounds of post-review adapter corrections (union NaN mask over the kernel footprint, propagated variance,
     sign accounting), against `arc_diff`:
-    - fades on the review list: 83/120 vs 92/120 (partial 32 vs 41; vanish equal);
+    - fades on the review list: 83/120 vs 92/120 (partial 32 vs 41; vanish 51/60 each, not the same sources);
     - brightenings: 42/60 vs 45/60;
     - unchanged false hits: 5/60 vs 1/60.
   - About ×1.4 faster (indicative; loads differ), with 1.49–2.51 × the peak memory.
@@ -30,7 +30,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Batch denominator:**
   - 56 VENUS targets, 18 with another public NIRCam F150W epoch, about 31 pairs (an upper bound: F444W and overlap
     not checked);
-  - about 1 min per box on 4 cores;
+  - about 4 min per box per core; a throughput of about 1 box per minute with 4 boxes in parallel;
   - about 0.3–1 review entries per box.
 ## 2026-10-17: W1 shear screen on Abell S1063: null; five-field W1 limits 5.8 × 10³ / 1.1 × 10³ / 5.7 × 10² deg⁻²
 - **Why:** TASKS "JWST focus" 1 (W1): S1063 has a pinned model and DJA photo-z but had only the radial screen. Plan
