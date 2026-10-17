@@ -124,8 +124,8 @@ runs they govern (35748f4, d9399f6, d0c1ea3). Owner instruction 2026-10-16; budg
   - Sunrise ≤ 0.3 px;
   - Abell 2744 grid ≤ 1.8 px;
   - SMACS GO-4043 ≤ 0.5 px.
-  - SMACS ERO → VENUS has an unpinned (2.11, −1.82) px in F150W, not compared with a tile median. This is a
-    pending check; that search recovered SN Atalanta.
+  - SMACS ERO → VENUS had an unpinned (2.11, −1.82) px in F150W; the tile median is (0.20, −0.40) px, and the
+    re-screen keeps the outcome (Atalanta recovered, 0 `vet`; `../smacs_arcdiff/o001_o057_tile/RESULT.md`).
 
 ## Speed-up (PLAN §5)
 - **What is cached (`--cache-dir`):** raw-data products only: the raw boxes, the empirical PSFs and the

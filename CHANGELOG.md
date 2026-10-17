@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: SMACS ERO → VENUS `arc_diff` with tile-median registration: shift 2.4 px off, outcome unchanged
+- **Why:** pending item of #288: pair 1's F150W whole-box shift (2.11, −1.82) px was never compared with
+  `--reg-tile-arcsec 6`. Plan first (`results/transients/smacs_arcdiff/o001_o057_tile/PLAN.md`).
+- **Result:** tile medians F150W (0.20, −0.40), F444W (0.28, −0.09) px: the whole-box peak was pulled (2.4 / 1.0 px),
+  as in El Gordo. Re-screen: Atalanta A/B recovered as `known`, 0 `vet`, no new pass within 2″ of an image; the two
+  new `off_image` passes are core residuals on the sheet (looked at). Injection recovery at 27.5 AB 0.85 / 0.82
+  (was 0.82 / 0.76).
+- **Handoff:** item closed; `results/transients/smacs_arcdiff/RESULT.md` pair 1 stands, h061 stays open as recorded.
+
 ## 2026-10-17: MOA-II manifest lists every streamed field tar; retrieval dates no longer hard-coded
 - **Why:** TASKS follow-up from the gb10 review: `data/manifests/moa_ii.ecsv` had only the metadata tar and gb22,
   and `write_manifest` stamped every row `retrieved_utc` 2026-10-08 (the day of the HTTP HEAD reads, not of the
