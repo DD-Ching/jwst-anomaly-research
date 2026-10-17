@@ -1,0 +1,11 @@
+{
+ "label": "derived; batch-2 pending entry AS1063_1:h002 reviewed with the unchanged batch tools (2026-10-17)",
+ "entry": {"box_id": "AS1063_1", "hit_id": "h002", "ra": 342.1798223740701, "dec": -44.53398357098873, "box_status": "undeterminable (6/19 control false hits)"},
+ "screen_rerun": "arc_diff screen re-run with the batch settings to regenerate the session maps; hits.ecsv identical to the committed one",
+ "offset_from_box_centre_arcsec": {"dra": -4.56, "ddec": 12.54, "box_half_width": 12.0},
+ "coded_class": "artifact (edge)",
+ "photometry": "compact faint source present in 1840, 3293 and VENUS; search-epoch z F150W -1.68, F444W -0.64; all-mosaic max |z| < 3 in every band (post_review_checks.json)",
+ "sheet": "compact source with a weak negative S on it; no change in the stamps",
+ "final_class": "artifact (edge); independently of the edge flag, no significant change",
+ "note": "the box is undeterminable, so it is not a reliable zero-candidate search"
+}
