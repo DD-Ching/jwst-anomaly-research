@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: PLCK G165 h002 vetting record corrected: the z = 1.32 galaxy is 3.77″ away, not 0.06″
+- **Error:** the #296 record read NED's separation (0.063, in arcmin) as arcsec and wrote that h002 "sits on" the
+  z = 1.3236 galaxy `[FPP2024] NS_0481`. The separation is 3.77″ (`results/transients/batch_venus/h002_identity.json`).
+- **Checked (literature subagent, 2026-10-17):** NS_0481's z is spectroscopic (Frye et al. 2024 Table 2, NIRSpec
+  DDT 4446); Frye et al. report only SN H0pe in G165, whose three images are 25–38″ away (not stored); TNS returned
+  HTTP 403. Host and redshift of h002: not determined.
+- **Verdict unchanged:** known population, supernova-like transient (hypothesis; the light curve carries it).
+
 ## 2026-10-17: W1 B-mode floor diagnostic on Abell 2744: no streak; carried by many sources near bright galaxies
 - **Why:** TASKS "JWST focus" 1 (W1): find what sets the highest floor (Abell 2744 max |S_×| 4.21 at (88, −42)).
   Claimed as a streak veto; the sheet showed no streak, so it became a diagnostic (deviation; nothing adopted).
@@ -39,8 +47,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     check: mixed-sign differences across programmes on a bright arc.
   - **PLCK G165 h002** is a real fade: a point source in all PEARLS bands in March to April 2023, gone in 2025 and
     2026. That light curve is an ordinary transient's (supernova-like).
-  - Vetted (`docs/candidates/batch_venus_PLCKG165_h002.md`): known population (hypothesis). It sits on a
-    catalogued z = 1.32 galaxy (Frye et al. 2024). Its TNS identity is pending.
+  - Vetted (`docs/candidates/batch_venus_PLCKG165_h002.md`): known population (hypothesis). Its TNS identity is
+    pending. (Corrected 2026-10-17: the z = 1.32 galaxy NS_0481 is 3.77″ away, not under it.)
   - Not an unexplained signal and not wormhole evidence.
 - **Time:** 22 min of computation on 4 workers; about 60 min for the whole unit (not stored).
 - **#293 report wording corrected:**
