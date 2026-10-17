@@ -39,7 +39,9 @@ Screened area 2.99 arcmin² (SMACS, 60″ grid half-width) and 4.83 arcmin² (El
 
 ## Seven-field limits (`combined_7fields.json`; 43.7 arcmin²)
 - The five earlier fields enter from their committed summaries (`results/w1_shear_s1063/`). They predate two screen
-  options (`psf_chi`, `min_coverage`); `inject_shear.py --combine-only` now reads a missing option as its default.
+  options (`psf_chi`, `min_coverage`); `inject_shear.py --combine-only` now reads a missing option as the value
+  those runs used (`LEGACY_SCREEN_OPTIONS`: isotropic PSF, no coverage cut). `DEFAULT_FIELDS` now holds all seven, so
+  `inject_shear.py --combine-only --out <dir>` rebuilds `combined_7fields.json` (checked, equal).
   Check (deviation from the plan, added): Abell 2744 re-run with the current code reproduces its committed
   recoveries, S_max and area exactly (`rerun_abell2744_summary.json`); `min_coverage` 0 had already reproduced all
   five fields (`results/w1_edge_cut`).

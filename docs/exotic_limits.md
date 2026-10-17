@@ -279,8 +279,8 @@ these two are not stored (—).
 | 8 × 10¹² | 5.4–7.2″ | 72 | 50 | 30 | 45 | 69 | 62 | 14 | 84 / 1600 |
 | 2 × 10¹³ | 8.5–11.4″ | 146 | 112 | 74 | 73 | 91 | 106 | 48 | 156 / 1600 |
 
-MACS1149 is lowest (fewest sources per arcsec²). Before the spike veto, with the rotation null alone, the four
-fields recovered 66, 309 and 486 of 800 at the top three masses (biased high by the spike systematics).
+El Gordo is lowest (cause not measured), then MACS1149 (fewest sources per arcsec² of the first five).
+Before the spike veto, with the rotation null alone, the four fields recovered 66, 309 and 486 of 800 at the top three masses (biased high by the spike systematics).
 
 ### Upper limits (95 %, zero detections; `derived`; seven photo-z fields, 43.7 arcmin²)
 

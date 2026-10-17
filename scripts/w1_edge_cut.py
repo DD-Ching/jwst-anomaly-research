@@ -31,6 +31,8 @@ COMMITTED = {  # the committed c = 0 runs the reproduction check compares with
     "macs1149": "results/w1_shear_s1063/rerun_4fields/macs1149_summary.json",
     "abells1063": "results/w1_shear_s1063/inject_summary_abells1063.json",
 }
+# the five fields this test ran on (inject_shear.DEFAULT_FIELDS before SMACS and El Gordo joined)
+FIELDS = ("abell2744", "macs0416", "macs1149", "abell370", "abells1063")
 
 
 def recoveries(summary: dict) -> dict[str, int]:
@@ -54,7 +56,7 @@ def eb_pass(screen: dict) -> bool:
 
 def cmd_decide(args) -> dict:
     out = {"fields": {}, "reproduces_committed": True}
-    for f in ish.DEFAULT_FIELDS:
+    for f in FIELDS:
         off = json.loads((args.off / f / "summary.json").read_text())
         on = json.loads((args.on / f / "summary.json").read_text())
         ref = json.loads(Path(COMMITTED[f]).read_text())
@@ -87,7 +89,7 @@ def cmd_decide(args) -> dict:
 
 def cmd_diagnose(args) -> dict:
     out = {"min_coverage_tested": args.min_coverage, "provenance": "derived", "fields": {}}
-    for f in ish.DEFAULT_FIELDS:
+    for f in FIELDS:
         spec = ish.field_spec(f)
         model, shapes, extra, _, _ = ir.load_field(f, args.work / f, spec)
         sargs = SimpleNamespace(**ish.SHEAR_DEFAULTS)

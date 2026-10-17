@@ -54,9 +54,19 @@ ir = _load("inject_radial")
 es = ir.es
 
 SHEAR_DEFAULTS = es.shear_defaults()
-# fields with public photo-z (DJA v7.4/v7.0 tarballs for SMACS and El Gordo 404 on 2026-10-08, so
-# they have no photo-z here and stay out of the headline)
-DEFAULT_FIELDS = ("abell2744", "macs0416", "macs1149", "abell370", "abells1063")
+# fields with public photo-z (SMACS and El Gordo added 2026-10-17: their DJA tarballs answer again)
+DEFAULT_FIELDS = (
+    "abell2744",
+    "macs0416",
+    "macs1149",
+    "abell370",
+    "abells1063",
+    "smacs0723",
+    "elgordo",
+)
+# Screen options added after summaries were first committed, with the value those runs used
+# (before the option existed). A summary without the key is read with this value.
+LEGACY_SCREEN_OPTIONS = {"psf_chi": [0.0, 0.0], "min_coverage": 0.0}
 # Shear-only inputs that differ from the radial screen's FIELDS entry. The shear screen needs
 # photo-z (cluster shear at each row's z), so Abell S1063 uses the DJA v7.5 zout here
 # (docs/fields/abells1063.md), with the Gaia spike veto (D-043).
@@ -315,6 +325,16 @@ def run_field(name: str, args) -> dict:
     return summary
 
 
+def setting(summary: dict) -> dict:
+    """A summary's screen settings that must agree across combined fields: the grid half-width and
+    star table are per field; options missing from older summaries take their legacy value."""
+    a = json.loads(json.dumps(summary["assumptions"]))
+    a["screen"].pop("max_radius", None)
+    a.pop("spike_stars", None)
+    a["screen"] = {**LEGACY_SCREEN_OPTIONS, **a["screen"]}
+    return a
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--fields", nargs="+", default=list(DEFAULT_FIELDS), choices=sorted(ir.FIELDS))
@@ -359,15 +379,6 @@ def main(argv: list[str] | None = None) -> int:
     else:
         summaries = [run_field(f, args) for f in args.fields]
     combined = ir.combine(summaries, args.mass, {f: field_spec(f) for f in args.fields})
-
-    def setting(s):  # grid half-width and star table are per field; everything else must agree
-        a = json.loads(json.dumps(s["assumptions"]))
-        a["screen"].pop("max_radius", None)
-        a.pop("spike_stars", None)
-        # options added after older summaries were written: absent means their default
-        a["screen"].setdefault("psf_chi", [0.0, 0.0])
-        a["screen"].setdefault("min_coverage", SHEAR_DEFAULTS["min_coverage"])
-        return a
 
     if len({json.dumps(setting(s), sort_keys=True) for s in summaries}) != 1:
         ap.error("the fields were run with different screen settings; re-run them alike")

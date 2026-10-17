@@ -3199,7 +3199,7 @@ so the radial FIELDS entry (no photo-z, D-049 headline) stays as it was. Five-fi
 HTTP 200 and match SOURCES.md. The screen runs on both (Gaia spike veto at the model centre; D-053 defaults): null
 (S_max 2.91 / 2.95, p_rot 0.77 / 0.62, both below the rotation-null median). R 0.438 / 0.486. Seven-field limits
 5.3 × 10³ / 9.6 × 10² / 5.0 × 10² deg⁻². `--combine-only` reads screen options missing from older summaries as
-their defaults (an Abell 2744 re-run reproduces its committed summary exactly). Evidence:
+the values those runs used (an Abell 2744 re-run reproduces its committed summary exactly). Evidence:
 `results/w1_shear_smacs_elgordo/RESULT.md`.
 
 **Addendum 2026-10-17 (aperture-coverage cut not adopted).** Dropping grid centres whose aperture annulus is
