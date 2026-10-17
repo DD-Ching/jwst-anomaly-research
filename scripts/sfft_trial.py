@@ -6,12 +6,16 @@ the search chain. ``arc_diff.kernel_match`` is replaced by ``sfft_kernel_match``
 Numpy CPU backend. It is *not* the B-spline JWST method of Hu & Wang 2024, which is GPU-only in
 sfft 1.7.3. Every other step of ``arc_diff`` runs unchanged. Settings are fixed in PLAN §2:
 REF = the side ``arc_diff`` convolves, ``ForceConv='REF'``, ``GKerHW = kernel_px``,
-``KerPolyOrder=2``, ``BGPolyOrder=0``, ``ConstPhotRatio=True``, no source masking (NaN -> 0).
-Variance is var_ref + var_sci (no kernel propagation); ``significance`` rescales S by its robust
-std in both tools.
+``KerPolyOrder=2``, ``BGPolyOrder=0``, ``ConstPhotRatio=True``, no source masking; both masked
+images are 0 on the union NaN mask grown by the kernel footprint. Variance: var_ref propagated
+through an effective whole-box 9x9 kernel fitted to SFFT's own matched image, plus var_sci
+(a mean kernel, so it is biased low where SFFT's local kernel departs from the mean; PLAN
+addendum 1). ``significance`` rescales S by its robust std in both tools.
 
     python scripts/sfft_trial.py <arc_diff.py arguments ...>
     python scripts/sfft_trial.py regions --maps M.npz --hits H.ecsv [--spike RA DEC] --out R.json
+    python scripts/sfft_trial.py summarize --runs DIR [--arc-runs DIR] --out S.json
+    python scripts/sfft_trial.py diagnostics --run DIR [--run DIR ...] --out D.json
 
 Requires ``pip install sfft==1.7.3`` (not a project dependency).
 """
@@ -27,6 +31,7 @@ from pathlib import Path
 
 import numpy as np
 from astropy.io import fits
+from scipy import ndimage
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import arc_diff as ad  # noqa: E402
@@ -44,9 +49,8 @@ def sfft_kernel_match(e1, e2, v1, v2, blur, half, stamps=False, stamp_fit=None, 
     vref, vtgt = (v1, v2) if conv1 else (v2, v1)
     # Masked images: both set to 0 on the union of NaNs, grown by the kernel half-width, as
     # SFFT's own packets do; no source masking (PLAN §2; union mask: post-review correction).
-    from scipy import ndimage
-
-    bad = ndimage.binary_dilation(~(np.isfinite(ref) & np.isfinite(tgt)), iterations=half)
+    foot = np.ones((2 * half + 1, 2 * half + 1), bool)
+    bad = ndimage.binary_dilation(~(np.isfinite(ref) & np.isfinite(tgt)), structure=foot)
     with tempfile.TemporaryDirectory() as d:
         paths = {}
         for name, arr in (("ref", ref), ("sci", tgt)):
@@ -75,7 +79,7 @@ def sfft_kernel_match(e1, e2, v1, v2, blur, half, stamps=False, stamp_fit=None, 
     # so a 9x9 least-squares fit recovers K's mean shape; its constant term absorbs B). It
     # propagates the variance as arc_diff does, gives the kernel sum without the background and
     # convolves post-matching injections (post-review correction).
-    kern, _ = ad.kernel_fit(ref, m, np.where(np.isfinite(vref), vref, np.nan) + vtgt, half)
+    kern, _ = ad.kernel_fit(ref, m, vref + vtgt, half)
     vfill = np.where(np.isfinite(vref), vref, 0.0)
     var = ndimage.convolve(vfill, kern**2, mode="constant") + vtgt
     var[~np.isfinite(vref)] = np.nan
@@ -112,8 +116,6 @@ def regions(argv) -> int:
         fin = np.isfinite(e1)
         thr = np.nanpercentile(e1, 99.9)
         rc = int(np.ceil(0.8 / scale))
-        from scipy import ndimage
-
         disk = np.hypot(*np.mgrid[-rc : rc + 1, -rc : rc + 1]) <= rc
         cores = ndimage.binary_dilation(fin & (np.nan_to_num(e1) > thr), structure=disk)
         stampm = ad.compact_stamps(e1, 4)
@@ -158,15 +160,19 @@ def summarize(argv) -> int:
 
     p = argparse.ArgumentParser()
     p.add_argument("summarize")
-    p.add_argument("--runs", type=Path, required=True)
+    p.add_argument(
+        "--runs", type=Path, required=True, help="directory with sfft_* (and arc_*) runs"
+    )
+    p.add_argument("--arc-runs", type=Path, help="directory with arc_* runs (default: --runs)")
     p.add_argument("--out", type=Path, required=True)
     a = p.parse_args(argv)
     names = ["b1_s30", "b1_s31", "b2_s40"]
+    base = {"arc": a.arc_runs or a.runs, "sfft": a.runs}
     tot, per = {}, {}
     for t in ("arc", "sfft"):
         rows = {}
         for n in names:
-            rows.update(_stage_rows(a.runs / f"{t}_{n}"))
+            rows.update(_stage_rows(base[t] / f"{t}_{n}"))
         per[t] = rows
         fades = [r for r in rows.values() if r["cls"] in ("partial", "vanish")]
         tot[t] = {
@@ -181,7 +187,7 @@ def summarize(argv) -> int:
         }
         scr = 0
         for b in ("b1", "b2"):
-            d = a.runs / f"{t}_{b}_screen"
+            d = base[t] / f"{t}_{b}_screen"
             h = Table.read(d / "hits.ecsv")
             v = {
                 x["id"]: x["verdict"]
@@ -189,11 +195,12 @@ def summarize(argv) -> int:
             }
             scr += sum((not r["near_bright_core"]) and v.get(r["hit_id"]) == "pass" for r in h)
         tot[t]["screen_review_entries"] = scr
-        walls = [
-            json.loads((a.runs / f"{t}_{n}" / "rss.json").read_text())["wall_s"]
+        rss = {
+            n: json.loads((base[t] / f"{t}_{n}" / "rss.json").read_text())
             for n in [*names, "b1_screen", "b2_screen"]
-        ]
-        tot[t]["wall_s_total"] = round(sum(walls), 1)
+        }
+        tot[t]["wall_s_total"] = round(sum(r["wall_s"] for r in rss.values()), 1)
+        tot[t]["peak_rss_mb"] = {n: r["peak_rss_mb"] for n, r in rss.items()}
     diffs = []
     for k, ra_ in per["arc"].items():
         rs = per["sfft"][k]
@@ -209,6 +216,7 @@ def summarize(argv) -> int:
                 }
             )
     ar, sf = tot["arc"], tot["sfft"]
+    mem_ratio = [round(sf["peak_rss_mb"][n] / ar["peak_rss_mb"][n], 2) for n in ar["peak_rss_mb"]]
     crit = {
         "a_false_hits": sf["unchanged_false_hits"] <= ar["unchanged_false_hits"],
         "b_fades": sf["fade_review_sign"] >= ar["fade_review_sign"]
@@ -227,10 +235,47 @@ def summarize(argv) -> int:
         "totals": tot,
         "criteria": crit,
         "verdict": verdict,
+        "peak_rss_ratio_sfft_over_arc": [min(mem_ratio), max(mem_ratio)],
         "per_source_differences": diffs,
     }
     a.out.write_text(json.dumps(out, indent=1) + "\n")
     print(json.dumps({"totals": tot, "criteria": crit, "verdict": verdict, "n_diff": len(diffs)}))
+    return 0
+
+
+def diagnostics(argv) -> int:
+    """Median per-band S of injected sources per class x magnitude, per run."""
+    import argparse
+    import csv
+    import statistics
+
+    p = argparse.ArgumentParser()
+    p.add_argument("diagnostics")
+    p.add_argument("--run", type=Path, action="append", required=True)
+    p.add_argument("--out", type=Path, required=True)
+    a = p.parse_args(argv)
+    out = {
+        "label": "derived; median S at injected positions (injected_pre.csv), per run",
+        "runs": {},
+    }
+    for run in a.run:
+        with open(run / "injected_pre.csv", newline="") as f:
+            rows = list(csv.DictReader(f))
+        bands = [k for k in rows[0] if k.isupper() and k.startswith("F")]
+        res = {}
+        for c in sorted({r["cls"] for r in rows}):
+            for m in sorted({r["mag"] for r in rows}):
+                sel = [r for r in rows if r["cls"] == c and r["mag"] == m]
+                if sel:
+                    res[f"{c}_{m}"] = {
+                        b: round(
+                            statistics.median(float(r[b]) for r in sel if r[b] not in ("", "None")),
+                            1,
+                        )
+                        for b in bands
+                    }
+        out["runs"][str(run)] = res
+    a.out.write_text(json.dumps(out, indent=1) + "\n")
     return 0
 
 
@@ -240,6 +285,8 @@ def main(argv=None) -> int:
         return regions(argv)
     if argv and argv[0] == "summarize":
         return summarize(argv)
+    if argv and argv[0] == "diagnostics":
+        return diagnostics(argv)
     ad.kernel_match = sfft_kernel_match
     return ad.main(argv)
 

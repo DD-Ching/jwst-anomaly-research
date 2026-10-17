@@ -5001,7 +5001,7 @@ confining radiation at a throat is found.
 - **Alternatives rejected:**
   - SFFT's JWST B-spline method (Hu & Wang 2024): GPU-only in sfft 1.7.3; a port is out of scope.
   - Ordinary SFFT without masking (corrected adapter): somewhat worse on B1 + B2 (fades 83/120 vs 92/120; unchanged
-    false hits 7/60 vs 1/60), though ×1.31 faster with about 1.5–2.6 × the memory.
+    false hits 5/60 vs 1/60), though about ×1.4 faster (indicative) with 1.49–2.51 × the peak memory.
   - SFFT's automatic masking: needs the SExtractor binary.
 - **Evidence:** `results/transients/sfft_trial/RESULT.md`. Small development sample; not "generally worse".
 - **Revisit if:**

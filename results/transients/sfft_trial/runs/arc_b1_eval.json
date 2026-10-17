@@ -1,8 +1,8 @@
 {
  "label": "derived; injected sources are simulations",
  "runs": [
-  "/tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/sfft/cmp/arc_b1_s30",
-  "/tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/sfft/cmp/arc_b1_s31"
+  "results/transients/sfft_trial/runs/arc_b1_s30",
+  "results/transients/sfft_trial/runs/arc_b1_s31"
  ],
  "summary": {
   "unchanged": {

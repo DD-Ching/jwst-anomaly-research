@@ -6,12 +6,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **The JWST B-spline SFFT** (Hu & Wang 2024) is GPU-only in sfft 1.7.3, so it was not tested. SFFT's automatic
   masking needs SExtractor, so it was not tested either.
 - **Ordinary SFFT** (CPU, unmasked) replaced only `kernel_match` on B1 + B2 with the same pre-matching injections.
-  - After the post-review adapter corrections (union NaN mask, propagated variance, sign accounting), against
-    `arc_diff`:
-    - fades on the review list: 83/120 vs 92/120;
+  - After two rounds of post-review adapter corrections (union NaN mask over the kernel footprint, propagated variance,
+    sign accounting), against `arc_diff`:
+    - fades on the review list: 83/120 vs 92/120 (partial 32 vs 41; vanish equal);
     - brightenings: 42/60 vs 45/60;
-    - unchanged false hits: 7/60 vs 1/60.
-  - ×1.31 faster, with 2.2 GB vs ≤ 1.5 GB peak memory.
+    - unchanged false hits: 5/60 vs 1/60.
+  - About ×1.4 faster (indicative; loads differ), with 1.49–2.51 × the peak memory.
   - **Verdict under the fixed rule:** keep `arc_diff`.
 - **Failed first adapter (kept in `runs_v1/`):** its non-union NaN mask and unpropagated variance cost SFFT about a
   third of the fades.

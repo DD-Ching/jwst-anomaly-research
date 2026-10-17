@@ -34,20 +34,20 @@
     -0.6132339347165572
    ],
    "blur_sigma_px": 1.87,
-   "kernel_sum": 0.964632777264519,
+   "kernel_sum": 0.9647348253853194,
    "convolved_epoch": 1,
-   "flux_scale": 0.964632777264519,
-   "noise_scale": 1.1552001068322026,
-   "n_detections": 364,
+   "flux_scale": 0.9647348253853194,
+   "noise_scale": 1.1563513319844705,
+   "n_detections": 368,
    "injection_recovered": {},
    "injection_recovered_not_near_core_this_band": {},
    "timing_s": {
-    "read": 9.13,
+    "read": 8.89,
     "pre_injections": 0.0,
-    "resample_register_match": 20.79,
-    "detect": 3.11,
-    "post_injections": 0.02,
-    "sfft_s": 12.43
+    "resample_register_match": 22.78,
+    "detect": 3.12,
+    "post_injections": 0.04,
+    "sfft_s": 13.451
    },
    "kernel_stats": {},
    "inject_pre_psf": null,
@@ -63,20 +63,20 @@
     -0.17850508302839507
    ],
    "blur_sigma_px": -0.734,
-   "kernel_sum": 0.998716335254931,
+   "kernel_sum": 0.9989223022691608,
    "convolved_epoch": 2,
-   "flux_scale": 1.0012853146581822,
-   "noise_scale": 1.195624809859962,
+   "flux_scale": 1.0010788604162617,
+   "noise_scale": 1.2006342949724036,
    "n_detections": 8,
    "injection_recovered": {},
    "injection_recovered_not_near_core_this_band": {},
    "timing_s": {
-    "read": 3.56,
+    "read": 3.43,
     "pre_injections": 0.0,
-    "resample_register_match": 6.23,
+    "resample_register_match": 5.66,
     "detect": 0.24,
     "post_injections": 0.0,
-    "sfft_s": 4.385
+    "sfft_s": 3.718
    },
    "kernel_stats": {},
    "inject_pre_psf": null,
@@ -91,7 +91,7 @@
   "n": 0,
   "csv": null
  },
- "wall_s": 43.5,
+ "wall_s": 44.6,
  "inject_grid": {
   "n": 0,
   "n_hit": 0,

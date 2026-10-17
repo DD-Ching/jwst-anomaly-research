@@ -11,7 +11,8 @@ Prior repository state: DECISIONS addendum 2026-10-15c ("HOTPANTS/SFFT not adopt
 spatially varying PSF (box > 1′) leaves ridges"); no earlier SFFT evaluation.
 
 ## Status
-Done: integration check (paper method GPU-only), comparison (keep `arc_diff`, D-095), VENUS pair denominator.
+Done: integration check (paper method GPU-only), comparison with two rounds of post-review corrections (keep
+`arc_diff`, D-095), VENUS pair denominator.
 Results: `RESULT.md`.
 
 ## Next action

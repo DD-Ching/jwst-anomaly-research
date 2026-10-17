@@ -14,4 +14,4 @@
 # - {thresholds: 'ASSUMPTION: see summary.json'}
 # schema: astropy-2.0
 ra dec n_bands bands max_abs_sigma sign near_bright_core hit_id
-15.714733846535728 -49.26492863783509 2 F150W,F444W 9.889689632534674 mixed True h000
+15.714733846535728 -49.26492863783509 2 F150W,F444W 9.972113812729201 mixed True h000

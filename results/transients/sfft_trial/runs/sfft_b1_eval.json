@@ -1,24 +1,24 @@
 {
  "label": "derived; injected sources are simulations",
  "runs": [
-  "/tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/sfft/cmp/sfft_b1_s30",
-  "/tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/sfft/cmp/sfft_b1_s31"
+  "results/transients/sfft_trial/runs/sfft_b1_s30",
+  "results/transients/sfft_trial/runs/sfft_b1_s31"
  ],
  "summary": {
   "unchanged": {
    "26.00": {
     "n": 14,
-    "hit": 4,
-    "hit_frac": 0.286,
+    "hit": 3,
+    "hit_frac": 0.214,
     "hit_68": [
-     0.182,
-     0.418
+     0.126,
+     0.341
     ],
-    "unflagged": 4,
-    "unflagged_frac": 0.286,
+    "unflagged": 2,
+    "unflagged_frac": 0.143,
     "unflagged_68": [
-     0.182,
-     0.418
+     0.073,
+     0.26
     ],
     "morph_pass": 0,
     "morph_pass_frac": 0.0,
@@ -26,11 +26,11 @@
      0.0,
      0.067
     ],
-    "sign_ok": 4,
-    "sign_ok_frac": 0.286,
+    "sign_ok": 3,
+    "sign_ok_frac": 0.214,
     "sign_ok_68": [
-     0.182,
-     0.418
+     0.126,
+     0.341
     ],
     "review": 0,
     "review_frac": 0.0,
@@ -47,17 +47,17 @@
    },
    "27.00": {
     "n": 14,
-    "hit": 2,
-    "hit_frac": 0.143,
+    "hit": 1,
+    "hit_frac": 0.071,
     "hit_68": [
-     0.073,
-     0.26
+     0.028,
+     0.172
     ],
-    "unflagged": 2,
-    "unflagged_frac": 0.143,
+    "unflagged": 1,
+    "unflagged_frac": 0.071,
     "unflagged_68": [
-     0.073,
-     0.26
+     0.028,
+     0.172
     ],
     "morph_pass": 1,
     "morph_pass_frac": 0.071,
@@ -65,11 +65,11 @@
      0.028,
      0.172
     ],
-    "sign_ok": 2,
-    "sign_ok_frac": 0.143,
+    "sign_ok": 1,
+    "sign_ok_frac": 0.071,
     "sign_ok_68": [
-     0.073,
-     0.26
+     0.028,
+     0.172
     ],
     "review": 1,
     "review_frac": 0.071,
@@ -205,17 +205,17 @@
    },
    "27.50": {
     "n": 14,
-    "hit": 11,
-    "hit_frac": 0.786,
+    "hit": 12,
+    "hit_frac": 0.857,
     "hit_68": [
-     0.659,
-     0.874
+     0.74,
+     0.927
     ],
-    "unflagged": 11,
-    "unflagged_frac": 0.786,
+    "unflagged": 12,
+    "unflagged_frac": 0.857,
     "unflagged_68": [
-     0.659,
-     0.874
+     0.74,
+     0.927
     ],
     "morph_pass": 11,
     "morph_pass_frac": 0.786,
@@ -223,11 +223,11 @@
      0.659,
      0.874
     ],
-    "sign_ok": 11,
-    "sign_ok_frac": 0.786,
+    "sign_ok": 12,
+    "sign_ok_frac": 0.857,
     "sign_ok_68": [
-     0.659,
-     0.874
+     0.74,
+     0.927
     ],
     "review": 11,
     "review_frac": 0.786,
@@ -258,68 +258,68 @@
      0.933,
      1.0
     ],
-    "morph_pass": 11,
-    "morph_pass_frac": 0.786,
+    "morph_pass": 13,
+    "morph_pass_frac": 0.929,
     "morph_pass_68": [
-     0.659,
-     0.874
+     0.828,
+     0.972
     ],
-    "sign_ok": 12,
-    "sign_ok_frac": 0.857,
+    "sign_ok": 13,
+    "sign_ok_frac": 0.929,
     "sign_ok_68": [
+     0.828,
+     0.972
+    ],
+    "review": 13,
+    "review_frac": 0.929,
+    "review_68": [
+     0.828,
+     0.972
+    ],
+    "review_sign": 12,
+    "review_sign_frac": 0.857,
+    "review_sign_68": [
      0.74,
      0.927
-    ],
-    "review": 11,
-    "review_frac": 0.786,
-    "review_68": [
-     0.659,
-     0.874
-    ],
-    "review_sign": 11,
-    "review_sign_frac": 0.786,
-    "review_sign_68": [
-     0.659,
-     0.874
     ]
    },
    "27.00": {
     "n": 12,
-    "hit": 9,
-    "hit_frac": 0.75,
+    "hit": 10,
+    "hit_frac": 0.833,
     "hit_68": [
-     0.609,
-     0.852
+     0.701,
+     0.914
     ],
-    "unflagged": 9,
-    "unflagged_frac": 0.75,
+    "unflagged": 10,
+    "unflagged_frac": 0.833,
     "unflagged_68": [
+     0.701,
+     0.914
+    ],
+    "morph_pass": 5,
+    "morph_pass_frac": 0.417,
+    "morph_pass_68": [
+     0.286,
+     0.56
+    ],
+    "sign_ok": 9,
+    "sign_ok_frac": 0.75,
+    "sign_ok_68": [
      0.609,
      0.852
     ],
-    "morph_pass": 6,
-    "morph_pass_frac": 0.5,
-    "morph_pass_68": [
-     0.361,
-     0.639
-    ],
-    "sign_ok": 8,
-    "sign_ok_frac": 0.667,
-    "sign_ok_68": [
-     0.522,
-     0.785
-    ],
-    "review": 6,
-    "review_frac": 0.5,
+    "review": 5,
+    "review_frac": 0.417,
     "review_68": [
-     0.361,
-     0.639
+     0.286,
+     0.56
     ],
-    "review_sign": 6,
-    "review_sign_frac": 0.5,
+    "review_sign": 5,
+    "review_sign_frac": 0.417,
     "review_sign_68": [
-     0.361,
-     0.639
+     0.286,
+     0.56
     ]
    },
    "27.50": {
@@ -342,11 +342,11 @@
      0.028,
      0.172
     ],
-    "sign_ok": 2,
-    "sign_ok_frac": 0.143,
+    "sign_ok": 3,
+    "sign_ok_frac": 0.214,
     "sign_ok_68": [
-     0.073,
-     0.26
+     0.126,
+     0.341
     ],
     "review": 1,
     "review_frac": 0.071,
@@ -483,17 +483,17 @@
   },
   "unchanged_false_hits": {
    "n": 40,
-   "false_hits": 7,
-   "frac": 0.175,
+   "false_hits": 5,
+   "frac": 0.125,
    "frac_68": [
-    0.123,
-    0.243
+    0.082,
+    0.187
    ]
   }
  },
  "pass_rule": {
   "vanish_review_sign_frac": 1.0,
-  "unchanged_false_hit_frac": 0.175,
+  "unchanged_false_hit_frac": 0.125,
   "vanish_ok": true,
   "unchanged_ok": false,
   "passed": false

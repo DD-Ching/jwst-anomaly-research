@@ -82,3 +82,16 @@ only a trial choice, not "generally better".
 - **Load difference:** the corrected SFFT runs ran as 4 at once plus 1 alone, where the `arc_diff` runs were 2 + 2.
 - **Deviation:** the compact-stamp region in `regions` uses epoch-1 stamps only, because the maps store no epoch-2
   image. PLAN §3.3 said both epochs.
+- **Second review (04:31Z):** the union mask had been grown by a diamond, not the kernel footprint. It is now the
+  full 9 × 9 footprint, and the five SFFT runs were re-run once more.
+  - Results by version (`summary*.json`), `arc_diff` unchanged throughout:
+    - first SFFT runs: `runs_v1/`;
+    - diamond mask: `runs_v2/`;
+    - final: `runs/`.
+  - Also stated as a limitation: SFFT's variance uses one mean kernel, so it is biased low where SFFT's local kernel
+    departs from the mean.
+- **Load (deviation from PLAN §3.1):**
+  - `arc_diff`: batches of 2 + 2 (screens, B1 seeds) and 1 (B2 seed 40), each alongside the same number of first
+    SFFT runs.
+  - Final SFFT: 4 at once, then 1 alone.
+  - The wall-time ratio is therefore indicative only.
