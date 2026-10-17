@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: MOA-II manifest lists every streamed field tar; retrieval dates no longer hard-coded
+- **Why:** TASKS follow-up from the gb10 review: `data/manifests/moa_ii.ecsv` had only the metadata tar and gb22,
+  and `write_manifest` stamped every row `retrieved_utc` 2026-10-08 (the day of the HTTP HEAD reads, not of the
+  streaming).
+- **New:** `w3_moa.py` pre-screen chunks record `retrieved_utc` (when their last byte range arrived);
+  `field_retrieved_utc` turns them into a day or `first/last` range; the manifest gains `head_utc` (2026-10-08, the
+  size and Last-Modified read). Test `test_field_retrieved_utc_from_chunk_stamps`.
+- **Result:** manifest regenerated from the tracked chunks: 22 streamed tars with `range_sha256` (gb1–gb22; gb22
+  also keeps its whole-file sha256 row). Their `retrieved_utc` is "not recorded": the older chunks carry no stamp,
+  and git dates of the chunk files (all 2026-10-15) are not retrieval dates, so none is inferred.
+- **Handoff:** no science change. A re-stream of any field fills its dates.
+
 ## 2026-10-17: `arcs` on WHL0137 (Sunrise), RELICS maps: the S1063 anti excess does not replicate (1 vs 0.15, P 0.14)
 - **Why:** the S1063 replication tally needs fields never used to tune `arcs`; WHL0137 has an F200W catalogue, DJA
   v7.5 photo-z and RELICS maps (the HEAD probe of DJA v7 names found only Sunrise, SMACS, MRG0138 and RXCJ0600 among

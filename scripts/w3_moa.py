@@ -588,6 +588,8 @@ def run_stream_prescreen(field: str, procs: int, conns: int, chunks=None, source
                     "conns": procs * prefetch,
                     "segment_bytes": SEG_BYTES,
                     "segment_sha256": [seg_sha[x] for x in segs if x[0] == k],
+                    # when the chunk's last byte range arrived (the manifest's retrieval date)
+                    "retrieved_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                 }
                 written.append(_write_prescreen_chunk(field, k, n, rows.pop(k), st))
                 shown = {k2: v for k2, v in st.items() if k2 != "segment_sha256"}
@@ -2379,6 +2381,7 @@ def write_vetting_summary() -> Path:
     return path
 
 
+HEAD_UTC = "2026-10-08"  # day of the HTTP HEAD reads behind moa.FILES, TAR_BYTES and Last-Modified
 LAST_MODIFIED = {  # HTTP Last-Modified of the pinned files, read 2026-10-08 (the release version)
     "metadata.ipac.tar.gz": "2023-10-13",
     "gb22.tar": "2023-10-10",
@@ -2401,22 +2404,44 @@ def field_range_digest(field: str) -> str | None:
     return moa_stream.range_digest(shas)
 
 
+RETRIEVED_UNRECORDED = "not recorded"
+
+
+def field_retrieved_utc(field: str) -> str:
+    """Retrieval dates of a streamed field tar: ``first/last`` UTC day over its tracked pre-screen
+    chunks (one day alone if they agree), or "not recorded" if any chunk predates the stamp."""
+    n = n_chunks(field)
+    days = []
+    for k in range(n):
+        p = prescreen_chunk_path(field, k, n)
+        stamp = Table.read(p, format="ascii.ecsv").meta.get("retrieved_utc") if p.exists() else None
+        if not stamp:
+            return RETRIEVED_UNRECORDED
+        days.append(str(stamp)[:10])
+    lo, hi = min(days), max(days)
+    return lo if lo == hi else f"{lo}/{hi}"
+
+
 def write_manifest() -> Path:
     """Pinned MOA-II files as a tracked manifest (URL, sha256, size, retrieval date, release).
     Downloaded files carry a whole-file sha256; streamed field tars carry ``range_sha256`` (sha256
-    over the sha256s of consecutive 64 MiB byte ranges, recorded per chunk in results/w3_moa/)."""
+    over the sha256s of consecutive 64 MiB byte ranges, recorded per chunk in results/w3_moa/).
+    ``head_utc``: day of the HTTP HEAD read of size and Last-Modified. ``retrieved_utc``: day the
+    bytes were read (streamed tars: from the chunk stamps, "not recorded" before them)."""
     rows = []
     release = "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
     for url, (sha, size) in moa.FILES.items():
         name = url.rsplit("/", 1)[-1]
         rows.append({"url": url, "sha256": sha, "range_sha256": "", "size_bytes": size,
-                     "retrieved_utc": "2026-10-08", "last_modified": LAST_MODIFIED[name],
+                     "head_utc": HEAD_UTC, "retrieved_utc": HEAD_UTC,
+                     "last_modified": LAST_MODIFIED[name],
                      "release": release})  # fmt: skip
     for f in sorted(moa.TAR_BYTES):
         dig = field_range_digest(f"gb{f}")
         if dig:
             rows.append({"url": moa.tar_url(f), "sha256": "", "range_sha256": dig,
-                         "size_bytes": moa.TAR_BYTES[f], "retrieved_utc": "2026-10-08",
+                         "size_bytes": moa.TAR_BYTES[f], "head_utc": HEAD_UTC,
+                         "retrieved_utc": field_retrieved_utc(f"gb{f}"),
                          "last_modified": moa.TAR_LAST_MODIFIED[f],
                          "release": release})  # fmt: skip
     tab = Table(rows)

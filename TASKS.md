@@ -129,8 +129,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    ρ = 0.1 cell has 0 recoveries). **Combined (21 fields, gb14 added): Γ₉₅ ≈ 1.2 × 10⁻⁸–7.4 × 10⁻⁸ per star per year**
    (`results/w3_moa/limits_combined.ecsv`; no field > 19 % of any cell; gb14 tightened it by 5–10 %). The lenient-reference fields were re-vetted with a working CDS XMatch: 0 survivors (CHANGELOG 2026-10-10).
    Follow-ups (from the gb10 review): the pre-screen per-chunk clock starts at a chunk's first finished segment, so
-   chunk windows overlap and `wall_time_s` / `mb_per_s` are overstated (use run totals); `data/manifests/moa_ii.ecsv` lacks
-   rows for the streamed fields after gb22 and `write_manifest` hard-codes `retrieved_utc` 2026-10-08.
+   chunk windows overlap and `wall_time_s` / `mb_per_s` are overstated (use run totals); ~~manifest rows and
+   retrieval dates~~ done (2026-10-17: all 22 streamed tars listed; dates "not recorded" until a re-stream stamps them).
    A fresh clone needs `merge-prescreen`, `merge-chunks` and a re-run of `vet` (~3 min) before `limit`: the tracked
    `results/w3_moa/vetting_gbF.json` is a summary without the chain stamp `limit` checks (gb14 run 5).
    MOA-II is complete except gb13; next: gb13 after the owner decides #145. Each further field now moves the combined
