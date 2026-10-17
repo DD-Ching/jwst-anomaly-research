@@ -88,9 +88,18 @@ def neighbour_alignment(model, shapes, arcs: np.ndarray, nb: np.ndarray) -> dict
 
 
 def field_stack(
-    name: str, out: Path, n_random: int, seed, exclude_radial: bool = False, near: float = 0.0
+    name: str,
+    out: Path,
+    n_random: int,
+    seed,
+    exclude_radial: bool = False,
+    near: float = 0.0,
+    shear_model: str | None = None,
 ) -> dict:
     spec = ish.field_spec(name)
+    radial_model = spec["model"]
+    if shear_model is not None:  # a second model removes the cluster shear; centres stay fixed
+        spec = {**spec, "model": shear_model}
     (out / name).mkdir(parents=True, exist_ok=True)
     model, shapes, extra, _, _ = ir.load_field(name, out / name, spec)
     sargs = argparse.Namespace(**ish.SHEAR_DEFAULTS)
@@ -98,7 +107,11 @@ def field_stack(
     e, counts = es.shear_sources(model, shapes, psf, sargs.min_snr, sargs.max_g, None, extra)
     n_radial_used = None
     if exclude_radial:  # vetting step: the arcs that define the centres leave the shear sample
-        arcs = radial_arc_rows(model, shapes, spec, extra)
+        rmodel = model
+        if radial_model != spec["model"]:  # the arc selection is the radial screen's own model
+            rmodel, _, _ = ir.lc.load_model(radial_model)
+            ir.lc.apply_frame_offset(radial_model, rmodel)
+        arcs = radial_arc_rows(rmodel, shapes, spec, extra)
         if near > 0:  # also the arcs' neighbours, e.g. deblended fragments of the same arc
             nb = near_rows(model, shapes, arcs, near) & ~arcs
             align = neighbour_alignment(model, shapes, arcs, nb & np.isfinite(e))
@@ -108,7 +121,7 @@ def field_stack(
     use = np.isfinite(e)
     x, y = model.to_frame(np.asarray(shapes["ra"])[use], np.asarray(shapes["dec"])[use])
     peaks = json.loads(RADIAL[name].read_text())["peaks"]
-    if json.loads(RADIAL[name].read_text())["model"] != spec["model"]:
+    if json.loads(RADIAL[name].read_text())["model"] != radial_model:
         raise ValueError(f"{name}: radial.json model differs from the shear field spec")
     cx, cy = model.to_frame(np.array([p["ra"] for p in peaks]), np.array([p["dec"] for p in peaks]))
     kw = dict(radius=sargs.aperture_arcsec, kind=sargs.filter, r_min=sargs.r_min_arcsec)
@@ -193,12 +206,27 @@ def main(argv: list[str] | None = None) -> int:
         default=0.0,
         help="with --exclude-radial-arcs, also drop sources within this distance of those arcs",
     )
+    ap.add_argument(
+        "--shear-model",
+        default=None,
+        help="lens model that removes the cluster shear (one field only; centres stay fixed)",
+    )
     ap.add_argument("--work", type=Path, default=None, help="Gaia star / zout cache (default OUT)")
     args = ap.parse_args(argv)
+    if args.shear_model is not None and len(args.fields) != 1:
+        ap.error("--shear-model needs exactly one field")
     work = args.work or args.out
     seeds = np.random.SeedSequence(args.seed).spawn(len(args.fields))
     fields = [
-        field_stack(n, work, args.n_random, sd, args.exclude_radial_arcs, args.exclude_near_arcsec)
+        field_stack(
+            n,
+            work,
+            args.n_random,
+            sd,
+            args.exclude_radial_arcs,
+            args.exclude_near_arcsec,
+            args.shear_model,
+        )
         for n, sd in zip(args.fields, seeds, strict=True)
     ]
     summary = {
@@ -221,6 +249,7 @@ def main(argv: list[str] | None = None) -> int:
             "streak_veto": False,
             "exclude_radial_arcs": args.exclude_radial_arcs,
             "exclude_near_arcsec": args.exclude_near_arcsec,
+            "shear_model": args.shear_model,
         },
         "stack": combine(fields),
         "fields": [{k: v for k, v in f.items() if k not in ("null_sum", "null_n")} for f in fields],

@@ -1,0 +1,167 @@
+{
+ "provenance": "derived",
+ "plan": "results/w1_stack_radial/PLAN.md",
+ "seed": 314,
+ "assumptions": {
+  "aperture_arcsec": 10.0,
+  "filter": "schirmer",
+  "r_min_arcsec": 1.0,
+  "min_sources": 5,
+  "min_snr": 10.0,
+  "max_g": 0.5,
+  "sign_radius_arcsec": 30.0,
+  "streak_veto": false,
+  "exclude_radial_arcs": true,
+  "exclude_near_arcsec": 0.0,
+  "shear_model": "macs0417-relics-lenstool"
+ },
+ "stack": {
+  "n_centres": 7,
+  "mean_s": -0.11661084052241859,
+  "mean_s_cross": -0.3085133611395913,
+  "p_one_sided": 0.6085,
+  "null_mean_p50_p95": [
+   -0.00712488528109843,
+   0.6632493677216874
+  ],
+  "n_random": 2000
+ },
+ "fields": [
+  {
+   "field": "macs0417",
+   "model": "macs0417-relics-lenstool",
+   "n_used": 718,
+   "n_rows_removed": 30,
+   "neighbour_alignment": null,
+   "responsivity": 0.42963044477627144,
+   "centres": [
+    {
+     "ra": 64.39514977596096,
+     "dec": -11.904519555555552,
+     "n_lines": 5,
+     "s": null,
+     "s_cross": null
+    },
+    {
+     "ra": 64.39302061610735,
+     "dec": -11.902158444444442,
+     "n_lines": 4,
+     "s": null,
+     "s_cross": null
+    },
+    {
+     "ra": 64.3837942567417,
+     "dec": -11.888547333333332,
+     "n_lines": 4,
+     "s": null,
+     "s_cross": null
+    },
+    {
+     "ra": 64.38862035240989,
+     "dec": -11.932991777777776,
+     "n_lines": 3,
+     "s": null,
+     "s_cross": null
+    },
+    {
+     "ra": 64.38422008871242,
+     "dec": -11.917019555555553,
+     "n_lines": 3,
+     "s": 0.949880439094492,
+     "s_cross": -2.0591481773794977
+    },
+    {
+     "ra": 64.40636335118998,
+     "dec": -11.905769555555553,
+     "n_lines": 3,
+     "s": -0.4787895235051955,
+     "s_cross": -0.35649521574874754
+    },
+    {
+     "ra": 64.4015372555218,
+     "dec": -11.904380666666665,
+     "n_lines": 3,
+     "s": -1.2334571505939647,
+     "s_cross": 1.9092040218085953
+    },
+    {
+     "ra": 64.40196308749252,
+     "dec": -11.90104733333333,
+     "n_lines": 3,
+     "s": 1.4382679894939203,
+     "s_cross": 1.3337078382386207
+    },
+    {
+     "ra": 64.40508585527782,
+     "dec": -11.898408444444442,
+     "n_lines": 3,
+     "s": -2.044183044237079,
+     "s_cross": -0.6761536721807263
+    },
+    {
+     "ra": 64.40622140719975,
+     "dec": -11.897158444444441,
+     "n_lines": 3,
+     "s": -0.6273723826233994,
+     "s_cross": -2.2458336665497582
+    },
+    {
+     "ra": 64.40693112715095,
+     "dec": -11.896463999999998,
+     "n_lines": 3,
+     "s": 1.1793777887142962,
+     "s_cross": -0.06487465616562568
+    },
+    {
+     "ra": 64.38081343294664,
+     "dec": -11.895213999999998,
+     "n_lines": 3,
+     "s": null,
+     "s_cross": null
+    },
+    {
+     "ra": 64.38407814472218,
+     "dec": -11.88993622222222,
+     "n_lines": 3,
+     "s": null,
+     "s_cross": null
+    },
+    {
+     "ra": 64.38407814472218,
+     "dec": -11.889241777777775,
+     "n_lines": 3,
+     "s": null,
+     "s_cross": null
+    },
+    {
+     "ra": 64.38393620073194,
+     "dec": -11.88868622222222,
+     "n_lines": 3,
+     "s": null,
+     "s_cross": null
+    },
+    {
+     "ra": 64.38322648078073,
+     "dec": -11.886602888888886,
+     "n_lines": 3,
+     "s": null,
+     "s_cross": null
+    },
+    {
+     "ra": 64.38280064881002,
+     "dec": -11.885630666666664,
+     "n_lines": 3,
+     "s": null,
+     "s_cross": null
+    }
+   ],
+   "sign_check": {
+    "n_centres": 1091,
+    "mean_s_cluster_kept": -0.004491144402055921,
+    "mean_s_cluster_removed": 0.08048372060337496
+   }
+  }
+ ],
+ "sign_check_passed": true,
+ "outcome": "null"
+}

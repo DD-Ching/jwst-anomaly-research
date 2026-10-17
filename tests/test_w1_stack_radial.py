@@ -44,3 +44,12 @@ def test_radial_stack_recovers_injected_radial_shear():
     assert s_rad[0] > 3 and s_tan[0] < -3
     tot, n = wsr.stack_null(ap, e_rad, 200, rng)
     assert np.mean(tot / n >= s_rad[0]) < 0.02
+
+
+def test_shear_model_needs_one_field():
+    import pytest
+
+    with pytest.raises(SystemExit):
+        wsr.main(
+            ["--fields", "macs0417", "abells1063", "--shear-model", "macs0417-relics-lenstool"]
+        )
