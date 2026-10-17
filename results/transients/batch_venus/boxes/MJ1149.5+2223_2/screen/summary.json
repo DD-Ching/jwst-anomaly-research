@@ -1,0 +1,110 @@
+{
+ "command": "arc_diff.py --band f150w s3://stpubdata/jwst/public/jw01176/L3/t/o231/jw01176-o231_t011_nircam_clear-f150w_i2d.fits s3://stpubdata/jwst/public/jw06882/L3/t/o058/jw06882-o058_t058_nircam_clear-f150w_i2d.fits --band f444w s3://stpubdata/jwst/public/jw01176/L3/t/o231/jw01176-o231_t011_nircam_clear-f444w_i2d.fits s3://stpubdata/jwst/public/jw06882/L3/t/o058/jw06882-o058_t058_nircam_clear-f444w_i2d.fits --ra 177.392189 --dec 22.3983 --half-arcsec 12 --kernel-px 4 --kernel-stamps --min-bands 2 --reg-tile-arcsec 6 --procs 1 --cache-dir /tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/bv/cache --out results/transients/batch_venus/boxes/MJ1149.5+2223_2/screen --maps /tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/bv/MJ1149.5+2223_2/screen/maps.npz",
+ "box": {
+  "ra": 177.392189,
+  "dec": 22.3983,
+  "half_arcsec": 12.0
+ },
+ "thresholds_assumption": {
+  "min_sigma": 5.0,
+  "min_bands": 2,
+  "link_arcsec": 0.1,
+  "bg_arcsec": 0.6,
+  "tile_arcsec": 3.0,
+  "reg_tile_arcsec": 6.0,
+  "inject_pre_psf": "gauss",
+  "kernel_px": 4,
+  "kernel_stamps": true,
+  "kernel_stamp_fit": "shared",
+  "match_arcsec": 0.15,
+  "core_arcsec": 0.8,
+  "core_pct": 99.9,
+  "psf_fwhm_arcsec": {
+   "F150W": 0.05,
+   "F444W": 0.145
+  }
+ },
+ "bands": {
+  "F150W": {
+   "e1": "jw01176-o231_t011_nircam_clear-f150w_i2d.fits",
+   "e2": "jw06882-o058_t058_nircam_clear-f150w_i2d.fits",
+   "scale_arcsec": 0.031228902654231526,
+   "shift_px": [
+    -0.141427926080944,
+    0.16164658387986533
+   ],
+   "blur_sigma_px": 1.19,
+   "kernel_sum": 0.941366505166756,
+   "convolved_epoch": 1,
+   "flux_scale": 0.941366505166756,
+   "noise_scale": 1.02328450922899,
+   "n_detections": 35,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {},
+   "timing_s": {
+    "read": 8.69,
+    "pre_injections": 0.0,
+    "resample_register_match": 32.94,
+    "detect": 2.85,
+    "post_injections": 0.02,
+    "stamp_design_build": 0.053,
+    "kernel_stamps_s": 6.52
+   },
+   "kernel_stats": {
+    "stamp_rows": 24498,
+    "stamp_unconverged": 0,
+    "n_stamps": 414
+   },
+   "inject_pre_psf": null,
+   "inject_pre_shift_px": null,
+   "reg_tiles_used": 11
+  },
+  "F444W": {
+   "e1": "jw01176-o231_t011_nircam_clear-f444w_i2d.fits",
+   "e2": "jw06882-o058_t058_nircam_clear-f444w_i2d.fits",
+   "scale_arcsec": 0.06291498759879528,
+   "shift_px": [
+    0.06791870652824128,
+    0.10315062706318234
+   ],
+   "blur_sigma_px": -1.468,
+   "kernel_sum": 0.9576538336898763,
+   "convolved_epoch": 2,
+   "flux_scale": 1.0442186569096292,
+   "noise_scale": 1.321791368953712,
+   "n_detections": 60,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {},
+   "timing_s": {
+    "read": 3.59,
+    "pre_injections": 0.0,
+    "resample_register_match": 7.61,
+    "detect": 0.22,
+    "post_injections": 0.0,
+    "stamp_design_build": 0.005,
+    "kernel_stamps_s": 0.099
+   },
+   "kernel_stats": {
+    "stamp_rows": 2562,
+    "stamp_unconverged": 0,
+    "n_stamps": 27
+   },
+   "inject_pre_psf": null,
+   "inject_pre_shift_px": null,
+   "reg_tiles_used": 12
+  }
+ },
+ "n_hits": 7,
+ "n_hits_not_near_bright_core": 2,
+ "known": [],
+ "inject_pre": {
+  "n": 0,
+  "csv": null
+ },
+ "wall_s": 56.3,
+ "inject_grid": {
+  "n": 0,
+  "n_hit": 0,
+  "n_hit_not_near_bright_core": 0
+ }
+}

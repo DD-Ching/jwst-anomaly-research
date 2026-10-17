@@ -1,0 +1,19 @@
+{
+ "box_id": "AS1063_2",
+ "kind": "inj",
+ "sample": {
+  "rc": 0,
+  "wall_s": 5.3,
+  "peak_rss_mb": 375.4
+ },
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 121.4,
+  "peak_rss_mb": 1397.7
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.1,
+  "peak_rss_mb": 133.4
+ }
+}
