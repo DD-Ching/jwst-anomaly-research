@@ -2,8 +2,9 @@
 
 PLAN ``results/transients/kernel_loo/PLAN.md`` §3 tests 2-4, tolerances fixed there:
 - maps: max|ΔS| ≤ 0.01 per band over pixels finite in both (and max|Δd| reported);
-- hits: same positions (0.01″), flags, signs, band sets, morphology verdicts and review list;
-  every hit with 4.9 ≤ |S| ≤ 5.1 in any band, and every changed item, listed;
+- hits: same positions (1e-6 deg), flags, signs, band sets, morphology verdicts and review list;
+  every hit with 4.9 ≤ |S| ≤ 5.1 in any band (S within 0.15″ in each band's map), and every
+  changed item, listed;
 - injections (optional): each injected row's hit / sign / flag / morph / review outcome.
 
     python scripts/kernel_loo_compare.py --a A --b B [--a-inj DIR --b-inj DIR] --out cmp.json
@@ -59,6 +60,28 @@ def maps_diff(a: Path, b: Path) -> dict:
     return out
 
 
+def band_s_at(d: Path, ra: float, dec: float, r_arcsec: float = 0.15) -> dict:
+    """Signed S of largest |S| within ``r_arcsec`` of (ra, dec) in each band's map."""
+    from astropy.io import fits
+    from astropy.wcs import WCS
+    from astropy.wcs.utils import proj_plane_pixel_scales
+
+    z = np.load(d / "maps.npz", allow_pickle=True)
+    out = {}
+    for k in z.keys():
+        if not k.endswith("_s"):
+            continue
+        b = k[:-2]
+        w = WCS(fits.Header.fromstring(str(z[b + "_wcs"])))
+        x, y = w.world_to_pixel_values(ra, dec)
+        rr = int(np.ceil(r_arcsec / (proj_plane_pixel_scales(w)[1] * 3600)))
+        xi, yi = int(round(float(x))), int(round(float(y)))
+        win = z[k][max(yi - rr, 0) : yi + rr + 1, max(xi - rr, 0) : xi + rr + 1]
+        v = win[np.isfinite(win)]
+        out[b] = float(v[np.argmax(np.abs(v))]) if v.size else None
+    return out
+
+
 def hits_diff(a: Path, b: Path) -> dict:
     ha, hb = Table.read(a / "hits.ecsv"), Table.read(b / "hits.ecsv")
     va, vb = _verdicts(a), _verdicts(b)
@@ -81,11 +104,10 @@ def hits_diff(a: Path, b: Path) -> dict:
         diff = {f: v for f, v in fields.items() if v[0] != v[1]}
         if diff:
             changed.append({"id": [str(ra_["hit_id"]), str(rb_["hit_id"])], **diff})
-        s = float(ra_["max_abs_sigma"])
-        if BORDER[0] <= s <= BORDER[1]:
-            border.append(
-                {"id": str(ra_["hit_id"]), "max_abs_sigma": [s, float(rb_["max_abs_sigma"])]}
-            )
+        sa = band_s_at(a, float(ra_["ra"]), float(ra_["dec"]))
+        if any(v is not None and BORDER[0] <= abs(v) <= BORDER[1] for v in sa.values()):
+            sb = band_s_at(b, float(rb_["ra"]), float(rb_["dec"]))
+            border.append({"id": str(ra_["hit_id"]), "band_s": [sa, sb]})
     ds = [
         abs(float(ma[k]["max_abs_sigma"]) - float(mb[k]["max_abs_sigma"]))
         for k in set(ma) & set(mb)

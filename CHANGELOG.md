@@ -2,21 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-17: `arc_diff` per-stamp kernel fits share one design (D-094): B2 ×22, same results (#291)
-- **Diagnosis:** each of B2's 1,076 F150W stamps rebuilt an ~87,000 × 82 design and ran 3 SVD least-squares on it
+## 2026-10-17: `arc_diff` per-stamp kernel fits share one design (D-094): B2 run ×15 (screen), same results (#291)
+- **Diagnosis:** each of B2's 1,076 F150W stamps rebuilt an ~86,800 × 82 design and ran 3 SVD least-squares on it
   (≈1.4 s per stamp).
-- **Change:** `kernel_fit_stamps` builds the design and Gram once per band, then subtracts each fit's own stamp and
-  clipped rows.
+- **Change:** `kernel_fit_stamps` builds the design and Gram once per band. Each fit subtracts its own stamp and
+  clipped rows, or sums them directly when they dominate, and refines its solution twice.
   - Leave-one-out, per-fit clipping, iterations and precision are unchanged.
   - It is the default; `--kernel-stamp-fit refit` keeps the old path.
+- **Failed first version (review):** plain Gram downdating lost digits for a bright-star stamp (synthetic: up to
+  1.2e-4 relative). Fixed with the guard and refinement, and checked on every stamp.
 - **Validation (tolerances fixed first):**
-  - kernels ≤ 2.7e-11 relative (B1 all stamps, B2 40 stamps, synthetic);
-  - B2 S ≤ 4.8e-7;
+  - all B1 and B2 stamp kernels agree to ≤ 1.2e-13, with the same clipping;
+  - B2 S ≤ 3e-8;
   - hits, flags, morphology, review list and all 60 injection outcomes identical;
-  - no threshold crossings.
-- **Speed (B2, no cache, same load):**
-  - whole run 1,508 → 67 s (screen, ×22) and 1,341 → 123 s (injection run, ×11);
-  - matching ×25–28; stamp kernels ×86–92;
+  - no threshold crossings or near-threshold hits.
+- **Speed (B2, no cache; similar, not identical load):**
+  - whole run 1,508 → ~99 s (screen, ×15) and 1,341 → ~171 s (injection run, ×8);
+  - matching ×16–18; stamp kernels ×30–31;
   - peak memory unchanged.
 - **Wording corrected in `fade_calib/RESULT.md` (owner):**
   - the direction of the injection-registration effect is not verified;

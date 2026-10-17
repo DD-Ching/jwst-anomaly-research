@@ -2,9 +2,10 @@
 
 Runs ``arc_diff.band_diff`` for one band up to ``kernel_match``, captures its exact inputs, then
 computes every stamp's leave-one-out kernel both ways on the same arrays (results/transients/
-kernel_loo/PLAN.md §3 test 1). Reports max|ΔK| / max|K| per stamp, kept-row counts are not
-exposed by ``kernel_fit``, so only kernels are compared; plus the condition number of the
-weighted stamp design and the time of each method.
+kernel_loo/PLAN.md §3 test 1). Reports max|ΔK| / max|K| per stamp and the relative difference of
+each fit's clipped χ² (``kernel_fit`` does not expose its kept-row count; a different clipping
+would change χ²), the condition number of the weighted stamp design and each method's time.
+``--part K M`` compares the stamps with label % M == K (to spread the refit cost over cores).
 
     python scripts/kernel_loo_check.py --band F150W --e1 <i2d> --e2 <i2d> --ra R --dec D \
         [--max-stamps N] --out check.json
@@ -57,6 +58,7 @@ def main(argv=None) -> int:
     p.add_argument("--half-arcsec", type=float, default=12.0)
     p.add_argument("--kernel-px", type=int, default=4)
     p.add_argument("--max-stamps", type=int, default=0, help="0 = all")
+    p.add_argument("--part", type=int, nargs=2, default=[0, 1], metavar=("K", "M"))
     p.add_argument("--out", type=Path, required=True)
     a = p.parse_args(argv)
     job = dict(
@@ -74,16 +76,17 @@ def main(argv=None) -> int:
     lab, nlab = ndimage.label(stamp)
     t0 = time.perf_counter()
     tim: dict = {}
-    shared = ad.kernel_fit_stamps(ref, tgt, var, half, stamp, lab, nlab, timing=tim)
+    chi2: dict = {}
+    shared = ad.kernel_fit_stamps(ref, tgt, var, half, stamp, lab, nlab, timing=tim, chi2=chi2)
     t_shared = time.perf_counter() - t0
-    labels = list(range(1, nlab + 1))
+    labels = [i for i in range(1, nlab + 1) if i % a.part[1] == a.part[0]]
     if a.max_stamps:
         labels = labels[: a.max_stamps]
-    rel, skipped_both, mismatch_skip = [], 0, []
+    rel, rel_chi2, skipped_both, mismatch_skip = [], [], 0, []
     t0 = time.perf_counter()
     for i in labels:
         try:
-            k_old, _ = ad.kernel_fit(ref, tgt, var, half, mask=stamp & (lab != i))
+            k_old, c_old = ad.kernel_fit(ref, tgt, var, half, mask=stamp & (lab != i))
         except ValueError:
             skipped_both += i not in shared
             if i in shared:
@@ -93,13 +96,10 @@ def main(argv=None) -> int:
             mismatch_skip.append(i)
             continue
         rel.append(float(np.max(np.abs(shared[i] - k_old)) / np.max(np.abs(k_old))))
+        rel_chi2.append(abs(chi2[i] / c_old - 1.0))
     t_refit = time.perf_counter() - t0
     # condition number of the weighted stamp design (all stamps)
-    n = 2 * half + 1
-    good = np.isfinite(ref) & np.isfinite(tgt) & np.isfinite(var) & (var > 0)
-    good[:half, :] = good[-half:, :] = good[:, :half] = good[:, -half:] = False
-    fin = ndimage.minimum_filter(np.isfinite(ref).astype(np.uint8), size=n) > 0
-    ys, xs = np.nonzero(good & fin & stamp)
+    ys, xs = ad._fit_rows(ref, tgt, var, half, stamp)
     r0 = np.where(np.isfinite(ref), ref, 0.0)
     cols = [r0[ys - dy, xs - dx] for dy in range(-half, half + 1) for dx in range(-half, half + 1)]
     des = np.column_stack([*cols, np.ones(ys.size)]) / np.sqrt(var[ys, xs])[:, None]
@@ -114,6 +114,8 @@ def main(argv=None) -> int:
         "max_rel_dK": max(rel) if rel else None,
         "median_rel_dK": float(np.median(rel)) if rel else None,
         "n_over_tolerance": int(sum(r > 1e-6 for r in rel)),
+        "max_rel_dchi2": max(rel_chi2) if rel_chi2 else None,
+        "part": a.part,
         "cond_design": float(np.linalg.cond(des)),
         "rows": int(ys.size),
         "time_shared_all_s": round(t_shared, 2),

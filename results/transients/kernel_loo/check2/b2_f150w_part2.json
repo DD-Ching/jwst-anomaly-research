@@ -7,15 +7,20 @@
   12.0
  ],
  "n_stamps": 1076,
- "stamps_compared": 40,
+ "stamps_compared": 269,
  "skips_both": 0,
  "skip_mismatch": [],
- "max_rel_dK": 2.079594457949305e-11,
- "median_rel_dK": 1.9485555693600096e-11,
+ "max_rel_dK": 8.909262026552019e-14,
+ "median_rel_dK": 4.0879832989141623e-14,
  "n_over_tolerance": 0,
+ "max_rel_dchi2": 2.220446049250313e-16,
+ "part": [
+  2,
+  4
+ ],
  "cond_design": 322.91548779985783,
  "rows": 86892,
- "time_shared_all_s": 15.07,
- "shared_build_s": 0.365,
- "time_refit_compared_s": 55.62
+ "time_shared_all_s": 57.78,
+ "shared_build_s": 0.323,
+ "time_refit_compared_s": 365.31
 }

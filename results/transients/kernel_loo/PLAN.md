@@ -76,3 +76,21 @@ Owner instruction 2026-10-17 (follow-up to #288). Budget 02:23Z → 05:23Z. One 
 
 ## 6. Out of scope
 Algorithm swap, GPU, new pipeline, new sky regions, SMACS, re-running history.
+
+## Addendum 1 (2026-10-17T03:10Z, after the final `/code-review`; deviations from §2–§4)
+- **Precision finding (review):**
+  - Downdating a Gram matrix that one bright stamp, or its clipped core, dominates can cancel digits.
+  - In a synthetic scene with a 1e5–1e6 flux star, the first version missed the 1e-6 kernel tolerance (1.1e-6 and
+    1.2e-4).
+  - The first B2 kernel check had covered only 40 stamps in raster order.
+- **Changes to the method (still the one method; nothing in the search changes):**
+  - When the subtracted rows carry more than half of the Gram's trace, the Gram is summed from the kept rows.
+  - Every solve gets 2 iterative-refinement steps, with the residual computed from the rows.
+- **Changes to the tests:**
+  - Test 1 now covers **every** stamp of B1 and B2 in both bands (`check2/`; the B2 F150W refit cost is split over
+    4 processes).
+  - The clipped-row count, which `kernel_fit` does not expose, is compared through each fit's clipped χ².
+  - The bright-star cases are unit tests.
+  - Test 3 lists hits with 4.9 ≤ |S| ≤ 5.1 in **any band**, from each band's map within 0.15″, instead of only the
+    hit's maximum.
+- **The first version's full-chain results and timings are superseded.**

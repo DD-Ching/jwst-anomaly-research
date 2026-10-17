@@ -10,12 +10,17 @@
  "stamps_compared": 175,
  "skips_both": 0,
  "skip_mismatch": [],
- "max_rel_dK": 1.2447461865272386e-11,
- "median_rel_dK": 4.349549936820716e-12,
+ "max_rel_dK": 7.246182354318246e-14,
+ "median_rel_dK": 2.5525388346537375e-14,
  "n_over_tolerance": 0,
+ "max_rel_dchi2": 3.3306690738754696e-16,
+ "part": [
+  0,
+  1
+ ],
  "cond_design": 1029.4865876619408,
  "rows": 18857,
- "time_shared_all_s": 0.82,
- "shared_build_s": 0.042,
- "time_refit_compared_s": 38.33
+ "time_shared_all_s": 2.03,
+ "shared_build_s": 0.038,
+ "time_refit_compared_s": 35.96
 }
