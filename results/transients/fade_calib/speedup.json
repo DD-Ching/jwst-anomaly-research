@@ -1,0 +1,167 @@
+{
+ "label": "derived; final code (exact cache, addendum-4 geometry); seed 30, empirical (E) and Gaussian (G) injections, 2 runs concurrently, --procs 1, OMP_NUM_THREADS=1, 4-core cloud session",
+ "set_wall_s": {
+  "nocache": 162.6,
+  "cold_cache_first_build": 150.1,
+  "warm_cache": 85.6
+ },
+ "runs": {
+  "nocache_E": {
+   "wall_s": 161.8,
+   "timing_s": {
+    "F150W": {
+     "read": 5.55,
+     "pre_injections": 43.89,
+     "resample_register_match": 70.22,
+     "detect": 2.88,
+     "post_injections": 0.02
+    },
+    "F444W": {
+     "read": 4.08,
+     "pre_injections": 24.81,
+     "resample_register_match": 9.73,
+     "detect": 0.25,
+     "post_injections": 0.0
+    }
+   }
+  },
+  "nocache_G": {
+   "wall_s": 111.7,
+   "timing_s": {
+    "F150W": {
+     "read": 9.17,
+     "pre_injections": 9.09,
+     "resample_register_match": 71.66,
+     "detect": 2.92,
+     "post_injections": 0.02
+    },
+    "F444W": {
+     "read": 3.8,
+     "pre_injections": 3.81,
+     "resample_register_match": 10.65,
+     "detect": 0.24,
+     "post_injections": 0.0
+    }
+   }
+  },
+  "cold_E": {
+   "wall_s": 149.4,
+   "timing_s": {
+    "F150W": {
+     "read": 5.06,
+     "pre_injections": 43.6,
+     "resample_register_match": 70.61,
+     "detect": 2.9,
+     "post_injections": 0.02
+    },
+    "F444W": {
+     "read": 0.01,
+     "pre_injections": 17.26,
+     "resample_register_match": 9.39,
+     "detect": 0.24,
+     "post_injections": 0.0
+    }
+   },
+   "vs_nocache": {
+    "hits": [
+     93,
+     93
+    ],
+    "hits_only_in_one": 0,
+    "max_rel_dS_common_hits": 0.0,
+    "injected_stage_diffs": 0,
+    "byte_identical": true
+   }
+  },
+  "cold_G": {
+   "wall_s": 103.2,
+   "timing_s": {
+    "F150W": {
+     "read": 5.04,
+     "pre_injections": 5.34,
+     "resample_register_match": 72.37,
+     "detect": 2.96,
+     "post_injections": 0.02
+    },
+    "F444W": {
+     "read": 2.84,
+     "pre_injections": 3.57,
+     "resample_register_match": 10.46,
+     "detect": 0.23,
+     "post_injections": 0.0
+    }
+   },
+   "vs_nocache": {
+    "hits": [
+     100,
+     100
+    ],
+    "hits_only_in_one": 0,
+    "max_rel_dS_common_hits": 0.0,
+    "injected_stage_diffs": 0,
+    "byte_identical": true
+   }
+  },
+  "warm_E": {
+   "wall_s": 84.1,
+   "timing_s": {
+    "F150W": {
+     "read": 0.04,
+     "pre_injections": 0.02,
+     "resample_register_match": 70.71,
+     "detect": 2.87,
+     "post_injections": 0.02
+    },
+    "F444W": {
+     "read": 0.01,
+     "pre_injections": 0.01,
+     "resample_register_match": 9.86,
+     "detect": 0.23,
+     "post_injections": 0.0
+    }
+   },
+   "vs_nocache": {
+    "hits": [
+     93,
+     93
+    ],
+    "hits_only_in_one": 0,
+    "max_rel_dS_common_hits": 0.0,
+    "injected_stage_diffs": 0,
+    "byte_identical": true
+   }
+  },
+  "warm_G": {
+   "wall_s": 85.0,
+   "timing_s": {
+    "F150W": {
+     "read": 0.04,
+     "pre_injections": 0.01,
+     "resample_register_match": 71.35,
+     "detect": 2.81,
+     "post_injections": 0.02
+    },
+    "F444W": {
+     "read": 0.01,
+     "pre_injections": 0.01,
+     "resample_register_match": 10.19,
+     "detect": 0.24,
+     "post_injections": 0.0
+    }
+   },
+   "vs_nocache": {
+    "hits": [
+     100,
+     100
+    ],
+    "hits_only_in_one": 0,
+    "max_rel_dS_common_hits": 0.0,
+    "injected_stage_diffs": 0,
+    "byte_identical": true
+   }
+  }
+ },
+ "previous_attempt": "speedup_v1.json: earlier cache (pickled WCS, not exact) and pre-addendum-4 injection geometry; superseded",
+ "cache_size_mb_box1_pair": 25,
+ "cache_size_note": "du -sm of the cache directory after the cold run (box 1, F150W + F444W, both injection models)"
+}

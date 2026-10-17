@@ -32,8 +32,11 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import os
+import pickle
+import time
 import warnings
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
@@ -64,7 +67,7 @@ def _wcs(header: fits.Header) -> WCS:
         return WCS(header)
 
 
-def read_box(uri: str, ra: float, dec: float, half_arcsec: float) -> dict:
+def read_box_raw(uri: str, ra: float, dec: float, half_arcsec: float) -> dict:
     """SCI, ERR, WCS (of the box), pixel scale and PIXAR_SR of a box of a level-3 mosaic.
 
     Remote URIs (``s3://``, ``https://``) are opened with fsspec; the rows of the box are read in
@@ -97,9 +100,60 @@ def read_box(uri: str, ra: float, dec: float, half_arcsec: float) -> dict:
             pixar = float(hdr.get("PIXAR_SR", (scale / 206264.806) ** 2))
     finally:
         fobj.close()
-    sub = wcs.deepcopy()
-    sub.wcs.crpix = sub.wcs.crpix - np.array([x0, y0])
-    return {"sci": out["SCI"], "err": out["ERR"], "wcs": sub, "scale": scale, "pixar_sr": pixar}
+    return {
+        "sci": out["SCI"],
+        "err": out["ERR"],
+        "header": hdr.tostring(),
+        "x0": x0,
+        "y0": y0,
+        "scale": scale,
+        "pixar_sr": pixar,
+    }
+
+
+def box_from_raw(raw: dict) -> dict:
+    """``read_box`` output from ``read_box_raw`` output (the WCS is rebuilt from the header text,
+    so a cached raw box gives exactly the same WCS as a fresh read)."""
+    sub = _wcs(fits.Header.fromstring(raw["header"]))
+    sub.wcs.crpix = sub.wcs.crpix - np.array([raw["x0"], raw["y0"]])
+    return {
+        "sci": raw["sci"],
+        "err": raw["err"],
+        "wcs": sub,
+        "scale": raw["scale"],
+        "pixar_sr": raw["pixar_sr"],
+    }
+
+
+def read_box(uri: str, ra: float, dec: float, half_arcsec: float) -> dict:
+    """SCI, ERR, WCS (of the box), pixel scale and PIXAR_SR of a box of a level-3 mosaic."""
+    return box_from_raw(read_box_raw(uri, ra, dec, half_arcsec))
+
+
+CACHE_VERSION = "2026-10-17.1"  # bump when a cached function's output changes
+
+
+def cached(cache_dir: str | None, fn, *args):
+    """``fn(*args)``, stored as a pickle under ``cache_dir`` keyed by ``fn``'s name and ``args``.
+
+    For raw-data products only (archive boxes, empirical PSFs, the injection-free registration):
+    nothing that depends on injected sources may go through this cache. Every argument of ``fn``
+    is part of the key, so a changed setting never serves a stale entry. Each call returns a fresh
+    copy; a WCS is never pickled (``read_box_raw`` keeps the header text instead). Code changes
+    to a cached function need a ``CACHE_VERSION`` bump.
+    """
+    if not cache_dir:
+        return fn(*args)
+    h = hashlib.sha1(repr((CACHE_VERSION, fn.__name__, *args)).encode()).hexdigest()[:20]
+    path = Path(cache_dir) / f"{fn.__name__}_{h}.pkl"
+    if path.exists():
+        return pickle.loads(path.read_bytes())
+    out = fn(*args)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(f".{os.getpid()}.tmp")
+    tmp.write_bytes(pickle.dumps(out))
+    tmp.replace(path)
+    return out
 
 
 def resample(img: np.ndarray, wcs_from: WCS, wcs_to: WCS, shape: tuple[int, int]) -> np.ndarray:
@@ -147,6 +201,35 @@ def register(a: np.ndarray, b: np.ndarray, max_shift: float = 3.0) -> tuple[floa
     if 0 < ix < win.shape[1] - 1:
         dx += parab(win[iy, ix - 1], win[iy, ix], win[iy, ix + 1])
     return float(dy), float(dx)
+
+
+def register_median(
+    a: np.ndarray, b: np.ndarray, tile: int, max_shift: float = 3.0
+) -> tuple[float, float, int]:
+    """Global (dy, dx) as the median of ``register`` over non-overlapping ``tile``-px tiles.
+
+    The whole-box correlation can be pulled to its window edge by a few tiles holding a bright
+    saturated star and its spikes (El Gordo F150W, 2026-10-17: (1.71, -3.00) px against a tile
+    median of (0.64, -0.52) px); the median follows the majority. Falls back to the whole-box
+    value when fewer than 4 usable tiles remain (tiles < 90 % finite in either image, or pinned at
+    the window edge, are dropped). Returns dy, dx and the number of tiles used.
+    """
+    ny, nx = a.shape
+    if tile < 8:
+        return (*register(a, b, max_shift), 0)
+    offs = []
+    for y in range(0, ny - tile + 1, tile):
+        for x in range(0, nx - tile + 1, tile):
+            ta, tb = a[y : y + tile, x : x + tile], b[y : y + tile, x : x + tile]
+            if np.isfinite(ta).mean() < 0.9 or np.isfinite(tb).mean() < 0.9:
+                continue  # chip gaps, footprint edges: an empty correlation peaks at a corner
+            d = register(ta, tb, max_shift)
+            if max(abs(d[0]), abs(d[1])) < np.ceil(max_shift) - 1e-6:
+                offs.append(d)  # tiles pinned at the window edge carry no position
+    if len(offs) < 4:
+        return (*register(a, b, max_shift), 0)
+    dy, dx = np.median(np.array(offs), axis=0)
+    return float(dy), float(dx), len(offs)
 
 
 def shift(img: np.ndarray, dy: float, dx: float) -> np.ndarray:
@@ -448,6 +531,87 @@ def add_star(
     img[sl] += star
 
 
+def empirical_psfs(
+    b1: dict, b2: dict, fwhm_arcsec: float, half_arcsec: float, n: int = 5, min_snr: float = 50.0
+) -> tuple[np.ndarray, np.ndarray, list[tuple[float, float, float]]]:
+    """Per-epoch empirical point-source stamps (sum 1) from the same point-like sources.
+
+    Sources are chosen on epoch 1 only: background-subtracted local maxima with peak / ERR ≥
+    ``min_snr``, no brighter maximum within the stamp, finite stamps in both epochs, ranked by
+    core concentration (peak / sum within ±r, r = max(3, 2 FWHM) px). Concentrations above that of
+    the band-FWHM Gaussian (hot pixels, cosmic rays) are dropped; the ``n`` most concentrated are
+    kept. Each epoch's stamps are cut at the same sky positions on that epoch's grid, recentred on
+    their own centroid, normalised and median-stacked. ASSUMPTION: these sources are stars or
+    unresolved knots and carry each epoch's PSF; wings beyond the stamp are truncated.
+    """
+
+    def bgsub(b):
+        fin = np.isfinite(b["sci"])
+        c = np.where(fin, b["sci"], 0.0)
+        k = int(round(4 * fwhm_arcsec / b["scale"])) * 2 + 1
+        return c - ndimage.median_filter(c, size=max(k, 9)), fin
+
+    c1, f1 = bgsub(b1)
+    c2, f2 = bgsub(b2)
+    h1 = int(round(half_arcsec / b1["scale"]))
+    r = max(3, int(round(2 * fwhm_arcsec / b1["scale"])))
+    g = gaussian_star((2 * r + 1, 2 * r + 1), r, r, fwhm_arcsec / 2.3548 / b1["scale"], 1.0)
+    conc_max = float(g.max())
+    mx = c1 == ndimage.maximum_filter(c1, size=2 * h1 + 1)
+    snr = c1 / np.where(b1["err"] > 0, b1["err"], np.inf)
+    cand = []
+    for y, x in zip(*np.nonzero(mx & (snr >= min_snr) & f1), strict=True):
+        if not (h1 <= y < c1.shape[0] - h1 and h1 <= x < c1.shape[1] - h1):
+            continue
+        if not f1[y - h1 : y + h1 + 1, x - h1 : x + h1 + 1].all():
+            continue
+        conc = float(c1[y, x] / c1[y - r : y + r + 1, x - r : x + r + 1].sum())
+        if conc <= conc_max:
+            ra, dec = b1["wcs"].all_pix2world(x, y, 0)
+            cand.append((-conc, float(ra), float(dec)))
+    cand.sort()
+
+    def stamp(c, fin, b, ra, dec):
+        x, y = (float(v) for v in b["wcs"].all_world2pix(ra, dec, 0))
+        h = int(round(half_arcsec / b["scale"]))
+        yi, xi = int(round(y)), int(round(x))
+        if not (h <= yi < c.shape[0] - h and h <= xi < c.shape[1] - h):
+            return None
+        sl = (slice(yi - h, yi + h + 1), slice(xi - h, xi + h + 1))
+        if not fin[sl].all():
+            return None
+        st = c[sl]
+        cy, cx = ndimage.center_of_mass(np.clip(st, 0.0, None))
+        st = ndimage.shift(st, (h - cy, h - cx), order=3, mode="constant")
+        return st / st.sum()
+
+    s1, s2, used = [], [], []
+    for nc, ra, dec in cand:
+        a, b = stamp(c1, f1, b1, ra, dec), stamp(c2, f2, b2, ra, dec)
+        if a is not None and b is not None:
+            s1.append(a)
+            s2.append(b)
+            used.append((ra, dec, round(-nc, 4)))
+        if len(used) == n:
+            break
+    if not used:
+        raise ValueError("no compact sources for the empirical PSF")
+    p1, p2 = np.median(s1, axis=0), np.median(s2, axis=0)
+    return p1 / p1.sum(), p2 / p2.sum(), used
+
+
+def add_stamp(img: np.ndarray, y: float, x: float, psf: np.ndarray, flux: float) -> None:
+    """Add ``flux`` × ``psf`` (sum 1, centred) to ``img`` at sub-pixel (y, x), in place."""
+    h = psf.shape[0] // 2
+    yi, xi = int(round(y)), int(round(x))
+    st = flux * ndimage.shift(psf, (y - yi, x - xi), order=3, mode="constant")
+    y0, x0 = yi - h, xi - h
+    ys, xs = max(y0, 0), max(x0, 0)
+    ye, xe = min(y0 + psf.shape[0], img.shape[0]), min(x0 + psf.shape[1], img.shape[1])
+    if ye > ys and xe > xs:
+        img[ys:ye, xs:xe] += st[ys - y0 : ye - y0, xs - x0 : xe - x0]
+
+
 def grid_positions(
     img: np.ndarray, w: WCS, scale: float, n: int, min_sep: float, margin: float, pct: float, seed
 ) -> list[tuple[float, float]]:
@@ -474,15 +638,125 @@ def grid_job(uri, ra, dec, half, n, min_sep, margin, seed) -> list[tuple[float, 
     return grid_positions(b["sci"], b["wcs"], b["scale"], n, min_sep, margin, 90.0, seed)
 
 
+PSF_N = 5  # ASSUMPTION: empirical PSF stack size (PLAN addendum 3)
+PSF_MIN_SNR = 50.0
+
+
+def global_shift(a: np.ndarray, b: np.ndarray, scale: float, reg_tile_arcsec: float):
+    """The chain's global registration: tile median (``--reg-tile-arcsec`` > 0) or whole box."""
+    if reg_tile_arcsec > 0:
+        return register_median(a, b, int(round(reg_tile_arcsec / scale)))
+    return (*register(a, b), 0)
+
+
+def pair_shift(
+    e1: str, e2: str, ra: float, dec: float, half: float, reg_tile_arcsec: float, cache_dir=None
+):
+    """Global registration (dy, dx) of the injection-free boxes, as the chain measures it.
+
+    Known limitation (final review 2026-10-17): the chain re-measures the registration with the
+    injected sources present, which moves it by 0.02-0.15 px (F150W) from this value
+    (``results/transients/fade_calib/inject_shift_residual.json``), so injected sources keep that
+    small misregistration."""
+    b1 = box_from_raw(cached(cache_dir, read_box_raw, e1, ra, dec, half))
+    b2 = box_from_raw(cached(cache_dir, read_box_raw, e2, ra, dec, half + 1.0))
+    s2 = resample(b2["sci"], b2["wcs"], b1["wcs"], b1["sci"].shape)
+    dy, dx, _ = global_shift(b1["sci"], s2, b1["scale"], reg_tile_arcsec)
+    return dy, dx
+
+
+def pair_psfs(e1, e2, ra, dec, box, half, fwhm, n, min_snr):
+    """Per-epoch empirical PSFs from ``box``-half boxes of the two mosaics (``empirical_psfs``)."""
+    q1 = read_box(e1, ra, dec, box)
+    q2 = read_box(e2, ra, dec, box + 1.0)
+    return empirical_psfs(q1, q2, fwhm, half, n=n, min_snr=min_snr)
+
+
+def epoch2_pixel(w1: WCS, w2: WCS, ra: float, dec: float, dy: float, dx: float):
+    """(y, x) in epoch 2 of a sky-fixed source at (ra, dec), given the chain's registration.
+
+    Real sources sit at epoch-1 pixel p - (dy, dx) in WCS-resampled epoch 2 (``shift`` then moves
+    them by +(dy, dx) onto p), so the source is placed at the sky position of that pixel.
+    """
+    x1, y1 = (float(v) for v in w1.all_world2pix(ra, dec, 0))
+    ra2, dec2 = w1.all_pix2world(x1 - dx, y1 - dy, 0)
+    x2, y2 = (float(v) for v in w2.all_world2pix(ra2, dec2, 0))
+    return y2, x2
+
+
 def band_diff(job: dict) -> dict:
     """Read, align, match and difference one band; detections, maps and injections."""
     os.environ.setdefault("OMP_NUM_THREADS", "1")
-    b1 = read_box(job["e1"], job["ra"], job["dec"], job["half"])
-    b2 = read_box(job["e2"], job["ra"], job["dec"], job["half"] + 1.0)
+    t0 = time.perf_counter()
+    cd = job.get("cache_dir")
+    b1 = box_from_raw(cached(cd, read_box_raw, job["e1"], job["ra"], job["dec"], job["half"]))
+    b2 = box_from_raw(cached(cd, read_box_raw, job["e2"], job["ra"], job["dec"], job["half"] + 1.0))
+    t_read = time.perf_counter() - t0
+    # Pre-matching injections (``--inject-pre``): sources added to the raw boxes of each epoch,
+    # on that epoch's own grid and flux scale, before resampling, registration and matching.
+    # With ``inj_pre_psf == "empirical"`` each epoch gets its own empirical PSF (chosen before
+    # any injection), so an unchanged source has each epoch's real shape.
+    psfs, psf_info, pre_shift = None, None, None
+    if job.get("inj_pre"):
+        # Where a real sky-fixed source lands in epoch 2: the chain shifts resampled epoch 2 by
+        # the registration (dy, dx), so a source at epoch-1 pixel p sits at p - (dy, dx) there.
+        # Placing it at the WCS position instead would leave every injection misregistered by
+        # (dy, dx) after the shift. The shift is measured on the injection-free boxes.
+        pre_shift = cached(
+            cd,
+            pair_shift,
+            job["e1"],
+            job["e2"],
+            job["ra"],
+            job["dec"],
+            job["half"],
+            job.get("reg_tile_arcsec", 0.0),
+            cd,
+        )
+    if job.get("inj_pre") and job.get("inj_pre_psf") == "empirical":
+        fw = PSF_FWHM[job["band"]]
+        box = job["inj_pre_psf_box"]
+        p1, p2, used = cached(
+            cd,
+            pair_psfs,
+            job["e1"],
+            job["e2"],
+            job["ra"],
+            job["dec"],
+            box,
+            job["inj_pre_psf_half"],
+            fw,
+            PSF_N,
+            PSF_MIN_SNR,
+        )
+        psfs = {1: p1, 2: p2}
+        psf_info = {
+            "sources_ra_dec_conc": used,
+            "half_arcsec": job["inj_pre_psf_half"],
+            "box_half_arcsec": box,
+            "peak_frac": [round(float(p1.max()), 4), round(float(p2.max()), 4)],
+        }
+    for ra, dec, mag1, mag2 in job.get("inj_pre") or []:
+        for ep, b, mag in ((1, b1, mag1), (2, b2, mag2)):
+            if mag is None:
+                continue
+            if ep == 1:
+                x, y = (float(v) for v in b1["wcs"].all_world2pix(ra, dec, 0))
+            else:
+                y, x = epoch2_pixel(b1["wcs"], b2["wcs"], ra, dec, *pre_shift)
+            if 0 <= y < b["sci"].shape[0] and 0 <= x < b["sci"].shape[1]:
+                flux = mag_to_mjysr(mag, b["pixar_sr"])
+                if psfs is not None:
+                    add_stamp(b["sci"], y, x, psfs[ep], flux)
+                else:
+                    sig = PSF_FWHM[job["band"]] / 2.3548 / b["scale"]
+                    add_star(b["sci"], y, x, sig, flux)
+    t1 = time.perf_counter()
+    t_pre = t1 - t0 - t_read
     shape = b1["sci"].shape
     s2 = resample(b2["sci"], b2["wcs"], b1["wcs"], shape)
     v2 = resample(b2["err"] ** 2, b2["wcs"], b1["wcs"], shape)
-    dy, dx = register(b1["sci"], s2)
+    dy, dx, n_reg_tiles = global_shift(b1["sci"], s2, b1["scale"], job.get("reg_tile_arcsec", 0.0))
     s2 = shift(s2, dy, dx)
     v2 = shift(v2, dy, dx)
     if job["tile_arcsec"] > 0:
@@ -507,6 +781,7 @@ def band_diff(job: dict) -> dict:
         conv2 = conv_epoch == 2
     bg_px = int(np.ceil(job["bg_arcsec"] / b1["scale"])) | 1
     sep = max(int(round(2 * sig_psf)), 1)
+    t_match = time.perf_counter() - t1
 
     # Whole-chain injection grid: stars at common sky positions in every band, added to epoch 2
     # before detection, so hits, maps and any later stage (arc_diff_morph.py) see them.
@@ -530,6 +805,7 @@ def band_diff(job: dict) -> dict:
         sc = scale if scale is not None else max(_robust_std(sraw), 1.0)
         return sraw / sc, d, sc
 
+    t2 = time.perf_counter()
     s, d, noise_scale = detect(m2)
     det = []
     for y, x, v in peaks(s, job["min_sigma"], sep):
@@ -554,6 +830,8 @@ def band_diff(job: dict) -> dict:
         "e1img": b1["sci"].astype(np.float32),
         "wcs": b1["wcs"].to_header_string(relax=True),
     }
+    t_detect = time.perf_counter() - t2
+    t3 = time.perf_counter()
     # Injections: epoch 2 only, on bright pixels (arcs); same chain, same noise scale.
     rng = np.random.default_rng(job["seed"])
     bright = np.nan_to_num(b1["sci"]) > np.nanpercentile(b1["sci"], 90)
@@ -601,6 +879,16 @@ def band_diff(job: dict) -> dict:
             inj_unflagged[f"{mag:.2f}"] = found_unflagged / job["inject"]
     out["injection"] = inj
     out["injection_unflagged"] = inj_unflagged
+    out["inject_pre_psf"] = psf_info
+    out["inject_pre_shift_px"] = list(pre_shift) if pre_shift is not None else None
+    out["reg_tiles_used"] = n_reg_tiles
+    out["timing_s"] = {
+        "read": round(t_read, 2),
+        "pre_injections": round(t_pre, 2),
+        "resample_register_match": round(t_match, 2),
+        "detect": round(t_detect, 2),
+        "post_injections": round(time.perf_counter() - t3, 2),
+    }
     return out
 
 
@@ -677,6 +965,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--bg-arcsec", type=float, default=0.6, help="median filter of the difference")
     ap.add_argument("--tile-arcsec", type=float, default=3.0, help="local registration; 0 = off")
     ap.add_argument(
+        "--reg-tile-arcsec",
+        type=float,
+        default=0.0,
+        help="global shift = median over tiles of this size (0 = whole-box correlation)",
+    )
+    ap.add_argument(
         "--kernel-px", type=int, default=0, help="half-width of a fitted pixel kernel; 0 = Gaussian"
     )
     ap.add_argument(
@@ -700,11 +994,45 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--inject-grid-mags", type=float, nargs="+", default=[27.5, 28.0])
     ap.add_argument("--inject-grid-sep", type=float, default=1.5, help="arcsec between stars")
+    ap.add_argument(
+        "--inject-pre",
+        type=Path,
+        help="CSV name,ra,dec,mag1,mag2: sources added to both raw epochs before matching",
+    )
+    ap.add_argument(
+        "--inject-pre-psf",
+        choices=("gauss", "empirical"),
+        default="gauss",
+        help="shape of --inject-pre sources: band-FWHM Gaussian, or per-epoch empirical PSF",
+    )
+    ap.add_argument(
+        "--inject-pre-psf-half", type=float, default=0.6, help="stamp half-size (arcsec)"
+    )
+    ap.add_argument(
+        "--inject-pre-psf-box", type=float, default=40.0, help="PSF-star box half-size (arcsec)"
+    )
+    ap.add_argument(
+        "--cache-dir",
+        type=Path,
+        help="local cache of raw boxes and empirical PSFs (untracked; never injection-dependent)",
+    )
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--procs", type=int, default=min(os.cpu_count() or 1, 4))
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--maps", type=Path, help="S, difference and epoch-1 maps (.npz; untracked)")
     a = ap.parse_args(argv)
+    t_start = time.perf_counter()
+    pre_rows = []
+    if a.inject_pre:
+        with open(a.inject_pre, newline="") as f:
+            pre_rows = list(csv.DictReader(f))
+
+    def _mag(v):
+        return float(v) if v not in (None, "") else None
+
+    inj_pre = [
+        (float(r["ra"]), float(r["dec"]), _mag(r["mag1"]), _mag(r["mag2"])) for r in pre_rows
+    ]
 
     jobs = [
         {
@@ -725,6 +1053,12 @@ def main(argv: list[str] | None = None) -> int:
             "inject_mags": a.inject_mags,
             "seed": a.seed + i,
             "inj_sky": [],
+            "inj_pre": inj_pre,
+            "inj_pre_psf": a.inject_pre_psf,
+            "inj_pre_psf_half": a.inject_pre_psf_half,
+            "inj_pre_psf_box": a.inject_pre_psf_box,
+            "reg_tile_arcsec": a.reg_tile_arcsec,
+            "cache_dir": str(a.cache_dir) if a.cache_dir else None,
         }
         for i, (b, e1, e2) in enumerate(a.band)
     ]
@@ -825,6 +1159,28 @@ def main(argv: list[str] | None = None) -> int:
             wr.writeheader()
             for e in injected:
                 wr.writerow({k: e[k] for k in wr.fieldnames})
+    if pre_rows:
+        flagged = {h["hit_id"] for h in hits if h["near_bright_core"]}
+        hit_sign = {h["hit_id"]: h["sign"] for h in hits}
+        pre = match_targets(
+            [{"name": r["name"], "ra": float(r["ra"]), "dec": float(r["dec"])} for r in pre_rows],
+            res,
+            hits,
+            a.match_arcsec,
+        )
+        fields = list(pre_rows[0].keys()) + ["hit", "hit_sign", "near_bright_core"]
+        fields += [r["band"] for r in res]
+        with open(a.out / "injected_pre.csv", "w", newline="") as f:
+            wr = csv.DictWriter(f, fieldnames=fields)
+            wr.writeheader()
+            for row, e in zip(pre_rows, pre, strict=True):
+                out = dict(row)
+                out["hit"] = e["hit"] or ""
+                out["hit_sign"] = hit_sign.get(e["hit"], "")
+                out["near_bright_core"] = e["hit"] in flagged
+                for r in res:
+                    out[r["band"]] = e[r["band"]]
+                wr.writerow(out)
     tab = Table(rows=hits, names=list(hits[0].keys())) if hits else Table()
     tab.meta = {"provenance": "derived", "thresholds": "ASSUMPTION: see summary.json"}
     tab.write(a.out / "hits.ecsv", overwrite=True)
@@ -843,6 +1199,8 @@ def main(argv: list[str] | None = None) -> int:
             "link_arcsec": a.link_arcsec,
             "bg_arcsec": a.bg_arcsec,
             "tile_arcsec": a.tile_arcsec,
+            "reg_tile_arcsec": a.reg_tile_arcsec,
+            "inject_pre_psf": a.inject_pre_psf,
             "kernel_px": a.kernel_px,
             "kernel_stamps": a.kernel_stamps,
             "match_arcsec": a.match_arcsec,
@@ -869,12 +1227,18 @@ def main(argv: list[str] | None = None) -> int:
                 "n_detections": len(r["detections"]),
                 "injection_recovered": r["injection"],
                 "injection_recovered_not_near_core_this_band": r["injection_unflagged"],
+                "timing_s": r["timing_s"],
+                "inject_pre_psf": r.get("inject_pre_psf"),
+                "inject_pre_shift_px": r.get("inject_pre_shift_px"),
+                "reg_tiles_used": r.get("reg_tiles_used"),
             }
             for r in res
         },
         "n_hits": len(hits),
         "n_hits_not_near_bright_core": sum(not h["near_bright_core"] for h in hits),
         "known": known_out,
+        "inject_pre": {"n": len(pre_rows), "csv": str(a.inject_pre) if a.inject_pre else None},
+        "wall_s": round(time.perf_counter() - t_start, 1),
         "inject_grid": {
             "n": len(injected),
             "n_hit": sum(e["hit"] is not None for e in injected),

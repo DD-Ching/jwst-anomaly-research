@@ -1,0 +1,501 @@
+{
+ "label": "derived; injected sources are simulations",
+ "runs": [
+  "/tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/fc/regE_s10",
+  "/tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/fc/regE_s11"
+ ],
+ "summary": {
+  "unchanged": {
+   "26.00": {
+    "n": 14,
+    "hit": 4,
+    "hit_frac": 0.286,
+    "hit_68": [
+     0.182,
+     0.418
+    ],
+    "unflagged": 4,
+    "unflagged_frac": 0.286,
+    "unflagged_68": [
+     0.182,
+     0.418
+    ],
+    "morph_pass": 0,
+    "morph_pass_frac": 0.0,
+    "morph_pass_68": [
+     0.0,
+     0.067
+    ],
+    "sign_ok": 4,
+    "sign_ok_frac": 0.286,
+    "sign_ok_68": [
+     0.182,
+     0.418
+    ],
+    "review": 0,
+    "review_frac": 0.0,
+    "review_68": [
+     0.0,
+     0.067
+    ],
+    "review_sign": 0,
+    "review_sign_frac": 0.0,
+    "review_sign_68": [
+     0.0,
+     0.067
+    ]
+   },
+   "27.00": {
+    "n": 14,
+    "hit": 0,
+    "hit_frac": 0.0,
+    "hit_68": [
+     0.0,
+     0.067
+    ],
+    "unflagged": 0,
+    "unflagged_frac": 0.0,
+    "unflagged_68": [
+     0.0,
+     0.067
+    ],
+    "morph_pass": 0,
+    "morph_pass_frac": 0.0,
+    "morph_pass_68": [
+     0.0,
+     0.067
+    ],
+    "sign_ok": 0,
+    "sign_ok_frac": 0.0,
+    "sign_ok_68": [
+     0.0,
+     0.067
+    ],
+    "review": 0,
+    "review_frac": 0.0,
+    "review_68": [
+     0.0,
+     0.067
+    ],
+    "review_sign": 0,
+    "review_sign_frac": 0.0,
+    "review_sign_68": [
+     0.0,
+     0.067
+    ]
+   },
+   "27.50": {
+    "n": 12,
+    "hit": 0,
+    "hit_frac": 0.0,
+    "hit_68": [
+     0.0,
+     0.077
+    ],
+    "unflagged": 0,
+    "unflagged_frac": 0.0,
+    "unflagged_68": [
+     0.0,
+     0.077
+    ],
+    "morph_pass": 0,
+    "morph_pass_frac": 0.0,
+    "morph_pass_68": [
+     0.0,
+     0.077
+    ],
+    "sign_ok": 0,
+    "sign_ok_frac": 0.0,
+    "sign_ok_68": [
+     0.0,
+     0.077
+    ],
+    "review": 0,
+    "review_frac": 0.0,
+    "review_68": [
+     0.0,
+     0.077
+    ],
+    "review_sign": 0,
+    "review_sign_frac": 0.0,
+    "review_sign_68": [
+     0.0,
+     0.077
+    ]
+   }
+  },
+  "appear": {
+   "26.00": {
+    "n": 12,
+    "hit": 11,
+    "hit_frac": 0.917,
+    "hit_68": [
+     0.802,
+     0.968
+    ],
+    "unflagged": 10,
+    "unflagged_frac": 0.833,
+    "unflagged_68": [
+     0.701,
+     0.914
+    ],
+    "morph_pass": 11,
+    "morph_pass_frac": 0.917,
+    "morph_pass_68": [
+     0.802,
+     0.968
+    ],
+    "sign_ok": 11,
+    "sign_ok_frac": 0.917,
+    "sign_ok_68": [
+     0.802,
+     0.968
+    ],
+    "review": 10,
+    "review_frac": 0.833,
+    "review_68": [
+     0.701,
+     0.914
+    ],
+    "review_sign": 10,
+    "review_sign_frac": 0.833,
+    "review_sign_68": [
+     0.701,
+     0.914
+    ]
+   },
+   "27.00": {
+    "n": 14,
+    "hit": 11,
+    "hit_frac": 0.786,
+    "hit_68": [
+     0.659,
+     0.874
+    ],
+    "unflagged": 10,
+    "unflagged_frac": 0.714,
+    "unflagged_68": [
+     0.582,
+     0.818
+    ],
+    "morph_pass": 11,
+    "morph_pass_frac": 0.786,
+    "morph_pass_68": [
+     0.659,
+     0.874
+    ],
+    "sign_ok": 11,
+    "sign_ok_frac": 0.786,
+    "sign_ok_68": [
+     0.659,
+     0.874
+    ],
+    "review": 10,
+    "review_frac": 0.714,
+    "review_68": [
+     0.582,
+     0.818
+    ],
+    "review_sign": 10,
+    "review_sign_frac": 0.714,
+    "review_sign_68": [
+     0.582,
+     0.818
+    ]
+   },
+   "27.50": {
+    "n": 14,
+    "hit": 13,
+    "hit_frac": 0.929,
+    "hit_68": [
+     0.828,
+     0.972
+    ],
+    "unflagged": 12,
+    "unflagged_frac": 0.857,
+    "unflagged_68": [
+     0.74,
+     0.927
+    ],
+    "morph_pass": 11,
+    "morph_pass_frac": 0.786,
+    "morph_pass_68": [
+     0.659,
+     0.874
+    ],
+    "sign_ok": 13,
+    "sign_ok_frac": 0.929,
+    "sign_ok_68": [
+     0.828,
+     0.972
+    ],
+    "review": 11,
+    "review_frac": 0.786,
+    "review_68": [
+     0.659,
+     0.874
+    ],
+    "review_sign": 11,
+    "review_sign_frac": 0.786,
+    "review_sign_68": [
+     0.659,
+     0.874
+    ]
+   }
+  },
+  "partial": {
+   "26.00": {
+    "n": 14,
+    "hit": 14,
+    "hit_frac": 1.0,
+    "hit_68": [
+     0.933,
+     1.0
+    ],
+    "unflagged": 13,
+    "unflagged_frac": 0.929,
+    "unflagged_68": [
+     0.828,
+     0.972
+    ],
+    "morph_pass": 13,
+    "morph_pass_frac": 0.929,
+    "morph_pass_68": [
+     0.828,
+     0.972
+    ],
+    "sign_ok": 14,
+    "sign_ok_frac": 1.0,
+    "sign_ok_68": [
+     0.933,
+     1.0
+    ],
+    "review": 13,
+    "review_frac": 0.929,
+    "review_68": [
+     0.828,
+     0.972
+    ],
+    "review_sign": 13,
+    "review_sign_frac": 0.929,
+    "review_sign_68": [
+     0.828,
+     0.972
+    ]
+   },
+   "27.00": {
+    "n": 12,
+    "hit": 9,
+    "hit_frac": 0.75,
+    "hit_68": [
+     0.609,
+     0.852
+    ],
+    "unflagged": 9,
+    "unflagged_frac": 0.75,
+    "unflagged_68": [
+     0.609,
+     0.852
+    ],
+    "morph_pass": 8,
+    "morph_pass_frac": 0.667,
+    "morph_pass_68": [
+     0.522,
+     0.785
+    ],
+    "sign_ok": 9,
+    "sign_ok_frac": 0.75,
+    "sign_ok_68": [
+     0.609,
+     0.852
+    ],
+    "review": 8,
+    "review_frac": 0.667,
+    "review_68": [
+     0.522,
+     0.785
+    ],
+    "review_sign": 8,
+    "review_sign_frac": 0.667,
+    "review_sign_68": [
+     0.522,
+     0.785
+    ]
+   },
+   "27.50": {
+    "n": 14,
+    "hit": 8,
+    "hit_frac": 0.571,
+    "hit_68": [
+     0.439,
+     0.695
+    ],
+    "unflagged": 7,
+    "unflagged_frac": 0.5,
+    "unflagged_68": [
+     0.371,
+     0.629
+    ],
+    "morph_pass": 6,
+    "morph_pass_frac": 0.429,
+    "morph_pass_68": [
+     0.305,
+     0.561
+    ],
+    "sign_ok": 8,
+    "sign_ok_frac": 0.571,
+    "sign_ok_68": [
+     0.439,
+     0.695
+    ],
+    "review": 6,
+    "review_frac": 0.429,
+    "review_68": [
+     0.305,
+     0.561
+    ],
+    "review_sign": 6,
+    "review_sign_frac": 0.429,
+    "review_sign_68": [
+     0.305,
+     0.561
+    ]
+   }
+  },
+  "vanish": {
+   "26.00": {
+    "n": 14,
+    "hit": 14,
+    "hit_frac": 1.0,
+    "hit_68": [
+     0.933,
+     1.0
+    ],
+    "unflagged": 12,
+    "unflagged_frac": 0.857,
+    "unflagged_68": [
+     0.74,
+     0.927
+    ],
+    "morph_pass": 14,
+    "morph_pass_frac": 1.0,
+    "morph_pass_68": [
+     0.933,
+     1.0
+    ],
+    "sign_ok": 14,
+    "sign_ok_frac": 1.0,
+    "sign_ok_68": [
+     0.933,
+     1.0
+    ],
+    "review": 12,
+    "review_frac": 0.857,
+    "review_68": [
+     0.74,
+     0.927
+    ],
+    "review_sign": 12,
+    "review_sign_frac": 0.857,
+    "review_sign_68": [
+     0.74,
+     0.927
+    ]
+   },
+   "27.00": {
+    "n": 14,
+    "hit": 14,
+    "hit_frac": 1.0,
+    "hit_68": [
+     0.933,
+     1.0
+    ],
+    "unflagged": 12,
+    "unflagged_frac": 0.857,
+    "unflagged_68": [
+     0.74,
+     0.927
+    ],
+    "morph_pass": 13,
+    "morph_pass_frac": 0.929,
+    "morph_pass_68": [
+     0.828,
+     0.972
+    ],
+    "sign_ok": 14,
+    "sign_ok_frac": 1.0,
+    "sign_ok_68": [
+     0.933,
+     1.0
+    ],
+    "review": 12,
+    "review_frac": 0.857,
+    "review_68": [
+     0.74,
+     0.927
+    ],
+    "review_sign": 12,
+    "review_sign_frac": 0.857,
+    "review_sign_68": [
+     0.74,
+     0.927
+    ]
+   },
+   "27.50": {
+    "n": 12,
+    "hit": 10,
+    "hit_frac": 0.833,
+    "hit_68": [
+     0.701,
+     0.914
+    ],
+    "unflagged": 9,
+    "unflagged_frac": 0.75,
+    "unflagged_68": [
+     0.609,
+     0.852
+    ],
+    "morph_pass": 10,
+    "morph_pass_frac": 0.833,
+    "morph_pass_68": [
+     0.701,
+     0.914
+    ],
+    "sign_ok": 10,
+    "sign_ok_frac": 0.833,
+    "sign_ok_68": [
+     0.701,
+     0.914
+    ],
+    "review": 9,
+    "review_frac": 0.75,
+    "review_68": [
+     0.609,
+     0.852
+    ],
+    "review_sign": 9,
+    "review_sign_frac": 0.75,
+    "review_sign_68": [
+     0.609,
+     0.852
+    ]
+   }
+  },
+  "unchanged_false_hits": {
+   "n": 40,
+   "false_hits": 4,
+   "frac": 0.1,
+   "frac_68": [
+    0.062,
+    0.158
+   ]
+  }
+ },
+ "pass_rule": {
+  "vanish_review_sign_frac": 0.857,
+  "unchanged_false_hit_frac": 0.1,
+  "vanish_ok": true,
+  "unchanged_ok": true,
+  "passed": true
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "label": "derived; box 1 (#286) re-screened with the addendum-4 chain (--reg-tile-arcsec 6, robust tile median), no injections",
+ "shift_px": {
+  "F150W": [
+   0.6433259080077189,
+   -0.5219414134122046
+  ],
+  "F444W": [
+   0.11082451251649328,
+   -0.18354930297408523
+  ]
+ },
+ "reg_tiles_used": {
+  "F150W": 12,
+  "F444W": 16
+ },
+ "hits": 40,
+ "unflagged": 6,
+ "morph_all": {
+  "edge": 7,
+  "dipole": 4,
+  "rosette": 25,
+  "pass": 1,
+  "sign_flip": 2,
+  "extended": 1
+ },
+ "review": [
+  {
+   "id": "h021",
+   "sign": "-",
+   "nearest_286": [
+    "h024",
+    0.0
+   ]
+  }
+ ]
+}

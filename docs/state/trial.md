@@ -216,6 +216,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.35 (`arcs` on RXJ2129 with the DJA catalogue: PA convention gate, run, sheet; no result) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01ExftNC, 21:08–21:45Z |
 | 2026-W42 | ≈ 1.0 (El Gordo arc_diff one-box pilot: screen, full-chain injections, 4 entries vetted) | — | ≈ 0.4 (spike, on-spike and bright-source controls) | 0.2 (orientation, claim, state files) | interactive session 01P8KV8A |
 | 2026-W42 | — | — | ≈ 0.15 (`arcs` PA convention check: pa_sep vs pa_obs on stored census rows) | 0.1 (orientation, claim, PR) | cloud routine 01UdRNer, 22:08–22:35Z |
+| 2026-W42 | ≈ 0.4 (El Gordo boxes 2–3 `arc_diff` screen and injections) | — | ≈ 0.9 (`arc_diff` fading calibration with pre-matching injections; registration fix; review-driven geometry fix; held-out reruns; #286 re-screen) | 0.3 (plan addenda, speed-up comparison, state files, review, PR) | cloud routine 01P8KV8A, 23:32–01:30Z (#288) |
 | 2026-W42 | — | — | ≈ 0.25 (MACS1423 clump-pair census re-run with the fixed #273 code; sheet looked at) | 0.1 (orientation, takeover, PR) | cloud routine 01WSfhqY, 00:08–00:45Z |
 | 2026-W42 | ≈ 0.4 (`arcs` on WHL0137: plan, GLAFIC model pin, run, sheet) | — | — | 0.1 (orientation, claim, PR) | cloud routine 016CxjVy, 01:08–01:45Z |
 | 2026-W42 | — | — | — | 0.3 (MOA-II manifest rows and retrieval dates; orientation, PR) | cloud routine 01RSWD6E, 02:08–02:45Z |

@@ -14,6 +14,46 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   and git dates of the chunk files (all 2026-10-15) are not retrieval dates, so none is inferred.
 - **Handoff:** no science change. A re-stream of any field fills its dates.
 
+## 2026-10-17: `arc_diff` fading calibration (pre-matching injections), registration fix, El Gordo B1–B3 search (#288)
+- **Scope (owner, 2026-10-16):**
+  - calibrate fades, then a measured speed-up, then a small batch only if the calibration passes;
+  - plan first: `results/transients/fade_calib/PLAN.md` with addenda 3–5.
+- **Tools:**
+  - `arc_diff.py --inject-pre`: sources go into both raw epochs before registration and matching. Epoch 2 follows
+    the chain's injection-free registration.
+  - `--inject-pre-psf empirical`: per-epoch PSFs.
+  - **The one chain fix:** `--reg-tile-arcsec 6`, the global shift as a tile median. El Gordo's whole-box shift was
+    pinned at ±3 px.
+  - `--cache-dir`: raw-data products only.
+  - `scripts/fade_calib.py`: `make`, `eval`, `boxes`.
+- **Failed approach, kept for the record:**
+  - The first injection placed epoch-2 sources at their WCS position, so after the chain's registration shift each
+    unchanged source became a 0.9 px dipole.
+  - Held-out seeds 20 + 21 "failed" (false hits 0.25–0.28) because of that artefact.
+  - Found by `/code-review`; corrected in addendum 4. Fresh held-out seeds 30 + 31 were used after it.
+- **Calibration (box 1, held-out seeds 30 + 31; n = 12–14 per cell):**
+  - vanish 26.0 AB on the review list with the sign: 14 / 14 [0.93, 1.00];
+  - unchanged false hits: 1 / 40 (empirical PSF) and 4 / 40 (Gaussian, exactly at the 0.10 limit); passes §4;
+  - corrected dev seeds: 6 / 40.
+  - Partial fades at 27.5 AB: detected 5 / 14 (empirical) and 8 / 14 (Gaussian); on the review list 4 / 14 and
+    6 / 14.
+  - Known limitation: injected sources keep a 0.02–0.15 px F150W misregistration
+    (`inject_shift_residual.json`); not corrected, no rerun.
+  - These are small-sample figures for one box, and an injected-source false-hit fraction is not a real-sky
+    false-alarm rate.
+- **Batch:**
+  - B1 (#286) re-screened: review list 4 → 1 (the vetted h024 position); #286 stands.
+  - B2 and B3 were chosen by coverage before any difference. Review lists 0 and 0, and all 8 rejected hits were
+    looked at.
+  - Local vanish 26.0 AB efficiency: 5 / 7 and 6 / 7.
+  - Nothing pending; no exclusion.
+- **Speed-up (`speedup.json`):** a warm cache gives ×1.9 (empirical) and ×1.3 (Gaussian) on box 1.
+  - The outputs are byte-identical, and the first use is not slower.
+  - There is no gain in B2 and B3, where the per-stamp kernel fits take 1,466–1,948 s (1,065–1,199 stamps against
+    217); that step is left for a decision.
+- **Pending (not done here):**
+  - the SMACS ERO → VENUS whole-box shift (2.11, −1.82) px, unchecked;
+  - the kernel-stamp cost.
 ## 2026-10-17: `arcs` on WHL0137 (Sunrise), RELICS maps: the S1063 anti excess does not replicate (1 vs 0.15, P 0.14)
 - **Why:** the S1063 replication tally needs fields never used to tune `arcs`; WHL0137 has an F200W catalogue, DJA
   v7.5 photo-z and RELICS maps (the HEAD probe of DJA v7 names found only Sunrise, SMACS, MRG0138 and RXCJ0600 among

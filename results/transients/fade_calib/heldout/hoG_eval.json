@@ -1,0 +1,501 @@
+{
+ "label": "derived; injected sources are simulations",
+ "runs": [
+  "/tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/fc/hoG_s20",
+  "/tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/fc/hoG_s21"
+ ],
+ "summary": {
+  "unchanged": {
+   "26.00": {
+    "n": 14,
+    "hit": 6,
+    "hit_frac": 0.429,
+    "hit_68": [
+     0.305,
+     0.561
+    ],
+    "unflagged": 4,
+    "unflagged_frac": 0.286,
+    "unflagged_68": [
+     0.182,
+     0.418
+    ],
+    "morph_pass": 0,
+    "morph_pass_frac": 0.0,
+    "morph_pass_68": [
+     0.0,
+     0.067
+    ],
+    "sign_ok": 6,
+    "sign_ok_frac": 0.429,
+    "sign_ok_68": [
+     0.305,
+     0.561
+    ],
+    "review": 0,
+    "review_frac": 0.0,
+    "review_68": [
+     0.0,
+     0.067
+    ],
+    "review_sign": 0,
+    "review_sign_frac": 0.0,
+    "review_sign_68": [
+     0.0,
+     0.067
+    ]
+   },
+   "27.00": {
+    "n": 14,
+    "hit": 0,
+    "hit_frac": 0.0,
+    "hit_68": [
+     0.0,
+     0.067
+    ],
+    "unflagged": 0,
+    "unflagged_frac": 0.0,
+    "unflagged_68": [
+     0.0,
+     0.067
+    ],
+    "morph_pass": 0,
+    "morph_pass_frac": 0.0,
+    "morph_pass_68": [
+     0.0,
+     0.067
+    ],
+    "sign_ok": 0,
+    "sign_ok_frac": 0.0,
+    "sign_ok_68": [
+     0.0,
+     0.067
+    ],
+    "review": 0,
+    "review_frac": 0.0,
+    "review_68": [
+     0.0,
+     0.067
+    ],
+    "review_sign": 0,
+    "review_sign_frac": 0.0,
+    "review_sign_68": [
+     0.0,
+     0.067
+    ]
+   },
+   "27.50": {
+    "n": 12,
+    "hit": 4,
+    "hit_frac": 0.333,
+    "hit_68": [
+     0.215,
+     0.478
+    ],
+    "unflagged": 2,
+    "unflagged_frac": 0.167,
+    "unflagged_68": [
+     0.086,
+     0.299
+    ],
+    "morph_pass": 0,
+    "morph_pass_frac": 0.0,
+    "morph_pass_68": [
+     0.0,
+     0.077
+    ],
+    "sign_ok": 4,
+    "sign_ok_frac": 0.333,
+    "sign_ok_68": [
+     0.215,
+     0.478
+    ],
+    "review": 0,
+    "review_frac": 0.0,
+    "review_68": [
+     0.0,
+     0.077
+    ],
+    "review_sign": 0,
+    "review_sign_frac": 0.0,
+    "review_sign_68": [
+     0.0,
+     0.077
+    ]
+   }
+  },
+  "appear": {
+   "26.00": {
+    "n": 12,
+    "hit": 11,
+    "hit_frac": 0.917,
+    "hit_68": [
+     0.802,
+     0.968
+    ],
+    "unflagged": 11,
+    "unflagged_frac": 0.917,
+    "unflagged_68": [
+     0.802,
+     0.968
+    ],
+    "morph_pass": 10,
+    "morph_pass_frac": 0.833,
+    "morph_pass_68": [
+     0.701,
+     0.914
+    ],
+    "sign_ok": 11,
+    "sign_ok_frac": 0.917,
+    "sign_ok_68": [
+     0.802,
+     0.968
+    ],
+    "review": 10,
+    "review_frac": 0.833,
+    "review_68": [
+     0.701,
+     0.914
+    ],
+    "review_sign": 10,
+    "review_sign_frac": 0.833,
+    "review_sign_68": [
+     0.701,
+     0.914
+    ]
+   },
+   "27.00": {
+    "n": 14,
+    "hit": 14,
+    "hit_frac": 1.0,
+    "hit_68": [
+     0.933,
+     1.0
+    ],
+    "unflagged": 12,
+    "unflagged_frac": 0.857,
+    "unflagged_68": [
+     0.74,
+     0.927
+    ],
+    "morph_pass": 12,
+    "morph_pass_frac": 0.857,
+    "morph_pass_68": [
+     0.74,
+     0.927
+    ],
+    "sign_ok": 14,
+    "sign_ok_frac": 1.0,
+    "sign_ok_68": [
+     0.933,
+     1.0
+    ],
+    "review": 10,
+    "review_frac": 0.714,
+    "review_68": [
+     0.582,
+     0.818
+    ],
+    "review_sign": 10,
+    "review_sign_frac": 0.714,
+    "review_sign_68": [
+     0.582,
+     0.818
+    ]
+   },
+   "27.50": {
+    "n": 14,
+    "hit": 14,
+    "hit_frac": 1.0,
+    "hit_68": [
+     0.933,
+     1.0
+    ],
+    "unflagged": 13,
+    "unflagged_frac": 0.929,
+    "unflagged_68": [
+     0.828,
+     0.972
+    ],
+    "morph_pass": 13,
+    "morph_pass_frac": 0.929,
+    "morph_pass_68": [
+     0.828,
+     0.972
+    ],
+    "sign_ok": 14,
+    "sign_ok_frac": 1.0,
+    "sign_ok_68": [
+     0.933,
+     1.0
+    ],
+    "review": 13,
+    "review_frac": 0.929,
+    "review_68": [
+     0.828,
+     0.972
+    ],
+    "review_sign": 13,
+    "review_sign_frac": 0.929,
+    "review_sign_68": [
+     0.828,
+     0.972
+    ]
+   }
+  },
+  "partial": {
+   "26.00": {
+    "n": 14,
+    "hit": 13,
+    "hit_frac": 0.929,
+    "hit_68": [
+     0.828,
+     0.972
+    ],
+    "unflagged": 13,
+    "unflagged_frac": 0.929,
+    "unflagged_68": [
+     0.828,
+     0.972
+    ],
+    "morph_pass": 13,
+    "morph_pass_frac": 0.929,
+    "morph_pass_68": [
+     0.828,
+     0.972
+    ],
+    "sign_ok": 13,
+    "sign_ok_frac": 0.929,
+    "sign_ok_68": [
+     0.828,
+     0.972
+    ],
+    "review": 13,
+    "review_frac": 0.929,
+    "review_68": [
+     0.828,
+     0.972
+    ],
+    "review_sign": 13,
+    "review_sign_frac": 0.929,
+    "review_sign_68": [
+     0.828,
+     0.972
+    ]
+   },
+   "27.00": {
+    "n": 12,
+    "hit": 12,
+    "hit_frac": 1.0,
+    "hit_68": [
+     0.923,
+     1.0
+    ],
+    "unflagged": 11,
+    "unflagged_frac": 0.917,
+    "unflagged_68": [
+     0.802,
+     0.968
+    ],
+    "morph_pass": 10,
+    "morph_pass_frac": 0.833,
+    "morph_pass_68": [
+     0.701,
+     0.914
+    ],
+    "sign_ok": 12,
+    "sign_ok_frac": 1.0,
+    "sign_ok_68": [
+     0.923,
+     1.0
+    ],
+    "review": 10,
+    "review_frac": 0.833,
+    "review_68": [
+     0.701,
+     0.914
+    ],
+    "review_sign": 10,
+    "review_sign_frac": 0.833,
+    "review_sign_68": [
+     0.701,
+     0.914
+    ]
+   },
+   "27.50": {
+    "n": 14,
+    "hit": 11,
+    "hit_frac": 0.786,
+    "hit_68": [
+     0.659,
+     0.874
+    ],
+    "unflagged": 10,
+    "unflagged_frac": 0.714,
+    "unflagged_68": [
+     0.582,
+     0.818
+    ],
+    "morph_pass": 8,
+    "morph_pass_frac": 0.571,
+    "morph_pass_68": [
+     0.439,
+     0.695
+    ],
+    "sign_ok": 11,
+    "sign_ok_frac": 0.786,
+    "sign_ok_68": [
+     0.659,
+     0.874
+    ],
+    "review": 8,
+    "review_frac": 0.571,
+    "review_68": [
+     0.439,
+     0.695
+    ],
+    "review_sign": 8,
+    "review_sign_frac": 0.571,
+    "review_sign_68": [
+     0.439,
+     0.695
+    ]
+   }
+  },
+  "vanish": {
+   "26.00": {
+    "n": 14,
+    "hit": 14,
+    "hit_frac": 1.0,
+    "hit_68": [
+     0.933,
+     1.0
+    ],
+    "unflagged": 14,
+    "unflagged_frac": 1.0,
+    "unflagged_68": [
+     0.933,
+     1.0
+    ],
+    "morph_pass": 14,
+    "morph_pass_frac": 1.0,
+    "morph_pass_68": [
+     0.933,
+     1.0
+    ],
+    "sign_ok": 14,
+    "sign_ok_frac": 1.0,
+    "sign_ok_68": [
+     0.933,
+     1.0
+    ],
+    "review": 14,
+    "review_frac": 1.0,
+    "review_68": [
+     0.933,
+     1.0
+    ],
+    "review_sign": 14,
+    "review_sign_frac": 1.0,
+    "review_sign_68": [
+     0.933,
+     1.0
+    ]
+   },
+   "27.00": {
+    "n": 14,
+    "hit": 14,
+    "hit_frac": 1.0,
+    "hit_68": [
+     0.933,
+     1.0
+    ],
+    "unflagged": 13,
+    "unflagged_frac": 0.929,
+    "unflagged_68": [
+     0.828,
+     0.972
+    ],
+    "morph_pass": 13,
+    "morph_pass_frac": 0.929,
+    "morph_pass_68": [
+     0.828,
+     0.972
+    ],
+    "sign_ok": 14,
+    "sign_ok_frac": 1.0,
+    "sign_ok_68": [
+     0.933,
+     1.0
+    ],
+    "review": 12,
+    "review_frac": 0.857,
+    "review_68": [
+     0.74,
+     0.927
+    ],
+    "review_sign": 12,
+    "review_sign_frac": 0.857,
+    "review_sign_68": [
+     0.74,
+     0.927
+    ]
+   },
+   "27.50": {
+    "n": 12,
+    "hit": 12,
+    "hit_frac": 1.0,
+    "hit_68": [
+     0.923,
+     1.0
+    ],
+    "unflagged": 11,
+    "unflagged_frac": 0.917,
+    "unflagged_68": [
+     0.802,
+     0.968
+    ],
+    "morph_pass": 11,
+    "morph_pass_frac": 0.917,
+    "morph_pass_68": [
+     0.802,
+     0.968
+    ],
+    "sign_ok": 12,
+    "sign_ok_frac": 1.0,
+    "sign_ok_68": [
+     0.923,
+     1.0
+    ],
+    "review": 10,
+    "review_frac": 0.833,
+    "review_68": [
+     0.701,
+     0.914
+    ],
+    "review_sign": 10,
+    "review_sign_frac": 0.833,
+    "review_sign_68": [
+     0.701,
+     0.914
+    ]
+   }
+  },
+  "unchanged_false_hits": {
+   "n": 40,
+   "false_hits": 10,
+   "frac": 0.25,
+   "frac_68": [
+    0.188,
+    0.324
+   ]
+  }
+ },
+ "pass_rule": {
+  "vanish_review_sign_frac": 1.0,
+  "unchanged_false_hit_frac": 0.25,
+  "vanish_ok": true,
+  "unchanged_ok": false,
+  "passed": false
+ }
+}
