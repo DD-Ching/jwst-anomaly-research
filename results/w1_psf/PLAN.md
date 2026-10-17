@@ -45,3 +45,10 @@ same seed (50), 200 lenses per mass, `inject_shear.py` defaults otherwise.
   `results/w1_edge_cut/PLAN.md`. Otherwise it is not adopted and limits stay as committed.
 - The real field's E-mode result must stay null under the correction (S_max below the rotation null's 95th
   percentile); if not, the correction's peaks are vetted before anything else.
+
+## Post-review correction (code review on the final diff, 2026-10-17; deviation)
+The review found two defects in the first run: (1) the PSF model kept the trace 2σ², so its minor axis was
+σ²(1 − |χ|), smaller than the measured σ² it came from; (2) injections painted images with a round PSF but measured
+them with the anisotropic one. Fixed: `exotic_screens.psf_moments` keeps the minor-axis variance σ² (major
+σ²(1 + |χ|)/(1 − |χ|)), and `inject_radial.lensed_cov` / `paint_lens` use the same PSF. R1 and R2 are re-applied
+unchanged to the corrected model; the first run's R2 pass and injection results are withdrawn.

@@ -164,9 +164,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      added 2026-10-17); limits 5.8 × 10³ / 1.1 × 10³ / 5.7 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, still
      blind at ≤ 2 × 10¹¹ M☉. Next:
      lower the B-mode floor (Abell 2744 max S_× 4.21 at (88, −42), full coverage: ~~PSF anisotropy from stars~~ done
-     2026-10-17, not adopted (`results/w1_psf/RESULT.md`: 3 stars, constant χ_PSF lowers the floor to 3.66 but
-     the limits rise at 8 × 10¹² and 2 × 10¹³ M☉; next a model PSF per detector, STPSF, after finding which step
-     removes injected images), blend
+     2026-10-17, not adopted (`results/w1_psf/RESULT.md`: 3 stars, too few for a map; a constant χ_PSF lowers the
+     floor to 3.85, rule ≤ 3.79; next a model PSF per detector, STPSF, reuse-check first), blend
      rejection (2026-10-17 diagnostic, `results/w1_floor/RESULT.md`: no streak there; 44 sources near bright
      galaxies carry it, above the rotation null; a bright-neighbour veto is not floor-specific); ~~drop edge apertures with < 50 % coverage~~ done 2026-10-17, not adopted: limits move ≤ 1.6 %,
      `results/w1_edge_cut/RESULT.md`); add SMACS 0723 and El Gordo when DJA photo-z is reachable (tarballs 404

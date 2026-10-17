@@ -154,6 +154,7 @@ class ShearInjector:
             self.psf,
             self.next_label,
             pixel_scale,
+            psf_chi=getattr(self.args, "psf_chi", 0j),
         )
         a = self.args
         near_l = np.hypot(self.xs - x_l, self.ys - y_l) <= a.recover_tol + a.aperture_arcsec + 1.0
@@ -345,6 +346,8 @@ def main(argv: list[str] | None = None) -> int:
         help="combine existing <out>/<field>/summary.json files (fields run as separate processes)",
     )
     args = ap.parse_args(argv)
+    if tuple(args.psf_chi) != (0.0, 0.0) and len(args.fields) > 1:
+        ap.error("--psf-chi is measured per field; run one field at a time")
     keys = [f"{m:.0e}" for m in args.mass]
     if len(set(keys)) != len(keys):
         ap.error(f"--mass values must differ at one significant figure (keys {keys})")

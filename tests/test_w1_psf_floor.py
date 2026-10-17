@@ -22,9 +22,11 @@ def test_anisotropic_psf_removes_its_own_distortion():
     # a round source of sigma 3 px convolved with an elongated PSF: isotropic deconvolution leaves
     # the PSF's direction in, the anisotropic one with the PSF's chi returns a round source
     psf_s, chi = 1.2, 0.3 * np.exp(2j * np.deg2rad(130.0))
-    qnn = 9 + psf_s**2 * (1 + chi.real)
-    qee = 9 + psf_s**2 * (1 - chi.real)
-    qen = psf_s**2 * chi.imag
+    pee, pnn, pen = es.psf_moments(psf_s, chi)
+    # the PSF's minor-axis variance is psf_sigma^2 and its distortion is chi
+    lam = np.linalg.eigvalsh(np.array([[pee, pen], [pen, pnn]]))
+    assert np.isclose(lam[0], psf_s**2) and np.isclose((lam[1] - lam[0]) / lam.sum(), abs(chi))
+    qee, qnn, qen = 9 + pee, 9 + pnn, pen
     tr, det = qnn + qee, qnn * qee - qen**2
     lam1 = tr / 2 + np.sqrt(tr**2 / 4 - det)
     lam2 = tr / 2 - np.sqrt(tr**2 / 4 - det)
@@ -36,12 +38,19 @@ def test_anisotropic_psf_removes_its_own_distortion():
     assert np.isclose(np.mod(0.5 * np.degrees(np.angle(iso)), 180), 130.0)
     assert abs(ani) < 1e-9
     # moments_chi of the PSF-only object recovers chi
-    assert np.isclose(
-        w1p.moments_chi(
-            [np.sqrt(psf_s**2 * (1 + abs(chi)))], [np.sqrt(psf_s**2 * (1 - abs(chi)))], [130.0]
-        )[0],
-        chi,
-    )
+    got = w1p.moments_chi([np.sqrt(lam[1])], [np.sqrt(lam[0])], [130.0])[0]
+    assert np.isclose(got, chi)
+
+
+def test_lensed_cov_uses_the_same_psf():
+    # an unlensed (identity Jacobian) image of a PSF-convolved source keeps its moments for any chi
+    ir = w1p.ish.ir
+    chi = 0.2 * np.exp(2j * np.deg2rad(40.0))
+    a, b, pa = np.array([3.0]), np.array([2.0]), np.array([70.0])
+    for c in (0j, chi):
+        cov = ir.lensed_cov(a, b, pa, [1.0], [0.0], [1.0], [1.0], 1.2, c)
+        sm, ell, p2 = ir.cov_shape(cov)
+        assert np.allclose([sm[0], ell[0]], [3.0, 1 / 3]) and np.isclose(np.mod(p2[0], 180), 70.0)
 
 
 def test_default_is_unchanged():
