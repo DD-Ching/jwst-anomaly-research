@@ -47,3 +47,14 @@ The exclusion at f = 1 between 2 × 10¹¹ and 2 × 10¹² M☉ is not resolved 
 - One lens changes only its own centre's S (PLAN ASSUMPTION, conservative for MACS0417's overlapping apertures).
 - Exploratory sample: the centres were chosen by the `radial` screen on the same catalogues; no held-out data.
 - The cluster-model-error explanation stays open outside the RELICS area of MACS0417 (`../RESULT.md` addendum).
+
+## Addendum (2026-10-17, later run): mass points 5 × 10¹¹ and 1 × 10¹² M☉ (`PLAN_mass.md`, `mass_points/summary.json`)
+Noise-aware rule, same sample and seed. Share of draws above the observed mean:
+
+| M (M☉) | f = 0.1 | 0.25 | 0.5 | 1.0 |
+|---|---|---|---|---|
+| 5 × 10¹¹ | 0.046 | 0.099 | 0.236 | 0.618 |
+| 1 × 10¹² | 0.093 | 0.265 | 0.654 | **0.997** |
+
+The f = 1 limit at these centres is **1 × 10¹² M☉** (one MACS0417 centre undefined at that mass); 5 × 10¹¹ is not
+excluded at any f. Conditions as above (post hoc rule, additivity ASSUMPTION, exploratory sample).
