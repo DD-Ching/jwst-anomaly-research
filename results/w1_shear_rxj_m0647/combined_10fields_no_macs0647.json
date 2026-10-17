@@ -1,0 +1,92 @@
+{
+ "fields": [
+  "abell2744",
+  "macs0416",
+  "macs1149",
+  "abell370",
+  "abells1063",
+  "smacs0723",
+  "elgordo",
+  "macs0417",
+  "whl0137",
+  "rxj2129"
+ ],
+ "total_area_deg2": 0.016462577160493826,
+ "limits_95": {
+  "2e+10": {
+   "mass_msun": 20000000000.0,
+   "theta_e_zs2_arcsec_range": [
+    0.20528914416990537,
+    0.4093610034356401
+   ],
+   "effective_area_deg2": 0.0,
+   "upper_limit_deg2": null,
+   "upper_limit_border_corrected_deg2": null
+  },
+  "2e+11": {
+   "mass_msun": 200000000000.0,
+   "theta_e_zs2_arcsec_range": [
+    0.6491812744835774,
+    1.2945131561086358
+   ],
+   "effective_area_deg2": 8.500771604938272e-06,
+   "upper_limit_deg2": 352438.59489879274,
+   "upper_limit_border_corrected_deg2": 394648.97939033475
+  },
+  "2e+12": {
+   "mass_msun": 2000000000000.0,
+   "theta_e_zs2_arcsec_range": [
+    2.0528914416990536,
+    4.093610034356401
+   ],
+   "effective_area_deg2": 0.0006626871141975309,
+   "upper_limit_deg2": 4520.987259014312,
+   "upper_limit_border_corrected_deg2": 5017.502556128965
+  },
+  "8e+12": {
+   "mass_msun": 8000000000000.0,
+   "theta_e_zs2_arcsec_range": [
+    4.105782883398107,
+    8.187220068712803
+   ],
+   "effective_area_deg2": 0.003960581404320988,
+   "upper_limit_deg2": 756.4545944520593,
+   "upper_limit_border_corrected_deg2": 842.8970757618245
+  },
+  "2e+13": {
+   "mass_msun": 20000000000000.0,
+   "theta_e_zs2_arcsec_range": [
+    6.491812744835775,
+    12.945131561086356
+   ],
+   "effective_area_deg2": 0.007780846836419753,
+   "upper_limit_deg2": 385.0480626320318,
+   "upper_limit_border_corrected_deg2": 428.6754574866096
+  }
+ },
+ "provenance": "derived",
+ "screen": {
+  "recover_tol_arcsec": 2.0,
+  "p_recover": 0.05,
+  "trials_per_null": 10,
+  "seed": 50,
+  "n_inject": 200,
+  "screen": {
+   "psf_chi": [
+    0.0,
+    0.0
+   ],
+   "min_coverage": 0.0,
+   "aperture_arcsec": 10.0,
+   "filter": "schirmer",
+   "r_min_arcsec": 1.0,
+   "min_sources": 5,
+   "min_snr": 10.0,
+   "max_g": 0.5,
+   "responsivity": null,
+   "grid_arcsec": 1.0,
+   "n_random": 200,
+   "seed": 1
+  }
+ }
+}
