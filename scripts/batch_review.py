@@ -1,8 +1,9 @@
 """Detailed review of the first ``--capacity`` entries of a batch review queue (PLAN §5).
 
-For each reviewed entry: a contact sheet (``arc_diff_sheet.py`` on the box's screen maps, that hit
-only), forced photometry in every covering public mosaic (``hit_lightcurve.py``), and the class rule,
-applied by code to the two search epochs (the box's epoch-1 programme and VENUS 6882):
+For each reviewed entry: a contact sheet (``arc_diff_sheet.py`` on the box's screen maps,
+that hit only), forced photometry in every covering public mosaic (``hit_lightcurve.py``),
+and the class rule, applied by code to the two search epochs (the box's epoch-1 programme
+and VENUS 6882):
 
 - ``edge``: the hit lies within 1″ of the box edge (box half-width 12″);
 - per band, z = (f2 - f1) / sqrt(e1² + e2²) from the 0.15″ forced photometry;
@@ -14,7 +15,8 @@ The by-eye sheet verdict comes from ``--sheet-verdicts`` (JSON {hit key: text});
 with "veto" makes the entry ``artifact``. Entries beyond capacity are written to ``pending.json``
 unchanged; nothing is dropped. Every number is ``derived``.
 
-    python scripts/batch_review.py --batch DIR --scratch SCRATCH --capacity 10 [--sheet-verdicts V.json]
+    python scripts/batch_review.py --batch DIR --boxes B.json --scratch S --capacity 10 \
+        [--sheet-verdicts V.json]
 """
 
 from __future__ import annotations
