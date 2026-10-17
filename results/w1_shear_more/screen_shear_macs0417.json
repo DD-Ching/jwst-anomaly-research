@@ -1,0 +1,96 @@
+{
+ "model": "macs0417-canucs-maps",
+ "catalog": "data/cache/mast/jw01208-o006_t003_nircam_clear-f200w/jw01208-o006_t003_nircam_clear-f200w_cat.ecsv",
+ "photoz": "<scratch>/inj/macs0417/macs0417_canucs_zout.fits",
+ "spike_stars": {
+  "path": "<scratch>/inj/macs0417/macs0417_gaia_stars.ecsv",
+  "n": 13,
+  "sha256": "30a881c65eae0a10a12023de5d25acd9bbe32ed63c0d6f92e598a7f91d19189f"
+ },
+ "seed": 1,
+ "psf_sigma_px": 1.3166776764598,
+ "n_rows": 4611,
+ "n_spike_segments": 171,
+ "n_lensable": 3421,
+ "n_lensable_after_spike_veto": 3264,
+ "n_snr": 3212,
+ "n_resolved": 2510,
+ "n_weak_shear": 2279,
+ "responsivity": 0.4877905915671723,
+ "responsivity_err": 0.033580495970199714,
+ "n_centres_valid": 21473,
+ "area_arcsec2": 21473.0,
+ "s_max": 3.559634237192139,
+ "p_random_max": 0.065,
+ "s_cross_plus_max": 3.2371338910036282,
+ "p_random_cross_plus": 0.34,
+ "s_cross_minus_max": 3.2044190213086265,
+ "p_random_cross_minus": 0.415,
+ "b_max": 3.2371338910036282,
+ "passes_eb_rule": false,
+ "null_max_p50_p95": [
+  3.1788897867575727,
+  3.599945330276733
+ ],
+ "n_peaks_above_null_median": 5,
+ "peaks": [
+  {
+   "x": -28.0,
+   "y": -86.0,
+   "ra": 64.40253086345349,
+   "dec": -11.932852888888887,
+   "s": 3.559634237192139,
+   "s_cross": -0.5246555831357782,
+   "p_random": 0.065
+  },
+  {
+   "x": -52.0,
+   "y": 26.0,
+   "ra": 64.40934417498505,
+   "dec": -11.901741777777776,
+   "s": 3.4605619472220925,
+   "s_cross": 0.37523905124648615,
+   "p_random": 0.115
+  },
+  {
+   "x": 5.0,
+   "y": -54.0,
+   "ra": 64.3931625600976,
+   "dec": -11.923963999999998,
+   "s": 3.420741582972664,
+   "s_cross": -0.620657997707756,
+   "p_random": 0.13
+  },
+  {
+   "x": 39.0,
+   "y": -2.0,
+   "ra": 64.38351036876122,
+   "dec": -11.909519555555553,
+   "s": 3.332000458030542,
+   "s_cross": -0.08179326980446244,
+   "p_random": 0.21
+  },
+  {
+   "x": -54.0,
+   "y": -45.0,
+   "ra": 64.40991195094601,
+   "dec": -11.921463999999997,
+   "s": 3.210383193488839,
+   "s_cross": 0.2102840052584389,
+   "p_random": 0.39
+  }
+ ],
+ "assumptions": {
+  "aperture_arcsec": 10.0,
+  "filter": "schirmer",
+  "r_min_arcsec": 1.0,
+  "min_sources": 5,
+  "min_snr": 10.0,
+  "max_g": 0.5,
+  "responsivity": null,
+  "max_radius": 100.0,
+  "grid_arcsec": 1.0,
+  "n_random": 200,
+  "min_coverage": 0.0
+ }
+}
