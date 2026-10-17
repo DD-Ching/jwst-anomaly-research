@@ -1428,3 +1428,12 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - JWST VENUS (program 6882) observation 51 at El Gordo, 2026-08-05: `jw06882-o051_t051_nircam_clear-{f150w,f444w}_i2d.fits`
   and `_cat.ecsv` (jwst 3.0.0, CRDS jwst_1584.pmap), public level 3, read by S3 byte range on 2026-10-16 with PEARLS
   `jw01176-o241_t012_nircam_clear-{f150w,f444w}` (`results/transients/elgordo_arcdiff/`).
+
+## Difference-imaging tool comparison (accessed 2026-10-17; `results/transients/sfft_trial/`)
+- SFFT: Hu, L. et al. 2022, ApJ 936, 157, "Image Subtraction in Fourier Space". Code: https://github.com/thomasvrussell/sfft
+  (MIT), PyPI `sfft` 1.7.3. Used: `CustomizedPacket` (Numpy backend).
+- Hu, L. & Wang, L. 2024, AJ 167, 5, "Differencing and Coadding JWST Images with Matched Point Spread Function",
+  arXiv:2309.09143, doi:10.3847/1538-3881/ad36cb. The B-spline method is `sfft.BSplineSFFT`, CuPy (GPU) only in 1.7.3;
+  not run.
+- MAST CAOM query (astroquery, 2026-10-17): VENUS 6882 NIRCam F150W level-3 targets and other programs within ±0.05°
+  (`venus_pairs.json`).

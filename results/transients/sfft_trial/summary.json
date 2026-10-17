@@ -1,0 +1,416 @@
+{
+ "label": "derived; PLAN \u00a74 rule (ordinary SFFT, not the B-spline JWST method)",
+ "totals": {
+  "arc": {
+   "unchanged_false_hits": 1,
+   "unchanged_n": 60,
+   "fade_review_sign": 92,
+   "fade_n": 120,
+   "appear_review_sign": 45,
+   "appear_n": 60,
+   "screen_review_entries": 1,
+   "wall_s_total": 579.5,
+   "peak_rss_mb": {
+    "b1_s30": 1499.7,
+    "b1_s31": 1500.7,
+    "b2_s40": 1466.3,
+    "b1_screen": 860.8,
+    "b2_screen": 859.9
+   }
+  },
+  "sfft": {
+   "unchanged_false_hits": 5,
+   "unchanged_n": 60,
+   "fade_review_sign": 83,
+   "fade_n": 120,
+   "appear_review_sign": 42,
+   "appear_n": 60,
+   "screen_review_entries": 0,
+   "wall_s_total": 417.7,
+   "peak_rss_mb": {
+    "b1_s30": 2231.3,
+    "b1_s31": 2232.4,
+    "b2_s40": 2229.9,
+    "b1_screen": 2161.5,
+    "b2_screen": 2161.9
+   }
+  }
+ },
+ "criteria": {
+  "a_false_hits": false,
+  "b_fades": false,
+  "c_screen_review": true,
+  "d_wall": true
+ },
+ "verdict": "keep arc_diff",
+ "peak_rss_ratio_sfft_over_arc": [
+  1.49,
+  2.51
+ ],
+ "per_source_differences": [
+  {
+   "run": "b1_s30",
+   "name": "pre011",
+   "cls": "vanish",
+   "mag": "27.50",
+   "arc": {
+    "hit": false,
+    "review_sign": false
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre012",
+   "cls": "unchanged",
+   "mag": "26.00",
+   "arc": {
+    "hit": false,
+    "review_sign": false
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre013",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre019",
+   "cls": "vanish",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": false,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre022",
+   "cls": "partial",
+   "mag": "27.00",
+   "arc": {
+    "hit": false,
+    "review_sign": false
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre025",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review_sign": false
+   },
+   "sfft": {
+    "hit": false,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre030",
+   "cls": "partial",
+   "mag": "26.00",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre046",
+   "cls": "partial",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre048",
+   "cls": "unchanged",
+   "mag": "26.00",
+   "arc": {
+    "hit": false,
+    "review_sign": false
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre062",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": false,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre070",
+   "cls": "partial",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre074",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre001",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review_sign": false
+   },
+   "sfft": {
+    "hit": false,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre004",
+   "cls": "unchanged",
+   "mag": "27.00",
+   "arc": {
+    "hit": false,
+    "review_sign": false
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": true
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre006",
+   "cls": "partial",
+   "mag": "26.00",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre007",
+   "cls": "vanish",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review_sign": false
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": true
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre010",
+   "cls": "partial",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre017",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre020",
+   "cls": "unchanged",
+   "mag": "27.50",
+   "arc": {
+    "hit": false,
+    "review_sign": false
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": true
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre025",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre074",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": false,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre014",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": false,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre038",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": false,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre050",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": false,
+    "review_sign": false
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": true
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre062",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review_sign": true
+   },
+   "sfft": {
+    "hit": false,
+    "review_sign": false
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre074",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": false,
+    "review_sign": false
+   },
+   "sfft": {
+    "hit": true,
+    "review_sign": true
+   }
+  }
+ ]
+}

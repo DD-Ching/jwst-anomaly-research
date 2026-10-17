@@ -1,0 +1,23 @@
+{
+ "label": "derived; box counts from image lists (median S moved to diagnostics_median_s.json)",
+ "boxes_ge5_images_24arcsec": {
+  "elgordo": {
+   "images": 56,
+   "boxes": 5,
+   "images_in_boxes": 39,
+   "method": "greedy non-overlapping 24\" boxes from fade_calib.rank_boxes (step 2\", >= 5 images), image lists of arc_chain.image_positions; coverage not checked"
+  },
+  "macs0416": {
+   "images": 303,
+   "boxes": 12,
+   "images_in_boxes": 266,
+   "method": "greedy non-overlapping 24\" boxes from fade_calib.rank_boxes (step 2\", >= 5 images), image lists of arc_chain.image_positions; coverage not checked"
+  },
+  "smacs": {
+   "images": 60,
+   "boxes": 4,
+   "images_in_boxes": 51,
+   "method": "greedy non-overlapping 24\" boxes from fade_calib.rank_boxes (step 2\", >= 5 images), image lists of arc_chain.image_positions; coverage not checked"
+  }
+ }
+}

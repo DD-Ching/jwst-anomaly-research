@@ -1,0 +1,57 @@
+{
+ "label": "derived; S statistics by region (PLAN \u00a73.3)",
+ "hits": 47,
+ "unflagged": 13,
+ "F150W": {
+  "all": {
+   "n_px": 581794,
+   "robust_std": 0.9999998807907104,
+   "max_abs": 267.9609375,
+   "frac_abs_gt5": 0.00933663805401912
+  },
+  "bright_cores": {
+   "n_px": 13055,
+   "robust_std": 2.774202346801758,
+   "max_abs": 267.9609375,
+   "frac_abs_gt5": 0.27476062811183455
+  },
+  "compact_stamps": {
+   "n_px": 33295,
+   "robust_std": 1.6251589059829712,
+   "max_abs": 267.9609375,
+   "frac_abs_gt5": 0.09337738399159033
+  },
+  "spike_annulus": {
+   "n_px": 44294,
+   "robust_std": 1.106710433959961,
+   "max_abs": 16.943655014038086,
+   "frac_abs_gt5": 0.0170451979952138
+  }
+ },
+ "F444W": {
+  "all": {
+   "n_px": 140611,
+   "robust_std": 0.9767358303070068,
+   "max_abs": 40.3907585144043,
+   "frac_abs_gt5": 0.007154490047009124
+  },
+  "bright_cores": {
+   "n_px": 4247,
+   "robust_std": 2.0053443908691406,
+   "max_abs": 40.3907585144043,
+   "frac_abs_gt5": 0.14151165528608428
+  },
+  "compact_stamps": {
+   "n_px": 5491,
+   "robust_std": 1.8307431936264038,
+   "max_abs": 40.3907585144043,
+   "frac_abs_gt5": 0.09925332362046986
+  },
+  "spike_annulus": {
+   "n_px": 10916,
+   "robust_std": 1.13988196849823,
+   "max_abs": 17.897415161132812,
+   "frac_abs_gt5": 0.00934408208134848
+  }
+ }
+}

@@ -1,0 +1,174 @@
+{
+ "command": "arc_diff.py --band f150w s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f150w_i2d.fits s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f150w_i2d.fits --band f444w s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f444w_i2d.fits s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f444w_i2d.fits --half-arcsec 12 --kernel-px 4 --kernel-stamps --min-bands 2 --reg-tile-arcsec 6 --procs 1 --ra 15.7300 --dec -49.2530 --inject-pre results/transients/fade_calib/sample_s30.csv --inject-pre-psf empirical --out /tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/sfft/cmp/sfft_b1_s30 --maps /tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/sfft/cmp/sfft_b1_s30/maps.npz",
+ "box": {
+  "ra": 15.73,
+  "dec": -49.253,
+  "half_arcsec": 12.0
+ },
+ "thresholds_assumption": {
+  "min_sigma": 5.0,
+  "min_bands": 2,
+  "link_arcsec": 0.1,
+  "bg_arcsec": 0.6,
+  "tile_arcsec": 3.0,
+  "reg_tile_arcsec": 6.0,
+  "inject_pre_psf": "empirical",
+  "kernel_px": 4,
+  "kernel_stamps": true,
+  "kernel_stamp_fit": "shared",
+  "match_arcsec": 0.15,
+  "core_arcsec": 0.8,
+  "core_pct": 99.9,
+  "psf_fwhm_arcsec": {
+   "F150W": 0.05,
+   "F444W": 0.145
+  }
+ },
+ "bands": {
+  "F150W": {
+   "e1": "jw01176-o241_t012_nircam_clear-f150w_i2d.fits",
+   "e2": "jw06882-o051_t051_nircam_clear-f150w_i2d.fits",
+   "scale_arcsec": 0.031228086204846656,
+   "shift_px": [
+    0.5652968919810728,
+    -0.39721435349257916
+   ],
+   "blur_sigma_px": 0.85,
+   "kernel_sum": 0.8947493293091655,
+   "convolved_epoch": 1,
+   "flux_scale": 0.8947493293091655,
+   "noise_scale": 6.55904410404184,
+   "n_detections": 2511,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {},
+   "timing_s": {
+    "read": 8.4,
+    "pre_injections": 60.18,
+    "resample_register_match": 14.93,
+    "detect": 3.28,
+    "post_injections": 0.02,
+    "sfft_s": 6.35
+   },
+   "kernel_stats": {},
+   "inject_pre_psf": {
+    "sources_ra_dec_conc": [
+     [
+      15.715540583119555,
+      -49.24773183303401,
+      0.3234
+     ],
+     [
+      15.717060159981559,
+      -49.241370121288526,
+      0.2443
+     ],
+     [
+      15.722578921394023,
+      -49.24888339579278,
+      0.2291
+     ],
+     [
+      15.716769119012005,
+      -49.241621857188996,
+      0.1893
+     ],
+     [
+      15.740151818333858,
+      -49.24886117511675,
+      0.173
+     ]
+    ],
+    "half_arcsec": 0.6,
+    "box_half_arcsec": 40.0,
+    "peak_frac": [
+     0.2427,
+     0.2136
+    ]
+   },
+   "inject_pre_shift_px": [
+    0.6433259080077189,
+    -0.5219414134122046
+   ],
+   "reg_tiles_used": 12
+  },
+  "F444W": {
+   "e1": "jw01176-o241_t012_nircam_clear-f444w_i2d.fits",
+   "e2": "jw06882-o051_t051_nircam_clear-f444w_i2d.fits",
+   "scale_arcsec": 0.06291333851861627,
+   "shift_px": [
+    0.1240747746490622,
+    -0.1567225051405307
+   ],
+   "blur_sigma_px": -0.489,
+   "kernel_sum": 0.9973245151000955,
+   "convolved_epoch": 2,
+   "flux_scale": 1.0026826623224399,
+   "noise_scale": 1.0435809785886214,
+   "n_detections": 184,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {},
+   "timing_s": {
+    "read": 3.36,
+    "pre_injections": 23.27,
+    "resample_register_match": 3.54,
+    "detect": 0.26,
+    "post_injections": 0.0,
+    "sfft_s": 1.764
+   },
+   "kernel_stats": {},
+   "inject_pre_psf": {
+    "sources_ra_dec_conc": [
+     [
+      15.727222275054435,
+      -49.25393916515845,
+      0.106
+     ],
+     [
+      15.716781082156293,
+      -49.24161979882503,
+      0.1046
+     ],
+     [
+      15.734137363122787,
+      -49.24248389279566,
+      0.1031
+     ],
+     [
+      15.725964697733021,
+      -49.250566187231065,
+      0.1021
+     ],
+     [
+      15.722191753078596,
+      -49.25308236271802,
+      0.0964
+     ]
+    ],
+    "half_arcsec": 0.6,
+    "box_half_arcsec": 40.0,
+    "peak_frac": [
+     0.1036,
+     0.1068
+    ]
+   },
+   "inject_pre_shift_px": [
+    0.11082451251649328,
+    -0.18354930297408523
+   ],
+   "reg_tiles_used": 16
+  }
+ },
+ "n_hits": 84,
+ "n_hits_not_near_bright_core": 57,
+ "known": [],
+ "inject_pre": {
+  "n": 80,
+  "csv": "results/transients/fade_calib/sample_s30.csv"
+ },
+ "wall_s": 118.0,
+ "inject_grid": {
+  "n": 0,
+  "n_hit": 0,
+  "n_hit_not_near_bright_core": 0
+ }
+}

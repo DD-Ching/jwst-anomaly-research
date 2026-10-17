@@ -5000,3 +5000,16 @@ confining radiation at a throat is found.
   - a design is ill-conditioned (condition number ≫ 1e6; B1 and B2 are 320–1,800);
   - stamp fits exceed 200,000 rows (these already fall back to `refit`);
   - the clipping rule changes.
+
+## D-095 Difference-imaging tool for batch searches: keep `arc_diff` (#291); SFFT not adopted (2026-10-17)
+- **Decision:** the batch search keeps `arc_diff` with the D-094 stamp kernels.
+- **Alternatives rejected:**
+  - SFFT's JWST B-spline method (Hu & Wang 2024): GPU-only in sfft 1.7.3; a port is out of scope.
+  - Ordinary SFFT without masking (corrected adapter): somewhat worse on B1 + B2 (fades 83/120 vs 92/120; unchanged
+    false hits 5/60 vs 1/60), though about ×1.4 faster (indicative) with 1.49–2.51 × the peak memory.
+  - SFFT's automatic masking: needs the SExtractor binary.
+- **Evidence:** `results/transients/sfft_trial/RESULT.md`. Small development sample; not "generally worse".
+- **Revisit if:**
+  - a GPU is available, then test the B-spline method on the same B1/B2 injections;
+  - SExtractor is installed for a masking-mode test;
+  - a box larger than 1′ shows spatially varying PSF ridges (DECISIONS addendum 2026-10-15c).
