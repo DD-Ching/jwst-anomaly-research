@@ -8,7 +8,7 @@ The zout columns ``load_field`` reads are
 - ``z_phot`` = ``zbest`` (a spectroscopic z where ``f_zbest`` = 1, as published);
 - ``z160``, ``z840`` = ``zbest`` -/+ 1.483 SIQR (Gaussian 16/84 % points; ASSUMPTION); z160 is
   floored at ``Z_FLOOR`` (> 0, so ``attach_photoz`` keeps it and the row counts as possibly
-  foreground);
+  foreground) but never exceeds ``zbest``;
 - rows with ``relFlag`` != 1 (the catalogue's photo-z robustness flag; ASSUMPTION) and no
   spectroscopic z, or with no zbest, are dropped, so the nearest-neighbour match cannot land on
   them and hide a usable row (it may then reach a neighbour within 0.3 arcsec instead).
@@ -60,7 +60,7 @@ def to_zout(pos: Table, z: Table) -> Table:
             "ra": np.asarray(t["RAJ2000"], float),
             "dec": np.asarray(t["DEJ2000"], float),
             "z_phot": zb,
-            "z160": np.maximum(zb - half, Z_FLOOR),
+            "z160": np.minimum(np.maximum(zb - half, Z_FLOOR), zb),  # never above z_phot
             "z840": zb + half,
         }
     )
@@ -81,10 +81,21 @@ def content_sha256(t: Table) -> str:
     return h.hexdigest()
 
 
-def write(field: str, path: Path) -> str:
-    """Fetch, convert and write ``path`` (via a ``.part`` file); returns ``content_sha256``."""
+class HashMismatch(RuntimeError):
+    """The fetched table's ``content_sha256`` differs from the pinned value; nothing was written."""
+
+
+def write(field: str, path: Path, expect: str | None = None) -> str:
+    """Fetch, convert and write ``path``; returns ``content_sha256``.
+
+    With ``expect``, a table whose hash differs raises ``HashMismatch`` before ``path`` is touched,
+    so only a verified file reaches the final name (written via a ``.part`` file).
+    """
     pos, z = fetch(field)
     out = to_zout(pos, z)
+    got = content_sha256(out)
+    if expect is not None and got != expect:
+        raise HashMismatch(f"content sha256 {got} != {expect}")
     path.parent.mkdir(parents=True, exist_ok=True)
     part = path.with_name(path.name + ".part")
     try:
@@ -93,7 +104,7 @@ def write(field: str, path: Path) -> str:
     finally:
         part.unlink(missing_ok=True)
     print(f"{field}: {len(pos)} positions, {len(z)} redshifts, {len(out)} usable rows")
-    return content_sha256(Table.read(path))
+    return got
 
 
 def main(argv=None) -> int:

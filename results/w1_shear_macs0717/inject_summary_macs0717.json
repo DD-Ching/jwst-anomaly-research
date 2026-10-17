@@ -2,8 +2,8 @@
  "field": "macs0717",
  "model": "macs0717-cats",
  "z_lens": 0.545,
- "catalog": "/home/user/jwst-anomaly-research/data/cache/mast/jw06882-o029_t063_nircam_clear-f200w/jw06882-o029_t063_nircam_clear-f200w_cat.ecsv",
- "photoz": "/home/user/jwst-anomaly-research/data/cache/external/astrodeep/m0717clu_zout.fits",
+ "catalog": "data/cache/mast/jw06882-o029_t063_nircam_clear-f200w/jw06882-o029_t063_nircam_clear-f200w_cat.ecsv",
+ "photoz": "data/cache/external/astrodeep/m0717clu_zout.fits",
  "screen": {
   "n_rows": 4953,
   "n_spike_segments": 334,

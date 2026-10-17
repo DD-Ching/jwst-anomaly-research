@@ -227,12 +227,9 @@ def stage_astrodeep(target: Path, src: dict) -> dict:
     if target.exists() and _content_sha256(target) == src["sha256"]:
         return {**row, "status": "present", "sha256": src["sha256"]}
     try:
-        got = astrodeep_zout.write(src["astrodeep"], target)
+        got = astrodeep_zout.write(src["astrodeep"], target, expect=src["sha256"])
     except Exception as exc:  # noqa: BLE001 - report and continue with the other files
         return {**row, "status": f"FAILED: {type(exc).__name__}: {exc}"}
-    if got != src["sha256"]:
-        target.unlink()
-        return {**row, "status": f"FAILED: sha256 {got} != {src['sha256']}"}
     return {**row, "status": "fetched", "sha256": got, "bytes": target.stat().st_size}
 
 

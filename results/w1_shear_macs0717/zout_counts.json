@@ -1,0 +1,15 @@
+{
+ "provenance": "derived",
+ "source": "VizieR J/A+A/607/A30 m0717cla + m0717clz",
+ "accessed": "2026-10-17",
+ "script": "scripts/astrodeep_zout.py",
+ "positions": 4082,
+ "redshift_rows": 4082,
+ "kept_rows": 2928,
+ "kept_relflag1": 2866,
+ "kept_spec_relflag_not1": 62,
+ "spec_rows_total": 173,
+ "content_sha256": "ef1a24d3440e70dd537db605b94e8a5f66080a3541878384aa27d5c3a4de7ca0",
+ "shape_rows_with_photoz": "855 of 4953 (session measurement on the final zout, not re-derived here)",
+ "kept_rows_zbest_below_0.01": 0
+}

@@ -7,7 +7,7 @@ every threshold an ASSUMPTION (D-053 defaults and the streak-veto settings, unch
 ## Inputs
 - F200W VENUS catalogue `jw06882-o029_t063` (sha256 `099c3c38…`, data/manifests/macs0717.ecsv), 4,953 shape rows.
 - ASTRODEEP-FF (VizieR J/A+A/607/A30 `m0717cla` + `m0717clz`, accessed 2026-10-17): 4,082 rows; kept: `relFlag` = 1 or a
-  spectroscopic z (`f_zbest` = 1), 2,928 rows (2,866 + 62; `tests/test_astrodeep_zout.py` live test) (`scripts/astrodeep_zout.py`;
+  spectroscopic z (`f_zbest` = 1), 2,928 rows (2,866 + 62; `zout_counts.json`, live test in `tests/test_astrodeep_zout.py`) (`scripts/astrodeep_zout.py`;
   file sha256 `b072ff2e…`, written twice, identical; pinned in `w1_stage_inputs.PHOTOZ` by its column-value hash
   `astrodeep_zout.content_sha256` `ef1a24d3…`, re-measured 2026-10-17). 855 shape rows (of 4,953) get
   a photo-z within 0.3″ on the final zout (808 before review 2; not stored); JWST − ASTRODEEP median offset (−0.03″, +0.06″) over 1,498 pairs within 1″ (not stored).

@@ -98,3 +98,22 @@ def test_content_sha256_survives_fits_round_trip(tmp_path):
     assert az.content_sha256(Table.read(path)) == az.content_sha256(out)
     out["z_phot"][0] += 1e-9
     assert az.content_sha256(out) != az.content_sha256(Table.read(path))
+
+
+def test_z160_never_above_zbest():
+    pos = Table({"ID": [1], "RAJ2000": [0.0], "DEJ2000": [0.0]})
+    z = Table({"ID": [1], "zbest": [0.005], "e_zbest": [0.001], "relFlag": [1.0], "f_zbest": [0.0]})
+    r = az.to_zout(pos, z)[0]
+    assert r["z160"] <= r["z_phot"] <= r["z840"]
+
+
+def test_write_rejects_hash_mismatch_before_touching_target(tmp_path, monkeypatch):
+    pos = Table({"ID": [1], "RAJ2000": [0.0], "DEJ2000": [0.0]})
+    z = Table({"ID": [1], "zbest": [1.0], "e_zbest": [0.1], "relFlag": [1.0], "f_zbest": [0.0]})
+    monkeypatch.setattr(az, "fetch", lambda field: (pos, z))
+    target = tmp_path / "z.fits"
+    target.write_bytes(b"previous")
+    with pytest.raises(az.HashMismatch):
+        az.write("m0717", target, expect="0" * 64)
+    assert target.read_bytes() == b"previous"
+    assert az.write("m0717", target, expect=az.content_sha256(az.to_zout(pos, z)))

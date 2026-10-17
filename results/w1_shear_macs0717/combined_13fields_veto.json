@@ -1,4 +1,6 @@
 {
+ "headline": false,
+ "note": "Diagnostic only, not the headline: MACS0717 counted although 83 % of its shape rows lack photo-z (855 of 4,953, not stored), so its efficiency is optimistic (D-049). Headline: twelve fields (D-097). See RESULT.md.",
  "fields": [
   "abell2744",
   "abell370",
