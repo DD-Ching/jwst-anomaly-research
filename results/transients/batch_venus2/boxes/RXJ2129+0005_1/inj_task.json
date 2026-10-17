@@ -1,0 +1,19 @@
+{
+ "box_id": "RXJ2129+0005_1",
+ "kind": "inj",
+ "sample": {
+  "rc": 0,
+  "wall_s": 4.9,
+  "peak_rss_mb": 248.5
+ },
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 723.3,
+  "peak_rss_mb": 1045.4
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.6,
+  "peak_rss_mb": 135.1
+ }
+}

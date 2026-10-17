@@ -1,0 +1,14 @@
+{
+ "box_id": "RXJ2129+0005_1",
+ "kind": "screen",
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 675.8,
+  "peak_rss_mb": 799.4
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.3,
+  "peak_rss_mb": 135.1
+ }
+}
