@@ -6,8 +6,11 @@ ASTRODEEP-FF redshifts: positions from table ``m0717cla``, ``zbest`` / ``e_zbest
 The zout columns ``load_field`` reads are
 
 - ``z_phot`` = ``zbest`` (a spectroscopic z where ``f_zbest`` = 1, as published);
-- ``z160``, ``z840`` = ``zbest`` -/+ 1.483 SIQR (Gaussian 16/84 % points; ASSUMPTION), floored at 0;
-- NaN for rows with ``relFlag`` != 1 (the catalogue's robustness flag; ASSUMPTION).
+- ``z160``, ``z840`` = ``zbest`` -/+ 1.483 SIQR (Gaussian 16/84 % points; ASSUMPTION); z160 is
+  floored at ``Z_FLOOR`` (> 0, so ``attach_photoz`` keeps it and the row counts as possibly
+  foreground);
+- rows with ``relFlag`` != 1 (the catalogue's robustness flag; ASSUMPTION) or no zbest are
+  dropped, so the nearest-neighbour match cannot land on them and hide a usable row.
 
     python scripts/astrodeep_zout.py --field m0717 \\
         --out <data root>/cache/external/astrodeep/m0717clu_zout.fits
@@ -17,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import sys
 from pathlib import Path
 
@@ -24,6 +28,7 @@ import numpy as np
 from astropy.table import Table, join
 
 SIQR_TO_SIGMA = 1.483  # 1 / 0.6745: Gaussian sigma per semi-interquartile range (ASSUMPTION)
+Z_FLOOR = 0.01  # lower bound of z160 (ASSUMPTION; attach_photoz turns values <= 0 into NaN)
 CATALOG = "J/A+A/607/A30"
 
 
@@ -43,38 +48,39 @@ def to_zout(pos: Table, z: Table) -> Table:
     siqr = np.ma.filled(np.ma.asarray(t["e_zbest"], float), np.nan)
     rel = np.ma.filled(np.ma.asarray(t["relFlag"], float), 0.0)
     good = np.isfinite(zb) & (zb > 0) & np.isfinite(siqr) & (rel == 1)
-    half = SIQR_TO_SIGMA * siqr
+    t, zb, half = t[good], zb[good], SIQR_TO_SIGMA * siqr[good]
     out = Table(
         {
             "id": np.asarray(t["ID"]),
             "ra": np.asarray(t["RAJ2000"], float),
             "dec": np.asarray(t["DEJ2000"], float),
-            "z_phot": np.where(good, zb, np.nan),
-            "z160": np.where(good, np.maximum(zb - half, 0.0), np.nan),
-            "z840": np.where(good, zb + half, np.nan),
+            "z_phot": zb,
+            "z160": np.maximum(zb - half, Z_FLOOR),
+            "z840": zb + half,
         }
     )
     out.meta.update(provenance="derived", source=CATALOG, SIQRSIG=SIQR_TO_SIGMA)
     return out
 
 
+def write(field: str, path: Path) -> str:
+    """Fetch, convert and write ``path`` (via a ``.part`` file); returns the file's sha256."""
+    pos, z = fetch(field)
+    out = to_zout(pos, z)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    part = path.with_name(path.name + ".part")
+    out.write(part, format="fits", overwrite=True)
+    os.replace(part, path)
+    print(f"{field}: {len(pos)} positions, {len(z)} redshifts, {len(out)} usable rows")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--field", default="m0717", choices=("m0717", "m1149"))
+    ap.add_argument("--field", default="m0717", choices=("m0717",))
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args(argv)
-    pos, z = fetch(args.field)
-    out = to_zout(pos, z)
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    out.write(args.out, overwrite=True)
-    sha = hashlib.sha256(
-        b"".join(np.ascontiguousarray(out[c]).tobytes() for c in out.colnames)
-    ).hexdigest()
-    n_ok = int(np.isfinite(out["z_phot"]).sum())
-    print(
-        f"{args.field}: {len(pos)} positions, {len(z)} redshifts, {len(out)} joined, {n_ok} usable"
-    )
-    print(f"data_sha256 (column bytes) {sha}")
+    print(f"sha256 {write(args.field, args.out)}")
     return 0
 
 

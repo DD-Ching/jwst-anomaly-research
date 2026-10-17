@@ -22,11 +22,11 @@ def test_to_zout_joins_and_converts():
     )
     out = az.to_zout(pos, z)
     by_id = {int(r["id"]): r for r in out}
+    assert set(by_id) == {1, 3}  # relFlag 0 dropped
     assert np.isclose(by_id[1]["ra"], 10.0)
     assert np.isclose(by_id[1]["z_phot"], 1.0)
     assert np.isclose(by_id[1]["z160"], 1.0 - az.SIQR_TO_SIGMA * 0.1)
     assert np.isclose(by_id[1]["z840"], 1.0 + az.SIQR_TO_SIGMA * 0.1)
-    assert np.isnan(by_id[2]["z_phot"])  # relFlag 0
     assert by_id[3]["z160"] == by_id[3]["z840"] == 2.0  # spectroscopic, SIQR 0
     assert out.meta["provenance"] == "derived"
 
@@ -34,12 +34,11 @@ def test_to_zout_joins_and_converts():
 def test_floor_at_zero():
     pos = Table({"ID": [1], "RAJ2000": [0.0], "DEJ2000": [0.0]})
     z = Table({"ID": [1], "zbest": [0.1], "e_zbest": [1.0], "relFlag": [1.0]})
-    assert az.to_zout(pos, z)["z160"][0] == 0.0
+    assert az.to_zout(pos, z)["z160"][0] == az.Z_FLOOR
 
 
 @pytest.mark.network
 def test_fetch_m0717_live():
     pos, z = az.fetch("m0717")
     assert len(pos) == len(z) == 4082
-    out = az.to_zout(pos, z)
-    assert int(np.isfinite(out["z_phot"]).sum()) == 2866
+    assert len(az.to_zout(pos, z)) == 2866

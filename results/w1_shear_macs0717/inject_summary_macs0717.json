@@ -117,8 +117,8 @@
   }
  },
  "wall_time_s": {
-  "base_screen": 2.4,
-  "total": 212.8
+  "base_screen": 3.1,
+  "total": 210.4
  },
  "assumptions": {
   "recover_tol_arcsec": 2.0,

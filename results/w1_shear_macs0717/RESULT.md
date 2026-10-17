@@ -7,7 +7,8 @@ every threshold an ASSUMPTION (D-053 defaults and the streak-veto settings, unch
 ## Inputs
 - F200W VENUS catalogue `jw06882-o029_t063` (sha256 `099c3c38…`, data/manifests/macs0717.ecsv), 4,953 shape rows.
 - ASTRODEEP-FF (VizieR J/A+A/607/A30 `m0717cla` + `m0717clz`, accessed 2026-10-17): 4,082 rows, 2,866 with
-  `relFlag` = 1 (printed by the script, not stored) (`scripts/astrodeep_zout.py`; column-bytes sha256 `a3a9f660…`, not stored as a file). 808 shape rows get
+  `relFlag` = 1 (printed by the script, not stored); only those rows are kept (`scripts/astrodeep_zout.py`; file
+  sha256 `26fe3fdd…`, pinned in `w1_stage_inputs.PHOTOZ`; written twice, identical). 808 shape rows get
   a photo-z within 0.3″ (not stored); JWST − ASTRODEEP median offset (−0.03″, +0.06″) over 1,498 pairs within 1″ (not stored).
 - Gaia DR3 G < 17 within 4′ of the VENUS pointing: 34 stars. Streak mask (`masks/macs0717_streak_mask.json`, 2 trails,
   19,621 binned pixels; the FITS mask is gitignored, re-make it with `w1_streak_mask.py --fields macs0717`).
@@ -32,6 +33,12 @@ Screened area 22,207 arcsec² (6.17 arcmin²). MACS0717 is nearly blind (efficie
 Σ(W1) < 4.4 × 10³ / 7.1 × 10² / 3.4 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉ (border-corrected 4.9 × 10³ /
 8.0 × 10² / 3.9 × 10²), against twelve fields 4.4 × 10³ / 7.2 × 10² / 3.5 × 10² (`results/w1_streak_veto/
 combined_12fields_veto.json`): changes ≤ 1.2 %. Still blind at ≤ 2 × 10¹¹ M☉.
+
+## Code-review fixes (post hoc, before the PR)
+The first run kept `relFlag` ≠ 1 rows as NaN and floored z160 at 0 (which `attach_photoz` turns into NaN); the
+adapter now drops those rows and floors z160 at 0.01. Re-run with the same seed: every screen and injection number
+above is unchanged (808 matched rows both times, not stored; rows with photo-z but no usable z160 are excluded
+from the background either way, `exotic_screens.py` line 603).
 
 ## Limits of this result
 - Photo-z cover only the HST WFC3 footprint; the other rows enter as in the unchanged code. The low R (0.23) is

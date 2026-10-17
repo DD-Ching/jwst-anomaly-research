@@ -107,7 +107,11 @@ PHOTOZ = {
         "ceb199c61f1ca67df6afc34df6ed7ad61267f59ccaf27e9a2fd1e64c2662c04e",
     ),
 }
-PHOTOZ["m0717clu_zout.fits"] = {"astrodeep": "m0717"}  # no DJA photo-z (2026-10-17)
+# No DJA photo-z for MACS0717 (2026-10-17): ASTRODEEP-FF from VizieR, written by astrodeep_zout.py
+PHOTOZ["m0717clu_zout.fits"] = {
+    "astrodeep": "m0717",
+    "sha256": "26fe3fdd9dd0a3579e97e08c0121bc48cefb4bb5e02d5787f1cde341df143fa7",
+}
 for _f, _sha in (
     ("macs0417", "ca6b48aa6404444d2e0b8965a35376ff032917071ea64cbf6306d06ee57d90dd"),
     ("macs1423", "c257d8dff95319f4eea981cc838269c04aff0a79bac603c7ed64100deac622b0"),
@@ -201,23 +205,26 @@ def stage_zip_members(files: dict[str, tuple[str, str]]) -> dict:
     return row | {"status": "fetched" if missing else "present"}
 
 
-def stage_astrodeep(target: Path, field: str) -> dict:
-    """Write the ASTRODEEP-FF zout (``astrodeep_zout.py``; VizieR, not a pinned file)."""
-    row = {"path": str(target), "url": f"vizier:{astrodeep_zout.CATALOG}/{field}", "bytes": 0}
-    row["pinned"] = True  # checked by the column-bytes hash the run summary records
-    if target.exists():
-        return {**row, "status": "present"}
+def stage_astrodeep(target: Path, src: dict) -> dict:
+    """Write the ASTRODEEP-FF zout (``astrodeep_zout.write``, from VizieR) and check its sha256."""
+    url = f"vizier:{astrodeep_zout.CATALOG}/{src['astrodeep']}"
+    row = {"path": str(target), "url": url, "pinned": True, "bytes": 0}
+    if target.exists() and acquire.sha256_file(target) == src["sha256"]:
+        return {**row, "status": "present", "sha256": src["sha256"]}
     try:
-        astrodeep_zout.main(["--field", field, "--out", str(target)])
+        got = astrodeep_zout.write(src["astrodeep"], target)
     except Exception as exc:  # noqa: BLE001 - report and continue with the other files
         return {**row, "status": f"FAILED: {type(exc).__name__}: {exc}"}
-    return {**row, "status": "fetched", "bytes": target.stat().st_size}
+    if got != src["sha256"]:
+        target.unlink()
+        return {**row, "status": f"FAILED: sha256 {got} != {src['sha256']}"}
+    return {**row, "status": "fetched", "sha256": got, "bytes": target.stat().st_size}
 
 
 def run_job(job: tuple[str, Path | None, dict]) -> dict:
     _, target, src = job
     if "astrodeep" in src:
-        return stage_astrodeep(target, src["astrodeep"])
+        return stage_astrodeep(target, src)
     return stage_zip_members(src["zip_members"]) if target is None else stage(target, src)
 
 
