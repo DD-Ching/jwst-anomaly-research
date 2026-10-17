@@ -26,3 +26,12 @@ def test_contributors_match_line_counts():
     args = SimpleNamespace(line_tol_arcsec=1.0, max_len_arcsec=15.0)
     use = rm.contributors(cand, _Frame(), {"x": 0.0, "y": 0.0}, args)
     assert use.tolist() == [True, False, False]  # the third is 20" away, beyond max_len
+
+
+def test_drop_streak_arcs_counts_and_keeps_order():
+    cand = Table({"ra": [1.0, 2.0, 3.0], "dec": [0.0, 0.0, 0.0]})
+    out, counts = rm.es.drop_streak_arcs(cand, {"n_anti": 3}, lambda ra, dec: ra == 2.0)
+    assert out["ra"].tolist() == [1.0, 3.0]
+    assert counts == {"n_anti": 3, "n_streak_vetoed": 1}
+    same, c0 = rm.es.drop_streak_arcs(cand, {"n_anti": 3}, None)
+    assert same is cand and c0 == {"n_anti": 3}  # no veto: inputs unchanged, no new key

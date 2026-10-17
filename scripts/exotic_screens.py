@@ -445,6 +445,15 @@ def radial_defaults() -> dict:
     return vars(ap.parse_args([]))
 
 
+def drop_streak_arcs(cand: Table, sel_counts: dict, streak) -> tuple[Table, dict]:
+    """Optional streak veto (results/radial_streak/PLAN.md): ``streak(ra, dec) -> bool`` drops
+    candidate arcs on linear streaks after selection, so the null draws use the same arcs."""
+    if streak is None:
+        return cand, sel_counts
+    on = np.asarray(streak(np.asarray(cand["ra"], float), np.asarray(cand["dec"], float)), bool)
+    return cand[~on], {**sel_counts, "n_streak_vetoed": int(on.sum())}
+
+
 def cmd_radial(args) -> dict:
     model, _, _ = lc.load_model(args.model)  # a Lenstool model or published deflection maps
     lc.apply_frame_offset(args.model, model)  # into the JWST frame (D-034, D-040)
@@ -453,6 +462,7 @@ def cmd_radial(args) -> dict:
         lc.attach_photoz(shapes, args.photoz)
     extra = read_spike_stars(args.spike_stars) if args.spike_stars else None
     cand, sel_counts = radial_candidates(model, shapes, args, extra)
+    cand, sel_counts = drop_streak_arcs(cand, sel_counts, getattr(args, "streak", None))
     cx, cy = model.to_frame(cand["ra"], cand["dec"])
     gx, gy = radial_grid(args.max_radius, args.grid_arcsec)
     counts = line_counts(cx, cy, cand["pa_obs"], gx, gy, args.line_tol_arcsec, args.max_len_arcsec)

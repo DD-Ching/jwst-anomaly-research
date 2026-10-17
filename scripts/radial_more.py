@@ -51,7 +51,7 @@ def flagged(summary: dict) -> list[dict]:
     return [p for p in summary["peaks"] if p.get("p_random") is not None and p["p_random"] < P_FLAG]
 
 
-def run(name: str, spec: dict, out: Path, tag: str) -> dict:
+def run(name: str, spec: dict, out: Path, tag: str, streak_masks: Path | None = None) -> dict:
     fdir = out / tag
     fdir.mkdir(parents=True, exist_ok=True)
     _, _, extra, cat, photoz = ir.load_field(name, fdir, spec=spec)
@@ -59,9 +59,14 @@ def run(name: str, spec: dict, out: Path, tag: str) -> dict:
     args.max_radius = spec["max_radius"]
     args.model, args.catalog, args.photoz, args.out = spec["model"], cat, photoz, fdir
     args.spike_stars = fdir / f"{name}_gaia_stars.ecsv" if extra is not None else None
+    if streak_masks is not None:  # diagnostic, not adopted (results/radial_streak)
+        args.streak = ish.streak_veto(streak_masks, name)
     s = es.cmd_radial(args)
     row = {"field": tag, "model": spec["model"], **{k: s[k] for k in KEYS}}
     row["n_spike_stars"] = None if s["spike_stars"] is None else s["spike_stars"]["n"]
+    if streak_masks is not None:
+        row["n_streak_vetoed"] = s["n_streak_vetoed"]
+        row["streak_mask"] = ish.wsm.mask_identity(streak_masks / f"{name}_streak_mask.fits.gz")
     row["flags"] = flagged(s)
     return row
 
@@ -148,6 +153,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--reproduce-s1063", action="store_true")
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--sheet", nargs="*", help="field tags to draw (after their runs)")
+    ap.add_argument(
+        "--streak-masks",
+        type=Path,
+        help="directory of <field>_streak_mask.fits.gz (scripts/w1_streak_mask.py): drop candidate "
+        "arcs on streaks before the line counts (results/radial_streak/PLAN.md)",
+    )
     a = ap.parse_args(argv)
     if a.sheet:
         print(sheet(a.sheet, a.out))
@@ -155,7 +166,7 @@ def main(argv: list[str] | None = None) -> int:
     rows = []
     if a.reproduce_s1063:
         rows.append(run("abells1063", ir.FIELDS["abells1063"], a.out, "abells1063_reproduce"))
-    rows += [run(f, ish.field_spec(f), a.out, f) for f in a.fields]
+    rows += [run(f, ish.field_spec(f), a.out, f, a.streak_masks) for f in a.fields]
     path = a.out / "summary.json"
     old = json.loads(path.read_text()) if path.exists() else {}
     old.update({r["field"]: r for r in rows})
