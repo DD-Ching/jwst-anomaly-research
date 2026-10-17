@@ -29,3 +29,16 @@ outside (0, 1.5] or < 20 calibrating rows: the field is dropped (D-053). Null fi
 seven-field ones.
 **Known-case check.** R should fall near the 0.41–0.49 of the other seven fields (the cluster shear is seen); a
 field with R far outside it is reported and not combined.
+
+## Addendum A (written after the screen, before the vetting computation; 2026-10-17 11:18Z)
+MACS1423 passed the D-053 rule (S_max 3.88 at (215.93975, 24.06457), p_rot 0.01, B-mode max 3.64). The 30″ F200W
+sheet (`sheet_macs1423_smax.png`, looked at) shows a vertical stripe crossing the aperture centre and a bright
+star (no Gaia G < 17 cross) about 8″ from it with spikes, one pointing near the centre. Frozen vetting test
+(`scripts/w1_peak_vet.py`, computable):
+- V1 streak: in the 30″ cutout, stripe columns are those whose column median deviates from the cutout median by
+  > 5 × the MAD of the column medians; used sources within 1.0″ of a stripe column are removed.
+- V2 star: the brightest catalogue source within 10″ of the peak is the star; used sources within 15″ of it whose
+  catalogue axis is within 15° of the direction to the star are removed.
+- S at the peak is recomputed without V1 ∪ V2 (and without each alone, reported). **Outcome rule:** if S without
+  V1 ∪ V2 is ≤ the field's B-mode max 3.64 or its p_rot (same null draws) ≥ 0.05, the hit is "explained by
+  streak/spike contamination (screen-level)"; otherwise it goes to `/vet-candidate`. All thresholds ASSUMPTIONs.
