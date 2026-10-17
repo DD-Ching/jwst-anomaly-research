@@ -233,11 +233,16 @@ def line_counts(x, y, pa_deg, gx, gy, tol: float, max_len: float) -> np.ndarray:
     ux, uy = -np.sin(pa), np.cos(pa)  # E of N in a West/North frame: East = -x
     counts = np.zeros(gx.shape, int)
     for xi, yi, ui, vi in zip(x, y, ux, uy, strict=True):
-        dx, dy = gx - xi, gy - yi
-        along = dx * ui + dy * vi
-        perp = np.abs(dx * vi - dy * ui)
-        counts += (perp <= tol) & (np.abs(along) <= max_len) & (np.abs(along) >= tol)
+        counts += line_passes(gx - xi, gy - yi, ui, vi, tol, max_len)
     return counts
+
+
+def line_passes(dx, dy, ux, uy, tol: float, max_len: float):
+    """Whether a point at offset (dx, dy) from a source lies on its major-axis line (unit vector
+    (ux, uy)): within ``tol`` of the line, and between ``tol`` and ``max_len`` along it."""
+    along = dx * ux + dy * uy
+    perp = np.abs(dx * uy - dy * ux)
+    return (perp <= tol) & (np.abs(along) <= max_len) & (np.abs(along) >= tol)
 
 
 def convergence_peaks(counts: np.ndarray, min_lines: int) -> list[tuple[int, int]]:
@@ -257,21 +262,24 @@ AXIAL_MIN = 0.9  # axial concentration at or above which a centre is a collinear
 def axial_concentration(x, y, pa_deg, x0: float, y0: float, tol: float, max_len: float):
     """Axial concentration of the arcs whose lines pass (x0, y0) (results/radial_axial/PLAN.md).
 
-    Contributors follow ``line_counts`` exactly; φ is each contributor's azimuth about the centre
-    and A = |mean exp(2iφ)| (1: all on one axis through the centre; 0: spread azimuths). Returns
-    (number of contributors, A); A is NaN without contributors. Tested as a streak rule and not
-    adopted (gate K failed, results/radial_axial/RESULT.md)."""
+    Contributors are the arcs ``line_counts`` counts there (``contributors``); φ is each one's
+    azimuth about the centre and A = |mean exp(2iφ)| (1: all on one axis through the centre;
+    0: spread azimuths). Returns (number of contributors, A); A is NaN without contributors.
+    Tested as a streak rule and not adopted (gate K failed, results/radial_axial/RESULT.md)."""
     x, y = np.asarray(x, float), np.asarray(y, float)
-    pa = np.deg2rad(np.asarray(pa_deg, float))
-    ux, uy = -np.sin(pa), np.cos(pa)
-    dx, dy = x0 - x, y0 - y
-    along = dx * ux + dy * uy
-    perp = np.abs(dx * uy - dy * ux)
-    hit = (perp <= tol) & (np.abs(along) <= max_len) & (np.abs(along) >= tol)
+    hit = contributors(x, y, pa_deg, x0, y0, tol, max_len)
     if not hit.any():
         return 0, float("nan")
     phi = np.arctan2(y[hit] - y0, x[hit] - x0)
     return int(hit.sum()), float(np.abs(np.mean(np.exp(2j * phi))))
+
+
+def contributors(x, y, pa_deg, x0: float, y0: float, tol: float, max_len: float) -> np.ndarray:
+    """Per arc, whether its major-axis line passes (x0, y0) under the ``line_counts`` test."""
+    pa = np.deg2rad(np.asarray(pa_deg, float))
+    return line_passes(
+        x0 - np.asarray(x, float), y0 - np.asarray(y, float), -np.sin(pa), np.cos(pa), tol, max_len
+    )
 
 
 SPIKE_STAR_MAG = 20.0  # point sources brighter than this have long diffraction spikes (ASSUMPTION)

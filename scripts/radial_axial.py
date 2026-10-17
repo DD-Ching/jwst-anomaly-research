@@ -57,7 +57,9 @@ def on_line(x, y, tol: float = LINE_TOL_ARCSEC) -> int:
 
 
 def gate_k(peaks: list[dict]) -> bool:
-    """The frozen gate: the strongest centre is axial (A >= AXIAL_MIN)."""
+    """The frozen gate: the strongest centre is axial (A >= AXIAL_MIN); no centre fails it."""
+    if not peaks:
+        return False
     top = max(peaks, key=lambda p: p["n_lines"])
     return bool(top["axial_a"] >= es.AXIAL_MIN)
 
@@ -81,14 +83,10 @@ def main(argv: list[str] | None = None) -> int:
     peaks = []
     for p in summ["peaks"]:
         n, a_ax = es.axial_concentration(x, y, pa, p["x"], p["y"], tol, max_len)
-        gx, gy = np.array([[p["x"]]]), np.array([[p["y"]]])
-        hit = np.array(
-            [
-                bool(es.line_counts([xi], [yi], [pi], gx, gy, tol, max_len)[0, 0])
-                for xi, yi, pi in zip(x, y, pa, strict=True)
-            ]
-        )
-        assert n == hit.sum() == p["n_lines"]
+        hit = es.contributors(x, y, pa, p["x"], p["y"], tol, max_len)
+        count = es.line_counts(x, y, pa, np.array([[p["x"]]]), np.array([[p["y"]]]), tol, max_len)
+        if not n == hit.sum() == count[0, 0] == p["n_lines"]:
+            raise RuntimeError(f"contributors do not match the stored line count at {p}")
         phi = np.rad2deg(np.arctan2(y[hit] - p["y"], x[hit] - p["x"]))
         peaks.append(
             {

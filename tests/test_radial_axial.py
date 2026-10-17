@@ -27,3 +27,4 @@ def test_gate_k_uses_the_strongest_centre():
     assert not rax.gate_k(peaks)
     peaks[0]["axial_a"] = 0.95
     assert rax.gate_k(peaks)
+    assert not rax.gate_k([])
