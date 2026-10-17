@@ -325,6 +325,9 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   (accessed 2026-10-17; used by `results/transients/batch_venus2/followup/macs0417_h002`).
 - Mahler et al. 2019 (RELICS MACS J0417 lenstool model, system 1 images): arXiv:1810.13439 (abstract read 2026-10-17: "MACS J0417.5-1154 at z=0.443"; journal reference not checked).
 - Meena et al. 2026, "Caught in Swallowtails" (MS 0451.6−0305), arXiv:2601.10097 (abstract read 2026-10-17).
+- Palencia et al. 2026, catalogue of microlensed stars in the A370 Dragon arc, A&A 714, A22, arXiv:2604.22702
+  (via a literature search 2026-10-17; used for B3-A370-box2-h010).
+- Fudamoto et al., Dragon-arc transients, arXiv:2404.08045 (via a literature search 2026-10-17).
 - Hubble Frontier Fields lens models (same layout as RELICS): https://archive.stsci.edu/prepds/frontier/lensmodels/
 - Zoobot Euclid encoder (Apache-2.0): https://huggingface.co/mwalmsley/zoobot-encoder-euclid
 - Euclid Q1 strong-lens expert labels: https://huggingface.co/datasets/mwalmsley/euclid_strong_lens_expert_judges

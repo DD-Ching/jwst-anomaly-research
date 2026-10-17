@@ -1,0 +1,21 @@
+{
+ "label": "observed catalogue entries and literature (SIMBAD, NED, Gaia DR3, VizieR, web), 2026-10-17, via a literature subagent; separations in arcsec",
+ "tns": "could not query: one request per position was sent, the response body was not recorded; not retried",
+ "B3-A370-box2-h003": {
+  "position": [39.966687, -1.583019],
+  "simbad_3arcsec": [["[LRB2019] 6401", "G", 0.08]],
+  "ned": [["[LRB2022] 06401", 0.12, "z 0.3604, flag S1L (spectroscopic)"]],
+  "gaia_15arcsec": "none",
+  "literature": "z_spec 0.3604 in Lagattuta+2019 MUSE (confidence 2; Ca K/H, Hbeta, Mg5176, Hgamma absorption), Richard+2021 (zconf 2, mu 1.0), Pilot-WINGS (q_z 2); photometric z 0.335; HFF-DeepSpace S/G = 0 (not a star); in the constant-source table of the HST variability study J/A+A/630/A92 (HST epochs only); not within 8 arcsec of a Palencia+2026 Dragon event",
+  "nearest_lensed_image": ["[DSB2018] A370 2.3.10", 4.91],
+  "reading": "a compact galaxy (z 0.36, near the cluster redshift 0.375), not a star, no AGN evidence, not multiply imaged"
+ },
+ "B3-A370-box2-h010": {
+  "position": [39.970466, -1.585253],
+  "simbad_3arcsec": [["[DSB2018] A370 2.2.1", "LeG", 1.91], ["ACO 370 Giant Arc", "LeG", 2.32], ["[LRC2017] S2", "G", 2.62], ["CN A370 103", "GiC", 2.78], ["[LRB2019] 5674", "G", 2.78]],
+  "ned": "Dragon-arc images at z 0.7251 (e.g. HLS J023953.0-013507 at 1.50); bright neighbour 05674 z 0.3677 at 2.76",
+  "gaia_15arcsec": "none",
+  "literature": "Palencia+2026 (A&A 714, A22; arXiv:2604.22702) lists 33 microlensing-event detections within 1 arcsec, nearest 0.54 arcsec, epochs 2022-12-29, 2023-12-19/20/22, 2024-07 to 2024-09; Fudamoto+2025 (arXiv:2404.08045) report 40+ events in the same galaxy",
+  "reading": "on the Dragon arc (z 0.725), a region with many known caustic-microlensing events; whether one catalogued event matches is not established (nearest 0.54 arcsec)"
+ }
+}

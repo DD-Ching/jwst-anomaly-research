@@ -1,0 +1,487 @@
+{
+ "unchanged": {
+  "26.00": {
+   "n": 4,
+   "hit": 0,
+   "hit_frac": 0.0,
+   "hit_68": [
+    0.0,
+    0.2
+   ],
+   "unflagged": 0,
+   "unflagged_frac": 0.0,
+   "unflagged_68": [
+    0.0,
+    0.2
+   ],
+   "morph_pass": 0,
+   "morph_pass_frac": 0.0,
+   "morph_pass_68": [
+    0.0,
+    0.2
+   ],
+   "sign_ok": 0,
+   "sign_ok_frac": 0.0,
+   "sign_ok_68": [
+    0.0,
+    0.2
+   ],
+   "review": 0,
+   "review_frac": 0.0,
+   "review_68": [
+    0.0,
+    0.2
+   ],
+   "review_sign": 0,
+   "review_sign_frac": 0.0,
+   "review_sign_68": [
+    0.0,
+    0.2
+   ]
+  },
+  "27.00": {
+   "n": 4,
+   "hit": 0,
+   "hit_frac": 0.0,
+   "hit_68": [
+    0.0,
+    0.2
+   ],
+   "unflagged": 0,
+   "unflagged_frac": 0.0,
+   "unflagged_68": [
+    0.0,
+    0.2
+   ],
+   "morph_pass": 0,
+   "morph_pass_frac": 0.0,
+   "morph_pass_68": [
+    0.0,
+    0.2
+   ],
+   "sign_ok": 0,
+   "sign_ok_frac": 0.0,
+   "sign_ok_68": [
+    0.0,
+    0.2
+   ],
+   "review": 0,
+   "review_frac": 0.0,
+   "review_68": [
+    0.0,
+    0.2
+   ],
+   "review_sign": 0,
+   "review_sign_frac": 0.0,
+   "review_sign_68": [
+    0.0,
+    0.2
+   ]
+  },
+  "27.50": {
+   "n": 3,
+   "hit": 0,
+   "hit_frac": 0.0,
+   "hit_68": [
+    0.0,
+    0.25
+   ],
+   "unflagged": 0,
+   "unflagged_frac": 0.0,
+   "unflagged_68": [
+    0.0,
+    0.25
+   ],
+   "morph_pass": 0,
+   "morph_pass_frac": 0.0,
+   "morph_pass_68": [
+    0.0,
+    0.25
+   ],
+   "sign_ok": 0,
+   "sign_ok_frac": 0.0,
+   "sign_ok_68": [
+    0.0,
+    0.25
+   ],
+   "review": 0,
+   "review_frac": 0.0,
+   "review_68": [
+    0.0,
+    0.25
+   ],
+   "review_sign": 0,
+   "review_sign_frac": 0.0,
+   "review_sign_68": [
+    0.0,
+    0.25
+   ]
+  }
+ },
+ "appear": {
+  "26.00": {
+   "n": 3,
+   "hit": 3,
+   "hit_frac": 1.0,
+   "hit_68": [
+    0.75,
+    1.0
+   ],
+   "unflagged": 3,
+   "unflagged_frac": 1.0,
+   "unflagged_68": [
+    0.75,
+    1.0
+   ],
+   "morph_pass": 3,
+   "morph_pass_frac": 1.0,
+   "morph_pass_68": [
+    0.75,
+    1.0
+   ],
+   "sign_ok": 3,
+   "sign_ok_frac": 1.0,
+   "sign_ok_68": [
+    0.75,
+    1.0
+   ],
+   "review": 3,
+   "review_frac": 1.0,
+   "review_68": [
+    0.75,
+    1.0
+   ],
+   "review_sign": 3,
+   "review_sign_frac": 1.0,
+   "review_sign_68": [
+    0.75,
+    1.0
+   ]
+  },
+  "27.00": {
+   "n": 4,
+   "hit": 4,
+   "hit_frac": 1.0,
+   "hit_68": [
+    0.8,
+    1.0
+   ],
+   "unflagged": 3,
+   "unflagged_frac": 0.75,
+   "unflagged_68": [
+    0.5,
+    0.9
+   ],
+   "morph_pass": 4,
+   "morph_pass_frac": 1.0,
+   "morph_pass_68": [
+    0.8,
+    1.0
+   ],
+   "sign_ok": 4,
+   "sign_ok_frac": 1.0,
+   "sign_ok_68": [
+    0.8,
+    1.0
+   ],
+   "review": 3,
+   "review_frac": 0.75,
+   "review_68": [
+    0.5,
+    0.9
+   ],
+   "review_sign": 3,
+   "review_sign_frac": 0.75,
+   "review_sign_68": [
+    0.5,
+    0.9
+   ]
+  },
+  "27.50": {
+   "n": 4,
+   "hit": 2,
+   "hit_frac": 0.5,
+   "hit_68": [
+    0.276,
+    0.724
+   ],
+   "unflagged": 2,
+   "unflagged_frac": 0.5,
+   "unflagged_68": [
+    0.276,
+    0.724
+   ],
+   "morph_pass": 2,
+   "morph_pass_frac": 0.5,
+   "morph_pass_68": [
+    0.276,
+    0.724
+   ],
+   "sign_ok": 2,
+   "sign_ok_frac": 0.5,
+   "sign_ok_68": [
+    0.276,
+    0.724
+   ],
+   "review": 2,
+   "review_frac": 0.5,
+   "review_68": [
+    0.276,
+    0.724
+   ],
+   "review_sign": 2,
+   "review_sign_frac": 0.5,
+   "review_sign_68": [
+    0.276,
+    0.724
+   ]
+  }
+ },
+ "partial": {
+  "26.00": {
+   "n": 4,
+   "hit": 4,
+   "hit_frac": 1.0,
+   "hit_68": [
+    0.8,
+    1.0
+   ],
+   "unflagged": 4,
+   "unflagged_frac": 1.0,
+   "unflagged_68": [
+    0.8,
+    1.0
+   ],
+   "morph_pass": 4,
+   "morph_pass_frac": 1.0,
+   "morph_pass_68": [
+    0.8,
+    1.0
+   ],
+   "sign_ok": 4,
+   "sign_ok_frac": 1.0,
+   "sign_ok_68": [
+    0.8,
+    1.0
+   ],
+   "review": 4,
+   "review_frac": 1.0,
+   "review_68": [
+    0.8,
+    1.0
+   ],
+   "review_sign": 4,
+   "review_sign_frac": 1.0,
+   "review_sign_68": [
+    0.8,
+    1.0
+   ]
+  },
+  "27.00": {
+   "n": 3,
+   "hit": 3,
+   "hit_frac": 1.0,
+   "hit_68": [
+    0.75,
+    1.0
+   ],
+   "unflagged": 3,
+   "unflagged_frac": 1.0,
+   "unflagged_68": [
+    0.75,
+    1.0
+   ],
+   "morph_pass": 3,
+   "morph_pass_frac": 1.0,
+   "morph_pass_68": [
+    0.75,
+    1.0
+   ],
+   "sign_ok": 3,
+   "sign_ok_frac": 1.0,
+   "sign_ok_68": [
+    0.75,
+    1.0
+   ],
+   "review": 3,
+   "review_frac": 1.0,
+   "review_68": [
+    0.75,
+    1.0
+   ],
+   "review_sign": 3,
+   "review_sign_frac": 1.0,
+   "review_sign_68": [
+    0.75,
+    1.0
+   ]
+  },
+  "27.50": {
+   "n": 4,
+   "hit": 1,
+   "hit_frac": 0.25,
+   "hit_68": [
+    0.1,
+    0.5
+   ],
+   "unflagged": 0,
+   "unflagged_frac": 0.0,
+   "unflagged_68": [
+    0.0,
+    0.2
+   ],
+   "morph_pass": 1,
+   "morph_pass_frac": 0.25,
+   "morph_pass_68": [
+    0.1,
+    0.5
+   ],
+   "sign_ok": 1,
+   "sign_ok_frac": 0.25,
+   "sign_ok_68": [
+    0.1,
+    0.5
+   ],
+   "review": 0,
+   "review_frac": 0.0,
+   "review_68": [
+    0.0,
+    0.2
+   ],
+   "review_sign": 0,
+   "review_sign_frac": 0.0,
+   "review_sign_68": [
+    0.0,
+    0.2
+   ]
+  }
+ },
+ "vanish": {
+  "26.00": {
+   "n": 4,
+   "hit": 4,
+   "hit_frac": 1.0,
+   "hit_68": [
+    0.8,
+    1.0
+   ],
+   "unflagged": 4,
+   "unflagged_frac": 1.0,
+   "unflagged_68": [
+    0.8,
+    1.0
+   ],
+   "morph_pass": 4,
+   "morph_pass_frac": 1.0,
+   "morph_pass_68": [
+    0.8,
+    1.0
+   ],
+   "sign_ok": 4,
+   "sign_ok_frac": 1.0,
+   "sign_ok_68": [
+    0.8,
+    1.0
+   ],
+   "review": 4,
+   "review_frac": 1.0,
+   "review_68": [
+    0.8,
+    1.0
+   ],
+   "review_sign": 4,
+   "review_sign_frac": 1.0,
+   "review_sign_68": [
+    0.8,
+    1.0
+   ]
+  },
+  "27.00": {
+   "n": 4,
+   "hit": 4,
+   "hit_frac": 1.0,
+   "hit_68": [
+    0.8,
+    1.0
+   ],
+   "unflagged": 3,
+   "unflagged_frac": 0.75,
+   "unflagged_68": [
+    0.5,
+    0.9
+   ],
+   "morph_pass": 4,
+   "morph_pass_frac": 1.0,
+   "morph_pass_68": [
+    0.8,
+    1.0
+   ],
+   "sign_ok": 4,
+   "sign_ok_frac": 1.0,
+   "sign_ok_68": [
+    0.8,
+    1.0
+   ],
+   "review": 3,
+   "review_frac": 0.75,
+   "review_68": [
+    0.5,
+    0.9
+   ],
+   "review_sign": 3,
+   "review_sign_frac": 0.75,
+   "review_sign_68": [
+    0.5,
+    0.9
+   ]
+  },
+  "27.50": {
+   "n": 3,
+   "hit": 2,
+   "hit_frac": 0.667,
+   "hit_68": [
+    0.386,
+    0.864
+   ],
+   "unflagged": 2,
+   "unflagged_frac": 0.667,
+   "unflagged_68": [
+    0.386,
+    0.864
+   ],
+   "morph_pass": 2,
+   "morph_pass_frac": 0.667,
+   "morph_pass_68": [
+    0.386,
+    0.864
+   ],
+   "sign_ok": 2,
+   "sign_ok_frac": 0.667,
+   "sign_ok_68": [
+    0.386,
+    0.864
+   ],
+   "review": 2,
+   "review_frac": 0.667,
+   "review_68": [
+    0.386,
+    0.864
+   ],
+   "review_sign": 2,
+   "review_sign_frac": 0.667,
+   "review_sign_68": [
+    0.386,
+    0.864
+   ]
+  }
+ },
+ "unchanged_false_hits": {
+  "n": 11,
+  "false_hits": 0,
+  "frac": 0.0,
+  "frac_68": [
+   0.0,
+   0.083
+  ]
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "box_id": "SJ0723.3-7327_1",
+ "kind": "inj",
+ "sample": {
+  "rc": 0,
+  "wall_s": 6.7,
+  "peak_rss_mb": 379.7
+ },
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 151.4,
+  "peak_rss_mb": 1283.2
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 2.0,
+  "peak_rss_mb": 133.5
+ }
+}

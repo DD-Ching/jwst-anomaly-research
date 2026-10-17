@@ -1,0 +1,14 @@
+{
+ "box_id": "SJ0723.3-7327_1",
+ "kind": "screen",
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 80.5,
+  "peak_rss_mb": 864.1
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.5,
+  "peak_rss_mb": 133.5
+ }
+}
