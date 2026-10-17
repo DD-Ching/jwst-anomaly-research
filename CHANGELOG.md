@@ -18,6 +18,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   veto-path test); traced items in RESULT "Second code-review".
 - **Handoff:** W1 next: faint parallel streaks (S1063 S_max aperture) are missed: a lower findsat threshold,
   calibrated through injections; fewer false trails on MACS0647; the open review items in RESULT.
+## 2026-10-17: Batch-2 follow-up: AS1063 h002 edge, MS0451 h011 detector-fixed, MACS0417 h002 counter-images not testable yet (#308)
+- **AS1063 1 h002:** artifact (edge, 12.54″ from the box centre); no significant change in any mosaic either.
+- **MS0451 1 h011:** artifact. The signal sits on one NRCALONG pixel in all 18 exposures of visits 1–2 (S/N 9–28),
+  absent at the sky position in other dithers; mechanism (persistence or hot pixel) not distinguished.
+- **MACS0417 2 h002:** public RELICS glafic/lenstool models reproduce the catalogued images; counter-images lag by
+  ≈ 650–830 d (glafic best fit and 10 realisations), so current epochs cannot test them. Next useful epoch ≈ 2027-07 to 2028-01.
+- Results: `results/transients/batch_venus2/followup/RESULT.md`.
 
 ## 2026-10-17: W1 shear screen on RXJ2129 and MACS0647: null; eleven-field limits 4.5e3 / 7.6e2 / 3.8e2 deg⁻²
 - **Why:** TASKS "JWST focus" 1 (W1): the next fields of the previous handoff (DJA v7.0 photo-z).

@@ -1,0 +1,42 @@
+{
+ "label": "derived; post-review checks of the reviewed entries (owner rule: sky-fixed, spike, other mosaics)",
+ "entries": {
+  "AS1063_1:h002": {
+   "F150W_max_e1_within_5arcsec_over_box_p999": 3.39,
+   "F444W_max_e1_within_5arcsec_over_box_p999": 0.48,
+   "S_peak_offset_F150W_F444W_arcsec": 0.04,
+   "S_peak": {
+    "F150W": -6.7,
+    "F444W": -6.4
+   },
+   "max_pairwise_z_by_band_all_mosaics": {
+    "F115W": [
+     0.95,
+     "01840",
+     "03293"
+    ],
+    "F150W": [
+     -1.68,
+     "03293",
+     "06882"
+    ],
+    "F200W": [
+     0.47,
+     "01840",
+     "03293"
+    ],
+    "F300M": [
+     -1.34,
+     "01840",
+     "06882"
+    ],
+    "F444W": [
+     -0.91,
+     "01840",
+     "06882"
+    ]
+   },
+   "n_mosaics": 19
+  }
+ }
+}

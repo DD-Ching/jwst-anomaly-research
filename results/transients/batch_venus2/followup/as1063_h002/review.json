@@ -1,0 +1,37 @@
+{
+ "label": "derived; PLAN \u00a75 classes",
+ "reviewed": [
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h002",
+   "ra": 342.1798223740701,
+   "dec": -44.53398357098873,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 6.704871944969086,
+   "rank": 11,
+   "edge": true,
+   "z": {
+    "F150W": -1.68,
+    "F444W": -0.64
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     37.7,
+     4.6,
+     18.7,
+     10.4
+    ],
+    "F444W": [
+     19.7,
+     1.6,
+     17.0,
+     3.9
+    ]
+   },
+   "sheet": null,
+   "class": "artifact (edge)"
+  }
+ ]
+}

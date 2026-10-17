@@ -1,0 +1,37 @@
+import json, sys, os, subprocess, numpy as np, warnings
+from astropy.io import fits
+from astropy.wcs import WCS
+from scipy import ndimage
+warnings.filterwarnings('ignore')
+D = sys.argv[1]; base = json.load(open(sys.argv[2]))
+f, tfac = base['f_Dls_Ds'], base['days_per_arcsec2']
+RA, DEC = 64.39640738001187, -11.90704044211364
+URL = 'https://archive.stsci.edu/hlsps/relics/macs0417m11/models/glafic/v3/range/hlsp_relics_model_model_macs0417m11_glafic-map{:03d}_v3_{}.fits'
+h = fits.getheader(f'{D}/hlsp_relics_model_model_macs0417m11_glafic_v3_kappa.fits'); w = WCS(h); sc = abs(h['CDELT1']) * 3600
+res = []
+for k in range(10):
+    arr = {}
+    for q in ('psi', 'x-pixels-deflect', 'y-pixels-deflect'):
+        p = f'{D}/tmp_{q}.fits'
+        subprocess.run(['curl', '-sS', '--max-time', '300', '-o', p, URL.format(k, q)], check=True)
+        arr[q] = fits.getdata(p).astype(float)
+        if q == 'psi': h = fits.getheader(p); w = WCS(h); sc = abs(h['CDELT1']) * 3600
+        os.remove(p)
+    ax, ay = arr['x-pixels-deflect'] * sc * f, arr['y-pixels-deflect'] * sc * f
+    ny, nx = ax.shape; yy, xx = np.mgrid[0:ny, 0:nx]
+    x0, y0 = (float(v) for v in w.world_to_pixel_values(RA, DEC))
+    tx, ty = (xx - x0) * sc, (yy - y0) * sc; bx, by = tx - ax, ty - ay
+    b0 = [float(ndimage.map_coordinates(b, [[y0], [x0]], order=1)[0]) for b in (bx, by)]
+    dd = np.hypot(bx - b0[0], by - b0[1])
+    phi = 0.5 * ((tx - bx)**2 + (ty - by)**2) - arr['psi'] * f
+    phi0 = float(ndimage.map_coordinates(phi, [[y0], [x0]], order=1)[0])
+    mins = (ndimage.minimum_filter(dd, size=3) == dd) & (dd < 1.0)
+    imgs = []
+    for j, i in zip(*np.nonzero(mins)):
+        sep = float(np.hypot(i - x0, j - y0) * sc)
+        if sep < 1: continue
+        r, d = (float(v) for v in w.pixel_to_world_values(i, j))
+        imgs.append({'ra': round(r, 6), 'dec': round(d, 6), 'sep': round(sep, 2), 'delay_days': round((float(phi[j, i]) - phi0) * tfac, 1)})
+    res.append({'map': k, 'images': sorted(imgs, key=lambda r: r['sep'])})
+    print(k, [(r['sep'], r['delay_days']) for r in res[-1]['images']], flush=True)
+json.dump(res, open(sys.argv[3], 'w'), indent=1)
