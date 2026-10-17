@@ -182,7 +182,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      work, ≥ 300 multi-epoch controls so NEXUS and Abell 2744 become calibrated; replace the single-epoch veto for
      vanish flags with the D-039 persistence test (restores full-vanish sensitivity); add JADES and new NEXUS epochs;
      SN/TNS check for any survivor; leave the Sunrise transient track to its owner run;
-   - W5: counts N(>S) around `radial` centres.
+   - ~~W5: counts N(>S) around `radial` centres~~ done 2026-10-17 (`results/w5_radial_counts/RESULT.md`): no deficit,
+     but no power: at JWST depth the model predicts an excess; the post hoc excess (Q ≈ 1.26 at 9″ without arc
+     neighbours) is flat in R. An excess test needs a density-matched control (low priority).
 2. W3 inside caustic-crossing arcs needs a microlens with macro shear (Chang-Refsdal-type; reuse-check first).
 3. Warp: recheck only when a paper gives an electromagnetic prediction for a distant observer.
 

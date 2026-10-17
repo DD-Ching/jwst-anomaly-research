@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W5 counts at the `radial` centres: no deficit; the deficit test has no power at JWST depth
+- `scripts/w5_radial_counts.py`; plan frozen first (`results/w5_radial_counts/PLAN.md`, `RESULT.md`). 30 centres,
+  four fields, radial arcs removed: Q = N_obs / control 1.91 / 1.76 / 1.70 at 3″ / 6″ / 9″, deficit p ≥ 0.9995 (null).
+- **Failed approach:** at m_lim 27.3–28.2 the counts are shallow, so the negative-mass model predicts an *excess*
+  (Q_H 1.6–2.9 at 3″ for 1 × 10¹² M☉), not a deficit; power 0–0.0035. The recipe's "~10 % missing" holds for DR10 depth only.
+- Post hoc: without the rows within 2″ of the arcs, Q 1.34 / 1.23 / 1.26 (p_high 0.104 / 0.058 / 0.0075), nearly
+  flat in R, unlike H's profile; read as a local overdensity at the centres. Not a candidate. **Handoff:** W5 at the
+  `radial` centres closed; an excess test needs a density-matched control and a new plan (low priority).
+
 ## 2026-10-17: W1 stack injections, mass points 5 × 10¹¹ and 1 × 10¹² M☉: f = 1 limit 1 × 10¹² M☉
 - Same code, sample, seed and noise-aware rule (`results/w1_stack_radial/inject/PLAN_mass.md`,
   `mass_points/summary.json`): 1 × 10¹² M☉ at all 19 centres excluded (share above observed 0.997; one MACS0417 centre undefined at that mass); 5 × 10¹¹ not

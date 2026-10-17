@@ -241,6 +241,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.1 (W1 radial-centre stack with a second MACS0417 model) | — | — | 0.05 (state files, PR) | cloud routine 0129VzsK, 18:28–18:45Z |
 | 2026-W42 | ≈ 0.3 (W1 injections at the `radial` centres through the stack; frozen rule degenerate, post hoc noise-aware limit) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01VzSwtX, 19:08–19:28Z |
 | 2026-W42 | ≈ 0.1 (W1 stack injections: mass points 5 × 10¹¹ and 1 × 10¹² M☉) | — | — | 0.05 (plan, state files, PR) | cloud routine 01VzSwtX, 19:28–19:40Z |
+| 2026-W42 | ≈ 0.3 (W5 counts at `radial` centres: plan, script, Gaia via CfA VizieR mirror, planned run, 2″-neighbour diagnostic) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01U6Y4Kd, 20:08–20:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
