@@ -452,6 +452,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - STPSF 2.2.0 (2025-12-23, BSD-3-Clause; requires `numpy<2.4.0`): https://github.com/spacetelescope/stpsf. Data
   files (88 MB): https://stpsf.readthedocs.io/en/latest/installation.html (used 2026-10-17 for `results/w1_stpsf`: stpsf 2.2.0
   from PyPI, data 2.2.0 via the "LATEST" link, https://stsci.box.com/shared/static/kqfolg2bfzqc4mjkgmujo06d3iaymahv.gz)
+- jwst `tweakreg/tweakreg_catalog.py` (main branch, read 2026-10-17): source morphology is measured on data convolved
+  with a Gaussian of FWHM `kernel_fwhm` (step default 2.0 px, `source_catalog_step.py`):
+  https://github.com/spacetelescope/jwst/blob/main/jwst/tweakreg/tweakreg_catalog.py (used for `results/w1_psf_smooth`).
 - MaxiMask 1.4.1 (2024-03-22, MIT): https://github.com/mpaillassa/MaxiMask. Paper: Paillassa, Bertin & Bouy,
   arXiv:1907.08298.
 - grizli 1.14.2 `mask_IR_psf_spikes` (WFC3/IR only):
