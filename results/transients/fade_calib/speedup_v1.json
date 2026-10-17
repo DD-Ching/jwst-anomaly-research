@@ -1,0 +1,139 @@
+{
+ "label": "SUPERSEDED by speedup.json: earlier cache pickled the WCS (not exact) and the injection geometry predates addendum 4. derived; timings on the cloud session's 4 cores, 4 runs concurrently (--procs 1 each), OMP_NUM_THREADS=1",
+ "workload": "held-out seeds 20, 21 x {empirical, gauss} injections, plan settings + --reg-tile-arcsec 6",
+ "baseline": "heldout/ho{E,G}_s{20,21}: no cache",
+ "cold": "--cache-dir, empty cache (fills it); set wall 163.3 s",
+ "warm": "--cache-dir, filled cache; set wall 88.4 s",
+ "baseline_set_wall_s_note": "not timed as a set; per-run wall_s 95.8-171.4 (max = set lower bound 171.4)",
+ "cache_size_mb": 25,
+ "profile_F150W_one_band_s": {
+  "total": 78.5,
+  "kernel_match": 55.1,
+  "lstsq": 30.7,
+  "median_filter": 21.0,
+  "significance": 6.8,
+  "read_box": 8.5
+ },
+ "runs": {
+  "cold_E20": {
+   "hits": [
+    96,
+    96
+   ],
+   "hits_only_in_one": 0,
+   "max_rel_dS_common_hits": 1.5675643338930456e-08,
+   "flag_or_sign_diffs": 0,
+   "injected_stage_diffs": 0,
+   "byte_identical": false,
+   "wall_s": [
+    171.4,
+    161.1
+   ]
+  },
+  "cold_E21": {
+   "hits": [
+    99,
+    99
+   ],
+   "hits_only_in_one": 0,
+   "max_rel_dS_common_hits": 2.0507641806943866e-08,
+   "flag_or_sign_diffs": 0,
+   "injected_stage_diffs": 0,
+   "byte_identical": false,
+   "wall_s": [
+    168.2,
+    162.6
+   ]
+  },
+  "cold_G20": {
+   "hits": [
+    100,
+    100
+   ],
+   "hits_only_in_one": 0,
+   "max_rel_dS_common_hits": 0.0,
+   "flag_or_sign_diffs": 0,
+   "injected_stage_diffs": 0,
+   "byte_identical": true,
+   "wall_s": [
+    97.9,
+    97.4
+   ]
+  },
+  "cold_G21": {
+   "hits": [
+    104,
+    104
+   ],
+   "hits_only_in_one": 0,
+   "max_rel_dS_common_hits": 2.3797521953028422e-08,
+   "flag_or_sign_diffs": 0,
+   "injected_stage_diffs": 0,
+   "byte_identical": false,
+   "wall_s": [
+    95.8,
+    98.6
+   ]
+  },
+  "warm_E20": {
+   "hits": [
+    96,
+    96
+   ],
+   "hits_only_in_one": 0,
+   "max_rel_dS_common_hits": 1.7092018689268684e-07,
+   "flag_or_sign_diffs": 0,
+   "injected_stage_diffs": 0,
+   "byte_identical": false,
+   "wall_s": [
+    171.4,
+    87.7
+   ]
+  },
+  "warm_E21": {
+   "hits": [
+    99,
+    99
+   ],
+   "hits_only_in_one": 0,
+   "max_rel_dS_common_hits": 1.674547104313362e-07,
+   "flag_or_sign_diffs": 0,
+   "injected_stage_diffs": 0,
+   "byte_identical": false,
+   "wall_s": [
+    168.2,
+    87.7
+   ]
+  },
+  "warm_G20": {
+   "hits": [
+    100,
+    100
+   ],
+   "hits_only_in_one": 0,
+   "max_rel_dS_common_hits": 1.275844992987274e-07,
+   "flag_or_sign_diffs": 0,
+   "injected_stage_diffs": 0,
+   "byte_identical": false,
+   "wall_s": [
+    97.9,
+    85.6
+   ]
+  },
+  "warm_G21": {
+   "hits": [
+    104,
+    104
+   ],
+   "hits_only_in_one": 0,
+   "max_rel_dS_common_hits": 4.804433934024743e-07,
+   "flag_or_sign_diffs": 0,
+   "injected_stage_diffs": 0,
+   "byte_identical": false,
+   "wall_s": [
+    95.8,
+    87.4
+   ]
+  }
+ }
+}

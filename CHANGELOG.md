@@ -2,35 +2,43 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-17: `arc_diff` fading calibration with pre-matching injections: failed; registration fix; raw-data cache (#288)
-- **Scope (owner, 2026-10-16):** calibrate fades, speed up, then a small batch only if the calibration passes.
-  Plan first: `results/transients/fade_calib/PLAN.md`.
-- **New:**
-  - `arc_diff.py --inject-pre`: sources go into both raw epochs before registration and matching (Gaussian, or
-    `--inject-pre-psf empirical` per-epoch PSFs);
-  - `scripts/fade_calib.py` (`make`, `eval`, frozen pass rule);
-  - `--cache-dir` (raw boxes and PSFs only).
-- **Found:**
-  - The El Gordo whole-box registration was pinned at its ±3 px edge: F150W (1.71, −3.00) px, against a tile median
-    of (0.70, −0.57).
-  - **The one fix:** `--reg-tile-arcsec 6`, a median of tile shifts (default off).
-  - Only El Gordo runs are pinned. SMACS ERO → VENUS (2.11, −1.82) px is unchecked.
-- **Held-out result (seeds 20 + 21; n = 12–14 per cell):**
-  - vanish at 26.0 AB on the review list with the correct sign: 14 / 14;
-  - vanish 27.0 / 27.5: 12 / 14, 10 / 12;
-  - partial fades 26.0: 13 / 14; 27.5: 5–8 / 14.
-  - **Unchanged false hits 11 / 40 (empirical) and 10 / 40 (Gaussian), above the ≤ 0.10 rule → calibration
-    failed.** Only 0–1 / 40 of them reach the review list.
-  - Development seeds gave 4 / 40, which was optimistic.
-- **#286 re-screened with the fix:** the review list goes 4 → 1. The remaining entry is the same position as h024
-  (already vetted); nothing new, and the conclusion stands.
-- **Speed-up:** warm cache 86–88 s per run, against 168–171 s (empirical) and 96–98 s (Gaussian).
-  - Stage outcomes are identical (0 extra misses); S agrees to ≤ 5 × 10⁻⁷ relative.
-  - Not byte-identical, but the un-cached chain is not byte-reproducible either. Plan §5 asked for exact
-    agreement, so the factor is reported as measured, not validated.
-- **Not done:** the batch search (calibration failed).
-- **Next:** an owner decision is needed to go further, either a review-list criterion (a criterion change) or
-  another fix.
+## 2026-10-17: `arc_diff` fading calibration (pre-matching injections), registration fix, El Gordo B1–B3 search (#288)
+- **Scope (owner, 2026-10-16):**
+  - calibrate fades, then a measured speed-up, then a small batch only if the calibration passes;
+  - plan first: `results/transients/fade_calib/PLAN.md` with addenda 3–5.
+- **Tools:**
+  - `arc_diff.py --inject-pre`: sources go into both raw epochs before registration and matching. Epoch 2 follows
+    the chain's injection-free registration.
+  - `--inject-pre-psf empirical`: per-epoch PSFs.
+  - **The one chain fix:** `--reg-tile-arcsec 6`, the global shift as a tile median. El Gordo's whole-box shift was
+    pinned at ±3 px.
+  - `--cache-dir`: raw-data products only.
+  - `scripts/fade_calib.py`: `make`, `eval`, `boxes`.
+- **Failed approach, kept for the record:**
+  - The first injection placed epoch-2 sources at their WCS position, so after the chain's registration shift each
+    unchanged source became a 0.9 px dipole.
+  - Held-out seeds 20 + 21 "failed" (false hits 0.25–0.28) because of that artefact.
+  - Found by `/code-review`; corrected in addendum 4. Fresh held-out seeds 30 + 31 were used after it.
+- **Calibration (box 1, held-out seeds 30 + 31; n = 12–14 per cell):**
+  - vanish 26.0 AB on the review list with the sign: 14 / 14 [0.93, 1.00];
+  - unchanged false hits: 1 / 40 (empirical PSF) and 4 / 40 (Gaussian, exactly at the 0.10 limit); passes §4;
+  - corrected dev seeds: 6 / 40.
+  - Partial fades at 27.5 AB are mostly undetected: 4–6 / 14.
+  - These are small-sample figures for one box, and an injected-source false-hit fraction is not a real-sky
+    false-alarm rate.
+- **Batch:**
+  - B1 (#286) re-screened: review list 4 → 1 (the vetted h024 position); #286 stands.
+  - B2 and B3 were chosen by coverage before any difference. Review lists 0 and 0, and all 8 rejected hits were
+    looked at.
+  - Local vanish 26.0 AB efficiency: 5 / 7 and 6 / 7.
+  - Nothing pending; no exclusion.
+- **Speed-up (`speedup.json`):** a warm cache gives ×1.9 (empirical) and ×1.3 (Gaussian) on box 1.
+  - The outputs are byte-identical, and the first use is not slower.
+  - There is no gain in B2 and B3, where the per-stamp kernel fits take 1,466–1,948 s (1,065–1,199 stamps against
+    217); that step is left for a decision.
+- **Pending (not done here):**
+  - the SMACS ERO → VENUS whole-box shift (2.11, −1.82) px, unchecked;
+  - the kernel-stamp cost.
 
 ## 2026-10-16: El Gordo arc difference imaging, PEARLS 2022 → VENUS 2026 (one-box pilot): nothing open (#286)
 - **Scope (owner):**
