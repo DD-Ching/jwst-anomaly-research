@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 PSF anisotropy from stars vs Abell 2744's B-mode floor: 4.21 → 3.85, misses the rule; not adopted
+- **Why:** TASKS "JWST focus" 1 (W1), `results/w1_floor` "Next". Frozen rules R1/R2 in `results/w1_psf/PLAN.md`.
+- **New:** `exotic_screens.psf_moments` and `psf_chi` in `intrinsic_ellipticity` / `shear_sources` /
+  `shear_screen`, `inject_radial.lensed_cov` / `paint_lens`, `inject_shear.py --psf-chi` (default isotropic,
+  unchanged); `scripts/w1_psf_floor.py`.
+- **Result (derived; `results/w1_psf/RESULT.md`):** 3 PSF stars (Gaia-matched), median χ_PSF with |χ| 0.157 at
+  PA ≈ 133°. R1 (star map at the 10″ scale) fails: median nearest star 92″. Constant correction: b_max 4.21 → 3.85
+  at (88, −42) (rule ≤ 3.79: fails), used sources 4,951 → 4,496, field-mean ε₂ −0.026 → −0.006; E-mode still null.
+  W1 limits unchanged.
+- **Failed approaches:** a star-based PSF map (too few stars); a trace-preserving PSF model and round-PSF
+  injection painting (code review; first-run numbers withdrawn).
+- **Handoff:** next W1 floor step is a model PSF per detector (STPSF; reuse-check first).
+
 ## 2026-10-17: PLCK G165 h002 vetting record corrected: the z = 1.32 galaxy is 3.77″ away, not 0.06″
 - **Error:** the #296 record read NED's separation (0.063, in arcmin) as arcsec and wrote that h002 "sits on" the
   z = 1.3236 galaxy `[FPP2024] NS_0481`. The separation is 3.77″ (`results/transients/batch_venus/h002_identity.json`).

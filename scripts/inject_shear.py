@@ -154,6 +154,7 @@ class ShearInjector:
             self.psf,
             self.next_label,
             pixel_scale,
+            psf_chi=getattr(self.args, "psf_chi", 0j),
         )
         a = self.args
         near_l = np.hypot(self.xs - x_l, self.ys - y_l) <= a.recover_tol + a.aperture_arcsec + 1.0
@@ -162,7 +163,14 @@ class ShearInjector:
         n_img_used = 0
         if len(img):
             e_img, c = es.shear_sources(
-                self.model, img, self.psf, a.min_snr, a.max_g, self.r, spike_veto=False
+                self.model,
+                img,
+                self.psf,
+                a.min_snr,
+                a.max_g,
+                self.r,
+                spike_veto=False,
+                psf_chi=getattr(a, "psf_chi", 0j),
             )
             src = np.asarray(img["_src"], int)
             e_img = np.where(
@@ -207,6 +215,7 @@ def run_field(name: str, args) -> dict:
         setattr(sargs, k, getattr(args, k))
     sargs.max_radius = spec["max_radius"]
     sargs.recover_tol = args.recover_tol
+    sargs.psf_chi = complex(*getattr(args, "psf_chi", (0.0, 0.0)))
     psf = es.psf_sigma_px(shapes)
     inj = ShearInjector(model, shapes, sargs, psf, extra)
     t_base = time.time() - t0
@@ -295,7 +304,8 @@ def run_field(name: str, args) -> dict:
                 k: getattr(sargs, k)
                 for k in ("aperture_arcsec", "filter", "r_min_arcsec", "min_coverage")
             }
-            | {"max_radius": sargs.max_radius},
+            | {"max_radius": sargs.max_radius}
+            | {"psf_chi": [sargs.psf_chi.real, sargs.psf_chi.imag]},
         },
     }
     (out / "summary.json").write_text(json.dumps(es.json_safe(summary), indent=1) + "\n")
@@ -319,6 +329,15 @@ def main(argv: list[str] | None = None) -> int:
         default=SHEAR_DEFAULTS["min_coverage"],
         help="drop grid centres with less of their aperture inside the footprint (D-053 cut)",
     )
+    ap.add_argument(
+        "--psf-chi",
+        type=float,
+        nargs=2,
+        default=(0.0, 0.0),
+        metavar=("CHI1", "CHI2"),
+        help="constant PSF distortion for the shape deconvolution (default isotropic; "
+        "scripts/w1_psf_floor.py)",
+    )
     ap.add_argument("--seed", type=int, default=50)
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "inject_shear")
     ap.add_argument(
@@ -327,6 +346,8 @@ def main(argv: list[str] | None = None) -> int:
         help="combine existing <out>/<field>/summary.json files (fields run as separate processes)",
     )
     args = ap.parse_args(argv)
+    if tuple(args.psf_chi) != (0.0, 0.0) and len(args.fields) > 1:
+        ap.error("--psf-chi is measured per field; run one field at a time")
     keys = [f"{m:.0e}" for m in args.mass]
     if len(set(keys)) != len(keys):
         ap.error(f"--mass values must differ at one significant figure (keys {keys})")
