@@ -52,16 +52,19 @@ def _run(cmd: list[str], log: Path, timeout: float | None = None) -> dict:
         timer = threading.Timer(timeout, p.kill) if timeout else None
         if timer:
             timer.start()
-        _, status, ru = os.wait4(p.pid, 0)
-        p.returncode = os.waitstatus_to_exitcode(status)  # reaped here; keep Popen from re-waiting
+        if hasattr(os, "wait4"):  # POSIX: also gives the child's peak memory
+            _, status, ru = os.wait4(p.pid, 0)
+            p.returncode = os.waitstatus_to_exitcode(
+                status
+            )  # reaped here; keep Popen from re-waiting
+            rss = round(ru.ru_maxrss / 1024, 1)
+        else:  # Windows: no rusage
+            p.wait()
+            rss = None
         if timer:
             timer.cancel()
     wall = round(time.time() - t0, 1)
-    rec = {
-        "rc": os.waitstatus_to_exitcode(status),
-        "wall_s": wall,
-        "peak_rss_mb": round(ru.ru_maxrss / 1024, 1),
-    }
+    rec = {"rc": p.returncode, "wall_s": wall, "peak_rss_mb": rss}
     if timeout and rec["rc"] != 0 and wall >= timeout:
         rec["timed_out"] = True
     return rec
@@ -277,7 +280,7 @@ def totals(out: Path) -> None:
         "screen_unflagged": sum(s["unflagged"] for s in scr),
         "review_entries": sum(s["review"] for s in scr),
         "task_seconds_sum": round(secs, 1),
-        "peak_rss_mb_max": max(t["arc_diff"].get("peak_rss_mb", 0) for t in tasks),
+        "peak_rss_mb_max": max(t["arc_diff"].get("peak_rss_mb") or 0 for t in tasks),
         "pooled_calibration": agg,
     }
     (out.parent / "totals.json").write_text(json.dumps(res, indent=1) + "\n")

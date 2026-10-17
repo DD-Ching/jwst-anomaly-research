@@ -74,3 +74,15 @@ def test_rank_key_prefers_extra_epochs_within_depth_tier():
     c = bp.rank_key(2600.0, 0, 9, 1.4)  # deeper tier wins over extra epochs
     assert sorted([a, b, c]) == [c, b, a]
     assert bp.rank_key(1245.0, 2, 1, 0.0) < bp.rank_key(1245.0, 2, 1, 1.0)
+
+
+def test_run_without_wait4(tmp_path, monkeypatch):
+    import sys as _sys
+
+    monkeypatch.delattr(bru.os, "wait4", raising=False)
+    r = bru._run([_sys.executable, "-c", "raise SystemExit(3)"], tmp_path / "x.log", timeout=30.0)
+    assert r["rc"] == 3 and r["peak_rss_mb"] is None and "timed_out" not in r
+    r = bru._run(
+        [_sys.executable, "-c", "import time; time.sleep(30)"], tmp_path / "y.log", timeout=1.0
+    )
+    assert r.get("timed_out") is True
