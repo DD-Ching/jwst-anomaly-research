@@ -234,6 +234,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.3 (W1 shear on MACS0417, MACS1423, WHL0137: plan, screens, injections, ten-field combination; sheets looked at) | — | ≈ 0.1 (MACS1423 hit: frozen streak/star test) | 0.1 (orientation, claim, state files, PR) | cloud routine 01Td5iwv, 11:08–11:35Z |
 | 2026-W42 | ≈ 0.2 (W1 shear on RXJ2129 and MACS0647: plan, screens, injections, eleven-field combination; sheet looked at) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01E49N6v, 12:08–12:40Z |
 | 2026-W42 | ≈ 0.4 (W1 streak veto: plan, findsat_mrt masks on 12 fields, veto screens and injections, eleven-field limit; sheets looked at) | — | — | 0.1 (orientation, claim, input staging, state files, PR) | cloud routine 01H5UuYw, 13:08–13:45Z |
+| 2026-W42 | ≈ 0.3 (radial screen on the five W1 shear-only fields: plan, S1063 reproduction, runs, sheet looked at) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 015p2WtK, 15:08–15:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
