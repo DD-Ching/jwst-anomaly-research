@@ -120,10 +120,8 @@ def read_mask(path: Path) -> tuple[np.ndarray, WCS]:
         return np.asarray(h[0].data, bool), WCS(h[0].header)
 
 
-def veto_rows(
-    ra, dec, mask: np.ndarray, wcs: WCS, veto_arcsec: float = VETO_ARCSEC
-) -> np.ndarray:
-    """True for positions within ``veto_arcsec`` of a masked pixel (outside the mask image: False)."""
+def veto_rows(ra, dec, mask: np.ndarray, wcs: WCS, veto_arcsec: float = VETO_ARCSEC) -> np.ndarray:
+    """True within ``veto_arcsec`` of a masked pixel (positions off the mask image: False)."""
     ra, dec = np.atleast_1d(np.asarray(ra, float)), np.atleast_1d(np.asarray(dec, float))
     if not mask.any():
         return np.zeros(len(ra), bool)
@@ -147,17 +145,52 @@ def adopt(k: dict) -> bool:
     return bool(k["K1"] and k["K2"])
 
 
+HIT_SUMMARY = "results/w1_shear_more/inject_summary_macs1423.json"  # the 2026-10-17 D-053 hit
+
+
+def evaluate(mask_dir: Path, veto_summary: Path, hit_summary: Path) -> dict:
+    """K1, K2 and the adoption decision (PLAN) from the MACS1423 mask and veto-run summary."""
+    hit = json.loads(hit_summary.read_text())["screen"]
+    mask, wcs = read_mask(mask_dir / "macs1423_streak_mask.fits.gz")
+    covers = bool(veto_rows([hit["s_max_radec"][0]], [hit["s_max_radec"][1]], mask, wcs)[0])
+    new = json.loads(veto_summary.read_text())
+    if new["field"] != "macs1423" or "streak_veto" not in new["assumptions"]:
+        raise ValueError(f"{veto_summary} is not a MACS1423 summary run with the streak veto")
+    k = known_case(covers, bool(new["screen"]["passes_eb_rule"]))
+    return {
+        "hit_radec": hit["s_max_radec"],
+        "mask_covers_hit": covers,
+        "macs1423_with_veto": {
+            key: new["screen"][key] for key in ("s_max", "p_random_max", "b_max", "passes_eb_rule")
+        },
+        **k,
+        "adopted": adopt(k),
+        "rule": "results/w1_streak_veto/PLAN.md (K1, K2, adoption rule)",
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import inject_shear as ish
 
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--fields", nargs="+", required=True, choices=ish.FIELD_NAMES)
+    ap.add_argument("--fields", nargs="+", default=[], choices=ish.FIELD_NAMES)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--processes", type=int, default=4)
     ap.add_argument("--png", action="store_true", help="also write a contact sheet per field")
+    ap.add_argument(
+        "--evaluate",
+        type=Path,
+        metavar="SUMMARY",
+        help="MACS1423 inject_shear summary run with the veto: write <out>/adoption.json",
+    )
     args = ap.parse_args(argv)
     args.out.mkdir(parents=True, exist_ok=True)
+    if args.evaluate is not None:
+        res = evaluate(args.out, args.evaluate, Path(HIT_SUMMARY))
+        (args.out / "adoption.json").write_text(json.dumps(res, indent=1) + "\n")
+        print(json.dumps(res))
+        return 0
     for name in args.fields:
         t0 = time.time()
         uri = i2d_uri(ish.field_spec(name)["catalog"])

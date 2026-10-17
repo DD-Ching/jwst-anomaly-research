@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -22,10 +23,10 @@ def _wcs(scale_arcsec: float = 0.25) -> WCS:
 
 
 def test_i2d_uri_from_catalogue_name():
-    cat = "cache/mast/jw01208-o010_t005_nircam_clear-f200w/jw01208-o010_t005_nircam_clear-f200w_cat.ecsv"
+    stem = "jw01208-o010_t005_nircam_clear-f200w"
+    cat = f"cache/mast/{stem}/{stem}_cat.ecsv"
     assert wsm.i2d_uri(cat) == (
-        "s3://stpubdata/jwst/public/jw01208/L3/t/o010/"
-        "jw01208-o010_t005_nircam_clear-f200w_i2d.fits"
+        "s3://stpubdata/jwst/public/jw01208/L3/t/o010/jw01208-o010_t005_nircam_clear-f200w_i2d.fits"
     )
 
 
@@ -82,3 +83,20 @@ def test_known_case_and_adoption_rule():
     assert wsm.adopt(wsm.known_case(True, False))
     assert not wsm.adopt(wsm.known_case(False, False))  # K1 fails
     assert not wsm.adopt(wsm.known_case(True, True))  # MACS1423 still passes: K2 fails
+
+
+def test_evaluate_reads_k1_k2(tmp_path):
+    w = _wcs()
+    m = np.zeros((40, 40), bool)
+    m[:, 20] = True
+    wsm.write_mask(tmp_path / "macs1423_streak_mask.fits.gz", m, w)
+    ra, dec = w.pixel_to_world_values(20, 10)
+    hit = tmp_path / "hit.json"
+    hit.write_text(json.dumps({"screen": {"s_max_radec": [float(ra), float(dec)]}}))
+    new = tmp_path / "new.json"
+    scr = {"s_max": 3.0, "p_random_max": 0.3, "b_max": 3.5, "passes_eb_rule": False}
+    new.write_text(
+        json.dumps({"field": "macs1423", "assumptions": {"streak_veto": {}}, "screen": scr})
+    )
+    res = wsm.evaluate(tmp_path, new, hit)
+    assert res["K1"] and res["K2"] and res["adopted"]

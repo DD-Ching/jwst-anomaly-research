@@ -462,8 +462,8 @@ def main(argv: list[str] | None = None) -> int:
         "--streak-masks",
         type=Path,
         default=None,
-        help="directory of <field>_streak_mask.fits.gz (scripts/w1_streak_mask.py): drop shape rows "
-        "and painted images on streaks (results/w1_streak_veto/PLAN.md)",
+        help="directory of <field>_streak_mask.fits.gz (scripts/w1_streak_mask.py): drop shape "
+        "rows and painted images on streaks (results/w1_streak_veto/PLAN.md)",
     )
     ap.add_argument("--seed", type=int, default=50)
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "inject_shear")

@@ -42,6 +42,8 @@ cloud = ["fsspec>=2024.2", "s3fs>=2024.2"]
 mulens = ["MulensModel>=3.12"]
 # IceCube public-data likelihood fits (Neutrino Frontier benchmarks; D-080).
 nf = ["skyllh>=26.1"]
+# Linear-streak masks for the W1 shear screen (STScI findsat_mrt; scripts/w1_streak_mask.py).
+streaks = ["acstools>=3.8", "scikit-image>=0.22", "photutils>=1.12"]
 
 [project.scripts]
 jwst-anomaly = "jwst_anomaly.cli:main"
