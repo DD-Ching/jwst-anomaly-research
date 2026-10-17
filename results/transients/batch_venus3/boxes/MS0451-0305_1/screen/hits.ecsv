@@ -1,0 +1,22 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: n_bands, datatype: int64}
+# - {name: bands, datatype: string}
+# - {name: max_abs_sigma, datatype: float64}
+# - {name: sign, datatype: string}
+# - {name: near_bright_core, datatype: bool}
+# - {name: hit_id, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {thresholds: 'ASSUMPTION: see summary.json'}
+# schema: astropy-2.0
+ra dec n_bands bands max_abs_sigma sign near_bright_core hit_id
+73.55260718895772 -3.0177720882057657 2 F150W,F444W 16.017324314238312 mixed True h000
+73.55598556689665 -3.0158716462692157 2 F150W,F444W 15.622209129933715 mixed True h001
+73.55667565770021 -3.016957585063367 2 F150W,F444W 7.73963502317548 + False h002
+73.55038130246395 -3.013918850091487 2 F150W,F444W 7.3458281131274275 mixed True h003
+73.55338997838908 -3.0175793270569544 2 F150W,F444W 6.8844158319588065 mixed True h004
+73.54963949492283 -3.0131143596879184 2 F150W,F444W 5.779046968466192 mixed True h005

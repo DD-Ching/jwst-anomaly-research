@@ -23,8 +23,10 @@ import math
 import os
 import subprocess
 import sys
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
+from datetime import UTC, datetime
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -35,18 +37,51 @@ SETTINGS = [
 ]  # fmt: skip
 
 
-def _run(cmd: list[str], log: Path) -> dict:
+LIMITS: dict = {
+    "timeout_s": {},
+    "no_start_after": None,
+}  # set by main(); ASSUMPTIONs fixed in the plan
+
+
+def _run(cmd: list[str], log: Path, timeout: float | None = None) -> dict:
+    """Run ``cmd``; with ``timeout`` (s) a longer run is killed and flagged ``timed_out``."""
     env = dict(os.environ, OMP_NUM_THREADS="1")
     t0 = time.time()
     with open(log, "w") as f:
         p = subprocess.Popen(cmd, stdout=f, stderr=subprocess.STDOUT, env=env)
-        _, status, ru = os.wait4(p.pid, 0)
-        p.returncode = os.waitstatus_to_exitcode(status)  # reaped here; keep Popen from re-waiting
-    return {
-        "rc": os.waitstatus_to_exitcode(status),
-        "wall_s": round(time.time() - t0, 1),
-        "peak_rss_mb": round(ru.ru_maxrss / 1024, 1),
-    }
+        timer = threading.Timer(timeout, p.kill) if timeout else None
+        if timer:
+            timer.start()
+        rss = None
+        try:
+            if hasattr(os, "wait4"):  # POSIX: also gives the child's peak memory
+                try:
+                    _, status, ru = os.wait4(p.pid, 0)
+                    p.returncode = os.waitstatus_to_exitcode(status)  # reaped here
+                    rss = round(ru.ru_maxrss / 1024, 1)
+                except ChildProcessError:  # already reaped by Popen (kill raced the exit)
+                    p.wait()
+            else:  # Windows: no rusage
+                p.wait()
+        finally:
+            if timer:
+                timer.cancel()
+    wall = round(time.time() - t0, 1)
+    rec = {"rc": p.returncode, "wall_s": wall, "peak_rss_mb": rss}
+    if timeout and rec["rc"] != 0 and wall >= timeout:
+        rec["timed_out"] = True
+    return rec
+
+
+def parse_utc(text: str) -> float:
+    """ISO time to a UNIX time (no offset: UTC; an explicit offset is honoured)."""
+    t = datetime.fromisoformat(text)
+    return (t.replace(tzinfo=UTC) if t.tzinfo is None else t).timestamp()
+
+
+def too_late(now: float, no_start_after: float | None) -> bool:
+    """True when a new task may no longer start (``no_start_after`` is a UNIX time)."""
+    return no_start_after is not None and now > no_start_after
 
 
 def _bands(box: dict) -> list[str]:
@@ -61,6 +96,10 @@ def task(kind: str, i: int, box: dict, out: Path, scratch: Path, cache: Path, se
     d.mkdir(parents=True, exist_ok=True)
     sample = d / "sample.csv"
     rec = {"box_id": box["box_id"], "kind": kind}
+    if too_late(time.time(), LIMITS["no_start_after"]):
+        rec["arc_diff"] = {"rc": -1, "why": "not started: stop time for new computation reached"}
+        (d / f"{kind}_task.json").write_text(json.dumps(rec, indent=1) + "\n")
+        return rec
     if kind == "inj":
         rec["sample"] = _run(
             [PY, str(HERE / "fade_calib.py"), "make", "--uri", box["e1"]["F150W"]["uri"],
@@ -87,7 +126,7 @@ def task(kind: str, i: int, box: dict, out: Path, scratch: Path, cache: Path, se
         rec["arc_diff"] = {"rc": -1, "why": "sample failed"}
         (d / f"{kind}_task.json").write_text(json.dumps(rec, indent=1) + "\n")
         return rec
-    rec["arc_diff"] = _run(cmd, d / f"{kind}.log")
+    rec["arc_diff"] = _run(cmd, d / f"{kind}.log", LIMITS["timeout_s"].get(kind))
     if rec["arc_diff"]["rc"] == 0:
         rec["morph"] = _run(
             [PY, str(HERE / "arc_diff_morph.py"), "--hits", str(run / "hits.ecsv"),
@@ -102,6 +141,18 @@ def box_passes(vk: int, vn: int, false_hits: int, pass_vanish: float, max_false:
     """PLAN §4: vanish 26.0 + 27.0 AB review-with-sign fraction >= pass_vanish and
     unchanged-control false hits <= max_false (both conditions)."""
     return vn > 0 and vk / vn >= pass_vanish and false_hits <= max_false
+
+
+def task_problem(task: dict | None) -> str | None:
+    """Why a task gave no output: missing, timed out, not started or failed (None if ok)."""
+    if not task:
+        return "missing"
+    ad = task.get("arc_diff", {})
+    if ad.get("timed_out"):
+        return "timed out"
+    if str(ad.get("why", "")).startswith("not started"):
+        return "not started"
+    return None if _ok(task) else "failed"
 
 
 def _ok(task: dict | None) -> bool:
@@ -147,7 +198,7 @@ def summarize(boxes: list[dict], out: Path, pass_vanish: float, max_false: int) 
             r["status"] = "passed" if ok else "undeterminable"
         else:
             r["status"] = "undeterminable"
-            r["why"] = "injection run missing or failed"
+            r["why"] = f"injection run {task_problem(r['inj_task']) or 'output missing'}"
         scr = d / "screen"
         if _ok(r["screen_task"]) and (scr / "morph_all.json").exists():
             h = Table.read(scr / "hits.ecsv")
@@ -181,7 +232,7 @@ def summarize(boxes: list[dict], out: Path, pass_vanish: float, max_false: int) 
         else:
             r["screen"] = None
             r["status"] = "undeterminable"
-            r["why"] = "screen missing or failed"
+            r["why"] = f"screen {task_problem(r['screen_task']) or 'output missing'}"
         rows.append(r)
     queue.sort(key=lambda q: (q["box_status"] != "passed", -q["max_abs_sigma"]))
     for k, q in enumerate(queue):
@@ -250,7 +301,7 @@ def totals(out: Path) -> None:
         "screen_unflagged": sum(s["unflagged"] for s in scr),
         "review_entries": sum(s["review"] for s in scr),
         "task_seconds_sum": round(secs, 1),
-        "peak_rss_mb_max": max(t["arc_diff"].get("peak_rss_mb", 0) for t in tasks),
+        "peak_rss_mb_max": max(t["arc_diff"].get("peak_rss_mb") or 0 for t in tasks),
         "pooled_calibration": agg,
     }
     (out.parent / "totals.json").write_text(json.dumps(res, indent=1) + "\n")
@@ -266,7 +317,17 @@ def main(argv=None) -> int:
     ap.add_argument("--seed0", type=int, default=100)
     ap.add_argument("--pass-vanish", type=float, default=0.70)
     ap.add_argument("--max-false", type=int, default=2)
+    ap.add_argument(
+        "--timeout-screen", type=float, help="seconds per screen arc_diff run (killed after)"
+    )
+    ap.add_argument(
+        "--timeout-inj", type=float, help="seconds per injection arc_diff run (killed after)"
+    )
+    ap.add_argument("--no-start-after", help="UTC ISO time; tasks not started by then are skipped")
     a = ap.parse_args(argv)
+    LIMITS["timeout_s"] = {"screen": a.timeout_screen, "inj": a.timeout_inj}
+    if a.no_start_after:
+        LIMITS["no_start_after"] = parse_utc(a.no_start_after)
     boxes = json.loads(a.boxes.read_text())["chosen"]
     if a.cmd == "totals":
         totals(a.out)

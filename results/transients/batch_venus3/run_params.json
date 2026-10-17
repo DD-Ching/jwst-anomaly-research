@@ -1,0 +1,8 @@
+{
+ "label": "observed: command lines as run on 2026-10-17 (session clock times, UTC)",
+ "selection": "batch_pairs.py --pairs results/transients/sfft_trial/venus_pairs.json --exclude <batch-1 list + 40 batch-1/2 box centres> --prefer-extra-epochs --out results/transients/batch_venus3/boxes.json (run 16:09-16:14, wall 290 s)",
+ "run": "batch_run.py run --boxes results/transients/batch_venus3/boxes.json --out results/transients/batch_venus3/boxes --scratch <scratch> --workers 4 --seed0 300 --timeout-screen 900 --timeout-inj 1200 --no-start-after 2026-10-17T18:20:00",
+ "run_start": "16:14:43",
+ "run_end": "16:46 (batch_run.py summarize printed)",
+ "review": "batch_review.py --capacity 10 run 16:46:43 to about 16:55:24 (photometry, sheets, post-review checks)"
+}
