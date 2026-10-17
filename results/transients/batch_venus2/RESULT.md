@@ -67,6 +67,15 @@ simulations. An ordinary transient is not wormhole evidence; zero entries is not
 - MACS0417 h002 lies on a multiply-imaged lensed galaxy; whether its counter-images show the transient with time
   delays was **not checked**.
 
+## Revision 2026-10-17 (follow-up, `followup/RESULT.md`; the text above is kept)
+- AS1063 1 h002 (the pending entry): reviewed; artifact (edge), and no significant change in any mosaic. Pending: 0.
+- MS0451 1 h011: undetermined → **artifact**: a signal fixed on one NRCALONG detector pixel in all 18 exposures of
+  visits 1–2, absent at the sky position in dithers that put it elsewhere.
+- MACS0417 2 h002: still a real change; the counter-image test is feasible with public RELICS models but not testable
+  with current epochs (counter-images lag by ≈ 650–820 d).
+- Final classes now: 3 real changes, 2 undetermined (A370 1 h005, PLCK G165 1 h003), 5 artifacts, 1 no significant
+  change; 11 of 11 review entries reviewed.
+
 ## Deviations and corrections (labelled)
 - **Selection bug fix** (before selection): `batch_pairs.overlaps()` now lets boxes touch a searched box (0.01″
   tolerance); the old test wrongly rejected 13 of 40 RA-neighbours of batch-1 boxes (`overlap_fix_check.json`). Tested; no threshold changed.

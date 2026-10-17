@@ -44,6 +44,12 @@ exotic candidate.
   (positions in that paper not checked).
 - **Status:** real change at modest S/N; an ordinary transient is plausible; identity and type unknown.
 
+## Revision 2026-10-17 (follow-up; the record above is kept)
+- MACS0417 h002: public RELICS lens models (glafic v3, lenstool v2) predict counter-images at 7.3–7.6″, 8.9–9.3″ and
+  25.4–25.5″ (matching catalogued 1c.2, 1b.4, 1c.3); glafic delays +649 to +817 d at 7.5″, −4,505 to −5,259 d at 25″.
+  No new point source there in VENUS 2025-10, which is uninformative given the delays. Testable with an epoch of 1c.2
+  at about 2027-07 to 2028-01 (`results/transients/batch_venus2/followup/macs0417_h002/result.json`).
+
 ## Not explained / open
 - None of the three is "unexplained": each has an ordinary transient hypothesis that the data do not contradict.
   Their identities and types are open (no spectra, single detected epochs, TNS not queried).
