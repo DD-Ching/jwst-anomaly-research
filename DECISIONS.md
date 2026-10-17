@@ -5048,6 +5048,7 @@ confining radiation at a throat is found.
   - catalogue collinearity: chains are common by chance (`results/w1_floor/RESULT.md`, 21 % of used sources);
   - a hand-written Hough transform: findsat_mrt is maintained STScI code (BSD-3) built for this (charter order 1);
   - zeroing > 5σ pixels before the finder: removes bright streaks (PLAN addendum A).
-- **Evidence:** `results/w1_streak_veto/RESULT.md`. MACS1423 S 3.88 → 3.41, p_rot 0.01 → 0.215.
+- **Evidence:** `results/w1_streak_veto/RESULT.md`. MACS1423 S 3.88 → 3.41, p_rot 0.01 → 0.22; no field passes.
+  Vetoed rows are blanked inside `shear_screen` after the spike veto; dropping them earlier changed the spike veto.
 - **Revisit if:** a faint-streak case (S1063's parallel streaks) needs a lower threshold; recalibrate through
   injections before using it.

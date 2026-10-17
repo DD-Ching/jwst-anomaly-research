@@ -3,7 +3,7 @@
  "model": "macs1149-cats",
  "z_lens": 0.543,
  "catalog": "/home/user/jwst-anomaly-research/data/cache/mast/jw01208-o008_t004_nircam_clear-f200w/jw01208-o008_t004_nircam_clear-f200w_cat.ecsv",
- "photoz": "/tmp/claude-0/-home-user-jwst-anomaly-research/71799e80-08ca-550b-8f32-9f6805bfdd43/scratchpad/inj_veto/macs1149/macs1149_canucs_zout.fits",
+ "photoz": "/tmp/claude-0/-home-user-jwst-anomaly-research/71799e80-08ca-550b-8f32-9f6805bfdd43/scratchpad/inj_veto2/macs1149/macs1149_canucs_zout.fits",
  "screen": {
   "n_rows": 4579,
   "n_spike_segments": 77,
@@ -14,6 +14,8 @@
   "n_weak_shear": 1399,
   "responsivity": 0.4762704816602961,
   "responsivity_err": 0.03935077612259101,
+  "n_used_before_veto": 1399,
+  "n_veto_used": 0,
   "psf_sigma_px": 1.3551326794606617,
   "n_streak_vetoed": 0,
   "n_centres_valid": 22388,
@@ -115,8 +117,8 @@
   }
  },
  "wall_time_s": {
-  "base_screen": 2.5,
-  "total": 82.9
+  "base_screen": 0.8,
+  "total": 79.2
  },
  "assumptions": {
   "recover_tol_arcsec": 2.0,
@@ -128,6 +130,11 @@
   "streak_veto": {
    "veto_arcsec": 1.0,
    "masks": "w1_streak_mask.py"
+  },
+  "streak_mask": {
+   "file": "macs1149_streak_mask.fits.gz",
+   "sha256": "921831caff54b9642000d65d7e06eea8fecfe225c06d7f558a21512f2883b3e7",
+   "mask_pixels": 0
   },
   "screen": {
    "aperture_arcsec": 10.0,

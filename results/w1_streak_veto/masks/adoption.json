@@ -5,9 +5,9 @@
  ],
  "mask_covers_hit": true,
  "macs1423_with_veto": {
-  "s_max": 3.40559440343024,
-  "p_random_max": 0.215,
-  "b_max": 3.628390552517233,
+  "s_max": 3.4143918608285224,
+  "p_random_max": 0.22,
+  "b_max": 3.6359871130798878,
   "passes_eb_rule": false
  },
  "K1": true,

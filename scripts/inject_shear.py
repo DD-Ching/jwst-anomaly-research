@@ -179,7 +179,10 @@ class ShearInjector:
         # streak(ra, dec) -> bool: rows the field's streak mask vetoes (results/w1_streak_veto);
         # the caller drops real rows, painted images are vetoed here
         self.streak = streak
-        self.base = es.shear_screen(model, shapes, args, psf_sigma, extra)
+        on = None
+        if streak is not None:
+            on = streak(np.asarray(shapes["ra"], float), np.asarray(shapes["dec"], float))
+        self.base = es.shear_screen(model, shapes, args, psf_sigma, extra, on)
         if not np.isfinite(self.base["s"]).any():
             raise ValueError("no grid centre has enough shear sources")
         self.e = self.base["e"]
@@ -201,6 +204,7 @@ class ShearInjector:
             & ~self.base["spike"]
             & self.base["correctable"]
             & np.isfinite(self.eps)
+            & (True if on is None else ~on)  # streak rows are not galaxies to lens
         )
         shapes["_src"] = np.arange(len(shapes))  # carried into painted rows by paint_lens
         self.next_label = int(np.max(shapes["label"])) + 1
@@ -302,9 +306,9 @@ def run_field(name: str, args) -> dict:
     streak, n_streak = None, None
     if getattr(args, "streak_masks", None) is not None:
         streak = streak_veto(args.streak_masks, name)
-        on = streak(np.asarray(shapes["ra"], float), np.asarray(shapes["dec"], float))
-        n_streak = int(on.sum())
-        shapes = shapes[~on]
+        n_streak = int(
+            streak(np.asarray(shapes["ra"], float), np.asarray(shapes["dec"], float)).sum()
+        )
     sargs = SimpleNamespace(**SHEAR_DEFAULTS)
     for k in ("aperture_arcsec", "filter", "r_min_arcsec", "min_coverage"):
         setattr(sargs, k, getattr(args, k))

@@ -14,6 +14,8 @@
   "n_weak_shear": 4951,
   "responsivity": 0.4512400916695147,
   "responsivity_err": 0.017830133402490393,
+  "n_used_before_veto": 4951,
+  "n_veto_used": 0,
   "psf_sigma_px": 1.229978905680075,
   "n_streak_vetoed": 0,
   "n_centres_valid": 46586,
@@ -115,8 +117,8 @@
   }
  },
  "wall_time_s": {
-  "base_screen": 3.0,
-  "total": 186.9
+  "base_screen": 2.4,
+  "total": 193.9
  },
  "assumptions": {
   "recover_tol_arcsec": 2.0,
@@ -128,6 +130,11 @@
   "streak_veto": {
    "veto_arcsec": 1.0,
    "masks": "w1_streak_mask.py"
+  },
+  "streak_mask": {
+   "file": "abell2744_streak_mask.fits.gz",
+   "sha256": "73058373dab7153f0e5b85a322395d35c290dd0977bdaa98ec9d8f608c1a6097",
+   "mask_pixels": 0
   },
   "screen": {
    "aperture_arcsec": 10.0,

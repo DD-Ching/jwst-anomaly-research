@@ -4,15 +4,15 @@
   "macs0416",
   "macs1149",
   "abell370",
+  "abells1063",
   "smacs0723",
   "elgordo",
   "macs0417",
   "whl0137",
   "rxj2129",
-  "macs0647",
   "macs1423"
  ],
- "total_area_deg2": 0.01735185185185185,
+ "total_area_deg2": 0.018247685185185186,
  "limits_95": {
   "2e+10": {
    "mass_msun": 20000000000.0,
@@ -40,9 +40,9 @@
     2.0528914416990536,
     4.093610034356401
    ],
-   "effective_area_deg2": 0.000568695987654321,
-   "upper_limit_deg2": 5268.192610884224,
-   "upper_limit_border_corrected_deg2": 5985.944246130715
+   "effective_area_deg2": 0.0006789444444444446,
+   "upper_limit_deg2": 4412.732182309139,
+   "upper_limit_border_corrected_deg2": 4905.482461748787
   },
   "8e+12": {
    "mass_msun": 8000000000000.0,
@@ -50,9 +50,9 @@
     4.105782883398107,
     8.187220068712803
    ],
-   "effective_area_deg2": 0.0037252152777777782,
-   "upper_limit_deg2": 804.2488223089268,
-   "upper_limit_border_corrected_deg2": 920.3028735982942
+   "effective_area_deg2": 0.004113023533950617,
+   "upper_limit_deg2": 728.4179084485567,
+   "upper_limit_border_corrected_deg2": 814.7605772496565
   },
   "2e+13": {
    "mass_msun": 20000000000000.0,
@@ -60,9 +60,9 @@
     6.491812744835775,
     12.945131561086356
    ],
-   "effective_area_deg2": 0.0077351581790123455,
-   "upper_limit_deg2": 387.32239608609274,
-   "upper_limit_border_corrected_deg2": 442.2254773160745
+   "effective_area_deg2": 0.00858269637345679,
+   "upper_limit_deg2": 349.074448126297,
+   "upper_limit_border_corrected_deg2": 389.7321345667205
   }
  },
  "provenance": "derived",
