@@ -45,9 +45,9 @@ instruction 2026-10-17; budget 02:23Z → 05:23Z. Every number is `derived`.
     refit, so the ratios are not inflated by load.
   - One run per variant: no repeat timing, no spread.
 - **What still costs time** (`timing_b2.json`):
-  - The rest of F150W matching takes about 37 s in the shared screen: resampling, registration, `psf_match`, the
+  - The rest of F150W matching takes about 29 s in the shared screen: resampling, registration, `psf_match`, the
     whole-box kernel and the stamp median filters.
-  - In injection runs, the empirical-PSF reads (`pre_injections`) take about 47 s.
+  - In injection runs, the empirical-PSF reads (`pre_injections`) take about 42 s in F150W.
   - Neither is changed here.
 - **Not measured:** the B3 run.
 - **Default:** `--kernel-stamp-fit` now defaults to `shared` (D-094). `refit` stays available, and job dicts without
