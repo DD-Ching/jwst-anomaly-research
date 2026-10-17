@@ -143,3 +143,21 @@ def test_painted_images_on_a_spike_axis_are_vetoed_like_real_segments():
         }
     )
     np.testing.assert_array_equal(inj.spike_veto(img), [True, False, False])
+
+
+def test_setting_reads_missing_options_as_legacy_values():
+    old = {"assumptions": {"screen": {"aperture_arcsec": 10.0, "max_radius": 100.0}}}
+    new = {
+        "assumptions": {
+            "screen": {
+                "aperture_arcsec": 10.0,
+                "max_radius": 60.0,
+                "psf_chi": [0.0, 0.0],
+                "min_coverage": 0.0,
+            },
+            "spike_stars": 25,
+        }
+    }
+    assert ish.setting(old) == ish.setting(new)
+    cut = {"assumptions": {"screen": {**new["assumptions"]["screen"], "min_coverage": 0.5}}}
+    assert ish.setting(old) != ish.setting(cut)

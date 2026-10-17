@@ -3195,6 +3195,13 @@ veto): null (S_max 3.61, p_rot 0.07; max |S_×| 3.33). Shear-only inputs live in
 so the radial FIELDS entry (no photo-z, D-049 headline) stays as it was. Five-field limits 5.8 × 10³ / 1.1 × 10³ /
 5.7 × 10² deg⁻²; the four earlier fields reproduce exactly. Evidence: `results/w1_shear_s1063/RESULT.md`.
 
+**Addendum 2026-10-17 (SMACS 0723 and El Gordo added).** The "Revisit if" on DJA photo-z holds: both tarballs answer
+HTTP 200 and match SOURCES.md. The screen runs on both (Gaia spike veto at the model centre; D-053 defaults): null
+(S_max 2.91 / 2.95, p_rot 0.77 / 0.62, both below the rotation-null median). R 0.438 / 0.486. Seven-field limits
+5.3 × 10³ / 9.6 × 10² / 5.0 × 10² deg⁻². `--combine-only` reads screen options missing from older summaries as
+the values those runs used (an Abell 2744 re-run reproduces its committed summary exactly). Evidence:
+`results/w1_shear_smacs_elgordo/RESULT.md`.
+
 **Addendum 2026-10-17 (aperture-coverage cut not adopted).** Dropping grid centres whose aperture annulus is
 < 50 % inside the catalogue footprint (`--min-coverage 0.5`, default 0) was tested on the five fields under a
 frozen rule (adopt only if the combined limit is lower at each of 2 × 10¹², 8 × 10¹², 2 × 10¹³ M☉): it fails
