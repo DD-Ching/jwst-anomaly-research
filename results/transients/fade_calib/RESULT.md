@@ -29,8 +29,9 @@ runs they govern (35748f4, d9399f6, d0c1ea3). Owner instruction 2026-10-16; budg
   - With injections present, the chain's own registration moves away from the injection-free shift used to place
     epoch-2 sources, by 0.02–0.15 px in F150W and ≤ 0.03 px in F444W (`inject_shift_residual.json`). The
     addendum-4 error was 0.9 px.
-  - Injected sources therefore keep a small misregistration. This can add false hits for unchanged sources and
-    lower fade recovery slightly.
+  - Injected sources therefore keep a small misregistration. **Its effect on the false-hit and recovery figures is
+    not verified in either direction** (wording corrected 2026-10-17, owner); the figures are not claimed to be
+    conservative.
   - The injection-free screens of B1–B3 are not affected.
 - **The margin is small.** The corrected dev rerun (seeds 10 + 11) gives 6 / 40 = 0.15 for both models. Over
   all four corrected seeds, false hits are 7 / 80 (empirical) and 10 / 80 (Gaussian).
@@ -198,7 +199,8 @@ runs they govern (35748f4, d9399f6, d0c1ea3). Owner instruction 2026-10-16; budg
     - h005: a two-band hit with mixed sign. F444W is a ± dipole (S −14.6 / +11.1); F150W has only a marginal
       +5.5 peak and no compact feature on the sheet (S extremes within 0.3″, session check, not stored). A dipole
       is a residual, not a point-like fade.
-  - All 8 rejections are consistent with their verdicts. None is a missed point-like fade.
+  - All 8 rejections look consistent with their verdicts on the sheets. This visual check of 8 entries does
+    **not** show that no real fade was missed (wording corrected 2026-10-17, owner).
 - **Pending signals:** none. Box 1's only entry is the #286 h024 position, already vetted.
 - **Zero entries is not an exclusion.** Fades, simulations and passing CI are not evidence of new physics.
 

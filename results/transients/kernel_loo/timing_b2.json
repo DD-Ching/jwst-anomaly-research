@@ -1,0 +1,302 @@
+{
+ "label": "derived; B2 (15.717097, -49.262488), F150W + F444W, #288 final-chain settings, no cache. DEVIATION from PLAN \u00a75 (not one shared batch): refit was timed in a batch of 4 runs started together (refit screen, refit inj, and the superseded first shared version x2), one process each on 4 cores, and spent its last ~20 min on a half-loaded machine; the final shared code was timed in a later batch of 4 shared runs (screen x2, inj x2), one process each on 4 cores. Loads are similar, not identical.",
+ "runs": {
+  "refit_screen": {
+   "wall_s_process": 1507.8,
+   "wall_s_summary": 1507.1,
+   "peak_rss_mb": 859.7,
+   "user_s": 1299.0,
+   "timing_s": {
+    "F150W": {
+     "read": 9.17,
+     "pre_injections": 0.0,
+     "resample_register_match": 1481.95,
+     "detect": 3.24,
+     "post_injections": 0.03,
+     "kernel_stamps": 1454.769,
+     "n_stamps": 1076
+    },
+    "F444W": {
+     "read": 2.5,
+     "pre_injections": 0.0,
+     "resample_register_match": 9.58,
+     "detect": 0.24,
+     "post_injections": 0.0,
+     "kernel_stamps": 0.861,
+     "n_stamps": 33
+    }
+   }
+  },
+  "refit_inj": {
+   "wall_s_process": 1341.0,
+   "wall_s_summary": 1340.3,
+   "peak_rss_mb": 1466.5,
+   "user_s": 1122.4,
+   "timing_s": {
+    "F150W": {
+     "read": 8.4,
+     "pre_injections": 58.74,
+     "resample_register_match": 1230.55,
+     "detect": 2.94,
+     "post_injections": 0.02,
+     "kernel_stamps": 1202.965,
+     "n_stamps": 1005
+    },
+    "F444W": {
+     "read": 4.3,
+     "pre_injections": 23.14,
+     "resample_register_match": 11.31,
+     "detect": 0.26,
+     "post_injections": 0.0,
+     "kernel_stamps": 2.612,
+     "n_stamps": 53
+    }
+   }
+  },
+  "shared3_screen_r1": {
+   "wall_s_process": 106.1,
+   "wall_s_summary": 105.5,
+   "peak_rss_mb": 861.3,
+   "user_s": 89.8,
+   "timing_s": {
+    "F150W": {
+     "read": 8.55,
+     "pre_injections": 0.0,
+     "resample_register_match": 80.28,
+     "detect": 2.91,
+     "post_injections": 0.02,
+     "stamp_design_build": 0.376,
+     "kernel_stamps_s": 52.081
+    },
+    "F444W": {
+     "read": 3.73,
+     "pre_injections": 0.0,
+     "resample_register_match": 9.35,
+     "detect": 0.24,
+     "post_injections": 0.0,
+     "stamp_design_build": 0.007,
+     "kernel_stamps_s": 0.133
+    }
+   },
+   "kernel_stats": {
+    "F150W": {
+     "stamp_rows": 86892,
+     "stamp_unconverged": 0,
+     "n_stamps": 1076
+    },
+    "F444W": {
+     "stamp_rows": 3354,
+     "stamp_unconverged": 0,
+     "n_stamps": 33
+    }
+   }
+  },
+  "shared3_screen_r2": {
+   "wall_s_process": 106.2,
+   "wall_s_summary": 105.5,
+   "peak_rss_mb": 860.3,
+   "user_s": 90.6,
+   "timing_s": {
+    "F150W": {
+     "read": 9.08,
+     "pre_injections": 0.0,
+     "resample_register_match": 80.05,
+     "detect": 3.1,
+     "post_injections": 0.03,
+     "stamp_design_build": 0.372,
+     "kernel_stamps_s": 52.65
+    },
+    "F444W": {
+     "read": 3.32,
+     "pre_injections": 0.0,
+     "resample_register_match": 9.25,
+     "detect": 0.25,
+     "post_injections": 0.0,
+     "stamp_design_build": 0.008,
+     "kernel_stamps_s": 0.149
+    }
+   },
+   "kernel_stats": {
+    "F150W": {
+     "stamp_rows": 86892,
+     "stamp_unconverged": 0,
+     "n_stamps": 1076
+    },
+    "F444W": {
+     "stamp_rows": 3354,
+     "stamp_unconverged": 0,
+     "n_stamps": 33
+    }
+   }
+  },
+  "shared3_inj_r1": {
+   "wall_s_process": 175.8,
+   "wall_s_summary": 175.1,
+   "peak_rss_mb": 1438.0,
+   "user_s": 123.6,
+   "timing_s": {
+    "F150W": {
+     "read": 8.92,
+     "pre_injections": 58.75,
+     "resample_register_match": 69.16,
+     "detect": 3.12,
+     "post_injections": 0.02,
+     "stamp_design_build": 0.252,
+     "kernel_stamps_s": 40.192
+    },
+    "F444W": {
+     "read": 3.48,
+     "pre_injections": 22.75,
+     "resample_register_match": 8.07,
+     "detect": 0.24,
+     "post_injections": 0.0,
+     "stamp_design_build": 0.009,
+     "kernel_stamps_s": 0.286
+    }
+   },
+   "kernel_stats": {
+    "F150W": {
+     "stamp_rows": 78260,
+     "stamp_unconverged": 0,
+     "n_stamps": 1005
+    },
+    "F444W": {
+     "stamp_rows": 5477,
+     "stamp_unconverged": 0,
+     "n_stamps": 53
+    }
+   }
+  },
+  "shared3_inj_r2": {
+   "wall_s_process": 156.8,
+   "wall_s_summary": 156.1,
+   "peak_rss_mb": 1465.2,
+   "user_s": 124.8,
+   "timing_s": {
+    "F150W": {
+     "read": 5.23,
+     "pre_injections": 41.58,
+     "resample_register_match": 69.78,
+     "detect": 3.01,
+     "post_injections": 0.02,
+     "stamp_design_build": 0.214,
+     "kernel_stamps_s": 41.274
+    },
+    "F444W": {
+     "read": 3.67,
+     "pre_injections": 23.47,
+     "resample_register_match": 8.49,
+     "detect": 0.26,
+     "post_injections": 0.0,
+     "stamp_design_build": 0.009,
+     "kernel_stamps_s": 0.296
+    }
+   },
+   "kernel_stats": {
+    "F150W": {
+     "stamp_rows": 78260,
+     "stamp_unconverged": 0,
+     "n_stamps": 1005
+    },
+    "F444W": {
+     "stamp_rows": 5477,
+     "stamp_unconverged": 0,
+     "n_stamps": 53
+    }
+   }
+  }
+ },
+ "speedup_screen": {
+  "whole_run": [
+   14.2,
+   14.2
+  ],
+  "matching_step": [
+   16.6,
+   16.7
+  ],
+  "kernel_stamps_step": [
+   27.9,
+   27.6
+  ],
+  "wall_s": [
+   1507.8,
+   106.1,
+   106.2
+  ],
+  "matching_s": [
+   1491.5,
+   89.6,
+   89.3
+  ],
+  "kernel_stamps_s": [
+   1455.6,
+   52.2,
+   52.8
+  ],
+  "shared_design_build_s": [
+   0.38,
+   0.38
+  ],
+  "f150w_pre_injections_s": [
+   0.0,
+   0.0
+  ],
+  "f150w_matching_minus_stamps_s": [
+   28.2,
+   27.4
+  ],
+  "peak_rss_mb": [
+   859.7,
+   861.3,
+   860.3
+  ]
+ },
+ "speedup_inj": {
+  "whole_run": [
+   7.6,
+   8.6
+  ],
+  "matching_step": [
+   16.1,
+   15.9
+  ],
+  "kernel_stamps_step": [
+   29.8,
+   29.0
+  ],
+  "wall_s": [
+   1341.0,
+   175.8,
+   156.8
+  ],
+  "matching_s": [
+   1241.9,
+   77.2,
+   78.3
+  ],
+  "kernel_stamps_s": [
+   1205.6,
+   40.5,
+   41.6
+  ],
+  "shared_design_build_s": [
+   0.26,
+   0.22
+  ],
+  "f150w_pre_injections_s": [
+   58.75,
+   41.58
+  ],
+  "f150w_matching_minus_stamps_s": [
+   29.0,
+   28.5
+  ],
+  "peak_rss_mb": [
+   1466.5,
+   1438.0,
+   1465.2
+  ]
+ },
+ "superseded": "first shared version (no refinement) 67 s / 123 s and the second (fixed 2 refinement steps) 98-100 s / 167-176 s; both replaced after the reviews (precision, self-check)"
+}

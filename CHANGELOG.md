@@ -2,6 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: `arc_diff` per-stamp kernel fits share one design (D-094): B2 run ×14 (screen), same results (#291)
+- **Diagnosis:** each of B2's 1,076 F150W stamps rebuilt an ~86,800 × 82 design and ran 3 SVD least-squares on it
+  (≈1.4 s per stamp).
+- **Change:** `kernel_fit_stamps` builds the design and Gram once per band. Each fit subtracts its own stamp and
+  clipped rows, or sums them directly when they dominate, and refines its solution until it converges.
+  - Leave-one-out, per-fit clipping, iterations and precision are unchanged.
+  - It is the default; `--kernel-stamp-fit refit` keeps the old path.
+- **Failed first version (review):** plain Gram downdating lost digits for a bright-star stamp (synthetic: up to
+  1.2e-4 relative; review measurement, not stored). Fixed with the guard and refinement, and checked on every
+  stamp.
+- **Validation (tolerances fixed first):**
+  - all B1 and B2 stamp kernels agree to ≤ 1.2e-13, with the same clipping;
+  - B2 S ≤ 3e-8;
+  - hits, flags, morphology, review list and all 60 injection outcomes identical;
+  - no threshold crossings or near-threshold hits.
+- **Speed (B2, no cache; similar, not identical load, timed in separate batches):**
+  - whole run 1,508 → 106 s (screen, ×14) and 1,341 → 157–176 s (injection run, ×8–9);
+  - matching ×16–17; stamp kernels ×28–30;
+  - peak memory unchanged.
+- **Wording corrected in `fade_calib/RESULT.md` (owner):**
+  - the direction of the injection-registration effect is not verified;
+  - the 8 looked-at rejections do not show that no fade was missed.
 ## 2026-10-17: SMACS ERO → VENUS `arc_diff` with tile-median registration: shift 2.4 px off, outcome unchanged
 - **Why:** pending item of #288: pair 1's F150W whole-box shift (2.11, −1.82) px was never compared with
   `--reg-tile-arcsec 6`. Plan first (`results/transients/smacs_arcdiff/o001_o057_tile/PLAN.md`).

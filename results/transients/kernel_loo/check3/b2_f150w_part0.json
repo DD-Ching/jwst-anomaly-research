@@ -1,0 +1,26 @@
+{
+ "label": "derived; kernel-level comparison, same inputs (PLAN \u00a73 test 1, tol 1e-6)",
+ "band": "F150W",
+ "box": [
+  15.717097,
+  -49.262488,
+  12.0
+ ],
+ "n_stamps": 1076,
+ "stamps_compared": 269,
+ "skips_both": 0,
+ "skip_mismatch": [],
+ "max_rel_dK": 8.096338125815426e-14,
+ "median_rel_dK": 4.225281604056009e-14,
+ "n_over_tolerance": 0,
+ "max_rel_dchi2": 3.3306690738754696e-16,
+ "part": [
+  0,
+  4
+ ],
+ "cond_design": 322.91548779985783,
+ "rows": 86892,
+ "time_shared_all_s": 58.25,
+ "shared_build_s": 0.311,
+ "time_refit_compared_s": 372.37
+}

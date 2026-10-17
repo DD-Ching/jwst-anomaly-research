@@ -4975,3 +4975,23 @@ confining radiation at a throat is found.
   is non-perturbative".
 - A stability calculation will be proposed only with a fully specified radiation closure and a fixed matter
   theory.
+
+## D-094 `arc_diff` per-stamp kernels: shared design by default (2026-10-17)
+- **Decision:** `kernel_match --kernel-stamps` computes its leave-one-out stamp kernels with `kernel_fit_stamps`:
+  - one weighted design and Gram matrix per band;
+  - a per-fit downdate of the own stamp and the clipped rows, with a direct sum when the downdate dominates;
+  - a Cholesky solve refined with the exact residual until converged, falling back to a direct sum.
+  - It is the default (`STAMP_FIT_DEFAULT = "shared"`); `refit` stays available.
+- **Alternatives rejected:**
+  - dropping leave-one-out, fewer iterations or lower precision (they change the search; owner);
+  - sharing one solution across fits;
+  - plain normal equations without refinement (lose digits on bright stamps: review 2026-10-17);
+  - a different algorithm or GPU (out of scope).
+- **Evidence (`results/transients/kernel_loo/RESULT.md`):**
+  - every B1 and B2 stamp kernel agrees to ≤ 1.2e-13 relative, with the same clipping (χ²);
+  - on B2, S agrees to ≤ 3e-8, with identical hits, flags, morphology, review list and 60 injection outcomes;
+  - the whole B2 run is ×14 (screen) and ×8–9 (injection run) faster, with the same peak memory.
+- **Revisit if:**
+  - a design is ill-conditioned (condition number ≫ 1e6; B1 and B2 are 320–1,800);
+  - stamp fits exceed 200,000 rows (these already fall back to `refit`);
+  - the clipping rule changes.
