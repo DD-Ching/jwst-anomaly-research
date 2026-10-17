@@ -54,9 +54,26 @@ ir = _load("inject_radial")
 es = ir.es
 
 SHEAR_DEFAULTS = es.shear_defaults()
-# fields with photo-z whose inputs are public without tarballs (DJA v7.4/v7.0 tarballs 404 on
-# 2026-10-08, so SMACS and El Gordo have no photo-z here and stay out of the headline)
-DEFAULT_FIELDS = ("abell2744", "macs0416", "macs1149", "abell370")
+# fields with public photo-z (DJA v7.4/v7.0 tarballs for SMACS and El Gordo 404 on 2026-10-08, so
+# they have no photo-z here and stay out of the headline)
+DEFAULT_FIELDS = ("abell2744", "macs0416", "macs1149", "abell370", "abells1063")
+# Shear-only inputs that differ from the radial screen's FIELDS entry. The shear screen needs
+# photo-z (cluster shear at each row's z), so Abell S1063 uses the DJA v7.5 zout here
+# (docs/fields/abells1063.md), with the Gaia spike veto (D-043).
+SHEAR_FIELD_OVERRIDES = {
+    "abells1063": {
+        "photoz": (
+            "eazy",
+            "cache/dja/photoz-abells1063-v7.5/abells1063-grizli-v7.5-fix.eazypy.zout.fits",
+        ),
+        "spike_stars": True,
+        "centre": (342.1832, -44.5309),
+    },
+}
+
+
+def field_spec(name: str) -> dict:
+    return {**ir.FIELDS[name], **SHEAR_FIELD_OVERRIDES.get(name, {})}
 
 
 def injected_ellipticity(e_src, raw_img, raw_src, r: float) -> np.ndarray:
@@ -182,11 +199,12 @@ def run_field(name: str, args) -> dict:
     t0 = time.time()
     out = args.out / name
     out.mkdir(parents=True, exist_ok=True)
-    model, shapes, extra, cat, photoz = ir.load_field(name, out)
+    spec = field_spec(name)
+    model, shapes, extra, cat, photoz = ir.load_field(name, out, spec)
     sargs = SimpleNamespace(**SHEAR_DEFAULTS)
     for k in ("aperture_arcsec", "filter", "r_min_arcsec"):
         setattr(sargs, k, getattr(args, k))
-    sargs.max_radius = ir.FIELDS[name]["max_radius"]
+    sargs.max_radius = spec["max_radius"]
     sargs.recover_tol = args.recover_tol
     psf = es.psf_sigma_px(shapes)
     inj = ShearInjector(model, shapes, sargs, psf, extra)
@@ -239,7 +257,7 @@ def run_field(name: str, args) -> dict:
     ra_pk, dec_pk = model.to_sky(inj.base["gx"][iy, ix], inj.base["gy"][iy, ix])
     summary = {
         "field": name,
-        "model": ir.FIELDS[name]["model"],
+        "model": spec["model"],
         "z_lens": model.z_lens,
         "catalog": str(cat),
         "photoz": str(photoz) if photoz else None,
@@ -276,7 +294,7 @@ def run_field(name: str, args) -> dict:
             | {"max_radius": sargs.max_radius},
         },
     }
-    (out / "summary.json").write_text(json.dumps(es.json_safe(summary), indent=1))
+    (out / "summary.json").write_text(json.dumps(es.json_safe(summary), indent=1) + "\n")
     return summary
 
 
@@ -306,7 +324,7 @@ def main(argv: list[str] | None = None) -> int:
         summaries = [json.loads((args.out / f / "summary.json").read_text()) for f in args.fields]
     else:
         summaries = [run_field(f, args) for f in args.fields]
-    combined = ir.combine(summaries, args.mass)
+    combined = ir.combine(summaries, args.mass, {f: field_spec(f) for f in args.fields})
 
     def setting(s):  # grid half-width and star table are per field; everything else must agree
         a = json.loads(json.dumps(s["assumptions"]))
@@ -318,7 +336,7 @@ def main(argv: list[str] | None = None) -> int:
         ap.error("the fields were run with different screen settings; re-run them alike")
     combined["screen"] = setting(summaries[0])
     args.out.mkdir(parents=True, exist_ok=True)
-    (args.out / "combined.json").write_text(json.dumps(es.json_safe(combined), indent=1))
+    (args.out / "combined.json").write_text(json.dumps(es.json_safe(combined), indent=1) + "\n")
     print(json.dumps(combined, indent=1))
     return 0
 

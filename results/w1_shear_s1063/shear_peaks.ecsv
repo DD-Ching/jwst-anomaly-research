@@ -1,0 +1,26 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: x, datatype: float64}
+# - {name: y, datatype: float64}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: s, datatype: float64}
+# - {name: s_cross, datatype: float64}
+# - {name: p_random, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: data/cache/mast/jw03293-o001_t001_nircam_clear-f200w/jw03293-o001_t001_nircam_clear-f200w_cat.ecsv}
+# - {model_sha256: 789a3ed207cc990b2efdf6b7de0991087eabe6fa59124e0e36a863da2e555cae}
+# - {z_lens: 0.348}
+# - reference_radec: [342.18322, -44.530889]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - maps:
+#     interpolation: bilinear; Hessian from centred finite differences
+#     pixel_arcsec: 0.200133422281521
+#     shape: [1500, 1500]
+# schema: astropy-2.0
+x y ra dec s s_cross p_random
+-28.0 -14.0 342.1941304756469 -44.53477788888889 3.609523272566242 -0.877287019508595 0.07
+-6.0 -34.0 342.1855579590672 -44.54033344444445 3.5169774100818714 0.5315088549963898 0.105

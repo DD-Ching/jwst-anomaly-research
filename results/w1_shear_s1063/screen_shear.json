@@ -1,0 +1,68 @@
+{
+ "model": "abells1063-cats",
+ "catalog": "$JWST_ANOMALY_DATA/cache/mast/jw03293-o001_t001_nircam_clear-f200w/jw03293-o001_t001_nircam_clear-f200w_cat.ecsv",
+ "photoz": "$JWST_ANOMALY_DATA/cache/dja/photoz-abells1063-v7.5/abells1063-grizli-v7.5-fix.eazypy.zout.fits",
+ "spike_stars": {
+  "path": "<scratch>/gaia.ecsv (scripts/gaia_stars.py 342.1832 -44.5309 --radius-arcmin 4 --gmax 17)",
+  "n": 11,
+  "sha256": "79330a3679fa10deb614a0c5bfe72db89315706fbce90e7d44bb99c0dcafa7a2"
+ },
+ "seed": 1,
+ "psf_sigma_px": 0.997705338823769,
+ "n_rows": 4238,
+ "n_spike_segments": 80,
+ "n_lensable": 3056,
+ "n_lensable_after_spike_veto": 2982,
+ "n_snr": 2979,
+ "n_resolved": 2910,
+ "n_weak_shear": 1440,
+ "responsivity": 0.47214764932985176,
+ "responsivity_err": 0.034228402660394126,
+ "n_centres_valid": 17584,
+ "area_arcsec2": 17584.0,
+ "s_max": 3.609523272566242,
+ "p_random_max": 0.07,
+ "s_cross_plus_max": 3.3255427111224387,
+ "p_random_cross_plus": 0.285,
+ "s_cross_minus_max": 3.0270659909562245,
+ "p_random_cross_minus": 0.815,
+ "b_max": 3.3255427111224387,
+ "passes_eb_rule": false,
+ "null_max_p50_p95": [
+  3.209954769187954,
+  3.6285822850041063
+ ],
+ "n_peaks_above_null_median": 2,
+ "peaks": [
+  {
+   "x": -28.0,
+   "y": -14.0,
+   "ra": 342.1941304756469,
+   "dec": -44.53477788888889,
+   "s": 3.609523272566242,
+   "s_cross": -0.877287019508595,
+   "p_random": 0.07
+  },
+  {
+   "x": -6.0,
+   "y": -34.0,
+   "ra": 342.1855579590672,
+   "dec": -44.54033344444445,
+   "s": 3.5169774100818714,
+   "s_cross": 0.5315088549963898,
+   "p_random": 0.105
+  }
+ ],
+ "assumptions": {
+  "aperture_arcsec": 10.0,
+  "filter": "schirmer",
+  "r_min_arcsec": 1.0,
+  "min_sources": 5,
+  "min_snr": 10.0,
+  "max_g": 0.5,
+  "responsivity": null,
+  "max_radius": 100.0,
+  "grid_arcsec": 1.0,
+  "n_random": 200
+ }
+}
