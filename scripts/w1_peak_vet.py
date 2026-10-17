@@ -84,6 +84,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = ap.parse_args(argv)
     full = json.loads(args.summary.read_text())
+    if not {"field", "screen", "assumptions"} <= set(full):
+        raise SystemExit(f"{args.summary} is not an inject_shear.py per-field summary")
     if full["field"] != args.field:
         raise SystemExit(f"summary is for {full['field']}, not {args.field}")
     summ = full["screen"]
@@ -91,6 +93,7 @@ def main(argv: list[str] | None = None) -> int:
     spec = ish.field_spec(args.field)
     with tempfile.TemporaryDirectory() as tmp:
         cache = args.cache or Path(tmp)
+        cache.mkdir(parents=True, exist_ok=True)
         model, shapes, extra, _, _ = ir.load_field(args.field, cache, spec)
         # the settings the summary's screen ran with (legacy defaults for older summaries)
         screen = {**ish.LEGACY_SCREEN_OPTIONS, **full["assumptions"]["screen"]}

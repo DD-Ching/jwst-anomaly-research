@@ -43,3 +43,14 @@ def test_outcome_rule():
     assert pv.outcome(3.7, 0.06, 3.6).startswith("explained")
     assert pv.outcome(3.6, 0.01, 3.6).startswith("explained")
     assert pv.outcome(3.9, 0.01, 3.6).startswith("not explained")
+
+
+def test_axis_points_at_uses_direction_to_the_star():
+    from astropy.coordinates import SkyCoord
+
+    star = SkyCoord(10.0, 0.0, unit="deg")
+    src = SkyCoord([10.0, 10.001], [0.001, 0.0], unit="deg")  # north of and east of the star
+    pa_to = np.mod(src.position_angle(star).deg, 180.0)
+    # a N-S axis points at the star from the north source, an E-W axis from the east source
+    assert pv.axis_points_at(np.array([0.0, 90.0]), pa_to).tolist() == [True, True]
+    assert pv.axis_points_at(np.array([90.0, 0.0]), pa_to).tolist() == [False, False]

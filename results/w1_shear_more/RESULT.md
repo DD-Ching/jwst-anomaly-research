@@ -33,7 +33,8 @@ unchanged). Commands: `exotic_screens.py --model <model> shear ... --max-radius 
 The sheet shows a vertical stripe through the aperture centre and an m = 18.2 source (not a Gaia G < 17 star)
 8.9″ from the peak with diffraction spikes. **Post hoc** test (designed after seeing the sheet, frozen before computing): V1 removes the 15 used sources
 within 1″ of the stripe columns (61 columns, 442–502, about 1.9″ wide, found by the 5-MAD column-median rule;
-zero-valued fill is ignored and a zero MAD flags nothing, guards added after code review); V2 removes the 5 used sources within
+**deviation:** zero-valued fill is ignored and a zero MAD flags nothing, guards added after code review and not in
+addendum A; the flagged set is one contiguous band matching the stripe on the sheet); V2 removes the 5 used sources within
 15″ of the bright source whose axis points at it (±15°).
 
 | Removed | S at the peak | p_rot (same 200 null draws) |
@@ -72,4 +73,5 @@ field (after Abell S1063) where a linear streak mimics the W1 sign.
   measured for any of the three models.
 - The streak test is a post hoc, screen-level vetting step (its rule was frozen before computing); it was not run
   through injections. A first version compared column medians with the median of column medians instead of the
-  frozen "cutout median" (19 sources, S 0.14 without them, same outcome); the committed JSON uses the frozen rule.
+  frozen "cutout median" (19 sources, S 0.14 without them, same outcome; that JSON is in commit 989d10f, superseded); the committed JSON
+  uses the frozen rule with the two guards above.
