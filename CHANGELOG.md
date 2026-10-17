@@ -2,8 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-17: W1 shear screen streak veto (in progress; claim)
-- Plan: test whether long linear streaks set the W1 B-mode floor (Abell 2744 S_× 4.21, S1063 top peaks).
+## 2026-10-17: W1 B-mode floor diagnostic on Abell 2744: no streak; carried by many sources near bright galaxies
+- **Why:** TASKS "JWST focus" 1 (W1): find what sets the highest floor (Abell 2744 max |S_×| 4.21 at (88, −42)).
+  Claimed as a streak veto; the sheet showed no streak, so it became a diagnostic (deviation; nothing adopted).
+- **Result (derived; `results/w1_floor/RESULT.md`):** no streak in the box (sheet looked at); top 1/3/5 of 44
+  sources give 0.12/0.31/0.47 of S_×; aperture mean ε 0.044 (field mean |ε| 0.331); 1 of 200 rotation-null maxima
+  reaches 4.21 (indicative). A bright-neighbour veto lowers b_max to 3.86 (k 3) or 3.89 / 3.47 (k 5, Δm 2 / 3)
+  only with a 31–74 % source loss and flagged rows are not over-represented at the peak: not adopted.
+- **Failed approaches:** collinear-chain streak proxy (21 % of sources flagged by chance at 10°/10°/20″);
+  bright-neighbour rule as a floor-specific veto.
+- **Handoff:** next W1 floor test is a spatially varying systematic (star-based PSF map or a bright-galaxy
+  light-gradient term per source), then injections under a frozen adoption rule.
 
 ## 2026-10-17: W1 shear screen aperture-coverage cut (c = 0.5): not adopted; limits move ≤ 1.6 %
 - **Why:** TASKS "JWST focus" 1 (W1): "drop edge apertures with < 50 % coverage" to lower the B-mode floor. Plan

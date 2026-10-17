@@ -1,0 +1,14 @@
+{
+ "field": "abell2744",
+ "provenance": "derived",
+ "n_rotations": 200,
+ "null_max_S_quantiles_50_90_95_99": [
+  3.419173944079608,
+  3.691801062668093,
+  3.7597039968220076,
+  4.01712191994933
+ ],
+ "b_max": 4.205639790776325,
+ "frac_null_max_ge_b_max": 0.005,
+ "note": "rotation null of max S over the grid; max |S_x| of the real field compared to it (two-sided |S_x| vs one-sided S: indicative)"
+}
