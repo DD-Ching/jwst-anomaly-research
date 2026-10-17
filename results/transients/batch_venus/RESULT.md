@@ -76,8 +76,8 @@ injected sources are simulations. An ordinary fading is not wormhole evidence; z
   - It is sky-fixed: the band peaks are 0.03″ apart.
   - It is not a spike, persistence, star or cosmic ray: no bright source within 5″, 8 bands, 2 programmes, no
   Gaia or SIMBAD match within 3″.
-  - It lies on a catalogued galaxy, NED `[FPP2024] NS_0481` (z = 1.3236, Frye et al. 2024; redshift type not
-  verified).
+  - The nearest catalogued galaxy with a redshift, NED `[FPP2024] NS_0481` (spectroscopic z = 1.3236, Frye et al.
+  2024), is 3.77″ away (corrected 2026-10-17: an earlier "on the galaxy, 0.06″" read NED's arcmin column as arcsec).
 - **It is not an unexplained change:**
   - Its multi-epoch light curve is that of a transient: present over at least 23 days in 2023 and fading in the blue
     bands, then gone by 2025. That is the light curve of a supernova or similar ordinary transient.
@@ -121,7 +121,8 @@ injected sources are simulations. An ordinary fading is not wormhole evidence; z
 - **Records:** about 15 min (not stored).
 
 ## Pending
-- Identify h002 in a transient catalogue (TNS) or in the G165 literature, and the origin of `NS_0481`'s redshift.
+- Identify h002 in TNS (403 on 2026-10-17). Literature: Frye et al. 2024 reports only SN H0pe; NS_0481's z is
+  spectroscopic (NIRSpec) and 3.77″ away (host not determined).
 - h003 (MACS0416 box 2) stays undetermined: it needs a PSF-matched multi-programme check on the arc.
 - Boxes not searched in this batch: the undeterminable 8, which need a decision on whether to re-calibrate with more
   injections, and pairs beyond the cap.
