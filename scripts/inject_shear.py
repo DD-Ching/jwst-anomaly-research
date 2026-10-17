@@ -336,6 +336,12 @@ def run_field(name: str, args) -> dict:
     fx, fy, area = ir.screened_footprint(inj.xs, inj.ys, sargs.max_radius)
     border = ir.footprint_border(inj.xs, inj.ys, sargs.max_radius)
     z_src = ir.source_redshift(shapes)
+    # W1 lens redshift (results/w1_volume/PLAN.md): the cluster's unless --lens-z is given; then
+    # only screen rows behind that redshift too are painted (single-plane ASSUMPTION: the cluster
+    # model and its shear removal stay as they are)
+    z_w1 = model.z_lens if getattr(args, "lens_z", None) is None else float(args.lens_z)
+    if z_w1 != model.z_lens:
+        inj.background = inj.background & es.lensable_mask(shapes, z_w1)
     s_map = inj.base["s"]
     s_max = float(np.nanmax(s_map))
     iy, ix = np.unravel_index(np.nanargmax(s_map), s_map.shape)
@@ -344,8 +350,8 @@ def run_field(name: str, args) -> dict:
     trials, eff = [], {}
     for mass, seed in zip(args.mass, seeds, strict=True):
         rng = np.random.default_rng(seed)
-        theta_row = np.where(inj.background, ir.theta_e_arcsec(mass, model.z_lens, z_src), np.nan)
-        theta_2 = float(ir.theta_e_arcsec(mass, model.z_lens, ir.Z_SOURCE)[0])
+        theta_row = np.where(inj.background, ir.theta_e_arcsec(mass, z_w1, z_src), np.nan)
+        theta_2 = float(ir.theta_e_arcsec(mass, z_w1, ir.Z_SOURCE)[0])
         sub = []
         for k in range(args.n_inject):
             if k % ir.BATCH == 0:
@@ -413,6 +419,7 @@ def run_field(name: str, args) -> dict:
             "seed": args.seed,
             "n_inject": args.n_inject,
             "spike_stars": len(extra) if extra is not None else None,
+            **({} if getattr(args, "lens_z", None) is None else {"w1_lens_z": z_w1}),
             **(
                 {}
                 if streak is None
@@ -488,6 +495,13 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="directory of <field>_streak_mask.fits.gz (scripts/w1_streak_mask.py): drop shape "
         "rows and painted images on streaks (results/w1_streak_veto/PLAN.md)",
+    )
+    ap.add_argument(
+        "--lens-z",
+        type=float,
+        default=None,
+        help="redshift of the injected W1 lenses (default: each field's cluster redshift; "
+        "results/w1_volume/PLAN.md)",
     )
     ap.add_argument("--seed", type=int, default=50)
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "inject_shear")
