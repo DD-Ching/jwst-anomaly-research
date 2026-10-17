@@ -1,0 +1,16 @@
+{
+ "label": "review-list entries beyond capacity: pending, not cleared",
+ "entries": [
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h002",
+   "ra": 342.1798223740701,
+   "dec": -44.53398357098873,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 6.704871944969086,
+   "rank": 11
+  }
+ ]
+}
