@@ -14,6 +14,27 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** the floor is elsewhere; next W1 gains are a PSF-anisotropy model from stars, blend rejection or a
   streak veto, tested against Abell 2744's 4.21 centre (88, −42) first.
 
+## 2026-10-17: bounded VENUS batch, 20 new boxes with fixed `arc_diff`: one real fade, explained as an ordinary transient (#296)
+- **Data:** 20 unsearched 24″ boxes (3.2 arcmin²) in 10 clusters; earlier NIRCam epoch → VENUS, F150W + F444W.
+  - Chosen from metadata only: coverage, finite fraction, depth.
+  - Depth ties broken alphabetically (post hoc label).
+- **Calibration per box (fixed rule):** 12 passed (1.92 arcmin²); 8 undeterminable.
+  - Pooled over the passing boxes, vanish recovery is 0.87 / 0.82 / 0.79 at 26.0 / 27.0 / 27.5 AB.
+  - Partial (50 %) fades: 0.79 / 0.75 / 0.52.
+  - Unchanged-control hits: 8/207.
+- **Screen:** 113 hits, 13 unflagged, 5 review entries, all 5 reviewed (capacity 10, 0 pending).
+  - Four show no significant change in forced photometry.
+  - **PLCK G165 h002** is a real fade: a point source in all PEARLS bands in March to April 2023, gone in 2025 and
+    2026. That light curve is an ordinary transient's (supernova-like).
+  - Not yet identified: about 32″ from SN H0pe's published position.
+  - Not an unexplained signal and not wormhole evidence.
+- **Time:** 22 min of computation on 4 workers; about 45 min for the whole unit.
+- **#293 report wording corrected:**
+  - vanish 51/60, not 51/51;
+  - 180 changes + 60 controls;
+  - per-source vs totals;
+  - throughput vs per-box time.
+
 ## 2026-10-17: SFFT vs `arc_diff` (bounded tool comparison): keep `arc_diff` (D-095, #293)
 - **The JWST B-spline SFFT** (Hu & Wang 2024) is GPU-only in sfft 1.7.3, so it was not tested. SFFT's automatic
   masking needs SExtractor, so it was not tested either.

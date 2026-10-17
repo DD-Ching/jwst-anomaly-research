@@ -15,6 +15,9 @@ the rest saved as pending. No follow-on batch, no tool work, no SFFT.
 - 06:10Z program fixed (d9640f8; `arc_diff.py` unchanged from main 7c975ac); batch started 06:10Z
   (`scripts/batch_run.py run`, 4 workers, maps and cache in the session scratchpad).
 
+- 06:32Z batch done (40 runs, all rc 0): 12 boxes passed, 8 undeterminable; review queue 5.
+- 06:35Z review done: 5 / 5 reviewed (capacity 10), 0 pending; PLCK G165 h002 real fade (ordinary transient).
+- Results: `RESULT.md`.
+
 ## Next action
-When the batch finishes: `batch_run.py summarize` (also run by `run`), look at sheets, `batch_review.py`
-(capacity 10), RESULT and state files. Hard stop for computation 09:30Z, for everything 10:01Z.
+`/code-review`, PR ready, CI, merge under the merge policy; final report. No follow-on batch.

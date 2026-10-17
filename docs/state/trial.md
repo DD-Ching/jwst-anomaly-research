@@ -225,6 +225,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | ≈ 0.25 (SFFT vs arc_diff on B1/B2 injections) | ≈ 0.25 (SFFT integration check, VENUS pair enumeration, plan, state files, PR) | interactive session 01P8KV8A, 04:02–04:45Z (#293) |
 | 2026-W42 | ≈ 0.3 (W1 shear screen on Abell S1063, injections, five-field re-combination; peak sheet looked at) | — | — | 0.1 (orientation, claim, PR) | cloud routine 018YnfpM, 04:08–04:40Z |
 | 2026-W42 | ≈ 0.3 (W1 shear aperture-coverage cut: plan, code, five-field c = 0 / 0.5 injections; not adopted) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01H2i3uj, 05:07–05:35Z |
+| 2026-W42 | ≈ 0.5 (VENUS batch: 20 boxes, per-box calibration, 5 reviews) | — | — | ≈ 0.3 (#293 wording fixes, plan, box selection, state files, PR) | interactive session 01P8KV8A, 06:01–06:50Z (#296) |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
