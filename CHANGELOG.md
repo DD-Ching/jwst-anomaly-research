@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 shear null as a volume density over lens redshift: 3.6× weaker than Takahashi & Asada at 2 × 10¹³ M☉
+- `inject_shear.py --lens-z` (W1 lens off the cluster redshift; default path unchanged) and `scripts/w1_volume.py`
+  (ε integrated over comoving volume); plan frozen first (`results/w1_volume/PLAN.md`, addendum A before the grid).
+- Gate Z (Abell 2744 at its cluster z reproduces 0 / 0 / 14 / 72 / 146) passed on the second attempt; inputs equal
+  the stored streak-veto run on all eleven fields (`inputs_check.json`).
+- **Result (`results/w1_volume/RESULT.md`):** eleven fields, Z 0.1–1.5: n₉₅ < 3.65 × 10⁻⁴ / 8.5 × 10⁻⁴ / 6.5 × 10⁻³
+  h³ Mpc⁻³ at 2 × 10¹³ / 8 × 10¹² / 2 × 10¹² M☉, i.e. 3.6× / 8.5× / 65× weaker than Takahashi & Asada (2013).
+- **Failed approach:** a three-mass gate run cannot reproduce a five-mass run (seeds spawned per `--mass` entry).
+- **Deviations:** RXJ2129 out (its MAST F200W catalogue `jw02767-o002_t001` now 404 on S3 and the MAST API); 100
+  lenses per cell. **Handoff:** the W1 shear line does not reach the literature bound; reaching it at 2 × 10¹³ M☉
+  needs ~3.6× the area at similar efficiency. Single-plane assumption untested (a multi-plane check is the next
+  step only if the line continues). Restore RXJ2129 when MAST serves its catalogue again.
+
 ## 2026-10-17: Radial screen on MACS0717 with ASTRODEEP-FF photo-z: no flag
 - `scripts/radial_more.py --fields macs0717` (unchanged code), plan frozen first (`results/radial_macs0717/PLAN.md`).
 - **Result (`results/radial_macs0717/RESULT.md`):** 411 elongated, 77 dropped as not behind the lens, 37 `anti` not

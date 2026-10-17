@@ -1,0 +1,22 @@
+{
+ "field": "abell2744",
+ "lens_z": 0.3072,
+ "mass": [
+  2000000000000.0,
+  8000000000000.0,
+  20000000000000.0
+ ],
+ "n_inject": 200,
+ "n_recovered": [
+  11,
+  77,
+  148
+ ],
+ "stored": [
+  14,
+  72,
+  146
+ ],
+ "pass": false,
+ "cause": "seed spawned per --mass entry; stored run used five masses"
+}
