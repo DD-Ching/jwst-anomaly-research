@@ -69,6 +69,9 @@ SHEAR_FIELD_OVERRIDES = {
         "spike_stars": True,
         "centre": (342.1832, -44.5309),
     },
+    # photo-z already in FIELDS (DJA tarballs reachable 2026-10-17); Gaia veto at the model centre
+    "smacs0723": {"spike_stars": True, "centre": (110.826989, -73.454723)},
+    "elgordo": {"spike_stars": True, "centre": (15.740693, -49.271992)},
 }
 
 
@@ -361,6 +364,9 @@ def main(argv: list[str] | None = None) -> int:
         a = json.loads(json.dumps(s["assumptions"]))
         a["screen"].pop("max_radius", None)
         a.pop("spike_stars", None)
+        # options added after older summaries were written: absent means their default
+        a["screen"].setdefault("psf_chi", [0.0, 0.0])
+        a["screen"].setdefault("min_coverage", SHEAR_DEFAULTS["min_coverage"])
         return a
 
     if len({json.dumps(setting(s), sort_keys=True) for s in summaries}) != 1:

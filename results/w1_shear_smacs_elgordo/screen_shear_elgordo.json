@@ -1,0 +1,50 @@
+{
+ "model": "elgordo-caminha23",
+ "catalog": "data/cache/mast/jw01176-o241_t012_nircam_clear-f200w/jw01176-o241_t012_nircam_clear-f200w_cat.ecsv",
+ "photoz": "data/cache/dja/photoz-elgordo-v7.0/elgordo-grizli-v7.0-fix.eazypy.zout.fits",
+ "spike_stars": {
+  "path": "data/outputs/w1se/elgordo_gaia.ecsv",
+  "n": 7,
+  "sha256": "cf507cd4bffc6324046e74cfa3f8f00c3a4b3ef28eb69aa95215df0e606ddf32"
+ },
+ "seed": 1,
+ "psf_sigma_px": 1.4376981087491008,
+ "n_rows": 3108,
+ "n_spike_segments": 59,
+ "n_lensable": 1813,
+ "n_lensable_after_spike_veto": 1759,
+ "n_snr": 1732,
+ "n_resolved": 1265,
+ "n_weak_shear": 1114,
+ "responsivity": 0.48609808510734126,
+ "responsivity_err": 0.05754450749023907,
+ "n_centres_valid": 12712,
+ "area_arcsec2": 12712.0,
+ "s_max": 2.9522294922064387,
+ "p_random_max": 0.62,
+ "s_cross_plus_max": 3.2467140654858815,
+ "p_random_cross_plus": 0.15,
+ "s_cross_minus_max": 3.008787266780741,
+ "p_random_cross_minus": 0.49,
+ "b_max": 3.2467140654858815,
+ "passes_eb_rule": false,
+ "null_max_p50_p95": [
+  3.007178808260356,
+  3.4095823211828002
+ ],
+ "n_peaks_above_null_median": 0,
+ "peaks": [],
+ "assumptions": {
+  "aperture_arcsec": 10.0,
+  "filter": "schirmer",
+  "r_min_arcsec": 1.0,
+  "min_sources": 5,
+  "min_snr": 10.0,
+  "max_g": 0.5,
+  "responsivity": null,
+  "max_radius": 110.0,
+  "grid_arcsec": 1.0,
+  "n_random": 200,
+  "min_coverage": 0.0
+ }
+}

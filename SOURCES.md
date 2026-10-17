@@ -397,7 +397,7 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 ## Vetting (cycle 7, checked 2026-10-07 UTC)
 
 - **DJA v7.4 SMACS 0723 eazy photo-z** (same DJA terms as the catalog above):
-  - tarball https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/smacs0723-grizli-v7.4-fix.photoz.tar.gz, last-modified
+  - tarball https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/smacs0723-grizli-v7.4-fix.photoz.tar.gz (re-checked 2026-10-17, sha256 unchanged), last-modified
     2025-03-05, 59,032,200 bytes, sha256 `13b5b6f40048b1f474827d93ca52dc94f0200261187c59ca397d70382c8c2821`;
   - only the member `smacs0723-grizli-v7.4-fix.eazypy.zout.fits` is used (13,052,160 bytes, sha256
     `82db8910962f3050ddb9f8209aafa487fb30f3cf46551d57ef3824d7d2c355ea`, 13,554 rows). Extract it with
@@ -506,7 +506,7 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     sha256 `ac1cf7064edc3f1a907c1b95b7eacd864e19810ff559e7dc39b917081ed66e31`).
   - DJA v7.0 eazy photo-z (D-032): https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/elgordo-grizli-v7.0-fix.photoz.tar.gz
     (38,066,605 B, last-modified 2023-08-07, sha256 `9a4a39cee4b154c34040e05591a151597e85d05d0f580cbabdd15519488baade`,
-    accessed 2026-10-08). Only the member `elgordo-grizli-v7.0-fix.eazypy.zout.fits` is used (6,546,240 B, sha256
+    accessed 2026-10-08; re-checked 2026-10-17, sha256 unchanged). Only the member `elgordo-grizli-v7.0-fix.eazypy.zout.fits` is used (6,546,240 B, sha256
     `efd051e4e688ed46f7279e08cab19ec4179e114705d38f879ffb8feff230edd0`, rows match the `fix_phot` ids). The tarball
     also holds `elgordo-grizli-v7.0-fix_phot_apcorr.fits` (not inspected).
   - Lens models:

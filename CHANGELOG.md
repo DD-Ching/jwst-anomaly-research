@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 shear screen on SMACS 0723 and El Gordo: null; seven-field limits 5.3e3 / 9.6e2 / 5.0e2 deg⁻²
+- **Why:** D-053 "Revisit if": the DJA photo-z tarballs (404 on 2026-10-08) answer HTTP 200 again; sha256 match.
+- **Result (`results/w1_shear_smacs_elgordo/RESULT.md`):** R 0.438 / 0.486 (cluster shear seen); S_max 2.91 / 2.95,
+  p_rot 0.77 / 0.62, below the rotation-null median: null. Injections 11 / 62 / 106 (SMACS) and 0 / 14 / 48 (El
+  Gordo) of 200 at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉. Seven fields, 43.7 arcmin²: Σ(W1) < 5.3 × 10³ / 9.6 × 10² /
+  5.0 × 10² deg⁻² (was 5.8 × 10³ / 1.1 × 10³ / 5.7 × 10²). S_max cutouts looked at (`sheet_smax.png`).
+- **New:** `SHEAR_FIELD_OVERRIDES` for both fields (Gaia veto); `--combine-only` treats screen options missing from
+  older summaries as defaults (Abell 2744 re-run reproduces exactly); `scripts/w1_smax_sheet.py`.
+- **Handoff:** W1 next: MACS0717 needs a photo-z; streak veto (S1063, and the SMACS S_max aperture has spike
+  streaks); PSF-weighted moments for the floor (reuse-check GalSim HSM first).
+
 ## 2026-10-17: W1 STPSF + detection-kernel/jitter/drizzle smoothing vs the star χ: rule S3 fails; PSF-model route stops
 - **Why:** `results/w1_stpsf` "Limitations": STPSF over-predicts the stars' area-matched |χ| by 0.05–0.07; the
   jwst catalogue measures morphology on kernel-smoothed data (FWHM 2 px default; ASSUMPTION for this catalogue).

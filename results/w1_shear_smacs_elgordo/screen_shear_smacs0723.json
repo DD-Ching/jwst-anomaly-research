@@ -1,0 +1,50 @@
+{
+ "model": "smacs0723-iclv2",
+ "catalog": "data/cache/mast/jw02736-o001_t001_nircam_clear-f200w/jw02736-o001_t001_nircam_clear-f200w_cat.ecsv",
+ "photoz": "data/cache/dja/photoz-v7.4/smacs0723-grizli-v7.4-fix.eazypy.zout.fits",
+ "spike_stars": {
+  "path": "data/outputs/w1se/smacs0723_gaia.ecsv",
+  "n": 25,
+  "sha256": "242d41bbf5ae51970a7506cdbe827c5efa5f59dea7c00057da8ff0af0bd0216e"
+ },
+ "seed": 1,
+ "psf_sigma_px": 1.1550359794277596,
+ "n_rows": 3145,
+ "n_spike_segments": 72,
+ "n_lensable": 2381,
+ "n_lensable_after_spike_veto": 2319,
+ "n_snr": 2289,
+ "n_resolved": 2045,
+ "n_weak_shear": 1902,
+ "responsivity": 0.4378531131735564,
+ "responsivity_err": 0.03797507443849595,
+ "n_centres_valid": 12581,
+ "area_arcsec2": 12581.0,
+ "s_max": 2.910171638490498,
+ "p_random_max": 0.765,
+ "s_cross_plus_max": 2.9679893100298895,
+ "p_random_cross_plus": 0.66,
+ "s_cross_minus_max": 3.1886316899246885,
+ "p_random_cross_minus": 0.25,
+ "b_max": 3.1886316899246885,
+ "passes_eb_rule": false,
+ "null_max_p50_p95": [
+  3.06226989324627,
+  3.3835989072381896
+ ],
+ "n_peaks_above_null_median": 0,
+ "peaks": [],
+ "assumptions": {
+  "aperture_arcsec": 10.0,
+  "filter": "schirmer",
+  "r_min_arcsec": 1.0,
+  "min_sources": 5,
+  "min_snr": 10.0,
+  "max_g": 0.5,
+  "responsivity": null,
+  "max_radius": 60.0,
+  "grid_arcsec": 1.0,
+  "n_random": 200,
+  "min_coverage": 0.0
+ }
+}
