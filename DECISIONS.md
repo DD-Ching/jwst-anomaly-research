@@ -4975,3 +4975,21 @@ confining radiation at a throat is found.
   is non-perturbative".
 - A stability calculation will be proposed only with a fully specified radiation closure and a fixed matter
   theory.
+
+## D-094 `arc_diff` per-stamp kernels: shared design by default (2026-10-17)
+- **Decision:** `kernel_match --kernel-stamps` computes its leave-one-out stamp kernels with `kernel_fit_stamps`:
+  - one weighted design and Gram matrix per band;
+  - per-fit downdating of the own stamp and the clipped rows.
+  - It is the default (`--kernel-stamp-fit shared`); `refit` stays available.
+- **Alternatives rejected:**
+  - dropping leave-one-out, fewer iterations or lower precision (they change the search; owner);
+  - sharing one solution across fits;
+  - a different algorithm or GPU (out of scope).
+- **Evidence (`results/transients/kernel_loo/RESULT.md`):**
+  - kernels agree to ≤ 2.7e-11 relative;
+  - on B2, S agrees to ≤ 4.8e-7, with identical hits, flags, morphology, review list and 60 injection outcomes;
+  - the whole B2 run is ×22 (screen) and ×11 (injection run) faster, with the same peak memory.
+- **Revisit if:**
+  - a design is ill-conditioned (condition number ≫ 1e6);
+  - stamp fits exceed 200,000 rows (these already fall back to `refit`);
+  - the clipping rule changes.

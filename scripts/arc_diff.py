@@ -902,7 +902,7 @@ def band_diff(job: dict) -> dict:
             blur,
             job["kernel_px"],
             job["kernel_stamps"],
-            stamp_fit=job.get("kernel_stamp_fit", "refit"),
+            stamp_fit=job.get("kernel_stamp_fit", "refit"),  # job dicts without the key: original
             timing=ktiming,
         )
         conv2 = conv_epoch == 2
@@ -1107,8 +1107,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--kernel-stamp-fit",
         choices=("refit", "shared"),
-        default="refit",
-        help="per-stamp leave-one-out kernels: refit each (original) or shared design (same fits)",
+        default="shared",
+        help="per-stamp leave-one-out kernels: shared design (default since 2026-10-17, same fits "
+        "within 1e-6) or refit each (original)",
     )
     ap.add_argument("--min-sigma", type=float, default=5.0)
     ap.add_argument("--core-arcsec", type=float, default=0.8, help="bright-core flag radius")

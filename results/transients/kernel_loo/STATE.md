@@ -1,10 +1,9 @@
-# Per-stamp kernel-fit cost (`arc_diff.kernel_match --kernel-stamps`): cross-session state
+# Per-stamp kernel-fit cost: cross-session state
 
-Owner instruction 2026-10-17 (follow-up to #288): one unit, one main session, no `/batch`. Budget 3 h, from
-2026-10-17T02:23Z to **05:23Z**. Read this file first and continue from "Next action"; branch `claude/kernel-loo`.
+Owner instruction 2026-10-17. Budget 02:23Z → **05:23Z**; branch `claude/kernel-loo` (PR #291).
 
-Scope: only the measured per-stamp leave-one-out kernel-fit cost (#288 `batch/timing.json`). At most one
-implementation. No algorithm swap, GPU or new pipeline, no new sky regions, no SMACS check, no re-run of history.
+Done: plan; shared-design implementation (`--kernel-stamp-fit shared`, now the default, D-094); validation (all
+PLAN §3 tests pass on B1 and B2); timing (B2 whole run ×22 screen, ×11 injection run). Results: `RESULT.md`.
 
 ## Next action
-Write PLAN.md (diagnosis, the one method, fixed tolerances and test data) before any comparison run.
+`/code-review`, PR ready, CI, merge under the merge policy. This optimisation line ends here.

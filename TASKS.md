@@ -346,7 +346,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      **Fading calibration + B1–B3 (2026-10-17, #288, `results/transients/fade_calib/RESULT.md`):** passes on fresh
      held-out seeds after the injection-geometry correction (vanish 26 AB 14 / 14; unchanged 1 / 40 and 4 / 40);
      El Gordo registration fixed (`--reg-tile-arcsec 6`); B1 review 4 → 1 (vetted h024 position), B2 / B3 0 / 0.
-     Pending, awaiting the owner: the per-stamp kernel-fit cost (`batch/timing.json`), and the SMACS ERO → VENUS
+     Per-stamp kernel-fit cost: done (D-094, #291; B2 ×22 per run). Pending, awaiting the owner: the SMACS ERO → VENUS
      whole-box shift (2.11, −1.82) px, not checked;
    - **SMACS 0723 arc `arc_diff`** (D-027 addendum 2026-10-16, system 5 box): ERO → VENUS done, Atalanta recovered,
      no candidate (frozen 1″ rule fails the known case; post hoc 2″ + forced photometry); GO-4043 → DD 12774

@@ -1,0 +1,153 @@
+{
+ "label": "derived; B2 (15.717097, -49.262488), F150W + F444W, #288 final-chain settings, no cache; the 4 runs started together, one process each on 4 cores (the shared runs finished first, so the refit runs ran their last ~20 min on a half-loaded machine, which favours refit)",
+ "runs": {
+  "refit_screen": {
+   "wall_s_process": 1507.8,
+   "wall_s_summary": 1507.1,
+   "peak_rss_mb": 859.7,
+   "user_s": 1299.0,
+   "timing_s": {
+    "F150W": {
+     "read": 9.17,
+     "pre_injections": 0.0,
+     "resample_register_match": 1481.95,
+     "detect": 3.24,
+     "post_injections": 0.03,
+     "kernel_stamps": 1454.769,
+     "n_stamps": 1076
+    },
+    "F444W": {
+     "read": 2.5,
+     "pre_injections": 0.0,
+     "resample_register_match": 9.58,
+     "detect": 0.24,
+     "post_injections": 0.0,
+     "kernel_stamps": 0.861,
+     "n_stamps": 33
+    }
+   }
+  },
+  "shared_screen": {
+   "wall_s_process": 67.4,
+   "wall_s_summary": 66.7,
+   "peak_rss_mb": 859.3,
+   "user_s": 54.0,
+   "timing_s": {
+    "F150W": {
+     "read": 6.3,
+     "pre_injections": 0.0,
+     "resample_register_match": 44.51,
+     "detect": 3.12,
+     "post_injections": 0.02,
+     "stamp_design_build": 0.167,
+     "stamp_rows": 86892,
+     "kernel_stamps": 15.69,
+     "n_stamps": 1076
+    },
+    "F444W": {
+     "read": 3.67,
+     "pre_injections": 0.0,
+     "resample_register_match": 8.34,
+     "detect": 0.29,
+     "post_injections": 0.0,
+     "stamp_design_build": 0.009,
+     "stamp_rows": 3354,
+     "kernel_stamps": 0.095,
+     "n_stamps": 33
+    }
+   }
+  },
+  "refit_inj": {
+   "wall_s_process": 1341.0,
+   "wall_s_summary": 1340.3,
+   "peak_rss_mb": 1466.5,
+   "user_s": 1122.4,
+   "timing_s": {
+    "F150W": {
+     "read": 8.4,
+     "pre_injections": 58.74,
+     "resample_register_match": 1230.55,
+     "detect": 2.94,
+     "post_injections": 0.02,
+     "kernel_stamps": 1202.965,
+     "n_stamps": 1005
+    },
+    "F444W": {
+     "read": 4.3,
+     "pre_injections": 23.14,
+     "resample_register_match": 11.31,
+     "detect": 0.26,
+     "post_injections": 0.0,
+     "kernel_stamps": 2.612,
+     "n_stamps": 53
+    }
+   }
+  },
+  "shared_inj": {
+   "wall_s_process": 123.1,
+   "wall_s_summary": 122.5,
+   "peak_rss_mb": 1466.7,
+   "user_s": 96.4,
+   "timing_s": {
+    "F150W": {
+     "read": 6.27,
+     "pre_injections": 42.36,
+     "resample_register_match": 41.72,
+     "detect": 2.99,
+     "post_injections": 0.03,
+     "stamp_design_build": 0.142,
+     "stamp_rows": 78260,
+     "kernel_stamps": 13.91,
+     "n_stamps": 1005
+    },
+    "F444W": {
+     "read": 2.53,
+     "pre_injections": 17.43,
+     "resample_register_match": 8.3,
+     "detect": 0.23,
+     "post_injections": 0.0,
+     "stamp_design_build": 0.009,
+     "stamp_rows": 5477,
+     "kernel_stamps": 0.123,
+     "n_stamps": 53
+    }
+   }
+  }
+ },
+ "speedup_screen": {
+  "whole_run": 22.4,
+  "matching_step": 28.2,
+  "kernel_stamps_step": 92.2,
+  "matching_s": [
+   1491.5,
+   52.8
+  ],
+  "kernel_stamps_s": [
+   1455.6,
+   15.8
+  ],
+  "shared_design_build_s": 0.18,
+  "peak_rss_mb": [
+   859.7,
+   859.3
+  ]
+ },
+ "speedup_inj": {
+  "whole_run": 10.9,
+  "matching_step": 24.8,
+  "kernel_stamps_step": 85.9,
+  "matching_s": [
+   1241.9,
+   50.0
+  ],
+  "kernel_stamps_s": [
+   1205.6,
+   14.0
+  ],
+  "shared_design_build_s": 0.15,
+  "peak_rss_mb": [
+   1466.5,
+   1466.7
+  ]
+ }
+}

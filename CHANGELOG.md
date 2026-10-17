@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: `arc_diff` per-stamp kernel fits share one design (D-094): B2 ×22, same results (#291)
+- **Diagnosis:** each of B2's 1,076 F150W stamps rebuilt an ~87,000 × 82 design and ran 3 SVD least-squares on it
+  (≈1.4 s per stamp).
+- **Change:** `kernel_fit_stamps` builds the design and Gram once per band, then subtracts each fit's own stamp and
+  clipped rows.
+  - Leave-one-out, per-fit clipping, iterations and precision are unchanged.
+  - It is the default; `--kernel-stamp-fit refit` keeps the old path.
+- **Validation (tolerances fixed first):**
+  - kernels ≤ 2.7e-11 relative (B1 all stamps, B2 40 stamps, synthetic);
+  - B2 S ≤ 4.8e-7;
+  - hits, flags, morphology, review list and all 60 injection outcomes identical;
+  - no threshold crossings.
+- **Speed (B2, no cache, same load):**
+  - whole run 1,508 → 67 s (screen, ×22) and 1,341 → 123 s (injection run, ×11);
+  - matching ×25–28; stamp kernels ×86–92;
+  - peak memory unchanged.
+- **Wording corrected in `fade_calib/RESULT.md` (owner):**
+  - the direction of the injection-registration effect is not verified;
+  - the 8 looked-at rejections do not show that no fade was missed.
+
 ## 2026-10-17: `arc_diff` fading calibration (pre-matching injections), registration fix, El Gordo B1–B3 search (#288)
 - **Scope (owner, 2026-10-16):**
   - calibrate fades, then a measured speed-up, then a small batch only if the calibration passes;

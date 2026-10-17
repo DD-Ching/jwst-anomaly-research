@@ -1,0 +1,148 @@
+{
+ "label": "derived; a = refit, b = shared (PLAN \u00a73 tests 2-4)",
+ "tolerance_max_abs_dS": 0.01,
+ "maps": {
+  "F150W_d": {
+   "max_abs_diff": 3.725290298461914e-09,
+   "finite_mismatch_px": 0
+  },
+  "F150W_s": {
+   "max_abs_diff": 4.76837158203125e-07,
+   "finite_mismatch_px": 0,
+   "border_px": 25,
+   "threshold_crossings_px": 0
+  },
+  "F444W_d": {
+   "max_abs_diff": 4.656612873077393e-10,
+   "finite_mismatch_px": 0
+  },
+  "F444W_s": {
+   "max_abs_diff": 1.1920928955078125e-07,
+   "finite_mismatch_px": 0,
+   "border_px": 8,
+   "threshold_crossings_px": 0
+  }
+ },
+ "hits": {
+  "hits": [
+   2,
+   2
+  ],
+  "only_a": [],
+  "only_b": [],
+  "changed": [],
+  "border_hits_a": [],
+  "max_abs_d_maxsigma": 2.2173907154865447e-10,
+  "review": [
+   [],
+   []
+  ]
+ },
+ "inj_maps": {
+  "F150W_d": {
+   "max_abs_diff": 3.725290298461914e-09,
+   "finite_mismatch_px": 0
+  },
+  "F150W_s": {
+   "max_abs_diff": 1.1920928955078125e-07,
+   "finite_mismatch_px": 0,
+   "border_px": 51,
+   "threshold_crossings_px": 0
+  },
+  "F444W_d": {
+   "max_abs_diff": 1.862645149230957e-09,
+   "finite_mismatch_px": 0
+  },
+  "F444W_s": {
+   "max_abs_diff": 2.384185791015625e-07,
+   "finite_mismatch_px": 0,
+   "border_px": 23,
+   "threshold_crossings_px": 0
+  }
+ },
+ "inj_hits": {
+  "hits": [
+   36,
+   36
+  ],
+  "only_a": [],
+  "only_b": [],
+  "changed": [],
+  "border_hits_a": [],
+  "max_abs_d_maxsigma": 3.5239082762927865e-09,
+  "review": [
+   [
+    "h001",
+    "h002",
+    "h003",
+    "h004",
+    "h007",
+    "h009",
+    "h010",
+    "h011",
+    "h012",
+    "h014",
+    "h015",
+    "h016",
+    "h017",
+    "h018",
+    "h019",
+    "h020",
+    "h021",
+    "h022",
+    "h023",
+    "h024",
+    "h025",
+    "h027",
+    "h028",
+    "h029",
+    "h030",
+    "h031",
+    "h032",
+    "h034",
+    "h035"
+   ],
+   [
+    "h001",
+    "h002",
+    "h003",
+    "h004",
+    "h007",
+    "h009",
+    "h010",
+    "h011",
+    "h012",
+    "h014",
+    "h015",
+    "h016",
+    "h017",
+    "h018",
+    "h019",
+    "h020",
+    "h021",
+    "h022",
+    "h023",
+    "h024",
+    "h025",
+    "h027",
+    "h028",
+    "h029",
+    "h030",
+    "h031",
+    "h032",
+    "h034",
+    "h035"
+   ]
+  ]
+ },
+ "injections": {
+  "n": 60,
+  "changed": []
+ },
+ "pass": {
+  "maps": true,
+  "hits": true,
+  "injections": true,
+  "all": true
+ }
+}
