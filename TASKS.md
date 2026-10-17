@@ -166,7 +166,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      lower the B-mode floor (Abell 2744 max S_× 4.21 at (88, −42), full coverage: ~~PSF anisotropy from stars~~ done
      2026-10-17, not adopted (`results/w1_psf/RESULT.md`: 3 stars, too few for a map; a constant χ_PSF lowers the
      floor to 3.85, rule ≤ 3.79); ~~model PSF per detector (STPSF)~~ done 2026-10-17, not adopted
-     (`results/w1_stpsf/RESULT.md`: same axis as the stars, |χ| depends on the isophote level and over-predicts the
+     (`results/w1_stpsf/RESULT.md`: axis close to the stars, |χ| depends on the isophote level and over-predicts the
      stars by 0.05–0.07; next a per-source forward model or PSF-weighted moments), blend
      rejection (2026-10-17 diagnostic, `results/w1_floor/RESULT.md`: no streak there; 44 sources near bright
      galaxies carry it, above the rotation null; a bright-neighbour veto is not floor-specific); ~~drop edge apertures with < 50 % coverage~~ done 2026-10-17, not adopted: limits move ≤ 1.6 %,

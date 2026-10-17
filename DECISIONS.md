@@ -2952,7 +2952,7 @@ Results (`model_prediction`, unrefitted; details `docs/fields/abell370.md`, CHAN
   lists; a local p-value per centre and a field-maximum p-value.
 - **Adoption.** Benchmark with `scripts/inject_radial.py`; adopt only if it beats `radial`'s D-049 efficiencies.
 - **Expectation (`derived`, rough).** γ_t ≈ (θ_E/θ)², so at θ_E = 1″ γ_t ≈ 0.11 at 3″; with about
-  0.05–0.07 lensable rows per arcsec² (D-049) and σ_e ≈ 0.3, S/N ≈ 1–2 in a 5″ aperture. Gains are expected
+  0.05–0.09 lensable rows per arcsec² (D-049) and σ_e ≈ 0.3, S/N ≈ 1–2 in a 5″ aperture. Gains are expected
   mainly at θ_E ≥ 2–3″; the injections decide.
 
 **Alternatives rejected.**
