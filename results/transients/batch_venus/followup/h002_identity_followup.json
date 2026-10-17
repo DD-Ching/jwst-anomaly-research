@@ -274,7 +274,13 @@
     175.0
    ],
    "days": 23.8,
-   "source": "lightcurves.ecsv"
+   "source": "lightcurves.ecsv",
+   "z": {
+    "F090W": -4.0,
+    "F150W": -1.7,
+    "F200W": -1.3
+   },
+   "note": "z = (f2-f1)/hypot(e1,e2) from lightcurves.ecsv; only F090W changes at > 3 sigma; second epoch is a different programme (4446)"
   },
   "sed_2023_03_30_njy": {
    "F090W": 270.9,
@@ -313,7 +319,7 @@
  "supports_transient": [
   "absent in HST 2016 (3-sigma < 33 nJy F160W) and present in 2023 at 240 nJy F150W",
   "detected in 8 bands at S/N 14-41 on 2023-03-30 and in 3 bands on 2023-04-22 (two programmes)",
-  "bluer bands fade faster over 23.8 d (F090W -36 %, F150W -11 %, F200W -7 %)",
+  "over 23.8 d only F090W declines significantly (271 -> 173 nJy, z -4.0); F150W (z -1.7) and F200W (z -1.3) are consistent with constant",
   "absent in all bands in 2025 (4744) and 2026 (VENUS)",
   "point-like, no catalogued star or galaxy within 3 arcsec"
  ],
@@ -321,7 +327,7 @@
   "spectrum of the transient",
   "host identification and redshift",
   "classification or report (TNS could not be queried)",
-  "light-curve sampling (only two detected epochs; no rise)"
+  "light-curve sampling: two detected epochs 23.8 d apart, no rise, no peak; colour evolution rests on one band"
  ],
  "identity_conclusion": {
   "matches_reported_transient": "no match found in the sources that could be queried; TNS could not be queried",
