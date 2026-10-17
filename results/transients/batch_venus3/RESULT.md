@@ -60,16 +60,18 @@ sources are simulations. An ordinary transient is not wormhole evidence; zero en
 
 ## The two rule-level real changes (both in A370 box 2, a calibration-failed box)
 Vetting record: `docs/candidates/batch_venus3_A370_box2.md`.
-- **B3-A370-box2-h003:** a bright compact point source present in all six programmes (1208, 3538, 2883, 5324, 5890,
+- **B3-A370-box2-h003:** a compact galaxy ([LRB2019] 6401, z_spec 0.3604, 0.08″; not a star: no Gaia source, galaxy
+  spectrum) present in all six programmes (1208, 3538, 2883, 5324, 5890,
   VENUS). The rule's change is F444W 255.4 ± 3.3 → 219.4 ± 5.9 nJy (1208 2022-12 → VENUS 2026-01). **The independent
   epoch 18 days after VENUS (5324, 2026-02) gives 247.4 ± 7.5 nJy**, consistent with 2022; between programmes the
   differences have mixed signs (F200W −30σ, F210M +8σ). Reading: not confirmed by the independent epoch; consistent
-  with programme-to-programme photometric scatter of a bright point source; variability not excluded.
+  with programme-to-programme photometric scatter of a compact bright galaxy; variability not excluded.
 - **B3-A370-box2-h010:** a 0.15″ aperture on the steep edge of a bright extended structure; **no point source is visible
   in any of the stamps**. Fluxes ≈ 30–50 nJy (2022-12, 2024-09) then ≈ 8–16 nJy (2024-12 onward) in four bands; the
-  within-5324 drop coincides with a different orientation of that programme's first visit. Reading: the change is not
-  shown to come from a source; aperture photometry on a steep gradient is the open ordinary explanation.
-- Neither is an unexplained change or an exotic candidate.
+  within-5324 drop coincides with a different orientation of that programme's first visit. The position is on the
+  Dragon arc (lensed galaxy, z 0.725), where Palencia+2026 list 33 microlensing-event detections within 1″ (nearest
+  0.54″). Reading: two open ordinary explanations, a caustic-microlensing event or steep-gradient photometry.
+- Neither is an unexplained change or an exotic candidate. TNS could not be queried (`crossmatch.json`).
 
 ## Deviations and corrections (labelled)
 - **Tools changed before selection (tested):** `batch_pairs.py --prefer-extra-epochs` (owner-requested ranking);
@@ -92,7 +94,8 @@ Vetting record: `docs/candidates/batch_venus3_A370_box2.md`.
   sets and the catalogue checks (subagent in parallel).
 
 ## Pending
-- h010: matched arc-pixel controls (`hit_lightcurve_controls.py pick-arc` + `compare`) on the 1208 → VENUS F444W pair.
+- h010: matched arc-pixel controls (`hit_lightcurve_controls.py pick-arc` + `compare`) on the 1208 → VENUS F444W pair,
+  then a comparison with the Palencia+2026 event list. h003: matched compact-source controls on the same pair.
 - The 10 calibration-failed boxes join the held set (26 in all); no follow-on batch is started.
 
 ## Regenerate

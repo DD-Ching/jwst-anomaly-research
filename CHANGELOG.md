@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: VENUS batch 3: 20 new boxes, 10 calibrated; two rule-level changes in a failed A370 box, neither confirmed (#311)
+- **Coverage:** 20 new 24″ boxes in 10 fields, ranked to prefer extra public epochs at similar depth (owner
+  instruction); 10 passed calibration (1.6 arcmin²), 10 failed (2 false hits, 8 vanish recovery); 0 timed out.
+- **Screen:** 136 hits → 22 unflagged → 9 review entries, all reviewed: 3 no significant change, 4 undetermined, 2 real
+  change by rule, both in calibration-failed A370 box 2 (`docs/candidates/batch_venus3_A370_box2.md`):
+  - h003 is a compact z 0.36 galaxy; the F444W drop is not confirmed by an epoch 18 d later (5324);
+  - h010 sits on the Dragon arc next to 33 catalogued microlensing detections; no point source is seen.
+- **Tools:** `batch_pairs.py --prefer-extra-epochs`; `batch_run.py` per-task timeout and stop time (portable without
+  `os.wait4`). Results: `results/transients/batch_venus3/RESULT.md`.
+
 ## 2026-10-17: Radial (W1) screen on MACS0417, MACS1423, WHL0137, RXJ2129, MACS0647: no flag
 - **Why:** the five W1 shear-only fields had never run the `radial` screen (exotic W1 signature, D-031/D-049).
 - **New:** `scripts/radial_more.py` (the shear fields' inputs through `exotic_screens.cmd_radial`, Gaia spike veto;
