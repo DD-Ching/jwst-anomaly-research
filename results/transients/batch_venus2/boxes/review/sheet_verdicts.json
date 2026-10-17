@@ -1,0 +1,12 @@
+{
+ "MACSJ1423+2404_2:h000": "point source on a galaxy's outskirts in all 9 bands of 1208 (2023-02); no point source in VENUS (2026); sky-fixed",
+ "MJ0417.5-1154_2:h002": "point source present in VENUS (3 bands), not in 1208 (2022-10), inside a knotty galaxy; sky-fixed",
+ "MS0451-0305_1:h011": "LW-only point source (F277W/F356W/F444W) in the first two 5058 visits (4 d apart), not detected 4 d later, no SW counterpart; persistence not tested",
+ "MS0451-0305_1:h015": "faint residual near the box edge on noise",
+ "BULLET_2:h019": "faint point source in VENUS (F150W/F210M/F300M/F444W, S/N 5-7) not in 4598; beside a horizontal streak present in both epochs",
+ "A370_1:h005": "compact source with a small dipole residual (compact-core class)",
+ "MJ1149.5+2223_1:h012": "veto: inside a bright star's diffraction-spike pattern, which changes between programmes",
+ "PLCKG165+67.0_1:h003": "compact bright source with a dipole residual (compact-core class)",
+ "MJ1149.5+2223_1:h051": "veto: linear residual along a diffraction spike of the bright star 5 arcsec away",
+ "AS1063_1:h001": "elongated residual along a galaxy disk"
+}
