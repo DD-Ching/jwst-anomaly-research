@@ -11,6 +11,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - h010 sits on the Dragon arc next to 33 catalogued microlensing detections; no point source is seen.
 - **Tools:** `batch_pairs.py --prefer-extra-epochs`; `batch_run.py` per-task timeout and stop time (portable without
   `os.wait4`). Results: `results/transients/batch_venus3/RESULT.md`.
+## 2026-10-17: Radial (W1) screen with the W1 streak veto: gate failed, not adopted
+- **Why:** handoff of the radial_more run: MACS0647's strongest `radial` centre is built from streak segments.
+- **New:** `radial_more.py --streak-masks` (`exotic_screens.drop_streak_arcs`: candidate arcs within 1″ of a
+  `findsat_mrt` trail dropped after selection; the null uses the same arcs). Masks regenerated; pixel counts match
+  `results/w1_streak_veto` in 12 / 12 fields; the no-veto runs reproduce `results/radial_more`.
+- **Result (`results/radial_streak/RESULT.md`):** gate K fails: the mask covers 2 of the 6 arcs; the centre stays
+  with 5 lines, three on the faint streak the mask misses (sheet looked at), and the thinner null puts it at p 0.03,
+  a veto-made flag in a no-result field (not a candidate). Twelve-field diagnostic: no flag changes in the ten
+  control-passing fields; Abell 370 loses 22 of 100 arcs, SMACS max lines 4 → 3.
+- **Failed approach:** `findsat_mrt` masks as a `radial` streak veto. **Handoff:** radial conclusions unchanged; a
+  radial streak veto needs a faint-streak detector validated on the MACS0647 streak plus injections.
 
 ## 2026-10-17: Radial (W1) screen on MACS0417, MACS1423, WHL0137, RXJ2129, MACS0647: no flag
 - **Why:** the five W1 shear-only fields had never run the `radial` screen (exotic W1 signature, D-031/D-049).
