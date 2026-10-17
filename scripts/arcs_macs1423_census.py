@@ -10,6 +10,10 @@ If ``43fbbbd`` is not in the clone (its branch merged or deleted), ``git fetch o
 pull/273/head`` brings it back: GitHub keeps every pull request's head ref.
     python scripts/arcs_macs1423_census.py --s1063-scripts S [--workers 4]
 
+Re-run with the fixed census code (``PLAN_census_rerun.md``): ``--s1063-scripts scripts
+--code-ref "main <sha>: #273 final arcs_vet_census.py / arcs_vet_deblend.py"
+--plan PLAN_census_rerun.md``.
+
 Only the image and the anti sets (photo-z basis) differ from the S1063 run. Output:
 ``results/arcs/macs1423-canucs/vetting/census.{json,ecsv}`` (derived; pixels observed, injections
 simulated, probabilities model_prediction).
@@ -80,6 +84,12 @@ def main(argv=None) -> int:
     p.add_argument("--sigma-eps", type=float, default=0.26, help="ASSUMPTION (screen value)")
     p.add_argument("--workers", type=int, default=os.cpu_count() or 1)
     p.add_argument("--cut-dir", type=Path, default=None, help="reuse cutouts (else a temp dir)")
+    p.add_argument(
+        "--code-ref",
+        default="#273 arcs_vet_census.py at 43fbbbd (unchanged)",
+        help="provenance note for the census code in --s1063-scripts",
+    )
+    p.add_argument("--plan", default="PLAN_census.md", help="plan file the run follows")
     a = p.parse_args(argv)
     vc = load_census(a.s1063_scripts.resolve())
     d = a.arcs_dir / MODEL
@@ -182,16 +192,16 @@ def main(argv=None) -> int:
             "p_anti_row": [p_row[lab] for lab in labels],
         },
         meta={
-            "provenance": "derived (exploratory; PLAN_census.md)",
+            "provenance": f"derived (exploratory; {a.plan})",
             "image": IMAGE,
-            "code": "#273 arcs_vet_census.py at 43fbbbd (unchanged)",
+            "code": a.code_ref,
         }
         | sets,
     )
     out_dir = a.arcs_dir / "vetting"
     t.write(out_dir / "census.ecsv", overwrite=True)
     out = {
-        "plan": "PLAN_census.md",
+        "plan": a.plan,
         "label": "exploratory; fits derived, injections simulated, probabilities model_prediction",
         "assumptions": {k: getattr(a, k) for k in ("fit_arcsec", "n_inject", "seed", "sigma_eps")}
         | {

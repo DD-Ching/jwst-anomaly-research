@@ -70,3 +70,24 @@ injections simulated; P values model_prediction). Exploratory (the census idea i
 - Not tested here: the PA conventions of the deblend's `pa_sep` and the catalogue `pa_obs` were not cross-checked,
   so this step does not say whether the knot axes of 2197 and 2322 follow the prediction.
 - Not a candidate.
+
+# Step 2 re-run with the fixed census code (2026-10-17)
+
+Plan: `PLAN_census_rerun.md` (committed before the run, `c5c0b96`). Code: main `528df92` `arcs_vet_census.py` /
+`arcs_vet_deblend.py` (the #273 review fixes: flux start and bound from `flux_scale`, census null/count). Image, rows,
+seeds, gates and the outcome rule unchanged. `census.json` / `census.ecsv` are overwritten; the #282 versions are in
+git history. A second run with `--cut-dir` (for the sheet) gave a byte-identical `census.json`.
+
+- **Every sample number is unchanged:** 45 / 55 gate-passed, 13 `two-knot` (f̂ 0.289, upper 0.443), expected anti
+  2.608 (clump-aware) / 0.946 (shape noise), **P(≥ 4) 0.259**, P(≥ 3) 0.494; mixture and shape-noise checks as
+  above. Outcome: `anti excess explained by clump orientation (exploratory)`, as before.
+- **One class change:** 1818 `single` → `undecided` (old fit was pinned: knot S/N 3 × 10⁻¹¹, separation 0.0002″;
+  now S/N 1.46, 0.16″, ΔBIC −8.9). Its gate still fails (pair recovery 20 %), so it keeps the mixture probability
+  and P is unchanged.
+- **Other rows:** ΔBIC moves by ≤ 1 × 10⁻⁸ (median) except 1818 (3.6) and 1758 (0.09); gate injection
+  fractions move by one injection (0.05) in 5 rows (1068, 1176, 1758, 2311, 2686), with no `gate_passed` flip.
+- **Looked at:** `census_anti.png` regenerated (pixels unchanged, 1818's title now `undecided`); 1818 is barely
+  visible next to the BCG halo, so `undecided` fits what the image shows.
+
+**Reading:** the #282 census conclusion stands and its numbers may be cited. The plan's "outcome unchanged" branch
+applies.
