@@ -2616,11 +2616,127 @@
    "target": "PLCKG165+67.0",
    "ra": 171.8181,
    "dec": 42.489767,
-   "screen_task": null,
-   "inj_task": null,
+   "screen_task": {
+    "box_id": "PLCKG165+67.0_2",
+    "kind": "screen",
+    "arc_diff": {
+     "rc": -15,
+     "wall_s": 5006.5,
+     "peak_rss_mb": 89.5
+    }
+   },
+   "inj_task": {
+    "box_id": "PLCKG165+67.0_2",
+    "kind": "inj",
+    "sample": {
+     "rc": 0,
+     "wall_s": 6.4,
+     "peak_rss_mb": 376.7
+    },
+    "arc_diff": {
+     "rc": 0,
+     "wall_s": 2293.8,
+     "peak_rss_mb": 1275.2
+    },
+    "morph": {
+     "rc": 0,
+     "wall_s": 1.5,
+     "peak_rss_mb": 133.9
+    }
+   },
+   "calibration": {
+    "vanish_26_27_review_sign": [
+     7,
+     14
+    ],
+    "unchanged_false_hits": [
+     1,
+     20
+    ],
+    "per_cell": {
+     "vanish": {
+      "26.00": [
+       0,
+       7,
+       [
+        0.0,
+        0.125
+       ]
+      ],
+      "27.00": [
+       7,
+       7,
+       [
+        0.875,
+        1.0
+       ]
+      ],
+      "27.50": [
+       6,
+       6,
+       [
+        0.857,
+        1.0
+       ]
+      ]
+     },
+     "partial": {
+      "26.00": [
+       0,
+       7,
+       [
+        0.0,
+        0.125
+       ]
+      ],
+      "27.00": [
+       6,
+       6,
+       [
+        0.857,
+        1.0
+       ]
+      ],
+      "27.50": [
+       3,
+       7,
+       [
+        0.262,
+        0.613
+       ]
+      ]
+     },
+     "appear": {
+      "26.00": [
+       4,
+       6,
+       [
+        0.463,
+        0.823
+       ]
+      ],
+      "27.00": [
+       5,
+       7,
+       [
+        0.526,
+        0.849
+       ]
+      ],
+      "27.50": [
+       4,
+       7,
+       [
+        0.387,
+        0.738
+       ]
+      ]
+     }
+    }
+   },
    "status": "undeterminable",
-   "why": "screen missing or failed",
-   "screen": null
+   "screen": null,
+   "why": "screen missing or failed"
   },
   {
    "box_id": "RXJ2129+0005_1",

@@ -1,0 +1,9 @@
+{
+ "box_id": "PLCKG165+67.0_2",
+ "kind": "screen",
+ "arc_diff": {
+  "rc": -15,
+  "wall_s": 5006.5,
+  "peak_rss_mb": 89.5
+ }
+}
