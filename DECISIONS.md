@@ -3190,6 +3190,11 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   floor would drop and the limits improve.
 - DJA photo-z for SMACS 0723 and El Gordo are reachable again (tarballs 404 on 2026-10-08).
 
+**Addendum 2026-10-17 (Abell S1063 added).** The screen runs on Abell S1063 (CATS v4.1, DJA v7.5 photo-z, Gaia spike
+veto): null (S_max 3.61, p_rot 0.07; max |S_×| 3.33). Shear-only inputs live in `inject_shear.SHEAR_FIELD_OVERRIDES`
+so the radial FIELDS entry (no photo-z, D-049 headline) stays as it was. Five-field limits 5.8 × 10³ / 1.1 × 10³ /
+5.7 × 10² deg⁻²; the four earlier fields reproduce exactly. Evidence: `results/w1_shear_s1063/RESULT.md`.
+
 ## D-054 Survey-agnostic exotic signatures; MulensModel for ordinary microlensing fits; OGLE-IV Mróz samples first for W3 (2026-10-08)
 
 **Context.** Owner direction (2026-10-08): find observational evidence of traversable wormholes / negative-mass

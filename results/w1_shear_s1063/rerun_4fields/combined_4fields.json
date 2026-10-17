@@ -1,0 +1,81 @@
+{
+ "fields": [
+  "abell2744",
+  "macs0416",
+  "macs1149",
+  "abell370"
+ ],
+ "total_area_deg2": 0.008396682098765432,
+ "limits_95": {
+  "2e+10": {
+   "mass_msun": 20000000000.0,
+   "theta_e_zs2_arcsec_range": [
+    0.2701088999698401,
+    0.3590043547320144
+   ],
+   "effective_area_deg2": 0.0,
+   "upper_limit_deg2": null,
+   "upper_limit_border_corrected_deg2": null
+  },
+  "2e+11": {
+   "mass_msun": 200000000000.0,
+   "theta_e_zs2_arcsec_range": [
+    0.8541593401872808,
+    1.1352714508722133
+   ],
+   "effective_area_deg2": 8.500771604938272e-06,
+   "upper_limit_deg2": 352438.59489879274,
+   "upper_limit_border_corrected_deg2": 394648.97939033475
+  },
+  "2e+12": {
+   "mass_msun": 2000000000000.0,
+   "theta_e_zs2_arcsec_range": [
+    2.701088999698401,
+    3.590043547320144
+   ],
+   "effective_area_deg2": 0.00038698881172839506,
+   "upper_limit_deg2": 7741.825885402387,
+   "upper_limit_border_corrected_deg2": 8364.75185476027
+  },
+  "8e+12": {
+   "mass_msun": 8000000000000.0,
+   "theta_e_zs2_arcsec_range": [
+    5.402177999396802,
+    7.180087094640288
+   ],
+   "effective_area_deg2": 0.0022294444444444445,
+   "upper_limit_deg2": 1343.8325442312484,
+   "upper_limit_border_corrected_deg2": 1458.0447678560524
+  },
+  "2e+13": {
+   "mass_msun": 20000000000000.0,
+   "theta_e_zs2_arcsec_range": [
+    8.541593401872806,
+    11.352714508722134
+   ],
+   "effective_area_deg2": 0.004574246141975308,
+   "upper_limit_deg2": 654.971312651363,
+   "upper_limit_border_corrected_deg2": 711.0093078696802
+  }
+ },
+ "provenance": "derived",
+ "screen": {
+  "recover_tol_arcsec": 2.0,
+  "p_recover": 0.05,
+  "trials_per_null": 10,
+  "seed": 50,
+  "n_inject": 200,
+  "screen": {
+   "aperture_arcsec": 10.0,
+   "filter": "schirmer",
+   "r_min_arcsec": 1.0,
+   "min_sources": 5,
+   "min_snr": 10.0,
+   "max_g": 0.5,
+   "responsivity": null,
+   "grid_arcsec": 1.0,
+   "n_random": 200,
+   "seed": 1
+  }
+ }
+}

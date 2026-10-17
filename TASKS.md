@@ -160,11 +160,12 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 
 ## JWST focus (D-047 screens; continues under the direction above)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
-   - W1: the shear screen (D-053, `exotic_screens.py shear`, `inject_shear.py`) is built; four fields null; limits
-     7.7 × 10³ / 1.3 × 10³ / 6.5 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, still blind at ≤ 2 × 10¹¹ M☉. Next:
+   - W1: the shear screen (D-053, `exotic_screens.py shear`, `inject_shear.py`) is built; five fields null (Abell S1063
+     added 2026-10-17); limits 5.8 × 10³ / 1.1 × 10³ / 5.7 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, still
+     blind at ≤ 2 × 10¹¹ M☉. Next:
      lower the B-mode floor (Abell 2744 max S_× 4.21: PSF-anisotropy model from stars, blend rejection, drop edge
      apertures with < 50 % coverage); add SMACS 0723 and El Gordo when DJA photo-z is reachable (tarballs 404
-     2026-10-08) and MACS0717 / Abell S1063 with photo-z (DJA v7.5, 75 MB); stack S around `radial` and orphan-pair
+     2026-10-08) and MACS0717 with photo-z; a streak veto (S1063 top peaks sit on long linear streaks); stack S around `radial` and orphan-pair
      centres; other lens redshifts → volume density vs Takahashi & Asada;
    - W2 / dark deflectors (D-048 clusters, D-051 deep fields: null, limits; D-055: the flanking-field orphan
      excess was a null (e) artefact, no excess under the fixed (e) or the companion-aware (f); D-048 clusters re-run, null): segmentation-map

@@ -223,6 +223,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | — | 0.3 (MOA-II manifest rows and retrieval dates; orientation, PR) | cloud routine 01RSWD6E, 02:08–02:45Z |
 | 2026-W42 | — | — | ≈ 0.2 (SMACS ERO → VENUS `arc_diff` tile-median registration re-screen; sheet looked at) | 0.1 (orientation, claim, PR) | cloud routine 017PWozQ, 03:08–03:30Z |
 | 2026-W42 | — | — | ≈ 0.25 (SFFT vs arc_diff on B1/B2 injections) | ≈ 0.25 (SFFT integration check, VENUS pair enumeration, plan, state files, PR) | interactive session 01P8KV8A, 04:02–04:45Z (#293) |
+| 2026-W42 | ≈ 0.3 (W1 shear screen on Abell S1063, injections, five-field re-combination; peak sheet looked at) | — | — | 0.1 (orientation, claim, PR) | cloud routine 018YnfpM, 04:08–04:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
