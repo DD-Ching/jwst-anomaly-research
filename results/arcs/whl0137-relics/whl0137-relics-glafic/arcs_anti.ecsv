@@ -1,0 +1,60 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int32}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: pa_obs, datatype: float64}
+# - {name: ellipticity, datatype: float64}
+# - {name: semimajor_px, datatype: float64}
+# - {name: area_px, datatype: float64}
+# - {name: snr, datatype: float64}
+# - {name: is_extended, datatype: bool}
+# - {name: mag, datatype: float64}
+# - {name: z_phot, datatype: float64}
+# - {name: z160, datatype: float64}
+# - {name: z840, datatype: float64}
+# - {name: r_arcsec, datatype: float64}
+# - {name: pa_pred_z1, datatype: float64}
+# - {name: offset_z1, datatype: float64}
+# - {name: g_z1, datatype: float64}
+# - {name: mu_z1, datatype: float64}
+# - {name: pa_pred_z2, datatype: float64}
+# - {name: offset_z2, datatype: float64}
+# - {name: g_z2, datatype: float64}
+# - {name: mu_z2, datatype: float64}
+# - {name: pa_pred_z4, datatype: float64}
+# - {name: offset_z4, datatype: float64}
+# - {name: g_z4, datatype: float64}
+# - {name: mu_z4, datatype: float64}
+# - {name: offset_zphot, datatype: float64}
+# - {name: z_basis, datatype: string}
+# - {name: offset_min, datatype: float64}
+# - {name: offset_max, datatype: float64}
+# - {name: g_min, datatype: float64}
+# - {name: pa_pred_spread, datatype: float64}
+# - {name: orientation_class, datatype: string}
+# - {name: strong_shear, datatype: bool}
+# - {name: population, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: data/cat/jw02282-o010_t001_nircam_clear-f200w_cat.ecsv against whl0137-relics-glafic}
+# - {photoz_source: data/dja/sunrise-grizli-v7.5-fix.eazypy.zout.fits}
+# - {model_sha256: 3862cc23eafaf14d8c305ead63ed497d1d631b5bdec3d165a55905ac5ac2844b}
+# - {z_lens: 0.566}
+# - reference_radec: [24.3538404415454, -8.456348388888884]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - maps:
+#     interpolation: bilinear; Hessian from centred finite differences
+#     pixel_arcsec: 0.10000000000000007
+#     shape: [1200, 1200]
+# - z_grid: [1.0, 2.0, 4.0]
+# - assumptions: {aligned_deg: 30.0, anti_deg: 60.0, z_margin: 0.1}
+# schema: astropy-2.0
+label ra dec pa_obs ellipticity semimajor_px area_px snr is_extended mag z_phot z160 z840 r_arcsec pa_pred_z1 offset_z1 g_z1 mu_z1 pa_pred_z2 offset_z2 g_z2 mu_z2 pa_pred_z4 offset_z4 g_z4 mu_z4 offset_zphot z_basis offset_min offset_max g_min pa_pred_spread orientation_class strong_shear population
+2194 24.341443283127845 -8.454895554127202 70.81416133281448 0.7949571071414702 10.382532888532824 339.0 110.41811812874934 True 24.36220426336193 1.1737993955612183 1.142813801765442 1.2725201845169067 44.45331886219793 10.006538372387382 60.807622960427096 0.19150115495095604 1.45722986326339 10.006538372387382 60.807622960427096 0.35391164322249147 2.0574823577651182 10.006538372387382 60.807622960427096 0.45003039100864495 2.579744195399962 60.807622960427096 photo-z 60.807622960427096 60.807622960427096 0.22891777210744033 0.0 anti True background
+1284 24.360053645491796 -8.464400228731588 134.2660384891356 0.7216680549495958 4.582908448648319 40.0 22.07145484792221 True 27.33215148102314 nan nan nan 36.46521053998565 69.20453356323267 65.06150492590294 0.276567220094178 2.854348797147505 69.20453356323267 65.06150492590294 0.74515026906223 16.150565735081365 69.20453356323267 65.06150492590294 1.2997268968341429 -22.412966941262262 nan grid 65.06150492590294 65.06150492590294 0.276567220094178 0.0 anti True unknown
+1733 24.3493960751153 -8.452641740756444 136.0460189707415 0.5797655870422803 5.237551282525505 162.0 57.74892711486105 True 25.511483344726628 nan nan nan 20.700619616214166 41.29237597216317 85.24635700142167 0.3345351095816795 2.9127194364132123 41.29237597216317 85.24635700142167 0.887216247946336 32.087115865735804 41.29237597216317 85.24635700142167 1.519363402610671 -10.821343287982904 nan grid 85.24635700142167 85.24635700142167 0.3345351095816795 0.0 anti True unknown
+993 24.361123344147817 -8.449969482826639 17.03462699943509 0.5274311330752197 4.6988182488129535 162.0 79.59354918902223 True 25.189807038983254 nan nan nan 34.639424781349014 135.1377064469608 61.896920552474285 0.2970740383166349 2.074784394780017 135.1377064469608 61.896920552474285 0.6357398404429029 5.457834886388376 135.1377064469608 61.896920552474285 0.8917633536311711 22.091522371979398 nan grid 61.896920552474285 61.896920552474285 0.2970740383166349 0.0 anti True unknown
+1651 24.3547396698531 -8.465168092967652 157.82847552250723 0.5009223929733123 3.2134121135703615 41.0 21.28736077524628 True 27.32147507235304 nan nan nan 31.911985726132365 90.00672968708032 67.82174583542691 0.35437754484473327 2.6656967307681954 90.00672968708032 67.82174583542691 0.8671567905594314 21.12230693720827 90.00672968708032 67.82174583542691 1.364329174083356 -10.643458646723657 nan grid 67.82174583542691 67.82174583542691 0.35437754484473327 0.0 anti True unknown

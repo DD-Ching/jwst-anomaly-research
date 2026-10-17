@@ -124,23 +124,18 @@ def _run(model: str, out: Path, catalog: Path, photoz: Path) -> dict:
     return {"model": model, "validate_passes": True, **run}
 
 
-def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--catalog", type=Path, required=True)
-    ap.add_argument("--photoz", type=Path, required=True)
-    ap.add_argument("--out", type=Path, default=OUT)
-    args = ap.parse_args(argv)
-    stage_members(lensmodel.RXJ2129_LENSTOOL_MAPS)
-    stage_members(lensmodel.RXJ2129_GLAFIC_MAPS)
-    runs = {m: _run(m, args.out, args.catalog, args.photoz) for m in (PRIMARY, SECOND)}
-    res = outcome(runs[PRIMARY], runs[SECOND])
+def decide(primary: str, second: str, out: Path, catalog: Path, photoz: Path, plan: str) -> dict:
+    """Run both models, apply the frozen outcome rule and list the deciding run's anti rows with
+    the other model's class; writes ``out/summary.json`` and returns it."""
+    runs = {m: _run(m, out, catalog, photoz) for m in (primary, second)}
+    res = outcome(runs[primary], runs[second])
     summary = {
-        "plan": "results/arcs/rxj2129/PLAN.md",
+        "plan": plan,
         "inputs": {
-            "catalog": args.catalog.name,
-            "catalog_sha256": sha256_file(args.catalog),
-            "photoz": args.photoz.name,
-            "photoz_sha256": sha256_file(args.photoz),
+            "catalog": catalog.name,
+            "catalog_sha256": sha256_file(catalog),
+            "photoz": photoz.name,
+            "photoz_sha256": sha256_file(photoz),
         },
         "runs": {
             m: {
@@ -156,8 +151,8 @@ def main(argv: list[str] | None = None) -> int:
     }
     if res["deciding_model"] is not None:
         dec = res["deciding_model"]
-        other = SECOND if dec == PRIMARY else PRIMARY
-        t = Table.read(args.out / dec / "arcs.ecsv")
+        other = second if dec == primary else primary
+        t = Table.read(out / dec / "arcs.ecsv")
         summary["background_by_gmin"] = _background_by_gmin(t)
         anti = t[
             t["strong_shear"]
@@ -165,7 +160,7 @@ def main(argv: list[str] | None = None) -> int:
             & (t["orientation_class"] == "anti")
         ]
         other_cls = (
-            match_class(anti, Table.read(args.out / other / "arcs.ecsv"), None)
+            match_class(anti, Table.read(out / other / "arcs.ecsv"), None)
             if runs[other]["validate_passes"]
             else ["no run"] * len(anti)
         )
@@ -182,8 +177,20 @@ def main(argv: list[str] | None = None) -> int:
             }
             for r, c in zip(anti, other_cls, strict=True)
         ]
-    (args.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
+    (out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
     print(json.dumps({k: summary[k] for k in ("deciding_model", "outcome", "p_ge_observed")}))
+    return summary
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--catalog", type=Path, required=True)
+    ap.add_argument("--photoz", type=Path, required=True)
+    ap.add_argument("--out", type=Path, default=OUT)
+    args = ap.parse_args(argv)
+    stage_members(lensmodel.RXJ2129_LENSTOOL_MAPS)
+    stage_members(lensmodel.RXJ2129_GLAFIC_MAPS)
+    decide(PRIMARY, SECOND, args.out, args.catalog, args.photoz, "results/arcs/rxj2129/PLAN.md")
     return 0
 
 

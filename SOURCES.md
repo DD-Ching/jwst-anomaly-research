@@ -533,6 +533,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Lens models:
     - RELICS: https://archive.stsci.edu/hlsps/relics/whl0137m08/models/. Lenstool v1 maps used (accessed
       2026-10-08, sha256 in `lensmodel.WHL0137_RELICS_LENSTOOL`): x/y-arcsec-deflect, kappa, z06p2-magnif.
+      GLAFIC v1 maps used for `arcs` (accessed 2026-10-17, sha256 in `lensmodel.WHL0137_RELICS_GLAFIC`):
+      x/y-arcsec-deflect, kappa, z02-magnif.
+    - DJA v7.5 photo-z: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/sunrise-grizli-v7.5-fix.photoz.tar.gz
+      (51,231,576 B, last-modified 2025-07-11), member `sunrise-grizli-v7.5-fix.eazypy.zout.fits` sha256
+      `672d4bdf31926209633c1a7feeb436bab3e5b08e847a079521820f3409f548e0` (accessed 2026-10-17).
     - Scofield et al. arXiv:2504.08879: maps at Zenodo 10.5281/zenodo.15110933 (M5-G1, files dated 250325,
       1,112,414,400 B each; md5 in `scripts/sunrise_scofield.py`; accessed 2026-10-13 by byte range). Image list:
       Table 3 of the arXiv source (v1 e-print, accessed 2026-10-13).

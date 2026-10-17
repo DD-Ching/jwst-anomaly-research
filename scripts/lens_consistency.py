@@ -158,6 +158,13 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {6.2: "mag_z6.2"},
     },
+    "whl0137-relics-glafic": {
+        "files": lensmodel.WHL0137_RELICS_GLAFIC,
+        "kind": "maps",
+        "z_lens": 0.566,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
     "macs0417-relics-lenstool": {
         "files": lensmodel.MACS0417_RELICS_LENSTOOL,
         "kind": "maps",

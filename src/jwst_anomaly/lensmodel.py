@@ -216,6 +216,31 @@ WHL0137_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: RELICS GLAFIC v1 maps of WHL0137-08 (Sunrise; Cerny et al. 2018, HLSP DOI 10.17909/T9SP45,
+#: accessed 2026-10-17), deflection in arcsec at D_LS/D_S = 1. Second model for ``arcs``.
+_RELICS_WHL0137_GLAFIC = (
+    "https://archive.stsci.edu/hlsps/relics/whl0137m08/models/glafic/v1/"
+    "hlsp_relics_model_model_whl0137m08_glafic_v1"
+)
+WHL0137_RELICS_GLAFIC: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_WHL0137_GLAFIC}_x-arcsec-deflect.fits",
+        "ce268399ce93456e7e310ea4ff4b44373df429192a2ea655b87d1e5b3bf62de0",
+    ),
+    "alpha_y": (
+        f"{_RELICS_WHL0137_GLAFIC}_y-arcsec-deflect.fits",
+        "3346debbaac7f6ef4bee09554fa9da484b9bb1c3eb46ced33502c8d7b45d5804",
+    ),
+    "kappa_map": (
+        f"{_RELICS_WHL0137_GLAFIC}_kappa.fits",
+        "797de8b900f7dd8636898546d00c99f2527c8418e22d0e85b7c1f081b7226387",
+    ),
+    "mag_z2": (
+        f"{_RELICS_WHL0137_GLAFIC}_z02-magnif.fits",
+        "458e1ca45c8204db63891b2497cf46408f59686159e1cb8e19477aeb3ac93617",
+    ),
+}
+
 #: RELICS Lenstool v1 maps of MACS J0417.5-1154 (Mahler et al. 2019, MNRAS 485, 3954; HLSP DOI
 #: 10.17909/T9SP45, accessed 2026-10-16), deflection in arcsec at D_LS/D_S = 1. Lens redshift 0.443.
 _RELICS_MACS0417 = (

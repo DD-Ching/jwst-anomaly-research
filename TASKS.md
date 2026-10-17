@@ -222,6 +222,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      own re-run (open). ~~RXJ2129~~ — done (2026-10-16,
      `results/arcs/rxj2129/RESULT.md`): Lenstool and GLAFIC JWST-updated maps both fail the control (8 / 12),
      no result. Next, optional: RXJ2129 on the deeper DJA catalogue (new plan; shape source changes);
+     ~~WHL0137~~ — done (2026-10-17, `results/arcs/whl0137-relics/RESULT.md`): RELICS Lenstool 13 / 18 aligned,
+     anti 1 vs 0.15 (P 0.14): does not replicate;
    - ~~arc curvature~~ — done (D-024 addenda 5–6): forward-modelled curvature, 5 testable arcs all as predicted (El
      Gordo 2527 explained by its model); critical curves at z_s = 1, 2, 4 still open;
    - shapes for the `arcs` test: S/N ≥ 50 done on the stored tables (`docs/fields/abell370.md`: 3 anti vs 1.33,
