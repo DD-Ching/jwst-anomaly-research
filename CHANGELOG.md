@@ -2,6 +2,11 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 stack injections, mass points 5 × 10¹¹ and 1 × 10¹² M☉: f = 1 limit 1 × 10¹² M☉
+- Same code, sample, seed and noise-aware rule (`results/w1_stack_radial/inject/PLAN_mass.md`,
+  `mass_points/summary.json`): 1 × 10¹² M☉ at all 19 centres excluded (share above observed 0.997; one MACS0417 centre undefined at that mass); 5 × 10¹¹ not
+  excluded at any f (≤ 0.618). **Handoff:** the W1 radial-centre stack line is done.
+
 ## 2026-10-17: W1 lenses injected at the `radial` centres through the stack: limit ≥ 2 × 10¹² M☉ (post hoc rule)
 - `scripts/w1_stack_inject.py` (`ShearInjector.lensed_sample` split out of `trial`); plan frozen first
   (`results/w1_stack_radial/inject/PLAN.md`). Gates Z (θ_E = 0 reproduces S) and R (stack responds) passed.
