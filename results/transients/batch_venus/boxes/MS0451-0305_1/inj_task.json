@@ -1,0 +1,19 @@
+{
+ "box_id": "MS0451-0305_1",
+ "kind": "inj",
+ "sample": {
+  "rc": 0,
+  "wall_s": 6.1,
+  "peak_rss_mb": 375.2
+ },
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 102.0,
+  "peak_rss_mb": 1274.7
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.0,
+  "peak_rss_mb": 133.4
+ }
+}
