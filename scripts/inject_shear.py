@@ -63,6 +63,9 @@ DEFAULT_FIELDS = (
     "abells1063",
     "smacs0723",
     "elgordo",
+    "macs0417",
+    "macs1423",
+    "whl0137",
 )
 # Screen options added after summaries were first committed, with the value those runs used
 # (before the option existed). A summary without the key is read with this value.
@@ -82,11 +85,42 @@ SHEAR_FIELD_OVERRIDES = {
     # photo-z already in FIELDS (DJA tarballs reachable 2026-10-17); Gaia veto at the model centre
     "smacs0723": {"spike_stars": True, "centre": (110.826989, -73.454723)},
     "elgordo": {"spike_stars": True, "centre": (15.740693, -49.271992)},
+    # Shear-only fields (2026-10-17; results/w1_shear_more/PLAN.md): JWST-era map models that
+    # passed the `arcs` alignment control, the photo-z of those runs, the 100" grid of the other
+    # CANUCS fields (ASSUMPTION) and the Gaia veto at the model reference point.
+    "macs0417": {
+        "model": "macs0417-canucs-maps",
+        "catalog": ir._MAST.format("jw01208-o006_t003_nircam_clear-f200w"),
+        "photoz": ("canucs", ir._CANUCS.format("macs0417")),
+        "max_radius": 100.0,
+        "spike_stars": True,
+        "centre": (64.394582, -11.908964),
+    },
+    "macs1423": {
+        "model": "macs1423-canucs-maps",
+        "catalog": ir._MAST.format("jw01208-o010_t005_nircam_clear-f200w"),
+        "photoz": ("canucs", ir._CANUCS.format("macs1423")),
+        "max_radius": 100.0,
+        "spike_stars": True,
+        "centre": (215.949485, 24.078455),
+    },
+    "whl0137": {
+        "model": "whl0137-relics-lenstool",
+        "catalog": ir._MAST.format("jw02282-o010_t001_nircam_clear-f200w"),
+        "photoz": (
+            "eazy",
+            "cache/dja/photoz-sunrise-v7.5/sunrise-grizli-v7.5-fix.eazypy.zout.fits",
+        ),
+        "max_radius": 100.0,
+        "spike_stars": True,
+        "centre": (24.354, -8.4563),
+    },
 }
+FIELD_NAMES = sorted(set(ir.FIELDS) | set(SHEAR_FIELD_OVERRIDES))
 
 
 def field_spec(name: str) -> dict:
-    return {**ir.FIELDS[name], **SHEAR_FIELD_OVERRIDES.get(name, {})}
+    return {**ir.FIELDS.get(name, {}), **SHEAR_FIELD_OVERRIDES.get(name, {})}
 
 
 def injected_ellipticity(e_src, raw_img, raw_src, r: float) -> np.ndarray:
@@ -337,7 +371,7 @@ def setting(summary: dict) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--fields", nargs="+", default=list(DEFAULT_FIELDS), choices=sorted(ir.FIELDS))
+    ap.add_argument("--fields", nargs="+", default=list(DEFAULT_FIELDS), choices=FIELD_NAMES)
     ap.add_argument("--mass", nargs="+", type=float, default=list(ir.MASSES), help="|M| in M_sun")
     ap.add_argument("--n-inject", type=int, default=200, help="lenses per field and mass")
     ap.add_argument("--recover-tol", type=float, default=ir.RECOVER_TOL)
