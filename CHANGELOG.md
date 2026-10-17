@@ -2,6 +2,36 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: `arc_diff` fading calibration with pre-matching injections: failed; registration fix; raw-data cache (#288)
+- **Scope (owner, 2026-10-16):** calibrate fades, speed up, then a small batch only if the calibration passes.
+  Plan first: `results/transients/fade_calib/PLAN.md`.
+- **New:**
+  - `arc_diff.py --inject-pre`: sources go into both raw epochs before registration and matching (Gaussian, or
+    `--inject-pre-psf empirical` per-epoch PSFs);
+  - `scripts/fade_calib.py` (`make`, `eval`, frozen pass rule);
+  - `--cache-dir` (raw boxes and PSFs only).
+- **Found:**
+  - The El Gordo whole-box registration was pinned at its ±3 px edge: F150W (1.71, −3.00) px, against a tile median
+    of (0.70, −0.57).
+  - **The one fix:** `--reg-tile-arcsec 6`, a median of tile shifts (default off).
+  - Only El Gordo runs are pinned. SMACS ERO → VENUS (2.11, −1.82) px is unchecked.
+- **Held-out result (seeds 20 + 21; n = 12–14 per cell):**
+  - vanish at 26.0 AB on the review list with the correct sign: 14 / 14;
+  - vanish 27.0 / 27.5: 12 / 14, 10 / 12;
+  - partial fades 26.0: 13 / 14; 27.5: 5–8 / 14.
+  - **Unchanged false hits 11 / 40 (empirical) and 10 / 40 (Gaussian), above the ≤ 0.10 rule → calibration
+    failed.** Only 0–1 / 40 of them reach the review list.
+  - Development seeds gave 4 / 40, which was optimistic.
+- **#286 re-screened with the fix:** the review list goes 4 → 1. The remaining entry is the same position as h024
+  (already vetted); nothing new, and the conclusion stands.
+- **Speed-up:** warm cache 86–88 s per run, against 168–171 s (empirical) and 96–98 s (Gaussian).
+  - Stage outcomes are identical (0 extra misses); S agrees to ≤ 5 × 10⁻⁷ relative.
+  - Not byte-identical, but the un-cached chain is not byte-reproducible either. Plan §5 asked for exact
+    agreement, so the factor is reported as measured, not validated.
+- **Not done:** the batch search (calibration failed).
+- **Next:** an owner decision is needed to go further, either a review-list criterion (a criterion change) or
+  another fix.
+
 ## 2026-10-16: El Gordo arc difference imaging, PEARLS 2022 → VENUS 2026 (one-box pilot): nothing open (#286)
 - **Scope (owner):**
   - one box and one epoch pair;

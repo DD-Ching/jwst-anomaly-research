@@ -32,8 +32,10 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import os
+import pickle
 import time
 import warnings
 from concurrent.futures import ProcessPoolExecutor
@@ -101,6 +103,26 @@ def read_box(uri: str, ra: float, dec: float, half_arcsec: float) -> dict:
     sub = wcs.deepcopy()
     sub.wcs.crpix = sub.wcs.crpix - np.array([x0, y0])
     return {"sci": out["SCI"], "err": out["ERR"], "wcs": sub, "scale": scale, "pixar_sr": pixar}
+
+
+def cached(cache_dir: str | None, tag: str, key: tuple, fn, *args):
+    """``fn(*args)``, stored as a pickle under ``cache_dir`` keyed by ``tag`` and ``key``.
+
+    For raw-data products only (boxes read from the archive, empirical PSFs): nothing that depends
+    on injected sources may go through this cache. Each call returns a fresh copy.
+    """
+    if not cache_dir:
+        return fn(*args)
+    h = hashlib.sha1(repr((tag, *key)).encode()).hexdigest()[:20]
+    path = Path(cache_dir) / f"{tag}_{h}.pkl"
+    if path.exists():
+        return pickle.loads(path.read_bytes())
+    out = fn(*args)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(f".{os.getpid()}.tmp")
+    tmp.write_bytes(pickle.dumps(out))
+    tmp.replace(path)
+    return out
 
 
 def resample(img: np.ndarray, wcs_from: WCS, wcs_to: WCS, shape: tuple[int, int]) -> np.ndarray:
@@ -582,8 +604,27 @@ def band_diff(job: dict) -> dict:
     """Read, align, match and difference one band; detections, maps and injections."""
     os.environ.setdefault("OMP_NUM_THREADS", "1")
     t0 = time.perf_counter()
-    b1 = read_box(job["e1"], job["ra"], job["dec"], job["half"])
-    b2 = read_box(job["e2"], job["ra"], job["dec"], job["half"] + 1.0)
+    cd = job.get("cache_dir")
+    b1 = cached(
+        cd,
+        "box",
+        (job["e1"], job["ra"], job["dec"], job["half"]),
+        read_box,
+        job["e1"],
+        job["ra"],
+        job["dec"],
+        job["half"],
+    )
+    b2 = cached(
+        cd,
+        "box",
+        (job["e2"], job["ra"], job["dec"], job["half"] + 1.0),
+        read_box,
+        job["e2"],
+        job["ra"],
+        job["dec"],
+        job["half"] + 1.0,
+    )
     t_read = time.perf_counter() - t0
     # Pre-matching injections (``--inject-pre``): sources added to the raw boxes of each epoch,
     # on that epoch's own grid and flux scale, before resampling, registration and matching.
@@ -593,9 +634,14 @@ def band_diff(job: dict) -> dict:
     if job.get("inj_pre") and job.get("inj_pre_psf") == "empirical":
         fw = PSF_FWHM[job["band"]]
         box = job["inj_pre_psf_box"]
-        q1 = read_box(job["e1"], job["ra"], job["dec"], box)
-        q2 = read_box(job["e2"], job["ra"], job["dec"], box + 1.0)
-        p1, p2, used = empirical_psfs(q1, q2, fw, job["inj_pre_psf_half"])
+
+        def _psf():
+            q1 = read_box(job["e1"], job["ra"], job["dec"], box)
+            q2 = read_box(job["e2"], job["ra"], job["dec"], box + 1.0)
+            return empirical_psfs(q1, q2, fw, job["inj_pre_psf_half"])
+
+        key = (job["e1"], job["e2"], job["ra"], job["dec"], box, job["inj_pre_psf_half"], fw)
+        p1, p2, used = cached(cd, "psf", key, _psf)
         psfs = {1: p1, 2: p2}
         psf_info = {
             "sources_ra_dec_conc": used,
@@ -876,6 +922,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--inject-pre-psf-box", type=float, default=40.0, help="PSF-star box half-size (arcsec)"
     )
+    ap.add_argument(
+        "--cache-dir",
+        type=Path,
+        help="local cache of raw boxes and empirical PSFs (untracked; never injection-dependent)",
+    )
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--procs", type=int, default=min(os.cpu_count() or 1, 4))
     ap.add_argument("--out", type=Path, required=True)
@@ -915,6 +966,7 @@ def main(argv: list[str] | None = None) -> int:
             "inj_pre_psf_half": a.inject_pre_psf_half,
             "inj_pre_psf_box": a.inject_pre_psf_box,
             "reg_tile_arcsec": a.reg_tile_arcsec,
+            "cache_dir": str(a.cache_dir) if a.cache_dir else None,
         }
         for i, (b, e1, e2) in enumerate(a.band)
     ]

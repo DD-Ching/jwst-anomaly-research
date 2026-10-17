@@ -77,3 +77,79 @@ def test_add_star_flux_and_mag_scale():
     f1 = ad.mag_to_mjysr(26.0, 2.3e-14)
     f2 = ad.mag_to_mjysr(26.75, 2.3e-14)
     assert np.isclose(f2 / f1, 10 ** (-0.4 * 0.75))
+
+
+def _ad():
+    import arc_diff
+
+    return arc_diff
+
+
+def test_register_median_ignores_minority_tiles():
+    ad = _ad()
+    rng = np.random.default_rng(1)
+    a = ndimage_gauss(rng.normal(size=(128, 128)))
+    b = np.roll(a, (1, -1), axis=(0, 1)).copy()
+    # one tile (of 16) dominated by a bright feature shifted differently
+    b[:32, :32] = np.roll(a[:32, :32], (0, 3), axis=(0, 1)) * 50
+    a2 = a.copy()
+    a2[:32, :32] *= 50
+    dy, dx, n = ad.register_median(a2, b, 32)
+    assert n == 16
+    assert abs(dy + 1) < 0.3 and abs(dx - 1) < 0.3
+
+
+def ndimage_gauss(x):
+    from scipy import ndimage
+
+    return ndimage.gaussian_filter(x, 1.5)
+
+
+def test_add_stamp_conserves_flux_and_centres():
+    ad = _ad()
+    psf = ad.gaussian_star((15, 15), 7, 7, 1.2, 1.0)
+    img = np.zeros((40, 40))
+    ad.add_stamp(img, 20.3, 18.6, psf, 5.0)
+    assert np.isclose(img.sum(), 5.0, rtol=2e-3)
+    yy, xx = np.mgrid[0:40, 0:40]
+    assert abs((img * yy).sum() / img.sum() - 20.3) < 0.02
+    assert abs((img * xx).sum() / img.sum() - 18.6) < 0.02
+    edge = np.zeros((40, 40))
+    ad.add_stamp(edge, 1.0, 1.0, psf, 1.0)  # clipped at the border, no error
+    assert 0 < edge.sum() < 1.0
+
+
+def test_empirical_psfs_per_epoch_width():
+    ad = _ad()
+    from astropy.wcs import WCS
+
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = [10.0, -40.0]
+    w.wcs.crpix = [100.0, 100.0]
+    w.wcs.cdelt = [-0.03 / 3600, 0.03 / 3600]
+    rng = np.random.default_rng(2)
+    boxes = []
+    for sig in (1.0, 1.6):
+        sci = rng.normal(0, 0.01, (200, 200))
+        for y, x in ((40, 40), (40, 150), (150, 60), (120, 160), (90, 100)):
+            ad.add_star(sci, y + 0.2, x - 0.3, sig, 100.0)
+        boxes.append({"sci": sci, "err": np.full_like(sci, 0.01), "wcs": w, "scale": 0.03})
+    p1, p2, used = ad.empirical_psfs(boxes[0], boxes[1], 0.05, 0.3, n=5)
+    assert len(used) == 5 and np.isclose(p1.sum(), 1) and np.isclose(p2.sum(), 1)
+    assert p1.max() > 1.5 * p2.max()  # epoch 1 sharper, as injected
+
+
+def test_cached_returns_fresh_copies(tmp_path):
+    ad = _ad()
+    calls = []
+
+    def f(n):
+        calls.append(n)
+        return {"sci": np.zeros(n)}
+
+    a = ad.cached(str(tmp_path), "box", ("u", 1), f, 3)
+    a["sci"] += 1  # an injection on the returned copy must not reach the cache
+    b = ad.cached(str(tmp_path), "box", ("u", 1), f, 3)
+    assert calls == [3] and b["sci"].sum() == 0
+    assert ad.cached(None, "box", ("u", 1), f, 2)["sci"].size == 2
