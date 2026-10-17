@@ -1,0 +1,104 @@
+{
+ "label": "derived; PLAN \u00a75 order",
+ "entries": [
+  {
+   "box_id": "SJ0723.3-7327_1",
+   "box_status": "passed",
+   "hit_id": "h007",
+   "ra": 110.830282683988,
+   "dec": -73.46033819913781,
+   "sign": "mixed",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 23.131873192626912,
+   "rank": 1
+  },
+  {
+   "box_id": "MJ0416.1-2403_1",
+   "box_status": "passed",
+   "hit_id": "h004",
+   "ra": 64.04815469365727,
+   "dec": -24.07494044005699,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 13.952902248887863,
+   "rank": 2
+  },
+  {
+   "box_id": "MJ0416.1-2403_1",
+   "box_status": "passed",
+   "hit_id": "h005",
+   "ra": 64.04317462557195,
+   "dec": -24.073775078547513,
+   "sign": "mixed",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 7.1804971424364625,
+   "rank": 3
+  },
+  {
+   "box_id": "MJ0416.1-2403_2",
+   "box_status": "undeterminable",
+   "hit_id": "h001",
+   "ra": 64.03112214460862,
+   "dec": -24.07891640679638,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 18.292682384201267,
+   "rank": 4
+  },
+  {
+   "box_id": "SJ0723.3-7327_2",
+   "box_status": "undeterminable",
+   "hit_id": "h011",
+   "ra": 110.84293785284451,
+   "dec": -73.45457238587763,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 15.722553237360433,
+   "rank": 5
+  },
+  {
+   "box_id": "A370_2",
+   "box_status": "undeterminable",
+   "hit_id": "h003",
+   "ra": 39.966687405392946,
+   "dec": -1.5830194828916722,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 11.098263132122371,
+   "rank": 6
+  },
+  {
+   "box_id": "PLCKG165+67.0_2",
+   "box_status": "undeterminable",
+   "hit_id": "h002",
+   "ra": 171.81146251341164,
+   "dec": 42.47784988918558,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 10.101745014530453,
+   "rank": 7
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h002",
+   "ra": 342.18934381949657,
+   "dec": -44.53095325067861,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 6.586243014058893,
+   "rank": 8
+  },
+  {
+   "box_id": "A370_2",
+   "box_status": "undeterminable",
+   "hit_id": "h010",
+   "ra": 39.970466450565894,
+   "dec": -1.585252758434272,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 5.727775602800006,
+   "rank": 9
+  }
+ ]
+}
