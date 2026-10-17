@@ -1,0 +1,19 @@
+{
+ "box_id": "A370_2",
+ "kind": "inj",
+ "sample": {
+  "rc": 0,
+  "wall_s": 7.5,
+  "peak_rss_mb": 383.3
+ },
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 147.0,
+  "peak_rss_mb": 1409.3
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.3,
+  "peak_rss_mb": 133.6
+ }
+}

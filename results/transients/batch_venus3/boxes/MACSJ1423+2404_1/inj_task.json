@@ -1,0 +1,19 @@
+{
+ "box_id": "MACSJ1423+2404_1",
+ "kind": "inj",
+ "sample": {
+  "rc": 0,
+  "wall_s": 5.5,
+  "peak_rss_mb": 382.7
+ },
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 138.0,
+  "peak_rss_mb": 1289.6
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.7,
+  "peak_rss_mb": 133.8
+ }
+}
