@@ -86,3 +86,19 @@ def test_run_without_wait4(tmp_path, monkeypatch):
         [_sys.executable, "-c", "import time; time.sleep(30)"], tmp_path / "y.log", timeout=1.0
     )
     assert r.get("timed_out") is True
+
+
+def test_parse_utc_and_boundary():
+    assert bru.parse_utc("2026-10-17T18:20:00") == bru.parse_utc("2026-10-17T20:20:00+02:00")
+    stop = bru.parse_utc("2026-10-17T18:20:00")
+    assert not bru.too_late(stop, stop) and bru.too_late(stop + 1, stop)
+
+
+def test_task_problem():
+    assert bru.task_problem(None) == "missing"
+    assert bru.task_problem({"arc_diff": {"rc": -9, "timed_out": True}}) == "timed out"
+    assert (
+        bru.task_problem({"arc_diff": {"rc": -1, "why": "not started: stop time"}}) == "not started"
+    )
+    assert bru.task_problem({"arc_diff": {"rc": 1}}) == "failed"
+    assert bru.task_problem({"arc_diff": {"rc": 0}, "morph": {"rc": 0}}) is None

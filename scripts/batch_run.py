@@ -26,7 +26,7 @@ import sys
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
-from datetime import UTC
+from datetime import UTC, datetime
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -52,22 +52,31 @@ def _run(cmd: list[str], log: Path, timeout: float | None = None) -> dict:
         timer = threading.Timer(timeout, p.kill) if timeout else None
         if timer:
             timer.start()
-        if hasattr(os, "wait4"):  # POSIX: also gives the child's peak memory
-            _, status, ru = os.wait4(p.pid, 0)
-            p.returncode = os.waitstatus_to_exitcode(
-                status
-            )  # reaped here; keep Popen from re-waiting
-            rss = round(ru.ru_maxrss / 1024, 1)
-        else:  # Windows: no rusage
-            p.wait()
-            rss = None
-        if timer:
-            timer.cancel()
+        rss = None
+        try:
+            if hasattr(os, "wait4"):  # POSIX: also gives the child's peak memory
+                try:
+                    _, status, ru = os.wait4(p.pid, 0)
+                    p.returncode = os.waitstatus_to_exitcode(status)  # reaped here
+                    rss = round(ru.ru_maxrss / 1024, 1)
+                except ChildProcessError:  # already reaped by Popen (kill raced the exit)
+                    p.wait()
+            else:  # Windows: no rusage
+                p.wait()
+        finally:
+            if timer:
+                timer.cancel()
     wall = round(time.time() - t0, 1)
     rec = {"rc": p.returncode, "wall_s": wall, "peak_rss_mb": rss}
     if timeout and rec["rc"] != 0 and wall >= timeout:
         rec["timed_out"] = True
     return rec
+
+
+def parse_utc(text: str) -> float:
+    """ISO time to a UNIX time (no offset: UTC; an explicit offset is honoured)."""
+    t = datetime.fromisoformat(text)
+    return (t.replace(tzinfo=UTC) if t.tzinfo is None else t).timestamp()
 
 
 def too_late(now: float, no_start_after: float | None) -> bool:
@@ -134,6 +143,18 @@ def box_passes(vk: int, vn: int, false_hits: int, pass_vanish: float, max_false:
     return vn > 0 and vk / vn >= pass_vanish and false_hits <= max_false
 
 
+def task_problem(task: dict | None) -> str | None:
+    """Why a task gave no output: missing, timed out, not started or failed (None if ok)."""
+    if not task:
+        return "missing"
+    ad = task.get("arc_diff", {})
+    if ad.get("timed_out"):
+        return "timed out"
+    if str(ad.get("why", "")).startswith("not started"):
+        return "not started"
+    return None if _ok(task) else "failed"
+
+
 def _ok(task: dict | None) -> bool:
     return (
         bool(task)
@@ -177,7 +198,7 @@ def summarize(boxes: list[dict], out: Path, pass_vanish: float, max_false: int) 
             r["status"] = "passed" if ok else "undeterminable"
         else:
             r["status"] = "undeterminable"
-            r["why"] = "injection run missing or failed"
+            r["why"] = f"injection run {task_problem(r['inj_task']) or 'output missing'}"
         scr = d / "screen"
         if _ok(r["screen_task"]) and (scr / "morph_all.json").exists():
             h = Table.read(scr / "hits.ecsv")
@@ -211,7 +232,7 @@ def summarize(boxes: list[dict], out: Path, pass_vanish: float, max_false: int) 
         else:
             r["screen"] = None
             r["status"] = "undeterminable"
-            r["why"] = "screen missing or failed"
+            r["why"] = f"screen {task_problem(r['screen_task']) or 'output missing'}"
         rows.append(r)
     queue.sort(key=lambda q: (q["box_status"] != "passed", -q["max_abs_sigma"]))
     for k, q in enumerate(queue):
@@ -306,10 +327,7 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     LIMITS["timeout_s"] = {"screen": a.timeout_screen, "inj": a.timeout_inj}
     if a.no_start_after:
-        from datetime import datetime
-
-        t = datetime.fromisoformat(a.no_start_after).replace(tzinfo=UTC)
-        LIMITS["no_start_after"] = t.timestamp()
+        LIMITS["no_start_after"] = parse_utc(a.no_start_after)
     boxes = json.loads(a.boxes.read_text())["chosen"]
     if a.cmd == "totals":
         totals(a.out)

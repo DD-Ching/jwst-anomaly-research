@@ -7,11 +7,12 @@ sources are simulations. An ordinary transient is not wormhole evidence; zero en
 ## New coverage (`boxes.json`)
 - **20 new, non-overlapping boxes** of 24″ (3.2 arcmin²) in 10 cluster fields (two each): MS0451, PLCK G165, MACS0416,
   MACS1149, Abell S1063, SMACS 0723, Abell 370, Bullet, MACS1423, MACS0417. Each pairs an earlier public NIRCam epoch
-  with VENUS (6882) in F150W + F444W; footprints and ≥ 0.95 finite pixels confirmed (metadata only).
+  with VENUS (6882) in F150W + F444W; footprints and ≥ 0.95 finite pixels checked (metadata only).
 - **New ranking (owner instruction):** among boxes of similar depth (all pairs share the VENUS 1,245 s F150W depth),
-  those with more extra public F150W visits came first: MS0451 and PLCK G165 (4 extra visits), MACS0416 (3), MACS1149
+  those with more extra public F150W visits came first: MS0451 (4 extra visits), PLCK G165 (4 and 3), MACS0416 (3), MACS1149
   (2), AS1063 and SMACS (1); the remaining 8 boxes have none (`extra_f150w_epochs` in `boxes.json`).
-- **Not reached:** El Gordo, RXCJ0018, RXJ2129, SPT0615 and Sunrise (ranked after the 20th box). Extra epochs were
+- **Not reached:** RXCJ0018, RXJ2129, SPT0615 and Sunrise (ranked after the 20th box). El Gordo had no free box: all
+  nine grid positions overlap searched boxes. Extra epochs were
   counted only among the programmes in `venus_pairs.json` and other VENUS visits.
 - Pipeline versions: jwst 3.0.0 except epoch 1 of MS0451, SMACS and Bullet (2.0.1).
 
@@ -63,15 +64,17 @@ Vetting record: `docs/candidates/batch_venus3_A370_box2.md`.
 - **B3-A370-box2-h003:** a compact galaxy ([LRB2019] 6401, z_spec 0.3604, 0.08″; not a star: no Gaia source, galaxy
   spectrum) present in all six programmes (1208, 3538, 2883, 5324, 5890,
   VENUS). The rule's change is F444W 255.4 ± 3.3 → 219.4 ± 5.9 nJy (1208 2022-12 → VENUS 2026-01). **The independent
-  epoch 18 days after VENUS (5324, 2026-02) gives 247.4 ± 7.5 nJy**, consistent with 2022; between programmes the
+  epoch 18 days after VENUS (5324, 2026-01-27) gives 247.4 ± 7.5 nJy**, consistent with 2022; between programmes the
   differences have mixed signs (F200W −30σ, F210M +8σ). Reading: not confirmed by the independent epoch; consistent
   with programme-to-programme photometric scatter of a compact bright galaxy; variability not excluded.
 - **B3-A370-box2-h010:** a 0.15″ aperture on the steep edge of a bright extended structure; **no point source is visible
-  in any of the stamps**. Fluxes ≈ 30–50 nJy (2022-12, 2024-09) then ≈ 8–16 nJy (2024-12 onward) in four bands; the
-  within-5324 drop coincides with a different orientation of that programme's first visit. The position is on the
+  in any of the stamps**. In F200W, F277W, F356W and F444W the fluxes are 29.9–51.5 nJy in 1208 (2022-12) and 5324 (2024-09), then
+  7.7–16.2 nJy in 5324 (2024-12, 2026-01) and VENUS; F150W is noisy (1.0–23.1 nJy). By eye on the stamps (not stored),
+  the first 5324 visit has a different orientation from its later ones. The position is on the
   Dragon arc (lensed galaxy, z 0.725), where Palencia+2026 list 33 microlensing-event detections within 1″ (nearest
   0.54″). Reading: two open ordinary explanations, a caustic-microlensing event or steep-gradient photometry.
-- Neither is an unexplained change or an exotic candidate. TNS could not be queried (`crossmatch.json`).
+- Neither is an unexplained change or an exotic candidate. TNS: one request per position, response not recorded, so
+  the TNS result is unknown (`crossmatch.json`).
 
 ## Deviations and corrections (labelled)
 - **Tools changed before selection (tested):** `batch_pairs.py --prefer-extra-epochs` (owner-requested ranking);
@@ -87,9 +90,9 @@ Vetting record: `docs/candidates/batch_venus3_A370_box2.md`.
   slow class.
 
 ## Cost (`boxes/*_task.json`, `totals.json`; session clock where stated)
-- Box selection: 4.8 min (session clock, not stored).
-- Search + calibration: 16:14Z → 16:46Z wall on 4 workers; 6,803 task-seconds; passed boxes 191–576 s each (median
-  239 s), calibration-failed boxes 4,138 s in all; peak memory 1.41 GB per task.
+- Box selection: 290 s (session clock, `run_params.json`).
+- Search + calibration: 16:14Z → 16:46Z wall on 4 workers (session clock, `run_params.json`); 6,803 task-seconds; passed boxes 191–576 s each (median
+  231 s), calibration-failed boxes 4,138 s in all; peak memory 1.41 GB per task.
 - Review: 16:46Z → 16:55Z computation for 9 entries (≈ 1 min each, session clock), plus looking at 9 sheets and stamp
   sets and the catalogue checks (subagent in parallel).
 
