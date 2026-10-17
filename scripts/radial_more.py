@@ -102,6 +102,9 @@ def sheet(fields: list[str], out: Path, size: float = 36.0) -> Path:
         spec = ir.FIELDS[name] if tag.endswith("_reproduce") else ish.field_spec(name)
         d = out / tag / spec["model"]
         summ = json.loads((d / "radial.json").read_text())
+        if not summ["peaks"]:  # no centre: an empty panel
+            ax.set_title(f"{tag}: no centre", fontsize=9), ax.set_axis_off()
+            continue
         top = max(summ["peaks"], key=lambda p: p["n_lines"])
         cand = Table.read(d / "radial_sources.ecsv")
         model, _, _ = lc.load_model(spec["model"])
@@ -126,9 +129,10 @@ def sheet(fields: list[str], out: Path, size: float = 36.0) -> Path:
         cx, cy = w.world_to_pixel_values(top["ra"], top["dec"])
         ax.plot(cx, cy, "+", color="tab:blue", ms=14, mew=1.5)
         ax.set_xlim(0, img.shape[1]), ax.set_ylim(0, img.shape[0])
+        pr = top["p_random"]
+        ptxt = "n/a" if pr is None else f"{pr:.3f}"
         ax.set_title(
-            f"{tag}: {top['n_lines']} lines, p {top['p_random']:.3f}\n"
-            f"{sum(use)} arcs; dark {top['dark_centre']}",
+            f"{tag}: {top['n_lines']} lines, p {ptxt}\n{sum(use)} arcs; dark {top['dark_centre']}",
             fontsize=9,
         )
         ax.set_xticks([]), ax.set_yticks([])
