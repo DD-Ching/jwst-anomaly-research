@@ -1,0 +1,19 @@
+{
+ "box_id": "BULLET_1",
+ "kind": "inj",
+ "sample": {
+  "rc": 0,
+  "wall_s": 5.0,
+  "peak_rss_mb": 364.2
+ },
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 116.8,
+  "peak_rss_mb": 1326.8
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.0,
+  "peak_rss_mb": 133.7
+ }
+}

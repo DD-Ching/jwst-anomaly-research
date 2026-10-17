@@ -1,0 +1,60 @@
+{
+ "label": "derived; PLAN \u00a75 order",
+ "entries": [
+  {
+   "box_id": "PLCKG165+67.0_2",
+   "box_status": "passed",
+   "hit_id": "h002",
+   "ra": 171.8058990339954,
+   "dec": 42.48180150994639,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 35.869225914660646,
+   "rank": 1
+  },
+  {
+   "box_id": "MJ0416.1-2403_2",
+   "box_status": "passed",
+   "hit_id": "h003",
+   "ra": 64.031622070709,
+   "dec": -24.075254712375305,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 5.6647508141591185,
+   "rank": 2
+  },
+  {
+   "box_id": "MACSJ1423+2404_2",
+   "box_status": "passed",
+   "hit_id": "h006",
+   "ra": 215.93912677013742,
+   "dec": 24.076625000970942,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 5.1730488696230985,
+   "rank": 3
+  },
+  {
+   "box_id": "MJ0416.1-2403_1",
+   "box_status": "undeterminable",
+   "hit_id": "h004",
+   "ra": 64.03892814109616,
+   "dec": -24.070147164618064,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 7.153081470119841,
+   "rank": 4
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h005",
+   "ra": 342.18422869600016,
+   "dec": -44.5290391224615,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 6.936250452346698,
+   "rank": 5
+  }
+ ]
+}

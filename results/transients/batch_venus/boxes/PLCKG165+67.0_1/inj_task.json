@@ -1,0 +1,19 @@
+{
+ "box_id": "PLCKG165+67.0_1",
+ "kind": "inj",
+ "sample": {
+  "rc": 0,
+  "wall_s": 3.5,
+  "peak_rss_mb": 373.9
+ },
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 170.6,
+  "peak_rss_mb": 1274.9
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 0.9,
+  "peak_rss_mb": 133.6
+ }
+}

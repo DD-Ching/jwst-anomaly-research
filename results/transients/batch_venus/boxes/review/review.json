@@ -1,0 +1,165 @@
+{
+ "label": "derived; PLAN \u00a75 classes",
+ "reviewed": [
+  {
+   "box_id": "PLCKG165+67.0_2",
+   "box_status": "passed",
+   "hit_id": "h002",
+   "ra": 171.8058990339954,
+   "dec": 42.48180150994639,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 35.869225914660646,
+   "rank": 1,
+   "edge": false,
+   "z": {
+    "F150W": -27.05,
+    "F444W": -13.35
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     240.0,
+     6.8,
+     -6.2,
+     6.1
+    ],
+    "F444W": [
+     74.4,
+     3.6,
+     -2.2,
+     4.5
+    ]
+   },
+   "sheet": "looked at: isolated point source in all 8 PEARLS bands (2023-03-30) and in 4446 (2023-04-22), absent in 4744 (2025) and VENUS (2026); compact galaxy ~1.2 arcsec SE; no host visible under it",
+   "class": "real change"
+  },
+  {
+   "box_id": "MJ0416.1-2403_2",
+   "box_status": "passed",
+   "hit_id": "h003",
+   "ra": 64.031622070709,
+   "dec": -24.075254712375305,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 5.6647508141591185,
+   "rank": 2,
+   "edge": false,
+   "z": {
+    "F150W": -0.35,
+    "F444W": -2.87
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     316.9,
+     8.8,
+     310.9,
+     14.6
+    ],
+    "F444W": [
+     282.0,
+     4.7,
+     259.5,
+     6.3
+    ]
+   },
+   "sheet": "looked at: on a bright elongated arc; F444W S is a ridge along the arc (matching residual); F150W weak",
+   "class": "no significant change"
+  },
+  {
+   "box_id": "MACSJ1423+2404_2",
+   "box_status": "passed",
+   "hit_id": "h006",
+   "ra": 215.93912677013742,
+   "dec": 24.076625000970942,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 5.1730488696230985,
+   "rank": 3,
+   "edge": false,
+   "z": {
+    "F150W": -0.89,
+    "F444W": -1.03
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     50.9,
+     2.9,
+     42.1,
+     9.4
+    ],
+    "F444W": [
+     17.0,
+     1.6,
+     13.8,
+     2.7
+    ]
+   },
+   "sheet": "looked at: compact source, weak S in both bands",
+   "class": "no significant change"
+  },
+  {
+   "box_id": "MJ0416.1-2403_1",
+   "box_status": "undeterminable",
+   "hit_id": "h004",
+   "ra": 64.03892814109616,
+   "dec": -24.070147164618064,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 7.153081470119841,
+   "rank": 4,
+   "edge": false,
+   "z": {
+    "F150W": -1.1,
+    "F444W": -2.82
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     108.1,
+     6.8,
+     85.6,
+     19.4
+    ],
+    "F444W": [
+     79.3,
+     5.0,
+     59.2,
+     5.1
+    ]
+   },
+   "sheet": "looked at: on a thin bright arc; F444W S is a ridge along the arc (matching residual)",
+   "class": "no significant change"
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h005",
+   "ra": 342.18422869600016,
+   "dec": -44.5290391224615,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 6.936250452346698,
+   "rank": 5,
+   "edge": false,
+   "z": {
+    "F150W": -0.78,
+    "F444W": -1.56
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     76.5,
+     5.9,
+     66.2,
+     11.9
+    ],
+    "F444W": [
+     30.2,
+     3.2,
+     20.6,
+     5.3
+    ]
+   },
+   "sheet": "looked at: compact source, weak S in both bands",
+   "class": "no significant change"
+  }
+ ]
+}

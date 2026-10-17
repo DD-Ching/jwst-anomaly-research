@@ -1,0 +1,199 @@
+{
+ "provenance": "derived",
+ "maps": "maps.npz",
+ "thresholds_assumption": {
+  "peak_arcsec": 0.06,
+  "level": 3.0,
+  "smooth_px": 2.0,
+  "streak_level": 3.0,
+  "max_extent_arcsec": 3.0,
+  "edge_arcsec": 0.5,
+  "lobe_arcsec": 0.8,
+  "min_lobe_px": 4,
+  "min_lobes": 4,
+  "min_rosette_bands": 2,
+  "dipole_arcsec": 0.3,
+  "dipole_ratio": 0.5,
+  "min_dipole_bands": 2,
+  "rosette_lobe_ratio": 0.3,
+  "sign_flip_level": 5.0,
+  "ring_search_arcsec": 1.2,
+  "ring_min_arcsec": 0.15,
+  "ring_width_arcsec": 0.1,
+  "ring_bins": 16,
+  "ring_exclude_arcsec": 0.3,
+  "ring_frac": 0.3,
+  "ring_fill_min": 0.5,
+  "min_ring_bands": 2
+ },
+ "counts": {
+  "dipole": 1,
+  "pass": 2,
+  "sign_flip": 1
+ },
+ "targets": [
+  {
+   "id": "h000",
+   "ra": 171.81270758883477,
+   "dec": 42.4829566570316,
+   "verdict": "sign_flip",
+   "top_band": "F150W",
+   "bands": {
+    "F150W": {
+     "ring_fill": 0.0,
+     "s_hit": 121.54534149169922,
+     "lobe_peaks": [
+      3.34,
+      5.75,
+      9.42,
+      121.55,
+      3.72,
+      3.79,
+      3.74,
+      -4.8,
+      -41.87,
+      -4.78
+     ],
+     "extent_arcsec": 0.7035564447629569,
+     "n_lobes": 10,
+     "both_signs": true,
+     "dipole_ratio": 0.34446467310573325,
+     "edge_arcsec": 3.184984127101013
+    },
+    "F444W": {
+     "ring_fill": 0.0,
+     "s_hit": -7.633772850036621,
+     "lobe_peaks": [
+      4.06,
+      5.0,
+      8.05,
+      4.11,
+      -7.63
+     ],
+     "extent_arcsec": 0.25163119601618417,
+     "n_lobes": 5,
+     "both_signs": true,
+     "dipole_ratio": 1.0548311587687615,
+     "edge_arcsec": 3.0195743521942107
+    }
+   }
+  },
+  {
+   "id": "h001",
+   "ra": 171.8098319050832,
+   "dec": 42.481588328263136,
+   "verdict": "pass",
+   "top_band": "F150W",
+   "bands": {
+    "F150W": {
+     "ring_fill": 0.0,
+     "s_hit": 58.706485748291016,
+     "lobe_peaks": [
+      4.65,
+      58.71,
+      4.66,
+      -4.12,
+      -4.74
+     ],
+     "extent_arcsec": 0.7406504334640378,
+     "n_lobes": 5,
+     "both_signs": true,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 6.057714908407809
+    },
+    "F444W": {
+     "ring_fill": 0.0,
+     "s_hit": 8.751266479492188,
+     "lobe_peaks": [
+      4.06,
+      8.75,
+      3.43,
+      3.65,
+      3.47,
+      -4.89,
+      -5.83,
+      -7.32
+     ],
+     "extent_arcsec": 0.6002143012820635,
+     "n_lobes": 8,
+     "both_signs": true,
+     "dipole_ratio": 0.8361065619861802,
+     "edge_arcsec": 6.086146679385337
+    }
+   }
+  },
+  {
+   "id": "h002",
+   "ra": 171.8058990339954,
+   "dec": 42.48180150994639,
+   "verdict": "pass",
+   "top_band": "F150W",
+   "bands": {
+    "F150W": {
+     "ring_fill": 0.0,
+     "s_hit": -35.869224548339844,
+     "lobe_peaks": [
+      -35.87,
+      -4.17
+     ],
+     "extent_arcsec": 0.37671215520410045,
+     "n_lobes": 2,
+     "both_signs": false,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 2.4043507626154703
+    },
+    "F444W": {
+     "ring_fill": 0.0,
+     "s_hit": -27.938072204589844,
+     "lobe_peaks": [
+      3.81,
+      -27.94
+     ],
+     "extent_arcsec": 0.5561979719353015,
+     "n_lobes": 2,
+     "both_signs": true,
+     "dipole_ratio": 0.0,
+     "edge_arcsec": 2.278617392696698
+    }
+   }
+  },
+  {
+   "id": "h003",
+   "ra": 171.81170660481956,
+   "dec": 42.480976894537605,
+   "verdict": "dipole",
+   "top_band": "F150W",
+   "bands": {
+    "F150W": {
+     "ring_fill": 0.0,
+     "s_hit": -28.35281753540039,
+     "lobe_peaks": [
+      61.1,
+      4.0,
+      -5.97,
+      -28.35
+     ],
+     "extent_arcsec": 0.5723306720603919,
+     "n_lobes": 4,
+     "both_signs": true,
+     "dipole_ratio": 2.1551345768145156,
+     "edge_arcsec": 2.1857734205595185
+    },
+    "F444W": {
+     "ring_fill": 0.0,
+     "s_hit": 10.928561210632324,
+     "lobe_peaks": [
+      10.93,
+      -7.38,
+      -4.75
+     ],
+     "extent_arcsec": 0.9066748929682458,
+     "n_lobes": 3,
+     "both_signs": true,
+     "dipole_ratio": 0.6755801140842382,
+     "edge_arcsec": 2.07595736713352
+    }
+   }
+  }
+ ]
+}

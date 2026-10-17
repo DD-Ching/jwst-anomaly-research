@@ -1,0 +1,14 @@
+{
+ "box_id": "El-Gordo_2",
+ "kind": "screen",
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 66.9,
+  "peak_rss_mb": 861.1
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 0.9,
+  "peak_rss_mb": 133.7
+ }
+}
