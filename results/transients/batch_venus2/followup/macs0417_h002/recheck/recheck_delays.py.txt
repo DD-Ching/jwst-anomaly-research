@@ -1,0 +1,68 @@
+# Fixed-beta0 Fermat potential with root-refined image positions (glafic v3 best fit + first 10 realisations).
+# Usage: python recheck_delays.py <map dir> <out.json>
+import json, sys, numpy as np, warnings
+from astropy.io import fits
+from astropy.wcs import WCS
+from scipy import ndimage, optimize
+warnings.filterwarnings('ignore')
+D, OUT = sys.argv[1], sys.argv[2]
+RA, DEC = 64.39640738001187, -11.90704044211364
+F, TFAC = 0.4299, 110.65   # D_LS/D_S and days per arcsec^2 (as in #308 predicted_images.json)
+
+def load(kind, k=None):
+    if kind == 'best':
+        p = lambda q: f'{D}/hlsp_relics_model_model_macs0417m11_glafic_v3_{q}.fits'
+        h = fits.getheader(p('psi')); sc = abs(h['CDELT1']) * 3600
+        ax, ay = fits.getdata(p('x-arcsec-deflect')).astype(float), fits.getdata(p('y-arcsec-deflect')).astype(float)
+    else:
+        p = lambda q: f'{D}/hlsp_relics_model_model_macs0417m11_glafic-map{k:03d}_v3_{q}.fits'
+        h = fits.getheader(p('psi')); sc = abs(h['CDELT1']) * 3600
+        ax, ay = fits.getdata(p('x-pixels-deflect')).astype(float) * sc, fits.getdata(p('y-pixels-deflect')).astype(float) * sc
+    return h, sc, ax * F, ay * F, fits.getdata(p('psi')).astype(float) * F
+
+def solve(h, sc, ax, ay, psi, order):
+    w = WCS(h); x0, y0 = (float(v) for v in w.world_to_pixel_values(RA, DEC))
+    at = lambda m, x, y: float(ndimage.map_coordinates(m, [[y], [x]], order=order, mode='nearest')[0])
+    def beta(p):  # p = (x, y) in pixels; returns beta in pixel-axis arcsec relative to h002
+        return np.array([(p[0] - x0) * sc - at(ax, *p), (p[1] - y0) * sc - at(ay, *p)])
+    b0 = beta((x0, y0))
+    def phi(p):  # fixed-beta0 Fermat potential, arcsec^2
+        t = np.array([(p[0] - x0) * sc, (p[1] - y0) * sc])
+        return 0.5 * np.sum((t - b0) ** 2) - at(psi, *p)
+    def phi_old(p):  # #308 form: per-position beta(theta)
+        t = np.array([(p[0] - x0) * sc, (p[1] - y0) * sc])
+        return 0.5 * np.sum((t - beta(p)) ** 2) - at(psi, *p)
+    # grid candidates (as in #308): local minima of |beta - beta0|
+    ny, nx = ax.shape; yy, xx = np.mgrid[0:ny, 0:nx]
+    bx, by = (xx - x0) * sc - ax, (yy - y0) * sc - ay
+    dd = np.hypot(bx - b0[0], by - b0[1])
+    win, tol = (7, 0.5) if sc < 0.2 else (3, 1.0)
+    cand = list(zip(*np.nonzero((ndimage.minimum_filter(dd, size=win) == dd) & (dd < tol))))
+    phi0 = phi((x0, y0)); phi0_old = phi_old((x0, y0))
+    out = []
+    for j, i in cand:
+        r = optimize.root(lambda p: beta(p) - b0, x0=[float(i), float(j)], method='hybr', options={'xtol': 1e-12})
+        res = float(np.hypot(*(beta(r.x) - b0)))
+        ra, de = (float(v) for v in w.pixel_to_world_values(*r.x))
+        out.append({'grid_px': [int(i), int(j)], 'grid_sep_arcsec': round(float(np.hypot(i - x0, j - y0) * sc), 3),
+                    'grid_source_residual_arcsec': round(float(dd[j, i]), 4),
+                    'old_delay_days': round((phi_old((i, j)) - phi0_old) * TFAC, 1),
+                    'gridpoint_fixed_beta0_delay_days': round((phi((i, j)) - phi0) * TFAC, 1),
+                    'root_converged': bool(r.success), 'root_source_residual_arcsec': float(f'{res:.2e}'),
+                    'root_ra': round(ra, 6), 'root_dec': round(de, 6),
+                    'root_sep_arcsec': round(float(np.hypot(r.x[0] - x0, r.x[1] - y0) * sc), 3),
+                    'root_shift_from_grid_arcsec': round(float(np.hypot(r.x[0] - i, r.x[1] - j) * sc), 3),
+                    'new_delay_days': round((phi(r.x) - phi0) * TFAC, 1)})
+    self_root = optimize.root(lambda p: beta(p) - b0, x0=[x0 + 0.3, y0 + 0.3], method='hybr')
+    return {'pixel_arcsec': round(sc, 3), 'beta0_arcsec': [round(float(v), 4) for v in b0],
+            'self_delay_days': round((phi(self_root.x) - phi0) * TFAC, 3),
+            'self_root_shift_arcsec': round(float(np.hypot(self_root.x[0] - x0, self_root.x[1] - y0) * sc), 4),
+            'images': sorted(out, key=lambda r: r['root_sep_arcsec'])}
+
+res = {'label': 'derived (model_prediction); fixed-beta0 Fermat potential, root-refined images; glafic v3 best fit and realisations map000-map009', 'f_Dls_Ds': F, 'days_per_arcsec2': TFAC, 'models': {}}
+for tag, kind, k in [('best', 'best', None)] + [(f'map{k:03d}', 'real', k) for k in range(10)]:
+    h, sc, ax, ay, psi = load(kind, k)
+    res['models'][tag] = {f'order{o}': solve(h, sc, ax, ay, psi, o) for o in (1, 3)}
+    m = res['models'][tag]['order1']
+    print(tag, 'self', m['self_delay_days'], [(r['root_sep_arcsec'], r['old_delay_days'], r['new_delay_days'], res['models'][tag]['order3']['images'][n]['new_delay_days'] if n < len(res['models'][tag]['order3']['images']) else None, r['root_source_residual_arcsec']) for n, r in enumerate(m['images'])], flush=True)
+json.dump(res, open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')

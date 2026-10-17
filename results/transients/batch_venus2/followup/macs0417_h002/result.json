@@ -37,5 +37,45 @@
  "expected_signal": "if visible, about 570 nJy x (|mu| 2-3 / 5.2), i.e. roughly 200-330 nJy in F150W at the 7.5 arcsec images, far above the forced-photometry errors (5-12 nJy)",
  "interpretation": "not testable with current epochs: the 7.5 arcsec images lag by about 650-830 days, so in 2025-10 they show image 1.1's state of about 2023-07 to 2023-12, when no data exist on image 1.1; a non-detection now is uninformative. The 25 arcsec image leads by about 12.3-14.4 years (about 2011-2013), before JWST",
  "minimal_next_step": "a NIRCam (or deep HST/WFC3-IR) epoch covering 1c.2 at about 2027-07 to 2028-01 (VENUS epoch 60954 + 650-830 d), or an archival HST epoch of 1c.3 from about 2011-2013 if one exists (not checked)",
- "not_done": "no lens model fitted or rebuilt; lenstool delays unavailable; archival HST of the 25 arcsec image not checked"
+ "not_done": "no lens model fitted or rebuilt; lenstool delays unavailable; archival HST of the 25 arcsec image not checked",
+ "revision_2026_10_17_recheck": {
+  "note": "delays recomputed with the fixed-beta0 Fermat potential and root-refined images (recheck/RESULT.md); the fields above are kept as first written",
+  "z_lens": "0.443 stated in the arXiv:1810.13439 abstract",
+  "delays_days": {
+   "7.6": {
+    "best_fit": 748.0,
+    "realisations_sample_range": [
+     708.1,
+     777.7
+    ]
+   },
+   "9.3": {
+    "best_fit": 1021.5,
+    "realisations_sample_range": [
+     1056.3,
+     1136.3
+    ]
+   },
+   "25.4": {
+    "best_fit": -4824.2,
+    "realisations_sample_range": [
+     -5318.7,
+     -4515.9
+    ]
+   }
+  },
+  "spurious": "the 7.34 arcsec best-fit candidate (826.4 d) and one 7.5-7.6 arcsec candidate per realisation do not converge: not images",
+  "dates": {
+   "image_1.1_state_seen_by_7.6_in_VENUS": [
+    "2023-08-20",
+    "2023-10-28"
+   ],
+   "next_useful_epoch_of_7.6": [
+    "2027-09-14",
+    "2027-11-22"
+   ]
+  },
+  "position": "converged glafic 7.6 arcsec image is 0.82-1.10 arcsec from catalogued 1c.2",
+  "conclusion": "unchanged: not testable with current epochs"
+ }
 }

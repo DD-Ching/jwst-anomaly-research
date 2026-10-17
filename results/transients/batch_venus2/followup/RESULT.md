@@ -39,6 +39,14 @@ Exploratory: items 2 and 3 were seen before. Every number is `derived` unless la
 - A counterpart, if found later, would support an ordinary lensed transient; a non-detection would not by itself
   support anything exotic.
 
+## Revision 2026-10-17: delay re-check (`macs0417_h002/recheck/RESULT.md`; item 3 above is kept as first written)
+- #308 computed φ with each pixel's own β; with β0 fixed and images root-refined, the 7.6″ image's delay is 748 d (best
+  fit) and 708–778 d (sample range of 10 realisations); the 7.34″ best-fit entry (826 d) was not an image. 9.3″:
+  1,022 d / 1,056–1,136 d; 25.4″: −4,824 d / −5,319 to −4,516 d.
+- VENUS (2025-10) at the 7.6″ image shows image 1.1's state of 2023-08-20 to 2023-10-28, with no data: still not
+  testable. Next useful epoch: 2027-09-14 to 2027-11-22. The converged image is 0.82–1.10″ from catalogued 1c.2.
+- z_l = 0.443 is stated in the arXiv:1810.13439 abstract.
+
 ## Deviations
 - Item 2: the per-exposure WCS offset correction and the detector-pixel measurement were added after the first
   uncorrected pass returned ≈ 0 everywhere (a method check, not a threshold change).
