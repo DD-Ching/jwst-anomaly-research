@@ -1,0 +1,96 @@
+{
+ "label": "observed catalogue entries (SIMBAD, NED TAP, Gaia DR3) and literature search, 2026-10-17; separations computed in arcsec",
+ "tns": "could not query (wis-tns.org HTTP 403 for all three positions)",
+ "MACSJ1423+2404_2:h000": {
+  "simbad_3arcsec": [
+   [
+    "[TSB2015] GLASS MACS1423-00487",
+    "G",
+    0.72,
+    "z 0.525"
+   ]
+  ],
+  "ned_5arcsec": [
+   [
+    "[CDK2017] 13413",
+    "G",
+    0.73,
+    null
+   ],
+   [
+    "SSTSL2 J142347.77+240514.0",
+    "G",
+    1.08,
+    "z 0.53 (2015ApJ...814..161V; NED flag SUN, type not determined)"
+   ]
+  ],
+  "gaia_3arcsec": [],
+  "literature": "no reported transient found (CANUCS, MACS J1423 JWST transients, CANUCS DR1 arXiv:2506.21685)"
+ },
+ "MJ0417.5-1154_2:h002": {
+  "simbad_3arcsec": [
+   [
+    "[MSF2019] MACS J0417 1c.1",
+    "LeG",
+    0.26,
+    "z 0.8718"
+   ],
+   [
+    "[JME2019] 1m.1",
+    "LeG",
+    0.94,
+    "z 0.8718"
+   ],
+   [
+    "[MSF2019] 1a.1",
+    "LeG",
+    1.34,
+    "z 0.8718"
+   ],
+   [
+    "[MSF2019] 1b.1",
+    "LeG",
+    1.38,
+    "z 0.8718"
+   ]
+  ],
+  "counter_images_arcsec": {
+   "1b.2": 6.23,
+   "1m.2": 7.02,
+   "1c.2": 7.3
+  },
+  "ned_z_ref": "2019MNRAS.483.3082J (zflag SLS)",
+  "gaia_3arcsec": [],
+  "literature": "no reported transient found (MACS J0417 JWST supernovae; RELICS lens model arXiv:1810.13439)"
+ },
+ "BULLET_2:h019": {
+  "simbad_3arcsec": [],
+  "nearest": [
+   [
+    "[RCL2021] Bullet 864",
+    "EmG",
+    3.69,
+    "z 3.252"
+   ],
+   [
+    "Bullet 344",
+    "G",
+    3.7,
+    "z 1.038"
+   ]
+  ],
+  "ned_5arcsec": [
+   [
+    "1ES 0657-558:[PKR2016] E.3",
+    "G_Lens",
+    3.71,
+    "z 2.96 (flag PUN, likely photometric)"
+   ]
+  ],
+  "gaia_3arcsec": [],
+  "literature": "no reported transient found; arXiv:2604.23668 (VENUS vs 4598 brown dwarfs, proper motions 24-49 mas/yr) gives no coordinates; a 0.05 arcsec/yr mover would stay in the 0.15 arcsec aperture, and h019 is not detected in 4598 (F444W S/N +0.4)"
+ },
+ "other": "arXiv:2601.10097 is a transient search in MS0451 (not read; relevant to MS0451 h011)",
+ "transient_match_radius_arcsec": 1.0,
+ "transient_match_note": "a reported transient was searched for within about 1 arcsec of each position (TNS not queried; literature and web search)"
+}

@@ -1,0 +1,325 @@
+{
+ "label": "derived; PLAN \u00a75 classes",
+ "reviewed": [
+  {
+   "box_id": "MACSJ1423+2404_2",
+   "box_status": "passed",
+   "hit_id": "h000",
+   "ra": 215.9490992690918,
+   "dec": 24.086947983082148,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 94.35118848559354,
+   "rank": 1,
+   "edge": false,
+   "z": {
+    "F150W": -29.11,
+    "F444W": -12.53
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     551.9,
+     4.4,
+     275.1,
+     8.4
+    ],
+    "F444W": [
+     268.9,
+     3.3,
+     178.1,
+     6.5
+    ]
+   },
+   "sheet": "point source on a galaxy's outskirts in all 9 bands of 1208 (2023-02); no point source in VENUS (2026); sky-fixed",
+   "class": "real change"
+  },
+  {
+   "box_id": "MJ0417.5-1154_2",
+   "box_status": "passed",
+   "hit_id": "h002",
+   "ra": 64.39640738001187,
+   "dec": -11.90704044211364,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 93.44776963876681,
+   "rank": 2,
+   "edge": false,
+   "z": {
+    "F150W": 13.65,
+    "F444W": 3.2
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     299.0,
+     26.3,
+     867.3,
+     32.3
+    ],
+    "F444W": [
+     289.0,
+     58.7,
+     532.5,
+     48.3
+    ]
+   },
+   "sheet": "point source present in VENUS (3 bands), not in 1208 (2022-10), inside a knotty galaxy; sky-fixed",
+   "class": "real change"
+  },
+  {
+   "box_id": "MS0451-0305_1",
+   "box_status": "passed",
+   "hit_id": "h011",
+   "ra": 73.54877348596928,
+   "dec": -3.0208416014586894,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 15.474082662594517,
+   "rank": 3,
+   "edge": false,
+   "z": {
+    "F150W": -0.39,
+    "F444W": -5.43
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     -6.8,
+     4.4,
+     -11.0,
+     9.8
+    ],
+    "F444W": [
+     21.9,
+     3.5,
+     -6.1,
+     3.8
+    ]
+   },
+   "sheet": "LW-only point source (F277W/F356W/F444W) in the first two 5058 visits (4 d apart), not detected 4 d later, no SW counterpart; persistence not tested",
+   "class": "real change"
+  },
+  {
+   "box_id": "MS0451-0305_1",
+   "box_status": "passed",
+   "hit_id": "h015",
+   "ra": 73.5482631715997,
+   "dec": -3.01825739153826,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 11.322558634581888,
+   "rank": 4,
+   "edge": true,
+   "z": {
+    "F150W": 0.01,
+    "F444W": -2.65
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     2.2,
+     4.4,
+     2.2,
+     9.8
+    ],
+    "F444W": [
+     18.8,
+     3.5,
+     5.1,
+     3.8
+    ]
+   },
+   "sheet": "faint residual near the box edge on noise",
+   "class": "artifact (edge)"
+  },
+  {
+   "box_id": "BULLET_2",
+   "box_status": "passed",
+   "hit_id": "h019",
+   "ra": 104.65530449311879,
+   "dec": -55.94527052200696,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 7.873038041215966,
+   "rank": 5,
+   "edge": false,
+   "z": {
+    "F150W": 5.63,
+    "F444W": 6.13
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     -4.1,
+     2.5,
+     38.0,
+     7.0
+    ],
+    "F444W": [
+     0.7,
+     1.7,
+     25.2,
+     3.6
+    ]
+   },
+   "sheet": "faint point source in VENUS (F150W/F210M/F300M/F444W, S/N 5-7) not in 4598; beside a horizontal streak present in both epochs",
+   "class": "real change"
+  },
+  {
+   "box_id": "A370_1",
+   "box_status": "passed",
+   "hit_id": "h005",
+   "ra": 39.97489003900871,
+   "dec": -1.5849034073159773,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 6.109449646870085,
+   "rank": 6,
+   "edge": false,
+   "z": {
+    "F150W": -0.22,
+    "F444W": -1.69
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     93.8,
+     3.1,
+     92.0,
+     7.3
+    ],
+    "F444W": [
+     22.0,
+     2.1,
+     14.6,
+     3.9
+    ]
+   },
+   "sheet": "compact source with a small dipole residual (compact-core class)",
+   "class": "no significant change"
+  },
+  {
+   "box_id": "MJ1149.5+2223_1",
+   "box_status": "undeterminable",
+   "hit_id": "h012",
+   "ra": 177.39690843238105,
+   "dec": 22.39409601315468,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 55.740146543544796,
+   "rank": 7,
+   "edge": false,
+   "z": {
+    "F150W": -37.82,
+    "F444W": -11.69
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     939.6,
+     16.8,
+     -20.4,
+     19.0
+    ],
+    "F444W": [
+     237.2,
+     12.0,
+     50.4,
+     10.6
+    ]
+   },
+   "sheet": "veto: inside a bright star's diffraction-spike pattern, which changes between programmes",
+   "class": "artifact (sheet: veto: inside a bright star's diffraction-spike pattern, which changes between programmes)"
+  },
+  {
+   "box_id": "PLCKG165+67.0_1",
+   "box_status": "undeterminable",
+   "hit_id": "h003",
+   "ra": 171.82145926112324,
+   "dec": 42.47544265596189,
+   "sign": "mixed",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 14.402066918114096,
+   "rank": 8,
+   "edge": false,
+   "z": {
+    "F150W": -1.81,
+    "F444W": -1.28
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     595.7,
+     8.7,
+     572.2,
+     9.6
+    ],
+    "F444W": [
+     128.0,
+     2.8,
+     121.8,
+     3.9
+    ]
+   },
+   "sheet": "compact bright source with a dipole residual (compact-core class)",
+   "class": "no significant change"
+  },
+  {
+   "box_id": "MJ1149.5+2223_1",
+   "box_status": "undeterminable",
+   "hit_id": "h051",
+   "ra": 177.3981689186077,
+   "dec": 22.394201880515073,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 10.426915329420092,
+   "rank": 9,
+   "edge": false,
+   "z": {
+    "F150W": 10.17,
+    "F444W": 2.69
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     -6.5,
+     16.8,
+     251.6,
+     19.0
+    ],
+    "F444W": [
+     3.5,
+     12.0,
+     46.6,
+     10.6
+    ]
+   },
+   "sheet": "veto: linear residual along a diffraction spike of the bright star 5 arcsec away",
+   "class": "artifact (sheet: veto: linear residual along a diffraction spike of the bright star 5 arcsec away)"
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h001",
+   "ra": 342.1803113927113,
+   "dec": -44.538511922145545,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 6.813937009900851,
+   "rank": 10,
+   "edge": false,
+   "z": {
+    "F150W": -2.28,
+    "F444W": -2.64
+   },
+   "phot_njy_f1_e1_f2_e2": {
+    "F150W": [
+     86.1,
+     2.8,
+     64.4,
+     9.1
+    ],
+    "F444W": [
+     68.7,
+     2.1,
+     58.0,
+     3.5
+    ]
+   },
+   "sheet": "elongated residual along a galaxy disk",
+   "class": "no significant change"
+  }
+ ]
+}

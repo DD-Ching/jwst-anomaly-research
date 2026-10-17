@@ -1,0 +1,14 @@
+{
+ "box_id": "MJ0416.1-2403_2",
+ "kind": "screen",
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 62.6,
+  "peak_rss_mb": 860.1
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.2,
+  "peak_rss_mb": 133.7
+ }
+}

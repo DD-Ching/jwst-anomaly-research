@@ -1,0 +1,126 @@
+{
+ "label": "derived; full rule of the #296 post-review checks applied by function: artifact stays; real change needs S-peak offset <= 0.1 arcsec (post hoc ASSUMPTION); no significant change needs |z| < 3 in every band over all covering mosaics; else undetermined",
+ "sky_fixed_arcsec": 0.1,
+ "entries": [
+  {
+   "key": "MACSJ1423+2404_2:h000",
+   "rank": 1,
+   "box_status": "passed",
+   "coded": "real change",
+   "final": "real change",
+   "z_search": {
+    "F150W": -29.11,
+    "F444W": -12.53
+   },
+   "offset_arcsec": 0.023
+  },
+  {
+   "key": "MJ0417.5-1154_2:h002",
+   "rank": 2,
+   "box_status": "passed",
+   "coded": "real change",
+   "final": "real change",
+   "z_search": {
+    "F150W": 13.65,
+    "F444W": 3.2
+   },
+   "offset_arcsec": 0.042
+  },
+  {
+   "key": "MS0451-0305_1:h011",
+   "rank": 3,
+   "box_status": "passed",
+   "coded": "real change",
+   "final": "undetermined (not sky-fixed: S peaks 0.19 arcsec apart)",
+   "z_search": {
+    "F150W": -0.39,
+    "F444W": -5.43
+   },
+   "offset_arcsec": 0.192
+  },
+  {
+   "key": "MS0451-0305_1:h015",
+   "rank": 4,
+   "box_status": "passed",
+   "coded": "artifact (edge)",
+   "final": "artifact (edge)",
+   "z_search": {
+    "F150W": 0.01,
+    "F444W": -2.65
+   },
+   "offset_arcsec": 0.056
+  },
+  {
+   "key": "BULLET_2:h019",
+   "rank": 5,
+   "box_status": "passed",
+   "coded": "real change",
+   "final": "real change",
+   "z_search": {
+    "F150W": 5.63,
+    "F444W": 6.13
+   },
+   "offset_arcsec": 0.059
+  },
+  {
+   "key": "A370_1:h005",
+   "rank": 6,
+   "box_status": "passed",
+   "coded": "no significant change",
+   "final": "undetermined (>= 3 sigma in other mosaics: F200W,F210M,F356W,F444W)",
+   "z_search": {
+    "F150W": -0.22,
+    "F444W": -1.69
+   },
+   "offset_arcsec": 0.024
+  },
+  {
+   "key": "MJ1149.5+2223_1:h012",
+   "rank": 7,
+   "box_status": "undeterminable",
+   "coded": "artifact (sheet: veto: inside a bright star's diffraction-spike pattern, which changes between programmes)",
+   "final": "artifact (sheet: veto: inside a bright star's diffraction-spike pattern, which changes between programmes)",
+   "z_search": {
+    "F150W": -37.82,
+    "F444W": -11.69
+   },
+   "offset_arcsec": 0.121
+  },
+  {
+   "key": "PLCKG165+67.0_1:h003",
+   "rank": 8,
+   "box_status": "undeterminable",
+   "coded": "no significant change",
+   "final": "undetermined (>= 3 sigma in other mosaics: F090W)",
+   "z_search": {
+    "F150W": -1.81,
+    "F444W": -1.28
+   },
+   "offset_arcsec": 0.042
+  },
+  {
+   "key": "MJ1149.5+2223_1:h051",
+   "rank": 9,
+   "box_status": "undeterminable",
+   "coded": "artifact (sheet: veto: linear residual along a diffraction spike of the bright star 5 arcsec away)",
+   "final": "artifact (sheet: veto: linear residual along a diffraction spike of the bright star 5 arcsec away)",
+   "z_search": {
+    "F150W": 10.17,
+    "F444W": 2.69
+   },
+   "offset_arcsec": 0.293
+  },
+  {
+   "key": "AS1063_1:h001",
+   "rank": 10,
+   "box_status": "undeterminable",
+   "coded": "no significant change",
+   "final": "no significant change",
+   "z_search": {
+    "F150W": -2.28,
+    "F444W": -2.64
+   },
+   "offset_arcsec": 0.072
+  }
+ ]
+}

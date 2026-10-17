@@ -1,0 +1,14 @@
+{
+ "box_id": "AS1063_2",
+ "kind": "screen",
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 69.6,
+  "peak_rss_mb": 863.3
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.5,
+  "peak_rss_mb": 133.5
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "label": "observed session-clock times (UTC, 2026-10-17) and durations; approximate where marked",
+ "budget": ["10:55", "14:55"],
+ "box_selection_wall_s": 288,
+ "boxes_json_written": "11:02:58",
+ "batch_run_start": "11:03:21",
+ "plck_g165_2_cutoff_set": "11:51 (approximate; before any result of that box)",
+ "plck_g165_2_screen_stopped": "12:45:13 (screen_task.json rc -15)",
+ "review_run": ["11:55 (approximate)", "12:01:54 (lightcurves.ecsv written)"],
+ "review_compute_min_approx": 6,
+ "crossmatch_subagent_wall_s": 1122
+}

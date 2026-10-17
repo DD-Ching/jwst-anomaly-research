@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import batch_pairs as bp  # noqa: E402
 import batch_review as br  # noqa: E402
 import batch_run as bru  # noqa: E402
 
@@ -33,3 +34,18 @@ def test_wilson():
     assert bru.wilson(0, 0) is None
     lo, hi = bru.wilson(62, 71)
     assert lo < 62 / 71 < hi
+
+
+def test_touching_boxes_do_not_overlap():
+    import math
+
+    # batch-1 A370_1 (stored rounded) and its east grid neighbour: 23.999999999999" apart, which the
+    # old strict "< BOX" test called overlapping
+    a370 = (39.9754, -1.576)
+    east = (39.98206918946676, -1.576)
+    c = math.cos(math.radians(east[1]))
+    assert abs((east[0] - a370[0]) * c * 3600) < bp.BOX  # the old rule's false overlap
+    assert not bp.overlaps(*east, [a370])
+    step = bp.BOX / 3600 / c
+    assert bp.overlaps(a370[0] + step / 2, a370[1], [a370])  # half a box: real overlap
+    assert bp.overlaps(*a370, [a370])

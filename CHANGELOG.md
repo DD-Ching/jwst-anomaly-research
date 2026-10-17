@@ -65,6 +65,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** next W1 floor step is a per-source forward model (source ⊗ drizzled STPSF PSF at the catalogue
   isophote, validated on the three stars first) or PSF-weighted moments.
 
+## 2026-10-17: VENUS batch 2: 20 new boxes, 12 calibrated; three real changes (ordinary-transient hypotheses), identities open (#304)
+- **Coverage:** 20 new 24″ boxes (3.2 arcmin²) in 11 fields, metadata-only selection with the batch-1 rule; 12 passed the
+  per-box calibration (1.92 arcmin²), 8 undeterminable (`results/transients/batch_venus2/RESULT.md`).
+- **Screen:** 203 hits → 56 unflagged → 11 review entries; 10 reviewed, 1 pending. Final classes: 3 real changes
+  (MACS1423 fading, MACS0417 brightening on lensed image 1.1, Bullet faint brightening), 3 undetermined, 3 artifacts,
+  1 no significant change. TNS not queried (403). Vetting: `docs/candidates/batch_venus2_real_changes.md`.
+- **Fix:** `batch_pairs.overlaps()` lets touching boxes through (old test rejected 13 of 40 batch-1 neighbours; `overlap_fix_check.json`).
+- **Failed approach / cost:** PLCK G165 2 hit the per-stamp fallback (stamp pixels > `max_pix`): 38 min injection,
+  screen stopped at 83 min (post hoc 12:45Z cutoff); undeterminable by calibration anyway.
+
 ## 2026-10-17: h002 identity follow-up and h003 limited re-check (#300)
 - **h002:** real fade; an ordinary transient is reasonable; identity and type not confirmed. No reported transient
   matched in queried sources; TNS not queried (403). SN H0pe images 24.9–37.9″ away; NS_0481 (3.77″) is a separate

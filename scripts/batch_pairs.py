@@ -31,6 +31,18 @@ from matplotlib.path import Path as MPath
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 BOX = 24.0  # arcsec
+TOUCH_TOL = (
+    0.01  # arcsec: boxes that only touch (centres BOX apart, rounded to 1e-6 deg) do not overlap
+)
+
+
+def overlaps(ra: float, dec: float, others: list[tuple[float, float]]) -> bool:
+    """True if the BOX-wide box at (ra, dec) shares area with one centred on any of ``others``."""
+    c = math.cos(math.radians(dec))
+    return any(
+        abs((ra - x) * c * 3600) < BOX - TOUCH_TOL and abs((dec - y) * 3600) < BOX - TOUCH_TOL
+        for x, y in others
+    )
 
 
 def polygons(s_region: str) -> list[MPath]:
@@ -164,10 +176,7 @@ def main(argv=None) -> int:
         for dist, bra, bdec in grid:
             if n_pair >= a.per_pair or len(chosen) >= a.max_boxes:
                 break
-            if any(
-                abs((bra - x) * c * 3600) < BOX and abs((bdec - y) * 3600) < BOX
-                for x, y in a.exclude
-            ):
+            if overlaps(bra, bdec, a.exclude):
                 rejected.append(
                     {"target": p["target"], "ra": bra, "dec": bdec, "why": "overlaps searched box"}
                 )

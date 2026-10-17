@@ -1,0 +1,14 @@
+{
+ "box_id": "A370_1",
+ "kind": "screen",
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 68.4,
+  "peak_rss_mb": 864.3
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.1,
+  "peak_rss_mb": 133.4
+ }
+}

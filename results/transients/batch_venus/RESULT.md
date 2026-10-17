@@ -123,6 +123,14 @@ injected sources are simulations. An ordinary fading is not wormhole evidence; z
 - **Review queue vs open science questions:** the review queue is empty (5 of 5 reviewed, 0 pending). Detailed review
   finished does not mean every object is explained: h002's identity and physical type remain open. No evidence for
   special physics was found; that does not mean every ordinary explanation was proven.
+- **Owner wording, accepted 2026-10-17 (after #300):**
+  - "Gone", "absent" and "disappears" for h002 above mean **not detected in later observations** (2025 programme
+    4744, 2026 VENUS; limits in `followup/h002_identity_followup.json`).
+  - h002: real change; identity and type not confirmed.
+  - h003: active follow-up ended this round; **undetermined, with no evidence so far beyond the scatter of matched
+    controls**. It is neither a confirmed instrumental artifact nor excluded.
+  - TNS: the query was not completed (HTTP 403); a low-cost pending item, not polled, not blocking other searches.
+  - Finding nothing more this round does not mean the public record was exhausted.
 - **Not reviewed (by design):** 108 hits that are near bright cores or fail morphology. They are saved in each
   box's `screen/hits.ecsv` and `morph_all.json`, not deleted.
 
