@@ -1,0 +1,73 @@
+{
+ "label": "derived; chosen from image lists and coverage only, before any difference",
+ "rule": {
+  "cmd": "boxes",
+  "field": "elgordo",
+  "uri": [
+   "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f150w_i2d.fits",
+   "s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f150w_i2d.fits",
+   "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f444w_i2d.fits",
+   "s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f444w_i2d.fits"
+  ],
+  "exclude": [
+   [
+    15.73,
+    -49.253
+   ]
+  ],
+  "half_arcsec": 12.0,
+  "step": 2.0,
+  "min_images": 5,
+  "min_finite": 0.95,
+  "n": 2,
+  "out": "results/transients/fade_calib/boxes.json"
+ },
+ "chosen": [
+  {
+   "ra": 15.717097,
+   "dec": -49.262488,
+   "n_images": 8,
+   "finite": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "ra": 15.731568,
+   "dec": -49.270822,
+   "n_images": 7,
+   "finite": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ]
+  }
+ ],
+ "checked": [
+  {
+   "ra": 15.717097,
+   "dec": -49.262488,
+   "n_images": 8,
+   "finite": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "ra": 15.731568,
+   "dec": -49.270822,
+   "n_images": 7,
+   "finite": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ]
+  }
+ ]
+}

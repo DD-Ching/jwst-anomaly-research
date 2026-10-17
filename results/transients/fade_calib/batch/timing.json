@@ -1,0 +1,10 @@
+{
+ "label": "derived; main time cost of the final chain per box (F150W), for a later decision; no tool change in this unit",
+ "kernel_stamps_F150W": {
+  "B1": {"stamps": 217, "stamp_px": 18792, "match_s": 70.7, "source": "heldout2/h2E_s30/summary.json (warm cache)"},
+  "B2": {"stamps": 1199, "stamp_px": 97883, "match_s": 1466.0, "source": "batch/b2/summary.json"},
+  "B3": {"stamps": 1065, "stamp_px": 122064, "match_s": 1947.5, "source": "batch/b3/summary.json"}
+ },
+ "note": "stamp counts: compact_stamps(e1, 4) & compact_stamps(resampled e2, 4), counted in session with the cached raw boxes; each stamp gets a leave-one-out kernel_fit (lstsq) over all other stamp pixels, so cost grows about as stamps x stamp_px. Runs were 4 concurrent processes on 4 cores.",
+ "cache_saving_B2_B3": "reads + empirical PSF are <= 50 s of 1276-1961 s per run (b2_inj, b3 summaries): under 4 %"
+}

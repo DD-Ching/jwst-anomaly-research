@@ -1,0 +1,79 @@
+{
+ "label": "derived; box 1 (#286) re-screened with --reg-tile-arcsec 6, no injections",
+ "shift_px": {
+  "F150W": [
+   0.695653174935523,
+   -0.5711249060938846
+  ],
+  "F444W": [
+   0.11082451251649328,
+   -0.18354930297408523
+  ]
+ },
+ "shift_px_286": {
+  "F150W": [
+   1.7059955515363727,
+   -3.0
+  ],
+  "F444W": [
+   0.5296930754113593,
+   -0.9545214230638185
+  ]
+ },
+ "hits": [
+  50,
+  39
+ ],
+ "unflagged": [
+  18,
+  7
+ ],
+ "morph_all": [
+  {
+   "dipole": 10,
+   "edge": 6,
+   "pass": 5,
+   "rosette": 28,
+   "sign_flip": 1
+  },
+  {
+   "dipole": 4,
+   "edge": 7,
+   "rosette": 24,
+   "pass": 1,
+   "sign_flip": 2,
+   "extended": 1
+  }
+ ],
+ "review_new": [
+  "h020"
+ ],
+ "review_new_nearest_286": {
+  "h020": [
+   "h024",
+   0.0
+  ]
+ },
+ "review_286_nearest_new": {
+  "h024": [
+   "h020",
+   0.0,
+   "pass"
+  ],
+  "h031": [
+   "h020",
+   1.308,
+   "pass"
+  ],
+  "h043": [
+   "h029",
+   1.313,
+   "extended"
+  ],
+  "h049": [
+   "h020",
+   1.796,
+   "pass"
+  ]
+ }
+}
